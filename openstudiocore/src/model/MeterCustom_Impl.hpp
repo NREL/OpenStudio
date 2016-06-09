@@ -74,7 +74,7 @@ class MODEL_API MeterCustom_Impl : public ModelObject_Impl {
     std::vector< std::pair<std::string, std::string> > keyVarGroups();
 
     // Return the number of (KeyName, OutputVariableorMeterName) groups
-    unsigned numKeyVars() const;
+    unsigned numKeyVarGroups() const;
 
 
     // Lower Level functions

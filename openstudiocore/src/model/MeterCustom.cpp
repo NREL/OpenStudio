@@ -154,7 +154,7 @@ namespace detail {
   }
 
   // Return the number of (KeyName, OutputVariableorMeterName) groups
-  unsigned MeterCustom_Impl::numKeyVars() const {
+  unsigned MeterCustom_Impl::numKeyVarGroups() const {
     return numExtensibleGroups();
   }
 
@@ -263,8 +263,8 @@ std::vector< std::pair<std::string, std::string> > MeterCustom::keyVarGroups() {
 }
 
 // Return the number of (KeyName, OutputVariableorMeterName) groups
-unsigned MeterCustom::numKeyVars() const {
-  return getImpl<detail::MeterCustom_Impl>()->numKeyVars();
+unsigned MeterCustom::numKeyVarGroups() const {
+  return getImpl<detail::MeterCustom_Impl>()->numKeyVarGroups();
 }
 
 
