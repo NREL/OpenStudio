@@ -20,35 +20,39 @@
 #ifndef MODEL_METERCUSTOM_IMPL_HPP
 #define MODEL_METERCUSTOM_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 
-#include <QObject>
+//#include <QObject>
+//#include <memory>
 
-#include <memory>
 namespace openstudio {
 namespace model {
 
 namespace detail {
 
   /** MeterCustom_Impl is the implementation class for MeterCustom.*/
-  class MODEL_API MeterCustom_Impl : public QObject, public std::enable_shared_from_this<MeterCustom_Impl> {
-    Q_OBJECT;
+  class MODEL_API MeterCustom_Impl : public std::enable_shared_from_this<MeterCustom_Impl> {
+
    public:
     /** @name Constructors and Destructors */
     //@{
-
+    
+    // constructor
     MeterCustom_Impl(const IdfObject& idfObject,
                      Model_Impl* model,
                      bool keepHandle);
-
+    
+    // construct from workspace
     MeterCustom_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                      Model_Impl* model,
                      bool keepHandle);
 
+    // clone copy constructor
     MeterCustom_Impl(const MeterCustom_Impl& other,
                      Model_Impl* model,
                      bool keepHandle);
 
+    // virtual destructor
     virtual ~MeterCustom_Impl() {}
 
     //@}
@@ -67,6 +71,20 @@ namespace detail {
 
     // TODO: Handle this object's extensible fields.
 
+    // Return a vector of (Key, Var) pairs
+    std::vector< std::pair<std::string, std::string> > MeterCustom_Impl::keyVarGroups();
+
+    // Return the number of (KeyName, OutputVariableorMeterName) groups
+    unsigned numKeyVars() const;
+
+
+    // Lower Level functions
+    /** Get the Key Name at index. Indexing starts at 0. */
+    boost::optional<std::string> keyName(unsigned index) const;
+
+    /** Get the Output Variable of Meter Name at index. Indexing starts at 0. */
+    boost::optional<std::string> outputVariableorMeterName(unsigned index) const;
+
     //@}
     /** @name Setters */
     //@{
@@ -76,6 +94,27 @@ namespace detail {
     void resetFuelType();
 
     // TODO: Handle this object's extensible fields.
+
+    // Add a new (Key, Var) group
+    bool addKeyVarGroup(const std::string& keyName, const std::string& outputVariableorMeterName);
+
+    // Remove the (Key, Var) group at given index
+    bool removeKeyVarGroup(unsigned groupIndex);
+
+    // Remove all the (Key, Var) groups
+    void removeAllKeyVarGroups();
+
+
+    // Lower level functions
+    /** Set the Key Name at index. Indexing starts at 0. */
+    bool setKeyName(unsigned index, const std::string& str);
+
+    /** Set the Output Variable of Meter Name at index. Indexing starts at 0. */
+    bool setOutputVariableorMeterName(unsigned index, const std::string& str);
+
+
+
+
 
     //@}
     /** @name Other */

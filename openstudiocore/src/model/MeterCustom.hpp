@@ -20,10 +20,11 @@
 #ifndef MODEL_METERCUSTOM_HPP
 #define MODEL_METERCUSTOM_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 
-#include <memory>
+//#include <memory>
 #include <boost/optional.hpp>
+
 
 #include <vector>
 
@@ -59,6 +60,20 @@ class MODEL_API MeterCustom {
 
   // TODO: Handle this object's extensible fields.
 
+  // Return a vector of (Key, Var) pairs
+  std::vector< std::pair<std::string, std::string> > MeterCustom_Impl::keyVarGroups();
+
+  // Return the number of (KeyName, OutputVariableorMeterName) groups
+  unsigned numKeyVars() const;
+
+
+  // Lower Level functions
+  /** Get the Key Name at index. Indexing starts at 0. */
+  boost::optional<std::string> keyName(unsigned index) const;
+
+  /** Get the Output Variable of Meter Name at index. Indexing starts at 0. */
+  boost::optional<std::string> outputVariableorMeterName(unsigned index) const;
+
   //@}
   /** @name Setters */
   //@{
@@ -68,6 +83,23 @@ class MODEL_API MeterCustom {
   void resetFuelType();
 
   // TODO: Handle this object's extensible fields.
+
+  // Add a new (Key, Var) group
+  bool addKeyVarGroup(const std::string& keyName, const std::string& outputVariableorMeterName);
+
+  // Remove the (Key, Var) group at given index
+  bool MeterCustom_Impl::removeKeyVarGroup(unsigned groupIndex);
+
+  // Remove all the (Key, Var) groups
+  void MeterCustom_Impl::removeAllKeyVarGroups();
+
+
+  // Lower level functions
+  /** Set the Key Name at index. Indexing starts at 0. */
+  bool setKeyName(unsigned index, const std::string& str);
+
+  /** Set the Output Variable of Meter Name at index. Indexing starts at 0. */
+  bool setOutputVariableorMeterName(unsigned index, const std::string& str);
 
   //@}
   /** @name Other */
