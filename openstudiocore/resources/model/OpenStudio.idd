@@ -25793,3 +25793,31 @@ OS:Output:Variable,
        \type object-list
        \object-list ScheduleNames
 
+OS:Meter:Custom,
+   \extensible:2 - repeat last two fields, remembering to remove ; from "inner" fields.
+   \memo Used to allow users to combine specific variables and/or meters into
+   \memo "custom" meter configurations. To access these meters by name, one must
+   \memo first run a simulation to generate the RDD/MDD files and names.
+   A1,  \field Handle
+        \type handle
+        \required-field
+   A2,  \field Name
+        \required-field
+   A3,  \field Fuel Type
+        \type choice
+        \key Electricity
+        \key NaturalGas
+        \key PropaneGas
+        \key FuelOil#1
+        \key FuelOil#2
+        \key Coal
+        \key Diesel
+        \key Gasoline
+        \key Water
+        \key Generic
+        \key OtherFuel1
+        \key OtherFuel2
+   A4,  \field Key Name
+        \begin-extensible
+   A5;  \field Output Variable or Meter Name
+
