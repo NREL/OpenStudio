@@ -149,6 +149,8 @@ std::vector<openstudio::IdfObject> WaterToWaterComponent_Impl::remove()
 
   removeFromSecondaryPlantLoop();
 
+  removeFromTertiaryPlantLoop();
+
   return HVACComponent_Impl::remove();
 }
 
