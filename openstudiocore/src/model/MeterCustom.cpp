@@ -21,6 +21,10 @@
 #include "MeterCustom_Impl.hpp"
 
 #include "Model.hpp"
+#include "Model_Impl.hpp"
+
+#include "ModelObject.hpp"
+#include "ModelObject_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -99,8 +103,8 @@ namespace detail {
   bool MeterCustom_Impl::addKeyVarGroup(const std::string& keyName, const std::string& outputVariableorMeterName) {
     WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
 
-    bool temp = eg.setString(OS_MeterCustomExtensibleFields::KeyName, keyName);
-    bool ok = eg.setDouble(OS_MeterCustomExtensibleFields::OutputVariableorMeterName, outputVariableorMeterName);
+    bool temp = eg.setString(OS_Meter_CustomExtensibleFields::KeyName, keyName);
+    bool ok = eg.setString(OS_Meter_CustomExtensibleFields::OutputVariableorMeterName, outputVariableorMeterName);
 
     if (temp) {
       temp = ok;
@@ -132,29 +136,14 @@ namespace detail {
   }
 
   // Return a vector of (Key, Var) pairs
-  std::vector< std::pair<double, double> > MeterCustom_Impl::keyVarGroups() {
-    std::vector< std::pair<std::string, std::string> > result;
-
-    std::vector<IdfExtensibleGroup> groups = extensibleGroups();
-
-    for (const auto & group : groups) {
-      boost::optional<double> keyName = group.cast<WorkspaceExtensibleGroup>().getString(OS_MeterCustomExtensibleFields::KeyName);
-      boost::optional<double> outputVariableorMeterName = group.cast<WorkspaceExtensibleGroup>().getString(OS_MeterCustomExtensibleFields::OutputVariableorMeterName);
-
-      if (keyName && outputVariableorMeterName) {
-        result.push_back(std::make_pair(keyName.get(), outputVariableorMeterName.get()));
-      }
-    }
-
-  // Return a vector of (Key, Var) pairs
   std::vector< std::pair<std::string, std::string> > MeterCustom_Impl::keyVarGroups() {
     std::vector< std::pair<std::string, std::string> > result;
 
     std::vector<IdfExtensibleGroup> groups = extensibleGroups();
 
     for (const auto & group : groups) {
-      boost::optional<double> keyName = group.cast<WorkspaceExtensibleGroup>().getString(OS_MeterCustomExtensibleFields::KeyName);
-      boost::optional<double> outputVariableorMeterName = group.cast<WorkspaceExtensibleGroup>().getString(OS_MeterCustomExtensibleFields::OutputVariableorMeterName);
+      boost::optional<std::string> keyName = group.cast<WorkspaceExtensibleGroup>().getString(OS_Meter_CustomExtensibleFields::KeyName);
+      boost::optional<std::string> outputVariableorMeterName = group.cast<WorkspaceExtensibleGroup>().getString(OS_Meter_CustomExtensibleFields::OutputVariableorMeterName);
 
       if (keyName && outputVariableorMeterName) {
         result.push_back(std::make_pair(keyName.get(), outputVariableorMeterName.get()));
@@ -175,7 +164,7 @@ namespace detail {
   boost::optional<std::string> MeterCustom_Impl::keyName(unsigned index) const {
     IdfExtensibleGroup eg = getExtensibleGroup(index);
     if (!eg.empty()) {
-      return eg.getString(OS_MeterCustomExtensibleFields::KeyName, true);
+      return eg.getString(OS_Meter_CustomExtensibleFields::KeyName, true);
     }
     return boost::none;
   }
@@ -184,10 +173,10 @@ namespace detail {
   bool MeterCustom_Impl::setKeyName(unsigned index, const std::string& str) {
     IdfExtensibleGroup eg = getExtensibleGroup(index);
     if (!eg.empty()) {
-      return eg.setString(OS_MeterCustomExtensibleFields::KeyName, str);
+      return eg.setString(OS_Meter_CustomExtensibleFields::KeyName, str);
     } else {
       StringVector values(2u);
-      values[OS_MeterCustomExtensibleFields::KeyName] = str;
+      values[OS_Meter_CustomExtensibleFields::KeyName] = str;
       return !insertExtensibleGroup(index, values).empty();
     }
     OS_ASSERT(false);
@@ -198,7 +187,7 @@ namespace detail {
   boost::optional<std::string> MeterCustom_Impl::outputVariableorMeterName(unsigned index) const {
     IdfExtensibleGroup eg = getExtensibleGroup(index);
     if (!eg.empty()) {
-      return eg.getString(OS_MeterCustomExtensibleFields::OutputVariableorMeterName, true);
+      return eg.getString(OS_Meter_CustomExtensibleFields::OutputVariableorMeterName, true);
     }
     return boost::none;
   }
@@ -207,10 +196,10 @@ namespace detail {
   bool MeterCustom_Impl::setOutputVariableorMeterName(unsigned index, const std::string& str) {
     IdfExtensibleGroup eg = getExtensibleGroup(index);
     if (!eg.empty()) {
-      return eg.setString(OS_MeterCustomExtensibleFields::OutputVariableorMeterName, str);
+      return eg.setString(OS_Meter_CustomExtensibleFields::OutputVariableorMeterName, str);
     } else {
       StringVector values(2u);
-      values[OS_MeterCustomExtensibleFields::OutputVariableorMeterName] = str;
+      values[OS_Meter_CustomExtensibleFields::OutputVariableorMeterName] = str;
       return !insertExtensibleGroup(index, values).empty();
     }
     OS_ASSERT(false);
@@ -269,13 +258,13 @@ void MeterCustom::removeAllKeyVarGroups() {
 }
 
 // // Return a vector of (Key, Var) pairs
-std::vector< std::pair<std::string, std::string> > MeterCustom_Impl::keyVarGroups() {
+std::vector< std::pair<std::string, std::string> > MeterCustom::keyVarGroups() {
   return getImpl<detail::MeterCustom_Impl>()->keyVarGroups();
 }
 
 // Return the number of (KeyName, OutputVariableorMeterName) groups
-unsigned MeterCustom::numBlocks() const {
-  return getImpl<detail::MeterCustom_Impl>()->numBlocks();
+unsigned MeterCustom::numKeyVars() const {
+  return getImpl<detail::MeterCustom_Impl>()->numKeyVars();
 }
 
 
@@ -285,20 +274,17 @@ boost::optional<std::string> MeterCustom::keyName(unsigned index) const {
   return getImpl<detail::MeterCustom_Impl>()->keyName(index);
 }
 /** Set the Key Name at index. Indexing starts at 0. */
-boost::optional<std::string> MeterCustom::setKeyName(
-  unsigned index) const {
-  return getImpl<detail::MeterCustom_Impl>()->setKeyName(index);
+bool MeterCustom::setKeyName(unsigned index, const std::string& str) {
+  return getImpl<detail::MeterCustom_Impl>()->setKeyName(index, str);
 }
 
 /** Get the Output Variable of Meter Name at index. Indexing starts at 0. */
-boost::optional<std::string> MeterCustom::outputVariableorMeterName(
-  unsigned index) const {
+boost::optional<std::string> MeterCustom::outputVariableorMeterName(unsigned index) const {
   return getImpl<detail::MeterCustom_Impl>()->outputVariableorMeterName(index);
 }
 /** Set the Output Variable of Meter Name at index. Indexing starts at 0. */
-boost::optional<std::string> MeterCustom::setOutputVariableorMeterName(
-  unsigned index) const {
-  return getImpl<detail::MeterCustom_Impl>()->setOutputVariableorMeterName(index);
+bool MeterCustom::setOutputVariableorMeterName(unsigned index, const std::string& str) {
+  return getImpl<detail::MeterCustom_Impl>()->setOutputVariableorMeterName(index, str);
 }
 
 /// @cond
