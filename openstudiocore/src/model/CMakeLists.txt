@@ -637,6 +637,9 @@ set(${target_name}_src
   MeterCustom.hpp
   MeterCustom_Impl.hpp
   MeterCustom.cpp
+  MeterCustomDecrement.hpp
+  MeterCustomDecrement_Impl.hpp
+  MeterCustomDecrement.cpp
   Mixer.hpp
   Mixer_Impl.hpp
   Mixer.cpp
@@ -1623,6 +1626,7 @@ set(${target_name}_test_src
   test/Material_GTest.cpp
   test/Meter_GTest.cpp
   test/MeterCustom_GTest.cpp
+  test/MeterCustomDecrement_GTest.cpp
   test/ModelFixture.cpp
   test/ModelFixture.hpp
   test/ModelObject_GTest.cpp

@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef MODEL_METERCUSTOM_IMPL_HPP
-#define MODEL_METERCUSTOM_IMPL_HPP
+#ifndef MODEL_METERCUSTOMDECREMENT_IMPL_HPP
+#define MODEL_METERCUSTOMDECREMENT_IMPL_HPP
 
 #include "ModelAPI.hpp"
 #include "ModelObject_Impl.hpp"
@@ -29,30 +29,30 @@ namespace model {
 
 namespace detail {
 
-  /** MeterCustom_Impl is a ModelObject_Impl that is the implementation class for MeterCustom.*/
-class MODEL_API MeterCustom_Impl : public ModelObject_Impl {
+  /** MeterCustomDecrement_Impl is a ModelObject_Impl that is the implementation class for MeterCustomDecrement.*/
+class MODEL_API MeterCustomDecrement_Impl : public ModelObject_Impl {
 
    public:
     /** @name Constructors and Destructors */
     //@{
     
     // constructor
-    MeterCustom_Impl(const IdfObject& idfObject,
+    MeterCustomDecrement_Impl(const IdfObject& idfObject,
                      Model_Impl* model,
                      bool keepHandle);
     
     // construct from workspace
-    MeterCustom_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+    MeterCustomDecrement_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                      Model_Impl* model,
                      bool keepHandle);
 
     // clone copy constructor
-    MeterCustom_Impl(const MeterCustom_Impl& other,
+    MeterCustomDecrement_Impl(const MeterCustomDecrement_Impl& other,
                      Model_Impl* model,
                      bool keepHandle);
 
     // virtual destructor
-    virtual ~MeterCustom_Impl() {}
+    virtual ~MeterCustomDecrement_Impl() {}
 
     //@}
     /** @name Virtual Methods */
@@ -67,6 +67,8 @@ class MODEL_API MeterCustom_Impl : public ModelObject_Impl {
     //@{
 
     boost::optional<std::string> fuelType() const;
+    
+    std::string sourceMeterName() const;
 
     // Return a vector of (Key, Var) pairs
     std::vector< std::pair<std::string, std::string> > keyVarGroups();
@@ -89,6 +91,8 @@ class MODEL_API MeterCustom_Impl : public ModelObject_Impl {
     bool setFuelType(const std::string& fuelType);
 
     void resetFuelType();
+    
+    bool setSourceMeterName(const std::string& sourceMeterName);
 
     // Add a new (Key, Var) group
     bool addKeyVarGroup(const std::string& keyName, const std::string& outputVariableorMeterName);
@@ -122,7 +126,7 @@ class MODEL_API MeterCustom_Impl : public ModelObject_Impl {
     //@}
    protected:
    private:
-    REGISTER_LOGGER("openstudio.model.MeterCustom");
+    REGISTER_LOGGER("openstudio.model.MeterCustomDecrement");
   };
 
 } // detail
@@ -130,5 +134,5 @@ class MODEL_API MeterCustom_Impl : public ModelObject_Impl {
 } // model
 } // openstudio
 
-#endif // MODEL_METERCUSTOM_IMPL_HPP
+#endif // MODEL_METERCUSTOMDECREMENT_IMPL_HPP
 

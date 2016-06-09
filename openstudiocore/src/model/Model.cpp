@@ -375,6 +375,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(MasslessOpaqueMaterial);
     REGISTER_CONSTRUCTOR(Meter);
     REGISTER_CONSTRUCTOR(MeterCustom);
+    REGISTER_CONSTRUCTOR(MeterCustomDecrement);
     REGISTER_CONSTRUCTOR(ModelObjectList);
     REGISTER_CONSTRUCTOR(Node);
     REGISTER_CONSTRUCTOR(OtherEquipment);
@@ -780,6 +781,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(MasslessOpaqueMaterial);
     REGISTER_COPYCONSTRUCTORS(Meter);
     REGISTER_COPYCONSTRUCTORS(MeterCustom);
+    REGISTER_COPYCONSTRUCTORS(MeterCustomDecrement);
     REGISTER_COPYCONSTRUCTORS(ModelObjectList);
     REGISTER_COPYCONSTRUCTORS(Node);
     REGISTER_COPYCONSTRUCTORS(OtherEquipment);

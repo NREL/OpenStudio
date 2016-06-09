@@ -68,7 +68,7 @@ namespace detail {
     static std::vector<std::string> result;
     if (result.empty()){
     }
-    LOG(Info, "Meter:Custom does not produce any output variables.");
+    //LOG(Info, "Meter:Custom does not produce any output variables.");
     return result;
   }
 
@@ -81,16 +81,8 @@ namespace detail {
     return getString(OS_Meter_CustomFields::FuelType,true);
   }
 
-  bool MeterCustom_Impl::setFuelType(boost::optional<std::string> fuelType) {
-    bool result(false);
-    if (fuelType) {
-      result = setString(OS_Meter_CustomFields::FuelType, fuelType.get());
-    }
-    else {
-      resetFuelType();
-      result = true;
-    }
-    return result;
+  bool MeterCustom_Impl::setFuelType(const std::string& fuelType) {
+    return setString(OS_Meter_CustomFields::FuelType, fuelType);
   }
 
   void MeterCustom_Impl::resetFuelType() {
@@ -234,7 +226,7 @@ boost::optional<std::string> MeterCustom::fuelType() const {
   return getImpl<detail::MeterCustom_Impl>()->fuelType();
 }
 
-bool MeterCustom::setFuelType(std::string fuelType) {
+bool MeterCustom::setFuelType(const std::string& fuelType) {
   return getImpl<detail::MeterCustom_Impl>()->setFuelType(fuelType);
 }
 

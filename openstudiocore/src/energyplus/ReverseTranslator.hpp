@@ -166,6 +166,8 @@ class ENERGYPLUS_API ReverseTranslator {
   boost::optional<model::ModelObject> translateMaterialNoMass(const WorkspaceObject & workspaceObject);
   
   boost::optional<model::ModelObject> translateMeterCustom(const WorkspaceObject & workspaceObject);
+  
+  boost::optional<model::ModelObject> translateMeterCustomDecrement(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateOtherEquipment(const WorkspaceObject& workspaceObject);
 

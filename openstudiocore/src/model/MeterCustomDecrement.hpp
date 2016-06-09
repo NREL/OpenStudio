@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef MODEL_METERCUSTOM_HPP
-#define MODEL_METERCUSTOM_HPP
+#ifndef MODEL_METERCUSTOMDECREMENT_HPP
+#define MODEL_METERCUSTOMDECREMENT_HPP
 
 #include "ModelAPI.hpp"
 #include "ModelObject.hpp"
@@ -30,20 +30,20 @@ namespace model {
 
 namespace detail {
 
-  class MeterCustom_Impl;
+  class MeterCustomDecrement_Impl;
 
 } // detail
 
-/** MeterCustom is a ModelObject that wraps the OpenStudio IDD object 'OS:Meter:Custom'. */
-class MODEL_API MeterCustom : public ModelObject {
+/** MeterCustomDecrement is a ModelObject that wraps the OpenStudio IDD object 'OS:Meter:Custom'. */
+class MODEL_API MeterCustomDecrement : public ModelObject {
  public:
   /** @name Constructors and Destructors */
   //@{
 
-  // Constructs a new MeterCustom object in the model.
-  explicit MeterCustom(const Model& model);
+  // Constructs a new MeterCustomDecrement object in the model.
+  explicit MeterCustomDecrement(const Model& model, const std::string& sourceMeterName);
 
-  virtual ~MeterCustom() {}
+  virtual ~MeterCustomDecrement() {}
 
   //@}
 
@@ -55,6 +55,8 @@ class MODEL_API MeterCustom : public ModelObject {
   //@{
 
   boost::optional<std::string> fuelType() const;
+  
+  std::string sourceMeterName() const;
 
   // Return a vector of (Key, Var) pairs
   std::vector< std::pair<std::string, std::string> > keyVarGroups();
@@ -77,6 +79,8 @@ class MODEL_API MeterCustom : public ModelObject {
   bool setFuelType(const std::string& fuelType);
 
   void resetFuelType();
+  
+  bool setSourceMeterName(const std::string& sourceMeterName);
 
   // Add a new (Key, Var) group
   bool addKeyVarGroup(const std::string& keyName, const std::string& outputVariableorMeterName);
@@ -107,29 +111,29 @@ class MODEL_API MeterCustom : public ModelObject {
   //@}
  protected:
   /// @cond
-  typedef detail::MeterCustom_Impl ImplType;
+  typedef detail::MeterCustomDecrement_Impl ImplType;
 
-  explicit MeterCustom(std::shared_ptr<detail::MeterCustom_Impl> impl);
+  explicit MeterCustomDecrement(std::shared_ptr<detail::MeterCustomDecrement_Impl> impl);
 
-  friend class detail::MeterCustom_Impl;
+  friend class detail::MeterCustomDecrement_Impl;
   friend class Model;
   friend class IdfObject;
   friend class openstudio::detail::IdfObject_Impl;
   /// @endcond
  private:
-  std::shared_ptr<detail::MeterCustom_Impl> m_impl;
+  std::shared_ptr<detail::MeterCustomDecrement_Impl> m_impl;
 
-  REGISTER_LOGGER("openstudio.model.MeterCustom");
+  REGISTER_LOGGER("openstudio.model.MeterCustomDecrement");
 };
 
-/** \relates MeterCustom*/
-typedef boost::optional<MeterCustom> OptionalMeterCustom;
+/** \relates MeterCustomDecrement*/
+typedef boost::optional<MeterCustomDecrement> OptionalMeterCustomDecrement;
 
-/** \relates MeterCustom*/
-typedef std::vector<MeterCustom> MeterCustomVector;
+/** \relates MeterCustomDecrement*/
+typedef std::vector<MeterCustomDecrement> MeterCustomDecrementVector;
 
 } // model
 } // openstudio
 
-#endif // MODEL_METERCUSTOM_HPP
+#endif // MODEL_METERCUSTOMDECREMENT_HPP
 

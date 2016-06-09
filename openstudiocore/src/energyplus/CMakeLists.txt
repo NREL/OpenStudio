@@ -159,6 +159,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateMasslessOpaqueMaterial.cpp
   ForwardTranslator/ForwardTranslateMeter.cpp
   ForwardTranslator/ForwardTranslateMeterCustom.cpp
+  ForwardTranslator/ForwardTranslateMeterCustomDecrement.cpp
   ForwardTranslator/ForwardTranslateNode.cpp
   ForwardTranslator/ForwardTranslateOtherEquipment.cpp
   ForwardTranslator/ForwardTranslateOutsideSurfaceConvectionAlgorithm.cpp
@@ -366,6 +367,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateMaterialAirGap.cpp
   ReverseTranslator/ReverseTranslateMaterialNoMass.cpp
   ReverseTranslator/ReverseTranslateMeterCustom.cpp
+  ReverseTranslator/ReverseTranslateMeterCustomDecrement.cpp
   ReverseTranslator/ReverseTranslateOtherEquipment.cpp
   ReverseTranslator/ReverseTranslateOutputIlluminanceMap.cpp
   ReverseTranslator/ReverseTranslateOutputMeter.cpp

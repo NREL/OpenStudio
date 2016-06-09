@@ -1646,6 +1646,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateMeterCustom(meterCustom);
       break;
     }
+  case openstudio::IddObjectType::OS_Meter_CustomDecrement :
+    {
+      model::MeterCustomDecrement meterCustomDecrement = modelObject.cast<MeterCustomDecrement>();
+      retVal = translateMeterCustomDecrement(meterCustomDecrement);
+      break;
+    }
   case openstudio::IddObjectType::OS_ModelObjectList :
     {
       // no-op
