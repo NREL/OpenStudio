@@ -638,6 +638,20 @@ set(GeographicLib_DIR ${CMAKE_BINARY_DIR}/GeographicLib-prefix/src/GeographicLib
 ## windows configure notes
 #-platform win32-msvc2013 -debug-and-release -opensource -openssl -opengl dynamic -static -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -confirm-license -prefix C:\Qt2\5.6\msvc2013_static
 #
+# Dan's attempt
+## MSVC 2013
+# from build dir (which should be below qt dir)
+# "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" amd64
+# set CL=/MP
+# ..\configure.bat -platform win32-msvc2013 -debug-and-release -opensource -openssl-linked OPENSSL_LIBS="-lssleay32 -llibeay32" -I C:\OpenSSL-Win64\include -L C:\OpenSSL-Win64\lib\VC\static -opengl dynamic -static -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -confirm-license -prefix C:\Qt2\5.6\msvc2013_static
+# nmake
+#
+## MSVC 2015
+# from build dir (which should be below qt dir)
+# "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" amd64
+# set CL=/MP
+# ..\configure.bat -platform win32-msvc2015 -debug-and-release -opensource -openssl-linked OPENSSL_LIBS="-lssleay32 -llibeay32" -I C:\OpenSSL-Win64\include -L C:\OpenSSL-Win64\lib\VC\static -opengl dynamic -static -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -confirm-license -prefix C:\Qt2\5.6\msvc2015_static
+# nmake
 
 ## mac configure notes
 #./configure -v -release -opensource -static -openssl -no-pch -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -confirm-license -prefix /Users/kbenne/Development/Qt/qt_5_6_osx_static
