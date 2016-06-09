@@ -1622,6 +1622,7 @@ set(${target_name}_test_src
   test/MasslessOpaqueMaterial_GTest.cpp
   test/Material_GTest.cpp
   test/Meter_GTest.cpp
+  test/MeterCustom_GTest.cpp
   test/ModelFixture.cpp
   test/ModelFixture.hpp
   test/ModelObject_GTest.cpp
