@@ -232,12 +232,12 @@ namespace model {
   
   /*
   // If defaulted, return mchpHR 'Reference Thermal Efficiency Using Lower Heat Value' divided by mchp 'Reference Electrical Efficiency Using Lower Heating Value'
-  double GeneratorMicroTurbineHeatRecovery_Impl::ratedThermalToElectricalPowerRatio() const {
-    boost::optional<double> ratedThermalToElectricalPowerRatio = getDouble(GeneratorMicroTurbineHeatRecovery_Impl::RatedThermalToElectricalPowerRatio,true);
+  double GeneratorMicroTurbineHeatRecovery_Impl::ratedThermaltoElectricalPowerRatio() const {
+    boost::optional<double> ratedThermaltoElectricalPowerRatio = getDouble(GeneratorMicroTurbineHeatRecovery_Impl::RatedThermalToElectricalPowerRatio,true);
     // If there it's set
-    if (ratedThermalToElectricalPowerRatio) {
+    if (ratedThermaltoElectricalPowerRatio) {
       // Get it and return
-      return ratedThermalToElectricalPowerRatio.get();
+      return ratedThermaltoElectricalPowerRatio.get();
     }
     else {
       
@@ -247,7 +247,7 @@ namespace model {
     }
   }*/
   
-  double GeneratorMicroTurbineHeatRecovery_Impl::ratedThermalToElectricalPowerRatio() const {
+  double GeneratorMicroTurbineHeatRecovery_Impl::ratedThermaltoElectricalPowerRatio() const {
     boost::optional<double> value = getDouble(OS_Generator_MicroTurbine_HeatRecoveryFields::RatedThermaltoElectricalPowerRatio,true);
     OS_ASSERT(value);
     return value.get();
@@ -402,12 +402,12 @@ namespace model {
     OS_ASSERT(result);
   }
   
-  bool GeneratorMicroTurbineHeatRecovery_Impl::setRatedThermalToElectricalPowerRatio(double ratedThermalToElectricalPowerRatio) {
-    bool result = setDouble(OS_Generator_MicroTurbine_HeatRecoveryFields::RatedThermaltoElectricalPowerRatio, ratedThermalToElectricalPowerRatio);
+  bool GeneratorMicroTurbineHeatRecovery_Impl::setRatedThermaltoElectricalPowerRatio(double ratedThermaltoElectricalPowerRatio) {
+    bool result = setDouble(OS_Generator_MicroTurbine_HeatRecoveryFields::RatedThermaltoElectricalPowerRatio, ratedThermaltoElectricalPowerRatio);
     return result;
   }
 
-  void GeneratorMicroTurbineHeatRecovery_Impl::resetRatedThermalToElectricalPowerRatio() {
+  void GeneratorMicroTurbineHeatRecovery_Impl::resetRatedThermaltoElectricalPowerRatio() {
     bool result = setString(OS_Generator_MicroTurbine_HeatRecoveryFields::RatedThermaltoElectricalPowerRatio, "");
     OS_ASSERT(result);
   }
@@ -526,8 +526,8 @@ boost::optional<double> GeneratorMicroTurbineHeatRecovery::maximumHeatRecoveryWa
   return getImpl<detail::GeneratorMicroTurbineHeatRecovery_Impl>()->maximumHeatRecoveryWaterTemperature();
 }
 
-double GeneratorMicroTurbineHeatRecovery::ratedThermalToElectricalPowerRatio() const {
-  return getImpl<detail::GeneratorMicroTurbineHeatRecovery_Impl>()->ratedThermalToElectricalPowerRatio();
+double GeneratorMicroTurbineHeatRecovery::ratedThermaltoElectricalPowerRatio() const {
+  return getImpl<detail::GeneratorMicroTurbineHeatRecovery_Impl>()->ratedThermaltoElectricalPowerRatio();
 }
 
 bool GeneratorMicroTurbineHeatRecovery::isRatedThermalToElectricalPowerRatioDefaulted() const {
@@ -640,12 +640,12 @@ void GeneratorMicroTurbineHeatRecovery::resetMaximumHeatRecoveryWaterTemperature
   getImpl<detail::GeneratorMicroTurbineHeatRecovery_Impl>()->resetMaximumHeatRecoveryWaterTemperature();
 }
 
-bool GeneratorMicroTurbineHeatRecovery::setRatedThermalToElectricalPowerRatio(double ratedThermalToElectricalPowerRatio) {
-  return getImpl<detail::GeneratorMicroTurbineHeatRecovery_Impl>()->setRatedThermalToElectricalPowerRatio(ratedThermalToElectricalPowerRatio);
+bool GeneratorMicroTurbineHeatRecovery::setRatedThermaltoElectricalPowerRatio(double ratedThermaltoElectricalPowerRatio) {
+  return getImpl<detail::GeneratorMicroTurbineHeatRecovery_Impl>()->setRatedThermaltoElectricalPowerRatio(ratedThermaltoElectricalPowerRatio);
 }
 
-void GeneratorMicroTurbineHeatRecovery::resetRatedThermalToElectricalPowerRatio() {
-  getImpl<detail::GeneratorMicroTurbineHeatRecovery_Impl>()->resetRatedThermalToElectricalPowerRatio();
+void GeneratorMicroTurbineHeatRecovery::resetRatedThermaltoElectricalPowerRatio() {
+  getImpl<detail::GeneratorMicroTurbineHeatRecovery_Impl>()->resetRatedThermaltoElectricalPowerRatio();
 }
 
 

@@ -109,7 +109,7 @@ namespace detail {
 
     boost::optional<double> maximumHeatRecoveryWaterTemperature() const;
     
-    double ratedThermalToElectricalPowerRatio() const;
+    double ratedThermaltoElectricalPowerRatio() const;
     bool isRatedThermalToElectricalPowerRatioDefaulted() const;
 
     //@}
@@ -163,8 +163,8 @@ namespace detail {
     bool setMaximumHeatRecoveryWaterTemperature(double maximumHeatRecoveryWaterTemperature);
     void resetMaximumHeatRecoveryWaterTemperature();
     
-    bool setRatedThermalToElectricalPowerRatio(double ratedThermalToElectricalPowerRatio);
-    void resetRatedThermalToElectricalPowerRatio();
+    bool setRatedThermaltoElectricalPowerRatio(double ratedThermaltoElectricalPowerRatio);
+    void resetRatedThermaltoElectricalPowerRatio();
 
     //@}
     /** @name Other */

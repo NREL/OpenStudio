@@ -194,12 +194,18 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Generator_MicroTurbineFields::AvailabilityScheduleName);
   }
 
-  boost::optional<double> GeneratorMicroTurbine_Impl::ratedThermalToElectricalPowerRatio() const
+  boost::optional<double> GeneratorMicroTurbine_Impl::ratedThermaltoElectricalPowerRatio() const
   {
     // translated to ElectricLoadCenter:Generators 'Generator Rated Thermal to Electrical Power Ratio'
     //DLM: need to look into meaning of this field, is this heat recovery size divided by electrical power?
     // TODO: Use the GeneratorMicroTurbineHeatRecovery method
-    return boost::none;
+    boost::optional<GeneratorMicroTurbineHeatRecovery> mchpHR = this->generatorMicroTurbineHeatRecovery();
+    boost::optional<double> value;
+    
+    if (mchpHR) {
+        value = mchpHR->ratedThermaltoElectricalPowerRatio();
+    }
+    return value;
   }
 
   double GeneratorMicroTurbine_Impl::referenceElectricalPowerOutput() const {
@@ -760,6 +766,10 @@ std::vector<std::string> GeneratorMicroTurbine::validFuelTypeValues() {
 
 double GeneratorMicroTurbine::referenceElectricalPowerOutput() const {
   return getImpl<detail::GeneratorMicroTurbine_Impl>()->referenceElectricalPowerOutput();
+}
+
+boost::optional<double> GeneratorMicroTurbine::ratedThermaltoElectricalPowerRatio() const {
+  return getImpl<detail::GeneratorMicroTurbine_Impl>()->ratedThermaltoElectricalPowerRatio();
 }
 
 boost::optional<Schedule> GeneratorMicroTurbine::availabilitySchedule() const {
