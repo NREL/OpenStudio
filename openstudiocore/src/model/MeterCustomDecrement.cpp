@@ -92,7 +92,7 @@ namespace detail {
   
   // Source Meter Name
   std::string MeterCustomDecrement_Impl::sourceMeterName() const {
-    return getString(OS_Meter_CustomDecrementFields::SourceMeterName,true);
+    return getString(OS_Meter_CustomDecrementFields::SourceMeterName,true).get();
   }
   
   bool MeterCustomDecrement_Impl::setSourceMeterName(const std::string& sourceMeterName) {
