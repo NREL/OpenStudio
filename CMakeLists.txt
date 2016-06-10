@@ -507,7 +507,7 @@ if( WIN32 )
   set(SHELL_COMMAND cmd /C)
 endif()
 ExternalProject_Add(OpenStudio-workflow-gem
-  GIT_REPOSITORY http://github.com/NREL/OpenStudio-workflow-gem.git
+  GIT_REPOSITORY git://github.com/NREL/OpenStudio-workflow-gem.git
   GIT_TAG c2f6ed3b51515b512378c7a913537b43851e8229
   BUILD_IN_SOURCE 1
   CONFIGURE_COMMAND ""
