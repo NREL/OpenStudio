@@ -1,7 +1,7 @@
 
 OS:Version,
-  {7d8212eb-461a-4020-89ab-cf12cbe93283}, !- Handle
-  1.10.6;                                 !- Version Identifier
+  {dfbce37c-c912-4fbd-9c21-3bf0cddb3237}, !- Handle
+  1.11.4;                                 !- Version Identifier
 
 OS:Schedule:Constant,
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Handle
@@ -1417,18 +1417,18 @@ OS:Curve:Biquadratic,
   35;                                     !- Maximum Value of y
 
 OS:Curve:Biquadratic,
-  {6d4f917a-2262-4a69-9249-643fa85b4a69},          !- Handle
+  {6d4f917a-2262-4a69-9249-643fa85b4a69}, !- Handle
   Water Cooled Chiller EItoCoolingOutputRatioFofT, !- Name
-  0.934,                                           !- Coefficient1 Constant
-  -0.0582,                                         !- Coefficient2 x
-  0.0045,                                          !- Coefficient3 x**2
-  0.00243,                                         !- Coefficient4 y
-  0.000486,                                        !- Coefficient5 y**2
-  -0.00122,                                        !- Coefficient6 x*y
-  5,                                               !- Minimum Value of x
-  10,                                              !- Maximum Value of x
-  24,                                              !- Minimum Value of y
-  35;                                              !- Maximum Value of y
+  0.934,                                  !- Coefficient1 Constant
+  -0.0582,                                !- Coefficient2 x
+  0.0045,                                 !- Coefficient3 x**2
+  0.00243,                                !- Coefficient4 y
+  0.000486,                               !- Coefficient5 y**2
+  -0.00122,                               !- Coefficient6 x*y
+  5,                                      !- Minimum Value of x
+  10,                                     !- Maximum Value of x
+  24,                                     !- Minimum Value of y
+  35;                                     !- Maximum Value of y
 
 OS:Curve:Quadratic,
   {8a27fa33-c1e0-4351-b280-8b5a14b4d61c}, !- Handle
@@ -1455,10 +1455,10 @@ OS:Chiller:Electric:EIR,
   ,                                       !- Maximum Part Load Ratio
   ,                                       !- Optimum Part Load Ratio
   ,                                       !- Minimum Unloading Ratio
-  {556f1d22-0644-4bf3-a3b4-48616164fb71}, !- Chilled Water Inlet Node Name
-  {43ffb2e3-562e-41ee-aa64-71afb8c251bf}, !- Chilled Water Outlet Node Name
-  {4b4c85b1-9eee-496e-87a7-aa9226bf92cd}, !- Condenser Inlet Node Name
-  {3131fd05-66fc-4876-8181-fea5a22ec31d}, !- Condenser Outlet Node Name
+  ,                                       !- Chilled Water Inlet Node Name
+  ,                                       !- Chilled Water Outlet Node Name
+  ,                                       !- Condenser Inlet Node Name
+  ,                                       !- Condenser Outlet Node Name
   ,                                       !- Condenser Type
   ,                                       !- Condenser Fan Power Ratio {W/W}
   ,                                       !- Compressor Motor Efficiency
@@ -2679,6 +2679,10 @@ OS:ZoneHVAC:Baseboard:Convective:Electric,
 OS:Coil:Heating:Water:Baseboard,
   {4a34a74c-37f5-42da-b2e0-0526ce10d4c5}, !- Handle
   Baseboard HW Htg Coil,                  !- Name
+  HeatingDesignCapacity,                  !- Heating Design Capacity Method
+  Autosize,                               !- Heating Design Capacity {W}
+  0,                                      !- Heating Design Capacity Per Floor Area {W/m2}
+  0.8,                                    !- Fraction of Autosized Heating Design Capacity
   autosize,                               !- U-Factor Times Area Value {W/K}
   autosize,                               !- Maximum Water Flow Rate {m3/s}
   0.001,                                  !- Convergence Tolerance
@@ -9985,4 +9989,218 @@ OS:HeatPump:WaterToWater:EquationFit:Heating,
   1.29660976,                             !- Heating Compressor Power Coefficient 3
   -0.21629222,                            !- Heating Compressor Power Coefficient 4
   0.033862378;                            !- Heating Compressor Power Coefficient 5
+
+OS:Generator:MicroTurbine,
+  {e1c1a16d-3516-4bfc-a28f-e476c390dba8}, !- Handle
+  Capstone C65,                           !- Name
+  ,                                       !- Availability Schedule Name
+  65000,                                  !- Reference Electrical Power Output {W}
+  29900,                                  !- Minimum Full Load Electrical Power Output {W}
+  65000,                                  !- Maximum Full Load Electrical Power Output {W}
+  0.29,                                   !- Reference Electrical Efficiency Using Lower Heating Value
+  15,                                     !- Reference Combustion Air Inlet Temperature {C}
+  0.00638,                                !- Reference Combustion Air Inlet Humidity Ratio {kgWater/kgDryAir}
+  ,                                       !- Reference Elevation {m}
+  {c9105bf9-9695-49f7-bf28-0fd58e89d643}, !- Electrical Power Function of Temperature and Elevation Curve Name
+  {e1a078aa-61bd-4815-a685-eea8d903628a}, !- Electrical Efficiency Function of Temperature Curve Name
+  {b104fdc4-4789-46ef-9c36-3203cc9d9a1a}, !- Electrical Efficiency Function of Part Load Ratio Curve Name
+  NaturalGas,                             !- Fuel Type
+  50000,                                  !- Fuel Higher Heating Value {kJ/kg}
+  50000,                                  !- Fuel Lower Heating Value {kJ/kg}
+  300,                                    !- Standby Power {W}
+  4500,                                   !- Ancillary Power {W}
+  ,                                       !- Ancillary Power Function of Fuel Input Curve Name
+  {df27a080-7b09-441e-b133-7e1f029da76d}, !- Generator MicroTurbine Heat Recovery Name
+  ,                                       !- Combustion Air Inlet Node Name
+  ,                                       !- Combustion Air Outlet Node Name
+  0.489885,                               !- Reference Exhaust Air Mass Flow Rate {kg/s}
+  {ca7373d6-5361-472a-b566-72ac829cc582}, !- Exhaust Air Flow Rate Function of Temperature Curve Name
+  {3585dc88-5a7e-4433-9d26-4faa2eedd19a}, !- Exhaust Air Flow Rate Function of Part Load Ratio Curve Name
+  308.9,                                  !- Nominal Exhaust Air Outlet Temperature
+  {eea8cac9-de7b-4b35-955e-07f8b64f0d32}, !- Exhaust Air Temperature Function of Temperature Curve Name
+  {8dc626ee-b3f2-46cd-8a66-3bb8108865ff}; !- Exhaust Air Temperature Function of Part Load Ratio Curve Name
+
+OS:Curve:Biquadratic,
+  {e0c11b08-3a01-4dea-ab4a-42d5d26c8cf7}, !- Handle
+  Capstone C65 Power_vs_Temp_Elev, !- Name
+  1.2027697,                              !- Coefficient1 Constant
+  -0.009671305,                           !- Coefficient2 x
+  -4.860793e-006,                         !- Coefficient3 x**2
+  -0.0001542394,                          !- Coefficient4 y
+  9.111418e-009,                          !- Coefficient5 y**2
+  8.797885e-007,                          !- Coefficient6 x*y
+  -17.8,                                  !- Minimum Value of x
+  50,                                     !- Maximum Value of x
+  0,                                      !- Minimum Value of y
+  3050;                                   !- Maximum Value of y
+
+OS:Curve:Cubic,
+  {7141cd7e-2b91-4e32-9550-9701c03e9c2e}, !- Handle
+  Capstone C65 Efficiency_vs_Temp, !- Name
+  1.0402217,                              !- Coefficient1 Constant
+  -0.0017314,                             !- Coefficient2 x
+  -6.49704e-005,                          !- Coefficient3 x**2
+  5.133175e-007,                          !- Coefficient4 x**3
+  -20,                                    !- Minimum Value of x
+  50;                                     !- Maximum Value of x
+
+OS:Curve:Cubic,
+  {66d5ccff-e346-4b4a-b459-d33637320477}, !- Handle
+  Capstone C65 Efficiency_vs_PLR, !- Name
+  0.21529,                                !- Coefficient1 Constant
+  2.561463,                               !- Coefficient2 x
+  -3.24613,                               !- Coefficient3 x**2
+  1.497306,                               !- Coefficient4 x**3
+  0.03,                                   !- Minimum Value of x
+  1;                                      !- Maximum Value of x
+
+OS:Generator:MicroTurbine:HeatRecovery,
+  {df27a080-7b09-441e-b133-7e1f029da76d}, !- Handle
+  Capstone C65 HeatRecovery Module, !- Name
+  ,                                       !- Heat Recovery Water Inlet Node Name
+  ,                                       !- Heat Recovery Water Outlet Node Name
+  0.4975,                                 !- Reference Thermal Efficiency Using Lower Heat Value
+  60,                                     !- Reference Inlet Water Temperature {C}
+  PlantControl,                           !- Heat Recovery Water Flow Operating Mode
+  0.00252362,                             !- Reference Heat Recovery Water Flow Rate {m3/s}
+  ,                                       !- Heat Recovery Water Flow Rate Function of Temperature and Power Curve Name
+  {1307c530-9b49-4a13-912f-4f24a0aad0f2}, !- Thermal Efficiency Function of Temperature and Elevation Curve Name
+  {10843574-efdd-470b-9328-740c51047466}, !- Heat Recovery Rate Function of Part Load Ratio Curve Name
+  {06b67e09-c26b-470c-9a6e-6ca02e360d20}, !- Heat Recovery Rate Function of Inlet Water Temperature Curve Name
+  {ea15005e-47d1-45ba-b67a-065b9d8008f9}, !- Heat Recovery Rate Function of Water Flow Rate Curve Name
+  0.001577263,                            !- Minimum Heat Recovery Water Flow Rate {m3/s}
+  0.003785432,                            !- Maximum Heat Recovery Water Flow Rate {m3/s}
+  82.2,                                   !- Maximum Heat Recovery Water Temperature {C}
+  1.75;                                   !- Rated Thermal to Electrical Power Ratio
+
+OS:Curve:Biquadratic,
+  {c9105bf9-9695-49f7-bf28-0fd58e89d643}, !- Handle
+  Capstone C65 Power_vs_Temp_Elev,        !- Name
+  1.2027697,                              !- Coefficient1 Constant
+  -0.009671305,                           !- Coefficient2 x
+  -4.860793e-006,                         !- Coefficient3 x**2
+  -0.0001542394,                          !- Coefficient4 y
+  9.111418e-009,                          !- Coefficient5 y**2
+  8.797885e-007,                          !- Coefficient6 x*y
+  -17.8,                                  !- Minimum Value of x
+  50,                                     !- Maximum Value of x
+  0,                                      !- Minimum Value of y
+  3050;                                   !- Maximum Value of y
+
+OS:Curve:Cubic,
+  {e1a078aa-61bd-4815-a685-eea8d903628a}, !- Handle
+  Capstone C65 Efficiency_vs_Temp,        !- Name
+  1.0402217,                              !- Coefficient1 Constant
+  -0.0017314,                             !- Coefficient2 x
+  -6.49704e-005,                          !- Coefficient3 x**2
+  5.133175e-007,                          !- Coefficient4 x**3
+  -20,                                    !- Minimum Value of x
+  50;                                     !- Maximum Value of x
+
+OS:Curve:Cubic,
+  {b104fdc4-4789-46ef-9c36-3203cc9d9a1a}, !- Handle
+  Capstone C65 Efficiency_vs_PLR,         !- Name
+  0.21529,                                !- Coefficient1 Constant
+  2.561463,                               !- Coefficient2 x
+  -3.24613,                               !- Coefficient3 x**2
+  1.497306,                               !- Coefficient4 x**3
+  0.03,                                   !- Minimum Value of x
+  1;                                      !- Maximum Value of x
+
+OS:Curve:Bicubic,
+  {1307c530-9b49-4a13-912f-4f24a0aad0f2}, !- Handle
+  Capstone C65 ThermalEff_vs_Temp_Elev,   !- Name
+  0.93553794,                             !- Coefficient1 Constant
+  0.00541992,                             !- Coefficient2 x
+  -7.8902e-005,                           !- Coefficient3 x**2
+  -1.74338e-005,                          !- Coefficient4 y
+  -2.51197e-008,                          !- Coefficient5 y**2
+  -4.50373e-006,                          !- Coefficient6 x*y
+  1.49283e-006,                           !- Coefficient7 x**3
+  2.16866e-012,                           !- Coefficient8 y**3
+  1.93982e-008,                           !- Coefficient9 x**2*y
+  6.73429e-010,                           !- Coefficient10 x*y**2
+  -17.8,                                  !- Minimum Value of x
+  48.9,                                   !- Maximum Value of x
+  0,                                      !- Minimum Value of y
+  3048;                                   !- Maximum Value of y
+
+OS:Curve:Quadratic,
+  {10843574-efdd-470b-9328-740c51047466}, !- Handle
+  Capstone C65 HeatRecoveryRate_vs_PLR,   !- Name
+  0,                                      !- Coefficient1 Constant
+  1,                                      !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0.03,                                   !- Minimum Value of x
+  1;                                      !- Maximum Value of x
+
+OS:Curve:Quadratic,
+  {06b67e09-c26b-470c-9a6e-6ca02e360d20}, !- Handle
+  Capstone C65 HeatRecoveryRate_vs_InletTemp, !- Name
+  0.7516,                                 !- Coefficient1 Constant
+  0.00414,                                !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  29.44,                                  !- Minimum Value of x
+  85,                                     !- Maximum Value of x
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
+  Temperature,                            !- Input Unit Type for X
+  Dimensionless;                          !- Output Unit Type
+
+OS:Curve:Quadratic,
+  {ea15005e-47d1-45ba-b67a-065b9d8008f9}, !- Handle
+  Capstone C65 HeatRecoveryRate_vs_WaterFlow, !- Name
+  0.83,                                   !- Coefficient1 Constant
+  88.76138,                               !- Coefficient2 x
+  -8541.831,                              !- Coefficient3 x**2
+  0.001577263,                            !- Minimum Value of x
+  0.003785432,                            !- Maximum Value of x
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
+  VolumetricFlow,                         !- Input Unit Type for X
+  Dimensionless;                          !- Output Unit Type
+
+OS:Curve:Cubic,
+  {ca7373d6-5361-472a-b566-72ac829cc582}, !- Handle
+  Capstone C65 ExhAirFlowRate_vs_InletTemp, !- Name
+  0.9837417,                              !- Coefficient1 Constant
+  6.76623e-005,                           !- Coefficient2 x
+  5.35766e-005,                           !- Coefficient3 x**2
+  -2.12819e-006,                          !- Coefficient4 x**3
+  -20,                                    !- Minimum Value of x
+  50,                                     !- Maximum Value of x
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
+  Temperature,                            !- Input Unit Type for X
+  Dimensionless;                          !- Output Unit Type
+
+OS:Curve:Cubic,
+  {3585dc88-5a7e-4433-9d26-4faa2eedd19a}, !- Handle
+  Capstone C65 ExhAirFlowRate_vs_PLR,     !- Name
+  0.272074,                               !- Coefficient1 Constant
+  1.313337,                               !- Coefficient2 x
+  -1.0480845,                             !- Coefficient3 x**2
+  0.46216638,                             !- Coefficient4 x**3
+  0.03,                                   !- Minimum Value of x
+  1;                                      !- Maximum Value of x
+
+OS:Curve:Cubic,
+  {eea8cac9-de7b-4b35-955e-07f8b64f0d32}, !- Handle
+  Capstone C65 ExhaustTemp_vs_InletTemp,  !- Name
+  0.9246362,                              !- Coefficient1 Constant
+  0.0052553,                              !- Coefficient2 x
+  -1.97367e-005,                          !- Coefficient3 x**2
+  -5.66196e-007,                          !- Coefficient4 x**3
+  -20,                                    !- Minimum Value of x
+  50;                                     !- Maximum Value of x
+
+OS:Curve:Cubic,
+  {8dc626ee-b3f2-46cd-8a66-3bb8108865ff}, !- Handle
+  Capstone C65 ExhaustTemp_vs_PLR,        !- Name
+  0.59175,                                !- Coefficient1 Constant
+  0.87874,                                !- Coefficient2 x
+  -0.880443,                              !- Coefficient3 x**2
+  0.4107131,                              !- Coefficient4 x**3
+  0.03,                                   !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 

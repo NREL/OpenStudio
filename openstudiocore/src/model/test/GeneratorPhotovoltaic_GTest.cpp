@@ -49,7 +49,7 @@ TEST_F(ModelFixture, GeneratorPhotovoltaic_Simple) {
 
   EXPECT_FALSE(panel.ratedElectricPowerOutput());
   EXPECT_FALSE(panel.availabilitySchedule());
-  EXPECT_FALSE(panel.ratedThermalToElectricalPowerRatio());
+  EXPECT_FALSE(panel.ratedThermaltoElectricalPowerRatio());
   EXPECT_FALSE(panel.electricLoadCenterDistribution());
 
   Point3dVector points;
@@ -105,7 +105,7 @@ TEST_F(ModelFixture, GeneratorPhotovoltaic_OneDiode) {
 
   EXPECT_FALSE(panel.ratedElectricPowerOutput());
   EXPECT_FALSE(panel.availabilitySchedule());
-  EXPECT_FALSE(panel.ratedThermalToElectricalPowerRatio());
+  EXPECT_FALSE(panel.ratedThermaltoElectricalPowerRatio());
   EXPECT_FALSE(panel.electricLoadCenterDistribution());
 
   Point3dVector points;
