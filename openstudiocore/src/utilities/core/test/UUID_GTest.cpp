@@ -65,7 +65,8 @@ TEST(UUID, Constuctors)
 TEST(UUID, BigSet)
 {
   // create a bunch of uuids, insert into set, make sure no uuids collided
-  unsigned numUUIDS = 1000000;
+  //unsigned numUUIDS = 1000000;
+  unsigned numUUIDS = 1000;
   std::set<UUID> uuids;
 
   for(unsigned i=0; i < numUUIDS; ++i){

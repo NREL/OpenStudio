@@ -260,6 +260,24 @@ boost::optional<IdfObject> ForwardTranslator::translateChillerElectricEIR( Chill
     idfObject.setDouble(Chiller_Electric_EIRFields::SizingFactor,value.get());
   }
 
+  // HeatRecoveryInletNodeName
+  if( boost::optional<ModelObject> mo = modelObject.tertiaryInletModelObject() )
+  {
+    if( boost::optional<Node> node = mo->optionalCast<Node>() )
+    {
+      idfObject.setString(Chiller_Electric_EIRFields::HeatRecoveryInletNodeName,node->name().get());
+    }
+  }
+
+  // HeatRecoveryOutletNodeName
+  if( boost::optional<ModelObject> mo = modelObject.tertiaryOutletModelObject() )
+  {
+    if( boost::optional<Node> node = mo->optionalCast<Node>() )
+    {
+      idfObject.setString(Chiller_Electric_EIRFields::HeatRecoveryOutletNodeName,node->name().get());
+    }
+  }
+
   return boost::optional<IdfObject>(idfObject);
 }
 

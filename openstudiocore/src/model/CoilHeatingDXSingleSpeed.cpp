@@ -737,6 +737,17 @@ namespace detail {
     return false;
   }
 
+  double CoilHeatingDXSingleSpeed_Impl::ratedSupplyFanPowerPerVolumeFlowRate() const {
+    boost::optional<double> value = getDouble(OS_Coil_Heating_DX_SingleSpeedFields::RatedSupplyFanPowerPerVolumeFlowRate,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool CoilHeatingDXSingleSpeed_Impl::setRatedSupplyFanPowerPerVolumeFlowRate(double ratedSupplyFanPowerPerVolumeFlowRate) {
+    bool result = setDouble(OS_Coil_Heating_DX_SingleSpeedFields::RatedSupplyFanPowerPerVolumeFlowRate, ratedSupplyFanPowerPerVolumeFlowRate);
+    return result;
+  }
+
 } // detail
 
 CoilHeatingDXSingleSpeed::CoilHeatingDXSingleSpeed( const Model& model,
@@ -766,6 +777,8 @@ CoilHeatingDXSingleSpeed::CoilHeatingDXSingleSpeed( const Model& model,
   autosizeRatedTotalHeatingCapacity();
 
   autosizeRatedAirFlowRate();
+
+  setRatedSupplyFanPowerPerVolumeFlowRate(773.3);
 
   setRatedCOP(5.0);
 
@@ -837,6 +850,8 @@ CoilHeatingDXSingleSpeed::CoilHeatingDXSingleSpeed(const Model& model)
   autosizeRatedTotalHeatingCapacity();
 
   autosizeRatedAirFlowRate();
+
+  setRatedSupplyFanPowerPerVolumeFlowRate(773.3);
 
   setRatedCOP(5.0);
 
@@ -1120,6 +1135,13 @@ void CoilHeatingDXSingleSpeed::resetDefrostEnergyInputRatioFunctionofTemperature
   getImpl<detail::CoilHeatingDXSingleSpeed_Impl>()->setDefrostEnergyInputRatioFunctionofTemperatureCurve(boost::none);
 }
 
+double CoilHeatingDXSingleSpeed::ratedSupplyFanPowerPerVolumeFlowRate() const {
+  return getImpl<detail::CoilHeatingDXSingleSpeed_Impl>()->ratedSupplyFanPowerPerVolumeFlowRate();
+}
+
+bool CoilHeatingDXSingleSpeed::setRatedSupplyFanPowerPerVolumeFlowRate(double ratedSupplyFanPowerPerVolumeFlowRate) {
+  return getImpl<detail::CoilHeatingDXSingleSpeed_Impl>()->setRatedSupplyFanPowerPerVolumeFlowRate(ratedSupplyFanPowerPerVolumeFlowRate);
+}
 
 /// @cond
 CoilHeatingDXSingleSpeed::CoilHeatingDXSingleSpeed(std::shared_ptr<detail::CoilHeatingDXSingleSpeed_Impl> impl)

@@ -165,7 +165,7 @@ YearSettingsWidget::YearSettingsWidget(const model::Model & model, QWidget * par
   dstStartButtonGroup->addButton(m_dateStartButton);
   dstGridLayout->addWidget(m_dateStartButton,2,0);
   connect(m_dateStartButton, &QRadioButton::clicked, this, &YearSettingsWidget::onDefineStartByDateClicked);
-  m_startDateEdit = new QDateEdit();
+  m_startDateEdit = new QDateEdit(QDate(2009, 4, 1));
   m_startDateEdit->setCalendarPopup(true);
   dstGridLayout->addWidget(m_startDateEdit,2,1);
 
@@ -194,7 +194,7 @@ YearSettingsWidget::YearSettingsWidget(const model::Model & model, QWidget * par
   dstEndButtonGroup->addButton(m_dateEndButton);
   dstGridLayout->addWidget(m_dateEndButton,5,0);
   connect(m_dateEndButton, &QRadioButton::clicked, this, &YearSettingsWidget::onDefineEndByDateClicked);
-  m_endDateEdit = new QDateEdit();
+  m_endDateEdit = new QDateEdit(QDate(2009, 10, 1));
   m_endDateEdit->setCalendarPopup(true);
   dstGridLayout->addWidget(m_endDateEdit,5,1);
 
@@ -414,18 +414,18 @@ void YearSettingsWidget::refresh()
         m_startMonthBox->setCurrentIndex(startDate.monthOfYear().value() - 1);
 
         m_startDateEdit->setEnabled(false);
-        m_startDateEdit->setDate(qstartDate);
+        //m_startDateEdit->setDate(qstartDate);
       }else{
         m_dateStartButton->setChecked(true);
 
         m_startWeekBox->setEnabled(false);
-        m_startWeekBox->setCurrentIndex(nthDayOfWeekInMonth(startDate).value() - 1);
+        //m_startWeekBox->setCurrentIndex(nthDayOfWeekInMonth(startDate).value() - 1);
 
         m_startDayBox->setEnabled(false);
-        m_startDayBox->setCurrentIndex(startDate.dayOfWeek().value());
+        //m_startDayBox->setCurrentIndex(startDate.dayOfWeek().value());
 
         m_startMonthBox->setEnabled(false);
-        m_startMonthBox->setCurrentIndex(startDate.monthOfYear().value() - 1);
+        //m_startMonthBox->setCurrentIndex(startDate.monthOfYear().value() - 1);
 
         m_startDateEdit->setEnabled(true);
         m_startDateEdit->setDate(qstartDate);
@@ -452,18 +452,18 @@ void YearSettingsWidget::refresh()
         m_endMonthBox->setCurrentIndex(endDate.monthOfYear().value() - 1);
 
         m_endDateEdit->setEnabled(false);
-        m_endDateEdit->setDate(qendDate);
+        //m_endDateEdit->setDate(qendDate);
       }else{
         m_dateEndButton->setChecked(true);
 
         m_endWeekBox->setEnabled(false);
-        m_endWeekBox->setCurrentIndex(nthDayOfWeekInMonth(endDate).value() - 1);
+        //m_endWeekBox->setCurrentIndex(nthDayOfWeekInMonth(endDate).value() - 1);
 
         m_endDayBox->setEnabled(false);
-        m_endDayBox->setCurrentIndex(endDate.dayOfWeek().value());
+        //m_endDayBox->setCurrentIndex(endDate.dayOfWeek().value());
 
         m_endMonthBox->setEnabled(false);
-        m_endMonthBox->setCurrentIndex(endDate.monthOfYear().value() - 1);
+        //m_endMonthBox->setCurrentIndex(endDate.monthOfYear().value() - 1);
 
         m_endDateEdit->setEnabled(true);
         m_endDateEdit->setDate(qendDate);
@@ -635,7 +635,7 @@ void YearSettingsWidget::onDefineStartByDateClicked()
 
   m_startDateEdit->setEnabled(true);
 
-  m_startDateEdit->setDate(m_startDateEdit->date());
+  emit dstStartDateChanged(m_startDateEdit->date());
 }
 
 void YearSettingsWidget::onDefineEndByDateClicked()
@@ -648,7 +648,7 @@ void YearSettingsWidget::onDefineEndByDateClicked()
 
   m_endDateEdit->setEnabled(true);
 
-  m_endDateEdit->setDate(m_endDateEdit->date());
+  emit dstEndDateChanged(m_endDateEdit->date());
 }
 
 } // openstudio

@@ -202,7 +202,7 @@ TEST_F(UnitsFixture,OSQuantityVector_MathematicalOperators) {
   EXPECT_EQ(resultQ,resultVec.getQuantity(0));
   EXPECT_EQ(resultQ,resultVec.getQuantity(1));
 }
-
+/*
 TEST_F(UnitsFixture,OSQuantityVector_Profiling_Construction_QuantityVectorBaseCase) {
   for (unsigned i = 0, n = 100; i < n; ++i) {
     DoubleVector vals = toStandardVector(randVector(0.0,1.0,8760u));
@@ -213,7 +213,7 @@ TEST_F(UnitsFixture,OSQuantityVector_Profiling_Construction_QuantityVectorBaseCa
     }
   }
 }
-
+*/
 TEST_F(UnitsFixture,OSQuantityVector_Profiling_Construction_OSQuantityVector) {
   for (unsigned i = 0, n = 100; i < n; ++i) {
     DoubleVector vals = toStandardVector(randVector(0.0,1.0,8760u));
@@ -221,7 +221,7 @@ TEST_F(UnitsFixture,OSQuantityVector_Profiling_Construction_OSQuantityVector) {
     OSQuantityVector result(u,vals);
   }
 }
-
+/*
 TEST_F(UnitsFixture,OSQuantityVector_Profiling_Addition_QuantityVectorBaseCase) {
   for (unsigned i = 0, n = 10; i < n; ++i) {
     QuantityVector result(testQuantityVector);
@@ -231,14 +231,14 @@ TEST_F(UnitsFixture,OSQuantityVector_Profiling_Addition_QuantityVectorBaseCase) 
     }
   }
 }
-
+*/
 TEST_F(UnitsFixture,OSQuantityVector_Profiling_Addition_OSQuantityVector) {
   for (unsigned i = 0, n = 10; i < n; ++i) {
     Quantity other(10.0,createSIPower());
     OSQuantityVector result = testOSQuantityVector + other;
   }
 }
-
+/*
 TEST_F(UnitsFixture,OSQuantityVector_Profiling_Multiplication_QuantityVectorBaseCase) {
   for (unsigned i = 0, n = 10; i < n; ++i) {
     QuantityVector result(testQuantityVector);
@@ -248,7 +248,7 @@ TEST_F(UnitsFixture,OSQuantityVector_Profiling_Multiplication_QuantityVectorBase
     }
   }
 }
-
+*/
 TEST_F(UnitsFixture,OSQuantityVector_Profiling_Multiplication_OSQuantityVector) {
   for (unsigned i = 0, n = 10; i < n; ++i) {
     Quantity other(8.0,createWhTime());

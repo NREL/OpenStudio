@@ -28,6 +28,8 @@
 #include "../PlantLoop.hpp"
 #include "../Node.hpp"
 #include "../Node_Impl.hpp"
+#include "../Curve.hpp"
+#include "../Curve_Impl.hpp"
 #include "../AirLoopHVACZoneSplitter.hpp"
 
 using namespace openstudio;
@@ -66,6 +68,29 @@ TEST_F(ModelFixture,AirConditionerVariableRefrigerantFlow)
 
   boost::optional<AirConditionerVariableRefrigerantFlow> vrfClone = vrf.clone(m2).optionalCast<AirConditionerVariableRefrigerantFlow>(); 
   ASSERT_TRUE(vrfClone);
+
+  ASSERT_TRUE(vrfClone->coolingCapacityRatioModifierFunctionofLowTemperatureCurve());
+  ASSERT_TRUE(vrfClone->coolingCapacityRatioBoundaryCurve());
+  ASSERT_TRUE(vrfClone->coolingCapacityRatioModifierFunctionofHighTemperatureCurve());
+  ASSERT_TRUE(vrfClone->coolingEnergyInputRatioModifierFunctionofLowTemperatureCurve());
+  ASSERT_TRUE(vrfClone->coolingEnergyInputRatioBoundaryCurve());
+  ASSERT_TRUE(vrfClone->coolingEnergyInputRatioModifierFunctionofHighTemperatureCurve());
+  ASSERT_TRUE(vrfClone->coolingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve());
+  ASSERT_TRUE(vrfClone->coolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve());
+  ASSERT_TRUE(vrfClone->coolingCombinationRatioCorrectionFactorCurve());
+  ASSERT_TRUE(vrfClone->coolingPartLoadFractionCorrelationCurve());
+  ASSERT_TRUE(vrfClone->heatingCapacityRatioModifierFunctionofLowTemperatureCurve());
+  ASSERT_TRUE(vrfClone->heatingCapacityRatioBoundaryCurve());
+  ASSERT_TRUE(vrfClone->heatingCapacityRatioModifierFunctionofHighTemperatureCurve());
+  ASSERT_TRUE(vrfClone->heatingEnergyInputRatioModifierFunctionofLowTemperatureCurve());
+  ASSERT_TRUE(vrfClone->heatingEnergyInputRatioBoundaryCurve());
+  ASSERT_TRUE(vrfClone->heatingEnergyInputRatioModifierFunctionofHighTemperatureCurve());
+  ASSERT_TRUE(vrfClone->heatingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve());
+  ASSERT_TRUE(vrfClone->heatingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve());
+  ASSERT_TRUE(vrfClone->heatingCombinationRatioCorrectionFactorCurve());
+  ASSERT_TRUE(vrfClone->heatingPartLoadFractionCorrelationCurve());
+  ASSERT_TRUE(vrfClone->pipingCorrectionFactorforLengthinCoolingModeCurve());
+
 
   ASSERT_TRUE(vrfClone->terminals().empty()); 
 

@@ -31,6 +31,12 @@
 #include "../../model/SiteGroundReflectance_Impl.hpp"
 #include "../../model/SiteGroundTemperatureBuildingSurface.hpp"
 #include "../../model/SiteGroundTemperatureBuildingSurface_Impl.hpp"
+#include "../../model/SiteGroundTemperatureDeep.hpp"
+#include "../../model/SiteGroundTemperatureDeep_Impl.hpp"
+#include "../../model/SiteGroundTemperatureFCfactorMethod.hpp"
+#include "../../model/SiteGroundTemperatureFCfactorMethod_Impl.hpp"
+#include "../../model/SiteGroundTemperatureShallow.hpp"
+#include "../../model/SiteGroundTemperatureShallow_Impl.hpp"
 #include "../../model/SiteWaterMainsTemperature.hpp"
 #include "../../model/SiteWaterMainsTemperature_Impl.hpp"
 #include "../../model/Building.hpp"
@@ -71,6 +77,8 @@
 #include <resources.hxx>
 
 #include <sstream>
+
+#include <vector>
 
 using namespace openstudio::energyplus;
 using namespace openstudio::model;
@@ -309,7 +317,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorTest_TranslateStandardOpaqueMaterial) 
   mat.setSolarAbsorptance(0.7);
   mat.setVisibleAbsorptance(0.7);
 
-  
+
   ForwardTranslator trans;
   Workspace workspace = trans.translateModelObject(mat);
 
@@ -379,7 +387,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorTest_TranslateSite) {
   ForwardTranslator trans;
   Workspace workspace = trans.translateModelObject(site);
   ASSERT_EQ(1u, workspace.numObjectsOfType(IddObjectType::Site_Location));
-    
+
   IdfObject siteIdf = workspace.getObjectsByType(IddObjectType::Site_Location)[0];
   EXPECT_EQ(unsigned(5), siteIdf.numFields());
 
@@ -410,7 +418,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorTest_TranslateSiteGroundReflectance) {
   ForwardTranslator trans;
   Workspace workspace = trans.translateModelObject(groundreflect);
   ASSERT_EQ(1u, workspace.numObjectsOfType(IddObjectType::Site_GroundReflectance));
-    
+
   IdfObject groundreflectIdf = workspace.getObjectsByType(IddObjectType::Site_GroundReflectance)[0];
   EXPECT_EQ(unsigned(12), groundreflectIdf.numFields());
 
@@ -448,7 +456,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorTest_TranslateSiteGroundTemperatureBui
   ForwardTranslator trans;
   Workspace workspace = trans.translateModelObject(groundtemp);
   ASSERT_EQ(1u, workspace.numObjectsOfType(IddObjectType::Site_GroundTemperature_BuildingSurface));
-    
+
   IdfObject groundtempIdf = workspace.getObjectsByType(IddObjectType::Site_GroundTemperature_BuildingSurface)[0];
   EXPECT_EQ(unsigned(12), groundtempIdf.numFields());
 
@@ -466,6 +474,64 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorTest_TranslateSiteGroundTemperatureBui
   EXPECT_EQ( 19.633, *(groundtempIdf.getDouble(11)) );
 }
 
+TEST_F(EnergyPlusFixture, ForwardTranslatorTest_TranslateSiteGroundTemperatureDeep) {
+  openstudio::model::Model model;
+  openstudio::model::SiteGroundTemperatureDeep groundtemp = model.getUniqueModelObject<openstudio::model::SiteGroundTemperatureDeep>();
+
+  std::vector<double> monthly_temps = {19.527, 19.502, 19.536, 19.598, 20.002, 21.64, 22.225, 22.375, 21.449, 20.121, 19.802, 19.633};
+  groundtemp.setAllMonthlyTemperatures(monthly_temps);
+
+  ForwardTranslator trans;
+  Workspace workspace = trans.translateModelObject(groundtemp);
+  ASSERT_EQ(1u, workspace.numObjectsOfType(IddObjectType::Site_GroundTemperature_Deep));
+
+  IdfObject groundtempIdf = workspace.getObjectsByType(IddObjectType::Site_GroundTemperature_Deep)[0];
+  EXPECT_EQ(unsigned(12), groundtempIdf.numFields());
+
+  for (int i=0; i < 12; ++i) {
+    ASSERT_NEAR(monthly_temps[i], *groundtempIdf.getDouble(i), 0.001);
+  }
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslatorTest_TranslateSiteGroundTemperatureFCfactorMethod) {
+  openstudio::model::Model model;
+  openstudio::model::SiteGroundTemperatureFCfactorMethod groundtemp = model.getUniqueModelObject<openstudio::model::SiteGroundTemperatureFCfactorMethod>();
+
+  std::vector<double> monthly_temps = {19.527, 19.502, 19.536, 19.598, 20.002, 21.64, 22.225, 22.375, 21.449, 20.121, 19.802, 19.633};
+  groundtemp.setAllMonthlyTemperatures(monthly_temps);
+
+  ForwardTranslator trans;
+  Workspace workspace = trans.translateModelObject(groundtemp);
+  ASSERT_EQ(1u, workspace.numObjectsOfType(IddObjectType::Site_GroundTemperature_FCfactorMethod));
+
+  IdfObject groundtempIdf = workspace.getObjectsByType(IddObjectType::Site_GroundTemperature_FCfactorMethod)[0];
+  EXPECT_EQ(unsigned(12), groundtempIdf.numFields());
+
+  for (int i=0; i < 12; ++i) {
+    ASSERT_NEAR(monthly_temps[i], *groundtempIdf.getDouble(i), 0.001);
+  }
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslatorTest_TranslateSiteGroundTemperatureShallow) {
+  openstudio::model::Model model;
+  openstudio::model::SiteGroundTemperatureShallow groundtemp = model.getUniqueModelObject<openstudio::model::SiteGroundTemperatureShallow>();
+
+  std::vector<double> monthly_temps = {19.527, 19.502, 19.536, 19.598, 20.002, 21.64, 22.225, 22.375, 21.449, 20.121, 19.802, 19.633};
+  groundtemp.setAllMonthlyTemperatures(monthly_temps);
+
+  ForwardTranslator trans;
+  Workspace workspace = trans.translateModelObject(groundtemp);
+  ASSERT_EQ(1u, workspace.numObjectsOfType(IddObjectType::Site_GroundTemperature_Shallow));
+
+  IdfObject groundtempIdf = workspace.getObjectsByType(IddObjectType::Site_GroundTemperature_Shallow)[0];
+  EXPECT_EQ(unsigned(12), groundtempIdf.numFields());
+
+  for (int i=0; i < 12; ++i) {
+    ASSERT_NEAR(monthly_temps[i], *groundtempIdf.getDouble(i), 0.001);
+  }
+}
+
+
 TEST_F(EnergyPlusFixture,ForwardTranslatorTest_TranslateSiteWaterMainsTemperature) {
   openstudio::model::Model model;
   openstudio::model::SiteWaterMainsTemperature watertemp = model.getUniqueModelObject<openstudio::model::SiteWaterMainsTemperature>();
@@ -476,7 +542,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorTest_TranslateSiteWaterMainsTemperatur
   ForwardTranslator trans;
   Workspace workspace = trans.translateModelObject(watertemp);
   ASSERT_EQ(1u, workspace.numObjectsOfType(IddObjectType::Site_WaterMainsTemperature));
-    
+
   IdfObject watertempIdf = workspace.getObjectsByType(IddObjectType::Site_WaterMainsTemperature)[0];
   EXPECT_EQ(unsigned(4), watertempIdf.numFields());
 
@@ -488,16 +554,16 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorTest_TranslateSiteWaterMainsTemperatur
 
 /*
 TEST_F(EnergyPlusFixture,ForwardTranslatorTest_AllObjects) {
-  // ETH@20130319 - Would like to have a test like this so we can inspect common errors and warnings 
-  // (and eliminate false positives). However, right now translateModel throws (and throws and throws), 
+  // ETH@20130319 - Would like to have a test like this so we can inspect common errors and warnings
+  // (and eliminate false positives). However, right now translateModel throws (and throws and throws),
   // because AirLoopHVAC assumes that so many things are hooked up properly and now is not the time to
-  // wrap lots of different pieces of code in try-catches. 
+  // wrap lots of different pieces of code in try-catches.
   //
-  // Perhaps we can make a model and add a template HVAC, screen out object types already there, and 
+  // Perhaps we can make a model and add a template HVAC, screen out object types already there, and
   // then try to add default objects for the rest ... Or maybe this test should be able to run as-is?
-  // In other words, should ForwardTranslator be robust to missing related objects even if the App 
+  // In other words, should ForwardTranslator be robust to missing related objects even if the App
   // and the API try their darndest to keep that from happening? (Wherever related objects are assumed
-  // to exist (airLoopHVAC.sizingSystem() is the first one), we could wrap them in try-catch blocks and 
+  // to exist (airLoopHVAC.sizingSystem() is the first one), we could wrap them in try-catch blocks and
   // log translator errors rather than having the exceptions propagate out of ForwardTranslator.)
   Workspace ws;
   IddObjectVector iddObjects = IddFactory::instance().getObjects(IddFileType(IddFileType::OpenStudio));
@@ -516,7 +582,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorTest_MultiThreadedLogMessages) {
   // This thread calls forward translator, this is not a good example of threading
   // just used for testing
   class ForwardTranslatorThread : public QThread {
-  public: 
+  public:
 
     ForwardTranslator translator;
     Model model;
@@ -531,7 +597,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorTest_MultiThreadedLogMessages) {
       workspace = translator.translateModel(model);
     }
   };
-    
+
   Logger::instance().standardOutLogger().enable();
 
   Model model;
