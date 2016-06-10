@@ -611,17 +611,33 @@ elseif( APPLE )
   endif()
   list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}/qt_5_6_linux_64_static/lib/cmake")
 elseif( UNIX )
-  set(QT_TAR_LOCAL_PATH "${CMAKE_BINARY_DIR}/qt_5_6_linux_64_static.tar.gz")
-  file(MD5 ${QT_TAR_LOCAL_PATH} QT_TAR_MD5)
-  if( NOT QT_TAR_MD5 STREQUAL "4fd726173b801f34dc965ddbce53c193" )
-    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/qt_5_6_linux_64_static.tar.gz" 
-      ${QT_TAR_LOCAL_PATH} 
-      INACTIVITY_TIMEOUT 120 
-      SHOW_PROGRESS
-      EXPECTED_MD5 4fd726173b801f34dc965ddbce53c193)
-      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_TAR_LOCAL_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+  if(EXISTS "/etc/redhat-release")
+    # redhat
+    set(QT_TAR_LOCAL_PATH "${CMAKE_BINARY_DIR}/qt_5_6_redhat_64_static.tar.gz")
+    file(MD5 ${QT_TAR_LOCAL_PATH} QT_TAR_MD5)
+    if( NOT QT_TAR_MD5 STREQUAL "80347b74e964f17b01942e3645bab7c1" )
+      file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/qt_5_6_redhat_64_static.tar.gz" 
+        ${QT_TAR_LOCAL_PATH} 
+        INACTIVITY_TIMEOUT 120 
+        SHOW_PROGRESS
+        EXPECTED_MD5 80347b74e964f17b01942e3645bab7c1)
+        execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_TAR_LOCAL_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+    endif()
+    list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}/qt_5_6_redhat_64_static/lib/cmake")
+  else()
+    # ubuntu
+    set(QT_TAR_LOCAL_PATH "${CMAKE_BINARY_DIR}/qt_5_6_linux_64_static.tar.gz")
+    file(MD5 ${QT_TAR_LOCAL_PATH} QT_TAR_MD5)
+    if( NOT QT_TAR_MD5 STREQUAL "4fd726173b801f34dc965ddbce53c193" )
+      file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/qt_5_6_linux_64_static.tar.gz" 
+        ${QT_TAR_LOCAL_PATH} 
+        INACTIVITY_TIMEOUT 120 
+        SHOW_PROGRESS
+        EXPECTED_MD5 4fd726173b801f34dc965ddbce53c193)
+        execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_TAR_LOCAL_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+    endif()
+    list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}/qt_5_6_linux_64_static/lib/cmake")
   endif()
-  list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}/qt_5_6_linux_64_static/lib/cmake")
 endif()
 
 find_package(Qt5Core REQUIRED)
