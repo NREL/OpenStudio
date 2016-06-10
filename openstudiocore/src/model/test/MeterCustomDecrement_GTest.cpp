@@ -32,7 +32,7 @@ TEST_F(ModelFixture, MeterCustomDecrement_DefaultConstructor)
   ASSERT_EXIT ( 
   {  
     Model model;
-    MeterCustomDecrement testObject = MeterCustomDecrement(model);
+    MeterCustomDecrement testObject(model, "Electricity:Facility");
 
     exit(0); 
   } ,
@@ -57,7 +57,7 @@ TEST_F(ModelFixture, MeterCustomDecrement_KeyVarGroups)
   MeterCustomDecrement testObject(model, "Electricity:Facility");
   
   EXPECT_EQ("Electricity:Facility", testObject.sourceMeterName());
-  testObject.setSourceMeterName("Electricity:Building")
+  testObject.setSourceMeterName("Electricity:Building");
   EXPECT_EQ("Electricity:Building", testObject.sourceMeterName());
 
   std::vector< std::pair<std::string,std::string> > keyVarGroups = testObject.keyVarGroups();

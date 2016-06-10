@@ -69,7 +69,7 @@ boost::optional<IdfObject> ForwardTranslator::translateMeterCustomDecrement( Met
   }
   
   // FuelType
-  std::string sourceMeterName = modelObject.sourceMeterName()
+  std::string sourceMeterName = modelObject.sourceMeterName();
   if( (sourceMeterName) )
   {
     idfObject.setString(Meter_CustomDecrementFields::SourceMeterName,sourceMeterName);

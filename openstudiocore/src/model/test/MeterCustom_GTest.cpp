@@ -32,7 +32,7 @@ TEST_F(ModelFixture, MeterCustom_DefaultConstructor)
   ASSERT_EXIT ( 
   {  
     Model model;
-    MeterCustom testObject = MeterCustom(model);
+    MeterCustom testObject(model);
 
     exit(0); 
   } ,
