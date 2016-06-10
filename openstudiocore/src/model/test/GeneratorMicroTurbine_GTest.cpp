@@ -420,6 +420,14 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_HeatRecovery) {
   boost::optional<double> testmaxHRWT = mchpHR.maximumHeatRecoveryWaterTemperature();
   EXPECT_EQ((*testmaxHRWT),90);
   
+  // Test setRatedThermaltoElectricalPowerRatio
+  mchpHR.setRatedThermaltoElectricalPowerRatio(1.72);
+  EXPECT_EQ(1.72, mchpHR.ratedThermaltoElectricalPowerRatio());
+  
+  // Test the accessor from the mchp
+  boost::optional<double> ratedThermaltoElectricalPowerRatio = mchp.ratedThermaltoElectricalPowerRatio();
+  EXPECT_EQ((*ratedThermaltoElectricalPowerRatio),1.72);
+  
   // Test setting it to a microturbine and resetting
   mchp.setGeneratorMicroTurbineHeatRecovery(mchpHR);
   ASSERT_TRUE(mchp.generatorMicroTurbineHeatRecovery());
@@ -427,6 +435,8 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_HeatRecovery) {
   EXPECT_EQ(mchpHR.handle(), setmchpHR->handle());
   mchp.resetGeneratorMicroTurbineHeatRecovery();
   ASSERT_FALSE(mchp.generatorMicroTurbineHeatRecovery());
+  
+  
 }
 
 

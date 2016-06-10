@@ -110,7 +110,7 @@ namespace detail {
     boost::optional<double> maximumHeatRecoveryWaterTemperature() const;
     
     double ratedThermaltoElectricalPowerRatio() const;
-    bool isRatedThermalToElectricalPowerRatioDefaulted() const;
+    bool isRatedThermaltoElectricalPowerRatioDefaulted() const;
 
     //@}
     /** @name Setters */

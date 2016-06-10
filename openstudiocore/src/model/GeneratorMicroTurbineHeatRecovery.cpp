@@ -233,7 +233,7 @@ namespace model {
   /*
   // If defaulted, return mchpHR 'Reference Thermal Efficiency Using Lower Heat Value' divided by mchp 'Reference Electrical Efficiency Using Lower Heating Value'
   double GeneratorMicroTurbineHeatRecovery_Impl::ratedThermaltoElectricalPowerRatio() const {
-    boost::optional<double> ratedThermaltoElectricalPowerRatio = getDouble(GeneratorMicroTurbineHeatRecovery_Impl::RatedThermalToElectricalPowerRatio,true);
+    boost::optional<double> ratedThermaltoElectricalPowerRatio = getDouble(GeneratorMicroTurbineHeatRecovery_Impl::RatedThermaltoElectricalPowerRatio,true);
     // If there it's set
     if (ratedThermaltoElectricalPowerRatio) {
       // Get it and return
@@ -253,7 +253,7 @@ namespace model {
     return value.get();
   }
 
-  bool GeneratorMicroTurbineHeatRecovery_Impl::isRatedThermalToElectricalPowerRatioDefaulted() const {
+  bool GeneratorMicroTurbineHeatRecovery_Impl::isRatedThermaltoElectricalPowerRatioDefaulted() const {
     return isEmpty(OS_Generator_MicroTurbine_HeatRecoveryFields::RatedThermaltoElectricalPowerRatio);
   }
 
@@ -530,8 +530,8 @@ double GeneratorMicroTurbineHeatRecovery::ratedThermaltoElectricalPowerRatio() c
   return getImpl<detail::GeneratorMicroTurbineHeatRecovery_Impl>()->ratedThermaltoElectricalPowerRatio();
 }
 
-bool GeneratorMicroTurbineHeatRecovery::isRatedThermalToElectricalPowerRatioDefaulted() const {
-  return getImpl<detail::GeneratorMicroTurbineHeatRecovery_Impl>()->isRatedThermalToElectricalPowerRatioDefaulted();
+bool GeneratorMicroTurbineHeatRecovery::isRatedThermaltoElectricalPowerRatioDefaulted() const {
+  return getImpl<detail::GeneratorMicroTurbineHeatRecovery_Impl>()->isRatedThermaltoElectricalPowerRatioDefaulted();
 }
 
 

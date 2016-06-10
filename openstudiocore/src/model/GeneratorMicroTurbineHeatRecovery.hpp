@@ -96,7 +96,7 @@ class MODEL_API GeneratorMicroTurbineHeatRecovery : public StraightComponent {
   boost::optional<double> maximumHeatRecoveryWaterTemperature() const;
   
   double ratedThermaltoElectricalPowerRatio() const;
-  bool isRatedThermalToElectricalPowerRatioDefaulted() const;
+  bool isRatedThermaltoElectricalPowerRatioDefaulted() const;
 
   //@}
   /** @name Setters */
