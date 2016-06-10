@@ -55,6 +55,8 @@ class MODEL_API GeneratorMicroTurbine : public Generator {
   explicit GeneratorMicroTurbine(const Model& model);
 
   virtual ~GeneratorMicroTurbine() {}
+  
+  virtual boost::optional<double> ratedThermaltoElectricalPowerRatio() const;
 
   //@}
 
