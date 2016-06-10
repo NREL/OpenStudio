@@ -68,12 +68,9 @@ boost::optional<IdfObject> ForwardTranslator::translateMeterCustomDecrement( Met
     idfObject.setString(Meter_CustomDecrementFields::FuelType,s.get());
   }
   
-  // FuelType
+  // Source Meter Name
   std::string sourceMeterName = modelObject.sourceMeterName();
-  if( (sourceMeterName) )
-  {
-    idfObject.setString(Meter_CustomDecrementFields::SourceMeterName,sourceMeterName);
-  }
+  idfObject.setString(Meter_CustomDecrementFields::SourceMeterName,sourceMeterName);
   
   // Handle the (Key Name, Output Variable or Meter Name) pairs
   std::vector< std::pair<std::string, std::string> > keyVarGroups = modelObject.keyVarGroups();

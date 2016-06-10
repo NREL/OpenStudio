@@ -41,10 +41,16 @@ OptionalModelObject ReverseTranslator::translateMeterCustomDecrement( const Work
     return boost::none;
   }
 
-  // Create an OS:Meter:CustomDecrement object
-  MeterCustomDecrement meterCustomDecrement = MeterCustomDecrement( m_model );
+  // Source Meter Name: get it and pass it to the constructor
+  s = workspaceObject.getString(Meter_CustomDecrementFields::SourceMeterName);
+  if (s) {
+    // Create an OS:Meter:CustomDecrement object
+    meterCustomDecrement = MeterCustomDecrement(m_model, s.get());
+  } else {
+    LOG(Warn, workspaceObject.briefDescription() << " does not have a Source Meter Name which is required. It will not be translated!");
+  }
 
- 
+  
   // Name
   boost::optional<std::string> s = workspaceObject.getString(Meter_CustomDecrementFields::Name);
   if (s) {
@@ -58,12 +64,6 @@ OptionalModelObject ReverseTranslator::translateMeterCustomDecrement( const Work
     meterCustomDecrement.setFuelType(s.get());
   }
   
-  // Source Meter Name
-  s = workspaceObject.getString(Meter_CustomDecrementFields::sourceMeterName);
-  if (s) {
-    // TODO: this is a required field, does it return a non optional?
-    meterCustomDecrement.setSourceMeterName(s.get());
-  }
   
   // Get all the (key, var) extensible groups from IDF
   std::vector<IdfExtensibleGroup> keyVarGroups = workspaceObject.extensibleGroups();
