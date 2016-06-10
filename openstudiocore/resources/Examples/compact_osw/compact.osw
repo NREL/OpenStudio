@@ -17,6 +17,10 @@
 			"arguments": {
 				"flowPerZoneFloorArea": 10.76
 			}
+		},
+		{
+			"measure_dir_name": "Standard Reports",
+			"arguments": {}
 		}
 	]
 }
