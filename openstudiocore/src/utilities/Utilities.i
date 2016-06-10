@@ -13,7 +13,6 @@
 %import <utilities/core/CommonImport.i>
 
 %import <utilities/UtilitiesCore.i>
-%import <utilities/UtilitiesEconomics.i>
 %import <utilities/UtilitiesTime.i>
 %import <utilities/UtilitiesData.i>
 %import <utilities/UtilitiesPlot.i>
