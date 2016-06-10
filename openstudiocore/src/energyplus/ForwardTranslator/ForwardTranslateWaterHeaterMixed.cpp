@@ -266,7 +266,7 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterMixed( WaterHe
 
   // AmbientTemperatureOutdoorAirNodeName
   s = modelObject.ambientTemperatureOutdoorAirNodeName();
-  if( s ) {
+  if( s && ! s->empty() ) {
     IdfObject oaNodeList(openstudio::IddObjectType::OutdoorAir_NodeList);
     oaNodeList.setString(0,s.get());
     m_idfObjects.push_back(oaNodeList);
