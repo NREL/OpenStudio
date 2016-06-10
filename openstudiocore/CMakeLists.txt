@@ -703,15 +703,30 @@ endif()
 if( WIN32 )
   # This is a dirty hack and only works for release
   # clean this up
+  get_target_property(QtCore_LOCATION Qt5::Core LOCATION)
+  get_filename_component(QT_LIB_DIR ${QtCore_LOCATION} PATH)
+  
+  find_library(HARFBUZZ qtharfbuzzng PATHS ${QT_LIB_DIR} NO_DEFAULT_PATH)
+  find_library(PCRE qtpcre PATHS ${QT_LIB_DIR} NO_DEFAULT_PATH)
+  find_library(PLATFORM_SUPPORT Qt5PlatformSupport PATHS ${QT_LIB_DIR} NO_DEFAULT_PATH)
+  find_library(WIN_PLATFORM qwindows PATHS "${QT_LIB_DIR}/../plugins/platforms/" NO_DEFAULT_PATH)
+  find_library(SQLITE qsqlite PATHS "${QT_LIB_DIR}/../plugins/sqldrivers/" NO_DEFAULT_PATH)
+  mark_as_advanced(HARFBUZZ PCRE PLATFORM_SUPPORT WIN_PLATFORM SQLITE)
+  
+  list(APPEND QT_LIBS ${HARFBUZZ})
+  list(APPEND QT_LIBS ${PCRE})
+  list(APPEND QT_LIBS ${PLATFORM_SUPPORT})
+  list(APPEND QT_LIBS ${WIN_PLATFORM})
+  list(APPEND QT_LIBS ${SQLITE})
+  
   list(APPEND QT_LIBS Qt5::WinExtras)
   list(APPEND QT_LIBS wsock32)
   list(APPEND QT_LIBS ws2_32)
   list(APPEND QT_LIBS Crypt32)
   list(APPEND QT_LIBS iphlpapi)
-  list(APPEND QT_LIBS "${_qt5Widgets_install_prefix}/plugins/sqldrivers/qsqlite.lib")
-  list(APPEND QT_LIBS "${_qt5Widgets_install_prefix}/plugins/platforms/qwindows.lib")
-  list(APPEND QT_LIBS "${_qt5Widgets_install_prefix}/lib/qtpcre.lib")
-  list(APPEND QT_LIBS "${_qt5Widgets_install_prefix}/lib/qtharfbuzzng.lib")
+  list(APPEND QT_LIBS imm32)
+  list(APPEND QT_LIBS winmm)
+    
 endif()
 
 ###############################################################################
