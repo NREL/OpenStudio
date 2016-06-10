@@ -58,7 +58,6 @@
 
 // DLM: not sure how to do this right, think I only need this for static builds
 #include <QtPlugin>
-Q_IMPORT_PLUGIN(AccessibleFactory)
 Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin)
 
 #include "qwinwidget.h"
