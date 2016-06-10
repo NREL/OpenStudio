@@ -728,6 +728,8 @@ if( WIN32 )
   list(APPEND QT_LIBS iphlpapi)
   list(APPEND QT_LIBS imm32)
   list(APPEND QT_LIBS winmm)
+  list(APPEND QT_LIBS dbghelp)
+  list(APPEND QT_LIBS Shlwapi)
     
 endif()
 
