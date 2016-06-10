@@ -378,6 +378,9 @@ namespace openstudio {
   {
     m_model.getImpl<openstudio::model::detail::Model_Impl>()->blockSignals(true);
 
+    // close the project
+    m_simpleProject.reset();
+
     // release the file watchers so can remove model temp dir
     m_mainTabController.reset();
 
