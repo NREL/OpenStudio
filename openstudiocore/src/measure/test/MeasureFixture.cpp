@@ -41,6 +41,13 @@
 
 #include <cli/embedded_files.hxx>
 
+namespace embedded_files {
+  std::map<std::string, std::pair<size_t, const uint8_t *> > files()
+  {
+    return std::map<std::string, std::pair<size_t, const uint8_t *> >();
+  }
+}
+
 std::vector<std::string> paths;
 static RubyInterpreter rubyInterpreter(paths);//(paths);
 
