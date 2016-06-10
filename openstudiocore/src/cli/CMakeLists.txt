@@ -234,7 +234,7 @@ target_link_libraries(openstudio
  ##ruby_OpenStudioGBXML
  ruby_OpenStudioModelGenerators
  ##ruby_OpenStudioRadiance
- ruby_OpenStudioUtilitiesEconomics
+ #ruby_OpenStudioUtilitiesEconomics
  ruby_OpenStudioUtilitiesTime
  ##ruby_OpenStudioISOModel
  ruby_OpenStudioModelGeometry
