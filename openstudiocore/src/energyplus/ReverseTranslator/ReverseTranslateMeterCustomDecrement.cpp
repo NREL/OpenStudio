@@ -41,18 +41,23 @@ OptionalModelObject ReverseTranslator::translateMeterCustomDecrement( const Work
     return boost::none;
   }
 
+  boost::optional<MeterCustomDecrement> optMeterCustomDecrement;
+  boost::optional<std::string> s;
+
   // Source Meter Name: get it and pass it to the constructor
   s = workspaceObject.getString(Meter_CustomDecrementFields::SourceMeterName);
   if (s) {
     // Create an OS:Meter:CustomDecrement object
-    meterCustomDecrement = MeterCustomDecrement(m_model, s.get());
+    optMeterCustomDecrement = MeterCustomDecrement(m_model, s.get());
   } else {
-    LOG(Warn, workspaceObject.briefDescription() << " does not have a Source Meter Name which is required. It will not be translated!");
+    LOG(Error, workspaceObject.briefDescription() << " does not have a Source Meter Name which is required. It will not be translated!");
   }
+
+  MeterCustomDecrement meterCustomDecrement = optMeterCustomDecrement.get();
 
   
   // Name
-  boost::optional<std::string> s = workspaceObject.getString(Meter_CustomDecrementFields::Name);
+  s = workspaceObject.getString(Meter_CustomDecrementFields::Name);
   if (s) {
     meterCustomDecrement.setName(s.get());
   }
