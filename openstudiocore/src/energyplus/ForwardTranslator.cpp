@@ -2865,6 +2865,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
 
   result.push_back(IddObjectType::OS_Meter);
   result.push_back(IddObjectType::OS_Meter_Custom);
+  result.push_back(IddObjectType::OS_Meter_CustomDecrement);
   result.push_back(IddObjectType::OS_Output_Variable);
 
   return result;
