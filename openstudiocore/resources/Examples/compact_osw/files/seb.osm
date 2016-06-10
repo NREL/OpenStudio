@@ -1,85 +1,85 @@
 
 OS:Version,
-  {b07c0377-e6ef-4205-ae8f-edcaa3bcf497}, !- Handle
-  1.11.4;                                 !- Version Identifier
+  {b6485fa5-89f9-455b-8f31-829835129aa5}, !- Handle
+  1.5.3;                                  !- Version Identifier
 
 OS:ScheduleTypeLimits,
   {bc3c52d5-c0e6-4771-9027-386c816456db}, !- Handle
   Lights Schedule Type Limits,            !- Name
-  0,                                      !- Lower Limit Value
-  1,                                      !- Upper Limit Value
+  0,                                      !- Lower Limit Value {BasedOnField A4}
+  1,                                      !- Upper Limit Value {BasedOnField A4}
   Continuous,                             !- Numeric Type
   Dimensionless;                          !- Unit Type
 
 OS:ScheduleTypeLimits,
   {020c7f69-3bc5-4dfc-8132-72ed164b700e}, !- Handle
   Occupancy Schedule Type Limits,         !- Name
-  0,                                      !- Lower Limit Value
-  1,                                      !- Upper Limit Value
+  0,                                      !- Lower Limit Value {BasedOnField A4}
+  1,                                      !- Upper Limit Value {BasedOnField A4}
   Continuous,                             !- Numeric Type
   Dimensionless;                          !- Unit Type
 
 OS:ScheduleTypeLimits,
   {26900520-e14b-428e-88ba-610173aa0fcb}, !- Handle
   People Activity Type Limits,            !- Name
-  0,                                      !- Lower Limit Value
-  ,                                       !- Upper Limit Value
+  0,                                      !- Lower Limit Value {BasedOnField A4}
+  ,                                       !- Upper Limit Value {BasedOnField A4}
   Continuous,                             !- Numeric Type
   ActivityLevel;                          !- Unit Type
 
 OS:ScheduleTypeLimits,
   {e2402aec-fbd3-41ce-a7d2-b49b85f99285}, !- Handle
   Equipment Schedule Type Limits,         !- Name
-  0,                                      !- Lower Limit Value
-  1,                                      !- Upper Limit Value
+  0,                                      !- Lower Limit Value {BasedOnField A4}
+  1,                                      !- Upper Limit Value {BasedOnField A4}
   Continuous,                             !- Numeric Type
   Dimensionless;                          !- Unit Type
 
 OS:ScheduleTypeLimits,
   {ec1fd10c-3094-42e5-9e7e-b60118ba2574}, !- Handle
   Water Use Schedule Type Limits,         !- Name
-  0,                                      !- Lower Limit Value
-  1,                                      !- Upper Limit Value
+  0,                                      !- Lower Limit Value {BasedOnField A4}
+  1,                                      !- Upper Limit Value {BasedOnField A4}
   Continuous,                             !- Numeric Type
   Dimensionless;                          !- Unit Type
 
 OS:ScheduleTypeLimits,
   {8a007b9e-2e7d-4999-b119-571945417859}, !- Handle
   Elevators Schedule Type Limits,         !- Name
-  0,                                      !- Lower Limit Value
-  1,                                      !- Upper Limit Value
+  0,                                      !- Lower Limit Value {BasedOnField A4}
+  1,                                      !- Upper Limit Value {BasedOnField A4}
   Continuous,                             !- Numeric Type
   Dimensionless;                          !- Unit Type
 
 OS:ScheduleTypeLimits,
   {07fb58aa-a09f-435b-9ff8-50f83703f6a7}, !- Handle
   Process Loads Schedule Type Limits,     !- Name
-  0,                                      !- Lower Limit Value
-  1,                                      !- Upper Limit Value
+  0,                                      !- Lower Limit Value {BasedOnField A4}
+  1,                                      !- Upper Limit Value {BasedOnField A4}
   Continuous,                             !- Numeric Type
   Dimensionless;                          !- Unit Type
 
 OS:ScheduleTypeLimits,
   {7ff33d4a-ae5b-414f-8917-18110c7f1996}, !- Handle
   Thermostat Heating Setpoint Schedule Type Limits, !- Name
-  0,                                      !- Lower Limit Value
-  100,                                    !- Upper Limit Value
+  0,                                      !- Lower Limit Value {BasedOnField A4}
+  100,                                    !- Upper Limit Value {BasedOnField A4}
   Continuous,                             !- Numeric Type
   Temperature;                            !- Unit Type
 
 OS:ScheduleTypeLimits,
   {4216fcfc-3c3e-4f43-bd50-87f6375e2ddb}, !- Handle
   Thermostat Cooling Setpoint Schedule Type Limits, !- Name
-  0,                                      !- Lower Limit Value
-  100,                                    !- Upper Limit Value
+  0,                                      !- Lower Limit Value {BasedOnField A4}
+  100,                                    !- Upper Limit Value {BasedOnField A4}
   Continuous,                             !- Numeric Type
   Temperature;                            !- Unit Type
 
 OS:ScheduleTypeLimits,
   {5d7ea16b-1b69-4c47-bbb5-2b5de286f131}, !- Handle
   HVAC Operation Schedule Type Limits,    !- Name
-  0,                                      !- Lower Limit Value
-  1,                                      !- Upper Limit Value
+  0,                                      !- Lower Limit Value {BasedOnField A4}
+  1,                                      !- Upper Limit Value {BasedOnField A4}
   Discrete,                               !- Numeric Type
   Availability;                           !- Unit Type
 
@@ -1221,8 +1221,8 @@ OS:Schedule:Constant,
 OS:ScheduleTypeLimits,
   {49a68fe9-5b5a-45c8-83b8-09570dd013f2}, !- Handle
   Schedule Type Limits 1,                 !- Name
-  0,                                      !- Lower Limit Value
-  1,                                      !- Upper Limit Value
+  0,                                      !- Lower Limit Value {BasedOnField A4}
+  1,                                      !- Upper Limit Value {BasedOnField A4}
   Discrete,                               !- Numeric Type
   Availability;                           !- Unit Type
 
@@ -1470,12 +1470,8 @@ OS:PortList,
 OS:Sizing:Zone,
   {b4a1916e-afdc-4f63-ac7d-50b493691235}, !- Handle
   {62523a5c-b2fe-498f-b36c-5e31dceee4cf}, !- Zone or ZoneList Name
-  SupplyAirTemperature,                   !- Zone Cooling Design Supply Air Temperature Input Method
   12.7777777777778,                       !- Zone Cooling Design Supply Air Temperature {C}
-  11.11,                                  !- Zone Cooling Design Supply Air Temperature Difference {deltaC}
-  SupplyAirTemperature,                   !- Zone Heating Design Supply Air Temperature Input Method
   40.0000000000001,                       !- Zone Heating Design Supply Air Temperature {C}
-  11.11,                                  !- Zone Heating Design Supply Air Temperature Difference {deltaC}
   0.0085,                                 !- Zone Cooling Design Supply Air Humidity Ratio {kg-H2O/kg-air}
   0.008,                                  !- Zone Heating Design Supply Air Humidity Ratio {kg-H2O/kg-air}
   ,                                       !- Zone Heating Sizing Factor
@@ -1491,11 +1487,7 @@ OS:Sizing:Zone,
   0.14158423296,                          !- Heating Maximum Air Flow {m3/s}
   0.3,                                    !- Heating Maximum Air Flow Fraction
   1,                                      !- Design Zone Air Distribution Effectiveness in Cooling Mode
-  1,                                      !- Design Zone Air Distribution Effectiveness in Heating Mode
-  No,                                     !- Account for Dedicated Outdoor Air System
-  NeutralSupplyAir,                       !- Dedicated Outdoor Air System Control Strategy
-  Autosize,                               !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
-  Autosize;                               !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
+  1;                                      !- Design Zone Air Distribution Effectiveness in Heating Mode
 
 OS:ZoneHVAC:EquipmentList,
   {72515752-be56-4f06-8a67-071cc1c82ed5}, !- Handle
@@ -1568,8 +1560,8 @@ OS:Schedule:Day,
 OS:ScheduleTypeLimits,
   {c7a7a0af-8911-4250-aff1-a898c3d2f8ad}, !- Handle
   Fractional,                             !- Name
-  0,                                      !- Lower Limit Value
-  1,                                      !- Upper Limit Value
+  0,                                      !- Lower Limit Value {BasedOnField A4}
+  1,                                      !- Upper Limit Value {BasedOnField A4}
   Continuous;                             !- Numeric Type
 
 OS:Schedule:Ruleset,
@@ -1802,8 +1794,8 @@ OS:People,
 OS:ScheduleTypeLimits,
   {0de5c0e5-7c62-4048-8368-a0fe85bdab6d}, !- Handle
   ActivityLevel,                          !- Name
-  0,                                      !- Lower Limit Value
-  ,                                       !- Upper Limit Value
+  0,                                      !- Lower Limit Value {BasedOnField A4}
+  ,                                       !- Upper Limit Value {BasedOnField A4}
   Continuous,                             !- Numeric Type
   ActivityLevel;                          !- Unit Type
 
@@ -1974,12 +1966,8 @@ OS:PortList,
 OS:Sizing:Zone,
   {82ffb5aa-326d-4bee-9fc0-f49cd6367c77}, !- Handle
   {5d2d3c71-5e39-4a6e-a74e-72ab82165a49}, !- Zone or ZoneList Name
-  SupplyAirTemperature,                   !- Zone Cooling Design Supply Air Temperature Input Method
   12.7777777777778,                       !- Zone Cooling Design Supply Air Temperature {C}
-  11.11,                                  !- Zone Cooling Design Supply Air Temperature Difference {deltaC}
-  SupplyAirTemperature,                   !- Zone Heating Design Supply Air Temperature Input Method
   40.0000000000001,                       !- Zone Heating Design Supply Air Temperature {C}
-  11.11,                                  !- Zone Heating Design Supply Air Temperature Difference {deltaC}
   0.0085,                                 !- Zone Cooling Design Supply Air Humidity Ratio {kg-H2O/kg-air}
   0.008,                                  !- Zone Heating Design Supply Air Humidity Ratio {kg-H2O/kg-air}
   ,                                       !- Zone Heating Sizing Factor
@@ -1995,11 +1983,7 @@ OS:Sizing:Zone,
   ,                                       !- Heating Maximum Air Flow {m3/s}
   ,                                       !- Heating Maximum Air Flow Fraction
   ,                                       !- Design Zone Air Distribution Effectiveness in Cooling Mode
-  ,                                       !- Design Zone Air Distribution Effectiveness in Heating Mode
-  No,                                     !- Account for Dedicated Outdoor Air System
-  NeutralSupplyAir,                       !- Dedicated Outdoor Air System Control Strategy
-  Autosize,                               !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
-  Autosize;                               !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
+  ;                                       !- Design Zone Air Distribution Effectiveness in Heating Mode
 
 OS:ZoneHVAC:EquipmentList,
   {ff0e803b-bd03-49c0-9e7f-ae4681823092}, !- Handle
@@ -3231,8 +3215,8 @@ OS:Curve:Cubic,
   0.027626,                               !- Coefficient2 x
   0.000148716,                            !- Coefficient3 x**2
   3.4992e-006,                            !- Coefficient4 x**3
-  -20,                                    !- Minimum Value of x
-  20;                                     !- Maximum Value of x
+  -20,                                    !- Minimum Value of x {BasedOnField A2}
+  20;                                     !- Maximum Value of x {BasedOnField A2}
 
 OS:Curve:Cubic,
   {241d319a-8104-4003-8387-fcb2cbbf04d0}, !- Handle
@@ -3241,8 +3225,8 @@ OS:Curve:Cubic,
   0.16,                                   !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
   0,                                      !- Coefficient4 x**3
-  0.5,                                    !- Minimum Value of x
-  1.5;                                    !- Maximum Value of x
+  0.5,                                    !- Minimum Value of x {BasedOnField A2}
+  1.5;                                    !- Maximum Value of x {BasedOnField A2}
 
 OS:Curve:Cubic,
   {76a3a14d-aba1-4ca0-bd2e-39c6ffc821c7}, !- Handle
@@ -3251,8 +3235,8 @@ OS:Curve:Cubic,
   -0.0300438,                             !- Coefficient2 x
   0.00103745,                             !- Coefficient3 x**2
   -2.3328e-005,                           !- Coefficient4 x**3
-  -20,                                    !- Minimum Value of x
-  20;                                     !- Maximum Value of x
+  -20,                                    !- Minimum Value of x {BasedOnField A2}
+  20;                                     !- Maximum Value of x {BasedOnField A2}
 
 OS:Curve:Quadratic,
   {8a268077-02ad-4788-b04a-a26487d5b3f2}, !- Handle
@@ -3260,8 +3244,8 @@ OS:Curve:Quadratic,
   1.3824,                                 !- Coefficient1 Constant
   -0.4336,                                !- Coefficient2 x
   0.0512,                                 !- Coefficient3 x**2
-  0,                                      !- Minimum Value of x
-  1;                                      !- Maximum Value of x
+  0,                                      !- Minimum Value of x {BasedOnField A2}
+  1;                                      !- Maximum Value of x {BasedOnField A2}
 
 OS:Curve:Quadratic,
   {8847b177-031e-44f0-9659-2ad312eae35c}, !- Handle
@@ -3269,8 +3253,8 @@ OS:Curve:Quadratic,
   0.75,                                   !- Coefficient1 Constant
   0.25,                                   !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0,                                      !- Minimum Value of x
-  1;                                      !- Maximum Value of x
+  0,                                      !- Minimum Value of x {BasedOnField A2}
+  1;                                      !- Maximum Value of x {BasedOnField A2}
 
 OS:Curve:Biquadratic,
   {3533a613-6e64-44f3-ad28-090f54dfee84}, !- Handle
@@ -3281,10 +3265,10 @@ OS:Curve:Biquadratic,
   0.00333,                                !- Coefficient4 y
   -8e-005,                                !- Coefficient5 y**2
   -0.00021,                               !- Coefficient6 x*y
-  17,                                     !- Minimum Value of x
-  22,                                     !- Maximum Value of x
-  13,                                     !- Minimum Value of y
-  46;                                     !- Maximum Value of y
+  17,                                     !- Minimum Value of x {BasedOnField A2}
+  22,                                     !- Maximum Value of x {BasedOnField A2}
+  13,                                     !- Minimum Value of y {BasedOnField A3}
+  46;                                     !- Maximum Value of y {BasedOnField A3}
 
 OS:Curve:Quadratic,
   {da8bad0d-4d96-4f97-aa83-231acbe7b1da}, !- Handle
@@ -3292,8 +3276,8 @@ OS:Curve:Quadratic,
   0.77136,                                !- Coefficient1 Constant
   0.34053,                                !- Coefficient2 x
   -0.11088,                               !- Coefficient3 x**2
-  0.75918,                                !- Minimum Value of x
-  1.13877;                                !- Maximum Value of x
+  0.75918,                                !- Minimum Value of x {BasedOnField A2}
+  1.13877;                                !- Maximum Value of x {BasedOnField A2}
 
 OS:Curve:Biquadratic,
   {330fc5bb-b82d-458d-ace7-c9bed57c57ad}, !- Handle
@@ -3304,10 +3288,10 @@ OS:Curve:Biquadratic,
   -0.01434,                               !- Coefficient4 y
   0.00063,                                !- Coefficient5 y**2
   -0.00038,                               !- Coefficient6 x*y
-  17,                                     !- Minimum Value of x
-  22,                                     !- Maximum Value of x
-  13,                                     !- Minimum Value of y
-  46;                                     !- Maximum Value of y
+  17,                                     !- Minimum Value of x {BasedOnField A2}
+  22,                                     !- Maximum Value of x {BasedOnField A2}
+  13,                                     !- Minimum Value of y {BasedOnField A3}
+  46;                                     !- Maximum Value of y {BasedOnField A3}
 
 OS:Curve:Quadratic,
   {c8aad538-be90-4fd8-bccb-0772a9734993}, !- Handle
@@ -3315,8 +3299,8 @@ OS:Curve:Quadratic,
   1.2055,                                 !- Coefficient1 Constant
   -0.32953,                               !- Coefficient2 x
   0.12308,                                !- Coefficient3 x**2
-  0.75918,                                !- Minimum Value of x
-  1.13877;                                !- Maximum Value of x
+  0.75918,                                !- Minimum Value of x {BasedOnField A2}
+  1.13877;                                !- Maximum Value of x {BasedOnField A2}
 
 OS:Curve:Quadratic,
   {9207a676-6753-4c32-ad42-191977c02edd}, !- Handle
@@ -3324,8 +3308,8 @@ OS:Curve:Quadratic,
   0.771,                                  !- Coefficient1 Constant
   0.229,                                  !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0,                                      !- Minimum Value of x
-  1;                                      !- Maximum Value of x
+  0,                                      !- Minimum Value of x {BasedOnField A2}
+  1;                                      !- Maximum Value of x {BasedOnField A2}
 
 OS:Curve:Biquadratic,
   {e499bb3c-dfd5-4f89-ae4e-595c0bdbabb4}, !- Handle
@@ -3336,10 +3320,10 @@ OS:Curve:Biquadratic,
   0.00333,                                !- Coefficient4 y
   -8e-005,                                !- Coefficient5 y**2
   -0.00021,                               !- Coefficient6 x*y
-  17,                                     !- Minimum Value of x
-  22,                                     !- Maximum Value of x
-  13,                                     !- Minimum Value of y
-  46;                                     !- Maximum Value of y
+  17,                                     !- Minimum Value of x {BasedOnField A2}
+  22,                                     !- Maximum Value of x {BasedOnField A2}
+  13,                                     !- Minimum Value of y {BasedOnField A3}
+  46;                                     !- Maximum Value of y {BasedOnField A3}
 
 OS:Curve:Quadratic,
   {0da68818-71fb-4c51-b4e7-e561918b8741}, !- Handle
@@ -3347,8 +3331,8 @@ OS:Curve:Quadratic,
   0.77136,                                !- Coefficient1 Constant
   0.34053,                                !- Coefficient2 x
   -0.11088,                               !- Coefficient3 x**2
-  0.75918,                                !- Minimum Value of x
-  1.13877;                                !- Maximum Value of x
+  0.75918,                                !- Minimum Value of x {BasedOnField A2}
+  1.13877;                                !- Maximum Value of x {BasedOnField A2}
 
 OS:Curve:Biquadratic,
   {c6336887-ba04-40c8-b61b-0dac2f608ba9}, !- Handle
@@ -3359,10 +3343,10 @@ OS:Curve:Biquadratic,
   -0.01434,                               !- Coefficient4 y
   0.00063,                                !- Coefficient5 y**2
   -0.00038,                               !- Coefficient6 x*y
-  17,                                     !- Minimum Value of x
-  22,                                     !- Maximum Value of x
-  13,                                     !- Minimum Value of y
-  46;                                     !- Maximum Value of y
+  17,                                     !- Minimum Value of x {BasedOnField A2}
+  22,                                     !- Maximum Value of x {BasedOnField A2}
+  13,                                     !- Minimum Value of y {BasedOnField A3}
+  46;                                     !- Maximum Value of y {BasedOnField A3}
 
 OS:Curve:Quadratic,
   {baf23087-24a9-4e66-8bef-01b2b44f8f79}, !- Handle
@@ -3370,8 +3354,8 @@ OS:Curve:Quadratic,
   1.2055,                                 !- Coefficient1 Constant
   -0.32953,                               !- Coefficient2 x
   0.12308,                                !- Coefficient3 x**2
-  0.75918,                                !- Minimum Value of x
-  1.13877;                                !- Maximum Value of x
+  0.75918,                                !- Minimum Value of x {BasedOnField A2}
+  1.13877;                                !- Maximum Value of x {BasedOnField A2}
 
 OS:Curve:Quadratic,
   {2290201c-c056-4f9a-95c1-ecf54686b440}, !- Handle
@@ -3379,8 +3363,8 @@ OS:Curve:Quadratic,
   0.771,                                  !- Coefficient1 Constant
   0.229,                                  !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0,                                      !- Minimum Value of x
-  1;                                      !- Maximum Value of x
+  0,                                      !- Minimum Value of x {BasedOnField A2}
+  1;                                      !- Maximum Value of x {BasedOnField A2}
 
 OS:Curve:Biquadratic,
   {d83130b2-e383-44ab-8d31-d26051fd591f}, !- Handle
@@ -3391,10 +3375,10 @@ OS:Curve:Biquadratic,
   0.00333,                                !- Coefficient4 y
   -8e-005,                                !- Coefficient5 y**2
   -0.00021,                               !- Coefficient6 x*y
-  17,                                     !- Minimum Value of x
-  22,                                     !- Maximum Value of x
-  13,                                     !- Minimum Value of y
-  46;                                     !- Maximum Value of y
+  17,                                     !- Minimum Value of x {BasedOnField A2}
+  22,                                     !- Maximum Value of x {BasedOnField A2}
+  13,                                     !- Minimum Value of y {BasedOnField A3}
+  46;                                     !- Maximum Value of y {BasedOnField A3}
 
 OS:Curve:Biquadratic,
   {f923482d-cda6-4746-a4b9-18875e5dc1c5}, !- Handle
@@ -3405,26 +3389,43 @@ OS:Curve:Biquadratic,
   -0.01434,                               !- Coefficient4 y
   0.00063,                                !- Coefficient5 y**2
   -0.00038,                               !- Coefficient6 x*y
-  17,                                     !- Minimum Value of x
-  22,                                     !- Maximum Value of x
-  13,                                     !- Minimum Value of y
-  46;                                     !- Maximum Value of y
+  17,                                     !- Minimum Value of x {BasedOnField A2}
+  22,                                     !- Maximum Value of x {BasedOnField A2}
+  13,                                     !- Minimum Value of y {BasedOnField A3}
+  46;                                     !- Maximum Value of y {BasedOnField A3}
 
 OS:AirLoopHVAC,
   {61663477-14ad-441f-ae7a-b9090dd60b33}, !- Handle
   Small heating and cooling furnace,      !- Name
   ,                                       !- Controller List Name
-  {225dd4da-da8e-46b2-a52e-f6eea1804f9e}, !- Availability Schedule
-  ,                                       !- Availability Manager
+  {5ff85cfa-4a9f-4b8d-8e53-b808b30af6f5}, !- Availability Manager List Name
   AutoSize,                               !- Design Supply Air Flow Rate {m3/s}
   ,                                       !- Branch List Name
   ,                                       !- Connector List Name
   {eb7cba12-c1e0-4426-8207-cc7679afe1cd}, !- Supply Side Inlet Node Name
   {d5510daf-5a13-4f68-87cb-665ebe3c7077}, !- Demand Side Outlet Node Name
-  {85768b56-a3d8-4cbd-9248-7cf7b2c48528}, !- Demand Side Inlet Node A
-  {1a3c96a9-e636-4f82-9a94-d0bc14bbc400}, !- Supply Side Outlet Node A
-  ,                                       !- Demand Side Inlet Node B
-  ;                                       !- Supply Side Outlet Node B
+  {85768b56-a3d8-4cbd-9248-7cf7b2c48528}, !- Demand Side Inlet Node Names
+  {1a3c96a9-e636-4f82-9a94-d0bc14bbc400}; !- Supply Side Outlet Node Names
+
+OS:AvailabilityManagerAssignmentList,
+  {5ff85cfa-4a9f-4b8d-8e53-b808b30af6f5}, !- Handle
+  Availability Manager Assignment List 1, !- Name
+  {fc82d420-df83-4dbc-a07f-0b3d07e3ecbc}, !- Availability Manager Name 1
+  {6577c678-5c6d-4ae2-8e61-b3d432f6abfc}; !- Availability Manager Name 2
+
+OS:AvailabilityManager:Scheduled,
+  {fc82d420-df83-4dbc-a07f-0b3d07e3ecbc}, !- Handle
+  Availability Manager Scheduled 1,       !- Name
+  {225dd4da-da8e-46b2-a52e-f6eea1804f9e}; !- Schedule Name
+
+OS:AvailabilityManager:NightCycle,
+  {6577c678-5c6d-4ae2-8e61-b3d432f6abfc}, !- Handle
+  Availability Manager Night Cycle 1,     !- Name
+  ,                                       !- Applicability Schedule
+  ,                                       !- Fan Schedule
+  ,                                       !- Control Type
+  ,                                       !- Thermostat Tolerance {deltaC}
+  ;                                       !- Cycling Run Time {s}
 
 OS:Node,
   {d8f8c1b2-36dc-41c2-bcb8-4f674600e9df}, !- Handle
@@ -3531,24 +3532,7 @@ OS:Sizing:System,
   0,                                      !- Cooling Design Air Flow Rate {m3/s}
   DesignDay,                              !- Heating Design Air Flow Method
   0,                                      !- Heating Design Air Flow Rate {m3/s}
-  ZoneSum,                                !- System Outdoor Air Method
-  1,                                      !- Zone Maximum Outdoor Air Fraction {dimensionless}
-  0.0099676501,                           !- Cooling Supply Air Flow Rate Per Floor Area {m3/s-m2}
-  1,                                      !- Cooling Fraction of Autosized Cooling Supply Air Flow Rate
-  3.9475456e-05,                          !- Cooling Supply Air Flow Rate Per Unit Cooling Capacity {m3/s-W}
-  0.0099676501,                           !- Heating Supply Air Flow Rate Per Floor Area {m3/s-m2}
-  1,                                      !- Heating Fraction of Autosized Heating Supply Air Flow Rate
-  1,                                      !- Heating Fraction of Autosized Cooling Supply Air Flow Rate
-  3.1588213e-05,                          !- Heating Supply Air Flow Rate Per Unit Heating Capacity {m3/s-W}
-  CoolingDesignCapacity,                  !- Cooling Design Capacity Method
-  Autosize,                               !- Cooling Design Capacity {W}
-  234.7,                                  !- Cooling Design Capacity Per Floor Area {W/m2}
-  1,                                      !- Fraction of Autosized Cooling Design Capacity
-  HeatingDesignCapacity,                  !- Heating Design Capacity Method
-  Autosize,                               !- Heating Design Capacity {W}
-  157,                                    !- Heating Design Capacity Per Floor Area {W/m2}
-  1,                                      !- Fraction of Autosized Heating Design Capacity
-  OnOff;                                  !- Central Cooling Capacity Control Method
+  ZoneSum;                                !- System Outdoor Air Method
 
 OS:Curve:Biquadratic,
   {bac08baf-fa1c-4de9-9caf-fe77abeee8cd}, !- Handle
@@ -3559,10 +3543,10 @@ OS:Curve:Biquadratic,
   0.00333,                                !- Coefficient4 y
   -8e-005,                                !- Coefficient5 y**2
   -0.00021,                               !- Coefficient6 x*y
-  17,                                     !- Minimum Value of x
-  22,                                     !- Maximum Value of x
-  13,                                     !- Minimum Value of y
-  46;                                     !- Maximum Value of y
+  17,                                     !- Minimum Value of x {BasedOnField A2}
+  22,                                     !- Maximum Value of x {BasedOnField A2}
+  13,                                     !- Minimum Value of y {BasedOnField A3}
+  46;                                     !- Maximum Value of y {BasedOnField A3}
 
 OS:Curve:Quadratic,
   {e2aade6d-4adc-4d9e-8ebc-3135bb20f0a8}, !- Handle
@@ -3570,8 +3554,8 @@ OS:Curve:Quadratic,
   0.77136,                                !- Coefficient1 Constant
   0.34053,                                !- Coefficient2 x
   -0.11088,                               !- Coefficient3 x**2
-  0.75918,                                !- Minimum Value of x
-  1.13877;                                !- Maximum Value of x
+  0.75918,                                !- Minimum Value of x {BasedOnField A2}
+  1.13877;                                !- Maximum Value of x {BasedOnField A2}
 
 OS:Curve:Biquadratic,
   {0763ef65-d12f-4f58-ae4c-613a582d2d26}, !- Handle
@@ -3582,10 +3566,10 @@ OS:Curve:Biquadratic,
   -0.01434,                               !- Coefficient4 y
   0.00063,                                !- Coefficient5 y**2
   -0.00038,                               !- Coefficient6 x*y
-  17,                                     !- Minimum Value of x
-  22,                                     !- Maximum Value of x
-  13,                                     !- Minimum Value of y
-  46;                                     !- Maximum Value of y
+  17,                                     !- Minimum Value of x {BasedOnField A2}
+  22,                                     !- Maximum Value of x {BasedOnField A2}
+  13,                                     !- Minimum Value of y {BasedOnField A3}
+  46;                                     !- Maximum Value of y {BasedOnField A3}
 
 OS:Curve:Quadratic,
   {348a2412-32e9-4523-ab12-e27fd38dee7e}, !- Handle
@@ -3593,8 +3577,8 @@ OS:Curve:Quadratic,
   1.2055,                                 !- Coefficient1 Constant
   -0.32953,                               !- Coefficient2 x
   0.12308,                                !- Coefficient3 x**2
-  0.75918,                                !- Minimum Value of x
-  1.13877;                                !- Maximum Value of x
+  0.75918,                                !- Minimum Value of x {BasedOnField A2}
+  1.13877;                                !- Maximum Value of x {BasedOnField A2}
 
 OS:Curve:Quadratic,
   {d09a9a2b-841f-4f4b-86fd-b92fb6d8d0e3}, !- Handle
@@ -3602,8 +3586,8 @@ OS:Curve:Quadratic,
   0.771,                                  !- Coefficient1 Constant
   0.229,                                  !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0,                                      !- Minimum Value of x
-  1;                                      !- Maximum Value of x
+  0,                                      !- Minimum Value of x {BasedOnField A2}
+  1;                                      !- Maximum Value of x {BasedOnField A2}
 
 OS:Coil:Cooling:DX:SingleSpeed,
   {99e7fa75-b1b6-44c4-9fde-894009b7203d}, !- Handle
@@ -3674,8 +3658,8 @@ OS:ThermostatSetpoint:DualSetpoint,
 OS:ScheduleTypeLimits,
   {f9b67bb7-26b2-465b-83be-c0c05af823ea}, !- Handle
   Temperature,                            !- Name
-  ,                                       !- Lower Limit Value
-  ,                                       !- Upper Limit Value
+  ,                                       !- Lower Limit Value {BasedOnField A4}
+  ,                                       !- Upper Limit Value {BasedOnField A4}
   Continuous,                             !- Numeric Type
   Temperature;                            !- Unit Type
 
@@ -3684,9 +3668,7 @@ OS:PlantLoop,
   Point-of-use Electricity Water Heater,  !- Name
   ,                                       !- Fluid Type
   ,                                       !- User Defined Fluid Type
-  ,                                       !- Plant Equipment Operation Heating Load
-  ,                                       !- Plant Equipment Operation Cooling Load
-  ,                                       !- Primary Plant Equipment Operation Scheme
+  ,                                       !- Plant Equipment Operation Scheme Name
   {83404834-77a2-4994-8f74-ec72ef7e0ca0}, !- Loop Temperature Setpoint Node Name
   ,                                       !- Maximum Loop Temperature {C}
   ,                                       !- Minimum Loop Temperature {C}
@@ -3700,7 +3682,7 @@ OS:PlantLoop,
   {b506b8d8-1b22-432d-a3f4-f810cf1c8c7e}, !- Demand Side Outlet Node Name
   ,                                       !- Demand Side Branch List Name
   ,                                       !- Demand Side Connector List Name
-  Optimal,                                !- Load Distribution Scheme
+  ,                                       !- Load Distribution Scheme
   ,                                       !- Availability Manager List Name
   ,                                       !- Plant Loop Demand Calculation Scheme
   ,                                       !- Common Pipe Simulation
@@ -3711,10 +3693,7 @@ OS:Sizing:Plant,
   {fe15e97e-7866-48fc-a06a-59ec0ca5f746}, !- Plant or Condenser Loop Name
   Heating,                                !- Loop Type
   48.8888888888889,                       !- Design Loop Exit Temperature {C}
-  11.1111111111111,                       !- Loop Design Temperature Difference {deltaC}
-  NonCoincident,                          !- Sizing Option
-  1,                                      !- Zone Timesteps in Averaging Window
-  None;                                   !- Coincident Sizing Factor Mode
+  11.1111111111111;                       !- Loop Design Temperature Difference {deltaC}
 
 OS:Node,
   {6c3852d7-7ffa-4e7e-b61d-9da6eb9b3a4f}, !- Handle
@@ -3993,8 +3972,8 @@ OS:SetpointManager:Scheduled,
 OS:ScheduleTypeLimits,
   {d17fd5fa-c92c-4f9b-898c-c036d1698771}, !- Handle
   Temperature 1,                          !- Name
-  ,                                       !- Lower Limit Value
-  ,                                       !- Upper Limit Value
+  ,                                       !- Lower Limit Value {BasedOnField A4}
+  ,                                       !- Upper Limit Value {BasedOnField A4}
   Continuous,                             !- Numeric Type
   Temperature;                            !- Unit Type
 
@@ -4348,7 +4327,7 @@ OS:SurfaceConvectionAlgorithm:Outside,
 OS:HeatBalanceAlgorithm,
   {e48874bd-a5a2-4953-a6cd-71dff34e2b2a}, !- Handle
   ConductionTransferFunction,             !- Algorithm
-  200;                                    !- Surface Temperature Upper Limit {C}
+  200;                                    !- Surface Temperature Upper Limit {F}
 
 OS:ZoneAirHeatBalanceAlgorithm,
   {09b96455-ab93-4ba7-8b72-cc772e42bac1}, !- Handle
@@ -4394,6 +4373,20 @@ OS:Rendering:Color,
   47,                                     !- Rendering Red Value
   79,                                     !- Rendering Green Value
   79;                                     !- Rendering Blue Value
+
+OS:WeatherFile,
+  {723b8b41-fedf-4006-b2ea-df5318b05b7b}, !- Handle
+  Golden,                                 !- City
+  CO,                                     !- State Province Region
+  USA,                                    !- Country
+  Custom-724666,                          !- Data Source
+  724666,                                 !- WMO Number
+  39.74,                                  !- Latitude {deg}
+  -105.18,                                !- Longitude {deg}
+  -7,                                     !- Time Zone {hr}
+  1829,                                   !- Elevation {m}
+  file:files/SRRL_2012AMY_60min.epw,      !- Url
+  D8B625BE;                               !- Checksum
 
 OS:Rendering:Color,
   {f0b28857-00b0-4b88-99a5-cd9dbd3b85ae}, !- Handle
@@ -4696,7 +4689,7 @@ OS:SizingPeriod:DesignDay,
   Denver Centennial  Golden   N Ann Htg Wind 99.6% Condns WS=>MCDB, !- Name
   3.9,                                    !- Maximum Dry-Bulb Temperature {C}
   0,                                      !- Daily Dry-Bulb Temperature Range {deltaC}
-  3.9,                                    !- Humidity Indicating Conditions at Maximum Dry-Bulb
+  3.9,                                    !- Humidity Indicating Conditions at Maximum Dry-Bulb {BasedOnField A3}
   81198,                                  !- Barometric Pressure {Pa}
   12.2,                                   !- Wind Speed {m/s}
   340,                                    !- Wind Direction {deg}
@@ -4718,7 +4711,7 @@ OS:SizingPeriod:DesignDay,
   Denver Centennial  Golden   N Ann Clg .4% Condns DP=>MDB, !- Name
   20.2,                                   !- Maximum Dry-Bulb Temperature {C}
   15.2,                                   !- Daily Dry-Bulb Temperature Range {deltaC}
-  16.1,                                   !- Humidity Indicating Conditions at Maximum Dry-Bulb
+  16.1,                                   !- Humidity Indicating Conditions at Maximum Dry-Bulb {BasedOnField A3}
   81198,                                  !- Barometric Pressure {Pa}
   4.9,                                    !- Wind Speed {m/s}
   0,                                      !- Wind Direction {deg}
@@ -4744,7 +4737,7 @@ OS:SizingPeriod:DesignDay,
   Denver Centennial  Golden   N Ann Hum_n 99.6% Condns DP=>MCDB, !- Name
   -10.9,                                  !- Maximum Dry-Bulb Temperature {C}
   0,                                      !- Daily Dry-Bulb Temperature Range {deltaC}
-  -21.6,                                  !- Humidity Indicating Conditions at Maximum Dry-Bulb
+  -21.6,                                  !- Humidity Indicating Conditions at Maximum Dry-Bulb {BasedOnField A3}
   81198,                                  !- Barometric Pressure {Pa}
   3,                                      !- Wind Speed {m/s}
   340,                                    !- Wind Direction {deg}
@@ -4766,7 +4759,7 @@ OS:SizingPeriod:DesignDay,
   Denver Centennial  Golden   N Ann Clg .4% Condns WB=>MDB, !- Name
   27.3,                                   !- Maximum Dry-Bulb Temperature {C}
   15.2,                                   !- Daily Dry-Bulb Temperature Range {deltaC}
-  18.4,                                   !- Humidity Indicating Conditions at Maximum Dry-Bulb
+  18.4,                                   !- Humidity Indicating Conditions at Maximum Dry-Bulb {BasedOnField A3}
   81198,                                  !- Barometric Pressure {Pa}
   4.9,                                    !- Wind Speed {m/s}
   0,                                      !- Wind Direction {deg}
@@ -4792,7 +4785,7 @@ OS:SizingPeriod:DesignDay,
   Denver Centennial  Golden   N Ann Htg 99.6% Condns DB, !- Name
   -18.8,                                  !- Maximum Dry-Bulb Temperature {C}
   0,                                      !- Daily Dry-Bulb Temperature Range {deltaC}
-  -18.8,                                  !- Humidity Indicating Conditions at Maximum Dry-Bulb
+  -18.8,                                  !- Humidity Indicating Conditions at Maximum Dry-Bulb {BasedOnField A3}
   81198,                                  !- Barometric Pressure {Pa}
   3,                                      !- Wind Speed {m/s}
   340,                                    !- Wind Direction {deg}
@@ -4814,7 +4807,7 @@ OS:SizingPeriod:DesignDay,
   Denver Centennial  Golden   N Ann Clg .4% Condns DB=>MWB, !- Name
   33,                                     !- Maximum Dry-Bulb Temperature {C}
   15.2,                                   !- Daily Dry-Bulb Temperature Range {deltaC}
-  15.7,                                   !- Humidity Indicating Conditions at Maximum Dry-Bulb
+  15.7,                                   !- Humidity Indicating Conditions at Maximum Dry-Bulb {BasedOnField A3}
   81198,                                  !- Barometric Pressure {Pa}
   4.9,                                    !- Wind Speed {m/s}
   0,                                      !- Wind Direction {deg}
@@ -4840,7 +4833,7 @@ OS:SizingPeriod:DesignDay,
   Denver Centennial  Golden   N Ann Clg .4% Condns Enth=>MDB, !- Name
   27.3,                                   !- Maximum Dry-Bulb Temperature {C}
   15.2,                                   !- Daily Dry-Bulb Temperature Range {deltaC}
-  59700,                                  !- Humidity Indicating Conditions at Maximum Dry-Bulb
+  59700,                                  !- Humidity Indicating Conditions at Maximum Dry-Bulb {BasedOnField A3}
   81198,                                  !- Barometric Pressure {Pa}
   4.9,                                    !- Wind Speed {m/s}
   0,                                      !- Wind Direction {deg}

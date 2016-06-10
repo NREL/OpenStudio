@@ -1,6 +1,6 @@
 {
 	"weather_file": "srrl_2013_amy.epw",
-	"seed_model": "seb.osm",
+	"seed_file": "seb.osm",
 	"steps": [
 		{
 			"measure_dir_name": "IncreaseWallRValue",

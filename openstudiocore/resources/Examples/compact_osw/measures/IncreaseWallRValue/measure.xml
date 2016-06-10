@@ -2,8 +2,9 @@
   <schema_version>3.0</schema_version>
   <name>increase_insulation_r_value_for_exterior_walls_by_percentage</name>
   <uid>7508c563-22bd-49f4-b646-aac69b02a82d</uid>
-  <version_id>9dcca162-642a-4a06-a98a-3c9a5567a2b4</version_id>
-  <xml_checksum>EB1A0C08</xml_checksum>
+  <version_id>0abb166f-7a57-4ce2-87b4-39bf0c682522</version_id>
+  <version_modified>20160426T215418Z</version_modified>
+  <xml_checksum>350B6836</xml_checksum>
   <class_name>IncreaseInsulationRValueForExteriorWallsByPercentage</class_name>
   <display_name>Increase R-value of Insulation for Exterior Walls By a Specified Percentage</display_name>
   <description>Increase the R value of the insulation layer in roof constructinons by a percentage.</description>
@@ -18,6 +19,7 @@
       <default_value>30</default_value>
     </argument>
   </arguments>
+  <outputs/>
   <provenances/>
   <tags>
     <tag>Envelope.Opaque</tag>
@@ -46,18 +48,6 @@
   </attributes>
   <files>
     <file>
-      <filename>EnvelopeAndLoadTestModel_01.osm</filename>
-      <filetype>osm</filetype>
-      <usage_type>test</usage_type>
-      <checksum>10AA8866</checksum>
-    </file>
-    <file>
-      <filename>ReverseTranslatedModel.osm</filename>
-      <filetype>osm</filetype>
-      <usage_type>test</usage_type>
-      <checksum>0B94403D</checksum>
-    </file>
-    <file>
       <version>
         <software_program>OpenStudio</software_program>
         <identifier>0.11.5</identifier>
@@ -67,12 +57,6 @@
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
       <checksum>2B0F0D0D</checksum>
-    </file>
-    <file>
-      <filename>IncreaseInsulationRValueForExteriorWalls_Test.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>test</usage_type>
-      <checksum>9D91D252</checksum>
     </file>
   </files>
 </measure>
