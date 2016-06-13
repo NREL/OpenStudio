@@ -62,6 +62,9 @@ namespace detail {
     virtual unsigned inletPort() override;
 
     virtual unsigned outletPort() override;
+    
+    // TODO: I think this should be virtual bool since it's defined in both HVACcomponent and StraightComponent. @Kyle?
+    virtual bool addToNode(Node & node) override;
 
     // DLM: consider reimplementing any other virtual methods of StraightComponent or HVACComponent
 
@@ -69,10 +72,8 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    // TODO: Check return type. From object lists, some candidates are: Connection.
     //boost::optional<Connection> heatRecoveryWaterInletNode() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Connection.
     //boost::optional<Connection> heatRecoveryWaterOutletNode() const;
 
     // TODO: I might need to make this one default to something that makes sense...
@@ -86,19 +87,19 @@ namespace detail {
 
     double referenceHeatRecoveryWaterFlowRate() const;
 
-    // TODO: Check return type. From object lists, some candidates are: BiquadraticCurves, BiVariateTables.
+    // BiquadraticCurves, BiVariateTables.
     boost::optional<Curve> heatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: BicubicBiquadraticCurves, BiVariateTables.
+    // BicubicBiquadraticCurves, BiVariateTables.
     boost::optional<Curve> thermalEfficiencyFunctionofTemperatureandElevationCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: QuadraticCubicCurves, UniVariateTables.
+    // QuadraticCubicCurves, UniVariateTables.
     boost::optional<Curve> heatRecoveryRateFunctionofPartLoadRatioCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
+    //QuadraticCurves, UniVariateTables.
     boost::optional<Curve> heatRecoveryRateFunctionofInletWaterTemperatureCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
+    // QuadraticCurves, UniVariateTables.
     boost::optional<Curve> heatRecoveryRateFunctionofWaterFlowRateCurve() const;
 
     double minimumHeatRecoveryWaterFlowRate() const;
@@ -111,6 +112,9 @@ namespace detail {
     
     double ratedThermaltoElectricalPowerRatio() const;
     bool isRatedThermaltoElectricalPowerRatioDefaulted() const;
+    
+    // Return optional parent generator
+    boost::optional<GeneratorMicroTurbine> generatorMicroTurbine() const;
 
     //@}
     /** @name Setters */
@@ -134,23 +138,23 @@ namespace detail {
 
     bool setReferenceHeatRecoveryWaterFlowRate(double referenceHeatRecoveryWaterFlowRate);
 
-    // TODO: Check argument type. From object lists, some candidates are: BiquadraticCurves, BiVariateTables.
+    // BiquadraticCurves, BiVariateTables.
     bool setHeatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurve(const Curve& heatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurve);
     void resetHeatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurve();
 
-    // TODO: Check argument type. From object lists, some candidates are: BicubicBiquadraticCurves, BiVariateTables.
+    // BicubicBiquadraticCurves, BiVariateTables.
     bool setThermalEfficiencyFunctionofTemperatureandElevationCurve(const Curve& thermalEfficiencyFunctionofTemperatureandElevationCurve);
     void resetThermalEfficiencyFunctionofTemperatureandElevationCurve();
 
-    // TODO: Check argument type. From object lists, some candidates are: QuadraticCubicCurves, UniVariateTables.
+    // QuadraticCubicCurves, UniVariateTables.
     bool setHeatRecoveryRateFunctionofPartLoadRatioCurve(const Curve& heatRecoveryRateFunctionofPartLoadRatioCurve);
     void resetHeatRecoveryRateFunctionofPartLoadRatioCurve();
 
-    // TODO: Check argument type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
+    // QuadraticCurves, UniVariateTables.
     bool setHeatRecoveryRateFunctionofInletWaterTemperatureCurve(const Curve& heatRecoveryRateFunctionofInletWaterTemperatureCurve);
     void resetHeatRecoveryRateFunctionofInletWaterTemperatureCurve();
 
-    // TODO: Check argument type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
+    // QuadraticCurves, UniVariateTables.
     bool setHeatRecoveryRateFunctionofWaterFlowRateCurve(const Curve& heatRecoveryRateFunctionofWaterFlowRateCurve);
     void resetHeatRecoveryRateFunctionofWaterFlowRateCurve();
 
@@ -166,6 +170,7 @@ namespace detail {
     bool setRatedThermaltoElectricalPowerRatio(double ratedThermaltoElectricalPowerRatio);
     void resetRatedThermaltoElectricalPowerRatio();
 
+    
     //@}
     /** @name Other */
     //@{
@@ -175,8 +180,6 @@ namespace detail {
     std::vector<IddObjectType> allowableChildTypes() const override;
 
     std::vector<ModelObject> children() const override;
-
-    bool addToNode(Node & node) override;
 
     //@}
    protected:

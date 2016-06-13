@@ -225,6 +225,21 @@ namespace model {
     return getDouble(OS_Generator_MicroTurbine_HeatRecoveryFields::MaximumHeatRecoveryWaterTemperature,true);
   }
   
+  // Get the parent generatorMicroTurbine
+  boost::optional<GeneratorMicroTurbine> GeneratorMicroTurbineHeatRecovery_Impl::generatorMicroTurbine() const {
+    for ( const GeneratorMicroTurbine& mchp : this->model().getConcreteModelObjects<GeneratorMicroTurbine>() )
+    {
+      if ( boost::optional<GeneratorMicroTurbineHeatRecovery> mchpHR = mchp.generatorMicroTurbineHeatRecovery() )
+      {
+        if (mchpHR->handle() == this->handle())
+        {
+          return mchp;
+        }
+      }
+    }
+    return boost::none;
+  }
+  
   
   
   
@@ -239,7 +254,8 @@ namespace model {
     }
     else {
       
-      boost::optional<double> referenceElectricalPowerOutput = getDouble(OS_Generator_MicroTurbineFields::ReferenceElectricalPowerOutput,true);
+      boost::optional<double> referenceElectricalPowerOutput = this->referenceElectricalPowerOutput();
+      getDouble(OS_Generator_MicroTurbineFields::ReferenceElectricalPowerOutput,true);
       OS_ASSERT(referenceElectricalPowerOutput);
       return referenceElectricalPowerOutput.get();
     }
@@ -532,6 +548,9 @@ bool GeneratorMicroTurbineHeatRecovery::isRatedThermaltoElectricalPowerRatioDefa
   return getImpl<detail::GeneratorMicroTurbineHeatRecovery_Impl>()->isRatedThermaltoElectricalPowerRatioDefaulted();
 }
 
+boost::optional<GeneratorMicroTurbine> GeneratorMicroTurbineHeatRecovery::generatorMicroTurbine() const {
+  return getImpl<detail::GeneratorMicroTurbineHeatRecovery_Impl>()->generatorMicroTurbine();
+}
 
 /*
 bool GeneratorMicroTurbineHeatRecovery::setHeatRecoveryWaterInletNode(const Connection& connection) {
