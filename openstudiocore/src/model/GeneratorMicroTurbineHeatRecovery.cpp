@@ -243,23 +243,30 @@ namespace model {
   
   
   
-  /*
+  
   // If defaulted, return mchpHR 'Reference Thermal Efficiency Using Lower Heat Value' divided by mchp 'Reference Electrical Efficiency Using Lower Heating Value'
   double GeneratorMicroTurbineHeatRecovery_Impl::ratedThermaltoElectricalPowerRatio() const {
-    boost::optional<double> ratedThermaltoElectricalPowerRatio = getDouble(GeneratorMicroTurbineHeatRecovery_Impl::RatedThermaltoElectricalPowerRatio,true);
+    // TODO: JM: I think I need to change the constructor of mchpHR to include mchp to make sure the heat recovery module is necesarilly linked to a mchp.
+    boost::optional<double> optRatedThermaltoElectricalPowerRatio = getDouble(OS_Generator_MicroTurbine_HeatRecoveryFields::RatedThermaltoElectricalPowerRatio, true);
     // If there it's set
-    if (ratedThermaltoElectricalPowerRatio) {
+    if (optRatedThermaltoElectricalPowerRatio) {
       // Get it and return
-      return ratedThermaltoElectricalPowerRatio.get();
+      return optRatedThermaltoElectricalPowerRatio.get();
     }
     else {
-      
-      boost::optional<double> referenceElectricalPowerOutput = this->referenceElectricalPowerOutput();
-      getDouble(OS_Generator_MicroTurbineFields::ReferenceElectricalPowerOutput,true);
-      OS_ASSERT(referenceElectricalPowerOutput);
-      return referenceElectricalPowerOutput.get();
+      // We try to default it
+      // First, check if there's a linked generator
+      // TODO: This should return an actual mchp once I make it part of the constructor.
+      //boost::optional<GeneratorMicroTurbine> mchp = this->generatorMicroTurbine();
+      //if ( mchp ) {
+      GeneratorMicroTurbine mchp = this->generatorMicroTurbine();
+      double refElecEffUsingLowerHeatingVal = mchp.referenceElectricalEfficiencyUsingLowerHeatingValue();
+      double refThermalEffUsingLowerHeatVal = this->referenceThermalEfficiencyUsingLowerHeatValue();
+      double ratedThermaltoElectricalPowerRatio = refThermalEffUsingLowerHeatVal / refElecEffUsingLowerHeatingVal;
+      return ratedThermaltoElectricalPowerRatio;
+      //}
     }
-  }*/
+  }
   
   double GeneratorMicroTurbineHeatRecovery_Impl::ratedThermaltoElectricalPowerRatio() const {
     boost::optional<double> value = getDouble(OS_Generator_MicroTurbine_HeatRecoveryFields::RatedThermaltoElectricalPowerRatio,true);
@@ -429,10 +436,15 @@ namespace model {
 
 } // detail
 
-GeneratorMicroTurbineHeatRecovery::GeneratorMicroTurbineHeatRecovery(const Model& model)
+// The constructor needs model, and a GeneratorMicroTurbine
+GeneratorMicroTurbineHeatRecovery::GeneratorMicroTurbineHeatRecovery( const Model& model,
+                                                                      GeneratorMicroTurbine & mchp )
   : StraightComponent(GeneratorMicroTurbineHeatRecovery::iddObjectType(),model)
 {
 
+  // Set object in parent
+  mchp.setGeneratorMicroTurbineHeatRecovery( (*this) );
+  
   // Reference Thermal Efficiency Using Lower Heat Value has a default of 0 in E+ idd which isn't smart in this case
   // TODO Should I set it here, or change the .idd??
   // 0.4975 would be better
