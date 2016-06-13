@@ -22,6 +22,7 @@
 
 #include "ModelAPI.hpp"
 #include "StraightComponent_Impl.hpp"
+#include "GeneratorMicroTurbine_Impl.hpp"
 
 namespace openstudio {
 namespace model {

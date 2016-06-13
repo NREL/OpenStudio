@@ -22,6 +22,7 @@
 
 #include <model/ModelAPI.hpp>
 #include "StraightComponent.hpp"
+#include "GeneratorMicroTurbine.hpp"
 
 
 namespace openstudio {
@@ -42,8 +43,10 @@ class MODEL_API GeneratorMicroTurbineHeatRecovery : public StraightComponent {
  public:
   /** @name Constructors and Destructors */
   //@{
-
-  explicit GeneratorMicroTurbineHeatRecovery(const Model& model);
+    
+ // Constructs a new GeneratorMicroTurbineHeatRecovery object in the model, given a GeneratorMicroTurbine
+  explicit GeneratorMicroTurbineHeatRecovery( const Model& model, 
+                                              GeneratorMicroTurbine & mchp );
   
   virtual ~GeneratorMicroTurbineHeatRecovery() {}
 
