@@ -4,3 +4,5 @@ add_executable(CreateEmbeddedSource
   CreateEmbeddedSource.cpp
 )
 
+target_link_libraries(CreateEmbeddedSource miniziplib)
+
