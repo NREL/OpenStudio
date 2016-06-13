@@ -72,6 +72,13 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorMicroTurbine(mod
     }
 
     //HeatRecoveryWaterOutletNodeName
+    auto temp = generatorMCHPHX.outletModelObject();
+    if (temp) {
+      auto s = temp->name();
+      if (s) {
+        idfObject.setString(openstudio::Generator_MicroTurbineFields::HeatRecoveryWaterOutletNodeName, *s);
+      }
+    }
 
     //ReferenceThermalEfficiencyUsingLowerHeatValue
     {
@@ -80,7 +87,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorMicroTurbine(mod
     }
 
     //ReferenceInletWaterTemperature (double)
-    idfObject.setDouble(Generator_MicroTurbineFields::ReferenceHeatRecoveryWaterFlowRate, generatorMCHPHX.referenceInletWaterTemperature());
+    idfObject.setDouble(Generator_MicroTurbineFields::ReferenceInletWaterTemperature, generatorMCHPHX.referenceInletWaterTemperature());
 
     
     //HeatRecoveryWaterFlowOperatingMode
@@ -245,7 +252,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorMicroTurbine(mod
   {
     auto curve = modelObject.electricalPowerFunctionofTemperatureandElevationCurve();
     if( auto _curve = translateAndMapModelObject(curve) ) {
-      idfObject.setString(Generator_MicroTurbineFields::ElectricalEfficiencyFunctionofTemperatureCurveName,_curve->name().get());
+      idfObject.setString(Generator_MicroTurbineFields::ElectricalPowerFunctionofTemperatureandElevationCurveName, _curve->name().get());
     }
   }
 
@@ -253,7 +260,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorMicroTurbine(mod
   {
     auto curve = modelObject.electricalEfficiencyFunctionofTemperatureCurve();
     if( auto _curve = translateAndMapModelObject(curve) ) {
-      idfObject.setString(Generator_MicroTurbineFields::ElectricalEfficiencyFunctionofPartLoadRatioCurveName,_curve->name().get());
+      idfObject.setString(Generator_MicroTurbineFields::ElectricalEfficiencyFunctionofTemperatureCurveName, _curve->name().get());
     }
   }
 
@@ -261,7 +268,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorMicroTurbine(mod
   {
     auto curve = modelObject.electricalEfficiencyFunctionofPartLoadRatioCurve();
     if( auto _curve = translateAndMapModelObject(curve) ) {
-      idfObject.setString(Generator_MicroTurbineFields::FuelType, _curve->name().get());
+      idfObject.setString(Generator_MicroTurbineFields::ElectricalEfficiencyFunctionofPartLoadRatioCurveName, _curve->name().get());
     }
   }
   /// Curves, Optional
@@ -269,14 +276,14 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorMicroTurbine(mod
   //AncillaryPowerFunctionofFuelInputCurve
   if( auto curve = modelObject.ancillaryPowerFunctionofFuelInputCurve() )  {
     if( auto _curve = translateAndMapModelObject(curve.get()) ) {
-      idfObject.setString(Generator_MicroTurbineFields::HeatRecoveryWaterInletNodeName,_curve->name().get());
+      idfObject.setString(Generator_MicroTurbineFields::AncillaryPowerFunctionofFuelInputCurveName, _curve->name().get());
     }
   }
 
   //ExhaustAirFlowRateFunctionofTemperatureCurve
   if( auto curve = modelObject.exhaustAirFlowRateFunctionofTemperatureCurve() )  {
     if( auto _curve = translateAndMapModelObject(curve.get()) ) {
-      idfObject.setString(Generator_MicroTurbineFields::ExhaustAirFlowRateFunctionofPartLoadRatioCurveName,_curve->name().get());
+      idfObject.setString(Generator_MicroTurbineFields::ExhaustAirFlowRateFunctionofTemperatureCurveName, _curve->name().get());
     }
   }
 
@@ -290,14 +297,14 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorMicroTurbine(mod
   //ExhaustAirTemperatureFunctionofTemperatureCurve
   if( auto curve = modelObject.exhaustAirTemperatureFunctionofTemperatureCurve() )  {
     if( auto _curve = translateAndMapModelObject(curve.get()) ) {
-      idfObject.setString(Generator_MicroTurbineFields::ExhaustAirTemperatureFunctionofPartLoadRatioCurveName,_curve->name().get());
+      idfObject.setString(Generator_MicroTurbineFields::ExhaustAirTemperatureFunctionofTemperatureCurveName, _curve->name().get());
     }
   }
 
-  //ExhaustAirTemperatureFunctionofPartLoadRatioCurve
+  //ExhaustAirTemperatureFunctionofPartLoadRatioCurve 
   if( auto curve = modelObject.exhaustAirTemperatureFunctionofPartLoadRatioCurve() )  {
     if( auto _curve = translateAndMapModelObject(curve.get()) ) {
-      idfObject.setString(Generator_MicroTurbineFields::Name,_curve->name().get());
+      idfObject.setString(Generator_MicroTurbineFields::ExhaustAirTemperatureFunctionofPartLoadRatioCurveName, _curve->name().get());
     }
   }
 
