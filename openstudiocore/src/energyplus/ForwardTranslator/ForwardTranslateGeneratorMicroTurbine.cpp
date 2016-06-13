@@ -61,8 +61,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorMicroTurbine(mod
     
     // HeatRecoveryWaterInletNodeName
     // Inlet Node Name 
-    auto temp = generatorMCHPHX.inletModelObject();
-    if(temp)
+    if (auto temp = generatorMCHPHX.inletModelObject();)
     {
       auto s = temp->name();
       if(s)
@@ -72,8 +71,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorMicroTurbine(mod
     }
 
     //HeatRecoveryWaterOutletNodeName
-    auto temp = generatorMCHPHX.outletModelObject();
-    if (temp) {
+    if (auto temp = generatorMCHPHX.outletModelObject();) {
       auto s = temp->name();
       if (s) {
         idfObject.setString(openstudio::Generator_MicroTurbineFields::HeatRecoveryWaterOutletNodeName, *s);
