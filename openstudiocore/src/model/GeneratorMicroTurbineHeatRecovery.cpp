@@ -131,12 +131,10 @@ namespace model {
   // Add to plantLoop Node
   bool  GeneratorMicroTurbineHeatRecovery_Impl::addToNode(Node & node)
   {
+    // This can be placed on the supply or the demand side
     if( boost::optional<PlantLoop> plant = node.plantLoop() )
     {
-      if( plant->supplyComponent(node.handle()) )
-      {
-        return StraightComponent_Impl::addToNode(node);
-      }
+      return StraightComponent_Impl::addToNode(node);
     }
 
     return false;
