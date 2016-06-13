@@ -206,9 +206,9 @@ namespace detail {
     bool setAncillaryPowerFunctionofFuelInputCurve(const Curve& ancillaryPowerFunctionofFuelInputCurve);
     void resetAncillaryPowerFunctionofFuelInputCurve();
 
-    // Optional Generator:MicroTurbine:HeatRecovery
+    // Private setter
     bool setGeneratorMicroTurbineHeatRecovery(const GeneratorMicroTurbineHeatRecovery& generatorMicroTurbineHeatRecovery);
-    void resetGeneratorMicroTurbineHeatRecovery();
+    //void resetGeneratorMicroTurbineHeatRecovery();
 
     // TODO: Check argument type. From object lists, some candidates are: Connection.
     //bool setCombustionAirInletNode(const Connection& connection);

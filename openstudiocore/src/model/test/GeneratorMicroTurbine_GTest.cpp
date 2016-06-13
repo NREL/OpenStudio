@@ -299,7 +299,14 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_HeatRecovery) {
   //  A4, \field Heat Recovery Water Outlet Node Name
 
  
-  GeneratorMicroTurbineHeatRecovery mchpHR = GeneratorMicroTurbineHeatRecovery(model);
+  GeneratorMicroTurbineHeatRecovery mchpHR = GeneratorMicroTurbineHeatRecovery(model, mchp);
+
+  // Check if the parent mchp does have this mchpHR set
+  EXPECT_EQ(mchpHR, mchp.generatorMicroTurbineHeatRecovery().get());
+
+  
+  // Check if we can get the parent mchp from the mchpHR
+  EXPECT_EQ(mchp, mchpHR.generatorMicroTurbine());
  
   //N1 , \field Reference Thermal Efficiency Using Lower Heat Value
   //  \default 0.0 but overriden in construction to 0.4975
@@ -429,12 +436,18 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_HeatRecovery) {
   EXPECT_EQ((*ratedThermaltoElectricalPowerRatio),1.72);
   
   // Test setting it to a microturbine and resetting
-  mchp.setGeneratorMicroTurbineHeatRecovery(mchpHR);
+  /*mchp.setGeneratorMicroTurbineHeatRecovery(mchpHR);
   ASSERT_TRUE(mchp.generatorMicroTurbineHeatRecovery());
   boost::optional<GeneratorMicroTurbineHeatRecovery> setmchpHR = mchp.generatorMicroTurbineHeatRecovery();
   EXPECT_EQ(mchpHR.handle(), setmchpHR->handle());
   mchp.resetGeneratorMicroTurbineHeatRecovery();
-  ASSERT_FALSE(mchp.generatorMicroTurbineHeatRecovery());
+  ASSERT_FALSE(mchp.generatorMicroTurbineHeatRecovery());*/
+
+  // Try deleting the mchpHR and see if the mchp no longer has a mchpHR or not
+  mchpHR.remove();
+
+  EXPECT_FALSE(mchp.generatorMicroTurbineHeatRecovery());
+
   
   
 }
@@ -477,8 +490,7 @@ TEST_F(ModelFixture,GeneratorMicroTurbine_Clone)
   ASSERT_EQ(3,mchpClone.electricalEfficiencyFunctionofPartLoadRatioCurve().cast<CurveCubic>().coefficient1Constant());
 
   // Add a MicroTurbine:HeatRecovery and clone again
-  GeneratorMicroTurbineHeatRecovery mchpHR = GeneratorMicroTurbineHeatRecovery(model);
-  mchp.setGeneratorMicroTurbineHeatRecovery(mchpHR);
+  GeneratorMicroTurbineHeatRecovery mchpHR = GeneratorMicroTurbineHeatRecovery(model, mchp);
   
   // Clone in same model and verify that the mCHPHR is also cloned
   GeneratorMicroTurbine  mchpClone1 = mchp.clone(model).cast<GeneratorMicroTurbine>();
@@ -508,8 +520,10 @@ TEST_F(ModelFixture,GeneratorMicroTurbine_Clone)
 
 TEST_F(ModelFixture,GeneratorMicroTurbine_HeatRecovery_addToNode) {
   Model model;
+
+  GeneratorMicroTurbine mchp = GeneratorMicroTurbine(model);
   
-  GeneratorMicroTurbineHeatRecovery mchpHR = GeneratorMicroTurbineHeatRecovery(model);
+  GeneratorMicroTurbineHeatRecovery mchpHR = GeneratorMicroTurbineHeatRecovery(model, mchp);
 
   AirLoopHVAC airLoop = AirLoopHVAC(model);
 
@@ -524,20 +538,20 @@ TEST_F(ModelFixture,GeneratorMicroTurbine_HeatRecovery_addToNode) {
   EXPECT_EQ((unsigned)5, airLoop.demandComponents().size());
 
   PlantLoop plantLoop(model);
+  
+  // This should de settable to the supply side
   supplyOutletNode = plantLoop.supplyOutletNode();
   EXPECT_TRUE(mchpHR.addToNode(supplyOutletNode));
   EXPECT_EQ( (unsigned)7, plantLoop.supplyComponents().size() );
 
+  // This should be settable to the demand side too
   Node demandOutletNode = plantLoop.demandOutletNode();
-  EXPECT_FALSE(mchpHR.addToNode(demandOutletNode));
-  EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
+  EXPECT_TRUE(mchpHR.addToNode(demandOutletNode));
+  EXPECT_EQ( (unsigned)7, plantLoop.demandComponents().size() );
 
   GeneratorMicroTurbineHeatRecovery mchpHRClone = mchpHR.clone(model).cast<GeneratorMicroTurbineHeatRecovery>();
+  EXPECT_EQ((unsigned)5, plantLoop.supplyComponents().size());
   EXPECT_TRUE(mchpHRClone.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)9, plantLoop.supplyComponents().size() );
+  EXPECT_EQ( (unsigned)7, plantLoop.supplyComponents().size() );
 }
-
-
-// TEST_F(ModelFixture, GeneratorPhotovoltaic_Delete) {
-
 

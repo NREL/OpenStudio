@@ -226,18 +226,22 @@ namespace model {
   }
   
   // Get the parent generatorMicroTurbine
-  boost::optional<GeneratorMicroTurbine> GeneratorMicroTurbineHeatRecovery_Impl::generatorMicroTurbine() const {
+  GeneratorMicroTurbine GeneratorMicroTurbineHeatRecovery_Impl::generatorMicroTurbine() const {
+
+    boost::optional<GeneratorMicroTurbine> value;
     for ( const GeneratorMicroTurbine& mchp : this->model().getConcreteModelObjects<GeneratorMicroTurbine>() )
     {
       if ( boost::optional<GeneratorMicroTurbineHeatRecovery> mchpHR = mchp.generatorMicroTurbineHeatRecovery() )
       {
         if (mchpHR->handle() == this->handle())
         {
-          return mchp;
+          value = mchp;
         }
       }
     }
-    return boost::none;
+    OS_ASSERT(value);
+    return value.get();
+
   }
   
   
@@ -246,7 +250,6 @@ namespace model {
   
   // If defaulted, return mchpHR 'Reference Thermal Efficiency Using Lower Heat Value' divided by mchp 'Reference Electrical Efficiency Using Lower Heating Value'
   double GeneratorMicroTurbineHeatRecovery_Impl::ratedThermaltoElectricalPowerRatio() const {
-    // TODO: JM: I think I need to change the constructor of mchpHR to include mchp to make sure the heat recovery module is necesarilly linked to a mchp.
     boost::optional<double> optRatedThermaltoElectricalPowerRatio = getDouble(OS_Generator_MicroTurbine_HeatRecoveryFields::RatedThermaltoElectricalPowerRatio, true);
     // If there it's set
     if (optRatedThermaltoElectricalPowerRatio) {
@@ -266,12 +269,6 @@ namespace model {
       return ratedThermaltoElectricalPowerRatio;
       //}
     }
-  }
-  
-  double GeneratorMicroTurbineHeatRecovery_Impl::ratedThermaltoElectricalPowerRatio() const {
-    boost::optional<double> value = getDouble(OS_Generator_MicroTurbine_HeatRecoveryFields::RatedThermaltoElectricalPowerRatio,true);
-    OS_ASSERT(value);
-    return value.get();
   }
 
   bool GeneratorMicroTurbineHeatRecovery_Impl::isRatedThermaltoElectricalPowerRatioDefaulted() const {
@@ -443,7 +440,8 @@ GeneratorMicroTurbineHeatRecovery::GeneratorMicroTurbineHeatRecovery( const Mode
 {
 
   // Set object in parent
-  mchp.setGeneratorMicroTurbineHeatRecovery( (*this) );
+  mchp.getImpl<detail::GeneratorMicroTurbine_Impl>()->setGeneratorMicroTurbineHeatRecovery( (*this) );
+  //mchp.setGeneratorMicroTurbineHeatRecovery( (*this) );
   
   // Reference Thermal Efficiency Using Lower Heat Value has a default of 0 in E+ idd which isn't smart in this case
   // TODO Should I set it here, or change the .idd??
@@ -560,7 +558,7 @@ bool GeneratorMicroTurbineHeatRecovery::isRatedThermaltoElectricalPowerRatioDefa
   return getImpl<detail::GeneratorMicroTurbineHeatRecovery_Impl>()->isRatedThermaltoElectricalPowerRatioDefaulted();
 }
 
-boost::optional<GeneratorMicroTurbine> GeneratorMicroTurbineHeatRecovery::generatorMicroTurbine() const {
+GeneratorMicroTurbine GeneratorMicroTurbineHeatRecovery::generatorMicroTurbine() const {
   return getImpl<detail::GeneratorMicroTurbineHeatRecovery_Impl>()->generatorMicroTurbine();
 }
 
@@ -676,39 +674,6 @@ bool GeneratorMicroTurbineHeatRecovery::setRatedThermaltoElectricalPowerRatio(do
 void GeneratorMicroTurbineHeatRecovery::resetRatedThermaltoElectricalPowerRatio() {
   getImpl<detail::GeneratorMicroTurbineHeatRecovery_Impl>()->resetRatedThermaltoElectricalPowerRatio();
 }
-
-
-/// New Methods
-  // Problably useless...
-  //boost::optional<std::string> GeneratorMicroTurbineHeatRecovery_Impl::heatRecoveryWaterInletNodeName() const {
-  //  return getString(OS_Generator_MicroTurbineHeatRecoveryFields::HeatRecoveryWaterInletNodeName,true);
-  //}
-
-  /*ModelObject GeneratorMicroTurbineHeatRecovery_Impl::clone(Model model) const
-  {
-    GeneratorMicroTurbineHeatRecovery newMCHP = StraightComponent_Impl::clone(model).cast<GeneratorMicroTurbineHeatRecovery>();
-
-    return newMCHP;
-  }
-  
-  bool GeneratorMicroTurbineHeatRecovery_Impl::addToNode(Node & node)
-  {
-    if( boost::optional<PlantLoop> plant = node.plantLoop() )
-    {
-      if( plant->supplyComponent(node.handle()) )
-      {
-        if( StraightComponent_Impl::addToNode(node) )
-        {
-          return true;
-        }
-      }
-    }
-
-    return false;
-  }
-*/
-
-
 
 /// @cond
 GeneratorMicroTurbineHeatRecovery::GeneratorMicroTurbineHeatRecovery(std::shared_ptr<detail::GeneratorMicroTurbineHeatRecovery_Impl> impl)

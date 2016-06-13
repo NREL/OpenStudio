@@ -22,7 +22,6 @@
 
 #include <model/ModelAPI.hpp>
 #include "StraightComponent.hpp"
-#include "GeneratorMicroTurbine.hpp"
 
 
 namespace openstudio {
@@ -102,7 +101,7 @@ class MODEL_API GeneratorMicroTurbineHeatRecovery : public StraightComponent {
   bool isRatedThermaltoElectricalPowerRatioDefaulted() const;
   
   // Return optional parent generator
-  boost::optional<GeneratorMicroTurbine> generatorMicroTurbine() const;
+  GeneratorMicroTurbine generatorMicroTurbine() const;
 
   //@}
   /** @name Setters */

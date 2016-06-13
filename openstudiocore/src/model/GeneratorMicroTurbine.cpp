@@ -139,7 +139,7 @@ namespace detail {
     if( boost::optional<GeneratorMicroTurbineHeatRecovery> mchpHR = generatorMicroTurbineHeatRecovery() )
     {
       GeneratorMicroTurbineHeatRecovery mchpHRClone = mchpHR.get().clone(model).cast<GeneratorMicroTurbineHeatRecovery>();
-      newCHP.setGeneratorMicroTurbineHeatRecovery(mchpHRClone);
+      newCHP.getImpl<detail::GeneratorMicroTurbine_Impl>()->setGeneratorMicroTurbineHeatRecovery( mchpHRClone );
     }
 
     return newCHP;
@@ -565,16 +565,17 @@ namespace detail {
   }
   
   
-  // Optional Generator:MicroTurbine:HeatRecovery
+  // Private: Generator:MicroTurbine:HeatRecovery
   bool GeneratorMicroTurbine_Impl::setGeneratorMicroTurbineHeatRecovery(const GeneratorMicroTurbineHeatRecovery& generatorMicroTurbineHeatRecovery) {
     bool result = setPointer(OS_Generator_MicroTurbineFields::GeneratorMicroTurbineHeatRecoveryName, generatorMicroTurbineHeatRecovery.handle());
     return result;
   }
-
+  
+  /*
   void GeneratorMicroTurbine_Impl::resetGeneratorMicroTurbineHeatRecovery() {
     bool result = setString(OS_Generator_MicroTurbineFields::GeneratorMicroTurbineHeatRecoveryName, "");
     OS_ASSERT(result);
-  }
+  }*/
 
   /* void GeneratorMicroTurbine_Impl::resetCombustionAirInletNode() {
     bool result = setString(OS_Generator_MicroTurbineFields::CombustionAirInletNodeName, "");
@@ -1029,13 +1030,15 @@ void GeneratorMicroTurbine::resetAncillaryPowerFunctionofFuelInputCurve() {
   getImpl<detail::GeneratorMicroTurbine_Impl>()->resetAncillaryPowerFunctionofFuelInputCurve();
 }
 
-bool GeneratorMicroTurbine::setGeneratorMicroTurbineHeatRecovery(const GeneratorMicroTurbineHeatRecovery& heatRecovery) {
+// These isn't made "public" to bindings
+/*bool GeneratorMicroTurbine::setGeneratorMicroTurbineHeatRecovery(const GeneratorMicroTurbineHeatRecovery& heatRecovery) {
   return getImpl<detail::GeneratorMicroTurbine_Impl>()->setGeneratorMicroTurbineHeatRecovery(heatRecovery);
-}
+}*/
 
+/* This isn't implemented
 void GeneratorMicroTurbine::resetGeneratorMicroTurbineHeatRecovery() {
   getImpl<detail::GeneratorMicroTurbine_Impl>()->resetGeneratorMicroTurbineHeatRecovery();
-}
+}*/
 
 /*
 bool GeneratorMicroTurbine::setCombustionAirInletNode(const Connection& connection) {

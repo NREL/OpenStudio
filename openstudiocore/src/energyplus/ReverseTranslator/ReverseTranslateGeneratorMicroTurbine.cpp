@@ -367,8 +367,7 @@ OptionalModelObject ReverseTranslator::translateGeneratorMicroTurbine( const Wor
   {
    
     // Create a GeneratorMicroTurbineHeatRecovery module, and assign it to the MicroTurbine
-    openstudio::model::GeneratorMicroTurbineHeatRecovery mchpHR( m_model );
-    mchp.setGeneratorMicroTurbineHeatRecovery(  mchpHR );
+    openstudio::model::GeneratorMicroTurbineHeatRecovery mchpHR (m_model, mchp);
     
     // Assign the Reference Thermal Efficiency Using Lower Heat Value
     mchpHR.setReferenceThermalEfficiencyUsingLowerHeatValue(*d);

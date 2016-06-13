@@ -195,8 +195,8 @@ class MODEL_API GeneratorMicroTurbine : public Generator {
   void resetAncillaryPowerFunctionofFuelInputCurve();
   
   // Optional Generator:MicroTurbine:HeatRecovery
-  bool setGeneratorMicroTurbineHeatRecovery(const GeneratorMicroTurbineHeatRecovery& generatorMicroTurbineHeatRecovery);
-  void resetGeneratorMicroTurbineHeatRecovery();
+  //bool setGeneratorMicroTurbineHeatRecovery(const GeneratorMicroTurbineHeatRecovery& generatorMicroTurbineHeatRecovery);
+  //void resetGeneratorMicroTurbineHeatRecovery();
 
   // TODO: Check argument type. From object lists, some candidates are: Connection.
   //bool setCombustionAirInletNode(const Connection& connection);
