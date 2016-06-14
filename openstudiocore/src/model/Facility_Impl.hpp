@@ -30,8 +30,6 @@
 
 namespace openstudio {  
 
-class Economics;
-
 namespace model {
 
 class Building;
@@ -367,7 +365,6 @@ namespace detail {
     //@}
    protected:
    
-    bool initEconomics(Economics& economics) const;
     boost::optional<double> elecUse() const;
     boost::optional<double> elecCost() const;
     boost::optional<double> gasUse() const;

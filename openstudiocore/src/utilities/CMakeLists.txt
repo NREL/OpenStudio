@@ -2,6 +2,9 @@
 
 set(target_name openstudio_utilities)
 
+include_directories(${CMAKE_BINARY_DIR})
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
 include(idd/CMakeLists.txt)
 include(idf/CMakeLists.txt)
 include(sql/CMakeLists.txt)
@@ -112,7 +115,11 @@ set(filetypes_src
   filetypes/WorkflowJSON_Impl.hpp
   filetypes/WorkflowJSON.cpp
   filetypes/WorkflowStep.hpp
+  filetypes/WorkflowStep_Impl.hpp 
   filetypes/WorkflowStep.cpp  
+  filetypes/WorkflowStepResult.hpp
+  filetypes/WorkflowStepResult_Impl.hpp 
+  filetypes/WorkflowStepResult.cpp  
 )
 
 set(geometry_src
@@ -199,15 +206,6 @@ set(documentation_src
   mainpage.hpp
 )
 
-set(economics_src
-  economics/CostLineItem.hpp
-  economics/CostLineItem.cpp
-  economics/CostObject.hpp
-  economics/CostObject.cpp
-  economics/Economics.hpp
-  economics/Economics.cpp
-)
-
 set(${target_name}_depends
   sqlite
   jsoncpp
@@ -292,13 +290,19 @@ qt5_wrap_cpp_minimally(idf_moc_src ${idfxx_moc})
 qt5_wrap_cpp_minimally(data_moc_src ${data_moc}) # RM
 qt5_wrap_cpp_minimally(plot_moc_src ${plot_moc}) # [sudo] RM [-rf]
 
-# qrc files
-set(bcl_qrc
-  bcl/bcl.qrc
-)
 
-# generate rules for building source files from the resources
-qt5_add_resources(bcl_qrc_src ${bcl_qrc})
+# embedded files
+file(GLOB_RECURSE BCL_TEMPLATES  FOLLOW_SYMLINKS "${CMAKE_CURRENT_SOURCE_DIR}/bcl/templates/**/*.*")
+
+foreach( _FILE ${BCL_TEMPLATES} )
+  file(RELATIVE_PATH LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/bcl/" ${_FILE})
+  list(APPEND E_FILES ${_FILE})
+  list(APPEND E_PATHS ${LOCATION})
+endforeach()
+
+include("${CMAKE_SOURCE_DIR}/embedded/EmbedFiles.cmake")
+embed_files("${E_FILES}" "${E_PATHS}" EMBEDDED_OUTPUT openstudio)
+
 # set up groups of source files for Visual Studio
 source_group(bcl FILES ${bcl_src})
 source_group(cloud FILES ${cloud_src})
@@ -314,7 +318,7 @@ source_group(plot FILES ${plot_src})
 source_group(time FILES ${time_src})
 source_group(units FILES ${units_src})
 source_group(documentation FILES ${documentation_src})
-source_group(economics FILES ${economics_src})
+source_group(embedded FILES ${EMBEDDED_OUTPUT})
 
 
 add_custom_command(
@@ -330,7 +334,6 @@ set(${target_name}_src
   "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx" # referenced here to make sure it is generated when and where we expect
   ${bcl_src}
   ${bcl_moc_src}
-  ${bcl_qrc_src}
   ${cloud_src}
   ${cloud_moc_src}
   ${core_src}
@@ -338,7 +341,6 @@ set(${target_name}_src
   ${data_src}
   ${data_moc_src}
   ${documentation_src}
-  ${economics_src}
   ${filetypes_src}
   ${idd_src}
   ${idf_src}
@@ -350,6 +352,7 @@ set(${target_name}_src
   ${plot_moc_src}
   ${time_src}
   ${units_src}
+  ${EMBEDDED_OUTPUT}
 )
 
 set(${target_name}_test_src
@@ -391,8 +394,6 @@ set(${target_name}_test_src
   data/Test/TimeSeries_GTest.cpp
   data/Test/Variant_GTest.cpp
   data/Test/Vector_GTest.cpp
-  
-  economics/test/Economics_GTest.cpp
   
   filetypes/test/EpwFile_GTest.cpp
   filetypes/test/WorkflowJSON_GTest.cpp
@@ -473,7 +474,6 @@ set(${target_name}_swig_src
   core/python/LanguageSpecific.i
   core/csharp/LanguageSpecific.i
   cloud/Cloud.i
-  economics/Economics.i
   filetypes/Filetypes.i
   geometry/Geometry.i
   time/Time.i
@@ -545,8 +545,7 @@ MAKE_SWIG_TARGET(OpenStudioUtilitiesIdf utilitiesidf "${CMAKE_CURRENT_SOURCE_DIR
 MAKE_SWIG_TARGET(OpenStudioUtilitiesBCL utilitiesbcl "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesBCL.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesIdf)
 MAKE_SWIG_TARGET(OpenStudioUtilitiesCloud utilitiescloud "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesCloud.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesCore)
 MAKE_SWIG_TARGET(OpenStudioUtilitiesData utilitiesdata "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesData.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesBCL)
-MAKE_SWIG_TARGET(OpenStudioUtilitiesEconomics utilitieseconomics "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesEconomics.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesCore)
-MAKE_SWIG_TARGET(OpenStudioUtilitiesGeometry utilitiesgeometry "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesGeometry.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesEconomics)
+MAKE_SWIG_TARGET(OpenStudioUtilitiesGeometry utilitiesgeometry "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesGeometry.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesCore)
 MAKE_SWIG_TARGET(OpenStudioUtilitiesPlot utilitiesplot "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesPlot.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesGeometry)
 MAKE_SWIG_TARGET(OpenStudioUtilitiesSql utilitiessql "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesSql.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesPlot)
 MAKE_SWIG_TARGET(OpenStudioUtilitiesTime utilitiestime "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesTime.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesSql)

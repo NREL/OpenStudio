@@ -609,7 +609,19 @@ elseif( APPLE )
       EXPECTED_MD5 e4bfe40212b660895f76d5728685373d)
       execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_TAR_LOCAL_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
   endif()
-  list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}/qt_5_6_osx_static/lib/cmake")
+  list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}/qt_5_6_linux_64_static/lib/cmake")
+elseif( UNIX )
+  set(QT_TAR_LOCAL_PATH "${CMAKE_BINARY_DIR}/qt_5_6_linux_64_static.tar.gz")
+  file(MD5 ${QT_TAR_LOCAL_PATH} QT_TAR_MD5)
+  if( NOT QT_TAR_MD5 STREQUAL "4fd726173b801f34dc965ddbce53c193" )
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/qt_5_6_linux_64_static.tar.gz" 
+      ${QT_TAR_LOCAL_PATH} 
+      INACTIVITY_TIMEOUT 120 
+      SHOW_PROGRESS
+      EXPECTED_MD5 4fd726173b801f34dc965ddbce53c193)
+      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_TAR_LOCAL_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+  endif()
+  list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}/qt_5_6_linux_64_static/lib/cmake")
 endif()
 
 find_package(Qt5Core REQUIRED)
@@ -656,10 +668,18 @@ list(APPEND QT_LIBS Qt5::Concurrent)
 list(APPEND QT_LIBS Qt5::PrintSupport)
 if( UNIX )
   list(APPEND QT_LIBS "${_qt5Widgets_install_prefix}/plugins/sqldrivers/libqsqlite.a")
-  list(APPEND QT_LIBS "${_qt5Widgets_install_prefix}/lib/libqtpcre.a")
   list(APPEND QT_LIBS "${_qt5Widgets_install_prefix}/lib/libqtharfbuzzng.a")
   find_package(OpenGL REQUIRED)
   list(APPEND QT_LIBS "${OPENGL_LIBRARIES}")
+endif()
+
+if( UNIX AND NOT APPLE )
+  find_library(png_lib png)
+  list(APPEND QT_LIBS ${png_lib})
+  find_library(pcre16_lib pcre16)
+  list(APPEND QT_LIBS ${pcre16_lib})
+  find_library(crypto_lib crypto)
+  list(APPEND QT_LIBS ${crypto_lib})
 endif()
 
 if( APPLE )
@@ -677,6 +697,7 @@ if( APPLE )
   list(APPEND QT_LIBS ${appkit_lib})
   list(APPEND QT_LIBS ${systemconfiguration_lib})
   list(APPEND QT_LIBS ${security_lib})
+  list(APPEND QT_LIBS "${_qt5Widgets_install_prefix}/lib/libqtpcre.a")
 endif()
 
 if( WIN32 )
@@ -686,6 +707,7 @@ if( WIN32 )
   list(APPEND QT_LIBS wsock32)
   list(APPEND QT_LIBS ws2_32)
   list(APPEND QT_LIBS Crypt32)
+  list(APPEND QT_LIBS iphlpapi)
   list(APPEND QT_LIBS "${_qt5Widgets_install_prefix}/plugins/sqldrivers/qsqlite.lib")
   list(APPEND QT_LIBS "${_qt5Widgets_install_prefix}/lib/qtpcre.lib")
   list(APPEND QT_LIBS "${_qt5Widgets_install_prefix}/lib/qtharfbuzzng.lib")
@@ -901,9 +923,9 @@ export(TARGETS
 
 set(all_exe_targets
   GenerateIddFactory
-  gbXMLToIdf
-  OpenStudio
-  ResultsViewer
+  #gbXMLToIdf
+  #OpenStudio
+  #ResultsViewer
 )
 
 if(UNIX AND NOT APPLE)

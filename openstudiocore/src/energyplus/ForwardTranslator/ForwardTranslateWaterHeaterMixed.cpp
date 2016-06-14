@@ -265,11 +265,22 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterMixed( WaterHe
   }
 
   // AmbientTemperatureOutdoorAirNodeName
-
   s = modelObject.ambientTemperatureOutdoorAirNodeName();
-  if( s )
-  {
+  if( s && ! s->empty() ) {
+    IdfObject oaNodeList(openstudio::IddObjectType::OutdoorAir_NodeList);
+    oaNodeList.setString(0,s.get());
+    m_idfObjects.push_back(oaNodeList);
     idfObject.setString(WaterHeater_MixedFields::AmbientTemperatureOutdoorAirNodeName,s.get());
+  } else {
+    // Even if there is no node defined, if user chooses the outdoor air indicator we need to make a node
+    auto indicator = modelObject.ambientTemperatureIndicator();
+    if( istringEqual(indicator,"Outdoors") ) {
+      std::string oaNodeName = modelObject.nameString() + " Ambient Temp OA Node";
+      IdfObject oaNodeList(openstudio::IddObjectType::OutdoorAir_NodeList);
+      oaNodeList.setString(0,oaNodeName);
+      m_idfObjects.push_back(oaNodeList);
+      idfObject.setString(WaterHeater_MixedFields::AmbientTemperatureOutdoorAirNodeName,oaNodeName);
+    }
   }
 
   // OffCycleLossCoefficienttoAmbientTemperature

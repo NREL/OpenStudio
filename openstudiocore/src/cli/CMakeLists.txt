@@ -44,6 +44,7 @@ set(LIBS
   pty
   ##readline
   ripper
+  rbconfig
   sdbm
   socket
   stringio
@@ -190,19 +191,34 @@ add_definitions(-DRUBY_EXTCONF_H="osruby_config.h")
 
 # TODO: use finder or something better
 if( WIN32 )
-  set(JSON_LIBS optimized 
-          "${RUBY_SOURCE_DIR}/ext/json/generator/generator.lib" 
-          "${RUBY_SOURCE_DIR}/ext/json/parser/parser.lib"
-          debug
-          "${RUBY_SOURCE_DIR_DEBUG}/ext/json/generator/generator.lib" 
-          "${RUBY_SOURCE_DIR_DEBUG}/ext/json/parser/parser.lib")
+  set(OTHER_EXT_LIBS optimized 
+    "${RUBY_SOURCE_DIR}/ext/json/generator/generator.lib" 
+    "${RUBY_SOURCE_DIR}/ext/json/parser/parser.lib"
+    "${RUBY_SOURCE_DIR}/ext/digest/md5/md5.lib"
+    "${RUBY_SOURCE_DIR}/ext/digest/rmd160/rmd160.lib"
+    "${RUBY_SOURCE_DIR}/ext/digest/sha1/sha1.lib"
+    "${RUBY_SOURCE_DIR}/ext/digest/sha2/sha2.lib"
+    debug
+    "${RUBY_SOURCE_DIR_DEBUG}/ext/json/generator/generator.lib" 
+    "${RUBY_SOURCE_DIR_DEBUG}/ext/json/parser/parser.lib"
+    "${RUBY_SOURCE_DIR_DEBUG}/ext/digest/md5/md5.lib"
+    "${RUBY_SOURCE_DIR_DEBUG}/ext/digest/rmd160/rmd160.lib"
+    "${RUBY_SOURCE_DIR_DEBUG}/ext/digest/sha1/sha1.lib"
+    "${RUBY_SOURCE_DIR_DEBUG}/ext/digest/sha2/sha2.lib")
 else()
-  set(JSON_LIBS "${RUBY_SOURCE_DIR}/ext/json/generator/generator.a" "${RUBY_SOURCE_DIR}/ext/json/parser/parser.a")
+  set(OTHER_EXT_LIBS 
+    "${RUBY_SOURCE_DIR}/ext/json/generator/generator.a" 
+    "${RUBY_SOURCE_DIR}/ext/json/parser/parser.a"
+    "${RUBY_SOURCE_DIR}/ext/rbconfig/sizeof/sizeof.a"
+    "${RUBY_SOURCE_DIR}/ext/digest/md5/md5.a"
+    "${RUBY_SOURCE_DIR}/ext/digest/rmd160/rmd160.a"
+    "${RUBY_SOURCE_DIR}/ext/digest/sha1/sha1.a"
+    "${RUBY_SOURCE_DIR}/ext/digest/sha2/sha2.a")
 endif()
 
 target_link_libraries(openstudio 
  ${EXTENSION_LIBS} 
- ${JSON_LIBS}
+ ${OTHER_EXT_LIBS}
  ${ENCODING_LIB}
  ${TRANSLATION_LIB}
  ruby_OpenStudioAirflow
@@ -218,7 +234,7 @@ target_link_libraries(openstudio
  ##ruby_OpenStudioGBXML
  ruby_OpenStudioModelGenerators
  ##ruby_OpenStudioRadiance
- ruby_OpenStudioUtilitiesEconomics
+ #ruby_OpenStudioUtilitiesEconomics
  ruby_OpenStudioUtilitiesTime
  ##ruby_OpenStudioISOModel
  ruby_OpenStudioModelGeometry

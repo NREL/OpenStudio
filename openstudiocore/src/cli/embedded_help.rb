@@ -1,10 +1,22 @@
+
+module RbConfig
+  def RbConfig.ruby
+    EmbeddedScripting::applicationFilePath;
+  end
+end
+
 BINDING = Kernel::binding()
+Encoding.default_external = Encoding::ASCII
 
 module Kernel
   # ":" is our root path to the embedded file system
   # make sure it is in the ruby load path
   $LOAD_PATH << ':'
   $LOAD_PATH << ':/ruby/2.2.0'
+  # TODO configure this in a better way
+  # these hardcoded platform paths are brain dead
+  $LOAD_PATH << ':/ruby/2.2.0/x86_64-darwin13'
+  $LOAD_PATH << ':/ruby/2.2.0/x64-mswin64_120'
   $LOAD_PATH << ':/openstudio-workflow-1.0.0.alpha.0/lib'
   $LOADED = []
 
@@ -196,20 +208,33 @@ module Ruleset
     end      
   end
   
-  # support for name deprecated as of 2.0.0
-  class OSResult < OpenStudio::Measure::OSResult
-    def initialize
-      OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "OSResult is deprecated, use OpenStudio::Measure::OSResult instead.")
-      super
-    end      
-  end
+  # class was replaced by OpenStudio::WorkflowStepResult
+#  # support for name deprecated as of 2.0.0
+#  class OSResult < OpenStudio::Measure::OSResult
+#    def initialize
+#      OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "OSResult is deprecated, use OpenStudio::Measure::OSResult instead.")
+#      super
+#    end      
+#  end
+#  
+#  # support for name deprecated as of 2.0.0
+#  class OSResultVector < OpenStudio::Measure::OSResultVector
+#    def initialize
+#      OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "OSResultVector is deprecated, use OpenStudio::Measure::OSResultVector instead.")
+#      super
+#    end      
+#  end
   
   # support for name deprecated as of 2.0.0
   class OSRunner < OpenStudio::Measure::OSRunner
-    def initialize
+    def initialize(workflow_json = nil)
       OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "OSRunner is deprecated, use OpenStudio::Measure::OSRunner instead.")
-      super
-    end      
+      if workflow_json.nil?
+        workflow_json = OpenStudio::WorkflowJSON.new
+        OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "No workflow provided, using empty WorkflowJSON.")
+      end
+      super(workflow_json)
+    end       
   end
   
   # support for name deprecated as of 2.0.0
@@ -221,7 +246,7 @@ module Ruleset
       elsif args.size == 8
         super(args[0],args[1],args[2],args[3],args[4],args[5],args[6],args[7],args[8])
       end
-    end      
+    end       
   end
   
   # support for name deprecated as of 2.0.0
@@ -229,7 +254,7 @@ module Ruleset
     OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "Ruleset is deprecated, use OpenStudio::Measure::infoExtractorRubyFunction instead.")
     return OpenStudio::Measure.infoExtractorRubyFunction
   end
-
+  
   # support for name deprecated as of 2.0.0
   def self.getInfo(measure, model, workspace)
     OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "Ruleset is deprecated, use OpenStudio::Measure::getInfo instead.")
@@ -238,5 +263,3 @@ module Ruleset
   
 end # module Ruleset
 end # module OpenStudio
-
-

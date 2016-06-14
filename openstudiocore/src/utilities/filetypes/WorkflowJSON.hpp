@@ -31,14 +31,8 @@
 
 namespace openstudio{
 
-  /** TODO:
-  * Variant class: remove
-  * Attribute class: simplify interface, not use QVariant, handle JSON objects (currently just does arrays), provide better JSON support
-  * WorkflowJSON class: ensure that this can read and write arbitrary JSON 
-  * WorkflowStep class: build around Attribute
-  */
-  
 class WorkflowStep;
+class DateTime;
 
 namespace detail{
   class WorkflowJSON_Impl;
@@ -85,42 +79,84 @@ public:
   /** Saves this file to a new location. */
   bool saveAs(const openstudio::path& p) const;
 
-  /** Returns the original path this workflow was loaded from, can be empty. */
-  openstudio::path path() const;
+  /** Reset to re-run the workflow, does not delete steps. */
+  void reset();
 
-  /** Returns the absolute path to the root directory, can be empty. 
-   ** Key name is 'root', default value is '.' */
-  openstudio::path rootPath() const;
+  /** Sets the started at time. */
+  void start();
 
-  /** Returns the absolute path to the seed file, can be empty. 
-   ** Key name is 'seed', default value is '' */
-  openstudio::path seedPath() const;
+  /** Get the current step index. */
+  unsigned currentStepIndex() const;
 
-  /** Returns the absolute path to the weather file, can be empty. 
-   ** Key name is 'weather_file', default value is '' */
-  openstudio::path weatherPath() const;
+  /** Get the current step. */
+  boost::optional<WorkflowStep> currentStep() const;
 
-  /** Returns the absolute path to the measures directory, can be empty. */
-  openstudio::path measuresDir() const;
+  /** Increments current step, returns true if there is another step. */
+  bool incrementStep();
 
-  /** Returns the attributes (other than steps). */
-  std::vector<Attribute> attributes() const;
+  /** Returns the completion status, "Success" or "Fail". */
+  boost::optional<std::string> completedStatus() const;
 
-  /** Gets an attribute (other than steps). */
-  boost::optional<Attribute> getAttribute(const std::string& name) const;
+  /** Sets the completion status, "Success" or "Fail". */
+  void setCompletedStatus(const std::string& status);
 
-  /** Removes an attribute (other than steps). */
-  bool removeAttribute(const std::string& name);
+  /** Returns the time this WorkflowJSON was created at. */
+  boost::optional<DateTime> createdAt() const;
 
-  /** Sets an attribute (other than steps). */
-  bool setAttribute(const Attribute& attribute);
-  bool setAttribute(const std::string& name, bool value);
-  bool setAttribute(const std::string& name, double value);
-  bool setAttribute(const std::string& name, int value);
-  bool setAttribute(const std::string& name, const std::string& value);
-  
-  /** Clears all attributes (other than steps). */
-  void clearAttributes();
+  /** Returns the time this WorkflowJSON was started at. */
+  boost::optional<DateTime> startedAt() const;
+
+  /** Returns the time this WorkflowJSON was updated at. */
+  boost::optional<DateTime> updatedAt() const;
+
+  /** Returns the time this WorkflowJSON was completed at. */
+  boost::optional<DateTime> completedAt() const;
+
+  /** Returns the absolute path this workflow was loaded from or saved to, empty for new WorkflowJSON. */
+  boost::optional<openstudio::path> oswPath() const;
+
+  /** Sets the absolute path for this workflow. */
+  bool setOswPath(const openstudio::path& path);
+
+  /** Returns the absolute path to the directory this workflow was loaded from or saved to.  Returns current working dir for new WorkflowJSON. */
+  openstudio::path oswDir() const;
+
+  /** Sets the oswDir.  If oswPath is empty this does not set it.  If oswPath is set, this changes directories but preserves file name. */
+  bool setOswDir(const openstudio::path& path);
+
+  /** Returns the root directory, default value is '.'. Evaluated relative to oswDir if not absolute. */
+  openstudio::path rootDir() const;
+  openstudio::path absoluteRootDir() const;
+
+  /** Returns the run directory, default value is './run'. Evaluated relative to rootDir if not absolute. */
+  openstudio::path runDir() const;
+  openstudio::path absoluteRunDir() const;
+
+  /** Returns the path to write output OSW, default value is 'out.osw'. Evaluated relative to oswDir to ensure relative paths remain valid. */
+  openstudio::path outPath() const;
+  openstudio::path absoluteOutPath() const;
+
+  /** Returns the paths that will be searched in order for files, default value is './files/'. Evaluated relative to rootDir if not absolute. */
+  std::vector<openstudio::path> filePaths() const;
+  std::vector<openstudio::path> absoluteFilePaths() const;
+
+  /** Attempts to find a file by name, searches through filePaths in order and returns first match. */
+  boost::optional<openstudio::path> findFile(const openstudio::path& file) const;
+  boost::optional<openstudio::path> findFile(const std::string& fileName) const;
+
+  /** Returns the paths that will be searched in order for measures, default value is './measures/'. Evaluated relative to rootDir if not absolute. */
+  std::vector<openstudio::path> measurePaths() const;
+  std::vector<openstudio::path> absoluteMeasurePaths() const;
+
+  /** Attempts to find a measure by name, searches through measurePaths in order and returns first match. */
+  boost::optional<openstudio::path> findMeasure(const openstudio::path& measureDir) const;
+  boost::optional<openstudio::path> findMeasure(const std::string& measureDirName) const;
+
+  /** Returns the seed file path. Evaluated relative to filePaths if not absolute. */
+  boost::optional<openstudio::path> seedFile() const;
+
+  /** Returns the weather file path. Evaluated relative to filePaths if not absolute. */
+  boost::optional<openstudio::path> weatherFile() const;
 
   /** Returns the workflow steps. */
   std::vector<WorkflowStep> workflowSteps() const;
@@ -149,6 +185,8 @@ private:
   // pointer to implementation
   std::shared_ptr<detail::WorkflowJSON_Impl> m_impl;
 };
+
+UTILITIES_API std::ostream& operator<<(std::ostream& os, const WorkflowJSON& workflowJSON);
 
 } // openstudio
 

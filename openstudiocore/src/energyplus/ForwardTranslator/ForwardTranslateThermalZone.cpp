@@ -378,8 +378,10 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
       // Shared Data
       std::string lightingControlType = primaryDaylightingControl->lightingControlType();
       if (istringEqual("None", lightingControlType)){
-        // fraction for first point have been set to 0, get control type from second point
-        lightingControlType = secondaryDaylightingControl->lightingControlType();
+        // fraction for first point have been set to 0, try to get control type from second point
+        if (secondaryDaylightingControl){
+          lightingControlType = secondaryDaylightingControl->lightingControlType();
+        }
       }
 
       if (istringEqual("None", lightingControlType)){

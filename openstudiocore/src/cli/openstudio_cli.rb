@@ -28,8 +28,8 @@ require 'optparse'
 #include OpenStudio::Workflow::Util::IO
 
 $logger = Logger.new(STDOUT)
-$logger.level = Logger::ERROR
-#$logger.level = Logger::WARN
+#$logger.level = Logger::ERROR
+$logger.level = Logger::WARN
 #$logger.level = Logger::DEBUG
 
 #OpenStudio::Logger.instance.standardOutLogger.disable
@@ -130,7 +130,13 @@ def split_main_and_subcommand(argv)
   # We split the arguments into two: One set containing any flags before a word, and then the rest. The rest are what
   # get actually sent on to the command
   argv.each_index do |i|
-    unless argv[i].start_with?('-')
+    if argv[i].start_with?('-') 
+      next
+    elsif argv[i].end_with?('.rb')
+      sub_command = 'e'
+      sub_args    = argv[i..-1]
+      break
+    else
       # We found the beginning of the sub command. Split the
       # args up.
       main_args   = argv[0, i]
@@ -327,13 +333,13 @@ class Run
     osw_path = File.absolute_path(File.join(Dir.pwd, osw_path)) unless Pathname.new(osw_path).absolute?
     $logger.debug "Path for the OSW: #{osw_path}"
 
-    adapter_options = {workflow_filename: File.basename(osw_path), output_directory: File.join(Dir.pwd, 'run')}
+    #adapter_options = {workflow_filename: File.basename(osw_path), output_directory: File.join(Dir.pwd, 'run')}
     
-    $logger.debug "Loading input adapter, options = #{adapter_options}"
-    input_adapter = OpenStudio::Workflow.load_input_adapter 'local', adapter_options
+    #$logger.debug "Loading input adapter, options = #{adapter_options}"
+    #input_adapter = OpenStudio::Workflow.load_input_adapter 'local', adapter_options
     
-    $logger.debug "Loading output adapter, options = #{adapter_options}"
-    output_adapter = OpenStudio::Workflow.load_output_adapter 'local', adapter_options
+    #$logger.debug "Loading output adapter, options = #{adapter_options}"
+    #output_adapter = OpenStudio::Workflow.load_output_adapter 'local', adapter_options
     
     run_options = options[:debug] ? {debug: true, cleanup: false} : {}
     if options[:no_simulation]
@@ -369,7 +375,7 @@ class Run
     end
     
     $logger.debug "Initializing run method"
-    k = OpenStudio::Workflow::Run.new input_adapter, output_adapter, File.dirname(osw_path), run_options
+    k = OpenStudio::Workflow::Run.new osw_path, run_options
     
     $logger.debug "Beginning run"
     k.run
@@ -656,6 +662,8 @@ class ExecuteRubyScript
   # @return [Fixnum] Return status
   #
   def execute(sub_argv)
+    require 'pathname'
+
     options = {}
 
     opts = OptionParser.new do |o|

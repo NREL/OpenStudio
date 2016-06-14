@@ -55,6 +55,7 @@ class UTILITIES_API Variant {
  public:
 
   /// constructors
+  explicit Variant();
   explicit Variant(bool value);
   explicit Variant(double value);
   explicit Variant(int value);
@@ -90,6 +91,8 @@ typedef boost::optional<Variant> OptionalVariant;
 
 /** \relates Variant */
 typedef std::vector<Variant> VariantVector;
+
+UTILITIES_API std::ostream& operator<<(std::ostream& os, const Variant& variant);
 
 } // openstudio
 

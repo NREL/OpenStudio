@@ -32,95 +32,106 @@
 #include <jsoncpp/json.h>
 
 namespace openstudio{
+  
+class DateTime;
+
 namespace detail {
 
     class UTILITIES_API WorkflowJSON_Impl
     {
     public:
 
-      /** Create a new, empty workflow. */
       WorkflowJSON_Impl();
 
-      /** Constructor with string, will throw if string is incorrect. */
       WorkflowJSON_Impl(const std::string& s);
 
-      /** Constructor with path, will throw if path does not exist or file is incorrect. */
       WorkflowJSON_Impl(const openstudio::path& p);
 
-      /** Get the workflow as a string. */
+      WorkflowJSON clone() const;
+
       std::string string(bool includeHash = true) const;
 
-      /** Get a stored hash of the workflow. */
       std::string hash() const;
 
-      /** Compute the current hash of the workflow. */
       std::string computeHash() const;
 
-      /** Check for updates and return true if there are any, updates value of the stored hash. */
       bool checkForUpdates();
 
-      /** Saves this file to the current location. */
       bool save() const;
 
-      /** Saves this file to a new location. */
       bool saveAs(const openstudio::path& p) const;
 
-      /** Returns the original path this workflow was loaded from, can be empty. */
-      openstudio::path path() const;
+      void reset();
 
-      /** Returns the absolute path to the root directory, can be empty.
-       ** Key name is 'root', default value is '.' */
-      openstudio::path rootPath() const;
+      void start();
 
-      /** Returns the absolute path to the seed file, can be empty.
-       ** Key name is 'seed', default value is '' */
-      openstudio::path seedPath() const;
+      unsigned currentStepIndex() const;
 
-      /** Returns the absolute path to the weather file, can be empty.
-       ** Key name is 'weather_file', default value is '' */
-      openstudio::path weatherPath() const;
+      boost::optional<WorkflowStep> currentStep() const;
 
-      /** Returns the absolute path to the measures directory, can be empty. */
-      openstudio::path measuresDir() const;
+      bool incrementStep();
 
-      /** Returns the attributes (other than steps). */
-      std::vector<Attribute> attributes() const;
+      boost::optional<std::string> completedStatus() const;
 
-      /** Gets an attribute (other than steps). */
-      boost::optional<Attribute> getAttribute(const std::string& name) const;
+      void setCompletedStatus(const std::string& status);
 
-      /** Removes an attribute (other than steps). */
-      bool removeAttribute(const std::string& name);
+      boost::optional<DateTime> createdAt() const;
 
-      /** Sets an attribute (other than steps). */
-      bool setAttribute(const Attribute& attribute);
-      bool setAttribute(const std::string& name, bool value);
-      bool setAttribute(const std::string& name, double value);
-      bool setAttribute(const std::string& name, int value);
-      bool setAttribute(const std::string& name, const std::string& value);
+      boost::optional<DateTime> startedAt() const;
 
-      /** Clears all attributes (other than steps). */
-      void clearAttributes();
+      boost::optional<DateTime> updatedAt() const;
 
-      /** Returns the workflow steps. */
+      boost::optional<DateTime> completedAt() const;
+
+      boost::optional<openstudio::path> oswPath() const;
+
+      bool setOswPath(const openstudio::path& path);
+
+      openstudio::path oswDir() const;
+
+      bool setOswDir(const openstudio::path& path);
+
+      openstudio::path rootDir() const;
+      openstudio::path absoluteRootDir() const;
+
+      openstudio::path runDir() const;
+      openstudio::path absoluteRunDir() const;
+
+      openstudio::path outPath() const;
+      openstudio::path absoluteOutPath() const;
+
+      std::vector<openstudio::path> filePaths() const;
+      std::vector<openstudio::path> absoluteFilePaths() const;
+
+      boost::optional<openstudio::path> findFile(const openstudio::path& file) const;
+      boost::optional<openstudio::path> findFile(const std::string& fileName) const;
+
+      std::vector<openstudio::path> measurePaths() const;
+      std::vector<openstudio::path> absoluteMeasurePaths() const;
+
+      boost::optional<openstudio::path> findMeasure(const openstudio::path& measureDir) const;
+      boost::optional<openstudio::path> findMeasure(const std::string& measureDirName) const;
+
+      boost::optional<openstudio::path> seedFile() const;
+
+      boost::optional<openstudio::path> weatherFile() const;
+
       std::vector<WorkflowStep> workflowSteps() const;
 
-      /** Assigns the workflow steps. */
       bool setWorkflowSteps(const std::vector<WorkflowStep>& steps);
 
     private:
 
-      Attribute parse(const std::string& name, const Json::Value& json);
-
-      Json::Value json(bool includeHash) const;
-
-      // configure logging
       REGISTER_LOGGER("openstudio.WorkflowJSON");
 
-      openstudio::path m_path;
+      void onUpdate();
 
-      std::vector<Attribute> m_attributes; // does not store 'steps'
-      std::vector<WorkflowStep> m_workflowSteps;
+      void parseSteps();
+
+      openstudio::path m_oswDir;
+      openstudio::path m_oswFilename;
+      Json::Value m_value;
+      std::vector<WorkflowStep> m_steps;
     };
 
 } // detail

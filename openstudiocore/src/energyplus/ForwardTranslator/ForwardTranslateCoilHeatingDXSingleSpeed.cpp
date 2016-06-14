@@ -133,6 +133,12 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingDXSingleSpeedW
     idfObject.setDouble(Coil_Heating_DX_SingleSpeedFields::RatedAirFlowRate,value.get());
   }
 
+  // Rated Supply Fan Power Per Volume Flow Rate
+
+  if( value = modelObject.ratedSupplyFanPowerPerVolumeFlowRate() ) {
+    idfObject.setDouble(Coil_Heating_DX_SingleSpeedFields::RatedSupplyFanPowerPerVolumeFlowRate,value.get());
+  }
+  
   // TotalHeatingCapacityFunctionofTemperatureCurveName
 
   ModelObject curve = modelObject.totalHeatingCapacityFunctionofTemperatureCurve();

@@ -38,7 +38,7 @@
 #include <QSettings>
 #include <QRegularExpression>
 
-
+#include <src/utilities/embedded_files.hxx>
 
 namespace openstudio{
 
@@ -94,16 +94,16 @@ namespace openstudio{
     createDirectory(measureTestDir);
 
     // read in template files
-    QString measureTemplate;
-    QString testTemplate;
+    std::string measureTemplate;
+    std::string testTemplate;
     QString templateClassName;
     QString templateName = "NAME_TEXT";
     QString templateDescription = "DESCRIPTION_TEXT";
     QString templateModelerDescription = "MODELER_DESCRIPTION_TEXT";
     std::vector<BCLMeasureArgument> arguments;
     std::vector<BCLMeasureOutput> outputs;
-    QString testOSM;
-    QString resourceFile;
+    std::string testOSM;
+    std::string resourceFile;
     openstudio::path testOSMPath;
     openstudio::path resourceFilePath;
     if (measureType == MeasureType::ModelMeasure){
@@ -165,48 +165,28 @@ namespace openstudio{
     }
 
     QString measureString;
-    if (!measureTemplate.isEmpty()){
-      QFile file(measureTemplate);
-      if(file.open(QFile::ReadOnly)){
-        QTextStream docIn(&file);
-        measureString = docIn.readAll();
-        measureString.replace(templateClassName, toQString(className));
-        measureString.replace(templateName, toQString(name));
-        measureString.replace(templateModelerDescription, toQString(modelerDescription)); // put first as this includes description tag
-        measureString.replace(templateDescription, toQString(description));
-        file.close();
-      }
+    if (!measureTemplate.empty()){
+      measureString = toQString(::openstudio::embedded_files::getFileAsString(measureTemplate));
+      measureString.replace(templateClassName, toQString(className));
+      measureString.replace(templateName, toQString(name));
+      measureString.replace(templateModelerDescription, toQString(modelerDescription)); // put first as this includes description tag
+      measureString.replace(templateDescription, toQString(description));
     }
 
     QString testString;
-    if (!testTemplate.isEmpty()){
-      QFile file(testTemplate);
-      if(file.open(QFile::ReadOnly)){
-        QTextStream docIn(&file);
-        testString = docIn.readAll();
-        testString.replace(templateClassName, toQString(className));
-        file.close();
-      }
+    if (!testTemplate.empty()){
+      testString = toQString(::openstudio::embedded_files::getFileAsString(testTemplate));
+      testString.replace(templateClassName, toQString(className));
     }
 
     QString testOSMString;
-    if (!testOSM.isEmpty()){
-      QFile file(testOSM);
-      if(file.open(QFile::ReadOnly)){
-        QTextStream docIn(&file);
-        testOSMString = docIn.readAll();
-        file.close();
-      }
+    if (!testOSM.empty()){
+      testOSMString = toQString(::openstudio::embedded_files::getFileAsString(testOSM));
     }
 
     QString resourceFileString;
-    if (!resourceFile.isEmpty()){
-      QFile file(resourceFile);
-      if(file.open(QFile::ReadOnly)){
-        QTextStream docIn(&file);
-        resourceFileString = docIn.readAll();
-        file.close();
-      }
+    if (!resourceFile.empty()){
+      resourceFileString = toQString(::openstudio::embedded_files::getFileAsString(resourceFile));
     }
 
     // write files
@@ -949,6 +929,21 @@ namespace openstudio{
   void BCLMeasure::clearAttributes()
   {
     m_bclXML.clearAttributes();
+  }
+
+  bool BCLMeasure::missingRequiredFields() const
+  {
+    bool missing = (
+      uid().empty() ||
+      versionId().empty() ||
+      xmlChecksum().empty() ||
+      name().empty() ||
+      displayName().empty() ||
+      className().empty() ||
+      description().empty() ||
+      modelerDescription().empty()
+      );
+    return missing;
   }
 
   bool BCLMeasure::checkForUpdatesFiles()

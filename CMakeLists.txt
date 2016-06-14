@@ -10,7 +10,7 @@ project(OpenStudio)
 
 set(CMAKE_VERSION_MAJOR 1)
 set(CMAKE_VERSION_MINOR 11)
-set(CMAKE_VERSION_PATCH 4)
+set(CMAKE_VERSION_PATCH 5)
 
 set(CMAKE_VERSION_BUILD "Unknown" CACHE STRING "Build number")
 find_package(Git)
@@ -447,19 +447,34 @@ if(BUILD_V8)
   set(V8_INCLUDE_DIR ${CMAKE_BINARY_DIR}/V8-prefix/src/V8/include)
 endif()
 
-if( UNIX )
+if( APPLE )
   ExternalProject_Add(Ruby
     URL https://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.2.0.tar.gz
     URL_MD5 d4d8b600af2f77566515728d5bd7ffa4
     BUILD_IN_SOURCE 1
     CONFIGURE_COMMAND autoconf && sh -c "./configure --with-static-linked-ext --without-gmp --without-tcl --without-tk --disable-install-doc --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install"
-    BUILD_COMMAND $(MAKE) libenc; $(MAKE) libtrans; $(MAKE)
+    BUILD_COMMAND $(MAKE)  libenc; $(MAKE) libtrans; $(MAKE)
     INSTALL_COMMAND $(MAKE) install
   )
   set(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/libruby-static.a")
   set(RUBY_INCLUDE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/include/ruby-2.2.0")
   # Uh... yeah. this line needs some work...
   set(RUBY_CONFIG_INCLUDE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/include/ruby-2.2.0/x86_64-darwin15")
+  set(RUBY_EXECUTABLE "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby")
+  set(RUBY_SOURCE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby")
+elseif( UNIX )
+  ExternalProject_Add(Ruby
+    URL https://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.2.0.tar.gz
+    URL_MD5 d4d8b600af2f77566515728d5bd7ffa4
+    BUILD_IN_SOURCE 1
+    CONFIGURE_COMMAND autoconf && sh -c "./configure --with-static-linked-ext --without-gmp --without-tcl --without-tk --disable-install-doc --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install"
+    BUILD_COMMAND $(MAKE)
+    INSTALL_COMMAND $(MAKE) install
+  )
+  set(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/libruby-static.a")
+  set(RUBY_INCLUDE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/include/ruby-2.2.0")
+  # Uh... yeah. this line needs some work...
+  set(RUBY_CONFIG_INCLUDE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/include/ruby-2.2.0/x86_64-linux")
   set(RUBY_EXECUTABLE "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby")
   set(RUBY_SOURCE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby")
 else()
@@ -493,10 +508,10 @@ if( WIN32 )
 endif()
 ExternalProject_Add(OpenStudio-workflow-gem
   GIT_REPOSITORY https://github.com/NREL/OpenStudio-workflow-gem.git
-  GIT_TAG osw
+  GIT_TAG c2f6ed3b51515b512378c7a913537b43851e8229
   BUILD_IN_SOURCE 1
   CONFIGURE_COMMAND ""
-  BUILD_COMMAND ${SHELL_COMMAND} "gem build openstudio-workflow.gemspec"
+  BUILD_COMMAND ${SHELL_COMMAND} "gem build --force openstudio-workflow.gemspec"
   INSTALL_COMMAND ${SHELL_COMMAND} "gem install --force --install-dir ${CMAKE_BINARY_DIR}/OpenStudio-workflow-gem-prefix/src/OpenStudio-workflow-gem-install ${CMAKE_BINARY_DIR}/OpenStudio-workflow-gem-prefix/src/OpenStudio-workflow-gem/openstudio-workflow-1.0.0.alpha.0.gem"
 )
 # Get rid of that version id in the path, or find it or something that doesn't require maintenance
@@ -638,10 +653,28 @@ set(GeographicLib_DIR ${CMAKE_BINARY_DIR}/GeographicLib-prefix/src/GeographicLib
 ## windows configure notes
 #-platform win32-msvc2013 -debug-and-release -opensource -openssl -opengl dynamic -static -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -confirm-license -prefix C:\Qt2\5.6\msvc2013_static
 #
+# Dan's attempt
+## MSVC 2013
+# from build dir (which should be below qt dir)
+# "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" amd64
+# set CL=/MP
+# ..\configure.bat -platform win32-msvc2013 -debug-and-release -opensource -openssl-linked OPENSSL_LIBS="-lssleay32 -llibeay32" -I C:\OpenSSL-Win64\include -L C:\OpenSSL-Win64\lib\VC\static -opengl dynamic -static -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -confirm-license -prefix C:\Qt2\5.6\msvc2013_static
+# nmake
+#
+## MSVC 2015
+# from build dir (which should be below qt dir)
+# "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" amd64
+# set CL=/MP
+# ..\configure.bat -platform win32-msvc2015 -debug-and-release -opensource -openssl-linked OPENSSL_LIBS="-lssleay32 -llibeay32" -I C:\OpenSSL-Win64\include -L C:\OpenSSL-Win64\lib\VC\static -opengl dynamic -static -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -confirm-license -prefix C:\Qt2\5.6\msvc2015_static
+# nmake
 
 ## mac configure notes
 #./configure -v -release -opensource -static -openssl -no-pch -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -confirm-license -prefix /Users/kbenne/Development/Qt/qt_5_6_osx_static
 #
+
+## linux configure notes
+# install deps according to here http://doc.qt.io/qt-5/linux-requirements.html
+#./configure -v -release -opensource -static -openssl -no-pch -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -qt-xcb -confirm-license  -no-qml-debug -prefix /home/kbenne/Qt/qt_5_6_linux_64_static 
 
 
 

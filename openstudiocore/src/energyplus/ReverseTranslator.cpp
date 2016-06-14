@@ -642,7 +642,7 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
     }
   case openstudio::IddObjectType::RunPeriodControl_DaylightSavingTime :
     {
-      //modelObject = translateRunPeriodControlDaylightSavingTime(workspaceObject);
+      modelObject = translateRunPeriodControlDaylightSavingTime(workspaceObject);
       break;
     }
   case openstudio::IddObjectType::RunPeriodControl_SpecialDays :

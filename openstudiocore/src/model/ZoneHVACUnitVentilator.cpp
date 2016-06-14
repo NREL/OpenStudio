@@ -113,6 +113,8 @@ namespace detail {
 
     auto const supplyFanClone = this->supplyAirFan().clone(model).cast<HVACComponent>();
 
+    objectClone.setSupplyAirFan(supplyFanClone);
+
     bool sameModel = model == this->model();
 
     if( auto const t_coolingCoil = coolingCoil() ) {

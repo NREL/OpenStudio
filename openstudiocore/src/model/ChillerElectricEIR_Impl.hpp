@@ -101,6 +101,10 @@ class MODEL_API ChillerElectricEIR_Impl : public WaterToWaterComponent_Impl
 
   virtual unsigned demandOutletPort() override;
 
+  virtual unsigned tertiaryInletPort() const override;
+
+  virtual unsigned tertiaryOutletPort() const override;
+
   //@}
   boost::optional<double> referenceCapacity() const;
 
