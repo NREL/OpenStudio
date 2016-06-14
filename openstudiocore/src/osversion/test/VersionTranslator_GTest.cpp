@@ -402,7 +402,9 @@ TEST_F(OSVersionFixture,VersionTranslator_0_7_4_NameRefsTranslated) {
   for (const model::Construction construction : constructions) {
     ASSERT_FALSE(construction.layers().empty());
     model::Material material = construction.layers()[0];
-    ASSERT_FALSE(material.attributeNames().empty());
+    
+    // Removed due to removal of attributes
+    // ASSERT_FALSE(material.attributeNames().empty());
   }
 }
 

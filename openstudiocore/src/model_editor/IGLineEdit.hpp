@@ -29,8 +29,8 @@
 
 class  MODELEDITOR_API IGLineEdit : public QLineEdit
 {
-  Q_OBJECT;
-  Q_PROPERTY( bool precision READ getPrec WRITE setPrec );
+  
+  
   
 
  public:

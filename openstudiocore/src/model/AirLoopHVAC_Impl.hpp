@@ -44,14 +44,14 @@ namespace detail {
 class Model_Impl;
 
 class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
-  Q_OBJECT;
+  
 
-  Q_PROPERTY(std::vector<openstudio::model::ModelObject> supplyOutletNodes READ supplyOutletNodesAsModelObjects);
-  Q_PROPERTY(std::vector<openstudio::model::ModelObject> demandInletNodes READ demandInletNodesAsModelObjects);
-  Q_PROPERTY(boost::optional<openstudio::model::ModelObject> demandOutletNode READ demandOutletNodeAsModelObject);
-  Q_PROPERTY(boost::optional<openstudio::model::ModelObject> reliefAirNode READ reliefAirNodeAsModelObject);
-  Q_PROPERTY(boost::optional<openstudio::model::ModelObject> zoneMixer READ zoneMixerAsModelObject);
-  Q_PROPERTY(boost::optional<openstudio::model::ModelObject> zoneSplitter READ zoneSplitterAsModelObject);
+  
+  
+  
+  
+  
+  
 
  public:
 

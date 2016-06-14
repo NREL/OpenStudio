@@ -33,7 +33,7 @@ namespace model {
 namespace detail {
 
   class MODEL_API PlanarSurfaceGroup_Impl : public ParentObject_Impl {
-    Q_OBJECT;
+    
    public:
 
     /** @name Constructors and Destructors */

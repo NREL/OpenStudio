@@ -34,20 +34,20 @@ namespace detail {
 
   /** ExteriorLights_Impl is a ModelObject_Impl that is the implementation class for ExteriorLights.*/
   class MODEL_API ExteriorLights_Impl : public ModelObject_Impl {
-    Q_OBJECT;
-    Q_PROPERTY(std::string controlOption READ controlOption WRITE setControlOption RESET resetControlOption);
-    Q_PROPERTY(bool isControlOptionDefaulted READ isControlOptionDefaulted);
-    Q_PROPERTY(std::vector<std::string> controlOptionValues READ controlOptionValues);
+    
+    
+    
+    
 
-    Q_PROPERTY(double multiplier READ multiplier WRITE setMultiplier RESET resetMultiplier);
-    Q_PROPERTY(bool isMultiplierDefaulted READ isMultiplierDefaulted);
+    
+    
 
-    Q_PROPERTY(std::string endUseSubcategory READ endUseSubcategory WRITE setEndUseSubcategory RESET resetEndUseSubcategory);
-    Q_PROPERTY(bool isEndUseSubcategoryDefaulted READ isEndUseSubcategoryDefaulted);
+    
+    
 
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> exteriorLightsDefinition READ exteriorLightsDefinitionAsModelObject WRITE setExteriorLightsDefinitionAsModelObject);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> schedule READ scheduleAsModelObject WRITE setScheduleAsModelObject);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> facility READ facilityAsModelObject);
+    
+    
+    
    public:
     /** @name Constructors and Destructors */
     //@{

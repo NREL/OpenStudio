@@ -43,19 +43,19 @@ namespace detail {
 
   /** Site_Impl is a ParentObject_Impl that is the implementation class for Site.*/
   class MODEL_API Site_Impl : public ParentObject_Impl {
-    Q_OBJECT;
-    Q_PROPERTY(double latitude READ latitude WRITE setLatitude RESET resetLatitude);
-    Q_PROPERTY(bool isLatitudeDefaulted READ isLatitudeDefaulted);
-    Q_PROPERTY(double longitude READ longitude WRITE setLongitude RESET resetLongitude);
-    Q_PROPERTY(bool isLongitudeDefaulted READ isLongitudeDefaulted);
-    Q_PROPERTY(double timeZone READ timeZone WRITE setTimeZone RESET resetTimeZone);
-    Q_PROPERTY(bool isTimeZoneDefaulted READ isTimeZoneDefaulted);
-    Q_PROPERTY(double elevation READ elevation WRITE setElevation RESET resetElevation);
-    Q_PROPERTY(bool isElevationDefaulted READ isElevationDefaulted);
-    Q_PROPERTY(std::string terrain READ terrain WRITE setTerrain RESET resetTerrain);
-    Q_PROPERTY(bool isTerrainDefaulted READ isTerrainDefaulted);
-    //Q_PROPERTY(std::string activeClimateZoneValue READ activeClimateZoneValue WRITE setActiveClimateZoneValue);
-    //Q_PROPERTY(std::string activeClimateZoneInstitution READ activeClimateZoneInstitution WRITE setActiveClimateZoneInstitution);
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    //
+    //
    public:
     /** @name Constructors and Destructors */
     //@{

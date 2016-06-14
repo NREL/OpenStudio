@@ -48,62 +48,62 @@ namespace detail {
 
   /** ThermalZone_Impl is a HVACComponent_Impl that is the implementation class for ThermalZone.*/
   class MODEL_API ThermalZone_Impl : public HVACComponent_Impl {
-    Q_OBJECT;
-
-    Q_PROPERTY(int multiplier READ multiplier WRITE setMultiplier RESET resetMultiplier);
-    Q_PROPERTY(bool isMultiplierDefaulted READ isMultiplierDefaulted);
     
-    Q_PROPERTY(boost::optional<double> ceilingHeight READ ceilingHeight WRITE setCeilingHeight RESET resetCeilingHeight);
-    Q_PROPERTY(openstudio::OSOptionalQuantity ceilingHeight_SI READ ceilingHeight_SI WRITE setCeilingHeight RESET resetCeilingHeight);
-    Q_PROPERTY(openstudio::OSOptionalQuantity ceilingHeight_IP READ ceilingHeight_IP WRITE setCeilingHeight RESET resetCeilingHeight);
-    Q_PROPERTY(bool isCeilingHeightDefaulted READ isCeilingHeightDefaulted);
-    Q_PROPERTY(bool isCeilingHeightAutocalculated READ isCeilingHeightAutocalculated);
 
-    Q_PROPERTY(boost::optional<double> volume READ volume WRITE setVolume RESET resetVolume);
-    Q_PROPERTY(openstudio::OSOptionalQuantity volume_SI READ volume_SI WRITE setVolume RESET resetVolume);
-    Q_PROPERTY(openstudio::OSOptionalQuantity volume_IP READ volume_IP WRITE setVolume RESET resetVolume);
-    Q_PROPERTY(bool isVolumeDefaulted READ isVolumeDefaulted);
-    Q_PROPERTY(bool isVolumeAutocalculated READ isVolumeAutocalculated);
+    
+    
+    
+    
+    
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<std::string> zoneInsideConvectionAlgorithm READ zoneInsideConvectionAlgorithm WRITE setZoneInsideConvectionAlgorithm RESET resetZoneInsideConvectionAlgorithm);
     
-    Q_PROPERTY(boost::optional<std::string> zoneOutsideConvectionAlgorithm READ zoneOutsideConvectionAlgorithm WRITE setZoneOutsideConvectionAlgorithm RESET resetZoneOutsideConvectionAlgorithm);
     
-    Q_PROPERTY(std::string zoneConditioningEquipmentListName READ zoneConditioningEquipmentListName WRITE setZoneConditioningEquipmentListName);
     
-    Q_PROPERTY(double fractionofZoneControlledbyPrimaryDaylightingControl READ fractionofZoneControlledbyPrimaryDaylightingControl WRITE setFractionofZoneControlledbyPrimaryDaylightingControl RESET resetFractionofZoneControlledbyPrimaryDaylightingControl);
-    Q_PROPERTY(openstudio::Quantity fractionofZoneControlledbyPrimaryDaylightingControl_SI READ fractionofZoneControlledbyPrimaryDaylightingControl_SI WRITE setFractionofZoneControlledbyPrimaryDaylightingControl RESET resetFractionofZoneControlledbyPrimaryDaylightingControl);
-    Q_PROPERTY(openstudio::Quantity fractionofZoneControlledbyPrimaryDaylightingControl_IP READ fractionofZoneControlledbyPrimaryDaylightingControl_IP WRITE setFractionofZoneControlledbyPrimaryDaylightingControl RESET resetFractionofZoneControlledbyPrimaryDaylightingControl);    
-    Q_PROPERTY(bool isFractionofZoneControlledbyPrimaryDaylightingControlDefaulted READ isFractionofZoneControlledbyPrimaryDaylightingControlDefaulted);
     
-    Q_PROPERTY(double fractionofZoneControlledbySecondaryDaylightingControl READ fractionofZoneControlledbySecondaryDaylightingControl WRITE setFractionofZoneControlledbySecondaryDaylightingControl RESET resetFractionofZoneControlledbySecondaryDaylightingControl);
-    Q_PROPERTY(openstudio::Quantity fractionofZoneControlledbySecondaryDaylightingControl_SI READ fractionofZoneControlledbySecondaryDaylightingControl_SI WRITE setFractionofZoneControlledbySecondaryDaylightingControl RESET resetFractionofZoneControlledbySecondaryDaylightingControl);
-    Q_PROPERTY(openstudio::Quantity fractionofZoneControlledbySecondaryDaylightingControl_IP READ fractionofZoneControlledbySecondaryDaylightingControl_IP WRITE setFractionofZoneControlledbySecondaryDaylightingControl RESET resetFractionofZoneControlledbySecondaryDaylightingControl);    
-    Q_PROPERTY(bool isFractionofZoneControlledbySecondaryDaylightingControlDefaulted READ isFractionofZoneControlledbySecondaryDaylightingControlDefaulted);
+    
 
-    Q_PROPERTY(double floorArea READ floorArea);
-    Q_PROPERTY(double numberOfPeople READ numberOfPeople);
-    Q_PROPERTY(double peoplePerFloorArea READ peoplePerFloorArea);
-    Q_PROPERTY(double floorAreaPerPerson READ floorAreaPerPerson);
-    Q_PROPERTY(double lightingPower READ lightingPower);
-    Q_PROPERTY(double lightingPowerPerFloorArea READ lightingPowerPerFloorArea);
-    Q_PROPERTY(double lightingPowerPerPerson READ lightingPowerPerPerson);
-    Q_PROPERTY(double electricEquipmentPower READ electricEquipmentPower);
-    Q_PROPERTY(double electricEquipmentPowerPerFloorArea READ electricEquipmentPowerPerFloorArea);
-    Q_PROPERTY(double electricEquipmentPowerPerPerson READ electricEquipmentPowerPerPerson);
-    Q_PROPERTY(double gasEquipmentPower READ gasEquipmentPower);
-    Q_PROPERTY(double gasEquipmentPowerPerFloorArea READ gasEquipmentPowerPerFloorArea);
-    Q_PROPERTY(double gasEquipmentPowerPerPerson READ gasEquipmentPowerPerPerson);
-    Q_PROPERTY(bool useIdealAirLoads READ useIdealAirLoads WRITE setUseIdealAirLoads);
+    
+    
+    
+    
+    
+    
+    
+    
+        
+    
+    
+    
+    
+        
+    
 
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> thermostatSetpointDualSetpoint READ thermostatSetpointDualSetpointAsModelObject WRITE setThermostatSetpointDualSetpointAsModelObject RESET resetThermostatSetpointDualSetpoint);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> zoneControlHumidistat READ zoneControlHumidistatAsModelObject WRITE setZoneControlHumidistatAsModelObject RESET resetZoneControlHumidistat);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> primaryDaylightingControl READ primaryDaylightingControlAsModelObject WRITE setPrimaryDaylightingControlAsModelObject RESET resetPrimaryDaylightingControl);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> secondaryDaylightingControl READ secondaryDaylightingControlAsModelObject WRITE setSecondaryDaylightingControlAsModelObject RESET resetSecondaryDaylightingControl);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> illuminanceMap READ illuminanceMapAsModelObject WRITE setIlluminanceMapAsModelObject RESET resetIlluminanceMap);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> renderingColor READ renderingColorAsModelObject WRITE setRenderingColorAsModelObject RESET resetRenderingColor);
-    Q_PROPERTY(std::vector<openstudio::model::ModelObject> equipment READ equipmentAsModelObjects);
-    Q_PROPERTY(std::vector<openstudio::model::ModelObject> spaces READ spacesAsModelObjects);
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
    public:
     /** @name Constructors and Destructors */
     //@{

@@ -40,22 +40,22 @@ namespace detail {
 
   /** SubSurface_Impl is a PlanarSurface_Impl that is the implementation class for SubSurface.*/
   class MODEL_API SubSurface_Impl : public PlanarSurface_Impl {
-    Q_OBJECT;
-    Q_PROPERTY(std::string subSurfaceType READ subSurfaceType WRITE setSubSurfaceType);
-    Q_PROPERTY(std::vector<std::string> subSurfaceTypeValues READ subSurfaceTypeValues);
-    Q_PROPERTY(boost::optional<double> viewFactortoGround READ viewFactortoGround WRITE setViewFactortoGround RESET resetViewFactortoGround);
-    Q_PROPERTY(bool isViewFactortoGroundDefaulted READ isViewFactortoGroundDefaulted);
-    Q_PROPERTY(bool isViewFactortoGroundAutocalculated READ isViewFactortoGroundAutocalculated);
-    Q_PROPERTY(double multiplier READ multiplier WRITE setMultiplier RESET resetMultiplier);
-    Q_PROPERTY(bool isMultiplierDefaulted READ isMultiplierDefaulted);
-    Q_PROPERTY(boost::optional<double> numberofVertices READ numberofVertices WRITE setNumberofVertices RESET resetNumberofVertices);
-    Q_PROPERTY(bool isNumberofVerticesDefaulted READ isNumberofVerticesDefaulted);
-    Q_PROPERTY(bool isNumberofVerticesAutocalculated READ isNumberofVerticesAutocalculated);
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
-    Q_PROPERTY(std::string outsideBoundaryCondition READ outsideBoundaryCondition);
+    
 
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> surface READ surfaceAsModelObject WRITE setSurfaceAsModelObject);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> adjacentSubSurface READ adjacentSubSurfaceAsModelObject WRITE setAdjacentSubSurfaceAsModelObject RESET resetAdjacentSubSurface);
+    
+    
    public:
     /** @name Constructors and Destructors */
     //@{

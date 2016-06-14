@@ -34,21 +34,21 @@ namespace detail {
 
   /** People_Impl is a SpaceLoadInstance_Impl that is the implementation class for People.*/
   class MODEL_API People_Impl : public SpaceLoadInstance_Impl {
-    Q_OBJECT;
-    Q_PROPERTY(bool isNumberofPeopleScheduleDefaulted READ isNumberofPeopleScheduleDefaulted);
-    Q_PROPERTY(bool isActivityLevelScheduleDefaulted READ isActivityLevelScheduleDefaulted);
-    Q_PROPERTY(double multiplier READ multiplier WRITE setMultiplier RESET resetMultiplier);
-    Q_PROPERTY(bool isMultiplierDefaulted READ isMultiplierDefaulted);
-    Q_PROPERTY(boost::optional<double> numberOfPeople READ numberOfPeople);
-    Q_PROPERTY(boost::optional<double> peoplePerFloorArea READ peoplePerFloorArea);
-    Q_PROPERTY(boost::optional<double> spaceFloorAreaPerPerson READ spaceFloorAreaPerPerson);
+    
+    
+    
+    
+    
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> peopleDefinition READ peopleDefinitionAsModelObject WRITE setPeopleDefinitionAsModelObject);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> numberofPeopleSchedule READ numberofPeopleScheduleAsModelObject WRITE setNumberofPeopleScheduleAsModelObject RESET resetNumberofPeopleSchedule);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> activityLevelSchedule READ activityLevelScheduleAsModelObject WRITE setActivityLevelScheduleAsModelObject RESET resetActivityLevelSchedule);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> workEfficiencySchedule READ workEfficiencyScheduleAsModelObject WRITE setWorkEfficiencyScheduleAsModelObject RESET resetWorkEfficiencySchedule);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> clothingInsulationSchedule READ clothingInsulationScheduleAsModelObject WRITE setClothingInsulationScheduleAsModelObject RESET resetClothingInsulationSchedule);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> airVelocitySchedule READ airVelocityScheduleAsModelObject WRITE setAirVelocityScheduleAsModelObject RESET resetAirVelocitySchedule);
+    
+    
+    
+    
+    
+    
    public:
     /** @name Constructors and Destructors */
     //@{

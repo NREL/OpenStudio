@@ -59,12 +59,12 @@ namespace detail {
    *  should provide an implementation class that derives from ModelObject_Impl. */
   class MODEL_API ModelObject_Impl : public openstudio::detail::WorkspaceObject_Impl {
 
-    // Q_PROPERTY(openstudio::IddObjectType iddObjectType READ iddObjectType);
-    // Q_PROPERTY(openstudio::UUID handle READ handle);
-    // Q_PROPERTY(boost::optional<std::string> name READ name WRITE mf_setName STORED true);
+    // 
+    // 
+    // 
 
-    // Q_PROPERTY(boost::optional<openstudio::model::ModelObject> parent READ parentAsModelObject WRITE setParentAsModelObject);
-    // Q_PROPERTY(std::vector<openstudio::model::ModelObject> resources READ resourcesAsModelObjects);
+    // 
+    // 
    public:
 
     /** @name Constructors and Destructors */
