@@ -17,6 +17,7 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 #include "Model.hpp"
+#include "Model_Impl.hpp"
 
 #include "GeneratorMicroTurbine.hpp"
 #include "GeneratorMicroTurbine_Impl.hpp"
@@ -73,6 +74,7 @@ namespace model {
     : StraightComponent_Impl(other, model, keepHandle)
   {}
 
+  // Lists the output variables that are specific to the heat recovery portion of a Generator:MicroTurbine
   const std::vector<std::string>& GeneratorMicroTurbineHeatRecovery_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
@@ -91,12 +93,20 @@ namespace model {
     return GeneratorMicroTurbineHeatRecovery::iddObjectType();
   }
 
-  // Clone
+  // This will clone both the GeneratorMicroTurbineHeatRecovery and its linked GeneratorMicroTurbineHeatRecovery
+  // and will return a reference to the GeneratorMicroTurbineHeatRecovery
   ModelObject GeneratorMicroTurbineHeatRecovery_Impl::clone(Model model) const
   {
-    GeneratorMicroTurbineHeatRecovery newmCHPHR = StraightComponent_Impl::clone(model).cast<GeneratorMicroTurbineHeatRecovery>();
 
-    return newmCHPHR;
+    // We call the parent generator's Clone method which will clone both the mchp and mchpHR
+    GeneratorMicroTurbine mchp = generatorMicroTurbine();
+    GeneratorMicroTurbine mchpClone = mchp.clone(model).cast<GeneratorMicroTurbine>();
+    
+    // We get the clone of the parent generator's MTHR so we can return that
+    GeneratorMicroTurbineHeatRecovery mchpHRClone = mchpClone.generatorMicroTurbineHeatRecovery().get();
+
+
+    return mchpHRClone;
   }
 
   std::vector<IddObjectType> GeneratorMicroTurbineHeatRecovery_Impl::allowableChildTypes() const
@@ -109,11 +119,26 @@ namespace model {
     return result;
   }
 
+  // Returns the children objects (max of 4 curves)
   std::vector<ModelObject> GeneratorMicroTurbineHeatRecovery_Impl::children() const
   {
     std::vector<ModelObject> result;
+    boost::optional<Curve> oCurve;
     
-    // TODO: Should I include curves? (share resource)
+    // Curves should be included
+    if (oCurve = thermalEfficiencyFunctionofTemperatureandElevationCurve()) {
+      result.push_back(oCurve.get());
+    }
+    if (oCurve = heatRecoveryRateFunctionofPartLoadRatioCurve()) {
+      result.push_back(oCurve.get());
+    }
+    if (oCurve = heatRecoveryRateFunctionofInletWaterTemperatureCurve()) {
+      result.push_back(oCurve.get());
+    }
+
+    if (oCurve = heatRecoveryRateFunctionofWaterFlowRateCurve()) {
+      result.push_back(oCurve.get());
+    }
 
     return result;
   }
@@ -128,7 +153,9 @@ namespace model {
     return OS_Generator_MicroTurbine_HeatRecoveryFields::HeatRecoveryWaterOutletNodeName;
   }
 
-  // Add to plantLoop Node
+  // Add to plantLoop Node: accepts to be placed on both the supply and the demand
+  // You should make sure that this is compatible with your Generator Operation Scheme
+  // For example, if FollowThermal, it must be placed on the supply side of the plant loop
   bool  GeneratorMicroTurbineHeatRecovery_Impl::addToNode(Node & node)
   {
     // This can be placed on the supply or the demand side
@@ -248,7 +275,7 @@ namespace model {
   
   
   
-  // If defaulted, return mchpHR 'Reference Thermal Efficiency Using Lower Heat Value' divided by mchp 'Reference Electrical Efficiency Using Lower Heating Value'
+  // If defaulted, return generatorMicroTurbineHeatRecovery 'Reference Thermal Efficiency Using Lower Heat Value' divided by its generatorMicroTurbine 'Reference Electrical Efficiency Using Lower Heating Value'
   double GeneratorMicroTurbineHeatRecovery_Impl::ratedThermaltoElectricalPowerRatio() const {
     boost::optional<double> optRatedThermaltoElectricalPowerRatio = getDouble(OS_Generator_MicroTurbine_HeatRecoveryFields::RatedThermaltoElectricalPowerRatio, true);
     // If there it's set

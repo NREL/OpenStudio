@@ -85,6 +85,8 @@ namespace detail {
     : Generator_Impl(other,model,keepHandle)
   {}
 
+  // Lists the output variables of a Generator:MicroTurbine, excepts the Heat Recovery specific ones
+  // (see GeneratorMicroTurbineHeatRecovery::outputVariableNames for these)
   const std::vector<std::string>& GeneratorMicroTurbine_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
@@ -131,15 +133,21 @@ namespace detail {
     return "Generator:MicroTurbine";
   }
   
+  // This will clone the GeneratorMicroTurbine as well as the GeneratorMicroTurbineHeatRecovery if there is one
+  // and will return a reference to the GeneratorMicroTurbine
   ModelObject GeneratorMicroTurbine_Impl::clone(Model model) const
   {
     GeneratorMicroTurbine newCHP = ModelObject_Impl::clone(model).cast<GeneratorMicroTurbine>();
 
+
+
     // If there's a GeneratorMicroTurbineHeatRecovery, clone it as well
-    if( boost::optional<GeneratorMicroTurbineHeatRecovery> mchpHR = generatorMicroTurbineHeatRecovery() )
+    if (boost::optional<GeneratorMicroTurbineHeatRecovery> mchpHR = generatorMicroTurbineHeatRecovery())
     {
-      GeneratorMicroTurbineHeatRecovery mchpHRClone = mchpHR.get().clone(model).cast<GeneratorMicroTurbineHeatRecovery>();
-      newCHP.getImpl<detail::GeneratorMicroTurbine_Impl>()->setGeneratorMicroTurbineHeatRecovery( mchpHRClone );
+      // Call the BaseClass (ModelObject) clone method to avoid circular references
+      GeneratorMicroTurbineHeatRecovery mchpHRClone = mchpHR->getImpl<detail::GeneratorMicroTurbineHeatRecovery_Impl>()->ModelObject_Impl::clone(model).cast<GeneratorMicroTurbineHeatRecovery>();
+      newCHP.getImpl<detail::GeneratorMicroTurbine_Impl>()->setGeneratorMicroTurbineHeatRecovery(mchpHRClone);
+
     }
 
     return newCHP;
@@ -156,17 +164,42 @@ namespace detail {
     return result;
   }
   
+  // Returns the children object: max of 7 curves and a the GeneratorMicroTurbineHeatRecovery if it exists
   std::vector<ModelObject> GeneratorMicroTurbine_Impl::children() const
   {
     std::vector<ModelObject> result;
+    boost::optional<Curve> oCurve;
+
     if(boost::optional<GeneratorMicroTurbineHeatRecovery> mo = generatorMicroTurbineHeatRecovery())
     {
       result.push_back(mo.get());
     }
 
     // Should I include curves in there? Even now that then can be shared (resources)
-    Curve mo = electricalPowerFunctionofTemperatureandElevationCurve();
-    result.push_back(mo);
+    Curve curve = electricalPowerFunctionofTemperatureandElevationCurve();
+    result.push_back(curve);
+
+    curve = electricalEfficiencyFunctionofTemperatureCurve();
+    result.push_back(curve);
+
+    curve = electricalEfficiencyFunctionofPartLoadRatioCurve();
+    result.push_back(curve);
+
+    if (oCurve = exhaustAirFlowRateFunctionofTemperatureCurve()) {
+      result.push_back(oCurve.get());
+    }
+    if (oCurve = exhaustAirFlowRateFunctionofPartLoadRatioCurve()) {
+      result.push_back(oCurve.get());
+    }
+
+    if (oCurve = exhaustAirTemperatureFunctionofTemperatureCurve()) {
+      result.push_back(oCurve.get());
+    }
+    if (oCurve = exhaustAirTemperatureFunctionofPartLoadRatioCurve()) {
+      result.push_back(oCurve.get());
+    }
+    
+
 
     return result;
   }
@@ -184,9 +217,9 @@ namespace detail {
     return result;
   }
 
+  // translated to ElectricLoadCenter:Generators 'Generator Rated Electric Power Output'
   boost::optional<double> GeneratorMicroTurbine_Impl::ratedElectricPowerOutput() const
   {
-    // translated to ElectricLoadCenter:Generators 'Generator Rated Electric Power Output'
     return referenceElectricalPowerOutput();
   }
 
@@ -194,6 +227,7 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Generator_MicroTurbineFields::AvailabilityScheduleName);
   }
 
+  // Convenience method to go fetch the connected GeneratorMicroTurbineHeatRecovery's 'Rated Thermal to Electrical Power Ratio'
   boost::optional<double> GeneratorMicroTurbine_Impl::ratedThermaltoElectricalPowerRatio() const
   {
     // translated to ElectricLoadCenter:Generators 'Generator Rated Thermal to Electrical Power Ratio'
