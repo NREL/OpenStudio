@@ -10006,7 +10006,7 @@ OS:Generator:MicroTurbine,
   {62f04b09-700d-4cbd-9182-ca43e5970d82}, !- Electrical Efficiency Function of Part Load Ratio Curve Name
   NaturalGas,                             !- Fuel Type
   50000,                                  !- Fuel Higher Heating Value {kJ/kg}
-  50000,                                  !- Fuel Lower Heating Value {kJ/kg}
+  45450,                                  !- Fuel Lower Heating Value {kJ/kg}
   300,                                    !- Standby Power {W}
   4500,                                   !- Ancillary Power {W}
   ,                                       !- Ancillary Power Function of Fuel Input Curve Name
