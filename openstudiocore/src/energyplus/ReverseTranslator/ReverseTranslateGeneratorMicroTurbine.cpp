@@ -348,17 +348,16 @@ OptionalModelObject ReverseTranslator::translateGeneratorMicroTurbine( const Wor
     
   /// HEAT RECOVERY PORTION
   
+  // Would need to add that to the plantLoop reverse translator
   //    Capstone C65 Heat Recovery Water Inlet Node,  !- Heat Recovery Water Inlet Node Name
   //    Capstone C65 Heat Recovery Water Outlet Node,  !- Heat Recovery Water Outlet Node Name
-
-
-
   
 
   
   
   // TODO: For now, I trigger the creation is the 'Reference Thermal Efficiency Using Lower Heat Value' is filled.
   // TODO: I should trigger it based on the `Rated Thermal To Electrical Power Ratio in the list`  in the ElectricLoadCenter:Generators (list)
+  // TODO: But in order to do that, the ElectricLoadCenter:Distribution & ElectricLoadCenter:Generators need to have a reverse translator
   
   //    0.4975,                  !- Reference Thermal Efficiency Using Lower Heat Value
   d = workspaceObject.getDouble(Generator_MicroTurbineFields::ReferenceThermalEfficiencyUsingLowerHeatValue);
@@ -367,6 +366,7 @@ OptionalModelObject ReverseTranslator::translateGeneratorMicroTurbine( const Wor
   {
    
     // Create a GeneratorMicroTurbineHeatRecovery module, and assign it to the MicroTurbine
+    // I've Set the Name in the constructor
     openstudio::model::GeneratorMicroTurbineHeatRecovery mchpHR (m_model, mchp);
     
     // Assign the Reference Thermal Efficiency Using Lower Heat Value
@@ -459,13 +459,13 @@ OptionalModelObject ReverseTranslator::translateGeneratorMicroTurbine( const Wor
     //    Capstone C65 HeatRecoveryRate_vs_InletTemp,  !- Heat Recovery Rate Function of Inlet Water Temperature Curve Name
     // QuadraticCurves
     // mchpHR.setHeatRecoveryRateFunctionofInletWaterTemperatureCurve();
-    if( (owo = workspaceObject.getTarget(Generator_MicroTurbineFields::HeatRecoveryRateFunctionofPartLoadRatioCurveName)) )
+    if ((owo = workspaceObject.getTarget(Generator_MicroTurbineFields::HeatRecoveryRateFunctionofInletWaterTemperatureCurveName)))
       {
         if( boost::optional<ModelObject> mo = translateAndMapWorkspaceObject(owo.get()) )
         {
           if( boost::optional<CurveQuadratic> curve = mo->optionalCast<CurveQuadratic>() )
           {
-            mchpHR.setHeatRecoveryRateFunctionofPartLoadRatioCurve(curve.get());
+            mchpHR.setHeatRecoveryRateFunctionofInletWaterTemperatureCurve(curve.get());
           }
           else
           {
@@ -493,24 +493,24 @@ OptionalModelObject ReverseTranslator::translateGeneratorMicroTurbine( const Wor
       }
 
     //    0.001577263,             !- Minimum Heat Recovery Water Flow Rate {m3/s}
-    d = workspaceObject.getDouble(Generator_MicroTurbineFields::ReferenceThermalEfficiencyUsingLowerHeatValue);
-    if(d)
-    {
-      mchpHR.setReferenceThermalEfficiencyUsingLowerHeatValue(*d);
-    }
-
-    //    0.003785432,             !- Maximum Heat Recovery Water Flow Rate {m3/s}
     d = workspaceObject.getDouble(Generator_MicroTurbineFields::MinimumHeatRecoveryWaterFlowRate);
     if(d)
     {
       mchpHR.setMinimumHeatRecoveryWaterFlowRate(*d);
     }
 
-    //    82.2,                    !- Maximum Heat Recovery Water Temperature {C}
+    //    0.003785432,             !- Maximum Heat Recovery Water Flow Rate {m3/s}
     d = workspaceObject.getDouble(Generator_MicroTurbineFields::MaximumHeatRecoveryWaterFlowRate);
     if(d)
     {
       mchpHR.setMaximumHeatRecoveryWaterFlowRate(*d);
+    }
+
+    //    82.2,                    !- Maximum Heat Recovery Water Temperature {C}
+    d = workspaceObject.getDouble(Generator_MicroTurbineFields::MaximumHeatRecoveryWaterTemperature);
+    if(d)
+    {
+      mchpHR.setMaximumHeatRecoveryWaterTemperature(*d);
     }
     
     

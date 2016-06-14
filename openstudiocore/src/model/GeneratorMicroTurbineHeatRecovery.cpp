@@ -440,8 +440,13 @@ GeneratorMicroTurbineHeatRecovery::GeneratorMicroTurbineHeatRecovery( const Mode
 {
 
   // Set object in parent
-  mchp.getImpl<detail::GeneratorMicroTurbine_Impl>()->setGeneratorMicroTurbineHeatRecovery( (*this) );
+  mchp.getImpl<detail::GeneratorMicroTurbine_Impl>()->setGeneratorMicroTurbineHeatRecovery((*this));
   //mchp.setGeneratorMicroTurbineHeatRecovery( (*this) );
+
+  // Set the Name to mchp.name + " Heat Recovery"
+  if (OptionalString parentName = mchp.name()) {
+    setName( (*parentName) + " Heat Recovery");
+  }
   
   // Reference Thermal Efficiency Using Lower Heat Value has a default of 0 in E+ idd which isn't smart in this case
   // TODO Should I set it here, or change the .idd??
