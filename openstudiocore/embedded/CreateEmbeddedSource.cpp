@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
               if( length != 0 ) {
                 outstream << ",";
               }
-              outstream << "0x" << std::hex << out[i];
+              outstream << "0x" << std::hex << static_cast<int>(out[i]);
               ++length;
             }
         } while (strm.avail_out == 0);

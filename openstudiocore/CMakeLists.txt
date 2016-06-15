@@ -523,6 +523,8 @@ endif()
 # Zlib
 include_directories(SYSTEM src/zlib)
 add_subdirectory(src/zlib)
+# make sure zconf.h can be found
+include_directories(${CMAKE_BINARY_DIR}/src/zlib)
 
 # Google test library
 add_definitions(-DGTEST_HAS_TR1_TUPLE=0)

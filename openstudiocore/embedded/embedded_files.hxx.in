@@ -12,13 +12,11 @@
 #include <memory>
 #include <vector>
 
-@BEGIN_NAMESPACE@
-
 typedef std::pair<size_t, const uint8_t *> EmbeddedFile;
 
 #include <stdio.h>
 #include <assert.h>
-#include "zlib.h"
+#include <zlib.h>
 
 #if defined(MSDOS) || defined(OS2) || defined(WIN32) || defined(__CYGWIN__)
 #  include <fcntl.h>
@@ -30,6 +28,8 @@ typedef std::pair<size_t, const uint8_t *> EmbeddedFile;
 
 #define CHUNK 16384
 
+@BEGIN_NAMESPACE@
+
 
 /* Decompress from file source to file dest until stream ends or EOF.
    inf() returns Z_OK on success, Z_MEM_ERROR if memory could not be
@@ -37,7 +37,7 @@ typedef std::pair<size_t, const uint8_t *> EmbeddedFile;
    invalid or incomplete, Z_VERSION_ERROR if the version of zlib.h and
    the version of the library linked do not match, or Z_ERRNO if there
    is an error reading or writing the files. */
-int inf(EmbeddedFile & file, std::vector<uint8_t> & result)
+inline int inf(const EmbeddedFile & file, std::vector<uint8_t> & result)
 {
   //std::vector<uint8_t> result;
 
@@ -57,24 +57,26 @@ int inf(EmbeddedFile & file, std::vector<uint8_t> & result)
   if (ret != Z_OK)
       return ret;
   
-  auto chars = file.second.second;
-  auto size = file.second.first;
-  //size_t size;
-  //uint8_t * chars;
+  auto chars = file.second;
+  auto size = file.first;
   
   // point or location where we are at moving through the data array
   auto begin = chars;
   auto end = chars + size; 
+  auto chunk_end = begin;
   
   /* decompress until deflate stream ends or end of file */
-  while( begin < end ) {
-    if( (begin + CHUNK) < end ) {
+  while( begin != end ) {
+    if( (begin + CHUNK) != end ) {
       std::copy(begin, begin + CHUNK, in);
-      begin = begin + CHUNK;
+      chunk_end = begin + CHUNK;
     } else {
       std::copy(begin, end, in);
-      begin = end;
+      chunk_end = end;
     } 
+
+    strm.next_in = const_cast<unsigned char *>(begin);
+    strm.avail_in = chunk_end - begin;
   
     /* run inflate() on input until output buffer not full */
     do {
@@ -97,15 +99,14 @@ int inf(EmbeddedFile & file, std::vector<uint8_t> & result)
     if( ret == Z_STREAM_END ) {
       break;
     }
+
+    begin = chunk_end;
   }
   
   /* clean up and return */
   (void)inflateEnd(&strm);
   return ret == Z_STREAM_END ? Z_OK : Z_DATA_ERROR;
 }
-
-
-
 
 
 namespace embedded_files { 
@@ -122,7 +123,11 @@ namespace embedded_files {
     if (f == fs.end()){
       throw std::runtime_error("Embedded file not found '" + t_filename + "'");
     }
-    return std::string(f->second.second, f->second.second + f->second.first);
+    std::vector<uint8_t> inflated_data;
+    if( inf(f->second,inflated_data) != Z_OK ) {
+      throw std::runtime_error("Embedded file failed to inflate '" + t_filename + "'");
+    }
+    return std::string(inflated_data.begin(),inflated_data.end());
   }
 
   inline void extractFile(const std::string &t_filename, const std::string &t_location)
@@ -170,7 +175,13 @@ namespace embedded_files {
     const auto fullpath = t_location + '/' + t_filename;
     create_dirs(std::string(std::begin(fullpath), std::begin(fullpath) + fullpath.rfind('/')));
     std::ofstream ofs(fullpath);
-    ofs.write(reinterpret_cast<const char *>(f.second), f.first);
+
+    std::vector<uint8_t> inflated_data;
+    if( inf(f,inflated_data) != Z_OK ) {
+      throw std::runtime_error("Embedded file failed to inflate '" + t_filename + "'");
+    }
+
+    ofs.write(reinterpret_cast<const char *>(inflated_data.data()), inflated_data.size());
     std::cout << "***** Extracted " << t_filename << " to: " << fullpath << " *****\n";
   }
 

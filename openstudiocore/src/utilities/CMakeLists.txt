@@ -501,9 +501,6 @@ set(${target_name}_swig_src
   units/QuantityConverter.i
 )
 
-# make sure zconf.h can be found
-include_directories(${CMAKE_BINARY_DIR}/src/zlib)
-
 #include subdir for pch
 add_subdirectory(pch)
 
