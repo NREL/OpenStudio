@@ -20,16 +20,15 @@
 #ifndef MODEL_ELECTRICLOADCENTERSTORAGESIMPLE_HPP
 #define MODEL_ELECTRICLOADCENTERSTORAGESIMPLE_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "ParentObject.hpp"
 
 namespace openstudio {
 
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class Schedule;
-class Zone;
+class ThermalZone;
 
 namespace detail {
 
@@ -39,101 +38,89 @@ namespace detail {
 
 /** ElectricLoadCenterStorageSimple is a ParentObject that wraps the OpenStudio IDD object 'OS:ElectricLoadCenter:Storage:Simple'. */
 class MODEL_API ElectricLoadCenterStorageSimple : public ParentObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit ElectricLoadCenterStorageSimple(const Model& model);
+    explicit ElectricLoadCenterStorageSimple(const Model& model);
 
-  virtual ~ElectricLoadCenterStorageSimple() {}
+    virtual ~ElectricLoadCenterStorageSimple() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
-  boost::optional<Schedule> availabilitySchedule() const;
+    Schedule availabilitySchedule() const;
+    
+    boost::optional<ThermalZone> thermalZone() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Zone.
-  boost::optional<Zone> zone() const;
+    double radiativeFractionforZoneHeatGains() const;
+    bool isRadiativeFractionforZoneHeatGainsDefaulted() const;
 
-  double radiativeFractionforZoneHeatGains() const;
+    double nominalEnergeticEfficiencyforCharging() const;
+    bool isNominalEnergeticEfficiencyforChargingDefaulted() const;
 
-  bool isRadiativeFractionforZoneHeatGainsDefaulted() const;
+    double nominalDischargingEnergeticEfficiency() const;
+    bool isNominalDischargingEnergeticEfficiencyDefaulted() const;"
 
-  double nominalEnergeticEfficiencyforCharging() const;
+    double maximumStorageCapacity() const;
 
-  bool isNominalEnergeticEfficiencyforChargingDefaulted() const;
+    double maximumPowerforDischarging() const;
 
-  double nominalDischargingEnergeticEfficiency() const;
+    double maximumPowerforCharging() const;
 
-  bool isNominalDischargingEnergeticEfficiencyDefaulted() const;
+    double initialStateofCharge() const;
+    bool isInitialStateofChargeDefaulted() const;
 
-  double maximumStorageCapacity() const;
+    //@}
+    /** @name Setters */
+    //@{
 
-  double maximumPowerforDischarging() const;
+    bool setAvailabilitySchedule(Schedule& schedule);
+    void resetAvailabilitySchedule();
+        
+    bool setThermalZone(ThermalZone& zone);
+    void resetThermalZone();
 
-  double maximumPowerforCharging() const;
+    bool setRadiativeFractionforZoneHeatGains(double radiativeFractionforZoneHeatGains);
+    void resetRadiativeFractionforZoneHeatGains();
+    
+    bool setNominalEnergeticEfficiencyforCharging(double nominalEnergeticEfficiencyforCharging);
+    void resetNominalEnergeticEfficiencyforCharging();
+    
+    bool setNominalDischargingEnergeticEfficiency(double nominalDischargingEnergeticEfficiency);
+    void resetNominalDischargingEnergeticEfficiency();
+    
+    bool setMaximumStorageCapacity(double maximumStorageCapacity);
+    
+    bool setMaximumPowerforDischarging(double maximumPowerforDischarging);
+    
+    bool setMaximumPowerforCharging(double maximumPowerforCharging);
+    
+    bool setInitialStateofCharge(double initialStateofCharge);
+    void resetInitialStateofCharge();
 
-  boost::optional<double> initialStateofCharge() const;
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+  protected:
+    /// @cond
+    typedef detail::ElectricLoadCenterStorageSimple_Impl ImplType;
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
-  bool setAvailabilitySchedule(Schedule& schedule);
+    explicit ElectricLoadCenterStorageSimple(std::shared_ptr<detail::ElectricLoadCenterStorageSimple_Impl> impl);
 
-  void resetAvailabilitySchedule();
-
-  // TODO: Check argument type. From object lists, some candidates are: Zone.
-  bool setZone(const Zone& zone);
-
-  void resetZone();
-
-  bool setRadiativeFractionforZoneHeatGains(double radiativeFractionforZoneHeatGains);
-
-  void resetRadiativeFractionforZoneHeatGains();
-
-  bool setNominalEnergeticEfficiencyforCharging(double nominalEnergeticEfficiencyforCharging);
-
-  void resetNominalEnergeticEfficiencyforCharging();
-
-  bool setNominalDischargingEnergeticEfficiency(double nominalDischargingEnergeticEfficiency);
-
-  void resetNominalDischargingEnergeticEfficiency();
-
-  void setMaximumStorageCapacity(double maximumStorageCapacity);
-
-  bool setMaximumPowerforDischarging(double maximumPowerforDischarging);
-
-  bool setMaximumPowerforCharging(double maximumPowerforCharging);
-
-  void setInitialStateofCharge(double initialStateofCharge);
-
-  void resetInitialStateofCharge();
-
-  //@}
-  /** @name Other */
-  //@{
-
-  //@}
- protected:
-  /// @cond
-  typedef detail::ElectricLoadCenterStorageSimple_Impl ImplType;
-
-  explicit ElectricLoadCenterStorageSimple(std::shared_ptr<detail::ElectricLoadCenterStorageSimple_Impl> impl);
-
-  friend class detail::ElectricLoadCenterStorageSimple_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ElectricLoadCenterStorageSimple");
+    friend class detail::ElectricLoadCenterStorageSimple_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+  private:
+    REGISTER_LOGGER("openstudio.model.ElectricLoadCenterStorageSimple");
 };
 
 /** \relates ElectricLoadCenterStorageSimple*/

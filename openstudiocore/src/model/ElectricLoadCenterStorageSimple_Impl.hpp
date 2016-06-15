@@ -20,7 +20,7 @@
 #ifndef MODEL_ELECTRICLOADCENTERSTORAGESIMPLE_IMPL_HPP
 #define MODEL_ELECTRICLOADCENTERSTORAGESIMPLE_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "ParentObject_Impl.hpp"
 
 namespace openstudio {
@@ -28,7 +28,7 @@ namespace model {
 
 // TODO: Check the following class names against object getters and setters.
 class Schedule;
-class Zone;
+class ThermalZone;
 
 namespace detail {
 
@@ -67,22 +67,17 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
-    boost::optional<Schedule> availabilitySchedule() const;
-
-    // TODO: Check return type. From object lists, some candidates are: Zone.
-    boost::optional<Zone> zone() const;
+    Schedule availabilitySchedule() const;
+    
+    boost::optional<ThermalZone> thermalZone() const;
 
     double radiativeFractionforZoneHeatGains() const;
-
     bool isRadiativeFractionforZoneHeatGainsDefaulted() const;
 
     double nominalEnergeticEfficiencyforCharging() const;
-
     bool isNominalEnergeticEfficiencyforChargingDefaulted() const;
 
     double nominalDischargingEnergeticEfficiency() const;
-
     bool isNominalDischargingEnergeticEfficiencyDefaulted() const;
 
     double maximumStorageCapacity() const;
@@ -91,52 +86,53 @@ namespace detail {
 
     double maximumPowerforCharging() const;
 
-    boost::optional<double> initialStateofCharge() const;
+    double initialStateofCharge() const;
+    bool isInitialStateofChargeDefaulted() const;
 
     //@}
     /** @name Setters */
     //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setAvailabilitySchedule(Schedule& schedule);
-
     void resetAvailabilitySchedule();
-
-    // TODO: Check argument type. From object lists, some candidates are: Zone.
-    bool setZone(const boost::optional<Zone>& zone);
-
-    void resetZone();
+        
+    bool setThermalZone(ThermalZone& zone);
+    void resetThermalZone();
 
     bool setRadiativeFractionforZoneHeatGains(double radiativeFractionforZoneHeatGains);
-
     void resetRadiativeFractionforZoneHeatGains();
-
+    
     bool setNominalEnergeticEfficiencyforCharging(double nominalEnergeticEfficiencyforCharging);
-
     void resetNominalEnergeticEfficiencyforCharging();
-
+    
     bool setNominalDischargingEnergeticEfficiency(double nominalDischargingEnergeticEfficiency);
-
     void resetNominalDischargingEnergeticEfficiency();
-
-    void setMaximumStorageCapacity(double maximumStorageCapacity);
-
+    
+    bool setMaximumStorageCapacity(double maximumStorageCapacity);
+    
     bool setMaximumPowerforDischarging(double maximumPowerforDischarging);
-
+    
     bool setMaximumPowerforCharging(double maximumPowerforCharging);
-
-    void setInitialStateofCharge(boost::optional<double> initialStateofCharge);
-
+    
+    bool setInitialStateofCharge(double initialStateofCharge);
     void resetInitialStateofCharge();
 
     //@}
     /** @name Other */
     //@{
+      
+    // TODO: Remove if not used. Don't think I need to override any of these
+    //ModelObject clone(Model model) const override;
+
+    //std::vector<openstudio::IdfObject> remove() override;
+
+    //std::vector<ModelObject> children() const override;
 
     //@}
    protected:
    private:
     REGISTER_LOGGER("openstudio.model.ElectricLoadCenterStorageSimple");
+    boost::optional<Schedule> optionalAvailabilitySchedule() const;
   };
 
 } // detail

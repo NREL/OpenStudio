@@ -23,8 +23,11 @@
 // TODO: Check the following class names against object getters and setters.
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
-#include "Zone.hpp"
-#include "Zone_Impl.hpp"
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+
 #include "../../model/ScheduleTypeLimits.hpp"
 #include "../../model/ScheduleTypeRegistry.hpp"
 
@@ -32,7 +35,6 @@
 #include <utilities/idd/OS_ElectricLoadCenter_Storage_Simple_FieldEnums.hxx>
 
 #include "../utilities/units/Unit.hpp"
-
 #include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
@@ -66,6 +68,14 @@ namespace detail {
   {
     static std::vector<std::string> result;
     if (result.empty()){
+      result.push_back("Electric Storage Simple Charge State")
+      result.push_back("Electric Storage Charge Power")
+      result.push_back("Electric Storage Charge Energy")
+      result.push_back("Electric Storage Production Decrement Energy")
+      result.push_back("Electric Storage Discharge Power")
+      result.push_back("Electric Storage Discharge Energy")
+      result.push_back("Electric Storage Thermal Loss Rate")
+      result.push_back("Electric Storage Thermal Loss Energy")
     }
     return result;
   }
@@ -76,7 +86,6 @@ namespace detail {
 
   std::vector<ScheduleTypeKey> ElectricLoadCenterStorageSimple_Impl::getScheduleTypeKeys(const Schedule& schedule) const
   {
-    // TODO: Check schedule display names.
     std::vector<ScheduleTypeKey> result;
     UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
     UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
@@ -86,15 +95,31 @@ namespace detail {
     }
     return result;
   }
+  
+  //@}
+  /** @name Getters */
+  //@{
 
-  boost::optional<Schedule> ElectricLoadCenterStorageSimple_Impl::availabilitySchedule() const {
+  boost::optional<Schedule> ElectricLoadCenterStorageSimple_Impl::optionalAvailabilitySchedule() const {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ElectricLoadCenter_Storage_SimpleFields::AvailabilityScheduleName);
   }
-
-  boost::optional<Zone> ElectricLoadCenterStorageSimple_Impl::zone() const {
-    return getObject<ModelObject>().getModelObjectTarget<Zone>(OS_ElectricLoadCenter_Storage_SimpleFields::ZoneName);
+  
+  Schedule ElectricLoadCenterStorageSimple_Impl::availabilitySchedule() const {
+    boost::optional<Schedule> value = optionalAvailabilitySchedule();
+    if (!value) {
+      //LOG_AND_THROW(briefDescription() << " does not have an Availability Schedule attached.");
+      // I'm choosing to just return alwaysOnDiscreteSchedule
+      return model.alwaysOnDiscreteSchedule();
+    }
+    return value.get();
+  }
+  
+  // Optional thermal Zone for heat gains  
+  boost::optional<ThermalZone> ElectricLoadCenterStorageSimple_Impl::thermalZone() const {
+    return getObject<ModelObject>().getModelObjectTarget<ThermalZone>(OS_ElectricLoadCenter_Storage_SimpleFields::ZoneName);
   }
 
+  // Radiative fraction for zone heat gains, defaults to 0, and not used if thermalZone above isn't used
   double ElectricLoadCenterStorageSimple_Impl::radiativeFractionforZoneHeatGains() const {
     boost::optional<double> value = getDouble(OS_ElectricLoadCenter_Storage_SimpleFields::RadiativeFractionforZoneHeatGains,true);
     OS_ASSERT(value);
@@ -105,6 +130,7 @@ namespace detail {
     return isEmpty(OS_ElectricLoadCenter_Storage_SimpleFields::RadiativeFractionforZoneHeatGains);
   }
 
+  // Nominal Efficiency for Charging for zone heat gains, has a default in IDD
   double ElectricLoadCenterStorageSimple_Impl::nominalEnergeticEfficiencyforCharging() const {
     boost::optional<double> value = getDouble(OS_ElectricLoadCenter_Storage_SimpleFields::NominalEnergeticEfficiencyforCharging,true);
     OS_ASSERT(value);
@@ -115,6 +141,7 @@ namespace detail {
     return isEmpty(OS_ElectricLoadCenter_Storage_SimpleFields::NominalEnergeticEfficiencyforCharging);
   }
 
+  // Nominal Efficiency for Discharging for zone heat gains, has a default in IDD
   double ElectricLoadCenterStorageSimple_Impl::nominalDischargingEnergeticEfficiency() const {
     boost::optional<double> value = getDouble(OS_ElectricLoadCenter_Storage_SimpleFields::NominalDischargingEnergeticEfficiency,true);
     OS_ASSERT(value);
@@ -124,28 +151,49 @@ namespace detail {
   bool ElectricLoadCenterStorageSimple_Impl::isNominalDischargingEnergeticEfficiencyDefaulted() const {
     return isEmpty(OS_ElectricLoadCenter_Storage_SimpleFields::NominalDischargingEnergeticEfficiency);
   }
-
+  
+  // Maximum Storage Capacity, required, no default
   double ElectricLoadCenterStorageSimple_Impl::maximumStorageCapacity() const {
     boost::optional<double> value = getDouble(OS_ElectricLoadCenter_Storage_SimpleFields::MaximumStorageCapacity,true);
     OS_ASSERT(value);
     return value.get();
   }
-
+  
+  // Maximum Rate of Discharge, required, no default
   double ElectricLoadCenterStorageSimple_Impl::maximumPowerforDischarging() const {
     boost::optional<double> value = getDouble(OS_ElectricLoadCenter_Storage_SimpleFields::MaximumPowerforDischarging,true);
     OS_ASSERT(value);
     return value.get();
   }
 
+  // Maximum Rate of Charge, required, no default
   double ElectricLoadCenterStorageSimple_Impl::maximumPowerforCharging() const {
     boost::optional<double> value = getDouble(OS_ElectricLoadCenter_Storage_SimpleFields::MaximumPowerforCharging,true);
     OS_ASSERT(value);
     return value.get();
   }
 
-  boost::optional<double> ElectricLoadCenterStorageSimple_Impl::initialStateofCharge() const {
-    return getDouble(OS_ElectricLoadCenter_Storage_SimpleFields::InitialStateofCharge,true);
+  // Initial state of charge, if empty it will default to half of the maximum capacity
+  double ElectricLoadCenterStorageSimple_Impl::initialStateofCharge() const {
+    boost::optional<double> optIniStateCharge = getDouble(OS_ElectricLoadCenter_Storage_SimpleFields::InitialStateofCharge,true);
+    // if it's set
+    if (optIniStateCharge) {
+      // Get it and return
+      return optIniStateCharge.get();
+    } else {
+      // We Default it to half the maximum capacity
+      double maxCap = maximumStorageCapacity();
+      return maxCap / 2.0;
+    }
   }
+  
+  bool ElectricLoadCenterStorageSimple_Impl::isInitialStateofChargeDefaulted() const {
+    return isEmpty(OS_ElectricLoadCenter_Storage_SimpleFields::InitialStateofCharge);
+  }
+  
+  //@}
+  /** @name Setters */
+  //@{
 
   bool ElectricLoadCenterStorageSimple_Impl::setAvailabilitySchedule(Schedule& schedule) {
     bool result = setSchedule(OS_ElectricLoadCenter_Storage_SimpleFields::AvailabilityScheduleName,
@@ -160,22 +208,17 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool ElectricLoadCenterStorageSimple_Impl::setZone(const boost::optional<Zone>& zone) {
-    bool result(false);
-    if (zone) {
-      result = setPointer(OS_ElectricLoadCenter_Storage_SimpleFields::ZoneName, zone.get().handle());
-    }
-    else {
-      resetZone();
-      result = true;
-    }
-    return result;
+  // Set the thermal Zone for heat gains
+  bool ElectricLoadCenterStorageSimple_Impl::setThermalZone(const ThermalZone& thermalZone) {
+    return setPointer(OS_ElectricLoadCenter_Storage_SimpleFields::ZoneName, thermalZone.handle());
   }
-
-  void ElectricLoadCenterStorageSimple_Impl::resetZone() {
+  
+  // Reset the zone (leave blank)
+  void ElectricLoadCenterStorageSimple_Impl::resetThermalZone() {
     bool result = setString(OS_ElectricLoadCenter_Storage_SimpleFields::ZoneName, "");
     OS_ASSERT(result);
   }
+  
 
   bool ElectricLoadCenterStorageSimple_Impl::setRadiativeFractionforZoneHeatGains(double radiativeFractionforZoneHeatGains) {
     bool result = setDouble(OS_ElectricLoadCenter_Storage_SimpleFields::RadiativeFractionforZoneHeatGains, radiativeFractionforZoneHeatGains);
@@ -222,16 +265,9 @@ namespace detail {
     return result;
   }
 
-  void ElectricLoadCenterStorageSimple_Impl::setInitialStateofCharge(boost::optional<double> initialStateofCharge) {
-    bool result(false);
-    if (initialStateofCharge) {
-      result = setDouble(OS_ElectricLoadCenter_Storage_SimpleFields::InitialStateofCharge, initialStateofCharge.get());
-    }
-    else {
-      resetInitialStateofCharge();
-      result = true;
-    }
-    OS_ASSERT(result);
+  bool ElectricLoadCenterStorageSimple_Impl::setInitialStateofCharge(double value) {
+    bool result = setDouble(OS_ElectricLoadCenter_Storage_SimpleFields::InitialStateofCharge, value);
+    return result;
   }
 
   void ElectricLoadCenterStorageSimple_Impl::resetInitialStateofCharge() {
@@ -241,20 +277,26 @@ namespace detail {
 
 } // detail
 
+/* Constructor. Defaults the availabilitySchedule to alwaysOnDiscreteSchedule,
+   Defaults efficiencies for charge and discharge to 0.8
+   maximum storage capacity to 1.0E13
+   Maximum Power for Charge/Discharge to 1.0E6
+   Reference: EnergyPlus example files (v8.5, LrgOff_GridStorageDemandLeveling */
 ElectricLoadCenterStorageSimple::ElectricLoadCenterStorageSimple(const Model& model)
   : ParentObject(ElectricLoadCenterStorageSimple::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::ElectricLoadCenterStorageSimple_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  bool ok = true;
-  // ok = setHandle();
-  OS_ASSERT(ok);
-  // setMaximumStorageCapacity();
-  // ok = setMaximumPowerforDischarging();
-  OS_ASSERT(ok);
-  // ok = setMaximumPowerforCharging();
-  OS_ASSERT(ok);
+  Schedule schedule = model.alwaysOnDiscreteSchedule();
+
+  setAvailabilitySchedule(schedule);
+  
+  setNominalDischargingEnergeticEfficiency(0.8);
+  setNominalChargingEnergeticEfficiency(0.8);
+  setMaximumStorageCapacity(1.0E13);
+  setMaximumPowerforDischarging(1.0E6);
+  setMaximumPowerforCharging(1.0E6);
+  
 }
 
 IddObjectType ElectricLoadCenterStorageSimple::iddObjectType() {
@@ -265,8 +307,8 @@ boost::optional<Schedule> ElectricLoadCenterStorageSimple::availabilitySchedule(
   return getImpl<detail::ElectricLoadCenterStorageSimple_Impl>()->availabilitySchedule();
 }
 
-boost::optional<Zone> ElectricLoadCenterStorageSimple::zone() const {
-  return getImpl<detail::ElectricLoadCenterStorageSimple_Impl>()->zone();
+boost::optional<ThermalZone> ElectricLoadCenterStorageSimple::thermalZone() const {
+  return getImpl<detail::ElectricLoadCenterStorageSimple_Impl>()->thermalZone();
 }
 
 double ElectricLoadCenterStorageSimple::radiativeFractionforZoneHeatGains() const {
@@ -305,10 +347,15 @@ double ElectricLoadCenterStorageSimple::maximumPowerforCharging() const {
   return getImpl<detail::ElectricLoadCenterStorageSimple_Impl>()->maximumPowerforCharging();
 }
 
-boost::optional<double> ElectricLoadCenterStorageSimple::initialStateofCharge() const {
+double ElectricLoadCenterStorageSimple::initialStateofCharge() const {
   return getImpl<detail::ElectricLoadCenterStorageSimple_Impl>()->initialStateofCharge();
 }
 
+bool ElectricLoadCenterStorageSimple::isInitialStateofChargeDefaulted() const {
+  return getImpl<detail::ElectricLoadCenterStorageSimple_Impl>()->isInitialStateofChargeDefaulted();
+}
+
+// Setters
 bool ElectricLoadCenterStorageSimple::setAvailabilitySchedule(Schedule& schedule) {
   return getImpl<detail::ElectricLoadCenterStorageSimple_Impl>()->setAvailabilitySchedule(schedule);
 }
@@ -317,12 +364,12 @@ void ElectricLoadCenterStorageSimple::resetAvailabilitySchedule() {
   getImpl<detail::ElectricLoadCenterStorageSimple_Impl>()->resetAvailabilitySchedule();
 }
 
-bool ElectricLoadCenterStorageSimple::setZone(const Zone& zone) {
-  return getImpl<detail::ElectricLoadCenterStorageSimple_Impl>()->setZone(zone);
+bool ElectricLoadCenterStorageSimple::setThermalZone(const ThermalZone& zone) {
+  return getImpl<detail::ElectricLoadCenterStorageSimple_Impl>()->setThermalZone(zone);
 }
 
-void ElectricLoadCenterStorageSimple::resetZone() {
-  getImpl<detail::ElectricLoadCenterStorageSimple_Impl>()->resetZone();
+void ElectricLoadCenterStorageSimple::resetThermalZone() {
+  getImpl<detail::ElectricLoadCenterStorageSimple_Impl>()->resetThermalZone();
 }
 
 bool ElectricLoadCenterStorageSimple::setRadiativeFractionforZoneHeatGains(double radiativeFractionforZoneHeatGains) {
