@@ -256,7 +256,7 @@ namespace detail {
 
   bool ElectricLoadCenterStorageSimple_Impl::setMaximumStorageCapacity(double maximumStorageCapacity) {
     bool result = setDouble(OS_ElectricLoadCenter_Storage_SimpleFields::MaximumStorageCapacity, maximumStorageCapacity);
-    OS_ASSERT(result);
+    return result;
   }
 
   bool ElectricLoadCenterStorageSimple_Impl::setMaximumPowerforDischarging(double maximumPowerforDischarging) {
@@ -307,7 +307,7 @@ IddObjectType ElectricLoadCenterStorageSimple::iddObjectType() {
   return IddObjectType(IddObjectType::OS_ElectricLoadCenter_Storage_Simple);
 }
 
-boost::optional<Schedule> ElectricLoadCenterStorageSimple::availabilitySchedule() const {
+Schedule ElectricLoadCenterStorageSimple::availabilitySchedule() const {
   return getImpl<detail::ElectricLoadCenterStorageSimple_Impl>()->availabilitySchedule();
 }
 
@@ -372,7 +372,7 @@ void ElectricLoadCenterStorageSimple::resetAvailabilitySchedule() {
   getImpl<detail::ElectricLoadCenterStorageSimple_Impl>()->resetAvailabilitySchedule();
 }
 
-bool ElectricLoadCenterStorageSimple::setThermalZone(const ThermalZone& zone) {
+bool ElectricLoadCenterStorageSimple::setThermalZone(ThermalZone& zone) {
   return getImpl<detail::ElectricLoadCenterStorageSimple_Impl>()->setThermalZone(zone);
 }
 
@@ -404,8 +404,8 @@ void ElectricLoadCenterStorageSimple::resetNominalDischargingEnergeticEfficiency
   getImpl<detail::ElectricLoadCenterStorageSimple_Impl>()->resetNominalDischargingEnergeticEfficiency();
 }
 
-void ElectricLoadCenterStorageSimple::setMaximumStorageCapacity(double maximumStorageCapacity) {
-  getImpl<detail::ElectricLoadCenterStorageSimple_Impl>()->setMaximumStorageCapacity(maximumStorageCapacity);
+bool ElectricLoadCenterStorageSimple::setMaximumStorageCapacity(double maximumStorageCapacity) {
+  return getImpl<detail::ElectricLoadCenterStorageSimple_Impl>()->setMaximumStorageCapacity(maximumStorageCapacity);
 }
 
 bool ElectricLoadCenterStorageSimple::setMaximumPowerforDischarging(double maximumPowerforDischarging) {
@@ -416,8 +416,8 @@ bool ElectricLoadCenterStorageSimple::setMaximumPowerforCharging(double maximumP
   return getImpl<detail::ElectricLoadCenterStorageSimple_Impl>()->setMaximumPowerforCharging(maximumPowerforCharging);
 }
 
-void ElectricLoadCenterStorageSimple::setInitialStateofCharge(double initialStateofCharge) {
-  getImpl<detail::ElectricLoadCenterStorageSimple_Impl>()->setInitialStateofCharge(initialStateofCharge);
+bool ElectricLoadCenterStorageSimple::setInitialStateofCharge(double initialStateofCharge) {
+  return getImpl<detail::ElectricLoadCenterStorageSimple_Impl>()->setInitialStateofCharge(initialStateofCharge);
 }
 
 void ElectricLoadCenterStorageSimple::resetInitialStateofCharge() {
