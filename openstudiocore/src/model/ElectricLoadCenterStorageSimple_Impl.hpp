@@ -26,7 +26,6 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class Schedule;
 class ThermalZone;
 
@@ -56,18 +55,19 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
+    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
     //@}
     /** @name Getters */
     //@{
     
     // Convenience method to return the electricalLoadCenter on which it's assigned (optional)
-    boost::optional<ElectricLoadCenterDistribution> electricLoadCenterDistribution() const;
+    // Included in Base Class
+    // boost::optional<ElectricLoadCenterDistribution> electricLoadCenterDistribution() const;
 
     Schedule availabilitySchedule() const;
     bool isAvailabilityScheduleDefaulted() const;
