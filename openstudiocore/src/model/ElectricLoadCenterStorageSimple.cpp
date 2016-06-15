@@ -99,6 +99,40 @@ namespace detail {
   //@}
   /** @name Getters */
   //@{
+    
+  boost::optional<ElectricLoadCenterDistribution> ElectricLoadCenterStorageSimple_Impl::electricLoadCenterDistribution() const
+  {
+    boost::optional<ElectricLoadCenterDistribution> result;
+    for (auto list : getObject<ModelObject>().getModelObjectSources<ModelObjectList>(ModelObjectList::iddObjectType())){
+      auto elcds = list.getModelObjectSources<ElectricLoadCenterDistribution>(ElectricLoadCenterDistribution::iddObjectType());
+      if (elcds.empty()){
+        // error
+      } else if (elcds.size() == 1u){
+        return elcds[0];
+      }else{
+        // error
+      }
+    }
+    return boost::none;
+  }
+  
+  /*
+  boost::optional<ElectricLoadCenterDistribution> ElectricLoadCenterStorageSimple_Impl::electricLoadCenterDistribution const {
+
+    boost::optional<ElectricLoadCenterDistribution> value;
+    for ( const ElectricLoadCenterDistribution& elcd : this->model().getConcreteModelObjects<ElectricLoadCenterDistribution>() )
+    {
+      if ( boost::optional<ElectricalStorage> elecStor = mchp.electricalStorage() )
+      {
+        if (elecStor->handle() == this->handle())
+        {
+          value = elcd;
+        }
+      }
+    }
+    return value;
+
+  }*/
 
   boost::optional<Schedule> ElectricLoadCenterStorageSimple_Impl::optionalAvailabilitySchedule() const {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ElectricLoadCenter_Storage_SimpleFields::AvailabilityScheduleName);
@@ -305,6 +339,12 @@ ElectricLoadCenterStorageSimple::ElectricLoadCenterStorageSimple(const Model& mo
 
 IddObjectType ElectricLoadCenterStorageSimple::iddObjectType() {
   return IddObjectType(IddObjectType::OS_ElectricLoadCenter_Storage_Simple);
+}
+
+// Convenience method to return the electricalLoadCenter on which it's assigned (optional)
+boost::optional<ElectricLoadCenterDistribution> ElectricLoadCenterStorageSimple::electricLoadCenterDistribution() const
+{
+  return getImpl<detail::Generator_Impl>()->electricLoadCenterDistribution();
 }
 
 Schedule ElectricLoadCenterStorageSimple::availabilitySchedule() const {

@@ -66,6 +66,9 @@ namespace detail {
     //@}
     /** @name Getters */
     //@{
+    
+    // Convenience method to return the electricalLoadCenter on which it's assigned (optional)
+    boost::optional<ElectricLoadCenterDistribution> electricLoadCenterDistribution() const;
 
     Schedule availabilitySchedule() const;
     bool isAvailabilityScheduleDefaulted() const;
