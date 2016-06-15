@@ -101,8 +101,9 @@ namespace detail {
     bool setAvailabilitySchedule(Schedule& schedule);
     void resetAvailabilitySchedule();
         
-    bool setThermalZone(ThermalZone& zone);
-    void resetThermalZone();
+    // Override ElectricalStorage (Base class) methods
+    virtual bool setThermalZone(const ThermalZone& thermalZone) override;
+    virtual void resetThermalZone() override;
 
     bool setRadiativeFractionforZoneHeatGains(double radiativeFractionforZoneHeatGains);
     void resetRadiativeFractionforZoneHeatGains();

@@ -99,22 +99,23 @@ namespace detail {
   //@}
   /** @name Getters */
   //@{
-    
-  boost::optional<ElectricLoadCenterDistribution> ElectricLoadCenterStorageSimple_Impl::electricLoadCenterDistribution() const
-  {
-    boost::optional<ElectricLoadCenterDistribution> result;
-    for (auto list : getObject<ModelObject>().getModelObjectSources<ModelObjectList>(ModelObjectList::iddObjectType())){
-      auto elcds = list.getModelObjectSources<ElectricLoadCenterDistribution>(ElectricLoadCenterDistribution::iddObjectType());
-      if (elcds.empty()){
-        // error
-      } else if (elcds.size() == 1u){
-        return elcds[0];
-      }else{
-        // error
-      }
-    }
-    return boost::none;
-  }
+  
+  // Included in parent class
+  // boost::optional<ElectricLoadCenterDistribution> ElectricLoadCenterStorageSimple_Impl::electricLoadCenterDistribution() const
+  // {
+    // boost::optional<ElectricLoadCenterDistribution> result;
+    // for (auto list : getObject<ModelObject>().getModelObjectSources<ModelObjectList>(ModelObjectList::iddObjectType())){
+      // auto elcds = list.getModelObjectSources<ElectricLoadCenterDistribution>(ElectricLoadCenterDistribution::iddObjectType());
+      // if (elcds.empty()){
+        error
+      // } else if (elcds.size() == 1u){
+        // return elcds[0];
+      // }else{
+        error
+      // }
+    // }
+    // return boost::none;
+  // }
   
   /*
   boost::optional<ElectricLoadCenterDistribution> ElectricLoadCenterStorageSimple_Impl::electricLoadCenterDistribution const {
