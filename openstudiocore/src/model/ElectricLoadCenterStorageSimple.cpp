@@ -342,10 +342,11 @@ IddObjectType ElectricLoadCenterStorageSimple::iddObjectType() {
 }
 
 // Convenience method to return the electricalLoadCenter on which it's assigned (optional)
-boost::optional<ElectricLoadCenterDistribution> ElectricLoadCenterStorageSimple::electricLoadCenterDistribution() const
-{
-  return getImpl<detail::Generator_Impl>()->electricLoadCenterDistribution();
-}
+// Included in parent
+// boost::optional<ElectricLoadCenterDistribution> ElectricLoadCenterStorageSimple::electricLoadCenterDistribution() const
+// {
+  // return getImpl<detail::Generator_Impl>()->electricLoadCenterDistribution();
+// }
 
 Schedule ElectricLoadCenterStorageSimple::availabilitySchedule() const {
   return getImpl<detail::ElectricLoadCenterStorageSimple_Impl>()->availabilitySchedule();
@@ -355,9 +356,10 @@ bool ElectricLoadCenterStorageSimple::isAvailabilityScheduleDefaulted() const {
   return getImpl<detail::ElectricLoadCenterStorageSimple_Impl>()->isAvailabilityScheduleDefaulted();
 }
 
-boost::optional<ThermalZone> ElectricLoadCenterStorageSimple::thermalZone() const {
-  return getImpl<detail::ElectricLoadCenterStorageSimple_Impl>()->thermalZone();
-}
+// Included in parent
+// boost::optional<ThermalZone> ElectricLoadCenterStorageSimple::thermalZone() const {
+  // return getImpl<detail::ElectricLoadCenterStorageSimple_Impl>()->thermalZone();
+// }
 
 double ElectricLoadCenterStorageSimple::radiativeFractionforZoneHeatGains() const {
   return getImpl<detail::ElectricLoadCenterStorageSimple_Impl>()->radiativeFractionforZoneHeatGains();
@@ -412,13 +414,13 @@ void ElectricLoadCenterStorageSimple::resetAvailabilitySchedule() {
   getImpl<detail::ElectricLoadCenterStorageSimple_Impl>()->resetAvailabilitySchedule();
 }
 
-bool ElectricLoadCenterStorageSimple::setThermalZone(ThermalZone& zone) {
-  return getImpl<detail::ElectricLoadCenterStorageSimple_Impl>()->setThermalZone(zone);
-}
-
-void ElectricLoadCenterStorageSimple::resetThermalZone() {
-  getImpl<detail::ElectricLoadCenterStorageSimple_Impl>()->resetThermalZone();
-}
+// Included in parent
+// bool ElectricLoadCenterStorageSimple::setThermalZone(ThermalZone& zone) {
+  // return getImpl<detail::ElectricLoadCenterStorageSimple_Impl>()->setThermalZone(zone);
+// }
+// void ElectricLoadCenterStorageSimple::resetThermalZone() {
+  // getImpl<detail::ElectricLoadCenterStorageSimple_Impl>()->resetThermalZone();
+// }
 
 bool ElectricLoadCenterStorageSimple::setRadiativeFractionforZoneHeatGains(double radiativeFractionforZoneHeatGains) {
   return getImpl<detail::ElectricLoadCenterStorageSimple_Impl>()->setRadiativeFractionforZoneHeatGains(radiativeFractionforZoneHeatGains);

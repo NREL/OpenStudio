@@ -21,7 +21,7 @@
 #define MODEL_ELECTRICLOADCENTERSTORAGESIMPLE_HPP
 
 #include "ModelAPI.hpp"
-#include "ParentObject.hpp"
+#include "ElectricalStorage.hpp"
 
 namespace openstudio {
 
@@ -36,7 +36,7 @@ namespace detail {
 
 } // detail
 
-/** ElectricLoadCenterStorageSimple is a ParentObject that wraps the OpenStudio IDD object 'OS:ElectricLoadCenter:Storage:Simple'. */
+/** ElectricLoadCenterStorageSimple is a ElectricalStorage that wraps the OpenStudio IDD object 'OS:ElectricLoadCenter:Storage:Simple'. */
 class MODEL_API ElectricLoadCenterStorageSimple : public ParentObject {
   public:
     /** @name Constructors and Destructors */
@@ -54,12 +54,14 @@ class MODEL_API ElectricLoadCenterStorageSimple : public ParentObject {
     //@{
 
     // Convenience method to return the electricalLoadCenter on which it's assigned (optional)
-    boost::optional<ElectricLoadCenterDistribution> electricLoadCenterDistribution() const;
+    // In parent
+    // boost::optional<ElectricLoadCenterDistribution> electricLoadCenterDistribution() const;
     
     Schedule availabilitySchedule() const;
     bool isAvailabilityScheduleDefaulted() const;
     
-    boost::optional<ThermalZone> thermalZone() const;
+    // Included in parent class
+    //boost::optional<ThermalZone> thermalZone() const;
 
     double radiativeFractionforZoneHeatGains() const;
     bool isRadiativeFractionforZoneHeatGainsDefaulted() const;
@@ -86,8 +88,9 @@ class MODEL_API ElectricLoadCenterStorageSimple : public ParentObject {
     bool setAvailabilitySchedule(Schedule& schedule);
     void resetAvailabilitySchedule();
         
-    bool setThermalZone(ThermalZone& zone);
-    void resetThermalZone();
+    // Included in parent class
+    //bool setThermalZone(ThermalZone& zone);
+    //void resetThermalZone();
 
     bool setRadiativeFractionforZoneHeatGains(double radiativeFractionforZoneHeatGains);
     void resetRadiativeFractionforZoneHeatGains();

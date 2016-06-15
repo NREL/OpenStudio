@@ -21,7 +21,7 @@
 #define MODEL_ELECTRICLOADCENTERSTORAGESIMPLE_IMPL_HPP
 
 #include "ModelAPI.hpp"
-#include "ParentObject_Impl.hpp"
+#include "ElectricalStorage_Impl.hpp"
 
 namespace openstudio {
 namespace model {
@@ -32,9 +32,8 @@ class ThermalZone;
 
 namespace detail {
 
-  /** ElectricLoadCenterStorageSimple_Impl is a ParentObject_Impl that is the implementation class for ElectricLoadCenterStorageSimple.*/
-  class MODEL_API ElectricLoadCenterStorageSimple_Impl : public ParentObject_Impl {
-    Q_OBJECT;
+  /** ElectricLoadCenterStorageSimple_Impl is a ElectricalStorage_Impl that is the implementation class for ElectricLoadCenterStorageSimple.*/
+  class MODEL_API ElectricLoadCenterStorageSimple_Impl : public ElectricalStorage_Impl {
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -73,7 +72,7 @@ namespace detail {
     Schedule availabilitySchedule() const;
     bool isAvailabilityScheduleDefaulted() const;
     
-    boost::optional<ThermalZone> thermalZone() const;
+    virtual boost::optional<ThermalZone> thermalZone() const override;
 
     double radiativeFractionforZoneHeatGains() const;
     bool isRadiativeFractionforZoneHeatGainsDefaulted() const;
