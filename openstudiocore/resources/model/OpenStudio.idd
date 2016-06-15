@@ -25009,6 +25009,56 @@ OS:ElectricLoadCenter:Inverter:LookUpTable,
         \minimum 0
         \maximum 1.0
 
+OS:ElectricLoadCenter:Storage:Simple,
+       \memo Used to model storage of electricity in an electric load center.  This is a simple
+       \memo model that does not attempt to represent any of the characteristics of a real
+       \memo storage device such as a battery.  The type of power, AC or DC, depends on
+       \memo the configuration chosen as the Electrical Buss Type in the
+       \memo ElectricLoadCenter:Distribution object.
+  A1 , \field Handle
+       \type handle
+       \required-field 
+  A2,  \field Name
+       \reference ElecStorageList
+  A3,  \field Availability Schedule Name
+       \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+       \note If this field is blank, the system is always available.
+       \type object-list
+       \object-list ScheduleNames
+  A4,  \field Zone Name
+       \note Enter name of zone to receive storage losses as heat
+       \note if blank then storage is assumed to be outdoors
+       \type object-list
+       \object-list ZoneNames
+  N1 , \field Radiative Fraction for Zone Heat Gains
+       \maximum 1.0
+       \minimum 0.0
+       \default 0.0
+       \note This field contains the fraction of storage losses that enter the zone as long-wave thermal radiation.
+       \note This should be a factor between 0.0 and 1.0. The balance of the losses are convective.
+       \note This field is not used if the previous field for 'Zone Name' is left blank.
+  N2,  \field Nominal Energetic Efficiency for Charging
+       \maximum 1.0
+       \minimum 0.0
+       \default 1.0
+  N3,  \field Nominal Discharging Energetic Efficiency
+       \maximum 1.0
+       \minimum 0.0
+       \default 1.0
+  N4,  \field Maximum Storage Capacity
+       \required-field
+       \units J
+  N5,  \field Maximum Power for Discharging
+       \required-field
+       \units W
+       \minimum 0.0
+  N6,  \field Maximum Power for Charging
+       \required-field
+       \units W
+       \minimum 0.0
+  N7;  \field Initial State of Charge
+       \units J
+
 OS:ElectricLoadCenter:Distribution,
        \memo a list of meters that can be reported are available after a run on
        \memo the meter dictionary file (.mdd) if the Output:VariableDictionary has been requested.

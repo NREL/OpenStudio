@@ -231,6 +231,7 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     // TODO: when we wrap this field { "ElectricLoadCenterDistribution", "Track  Scheme", "trackScheduleSchemeSchedule", , , , },
     {"ElectricLoadCenterInverterLookUpTable","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"ElectricLoadCenterInverterSimple","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
+    {"ElectricLoadCenterStorageSimple","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"EvaporativeCoolerDirectResearchSpecial","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"EvaporativeCoolerIndirectResearchSpecial","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"EvaporativeFluidCoolerSingleSpeed","Blowdown Makeup Water Usage","blowdownMakeupWaterUsageSchedule",true,"VolumetricFlowRate",0.0,OptionalDouble()},
