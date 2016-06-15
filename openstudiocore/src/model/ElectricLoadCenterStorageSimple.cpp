@@ -68,14 +68,14 @@ namespace detail {
   {
     static std::vector<std::string> result;
     if (result.empty()){
-      result.push_back("Electric Storage Simple Charge State")
-      result.push_back("Electric Storage Charge Power")
-      result.push_back("Electric Storage Charge Energy")
-      result.push_back("Electric Storage Production Decrement Energy")
-      result.push_back("Electric Storage Discharge Power")
-      result.push_back("Electric Storage Discharge Energy")
-      result.push_back("Electric Storage Thermal Loss Rate")
-      result.push_back("Electric Storage Thermal Loss Energy")
+      result.push_back("Electric Storage Simple Charge State");
+      result.push_back("Electric Storage Charge Power");
+      result.push_back("Electric Storage Charge Energy");
+      result.push_back("Electric Storage Production Decrement Energy");
+      result.push_back("Electric Storage Discharge Power");
+      result.push_back("Electric Storage Discharge Energy");
+      result.push_back("Electric Storage Thermal Loss Rate");
+      result.push_back("Electric Storage Thermal Loss Energy");
     }
     return result;
   }
@@ -109,9 +109,13 @@ namespace detail {
     if (!value) {
       //LOG_AND_THROW(briefDescription() << " does not have an Availability Schedule attached.");
       // I'm choosing to just return alwaysOnDiscreteSchedule
-      return model.alwaysOnDiscreteSchedule();
+      return this->model().alwaysOnDiscreteSchedule();
     }
     return value.get();
+  }
+
+  bool ElectricLoadCenterStorageSimple_Impl::isAvailabilityScheduleDefaulted() const {
+    return isEmpty(OS_ElectricLoadCenter_Storage_SimpleFields::AvailabilityScheduleName);
   }
   
   // Optional thermal Zone for heat gains  
@@ -305,6 +309,10 @@ IddObjectType ElectricLoadCenterStorageSimple::iddObjectType() {
 
 boost::optional<Schedule> ElectricLoadCenterStorageSimple::availabilitySchedule() const {
   return getImpl<detail::ElectricLoadCenterStorageSimple_Impl>()->availabilitySchedule();
+}
+
+bool ElectricLoadCenterStorageSimple::isAvailabilityScheduleDefaulted() const {
+  return getImpl<detail::ElectricLoadCenterStorageSimple_Impl>()->isAvailabilityScheduleDefaulted();
 }
 
 boost::optional<ThermalZone> ElectricLoadCenterStorageSimple::thermalZone() const {

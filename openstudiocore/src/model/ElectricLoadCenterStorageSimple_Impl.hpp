@@ -68,6 +68,7 @@ namespace detail {
     //@{
 
     Schedule availabilitySchedule() const;
+    bool isAvailabilityScheduleDefaulted() const;
     
     boost::optional<ThermalZone> thermalZone() const;
 

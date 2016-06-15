@@ -54,6 +54,7 @@ class MODEL_API ElectricLoadCenterStorageSimple : public ParentObject {
     //@{
 
     Schedule availabilitySchedule() const;
+    bool isAvailabilityScheduleDefaulted() const;
     
     boost::optional<ThermalZone> thermalZone() const;
 
@@ -64,7 +65,7 @@ class MODEL_API ElectricLoadCenterStorageSimple : public ParentObject {
     bool isNominalEnergeticEfficiencyforChargingDefaulted() const;
 
     double nominalDischargingEnergeticEfficiency() const;
-    bool isNominalDischargingEnergeticEfficiencyDefaulted() const;"
+    bool isNominalDischargingEnergeticEfficiencyDefaulted() const;
 
     double maximumStorageCapacity() const;
 
