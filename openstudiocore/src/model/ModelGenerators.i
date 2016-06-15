@@ -45,6 +45,7 @@ MODELOBJECT_TEMPLATES(GeneratorPhotovoltaic);
 MODELOBJECT_TEMPLATES(ElectricLoadCenterDistribution);
 MODELOBJECT_TEMPLATES(ElectricLoadCenterInverterLookUpTable);
 MODELOBJECT_TEMPLATES(ElectricLoadCenterInverterSimple);
+MODELOBJECT_TEMPLATES(ElectricLoadCenterStorageSimple);
 MODELOBJECT_TEMPLATES(PhotovoltaicPerformanceEquivalentOneDiode);
 MODELOBJECT_TEMPLATES(PhotovoltaicPerformanceSimple);
 
@@ -55,6 +56,7 @@ SWIG_MODELOBJECT(GeneratorPhotovoltaic, 1);
 SWIG_MODELOBJECT(ElectricLoadCenterDistribution, 1);
 SWIG_MODELOBJECT(ElectricLoadCenterInverterLookUpTable, 1);
 SWIG_MODELOBJECT(ElectricLoadCenterInverterSimple, 1);
+SWIG_MODELOBJECT(ElectricLoadCenterStorageSimple, 1);
 SWIG_MODELOBJECT(PhotovoltaicPerformanceEquivalentOneDiode, 1);
 SWIG_MODELOBJECT(PhotovoltaicPerformanceSimple, 1);
 
