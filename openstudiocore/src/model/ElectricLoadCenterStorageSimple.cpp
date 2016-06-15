@@ -107,11 +107,11 @@ namespace detail {
     // for (auto list : getObject<ModelObject>().getModelObjectSources<ModelObjectList>(ModelObjectList::iddObjectType())){
       // auto elcds = list.getModelObjectSources<ElectricLoadCenterDistribution>(ElectricLoadCenterDistribution::iddObjectType());
       // if (elcds.empty()){
-        error
+        // error
       // } else if (elcds.size() == 1u){
         // return elcds[0];
       // }else{
-        error
+        // error
       // }
     // }
     // return boost::none;
@@ -248,7 +248,7 @@ namespace detail {
   }
 
   // Set the thermal Zone for heat gains
-  bool ElectricLoadCenterStorageSimple_Impl::setThermalZone(ThermalZone& thermalZone) {
+  bool ElectricLoadCenterStorageSimple_Impl::setThermalZone(const ThermalZone& thermalZone) {
     return setPointer(OS_ElectricLoadCenter_Storage_SimpleFields::ZoneName, thermalZone.handle());
   }
   
