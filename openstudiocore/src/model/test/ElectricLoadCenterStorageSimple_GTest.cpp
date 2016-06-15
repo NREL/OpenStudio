@@ -63,13 +63,13 @@ TEST_F(ModelFixture, ElectricLoadCenterStorageSimple_Instantiate) {
   elcStorSimple.resetNominalEnergeticEfficiencyforCharging();
   EXPECT_TRUE(elcStorSimple.isNominalEnergeticEfficiencyforChargingDefaulted());
 
-  // nominalEnergeticEfficiencyforCharging, defaults
-  EXPECT_TRUE(elcStorSimple.isNominalEnergeticEfficiencyforDischargingDefaulted());
-  EXPECT_TRUE(elcStorSimple.setNominalEnergeticEfficiencyforDischarging(0.855););
-  EXPECT_FALSE(elcStorSimple.isNominalEnergeticEfficiencyforDischargingDefaulted());
-  EXPECT_EQ(elcStorSimple.nominalEnergeticEfficiencyforDischarging(), 0.855);
-  elcStorSimple.resetNominalEnergeticEfficiencyforDischarging();
-  EXPECT_TRUE(elcStorSimple.isNominalEnergeticEfficiencyforDischargingDefaulted());
+  // nominalEnergeticEfficiencyforDischarging, defaults
+  EXPECT_TRUE(elcStorSimple.isNominalDischargingEnergeticEfficiencyDefaulted());
+  EXPECT_TRUE(elcStorSimple.resetNominalDischargingEnergeticEfficiency(0.855););
+  EXPECT_FALSE(elcStorSimple.isNominalDischargingEnergeticEfficiencyDefaulted());
+  EXPECT_EQ(elcStorSimple.nominalDischargingEnergeticEfficiency(), 0.855);
+  elcStorSimple.resetNominalDischargingEnergeticEfficiency();
+  EXPECT_TRUE(elcStorSimple.isNominalDischargingEnergeticEfficiencyDefaulted());
 
   // maximumStorageCapacity, required, assigned in ctor
   EXPECT_TRUE(elcStorSimple.maximumStorageCapacity());

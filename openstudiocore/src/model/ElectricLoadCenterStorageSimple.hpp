@@ -92,6 +92,8 @@ class MODEL_API ElectricLoadCenterStorageSimple : public ParentObject {
     bool setNominalEnergeticEfficiencyforCharging(double nominalEnergeticEfficiencyforCharging);
     void resetNominalEnergeticEfficiencyforCharging();
     
+    // TODO: I've requested an .IDD change in EnergyPlus, to make this "Nominal Energetic Efficiency for Discharging"
+    // TODO: https://github.com/NREL/EnergyPlus/issues/5730
     bool setNominalDischargingEnergeticEfficiency(double nominalDischargingEnergeticEfficiency);
     void resetNominalDischargingEnergeticEfficiency();
     

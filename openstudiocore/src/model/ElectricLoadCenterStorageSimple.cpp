@@ -213,7 +213,7 @@ namespace detail {
   }
 
   // Set the thermal Zone for heat gains
-  bool ElectricLoadCenterStorageSimple_Impl::setThermalZone(const ThermalZone& thermalZone) {
+  bool ElectricLoadCenterStorageSimple_Impl::setThermalZone(ThermalZone& thermalZone) {
     return setPointer(OS_ElectricLoadCenter_Storage_SimpleFields::ZoneName, thermalZone.handle());
   }
   
@@ -254,7 +254,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ElectricLoadCenterStorageSimple_Impl::setMaximumStorageCapacity(double maximumStorageCapacity) {
+  bool ElectricLoadCenterStorageSimple_Impl::setMaximumStorageCapacity(double maximumStorageCapacity) {
     bool result = setDouble(OS_ElectricLoadCenter_Storage_SimpleFields::MaximumStorageCapacity, maximumStorageCapacity);
     OS_ASSERT(result);
   }
@@ -295,8 +295,8 @@ ElectricLoadCenterStorageSimple::ElectricLoadCenterStorageSimple(const Model& mo
 
   setAvailabilitySchedule(schedule);
   
+  setNominalEnergeticEfficiencyforCharging(0.8);
   setNominalDischargingEnergeticEfficiency(0.8);
-  setNominalChargingEnergeticEfficiency(0.8);
   setMaximumStorageCapacity(1.0E13);
   setMaximumPowerforDischarging(1.0E6);
   setMaximumPowerforCharging(1.0E6);

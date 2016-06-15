@@ -78,6 +78,8 @@ namespace detail {
     double nominalEnergeticEfficiencyforCharging() const;
     bool isNominalEnergeticEfficiencyforChargingDefaulted() const;
 
+    // TODO: I've requested an .IDD change in EnergyPlus, to make this "Nominal Energetic Efficiency for Discharging"
+    // TODO: https://github.com/NREL/EnergyPlus/issues/5730
     double nominalDischargingEnergeticEfficiency() const;
     bool isNominalDischargingEnergeticEfficiencyDefaulted() const;
 

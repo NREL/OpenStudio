@@ -20,14 +20,15 @@
 #include "../ForwardTranslator.hpp"
 
 #include "../../model/Model.hpp"
-#include "../../model/ElectricLoadCenterInverterSimple.hpp"
-#include "../../model/ElectricLoadCenterInverterSimple_Impl.hpp"
+#include "../../model/ElectricLoadCenterStorageSimple.hpp"
+#include "../../model/ElectricLoadCenterStorageSimple_Impl.hpp"
+
 #include "../../model/Schedule.hpp"
 #include "../../model/Schedule_Impl.hpp"
 #include "../../model/ThermalZone.hpp"
 #include "../../model/ThermalZone_Impl.hpp"
 
-#include <utilities/idd/ElectricLoadCenter_Inverter_Simple_FieldEnums.hxx>
+#include <utilities/idd/ElectricLoadCenter_Storage_Simple_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
@@ -39,29 +40,66 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateElectricLoadCenterInverterSimple(model::ElectricLoadCenterInverterSimple & modelObject)
+boost::optional<IdfObject> ForwardTranslator::translateElectricLoadCenterStorageSimple(model::ElectricLoadCenterStorageSimple & modelObject)
 {
-  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ElectricLoadCenter_Inverter_Simple, modelObject);
+  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ElectricLoadCenter_Storage_Simple, modelObject);
 
   if (modelObject.name()) {
-    idfObject.setString(ElectricLoadCenter_Inverter_SimpleFields::Name, modelObject.name().get());
+    idfObject.setString(ElectricLoadCenter_Storage_SimpleFields::Name, modelObject.name().get());
   }
 
+  // Availability Schedule, defaults to model.alwaysOnDiscrete
   if (modelObject.availabilitySchedule() && modelObject.availabilitySchedule().get().name()) {
-    idfObject.setString(ElectricLoadCenter_Inverter_SimpleFields::AvailabilityScheduleName, modelObject.availabilitySchedule().get().name().get());
+    idfObject.setString(ElectricLoadCenter_Storage_SimpleFields::AvailabilityScheduleName, modelObject.availabilitySchedule().get().name().get());
   }
 
+  // ZoneName
   if (modelObject.thermalZone() && modelObject.thermalZone().get().name()) {
-    idfObject.setString(ElectricLoadCenter_Inverter_SimpleFields::ZoneName, modelObject.thermalZone().get().name().get());
+    idfObject.setString(ElectricLoadCenter_Storage_SimpleFields::ZoneName, modelObject.thermalZone().get().name().get());
   }
 
-  if (modelObject.radiativeFraction()) {
-    idfObject.setDouble(ElectricLoadCenter_Inverter_SimpleFields::RadiativeFraction, modelObject.radiativeFraction().get());
+  // Radiative Fraction, defaults (double)
+  {
+    double value = modelObject.radiativeFractionforZoneHeatGains();
+    idfObject.setDouble(ElectricLoadCenter_Storage_SimpleFields::RadiativeFractionforZoneHeatGains, value);
   }
-
-  if (modelObject.inverterEfficiency()) {
-    idfObject.setDouble(ElectricLoadCenter_Inverter_SimpleFields::InverterEfficiency, modelObject.inverterEfficiency().get());
+  
+  // nominalEnergeticEfficiencyforCharging, defaults
+  {
+    double value = modelObject.nominalEnergeticEfficiencyforCharging();
+    idfObject.setDouble(ElectricLoadCenter_Storage_SimpleFields::NominalEnergeticEfficiencyforCharging, value);
   }
+  
+  // nominalEnergeticEfficiencyforDischarging, defaults
+  {
+    double value = modelObject.nominalDischargingEnergeticEfficiency();
+    idfObject.setDouble(ElectricLoadCenter_Storage_SimpleFields::NominalDischargingEnergeticEfficiency, value);
+  }
+  
+  // maximumStorageCapacity, required, assigned in ctor
+  {
+    double value = modelObject.maximumStorageCapacity();
+    idfObject.setDouble(ElectricLoadCenter_Storage_SimpleFields::MaximumStorageCapacity, value);
+  }
+  
+  // maximumPowerforDischarging, required, assigned in ctor
+  {
+    double value = modelObject.maximumPowerforDischarging();
+    idfObject.setDouble(ElectricLoadCenter_Storage_SimpleFields::MaximumPowerforDischarging, value);
+  }
+  
+  // maximumPowerforCharging, required, assigned in ctor
+  {
+    double value = modelObject.maximumPowerforCharging();
+    idfObject.setDouble(ElectricLoadCenter_Storage_SimpleFields::MaximumPowerforCharging, value);
+  }
+  
+  // initialStateofCharge
+  {
+    double value = modelObject.initialStateofCharge();
+    idfObject.setDouble(ElectricLoadCenter_Storage_SimpleFields::InitialStateofCharge, value);
+  }
+  
 
   return idfObject;
 }
