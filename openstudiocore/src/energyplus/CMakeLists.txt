@@ -354,7 +354,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateDaylightingControls.cpp
   ReverseTranslator/ReverseTranslateDesignSpecificationOutdoorAir.cpp
   ReverseTranslator/ReverseTranslateElectricEquipment.cpp
-  ReverseTranslator/ReverseTranslatorElectricLoadCenterStorageSimple.cpp
+  ReverseTranslator/ReverseTranslateElectricLoadCenterStorageSimple.cpp
   ReverseTranslator/ReverseTranslateEvaporativeCoolerDirectResearchSpecial.cpp
   ReverseTranslator/ReverseTranslateEvaporativeFluidCoolerSingleSpeed.cpp
   ReverseTranslator/ReverseTranslateExteriorLights.cpp

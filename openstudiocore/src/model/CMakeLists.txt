@@ -431,6 +431,9 @@ set(${target_name}_src
   Duct.hpp
   Duct_Impl.hpp
   Duct.cpp
+  ElectricalStorage.hpp
+  ElectricalStorage_Impl.hpp
+  ElectricalStorage.cpp
   ElectricEquipment.hpp
   ElectricEquipment_Impl.hpp
   ElectricEquipment.cpp

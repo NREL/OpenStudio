@@ -37,7 +37,7 @@ namespace detail {
 } // detail
 
 /** ElectricLoadCenterStorageSimple is a ElectricalStorage that wraps the OpenStudio IDD object 'OS:ElectricLoadCenter:Storage:Simple'. */
-class MODEL_API ElectricLoadCenterStorageSimple : public ParentObject {
+class MODEL_API ElectricLoadCenterStorageSimple : public ElectricalStorage {
   public:
     /** @name Constructors and Destructors */
     //@{

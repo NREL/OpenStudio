@@ -45,7 +45,7 @@ namespace detail {
   ElectricLoadCenterStorageSimple_Impl::ElectricLoadCenterStorageSimple_Impl(const IdfObject& idfObject,
                                                                              Model_Impl* model,
                                                                              bool keepHandle)
-    : ParentObject_Impl(idfObject,model,keepHandle)
+    : ElectricalStorage_Impl(idfObject,model,keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == ElectricLoadCenterStorageSimple::iddObjectType());
   }
@@ -53,7 +53,7 @@ namespace detail {
   ElectricLoadCenterStorageSimple_Impl::ElectricLoadCenterStorageSimple_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                                                              Model_Impl* model,
                                                                              bool keepHandle)
-    : ParentObject_Impl(other,model,keepHandle)
+    : ElectricalStorage_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == ElectricLoadCenterStorageSimple::iddObjectType());
   }
@@ -61,7 +61,7 @@ namespace detail {
   ElectricLoadCenterStorageSimple_Impl::ElectricLoadCenterStorageSimple_Impl(const ElectricLoadCenterStorageSimple_Impl& other,
                                                                              Model_Impl* model,
                                                                              bool keepHandle)
-    : ParentObject_Impl(other,model,keepHandle)
+    : ElectricalStorage_Impl(other,model,keepHandle)
   {}
 
   const std::vector<std::string>& ElectricLoadCenterStorageSimple_Impl::outputVariableNames() const
@@ -321,7 +321,7 @@ namespace detail {
    Maximum Power for Charge/Discharge to 1.0E6
    Reference: EnergyPlus example files (v8.5, LrgOff_GridStorageDemandLeveling */
 ElectricLoadCenterStorageSimple::ElectricLoadCenterStorageSimple(const Model& model)
-  : ParentObject(ElectricLoadCenterStorageSimple::iddObjectType(),model)
+  : ElectricalStorage(ElectricLoadCenterStorageSimple::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::ElectricLoadCenterStorageSimple_Impl>());
 
@@ -468,7 +468,7 @@ void ElectricLoadCenterStorageSimple::resetInitialStateofCharge() {
 
 /// @cond
 ElectricLoadCenterStorageSimple::ElectricLoadCenterStorageSimple(std::shared_ptr<detail::ElectricLoadCenterStorageSimple_Impl> impl)
-  : ParentObject(impl)
+  : ElectricalStorage(impl)
 {}
 /// @endcond
 
