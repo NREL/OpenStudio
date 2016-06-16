@@ -326,9 +326,9 @@ ElectricLoadCenterStorageSimple::ElectricLoadCenterStorageSimple(const Model& mo
 {
   OS_ASSERT(getImpl<detail::ElectricLoadCenterStorageSimple_Impl>());
 
-  Schedule schedule = model.alwaysOnDiscreteSchedule();
-
-  setAvailabilitySchedule(schedule);
+  // already defaults to alwaysOn
+  //Schedule schedule = model.alwaysOnDiscreteSchedule();
+  //setAvailabilitySchedule(schedule);
   
   setNominalEnergeticEfficiencyforCharging(0.8);
   setNominalDischargingEnergeticEfficiency(0.8);

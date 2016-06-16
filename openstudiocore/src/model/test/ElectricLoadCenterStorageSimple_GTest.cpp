@@ -59,7 +59,7 @@ TEST_F(ModelFixture, ElectricLoadCenterStorageSimple_Instantiate) {
   EXPECT_TRUE(elcStorSimple.isRadiativeFractionforZoneHeatGainsDefaulted());
   
   // nominalEnergeticEfficiencyforCharging, defaults
-  EXPECT_TRUE(elcStorSimple.isNominalEnergeticEfficiencyforChargingDefaulted());
+  EXPECT_FALSE(elcStorSimple.isNominalEnergeticEfficiencyforChargingDefaulted());
   EXPECT_TRUE(elcStorSimple.setNominalEnergeticEfficiencyforCharging(0.875));
   EXPECT_FALSE(elcStorSimple.isNominalEnergeticEfficiencyforChargingDefaulted());
   EXPECT_EQ(elcStorSimple.nominalEnergeticEfficiencyforCharging(), 0.875);
@@ -67,7 +67,7 @@ TEST_F(ModelFixture, ElectricLoadCenterStorageSimple_Instantiate) {
   EXPECT_TRUE(elcStorSimple.isNominalEnergeticEfficiencyforChargingDefaulted());
 
   // nominalEnergeticEfficiencyforDischarging, defaults
-  EXPECT_TRUE(elcStorSimple.isNominalDischargingEnergeticEfficiencyDefaulted());
+  EXPECT_FALSE(elcStorSimple.isNominalDischargingEnergeticEfficiencyDefaulted());
   EXPECT_TRUE(elcStorSimple.setNominalDischargingEnergeticEfficiency(0.855));
   EXPECT_FALSE(elcStorSimple.isNominalDischargingEnergeticEfficiencyDefaulted());
   EXPECT_EQ(elcStorSimple.nominalDischargingEnergeticEfficiency(), 0.855);
