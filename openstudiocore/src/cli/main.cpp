@@ -45,7 +45,7 @@ extern "C" {
   void Init_openstudioutilitiesplot(void);
   void Init_openstudioenergyplus(void);
   ////void Init_openstudiomodeleditor(void);
-  ////void Init_openstudioosversion(void);
+  void Init_openstudioosversion(void);
   void Init_openstudioutilitiesdata(void);
   void Init_openstudioutilitiessql(void);
   ////void Init_openstudiogbxml(void);
@@ -165,7 +165,7 @@ int main(int argc, char *argv[])
     //Init_openstudioradiance();
     //Init_openstudiogbxml();
     //Init_openstudioairflow();
-    //Init_openstudioosversion();
+    Init_openstudioosversion();
     Init_openstudiomeasure();
     rb_provide("openstudiomeasure");
     //Init_openstudiomodeleditor();
