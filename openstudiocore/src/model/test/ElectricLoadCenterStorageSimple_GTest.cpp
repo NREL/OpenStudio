@@ -23,6 +23,9 @@
 
 #include "../ElectricLoadCenterStorageSimple.hpp"
 #include "../ElectricLoadCenterStorageSimple_Impl.hpp"
+#include "../Schedule.hpp"
+#include "../ScheduleCompact.hpp"
+
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -37,7 +40,7 @@ TEST_F(ModelFixture, ElectricLoadCenterStorageSimple_Instantiate) {
   // Availability Schedule, defaults to model.alwaysOnDiscrete
   EXPECT_FALSE(elcStorSimple.availabilitySchedule()); // This may fail, I'm returning model.alwaysOnDiscrete
   ScheduleCompact scheduleCompact(model);
-  EXPECT_TRUE(elcStorSimple.setAvailabilitySchedule(scheduleCompact););
+  EXPECT_TRUE(elcStorSimple.setAvailabilitySchedule(scheduleCompact));
   EXPECT_TRUE(elcStorSimple.availabilitySchedule());
   elcStorSimple.resetAvailabilitySchedule();
   EXPECT_FALSE(elcStorSimple.availabilitySchedule()); // will fail likely
@@ -49,7 +52,7 @@ TEST_F(ModelFixture, ElectricLoadCenterStorageSimple_Instantiate) {
 
   // Radiative Fraction, defaults
   EXPECT_TRUE(elcStorSimple.isRadiativeFractionforZoneHeatGainsDefaulted());
-  EXPECT_TRUE(elcStorSimple.setRadiativeFractionforZoneHeatGains(0.3););
+  EXPECT_TRUE(elcStorSimple.setRadiativeFractionforZoneHeatGains(0.3));
   EXPECT_FALSE(elcStorSimple.isRadiativeFractionforZoneHeatGainsDefaulted());
   EXPECT_EQ(elcStorSimple.radiativeFractionforZoneHeatGains(), 0.3);
   elcStorSimple.resetRadiativeFractionforZoneHeatGains();
@@ -57,7 +60,7 @@ TEST_F(ModelFixture, ElectricLoadCenterStorageSimple_Instantiate) {
   
   // nominalEnergeticEfficiencyforCharging, defaults
   EXPECT_TRUE(elcStorSimple.isNominalEnergeticEfficiencyforChargingDefaulted());
-  EXPECT_TRUE(elcStorSimple.setNominalEnergeticEfficiencyforCharging(0.875););
+  EXPECT_TRUE(elcStorSimple.setNominalEnergeticEfficiencyforCharging(0.875));
   EXPECT_FALSE(elcStorSimple.isNominalEnergeticEfficiencyforChargingDefaulted());
   EXPECT_EQ(elcStorSimple.nominalEnergeticEfficiencyforCharging(), 0.875);
   elcStorSimple.resetNominalEnergeticEfficiencyforCharging();
@@ -65,7 +68,7 @@ TEST_F(ModelFixture, ElectricLoadCenterStorageSimple_Instantiate) {
 
   // nominalEnergeticEfficiencyforDischarging, defaults
   EXPECT_TRUE(elcStorSimple.isNominalDischargingEnergeticEfficiencyDefaulted());
-  EXPECT_TRUE(elcStorSimple.resetNominalDischargingEnergeticEfficiency(0.855););
+  EXPECT_TRUE(elcStorSimple.resetNominalDischargingEnergeticEfficiency(0.855));
   EXPECT_FALSE(elcStorSimple.isNominalDischargingEnergeticEfficiencyDefaulted());
   EXPECT_EQ(elcStorSimple.nominalDischargingEnergeticEfficiency(), 0.855);
   elcStorSimple.resetNominalDischargingEnergeticEfficiency();
@@ -92,7 +95,7 @@ TEST_F(ModelFixture, ElectricLoadCenterStorageSimple_Instantiate) {
   // Initial State of Charge
   EXPECT_TRUE(elcStorSimple.isInitialStateofChargeDefaulted());
   EXPECT_EQ(elcStorSimple.initialStateofCharge, elcStorSimple.maximumStorageCapacity() /2.0)
-  EXPECT_TRUE(elcStorSimple.setInitialStateofCharge(1E5););
+  EXPECT_TRUE(elcStorSimple.setInitialStateofCharge(1E5));
   EXPECT_FALSE(elcStorSimple.isInitialStateofChargeDefaulted());
   EXPECT_EQ(elcStorSimple.initialStateofCharge(), 1E5);
   elcStorSimple.resetInitialStateofCharge();
