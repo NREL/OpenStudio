@@ -38,12 +38,12 @@ TEST_F(ModelFixture, ElectricLoadCenterStorageSimple_Instantiate) {
   ElectricLoadCenterStorageSimple elcStorSimple(model);
   
   // Availability Schedule, defaults to model.alwaysOnDiscrete
-  EXPECT_FALSE(elcStorSimple.availabilitySchedule()); // This may fail, I'm returning model.alwaysOnDiscrete
+  EXPECT_EQ(elcStorSimple.availabilitySchedule(), model.alwaysOnDiscreteSchedule());
   ScheduleCompact scheduleCompact(model);
   EXPECT_TRUE(elcStorSimple.setAvailabilitySchedule(scheduleCompact));
-  EXPECT_TRUE(elcStorSimple.availabilitySchedule());
+  EXPECT_TRUE(elcStorSimple.availabilitySchedule(), scheduleCompact);
   elcStorSimple.resetAvailabilitySchedule();
-  EXPECT_FALSE(elcStorSimple.availabilitySchedule()); // will fail likely
+  EXPECT_EQ(elcStorSimple.availabilitySchedule(), model.alwaysOnDiscreteSchedule());
     
   // ZoneName
   EXPECT_FALSE(elcStorSimple.thermalZone());
@@ -68,7 +68,7 @@ TEST_F(ModelFixture, ElectricLoadCenterStorageSimple_Instantiate) {
 
   // nominalEnergeticEfficiencyforDischarging, defaults
   EXPECT_TRUE(elcStorSimple.isNominalDischargingEnergeticEfficiencyDefaulted());
-  EXPECT_TRUE(elcStorSimple.resetNominalDischargingEnergeticEfficiency(0.855));
+  EXPECT_TRUE(elcStorSimple.setNominalDischargingEnergeticEfficiency(0.855));
   EXPECT_FALSE(elcStorSimple.isNominalDischargingEnergeticEfficiencyDefaulted());
   EXPECT_EQ(elcStorSimple.nominalDischargingEnergeticEfficiency(), 0.855);
   elcStorSimple.resetNominalDischargingEnergeticEfficiency();
@@ -94,7 +94,7 @@ TEST_F(ModelFixture, ElectricLoadCenterStorageSimple_Instantiate) {
 
   // Initial State of Charge
   EXPECT_TRUE(elcStorSimple.isInitialStateofChargeDefaulted());
-  EXPECT_EQ(elcStorSimple.initialStateofCharge, elcStorSimple.maximumStorageCapacity() /2.0)
+  EXPECT_EQ(elcStorSimple.initialStateofCharge(), elcStorSimple.maximumStorageCapacity() / 2.0);
   EXPECT_TRUE(elcStorSimple.setInitialStateofCharge(1E5));
   EXPECT_FALSE(elcStorSimple.isInitialStateofChargeDefaulted());
   EXPECT_EQ(elcStorSimple.initialStateofCharge(), 1E5);
