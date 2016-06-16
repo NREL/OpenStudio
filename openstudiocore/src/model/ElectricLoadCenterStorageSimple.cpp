@@ -116,23 +116,23 @@ namespace detail {
     // return boost::none;
   // }
   
-  /*
-  boost::optional<ElectricLoadCenterDistribution> ElectricLoadCenterStorageSimple_Impl::electricLoadCenterDistribution const {
+  
+  //boost::optional<ElectricLoadCenterDistribution> ElectricLoadCenterStorageSimple_Impl::electricLoadCenterDistribution const {
 
-    boost::optional<ElectricLoadCenterDistribution> value;
-    for ( const ElectricLoadCenterDistribution& elcd : this->model().getConcreteModelObjects<ElectricLoadCenterDistribution>() )
-    {
-      if ( boost::optional<ElectricalStorage> elecStor = mchp.electricalStorage() )
-      {
-        if (elecStor->handle() == this->handle())
-        {
-          value = elcd;
-        }
-      }
-    }
-    return value;
+  //  boost::optional<ElectricLoadCenterDistribution> value;
+  //  for ( const ElectricLoadCenterDistribution& elcd : this->model().getConcreteModelObjects<ElectricLoadCenterDistribution>() )
+  //  {
+  //    if ( boost::optional<ElectricalStorage> elecStor = mchp.electricalStorage() )
+  //    {
+  //      if (elecStor->handle() == this->handle())
+  //      {
+  //        value = elcd;
+  //      }
+  //    }
+  //  }
+  //  return value;
 
-  }*/
+  //}
 
   boost::optional<Schedule> ElectricLoadCenterStorageSimple_Impl::optionalAvailabilitySchedule() const {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ElectricLoadCenter_Storage_SimpleFields::AvailabilityScheduleName);
@@ -316,10 +316,10 @@ namespace detail {
 } // detail
 
 /* Constructor. Defaults the availabilitySchedule to alwaysOnDiscreteSchedule,
-   Defaults efficiencies for charge and discharge to 0.8
-   maximum storage capacity to 1.0E13
-   Maximum Power for Charge/Discharge to 1.0E6
-   Reference: EnergyPlus example files (v8.5, LrgOff_GridStorageDemandLeveling */
+ * Defaults efficiencies for charge and discharge to 0.8
+ * maximum storage capacity to 1.0E13
+ * Maximum Power for Charge/Discharge to 1.0E6
+ * Reference: EnergyPlus example files (v8.5, LrgOff_GridStorageDemandLeveling */
 ElectricLoadCenterStorageSimple::ElectricLoadCenterStorageSimple(const Model& model)
   : ElectricalStorage(ElectricLoadCenterStorageSimple::iddObjectType(),model)
 {
@@ -356,10 +356,10 @@ bool ElectricLoadCenterStorageSimple::isAvailabilityScheduleDefaulted() const {
   return getImpl<detail::ElectricLoadCenterStorageSimple_Impl>()->isAvailabilityScheduleDefaulted();
 }
 
-// Included in parent
-// boost::optional<ThermalZone> ElectricLoadCenterStorageSimple::thermalZone() const {
-  // return getImpl<detail::ElectricLoadCenterStorageSimple_Impl>()->thermalZone();
-// }
+// TODO: Included in parent shouldn't need that
+ //boost::optional<ThermalZone> ElectricLoadCenterStorageSimple::thermalZone() const {
+ //  return getImpl<detail::ElectricLoadCenterStorageSimple_Impl>()->thermalZone();
+ //}
 
 double ElectricLoadCenterStorageSimple::radiativeFractionforZoneHeatGains() const {
   return getImpl<detail::ElectricLoadCenterStorageSimple_Impl>()->radiativeFractionforZoneHeatGains();
@@ -414,13 +414,13 @@ void ElectricLoadCenterStorageSimple::resetAvailabilitySchedule() {
   getImpl<detail::ElectricLoadCenterStorageSimple_Impl>()->resetAvailabilitySchedule();
 }
 
-// Included in parent
-// bool ElectricLoadCenterStorageSimple::setThermalZone(ThermalZone& zone) {
-  // return getImpl<detail::ElectricLoadCenterStorageSimple_Impl>()->setThermalZone(zone);
-// }
-// void ElectricLoadCenterStorageSimple::resetThermalZone() {
-  // getImpl<detail::ElectricLoadCenterStorageSimple_Impl>()->resetThermalZone();
-// }
+// TODO: Included in parent shouldn't need that
+ //bool ElectricLoadCenterStorageSimple::setThermalZone(ThermalZone& zone) {
+ //  return getImpl<detail::ElectricLoadCenterStorageSimple_Impl>()->setThermalZone(zone);
+ //}
+ //void ElectricLoadCenterStorageSimple::resetThermalZone() {
+ //  getImpl<detail::ElectricLoadCenterStorageSimple_Impl>()->resetThermalZone();
+ //}
 
 bool ElectricLoadCenterStorageSimple::setRadiativeFractionforZoneHeatGains(double radiativeFractionforZoneHeatGains) {
   return getImpl<detail::ElectricLoadCenterStorageSimple_Impl>()->setRadiativeFractionforZoneHeatGains(radiativeFractionforZoneHeatGains);

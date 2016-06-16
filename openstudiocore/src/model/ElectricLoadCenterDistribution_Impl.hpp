@@ -29,7 +29,7 @@ namespace model {
 class Schedule;
 class Generator;
 class Inverter;
-//class ElectricalStorage;
+class ElectricalStorage;
 //class Transformer;
 class ModelObjectList;
 

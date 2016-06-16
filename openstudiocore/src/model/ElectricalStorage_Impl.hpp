@@ -56,7 +56,7 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    // Convenience method to return the electricalLoadCenter on which it's assigned (optional)
+    // Convenience method to return the (optional) electricalLoadCenter on which it's assigned
     boost::optional<ElectricLoadCenterDistribution> electricLoadCenterDistribution() const;
 
     virtual boost::optional<ThermalZone> thermalZone() const = 0;

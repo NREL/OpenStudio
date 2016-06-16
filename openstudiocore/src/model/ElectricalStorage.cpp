@@ -37,28 +37,24 @@ namespace detail {
 
 ElectricalStorage_Impl::ElectricalStorage_Impl(IddObjectType type, Model_Impl* model)
   : ParentObject_Impl(type,model)
-{
-}
+{}
 
 ElectricalStorage_Impl::ElectricalStorage_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
   : ParentObject_Impl(idfObject, model, keepHandle)
-{ 
-}
+{}
 
 ElectricalStorage_Impl::ElectricalStorage_Impl(
     const openstudio::detail::WorkspaceObject_Impl& other, 
     Model_Impl* model, 
     bool keepHandle)
  : ParentObject_Impl(other, model, keepHandle)
-{
-}
+{}
 
 ElectricalStorage_Impl::ElectricalStorage_Impl(const ElectricalStorage_Impl& other, 
                              Model_Impl* model, 
                              bool keepHandles)
  : ParentObject_Impl(other, model, keepHandles)
-{
-}
+{}
 
 boost::optional<ElectricLoadCenterDistribution> ElectricalStorage_Impl::electricLoadCenterDistribution() const
 {

@@ -60,8 +60,8 @@ class MODEL_API ElectricLoadCenterStorageSimple : public ElectricalStorage {
     Schedule availabilitySchedule() const;
     bool isAvailabilityScheduleDefaulted() const;
     
-    // Included in parent class
-    //boost::optional<ThermalZone> thermalZone() const;
+    // TODO: Included in parent class, shouldn't need to define it here...
+    //virtual boost::optional<ThermalZone> thermalZone() const override;
 
     double radiativeFractionforZoneHeatGains() const;
     bool isRadiativeFractionforZoneHeatGainsDefaulted() const;
@@ -88,9 +88,9 @@ class MODEL_API ElectricLoadCenterStorageSimple : public ElectricalStorage {
     bool setAvailabilitySchedule(Schedule& schedule);
     void resetAvailabilitySchedule();
         
-    // Included in parent class
-    //bool setThermalZone(ThermalZone& zone);
-    //void resetThermalZone();
+    // TODO: Included in parent class, shouldn't need to define it...
+    //virtual bool setThermalZone(ThermalZone& zone) override;
+    //virtual void resetThermalZone() override;
 
     bool setRadiativeFractionforZoneHeatGains(double radiativeFractionforZoneHeatGains);
     void resetRadiativeFractionforZoneHeatGains();

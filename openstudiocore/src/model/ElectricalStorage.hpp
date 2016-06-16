@@ -39,33 +39,33 @@ class MODEL_API ElectricalStorage : public ParentObject {
 
   public:
 
-  ElectricalStorage(IddObjectType type,const Model& model);
+    ElectricalStorage(IddObjectType type,const Model& model);
 
-  virtual ~ElectricalStorage() {}
+    virtual ~ElectricalStorage() {}
 
-  boost::optional<ElectricLoadCenterDistribution> electricLoadCenterDistribution() const;
+    boost::optional<ElectricLoadCenterDistribution> electricLoadCenterDistribution() const;
 
-  virtual boost::optional<ThermalZone> thermalZone() const;
+    virtual boost::optional<ThermalZone> thermalZone() const;
 
-  virtual bool setThermalZone(const ThermalZone& thermalZone);
+    virtual bool setThermalZone(const ThermalZone& thermalZone);
 
-  virtual void resetThermalZone();
+    virtual void resetThermalZone();
 
   protected:
 
-  friend class Model;
+    friend class Model;
 
-  friend class openstudio::IdfObject;
+    friend class openstudio::IdfObject;
 
-  /// @cond 
+    /// @cond 
 
-  typedef detail::ElectricalStorage_Impl ImplType;
+    typedef detail::ElectricalStorage_Impl ImplType;
 
-  explicit ElectricalStorage(std::shared_ptr<detail::ElectricalStorage_Impl> impl);
+    explicit ElectricalStorage(std::shared_ptr<detail::ElectricalStorage_Impl> impl);
 
   private:
 
-  REGISTER_LOGGER("openstudio.model.ElectricalStorage");
+    REGISTER_LOGGER("openstudio.model.ElectricalStorage");
 
   /// @endcond 
 

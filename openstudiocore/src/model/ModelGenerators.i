@@ -44,6 +44,7 @@ namespace openstudio {
 MODELOBJECT_TEMPLATES(PhotovoltaicPerformance);
 MODELOBJECT_TEMPLATES(Generator);
 MODELOBJECT_TEMPLATES(Inverter);
+MODELOBJECT_TEMPLATES(ElectricalStorage);
 MODELOBJECT_TEMPLATES(GeneratorPhotovoltaic);
 MODELOBJECT_TEMPLATES(ElectricLoadCenterDistribution);
 MODELOBJECT_TEMPLATES(ElectricLoadCenterInverterLookUpTable);
@@ -55,6 +56,7 @@ MODELOBJECT_TEMPLATES(PhotovoltaicPerformanceSimple);
 SWIG_MODELOBJECT(PhotovoltaicPerformance, 0);
 SWIG_MODELOBJECT(Generator, 0);
 SWIG_MODELOBJECT(Inverter, 0);
+SWIG_MODELOBJECT(ElectricalStorage, 0);
 SWIG_MODELOBJECT(GeneratorPhotovoltaic, 1);
 SWIG_MODELOBJECT(ElectricLoadCenterDistribution, 1);
 SWIG_MODELOBJECT(ElectricLoadCenterInverterLookUpTable, 1);
