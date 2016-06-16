@@ -248,7 +248,8 @@ namespace detail {
 
   // Set the thermal Zone for heat gains
   bool ElectricLoadCenterStorageSimple_Impl::setThermalZone(const ThermalZone& thermalZone) {
-    return setPointer(OS_ElectricLoadCenter_Storage_SimpleFields::ZoneName, thermalZone.handle());
+    bool result = setPointer(OS_ElectricLoadCenter_Storage_SimpleFields::ZoneName, thermalZone.handle());
+    return result;
   }
   
   // Reset the zone (leave blank)

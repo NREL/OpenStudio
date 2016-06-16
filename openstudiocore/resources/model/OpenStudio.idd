@@ -25029,7 +25029,7 @@ OS:ElectricLoadCenter:Storage:Simple,
        \note Enter name of zone to receive storage losses as heat
        \note if blank then storage is assumed to be outdoors
        \type object-list
-       \object-list ZoneNames
+       \object-list ThermalZoneNames
   N1 , \field Radiative Fraction for Zone Heat Gains
        \maximum 1.0
        \minimum 0.0
