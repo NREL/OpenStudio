@@ -41,7 +41,7 @@ TEST_F(ModelFixture, ElectricLoadCenterStorageSimple_Instantiate) {
   EXPECT_EQ(elcStorSimple.availabilitySchedule(), model.alwaysOnDiscreteSchedule());
   ScheduleCompact scheduleCompact(model);
   EXPECT_TRUE(elcStorSimple.setAvailabilitySchedule(scheduleCompact));
-  EXPECT_TRUE(elcStorSimple.availabilitySchedule(), scheduleCompact);
+  EXPECT_EQ(elcStorSimple.availabilitySchedule(), scheduleCompact);
   elcStorSimple.resetAvailabilitySchedule();
   EXPECT_EQ(elcStorSimple.availabilitySchedule(), model.alwaysOnDiscreteSchedule());
     
