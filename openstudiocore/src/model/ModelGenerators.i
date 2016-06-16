@@ -13,6 +13,7 @@
 %import <model/ModelGeometry.i>
 %import <model/ModelHVAC.i>
 
+// All base classes for PV, Generators, inverters and Electrical Storage
 %{
   #include <model/PhotovoltaicPerformance.hpp>
   #include <model/PhotovoltaicPerformance_Impl.hpp>
@@ -20,6 +21,8 @@
   #include <model/Generator_Impl.hpp>
   #include <model/Inverter.hpp>
   #include <model/Inverter_Impl.hpp>
+  #include <model/ElectricalStorage.hpp>
+  #include <model/ElectricalStorage_Impl.hpp>
 %}
 
 
