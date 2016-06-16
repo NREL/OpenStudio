@@ -1,3 +1,24 @@
+## OpenStudio v1.11.5
+###### 2016-06-13 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.11.4...v1.11.5 )
+
+Closed Issues: 16 (#247, #981, #2099, #2172, #2177, #2184, #2185, #2204, #2213, #2221, #2237, #2240, #2249, #2265, #2268, #2269)
+- ![Improved:][improved] [#2172]( https://github.com/NREL/OpenStudio/issues/2172 ), Translate all coils supported by the IDD in AirLoopHVACUnitarySystem
+- ![Improved:][improved] [#2213]( https://github.com/NREL/OpenStudio/issues/2213 ), Enable heat recovery for ChillerElectricEIR
+- ![Fixed:][fixed] [#247]( https://github.com/NREL/OpenStudio/issues/247 ), Opening OSM file in SketchUp Plugin changes Daylight Savings values (Bugzilla #1015)
+- ![Fixed:][fixed] [#981]( https://github.com/NREL/OpenStudio/issues/981 ), Daylight savings time in user file is overwritten when opening model in app
+- ![Fixed:][fixed] [#2099]( https://github.com/NREL/OpenStudio/issues/2099 ), TimeStep of 6 per hour in new model isn't respected when simulation is run
+- ![Fixed:][fixed] [#2177]( https://github.com/NREL/OpenStudio/issues/2177 ), WaterHeaterMixed - Ambient Temperature Indicator : Outdoors does not work
+- ![Fixed:][fixed] [#2184]( https://github.com/NREL/OpenStudio/issues/2184 ), unit ventilator object is incomplete in 1.11.0
+- ![Fixed:][fixed] [#2185]( https://github.com/NREL/OpenStudio/issues/2185 ), Daylight savings time allways get the American option
+- ![Fixed:][fixed] [#2204]( https://github.com/NREL/OpenStudio/issues/2204 ), Update forward translator so it doesn't translate orphan surfaces
+- ![Fixed:][fixed] [#2221]( https://github.com/NREL/OpenStudio/issues/2221 ), Temp dir is not deleted
+- ![Fixed:][fixed] [#2237]( https://github.com/NREL/OpenStudio/issues/2237 ), Site:GroundTemperature:Deep not forward translating
+- ![Fixed:][fixed] [#2240]( https://github.com/NREL/OpenStudio/issues/2240 ), Unit conversion error - in^2 to cm^2
+- ![Fixed:][fixed] [#2249]( https://github.com/NREL/OpenStudio/issues/2249 ), Handle "Baseline" checks on PAT XML export
+- ![Fixed:][fixed] [#2265]( https://github.com/NREL/OpenStudio/issues/2265 ), OpenStudio::Workspace constructor creates an OS:Version object that makes reverse translation fail
+- ![Fixed:][fixed] [#2268]( https://github.com/NREL/OpenStudio/issues/2268 ), WaterHeaterMixed is writing a corrupt oa node on translate to idf
+- ![Fixed:][fixed] [#2269]( https://github.com/NREL/OpenStudio/issues/2269 ), 1.11.4 - Coil:Cooling:DX:TwoStageWithHumidityControlMode causes sim to fail
+
 ## OpenStudio v1.11.4
 ###### 2016-05-27 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.11.3...v1.11.4 )
 
