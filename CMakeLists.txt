@@ -647,7 +647,44 @@ ExternalProject_Add(GeographicLib
 # and that config file will tell us everything we need to know about the project's targets.
 set(GeographicLib_DIR ${CMAKE_BINARY_DIR}/GeographicLib-prefix/src/GeographicLib-build/)
 
-#if(BUILD_QT)
+option(BUILD_QT "Build Qt" OFF)
+option(STATIC_QT "Use Static Qt" ON)
+
+if(BUILD_QT)
+
+  if( UNIX )
+    if( STATIC_QT )
+      set(QT_CONFIGURE_COMMAND "-v -release -opensource -static -openssl -no-pch -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -confirm-license -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install")
+    else()
+      set(QT_CONFIGURE_COMMAND "-v -release -opensource -shared -openssl -no-pch -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -confirm-license -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install")
+    endif()
+    ExternalProject_Add(Qt
+      URL http://openstudio-resources.s3.amazonaws.com/dependencies/qt-everywhere-opensource-src-5.6.1.tar.gz
+      URL_MD5 ed16ef2a30c674f91f8615678005d44c
+      CONFIGURE_COMMAND "configure ${QT_CONFIGURE_COMMAND}"
+      PATCH_COMMAND ""
+      BUILD_COMMAND make -j${CPUCOUNT} && make install
+      INSTALL_COMMAND ""
+    )
+  else()
+    # "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" amd64
+    if( STATIC_QT )
+      set(QT_CONFIGURE_COMMAND -platform win32-msvc2013 -debug-and-release -opensource -static -mp -openssl-linked -I ${OPENSSL_ROOT_DIR}/include -L ${OPENSSL_ROOT_DIR}/lib/VC/static OPENSSL_LIBS="-lssleay32MT -llibeay32MT" -opengl dynamic -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -qt-pcre -qt-libpng -qt-libjpeg -qt-freetype -qt-harfbuzz -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -confirm-license -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install)
+    else()
+      set(QT_CONFIGURE_COMMAND -platform win32-msvc2013 -debug-and-release -opensource -shared -mp -openssl -I ${OPENSSL_ROOT_DIR}/include -L ${OPENSSL_ROOT_DIR}/lib/VC -opengl dynamic -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -qt-pcre -qt-libpng -qt-libjpeg -qt-freetype -qt-harfbuzz -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -confirm-license -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install)
+    endif()  
+    ExternalProject_Add(Qt
+      URL http://openstudio-resources.s3.amazonaws.com/dependencies/qt-everywhere-opensource-src-5.6.1.zip
+      URL_MD5 c18a4904d9773894437c10c25f93e50f
+      CONFIGURE_COMMAND cd "${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt" && configure.bat ${QT_CONFIGURE_COMMAND}
+      PATCH_COMMAND ""
+      BUILD_COMMAND cd "${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt" && nmake && nmake install
+      INSTALL_COMMAND ""
+    )
+  endif()     
+else()
+        
+endif()
 
 ## TODO Bring back build static qt on all platform 
 #
@@ -659,15 +696,21 @@ set(GeographicLib_DIR ${CMAKE_BINARY_DIR}/GeographicLib-prefix/src/GeographicLib
 # from build dir (which should be below qt dir)
 # "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" amd64
 # set CL=/MP
-# ..\configure.bat -platform win32-msvc2013 -debug-and-release -opensource -openssl-linked OPENSSL_LIBS="-lssleay32 -llibeay32" -I C:\OpenSSL-Win64\include -L C:\OpenSSL-Win64\lib\VC\static -opengl dynamic -static -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -confirm-license -prefix C:\Qt2\5.6\msvc2013_static
-# nmake
+# ..\configure.bat -platform win32-msvc2013 -debug-and-release -opensource -static -mp -openssl-linked -I C:\OpenSSL-Win64\include -L C:\OpenSSL-Win64\lib\VC\static -opengl dynamic -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -qt-pcre -qt-libpng -qt-libjpeg -qt-freetype -qt-harfbuzz -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -confirm-license -prefix C:\Qt2\5.6\msvc2013_static
+# nmake 
+#
+# Shared build
+# "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" amd64
+# set CL=/MP
+# ..\configure.bat -platform win32-msvc2013 -debug-and-release -opensource -shared -mp -openssl -I C:\OpenSSL-Win64\include -L C:\OpenSSL-Win64\lib\VC -opengl dynamic -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -qt-pcre -qt-libpng -qt-libjpeg -qt-freetype -qt-harfbuzz -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -confirm-license -prefix C:\Qt2\5.6\msvc2013_shared
+# nmake 
 #
 ## MSVC 2015
 # from build dir (which should be below qt dir)
 # "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" amd64
 # set CL=/MP
 # ..\configure.bat -platform win32-msvc2015 -debug-and-release -opensource -openssl-linked OPENSSL_LIBS="-lssleay32 -llibeay32" -I C:\OpenSSL-Win64\include -L C:\OpenSSL-Win64\lib\VC\static -opengl dynamic -static -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -confirm-license -prefix C:\Qt2\5.6\msvc2015_static
-# nmake
+# nmake 
 
 ## mac configure notes
 #./configure -v -release -opensource -static -openssl -no-pch -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -confirm-license -prefix /Users/kbenne/Development/Qt/qt_5_6_osx_static
@@ -676,8 +719,6 @@ set(GeographicLib_DIR ${CMAKE_BINARY_DIR}/GeographicLib-prefix/src/GeographicLib
 ## linux configure notes
 # install deps according to here http://doc.qt.io/qt-5/linux-requirements.html
 #./configure -v -release -opensource -static -openssl -no-pch -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -qt-xcb -confirm-license  -no-qml-debug -prefix /home/kbenne/Qt/qt_5_6_linux_64_static 
-
-
 
 set(OpenStudioCore_DIR ${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build)
 
