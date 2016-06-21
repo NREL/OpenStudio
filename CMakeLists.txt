@@ -667,18 +667,21 @@ if(BUILD_QT)
       INSTALL_COMMAND ""
     )
   else()
-    # "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" amd64
+    # to initialize command prompt run: "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" amd64
+    configure_file("${CMAKE_SOURCE_DIR}/dependencies/qt/build_static_qt.bat.in" "${CMAKE_BINARY_DIR}/build_static_qt.bat")
+    configure_file("${CMAKE_SOURCE_DIR}/dependencies/qt/build_shared_qt.bat.in" "${CMAKE_BINARY_DIR}/build_shared_qt.bat")
     if( STATIC_QT )
-      set(QT_CONFIGURE_COMMAND -platform win32-msvc2013 -debug-and-release -opensource -static -mp -openssl-linked -I ${OPENSSL_ROOT_DIR}/include -L ${OPENSSL_ROOT_DIR}/lib/VC/static OPENSSL_LIBS="-lssleay32MT -llibeay32MT" -opengl dynamic -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -qt-pcre -qt-libpng -qt-libjpeg -qt-freetype -qt-harfbuzz -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -confirm-license -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install)
+      set(QT_BUILD_SCRIPT "build_static_qt.bat")
     else()
-      set(QT_CONFIGURE_COMMAND -platform win32-msvc2013 -debug-and-release -opensource -shared -mp -openssl -I ${OPENSSL_ROOT_DIR}/include -L ${OPENSSL_ROOT_DIR}/lib/VC -opengl dynamic -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -qt-pcre -qt-libpng -qt-libjpeg -qt-freetype -qt-harfbuzz -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -confirm-license -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install)
+      set(QT_BUILD_SCRIPT "build_shared_qt.bat")
     endif()  
     ExternalProject_Add(Qt
       URL http://openstudio-resources.s3.amazonaws.com/dependencies/qt-everywhere-opensource-src-5.6.1.zip
       URL_MD5 c18a4904d9773894437c10c25f93e50f
-      CONFIGURE_COMMAND cd "${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt" && configure.bat ${QT_CONFIGURE_COMMAND}
+      BUILD_IN_SOURCE 1
+      CONFIGURE_COMMAND ""
       PATCH_COMMAND ""
-      BUILD_COMMAND cd "${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt" && nmake && nmake install
+      BUILD_COMMAND cmd /C "${CMAKE_BINARY_DIR}/${QT_BUILD_SCRIPT}"
       INSTALL_COMMAND ""
     )
   endif()     
