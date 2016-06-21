@@ -1,7 +1,21 @@
 
 OS:Version,
-  {b07c0377-e6ef-4205-ae8f-edcaa3bcf497}, !- Handle
-  1.11.4;                                 !- Version Identifier
+  {24ab10d5-e510-4741-8e04-60850cb5f30a}, !- Handle
+  1.11.5;                                 !- Version Identifier
+
+OS:WeatherFile,
+  {723b8b41-fedf-4006-b2ea-df5318b05b7b}, !- Handle
+  Golden,                                 !- City
+  CO,                                     !- State Province Region
+  USA,                                    !- Country
+  Custom-724666,                          !- Data Source
+  724666,                                 !- WMO Number
+  39.74,                                  !- Latitude {deg}
+  -105.18,                                !- Longitude {deg}
+  -7,                                     !- Time Zone {hr}
+  1829,                                   !- Elevation {m}
+  file:files/SRRL_2012AMY_60min.epw,      !- Url
+  D8B625BE;                               !- Checksum
 
 OS:ScheduleTypeLimits,
   {bc3c52d5-c0e6-4771-9027-386c816456db}, !- Handle

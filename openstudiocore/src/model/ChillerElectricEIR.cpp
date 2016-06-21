@@ -679,6 +679,16 @@ namespace detail {
     return OS_Chiller_Electric_EIRFields::CondenserOutletNodeName;
   }
 
+  unsigned ChillerElectricEIR_Impl::tertiaryInletPort() const
+  {
+    return OS_Chiller_Electric_EIRFields::HeatRecoveryInletNodeName;
+  }
+
+  unsigned ChillerElectricEIR_Impl::tertiaryOutletPort() const
+  {
+    return OS_Chiller_Electric_EIRFields::HeatRecoveryOutletNodeName;
+  }
+
   ModelObject ChillerElectricEIR_Impl::clone(Model model) const
   {
     ChillerElectricEIR chiller = WaterToWaterComponent_Impl::clone(model).cast<ChillerElectricEIR>();

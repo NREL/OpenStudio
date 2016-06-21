@@ -931,6 +931,21 @@ namespace openstudio{
     m_bclXML.clearAttributes();
   }
 
+  bool BCLMeasure::missingRequiredFields() const
+  {
+    bool missing = (
+      uid().empty() ||
+      versionId().empty() ||
+      xmlChecksum().empty() ||
+      name().empty() ||
+      displayName().empty() ||
+      className().empty() ||
+      description().empty() ||
+      modelerDescription().empty()
+      );
+    return missing;
+  }
+
   bool BCLMeasure::checkForUpdatesFiles()
   {
     bool result = false;

@@ -98,6 +98,44 @@ In Visual Studio:
 - Open OpenStudio.sln
 - Build PACKAGE
 
+OpenStudio 2 Windows 64-bit
+--------------
+With Git, pull `os_2_0_develop` branch.
+
+In CMake, select current 64-bit compiler
+
+In CMake check the following:
+
+- BUILD\_PACKAGE
+- BUILD\_SWIG
+
+Press `Configure` and `Generate` in CMake
+
+Check advanced, check grouped
+
+In CMake **uncheck** the following:
+
+- CPACK_BINARY_FOO (uncheck all)
+- CPACK_SOURCE_FOO (uncheck all)
+
+In CMake **check** the following:
+
+- CPACK_BINARY_ZIP
+
+Press `Configure` and `Generate` in CMake
+
+In Visual Studio:
+
+- Open OpenStudio.sln
+- Select Release Solution Configuration
+- Build OpenStudio until "configuring done", and "generating done"
+- Cancel the build (tip: set up [Kill Build Shortcut](https://github.com/NREL/OpenStudio/wiki/Suggested-Visual-Studio-2013-Configuration#kill-build-shortcut))
+- Open OpenStudioCore.sln
+- Select Release Solution Configuration
+- Build OpenStudioCore with IncrediBuild
+- Open OpenStudio.sln
+- Build PACKAGE
+
 Windows 32-bit
 --------------
 With Git, pull iteration branch.
@@ -334,7 +372,7 @@ In folder `developer\ruby`, open Git Bash and type the following
 
 Open out.txt, and paste data into CHANGELOG.md
 
-Commit CHANGELOG.md to the develop branch
+Commit GitHubIssueStats.rb and CHANGELOG.md to the develop branch
 
 
 Version Update

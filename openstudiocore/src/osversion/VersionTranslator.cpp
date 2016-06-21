@@ -51,6 +51,7 @@
 #include "../utilities/units/QuantityConverter.hpp"
 #include <utilities/idd/OS_ComponentData_FieldEnums.hxx>
 #include "../utilities/math/FloatCompare.hpp"
+#include <utilities/embedded_files.hxx>
 
 #include <OpenStudio.hxx>
 
@@ -105,6 +106,9 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("1.10.2")] = &VersionTranslator::update_1_10_1_to_1_10_2;
   m_updateMethods[VersionString("1.10.6")] = &VersionTranslator::update_1_10_5_to_1_10_6;
   m_updateMethods[VersionString("1.11.4")] = &VersionTranslator::update_1_11_3_to_1_11_4;
+  m_updateMethods[VersionString("1.11.5")] = &VersionTranslator::update_1_11_4_to_1_11_5;
+  m_updateMethods[VersionString("1.11.6")] = &VersionTranslator::defaultUpdate;
+
 
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
@@ -209,6 +213,8 @@ VersionTranslator::VersionTranslator()
   m_startVersions.push_back(VersionString("1.11.1"));
   m_startVersions.push_back(VersionString("1.11.2"));
   m_startVersions.push_back(VersionString("1.11.3"));
+  m_startVersions.push_back(VersionString("1.11.4"));
+  m_startVersions.push_back(VersionString("1.11.5"));
 }
 
 boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm, 
@@ -483,7 +489,9 @@ void VersionTranslator::initializeMap(std::istream& is) {
           // get the sizing objects and save them for later,
           // we will reintrodce the sizing objects in the version 1.10.2 phase of the translation
           // when they were officially part of OS
-          auto cbeccIddFile = IddFile::load( getSharedResourcesPath() / "osversion/1_9_0_CBECC/OpenStudio.idd");
+          std::stringstream ss;
+          ss << ::openstudio::embedded_files::getFileAsString(":/idd/versions/1_9_0_CBECC/OpenStudio.idd");
+          auto cbeccIddFile = IddFile::load(ss);
           OS_ASSERT(cbeccIddFile);
           is.seekg(0, std::ios::beg);
           auto cbeccIdfFile = IdfFile::load(is,cbeccIddFile.get());
@@ -3222,6 +3230,44 @@ std::string VersionTranslator::update_1_11_3_to_1_11_4(const IdfFile& idf_1_11_3
       newObject.setString(3,"Autosize");
       newObject.setDouble(4,0.0);
       newObject.setDouble(5,0.8);
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
+    } else {
+      ss << object;
+    }
+  }
+
+  return ss.str();
+}
+
+std::string VersionTranslator::update_1_11_4_to_1_11_5(const IdfFile& idf_1_11_4, const IddFileAndFactoryWrapper& idd_1_11_5) {
+  std::stringstream ss;
+
+  ss << idf_1_11_4.header() << std::endl << std::endl;
+
+  // new version object
+  IdfFile targetIdf(idd_1_11_5.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  for (const IdfObject& object : idf_1_11_4.objects()) {
+    auto iddname = object.iddObject().name();
+
+    if (iddname == "OS:Coil:Heating:DX:SingleSpeed") {
+      auto iddObject = idd_1_11_5.getObject("OS:Coil:Heating:DX:SingleSpeed");
+      IdfObject newObject(iddObject.get());
+
+      size_t newi = 0;
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        if( auto s = object.getString(i) ) {
+          newObject.setString(newi,s.get());
+          if( i == 6 ) {
+            newObject.setDouble(newi,773.3);
+            ++newi;
+          }
+        }
+        ++newi;
+      }
 
       m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
       ss << newObject;

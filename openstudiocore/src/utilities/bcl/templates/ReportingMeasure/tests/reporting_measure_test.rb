@@ -140,7 +140,9 @@ class ReportingMeasure_Test < MiniTest::Unit::TestCase
       # run the measure
       measure.run(runner, argument_map)
       result = runner.result
+      show_output(result)
       assert_equal("Success", result.value.valueName)
+      assert(result.warnings.size == 0)
     ensure
       Dir.chdir(start_dir)
     end

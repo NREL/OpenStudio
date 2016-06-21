@@ -228,13 +228,13 @@ target_link_libraries(openstudio
  ruby_OpenStudioUtilitiesPlot
  ruby_OpenStudioEnergyPlus
  ##ruby_OpenStudioModelEditor
- ##ruby_OpenStudioOSVersion
+ ruby_OpenStudioOSVersion
  ruby_OpenStudioUtilitiesData
  ruby_OpenStudioUtilitiesSql
  ##ruby_OpenStudioGBXML
  ruby_OpenStudioModelGenerators
  ##ruby_OpenStudioRadiance
- ruby_OpenStudioUtilitiesEconomics
+ #ruby_OpenStudioUtilitiesEconomics
  ruby_OpenStudioUtilitiesTime
  ##ruby_OpenStudioISOModel
  ruby_OpenStudioModelGeometry

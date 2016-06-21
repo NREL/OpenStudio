@@ -110,7 +110,7 @@ class ReportingMeasure < OpenStudio::Ruleset::ReportingUserScript
     if ann_env_pd
 
       # get desired variable
-      key_value =  "" # when used should be in all caps. In this case I'm using a meter vs. an output variable, and it doesn't have a key
+      key_value =  "Environment"
       time_step = "Hourly" # "Zone Timestep", "Hourly", "HVAC System Timestep"
       variable_name = "Site Outdoor Air Drybulb Temperature"
       output_timeseries = sqlFile.timeSeries(ann_env_pd, time_step, variable_name, key_value) # key value would go at the end if we used it.
