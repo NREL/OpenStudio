@@ -449,7 +449,7 @@ endif()
 
 if( APPLE )
   ExternalProject_Add(Ruby
-    URL https://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.2.0.tar.gz
+    URL http://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.2.0.tar.gz
     URL_MD5 d4d8b600af2f77566515728d5bd7ffa4
     BUILD_IN_SOURCE 1
     CONFIGURE_COMMAND autoconf && sh -c "./configure --with-static-linked-ext --without-gmp --without-tcl --without-tk --disable-install-doc --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install"
@@ -463,8 +463,9 @@ if( APPLE )
   set(RUBY_EXECUTABLE "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby")
   set(RUBY_SOURCE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby")
 elseif( UNIX )
+  # I had to install autotools-dev on Redhat, http://askubuntu.com/questions/430706/installing-autotools-autoconf
   ExternalProject_Add(Ruby
-    URL https://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.2.0.tar.gz
+    URL http://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.2.0.tar.gz
     URL_MD5 d4d8b600af2f77566515728d5bd7ffa4
     BUILD_IN_SOURCE 1
     CONFIGURE_COMMAND autoconf && sh -c "./configure --with-static-linked-ext --without-gmp --without-tcl --without-tk --disable-install-doc --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install"
@@ -482,7 +483,7 @@ else()
   # This will require bison, sed, and at least ruby 1.8 in your path
   # Consider minsys even though the build will be done by msvc the ruby build system uses some traditionally unix tools
   ExternalProject_Add(Ruby
-    URL https://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.2.0.tar.gz
+    URL http://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.2.0.tar.gz
     URL_MD5 d4d8b600af2f77566515728d5bd7ffa4
     BUILD_IN_SOURCE 1
     CONFIGURE_COMMAND ""
@@ -507,7 +508,7 @@ if( WIN32 )
   set(SHELL_COMMAND cmd /C)
 endif()
 ExternalProject_Add(OpenStudio-workflow-gem
-  GIT_REPOSITORY https://github.com/NREL/OpenStudio-workflow-gem.git
+  GIT_REPOSITORY git://github.com/NREL/OpenStudio-workflow-gem.git
   GIT_TAG c2f6ed3b51515b512378c7a913537b43851e8229
   BUILD_IN_SOURCE 1
   CONFIGURE_COMMAND ""
