@@ -161,6 +161,8 @@
 #include "../model/ZoneHVACBaseboardConvectiveElectric_Impl.hpp"
 #include "../model/ZoneHVACBaseboardConvectiveWater.hpp"
 #include "../model/ZoneHVACBaseboardConvectiveWater_Impl.hpp"
+#include "../model/ZoneVentilationDesignFlowRate.hpp"
+#include "../model/ZoneVentilationDesignFlowRate_Impl.hpp"
 #include "../model/CoilHeatingWaterBaseboard.hpp"
 #include "../model/CoilHeatingWaterBaseboard_Impl.hpp"
 #include "../model/WaterHeaterMixed.hpp"
@@ -4772,6 +4774,44 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
         spm->setControlZone(thermalZone);
       }
     }
+  }
+
+  // OperableWinInterlock
+  auto operableWinInterlock = thermalZoneElement.firstChildElement("OperableWinInterlock").text().toInt(&ok);
+  if( ok && (operableWinInterlock == 1) ) {
+    model::ZoneVentilationDesignFlowRate zoneVent(model);
+    zoneVent.setName(thermalZone.nameString() + " Operable Window Ventilation");
+    zoneVent.setDesignFlowRateCalculationMethod("Flow/Area");
+    zoneVent.setFlowRateperZoneFloorArea(0.000762);
+    zoneVent.setVentilationType("Intake");
+    zoneVent.setFanPressureRise(0.0);
+    zoneVent.setFanTotalEfficiency(1.0);
+    zoneVent.setConstantTermCoefficient(1.0);
+    zoneVent.setTemperatureTermCoefficient(0.0);
+    zoneVent.setVelocityTermCoefficient(0.0);
+    zoneVent.setVelocitySquaredTermCoefficient(0.0);
+    zoneVent.setMinimumOutdoorTemperature(10);
+    zoneVent.setMaximumOutdoorTemperature(29.4);
+    zoneVent.setMaximumWindSpeed(40);
+
+    // primAirCondSysRefElement
+    // Could be a zn sys or an air sys
+    auto znSysElement = findZnSysElement(primAirCondSysRefElement.text(),doc);
+    auto airSysElement = findAirSysElement(primAirCondSysRefElement.text(),doc);
+    if( ! znSysElement.isNull() ) {
+      auto availSchRefElement = znSysElement.firstChildElement("AvailSchRef");
+      if( auto availSch = model.getModelObjectByName<model::Schedule>(availSchRefElement.text().toStdString()) ) {
+        zoneVent.setSchedule(availSch.get());
+      }
+    } else if( ! airSysElement.isNull() ) {
+      auto availSchRefElement = airSysElement.firstChildElement("AvailSchRef");
+      auto availSch = model.getModelObjectByName<model::Schedule>(availSchRefElement.text().toStdString());
+      if( auto availSch = model.getModelObjectByName<model::Schedule>(availSchRefElement.text().toStdString()) ) {
+        zoneVent.setSchedule(availSch.get());
+      }
+    }
+
+    zoneVent.addToThermalZone(thermalZone);
   }
 
   return result;
