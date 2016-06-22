@@ -25073,10 +25073,15 @@ OS:ElectricLoadCenter:Distribution,
        \object-list ModelObjectLists
   A4 , \field Generator Operation Scheme Type
        \note required if Generator List is entered.
-       \memo Keys DemandLimit, TrackElectrical, TrackSchedule, TrackMeter, FollowThermal and FollowThermalLimitElectrical disabled for now
+       \note Determines how generators are to be controlled
        \type choice
-       \default Baseload
        \key Baseload
+       \key DemandLimit
+       \key TrackElectrical
+       \key TrackSchedule
+       \key TrackMeter
+       \key FollowThermal
+       \key FollowThermalLimitElectrical
   N1 , \field Demand Limit Scheme Purchased Electric Demand Limit
        \type real
        \units W
@@ -25090,10 +25095,13 @@ OS:ElectricLoadCenter:Distribution,
        \external-list autoRDDmeter
   A7 , \field Electrical Buss Type
        \type choice
-       \memo Keys AlternatingCurrent, AlternatingCurrentWithStorage, DirectCurrentWithInverterDCStorage, and DirectCurrentWithInverterACStorage disabled for now
+       \key AlternatingCurrent
+       \key AlternatingCurrentWithStorage
        \key DirectCurrentWithInverter
+       \key DirectCurrentWithInverterDCStorage
+       \key DirectCurrentWithInverterACStorage
        \default DirectCurrentWithInverter
-  A8 , \field Inverter Object Name
+  A8 , \field Inverter Name
        \note required when Electrical Buss Type=DirectCurrentWithInverter, DirectCurrentWithInverterDCStorage,
        \note or DirectCurrentWithInverterACStorage
        \type object-list
@@ -25103,10 +25111,81 @@ OS:ElectricLoadCenter:Distribution,
        \note or DirectCurrentWithInverterACStorage
        \type object-list
        \object-list ElecStorageList
-  A10; \field Transformer Object Name
+  A10, \field Transformer Object Name
        \note required when power needs to be output from on-site generation to the grid via transformer
        \type object-list
-       \object-list TransformerNames       
+       \object-list TransformerNames
+  A11, \field Storage Operation Scheme
+       \note Select method to govern how storage charge and discharge is controlled
+       \type choice
+       \key TrackFacilityElectricDemandStoreExcessOnSite
+       \note TrackFacilityElectricDemandStoreExcessOnSite indicates that storage control will follow the facility power demand 
+       \note while accounting for any on-site generation.  Only excess on site generation  gets stored (legacy behavior).
+       \default TrackFacilityElectricDemandStoreExcessOnSite
+       \key TrackMeterDemandStoreExcessOnSite
+       \note TrackMeterDemandStoreExcessOnSite indicates that storage discharge control will follow an electric meter named in the field called Storage Control Track Meter Name.  This scheme is similiar 
+       \note to TrackFacilityElectricDemandStoreExcessOnSite except that instead of the main facility electric meter, the control is based off of a user-selected meter.
+       \key TrackChargeDischargeSchedules
+       \note TrackChargeDischargeSchedules indicates that control will follow the charging and discharging power and schedules defined in the fields called Maximum Storage Charge Grid Supply Power,
+       \note Storage Charge Grid Supply Power Fraction Schedule Name, Design Storage Discharge Grid Export Power, and Storage Discharge Grid Export Fraction Schedule Name.
+       \key FacilityDemandLeveling
+       \note FacilityDemandLeveling indicates that storage control will attempt to control the facility's power demand drawn from the utility service to a prescribed level.
+       \note The target utility demand is entered in the fields called Storage Control Utility Demand Limit and Storage Control Utility Demand Limit Fraction Schedule Name
+       \note This scheme first accounts for any on-site generation and during times of high use will discharge storage to reduce facility grid demand to meet the target level
+       \note and during times of low use will charge storage from the grid to increase facility grid demand to meet the target level. 
+  A12, \field Storage Control Track Meter Name
+       \note required when Storage Operation Scheme is set to TrackMeterDemandStoreExcessOnSite.
+       \type external-list
+       \external-list autoRDDmeter
+  A13, \field Storage Converter Object Name
+       \note Name of an ElectricLoadCenter:Storage:Converter used to convert AC to DC when charging DC storage from grid supply.
+       \note A converter is expected when using Storage Operation Schemes FacilityDemandLeveling or TrackChargeDischargeSchedules
+       \note A single bidirectional device will reference both an inverter object (DC to AC) and a converter object (AC to DC).
+       \type object-list
+       \object-list ConverterList
+  N2 , \field Maximum Storage State of Charge Fraction
+       \note Fraction of storage capacity used as upper limit for controlling charging, for all storage operation schemes.
+       \type real
+       \default 1.0
+  N3,  \field Minimum Storage State of Charge Fraction
+       \note Fraction of storage capacity used as lower limit for controlling discharging, for all storage operation schemes.
+       \type real
+       \default 0.0
+  N4 , \field Design Storage Control Charge Power
+       \note Maximum rate that electric power can be charged into storage.
+       \note Storage charging adjusted downward for conversion losses.
+       \note Rate is modified by fractional values in the schedule named in the next field. 
+       \note Required field when using Storage Operation Schemes FacilityDemandLeveling or TrackChargeDischargeSchedules.
+       \type real
+       \units W
+  A14, \field Storage Charge Power Fraction Schedule Name
+       \note Controls timing and magnitude of charging storage.
+       \note Required field if Storage Operation Scheme is set to TrackChargeDischargeSchedules.
+       \note Schedule values should be fractions from 0.0 to 1.0, inclusive.
+       \type object-list
+       \object-list ScheduleNames
+  N5 , \field Design Storage Control Discharge Power
+       \note Maximum rate that electric power can be discharged from storage.
+       \note Rate is modified by fractional values in the schedule named in the next field. 
+       \note Required field when using Storage Operation Schemes FacilityDemandLeveling or TrackChargeDischargeSchedules.
+       \type real
+       \units W
+  A15, \field Storage Discharge Power Fraction Schedule Name
+       \note Controls timing and magnitude of discharging storage
+       \note Required field if Storage Operation Scheme is set to TrackChargeDischargeSchedules.
+       \note Schedule values should be fractions from 0.0 to 1.0, inclusive.
+  N6,  \field Storage Control Utility Demand Target
+       \note Target utility service demand power for discharge control.  Storage draws are adjusted upwards for conversion losses. 
+       \note Required field for FacilityDemandLeveling storage operation scheme
+       \type real
+       \units W
+  A16; \field Storage Control Utility Demand Target Fraction Schedule Name
+       \note Modifies the target utility service demand power over time.
+       \note Schedule values should be fractions from -1.0 to 1.0, inclusive.
+       \note if omitted a schedule value of 1.0 is used. Negative values indicate export to grid
+       \note Schedule is used if Storage Operation Scheme is set to FacilityDemandLeveling.
+       \type object-list
+       \object-list ScheduleNames       
        
 \group OpenStudio Economics
 

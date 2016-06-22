@@ -105,6 +105,13 @@ namespace detail {
   {
     std::vector<ModelObject> result;
     result.push_back(generatorModelObjectList());
+    if (boost::optional<Inverter> optInverter = inverter()) {
+      result.push_back(optInverter.get());
+    }
+    if (boost::optional<ElectricalStorage> optElectricalStorage = electricalStorage()) {
+      result.push_back(optElectricalStorage.get());
+    }
+    
     return result;
   }
 
@@ -167,12 +174,12 @@ namespace detail {
   }
 
   boost::optional<Inverter> ElectricLoadCenterDistribution_Impl::inverter() const {
-    return getObject<ModelObject>().getModelObjectTarget<Inverter>(OS_ElectricLoadCenter_DistributionFields::InverterObjectName);
+    return getObject<ModelObject>().getModelObjectTarget<Inverter>(OS_ElectricLoadCenter_DistributionFields::InverterName);
   }
 
-  //boost::optional<ElecricalStorage> ElectricLoadCenterDistribution_Impl::electricalStorage() const {
-  //  return getObject<ModelObject>().getModelObjectTarget<ElecricalStorage>(OS_ElectricLoadCenter_DistributionFields::ElectricalStorageObjectName);
-  //}
+  boost::optional<ElectricalStorage> ElectricLoadCenterDistribution_Impl::electricalStorage() const {
+    return getObject<ModelObject>().getModelObjectTarget<ElectricalStorage>(OS_ElectricLoadCenter_DistributionFields::ElectricalStorageObjectName);
+  }
 
   //boost::optional<Transformer> ElectricLoadCenterDistribution_Impl::transformer() const {
   //  return getObject<ModelObject>().getModelObjectTarget<Transformer>(OS_ElectricLoadCenter_DistributionFields::TransformerObjectName);
@@ -298,7 +305,7 @@ namespace detail {
     }
 
     // DLM: may have problems with signals here if inverter is temporarily on two load centers
-    bool result = setPointer(OS_ElectricLoadCenter_DistributionFields::InverterObjectName, inverter.handle());
+    bool result = setPointer(OS_ElectricLoadCenter_DistributionFields::InverterName, inverter.handle());
  
     if (result){
       
@@ -317,20 +324,20 @@ namespace detail {
   }
 
   void ElectricLoadCenterDistribution_Impl::resetInverter() {
-    bool result = setString(OS_ElectricLoadCenter_DistributionFields::InverterObjectName, "");
+    bool result = setString(OS_ElectricLoadCenter_DistributionFields::InverterName, "");
 
     // TODO: update bus type
     OS_ASSERT(result);
   }
 
-  //bool ElectricLoadCenterDistribution_Impl::setElectricalStorage(const ElectricalStorage& electricalStorage) {
-  //  return setPointer(OS_ElectricLoadCenter_DistributionFields::ElectricalStorageObjectName, electricalStorage.handle());
-  //}
+  bool ElectricLoadCenterDistribution_Impl::setElectricalStorage(const ElectricalStorage& electricalStorage) {
+    return setPointer(OS_ElectricLoadCenter_DistributionFields::ElectricalStorageObjectName, electricalStorage.handle());
+  }
 
-  //void ElectricLoadCenterDistribution_Impl::resetElectricalStorage() {
-  //  bool result = setString(OS_ElectricLoadCenter_DistributionFields::ElectricalStorageObjectName, "");
-  //  OS_ASSERT(result);
-  //}
+  void ElectricLoadCenterDistribution_Impl::resetElectricalStorage() {
+    bool result = setString(OS_ElectricLoadCenter_DistributionFields::ElectricalStorageObjectName, "");
+    OS_ASSERT(result);
+  }
 
   //bool ElectricLoadCenterDistribution_Impl::setTransformer(const Transformer& transformer) {
   //  return setPointer(OS_ElectricLoadCenter_DistributionFields::TransformerObjectName, transformer.handle());
@@ -373,6 +380,14 @@ std::vector<std::string> ElectricLoadCenterDistribution::electricalBussTypeValue
                         OS_ElectricLoadCenter_DistributionFields::ElectricalBussType);
 }
 
+std::vector<std::string> ElectricLoadCenterDistribution::storageOperationSchemeValues() {
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+    OS_ElectricLoadCenter_DistributionFields::StorageOperationScheme);
+}
+
+
+
+
 std::vector<Generator> ElectricLoadCenterDistribution::generators() const {
   return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->generators();
 }
@@ -409,9 +424,9 @@ boost::optional<Inverter> ElectricLoadCenterDistribution::inverter() const {
   return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->inverter();
 }
 
-//boost::optional<ElecricalStorage> ElectricLoadCenterDistribution::elecricalStorage() const {
-//  return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->elecricalStorage();
-//}
+boost::optional<ElectricalStorage> ElectricLoadCenterDistribution::electricalStorage() const {
+  return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->electricalStorage();
+}
 
 //boost::optional<Transformer> ElectricLoadCenterDistribution::transformer() const {
 //  return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->transformer();
@@ -477,13 +492,13 @@ void ElectricLoadCenterDistribution::resetInverter() {
   getImpl<detail::ElectricLoadCenterDistribution_Impl>()->resetInverter();
 }
 
-//bool ElectricLoadCenterDistribution::setElecricalStorage(const ElecricalStorage& elecricalStorage) {
-//  return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->setElectricalStorageObject(elecricalStorage);
-//}
+bool ElectricLoadCenterDistribution::setElectricalStorage(const ElectricalStorage& electricalStorage) {
+  return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->setElectricalStorage(electricalStorage);
+}
 
-//void ElectricLoadCenterDistribution::resetElecricalStorage() {
-//  getImpl<detail::ElectricLoadCenterDistribution_Impl>()->resetElecricalStorage();
-//}
+void ElectricLoadCenterDistribution::resetElectricalStorage() {
+  getImpl<detail::ElectricLoadCenterDistribution_Impl>()->resetElectricalStorage();
+}
 
 //bool ElectricLoadCenterDistribution::setTransformer(const Transformer& transformer) {
 //  return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->setTransformer(transformer);

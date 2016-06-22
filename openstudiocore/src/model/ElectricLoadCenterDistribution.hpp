@@ -62,6 +62,8 @@ class MODEL_API ElectricLoadCenterDistribution : public ParentObject {
 
   static std::vector<std::string> electricalBussTypeValues();
 
+  static std::vector<std::string> storageOperationSchemeValues();
+
   /** @name Getters */
   //@{
 
@@ -72,11 +74,11 @@ class MODEL_API ElectricLoadCenterDistribution : public ParentObject {
 
   bool isGeneratorOperationSchemeTypeDefaulted() const;
 
-  //boost::optional<double> demandLimitSchemePurchasedElectricDemandLimit() const;
+  boost::optional<double> demandLimitSchemePurchasedElectricDemandLimit() const;
 
-  //boost::optional<Schedule> trackScheduleSchemeSchedule() const;
+  boost::optional<Schedule> trackScheduleSchemeSchedule() const;
 
-  //boost::optional<std::string> trackMeterSchemeMeterName() const;
+  boost::optional<std::string> trackMeterSchemeMeterName() const;
 
   std::string electricalBussType() const;
 
@@ -84,9 +86,15 @@ class MODEL_API ElectricLoadCenterDistribution : public ParentObject {
 
   boost::optional<Inverter> inverter() const;
 
-  //boost::optional<ElectricalStorage> electricalStorage() const;
+  boost::optional<ElectricalStorage> electricalStorage() const;
 
   //boost::optional<Transformer> transformer() const;
+
+
+  // New
+  
+  // Storage Operation Scheme
+  boost::optional<std::string> storageOperationScheme() const;
 
   //@}
   /** @name Setters */
@@ -122,9 +130,9 @@ class MODEL_API ElectricLoadCenterDistribution : public ParentObject {
 
   void resetInverter();
 
-  //bool setElectricalStorage(const ElectricalStorage& electricalStorage);
+  bool setElectricalStorage(const ElectricalStorage& electricalStorage);
 
-  //void resetElectricalStorage();
+  void resetElectricalStorage();
 
   //bool setTransformer(const Transformer& transformer);
 
