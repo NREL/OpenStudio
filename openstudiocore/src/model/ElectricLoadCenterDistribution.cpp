@@ -151,17 +151,17 @@ namespace detail {
     return isEmpty(OS_ElectricLoadCenter_DistributionFields::GeneratorOperationSchemeType);
   }
 
-  //boost::optional<double> ElectricLoadCenterDistribution_Impl::demandLimitSchemePurchasedElectricDemandLimit() const {
-  //  return getDouble(OS_ElectricLoadCenter_DistributionFields::DemandLimitSchemePurchasedElectricDemandLimit,true);
-  //}
+  boost::optional<double> ElectricLoadCenterDistribution_Impl::demandLimitSchemePurchasedElectricDemandLimit() const {
+    return getDouble(OS_ElectricLoadCenter_DistributionFields::DemandLimitSchemePurchasedElectricDemandLimit,true);
+  }
 
-  //boost::optional<Schedule> ElectricLoadCenterDistribution_Impl::trackScheduleSchemeSchedule() const {
-  //  return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ElectricLoadCenter_DistributionFields::TrackScheduleNameSchemeScheduleName);
-  //}
+  boost::optional<Schedule> ElectricLoadCenterDistribution_Impl::trackScheduleSchemeSchedule() const {
+    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ElectricLoadCenter_DistributionFields::TrackScheduleNameSchemeScheduleName);
+  }
 
-  //boost::optional<std::string> ElectricLoadCenterDistribution_Impl::trackMeterSchemeMeterName() const {
-  //  return getString(OS_ElectricLoadCenter_DistributionFields::TrackMeterSchemeMeterName,true);
-  //}
+  boost::optional<std::string> ElectricLoadCenterDistribution_Impl::trackMeterSchemeMeterName() const {
+    return getString(OS_ElectricLoadCenter_DistributionFields::TrackMeterSchemeMeterName,true);
+  }
 
   std::string ElectricLoadCenterDistribution_Impl::electricalBussType() const {
     boost::optional<std::string> value = getString(OS_ElectricLoadCenter_DistributionFields::ElectricalBussType,true);
@@ -250,37 +250,37 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  //void ElectricLoadCenterDistribution_Impl::setDemandLimitSchemePurchasedElectricDemandLimit(double demandLimitSchemePurchasedElectricDemandLimit) {
-  //  bool result = setDouble(OS_ElectricLoadCenter_DistributionFields::DemandLimitSchemePurchasedElectricDemandLimit, demandLimitSchemePurchasedElectricDemandLimit);
-  //  OS_ASSERT(result);
-  //}
+  void ElectricLoadCenterDistribution_Impl::setDemandLimitSchemePurchasedElectricDemandLimit(double demandLimitSchemePurchasedElectricDemandLimit) {
+    bool result = setDouble(OS_ElectricLoadCenter_DistributionFields::DemandLimitSchemePurchasedElectricDemandLimit, demandLimitSchemePurchasedElectricDemandLimit);
+    OS_ASSERT(result);
+  }
 
-  //void ElectricLoadCenterDistribution_Impl::resetDemandLimitSchemePurchasedElectricDemandLimit() {
-  //  bool result = setString(OS_ElectricLoadCenter_DistributionFields::DemandLimitSchemePurchasedElectricDemandLimit, "");
-  // OS_ASSERT(result);
-  //}
+  void ElectricLoadCenterDistribution_Impl::resetDemandLimitSchemePurchasedElectricDemandLimit() {
+    bool result = setString(OS_ElectricLoadCenter_DistributionFields::DemandLimitSchemePurchasedElectricDemandLimit, "");
+   OS_ASSERT(result);
+  }
 
-  //bool ElectricLoadCenterDistribution_Impl::setTrackScheduleSchemeSchedule(Schedule& schedule) {
-  //  bool result = setSchedule(OS_ElectricLoadCenter_DistributionFields::TrackScheduleNameSchemeScheduleName,
-  //                            "ElectricLoadCenterDistribution",
-  //                            "Track  Scheme",
-  //                            schedule);
-  //  return result;
-  //}
+  bool ElectricLoadCenterDistribution_Impl::setTrackScheduleSchemeSchedule(Schedule& schedule) {
+    bool result = setSchedule(OS_ElectricLoadCenter_DistributionFields::TrackScheduleNameSchemeScheduleName,
+                              "ElectricLoadCenterDistribution",
+                              "Track  Scheme",
+                              schedule);
+    return result;
+  }
 
-  //void ElectricLoadCenterDistribution_Impl::resetTrackScheduleSchemeSchedule() {
-  //  bool result = setString(OS_ElectricLoadCenter_DistributionFields::TrackScheduleNameSchemeScheduleName, "");
-  //  OS_ASSERT(result);
-  //}
+  void ElectricLoadCenterDistribution_Impl::resetTrackScheduleSchemeSchedule() {
+    bool result = setString(OS_ElectricLoadCenter_DistributionFields::TrackScheduleNameSchemeScheduleName, "");
+    OS_ASSERT(result);
+  }
 
-  //bool ElectricLoadCenterDistribution_Impl::setTrackMeterSchemeMeterName(const std::string& trackMeterSchemeMeterName) {
-  //  return setString(OS_ElectricLoadCenter_DistributionFields::TrackMeterSchemeMeterName, trackMeterSchemeMeterName);
-  //}
+  bool ElectricLoadCenterDistribution_Impl::setTrackMeterSchemeMeterName(const std::string& trackMeterSchemeMeterName) {
+    return setString(OS_ElectricLoadCenter_DistributionFields::TrackMeterSchemeMeterName, trackMeterSchemeMeterName);
+  }
 
-  //void ElectricLoadCenterDistribution_Impl::resetTrackMeterSchemeMeterName() {
-  //  bool result = setString(OS_ElectricLoadCenter_DistributionFields::TrackMeterSchemeMeterName, "");
-  //  OS_ASSERT(result);
-  //}
+  void ElectricLoadCenterDistribution_Impl::resetTrackMeterSchemeMeterName() {
+    bool result = setString(OS_ElectricLoadCenter_DistributionFields::TrackMeterSchemeMeterName, "");
+    OS_ASSERT(result);
+  }
 
   bool ElectricLoadCenterDistribution_Impl::setElectricalBussType(const std::string& electricalBussType) {
     bool result = setString(OS_ElectricLoadCenter_DistributionFields::ElectricalBussType, electricalBussType);
@@ -400,17 +400,17 @@ bool ElectricLoadCenterDistribution::isGeneratorOperationSchemeTypeDefaulted() c
   return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->isGeneratorOperationSchemeTypeDefaulted();
 }
 
-//boost::optional<double> ElectricLoadCenterDistribution::demandLimitSchemePurchasedElectricDemandLimit() const {
-//  return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->demandLimitSchemePurchasedElectricDemandLimit();
-//}
+boost::optional<double> ElectricLoadCenterDistribution::demandLimitSchemePurchasedElectricDemandLimit() const {
+  return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->demandLimitSchemePurchasedElectricDemandLimit();
+}
 
-//boost::optional<Schedule> ElectricLoadCenterDistribution::trackScheduleSchemeSchedule() const {
-//  return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->trackScheduleSchemeSchedule();
-//}
+boost::optional<Schedule> ElectricLoadCenterDistribution::trackScheduleSchemeSchedule() const {
+  return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->trackScheduleSchemeSchedule();
+}
 
-//boost::optional<std::string> ElectricLoadCenterDistribution::trackMeterSchemeMeterName() const {
-//  return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->trackMeterSchemeMeterName();
-//}
+boost::optional<std::string> ElectricLoadCenterDistribution::trackMeterSchemeMeterName() const {
+  return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->trackMeterSchemeMeterName();
+}
 
 std::string ElectricLoadCenterDistribution::electricalBussType() const {
   return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->electricalBussType();
@@ -452,37 +452,37 @@ void ElectricLoadCenterDistribution::resetGeneratorOperationSchemeType() {
   getImpl<detail::ElectricLoadCenterDistribution_Impl>()->resetGeneratorOperationSchemeType();
 }
 
-//void ElectricLoadCenterDistribution::setDemandLimitSchemePurchasedElectricDemandLimit(double demandLimitSchemePurchasedElectricDemandLimit) {
-//  getImpl<detail::ElectricLoadCenterDistribution_Impl>()->setDemandLimitSchemePurchasedElectricDemandLimit(demandLimitSchemePurchasedElectricDemandLimit);
-//}
+void ElectricLoadCenterDistribution::setDemandLimitSchemePurchasedElectricDemandLimit(double demandLimitSchemePurchasedElectricDemandLimit) {
+  getImpl<detail::ElectricLoadCenterDistribution_Impl>()->setDemandLimitSchemePurchasedElectricDemandLimit(demandLimitSchemePurchasedElectricDemandLimit);
+}
 
-//void ElectricLoadCenterDistribution::resetDemandLimitSchemePurchasedElectricDemandLimit() {
-//  getImpl<detail::ElectricLoadCenterDistribution_Impl>()->resetDemandLimitSchemePurchasedElectricDemandLimit();
-//}
+void ElectricLoadCenterDistribution::resetDemandLimitSchemePurchasedElectricDemandLimit() {
+  getImpl<detail::ElectricLoadCenterDistribution_Impl>()->resetDemandLimitSchemePurchasedElectricDemandLimit();
+}
 
-//bool ElectricLoadCenterDistribution::setTrackScheduleSchemeSchedule(Schedule& schedule) {
-//  return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->setTrackScheduleSchemeSchedule(schedule);
-//}
+bool ElectricLoadCenterDistribution::setTrackScheduleSchemeSchedule(Schedule& schedule) {
+  return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->setTrackScheduleSchemeSchedule(schedule);
+}
 
-//void ElectricLoadCenterDistribution::resetTrackScheduleSchemeSchedule() {
-//  getImpl<detail::ElectricLoadCenterDistribution_Impl>()->resetTrackScheduleSchemeSchedule();
-//}
+void ElectricLoadCenterDistribution::resetTrackScheduleSchemeSchedule() {
+  getImpl<detail::ElectricLoadCenterDistribution_Impl>()->resetTrackScheduleSchemeSchedule();
+}
 
-//bool ElectricLoadCenterDistribution::setTrackMeterSchemeMeterName(const std::string& trackMeterSchemeMeterName) {
-//  return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->setTrackMeterSchemeMeterName(trackMeterSchemeMeterName);
-//}
+bool ElectricLoadCenterDistribution::setTrackMeterSchemeMeterName(const std::string& trackMeterSchemeMeterName) {
+  return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->setTrackMeterSchemeMeterName(trackMeterSchemeMeterName);
+}
 
-//void ElectricLoadCenterDistribution::resetTrackMeterSchemeMeterName() {
-//  getImpl<detail::ElectricLoadCenterDistribution_Impl>()->resetTrackMeterSchemeMeterName();
-//}
+void ElectricLoadCenterDistribution::resetTrackMeterSchemeMeterName() {
+  getImpl<detail::ElectricLoadCenterDistribution_Impl>()->resetTrackMeterSchemeMeterName();
+}
 
-//bool ElectricLoadCenterDistribution::setElectricalBussType(const std::string& electricalBussType) {
-//  return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->setElectricalBussType(electricalBussType);
-//}
+bool ElectricLoadCenterDistribution::setElectricalBussType(const std::string& electricalBussType) {
+  return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->setElectricalBussType(electricalBussType);
+}
 
-//void ElectricLoadCenterDistribution::resetElectricalBussType() {
-//  getImpl<detail::ElectricLoadCenterDistribution_Impl>()->resetElectricalBussType();
-//}
+void ElectricLoadCenterDistribution::resetElectricalBussType() {
+  getImpl<detail::ElectricLoadCenterDistribution_Impl>()->resetElectricalBussType();
+}
 
 bool ElectricLoadCenterDistribution::setInverter(const Inverter& inverter) {
   return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->setInverter(inverter);

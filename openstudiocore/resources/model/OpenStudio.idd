@@ -25082,6 +25082,7 @@ OS:ElectricLoadCenter:Distribution,
        \key TrackMeter
        \key FollowThermal
        \key FollowThermalLimitElectrical
+       \default Baseload
   N1 , \field Demand Limit Scheme Purchased Electric Demand Limit
        \type real
        \units W
@@ -25091,8 +25092,9 @@ OS:ElectricLoadCenter:Distribution,
        \object-list ScheduleNames
   A6 , \field Track Meter Scheme Meter Name
        \note required when Generator Operation Scheme Type=TrackMeter
-       \type external-list
-       \external-list autoRDDmeter
+       \memo type external-list
+       \memo external-list autoRDDmeter
+       \type alpha
   A7 , \field Electrical Buss Type
        \type choice
        \key AlternatingCurrent
@@ -25135,8 +25137,9 @@ OS:ElectricLoadCenter:Distribution,
        \note and during times of low use will charge storage from the grid to increase facility grid demand to meet the target level. 
   A12, \field Storage Control Track Meter Name
        \note required when Storage Operation Scheme is set to TrackMeterDemandStoreExcessOnSite.
-       \type external-list
-       \external-list autoRDDmeter
+       \type alpha
+       \memo type external-list
+       \memo external-list autoRDDmeter
   A13, \field Storage Converter Object Name
        \note Name of an ElectricLoadCenter:Storage:Converter used to convert AC to DC when charging DC storage from grid supply.
        \note A converter is expected when using Storage Operation Schemes FacilityDemandLeveling or TrackChargeDischargeSchedules
@@ -25147,7 +25150,7 @@ OS:ElectricLoadCenter:Distribution,
        \note Fraction of storage capacity used as upper limit for controlling charging, for all storage operation schemes.
        \type real
        \default 1.0
-  N3,  \field Minimum Storage State of Charge Fraction
+  N3 , \field Minimum Storage State of Charge Fraction
        \note Fraction of storage capacity used as lower limit for controlling discharging, for all storage operation schemes.
        \type real
        \default 0.0
