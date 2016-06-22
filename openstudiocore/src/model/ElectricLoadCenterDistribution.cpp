@@ -196,7 +196,7 @@ namespace detail {
     return isEmpty(OS_ElectricLoadCenter_DistributionFields::StorageOperationScheme);
   }
   // Storage Control Track Meter Name, required if operation = TrackMeterDemandStoreExcessOnSite
-  boost::optional<std::string> storageControlTrackMeterName() const {
+  boost::optional<std::string> ElectricLoadCenterDistribution_Impl::storageControlTrackMeterName() const {
     return getString(OS_ElectricLoadCenter_DistributionFields::StorageControlTrackMeterName, true);
   }
 
@@ -204,58 +204,58 @@ namespace detail {
   //boost::optional<ElectricLoadCenterStorageConverter> storageConverterObjectName() const;
 
   // Maximum Storage State of Charge Fraction, required if storage, defaults
-  double maximumStorageStateofChargeFraction() const {
+  double ElectricLoadCenterDistribution_Impl::maximumStorageStateofChargeFraction() const {
     boost::optional<double> value = getDouble(OS_ElectricLoadCenter_DistributionFields::MaximumStorageStateofChargeFraction, true);
     OS_ASSERT(value);
     return value.get();
   }
 
-  bool isMaximumStorageStateofChargeFractionDefaulted() const {
+  bool ElectricLoadCenterDistribution_Impl::isMaximumStorageStateofChargeFractionDefaulted() const {
     return isEmpty(OS_ElectricLoadCenter_DistributionFields::MaximumStorageStateofChargeFraction);
   }
 
   // Minimum Storage State of Charge Fraction, required if storage, defaults
-  double minimumStorageStateofChargeFraction() const {
+  double ElectricLoadCenterDistribution_Impl::minimumStorageStateofChargeFraction() const {
     boost::optional<double> value = getDouble(OS_ElectricLoadCenter_DistributionFields::MinimumStorageStateofChargeFraction, true);
     OS_ASSERT(value);
     return value.get();
   }
-  bool isMinimumStorageStateofChargeFractionDefaulted() const {
+  bool ElectricLoadCenterDistribution_Impl::isMinimumStorageStateofChargeFractionDefaulted() const {
     return isEmpty(OS_ElectricLoadCenter_DistributionFields::MinimumStorageStateofChargeFraction);
   }
 
   // Design Storage Control Charge Power, required if FacilityDemandLeveling or TrackChargeDischargeSchedules
-  boost::optional<double> designStorageControlChargePower() const {
+  boost::optional<double> ElectricLoadCenterDistribution_Impl::designStorageControlChargePower() const {
     return getDouble(OS_ElectricLoadCenter_DistributionFields::DesignStorageControlChargePower, true);
   }
 
   // Storage Charge Power Fraction Schedule Name, required if TrackChargeDischargeSchedules
   // TODO: do I want to default that to daytime?
-  boost::optional<Schedule> storageChargePowerFractionSchedule() const {
+  boost::optional<Schedule> ElectricLoadCenterDistribution_Impl::storageChargePowerFractionSchedule() const {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ElectricLoadCenter_DistributionFields::StorageChargePowerFractionScheduleName);
   }
 
 
   // Design Storage Control Discharge Power, required if FacilityDemandLeveling or TrackChargeDischargeSchedules
-  boost::optional<double> designStorageControlDischargePower() const {
+  boost::optional<double> ElectricLoadCenterDistribution_Impl::designStorageControlDischargePower() const {
     return getDouble(OS_ElectricLoadCenter_DistributionFields::DesignStorageControlDischargePower, true);
   }
 
   // Storage Charge Power Fraction Schedule Name, required if TrackChargeDischargeSchedules
   // TODO: do I want to default that to daytime?
-  boost::optional<Schedule> storageDischargePowerFractionSchedule() const {
+  boost::optional<Schedule> ElectricLoadCenterDistribution_Impl::storageDischargePowerFractionSchedule() const {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ElectricLoadCenter_DistributionFields::StorageDischargePowerFractionScheduleName);
   }
 
 
   // Storage Control Utility Demand Target, required if FacilityDemandLeveling
-  boost::optional<double> storageControlUtilityDemandTarget() const {
+  boost::optional<double> ElectricLoadCenterDistribution_Impl::storageControlUtilityDemandTarget() const {
     return getDouble(OS_ElectricLoadCenter_DistributionFields::StorageControlUtilityDemandTarget, true);
   }
 
 
   // Storage Control Utility Demand Target Fraction Schedule Name, will be used only if FacilityDemandLeveling, defaults to 1.0
-  Schedule storageControlUtilityDemandTargetFractionSchedule() const {
+  Schedule ElectricLoadCenterDistribution_Impl::storageControlUtilityDemandTargetFractionSchedule() const {
     boost::optional<Schedule> sch = getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ElectricLoadCenter_DistributionFields::StorageChargePowerFractionScheduleName);
     if (sch) {
       return sch.get();
@@ -264,7 +264,7 @@ namespace detail {
     }
   }
 
-  bool isStorageControlUtilityDemandTargetFractionScheduleDefaulted() const {
+  bool ElectricLoadCenterDistribution_Impl::isStorageControlUtilityDemandTargetFractionScheduleDefaulted() const {
     return isEmpty(OS_ElectricLoadCenter_DistributionFields::StorageChargePowerFractionScheduleName);
   }
 
@@ -524,73 +524,73 @@ boost::optional<ElectricalStorage> ElectricLoadCenterDistribution::electricalSto
 // New
 
 // Storage Operation Scheme, defaults to TrackFacilityElectricDemandStoreExcessOnSite
-std::string storageOperationScheme() const {
+std::string ElectricLoadCenterDistribution::storageOperationScheme() const {
   return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->storageOperationScheme();
 }
-bool isStorageOperationSchemeDefaulted() const {
+bool ElectricLoadCenterDistribution::isStorageOperationSchemeDefaulted() const {
   return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->isStorageOperationSchemeDefaulted();
 }
 
 // Storage Control Track Meter Name, required if operation = TrackMeterDemandStoreExcessOnSite
-boost::optional<std::string> storageControlTrackMeterName() const {
+boost::optional<std::string> ElectricLoadCenterDistribution::storageControlTrackMeterName() const {
   return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->storageControlTrackMeterName();
 }
 
 // Storage Converter Object Name
-//boost::optional<ElectricLoadCenterStorageConverter> storageConverterObjectName() const  {
+//boost::optional<ElectricLoadCenterStorageConverter> ElectricLoadCenterDistribution::storageConverterObjectName() const  {
 //  return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->storageConverterObjectName();
 //}
 
 // Maximum Storage State of Charge Fraction, required if storage, defaults
-double maximumStorageStateofChargeFraction() const {
+double ElectricLoadCenterDistribution::maximumStorageStateofChargeFraction() const {
   return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->maximumStorageStateofChargeFraction();
 }
-bool isMaximumStorageStateofChargeFractionDefaulted() const {
+bool ElectricLoadCenterDistribution::isMaximumStorageStateofChargeFractionDefaulted() const {
   return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->isMaximumStorageStateofChargeFractionDefaulted();
 }
 
 // Minimum Storage State of Charge Fraction, required if storage, defaults
-double minimumStorageStateofChargeFraction() const {
+double ElectricLoadCenterDistribution::minimumStorageStateofChargeFraction() const {
   return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->minimumStorageStateofChargeFraction();
 }
-bool isMinimumStorageStateofChargeFractionDefaulted() const {
+bool ElectricLoadCenterDistribution::isMinimumStorageStateofChargeFractionDefaulted() const {
   return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->isMinimumStorageStateofChargeFractionDefaulted();
 }
 
 // Design Storage Control Charge Power, required if FacilityDemandLeveling or TrackChargeDischargeSchedules
-boost::optional<double> designStorageControlChargePower() const {
+boost::optional<double> ElectricLoadCenterDistribution::designStorageControlChargePower() const {
   return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->designStorageControlChargePower();
 }
 
 // Storage Charge Power Fraction Schedule Name, required if TrackChargeDischargeSchedules
 // TODO: do I want to default that to daytime?
-boost::optional<Schedule> storageChargePowerFractionSchedule() const {
+boost::optional<Schedule> ElectricLoadCenterDistribution::storageChargePowerFractionSchedule() const {
   return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->storageChargePowerFractionSchedule();
 }
 
 // Design Storage Control Discharge Power, required if FacilityDemandLeveling or TrackChargeDischargeSchedules
-boost::optional<double> designStorageControlDischargePower() const {
+boost::optional<double> ElectricLoadCenterDistribution::designStorageControlDischargePower() const {
   return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->designStorageControlDischargePower();
 }
 
 // Storage Charge Power Fraction Schedule Name, required if TrackChargeDischargeSchedules
 // TODO: do I want to default that to daytime?
-boost::optional<Schedule> storageDischargePowerFractionSchedule() const {
+boost::optional<Schedule> ElectricLoadCenterDistribution::storageDischargePowerFractionSchedule() const {
   return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->storageDischargePowerFractionSchedule();
 }
 
 
 // Storage Control Utility Demand Target, required if FacilityDemandLeveling
-boost::optional<double> storageControlUtilityDemandTarget() const {
+boost::optional<double> ElectricLoadCenterDistribution::storageControlUtilityDemandTarget() const {
   return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->storageControlUtilityDemandTarget();
 }
 
 
 // Storage Control Utility Demand Target Fraction Schedule Name, will be used only if FacilityDemandLeveling, defaults to 1.0
-Schedule storageControlUtilityDemandTargetFractionSchedule() const {
+Schedule ElectricLoadCenterDistribution::storageControlUtilityDemandTargetFractionSchedule() const {
   return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->storageControlUtilityDemandTargetFractionSchedule();
 }
-bool isStorageControlUtilityDemandTargetFractionScheduleDefaulted() const {
+bool ElectricLoadCenterDistribution::isStorageControlUtilityDemandTargetFractionScheduleDefaulted() const {
   return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->isStorageControlUtilityDemandTargetFractionScheduleDefaulted();
 }
 
