@@ -92,9 +92,48 @@ class MODEL_API ElectricLoadCenterDistribution : public ParentObject {
 
 
   // New
+
+  // Storage Operation Scheme, defaults to TrackFacilityElectricDemandStoreExcessOnSite
+  std::string storageOperationScheme() const;
+  bool isStorageOperationSchemeDefaulted() const;
+
+  // Storage Control Track Meter Name, required if operation = TrackMeterDemandStoreExcessOnSite
+  boost::optional<std::string> storageControlTrackMeterName() const;
+
+  // Storage Converter Object Name
+  //boost::optional<ElectricLoadCenterStorageConverter> storageConverterObjectName() const;
+
+  // Maximum Storage State of Charge Fraction, required if storage, defaults
+  double maximumStorageStateofChargeFraction() const;
+  bool isMaximumStorageStateofChargeFractionDefaulted() const;
+
+  // Minimum Storage State of Charge Fraction, required if storage, defaults
+  double minimumStorageStateofChargeFraction() const;
+  bool isMinimumStorageStateofChargeFractionDefaulted() const;
+
+  // Design Storage Control Charge Power, required if FacilityDemandLeveling or TrackChargeDischargeSchedules
+  boost::optional<double> designStorageControlChargePower() const;
+
+  // Storage Charge Power Fraction Schedule Name, required if TrackChargeDischargeSchedules
+  // TODO: do I want to default that to daytime?
+  boost::optional<Schedule> storageChargePowerFractionSchedule() const;
+
+  // Design Storage Control Discharge Power, required if FacilityDemandLeveling or TrackChargeDischargeSchedules
+  boost::optional<double> designStorageControlDischargePower() const;
+
+  // Storage Charge Power Fraction Schedule Name, required if TrackChargeDischargeSchedules
+  // TODO: do I want to default that to daytime?
+  boost::optional<Schedule> storageDischargePowerFractionSchedule() const;
+
+
+  // Storage Control Utility Demand Target, required if FacilityDemandLeveling
+  boost::optional<double> storageControlUtilityDemandTarget() const;
+
+
+  // Storage Control Utility Demand Target Fraction Schedule Name, will be used only if FacilityDemandLeveling, defaults to 1.0
+  Schedule storageControlUtilityDemandTargetFractionSchedule() const;
+  bool isStorageControlUtilityDemandTargetFractionScheduleDefaulted() const;
   
-  // Storage Operation Scheme
-  boost::optional<std::string> storageOperationScheme() const;
 
   //@}
   /** @name Setters */
@@ -110,21 +149,21 @@ class MODEL_API ElectricLoadCenterDistribution : public ParentObject {
 
   void resetGeneratorOperationSchemeType();
 
-  //void setDemandLimitSchemePurchasedElectricDemandLimit(double demandLimitSchemePurchasedElectricDemandLimit);
+  void setDemandLimitSchemePurchasedElectricDemandLimit(double demandLimitSchemePurchasedElectricDemandLimit);
 
-  //void resetDemandLimitSchemePurchasedElectricDemandLimit();
+  void resetDemandLimitSchemePurchasedElectricDemandLimit();
 
-  //bool setTrackScheduleSchemeSchedule(Schedule& schedule);
+  bool setTrackScheduleSchemeSchedule(Schedule& schedule);
 
-  //void resetTrackScheduleSchemeSchedule();
+  void resetTrackScheduleSchemeSchedule();
 
-  //bool setTrackMeterSchemeMeterName(const std::string& trackMeterSchemeMeterName);
+  bool setTrackMeterSchemeMeterName(const std::string& trackMeterSchemeMeterName);
 
-  //void resetTrackMeterSchemeMeterName();
+  void resetTrackMeterSchemeMeterName();
 
-  //bool setElectricalBussType(const std::string& electricalBussType);
+  bool setElectricalBussType(const std::string& electricalBussType);
 
-  //void resetElectricalBussType();
+  void resetElectricalBussType();
 
   bool setInverter(const Inverter& inverter);
 
@@ -137,6 +176,51 @@ class MODEL_API ElectricLoadCenterDistribution : public ParentObject {
   //bool setTransformer(const Transformer& transformer);
 
   //void resetTransformer();
+
+  // Storage Operation Scheme
+  bool setStorageOperationScheme(const std::string& operationScheme);
+  void resetStorageOperationScheme();
+
+  // Storage Control Track Meter Name, required if operation = TrackMeterDemandStoreExcessOnSite
+  bool setStorageControlTrackMeterName(const std::string& meterName);
+  void resetStorageControlTrackMeterName();
+
+  // Storage Converter Object Name
+  //boost::optional<ElectricLoadCenterStorageConverter> storageConverterObjectName() const;
+
+  // Maximum Storage State of Charge Fraction, required if storage, defaults
+  bool setMaximumStorageStateofChargeFraction(const double maxStateofCharge);
+  void resetMaximumStorageStateofChargeFraction();
+
+  // Minimum Storage State of Charge Fraction, required if storage, defaults
+  bool setMinimumStorageStateofChargeFraction(const double minStateofCharge);
+  void resetMinimumStorageStateofChargeFraction();
+
+  // Design Storage Control Charge Power, required if FacilityDemandLeveling or TrackChargeDischargeSchedules
+  bool setDesignStorageControlChargePower(const double designStorageControlChargePower);
+  void resetDesignStorageControlChargePower();
+
+  // Storage Charge Power Fraction Schedule Name, required if TrackChargeDischargeSchedules
+  // TODO: do I want to default that to daytime?
+  bool setStorageChargePowerFractionSchedule(const Schedule& schedule);
+  void resetStorageChargePowerFractionSchedule();
+
+  // Design Storage Control Discharge Power, required if FacilityDemandLeveling or TrackChargeDischargeSchedules
+  bool setDesignStorageControlDischargePower(const double designStorageControlDischargePower);
+  void resetDesignStorageControlDischargePower();
+
+  // Storage Charge Power Fraction Schedule Name, required if TrackChargeDischargeSchedules
+  // TODO: do I want to default that to daytime?
+  bool setStorageDischargePowerFractionSchedule(const Schedule& schedule);
+  void resetStorageDischargePowerFractionSchedule();
+
+  // Storage Control Utility Demand Target, required if FacilityDemandLeveling
+  bool setStorageControlUtilityDemandTarget(const double storageControlUtilityDemandTarget);
+  void resetStorageControlUtilityDemandTarget();
+
+  // Storage Control Utility Demand Target Fraction Schedule Name, will be used only if FacilityDemandLeveling, defaults to 1.0
+  bool setStorageControlUtilityDemandTargetFractionSchedule(const Schedule& schedule);
+  void resetStorageControlUtilityDemandTargetFractionSchedule();
 
   //@}
   /** @name Other */

@@ -110,7 +110,7 @@ namespace detail {
 
     // Storage Operation Scheme, defaults to TrackFacilityElectricDemandStoreExcessOnSite
     std::string storageOperationScheme() const;
-    void isStorageOperationSchemeDefaulted() const;
+    bool isStorageOperationSchemeDefaulted() const;
 
     // Storage Control Track Meter Name, required if operation = TrackMeterDemandStoreExcessOnSite
     boost::optional<std::string> storageControlTrackMeterName() const;
@@ -120,11 +120,11 @@ namespace detail {
 
     // Maximum Storage State of Charge Fraction, required if storage, defaults
     double maximumStorageStateofChargeFraction() const;
-    void isMaximumStorageStateofChargeFractionDefaulted() const;
+    bool isMaximumStorageStateofChargeFractionDefaulted() const;
 
     // Minimum Storage State of Charge Fraction, required if storage, defaults
     double minimumStorageStateofChargeFraction() const;
-    void isMinimumStorageStateofChargeFractionDefaulted() const;
+    bool isMinimumStorageStateofChargeFractionDefaulted() const;
 
     // Design Storage Control Charge Power, required if FacilityDemandLeveling or TrackChargeDischargeSchedules
     boost::optional<double> designStorageControlChargePower() const;
@@ -146,8 +146,8 @@ namespace detail {
 
 
     // Storage Control Utility Demand Target Fraction Schedule Name, will be used only if FacilityDemandLeveling, defaults to 1.0
-    Schedule storageControlUtilityDemandTargetFractionSchedule();
-    void isStorageControlUtilityDemandTargetFractionScheduleDefaulted();
+    Schedule storageControlUtilityDemandTargetFractionSchedule() const;
+    bool isStorageControlUtilityDemandTargetFractionScheduleDefaulted() const;
 
     //@}
     /** @name Setters */
@@ -191,7 +191,6 @@ namespace detail {
 
     //void resetTransformerObject();
 
-
     // Storage Operation Scheme
     bool setStorageOperationScheme(const std::string& operationScheme);
     void resetStorageOperationScheme();
@@ -229,12 +228,9 @@ namespace detail {
     bool setStorageDischargePowerFractionSchedule(const Schedule& schedule);
     void resetStorageDischargePowerFractionSchedule();
 
-
     // Storage Control Utility Demand Target, required if FacilityDemandLeveling
     bool setStorageControlUtilityDemandTarget(const double storageControlUtilityDemandTarget);
     void resetStorageControlUtilityDemandTarget();
-
-
 
     // Storage Control Utility Demand Target Fraction Schedule Name, will be used only if FacilityDemandLeveling, defaults to 1.0
     bool setStorageControlUtilityDemandTargetFractionSchedule(const Schedule& schedule);
