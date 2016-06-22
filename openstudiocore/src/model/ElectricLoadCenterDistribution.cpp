@@ -260,7 +260,7 @@ namespace detail {
     if (sch) {
       return sch.get();
     } else {
-      return this->model.alwaysOnDiscreteSchedule();
+      return this->model().alwaysOnDiscreteSchedule();
     }
   }
 
