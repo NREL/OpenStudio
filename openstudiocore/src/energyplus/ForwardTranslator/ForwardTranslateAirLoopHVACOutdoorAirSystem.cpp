@@ -176,12 +176,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACOutdoorAirSyst
     outdoorAirMixerIdf.setString(OutdoorAir_MixerFields::ReturnAirStreamNodeName,*s);
   }
 
-  s = outdoorAirMixerIdf.iddObject().name();
-  equipmentListIdf.setString(1,*s);
-  s = outdoorAirMixerIdf.name();
-  equipmentListIdf.setString(2,*s);
-
-  unsigned i = 3;
+  unsigned i = 1;
   ModelObjectVector oaModelObjects = modelObject.oaComponents();
   for( auto oaIt = oaModelObjects.begin();
        oaIt != oaModelObjects.end();
@@ -214,6 +209,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACOutdoorAirSyst
       }
     }
   }
+
+  s = outdoorAirMixerIdf.iddObject().name();
+  equipmentListIdf.setString(i,*s);
+  ++i;
+  s = outdoorAirMixerIdf.name();
+  equipmentListIdf.setString(i,*s);
 
   s = equipmentListIdf.name();
   if(s)

@@ -114,6 +114,20 @@ namespace openstudio{
     static Scale M = {"M", "mega",6,1.0E6};
     return M;
   }
+  
+  /** Static constant defining SI prefix for 10^5. */
+  UTILITIES_API const Scale& hectokilo()
+  {
+    static Scale hk = {"_hk", "hectokilo",5,1.0E5};
+    return hk;
+  }
+
+  /** Static constant defining SI prefix for 10^4. */
+  const Scale& myria()
+  {
+    static Scale k = {"_ma", "myria",4,1.0E4};
+    return k;
+  }
 
   /** Static constant defining SI prefix for 10^3. */
   const Scale& kilo()
@@ -122,11 +136,32 @@ namespace openstudio{
     return k;
   }
 
+  /** Static constant defining SI prefix for 10^2. */
+  UTILITIES_API const Scale& hecto()
+  {
+    static Scale h = {"_h", "hecto",2,1.0E2};
+    return h;
+  }
+
+  /** Static constant defining SI prefix for 10^1. */
+  UTILITIES_API const Scale& deka()
+  {
+    static Scale da = {"_da", "deka",1,1.0E1};
+    return da;
+  }
+
   /** Static constant defining no scale (1.0). */
   const Scale& one()
   {
     static Scale o = {"","",0,1.0};
     return o;
+  }
+
+  /** Static constant defining SI prefix for 10^{-1} */
+  const Scale& deci()
+  {
+    static Scale d = {"_d", "deci",-1,1.0E-1};
+    return d;
   }
 
   /** Static constant defining SI prefix for 10^{-2} */
@@ -141,6 +176,20 @@ namespace openstudio{
   {
     static Scale m = {"m", "milli",-3,1.0E-3};
     return m;
+  }
+
+  /** Static constant defining SI prefix for 10^{-4} */
+  const Scale& decimilli()
+  {
+    static Scale dm = {"_dm", "decimilli",-4,1.0E-4};
+    return dm;
+  }
+
+  /** Static constant defining SI prefix for 10^{-5} */
+  const Scale& centimilli()
+  {
+    static Scale cm = {"_cm", "centimilli",-5,1.0E-5};
+    return cm;
   }
 
   /** Static constant defining SI prefix for 10^{-6} */

@@ -405,8 +405,14 @@ void MeasureManager::updateBCLMeasures(analysisdriver::SimpleProject &t_project)
 
 bool MeasureManager::checkForUpdates(BCLMeasure& measure, bool force)
 {
-  // first check files for updates
-  bool result = measure.checkForUpdatesFiles();
+  // always check files for updates
+  bool checkForUpdatesFiles = measure.checkForUpdatesFiles();
+  
+  // see if we are missing fields
+  bool missingRequiredFields =  measure.missingRequiredFields();
+
+  bool result = (checkForUpdatesFiles || missingRequiredFields);
+
   if (result || force){
     // if files updated or being forced to, try to load the ruby measure
     try{
@@ -419,7 +425,8 @@ bool MeasureManager::checkForUpdates(BCLMeasure& measure, bool force)
     }
   }
   // last, check for xml updates
-  result = (result || measure.checkForUpdatesXML());
+  bool checkForUpdatesXML = measure.checkForUpdatesXML();
+  result = (result || checkForUpdatesXML);
 
   return result;
 }

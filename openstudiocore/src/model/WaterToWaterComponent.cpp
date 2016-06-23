@@ -149,6 +149,8 @@ std::vector<openstudio::IdfObject> WaterToWaterComponent_Impl::remove()
 
   removeFromSecondaryPlantLoop();
 
+  removeFromTertiaryPlantLoop();
+
   return HVACComponent_Impl::remove();
 }
 
@@ -171,6 +173,8 @@ void WaterToWaterComponent_Impl::disconnect()
   this->model().disconnect(mo, this->supplyOutletPort());
   this->model().disconnect(mo, this->demandInletPort());
   this->model().disconnect(mo, this->demandOutletPort());
+  this->model().disconnect(mo, this->tertiaryInletPort());
+  this->model().disconnect(mo, this->tertiaryOutletPort());
 }
 
 bool WaterToWaterComponent_Impl::addToNode(Node & node)
@@ -222,6 +226,8 @@ ModelObject WaterToWaterComponent_Impl::clone(Model model) const
   mo.setString(mo.supplyOutletPort(),""); 
   mo.setString(mo.demandInletPort(),""); 
   mo.setString(mo.demandOutletPort(),""); 
+  mo.setString(mo.getImpl<detail::WaterToWaterComponent_Impl>()->tertiaryInletPort(),""); 
+  mo.setString(mo.getImpl<detail::WaterToWaterComponent_Impl>()->tertiaryOutletPort(),""); 
 
   return mo;
 }
