@@ -163,7 +163,7 @@ namespace detail {
   }
 
   boost::optional<double> ElectricLoadCenterDistribution_Impl::demandLimitSchemePurchasedElectricDemandLimit() const {
-    return getDouble(OS_ElectricLoadCenter_DistributionFields::DemandLimitSchemePurchasedElectricDemandLimit,true);
+    return getDouble(OS_ElectricLoadCenter_DistributionFields::DemandLimitSchemePurchasedElectricDemandLimit, false);
   }
 
   boost::optional<Schedule> ElectricLoadCenterDistribution_Impl::trackScheduleSchemeSchedule() const {
@@ -171,7 +171,7 @@ namespace detail {
   }
 
   boost::optional<std::string> ElectricLoadCenterDistribution_Impl::trackMeterSchemeMeterName() const {
-    return getString(OS_ElectricLoadCenter_DistributionFields::TrackMeterSchemeMeterName,true);
+    return getString(OS_ElectricLoadCenter_DistributionFields::TrackMeterSchemeMeterName, false);
   }
 
   std::string ElectricLoadCenterDistribution_Impl::electricalBussType() const {

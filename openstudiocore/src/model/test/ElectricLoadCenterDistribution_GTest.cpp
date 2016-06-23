@@ -20,9 +20,10 @@
 #include <gtest/gtest.h>
 #include "ModelFixture.hpp"
 #include "../Schedule.hpp"
+#include "../ScheduleCompact.hpp"
 #include "../ElectricLoadCenterDistribution.hpp"
 #include "../GeneratorPhotovoltaic.hpp"
-#include "../GeneratorMicroTurbine.hpp"
+//#include "../GeneratorMicroTurbine.hpp" // In a different branch right now...
 #include "../ElectricLoadCenterInverterSimple.hpp"
 #include "../ElectricLoadCenterInverterLookUpTable.hpp"
 #include "../ElectricLoadCenterStorageSimple.hpp"
@@ -180,7 +181,7 @@ TEST_F(ModelFixture, ElectricLoadCenterDistribution_Inverters2) {
 
 TEST_F(ModelFixture, ElectricLoadCenterDistribution_newFields) {
   
-  Model model
+  Model model;
 
   ElectricLoadCenterDistribution elcd(model);
   EXPECT_EQ(0u, elcd.generators().size());
@@ -196,8 +197,8 @@ TEST_F(ModelFixture, ElectricLoadCenterDistribution_newFields) {
   elcd.resetGeneratorOperationSchemeType();
   EXPECT_TRUE(elcd.isGeneratorOperationSchemeTypeDefaulted());
 
-  GeneratorMicroTurbine mt(model);
-  GeneratorPhotovoltaic pv = GeneratorMicroTurbine(model);
+  /* GeneratorMicroTurbine mt(model);
+  GeneratorPhotovoltaic pv(model);
   EXPECT_TRUE(elcd.addGenerator(mt));
   ASSERT_EQ(1u, elcd.generators().size());
   EXPECT_EQ(mt.handle(), elcd.generators()[0].handle());
@@ -216,7 +217,29 @@ TEST_F(ModelFixture, ElectricLoadCenterDistribution_newFields) {
 
   // can't add something twice
   EXPECT_TRUE(elcd.addGenerator(mt));
-  EXPECT_FALSE(elcd.addGenerator(mt));
+  EXPECT_FALSE(elcd.addGenerator(mt)); */
+
+  GeneratorPhotovoltaic panel1 = GeneratorPhotovoltaic::simple(model);
+  GeneratorPhotovoltaic panel2 = GeneratorPhotovoltaic::simple(model);
+  EXPECT_TRUE(elcd.addGenerator(panel1));
+  ASSERT_EQ(1u, elcd.generators().size());
+  EXPECT_EQ(panel1.handle(), elcd.generators()[0].handle());
+  EXPECT_TRUE(elcd.addGenerator(panel2));
+  ASSERT_EQ(2u, elcd.generators().size());
+  EXPECT_EQ(panel1.handle(), elcd.generators()[0].handle());
+  EXPECT_EQ(panel2.handle(), elcd.generators()[1].handle());
+  EXPECT_TRUE(elcd.removeGenerator(panel1));
+  ASSERT_EQ(1u, elcd.generators().size());
+  EXPECT_EQ(panel2.handle(), elcd.generators()[0].handle());
+  EXPECT_TRUE(elcd.removeGenerator(panel2));
+  ASSERT_EQ(0u, elcd.generators().size());
+
+  // can't remove something not already there
+  EXPECT_FALSE(elcd.removeGenerator(panel1));
+
+  // can't add something twice
+  EXPECT_TRUE(elcd.addGenerator(panel1));
+  EXPECT_FALSE(elcd.addGenerator(panel1));
 
 
   // Demand Limit Scheme Purchased Electric Demand Limit, Optional
@@ -228,11 +251,11 @@ TEST_F(ModelFixture, ElectricLoadCenterDistribution_newFields) {
   ASSERT_FALSE(elcd.demandLimitSchemePurchasedElectricDemandLimit());
 
   // Generator Track Schedule Name Scheme Schedule Name, Optional
-  Schedule sch(model);
+  Schedule sch = model.alwaysOnDiscreteSchedule();
   EXPECT_FALSE(elcd.trackScheduleSchemeSchedule());
   EXPECT_TRUE(elcd.setTrackScheduleSchemeSchedule(sch));
   ASSERT_TRUE(elcd.trackScheduleSchemeSchedule());
-  EXPECT_EQ(sch.handle(), elcd.trackScheduleSchemeSchedule()->handle());
+  EXPECT_EQ(sch.handle(), (elcd.trackScheduleSchemeSchedule())->handle());
   elcd.resetTrackScheduleSchemeSchedule();
   ASSERT_FALSE(elcd.trackScheduleSchemeSchedule());
 
@@ -278,9 +301,8 @@ TEST_F(ModelFixture, ElectricLoadCenterDistribution_newFields) {
 
 
   // Storage Operation Scheme, defaults
-  EXPECT_TRUE(elcd.storageOperationScheme());
-  EXPECT_EQ("TrackFacilityElectricDemandStoreExcessOnSite", elcd.storageOperationScheme());
   EXPECT_TRUE(elcd.isStorageOperationSchemeDefaulted());
+  EXPECT_EQ("TrackFacilityElectricDemandStoreExcessOnSite", elcd.storageOperationScheme());
   ASSERT_TRUE(elcd.setStorageOperationScheme("FacilityDemandLeveling"));
   ASSERT_FALSE(elcd.isStorageOperationSchemeDefaulted());
   ASSERT_EQ("FacilityDemandLeveling", elcd.storageOperationScheme());
@@ -299,22 +321,22 @@ TEST_F(ModelFixture, ElectricLoadCenterDistribution_newFields) {
 
 
   // Maximum Storage State of Charge Fraction, defaults
-  EXPECT_TRUE(elcd.isMaximumStorageStateofChargeFractionDefaulted);
+  EXPECT_TRUE( elcd.isMaximumStorageStateofChargeFractionDefaulted() );
   EXPECT_EQ(1.0, elcd.maximumStorageStateofChargeFraction());
-  ASSERT_TRUE(elcd.maximumStorageStateofChargeFraction(0.85));
-  ASSERT_FALSE(elcd.isMaximumStorageStateofChargeFractionDefaulted);
+  ASSERT_TRUE(elcd.setMaximumStorageStateofChargeFraction(0.85));
+  ASSERT_FALSE( elcd.isMaximumStorageStateofChargeFractionDefaulted() );
   ASSERT_EQ(0.85, elcd.maximumStorageStateofChargeFraction());
   elcd.resetMaximumStorageStateofChargeFraction();
-  ASSERT_TRUE(elcd.isMaximumStorageStateofChargeFractionDefaulted);
+  ASSERT_TRUE( elcd.isMaximumStorageStateofChargeFractionDefaulted() );
 
   // Minimum Storage State of Charge Fraction, defaults
-  EXPECT_TRUE(elcd.isMinimumStorageStateofChargeFractionDefaulted);
+  EXPECT_TRUE( elcd.isMinimumStorageStateofChargeFractionDefaulted() );
   EXPECT_EQ(0.0, elcd.minimumStorageStateofChargeFraction());
-  ASSERT_TRUE(elcd.minimumStorageStateofChargeFraction(0.05));
-  ASSERT_FALSE(elcd.isMinimumStorageStateofChargeFractionDefaulted);
+  ASSERT_TRUE(elcd.setMinimumStorageStateofChargeFraction(0.05));
+  ASSERT_FALSE( elcd.isMinimumStorageStateofChargeFractionDefaulted() );
   ASSERT_EQ(0.05, elcd.minimumStorageStateofChargeFraction());
   elcd.resetMinimumStorageStateofChargeFraction();
-  ASSERT_TRUE(elcd.isMinimumStorageStateofChargeFractionDefaulted);
+  ASSERT_TRUE( elcd.isMinimumStorageStateofChargeFractionDefaulted() );
 
 
   // Design Storage Control Charge Power, Optional Double
@@ -326,7 +348,7 @@ TEST_F(ModelFixture, ElectricLoadCenterDistribution_newFields) {
   ASSERT_FALSE(elcd.designStorageControlChargePower());
 
   // Storage Charge Power Fraction Schedule Name, optional Schedule
-  Schedule schChP(model);
+  ScheduleCompact schChP = ScheduleCompact(model);
   EXPECT_FALSE(elcd.storageChargePowerFractionSchedule());
   EXPECT_TRUE(elcd.setStorageChargePowerFractionSchedule(schChP));
   ASSERT_TRUE(elcd.storageChargePowerFractionSchedule());
@@ -343,11 +365,11 @@ TEST_F(ModelFixture, ElectricLoadCenterDistribution_newFields) {
   ASSERT_FALSE(elcd.designStorageControlDischargePower());
 
   // Storage Discharge Power Fraction Schedule Name, optional Schedule
-  Schedule schChP(model);
+  ScheduleCompact schDisChP = ScheduleCompact(model);
   EXPECT_FALSE(elcd.storageDischargePowerFractionSchedule());
-  EXPECT_TRUE(elcd.setStorageDischargePowerFractionSchedule(schChP));
+  EXPECT_TRUE(elcd.setStorageDischargePowerFractionSchedule(schDisChP));
   ASSERT_TRUE(elcd.storageDischargePowerFractionSchedule());
-  EXPECT_EQ(schChP.handle(), elcd.storageDischargePowerFractionSchedule()->handle());
+  EXPECT_EQ(schDisChP.handle(), elcd.storageDischargePowerFractionSchedule()->handle());
   elcd.resetStorageDischargePowerFractionSchedule();
   ASSERT_FALSE(elcd.storageDischargePowerFractionSchedule());
 
@@ -359,14 +381,15 @@ TEST_F(ModelFixture, ElectricLoadCenterDistribution_newFields) {
   elcd.resetStorageControlUtilityDemandTarget();
   ASSERT_FALSE(elcd.storageControlUtilityDemandTarget());
 
-  // Storage Control Utility Demand Target Fraction Schedule, optional Schedule
-  Schedule schSControl(model);
-  EXPECT_FALSE(elcd.storageControlUtilityDemandTargetFractionSchedule());
+  // Storage Control Utility Demand Target Fraction Schedule, defaults to alwaysOnDiscrete
+  ScheduleCompact schSControl = ScheduleCompact(model);
+  EXPECT_TRUE( elcd.isStorageControlUtilityDemandTargetFractionScheduleDefaulted() );
+  EXPECT_EQ(model.alwaysOnDiscreteSchedule().handle(), elcd.storageControlUtilityDemandTargetFractionSchedule().handle());
   EXPECT_TRUE(elcd.setStorageControlUtilityDemandTargetFractionSchedule(schSControl));
-  ASSERT_TRUE(elcd.storageControlUtilityDemandTargetFractionSchedule());
-  EXPECT_EQ(schSControl.handle(), elcd.storageControlUtilityDemandTargetFractionSchedule()->handle());
+  ASSERT_FALSE( elcd.isStorageControlUtilityDemandTargetFractionScheduleDefaulted() );
+  EXPECT_EQ(schSControl.handle(), elcd.storageControlUtilityDemandTargetFractionSchedule().handle());
   elcd.resetStorageControlUtilityDemandTargetFractionSchedule();
-  ASSERT_FALSE(elcd.storageControlUtilityDemandTargetFractionSchedule());
+  ASSERT_TRUE( elcd.isStorageControlUtilityDemandTargetFractionScheduleDefaulted() );
 
 
 }
