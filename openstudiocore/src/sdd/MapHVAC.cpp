@@ -127,6 +127,10 @@
 #include "../model/PumpConstantSpeed_Impl.hpp"
 #include "../model/PumpVariableSpeed.hpp"
 #include "../model/PumpVariableSpeed_Impl.hpp"
+#include "../model/PlantEquipmentOperationHeatingLoad.hpp"
+#include "../model/PlantEquipmentOperationHeatingLoad_Impl.hpp"
+#include "../model/PlantEquipmentOperationCoolingLoad.hpp"
+#include "../model/PlantEquipmentOperationCoolingLoad_Impl.hpp"
 #include "../model/BoilerHotWater.hpp"
 #include "../model/BoilerHotWater_Impl.hpp"
 #include "../model/ChillerElectricEIR.hpp"
@@ -5586,6 +5590,103 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
       //{
       //  plantLoop.setMinimumLoopFlowRate(minimum(createVector(minimums)));
       //}
+    }
+  }
+
+  // Plant Operation Schemes
+  std::vector<QDomElement> ldRngLimElements;
+  std::vector<double> ldRngLims;
+  typedef std::vector<std::string> EquipmentList;
+  std::vector<EquipmentList> equipmentLists;
+  // Do some gymastics because we don't know that we will get childNodes
+  // back in the order of their "index" attribute.
+  auto childNodes = fluidSysElement.childNodes();
+  for( int i = 0; i != childNodes.count(); ++i ) {
+    auto element = childNodes.at(i).toElement();
+    if( element.nodeName().compare("LdRngLim") ) {
+      ldRngLimElements.push_back(element);
+    }
+  }
+  for( int i = 0; i != ldRngLimElements.size(); ++i ) {
+    for( int j = 0; j != ldRngLimElements.size(); ++j ) {
+      auto element = childNodes.at(j).toElement();
+      auto index = element.attribute("index").toInt(&ok);
+      if( ok && (index == i) ) {
+        auto value = element.text().toDouble(&ok);
+        if( ok ) {
+          ldRngLims.push_back(value);
+          break;
+        }
+      }
+    }
+  }
+
+  // Try to get an equipment list for each load range
+  for( int i = 0; i != ldRngLims.size(); ++i ) {
+    // EqpList1Name
+    // Get an unordered list of the equipment list elements for this range
+    std::vector<QDomElement> eqpListNameElements;
+    for( int j = 0; j != childNodes.count(); ++j ) {
+      auto element = childNodes.at(j).toElement();
+      if( element.nodeName().compare(QString("EqpList") + QString::number(i + 1) + QString("Name")) == 0 ) {
+        eqpListNameElements.push_back(element);
+      }
+    }
+
+    EquipmentList equipmentList;
+    // Now put eqpListNameElements in order according to the index attribute
+    for( int j = 0; j != eqpListNameElements.size(); ++j ) {
+      for( auto & eqpListNameElement : eqpListNameElements ) {
+        auto index = eqpListNameElement.attribute("index").toInt(&ok);
+        if( ok && (index == j) ) {
+          equipmentList.push_back(eqpListNameElement.text().toStdString());
+          break;
+        }
+      }
+    }
+    equipmentLists.push_back(equipmentList);
+  }
+
+  if( ! ldRngLims.empty() ) {
+    auto allPlantComponents = plantLoop.supplyComponents();
+
+    OS_ASSERT(ldRngLims.size() == equipmentLists.size());
+
+    boost::optional<model::PlantEquipmentOperationRangeBasedScheme> scheme;
+
+    if( istringEqual(typeElement.text().toStdString(),"ChilledWater") ) {
+      model::PlantEquipmentOperationCoolingLoad coolingScheme(model);
+      coolingScheme.setName(plantLoop.nameString() + " cooling operation scheme");
+      scheme = coolingScheme;
+      plantLoop.setPlantEquipmentOperationCoolingLoad(coolingScheme);
+    } else if(istringEqual(typeElement.text().toStdString(),"HotWater")) {
+      model::PlantEquipmentOperationHeatingLoad heatingScheme(model);
+      heatingScheme.setName(plantLoop.nameString() + " heating operation scheme");
+      scheme = heatingScheme;
+      plantLoop.setPlantEquipmentOperationHeatingLoad(heatingScheme);
+    }
+
+    if( scheme ) {
+      std::cout << "ldRngLims.size: " << ldRngLims.size() << std::endl;
+      for( int i = 0; i != ldRngLims.size(); ++i ) {
+        std::vector<model::HVACComponent> equipment;
+        auto ldRngLim = ldRngLims[i];
+        auto equipmentList = equipmentLists[i];
+
+        std::cout << "equipmentList.size: " << equipmentList.size() << std::endl;
+        for( auto & name : equipmentList ) {
+          for( const auto & comp : allPlantComponents ) {
+            if( istringEqual(name,comp.nameString()) ) {
+              equipment.push_back(comp.cast<model::HVACComponent>());
+              break;
+            } 
+          }
+        }
+
+        std::cout << "ldRngLim: " << ldRngLim << std::endl;
+        std::cout << "equipment.size: " << equipment.size() << std::endl;
+        scheme->addLoadRange(ldRngLim,equipment);
+      }
     }
   }
 
