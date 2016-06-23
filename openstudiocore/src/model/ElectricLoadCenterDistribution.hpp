@@ -150,7 +150,7 @@ class MODEL_API ElectricLoadCenterDistribution : public ParentObject {
 
   void resetGeneratorOperationSchemeType();
 
-  void setDemandLimitSchemePurchasedElectricDemandLimit(double demandLimitSchemePurchasedElectricDemandLimit);
+  bool setDemandLimitSchemePurchasedElectricDemandLimit(double demandLimitSchemePurchasedElectricDemandLimit);
 
   void resetDemandLimitSchemePurchasedElectricDemandLimit();
 

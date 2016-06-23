@@ -350,9 +350,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ElectricLoadCenterDistribution_Impl::setDemandLimitSchemePurchasedElectricDemandLimit(double demandLimitSchemePurchasedElectricDemandLimit) {
+  bool ElectricLoadCenterDistribution_Impl::setDemandLimitSchemePurchasedElectricDemandLimit(double demandLimitSchemePurchasedElectricDemandLimit) {
     bool result = setDouble(OS_ElectricLoadCenter_DistributionFields::DemandLimitSchemePurchasedElectricDemandLimit, demandLimitSchemePurchasedElectricDemandLimit);
     OS_ASSERT(result);
+    return result;
   }
 
   void ElectricLoadCenterDistribution_Impl::resetDemandLimitSchemePurchasedElectricDemandLimit() {
@@ -756,8 +757,8 @@ void ElectricLoadCenterDistribution::resetGeneratorOperationSchemeType() {
   getImpl<detail::ElectricLoadCenterDistribution_Impl>()->resetGeneratorOperationSchemeType();
 }
 
-void ElectricLoadCenterDistribution::setDemandLimitSchemePurchasedElectricDemandLimit(double demandLimitSchemePurchasedElectricDemandLimit) {
-  getImpl<detail::ElectricLoadCenterDistribution_Impl>()->setDemandLimitSchemePurchasedElectricDemandLimit(demandLimitSchemePurchasedElectricDemandLimit);
+bool ElectricLoadCenterDistribution::setDemandLimitSchemePurchasedElectricDemandLimit(double demandLimitSchemePurchasedElectricDemandLimit) {
+  return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->setDemandLimitSchemePurchasedElectricDemandLimit(demandLimitSchemePurchasedElectricDemandLimit);
 }
 
 void ElectricLoadCenterDistribution::resetDemandLimitSchemePurchasedElectricDemandLimit() {

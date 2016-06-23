@@ -163,7 +163,7 @@ namespace detail {
 
     void resetGeneratorOperationSchemeType();
 
-    void setDemandLimitSchemePurchasedElectricDemandLimit(double demandLimitSchemePurchasedElectricDemandLimit);
+    bool setDemandLimitSchemePurchasedElectricDemandLimit(double demandLimitSchemePurchasedElectricDemandLimit);
 
     void resetDemandLimitSchemePurchasedElectricDemandLimit();
 
