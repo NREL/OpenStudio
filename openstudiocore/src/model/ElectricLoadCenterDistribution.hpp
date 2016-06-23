@@ -32,7 +32,7 @@ class Generator;
 class Inverter;
 class ElectricalStorage;
 //class Transformer;
-//class Converter;
+//class ElectricLoadCenterConverter;
 
 namespace detail {
 
@@ -102,7 +102,7 @@ class MODEL_API ElectricLoadCenterDistribution : public ParentObject {
   boost::optional<std::string> storageControlTrackMeterName() const;
 
   // Storage Converter Object Name
-  //boost::optional<ElectricLoadCenterStorageConverter> storageConverterObjectName() const;
+  //boost::optional<ElectricLoadCenterStorageConverter> storageConverter() const;
 
   // Maximum Storage State of Charge Fraction, required if storage, defaults
   double maximumStorageStateofChargeFraction() const;
@@ -187,8 +187,8 @@ class MODEL_API ElectricLoadCenterDistribution : public ParentObject {
   void resetStorageControlTrackMeterName();
 
   // Storage Converter Object Name
-  //boost::optional<ElectricLoadCenterStorageConverter> storageConverterObjectName() const;
-  //bool setStorageConverterObjectName(const Converter& converter);
+  //bool setStorageConverter(const ElectricLoadCenterStorageConverter& converter);
+  //void resetStorageConverter();
 
   // Maximum Storage State of Charge Fraction, required if storage, defaults
   bool setMaximumStorageStateofChargeFraction(const double maxStateofCharge);

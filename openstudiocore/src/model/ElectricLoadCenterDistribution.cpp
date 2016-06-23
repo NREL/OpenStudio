@@ -455,55 +455,57 @@ namespace detail {
   }
 
   // Storage Operation Scheme
-  bool setStorageOperationScheme(const std::string& operationScheme) {
-    return setString(OS_ElectricLoadCenter_DistributionFields::StorageOperationScheme, operationScheme);
+  bool ElectricLoadCenterDistribution_Impl::setStorageOperationScheme(const std::string& operationScheme) {
+    bool result = setString(OS_ElectricLoadCenter_DistributionFields::StorageOperationScheme, operationScheme);
+    return result;
   }
 
-  void resetStorageOperationScheme() {
+  void ElectricLoadCenterDistribution_Impl::resetStorageOperationScheme() {
     bool result = setString(OS_ElectricLoadCenter_DistributionFields::StorageOperationScheme, "");
     OS_ASSERT(result);
   }
 
   // Storage Control Track Meter Name, required if operation = TrackMeterDemandStoreExcessOnSite
-  bool setStorageControlTrackMeterName(const std::string& meterName) {
+  bool ElectricLoadCenterDistribution_Impl::setStorageControlTrackMeterName(const std::string& meterName) {
     return setString(OS_ElectricLoadCenter_DistributionFields::StorageControlTrackMeterName, meterName);
   }
 
-  void resetStorageControlTrackMeterName() {
+  void ElectricLoadCenterDistribution_Impl::resetStorageControlTrackMeterName() {
     bool result = setString(OS_ElectricLoadCenter_DistributionFields::StorageControlTrackMeterName, "");
     OS_ASSERT(result);
   }
 
 
   // Storage Converter Object Name
-  //boost::optional<ElectricLoadCenterStorageConverter> storageConverter() const;
+  //bool ElectricLoadCenterDistribution_Impl::setStorageConverter(const ElectricLoadCenterStorageConverter& converter);
+  //void ElectricLoadCenterDistribution_Impl::resetStorageConverter();
 
   // Maximum Storage State of Charge Fraction, required if storage, defaults
-  bool setMaximumStorageStateofChargeFraction(const double maxStateofCharge) {
+  bool ElectricLoadCenterDistribution_Impl::setMaximumStorageStateofChargeFraction(const double maxStateofCharge) {
     bool result = setDouble(OS_ElectricLoadCenter_DistributionFields::MaximumStorageStateofChargeFraction, maxStateofCharge);
     OS_ASSERT(result);
   }
-  void resetMaximumStorageStateofChargeFraction() {
+  void ElectricLoadCenterDistribution_Impl::resetMaximumStorageStateofChargeFraction() {
     bool result = setString(OS_ElectricLoadCenter_DistributionFields::MaximumStorageStateofChargeFraction, "");
     OS_ASSERT(result);
   }
 
   // Minimum Storage State of Charge Fraction, required if storage, defaults
-  bool setMinimumStorageStateofChargeFraction(const double minStateofCharge) {
+  bool ElectricLoadCenterDistribution_Impl::setMinimumStorageStateofChargeFraction(const double minStateofCharge) {
     bool result = setDouble(OS_ElectricLoadCenter_DistributionFields::MinimumStorageStateofChargeFraction, minStateofCharge);
     OS_ASSERT(result);
   }
-  void resetMinimumStorageStateofChargeFraction() {
+  void ElectricLoadCenterDistribution_Impl::resetMinimumStorageStateofChargeFraction() {
     bool result = setString(OS_ElectricLoadCenter_DistributionFields::MinimumStorageStateofChargeFraction, "");
     OS_ASSERT(result);
   }
 
   // Design Storage Control Charge Power, required if FacilityDemandLeveling or TrackChargeDischargeSchedules
-  bool setDesignStorageControlChargePower(const double designStorageControlChargePower) {
+  bool ElectricLoadCenterDistribution_Impl::setDesignStorageControlChargePower(const double designStorageControlChargePower) {
     bool result = setDouble(OS_ElectricLoadCenter_DistributionFields::DesignStorageControlChargePower, designStorageControlChargePower);
     OS_ASSERT(result);
   }
-  void resetDesignStorageControlChargePower() {
+  void ElectricLoadCenterDistribution_Impl::resetDesignStorageControlChargePower() {
     bool result = setString(OS_ElectricLoadCenter_DistributionFields::DesignStorageControlChargePower, "");
     OS_ASSERT(result);
   }
@@ -524,11 +526,11 @@ namespace detail {
   }
 
   // Design Storage Control Discharge Power, required if FacilityDemandLeveling or TrackChargeDischargeSchedules
-  bool setDesignStorageControlDischargePower(const double designStorageControlDischargePower) {
+  bool ElectricLoadCenterDistribution_Impl::setDesignStorageControlDischargePower(const double designStorageControlDischargePower) {
     bool result = setDouble(OS_ElectricLoadCenter_DistributionFields::DesignStorageControlDischargePower, designStorageControlDischargePower);
     OS_ASSERT(result);
   }
-  void resetDesignStorageControlDischargePower() {
+  void ElectricLoadCenterDistribution_Impl::resetDesignStorageControlDischargePower() {
     bool result = setString(OS_ElectricLoadCenter_DistributionFields::DesignStorageControlDischargePower, "");
     OS_ASSERT(result);
   }
@@ -550,11 +552,11 @@ namespace detail {
   }
 
   // Storage Control Utility Demand Target, required if FacilityDemandLeveling
-  bool setStorageControlUtilityDemandTarget(const double storageControlUtilityDemandTarget) {
+  bool ElectricLoadCenterDistribution_Impl::setStorageControlUtilityDemandTarget(const double storageControlUtilityDemandTarget) {
     bool result = setDouble(OS_ElectricLoadCenter_DistributionFields::StorageControlUtilityDemandTarget, storageControlUtilityDemandTarget);
     OS_ASSERT(result);
   }
-  void resetStorageControlUtilityDemandTarget() {
+  void ElectricLoadCenterDistribution_Impl::resetStorageControlUtilityDemandTarget() {
     bool result = setString(OS_ElectricLoadCenter_DistributionFields::StorageControlUtilityDemandTarget, "");
     OS_ASSERT(result);
   }
@@ -805,99 +807,99 @@ void ElectricLoadCenterDistribution::resetElectricalStorage() {
 //}
 
 // Storage Operation Scheme
-bool setStorageOperationScheme(const std::string& operationScheme) {
+bool ElectricLoadCenterDistribution::setStorageOperationScheme(const std::string& operationScheme) {
   return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->setStorageOperationScheme(operationScheme);
 }
-void resetStorageOperationScheme() {
+void ElectricLoadCenterDistribution::resetStorageOperationScheme() {
   getImpl<detail::ElectricLoadCenterDistribution_Impl>()->resetStorageOperationScheme();
 }
 
 // Storage Control Track Meter Name, required if operation = TrackMeterDemandStoreExcessOnSite
-bool setStorageControlTrackMeterName(const std::string& meterName) {
+bool ElectricLoadCenterDistribution::setStorageControlTrackMeterName(const std::string& meterName) {
   return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->setStorageControlTrackMeterName(meterName);
 }
-void resetStorageControlTrackMeterName() {
+void ElectricLoadCenterDistribution::resetStorageControlTrackMeterName() {
   getImpl<detail::ElectricLoadCenterDistribution_Impl>()->resetStorageControlTrackMeterName();
 }
 
 // Storage Converter Object Name
-//bool setStorageConverter(const ElectricLoadCenterStorageConverter& converter) {
+//bool ElectricLoadCenterDistribution::setStorageConverter(const ElectricLoadCenterStorageConverter& converter) {
 //  return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->setStorageConverter(converter);
 //}
-//void resetStorageConverter() {
+//void ElectricLoadCenterDistribution::resetStorageConverter() {
 //  getImpl<detail::ElectricLoadCenterDistribution_Impl>()->resetStorageConverter();
 //}
 
 // Maximum Storage State of Charge Fraction, required if storage, defaults
-bool setMaximumStorageStateofChargeFraction(const double maxStateofCharge) {
+bool ElectricLoadCenterDistribution::setMaximumStorageStateofChargeFraction(const double maxStateofCharge) {
   return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->setMaximumStorageStateofChargeFraction(maxStateofCharge);
 }
-void resetMaximumStorageStateofChargeFraction() {
+void ElectricLoadCenterDistribution::resetMaximumStorageStateofChargeFraction() {
   getImpl<detail::ElectricLoadCenterDistribution_Impl>()->resetMaximumStorageStateofChargeFraction();
 }
 
 
 // Minimum Storage State of Charge Fraction, required if storage, defaults
-bool setMinimumStorageStateofChargeFraction(const double minStateofCharge) {
+bool ElectricLoadCenterDistribution::setMinimumStorageStateofChargeFraction(const double minStateofCharge) {
   return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->setMinimumStorageStateofChargeFraction(minStateofCharge);
 }
-void resetMinimumStorageStateofChargeFraction() {
+void ElectricLoadCenterDistribution::resetMinimumStorageStateofChargeFraction() {
   getImpl<detail::ElectricLoadCenterDistribution_Impl>()->resetMinimumStorageStateofChargeFraction();
 }
 
 
 // Design Storage Control Charge Power, required if FacilityDemandLeveling or TrackChargeDischargeSchedules
-bool setDesignStorageControlChargePower(const double designStorageControlChargePower) {
+bool ElectricLoadCenterDistribution::setDesignStorageControlChargePower(const double designStorageControlChargePower) {
   return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->setDesignStorageControlChargePower(designStorageControlChargePower);
 }
-void resetDesignStorageControlChargePower() {
+void ElectricLoadCenterDistribution::resetDesignStorageControlChargePower() {
   getImpl<detail::ElectricLoadCenterDistribution_Impl>()->resetDesignStorageControlChargePower();
 }
 
 
 // Storage Charge Power Fraction Schedule Name, required if TrackChargeDischargeSchedules
 // TODO: do I want to default that to daytime?
-bool setStorageChargePowerFractionSchedule(const Schedule& schedule) {
+bool ElectricLoadCenterDistribution::setStorageChargePowerFractionSchedule(const Schedule& schedule) {
   return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->setStorageChargePowerFractionSchedule(schedule);
 }
-void resetStorageChargePowerFractionSchedule() {
+void ElectricLoadCenterDistribution::resetStorageChargePowerFractionSchedule() {
   getImpl<detail::ElectricLoadCenterDistribution_Impl>()->resetStorageChargePowerFractionSchedule();
 }
 
 
 // Design Storage Control Discharge Power, required if FacilityDemandLeveling or TrackChargeDischargeSchedules
-bool setDesignStorageControlDischargePower(const double designStorageControlDischargePower) {
+bool ElectricLoadCenterDistribution::setDesignStorageControlDischargePower(const double designStorageControlDischargePower) {
   return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->setDesignStorageControlDischargePower(designStorageControlDischargePower);
 }
-void resetDesignStorageControlDischargePower() {
+void ElectricLoadCenterDistribution::resetDesignStorageControlDischargePower() {
   getImpl<detail::ElectricLoadCenterDistribution_Impl>()->resetDesignStorageControlDischargePower();
 }
 
 
 // Storage Charge Power Fraction Schedule Name, required if TrackChargeDischargeSchedules
 // TODO: do I want to default that to daytime?
-bool setStorageDischargePowerFractionSchedule(const Schedule& schedule) {
+bool ElectricLoadCenterDistribution::setStorageDischargePowerFractionSchedule(const Schedule& schedule) {
   return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->setStorageDischargePowerFractionSchedule(schedule);
 }
-void resetStorageDischargePowerFractionSchedule() {
+void ElectricLoadCenterDistribution::resetStorageDischargePowerFractionSchedule() {
   getImpl<detail::ElectricLoadCenterDistribution_Impl>()->resetStorageDischargePowerFractionSchedule();
 }
 
 
 // Storage Control Utility Demand Target, required if FacilityDemandLeveling
-bool setStorageControlUtilityDemandTarget(const double storageControlUtilityDemandTarget) {
+bool ElectricLoadCenterDistribution::setStorageControlUtilityDemandTarget(const double storageControlUtilityDemandTarget) {
   return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->setStorageControlUtilityDemandTarget(storageControlUtilityDemandTarget);
 }
-void resetStorageControlUtilityDemandTarget() {
+void ElectricLoadCenterDistribution::resetStorageControlUtilityDemandTarget() {
   getImpl<detail::ElectricLoadCenterDistribution_Impl>()->resetStorageControlUtilityDemandTarget();
 }
 
 
 // Storage Control Utility Demand Target Fraction Schedule Name, will be used only if FacilityDemandLeveling, defaults to 1.0
-bool setStorageControlUtilityDemandTargetFractionSchedule(const Schedule& schedule) {
+bool ElectricLoadCenterDistribution::setStorageControlUtilityDemandTargetFractionSchedule(const Schedule& schedule) {
   return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->setStorageControlUtilityDemandTargetFractionSchedule(schedule);
 }
-void resetStorageControlUtilityDemandTargetFractionSchedule() {
+void ElectricLoadCenterDistribution::resetStorageControlUtilityDemandTargetFractionSchedule() {
   getImpl<detail::ElectricLoadCenterDistribution_Impl>()->resetStorageControlUtilityDemandTargetFractionSchedule();
 }
 
