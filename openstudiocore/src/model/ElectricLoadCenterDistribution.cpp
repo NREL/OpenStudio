@@ -457,6 +457,7 @@ namespace detail {
   // Storage Operation Scheme
   bool ElectricLoadCenterDistribution_Impl::setStorageOperationScheme(const std::string& operationScheme) {
     bool result = setString(OS_ElectricLoadCenter_DistributionFields::StorageOperationScheme, operationScheme);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -484,6 +485,7 @@ namespace detail {
   bool ElectricLoadCenterDistribution_Impl::setMaximumStorageStateofChargeFraction(const double maxStateofCharge) {
     bool result = setDouble(OS_ElectricLoadCenter_DistributionFields::MaximumStorageStateofChargeFraction, maxStateofCharge);
     OS_ASSERT(result);
+    return result;
   }
   void ElectricLoadCenterDistribution_Impl::resetMaximumStorageStateofChargeFraction() {
     bool result = setString(OS_ElectricLoadCenter_DistributionFields::MaximumStorageStateofChargeFraction, "");
@@ -494,6 +496,7 @@ namespace detail {
   bool ElectricLoadCenterDistribution_Impl::setMinimumStorageStateofChargeFraction(const double minStateofCharge) {
     bool result = setDouble(OS_ElectricLoadCenter_DistributionFields::MinimumStorageStateofChargeFraction, minStateofCharge);
     OS_ASSERT(result);
+    return result;
   }
   void ElectricLoadCenterDistribution_Impl::resetMinimumStorageStateofChargeFraction() {
     bool result = setString(OS_ElectricLoadCenter_DistributionFields::MinimumStorageStateofChargeFraction, "");
@@ -504,6 +507,7 @@ namespace detail {
   bool ElectricLoadCenterDistribution_Impl::setDesignStorageControlChargePower(const double designStorageControlChargePower) {
     bool result = setDouble(OS_ElectricLoadCenter_DistributionFields::DesignStorageControlChargePower, designStorageControlChargePower);
     OS_ASSERT(result);
+    return result;
   }
   void ElectricLoadCenterDistribution_Impl::resetDesignStorageControlChargePower() {
     bool result = setString(OS_ElectricLoadCenter_DistributionFields::DesignStorageControlChargePower, "");
@@ -529,6 +533,7 @@ namespace detail {
   bool ElectricLoadCenterDistribution_Impl::setDesignStorageControlDischargePower(const double designStorageControlDischargePower) {
     bool result = setDouble(OS_ElectricLoadCenter_DistributionFields::DesignStorageControlDischargePower, designStorageControlDischargePower);
     OS_ASSERT(result);
+    return result;
   }
   void ElectricLoadCenterDistribution_Impl::resetDesignStorageControlDischargePower() {
     bool result = setString(OS_ElectricLoadCenter_DistributionFields::DesignStorageControlDischargePower, "");
@@ -555,6 +560,7 @@ namespace detail {
   bool ElectricLoadCenterDistribution_Impl::setStorageControlUtilityDemandTarget(const double storageControlUtilityDemandTarget) {
     bool result = setDouble(OS_ElectricLoadCenter_DistributionFields::StorageControlUtilityDemandTarget, storageControlUtilityDemandTarget);
     OS_ASSERT(result);
+    return result;
   }
   void ElectricLoadCenterDistribution_Impl::resetStorageControlUtilityDemandTarget() {
     bool result = setString(OS_ElectricLoadCenter_DistributionFields::StorageControlUtilityDemandTarget, "");
