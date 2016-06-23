@@ -192,34 +192,6 @@ endif()
 ###############################################################################
 
 ###############################################################################
-# Sub projects
-
-add_subdirectory(embedded)
-
-# Each subfolder of src is a major sub-project
-set(project_directories
-  generateiddfactory
-  utilities
-  model
-  energyplus
-  radiance
-  #gbxml
-  #bimserver
-  airflow
-  isomodel
-  osversion
-  measure
-  #resultsviewer
-  #model_editor
-  #openstudio_lib
-  sdd
-  cli
-)
-
-
-###############################################################################
-
-###############################################################################
 # CMake control
 
 # High level project configuration
@@ -588,70 +560,72 @@ add_definitions(-DSQLITE_THREADSAFE=1) # 1 is default, serial access
 
 #--------------------------------------------------------------------------------
 # Qt
-if( WIN32 )
-  set(QT_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/qt_5_6_msvc2013_64_static.zip")
-  file(MD5 ${QT_ZIP_LOCAL_PATH} QT_ZIP_MD5)
-  if( NOT QT_ZIP_MD5 STREQUAL "52424fdb4d553b94156de088881506b5" )
-    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/qt_5_6_msvc2013_64_static.zip" 
-      ${QT_ZIP_LOCAL_PATH} 
-      INACTIVITY_TIMEOUT 120 
-      SHOW_PROGRESS
-      EXPECTED_MD5 52424fdb4d553b94156de088881506b5)
-      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_ZIP_LOCAL_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
-  endif()
-  list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}/qt_5_6_msvc2013_64_static/lib/cmake")
-elseif( APPLE )
-  set(QT_TAR_LOCAL_PATH "${CMAKE_BINARY_DIR}/qt_5_6_osx_static.tar.gz")
-  file(MD5 ${QT_TAR_LOCAL_PATH} QT_TAR_MD5)
-  if( NOT QT_TAR_MD5 STREQUAL "e4bfe40212b660895f76d5728685373d" )
-    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/qt_5_6_osx_static.tar.gz" 
-      ${QT_TAR_LOCAL_PATH} 
-      INACTIVITY_TIMEOUT 120 
-      SHOW_PROGRESS
-      EXPECTED_MD5 e4bfe40212b660895f76d5728685373d)
-      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_TAR_LOCAL_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
-  endif()
-  list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}/qt_5_6_linux_64_static/lib/cmake")
-elseif( UNIX )
-  if(EXISTS "/etc/redhat-release")
-    # redhat
-    set(QT_TAR_LOCAL_PATH "${CMAKE_BINARY_DIR}/qt_5_6_redhat_64_static.tar.gz")
-    file(MD5 ${QT_TAR_LOCAL_PATH} QT_TAR_MD5)
-    if( NOT QT_TAR_MD5 STREQUAL "80347b74e964f17b01942e3645bab7c1" )
-      file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/qt_5_6_redhat_64_static.tar.gz" 
-        ${QT_TAR_LOCAL_PATH} 
-        INACTIVITY_TIMEOUT 120 
-        SHOW_PROGRESS
-        EXPECTED_MD5 80347b74e964f17b01942e3645bab7c1)
-        execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_TAR_LOCAL_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
-    endif()
-    list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}/qt_5_6_redhat_64_static/lib/cmake")
-  else()
-    # ubuntu
-    set(QT_TAR_LOCAL_PATH "${CMAKE_BINARY_DIR}/qt_5_6_linux_64_static.tar.gz")
-    file(MD5 ${QT_TAR_LOCAL_PATH} QT_TAR_MD5)
-    if( NOT QT_TAR_MD5 STREQUAL "4fd726173b801f34dc965ddbce53c193" )
-      file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/qt_5_6_linux_64_static.tar.gz" 
-        ${QT_TAR_LOCAL_PATH} 
-        INACTIVITY_TIMEOUT 120 
-        SHOW_PROGRESS
-        EXPECTED_MD5 4fd726173b801f34dc965ddbce53c193)
-        execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_TAR_LOCAL_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
-    endif()
-    list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}/qt_5_6_linux_64_static/lib/cmake")
-  endif()
-endif()
+# if( WIN32 )
+  # set(QT_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/qt_5_6_msvc2013_64_static.zip")
+  # file(MD5 ${QT_ZIP_LOCAL_PATH} QT_ZIP_MD5)
+  # if( NOT QT_ZIP_MD5 STREQUAL "52424fdb4d553b94156de088881506b5" )
+    # file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/qt_5_6_msvc2013_64_static.zip" 
+      # ${QT_ZIP_LOCAL_PATH} 
+      # INACTIVITY_TIMEOUT 120 
+      # SHOW_PROGRESS
+      # EXPECTED_MD5 52424fdb4d553b94156de088881506b5)
+      # execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_ZIP_LOCAL_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+  # endif()
+  # list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}/qt_5_6_msvc2013_64_static/lib/cmake")
+# elseif( APPLE )
+  # set(QT_TAR_LOCAL_PATH "${CMAKE_BINARY_DIR}/qt_5_6_osx_static.tar.gz")
+  # file(MD5 ${QT_TAR_LOCAL_PATH} QT_TAR_MD5)
+  # if( NOT QT_TAR_MD5 STREQUAL "e4bfe40212b660895f76d5728685373d" )
+    # file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/qt_5_6_osx_static.tar.gz" 
+      # ${QT_TAR_LOCAL_PATH} 
+      # INACTIVITY_TIMEOUT 120 
+      # SHOW_PROGRESS
+      # EXPECTED_MD5 e4bfe40212b660895f76d5728685373d)
+      # execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_TAR_LOCAL_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+  # endif()
+  # list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}/qt_5_6_linux_64_static/lib/cmake")
+# elseif( UNIX )
+  # if(EXISTS "/etc/redhat-release")
+    # # redhat
+    # set(QT_TAR_LOCAL_PATH "${CMAKE_BINARY_DIR}/qt_5_6_redhat_64_static.tar.gz")
+    # file(MD5 ${QT_TAR_LOCAL_PATH} QT_TAR_MD5)
+    # if( NOT QT_TAR_MD5 STREQUAL "80347b74e964f17b01942e3645bab7c1" )
+      # file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/qt_5_6_redhat_64_static.tar.gz" 
+        # ${QT_TAR_LOCAL_PATH} 
+        # INACTIVITY_TIMEOUT 120 
+        # SHOW_PROGRESS
+        # EXPECTED_MD5 80347b74e964f17b01942e3645bab7c1)
+        # execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_TAR_LOCAL_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+    # endif()
+    # list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}/qt_5_6_redhat_64_static/lib/cmake")
+  # else()
+    # # ubuntu
+    # set(QT_TAR_LOCAL_PATH "${CMAKE_BINARY_DIR}/qt_5_6_linux_64_static.tar.gz")
+    # file(MD5 ${QT_TAR_LOCAL_PATH} QT_TAR_MD5)
+    # if( NOT QT_TAR_MD5 STREQUAL "4fd726173b801f34dc965ddbce53c193" )
+      # file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/qt_5_6_linux_64_static.tar.gz" 
+        # ${QT_TAR_LOCAL_PATH} 
+        # INACTIVITY_TIMEOUT 120 
+        # SHOW_PROGRESS
+        # EXPECTED_MD5 4fd726173b801f34dc965ddbce53c193)
+        # execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_TAR_LOCAL_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+    # endif()
+    # list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}/qt_5_6_linux_64_static/lib/cmake")
+  # endif()
+# endif()
 
-find_package(Qt5Core REQUIRED)
-find_package(Qt5Widgets REQUIRED)
-find_package(Qt5Sql REQUIRED)
-find_package(Qt5Network REQUIRED)
-find_package(Qt5Xml REQUIRED)
-find_package(Qt5Concurrent REQUIRED)
-find_package(Qt5PrintSupport REQUIRED)
-find_package(Qt5Gui REQUIRED)
+set(QT_HINT_DIR "${CMAKE_BINARY_DIR}/../../../Qt-prefix/src/Qt-install/")
+
+find_package(Qt5Core REQUIRED HINTS ${QT_HINT_DIR} NO_DEFAULT_PATH)
+find_package(Qt5Widgets REQUIRED HINTS ${QT_HINT_DIR} NO_DEFAULT_PATH)
+find_package(Qt5Sql REQUIRED HINTS ${QT_HINT_DIR} NO_DEFAULT_PATH)
+find_package(Qt5Network REQUIRED HINTS ${QT_HINT_DIR} NO_DEFAULT_PATH)
+find_package(Qt5Xml REQUIRED HINTS ${QT_HINT_DIR} NO_DEFAULT_PATH)
+find_package(Qt5Concurrent REQUIRED HINTS ${QT_HINT_DIR} NO_DEFAULT_PATH)
+find_package(Qt5PrintSupport REQUIRED HINTS ${QT_HINT_DIR} NO_DEFAULT_PATH)
+find_package(Qt5Gui REQUIRED HINTS ${QT_HINT_DIR} NO_DEFAULT_PATH)
 if( WIN32 )
-  find_package(Qt5WinExtras REQUIRED)
+  find_package(Qt5WinExtras REQUIRED HINTS ${QT_HINT_DIR} NO_DEFAULT_PATH)
 endif()
 mark_as_advanced(
   Qt5Concurrent_DIR
@@ -675,6 +649,9 @@ mark_as_advanced(
 )
 
 set(CMAKE_AUTOMOC OFF)
+
+get_target_property(QtCore_TYPE Qt5::Core TYPE)
+message("QtCore_TYPE = ${QtCore_TYPE}")
 
 list(APPEND QT_LIBS Qt5::Core)
 list(APPEND QT_LIBS Qt5::Gui)
@@ -766,19 +743,6 @@ if( WIN32 )
 endif()
 
 ###############################################################################
-# qtwinmigrate
-if(WIN32)
-  add_subdirectory(src/qtwinmigrate)
-  include_directories(src/qtwinmigrate)
-endif()
-###############################################################################
-
-###############################################################################
-## qwt
-#add_subdirectory(src/qwt)
-###############################################################################
-
-###############################################################################
 ## jsoncpp
 add_subdirectory(src/jsoncpp)
 ###############################################################################
@@ -800,6 +764,36 @@ include_directories("${CMAKE_BINARY_DIR}/src/")
 
 ###############################################################################
 # Add project sub directories
+
+# Each subfolder of src is a major sub-project
+set(project_directories
+  generateiddfactory
+  utilities
+  model
+  energyplus
+  radiance
+  #gbxml
+  #bimserver
+  airflow
+  isomodel
+  osversion
+  measure
+  #resultsviewer
+  #model_editor
+  #openstudio_lib
+  sdd
+  cli
+)
+
+if(QtCore_TYPE STREQUAL "SHARED_LIBRARY")
+  list(APPEND project_directories "bimserver")
+  list(APPEND project_directories "resultsviewer")
+  list(APPEND project_directories "model_editor")
+  list(APPEND project_directories "qwt")
+  if(WIN32)
+    list(APPEND project_directories "qtwinmigrate")
+  endif()
+endif()
 
 # Include the resources, should happen after find EnergyPlus
 add_subdirectory(resources)
@@ -940,12 +934,6 @@ endif()
 
 set(TARGETS_FILE ${CMAKE_BINARY_DIR}/OpenStudioTargets.cmake)
 
-if(WIN32)
-  set(QTWINMIGRATE_EXPORT "qtwinmigrate")
-else()
-  set(QTWINMIGRATE_EXPORT "")
-endif()
-
 set(all_lib_targets
   openstudio_osversion
   openstudio_model
@@ -960,13 +948,22 @@ set(all_lib_targets
   #openstudio_lib
   openstudio_sdd
   openstudio_airflow
-  ${QTWINMIGRATE_EXPORT}
   #qwt
   miniziplib
   sqlite
   jsoncpp
   ${ALL_RUBY_BINDING_TARGETS}
 )
+
+if(QtCore_TYPE STREQUAL "SHARED_LIBRARY")
+  list(APPEND all_lib_targets "openstudio_modeleditor")
+  list(APPEND all_lib_targets "openstudio_bimserver")
+  list(APPEND all_lib_targets "openstudio_lib")
+  list(APPEND all_lib_targets "qwt")
+  if(WIN32)
+    list(APPEND all_lib_targets "qtwinmigrate")
+  endif()
+endif()
 
 export(TARGETS
   ${all_lib_targets}
