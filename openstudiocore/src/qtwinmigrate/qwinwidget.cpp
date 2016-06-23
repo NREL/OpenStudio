@@ -56,9 +56,10 @@
 
 #include <qevent.h>
 
-// DLM: not sure how to do this right, think I only need this for static builds
+#ifdef QT_STATIC
 #include <QtPlugin>
 Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin)
+#endif
 
 #include "qwinwidget.h"
 
