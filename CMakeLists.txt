@@ -685,8 +685,69 @@ if(BUILD_QT)
       INSTALL_COMMAND ""
     )
   endif()     
+  
 else()
-        
+ 
+  # download qt
+  if( WIN32 )
+    if( STATIC_QT )
+      set(QT_ZIP_FILENAME "qt_5_6_msvc2013_64_static_temp.zip")
+      set(QT_ZIP_EXPECTED_MD5 "52424fdb4d553b94156de088881506b5")
+    else()
+      set(QT_ZIP_FILENAME "qt_5_6_msvc2013_64_shared_temp.zip")
+      set(QT_ZIP_EXPECTED_MD5 "52424fdb4d553b94156de088881506b5")
+    endif()
+    
+  elseif( APPLE )
+    if( STATIC_QT )
+      message(SEND_ERROR "Static Apple Qt build not available")
+      #set(QT_ZIP_FILENAME "qt_5_6_osx_static.tar.gz")
+      #set(QT_ZIP_EXPECTED_MD5 "52424fdb4d553b94156de088881506b5")
+    else()
+      message(SEND_ERROR "Shared Apple Qt build not available")
+      #set(QT_ZIP_FILENAME "qt_5_6_osx_shared.tar.gz")
+      #set(QT_ZIP_EXPECTED_MD5 "52424fdb4d553b94156de088881506b5")
+    endif()
+
+  elseif(EXISTS "/etc/redhat-release")
+    if( STATIC_QT )
+      message(SEND_ERROR "Static Redhat Qt build not available")
+      #set(QT_ZIP_FILENAME "qt_5_6_redhat_64_static.tar.gz")
+      #set(QT_ZIP_EXPECTED_MD5 "52424fdb4d553b94156de088881506b5")
+    else()
+      message(SEND_ERROR "Shared Redhat Qt build not available")
+      #set(QT_ZIP_FILENAME "qt_5_6_redhat_64_shared.tar.gz")
+      #set(QT_ZIP_EXPECTED_MD5 "52424fdb4d553b94156de088881506b5")
+    endif()
+    
+  else()
+    #ubuntu
+    if( STATIC_QT )
+      message(SEND_ERROR "Static Ubuntu Qt build not available")
+      #set(QT_ZIP_FILENAME "qt_5_6_linux_64_static.tar.gz")
+      #set(QT_ZIP_EXPECTED_MD5 "52424fdb4d553b94156de088881506b5")
+    else()
+      message(SEND_ERROR "Shared Ubuntu Qt build not available")
+      #set(QT_ZIP_FILENAME "qt_5_6_linux_64_static.tar.gz")
+      #set(QT_ZIP_EXPECTED_MD5 "52424fdb4d553b94156de088881506b5")
+    endif()
+    
+  endif()
+  
+  set(QT_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/Qt-prefix/src/${QT_ZIP_FILENAME}")
+  if(EXISTS "${QT_ZIP_LOCAL_PATH}")
+    file(MD5 "${QT_ZIP_LOCAL_PATH}" QT_ZIP_MD5)
+  endif()
+    
+  if( NOT QT_ZIP_MD5 STREQUAL QT_ZIP_EXPECTED_MD5)
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${QT_ZIP_FILENAME}" 
+      ${QT_ZIP_LOCAL_PATH} 
+      INACTIVITY_TIMEOUT 120 
+      SHOW_PROGRESS
+      EXPECTED_MD5 ${QT_ZIP_EXPECTED_MD5})
+      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/Qt-prefix/src/")
+  endif()
+  
 endif()
 
 ## TODO Bring back build static qt on all platform 

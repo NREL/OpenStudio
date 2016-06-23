@@ -560,59 +560,6 @@ add_definitions(-DSQLITE_THREADSAFE=1) # 1 is default, serial access
 
 #--------------------------------------------------------------------------------
 # Qt
-# if( WIN32 )
-  # set(QT_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/qt_5_6_msvc2013_64_static.zip")
-  # file(MD5 ${QT_ZIP_LOCAL_PATH} QT_ZIP_MD5)
-  # if( NOT QT_ZIP_MD5 STREQUAL "52424fdb4d553b94156de088881506b5" )
-    # file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/qt_5_6_msvc2013_64_static.zip" 
-      # ${QT_ZIP_LOCAL_PATH} 
-      # INACTIVITY_TIMEOUT 120 
-      # SHOW_PROGRESS
-      # EXPECTED_MD5 52424fdb4d553b94156de088881506b5)
-      # execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_ZIP_LOCAL_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
-  # endif()
-  # list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}/qt_5_6_msvc2013_64_static/lib/cmake")
-# elseif( APPLE )
-  # set(QT_TAR_LOCAL_PATH "${CMAKE_BINARY_DIR}/qt_5_6_osx_static.tar.gz")
-  # file(MD5 ${QT_TAR_LOCAL_PATH} QT_TAR_MD5)
-  # if( NOT QT_TAR_MD5 STREQUAL "e4bfe40212b660895f76d5728685373d" )
-    # file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/qt_5_6_osx_static.tar.gz" 
-      # ${QT_TAR_LOCAL_PATH} 
-      # INACTIVITY_TIMEOUT 120 
-      # SHOW_PROGRESS
-      # EXPECTED_MD5 e4bfe40212b660895f76d5728685373d)
-      # execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_TAR_LOCAL_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
-  # endif()
-  # list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}/qt_5_6_linux_64_static/lib/cmake")
-# elseif( UNIX )
-  # if(EXISTS "/etc/redhat-release")
-    # # redhat
-    # set(QT_TAR_LOCAL_PATH "${CMAKE_BINARY_DIR}/qt_5_6_redhat_64_static.tar.gz")
-    # file(MD5 ${QT_TAR_LOCAL_PATH} QT_TAR_MD5)
-    # if( NOT QT_TAR_MD5 STREQUAL "80347b74e964f17b01942e3645bab7c1" )
-      # file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/qt_5_6_redhat_64_static.tar.gz" 
-        # ${QT_TAR_LOCAL_PATH} 
-        # INACTIVITY_TIMEOUT 120 
-        # SHOW_PROGRESS
-        # EXPECTED_MD5 80347b74e964f17b01942e3645bab7c1)
-        # execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_TAR_LOCAL_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
-    # endif()
-    # list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}/qt_5_6_redhat_64_static/lib/cmake")
-  # else()
-    # # ubuntu
-    # set(QT_TAR_LOCAL_PATH "${CMAKE_BINARY_DIR}/qt_5_6_linux_64_static.tar.gz")
-    # file(MD5 ${QT_TAR_LOCAL_PATH} QT_TAR_MD5)
-    # if( NOT QT_TAR_MD5 STREQUAL "4fd726173b801f34dc965ddbce53c193" )
-      # file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/qt_5_6_linux_64_static.tar.gz" 
-        # ${QT_TAR_LOCAL_PATH} 
-        # INACTIVITY_TIMEOUT 120 
-        # SHOW_PROGRESS
-        # EXPECTED_MD5 4fd726173b801f34dc965ddbce53c193)
-        # execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_TAR_LOCAL_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
-    # endif()
-    # list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}/qt_5_6_linux_64_static/lib/cmake")
-  # endif()
-# endif()
 
 set(QT_HINT_DIR "${CMAKE_BINARY_DIR}/../../../Qt-prefix/src/Qt-install/")
 
