@@ -45,6 +45,7 @@ namespace energyplus {
 boost::optional<IdfObject> ForwardTranslator::translateElectricLoadCenterDistribution(model::ElectricLoadCenterDistribution & modelObject)
 {
   boost::optional<double> d;
+  boost::optional<std::string> optS;
   boost::optional<Schedule> schedule;
 
   IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ElectricLoadCenter_Distribution, modelObject);
@@ -57,13 +58,18 @@ boost::optional<IdfObject> ForwardTranslator::translateElectricLoadCenterDistrib
 
   idfObject.setString(ElectricLoadCenter_DistributionFields::GeneratorOperationSchemeType, modelObject.generatorOperationSchemeType());
 
-  if {d = modelObject.demandLimitSchemePurchasedElectricDemandLimit()
+  if ( d = modelObject.demandLimitSchemePurchasedElectricDemandLimit() ) {
     idfObject.setDouble(ElectricLoadCenter_DistributionFields::GeneratorDemandLimitSchemePurchasedElectricDemandLimit, d.get());
   }
 
-  idfObject.setString(ElectricLoadCenter_DistributionFields::GeneratorTrackScheduleNameSchemeScheduleName, modelObject.trackScheduleSchemeSchedule());
+  boost::optional<Schedule> trackSch = modelObject.trackScheduleSchemeSchedule();
+  if (trackSch) {
+    idfObject.setString(ElectricLoadCenter_DistributionFields::GeneratorTrackScheduleNameSchemeScheduleName, trackSch->name().get());
+  }
 
-  idfObject.setString(ElectricLoadCenter_DistributionFields::GeneratorTrackMeterSchemeMeterName, modelObject.trackMeterSchemeMeterName());
+  if ( optS = modelObject.trackMeterSchemeMeterName() ) {
+    idfObject.setString(ElectricLoadCenter_DistributionFields::GeneratorTrackMeterSchemeMeterName, (*optS) );
+  }
 
   idfObject.setString(ElectricLoadCenter_DistributionFields::ElectricalBussType, modelObject.electricalBussType());
 
@@ -78,7 +84,7 @@ boost::optional<IdfObject> ForwardTranslator::translateElectricLoadCenterDistrib
 
   boost::optional<ElectricalStorage> electricalStorage = modelObject.electricalStorage();
   if (electricalStorage) {
-    boost::optional<IdfObject> storageIdf = translateAndMapModelObject(electricalStorage);
+    boost::optional<IdfObject> storageIdf = translateAndMapModelObject(*electricalStorage);
     if (storageIdf){
       idfObject.setString(ElectricLoadCenter_DistributionFields::ElectricalStorageObjectName, storageIdf->name().get());
     }
