@@ -712,6 +712,9 @@ include_directories("${CMAKE_BINARY_DIR}/src/")
 ###############################################################################
 # Add project sub directories
 
+include("embedded/EmbedFiles.cmake")
+add_subdirectory("embedded")
+
 # Each subfolder of src is a major sub-project
 set(project_directories
   generateiddfactory

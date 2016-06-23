@@ -132,7 +132,6 @@ list(APPEND EMBEDDED_PATHS "measure_manager.rb")
 list(APPEND FILES "${CMAKE_CURRENT_SOURCE_DIR}/measure_manager_server.rb")
 list(APPEND EMBEDDED_PATHS "measure_manager_server.rb")
 
-include("${CMAKE_SOURCE_DIR}/embedded/EmbedFiles.cmake")
 embed_files("${FILES}" "${EMBEDDED_PATHS}" OUTPUT)
 
 set_source_files_properties(EmbeddedScripting.i
