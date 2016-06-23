@@ -204,7 +204,7 @@ class MODEL_API ElectricLoadCenterDistribution : public ParentObject {
 
   // Storage Charge Power Fraction Schedule Name, required if TrackChargeDischargeSchedules
   // TODO: do I want to default that to daytime?
-  bool setStorageChargePowerFractionSchedule(const Schedule& schedule);
+  bool setStorageChargePowerFractionSchedule(Schedule& schedule);
   void resetStorageChargePowerFractionSchedule();
 
   // Design Storage Control Discharge Power, required if FacilityDemandLeveling or TrackChargeDischargeSchedules
@@ -213,7 +213,7 @@ class MODEL_API ElectricLoadCenterDistribution : public ParentObject {
 
   // Storage Charge Power Fraction Schedule Name, required if TrackChargeDischargeSchedules
   // TODO: do I want to default that to daytime?
-  bool setStorageDischargePowerFractionSchedule(const Schedule& schedule);
+  bool setStorageDischargePowerFractionSchedule(Schedule& schedule);
   void resetStorageDischargePowerFractionSchedule();
 
   // Storage Control Utility Demand Target, required if FacilityDemandLeveling
@@ -221,7 +221,7 @@ class MODEL_API ElectricLoadCenterDistribution : public ParentObject {
   void resetStorageControlUtilityDemandTarget();
 
   // Storage Control Utility Demand Target Fraction Schedule Name, will be used only if FacilityDemandLeveling, defaults to 1.0
-  bool setStorageControlUtilityDemandTargetFractionSchedule(const Schedule& schedule);
+  bool setStorageControlUtilityDemandTargetFractionSchedule(Schedule& schedule);
   void resetStorageControlUtilityDemandTargetFractionSchedule();
 
   //@}

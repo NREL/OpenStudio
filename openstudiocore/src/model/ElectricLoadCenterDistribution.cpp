@@ -859,7 +859,7 @@ void ElectricLoadCenterDistribution::resetDesignStorageControlChargePower() {
 
 // Storage Charge Power Fraction Schedule Name, required if TrackChargeDischargeSchedules
 // TODO: do I want to default that to daytime?
-bool ElectricLoadCenterDistribution::setStorageChargePowerFractionSchedule(const Schedule& schedule) {
+bool ElectricLoadCenterDistribution::setStorageChargePowerFractionSchedule(Schedule& schedule) {
   return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->setStorageChargePowerFractionSchedule(schedule);
 }
 void ElectricLoadCenterDistribution::resetStorageChargePowerFractionSchedule() {
@@ -878,7 +878,7 @@ void ElectricLoadCenterDistribution::resetDesignStorageControlDischargePower() {
 
 // Storage Charge Power Fraction Schedule Name, required if TrackChargeDischargeSchedules
 // TODO: do I want to default that to daytime?
-bool ElectricLoadCenterDistribution::setStorageDischargePowerFractionSchedule(const Schedule& schedule) {
+bool ElectricLoadCenterDistribution::setStorageDischargePowerFractionSchedule(Schedule& schedule) {
   return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->setStorageDischargePowerFractionSchedule(schedule);
 }
 void ElectricLoadCenterDistribution::resetStorageDischargePowerFractionSchedule() {
@@ -896,7 +896,7 @@ void ElectricLoadCenterDistribution::resetStorageControlUtilityDemandTarget() {
 
 
 // Storage Control Utility Demand Target Fraction Schedule Name, will be used only if FacilityDemandLeveling, defaults to 1.0
-bool ElectricLoadCenterDistribution::setStorageControlUtilityDemandTargetFractionSchedule(const Schedule& schedule) {
+bool ElectricLoadCenterDistribution::setStorageControlUtilityDemandTargetFractionSchedule(Schedule& schedule) {
   return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->setStorageControlUtilityDemandTargetFractionSchedule(schedule);
 }
 void ElectricLoadCenterDistribution::resetStorageControlUtilityDemandTargetFractionSchedule() {
