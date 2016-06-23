@@ -705,6 +705,9 @@ add_subdirectory(src/sqlite)
 # Project source directory
 include_directories("${CMAKE_HOME_DIRECTORY}/src/")
 
+# For QWinWidget
+include_directories("${CMAKE_HOME_DIRECTORY}/src/qtwinmigrate")
+
 # Project binary directory
 include_directories("${CMAKE_BINARY_DIR}/src/")
 ###############################################################################
@@ -734,15 +737,15 @@ set(project_directories
   sdd
   cli
 )
+if(WIN32)
+  list(APPEND project_directories "qtwinmigrate")
+endif()
 
 if(QtCore_TYPE STREQUAL "SHARED_LIBRARY")
   list(APPEND project_directories "bimserver")
   list(APPEND project_directories "resultsviewer")
   list(APPEND project_directories "model_editor")
   list(APPEND project_directories "qwt")
-  if(WIN32)
-    list(APPEND project_directories "qtwinmigrate")
-  endif()
 endif()
 
 # Include the resources, should happen after find EnergyPlus
@@ -904,15 +907,15 @@ set(all_lib_targets
   jsoncpp
   ${ALL_RUBY_BINDING_TARGETS}
 )
+if(WIN32)
+  list(APPEND all_lib_targets "qtwinmigrate")
+endif()
 
 if(QtCore_TYPE STREQUAL "SHARED_LIBRARY")
   list(APPEND all_lib_targets "openstudio_modeleditor")
   list(APPEND all_lib_targets "openstudio_bimserver")
   list(APPEND all_lib_targets "openstudio_lib")
   list(APPEND all_lib_targets "qwt")
-  if(WIN32)
-    list(APPEND all_lib_targets "qtwinmigrate")
-  endif()
 endif()
 
 export(TARGETS
