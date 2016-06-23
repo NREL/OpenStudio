@@ -551,11 +551,13 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
     }
   case openstudio::IddObjectType::Meter_Custom :
     {
-      break; // no-op
+      modelObject = translateMeterCustom(workspaceObject);
+      break;
     }
   case openstudio::IddObjectType::Meter_CustomDecrement :
     {
-      break; // no-op
+      modelObject = translateMeterCustomDecrement(workspaceObject);
+      break;
     }
   case openstudio::IddObjectType::OtherEquipment :
     {

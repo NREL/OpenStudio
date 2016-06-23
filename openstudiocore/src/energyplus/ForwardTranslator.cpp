@@ -1648,6 +1648,18 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateMeter(meter);
       break;
     }
+  case openstudio::IddObjectType::OS_Meter_Custom :
+    {
+      model::MeterCustom meterCustom = modelObject.cast<MeterCustom>();
+      retVal = translateMeterCustom(meterCustom);
+      break;
+    }
+  case openstudio::IddObjectType::OS_Meter_CustomDecrement :
+    {
+      model::MeterCustomDecrement meterCustomDecrement = modelObject.cast<MeterCustomDecrement>();
+      retVal = translateMeterCustomDecrement(meterCustomDecrement);
+      break;
+    }
   case openstudio::IddObjectType::OS_ModelObjectList :
     {
       // no-op
@@ -2881,6 +2893,8 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_LifeCycleCost);
 
   result.push_back(IddObjectType::OS_Meter);
+  result.push_back(IddObjectType::OS_Meter_Custom);
+  result.push_back(IddObjectType::OS_Meter_CustomDecrement);
   result.push_back(IddObjectType::OS_Output_Variable);
 
   return result;
