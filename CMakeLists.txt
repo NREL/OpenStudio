@@ -651,12 +651,28 @@ option(BUILD_QT "Build Qt" OFF)
 option(STATIC_QT "Use Static Qt" ON)
 
 if(BUILD_QT)
-
-  if( UNIX )
+  if(APPLE)
     if( STATIC_QT )
       set(QT_CONFIGURE_COMMAND "-v -release -opensource -static -openssl -no-pch -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -confirm-license -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install")
     else()
+      message(WARNING "Shared Apple Qt build untested")
       set(QT_CONFIGURE_COMMAND "-v -release -opensource -shared -openssl -no-pch -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -confirm-license -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install")
+    endif()
+    ExternalProject_Add(Qt
+      URL http://openstudio-resources.s3.amazonaws.com/dependencies/qt-everywhere-opensource-src-5.6.1.tar.gz
+      URL_MD5 ed16ef2a30c674f91f8615678005d44c
+      CONFIGURE_COMMAND "configure ${QT_CONFIGURE_COMMAND}"
+      PATCH_COMMAND ""
+      BUILD_COMMAND make -j${CPUCOUNT} && make install
+      INSTALL_COMMAND ""
+    )  
+  elseif( UNIX )
+    # install deps according to here http://doc.qt.io/qt-5/linux-requirements.html
+    if( STATIC_QT )
+      set(QT_CONFIGURE_COMMAND "-v -release -opensource -static -openssl -no-pch -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -qt-xcb -confirm-license  -no-qml-debug -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install")
+    else()
+      message(WARNING "Shared Unix Qt build untested")
+      set(QT_CONFIGURE_COMMAND "-v -release -opensource -shared -openssl -no-pch -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -qt-xcb -confirm-license  -no-qml-debug -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install")
     endif()
     ExternalProject_Add(Qt
       URL http://openstudio-resources.s3.amazonaws.com/dependencies/qt-everywhere-opensource-src-5.6.1.tar.gz
@@ -747,40 +763,6 @@ else()
   
 endif()
 
-## TODO Bring back build static qt on all platform 
-#
-## windows configure notes
-#-platform win32-msvc2013 -debug-and-release -opensource -openssl -opengl dynamic -static -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -confirm-license -prefix C:\Qt2\5.6\msvc2013_static
-#
-# Dan's attempt
-## MSVC 2013
-# from build dir (which should be below qt dir)
-# "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" amd64
-# set CL=/MP
-# ..\configure.bat -platform win32-msvc2013 -debug-and-release -opensource -static -mp -openssl-linked -I C:\OpenSSL-Win64\include -L C:\OpenSSL-Win64\lib\VC\static -opengl dynamic -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -qt-pcre -qt-libpng -qt-libjpeg -qt-freetype -qt-harfbuzz -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -confirm-license -prefix C:\Qt2\5.6\msvc2013_static
-# nmake 
-#
-# Shared build
-# "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" amd64
-# set CL=/MP
-# ..\configure.bat -platform win32-msvc2013 -debug-and-release -opensource -shared -mp -openssl -I C:\OpenSSL-Win64\include -L C:\OpenSSL-Win64\lib\VC -opengl dynamic -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -qt-pcre -qt-libpng -qt-libjpeg -qt-freetype -qt-harfbuzz -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -confirm-license -prefix C:\Qt2\5.6\msvc2013_shared
-# nmake 
-#
-## MSVC 2015
-# from build dir (which should be below qt dir)
-# "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" amd64
-# set CL=/MP
-# ..\configure.bat -platform win32-msvc2015 -debug-and-release -opensource -openssl-linked OPENSSL_LIBS="-lssleay32 -llibeay32" -I C:\OpenSSL-Win64\include -L C:\OpenSSL-Win64\lib\VC\static -opengl dynamic -static -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -confirm-license -prefix C:\Qt2\5.6\msvc2015_static
-# nmake 
-
-## mac configure notes
-#./configure -v -release -opensource -static -openssl -no-pch -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -confirm-license -prefix /Users/kbenne/Development/Qt/qt_5_6_osx_static
-#
-
-## linux configure notes
-# install deps according to here http://doc.qt.io/qt-5/linux-requirements.html
-#./configure -v -release -opensource -static -openssl -no-pch -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -qt-xcb -confirm-license  -no-qml-debug -prefix /home/kbenne/Qt/qt_5_6_linux_64_static 
-
 set(OpenStudioCore_DIR ${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build)
 
 # Set up the dependencies for OpenStudioCore
@@ -789,9 +771,9 @@ set(OpenStudioCore_DEPENDS GoogleTest)
 list(APPEND OpenStudioCore_DEPENDS GeographicLib)
 list(APPEND OpenStudioCore_DEPENDS OpenStudio-workflow-gem)
 
-#if(BUILD_QT)
-#  list(APPEND OpenStudioCore_DEPENDS Qt)
-#endif()
+if(BUILD_QT)
+  list(APPEND OpenStudioCore_DEPENDS Qt)
+endif()
 
 if(BUILD_SWIG)
   list(APPEND OpenStudioCore_DEPENDS SWIG)
