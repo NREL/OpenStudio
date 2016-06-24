@@ -1078,7 +1078,7 @@ void ElectricLoadCenterDistribution::validityCheckresetStorageControlUtilityDema
 }
 
 bool ElectricLoadCenterDistribution_Impl::validityCheck() const {
-  getImpl<detail::ElectricLoadCenterDistribution_Impl>()->validityCheck();
+  return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->validityCheck();
 }
 
 
