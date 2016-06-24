@@ -260,12 +260,12 @@ TEST_F(ModelFixture, ElectricLoadCenterDistribution_newFields) {
   ASSERT_FALSE(elcd.trackScheduleSchemeSchedule());
 
   // Generator Track Meter Scheme Meter Name, Optional String
-  /*EXPECT_FALSE(elcd.trackMeterSchemeMeterName());
+  EXPECT_FALSE(elcd.trackMeterSchemeMeterName());
   EXPECT_TRUE(elcd.setTrackMeterSchemeMeterName("Electricity:Facility"));
   ASSERT_TRUE(elcd.trackMeterSchemeMeterName());
   ASSERT_EQ("Electricity:Facility", elcd.trackMeterSchemeMeterName().get());
   elcd.resetTrackMeterSchemeMeterName();
-  ASSERT_FALSE(elcd.trackMeterSchemeMeterName());*/
+  ASSERT_FALSE(elcd.trackMeterSchemeMeterName());
 
   // Electrical Buss type, defaults to DirectCurrentWithInverter
   EXPECT_EQ("DirectCurrentWithInverter", elcd.electricalBussType());
