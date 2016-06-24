@@ -25190,7 +25190,64 @@ OS:ElectricLoadCenter:Distribution,
        \note if omitted a schedule value of 1.0 is used. Negative values indicate export to grid
        \note Schedule is used if Storage Operation Scheme is set to FacilityDemandLeveling.
        \type object-list
-       \object-list ScheduleNames       
+       \object-list ScheduleNames
+
+ElectricLoadCenter:Storage:Converter,
+        \memo This model is for converting AC to DC for grid-supplied charging of DC storage
+        \min-fields 4
+   A1 , \field Handle
+        \type handle
+        \required-field
+   A2 , \field Name
+        \reference ConverterList
+   A3 , \field Availability Schedule Name
+        \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+        \note If this field is blank, the converter is always available.
+        \type object-list
+        \object-list ScheduleNames
+   A4 , \field Power Conversion Efficiency Method
+        \type choice
+        \key SimpleFixed
+        \default SimpleFixed
+        \note SimpleFixed indicates power conversion losses are based on Simple Fixed Efficiency
+        \key FunctionOfPower
+        \note FunctionOfPower indicates power conversion losses are a function of normalized power using a curve or table.
+   N1 , \field Simple Fixed Efficiency
+        \note Constant efficiency for conversion of AC to DC at all power levels.
+        \note Field is only used when Power Conversion Efficiency Method is set to SimpleFixed.
+        \type real
+        \minimum> 0.0
+        \maximum 1.0
+        \default 0.95
+   N2,  \field Design Maximum Continuous Input Power
+        \note Required field when Power Conversion Efficiency Method is set to FunctionOfPower.
+        \type real
+        \units W
+   A5 , \field Efficiency Function of Power Curve Name
+        \note Curve or table with a single independent variable that describes efficiency as a function of normalized power.
+        \note The "x" input for curve or table is the ratio of current input power divided by design power in the previous field
+        \note Required field when Power Conversion Efficiency Method is set to FunctionOfPower.
+        \type object-list
+        \object-list UniVariateCurves
+        \object-list UniVariateTables
+   N3 , \field Ancillary Power Consumed In Standby
+        \note Optional standby power consumed when converter is available but no power is being conditioned. 
+        \type real
+        \units W
+        \default 0.0
+   A6 , \field Zone Name
+        \note enter name of zone to receive converter losses as heat
+        \note if blank then converter is assumed to be outdoors
+        \type object-list
+        \object-list ZoneNames
+   N4 ; \field Radiative Fraction
+        \note fraction of zone heat gains treated as thermal radiation
+        \note Only used if a Zone Name is entered.
+        \minimum 0.0
+        \maximum 1.0
+        \default 0.0
+        \memo This field was defaulted to 0.0 here, because the E+ doc says that if omitted,
+        \memo all zone heat gains will be convective
        
 \group OpenStudio Economics
 
