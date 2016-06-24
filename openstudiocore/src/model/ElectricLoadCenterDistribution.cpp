@@ -583,6 +583,173 @@ namespace detail {
   }
 
 
+  // Validity Checking
+  bool ElectricLoadCenterDistribution_Impl::validityCheck() const {
+    
+    // Logic based on Electrical Buss Type to translate or not translate inverters, storage
+    bool result = true;
+
+    std::string bussType = electricalBussType();
+
+    /// Inverter and Buss Type
+    boost::optional<Inverter> inverter = inverter();
+    bool bussWithInverter = (bussType == "DirectCurrentWithInverter" ||
+      bussType == "DirectCurrentWithInverterDCStorage" ||
+      bussType == "DirectCurrentWithInverterACStorage");
+
+    // Case 1: There is an inverter and a Buss with inverter: all good
+    if (inverter && bussWithInverter) {
+      LOG(Info, briefDescription() << ": Your Electric Buss Type '" << bussType
+        << "' is compatible with inverter objects and you do have an inverter '"
+        << inverter->name().get() << "'");
+      // Case 2: if there's an inverter, but the buss is not compatible, we issue a Warning and don't translate the inverter
+    } else if (inverter && !bussWithInverter) {
+      LOG(Warn, briefDescription() << ": Your Electric Buss Type '" << bussType
+        << "' is not compatible with inverter objects. The inverter object '"
+        << inverter->name().get() << " will not be translated'");
+
+      // Case 3: if there is a buss that expects an inverter, but not inverter: this is bad, it'll throw a fatal in E+
+    } else if (bussWithInverter && !inverter) {
+      result = false;
+      LOG(Error, briefDescription() << ": Your Electric Buss Type '" << bussType
+        << "' Requires an inverter but you didn't specify one");
+    }
+    // Case 4: there's no inverter and a buss type without inverter: nothing needs to be done
+
+
+    /// Storage & Buss Type
+    boost::optional<ElectricalStorage> electricalStorage = electricalStorage();
+    bool bussWithStorage = (bussType == "AlternatingCurrentWithStorage" ||
+      bussType == "DirectCurrentWithInverterDCStorage" ||
+      bussType == "DirectCurrentWithInverterACStorage");
+
+    // Case 1: There is a Storage object and a Buss with Storage: all good
+    if (electricalStorage && bussWithStorage) {
+
+      LOG(Info, briefDescription() << ": Your Electric Buss Type '" << bussType
+        << "' is compatible with storage objects and you do have an ELC:Storage:Simple '"
+        << electricalStorage->name().get() << "'");
+
+      // Storage Operation Scheme, defaults to TrackFacilityElectricDemandStoreExcessOnSite
+      std::string storageOperationScheme = storageOperationScheme();
+
+      if (!isStorageOperationSchemeDefaulted()) {
+        LOG(Info, "Your Storage Operation Scheme is defaulted to '" << storageOperationScheme
+          << "'");
+      }
+
+      // For all storageOperationScheme, we need to translate the Min/Max Storage SOC
+      // Maximum Storage State of Charge Fraction
+      if (!maximumStorageStateofChargeFraction()) {
+        result = false;
+        LOG(Error, briefDescription() << ": you have specified a Storage object "
+          << " but you didn't specify the required 'Maximum Storage State of Charge Fraction'");
+      }
+
+      // Minimum Storage State of Charge Fraction
+      if (!minimumStorageStateofChargeFraction()) {
+        result = false;
+        LOG(Error, briefDescription() << ": you have specified a Storage object "
+          << " but you didn't specify the required 'Minimum Storage State of Charge Fraction'");
+      }
+
+      /// Further testing based on storageOperationScheme
+      if (storageOperationScheme == "TrackMeterDemandStoreExcessOnSite") {
+        // Storage Control Track Meter Name, required if operation = TrackMeterDemandStoreExcessOnSite or it'll produce a fatal
+        if (!storageControlTrackMeterName()) {
+          result = false;
+          LOG(Error, briefDescription() << ": You set the Storage Operation Scheme to " << storageOperationScheme
+            << " but you didn't specify the required 'Storage Control Track Meter Name'");
+        }
+
+      } else if (storageOperationScheme = "TrackChargeDischargeSchedules") {
+        // Storage Converter Object Name
+        //boost::optional<ElectricLoadCenterStorageConverter> storageConverter = storageConverter();
+        //if (!storageConverter) {
+        //  result = false;
+        //  LOG(Error, briefDescription() << ": You set the Storage Operation Scheme to " << storageOperationScheme
+        //    << " but you didn't specify the required 'Storage Converter Object Name'");
+        //}
+
+        // Design Storage Control Charge Power
+        if (!designStorageControlChargePower()) {
+          result = false;
+          LOG(Error, briefDescription() << ": You set the Storage Operation Scheme to " << storageOperationScheme
+            << " but you didn't specify the required 'Design Storage Control Charge Power'");
+        }
+
+        // Design Storage Control Discharge Power
+        if (!designStorageControlDischargePower()) {
+          result = false;
+          LOG(Error, briefDescription() << ": You set the Storage Operation Scheme to " << storageOperationScheme
+            << " but you didn't specify the required 'Design Storage Control Discharge Power'");
+        }
+
+        // Storage Charge Power Fraction Schedule Name
+        if (schedule = storageChargePowerFractionSchedule()) {
+          result = false;
+          LOG(Error, briefDescription() << ": You set the Storage Operation Scheme to " << storageOperationScheme
+            << " but you didn't specify the required 'Storage Charge Power Fraction Schedule Name'");
+        }
+
+        // Discharge Power Fraction Schedule Name
+        if (schedule = storageDischargePowerFractionSchedule()) {
+          idfObject.setString(ElectricLoadCenter_DistributionFields::StorageDischargePowerFractionScheduleName, schedule->name().get());
+        } else {
+          LOG(Error, briefDescription() << ": You set the Storage Operation Scheme to " << storageOperationScheme
+            << " but you didn't specify the required 'Storage Discharge Power Fraction Schedule Name'");
+        }
+
+      } else if (storageOperationScheme == "FacilityDemandLeveling") {
+        // Storage Converter Object Name
+        //boost::optional<ElectricLoadCenterStorageConverter> storageConverter = storageConverter();
+        //if (!storageConverter) {
+        //  result = false;
+        //  LOG(Error, briefDescription() << ": You set the Storage Operation Scheme to " << storageOperationScheme
+        //    << " but you didn't specify the required 'Storage Converter Object Name'");
+        //}
+
+        // Design Storage Control Charge Power
+        if (!designStorageControlChargePower()) {
+          result = false;
+          LOG(Error, briefDescription() << ": You set the Storage Operation Scheme to " << storageOperationScheme
+            << " but you didn't specify the required 'Design Storage Control Charge Power'");
+        }
+
+        // Design Storage Control Discharge Power
+        if (!designStorageControlDischargePower()) {
+          result = false;
+          LOG(Error, briefDescription() << ": You set the Storage Operation Scheme to " << storageOperationScheme
+            << " but you didn't specify the required 'Design Storage Control Discharge Power'");
+        }
+
+        // Storage Control Utility Demand Target
+        if (!storageControlUtilityDemandTarget()) {
+          result = false;
+          LOG(Error, briefDescription() << ": You set the Storage Operation Scheme to " << storageOperationScheme
+            << " but you didn't specify the required 'Storage Control Utility Demand Target'");
+        }
+
+        // Case 2: if there's a Storage object, but the buss is not compatible, we issue a Warning and don't translate Any of the storage objects
+      } else if (electricalStorage && !bussWithStorage) {
+        LOG(Warn, briefDescription() << ": Your Electric Buss Type '" << bussType
+          << "' is not compatible with storage objects. No storage objects will be translated including the Battery itself:'"
+          << electricalStorage->name().get() << "'");
+      }
+
+      // Case 3: if there is a buss that expects Storage, but no Storage: this is bad, it'll throw a fatal in E+
+    } else if (bussWithStorage && !electricalStorage) {
+      LOG(Error, briefDescription() << ": Your Electric Buss Type '" << bussType
+        << "' Requires an electrical Storage object but you didn't specify one");
+    }
+    // Case 4: there's no inverter and a buss type without inverter: nothing needs to be done
+
+
+    return result;
+
+  }
+
+
 
 } // detail
 
@@ -906,11 +1073,13 @@ void ElectricLoadCenterDistribution::resetStorageControlUtilityDemandTarget() {
 bool ElectricLoadCenterDistribution::setStorageControlUtilityDemandTargetFractionSchedule(Schedule& schedule) {
   return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->setStorageControlUtilityDemandTargetFractionSchedule(schedule);
 }
-void ElectricLoadCenterDistribution::resetStorageControlUtilityDemandTargetFractionSchedule() {
+void ElectricLoadCenterDistribution::validityCheckresetStorageControlUtilityDemandTargetFractionSchedule() {
   getImpl<detail::ElectricLoadCenterDistribution_Impl>()->resetStorageControlUtilityDemandTargetFractionSchedule();
 }
 
-
+bool ElectricLoadCenterDistribution_Impl::validityCheck() const {
+  getImpl<detail::ElectricLoadCenterDistribution_Impl>()->validityCheck();
+}
 
 
 /// @cond

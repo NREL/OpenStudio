@@ -228,6 +228,8 @@ class MODEL_API ElectricLoadCenterDistribution : public ParentObject {
   /** @name Other */
   //@{
 
+  bool validityCheck() const;
+
   //@}
  protected:
 

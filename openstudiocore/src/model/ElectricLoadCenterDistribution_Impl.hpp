@@ -117,6 +117,7 @@ namespace detail {
 
     // Storage Converter Object Name
     //boost::optional<ElectricLoadCenterStorageConverter> storageConverter() const;
+    // TODO: Implement this object.
 
     // Maximum Storage State of Charge Fraction, required if storage, defaults
     double maximumStorageStateofChargeFraction() const;
@@ -241,6 +242,8 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
+
+    bool validityCheck() const;
 
     //@}
    protected:
