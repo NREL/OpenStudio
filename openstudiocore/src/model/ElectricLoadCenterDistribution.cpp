@@ -639,19 +639,11 @@ namespace detail {
       }
 
       // For all storageOperationScheme, we need to translate the Min/Max Storage SOC
-      // Maximum Storage State of Charge Fraction
-      if (!maximumStorageStateofChargeFraction()) {
-        result = false;
-        LOG(Error, briefDescription() << ": you have specified a Storage object "
-          << " but you didn't specify the required 'Maximum Storage State of Charge Fraction'");
-      }
+      // Maximum Storage State of Charge Fraction, defaults
+      // Nothing to do
 
-      // Minimum Storage State of Charge Fraction
-      if (!minimumStorageStateofChargeFraction()) {
-        result = false;
-        LOG(Error, briefDescription() << ": you have specified a Storage object "
-          << " but you didn't specify the required 'Minimum Storage State of Charge Fraction'");
-      }
+      // Minimum Storage State of Charge Fraction, defaults
+      // Nothing to do
 
       /// Further testing based on storageOperationScheme
       if (stoOpScheme == "TrackMeterDemandStoreExcessOnSite") {
@@ -662,7 +654,7 @@ namespace detail {
             << " but you didn't specify the required 'Storage Control Track Meter Name'");
         }
 
-      } else if (stoOpScheme = "TrackChargeDischargeSchedules") {
+      } else if (stoOpScheme == "TrackChargeDischargeSchedules") {
         // Storage Converter Object Name
         //boost::optional<ElectricLoadCenterStorageConverter> storageConverter = storageConverter();
         //if (!storageConverter) {
@@ -729,13 +721,14 @@ namespace detail {
             << " but you didn't specify the required 'Storage Control Utility Demand Target'");
         }
 
-        // Case 2: if there's a Storage object, but the buss is not compatible, we issue a Warning and don't translate Any of the storage objects
-      } else if (elcSto && !bussWithStorage) {
-        LOG(Warn, briefDescription() << ": Your Electric Buss Type '" << bussType
-          << "' is not compatible with storage objects. No storage objects will be translated including the Battery itself:'"
-          << elcSto->name().get() << "'");
-      }
 
+      }  // end if (storageOperationScheme)
+      // Case 2: if there's a Storage object, but the buss is not compatible, we issue a Warning and don't translate Any of the storage objects
+    } else if (elcSto && !bussWithStorage) {
+      LOG(Warn, briefDescription() << ": Your Electric Buss Type '" << bussType
+        << "' is not compatible with storage objects. No storage objects will be translated including the Battery itself:'"
+        << elcSto->name().get() << "'");
+    
       // Case 3: if there is a buss that expects Storage, but no Storage: this is bad, it'll throw a fatal in E+
     } else if (bussWithStorage && !elcSto) {
       LOG(Error, briefDescription() << ": Your Electric Buss Type '" << bussType

@@ -90,9 +90,9 @@ boost::optional<IdfObject> ForwardTranslator::translateElectricLoadCenterDistrib
 
       generatorGroup.setString(ElectricLoadCenter_GeneratorsExtensibleFields::GeneratorObjectType, generator.generatorObjectType());
 
-      d = generator.ratedElectricPowerOutput();
-      if (d) {
-        generatorGroup.setDouble(ElectricLoadCenter_GeneratorsExtensibleFields::GeneratorRatedElectricPowerOutput, *d);
+      optD = generator.ratedElectricPowerOutput();
+      if (optD) {
+        generatorGroup.setDouble(ElectricLoadCenter_GeneratorsExtensibleFields::GeneratorRatedElectricPowerOutput, *optD);
       }
 
       schedule = generator.availabilitySchedule();
@@ -103,9 +103,9 @@ boost::optional<IdfObject> ForwardTranslator::translateElectricLoadCenterDistrib
         }
       }
 
-      d = generator.ratedThermalToElectricalPowerRatio();
-      if (d) {
-        generatorGroup.setDouble(ElectricLoadCenter_GeneratorsExtensibleFields::GeneratorRatedThermaltoElectricalPowerRatio, *d);
+      optD = generator.ratedThermalToElectricalPowerRatio();
+      if (optD) {
+        generatorGroup.setDouble(ElectricLoadCenter_GeneratorsExtensibleFields::GeneratorRatedThermaltoElectricalPowerRatio, *optD);
       }
     } else {
       LOG(Warn, "Could not translate generator '" << generator.name().get() << "' on ElectricLoadCenter:Distribution '" << idfObject.name().get() << "'")
@@ -170,21 +170,11 @@ boost::optional<IdfObject> ForwardTranslator::translateElectricLoadCenterDistrib
     }
 
     // For all storageOperationScheme, we need to translate the Min/Max Storage SOC
-    // Maximum Storage State of Charge Fraction
-    if (optD = modelObject.maximumStorageStateofChargeFraction()) {
-      idfObject.setDouble(ElectricLoadCenter_DistributionFields::MaximumStorageStateofChargeFraction, optD.get());
-    } else {
-      LOG(Error, modelObject.briefDescription() << ": you have specified a Storage object "
-        << " but you didn't specify the required 'Maximum Storage State of Charge Fraction'");
-    }
+    // Maximum Storage State of Charge Fraction, defaults
+    idfObject.setDouble(ElectricLoadCenter_DistributionFields::MaximumStorageStateofChargeFraction, modelObject.maximumStorageStateofChargeFraction());
 
-    // Minimum Storage State of Charge Fraction
-    if (optD = modelObject.minimumStorageStateofChargeFraction()) {
-      idfObject.setDouble(ElectricLoadCenter_DistributionFields::MinimumStorageStateofChargeFraction, optD.get());
-    } else {
-      LOG(Error, modelObject.briefDescription() << ": you have specified a Storage object "
-        << " but you didn't specify the required 'Minimum Storage State of Charge Fraction'");
-    }
+    // Minimum Storage State of Charge Fraction, defaults
+    idfObject.setDouble(ElectricLoadCenter_DistributionFields::MinimumStorageStateofChargeFraction, modelObject.minimumStorageStateofChargeFraction());
 
     /// Further testing based on storageOperationScheme
     if (storageOperationScheme == "TrackMeterDemandStoreExcessOnSite") {
@@ -196,7 +186,7 @@ boost::optional<IdfObject> ForwardTranslator::translateElectricLoadCenterDistrib
           << " but you didn't specify the required 'Storage Control Track Meter Name'");
       }
 
-    } else if (storageOperationScheme = "TrackChargeDischargeSchedules") {
+    } else if (storageOperationScheme == "TrackChargeDischargeSchedules") {
       // Storage Converter Object Name
       //boost::optional<ElectricLoadCenterStorageConverter> storageConverter = modelObject.storageConverter();
       //if (storageConverter) {
@@ -288,13 +278,13 @@ boost::optional<IdfObject> ForwardTranslator::translateElectricLoadCenterDistrib
         modelObject.storageControlUtilityDemandTargetFractionSchedule().name().get());
 
 
+    } // end if (storageOperationScheme)
 
     // Case 2: if there's a Storage object, but the buss is not compatible, we issue a Warning and don't translate Any of the storage objects
   } else if (electricalStorage && !bussWithStorage) {
     LOG(Warn, modelObject.briefDescription() << ": Your Electric Buss Type '" << bussType
       << "' is not compatible with storage objects. No storage objects will be translated including the Battery itself:'"
       << electricalStorage->name().get() << "'");
-  }
 
     // Case 3: if there is a buss that expects Storage, but no Storage: this is bad, it'll throw a fatal in E+
   } else if (bussWithStorage && !electricalStorage) {
