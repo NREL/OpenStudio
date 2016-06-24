@@ -171,7 +171,7 @@ namespace detail {
   }
 
   boost::optional<std::string> ElectricLoadCenterDistribution_Impl::trackMeterSchemeMeterName() const {
-    return getString(OS_ElectricLoadCenter_DistributionFields::TrackMeterSchemeMeterName, false);
+    return getString(OS_ElectricLoadCenter_DistributionFields::TrackMeterSchemeMeterName, true, true);
   }
 
   std::string ElectricLoadCenterDistribution_Impl::electricalBussType() const {
@@ -208,7 +208,7 @@ namespace detail {
   }
   // Storage Control Track Meter Name, required if operation = TrackMeterDemandStoreExcessOnSite
   boost::optional<std::string> ElectricLoadCenterDistribution_Impl::storageControlTrackMeterName() const {
-    return getString(OS_ElectricLoadCenter_DistributionFields::StorageControlTrackMeterName, true);
+    return getString(OS_ElectricLoadCenter_DistributionFields::StorageControlTrackMeterName, true, true);
   }
 
   // Storage Converter Object Name
@@ -267,7 +267,7 @@ namespace detail {
 
   // Storage Control Utility Demand Target Fraction Schedule Name, will be used only if FacilityDemandLeveling, defaults to 1.0
   Schedule ElectricLoadCenterDistribution_Impl::storageControlUtilityDemandTargetFractionSchedule() const {
-    boost::optional<Schedule> sch = getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ElectricLoadCenter_DistributionFields::StorageChargePowerFractionScheduleName);
+    boost::optional<Schedule> sch = getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ElectricLoadCenter_DistributionFields::StorageControlUtilityDemandTargetFractionScheduleName);
     if (sch) {
       return sch.get();
     } else {
@@ -276,7 +276,7 @@ namespace detail {
   }
 
   bool ElectricLoadCenterDistribution_Impl::isStorageControlUtilityDemandTargetFractionScheduleDefaulted() const {
-    return isEmpty(OS_ElectricLoadCenter_DistributionFields::StorageChargePowerFractionScheduleName);
+    return isEmpty(OS_ElectricLoadCenter_DistributionFields::StorageControlUtilityDemandTargetFractionScheduleName);
   }
 
 
