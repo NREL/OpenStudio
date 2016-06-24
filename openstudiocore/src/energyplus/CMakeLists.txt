@@ -134,6 +134,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateGasEquipment.cpp
   ForwardTranslator/ForwardTranslateGasMixture.cpp
   ForwardTranslator/ForwardTranslateGeneratorPhotovoltaic.cpp
+  ForwardTranslator/ForwardTranslateGeneratorMicroTurbine.cpp
   ForwardTranslator/ForwardTranslateGroundHeatExchangerHorizontalTrench.cpp
   ForwardTranslator/ForwardTranslateGroundHeatExchangerVertical.cpp
   ForwardTranslator/ForwardTranslateHeaderedPumpsConstantSpeed.cpp
@@ -361,6 +362,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateFanConstantVolume.cpp
   ReverseTranslator/ReverseTranslateFenestrationSurfaceDetailed.cpp
   ReverseTranslator/ReverseTranslateGasEquipment.cpp
+  ReverseTranslator/ReverseTranslateGeneratorMicroTurbine.cpp
   ReverseTranslator/ReverseTranslateGroundHeatExchangerVertical.cpp
   ReverseTranslator/ReverseTranslateHeatBalanceAlgorithm.cpp
   ReverseTranslator/ReverseTranslateHotWaterEquipment.cpp

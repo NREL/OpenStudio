@@ -1557,4 +1557,8 @@
     <rule IddField="Numeric Type" Access="LOCKED"/>
     <rule IddField="Unit Type" Access="LOCKED"/>
   </POLICY>
+  <POLICY IddObjectType="OS_Generator_MicroTurbine_HeatRecovery">
+    <rule IddField="Heat Recovery Water Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Heat Recovery Water Outlet Node Name" Access="HIDDEN"/>
+  </POLICY>
 </ROOT>

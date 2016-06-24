@@ -509,6 +509,12 @@ set(${target_name}_src
   Generator.hpp
   Generator_Impl.hpp
   Generator.cpp
+  GeneratorMicroTurbine.hpp
+  GeneratorMicroTurbine_Impl.hpp
+  GeneratorMicroTurbine.cpp
+  GeneratorMicroTurbineHeatRecovery.hpp
+  GeneratorMicroTurbineHeatRecovery_Impl.hpp
+  GeneratorMicroTurbineHeatRecovery.cpp
   GeneratorPhotovoltaic.hpp
   GeneratorPhotovoltaic_Impl.hpp
   GeneratorPhotovoltaic.cpp
@@ -1600,6 +1606,7 @@ set(${target_name}_test_src
   test/GasMixture_GTest.cpp
   test/Gas_GTest.cpp
   test/GeneratorPhotovoltaic_GTest.cpp
+  test/GeneratorMicroTurbine_GTest.cpp
   test/GlareSensor_GTest.cpp
   test/GroundHeatExchangerHorizontalTrench_GTest.cpp
   test/GroundHeatExchangerVertical_GTest.cpp

@@ -259,6 +259,16 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
       }
     }
   }
+  
+  // remove orphan Generator:MicroTurbine
+  for (auto& chp : model.getConcreteModelObjects<GeneratorMicroTurbine>()){
+    if (!chp.electricLoadCenterDistribution()){
+      LOG(Warn, "GeneratorMicroTurbine " << chp.name().get() << " is not referenced by any ElectricLoadCenterDistribution, it will not be translated.");
+      chp.remove();
+      continue;
+    }
+  }
+  
 
   // remove orphan photovoltaics
   for (auto& pv : model.getConcreteModelObjects<GeneratorPhotovoltaic>()){
@@ -1380,6 +1390,13 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
   {
     model::FluidCoolerTwoSpeed fluidCoolerTwoSpeed = modelObject.cast<FluidCoolerTwoSpeed>();
     retVal = translateFluidCoolerTwoSpeed(fluidCoolerTwoSpeed);
+    break;
+  }
+  case openstudio::IddObjectType::OS_Generator_MicroTurbine:
+  {
+    // Will also translate the Generator:MicroTurbine:HeatRecovery if there is one
+    model::GeneratorMicroTurbine temp = modelObject.cast<GeneratorMicroTurbine>();
+    retVal = translateGeneratorMicroTurbine(temp);
     break;
   }
   case openstudio::IddObjectType::OS_Generator_Photovoltaic:
@@ -2883,6 +2900,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_Refrigeration_TranscriticalSystem);
 
   result.push_back(IddObjectType::OS_ElectricLoadCenter_Distribution);
+  result.push_back(IddObjectType::OS_Generator_MicroTurbine);
   result.push_back(IddObjectType::OS_Generator_Photovoltaic);
   result.push_back(IddObjectType::OS_PhotovoltaicPerformance_EquivalentOneDiode);
   result.push_back(IddObjectType::OS_PhotovoltaicPerformance_Simple);

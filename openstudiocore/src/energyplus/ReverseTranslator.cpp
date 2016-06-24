@@ -491,7 +491,12 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
     }
   case openstudio::IddObjectType::FenestrationSurface_Detailed :
     {
-      modelObject = translateFenestrationSurfaceDetailed(workspaceObject );
+      modelObject = translateFenestrationSurfaceDetailed(workspaceObject);
+      break;
+    }
+  case openstudio::IddObjectType::Generator_MicroTurbine :
+    {
+      modelObject = translateGeneratorMicroTurbine(workspaceObject);
       break;
     }
   case openstudio::IddObjectType::GlobalGeometryRules :

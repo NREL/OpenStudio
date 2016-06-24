@@ -157,6 +157,7 @@ class FluidCoolerTwoSpeed;
 class Gas;
 class GasEquipment;
 class GasMixture;
+class GeneratorMicroTurbine;
 class GeneratorPhotovoltaic;
 class GroundHeatExchangerHorizontalTrench;
 class GroundHeatExchangerVertical;
@@ -665,6 +666,8 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateGasMixture( model::GasMixture & modelObject );
 
+  boost::optional<IdfObject> translateGeneratorMicroTurbine( model::GeneratorMicroTurbine & modelObject );
+  
   boost::optional<IdfObject> translateGeneratorPhotovoltaic( model::GeneratorPhotovoltaic & modelObject );
 
   boost::optional<IdfObject> translateGroundHeatExchangerHorizontalTrench( model::GroundHeatExchangerHorizontalTrench & modelObject );

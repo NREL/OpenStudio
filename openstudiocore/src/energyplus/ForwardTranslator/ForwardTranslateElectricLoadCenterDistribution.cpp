@@ -111,7 +111,7 @@ boost::optional<IdfObject> ForwardTranslator::translateElectricLoadCenterDistrib
         }
       }
 
-      d = generator.ratedThermalToElectricalPowerRatio();
+      d = generator.ratedThermaltoElectricalPowerRatio();
       if (d){
         generatorGroup.setDouble(ElectricLoadCenter_GeneratorsExtensibleFields::GeneratorRatedThermaltoElectricalPowerRatio, *d);
       }
