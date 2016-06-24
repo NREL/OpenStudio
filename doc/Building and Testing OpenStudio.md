@@ -417,14 +417,16 @@ On first use, install the required gems using a command prompt, with Ruby in the
 gem install bundler
 bundler install
 ```
+ 
+With Git, make feature branch of OpenStudio-server develop, and name it "OS.x.y.z-sha"
 
-With Git, pull OpenStudio-server master
-
-- Update version in `server\lib\openstudio_server\version.rb`
-- Update version in `CHANGELOG.md`
+- Update version in `server\lib\openstudio_server\version.rb`: index by 1 semantic version,
+- Update version_ext to "-OS.x.y.z.sha"
+- Update version in `CHANGELOG.md` to be version + version_ext above, update OpenStudio to include its SHA
 - Update version and version_revision with the openstudio SHA in `vagrant\chef\roles\openstudio.rb`
 
-With Git, commit above files (Commit Message = `Bump version`)
+With Git, commit above files to new branch (Commit Message = `Bump OpenStudio version to OS.x.y.z.sha`)
+With Git, submit pull request
 
 In a command window:
 
@@ -446,7 +448,7 @@ In the top level of your docker-openstudio folder, modify `Dockerfile`
 - Update OPENSTUDIO_SHA with current SHA
 - (optional) test that the new Dockerfile works by running `docker build -t test-openstudio .` after starting the docker-machine to make sure that it completes successfully
 
-With Git, commit Dockerfile (Commit Message = Bump version)
+With Git, commit Dockerfile (Commit Message = Bump OpenStudio version to OS-x.y.z.sha)
  
 Verify master branch built successfully at https://hub.docker.com/r/nrel/openstudio/builds/
 
