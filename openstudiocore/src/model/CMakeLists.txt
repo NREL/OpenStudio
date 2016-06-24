@@ -431,6 +431,9 @@ set(${target_name}_src
   Duct.hpp
   Duct_Impl.hpp
   Duct.cpp
+  ElectricalStorage.hpp
+  ElectricalStorage_Impl.hpp
+  ElectricalStorage.cpp
   ElectricEquipment.hpp
   ElectricEquipment_Impl.hpp
   ElectricEquipment.cpp
@@ -446,6 +449,9 @@ set(${target_name}_src
   ElectricLoadCenterInverterSimple.hpp
   ElectricLoadCenterInverterSimple_Impl.hpp
   ElectricLoadCenterInverterSimple.cpp
+  ElectricLoadCenterStorageSimple.hpp
+  ElectricLoadCenterStorageSimple_Impl.hpp
+  ElectricLoadCenterStorageSimple.cpp
   EvaporativeCoolerDirectResearchSpecial.hpp
   EvaporativeCoolerDirectResearchSpecial_Impl.hpp
   EvaporativeCoolerDirectResearchSpecial.cpp
@@ -1590,6 +1596,7 @@ set(${target_name}_test_src
   test/ElectricLoadCenterDistribution_GTest.cpp
   test/ElectricLoadCenterInverterSimple_GTest.cpp
   test/ElectricLoadCenterInverterLookUpTable_GTest.cpp
+  test/ElectricLoadCenterStorageSimple_GTest.cpp
   test/EvaporativeCoolerDirectResearchSpecial_GTest.cpp
   test/EvaporativeCoolerIndirectResearchSpecial_GTest.cpp
   test/EvaporativeFluidCoolerSingleSpeed_GTest.cpp

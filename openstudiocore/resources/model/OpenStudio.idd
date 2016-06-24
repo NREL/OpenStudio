@@ -25294,6 +25294,56 @@ OS:ElectricLoadCenter:Inverter:LookUpTable,
         \minimum 0
         \maximum 1.0
 
+OS:ElectricLoadCenter:Storage:Simple,
+       \memo Used to model storage of electricity in an electric load center.  This is a simple
+       \memo model that does not attempt to represent any of the characteristics of a real
+       \memo storage device such as a battery.  The type of power, AC or DC, depends on
+       \memo the configuration chosen as the Electrical Buss Type in the
+       \memo ElectricLoadCenter:Distribution object.
+  A1 , \field Handle
+       \type handle
+       \required-field 
+  A2,  \field Name
+       \reference ElecStorageList
+  A3,  \field Availability Schedule Name
+       \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+       \note If this field is blank, the system is always available.
+       \type object-list
+       \object-list ScheduleNames
+  A4,  \field Zone Name
+       \note Enter name of zone to receive storage losses as heat
+       \note if blank then storage is assumed to be outdoors
+       \type object-list
+       \object-list ThermalZoneNames
+  N1 , \field Radiative Fraction for Zone Heat Gains
+       \maximum 1.0
+       \minimum 0.0
+       \default 0.0
+       \note This field contains the fraction of storage losses that enter the zone as long-wave thermal radiation.
+       \note This should be a factor between 0.0 and 1.0. The balance of the losses are convective.
+       \note This field is not used if the previous field for 'Zone Name' is left blank.
+  N2,  \field Nominal Energetic Efficiency for Charging
+       \maximum 1.0
+       \minimum 0.0
+       \default 1.0
+  N3,  \field Nominal Discharging Energetic Efficiency
+       \maximum 1.0
+       \minimum 0.0
+       \default 1.0
+  N4,  \field Maximum Storage Capacity
+       \required-field
+       \units J
+  N5,  \field Maximum Power for Discharging
+       \required-field
+       \units W
+       \minimum 0.0
+  N6,  \field Maximum Power for Charging
+       \required-field
+       \units W
+       \minimum 0.0
+  N7;  \field Initial State of Charge
+       \units J
+
 OS:ElectricLoadCenter:Distribution,
        \memo a list of meters that can be reported are available after a run on
        \memo the meter dictionary file (.mdd) if the Output:VariableDictionary has been requested.
@@ -25308,10 +25358,16 @@ OS:ElectricLoadCenter:Distribution,
        \object-list ModelObjectLists
   A4 , \field Generator Operation Scheme Type
        \note required if Generator List is entered.
-       \memo Keys DemandLimit, TrackElectrical, TrackSchedule, TrackMeter, FollowThermal and FollowThermalLimitElectrical disabled for now
+       \note Determines how generators are to be controlled
        \type choice
-       \default Baseload
        \key Baseload
+       \key DemandLimit
+       \key TrackElectrical
+       \key TrackSchedule
+       \key TrackMeter
+       \key FollowThermal
+       \key FollowThermalLimitElectrical
+       \default Baseload
   N1 , \field Demand Limit Scheme Purchased Electric Demand Limit
        \type real
        \units W
@@ -25320,15 +25376,19 @@ OS:ElectricLoadCenter:Distribution,
        \type object-list
        \object-list ScheduleNames
   A6 , \field Track Meter Scheme Meter Name
+       \type alpha
        \note required when Generator Operation Scheme Type=TrackMeter
-       \type external-list
-       \external-list autoRDDmeter
+       \memo type external list
+       \memo external list autoRDDmeter
   A7 , \field Electrical Buss Type
        \type choice
-       \memo Keys AlternatingCurrent, AlternatingCurrentWithStorage, DirectCurrentWithInverterDCStorage, and DirectCurrentWithInverterACStorage disabled for now
+       \key AlternatingCurrent
+       \key AlternatingCurrentWithStorage
        \key DirectCurrentWithInverter
+       \key DirectCurrentWithInverterDCStorage
+       \key DirectCurrentWithInverterACStorage
        \default DirectCurrentWithInverter
-  A8 , \field Inverter Object Name
+  A8 , \field Inverter Name
        \note required when Electrical Buss Type=DirectCurrentWithInverter, DirectCurrentWithInverterDCStorage,
        \note or DirectCurrentWithInverterACStorage
        \type object-list
@@ -25338,10 +25398,141 @@ OS:ElectricLoadCenter:Distribution,
        \note or DirectCurrentWithInverterACStorage
        \type object-list
        \object-list ElecStorageList
-  A10; \field Transformer Object Name
+  A10, \field Transformer Object Name
        \note required when power needs to be output from on-site generation to the grid via transformer
        \type object-list
-       \object-list TransformerNames       
+       \object-list TransformerNames
+  A11, \field Storage Operation Scheme
+       \note Select method to govern how storage charge and discharge is controlled
+       \type choice
+       \key TrackFacilityElectricDemandStoreExcessOnSite
+       \note TrackFacilityElectricDemandStoreExcessOnSite indicates that storage control will follow the facility power demand 
+       \note while accounting for any on-site generation.  Only excess on site generation  gets stored (legacy behavior).
+       \default TrackFacilityElectricDemandStoreExcessOnSite
+       \key TrackMeterDemandStoreExcessOnSite
+       \note TrackMeterDemandStoreExcessOnSite indicates that storage discharge control will follow an electric meter named in the field called Storage Control Track Meter Name.  This scheme is similiar 
+       \note to TrackFacilityElectricDemandStoreExcessOnSite except that instead of the main facility electric meter, the control is based off of a user-selected meter.
+       \key TrackChargeDischargeSchedules
+       \note TrackChargeDischargeSchedules indicates that control will follow the charging and discharging power and schedules defined in the fields called Maximum Storage Charge Grid Supply Power,
+       \note Storage Charge Grid Supply Power Fraction Schedule Name, Design Storage Discharge Grid Export Power, and Storage Discharge Grid Export Fraction Schedule Name.
+       \key FacilityDemandLeveling
+       \note FacilityDemandLeveling indicates that storage control will attempt to control the facility's power demand drawn from the utility service to a prescribed level.
+       \note The target utility demand is entered in the fields called Storage Control Utility Demand Limit and Storage Control Utility Demand Limit Fraction Schedule Name
+       \note This scheme first accounts for any on-site generation and during times of high use will discharge storage to reduce facility grid demand to meet the target level
+       \note and during times of low use will charge storage from the grid to increase facility grid demand to meet the target level. 
+  A12, \field Storage Control Track Meter Name
+       \note required when Storage Operation Scheme is set to TrackMeterDemandStoreExcessOnSite.
+       \type alpha
+       \memo type external-list
+       \memo external-list autoRDDmeter
+  A13, \field Storage Converter Object Name
+       \note Name of an ElectricLoadCenter:Storage:Converter used to convert AC to DC when charging DC storage from grid supply.
+       \note A converter is expected when using Storage Operation Schemes FacilityDemandLeveling or TrackChargeDischargeSchedules
+       \note A single bidirectional device will reference both an inverter object (DC to AC) and a converter object (AC to DC).
+       \type object-list
+       \object-list ConverterList
+  N2 , \field Maximum Storage State of Charge Fraction
+       \note Fraction of storage capacity used as upper limit for controlling charging, for all storage operation schemes.
+       \type real
+       \default 1.0
+  N3 , \field Minimum Storage State of Charge Fraction
+       \note Fraction of storage capacity used as lower limit for controlling discharging, for all storage operation schemes.
+       \type real
+       \default 0.0
+  N4 , \field Design Storage Control Charge Power
+       \note Maximum rate that electric power can be charged into storage.
+       \note Storage charging adjusted downward for conversion losses.
+       \note Rate is modified by fractional values in the schedule named in the next field. 
+       \note Required field when using Storage Operation Schemes FacilityDemandLeveling or TrackChargeDischargeSchedules.
+       \type real
+       \units W
+  A14, \field Storage Charge Power Fraction Schedule Name
+       \note Controls timing and magnitude of charging storage.
+       \note Required field if Storage Operation Scheme is set to TrackChargeDischargeSchedules.
+       \note Schedule values should be fractions from 0.0 to 1.0, inclusive.
+       \type object-list
+       \object-list ScheduleNames
+  N5 , \field Design Storage Control Discharge Power
+       \note Maximum rate that electric power can be discharged from storage.
+       \note Rate is modified by fractional values in the schedule named in the next field. 
+       \note Required field when using Storage Operation Schemes FacilityDemandLeveling or TrackChargeDischargeSchedules.
+       \type real
+       \units W
+  A15, \field Storage Discharge Power Fraction Schedule Name
+       \note Controls timing and magnitude of discharging storage
+       \note Required field if Storage Operation Scheme is set to TrackChargeDischargeSchedules.
+       \note Schedule values should be fractions from 0.0 to 1.0, inclusive.
+       \type object-list
+       \object-list ScheduleNames
+  N6,  \field Storage Control Utility Demand Target
+       \note Target utility service demand power for discharge control.  Storage draws are adjusted upwards for conversion losses. 
+       \note Required field for FacilityDemandLeveling storage operation scheme
+       \type real
+       \units W
+  A16; \field Storage Control Utility Demand Target Fraction Schedule Name
+       \note Modifies the target utility service demand power over time.
+       \note Schedule values should be fractions from -1.0 to 1.0, inclusive.
+       \note if omitted a schedule value of 1.0 is used. Negative values indicate export to grid
+       \note Schedule is used if Storage Operation Scheme is set to FacilityDemandLeveling.
+       \type object-list
+       \object-list ScheduleNames
+
+OS:ElectricLoadCenter:Storage:Converter,
+        \memo This model is for converting AC to DC for grid-supplied charging of DC storage
+        \min-fields 4
+   A1 , \field Handle
+        \type handle
+        \required-field
+   A2 , \field Name
+        \reference ConverterList
+   A3 , \field Availability Schedule Name
+        \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+        \note If this field is blank, the converter is always available.
+        \type object-list
+        \object-list ScheduleNames
+   A4 , \field Power Conversion Efficiency Method
+        \type choice
+        \key SimpleFixed
+        \default SimpleFixed
+        \note SimpleFixed indicates power conversion losses are based on Simple Fixed Efficiency
+        \key FunctionOfPower
+        \note FunctionOfPower indicates power conversion losses are a function of normalized power using a curve or table.
+   N1 , \field Simple Fixed Efficiency
+        \note Constant efficiency for conversion of AC to DC at all power levels.
+        \note Field is only used when Power Conversion Efficiency Method is set to SimpleFixed.
+        \type real
+        \minimum> 0.0
+        \maximum 1.0
+        \default 0.95
+   N2,  \field Design Maximum Continuous Input Power
+        \note Required field when Power Conversion Efficiency Method is set to FunctionOfPower.
+        \type real
+        \units W
+   A5 , \field Efficiency Function of Power Curve Name
+        \note Curve or table with a single independent variable that describes efficiency as a function of normalized power.
+        \note The "x" input for curve or table is the ratio of current input power divided by design power in the previous field
+        \note Required field when Power Conversion Efficiency Method is set to FunctionOfPower.
+        \type object-list
+        \object-list UniVariateCurves
+        \object-list UniVariateTables
+   N3 , \field Ancillary Power Consumed In Standby
+        \note Optional standby power consumed when converter is available but no power is being conditioned. 
+        \type real
+        \units W
+        \default 0.0
+   A6 , \field Zone Name
+        \note enter name of zone to receive converter losses as heat
+        \note if blank then converter is assumed to be outdoors
+        \type object-list
+        \object-list ZoneNames
+   N4 ; \field Radiative Fraction
+        \note fraction of zone heat gains treated as thermal radiation
+        \note Only used if a Zone Name is entered.
+        \minimum 0.0
+        \maximum 1.0
+        \default 0.0
+        \memo This field was defaulted to 0.0 here, because the E+ doc says that if omitted,
+        \memo all zone heat gains will be convective
        
 \group OpenStudio Economics
 
