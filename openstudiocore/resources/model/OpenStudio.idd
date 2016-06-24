@@ -25192,7 +25192,7 @@ OS:ElectricLoadCenter:Distribution,
        \type object-list
        \object-list ScheduleNames
 
-ElectricLoadCenter:Storage:Converter,
+OS:ElectricLoadCenter:Storage:Converter,
         \memo This model is for converting AC to DC for grid-supplied charging of DC storage
         \min-fields 4
    A1 , \field Handle
