@@ -76,7 +76,7 @@ inline int inf(const EmbeddedFile & file, std::vector<uint8_t> & result)
     } 
 
     strm.next_in = const_cast<unsigned char *>(begin);
-    strm.avail_in = chunk_end - begin;
+    strm.avail_in = static_cast<uInt>(chunk_end - begin);
   
     /* run inflate() on input until output buffer not full */
     do {
