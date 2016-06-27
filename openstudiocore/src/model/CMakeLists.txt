@@ -631,9 +631,6 @@ set(${target_name}_src
   Material.hpp
   Material_Impl.hpp
   Material.cpp
-  Meter.hpp
-  Meter_Impl.hpp
-  Meter.cpp
   MeterCustom.hpp
   MeterCustom_Impl.hpp
   MeterCustom.cpp
@@ -661,6 +658,9 @@ set(${target_name}_src
   OutputControlReportingTolerances.hpp
   OutputControlReportingTolerances_Impl.hpp
   OutputControlReportingTolerances.cpp
+  OutputMeter.hpp
+  OutputMeter_Impl.hpp
+  OutputMeter.cpp
   OutputVariable.hpp
   OutputVariable_Impl.hpp
   OutputVariable.cpp
@@ -1376,11 +1376,11 @@ set(${target_name}_moc
   LuminaireDefinition_Impl.hpp
   MasslessOpaqueMaterial_Impl.hpp
   Material_Impl.hpp
-  Meter_Impl.hpp
   OpaqueMaterial_Impl.hpp
   OtherEquipment_Impl.hpp
   OtherEquipmentDefinition_Impl.hpp
   OutputControlReportingTolerances_Impl.hpp
+  OutputMeter_Impl.hpp
   OutputVariable_Impl.hpp
   OutsideSurfaceConvectionAlgorithm_Impl.hpp
   ParentObject_Impl.hpp
@@ -1624,7 +1624,6 @@ set(${target_name}_test_src
   test/Luminaire_GTest.cpp
   test/MasslessOpaqueMaterial_GTest.cpp
   test/Material_GTest.cpp
-  test/Meter_GTest.cpp
   test/MeterCustom_GTest.cpp
   test/MeterCustomDecrement_GTest.cpp
   test/ModelFixture.cpp
@@ -1637,6 +1636,7 @@ set(${target_name}_test_src
   test/OpaqueMaterial_GTest.cpp
   test/OtherEquipment_GTest.cpp
   test/OutputControlReportingTolerances_GTest.cpp
+  test/OutputMeter_GTest.cpp
   test/OutputVariable_GTest.cpp
   test/ParentObject_GTest.cpp
   test/People_GTest.cpp

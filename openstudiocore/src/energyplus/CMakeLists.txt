@@ -157,13 +157,13 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateLights.cpp
   ForwardTranslator/ForwardTranslateLuminaire.cpp
   ForwardTranslator/ForwardTranslateMasslessOpaqueMaterial.cpp
-  ForwardTranslator/ForwardTranslateMeter.cpp
   ForwardTranslator/ForwardTranslateMeterCustom.cpp
   ForwardTranslator/ForwardTranslateMeterCustomDecrement.cpp
   ForwardTranslator/ForwardTranslateNode.cpp
   ForwardTranslator/ForwardTranslateOtherEquipment.cpp
   ForwardTranslator/ForwardTranslateOutsideSurfaceConvectionAlgorithm.cpp
   ForwardTranslator/ForwardTranslateOutputControlReportingTolerances.cpp
+  ForwardTranslator/ForwardTranslateOutputMeter.cpp
   ForwardTranslator/ForwardTranslateOutputVariable.cpp
   ForwardTranslator/ForwardTranslatePeople.cpp
   ForwardTranslator/ForwardTranslatePhotovoltaicPerformanceEquivalentOneDiode.cpp

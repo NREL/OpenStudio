@@ -25712,8 +25712,8 @@ OS:OutputControl:ReportingTolerances,
        \minimum 0
        \maximum 10
 
-OS:Meter,
-       \memo each OS:Meter command picks meters to be put onto the standard output file (.eso) and
+OS:Output:Meter,
+       \memo each OS:Output:Meter command picks meters to be put onto the standard output file (.eso) and
        \memo meter file (.mtr). Not all meters are reported in every simulation. A list of
        \memo a list of meters that can be reported are available after a run on
        \memo the meter dictionary file (.mdd).

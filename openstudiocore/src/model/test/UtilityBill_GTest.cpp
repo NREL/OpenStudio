@@ -24,8 +24,8 @@
 #include "../UtilityBill.hpp"
 #include "../YearDescription.hpp"
 #include "../YearDescription_Impl.hpp"
-#include "../Meter.hpp"
-#include "../Meter_Impl.hpp"
+#include "../OutputMeter.hpp"
+#include "../OutputMeter_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -104,9 +104,9 @@ TEST_F(ModelFixture, UtilityBill_Electricity) {
   EXPECT_EQ(8, bp1.numberOfDays());
   EXPECT_EQ(Date(1,8,1999), bp1.endDate());
 
-  EXPECT_EQ(0u, model.getModelObjects<Meter>().size());
-  Meter meter = utilityBill.consumptionMeter();
-  EXPECT_EQ(1u, model.getModelObjects<Meter>().size());
+  EXPECT_EQ(0u, model.getModelObjects<OutputMeter>().size());
+  OutputMeter meter = utilityBill.consumptionMeter();
+  EXPECT_EQ(1u, model.getModelObjects<OutputMeter>().size());
   EXPECT_EQ("Daily", meter.reportingFrequency());
   ASSERT_TRUE(meter.fuelType());
   EXPECT_EQ(FuelType::Electricity, meter.fuelType()->value());
@@ -116,33 +116,33 @@ TEST_F(ModelFixture, UtilityBill_Electricity) {
   EXPECT_EQ(InstallLocationType::Facility, meter.installLocationType()->value());
   EXPECT_FALSE(meter.specificInstallLocation());
   
-  Meter meter2 = utilityBill.consumptionMeter();
-  EXPECT_EQ(1u, model.getModelObjects<Meter>().size());
+  OutputMeter meter2 = utilityBill.consumptionMeter();
+  EXPECT_EQ(1u, model.getModelObjects<OutputMeter>().size());
 
-  Meter meter3 = utilityBill.consumptionMeter();
-  EXPECT_EQ(1u, model.getModelObjects<Meter>().size());
+  OutputMeter meter3 = utilityBill.consumptionMeter();
+  EXPECT_EQ(1u, model.getModelObjects<OutputMeter>().size());
 
-  Meter meter4 = utilityBill.consumptionMeter();
-  EXPECT_EQ(1u, model.getModelObjects<Meter>().size());
+  OutputMeter meter4 = utilityBill.consumptionMeter();
+  EXPECT_EQ(1u, model.getModelObjects<OutputMeter>().size());
 
-  boost::optional<Meter> meter5 = utilityBill.peakDemandMeter();
+  boost::optional<OutputMeter> meter5 = utilityBill.peakDemandMeter();
   ASSERT_TRUE(meter5);
-  EXPECT_EQ(2u, model.getModelObjects<Meter>().size());
+  EXPECT_EQ(2u, model.getModelObjects<OutputMeter>().size());
 
-  boost::optional<Meter> meter6 = utilityBill.peakDemandMeter();
+  boost::optional<OutputMeter> meter6 = utilityBill.peakDemandMeter();
   ASSERT_TRUE(meter5);
-  EXPECT_EQ(2u, model.getModelObjects<Meter>().size());
+  EXPECT_EQ(2u, model.getModelObjects<OutputMeter>().size());
 
-  boost::optional<Meter> meter7 = utilityBill.peakDemandMeter();
+  boost::optional<OutputMeter> meter7 = utilityBill.peakDemandMeter();
   ASSERT_TRUE(meter6);
-  EXPECT_EQ(2u, model.getModelObjects<Meter>().size());
+  EXPECT_EQ(2u, model.getModelObjects<OutputMeter>().size());
 
-  Meter meter8 = utilityBill.consumptionMeter();
-  EXPECT_EQ(2u, model.getModelObjects<Meter>().size());
+  OutputMeter meter8 = utilityBill.consumptionMeter();
+  EXPECT_EQ(2u, model.getModelObjects<OutputMeter>().size());
 
-  boost::optional<Meter> meter9 = utilityBill.peakDemandMeter();
+  boost::optional<OutputMeter> meter9 = utilityBill.peakDemandMeter();
   ASSERT_TRUE(meter9);
-  EXPECT_EQ(2u, model.getModelObjects<Meter>().size());
+  EXPECT_EQ(2u, model.getModelObjects<OutputMeter>().size());
 
 }
 
@@ -246,7 +246,7 @@ TEST_F(ModelFixture, UtilityBill_Coverage) {
     EXPECT_FALSE(utilityBill.consumptionUnitValues().empty());
     for (const std::string& consumptionUnit : utilityBill.consumptionUnitValues()){
 
-      Meter meter = utilityBill.consumptionMeter();
+      OutputMeter meter = utilityBill.consumptionMeter();
 
       EXPECT_TRUE(utilityBill.setConsumptionUnit(consumptionUnit)) << fuelType.valueName() << ", " << consumptionUnit;
       EXPECT_EQ(consumptionUnit, utilityBill.consumptionUnit());
@@ -255,7 +255,7 @@ TEST_F(ModelFixture, UtilityBill_Coverage) {
 
       for (const std::string& peakDemandUnit : utilityBill.peakDemandUnitValues()){
 
-        boost::optional<Meter> peakDemandMeter = utilityBill.peakDemandMeter();
+        boost::optional<OutputMeter> peakDemandMeter = utilityBill.peakDemandMeter();
 
         EXPECT_TRUE(utilityBill.setPeakDemandUnit(peakDemandUnit)) << fuelType.valueName() << ", " << peakDemandUnit;
         ASSERT_TRUE(utilityBill.peakDemandUnit());

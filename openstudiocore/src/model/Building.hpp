@@ -31,7 +31,7 @@ class Transformation;
 namespace model {
 
 class Facility;
-class Meter;
+class OutputMeter;
 class ShadingSurfaceGroup;
 class Surface;
 class Space;
@@ -156,8 +156,8 @@ class MODEL_API Building : public ParentObject {
   /// Resets the default schedule set for this space.
   void resetDefaultScheduleSet();
 
-  /// Returns all Meter objects at the Building level. 
-  std::vector<Meter> meters() const;
+  /// Returns all OutputMeter objects at the Building level. 
+  std::vector<OutputMeter> meters() const;
 
   /// Returns the parent Facility object if it exists.
   boost::optional<Facility> facility() const;

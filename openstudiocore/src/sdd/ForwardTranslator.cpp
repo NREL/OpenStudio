@@ -83,7 +83,7 @@
 #include "../model/LifeCycleCostParameters.hpp"
 #include "../model/LightingDesignDay.hpp"
 #include "../model/LightingSimulationControl.hpp"
-#include "../model/Meter.hpp"
+#include "../model/OutputMeter.hpp"
 #include "../model/ModelObjectList.hpp"
 #include "../model/OutputControlReportingTolerances.hpp"
 #include "../model/OutputVariable.hpp"
@@ -507,10 +507,10 @@ namespace sdd {
     m_ignoreTypes.push_back(model::LifeCycleCostParameters::iddObjectType());
     m_ignoreTypes.push_back(model::LightingDesignDay::iddObjectType());
     m_ignoreTypes.push_back(model::LightingSimulationControl::iddObjectType());
-    m_ignoreTypes.push_back(model::Meter::iddObjectType());
     m_ignoreTypes.push_back(model::ModelObjectList::iddObjectType());
     m_ignoreTypes.push_back(model::Node::iddObjectType());
     m_ignoreTypes.push_back(model::OutputControlReportingTolerances::iddObjectType());
+    m_ignoreTypes.push_back(model::OutputMeter::iddObjectType());
     m_ignoreTypes.push_back(model::OutputVariable::iddObjectType());
     m_ignoreTypes.push_back(model::OutsideSurfaceConvectionAlgorithm::iddObjectType());
     m_ignoreTypes.push_back(model::PortList::iddObjectType());

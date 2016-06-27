@@ -25,8 +25,8 @@
 #include "../ComponentCostAdjustments_Impl.hpp"
 #include "../Facility.hpp"
 #include "../Facility_Impl.hpp"
-#include "../Meter.hpp"
-#include "../Meter_Impl.hpp"
+#include "../OutputMeter.hpp"
+#include "../OutputMeter_Impl.hpp"
 #include "../RunPeriod.hpp"
 #include "../RunPeriod_Impl.hpp"
 #include "../LifeCycleCostParameters.hpp"
@@ -516,10 +516,10 @@ TEST_F(ModelFixture, Facility_EconomicsTest_EmptyModel) {
 
   EXPECT_EQ(0u, facility.meters().size());
 
-  boost::optional<Meter> electricMeter = facility.getMeterByFuelType(FuelType::Electricity, "Hourly");
+  boost::optional<OutputMeter> electricMeter = facility.getMeterByFuelType(FuelType::Electricity, "Hourly");
   EXPECT_FALSE(electricMeter);
 
-  Meter meter(model);
+  OutputMeter meter(model);
   meter.setFuelType(FuelType::Electricity);
   meter.setInstallLocationType(InstallLocationType::Facility);
   meter.setReportingFrequency("Hourly");

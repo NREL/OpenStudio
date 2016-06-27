@@ -181,13 +181,13 @@ class LifeCycleCostParameters;
 class Lights;
 class Luminaire;
 class MasslessOpaqueMaterial;
-class Meter;
 class MeterCustom;
 class MeterCustomDecrement;
 class Node;
 class OtherEquipment;
 class OutsideSurfaceConvectionAlgorithm;
 class OutputControlReportingTolerances;
+class OutputMeter;
 class OutputVariable;
 class People;
 class PhotovoltaicPerformanceEquivalentOneDiode;
@@ -709,8 +709,6 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateLuminaire( model::Luminaire & modelObject );
 
   boost::optional<IdfObject> translateMasslessOpaqueMaterial( model::MasslessOpaqueMaterial & modelObject );
-
-  boost::optional<IdfObject> translateMeter( model::Meter & modelObject );
   
   boost::optional<IdfObject> translateMeterCustom( model::MeterCustom & modelObject );
   
@@ -723,6 +721,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateOutsideSurfaceConvectionAlgorithm( model::OutsideSurfaceConvectionAlgorithm & modelObject );
 
   boost::optional<IdfObject> translateOutputControlReportingTolerances( model::OutputControlReportingTolerances & modelObject );
+
+  boost::optional<IdfObject> translateOutputMeter( model::OutputMeter & modelObject );
 
   boost::optional<IdfObject> translateOutputVariable( model::OutputVariable & modelObject );
 

@@ -359,8 +359,8 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
     std::vector<UtilityBill> utilityBills = model.getConcreteModelObjects<UtilityBill>();
     for (UtilityBill utilityBill : utilityBills){
       // these meters and variables will be translated later
-      Meter consumptionMeter = utilityBill.consumptionMeter();
-      boost::optional<Meter> peakDemandMeter = utilityBill.peakDemandMeter();
+      OutputMeter consumptionMeter = utilityBill.consumptionMeter();
+      boost::optional<OutputMeter> peakDemandMeter = utilityBill.peakDemandMeter();
     }
   }
 
@@ -1634,12 +1634,6 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateRoofVegetation(material);
       break;
     }
-  case openstudio::IddObjectType::OS_Meter :
-    {
-      model::Meter meter = modelObject.cast<Meter>();
-      retVal = translateMeter(meter);
-      break;
-    }
   case openstudio::IddObjectType::OS_Meter_Custom :
     {
       model::MeterCustom meterCustom = modelObject.cast<MeterCustom>();
@@ -1768,6 +1762,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     {
       model::OutputControlReportingTolerances outputControl = modelObject.cast<OutputControlReportingTolerances>();
       retVal = translateOutputControlReportingTolerances(outputControl);
+      break;
+    }
+  case openstudio::IddObjectType::OS_Output_Meter :
+    {
+      model::OutputMeter meter = modelObject.cast<OutputMeter>();
+      retVal = translateOutputMeter(meter);
       break;
     }
   case openstudio::IddObjectType::OS_Output_Variable :
@@ -2863,7 +2863,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   // put these down here so they have a chance to be translated with their "parent"
   result.push_back(IddObjectType::OS_LifeCycleCost);
 
-  result.push_back(IddObjectType::OS_Meter);
+  result.push_back(IddObjectType::OS_Output_Meter);
   result.push_back(IddObjectType::OS_Meter_Custom);
   result.push_back(IddObjectType::OS_Meter_CustomDecrement);
   result.push_back(IddObjectType::OS_Output_Variable);
