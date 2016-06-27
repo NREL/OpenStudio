@@ -12,6 +12,20 @@ Configured build environments: https://github.com/NREL/OpenStudio/wiki/Configuri
 - SketchUp
 - MarkdownPad 2
 
+
+Release Notes
+=============
+If this is a major release, release notes must be written.
+
+- Contact each OpenStudio developer and get from them a list of features and bug fixes which they feel should be highlighted.
+- In the folder doc\ReleaseNotes copy the most recent release notes, and update the name to reflect the correct version, and date.
+- Incorporate the developers notes previously obtained.
+- Have the release notes reviewed for accuracy.
+- Generate a PDF from the word doc.
+- With Git, commit above files (Commit Message = `Updating release notes X.Y.Z`) to the develop branch
+- Generate a markdown document from the word doc.
+
+
 Initial Steps
 =============
 If internal to NREL, connect to developer VPN (avoids certificate warnings, increases speed of uploads).
@@ -322,18 +336,6 @@ In S3:
 - Test at https://openstudio-sdk-documentation.s3.amazonaws.com/index.html
 
 
-Release Notes
-=============
-If this is a major release, release notes must be written.
-
-- Contact each OpenStudio developer and get from them a list of features and bug fixes which they feel should be highlighted.
-- In the folder doc\ReleaseNotes copy the most recent release notes, and update the name to reflect the correct version, and date.
-- Incorporate the developers notes previously obtained.
-- Have the release notes reviewed for accuracy.
-- Generate a PDF from the word doc.
-- Generate a markdown document from the word doc.
-
-
 OpenStudio News Update
 ======================
 
@@ -417,10 +419,10 @@ On first use, install the required gems using a command prompt, with Ruby in the
 gem install bundler
 bundler install
 ```
- 
-With Git, make feature branch of OpenStudio-server develop, and name it "OS.x.y.z-sha"
 
-- Update version in `server\lib\openstudio_server\version.rb`: index by 1 semantic version,
+With Git, make feature branch of OpenStudio-server develop, and name it "OS.x.y.z.sha"
+
+- Update version in `server\lib\openstudio_server\version.rb`: index the minor version for an OpenStudio quarterly release, index the dot version for an OpenStudio iteration release.
 - Update version_ext to "-OS.x.y.z.sha"
 - Update version in `CHANGELOG.md` to be version + version_ext above, update OpenStudio to include its SHA
 - Update version and version_revision with the openstudio SHA in `vagrant\chef\roles\openstudio.rb`
