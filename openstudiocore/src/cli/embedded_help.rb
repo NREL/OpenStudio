@@ -20,27 +20,10 @@ module Kernel
   $LOAD_PATH << ':/openstudio-workflow-1.0.0.alpha.0/lib'
   $LOADED = []
 
-  $INCLUDE_STACK = []
-
-  if defined?(gem_original_require) then
-    # Ruby ships with a custom_require, override its require
-    remove_method :require
-  else
-    ##
-    alias gem_original_require require
-    private :gem_original_require
-  end
+  alias :original_require_relative :require_relative
+  alias :original_require :require
 
   def require path
-    #puts "requiring path: #{path}"
-    
-    #call_stack = caller.join("\n")
-    #puts "call_stack: #{call_stack}"
-    
-    #if path == 'openstudio' 
-    #  return true
-    #end
-
     rb_path = path
 
     jsonparser = 'json/ext/parser' 
@@ -90,20 +73,18 @@ module Kernel
       end
     end
 
-    return gem_original_require path
+    return original_require path
   end
 
   def require_embedded_absolute path
     $LOADED << path
-    $INCLUDE_STACK.push path
     result = eval(EmbeddedScripting::getFileAsString(path),BINDING,path)
-    $INCLUDE_STACK.pop
     return result
   end
 
   def require_relative path
-    relative_path = "#{File.dirname($INCLUDE_STACK.last)}/#{path}"
-    require(relative_path)
+    absolute_path = File.dirname(caller_locations(1,1)[0].path) + '/' + path
+    return require absolute_path
   end
 
 end
