@@ -1,7 +1,11 @@
+## OpenStudio v1.11.6
+###### 2016-06-24 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.11.5...v1.11.6 )
+
+- ![Fixed:][fixed] [#2279]( https://github.com/NREL/OpenStudio/issues/2279 ), 1.11.5 - Surface class shadingSurfaceGroup method doesn't work
+
 ## OpenStudio v1.11.5
 ###### 2016-06-13 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.11.4...v1.11.5 )
 
-Closed Issues: 16 (#247, #981, #2099, #2172, #2177, #2184, #2185, #2204, #2213, #2221, #2237, #2240, #2249, #2265, #2268, #2269)
 - ![Improved:][improved] [#2172]( https://github.com/NREL/OpenStudio/issues/2172 ), Translate all coils supported by the IDD in AirLoopHVACUnitarySystem
 - ![Improved:][improved] [#2213]( https://github.com/NREL/OpenStudio/issues/2213 ), Enable heat recovery for ChillerElectricEIR
 - ![Fixed:][fixed] [#247]( https://github.com/NREL/OpenStudio/issues/247 ), Opening OSM file in SketchUp Plugin changes Daylight Savings values (Bugzilla #1015)
