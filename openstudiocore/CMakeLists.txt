@@ -602,6 +602,10 @@ message("QtCore_TYPE = ${QtCore_TYPE}")
 
 if(QtCore_TYPE STREQUAL "STATIC_LIBRARY")
   add_definitions(-DQT_STATIC)
+else()
+  find_package(Qt5WebEngineWidgets REQUIRED HINTS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
+  
+  list(APPEND QT_LIBS Qt5::WebEngineWidgets)
 endif()
 
 list(APPEND QT_LIBS Qt5::Core)
@@ -739,7 +743,7 @@ set(project_directories
   model
   energyplus
   radiance
-  #gbxml
+  gbxml
   #bimserver
   airflow
   isomodel
@@ -756,6 +760,7 @@ if(WIN32)
 endif()
 
 if(QtCore_TYPE STREQUAL "SHARED_LIBRARY")
+  #list(APPEND project_directories "gbxml")
   list(APPEND project_directories "bimserver")
   list(APPEND project_directories "resultsviewer")
   list(APPEND project_directories "model_editor")
@@ -910,7 +915,7 @@ set(all_lib_targets
   openstudio_energyplus
   openstudio_measure
   openstudio_radiance
-  #openstudio_gbxml
+  openstudio_gbxml
   #openstudio_bimserver
   openstudio_isomodel
   #openstudio_lib
@@ -928,6 +933,7 @@ endif()
 
 if(QtCore_TYPE STREQUAL "SHARED_LIBRARY")
   list(APPEND all_lib_targets "openstudio_modeleditor")
+  #list(APPEND all_lib_targets "openstudio_gbxml")
   list(APPEND all_lib_targets "openstudio_bimserver")
   list(APPEND all_lib_targets "openstudio_lib")
   list(APPEND all_lib_targets "qwt")
@@ -940,10 +946,15 @@ export(TARGETS
 
 set(all_exe_targets
   GenerateIddFactory
-  #gbXMLToIdf
+  gbXMLToIdf
   #OpenStudio
   #ResultsViewer
 )
+
+if(QtCore_TYPE STREQUAL "SHARED_LIBRARY")
+  list(APPEND all_exe_targets "OpenStudio")
+  list(APPEND all_exe_targets "ResultsViewer")
+endif()
 
 if(UNIX AND NOT APPLE)
   foreach(targ ${all_lib_targets} ${all_exe_targets} ${ALL_TESTING_TARGETS})
