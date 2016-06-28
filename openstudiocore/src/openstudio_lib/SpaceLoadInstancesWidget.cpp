@@ -478,7 +478,14 @@ SpaceLoadInstanceMiniView::SpaceLoadInstanceMiniView(const model::SpaceLoadInsta
   hLayout->addWidget(label);
 
   m_nameEdit = new OSLineEdit2();
-  m_nameEdit->bind(m_spaceLoadInstance, "name");
+  // m_nameEdit->bind(m_spaceLoadInstance, "name");
+  boost::optional<model::SpaceLoadInstance> opt_spaceLoadInstance = m_spaceLoadInstance;
+  m_nameEdit->bind(
+    *opt_spaceLoadInstance,
+    OptionalStringGetter(std::bind(&model::SpaceLoadInstance::name, opt_spaceLoadInstance.get_ptr(),true)),
+    boost::optional<StringSetter>(std::bind(&model::SpaceLoadInstance::setName, opt_spaceLoadInstance.get_ptr(),std::placeholders::_1))
+  );
+
   if (isDefault){
     m_nameEdit->setEnabled(false);
   }
@@ -519,7 +526,14 @@ SpaceLoadInstanceMiniView::SpaceLoadInstanceMiniView(const model::SpaceLoadInsta
 
   m_multiplierEdit = new OSDoubleEdit2();
   m_multiplierEdit->setFixedWidth(60);
-  m_multiplierEdit->bind(m_spaceLoadInstance, "multiplier", std::string("isMultiplierDefaulted"));
+  // m_multiplierEdit->bind(m_spaceLoadInstance, "multiplier", std::string("isMultiplierDefaulted"));
+
+  m_multiplierEdit->bind(
+    *opt_spaceLoadInstance,
+    OptionalStringGetter(std::bind(&model::SpaceLoadInstance::multiplier, opt_spaceLoadInstance.get_ptr())),
+    boost::optional<BasicQuery>(std::bind(&model::SpaceLoadInstance::isMultiplierDefaulted, opt_spaceLoadInstance.get_ptr()))
+  );
+
   if (isDefault){
     m_multiplierEdit->setEnabled(false);
   }

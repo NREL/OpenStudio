@@ -320,96 +320,96 @@ void OSLineEdit2::focusOutEvent(QFocusEvent * e)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-OSLineEdit::OSLineEdit( QWidget * parent )
-  : QLineEdit(parent)
-{
-  this->setAcceptDrops(false);
-  setEnabled(false);
-}
+// OSLineEdit::OSLineEdit( QWidget * parent )
+//   : QLineEdit(parent)
+// {
+//   this->setAcceptDrops(false);
+//   setEnabled(false);
+// }
 
-void OSLineEdit::bind(model::ModelObject & modelObject, const char * property)
-{
-  m_modelObject = modelObject;
+// void OSLineEdit::bind(model::ModelObject & modelObject, const char * property)
+// {
+//   m_modelObject = modelObject;
 
-  m_property = property;
+//   m_property = property;
 
-  setEnabled(true);
+//   setEnabled(true);
 
-  m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onChange.connect<OSLineEdit, &OSLineEdit::onModelObjectChange>(this);
+//   m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onChange.connect<OSLineEdit, &OSLineEdit::onModelObjectChange>(this);
 
-  m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onRemoveFromWorkspace.connect<OSLineEdit, &OSLineEdit::onModelObjectRemove>(this);
+//   m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onRemoveFromWorkspace.connect<OSLineEdit, &OSLineEdit::onModelObjectRemove>(this);
 
-  connect(this, &OSLineEdit::editingFinished, this, &OSLineEdit::onEditingFinished);
+//   connect(this, &OSLineEdit::editingFinished, this, &OSLineEdit::onEditingFinished);
 
-  onModelObjectChange();
-}
+//   onModelObjectChange();
+// }
 
-void OSLineEdit::unbind()
-{
-  if (m_modelObject){
-    m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onChange.disconnect<OSLineEdit, &OSLineEdit::onModelObjectChange>(this);
-    m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onRemoveFromWorkspace.disconnect<OSLineEdit, &OSLineEdit::onModelObjectRemove>(this);
+// void OSLineEdit::unbind()
+// {
+//   if (m_modelObject){
+//     m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onChange.disconnect<OSLineEdit, &OSLineEdit::onModelObjectChange>(this);
+//     m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onRemoveFromWorkspace.disconnect<OSLineEdit, &OSLineEdit::onModelObjectRemove>(this);
 
-    m_modelObject.reset();
-    m_property = "";
-    setEnabled(false);
-  }
-}
+//     m_modelObject.reset();
+//     m_property = "";
+//     setEnabled(false);
+//   }
+// }
 
-void OSLineEdit::onEditingFinished()
-{
-  if( m_modelObject )
-  {
-    std::string stdstring = this->text().toStdString();
+// void OSLineEdit::onEditingFinished()
+// {
+//   if( m_modelObject )
+//   {
+//     std::string stdstring = this->text().toStdString();
 
-    QVariant variant = m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->property(m_property.c_str());
+//     QVariant variant = m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->property(m_property.c_str());
 
-    if( variant.canConvert<std::string>() ) {
-      QVariant var;
-      var.setValue<std::string>(stdstring);
+//     if( variant.canConvert<std::string>() ) {
+//       QVariant var;
+//       var.setValue<std::string>(stdstring);
 
-      m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->setProperty(m_property.c_str(), var);
-    } else if( variant.canConvert<boost::optional<std::string> >() ) {
-      boost::optional<std::string> ostring(stdstring);
+//       m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->setProperty(m_property.c_str(), var);
+//     } else if( variant.canConvert<boost::optional<std::string> >() ) {
+//       boost::optional<std::string> ostring(stdstring);
 
-      QVariant ovar;
-      ovar.setValue<boost::optional<std::string> >(ostring);
+//       QVariant ovar;
+//       ovar.setValue<boost::optional<std::string> >(ostring);
 
-      m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->setProperty(m_property.c_str(),ovar);
-    }
+//       m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->setProperty(m_property.c_str(),ovar);
+//     }
     
-  }
-}
+//   }
+// }
 
-void OSLineEdit::onModelObjectChange()
-{
-  if( m_modelObject )
-  {
-    QVariant variant = m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->property(m_property.c_str());
+// void OSLineEdit::onModelObjectChange()
+// {
+//   if( m_modelObject )
+//   {
+//     QVariant variant = m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->property(m_property.c_str());
 
-    if( variant.canConvert<std::string>() )
-    {
-      setText(QString::fromStdString(variant.value<std::string>()));
-    }
-    else if( variant.canConvert<boost::optional<std::string> >() )
-    {
-      if( boost::optional<std::string> string = variant.value<boost::optional<std::string> >() )
-      {
-        if( string )
-        {
-          setText(QString::fromStdString(string.get()));
-        }
-      }
-    }
-  }
-}
+//     if( variant.canConvert<std::string>() )
+//     {
+//       setText(QString::fromStdString(variant.value<std::string>()));
+//     }
+//     else if( variant.canConvert<boost::optional<std::string> >() )
+//     {
+//       if( boost::optional<std::string> string = variant.value<boost::optional<std::string> >() )
+//       {
+//         if( string )
+//         {
+//           setText(QString::fromStdString(string.get()));
+//         }
+//       }
+//     }
+//   }
+// }
 
-void OSLineEdit::onModelObjectRemove(const Handle& handle)
-{
-  m_modelObject.reset();
-  m_property = "";
-  setEnabled(false);
-}
+// void OSLineEdit::onModelObjectRemove(const Handle& handle)
+// {
+//   m_modelObject.reset();
+//   m_property = "";
+//   setEnabled(false);
+// }
 
 } // openstudio
 

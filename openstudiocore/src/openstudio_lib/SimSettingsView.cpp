@@ -1236,7 +1236,18 @@ void SimSettingsView::attachSimulationControl()
       boost::optional<BasicQuery>(std::bind(&model::SimulationControl::isMinimumNumberofWarmupDaysDefaulted,m_simulationControl.get_ptr())));
   m_loadsConvergenceToleranceValue->bind(*m_simulationControl,"loadsConvergenceToleranceValue",m_isIP);
   m_temperatureConvergenceToleranceValue->bind(*m_simulationControl,"temperatureConvergenceToleranceValue",m_isIP);
-  m_solarDistribution->bind(*m_simulationControl,"solarDistribution");
+  
+  // m_solarDistribution->bind(*m_simulationControl,"solarDistribution");
+  m_solarDistribution->bind<std::string>(
+    *m_simulationControl,
+    static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
+    &model::SimulationControl::validSolarDistributionValues,
+    OptionalStringGetter(std::bind(&model::SimulationControl::solarDistribution, m_simulationControl.get_ptr())),
+    std::bind(&model::SimulationControl::setSolarDistribution, m_simulationControl.get_ptr(),std::placeholders::_1),
+    boost::optional<NoFailAction>(std::bind(&model::resetSolarDistribution::setNISTSector, m_simulationControl.get_ptr())),
+    boost::optional<BasicQuery>(std::bind(&model::SimulationControl::isSolarDistributionDefaulted, m_simulationControl.get_ptr()))
+  );
+  
 }
 
 void SimSettingsView::attachSizingParameters()
@@ -1245,21 +1256,44 @@ void SimSettingsView::attachSizingParameters()
 
   m_heatingSizingFactor->bind(mo,"heatingSizingFactor",m_isIP);
   m_coolingSizingFactor->bind(mo,"coolingSizingFactor",m_isIP);
-  m_timestepsinAveragingWindow->bind(mo,"timestepsinAveragingWindow");
+  // m_timestepsinAveragingWindow->bind(mo,"timestepsinAveragingWindow");
+
+  boost::optional<model::SizingParameters> m_mo = mo;
+  m_timestepsinAveragingWindow->bind(
+    *m_mo,
+    OptionalIntGetter(std::bind(&model::SizingParameters::timestepsinAveragingWindow, m_mo.get_ptr())),
+    boost::optional<IntSetter>(std::bind(&model::SizingParameters::timestepsinAveragingWindow, m_mo.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(&model::SizingParameters::resetTimestepsinAveragingWindow)
+  );
 }
 
 void SimSettingsView::attachProgramControl()
 {
   model::ProgramControl mo = m_model.getUniqueModelObject<model::ProgramControl>();
 
-  m_numberOfThreadsAllowed->bind(mo,"numberofThreadsAllowed");
+  // m_numberOfThreadsAllowed->bind(mo,"numberofThreadsAllowed");
+  boost::optional<model::ProgramControl> m_mo = mo;
+  m_numberOfThreadsAllowed->bind(
+    *m_mo,
+    OptionalIntGetter(std::bind(&model::ProgramControl::numberofThreadsAllowed, m_mo.get_ptr())),
+    boost::optional<IntSetter>(std::bind(&model::ProgramControl::setNumberofThreadsAllowed, m_mo.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::ProgramControl::resetNumberofThreadsAllowed, m_mo.get_ptr()))
+  );
 }
 
 void SimSettingsView::attachTimestep()
 {
   model::Timestep mo = m_model.getUniqueModelObject<model::Timestep>();
 
-  m_numberOfTimestepsPerHour->bind(mo,"numberOfTimestepsPerHour");
+  // m_numberOfTimestepsPerHour->bind(mo,"numberOfTimestepsPerHour");
+  boost::optional<model::Timestep> m_mo = mo;
+  m_numberOfTimestepsPerHour->bind(
+    *m_mo,
+    OptionalIntGetter(std::bind(&model::Timestep::numberOfTimestepsPerHour, m_mo.get_ptr())),
+    boost::optional<IntSetter>(std::bind(&model::Timestep::setNumberOfTimestepsPerHour, m_mo.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(&model::Timestep::resetNumberOfTimestepsPerHour),
+    boost::optional<BasicQuery>(&model::Timestep::isNumberOfTimestepsPerHourDefaulted)
+  );
 }
 
 void SimSettingsView::attachOutputControlReportingTolerances()
@@ -1273,11 +1307,44 @@ void SimSettingsView::attachOutputControlReportingTolerances()
 void SimSettingsView::attachConvergenceLimits()
 {
   model::ConvergenceLimits mo = m_model.getUniqueModelObject<model::ConvergenceLimits>();
+  boost::optional<model::ConvergenceLimits> m_mo = mo;
+  
+  // m_maximumHVACIterations->bind(mo,"maximumHVACIterations");
+  m_maximumHVACIterations->bind(
+    *m_mo,
+    OptionalIntGetter(std::bind(&model::Timestep::maximumHVACIterations, m_mo.get_ptr())),
+    boost::optional<IntSetter>(std::bind(&model::Timestep::setMaximumHVACIterations, m_mo.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Timestep::resetMaximumHVACIterations, m_mo.get_ptr())),
+    boost::optional<BasicQuery>(std::bind(&model::Timestep::isMaximumHVACIterationsDefaulted, m_mo.get_ptr()))
+  );
 
-  m_maximumHVACIterations->bind(mo,"maximumHVACIterations");
-  m_minimumPlantIterations->bind(mo,"minimumPlantIterations");
-  m_maximumPlantIterations->bind(mo,"maximumPlantIterations");
-  m_minimumSystemTimestep->bind(mo,"minimumSystemTimestep");
+  // m_minimumPlantIterations->bind(mo,"minimumPlantIterations");
+  m_minimumPlantIterations->bind(
+    *m_mo,
+    OptionalIntGetter(std::bind(&model::Timestep::minimumPlantIterations, m_mo.get_ptr())),
+    boost::optional<IntSetter>(std::bind(&model::Timestep::setMinimumPlantIterations, m_mo.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Timestep::resetMinimumPlantIterations, m_mo.get_ptr())),
+    boost::optional<BasicQuery>(std::bind(&model::Timestep::isMinimumPlantIterationsDefaulted, m_mo.get_ptr()))
+  );
+
+  // m_maximumPlantIterations->bind(mo,"maximumPlantIterations");
+  m_maximumPlantIterations->bind(
+    *m_mo,
+    OptionalIntGetter(std::bind(&model::Timestep::maximumPlantIterations, m_mo.get_ptr())),
+    boost::optional<IntSetter>(std::bind(&model::Timestep::setMaximumPlantIterations, m_mo.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Timestep::resetMaximumPlantIterations, m_mo.get_ptr())),
+    boost::optional<BasicQuery>(std::bind(&model::Timestep::isMaximumPlantIterationsDefaulted, m_mo.get_ptr()))
+  );
+
+  // m_minimumSystemTimestep->bind(mo,"minimumSystemTimestep");
+  m_minimumSystemTimestep->bind(
+    *m_mo,
+    OptionalIntGetter(std::bind(&model::Timestep::minimumSystemTimestep, m_mo.get_ptr())),
+    boost::optional<IntSetter>(std::bind(&model::Timestep::setMinimumSystemTimestep, m_mo.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Timestep::resetMinimumSystemTimestep, m_mo.get_ptr())),
+    boost::optional<BasicQuery>(std::bind(&model::Timestep::isMinimumSystemTimestepDefaulted, m_mo.get_ptr()))
+  );
+
 }
 
 void SimSettingsView::attachShadowCalculation()

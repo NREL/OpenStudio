@@ -143,7 +143,14 @@ void SteamEquipmentDefinitionInspectorView::onUpdate()
 
 void SteamEquipmentDefinitionInspectorView::attach(openstudio::model::SteamEquipmentDefinition & steamEquipmentDefinition)
 {
-  m_nameEdit->bind(steamEquipmentDefinition,"name");
+  // m_nameEdit->bind(steamEquipmentDefinition,"name");
+  boost::optional<model::SteamEquipmentDefinition> m_steamEquipmentDefinition = steamEquipmentDefinition;
+  m_nameEdit->bind(
+    *m_steamEquipmentDefinition,
+    OptionalStringGetter(std::bind(&model::SteamEquipmentDefinition::name, m_steamEquipmentDefinition.get_ptr(),true)),
+    boost::optional<StringSetter>(std::bind(&model::SteamEquipmentDefinition::setName, m_steamEquipmentDefinition.get_ptr(),std::placeholders::_1))
+  );
+
   m_designLevelEdit->bind(steamEquipmentDefinition,"designLevel",m_isIP);
   m_wattsPerSpaceFloorAreaEdit->bind(steamEquipmentDefinition,"wattsperSpaceFloorArea",m_isIP);
   m_wattsPerPersonEdit->bind(steamEquipmentDefinition,"wattsperPerson",m_isIP);

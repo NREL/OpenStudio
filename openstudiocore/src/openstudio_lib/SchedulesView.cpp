@@ -1670,7 +1670,15 @@ ScheduleRuleView::ScheduleRuleView(bool isIP,
   nameHLayout->addSpacing(10);
 
   m_nameEditField = new OSLineEdit2();
-  m_nameEditField->bind(m_scheduleRule,"name");
+
+  // m_nameEditField->bind(m_scheduleRule,"name");
+  boost::optional<model::ScheduleRule> opt_scheduleRule = m_scheduleRule;
+  m_nameEditField->bind(
+    *opt_scheduleRule,
+    OptionalStringGetter(std::bind(&model::ScheduleRule::name, opt_scheduleRule.get_ptr(),true)),
+    boost::optional<StringSetter>(std::bind(&model::ScheduleRule::setName, opt_scheduleRule.get_ptr(),std::placeholders::_1))
+  );
+
   nameHLayout->addWidget(m_nameEditField);
 
   ruleVLayout->addLayout(nameHLayout);
@@ -1904,7 +1912,14 @@ ScheduleRulesetNameWidget::ScheduleRulesetNameWidget(const model::ScheduleRulese
   hLayout->addWidget(label);
 
   auto lineEdit = new OSLineEdit2();
-  lineEdit->bind(m_scheduleRuleset, "name");
+  // lineEdit->bind(m_scheduleRuleset, "name");
+  boost::optional<model::ScheduleRuleset> opt_scheduleRuleset = m_scheduleRuleset;
+  lineEdit->bind(
+    *opt_scheduleRuleset,
+    OptionalStringGetter(std::bind(&model::ScheduleRuleset::name, opt_scheduleRuleset.get_ptr(),true)),
+    boost::optional<StringSetter>(std::bind(&model::ScheduleRuleset::setName, opt_scheduleRuleset.get_ptr(),std::placeholders::_1))
+  );
+
   hLayout->addWidget(lineEdit);
 
   // Schedule Type

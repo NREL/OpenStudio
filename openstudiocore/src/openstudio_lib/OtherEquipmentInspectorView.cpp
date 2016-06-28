@@ -143,7 +143,14 @@ void OtherEquipmentDefinitionInspectorView::onUpdate()
 
 void OtherEquipmentDefinitionInspectorView::attach(openstudio::model::OtherEquipmentDefinition & otherEquipmentDefinition)
 {
-  m_nameEdit->bind(otherEquipmentDefinition,"name");
+  boost::optional<model::OtherEquipmentDefinition> m_otherEquipmentDefinition = otherEquipmentDefinition;
+  // m_nameEdit->bind(otherEquipmentDefinition,"name");
+  m_nameEdit->bind(
+    *m_otherEquipmentDefinition,
+    OptionalStringGetter(std::bind(&model::OtherEquipmentDefinition::name, m_otherEquipmentDefinition.get_ptr(),true)),
+    boost::optional<StringSetter>(std::bind(&model::OtherEquipmentDefinition::setName, m_otherEquipmentDefinition.get_ptr(),std::placeholders::_1))
+  );
+
   m_designLevelEdit->bind(otherEquipmentDefinition,"designLevel",m_isIP);
   m_wattsPerSpaceFloorAreaEdit->bind(otherEquipmentDefinition,"wattsperSpaceFloorArea",m_isIP);
   m_wattsPerPersonEdit->bind(otherEquipmentDefinition,"wattsperPerson",m_isIP);

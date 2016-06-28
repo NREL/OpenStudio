@@ -315,7 +315,7 @@ void MaterialRoofVegetationInspectorView::attach(openstudio::model::RoofVegetati
   // m_soilLayerName->bind(roofVegetation,"soilLayerName");
   m_soilLayerName->bind(
     *m_roofVegetation,
-    OptionalStringGetter(std::bind(&model::RoofVegetation::soilLayerName, m_roofVegetation.get_ptr(),true)),
+    OptionalStringGetter(std::bind(&model::RoofVegetation::soilLayerName, m_roofVegetation.get_ptr())),
     boost::optional<StringSetter>(std::bind(&model::RoofVegetation::setSoilLayerName, m_roofVegetation.get_ptr(),std::placeholders::_1)),
     boost::optional<NoFailAction>(&model::RoofVegetation::resetSoilLayerName),
     boost::optional<BasicQuery>(&model::RoofVegetation::isSoilLayerNameDefaulted)
@@ -324,7 +324,7 @@ void MaterialRoofVegetationInspectorView::attach(openstudio::model::RoofVegetati
   // m_moistureDiffusionCalculationMethod->bind(roofVegetation,"moistureDiffusionCalculationMethod");
   m_moistureDiffusionCalculationMethod->bind(
     *m_roofVegetation,
-    OptionalStringGetter(std::bind(&model::RoofVegetation::moistureDiffusionCalculationMethod, m_roofVegetation.get_ptr(),true)),
+    OptionalStringGetter(std::bind(&model::RoofVegetation::moistureDiffusionCalculationMethod, m_roofVegetation.get_ptr())),
     boost::optional<StringSetter>(std::bind(&model::RoofVegetation::setMoistureDiffusionCalculationMethod, m_roofVegetation.get_ptr(),std::placeholders::_1)),
     boost::optional<NoFailAction>(&model::RoofVegetation::resetMoistureDiffusionCalculationMethod),
     boost::optional<BasicQuery>(&model::RoofVegetation::isMoistureDiffusionCalculationMethodDefaulted)

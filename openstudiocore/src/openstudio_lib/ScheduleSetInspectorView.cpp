@@ -803,7 +803,13 @@ void ScheduleSetInspectorView::attach(openstudio::model::DefaultScheduleSet& def
     vc->reportItems();
   }
 
-  m_nameEdit->bind(defaultScheduleSet, "name");
+  boost::optional<model::DefaultScheduleSet> m_defaultScheduleSet = defaultScheduleSet;
+  // m_nameEdit->bind(defaultScheduleSet, "name");
+  m_nameEdit->bind(
+    *m_defaultScheduleSet,
+    OptionalStringGetter(std::bind(&model::DefaultScheduleSet::name, m_defaultScheduleSet.get_ptr(),true)),
+    boost::optional<StringSetter>(std::bind(&model::DefaultScheduleSet::setName, m_defaultScheduleSet.get_ptr(),std::placeholders::_1))
+  );
 
   this->stackedWidget()->setCurrentIndex(1);
 }
