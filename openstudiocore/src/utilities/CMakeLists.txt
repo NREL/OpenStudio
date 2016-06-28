@@ -515,7 +515,7 @@ if(WIN32)
 endif()
 
 
-add_library(${target_name} STATIC
+add_library(${target_name}
   ${${target_name}_src}
 )
 

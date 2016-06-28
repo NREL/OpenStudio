@@ -107,6 +107,9 @@ option(BUILD_R "Build R package" OFF)
 # Build Ruby gem
 option(BUILD_RUBY_GEM "Build Ruby Gem" OFF)
 
+# Build shared OS libraries
+option(BUILD_SHARED_LIBS "Build OS libs as shared libraries" OFF)
+
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
   add_definitions(-Qunused-arguments)

@@ -1459,7 +1459,7 @@ set(${target_name}_depends
   openstudio_utilities
 )
 
-add_library(${target_name} STATIC ${${target_name}_src} ${${target_name}_moc_src} ${${target_name}_qrcs})
+add_library(${target_name} ${${target_name}_src} ${${target_name}_moc_src} ${${target_name}_qrcs})
 target_link_libraries(${target_name} "${${target_name}_depends}")
 AddPCH(${target_name})
 
