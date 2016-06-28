@@ -677,6 +677,8 @@ if( WIN32 )
     find_library(SQLITE qsqlite PATHS "${QT_INSTALL_DIR}/plugins/sqldrivers/" NO_DEFAULT_PATH)
     find_library(WIN_PLATFORM qwindows PATHS "${QT_INSTALL_DIR}/plugins/platforms/" NO_DEFAULT_PATH)
     
+    link_directories("${OPENSSL_ROOT_DIR}/lib/VC/static")
+    
     mark_as_advanced(HARFBUZZ PCRE SQLITE WIN_PLATFORM)
 
     list(APPEND QT_LIBS ${HARFBUZZ})
@@ -692,6 +694,9 @@ if( WIN32 )
     list(APPEND QT_LIBS winmm)
     list(APPEND QT_LIBS dbghelp)
     list(APPEND QT_LIBS Shlwapi)
+    list(APPEND QT_LIBS ssleay32MT)
+    list(APPEND QT_LIBS libeay32MT)
+    list(APPEND QT_LIBS Gdi32)
   endif()
 
   list(APPEND QT_LIBS Qt5::WinExtras)

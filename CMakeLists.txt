@@ -622,6 +622,7 @@ ExternalProject_Add(GoogleTest
 set(GTEST_INCLUDE_DIR ${CMAKE_BINARY_DIR}/GoogleTest-prefix/src/GoogleTest/include)
 set(GTEST_LIB_DIR ${CMAKE_BINARY_DIR}/GoogleTest-prefix/src/GoogleTest-build)
 
+# DLM: how to get this to build in Release and Debug mode on Windows?
 ExternalProject_Add(GeographicLib
   URL http://openstudio-resources.s3.amazonaws.com/dependencies/GeographicLib-1.45.zip
   URL_MD5 c3c8f989d700fc88c8ce4584cb298cee
