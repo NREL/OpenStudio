@@ -73,12 +73,12 @@ int main(int argc, char *argv[])
   bool cont = true;
   while(cont) {
     cont = false;
-
+    /*
     std::vector<std::string> modules;
     for (const auto& path : openstudio::getOpenStudioBareRubyPaths()){
       modules.push_back(openstudio::toString(path));
     }
-    /*
+    
     //try {
     // Initialize the embedded Ruby interpreter
     std::shared_ptr<openstudio::detail::RubyInterpreter> rubyInterpreter(
