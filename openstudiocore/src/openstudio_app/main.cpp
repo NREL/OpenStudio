@@ -44,18 +44,18 @@
 
 #define WSAAPI
 #include "../utilities/core/Path.hpp"
-#include "../utilities/core/RubyInterpreter.hpp"
-#include "../measure/EmbeddedRubyMeasureInfoGetter.hpp"
+//#include "../utilities/core/RubyInterpreter.hpp"
+//#include "../measure/EmbeddedRubyMeasureInfoGetter.hpp"
 
 int main(int argc, char *argv[])
 {
-
+  /*
   ruby_sysinit(&argc, &argv);
   {
     RUBY_INIT_STACK;
     ruby_init();
   }
-
+  */
 
 #if _DEBUG || (__GNUC__ && !NDEBUG)
 #ifdef _WIN32
@@ -78,22 +78,22 @@ int main(int argc, char *argv[])
     for (const auto& path : openstudio::getOpenStudioBareRubyPaths()){
       modules.push_back(openstudio::toString(path));
     }
-
+    /*
     //try {
     // Initialize the embedded Ruby interpreter
     std::shared_ptr<openstudio::detail::RubyInterpreter> rubyInterpreter(
         new openstudio::detail::RubyInterpreter(openstudio::getOpenStudioRubyPath(),
           openstudio::getOpenStudioRubyScriptsPath(),
           modules));
-
+         
     // Initialize the measure info getter
     QSharedPointer<openstudio::measure::OSMeasureInfoGetter> infoGetter(
       new openstudio::measure::EmbeddedRubyMeasureInfoGetter<openstudio::detail::RubyInterpreter>(rubyInterpreter));
-
+       */
     // Make the run path the default plugin search location
     QCoreApplication::addLibraryPath(openstudio::toQString(openstudio::getApplicationRunDirectory()));
 
-    openstudio::OpenStudioApp app(argc, argv, infoGetter);
+    openstudio::OpenStudioApp app(argc, argv);
     openstudio::Application::instance().setApplication(&app);
 
 #if !(_DEBUG || (__GNUC__ && !NDEBUG))

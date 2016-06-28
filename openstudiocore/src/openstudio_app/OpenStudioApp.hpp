@@ -78,7 +78,7 @@ class OpenStudioApp : public OSAppBase
 
  public:
 
-  OpenStudioApp( int & argc, char ** argv, const QSharedPointer<measure::OSMeasureInfoGetter> &t_infoGetter);
+  OpenStudioApp( int & argc, char ** argv);
 
   virtual ~OpenStudioApp() {}
 
@@ -164,7 +164,7 @@ class OpenStudioApp : public OSAppBase
 
   void connectOSDocumentSignals();
 
-  QSharedPointer<measure::OSMeasureInfoGetter> m_infoGetter;
+  //QSharedPointer<measure::OSMeasureInfoGetter> m_infoGetter;
 
   openstudio::model::Model m_compLibrary;
 

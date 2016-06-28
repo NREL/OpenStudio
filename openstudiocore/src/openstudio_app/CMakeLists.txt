@@ -1,4 +1,4 @@
-set(target_name OpenStudio)
+set(target_name OpenStudioApp)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 #include_directories(${RUBY_INCLUDE_DIR})
@@ -119,7 +119,7 @@ else()
   set(APPS "\${CMAKE_INSTALL_PREFIX}/bin/OpenStudio")
 endif()
 
-install(TARGETS OpenStudio
+install(TARGETS ${target_name}
   BUNDLE DESTINATION .
   RUNTIME DESTINATION bin
 )

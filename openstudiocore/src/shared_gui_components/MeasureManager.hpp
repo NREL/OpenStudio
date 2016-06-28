@@ -89,6 +89,9 @@ class MeasureManager : public QObject
   Q_OBJECT;
 
   public:
+    // Constructor without OSMeasureInfoGetter
+    MeasureManager(BaseApp *t_app);
+
     // Constructor taking a OSMeasureInfoGetter
     MeasureManager(const QSharedPointer<measure::OSMeasureInfoGetter> &t_infoGetter, BaseApp *t_app);
 

@@ -68,6 +68,11 @@
 
 namespace openstudio {
 
+MeasureManager::MeasureManager(BaseApp *t_app)
+  : m_app(t_app)
+{
+}
+
 MeasureManager::MeasureManager(const QSharedPointer<measure::OSMeasureInfoGetter> &t_infoGetter, BaseApp *t_app)
   : m_app(t_app), m_infoGetter(t_infoGetter)
 {
