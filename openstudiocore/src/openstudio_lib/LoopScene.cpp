@@ -54,9 +54,9 @@ LoopScene::LoopScene( model::Loop loop,
     m_loop(loop),
     m_dirty(true)
 {
-  loop.model().getImpl<model::detail::Model_Impl>().get()->model::detail::Model_Impl::addWorkspaceObjectPtr.connect<LoopScene, &LoopScene::addedWorkspaceObject>(this);
+  loop.model().getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.connect<LoopScene, &LoopScene::addedWorkspaceObject>(this);
 
-  loop.model().getImpl<model::detail::Model_Impl>().get()->model::detail::Model_Impl::removeWorkspaceObjectPtr.connect<LoopScene, &LoopScene::removedWorkspaceObject>(this);
+  loop.model().getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.connect<LoopScene, &LoopScene::removedWorkspaceObject>(this);
 
   layout();
 }

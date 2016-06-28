@@ -26,13 +26,13 @@ namespace openstudio {
 
 namespace model {
 
-  class Glazing;
+  class StandardGlazing;
 
 }
 
-class OSComboBox;
+class OSComboBox2;
 
-class OSLineEdit;
+class OSLineEdit2;
 
 class OSQuantityEdit;
 
@@ -62,7 +62,7 @@ class WindowMaterialGlazingInspectorView : public ModelObjectInspectorView
 
     void createLayout();
 
-    void attach(openstudio::model::Glazing & Glazing);
+    void attach(openstudio::model::StandardGlazing & Glazing);
 
     void detach();
 
@@ -70,13 +70,13 @@ class WindowMaterialGlazingInspectorView : public ModelObjectInspectorView
 
     bool m_isIP;
 
-    OSLineEdit * m_nameEdit = nullptr;
+    OSLineEdit2 * m_nameEdit = nullptr;
 
-    OSComboBox * m_opticalDataType = nullptr;
+    OSComboBox2 * m_opticalDataType = nullptr;
 
     OSSwitch * m_solarDiffusing = nullptr;
 
-    OSLineEdit * m_windowGlassSpectralDataSetName = nullptr;
+    OSLineEdit2 * m_windowGlassSpectralDataSetName = nullptr;
 
     OSQuantityEdit * m_thickness = nullptr;
 

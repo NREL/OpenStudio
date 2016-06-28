@@ -1340,7 +1340,7 @@ void WaterToAirInspectorView::layoutModelObject( model::ModelObject & modelObjec
 
   model::detail::ModelObject_Impl * impl = modelObject.getImpl<model::detail::ModelObject_Impl>().get();
 
-  impl->model::detail::ModelObject_Impl::onChange.connect<WaterToAirInspectorView, &WaterToAirInspectorView::onWorkspaceObjectChanged>(this);
+  impl->onChange.connect<WaterToAirInspectorView, &WaterToAirInspectorView::onWorkspaceObjectChanged>(this);
 }
 
 void WaterToAirInspectorView::onWorkspaceObjectChanged()

@@ -98,7 +98,7 @@ class OSCheckBox;
 
 class OSCheckBox2;
 
-class OSLineEdit;
+class OSLineEdit2;
 
 class ScheduleDayView;
 
@@ -380,7 +380,7 @@ signals:
 
   public slots:
 
-  void scheduleRefresh(const Handle& handle=NULL);
+  void scheduleRefresh(const Handle& handle);
 
   private slots:
 
@@ -666,7 +666,7 @@ private:
 
   OSCheckBox2 * m_saturdayButton;
 
-  OSLineEdit * m_nameEditField;
+  OSLineEdit2 * m_nameEditField;
 
   QDateTimeEdit * m_startDateEdit;
 

@@ -146,7 +146,7 @@ namespace detail {
   void ComponentWatcher_Impl::mf_changeComponentVersion() {
     // disconnect componentDataChange slot to avoid endless loop
     std::shared_ptr<ModelObject_Impl> implPtr = m_componentData.getImpl<ModelObject_Impl>();
-    implPtr.get()->ModelObject_Impl::onDataChange.disconnect<ComponentWatcher_Impl, &ComponentWatcher_Impl::componentDataChange>(this);
+    implPtr.get()->onDataChange.disconnect<ComponentWatcher_Impl, &ComponentWatcher_Impl::componentDataChange>(this);
 
     // change version UUID
     m_componentData.createVersionUUID();
@@ -158,7 +158,7 @@ namespace detail {
   void ComponentWatcher_Impl::mf_refreshComponentContents(bool logWarnings) {
     // disconnect componentDataChange slot to avoid endless loop
     std::shared_ptr<ModelObject_Impl> implPtr = m_componentData.getImpl<ModelObject_Impl>();
-    implPtr.get()->ModelObject_Impl::onDataChange.disconnect<ComponentWatcher_Impl, &ComponentWatcher_Impl::componentDataChange>(this);
+    implPtr.get()->onDataChange.disconnect<ComponentWatcher_Impl, &ComponentWatcher_Impl::componentDataChange>(this);
 
     // \todo logWarnings
     m_componentData.clearExtensibleGroups();

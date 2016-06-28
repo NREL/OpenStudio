@@ -48,9 +48,9 @@ ModelObjectTreeWidget::ModelObjectTreeWidget(const model::Model& model, QWidget*
   
   m_vLayout->addWidget(m_treeWidget);
 
-  model.getImpl<model::detail::Model_Impl>().get()->model::detail::Model_Impl::addWorkspaceObjectPtr.connect<ModelObjectTreeWidget, &ModelObjectTreeWidget::objectAdded>(this);
+  model.getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.connect<ModelObjectTreeWidget, &ModelObjectTreeWidget::objectAdded>(this);
   
-  model.getImpl<model::detail::Model_Impl>().get()->model::detail::Model_Impl::removeWorkspaceObjectPtr.connect<ModelObjectTreeWidget, &ModelObjectTreeWidget::objectRemoved>(this);
+  model.getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.connect<ModelObjectTreeWidget, &ModelObjectTreeWidget::objectRemoved>(this);
 }
 
 OSItem* ModelObjectTreeWidget::selectedItem() const

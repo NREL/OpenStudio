@@ -70,7 +70,7 @@ void WindowMaterialGasInspectorView::createLayout()
 
   ++row;
 
-  m_nameEdit = new OSLineEdit();
+  m_nameEdit = new OSLineEdit2();
   mainGridLayout->addWidget(m_nameEdit, row, 0, 1, 3);
 
   ++row;
@@ -87,7 +87,7 @@ void WindowMaterialGasInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_gasType = new OSComboBox();
+  m_gasType = new OSComboBox2();
   m_gasType->addItem("Air");
   m_gasType->addItem("Argon");
   m_gasType->addItem("Krypton");
@@ -203,7 +203,16 @@ void WindowMaterialGasInspectorView::onUpdate()
 
 void WindowMaterialGasInspectorView::attach(openstudio::model::Gas & gas)
 {
-  m_gasType->bind(gas,"gasType");
+  // m_gasType->bind(gas,"gasType");
+
+  m_gasType->bind<std::string>(
+      gas,
+      static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
+      &model::Gas::validGasTypes,
+      std::bind(&model::Gas::gasType, &gas),
+      std::bind(&model::Gas::setGasType, &gas, std::placeholders::_1),
+      boost::none,
+      boost::none);
 
   m_nameEdit->bind(gas,"name");
   m_thickness->bind(gas,"thickness",m_isIP);

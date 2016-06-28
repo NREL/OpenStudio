@@ -85,7 +85,7 @@ void ConstructionInternalSourceInspectorView::createLayout()
 
   ++row;
 
-  m_nameEdit = new OSLineEdit();
+  m_nameEdit = new OSLineEdit2();
   mainGridLayout->addWidget(m_nameEdit, row, 0, 1, 3);
 
   ++row;
@@ -136,7 +136,7 @@ void ConstructionInternalSourceInspectorView::createLayout()
 
   ++row;
 
-  m_sourcePresentAfterLayerNumberEdit = new OSIntegerEdit();
+  m_sourcePresentAfterLayerNumberEdit = new OSIntegerEdit2();
   mainGridLayout->addWidget(m_sourcePresentAfterLayerNumberEdit, row, 0);
 
   ++row;
@@ -149,7 +149,7 @@ void ConstructionInternalSourceInspectorView::createLayout()
 
   ++row;
 
-  m_temperatureCalculationRequestedAfterLayerNumberEdit = new OSIntegerEdit();
+  m_temperatureCalculationRequestedAfterLayerNumberEdit = new OSIntegerEdit2();
   mainGridLayout->addWidget(m_temperatureCalculationRequestedAfterLayerNumberEdit, row, 0);
 
   ++row;
@@ -162,7 +162,7 @@ void ConstructionInternalSourceInspectorView::createLayout()
 
   ++row;
 
-  m_dimensionsForTheCTFCalculationEdit = new OSIntegerEdit();
+  m_dimensionsForTheCTFCalculationEdit = new OSIntegerEdit2();
   mainGridLayout->addWidget(m_dimensionsForTheCTFCalculationEdit, row, 0);
 
   ++row;
@@ -210,11 +210,36 @@ void ConstructionInternalSourceInspectorView::onUpdate()
 
 void ConstructionInternalSourceInspectorView::attach(openstudio::model::ConstructionWithInternalSource & constructionWithInternalSource)
 {
-  m_nameEdit->bind(constructionWithInternalSource,"name");
+  // Wrap to interface properly with Boost
+  boost::optional<model::ConstructionWithInternalSource> m_constructionWithInternalSource = constructionWithInternalSource;
 
-  m_sourcePresentAfterLayerNumberEdit->bind(constructionWithInternalSource,"sourcePresentAfterLayerNumber");
-  m_temperatureCalculationRequestedAfterLayerNumberEdit->bind(constructionWithInternalSource,"temperatureCalculationRequestedAfterLayerNumber");
-  m_dimensionsForTheCTFCalculationEdit->bind(constructionWithInternalSource,"dimensionsForTheCTFCalculation");
+  // m_nameEdit->bind(constructionWithInternalSource,"name");  
+  m_nameEdit->bind(
+    *m_constructionWithInternalSource,
+    OptionalStringGetter(std::bind(&model::ConstructionWithInternalSource::name, m_constructionWithInternalSource.get_ptr(),true)),
+    boost::optional<StringSetter>(std::bind(&model::ConstructionWithInternalSource::setName, m_constructionWithInternalSource.get_ptr(),std::placeholders::_1))
+  );
+
+  // m_sourcePresentAfterLayerNumberEdit->bind(constructionWithInternalSource,"sourcePresentAfterLayerNumber");
+  m_sourcePresentAfterLayerNumberEdit->bind(
+    *m_constructionWithInternalSource,
+    OptionalIntGetter(std::bind(&model::ConstructionWithInternalSource::sourcePresentAfterLayerNumber, m_constructionWithInternalSource.get_ptr())),
+    boost::optional<IntSetter>(std::bind(&model::ConstructionWithInternalSource::setSourcePresentAfterLayerNumber, m_constructionWithInternalSource.get_ptr(), std::placeholders::_1))
+  );
+
+  // m_temperatureCalculationRequestedAfterLayerNumberEdit->bind(constructionWithInternalSource,"temperatureCalculationRequestedAfterLayerNumber");
+  m_temperatureCalculationRequestedAfterLayerNumberEdit->bind(
+    *m_constructionWithInternalSource,
+    OptionalIntGetter(std::bind(&model::ConstructionWithInternalSource::temperatureCalculationRequestedAfterLayerNumber,m_constructionWithInternalSource.get_ptr())),
+    boost::optional<IntSetter>(std::bind(&model::ConstructionWithInternalSource::setTemperatureCalculationRequestedAfterLayerNumber,m_constructionWithInternalSource.get_ptr(),std::placeholders::_1))
+  );
+
+  // m_dimensionsForTheCTFCalculationEdit->bind(constructionWithInternalSource,"dimensionsForTheCTFCalculation");
+  m_dimensionsForTheCTFCalculationEdit->bind(
+    *m_constructionWithInternalSource,
+    OptionalIntGetter(std::bind(&model::ConstructionWithInternalSource::dimensionsForTheCTFCalculation,m_constructionWithInternalSource.get_ptr())),
+    boost::optional<IntSetter>(std::bind(&model::ConstructionWithInternalSource::setDimensionsForTheCTFCalculation,m_constructionWithInternalSource.get_ptr(),std::placeholders::_1))
+  );
 
   m_tubeSpacingEdit->bind(constructionWithInternalSource,"tubeSpacing",m_isIP);
 

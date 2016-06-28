@@ -194,7 +194,7 @@ SimSettingsView::SimSettingsView(bool isIP,
 
   // when the year settings object changes need to update the year in all child widgets
   model::YearDescription yearDescription = m_model.getUniqueModelObject<model::YearDescription>();
-  yearDescription.getImpl<model::detail::YearDescription_Impl>().get()->model::detail::YearDescription_Impl::onChange.connect<SimSettingsView, &SimSettingsView::updateYearDescription>(this);
+  yearDescription.getImpl<model::detail::YearDescription_Impl>().get()->onChange.connect<SimSettingsView, &SimSettingsView::updateYearDescription>(this);
 
   createWidgets();
   attachAll();
@@ -994,22 +994,6 @@ void SimSettingsView::addField(QGridLayout * gridLayout,
                                int row,
                                int column,
                                QString text,
-                               OSComboBox * & comboBox)
-{
-  auto label = new QLabel(text,this);
-  label->setFixedWidth(TEXT_FIELD_WIDTH);
-  label->setObjectName("H2");
-  gridLayout->addWidget(label,row++,column);
-
-  comboBox = new OSComboBox(this);
-  comboBox->setFixedWidth(OSCOMBOBOX_FIELD_WIDTH);
-  gridLayout->addWidget(comboBox,row,column);
-}
-
-void SimSettingsView::addField(QGridLayout * gridLayout,
-                               int row,
-                               int column,
-                               QString text,
                                OSComboBox2 * & comboBox)
 {
   auto label = new QLabel(text,this);
@@ -1018,23 +1002,6 @@ void SimSettingsView::addField(QGridLayout * gridLayout,
   gridLayout->addWidget(label,row++,column);
 
   comboBox = new OSComboBox2(this);
-  comboBox->setFixedWidth(OSCOMBOBOX_FIELD_WIDTH);
-  gridLayout->addWidget(comboBox,row,column);
-}
-
-void SimSettingsView::addField(QGridLayout * gridLayout,
-                               int row,
-                               int column,
-                               QLabel * & label,
-                               QString text,
-                               OSComboBox * & comboBox)
-{
-  label = new QLabel(text,this);
-  label->setFixedWidth(TEXT_FIELD_WIDTH);
-  label->setObjectName("H2");
-  gridLayout->addWidget(label,row++,column);
-
-  comboBox = new OSComboBox(this);
   comboBox->setFixedWidth(OSCOMBOBOX_FIELD_WIDTH);
   gridLayout->addWidget(comboBox,row,column);
 }
@@ -1060,22 +1027,6 @@ void SimSettingsView::addField(QGridLayout * gridLayout,
                                int row,
                                int column,
                                QString text,
-                               OSIntegerEdit * & integerEdit)
-{
-  auto label = new QLabel(text,this);
-  label->setFixedWidth(TEXT_FIELD_WIDTH);
-  label->setObjectName("H2");
-  gridLayout->addWidget(label,row++,column);
-
-  integerEdit = new OSIntegerEdit(this);
-  integerEdit->setFixedWidth(OSINTEGEREDIT_FIELD_WIDTH);
-  gridLayout->addWidget(integerEdit,row,column);
-}
-
-void SimSettingsView::addField(QGridLayout * gridLayout,
-                               int row,
-                               int column,
-                               QString text,
                                OSIntegerEdit2 * & integerEdit)
 {
   auto label = new QLabel(text,this);
@@ -1084,23 +1035,6 @@ void SimSettingsView::addField(QGridLayout * gridLayout,
   gridLayout->addWidget(label,row++,column);
 
   integerEdit = new OSIntegerEdit2(this);
-  integerEdit->setFixedWidth(OSINTEGEREDIT_FIELD_WIDTH);
-  gridLayout->addWidget(integerEdit,row,column);
-}
-
-void SimSettingsView::addField(QGridLayout * gridLayout,
-                               int row,
-                               int column,
-                               QLabel * & label,
-                               QString text,
-                               OSIntegerEdit * & integerEdit)
-{
-  label = new QLabel(text,this);
-  label->setFixedWidth(TEXT_FIELD_WIDTH);
-  label->setObjectName("H2");
-  gridLayout->addWidget(label,row++,column);
-
-  integerEdit = new OSIntegerEdit(this);
   integerEdit->setFixedWidth(OSINTEGEREDIT_FIELD_WIDTH);
   gridLayout->addWidget(integerEdit,row,column);
 }
@@ -1126,14 +1060,14 @@ void SimSettingsView::addField(QGridLayout * gridLayout,
                                int row,
                                int column,
                                QString text,
-                               OSLineEdit * & lineEdit)
+                               OSLineEdit2 * & lineEdit)
 {
   auto label = new QLabel(text,this);
   label->setFixedWidth(TEXT_FIELD_WIDTH);
   label->setObjectName("H2");
   gridLayout->addWidget(label,row++,column);
 
-  lineEdit = new OSLineEdit(this);
+  lineEdit = new OSLineEdit2(this);
   lineEdit->setFixedWidth(TEXT_FIELD_WIDTH);
   gridLayout->addWidget(lineEdit,row,column);
 }

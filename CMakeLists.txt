@@ -307,6 +307,105 @@ endif()
 # Use PCH
 option(USE_PCH "Use precompiled headers" OFF)
 
+# Smart find qt location, looking for 64bit when appropriate
+# and preferring opengl installations
+if(MSVC)
+  if(CMAKE_CL_64)
+    set(COMPILER_ARCH_TAG "_64")
+  else()
+    set(COMPILER_ARCH_TAG "")
+  endif()
+
+  if(MSVC_VERSION STREQUAL "1800")
+    set(COMPILER_VER_TAG "2013")
+  else()
+    set(COMPILER_VER_TAG "2014")
+  endif()
+
+  file(GLOB_RECURSE QMAKE_LOCATIONS "C:/Qt/qmake.exe")
+
+  message(STATUS "Qt Locations: ${QMAKE_LOCATIONS}")
+
+  if(QMAKE_LOCATIONS MATCHES ".*msvc${COMPILER_VER_TAG}${COMPILER_ARCH_TAG}_opengl.*")
+    set(HAS_OPENGL_INSTALL TRUE)
+    set(OPENGL_TAG "_opengl")
+  else()
+    set(HAS_OPENGL_INSTALL FALSE)
+    set(OPENGL_TAG "")
+  endif()
+
+  set(QT_HINT_DIR "")
+  foreach(LOC ${QMAKE_LOCATIONS})
+    if(LOC MATCHES ".*msvc${COMPILER_VER_TAG}${COMPILER_ARCH_TAG}${OPENGL_TAG}/")
+      get_filename_component(PDIR "${LOC}" DIRECTORY)
+      get_filename_component(GPDIR "${PDIR}" DIRECTORY)
+      if(HAS_OPENGL_INSTALL)
+        if(GPDIR MATCHES ".*opengl.*")
+          list(APPEND QT_HINT_DIR "${GPDIR}")
+        endif()
+      else()
+        list(APPEND QT_HINT_DIR "${GPDIR}")
+      endif()
+    endif()
+  endforeach()
+
+  # we want sort, this will do both a lexicographical sort of the version numbers, putting the newest last and picking the
+  # longest (aka opengl) last. Then we sort it in reverse to prefer the highest version numbers with opengl
+  list(SORT QT_HINT_DIR)
+  list(REVERSE QT_HINT_DIR)
+else()
+  set(QT_HINT_DIR "")
+endif()
+
+# set CMAKE_PREFIX_PATH to specify specific Qt version
+find_package(Qt5Widgets HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Gui, Qt5Widgets
+find_package(Qt5Sql HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Sql
+find_package(Qt5Network HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Network
+find_package(Qt5Xml HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Xml
+#find_package(Qt5WinExtras HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Gui, Qt5WinExtras
+find_package(Qt5Concurrent HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Concurrent
+find_package(Qt5PrintSupport HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Gui, Qt5PrintSupport, Qt5Widgets
+mark_as_advanced(
+  Qt5Concurrent_DIR
+  Qt5Core_DIR
+  Qt5Gui_DIR
+  Qt5Gui_EGL_LIBRARY
+  Qt5Location_DIR
+  Qt5Multimedia_DIR
+  Qt5MultimediaWidgets_DIR
+  Qt5Network_DIR
+  Qt5OpenGL_DIR
+  Qt5Positioning_DIR
+  Qt5PrintSupport_DIR
+  Qt5Qml_DIR
+  Qt5Quick_DIR
+  Qt5Sensors_DIR
+  Qt5Sql_DIR
+  Qt5Widgets_DIR
+  #Qt5WinExtras_DIR
+  Qt5Xml_DIR
+)
+
+# Build Qt
+if(Qt5Widgets_DIR)
+  option(BUILD_QT "Build Qt" OFF)
+
+  if(${Qt5Widgets_VERSION} VERSION_LESS "5.2.1")
+    message(FATAL_ERROR "Minimum supported Qt is v5.2.1")
+  endif()
+  if(${Qt5Widgets_VERSION} VERSION_LESS "5.4.0")
+    find_package(Qt5WebKit HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Gui, Qt5Network, Qt5WebKit
+    find_package(Qt5WebKitWidgets HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Gui, Qt5Network, Qt5WebKit, Qt5WebKitWidgets, Qt5Widgets
+    mark_as_advanced(Qt5WebKit_DIR Qt5WebKitWidgets_DIR)
+  else()
+    find_package(Qt5WebEngine HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Gui, Qt5Network, Qt5Qml, Qt5Quick, Qt5WebEngine
+    find_package(Qt5WebEngineWidgets HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Gui, Qt5Network, Qt5Qml, Qt5Quick, Qt5WebEngine, Qt5WebEngineWidgets, Qt5Widgets
+    mark_as_advanced(Qt5WebEngine_DIR Qt5WebEngineWidgets_DIR)
+  endif()
+elseif(UNIX)
+  option(BUILD_QT "Build Qt" ON)
+endif()
+
 
 include(ExternalProject)
 include(ProcessorCount)
@@ -676,7 +775,56 @@ set(GeographicLib_DIR ${CMAKE_BINARY_DIR}/GeographicLib-prefix/src/GeographicLib
 # install deps according to here http://doc.qt.io/qt-5/linux-requirements.html
 #./configure -v -release -opensource -static -openssl -no-pch -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -qt-xcb -confirm-license  -no-qml-debug -prefix /home/kbenne/Qt/qt_5_6_linux_64_static 
 
+if(BUILD_QT)
+  set(Qt5Widgets_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5Widgets)
+  set(Qt5Sql_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5Sql)
+  set(Qt5Network_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5Network)
+  set(Qt5Xml_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5Xml)
+  if(${Qt5Widgets_VERSION} VERSION_LESS "5.4.0")
+    set(Qt5WebKit_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5WebKit)
+    set(Qt5WebKitWidgets_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5WebKitWidgets)
+  else()
+    set(Qt5WebEngine_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5WebEngine)
+    set(Qt5WebEngineWidgets_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5WebEngineWidgets)
+  endif()
+  set(Qt5Concurrent_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5Concurrent)
+  set(Qt5PrintSupport_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5PrintSupport)
 
+  if(APPLE)
+    # We're going to explicitly use the SDK specified in the configuration by the user
+    #set(APPLE_SDK_COMMAND "-sdk \"${CMAKE_OSX_SYSROOT}\"" )
+    set(APPLE_SDK_COMMAND "-sdk macosx${OSX_SDK}")
+
+    # At the moment we are building all of debug,release,x86 and x86_64
+    # it would appear that calling "make" in some way that CMake can detect that we are calling
+    # make (and attempt to pass parameters to the child make jobs) is breaking our ability to install
+    # the below code circumvents that by calling make through a call to "sh"
+    ExternalProject_Add(Qt
+      URL http://openstudio-resources.s3.amazonaws.com/dependencies/qt-everywhere-opensource-src-5.3.2.tar.gz
+      URL_MD5 febb001129927a70174467ecb508a682
+      CONFIGURE_COMMAND /bin/sh -c "cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/ && ./configure -v ${APPLE_SDK_COMMAND} -platform macx-clang-64 -release -opensource -openssl -no-pch -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -confirm-license -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install"
+      PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/qt/qmacstyle_mac.patch
+      BUILD_COMMAND /bin/sh -c "cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/ && make -j${QT_CPUCOUNT}"
+      INSTALL_COMMAND /bin/sh -c "cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/ && make -j1 install"
+    )
+  elseif(UNIX)
+    message(WARNING "Qt5 super build is currently untested")
+    ExternalProject_Add(Qt
+      URL http://openstudio-resources.s3.amazonaws.com/dependencies/qt-everywhere-opensource-src-5.3.2.tar.gz
+      URL_MD5 febb001129927a70174467ecb508a682
+      CONFIGURE_COMMAND ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/configure -debug-and-release -opensource -confirm-license -shared -qt-sql-sqlite -qt-xcb -openssl -nomake examples -nomake tests -plugindir ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/share/openstudio/qtplugins -qtlibinfix OpenStudio -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install
+      BUILD_COMMAND $(MAKE) -f ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-build/Makefile
+      INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-build && $(MAKE) install
+    )
+  else()
+    message(FATAL_ERROR "Qt5 cannot currently be built for Windows with the super build.  Please download a Qt installer from http://qt.io/")
+  endif()
+
+  #Update this for Windows if BUILD_QT is enabled for WINDOWS
+  if(UNIX)
+    list(APPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake)
+  endif()
+endif()
 
 set(OpenStudioCore_DIR ${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build)
 
@@ -686,9 +834,9 @@ set(OpenStudioCore_DEPENDS GoogleTest)
 list(APPEND OpenStudioCore_DEPENDS GeographicLib)
 list(APPEND OpenStudioCore_DEPENDS OpenStudio-workflow-gem)
 
-#if(BUILD_QT)
-#  list(APPEND OpenStudioCore_DEPENDS Qt)
-#endif()
+if(BUILD_QT)
+  list(APPEND OpenStudioCore_DEPENDS Qt)
+endif()
 
 if(BUILD_SWIG)
   list(APPEND OpenStudioCore_DEPENDS SWIG)
@@ -758,17 +906,17 @@ ExternalProject_Add(OSCore
     -DCMAKE_VERSION_BUILD:STRING=${CMAKE_VERSION_BUILD}
     -DBOOST_ROOT:STRING=${BOOST_ROOT}
     -DBOOST_LIBRARYDIR:STRING=${BOOST_LIBRARYDIR}
-    #-DQt5Widgets_DIR:STRING=${Qt5Widgets_DIR}
-    #-DQt5Sql_DIR:STRING=${Qt5Sql_DIR}
-    #-DQt5Network_DIR:STRING=${Qt5Network_DIR}
-    #-DQt5Xml_DIR:STRING=${Qt5Xml_DIR}
-    #-DQt5WebKit_DIR:STRING=${Qt5WebKit_DIR}
-    #-DQt5WebKitWidgets_DIR:STRING=${Qt5WebKitWidgets_DIR}
-    #-DQt5WebEngine_DIR:STRING=${Qt5WebEngine_DIR}
-    #-DQt5WebEngineWidgets_DIR:STRING=${Qt5WebEngineWidgets_DIR}
-    ##-DQt5WinExtras_DIR:STRING=${Qt5WinExtras_DIR}
-    #-DQt5Concurrent_DIR:STRING=${Qt5Concurrent_DIR}
-    #-DQt5PrintSupport_DIR:STRING=${Qt5PrintSupport_DIR}
+    -DQt5Widgets_DIR:STRING=${Qt5Widgets_DIR}
+    -DQt5Sql_DIR:STRING=${Qt5Sql_DIR}
+    -DQt5Network_DIR:STRING=${Qt5Network_DIR}
+    -DQt5Xml_DIR:STRING=${Qt5Xml_DIR}
+    -DQt5WebKit_DIR:STRING=${Qt5WebKit_DIR}
+    -DQt5WebKitWidgets_DIR:STRING=${Qt5WebKitWidgets_DIR}
+    -DQt5WebEngine_DIR:STRING=${Qt5WebEngine_DIR}
+    -DQt5WebEngineWidgets_DIR:STRING=${Qt5WebEngineWidgets_DIR}
+    # -DQt5WinExtras_DIR:STRING=${Qt5WinExtras_DIR}
+    -DQt5Concurrent_DIR:STRING=${Qt5Concurrent_DIR}
+    -DQt5PrintSupport_DIR:STRING=${Qt5PrintSupport_DIR}
     -DSWIG_EXECUTABLE:STRING=${SWIG_EXECUTABLE}
     -DNODE_BIN_DIR:STRING=${NODE_BIN_DIR}
     -DNODE_INCLUDE_DIR:STRING=${NODE_INCLUDE_DIR}

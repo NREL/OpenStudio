@@ -61,7 +61,7 @@ OPENSTUDIO_ENUM( InspectorDialogClient,
 
 class MODELEDITOR_API InspectorDialog : public QMainWindow, public Nano::Observer
 {
-  Q_OBJECT
+  Q_OBJECT;
 
 public:
 

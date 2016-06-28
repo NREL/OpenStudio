@@ -1951,7 +1951,7 @@ DayScheduleScene::DayScheduleScene(ScheduleDayView * scheduleDayView, const mode
 {
   setSceneRect(0,0,SCENEWIDTH,SCENEHEIGHT);
 
-  m_scheduleDay.getImpl<model::detail::ScheduleDay_Impl>().get()->model::detail::ScheduleDay_Impl::onChange.connect<DayScheduleScene, &DayScheduleScene::scheduleRefresh>(this);
+  m_scheduleDay.getImpl<model::detail::ScheduleDay_Impl>().get()->onChange.connect<DayScheduleScene, &DayScheduleScene::scheduleRefresh>(this);
   
   refresh();
   //scheduleRefresh();

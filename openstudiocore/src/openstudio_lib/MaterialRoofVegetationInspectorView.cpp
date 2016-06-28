@@ -69,7 +69,7 @@ void MaterialRoofVegetationInspectorView::createLayout()
 
   ++row;
 
-  m_nameEdit = new OSLineEdit();
+  m_nameEdit = new OSLineEdit2();
   mainGridLayout->addWidget(m_nameEdit, row, 0, 1, 3);
 
   ++row;
@@ -136,7 +136,7 @@ void MaterialRoofVegetationInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_soilLayerName = new OSLineEdit();
+  m_soilLayerName = new OSLineEdit2();
   mainGridLayout->addWidget(m_soilLayerName,row++,0,1,3);
 
  // Roughness
@@ -145,7 +145,7 @@ void MaterialRoofVegetationInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_roughness = new OSComboBox();
+  m_roughness = new OSComboBox2();
   m_roughness->addItem("Very Rough");
   m_roughness->addItem("Rough");
   m_roughness->addItem("Medium Rough");
@@ -260,7 +260,7 @@ void MaterialRoofVegetationInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_moistureDiffusionCalculationMethod = new OSLineEdit();
+  m_moistureDiffusionCalculationMethod = new OSLineEdit2();
   mainGridLayout->addWidget(m_moistureDiffusionCalculationMethod,row++,0,1,3);
 
   // Stretch
@@ -291,11 +291,45 @@ void MaterialRoofVegetationInspectorView::onUpdate()
 
 void MaterialRoofVegetationInspectorView::attach(openstudio::model::RoofVegetation & roofVegetation)
 {
-  m_roughness->bind(roofVegetation,"roughness");
+  // m_roughness->bind(roofVegetation,"roughness");
+  if(m_roughness){
+    m_roughness->bind<std::string>(
+      roofVegetation,
+      static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
+      &model::RoofVegetation::roughnessValues,
+      std::bind(&model::RoofVegetation::roughness, &roofVegetation),
+      std::bind(&model::RoofVegetation::setRoughness, &roofVegetation, std::placeholders::_1),
+      boost::optional<NoFailAction>(std::bind(&model::RoofVegetation::resetRoughness, &roofVegetation)),
+      boost::optional<BasicQuery>(std::bind(&model::RoofVegetation::isRoughnessDefaulted, &roofVegetation)));
+  }
 
-  m_nameEdit->bind(roofVegetation,"name");
-  m_soilLayerName->bind(roofVegetation,"soilLayerName");
-  m_moistureDiffusionCalculationMethod->bind(roofVegetation,"moistureDiffusionCalculationMethod");
+  boost::optional<model::RoofVegetation> m_roofVegetation = roofVegetation;
+  
+  // m_nameEdit->bind(roofVegetation,"name");
+  m_nameEdit->bind(
+    *m_roofVegetation,
+    OptionalStringGetter(std::bind(&model::RoofVegetation::name, m_roofVegetation.get_ptr(),true)),
+    boost::optional<StringSetter>(std::bind(&model::RoofVegetation::setName, m_roofVegetation.get_ptr(),std::placeholders::_1))
+  );
+
+  // m_soilLayerName->bind(roofVegetation,"soilLayerName");
+  m_soilLayerName->bind(
+    *m_roofVegetation,
+    OptionalStringGetter(std::bind(&model::RoofVegetation::soilLayerName, m_roofVegetation.get_ptr(),true)),
+    boost::optional<StringSetter>(std::bind(&model::RoofVegetation::setSoilLayerName, m_roofVegetation.get_ptr(),std::placeholders::_1)),
+    boost::optional<NoFailAction>(&model::RoofVegetation::resetSoilLayerName),
+    boost::optional<BasicQuery>(&model::RoofVegetation::isSoilLayerNameDefaulted)
+  );
+
+  // m_moistureDiffusionCalculationMethod->bind(roofVegetation,"moistureDiffusionCalculationMethod");
+  m_moistureDiffusionCalculationMethod->bind(
+    *m_roofVegetation,
+    OptionalStringGetter(std::bind(&model::RoofVegetation::moistureDiffusionCalculationMethod, m_roofVegetation.get_ptr(),true)),
+    boost::optional<StringSetter>(std::bind(&model::RoofVegetation::setMoistureDiffusionCalculationMethod, m_roofVegetation.get_ptr(),std::placeholders::_1)),
+    boost::optional<NoFailAction>(&model::RoofVegetation::resetMoistureDiffusionCalculationMethod),
+    boost::optional<BasicQuery>(&model::RoofVegetation::isMoistureDiffusionCalculationMethodDefaulted)
+  );
+  
   m_heightOfPlants->bind(roofVegetation,"heightofPlants",m_isIP);
   m_leafAreaIndex->bind(roofVegetation,"leafAreaIndex",m_isIP);
   m_leafReflectivity->bind(roofVegetation,"leafReflectivity",m_isIP);

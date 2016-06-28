@@ -164,9 +164,9 @@ SchedulesView::SchedulesView(bool isIP, const model::Model & model)
   m_contentLayout->setContentsMargins(0, 0, 0, 0);
   mainHLayout->addLayout(m_contentLayout, 100);
 
-  m_model.getImpl<model::detail::Model_Impl>().get()->model::detail::Model_Impl::addWorkspaceObjectPtr.connect<SchedulesView, &SchedulesView::onModelObjectAdded>(this);
+  m_model.getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.connect<SchedulesView, &SchedulesView::onModelObjectAdded>(this);
 
-  m_model.getImpl<model::detail::Model_Impl>().get()->model::detail::Model_Impl::removeWorkspaceObjectPtr.connect<SchedulesView, &SchedulesView::onModelObjectRemoved>(this);
+  m_model.getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.connect<SchedulesView, &SchedulesView::onModelObjectRemoved>(this);
 
   // get all schedules
   std::vector<model::ScheduleRuleset> schedules = m_model.getConcreteModelObjects<model::ScheduleRuleset>();
@@ -270,9 +270,9 @@ void SchedulesView::addScheduleRule(model::ScheduleRule & rule)
 
   if (tab)
   {
-    tab->scheduleTabContent()->scheduleRefresh();
+    tab->scheduleTabContent()->scheduleRefresh(scheduleRuleset.handle()); // Handle as dummy
 
-    rule.getImpl<model::detail::ScheduleRule_Impl>().get()->model::detail::ScheduleRule_Impl::onRemoveFromWorkspace.connect<ScheduleTabContent, &ScheduleTabContent::scheduleRefresh>(tab->scheduleTabContent());
+    rule.getImpl<model::detail::ScheduleRule_Impl>().get()->onRemoveFromWorkspace.connect<ScheduleTabContent, &ScheduleTabContent::scheduleRefresh>(tab->scheduleTabContent());
   }
 
 }
@@ -452,7 +452,7 @@ void SchedulesView::showScheduleRule(model::ScheduleRule scheduleRule)
 
   m_contentLayout->addWidget(scheduleView);
 
-  scheduleRule.getImpl<detail::WorkspaceObject_Impl>().get()->detail::WorkspaceObject_Impl::onRemoveFromWorkspace.connect<SchedulesView, &SchedulesView::onScheduleRuleRemoved>(this);
+  scheduleRule.getImpl<detail::WorkspaceObject_Impl>().get()->onRemoveFromWorkspace.connect<SchedulesView, &SchedulesView::onScheduleRuleRemoved>(this);
 
   scheduleView->show();
 
@@ -821,7 +821,7 @@ ScheduleTabHeader::ScheduleTabHeader(ScheduleTab * scheduleTab, QWidget * parent
 
   connect(this, &ScheduleTabHeader::scheduleClicked, m_scheduleTab, &ScheduleTab::scheduleClicked);
 
-  m_scheduleTab->schedule().getImpl<model::detail::ScheduleRuleset_Impl>().get()->model::detail::ScheduleRuleset_Impl::onChange.connect<ScheduleTabHeader, &ScheduleTabHeader::refresh>(this);
+  m_scheduleTab->schedule().getImpl<model::detail::ScheduleRuleset_Impl>().get()->onChange.connect<ScheduleTabHeader, &ScheduleTabHeader::refresh>(this);
 }
 
 void ScheduleTabHeader::expand()
@@ -1068,7 +1068,7 @@ ScheduleTabRule::ScheduleTabRule(ScheduleTab * scheduleTab,
 
   scheduleRefresh();
 
-  m_scheduleRule.getImpl<model::detail::ScheduleRule_Impl>().get()->model::detail::ScheduleRule_Impl::onChange.connect<ScheduleTabRule, &ScheduleTabRule::scheduleRefresh>(this);
+  m_scheduleRule.getImpl<model::detail::ScheduleRule_Impl>().get()->onChange.connect<ScheduleTabRule, &ScheduleTabRule::scheduleRefresh>(this);
 
   setMouseTracking(true);
 }
@@ -1669,7 +1669,7 @@ ScheduleRuleView::ScheduleRuleView(bool isIP,
 
   nameHLayout->addSpacing(10);
 
-  m_nameEditField = new OSLineEdit();
+  m_nameEditField = new OSLineEdit2();
   m_nameEditField->bind(m_scheduleRule,"name");
   nameHLayout->addWidget(m_nameEditField);
 
@@ -1793,9 +1793,9 @@ ScheduleRuleView::ScheduleRuleView(bool isIP,
 
   // Connect
 
-  m_scheduleRule.getImpl<model::detail::ScheduleRule_Impl>().get()->model::detail::ScheduleRule_Impl::onChange.connect<ScheduleRuleView, &ScheduleRuleView::scheduleRefresh>(this);
+  m_scheduleRule.getImpl<model::detail::ScheduleRule_Impl>().get()->onChange.connect<ScheduleRuleView, &ScheduleRuleView::scheduleRefresh>(this);
 
-  m_yearDescription->getImpl<model::detail::YearDescription_Impl>().get()->model::detail::YearDescription_Impl::onChange.connect<ScheduleRuleView, &ScheduleRuleView::scheduleRefresh>(this);
+  m_yearDescription->getImpl<model::detail::YearDescription_Impl>().get()->onChange.connect<ScheduleRuleView, &ScheduleRuleView::scheduleRefresh>(this);
 
   connect(this, &ScheduleRuleView::startDateTimeChanged, m_schedulesView, &SchedulesView::startDateTimeChanged);
 
@@ -1903,7 +1903,7 @@ ScheduleRulesetNameWidget::ScheduleRulesetNameWidget(const model::ScheduleRulese
   label->setObjectName("H2");
   hLayout->addWidget(label);
 
-  auto lineEdit = new OSLineEdit();
+  auto lineEdit = new OSLineEdit2();
   lineEdit->bind(m_scheduleRuleset, "name");
   hLayout->addWidget(lineEdit);
 
@@ -2028,7 +2028,7 @@ YearOverview::YearOverview(const model::ScheduleRuleset & scheduleRuleset, QWidg
 
   mainLayout->addStretch(10);
 
-  m_scheduleRuleset.model().getImpl<model::detail::Model_Impl>().get()->model::detail::Model_Impl::addWorkspaceObjectPtr.connect<YearOverview, &YearOverview::onModelAdd>(this);
+  m_scheduleRuleset.model().getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.connect<YearOverview, &YearOverview::onModelAdd>(this);
 
   std::vector<model::ScheduleRule> scheduleRules = m_scheduleRuleset.scheduleRules();
 
@@ -2036,12 +2036,12 @@ YearOverview::YearOverview(const model::ScheduleRuleset & scheduleRuleset, QWidg
        it < scheduleRules.end();
        ++it)
   {
-    it->getImpl<model::detail::ScheduleRule_Impl>().get()->model::detail::ScheduleRule_Impl::onChange.connect<YearOverview, &YearOverview::scheduleRefresh>(this);
+    it->getImpl<model::detail::ScheduleRule_Impl>().get()->onChange.connect<YearOverview, &YearOverview::scheduleRefresh>(this);
   }
 
   model::YearDescription yearDescription = m_scheduleRuleset.model().getUniqueModelObject<model::YearDescription>();
 
-  yearDescription.getImpl<model::detail::YearDescription_Impl>().get()->model::detail::YearDescription_Impl::onChange.connect<YearOverview, &YearOverview::scheduleRefresh>(this);
+  yearDescription.getImpl<model::detail::YearDescription_Impl>().get()->onChange.connect<YearOverview, &YearOverview::scheduleRefresh>(this);
 
   refresh();
 }
@@ -2068,7 +2068,7 @@ void YearOverview::onModelAdd(std::shared_ptr<openstudio::detail::WorkspaceObjec
   {
     if (scheduleRule->scheduleRuleset().handle() == m_scheduleRuleset.handle())
     {
-      scheduleRule->getImpl<model::detail::ScheduleRule_Impl>().get()->model::detail::ScheduleRule_Impl::onChange.connect<YearOverview, &YearOverview::scheduleRefresh>(this);
+      scheduleRule->getImpl<model::detail::ScheduleRule_Impl>().get()->onChange.connect<YearOverview, &YearOverview::scheduleRefresh>(this);
     }
   }
 }

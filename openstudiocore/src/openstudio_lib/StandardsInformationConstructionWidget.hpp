@@ -39,7 +39,7 @@ namespace model {
 
 }
 
-class OSLineEdit;
+class OSLineEdit2;
 
 class OSComboBox2;
 

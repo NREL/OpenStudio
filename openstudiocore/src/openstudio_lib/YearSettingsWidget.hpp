@@ -34,7 +34,7 @@ class QDateEdit;
 
 namespace openstudio {
 
-class OSComboBox;
+class OSComboBox2;
 
 class OSSwitch;
 
@@ -122,11 +122,11 @@ class YearSettingsWidget : public QWidget
   // year selection section
   QRadioButton * m_calendarYearButton = nullptr;
 
-  OSComboBox * m_calendarYearEdit = nullptr;
+  OSComboBox2 * m_calendarYearEdit = nullptr;
 
   QRadioButton * m_firstDayOfYearButton = nullptr;
 
-  OSComboBox * m_firstDayOfYearEdit = nullptr;
+  OSComboBox2 * m_firstDayOfYearEdit = nullptr;
 
   // daylight savings section
 
@@ -134,11 +134,11 @@ class YearSettingsWidget : public QWidget
 
   QRadioButton * m_dayOfWeekAndMonthStartButton = nullptr;
 
-  OSComboBox * m_startWeekBox = nullptr;
+  OSComboBox2 * m_startWeekBox = nullptr;
 
-  OSComboBox * m_startDayBox = nullptr;
+  OSComboBox2 * m_startDayBox = nullptr;
 
-  OSComboBox * m_startMonthBox = nullptr;
+  OSComboBox2 * m_startMonthBox = nullptr;
 
   QRadioButton * m_dateStartButton = nullptr;
 
@@ -146,11 +146,11 @@ class YearSettingsWidget : public QWidget
 
   QRadioButton * m_dayOfWeekAndMonthEndButton = nullptr;
 
-  OSComboBox * m_endWeekBox = nullptr;
+  OSComboBox2 * m_endWeekBox = nullptr;
 
-  OSComboBox * m_endDayBox = nullptr;
+  OSComboBox2 * m_endDayBox = nullptr;
 
-  OSComboBox * m_endMonthBox = nullptr;
+  OSComboBox2 * m_endMonthBox = nullptr;
 
   QRadioButton * m_dateEndButton = nullptr;
 

@@ -205,7 +205,7 @@ PeopleInspectorView::PeopleInspectorView(bool isIP, const openstudio::model::Mod
   label->setObjectName("H1");
   vLayout->addWidget(label);
 
-  m_nameEdit = new OSLineEdit();
+  m_nameEdit = new OSLineEdit2();
   vLayout->addWidget(m_nameEdit);
 
   mainGridLayout->addLayout(vLayout,0,0,1,2, Qt::AlignTop);
@@ -231,7 +231,7 @@ PeopleInspectorView::PeopleInspectorView(bool isIP, const openstudio::model::Mod
   label->setStyleSheet("QLabel { font: bold; }");
   vLayout->addWidget(label);
 
-  m_peopleDefinitionComboBox = new OSComboBox();
+  m_peopleDefinitionComboBox = new OSComboBox2();
   vLayout->addWidget(m_peopleDefinitionComboBox);
 
   mainGridLayout->addLayout(vLayout,1,1, Qt::AlignTop|Qt::AlignLeft);

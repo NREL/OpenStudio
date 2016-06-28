@@ -52,7 +52,7 @@ LuminaireDefinitionInspectorView::LuminaireDefinitionInspectorView(bool isIP, co
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,0,0);
 
-  m_nameEdit = new OSLineEdit();
+  m_nameEdit = new OSLineEdit2();
   mainGridLayout->addWidget(m_nameEdit,1,0,1,2);
 
   // Lighting Power
@@ -123,7 +123,14 @@ void LuminaireDefinitionInspectorView::onUpdate()
 
 void LuminaireDefinitionInspectorView::attach(openstudio::model::LuminaireDefinition & luminaireDefinition)
 {
-  m_nameEdit->bind(luminaireDefinition,"name");
+  boost::optional<model::LuminaireDefinition> m_luminaireDefinition = luminaireDefinition;
+
+  // m_nameEdit->bind(luminaireDefinition,"name");
+  m_nameEdit->bind(
+    *m_luminaireDefinition,
+    OptionalStringGetter(std::bind(&model::LuminaireDefinition::name, m_luminaireDefinition.get_ptr(),true)),
+    boost::optional<StringSetter>(std::bind(&model::LuminaireDefinition::setName, m_luminaireDefinition.get_ptr(),std::placeholders::_1))
+  );
   m_lightingPowerEdit->bind(luminaireDefinition,"lightingPower",m_isIP);
   m_fractionRadiantEdit->bind(luminaireDefinition,"fractionRadiant",m_isIP);
   m_fractionVisibleEdit->bind(luminaireDefinition,"fractionVisible",m_isIP);

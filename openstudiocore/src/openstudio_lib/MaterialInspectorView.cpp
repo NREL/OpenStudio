@@ -73,7 +73,7 @@ void MaterialInspectorView::createLayout()
 
   ++row;
 
-  m_nameEdit = new OSLineEdit();
+  m_nameEdit = new OSLineEdit2();
   mainGridLayout->addWidget(m_nameEdit, row, 0, 1, 3);
 
   ++row;
@@ -94,7 +94,7 @@ void MaterialInspectorView::createLayout()
   label->setObjectName("H2");
   vLayout->addWidget(label);
 
-  m_roughness = new OSComboBox();
+  m_roughness = new OSComboBox2();
   m_roughness->addItem("Very Rough");
   m_roughness->addItem("Rough");
   m_roughness->addItem("Medium Rough");
@@ -222,11 +222,27 @@ void MaterialInspectorView::onUpdate()
   refresh();
 }
 
-void MaterialInspectorView::attach(openstudio::model::Material & standardOpaqueMaterial)
+void MaterialInspectorView::attach(openstudio::model::StandardOpaqueMaterial & standardOpaqueMaterial)
 {
-  m_nameEdit->bind(standardOpaqueMaterial, "name"); // TODO
+  boost::optional<model::StandardOpaqueMaterial> m_standardOpaqueMaterial = standardOpaqueMaterial;
+  // m_nameEdit->bind(standardOpaqueMaterial, "name");
+  m_nameEdit->bind(
+    *m_standardOpaqueMaterial,
+    OptionalStringGetter(std::bind(&model::StandardOpaqueMaterial::name, m_standardOpaqueMaterial.get_ptr(),true)),
+    boost::optional<StringSetter>(std::bind(&model::StandardOpaqueMaterial::setName, m_standardOpaqueMaterial.get_ptr(),std::placeholders::_1))
+  );
 
-  m_roughness->bind(standardOpaqueMaterial,"roughness");
+  // m_roughness->bind(standardOpaqueMaterial,"roughness");
+  if(m_roughness){
+    m_roughness->bind<std::string>(
+      standardOpaqueMaterial,
+      static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
+      &model::StandardOpaqueMaterial::roughnessValues,
+      std::bind(&model::StandardOpaqueMaterial::roughness, &standardOpaqueMaterial),
+      std::bind(&model::StandardOpaqueMaterial::setRoughness, &standardOpaqueMaterial, std::placeholders::_1),
+      boost::none,
+      boost::none);
+  }
 
   m_thickness->bind(standardOpaqueMaterial,"thickness",m_isIP);
   m_conductivity->bind(standardOpaqueMaterial,"conductivity",m_isIP);

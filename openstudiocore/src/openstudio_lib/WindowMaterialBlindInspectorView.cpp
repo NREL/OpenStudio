@@ -70,7 +70,7 @@ void WindowMaterialBlindInspectorView::createLayout()
 
   ++row;
 
-  m_nameEdit = new OSLineEdit();
+  m_nameEdit = new OSLineEdit2();
   mainGridLayout->addWidget(m_nameEdit, row, 0, 1, 3);
 
   ++row;
@@ -87,7 +87,7 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_slatOrientation = new OSComboBox();
+  m_slatOrientation = new OSComboBox2();
   m_slatOrientation->addItem("Horizontal");
   m_slatOrientation->addItem("Vertical");
   mainGridLayout->addWidget(m_slatOrientation,row++,0,1,3);
@@ -390,7 +390,15 @@ void WindowMaterialBlindInspectorView::onUpdate()
 
 void WindowMaterialBlindInspectorView::attach(openstudio::model::Blind & material)
 {
-  m_slatOrientation->bind(material,"slatOrientation");
+  // m_slatOrientation->bind(material,"slatOrientation");
+  m_slatOrientation->bind<std::string>(
+      material,
+      static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
+      &model::Blind::slatOrientationValues,
+      std::bind(&model::Blind::slatOrientation, &material),
+      std::bind(&model::Blind::setSlatOrientation, &material, std::placeholders::_1),
+      boost::optional<NoFailAction>(std::bind(&model::Blind::resetSlatOrientation, &material)),
+      boost::optional<BasicQuery>(std::bind(&model::Blind::isSlatOrientationDefaulted, &material)));
 
   m_nameEdit->bind(material,"name");
   m_slatWidth->bind(material,"slatWidth",m_isIP);

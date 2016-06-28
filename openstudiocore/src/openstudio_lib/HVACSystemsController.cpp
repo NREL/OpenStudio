@@ -127,9 +127,9 @@ HVACSystemsController::HVACSystemsController(bool isIP, const model::Model & mod
 
   m_hvacControlsController = std::shared_ptr<HVACControlsController>(new HVACControlsController(this));
 
-  m_model.getImpl<model::detail::Model_Impl>().get()->model::detail::Model_Impl::addWorkspaceObject.connect<HVACSystemsController, &HVACSystemsController::onObjectAdded>(this);
+  m_model.getImpl<model::detail::Model_Impl>().get()->addWorkspaceObject.connect<HVACSystemsController, &HVACSystemsController::onObjectAdded>(this);
 
-  m_model.getImpl<model::detail::Model_Impl>().get()->model::detail::Model_Impl::removeWorkspaceObject.connect<HVACSystemsController, &HVACSystemsController::onObjectRemoved>(this);
+  m_model.getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObject.connect<HVACSystemsController, &HVACSystemsController::onObjectRemoved>(this);
 
   connect(m_hvacSystemsView->hvacToolbarView->addButton, &QPushButton::clicked, this, &HVACSystemsController::onAddSystemClicked);
 
@@ -1487,7 +1487,7 @@ void SystemAvailabilityVectorController::attach(const model::ModelObject& modelO
   {
     m_model = m_modelObject->model();
 
-    m_model->getImpl<model::detail::Model_Impl>().get()->model::detail::Model_Impl::onChange.connect<SystemAvailabilityVectorController, &SystemAvailabilityVectorController::reportItemsLater>(this);
+    m_model->getImpl<model::detail::Model_Impl>().get()->onChange.connect<SystemAvailabilityVectorController, &SystemAvailabilityVectorController::reportItemsLater>(this);
   }
 
   reportItemsLater();
@@ -1502,7 +1502,7 @@ void SystemAvailabilityVectorController::detach()
 
   if( m_model )
   {
-    m_model->getImpl<model::detail::Model_Impl>().get()->model::detail::Model_Impl::onChange.connect<SystemAvailabilityVectorController, &SystemAvailabilityVectorController::reportItemsLater>(this);
+    m_model->getImpl<model::detail::Model_Impl>().get()->onChange.connect<SystemAvailabilityVectorController, &SystemAvailabilityVectorController::reportItemsLater>(this);
 
     m_model.reset();
   }
@@ -1589,7 +1589,7 @@ void SupplyAirTempScheduleVectorController::attach(const model::ModelObject& mod
   {
     m_model = m_modelObject->model();
 
-    m_model->getImpl<model::detail::Model_Impl>().get()->model::detail::Model_Impl::onChange.connect<SupplyAirTempScheduleVectorController, &SupplyAirTempScheduleVectorController::reportItemsLater>(this);
+    m_model->getImpl<model::detail::Model_Impl>().get()->onChange.connect<SupplyAirTempScheduleVectorController, &SupplyAirTempScheduleVectorController::reportItemsLater>(this);
   }
 
   reportItemsLater();
@@ -1604,7 +1604,7 @@ void SupplyAirTempScheduleVectorController::detach()
 
   if( m_model )
   {
-    m_model->getImpl<model::detail::Model_Impl>().get()->model::detail::Model_Impl::onChange.connect<SupplyAirTempScheduleVectorController, &SupplyAirTempScheduleVectorController::reportItemsLater>(this);
+    m_model->getImpl<model::detail::Model_Impl>().get()->onChange.connect<SupplyAirTempScheduleVectorController, &SupplyAirTempScheduleVectorController::reportItemsLater>(this);
 
     m_model.reset();
   }

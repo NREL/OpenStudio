@@ -69,7 +69,7 @@ void WindowMaterialGlazingGroupThermochromicInspectorView::createLayout()
 
   ++row;
 
-  m_nameEdit = new OSLineEdit();
+  m_nameEdit = new OSLineEdit2();
   mainGridLayout->addWidget(m_nameEdit, row, 0, 1, 3);
 
   ++row;
@@ -98,7 +98,7 @@ void WindowMaterialGlazingGroupThermochromicInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_windowMaterialGlazingName = new OSLineEdit();
+  m_windowMaterialGlazingName = new OSLineEdit2();
   mainGridLayout->addWidget(m_windowMaterialGlazingName,row++,0,1,3);
 
   // Stretch

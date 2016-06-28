@@ -30,7 +30,7 @@ namespace model {
 
 }
 
-class OSLineEdit;
+class OSLineEdit2;
 
 class OSQuantityEdit;
 
@@ -66,7 +66,7 @@ class MaterialAirWallInspectorView : public ModelObjectInspectorView
 
     bool m_isIP;
 
-    OSLineEdit * m_nameEdit = nullptr;
+    OSLineEdit2 * m_nameEdit = nullptr;
 
     StandardsInformationMaterialWidget * m_standardsInformationWidget = nullptr;
 

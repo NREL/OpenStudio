@@ -30,9 +30,9 @@ namespace model {
 
 }
 
-class OSComboBox;
+class OSComboBox2;
 
-class OSLineEdit;
+class OSLineEdit2;
 
 class OSQuantityEdit;
 
@@ -68,9 +68,9 @@ class MaterialNoMassInspectorView : public ModelObjectInspectorView
 
     bool m_isIP;
 
-    OSLineEdit * m_nameEdit = nullptr;  
+    OSLineEdit2 * m_nameEdit = nullptr;  
 
-    OSComboBox * m_roughness = nullptr;
+    OSComboBox2 * m_roughness = nullptr;
         
     OSQuantityEdit * m_thermalResistance = nullptr;
 

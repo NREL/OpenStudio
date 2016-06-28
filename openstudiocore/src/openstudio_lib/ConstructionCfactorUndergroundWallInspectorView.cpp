@@ -74,7 +74,7 @@ void ConstructionCfactorUndergroundWallInspectorView::createLayout()
 
   ++row;
 
-  m_nameEdit = new OSLineEdit();
+  m_nameEdit = new OSLineEdit2();
   mainGridLayout->addWidget(m_nameEdit, row, 0, 1, 3);
 
   ++row;
@@ -145,7 +145,15 @@ void ConstructionCfactorUndergroundWallInspectorView::onUpdate()
 
 void ConstructionCfactorUndergroundWallInspectorView::attach(openstudio::model::CFactorUndergroundWallConstruction & cFactorUndergroundWallConstruction)
 {
-  m_nameEdit->bind(cFactorUndergroundWallConstruction,"name");
+  boost::optional<model::CFactorUndergroundWallConstruction> m_cFactorUndergroundWallConstruction = cFactorUndergroundWallConstruction;
+
+  // m_nameEdit->bind(cFactorUndergroundWallConstruction,"name");
+  m_nameEdit->bind(
+    *m_cFactorUndergroundWallConstruction,
+    OptionalStringGetter(std::bind(&model::CFactorUndergroundWallConstruction::name, m_cFactorUndergroundWallConstruction.get_ptr(),true)),
+    boost::optional<StringSetter>(std::bind(&model::CFactorUndergroundWallConstruction::setName, m_cFactorUndergroundWallConstruction.get_ptr(),std::placeholders::_1))
+  );
+
   m_cfactorEdit->bind(cFactorUndergroundWallConstruction,"cFactor",m_isIP);
   m_heightEdit->bind(cFactorUndergroundWallConstruction,"height",m_isIP);
   

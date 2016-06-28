@@ -70,7 +70,7 @@ void MaterialAirGapInspectorView::createLayout()
 
   ++row;
 
-  m_nameEdit = new OSLineEdit();
+  m_nameEdit = new OSLineEdit2();
   mainGridLayout->addWidget(m_nameEdit, row, 0, 1, 3);
 
   ++row;
@@ -119,7 +119,14 @@ void MaterialAirGapInspectorView::onUpdate()
 
 void MaterialAirGapInspectorView::attach(openstudio::model::AirGap & airGap)
 {
-  m_nameEdit->bind(airGap,"name");
+  boost::optional<model::AirGap> m_airGap = airGap;
+
+  // m_nameEdit->bind(airGap,"name");
+  m_nameEdit->bind(
+    *m_airGap,
+    OptionalStringGetter(std::bind(&model::AirGap::name, m_airGap.get_ptr(),true)),
+    boost::optional<StringSetter>(std::bind(&model::AirGap::setName, m_airGap.get_ptr(),std::placeholders::_1))
+  );
   m_thermalResistance->bind(airGap,"thermalResistance",m_isIP);
 
   m_standardsInformationWidget->attach(airGap);

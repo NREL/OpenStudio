@@ -37,9 +37,9 @@ UtilityBillFuelTypeListController::UtilityBillFuelTypeListController(const model
   openstudio::FuelType fuelType)
   : m_iddObjectType(model::UtilityBill::iddObjectType()), m_fuelType(fuelType), m_model(model)
 {
-  model.getImpl<model::detail::Model_Impl>().get()->model::detail::Model_Impl::addWorkspaceObjectPtr.connect<UtilityBillFuelTypeListController, &UtilityBillFuelTypeListController::objectAdded>(this);
+  model.getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.connect<UtilityBillFuelTypeListController, &UtilityBillFuelTypeListController::objectAdded>(this);
   
-  model.getImpl<model::detail::Model_Impl>().get()->model::detail::Model_Impl::removeWorkspaceObjectPtr.connect<UtilityBillFuelTypeListController, &UtilityBillFuelTypeListController::objectRemoved>(this);
+  model.getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.connect<UtilityBillFuelTypeListController, &UtilityBillFuelTypeListController::objectRemoved>(this);
   
 }
 

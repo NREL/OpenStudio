@@ -52,7 +52,7 @@ SteamEquipmentDefinitionInspectorView::SteamEquipmentDefinitionInspectorView(boo
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,0,0);
 
-  m_nameEdit = new OSLineEdit();
+  m_nameEdit = new OSLineEdit2();
   mainGridLayout->addWidget(m_nameEdit,1,0,1,3);
 
   // Design Level

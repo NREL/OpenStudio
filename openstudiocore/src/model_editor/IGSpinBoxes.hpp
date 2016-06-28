@@ -32,7 +32,7 @@ class QWheelEvent;
 
 class MODELEDITOR_API IGSpinBox : public QSpinBox
 {
-  
+  Q_OBJECT;
   
  public:
   IGSpinBox(QWidget* parent);
@@ -46,7 +46,7 @@ class MODELEDITOR_API IGSpinBox : public QSpinBox
 
 class MODELEDITOR_API IGDSpinBox : public QDoubleSpinBox
 {
-  
+  Q_OBJECT;
 
   public:
   IGDSpinBox(InspectorGadget* ig,QWidget* parent);

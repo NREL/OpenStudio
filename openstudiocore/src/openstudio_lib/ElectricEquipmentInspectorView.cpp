@@ -52,7 +52,7 @@ ElectricEquipmentDefinitionInspectorView::ElectricEquipmentDefinitionInspectorVi
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,0,0);
 
-  m_nameEdit = new OSLineEdit();
+  m_nameEdit = new OSLineEdit2();
   mainGridLayout->addWidget(m_nameEdit,1,0,1,3);
 
   // Design Level
@@ -143,7 +143,15 @@ void ElectricEquipmentDefinitionInspectorView::onUpdate()
 
 void ElectricEquipmentDefinitionInspectorView::attach(openstudio::model::ElectricEquipmentDefinition & electricEquipmentDefinition)
 {
-  m_nameEdit->bind(electricEquipmentDefinition,"name");
+  boost::optional<model::ElectricEquipmentDefinition> m_electricEquipmentDefinition = electricEquipmentDefinition;
+  
+  // m_nameEdit->bind(electricEquipmentDefinition,"name");
+  m_nameEdit->bind(
+    *m_electricEquipmentDefinition,
+    OptionalStringGetter(std::bind(&model::ElectricEquipmentDefinition::name, m_electricEquipmentDefinition.get_ptr(),true)),
+    boost::optional<StringSetter>(std::bind(&model::ElectricEquipmentDefinition::setName, m_electricEquipmentDefinition.get_ptr(),std::placeholders::_1))
+  );
+
   m_designLevelEdit->bind(electricEquipmentDefinition,"designLevel",m_isIP);
   m_wattsPerSpaceFloorAreaEdit->bind(electricEquipmentDefinition,"wattsperSpaceFloorArea",m_isIP);
   m_wattsPerPersonEdit->bind(electricEquipmentDefinition,"wattsperPerson",m_isIP);

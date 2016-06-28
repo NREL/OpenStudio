@@ -28,6 +28,8 @@
 
 #include "../model/Glazing.hpp"
 #include "../model/Glazing_Impl.hpp"
+#include "../model/StandardGlazing.hpp"
+#include "../model/StandardGlazing_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
 
@@ -71,7 +73,7 @@ void WindowMaterialGlazingInspectorView::createLayout()
 
   ++row;
 
-  m_nameEdit = new OSLineEdit();
+  m_nameEdit = new OSLineEdit2();
   mainGridLayout->addWidget(m_nameEdit, row, 0, 1, 3);
 
   ++row;
@@ -88,7 +90,7 @@ void WindowMaterialGlazingInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_opticalDataType = new OSComboBox();
+  m_opticalDataType = new OSComboBox2();
   m_opticalDataType->addItem("Spectral Average");
   m_opticalDataType->addItem("Spectral");
   mainGridLayout->addWidget(m_opticalDataType,row++,0,1,3);
@@ -99,7 +101,7 @@ void WindowMaterialGlazingInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_windowGlassSpectralDataSetName = new OSLineEdit();
+  m_windowGlassSpectralDataSetName = new OSLineEdit2();
   mainGridLayout->addWidget(m_windowGlassSpectralDataSetName,row++,0,1,3);
 
   // Thickness
@@ -247,7 +249,7 @@ void WindowMaterialGlazingInspectorView::onClearSelection()
 void WindowMaterialGlazingInspectorView::onSelectModelObject(const openstudio::model::ModelObject& modelObject)
 {
   detach();
-  model::Glazing glazing = modelObject.cast<model::Glazing>();
+  model::StandardGlazing glazing = modelObject.cast<model::StandardGlazing>();
   attach(glazing);
   refresh();
 }
@@ -257,9 +259,21 @@ void WindowMaterialGlazingInspectorView::onUpdate()
   refresh();
 }
 
-void WindowMaterialGlazingInspectorView::attach(openstudio::model::Glazing & glazing)
+void WindowMaterialGlazingInspectorView::attach(openstudio::model::StandardGlazing & glazing)
 {
-  m_opticalDataType->bind(glazing,"opticalDataType");
+  // Cast to standard glazing.
+  // m_opticalDataType->bind(glazing,"opticalDataType");
+  if(m_opticalDataType){
+    m_opticalDataType->bind<std::string>(
+      glazing,
+      static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
+      &model::StandardGlazing::opticalDataTypeValues,
+      std::bind(&model::StandardGlazing::opticalDataType, &glazing),
+      std::bind(&model::StandardGlazing::setOpticalDataType, &glazing, std::placeholders::_1),
+      boost::none,
+      boost::none);
+  }
+
   m_solarDiffusing->bind(glazing,"solarDiffusing");
     
   m_nameEdit->bind(glazing,"name");

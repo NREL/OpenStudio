@@ -69,7 +69,7 @@ void MaterialNoMassInspectorView::createLayout()
 
   ++row;
 
-  m_nameEdit = new OSLineEdit();
+  m_nameEdit = new OSLineEdit2();
   mainGridLayout->addWidget(m_nameEdit, row, 0, 1, 3);
 
   ++row;
@@ -87,7 +87,7 @@ void MaterialNoMassInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_roughness = new OSComboBox();
+  m_roughness = new OSComboBox2();
   m_roughness->addItem("Very Rough");
   m_roughness->addItem("Rough");
   m_roughness->addItem("Medium Rough");
@@ -164,9 +164,28 @@ void MaterialNoMassInspectorView::onUpdate()
 
 void MaterialNoMassInspectorView::attach(openstudio::model::MasslessOpaqueMaterial & masslessOpaqueMaterial)
 {
-  m_roughness->bind(masslessOpaqueMaterial,"roughness");
+  // m_roughness->bind(masslessOpaqueMaterial,"roughness");
+
+  if(m_roughness){
+    m_roughness->bind<std::string>(
+      masslessOpaqueMaterial,
+      static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
+      &model::MasslessOpaqueMaterial::roughnessValues,
+      std::bind(&model::MasslessOpaqueMaterial::roughness, &masslessOpaqueMaterial),
+      std::bind(&model::MasslessOpaqueMaterial::setRoughness, &masslessOpaqueMaterial, std::placeholders::_1),
+      boost::none,
+      boost::none);
+  }
   
-  m_nameEdit->bind(masslessOpaqueMaterial,"name");
+  boost::optional<model::MasslessOpaqueMaterial> m_masslessOpaqueMaterial = masslessOpaqueMaterial;
+  // m_nameEdit->bind(masslessOpaqueMaterial,"name");
+  m_nameEdit->bind(
+    *m_masslessOpaqueMaterial,
+    OptionalStringGetter(std::bind(&model::MasslessOpaqueMaterial::name, m_masslessOpaqueMaterial.get_ptr(),true)),
+    boost::optional<StringSetter>(std::bind(&model::MasslessOpaqueMaterial::setName, m_masslessOpaqueMaterial.get_ptr(),std::placeholders::_1))
+  );
+
+
   m_thermalResistance->bind(masslessOpaqueMaterial,"thermalResistance",m_isIP);
   m_thermalAbsorptance->bind(masslessOpaqueMaterial,"thermalAbsorptance",m_isIP);
   m_solarAbsorptance->bind(masslessOpaqueMaterial,"solarAbsorptance",m_isIP);

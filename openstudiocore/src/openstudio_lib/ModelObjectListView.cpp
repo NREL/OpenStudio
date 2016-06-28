@@ -43,9 +43,9 @@ ModelObjectListController::ModelObjectListController(const openstudio::IddObject
   : m_iddObjectType(iddObjectType), m_model(model), m_showLocalBCL(showLocalBCL)
 {
   
-  model.getImpl<model::detail::Model_Impl>().get()->model::detail::Model_Impl::addWorkspaceObjectPtr.connect<ModelObjectListController, &ModelObjectListController::objectAdded>(this);
+  model.getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.connect<ModelObjectListController, &ModelObjectListController::objectAdded>(this);
   
-  model.getImpl<model::detail::Model_Impl>().get()->model::detail::Model_Impl::removeWorkspaceObjectPtr.connect<ModelObjectListController, &ModelObjectListController::objectRemoved>(this);
+  model.getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.connect<ModelObjectListController, &ModelObjectListController::objectRemoved>(this);
 
 }
 

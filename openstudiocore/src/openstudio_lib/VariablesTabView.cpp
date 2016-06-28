@@ -62,11 +62,20 @@ namespace openstudio {
     hbox->addWidget(new QLabel(openstudio::toQString(m_name + ",")));
     hbox->addWidget(new QLabel(openstudio::toQString(m_keyValue)));
     hbox->addStretch();
-    m_combobox = new OSComboBox();
-    connect(m_combobox, static_cast<void (OSComboBox::*)(const QString &)>(&OSComboBox::currentIndexChanged), this, &VariableListItem::indexChanged);
+    m_combobox = new OSComboBox2();
+    connect(m_combobox, static_cast<void (OSComboBox2::*)(const QString &)>(&OSComboBox2::currentIndexChanged), this, &VariableListItem::indexChanged);
     if (m_variable)
     {
-      m_combobox->bind(*m_variable, "reportingFrequency");
+      // m_combobox->bind(*m_variable, "reportingFrequency");
+      m_combobox->bind<std::string>(
+      *m_variable,
+      static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
+      // &model::OutputVariable::roughnessValues,
+      nullptr,
+      std::bind(&model::OutputVariable::reportingFrequency, m_variable.get_ptr()),
+      std::bind(&model::OutputVariable::setReportingFrequency, m_variable.get_ptr(), std::placeholders::_1),
+      boost::none,
+      boost::none);
     }
 
     hbox->addWidget(m_combobox);
@@ -120,7 +129,17 @@ namespace openstudio {
         outputVariable.setReportingFrequency("Hourly");
         outputVariable.setKeyValue(m_keyValue);
         m_variable = outputVariable;
-        m_combobox->bind(*m_variable, "reportingFrequency");
+        
+        // m_combobox->bind(*m_variable, "reportingFrequency");
+        m_combobox->bind<std::string>(
+          *m_variable,
+          static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
+          // &model::OutputVariable::roughnessValues,
+          nullptr,
+          std::bind(&model::OutputVariable::reportingFrequency, m_variable.get_ptr()),
+          std::bind(&model::OutputVariable::setReportingFrequency, m_variable.get_ptr(), std::placeholders::_1),
+          boost::none,
+          boost::none);
       }
     } else {
       if (m_variable)
@@ -135,9 +154,9 @@ namespace openstudio {
   VariablesList::VariablesList(openstudio::model::Model t_model)
     : m_model(t_model), m_dirty(true)
   {
-    t_model.getImpl<openstudio::model::detail::Model_Impl>().get()->model::detail::Model_Impl::addWorkspaceObject.connect<VariablesList, &VariablesList::onAdded>(this);
+    t_model.getImpl<openstudio::model::detail::Model_Impl>().get()->addWorkspaceObject.connect<VariablesList, &VariablesList::onAdded>(this);
 
-    t_model.getImpl<openstudio::model::detail::Model_Impl>().get()->model::detail::Model_Impl::removeWorkspaceObject.connect<VariablesList, &VariablesList::onRemoved>(this);
+    t_model.getImpl<openstudio::model::detail::Model_Impl>().get()->removeWorkspaceObject.connect<VariablesList, &VariablesList::onRemoved>(this);
     auto vbox = new QVBoxLayout();
     vbox->setContentsMargins(10,10,10,10);
     vbox->setSpacing(10);

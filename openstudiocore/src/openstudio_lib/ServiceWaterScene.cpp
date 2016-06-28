@@ -39,9 +39,9 @@ ServiceWaterScene::ServiceWaterScene(const model::Model & model)
     m_dirty(true),
     m_model(model)
 {
-  m_model.getImpl<model::detail::Model_Impl>().get()->model::detail::Model_Impl::addWorkspaceObjectPtr.connect<ServiceWaterScene, &ServiceWaterScene::onAddedWorkspaceObject>(this);
+  m_model.getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.connect<ServiceWaterScene, &ServiceWaterScene::onAddedWorkspaceObject>(this);
 
-  m_model.getImpl<model::detail::Model_Impl>().get()->model::detail::Model_Impl::removeWorkspaceObjectPtr.connect<ServiceWaterScene, &ServiceWaterScene::onRemovedWorkspaceObject>(this);
+  m_model.getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.connect<ServiceWaterScene, &ServiceWaterScene::onRemovedWorkspaceObject>(this);
 
   layout();
 }
@@ -96,9 +96,9 @@ WaterUseConnectionsDetailScene::WaterUseConnectionsDetailScene(const model::Wate
 {
   model::Model model = m_waterUseConnections.model();
 
-  model.getImpl<model::detail::Model_Impl>().get()->model::detail::Model_Impl::addWorkspaceObjectPtr.connect<WaterUseConnectionsDetailScene, &WaterUseConnectionsDetailScene::onAddedWorkspaceObject>(this);
+  model.getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.connect<WaterUseConnectionsDetailScene, &WaterUseConnectionsDetailScene::onAddedWorkspaceObject>(this);
 
-  model.getImpl<model::detail::Model_Impl>().get()->model::detail::Model_Impl::removeWorkspaceObjectPtr.connect<WaterUseConnectionsDetailScene, &WaterUseConnectionsDetailScene::onRemovedWorkspaceObject>(this);
+  model.getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.connect<WaterUseConnectionsDetailScene, &WaterUseConnectionsDetailScene::onRemovedWorkspaceObject>(this);
 
   layout();
 }

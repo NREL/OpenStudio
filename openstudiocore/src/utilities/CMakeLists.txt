@@ -208,6 +208,7 @@ set(documentation_src
 
 set(${target_name}_depends
   sqlite
+#  dl
   jsoncpp
   #litesql
   #litesql-util
@@ -512,7 +513,7 @@ if(WIN32)
 endif()
 
 
-add_library(${target_name} STATIC
+add_library(${target_name} SHARED
   ${${target_name}_src}
 )
 

@@ -1258,10 +1258,17 @@ void InspectorGadget::connectWorkspaceObjectSignals() const
 void InspectorGadget::disconnectWorkspaceObjectSignals() const
 {
   if (m_workspaceObj){
-    QObject* impl = m_workspaceObj->getImpl<openstudio::detail::WorkspaceObject_Impl>().get();
+    auto* impl = m_workspaceObj->getImpl<openstudio::detail::WorkspaceObject_Impl>().get();
     if (impl){
       // disconnect all signals from m_workspaceObj to this
-      impl->disconnect(this); 
+
+      impl->openstudio::detail::WorkspaceObject_Impl::onChange.disconnect<InspectorGadget, &InspectorGadget::onWorkspaceObjectChanged>(const_cast<InspectorGadget *>(this));
+
+      impl->openstudio::detail::WorkspaceObject_Impl::onRemoveFromWorkspace.disconnect<InspectorGadget, &InspectorGadget::removeWorkspaceObject>(const_cast<InspectorGadget *>(this));
+
+      disconnect(this, &InspectorGadget::workspaceObjectRemoved, this, &InspectorGadget::onWorkspaceObjectRemoved);
+
+      // impl->disconnect(); 
     }
   }
 }

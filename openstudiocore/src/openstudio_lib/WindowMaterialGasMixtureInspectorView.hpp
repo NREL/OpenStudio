@@ -30,11 +30,11 @@ namespace model {
 
 }
 
-class OSComboBox;
+class OSComboBox2;
 
-class OSIntegerEdit;
+class OSIntegerEdit2;
 
-class OSLineEdit;
+class OSLineEdit2;
 
 class OSQuantityEdit;
 
@@ -70,22 +70,22 @@ class WindowMaterialGasMixtureInspectorView : public ModelObjectInspectorView
 
     bool m_isIP;
 
-    OSLineEdit * m_nameEdit = nullptr;
+    OSLineEdit2 * m_nameEdit = nullptr;
 
-    OSComboBox * m_gas1Type = nullptr;
-    OSComboBox * m_gas2Type = nullptr;
-    OSComboBox * m_gas3Type = nullptr;
-    OSComboBox * m_gas4Type = nullptr;
+    OSComboBox2 * m_gas1Type = nullptr;
+    OSComboBox2 * m_gas2Type = nullptr;
+    OSComboBox2 * m_gas3Type = nullptr;
+    OSComboBox2 * m_gas4Type = nullptr;
 
-    OSLineEdit * m_2AEdit = nullptr;
+    OSLineEdit2 * m_2AEdit = nullptr;
 
-    OSLineEdit * m_3AEdit = nullptr;
+    OSLineEdit2 * m_3AEdit = nullptr;
 
-    OSLineEdit * m_4AEdit = nullptr;
+    OSLineEdit2 * m_4AEdit = nullptr;
 
     OSQuantityEdit * m_thickness = nullptr;
 
-    OSIntegerEdit * m_numberOfGasesInMixture = nullptr;
+    OSIntegerEdit2 * m_numberOfGasesInMixture = nullptr;
 
     OSQuantityEdit * m_gas1Fraction = nullptr;
 

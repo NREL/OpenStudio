@@ -33,7 +33,7 @@ namespace model {
 
 }
 
-class OSLineEdit;
+class OSLineEdit2;
 
 class OSQuantityEdit;
 
@@ -69,7 +69,7 @@ class ConstructionFfactorGroundFloorInspectorView : public ModelObjectInspectorV
 
     bool m_isIP;
 
-    OSLineEdit * m_nameEdit;
+    OSLineEdit2 * m_nameEdit;
 
     StandardsInformationConstructionWidget * m_standardsInformationWidget;
 

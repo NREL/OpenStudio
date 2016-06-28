@@ -377,10 +377,11 @@ namespace openstudio {
 
   OSDocument::~OSDocument()
   {
-    m_model.getImpl<openstudio::model::detail::Model_Impl>()->blockSignals(true);
+    // blockSignals wouldn't work now anyways because of nano signal slot implementation
+    // m_model.getImpl<openstudio::model::detail::Model_Impl>()->blockSignals(true);
 
     // close the project
-    m_simpleProject.reset();
+    // m_simpleProject.reset(); // m_simpleProject removed Nov 2015
 
     // release the file watchers so can remove model temp dir
     m_mainTabController.reset();
@@ -460,7 +461,7 @@ namespace openstudio {
       QTimer::singleShot(0, this, SLOT(weatherFileReset()));
     }
 
-    m_model.getImpl<model::detail::Model_Impl>().get()->model::detail::Model_Impl::onChange.connect<OSDocument, &OSDocument::markAsModified>(this);
+    m_model.getImpl<model::detail::Model_Impl>().get()->onChange.connect<OSDocument, &OSDocument::markAsModified>(this);
 
     // Main Right Column
 

@@ -50,7 +50,7 @@ class QPaintEvent;
 
 namespace openstudio {
 
-class OSComboBox;
+class OSComboBox2;
 class OSGridView;
 
 // forward declaration

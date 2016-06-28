@@ -103,33 +103,33 @@ namespace openstudio {
   boost::optional<BasicQuery> m_isDefaulted;
 };
 
-class OSCheckBox : public QPushButton, public Nano::Observer {
-  Q_OBJECT
+// class OSCheckBox : public QPushButton, public Nano::Observer {
+//   Q_OBJECT
 
- public:
+//  public:
 
-  OSCheckBox(QWidget * parent = nullptr);
+//   OSCheckBox(QWidget * parent = nullptr);
 
-  virtual ~OSCheckBox() {}
+//   virtual ~OSCheckBox() {}
 
-  void bind(model::ModelObject & modelObject, const char * property);
+//   void bind(model::ModelObject & modelObject, const char * property);
 
-  void unbind();
+//   void unbind();
 
- private slots:
+//  private slots:
 
-  void onToggled(bool checked);
+//   void onToggled(bool checked);
 
-  void onModelObjectChange();
+//   void onModelObjectChange();
 
-  void onModelObjectRemove(const Handle& handle);
+//   void onModelObjectRemove(const Handle& handle);
 
- private:
+//  private:
 
-  boost::optional<model::ModelObject> m_modelObject;
+//   boost::optional<model::ModelObject> m_modelObject;
 
-  std::string m_property;
-};
+//   std::string m_property;
+// };
 
 } // openstudio
 

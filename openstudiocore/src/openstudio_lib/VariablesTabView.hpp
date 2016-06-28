@@ -32,7 +32,7 @@ class QVBoxLayout;
 
 namespace openstudio {
   class OSSwitch;
-  class OSComboBox;
+  class OSComboBox2;
 
   class VariableListItem : public QWidget, public Nano::Observer
   {
@@ -61,7 +61,7 @@ namespace openstudio {
       boost::optional<openstudio::model::OutputVariable> m_variable;
       openstudio::model::Model m_model;
 
-      OSComboBox *m_combobox;
+      OSComboBox2 *m_combobox;
       OSSwitch *m_onOffButton;
   };
 

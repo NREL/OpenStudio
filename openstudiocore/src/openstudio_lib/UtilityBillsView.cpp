@@ -195,7 +195,7 @@ void UtilityBillsInspectorView::createWidgets()
     yd = m_model.getUniqueModelObject<model::YearDescription>();
   }
   OS_ASSERT(yd);
-  yd->getImpl<model::detail::YearDescription_Impl>().get()->model::detail::YearDescription_Impl::onChange.connect<UtilityBillsInspectorView, &UtilityBillsInspectorView::updateRunPeriodDates>(this);
+  yd->getImpl<model::detail::YearDescription_Impl>().get()->onChange.connect<UtilityBillsInspectorView, &UtilityBillsInspectorView::updateRunPeriodDates>(this);
 
   // Regular inspector body
 
@@ -887,7 +887,7 @@ void BillingPeriodWidget::attach(openstudio::model::BillingPeriod & billingPerio
   }
 
   model::ModelObject modelObject = m_billingPeriod->getObject<openstudio::model::ModelObject>();
-  modelObject.getImpl<openstudio::model::detail::ModelObject_Impl>().get()->model::detail::ModelObject_Impl::onChange.connect<BillingPeriodWidget, &BillingPeriodWidget::modelObjectChanged>(this);
+  modelObject.getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onChange.connect<BillingPeriodWidget, &BillingPeriodWidget::modelObjectChanged>(this);
 
   if(m_startDateEdit){
     m_startDateEdit->setEnabled(true);

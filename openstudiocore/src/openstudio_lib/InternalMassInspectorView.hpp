@@ -31,7 +31,7 @@ class InternalMassDefinition;
 
 }
 
-class OSLineEdit;
+class OSLineEdit2;
 
 class OSQuantityEdit;
 
@@ -65,7 +65,7 @@ class InternalMassDefinitionInspectorView : public ModelObjectInspectorView
 
     void refresh();
 
-    OSLineEdit* m_nameEdit;
+    OSLineEdit2* m_nameEdit;
 
     OSQuantityEdit * m_surfaceAreaEdit;
 

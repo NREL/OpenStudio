@@ -87,7 +87,7 @@ class HVACToolbarView : public QWidget
 
   QPushButton * zoomOutButton;
 
-  OSComboBox * systemComboBox;
+  OSComboBox2 * systemComboBox;
 
   // Hide or show add, delete, zoom in, and zoom out buttons.
   // If control buttons are hidden only the systemComboBox and label are shown.
@@ -149,7 +149,7 @@ class HVACControlsView : public QScrollArea
 
   OSViewSwitcher * hvacOperationViewSwitcher;
 
-  OSComboBox * nightCycleComboBox;
+  OSComboBox2 * nightCycleComboBox;
 };
 
 class MechanicalVentilationView : public QWidget
@@ -188,7 +188,7 @@ class SingleZoneReheatSPMView : public QWidget
 
   virtual ~SingleZoneReheatSPMView();
 
-  OSComboBox * controlZoneComboBox;
+  OSComboBox2 * controlZoneComboBox;
 };
 
 class ScheduledSPMView : public QWidget
@@ -228,7 +228,7 @@ class AirLoopHVACUnitaryHeatPumpAirToAirControlView : public QWidget
 
   virtual ~AirLoopHVACUnitaryHeatPumpAirToAirControlView();
 
-  OSComboBox * controlZoneComboBox;
+  OSComboBox2 * controlZoneComboBox;
 };
 
 class NoSupplyAirTempControlView : public QWidget

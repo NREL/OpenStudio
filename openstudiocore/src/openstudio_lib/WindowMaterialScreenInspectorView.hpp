@@ -30,9 +30,9 @@ namespace model {
 
 }
 
-class OSComboBox;
+class OSComboBox2;
 
-class OSLineEdit;
+class OSLineEdit2;
 
 class OSQuantityEdit;
 
@@ -68,11 +68,11 @@ class WindowMaterialScreenInspectorView : public ModelObjectInspectorView
 
     bool m_isIP;
 
-    OSLineEdit * m_nameEdit = nullptr;
+    OSLineEdit2 * m_nameEdit = nullptr;
 
-    OSComboBox * m_reflectedBeamTransmittanceAccountingMethod = nullptr;
+    OSComboBox2 * m_reflectedBeamTransmittanceAccountingMethod = nullptr;
 
-    OSComboBox * m_angleOfResolutionForScreenTransmittanceOutputMap = nullptr;
+    OSComboBox2 * m_angleOfResolutionForScreenTransmittanceOutputMap = nullptr;
 
     OSQuantityEdit * m_diffuseSolarReflectance = nullptr;
 

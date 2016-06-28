@@ -28,13 +28,13 @@ namespace openstudio {
 
 namespace model {
 
-  class Material;
+  class StandardOpaqueMaterial;
 
 }
 
-class OSComboBox;
+class OSComboBox2;
 
-class OSLineEdit;
+class OSLineEdit2;
 
 class OSQuantityEdit;
 
@@ -62,7 +62,7 @@ class MaterialInspectorView : public ModelObjectInspectorView
 
     void createLayout();
 
-    void attach(openstudio::model::Material & material);
+    void attach(openstudio::model::StandardOpaqueMaterial & material);
 
     void detach();
 
@@ -70,9 +70,9 @@ class MaterialInspectorView : public ModelObjectInspectorView
     
     bool m_isIP;
 
-    OSLineEdit * m_nameEdit = nullptr;
+    OSLineEdit2 * m_nameEdit = nullptr;
 
-    OSComboBox * m_roughness = nullptr;
+    OSComboBox2 * m_roughness = nullptr;
     
     OSQuantityEdit * m_thickness = nullptr;
 

@@ -30,7 +30,7 @@ class GasEquipmentDefinition;
 
 }
 
-class OSLineEdit;
+class OSLineEdit2;
 
 class OSQuantityEdit;
 
@@ -63,7 +63,7 @@ class GasEquipmentDefinitionInspectorView : public ModelObjectInspectorView
 
     void refresh();
 
-    OSLineEdit * m_nameEdit;
+    OSLineEdit2 * m_nameEdit;
 
     OSQuantityEdit * m_designLevelEdit;
 

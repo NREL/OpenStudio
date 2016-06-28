@@ -7,3 +7,4 @@ set(src
 )
 
 add_library(sqlite STATIC ${src})
+target_link_libraries(sqlite dl)

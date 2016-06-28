@@ -281,9 +281,6 @@ void InspectorDialog::setModel(openstudio::model::Model& model, bool force)
     return;
   }
 
-  // disconnect all signals with previous model
-  disconnect(m_model.getImpl<openstudio::model::detail::Model_Impl>().get(), nullptr, this, nullptr);
-
   // change model
   m_model = model;
 
@@ -942,11 +939,11 @@ void InspectorDialog::connectSelfSignalsAndSlots()
 
 void InspectorDialog::connectModelSignalsAndSlots()
 {
-  m_model.getImpl<model::detail::Model_Impl>().get()->model::detail::Model_Impl::addWorkspaceObjectPtr.connect<InspectorDialog, &InspectorDialog::onAddWorkspaceObject>(this);
+  m_model.getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.connect<InspectorDialog, &InspectorDialog::onAddWorkspaceObject>(this);
 
-  m_model.getImpl<model::detail::Model_Impl>().get()->model::detail::Model_Impl::onChange.connect<InspectorDialog, &InspectorDialog::onWorkspaceChange>(this);
+  m_model.getImpl<model::detail::Model_Impl>().get()->onChange.connect<InspectorDialog, &InspectorDialog::onWorkspaceChange>(this);
 
-  m_model.getImpl<model::detail::Model_Impl>().get()->model::detail::Model_Impl::removeWorkspaceObjectPtr.connect<InspectorDialog, &InspectorDialog::onRemoveWorkspaceObject>(this);
+  m_model.getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.connect<InspectorDialog, &InspectorDialog::onRemoveWorkspaceObject>(this);
 }
 
 void InspectorDialog::hideSelectionWidget(bool hideSelectionWidget)

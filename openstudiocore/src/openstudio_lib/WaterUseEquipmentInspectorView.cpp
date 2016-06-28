@@ -239,7 +239,7 @@ WaterUseEquipmentDefinitionInspectorView::WaterUseEquipmentDefinitionInspectorVi
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,0,0);
 
-  m_nameEdit = new OSLineEdit();
+  m_nameEdit = new OSLineEdit2();
   mainGridLayout->addWidget(m_nameEdit,1,0,1,3);
 
   // End Use Subcategory
@@ -248,7 +248,7 @@ WaterUseEquipmentDefinitionInspectorView::WaterUseEquipmentDefinitionInspectorVi
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,2,0);
 
-  m_endUseSubcategoryEdit = new OSLineEdit();
+  m_endUseSubcategoryEdit = new OSLineEdit2();
   mainGridLayout->addWidget(m_endUseSubcategoryEdit,3,0,1,3);
 
   // Peak Flow Rate

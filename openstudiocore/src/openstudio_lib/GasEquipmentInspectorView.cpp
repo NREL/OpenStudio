@@ -52,7 +52,7 @@ GasEquipmentDefinitionInspectorView::GasEquipmentDefinitionInspectorView(bool is
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,0,0);
 
-  m_nameEdit = new OSLineEdit();
+  m_nameEdit = new OSLineEdit2();
   mainGridLayout->addWidget(m_nameEdit,1,0,1,3);
 
   // Design Level
@@ -153,7 +153,15 @@ void GasEquipmentDefinitionInspectorView::onUpdate()
 
 void GasEquipmentDefinitionInspectorView::attach(openstudio::model::GasEquipmentDefinition & gasEquipmentDefinition)
 {
-  m_nameEdit->bind(gasEquipmentDefinition,"name");
+  boost::optional<model::GasEquipmentDefinition> m_gasEquipmentDefinition = gasEquipmentDefinition;
+  
+  // m_nameEdit->bind(gasEquipmentDefinition,"name");
+  m_nameEdit->bind(
+    *m_gasEquipmentDefinition,
+    OptionalStringGetter(std::bind(&model::GasEquipmentDefinition::name, m_gasEquipmentDefinition.get_ptr(),true)),
+    boost::optional<StringSetter>(std::bind(&model::GasEquipmentDefinition::setName, m_gasEquipmentDefinition.get_ptr(),std::placeholders::_1))
+  );
+
   m_designLevelEdit->bind(gasEquipmentDefinition,"designLevel",m_isIP);
   m_wattsPerSpaceFloorAreaEdit->bind(gasEquipmentDefinition,"wattsperSpaceFloorArea",m_isIP);
   m_wattsPerPersonEdit->bind(gasEquipmentDefinition,"wattsperPerson",m_isIP);

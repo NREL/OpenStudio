@@ -118,36 +118,31 @@ namespace openstudio {
       {
         m_renderingColor = model::RenderingColor(bs->model());
         bs->setRenderingColor(*m_renderingColor);
-        isConnected = connect(bs->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), SIGNAL(onChange()), this, SLOT(refresh()));
-        OS_ASSERT(isConnected);
+        bs->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onChange.connect<RenderingColorWidget2, &RenderingColorWidget2::refresh>(this);
       }
       else if (boost::optional<model::ConstructionBase> cb = m_modelObject->optionalCast<model::ConstructionBase>())
       {
         m_renderingColor = model::RenderingColor(cb->model());
         cb->setRenderingColor(*m_renderingColor);
-        isConnected = connect(cb->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), SIGNAL(onChange()), this, SLOT(refresh()));
-        OS_ASSERT(isConnected);
+        cb->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onChange.connect<RenderingColorWidget2, &RenderingColorWidget2::refresh>(this);
       }
       else if (boost::optional<model::LightingSimulationZone> lsz = m_modelObject->optionalCast<model::LightingSimulationZone>())
       {
         m_renderingColor = model::RenderingColor(lsz->model());
         lsz->setRenderingColor(*m_renderingColor);
-        isConnected = connect(lsz->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), SIGNAL(onChange()), this, SLOT(refresh()));
-        OS_ASSERT(isConnected);
+        lsz->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onChange.connect<RenderingColorWidget2, &RenderingColorWidget2::refresh>(this);
       }
       else if (boost::optional<model::SpaceType> st = m_modelObject->optionalCast<model::SpaceType>())
       {
         m_renderingColor = model::RenderingColor(st->model());
         st->setRenderingColor(*m_renderingColor);
-        isConnected = connect(st->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), SIGNAL(onChange()), this, SLOT(refresh()));
-        OS_ASSERT(isConnected);
+        st->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onChange.connect<RenderingColorWidget2, &RenderingColorWidget2::refresh>(this);
       }
       else if (boost::optional<model::ThermalZone> tz = m_modelObject->optionalCast<model::ThermalZone>())
       {
         m_renderingColor = model::RenderingColor(tz->model());
         tz->setRenderingColor(*m_renderingColor);
-        isConnected = connect(tz->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), SIGNAL(onChange()), this, SLOT(refresh()));
-        OS_ASSERT(isConnected);
+        tz->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onChange.connect<RenderingColorWidget2, &RenderingColorWidget2::refresh>(this);
       }
       else
       {
@@ -164,11 +159,32 @@ namespace openstudio {
 
   void RenderingColorWidget2::unbind()
   {
-    this->blockSignals(true);
+    this->blockSignals(true); // Incompatible with Nano Signal Slot
     clear();
-    this->blockSignals(false);
+    this->blockSignals(false); // Incompatible with Nano Signal Slot
 
-    this->disconnect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get());
+    if (m_modelObject) {
+      if (boost::optional<model::BuildingStory> bs = m_modelObject->optionalCast<model::BuildingStory>())
+      {
+        bs->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onChange.disconnect<RenderingColorWidget2, &RenderingColorWidget2::refresh>(this);
+      }
+      else if (boost::optional<model::ConstructionBase> cb = m_modelObject->optionalCast<model::ConstructionBase>())
+      {
+        cb->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onChange.disconnect<RenderingColorWidget2, &RenderingColorWidget2::refresh>(this);
+      }
+      else if (boost::optional<model::LightingSimulationZone> lsz = m_modelObject->optionalCast<model::LightingSimulationZone>())
+      {
+        lsz->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onChange.disconnect<RenderingColorWidget2, &RenderingColorWidget2::refresh>(this);
+      }
+      else if (boost::optional<model::SpaceType> st = m_modelObject->optionalCast<model::SpaceType>())
+      {
+        st->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onChange.disconnect<RenderingColorWidget2, &RenderingColorWidget2::refresh>(this);
+      }
+      else if (boost::optional<model::ThermalZone> tz = m_modelObject->optionalCast<model::ThermalZone>())
+      {
+        tz->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onChange.disconnect<RenderingColorWidget2, &RenderingColorWidget2::refresh>(this);
+      }
+    }
 
     m_modelObject.reset();
     m_get.reset();
@@ -281,7 +297,7 @@ void RenderingColorWidget::attach(const openstudio::model::RenderingColor& rende
 
   m_renderingColor = renderingColor;
 
-  m_renderingColor->getImpl<model::detail::ModelObject_Impl>().get()->model::detail::ModelObject_Impl::onChange.connect<RenderingColorWidget, &RenderingColorWidget::refresh>(this);
+  m_renderingColor->getImpl<model::detail::ModelObject_Impl>().get()->onChange.connect<RenderingColorWidget, &RenderingColorWidget::refresh>(this);
 
   refresh();
 }
@@ -291,7 +307,7 @@ void RenderingColorWidget::detach()
   clear();
 
   if (m_renderingColor){
-    this->disconnect(m_renderingColor->getImpl<model::detail::ModelObject_Impl>().get());
+    m_renderingColor->getImpl<model::detail::ModelObject_Impl>().get()->onChange.disconnect<RenderingColorWidget, &RenderingColorWidget::refresh>(this);
     m_renderingColor.reset();
   }
 }

@@ -38,11 +38,9 @@ class QPushButton;
 
 namespace openstudio {
 
-  class OSComboBox;
   class OSComboBox2;
-  class OSIntegerEdit;
   class OSIntegerEdit2;
-  class OSLineEdit;
+  class OSLineEdit2;
   class OSQuantityEdit;
   class OSSwitch;
   class OSSwitch2;
@@ -88,20 +86,7 @@ private:
                 int row,
                 int column,
                 QString text,
-                OSComboBox * & comboBox);
-
-  void addField(QGridLayout * gridLayout,
-                int row,
-                int column,
-                QString text,
                 OSComboBox2 * & comboBox);
-
-  void addField(QGridLayout * gridLayout,
-                int row,
-                int column,
-                QLabel * & label,
-                QString text,
-                OSComboBox * & comboBox);
 
   void addField(QGridLayout * gridLayout,
                 int row,
@@ -114,20 +99,7 @@ private:
                 int row,
                 int column,
                 QString text,
-                OSIntegerEdit * & integerEdit);
-
-  void addField(QGridLayout * gridLayout,
-                int row,
-                int column,
-                QString text,
                 OSIntegerEdit2 * & integerEdit);
-
-  void addField(QGridLayout * gridLayout,
-                int row,
-                int column,
-                QLabel * & label,
-                QString text,
-                OSIntegerEdit * & integerEdit);
 
   void addField(QGridLayout * gridLayout,
                 int row,
@@ -140,7 +112,7 @@ private:
                 int row,
                 int column,
                 QString text,
-                OSLineEdit * & lineEdit);
+                OSLineEdit2 * & lineEdit);
 
   void addField(QGridLayout * gridLayout,
                 int row,
@@ -235,23 +207,23 @@ private:
   OSIntegerEdit2 * m_minimumNumberofWarmupDays;
   OSQuantityEdit * m_loadsConvergenceToleranceValue;
   OSQuantityEdit * m_temperatureConvergenceToleranceValue;
-  OSComboBox * m_solarDistribution;
+  OSComboBox2 * m_solarDistribution;
 
   // Radiance
-  OSIntegerEdit *  m_accumulatedRaysperRecord;
+  OSIntegerEdit2 *  m_accumulatedRaysperRecord;
   OSQuantityEdit * m_directThreshold;
   OSQuantityEdit * m_directCertainty;
   OSQuantityEdit * m_directJitter;
   OSQuantityEdit * m_directPretest;
-  OSIntegerEdit * m_ambientBouncesVMX;
-  OSIntegerEdit * m_ambientBouncesDMX;
-  OSIntegerEdit * m_ambientDivisionsVMX;
-  OSIntegerEdit * m_ambientDivisionsDMX;
-  OSIntegerEdit * m_ambientSupersamples;
+  OSIntegerEdit2 * m_ambientBouncesVMX;
+  OSIntegerEdit2 * m_ambientBouncesDMX;
+  OSIntegerEdit2 * m_ambientDivisionsVMX;
+  OSIntegerEdit2 * m_ambientDivisionsDMX;
+  OSIntegerEdit2 * m_ambientSupersamples;
   OSQuantityEdit * m_limitWeightVMX;
   OSQuantityEdit * m_limitWeightDMX;
-  OSIntegerEdit * m_klemsSamplingDensity;
-  OSComboBox * m_skyDiscretizationResolution;
+  OSIntegerEdit2 * m_klemsSamplingDensity;
+  OSComboBox2 * m_skyDiscretizationResolution;
   QLabel * m_accumulatedRaysperRecordLbl;
   QLabel * m_directThresholdLbl;
   QLabel * m_directCertaintyLbl;
@@ -270,52 +242,52 @@ private:
   // SizingParameters
   OSQuantityEdit * m_heatingSizingFactor;
   OSQuantityEdit * m_coolingSizingFactor;
-  OSIntegerEdit * m_timestepsinAveragingWindow;
+  OSIntegerEdit2 * m_timestepsinAveragingWindow;
 
   // ProgramControl
-  OSIntegerEdit * m_numberOfThreadsAllowed;
+  OSIntegerEdit2 * m_numberOfThreadsAllowed;
 
   // Timestep
-  OSIntegerEdit * m_numberOfTimestepsPerHour;
+  OSIntegerEdit2 * m_numberOfTimestepsPerHour;
 
   // OutputControlReportingTolerances
   OSQuantityEdit * m_toleranceForTimeHeatingSetpointNotMet;
   OSQuantityEdit * m_toleranceForTimeCoolingSetpointNotMet;
 
   // ConvergenceLimits
-  OSIntegerEdit * m_maximumHVACIterations;
-  OSIntegerEdit * m_minimumPlantIterations;
-  OSIntegerEdit * m_maximumPlantIterations;
-  OSIntegerEdit * m_minimumSystemTimestep;
+  OSIntegerEdit2 * m_maximumHVACIterations;
+  OSIntegerEdit2 * m_minimumPlantIterations;
+  OSIntegerEdit2 * m_maximumPlantIterations;
+  OSIntegerEdit2 * m_minimumSystemTimestep;
 
   // ShadowCalculation
-  OSIntegerEdit * m_calculationFrequency;
-  OSIntegerEdit * m_maximumFiguresInShadowOverlapCalculations;
+  OSIntegerEdit2 * m_calculationFrequency;
+  OSIntegerEdit2 * m_maximumFiguresInShadowOverlapCalculations;
   OSComboBox2 * m_polygonClippingAlgorithm;
   OSComboBox2 * m_skyDiffuseModelingAlgorithm;
 
   // SurfaceConvectionAlgorithmInside
-  //OSLineEdit * m_algorithmSurfaceConvectionInside;
+  //OSLineEdit2 * m_algorithmSurfaceConvectionInside;
   OSComboBox2 * m_algorithmSurfaceConvectionInside;
 
   // SurfaceConvectionAlgorithmOutside
-  //OSLineEdit * m_algorithmSurfaceConvectionOutside;
+  //OSLineEdit2 * m_algorithmSurfaceConvectionOutside;
   OSComboBox2 * m_algorithmSurfaceConvectionOutside;
 
   // HeatBalance
-  //OSLineEdit * m_algorithmHeatBalance;
+  //OSLineEdit2 * m_algorithmHeatBalance;
   OSComboBox2 * m_algorithmHeatBalance;
   OSQuantityEdit * m_surfaceTemperatureUpperLimit;
   OSQuantityEdit * m_minimumSurfaceConvectionHeatTransferCoefficientValue;
   OSQuantityEdit * m_maximumSurfaceConvectionHeatTransferCoefficientValue;
 
   // ZoneAirHeatBalanceAlgorithm
-  //OSLineEdit * m_algorithmZoneAirHeatBalance;
+  //OSLineEdit2 * m_algorithmZoneAirHeatBalance;
   OSComboBox2 * m_algorithmZoneAirHeatBalance;
 
   // ZoneAirContaminantBalance
   OSSwitch * m_carbonDioxideConcentration;
-  OSLineEdit * m_outdoorCarbonDioxideScheduleName;
+  OSLineEdit2 * m_outdoorCarbonDioxideScheduleName;
 
   // ZoneCapacitanceMultiplierResearchSpecial
   OSQuantityEdit * m_temperatureCapacityMultiplier;

@@ -25,6 +25,7 @@
 #include "../model/ModelObject_Impl.hpp"
 #include "../utilities/core/Assert.hpp"
 
+#include <model/nano_signal_slot.hpp>
 #include <QStyleOption>
 #include <QPainter>
 #include <QVBoxLayout>
@@ -61,18 +62,19 @@ void ModelObjectInspectorView::update()
    *  And this slot automatically emits the QSignal that will call 
    *  call QWidget::update().
    */
+  // this->onChange.nano_emit();
   emit onChange();
 }
 
 void ModelObjectInspectorView::selectModelObject(const openstudio::model::ModelObject& modelObject)
 {
   if (m_modelObject){
-    this->disconnect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get());
+    m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onChange.disconnect<ModelObjectInspectorView, &ModelObjectInspectorView::update>(this);
   }
 
   m_modelObject = modelObject;
 
-  m_modelObject->getImpl<model::detail::ModelObject_Impl>().get()->model::detail::ModelObject_Impl::onChange.connect<ModelObjectInspectorView, &ModelObjectInspectorView::update>(this);
+  m_modelObject->getImpl<model::detail::ModelObject_Impl>().get()->onChange.connect<ModelObjectInspectorView, &ModelObjectInspectorView::update>(this);
 
   onSelectModelObject(*m_modelObject);
 }
@@ -80,7 +82,7 @@ void ModelObjectInspectorView::selectModelObject(const openstudio::model::ModelO
 void ModelObjectInspectorView::onClearSelection()
 {
   if (m_modelObject){
-    this->disconnect(m_modelObject->getImpl<model::detail::ModelObject_Impl>().get());
+    m_modelObject->getImpl<model::detail::ModelObject_Impl>().get()->onChange.disconnect<ModelObjectInspectorView, &ModelObjectInspectorView::update>(this);
   }
 
   m_modelObject.reset();

@@ -30,7 +30,7 @@ namespace model {
 
 }
 
-class OSLineEdit;
+class OSLineEdit2;
 
 class OSSwitch;
 
@@ -68,7 +68,7 @@ class WindowMaterialGlazingRefractionExtinctionMethodInspectorView : public Mode
 
     bool m_isIP;
 
-    OSLineEdit * m_nameEdit = nullptr;
+    OSLineEdit2 * m_nameEdit = nullptr;
 
     OSSwitch * m_solarDiffusing = nullptr;
 

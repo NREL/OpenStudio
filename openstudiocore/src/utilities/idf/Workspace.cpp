@@ -2289,7 +2289,7 @@ namespace detail {
       }
     }
     ptr->disconnect();
-    ptr.get()->WorkspaceObject_Impl::onChange.disconnect<Workspace_Impl, &Workspace_Impl::change>(this);
+    ptr.get()->onChange.disconnect<Workspace_Impl, &Workspace_Impl::change>(this);
   }
 
   void Workspace_Impl::registerRemovalOfObjects(std::vector<SavedWorkspaceObject>& savedObjects,

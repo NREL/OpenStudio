@@ -125,9 +125,9 @@ void OSLineEdit2::completeBind() {
     setReadOnly(true);
   }
 
-  m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->openstudio::model::detail::ModelObject_Impl::onChange.connect<OSLineEdit2, &OSLineEdit2::onModelObjectChange>(this);
+  m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onChange.connect<OSLineEdit2, &OSLineEdit2::onModelObjectChange>(this);
 
-  m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace.connect<OSLineEdit2, &OSLineEdit2::onModelObjectRemove>(this);
+  m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onRemoveFromWorkspace.connect<OSLineEdit2, &OSLineEdit2::onModelObjectRemove>(this);
 
   connect(this, &OSLineEdit2::editingFinished, this, &OSLineEdit2::onEditingFinished);
 
@@ -141,7 +141,9 @@ void OSLineEdit2::completeBind() {
 void OSLineEdit2::unbind()
 {
   if (m_modelObject){
-    this->disconnect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get());
+    m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onChange.disconnect<OSLineEdit2, &OSLineEdit2::onModelObjectChange>(this);
+    m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onRemoveFromWorkspace.disconnect<OSLineEdit2, &OSLineEdit2::onModelObjectRemove>(this);
+
     m_modelObject.reset();
     m_get.reset();
     m_getOptional.reset();
@@ -333,9 +335,9 @@ void OSLineEdit::bind(model::ModelObject & modelObject, const char * property)
 
   setEnabled(true);
 
-  m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->openstudio::model::detail::ModelObject_Impl::onChange.connect<OSLineEdit, &OSLineEdit::onModelObjectChange>(this);
+  m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onChange.connect<OSLineEdit, &OSLineEdit::onModelObjectChange>(this);
 
-  m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace.connect<OSLineEdit, &OSLineEdit::onModelObjectRemove>(this);
+  m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onRemoveFromWorkspace.connect<OSLineEdit, &OSLineEdit::onModelObjectRemove>(this);
 
   connect(this, &OSLineEdit::editingFinished, this, &OSLineEdit::onEditingFinished);
 
@@ -345,7 +347,9 @@ void OSLineEdit::bind(model::ModelObject & modelObject, const char * property)
 void OSLineEdit::unbind()
 {
   if (m_modelObject){
-    this->disconnect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get());
+    m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onChange.disconnect<OSLineEdit, &OSLineEdit::onModelObjectChange>(this);
+    m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onRemoveFromWorkspace.disconnect<OSLineEdit, &OSLineEdit::onModelObjectRemove>(this);
+
     m_modelObject.reset();
     m_property = "";
     setEnabled(false);

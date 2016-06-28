@@ -59,7 +59,7 @@ InternalMassDefinitionInspectorView::InternalMassDefinitionInspectorView(bool is
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,0,0);
 
-  m_nameEdit = new OSLineEdit();
+  m_nameEdit = new OSLineEdit2();
   mainGridLayout->addWidget(m_nameEdit,1,0,1,3);
 
   // Surface Area
@@ -134,7 +134,15 @@ void InternalMassDefinitionInspectorView::onUpdate()
 
 void InternalMassDefinitionInspectorView::attach(openstudio::model::InternalMassDefinition & internalMassDefinition)
 {
-  m_nameEdit->bind(internalMassDefinition,"name");
+  boost::optional<model::InternalMassDefinition> m_internalMassDefinition = internalMassDefinition;
+
+  // m_nameEdit->bind(internalMassDefinition,"name");
+  m_nameEdit->bind(
+    *m_internalMassDefinition,
+    OptionalStringGetter(std::bind(&model::InternalMassDefinition::name, m_internalMassDefinition.get_ptr(),true)),
+    boost::optional<StringSetter>(std::bind(&model::InternalMassDefinition::setName, m_internalMassDefinition.get_ptr(),std::placeholders::_1))
+  );
+
   m_surfaceAreaEdit->bind(internalMassDefinition,"surfaceArea",m_isIP);
   m_surfaceAreaPerPersonEdit->bind(internalMassDefinition,"surfaceAreaperPerson",m_isIP);
   m_surfaceAreaPerSpaceFloorAreaEdit->bind(internalMassDefinition,"surfaceAreaperSpaceFloorArea",m_isIP);

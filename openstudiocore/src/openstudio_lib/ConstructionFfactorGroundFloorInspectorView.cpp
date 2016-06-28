@@ -74,7 +74,7 @@ void ConstructionFfactorGroundFloorInspectorView::createLayout()
 
   ++row;
 
-  m_nameEdit = new OSLineEdit();
+  m_nameEdit = new OSLineEdit2();
   mainGridLayout->addWidget(m_nameEdit, row, 0, 1, 3);
 
   ++row;
@@ -158,7 +158,14 @@ void ConstructionFfactorGroundFloorInspectorView::onUpdate()
 
 void ConstructionFfactorGroundFloorInspectorView::attach(openstudio::model::FFactorGroundFloorConstruction & fFactorGroundFloorConstruction)
 {
-  m_nameEdit->bind(fFactorGroundFloorConstruction,"name");
+  boost::optional<model::FFactorGroundFloorConstruction> m_fFactorGroundFloorConstruction = fFactorGroundFloorConstruction;
+  // m_nameEdit->bind(fFactorGroundFloorConstruction,"name");
+  m_nameEdit->bind(
+    *m_fFactorGroundFloorConstruction,
+    OptionalStringGetter(std::bind(&model::FFactorGroundFloorConstruction::name, m_fFactorGroundFloorConstruction.get_ptr(),true)),
+    boost::optional<StringSetter>(std::bind(&model::FFactorGroundFloorConstruction::setName, m_fFactorGroundFloorConstruction.get_ptr(),std::placeholders::_1))
+  );
+
   m_ffactorEdit->bind(fFactorGroundFloorConstruction,"fFactor",m_isIP);
   m_areaEdit->bind(fFactorGroundFloorConstruction,"area",m_isIP);
   m_perimeterExposedEdit->bind(fFactorGroundFloorConstruction,"perimeterExposed",m_isIP);

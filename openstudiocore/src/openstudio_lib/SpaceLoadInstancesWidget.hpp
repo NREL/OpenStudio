@@ -40,10 +40,10 @@ class QVBoxLayout;
 
 namespace openstudio {
 
-class OSDoubleEdit;
+class OSDoubleEdit2;
 class OSDropZone;
 class OSIntegerEdit;
-class OSLineEdit;
+class OSLineEdit2;
 
 class SpaceLoadInstanceDefinitionVectorController : public ModelObjectVectorController
 {
@@ -119,8 +119,8 @@ private slots:
   void onRemoveClicked();
 
 private:
-  OSDoubleEdit* m_multiplierEdit;
-  OSLineEdit* m_nameEdit;
+  OSDoubleEdit2* m_multiplierEdit;
+  OSLineEdit2* m_nameEdit;
   QLabel* m_activityScheduleLabel;
   QPushButton* m_removeButton;
 

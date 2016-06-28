@@ -251,7 +251,7 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
   label->setStyleSheet("QLabel { font: bold; }");
   vLayout->addWidget(label);
 
-  m_nameEdit = new OSLineEdit();
+  m_nameEdit = new OSLineEdit2();
   vLayout->addWidget(m_nameEdit);
 
   mainGridLayout->addLayout(vLayout,row,0,1,2);
@@ -554,7 +554,12 @@ void BuildingInspectorView::attach(openstudio::model::Building& building)
 {
   m_building = building;
 
-  m_nameEdit->bind(building, "name");
+  // m_nameEdit->bind(building, "name");
+  m_nameEdit->bind(
+    *m_building,
+    OptionalStringGetter(std::bind(&model::Building::name, m_building.get_ptr(),true)),
+    boost::optional<StringSetter>(std::bind(&model::Building::setName, m_building.get_ptr(),std::placeholders::_1))
+  );
 
   populateStandardsBuildingTypes();
 

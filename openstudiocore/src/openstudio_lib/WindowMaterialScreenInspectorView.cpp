@@ -70,7 +70,7 @@ void WindowMaterialScreenInspectorView::createLayout()
 
   ++row;
 
-  m_nameEdit = new OSLineEdit();
+  m_nameEdit = new OSLineEdit2();
   mainGridLayout->addWidget(m_nameEdit, row, 0, 1, 3);
 
   ++row;
@@ -87,7 +87,7 @@ void WindowMaterialScreenInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_reflectedBeamTransmittanceAccountingMethod = new OSComboBox();
+  m_reflectedBeamTransmittanceAccountingMethod = new OSComboBox2();
   m_reflectedBeamTransmittanceAccountingMethod->addItem("Do Not Model");
   m_reflectedBeamTransmittanceAccountingMethod->addItem("Model As Direct Beam");
   m_reflectedBeamTransmittanceAccountingMethod->addItem("Model As Diffuse");
@@ -209,7 +209,7 @@ void WindowMaterialScreenInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_angleOfResolutionForScreenTransmittanceOutputMap = new OSComboBox();
+  m_angleOfResolutionForScreenTransmittanceOutputMap = new OSComboBox2();
   m_angleOfResolutionForScreenTransmittanceOutputMap->addItem("0"); // TODO needs OS to bind to model
   m_angleOfResolutionForScreenTransmittanceOutputMap->addItem("2");
   m_angleOfResolutionForScreenTransmittanceOutputMap->addItem("3");
@@ -245,8 +245,25 @@ void WindowMaterialScreenInspectorView::onUpdate()
 
 void WindowMaterialScreenInspectorView::attach(openstudio::model::Screen & screen)
 {
-  m_reflectedBeamTransmittanceAccountingMethod->bind(screen,"reflectedBeamTransmittanceAccountingMethod");
-  m_angleOfResolutionForScreenTransmittanceOutputMap->bind(screen,"angleofResolutionforScreenTransmittanceOutputMap");
+  // m_reflectedBeamTransmittanceAccountingMethod->bind(screen,"reflectedBeamTransmittanceAccountingMethod");
+  m_reflectedBeamTransmittanceAccountingMethod->bind<std::string>(
+      screen,
+      static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
+      &model::Screen::reflectedBeamTransmittanceAccountingMethodValues,
+      std::bind(&model::Screen::reflectedBeamTransmittanceAccountingMethod, &screen),
+      std::bind(&model::Screen::setReflectedBeamTransmittanceAccountingMethod, &screen, std::placeholders::_1),
+      boost::optional<NoFailAction>(std::bind(&model::Screen::resetReflectedBeamTransmittanceAccountingMethod, &screen)),
+      boost::optional<BasicQuery>(std::bind(&model::Screen::isReflectedBeamTransmittanceAccountingMethodDefaulted, &screen)));
+
+  // m_angleOfResolutionForScreenTransmittanceOutputMap->bind(screen,"angleofResolutionforScreenTransmittanceOutputMap");
+  m_angleOfResolutionForScreenTransmittanceOutputMap->bind<std::string>(
+      screen,
+      static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
+      &model::Screen::angleofResolutionforScreenTransmittanceOutputMapValues,
+      std::bind(&model::Screen::angleofResolutionforScreenTransmittanceOutputMap, &screen),
+      std::bind(&model::Screen::setAngleofResolutionforScreenTransmittanceOutputMap, &screen, std::placeholders::_1),
+      boost::optional<NoFailAction>(std::bind(&model::Screen::resetAngleofResolutionforScreenTransmittanceOutputMap, &screen)),
+      boost::optional<BasicQuery>(std::bind(&model::Screen::isAngleofResolutionforScreenTransmittanceOutputMapDefaulted, &screen)));
 
   m_nameEdit->bind(screen,"name");
   m_diffuseSolarReflectance->bind(screen,"diffuseSolarReflectance",m_isIP);

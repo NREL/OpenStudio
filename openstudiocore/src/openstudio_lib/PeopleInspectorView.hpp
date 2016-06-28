@@ -31,12 +31,11 @@ namespace openstudio {
 
 class OSDoubleEdit2;
 class OSDropZone;
-class OSLineEdit;
 class OSLineEdit2;
 class OSQuantityEdit;
 class OSQuantityEdit2;
 class OSCheckBox;
-class OSComboBox;
+class OSComboBox2;
 
 class PeopleNumberofPeopleScheduleVectorController;
 class PeopleActivityLevelScheduleVectorController;
@@ -75,11 +74,11 @@ class PeopleInspectorView : public ModelObjectInspectorView
 
     void refresh();
 
-    OSLineEdit* m_nameEdit;
+    OSLineEdit2* m_nameEdit;
 
     OSQuantityEdit* m_multiplierEdit;
 
-    OSComboBox* m_peopleDefinitionComboBox;
+    OSComboBox2* m_peopleDefinitionComboBox;
 
     PeopleNumberofPeopleScheduleVectorController* m_numberofPeopleScheduleVectorController;
     OSDropZone* m_numberofPeopleScheduleDropZone;

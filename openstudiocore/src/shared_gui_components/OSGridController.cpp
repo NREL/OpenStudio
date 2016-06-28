@@ -1712,9 +1712,9 @@ namespace openstudio {
 
   void OSGridController::connectToModel()
   {
-    m_model.getImpl<model::detail::Model_Impl>().get()->model::detail::Model_Impl::addWorkspaceObject.connect<OSGridController, &OSGridController::onAddWorkspaceObject>(this);
+    m_model.getImpl<model::detail::Model_Impl>().get()->addWorkspaceObject.connect<OSGridController, &OSGridController::onAddWorkspaceObject>(this);
 
-    m_model.getImpl<model::detail::Model_Impl>().get()->model::detail::Model_Impl::removeWorkspaceObject.connect<OSGridController, &OSGridController::onRemoveWorkspaceObject>(this);
+    m_model.getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObject.connect<OSGridController, &OSGridController::onRemoveWorkspaceObject>(this);
   }
 
   void OSGridController::disconnectFromModel()

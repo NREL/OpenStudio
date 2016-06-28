@@ -30,7 +30,7 @@ class SteamEquipmentDefinition;
 
 }
 
-class OSLineEdit;
+class OSLineEdit2;
 
 class OSQuantityEdit;
 
@@ -62,7 +62,7 @@ class SteamEquipmentDefinitionInspectorView : public ModelObjectInspectorView
 
     void refresh();
 
-    OSLineEdit * m_nameEdit;
+    OSLineEdit2 * m_nameEdit;
 
     OSQuantityEdit * m_designLevelEdit;
 

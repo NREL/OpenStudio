@@ -52,7 +52,7 @@ LightsDefinitionInspectorView::LightsDefinitionInspectorView(bool isIP, const op
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,0,0);
 
-  m_nameEdit = new OSLineEdit();
+  m_nameEdit = new OSLineEdit2();
   mainGridLayout->addWidget(m_nameEdit,1,0,1,3);
 
   // Lighting Level
@@ -143,7 +143,15 @@ void LightsDefinitionInspectorView::onUpdate()
 
 void LightsDefinitionInspectorView::attach(openstudio::model::LightsDefinition & lightsDefinition)
 {
-  m_nameEdit->bind(lightsDefinition,"name");
+  boost::optional<model::LightsDefinition> m_lightsDefinition = lightsDefinition;
+  // m_nameEdit->bind(lightsDefinition,"name");
+
+  m_nameEdit->bind(
+    *m_lightsDefinition,
+    OptionalStringGetter(std::bind(&model::LightsDefinition::name, m_lightsDefinition.get_ptr(),true)),
+    boost::optional<StringSetter>(std::bind(&model::LightsDefinition::setName, m_lightsDefinition.get_ptr(),std::placeholders::_1))
+  );
+
   m_lightingLevelEdit->bind(lightsDefinition,"lightingLevel",m_isIP);
   m_wattsPerSpaceFloorAreaEdit->bind(lightsDefinition,"wattsperSpaceFloorArea",m_isIP);
   m_wattsPerPersonEdit->bind(lightsDefinition,"wattsperPerson",m_isIP);

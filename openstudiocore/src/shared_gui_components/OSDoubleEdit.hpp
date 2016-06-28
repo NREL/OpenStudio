@@ -163,50 +163,50 @@ class OSDoubleEdit2: public QLineEdit, public Nano::Observer {
 
 /** Should only be used for dimensionless real fields. Real fields with units should use
  *  OSQuantityEdit. */
-class OSDoubleEdit: public QLineEdit, public Nano::Observer {
-  Q_OBJECT
+// class OSDoubleEdit: public QLineEdit, public Nano::Observer {
+//   Q_OBJECT
 
- public:
+//  public:
 
-  OSDoubleEdit(QWidget * parent = nullptr);
+//   OSDoubleEdit(QWidget * parent = nullptr);
 
-  virtual ~OSDoubleEdit() {}
+//   virtual ~OSDoubleEdit() {}
 
-  QDoubleValidator * doubleValidator() { return m_doubleValidator; }
+//   QDoubleValidator * doubleValidator() { return m_doubleValidator; }
 
-  void bind(model::ModelObject& modelObject,
-            const char* property,
-            const boost::optional<std::string>& isDefaultedProperty = boost::none,
-            const boost::optional<std::string>& isAutosizedProperty = boost::none,
-            const boost::optional<std::string>& isAutocalucatedProperty = boost::none);
+//   void bind(model::ModelObject& modelObject,
+//             const char* property,
+//             const boost::optional<std::string>& isDefaultedProperty = boost::none,
+//             const boost::optional<std::string>& isAutosizedProperty = boost::none,
+//             const boost::optional<std::string>& isAutocalucatedProperty = boost::none);
 
-  void unbind();
+//   void unbind();
 
- private slots:
+//  private slots:
 
-  void onEditingFinished();
+//   void onEditingFinished();
 
-  void onModelObjectChange();
+//   void onModelObjectChange();
 
-  void onModelObjectRemove(const Handle& handle);
+//   void onModelObjectRemove(const Handle& handle);
 
- private:
-  boost::optional<model::ModelObject> m_modelObject;
-  std::string m_property;
-  boost::optional<std::string> m_isDefaultedProperty;
-  boost::optional<std::string> m_isAutosizedProperty;
-  boost::optional<std::string> m_isAutocalculatedProperty;
+//  private:
+//   boost::optional<model::ModelObject> m_modelObject;
+//   std::string m_property;
+//   boost::optional<std::string> m_isDefaultedProperty;
+//   boost::optional<std::string> m_isAutosizedProperty;
+//   boost::optional<std::string> m_isAutocalculatedProperty;
 
-  bool m_isScientific;
-  boost::optional<int> m_precision;
-  QDoubleValidator * m_doubleValidator;
+//   bool m_isScientific;
+//   boost::optional<int> m_precision;
+//   QDoubleValidator * m_doubleValidator;
 
-  void refreshTextAndLabel();
+//   void refreshTextAndLabel();
 
-  void setPrecision(const std::string& str);
+//   void setPrecision(const std::string& str);
 
-  REGISTER_LOGGER("openstudio.OSDoubleEdit");
-};
+//   REGISTER_LOGGER("openstudio.OSDoubleEdit");
+// };
 
 } // openstudio
 

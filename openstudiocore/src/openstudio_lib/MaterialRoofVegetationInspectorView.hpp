@@ -30,9 +30,9 @@ namespace model {
 
 }
 
-class OSComboBox;
+class OSComboBox2;
 
-class OSLineEdit;
+class OSLineEdit2;
 
 class OSQuantityEdit;
 
@@ -68,13 +68,13 @@ class MaterialRoofVegetationInspectorView : public ModelObjectInspectorView
 
     bool m_isIP;
 
-    OSLineEdit * m_nameEdit = nullptr;
+    OSLineEdit2 * m_nameEdit = nullptr;
 
-    OSComboBox * m_roughness = nullptr;
+    OSComboBox2 * m_roughness = nullptr;
 
-    OSLineEdit * m_soilLayerName = nullptr;
+    OSLineEdit2 * m_soilLayerName = nullptr;
 
-    OSLineEdit * m_moistureDiffusionCalculationMethod = nullptr;
+    OSLineEdit2 * m_moistureDiffusionCalculationMethod = nullptr;
 
     OSQuantityEdit * m_heightOfPlants = nullptr;
 
