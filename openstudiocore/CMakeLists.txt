@@ -109,7 +109,9 @@ option(BUILD_RUBY_GEM "Build Ruby Gem" OFF)
 
 # Build shared OS libraries
 option(BUILD_SHARED_LIBS "Build OS libs as shared libraries" OFF)
-
+if (BUILD_SHARED_LIBS)
+  add_definitions("-DSHARED_OS_LIBS")
+endif()
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
   add_definitions(-Qunused-arguments)
@@ -565,6 +567,71 @@ add_definitions(-DSQLITE_THREADSAFE=1) # 1 is default, serial access
 # Qt
 
 set(QT_INSTALL_DIR "${CMAKE_BINARY_DIR}/../../../Qt-prefix/src/Qt-install/")
+
+if(NOT EXISTS QT_INSTALL_DIR)
+
+  option(STATIC_QT "Use Static Qt" ON)
+
+  # download qt
+  if( WIN32 )
+    if( STATIC_QT )
+      set(QT_ZIP_FILENAME "qt_5_6_msvc2013_64_static_temp.zip")
+      set(QT_ZIP_EXPECTED_MD5 "3f0e1a505e707c9f1bde31e05f17fc47")
+    else()
+      set(QT_ZIP_FILENAME "qt_5_6_msvc2013_64_shared_temp.zip")
+      set(QT_ZIP_EXPECTED_MD5 "2ac0ed2909710350f1c6acd5f38a8b33")
+    endif()
+    
+  elseif( APPLE )
+    if( STATIC_QT )
+      set(QT_ZIP_FILENAME "qt_5_6_osx_static_temp.tar.gz")
+      set(QT_ZIP_EXPECTED_MD5 "094985d51cc686cdb665c45fff9c088f")
+    else()
+      message(SEND_ERROR "Shared Apple Qt build not available")
+      #set(QT_ZIP_FILENAME "qt_5_6_osx_shared.tar.gz")
+      #set(QT_ZIP_EXPECTED_MD5 "52424fdb4d553b94156de088881506b5")
+    endif()
+
+  elseif(EXISTS "/etc/redhat-release")
+    if( STATIC_QT )
+      set(QT_ZIP_FILENAME "qt_5_6_redhat_64_static_temp.tar.gz")
+      set(QT_ZIP_EXPECTED_MD5 "4c62bd59d1c4ebc14594fe98b33c58fd")
+    else()
+      message(SEND_ERROR "Shared Redhat Qt build not available")
+      #set(QT_ZIP_FILENAME "qt_5_6_redhat_64_shared.tar.gz")
+      #set(QT_ZIP_EXPECTED_MD5 "52424fdb4d553b94156de088881506b5")
+    endif()
+    
+  else()
+    #ubuntu
+    if( STATIC_QT )
+      set(QT_ZIP_FILENAME "qt_5_6_linux_64_static_temp.tar.gz")
+      set(QT_ZIP_EXPECTED_MD5 "1377b18696829ccd7d5b1906b05d9857")
+    else()
+      message(SEND_ERROR "Shared Ubuntu Qt build not available")
+      #set(QT_ZIP_FILENAME "qt_5_6_linux_64_static.tar.gz")
+      #set(QT_ZIP_EXPECTED_MD5 "52424fdb4d553b94156de088881506b5")
+    endif()
+    
+  endif()
+  
+  set(QT_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${QT_ZIP_FILENAME}")
+  if(EXISTS "${QT_ZIP_LOCAL_PATH}")
+    file(MD5 "${QT_ZIP_LOCAL_PATH}" QT_ZIP_MD5)
+  endif()
+    
+  if( NOT QT_ZIP_MD5 STREQUAL QT_ZIP_EXPECTED_MD5)
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${QT_ZIP_FILENAME}" 
+      ${QT_ZIP_LOCAL_PATH} 
+      INACTIVITY_TIMEOUT 120 
+      SHOW_PROGRESS
+      EXPECTED_MD5 ${QT_ZIP_EXPECTED_MD5})
+      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+  endif()
+  
+  set(QT_INSTALL_DIR "${CMAKE_BINARY_DIR}/Qt-install/")
+  
+endif()
 
 find_package(Qt5Core REQUIRED HINTS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
 find_package(Qt5Widgets REQUIRED HINTS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
