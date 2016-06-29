@@ -32,6 +32,24 @@ namespace detail {
 
 } // detail
 
+class MODEL_API SpectralDataField
+{
+public:
+
+  SpectralDataField(double wavelength, double transmittance, double frontReflectance, double backReflectance);
+
+  double wavelength() const;
+  double transmittance() const;
+  double frontReflectance() const;
+  double backReflectance() const;
+
+private:
+  double m_wavelength;
+  double m_transmittance;
+  double m_frontReflectance;
+  double m_backReflectance;
+};
+
 /** MaterialPropertyGlazingSpectralData is a ResourceObject that wraps the OpenStudio IDD object 'OS:MaterialProperty:GlazingSpectralData'. */
 class MODEL_API MaterialPropertyGlazingSpectralData : public ResourceObject {
  public:
@@ -49,13 +67,19 @@ class MODEL_API MaterialPropertyGlazingSpectralData : public ResourceObject {
   /** @name Getters */
   //@{
 
-  // TODO: Handle this object's extensible fields.
+  std::vector<SpectralDataField> spectralDataFields() const;
 
   //@}
   /** @name Setters */
   //@{
 
-  // TODO: Handle this object's extensible fields.
+  bool setSpectralDataFields(const std::vector<SpectralDataField>& spectralDataFields);
+
+  bool addSpectralDataField(const SpectralDataField& spectralDataField);
+
+  bool addSpectralDataField(double wavelength, double transmittance, double frontReflectance, double backReflectance);
+
+  void resetSpectralDataFields();
 
   //@}
   /** @name Other */

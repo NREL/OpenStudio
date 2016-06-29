@@ -26,6 +26,8 @@
 namespace openstudio {
 namespace model {
 
+class SpectralDataField;
+
 namespace detail {
 
   /** MaterialPropertyGlazingSpectralData_Impl is a ResourceObject_Impl that is the implementation class for MaterialPropertyGlazingSpectralData.*/
@@ -61,13 +63,19 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    // TODO: Handle this object's extensible fields.
+    std::vector<SpectralDataField> spectralDataFields() const;
 
     //@}
     /** @name Setters */
     //@{
 
-    // TODO: Handle this object's extensible fields.
+    bool setSpectralDataFields(const std::vector<SpectralDataField>& spectralDataFields);
+
+    bool addSpectralDataField(const SpectralDataField& spectralDataField);
+
+    bool addSpectralDataField(double wavelength, double transmittance, double frontReflectance, double backReflectance);
+
+    void resetSpectralDataFields();
 
     //@}
     /** @name Other */

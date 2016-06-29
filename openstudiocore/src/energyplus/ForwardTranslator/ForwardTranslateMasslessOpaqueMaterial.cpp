@@ -20,10 +20,10 @@
 #include "../ForwardTranslator.hpp"
 
 #include "../../model/Model.hpp"
-#include "../../model/MaterialPropertyGlazingSpectralData.hpp"
-#include "../../model/MaterialPropertyGlazingSpectralData_Impl.hpp"
+#include "../../model/MasslessOpaqueMaterial.hpp"
+#include "../../model/MasslessOpaqueMaterial_Impl.hpp"
 
-#include <utilities/idd/MaterialProperty_GlazingSpectralData_FieldEnums.hxx>
+#include <utilities/idd/Material_NoMass_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
@@ -36,15 +36,32 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateMaterialPropertyGlazingSpectralData( MaterialPropertyGlazingSpectralData & modelObject )
+boost::optional<IdfObject> ForwardTranslator::translateMasslessOpaqueMaterial( MasslessOpaqueMaterial & modelObject )
 {
-  IdfObject idfObject(openstudio::IddObjectType::MaterialProperty_GlazingSpectralData);
+  IdfObject idfObject(openstudio::IddObjectType::Material_NoMass);
 
   m_idfObjects.push_back(idfObject);
 
-  idfObject.setString(openstudio::MaterialProperty_GlazingSpectralDataFields::Name, modelObject.name().get());
+  idfObject.setString(openstudio::Material_NoMassFields::Name, modelObject.name().get());
 
-  // TODO: translate extensible fields
+  idfObject.setString(openstudio::Material_NoMassFields::Roughness, modelObject.roughness());
+
+  idfObject.setDouble(openstudio::Material_NoMassFields::ThermalResistance, modelObject.thermalResistance());
+
+  OptionalDouble d = modelObject.thermalAbsorptance();
+  if(d) {
+    idfObject.setDouble(openstudio::Material_NoMassFields::ThermalAbsorptance, *d);
+  }
+
+  d = modelObject.solarAbsorptance();
+  if(d) {
+    idfObject.setDouble(openstudio::Material_NoMassFields::SolarAbsorptance, *d);
+  }
+
+  d = modelObject.visibleAbsorptance();
+  if(d) {
+    idfObject.setDouble(openstudio::Material_NoMassFields::VisibleAbsorptance, *d);
+  }
 
   return boost::optional<IdfObject>(idfObject);
 }
@@ -52,4 +69,3 @@ boost::optional<IdfObject> ForwardTranslator::translateMaterialPropertyGlazingSp
 } // energyplus
 
 } // openstudio
-

@@ -88,7 +88,7 @@ namespace detail {
 
   boost::optional<MaterialPropertyGlazingSpectralData> StandardGlazing_Impl::windowGlassSpectralDataSet() const
   {
-    return boost::none;
+    return getObject<ModelObject>().getModelObjectTarget<MaterialPropertyGlazingSpectralData>(OS_WindowMaterial_GlazingFields::WindowGlassSpectralDataSetName);
   }
 
   double StandardGlazing_Impl::thickness() const {
