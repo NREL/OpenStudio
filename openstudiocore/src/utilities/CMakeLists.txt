@@ -510,11 +510,6 @@ set(${target_name}_swig_src
 #include subdir for pch
 add_subdirectory(pch)
 
-if(WIN32)
-  add_definitions("-D${target_name}_EXPORTS")
-endif()
-
-
 add_library(${target_name}
   ${${target_name}_src}
 )
