@@ -156,6 +156,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateLifeCycleCostParameters.cpp
   ForwardTranslator/ForwardTranslateLights.cpp
   ForwardTranslator/ForwardTranslateLuminaire.cpp
+  ForwardTranslator/ForwardTranslateMaterialPropertyGlazingSpectralData.cpp
   ForwardTranslator/ForwardTranslateMasslessOpaqueMaterial.cpp
   ForwardTranslator/ForwardTranslateMeter.cpp
   ForwardTranslator/ForwardTranslateNode.cpp
