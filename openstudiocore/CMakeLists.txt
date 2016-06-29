@@ -568,7 +568,7 @@ add_definitions(-DSQLITE_THREADSAFE=1) # 1 is default, serial access
 
 set(QT_INSTALL_DIR "${CMAKE_BINARY_DIR}/../../../Qt-prefix/src/Qt-install/")
 
-if(NOT EXISTS QT_INSTALL_DIR)
+if(NOT EXISTS ${QT_INSTALL_DIR})
 
   option(STATIC_QT "Use Static Qt" ON)
 
@@ -686,7 +686,7 @@ list(APPEND QT_LIBS Qt5::Network)
 list(APPEND QT_LIBS Qt5::Xml)
 list(APPEND QT_LIBS Qt5::Concurrent)
 list(APPEND QT_LIBS Qt5::PrintSupport)
-if( UNIX )
+if( UNIX AND STATIC_QT )
   list(APPEND QT_LIBS "${QT_INSTALL_DIR}/plugins/sqldrivers/libqsqlite.a")
   list(APPEND QT_LIBS "${QT_INSTALL_DIR}/lib/libqtharfbuzzng.a")
   find_package(OpenGL REQUIRED)
@@ -716,7 +716,7 @@ if( UNIX AND NOT APPLE )
   list(APPEND QT_LIBS ${crypto_lib})
 endif()
 
-if( APPLE )
+if( APPLE AND STATIC_QT )
   find_library(corefoundation_lib CoreFoundation)
   find_library(cfnetwork_lib CFNetwork)
   find_library(coregraphics_lib CoreGraphics)
