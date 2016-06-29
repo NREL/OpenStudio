@@ -99,6 +99,9 @@ option(BUILD_REGRESSIONS "Build regressions" OFF)
 # This is a convenience for Visual Studio users
 option(ENABLE_TEST_RUNNER_TARGETS "Create test runner targets" OFF)
 
+# Build shared libraries, configuration affects OpenStudioCore
+option(BUILD_SHARED_LIBS "Build OS libs as shared libraries" OFF)
+
 set(MAXIMIZE_CPU_USAGE OFF CACHE BOOL "Attempt to fully load the CPU during builds")
 mark_as_advanced(MAXIMIZE_CPU_USAGE)
 
@@ -799,6 +802,7 @@ ExternalProject_Add(OSCore
     #-DQt5Concurrent_DIR:STRING=${Qt5Concurrent_DIR}
     #-DQt5PrintSupport_DIR:STRING=${Qt5PrintSupport_DIR}
     -DSTATIC_QT:BOOL=${STATIC_QT}
+    -DBUILD_SHARED_LIBS:BOOL=${BUILD_SHARED_LIBS}
     -DSWIG_EXECUTABLE:STRING=${SWIG_EXECUTABLE}
     -DNODE_BIN_DIR:STRING=${NODE_BIN_DIR}
     -DNODE_INCLUDE_DIR:STRING=${NODE_INCLUDE_DIR}
