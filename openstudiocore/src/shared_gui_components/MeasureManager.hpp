@@ -140,7 +140,7 @@ class MeasureManager : public QObject
 
     bool isMeasureSelected();
 
-    QSharedPointer<measure::OSMeasureInfoGetter> infoGetter() const;
+    //QSharedPointer<measure::OSMeasureInfoGetter> infoGetter() const;
 
   public slots:
     /// Update the UI display for all measures. Does recompute the measure's XML.
@@ -193,7 +193,7 @@ class MeasureManager : public QObject
     std::map<UUID,BCLMeasure> m_openstudioMeasures;
     std::map<UUID,BCLMeasure> m_myMeasures;
     std::map<UUID,BCLMeasure> m_bclMeasures;
-    QSharedPointer<measure::OSMeasureInfoGetter> m_infoGetter;
+    //QSharedPointer<measure::OSMeasureInfoGetter> m_infoGetter;
     QSharedPointer<LocalLibraryController> m_libraryController;
 };
 

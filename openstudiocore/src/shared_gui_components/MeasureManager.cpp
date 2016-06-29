@@ -74,7 +74,7 @@ MeasureManager::MeasureManager(BaseApp *t_app)
 }
 
 MeasureManager::MeasureManager(const QSharedPointer<measure::OSMeasureInfoGetter> &t_infoGetter, BaseApp *t_app)
-  : m_app(t_app), m_infoGetter(t_infoGetter)
+  : m_app(t_app)
 {
 }
 
@@ -421,7 +421,8 @@ bool MeasureManager::checkForUpdates(BCLMeasure& measure, bool force)
   if (result || force){
     // if files updated or being forced to, try to load the ruby measure
     try{
-      measure::OSMeasureInfo info = m_infoGetter->getInfo(measure);
+      measure::OSMeasureInfo info("No Ruby interpreter");
+      //measure::OSMeasureInfo info = m_infoGetter->getInfo(measure);
       info.update(measure);
     } catch(const std::exception& e) {
       // failed to get info, put error into the measure's xml
@@ -724,10 +725,10 @@ bool MeasureManager::isMeasureSelected()
   return false;
 }
 
-QSharedPointer<measure::OSMeasureInfoGetter> MeasureManager::infoGetter() const
-{
-  return m_infoGetter;
-}
+//QSharedPointer<measure::OSMeasureInfoGetter> MeasureManager::infoGetter() const
+//{
+//  return m_infoGetter;
+//}
 
 std::vector<BCLMeasure> MeasureManager::combinedMeasures(bool includeOpenStudioMeasures) const
 {

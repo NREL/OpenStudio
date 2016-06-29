@@ -51,7 +51,6 @@
 #include "../utilities/units/QuantityConverter.hpp"
 #include <utilities/idd/OS_ComponentData_FieldEnums.hxx>
 #include "../utilities/math/FloatCompare.hpp"
-#include <utilities/embedded_files.hxx>
 
 #include <OpenStudio.hxx>
 
@@ -490,14 +489,12 @@ void VersionTranslator::initializeMap(std::istream& is) {
           // get the sizing objects and save them for later,
           // we will reintrodce the sizing objects in the version 1.10.2 phase of the translation
           // when they were officially part of OS
-          std::stringstream ss;
-          ss << ::openstudio::embedded_files::getFileAsString(":/idd/versions/1_9_0_CBECC/OpenStudio.idd");
-          auto cbeccIddFile = IddFile::load(ss);
-          OS_ASSERT(cbeccIddFile);
+          auto cbeccIddFile = get_1_9_0_CBECC_IddFile();
+
           is.seekg(0, std::ios::beg);
-          auto cbeccIdfFile = IdfFile::load(is,cbeccIddFile.get());
+          auto cbeccIdfFile = IdfFile::load(is,cbeccIddFile);
           OS_ASSERT(cbeccIdfFile);
-          m_cbeccSizingObjects = cbeccIdfFile->getObjectsByType(cbeccIddFile->getObject("OS:Sizing:Zone").get());
+          m_cbeccSizingObjects = cbeccIdfFile->getObjectsByType(cbeccIddFile.getObject("OS:Sizing:Zone").get());
         }
 
       }
