@@ -400,7 +400,14 @@ void WindowMaterialBlindInspectorView::attach(openstudio::model::Blind & materia
       boost::optional<NoFailAction>(std::bind(&model::Blind::resetSlatOrientation, &material)),
       boost::optional<BasicQuery>(std::bind(&model::Blind::isSlatOrientationDefaulted, &material)));
 
-  m_nameEdit->bind(material,"name");
+  // m_nameEdit->bind(material,"name");
+  boost::optional<model::Blind> m_material = material;
+  m_nameEdit->bind(
+    *m_material,
+    OptionalStringGetter(std::bind(&model::Blind::name, m_material.get_ptr(),true)),
+    boost::optional<StringSetter>(std::bind(&model::Blind::setName, m_material.get_ptr(),std::placeholders::_1))
+  );
+
   m_slatWidth->bind(material,"slatWidth",m_isIP);
   m_slatSeparation->bind(material,"slatSeparation",m_isIP);
   m_slatThickness->bind(material,"slatThickness",m_isIP);

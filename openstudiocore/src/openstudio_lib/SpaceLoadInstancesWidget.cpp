@@ -531,7 +531,7 @@ SpaceLoadInstanceMiniView::SpaceLoadInstanceMiniView(const model::SpaceLoadInsta
   m_multiplierEdit->bind(
     *opt_spaceLoadInstance,
     OptionalStringGetter(std::bind(&model::SpaceLoadInstance::multiplier, opt_spaceLoadInstance.get_ptr())),
-    boost::optional<BasicQuery>(std::bind(&model::SpaceLoadInstance::isMultiplierDefaulted, opt_spaceLoadInstance.get_ptr()))
+    boost::optional<BasicQuery>(&model::SpaceLoadInstance::isMultiplierDefaulted)
   );
 
   if (isDefault){
