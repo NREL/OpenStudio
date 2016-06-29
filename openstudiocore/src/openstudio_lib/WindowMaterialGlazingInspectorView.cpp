@@ -276,9 +276,23 @@ void WindowMaterialGlazingInspectorView::attach(openstudio::model::StandardGlazi
 
   m_solarDiffusing->bind(glazing,"solarDiffusing");
     
-  m_nameEdit->bind(glazing,"name");
-  m_windowGlassSpectralDataSetName->bind(glazing,"windowGlassSpectralDataSetName");
-  m_thickness->bind(glazing,"thickness",m_isIP);
+  // m_nameEdit->bind(glazing,"name");
+  boost::optional<model::StandardGlazing> m_glazing = glazing;
+  m_nameEdit->bind(
+    *m_glazing,
+    OptionalStringGetter(std::bind(&model::StandardGlazing::name, m_glazing.get_ptr(),true)),
+    boost::optional<StringSetter>(std::bind(&model::StandardGlazing::setName, m_glazing.get_ptr(),std::placeholders::_1))
+  );
+
+  // m_windowGlassSpectralDataSetName->bind(glazing,"windowGlassSpectralDataSetName");
+  m_windowGlassSpectralDataSetName->bind(
+    *m_glazing,
+    OptionalStringGetter(std::bind(&model::StandardGlazing::windowGlassSpectralDataSetName, m_glazing.get_ptr())),
+    boost::optional<StringSetter>(std::bind(&model::StandardGlazing::windowGlassSpectralDataSetName, m_glazing.get_ptr(),std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::StandardGlazing::resetWindowGlassSpectralDataSetName, m_glazing.get_ptr()))
+  );
+
+  m_thickness->bind(glazing,"thickness",m_isIP); // Quantity
   m_solarTransmittanceAtNormalIncidence->bind(glazing,"solarTransmittanceatNormalIncidence",m_isIP);
   m_frontSideSolarReflectanceAtNormalIncidence->bind(glazing,"frontSideSolarReflectanceatNormalIncidence",m_isIP);
   m_backSideSolarReflectanceAtNormalIncidence->bind(glazing,"backSideSolarReflectanceatNormalIncidence",m_isIP);

@@ -1242,10 +1242,10 @@ void SimSettingsView::attachSimulationControl()
     *m_simulationControl,
     static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
     &model::SimulationControl::validSolarDistributionValues,
-    OptionalStringGetter(std::bind(&model::SimulationControl::solarDistribution, m_simulationControl.get_ptr())),
+    StringGetter(std::bind(&model::SimulationControl::solarDistribution, m_simulationControl.get_ptr())),
     std::bind(&model::SimulationControl::setSolarDistribution, m_simulationControl.get_ptr(),std::placeholders::_1),
-    boost::optional<NoFailAction>(std::bind(&model::resetSolarDistribution::setNISTSector, m_simulationControl.get_ptr())),
-    boost::optional<BasicQuery>(std::bind(&model::SimulationControl::isSolarDistributionDefaulted, m_simulationControl.get_ptr()))
+    boost::optional<NoFailAction>(&model::SimulationControl::resetSolarDistribution),
+    boost::optional<BasicQuery>(&model::SimulationControl::isSolarDistributionDefaulted)
   );
   
 }
@@ -1261,6 +1261,7 @@ void SimSettingsView::attachSizingParameters()
   boost::optional<model::SizingParameters> m_mo = mo;
   m_timestepsinAveragingWindow->bind(
     *m_mo,
+    // FIXED_LAST
     OptionalIntGetter(std::bind(&model::SizingParameters::timestepsinAveragingWindow, m_mo.get_ptr())),
     boost::optional<IntSetter>(std::bind(&model::SizingParameters::timestepsinAveragingWindow, m_mo.get_ptr(), std::placeholders::_1)),
     boost::optional<NoFailAction>(&model::SizingParameters::resetTimestepsinAveragingWindow)
@@ -1289,10 +1290,13 @@ void SimSettingsView::attachTimestep()
   boost::optional<model::Timestep> m_mo = mo;
   m_numberOfTimestepsPerHour->bind(
     *m_mo,
-    OptionalIntGetter(std::bind(&model::Timestep::numberOfTimestepsPerHour, m_mo.get_ptr())),
+    // FIXED_LAST
+    IntGetter(std::bind(&model::Timestep::numberOfTimestepsPerHour, m_mo.get_ptr())),
     boost::optional<IntSetter>(std::bind(&model::Timestep::setNumberOfTimestepsPerHour, m_mo.get_ptr(), std::placeholders::_1)),
-    boost::optional<NoFailAction>(&model::Timestep::resetNumberOfTimestepsPerHour),
-    boost::optional<BasicQuery>(&model::Timestep::isNumberOfTimestepsPerHourDefaulted)
+    boost::optional<NoFailAction>(std::bind(&model::Timestep::resetNumberOfTimestepsPerHour, m_mo.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::Timestep::isNumberOfTimestepsPerHourDefaulted, m_mo.get_ptr()))
   );
 }
 
@@ -1312,37 +1316,42 @@ void SimSettingsView::attachConvergenceLimits()
   // m_maximumHVACIterations->bind(mo,"maximumHVACIterations");
   m_maximumHVACIterations->bind(
     *m_mo,
-    OptionalIntGetter(std::bind(&model::Timestep::maximumHVACIterations, m_mo.get_ptr())),
-    boost::optional<IntSetter>(std::bind(&model::Timestep::setMaximumHVACIterations, m_mo.get_ptr(), std::placeholders::_1)),
-    boost::optional<NoFailAction>(std::bind(&model::Timestep::resetMaximumHVACIterations, m_mo.get_ptr())),
-    boost::optional<BasicQuery>(std::bind(&model::Timestep::isMaximumHVACIterationsDefaulted, m_mo.get_ptr()))
+    IntGetter(std::bind(&model::ConvergenceLimits::maximumHVACIterations, m_mo.get_ptr())),
+    boost::optional<IntSetter>(std::bind(&model::ConvergenceLimits::setMaximumHVACIterations, m_mo.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::ConvergenceLimits::resetMaximumHVACIterations, m_mo.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::ConvergenceLimits::isMaximumHVACIterationsDefaulted, m_mo.get_ptr()))
   );
 
   // m_minimumPlantIterations->bind(mo,"minimumPlantIterations");
   m_minimumPlantIterations->bind(
     *m_mo,
-    OptionalIntGetter(std::bind(&model::Timestep::minimumPlantIterations, m_mo.get_ptr())),
-    boost::optional<IntSetter>(std::bind(&model::Timestep::setMinimumPlantIterations, m_mo.get_ptr(), std::placeholders::_1)),
-    boost::optional<NoFailAction>(std::bind(&model::Timestep::resetMinimumPlantIterations, m_mo.get_ptr())),
-    boost::optional<BasicQuery>(std::bind(&model::Timestep::isMinimumPlantIterationsDefaulted, m_mo.get_ptr()))
+    IntGetter(std::bind(&model::ConvergenceLimits::minimumPlantIterations, m_mo.get_ptr())),
+    boost::optional<IntSetter>(std::bind(&model::ConvergenceLimits::setMinimumPlantIterations, m_mo.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::ConvergenceLimits::resetMinimumPlantIterations, m_mo.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::ConvergenceLimits::isMinimumPlantIterationsDefaulted, m_mo.get_ptr()))
   );
 
   // m_maximumPlantIterations->bind(mo,"maximumPlantIterations");
   m_maximumPlantIterations->bind(
     *m_mo,
-    OptionalIntGetter(std::bind(&model::Timestep::maximumPlantIterations, m_mo.get_ptr())),
-    boost::optional<IntSetter>(std::bind(&model::Timestep::setMaximumPlantIterations, m_mo.get_ptr(), std::placeholders::_1)),
-    boost::optional<NoFailAction>(std::bind(&model::Timestep::resetMaximumPlantIterations, m_mo.get_ptr())),
-    boost::optional<BasicQuery>(std::bind(&model::Timestep::isMaximumPlantIterationsDefaulted, m_mo.get_ptr()))
+    IntGetter(std::bind(&model::ConvergenceLimits::maximumPlantIterations, m_mo.get_ptr())),
+    boost::optional<IntSetter>(std::bind(&model::ConvergenceLimits::setMaximumPlantIterations, m_mo.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::ConvergenceLimits::resetMaximumPlantIterations, m_mo.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::ConvergenceLimits::isMaximumPlantIterationsDefaulted, m_mo.get_ptr()))
   );
 
   // m_minimumSystemTimestep->bind(mo,"minimumSystemTimestep");
   m_minimumSystemTimestep->bind(
     *m_mo,
-    OptionalIntGetter(std::bind(&model::Timestep::minimumSystemTimestep, m_mo.get_ptr())),
-    boost::optional<IntSetter>(std::bind(&model::Timestep::setMinimumSystemTimestep, m_mo.get_ptr(), std::placeholders::_1)),
-    boost::optional<NoFailAction>(std::bind(&model::Timestep::resetMinimumSystemTimestep, m_mo.get_ptr())),
-    boost::optional<BasicQuery>(std::bind(&model::Timestep::isMinimumSystemTimestepDefaulted, m_mo.get_ptr()))
+    OptionalIntGetter(std::bind(&model::ConvergenceLimits::minimumSystemTimestep, m_mo.get_ptr())),
+    boost::optional<IntSetter>(std::bind(&model::ConvergenceLimits::setMinimumSystemTimestep, m_mo.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::ConvergenceLimits::resetMinimumSystemTimestep, m_mo.get_ptr()))
   );
 
 }
@@ -1351,9 +1360,30 @@ void SimSettingsView::attachShadowCalculation()
 {
   m_shadowCalculation = m_model.getUniqueModelObject<model::ShadowCalculation>();
 
-  m_calculationFrequency->bind(*m_shadowCalculation,"calculationFrequency");
-  m_maximumFiguresInShadowOverlapCalculations->bind(*m_shadowCalculation,
-                                                    "maximumFiguresInShadowOverlapCalculations");
+  boost::optional<model::ShadowCalculation> opt_shadowCalculation = m_shadowCalculation;
+
+  // m_calculationFrequency->bind(*m_shadowCalculation,"calculationFrequency");
+  m_calculationFrequency->bind(
+    *opt_shadowCalculation,
+    IntGetter(std::bind(&model::ShadowCalculation::calculationFrequency, opt_shadowCalculation.get_ptr())),
+    boost::optional<IntSetter>(std::bind(&model::ShadowCalculation::setCalculationFrequency, opt_shadowCalculation.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::ShadowCalculation::resetCalculationFrequency, opt_shadowCalculation.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::ShadowCalculation::isCalculationFrequencyDefaulted, opt_shadowCalculation.get_ptr()))
+  );
+
+  // m_maximumFiguresInShadowOverlapCalculations->bind(*m_shadowCalculation, "maximumFiguresInShadowOverlapCalculations");
+  m_maximumFiguresInShadowOverlapCalculations->bind(
+    *opt_shadowCalculation,
+    IntGetter(std::bind(&model::ShadowCalculation::calculationFrequency, opt_shadowCalculation.get_ptr())),
+    boost::optional<IntSetter>(std::bind(&model::ShadowCalculation::setCalculationFrequency, opt_shadowCalculation.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::ShadowCalculation::resetCalculationFrequency, opt_shadowCalculation.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::ShadowCalculation::isCalculationFrequencyDefaulted, opt_shadowCalculation.get_ptr()))
+  );
+
   m_polygonClippingAlgorithm->bind<std::string>(
       *m_shadowCalculation,
       static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
@@ -1408,6 +1438,7 @@ void SimSettingsView::attachHeatBalanceAlgorithm()
     std::bind(&model::HeatBalanceAlgorithm::setAlgorithm, mo, std::placeholders::_1),
     NoFailAction(std::bind(&model::HeatBalanceAlgorithm::resetAlgorithm, mo)));
 
+  // Quantity Edit
   m_surfaceTemperatureUpperLimit->bind(mo, "surfaceTemperatureUpperLimit", m_isIP);
   m_minimumSurfaceConvectionHeatTransferCoefficientValue->bind(mo,"minimumSurfaceConvectionHeatTransferCoefficientValue",m_isIP);
   m_maximumSurfaceConvectionHeatTransferCoefficientValue->bind(mo,"maximumSurfaceConvectionHeatTransferCoefficientValue",m_isIP);
@@ -1429,15 +1460,28 @@ void SimSettingsView::attachZoneAirHeatBalanceAlgorithm()
 void SimSettingsView::attachZoneAirContaminantBalance()
 {
   model::ZoneAirContaminantBalance mo = m_model.getUniqueModelObject<model::ZoneAirContaminantBalance>();
+  boost::optional<model::ZoneAirContaminantBalance> m_mo = mo;
 
   m_carbonDioxideConcentration->bind(mo,"carbonDioxideConcentration");
-  m_outdoorCarbonDioxideScheduleName->bind(mo,"outdoorCarbonDioxideScheduleName");
+
+  // m_outdoorCarbonDioxideScheduleName->bind(mo,"outdoorCarbonDioxideScheduleName");
+  // outdoorCarbonDioxideScheduleName does not exist in ZoneAirContaminantBalance
+
+  // TODO: Locate "outdoorCarbonDioxideScheduleName" and reimplement.
+  // m_outdoorCarbonDioxideScheduleName->bind(
+  //   *m_mo,
+  //   StringGetter(std::bind(&model::ZoneAirContaminantBalance::outdoorCarbonDioxideScheduleName, m_mo.get_ptr())),
+  //   boost::optional<StringSetter>(std::bind(&model::ZoneAirContaminantBalance::setOutdoorCarbonDioxideScheduleName, m_mo.get_ptr(),std::placeholders::_1)),
+  //   boost::optional<NoFailAction>(std::bind(&model::ZoneAirContaminantBalance::resetOutdoorCarbonDioxideScheduleName, m_mo.get_ptr())),
+  //   boost::optional<BasicQuery>(std::bind(&model::ZoneAirContaminantBalance::isOutdoorCarbonDioxideScheduleNameDefaulted, m_mo.get_ptr()))
+  // );
 }
 
 void SimSettingsView::attachZoneCapacitanceMultipleResearchSpecial()
 {
   model::ZoneCapacitanceMultiplierResearchSpecial mo = m_model.getUniqueModelObject<model::ZoneCapacitanceMultiplierResearchSpecial>();
 
+  // Quantity Edit
   m_temperatureCapacityMultiplier->bind(mo,"temperatureCapacityMultiplier",m_isIP);
   m_humidityCapacityMultiplier->bind(mo,"humidityCapacityMultiplier",m_isIP);
   m_carbonDioxideCapacityMultiplier->bind(mo,"carbonDioxideCapacityMultiplier",m_isIP);
@@ -1446,21 +1490,100 @@ void SimSettingsView::attachZoneCapacitanceMultipleResearchSpecial()
 void SimSettingsView::attachRadianceParameters()
 {
   model::RadianceParameters mo = m_model.getUniqueModelObject<model::RadianceParameters>();
+  boost::optional<model::RadianceParameters> m_mo = mo;
 
-  m_accumulatedRaysperRecord->bind(mo,"accumulatedRaysperRecord");
+  // m_accumulatedRaysperRecord->bind(mo,"accumulatedRaysperRecord");
+  m_accumulatedRaysperRecord->bind(
+    *m_mo,
+    IntGetter(std::bind(&model::RadianceParameters::accumulatedRaysperRecord, m_mo.get_ptr())),
+    boost::optional<IntSetter>(std::bind(&model::RadianceParameters::setAccumulatedRaysperRecord, m_mo.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::RadianceParameters::resetAccumulatedRaysperRecord, m_mo.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::RadianceParameters::isAccumulatedRaysperRecordDefaulted, m_mo.get_ptr()))
+  );
+
   m_directThreshold->bind(mo,"directThreshold",m_isIP);
   m_directCertainty->bind(mo,"directCertainty",m_isIP);
   m_directJitter->bind(mo,"directJitter",m_isIP);
   m_directPretest->bind(mo,"directPretest",m_isIP);
-  m_ambientBouncesVMX->bind(mo,"ambientBouncesVMX");
-  m_ambientBouncesDMX->bind(mo,"ambientBouncesDMX");
-  m_ambientDivisionsVMX->bind(mo,"ambientDivisionsVMX");
-  m_ambientDivisionsDMX->bind(mo,"ambientDivisionsDMX");
-  m_ambientSupersamples->bind(mo,"ambientSupersamples");
+
+  // m_ambientBouncesVMX->bind(mo,"ambientBouncesVMX");
+  m_ambientBouncesVMX->bind(
+    *m_mo,
+    IntGetter(std::bind(&model::RadianceParameters::ambientBouncesVMX, m_mo.get_ptr())),
+    boost::optional<IntSetter>(std::bind(&model::RadianceParameters::setAmbientBouncesVMX, m_mo.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::RadianceParameters::resetAmbientBouncesVMX, m_mo.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::RadianceParameters::isAmbientBouncesVMXDefaulted, m_mo.get_ptr()))
+  );
+
+  // m_ambientBouncesDMX->bind(mo,"ambientBouncesDMX");
+  m_ambientBouncesDMX->bind(
+    *m_mo,
+    IntGetter(std::bind(&model::RadianceParameters::ambientBouncesDMX, m_mo.get_ptr())),
+    boost::optional<IntSetter>(std::bind(&model::RadianceParameters::setAmbientBouncesDMX, m_mo.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::RadianceParameters::resetAmbientBouncesDMX, m_mo.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::RadianceParameters::isAmbientBouncesDMXDefaulted, m_mo.get_ptr()))
+  );
+
+  // m_ambientDivisionsVMX->bind(mo,"ambientDivisionsVMX");
+  m_ambientDivisionsVMX->bind(
+    *m_mo,
+    IntGetter(std::bind(&model::RadianceParameters::ambientDivisionsVMX, m_mo.get_ptr())),
+    boost::optional<IntSetter>(std::bind(&model::RadianceParameters::setAmbientDivisionsVMX, m_mo.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::RadianceParameters::resetAmbientDivisionsVMX, m_mo.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::RadianceParameters::isAmbientDivisionsVMXDefaulted, m_mo.get_ptr()))
+  );
+
+  // m_ambientDivisionsDMX->bind(mo,"ambientDivisionsDMX");
+  m_ambientDivisionsDMX->bind(
+    *m_mo,
+    IntGetter(std::bind(&model::RadianceParameters::ambientDivisionsDMX, m_mo.get_ptr())),
+    boost::optional<IntSetter>(std::bind(&model::RadianceParameters::setAmbientDivisionsDMX, m_mo.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::RadianceParameters::resetAmbientDivisionsDMX, m_mo.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::RadianceParameters::isAmbientDivisionsDMXDefaulted, m_mo.get_ptr()))
+  );
+
+  // m_ambientSupersamples->bind(mo,"ambientSupersamples");
+  m_ambientSupersamples->bind(
+    *m_mo,
+    IntGetter(std::bind(&model::RadianceParameters::ambientSupersamples, m_mo.get_ptr())),
+    boost::optional<IntSetter>(std::bind(&model::RadianceParameters::setAmbientSupersamples, m_mo.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::RadianceParameters::resetAmbientSupersamples, m_mo.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::RadianceParameters::isAmbientSupersamplesDefaulted, m_mo.get_ptr()))
+  );
+
   m_limitWeightVMX->bind(mo,"limitWeightVMX",m_isIP);
   m_limitWeightDMX->bind(mo,"limitWeightDMX",m_isIP);
-  m_klemsSamplingDensity->bind(mo,"klemsSamplingDensity");
-  m_skyDiscretizationResolution->bind(mo,"skyDiscretizationResolution");
+  // m_klemsSamplingDensity->bind(mo,"klemsSamplingDensity");
+  m_klemsSamplingDensity->bind(
+    *m_mo,
+    IntGetter(std::bind(&model::RadianceParameters::klemsSamplingDensity, m_mo.get_ptr())),
+    boost::optional<IntSetter>(std::bind(&model::RadianceParameters::setKlemsSamplingDensity, m_mo.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::RadianceParameters::resetKlemsSamplingDensity, m_mo.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::RadianceParameters::isKlemsSamplingDensityDefaulted, m_mo.get_ptr()))
+  );
+  // m_skyDiscretizationResolution->bind(mo,"skyDiscretizationResolution");
+  m_skyDiscretizationResolution->bind<std::string>(
+    *m_mo,
+    static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
+    &model::RadianceParameters::skyDiscretizationResolutionValues,
+    StringGetter(std::bind(&model::RadianceParameters::skyDiscretizationResolution, m_mo.get_ptr())),
+    std::bind(&model::RadianceParameters::setSkyDiscretizationResolution, m_mo.get_ptr(),std::placeholders::_1),
+    boost::optional<NoFailAction>(std::bind(&model::RadianceParameters::resetSkyDiscretizationResolution, m_mo.get_ptr()))
+  );
 }
 
 void SimSettingsView::detachRunPeriod()

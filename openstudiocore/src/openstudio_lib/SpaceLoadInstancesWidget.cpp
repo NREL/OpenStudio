@@ -526,11 +526,15 @@ SpaceLoadInstanceMiniView::SpaceLoadInstanceMiniView(const model::SpaceLoadInsta
 
   m_multiplierEdit = new OSDoubleEdit2();
   m_multiplierEdit->setFixedWidth(60);
-  // m_multiplierEdit->bind(m_spaceLoadInstance, "multiplier", std::string("isMultiplierDefaulted"));
 
+  // m_multiplierEdit->bind(m_spaceLoadInstance, "multiplier", std::string("isMultiplierDefaulted"));
   m_multiplierEdit->bind(
     *opt_spaceLoadInstance,
-    OptionalStringGetter(std::bind(&model::SpaceLoadInstance::multiplier, opt_spaceLoadInstance.get_ptr())),
+    DoubleGetter(std::bind(&model::SpaceLoadInstance::multiplier, opt_spaceLoadInstance.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::none,
+    boost::none,
     boost::optional<BasicQuery>(&model::SpaceLoadInstance::isMultiplierDefaulted)
   );
 

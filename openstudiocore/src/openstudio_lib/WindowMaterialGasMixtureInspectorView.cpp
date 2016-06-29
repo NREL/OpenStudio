@@ -280,7 +280,14 @@ void WindowMaterialGasMixtureInspectorView::attach(openstudio::model::GasMixture
     boost::optional<IntSetter>(std::bind(&model::GasMixture::setNumberofGasesinMixture, m_gasMixture.get_ptr(), std::placeholders::_1))
   );
 
-  m_nameEdit->bind(gasMixture,"name");
+  // m_nameEdit->bind(gasMixture,"name");
+  m_nameEdit->bind(
+    *m_gasMixture,
+    OptionalStringGetter(std::bind(&model::GasMixture::name, m_gasMixture.get_ptr(), true)),
+    boost::optional<StringSetter>(std::bind(&model::GasMixture::setName, m_gasMixture.get_ptr(),std::placeholders::_1))
+  );
+
+  // OSQuantityEdit
   m_thickness->bind(gasMixture,"thickness",m_isIP);
   m_gas1Fraction->bind(gasMixture,"gas1Fraction",m_isIP);
   m_gas2Fraction->bind(gasMixture,"gas2Fraction",m_isIP);
