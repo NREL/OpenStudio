@@ -852,6 +852,13 @@ openstudio::path OpenStudioApp::resourcesPath() const
   }
 }
 
+openstudio::path OpenStudioApp::openstudioCLIPath() const
+{
+  auto dir = applicationDirPath();
+  auto ext = QFileInfo(applicationFilePath()).suffix();
+  return openstudio::toPath(dir + "/openstudio" + ext);
+}
+
 bool OpenStudioApp::notify(QObject* receiver, QEvent* event)
 {
   if (event->type() == QEvent::FileOpen) {

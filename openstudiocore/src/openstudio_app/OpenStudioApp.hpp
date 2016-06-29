@@ -92,6 +92,8 @@ class OpenStudioApp : public OSAppBase
 
   openstudio::path resourcesPath() const; 
 
+  openstudio::path openstudioCLIPath() const;
+
   virtual bool notify(QObject* receiver, QEvent* event) override;
 
  protected:

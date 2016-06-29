@@ -82,6 +82,17 @@ add_executable(${target_name}
   ${ICON_SRC}
 )
 
+# This is because Apple has app bundles for .apps.
+# We copy the openstudio cli into the app bundle in an effort
+# to be self contained. It also makes it easy to find the cli since
+# it will be sitting next to the app executable.
+if( APPLE )
+add_custom_command(TARGET ${target_name}
+  POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:openstudio> $<TARGET_FILE_DIR:${target_name}>/$<TARGET_FILE_NAME:openstudio>
+)
+endif()
+
 set(depends
   openstudio_lib
   openstudio_osversion
