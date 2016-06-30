@@ -113,9 +113,8 @@ using namespace openstudio::model;
 
 namespace openstudio {
 
-OpenStudioApp::OpenStudioApp( int & argc, char ** argv, const QSharedPointer<measure::OSMeasureInfoGetter> &t_infoGetter)
-  : OSAppBase(argc, argv, QSharedPointer<MeasureManager>(new MeasureManager(t_infoGetter, this))),
-    m_infoGetter(t_infoGetter)
+OpenStudioApp::OpenStudioApp( int & argc, char ** argv)
+  : OSAppBase(argc, argv, QSharedPointer<MeasureManager>(new MeasureManager(this)))
 {
   setOrganizationName("NREL");
   QCoreApplication::setOrganizationDomain("nrel.gov");
@@ -851,6 +850,13 @@ openstudio::path OpenStudioApp::resourcesPath() const
   {
     return getApplicationRunDirectory() / openstudio::toPath("../share/openstudio-" + openStudioVersion() + "/OSApp");
   }
+}
+
+openstudio::path OpenStudioApp::openstudioCLIPath() const
+{
+  auto dir = applicationDirPath();
+  auto ext = QFileInfo(applicationFilePath()).suffix();
+  return openstudio::toPath(dir + "/openstudio" + ext);
 }
 
 bool OpenStudioApp::notify(QObject* receiver, QEvent* event)

@@ -790,13 +790,13 @@ void completeOutFiles(const IddFileFactoryDataVector& iddFiles,
     << "    if (it != m_osIddFiles.end()) {" << std::endl
     << "      return it->second;" << std::endl
     << "    }" << std::endl
-    << "    openstudio::path iddPath = toPath(\":/idd/versions\");" << std::endl
+    << "    std::string iddPath = \":/idd/versions\";" << std::endl
     << "    std::stringstream folderString;" << std::endl
     << "    folderString << version.major() << \"_\" << version.minor() << \"_\" << version.patch().get();" << std::endl
-    << "    iddPath = iddPath / toPath(folderString.str() + \"/OpenStudio.idd\");" << std::endl
-    << "    if (::openstudio::embedded_files::hasFile(iddPath.string()) && (version < currentVersion)) {" << std::endl
+    << "    iddPath += \"/\" + folderString.str() + \"/OpenStudio.idd\";" << std::endl
+    << "    if (::openstudio::embedded_files::hasFile(iddPath) && (version < currentVersion)) {" << std::endl
     << "      std::stringstream ss;" << std::endl
-    << "      ss << ::openstudio::embedded_files::getFileAsString(iddPath.string());" << std::endl
+    << "      ss << ::openstudio::embedded_files::getFileAsString(iddPath);" << std::endl
     << "      result = IddFile::load(ss);" << std::endl
     << "    }" << std::endl
     << "    if (result) {" << std::endl
