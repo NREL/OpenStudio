@@ -4797,6 +4797,21 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
     zoneVent.setMinimumOutdoorTemperature(10);
     zoneVent.setMaximumOutdoorTemperature(29.4);
     zoneVent.setMaximumWindSpeed(40);
+    zoneVent.setMinimumIndoorTemperature(-100);
+    zoneVent.setMaximumIndoorTemperature(100);
+    zoneVent.setDeltaTemperature(-100);
+
+    auto operableWinOALimLo = thermalZoneElement.firstChildElement("OperableWinOALimLo").text().toDouble(&ok);
+    if( ok ) {
+      operableWinOALimLo = unitToUnit(operableWinOALimLo,"F","C").get();
+      zoneVent.setMinimumOutdoorTemperature(operableWinOALimLo);
+    }
+
+    auto operableWinOALimHi = thermalZoneElement.firstChildElement("OperableWinOALimHi").text().toDouble(&ok);
+    if( ok ) {
+      operableWinOALimHi = unitToUnit(operableWinOALimHi,"F","C").get();
+      zoneVent.setMaximumOutdoorTemperature(operableWinOALimHi);
+    }
 
     // primAirCondSysRefElement
     // Could be a zn sys or an air sys
