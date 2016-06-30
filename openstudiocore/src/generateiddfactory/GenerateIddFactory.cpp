@@ -792,6 +792,7 @@ void completeOutFiles(const IddFileFactoryDataVector& iddFiles,
     << "    }" << std::endl
     << "    std::string iddPath = \":/idd/versions\";" << std::endl
     << "    std::stringstream folderString;" << std::endl
+    << "    folderString << version.major() << \"_\" << version.minor() << \"_\" << version.patch().get();" << std::endl
     << "    iddPath += \"/\" + folderString.str() + \"/OpenStudio.idd\";" << std::endl
     << "    if (::openstudio::embedded_files::hasFile(iddPath) && (version < currentVersion)) {" << std::endl
     << "      std::stringstream ss;" << std::endl
