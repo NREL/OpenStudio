@@ -257,8 +257,8 @@ WaterUseEquipmentDefinitionInspectorView::WaterUseEquipmentDefinitionInspectorVi
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,4,0);
 
-  m_peakFlowRateEdit = new OSQuantityEdit(m_isIP);
-  connect(this, &WaterUseEquipmentDefinitionInspectorView::toggleUnitsClicked, m_peakFlowRateEdit, &OSQuantityEdit::onUnitSystemChange);
+  m_peakFlowRateEdit = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WaterUseEquipmentDefinitionInspectorView::toggleUnitsClicked, m_peakFlowRateEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_peakFlowRateEdit,5,0,1,3);
 
   // Target Temperature Schedule
@@ -339,7 +339,13 @@ void WaterUseEquipmentDefinitionInspectorView::attach(openstudio::model::WaterUs
     boost::optional<BasicQuery>(std::bind(&model::WaterUseEquipmentDefinition::isEndUseSubcategoryDefaulted, m_waterUseEquipmentDefinition.get_ptr()))
   );
   
-  m_peakFlowRateEdit->bind(waterUseEquipmentDefinition,"peakFlowRate",m_isIP);
+  // m_peakFlowRateEdit->bind(waterUseEquipmentDefinition,"peakFlowRate",m_isIP);
+  m_peakFlowRateEdit->bind(
+    m_isIP,
+    *m_waterUseEquipmentDefinition,
+    DoubleGetter(std::bind(&model::WaterUseEquipmentDefinition::peakFlowRate, m_waterUseEquipmentDefinition.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::WaterUseEquipmentDefinition::*)(double)>(&model::WaterUseEquipmentDefinition::setPeakFlowRate), m_waterUseEquipmentDefinition.get_ptr(), std::placeholders::_1))
+  );
 
   m_targetTemperatureScheduleVC->attach(waterUseEquipmentDefinition);
   m_targetTemperatureScheduleVC->reportItems();

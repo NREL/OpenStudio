@@ -110,8 +110,8 @@ void WindowMaterialGlazingInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_thickness = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialGlazingInspectorView::toggleUnitsClicked, m_thickness, &OSQuantityEdit::onUnitSystemChange);
+  m_thickness = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialGlazingInspectorView::toggleUnitsClicked, m_thickness, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_thickness,row++,0,1,3);
 
     // Solar Transmittance At Normal Incidence
@@ -120,8 +120,8 @@ void WindowMaterialGlazingInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_solarTransmittanceAtNormalIncidence = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialGlazingInspectorView::toggleUnitsClicked, m_solarTransmittanceAtNormalIncidence, &OSQuantityEdit::onUnitSystemChange);
+  m_solarTransmittanceAtNormalIncidence = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialGlazingInspectorView::toggleUnitsClicked, m_solarTransmittanceAtNormalIncidence, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_solarTransmittanceAtNormalIncidence,row++,0,1,3);
 
   // Front Side Solar Reflectance At Normal Incidence
@@ -130,8 +130,8 @@ void WindowMaterialGlazingInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_frontSideSolarReflectanceAtNormalIncidence = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialGlazingInspectorView::toggleUnitsClicked, m_frontSideSolarReflectanceAtNormalIncidence, &OSQuantityEdit::onUnitSystemChange);
+  m_frontSideSolarReflectanceAtNormalIncidence = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialGlazingInspectorView::toggleUnitsClicked, m_frontSideSolarReflectanceAtNormalIncidence, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_frontSideSolarReflectanceAtNormalIncidence,row++,0,1,3);
 
   // Back Side Solar Reflectance At Normal Incidence
@@ -140,8 +140,8 @@ void WindowMaterialGlazingInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_backSideSolarReflectanceAtNormalIncidence = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialGlazingInspectorView::toggleUnitsClicked, m_backSideSolarReflectanceAtNormalIncidence, &OSQuantityEdit::onUnitSystemChange);
+  m_backSideSolarReflectanceAtNormalIncidence = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialGlazingInspectorView::toggleUnitsClicked, m_backSideSolarReflectanceAtNormalIncidence, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_backSideSolarReflectanceAtNormalIncidence,row++,0,1,3);
 
   // Visible Transmittance At Normal Incidence
@@ -150,8 +150,8 @@ void WindowMaterialGlazingInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_visibleTransmittanceAtNormalIncidence = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialGlazingInspectorView::toggleUnitsClicked, m_visibleTransmittanceAtNormalIncidence, &OSQuantityEdit::onUnitSystemChange);
+  m_visibleTransmittanceAtNormalIncidence = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialGlazingInspectorView::toggleUnitsClicked, m_visibleTransmittanceAtNormalIncidence, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_visibleTransmittanceAtNormalIncidence,row++,0,1,3);
 
   // Front Side Visible Reflectance At Normal Incidence
@@ -160,8 +160,8 @@ void WindowMaterialGlazingInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_frontSideVisibleReflectanceAtNormalIncidence = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialGlazingInspectorView::toggleUnitsClicked, m_frontSideVisibleReflectanceAtNormalIncidence, &OSQuantityEdit::onUnitSystemChange);
+  m_frontSideVisibleReflectanceAtNormalIncidence = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialGlazingInspectorView::toggleUnitsClicked, m_frontSideVisibleReflectanceAtNormalIncidence, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_frontSideVisibleReflectanceAtNormalIncidence,row++,0,1,3);
 
   // Back Side Visible Reflectance At Normal Incidence
@@ -170,8 +170,8 @@ void WindowMaterialGlazingInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_backSideVisibleReflectanceAtNormalIncidence = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialGlazingInspectorView::toggleUnitsClicked, m_backSideVisibleReflectanceAtNormalIncidence, &OSQuantityEdit::onUnitSystemChange);
+  m_backSideVisibleReflectanceAtNormalIncidence = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialGlazingInspectorView::toggleUnitsClicked, m_backSideVisibleReflectanceAtNormalIncidence, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_backSideVisibleReflectanceAtNormalIncidence,row++,0,1,3);
 
   // Infrared Transmittance at Normal Incidence
@@ -180,8 +180,8 @@ void WindowMaterialGlazingInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_infraredTransmittanceAtNormalIncidence = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialGlazingInspectorView::toggleUnitsClicked, m_infraredTransmittanceAtNormalIncidence, &OSQuantityEdit::onUnitSystemChange);
+  m_infraredTransmittanceAtNormalIncidence = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialGlazingInspectorView::toggleUnitsClicked, m_infraredTransmittanceAtNormalIncidence, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_infraredTransmittanceAtNormalIncidence,row++,0,1,3);
 
   // Front Side Infrared Hemispherical Emissivity
@@ -190,8 +190,8 @@ void WindowMaterialGlazingInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_frontSideInfraredHemisphericalEmissivity = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialGlazingInspectorView::toggleUnitsClicked, m_frontSideInfraredHemisphericalEmissivity, &OSQuantityEdit::onUnitSystemChange);
+  m_frontSideInfraredHemisphericalEmissivity = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialGlazingInspectorView::toggleUnitsClicked, m_frontSideInfraredHemisphericalEmissivity, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_frontSideInfraredHemisphericalEmissivity,row++,0,1,3);
 
   // Back Side Infrared Hemispherical Emissivity
@@ -200,8 +200,8 @@ void WindowMaterialGlazingInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_backSideInfraredHemisphericalEmissivity = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialGlazingInspectorView::toggleUnitsClicked, m_backSideInfraredHemisphericalEmissivity, &OSQuantityEdit::onUnitSystemChange);
+  m_backSideInfraredHemisphericalEmissivity = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialGlazingInspectorView::toggleUnitsClicked, m_backSideInfraredHemisphericalEmissivity, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_backSideInfraredHemisphericalEmissivity,row++,0,1,3);
 
   // Conductivity
@@ -210,8 +210,8 @@ void WindowMaterialGlazingInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_conductivity = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialGlazingInspectorView::toggleUnitsClicked, m_conductivity, &OSQuantityEdit::onUnitSystemChange);
+  m_conductivity = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialGlazingInspectorView::toggleUnitsClicked, m_conductivity, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_conductivity,row++,0,1,3);
 
   // Dirt Correction Factor For Solar And Visible Transmittance
@@ -220,8 +220,8 @@ void WindowMaterialGlazingInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_dirtCorrectionFactorForSolarAndVisibleTransmittance = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialGlazingInspectorView::toggleUnitsClicked, m_dirtCorrectionFactorForSolarAndVisibleTransmittance, &OSQuantityEdit::onUnitSystemChange);
+  m_dirtCorrectionFactorForSolarAndVisibleTransmittance = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialGlazingInspectorView::toggleUnitsClicked, m_dirtCorrectionFactorForSolarAndVisibleTransmittance, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_dirtCorrectionFactorForSolarAndVisibleTransmittance,row++,0,1,3);
 
   // Solar Diffusing
@@ -230,7 +230,7 @@ void WindowMaterialGlazingInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_solarDiffusing = new OSSwitch();
+  m_solarDiffusing = new OSSwitch2();
   mainGridLayout->addWidget(m_solarDiffusing,row++,0,1,3); 
 
   // Stretch
@@ -274,7 +274,14 @@ void WindowMaterialGlazingInspectorView::attach(openstudio::model::StandardGlazi
       boost::none);
   }
 
-  m_solarDiffusing->bind(glazing,"solarDiffusing");
+  // m_solarDiffusing->bind(glazing,"solarDiffusing");
+  m_solarDiffusing->bind(
+    glazing,
+    std::bind(&model::StandardGlazing::solarDiffusing, glazing),
+    boost::optional<BoolSetter>(std::bind(&model::StandardGlazing::setSolarDiffusing, glazing, std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::StandardGlazing::resetSolarDiffusing, glazing)),
+    boost::optional<BasicQuery>(std::bind(&model::StandardGlazing::isSolarDiffusingDefaulted, glazing))
+  );
     
   // m_nameEdit->bind(glazing,"name");
   boost::optional<model::StandardGlazing> m_glazing = glazing;

@@ -38,7 +38,7 @@ class HVACToolbarView;
 class VentilationControlsView;
 class SingleZoneResetSPView;
 class OSViewSwitcher;
-class OSSwitch;
+class OSSwitch2;
 
 class HVACSystemsView : public QWidget
 {
@@ -166,7 +166,7 @@ class MechanicalVentilationView : public QWidget
 
   QComboBox * ventilationCalcMethodComboBox;
 
-  OSSwitch * dcvButton;
+  OSSwitch2 * dcvButton;
 };
 
 class NoMechanicalVentilationView : public QWidget

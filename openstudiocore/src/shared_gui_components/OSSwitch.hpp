@@ -65,34 +65,34 @@ class OSSwitch2 : public QPushButton, public Nano::Observer {
   boost::optional<BasicQuery> m_isDefaulted;
 };
 
-class OSSwitch : public QPushButton, public Nano::Observer
-{
-  Q_OBJECT
+// class OSSwitch2 : public QPushButton, public Nano::Observer
+// {
+//   Q_OBJECT
 
-  public:
+//   public:
 
-  OSSwitch(QWidget * parent = nullptr);
+//  OSSwitch2(QWidget * parent = nullptr);
 
-  virtual ~OSSwitch() {}
+//   virtual ~OSSwitch2() {}
 
-  void bind(model::ModelObject & modelObject, const char * property);
+//   void bind(model::ModelObject & modelObject, const char * property);
 
-  void unbind();
+//   void unbind();
 
-  private slots:
+//   private slots:
 
-  void onClicked(bool checked);
+//   void onClicked(bool checked);
 
-  void onModelObjectChange();
+//   void onModelObjectChange();
 
-  void onModelObjectRemove(const Handle& handle);
+//   void onModelObjectRemove(const Handle& handle);
 
-  private:
+//   private:
 
-  boost::optional<model::ModelObject> m_modelObject;
+//   boost::optional<model::ModelObject> m_modelObject;
 
-  std::string m_property;
-};
+//   std::string m_property;
+// };
 
 } // openstudio
 

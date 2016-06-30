@@ -34,7 +34,7 @@ class OSComboBox2;
 
 class OSLineEdit2;
 
-class OSQuantityEdit;
+class OSQuantityEdit2;
 
 class StandardsInformationMaterialWidget;
 
@@ -74,27 +74,27 @@ class WindowMaterialScreenInspectorView : public ModelObjectInspectorView
 
     OSComboBox2 * m_angleOfResolutionForScreenTransmittanceOutputMap = nullptr;
 
-    OSQuantityEdit * m_diffuseSolarReflectance = nullptr;
+    OSQuantityEdit2 * m_diffuseSolarReflectance = nullptr;
 
-    OSQuantityEdit * m_diffuseVisibleReflectance = nullptr;
+    OSQuantityEdit2 * m_diffuseVisibleReflectance = nullptr;
 
-    OSQuantityEdit * m_thermalHemisphericalEmissivity = nullptr;
+    OSQuantityEdit2 * m_thermalHemisphericalEmissivity = nullptr;
 
-    OSQuantityEdit * m_conductivity = nullptr;
+    OSQuantityEdit2 * m_conductivity = nullptr;
 
-    OSQuantityEdit * m_screenMaterialSpacing = nullptr;
+    OSQuantityEdit2 * m_screenMaterialSpacing = nullptr;
 
-    OSQuantityEdit * m_screenMaterialDiameter = nullptr;
+    OSQuantityEdit2 * m_screenMaterialDiameter = nullptr;
 
-    OSQuantityEdit * m_screenToGlassDistance = nullptr;
+    OSQuantityEdit2 * m_screenToGlassDistance = nullptr;
 
-    OSQuantityEdit * m_topOpeningMultiplier = nullptr;
+    OSQuantityEdit2 * m_topOpeningMultiplier = nullptr;
 
-    OSQuantityEdit * m_bottomOpeningMultiplier = nullptr;
+    OSQuantityEdit2 * m_bottomOpeningMultiplier = nullptr;
 
-    OSQuantityEdit * m_leftSideOpeningMultiplier = nullptr;
+    OSQuantityEdit2 * m_leftSideOpeningMultiplier = nullptr;
 
-    OSQuantityEdit * m_rightSideOpeningMultiplier = nullptr;
+    OSQuantityEdit2 * m_rightSideOpeningMultiplier = nullptr;
 
     StandardsInformationMaterialWidget * m_standardsInformationWidget = nullptr;
 

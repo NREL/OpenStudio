@@ -128,9 +128,9 @@ YearSettingsWidget::YearSettingsWidget(const model::Model & model, QWidget * par
   dstLabel->setObjectName("H2");
   dstHLayout1->addWidget(dstLabel);
 
-  m_dstOnOffButton = new OSSwitch();
+  m_dstOnOffButton = new OSSwitch2();
   dstHLayout1->addWidget(m_dstOnOffButton);
-  connect(m_dstOnOffButton, &OSSwitch::clicked, this, &YearSettingsWidget::daylightSavingTimeClicked);
+  connect(m_dstOnOffButton, &OSSwitch2::clicked, this, &YearSettingsWidget::daylightSavingTimeClicked);
   dstHLayout1->addStretch();
 
   mainVLayout->addLayout(dstHLayout1);

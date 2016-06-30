@@ -36,7 +36,7 @@ class OSComboBox2;
 
 class OSLineEdit2;
 
-class OSQuantityEdit;
+class OSQuantityEdit2;
 
 class StandardsInformationMaterialWidget;
 
@@ -74,19 +74,19 @@ class MaterialInspectorView : public ModelObjectInspectorView
 
     OSComboBox2 * m_roughness = nullptr;
     
-    OSQuantityEdit * m_thickness = nullptr;
+    OSQuantityEdit2 * m_thickness = nullptr;
 
-    OSQuantityEdit * m_conductivity = nullptr;
+    OSQuantityEdit2 * m_conductivity = nullptr;
 
-    OSQuantityEdit * m_density = nullptr;
+    OSQuantityEdit2 * m_density = nullptr;
 
-    OSQuantityEdit * m_specificHeat = nullptr;
+    OSQuantityEdit2 * m_specificHeat = nullptr;
 
-    OSQuantityEdit * m_thermalAbsorptance = nullptr;
+    OSQuantityEdit2 * m_thermalAbsorptance = nullptr;
 
-    OSQuantityEdit * m_solarAbsorptance = nullptr;
+    OSQuantityEdit2 * m_solarAbsorptance = nullptr;
 
-    OSQuantityEdit * m_visibleAbsorptance = nullptr;
+    OSQuantityEdit2 * m_visibleAbsorptance = nullptr;
 
     StandardsInformationMaterialWidget * m_standardsInformationWidget = nullptr;
 

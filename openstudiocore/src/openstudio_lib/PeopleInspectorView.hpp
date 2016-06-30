@@ -32,7 +32,7 @@ namespace openstudio {
 class OSDoubleEdit2;
 class OSDropZone;
 class OSLineEdit2;
-class OSQuantityEdit;
+class OSQuantityEdit2;
 class OSQuantityEdit2;
 class OSCheckBox;
 class OSComboBox2;
@@ -76,7 +76,7 @@ class PeopleInspectorView : public ModelObjectInspectorView
 
     OSLineEdit2* m_nameEdit;
 
-    OSQuantityEdit* m_multiplierEdit;
+    OSQuantityEdit2* m_multiplierEdit;
 
     OSComboBox2* m_peopleDefinitionComboBox;
 

@@ -32,7 +32,7 @@ namespace model {
 
 class OSLineEdit2;
 
-class OSQuantityEdit;
+class OSQuantityEdit2;
 
 class StandardsInformationMaterialWidget;
 

@@ -454,7 +454,7 @@ ScheduleLimitsView::ScheduleLimitsView(bool isIP,
 
   // Lower Limit
 
-  // Note: QDoubleSpinBox are used, rather than OSQuantityEdit
+  // Note: QDoubleSpinBox are used, rather than OSQuantityEdit2
   // because limits are not connected via Q_PROPERTY. 
   m_lowerViewLimitSpinBox = new QDoubleSpinBox();
   m_lowerViewLimitSpinBox->setFixedWidth(100);

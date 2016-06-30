@@ -138,50 +138,50 @@ protected:
   REGISTER_LOGGER("openstudio.OSUnsignedEdit");
 };
 
-class OSUnsignedEdit: public QLineEdit {
-  Q_OBJECT
+// class OSUnsignedEdit: public QLineEdit {
+//   Q_OBJECT
 
- public:
+//  public:
 
-  OSUnsignedEdit(QWidget * parent = nullptr);
+//   OSUnsignedEdit(QWidget * parent = nullptr);
 
-  virtual ~OSUnsignedEdit() {}
+//   virtual ~OSUnsignedEdit() {}
 
-  QIntValidator * intValidator() { return m_intValidator; }
+//   QIntValidator * intValidator() { return m_intValidator; }
 
-  void bind(model::ModelObject& modelObject,
-            const char* property,
-            const boost::optional<std::string>& isDefaultedProperty = boost::none,
-            const boost::optional<std::string>& isAutosizedProperty = boost::none,
-            const boost::optional<std::string>& isAutocalucatedProperty = boost::none);
+//   void bind(model::ModelObject& modelObject,
+//             const char* property,
+//             const boost::optional<std::string>& isDefaultedProperty = boost::none,
+//             const boost::optional<std::string>& isAutosizedProperty = boost::none,
+//             const boost::optional<std::string>& isAutocalucatedProperty = boost::none);
 
-  void unbind();
+//   void unbind();
 
- private slots:
+//  private slots:
 
-  void onEditingFinished();
+//   void onEditingFinished();
 
-  void onModelObjectChange();
+//   void onModelObjectChange();
 
-  void onModelObjectRemove(const Handle& handle);
+//   void onModelObjectRemove(const Handle& handle);
 
- private:
-  boost::optional<model::ModelObject> m_modelObject;
-  std::string m_property;
-  boost::optional<std::string> m_isDefaultedProperty;
-  boost::optional<std::string> m_isAutosizedProperty;
-  boost::optional<std::string> m_isAutocalculatedProperty;
+//  private:
+//   boost::optional<model::ModelObject> m_modelObject;
+//   std::string m_property;
+//   boost::optional<std::string> m_isDefaultedProperty;
+//   boost::optional<std::string> m_isAutosizedProperty;
+//   boost::optional<std::string> m_isAutocalculatedProperty;
 
-  bool m_isScientific;
-  boost::optional<int> m_precision;
-  QIntValidator * m_intValidator = nullptr;
+//   bool m_isScientific;
+//   boost::optional<int> m_precision;
+//   QIntValidator * m_intValidator = nullptr;
 
-  void refreshTextAndLabel();
+//   void refreshTextAndLabel();
 
-  void setPrecision(const std::string& str);
+//   void setPrecision(const std::string& str);
 
-  REGISTER_LOGGER("openstudio.OSUnsignedEdit");
-};
+//   REGISTER_LOGGER("openstudio.OSUnsignedEdit");
+// };
 
 } // openstudio
 

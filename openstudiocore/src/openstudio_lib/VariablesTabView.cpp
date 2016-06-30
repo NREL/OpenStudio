@@ -54,8 +54,8 @@ namespace openstudio {
     hbox->setContentsMargins(10,10,10,10);
     hbox->setSpacing(10);
 
-    m_onOffButton = new OSSwitch();
-    connect(m_onOffButton, &OSSwitch::clicked, this, &VariableListItem::onOffClicked);
+    m_onOffButton = new OSSwitch2();
+    connect(m_onOffButton, &OSSwitch2::clicked, this, &VariableListItem::onOffClicked);
     hbox->addWidget(m_onOffButton);
     m_onOffButton->setChecked(m_variable.is_initialized());
 

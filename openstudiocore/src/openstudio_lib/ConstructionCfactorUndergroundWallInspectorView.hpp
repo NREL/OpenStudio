@@ -35,7 +35,7 @@ namespace model {
 
 class OSLineEdit2;
 
-class OSQuantityEdit;
+class OSQuantityEdit2;
 
 class OSComboBox2;
 
@@ -73,9 +73,9 @@ class ConstructionCfactorUndergroundWallInspectorView : public ModelObjectInspec
 
     StandardsInformationConstructionWidget * m_standardsInformationWidget;
       
-    OSQuantityEdit * m_cfactorEdit;
+    OSQuantityEdit2 * m_cfactorEdit;
 
-    OSQuantityEdit * m_heightEdit;
+    OSQuantityEdit2 * m_heightEdit;
 };
 
 } // openstudio

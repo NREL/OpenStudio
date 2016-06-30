@@ -32,7 +32,7 @@ class ElectricEquipmentDefinition;
 
 class OSLineEdit2;
 
-class OSQuantityEdit;
+class OSQuantityEdit2;
 
 class OSDropZone;
 
@@ -64,17 +64,17 @@ class ElectricEquipmentDefinitionInspectorView : public ModelObjectInspectorView
 
     OSLineEdit2 * m_nameEdit;
 
-    OSQuantityEdit * m_designLevelEdit;
+    OSQuantityEdit2 * m_designLevelEdit;
 
-    OSQuantityEdit * m_wattsPerSpaceFloorAreaEdit;
+    OSQuantityEdit2 * m_wattsPerSpaceFloorAreaEdit;
 
-    OSQuantityEdit * m_wattsPerPersonEdit;
+    OSQuantityEdit2 * m_wattsPerPersonEdit;
 
-    OSQuantityEdit * m_fractionLatentEdit;
+    OSQuantityEdit2 * m_fractionLatentEdit;
 
-    OSQuantityEdit * m_fractionRadiantEdit;
+    OSQuantityEdit2 * m_fractionRadiantEdit;
 
-    OSQuantityEdit * m_fractionLostEdit;
+    OSQuantityEdit2 * m_fractionLostEdit;
 
     bool m_isIP;
 

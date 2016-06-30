@@ -86,8 +86,8 @@ void MaterialRoofVegetationInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_heightOfPlants = new OSQuantityEdit(m_isIP);
-  connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_heightOfPlants, &OSQuantityEdit::onUnitSystemChange);
+  m_heightOfPlants = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_heightOfPlants, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_heightOfPlants,row++,0,1,3);
 
   // Leaf Area Index
@@ -96,8 +96,8 @@ void MaterialRoofVegetationInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_leafAreaIndex = new OSQuantityEdit(m_isIP);
-  connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_leafAreaIndex, &OSQuantityEdit::onUnitSystemChange);
+  m_leafAreaIndex = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_leafAreaIndex, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_leafAreaIndex,row++,0,1,3);
 
   // Leaf Reflectivity
@@ -106,8 +106,8 @@ void MaterialRoofVegetationInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_leafReflectivity = new OSQuantityEdit(m_isIP);
-  connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_leafReflectivity, &OSQuantityEdit::onUnitSystemChange);
+  m_leafReflectivity = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_leafReflectivity, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_leafReflectivity,row++,0,1,3);
 
   // Leaf Emissivity
@@ -116,8 +116,8 @@ void MaterialRoofVegetationInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_leafEmissivity = new OSQuantityEdit(m_isIP);
-  connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_leafEmissivity, &OSQuantityEdit::onUnitSystemChange);
+  m_leafEmissivity = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_leafEmissivity, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_leafEmissivity,row++,0,1,3);
 
   // Minimum Stomatal Resistance
@@ -126,8 +126,8 @@ void MaterialRoofVegetationInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_minimumStomatalResistance = new OSQuantityEdit(m_isIP);
-  connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_minimumStomatalResistance, &OSQuantityEdit::onUnitSystemChange);
+  m_minimumStomatalResistance = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_minimumStomatalResistance, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_minimumStomatalResistance,row++,0,1,3);
 
   // Soil Layer Name
@@ -160,8 +160,8 @@ void MaterialRoofVegetationInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_thickness = new OSQuantityEdit(m_isIP);
-  connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_thickness, &OSQuantityEdit::onUnitSystemChange);
+  m_thickness = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_thickness, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_thickness,row++,0,1,3);
 
   // Conductivity Of Dry Soil
@@ -170,8 +170,8 @@ void MaterialRoofVegetationInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_conductivityOfDrySoil = new OSQuantityEdit(m_isIP);
-  connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_conductivityOfDrySoil, &OSQuantityEdit::onUnitSystemChange);
+  m_conductivityOfDrySoil = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_conductivityOfDrySoil, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_conductivityOfDrySoil,row++,0,1,3);
 
   // Density Of Dry Soil
@@ -180,8 +180,8 @@ void MaterialRoofVegetationInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_densityOfDrySoil = new OSQuantityEdit(m_isIP);
-  connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_densityOfDrySoil, &OSQuantityEdit::onUnitSystemChange);
+  m_densityOfDrySoil = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_densityOfDrySoil, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_densityOfDrySoil,row++,0,1,3);
 
   // Specific Heat Of Dry Soil
@@ -190,8 +190,8 @@ void MaterialRoofVegetationInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_specificHeatOfDrySoil = new OSQuantityEdit(m_isIP);
-  connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_specificHeatOfDrySoil, &OSQuantityEdit::onUnitSystemChange);
+  m_specificHeatOfDrySoil = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_specificHeatOfDrySoil, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_specificHeatOfDrySoil,row++,0,1,3);
 
   // Thermal Absorptance
@@ -200,8 +200,8 @@ void MaterialRoofVegetationInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_thermalAbsorptance = new OSQuantityEdit(m_isIP);
-  connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_thermalAbsorptance, &OSQuantityEdit::onUnitSystemChange);
+  m_thermalAbsorptance = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_thermalAbsorptance, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_thermalAbsorptance,row++,0,1,3);
 
   // Solar Absorptance
@@ -210,8 +210,8 @@ void MaterialRoofVegetationInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_solarAbsorptance = new OSQuantityEdit(m_isIP);
-  connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_solarAbsorptance, &OSQuantityEdit::onUnitSystemChange);
+  m_solarAbsorptance = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_solarAbsorptance, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_solarAbsorptance,row++,0,1,3);
 
   // Visible Absorptance
@@ -220,8 +220,8 @@ void MaterialRoofVegetationInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_visibleAbsorptance = new OSQuantityEdit(m_isIP);
-  connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_visibleAbsorptance, &OSQuantityEdit::onUnitSystemChange);
+  m_visibleAbsorptance = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_visibleAbsorptance, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_visibleAbsorptance,row++,0,1,3);
 
   // Saturation Volumetric Moisture Content Of The Soil Layer
@@ -230,8 +230,8 @@ void MaterialRoofVegetationInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_saturationVolumetricMoistureContentOfTheSoilLayer = new OSQuantityEdit(m_isIP);
-  connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_saturationVolumetricMoistureContentOfTheSoilLayer, &OSQuantityEdit::onUnitSystemChange);
+  m_saturationVolumetricMoistureContentOfTheSoilLayer = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_saturationVolumetricMoistureContentOfTheSoilLayer, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_saturationVolumetricMoistureContentOfTheSoilLayer,row++,0,1,3);
 
   // Residual Volumetric Moisture Content Of The Soil Layer
@@ -240,8 +240,8 @@ void MaterialRoofVegetationInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_residualVolumetricMoistureContentOfTheSoilLayer = new OSQuantityEdit(m_isIP);
-  connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_residualVolumetricMoistureContentOfTheSoilLayer, &OSQuantityEdit::onUnitSystemChange);
+  m_residualVolumetricMoistureContentOfTheSoilLayer = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_residualVolumetricMoistureContentOfTheSoilLayer, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_residualVolumetricMoistureContentOfTheSoilLayer,row++,0,1,3);
 
   // Initial Volumetric Moisture Content Of The Soil Layer
@@ -250,8 +250,8 @@ void MaterialRoofVegetationInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_initialVolumetricMoistureContentOfTheSoilLayer = new OSQuantityEdit(m_isIP);
-  connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_initialVolumetricMoistureContentOfTheSoilLayer, &OSQuantityEdit::onUnitSystemChange);
+  m_initialVolumetricMoistureContentOfTheSoilLayer = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_initialVolumetricMoistureContentOfTheSoilLayer, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_initialVolumetricMoistureContentOfTheSoilLayer,row++,0,1,3);
 
   // Moisture Diffusion Calculation Method
@@ -315,36 +315,200 @@ void MaterialRoofVegetationInspectorView::attach(openstudio::model::RoofVegetati
   // m_soilLayerName->bind(roofVegetation,"soilLayerName");
   m_soilLayerName->bind(
     *m_roofVegetation,
-    OptionalStringGetter(std::bind(&model::RoofVegetation::soilLayerName, m_roofVegetation.get_ptr())),
+    StringGetter(std::bind(&model::RoofVegetation::soilLayerName, m_roofVegetation.get_ptr())),
     boost::optional<StringSetter>(std::bind(&model::RoofVegetation::setSoilLayerName, m_roofVegetation.get_ptr(),std::placeholders::_1)),
-    boost::optional<NoFailAction>(&model::RoofVegetation::resetSoilLayerName),
-    boost::optional<BasicQuery>(&model::RoofVegetation::isSoilLayerNameDefaulted)
+    boost::optional<NoFailAction>(std::bind(&model::RoofVegetation::resetSoilLayerName, m_roofVegetation.get_ptr())),
+    boost::optional<BasicQuery>(std::bind(&model::RoofVegetation::isSoilLayerNameDefaulted, m_roofVegetation.get_ptr()))
   );
 
   // m_moistureDiffusionCalculationMethod->bind(roofVegetation,"moistureDiffusionCalculationMethod");
   m_moistureDiffusionCalculationMethod->bind(
     *m_roofVegetation,
-    OptionalStringGetter(std::bind(&model::RoofVegetation::moistureDiffusionCalculationMethod, m_roofVegetation.get_ptr())),
+    StringGetter(std::bind(&model::RoofVegetation::moistureDiffusionCalculationMethod, m_roofVegetation.get_ptr())),
     boost::optional<StringSetter>(std::bind(&model::RoofVegetation::setMoistureDiffusionCalculationMethod, m_roofVegetation.get_ptr(),std::placeholders::_1)),
-    boost::optional<NoFailAction>(&model::RoofVegetation::resetMoistureDiffusionCalculationMethod),
-    boost::optional<BasicQuery>(&model::RoofVegetation::isMoistureDiffusionCalculationMethodDefaulted)
+    boost::optional<NoFailAction>(std::bind(&model::RoofVegetation::resetMoistureDiffusionCalculationMethod, m_roofVegetation.get_ptr())),
+    boost::optional<BasicQuery>(std::bind(&model::RoofVegetation::isMoistureDiffusionCalculationMethodDefaulted, m_roofVegetation.get_ptr()))
   );
   
-  m_heightOfPlants->bind(roofVegetation,"heightofPlants",m_isIP);
-  m_leafAreaIndex->bind(roofVegetation,"leafAreaIndex",m_isIP);
-  m_leafReflectivity->bind(roofVegetation,"leafReflectivity",m_isIP);
-  m_leafEmissivity->bind(roofVegetation,"leafEmissivity",m_isIP);
-  m_minimumStomatalResistance->bind(roofVegetation,"minimumStomatalResistance",m_isIP);
-  m_thickness->bind(roofVegetation,"thickness",m_isIP);
-  m_conductivityOfDrySoil->bind(roofVegetation,"conductivityofDrySoil",m_isIP);
-  m_densityOfDrySoil->bind(roofVegetation,"densityofDrySoil",m_isIP);
-  m_specificHeatOfDrySoil->bind(roofVegetation,"specificHeatofDrySoil",m_isIP);
-  m_thermalAbsorptance->bind(roofVegetation,"thermalAbsorptance",m_isIP);
-  m_visibleAbsorptance->bind(roofVegetation,"visibleAbsorptance",m_isIP);
-  m_saturationVolumetricMoistureContentOfTheSoilLayer->bind(roofVegetation,"saturationVolumetricMoistureContentoftheSoilLayer",m_isIP);
-  m_residualVolumetricMoistureContentOfTheSoilLayer->bind(roofVegetation,"residualVolumetricMoistureContentoftheSoilLayer",m_isIP);
-  m_initialVolumetricMoistureContentOfTheSoilLayer->bind(roofVegetation,"initialVolumetricMoistureContentoftheSoilLayer",m_isIP);
-  m_solarAbsorptance->bind(roofVegetation,"solarAbsorptance",m_isIP);
+  // m_heightOfPlants->bind(roofVegetation,"heightofPlants",m_isIP);
+  m_heightOfPlants->bind(
+    m_isIP,
+    *m_roofVegetation,
+    DoubleGetter(std::bind(&model::RoofVegetation::heightofPlants, m_roofVegetation.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::RoofVegetation::*)(double)>(&model::RoofVegetation::setHeightofPlants), m_roofVegetation.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::RoofVegetation::resetHeightofPlants, m_roofVegetation.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::RoofVegetation::isHeightofPlantsDefaulted, m_roofVegetation.get_ptr()))
+  );
+
+  // m_leafAreaIndex->bind(roofVegetation,"leafAreaIndex",m_isIP);
+  m_leafAreaIndex->bind(
+    m_isIP,
+    *m_roofVegetation,
+    DoubleGetter(std::bind(&model::RoofVegetation::leafAreaIndex, m_roofVegetation.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::RoofVegetation::*)(double)>(&model::RoofVegetation::setLeafAreaIndex), m_roofVegetation.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::RoofVegetation::resetLeafAreaIndex, m_roofVegetation.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::RoofVegetation::isLeafAreaIndexDefaulted, m_roofVegetation.get_ptr()))
+  );
+
+  // m_leafReflectivity->bind(roofVegetation,"leafReflectivity",m_isIP);
+  m_leafReflectivity->bind(
+    m_isIP,
+    *m_roofVegetation,
+    DoubleGetter(std::bind(&model::RoofVegetation::leafReflectivity, m_roofVegetation.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::RoofVegetation::*)(double)>(&model::RoofVegetation::setLeafReflectivity), m_roofVegetation.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::RoofVegetation::resetLeafReflectivity, m_roofVegetation.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::RoofVegetation::isLeafReflectivityDefaulted, m_roofVegetation.get_ptr()))
+  );
+
+  // m_leafEmissivity->bind(roofVegetation,"leafEmissivity",m_isIP);
+  m_leafEmissivity->bind(
+    m_isIP,
+    *m_roofVegetation,
+    DoubleGetter(std::bind(&model::RoofVegetation::leafEmissivity, m_roofVegetation.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::RoofVegetation::*)(double)>(&model::RoofVegetation::setLeafEmissivity), m_roofVegetation.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::RoofVegetation::resetLeafEmissivity, m_roofVegetation.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::RoofVegetation::isLeafEmissivityDefaulted, m_roofVegetation.get_ptr()))
+  );
+
+  // m_minimumStomatalResistance->bind(roofVegetation,"minimumStomatalResistance",m_isIP);
+  m_minimumStomatalResistance->bind(
+    m_isIP,
+    *m_roofVegetation,
+    DoubleGetter(std::bind(&model::RoofVegetation::minimumStomatalResistance, m_roofVegetation.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::RoofVegetation::*)(double)>(&model::RoofVegetation::setMinimumStomatalResistance), m_roofVegetation.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::RoofVegetation::resetMinimumStomatalResistance, m_roofVegetation.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::RoofVegetation::isMinimumStomatalResistanceDefaulted, m_roofVegetation.get_ptr()))
+  );
+
+  // m_thickness->bind(roofVegetation,"thickness",m_isIP);
+  m_thickness->bind(
+    m_isIP,
+    *m_roofVegetation,
+    DoubleGetter(std::bind(&model::RoofVegetation::thickness, m_roofVegetation.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::RoofVegetation::*)(double)>(&model::RoofVegetation::setThickness), m_roofVegetation.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::RoofVegetation::resetThickness, m_roofVegetation.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::RoofVegetation::isThicknessDefaulted, m_roofVegetation.get_ptr()))
+  );
+
+  // m_conductivityOfDrySoil->bind(roofVegetation,"conductivityofDrySoil",m_isIP);
+  m_conductivityOfDrySoil->bind(
+    m_isIP,
+    *m_roofVegetation,
+    DoubleGetter(std::bind(&model::RoofVegetation::conductivityofDrySoil, m_roofVegetation.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::RoofVegetation::*)(double)>(&model::RoofVegetation::setConductivityofDrySoil), m_roofVegetation.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::RoofVegetation::resetConductivityofDrySoil, m_roofVegetation.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::RoofVegetation::isConductivityofDrySoilDefaulted, m_roofVegetation.get_ptr()))
+  );
+
+  // m_densityOfDrySoil->bind(roofVegetation,"densityofDrySoil",m_isIP);
+  m_densityOfDrySoil->bind(
+    m_isIP,
+    *m_roofVegetation,
+    DoubleGetter(std::bind(&model::RoofVegetation::densityofDrySoil, m_roofVegetation.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::RoofVegetation::*)(double)>(&model::RoofVegetation::setDensityofDrySoil), m_roofVegetation.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::RoofVegetation::resetDensityofDrySoil, m_roofVegetation.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::RoofVegetation::isDensityofDrySoilDefaulted, m_roofVegetation.get_ptr()))
+  );
+
+  // m_specificHeatOfDrySoil->bind(roofVegetation,"specificHeatofDrySoil",m_isIP);
+  m_specificHeatOfDrySoil->bind(
+    m_isIP,
+    *m_roofVegetation,
+    DoubleGetter(std::bind(&model::RoofVegetation::specificHeatofDrySoil, m_roofVegetation.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::RoofVegetation::*)(double)>(&model::RoofVegetation::setSpecificHeatofDrySoil), m_roofVegetation.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::RoofVegetation::resetSpecificHeatofDrySoil, m_roofVegetation.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::RoofVegetation::isSpecificHeatofDrySoilDefaulted, m_roofVegetation.get_ptr()))
+  );
+
+  // m_thermalAbsorptance->bind(roofVegetation,"thermalAbsorptance",m_isIP);
+  m_thermalAbsorptance->bind(
+    m_isIP,
+    *m_roofVegetation,
+    OptionalDoubleGetter(std::bind(&model::RoofVegetation::thermalAbsorptance, m_roofVegetation.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::RoofVegetation::*)(double)>(&model::RoofVegetation::setThermalAbsorptance), m_roofVegetation.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::RoofVegetation::resetThermalAbsorptance, m_roofVegetation.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::RoofVegetation::isThermalAbsorptanceDefaulted, m_roofVegetation.get_ptr()))
+  );
+
+  // m_visibleAbsorptance->bind(roofVegetation,"visibleAbsorptance",m_isIP);
+  m_visibleAbsorptance->bind(
+    m_isIP,
+    *m_roofVegetation,
+    OptionalDoubleGetter(std::bind(&model::RoofVegetation::visibleAbsorptance, m_roofVegetation.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::RoofVegetation::*)(double)>(&model::RoofVegetation::setVisibleAbsorptance), m_roofVegetation.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::RoofVegetation::resetVisibleAbsorptance, m_roofVegetation.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::RoofVegetation::isVisibleAbsorptanceDefaulted, m_roofVegetation.get_ptr()))
+  );
+
+  // m_saturationVolumetricMoistureContentOfTheSoilLayer->bind(roofVegetation,"saturationVolumetricMoistureContentoftheSoilLayer",m_isIP);
+  m_saturationVolumetricMoistureContentOfTheSoilLayer->bind(
+    m_isIP,
+    *m_roofVegetation,
+    DoubleGetter(std::bind(&model::RoofVegetation::saturationVolumetricMoistureContentoftheSoilLayer, m_roofVegetation.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::RoofVegetation::*)(double)>(&model::RoofVegetation::setSaturationVolumetricMoistureContentoftheSoilLayer), m_roofVegetation.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::RoofVegetation::resetSaturationVolumetricMoistureContentoftheSoilLayer, m_roofVegetation.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::RoofVegetation::isSaturationVolumetricMoistureContentoftheSoilLayerDefaulted, m_roofVegetation.get_ptr()))
+  );
+
+  // m_residualVolumetricMoistureContentOfTheSoilLayer->bind(roofVegetation,"residualVolumetricMoistureContentoftheSoilLayer",m_isIP);
+  m_residualVolumetricMoistureContentOfTheSoilLayer->bind(
+    m_isIP,
+    *m_roofVegetation,
+    DoubleGetter(std::bind(&model::RoofVegetation::residualVolumetricMoistureContentoftheSoilLayer, m_roofVegetation.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::RoofVegetation::*)(double)>(&model::RoofVegetation::setResidualVolumetricMoistureContentoftheSoilLayer), m_roofVegetation.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::RoofVegetation::resetResidualVolumetricMoistureContentoftheSoilLayer, m_roofVegetation.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::RoofVegetation::isResidualVolumetricMoistureContentoftheSoilLayerDefaulted, m_roofVegetation.get_ptr()))
+  );
+
+  // m_initialVolumetricMoistureContentOfTheSoilLayer->bind(roofVegetation,"initialVolumetricMoistureContentoftheSoilLayer",m_isIP);
+  m_initialVolumetricMoistureContentOfTheSoilLayer->bind(
+    m_isIP,
+    *m_roofVegetation,
+    DoubleGetter(std::bind(&model::RoofVegetation::initialVolumetricMoistureContentoftheSoilLayer, m_roofVegetation.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::RoofVegetation::*)(double)>(&model::RoofVegetation::setInitialVolumetricMoistureContentoftheSoilLayer), m_roofVegetation.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::RoofVegetation::resetInitialVolumetricMoistureContentoftheSoilLayer, m_roofVegetation.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::RoofVegetation::isInitialVolumetricMoistureContentoftheSoilLayerDefaulted, m_roofVegetation.get_ptr()))
+  );
+
+  // m_solarAbsorptance->bind(roofVegetation,"solarAbsorptance",m_isIP);
+  m_solarAbsorptance->bind(
+    m_isIP,
+    *m_roofVegetation,
+    OptionalDoubleGetter(std::bind(&model::RoofVegetation::solarAbsorptance, m_roofVegetation.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::RoofVegetation::*)(double)>(&model::RoofVegetation::setSolarAbsorptance), m_roofVegetation.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::RoofVegetation::resetSolarAbsorptance, m_roofVegetation.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::RoofVegetation::isSolarAbsorptanceDefaulted, m_roofVegetation.get_ptr()))
+  );
 
   m_standardsInformationWidget->attach(roofVegetation);
 

@@ -88,8 +88,8 @@ void WindowMaterialGasMixtureInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_thickness = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialGasMixtureInspectorView::toggleUnitsClicked, m_thickness, &OSQuantityEdit::onUnitSystemChange);
+  m_thickness = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialGasMixtureInspectorView::toggleUnitsClicked, m_thickness, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_thickness,row++,0,1,3);
 
   // Number Of Gases In Mixture
@@ -109,8 +109,8 @@ void WindowMaterialGasMixtureInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_gas1Fraction = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialGasMixtureInspectorView::toggleUnitsClicked, m_gas1Fraction, &OSQuantityEdit::onUnitSystemChange);
+  m_gas1Fraction = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialGasMixtureInspectorView::toggleUnitsClicked, m_gas1Fraction, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_gas1Fraction,row++,0,1,3);
 
   // Gas Type
@@ -135,8 +135,8 @@ void WindowMaterialGasMixtureInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_gas2Fraction = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialGasMixtureInspectorView::toggleUnitsClicked, m_gas2Fraction, &OSQuantityEdit::onUnitSystemChange);
+  m_gas2Fraction = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialGasMixtureInspectorView::toggleUnitsClicked, m_gas2Fraction, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_gas2Fraction,row++,0,1,3);
 
   // Gas Type
@@ -160,8 +160,8 @@ void WindowMaterialGasMixtureInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_gas3Fraction = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialGasMixtureInspectorView::toggleUnitsClicked, m_gas3Fraction, &OSQuantityEdit::onUnitSystemChange);
+  m_gas3Fraction = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialGasMixtureInspectorView::toggleUnitsClicked, m_gas3Fraction, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_gas3Fraction,row++,0,1,3);
 
   // Gas Type
@@ -185,8 +185,8 @@ void WindowMaterialGasMixtureInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_gas4Fraction = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialGasMixtureInspectorView::toggleUnitsClicked, m_gas4Fraction, &OSQuantityEdit::onUnitSystemChange);
+  m_gas4Fraction = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialGasMixtureInspectorView::toggleUnitsClicked, m_gas4Fraction, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_gas4Fraction,row++,0,1,3);
 
   // Gas Type
@@ -287,7 +287,7 @@ void WindowMaterialGasMixtureInspectorView::attach(openstudio::model::GasMixture
     boost::optional<StringSetter>(std::bind(&model::GasMixture::setName, m_gasMixture.get_ptr(),std::placeholders::_1))
   );
 
-  // OSQuantityEdit
+  // OSQuantityEdit2
   m_thickness->bind(gasMixture,"thickness",m_isIP);
   m_gas1Fraction->bind(gasMixture,"gas1Fraction",m_isIP);
   m_gas2Fraction->bind(gasMixture,"gas2Fraction",m_isIP);

@@ -36,7 +36,7 @@ class OSComboBox2;
 class OSDropZone;
 class OSIntegerEdit2;
 class OSLineEdit2;
-class OSQuantityEdit;
+class OSQuantityEdit2;
 class OSQuantityEdit2;
 class OSSwitch2;
 
@@ -148,7 +148,7 @@ class BuildingInspectorView : public ModelObjectInspectorView
     OSIntegerEdit2* m_numberLivingUnits = nullptr;
     OSIntegerEdit2* m_numberStories = nullptr;
     OSLineEdit2* m_nameEdit = nullptr;
-    OSQuantityEdit* m_northAxisEdit = nullptr;
+    OSQuantityEdit2* m_northAxisEdit = nullptr;
     OSQuantityEdit2 * m_floorToCeilingHeight = nullptr;
     OSQuantityEdit2 * m_floorToFloorHeight = nullptr;
     OSSwitch2* m_relocatable = nullptr;

@@ -188,62 +188,62 @@ class OSQuantityEdit2: public QWidget, public Nano::Observer {
 };
 
 /** \deprecated Use OSQuantityEdit2. */
-class OSQuantityEdit: public QWidget, public Nano::Observer {
-  Q_OBJECT
+// class OSQuantityEdit: public QWidget, public Nano::Observer {
+//   Q_OBJECT
   
- public:
+//  public:
 
-  OSQuantityEdit(bool isIP, QWidget * parent = nullptr);
+//   OSQuantityEdit(bool isIP, QWidget * parent = nullptr);
 
-  virtual ~OSQuantityEdit() {}
+//   virtual ~OSQuantityEdit() {}
 
-  QDoubleValidator * doubleValidator() { return m_doubleValidator; }
+//   QDoubleValidator * doubleValidator() { return m_doubleValidator; }
 
-  void bind(model::ModelObject& modelObject,
-            const char* property,
-            bool isIP,
-            const boost::optional<std::string>& isDefaultedProperty = boost::none,
-            const boost::optional<std::string>& isAutosizedProperty = boost::none,
-            const boost::optional<std::string>& isAutocalucatedProperty = boost::none);
+//   void bind(model::ModelObject& modelObject,
+//             const char* property,
+//             bool isIP,
+//             const boost::optional<std::string>& isDefaultedProperty = boost::none,
+//             const boost::optional<std::string>& isAutosizedProperty = boost::none,
+//             const boost::optional<std::string>& isAutocalucatedProperty = boost::none);
 
-  void unbind();
+//   void unbind();
 
- public slots:
+//  public slots:
 
-  void onUnitSystemChange(bool isIP);
+//   void onUnitSystemChange(bool isIP);
 
- private slots:
+//  private slots:
 
-  void onEditingFinished();
+//   void onEditingFinished();
 
-  void onModelObjectChange();
+//   void onModelObjectChange();
 
-  void onModelObjectRemove(const Handle& handle);
+//   void onModelObjectRemove(const Handle& handle);
 
- private:
+//  private:
 
-  QLineEdit* m_lineEdit;
-  QLabel* m_units;
+//   QLineEdit* m_lineEdit;
+//   QLabel* m_units;
 
-  boost::optional<model::ModelObject> m_modelObject;
-  std::string m_property;
-  bool m_isIP;
-  boost::optional<std::string> m_isDefaultedProperty;
-  boost::optional<std::string> m_isAutosizedProperty;
-  boost::optional<std::string> m_isAutocalculatedProperty;
+//   boost::optional<model::ModelObject> m_modelObject;
+//   std::string m_property;
+//   bool m_isIP;
+//   boost::optional<std::string> m_isDefaultedProperty;
+//   boost::optional<std::string> m_isAutosizedProperty;
+//   boost::optional<std::string> m_isAutocalculatedProperty;
 
-  bool m_isScientific;
-  boost::optional<int> m_precision;
-  QDoubleValidator * m_doubleValidator;
+//   bool m_isScientific;
+//   boost::optional<int> m_precision;
+//   QDoubleValidator * m_doubleValidator;
 
-  std::string propertyWithSystem() const;
+//   std::string propertyWithSystem() const;
 
-  void refreshTextAndLabel();
+//   void refreshTextAndLabel();
 
-  void setPrecision(const std::string& str);
+//   void setPrecision(const std::string& str);
 
-  REGISTER_LOGGER("openstudio.OSQuantityEdit");
-};
+//   REGISTER_LOGGER("openstudio.OSQuantityEdit");
+// };
 
 } // openstudio
 

@@ -1060,7 +1060,14 @@ void HVACControlsController::update()
 
         // Demand Controlled Ventilation
 
-        m_mechanicalVentilationView->dcvButton->bind(controllerMechanicalVentilation,"demandControlledVentilation");
+        // m_mechanicalVentilationView->dcvButton->bind(controllerMechanicalVentilation,"demandControlledVentilation");
+        m_mechanicalVentilationView->dcvButton->bind(
+          controllerMechanicalVentilation,
+          std::bind(&model::ControllerMechanicalVentilation::demandControlledVentilation, controllerMechanicalVentilation),
+          boost::optional<BoolSetter>(std::bind(&model::ControllerMechanicalVentilation::setDemandControlledVentilation, controllerMechanicalVentilation, std::placeholders::_1)),
+          boost::optional<NoFailAction>(std::bind(&model::ControllerMechanicalVentilation::resetDemandControlledVentilation, controllerMechanicalVentilation)),
+          boost::optional<BasicQuery>(std::bind(&model::ControllerMechanicalVentilation::isDemandControlledVentilationDefaulted, controllerMechanicalVentilation))
+        );
       }
       else
       {

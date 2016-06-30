@@ -61,8 +61,8 @@ LuminaireDefinitionInspectorView::LuminaireDefinitionInspectorView(bool isIP, co
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,2,0);
 
-  m_lightingPowerEdit = new OSQuantityEdit(m_isIP);
-  connect(this, &LuminaireDefinitionInspectorView::toggleUnitsClicked, m_lightingPowerEdit, &OSQuantityEdit::onUnitSystemChange);
+  m_lightingPowerEdit = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &LuminaireDefinitionInspectorView::toggleUnitsClicked, m_lightingPowerEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_lightingPowerEdit,3,0);
 
   // Fraction Radiant
@@ -71,8 +71,8 @@ LuminaireDefinitionInspectorView::LuminaireDefinitionInspectorView(bool isIP, co
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,4,0);
 
-  m_fractionRadiantEdit = new OSQuantityEdit(m_isIP);
-  connect(this, &LuminaireDefinitionInspectorView::toggleUnitsClicked, m_fractionRadiantEdit, &OSQuantityEdit::onUnitSystemChange);
+  m_fractionRadiantEdit = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &LuminaireDefinitionInspectorView::toggleUnitsClicked, m_fractionRadiantEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_fractionRadiantEdit,5,0);
 
   // Fraction Visible
@@ -81,8 +81,8 @@ LuminaireDefinitionInspectorView::LuminaireDefinitionInspectorView(bool isIP, co
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,4,1);
 
-  m_fractionVisibleEdit = new OSQuantityEdit(m_isIP);
-  connect(this, &LuminaireDefinitionInspectorView::toggleUnitsClicked, m_fractionVisibleEdit, &OSQuantityEdit::onUnitSystemChange);
+  m_fractionVisibleEdit = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &LuminaireDefinitionInspectorView::toggleUnitsClicked, m_fractionVisibleEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_fractionVisibleEdit,5,1);
 
   // Return Air Fraction 
@@ -91,8 +91,8 @@ LuminaireDefinitionInspectorView::LuminaireDefinitionInspectorView(bool isIP, co
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,6,0);
 
-  m_returnAirFractionEdit = new OSQuantityEdit(m_isIP);
-  connect(this, &LuminaireDefinitionInspectorView::toggleUnitsClicked, m_returnAirFractionEdit, &OSQuantityEdit::onUnitSystemChange);
+  m_returnAirFractionEdit = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &LuminaireDefinitionInspectorView::toggleUnitsClicked, m_returnAirFractionEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_returnAirFractionEdit,7,0);
 
   // Stretch
@@ -131,10 +131,53 @@ void LuminaireDefinitionInspectorView::attach(openstudio::model::LuminaireDefini
     OptionalStringGetter(std::bind(&model::LuminaireDefinition::name, m_luminaireDefinition.get_ptr(),true)),
     boost::optional<StringSetter>(std::bind(&model::LuminaireDefinition::setName, m_luminaireDefinition.get_ptr(),std::placeholders::_1))
   );
-  m_lightingPowerEdit->bind(luminaireDefinition,"lightingPower",m_isIP);
-  m_fractionRadiantEdit->bind(luminaireDefinition,"fractionRadiant",m_isIP);
-  m_fractionVisibleEdit->bind(luminaireDefinition,"fractionVisible",m_isIP);
-  m_returnAirFractionEdit->bind(luminaireDefinition,"returnAirFraction",m_isIP);
+  // m_lightingPowerEdit->bind(luminaireDefinition,"lightingPower",m_isIP);
+  m_lightingPowerEdit->bind(
+    m_isIP,
+    *m_luminaireDefinition,
+    DoubleGetter(std::bind(&model::LuminaireDefinition::lightingPower, m_luminaireDefinition.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(&model::LuminaireDefinition::setLightingPower, m_luminaireDefinition.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::LuminaireDefinition::resetLightingPower, m_luminaireDefinition.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::LuminaireDefinition::isLightingPowerDefaulted, m_luminaireDefinition.get_ptr()))
+  );
+
+  // m_fractionRadiantEdit->bind(luminaireDefinition,"fractionRadiant",m_isIP);
+  m_lightingPowerEdit->bind(
+    m_isIP,
+    *m_luminaireDefinition,
+    DoubleGetter(std::bind(&model::LuminaireDefinition::fractionRadiant, m_luminaireDefinition.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(&model::LuminaireDefinition::setFractionRadiant, m_luminaireDefinition.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::LuminaireDefinition::resetFractionRadiant, m_luminaireDefinition.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::LuminaireDefinition::isFractionRadiantDefaulted, m_luminaireDefinition.get_ptr()))
+  );
+
+  // m_fractionVisibleEdit->bind(luminaireDefinition,"fractionVisible",m_isIP);
+  m_lightingPowerEdit->bind(
+    m_isIP,
+    *m_luminaireDefinition,
+    DoubleGetter(std::bind(&model::LuminaireDefinition::fractionVisible, m_luminaireDefinition.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(&model::LuminaireDefinition::setFractionVisible, m_luminaireDefinition.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::LuminaireDefinition::resetFractionVisible, m_luminaireDefinition.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::LuminaireDefinition::isFractionVisibleDefaulted, m_luminaireDefinition.get_ptr()))
+  );
+
+  // m_returnAirFractionEdit->bind(luminaireDefinition,"returnAirFraction",m_isIP);
+  m_lightingPowerEdit->bind(
+    m_isIP,
+    *m_luminaireDefinition,
+    DoubleGetter(std::bind(&model::LuminaireDefinition::returnAirFraction, m_luminaireDefinition.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(&model::LuminaireDefinition::setReturnAirFraction, m_luminaireDefinition.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::LuminaireDefinition::resetReturnAirFraction, m_luminaireDefinition.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::LuminaireDefinition::isReturnAirFractionDefaulted, m_luminaireDefinition.get_ptr()))
+  );
 
   this->stackedWidget()->setCurrentIndex(1);
 }

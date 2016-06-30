@@ -98,8 +98,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_slatWidth = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_slatWidth, &OSQuantityEdit::onUnitSystemChange);
+  m_slatWidth = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_slatWidth, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_slatWidth,row++,0,1,3);
 
   // Slat Separation
@@ -108,8 +108,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_slatSeparation = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_slatSeparation, &OSQuantityEdit::onUnitSystemChange);
+  m_slatSeparation = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_slatSeparation, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_slatSeparation,row++,0,1,3);
 
   // Slat Thickness
@@ -118,8 +118,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_slatThickness = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_slatThickness, &OSQuantityEdit::onUnitSystemChange);
+  m_slatThickness = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_slatThickness, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_slatThickness,row++,0,1,3);
 
   // Slat Angle
@@ -128,8 +128,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_slatAngle = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_slatAngle, &OSQuantityEdit::onUnitSystemChange);
+  m_slatAngle = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_slatAngle, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_slatAngle,row++,0,1,3);
 
   // Slat Conductivity
@@ -138,8 +138,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_slatConductivity = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_slatConductivity, &OSQuantityEdit::onUnitSystemChange);
+  m_slatConductivity = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_slatConductivity, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_slatConductivity,row++,0,1,3);
 
   // Slat Beam Solar Transmittance
@@ -148,8 +148,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_slatBeamSolarTransmittance = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_slatBeamSolarTransmittance, &OSQuantityEdit::onUnitSystemChange);
+  m_slatBeamSolarTransmittance = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_slatBeamSolarTransmittance, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_slatBeamSolarTransmittance,row++,0,1,3);
 
   // Front Side Slat Beam Solar Reflectance
@@ -158,8 +158,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_frontSideSlatBeamSolarReflectance = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_frontSideSlatBeamSolarReflectance, &OSQuantityEdit::onUnitSystemChange);
+  m_frontSideSlatBeamSolarReflectance = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_frontSideSlatBeamSolarReflectance, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_frontSideSlatBeamSolarReflectance,row++,0,1,3);
 
   // Back Side Slat Beam Solar Reflectance
@@ -168,8 +168,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_backSideSlatBeamSolarReflectance = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_backSideSlatBeamSolarReflectance, &OSQuantityEdit::onUnitSystemChange);
+  m_backSideSlatBeamSolarReflectance = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_backSideSlatBeamSolarReflectance, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_backSideSlatBeamSolarReflectance,row++,0,1,3);
 
   // Slat Diffuse Solar Transmittance
@@ -178,8 +178,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_slatDiffuseSolarTransmittance = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_slatDiffuseSolarTransmittance, &OSQuantityEdit::onUnitSystemChange);
+  m_slatDiffuseSolarTransmittance = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_slatDiffuseSolarTransmittance, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_slatDiffuseSolarTransmittance,row++,0,1,3);
 
   // Front Side Slat Diffuse Solar Reflectance
@@ -188,8 +188,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_frontSideSlatDiffuseSolarReflectance = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_frontSideSlatDiffuseSolarReflectance, &OSQuantityEdit::onUnitSystemChange);
+  m_frontSideSlatDiffuseSolarReflectance = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_frontSideSlatDiffuseSolarReflectance, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_frontSideSlatDiffuseSolarReflectance,row++,0,1,3);
 
   // Back Side Slat Diffuse Solar Reflectance
@@ -198,8 +198,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_backSideSlatDiffuseSolarReflectance = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_backSideSlatDiffuseSolarReflectance, &OSQuantityEdit::onUnitSystemChange);
+  m_backSideSlatDiffuseSolarReflectance = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_backSideSlatDiffuseSolarReflectance, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_backSideSlatDiffuseSolarReflectance,row++,0,1,3);
 
   // Slat Beam Visible Transmittance
@@ -208,8 +208,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_slatBeamVisibleTransmittance = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_slatBeamVisibleTransmittance, &OSQuantityEdit::onUnitSystemChange);
+  m_slatBeamVisibleTransmittance = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_slatBeamVisibleTransmittance, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_slatBeamVisibleTransmittance,row++,0,1,3);
 
   // Front Side Slat Beam Visible Reflectance
@@ -218,8 +218,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_frontSideSlatBeamVisibleReflectance = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_frontSideSlatBeamVisibleReflectance, &OSQuantityEdit::onUnitSystemChange);
+  m_frontSideSlatBeamVisibleReflectance = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_frontSideSlatBeamVisibleReflectance, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_frontSideSlatBeamVisibleReflectance,row++,0,1,3);
 
   // Back Side Slat Beam Visible Reflectance
@@ -228,8 +228,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_backSideSlatBeamVisibleReflectance = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_frontSideSlatBeamVisibleReflectance, &OSQuantityEdit::onUnitSystemChange);
+  m_backSideSlatBeamVisibleReflectance = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_frontSideSlatBeamVisibleReflectance, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_backSideSlatBeamVisibleReflectance,row++,0,1,3);
 
   // Slat Diffuse Visible Transmittance
@@ -238,8 +238,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_slatDiffuseVisibleTransmittance = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_slatDiffuseVisibleTransmittance, &OSQuantityEdit::onUnitSystemChange);
+  m_slatDiffuseVisibleTransmittance = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_slatDiffuseVisibleTransmittance, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_slatDiffuseVisibleTransmittance,row++,0,1,3);
 
   // Front Side Slat Diffuse Visible Reflectance
@@ -248,8 +248,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_frontSideSlatDiffuseVisibleReflectance = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_frontSideSlatDiffuseVisibleReflectance, &OSQuantityEdit::onUnitSystemChange);
+  m_frontSideSlatDiffuseVisibleReflectance = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_frontSideSlatDiffuseVisibleReflectance, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_frontSideSlatDiffuseVisibleReflectance,row++,0,1,3);
 
   // Back Side Slat Diffuse Visible Reflectance
@@ -258,8 +258,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_backSideSlatDiffuseVisibleReflectance = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_backSideSlatDiffuseVisibleReflectance, &OSQuantityEdit::onUnitSystemChange);
+  m_backSideSlatDiffuseVisibleReflectance = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_backSideSlatDiffuseVisibleReflectance, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_backSideSlatDiffuseVisibleReflectance,row++,0,1,3);
 
   // Slat Infrared Hemispherical Transmittance
@@ -268,8 +268,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_slatInfraredHemisphericalTransmittance = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_slatInfraredHemisphericalTransmittance, &OSQuantityEdit::onUnitSystemChange);
+  m_slatInfraredHemisphericalTransmittance = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_slatInfraredHemisphericalTransmittance, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_slatInfraredHemisphericalTransmittance,row++,0,1,3);
 
   // Front Side Slat Infrared Hemispherical Emissivity
@@ -278,8 +278,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_frontSideSlatInfraredHemisphericalEmissivity = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_frontSideSlatInfraredHemisphericalEmissivity, &OSQuantityEdit::onUnitSystemChange);
+  m_frontSideSlatInfraredHemisphericalEmissivity = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_frontSideSlatInfraredHemisphericalEmissivity, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_frontSideSlatInfraredHemisphericalEmissivity,row++,0,1,3);
 
   // Back Side Slat Infrared Hemispherical Emissivity
@@ -288,8 +288,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_backSideSlatInfraredHemisphericalEmissivity = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_backSideSlatInfraredHemisphericalEmissivity, &OSQuantityEdit::onUnitSystemChange);
+  m_backSideSlatInfraredHemisphericalEmissivity = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_backSideSlatInfraredHemisphericalEmissivity, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_backSideSlatInfraredHemisphericalEmissivity,row++,0,1,3);
 
   // Blind To Glass Distance
@@ -298,8 +298,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_blindToGlassDistance = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_blindToGlassDistance, &OSQuantityEdit::onUnitSystemChange);
+  m_blindToGlassDistance = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_blindToGlassDistance, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_blindToGlassDistance,row++,0,1,3);
 
   // Blind Top Opening Multiplier
@@ -308,8 +308,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_blindTopOpeningMultiplier = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_blindTopOpeningMultiplier, &OSQuantityEdit::onUnitSystemChange);
+  m_blindTopOpeningMultiplier = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_blindTopOpeningMultiplier, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_blindTopOpeningMultiplier,row++,0,1,3);
 
   // Blind Bottom Opening Multiplier
@@ -318,8 +318,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_blindBottomOpeningMultiplier = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_blindBottomOpeningMultiplier, &OSQuantityEdit::onUnitSystemChange);
+  m_blindBottomOpeningMultiplier = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_blindBottomOpeningMultiplier, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_blindBottomOpeningMultiplier,row++,0,1,3);
 
   // Blind Left Side Opening Multiplier
@@ -328,8 +328,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_blindLeftSideOpeningMultiplier = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_blindLeftSideOpeningMultiplier, &OSQuantityEdit::onUnitSystemChange);
+  m_blindLeftSideOpeningMultiplier = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_blindLeftSideOpeningMultiplier, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_blindLeftSideOpeningMultiplier,row++,0,1,3);
 
   // Blind Right Side Opening Multiplier
@@ -338,8 +338,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_blindRightSideOpeningMultiplier = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_blindRightSideOpeningMultiplier, &OSQuantityEdit::onUnitSystemChange);
+  m_blindRightSideOpeningMultiplier = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_blindRightSideOpeningMultiplier, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_blindRightSideOpeningMultiplier,row++,0,1,3);
 
   // Minimum Slat Angle
@@ -348,8 +348,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_minimumSlatAngle = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_minimumSlatAngle, &OSQuantityEdit::onUnitSystemChange);
+  m_minimumSlatAngle = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_minimumSlatAngle, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_minimumSlatAngle,row++,0,1,3);
 
   // Maximum Slat Angle
@@ -358,8 +358,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_maximumSlatAngle = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_maximumSlatAngle, &OSQuantityEdit::onUnitSystemChange);
+  m_maximumSlatAngle = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_maximumSlatAngle, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_maximumSlatAngle,row++,0,1,3);  
 
   // Stretch

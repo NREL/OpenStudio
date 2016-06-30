@@ -36,7 +36,7 @@ namespace openstudio {
 
 class OSComboBox2;
 
-class OSSwitch;
+class OSSwitch2;
 
 class YearSettingsWidget : public QWidget
 {
@@ -130,7 +130,7 @@ class YearSettingsWidget : public QWidget
 
   // daylight savings section
 
-  OSSwitch * m_dstOnOffButton = nullptr;
+  OSSwitch2 * m_dstOnOffButton = nullptr;
 
   QRadioButton * m_dayOfWeekAndMonthStartButton = nullptr;
 

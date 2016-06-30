@@ -32,7 +32,7 @@ namespace model {
 
 class OSLineEdit2;
 
-class OSQuantityEdit;
+class OSQuantityEdit2;
 
 class StandardsInformationMaterialWidget;
 
@@ -68,11 +68,11 @@ class WindowMaterialSimpleGlazingSystemInspectorView : public ModelObjectInspect
 
     OSLineEdit2 * m_nameEdit = nullptr;
 
-    OSQuantityEdit * m_uFactor = nullptr;
+    OSQuantityEdit2 * m_uFactor = nullptr;
 
-    OSQuantityEdit * m_solarHeatGainCoefficient = nullptr;
+    OSQuantityEdit2 * m_solarHeatGainCoefficient = nullptr;
 
-    OSQuantityEdit * m_visibleTransmittance = nullptr;
+    OSQuantityEdit2 * m_visibleTransmittance = nullptr;
 
     StandardsInformationMaterialWidget * m_standardsInformationWidget = nullptr;
 

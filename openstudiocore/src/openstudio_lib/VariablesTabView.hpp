@@ -31,7 +31,7 @@ class QPushButton;
 class QVBoxLayout;
 
 namespace openstudio {
-  class OSSwitch;
+  class OSSwitch2;
   class OSComboBox2;
 
   class VariableListItem : public QWidget, public Nano::Observer
@@ -62,7 +62,7 @@ namespace openstudio {
       openstudio::model::Model m_model;
 
       OSComboBox2 *m_combobox;
-      OSSwitch *m_onOffButton;
+      OSSwitch2 *m_onOffButton;
   };
 
   class VariablesList : public QWidget, public Nano::Observer

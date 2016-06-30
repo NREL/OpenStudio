@@ -61,8 +61,8 @@ SteamEquipmentDefinitionInspectorView::SteamEquipmentDefinitionInspectorView(boo
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,2,0);
 
-  m_designLevelEdit = new OSQuantityEdit(m_isIP);
-  connect(this, &SteamEquipmentDefinitionInspectorView::toggleUnitsClicked, m_designLevelEdit, &OSQuantityEdit::onUnitSystemChange);
+  m_designLevelEdit = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &SteamEquipmentDefinitionInspectorView::toggleUnitsClicked, m_designLevelEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_designLevelEdit,3,0);
 
   // Energy Per Space Floor Area
@@ -71,8 +71,8 @@ SteamEquipmentDefinitionInspectorView::SteamEquipmentDefinitionInspectorView(boo
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,2,1);
 
-  m_wattsPerSpaceFloorAreaEdit = new OSQuantityEdit(m_isIP);
-  connect(this, &SteamEquipmentDefinitionInspectorView::toggleUnitsClicked, m_wattsPerSpaceFloorAreaEdit, &OSQuantityEdit::onUnitSystemChange);
+  m_wattsPerSpaceFloorAreaEdit = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &SteamEquipmentDefinitionInspectorView::toggleUnitsClicked, m_wattsPerSpaceFloorAreaEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_wattsPerSpaceFloorAreaEdit,3,1);
 
   // Energy Per Person
@@ -81,8 +81,8 @@ SteamEquipmentDefinitionInspectorView::SteamEquipmentDefinitionInspectorView(boo
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,2,2);
 
-  m_wattsPerPersonEdit = new OSQuantityEdit(m_isIP);
-  connect(this, &SteamEquipmentDefinitionInspectorView::toggleUnitsClicked, m_wattsPerPersonEdit, &OSQuantityEdit::onUnitSystemChange);
+  m_wattsPerPersonEdit = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &SteamEquipmentDefinitionInspectorView::toggleUnitsClicked, m_wattsPerPersonEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_wattsPerPersonEdit,3,2);
 
   // Fraction Latent
@@ -91,8 +91,8 @@ SteamEquipmentDefinitionInspectorView::SteamEquipmentDefinitionInspectorView(boo
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,4,0);
 
-  m_fractionLatentEdit = new OSQuantityEdit(m_isIP);
-  connect(this, &SteamEquipmentDefinitionInspectorView::toggleUnitsClicked, m_fractionLatentEdit, &OSQuantityEdit::onUnitSystemChange);
+  m_fractionLatentEdit = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &SteamEquipmentDefinitionInspectorView::toggleUnitsClicked, m_fractionLatentEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_fractionLatentEdit,5,0);
 
   // Fraction Radiant
@@ -101,8 +101,8 @@ SteamEquipmentDefinitionInspectorView::SteamEquipmentDefinitionInspectorView(boo
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,4,1);
 
-  m_fractionRadiantEdit = new OSQuantityEdit(m_isIP);
-  connect(this, &SteamEquipmentDefinitionInspectorView::toggleUnitsClicked, m_fractionRadiantEdit, &OSQuantityEdit::onUnitSystemChange);
+  m_fractionRadiantEdit = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &SteamEquipmentDefinitionInspectorView::toggleUnitsClicked, m_fractionRadiantEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_fractionRadiantEdit,5,1);
 
   // Fraction Lost
@@ -111,8 +111,8 @@ SteamEquipmentDefinitionInspectorView::SteamEquipmentDefinitionInspectorView(boo
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,6,0);
 
-  m_fractionLostEdit = new OSQuantityEdit(m_isIP);
-  connect(this, &SteamEquipmentDefinitionInspectorView::toggleUnitsClicked, m_fractionRadiantEdit, &OSQuantityEdit::onUnitSystemChange);
+  m_fractionLostEdit = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &SteamEquipmentDefinitionInspectorView::toggleUnitsClicked, m_fractionRadiantEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_fractionLostEdit,7,0);
 
   // Stretch
@@ -151,12 +151,65 @@ void SteamEquipmentDefinitionInspectorView::attach(openstudio::model::SteamEquip
     boost::optional<StringSetter>(std::bind(&model::SteamEquipmentDefinition::setName, m_steamEquipmentDefinition.get_ptr(),std::placeholders::_1))
   );
 
-  m_designLevelEdit->bind(steamEquipmentDefinition,"designLevel",m_isIP);
-  m_wattsPerSpaceFloorAreaEdit->bind(steamEquipmentDefinition,"wattsperSpaceFloorArea",m_isIP);
-  m_wattsPerPersonEdit->bind(steamEquipmentDefinition,"wattsperPerson",m_isIP);
-  m_fractionLatentEdit->bind(steamEquipmentDefinition,"fractionLatent",m_isIP);
-  m_fractionRadiantEdit->bind(steamEquipmentDefinition,"fractionRadiant",m_isIP);
-  m_fractionLostEdit->bind(steamEquipmentDefinition,"fractionLost",m_isIP);
+  // m_designLevelEdit->bind(steamEquipmentDefinition,"designLevel",m_isIP);
+  m_designLevelEdit->bind(
+    m_isIP,
+    *m_steamEquipmentDefinition,
+    OptionalDoubleGetter(std::bind(&model::SteamEquipmentDefinition::designLevel, m_steamEquipmentDefinition.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::SteamEquipmentDefinition::*)(double)>(&model::SteamEquipmentDefinition::setDesignLevel), m_steamEquipmentDefinition.get_ptr(), std::placeholders::_1))
+  );
+
+  // m_wattsPerSpaceFloorAreaEdit->bind(steamEquipmentDefinition,"wattsperSpaceFloorArea",m_isIP);
+  m_wattsPerSpaceFloorAreaEdit->bind(
+    m_isIP,
+    *m_steamEquipmentDefinition,
+    OptionalDoubleGetter(std::bind(&model::SteamEquipmentDefinition::wattsperSpaceFloorArea, m_steamEquipmentDefinition.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::SteamEquipmentDefinition::*)(double)>(&model::SteamEquipmentDefinition::setWattsperSpaceFloorArea), m_steamEquipmentDefinition.get_ptr(), std::placeholders::_1))
+  );
+
+  // m_wattsPerPersonEdit->bind(steamEquipmentDefinition,"wattsperPerson",m_isIP);
+  m_wattsPerPersonEdit->bind(
+    m_isIP,
+    *m_steamEquipmentDefinition,
+    OptionalDoubleGetter(std::bind(&model::SteamEquipmentDefinition::wattsperPerson, m_steamEquipmentDefinition.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::SteamEquipmentDefinition::*)(double)>(&model::SteamEquipmentDefinition::setWattsperPerson), m_steamEquipmentDefinition.get_ptr(), std::placeholders::_1))
+  );
+
+  // m_fractionLatentEdit->bind(steamEquipmentDefinition,"fractionLatent",m_isIP);
+  m_fractionLatentEdit->bind(
+    m_isIP,
+    *m_steamEquipmentDefinition,
+    DoubleGetter(std::bind(&model::SteamEquipmentDefinition::fractionLatent, m_steamEquipmentDefinition.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::SteamEquipmentDefinition::*)(double)>(&model::SteamEquipmentDefinition::setFractionLatent), m_steamEquipmentDefinition.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::SteamEquipmentDefinition::resetFractionLatent, m_steamEquipmentDefinition.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::SteamEquipmentDefinition::isFractionLatentDefaulted, m_steamEquipmentDefinition.get_ptr()))
+  );
+
+  // m_fractionRadiantEdit->bind(steamEquipmentDefinition,"fractionRadiant",m_isIP);
+  m_fractionRadiantEdit->bind(
+    m_isIP,
+    *m_steamEquipmentDefinition,
+    DoubleGetter(std::bind(&model::SteamEquipmentDefinition::fractionRadiant, m_steamEquipmentDefinition.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::SteamEquipmentDefinition::*)(double)>(&model::SteamEquipmentDefinition::setFractionRadiant), m_steamEquipmentDefinition.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::SteamEquipmentDefinition::resetFractionRadiant, m_steamEquipmentDefinition.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::SteamEquipmentDefinition::isFractionRadiantDefaulted, m_steamEquipmentDefinition.get_ptr()))
+  );
+
+  // m_fractionLostEdit->bind(steamEquipmentDefinition,"fractionLost",m_isIP);
+  m_fractionLostEdit->bind(
+    m_isIP,
+    *m_steamEquipmentDefinition,
+    DoubleGetter(std::bind(&model::SteamEquipmentDefinition::fractionLost, m_steamEquipmentDefinition.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::SteamEquipmentDefinition::*)(double)>(&model::SteamEquipmentDefinition::setFractionLost), m_steamEquipmentDefinition.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::SteamEquipmentDefinition::resetFractionLost, m_steamEquipmentDefinition.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::SteamEquipmentDefinition::isFractionLostDefaulted, m_steamEquipmentDefinition.get_ptr()))
+  );
 
   this->stackedWidget()->setCurrentIndex(1);
 }

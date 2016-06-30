@@ -34,7 +34,7 @@ class OSComboBox2;
 
 class OSLineEdit2;
 
-class OSQuantityEdit;
+class OSQuantityEdit2;
 
 class StandardsInformationMaterialWidget;
 
@@ -72,21 +72,21 @@ class WindowMaterialGasInspectorView : public ModelObjectInspectorView
 
     OSComboBox2 * m_gasType = nullptr;
 
-    OSQuantityEdit * m_thickness = nullptr;
+    OSQuantityEdit2 * m_thickness = nullptr;
 
-    OSQuantityEdit * m_conductivityCoefficientA = nullptr;
+    OSQuantityEdit2 * m_conductivityCoefficientA = nullptr;
 
-    OSQuantityEdit * m_conductivityCoefficientB = nullptr;
+    OSQuantityEdit2 * m_conductivityCoefficientB = nullptr;
 
-    OSQuantityEdit * m_viscosityCoefficientA = nullptr;
+    OSQuantityEdit2 * m_viscosityCoefficientA = nullptr;
 
-    OSQuantityEdit * m_viscosityCoefficientB = nullptr;
+    OSQuantityEdit2 * m_viscosityCoefficientB = nullptr;
 
-    OSQuantityEdit * m_specificHeatCoefficientA = nullptr;
+    OSQuantityEdit2 * m_specificHeatCoefficientA = nullptr;
 
-    OSQuantityEdit * m_specificHeatCoefficientB = nullptr;
+    OSQuantityEdit2 * m_specificHeatCoefficientB = nullptr;
 
-    OSQuantityEdit * m_molecularWeight = nullptr;
+    OSQuantityEdit2 * m_molecularWeight = nullptr;
 
     StandardsInformationMaterialWidget * m_standardsInformationWidget = nullptr;
 

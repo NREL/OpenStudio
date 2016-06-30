@@ -61,8 +61,8 @@ GasEquipmentDefinitionInspectorView::GasEquipmentDefinitionInspectorView(bool is
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,2,0);
 
-  m_designLevelEdit = new OSQuantityEdit(m_isIP);
-  connect(this, &GasEquipmentDefinitionInspectorView::toggleUnitsClicked, m_designLevelEdit, &OSQuantityEdit::onUnitSystemChange);
+  m_designLevelEdit = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &GasEquipmentDefinitionInspectorView::toggleUnitsClicked, m_designLevelEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_designLevelEdit,3,0);
 
   // Energy Per Space Floor Area
@@ -71,8 +71,8 @@ GasEquipmentDefinitionInspectorView::GasEquipmentDefinitionInspectorView(bool is
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,2,1);
 
-  m_wattsPerSpaceFloorAreaEdit = new OSQuantityEdit(m_isIP);
-  connect(this, &GasEquipmentDefinitionInspectorView::toggleUnitsClicked, m_wattsPerSpaceFloorAreaEdit, &OSQuantityEdit::onUnitSystemChange);
+  m_wattsPerSpaceFloorAreaEdit = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &GasEquipmentDefinitionInspectorView::toggleUnitsClicked, m_wattsPerSpaceFloorAreaEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_wattsPerSpaceFloorAreaEdit,3,1);
 
   // Energy Per Person
@@ -81,8 +81,8 @@ GasEquipmentDefinitionInspectorView::GasEquipmentDefinitionInspectorView(bool is
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,2,2);
 
-  m_wattsPerPersonEdit = new OSQuantityEdit(m_isIP);
-  connect(this, &GasEquipmentDefinitionInspectorView::toggleUnitsClicked, m_wattsPerPersonEdit, &OSQuantityEdit::onUnitSystemChange);
+  m_wattsPerPersonEdit = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &GasEquipmentDefinitionInspectorView::toggleUnitsClicked, m_wattsPerPersonEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_wattsPerPersonEdit,3,2);
 
   // Fraction Latent
@@ -91,8 +91,8 @@ GasEquipmentDefinitionInspectorView::GasEquipmentDefinitionInspectorView(bool is
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,4,0);
 
-  m_fractionLatentEdit = new OSQuantityEdit(m_isIP);
-  connect(this, &GasEquipmentDefinitionInspectorView::toggleUnitsClicked, m_fractionLatentEdit, &OSQuantityEdit::onUnitSystemChange);
+  m_fractionLatentEdit = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &GasEquipmentDefinitionInspectorView::toggleUnitsClicked, m_fractionLatentEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_fractionLatentEdit,5,0);
 
   // Fraction Radiant
@@ -101,8 +101,8 @@ GasEquipmentDefinitionInspectorView::GasEquipmentDefinitionInspectorView(bool is
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,4,1);
 
-  m_fractionRadiantEdit = new OSQuantityEdit(m_isIP);
-  connect(this, &GasEquipmentDefinitionInspectorView::toggleUnitsClicked, m_fractionRadiantEdit, &OSQuantityEdit::onUnitSystemChange);
+  m_fractionRadiantEdit = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &GasEquipmentDefinitionInspectorView::toggleUnitsClicked, m_fractionRadiantEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_fractionRadiantEdit,5,1);
 
   // Fraction Lost
@@ -111,8 +111,8 @@ GasEquipmentDefinitionInspectorView::GasEquipmentDefinitionInspectorView(bool is
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,6,0);
 
-  m_fractionLostEdit = new OSQuantityEdit(m_isIP);
-  connect(this, &GasEquipmentDefinitionInspectorView::toggleUnitsClicked, m_fractionLostEdit, &OSQuantityEdit::onUnitSystemChange);
+  m_fractionLostEdit = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &GasEquipmentDefinitionInspectorView::toggleUnitsClicked, m_fractionLostEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_fractionLostEdit,7,0);
 
   // Carbon Dioxide Generation Rate
@@ -121,8 +121,8 @@ GasEquipmentDefinitionInspectorView::GasEquipmentDefinitionInspectorView(bool is
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,8,0);
 
-  m_carbonDioxideGenerationRateEdit = new OSQuantityEdit(m_isIP);
-  connect(this, &GasEquipmentDefinitionInspectorView::toggleUnitsClicked, m_carbonDioxideGenerationRateEdit, &OSQuantityEdit::onUnitSystemChange);
+  m_carbonDioxideGenerationRateEdit = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &GasEquipmentDefinitionInspectorView::toggleUnitsClicked, m_carbonDioxideGenerationRateEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_carbonDioxideGenerationRateEdit,9,0);
 
   // Stretch
@@ -162,13 +162,77 @@ void GasEquipmentDefinitionInspectorView::attach(openstudio::model::GasEquipment
     boost::optional<StringSetter>(std::bind(&model::GasEquipmentDefinition::setName, m_gasEquipmentDefinition.get_ptr(),std::placeholders::_1))
   );
 
-  m_designLevelEdit->bind(gasEquipmentDefinition,"designLevel",m_isIP);
-  m_wattsPerSpaceFloorAreaEdit->bind(gasEquipmentDefinition,"wattsperSpaceFloorArea",m_isIP);
-  m_wattsPerPersonEdit->bind(gasEquipmentDefinition,"wattsperPerson",m_isIP);
-  m_fractionLatentEdit->bind(gasEquipmentDefinition,"fractionLatent",m_isIP);
-  m_fractionRadiantEdit->bind(gasEquipmentDefinition,"fractionRadiant",m_isIP);
-  m_fractionLostEdit->bind(gasEquipmentDefinition,"fractionLost",m_isIP);
-  m_carbonDioxideGenerationRateEdit->bind(gasEquipmentDefinition,"carbonDioxideGenerationRate",m_isIP);
+  // m_designLevelEdit->bind(gasEquipmentDefinition,"designLevel",m_isIP);
+  m_designLevelEdit->bind(
+    m_isIP,
+    *m_gasEquipmentDefinition,
+    OptionalDoubleGetter(std::bind(&model::GasEquipmentDefinition::designLevel, m_gasEquipmentDefinition.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(&model::GasEquipmentDefinition::setDesignLevel, m_gasEquipmentDefinition.get_ptr(), std::placeholders::_1))
+  );
+
+  // m_wattsPerSpaceFloorAreaEdit->bind(gasEquipmentDefinition,"wattsperSpaceFloorArea",m_isIP);
+  m_wattsPerSpaceFloorAreaEdit->bind(
+    m_isIP,
+    *m_gasEquipmentDefinition,
+    OptionalDoubleGetter(std::bind(&model::GasEquipmentDefinition::wattsperSpaceFloorArea, m_gasEquipmentDefinition.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(&model::GasEquipmentDefinition::setWattsperSpaceFloorArea, m_gasEquipmentDefinition.get_ptr(), std::placeholders::_1))
+  );
+
+  // m_wattsPerPersonEdit->bind(gasEquipmentDefinition,"wattsperPerson",m_isIP);
+  m_wattsPerPersonEdit->bind(
+    m_isIP,
+    *m_gasEquipmentDefinition,
+    OptionalDoubleGetter(std::bind(&model::GasEquipmentDefinition::wattsperPerson, m_gasEquipmentDefinition.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(&model::GasEquipmentDefinition::setWattsperPerson, m_gasEquipmentDefinition.get_ptr(), std::placeholders::_1))
+  );
+
+  // m_fractionLatentEdit->bind(gasEquipmentDefinition,"fractionLatent",m_isIP);
+  m_fractionLatentEdit->bind(
+    m_isIP,
+    *m_gasEquipmentDefinition,
+    OptionalDoubleGetter(std::bind(&model::GasEquipmentDefinition::fractionLatent, m_gasEquipmentDefinition.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(&model::GasEquipmentDefinition::setFractionLatent, m_gasEquipmentDefinition.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::GasEquipmentDefinition::resetFractionLatent, m_gasEquipmentDefinition.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::GasEquipmentDefinition::isFractionLatentDefaulted, m_gasEquipmentDefinition.get_ptr()))
+  );
+
+  // m_fractionRadiantEdit->bind(gasEquipmentDefinition,"fractionRadiant",m_isIP);
+  m_fractionRadiantEdit->bind(
+    m_isIP,
+    *m_gasEquipmentDefinition,
+    OptionalDoubleGetter(std::bind(&model::GasEquipmentDefinition::fractionRadiant, m_gasEquipmentDefinition.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(&model::GasEquipmentDefinition::setFractionRadiant, m_gasEquipmentDefinition.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::GasEquipmentDefinition::resetFractionRadiant, m_gasEquipmentDefinition.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::GasEquipmentDefinition::isFractionRadiantDefaulted, m_gasEquipmentDefinition.get_ptr()))
+  );
+
+  // m_fractionLostEdit->bind(gasEquipmentDefinition,"fractionLost",m_isIP);
+  m_fractionLostEdit->bind(
+    m_isIP,
+    *m_gasEquipmentDefinition,
+    OptionalDoubleGetter(std::bind(&model::GasEquipmentDefinition::fractionLost, m_gasEquipmentDefinition.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(&model::GasEquipmentDefinition::setFractionLost, m_gasEquipmentDefinition.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::GasEquipmentDefinition::resetFractionLost, m_gasEquipmentDefinition.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::GasEquipmentDefinition::isFractionLostDefaulted, m_gasEquipmentDefinition.get_ptr()))
+  );
+
+  // m_carbonDioxideGenerationRateEdit->bind(gasEquipmentDefinition,"carbonDioxideGenerationRate",m_isIP);
+  m_carbonDioxideGenerationRateEdit->bind(
+    m_isIP,
+    *m_gasEquipmentDefinition,
+    OptionalDoubleGetter(std::bind(&model::GasEquipmentDefinition::carbonDioxideGenerationRate, m_gasEquipmentDefinition.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(&model::GasEquipmentDefinition::setCarbonDioxideGenerationRate, m_gasEquipmentDefinition.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::GasEquipmentDefinition::resetCarbonDioxideGenerationRate, m_gasEquipmentDefinition.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::GasEquipmentDefinition::isCarbonDioxideGenerationRateDefaulted, m_gasEquipmentDefinition.get_ptr()))
+  );
 
   this->stackedWidget()->setCurrentIndex(1);
 }

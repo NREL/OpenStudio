@@ -41,8 +41,7 @@ namespace openstudio {
   class OSComboBox2;
   class OSIntegerEdit2;
   class OSLineEdit2;
-  class OSQuantityEdit;
-  class OSSwitch;
+  class OSQuantityEdit2;
   class OSSwitch2;
   class ScheduleCalendarWidget;
 
@@ -118,20 +117,14 @@ private:
                 int row,
                 int column,
                 QString text,
-                OSQuantityEdit * & quantityEdit);
+                OSQuantityEdit2 * & quantityEdit);
 
   void addField(QGridLayout * gridLayout,
                 int row,
                 int column,
                 QLabel * & label,
                 QString text,
-                OSQuantityEdit * & quantityEdit);
-
-  void addField(QGridLayout * gridLayout,
-                int row,
-                int column,
-                QString text,
-                OSSwitch * & osSwitch);
+                OSQuantityEdit2 * & quantityEdit);
 
   void addField(QGridLayout * gridLayout,
                 int row,
@@ -205,23 +198,23 @@ private:
   OSSwitch2 * m_runSimulationforWeatherFileRunPeriods;
   OSIntegerEdit2 * m_maximumNumberofWarmupDays;
   OSIntegerEdit2 * m_minimumNumberofWarmupDays;
-  OSQuantityEdit * m_loadsConvergenceToleranceValue;
-  OSQuantityEdit * m_temperatureConvergenceToleranceValue;
+  OSQuantityEdit2 * m_loadsConvergenceToleranceValue;
+  OSQuantityEdit2 * m_temperatureConvergenceToleranceValue;
   OSComboBox2 * m_solarDistribution;
 
   // Radiance
   OSIntegerEdit2 *  m_accumulatedRaysperRecord;
-  OSQuantityEdit * m_directThreshold;
-  OSQuantityEdit * m_directCertainty;
-  OSQuantityEdit * m_directJitter;
-  OSQuantityEdit * m_directPretest;
+  OSQuantityEdit2 * m_directThreshold;
+  OSQuantityEdit2 * m_directCertainty;
+  OSQuantityEdit2 * m_directJitter;
+  OSQuantityEdit2 * m_directPretest;
   OSIntegerEdit2 * m_ambientBouncesVMX;
   OSIntegerEdit2 * m_ambientBouncesDMX;
   OSIntegerEdit2 * m_ambientDivisionsVMX;
   OSIntegerEdit2 * m_ambientDivisionsDMX;
   OSIntegerEdit2 * m_ambientSupersamples;
-  OSQuantityEdit * m_limitWeightVMX;
-  OSQuantityEdit * m_limitWeightDMX;
+  OSQuantityEdit2 * m_limitWeightVMX;
+  OSQuantityEdit2 * m_limitWeightDMX;
   OSIntegerEdit2 * m_klemsSamplingDensity;
   OSComboBox2 * m_skyDiscretizationResolution;
   QLabel * m_accumulatedRaysperRecordLbl;
@@ -240,8 +233,8 @@ private:
   QLabel * m_skyDiscretizationResolutionLbl;
 
   // SizingParameters
-  OSQuantityEdit * m_heatingSizingFactor;
-  OSQuantityEdit * m_coolingSizingFactor;
+  OSQuantityEdit2 * m_heatingSizingFactor;
+  OSQuantityEdit2 * m_coolingSizingFactor;
   OSIntegerEdit2 * m_timestepsinAveragingWindow;
 
   // ProgramControl
@@ -251,8 +244,8 @@ private:
   OSIntegerEdit2 * m_numberOfTimestepsPerHour;
 
   // OutputControlReportingTolerances
-  OSQuantityEdit * m_toleranceForTimeHeatingSetpointNotMet;
-  OSQuantityEdit * m_toleranceForTimeCoolingSetpointNotMet;
+  OSQuantityEdit2 * m_toleranceForTimeHeatingSetpointNotMet;
+  OSQuantityEdit2 * m_toleranceForTimeCoolingSetpointNotMet;
 
   // ConvergenceLimits
   OSIntegerEdit2 * m_maximumHVACIterations;
@@ -277,22 +270,22 @@ private:
   // HeatBalance
   //OSLineEdit2 * m_algorithmHeatBalance;
   OSComboBox2 * m_algorithmHeatBalance;
-  OSQuantityEdit * m_surfaceTemperatureUpperLimit;
-  OSQuantityEdit * m_minimumSurfaceConvectionHeatTransferCoefficientValue;
-  OSQuantityEdit * m_maximumSurfaceConvectionHeatTransferCoefficientValue;
+  OSQuantityEdit2 * m_surfaceTemperatureUpperLimit;
+  OSQuantityEdit2 * m_minimumSurfaceConvectionHeatTransferCoefficientValue;
+  OSQuantityEdit2 * m_maximumSurfaceConvectionHeatTransferCoefficientValue;
 
   // ZoneAirHeatBalanceAlgorithm
   //OSLineEdit2 * m_algorithmZoneAirHeatBalance;
   OSComboBox2 * m_algorithmZoneAirHeatBalance;
 
   // ZoneAirContaminantBalance
-  OSSwitch * m_carbonDioxideConcentration;
+  OSSwitch2 * m_carbonDioxideConcentration;
   OSLineEdit2 * m_outdoorCarbonDioxideScheduleName;
 
   // ZoneCapacitanceMultiplierResearchSpecial
-  OSQuantityEdit * m_temperatureCapacityMultiplier;
-  OSQuantityEdit * m_humidityCapacityMultiplier;
-  OSQuantityEdit * m_carbonDioxideCapacityMultiplier;
+  OSQuantityEdit2 * m_temperatureCapacityMultiplier;
+  OSQuantityEdit2 * m_humidityCapacityMultiplier;
+  OSQuantityEdit2 * m_carbonDioxideCapacityMultiplier;
 
 signals:
 

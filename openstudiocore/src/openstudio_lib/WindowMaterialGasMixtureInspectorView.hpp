@@ -36,7 +36,7 @@ class OSIntegerEdit2;
 
 class OSLineEdit2;
 
-class OSQuantityEdit;
+class OSQuantityEdit2;
 
 class StandardsInformationMaterialWidget;
 
@@ -83,17 +83,17 @@ class WindowMaterialGasMixtureInspectorView : public ModelObjectInspectorView
 
     OSLineEdit2 * m_4AEdit = nullptr;
 
-    OSQuantityEdit * m_thickness = nullptr;
+    OSQuantityEdit2 * m_thickness = nullptr;
 
     OSIntegerEdit2 * m_numberOfGasesInMixture = nullptr;
 
-    OSQuantityEdit * m_gas1Fraction = nullptr;
+    OSQuantityEdit2 * m_gas1Fraction = nullptr;
 
-    OSQuantityEdit * m_gas2Fraction = nullptr;
+    OSQuantityEdit2 * m_gas2Fraction = nullptr;
 
-    OSQuantityEdit * m_gas3Fraction = nullptr;
+    OSQuantityEdit2 * m_gas3Fraction = nullptr;
 
-    OSQuantityEdit * m_gas4Fraction = nullptr;
+    OSQuantityEdit2 * m_gas4Fraction = nullptr;
 
     StandardsInformationMaterialWidget * m_standardsInformationWidget = nullptr;
 

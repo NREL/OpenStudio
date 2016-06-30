@@ -218,8 +218,8 @@ PeopleInspectorView::PeopleInspectorView(bool isIP, const openstudio::model::Mod
   label->setStyleSheet("QLabel { font: bold; }");
   vLayout->addWidget(label);
 
-  m_multiplierEdit = new OSQuantityEdit(m_isIP);
-  connect(this, &PeopleInspectorView::toggleUnitsClicked, m_multiplierEdit, &OSQuantityEdit::onUnitSystemChange);
+  m_multiplierEdit = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &PeopleInspectorView::toggleUnitsClicked, m_multiplierEdit, &OSQuantityEdit2::onUnitSystemChange);
   vLayout->addWidget(m_multiplierEdit);
 
   mainGridLayout->addLayout(vLayout,1,0, Qt::AlignTop|Qt::AlignLeft);

@@ -32,7 +32,7 @@ namespace model {
 
 class OSLineEdit2;
 
-class OSQuantityEdit;
+class OSQuantityEdit2;
 
 class StandardsInformationMaterialWidget;
 
@@ -68,7 +68,7 @@ class MaterialAirGapInspectorView : public ModelObjectInspectorView
 
     OSLineEdit2 * m_nameEdit = nullptr;
 
-    OSQuantityEdit * m_thermalResistance = nullptr;
+    OSQuantityEdit2 * m_thermalResistance = nullptr;
 
     StandardsInformationMaterialWidget * m_standardsInformationWidget = nullptr;
 

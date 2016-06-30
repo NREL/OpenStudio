@@ -33,7 +33,7 @@ class WaterUseEquipmentDefinition;
 
 class OSLineEdit2;
 
-class OSQuantityEdit;
+class OSQuantityEdit2;
 
 class OSDropZone;
 
@@ -124,7 +124,7 @@ class WaterUseEquipmentDefinitionInspectorView : public ModelObjectInspectorView
 
     OSLineEdit2 * m_endUseSubcategoryEdit;
 
-    OSQuantityEdit * m_peakFlowRateEdit;
+    OSQuantityEdit2 * m_peakFlowRateEdit;
 
     TargetTemperatureScheduleVC * m_targetTemperatureScheduleVC;
     SensibleFractionScheduleVC * m_sensibleFractionScheduleVC;

@@ -61,8 +61,8 @@ OtherEquipmentDefinitionInspectorView::OtherEquipmentDefinitionInspectorView(boo
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,2,0);
 
-  m_designLevelEdit = new OSQuantityEdit(m_isIP);
-  connect(this, &OtherEquipmentDefinitionInspectorView::toggleUnitsClicked, m_designLevelEdit, &OSQuantityEdit::onUnitSystemChange);
+  m_designLevelEdit = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &OtherEquipmentDefinitionInspectorView::toggleUnitsClicked, m_designLevelEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_designLevelEdit,3,0);
 
   // Energy Per Space Floor Area
@@ -71,8 +71,8 @@ OtherEquipmentDefinitionInspectorView::OtherEquipmentDefinitionInspectorView(boo
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,2,1);
 
-  m_wattsPerSpaceFloorAreaEdit = new OSQuantityEdit(m_isIP);
-  connect(this, &OtherEquipmentDefinitionInspectorView::toggleUnitsClicked, m_wattsPerSpaceFloorAreaEdit, &OSQuantityEdit::onUnitSystemChange);
+  m_wattsPerSpaceFloorAreaEdit = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &OtherEquipmentDefinitionInspectorView::toggleUnitsClicked, m_wattsPerSpaceFloorAreaEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_wattsPerSpaceFloorAreaEdit,3,1);
 
   // Energy Per Person
@@ -81,8 +81,8 @@ OtherEquipmentDefinitionInspectorView::OtherEquipmentDefinitionInspectorView(boo
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,2,2);
 
-  m_wattsPerPersonEdit = new OSQuantityEdit(m_isIP);
-  connect(this, &OtherEquipmentDefinitionInspectorView::toggleUnitsClicked, m_wattsPerPersonEdit, &OSQuantityEdit::onUnitSystemChange);
+  m_wattsPerPersonEdit = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &OtherEquipmentDefinitionInspectorView::toggleUnitsClicked, m_wattsPerPersonEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_wattsPerPersonEdit,3,2);
 
   // Fraction Latent
@@ -91,8 +91,8 @@ OtherEquipmentDefinitionInspectorView::OtherEquipmentDefinitionInspectorView(boo
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,4,0);
 
-  m_fractionLatentEdit = new OSQuantityEdit(m_isIP);
-  connect(this, &OtherEquipmentDefinitionInspectorView::toggleUnitsClicked, m_fractionLatentEdit, &OSQuantityEdit::onUnitSystemChange);
+  m_fractionLatentEdit = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &OtherEquipmentDefinitionInspectorView::toggleUnitsClicked, m_fractionLatentEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_fractionLatentEdit,5,0);
 
   // Fraction Radiant
@@ -101,8 +101,8 @@ OtherEquipmentDefinitionInspectorView::OtherEquipmentDefinitionInspectorView(boo
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,4,1);
 
-  m_fractionRadiantEdit = new OSQuantityEdit(m_isIP);
-  connect(this, &OtherEquipmentDefinitionInspectorView::toggleUnitsClicked, m_fractionRadiantEdit, &OSQuantityEdit::onUnitSystemChange);
+  m_fractionRadiantEdit = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &OtherEquipmentDefinitionInspectorView::toggleUnitsClicked, m_fractionRadiantEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_fractionRadiantEdit,5,1);
 
   // Fraction Lost
@@ -111,8 +111,8 @@ OtherEquipmentDefinitionInspectorView::OtherEquipmentDefinitionInspectorView(boo
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,6,0);
 
-  m_fractionLostEdit = new OSQuantityEdit(m_isIP);
-  connect(this, &OtherEquipmentDefinitionInspectorView::toggleUnitsClicked, m_fractionLostEdit, &OSQuantityEdit::onUnitSystemChange);
+  m_fractionLostEdit = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &OtherEquipmentDefinitionInspectorView::toggleUnitsClicked, m_fractionLostEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_fractionLostEdit,7,0);
 
   // Stretch
@@ -151,12 +151,65 @@ void OtherEquipmentDefinitionInspectorView::attach(openstudio::model::OtherEquip
     boost::optional<StringSetter>(std::bind(&model::OtherEquipmentDefinition::setName, m_otherEquipmentDefinition.get_ptr(),std::placeholders::_1))
   );
 
-  m_designLevelEdit->bind(otherEquipmentDefinition,"designLevel",m_isIP);
-  m_wattsPerSpaceFloorAreaEdit->bind(otherEquipmentDefinition,"wattsperSpaceFloorArea",m_isIP);
-  m_wattsPerPersonEdit->bind(otherEquipmentDefinition,"wattsperPerson",m_isIP);
-  m_fractionLatentEdit->bind(otherEquipmentDefinition,"fractionLatent",m_isIP);
-  m_fractionRadiantEdit->bind(otherEquipmentDefinition,"fractionRadiant",m_isIP);
-  m_fractionLostEdit->bind(otherEquipmentDefinition,"fractionLost",m_isIP);
+  // m_designLevelEdit->bind(otherEquipmentDefinition,"designLevel",m_isIP);
+  m_designLevelEdit->bind(
+    m_isIP,
+    *m_otherEquipmentDefinition,
+    OptionalDoubleGetter(std::bind(&model::OtherEquipmentDefinition::designLevel, m_otherEquipmentDefinition.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<void(model::OtherEquipmentDefinition::*)(double)>(&model::OtherEquipmentDefinition::setDesignLevel), m_otherEquipmentDefinition.get_ptr(), std::placeholders::_1))
+  );
+
+  // m_wattsPerSpaceFloorAreaEdit->bind(otherEquipmentDefinition,"wattsperSpaceFloorArea",m_isIP);
+  m_wattsPerSpaceFloorAreaEdit->bind(
+    m_isIP,
+    *m_otherEquipmentDefinition,
+    OptionalDoubleGetter(std::bind(&model::OtherEquipmentDefinition::wattsperSpaceFloorArea, m_otherEquipmentDefinition.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::OtherEquipmentDefinition::*)(double)>(&model::OtherEquipmentDefinition::setWattsperSpaceFloorArea), m_otherEquipmentDefinition.get_ptr(), std::placeholders::_1))
+  );
+
+  // m_wattsPerPersonEdit->bind(otherEquipmentDefinition,"wattsperPerson",m_isIP);
+  m_wattsPerPersonEdit->bind(
+    m_isIP,
+    *m_otherEquipmentDefinition,
+    OptionalDoubleGetter(std::bind(&model::OtherEquipmentDefinition::wattsperPerson, m_otherEquipmentDefinition.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::OtherEquipmentDefinition::*)(double)>(&model::OtherEquipmentDefinition::setWattsperPerson), m_otherEquipmentDefinition.get_ptr(), std::placeholders::_1))
+  );
+
+  // m_fractionLatentEdit->bind(otherEquipmentDefinition,"fractionLatent",m_isIP);
+  m_fractionLatentEdit->bind(
+    m_isIP,
+    *m_otherEquipmentDefinition,
+    DoubleGetter(std::bind(&model::OtherEquipmentDefinition::fractionLatent, m_otherEquipmentDefinition.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::OtherEquipmentDefinition::*)(double)>(&model::OtherEquipmentDefinition::setFractionLatent), m_otherEquipmentDefinition.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::OtherEquipmentDefinition::resetFractionLatent, m_otherEquipmentDefinition.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::OtherEquipmentDefinition::isFractionLatentDefaulted, m_otherEquipmentDefinition.get_ptr()))
+  );
+
+  // m_fractionRadiantEdit->bind(otherEquipmentDefinition,"fractionRadiant",m_isIP);
+  m_fractionRadiantEdit->bind(
+    m_isIP,
+    *m_otherEquipmentDefinition,
+    DoubleGetter(std::bind(&model::OtherEquipmentDefinition::fractionRadiant, m_otherEquipmentDefinition.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::OtherEquipmentDefinition::*)(double)>(&model::OtherEquipmentDefinition::setFractionRadiant), m_otherEquipmentDefinition.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::OtherEquipmentDefinition::resetFractionRadiant, m_otherEquipmentDefinition.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::OtherEquipmentDefinition::isFractionRadiantDefaulted, m_otherEquipmentDefinition.get_ptr()))
+  );
+
+  // m_fractionLostEdit->bind(otherEquipmentDefinition,"fractionLost",m_isIP);
+  m_fractionLostEdit->bind(
+    m_isIP,
+    *m_otherEquipmentDefinition,
+    DoubleGetter(std::bind(&model::OtherEquipmentDefinition::fractionLost, m_otherEquipmentDefinition.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::OtherEquipmentDefinition::*)(double)>(&model::OtherEquipmentDefinition::setFractionLost), m_otherEquipmentDefinition.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::OtherEquipmentDefinition::resetFractionLost, m_otherEquipmentDefinition.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::OtherEquipmentDefinition::isFractionLostDefaulted, m_otherEquipmentDefinition.get_ptr()))
+  );
 
   this->stackedWidget()->setCurrentIndex(1);
 }

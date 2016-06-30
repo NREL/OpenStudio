@@ -32,7 +32,7 @@ class LightsDefinition;
 
 class OSLineEdit2;
 
-class OSQuantityEdit;
+class OSQuantityEdit2;
 
 class OSDropZone;
 
@@ -64,17 +64,17 @@ class LightsDefinitionInspectorView : public ModelObjectInspectorView
 
     OSLineEdit2* m_nameEdit;
 
-    OSQuantityEdit * m_lightingLevelEdit;
+    OSQuantityEdit2 * m_lightingLevelEdit;
 
-    OSQuantityEdit * m_wattsPerSpaceFloorAreaEdit;
+    OSQuantityEdit2 * m_wattsPerSpaceFloorAreaEdit;
 
-    OSQuantityEdit * m_wattsPerPersonEdit;
+    OSQuantityEdit2 * m_wattsPerPersonEdit;
 
-    OSQuantityEdit * m_fractionRadiantEdit;
+    OSQuantityEdit2 * m_fractionRadiantEdit;
 
-    OSQuantityEdit * m_fractionVisibleEdit;
+    OSQuantityEdit2 * m_fractionVisibleEdit;
 
-    OSQuantityEdit * m_returnAirFractionEdit;
+    OSQuantityEdit2 * m_returnAirFractionEdit;
 
     bool m_isIP;
 

@@ -432,7 +432,7 @@ MechanicalVentilationView::MechanicalVentilationView()
   dcvTitle->setObjectName("H2");
   dcvHBoxLayout->addWidget(dcvTitle);
 
-  dcvButton = new OSSwitch();
+  dcvButton = new OSSwitch2();
   dcvHBoxLayout->addWidget(dcvButton);
 
   dcvHBoxLayout->addStretch();

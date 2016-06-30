@@ -175,8 +175,8 @@ void ConstructionInternalSourceInspectorView::createLayout()
 
   ++row;
 
-  m_tubeSpacingEdit = new OSQuantityEdit(m_isIP);
-  connect(this, &ConstructionInternalSourceInspectorView::toggleUnitsClicked, m_tubeSpacingEdit, &OSQuantityEdit::onUnitSystemChange);
+  m_tubeSpacingEdit = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &ConstructionInternalSourceInspectorView::toggleUnitsClicked, m_tubeSpacingEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_tubeSpacingEdit, row, 0);
 
   ++row;
@@ -241,7 +241,13 @@ void ConstructionInternalSourceInspectorView::attach(openstudio::model::Construc
     boost::optional<IntSetter>(std::bind(&model::ConstructionWithInternalSource::setDimensionsForTheCTFCalculation,m_constructionWithInternalSource.get_ptr(),std::placeholders::_1))
   );
 
-  m_tubeSpacingEdit->bind(constructionWithInternalSource,"tubeSpacing",m_isIP);
+  // m_tubeSpacingEdit->bind(constructionWithInternalSource,"tubeSpacing",m_isIP);
+  m_tubeSpacingEdit->bind(
+    m_isIP,
+    *m_constructionWithInternalSource,
+    DoubleGetter(std::bind(&model::ConstructionWithInternalSource::tubeSpacing, m_constructionWithInternalSource.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::ConstructionWithInternalSource::*)(double)>(&model::ConstructionWithInternalSource::setTubeSpacing), m_constructionWithInternalSource.get_ptr(), std::placeholders::_1))
+  );
 
   m_constructionVC->attach(constructionWithInternalSource);
   m_constructionVC->reportItems();

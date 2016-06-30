@@ -68,8 +68,8 @@ InternalMassDefinitionInspectorView::InternalMassDefinitionInspectorView(bool is
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,2,0);
 
-  m_surfaceAreaEdit = new OSQuantityEdit(m_isIP);
-  connect(this, &InternalMassDefinitionInspectorView::toggleUnitsClicked, m_surfaceAreaEdit, &OSQuantityEdit::onUnitSystemChange);
+  m_surfaceAreaEdit = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &InternalMassDefinitionInspectorView::toggleUnitsClicked, m_surfaceAreaEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_surfaceAreaEdit,3,0);
 
   // Surface Area Per Space Floor Area
@@ -78,8 +78,8 @@ InternalMassDefinitionInspectorView::InternalMassDefinitionInspectorView(bool is
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,2,1);
 
-  m_surfaceAreaPerSpaceFloorAreaEdit = new OSQuantityEdit(m_isIP);
-  connect(this, &InternalMassDefinitionInspectorView::toggleUnitsClicked, m_surfaceAreaPerSpaceFloorAreaEdit, &OSQuantityEdit::onUnitSystemChange);
+  m_surfaceAreaPerSpaceFloorAreaEdit = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &InternalMassDefinitionInspectorView::toggleUnitsClicked, m_surfaceAreaPerSpaceFloorAreaEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_surfaceAreaPerSpaceFloorAreaEdit,3,1);
 
   // Surface Area Per Person
@@ -88,8 +88,8 @@ InternalMassDefinitionInspectorView::InternalMassDefinitionInspectorView(bool is
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,2,2);
 
-  m_surfaceAreaPerPersonEdit = new OSQuantityEdit(m_isIP);
-  connect(this, &InternalMassDefinitionInspectorView::toggleUnitsClicked, m_surfaceAreaPerPersonEdit, &OSQuantityEdit::onUnitSystemChange);
+  m_surfaceAreaPerPersonEdit = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &InternalMassDefinitionInspectorView::toggleUnitsClicked, m_surfaceAreaPerPersonEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_surfaceAreaPerPersonEdit,3,2);
 
   // Construction
@@ -143,9 +143,29 @@ void InternalMassDefinitionInspectorView::attach(openstudio::model::InternalMass
     boost::optional<StringSetter>(std::bind(&model::InternalMassDefinition::setName, m_internalMassDefinition.get_ptr(),std::placeholders::_1))
   );
 
-  m_surfaceAreaEdit->bind(internalMassDefinition,"surfaceArea",m_isIP);
-  m_surfaceAreaPerPersonEdit->bind(internalMassDefinition,"surfaceAreaperPerson",m_isIP);
-  m_surfaceAreaPerSpaceFloorAreaEdit->bind(internalMassDefinition,"surfaceAreaperSpaceFloorArea",m_isIP);
+  // m_surfaceAreaEdit->bind(internalMassDefinition,"surfaceArea",m_isIP);
+  m_surfaceAreaEdit->bind(
+    m_isIP,
+    *m_internalMassDefinition,
+    OptionalDoubleGetter(std::bind(&model::InternalMassDefinition::surfaceArea, m_internalMassDefinition.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::InternalMassDefinition::*)(double)>(&model::InternalMassDefinition::setSurfaceArea), m_internalMassDefinition.get_ptr(), std::placeholders::_1))
+  );
+
+  // m_surfaceAreaPerPersonEdit->bind(internalMassDefinition,"surfaceAreaperPerson",m_isIP);
+  m_surfaceAreaPerPersonEdit->bind(
+    m_isIP,
+    *m_internalMassDefinition,
+    OptionalDoubleGetter(std::bind(&model::InternalMassDefinition::surfaceAreaperPerson, m_internalMassDefinition.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::InternalMassDefinition::*)(double)>(&model::InternalMassDefinition::setSurfaceAreaperPerson), m_internalMassDefinition.get_ptr(), std::placeholders::_1))
+  );
+
+  // m_surfaceAreaPerSpaceFloorAreaEdit->bind(internalMassDefinition,"surfaceAreaperSpaceFloorArea",m_isIP);
+  m_surfaceAreaPerSpaceFloorAreaEdit->bind(
+    m_isIP,
+    *m_internalMassDefinition,
+    OptionalDoubleGetter(std::bind(&model::InternalMassDefinition::surfaceAreaperSpaceFloorArea, m_internalMassDefinition.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::InternalMassDefinition::*)(double)>(&model::InternalMassDefinition::setSurfaceAreaperSpaceFloorArea), m_internalMassDefinition.get_ptr(), std::placeholders::_1))
+  );
 
   m_ConstructionVectorController->attach(internalMassDefinition);
 

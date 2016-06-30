@@ -35,7 +35,7 @@ namespace model {
 
 class OSLineEdit2;
 
-class OSQuantityEdit;
+class OSQuantityEdit2;
 
 class OSComboBox2;
 
@@ -73,11 +73,11 @@ class ConstructionFfactorGroundFloorInspectorView : public ModelObjectInspectorV
 
     StandardsInformationConstructionWidget * m_standardsInformationWidget;
 
-    OSQuantityEdit * m_ffactorEdit;
+    OSQuantityEdit2 * m_ffactorEdit;
 
-    OSQuantityEdit * m_areaEdit;
+    OSQuantityEdit2 * m_areaEdit;
 
-    OSQuantityEdit * m_perimeterExposedEdit;
+    OSQuantityEdit2 * m_perimeterExposedEdit;
 };
 
 } // openstudio

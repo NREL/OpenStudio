@@ -40,7 +40,7 @@ class OSIntegerEdit2;
 
 class OSLineEdit2;
 
-class OSQuantityEdit;
+class OSQuantityEdit2;
 
 class OSComboBox2;
 
@@ -88,7 +88,7 @@ class ConstructionInternalSourceInspectorView : public ModelObjectInspectorView
 
     OSIntegerEdit2 * m_dimensionsForTheCTFCalculationEdit;
 
-    OSQuantityEdit * m_tubeSpacingEdit;
+    OSQuantityEdit2 * m_tubeSpacingEdit;
 };
 
 } // openstudio
