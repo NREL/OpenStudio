@@ -524,7 +524,7 @@ set(EMBEDDED_PATHS
 include("${CMAKE_SOURCE_DIR}/embedded/EmbedFiles.cmake")
 embed_files("${FILES}" "${EMBEDDED_PATHS}" OUTPUT energyplus)
 
-add_library(${target_name} STATIC ${${target_name}_src} ${OUTPUT})
+add_library(${target_name} ${${target_name}_src} ${OUTPUT})
 target_link_libraries(${target_name} ${${target_name}_depends})
 
 AddPCH(${target_name})
