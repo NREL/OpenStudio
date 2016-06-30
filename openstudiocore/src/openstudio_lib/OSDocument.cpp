@@ -1342,6 +1342,7 @@ namespace openstudio {
       m_model.workflowJSON().save();
 
       // saves the model to modelTempDir / m_savePath.filename()
+      // also copies the temp files to user location
       openstudio::path modelPath = saveModel(this->model(), toPath(m_savePath), toPath(m_modelTempDir));
 
       this->setSavePath(toQString(modelPath));
@@ -1416,6 +1417,7 @@ namespace openstudio {
       m_model.workflowJSON().save();
 
       // saves the model to modelTempDir / filePath.filename()
+      // also copies the temp files to user location
       openstudio::path modelPath = saveModel(this->model(), toPath(filePath), toPath(m_modelTempDir));
 
       this->setSavePath(toQString(modelPath));
