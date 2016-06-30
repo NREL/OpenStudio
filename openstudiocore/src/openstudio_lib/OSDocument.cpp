@@ -1331,25 +1331,21 @@ namespace openstudio {
   {
     bool fileSaved = false;
 
-    // save the osw
-    m_model.workflowJSON().save();
-
     if (!m_savePath.isEmpty())
     {
       // do before saving the osm
       // DLM: should not happen unless user sets an absolute path to epw file in a measure
       fixWeatherFileInTemp(false);
 
-      // saves the model to modelTempDir / in.osm
+      // save the osw, do before temp dirs get copied
+      m_model.workflowJSON().save();
+
+      // saves the model to modelTempDir / m_savePath.filename()
       openstudio::path modelPath = saveModel(this->model(), toPath(m_savePath), toPath(m_modelTempDir));
 
       this->setSavePath(toQString(modelPath));
 
-      // saves the run database, do before saveModelTempDir
       emit modelSaving(modelPath);
-
-      // copies modelTempDir/in.osm to modelPath, copies all resources including run database
-      saveModelTempDir(toPath(m_modelTempDir), modelPath);
 
       this->markAsUnmodified();
 
@@ -1404,16 +1400,26 @@ namespace openstudio {
     {
       //scriptFolderListView()->saveOSArguments();
 
-      // saves the model to modelTempDir / in.osm
+      // remove old model
+      if (!m_savePath.isEmpty()){
+        openstudio::path oldModelPath = toPath(m_modelTempDir) / toPath(m_savePath).filename();
+        if (boost::filesystem::exists(oldModelPath)){
+          boost::filesystem::remove(oldModelPath);
+        }
+      }
+
+      // set the new seed name
+      m_model.workflowJSON().setSeedFile(toPath("..") / toPath(filePath).filename());
+
+      // save the osw, do before temp dirs get copied
+      m_model.workflowJSON().save();
+
+      // saves the model to modelTempDir / filePath.filename()
       openstudio::path modelPath = saveModel(this->model(), toPath(filePath), toPath(m_modelTempDir));
 
       this->setSavePath(toQString(modelPath));
 
-      // saves the run database, do before saveModelTempDir
       emit modelSaving(modelPath);
-
-      // copies modelTempDir/in.osm to modelPath, copies all resources including run database
-      saveModelTempDir(toPath(m_modelTempDir), modelPath);
 
       this->markAsUnmodified();
 
