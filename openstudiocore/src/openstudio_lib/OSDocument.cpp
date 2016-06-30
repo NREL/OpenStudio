@@ -191,190 +191,72 @@ namespace openstudio {
       modifiedOnLoad = false;
     }
 
-    //openstudio::analysisdriver::SimpleProjectOptions options;
-    //options.setPauseRunManagerQueue(true); // do not start running when opening
-    //options.setInitializeRunManagerUI(true);
-    //options.setLogLevel(Debug);
+    // Look in the companion directory for a workflow.osw file, e.g. if the OSM is ‘my_model.osm’ look for ‘./my_model/workflow.osw’ ie self contained form.
+    boost::optional<WorkflowJSON> workflowJSON;
 
-    //// initialize project object
-    //if (boost::filesystem::exists(openstudio::toPath(m_modelTempDir) / openstudio::toPath("resources/project.osp")))
-    //{
-    //  LOG(Debug, "project existed, opening");
-    //  m_simpleProject = openstudio::analysisdriver::SimpleProject::open(openstudio::toPath(m_modelTempDir) / openstudio::toPath("resources"), options);
+    openstudio::path oswPath = openstudio::toPath(m_modelTempDir) / openstudio::toPath("resources/workflow.osw");
+    if (boost::filesystem::exists(oswPath)){
+      workflowJSON = WorkflowJSON::load(oswPath);
+      if (workflowJSON){
+        LOG(Debug, "Opening existing workflow.osw file");
+      } else{
+        LOG(Error, "Could not open existing workflow.osw file");
+      }
+    }
 
-    //  if (m_simpleProject)
-    //  {
-    //    // DLM: this does not seem very robust?
-    //    // fix up workflow as needed
-    //    bool save = false;
-    //    openstudio::analysis::Problem problem = m_simpleProject->analysis().problem();
-    //    OptionalInt index = problem.getWorkflowStepIndexByJobType(runmanager::JobType::ModelToIdf);
-    //    if (!index) {
-    //      problem.push(runmanager::WorkItem(runmanager::JobType::ModelToIdf));
-    //      save = true;
-    //    }
-    //    index = problem.getWorkflowStepIndexByJobType(runmanager::JobType::ExpandObjects);
-    //    if (!index) {
-    //      problem.push(runmanager::WorkItem(runmanager::JobType::ExpandObjects));
-    //      save = true;
-    //    }
-    //    index = problem.getWorkflowStepIndexByJobType(runmanager::JobType::EnergyPlusPreProcess);
-    //    if (!index) {
-    //      problem.push(runmanager::WorkItem(runmanager::JobType::EnergyPlusPreProcess));
-    //      save = true;
-    //    }
-    //    index = problem.getWorkflowStepIndexByJobType(runmanager::JobType::EnergyPlus);
-    //    if (!index) {
-    //      problem.push(runmanager::WorkItem(runmanager::JobType::EnergyPlus));
-    //      save = true;
-    //    }
-    //    index = problem.getWorkflowStepIndexByJobType(runmanager::JobType::OpenStudioPostProcess);
-    //    if (!index) {
-    //      problem.push(runmanager::WorkItem(runmanager::JobType::OpenStudioPostProcess));
-    //      save = true;
-    //    }
+    if (!workflowJSON){
+      workflowJSON = WorkflowJSON();
+      workflowJSON->saveAs(oswPath);
+    }
+    OS_ASSERT(workflowJSON);
+    model->setWorkflowJSON(*workflowJSON);
+    
+    bool isConnected;
 
-    //    if (save)
-    //    {
-    //      m_simpleProject->save();
-    //    }
+    m_verticalId = 0;
+    m_subTabIds = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+    // Make sure that the vector is the same size as the number of tabs
+    OS_ASSERT(m_subTabIds.size() == static_cast<unsigned>(RESULTS_SUMMARY + 1));
 
-    //    // check that all Ruby scripts exist, duplicates code in PatApp::openFile
-    //    std::stringstream ss;
-    //    for (const analysis::InputVariable& inputVariable : problem.variables()){
-    //      boost::optional<analysis::MeasureGroup> measureGroup = inputVariable.optionalCast<analysis::MeasureGroup>();
-    //      if (measureGroup){
-    //        for (const analysis::Measure& measure : measureGroup->measures(false)){
-    //          boost::optional<analysis::RubyMeasure> rubyMeasure = measure.optionalCast<analysis::RubyMeasure>();
-    //          if (rubyMeasure){
-    //            boost::optional<BCLMeasure> bclMeasure = rubyMeasure->bclMeasure();
-    //            if (!bclMeasure){
-    //              ss << "Cannot find measure '" << rubyMeasure->name() << "' in scripts directory." << std::endl;
-    //            }
-    //          }
-    //        }
-    //      }
-    //    }
-    //    if (ss.str().size() > 0){
-    //      ss << std::endl << "Ensure that all measures are correctly located in the scripts directory.";
-    //      LOG(Warn, ss.str());
-    //      // DLM: which dialog should be parent?
-    //      QMessageBox::warning(0,
-    //        QString("Error opening measure and run data."),
-    //        toQString(ss.str()),
-    //        QMessageBox::Ok);
-    //    }
+    // set the model, this will create widgets
+    setModel(*model, modifiedOnLoad, false);
 
-    //  }
-    //  else {
-    //    // save copy of databases about to be overwritten
-    //    openstudio::path projectDir = openstudio::toPath(m_modelTempDir) / openstudio::toPath("resources");
-    //    boost::filesystem::copy_file(projectDir / toPath("run.db"),
-    //      projectDir / toPath("bad-run.db"),
-    //      boost::filesystem::copy_option::overwrite_if_exists);
-    //    boost::filesystem::copy_file(projectDir / toPath("project.osp"),
-    //      projectDir / toPath("bad-project.osp"),
-    //      boost::filesystem::copy_option::overwrite_if_exists);
-    //    // throw up warning message
-    //    std::stringstream ss;
-    //    ss << "The project.osp and run.db associated with this model could not be opened. ";
-    //    ss << "Copies have been saved as bad-run.db and bad-project.osp. New, blank databases ";
-    //    ss << "will be created. Compared to the original, the model will no longer contain any ";
-    //    ss << "measures or run data. If that data was present and is critical, it can be mined ";
-    //    ss << "from the 'bad-' database copies, which are in SQLite format. If you would like ";
-    //    ss << "to help us diagnose and fix the underlying cause of this problem, please save ";
-    //    ss << "your model and send a zipped-up copy of the .osm file and its companion folder ";
-    //    ss << "to OpenStudio@NREL.gov, along with a description of this model's history. Thank ";
-    //    ss << "you, and sorry for the inconvenience.";
-    //    LOG(Warn, ss.str());
-    //    // DLM: which dialog should be parent?
-    //    QMessageBox::warning(nullptr, 
-    //                         QString("Error opening measure and run data."),
-    //                         toQString(ss.str()),
-    //                         QMessageBox::Ok);
-    //  }
-    //}
+    // connect signals to main window
+    connect(m_mainWindow, &MainWindow::downloadComponentsClicked, this, &OSDocument::openBclDlg);
+    connect(m_mainWindow, &MainWindow::openLibDlgClicked, this, &OSDocument::openLibDlg);
+    connect(m_mainWindow, &MainWindow::closeClicked, this, &OSDocument::closeClicked);
+    connect(m_mainWindow, &MainWindow::verticalTabSelected, this, &OSDocument::onVerticalTabSelected);
+    connect(m_mainWindow, &MainWindow::importClicked, this, &OSDocument::importClicked);
+    connect(m_mainWindow, &MainWindow::importgbXMLClicked, this, &OSDocument::importgbXMLClicked);
+    connect(m_mainWindow, &MainWindow::importSDDClicked, this, &OSDocument::importSDDClicked);
+    connect(m_mainWindow, &MainWindow::importIFCClicked, this, &OSDocument::importIFCClicked);
+    connect(m_mainWindow, &MainWindow::loadFileClicked, this, &OSDocument::loadFileClicked);
+    connect(m_mainWindow, &MainWindow::loadLibraryClicked, this, &OSDocument::loadLibraryClicked);
+    connect(m_mainWindow, &MainWindow::newClicked, this, &OSDocument::newClicked);
+    connect(m_mainWindow, &MainWindow::exitClicked, this, &OSDocument::exitClicked);
+    connect(m_mainWindow, &MainWindow::helpClicked, this, &OSDocument::helpClicked);
+    connect(m_mainWindow, &MainWindow::aboutClicked, this, &OSDocument::aboutClicked);
+    connect(m_mainWindow, &MainWindow::osmDropped, this, &OSDocument::osmDropped);
+    connect(m_mainWindow, &MainWindow::exportClicked, this, &OSDocument::exportIdf);
+    connect(m_mainWindow, &MainWindow::exportgbXMLClicked, this, &OSDocument::exportgbXML);
+    connect(m_mainWindow, &MainWindow::exportSDDClicked, this, &OSDocument::exportSDD);
+    connect(m_mainWindow, &MainWindow::saveAsFileClicked, this, &OSDocument::saveAs);
+    connect(m_mainWindow, &MainWindow::saveFileClicked, this, &OSDocument::save);
+    // Using old-style connect here to avoid including OpenStudioApp files
+    isConnected = connect(m_mainWindow, SIGNAL(revertFileClicked()), OSAppBase::instance(), SLOT(revertToSaved()));
+    OS_ASSERT(isConnected);
+    connect(m_mainWindow, &MainWindow::scanForToolsClicked, this, &OSDocument::scanForTools);
+    connect(m_mainWindow, &MainWindow::showRunManagerPreferencesClicked, this, &OSDocument::showRunManagerPreferences);
+    connect(m_mainWindow, &MainWindow::toggleUnitsClicked, this, &OSDocument::toggleUnitsClicked);
+    connect(m_mainWindow, &MainWindow::applyMeasureClicked, this, &OSDocument::openMeasuresDlg);
+    connect(m_mainWindow, &MainWindow::downloadMeasuresClicked, this, &OSDocument::openMeasuresBclDlg);
+    connect(m_mainWindow, &MainWindow::changeMyMeasuresDir, this, &OSDocument::openChangeMeasuresDirDlg);
+    connect(m_mainWindow, &MainWindow::changeBclLogin, this, &OSDocument::changeBclLogin);
+    connect(this, &OSDocument::downloadComponentsClicked, this, &OSDocument::openBclDlg);
+    connect(this, &OSDocument::openLibDlgClicked, this, &OSDocument::openLibDlg);
 
-    //if (!m_simpleProject) {
-    //  LOG(Debug, "Creating new project");
-    //  m_simpleProject = openstudio::analysisdriver::SimpleProject::create(
-    //    openstudio::toPath(m_modelTempDir) / openstudio::toPath("resources"),
-    //    options,
-    //    true);
-
-    //  openstudio::analysis::Problem problem = m_simpleProject->analysis().problem();
-
-    //  // add swap variable
-    //  openstudio::analysis::MeasureGroup dvar("Alternative Model", openstudio::analysis::MeasureVector(1u, openstudio::analysis::NullMeasure()));
-    //  problem.push(dvar);
-
-    //  // set up simulation workflow
-    //  problem.push(runmanager::WorkItem(runmanager::JobType::ModelToIdf));
-    //  problem.push(runmanager::WorkItem(runmanager::JobType::ExpandObjects));
-    //  problem.push(runmanager::WorkItem(runmanager::JobType::EnergyPlusPreProcess));
-    //  problem.push(runmanager::WorkItem(runmanager::JobType::EnergyPlus));
-    //  problem.push(runmanager::WorkItem(runmanager::JobType::OpenStudioPostProcess));
-    //}
-
-  //OS_ASSERT(m_simpleProject);
-  //
-  //// make sure project has baseline stuff setup
-  //analysis::DataPoint baselineDataPoint = m_simpleProject->baselineDataPoint();
-  //openstudio::analysis::Analysis analysis = m_simpleProject->analysis();
-
-  //// DLM: do we need to set seed model
-
-  //openstudio::runmanager::ConfigOptions co(true);
-  //m_simpleProject->runManager().setConfigOptions(co);
-
-  bool isConnected;
-  //bool isConnected = analysis.connect(SIGNAL(changed(ChangeType)), this, SLOT(markAsModified()));
-  //OS_ASSERT(isConnected);
-
-  m_verticalId = 0;
-  m_subTabIds = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-  // Make sure that the vector is the same size as the number of tabs
-  OS_ASSERT(m_subTabIds.size() == static_cast<unsigned>(RESULTS_SUMMARY + 1));
-
-  // set the model, this will create widgets
-  setModel(*model, modifiedOnLoad, false);
-
-  // connect signals to main window
-  connect(m_mainWindow, &MainWindow::downloadComponentsClicked, this, &OSDocument::openBclDlg);
-  connect(m_mainWindow, &MainWindow::openLibDlgClicked, this, &OSDocument::openLibDlg);
-  connect(m_mainWindow, &MainWindow::closeClicked, this, &OSDocument::closeClicked);
-  connect(m_mainWindow, &MainWindow::verticalTabSelected, this, &OSDocument::onVerticalTabSelected);
-  connect(m_mainWindow, &MainWindow::importClicked, this, &OSDocument::importClicked);
-  connect(m_mainWindow, &MainWindow::importgbXMLClicked, this, &OSDocument::importgbXMLClicked);
-  connect(m_mainWindow, &MainWindow::importSDDClicked, this, &OSDocument::importSDDClicked);
-  connect(m_mainWindow, &MainWindow::importIFCClicked, this, &OSDocument::importIFCClicked);
-  connect(m_mainWindow, &MainWindow::loadFileClicked, this, &OSDocument::loadFileClicked);
-  connect(m_mainWindow, &MainWindow::loadLibraryClicked, this, &OSDocument::loadLibraryClicked);
-  connect(m_mainWindow, &MainWindow::newClicked, this, &OSDocument::newClicked);
-  connect(m_mainWindow, &MainWindow::exitClicked, this, &OSDocument::exitClicked);
-  connect(m_mainWindow, &MainWindow::helpClicked, this, &OSDocument::helpClicked);
-  connect(m_mainWindow, &MainWindow::aboutClicked, this, &OSDocument::aboutClicked);
-  connect(m_mainWindow, &MainWindow::osmDropped, this, &OSDocument::osmDropped);
-  connect(m_mainWindow, &MainWindow::exportClicked, this, &OSDocument::exportIdf);
-  connect(m_mainWindow, &MainWindow::exportgbXMLClicked, this, &OSDocument::exportgbXML);
-  connect(m_mainWindow, &MainWindow::exportSDDClicked, this, &OSDocument::exportSDD);
-  connect(m_mainWindow, &MainWindow::saveAsFileClicked, this, &OSDocument::saveAs);
-  connect(m_mainWindow, &MainWindow::saveFileClicked, this, &OSDocument::save);
-  // Using old-style connect here to avoid including OpenStudioApp files
-  isConnected = connect(m_mainWindow, SIGNAL(revertFileClicked()), OSAppBase::instance(), SLOT(revertToSaved()));
-  OS_ASSERT(isConnected);
-  connect(m_mainWindow, &MainWindow::scanForToolsClicked, this, &OSDocument::scanForTools);
-  connect(m_mainWindow, &MainWindow::showRunManagerPreferencesClicked, this, &OSDocument::showRunManagerPreferences);
-  connect(m_mainWindow, &MainWindow::toggleUnitsClicked, this, &OSDocument::toggleUnitsClicked);
-  connect(m_mainWindow, &MainWindow::applyMeasureClicked, this, &OSDocument::openMeasuresDlg);
-  connect(m_mainWindow, &MainWindow::downloadMeasuresClicked, this, &OSDocument::openMeasuresBclDlg);
-  connect(m_mainWindow, &MainWindow::changeMyMeasuresDir, this, &OSDocument::openChangeMeasuresDirDlg);
-  connect(m_mainWindow, &MainWindow::changeBclLogin, this, &OSDocument::changeBclLogin);
-  connect(this, &OSDocument::downloadComponentsClicked, this, &OSDocument::openBclDlg);
-  connect(this, &OSDocument::openLibDlgClicked, this, &OSDocument::openLibDlg);
-
-  // update window path after the dialog is shown
-  QTimer::singleShot(0, this, SLOT(updateWindowFilePath())); 
+    // update window path after the dialog is shown
+    QTimer::singleShot(0, this, SLOT(updateWindowFilePath())); 
   }
 
   //void OSDocument::showRubyConsole()
@@ -390,9 +272,6 @@ namespace openstudio {
   OSDocument::~OSDocument()
   {
     m_model.getImpl<openstudio::model::detail::Model_Impl>()->blockSignals(true);
-
-    // close the project
-    //m_simpleProject.reset();
 
     // release the file watchers so can remove model temp dir
     m_mainTabController.reset();
@@ -1039,12 +918,6 @@ namespace openstudio {
     return m_savePath;
   }
 
-  //boost::optional<analysisdriver::SimpleProject> OSDocument::project() const
-  //{
-  //  return m_simpleProject;
-  //}
-
-
   QString OSDocument::modelTempDir() const
   {
     return m_modelTempDir;
@@ -1458,27 +1331,8 @@ namespace openstudio {
   {
     bool fileSaved = false;
 
-    // save the project file
-    //analysis::Analysis analysis = m_simpleProject->analysis();
-
-    //if (analysis.dataPointsAreInvalid()){
-    //  // DLM: Elaine, is there any way to just remove datapoints that are invalid
-    //  // or do we have to remove them all?
-    //  // ETH@20130319 - Currently, you have to remove them all. Same with results. The ability to do
-    //  // this more judiciously would be nice.
-    //  bool completeRemoval = m_simpleProject->removeAllDataPoints();
-    //  if (!completeRemoval) {
-    //    QMessageBox::critical(mainWindow(), "Incomplete File Removal", QString("Removed all design alternatives from this project, but could not remove all of the associated files. Close all files and clear results to clean up your file system."));
-    //  }
-    //}
-    //else if (analysis.resultsAreInvalid()){
-    //  bool completeRemoval = m_simpleProject->clearAllResults();
-    //  if (!completeRemoval) {
-    //    QMessageBox::critical(mainWindow(), "Incomplete File Removal", QString("Removed all results from this project, but could not remove all of the result files. Close all files and clear results again to clean up your file system."));
-    //  }
-    //}
-
-    //m_simpleProject->save();
+    // save the osw
+    m_model.workflowJSON().save();
 
     if (!m_savePath.isEmpty())
     {
