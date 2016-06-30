@@ -5,6 +5,12 @@ module RbConfig
   end
 end
 
+module OpenStudio
+  def self.openstudio_path
+    RbConfig.ruby
+  end
+end
+
 BINDING = Kernel::binding()
 Encoding.default_external = Encoding::ASCII
 
