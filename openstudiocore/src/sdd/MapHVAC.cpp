@@ -5698,7 +5698,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
         }
 
         if( i == (ldRngLims.size() - 1) ) {
-          scheme->addLoadRange(scheme->maximumUpperLimit(),equipment);
+          scheme->addLoadRange(1E8,equipment);
         } else {
           scheme->addLoadRange(ldRngLim,equipment);
         }
