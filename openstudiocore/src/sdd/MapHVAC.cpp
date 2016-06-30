@@ -5614,6 +5614,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
       if( ok && (index == i) ) {
         auto value = element.text().toDouble(&ok);
         if( ok ) {
+          value = unitToUnit(value,"Btu/h","W").get();
           ldRngLims.push_back(value);
           break;
         }
@@ -5667,13 +5668,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     }
 
     if( scheme ) {
-      std::cout << "ldRngLims.size: " << ldRngLims.size() << std::endl;
       for( int i = 0; i != ldRngLims.size(); ++i ) {
         std::vector<model::HVACComponent> equipment;
         auto ldRngLim = ldRngLims[i];
         auto equipmentList = equipmentLists[i];
 
-        std::cout << "equipmentList.size: " << equipmentList.size() << std::endl;
         for( auto & name : equipmentList ) {
           for( const auto & comp : allPlantComponents ) {
             if( istringEqual(name,comp.nameString()) ) {
@@ -5683,9 +5682,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
           }
         }
 
-        std::cout << "ldRngLim: " << ldRngLim << std::endl;
-        std::cout << "equipment.size: " << equipment.size() << std::endl;
-        scheme->addLoadRange(ldRngLim,equipment);
+        if( i == (ldRngLims.size() - 1) ) {
+          scheme->addLoadRange(scheme->maximumUpperLimit(),equipment);
+        } else {
+          scheme->addLoadRange(ldRngLim,equipment);
+        }
       }
     }
   }
