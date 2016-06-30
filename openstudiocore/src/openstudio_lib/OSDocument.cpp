@@ -206,7 +206,8 @@ namespace openstudio {
 
     if (!workflowJSON){
       workflowJSON = WorkflowJSON();
-      workflowJSON->saveAs(oswPath);
+      workflowJSON->setOswPath(oswPath);
+      workflowJSON->save();
     }
     OS_ASSERT(workflowJSON);
     model->setWorkflowJSON(*workflowJSON);

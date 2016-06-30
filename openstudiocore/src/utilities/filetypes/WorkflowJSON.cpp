@@ -141,11 +141,11 @@ namespace detail{
 
   bool WorkflowJSON_Impl::save() const
   {
-    openstudio::path p = path();
-    if (p.empty()){
+    boost::optional<openstudio::path> p = oswPath();
+    if (!p){
       return false;
     }
-    return saveAs(p);
+    return saveAs(*p);
   }
 
   bool WorkflowJSON_Impl::saveAs(const openstudio::path& p) const
@@ -156,6 +156,7 @@ namespace detail{
         try {
           outFile << string();
           outFile.close();
+
           return true;
         } catch (...) {
           LOG(Error, "Unable to write file to path '" << toString(p) << "'.");
