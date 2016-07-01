@@ -372,6 +372,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(LightsDefinition)
     REGISTER_CONSTRUCTOR(Luminaire);
     REGISTER_CONSTRUCTOR(LuminaireDefinition);
+    REGISTER_CONSTRUCTOR(MaterialPropertyGlazingSpectralData);
     REGISTER_CONSTRUCTOR(MasslessOpaqueMaterial);
     REGISTER_CONSTRUCTOR(Meter);
     REGISTER_CONSTRUCTOR(ModelObjectList);
@@ -776,6 +777,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(LightsDefinition);
     REGISTER_COPYCONSTRUCTORS(Luminaire);
     REGISTER_COPYCONSTRUCTORS(LuminaireDefinition);
+    REGISTER_COPYCONSTRUCTORS(MaterialPropertyGlazingSpectralData);
     REGISTER_COPYCONSTRUCTORS(MasslessOpaqueMaterial);
     REGISTER_COPYCONSTRUCTORS(Meter);
     REGISTER_COPYCONSTRUCTORS(ModelObjectList);

@@ -631,6 +631,9 @@ set(${target_name}_src
   Material.hpp
   Material_Impl.hpp
   Material.cpp
+  MaterialPropertyGlazingSpectralData.hpp
+  MaterialPropertyGlazingSpectralData_Impl.hpp
+  MaterialPropertyGlazingSpectralData.cpp
   Meter.hpp
   Meter_Impl.hpp
   Meter.cpp
@@ -1370,6 +1373,7 @@ set(${target_name}_moc
   LuminaireDefinition_Impl.hpp
   MasslessOpaqueMaterial_Impl.hpp
   Material_Impl.hpp
+  MaterialPropertyGlazingSpectralData_Impl.hpp
   Meter_Impl.hpp
   OpaqueMaterial_Impl.hpp
   OtherEquipment_Impl.hpp
@@ -1618,6 +1622,7 @@ set(${target_name}_test_src
   test/Luminaire_GTest.cpp
   test/MasslessOpaqueMaterial_GTest.cpp
   test/Material_GTest.cpp
+  test/MaterialPropertyGlazingSpectralData_GTest.cpp
   test/Meter_GTest.cpp
   test/ModelFixture.cpp
   test/ModelFixture.hpp
