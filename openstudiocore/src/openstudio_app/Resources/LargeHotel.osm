@@ -1,7 +1,7 @@
 
 OS:Version,
-  {47149229-1c5f-45e2-b80e-fb18462fdd09}, !- Handle
-  1.10.0;                                 !- Version Identifier
+  {179ef570-6dc9-4932-94bd-eff700c9f715}, !- Handle
+  1.12.0;                                 !- Version Identifier
 
 OS:Construction,
   {8606b218-add5-485f-a3f4-19986c294dc6}, !- Handle
@@ -15181,8 +15181,8 @@ OS:Schedule:Ruleset,
 OS:ScheduleTypeLimits,
   {ae49135f-a835-439f-a140-3b6769b38329}, !- Handle
   ActivityLevel 3,                        !- Name
-  0,                                      !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
+  0,                                      !- Lower Limit Value
+  ,                                       !- Upper Limit Value
   Continuous,                             !- Numeric Type
   ActivityLevel;                          !- Unit Type
 
@@ -15486,8 +15486,8 @@ OS:Schedule:Ruleset,
 OS:ScheduleTypeLimits,
   {55ca04d4-afc5-442a-b5e7-c926d3b1f8e5}, !- Handle
   Temperature 17,                         !- Name
-  ,                                       !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
+  ,                                       !- Lower Limit Value
+  ,                                       !- Upper Limit Value
   Continuous,                             !- Numeric Type
   Temperature;                            !- Unit Type
 
@@ -15538,8 +15538,8 @@ OS:Schedule:Ruleset,
 OS:ScheduleTypeLimits,
   {a124b51f-416b-4f9f-ab38-31e5d75921a6}, !- Handle
   Temperature 8,                          !- Name
-  ,                                       !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
+  ,                                       !- Lower Limit Value
+  ,                                       !- Upper Limit Value
   Continuous,                             !- Numeric Type
   Temperature;                            !- Unit Type
 
@@ -15786,8 +15786,8 @@ OS:Schedule:Ruleset,
 OS:ScheduleTypeLimits,
   {9851caf9-9348-4874-b1ea-f3d07cd15c68}, !- Handle
   Temperature 49,                         !- Name
-  ,                                       !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
+  ,                                       !- Lower Limit Value
+  ,                                       !- Upper Limit Value
   Continuous,                             !- Numeric Type
   Temperature;                            !- Unit Type
 
@@ -15829,8 +15829,8 @@ OS:Schedule:Ruleset,
 OS:ScheduleTypeLimits,
   {bdad3809-60f8-4da8-99ad-8631b75937af}, !- Handle
   Temperature 10,                         !- Name
-  ,                                       !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
+  ,                                       !- Lower Limit Value
+  ,                                       !- Upper Limit Value
   Continuous,                             !- Numeric Type
   Temperature;                            !- Unit Type
 
@@ -16216,8 +16216,8 @@ OS:Schedule:Ruleset,
 OS:ScheduleTypeLimits,
   {a5ff6424-61c8-4139-b80e-b14de5715d8e}, !- Handle
   Temperature 9,                          !- Name
-  ,                                       !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
+  ,                                       !- Lower Limit Value
+  ,                                       !- Upper Limit Value
   Continuous,                             !- Numeric Type
   Temperature;                            !- Unit Type
 
@@ -16259,8 +16259,8 @@ OS:Schedule:Ruleset,
 OS:ScheduleTypeLimits,
   {4776efa6-b768-4142-9f29-4f97ea82046e}, !- Handle
   Temperature 12,                         !- Name
-  ,                                       !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
+  ,                                       !- Lower Limit Value
+  ,                                       !- Upper Limit Value
   Continuous,                             !- Numeric Type
   Temperature;                            !- Unit Type
 
@@ -16685,8 +16685,8 @@ OS:Schedule:Ruleset,
 OS:ScheduleTypeLimits,
   {3f0efe46-57d7-4440-9d76-ed24165c19da}, !- Handle
   Temperature 38,                         !- Name
-  ,                                       !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
+  ,                                       !- Lower Limit Value
+  ,                                       !- Upper Limit Value
   Continuous,                             !- Numeric Type
   Temperature;                            !- Unit Type
 
@@ -16737,8 +16737,8 @@ OS:Schedule:Ruleset,
 OS:ScheduleTypeLimits,
   {c57c2b34-b2cf-4725-8936-12aad9794a41}, !- Handle
   Temperature 2,                          !- Name
-  ,                                       !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
+  ,                                       !- Lower Limit Value
+  ,                                       !- Upper Limit Value
   Continuous,                             !- Numeric Type
   Temperature;                            !- Unit Type
 
