@@ -288,11 +288,49 @@ void WindowMaterialGasMixtureInspectorView::attach(openstudio::model::GasMixture
   );
 
   // OSQuantityEdit2
-  m_thickness->bind(gasMixture,"thickness",m_isIP);
-  m_gas1Fraction->bind(gasMixture,"gas1Fraction",m_isIP);
-  m_gas2Fraction->bind(gasMixture,"gas2Fraction",m_isIP);
-  m_gas3Fraction->bind(gasMixture,"gas3Fraction",m_isIP);
-  m_gas4Fraction->bind(gasMixture,"gas4Fraction",m_isIP);
+  // m_thickness->bind(gasMixture,"thickness",m_isIP);
+  m_thickness->bind(
+    m_isIP,
+    *m_gasMixture,
+    DoubleGetter(std::bind(&model::GasMixture::thickness, m_gasMixture.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::GasMixture::*)(double)>(&model::GasMixture::setThickness), m_gasMixture.get_ptr(), std::placeholders::_1))
+  );
+
+  // m_gas1Fraction->bind(gasMixture,"gas1Fraction",m_isIP);
+  m_gas1Fraction->bind(
+    m_isIP,
+    *m_gasMixture,
+    DoubleGetter(std::bind(&model::GasMixture::gas1Fraction, m_gasMixture.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::GasMixture::*)(double)>(&model::GasMixture::setGas1Fraction), m_gasMixture.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::GasMixture::resetGas1Fraction, m_gasMixture.get_ptr()))
+  );
+
+  // m_gas2Fraction->bind(gasMixture,"gas2Fraction",m_isIP);
+  m_gas2Fraction->bind(
+    m_isIP,
+    *m_gasMixture,
+    DoubleGetter(std::bind(&model::GasMixture::gas2Fraction, m_gasMixture.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::GasMixture::*)(double)>(&model::GasMixture::setGas2Fraction), m_gasMixture.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::GasMixture::resetGas2Fraction, m_gasMixture.get_ptr()))
+  );
+
+  // m_gas3Fraction->bind(gasMixture,"gas3Fraction",m_isIP);
+  m_gas3Fraction->bind(
+    m_isIP,
+    *m_gasMixture,
+    OptionalDoubleGetter(std::bind(&model::GasMixture::gas3Fraction, m_gasMixture.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::GasMixture::*)(double)>(&model::GasMixture::setGas3Fraction), m_gasMixture.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::GasMixture::resetGas3Fraction, m_gasMixture.get_ptr()))
+  );
+
+  // m_gas4Fraction->bind(gasMixture,"gas4Fraction",m_isIP);
+  m_gas4Fraction->bind(
+    m_isIP,
+    *m_gasMixture,
+    OptionalDoubleGetter(std::bind(&model::GasMixture::gas4Fraction, m_gasMixture.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::GasMixture::*)(double)>(&model::GasMixture::setGas4Fraction), m_gasMixture.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::GasMixture::resetGas4Fraction, m_gasMixture.get_ptr()))
+  );
 
   m_standardsInformationWidget->attach(gasMixture);
 

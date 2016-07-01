@@ -1251,8 +1251,8 @@ void SimSettingsView::attachSimulationControl()
     &model::SimulationControl::validSolarDistributionValues,
     StringGetter(std::bind(&model::SimulationControl::solarDistribution, m_simulationControl.get_ptr())),
     std::bind(&model::SimulationControl::setSolarDistribution, m_simulationControl.get_ptr(),std::placeholders::_1),
-    boost::optional<NoFailAction>(&model::SimulationControl::resetSolarDistribution),
-    boost::optional<BasicQuery>(&model::SimulationControl::isSolarDistributionDefaulted)
+    boost::optional<NoFailAction>(std::bind(&model::SimulationControl::resetSolarDistribution, m_simulationControl.get_ptr())),
+    boost::optional<BasicQuery>(std::bind(&model::SimulationControl::isSolarDistributionDefaulted, m_simulationControl.get_ptr()))
   );
   
 }
@@ -1290,8 +1290,8 @@ void SimSettingsView::attachSizingParameters()
   m_timestepsinAveragingWindow->bind(
     *m_mo,
     OptionalIntGetter(std::bind(&model::SizingParameters::timestepsinAveragingWindow, m_mo.get_ptr())),
-    boost::optional<IntSetter>(std::bind(&model::SizingParameters::timestepsinAveragingWindow, m_mo.get_ptr(), std::placeholders::_1)),
-    boost::optional<NoFailAction>(&model::SizingParameters::resetTimestepsinAveragingWindow),
+    boost::optional<IntSetter>(std::bind(&model::SizingParameters::setTimestepsinAveragingWindow, m_mo.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::SizingParameters::resetTimestepsinAveragingWindow, m_mo.get_ptr())),
     boost::optional<NoFailAction>(),
     boost::optional<NoFailAction>(),
     boost::optional<BasicQuery>(),
@@ -1749,7 +1749,7 @@ void SimSettingsView::attachRadianceParameters()
     m_isIP,
     *m_mo,
     DoubleGetter(std::bind(&model::RadianceParameters::limitWeightDMX, m_mo.get_ptr())),
-    boost::optional<DoubleSetter>(std::bind(static_cast<void(model::RadianceParameters::*)(double)>(&model::RadianceParameters::setLimitWeightDMX), m_mo.get_ptr(), std::placeholders::_1)),
+    DoubleSetterVoidReturn(std::bind(static_cast<void(model::RadianceParameters::*)(double)>(&model::RadianceParameters::setLimitWeightDMX), m_mo.get_ptr(), std::placeholders::_1)),
     boost::optional<NoFailAction>(std::bind(&model::RadianceParameters::resetLimitWeightDMX, m_mo.get_ptr())),
     boost::none,
     boost::none,

@@ -535,7 +535,7 @@ SpaceLoadInstanceMiniView::SpaceLoadInstanceMiniView(const model::SpaceLoadInsta
     boost::none,
     boost::none,
     boost::none,
-    boost::optional<BasicQuery>(&model::SpaceLoadInstance::isMultiplierDefaulted)
+    boost::optional<BasicQuery>(std::bind(&model::SpaceLoadInstance::isMultiplierDefaulted, opt_spaceLoadInstance.get_ptr()))
   );
 
   if (isDefault){

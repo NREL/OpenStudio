@@ -223,14 +223,76 @@ void WindowMaterialGasInspectorView::attach(openstudio::model::Gas & gas)
   );
 
 
-  m_thickness->bind(gas,"thickness",m_isIP);
-  m_conductivityCoefficientA->bind(gas,"conductivityCoefficientA",m_isIP);
-  m_conductivityCoefficientB->bind(gas,"conductivityCoefficientB",m_isIP);
-  m_viscosityCoefficientA->bind(gas,"viscosityCoefficientA",m_isIP);
-  m_viscosityCoefficientB->bind(gas,"viscosityCoefficientB",m_isIP);
-  m_specificHeatCoefficientA->bind(gas,"specificHeatCoefficientA",m_isIP);
-  m_specificHeatCoefficientB->bind(gas,"specificHeatCoefficientB",m_isIP);
-  m_molecularWeight->bind(gas,"molecularWeight",m_isIP);
+  // m_thickness->bind(gas,"thickness",m_isIP);
+  m_thickness->bind(
+    m_isIP,
+    *m_gas,
+    DoubleGetter(std::bind(&model::Gas::thickness, m_gas.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Gas::*)(double)>(&model::Gas::setThickness), m_gas.get_ptr(), std::placeholders::_1))
+  );
+
+  // m_conductivityCoefficientA->bind(gas,"conductivityCoefficientA",m_isIP);
+  m_conductivityCoefficientA->bind(
+    m_isIP,
+    *m_gas,
+    OptionalDoubleGetter(std::bind(&model::Gas::conductivityCoefficientA, m_gas.get_ptr())),
+    DoubleSetterVoidReturn(std::bind(static_cast<void(model::Gas::*)(double)>(&model::Gas::setConductivityCoefficientA), m_gas.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Gas::resetConductivityCoefficientA, m_gas.get_ptr()))
+  );
+
+  // m_conductivityCoefficientB->bind(gas,"conductivityCoefficientB",m_isIP);
+  m_conductivityCoefficientB->bind(
+    m_isIP,
+    *m_gas,
+    OptionalDoubleGetter(std::bind(&model::Gas::conductivityCoefficientB, m_gas.get_ptr())),
+    DoubleSetterVoidReturn(std::bind(static_cast<void(model::Gas::*)(double)>(&model::Gas::setConductivityCoefficientB), m_gas.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Gas::resetConductivityCoefficientB, m_gas.get_ptr()))
+  );
+
+  // m_viscosityCoefficientA->bind(gas,"viscosityCoefficientA",m_isIP);
+  m_viscosityCoefficientA->bind(
+    m_isIP,
+    *m_gas,
+    OptionalDoubleGetter(std::bind(&model::Gas::viscosityCoefficientA, m_gas.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Gas::*)(double)>(&model::Gas::setViscosityCoefficientA), m_gas.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Gas::resetViscosityCoefficientA, m_gas.get_ptr()))
+  );
+
+  // m_viscosityCoefficientB->bind(gas,"viscosityCoefficientB",m_isIP);
+  m_viscosityCoefficientB->bind(
+    m_isIP,
+    *m_gas,
+    OptionalDoubleGetter(std::bind(&model::Gas::viscosityCoefficientB, m_gas.get_ptr())),
+    DoubleSetterVoidReturn(std::bind(static_cast<void(model::Gas::*)(double)>(&model::Gas::setViscosityCoefficientB), m_gas.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Gas::resetViscosityCoefficientB, m_gas.get_ptr()))
+  );
+
+  // m_specificHeatCoefficientA->bind(gas,"specificHeatCoefficientA",m_isIP);
+  m_specificHeatCoefficientA->bind(
+    m_isIP,
+    *m_gas,
+    OptionalDoubleGetter(std::bind(&model::Gas::specificHeatCoefficientA, m_gas.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Gas::*)(double)>(&model::Gas::setSpecificHeatCoefficientA), m_gas.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Gas::resetSpecificHeatCoefficientA, m_gas.get_ptr()))
+  );
+
+  // m_specificHeatCoefficientB->bind(gas,"specificHeatCoefficientB",m_isIP);
+  m_specificHeatCoefficientB->bind(
+    m_isIP,
+    *m_gas,
+    OptionalDoubleGetter(std::bind(&model::Gas::specificHeatCoefficientB, m_gas.get_ptr())),
+    DoubleSetterVoidReturn(std::bind(static_cast<void(model::Gas::*)(double)>(&model::Gas::setSpecificHeatCoefficientB), m_gas.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Gas::resetSpecificHeatCoefficientB, m_gas.get_ptr()))
+  );
+
+  // m_molecularWeight->bind(gas,"molecularWeight",m_isIP);
+  m_molecularWeight->bind(
+    m_isIP,
+    *m_gas,
+    OptionalDoubleGetter(std::bind(&model::Gas::molecularWeight, m_gas.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Gas::*)(double)>(&model::Gas::setMolecularWeight), m_gas.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Gas::resetMolecularWeight, m_gas.get_ptr()))
+  );
 
   m_standardsInformationWidget->attach(gas);
 

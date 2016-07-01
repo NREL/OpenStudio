@@ -101,8 +101,8 @@ void WindowMaterialGlazingInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_windowGlassSpectralDataSetName = new OSLineEdit2();
-  mainGridLayout->addWidget(m_windowGlassSpectralDataSetName,row++,0,1,3);
+  // m_windowGlassSpectralDataSetName = new OSLineEdit2();
+  // mainGridLayout->addWidget(m_windowGlassSpectralDataSetName,row++,0,1,3);
 
   // Thickness
 
@@ -292,25 +292,134 @@ void WindowMaterialGlazingInspectorView::attach(openstudio::model::StandardGlazi
   );
 
   // m_windowGlassSpectralDataSetName->bind(glazing,"windowGlassSpectralDataSetName");
-  m_windowGlassSpectralDataSetName->bind(
+  // m_windowGlassSpectralDataSetName->bind(
+  //   *m_glazing,
+  //   OptionalStringGetter(std::bind(&model::StandardGlazing::windowGlassSpectralDataSetName, m_glazing.get_ptr())),
+  //   boost::optional<StringSetterVoidReturn>(std::bind(&model::StandardGlazing::setWindowGlassSpectralDataSetName, m_glazing.get_ptr(), std::placeholders::_1)),
+  //   boost::optional<NoFailAction>(std::bind(&model::StandardGlazing::resetWindowGlassSpectralDataSetName, m_glazing.get_ptr()))
+  // );
+
+  // m_thickness->bind(glazing,"thickness",m_isIP);
+  m_thickness->bind(
+    m_isIP,
     *m_glazing,
-    OptionalStringGetter(std::bind(&model::StandardGlazing::windowGlassSpectralDataSetName, m_glazing.get_ptr())),
-    boost::optional<StringSetter>(std::bind(&model::StandardGlazing::windowGlassSpectralDataSetName, m_glazing.get_ptr(),std::placeholders::_1)),
-    boost::optional<NoFailAction>(std::bind(&model::StandardGlazing::resetWindowGlassSpectralDataSetName, m_glazing.get_ptr()))
+    DoubleGetter(std::bind(&model::StandardGlazing::thickness, m_glazing.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::StandardGlazing::*)(double)>(&model::StandardGlazing::setThickness), m_glazing.get_ptr(), std::placeholders::_1))
   );
 
-  m_thickness->bind(glazing,"thickness",m_isIP); // Quantity
-  m_solarTransmittanceAtNormalIncidence->bind(glazing,"solarTransmittanceatNormalIncidence",m_isIP);
-  m_frontSideSolarReflectanceAtNormalIncidence->bind(glazing,"frontSideSolarReflectanceatNormalIncidence",m_isIP);
-  m_backSideSolarReflectanceAtNormalIncidence->bind(glazing,"backSideSolarReflectanceatNormalIncidence",m_isIP);
-  m_visibleTransmittanceAtNormalIncidence->bind(glazing,"visibleTransmittanceatNormalIncidence",m_isIP);
-  m_frontSideVisibleReflectanceAtNormalIncidence->bind(glazing,"frontSideVisibleReflectanceatNormalIncidence",m_isIP);
-  m_backSideVisibleReflectanceAtNormalIncidence->bind(glazing,"backSideVisibleReflectanceatNormalIncidence",m_isIP);
-  m_infraredTransmittanceAtNormalIncidence->bind(glazing,"infraredTransmittanceatNormalIncidence",m_isIP);
-  m_frontSideInfraredHemisphericalEmissivity->bind(glazing,"frontSideInfraredHemisphericalEmissivity",m_isIP);
-  m_backSideInfraredHemisphericalEmissivity->bind(glazing,"backSideInfraredHemisphericalEmissivity",m_isIP);
-  m_conductivity->bind(glazing,"conductivity",m_isIP);
-  m_dirtCorrectionFactorForSolarAndVisibleTransmittance->bind(glazing,"dirtCorrectionFactorforSolarandVisibleTransmittance",m_isIP);
+  // m_solarTransmittanceAtNormalIncidence->bind(glazing,"solarTransmittanceatNormalIncidence",m_isIP);
+  m_solarTransmittanceAtNormalIncidence->bind(
+    m_isIP,
+    *m_glazing,
+    OptionalDoubleGetter(std::bind(&model::StandardGlazing::solarTransmittanceatNormalIncidence, m_glazing.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::StandardGlazing::*)(double)>(&model::StandardGlazing::setSolarTransmittanceatNormalIncidence), m_glazing.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::StandardGlazing::resetSolarTransmittanceatNormalIncidence, m_glazing.get_ptr()))
+  );
+
+  // m_frontSideSolarReflectanceAtNormalIncidence->bind(glazing,"frontSideSolarReflectanceatNormalIncidence",m_isIP);
+  m_frontSideSolarReflectanceAtNormalIncidence->bind(
+    m_isIP,
+    *m_glazing,
+    OptionalDoubleGetter(std::bind(&model::StandardGlazing::frontSideSolarReflectanceatNormalIncidence, m_glazing.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::StandardGlazing::*)(double)>(&model::StandardGlazing::setFrontSideSolarReflectanceatNormalIncidence), m_glazing.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::StandardGlazing::resetFrontSideSolarReflectanceatNormalIncidence, m_glazing.get_ptr()))
+  );
+
+  // m_backSideSolarReflectanceAtNormalIncidence->bind(glazing,"backSideSolarReflectanceatNormalIncidence",m_isIP);
+  m_frontSideSolarReflectanceAtNormalIncidence->bind(
+    m_isIP,
+    *m_glazing,
+    OptionalDoubleGetter(std::bind(&model::StandardGlazing::backSideSolarReflectanceatNormalIncidence, m_glazing.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::StandardGlazing::*)(double)>(&model::StandardGlazing::setBackSideSolarReflectanceatNormalIncidence), m_glazing.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::StandardGlazing::resetBackSideSolarReflectanceatNormalIncidence, m_glazing.get_ptr()))
+  );
+
+  // m_visibleTransmittanceAtNormalIncidence->bind(glazing,"visibleTransmittanceatNormalIncidence",m_isIP);
+  m_visibleTransmittanceAtNormalIncidence->bind(
+    m_isIP,
+    *m_glazing,
+    OptionalDoubleGetter(std::bind(&model::StandardGlazing::visibleTransmittanceatNormalIncidence, m_glazing.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::StandardGlazing::*)(double)>(&model::StandardGlazing::setVisibleTransmittanceatNormalIncidence), m_glazing.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::StandardGlazing::resetVisibleTransmittanceatNormalIncidence, m_glazing.get_ptr()))
+  );
+
+  // m_frontSideVisibleReflectanceAtNormalIncidence->bind(glazing,"frontSideVisibleReflectanceatNormalIncidence",m_isIP);
+  m_frontSideVisibleReflectanceAtNormalIncidence->bind(
+    m_isIP,
+    *m_glazing,
+    OptionalDoubleGetter(std::bind(&model::StandardGlazing::frontSideVisibleReflectanceatNormalIncidence, m_glazing.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::StandardGlazing::*)(double)>(&model::StandardGlazing::setFrontSideVisibleReflectanceatNormalIncidence), m_glazing.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::StandardGlazing::resetFrontSideVisibleReflectanceatNormalIncidence, m_glazing.get_ptr()))
+  );
+
+  // m_backSideVisibleReflectanceAtNormalIncidence->bind(glazing,"backSideVisibleReflectanceatNormalIncidence",m_isIP);
+  m_backSideVisibleReflectanceAtNormalIncidence->bind(
+    m_isIP,
+    *m_glazing,
+    OptionalDoubleGetter(std::bind(&model::StandardGlazing::backSideVisibleReflectanceatNormalIncidence, m_glazing.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::StandardGlazing::*)(double)>(&model::StandardGlazing::setBackSideVisibleReflectanceatNormalIncidence), m_glazing.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::StandardGlazing::resetBackSideVisibleReflectanceatNormalIncidence, m_glazing.get_ptr()))
+  );
+
+  // m_infraredTransmittanceAtNormalIncidence->bind(glazing,"infraredTransmittanceatNormalIncidence",m_isIP);
+  m_infraredTransmittanceAtNormalIncidence->bind(
+    m_isIP,
+    *m_glazing,
+    DoubleGetter(std::bind(&model::StandardGlazing::infraredTransmittanceatNormalIncidence, m_glazing.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::StandardGlazing::*)(double)>(&model::StandardGlazing::setInfraredTransmittanceatNormalIncidence), m_glazing.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::StandardGlazing::resetInfraredTransmittanceatNormalIncidence, m_glazing.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::StandardGlazing::isInfraredTransmittanceatNormalIncidenceDefaulted, m_glazing.get_ptr()))
+  );
+
+  // m_frontSideInfraredHemisphericalEmissivity->bind(glazing,"frontSideInfraredHemisphericalEmissivity",m_isIP);
+  m_frontSideInfraredHemisphericalEmissivity->bind(
+    m_isIP,
+    *m_glazing,
+    DoubleGetter(std::bind(&model::StandardGlazing::frontSideInfraredHemisphericalEmissivity, m_glazing.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::StandardGlazing::*)(double)>(&model::StandardGlazing::setFrontSideInfraredHemisphericalEmissivity), m_glazing.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::StandardGlazing::resetFrontSideInfraredHemisphericalEmissivity, m_glazing.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::StandardGlazing::isFrontSideInfraredHemisphericalEmissivityDefaulted, m_glazing.get_ptr()))
+  );
+
+  // m_backSideInfraredHemisphericalEmissivity->bind(glazing,"backSideInfraredHemisphericalEmissivity",m_isIP);
+  m_backSideInfraredHemisphericalEmissivity->bind(
+    m_isIP,
+    *m_glazing,
+    DoubleGetter(std::bind(&model::StandardGlazing::backSideInfraredHemisphericalEmissivity, m_glazing.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::StandardGlazing::*)(double)>(&model::StandardGlazing::setBackSideInfraredHemisphericalEmissivity), m_glazing.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::StandardGlazing::resetBackSideInfraredHemisphericalEmissivity, m_glazing.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::StandardGlazing::isBackSideInfraredHemisphericalEmissivityDefaulted, m_glazing.get_ptr()))
+  );
+
+  // m_conductivity->bind(glazing,"conductivity",m_isIP);
+  m_conductivity->bind(
+    m_isIP,
+    *m_glazing,
+    DoubleGetter(std::bind(&model::StandardGlazing::conductivity, m_glazing.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::StandardGlazing::*)(double)>(&model::StandardGlazing::setConductivity), m_glazing.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::StandardGlazing::resetConductivity, m_glazing.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::StandardGlazing::isConductivityDefaulted, m_glazing.get_ptr()))
+  );
+
+  // m_dirtCorrectionFactorForSolarAndVisibleTransmittance->bind(glazing,"dirtCorrectionFactorforSolarandVisibleTransmittance",m_isIP);
+  m_dirtCorrectionFactorForSolarAndVisibleTransmittance->bind(
+    m_isIP,
+    *m_glazing,
+    OptionalDoubleGetter(std::bind(&model::StandardGlazing::dirtCorrectionFactorforSolarandVisibleTransmittance, m_glazing.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::StandardGlazing::*)(double)>(&model::StandardGlazing::setDirtCorrectionFactorforSolarandVisibleTransmittance), m_glazing.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::StandardGlazing::resetDirtCorrectionFactorforSolarandVisibleTransmittance, m_glazing.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::StandardGlazing::isDirtCorrectionFactorforSolarandVisibleTransmittanceDefaulted, m_glazing.get_ptr()))
+  );
 
   m_standardsInformationWidget->attach(glazing);
 
@@ -325,7 +434,7 @@ void WindowMaterialGlazingInspectorView::detach()
   m_solarDiffusing->unbind();
 
   m_nameEdit->unbind();
-  m_windowGlassSpectralDataSetName->unbind();
+  // m_windowGlassSpectralDataSetName->unbind();
   m_thickness->unbind();
   m_solarTransmittanceAtNormalIncidence->unbind();
   m_frontSideSolarReflectanceAtNormalIncidence->unbind();

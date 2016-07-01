@@ -76,7 +76,7 @@ class WindowMaterialGlazingInspectorView : public ModelObjectInspectorView
 
     OSSwitch2 * m_solarDiffusing = nullptr;
 
-    OSLineEdit2 * m_windowGlassSpectralDataSetName = nullptr;
+    // OSLineEdit2 * m_windowGlassSpectralDataSetName = nullptr;
 
     OSQuantityEdit2 * m_thickness = nullptr;
 

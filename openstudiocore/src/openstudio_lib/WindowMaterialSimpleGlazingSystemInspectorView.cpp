@@ -146,9 +146,30 @@ void WindowMaterialSimpleGlazingSystemInspectorView::attach(openstudio::model::S
     boost::optional<StringSetter>(std::bind(&model::SimpleGlazing::setName, m_simpleGlazing.get_ptr(),std::placeholders::_1))
   );
 
-  m_uFactor->bind(simpleGlazing,"uFactor",m_isIP);
-  m_solarHeatGainCoefficient->bind(simpleGlazing,"solarHeatGainCoefficient",m_isIP);
-  m_visibleTransmittance->bind(simpleGlazing,"visibleTransmittance",m_isIP);
+  // m_uFactor->bind(simpleGlazing,"uFactor",m_isIP);
+  m_uFactor->bind(
+    m_isIP,
+    *m_simpleGlazing,
+    DoubleGetter(std::bind(&model::SimpleGlazing::uFactor, m_simpleGlazing.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::SimpleGlazing::*)(double)>(&model::SimpleGlazing::setUFactor), m_simpleGlazing.get_ptr(), std::placeholders::_1))
+  );
+
+  // m_solarHeatGainCoefficient->bind(simpleGlazing,"solarHeatGainCoefficient",m_isIP);
+  m_solarHeatGainCoefficient->bind(
+    m_isIP,
+    *m_simpleGlazing,
+    DoubleGetter(std::bind(&model::SimpleGlazing::solarHeatGainCoefficient, m_simpleGlazing.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::SimpleGlazing::*)(double)>(&model::SimpleGlazing::setSolarHeatGainCoefficient), m_simpleGlazing.get_ptr(), std::placeholders::_1))
+  );
+
+  // m_visibleTransmittance->bind(simpleGlazing,"visibleTransmittance",m_isIP);
+  m_visibleTransmittance->bind(
+    m_isIP,
+    *m_simpleGlazing,
+    OptionalDoubleGetter(std::bind(&model::SimpleGlazing::visibleTransmittance, m_simpleGlazing.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::SimpleGlazing::*)(double)>(&model::SimpleGlazing::setVisibleTransmittance), m_simpleGlazing.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::SimpleGlazing::resetVisibleTransmittance, m_simpleGlazing.get_ptr()))
+  );
 
   m_standardsInformationWidget->attach(simpleGlazing);
 

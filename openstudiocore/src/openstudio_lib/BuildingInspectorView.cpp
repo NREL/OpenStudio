@@ -577,7 +577,7 @@ void BuildingInspectorView::attach(openstudio::model::Building& building)
     m_isIP,
     *m_building,
     OptionalDoubleGetter(std::bind(&model::Building::northAxis, m_building.get_ptr())),
-    boost::optional<DoubleSetter>(std::bind(static_cast<void(model::Building::*)(double)>(&model::Building::setNorthAxis), m_building.get_ptr(), std::placeholders::_1)),
+    DoubleSetterVoidReturn(std::bind(static_cast<void(model::Building::*)(double)>(&model::Building::setNorthAxis), m_building.get_ptr(), std::placeholders::_1)),
     boost::optional<NoFailAction>(std::bind(&model::Building::resetNorthAxis, m_building.get_ptr())),
     boost::none,
     boost::none,

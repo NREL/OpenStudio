@@ -156,7 +156,7 @@ void OtherEquipmentDefinitionInspectorView::attach(openstudio::model::OtherEquip
     m_isIP,
     *m_otherEquipmentDefinition,
     OptionalDoubleGetter(std::bind(&model::OtherEquipmentDefinition::designLevel, m_otherEquipmentDefinition.get_ptr())),
-    boost::optional<DoubleSetter>(std::bind(static_cast<void(model::OtherEquipmentDefinition::*)(double)>(&model::OtherEquipmentDefinition::setDesignLevel), m_otherEquipmentDefinition.get_ptr(), std::placeholders::_1))
+    DoubleSetterVoidReturn(std::bind(static_cast<void(model::OtherEquipmentDefinition::*)(double)>(&model::OtherEquipmentDefinition::setDesignLevel), m_otherEquipmentDefinition.get_ptr(), std::placeholders::_1))
   );
 
   // m_wattsPerSpaceFloorAreaEdit->bind(otherEquipmentDefinition,"wattsperSpaceFloorArea",m_isIP);

@@ -256,20 +256,141 @@ void WindowMaterialShadeInspectorView::attach(openstudio::model::Shade & shade)
     boost::optional<StringSetter>(std::bind(&model::Shade::setName, m_shade.get_ptr(),std::placeholders::_1))
   );
 
-  m_solarTransmittance->bind(shade,"solarTransmittance",m_isIP);
-  m_solarReflectance->bind(shade,"solarReflectance",m_isIP);
-  m_visibleTransmittance->bind(shade,"visibleTransmittance",m_isIP);
-  m_visibleReflectance->bind(shade,"visibleReflectance",m_isIP);
-  m_thermalHemisphericalEmissivity->bind(shade,"thermalHemisphericalEmissivity",m_isIP);
-  m_thermalTransmittance->bind(shade,"thermalTransmittance",m_isIP);
-  m_thickness->bind(shade,"thickness",m_isIP);
-  m_conductivity->bind(shade,"conductivity",m_isIP);
-  m_shadeToGlassDistance->bind(shade,"shadetoGlassDistance",m_isIP);
-  m_topOpeningMultiplier->bind(shade,"topOpeningMultiplier",m_isIP);
-  m_bottomOpeningMultiplier->bind(shade,"bottomOpeningMultiplier",m_isIP);
-  m_leftSideOpeningMultiplier->bind(shade,"leftSideOpeningMultiplier",m_isIP);
-  m_rightSideOpeningMultiplier->bind(shade,"rightSideOpeningMultiplier",m_isIP);
-  m_airflowPermeability->bind(shade,"airflowPermeability",m_isIP);
+  // m_solarTransmittance->bind(shade,"solarTransmittance",m_isIP);
+  m_solarTransmittance->bind(
+    m_isIP,
+    *m_shade,
+    DoubleGetter(std::bind(&model::Shade::solarTransmittance, m_shade.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Shade::*)(double)>(&model::Shade::setSolarTransmittance), m_shade.get_ptr(), std::placeholders::_1))
+  );
+
+  // m_solarReflectance->bind(shade,"solarReflectance",m_isIP);
+  m_solarReflectance->bind(
+    m_isIP,
+    *m_shade,
+    DoubleGetter(std::bind(&model::Shade::solarReflectance, m_shade.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Shade::*)(double)>(&model::Shade::setSolarReflectance), m_shade.get_ptr(), std::placeholders::_1))
+  );
+
+  // m_visibleTransmittance->bind(shade,"visibleTransmittance",m_isIP);
+  m_visibleTransmittance->bind(
+    m_isIP,
+    *m_shade,
+    DoubleGetter(std::bind(&model::Shade::visibleTransmittance, m_shade.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Shade::*)(double)>(&model::Shade::setVisibleTransmittance), m_shade.get_ptr(), std::placeholders::_1))
+  );
+
+  // m_visibleReflectance->bind(shade,"visibleReflectance",m_isIP);
+  m_visibleReflectance->bind(
+    m_isIP,
+    *m_shade,
+    DoubleGetter(std::bind(&model::Shade::visibleReflectance, m_shade.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Shade::*)(double)>(&model::Shade::setVisibleReflectance), m_shade.get_ptr(), std::placeholders::_1))
+  );
+
+  // m_thermalHemisphericalEmissivity->bind(shade,"thermalHemisphericalEmissivity",m_isIP);
+  m_thermalHemisphericalEmissivity->bind(
+    m_isIP,
+    *m_shade,
+    DoubleGetter(std::bind(&model::Shade::thermalHemisphericalEmissivity, m_shade.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Shade::*)(double)>(&model::Shade::setThermalHemisphericalEmissivity), m_shade.get_ptr(), std::placeholders::_1))
+  );
+
+  // m_thermalTransmittance->bind(shade,"thermalTransmittance",m_isIP);
+  m_thermalTransmittance->bind(
+    m_isIP,
+    *m_shade,
+    DoubleGetter(std::bind(&model::Shade::thermalTransmittance, m_shade.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Shade::*)(double)>(&model::Shade::setThermalTransmittance), m_shade.get_ptr(), std::placeholders::_1))
+  );
+
+  // m_thickness->bind(shade,"thickness",m_isIP);
+  m_thickness->bind(
+    m_isIP,
+    *m_shade,
+    DoubleGetter(std::bind(&model::Shade::thickness, m_shade.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Shade::*)(double)>(&model::Shade::setThickness), m_shade.get_ptr(), std::placeholders::_1))
+  );
+
+  // m_conductivity->bind(shade,"conductivity",m_isIP);
+  m_conductivity->bind(
+    m_isIP,
+    *m_shade,
+    DoubleGetter(std::bind(&model::Shade::conductivity, m_shade.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Shade::*)(double)>(&model::Shade::setConductivity), m_shade.get_ptr(), std::placeholders::_1))
+  );
+
+  // m_shadeToGlassDistance->bind(shade,"shadetoGlassDistance",m_isIP);
+  m_shadeToGlassDistance->bind(
+    m_isIP,
+    *m_shade,
+    DoubleGetter(std::bind(&model::Shade::shadetoGlassDistance, m_shade.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Shade::*)(double)>(&model::Shade::setShadetoGlassDistance), m_shade.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Shade::resetShadetoGlassDistance, m_shade.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::Shade::isShadetoGlassDistanceDefaulted, m_shade.get_ptr()))
+  );
+
+  // m_topOpeningMultiplier->bind(shade,"topOpeningMultiplier",m_isIP);
+  m_topOpeningMultiplier->bind(
+    m_isIP,
+    *m_shade,
+    DoubleGetter(std::bind(&model::Shade::topOpeningMultiplier, m_shade.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Shade::*)(double)>(&model::Shade::setTopOpeningMultiplier), m_shade.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Shade::resetTopOpeningMultiplier, m_shade.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::Shade::isTopOpeningMultiplierDefaulted, m_shade.get_ptr()))
+  );
+
+  // m_bottomOpeningMultiplier->bind(shade,"bottomOpeningMultiplier",m_isIP);
+  m_bottomOpeningMultiplier->bind(
+    m_isIP,
+    *m_shade,
+    DoubleGetter(std::bind(&model::Shade::bottomOpeningMultiplier, m_shade.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Shade::*)(double)>(&model::Shade::setBottomOpeningMultiplier), m_shade.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Shade::resetBottomOpeningMultiplier, m_shade.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::Shade::isBottomOpeningMultiplierDefaulted, m_shade.get_ptr()))
+  );
+
+  // m_leftSideOpeningMultiplier->bind(shade,"leftSideOpeningMultiplier",m_isIP);
+  m_leftSideOpeningMultiplier->bind(
+    m_isIP,
+    *m_shade,
+    DoubleGetter(std::bind(&model::Shade::leftSideOpeningMultiplier, m_shade.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Shade::*)(double)>(&model::Shade::setLeftSideOpeningMultiplier), m_shade.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Shade::resetLeftSideOpeningMultiplier, m_shade.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::Shade::isLeftSideOpeningMultiplierDefaulted, m_shade.get_ptr()))
+  );
+
+  // m_rightSideOpeningMultiplier->bind(shade,"rightSideOpeningMultiplier",m_isIP);
+  m_rightSideOpeningMultiplier->bind(
+    m_isIP,
+    *m_shade,
+    DoubleGetter(std::bind(&model::Shade::rightSideOpeningMultiplier, m_shade.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Shade::*)(double)>(&model::Shade::setRightSideOpeningMultiplier), m_shade.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Shade::resetRightSideOpeningMultiplier, m_shade.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::Shade::isRightSideOpeningMultiplierDefaulted, m_shade.get_ptr()))
+  );
+
+  // m_airflowPermeability->bind(shade,"airflowPermeability",m_isIP);
+  m_airflowPermeability->bind(
+    m_isIP,
+    *m_shade,
+    DoubleGetter(std::bind(&model::Shade::airflowPermeability, m_shade.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Shade::*)(double)>(&model::Shade::setAirflowPermeability), m_shade.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Shade::resetAirflowPermeability, m_shade.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::Shade::isAirflowPermeabilityDefaulted, m_shade.get_ptr()))
+  );
 
   m_standardsInformationWidget->attach(shade);
 

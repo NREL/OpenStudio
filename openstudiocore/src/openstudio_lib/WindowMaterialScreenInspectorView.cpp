@@ -273,17 +273,118 @@ void WindowMaterialScreenInspectorView::attach(openstudio::model::Screen & scree
     boost::optional<StringSetter>(std::bind(&model::Screen::setName, m_screen.get_ptr(),std::placeholders::_1))
   );
 
-  m_diffuseSolarReflectance->bind(screen,"diffuseSolarReflectance",m_isIP);
-  m_diffuseVisibleReflectance->bind(screen,"diffuseVisibleReflectance",m_isIP);
-  m_thermalHemisphericalEmissivity->bind(screen,"thermalHemisphericalEmissivity",m_isIP);
-  m_conductivity->bind(screen,"conductivity",m_isIP);
-  m_screenMaterialSpacing->bind(screen,"screenMaterialSpacing",m_isIP);
-  m_screenMaterialDiameter->bind(screen,"screenMaterialDiameter",m_isIP);
-  m_screenToGlassDistance->bind(screen,"screentoGlassDistance",m_isIP);
-  m_topOpeningMultiplier->bind(screen,"topOpeningMultiplier",m_isIP);
-  m_bottomOpeningMultiplier->bind(screen,"bottomOpeningMultiplier",m_isIP);
-  m_leftSideOpeningMultiplier->bind(screen,"leftSideOpeningMultiplier",m_isIP);
-  m_rightSideOpeningMultiplier->bind(screen,"rightSideOpeningMultiplier",m_isIP);
+  // m_diffuseSolarReflectance->bind(screen,"diffuseSolarReflectance",m_isIP);
+  m_diffuseSolarReflectance->bind(
+    m_isIP,
+    *m_screen,
+    DoubleGetter(std::bind(&model::Screen::diffuseSolarReflectance, m_screen.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Screen::*)(double)>(&model::Screen::setDiffuseSolarReflectance), m_screen.get_ptr(), std::placeholders::_1))
+  );
+
+
+  // m_diffuseVisibleReflectance->bind(screen,"diffuseVisibleReflectance",m_isIP);
+  m_diffuseVisibleReflectance->bind(
+    m_isIP,
+    *m_screen,
+    DoubleGetter(std::bind(&model::Screen::diffuseVisibleReflectance, m_screen.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Screen::*)(double)>(&model::Screen::setDiffuseVisibleReflectance), m_screen.get_ptr(), std::placeholders::_1))
+  );
+
+  // m_thermalHemisphericalEmissivity->bind(screen,"thermalHemisphericalEmissivity",m_isIP);
+  m_thermalHemisphericalEmissivity->bind(
+    m_isIP,
+    *m_screen,
+    DoubleGetter(std::bind(&model::Screen::thermalHemisphericalEmissivity, m_screen.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Screen::*)(double)>(&model::Screen::setThermalHemisphericalEmissivity), m_screen.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Screen::resetThermalHemisphericalEmissivity, m_screen.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::Screen::isThermalHemisphericalEmissivityDefaulted, m_screen.get_ptr()))
+  );
+
+  // m_conductivity->bind(screen,"conductivity",m_isIP);
+  m_conductivity->bind(
+    m_isIP,
+    *m_screen,
+    DoubleGetter(std::bind(&model::Screen::conductivity, m_screen.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Screen::*)(double)>(&model::Screen::setConductivity), m_screen.get_ptr(), std::placeholders::_1))
+  );
+
+  // m_screenMaterialSpacing->bind(screen,"screenMaterialSpacing",m_isIP);
+  m_screenMaterialSpacing->bind(
+    m_isIP,
+    *m_screen,
+    DoubleGetter(std::bind(&model::Screen::screenMaterialSpacing, m_screen.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Screen::*)(double)>(&model::Screen::setScreenMaterialSpacing), m_screen.get_ptr(), std::placeholders::_1))
+  );
+
+  // m_screenMaterialDiameter->bind(screen,"screenMaterialDiameter",m_isIP);
+  m_screenMaterialDiameter->bind(
+    m_isIP,
+    *m_screen,
+    DoubleGetter(std::bind(&model::Screen::screenMaterialDiameter, m_screen.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Screen::*)(double)>(&model::Screen::setScreenMaterialDiameter), m_screen.get_ptr(), std::placeholders::_1))
+  );
+
+  // m_screenToGlassDistance->bind(screen,"screentoGlassDistance",m_isIP);
+  m_screenToGlassDistance->bind(
+    m_isIP,
+    *m_screen,
+    DoubleGetter(std::bind(&model::Screen::screentoGlassDistance, m_screen.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Screen::*)(double)>(&model::Screen::setScreentoGlassDistance), m_screen.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Screen::resetScreentoGlassDistance, m_screen.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::Screen::isScreentoGlassDistanceDefaulted, m_screen.get_ptr()))
+  );
+
+  // m_topOpeningMultiplier->bind(screen,"topOpeningMultiplier",m_isIP);
+  m_topOpeningMultiplier->bind(
+    m_isIP,
+    *m_screen,
+    DoubleGetter(std::bind(&model::Screen::topOpeningMultiplier, m_screen.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Screen::*)(double)>(&model::Screen::setTopOpeningMultiplier), m_screen.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Screen::resetTopOpeningMultiplier, m_screen.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::Screen::isTopOpeningMultiplierDefaulted, m_screen.get_ptr()))
+  );
+
+  // m_bottomOpeningMultiplier->bind(screen,"bottomOpeningMultiplier",m_isIP);
+  m_bottomOpeningMultiplier->bind(
+    m_isIP,
+    *m_screen,
+    DoubleGetter(std::bind(&model::Screen::bottomOpeningMultiplier, m_screen.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Screen::*)(double)>(&model::Screen::setBottomOpeningMultiplier), m_screen.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Screen::resetBottomOpeningMultiplier, m_screen.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::Screen::isBottomOpeningMultiplierDefaulted, m_screen.get_ptr()))
+  );
+
+  // m_leftSideOpeningMultiplier->bind(screen,"leftSideOpeningMultiplier",m_isIP);
+  m_leftSideOpeningMultiplier->bind(
+    m_isIP,
+    *m_screen,
+    DoubleGetter(std::bind(&model::Screen::leftSideOpeningMultiplier, m_screen.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Screen::*)(double)>(&model::Screen::setLeftSideOpeningMultiplier), m_screen.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Screen::resetLeftSideOpeningMultiplier, m_screen.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::Screen::isLeftSideOpeningMultiplierDefaulted, m_screen.get_ptr()))
+  );
+
+  // m_rightSideOpeningMultiplier->bind(screen,"rightSideOpeningMultiplier",m_isIP);
+  m_rightSideOpeningMultiplier->bind(
+    m_isIP,
+    *m_screen,
+    DoubleGetter(std::bind(&model::Screen::rightSideOpeningMultiplier, m_screen.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Screen::*)(double)>(&model::Screen::setRightSideOpeningMultiplier), m_screen.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Screen::resetRightSideOpeningMultiplier, m_screen.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::Screen::isRightSideOpeningMultiplierDefaulted, m_screen.get_ptr()))
+  );
 
   m_standardsInformationWidget->attach(screen);
 
