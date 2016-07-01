@@ -114,7 +114,15 @@ namespace detail {
 
       boost::optional<openstudio::path> seedFile() const;
 
+      void resetSeedFile();
+
+      bool setSeedFile(const openstudio::path& seedFile);
+
       boost::optional<openstudio::path> weatherFile() const;
+
+      bool setWeatherFile(const openstudio::path& weatherFile);
+    
+      void resetWeatherFile();
 
       std::vector<WorkflowStep> workflowSteps() const;
 

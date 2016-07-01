@@ -267,12 +267,14 @@ namespace openstudio {
       result = false;
 
     }else{
-      LOG_FREE(Debug, "initializeModelTempDir", "Copying '" << toString(osmPath) << "' to '" << toString(modelTempDir / toPath("in.osm")) << "'");
+      openstudio::path fileName = osmPath.filename();
+      openstudio::path destination = modelTempDir / fileName;
+      LOG_FREE(Debug, "initializeModelTempDir", "Copying '" << toString(osmPath) << "' to '" << toString(destination) << "'");
    
       // copy osm file
-      bool test = QFile::copy(toQString(osmPath), toQString(modelTempDir / toPath("in.osm")));
+      bool test = QFile::copy(toQString(osmPath), toQString(destination));
       if (!test){
-        LOG_FREE(Error, "initializeModelTempDir", "Could not copy '" << toString(osmPath) << "' to '" << toString(modelTempDir / toPath("in.osm")) << "'");
+        LOG_FREE(Error, "initializeModelTempDir", "Could not copy '" << toString(osmPath) << "' to '" << toString(destination) << "'");
       }
 
       // Copy all files from existing resources dir into temp dir when opening
@@ -338,7 +340,7 @@ namespace openstudio {
     }
 
     // copy osm file
-    openstudio::path srcPath = modelTempDir / toPath("in.osm");
+    openstudio::path srcPath = modelTempDir / osmPath.filename();
     test = QFile::copy(toQString(srcPath), toQString(osmPath));
     if (!test){
       LOG_FREE(Error, "saveModelTempDir", "Could not copy osm from '" << toString(srcPath) << "' to '" << toString(osmPath) << "'");
@@ -350,20 +352,12 @@ namespace openstudio {
       openstudio::path srcDir = modelTempDir / toPath("resources");
       openstudio::path dstDir =  osmPath.parent_path() / osmPath.stem();
 
-      openstudio::path srcproject = srcDir / toPath("project.osp");
-      openstudio::path destproject = dstDir / toPath("project.osp");
-
-//      LOG_FREE(Debug, "saveModelTempDir", "copying project file: " << toString(srcproject) << " to " << toString(destproject));
-//      QFile::copy(toQString(srcproject), toQString(destproject));
-
       LOG_FREE(Debug, "saveModelTempDir", "Copying " << toString(srcDir) << " to " << toString(dstDir));
 
       test = copyDir(toQString(srcDir), toQString(dstDir));
       if (!test){
         LOG_FREE(Error, "saveModelTempDir", "Could not copy '" << toString(srcDir) << "' to '" << toString(dstDir) << "'");
       }
-
-      // TODO: Open all osps just copied over to make the stored paths look reasonable.
 
     }
   }
@@ -378,16 +372,12 @@ namespace openstudio {
     }
 
     // save osm to temp directory, saveModelTempDir will copy to real location
-    openstudio::path tempModelPath = modelTempDir / toPath("in.osm");
-    Workspace(model).save(tempModelPath,true); 
+    openstudio::path tempModelPath = modelTempDir / modelPath.filename();
+    model.save(tempModelPath,true); 
 
     LOG_FREE(Debug, "saveModel", "Saved model to '" << toString(tempModelPath) << "'");
 
-    // DLM: eventually put saveRunManagerDatabase here, needs to happen before saveModelTempDir
-
-    // DLM: eventually add this back in too
-    // DLM: for now this is accomplished by calling saveModelTempDir after saveModel in all cases
-    //saveModelTempDir(modelTempDir, modelPath);
+    saveModelTempDir(modelTempDir, modelPath);
 
     return modelPath;
   }

@@ -54,7 +54,6 @@ class OPENSTUDIO_API OSAppBase : public QApplication, public BaseApp
 
   static OSAppBase * instance();
 
-  //virtual boost::optional<openstudio::analysisdriver::SimpleProject> project() override;
   virtual QWidget *mainWidget() override;
   virtual MeasureManager &measureManager() override;
   virtual boost::optional<openstudio::model::Model> currentModel() override;

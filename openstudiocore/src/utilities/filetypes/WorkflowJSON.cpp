@@ -141,11 +141,11 @@ namespace detail{
 
   bool WorkflowJSON_Impl::save() const
   {
-    openstudio::path p = path();
-    if (p.empty()){
+    boost::optional<openstudio::path> p = oswPath();
+    if (!p){
       return false;
     }
-    return saveAs(p);
+    return saveAs(*p);
   }
 
   bool WorkflowJSON_Impl::saveAs(const openstudio::path& p) const
@@ -156,6 +156,7 @@ namespace detail{
         try {
           outFile << string();
           outFile.close();
+
           return true;
         } catch (...) {
           LOG(Error, "Unable to write file to path '" << toString(p) << "'.");
@@ -472,6 +473,17 @@ namespace detail{
     return toPath(result);
   }
 
+  bool WorkflowJSON_Impl::setSeedFile(const openstudio::path& seedFile)
+  {
+    m_value["seed_file"] = toString(seedFile);
+    return true;
+  }
+
+  void WorkflowJSON_Impl::resetSeedFile()
+  {
+    m_value.removeMember("seed_file");
+  }
+
   boost::optional<openstudio::path> WorkflowJSON_Impl::weatherFile() const
   {
     Json::Value defaultValue("");
@@ -481,6 +493,17 @@ namespace detail{
       return boost::none;
     }
     return toPath(result);
+  }
+    
+  bool WorkflowJSON_Impl::setWeatherFile(const openstudio::path& weatherFile)
+  {
+    m_value["weather_file"] = toString(weatherFile);
+    return true;
+  }
+    
+  void WorkflowJSON_Impl::resetWeatherFile()
+  {
+    m_value.removeMember("weather_file");
   }
 
   std::vector<WorkflowStep> WorkflowJSON_Impl::workflowSteps() const
@@ -749,9 +772,29 @@ boost::optional<openstudio::path> WorkflowJSON::seedFile() const
   return getImpl<detail::WorkflowJSON_Impl>()->seedFile();
 }
 
+bool WorkflowJSON::setSeedFile(const openstudio::path& seedFile)
+{
+  return getImpl<detail::WorkflowJSON_Impl>()->setSeedFile(seedFile);
+}
+
+void WorkflowJSON::resetSeedFile()
+{
+  return getImpl<detail::WorkflowJSON_Impl>()->resetSeedFile();
+}
+
 boost::optional<openstudio::path> WorkflowJSON::weatherFile() const
 {
   return getImpl<detail::WorkflowJSON_Impl>()->weatherFile();
+}
+
+bool WorkflowJSON::setWeatherFile(const openstudio::path& weatherFile)
+{
+  return getImpl<detail::WorkflowJSON_Impl>()->setWeatherFile(weatherFile);
+}
+
+void WorkflowJSON::resetWeatherFile()
+{
+  return getImpl<detail::WorkflowJSON_Impl>()->resetWeatherFile();
 }
 
 std::vector<WorkflowStep> WorkflowJSON::workflowSteps() const
