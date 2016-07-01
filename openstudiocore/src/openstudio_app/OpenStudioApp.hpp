@@ -48,6 +48,8 @@
 
 #include "../utilities/core/Path.hpp"
 
+#include <QProcess>
+
 #include <vector>
 #include <map>
 
@@ -132,6 +134,8 @@ class OpenStudioApp : public OSAppBase
 
  private slots:
 
+  void buildCompLibraries();
+
   void newFromTemplateSlot( NewFromTemplateEnum newFromTemplateEnum );
 
   bool openFromDrag(QString path);
@@ -139,6 +143,12 @@ class OpenStudioApp : public OSAppBase
   bool closeDocument();
 
   void onCloseClicked();
+
+  void measureManagerProcessStateChanged(QProcess::ProcessState newState);
+
+  void measureManagerProcessFinished();
+
+  void startMeasureManagerProcess();
 
  private:
 
@@ -150,8 +160,6 @@ class OpenStudioApp : public OSAppBase
   void import(fileType type);
 
   bool openFile(const QString& fileName, bool restoreTabs = false);
-
-  void buildCompLibraries();
 
   void versionUpdateMessageBox(const osversion::VersionTranslator& translator, bool successful, const QString& fileName, 
       const openstudio::path &tempModelDir);
@@ -166,7 +174,7 @@ class OpenStudioApp : public OSAppBase
 
   void connectOSDocumentSignals();
 
-  //QSharedPointer<measure::OSMeasureInfoGetter> m_infoGetter;
+  QProcess* m_measureManagerProcess;
 
   openstudio::model::Model m_compLibrary;
 

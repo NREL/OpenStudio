@@ -107,6 +107,9 @@ set(depends
   ${COREFOUNDATION_LIBRARY}
 )
 
+# because the app calls the cli
+add_dependencies(${target_name} openstudio)
+
 target_link_libraries(${target_name} ${depends})
 AddPCH(${target_name})
 

@@ -105,6 +105,7 @@
 #include <QThread>
 #include <QTimer>
 #include <QWidget>
+#include <QProcess>
 
 #include <OpenStudio.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -114,7 +115,8 @@ using namespace openstudio::model;
 namespace openstudio {
 
 OpenStudioApp::OpenStudioApp( int & argc, char ** argv)
-  : OSAppBase(argc, argv, QSharedPointer<MeasureManager>(new MeasureManager(this)))
+  : OSAppBase(argc, argv, QSharedPointer<MeasureManager>(new MeasureManager(this))),
+    m_measureManagerProcess(nullptr)
 {
   setOrganizationName("NREL");
   QCoreApplication::setOrganizationDomain("nrel.gov");
@@ -153,7 +155,12 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv)
     connect(m_startupMenu.get(), &StartupMenu::aboutClicked, this, &OpenStudioApp::showAbout);
   #endif
 
+  // measure manager server needs to be started after event loop is started
+  QTimer::singleShot(0, this, &OpenStudioApp::startMeasureManagerProcess);
+
+  // DLM: does this have to happen here in a blocking way?  it takes a long time to complete
   this->buildCompLibraries();
+  //QTimer::singleShot(0, this, &OpenStudioApp::buildCompLibraries);
 
   m_startupView = std::shared_ptr<openstudio::StartupView>(new openstudio::StartupView());
 
@@ -856,7 +863,11 @@ openstudio::path OpenStudioApp::openstudioCLIPath() const
 {
   auto dir = applicationDirPath();
   auto ext = QFileInfo(applicationFilePath()).suffix();
-  return openstudio::toPath(dir + "/openstudio" + ext);
+  if (ext.isEmpty())
+  {
+    return openstudio::toPath(dir + "/openstudio");
+  }
+  return openstudio::toPath(dir + "/openstudio." + ext);
 }
 
 bool OpenStudioApp::notify(QObject* receiver, QEvent* event)
@@ -1034,6 +1045,57 @@ void OpenStudioApp::connectOSDocumentSignals()
   connect(m_osDocument.get(), &OSDocument::newClicked, this, &OpenStudioApp::newModel);
   connect(m_osDocument.get(), &OSDocument::helpClicked, this, &OpenStudioApp::showHelp);
   connect(m_osDocument.get(), &OSDocument::aboutClicked, this, &OpenStudioApp::showAbout);
+}
+
+void OpenStudioApp::measureManagerProcessStateChanged(QProcess::ProcessState newState)
+{
+}
+
+void OpenStudioApp::measureManagerProcessFinished()
+{
+  // any exit of the cli is an error
+  // DLM: I can't get this to fire when I terminate the process in taskmanager
+  OS_ASSERT(m_measureManagerProcess);
+
+  // the cli crashed
+  QByteArray stdErr = m_measureManagerProcess->readAllStandardError();
+  QByteArray stdOut = m_measureManagerProcess->readAllStandardOutput();
+
+  QString message = "Measure Manager has crashed, attempting to restart\n\n";
+  message += stdErr;
+  message += stdOut;
+
+  QMessageBox::warning(nullptr, QString("Measure Manager has crashed"), message);
+
+  startMeasureManagerProcess();
+}
+
+void OpenStudioApp::startMeasureManagerProcess(){
+  if (m_measureManagerProcess){
+    // will terminate the existing process, blocking call
+    delete m_measureManagerProcess;
+  }
+
+  m_measureManagerProcess = new QProcess(this);
+
+  bool test;
+  // finished is an overloaded signal so have to be clear about which version to use
+  test = connect(m_measureManagerProcess, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &OpenStudioApp::measureManagerProcessFinished);
+  OS_ASSERT(test);
+  test = connect(m_measureManagerProcess, &QProcess::errorOccurred, this, &OpenStudioApp::measureManagerProcessFinished);
+  OS_ASSERT(test);
+  test = connect(m_measureManagerProcess, &QProcess::stateChanged, this, &OpenStudioApp::measureManagerProcessStateChanged);
+  OS_ASSERT(test);
+
+  QString program = toQString(openstudioCLIPath());
+  QStringList arguments;
+  arguments << "measure";
+  arguments << "-s";
+  //arguments << port;
+
+  m_measureManagerProcess->start(program, arguments);
+  bool started = m_measureManagerProcess->waitForStarted();
+  OS_ASSERT(started);
 }
 
 } // openstudio
