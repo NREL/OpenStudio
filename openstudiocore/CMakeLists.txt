@@ -564,17 +564,17 @@ add_definitions(-DSQLITE_THREADSAFE=1) # 1 is default, serial access
 #add_definitions(-DSQLITE_DEBUG)
 #add_definitions(-DSQLITE_MEMDEBUG)
 
-# OpenStudio-workflow-gem
-set(WFG_LOCAL_PATH "${CMAKE_BINARY_DIR}/OpenStudio-workflow-gem.zip")
-file(MD5 ${WFG_LOCAL_PATH} WFG_ZIP_MD5)
-if( NOT WFG_ZIP_MD5 STREQUAL "3e4bb71a68071f77d754106a8c14a16c" )
-  file(DOWNLOAD "https://codeload.github.com/NREL/OpenStudio-workflow-gem/zip/c2f6ed3b51515b512378c7a913537b43851e8229" 
-    ${WFG_LOCAL_PATH} 
-    INACTIVITY_TIMEOUT 120 
-    SHOW_PROGRESS
-    EXPECTED_MD5 3e4bb71a68071f77d754106a8c14a16c)
-    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${WFG_LOCAL_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
-endif()
+## OpenStudio-workflow-gem
+#set(WFG_LOCAL_PATH "${CMAKE_BINARY_DIR}/OpenStudio-workflow-gem.zip")
+#file(MD5 ${WFG_LOCAL_PATH} WFG_ZIP_MD5)
+#if( NOT WFG_ZIP_MD5 STREQUAL "3e4bb71a68071f77d754106a8c14a16c" )
+#  file(DOWNLOAD "https://codeload.github.com/NREL/OpenStudio-workflow-gem/zip/c2f6ed3b51515b512378c7a913537b43851e8229" 
+#    ${WFG_LOCAL_PATH} 
+#    INACTIVITY_TIMEOUT 120 
+#    SHOW_PROGRESS
+#    EXPECTED_MD5 3e4bb71a68071f77d754106a8c14a16c)
+#    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${WFG_LOCAL_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+#endif()
 
 #--------------------------------------------------------------------------------
 # Qt
@@ -864,7 +864,7 @@ endforeach()
 #add_dependencies(ResultsViewer ResultsViewer_resources)
 
 # ruby, after loading projects
-#add_subdirectory(ruby)
+add_subdirectory(ruby)
 
 # csharp, after loading projects
 if(BUILD_CSHARP_BINDINGS)
