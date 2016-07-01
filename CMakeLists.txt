@@ -95,10 +95,6 @@ option(BUILD_PACKAGE "Build package" OFF)
 # Build regressions
 option(BUILD_REGRESSIONS "Build regressions" OFF)
 
-# Build test runner targets.
-# This is a convenience for Visual Studio users
-option(ENABLE_TEST_RUNNER_TARGETS "Create test runner targets" OFF)
-
 # Build shared libraries, configuration affects OpenStudioCore
 option(BUILD_SHARED_LIBS "Build OS libs as shared libraries" OFF)
 
@@ -769,7 +765,6 @@ ExternalProject_Add(OSCore
     -DBUILD_PYTHON_BINDINGS:BOOL=${BUILD_PYTHON_BINDINGS}
     -DBUILD_TESTING:BOOL=${BUILD_TESTING}
     -DBUILD_PACKAGE:BOOL=${BUILD_PACKAGE}
-    -DENABLE_TEST_RUNNER_TARGETS:BOOL=${ENABLE_TEST_RUNNER_TARGETS}
     -DBUILD_WITH_MULTIPLE_PROCESSES:BOOL=${BUILD_WITH_MULTIPLE_PROCESSES}
     -DBUILD_WITH_OPENSSL:BOOL=${BUILD_WITH_OPENSSL}
     -DBUILD_RUBY_GEM:BOOL=${BUILD_RUBY_GEM}
