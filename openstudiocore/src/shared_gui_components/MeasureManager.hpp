@@ -31,8 +31,9 @@
 #include <QSharedPointer>
 #include <QPointer>
 #include <QApplication>
-
+#include <QUrl>
 class QEvent;
+
 
 namespace openstudio {
 
@@ -89,13 +90,13 @@ class MeasureManager : public QObject
   Q_OBJECT;
 
   public:
-    // Constructor without OSMeasureInfoGetter
     MeasureManager(BaseApp *t_app);
 
-    // Constructor taking a OSMeasureInfoGetter
-    MeasureManager(const QSharedPointer<measure::OSMeasureInfoGetter> &t_infoGetter, BaseApp *t_app);
-
     virtual ~MeasureManager() {}
+
+    QUrl url() const;
+
+    void setUrl(const QUrl& url);
 
     // Returns true if given measure is managed by the application and not the user
     bool isManagedMeasure(const UUID & id) const;
@@ -193,7 +194,7 @@ class MeasureManager : public QObject
     std::map<UUID,BCLMeasure> m_openstudioMeasures;
     std::map<UUID,BCLMeasure> m_myMeasures;
     std::map<UUID,BCLMeasure> m_bclMeasures;
-    //QSharedPointer<measure::OSMeasureInfoGetter> m_infoGetter;
+    QUrl m_url;
     QSharedPointer<LocalLibraryController> m_libraryController;
 };
 

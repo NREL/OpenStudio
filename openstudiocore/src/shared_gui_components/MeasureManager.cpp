@@ -73,9 +73,14 @@ MeasureManager::MeasureManager(BaseApp *t_app)
 {
 }
 
-MeasureManager::MeasureManager(const QSharedPointer<measure::OSMeasureInfoGetter> &t_infoGetter, BaseApp *t_app)
-  : m_app(t_app)
+QUrl MeasureManager::url() const
 {
+  return m_url;
+}
+
+void MeasureManager::setUrl(const QUrl& url)
+{
+  m_url = url;
 }
 
 //std::pair<bool,std::string> MeasureManager::updateMeasure(analysisdriver::SimpleProject &t_project, const BCLMeasure &t_measure)

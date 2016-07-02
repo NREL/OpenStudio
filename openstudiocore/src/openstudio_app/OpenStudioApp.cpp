@@ -106,6 +106,7 @@
 #include <QTimer>
 #include <QWidget>
 #include <QProcess>
+#include <QTcpServer>
 
 #include <OpenStudio.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -814,8 +815,10 @@ void  OpenStudioApp::showAbout()
   if (currentDocument()) {
     parent = currentDocument()->mainWindow();
   }
+  QString details = "Measure Manager Server: " + measureManager().url().toString();
   QMessageBox about(parent);
   about.setText(OPENSTUDIO_ABOUTBOX);
+  about.setDetailedText(details);
   about.setStyleSheet("qproperty-alignment: AlignCenter;");
   about.setWindowTitle("About " + applicationName());
   about.exec();
@@ -1076,6 +1079,18 @@ void OpenStudioApp::startMeasureManagerProcess(){
     delete m_measureManagerProcess;
   }
 
+  // find available port
+  QTcpServer* tcpServer = new QTcpServer(this);
+
+  tcpServer->listen(QHostAddress::LocalHost);
+  quint16 port = tcpServer->serverPort();
+  tcpServer->close();
+  delete tcpServer;
+
+  QString portString = QString::number(port);
+  QString urlString = "http://127.0.0.1:" + portString;
+  QUrl url(urlString);
+
   m_measureManagerProcess = new QProcess(this);
 
   bool test;
@@ -1091,11 +1106,15 @@ void OpenStudioApp::startMeasureManagerProcess(){
   QStringList arguments;
   arguments << "measure";
   arguments << "-s";
-  //arguments << port;
+  arguments << portString;
+
+  LOG(Debug, "Starting measure manager server at " << url.toString().toStdString());
 
   m_measureManagerProcess->start(program, arguments);
   bool started = m_measureManagerProcess->waitForStarted();
   OS_ASSERT(started);
+
+  measureManager().setUrl(url);
 }
 
 } // openstudio

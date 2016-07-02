@@ -76,9 +76,9 @@ class OPENSTUDIO_API OSAppBase : public QApplication, public BaseApp
 
   virtual void childEvent(QChildEvent * e) override;
 
-  private:
-
   REGISTER_LOGGER("openstudio.OSAppBase");
+
+  private:
 
   QSharedPointer<openstudio::MeasureManager> m_measureManager;
 
