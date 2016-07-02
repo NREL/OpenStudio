@@ -233,21 +233,6 @@ if(BUILD_TESTING)
   #add_dependencies(openstudio_analysisdriver_tests ${ALL_RUBY_BINDING_TARGETS})
 endif()
 
-# run all the unit tests
-if(ENABLE_TEST_RUNNER_TARGETS)
-  if(MSVC)
-    add_custom_target(ruby_run_tests
-      ${CMAKE_COMMAND} -E chdir "${RUBY_RUN_DIR}" "${RUBY_EXECUTABLE}" -I "${RUBY_RUBY_LIB_DIR}" -I "${RUBY_RUBY_LIB_DIR}/i386-mingw32" -I. "openstudio_test.rb"
-      DEPENDS ${ALL_RUBY_BINDING_TARGETS} ResultsViewer_resources openstudio_energyplus_resources
-    )
-  else()
-    add_custom_target(ruby_run_tests
-      ${CMAKE_COMMAND} -E chdir "${RUBY_RUN_DIR}" "${RUBY_EXECUTABLE}" -I "${RUBY_RUBY_LIB_DIR}" -I. "openstudio_test.rb"
-      DEPENDS ${ALL_RUBY_BINDING_TARGETS} ResultsViewer_resources openstudio_energyplus_resources
-    )
-  endif()
-endif()
-
 # install the files
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/install/openstudio.rb" DESTINATION ${RUBY_MODULE_DIR})
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/install/Win32API.so" DESTINATION ${RUBY_MODULE_DIR})
