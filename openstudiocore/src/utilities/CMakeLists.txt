@@ -103,7 +103,7 @@ set(data_src
   data/TimeSeries.hpp
   data/TimeSeries.cpp
   data/Variant.hpp
-  data/Variant.cpp  
+  data/Variant.cpp
   data/Vector.hpp
   data/Vector.cpp
 )
@@ -115,11 +115,11 @@ set(filetypes_src
   filetypes/WorkflowJSON_Impl.hpp
   filetypes/WorkflowJSON.cpp
   filetypes/WorkflowStep.hpp
-  filetypes/WorkflowStep_Impl.hpp 
-  filetypes/WorkflowStep.cpp  
+  filetypes/WorkflowStep_Impl.hpp
+  filetypes/WorkflowStep.cpp
   filetypes/WorkflowStepResult.hpp
-  filetypes/WorkflowStepResult_Impl.hpp 
-  filetypes/WorkflowStepResult.cpp  
+  filetypes/WorkflowStepResult_Impl.hpp
+  filetypes/WorkflowStepResult.cpp
 )
 
 set(geometry_src
@@ -136,7 +136,7 @@ set(geometry_src
   geometry/Point3d.hpp
   geometry/Point3d.cpp
   geometry/PointLatLon.hpp
-  geometry/PointLatLon.cpp  
+  geometry/PointLatLon.cpp
   geometry/Transformation.hpp
   geometry/Transformation.cpp
   geometry/Vector3d.hpp
@@ -176,9 +176,9 @@ set(bcl_src
   bcl/BCLMeasure.hpp
   bcl/BCLMeasure.cpp
   bcl/BCLMeasureArgument.hpp
-  bcl/BCLMeasureArgument.cpp  
+  bcl/BCLMeasureArgument.cpp
   bcl/BCLMeasureOutput.hpp
-  bcl/BCLMeasureOutput.cpp   
+  bcl/BCLMeasureOutput.cpp
   bcl/BCLXML.hpp
   bcl/BCLXML.cpp
   bcl/LocalBCL.hpp
@@ -367,10 +367,10 @@ set(${target_name}_test_src
   ${idf_test_src}
   ${idf_test_moc_src}
   ${sql_test_src}
-  
+
   cloud/test/AWSProvider_GTest.cpp
   cloud/test/VagrantProvider_GTest.cpp
-  
+
   core/test/ApplicationPathHelpers_GTest.cpp
   core/test/CoreFixture.hpp
   core/test/CoreFixture.cpp
@@ -391,7 +391,7 @@ set(${target_name}_test_src
   core/test/UpdateManager_GTest.cpp
   core/test/UUID_GTest.cpp
   core/test/Zip_GTest.cpp
-  
+
   data/Test/DataFixture.hpp
   data/Test/DataFixture.cpp
   data/Test/Attribute_GTest.cpp
@@ -401,10 +401,10 @@ set(${target_name}_test_src
   data/Test/TimeSeries_GTest.cpp
   data/Test/Variant_GTest.cpp
   data/Test/Vector_GTest.cpp
-  
+
   filetypes/test/EpwFile_GTest.cpp
   filetypes/test/WorkflowJSON_GTest.cpp
-  
+
   geometry/Test/BoundingBox_GTest.cpp
   geometry/Test/GeometryFixture.hpp
   geometry/Test/GeometryFixture.cpp
@@ -412,18 +412,18 @@ set(${target_name}_test_src
   geometry/Test/Intersection_GTest.cpp
   geometry/Test/Plane_GTest.cpp
   geometry/Test/Transformation_GTest.cpp
-  
+
   math/test/FloatCompare_GTest.cpp
   math/test/Permutation_GTest.cpp
   math/test/Primes_GTest.cpp
-  
+
   plot/Test/ProgressBar_GTest.cpp
-  
+
   time/Test/Calendar_GTest.cpp
   time/Test/Date_GTest.cpp
   time/Test/DateTime_GTest.cpp
   time/Test/Time_GTest.cpp
-  
+
   units/test/UnitsFixture.hpp
   units/test/UnitsFixture.cpp
   units/test/Scale_GTest.cpp
@@ -442,7 +442,7 @@ set(${target_name}_test_src
   units/test/QuantityFactory_GTest.cpp
   units/test/QuantityConverter_GTest.cpp
   units/test/IddUnits_GTest.cpp
-  
+
   bcl/test/BCLFixture.hpp
   bcl/test/BCLFixture.cpp
   bcl/test/BCL_GTest.cpp
@@ -511,16 +511,7 @@ set(${target_name}_swig_src
 #include subdir for pch
 add_subdirectory(pch)
 
-<<<<<<< HEAD
-if(WIN32)
-  add_definitions("-D${target_name}_EXPORTS")
-endif()
-
-
-add_library(${target_name} SHARED
-=======
 add_library(${target_name}
->>>>>>> os_2_0_develop
   ${${target_name}_src}
 )
 

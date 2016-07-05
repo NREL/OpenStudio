@@ -740,93 +740,12 @@ ExternalProject_Add(GeographicLib
   -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=ON
 )
 
-# Don't confuse "GEOGRAPHICLIB"_Dir as something that refers to the 
+# Don't confuse "GEOGRAPHICLIB"_Dir as something that refers to the
 # actual library compiled unit. This variable just refers to where the project is at.
 # We will use this to find the cmake config file provided by the project,
 # and that config file will tell us everything we need to know about the project's targets.
 set(GeographicLib_DIR ${CMAKE_BINARY_DIR}/GeographicLib-prefix/src/GeographicLib-build/)
 
-<<<<<<< HEAD
-#if(BUILD_QT)
-
-## TODO Bring back build static qt on all platform 
-#
-## windows configure notes
-#-platform win32-msvc2013 -debug-and-release -opensource -openssl -opengl dynamic -static -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -confirm-license -prefix C:\Qt2\5.6\msvc2013_static
-#
-# Dan's attempt
-## MSVC 2013
-# from build dir (which should be below qt dir)
-# "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" amd64
-# set CL=/MP
-# ..\configure.bat -platform win32-msvc2013 -debug-and-release -opensource -openssl-linked OPENSSL_LIBS="-lssleay32 -llibeay32" -I C:\OpenSSL-Win64\include -L C:\OpenSSL-Win64\lib\VC\static -opengl dynamic -static -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -confirm-license -prefix C:\Qt2\5.6\msvc2013_static
-# nmake
-#
-## MSVC 2015
-# from build dir (which should be below qt dir)
-# "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" amd64
-# set CL=/MP
-# ..\configure.bat -platform win32-msvc2015 -debug-and-release -opensource -openssl-linked OPENSSL_LIBS="-lssleay32 -llibeay32" -I C:\OpenSSL-Win64\include -L C:\OpenSSL-Win64\lib\VC\static -opengl dynamic -static -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -confirm-license -prefix C:\Qt2\5.6\msvc2015_static
-# nmake
-
-## mac configure notes
-#./configure -v -release -opensource -static -openssl -no-pch -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -confirm-license -prefix /Users/kbenne/Development/Qt/qt_5_6_osx_static
-#
-
-## linux configure notes
-# install deps according to here http://doc.qt.io/qt-5/linux-requirements.html
-#./configure -v -release -opensource -static -openssl -no-pch -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -qt-xcb -confirm-license  -no-qml-debug -prefix /home/kbenne/Qt/qt_5_6_linux_64_static 
-
-if(BUILD_QT)
-  set(Qt5Widgets_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5Widgets)
-  set(Qt5Sql_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5Sql)
-  set(Qt5Network_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5Network)
-  set(Qt5Xml_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5Xml)
-  if(${Qt5Widgets_VERSION} VERSION_LESS "5.4.0")
-    set(Qt5WebKit_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5WebKit)
-    set(Qt5WebKitWidgets_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5WebKitWidgets)
-  else()
-    set(Qt5WebEngine_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5WebEngine)
-    set(Qt5WebEngineWidgets_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5WebEngineWidgets)
-  endif()
-  set(Qt5Concurrent_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5Concurrent)
-  set(Qt5PrintSupport_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5PrintSupport)
-
-  if(APPLE)
-    # We're going to explicitly use the SDK specified in the configuration by the user
-    #set(APPLE_SDK_COMMAND "-sdk \"${CMAKE_OSX_SYSROOT}\"" )
-    set(APPLE_SDK_COMMAND "-sdk macosx${OSX_SDK}")
-
-    # At the moment we are building all of debug,release,x86 and x86_64
-    # it would appear that calling "make" in some way that CMake can detect that we are calling
-    # make (and attempt to pass parameters to the child make jobs) is breaking our ability to install
-    # the below code circumvents that by calling make through a call to "sh"
-    ExternalProject_Add(Qt
-      URL http://openstudio-resources.s3.amazonaws.com/dependencies/qt-everywhere-opensource-src-5.3.2.tar.gz
-      URL_MD5 febb001129927a70174467ecb508a682
-      CONFIGURE_COMMAND /bin/sh -c "cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/ && ./configure -v ${APPLE_SDK_COMMAND} -platform macx-clang-64 -release -opensource -openssl -no-pch -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -confirm-license -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install"
-      PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/qt/qmacstyle_mac.patch
-      BUILD_COMMAND /bin/sh -c "cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/ && make -j${QT_CPUCOUNT}"
-      INSTALL_COMMAND /bin/sh -c "cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/ && make -j1 install"
-    )
-  elseif(UNIX)
-    message(WARNING "Qt5 super build is currently untested")
-    ExternalProject_Add(Qt
-      URL http://openstudio-resources.s3.amazonaws.com/dependencies/qt-everywhere-opensource-src-5.3.2.tar.gz
-      URL_MD5 febb001129927a70174467ecb508a682
-      CONFIGURE_COMMAND ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/configure -debug-and-release -opensource -confirm-license -shared -qt-sql-sqlite -qt-xcb -openssl -nomake examples -nomake tests -plugindir ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/share/openstudio/qtplugins -qtlibinfix OpenStudio -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install
-      BUILD_COMMAND $(MAKE) -f ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-build/Makefile
-      INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-build && $(MAKE) install
-    )
-  else()
-    message(FATAL_ERROR "Qt5 cannot currently be built for Windows with the super build.  Please download a Qt installer from http://qt.io/")
-  endif()
-
-  #Update this for Windows if BUILD_QT is enabled for WINDOWS
-  if(UNIX)
-    list(APPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake)
-  endif()
-=======
 option(BUILD_QT "Build Qt" OFF)
 option(STATIC_QT "Use Static Qt" ON)
 
@@ -847,7 +766,7 @@ if(BUILD_QT)
       BUILD_COMMAND sh -c "make -j${CPUCOUNT} && make install"
       INSTALL_COMMAND ""
       BUILD_IN_SOURCE 1
-    )  
+    )
   elseif( UNIX )
     # install deps according to here http://doc.qt.io/qt-5/linux-requirements.html
     if( STATIC_QT )
@@ -872,7 +791,7 @@ if(BUILD_QT)
       set(QT_BUILD_SCRIPT "build_static_qt.bat")
     else()
       set(QT_BUILD_SCRIPT "build_shared_qt.bat")
-    endif()  
+    endif()
     ExternalProject_Add(Qt
       URL http://openstudio-resources.s3.amazonaws.com/dependencies/qt-everywhere-opensource-src-5.6.1.zip
       URL_MD5 c18a4904d9773894437c10c25f93e50f
@@ -882,9 +801,8 @@ if(BUILD_QT)
       BUILD_COMMAND cmd /C "${CMAKE_BINARY_DIR}/${QT_BUILD_SCRIPT}"
       INSTALL_COMMAND ""
     )
-  endif()     
-  
->>>>>>> os_2_0_develop
+  endif()
+
 endif()
 
 set(OpenStudioCore_DIR ${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build)
@@ -966,19 +884,6 @@ ExternalProject_Add(OSCore
     -DCMAKE_VERSION_BUILD:STRING=${CMAKE_VERSION_BUILD}
     -DBOOST_ROOT:STRING=${BOOST_ROOT}
     -DBOOST_LIBRARYDIR:STRING=${BOOST_LIBRARYDIR}
-<<<<<<< HEAD
-    -DQt5Widgets_DIR:STRING=${Qt5Widgets_DIR}
-    -DQt5Sql_DIR:STRING=${Qt5Sql_DIR}
-    -DQt5Network_DIR:STRING=${Qt5Network_DIR}
-    -DQt5Xml_DIR:STRING=${Qt5Xml_DIR}
-    -DQt5WebKit_DIR:STRING=${Qt5WebKit_DIR}
-    -DQt5WebKitWidgets_DIR:STRING=${Qt5WebKitWidgets_DIR}
-    -DQt5WebEngine_DIR:STRING=${Qt5WebEngine_DIR}
-    -DQt5WebEngineWidgets_DIR:STRING=${Qt5WebEngineWidgets_DIR}
-    # -DQt5WinExtras_DIR:STRING=${Qt5WinExtras_DIR}
-    -DQt5Concurrent_DIR:STRING=${Qt5Concurrent_DIR}
-    -DQt5PrintSupport_DIR:STRING=${Qt5PrintSupport_DIR}
-=======
     #-DQt5Widgets_DIR:STRING=${Qt5Widgets_DIR}
     #-DQt5Sql_DIR:STRING=${Qt5Sql_DIR}
     #-DQt5Network_DIR:STRING=${Qt5Network_DIR}
@@ -992,7 +897,6 @@ ExternalProject_Add(OSCore
     #-DQt5PrintSupport_DIR:STRING=${Qt5PrintSupport_DIR}
     -DSTATIC_QT:BOOL=${STATIC_QT}
     -DBUILD_SHARED_LIBS:BOOL=${BUILD_SHARED_LIBS}
->>>>>>> os_2_0_develop
     -DSWIG_EXECUTABLE:STRING=${SWIG_EXECUTABLE}
     -DNODE_BIN_DIR:STRING=${NODE_BIN_DIR}
     -DNODE_INCLUDE_DIR:STRING=${NODE_INCLUDE_DIR}
@@ -1004,13 +908,13 @@ ExternalProject_Add(OSCore
     -DOPENSSL_ROOT_DIR:PATH=${OPENSSL_ROOT_DIR}
     -DPATCH_EXE:PATH=${PATCH_EXE}
     -DMAXIMIZE_CPU_USAGE:BOOL=${MAXIMIZE_CPU_USAGE}
-    -DRUBY_LIBRARY:PATH=${RUBY_LIBRARY} 
-    -DRUBY_INCLUDE_DIR:PATH=${RUBY_INCLUDE_DIR}  
+    -DRUBY_LIBRARY:PATH=${RUBY_LIBRARY}
+    -DRUBY_INCLUDE_DIR:PATH=${RUBY_INCLUDE_DIR}
     -DRUBY_CONFIG_INCLUDE_DIR:PATH=${RUBY_CONFIG_INCLUDE_DIR}
     -DRUBY_EXECUTABLE:PATH=${RUBY_EXECUTABLE}
     -DRUBY_SOURCE_DIR:PATH=${RUBY_SOURCE_DIR}
-    -DRUBY_LIBRARY_DEBUG:PATH=${RUBY_LIBRARY_DEBUG} 
-    -DRUBY_INCLUDE_DIR_DEBUG:PATH=${RUBY_INCLUDE_DIR_DEBUG}  
+    -DRUBY_LIBRARY_DEBUG:PATH=${RUBY_LIBRARY_DEBUG}
+    -DRUBY_INCLUDE_DIR_DEBUG:PATH=${RUBY_INCLUDE_DIR_DEBUG}
     -DRUBY_CONFIG_INCLUDE_DIR_DEBUG:PATH=${RUBY_CONFIG_INCLUDE_DIR_DEBUG}
     -DRUBY_EXECUTABLE_DEBUG:PATH=${RUBY_EXECUTABLE_DEBUG}
     -DRUBY_SOURCE_DIR_DEBUG:PATH=${RUBY_SOURCE_DIR_DEBUG}

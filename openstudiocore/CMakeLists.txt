@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.11)
 
 project(OpenStudioCore)
 
-if( POLICY CMP0022 ) 
+if( POLICY CMP0022 )
   cmake_policy(SET CMP0022 NEW)
 endif()
 cmake_policy(SET CMP0020 NEW)
@@ -194,37 +194,6 @@ endif()
 ###############################################################################
 
 ###############################################################################
-<<<<<<< HEAD
-# Sub projects
-
-add_subdirectory(embedded)
-
-# Each subfolder of src is a major sub-project
-set(project_directories
-  generateiddfactory
-  utilities
-  model
-  energyplus
-  radiance
-  #gbxml
-  #bimserver
-  airflow
-  isomodel
-  osversion
-  measure
-  #resultsviewer
-  model_editor
-  openstudio_lib
-  sdd
-  cli
-)
-
-
-###############################################################################
-
-###############################################################################
-=======
->>>>>>> os_2_0_develop
 # CMake control
 
 # High level project configuration
@@ -593,45 +562,6 @@ add_definitions(-DSQLITE_THREADSAFE=1) # 1 is default, serial access
 
 #--------------------------------------------------------------------------------
 # Qt
-<<<<<<< HEAD
-# if( WIN32 )
-#  set(QT_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/qt_5_6_msvc2013_64_static.zip")
-#  file(MD5 ${QT_ZIP_LOCAL_PATH} QT_ZIP_MD5)
-#  if( NOT QT_ZIP_MD5 STREQUAL "52424fdb4d553b94156de088881506b5" )
-#    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/qt_5_6_msvc2013_64_static.zip" 
-#      ${QT_ZIP_LOCAL_PATH} 
-#      INACTIVITY_TIMEOUT 120 
-#      SHOW_PROGRESS
-#      EXPECTED_MD5 52424fdb4d553b94156de088881506b5)
-#      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_ZIP_LOCAL_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
-#  endif()
-#  list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}/qt_5_6_msvc2013_64_static/lib/cmake")
-#elseif( APPLE )
-#  set(QT_TAR_LOCAL_PATH "${CMAKE_BINARY_DIR}/qt_5_6_osx_static.tar.gz")
-#  file(MD5 ${QT_TAR_LOCAL_PATH} QT_TAR_MD5)
-#  if( NOT QT_TAR_MD5 STREQUAL "e4bfe40212b660895f76d5728685373d" )
-#    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/qt_5_6_osx_static.tar.gz" 
-#      ${QT_TAR_LOCAL_PATH} 
-#      INACTIVITY_TIMEOUT 120 
-#      SHOW_PROGRESS
-#      EXPECTED_MD5 e4bfe40212b660895f76d5728685373d)
-#      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_TAR_LOCAL_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
-#  endif()
-#  list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}/qt_5_6_linux_64_static/lib/cmake")
-#elseif( UNIX )
-#  set(QT_TAR_LOCAL_PATH "${CMAKE_BINARY_DIR}/qt_5_6_linux_64_static.tar.gz")
-#  file(MD5 ${QT_TAR_LOCAL_PATH} QT_TAR_MD5)
-#  if( NOT QT_TAR_MD5 STREQUAL "4fd726173b801f34dc965ddbce53c193" )
-#    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/qt_5_6_linux_64_static.tar.gz" 
-#      ${QT_TAR_LOCAL_PATH} 
-#      INACTIVITY_TIMEOUT 120 
-#      SHOW_PROGRESS
-#      EXPECTED_MD5 4fd726173b801f34dc965ddbce53c193)
-#      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_TAR_LOCAL_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
-#  endif()
-#  list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}/qt_5_6_linux_64_static/lib/cmake")
-#endif()
-=======
 
 set(QT_INSTALL_DIR "${CMAKE_BINARY_DIR}/../../../Qt-prefix/src/Qt-install/")
 
@@ -648,7 +578,7 @@ if(NOT EXISTS ${QT_INSTALL_DIR})
       set(QT_ZIP_FILENAME "qt_5_6_msvc2013_64_shared_temp.zip")
       set(QT_ZIP_EXPECTED_MD5 "2ac0ed2909710350f1c6acd5f38a8b33")
     endif()
-    
+
   elseif( APPLE )
     if( STATIC_QT )
       set(QT_ZIP_FILENAME "qt_5_6_osx_static_temp.tar.gz")
@@ -668,7 +598,7 @@ if(NOT EXISTS ${QT_INSTALL_DIR})
       #set(QT_ZIP_FILENAME "qt_5_6_redhat_64_shared.tar.gz")
       #set(QT_ZIP_EXPECTED_MD5 "52424fdb4d553b94156de088881506b5")
     endif()
-    
+
   else()
     #ubuntu
     if( STATIC_QT )
@@ -679,27 +609,26 @@ if(NOT EXISTS ${QT_INSTALL_DIR})
       #set(QT_ZIP_FILENAME "qt_5_6_linux_64_static.tar.gz")
       #set(QT_ZIP_EXPECTED_MD5 "52424fdb4d553b94156de088881506b5")
     endif()
-    
+
   endif()
-  
+
   set(QT_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${QT_ZIP_FILENAME}")
   if(EXISTS "${QT_ZIP_LOCAL_PATH}")
     file(MD5 "${QT_ZIP_LOCAL_PATH}" QT_ZIP_MD5)
   endif()
-    
+
   if( NOT QT_ZIP_MD5 STREQUAL QT_ZIP_EXPECTED_MD5)
-    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${QT_ZIP_FILENAME}" 
-      ${QT_ZIP_LOCAL_PATH} 
-      INACTIVITY_TIMEOUT 120 
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${QT_ZIP_FILENAME}"
+      ${QT_ZIP_LOCAL_PATH}
+      INACTIVITY_TIMEOUT 120
       SHOW_PROGRESS
       EXPECTED_MD5 ${QT_ZIP_EXPECTED_MD5})
       execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
   endif()
-  
+
   set(QT_INSTALL_DIR "${CMAKE_BINARY_DIR}/Qt-install/")
-  
+
 endif()
->>>>>>> os_2_0_develop
 
 find_package(Qt5Core REQUIRED HINTS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
 find_package(Qt5Widgets REQUIRED HINTS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
@@ -745,125 +674,6 @@ endif()
 
 set(CMAKE_AUTOMOC OFF)
 
-<<<<<<< HEAD
-#Adding libraries to the list of includes
-include_directories(${Qt5Widgets_INCLUDE_DIRS})
-include_directories(${Qt5Sql_INCLUDE_DIRS})
-include_directories(${Qt5Network_INCLUDE_DIRS})
-include_directories(${Qt5Xml_INCLUDE_DIRS})
-if(${Qt5Widgets_VERSION} VERSION_LESS "5.4.0")
-  include_directories(${Qt5WebKit_INCLUDE_DIRS})
-  include_directories(${Qt5WebKitWidgets_INCLUDE_DIRS})
-else()
-  include_directories(${Qt5WebEngine_INCLUDE_DIRS})
-  include_directories(${Qt5WebEngineWidgets_INCLUDE_DIRS})
-endif()
-#include_directories(${Qt5WinExtras_INCLUDE_DIRS})
-include_directories(${Qt5Concurrent_INCLUDE_DIRS})
-include_directories(${Qt5PrintSupport_INCLUDE_DIRS})
-
-#include_directories is supposed to be a set, however there are tons of Qt duplicate includes
-get_directory_property(dupdirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} INCLUDE_DIRECTORIES)
-list(REMOVE_DUPLICATES dupdirs)
-set_directory_properties(PROPERTIES INCLUDE_DIRECTORIES "${dupdirs}")
-
-# list of all Qt libs and dependencies we are using
-list(APPEND QT_LIBS ${Qt5Widgets_LIBRARIES})
-list(APPEND QT_LIBS ${Qt5Sql_LIBRARIES})
-list(APPEND QT_LIBS ${Qt5Core_LIBRARIES})
-list(APPEND QT_LIBS ${Qt5Gui_LIBRARIES})
-list(APPEND QT_LIBS ${Qt5Network_LIBRARIES})
-list(APPEND QT_LIBS ${Qt5Xml_LIBRARIES})
-if(${Qt5Widgets_VERSION} VERSION_LESS "5.4.0")
-  list(APPEND QT_LIBS ${Qt5WebKit_LIBRARIES})
-  list(APPEND QT_LIBS ${Qt5WebKitWidgets_LIBRARIES})
-else()
-  list(APPEND QT_LIBS ${Qt5WebEngine_LIBRARIES})
-  list(APPEND QT_LIBS ${Qt5WebEngineWidgets_LIBRARIES})
-endif()
-#list(APPEND QT_LIBS ${Qt5WinExtras_LIBRARIES})
-list(APPEND QT_LIBS ${Qt5Concurrent_LIBRARIES})
-list(APPEND QT_LIBS ${Qt5PrintSupport_LIBRARIES})
-
-### recreating QT_LIBRARY_DIR for qt5
-if(WIN32 AND TARGET Qt5::Core)
-  get_property(_Qt5_Core_LOCATION TARGET Qt5::Core PROPERTY LOCATION)
-  get_filename_component(QT_LIBRARY_DIR "${_Qt5_Core_LOCATION}" DIRECTORY)
-else()
-  set(QT_LIBRARY_DIR "")
-endif()
-
-
-# list(APPEND QT_LIBS Qt5::Core)
-# list(APPEND QT_LIBS Qt5::Gui)
-# list(APPEND QT_LIBS Qt5::Widgets)
-# list(APPEND QT_LIBS Qt5::Sql)
-# list(APPEND QT_LIBS Qt5::Network)
-# list(APPEND QT_LIBS Qt5::Xml)
-# list(APPEND QT_LIBS Qt5::Concurrent)
-# list(APPEND QT_LIBS Qt5::PrintSupport)
-#if( UNIX )
-#  list(APPEND QT_LIBS "${_qt5Widgets_install_prefix}/plugins/sqldrivers/libqsqlite.a")
-#  list(APPEND QT_LIBS "${_qt5Widgets_install_prefix}/lib/libqtharfbuzzng.a")
-#  find_package(OpenGL REQUIRED)
-#  list(APPEND QT_LIBS "${OPENGL_LIBRARIES}")
-#endif()
-#
-#if( UNIX AND NOT APPLE )
-#  find_library(png_lib png)
-#  list(APPEND QT_LIBS ${png_lib})
-#  find_library(pcre16_lib pcre16)
-#  list(APPEND QT_LIBS ${pcre16_lib})
-#  find_library(crypto_lib crypto)
-#  list(APPEND QT_LIBS ${crypto_lib})
-#  find_package( ZLIB REQUIRED )
-#  list(APPEND QT_LIBS ${ZLIB_LIBRARIES})
-#endif()
-#
-#if( APPLE )
-#  find_library(corefoundation_lib CoreFoundation)
-#  find_library(cfnetwork_lib CFNetwork)
-#  find_library(coregraphics_lib CoreGraphics)
-#  find_library(carbon_lib Carbon)
-#  find_library(appkit_lib AppKit)
-#  find_library(systemconfiguration_lib SystemConfiguration)
-#  find_library(security_lib Security)
-#  list(APPEND QT_LIBS ${corefoundation_lib})
-#  list(APPEND QT_LIBS ${cfnetwork_lib})
-#  list(APPEND QT_LIBS ${coregraphics_lib})
-#  list(APPEND QT_LIBS ${carbon_lib})
-#  list(APPEND QT_LIBS ${appkit_lib})
-#  list(APPEND QT_LIBS ${systemconfiguration_lib})
-#  list(APPEND QT_LIBS ${security_lib})
-#  list(APPEND QT_LIBS "${_qt5Widgets_install_prefix}/lib/libqtpcre.a")
-#endif()
-#
-#if( WIN32 )
-#  # This is a dirty hack and only works for release
-#  # clean this up
-#  list(APPEND QT_LIBS Qt5::WinExtras)
-#  list(APPEND QT_LIBS wsock32)
-#  list(APPEND QT_LIBS ws2_32)
-#  list(APPEND QT_LIBS Crypt32)
-#  list(APPEND QT_LIBS iphlpapi)
-#  list(APPEND QT_LIBS "${_qt5Widgets_install_prefix}/plugins/sqldrivers/qsqlite.lib")
-#  list(APPEND QT_LIBS "${_qt5Widgets_install_prefix}/lib/qtpcre.lib")
-#  list(APPEND QT_LIBS "${_qt5Widgets_install_prefix}/lib/qtharfbuzzng.lib")
-#endif()
-
-###############################################################################
-# qtwinmigrate
-if(WIN32)
-  add_subdirectory(src/qtwinmigrate)
-  include_directories(src/qtwinmigrate)
-endif()
-###############################################################################
-
-###############################################################################
-## qwt
-# add_subdirectory(src/qwt)
-###############################################################################
-=======
 get_target_property(QtCore_TYPE Qt5::Core TYPE)
 message("QtCore_TYPE = ${QtCore_TYPE}")
 
@@ -871,7 +681,7 @@ if(QtCore_TYPE STREQUAL "STATIC_LIBRARY")
   add_definitions(-DQT_STATIC)
 else()
   find_package(Qt5WebEngineWidgets REQUIRED HINTS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-  
+
   list(APPEND QT_LIBS Qt5::WebEngineWidgets)
 endif()
 
@@ -936,33 +746,33 @@ if( WIN32 )
   # clean this up
   find_library(PLATFORM_SUPPORT Qt5PlatformSupport PATHS "${QT_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
   find_library(FREETYPE qtfreetype PATHS "${QT_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
-  
+
   mark_as_advanced(PLATFORM_SUPPORT FREETYPE)
-  
+
   list(APPEND QT_LIBS ${PLATFORM_SUPPORT})
   list(APPEND QT_LIBS ${FREETYPE})
-  
+
   list(APPEND QT_LIBS wsock32)
   list(APPEND QT_LIBS ws2_32)
   list(APPEND QT_LIBS iphlpapi)
   list(APPEND QT_LIBS dbghelp)
   list(APPEND QT_LIBS Shlwapi)
-  
+
   if(QtCore_TYPE STREQUAL "STATIC_LIBRARY")
     find_library(HARFBUZZ qtharfbuzzng PATHS "${QT_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
     find_library(PCRE qtpcre PATHS "${QT_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
     find_library(SQLITE qsqlite PATHS "${QT_INSTALL_DIR}/plugins/sqldrivers/" NO_DEFAULT_PATH)
     find_library(WIN_PLATFORM qwindows PATHS "${QT_INSTALL_DIR}/plugins/platforms/" NO_DEFAULT_PATH)
-    
+
     link_directories("${OPENSSL_ROOT_DIR}/lib/VC/static")
-    
+
     mark_as_advanced(HARFBUZZ PCRE SQLITE WIN_PLATFORM)
 
     list(APPEND QT_LIBS ${HARFBUZZ})
     list(APPEND QT_LIBS ${PCRE})
     list(APPEND QT_LIBS ${SQLITE})
     list(APPEND QT_LIBS ${WIN_PLATFORM})
-  
+
     list(APPEND QT_LIBS Crypt32)
     list(APPEND QT_LIBS imm32)
     list(APPEND QT_LIBS winmm)
@@ -972,9 +782,8 @@ if( WIN32 )
   endif()
 
   list(APPEND QT_LIBS Qt5::WinExtras)
-    
+
 endif()
->>>>>>> os_2_0_develop
 
 ###############################################################################
 ## jsoncpp
@@ -1191,12 +1000,7 @@ set(all_lib_targets
   openstudio_lib
   openstudio_sdd
   openstudio_airflow
-<<<<<<< HEAD
-  ${QTWINMIGRATE_EXPORT}
-# qwt
-=======
   #qwt
->>>>>>> os_2_0_develop
   miniziplib
   sqlite
   jsoncpp
