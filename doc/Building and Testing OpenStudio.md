@@ -203,6 +203,12 @@ In CMake **check** the following:
 
 - CPACK\_BINARY\_PACKAGEMAKER
 
+
+In CMake **enter** the following for CMAKE\_BUILD\_TYPE:
+
+- `Release`
+
+
 In CMake type the following:
 
 	c
