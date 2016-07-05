@@ -9,8 +9,8 @@ endif()
 project(OpenStudio)
 
 set(CMAKE_VERSION_MAJOR 1)
-set(CMAKE_VERSION_MINOR 11)
-set(CMAKE_VERSION_PATCH 5)
+set(CMAKE_VERSION_MINOR 12)
+set(CMAKE_VERSION_PATCH 1)
 
 set(CMAKE_VERSION_BUILD "Unknown" CACHE STRING "Build number")
 find_package(Git)
@@ -95,9 +95,8 @@ option(BUILD_PACKAGE "Build package" OFF)
 # Build regressions
 option(BUILD_REGRESSIONS "Build regressions" OFF)
 
-# Build test runner targets.
-# This is a convenience for Visual Studio users
-option(ENABLE_TEST_RUNNER_TARGETS "Create test runner targets" OFF)
+# Build shared libraries, configuration affects OpenStudioCore
+option(BUILD_SHARED_LIBS "Build OS libs as shared libraries" OFF)
 
 set(MAXIMIZE_CPU_USAGE OFF CACHE BOOL "Attempt to fully load the CPU during builds")
 mark_as_advanced(MAXIMIZE_CPU_USAGE)
@@ -548,7 +547,7 @@ endif()
 
 if( APPLE )
   ExternalProject_Add(Ruby
-    URL https://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.2.0.tar.gz
+    URL http://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.2.0.tar.gz
     URL_MD5 d4d8b600af2f77566515728d5bd7ffa4
     BUILD_IN_SOURCE 1
     CONFIGURE_COMMAND autoconf && sh -c "./configure --with-static-linked-ext --without-gmp --without-tcl --without-tk --disable-install-doc --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install"
@@ -562,8 +561,9 @@ if( APPLE )
   set(RUBY_EXECUTABLE "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby")
   set(RUBY_SOURCE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby")
 elseif( UNIX )
+  # I had to install autotools-dev on Redhat, http://askubuntu.com/questions/430706/installing-autotools-autoconf
   ExternalProject_Add(Ruby
-    URL https://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.2.0.tar.gz
+    URL http://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.2.0.tar.gz
     URL_MD5 d4d8b600af2f77566515728d5bd7ffa4
     BUILD_IN_SOURCE 1
     CONFIGURE_COMMAND autoconf && sh -c "./configure --with-static-linked-ext --without-gmp --without-tcl --without-tk --disable-install-doc --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install"
@@ -581,7 +581,7 @@ else()
   # This will require bison, sed, and at least ruby 1.8 in your path
   # Consider minsys even though the build will be done by msvc the ruby build system uses some traditionally unix tools
   ExternalProject_Add(Ruby
-    URL https://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.2.0.tar.gz
+    URL http://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.2.0.tar.gz
     URL_MD5 d4d8b600af2f77566515728d5bd7ffa4
     BUILD_IN_SOURCE 1
     CONFIGURE_COMMAND ""
@@ -606,7 +606,7 @@ if( WIN32 )
   set(SHELL_COMMAND cmd /C)
 endif()
 ExternalProject_Add(OpenStudio-workflow-gem
-  GIT_REPOSITORY https://github.com/NREL/OpenStudio-workflow-gem.git
+  GIT_REPOSITORY git://github.com/NREL/OpenStudio-workflow-gem.git
   GIT_TAG c2f6ed3b51515b512378c7a913537b43851e8229
   BUILD_IN_SOURCE 1
   CONFIGURE_COMMAND ""
@@ -720,6 +720,7 @@ ExternalProject_Add(GoogleTest
 set(GTEST_INCLUDE_DIR ${CMAKE_BINARY_DIR}/GoogleTest-prefix/src/GoogleTest/include)
 set(GTEST_LIB_DIR ${CMAKE_BINARY_DIR}/GoogleTest-prefix/src/GoogleTest-build)
 
+# DLM: how to get this to build in Release and Debug mode on Windows?
 ExternalProject_Add(GeographicLib
   URL http://openstudio-resources.s3.amazonaws.com/dependencies/GeographicLib-1.45.zip
   URL_MD5 c3c8f989d700fc88c8ce4584cb298cee
@@ -745,6 +746,7 @@ ExternalProject_Add(GeographicLib
 # and that config file will tell us everything we need to know about the project's targets.
 set(GeographicLib_DIR ${CMAKE_BINARY_DIR}/GeographicLib-prefix/src/GeographicLib-build/)
 
+<<<<<<< HEAD
 #if(BUILD_QT)
 
 ## TODO Bring back build static qt on all platform 
@@ -824,6 +826,65 @@ if(BUILD_QT)
   if(UNIX)
     list(APPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake)
   endif()
+=======
+option(BUILD_QT "Build Qt" OFF)
+option(STATIC_QT "Use Static Qt" ON)
+
+if(BUILD_QT)
+  if(APPLE)
+    execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install")
+    if( STATIC_QT )
+      set(QT_CONFIGURE_COMMAND "-v -release -opensource -qt-pcre -qt-harfbuzz -static -openssl -no-pch -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -confirm-license -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install")
+    else()
+      message(WARNING "Shared Apple Qt build untested")
+      set(QT_CONFIGURE_COMMAND "-v -release -opensource -qt-pcre -qt-harfbuzz -shared -openssl -no-pch -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -confirm-license -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install")
+    endif()
+    ExternalProject_Add(Qt
+      URL http://openstudio-resources.s3.amazonaws.com/dependencies/qt-everywhere-opensource-src-5.6.1.tar.gz
+      URL_MD5 ed16ef2a30c674f91f8615678005d44c
+      CONFIGURE_COMMAND sh -c "./configure ${QT_CONFIGURE_COMMAND}"
+      PATCH_COMMAND ""
+      BUILD_COMMAND sh -c "make -j${CPUCOUNT} && make install"
+      INSTALL_COMMAND ""
+      BUILD_IN_SOURCE 1
+    )  
+  elseif( UNIX )
+    # install deps according to here http://doc.qt.io/qt-5/linux-requirements.html
+    if( STATIC_QT )
+      set(QT_CONFIGURE_COMMAND "-v -release -opensource -static -openssl -no-pch -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -qt-xcb -confirm-license  -no-qml-debug -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install")
+    else()
+      message(WARNING "Shared Unix Qt build untested")
+      set(QT_CONFIGURE_COMMAND "-v -release -opensource -shared -openssl -no-pch -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -qt-xcb -confirm-license  -no-qml-debug -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install")
+    endif()
+    ExternalProject_Add(Qt
+      URL http://openstudio-resources.s3.amazonaws.com/dependencies/qt-everywhere-opensource-src-5.6.1.tar.gz
+      URL_MD5 ed16ef2a30c674f91f8615678005d44c
+      CONFIGURE_COMMAND sh -c "./configure ${QT_CONFIGURE_COMMAND}"
+      PATCH_COMMAND ""
+      BUILD_COMMAND sh -c "make -j${CPUCOUNT} && make install"
+      INSTALL_COMMAND ""
+    )
+  else()
+    # to initialize command prompt run: "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" amd64
+    configure_file("${CMAKE_SOURCE_DIR}/dependencies/qt/build_static_qt.bat.in" "${CMAKE_BINARY_DIR}/build_static_qt.bat")
+    configure_file("${CMAKE_SOURCE_DIR}/dependencies/qt/build_shared_qt.bat.in" "${CMAKE_BINARY_DIR}/build_shared_qt.bat")
+    if( STATIC_QT )
+      set(QT_BUILD_SCRIPT "build_static_qt.bat")
+    else()
+      set(QT_BUILD_SCRIPT "build_shared_qt.bat")
+    endif()  
+    ExternalProject_Add(Qt
+      URL http://openstudio-resources.s3.amazonaws.com/dependencies/qt-everywhere-opensource-src-5.6.1.zip
+      URL_MD5 c18a4904d9773894437c10c25f93e50f
+      BUILD_IN_SOURCE 1
+      CONFIGURE_COMMAND ""
+      PATCH_COMMAND ""
+      BUILD_COMMAND cmd /C "${CMAKE_BINARY_DIR}/${QT_BUILD_SCRIPT}"
+      INSTALL_COMMAND ""
+    )
+  endif()     
+  
+>>>>>>> os_2_0_develop
 endif()
 
 set(OpenStudioCore_DIR ${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build)
@@ -885,7 +946,6 @@ ExternalProject_Add(OSCore
     -DBUILD_PYTHON_BINDINGS:BOOL=${BUILD_PYTHON_BINDINGS}
     -DBUILD_TESTING:BOOL=${BUILD_TESTING}
     -DBUILD_PACKAGE:BOOL=${BUILD_PACKAGE}
-    -DENABLE_TEST_RUNNER_TARGETS:BOOL=${ENABLE_TEST_RUNNER_TARGETS}
     -DBUILD_WITH_MULTIPLE_PROCESSES:BOOL=${BUILD_WITH_MULTIPLE_PROCESSES}
     -DBUILD_WITH_OPENSSL:BOOL=${BUILD_WITH_OPENSSL}
     -DBUILD_RUBY_GEM:BOOL=${BUILD_RUBY_GEM}
@@ -906,6 +966,7 @@ ExternalProject_Add(OSCore
     -DCMAKE_VERSION_BUILD:STRING=${CMAKE_VERSION_BUILD}
     -DBOOST_ROOT:STRING=${BOOST_ROOT}
     -DBOOST_LIBRARYDIR:STRING=${BOOST_LIBRARYDIR}
+<<<<<<< HEAD
     -DQt5Widgets_DIR:STRING=${Qt5Widgets_DIR}
     -DQt5Sql_DIR:STRING=${Qt5Sql_DIR}
     -DQt5Network_DIR:STRING=${Qt5Network_DIR}
@@ -917,6 +978,21 @@ ExternalProject_Add(OSCore
     # -DQt5WinExtras_DIR:STRING=${Qt5WinExtras_DIR}
     -DQt5Concurrent_DIR:STRING=${Qt5Concurrent_DIR}
     -DQt5PrintSupport_DIR:STRING=${Qt5PrintSupport_DIR}
+=======
+    #-DQt5Widgets_DIR:STRING=${Qt5Widgets_DIR}
+    #-DQt5Sql_DIR:STRING=${Qt5Sql_DIR}
+    #-DQt5Network_DIR:STRING=${Qt5Network_DIR}
+    #-DQt5Xml_DIR:STRING=${Qt5Xml_DIR}
+    #-DQt5WebKit_DIR:STRING=${Qt5WebKit_DIR}
+    #-DQt5WebKitWidgets_DIR:STRING=${Qt5WebKitWidgets_DIR}
+    #-DQt5WebEngine_DIR:STRING=${Qt5WebEngine_DIR}
+    #-DQt5WebEngineWidgets_DIR:STRING=${Qt5WebEngineWidgets_DIR}
+    ##-DQt5WinExtras_DIR:STRING=${Qt5WinExtras_DIR}
+    #-DQt5Concurrent_DIR:STRING=${Qt5Concurrent_DIR}
+    #-DQt5PrintSupport_DIR:STRING=${Qt5PrintSupport_DIR}
+    -DSTATIC_QT:BOOL=${STATIC_QT}
+    -DBUILD_SHARED_LIBS:BOOL=${BUILD_SHARED_LIBS}
+>>>>>>> os_2_0_develop
     -DSWIG_EXECUTABLE:STRING=${SWIG_EXECUTABLE}
     -DNODE_BIN_DIR:STRING=${NODE_BIN_DIR}
     -DNODE_INCLUDE_DIR:STRING=${NODE_INCLUDE_DIR}

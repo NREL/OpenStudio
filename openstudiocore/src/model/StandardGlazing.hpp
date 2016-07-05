@@ -30,6 +30,8 @@ class OSOptionalQuantity;
 
 namespace model {
 
+class MaterialPropertyGlazingSpectralData;
+
 namespace detail {
 
   class StandardGlazing_Impl;
@@ -63,7 +65,10 @@ class MODEL_API StandardGlazing : public Glazing {
 
   double thickness() const;
 
+  /** deprecated **/
   boost::optional<std::string> windowGlassSpectralDataSetName() const;
+
+  boost::optional<MaterialPropertyGlazingSpectralData> windowGlassSpectralDataSet() const;
 
   double solarTransmittance() const;
 
@@ -138,9 +143,12 @@ class MODEL_API StandardGlazing : public Glazing {
 
   bool setOpticalDataType(std::string opticalDataType);
 
-  void setWindowGlassSpectralDataSetName(std::string windowGlassSpectralDataSetName);
-
+  /** deprecated **/
+  bool setWindowGlassSpectralDataSetName(const std::string& windowGlassSpectralDataSetName);
   void resetWindowGlassSpectralDataSetName();
+
+  bool setWindowGlassSpectralDataSet(const MaterialPropertyGlazingSpectralData& spectralData);
+  void resetWindowGlassSpectralDataSet();
 
   bool setThickness(double thickness);
 

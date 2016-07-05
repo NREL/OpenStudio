@@ -27,8 +27,10 @@
 using namespace std;
 using namespace openstudio;
 
+/*
 TEST(VagrantProvider, VagrantProviderTest)
 {
   VagrantProvider vagrantProvider;
   cout << vagrantProvider.serviceAvailable() << endl;
 }
+*/

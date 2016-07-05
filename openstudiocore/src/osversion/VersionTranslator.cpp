@@ -106,6 +106,8 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("1.10.6")] = &VersionTranslator::update_1_10_5_to_1_10_6;
   m_updateMethods[VersionString("1.11.4")] = &VersionTranslator::update_1_11_3_to_1_11_4;
   m_updateMethods[VersionString("1.11.5")] = &VersionTranslator::update_1_11_4_to_1_11_5;
+  m_updateMethods[VersionString("1.12.1")] = &VersionTranslator::defaultUpdate;
+
 
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
@@ -211,6 +213,9 @@ VersionTranslator::VersionTranslator()
   m_startVersions.push_back(VersionString("1.11.2"));
   m_startVersions.push_back(VersionString("1.11.3"));
   m_startVersions.push_back(VersionString("1.11.4"));
+  m_startVersions.push_back(VersionString("1.11.5"));
+  m_startVersions.push_back(VersionString("1.11.6"));
+  m_startVersions.push_back(VersionString("1.12.0"));
 }
 
 boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm, 
@@ -485,12 +490,12 @@ void VersionTranslator::initializeMap(std::istream& is) {
           // get the sizing objects and save them for later,
           // we will reintrodce the sizing objects in the version 1.10.2 phase of the translation
           // when they were officially part of OS
-          auto cbeccIddFile = IddFile::load( getSharedResourcesPath() / "osversion/1_9_0_CBECC/OpenStudio.idd");
-          OS_ASSERT(cbeccIddFile);
+          auto cbeccIddFile = get_1_9_0_CBECC_IddFile();
+
           is.seekg(0, std::ios::beg);
-          auto cbeccIdfFile = IdfFile::load(is,cbeccIddFile.get());
+          auto cbeccIdfFile = IdfFile::load(is,cbeccIddFile);
           OS_ASSERT(cbeccIdfFile);
-          m_cbeccSizingObjects = cbeccIdfFile->getObjectsByType(cbeccIddFile->getObject("OS:Sizing:Zone").get());
+          m_cbeccSizingObjects = cbeccIdfFile->getObjectsByType(cbeccIddFile.getObject("OS:Sizing:Zone").get());
         }
 
       }

@@ -94,10 +94,6 @@ option(BUILD_TESTING "Build testing targets" OFF)
 # Requires: EnergyPlus, Radiance
 option(BUILD_PACKAGE "Build package" OFF)
 
-# Build test runner targets.
-# This is a convenience for Visual Studio users
-option(ENABLE_TEST_RUNNER_TARGETS "Create test runner targets" OFF)
-
 # Build with OpenSSL support
 set(BUILD_WITH_OPENSSL ON CACHE INTERNAL "Build With OpenSSL Support For SSH Connections")
 
@@ -107,6 +103,12 @@ option(BUILD_R "Build R package" OFF)
 # Build Ruby gem
 option(BUILD_RUBY_GEM "Build Ruby Gem" OFF)
 
+# Build shared OS libraries
+option(BUILD_SHARED_LIBS "Build OS libs as shared libraries" OFF)
+
+if (BUILD_SHARED_LIBS)
+  add_definitions("-DSHARED_OS_LIBS")
+endif()
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
   add_definitions(-Qunused-arguments)
@@ -192,6 +194,7 @@ endif()
 ###############################################################################
 
 ###############################################################################
+<<<<<<< HEAD
 # Sub projects
 
 add_subdirectory(embedded)
@@ -220,6 +223,8 @@ set(project_directories
 ###############################################################################
 
 ###############################################################################
+=======
+>>>>>>> os_2_0_develop
 # CMake control
 
 # High level project configuration
@@ -523,6 +528,8 @@ endif()
 # Zlib
 include_directories(SYSTEM src/zlib)
 add_subdirectory(src/zlib)
+# make sure zconf.h can be found
+include_directories(${CMAKE_BINARY_DIR}/src/zlib)
 
 # Google test library
 add_definitions(-DGTEST_HAS_TR1_TUPLE=0)
@@ -586,6 +593,7 @@ add_definitions(-DSQLITE_THREADSAFE=1) # 1 is default, serial access
 
 #--------------------------------------------------------------------------------
 # Qt
+<<<<<<< HEAD
 # if( WIN32 )
 #  set(QT_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/qt_5_6_msvc2013_64_static.zip")
 #  file(MD5 ${QT_ZIP_LOCAL_PATH} QT_ZIP_MD5)
@@ -623,17 +631,86 @@ add_definitions(-DSQLITE_THREADSAFE=1) # 1 is default, serial access
 #  endif()
 #  list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}/qt_5_6_linux_64_static/lib/cmake")
 #endif()
+=======
 
-find_package(Qt5Core REQUIRED)
-find_package(Qt5Widgets REQUIRED)
-find_package(Qt5Sql REQUIRED)
-find_package(Qt5Network REQUIRED)
-find_package(Qt5Xml REQUIRED)
-find_package(Qt5Concurrent REQUIRED)
-find_package(Qt5PrintSupport REQUIRED)
-find_package(Qt5Gui REQUIRED)
+set(QT_INSTALL_DIR "${CMAKE_BINARY_DIR}/../../../Qt-prefix/src/Qt-install/")
+
+if(NOT EXISTS ${QT_INSTALL_DIR})
+
+  option(STATIC_QT "Use Static Qt" ON)
+
+  # download qt
+  if( WIN32 )
+    if( STATIC_QT )
+      set(QT_ZIP_FILENAME "qt_5_6_msvc2013_64_static_temp.zip")
+      set(QT_ZIP_EXPECTED_MD5 "3f0e1a505e707c9f1bde31e05f17fc47")
+    else()
+      set(QT_ZIP_FILENAME "qt_5_6_msvc2013_64_shared_temp.zip")
+      set(QT_ZIP_EXPECTED_MD5 "2ac0ed2909710350f1c6acd5f38a8b33")
+    endif()
+    
+  elseif( APPLE )
+    if( STATIC_QT )
+      set(QT_ZIP_FILENAME "qt_5_6_osx_static_temp.tar.gz")
+      set(QT_ZIP_EXPECTED_MD5 "094985d51cc686cdb665c45fff9c088f")
+    else()
+      message(SEND_ERROR "Shared Apple Qt build not available")
+      #set(QT_ZIP_FILENAME "qt_5_6_osx_shared.tar.gz")
+      #set(QT_ZIP_EXPECTED_MD5 "52424fdb4d553b94156de088881506b5")
+    endif()
+
+  elseif(EXISTS "/etc/redhat-release")
+    if( STATIC_QT )
+      set(QT_ZIP_FILENAME "qt_5_6_redhat_64_static_temp.tar.gz")
+      set(QT_ZIP_EXPECTED_MD5 "4c62bd59d1c4ebc14594fe98b33c58fd")
+    else()
+      message(SEND_ERROR "Shared Redhat Qt build not available")
+      #set(QT_ZIP_FILENAME "qt_5_6_redhat_64_shared.tar.gz")
+      #set(QT_ZIP_EXPECTED_MD5 "52424fdb4d553b94156de088881506b5")
+    endif()
+    
+  else()
+    #ubuntu
+    if( STATIC_QT )
+      set(QT_ZIP_FILENAME "qt_5_6_linux_64_static_temp.tar.gz")
+      set(QT_ZIP_EXPECTED_MD5 "1377b18696829ccd7d5b1906b05d9857")
+    else()
+      message(SEND_ERROR "Shared Ubuntu Qt build not available")
+      #set(QT_ZIP_FILENAME "qt_5_6_linux_64_static.tar.gz")
+      #set(QT_ZIP_EXPECTED_MD5 "52424fdb4d553b94156de088881506b5")
+    endif()
+    
+  endif()
+  
+  set(QT_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${QT_ZIP_FILENAME}")
+  if(EXISTS "${QT_ZIP_LOCAL_PATH}")
+    file(MD5 "${QT_ZIP_LOCAL_PATH}" QT_ZIP_MD5)
+  endif()
+    
+  if( NOT QT_ZIP_MD5 STREQUAL QT_ZIP_EXPECTED_MD5)
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${QT_ZIP_FILENAME}" 
+      ${QT_ZIP_LOCAL_PATH} 
+      INACTIVITY_TIMEOUT 120 
+      SHOW_PROGRESS
+      EXPECTED_MD5 ${QT_ZIP_EXPECTED_MD5})
+      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+  endif()
+  
+  set(QT_INSTALL_DIR "${CMAKE_BINARY_DIR}/Qt-install/")
+  
+endif()
+>>>>>>> os_2_0_develop
+
+find_package(Qt5Core REQUIRED HINTS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
+find_package(Qt5Widgets REQUIRED HINTS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
+find_package(Qt5Sql REQUIRED HINTS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
+find_package(Qt5Network REQUIRED HINTS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
+find_package(Qt5Xml REQUIRED HINTS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
+find_package(Qt5Concurrent REQUIRED HINTS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
+find_package(Qt5PrintSupport REQUIRED HINTS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
+find_package(Qt5Gui REQUIRED HINTS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
 if( WIN32 )
-  find_package(Qt5WinExtras REQUIRED)
+  find_package(Qt5WinExtras REQUIRED HINTS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
 endif()
 mark_as_advanced(
   Qt5Concurrent_DIR
@@ -668,6 +745,7 @@ endif()
 
 set(CMAKE_AUTOMOC OFF)
 
+<<<<<<< HEAD
 #Adding libraries to the list of includes
 include_directories(${Qt5Widgets_INCLUDE_DIRS})
 include_directories(${Qt5Sql_INCLUDE_DIRS})
@@ -785,6 +863,118 @@ endif()
 ## qwt
 # add_subdirectory(src/qwt)
 ###############################################################################
+=======
+get_target_property(QtCore_TYPE Qt5::Core TYPE)
+message("QtCore_TYPE = ${QtCore_TYPE}")
+
+if(QtCore_TYPE STREQUAL "STATIC_LIBRARY")
+  add_definitions(-DQT_STATIC)
+else()
+  find_package(Qt5WebEngineWidgets REQUIRED HINTS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
+  
+  list(APPEND QT_LIBS Qt5::WebEngineWidgets)
+endif()
+
+list(APPEND QT_LIBS Qt5::Core)
+list(APPEND QT_LIBS Qt5::Gui)
+list(APPEND QT_LIBS Qt5::Widgets)
+list(APPEND QT_LIBS Qt5::Sql)
+list(APPEND QT_LIBS Qt5::Network)
+list(APPEND QT_LIBS Qt5::Xml)
+list(APPEND QT_LIBS Qt5::Concurrent)
+list(APPEND QT_LIBS Qt5::PrintSupport)
+if( UNIX AND STATIC_QT )
+  list(APPEND QT_LIBS "${QT_INSTALL_DIR}/plugins/sqldrivers/libqsqlite.a")
+  list(APPEND QT_LIBS "${QT_INSTALL_DIR}/lib/libqtharfbuzzng.a")
+  find_package(OpenGL REQUIRED)
+  list(APPEND QT_LIBS "${OPENGL_LIBRARIES}")
+endif()
+
+if( UNIX AND NOT APPLE )
+  find_library(png_lib png)
+  list(APPEND QT_LIBS ${png_lib})
+  if(EXISTS "/etc/redhat-release")
+    list(APPEND QT_LIBS "${QT_INSTALL_DIR}/lib/libqtpcre.a")
+    find_library(rt_lib rt)
+    list(APPEND QT_LIBS ${rt_lib})
+    find_library(jpeg_lib jpeg)
+    list(APPEND QT_LIBS ${jpeg_lib})
+    find_library(glib_lib glib-2.0)
+    list(APPEND QT_LIBS ${glib_lib})
+    find_library(gthread_lib gthread-2.0)
+    list(APPEND QT_LIBS ${gthread_lib})
+    find_library(db_lib db)
+    list(APPEND QT_LIBS ${db_lib})
+  else()
+    find_library(pcre16_lib pcre16)
+    list(APPEND QT_LIBS ${pcre16_lib})
+  endif()
+  find_library(crypto_lib crypto)
+  list(APPEND QT_LIBS ${crypto_lib})
+endif()
+
+if( APPLE AND STATIC_QT )
+  find_library(corefoundation_lib CoreFoundation)
+  find_library(cfnetwork_lib CFNetwork)
+  find_library(coregraphics_lib CoreGraphics)
+  find_library(carbon_lib Carbon)
+  find_library(appkit_lib AppKit)
+  find_library(systemconfiguration_lib SystemConfiguration)
+  find_library(security_lib Security)
+  list(APPEND QT_LIBS ${corefoundation_lib})
+  list(APPEND QT_LIBS ${cfnetwork_lib})
+  list(APPEND QT_LIBS ${coregraphics_lib})
+  list(APPEND QT_LIBS ${carbon_lib})
+  list(APPEND QT_LIBS ${appkit_lib})
+  list(APPEND QT_LIBS ${systemconfiguration_lib})
+  list(APPEND QT_LIBS ${security_lib})
+  list(APPEND QT_LIBS "${QT_INSTALL_DIR}/lib/libqtpcre.a")
+endif()
+
+if( WIN32 )
+  # This is a dirty hack and only works for release
+  # clean this up
+  find_library(PLATFORM_SUPPORT Qt5PlatformSupport PATHS "${QT_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
+  find_library(FREETYPE qtfreetype PATHS "${QT_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
+  
+  mark_as_advanced(PLATFORM_SUPPORT FREETYPE)
+  
+  list(APPEND QT_LIBS ${PLATFORM_SUPPORT})
+  list(APPEND QT_LIBS ${FREETYPE})
+  
+  list(APPEND QT_LIBS wsock32)
+  list(APPEND QT_LIBS ws2_32)
+  list(APPEND QT_LIBS iphlpapi)
+  list(APPEND QT_LIBS dbghelp)
+  list(APPEND QT_LIBS Shlwapi)
+  
+  if(QtCore_TYPE STREQUAL "STATIC_LIBRARY")
+    find_library(HARFBUZZ qtharfbuzzng PATHS "${QT_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
+    find_library(PCRE qtpcre PATHS "${QT_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
+    find_library(SQLITE qsqlite PATHS "${QT_INSTALL_DIR}/plugins/sqldrivers/" NO_DEFAULT_PATH)
+    find_library(WIN_PLATFORM qwindows PATHS "${QT_INSTALL_DIR}/plugins/platforms/" NO_DEFAULT_PATH)
+    
+    link_directories("${OPENSSL_ROOT_DIR}/lib/VC/static")
+    
+    mark_as_advanced(HARFBUZZ PCRE SQLITE WIN_PLATFORM)
+
+    list(APPEND QT_LIBS ${HARFBUZZ})
+    list(APPEND QT_LIBS ${PCRE})
+    list(APPEND QT_LIBS ${SQLITE})
+    list(APPEND QT_LIBS ${WIN_PLATFORM})
+  
+    list(APPEND QT_LIBS Crypt32)
+    list(APPEND QT_LIBS imm32)
+    list(APPEND QT_LIBS winmm)
+    list(APPEND QT_LIBS ssleay32MT)
+    list(APPEND QT_LIBS libeay32MT)
+    list(APPEND QT_LIBS Gdi32)
+  endif()
+
+  list(APPEND QT_LIBS Qt5::WinExtras)
+    
+endif()
+>>>>>>> os_2_0_develop
 
 ###############################################################################
 ## jsoncpp
@@ -802,12 +992,51 @@ add_subdirectory(src/sqlite)
 # Project source directory
 include_directories("${CMAKE_HOME_DIRECTORY}/src/")
 
+# For QWinWidget
+include_directories("${CMAKE_HOME_DIRECTORY}/src/qtwinmigrate")
+
 # Project binary directory
 include_directories("${CMAKE_BINARY_DIR}/src/")
 ###############################################################################
 
 ###############################################################################
 # Add project sub directories
+
+include("embedded/EmbedFiles.cmake")
+add_subdirectory("embedded")
+
+# Each subfolder of src is a major sub-project
+set(project_directories
+  generateiddfactory
+  utilities
+  model
+  energyplus
+  radiance
+  gbxml
+  #bimserver
+  airflow
+  isomodel
+  osversion
+  measure
+  #resultsviewer
+  #model_editor
+  #openstudio_lib
+  sdd
+  cli
+)
+if(WIN32)
+  list(APPEND project_directories "qtwinmigrate")
+endif()
+
+if(QtCore_TYPE STREQUAL "SHARED_LIBRARY")
+  list(APPEND project_directories "qwt")
+  #list(APPEND project_directories "gbxml")
+  list(APPEND project_directories "bimserver")
+  list(APPEND project_directories "resultsviewer")
+  list(APPEND project_directories "model_editor")
+  list(APPEND project_directories "openstudio_lib")
+  list(APPEND project_directories "openstudio_app")
+endif()
 
 # Include the resources, should happen after find EnergyPlus
 add_subdirectory(resources)
@@ -948,12 +1177,6 @@ endif()
 
 set(TARGETS_FILE ${CMAKE_BINARY_DIR}/OpenStudioTargets.cmake)
 
-if(WIN32)
-  set(QTWINMIGRATE_EXPORT "qtwinmigrate")
-else()
-  set(QTWINMIGRATE_EXPORT "")
-endif()
-
 set(all_lib_targets
   openstudio_osversion
   openstudio_model
@@ -962,19 +1185,34 @@ set(all_lib_targets
   openstudio_energyplus
   openstudio_measure
   openstudio_radiance
-  #openstudio_gbxml
+  openstudio_gbxml
   #openstudio_bimserver
   openstudio_isomodel
   openstudio_lib
   openstudio_sdd
   openstudio_airflow
+<<<<<<< HEAD
   ${QTWINMIGRATE_EXPORT}
 # qwt
+=======
+  #qwt
+>>>>>>> os_2_0_develop
   miniziplib
   sqlite
   jsoncpp
   ${ALL_RUBY_BINDING_TARGETS}
 )
+if(WIN32)
+  list(APPEND all_lib_targets "qtwinmigrate")
+endif()
+
+if(QtCore_TYPE STREQUAL "SHARED_LIBRARY")
+  list(APPEND all_lib_targets "openstudio_modeleditor")
+  #list(APPEND all_lib_targets "openstudio_gbxml")
+  list(APPEND all_lib_targets "openstudio_bimserver")
+  list(APPEND all_lib_targets "openstudio_lib")
+  list(APPEND all_lib_targets "qwt")
+endif()
 
 export(TARGETS
   ${all_lib_targets}
@@ -983,10 +1221,15 @@ export(TARGETS
 
 set(all_exe_targets
   GenerateIddFactory
-  #gbXMLToIdf
+  gbXMLToIdf
   #OpenStudio
   #ResultsViewer
 )
+
+if(QtCore_TYPE STREQUAL "SHARED_LIBRARY")
+  list(APPEND all_exe_targets "OpenStudio")
+  list(APPEND all_exe_targets "ResultsViewer")
+endif()
 
 if(UNIX AND NOT APPLE)
   foreach(targ ${all_lib_targets} ${all_exe_targets} ${ALL_TESTING_TARGETS})

@@ -645,3 +645,36 @@ TEST(Filetypes, WorkflowStepResult_EscapeCharacters2)
   EXPECT_EQ("\"Standard Error\"", result2->stdErr().get());
 
 }
+
+TEST(Filetypes, WorkflowJSON_Setters)
+{
+  WorkflowJSON workflowJSON;
+
+  EXPECT_FALSE(workflowJSON.seedFile());
+  EXPECT_FALSE(workflowJSON.weatherFile());
+
+  EXPECT_TRUE(workflowJSON.setSeedFile(toPath("../in.osm")));
+  EXPECT_TRUE(workflowJSON.setWeatherFile(toPath("./files/in.epw")));
+
+  ASSERT_TRUE(workflowJSON.seedFile());
+  ASSERT_TRUE(workflowJSON.weatherFile());
+
+  EXPECT_EQ(toPath("../in.osm"), workflowJSON.seedFile().get());
+  EXPECT_EQ(toPath("./files/in.epw"), workflowJSON.weatherFile().get());
+
+  std::string json = workflowJSON.string();
+  
+  workflowJSON.resetSeedFile();
+  workflowJSON.resetWeatherFile();
+
+  EXPECT_FALSE(workflowJSON.seedFile());
+  EXPECT_FALSE(workflowJSON.weatherFile());
+
+  EXPECT_NO_THROW({ workflowJSON = WorkflowJSON(json); });
+
+  ASSERT_TRUE(workflowJSON.seedFile());
+  ASSERT_TRUE(workflowJSON.weatherFile());
+
+  EXPECT_EQ(toPath("../in.osm"), workflowJSON.seedFile().get());
+  EXPECT_EQ(toPath("./files/in.epw"), workflowJSON.weatherFile().get());
+}

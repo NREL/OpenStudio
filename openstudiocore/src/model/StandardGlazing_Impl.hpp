@@ -29,6 +29,8 @@
 namespace openstudio {
 namespace model {
 
+class MaterialPropertyGlazingSpectralData;
+
 namespace detail {
 
   /** StandardGlazing_Impl is a Glazing_Impl that is the implementation class for StandardGlazing.*/
@@ -134,6 +136,8 @@ namespace detail {
 
     boost::optional<std::string> windowGlassSpectralDataSetName() const;
 
+    boost::optional<MaterialPropertyGlazingSpectralData> windowGlassSpectralDataSet() const;
+
     /** Get the thickness of the material. */
     virtual double thickness() const override;
 
@@ -212,9 +216,11 @@ namespace detail {
 
     bool setOpticalDataType(std::string opticalDataType);
 
-    void setWindowGlassSpectralDataSetName(boost::optional<std::string> windowGlassSpectralDataSetName);
-
+    bool setWindowGlassSpectralDataSetName(boost::optional<std::string> windowGlassSpectralDataSetName);
     void resetWindowGlassSpectralDataSetName();
+
+    bool setWindowGlassSpectralDataSet(const MaterialPropertyGlazingSpectralData& spectralData);
+    void resetWindowGlassSpectralDataSet();
 
     /** Set thickness to value (m). */
     virtual bool setThickness(double value) override;

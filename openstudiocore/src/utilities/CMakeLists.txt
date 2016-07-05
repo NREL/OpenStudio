@@ -294,9 +294,15 @@ qt5_wrap_cpp_minimally(plot_moc_src ${plot_moc}) # [sudo] RM [-rf]
 
 # embedded files
 file(GLOB_RECURSE BCL_TEMPLATES  FOLLOW_SYMLINKS "${CMAKE_CURRENT_SOURCE_DIR}/bcl/templates/**/*.*")
-
 foreach( _FILE ${BCL_TEMPLATES} )
   file(RELATIVE_PATH LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/bcl/" ${_FILE})
+  list(APPEND E_FILES ${_FILE})
+  list(APPEND E_PATHS ${LOCATION})
+endforeach()
+
+file(GLOB_RECURSE IDD_FILES  FOLLOW_SYMLINKS "${CMAKE_CURRENT_SOURCE_DIR}/idd/versions/*/*.idd")
+foreach( _FILE ${IDD_FILES} )
+  file(RELATIVE_PATH LOCATION "${CMAKE_CURRENT_SOURCE_DIR}" ${_FILE})
   list(APPEND E_FILES ${_FILE})
   list(APPEND E_PATHS ${LOCATION})
 endforeach()
@@ -502,18 +508,19 @@ set(${target_name}_swig_src
   units/QuantityConverter.i
 )
 
-# make sure zconf.h can be found
-include_directories(${CMAKE_BINARY_DIR}/src/zlib)
-
 #include subdir for pch
 add_subdirectory(pch)
 
+<<<<<<< HEAD
 if(WIN32)
   add_definitions("-D${target_name}_EXPORTS")
 endif()
 
 
 add_library(${target_name} SHARED
+=======
+add_library(${target_name}
+>>>>>>> os_2_0_develop
   ${${target_name}_src}
 )
 
