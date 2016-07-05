@@ -22,7 +22,6 @@
 
 #include "../UtilitiesAPI.hpp"
 
-#include "Vector.hpp"
 #include "../time/Date.hpp"
 #include "../time/Time.hpp"
 #include "../time/DateTime.hpp"
@@ -34,102 +33,9 @@
 
 namespace openstudio{
 
-namespace detail{
-
-class UTILITIES_API TimeSeries_Impl
-{
-public:
-
-  TimeSeries_Impl();
-
-  TimeSeries_Impl(const Date& startDate, const Time& intervalLength, const Vector& values, const std::string& units);
-
-  TimeSeries_Impl(const DateTime& firstReportDateTime, const Time& intervalLength, const Vector& values, const std::string& units);
-
-  TimeSeries_Impl(const DateTime& firstReportDateTime, const Vector& timeInDays, const Vector& values, const std::string& units);
-
-  TimeSeries_Impl(const DateTime& firstReportDateTime, const std::vector<double>& timeInDays, const std::vector<double>& values, const std::string& units);
-
-  TimeSeries_Impl(const DateTimeVector& dateTimes, const Vector& values, const std::string& units);
-
-  TimeSeries_Impl(const DateTime& firstReportDateTime, const std::vector<long>& timeInSeconds, const Vector& values, const std::string& units);
-
-  ~TimeSeries_Impl() {}
-
-  openstudio::OptionalTime intervalLength() const;
-
-  openstudio::DateTime firstReportDateTime() const;
-
-  DateTimeVector dateTimes() const;
-
-  openstudio::Vector daysFromFirstReport() const;
-
-  double daysFromFirstReport(const unsigned& i) const;
-
-  std::vector<long> secondsFromFirstReport() const;
-
-  long secondsFromFirstReport(const unsigned& i) const;
-
-  openstudio::Vector values() const;
-
-  double values(const unsigned& i) const;
-
-  const std::string units() const;
-
-  double valueAtSecondsFromFirstReport(long secondsFromFirstReport) const;
-
-  double value(double daysFromFirstReport) const;
-
-  double value(const Time& timeFromFirstReport) const;
-
-  double value(const DateTime& dateTime) const;
-
-  Vector values(const DateTime& startDateTime, const DateTime& endDateTime) const;
-
-  double outOfRangeValue() const;
-
-  void setOutOfRangeValue(double value);
-
-  std::shared_ptr<TimeSeries_Impl> operator+(const TimeSeries_Impl& other) const;
-
-  std::shared_ptr<TimeSeries_Impl> operator-(const TimeSeries_Impl& other) const;
-
-  std::shared_ptr<TimeSeries_Impl> operator*(double d) const;
-
-  double integrate() const;
-
-  double averageValue() const;
-
-private:
-
-  REGISTER_LOGGER("utilities.TimeSeries_Impl");
-  // fully qualified first report date
-  DateTime m_firstReportDateTime;
-
-  // start date and time of time series
-  DateTime m_startDateTime;
-
-  // integer seconds from first report date time, used for quick interpolation
-  std::vector<long> m_secondsFromFirstReport;
-  Vector m_secondsFromFirstReportAsVector; // same as m_secondsFromFirstReport but stored as Vector
-  std::vector<long> m_secondsFromStart;
-
-  // values reported at m_dateTimes
-  Vector m_values;
-
-  // units of the values
-  std::string m_units;
-
-  // length of the reporting interval if known, can be used to speed up interpolation
-  OptionalTime m_intervalLength;
-
-  // value used for out of range data
-  double m_outOfRangeValue;
-
-  // true if the time series should support wrap around dates, e.g. 4/11-4/10 without specific year
-  bool m_wrapAround;
-};
-} // detail
+namespace detail {
+class TimeSeries_Impl;
+}
 
 /** TimeSeries is a series of values each reported at a single time.  We follow the EnergyPlus
  *   convention that the time reported for each value is at the end of the reporting interval.  For example, if a value 
@@ -154,22 +60,12 @@ public:
 
   /** Constructor from start date, interval length, values, and units.
    *  First reporting interval starts at 0 hours on startDate and ends at startDate + intervalLength. */
-  TimeSeries(const Date& startDate, const Time& intervalLength, const Vector& values, const std::string& units);
+  //TimeSeries(const Date& startDate, const Time& intervalLength, const Vector& values, const std::string& units);
+  TimeSeries(const Date& startDate, const Time& intervalLength, const std::vector<double>& values, const std::string& units);
 
   /** Constructor from first report date and time, interval length, values, and units.
    *  First reporting interval starts at firstReportDateTime - intervalLength and ends at firstReportDateTime. */
-  TimeSeries(const DateTime& firstReportDateTime, const Time& intervalLength, const Vector& values, const std::string& units);
-
-  /** Constructor from first report date and time, time in days, values, and units.
-   *  The treatment of the time vector depends upon the value of the first element:
-   *    - If timeInDays[0] == 0 then the first reporting interval starts at 0 hours on the firstReportDateTime's date and ends at firstReportDateTime.
-   *    - If timeInDays[0] > 0 then the first reporting interval starts at firstReportDateTime - timeInDays[0] and ends at firstReportDateTime.
-   *
-   *  An exception is thrown if:
-   *    - timeInDays.size != values.size
-   *    - timeInDays is not monotonically increasing
-   *    - the start date and time of first reporting interval cannot be determined */
-  TimeSeries(const DateTime& firstReportDateTime, const Vector& timeInDays, const Vector& values, const std::string& units);
+  TimeSeries(const DateTime& firstReportDateTime, const Time& intervalLength, const std::vector<double>& values, const std::string& units);
 
   /** Constructor from first report date and time, time in days, values, and units.
    *  The treatment of the time vector depends upon the value of the first element:
@@ -191,7 +87,7 @@ public:
    *   - (timeInDays.size != values.size) and (timeInDays.size != values.size + 1)
    *   - the start date and time of first reporting interval cannot be determined */
   // DLM: this is the constructor that would be used for point in time measurements
-  TimeSeries(const DateTimeVector& dateTimes, const Vector& values, const std::string& units);
+  TimeSeries(const DateTimeVector& dateTimes, const std::vector<double>& values, const std::string& units);
 
   /** Constructor from first report date and time, time in seconds, values, and units.
    *  The treatment of the time vector depends upon the value of the first element:
@@ -202,7 +98,7 @@ public:
    *   - timeInSeconds.size != values.size
    *   - timeInSeconds is not monotonically increasing
    *   - start date and time of first reporting interval cannot be determined */
-  TimeSeries(const DateTime& firstReportDateTime, const std::vector<long>& timeInSeconds, const Vector& values, const std::string& units);
+  TimeSeries(const DateTime& firstReportDateTime, const std::vector<long>& timeInSeconds, const std::vector<double>& values, const std::string& units);
 
   /// Virtual destructor
   ~TimeSeries() {}
@@ -221,7 +117,7 @@ public:
   openstudio::DateTime firstReportDateTime() const;
 
   /// Returns the vector of time in days from end of the first reporting interval
-  openstudio::Vector daysFromFirstReport() const;
+  std::vector<double> daysFromFirstReport() const;
 
   /// Returns the time in days from end of the first reporting interval at index i to prevent implicit vector copy for single value
   double daysFromFirstReport(const unsigned& i) const;
@@ -233,7 +129,7 @@ public:
   long secondsFromFirstReport(const unsigned& i) const;
 
   /// Returns the values vector
-  openstudio::Vector values() const;
+  std::vector<double> values() const;
 
   /// Returns the value at index i to prevent implicit vector copy for single value
   double values(const unsigned& i) const;
@@ -251,7 +147,7 @@ public:
   double value(const DateTime& dateTime) const;
 
   /// Get values between start and end date times
-  Vector values(const DateTime& startDateTime, const DateTime& endDateTime) const;
+  std::vector<double> values(const DateTime& startDateTime, const DateTime& endDateTime) const;
 
   /// Get the value used for out of range data
   double outOfRangeValue() const;

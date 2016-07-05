@@ -1302,7 +1302,7 @@ std::vector<TimeSeries> IndexModelImpl::zoneInfiltration(SimFile *sim)
   for(unsigned int i=0; i<m_zones.size(); i++)
   {
     // This is lame, but I can't tell for sure if the values of a Vector are actually zero.
-    Vector inf = createVector(std::vector<double>(ntimes,0));
+    std::vector<double> inf(ntimes,0);
     for(unsigned int j=0; j<paths[i].size(); j++)
     {
       if(paths[i][j] > 0) // Positive values are infiltration
@@ -1310,7 +1310,7 @@ std::vector<TimeSeries> IndexModelImpl::zoneInfiltration(SimFile *sim)
         boost::optional<openstudio::TimeSeries> optFlow = sim->pathFlow(paths[i][j]);
         if(optFlow)
         {
-          Vector flow = optFlow.get().values();
+          std::vector<double> flow = optFlow.get().values();
           for(unsigned int k=0; k<ntimes; k++)
           {
             if(flow[k] > 0)
@@ -1331,7 +1331,7 @@ std::vector<TimeSeries> IndexModelImpl::zoneInfiltration(SimFile *sim)
         boost::optional<openstudio::TimeSeries> optFlow = sim->pathFlow(paths[i][j]);
         if(optFlow)
         {
-          Vector flow = optFlow.get().values();
+          std::vector<double> flow = optFlow.get().values();
           for(unsigned int k=0; k<ntimes; k++)
           {
             if(flow[k] < 0)
@@ -1367,7 +1367,7 @@ std::vector<TimeSeries> IndexModelImpl::pathInfiltration(std::vector<int> pathNr
   }
   for(unsigned int i=0; i<pathNrs.size(); i++)
   {
-    Vector inf = createVector(std::vector<double>(ntimes,0.0));
+    std::vector<double> inf(ntimes,0.0);
     if(pathNrs[i]<=0 || (unsigned)pathNrs[i] > m_paths.size())
     {
       // Possibly should issue a warning here, the path number is out of range
@@ -1381,7 +1381,7 @@ std::vector<TimeSeries> IndexModelImpl::pathInfiltration(std::vector<int> pathNr
         boost::optional<openstudio::TimeSeries> optFlow = sim->pathFlow(path.nr());
         if(optFlow)
         {
-          Vector flow = optFlow.get().values();
+          std::vector<double> flow = optFlow.get().values();
           for(unsigned int k=0; k<ntimes; k++)
           {
             if(flow[k] < 0)
@@ -1403,7 +1403,7 @@ std::vector<TimeSeries> IndexModelImpl::pathInfiltration(std::vector<int> pathNr
         boost::optional<openstudio::TimeSeries> optFlow = sim->pathFlow(path.nr());
         if(optFlow)
         {
-          Vector flow = optFlow.get().values();
+          std::vector<double> flow = optFlow.get().values();
           for(unsigned int k=0; k<ntimes; k++)
           {
             if(flow[k] > 0)

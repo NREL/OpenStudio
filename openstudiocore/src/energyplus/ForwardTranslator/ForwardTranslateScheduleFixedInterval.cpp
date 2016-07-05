@@ -84,9 +84,9 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleFixedInterval( Sc
     return boost::optional<IdfObject>();
   }
   DateTime firstReportDateTime = timeseries.firstReportDateTime();
-  Vector daysFromFirst = timeseries.daysFromFirstReport();
+  std::vector<double> daysFromFirst = timeseries.daysFromFirstReport();
   std::vector<long> secondsFromFirst = timeseries.secondsFromFirstReport();
-  Vector values = timeseries.values();
+  std::vector<double> values = timeseries.values();
 
   // We aren't using this - should we?
   std::string interpolateField = "Interpolate:No";

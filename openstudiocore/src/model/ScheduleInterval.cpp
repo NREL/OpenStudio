@@ -88,7 +88,7 @@ namespace detail {
   }
 
   std::vector<double> ScheduleInterval_Impl::values() const {
-    return toStandardVector(timeSeries().values());
+    return timeSeries().values();
   }
 
 } // detail

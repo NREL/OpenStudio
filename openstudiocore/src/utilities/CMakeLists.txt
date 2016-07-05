@@ -94,6 +94,7 @@ set(data_src
   data/Tag.hpp
   data/Tag.cpp
   data/TimeSeries.hpp
+  data/TimeSeries_Impl.hpp
   data/TimeSeries.cpp
   data/Vector.hpp
   data/Vector.cpp

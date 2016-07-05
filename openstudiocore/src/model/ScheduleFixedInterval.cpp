@@ -88,7 +88,7 @@ namespace detail {
     Date startDate(openstudio::MonthOfYear(this->startMonth()), this->startDay());
     Time intervalLength(0, 0, this->intervalLength());
 
-    Vector values(this->numExtensibleGroups());
+    std::vector<double> values(this->numExtensibleGroups());
     unsigned i = 0;
     for (const ModelExtensibleGroup& group : castVector<ModelExtensibleGroup>(extensibleGroups()))
     {
@@ -156,7 +156,7 @@ namespace detail {
     }
 
     // set the values
-    openstudio::Vector values = timeSeries.values();
+    std::vector<double> values = timeSeries.values();
     for (unsigned i = 0; i < values.size(); ++i){
       std::vector<std::string> temp;
       temp.push_back(toString(values[i]));

@@ -667,8 +667,8 @@ namespace openstudio{
       execAndThrowOnError(insertReportDataDictionary.str());
 
 
-      std::vector<double> values = toStandardVector(t_timeSeries.values());
-      std::vector<double> days = toStandardVector(t_timeSeries.daysFromFirstReport());
+      std::vector<double> values = t_timeSeries.values();
+      std::vector<double> days = t_timeSeries.daysFromFirstReport();
 
       openstudio::DateTime firstdate = t_timeSeries.firstReportDateTime();
 
@@ -2449,11 +2449,9 @@ namespace openstudio{
         if (firstReportDateTime && !stdSecondsFromFirstReport.empty()){
           if (isIntervalTimeSeries){
             openstudio::Time intervalTime(0,0,*reportingIntervalMinutes,0);
-            openstudio::Vector values = createVector(stdValues);
-            ts = openstudio::TimeSeries(*firstReportDateTime, intervalTime, values, units);
+            ts = openstudio::TimeSeries(*firstReportDateTime, intervalTime, stdValues, units);
           }else{
-            openstudio::Vector values = createVector(stdValues);
-            ts = openstudio::TimeSeries(*firstReportDateTime, stdSecondsFromFirstReport, values, units);
+            ts = openstudio::TimeSeries(*firstReportDateTime, stdSecondsFromFirstReport, stdValues, units);
           }
         }
       }

@@ -322,14 +322,14 @@ static openstudio::TimeSeries convertData(std::vector<openstudio::DateTime> inpu
   std::vector<double> values;
   if(inputDateTimes.size()==1) // Account for steady simulation results
   {
-    return openstudio::TimeSeries(inputDateTimes,createVector(inputValues),units);
+    return openstudio::TimeSeries(inputDateTimes,inputValues,units);
   }
   for(unsigned i=1;i<inputDateTimes.size();i++)
   {
     dateTimes.push_back(inputDateTimes[i]);
     values.push_back(0.5*(inputValues[i-1]+inputValues[i]));
   }
-  return openstudio::TimeSeries(dateTimes,createVector(values),units);
+  return openstudio::TimeSeries(dateTimes,values,units);
 }
 
 

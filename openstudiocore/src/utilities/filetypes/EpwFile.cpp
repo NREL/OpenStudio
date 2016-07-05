@@ -2178,7 +2178,7 @@ boost::optional<TimeSeries> EpwFile::getTimeSeries(const std::string &name)
     if(values.size()) {
       DateTime start = dates[1] - Time(0, 0, 0, 3600.0 / m_recordsPerHour);
       dates[0] = start; // Overwrite the placeholder
-      return boost::optional<TimeSeries>(TimeSeries(dates,openstudio::createVector(values),units));
+      return boost::optional<TimeSeries>(TimeSeries(dates,values,units));
     }
   }
   return boost::none;
@@ -2240,7 +2240,7 @@ boost::optional<TimeSeries> EpwFile::getComputedTimeSeries(const std::string &na
   if (values.size()) {
     DateTime start = dates[1] - Time(0, 0, 0, 3600.0 / m_recordsPerHour);
     dates[0] = start; // Overwrite the placeholder
-    return boost::optional<TimeSeries>(TimeSeries(dates, openstudio::createVector(values), units));
+    return boost::optional<TimeSeries>(TimeSeries(dates, values, units));
   }
   return boost::none;
 }

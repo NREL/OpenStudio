@@ -1284,7 +1284,7 @@ boost::optional<double> BillingPeriod::modelPeakDemand() const
     DateTime runPeriodStartDateTime = DateTime(runPeriodStartDate, Time(0,1,0,0));
     DateTime runPeriodEndDateTime = DateTime(runPeriodEndDate, Time(0,24,0,0));
 
-    Vector values = timeseries->values(runPeriodStartDateTime, runPeriodEndDateTime);
+    std::vector<double> values = timeseries->values(runPeriodStartDateTime, runPeriodEndDateTime);
     unsigned numValues = values.size();
 
     if (numValues < *timestepsInPeakDemandWindow){

@@ -18,10 +18,12 @@
  **********************************************************************/
 
 #include "TimeSeries.hpp"
+#include "TimeSeries_Impl.hpp"
 #include "../core/Assert.hpp"
 
 #include <exception>
 #include <set>
+#include <algorithm>
 
 using namespace std;
 using namespace boost;
@@ -33,7 +35,7 @@ namespace detail{
 TimeSeries_Impl::TimeSeries_Impl() :m_outOfRangeValue(0.0)
 {}
 
-TimeSeries_Impl::TimeSeries_Impl(const Date& startDate, const Time& intervalLength, const Vector& values, const std::string& units)
+TimeSeries_Impl::TimeSeries_Impl(const Date& startDate, const Time& intervalLength, const std::vector<double>& values, const std::string& units)
   : m_secondsFromFirstReport(values.size()), m_secondsFromStart(values.size()), m_values(values), m_units(units), m_intervalLength(intervalLength), m_outOfRangeValue(0.0), m_wrapAround(false)
 {
   if (values.empty()) {
@@ -53,7 +55,6 @@ TimeSeries_Impl::TimeSeries_Impl(const Date& startDate, const Time& intervalLeng
     m_secondsFromFirstReport[i] = i*secondsPerInterval;
     m_secondsFromStart[i] = (i + 1)*secondsPerInterval;
   }
-  m_secondsFromFirstReportAsVector = createVector(m_secondsFromFirstReport);
 
   long durationSeconds = 0;
   if (!m_secondsFromFirstReport.empty()) {
@@ -71,7 +72,7 @@ TimeSeries_Impl::TimeSeries_Impl(const Date& startDate, const Time& intervalLeng
   }
 }
 
-TimeSeries_Impl::TimeSeries_Impl(const DateTime& firstReportDateTime, const Time& intervalLength, const Vector& values, const std::string& units)
+TimeSeries_Impl::TimeSeries_Impl(const DateTime& firstReportDateTime, const Time& intervalLength, const std::vector<double>& values, const std::string& units)
   : m_secondsFromFirstReport(values.size()), m_secondsFromStart(values.size()), m_values(values), m_units(units), m_intervalLength(intervalLength), m_outOfRangeValue(0.0), m_wrapAround(false)
 {
   if (values.empty()) {
@@ -90,7 +91,6 @@ TimeSeries_Impl::TimeSeries_Impl(const DateTime& firstReportDateTime, const Time
     m_secondsFromFirstReport[i] = i*secondsPerInterval;
     m_secondsFromStart[i] = (i + 1)*secondsPerInterval;
   }
-  m_secondsFromFirstReportAsVector = createVector(m_secondsFromFirstReport);
 
   long durationSeconds = 0;
   if (!m_secondsFromFirstReport.empty()) {
@@ -107,7 +107,7 @@ TimeSeries_Impl::TimeSeries_Impl(const DateTime& firstReportDateTime, const Time
     }
   }
 }
-
+/*
 TimeSeries_Impl::TimeSeries_Impl(const DateTime& firstReportDateTime, const Vector& timeInDays, const Vector& values, const std::string& units)
   : m_secondsFromFirstReport(values.size()), m_secondsFromStart(values.size()), m_values(values), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
 {
@@ -174,6 +174,7 @@ TimeSeries_Impl::TimeSeries_Impl(const DateTime& firstReportDateTime, const Vect
     }
   }
 }
+*/
 
 TimeSeries_Impl::TimeSeries_Impl(const DateTime& firstReportDateTime, const std::vector<double>& timeInDays, const std::vector<double>& values, const std::string& units)
   : m_secondsFromFirstReport(timeInDays.size()), m_secondsFromStart(values.size()), m_values(values.size()), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
@@ -224,8 +225,6 @@ TimeSeries_Impl::TimeSeries_Impl(const DateTime& firstReportDateTime, const std:
       }
     }
 
-    m_secondsFromFirstReportAsVector = createVector(m_secondsFromFirstReport);
-
     long durationSeconds = 0;
     if (!m_secondsFromFirstReport.empty()) {
       durationSeconds = m_secondsFromFirstReport.back();
@@ -243,7 +242,7 @@ TimeSeries_Impl::TimeSeries_Impl(const DateTime& firstReportDateTime, const std:
   }
 }
 
-TimeSeries_Impl::TimeSeries_Impl(const DateTimeVector& inDateTimes, const Vector& values, const std::string& units)
+TimeSeries_Impl::TimeSeries_Impl(const DateTimeVector& inDateTimes, const std::vector<double>& values, const std::string& units)
   : m_secondsFromFirstReport(values.size()), m_secondsFromStart(values.size()), m_values(values), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
 {
   // DLM: this seems to be a pretty fragile constructor with a lot going on
@@ -349,11 +348,10 @@ TimeSeries_Impl::TimeSeries_Impl(const DateTimeVector& inDateTimes, const Vector
       m_secondsFromStart[i] = m_secondsFromStart[i] + firstIntervalSeconds;
     }
 
-    m_secondsFromFirstReportAsVector = createVector(m_secondsFromFirstReport);
   }
 }
 
-TimeSeries_Impl::TimeSeries_Impl(const DateTime& firstReportDateTime, const std::vector<long>& timeInSeconds, const Vector& values, const std::string& units)
+TimeSeries_Impl::TimeSeries_Impl(const DateTime& firstReportDateTime, const std::vector<long>& timeInSeconds, const std::vector<double>& values, const std::string& units)
   : m_secondsFromFirstReport(values.size()), m_secondsFromStart(values.size()), m_values(values), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
 {
   if (timeInSeconds.size() != values.size()) {
@@ -398,8 +396,6 @@ TimeSeries_Impl::TimeSeries_Impl(const DateTime& firstReportDateTime, const std:
     }
   }
 
-  m_secondsFromFirstReportAsVector = createVector(m_secondsFromFirstReport);
-
   long durationSeconds = 0;
   if (!m_secondsFromFirstReport.empty()) {
     durationSeconds = m_secondsFromFirstReport.back();
@@ -432,9 +428,9 @@ DateTimeVector TimeSeries_Impl::dateTimes() const
 }
 
 /// time in days from end of the first reporting interval
-Vector TimeSeries_Impl::daysFromFirstReport() const
+std::vector<double> TimeSeries_Impl::daysFromFirstReport() const
 {
-  Vector daysFromFirstReport(m_secondsFromFirstReport.size());
+  std::vector<double> daysFromFirstReport(m_secondsFromFirstReport.size());
   for (unsigned i = 0; i < m_secondsFromFirstReport.size(); i++) {
     daysFromFirstReport[i] = Time(0, 0, 0, m_secondsFromFirstReport[i]).totalDays();
   }
@@ -469,7 +465,7 @@ long TimeSeries_Impl::secondsFromFirstReport(const unsigned& i) const
 }
 
 /// values
-Vector TimeSeries_Impl::values() const
+std::vector<double> TimeSeries_Impl::values() const
 {
   return m_values;
 }
@@ -494,6 +490,14 @@ const std::string TimeSeries_Impl::units() const
 openstudio::DateTime TimeSeries_Impl::firstReportDateTime() const
 {
   return m_firstReportDateTime;
+}
+
+static double interpolateTimeSeries(long s, std::vector<long> seconds, std::vector<double> values)
+{
+  auto begin = seconds.begin();
+  auto it = std::lower_bound(begin, seconds.end(), s);
+  unsigned index = (unsigned)(it - begin);
+  return values[index];
 }
 
 /// get value at number of seconds from start date and time
@@ -535,7 +539,7 @@ double TimeSeries_Impl::valueAtSecondsFromFirstReport(long secondsFromFirstRepor
         LOG(Warn, "Timeseries index " << index << " is greater than or equal to values size " << m_values.size() << " and has been set to size - 1.");
         index = index - 1;
       }
-      result = m_values(index);
+      result = m_values[index];
     }
 
   } else {
@@ -549,7 +553,7 @@ double TimeSeries_Impl::valueAtSecondsFromFirstReport(long secondsFromFirstRepor
       LOG(Debug, "Cannot compute value " << secondsFromFirstReport << " seconds after first reporting time when duration is " << duration << " seconds");
     } else {
       // normal interpolation
-      result = interp(m_secondsFromFirstReportAsVector, m_values, secondsFromFirstReport, HoldNextInterp, NoneExtrap);
+      result = interpolateTimeSeries(secondsFromFirstReport, m_secondsFromStart, m_values);
     }
   }
 
@@ -603,7 +607,7 @@ double TimeSeries_Impl::value(const DateTime& dateTime) const
 }
 
 /// get values between start and end date times
-Vector TimeSeries_Impl::values(const DateTime& startDateTime, const DateTime& endDateTime) const
+std::vector<double> TimeSeries_Impl::values(const DateTime& startDateTime, const DateTime& endDateTime) const
 {
   boost::optional<int> calendarYear = m_firstReportDateTime.date().baseYear();
 
@@ -646,7 +650,7 @@ Vector TimeSeries_Impl::values(const DateTime& startDateTime, const DateTime& en
   unsigned numValues = m_values.size();
   OS_ASSERT(numValues == m_secondsFromFirstReport.size());
 
-  Vector result(numValues);
+  std::vector<double> result(numValues);
   unsigned resultSize = 0;
   for (unsigned i = 0; i < numValues; ++i) {
     if ((m_secondsFromFirstReport[i] >= startSecondsFromFirstReport) &&
@@ -692,7 +696,7 @@ std::shared_ptr<TimeSeries_Impl> TimeSeries_Impl::operator+(const TimeSeries_Imp
     DateTimeVector dateTimes(dateTimesSet.begin(), dateTimesSet.end());
 
     // compute value at each date time
-    Vector values(dateTimesSet.size());
+    std::vector<double> values(dateTimesSet.size());
     unsigned valueIndex = 0;
     for (const DateTime& dt : dateTimes) {
       values[valueIndex] = value(dt) + other.value(dt);
@@ -731,7 +735,7 @@ std::shared_ptr<TimeSeries_Impl> TimeSeries_Impl::operator-(const TimeSeries_Imp
     DateTimeVector dateTimes(dateTimesSet.begin(), dateTimesSet.end());
 
     // compute value at each date time
-    Vector values(dateTimesSet.size());
+    std::vector<double> values(dateTimesSet.size());
     unsigned valueIndex = 0;
     for (const DateTime& dt : dateTimes) {
       values[valueIndex] = value(dt) - other.value(dt);
@@ -752,15 +756,19 @@ std::shared_ptr<TimeSeries_Impl> TimeSeries_Impl::operator-(const TimeSeries_Imp
 }
 
 std::shared_ptr<TimeSeries_Impl> TimeSeries_Impl::operator*(double d) const {
+  std::vector<double> values(m_values.size());
+  for (unsigned i = 0; i < m_values.size(); i++) {
+    values[i] = m_values[i] * d;
+  }
   if (m_intervalLength) {
     return std::shared_ptr<TimeSeries_Impl>(new TimeSeries_Impl(m_firstReportDateTime,
       m_intervalLength.get(),
-      m_values*d,
+      values,
       m_units));
   }
   return std::shared_ptr<TimeSeries_Impl>(new TimeSeries_Impl(m_firstReportDateTime,
     m_secondsFromFirstReport,
-    m_values*d,
+    values,
     m_units));
 }
 
@@ -798,27 +806,23 @@ TimeSeries::TimeSeries() :
 m_impl(std::shared_ptr<detail::TimeSeries_Impl>(new detail::TimeSeries_Impl()))
 {}
 
-TimeSeries::TimeSeries(const Date& startDate, const Time& intervalLength, const Vector& values, const std::string& units) :
+TimeSeries::TimeSeries(const Date& startDate, const Time& intervalLength, const std::vector<double>& values, const std::string& units) :
 m_impl(std::shared_ptr<detail::TimeSeries_Impl>(new detail::TimeSeries_Impl(startDate, intervalLength, values, units)))
 {}
 
-TimeSeries::TimeSeries(const DateTime& firstReportDateTime, const Time& intervalLength, const Vector& values, const std::string& units) :
+TimeSeries::TimeSeries(const DateTime& firstReportDateTime, const Time& intervalLength, const std::vector<double>& values, const std::string& units) :
 m_impl(std::shared_ptr<detail::TimeSeries_Impl>(new detail::TimeSeries_Impl(firstReportDateTime, intervalLength, values, units)))
-{}
-
-TimeSeries::TimeSeries(const DateTime& firstReportDateTime, const Vector& timeInDays, const Vector& values, const std::string& units) :
-m_impl(std::shared_ptr<detail::TimeSeries_Impl>(new detail::TimeSeries_Impl(firstReportDateTime, timeInDays, values, units)))
 {}
 
 TimeSeries::TimeSeries(const DateTime& firstReportDateTime, const std::vector<double>& timeInDays, const std::vector<double>& values, const std::string& units) :
 m_impl(std::shared_ptr<detail::TimeSeries_Impl>(new detail::TimeSeries_Impl(firstReportDateTime, timeInDays, values, units)))
 {}
 
-TimeSeries::TimeSeries(const DateTimeVector& dateTimes, const Vector& values, const std::string& units) :
+TimeSeries::TimeSeries(const DateTimeVector& dateTimes, const std::vector<double>& values, const std::string& units) :
 m_impl(std::shared_ptr<detail::TimeSeries_Impl>(new detail::TimeSeries_Impl(dateTimes, values, units)))
 {}
 
-TimeSeries::TimeSeries(const DateTime& firstReportDateTime, const std::vector<long>& timeInSeconds, const Vector& values, const std::string& units) :
+TimeSeries::TimeSeries(const DateTime& firstReportDateTime, const std::vector<long>& timeInSeconds, const std::vector<double>& values, const std::string& units) :
 m_impl(std::shared_ptr<detail::TimeSeries_Impl>(new detail::TimeSeries_Impl(firstReportDateTime, timeInSeconds, values, units)))
 {}
 
@@ -837,7 +841,7 @@ openstudio::DateTime TimeSeries::firstReportDateTime() const
   return m_impl->firstReportDateTime();
 }
 
-openstudio::Vector TimeSeries::daysFromFirstReport() const
+std::vector<double> TimeSeries::daysFromFirstReport() const
 {
   return m_impl->daysFromFirstReport();
 }
@@ -857,7 +861,7 @@ long TimeSeries::secondsFromFirstReport(const unsigned& i) const
   return m_impl->secondsFromFirstReport(i);
 }
 
-openstudio::Vector TimeSeries::values() const
+std::vector<double> TimeSeries::values() const
 {
   return m_impl->values();
 }
@@ -887,7 +891,7 @@ double TimeSeries::value(const DateTime& dateTime) const
   return m_impl->value(dateTime);
 }
 
-Vector TimeSeries::values(const DateTime& startDateTime, const DateTime& endDateTime) const
+std::vector<double> TimeSeries::values(const DateTime& startDateTime, const DateTime& endDateTime) const
 {
   return m_impl->values(startDateTime, endDateTime);
 }

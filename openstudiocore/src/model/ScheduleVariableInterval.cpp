@@ -173,7 +173,7 @@ namespace detail {
   {
     unsigned numExtensibleGroups = this->numExtensibleGroups();
     if (numExtensibleGroups == 0){
-      return TimeSeries(Date(MonthOfYear::Jan, 1), 0, Vector(), "");
+      return TimeSeries(Date(MonthOfYear::Jan, 1), 0, std::vector<double>(), "");
     }
 
     OptionalInt startMonth = this->startMonth();
@@ -188,7 +188,7 @@ namespace detail {
 
     DateTimeVector dateTimes;
     dateTimes.push_back(DateTime(Date(MonthOfYear(*startMonth), *startDay), Time(0, *startHour, *startMinute)));
-    Vector values(numExtensibleGroups);
+    std::vector<double> values(numExtensibleGroups);
     unsigned i = 0;
     for (const ModelExtensibleGroup& group : castVector<ModelExtensibleGroup>(extensibleGroups()))
     {
@@ -231,7 +231,7 @@ namespace detail {
 
     // set the values
     std::vector<long> secondsFromFirstReport = timeSeries.secondsFromFirstReport();
-    openstudio::Vector values = timeSeries.values();
+    std::vector<double> values = timeSeries.values();
     for (unsigned i = 0; i < values.size(); ++i){
       DateTime dateTime = firstReportDateTime + Time(0,0,0,secondsFromFirstReport[i]);
       Date date = dateTime.date();
