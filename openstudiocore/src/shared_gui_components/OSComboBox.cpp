@@ -140,22 +140,22 @@ void OSObjectListCBDS::onObjectWillBeRemoved(const WorkspaceObject & workspaceOb
 
 void OSObjectListCBDS::onObjectChanged()
 {
-  WorkspaceObject workspaceObject = qobject_cast<detail::WorkspaceObject_Impl *>(sender())->getObject<WorkspaceObject>();
+  // WorkspaceObject workspaceObject = qobject_cast<detail::WorkspaceObject_Impl *>(sender())->getObject<WorkspaceObject>();
 
-  if(std::find(m_types.begin(),m_types.end(),workspaceObject.cast<model::ModelObject>().iddObjectType()) != m_types.end())
-  {
+  // if(std::find(m_types.begin(),m_types.end(),workspaceObject.cast<model::ModelObject>().iddObjectType()) != m_types.end())
+  // {
 
-    int i = m_workspaceObjects.indexOf(workspaceObject);
+  //   int i = m_workspaceObjects.indexOf(workspaceObject);
 
-    if( m_allowEmptySelection )
-    {
-      emit itemChanged(i + 1);
-    }
-    else
-    {
-      emit itemChanged(i);
-    }
-  }
+  //   if( m_allowEmptySelection )
+  //   {
+  //     emit itemChanged(i + 1);
+  //   }
+  //   else
+  //   {
+  //     emit itemChanged(i);
+  //   }
+  // }
 }
 
 OSComboBox2::OSComboBox2( QWidget * parent, bool editable )
@@ -420,7 +420,7 @@ void OSComboBox2::completeBind() {
 
 // OSComboBox::OSComboBox( QWidget * parent )
 //   : QComboBox(parent)
-// { 
+// {
 //   this->setAcceptDrops(false);
 //   setEnabled(false);
 // }
@@ -519,7 +519,7 @@ void OSComboBox2::completeBind() {
 //   QVariant variant = m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->property(m_property.c_str());
 //   QVariant textString;
 //   if (variant.canConvert<QString>()) {
-//     textString = QVariant::fromValue(text); 
+//     textString = QVariant::fromValue(text);
 //   } else if (variant.canConvert<std::string>()) {
 //     textString = QVariant::fromValue(toString(text));
 //   }
