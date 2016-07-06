@@ -304,12 +304,24 @@ void OpenStudioApp::buildCompLibraries()
   path p = resourcesPath() / toPath("MinimalTemplate.osm");
   OS_ASSERT(exists(p));
   boost::optional<Model> temp = versionTranslator.loadModel(p);
+  if (!temp){
+    LOG_FREE(Error, "OpenStudioApp", "Failed to load MinimalTemplate");
+    for (const auto& error : versionTranslator.errors()){
+      LOG_FREE(Error, "OpenStudioApp", error.logMessage());
+    }
+  }
   OS_ASSERT(temp);
   m_compLibrary = temp.get();
 
   p = resourcesPath() / toPath("hvaclibrary/hvac_library.osm");
   OS_ASSERT(exists(p));
   temp = versionTranslator.loadModel(p);
+  if (!temp){
+    LOG_FREE(Error, "OpenStudioApp", "Failed to load hvaclibrary");
+    for (const auto& error : versionTranslator.errors()){
+      LOG_FREE(Error, "OpenStudioApp", error.logMessage());
+    }
+  }
   OS_ASSERT(temp);
   m_hvacCompLibrary = temp.get();
 }

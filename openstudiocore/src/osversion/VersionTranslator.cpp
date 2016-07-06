@@ -106,7 +106,7 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("1.10.6")] = &VersionTranslator::update_1_10_5_to_1_10_6;
   m_updateMethods[VersionString("1.11.4")] = &VersionTranslator::update_1_11_3_to_1_11_4;
   m_updateMethods[VersionString("1.11.5")] = &VersionTranslator::update_1_11_4_to_1_11_5;
-  m_updateMethods[VersionString("1.12.1")] = &VersionTranslator::update_1_12_1_to_1_12_2;
+  m_updateMethods[VersionString("1.12.1")] = &VersionTranslator::update_1_12_0_to_1_12_1;
   m_updateMethods[VersionString("1.12.2")] = &VersionTranslator::defaultUpdate;
 
 
@@ -3279,20 +3279,20 @@ std::string VersionTranslator::update_1_11_4_to_1_11_5(const IdfFile& idf_1_11_4
   return ss.str();
 }
 
-std::string VersionTranslator::update_1_12_1_to_1_12_2(const IdfFile& idf_1_12_1, const IddFileAndFactoryWrapper& idd_1_12_2) {
+std::string VersionTranslator::update_1_12_0_to_1_12_1(const IdfFile& idf_1_12_0, const IddFileAndFactoryWrapper& idd_1_12_1) {
   std::stringstream ss;
 
-  ss << idf_1_12_1.header() << std::endl << std::endl;
+  ss << idf_1_12_0.header() << std::endl << std::endl;
 
   // new version object
-  IdfFile targetIdf(idd_1_12_2.iddFile());
+  IdfFile targetIdf(idd_1_12_1.iddFile());
   ss << targetIdf.versionObject().get();
 
-  for (const IdfObject& object : idf_1_12_1.objects()) {
+  for (const IdfObject& object : idf_1_12_0.objects()) {
     auto iddname = object.iddObject().name();
 
     if (iddname == "OS:Meter") {
-      auto iddObject = idd_1_12_2.getObject("OS:OutputMeter");
+      auto iddObject = idd_1_12_1.getObject("OS:Output:Meter");
       IdfObject newObject(iddObject.get());
 
       size_t newi = 0;
