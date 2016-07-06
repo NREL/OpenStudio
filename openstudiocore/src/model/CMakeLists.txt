@@ -1642,7 +1642,6 @@ set(${target_name}_test_src
   test/MasslessOpaqueMaterial_GTest.cpp
   test/Material_GTest.cpp
   test/MaterialPropertyGlazingSpectralData_GTest.cpp
-  test/Meter_GTest.cpp
   test/MeterCustom_GTest.cpp
   test/MeterCustomDecrement_GTest.cpp
   test/ModelFixture.cpp
