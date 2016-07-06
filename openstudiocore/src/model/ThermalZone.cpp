@@ -1998,18 +1998,13 @@ namespace detail {
   {
     boost::optional<AirLoopHVACSupplyPlenum> result;
 
-    std::vector<AirLoopHVACSupplyPlenum> plenums = model().getModelObjects<AirLoopHVACSupplyPlenum>();
+    std::vector<AirLoopHVACSupplyPlenum> plenums = getObject<ModelObject>().getModelObjectSources<AirLoopHVACSupplyPlenum>();
 
-    for(const auto & plenum : plenums)
-    {
-      if( boost::optional<ThermalZone> tz = plenum.thermalZone() )
-      {
-        if( tz->handle() == handle() )
-        {
-          result = plenum;
-          break;
-        }
-      }
+    if (plenums.size() == 1){
+      result = plenums[0];
+    } else if (plenums.size() > 1){
+      LOG(Warn, "Multiple AirLoopHVACSupplyPlenum sources found, returning first");
+      result = plenums[0];
     }
 
     return result;
@@ -2019,17 +2014,13 @@ namespace detail {
   {
     boost::optional<AirLoopHVACReturnPlenum> result;
 
-    std::vector<AirLoopHVACReturnPlenum> plenums = model().getModelObjects<AirLoopHVACReturnPlenum>();
+    std::vector<AirLoopHVACReturnPlenum> plenums = getObject<ModelObject>().getModelObjectSources<AirLoopHVACReturnPlenum>();
 
-    for(const auto & plenum : plenums)
-    {
-      if( boost::optional<ThermalZone> tz = plenum.thermalZone() )
-      {
-        if( tz->handle() == handle() )
-        {
-          return plenum;
-        }
-      }
+    if (plenums.size() == 1){
+      result = plenums[0];
+    } else if (plenums.size() > 1){
+      LOG(Warn, "Multiple AirLoopHVACReturnPlenum sources found, returning first");
+      result = plenums[0];
     }
 
     return result;
