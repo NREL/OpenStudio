@@ -7,4 +7,4 @@ gem 'test-unit', '= 2.0.0.0'
 
 # OpenStudio
 gem 'openstudio-aws', '~> 0.4.0.pre1'
-gem 'openstudio-standards', '= 0.1.3' # Also update DarwinPostFlight.sh.in when updating gem version
+gem 'openstudio-standards', '= 0.1.4' # Also update DarwinPostFlight.sh.in when updating gem version

@@ -643,6 +643,9 @@ set(${target_name}_src
   Material.hpp
   Material_Impl.hpp
   Material.cpp
+  MaterialPropertyGlazingSpectralData.hpp
+  MaterialPropertyGlazingSpectralData_Impl.hpp
+  MaterialPropertyGlazingSpectralData.cpp
   MeterCustom.hpp
   MeterCustom_Impl.hpp
   MeterCustom.cpp
@@ -1638,6 +1641,8 @@ set(${target_name}_test_src
   test/Luminaire_GTest.cpp
   test/MasslessOpaqueMaterial_GTest.cpp
   test/Material_GTest.cpp
+  test/MaterialPropertyGlazingSpectralData_GTest.cpp
+  test/Meter_GTest.cpp
   test/MeterCustom_GTest.cpp
   test/MeterCustomDecrement_GTest.cpp
   test/ModelFixture.cpp
