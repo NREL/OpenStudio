@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef MODEL_METER_HPP
-#define MODEL_METER_HPP
+#ifndef MODEL_OUTPUTMETER_HPP
+#define MODEL_OUTPUTMETER_HPP
 
 #include "ModelAPI.hpp"
 #include "ModelObject.hpp"
@@ -34,28 +34,28 @@ namespace model {
 
 namespace detail {
 
-  class Meter_Impl;
+  class OutputMeter_Impl;
 
 } // detail
 
-/** Meter is a ModelObject that wraps the OpenStudio IDD object 'OS_Meter'. 
+/** OutputMeter is a ModelObject that wraps the OpenStudio IDD object 'OS_Output_Meter'. 
  *
- *  A Meter is a virtual instrument measuring energy use of some fuel type at a particular location.
- *  Meter objects may be associated with various classes in the building model hierarchy (e.g. Facility, Building, Zone, Plant, etc).
- *  A Meter can be used to request output data as well as access it from the EnergyPlus SQLite output.
- *  If the user wants to access measured data from a particular Meter, they must ensure that input objects are present to
+ *  A OutputMeter is a virtual instrument measuring energy use of some fuel type at a particular location.
+ *  OutputMeter objects may be associated with various classes in the building model hierarchy (e.g. Facility, Building, Zone, Plant, etc).
+ *  A OutputMeter can be used to request output data as well as access it from the EnergyPlus SQLite output.
+ *  If the user wants to access measured data from a particular OutputMeter, they must ensure that input objects are present to
  *  trigger EnergyPlus to output the desired data.  This is similar to needing to instrument a real
  *  building during field measurements.
  *
  */
-class MODEL_API Meter : public ModelObject {
+class MODEL_API OutputMeter : public ModelObject {
  public:
   /** @name Constructors and Destructors */
   //@{
 
-  explicit Meter(const Model& model);
+  explicit OutputMeter(const Model& model);
 
-  virtual ~Meter() {}
+  virtual ~OutputMeter() {}
 
   //@}
   /** @name Static Methods */
@@ -183,30 +183,30 @@ class MODEL_API Meter : public ModelObject {
 
  protected:
   /// @cond
-  typedef detail::Meter_Impl ImplType;
+  typedef detail::OutputMeter_Impl ImplType;
 
   friend class Model;
   friend class openstudio::IdfObject;
 
-  explicit Meter(std::shared_ptr<detail::Meter_Impl> impl);
+  explicit OutputMeter(std::shared_ptr<detail::OutputMeter_Impl> impl);
 
   /// @endcond
  private:
 
-  REGISTER_LOGGER("openstudio.model.Meter");
+  REGISTER_LOGGER("openstudio.model.OutputMeter");
 };
 
-/** \relates Meter*/
-typedef boost::optional<Meter> OptionalMeter;
+/** \relates OutputMeter*/
+typedef boost::optional<OutputMeter> OptionalOutputMeter;
 
-/** \relates Meter*/
-typedef std::vector<Meter> MeterVector;
+/** \relates OutputMeter*/
+typedef std::vector<OutputMeter> OutputMeterVector;
 
-/** Predicate for finding \link Meter Meters \endlink with fuelType() ft. \relates Meter */
-MODEL_API bool MeterFuelTypeEquals(const Meter& meter, const FuelType& ft);
+/** Predicate for finding \link OutputMeter OutputMeters \endlink with fuelType() ft. \relates OutputMeter */
+MODEL_API bool MeterFuelTypeEquals(const OutputMeter& meter, const FuelType& ft);
 
 } // model
 } // openstudio
 
-#endif // MODEL_METER_HPP
+#endif // MODEL_OUTPUTMETER_HPP
 

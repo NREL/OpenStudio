@@ -182,6 +182,14 @@ end
 
 # "typedefs" for backwards compatibility
 module OpenStudio
+module Model
+
+# support for name deprecated as of 1.12.1
+class Meter < OutputMeter
+end
+
+end # module Model
+
 module Ruleset
 
 # support for name deprecated as of 0.10.1

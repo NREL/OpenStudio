@@ -35,7 +35,7 @@ class Date;
 
 namespace model {
 
-class Meter;
+class OutputMeter;
 
 namespace detail {
 
@@ -248,10 +248,10 @@ class MODEL_API UtilityBill : public ModelObject {
   //@{
 
   /** Gets the meter associated with consumption for this UtilityBill, creates it if it does not exist.*/
-  Meter consumptionMeter() const;
+  OutputMeter consumptionMeter() const;
 
   /** Gets the meter associated with peak demand for this UtilityBill, creates it if it does not exist.*/
-  boost::optional<Meter> peakDemandMeter() const;
+  boost::optional<OutputMeter> peakDemandMeter() const;
 
   /** Number of billing periods used to compute CVRMSE or NMBE.*/
   unsigned numberBillingPeriodsInCalculations() const;
