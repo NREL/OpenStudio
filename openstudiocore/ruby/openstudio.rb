@@ -198,6 +198,38 @@ end
 
 # "typedefs" for backwards compatibility
 module OpenStudio
+
+# support for deprecated names
+class IdfObject
+  def to_Meter
+    return to_OutputMeter
+  end
+end
+
+module Model
+
+# support for deprecated names
+class Model
+  def getMeter(handle)
+    return getOutputMeter(handle)
+  end
+  def getMeters
+    return getOutputMeters
+  end
+  def getMeterByName(name)
+    return getOutputMeterByName(name)
+  end
+  def getMetersByName(name)
+    return getOutputMetersByName(name)
+  end
+end
+
+# support for name deprecated as of 1.12.1
+class Meter < OutputMeter
+end
+
+end # module Model
+
 module Ruleset
 
 # support for name deprecated as of 0.10.1

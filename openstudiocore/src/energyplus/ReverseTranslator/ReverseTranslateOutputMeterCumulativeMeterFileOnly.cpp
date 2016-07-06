@@ -19,8 +19,8 @@
 
 #include "../ReverseTranslator.hpp"
 
-#include "../../model/Meter.hpp"
-#include "../../model/Meter_Impl.hpp"
+#include "../../model/OutputMeter.hpp"
+#include "../../model/OutputMeter_Impl.hpp"
 
 #include <utilities/idd/Output_Meter_Cumulative_MeterFileOnly_FieldEnums.hxx>
 
@@ -32,7 +32,7 @@ namespace energyplus {
 
 OptionalModelObject ReverseTranslator::translateOutputMeterCumulativeMeterFileOnly( const WorkspaceObject & workspaceObject )
 {
-  openstudio::model::Meter meter( m_model );
+  openstudio::model::OutputMeter meter( m_model );
 
   OptionalString s = workspaceObject.getString(Output_Meter_Cumulative_MeterFileOnlyFields::Name);
   if(s){

@@ -132,6 +132,7 @@ IconLibrary::IconLibrary()
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Humidifier_Steam_Electric).value()] = new QPixmap(":images/electric_humidifier.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_EvaporativeFluidCooler_SingleSpeed).value()] = new QPixmap(":images/evap_fluid_cooler.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_EvaporativeFluidCooler_TwoSpeed).value()] = new QPixmap(":images/evap_fluid_cooler_two_speed.png");
+  m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Generator_MicroTurbine_HeatRecovery).value()] = new QPixmap(":images/generator_microturbine_heatrecovery.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_LoadProfile_Plant).value()] = new QPixmap(":images/plant_profile.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Pipe_Adiabatic).value()] = new QPixmap(":images/pipe.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Pipe_Indoor).value()] = new QPixmap(":images/pipe_indoor.png");
@@ -203,6 +204,7 @@ IconLibrary::IconLibrary()
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_FluidCooler_TwoSpeed).value()] = new QPixmap(":images/mini_icons/mini_fluid_cooler_two.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_GasEquipment).value()] = new QPixmap(":images/mini_icons/gas_equipment.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_GasEquipment_Definition).value()] = new QPixmap(":images/mini_icons/gas_equipment_definition.png");
+  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Generator_MicroTurbine_HeatRecovery).value()] = new QPixmap(":images/mini_icons/generator_microturbine_heatrecovery.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_GroundHeatExchanger_HorizontalTrench).value()] = new QPixmap(":images/mini_icons/mini_ground_heat_exchanger_horizontal.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_GroundHeatExchanger_Vertical).value()] = new QPixmap(":images/mini_icons/ground_heat_exchanger_vertical.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_HeaderedPumps_ConstantSpeed).value()] = new QPixmap(":images/mini_icons/mini_headered_pumps_constant.png");

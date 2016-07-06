@@ -142,6 +142,7 @@ class ElectricEquipment;
 class ElectricLoadCenterDistribution;
 class ElectricLoadCenterInverterLookUpTable;
 class ElectricLoadCenterInverterSimple;
+class ElectricLoadCenterStorageSimple;
 class EvaporativeCoolerDirectResearchSpecial;
 class EvaporativeCoolerIndirectResearchSpecial;
 class EvaporativeFluidCoolerSingleSpeed;
@@ -157,6 +158,7 @@ class FluidCoolerTwoSpeed;
 class Gas;
 class GasEquipment;
 class GasMixture;
+class GeneratorMicroTurbine;
 class GeneratorPhotovoltaic;
 class GroundHeatExchangerHorizontalTrench;
 class GroundHeatExchangerVertical;
@@ -182,11 +184,13 @@ class Lights;
 class Luminaire;
 class MaterialPropertyGlazingSpectralData;
 class MasslessOpaqueMaterial;
-class Meter;
+class MeterCustom;
+class MeterCustomDecrement;
 class Node;
 class OtherEquipment;
 class OutsideSurfaceConvectionAlgorithm;
 class OutputControlReportingTolerances;
+class OutputMeter;
 class OutputVariable;
 class People;
 class PhotovoltaicPerformanceEquivalentOneDiode;
@@ -633,6 +637,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateElectricLoadCenterInverterLookUpTable( model::ElectricLoadCenterInverterLookUpTable & modelObject );
 
   boost::optional<IdfObject> translateElectricLoadCenterInverterSimple( model::ElectricLoadCenterInverterSimple & modelObject );
+  
+  boost::optional<IdfObject> translateElectricLoadCenterStorageSimple( model::ElectricLoadCenterStorageSimple & modelObject );
 
   boost::optional<IdfObject> translateEvaporativeFluidCoolerSingleSpeed( model::EvaporativeFluidCoolerSingleSpeed & modelObject );
 
@@ -664,6 +670,8 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateGasMixture( model::GasMixture & modelObject );
 
+  boost::optional<IdfObject> translateGeneratorMicroTurbine( model::GeneratorMicroTurbine & modelObject );
+  
   boost::optional<IdfObject> translateGeneratorPhotovoltaic( model::GeneratorPhotovoltaic & modelObject );
 
   boost::optional<IdfObject> translateGroundHeatExchangerHorizontalTrench( model::GroundHeatExchangerHorizontalTrench & modelObject );
@@ -713,8 +721,10 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateMaterialPropertyGlazingSpectralData( model::MaterialPropertyGlazingSpectralData & modelObject );
 
   boost::optional<IdfObject> translateMasslessOpaqueMaterial( model::MasslessOpaqueMaterial & modelObject );
-
-  boost::optional<IdfObject> translateMeter( model::Meter & modelObject );
+  
+  boost::optional<IdfObject> translateMeterCustom( model::MeterCustom & modelObject );
+  
+  boost::optional<IdfObject> translateMeterCustomDecrement( model::MeterCustomDecrement & modelObject );
 
   boost::optional<IdfObject> translateNode( model::Node & modelObject );
 
@@ -723,6 +733,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateOutsideSurfaceConvectionAlgorithm( model::OutsideSurfaceConvectionAlgorithm & modelObject );
 
   boost::optional<IdfObject> translateOutputControlReportingTolerances( model::OutputControlReportingTolerances & modelObject );
+
+  boost::optional<IdfObject> translateOutputMeter( model::OutputMeter & modelObject );
 
   boost::optional<IdfObject> translateOutputVariable( model::OutputVariable & modelObject );
 

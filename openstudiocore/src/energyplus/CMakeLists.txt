@@ -118,6 +118,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateElectricLoadCenterDistribution.cpp
   ForwardTranslator/ForwardTranslateElectricLoadCenterInverterLookUpTable.cpp
   ForwardTranslator/ForwardTranslateElectricLoadCenterInverterSimple.cpp
+  ForwardTranslator/ForwardTranslateElectricLoadCenterStorageSimple.cpp
   ForwardTranslator/ForwardTranslateEvaporativeCoolerDirectResearchSpecial.cpp
   ForwardTranslator/ForwardTranslateEvaporativeCoolerIndirectResearchSpecial.cpp
   ForwardTranslator/ForwardTranslateEvaporativeFluidCoolerSingleSpeed.cpp
@@ -134,6 +135,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateGasEquipment.cpp
   ForwardTranslator/ForwardTranslateGasMixture.cpp
   ForwardTranslator/ForwardTranslateGeneratorPhotovoltaic.cpp
+  ForwardTranslator/ForwardTranslateGeneratorMicroTurbine.cpp
   ForwardTranslator/ForwardTranslateGroundHeatExchangerHorizontalTrench.cpp
   ForwardTranslator/ForwardTranslateGroundHeatExchangerVertical.cpp
   ForwardTranslator/ForwardTranslateHeaderedPumpsConstantSpeed.cpp
@@ -158,11 +160,13 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateLuminaire.cpp
   ForwardTranslator/ForwardTranslateMaterialPropertyGlazingSpectralData.cpp
   ForwardTranslator/ForwardTranslateMasslessOpaqueMaterial.cpp
-  ForwardTranslator/ForwardTranslateMeter.cpp
+  ForwardTranslator/ForwardTranslateMeterCustom.cpp
+  ForwardTranslator/ForwardTranslateMeterCustomDecrement.cpp
   ForwardTranslator/ForwardTranslateNode.cpp
   ForwardTranslator/ForwardTranslateOtherEquipment.cpp
   ForwardTranslator/ForwardTranslateOutsideSurfaceConvectionAlgorithm.cpp
   ForwardTranslator/ForwardTranslateOutputControlReportingTolerances.cpp
+  ForwardTranslator/ForwardTranslateOutputMeter.cpp
   ForwardTranslator/ForwardTranslateOutputVariable.cpp
   ForwardTranslator/ForwardTranslatePeople.cpp
   ForwardTranslator/ForwardTranslatePhotovoltaicPerformanceEquivalentOneDiode.cpp
@@ -354,12 +358,14 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateDaylightingControls.cpp
   ReverseTranslator/ReverseTranslateDesignSpecificationOutdoorAir.cpp
   ReverseTranslator/ReverseTranslateElectricEquipment.cpp
+  ReverseTranslator/ReverseTranslateElectricLoadCenterStorageSimple.cpp
   ReverseTranslator/ReverseTranslateEvaporativeCoolerDirectResearchSpecial.cpp
   ReverseTranslator/ReverseTranslateEvaporativeFluidCoolerSingleSpeed.cpp
   ReverseTranslator/ReverseTranslateExteriorLights.cpp
   ReverseTranslator/ReverseTranslateFanConstantVolume.cpp
   ReverseTranslator/ReverseTranslateFenestrationSurfaceDetailed.cpp
   ReverseTranslator/ReverseTranslateGasEquipment.cpp
+  ReverseTranslator/ReverseTranslateGeneratorMicroTurbine.cpp
   ReverseTranslator/ReverseTranslateGroundHeatExchangerVertical.cpp
   ReverseTranslator/ReverseTranslateHeatBalanceAlgorithm.cpp
   ReverseTranslator/ReverseTranslateHotWaterEquipment.cpp
@@ -368,6 +374,8 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateMaterial.cpp
   ReverseTranslator/ReverseTranslateMaterialAirGap.cpp
   ReverseTranslator/ReverseTranslateMaterialNoMass.cpp
+  ReverseTranslator/ReverseTranslateMeterCustom.cpp
+  ReverseTranslator/ReverseTranslateMeterCustomDecrement.cpp
   ReverseTranslator/ReverseTranslateOtherEquipment.cpp
   ReverseTranslator/ReverseTranslateOutputIlluminanceMap.cpp
   ReverseTranslator/ReverseTranslateOutputMeter.cpp

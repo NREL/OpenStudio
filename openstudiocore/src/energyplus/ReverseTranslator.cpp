@@ -474,6 +474,11 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
       //modelObject = translateExteriorLights(workspaceObject);
       break;
     }
+  case openstudio::IddObjectType::ElectricLoadCenter_Storage_Simple :
+    {
+      modelObject = translateElectricLoadCenterStorageSimple(workspaceObject);
+      break;
+    }
   case openstudio::IddObjectType::EvaporativeCooler_Direct_ResearchSpecial :
     {
       //modelObject = translateEvaporativeCoolerDirectResearchSpecial(workspaceObject);
@@ -491,7 +496,12 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
     }
   case openstudio::IddObjectType::FenestrationSurface_Detailed :
     {
-      modelObject = translateFenestrationSurfaceDetailed(workspaceObject );
+      modelObject = translateFenestrationSurfaceDetailed(workspaceObject);
+      break;
+    }
+  case openstudio::IddObjectType::Generator_MicroTurbine :
+    {
+      modelObject = translateGeneratorMicroTurbine(workspaceObject);
       break;
     }
   case openstudio::IddObjectType::GlobalGeometryRules :
@@ -551,11 +561,13 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
     }
   case openstudio::IddObjectType::Meter_Custom :
     {
-      break; // no-op
+      modelObject = translateMeterCustom(workspaceObject);
+      break;
     }
   case openstudio::IddObjectType::Meter_CustomDecrement :
     {
-      break; // no-op
+      modelObject = translateMeterCustomDecrement(workspaceObject);
+      break;
     }
   case openstudio::IddObjectType::OtherEquipment :
     {

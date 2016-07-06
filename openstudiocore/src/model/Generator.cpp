@@ -114,9 +114,9 @@ boost::optional<Schedule> Generator::availabilitySchedule() const
   return getImpl<detail::Generator_Impl>()->availabilitySchedule();
 }
 
-boost::optional<double> Generator::ratedThermalToElectricalPowerRatio() const
+boost::optional<double> Generator::ratedThermaltoElectricalPowerRatio() const
 {
-  return getImpl<detail::Generator_Impl>()->ratedThermalToElectricalPowerRatio();
+  return getImpl<detail::Generator_Impl>()->ratedThermaltoElectricalPowerRatio();
 }
 
 boost::optional<ElectricLoadCenterDistribution> Generator::electricLoadCenterDistribution() const

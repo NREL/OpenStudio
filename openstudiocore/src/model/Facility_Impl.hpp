@@ -35,7 +35,7 @@ class Economics;
 namespace model {
 
 class Building;
-class Meter;
+class OutputMeter;
 class ExteriorLights;
 
 namespace detail {
@@ -217,9 +217,9 @@ namespace detail {
     boost::optional<Building> building() const;
 
     // get meter requests for the facility
-    std::vector<Meter> meters() const;
+    std::vector<OutputMeter> meters() const;
     
-    boost::optional<Meter> getMeterByFuelType(
+    boost::optional<OutputMeter> getMeterByFuelType(
       const FuelType& fuelType,
       const std::string& reportingFrequency,
       const boost::optional<EndUseType>& endUseType,
