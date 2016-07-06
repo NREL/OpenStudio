@@ -106,7 +106,8 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("1.10.6")] = &VersionTranslator::update_1_10_5_to_1_10_6;
   m_updateMethods[VersionString("1.11.4")] = &VersionTranslator::update_1_11_3_to_1_11_4;
   m_updateMethods[VersionString("1.11.5")] = &VersionTranslator::update_1_11_4_to_1_11_5;
-  m_updateMethods[VersionString("1.12.1")] = &VersionTranslator::defaultUpdate;
+  m_updateMethods[VersionString("1.12.1")] = &VersionTranslator::update_1_12_1_to_1_12_2;
+  m_updateMethods[VersionString("1.12.2")] = &VersionTranslator::defaultUpdate;
 
 
   // List of previous versions that may be updated to this one.
@@ -3277,6 +3278,41 @@ std::string VersionTranslator::update_1_11_4_to_1_11_5(const IdfFile& idf_1_11_4
 
   return ss.str();
 }
+
+std::string VersionTranslator::update_1_12_1_to_1_12_2(const IdfFile& idf_1_12_1, const IddFileAndFactoryWrapper& idd_1_12_2) {
+  std::stringstream ss;
+
+  ss << idf_1_12_1.header() << std::endl << std::endl;
+
+  // new version object
+  IdfFile targetIdf(idd_1_12_2.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  for (const IdfObject& object : idf_1_12_1.objects()) {
+    auto iddname = object.iddObject().name();
+
+    if (iddname == "OS:Meter") {
+      auto iddObject = idd_1_12_2.getObject("OS:OutputMeter");
+      IdfObject newObject(iddObject.get());
+
+      size_t newi = 0;
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        if( auto s = object.getString(i) ) {
+          newObject.setString(newi,s.get());
+        }
+        ++newi;
+      }
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
+    } else {
+      ss << object;
+    }
+  }
+
+  return ss.str();
+}
+
 
 } // osversion
 } // openstudio
