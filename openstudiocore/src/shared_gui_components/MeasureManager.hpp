@@ -33,7 +33,7 @@
 #include <QApplication>
 #include <QUrl>
 class QEvent;
-
+class QNetworkAccessManager;
 
 namespace openstudio {
 
@@ -172,7 +172,7 @@ class MeasureManager : public QObject
     //void updateBCLMeasures(analysisdriver::SimpleProject &t_project);
 
     /// Checks a BCL measure for updates, returns true if updated
-    bool checkForUpdates(BCLMeasure& measure, bool force=false);
+    //bool checkForUpdates(BCLMeasure& measure, bool force=false);
 
     /// Downloads updated versions of all BCL measures
     void downloadBCLMeasures();
@@ -189,6 +189,8 @@ class MeasureManager : public QObject
 
     void updateMeasuresLists(bool updateUserMeasures);
 
+    bool checkForUpdates(const openstudio::path& measureDir, bool force=false);
+
     BaseApp *m_app;
     std::map<UUID,BCLMeasure> m_managedMeasures;
     std::map<UUID,BCLMeasure> m_openstudioMeasures;
@@ -196,6 +198,7 @@ class MeasureManager : public QObject
     std::map<UUID,BCLMeasure> m_bclMeasures;
     QUrl m_url;
     QSharedPointer<LocalLibraryController> m_libraryController;
+    QNetworkAccessManager* m_networkAccessManager;
 };
 
 

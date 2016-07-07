@@ -116,6 +116,9 @@ void ScriptsTabView::openUpdateMeasuresDlg()
   //m_syncMeasuresDialog = boost::shared_ptr<SyncMeasuresDialog>(new SyncMeasuresDialog(&(project.get()),&(app->measureManager())));
   //m_syncMeasuresDialog->setGeometry(app->currentDocument()->mainWindow()->geometry());
   //m_syncMeasuresDialog->exec();
+
+  // DLM: temp
+  app->measureManager().updateMeasuresLists();
 }
 
 } // openstudio

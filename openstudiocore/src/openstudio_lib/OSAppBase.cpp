@@ -57,7 +57,8 @@ OSAppBase::OSAppBase( int & argc, char ** argv, const QSharedPointer<MeasureMana
     }
   }
 
-  m_measureManager->updateMeasuresLists();
+  // DLM: todo rethink this
+  //m_measureManager->updateMeasuresLists();
 
   m_waitDialog = boost::shared_ptr<WaitDialog>(new WaitDialog("Loading Model","Loading Model"));
 }
