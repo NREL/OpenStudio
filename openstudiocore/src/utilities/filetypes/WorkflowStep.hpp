@@ -111,6 +111,24 @@ public:
 
   std::string measureDirName() const;
 
+  boost::optional<std::string> name() const;
+
+  bool setName(const std::string& name);
+
+  void resetName();
+
+  boost::optional<std::string> description() const;
+
+  bool setDescription(const std::string& description);
+
+  void resetDescription();
+
+  boost::optional<std::string> modelerDescription() const;
+
+  bool setModelerDescription(const std::string& modelerDescription);
+
+  void resetModelerDescription();
+
   std::map<std::string, Variant> arguments() const;
 
   boost::optional<Variant> getArgument(const std::string& name) const;

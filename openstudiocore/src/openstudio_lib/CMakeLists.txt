@@ -379,10 +379,10 @@ set(${target_name}_SRC
   ../shared_gui_components/Component.hpp
   ../shared_gui_components/ComponentList.cpp
   ../shared_gui_components/ComponentList.hpp
-  #../shared_gui_components/EditController.cpp
-  #../shared_gui_components/EditController.hpp
-  #../shared_gui_components/EditView.cpp
-  #../shared_gui_components/EditView.hpp
+  ../shared_gui_components/EditController.cpp
+  ../shared_gui_components/EditController.hpp
+  ../shared_gui_components/EditView.cpp
+  ../shared_gui_components/EditView.hpp
   ../shared_gui_components/FieldMethodTypedefs.hpp
   ../shared_gui_components/GraphicsItems.cpp
   ../shared_gui_components/GraphicsItems.hpp
@@ -399,6 +399,10 @@ set(${target_name}_SRC
   ../shared_gui_components/MeasureBadge.hpp
   ../shared_gui_components/MeasureDragData.cpp
   ../shared_gui_components/MeasureDragData.hpp
+  ../shared_gui_components/MeasureItem.cpp
+  ../shared_gui_components/MeasureItem.hpp
+  ../shared_gui_components/MeasureItemView.cpp
+  ../shared_gui_components/MeasureItemView.hpp
   ../shared_gui_components/MeasureManager.cpp
   ../shared_gui_components/MeasureManager.hpp
   ../shared_gui_components/NetworkProxyDialog.cpp
@@ -452,8 +456,10 @@ set(${target_name}_SRC
   ../shared_gui_components/TextEditDialog.hpp 
   ../shared_gui_components/TIDItemModel.cpp
   ../shared_gui_components/TIDItemModel.hpp
-  ../shared_gui_components/VariableView.cpp
-  ../shared_gui_components/VariableView.hpp
+  #../shared_gui_components/VariableList.cpp
+  #../shared_gui_components/VariableList.hpp
+  #../shared_gui_components/VariableView.cpp
+  #../shared_gui_components/VariableView.hpp
   ../shared_gui_components/WaitDialog.cpp
   ../shared_gui_components/WaitDialog.hpp
   ../shared_gui_components/WorkflowTools.cpp
@@ -645,8 +651,8 @@ set(${target_name}_moc
   ../shared_gui_components/CollapsibleComponentList.hpp
   ../shared_gui_components/Component.hpp
   ../shared_gui_components/ComponentList.hpp
-  #../shared_gui_components/EditController.hpp
-  #../shared_gui_components/EditView.hpp
+  ../shared_gui_components/EditController.hpp
+  ../shared_gui_components/EditView.hpp
   ../shared_gui_components/GraphicsItems.hpp
   ../shared_gui_components/HeaderViews.hpp
   ../shared_gui_components/LostCloudConnectionDialog.hpp
@@ -654,6 +660,8 @@ set(${target_name}_moc
   ../shared_gui_components/LocalLibraryView.hpp
   ../shared_gui_components/MeasureBadge.hpp
   ../shared_gui_components/MeasureDragData.hpp
+  ../shared_gui_components/MeasureItem.hpp
+  ../shared_gui_components/MeasureItemView.hpp
   ../shared_gui_components/MeasureManager.hpp
   ../shared_gui_components/OSCheckBox.hpp
   ../shared_gui_components/OSCollapsibleView.hpp
@@ -678,7 +686,8 @@ set(${target_name}_moc
   #../shared_gui_components/SyncMeasuresDialogCentralWidget.hpp
   ../shared_gui_components/TextEditDialog.hpp 
   ../shared_gui_components/TIDItemModel.hpp
-  ../shared_gui_components/VariableView.hpp
+  #../shared_gui_components/VariableList.hpp
+  #../shared_gui_components/VariableView.hpp
   ../shared_gui_components/WaitDialog.hpp
   ../shared_gui_components/NetworkProxyDialog.hpp
 
@@ -752,8 +761,9 @@ if(BUILD_TESTING)
   
 endif()
 
-set(${target_name}_swig_src
-  OpenStudioLib.i
-)
+#set(${target_name}_swig_src
+#  OpenStudioLib.i
+#)
 
-MAKE_SWIG_TARGET(OpenStudioLib openstudiolib "${CMAKE_CURRENT_SOURCE_DIR}/OpenStudioLib.i" "${${target_name}_swig_src}" ${target_name} "OpenStudioEnergyPlus;OpenStudioModelEditor;OpenStudioMeasure")
+# Don't need this anymore
+# MAKE_SWIG_TARGET(OpenStudioLib openstudiolib "${CMAKE_CURRENT_SOURCE_DIR}/OpenStudioLib.i" "${${target_name}_swig_src}" ${target_name} "OpenStudioEnergyPlus;OpenStudioModelEditor;OpenStudioMeasure")

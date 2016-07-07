@@ -246,17 +246,17 @@ void OSAppBase::chooseHorizontalEditTab()
   }
 }
 
-//QSharedPointer<EditController> OSAppBase::editController()
-//{
-//  std::shared_ptr<OSDocument> document = currentDocument();
-//
-//  if (document)
-//  {
-//    return document->mainRightColumnController()->measuresEditController();
-//  } else {
-//    return QSharedPointer<EditController>();
-//  }
-//}
+QSharedPointer<EditController> OSAppBase::editController()
+{
+  std::shared_ptr<OSDocument> document = currentDocument();
+
+  if (document)
+  {
+    return document->mainRightColumnController()->measuresEditController();
+  } else {
+    return QSharedPointer<EditController>();
+  }
+}
 
 } // openstudio
 

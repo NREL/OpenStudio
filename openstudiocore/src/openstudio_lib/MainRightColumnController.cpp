@@ -37,8 +37,8 @@
 #include "SpaceTypeInspectorView.hpp"
 #include "ThermalZonesView.hpp"
 
-//#include "../shared_gui_components/EditController.hpp"
-//#include "../shared_gui_components/EditView.hpp"
+#include "../shared_gui_components/EditController.hpp"
+#include "../shared_gui_components/EditView.hpp"
 #include "../shared_gui_components/LocalLibraryController.hpp"
 #include "../shared_gui_components/LocalLibraryView.hpp"
 #include "../shared_gui_components/MeasureManager.hpp"
@@ -61,7 +61,7 @@ MainRightColumnController::MainRightColumnController(const model::Model & model,
     m_model(model),
     m_resourcesPath(resourcesPath),
     m_measureLibraryController(new LocalLibraryController(OSAppBase::instance())),
-    //m_measureEditController(new EditController()),
+    m_measureEditController(new EditController()),
     m_myModelTabIsHidden(false)
 {
   m_measureLibraryController->localLibraryView->setStyleSheet("QStackedWidget { border-top: 0px; }");
@@ -207,27 +207,27 @@ QSharedPointer<LocalLibraryController> MainRightColumnController::measureLibrary
 
 void MainRightColumnController::setEditView(QWidget *widget)
 {
-  //if( QWidget * oldwidget = m_editView->currentWidget() )
-  //{
-  //  LOG(Debug, "Removing old edit widget: " << oldwidget);
-  //  m_editView->removeWidget(oldwidget);
+  if( QWidget * oldwidget = m_editView->currentWidget() )
+  {
+    LOG(Debug, "Removing old edit widget: " << oldwidget);
+    m_editView->removeWidget(oldwidget);
 
-  //  if (oldwidget != m_inspectorController->inspectorView()
-  //      && oldwidget != m_measureEditController->editView.data())
-  //  {
-  //    LOG(Debug, "Deleting old edit widget: " << oldwidget);
-  //    delete oldwidget;
-  //  } else {
-  //    boost::optional<model::ModelObject> nomodelobject;
-  //    m_inspectorController->layoutModelObject(nomodelobject, false);
-  //  }
-  //}
+    if (oldwidget != m_inspectorController->inspectorView()
+        && oldwidget != m_measureEditController->editView.data())
+    {
+      LOG(Debug, "Deleting old edit widget: " << oldwidget);
+      delete oldwidget;
+    } else {
+      boost::optional<model::ModelObject> nomodelobject;
+      m_inspectorController->layoutModelObject(nomodelobject, false);
+    }
+  }
 
-  //if( widget )
-  //{
-  //  LOG(Debug, "Setting new edit widget: " << widget);
-  //  m_editView->addWidget(widget);
-  //}
+  if( widget )
+  {
+    LOG(Debug, "Setting new edit widget: " << widget);
+    m_editView->addWidget(widget);
+  }
 }
 
 void MainRightColumnController::setMyModelView(QWidget * widget)
@@ -1135,8 +1135,8 @@ void MainRightColumnController::configureForScriptsSubTab(int subTabID)
 
   setLibraryView(m_measureLibraryController->localLibraryView.data());
   setMyModelView(nullptr);
-  //m_measureEditController->reset();
-  //setEditView(m_measureEditController->editView.data());
+  m_measureEditController->reset();
+  setEditView(m_measureEditController->editView.data());
 
   doc->openSidebar();
 }
@@ -1174,10 +1174,10 @@ QSharedPointer<LocalLibraryController> MainRightColumnController::measuresLibrar
   return m_measureLibraryController;
 }
 
-//QSharedPointer<EditController> MainRightColumnController::measuresEditController()
-//{
-//  return m_measureEditController;
-//}
+QSharedPointer<EditController> MainRightColumnController::measuresEditController()
+{
+  return m_measureEditController;
+}
 
 void MainRightColumnController::chooseEditTab()
 {
