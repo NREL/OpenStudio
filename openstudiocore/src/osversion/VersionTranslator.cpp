@@ -217,6 +217,7 @@ VersionTranslator::VersionTranslator()
   m_startVersions.push_back(VersionString("1.11.5"));
   m_startVersions.push_back(VersionString("1.11.6"));
   m_startVersions.push_back(VersionString("1.12.0"));
+  m_startVersions.push_back(VersionString("1.12.1"));
 }
 
 boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm, 
