@@ -1,4 +1,13 @@
 ## OpenStudio v1.12.0
+###### 2016-07-07 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.12.0...v1.12.1 )
+
+- ![Fixed:][fixed] [#2248]( https://github.com/NREL/OpenStudio/pull/2248 ), Add Generator:MicroTurbine to OpenStudio
+- ![Fixed:][fixed] [#2263]( https://github.com/NREL/OpenStudio/pull/2263 ), Add Meter:Custom and Meter:CustomDecrement to the SDK
+- ![Fixed:][fixed] [#2276]( https://github.com/NREL/OpenStudio/pull/2276 ), Add ElectricLoadCenter:Storage:Simple and expose rest of ELC:Distribution fields
+- ![Fixed:][fixed] [#2282]( https://github.com/NREL/OpenStudio/pull/2282 ), Jmarrec merge
+- ![Fixed:][fixed] [#2287]( https://github.com/NREL/OpenStudio/pull/2287 ), Spectral dataset
+
+## OpenStudio v1.12.0
 ###### 2016-07-01 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.11.6...v1.12.0 )
 
 ## OpenStudio v1.11.6
