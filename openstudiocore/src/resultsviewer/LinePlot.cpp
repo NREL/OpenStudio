@@ -31,8 +31,8 @@ TimeSeriesLinePlotData::TimeSeriesLinePlotData(TimeSeries timeSeries)
 : m_timeSeries(timeSeries),
   m_minX(timeSeries.firstReportDateTime().date().dayOfYear()+timeSeries.firstReportDateTime().time().totalDays()),
   m_maxX(timeSeries.daysFromFirstReport()[timeSeries.daysFromFirstReport().size()-1]+timeSeries.firstReportDateTime().date().dayOfYear()+timeSeries.firstReportDateTime().time().totalDays()), // end day
-  m_minY(minimum(timeSeries.values())),
-  m_maxY(maximum(timeSeries.values())),
+  m_minY(timeSeries.min() ? timeSeries.min().get() : 0),
+  m_maxY(timeSeries.max() ? timeSeries.max().get() : 0),
   m_size(timeSeries.values().size())
 {
   m_boundingRect = QRectF(m_minX, m_minY, (m_maxX - m_minX), (m_maxY - m_minY));
@@ -40,16 +40,16 @@ TimeSeriesLinePlotData::TimeSeriesLinePlotData(TimeSeries timeSeries)
   m_maxValue = m_maxY;
   m_units = timeSeries.units();
   m_fracDaysOffset = 0.0;
-  m_x = m_timeSeries.daysFromFirstReport();
-  m_y = m_timeSeries.values();
+  m_x = createVector(m_timeSeries.daysFromFirstReport());
+  m_y = createVector(m_timeSeries.values());
 }
 
 TimeSeriesLinePlotData::TimeSeriesLinePlotData(TimeSeries timeSeries, double fracDaysOffset)
 : m_timeSeries(timeSeries),
   m_minX(timeSeries.firstReportDateTime().date().dayOfYear()+timeSeries.firstReportDateTime().time().totalDays()),
   m_maxX(timeSeries.daysFromFirstReport()[timeSeries.daysFromFirstReport().size()-1]+timeSeries.firstReportDateTime().date().dayOfYear()+timeSeries.firstReportDateTime().time().totalDays()), // end day
-  m_minY(minimum(timeSeries.values())),
-  m_maxY(maximum(timeSeries.values())),
+  m_minY(timeSeries.min() ? timeSeries.min().get() : 0),
+  m_maxY(timeSeries.max() ? timeSeries.max().get() : 0),
   m_size(timeSeries.values().size())
 {
   m_boundingRect = QRectF(m_minX, m_minY, (m_maxX - m_minX), (m_maxY - m_minY));
@@ -57,8 +57,8 @@ TimeSeriesLinePlotData::TimeSeriesLinePlotData(TimeSeries timeSeries, double fra
   m_maxValue = m_maxY;
   m_units = timeSeries.units();
   m_fracDaysOffset = fracDaysOffset; // note updating in xValue does not affect scaled axis
-  m_x = m_timeSeries.daysFromFirstReport();
-  m_y = m_timeSeries.values();
+  m_x = createVector(m_timeSeries.daysFromFirstReport());
+  m_y = createVector(m_timeSeries.values());
 }
 
 TimeSeriesLinePlotData::~TimeSeriesLinePlotData()
@@ -108,19 +108,19 @@ double TimeSeriesLinePlotData::maxValue() const { return m_maxValue; }
 /// sumValue
 double TimeSeriesLinePlotData::sumValue() const
 {
-  return sum(m_timeSeries.values());
+  return sum(createVector(m_timeSeries.values()));
 }
 
 /// meanValue
 double TimeSeriesLinePlotData::meanValue() const
 {
-  return mean(m_timeSeries.values());
+  return m_timeSeries.average() ? m_timeSeries.average().get() : 0;
 }
 
 /// stdDevValue
 double TimeSeriesLinePlotData::stdDevValue() const
 {
-  return stdDev(m_timeSeries.values());
+  return stdDev(createVector(m_timeSeries.values()));
 }
 
 /// reimplement bounding rect for speed

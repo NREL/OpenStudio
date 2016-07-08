@@ -531,10 +531,10 @@ TEST_F(ModelFixture, Facility_EconomicsTest_EmptyModel) {
 
   boost::optional<openstudio::TimeSeries> timeSeries = electricMeter->getData(runPeriod.name().get()); 
   if (timeSeries){
-    openstudio::Vector values = timeSeries->values();
+    std::vector<double> values = timeSeries->values();
     unsigned numValues = values.size();
     for (unsigned i = 0; i < numValues; ++i){
-      EXPECT_NO_THROW(values(i));
+      EXPECT_NO_THROW(values[i]);
     }
   }
 

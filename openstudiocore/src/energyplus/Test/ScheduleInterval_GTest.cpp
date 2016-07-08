@@ -24,6 +24,7 @@
 #include "../ReverseTranslator.hpp"
 
 #include "../../utilities/data/TimeSeries.hpp"
+#include "../../utilities/data/Vector.hpp"
 #include "../../utilities/time/Date.hpp"
 #include "../../utilities/time/Time.hpp"
 
@@ -49,7 +50,7 @@ using namespace openstudio;
 TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleFixedInterval_Hourly)
 {
   // Create the values vector
-  Vector values = linspace(1, 8760, 8760);
+  std::vector<double> values = toStandardVector(linspace(1, 8760, 8760));
 
   // Create an hourly interval time series that begins on 1/1 00:00
   TimeSeries timeseries(DateTime(Date(MonthOfYear::Jan, 1), Time(0,1,0)), Time(0,1,0), values, "");
@@ -155,7 +156,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleFixedInterval_Hourly)
 TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleFixedInterval_Hourly_Shifted)
 {
   // Create the values vector
-  Vector values = linspace(1, 8760, 8760);
+  std::vector<double> values = toStandardVector(linspace(1, 8760, 8760));
 
   // Create a time series that starts at 12/31 23:00
   TimeSeries timeseries(DateTime(Date(MonthOfYear::Jan, 1)), Time(0, 1, 0), values, "");
@@ -267,7 +268,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleFixedInterval_Hourly_Shifted
 TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleFixedInterval_20hours)
 {
   // Create the values vector
-  Vector values = linspace(20, 8760, 438);
+  std::vector<double> values = toStandardVector(linspace(20, 8760, 438));
 
   // Create an interval time series starting 1/1 00:00 with 20 hour interval
   TimeSeries timeseries(DateTime(Date(MonthOfYear::Jan, 1),Time(0,20,0)), Time(0,20,0), values, "");
@@ -371,9 +372,8 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleFixedInterval_20hours)
 TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleFixedInterval_ThreePoint)
 {
   // Create the values vector
-  std::vector<double> vec(3,0.0);
-  vec[2] = 1.0;
-  Vector values = openstudio::createVector(vec);
+  std::vector<double> values(3,0.0);
+  values[2] = 1.0;
 
   // Create an interval time series starting 1/1 00:00 with interval 182.5 days
   TimeSeries timeseries(DateTime(Date(MonthOfYear::Jan, 1), Time(0,0,0)), Time(0,4380,0), values, "");
@@ -494,7 +494,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleFixedInterval_TwoPoint)
 TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleVariableInterval_Hourly)
 {
   // Create the values vector and a vector of seconds from the start
-  Vector values = linspace(1, 8760, 8760);
+  std::vector<double> values = toStandardVector(linspace(1, 8760, 8760));
   std::vector<long> seconds(8760);
   for(unsigned i=0;i<seconds.size();i++) {
     seconds[i]=(i+1)*3600;
@@ -604,7 +604,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleVariableInterval_Hourly)
 TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleVariableInterval_Hourly_Shifted)
 {
   // Create the values vector and a vector of seconds from the start
-  Vector values = linspace(1, 8760, 8760);
+  std::vector<double> values = toStandardVector(linspace(1, 8760, 8760));
   std::vector<long> seconds(8760);
   for(unsigned i=0;i<seconds.size();i++) {
     seconds[i]=(i+1)*3600;
@@ -749,7 +749,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleVariableInterval_500)
     76417,86313,86313,66541,51775,86313,86129,36853,86313,70306,46162,86313,86313,29768,46103,
     24318,26234,59933,43230,65930,86313,86313,54580};
 
-  Vector values = linspace(1, 500, 500);
+  std::vector<double> values = toStandardVector(linspace(1, 500, 500));
 
   // Create the vector of seconds from start
   std::vector<long> seconds(500);
@@ -893,7 +893,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleVariableInterval_500_Shifted
     24318, 26234, 59933, 43230, 65930, 86313, 86313, 54580 };
 
   // The vector of values
-  Vector values = linspace(1, 500, 500);
+  std::vector<double> values = toStandardVector(linspace(1, 500, 500));
 
   // Create the vector of seconds from start
   std::vector<long> seconds(500);

@@ -44,7 +44,7 @@ TEST_F(ModelFixture, Schedule_FixedInterval)
 
   Date startDate(MonthOfYear::Jan, 1);
   Time intervalLength(0, 0, 60);
-  Vector values(8760);
+  std::vector<double> values(8760);
   for (unsigned i = 0; i < values.size(); ++i){
     values[i] = i % 24;
   }
@@ -86,7 +86,7 @@ TEST_F(ModelFixture, Schedule_VariableInterval)
   Date startDate(MonthOfYear::Jan, 1);
   Time intervalLength(0, 0, 60);
   std::vector<DateTime> dateTimes;
-  Vector values(8760);
+  std::vector<double> values(8760);
   for (unsigned i = 0; i < values.size(); ++i){
     dateTimes.push_back(DateTime(startDate, intervalLength*(i+1)));
     values[i] = i % 24;
@@ -121,7 +121,7 @@ TEST_F(ModelFixture, Schedule_VariableInterval2)
   Date startDate(MonthOfYear::Jan, 1);
   Time intervalLength(0, 0, 60);
   std::vector<DateTime> dateTimes;
-  Vector values(4380);
+  std::vector<double> values(4380);
   dateTimes.push_back(DateTime(startDate, Time(0,0,0))); // start of first interval
   unsigned i = 0;
   for (unsigned j = 0; j < 8760; ++j){
@@ -169,7 +169,7 @@ TEST_F(ModelFixture, Schedule_VariableInterval3)
   Date startDate(MonthOfYear::Jan, 1);
   Time intervalLength(0, 0, 60);
   std::vector<DateTime> dateTimes;
-  Vector values(4380);
+  std::vector<double> values(4380);
   //dateTimes.push_back(DateTime(startDate, Time(0, 0, 0))); // do not report start of first interval
   unsigned i = 0;
   for (unsigned j = 0; j < 8760; ++j){

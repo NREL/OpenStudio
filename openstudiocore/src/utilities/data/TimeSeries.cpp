@@ -792,12 +792,32 @@ double TimeSeries_Impl::integrate() const
   return result;
 }
 
-double TimeSeries_Impl::averageValue() const
+boost::optional<double> TimeSeries_Impl::average() const
 {
   if (m_secondsFromStart.size() > 0) {
-    return integrate() / m_secondsFromStart.back();
+    return boost::optional<double>(integrate() / m_secondsFromStart.back());
   }
-  return 0;
+  return boost::none;
+}
+
+boost::optional<double> TimeSeries_Impl::min() const
+{
+  auto it = std::min_element(m_values.begin(), m_values.end());
+  if (it == m_values.end()) {
+    // Nothing to see here, warning?
+    return boost::none;
+  }
+  return boost::optional<double>(*it);
+}
+
+boost::optional<double> TimeSeries_Impl::max() const
+{
+  auto it = std::max_element(m_values.begin(), m_values.end());
+  if (it == m_values.end()) {
+    // Nothing to see here, warning?
+    return boost::none;
+  }
+  return boost::optional<double>(*it);
 }
 
 } // detail
@@ -935,9 +955,19 @@ double TimeSeries::integrate() const
   return m_impl->integrate();
 }
 
-double TimeSeries::averageValue() const
+boost::optional<double> TimeSeries::average() const
 {
-  return m_impl->averageValue();
+  return m_impl->average();
+}
+
+boost::optional<double> TimeSeries::min() const
+{
+  return m_impl->min();
+}
+
+boost::optional<double> TimeSeries::max() const
+{
+  return m_impl->max();
 }
 
 TimeSeries::TimeSeries(std::shared_ptr<detail::TimeSeries_Impl> impl)

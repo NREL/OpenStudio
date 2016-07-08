@@ -194,7 +194,7 @@ TEST_F(SqlFileFixture, CreateSqlFile)
   values.push_back(1);
   values.push_back(100.5);
 
-  TimeSeries timeSeries(c.startDate(), openstudio::Time(0,1), openstudio::createVector(values), "lux");
+  TimeSeries timeSeries(c.startDate(), openstudio::Time(0,1), values, "lux");
 
   {
     openstudio::SqlFile sql(outfile,
@@ -281,8 +281,8 @@ TEST_F(SqlFileFixture, CreateSqlFile)
     boost::optional<TimeSeries> ts = sql.timeSeries(envPeriods[0], reportingFrequencies[0], timeSeriesNames[0], keyValues[0]);
     ASSERT_TRUE(ts);
 
-    EXPECT_EQ(openstudio::toStandardVector(ts->values()), openstudio::toStandardVector(timeSeries.values()));
-    EXPECT_EQ(openstudio::toStandardVector(ts->daysFromFirstReport()), openstudio::toStandardVector(timeSeries.daysFromFirstReport()));
+    EXPECT_EQ(ts->values(), timeSeries.values());
+    EXPECT_EQ(ts->daysFromFirstReport(), timeSeries.daysFromFirstReport());
   }
 
 }

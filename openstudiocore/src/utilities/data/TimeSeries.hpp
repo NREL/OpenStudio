@@ -182,8 +182,14 @@ public:
   /** Integrate the time series */
   double integrate() const;
 
-  /** Compute the time series average value */
-  double averageValue() const;
+  /** Compute the time series average value (if possible) */
+  boost::optional<double> average() const;
+
+  /** Determine the maximum value (if possible) of the time series values */
+  boost::optional<double> max() const;
+
+  /** Determine the maximum value (if possible) of the time series values */
+  boost::optional<double> min() const;
 
   //@}
 private:

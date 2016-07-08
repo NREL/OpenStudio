@@ -23,6 +23,7 @@
 #include "../TimeSeries.hpp"
 #include "../../time/Date.hpp"
 #include "../../time/Time.hpp"
+#include "../../data/Vector.hpp"
 
 using namespace std;
 using namespace boost;
@@ -33,9 +34,9 @@ TEST_F(DataFixture,TimeSeries_IntervalConstructor)
   std::string units = "W";
 
   // fill vector with 3 hours of data
-  Vector values(3);
+  std::vector<double> values(3);
   for (unsigned i = 0; i < 3; ++i){
-    values(i) = i;
+    values[i] = i;
   }
   unsigned numValues = values.size();
 
@@ -56,7 +57,7 @@ TEST_F(DataFixture,TimeSeries_IntervalConstructor)
 
   // Check computations
   EXPECT_EQ(10800, timeSeries1.integrate());
-  EXPECT_EQ(1, timeSeries1.averageValue());
+  EXPECT_EQ(1, timeSeries1.average().get());
 
   // check interval
   OptionalTime interval1 = timeSeries1.intervalLength();
@@ -135,10 +136,10 @@ TEST_F(DataFixture,TimeSeries_DetailedConstructor_FirstReport)
   DateTime startDateTime(startDate, Time(0,1,0,0));
 
   // fill vector with 3 hours of data
-  Vector values(3);
+  std::vector<double> values(3);
   DateTimeVector dateTimes;
   for (unsigned i = 0; i < 3; ++i){
-    values(i) = i;
+    values[i] = i;
     dateTimes.push_back(startDateTime + Time(0,i,0,0));
   }
   unsigned numValues = values.size();
@@ -152,7 +153,7 @@ TEST_F(DataFixture,TimeSeries_DetailedConstructor_FirstReport)
 
   // Check computations
   EXPECT_EQ(10800, timeSeries.integrate());
-  EXPECT_EQ(1, timeSeries.averageValue());
+  EXPECT_EQ(1, timeSeries.average().get());
 
   // check start date and time
 //  DateTime firstDateTime = timeSeries.dateTimes().front();
@@ -211,11 +212,11 @@ TEST_F(DataFixture, TimeSeries_DetailedConstructor_Start)
   DateTime firstDateTime(startDate, Time(0, 2, 0, 0));
 
   // fill vector with 3 hours of data
-  Vector values(3);
+  std::vector<double> values(3);
   DateTimeVector dateTimes;
   dateTimes.push_back(startDateTime);
   for (unsigned i = 0; i < 3; ++i){
-    values(i) = i;
+    values[i] = i;
     dateTimes.push_back(startDateTime + Time(0, i+1, 0, 0));
   }
   unsigned numValues = values.size();
@@ -229,7 +230,7 @@ TEST_F(DataFixture, TimeSeries_DetailedConstructor_Start)
 
   // Check computations
   EXPECT_EQ(10800, timeSeries.integrate());
-  EXPECT_EQ(1, timeSeries.averageValue());
+  EXPECT_EQ(1, timeSeries.average().get());
 
   // check start date and time
   EXPECT_EQ(firstDateTime, timeSeries.firstReportDateTime());
@@ -285,11 +286,11 @@ TEST_F(DataFixture, TimeSeries_SecondsConstructor_FirstReport)
   DateTime startDateTime(startDate, Time(0, 1, 0, 0));
 
   // fill vector with 3 hours of data
-  Vector values(3);
+  std::vector<double> values(3);
   DateTimeVector dateTimes;
   std::vector<long> seconds;
   for (unsigned i = 0; i < 3; ++i){
-    values(i) = i;
+    values[i] = i;
     seconds.push_back(i * 3600);
     dateTimes.push_back(startDateTime + Time(0, i, 0, 0));
   }
@@ -307,7 +308,7 @@ TEST_F(DataFixture, TimeSeries_SecondsConstructor_FirstReport)
 
   // Check computations
   EXPECT_EQ(10800, timeSeries.integrate());
-  EXPECT_EQ(1, timeSeries.averageValue());
+  EXPECT_EQ(1, timeSeries.average().get());
 
   // check start date and time
   //  DateTime firstDateTime = timeSeries.dateTimes().front();
@@ -369,11 +370,11 @@ TEST_F(DataFixture, TimeSeries_SecondsConstructor_Start)
   DateTime firstDateTime = startDateTime + Time(0, 1, 0, 0);
 
   // fill vector with 3 hours of data
-  Vector values(3);
+  std::vector<double> values(3);
   DateTimeVector dateTimes;
   std::vector<long> seconds;
   for (unsigned i = 0; i < 3; ++i){
-    values(i) = i;
+    values[i] = i;
     seconds.push_back((i+1) * 3600);
     dateTimes.push_back(startDateTime + Time(0, i+1, 0, 0));
   }
@@ -388,7 +389,7 @@ TEST_F(DataFixture, TimeSeries_SecondsConstructor_Start)
 
   // Check computations
   EXPECT_EQ(10800, timeSeries.integrate());
-  EXPECT_EQ(1, timeSeries.averageValue());
+  EXPECT_EQ(1, timeSeries.average().get());
 
   // check start date and time
   EXPECT_EQ(firstDateTime, timeSeries.firstReportDateTime());
@@ -469,7 +470,7 @@ TEST_F(DataFixture, TimeSeries_DaysConstructor_std_vector_FirstReport)
 
   // Check computations
   EXPECT_EQ(32400, timeSeries.integrate());
-  EXPECT_EQ(1, timeSeries.averageValue());
+  EXPECT_EQ(1, timeSeries.average().get());
 
   // check start date and time
   //  DateTime firstDateTime = timeSeries.dateTimes().front();
@@ -550,7 +551,7 @@ TEST_F(DataFixture, TimeSeries_DaysConstructor_std_vector_Start)
 
   // Check computations
   EXPECT_EQ(32400, timeSeries.integrate());
-  EXPECT_EQ(1, timeSeries.averageValue());
+  EXPECT_EQ(1, timeSeries.average().get());
 
   // check start date and time
   EXPECT_EQ(firstDateTime, timeSeries.firstReportDateTime());
@@ -609,9 +610,9 @@ TEST_F(DataFixture, TimeSeries_DaysConstructor_Vector_FirstReport)
   DateTime startDateTime(startDate, Time(0, 3, 0, 0));
 
   // fill vector with 9 hours of data
-  Vector values(3);
+  std::vector<double> values(3);
   DateTimeVector dateTimes;
-  Vector days(3);
+  std::vector<double> days(3);
   for (unsigned i = 0; i < 3; ++i) {
     values[i] = i;
     days[i] = i * 0.125;
@@ -631,7 +632,7 @@ TEST_F(DataFixture, TimeSeries_DaysConstructor_Vector_FirstReport)
 
   // Check computations
   EXPECT_EQ(32400, timeSeries.integrate());
-  EXPECT_EQ(1, timeSeries.averageValue());
+  EXPECT_EQ(1, timeSeries.average().get());
 
   // check start date and time
   //  DateTime firstDateTime = timeSeries.dateTimes().front();
@@ -693,9 +694,9 @@ TEST_F(DataFixture, TimeSeries_DaysConstructor_Vector_Start)
   DateTime firstDateTime = startDateTime + Time(0, 3, 0, 0);
 
   // fill vector with 3 hours of data
-  Vector values(3);
+  std::vector<double> values(3);
   DateTimeVector dateTimes;
-  Vector days(3);
+  std::vector<double> days(3);
   for (unsigned i = 0; i < 3; ++i) {
     values[i] = i;
     days[i] = (i + 1) * 0.125;
@@ -712,7 +713,7 @@ TEST_F(DataFixture, TimeSeries_DaysConstructor_Vector_Start)
 
   // Check computations
   EXPECT_EQ(32400, timeSeries.integrate());
-  EXPECT_EQ(1, timeSeries.averageValue());
+  EXPECT_EQ(1, timeSeries.average().get());
 
   // check start date and time
   EXPECT_EQ(firstDateTime, timeSeries.firstReportDateTime());
@@ -775,10 +776,10 @@ TEST_F(DataFixture,TimeSeries_IntervalConstructor_WrapAroundDates)
   Time interval = Time(1,0,0,0);
 
   // fill vector with 365 days of data
-  Vector values(365);
+  std::vector<double> values(365);
   DateTimeVector dateTimes;
   for (unsigned i = 0; i < 365; ++i){
-    values(i) = i;
+    values[i] = i;
     dateTimes.push_back(startDate + Time(i+1,0,0,0));
   }
   unsigned numValues = values.size();
@@ -803,7 +804,7 @@ TEST_F(DataFixture,TimeSeries_IntervalConstructor_WrapAroundDates)
     EXPECT_EQ(i, timeSeries.value(dateTime)) << dateTime;
   }
 
-  Vector test = timeSeries.values(DateTime(Date(MonthOfYear(MonthOfYear::Apr), 1), Time(1,0,0,0)), DateTime(Date(MonthOfYear(MonthOfYear::Apr), 30), Time(1,0,0,0)));
+  std::vector<double> test = timeSeries.values(DateTime(Date(MonthOfYear(MonthOfYear::Apr), 1), Time(1,0,0,0)), DateTime(Date(MonthOfYear(MonthOfYear::Apr), 30), Time(1,0,0,0)));
   ASSERT_EQ(30, test.size());
   for (unsigned i = 0; i < 30; ++i){
     EXPECT_EQ(i + 90, test[i]);
@@ -813,7 +814,7 @@ TEST_F(DataFixture,TimeSeries_IntervalConstructor_WrapAroundDates)
   startDate = Date(MonthOfYear(MonthOfYear::Apr),11);
   startDateTime = DateTime(startDate, Time(1,0,0,0)); 
 
-  Vector wrappedValues(365);
+  std::vector<double> wrappedValues(365);
   unsigned j = 0;
   for (unsigned i = 100; i < 365; ++i, ++j){
     wrappedValues[j] = values[i];
@@ -859,10 +860,10 @@ TEST_F(DataFixture,TimeSeries_DetailedConstructor_WrapAroundDates)
   Date startDate(MonthOfYear(MonthOfYear::Jan),1);
 
   // fill vector with 365 days of data
-  Vector values(365);
+  std::vector<double> values(365);
   DateTimeVector dateTimes;
   for (unsigned i = 0; i < 365; ++i){
-    values(i) = i;
+    values[i] = i;
     dateTimes.push_back(startDate + Time(i+1,0,0,0));
   }
   unsigned numValues = values.size();
@@ -889,14 +890,14 @@ TEST_F(DataFixture,TimeSeries_DetailedConstructor_WrapAroundDates)
     EXPECT_EQ(i, timeSeries.value(dateTime)) << dateTime;
   }
 
-  Vector test = timeSeries.values(DateTime(Date(MonthOfYear(MonthOfYear::Apr), 1), Time(1,0,0,0)), DateTime(Date(MonthOfYear(MonthOfYear::Apr), 30), Time(1,0,0,0)));
+  std::vector<double> test = timeSeries.values(DateTime(Date(MonthOfYear(MonthOfYear::Apr), 1), Time(1,0,0,0)), DateTime(Date(MonthOfYear(MonthOfYear::Apr), 30), Time(1,0,0,0)));
   ASSERT_EQ(30, test.size());
   for (unsigned i = 0; i < 30; ++i){
     EXPECT_EQ(i + 90, test[i]);
   }
 
   // now rearrange date times to make a wrap around year
-  Vector wrappedValues(365);
+  std::vector<double> wrappedValues(365);
   DateTimeVector wrappedDateTimes;
   unsigned j = 0;
   for (unsigned i = 100; i < 365; ++i, ++j){
@@ -947,7 +948,7 @@ TEST_F(DataFixture,TimeSeries_AddSubtract8760)
 
   // interval
   Time interval = Time(0,1);
-  Vector values = linspace(1, 8760, 8760);
+  std::vector<double> values = toStandardVector(linspace(1, 8760, 8760));
 
   Date startDate(Date(MonthOfYear(MonthOfYear::Jan),1));
   DateTime startDateTime(startDate, Time(0,1,0,0));
@@ -1011,10 +1012,10 @@ TEST_F(DataFixture,TimeSeries_AddSubtractSameTimePeriod)
 
   // interval
   Time interval = Time(0,1,0,0);
-  Vector intervalValues(3);
-  intervalValues(0) = 0;
-  intervalValues(1) = 1;
-  intervalValues(2) = 2;
+  std::vector<double> intervalValues(3);
+  intervalValues[0] = 0;
+  intervalValues[1] = 1;
+  intervalValues[2] = 2;
 
   TimeSeries intervalTimeSeries(startDateTime, interval, intervalValues, units);
   ASSERT_TRUE(!intervalTimeSeries.values().empty());
@@ -1026,12 +1027,12 @@ TEST_F(DataFixture,TimeSeries_AddSubtractSameTimePeriod)
   dateTimes.push_back(startDateTime + Time(0,1,0,0));
   dateTimes.push_back(startDateTime + Time(0,1,30,0));
   dateTimes.push_back(startDateTime + Time(0,2,0,0));
-  Vector detailedValues(5);
-  detailedValues(0) = 0.0; // 1:00
-  detailedValues(1) = 0.5; // 1:30
-  detailedValues(2) = 1.0; // 2:00
-  detailedValues(3) = 1.5; // 2:30
-  detailedValues(4) = 2.0; // 3:00
+  std::vector<double> detailedValues(5);
+  detailedValues[0] = 0.0; // 1:00
+  detailedValues[1] = 0.5; // 1:30
+  detailedValues[2] = 1.0; // 2:00
+  detailedValues[3] = 1.5; // 2:30
+  detailedValues[4] = 2.0; // 3:00
 
   TimeSeries detailedTimeSeries(dateTimes, detailedValues, units);
   ASSERT_TRUE(!detailedTimeSeries.values().empty());
@@ -1129,7 +1130,7 @@ TEST_F(DataFixture, TimeSeries_Multiply8760)
   Time interval = Time(0, 1);
 
   // Values
-  Vector values = linspace(1, 8760, 8760);
+  std::vector<double> values = toStandardVector(linspace(1, 8760, 8760));
 
   // Date/times for detailed series
   Date startDate(Date(MonthOfYear(MonthOfYear::Jan), 1));
@@ -1150,7 +1151,7 @@ TEST_F(DataFixture, TimeSeries_Multiply8760)
   TimeSeries mult = 3 * intervalTimeSeries;
 
   // Run tests
-  Vector mvals = mult.values();
+  std::vector<double> mvals = mult.values();
   for (unsigned i = 0; i < 8760; i++) {
     EXPECT_EQ(3 * values[i], mvals[i]);
   }
@@ -1183,7 +1184,7 @@ TEST_F(DataFixture, TimeSeries_Yearly)
   DateTime firstReportDateTime(startDate, interval);
 
   std::vector<double> values = { 1.0 };
-  Vector idioticVector(1);
+  std::vector<double> idioticVector(1);
   idioticVector[0] = 1.0;
 
   std::vector<double> daysFromFirstReport0 = { 0.0 };
@@ -1195,9 +1196,9 @@ TEST_F(DataFixture, TimeSeries_Yearly)
 
   // Check computations
   EXPECT_EQ(31536000, intervalTimeSeries.integrate());
-  EXPECT_EQ(1, intervalTimeSeries.averageValue());
+  EXPECT_EQ(1, intervalTimeSeries.average().get());
   EXPECT_EQ(31536000, firstAndDaysTimeSeries8760.integrate());
-  EXPECT_EQ(1, firstAndDaysTimeSeries8760.averageValue());
+  EXPECT_EQ(1, firstAndDaysTimeSeries8760.average().get());
 
 }
 

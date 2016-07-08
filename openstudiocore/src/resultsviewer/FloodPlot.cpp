@@ -182,8 +182,8 @@ FloodPlotData::~FloodPlotData()
 TimeSeriesFloodPlotData::TimeSeriesFloodPlotData(TimeSeries timeSeries)
 : FloodPlotData(),
   m_timeSeries(timeSeries),
-  m_minValue(minimum(timeSeries.values())),
-  m_maxValue(maximum(timeSeries.values())),
+  m_minValue(timeSeries.min() ? timeSeries.min().get() : 0),
+  m_maxValue(timeSeries.max() ? timeSeries.max().get() : 0),
   m_minX(timeSeries.firstReportDateTime().date().dayOfYear()),
   m_maxX(ceil(timeSeries.daysFromFirstReport()[timeSeries.daysFromFirstReport().size()-1]+timeSeries.firstReportDateTime().date().dayOfYear()+timeSeries.firstReportDateTime().time().totalDays())), // end day
   m_minY(0), // start hour
@@ -206,8 +206,8 @@ TimeSeriesFloodPlotData::TimeSeriesFloodPlotData(TimeSeries timeSeries)
 TimeSeriesFloodPlotData::TimeSeriesFloodPlotData(TimeSeries timeSeries,  QwtInterval colorMapRange)
 : FloodPlotData(),
   m_timeSeries(timeSeries),
-  m_minValue(minimum(timeSeries.values())),
-  m_maxValue(maximum(timeSeries.values())),
+  m_minValue(timeSeries.min() ? timeSeries.min().get() : 0),
+  m_maxValue(timeSeries.max() ? timeSeries.max().get() : 0),
   m_minX(timeSeries.firstReportDateTime().date().dayOfYear()),
   m_maxX(ceil(timeSeries.daysFromFirstReport()[timeSeries.daysFromFirstReport().size()-1]+timeSeries.firstReportDateTime().date().dayOfYear()+timeSeries.firstReportDateTime().time().totalDays())), // end day
   m_minY(0), // start hour
@@ -297,19 +297,19 @@ void TimeSeriesFloodPlotData::maxValue(double max) { m_maxValue = max; };
 /// sumValue
 double TimeSeriesFloodPlotData::sumValue() const
 {
-  return sum(m_timeSeries.values());
+  return sum(createVector(m_timeSeries.values()));
 }
 
 /// meanValue
 double TimeSeriesFloodPlotData::meanValue() const
 {
-  return mean(m_timeSeries.values());
+  return m_timeSeries.average() ? m_timeSeries.average().get() : 0;
 }
 
 /// stdDevValue
 double TimeSeriesFloodPlotData::stdDevValue() const
 {
-  return stdDev(m_timeSeries.values());
+  return stdDev(createVector(m_timeSeries.values()));
 }
 
 void TimeSeriesFloodPlotData::colorMapRange(QwtInterval colorMapRange) 
