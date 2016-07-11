@@ -24,6 +24,7 @@
 #include "../model/Model_Impl.hpp"
 #include "../model/YearDescription.hpp"
 #include "../model/YearDescription_Impl.hpp"
+#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
 
 #include <QRadioButton>
 #include <QWidget>
@@ -38,7 +39,7 @@ class OSComboBox2;
 
 class OSSwitch2;
 
-class YearSettingsWidget : public QWidget
+class YearSettingsWidget : public QWidget, public Nano::Observer
 {
   Q_OBJECT
 

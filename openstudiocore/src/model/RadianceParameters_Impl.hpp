@@ -107,7 +107,7 @@ namespace detail {
                             Model_Impl* model,
                             bool keepHandle);
 
-    virtual ~RadianceParameters_Impl() {}
+    virtual ~RadianceParameters_Impl();
 
     //@}
 

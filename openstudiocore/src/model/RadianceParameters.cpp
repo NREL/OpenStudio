@@ -55,6 +55,10 @@ namespace detail {
     : ModelObject_Impl(other,model,keepHandle)
   {}
 
+  RadianceParameters_Impl::~RadianceParameters_Impl() {
+    // Empty implementation for debugging
+  }
+
   const std::vector<std::string>& RadianceParameters_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
@@ -713,11 +717,13 @@ std::vector<std::string> RadianceParameters::skyDiscretizationResolutionValues()
 }
 
 std::string RadianceParameters::skyDiscretizationResolution() const {
-  return getImpl<detail::RadianceParameters_Impl>()->skyDiscretizationResolution();
+  auto impl = getImpl<detail::RadianceParameters_Impl>();
+  return impl->skyDiscretizationResolution();
 }
 
 bool RadianceParameters::setSkyDiscretizationResolution(std::string skyDiscretizationResolution) {
-  return getImpl<detail::RadianceParameters_Impl>()->setSkyDiscretizationResolution(skyDiscretizationResolution);
+  auto impl = getImpl<detail::RadianceParameters_Impl>();
+  return impl->setSkyDiscretizationResolution(skyDiscretizationResolution);
 }
 
 void RadianceParameters::resetSkyDiscretizationResolution() {

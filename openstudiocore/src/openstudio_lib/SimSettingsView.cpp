@@ -1260,38 +1260,37 @@ void SimSettingsView::attachSimulationControl()
 void SimSettingsView::attachSizingParameters()
 {
   model::SizingParameters mo = m_model.getUniqueModelObject<model::SizingParameters>();
-  boost::optional<model::SizingParameters> m_mo = mo;
 
   // m_heatingSizingFactor->bind(mo,"heatingSizingFactor",m_isIP);
   m_heatingSizingFactor->bind(
     m_isIP,
-    *m_mo,
-    DoubleGetter(std::bind(&model::SizingParameters::heatingSizingFactor, m_mo.get_ptr())),
-    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::SizingParameters::*)(double)>(&model::SizingParameters::setHeatingSizingFactor), m_mo.get_ptr(), std::placeholders::_1)),
-    boost::optional<NoFailAction>(std::bind(&model::SizingParameters::resetHeatingSizingFactor, m_mo.get_ptr())),
+    mo,
+    DoubleGetter(std::bind(&model::SizingParameters::heatingSizingFactor, mo)),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::SizingParameters::*)(double)>(&model::SizingParameters::setHeatingSizingFactor), mo, std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::SizingParameters::resetHeatingSizingFactor, mo)),
     boost::none,
     boost::none,
-    boost::optional<BasicQuery>(std::bind(&model::SizingParameters::isHeatingSizingFactorDefaulted, m_mo.get_ptr()))
+    boost::optional<BasicQuery>(std::bind(&model::SizingParameters::isHeatingSizingFactorDefaulted, mo))
   );
 
   // m_coolingSizingFactor->bind(mo,"coolingSizingFactor",m_isIP);
   m_coolingSizingFactor->bind(
     m_isIP,
-    *m_mo,
-    DoubleGetter(std::bind(&model::SizingParameters::coolingSizingFactor, m_mo.get_ptr())),
-    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::SizingParameters::*)(double)>(&model::SizingParameters::setCoolingSizingFactor), m_mo.get_ptr(), std::placeholders::_1)),
-    boost::optional<NoFailAction>(std::bind(&model::SizingParameters::resetCoolingSizingFactor, m_mo.get_ptr())),
+    mo,
+    DoubleGetter(std::bind(&model::SizingParameters::coolingSizingFactor, mo)),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::SizingParameters::*)(double)>(&model::SizingParameters::setCoolingSizingFactor), mo, std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::SizingParameters::resetCoolingSizingFactor, mo)),
     boost::none,
     boost::none,
-    boost::optional<BasicQuery>(std::bind(&model::SizingParameters::isCoolingSizingFactorDefaulted, m_mo.get_ptr()))
+    boost::optional<BasicQuery>(std::bind(&model::SizingParameters::isCoolingSizingFactorDefaulted, mo))
   );
   // m_timestepsinAveragingWindow->bind(mo,"timestepsinAveragingWindow");
   
   m_timestepsinAveragingWindow->bind(
-    *m_mo,
-    OptionalIntGetter(std::bind(&model::SizingParameters::timestepsinAveragingWindow, m_mo.get_ptr())),
-    boost::optional<IntSetter>(std::bind(&model::SizingParameters::setTimestepsinAveragingWindow, m_mo.get_ptr(), std::placeholders::_1)),
-    boost::optional<NoFailAction>(std::bind(&model::SizingParameters::resetTimestepsinAveragingWindow, m_mo.get_ptr())),
+    mo,
+    OptionalIntGetter(std::bind(&model::SizingParameters::timestepsinAveragingWindow, mo)),
+    boost::optional<IntSetter>(std::bind(&model::SizingParameters::setTimestepsinAveragingWindow, mo, std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::SizingParameters::resetTimestepsinAveragingWindow, mo)),
     boost::optional<NoFailAction>(),
     boost::optional<NoFailAction>(),
     boost::optional<BasicQuery>(),
@@ -1305,12 +1304,11 @@ void SimSettingsView::attachProgramControl()
   model::ProgramControl mo = m_model.getUniqueModelObject<model::ProgramControl>();
 
   // m_numberOfThreadsAllowed->bind(mo,"numberofThreadsAllowed");
-  boost::optional<model::ProgramControl> m_mo = mo;
   m_numberOfThreadsAllowed->bind(
-    *m_mo,
-    OptionalIntGetter(std::bind(&model::ProgramControl::numberofThreadsAllowed, m_mo.get_ptr())),
-    boost::optional<IntSetter>(std::bind(&model::ProgramControl::setNumberofThreadsAllowed, m_mo.get_ptr(), std::placeholders::_1)),
-    boost::optional<NoFailAction>(std::bind(&model::ProgramControl::resetNumberofThreadsAllowed, m_mo.get_ptr()))
+    mo,
+    OptionalIntGetter(std::bind(&model::ProgramControl::numberofThreadsAllowed, mo)),
+    boost::optional<IntSetter>(std::bind(&model::ProgramControl::setNumberofThreadsAllowed, mo, std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::ProgramControl::resetNumberofThreadsAllowed, mo))
   );
 }
 
@@ -1319,94 +1317,91 @@ void SimSettingsView::attachTimestep()
   model::Timestep mo = m_model.getUniqueModelObject<model::Timestep>();
 
   // m_numberOfTimestepsPerHour->bind(mo,"numberOfTimestepsPerHour");
-  boost::optional<model::Timestep> m_mo = mo;
   m_numberOfTimestepsPerHour->bind(
-    *m_mo,
+    mo,
     // FIXED_LAST
-    IntGetter(std::bind(&model::Timestep::numberOfTimestepsPerHour, m_mo.get_ptr())),
-    boost::optional<IntSetter>(std::bind(&model::Timestep::setNumberOfTimestepsPerHour, m_mo.get_ptr(), std::placeholders::_1)),
-    boost::optional<NoFailAction>(std::bind(&model::Timestep::resetNumberOfTimestepsPerHour, m_mo.get_ptr())),
+    IntGetter(std::bind(&model::Timestep::numberOfTimestepsPerHour, mo)),
+    boost::optional<IntSetter>(std::bind(&model::Timestep::setNumberOfTimestepsPerHour, mo, std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Timestep::resetNumberOfTimestepsPerHour, mo)),
     boost::none,
     boost::none,
-    boost::optional<BasicQuery>(std::bind(&model::Timestep::isNumberOfTimestepsPerHourDefaulted, m_mo.get_ptr()))
+    boost::optional<BasicQuery>(std::bind(&model::Timestep::isNumberOfTimestepsPerHourDefaulted, mo))
   );
 }
 
 void SimSettingsView::attachOutputControlReportingTolerances()
 {
   model::OutputControlReportingTolerances mo = m_model.getUniqueModelObject<model::OutputControlReportingTolerances>();
-  boost::optional<model::OutputControlReportingTolerances> m_mo = mo;
   
   // m_toleranceForTimeHeatingSetpointNotMet->bind(mo,"toleranceforTimeHeatingSetpointNotMet",m_isIP);
   m_toleranceForTimeHeatingSetpointNotMet->bind(
     m_isIP,
-    *m_mo,
-    DoubleGetter(std::bind(&model::OutputControlReportingTolerances::toleranceforTimeHeatingSetpointNotMet, m_mo.get_ptr())),
-    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::OutputControlReportingTolerances::*)(double)>(&model::OutputControlReportingTolerances::setToleranceforTimeHeatingSetpointNotMet), m_mo.get_ptr(), std::placeholders::_1)),
-    boost::optional<NoFailAction>(std::bind(&model::OutputControlReportingTolerances::resetToleranceforTimeHeatingSetpointNotMet, m_mo.get_ptr())),
+    mo,
+    DoubleGetter(std::bind(&model::OutputControlReportingTolerances::toleranceforTimeHeatingSetpointNotMet, mo)),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::OutputControlReportingTolerances::*)(double)>(&model::OutputControlReportingTolerances::setToleranceforTimeHeatingSetpointNotMet), mo, std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::OutputControlReportingTolerances::resetToleranceforTimeHeatingSetpointNotMet, mo)),
     boost::none,
     boost::none,
-    boost::optional<BasicQuery>(std::bind(&model::OutputControlReportingTolerances::isToleranceforTimeHeatingSetpointNotMetDefaulted, m_mo.get_ptr()))
+    boost::optional<BasicQuery>(std::bind(&model::OutputControlReportingTolerances::isToleranceforTimeHeatingSetpointNotMetDefaulted, mo))
   );
 
   
   // m_toleranceForTimeCoolingSetpointNotMet->bind(mo,"toleranceforTimeCoolingSetpointNotMet",m_isIP);
   m_toleranceForTimeCoolingSetpointNotMet->bind(
     m_isIP,
-    *m_mo,
-    DoubleGetter(std::bind(&model::OutputControlReportingTolerances::toleranceforTimeCoolingSetpointNotMet, m_mo.get_ptr())),
-    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::OutputControlReportingTolerances::*)(double)>(&model::OutputControlReportingTolerances::setToleranceforTimeCoolingSetpointNotMet), m_mo.get_ptr(), std::placeholders::_1)),
-    boost::optional<NoFailAction>(std::bind(&model::OutputControlReportingTolerances::resetToleranceforTimeCoolingSetpointNotMet, m_mo.get_ptr())),
+    mo,
+    DoubleGetter(std::bind(&model::OutputControlReportingTolerances::toleranceforTimeCoolingSetpointNotMet, mo)),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::OutputControlReportingTolerances::*)(double)>(&model::OutputControlReportingTolerances::setToleranceforTimeCoolingSetpointNotMet), mo, std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::OutputControlReportingTolerances::resetToleranceforTimeCoolingSetpointNotMet, mo)),
     boost::none,
     boost::none,
-    boost::optional<BasicQuery>(std::bind(&model::OutputControlReportingTolerances::isToleranceforTimeCoolingSetpointNotMetDefaulted, m_mo.get_ptr()))
+    boost::optional<BasicQuery>(std::bind(&model::OutputControlReportingTolerances::isToleranceforTimeCoolingSetpointNotMetDefaulted, mo))
   );
 }
 
 void SimSettingsView::attachConvergenceLimits()
 {
   model::ConvergenceLimits mo = m_model.getUniqueModelObject<model::ConvergenceLimits>();
-  boost::optional<model::ConvergenceLimits> m_mo = mo;
   
   // m_maximumHVACIterations->bind(mo,"maximumHVACIterations");
   m_maximumHVACIterations->bind(
-    *m_mo,
-    IntGetter(std::bind(&model::ConvergenceLimits::maximumHVACIterations, m_mo.get_ptr())),
-    boost::optional<IntSetter>(std::bind(&model::ConvergenceLimits::setMaximumHVACIterations, m_mo.get_ptr(), std::placeholders::_1)),
-    boost::optional<NoFailAction>(std::bind(&model::ConvergenceLimits::resetMaximumHVACIterations, m_mo.get_ptr())),
+    mo,
+    IntGetter(std::bind(&model::ConvergenceLimits::maximumHVACIterations, mo)),
+    boost::optional<IntSetter>(std::bind(&model::ConvergenceLimits::setMaximumHVACIterations, mo, std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::ConvergenceLimits::resetMaximumHVACIterations, mo)),
     boost::none,
     boost::none,
-    boost::optional<BasicQuery>(std::bind(&model::ConvergenceLimits::isMaximumHVACIterationsDefaulted, m_mo.get_ptr()))
+    boost::optional<BasicQuery>(std::bind(&model::ConvergenceLimits::isMaximumHVACIterationsDefaulted, mo))
   );
 
   // m_minimumPlantIterations->bind(mo,"minimumPlantIterations");
   m_minimumPlantIterations->bind(
-    *m_mo,
-    IntGetter(std::bind(&model::ConvergenceLimits::minimumPlantIterations, m_mo.get_ptr())),
-    boost::optional<IntSetter>(std::bind(&model::ConvergenceLimits::setMinimumPlantIterations, m_mo.get_ptr(), std::placeholders::_1)),
-    boost::optional<NoFailAction>(std::bind(&model::ConvergenceLimits::resetMinimumPlantIterations, m_mo.get_ptr())),
+    mo,
+    IntGetter(std::bind(&model::ConvergenceLimits::minimumPlantIterations, mo)),
+    boost::optional<IntSetter>(std::bind(&model::ConvergenceLimits::setMinimumPlantIterations, mo, std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::ConvergenceLimits::resetMinimumPlantIterations, mo)),
     boost::none,
     boost::none,
-    boost::optional<BasicQuery>(std::bind(&model::ConvergenceLimits::isMinimumPlantIterationsDefaulted, m_mo.get_ptr()))
+    boost::optional<BasicQuery>(std::bind(&model::ConvergenceLimits::isMinimumPlantIterationsDefaulted, mo))
   );
 
   // m_maximumPlantIterations->bind(mo,"maximumPlantIterations");
   m_maximumPlantIterations->bind(
-    *m_mo,
-    IntGetter(std::bind(&model::ConvergenceLimits::maximumPlantIterations, m_mo.get_ptr())),
-    boost::optional<IntSetter>(std::bind(&model::ConvergenceLimits::setMaximumPlantIterations, m_mo.get_ptr(), std::placeholders::_1)),
-    boost::optional<NoFailAction>(std::bind(&model::ConvergenceLimits::resetMaximumPlantIterations, m_mo.get_ptr())),
+    mo,
+    IntGetter(std::bind(&model::ConvergenceLimits::maximumPlantIterations, mo)),
+    boost::optional<IntSetter>(std::bind(&model::ConvergenceLimits::setMaximumPlantIterations, mo, std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::ConvergenceLimits::resetMaximumPlantIterations, mo)),
     boost::none,
     boost::none,
-    boost::optional<BasicQuery>(std::bind(&model::ConvergenceLimits::isMaximumPlantIterationsDefaulted, m_mo.get_ptr()))
+    boost::optional<BasicQuery>(std::bind(&model::ConvergenceLimits::isMaximumPlantIterationsDefaulted, mo))
   );
 
   // m_minimumSystemTimestep->bind(mo,"minimumSystemTimestep");
   m_minimumSystemTimestep->bind(
-    *m_mo,
-    OptionalIntGetter(std::bind(&model::ConvergenceLimits::minimumSystemTimestep, m_mo.get_ptr())),
-    boost::optional<IntSetter>(std::bind(&model::ConvergenceLimits::setMinimumSystemTimestep, m_mo.get_ptr(), std::placeholders::_1)),
-    boost::optional<NoFailAction>(std::bind(&model::ConvergenceLimits::resetMinimumSystemTimestep, m_mo.get_ptr()))
+    mo,
+    OptionalIntGetter(std::bind(&model::ConvergenceLimits::minimumSystemTimestep, mo)),
+    boost::optional<IntSetter>(std::bind(&model::ConvergenceLimits::setMinimumSystemTimestep, mo, std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::ConvergenceLimits::resetMinimumSystemTimestep, mo))
   );
 
 }
@@ -1415,28 +1410,26 @@ void SimSettingsView::attachShadowCalculation()
 {
   m_shadowCalculation = m_model.getUniqueModelObject<model::ShadowCalculation>();
 
-  boost::optional<model::ShadowCalculation> opt_shadowCalculation = m_shadowCalculation;
-
   // m_calculationFrequency->bind(*m_shadowCalculation,"calculationFrequency");
   m_calculationFrequency->bind(
-    *opt_shadowCalculation,
-    IntGetter(std::bind(&model::ShadowCalculation::calculationFrequency, opt_shadowCalculation.get_ptr())),
-    boost::optional<IntSetter>(std::bind(&model::ShadowCalculation::setCalculationFrequency, opt_shadowCalculation.get_ptr(), std::placeholders::_1)),
-    boost::optional<NoFailAction>(std::bind(&model::ShadowCalculation::resetCalculationFrequency, opt_shadowCalculation.get_ptr())),
+    *m_shadowCalculation,
+    IntGetter(std::bind(&model::ShadowCalculation::calculationFrequency, m_shadowCalculation.get_ptr())),
+    boost::optional<IntSetter>(std::bind(&model::ShadowCalculation::setCalculationFrequency, m_shadowCalculation.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::ShadowCalculation::resetCalculationFrequency, m_shadowCalculation.get_ptr())),
     boost::none,
     boost::none,
-    boost::optional<BasicQuery>(std::bind(&model::ShadowCalculation::isCalculationFrequencyDefaulted, opt_shadowCalculation.get_ptr()))
+    boost::optional<BasicQuery>(std::bind(&model::ShadowCalculation::isCalculationFrequencyDefaulted, m_shadowCalculation.get_ptr()))
   );
 
   // m_maximumFiguresInShadowOverlapCalculations->bind(*m_shadowCalculation, "maximumFiguresInShadowOverlapCalculations");
   m_maximumFiguresInShadowOverlapCalculations->bind(
-    *opt_shadowCalculation,
-    IntGetter(std::bind(&model::ShadowCalculation::calculationFrequency, opt_shadowCalculation.get_ptr())),
-    boost::optional<IntSetter>(std::bind(&model::ShadowCalculation::setCalculationFrequency, opt_shadowCalculation.get_ptr(), std::placeholders::_1)),
-    boost::optional<NoFailAction>(std::bind(&model::ShadowCalculation::resetCalculationFrequency, opt_shadowCalculation.get_ptr())),
+    *m_shadowCalculation,
+    IntGetter(std::bind(&model::ShadowCalculation::calculationFrequency, m_shadowCalculation.get_ptr())),
+    boost::optional<IntSetter>(std::bind(&model::ShadowCalculation::setCalculationFrequency, m_shadowCalculation.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::ShadowCalculation::resetCalculationFrequency, m_shadowCalculation.get_ptr())),
     boost::none,
     boost::none,
-    boost::optional<BasicQuery>(std::bind(&model::ShadowCalculation::isCalculationFrequencyDefaulted, opt_shadowCalculation.get_ptr()))
+    boost::optional<BasicQuery>(std::bind(&model::ShadowCalculation::isCalculationFrequencyDefaulted, m_shadowCalculation.get_ptr()))
   );
 
   m_polygonClippingAlgorithm->bind<std::string>(
@@ -1484,7 +1477,6 @@ void SimSettingsView::attachSurfaceConvectionAlgorithmOutside()
 void SimSettingsView::attachHeatBalanceAlgorithm()
 {
   model::HeatBalanceAlgorithm mo = m_model.getUniqueModelObject<model::HeatBalanceAlgorithm>();
-  boost::optional<model::HeatBalanceAlgorithm> m_mo = mo;
 
   m_algorithmHeatBalance->bind<std::string>(
     mo,
@@ -1497,37 +1489,37 @@ void SimSettingsView::attachHeatBalanceAlgorithm()
   // m_surfaceTemperatureUpperLimit->bind(mo, "surfaceTemperatureUpperLimit", m_isIP);
   m_surfaceTemperatureUpperLimit->bind(
     m_isIP,
-    *m_mo,
-    DoubleGetter(std::bind(&model::HeatBalanceAlgorithm::surfaceTemperatureUpperLimit, m_mo.get_ptr())),
-    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::HeatBalanceAlgorithm::*)(double)>(&model::HeatBalanceAlgorithm::setSurfaceTemperatureUpperLimit), m_mo.get_ptr(), std::placeholders::_1)),
-    boost::optional<NoFailAction>(std::bind(&model::HeatBalanceAlgorithm::resetSurfaceTemperatureUpperLimit, m_mo.get_ptr())),
+    mo,
+    DoubleGetter(std::bind(&model::HeatBalanceAlgorithm::surfaceTemperatureUpperLimit, mo)),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::HeatBalanceAlgorithm::*)(double)>(&model::HeatBalanceAlgorithm::setSurfaceTemperatureUpperLimit), mo, std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::HeatBalanceAlgorithm::resetSurfaceTemperatureUpperLimit, mo)),
     boost::none,
     boost::none,
-    boost::optional<BasicQuery>(std::bind(&model::HeatBalanceAlgorithm::isSurfaceTemperatureUpperLimitDefaulted, m_mo.get_ptr()))
+    boost::optional<BasicQuery>(std::bind(&model::HeatBalanceAlgorithm::isSurfaceTemperatureUpperLimitDefaulted, mo))
   );
 
   // m_minimumSurfaceConvectionHeatTransferCoefficientValue->bind(mo,"minimumSurfaceConvectionHeatTransferCoefficientValue",m_isIP);
   m_minimumSurfaceConvectionHeatTransferCoefficientValue->bind(
     m_isIP,
-    *m_mo,
-    DoubleGetter(std::bind(&model::HeatBalanceAlgorithm::minimumSurfaceConvectionHeatTransferCoefficientValue, m_mo.get_ptr())),
-    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::HeatBalanceAlgorithm::*)(double)>(&model::HeatBalanceAlgorithm::setMinimumSurfaceConvectionHeatTransferCoefficientValue), m_mo.get_ptr(), std::placeholders::_1)),
-    boost::optional<NoFailAction>(std::bind(&model::HeatBalanceAlgorithm::resetMinimumSurfaceConvectionHeatTransferCoefficientValue, m_mo.get_ptr())),
+    mo,
+    DoubleGetter(std::bind(&model::HeatBalanceAlgorithm::minimumSurfaceConvectionHeatTransferCoefficientValue, mo)),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::HeatBalanceAlgorithm::*)(double)>(&model::HeatBalanceAlgorithm::setMinimumSurfaceConvectionHeatTransferCoefficientValue), mo, std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::HeatBalanceAlgorithm::resetMinimumSurfaceConvectionHeatTransferCoefficientValue, mo)),
     boost::none,
     boost::none,
-    boost::optional<BasicQuery>(std::bind(&model::HeatBalanceAlgorithm::isMinimumSurfaceConvectionHeatTransferCoefficientValueDefaulted, m_mo.get_ptr()))
+    boost::optional<BasicQuery>(std::bind(&model::HeatBalanceAlgorithm::isMinimumSurfaceConvectionHeatTransferCoefficientValueDefaulted, mo))
   );
 
   // m_maximumSurfaceConvectionHeatTransferCoefficientValue->bind(mo,"maximumSurfaceConvectionHeatTransferCoefficientValue",m_isIP);
   m_maximumSurfaceConvectionHeatTransferCoefficientValue->bind(
     m_isIP,
-    *m_mo,
-    DoubleGetter(std::bind(&model::HeatBalanceAlgorithm::maximumSurfaceConvectionHeatTransferCoefficientValue, m_mo.get_ptr())),
-    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::HeatBalanceAlgorithm::*)(double)>(&model::HeatBalanceAlgorithm::setMaximumSurfaceConvectionHeatTransferCoefficientValue), m_mo.get_ptr(), std::placeholders::_1)),
-    boost::optional<NoFailAction>(std::bind(&model::HeatBalanceAlgorithm::resetMaximumSurfaceConvectionHeatTransferCoefficientValue, m_mo.get_ptr())),
+    mo,
+    DoubleGetter(std::bind(&model::HeatBalanceAlgorithm::maximumSurfaceConvectionHeatTransferCoefficientValue, mo)),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::HeatBalanceAlgorithm::*)(double)>(&model::HeatBalanceAlgorithm::setMaximumSurfaceConvectionHeatTransferCoefficientValue), mo, std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::HeatBalanceAlgorithm::resetMaximumSurfaceConvectionHeatTransferCoefficientValue, mo)),
     boost::none,
     boost::none,
-    boost::optional<BasicQuery>(std::bind(&model::HeatBalanceAlgorithm::isMaximumSurfaceConvectionHeatTransferCoefficientValueDefaulted, m_mo.get_ptr()))
+    boost::optional<BasicQuery>(std::bind(&model::HeatBalanceAlgorithm::isMaximumSurfaceConvectionHeatTransferCoefficientValueDefaulted, mo))
   );
 }
 
@@ -1547,7 +1539,6 @@ void SimSettingsView::attachZoneAirHeatBalanceAlgorithm()
 void SimSettingsView::attachZoneAirContaminantBalance()
 {
   model::ZoneAirContaminantBalance mo = m_model.getUniqueModelObject<model::ZoneAirContaminantBalance>();
-  boost::optional<model::ZoneAirContaminantBalance> m_mo = mo;
 
   // m_carbonDioxideConcentration->bind(mo,"carbonDioxideConcentration");
   m_carbonDioxideConcentration->bind(
@@ -1574,206 +1565,204 @@ void SimSettingsView::attachZoneAirContaminantBalance()
 void SimSettingsView::attachZoneCapacitanceMultipleResearchSpecial()
 {
   model::ZoneCapacitanceMultiplierResearchSpecial mo = m_model.getUniqueModelObject<model::ZoneCapacitanceMultiplierResearchSpecial>();
-  boost::optional<model::ZoneCapacitanceMultiplierResearchSpecial> m_mo = mo;
 
   // m_temperatureCapacityMultiplier->bind(mo,"temperatureCapacityMultiplier",m_isIP);]
   m_temperatureCapacityMultiplier->bind(
     m_isIP,
-    *m_mo,
-    DoubleGetter(std::bind(&model::ZoneCapacitanceMultiplierResearchSpecial::temperatureCapacityMultiplier, m_mo.get_ptr())),
-    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::ZoneCapacitanceMultiplierResearchSpecial::*)(double)>(&model::ZoneCapacitanceMultiplierResearchSpecial::setTemperatureCapacityMultiplier), m_mo.get_ptr(), std::placeholders::_1)),
-    boost::optional<NoFailAction>(std::bind(&model::ZoneCapacitanceMultiplierResearchSpecial::resetTemperatureCapacityMultiplier, m_mo.get_ptr())),
+    mo,
+    DoubleGetter(std::bind(&model::ZoneCapacitanceMultiplierResearchSpecial::temperatureCapacityMultiplier, mo)),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::ZoneCapacitanceMultiplierResearchSpecial::*)(double)>(&model::ZoneCapacitanceMultiplierResearchSpecial::setTemperatureCapacityMultiplier), mo, std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::ZoneCapacitanceMultiplierResearchSpecial::resetTemperatureCapacityMultiplier, mo)),
     boost::none,
     boost::none,
-    boost::optional<BasicQuery>(std::bind(&model::ZoneCapacitanceMultiplierResearchSpecial::isTemperatureCapacityMultiplierDefaulted, m_mo.get_ptr()))
+    boost::optional<BasicQuery>(std::bind(&model::ZoneCapacitanceMultiplierResearchSpecial::isTemperatureCapacityMultiplierDefaulted, mo))
   );
   
   // m_humidityCapacityMultiplier->bind(mo,"humidityCapacityMultiplier",m_isIP);
   m_humidityCapacityMultiplier->bind(
     m_isIP,
-    *m_mo,
-    DoubleGetter(std::bind(&model::ZoneCapacitanceMultiplierResearchSpecial::humidityCapacityMultiplier, m_mo.get_ptr())),
-    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::ZoneCapacitanceMultiplierResearchSpecial::*)(double)>(&model::ZoneCapacitanceMultiplierResearchSpecial::setHumidityCapacityMultiplier), m_mo.get_ptr(), std::placeholders::_1)),
-    boost::optional<NoFailAction>(std::bind(&model::ZoneCapacitanceMultiplierResearchSpecial::resetHumidityCapacityMultiplier, m_mo.get_ptr())),
+    mo,
+    DoubleGetter(std::bind(&model::ZoneCapacitanceMultiplierResearchSpecial::humidityCapacityMultiplier, mo)),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::ZoneCapacitanceMultiplierResearchSpecial::*)(double)>(&model::ZoneCapacitanceMultiplierResearchSpecial::setHumidityCapacityMultiplier), mo, std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::ZoneCapacitanceMultiplierResearchSpecial::resetHumidityCapacityMultiplier, mo)),
     boost::none,
     boost::none,
-    boost::optional<BasicQuery>(std::bind(&model::ZoneCapacitanceMultiplierResearchSpecial::isHumidityCapacityMultiplierDefaulted, m_mo.get_ptr()))
+    boost::optional<BasicQuery>(std::bind(&model::ZoneCapacitanceMultiplierResearchSpecial::isHumidityCapacityMultiplierDefaulted, mo))
   );
 
   // m_carbonDioxideCapacityMultiplier->bind(mo,"carbonDioxideCapacityMultiplier",m_isIP);
   m_carbonDioxideCapacityMultiplier->bind(
     m_isIP,
-    *m_mo,
-    DoubleGetter(std::bind(&model::ZoneCapacitanceMultiplierResearchSpecial::carbonDioxideCapacityMultiplier, m_mo.get_ptr())),
-    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::ZoneCapacitanceMultiplierResearchSpecial::*)(double)>(&model::ZoneCapacitanceMultiplierResearchSpecial::setCarbonDioxideCapacityMultiplier), m_mo.get_ptr(), std::placeholders::_1)),
-    boost::optional<NoFailAction>(std::bind(&model::ZoneCapacitanceMultiplierResearchSpecial::resetCarbonDioxideCapacityMultiplier, m_mo.get_ptr())),
+    mo,
+    DoubleGetter(std::bind(&model::ZoneCapacitanceMultiplierResearchSpecial::carbonDioxideCapacityMultiplier, mo)),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::ZoneCapacitanceMultiplierResearchSpecial::*)(double)>(&model::ZoneCapacitanceMultiplierResearchSpecial::setCarbonDioxideCapacityMultiplier), mo, std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::ZoneCapacitanceMultiplierResearchSpecial::resetCarbonDioxideCapacityMultiplier, mo)),
     boost::none,
     boost::none,
-    boost::optional<BasicQuery>(std::bind(&model::ZoneCapacitanceMultiplierResearchSpecial::isCarbonDioxideCapacityMultiplierDefaulted, m_mo.get_ptr()))
+    boost::optional<BasicQuery>(std::bind(&model::ZoneCapacitanceMultiplierResearchSpecial::isCarbonDioxideCapacityMultiplierDefaulted, mo))
   );
 }
 
 void SimSettingsView::attachRadianceParameters()
 {
   model::RadianceParameters mo = m_model.getUniqueModelObject<model::RadianceParameters>();
-  boost::optional<model::RadianceParameters> m_mo = mo;
 
   // m_accumulatedRaysperRecord->bind(mo,"accumulatedRaysperRecord");
   m_accumulatedRaysperRecord->bind(
-    *m_mo,
-    IntGetter(std::bind(&model::RadianceParameters::accumulatedRaysperRecord, m_mo.get_ptr())),
-    boost::optional<IntSetter>(std::bind(&model::RadianceParameters::setAccumulatedRaysperRecord, m_mo.get_ptr(), std::placeholders::_1)),
-    boost::optional<NoFailAction>(std::bind(&model::RadianceParameters::resetAccumulatedRaysperRecord, m_mo.get_ptr())),
+    mo,
+    IntGetter(std::bind(&model::RadianceParameters::accumulatedRaysperRecord, mo)),
+    boost::optional<IntSetter>(std::bind(&model::RadianceParameters::setAccumulatedRaysperRecord, mo, std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::RadianceParameters::resetAccumulatedRaysperRecord, mo)),
     boost::none,
     boost::none,
-    boost::optional<BasicQuery>(std::bind(&model::RadianceParameters::isAccumulatedRaysperRecordDefaulted, m_mo.get_ptr()))
+    boost::optional<BasicQuery>(std::bind(&model::RadianceParameters::isAccumulatedRaysperRecordDefaulted, mo))
   );
 
   // m_directThreshold->bind(mo,"directThreshold",m_isIP);
   m_directThreshold->bind(
     m_isIP,
-    *m_mo,
-    DoubleGetter(std::bind(&model::RadianceParameters::directThreshold, m_mo.get_ptr())),
-    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::RadianceParameters::*)(double)>(&model::RadianceParameters::setDirectThreshold), m_mo.get_ptr(), std::placeholders::_1)),
-    boost::optional<NoFailAction>(std::bind(&model::RadianceParameters::resetDirectThreshold, m_mo.get_ptr())),
+    mo,
+    DoubleGetter(std::bind(&model::RadianceParameters::directThreshold, mo)),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::RadianceParameters::*)(double)>(&model::RadianceParameters::setDirectThreshold), mo, std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::RadianceParameters::resetDirectThreshold, mo)),
     boost::none,
     boost::none,
-    boost::optional<BasicQuery>(std::bind(&model::RadianceParameters::isDirectThresholdDefaulted, m_mo.get_ptr()))
+    boost::optional<BasicQuery>(std::bind(&model::RadianceParameters::isDirectThresholdDefaulted, mo))
   );
 
   // m_directCertainty->bind(mo,"directCertainty",m_isIP);
   m_directCertainty->bind(
     m_isIP,
-    *m_mo,
-    DoubleGetter(std::bind(&model::RadianceParameters::directCertainty, m_mo.get_ptr())),
-    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::RadianceParameters::*)(double)>(&model::RadianceParameters::setDirectCertainty), m_mo.get_ptr(), std::placeholders::_1)),
-    boost::optional<NoFailAction>(std::bind(&model::RadianceParameters::resetDirectCertainty, m_mo.get_ptr())),
+    mo,
+    DoubleGetter(std::bind(&model::RadianceParameters::directCertainty, mo)),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::RadianceParameters::*)(double)>(&model::RadianceParameters::setDirectCertainty), mo, std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::RadianceParameters::resetDirectCertainty, mo)),
     boost::none,
     boost::none,
-    boost::optional<BasicQuery>(std::bind(&model::RadianceParameters::isDirectCertaintyDefaulted, m_mo.get_ptr()))
+    boost::optional<BasicQuery>(std::bind(&model::RadianceParameters::isDirectCertaintyDefaulted, mo))
   );
 
   // m_directJitter->bind(mo,"directJitter",m_isIP);
   m_directJitter->bind(
     m_isIP,
-    *m_mo,
-    DoubleGetter(std::bind(&model::RadianceParameters::directJitter, m_mo.get_ptr())),
-    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::RadianceParameters::*)(double)>(&model::RadianceParameters::setDirectJitter), m_mo.get_ptr(), std::placeholders::_1)),
-    boost::optional<NoFailAction>(std::bind(&model::RadianceParameters::resetDirectJitter, m_mo.get_ptr())),
+    mo,
+    DoubleGetter(std::bind(&model::RadianceParameters::directJitter, mo)),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::RadianceParameters::*)(double)>(&model::RadianceParameters::setDirectJitter), mo, std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::RadianceParameters::resetDirectJitter, mo)),
     boost::none,
     boost::none,
-    boost::optional<BasicQuery>(std::bind(&model::RadianceParameters::isDirectJitterDefaulted, m_mo.get_ptr()))
+    boost::optional<BasicQuery>(std::bind(&model::RadianceParameters::isDirectJitterDefaulted, mo))
   );
 
   // m_directPretest->bind(mo,"directPretest",m_isIP);
   m_directPretest->bind(
     m_isIP,
-    *m_mo,
-    DoubleGetter(std::bind(&model::RadianceParameters::directPretest, m_mo.get_ptr())),
-    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::RadianceParameters::*)(double)>(&model::RadianceParameters::setDirectPretest), m_mo.get_ptr(), std::placeholders::_1)),
-    boost::optional<NoFailAction>(std::bind(&model::RadianceParameters::resetDirectPretest, m_mo.get_ptr())),
+    mo,
+    DoubleGetter(std::bind(&model::RadianceParameters::directPretest, mo)),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::RadianceParameters::*)(double)>(&model::RadianceParameters::setDirectPretest), mo, std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::RadianceParameters::resetDirectPretest, mo)),
     boost::none,
     boost::none,
-    boost::optional<BasicQuery>(std::bind(&model::RadianceParameters::isDirectPretestDefaulted, m_mo.get_ptr()))
+    boost::optional<BasicQuery>(std::bind(&model::RadianceParameters::isDirectPretestDefaulted, mo))
   );
 
   // m_ambientBouncesVMX->bind(mo,"ambientBouncesVMX");
   m_ambientBouncesVMX->bind(
-    *m_mo,
-    IntGetter(std::bind(&model::RadianceParameters::ambientBouncesVMX, m_mo.get_ptr())),
-    boost::optional<IntSetter>(std::bind(&model::RadianceParameters::setAmbientBouncesVMX, m_mo.get_ptr(), std::placeholders::_1)),
-    boost::optional<NoFailAction>(std::bind(&model::RadianceParameters::resetAmbientBouncesVMX, m_mo.get_ptr())),
+    mo,
+    IntGetter(std::bind(&model::RadianceParameters::ambientBouncesVMX, mo)),
+    boost::optional<IntSetter>(std::bind(&model::RadianceParameters::setAmbientBouncesVMX, mo, std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::RadianceParameters::resetAmbientBouncesVMX, mo)),
     boost::none,
     boost::none,
-    boost::optional<BasicQuery>(std::bind(&model::RadianceParameters::isAmbientBouncesVMXDefaulted, m_mo.get_ptr()))
+    boost::optional<BasicQuery>(std::bind(&model::RadianceParameters::isAmbientBouncesVMXDefaulted, mo))
   );
 
   // m_ambientBouncesDMX->bind(mo,"ambientBouncesDMX");
   m_ambientBouncesDMX->bind(
-    *m_mo,
-    IntGetter(std::bind(&model::RadianceParameters::ambientBouncesDMX, m_mo.get_ptr())),
-    boost::optional<IntSetter>(std::bind(&model::RadianceParameters::setAmbientBouncesDMX, m_mo.get_ptr(), std::placeholders::_1)),
-    boost::optional<NoFailAction>(std::bind(&model::RadianceParameters::resetAmbientBouncesDMX, m_mo.get_ptr())),
+    mo,
+    IntGetter(std::bind(&model::RadianceParameters::ambientBouncesDMX, mo)),
+    boost::optional<IntSetter>(std::bind(&model::RadianceParameters::setAmbientBouncesDMX, mo, std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::RadianceParameters::resetAmbientBouncesDMX, mo)),
     boost::none,
     boost::none,
-    boost::optional<BasicQuery>(std::bind(&model::RadianceParameters::isAmbientBouncesDMXDefaulted, m_mo.get_ptr()))
+    boost::optional<BasicQuery>(std::bind(&model::RadianceParameters::isAmbientBouncesDMXDefaulted, mo))
   );
 
   // m_ambientDivisionsVMX->bind(mo,"ambientDivisionsVMX");
   m_ambientDivisionsVMX->bind(
-    *m_mo,
-    IntGetter(std::bind(&model::RadianceParameters::ambientDivisionsVMX, m_mo.get_ptr())),
-    boost::optional<IntSetter>(std::bind(&model::RadianceParameters::setAmbientDivisionsVMX, m_mo.get_ptr(), std::placeholders::_1)),
-    boost::optional<NoFailAction>(std::bind(&model::RadianceParameters::resetAmbientDivisionsVMX, m_mo.get_ptr())),
+    mo,
+    IntGetter(std::bind(&model::RadianceParameters::ambientDivisionsVMX, mo)),
+    boost::optional<IntSetter>(std::bind(&model::RadianceParameters::setAmbientDivisionsVMX, mo, std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::RadianceParameters::resetAmbientDivisionsVMX, mo)),
     boost::none,
     boost::none,
-    boost::optional<BasicQuery>(std::bind(&model::RadianceParameters::isAmbientDivisionsVMXDefaulted, m_mo.get_ptr()))
+    boost::optional<BasicQuery>(std::bind(&model::RadianceParameters::isAmbientDivisionsVMXDefaulted, mo))
   );
 
   // m_ambientDivisionsDMX->bind(mo,"ambientDivisionsDMX");
   m_ambientDivisionsDMX->bind(
-    *m_mo,
-    IntGetter(std::bind(&model::RadianceParameters::ambientDivisionsDMX, m_mo.get_ptr())),
-    boost::optional<IntSetter>(std::bind(&model::RadianceParameters::setAmbientDivisionsDMX, m_mo.get_ptr(), std::placeholders::_1)),
-    boost::optional<NoFailAction>(std::bind(&model::RadianceParameters::resetAmbientDivisionsDMX, m_mo.get_ptr())),
+    mo,
+    IntGetter(std::bind(&model::RadianceParameters::ambientDivisionsDMX, mo)),
+    boost::optional<IntSetter>(std::bind(&model::RadianceParameters::setAmbientDivisionsDMX, mo, std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::RadianceParameters::resetAmbientDivisionsDMX, mo)),
     boost::none,
     boost::none,
-    boost::optional<BasicQuery>(std::bind(&model::RadianceParameters::isAmbientDivisionsDMXDefaulted, m_mo.get_ptr()))
+    boost::optional<BasicQuery>(std::bind(&model::RadianceParameters::isAmbientDivisionsDMXDefaulted, mo))
   );
 
   // m_ambientSupersamples->bind(mo,"ambientSupersamples");
   m_ambientSupersamples->bind(
-    *m_mo,
-    IntGetter(std::bind(&model::RadianceParameters::ambientSupersamples, m_mo.get_ptr())),
-    boost::optional<IntSetter>(std::bind(&model::RadianceParameters::setAmbientSupersamples, m_mo.get_ptr(), std::placeholders::_1)),
-    boost::optional<NoFailAction>(std::bind(&model::RadianceParameters::resetAmbientSupersamples, m_mo.get_ptr())),
+    mo,
+    IntGetter(std::bind(&model::RadianceParameters::ambientSupersamples, mo)),
+    boost::optional<IntSetter>(std::bind(&model::RadianceParameters::setAmbientSupersamples, mo, std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::RadianceParameters::resetAmbientSupersamples, mo)),
     boost::none,
     boost::none,
-    boost::optional<BasicQuery>(std::bind(&model::RadianceParameters::isAmbientSupersamplesDefaulted, m_mo.get_ptr()))
+    boost::optional<BasicQuery>(std::bind(&model::RadianceParameters::isAmbientSupersamplesDefaulted, mo))
   );
 
   // m_limitWeightVMX->bind(mo,"limitWeightVMX",m_isIP);
   m_limitWeightVMX->bind(
     m_isIP,
-    *m_mo,
-    DoubleGetter(std::bind(&model::RadianceParameters::limitWeightVMX, m_mo.get_ptr())),
-    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::RadianceParameters::*)(double)>(&model::RadianceParameters::setLimitWeightVMX), m_mo.get_ptr(), std::placeholders::_1)),
-    boost::optional<NoFailAction>(std::bind(&model::RadianceParameters::resetLimitWeightVMX, m_mo.get_ptr())),
+    mo,
+    DoubleGetter(std::bind(&model::RadianceParameters::limitWeightVMX, mo)),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::RadianceParameters::*)(double)>(&model::RadianceParameters::setLimitWeightVMX), mo, std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::RadianceParameters::resetLimitWeightVMX, mo)),
     boost::none,
     boost::none,
-    boost::optional<BasicQuery>(std::bind(&model::RadianceParameters::isLimitWeightVMXDefaulted, m_mo.get_ptr()))
+    boost::optional<BasicQuery>(std::bind(&model::RadianceParameters::isLimitWeightVMXDefaulted, mo))
   );
 
   // m_limitWeightDMX->bind(mo,"limitWeightDMX",m_isIP);
   m_limitWeightDMX->bind(
     m_isIP,
-    *m_mo,
-    DoubleGetter(std::bind(&model::RadianceParameters::limitWeightDMX, m_mo.get_ptr())),
-    DoubleSetterVoidReturn(std::bind(static_cast<void(model::RadianceParameters::*)(double)>(&model::RadianceParameters::setLimitWeightDMX), m_mo.get_ptr(), std::placeholders::_1)),
-    boost::optional<NoFailAction>(std::bind(&model::RadianceParameters::resetLimitWeightDMX, m_mo.get_ptr())),
+    mo,
+    DoubleGetter(std::bind(&model::RadianceParameters::limitWeightDMX, mo)),
+    DoubleSetterVoidReturn(std::bind(static_cast<void(model::RadianceParameters::*)(double)>(&model::RadianceParameters::setLimitWeightDMX), mo, std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::RadianceParameters::resetLimitWeightDMX, mo)),
     boost::none,
     boost::none,
-    boost::optional<BasicQuery>(std::bind(&model::RadianceParameters::isLimitWeightDMXDefaulted, m_mo.get_ptr()))
+    boost::optional<BasicQuery>(std::bind(&model::RadianceParameters::isLimitWeightDMXDefaulted, mo))
   );
 
   // m_klemsSamplingDensity->bind(mo,"klemsSamplingDensity");
   m_klemsSamplingDensity->bind(
-    *m_mo,
-    IntGetter(std::bind(&model::RadianceParameters::klemsSamplingDensity, m_mo.get_ptr())),
-    boost::optional<IntSetter>(std::bind(&model::RadianceParameters::setKlemsSamplingDensity, m_mo.get_ptr(), std::placeholders::_1)),
-    boost::optional<NoFailAction>(std::bind(&model::RadianceParameters::resetKlemsSamplingDensity, m_mo.get_ptr())),
+    mo,
+    IntGetter(std::bind(&model::RadianceParameters::klemsSamplingDensity, mo)),
+    boost::optional<IntSetter>(std::bind(&model::RadianceParameters::setKlemsSamplingDensity, mo, std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::RadianceParameters::resetKlemsSamplingDensity, mo)),
     boost::none,
     boost::none,
-    boost::optional<BasicQuery>(std::bind(&model::RadianceParameters::isKlemsSamplingDensityDefaulted, m_mo.get_ptr()))
+    boost::optional<BasicQuery>(std::bind(&model::RadianceParameters::isKlemsSamplingDensityDefaulted, mo))
   );
   // m_skyDiscretizationResolution->bind(mo,"skyDiscretizationResolution");
   m_skyDiscretizationResolution->bind<std::string>(
-    *m_mo,
+    mo,
     static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
     &model::RadianceParameters::skyDiscretizationResolutionValues,
-    StringGetter(std::bind(&model::RadianceParameters::skyDiscretizationResolution, m_mo.get_ptr())),
-    std::bind(&model::RadianceParameters::setSkyDiscretizationResolution, m_mo.get_ptr(),std::placeholders::_1),
-    boost::optional<NoFailAction>(std::bind(&model::RadianceParameters::resetSkyDiscretizationResolution, m_mo.get_ptr()))
+    StringGetter(std::bind(&model::RadianceParameters::skyDiscretizationResolution, mo)),
+    std::bind(&model::RadianceParameters::setSkyDiscretizationResolution, mo,std::placeholders::_1),
+    boost::optional<NoFailAction>(std::bind(&model::RadianceParameters::resetSkyDiscretizationResolution, mo))
   );
 }
 

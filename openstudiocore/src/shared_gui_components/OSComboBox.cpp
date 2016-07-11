@@ -371,7 +371,7 @@ void OSComboBox2::completeBind() {
 
     // if this is too burdensome, implement Workspace_Impl onNameChange() signal and uncomment the above two connections.
     // (IdfObject_Impl already has onNameChange(); Workspace_Impl::onChange() includes object addition and removal.)
-    m_modelObject->model().getImpl<openstudio::model::detail::Model_Impl>().get()->onChange.connect<OSComboBox2, &OSComboBox2::onChoicesRefreshTrigger>(this);
+    // m_modelObject->model().getImpl<openstudio::model::detail::Model_Impl>().get()->onChange.connect<OSComboBox2, &OSComboBox2::onChoicesRefreshTrigger>(this);
 
     // populate choices
     // ETH@20140228 - With extension of this class to choices of ModelObjects, and beyond,
