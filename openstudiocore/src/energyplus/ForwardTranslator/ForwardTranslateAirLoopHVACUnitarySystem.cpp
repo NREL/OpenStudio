@@ -511,7 +511,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
       _unitarySystemPerformance.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling,1);
     }
 
-    _unitarySystemPerformance.setString(UnitarySystemPerformance_MultispeedFields::SingleModeOperation,"Yes"); 
+    _unitarySystemPerformance.setString(UnitarySystemPerformance_MultispeedFields::SingleModeOperation,"No"); 
 
     auto heatingFlow = modelObject.supplyAirFlowRateDuringHeatingOperation();
     auto coolingFlow = modelObject.supplyAirFlowRateDuringCoolingOperation();
