@@ -116,7 +116,7 @@ struct ModelObjectNameSorter{
     layout->setContentsMargins(0, 0, 0, 0);
     setLayout(layout);
 
-    std::vector<model::ThermalZone> thermalZones = model.getModelObjects<model::ThermalZone>();
+    std::vector<model::ThermalZone> thermalZones = model.getConcreteModelObjects<model::ThermalZone>();
     std::vector<model::ModelObject> thermalZoneModelObjects = subsetCastVector<model::ModelObject>(thermalZones);
 
     m_gridController = new ThermalZonesGridController(m_isIP, "Thermal Zones", IddObjectType::OS_ThermalZone, model, thermalZoneModelObjects);
@@ -142,7 +142,7 @@ struct ModelObjectNameSorter{
     isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_gridController, SLOT(toggleUnits(bool)));
     OS_ASSERT(isConnected);
 
-    std::vector<model::ThermalZone> thermalZone = model.getModelObjects<model::ThermalZone>(); // NOTE for horizontal system lists
+    std::vector<model::ThermalZone> thermalZone = model.getConcreteModelObjects<model::ThermalZone>(); // NOTE for horizontal system lists
 
   }
 
@@ -326,7 +326,7 @@ struct ModelObjectNameSorter{
           catch (const std::exception &e) {
             // If this code is called there is no sizingZone currently set. This means
             // that the ThermalZone is probably in the process of being destructed. So,
-            // we don't want to create a new sizingZone, we really just want to try to 
+            // we don't want to create a new sizingZone, we really just want to try to
             // continue gracefully, so let's pretend that the current heatingDesignAirFlowMethod
             // is the 0th one in the list of possible options.
             //
@@ -355,9 +355,9 @@ struct ModelObjectNameSorter{
       }
       else if (field == COOLINGMINIMUMAIRFLOWPERZONEFLOORAREA){
         addQuantityEditColumn(Heading(QString(COOLINGMINIMUMAIRFLOWPERZONEFLOORAREA)),
-          QString("m^3/s*m^2"), 
-          QString("m^3/s*m^2"), 
-          QString("ft^3/min*ft^2"), 
+          QString("m^3/s*m^2"),
+          QString("m^3/s*m^2"),
+          QString("ft^3/min*ft^2"),
           m_isIP,
           ProxyAdapter(&model::SizingZone::coolingMinimumAirFlowperZoneFloorArea, &model::ThermalZone::sizingZone),
           ProxyAdapter(static_cast<bool (model::SizingZone::*)(double)>(&model::SizingZone::setCoolingMinimumAirFlowperZoneFloorArea),
@@ -385,9 +385,9 @@ struct ModelObjectNameSorter{
       }
       else if (field == HEATINGMAXIMUMAIRFLOWPERZONEFLOORAREA){
         addQuantityEditColumn(Heading(QString(HEATINGMAXIMUMAIRFLOWPERZONEFLOORAREA)),
-          QString("m^3/s*m^2"), 
-          QString("m^3/s*m^2"), 
-          QString("ft^3/min*ft^2"), 
+          QString("m^3/s*m^2"),
+          QString("m^3/s*m^2"),
+          QString("ft^3/min*ft^2"),
           m_isIP,
           ProxyAdapter(&model::SizingZone::heatingMaximumAirFlowperZoneFloorArea, &model::ThermalZone::sizingZone),
           ProxyAdapter(static_cast<bool (model::SizingZone::*)(double)>(&model::SizingZone::setHeatingMaximumAirFlowperZoneFloorArea),
@@ -435,7 +435,7 @@ struct ModelObjectNameSorter{
           catch (const std::exception &e) {
             // If this code is called there is no sizingZone currently set. This means
             // that the ThermalZone is probably in the process of being destructed. So,
-            // we don't want to create a new sizingZone, we really just want to try to 
+            // we don't want to create a new sizingZone, we really just want to try to
             // continue gracefully, so let's pretend that the current coolingDesignAirFlowMethod
             // is the 0th one in the list of possible options.
             //
@@ -709,7 +709,7 @@ struct ModelObjectNameSorter{
     // TODO: The code below is currently commented out because a refresh crash bug is precluding rack color
     // updates due to rack assignments to cases and walk-ins.  No colors are better than wrong colors.
 
-    //std::vector<model::RefrigerationSystem> refrigerationSystems = m_model.getModelObjects<model::RefrigerationSystem>();
+    //std::vector<model::RefrigerationSystem> refrigerationSystems = m_model.getConcreteModelObjects<model::RefrigerationSystem>();
 
     //boost::optional<model::ThermalZone> refrigerationCase = modelObject.optionalCast<model::ThermalZone>();
     //OS_ASSERT(refrigerationCase);
@@ -752,7 +752,7 @@ struct ModelObjectNameSorter{
 
   void ThermalZonesGridController::refreshModelObjects()
   {
-    std::vector<model::ThermalZone> thermalZones = m_model.getModelObjects<model::ThermalZone>();
+    std::vector<model::ThermalZone> thermalZones = m_model.getConcreteModelObjects<model::ThermalZone>();
     m_modelObjects = subsetCastVector<model::ModelObject>(thermalZones);
     std::sort(m_modelObjects.begin(), m_modelObjects.end(), ModelObjectNameSorter());
   }
