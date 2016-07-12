@@ -121,7 +121,7 @@ namespace openstudio {
       std::vector<QString> fields;
       fields.push_back(INTERIORPARTITIONNAME);
       fields.push_back(INTERIORPARTITIONGROUPNAME);
-      fields.push_back(CONSTRUCTIONNAME); 
+      fields.push_back(CONSTRUCTIONNAME);
       fields.push_back(CONVERTTOINTERNALMASS);
       //fields.push_back(SURFACEAREA);
       //fields.push_back(DAYLIGHTINGSHELFNAME);
@@ -313,7 +313,7 @@ namespace openstudio {
 
   void SpacesInteriorPartitionsGridController::refreshModelObjects()
   {
-    m_modelObjects = subsetCastVector<model::ModelObject>(m_model.getModelObjects<model::Space>());
+    m_modelObjects = subsetCastVector<model::ModelObject>(m_model.getConcreteModelObjects<model::Space>());
     std::sort(m_modelObjects.begin(), m_modelObjects.end(), ModelObjectNameSorter());
   }
 
