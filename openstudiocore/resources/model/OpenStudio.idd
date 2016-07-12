@@ -26236,9 +26236,9 @@ OS:Output:Meter,
   A2, \field Name
        \note Form is EnergyUseType:..., e.g. Electricity:* for all Electricity meters
        \note or EndUse:..., e.g. GeneralLights:* for all General Lights
-       \type external-list
        \required-field
-       \external-list autoRDDmeter
+       \reference OutputMeterNames
+       \reference OutputVariableMeterNames
   A3, \field Reporting Frequency
        \note Timestep refers to the zone Timestep/Number of Timesteps in hour value
        \note RunPeriod, Environment, and Annual are the same
@@ -26277,6 +26277,7 @@ OS:Output:Variable,
        \type alpha
        \required-field
        \reference OutputVariableNames
+       \reference OutputVariableMeterNames
   A3, \field Key Value
        \note use '*' (without quotes) to apply this variable to all keys
        \type alpha
@@ -26314,6 +26315,8 @@ OS:Meter:Custom,
         \required-field
    A2,  \field Name
         \required-field
+        \reference OutputMeterNames
+        \reference OutputVariableMeterNames
    A3,  \field Fuel Type
         \type choice
         \key Electricity
@@ -26342,6 +26345,8 @@ OS:Meter:CustomDecrement,
         \required-field
    A2,  \field Name
         \required-field
+        \reference OutputMeterNames
+        \reference OutputVariableMeterNames
    A3,  \field Fuel Type
         \type choice
         \key Electricity
@@ -26369,7 +26374,7 @@ OS:EnergyManagementSystem:Sensor,
        \memo a list of output variables and meters that can be reported are available after a run on
        \memo the report (.rdd) or meter dictionary file (.mdd) if the Output:VariableDictionary
        \memo has been requested.
-       \min-fields 3
+       \min-fields 4
   A1, \field Handle
        \type handle
        \required-field   
@@ -26377,13 +26382,15 @@ OS:EnergyManagementSystem:Sensor,
        \required-field
        \type alpha
        \note This name becomes a variable for use in Erl programs
-       \note no spaces allowed in name
-  A3 , \field Output:Variable or Output:Meter Index Key Name
+       \note No spaces allowed in names for ErlVariableNames
+       \reference ErlVariableNames
+  A3 , \field Output Variable or Output Meter Index Key Name
        \type alpha
-  A4 ; \field Output:Variable or Output:Meter Name
+       \note key name listed here will override key name in Output:Variable or Output:Meter
+  A4 ; \field Output Variable or Output Meter Name
        \required-field
-       \type external-list
-       \external-list autoRDDvariableMeter
+       \type object-list
+       \object-list OutputVariableMeterNames
        
 OS:EnergyManagementSystem:Actuator,
        \memo Hardware portion of EMS used to set up actuators in the model
@@ -26395,14 +26402,13 @@ OS:EnergyManagementSystem:Actuator,
        \required-field
        \type alpha
        \note This name becomes a variable for use in Erl programs
-       \note no spaces allowed in name
-  A3 , \field Actuated Component Unique Name
+       \note No spaces allowed in names for ErlVariableNames
+       \reference ErlVariableNames
+  A3 , \field Actuated Component Name
        \required-field
        \type alpha
-  A4 , \field Actuated Component Type
-       \required-field
-       \type alpha
-  A5 ; \field Actuated Component Control Type
+       \object-list AllObjects
+  A4 ; \field Actuated Component Control Type
        \required-field
        \type alpha     
 
@@ -26411,15 +26417,15 @@ OS:EnergyManagementSystem:ProgramCallingManager,
        \memo Input EMS program. a program needs a name
        \memo a description of when it should be called
        \memo and then lines of program code for EMS Runtime language
-       \min-fields 3
+       \min-fields 4
   A1, \field Handle
        \type handle
        \required-field      
   A2 , \field Name
        \required-field
        \type alpha
-       \reference ProgramNames
-       \note no spaces allowed in name
+       \reference ErlProgramCallingManagerNames
+       \note No spaces allowed in names for ErlProgramCallingManagerNames
   A3 , \field EnergyPlus Model Calling Point
        \type choice
        \key BeginNewEnvironment
@@ -26437,7 +26443,7 @@ OS:EnergyManagementSystem:ProgramCallingManager,
        \key AfterComponentInputReadIn
        \key UserDefinedComponentModel
        \key UnitarySystemSizing
-  A4 ; \field Program Name 1
+  A4 ; \field Program Name
        \begin-extensible
        \required-field
        \type object-list
@@ -26448,7 +26454,7 @@ OS:EnergyManagementSystem:Program,
        \extensible:1 - repeat last field, remembering to remove ; from "inner" fields.
        \memo This input defines an Erl program
        \memo Each field after the name is a line of EMS Runtime Language
-       \min-fields 2
+       \min-fields 3
   A1, \field Handle
        \type handle
        \required-field       
@@ -26456,8 +26462,9 @@ OS:EnergyManagementSystem:Program,
        \required-field
        \type alpha
        \reference ErlProgramNames
-       \note no spaces allowed in name
-  A3 ; \field Program Line 1
+       \reference ErlProgramSubroutineNames
+       \note No spaces allowed in names for ErlProgramNames
+  A3 ; \field Program Line
        \begin-extensible
        \type alpha
        \required-field
@@ -26466,28 +26473,30 @@ OS:EnergyManagementSystem:Subroutine,
        \extensible:1 - repeat last field, remembering to remove ; from "inner" fields.
        \memo This input defines an Erl program subroutine
        \memo Each field after the name is a line of EMS Runtime Language
-       \min-fields 2
+       \min-fields 3
   A1, \field Handle
        \type handle
        \required-field     
   A2 , \field Name
        \required-field
        \type alpha
-       \reference ErlProgramNames
-       \note no spaces allowed in name
-  A3 ; \field Program Line 1
+       \reference ErlSubroutineNames
+       \reference ErlProgramSubroutineNames
+       \note No spaces allowed in names for ErlSubroutineNames
+  A3 ; \field Program Line
        \begin-extensible
        \type alpha
+       \required-field
   
-  OS:EnergyManagementSystem:GlobalVariable,
+OS:EnergyManagementSystem:GlobalVariable,
        \extensible:1 - repeat last field, remembering to remove ; from "inner" fields.
        \memo Declares Erl variable as having global scope
        \memo No spaces allowed in names used for Erl variables
-       \min-fields 1
+       \min-fields 2
   A1, \field Handle
        \type handle
        \required-field      
-  A2 ; \field Erl Variable 1 Name
+  A2 ; \field Erl Variable Name
        \begin-extensible
        \required-field
        \type alpha
@@ -26495,7 +26504,7 @@ OS:EnergyManagementSystem:Subroutine,
 
 OS:EnergyManagementSystem:OutputVariable,
        \memo This object sets up an EnergyPlus output variable from an Erl variable
-       \min-fields 4
+       \min-fields 5
   A1, \field Handle
        \type handle
        \required-field 
@@ -26519,6 +26528,7 @@ OS:EnergyManagementSystem:OutputVariable,
        \key SystemTimestep
   A6 , \field EMS Program or Subroutine Name
        \type alpha
+       \object-list ErlProgramSubroutineNames
        \note optional for global scope variables, required for local scope variables
   A7 ; \field Units
        \note optional but will result in dimensionless units for blank
@@ -26527,7 +26537,7 @@ OS:EnergyManagementSystem:OutputVariable,
 
 OS:EnergyManagementSystem:MeteredOutputVariable,
        \memo This object sets up an EnergyPlus output variable from an Erl variable
-       \min-fields 7
+       \min-fields 8
   A1, \field Handle
        \type handle
        \required-field
@@ -26546,6 +26556,7 @@ OS:EnergyManagementSystem:MeteredOutputVariable,
        \key SystemTimestep
   A5 , \field EMS Program or Subroutine Name
        \type alpha
+       \object-list ErlProgramSubroutineNames
        \note optional for global scope variables, required for local scope variables
   A6 , \field Resource Type
        \required-field
@@ -26618,14 +26629,15 @@ OS:EnergyManagementSystem:MeteredOutputVariable,
 OS:EnergyManagementSystem:TrendVariable,
        \memo This object sets up an EMS trend variable from an Erl variable
        \memo A trend variable logs values across timesteps
-       \min-fields 3
+       \min-fields 4
   A1, \field Handle
        \type handle
        \required-field      
   A2 , \field Name
        \required-field
        \type alpha
-       \note no spaces allowed in name
+       \note No spaces allowed in names for ErlVariableNames
+       \reference ErlVariableNames
   A3 , \field EMS Variable Name
        \required-field
        \type alpha
@@ -26637,7 +26649,7 @@ OS:EnergyManagementSystem:TrendVariable,
 
 OS:EnergyManagementSystem:InternalVariable,
        \memo Declares EMS variable as an internal data variable
-       \min-fields 3
+       \min-fields 4
   A1, \field Handle
        \type handle
        \required-field       
@@ -26645,7 +26657,8 @@ OS:EnergyManagementSystem:InternalVariable,
        \required-field
        \type alpha
        \note This name becomes a variable for use in Erl programs
-       \note no spaces allowed in name
+       \note No spaces allowed in names for ErlVariableNames
+       \reference ErlVariableNames
   A3 , \field Internal Data Index Key Name
        \type alpha
   A4 ; \field Internal Data Type
@@ -26654,7 +26667,7 @@ OS:EnergyManagementSystem:InternalVariable,
 
 OS:EnergyManagementSystem:CurveOrTableIndexVariable,
        \memo Declares EMS variable that identifies a curve or table
-       \min-fields 2
+       \min-fields 3
   A1, \field Handle
        \type handle
        \required-field      
@@ -26662,7 +26675,8 @@ OS:EnergyManagementSystem:CurveOrTableIndexVariable,
        \required-field
        \type alpha
        \note This name becomes a variable for use in Erl programs
-       \note no spaces allowed in name
+       \note No spaces allowed in names for ErlVariableNames
+       \reference ErlVariableNames
   A3 ; \field Curve or Table Object Name
        \type object-list
        \object-list AllCurves
@@ -26670,7 +26684,7 @@ OS:EnergyManagementSystem:CurveOrTableIndexVariable,
 
 OS:EnergyManagementSystem:ConstructionIndexVariable,
        \memo Declares EMS variable that identifies a construction
-       \min-fields 2
+       \min-fields 3
   A1, \field Handle
        \type handle
        \required-field        
@@ -26678,7 +26692,8 @@ OS:EnergyManagementSystem:ConstructionIndexVariable,
        \required-field
        \type alpha
        \note This name becomes a variable for use in Erl programs
-       \note no spaces allowed in name
+       \note No spaces allowed in names for ErlVariableNames
+       \reference ErlVariableNames
   A3 ; \field Construction Object Name
        \type object-list
        \object-list ConstructionNames
