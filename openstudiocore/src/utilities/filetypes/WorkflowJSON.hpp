@@ -140,7 +140,10 @@ public:
   std::vector<openstudio::path> filePaths() const;
   std::vector<openstudio::path> absoluteFilePaths() const;
 
-  /** Attempts to find a file by name, searches through filePaths in order and returns first match. */
+  /** Attempts to find a file by path.
+  *   If file is relative, searches through filePaths in order and returns first match that exists. 
+  *   If file is absolute, does not search for file in filePaths, only returns true it file exists.
+  */
   boost::optional<openstudio::path> findFile(const openstudio::path& file) const;
   boost::optional<openstudio::path> findFile(const std::string& fileName) const;
 
@@ -148,7 +151,10 @@ public:
   std::vector<openstudio::path> measurePaths() const;
   std::vector<openstudio::path> absoluteMeasurePaths() const;
 
-  /** Attempts to find a measure by name, searches through measurePaths in order and returns first match. */
+  /** Attempts to find a measure by path.
+  *   If measureDir is relative, searches through measurePaths in order and returns first match that exists. 
+  *   If measureDir is absolute, does not search for measureDir in measurePaths, only returns true it measureDir exists.
+  */
   boost::optional<openstudio::path> findMeasure(const openstudio::path& measureDir) const;
   boost::optional<openstudio::path> findMeasure(const std::string& measureDirName) const;
 
