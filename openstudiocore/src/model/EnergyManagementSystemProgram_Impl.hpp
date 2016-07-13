@@ -30,7 +30,6 @@ namespace detail {
 
   /** EnergyManagementSystemProgram_Impl is a ModelObject_Impl that is the implementation class for EnergyManagementSystemProgram.*/
   class MODEL_API EnergyManagementSystemProgram_Impl : public ModelObject_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{

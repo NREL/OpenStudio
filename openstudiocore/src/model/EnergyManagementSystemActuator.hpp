@@ -49,7 +49,7 @@ class MODEL_API EnergyManagementSystemActuator : public ModelObject {
   /** @name Getters */
   //@{
 
-  std::string actuatedComponentName() const;
+  ModelObject actuatedComponentName() const;
 
   std::string actuatedComponentControlType() const;
 
@@ -57,9 +57,9 @@ class MODEL_API EnergyManagementSystemActuator : public ModelObject {
   /** @name Setters */
   //@{
 
-  void setActuatedComponentName(const std::string& actuatedComponentName);
+  bool setActuatedComponentName(const ModelObject&);
 
-  void setActuatedComponentControlType(const std::string& actuatedComponentControlType);
+  bool setActuatedComponentControlType(const std::string& actuatedComponentControlType);
 
   //@}
   /** @name Other */
