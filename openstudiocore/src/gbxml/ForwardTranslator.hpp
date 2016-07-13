@@ -50,6 +50,7 @@ namespace model {
   class BuildingStory;
   class ThermalZone;
   class Space;
+  class BuildingStory;
   class Surface;
   class SubSurface;
 }
@@ -80,6 +81,7 @@ namespace gbxml {
     boost::optional<QDomElement> translateFacility(const openstudio::model::Facility& facility, QDomDocument& doc);
     boost::optional<QDomElement> translateBuilding(const openstudio::model::Building& building, QDomDocument& doc);
     boost::optional<QDomElement> translateSpace(const openstudio::model::Space& space, QDomDocument& doc);
+    boost::optional<QDomElement> translateBuildingStory(const openstudio::model::BuildingStory& story, QDomDocument& doc);
     boost::optional<QDomElement> translateSurface(const openstudio::model::Surface& surface, QDomDocument& doc);
     boost::optional<QDomElement> translateSubSurface(const openstudio::model::SubSurface& subSurface, const openstudio::Transformation& transformation, QDomDocument& doc);
     boost::optional<QDomElement> translateThermalZone(const openstudio::model::ThermalZone& thermalZone, QDomDocument& doc);
