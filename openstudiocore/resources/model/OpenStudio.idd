@@ -1,4 +1,4 @@
-!IDD_Version 1.12.0
+!IDD_Version 1.12.1
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -2843,7 +2843,8 @@ OS:WindowMaterial:Glazing,
        \key Spectral
   A4, \field Window Glass Spectral Data Set Name
        \note Used only when Optical Data Type = Spectral
-       \type alpha
+       \type object-list
+       \object-list SpectralDataSets
   N1, \field Thickness
        \type real
        \required-field
@@ -3300,6 +3301,28 @@ OS:StandardsInformation:Material,
        \note More information can be found at https://github.com/NREL/openstudio-standards.
        \type alpha 
        
+OS:MaterialProperty:GlazingSpectralData,
+       \memo Name is followed by up to 800 sets of normal-incidence measured values of
+       \memo [wavelength, transmittance, front reflectance, back reflectance] for wavelengths
+       \memo covering the solar spectrum (from about 0.25 to 2.5 microns)
+       \format Spectral
+       \extensible:4 
+       \min-fields 1
+       \max-fields 3201
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \reference SpectralDataSets
+  N1,  \field Wavelength
+       \begin-extensible
+       \type real
+       \units micron
+  N2,  \field Transmittance
+  N3,  \field Front Reflectance
+  N4;  \field Back Reflectance
+ 
 \group OpenStudio Constructions
 
 OS:Construction,

@@ -94,10 +94,6 @@ option(BUILD_TESTING "Build testing targets" OFF)
 # Requires: EnergyPlus, Radiance
 option(BUILD_PACKAGE "Build package" OFF)
 
-# Build test runner targets.
-# This is a convenience for Visual Studio users
-option(ENABLE_TEST_RUNNER_TARGETS "Create test runner targets" OFF)
-
 # Build with OpenSSL support
 set(BUILD_WITH_OPENSSL ON CACHE INTERNAL "Build With OpenSSL Support For SSH Connections")
 

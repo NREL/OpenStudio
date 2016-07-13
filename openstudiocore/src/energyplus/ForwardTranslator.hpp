@@ -180,6 +180,7 @@ class LifeCycleCost;
 class LifeCycleCostParameters;
 class Lights;
 class Luminaire;
+class MaterialPropertyGlazingSpectralData;
 class MasslessOpaqueMaterial;
 class Meter;
 class Node;
@@ -708,6 +709,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateLights( model::Lights & modelObject );
 
   boost::optional<IdfObject> translateLuminaire( model::Luminaire & modelObject );
+
+  boost::optional<IdfObject> translateMaterialPropertyGlazingSpectralData( model::MaterialPropertyGlazingSpectralData & modelObject );
 
   boost::optional<IdfObject> translateMasslessOpaqueMaterial( model::MasslessOpaqueMaterial & modelObject );
 

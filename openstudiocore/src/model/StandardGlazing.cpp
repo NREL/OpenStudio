@@ -22,6 +22,9 @@
 
 #include <utilities/idd/IddFactory.hxx>
 
+#include "MaterialPropertyGlazingSpectralData.hpp"
+#include "MaterialPropertyGlazingSpectralData_Impl.hpp"
+
 #include <utilities/idd/OS_WindowMaterial_Glazing_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
@@ -75,7 +78,17 @@ namespace detail {
   }
 
   boost::optional<std::string> StandardGlazing_Impl::windowGlassSpectralDataSetName() const {
-    return getString(OS_WindowMaterial_GlazingFields::WindowGlassSpectralDataSetName,true);
+    LOG(Warn, "StandardGlazing::windowGlassSpectralDataSetName is deprecated, use StandardGlazing::windowGlassSpectralDataSet instead");
+    boost::optional<MaterialPropertyGlazingSpectralData> spectralData = windowGlassSpectralDataSet();
+    if (spectralData){
+      return spectralData->name();
+    }
+    return boost::none;
+  }
+
+  boost::optional<MaterialPropertyGlazingSpectralData> StandardGlazing_Impl::windowGlassSpectralDataSet() const
+  {
+    return getObject<ModelObject>().getModelObjectTarget<MaterialPropertyGlazingSpectralData>(OS_WindowMaterial_GlazingFields::WindowGlassSpectralDataSetName);
   }
 
   double StandardGlazing_Impl::thickness() const {
@@ -274,20 +287,46 @@ namespace detail {
     return result;
   }
 
-  void StandardGlazing_Impl::setWindowGlassSpectralDataSetName(boost::optional<std::string> windowGlassSpectralDataSetName) {
+  bool StandardGlazing_Impl::setWindowGlassSpectralDataSetName(boost::optional<std::string> windowGlassSpectralDataSetName) {
+    LOG(Warn, "StandardGlazing::setWindowGlassSpectralDataSetName is deprecated, use StandardGlazing::setWindowGlassSpectralDataSet");
     bool result(false);
     if (windowGlassSpectralDataSetName) {
       result = setString(OS_WindowMaterial_GlazingFields::WindowGlassSpectralDataSetName, windowGlassSpectralDataSetName.get());
+      if (result){
+        result = setOpticalDataType("Spectral");
+        OS_ASSERT(result);
+      }
     }
     else {
       resetWindowGlassSpectralDataSetName();
       result = true;
+      result = setOpticalDataType("SpectralAverage");
+      OS_ASSERT(result);
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void StandardGlazing_Impl::resetWindowGlassSpectralDataSetName() {
+    LOG(Warn, "StandardGlazing::resetWindowGlassSpectralDataSetName is deprecated, use StandardGlazing::resetWindowGlassSpectralDataSet");
     bool result = setString(OS_WindowMaterial_GlazingFields::WindowGlassSpectralDataSetName, "");
+    OS_ASSERT(result);
+    result = setOpticalDataType("SpectralAverage");
+    OS_ASSERT(result);
+  }
+
+  bool StandardGlazing_Impl::setWindowGlassSpectralDataSet(const MaterialPropertyGlazingSpectralData& spectralData) {
+    bool result = setPointer(OS_WindowMaterial_GlazingFields::WindowGlassSpectralDataSetName, spectralData.handle());
+    if (result){
+      result = setOpticalDataType("Spectral");
+      OS_ASSERT(result);
+    }
+    return result;
+  }
+
+  void StandardGlazing_Impl::resetWindowGlassSpectralDataSet() {
+    bool result = setString(OS_WindowMaterial_GlazingFields::WindowGlassSpectralDataSetName, "");
+    OS_ASSERT(result);
+    result = setOpticalDataType("SpectralAverage");
     OS_ASSERT(result);
   }
 
@@ -795,6 +834,10 @@ boost::optional<std::string> StandardGlazing::windowGlassSpectralDataSetName() c
   return getImpl<detail::StandardGlazing_Impl>()->windowGlassSpectralDataSetName();
 }
 
+boost::optional<MaterialPropertyGlazingSpectralData> StandardGlazing::windowGlassSpectralDataSet() const {
+  return getImpl<detail::StandardGlazing_Impl>()->windowGlassSpectralDataSet();
+}
+
 double StandardGlazing::solarTransmittance() const {
   return getImpl<detail::StandardGlazing_Impl>()->solarTransmittance();
 }
@@ -935,12 +978,20 @@ bool StandardGlazing::setOpticalDataType(std::string opticalDataType) {
   return getImpl<detail::StandardGlazing_Impl>()->setOpticalDataType(opticalDataType);
 }
 
-void StandardGlazing::setWindowGlassSpectralDataSetName(std::string windowGlassSpectralDataSetName) {
-  getImpl<detail::StandardGlazing_Impl>()->setWindowGlassSpectralDataSetName(windowGlassSpectralDataSetName);
+bool StandardGlazing::setWindowGlassSpectralDataSetName(const std::string& windowGlassSpectralDataSetName) {
+  return getImpl<detail::StandardGlazing_Impl>()->setWindowGlassSpectralDataSetName(windowGlassSpectralDataSetName);
 }
 
 void StandardGlazing::resetWindowGlassSpectralDataSetName() {
   getImpl<detail::StandardGlazing_Impl>()->resetWindowGlassSpectralDataSetName();
+}
+
+bool StandardGlazing::setWindowGlassSpectralDataSet(const MaterialPropertyGlazingSpectralData& spectralData) {
+  return getImpl<detail::StandardGlazing_Impl>()->setWindowGlassSpectralDataSet(spectralData);
+}
+
+void StandardGlazing::resetWindowGlassSpectralDataSet() {
+  getImpl<detail::StandardGlazing_Impl>()->resetWindowGlassSpectralDataSet();
 }
 
 bool StandardGlazing::setSolarTransmittance(double value) {

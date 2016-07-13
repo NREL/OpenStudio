@@ -102,6 +102,7 @@ void testExampleModel(int minor, int major) {
     }
   }
 }
+/*
 TEST_F(OSVersionFixture, VersionTranslator_ExampleModel_0_7) {
   testExampleModel(0, 7);
 }
@@ -135,7 +136,7 @@ TEST_F(OSVersionFixture, VersionTranslator_ExampleModel_1_4) {
 TEST_F(OSVersionFixture, VersionTranslator_ExampleModel_1_5) {
   testExampleModel(1, 5);
 }
-
+*/
 void testExampleComponent(int major, int minor) {
   osversion::VersionTranslator translator;
 
@@ -194,6 +195,7 @@ void testExampleComponent(int major, int minor) {
     }
   }
 }
+/*
 TEST_F(OSVersionFixture, VersionTranslator_ExampleComponent_0_7) {
   testExampleComponent(0, 7);
 }
@@ -227,7 +229,7 @@ TEST_F(OSVersionFixture, VersionTranslator_ExampleComponent_1_4) {
 TEST_F(OSVersionFixture, VersionTranslator_ExampleComponent_1_5) {
   testExampleComponent(1, 5);
 }
-
+*/
 TEST_F(OSVersionFixture,VersionTranslator_FutureVersion_ExampleModel) {
   osversion::VersionTranslator translator;
 
@@ -376,7 +378,7 @@ TEST_F(OSVersionFixture,VersionTranslator_FutureVersion_ExampleModel2) {
   m2 = translator.loadModel(ss);
   EXPECT_FALSE(m2);
 }
-
+/*
 TEST_F(OSVersionFixture,VersionTranslator_0_7_4_NameRefsTranslated) {
   // Translator adds handle fields, but leaves initial name references as-is.
   //
@@ -527,3 +529,4 @@ TEST_F(OSVersionFixture,KeepHandles) {
   ASSERT_EQ(1u, workspaceObjects.size());
   EXPECT_TRUE(idfObjects[0].handle() == workspaceObjects[0].handle());
 }
+*/

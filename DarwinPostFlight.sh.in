@@ -7,8 +7,8 @@ ln -sf "$2/Applications/${CMAKE_PROJECT_NAME} ${OPENSTUDIO_VERSION}/Ruby/openstu
 ln -sFf "$2/Applications/${CMAKE_PROJECT_NAME} ${OPENSTUDIO_VERSION}/Ruby/openstudio" /Library/Ruby/Site/
 
 #---------- Create Symbolic Links to the openstudio-standards gem ----------
-ln -sFf "$2/Applications/${CMAKE_PROJECT_NAME} ${OPENSTUDIO_VERSION}/ruby-2.0.0-aws-Darwin/lib/ruby/gems/2.0.0/gems/openstudio-standards-0.1.3" /Library/Ruby/Gems/2.0.0/gems/
-ln -sf "$2/Applications/${CMAKE_PROJECT_NAME} ${OPENSTUDIO_VERSION}/ruby-2.0.0-aws-Darwin/lib/ruby/gems/2.0.0/specifications/openstudio-standards-0.1.3.gemspec"  /Library/Ruby/Gems/2.0.0/specifications/
+ln -sFf "$2/Applications/${CMAKE_PROJECT_NAME} ${OPENSTUDIO_VERSION}/ruby-2.0.0-aws-Darwin/lib/ruby/gems/2.0.0/gems/openstudio-standards-0.1.4" /Library/Ruby/Gems/2.0.0/gems/
+ln -sf "$2/Applications/${CMAKE_PROJECT_NAME} ${OPENSTUDIO_VERSION}/ruby-2.0.0-aws-Darwin/lib/ruby/gems/2.0.0/specifications/openstudio-standards-0.1.4.gemspec"  /Library/Ruby/Gems/2.0.0/specifications/
 
 #---------- Write a plugin-config.rb file for later installation ----------
 # And put it in the install folder for later reuse by the user if needed

@@ -27,8 +27,6 @@
 #include "../model/Model.hpp"
 #include "../model/ModelObject.hpp"
 
-//#include "../analysisdriver/SimpleProject.hpp"
-
 #include <QObject>
 #include <QString>
 
@@ -139,9 +137,6 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   // Retrieves the Component identified by itemId from the local bcl library, 
   // updates it to the current version and returns it.
   boost::optional<model::Component> getComponent(const OSItemId& itemId) const;
-
-  // TODO Something new?
-  //boost::optional<analysisdriver::SimpleProject> project() const;
 
   // Returns the ScriptFolderListView, from which folder display names and
   // ruleset::UserScriptInfo is available.
@@ -350,8 +345,6 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   std::shared_ptr<InspectorController> m_inspectorController;
 
   std::shared_ptr<MainRightColumnController> m_mainRightColumnController;
-
-  //boost::optional<analysisdriver::SimpleProject> m_simpleProject;
 
   QString m_savePath = QString();
   QString m_modelTempDir = QString();

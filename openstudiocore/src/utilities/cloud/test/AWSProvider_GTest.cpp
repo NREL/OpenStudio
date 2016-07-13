@@ -27,6 +27,7 @@
 using namespace std;
 using namespace openstudio;
 
+ /*
 TEST(AWSProvider, AWSProviderTest)
 {
   AWSProvider::serverInstanceTypes();
@@ -42,7 +43,7 @@ TEST(AWSProvider, AWSProviderTest)
 
   //awsProvider.resourcesAvailableToStart();
 
- /* awsProvider.setServerInstanceType("t1.micro");
+ awsProvider.setServerInstanceType("t1.micro");
   awsProvider.requestStartServer();
   awsProvider.waitForServer();
 
@@ -67,9 +68,10 @@ TEST(AWSProvider, AWSProviderTest)
   }
 
   awsProvider.workersRunning();
-*/
+
   boost::optional<AWSSession> awsSession = awsProvider.session().optionalCast<AWSSession>();
   awsSession->totalSessionUptime();
 
   awsSession->totalSessionInstances();
 }
+*/

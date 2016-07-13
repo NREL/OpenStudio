@@ -336,9 +336,11 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
     translateAndMapModelObject(*simulationControl);
 
     // Add a ProgramControl object to force a single threaded simulation
-    IdfObject programControl(openstudio::IddObjectType::ProgramControl);
-    programControl.setInt(openstudio::ProgramControlFields::NumberofThreadsAllowed,1);
-    m_idfObjects.push_back(programControl);
+    //AP This code is no longer needed as multithreading has been disabled
+    //in E+ and this object is no longer forward translated anyway.
+    //IdfObject programControl(openstudio::IddObjectType::ProgramControl);
+    //programControl.setInt(openstudio::ProgramControlFields::NumberofThreadsAllowed,1);
+    //m_idfObjects.push_back(programControl);
 
     // ensure that sizing parameters control exists
     boost::optional<model::SizingParameters> sizingParameters = model.getOptionalUniqueModelObject<model::SizingParameters>();
@@ -1637,6 +1639,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateMasslessOpaqueMaterial(material);
       break;
     }
+  case openstudio::IddObjectType::OS_MaterialProperty_GlazingSpectralData :
+    {
+      model::MaterialPropertyGlazingSpectralData spectralData = modelObject.cast<MaterialPropertyGlazingSpectralData>();
+      retVal = translateMaterialPropertyGlazingSpectralData(spectralData);
+      break;
+    }
   case openstudio::IddObjectType::OS_Material_RoofVegetation :
     {
       model::RoofVegetation material = modelObject.cast<RoofVegetation>();
@@ -2890,6 +2898,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
 void ForwardTranslator::translateConstructions(const model::Model & model)
 {
   std::vector<IddObjectType> iddObjectTypes;
+  iddObjectTypes.push_back(IddObjectType::OS_MaterialProperty_GlazingSpectralData);
   iddObjectTypes.push_back(IddObjectType::OS_Material);
   iddObjectTypes.push_back(IddObjectType::OS_Material_AirGap);
   iddObjectTypes.push_back(IddObjectType::OS_Material_AirWall);

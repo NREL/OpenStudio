@@ -769,10 +769,5 @@ TEST_F(IdfFixture, DoubleDisplayedAsString) {
   EXPECT_EQ("0.05",ss.str());
   ss >> roundTripValue;
   EXPECT_DOUBLE_EQ(value,roundTripValue);
-
-  // QVariant
-  QVariant qvar(value);
-  EXPECT_EQ("0.05",qvar.toString().toStdString());
-  EXPECT_DOUBLE_EQ(value,qvar.toDouble());
 }
 

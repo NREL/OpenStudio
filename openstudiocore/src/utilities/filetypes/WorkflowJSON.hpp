@@ -155,8 +155,20 @@ public:
   /** Returns the seed file path. Evaluated relative to filePaths if not absolute. */
   boost::optional<openstudio::path> seedFile() const;
 
+  /** Sets the seed file path. */
+  bool setSeedFile(const openstudio::path& seedFile);
+    
+  /** Resets the seed file path. */
+  void resetSeedFile();
+
   /** Returns the weather file path. Evaluated relative to filePaths if not absolute. */
   boost::optional<openstudio::path> weatherFile() const;
+    
+  /** Sets the weather file path. */
+  bool setWeatherFile(const openstudio::path& weatherFile);
+    
+  /** Resets the weather file path. */
+  void resetWeatherFile();
 
   /** Returns the workflow steps. */
   std::vector<WorkflowStep> workflowSteps() const;
