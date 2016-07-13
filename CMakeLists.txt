@@ -449,7 +449,7 @@ endif()
 if( APPLE )
   ExternalProject_Add(Ruby
     URL http://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.0.0.tar.gz
-    URL_MD5 744b46ba30aa490f34624992613ce4bc
+    URL_MD5 07f4e70aba691eb99ef51e8eaab54426
     BUILD_IN_SOURCE 1
     CONFIGURE_COMMAND autoconf && sh -c "./configure --with-static-linked-ext --without-gmp --without-tcl --without-tk --disable-install-doc --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install"
     BUILD_COMMAND $(MAKE)  libenc; $(MAKE) libtrans; $(MAKE)
@@ -465,7 +465,7 @@ elseif( UNIX )
   # I had to install autotools-dev on Redhat, http://askubuntu.com/questions/430706/installing-autotools-autoconf
   ExternalProject_Add(Ruby
     URL http://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.0.0.tar.gz
-    URL_MD5 744b46ba30aa490f34624992613ce4bc
+    URL_MD5 07f4e70aba691eb99ef51e8eaab54426
     BUILD_IN_SOURCE 1
     CONFIGURE_COMMAND autoconf && sh -c "./configure --with-static-linked-ext --without-gmp --without-tcl --without-tk --disable-install-doc --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install"
     BUILD_COMMAND $(MAKE)
@@ -483,7 +483,7 @@ else()
   # Consider minsys even though the build will be done by msvc the ruby build system uses some traditionally unix tools
   ExternalProject_Add(Ruby
     URL http://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.0.0.tar.gz
-    URL_MD5 744b46ba30aa490f34624992613ce4bc 
+    URL_MD5 07f4e70aba691eb99ef51e8eaab54426 
     BUILD_IN_SOURCE 1
     CONFIGURE_COMMAND ""
     BUILD_COMMAND cmd /C "${CMAKE_BINARY_DIR}/build_ruby.bat"
