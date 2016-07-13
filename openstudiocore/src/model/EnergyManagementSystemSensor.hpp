@@ -55,7 +55,8 @@ class MODEL_API EnergyManagementSystemSensor : public ModelObject {
   boost::optional<std::string> outputVariableorOutputMeterIndexKeyName() const;
 
   // TODO: Check return type. From object lists, some candidates are: OutputVariableMeter.
-  OutputVariableMeter outputVariableorOutputMeter() const;
+  boost::optional<openstudio::model::OutputVariable> outputVariable() const;
+  boost::optional<openstudio::model::OutputMeter> outputMeter() const;
 
   //@}
   /** @name Setters */
@@ -66,8 +67,8 @@ class MODEL_API EnergyManagementSystemSensor : public ModelObject {
   void resetOutputVariableorOutputMeterIndexKeyName();
 
   // TODO: Check argument type. From object lists, some candidates are: OutputVariableMeter.
-  bool setOutputVariableorOutputMeter(const OutputVariableMeter& outputVariableMeter);
-
+  bool setOutputVariable(const OutputVariable& outputVariable);
+  bool setOutputMeter(const OutputMeter& outputMeter);
   //@}
   /** @name Other */
   //@{

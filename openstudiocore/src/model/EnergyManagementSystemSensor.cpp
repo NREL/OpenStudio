@@ -21,8 +21,10 @@
 #include "EnergyManagementSystemSensor_Impl.hpp"
 
 // TODO: Check the following class names against object getters and setters.
-#include "OutputVariableMeter.hpp"
-#include "OutputVariableMeter_Impl.hpp"
+#include "OutputVariable.hpp"
+#include "OutputVariable_Impl.hpp"
+#include "OutputMeter.hpp"
+#include "OutputMeter_Impl.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_EnergyManagementSystem_Sensor_FieldEnums.hxx>
