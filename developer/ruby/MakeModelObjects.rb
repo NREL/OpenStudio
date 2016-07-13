@@ -96,7 +96,7 @@ end
 
 failed_objects = []
 objects.each do |object|
-  command = "ruby -I #{includePath} GenerateClass.rb -s 'model' -c '#{object[1]}' -b '#{object[2]}' -o #{outDir} -p -q -i '#{object[0].gsub(':','_')}' > #{outDir}/logs/#{object[0].gsub(':','_')}.log 2>&1 "
+  command = "ruby -I #{includePath} GenerateClass.rb -s 'model' -c '#{object[1]}' -b '#{object[2]}' -o #{outDir} -p --no-qobject -i '#{object[0].gsub(':','_')}' > #{outDir}/logs/#{object[0].gsub(':','_')}.log 2>&1 "
   puts command
   result = system(command)
   failed_objects << object if not result
