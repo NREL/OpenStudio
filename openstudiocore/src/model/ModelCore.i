@@ -170,6 +170,10 @@ MODELOBJECT_TEMPLATES(ScheduleRuleset);
 MODELOBJECT_TEMPLATES(OutputVariable);
 MODELOBJECT_TEMPLATES(GenericModelObject);
 MODELOBJECT_TEMPLATES(ModelObjectList);
+MODELOBJECT_TEMPLATES(EnergyManagementSystemSensor);
+MODELOBJECT_TEMPLATES(EnergyManagementSystemActuator);
+MODELOBJECT_TEMPLATES(EnergyManagementSystemProgramCallingManager);
+MODELOBJECT_TEMPLATES(EnergyManagementSystemProgram);
 
 SWIG_MODELOBJECT(ModelObject, 0);
 SWIG_MODELEXTENSIBLEGROUP(ModelExtensibleGroup);
@@ -196,5 +200,9 @@ SWIG_MODELOBJECT(ScheduleRuleset, 1);
 SWIG_MODELOBJECT(OutputVariable, 1);
 SWIG_MODELOBJECT(GenericModelObject, 0); 
 SWIG_MODELOBJECT(ModelObjectList, 1);
+SWIG_MODELOBJECT(EnergyManagementSystemSensor, 1);
+SWIG_MODELOBJECT(EnergyManagementSystemActuator, 1);
+SWIG_MODELOBJECT(EnergyManagementSystemProgramCallingManager, 1);
+SWIG_MODELOBJECT(EnergyManagementSystemProgram, 1);
 
 #endif //MODEL_CORE_I 

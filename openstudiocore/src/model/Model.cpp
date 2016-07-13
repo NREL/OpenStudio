@@ -323,6 +323,10 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(ElectricLoadCenterInverterLookUpTable);
     REGISTER_CONSTRUCTOR(ElectricLoadCenterInverterSimple);
     REGISTER_CONSTRUCTOR(ElectricLoadCenterStorageSimple);
+    REGISTER_CONSTRUCTOR(EnergyManagementSystemActuator);
+    REGISTER_CONSTRUCTOR(EnergyManagementSystemProgram);
+    REGISTER_CONSTRUCTOR(EnergyManagementSystemProgramCallingManager);
+    REGISTER_CONSTRUCTOR(EnergyManagementSystemSensor);
     REGISTER_CONSTRUCTOR(EvaporativeCoolerDirectResearchSpecial);
     REGISTER_CONSTRUCTOR(EvaporativeCoolerIndirectResearchSpecial);
     REGISTER_CONSTRUCTOR(EvaporativeFluidCoolerSingleSpeed);
@@ -733,6 +737,10 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(ElectricLoadCenterInverterLookUpTable);
     REGISTER_COPYCONSTRUCTORS(ElectricLoadCenterInverterSimple);
     REGISTER_COPYCONSTRUCTORS(ElectricLoadCenterStorageSimple);
+    REGISTER_COPYCONSTRUCTORS(EnergyManagementSystemActuator);
+    REGISTER_COPYCONSTRUCTORS(EnergyManagementSystemProgram);
+    REGISTER_COPYCONSTRUCTORS(EnergyManagementSystemProgramCallingManager);
+    REGISTER_COPYCONSTRUCTORS(EnergyManagementSystemSensor);
     REGISTER_COPYCONSTRUCTORS(EvaporativeCoolerDirectResearchSpecial);
     REGISTER_COPYCONSTRUCTORS(EvaporativeCoolerIndirectResearchSpecial);
     REGISTER_COPYCONSTRUCTORS(EvaporativeFluidCoolerSingleSpeed);

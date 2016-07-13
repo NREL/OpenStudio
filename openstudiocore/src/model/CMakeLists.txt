@@ -452,6 +452,18 @@ set(${target_name}_src
   ElectricLoadCenterStorageSimple.hpp
   ElectricLoadCenterStorageSimple_Impl.hpp
   ElectricLoadCenterStorageSimple.cpp
+  EnergyManagementSystemActuator.cpp
+  EnergyManagementSystemActuator.hpp
+  EnergyManagementSystemActuator_Impl.hpp
+  EnergyManagementSystemProgram.cpp
+  EnergyManagementSystemProgram.hpp
+  EnergyManagementSystemProgram_Impl.hpp
+  EnergyManagementSystemProgramCallingManager.cpp
+  EnergyManagementSystemProgramCallingManager.hpp
+  EnergyManagementSystemProgramCallingManager_Impl.hpp
+  EnergyManagementSystemSensor.cpp
+  EnergyManagementSystemSensor.hpp
+  EnergyManagementSystemSensor_Impl.hpp
   EvaporativeCoolerDirectResearchSpecial.hpp
   EvaporativeCoolerDirectResearchSpecial_Impl.hpp
   EvaporativeCoolerDirectResearchSpecial.cpp
