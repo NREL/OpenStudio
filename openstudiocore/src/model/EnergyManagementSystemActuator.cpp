@@ -88,8 +88,8 @@ namespace detail {
 
 } // detail
 
-EnergyManagementSystemActuator::EnergyManagementSystemActuator(const Model& model)
-  : ModelObject(EnergyManagementSystemActuator::iddObjectType(),model)
+EnergyManagementSystemActuator::EnergyManagementSystemActuator(const ModelObject& modelObject)
+  : ModelObject(EnergyManagementSystemActuator::iddObjectType(), modelObject)
 {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemActuator_Impl>());
 
@@ -102,7 +102,7 @@ IddObjectType EnergyManagementSystemActuator::iddObjectType() {
   return IddObjectType(IddObjectType::OS_EnergyManagementSystem_Actuator);
 }
 
-std::string EnergyManagementSystemActuator::actuatedComponentName() const {
+ModelObject EnergyManagementSystemActuator::actuatedComponentName() const {
   return getImpl<detail::EnergyManagementSystemActuator_Impl>()->actuatedComponentName();
 }
 
