@@ -67,7 +67,7 @@ namespace detail {
     return EnergyManagementSystemActuator::iddObjectType();
   }
 
-  ModelObject EnergyManagementSystemActuator_Impl::actuatedComponentName() const {
+  ModelObject EnergyManagementSystemActuator_Impl::actuatedComponent() const {
     
     return this->getTarget(OS_EnergyManagementSystem_ActuatorFields::ActuatedComponentName)->cast<ModelObject>();
     //boost::optional<ModelObject> result;
@@ -83,7 +83,7 @@ namespace detail {
     return value.get();
   }
 
-  bool EnergyManagementSystemActuator_Impl::setActuatedComponentName(const ModelObject& modelObject) {
+  bool EnergyManagementSystemActuator_Impl::setActuatedComponent(const ModelObject& modelObject) {
     return setPointer(OS_EnergyManagementSystem_ActuatorFields::ActuatedComponentName, modelObject.handle());
   }
 
@@ -109,16 +109,16 @@ IddObjectType EnergyManagementSystemActuator::iddObjectType() {
   return IddObjectType(IddObjectType::OS_EnergyManagementSystem_Actuator);
 }
 
-ModelObject EnergyManagementSystemActuator::actuatedComponentName() const {
-  return getImpl<detail::EnergyManagementSystemActuator_Impl>()->actuatedComponentName();
+ModelObject EnergyManagementSystemActuator::actuatedComponent() const {
+  return getImpl<detail::EnergyManagementSystemActuator_Impl>()->actuatedComponent();
 }
 
 std::string EnergyManagementSystemActuator::actuatedComponentControlType() const {
   return getImpl<detail::EnergyManagementSystemActuator_Impl>()->actuatedComponentControlType();
 }
 
-bool EnergyManagementSystemActuator::setActuatedComponentName(const ModelObject& modelObject) {
-  return getImpl<detail::EnergyManagementSystemActuator_Impl>()->setActuatedComponentName(modelObject);
+bool EnergyManagementSystemActuator::setActuatedComponent(const ModelObject& modelObject) {
+  return getImpl<detail::EnergyManagementSystemActuator_Impl>()->setActuatedComponent(modelObject);
 }
 
 bool EnergyManagementSystemActuator::setActuatedComponentControlType(const std::string& actuatedComponentControlType) {

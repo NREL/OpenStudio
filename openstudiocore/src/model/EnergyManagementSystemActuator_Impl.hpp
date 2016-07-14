@@ -30,7 +30,6 @@ namespace detail {
 
   /** EnergyManagementSystemActuator_Impl is a ModelObject_Impl that is the implementation class for EnergyManagementSystemActuator.*/
   class MODEL_API EnergyManagementSystemActuator_Impl : public ModelObject_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -61,7 +60,7 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    ModelObject actuatedComponentName() const;
+    ModelObject actuatedComponent() const;
 
     std::string actuatedComponentControlType() const;
 
@@ -69,7 +68,7 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    bool setActuatedComponentName(const ModelObject& modelObject);
+    bool setActuatedComponent(const ModelObject& modelObject);
 
     bool setActuatedComponentControlType(const std::string& actuatedComponentControlType);
 
