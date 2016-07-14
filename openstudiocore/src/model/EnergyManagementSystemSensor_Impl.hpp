@@ -65,8 +65,8 @@ namespace detail {
 
     boost::optional<std::string> outputVariableorOutputMeterIndexKeyName() const;
 
-    // TODO: Check return type. From object lists, some candidates are: OutputVariableMeter.
-    OutputVariableMeter outputVariableorOutputMeter() const;
+    OutputVariable outputVariableorOutputMeter() const;
+    OutputMeter outputVariableorOutputMeter() const;
 
     //@}
     /** @name Setters */
@@ -76,8 +76,8 @@ namespace detail {
 
     void resetOutputVariableorOutputMeterIndexKeyName();
 
-    // TODO: Check argument type. From object lists, some candidates are: OutputVariableMeter.
-    bool setOutputVariableorOutputMeter(const OutputVariableMeter& outputVariableMeter);
+    bool setOutputVariableorOutputMeter(const OutputVariable& outputVariable);
+    bool setOutputVariableorOutputMeter(const OutputMeter& outputMeter);
 
     //@}
     /** @name Other */
@@ -88,11 +88,11 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.model.EnergyManagementSystemSensor");
 
-    // TODO: Check the return types of these methods.
     // Optional getters for use by methods like children() so can remove() if the constructor fails.
     // There are other ways for the public versions of these getters to fail--perhaps all required
     // objects should be returned as boost::optionals
-    boost::optional<OutputVariableMeter> optionalOutputVariableorOutputMeter() const;
+    boost::optional<OutputVariable> optionalOutputVariableorOutputMeter() const;
+    boost::optional<OutputMeter> optionalOutputVariableorOutputMeter() const;
   };
 
 } // detail
