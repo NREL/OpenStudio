@@ -74,16 +74,16 @@ namespace detail {
     return getString(OS_EnergyManagementSystem_SensorFields::OutputVariableorOutputMeterIndexKeyName,true);
   }
 
-  OutputVariable EnergyManagementSystemSensor_Impl::outputVariableorOutputMeter() const {
-    boost::optional<OutputVariable> value = optionalOutputVariableorOutputMeter();
+  OutputVariable EnergyManagementSystemSensor_Impl::outputVariable() const {
+    boost::optional<OutputVariable> value = optionalOutputVariable();
     if (!value) {
       LOG_AND_THROW(briefDescription() << " does not have an Output Variable or Output Meter attached.");
     }
     return value.get();
   }
 
-  OutputMeter EnergyManagementSystemSensor_Impl::outputVariableorOutputMeter() const {
-    boost::optional<OutputMeter> value = optionalOutputVariableorOutputMeter();
+  OutputMeter EnergyManagementSystemSensor_Impl::outputMeter() const {
+    boost::optional<OutputMeter> value = optionalOutputMeter();
     if (!value) {
       LOG_AND_THROW(briefDescription() << " does not have an Output Variable or Output Meter attached.");
     }
@@ -100,21 +100,21 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool EnergyManagementSystemSensor_Impl::setOutputVariableorOutputMeter(const OutputVariable& outputVariable) {
+  bool EnergyManagementSystemSensor_Impl::setOutputVariable(const OutputVariable& outputVariable) {
     bool result = setPointer(OS_EnergyManagementSystem_SensorFields::OutputVariableorOutputMeterName, outputVariable.handle());
     return result;
   }
 
-  bool EnergyManagementSystemSensor_Impl::setOutputVariableorOutputMeter(const OutputMeter& outputMeter) {
+  bool EnergyManagementSystemSensor_Impl::setOutputMeter(const OutputMeter& outputMeter) {
     bool result = setPointer(OS_EnergyManagementSystem_SensorFields::OutputVariableorOutputMeterName, outputMeter.handle());
     return result;
   }
 
-  boost::optional<OutputVariable> EnergyManagementSystemSensor_Impl::optionalOutputVariableorOutputMeter() const {
+  boost::optional<OutputVariable> EnergyManagementSystemSensor_Impl::optionalOutputVariable() const {
     return getObject<ModelObject>().getModelObjectTarget<OutputVariable>(OS_EnergyManagementSystem_SensorFields::OutputVariableorOutputMeterName);
   }
 
-  boost::optional<OutputMeter> EnergyManagementSystemSensor_Impl::optionalOutputVariableorOutputMeter() const {
+  boost::optional<OutputMeter> EnergyManagementSystemSensor_Impl::optionalOutputMeter() const {
     return getObject<ModelObject>().getModelObjectTarget<OutputMeter>(OS_EnergyManagementSystem_SensorFields::OutputVariableorOutputMeterName);
   }
 
@@ -140,12 +140,12 @@ boost::optional<std::string> EnergyManagementSystemSensor::outputVariableorOutpu
   return getImpl<detail::EnergyManagementSystemSensor_Impl>()->outputVariableorOutputMeterIndexKeyName();
 }
 
-OutputVariable EnergyManagementSystemSensor::outputVariableorOutputMeter() const {
-  return getImpl<detail::EnergyManagementSystemSensor_Impl>()->outputVariableorOutputMeter();
+boost::optional<OutputVariable> EnergyManagementSystemSensor::outputVariable() const {
+  return getImpl<detail::EnergyManagementSystemSensor_Impl>()->outputVariable();
 }
 
-OutputMeter EnergyManagementSystemSensor::outputVariableorOutputMeter() const {
-  return getImpl<detail::EnergyManagementSystemSensor_Impl>()->outputVariableorOutputMeter();
+boost::optional<OutputMeter> EnergyManagementSystemSensor::outputMeter() const {
+  return getImpl<detail::EnergyManagementSystemSensor_Impl>()->outputMeter();
 }
 
 void EnergyManagementSystemSensor::setOutputVariableorOutputMeterIndexKeyName(const std::string& outputVariableorOutputMeterIndexKeyName) {
@@ -156,12 +156,12 @@ void EnergyManagementSystemSensor::resetOutputVariableorOutputMeterIndexKeyName(
   getImpl<detail::EnergyManagementSystemSensor_Impl>()->resetOutputVariableorOutputMeterIndexKeyName();
 }
 
-bool EnergyManagementSystemSensor::setOutputVariableorOutputMeter(const OutputVariable& outputVariable) {
-  return getImpl<detail::EnergyManagementSystemSensor_Impl>()->setOutputVariableorOutputMeter(outputVariable);
+bool EnergyManagementSystemSensor::setOutputVariable(const OutputVariable& outputVariable) {
+  return getImpl<detail::EnergyManagementSystemSensor_Impl>()->setOutputVariable(outputVariable);
 }
 
-bool EnergyManagementSystemSensor::setOutputVariableorOutputMeter(const OutputMeter& outputMeter) {
-  return getImpl<detail::EnergyManagementSystemSensor_Impl>()->setOutputVariableorOutputMeter(outputMeter);
+bool EnergyManagementSystemSensor::setOutputMeter(const OutputMeter& outputMeter) {
+  return getImpl<detail::EnergyManagementSystemSensor_Impl>()->setOutputMeter(outputMeter);
 }
 
 /// @cond

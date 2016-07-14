@@ -65,8 +65,8 @@ namespace detail {
 
     boost::optional<std::string> outputVariableorOutputMeterIndexKeyName() const;
 
-    OutputVariable outputVariableorOutputMeter() const;
-    OutputMeter outputVariableorOutputMeter() const;
+    OutputVariable outputVariable() const;
+    OutputMeter outputMeter() const;
 
     //@}
     /** @name Setters */
@@ -76,8 +76,8 @@ namespace detail {
 
     void resetOutputVariableorOutputMeterIndexKeyName();
 
-    bool setOutputVariableorOutputMeter(const OutputVariable& outputVariable);
-    bool setOutputVariableorOutputMeter(const OutputMeter& outputMeter);
+    bool setOutputVariable(const OutputVariable& outputVariable);
+    bool setOutputMeter(const OutputMeter& outputMeter);
 
     //@}
     /** @name Other */
@@ -91,8 +91,8 @@ namespace detail {
     // Optional getters for use by methods like children() so can remove() if the constructor fails.
     // There are other ways for the public versions of these getters to fail--perhaps all required
     // objects should be returned as boost::optionals
-    boost::optional<OutputVariable> optionalOutputVariableorOutputMeter() const;
-    boost::optional<OutputMeter> optionalOutputVariableorOutputMeter() const;
+    boost::optional<OutputVariable> optionalOutputVariable() const;
+    boost::optional<OutputMeter> optionalOutputMeter() const;
   };
 
 } // detail
