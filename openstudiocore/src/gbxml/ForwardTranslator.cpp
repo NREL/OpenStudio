@@ -32,6 +32,8 @@
 #include "../model/Building_Impl.hpp"
 #include "../model/Space.hpp"
 #include "../model/Space_Impl.hpp"
+#include "../model/ShadingSurfaceGroup.hpp"
+#include "../model/ShadingSurfaceGroup_Impl.hpp"
 #include "../model/BuildingStory.hpp"
 #include "../model/BuildingStory_Impl.hpp"
 #include "../model/SpaceType.hpp"
@@ -40,6 +42,8 @@
 #include "../model/Surface_Impl.hpp"
 #include "../model/SubSurface.hpp"
 #include "../model/SubSurface_Impl.hpp"
+#include "../model/ShadingSurface.hpp"
+#include "../model/ShadingSurface_Impl.hpp"
 #include "../model/ThermalZone.hpp"
 #include "../model/ThermalZone_Impl.hpp"
 
@@ -307,6 +311,25 @@ namespace gbxml {
       }
     }
   
+    // translate shading surfaces
+    std::vector<model::ShadingSurface> shadingSurfaces = model.getConcreteModelObjects<model::ShadingSurface>();
+    if (m_progressBar){
+      m_progressBar->setWindowTitle(toString("Translating Shading Surfaces"));
+      m_progressBar->setMinimum(0);
+      m_progressBar->setMaximum((int)shadingSurfaces.size());
+      m_progressBar->setValue(0);
+    }
+
+    for (const model::ShadingSurface& shadingSurface : shadingSurfaces){
+      boost::optional<QDomElement> shadingSurfaceElement = translateShadingSurface(shadingSurface, doc);
+      if (shadingSurfaceElement){
+        result.appendChild(*shadingSurfaceElement);
+      }
+
+      if (m_progressBar){
+        m_progressBar->setValue(m_progressBar->value() + 1);
+      }
+    }
 
     return result;
   }
@@ -374,6 +397,26 @@ namespace gbxml {
       boost::optional<QDomElement> spaceElement = translateSpace(space, doc);
       if (spaceElement){
         result.appendChild(*spaceElement);
+      }
+
+      if (m_progressBar){
+        m_progressBar->setValue(m_progressBar->value() + 1);
+      }
+    }
+
+    // translate shading surface groups
+    model::ShadingSurfaceGroupVector shadingSurfaceGroups = building.model().getConcreteModelObjects<model::ShadingSurfaceGroup>();
+    if (m_progressBar){
+      m_progressBar->setWindowTitle(toString("Translating Shading Surface Groups"));
+      m_progressBar->setMinimum(0);
+      m_progressBar->setMaximum((int)shadingSurfaceGroups.size());
+      m_progressBar->setValue(0);
+    }
+
+    for (const model::ShadingSurfaceGroup& shadingSurfaceGroup : shadingSurfaceGroups){
+      boost::optional<QDomElement> shadingSurfaceGroupElement = translateShadingSurfaceGroup(shadingSurfaceGroup, doc);
+      if (shadingSurfaceGroupElement){
+        result.appendChild(*shadingSurfaceGroupElement);
       }
 
       if (m_progressBar){
@@ -455,6 +498,27 @@ namespace gbxml {
     return result;
   }
 
+  boost::optional<QDomElement> ForwardTranslator::translateShadingSurfaceGroup(const openstudio::model::ShadingSurfaceGroup& shadingSurfaceGroup, QDomDocument& doc)
+  {
+    if (shadingSurfaceGroup.space()){
+      return boost::none;
+    }
+
+    QDomElement result = doc.createElement("Space");
+    m_translatedObjects[shadingSurfaceGroup.handle()] = result;
+
+    // id
+    std::string name = shadingSurfaceGroup.name().get();
+    result.setAttribute("id", escapeName(name));
+
+    // name
+    QDomElement nameElement = doc.createElement("Name");
+    result.appendChild(nameElement);
+    nameElement.appendChild(doc.createTextNode(QString::fromStdString(name)));
+
+    return result;  
+  }
+
   boost::optional<QDomElement> ForwardTranslator::translateBuildingStory(const openstudio::model::BuildingStory& story, QDomDocument& doc)
   {
     boost::optional<double> zLevel = story.nominalZCoordinate();
@@ -514,7 +578,6 @@ namespace gbxml {
     result.setAttribute("id", escapeName(name));
 
     // DLM: currently unhandled
-    //Shade
     //FreestandingColumn
     //EmbeddedColumn
 
@@ -847,6 +910,158 @@ namespace gbxml {
     result.appendChild(planarGeometryElement);
 
     // translate vertices
+    QDomElement polyLoopElement = doc.createElement("PolyLoop");
+    planarGeometryElement.appendChild(polyLoopElement);
+    for (const Point3d& vertex : vertices){
+      QDomElement cartesianPointElement = doc.createElement("CartesianPoint");
+      polyLoopElement.appendChild(cartesianPointElement);
+
+      QDomElement coordinateXElement = doc.createElement("Coordinate");
+      cartesianPointElement.appendChild(coordinateXElement);
+      coordinateXElement.appendChild(doc.createTextNode(QString::number(vertex.x(), 'f')));
+
+      QDomElement coordinateYElement = doc.createElement("Coordinate");
+      cartesianPointElement.appendChild(coordinateYElement);
+      coordinateYElement.appendChild(doc.createTextNode(QString::number(vertex.y(), 'f')));
+
+      QDomElement coordinateZElement = doc.createElement("Coordinate");
+      cartesianPointElement.appendChild(coordinateZElement);
+      coordinateZElement.appendChild(doc.createTextNode(QString::number(vertex.z(), 'f')));
+    }
+
+    return result;
+  }
+
+  boost::optional<QDomElement> ForwardTranslator::translateShadingSurface(const openstudio::model::ShadingSurface& shadingSurface, QDomDocument& doc)
+  {
+    // return if already translated
+    if (m_translatedObjects.find(shadingSurface.handle()) != m_translatedObjects.end()){
+      return boost::none;
+    }
+
+    QDomElement result = doc.createElement("Surface");
+    m_translatedObjects[shadingSurface.handle()] = result;
+
+    // id
+    std::string name = shadingSurface.name().get();
+    result.setAttribute("id", escapeName(name));
+
+    result.setAttribute("surfaceType", "Shade");
+
+    // construction
+    boost::optional<model::ConstructionBase> construction = shadingSurface.construction();
+    if (construction){
+      std::string constructionName = construction->name().get();
+      result.setAttribute("constructionIdRef", escapeName(constructionName));
+    }
+
+    // this space
+    Transformation transformation;
+    boost::optional<model::Space> space = shadingSurface.space();
+    if (space){
+      transformation = space->siteTransformation();
+
+      std::string spaceName = space->name().get();
+      QDomElement adjacentSpaceIdElement = doc.createElement("AdjacentSpaceId");
+      result.appendChild(adjacentSpaceIdElement);
+      adjacentSpaceIdElement.setAttribute("spaceIdRef", escapeName(spaceName));
+    } else{
+      boost::optional<model::ShadingSurfaceGroup> shadingSurfaceGroup = shadingSurface.shadingSurfaceGroup();
+      if (shadingSurfaceGroup){
+        std::string spaceName = shadingSurfaceGroup->name().get();
+        QDomElement adjacentSpaceIdElement = doc.createElement("AdjacentSpaceId");
+        result.appendChild(adjacentSpaceIdElement);
+        adjacentSpaceIdElement.setAttribute("spaceIdRef", escapeName(spaceName));
+      }
+    }
+
+    // transform vertices to world coordinates
+    Point3dVector vertices = transformation*shadingSurface.vertices();
+
+    // check if we can make rectangular geometry
+    OptionalVector3d outwardNormal = getOutwardNormal(vertices);
+    double area = shadingSurface.grossArea();
+    if (outwardNormal && area > 0){
+
+      // get tilt, duplicate code in planar surface
+      Vector3d up(0.0,0.0,1.0);
+      double tiltRadians = getAngle(*outwardNormal, up);
+
+      // get azimuth, duplicate code in planar surface
+      Vector3d north(0.0,1.0,0.0);
+      double azimuthRadians = getAngle(*outwardNormal, north);
+      if (outwardNormal->x() < 0.0) { 
+        azimuthRadians = -azimuthRadians + 2.0*boost::math::constants::pi<double>(); 
+      }
+
+      // transform vertices to face coordinates
+      Transformation faceTransformation = Transformation::alignFace(vertices);
+      Point3dVector faceVertices = faceTransformation.inverse()*vertices;
+      BoundingBox faceBoundingBox;
+      faceBoundingBox.addPoints(faceVertices);
+      double width = faceBoundingBox.maxX().get() - faceBoundingBox.minX().get();
+      double height = faceBoundingBox.maxY().get() - faceBoundingBox.minY().get();
+      double areaCorrection = 1.0;
+      if (width > 0 && height > 0){
+        areaCorrection = sqrt(area/(width*height));
+      }
+
+      // pick lower left corner vertex in face coordinates
+      double minY = std::numeric_limits<double>::max();
+      double minX = std::numeric_limits<double>::max();
+      size_t llcIndex = 0;
+      size_t N = vertices.size();
+      for (size_t i = 0; i < N; ++i){
+        double z = faceVertices[i].z();
+        OS_ASSERT(std::abs(z) < 0.001);
+        if ((minY > faceVertices[i].y()) || ((minY > faceVertices[i].y() - 0.00001) && (minX > faceVertices[i].x()))){
+          llcIndex = i;
+          minY = faceVertices[i].y();
+          minX = faceVertices[i].x();
+        }
+      }
+      Point3d vertex = vertices[llcIndex];
+
+      // rectangular geometry 
+      QDomElement rectangularGeometryElement = doc.createElement("RectangularGeometry");
+      result.appendChild(rectangularGeometryElement);
+
+      QDomElement azimuthElement = doc.createElement("Azimuth");
+      rectangularGeometryElement.appendChild(azimuthElement);
+      azimuthElement.appendChild(doc.createTextNode(QString::number(radToDeg(azimuthRadians), 'g')));
+
+      QDomElement cartesianPointElement = doc.createElement("CartesianPoint");
+      rectangularGeometryElement.appendChild(cartesianPointElement);
+
+      QDomElement coordinateXElement = doc.createElement("Coordinate");
+      cartesianPointElement.appendChild(coordinateXElement);
+      coordinateXElement.appendChild(doc.createTextNode(QString::number(vertex.x(), 'f')));
+
+      QDomElement coordinateYElement = doc.createElement("Coordinate");
+      cartesianPointElement.appendChild(coordinateYElement);
+      coordinateYElement.appendChild(doc.createTextNode(QString::number(vertex.y(), 'f')));
+
+      QDomElement coordinateZElement = doc.createElement("Coordinate");
+      cartesianPointElement.appendChild(coordinateZElement);
+      coordinateZElement.appendChild(doc.createTextNode(QString::number(vertex.z(), 'f')));
+
+      QDomElement tiltElement = doc.createElement("Tilt");
+      rectangularGeometryElement.appendChild(tiltElement);
+      tiltElement.appendChild(doc.createTextNode(QString::number(radToDeg(tiltRadians), 'g')));
+
+      QDomElement widthElement = doc.createElement("Width");
+      rectangularGeometryElement.appendChild(widthElement);
+      widthElement.appendChild(doc.createTextNode(QString::number(areaCorrection*width, 'f')));
+
+      QDomElement heightElement = doc.createElement("Height");
+      rectangularGeometryElement.appendChild(heightElement);
+      heightElement.appendChild(doc.createTextNode(QString::number(areaCorrection*height, 'f')));
+    }
+
+    // planar geometry
+    QDomElement planarGeometryElement = doc.createElement("PlanarGeometry");
+    result.appendChild(planarGeometryElement);
+
     QDomElement polyLoopElement = doc.createElement("PolyLoop");
     planarGeometryElement.appendChild(polyLoopElement);
     for (const Point3d& vertex : vertices){
