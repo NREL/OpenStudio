@@ -129,12 +129,18 @@ class UTILITIES_API DateTime {
   /// convert to ISO 8601 string
   std::string toISO8601() const;
 
+  /// convert to xsd:dateTime format
+  std::string toXsdDateTime() const;
+
   /// convert to epoch time_t in UTC time
   time_t toEpoch() const;
   
   /// construct from ISO 8601 string
   static boost::optional<DateTime> fromISO8601(const std::string& str);
     
+  /// construct from xsd:dateTime string
+  static boost::optional<DateTime> fromXsdDateTime(const std::string& str);
+
   /// construct from epoch time_t in UTC
   static DateTime fromEpoch(const std::time_t& time);
 

@@ -42,6 +42,10 @@
 #include "../model/ShadingSurfaceGroup_Impl.hpp"
 #include "../model/ConstructionBase.hpp"
 #include "../model/ConstructionBase_Impl.hpp"
+#include "../model/Construction.hpp"
+#include "../model/Construction_Impl.hpp"
+#include "../model/AirWallMaterial.hpp"
+#include "../model/AirWallMaterial_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/units/UnitFactory.hpp"
@@ -545,11 +549,10 @@ namespace gbxml {
         surface.setSurfaceType("Floor"); 
       }else if (surfaceType.contains("RaisedFloor")){
         surface.setSurfaceType("Floor"); 
-      }
-
-      // this type can be wall, roof, or floor.  just use default surface type.
-      if (surfaceType.contains("Air")){
-        // TODO: set air wall construction
+      }else if (surfaceType.contains("ExposedFloor")){
+        surface.setSurfaceType("Floor"); 
+      } else if (surfaceType.contains("Air")){
+        // this type can be wall, roof, or floor.  just use default surface type based on vertices.
       }
 
       // set boundary conditions
@@ -569,26 +572,54 @@ namespace gbxml {
 
       result = surface;
 
-      // translate construction
-      QString constructionIdRef = element.attribute("constructionIdRef");
-      if (!constructionIdRef.isEmpty()){
-        std::string constructionName = escapeName(constructionIdRef);
-        boost::optional<model::ConstructionBase> construction = model.getModelObjectByName<model::ConstructionBase>(constructionName);
-        if (construction){
-          surface.setConstruction(*construction);
+      // if air wall
+      if (surfaceType.contains("Air")){
+        boost::optional<model::Construction> airWall;
+
+        for (const auto& construction : model.getConcreteModelObjects<model::Construction>()){
+          if ((construction.numLayers() == 1) && (construction.isModelPartition())) {
+            model::MaterialVector layers = construction.layers();
+            OS_ASSERT(layers.size() == 1u);
+            if (layers[0].optionalCast<model::AirWallMaterial>()){
+              airWall = construction;
+              break;
+            }
+          }
+        }
+        if (!airWall){
+          airWall = model::Construction(model);
+          model::AirWallMaterial airWallMaterial(model);
+          airWall->setLayer(airWallMaterial);
+          surface.setConstruction(*airWall);
+        }
+
+        // don't translate subsurfaces of air walls?
+
+      } else{
+        // not air wall
+
+        // translate construction
+        QString constructionIdRef = element.attribute("constructionIdRef");
+        if (!constructionIdRef.isEmpty()){
+          std::string constructionName = escapeName(constructionIdRef);
+          boost::optional<model::ConstructionBase> construction = model.getModelObjectByName<model::ConstructionBase>(constructionName);
+          if (construction){
+            surface.setConstruction(*construction);
+          }
+        }
+
+        // translate subSurfaces
+        QDomNodeList subSurfaceElements = element.elementsByTagName("Opening");
+        for (int i = 0; i < subSurfaceElements.count(); ++i){
+          try {
+            boost::optional<model::ModelObject> subSurface = translateSubSurface(subSurfaceElements.at(i).toElement(), doc, surface);
+          } catch (const std::exception&){
+            LOG(Error, "Could not translate sub surface " << subSurfaceElements.at(i).toElement());
+          }
         }
       }
 
-      // translate subSurfaces
-      QDomNodeList subSurfaceElements = element.elementsByTagName("Opening");
-      for (int i = 0; i < subSurfaceElements.count(); ++i){
-        try {
-          boost::optional<model::ModelObject> subSurface = translateSubSurface(subSurfaceElements.at(i).toElement(), doc, surface);
-        }catch(const std::exception&){
-          LOG(Error, "Could not translate sub surface " << subSurfaceElements.at(i).toElement());
-        }
-      }
-
+      // adjacent surfaces
       QString spaceId = adjacentSpaceElements.at(0).toElement().attribute("spaceIdRef");
       std::string spaceName = toString(spaceId);
 

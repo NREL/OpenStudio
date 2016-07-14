@@ -18,6 +18,8 @@
  **********************************************************************/
 
 #include "ReverseTranslator.hpp"
+#include "ForwardTranslator.hpp"
+
 
 #include "../model/Model.hpp"
 #include "../model/ModelObject.hpp"
@@ -139,6 +141,24 @@ namespace gbxml {
         return boost::none;
     }
 
+    boost::optional<QDomElement> ForwardTranslator::translateConstructionBase(const openstudio::model::ConstructionBase& constructionBase, QDomDocument& doc)
+    {
+
+      QDomElement result = doc.createElement("Construction");
+      m_translatedObjects[constructionBase.handle()] = result;
+
+      std::string name = constructionBase.name().get();
+
+      // id
+      result.setAttribute("id", escapeName(name));
+
+      // name
+      QDomElement nameElement = doc.createElement("Name");
+      result.appendChild(nameElement);
+      nameElement.appendChild(doc.createTextNode(QString::fromStdString(name)));
+  
+      return result;
+    }
     
 } // gbxml
 } // openstudio

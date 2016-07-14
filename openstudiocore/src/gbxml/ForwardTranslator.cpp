@@ -142,11 +142,11 @@ namespace gbxml {
 
     QDomElement gbXMLElement = doc.createElement("gbXML");
     doc.appendChild(gbXMLElement);
-    gbXMLElement.setAttribute("xmlns", "http://gbxml.org/schema/6-01");
+    gbXMLElement.setAttribute("xmlns", "http://www.gbxml.org/schema");
     gbXMLElement.setAttribute("xmlns:xhtml", "http://www.w3.org/1999/xhtml");
     gbXMLElement.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
     gbXMLElement.setAttribute("xmlns:xsd", "http://www.w3.org/2001/XMLSchema");
-    gbXMLElement.setAttribute("xsi:schemaLocation", "http://gbxml.org/schema/6-01/GreenBuildingXML_Ver6.01.xsd");
+    gbXMLElement.setAttribute("xsi:schemaLocation", "http://www.gbxml.org/schema http://gbxml.org/schema/6-01/GreenBuildingXML_Ver6.01.xsd");
     gbXMLElement.setAttribute("temperatureUnit", "C");
     gbXMLElement.setAttribute("lengthUnit", "Meters");
     gbXMLElement.setAttribute("areaUnit", "SquareMeters");
@@ -162,15 +162,28 @@ namespace gbxml {
         gbXMLElement.appendChild(*campusElement);
       }
     }
-  /*
+
     // do constructions
-    for (const model::ConstructionBase& constructionBase : model.getModelObjects<model::ConstructionBase>()){
-      boost::optional<QDomElement> constructionElement = translateConstructionBase(constructionBase, doc);
-      if (constructionElement){
-        projectElement.appendChild(*constructionElement);
-      }
+    std::vector<model::ConstructionBase> constructionBases = model.getModelObjects<model::ConstructionBase>();
+    if (m_progressBar){
+      m_progressBar->setWindowTitle(toString("Translating Constructions"));
+      m_progressBar->setMinimum(0);
+      m_progressBar->setMaximum((int)constructionBases.size()); 
+      m_progressBar->setValue(0);
     }
 
+    for (const model::ConstructionBase& constructionBase : constructionBases){
+      boost::optional<QDomElement> constructionElement = translateConstructionBase(constructionBase, doc);
+      if (constructionElement){
+        gbXMLElement.appendChild(*constructionElement);
+      }
+
+      if (m_progressBar){
+        m_progressBar->setValue(m_progressBar->value() + 1);
+      }
+    }
+    
+    /*
     // do materials
     for (const model::Material& material : model.getModelObjects<model::Material>()){
       boost::optional<QDomElement> materialElement = translateMaterial(material, doc);
@@ -178,7 +191,8 @@ namespace gbxml {
         projectElement.appendChild(*materialElement);
       }
     }
-*/
+    */
+    
     // do thermal zones
     std::vector<model::ThermalZone> thermalZones = model.getConcreteModelObjects<model::ThermalZone>();
     if (m_progressBar){
@@ -205,7 +219,7 @@ namespace gbxml {
 
     QDomElement createdByElement = doc.createElement("CreatedBy");
     documentHistoryElement.appendChild(createdByElement);
-    createdByElement.setAttribute("programId", "openstudio");    Date date = DateTime::now().date();    QString dateString = QString::number(date.year());        if (date.monthOfYear().value() < 10){      dateString += "-0";    } else{      dateString += "-";    }    dateString += QString::number(date.monthOfYear().value());    if (date.dayOfMonth() < 10){      dateString += "-0";    } else{      dateString += "-";    }    dateString += QString::number(date.dayOfMonth());    createdByElement.setAttribute("date",  dateString);    createdByElement.setAttribute("personId", "unknown");    QDomElement programInfoElement = doc.createElement("ProgramInfo");    documentHistoryElement.appendChild(programInfoElement);    programInfoElement.setAttribute("id", "openstudio");
+    createdByElement.setAttribute("programId", "openstudio");    createdByElement.setAttribute("date",  toQString(DateTime::now().toXsdDateTime()));    createdByElement.setAttribute("personId", "unknown");    QDomElement programInfoElement = doc.createElement("ProgramInfo");    documentHistoryElement.appendChild(programInfoElement);    programInfoElement.setAttribute("id", "openstudio");
 
     QDomElement productNameElement = doc.createElement("ProductName");
     programInfoElement.appendChild(productNameElement);
@@ -332,10 +346,23 @@ namespace gbxml {
     // area
     QDomElement areaElement = doc.createElement("Area");
     result.appendChild(areaElement);
-    areaElement.appendChild(doc.createTextNode(QString::number(building.floorArea(), 'f')));
+
+    // DLM: we want to use gbXML's definition of floor area which includes area from all spaces with people in them
+    //double floorArea = building.floorArea();
+   
+    std::vector<model::Space> spaces = building.spaces();
+
+    double floorArea = 0;
+    for (const model::Space& space : spaces){
+      double numberOfPeople = space.numberOfPeople();
+      if (numberOfPeople > 0.0) {
+        floorArea += space.multiplier() * space.floorArea();
+      }
+    }
+    
+    areaElement.appendChild(doc.createTextNode(QString::number(floorArea, 'f')));
 
     // translate spaces
-    std::vector<model::Space> spaces = building.spaces();
     if (m_progressBar){
       m_progressBar->setWindowTitle(toString("Translating Spaces"));
       m_progressBar->setMinimum(0);
@@ -529,9 +556,8 @@ namespace gbxml {
     // construction
     boost::optional<model::ConstructionBase> construction = surface.construction();
     if (construction){
-      //std::string constructionName = construction->name().get();
-      // todo:: translate construction
-      //result.setAttribute("constructionIdRef", "constructionName");
+      std::string constructionName = construction->name().get();
+      result.setAttribute("constructionIdRef", escapeName(constructionName));
     }
 
     // this space
@@ -611,7 +637,8 @@ namespace gbxml {
       size_t llcIndex = 0;
       size_t N = vertices.size();
       for (size_t i = 0; i < N; ++i){
-        OS_ASSERT(std::abs(faceVertices[i].z()) < 0.001);
+        double z = faceVertices[i].z();
+        OS_ASSERT(std::abs(z) < 0.001);
         if ((minY > faceVertices[i].y()) || ((minY > faceVertices[i].y() - 0.00001) && (minX > faceVertices[i].x()))){
           llcIndex = i;
           minY = faceVertices[i].y();
@@ -707,9 +734,8 @@ namespace gbxml {
     // construction
     boost::optional<model::ConstructionBase> construction = subSurface.construction();
     if (construction){
-      //std::string constructionName = construction->name().get();
-      // todo: translate construction
-      // result.setAttribute("constructionIdRef", "constructionName");
+      std::string constructionName = construction->name().get();
+      result.setAttribute("constructionIdRef", escapeName(constructionName));
     }
 
     // DLM: currently unhandled
@@ -770,7 +796,8 @@ namespace gbxml {
       size_t llcIndex = 0;
       size_t N = vertices.size();
       for (size_t i = 0; i < N; ++i){
-        OS_ASSERT(std::abs(faceVertices[i].z()) < 0.001);
+        double z = faceVertices[i].z();
+        OS_ASSERT(std::abs(z) < 0.001);
         if ((minY > faceVertices[i].y()) || ((minY > faceVertices[i].y() - 0.00001) && (minX > faceVertices[i].x()))){
           llcIndex = i;
           minY = faceVertices[i].y();
