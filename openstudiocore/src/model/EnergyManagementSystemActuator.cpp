@@ -69,7 +69,7 @@ namespace detail {
 
   ModelObject EnergyManagementSystemActuator_Impl::actuatedComponentName() const {
     
-    return this->actuatedComponentName();
+    return this->getTarget(OS_EnergyManagementSystem_ActuatorFields::ActuatedComponentName)->cast<ModelObject>();
     //boost::optional<ModelObject> result;
     //result = this->actuatedComponentName();
     //OS_ASSERT(result);
