@@ -20,6 +20,9 @@
 #include "EnergyManagementSystemActuator.hpp"
 #include "EnergyManagementSystemActuator_Impl.hpp"
 
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_EnergyManagementSystem_Actuator_FieldEnums.hxx>
 
@@ -64,10 +67,12 @@ namespace detail {
     return EnergyManagementSystemActuator::iddObjectType();
   }
 
-  std::string EnergyManagementSystemActuator_Impl::actuatedComponentName() const {
-    boost::optional<std::string> value = getString(OS_EnergyManagementSystem_ActuatorFields::ActuatedComponentName,true);
-    OS_ASSERT(value);
-    return value.get();
+  ModelObject EnergyManagementSystemActuator_Impl::actuatedComponentName() const {
+    boost::optional<ModelObject> result;
+    result = this->actuatedComponentName();
+    OS_ASSERT(result);
+    return result.get();
+    //return OS_EnergyManagementSystem_ActuatorFields::ActuatedComponentName();
   }
 
   std::string EnergyManagementSystemActuator_Impl::actuatedComponentControlType() const {
@@ -76,12 +81,11 @@ namespace detail {
     return value.get();
   }
 
-  void EnergyManagementSystemActuator_Impl::setActuatedComponentName(const std::string& actuatedComponentName) {
-    bool result = setString(OS_EnergyManagementSystem_ActuatorFields::ActuatedComponentName, actuatedComponentName);
-    OS_ASSERT(result);
+  bool EnergyManagementSystemActuator_Impl::setActuatedComponentName(const ModelObject& modelObject) {
+    return setPointer(OS_EnergyManagementSystem_ActuatorFields::ActuatedComponentName, modelObject.handle());
   }
 
-  void EnergyManagementSystemActuator_Impl::setActuatedComponentControlType(const std::string& actuatedComponentControlType) {
+  bool EnergyManagementSystemActuator_Impl::setActuatedComponentControlType(const std::string& actuatedComponentControlType) {
     bool result = setString(OS_EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, actuatedComponentControlType);
     OS_ASSERT(result);
   }
@@ -89,7 +93,7 @@ namespace detail {
 } // detail
 
 EnergyManagementSystemActuator::EnergyManagementSystemActuator(const ModelObject& modelObject)
-  : ModelObject(EnergyManagementSystemActuator::iddObjectType(), modelObject)
+  : ModelObject(EnergyManagementSystemActuator::iddObjectType(), modelObject.model())
 {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemActuator_Impl>());
 
@@ -110,11 +114,11 @@ std::string EnergyManagementSystemActuator::actuatedComponentControlType() const
   return getImpl<detail::EnergyManagementSystemActuator_Impl>()->actuatedComponentControlType();
 }
 
-void EnergyManagementSystemActuator::setActuatedComponentName(const std::string& actuatedComponentName) {
-  getImpl<detail::EnergyManagementSystemActuator_Impl>()->setActuatedComponentName(actuatedComponentName);
+bool EnergyManagementSystemActuator::setActuatedComponentName(const ModelObject& modelObject) {
+  getImpl<detail::EnergyManagementSystemActuator_Impl>()->setActuatedComponentName(modelObject);
 }
 
-void EnergyManagementSystemActuator::setActuatedComponentControlType(const std::string& actuatedComponentControlType) {
+bool EnergyManagementSystemActuator::setActuatedComponentControlType(const std::string& actuatedComponentControlType) {
   getImpl<detail::EnergyManagementSystemActuator_Impl>()->setActuatedComponentControlType(actuatedComponentControlType);
 }
 
