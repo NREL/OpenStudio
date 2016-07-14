@@ -2326,7 +2326,7 @@ namespace detail {
   {
     auto h = handle();
 
-    auto controllers = model().getModelObjects<ZoneControlContaminantController>();
+    auto controllers = model().getConcreteModelObjects<ZoneControlContaminantController>();
     for( const auto & controller : controllers ) {
       if( auto zone = controller.getImpl<detail::ZoneControlContaminantController_Impl>()->controlledZone() ) {
         if( zone->handle() == h ) {

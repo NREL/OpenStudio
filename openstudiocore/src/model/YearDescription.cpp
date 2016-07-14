@@ -268,7 +268,7 @@ namespace detail {
   {
     return makeDate(openstudio::MonthOfYear(monthOfYear), dayOfMonth);
   }
- 
+
   openstudio::Date YearDescription_Impl::makeDate(openstudio::NthDayOfWeekInMonth n, openstudio::DayOfWeek dayOfWeek, openstudio::MonthOfYear monthOfYear)
   {
     boost::optional<int> year = this->calendarYear();
@@ -278,7 +278,7 @@ namespace detail {
 
     return openstudio::Date::fromNthDayOfMonth(n, dayOfWeek, monthOfYear, *year);
   }
-  
+
   openstudio::Date YearDescription_Impl::makeDate(unsigned dayOfYear)
   {
     boost::optional<int> year = this->calendarYear();
@@ -301,15 +301,15 @@ namespace detail {
 
     model::Model model = this->model();
     if (wasLeapYear && !isLeapYear){
-      for (RunPeriod runPeriod : model.getModelObjects<RunPeriod>()){
+      for (RunPeriod runPeriod : model.getConcreteModelObjects<RunPeriod>()){
         runPeriod.ensureNoLeapDays();
       }
 
-      for (RunPeriodControlDaylightSavingTime runPeriodControlDaylightSavingTime : model.getModelObjects<RunPeriodControlDaylightSavingTime>()){
+      for (RunPeriodControlDaylightSavingTime runPeriodControlDaylightSavingTime : model.getConcreteModelObjects<RunPeriodControlDaylightSavingTime>()){
         runPeriodControlDaylightSavingTime.ensureNoLeapDays();
       }
 
-      for (RunPeriodControlSpecialDays runPeriodControlSpecialDays : model.getModelObjects<RunPeriodControlSpecialDays>()){
+      for (RunPeriodControlSpecialDays runPeriodControlSpecialDays : model.getConcreteModelObjects<RunPeriodControlSpecialDays>()){
         runPeriodControlSpecialDays.ensureNoLeapDays();
       }
 
@@ -319,13 +319,13 @@ namespace detail {
 
       for (ScheduleBase scheduleBase : model.getModelObjects<ScheduleBase>()){
         scheduleBase.ensureNoLeapDays();
-      } 
+      }
 
       for (ScheduleRule scheduleRule : model.getModelObjects<ScheduleRule>()){
         scheduleRule.ensureNoLeapDays();
       }
 
-      for (LightingDesignDay lightingDesignDay : model.getModelObjects<LightingDesignDay>()){
+      for (LightingDesignDay lightingDesignDay : model.getConcreteModelObjects<LightingDesignDay>()){
         lightingDesignDay.ensureNoLeapDays();
       }
     }
