@@ -169,6 +169,14 @@ namespace gbxml {
 
     // do constructions
     std::vector<model::ConstructionBase> constructionBases = model.getModelObjects<model::ConstructionBase>();
+
+    // sort by is opaque so we get constructions before window types
+    std::sort(constructionBases.begin(), constructionBases.end(), [](const model::ConstructionBase& a, const model::ConstructionBase& b) {
+      if (a.isOpaque() && !b.isOpaque()){
+        return true;
+      }
+      return false;
+    });
     if (m_progressBar){
       m_progressBar->setWindowTitle(toString("Translating Constructions"));
       m_progressBar->setMinimum(0);
@@ -223,7 +231,13 @@ namespace gbxml {
 
     QDomElement createdByElement = doc.createElement("CreatedBy");
     documentHistoryElement.appendChild(createdByElement);
-    createdByElement.setAttribute("programId", "openstudio");    createdByElement.setAttribute("date",  toQString(DateTime::now().toXsdDateTime()));    createdByElement.setAttribute("personId", "unknown");    QDomElement programInfoElement = doc.createElement("ProgramInfo");    documentHistoryElement.appendChild(programInfoElement);    programInfoElement.setAttribute("id", "openstudio");
+    createdByElement.setAttribute("programId", "openstudio");
+    createdByElement.setAttribute("date",  toQString(DateTime::now().toXsdDateTime()));
+    createdByElement.setAttribute("personId", "unknown");
+
+    QDomElement programInfoElement = doc.createElement("ProgramInfo");
+    documentHistoryElement.appendChild(programInfoElement);
+    programInfoElement.setAttribute("id", "openstudio");
 
     QDomElement productNameElement = doc.createElement("ProductName");
     programInfoElement.appendChild(productNameElement);
@@ -231,7 +245,9 @@ namespace gbxml {
 
     QDomElement versionElement = doc.createElement("Version");
     programInfoElement.appendChild(versionElement);
-    versionElement.appendChild(doc.createTextNode(QString::fromStdString(openStudioVersion())));    QDomElement platformElement = doc.createElement("Platform");
+    versionElement.appendChild(doc.createTextNode(QString::fromStdString(openStudioVersion())));
+
+    QDomElement platformElement = doc.createElement("Platform");
     programInfoElement.appendChild(platformElement);
     #if _WIN32 || _MSC_VER
       platformElement.appendChild(doc.createTextNode("Windows"));
@@ -620,7 +636,11 @@ namespace gbxml {
     boost::optional<model::ConstructionBase> construction = surface.construction();
     if (construction){
       std::string constructionName = construction->name().get();
-      result.setAttribute("constructionIdRef", escapeName(constructionName));
+      if (construction->isOpaque()){
+        result.setAttribute("constructionIdRef", escapeName(constructionName));
+      } else{
+        result.setAttribute("windowTypeIdRef", escapeName(constructionName));
+      }
     }
 
     // this space
@@ -798,10 +818,14 @@ namespace gbxml {
     boost::optional<model::ConstructionBase> construction = subSurface.construction();
     if (construction){
       std::string constructionName = construction->name().get();
-      result.setAttribute("constructionIdRef", escapeName(constructionName));
+      if (construction->isOpaque()){
+        result.setAttribute("constructionIdRef", escapeName(constructionName));
+      } else{
+        result.setAttribute("windowTypeIdRef", escapeName(constructionName));
+      }
     }
 
-    // DLM: currently unhandled
+    // DLM: currently unhandled, nothing in os maps to these
     // OperableSkylight
     // SlidingDoor
 
@@ -952,7 +976,11 @@ namespace gbxml {
     boost::optional<model::ConstructionBase> construction = shadingSurface.construction();
     if (construction){
       std::string constructionName = construction->name().get();
-      result.setAttribute("constructionIdRef", escapeName(constructionName));
+      if (construction->isOpaque()){
+        result.setAttribute("constructionIdRef", escapeName(constructionName));
+      } else{
+        result.setAttribute("windowTypeIdRef", escapeName(constructionName));
+      }
     }
 
     // this space

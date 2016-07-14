@@ -196,18 +196,24 @@ namespace gbxml {
 
     boost::optional<QDomElement> ForwardTranslator::translateConstructionBase(const openstudio::model::ConstructionBase& constructionBase, QDomDocument& doc)
     {
+      boost::optional<QDomElement> result;
 
-      QDomElement result = doc.createElement("Construction");
-      m_translatedObjects[constructionBase.handle()] = result;
+      if (constructionBase.isOpaque()){
+        result = doc.createElement("Construction");
+        m_translatedObjects[constructionBase.handle()] = *result;
+      } else{
+        result = doc.createElement("WindowType");
+        m_translatedObjects[constructionBase.handle()] = *result;
+      }
 
       std::string name = constructionBase.name().get();
 
       // id
-      result.setAttribute("id", escapeName(name));
+      result->setAttribute("id", escapeName(name));
 
       // name
       QDomElement nameElement = doc.createElement("Name");
-      result.appendChild(nameElement);
+      result->appendChild(nameElement);
       nameElement.appendChild(doc.createTextNode(QString::fromStdString(name)));
   
       return result;
