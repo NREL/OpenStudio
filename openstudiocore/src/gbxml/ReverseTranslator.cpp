@@ -250,6 +250,25 @@ namespace gbxml {
         m_progressBar->setValue(m_progressBar->value() + 1);
       }
     }
+    
+    // do window type before sub surfaces
+    QDomNodeList windowTypeElements = element.elementsByTagName("WindowType");
+    if (m_progressBar){
+      m_progressBar->setWindowTitle(toString("Translating Window Types"));
+      m_progressBar->setMinimum(0);
+      m_progressBar->setMaximum(windowTypeElements.count()); 
+      m_progressBar->setValue(0);
+    }
+
+    for (int i = 0; i < windowTypeElements.count(); i++){
+      QDomElement windowTypeElement = windowTypeElements.at(i).toElement();
+      boost::optional<model::ModelObject> construction = translateWindowType(windowTypeElement, doc, model);
+      OS_ASSERT(construction); // Krishnan, what type of error handling do you want?
+      
+      if (m_progressBar){
+        m_progressBar->setValue(m_progressBar->value() + 1);
+      }
+    }
 
     // do schedules before loads
     QDomNodeList scheduleElements = element.elementsByTagName("Schedule");
@@ -705,17 +724,71 @@ namespace gbxml {
 
     result = subSurface;
 
-    // translate construction
-    QString constructionIdRef = element.attribute("constructionIdRef");
-    if (!constructionIdRef.isEmpty()){
-      std::string constructionName = escapeName(constructionIdRef);
-      boost::optional<model::ConstructionBase> construction = model.getModelObjectByName<model::ConstructionBase>(constructionName);
-      if (construction){
-        subSurface.setConstruction(*construction);
+    // translate openingType
+    QString openingType = element.attribute("openingType");
+    if (openingType.contains("FixedWindow")){
+      subSurface.setSubSurfaceType("FixedWindow"); 
+    }else if (openingType.contains("OperableWindow")){
+      subSurface.setSubSurfaceType("OperableWindow"); 
+    }else if (openingType.contains("FixedSkylight")){
+      subSurface.setSubSurfaceType("Skylight"); 
+    }else if (openingType.contains("OperableSkylight")){
+      subSurface.setSubSurfaceType("Skylight"); 
+    }else if (openingType.contains("SlidingDoor")){
+      subSurface.setSubSurfaceType("GlassDoor"); 
+    }else if (openingType.contains("NonSlidingDoor")){
+      subSurface.setSubSurfaceType("Door"); 
+    } else if (openingType.contains("Air")){
+      // use default sub surface type?
+    }
+
+    // if air wall
+    if (openingType.contains("Air")){
+      boost::optional<model::Construction> airWall;
+
+      for (const auto& construction : model.getConcreteModelObjects<model::Construction>()){
+        if ((construction.numLayers() == 1) && (construction.isModelPartition())) {
+          model::MaterialVector layers = construction.layers();
+          OS_ASSERT(layers.size() == 1u);
+          if (layers[0].optionalCast<model::AirWallMaterial>()){
+            airWall = construction;
+            break;
+          }
+        }
+      }
+      if (!airWall){
+        airWall = model::Construction(model);
+        model::AirWallMaterial airWallMaterial(model);
+        airWall->setLayer(airWallMaterial);
+        subSurface.setConstruction(*airWall);
+      }
+
+      
+    } else{
+
+      // translate construction
+      QString constructionIdRef = element.attribute("constructionIdRef");
+      if (!constructionIdRef.isEmpty()){
+        std::string constructionName = escapeName(constructionIdRef);
+        boost::optional<model::ConstructionBase> construction = model.getModelObjectByName<model::ConstructionBase>(constructionName);
+        if (construction){
+          subSurface.setConstruction(*construction);
+        }
+      } else{
+
+        // translate window type ref
+        QString windowTypeIdRef = element.attribute("windowTypeIdRef");
+        if (!windowTypeIdRef.isEmpty()){
+          std::string constructionName = escapeName(windowTypeIdRef);
+          boost::optional<model::ConstructionBase> construction = model.getModelObjectByName<model::ConstructionBase>(constructionName);
+          if (construction){
+            subSurface.setConstruction(*construction);
+          }
+        }
       }
     }
 
-    // todo: translate "interiorShadeType", "exteriorShadeType", "windowTypeIdRef", and other properties of the opening
+    // todo: translate "interiorShadeType", "exteriorShadeType", and other properties of the opening
 
 
     return result;

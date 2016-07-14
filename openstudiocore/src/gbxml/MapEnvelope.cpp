@@ -32,6 +32,8 @@
 #include "../model/StandardOpaqueMaterial_Impl.hpp"
 #include "../model/FenestrationMaterial.hpp"
 #include "../model/FenestrationMaterial_Impl.hpp"
+#include "../model/SimpleGlazing.hpp"
+#include "../model/SimpleGlazing_Impl.hpp"
 #include "../model/ModelPartitionMaterial.hpp"
 #include "../model/ModelPartitionMaterial_Impl.hpp"
 #include "../utilities/core/Assert.hpp"
@@ -95,6 +97,57 @@ namespace gbxml {
         }
 
         return construction;
+    }
+
+    boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWindowType(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model)
+    {  
+      openstudio::model::Construction construction(model);
+      QString windowTypeId = element.attribute("id");
+      construction.setName(escapeName(windowTypeId));
+
+      boost::optional<double> uValue;
+      boost::optional<double> shgc;
+      boost::optional<double> tVis;
+
+      QDomNodeList uValueElements = element.elementsByTagName("U-value");
+      for (int i = 0; i < uValueElements.count(); i++){
+        QDomElement uValueElement = uValueElements.at(i).toElement();
+        if (uValueElement.attribute("unit") == "WPerSquareMeterK"){
+          uValue = uValueElement.text().toDouble();
+          break;
+        }
+      }
+        
+      QDomNodeList shgcElements = element.elementsByTagName("SolarHeatGainCoeff");
+      for (int i = 0; i < shgcElements.count(); i++){
+        QDomElement shgcElement = shgcElements.at(i).toElement();
+        if (shgcElement.attribute("unit") == "Fraction"){
+          shgc = shgcElement.text().toDouble();
+          break;
+        }
+      }
+        
+      QDomNodeList transmittanceElements = element.elementsByTagName("Transmittance");
+      for (int i = 0; i < transmittanceElements.count(); i++){
+        QDomElement transmittanceElement = transmittanceElements.at(i).toElement();
+        if (transmittanceElement.attribute("type") == "Visible"){
+          tVis = transmittanceElement.text().toDouble();
+          break;
+        }
+      }
+
+      if (uValue && shgc && tVis){
+        model::SimpleGlazing glazing(model);
+        glazing.setUFactor(*uValue);
+        glazing.setSolarHeatGainCoefficient(*shgc);
+        glazing.setVisibleTransmittance(*tVis);
+
+        std::vector<model::Material> layers;
+        layers.push_back(glazing);
+        construction.setLayers(layers);
+      }
+    
+      return construction;
     }
 
     boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateMaterial(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model)
