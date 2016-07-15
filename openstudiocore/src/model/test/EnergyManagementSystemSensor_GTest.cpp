@@ -39,7 +39,7 @@ using namespace openstudio;
 using namespace openstudio::model;
 using std::string;
 
-TEST_F(ModelFixture, OutputVariable_ThermalZone)
+TEST_F(ModelFixture, EMSSensor_EMSSensor)
 {
   Model model;
 
@@ -85,44 +85,3 @@ TEST_F(ModelFixture, OutputVariable_ThermalZone)
 
 }
 
-TEST_F(ModelFixture, MapOfAllOutputVariables)
-{
-  Model model = exampleModel();
-
-  // map of variable name to output variable
-  std::map<std::string, boost::optional<OutputVariable> > outputVariableMap;
-
-  // get list of all variable names
-  for (const ModelObject& modelObject : model.getModelObjects<ModelObject>()){
-    for (const std::string& variableName : modelObject.outputVariableNames()){
-      outputVariableMap[variableName] = boost::none;
-    }
-  }
-
-  // add all variables to map, allow only one variable per variable name in this application 
-  for (OutputVariable outputVariable : model.getModelObjects<OutputVariable>()){
-    if (outputVariableMap[outputVariable.variableName()]){
-      // already have output variable for this name, then remove this object
-      outputVariable.remove();
-    }else{
-
-      // make sure that key value is set to '*'
-      outputVariable.setKeyValue("*");
-
-      outputVariableMap[outputVariable.variableName()] = outputVariable;
-    }
-  }
-
-  // now make an output variable for each variable name
-  typedef std::pair<std::string, boost::optional<OutputVariable> > MapType;
-  for (MapType mapVal : outputVariableMap){
-    if (!mapVal.second){
-      OutputVariable outputVariable(mapVal.first, model);
-      outputVariable.setReportingFrequency("Hourly");
-      outputVariableMap[mapVal.first] = outputVariable;
-    }
-
-    boost::optional<OutputVariable> outputVariable = outputVariableMap[mapVal.first];
-    ASSERT_TRUE(outputVariable);
-  }
-}
