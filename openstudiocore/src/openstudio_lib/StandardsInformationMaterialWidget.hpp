@@ -40,9 +40,9 @@ namespace model {
 
 }
 
-class OSComboBox;
+class OSComboBox2;
 
-class OSLineEdit;
+class OSLineEdit2;
 
 class StandardsInformationMaterialWidget : public QWidget
 {

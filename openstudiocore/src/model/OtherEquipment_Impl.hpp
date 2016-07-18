@@ -33,14 +33,14 @@ namespace detail {
 
   /** OtherEquipment_Impl is a SpaceLoadInstance_Impl that is the implementation class for OtherEquipment.*/
   class MODEL_API OtherEquipment_Impl : public SpaceLoadInstance_Impl {
-    Q_OBJECT;
-    Q_PROPERTY(bool isScheduleDefaulted READ isScheduleDefaulted);
+    
+    
 
-    Q_PROPERTY(double multiplier READ multiplier WRITE setMultiplier RESET resetMultiplier);
-    Q_PROPERTY(bool isMultiplierDefaulted READ isMultiplierDefaulted);
+    
+    
 
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> otherEquipmentDefinition READ otherEquipmentDefinitionAsModelObject WRITE setOtherEquipmentDefinitionAsModelObject);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> schedule READ scheduleAsModelObject WRITE setScheduleAsModelObject RESET resetSchedule);
+    
+    
    public:
 
     /** @name Constructors and Destructors */

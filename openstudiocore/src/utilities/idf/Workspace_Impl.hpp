@@ -1,4 +1,4 @@
-/**********************************************************************
+  /**********************************************************************
  *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
@@ -28,10 +28,9 @@
 #include <utilities/idf/ObjectPointer.hpp>
 
 #include <utilities/idd/IddFileAndFactoryWrapper.hpp>
+#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
 
 #include <utilities/core/Logger.hpp>
-
-#include <QObject>
 
 #include <string>
 #include <ostream>
@@ -51,10 +50,9 @@ namespace detail {
 
   /** Implementation of Workspace. Maintains object handles and relationships. Locks down
    *  relationship fields in its IdfObjects if possible. */
-  class UTILITIES_API Workspace_Impl : public QObject,
-                                       public std::enable_shared_from_this<Workspace_Impl>
+  class UTILITIES_API Workspace_Impl : public std::enable_shared_from_this<Workspace_Impl>,
+                                       public Nano::Observer
   {
-    Q_OBJECT;
    public:
 
     /** @name Constructors and Destructors */
@@ -432,32 +430,44 @@ namespace detail {
 
     //@}
 
-   signals:
+    //@}
+    /** @name Nano Signals */
+    //@{
 
     /// range for progress to take
-    void progressRange(int min, int max) const;
+    // void progressRange(int min, int max) const;
+    mutable Nano::Signal<void(int, int)> progressRange;
 
     /// report on progress when loading workspace, creating objects, etc
-    void progressValue(int value) const;
+    // void progressValue(int value) const;
+    mutable Nano::Signal<void(int)> progressValue;
 
     /// report caption describing what we are currently doing
-    void progressCaption(const QString& caption) const;
+    // void progressCaption(const QString& caption) const;
+    mutable Nano::Signal<void(const QString&)> progressCaption;
 
     /** Emitted on any change to this Workspace and its contents. */
-    void onChange() const;
+    // void onChange() const;
+    mutable Nano::Signal<void()> onChange;
 
     /** Send an object being deleted from the workspace. OS_ASSERT(!object.initialized())
      *  should pass, as should OS_ASSERT(object.handle().isNull()). */
-    void removeWorkspaceObject(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle) const;
+    // void removeWorkspaceObject(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle) const;
+    mutable Nano::Signal<void(const WorkspaceObject&, const openstudio::IddObjectType&, const openstudio::UUID&)> removeWorkspaceObject;
 
     // DLM: deprecate this version
-    void removeWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle) const;
+    // void removeWorkspaceObjectPtr(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle) const;
+    mutable Nano::Signal<void(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)> removeWorkspaceObjectPtr;
 
     /** Sends an object just added to the Workspace. */
-    void addWorkspaceObject(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle) const;
+    // void addWorkspaceObject(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle) const;
+    mutable Nano::Signal<void(const WorkspaceObject&, const openstudio::IddObjectType&, const openstudio::UUID&)> addWorkspaceObject;
 
     // DLM: deprecate this version
-    void addWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle) const;
+    // void addWorkspaceObjectPtr(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle) const;
+    mutable Nano::Signal<void(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)> addWorkspaceObjectPtr;
+    //@}
+
 
    public slots:
 

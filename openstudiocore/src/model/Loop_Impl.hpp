@@ -37,11 +37,11 @@ namespace detail {
 
   class MODEL_API Loop_Impl : public ParentObject_Impl {
 
-    Q_OBJECT;
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> supplyInletNode READ supplyInletNodeAsModelObject);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> supplyOutletNode READ supplyOutletNodeAsModelObject);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> demandInletNode READ demandInletNodeAsModelObject);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> demandOutletNode READ demandOutletNodeAsModelObject);
+    
+    
+    
+    
+    
 
   public:
 

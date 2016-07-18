@@ -28,10 +28,10 @@ class Schedule;
 
 namespace detail {
   class MODEL_API ThermostatSetpointDualSetpoint_Impl : public Thermostat_Impl {
-    Q_OBJECT;
+    
 
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> heatingSetpointTemperatureSchedule READ heatingSetpointTemperatureScheduleAsModelObject WRITE setHeatingSetpointTemperatureScheduleAsModelObject RESET resetHeatingSetpointTemperatureSchedule);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> coolingSetpointTemperatureSchedule READ coolingSetpointTemperatureScheduleAsModelObject WRITE setCoolingSetpointTemperatureScheduleAsModelObject RESET resetCoolingSetpointTemperatureSchedule);
+    
+    
    public:
     /** @name Constructors and Destructors */
     //@{

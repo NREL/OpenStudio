@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.11)
 
 project(OpenStudioCore)
 
-if( POLICY CMP0022 ) 
+if( POLICY CMP0022 )
   cmake_policy(SET CMP0022 NEW)
 endif()
 cmake_policy(SET CMP0020 NEW)
@@ -105,6 +105,14 @@ option(BUILD_RUBY_GEM "Build Ruby Gem" OFF)
 
 # Build shared OS libraries
 option(BUILD_SHARED_LIBS "Build OS libs as shared libraries" OFF)
+
+# Build the OpenStudio Application
+# This option will require shared Qt
+option(BUILD_OS_APP "Use Static Qt" ON)
+
+# Use static version of Qt
+# This option is used for making static cli
+option(Qt5Static "Use Static Qt" Off)
 
 if (BUILD_SHARED_LIBS)
   add_definitions("-DSHARED_OS_LIBS")
@@ -482,9 +490,7 @@ if(BUILD_DOCUMENTATION)
 
 
 endif()
-###############################################################################
 
-###############################################################################
 # Required dependencies
 
 # Threading library
@@ -557,40 +563,32 @@ endif()
 
 # SQLite definitions, used in sqlite and litesql
 add_definitions(-DSQLITE_THREADSAFE=1) # 1 is default, serial access
-#add_definitions(-DSQLITE_DEBUG)
-#add_definitions(-DSQLITE_MEMDEBUG)
 
-#--------------------------------------------------------------------------------
 # Qt
-
 set(QT_INSTALL_DIR "${CMAKE_BINARY_DIR}/../../../Qt-prefix/src/Qt-install/")
 
 if(NOT EXISTS ${QT_INSTALL_DIR})
-
-  option(STATIC_QT "Use Static Qt" ON)
-
   # download qt
   if( WIN32 )
-    if( STATIC_QT )
+ 		if( Qt5Static )
       set(QT_ZIP_FILENAME "qt_5_6_msvc2013_64_static_temp.zip")
       set(QT_ZIP_EXPECTED_MD5 "3f0e1a505e707c9f1bde31e05f17fc47")
     else()
       set(QT_ZIP_FILENAME "qt_5_6_msvc2013_64_shared_temp.zip")
       set(QT_ZIP_EXPECTED_MD5 "2ac0ed2909710350f1c6acd5f38a8b33")
     endif()
-    
+
   elseif( APPLE )
-    if( STATIC_QT )
+    if( Qt5Static )
       set(QT_ZIP_FILENAME "qt_5_6_osx_static_temp.tar.gz")
       set(QT_ZIP_EXPECTED_MD5 "094985d51cc686cdb665c45fff9c088f")
     else()
-      message(SEND_ERROR "Shared Apple Qt build not available")
-      #set(QT_ZIP_FILENAME "qt_5_6_osx_shared.tar.gz")
-      #set(QT_ZIP_EXPECTED_MD5 "52424fdb4d553b94156de088881506b5")
+      set(QT_ZIP_FILENAME "qt_5_6_osx_shared.tar.gz")
+      set(QT_ZIP_EXPECTED_MD5 "550d6a4fcc2cc7eccf82b5d702cff7ad")
     endif()
 
   elseif(EXISTS "/etc/redhat-release")
-    if( STATIC_QT )
+    if( Qt5Static )
       set(QT_ZIP_FILENAME "qt_5_6_redhat_64_static_temp.tar.gz")
       set(QT_ZIP_EXPECTED_MD5 "4c62bd59d1c4ebc14594fe98b33c58fd")
     else()
@@ -598,10 +596,10 @@ if(NOT EXISTS ${QT_INSTALL_DIR})
       #set(QT_ZIP_FILENAME "qt_5_6_redhat_64_shared.tar.gz")
       #set(QT_ZIP_EXPECTED_MD5 "52424fdb4d553b94156de088881506b5")
     endif()
-    
+
   else()
     #ubuntu
-    if( STATIC_QT )
+		if( Qt5Static )
       set(QT_ZIP_FILENAME "qt_5_6_linux_64_static_temp.tar.gz")
       set(QT_ZIP_EXPECTED_MD5 "1377b18696829ccd7d5b1906b05d9857")
     else()
@@ -609,170 +607,173 @@ if(NOT EXISTS ${QT_INSTALL_DIR})
       #set(QT_ZIP_FILENAME "qt_5_6_linux_64_static.tar.gz")
       #set(QT_ZIP_EXPECTED_MD5 "52424fdb4d553b94156de088881506b5")
     endif()
-    
+
   endif()
-  
+
   set(QT_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${QT_ZIP_FILENAME}")
   if(EXISTS "${QT_ZIP_LOCAL_PATH}")
     file(MD5 "${QT_ZIP_LOCAL_PATH}" QT_ZIP_MD5)
   endif()
-    
+
   if( NOT QT_ZIP_MD5 STREQUAL QT_ZIP_EXPECTED_MD5)
-    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${QT_ZIP_FILENAME}" 
-      ${QT_ZIP_LOCAL_PATH} 
-      INACTIVITY_TIMEOUT 120 
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${QT_ZIP_FILENAME}"
+      ${QT_ZIP_LOCAL_PATH}
+      INACTIVITY_TIMEOUT 120
       SHOW_PROGRESS
       EXPECTED_MD5 ${QT_ZIP_EXPECTED_MD5})
       execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
   endif()
-  
+
   set(QT_INSTALL_DIR "${CMAKE_BINARY_DIR}/Qt-install/")
-  
 endif()
 
-find_package(Qt5Core REQUIRED HINTS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-find_package(Qt5Widgets REQUIRED HINTS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-find_package(Qt5Sql REQUIRED HINTS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-find_package(Qt5Network REQUIRED HINTS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-find_package(Qt5Xml REQUIRED HINTS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-find_package(Qt5Concurrent REQUIRED HINTS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-find_package(Qt5PrintSupport REQUIRED HINTS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-find_package(Qt5Gui REQUIRED HINTS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
+find_package(Qt5Core REQUIRED HINTS ${QT_INSTALL_DIR})
+find_package(Qt5Widgets REQUIRED HINTS ${QT_INSTALL_DIR})
+find_package(Qt5Sql REQUIRED HINTS ${QT_INSTALL_DIR})
+find_package(Qt5Network REQUIRED HINTS ${QT_INSTALL_DIR})
+find_package(Qt5Xml REQUIRED HINTS ${QT_INSTALL_DIR})
+find_package(Qt5Concurrent REQUIRED HINTS ${QT_INSTALL_DIR})
+find_package(Qt5PrintSupport REQUIRED HINTS ${QT_INSTALL_DIR})
+find_package(Qt5Gui REQUIRED HINTS ${QT_INSTALL_DIR})
+
 if( WIN32 )
-  find_package(Qt5WinExtras REQUIRED HINTS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
+  find_package(Qt5WinExtras REQUIRED HINTS ${QT_INSTALL_DIR})
 endif()
-mark_as_advanced(
-  Qt5Concurrent_DIR
-  Qt5Core_DIR
-  Qt5Gui_DIR
-  Qt5Gui_EGL_LIBRARY
-  Qt5Location_DIR
-  Qt5Multimedia_DIR
-  Qt5MultimediaWidgets_DIR
-  Qt5Network_DIR
-  Qt5OpenGL_DIR
-  Qt5Positioning_DIR
-  Qt5PrintSupport_DIR
-  Qt5Qml_DIR
-  Qt5Quick_DIR
-  Qt5Sensors_DIR
-  Qt5Sql_DIR
-  Qt5Widgets_DIR
-  Qt5WinExtras_DIR
-  Qt5Xml_DIR
-)
 
 set(CMAKE_AUTOMOC OFF)
 
-get_target_property(QtCore_TYPE Qt5::Core TYPE)
-message("QtCore_TYPE = ${QtCore_TYPE}")
-
-if(QtCore_TYPE STREQUAL "STATIC_LIBRARY")
-  add_definitions(-DQT_STATIC)
-else()
-  find_package(Qt5WebEngineWidgets REQUIRED HINTS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-  
-  list(APPEND QT_LIBS Qt5::WebEngineWidgets)
-endif()
-
+# list of all Qt libs and dependencies we are using
 list(APPEND QT_LIBS Qt5::Core)
 list(APPEND QT_LIBS Qt5::Gui)
 list(APPEND QT_LIBS Qt5::Widgets)
 list(APPEND QT_LIBS Qt5::Sql)
 list(APPEND QT_LIBS Qt5::Network)
 list(APPEND QT_LIBS Qt5::Xml)
-list(APPEND QT_LIBS Qt5::Concurrent)
 list(APPEND QT_LIBS Qt5::PrintSupport)
-if( UNIX AND STATIC_QT )
-  list(APPEND QT_LIBS "${QT_INSTALL_DIR}/plugins/sqldrivers/libqsqlite.a")
-  list(APPEND QT_LIBS "${QT_INSTALL_DIR}/lib/libqtharfbuzzng.a")
-  find_package(OpenGL REQUIRED)
-  list(APPEND QT_LIBS "${OPENGL_LIBRARIES}")
-endif()
-
-if( UNIX AND NOT APPLE )
-  find_library(png_lib png)
-  list(APPEND QT_LIBS ${png_lib})
-  if(EXISTS "/etc/redhat-release")
-    list(APPEND QT_LIBS "${QT_INSTALL_DIR}/lib/libqtpcre.a")
-    find_library(rt_lib rt)
-    list(APPEND QT_LIBS ${rt_lib})
-    find_library(jpeg_lib jpeg)
-    list(APPEND QT_LIBS ${jpeg_lib})
-    find_library(glib_lib glib-2.0)
-    list(APPEND QT_LIBS ${glib_lib})
-    find_library(gthread_lib gthread-2.0)
-    list(APPEND QT_LIBS ${gthread_lib})
-    find_library(db_lib db)
-    list(APPEND QT_LIBS ${db_lib})
-  else()
-    find_library(pcre16_lib pcre16)
-    list(APPEND QT_LIBS ${pcre16_lib})
-  endif()
-  find_library(crypto_lib crypto)
-  list(APPEND QT_LIBS ${crypto_lib})
-endif()
-
-if( APPLE AND STATIC_QT )
-  find_library(corefoundation_lib CoreFoundation)
-  find_library(cfnetwork_lib CFNetwork)
-  find_library(coregraphics_lib CoreGraphics)
-  find_library(carbon_lib Carbon)
-  find_library(appkit_lib AppKit)
-  find_library(systemconfiguration_lib SystemConfiguration)
-  find_library(security_lib Security)
-  list(APPEND QT_LIBS ${corefoundation_lib})
-  list(APPEND QT_LIBS ${cfnetwork_lib})
-  list(APPEND QT_LIBS ${coregraphics_lib})
-  list(APPEND QT_LIBS ${carbon_lib})
-  list(APPEND QT_LIBS ${appkit_lib})
-  list(APPEND QT_LIBS ${systemconfiguration_lib})
-  list(APPEND QT_LIBS ${security_lib})
-  list(APPEND QT_LIBS "${QT_INSTALL_DIR}/lib/libqtpcre.a")
-endif()
-
 if( WIN32 )
-  # This is a dirty hack and only works for release
-  # clean this up
-  find_library(PLATFORM_SUPPORT Qt5PlatformSupport PATHS "${QT_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
-  find_library(FREETYPE qtfreetype PATHS "${QT_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
-  
-  mark_as_advanced(PLATFORM_SUPPORT FREETYPE)
-  
-  list(APPEND QT_LIBS ${PLATFORM_SUPPORT})
-  list(APPEND QT_LIBS ${FREETYPE})
-  
-  list(APPEND QT_LIBS wsock32)
-  list(APPEND QT_LIBS ws2_32)
-  list(APPEND QT_LIBS iphlpapi)
-  list(APPEND QT_LIBS dbghelp)
-  list(APPEND QT_LIBS Shlwapi)
-  
-  if(QtCore_TYPE STREQUAL "STATIC_LIBRARY")
-    find_library(HARFBUZZ qtharfbuzzng PATHS "${QT_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
-    find_library(PCRE qtpcre PATHS "${QT_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
-    find_library(SQLITE qsqlite PATHS "${QT_INSTALL_DIR}/plugins/sqldrivers/" NO_DEFAULT_PATH)
-    find_library(WIN_PLATFORM qwindows PATHS "${QT_INSTALL_DIR}/plugins/platforms/" NO_DEFAULT_PATH)
-    
-    link_directories("${OPENSSL_ROOT_DIR}/lib/VC/static")
-    
-    mark_as_advanced(HARFBUZZ PCRE SQLITE WIN_PLATFORM)
+	list(APPEND QT_LIBS Qt5::WinExtras)
+endif()
 
-    list(APPEND QT_LIBS ${HARFBUZZ})
-    list(APPEND QT_LIBS ${PCRE})
-    list(APPEND QT_LIBS ${SQLITE})
-    list(APPEND QT_LIBS ${WIN_PLATFORM})
-  
-    list(APPEND QT_LIBS Crypt32)
-    list(APPEND QT_LIBS imm32)
-    list(APPEND QT_LIBS winmm)
-    list(APPEND QT_LIBS ssleay32MT)
-    list(APPEND QT_LIBS libeay32MT)
-    list(APPEND QT_LIBS Gdi32)
+get_target_property(QtCore_TYPE Qt5::Core TYPE)
+
+if( Qt5Static )
+  if(NOT QtCore_TYPE STREQUAL "STATIC_LIBRARY")
+    message(ERROR "A shared library version of Qt was found, but the project is configured for static Qt")
   endif()
+  add_definitions(-DQT_STATIC)
+else()
+  if(QtCore_TYPE STREQUAL "STATIC_LIBRARY")
+    message(ERROR "A static library version of Qt was found, but the project is configured for shared Qt")
+  endif()
+endif()
 
-  list(APPEND QT_LIBS Qt5::WinExtras)
-    
+if(BUILD_OS_APP)
+  if( Qt5Static )
+		message(ERROR "Project is configured for static Qt, which is not a valid configuration when building OS App")
+  endif()
+endif()
+
+if( NOT Qt5Static )
+	find_package(Qt5Quick REQUIRED HINTS ${QT_INSTALL_DIR})
+	find_package(Qt5Qml REQUIRED HINTS ${QT_INSTALL_DIR})
+	find_package(Qt5WebChannel REQUIRED HINTS ${QT_INSTALL_DIR})
+	find_package(Qt5Positioning REQUIRED HINTS ${QT_INSTALL_DIR})
+	find_package(Qt5WebEngine REQUIRED HINTS ${QT_INSTALL_DIR})
+	find_package(Qt5WebEngineWidgets REQUIRED HINTS ${QT_INSTALL_DIR})
+
+  list(APPEND QT_LIBS Qt5::Quick)
+  list(APPEND QT_LIBS Qt5::Qml)
+  list(APPEND QT_LIBS Qt5::WebEngine)
+  list(APPEND QT_LIBS Qt5::WebEngineCore)
+  list(APPEND QT_LIBS Qt5::WebEngineWidgets)
+  list(APPEND QT_LIBS Qt5::WebChannel)
+  list(APPEND QT_LIBS Qt5::Positioning)
+  list(APPEND QT_LIBS Qt5::Concurrent)
+else()
+	if( UNIX )
+  	list(APPEND QT_LIBS "${QT_INSTALL_DIR}/plugins/sqldrivers/libqsqlite.a")
+  	list(APPEND QT_LIBS "${QT_INSTALL_DIR}/lib/libqtharfbuzzng.a")
+  	find_package(OpenGL REQUIRED)
+  	list(APPEND QT_LIBS "${OPENGL_LIBRARIES}")
+	endif()
+
+	if( UNIX AND NOT APPLE )
+	  find_library(png_lib png)
+	  list(APPEND QT_LIBS ${png_lib})
+	  if(EXISTS "/etc/redhat-release")
+	    list(APPEND QT_LIBS "${QT_INSTALL_DIR}/lib/libqtpcre.a")
+	    find_library(rt_lib rt)
+	    list(APPEND QT_LIBS ${rt_lib})
+	    find_library(jpeg_lib jpeg)
+	    list(APPEND QT_LIBS ${jpeg_lib})
+	    find_library(glib_lib glib-2.0)
+	    list(APPEND QT_LIBS ${glib_lib})
+	    find_library(gthread_lib gthread-2.0)
+	    list(APPEND QT_LIBS ${gthread_lib})
+	    find_library(db_lib db)
+	    list(APPEND QT_LIBS ${db_lib})
+	  else()
+	    find_library(pcre16_lib pcre16)
+	    list(APPEND QT_LIBS ${pcre16_lib})
+	  endif()
+	  find_library(crypto_lib crypto)
+	  list(APPEND QT_LIBS ${crypto_lib})
+	endif()
+
+	if( APPLE )
+  	find_library(corefoundation_lib CoreFoundation)
+  	find_library(cfnetwork_lib CFNetwork)
+  	find_library(coregraphics_lib CoreGraphics)
+  	find_library(carbon_lib Carbon)
+  	find_library(appkit_lib AppKit)
+  	find_library(systemconfiguration_lib SystemConfiguration)
+  	find_library(security_lib Security)
+  	list(APPEND QT_LIBS ${corefoundation_lib})
+  	list(APPEND QT_LIBS ${cfnetwork_lib})
+  	list(APPEND QT_LIBS ${coregraphics_lib})
+  	list(APPEND QT_LIBS ${carbon_lib})
+  	list(APPEND QT_LIBS ${appkit_lib})
+  	list(APPEND QT_LIBS ${systemconfiguration_lib})
+  	list(APPEND QT_LIBS ${security_lib})
+  	list(APPEND QT_LIBS "${QT_INSTALL_DIR}/lib/libqtpcre.a")
+	endif()
+
+	if( WIN32 )
+	  find_library(HARFBUZZ qtharfbuzzng PATHS "${QT_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
+	  find_library(PCRE qtpcre PATHS "${QT_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
+	  find_library(SQLITE qsqlite PATHS "${QT_INSTALL_DIR}/plugins/sqldrivers/" NO_DEFAULT_PATH)
+	  find_library(WIN_PLATFORM qwindows PATHS "${QT_INSTALL_DIR}/plugins/platforms/" NO_DEFAULT_PATH)
+	
+	  link_directories("${OPENSSL_ROOT_DIR}/lib/VC/static")
+	
+	  find_library(PLATFORM_SUPPORT Qt5PlatformSupport PATHS "${QT_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
+	  find_library(FREETYPE qtfreetype PATHS "${QT_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
+	
+	  mark_as_advanced(PLATFORM_SUPPORT FREETYPE)
+	
+	  list(APPEND QT_LIBS ${PLATFORM_SUPPORT})
+	  list(APPEND QT_LIBS ${FREETYPE})
+	
+	  mark_as_advanced(HARFBUZZ PCRE SQLITE WIN_PLATFORM)
+	
+	  list(APPEND QT_LIBS ${HARFBUZZ})
+	  list(APPEND QT_LIBS ${PCRE})
+	  list(APPEND QT_LIBS ${SQLITE})
+	  list(APPEND QT_LIBS ${WIN_PLATFORM})
+	
+	  list(APPEND QT_LIBS Crypt32)
+	  list(APPEND QT_LIBS imm32)
+	  list(APPEND QT_LIBS winmm)
+	  list(APPEND QT_LIBS ssleay32MT)
+	  list(APPEND QT_LIBS libeay32MT)
+	  list(APPEND QT_LIBS Gdi32)
+	
+	  list(APPEND QT_LIBS wsock32)
+	  list(APPEND QT_LIBS ws2_32)
+	  list(APPEND QT_LIBS iphlpapi)
+	  list(APPEND QT_LIBS dbghelp)
+	  list(APPEND QT_LIBS Shlwapi)
+	endif()
 endif()
 
 ###############################################################################
@@ -827,7 +828,7 @@ if(WIN32)
   list(APPEND project_directories "qtwinmigrate")
 endif()
 
-if(QtCore_TYPE STREQUAL "SHARED_LIBRARY")
+if(BUILD_OS_APP)
   list(APPEND project_directories "qwt")
   #list(APPEND project_directories "gbxml")
   list(APPEND project_directories "bimserver")
@@ -987,7 +988,7 @@ set(all_lib_targets
   openstudio_gbxml
   #openstudio_bimserver
   openstudio_isomodel
-  #openstudio_lib
+  openstudio_lib
   openstudio_sdd
   openstudio_airflow
   #qwt
@@ -1004,7 +1005,7 @@ if(QtCore_TYPE STREQUAL "SHARED_LIBRARY")
   list(APPEND all_lib_targets "openstudio_modeleditor")
   #list(APPEND all_lib_targets "openstudio_gbxml")
   list(APPEND all_lib_targets "openstudio_bimserver")
-  list(APPEND all_lib_targets "openstudio_lib")
+  #list(APPEND all_lib_targets "openstudio_lib")
   list(APPEND all_lib_targets "qwt")
 endif()
 

@@ -35,10 +35,10 @@ namespace detail {
 
   /** LightingDesignDay_Impl is a ModelObject_Impl that is the implementation class for LightingDesignDay.*/
   class MODEL_API LightingDesignDay_Impl : public ModelObject_Impl {
-    Q_OBJECT;
-    Q_PROPERTY(std::string cieSkyModel READ cieSkyModel WRITE setCIESkyModel);
-    Q_PROPERTY(int snowIndicator READ snowIndicator WRITE setSnowIndicator RESET resetSnowIndicator);
-    Q_PROPERTY(bool isSnowIndicatorDefaulted READ isSnowIndicatorDefaulted);
+    
+    
+    
+    
    public:
 
     /** @name Constructors and Destructors */

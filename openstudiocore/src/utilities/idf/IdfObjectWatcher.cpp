@@ -31,9 +31,9 @@ IdfObjectWatcher::IdfObjectWatcher(const IdfObject& idfObject)
   openstudio::Application::instance().application(false);
   
   detail::IdfObject_ImplPtr objectImpl = idfObject.getImpl<detail::IdfObject_Impl>();
-  connect(objectImpl.get(), &detail::IdfObject_Impl::onChange, this, &IdfObjectWatcher::change);
-  connect(objectImpl.get(), &detail::IdfObject_Impl::onDataChange, this, &IdfObjectWatcher::dataChange);
-  connect(objectImpl.get(), &detail::IdfObject_Impl::onNameChange, this, &IdfObjectWatcher::nameChange);
+  objectImpl.get()->detail::IdfObject_Impl::onChange.connect<IdfObjectWatcher, &IdfObjectWatcher::change>(this);
+  objectImpl.get()->detail::IdfObject_Impl::onDataChange.connect<IdfObjectWatcher, &IdfObjectWatcher::dataChange>(this);
+  objectImpl.get()->detail::IdfObject_Impl::onNameChange.connect<IdfObjectWatcher, &IdfObjectWatcher::nameChange>(this);
 }
 
 IdfObjectWatcher::~IdfObjectWatcher()

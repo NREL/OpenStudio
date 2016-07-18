@@ -31,9 +31,9 @@ class InternalMassDefinition;
 
 }
 
-class OSLineEdit;
+class OSLineEdit2;
 
-class OSQuantityEdit;
+class OSQuantityEdit2;
 
 class OSDropZone;
 
@@ -65,13 +65,13 @@ class InternalMassDefinitionInspectorView : public ModelObjectInspectorView
 
     void refresh();
 
-    OSLineEdit* m_nameEdit;
+    OSLineEdit2* m_nameEdit;
 
-    OSQuantityEdit * m_surfaceAreaEdit;
+    OSQuantityEdit2 * m_surfaceAreaEdit;
 
-    OSQuantityEdit * m_surfaceAreaPerSpaceFloorAreaEdit;
+    OSQuantityEdit2 * m_surfaceAreaPerSpaceFloorAreaEdit;
 
-    OSQuantityEdit * m_surfaceAreaPerPersonEdit;
+    OSQuantityEdit2 * m_surfaceAreaPerPersonEdit;
 
     OSDropZone * m_ConstructionDropZone;
 

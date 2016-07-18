@@ -20,6 +20,7 @@
 #ifndef SHAREDGUICOMPONENTS_GRAPHICSITEMS_HPP
 #define SHAREDGUICOMPONENTS_GRAPHICSITEMS_HPP
 
+#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
 #include <QGraphicsObject>
 #include <QSizeF>
 
@@ -63,7 +64,7 @@ class AbstractButtonItem : public QGraphicsObject
   bool m_mouseDown;
 };
 
-class ButtonItem : public QGraphicsObject
+class ButtonItem : public QGraphicsObject, public Nano::Observer
 {
   Q_OBJECT;
 

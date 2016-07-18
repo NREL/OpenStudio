@@ -34,9 +34,9 @@ class SpaceItem;
 namespace detail {
 
   class MODEL_API SpaceItem_Impl : public ModelObject_Impl {
-    Q_OBJECT;
+    
 
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> space READ spaceAsModelObject WRITE setSpaceAsModelObject RESET resetSpace);
+    
    public:
 
     // Construct completely new object.

@@ -70,7 +70,7 @@ void WindowMaterialGlazingRefractionExtinctionMethodInspectorView::createLayout(
 
   ++row;
 
-  m_nameEdit = new OSLineEdit();
+  m_nameEdit = new OSLineEdit2();
   mainGridLayout->addWidget(m_nameEdit, row, 0, 1, 3);
 
   ++row;
@@ -87,8 +87,8 @@ void WindowMaterialGlazingRefractionExtinctionMethodInspectorView::createLayout(
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_thickness = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialGlazingRefractionExtinctionMethodInspectorView::toggleUnitsClicked, m_thickness, &OSQuantityEdit::onUnitSystemChange);
+  m_thickness = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialGlazingRefractionExtinctionMethodInspectorView::toggleUnitsClicked, m_thickness, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_thickness,row++,0,1,3);
 
   // Solar Index Of Refraction
@@ -97,8 +97,8 @@ void WindowMaterialGlazingRefractionExtinctionMethodInspectorView::createLayout(
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_solarIndexOfRefraction = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialGlazingRefractionExtinctionMethodInspectorView::toggleUnitsClicked, m_solarIndexOfRefraction, &OSQuantityEdit::onUnitSystemChange);
+  m_solarIndexOfRefraction = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialGlazingRefractionExtinctionMethodInspectorView::toggleUnitsClicked, m_solarIndexOfRefraction, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_solarIndexOfRefraction,row++,0,1,3);
 
   // Solar Extinction Coefficient
@@ -107,8 +107,8 @@ void WindowMaterialGlazingRefractionExtinctionMethodInspectorView::createLayout(
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_solarExtinctionCoefficient = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialGlazingRefractionExtinctionMethodInspectorView::toggleUnitsClicked, m_solarExtinctionCoefficient, &OSQuantityEdit::onUnitSystemChange);
+  m_solarExtinctionCoefficient = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialGlazingRefractionExtinctionMethodInspectorView::toggleUnitsClicked, m_solarExtinctionCoefficient, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_solarExtinctionCoefficient,row++,0,1,3);
 
   // Visible Index of Refraction
@@ -117,8 +117,8 @@ void WindowMaterialGlazingRefractionExtinctionMethodInspectorView::createLayout(
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_visibleIndexOfRefraction = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialGlazingRefractionExtinctionMethodInspectorView::toggleUnitsClicked, m_visibleIndexOfRefraction, &OSQuantityEdit::onUnitSystemChange);
+  m_visibleIndexOfRefraction = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialGlazingRefractionExtinctionMethodInspectorView::toggleUnitsClicked, m_visibleIndexOfRefraction, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_visibleIndexOfRefraction,row++,0,1,3);
 
   // Visible Extinction Coefficient
@@ -127,8 +127,8 @@ void WindowMaterialGlazingRefractionExtinctionMethodInspectorView::createLayout(
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_visibleExtinctionCoefficient = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialGlazingRefractionExtinctionMethodInspectorView::toggleUnitsClicked, m_visibleExtinctionCoefficient, &OSQuantityEdit::onUnitSystemChange);
+  m_visibleExtinctionCoefficient = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialGlazingRefractionExtinctionMethodInspectorView::toggleUnitsClicked, m_visibleExtinctionCoefficient, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_visibleExtinctionCoefficient,row++,0,1,3);
 
   // Infrared Transmittance At Normal Incidence
@@ -137,8 +137,8 @@ void WindowMaterialGlazingRefractionExtinctionMethodInspectorView::createLayout(
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_infraredTransmittanceAtNormalIncidence = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialGlazingRefractionExtinctionMethodInspectorView::toggleUnitsClicked, m_infraredTransmittanceAtNormalIncidence, &OSQuantityEdit::onUnitSystemChange);
+  m_infraredTransmittanceAtNormalIncidence = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialGlazingRefractionExtinctionMethodInspectorView::toggleUnitsClicked, m_infraredTransmittanceAtNormalIncidence, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_infraredTransmittanceAtNormalIncidence,row++,0,1,3);
 
   // Infrared Hemispherical Emissivity
@@ -147,8 +147,8 @@ void WindowMaterialGlazingRefractionExtinctionMethodInspectorView::createLayout(
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_infraredHemisphericalEmissivity = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialGlazingRefractionExtinctionMethodInspectorView::toggleUnitsClicked, m_infraredHemisphericalEmissivity, &OSQuantityEdit::onUnitSystemChange);
+  m_infraredHemisphericalEmissivity = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialGlazingRefractionExtinctionMethodInspectorView::toggleUnitsClicked, m_infraredHemisphericalEmissivity, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_infraredHemisphericalEmissivity,row++,0,1,3);
 
   // Conductivity
@@ -157,8 +157,8 @@ void WindowMaterialGlazingRefractionExtinctionMethodInspectorView::createLayout(
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_conductivity = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialGlazingRefractionExtinctionMethodInspectorView::toggleUnitsClicked, m_conductivity, &OSQuantityEdit::onUnitSystemChange);
+  m_conductivity = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialGlazingRefractionExtinctionMethodInspectorView::toggleUnitsClicked, m_conductivity, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_conductivity,row++,0,1,3);
 
   // Dirt Correction Factor For Solar And Visible Transmittance
@@ -167,8 +167,8 @@ void WindowMaterialGlazingRefractionExtinctionMethodInspectorView::createLayout(
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_dirtCorrectionFactorForSolarAndVisibleTransmittance = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialGlazingRefractionExtinctionMethodInspectorView::toggleUnitsClicked, m_dirtCorrectionFactorForSolarAndVisibleTransmittance, &OSQuantityEdit::onUnitSystemChange);
+  m_dirtCorrectionFactorForSolarAndVisibleTransmittance = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialGlazingRefractionExtinctionMethodInspectorView::toggleUnitsClicked, m_dirtCorrectionFactorForSolarAndVisibleTransmittance, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_dirtCorrectionFactorForSolarAndVisibleTransmittance,row++,0,1,3);
 
   // Solar Diffusing
@@ -177,7 +177,7 @@ void WindowMaterialGlazingRefractionExtinctionMethodInspectorView::createLayout(
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_solarDiffusing = new OSSwitch();
+  m_solarDiffusing = new OSSwitch2();
   mainGridLayout->addWidget(m_solarDiffusing,row++,0,1,3);
 
   // Stretch
@@ -208,18 +208,110 @@ void WindowMaterialGlazingRefractionExtinctionMethodInspectorView::onUpdate()
 
 void WindowMaterialGlazingRefractionExtinctionMethodInspectorView::attach(openstudio::model::RefractionExtinctionGlazing & refractionExtinctionGlazing)
 {
-  m_solarDiffusing->bind(refractionExtinctionGlazing,"solarDiffusing");
+  // m_solarDiffusing->bind(refractionExtinctionGlazing,"solarDiffusing");
+  m_solarDiffusing->bind(
+    refractionExtinctionGlazing,
+    std::bind(&model::RefractionExtinctionGlazing::solarDiffusing, refractionExtinctionGlazing),
+    boost::optional<BoolSetter>(std::bind(&model::RefractionExtinctionGlazing::setSolarDiffusing, refractionExtinctionGlazing, std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::RefractionExtinctionGlazing::resetSolarDiffusing, refractionExtinctionGlazing)),
+    boost::optional<BasicQuery>(std::bind(&model::RefractionExtinctionGlazing::isSolarDiffusingDefaulted, refractionExtinctionGlazing))
+  );
 
-  m_nameEdit->bind(refractionExtinctionGlazing,"name");
-  m_conductivity->bind(refractionExtinctionGlazing,"conductivity",m_isIP);
-  m_dirtCorrectionFactorForSolarAndVisibleTransmittance->bind(refractionExtinctionGlazing,"dirtCorrectionFactorforSolarandVisibleTransmittance",m_isIP);
-  m_infraredHemisphericalEmissivity->bind(refractionExtinctionGlazing,"infraredHemisphericalEmissivity",m_isIP);
-  m_infraredTransmittanceAtNormalIncidence->bind(refractionExtinctionGlazing,"infraredTransmittanceatNormalIncidence",m_isIP);
-  m_solarExtinctionCoefficient->bind(refractionExtinctionGlazing,"solarExtinctionCoefficient",m_isIP);
-  m_solarIndexOfRefraction->bind(refractionExtinctionGlazing,"solarIndexofRefraction",m_isIP);
-  m_thickness->bind(refractionExtinctionGlazing,"thickness",m_isIP);
-  m_visibleExtinctionCoefficient->bind(refractionExtinctionGlazing,"visibleExtinctionCoefficient",m_isIP);
-  m_visibleIndexOfRefraction->bind(refractionExtinctionGlazing,"visibleIndexofRefraction",m_isIP);
+  // m_nameEdit->bind(refractionExtinctionGlazing,"name");
+  boost::optional<model::RefractionExtinctionGlazing> m_refractionExtinctionGlazing = refractionExtinctionGlazing;
+  m_nameEdit->bind(
+    *m_refractionExtinctionGlazing,
+    OptionalStringGetter(std::bind(&model::RefractionExtinctionGlazing::name, m_refractionExtinctionGlazing.get_ptr(),true)),
+    boost::optional<StringSetter>(std::bind(&model::RefractionExtinctionGlazing::setName, m_refractionExtinctionGlazing.get_ptr(),std::placeholders::_1))
+  );
+
+  // m_conductivity->bind(refractionExtinctionGlazing,"conductivity",m_isIP);
+  m_conductivity->bind(
+    m_isIP,
+    *m_refractionExtinctionGlazing,
+    DoubleGetter(std::bind(&model::RefractionExtinctionGlazing::conductivity, m_refractionExtinctionGlazing.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::RefractionExtinctionGlazing::*)(double)>(&model::RefractionExtinctionGlazing::setConductivity), m_refractionExtinctionGlazing.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::RefractionExtinctionGlazing::resetConductivity, m_refractionExtinctionGlazing.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::RefractionExtinctionGlazing::isConductivityDefaulted, m_refractionExtinctionGlazing.get_ptr()))
+  );
+
+  // m_dirtCorrectionFactorForSolarAndVisibleTransmittance->bind(refractionExtinctionGlazing,"dirtCorrectionFactorforSolarandVisibleTransmittance",m_isIP);
+  m_dirtCorrectionFactorForSolarAndVisibleTransmittance->bind(
+    m_isIP,
+    *m_refractionExtinctionGlazing,
+    DoubleGetter(std::bind(&model::RefractionExtinctionGlazing::dirtCorrectionFactorforSolarandVisibleTransmittance, m_refractionExtinctionGlazing.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::RefractionExtinctionGlazing::*)(double)>(&model::RefractionExtinctionGlazing::setDirtCorrectionFactorforSolarandVisibleTransmittance), m_refractionExtinctionGlazing.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::RefractionExtinctionGlazing::resetDirtCorrectionFactorforSolarandVisibleTransmittance, m_refractionExtinctionGlazing.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::RefractionExtinctionGlazing::isDirtCorrectionFactorforSolarandVisibleTransmittanceDefaulted, m_refractionExtinctionGlazing.get_ptr()))
+  );
+
+  // m_infraredHemisphericalEmissivity->bind(refractionExtinctionGlazing,"infraredHemisphericalEmissivity",m_isIP);
+  m_infraredHemisphericalEmissivity->bind(
+    m_isIP,
+    *m_refractionExtinctionGlazing,
+    DoubleGetter(std::bind(&model::RefractionExtinctionGlazing::infraredHemisphericalEmissivity, m_refractionExtinctionGlazing.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::RefractionExtinctionGlazing::*)(double)>(&model::RefractionExtinctionGlazing::setInfraredHemisphericalEmissivity), m_refractionExtinctionGlazing.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::RefractionExtinctionGlazing::resetInfraredHemisphericalEmissivity, m_refractionExtinctionGlazing.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::RefractionExtinctionGlazing::isInfraredHemisphericalEmissivityDefaulted, m_refractionExtinctionGlazing.get_ptr()))
+  );
+
+  // m_infraredTransmittanceAtNormalIncidence->bind(refractionExtinctionGlazing,"infraredTransmittanceatNormalIncidence",m_isIP);
+  m_infraredTransmittanceAtNormalIncidence->bind(
+    m_isIP,
+    *m_refractionExtinctionGlazing,
+    DoubleGetter(std::bind(&model::RefractionExtinctionGlazing::infraredTransmittanceatNormalIncidence, m_refractionExtinctionGlazing.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::RefractionExtinctionGlazing::*)(double)>(&model::RefractionExtinctionGlazing::setInfraredTransmittanceatNormalIncidence), m_refractionExtinctionGlazing.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::RefractionExtinctionGlazing::resetInfraredTransmittanceatNormalIncidence, m_refractionExtinctionGlazing.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::RefractionExtinctionGlazing::isInfraredTransmittanceatNormalIncidenceDefaulted, m_refractionExtinctionGlazing.get_ptr()))
+  );
+
+  // m_solarExtinctionCoefficient->bind(refractionExtinctionGlazing,"solarExtinctionCoefficient",m_isIP);
+  m_solarExtinctionCoefficient->bind(
+    m_isIP,
+    *m_refractionExtinctionGlazing,
+    DoubleGetter(std::bind(&model::RefractionExtinctionGlazing::solarExtinctionCoefficient, m_refractionExtinctionGlazing.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::RefractionExtinctionGlazing::*)(double)>(&model::RefractionExtinctionGlazing::setSolarExtinctionCoefficient), m_refractionExtinctionGlazing.get_ptr(), std::placeholders::_1))
+  );
+
+  // m_solarIndexOfRefraction->bind(refractionExtinctionGlazing,"solarIndexofRefraction",m_isIP);
+  m_solarIndexOfRefraction->bind(
+    m_isIP,
+    *m_refractionExtinctionGlazing,
+    DoubleGetter(std::bind(&model::RefractionExtinctionGlazing::solarIndexofRefraction, m_refractionExtinctionGlazing.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::RefractionExtinctionGlazing::*)(double)>(&model::RefractionExtinctionGlazing::setSolarIndexofRefraction), m_refractionExtinctionGlazing.get_ptr(), std::placeholders::_1))
+  );
+
+  // m_thickness->bind(refractionExtinctionGlazing,"thickness",m_isIP);
+  m_thickness->bind(
+    m_isIP,
+    *m_refractionExtinctionGlazing,
+    DoubleGetter(std::bind(&model::RefractionExtinctionGlazing::thickness, m_refractionExtinctionGlazing.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::RefractionExtinctionGlazing::*)(double)>(&model::RefractionExtinctionGlazing::setThickness), m_refractionExtinctionGlazing.get_ptr(), std::placeholders::_1))
+  );
+
+  // m_visibleExtinctionCoefficient->bind(refractionExtinctionGlazing,"visibleExtinctionCoefficient",m_isIP);
+  m_visibleExtinctionCoefficient->bind(
+    m_isIP,
+    *m_refractionExtinctionGlazing,
+    DoubleGetter(std::bind(&model::RefractionExtinctionGlazing::visibleExtinctionCoefficient, m_refractionExtinctionGlazing.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::RefractionExtinctionGlazing::*)(double)>(&model::RefractionExtinctionGlazing::setVisibleExtinctionCoefficient), m_refractionExtinctionGlazing.get_ptr(), std::placeholders::_1))
+  );
+
+  // m_visibleIndexOfRefraction->bind(refractionExtinctionGlazing,"visibleIndexofRefraction",m_isIP);
+  m_visibleIndexOfRefraction->bind(
+    m_isIP,
+    *m_refractionExtinctionGlazing,
+    DoubleGetter(std::bind(&model::RefractionExtinctionGlazing::visibleIndexofRefraction, m_refractionExtinctionGlazing.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::RefractionExtinctionGlazing::*)(double)>(&model::RefractionExtinctionGlazing::setVisibleIndexofRefraction), m_refractionExtinctionGlazing.get_ptr(), std::placeholders::_1))
+  );
 
   m_standardsInformationWidget->attach(refractionExtinctionGlazing);
 

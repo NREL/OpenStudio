@@ -34,40 +34,40 @@ namespace detail {
 /** SizingSystem_Impl is a ModelObject_Impl that is the implementation class for SizingSystem.*/
 class MODEL_API SizingSystem_Impl : public ModelObject_Impl 
 {
-  Q_OBJECT;
+  
 
-  Q_PROPERTY(std::string typeofLoadtoSizeOn READ typeofLoadtoSizeOn WRITE setTypeofLoadtoSizeOn RESET resetTypeofLoadtoSizeOn);
-  Q_PROPERTY(bool isTypeofLoadtoSizeOnDefaulted READ isTypeofLoadtoSizeOnDefaulted);
-  Q_PROPERTY(boost::optional<double> designOutdoorAirFlowRate READ designOutdoorAirFlowRate WRITE setDesignOutdoorAirFlowRate RESET resetDesignOutdoorAirFlowRate);
-  Q_PROPERTY(bool isDesignOutdoorAirFlowRateDefaulted READ isDesignOutdoorAirFlowRateDefaulted);
-  Q_PROPERTY(bool isDesignOutdoorAirFlowRateAutosized READ isDesignOutdoorAirFlowRateAutosized);
-  Q_PROPERTY(double minimumSystemAirFlowRatio READ minimumSystemAirFlowRatio WRITE setMinimumSystemAirFlowRatio);
-  Q_PROPERTY(double preheatDesignTemperature READ preheatDesignTemperature WRITE setPreheatDesignTemperature);
-  Q_PROPERTY(double preheatDesignHumidityRatio READ preheatDesignHumidityRatio WRITE setPreheatDesignHumidityRatio);
-  Q_PROPERTY(double precoolDesignTemperature READ precoolDesignTemperature WRITE setPrecoolDesignTemperature);
-  Q_PROPERTY(double precoolDesignHumidityRatio READ precoolDesignHumidityRatio WRITE setPrecoolDesignHumidityRatio);
-  Q_PROPERTY(double centralCoolingDesignSupplyAirTemperature READ centralCoolingDesignSupplyAirTemperature WRITE setCentralCoolingDesignSupplyAirTemperature);
-  Q_PROPERTY(double centralHeatingDesignSupplyAirTemperature READ centralHeatingDesignSupplyAirTemperature WRITE setCentralHeatingDesignSupplyAirTemperature);
-  Q_PROPERTY(std::string sizingOption READ sizingOption WRITE setSizingOption RESET resetSizingOption);
-  Q_PROPERTY(bool isSizingOptionDefaulted READ isSizingOptionDefaulted);
-  Q_PROPERTY(bool allOutdoorAirinCooling READ allOutdoorAirinCooling WRITE setAllOutdoorAirinCooling RESET resetAllOutdoorAirinCooling);
-  Q_PROPERTY(bool isAllOutdoorAirinCoolingDefaulted READ isAllOutdoorAirinCoolingDefaulted);
-  Q_PROPERTY(bool allOutdoorAirinHeating READ allOutdoorAirinHeating WRITE setAllOutdoorAirinHeating RESET resetAllOutdoorAirinHeating);
-  Q_PROPERTY(bool isAllOutdoorAirinHeatingDefaulted READ isAllOutdoorAirinHeatingDefaulted);
-  Q_PROPERTY(double centralCoolingDesignSupplyAirHumidityRatio READ centralCoolingDesignSupplyAirHumidityRatio WRITE setCentralCoolingDesignSupplyAirHumidityRatio RESET resetCentralCoolingDesignSupplyAirHumidityRatio);
-  Q_PROPERTY(bool isCentralCoolingDesignSupplyAirHumidityRatioDefaulted READ isCentralCoolingDesignSupplyAirHumidityRatioDefaulted);
-  Q_PROPERTY(double centralHeatingDesignSupplyAirHumidityRatio READ centralHeatingDesignSupplyAirHumidityRatio WRITE setCentralHeatingDesignSupplyAirHumidityRatio RESET resetCentralHeatingDesignSupplyAirHumidityRatio);
-  Q_PROPERTY(bool isCentralHeatingDesignSupplyAirHumidityRatioDefaulted READ isCentralHeatingDesignSupplyAirHumidityRatioDefaulted);
-  Q_PROPERTY(std::string coolingDesignAirFlowMethod READ coolingDesignAirFlowMethod WRITE setCoolingDesignAirFlowMethod RESET resetCoolingDesignAirFlowMethod);
-  Q_PROPERTY(bool isCoolingDesignAirFlowMethodDefaulted READ isCoolingDesignAirFlowMethodDefaulted);
-  Q_PROPERTY(double coolingDesignAirFlowRate READ coolingDesignAirFlowRate WRITE setCoolingDesignAirFlowRate RESET resetCoolingDesignAirFlowRate);
-  Q_PROPERTY(bool isCoolingDesignAirFlowRateDefaulted READ isCoolingDesignAirFlowRateDefaulted);
-  Q_PROPERTY(std::string heatingDesignAirFlowMethod READ heatingDesignAirFlowMethod WRITE setHeatingDesignAirFlowMethod RESET resetHeatingDesignAirFlowMethod);
-  Q_PROPERTY(bool isHeatingDesignAirFlowMethodDefaulted READ isHeatingDesignAirFlowMethodDefaulted);
-  Q_PROPERTY(double heatingDesignAirFlowRate READ heatingDesignAirFlowRate WRITE setHeatingDesignAirFlowRate RESET resetHeatingDesignAirFlowRate);
-  Q_PROPERTY(bool isHeatingDesignAirFlowRateDefaulted READ isHeatingDesignAirFlowRateDefaulted);
-  Q_PROPERTY(std::string systemOutdoorAirMethod READ systemOutdoorAirMethod WRITE setSystemOutdoorAirMethod RESET resetSystemOutdoorAirMethod);
-  Q_PROPERTY(bool isSystemOutdoorAirMethodDefaulted READ isSystemOutdoorAirMethodDefaulted);
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 
   public:
 

@@ -27,6 +27,7 @@
 
 #include <QObject>
 #include <QTreeWidgetItem>
+#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
 
 class QPushButton;
 class QLabel;
@@ -44,7 +45,7 @@ namespace model {
   class Space;
 }
 
-class ModelObjectTreeItem : public QObject, public QTreeWidgetItem
+class ModelObjectTreeItem : public QObject, public QTreeWidgetItem, public Nano::Observer
 {
   Q_OBJECT
 

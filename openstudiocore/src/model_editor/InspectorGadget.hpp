@@ -28,6 +28,8 @@
 
 #include "ModelEditorAPI.hpp"
 
+#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
+
 #include "../utilities/idd/IddField.hpp"
 #include "../utilities/idf/Workspace.hpp"
 #include "../utilities/idf/Workspace_Impl.hpp"
@@ -45,7 +47,7 @@ class QVBoxLayout;
 
 class ComboHighlightBridge;
 
-class MODELEDITOR_API IGWidget : public QWidget
+class MODELEDITOR_API IGWidget : public QWidget, public Nano::Observer
 {
   public:
   
@@ -89,7 +91,7 @@ class IGComboBox : public QComboBox
  * Choice is displayed as a ComboBox
  *
  */
-class MODELEDITOR_API InspectorGadget : public QWidget
+class MODELEDITOR_API InspectorGadget : public QWidget, public Nano::Observer
 {
 
   Q_OBJECT
@@ -163,6 +165,8 @@ public:
   void setPrecision( unsigned int prec, FLOAT_DISPLAY dispType );
 
   void setUnitSystem(const UNIT_SYSTEM unitSystem);
+
+  void removeWorkspaceObject(const openstudio::Handle &); // Middleman nano slot to emit QT signal to simulate signal chaining
 
 public slots:
 
@@ -240,7 +244,8 @@ public slots:
    */
   void dirty();
 
-  void workspaceObjectRemoved();
+  void workspaceObjectRemoved(const openstudio::Handle &);
+  
 
 protected slots:
 
@@ -248,7 +253,7 @@ protected slots:
 
   void onTimeout();
 
-  void onWorkspaceObjectRemoved();
+  void onWorkspaceObjectRemoved(const openstudio::Handle &);
 
 protected:
 

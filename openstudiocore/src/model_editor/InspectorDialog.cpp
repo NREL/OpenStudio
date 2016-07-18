@@ -281,9 +281,6 @@ void InspectorDialog::setModel(openstudio::model::Model& model, bool force)
     return;
   }
 
-  // disconnect all signals with previous model
-  disconnect(m_model.getImpl<openstudio::model::detail::Model_Impl>().get(), nullptr, this, nullptr);
-
   // change model
   m_model = model;
 
@@ -433,7 +430,7 @@ void InspectorDialog::onTableWidgetSelectionChanged()
   setSelectedObjectHandles(selectedObjectHandles, true);
 }
 
-void InspectorDialog::onAddWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl)
+void InspectorDialog::onAddWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& type, const openstudio::UUID& uuid)
 {
   m_workspaceObjectAdded = true;
   m_workspaceChanged = true;
@@ -483,7 +480,7 @@ void InspectorDialog::onTimeout()
   }
 }
 
-void InspectorDialog::onRemoveWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl)
+void InspectorDialog::onRemoveWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& type, const openstudio::UUID& uuid)
 {
   m_workspaceObjectRemoved = true;
   m_workspaceChanged = true;
@@ -942,17 +939,11 @@ void InspectorDialog::connectSelfSignalsAndSlots()
 
 void InspectorDialog::connectModelSignalsAndSlots()
 {
-  connect(m_model.getImpl<model::detail::Model_Impl>().get(),
-    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::addWorkspaceObject),
-    this,
-    &InspectorDialog::onAddWorkspaceObject);
+  m_model.getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.connect<InspectorDialog, &InspectorDialog::onAddWorkspaceObject>(this);
 
-  connect(m_model.getImpl<model::detail::Model_Impl>().get(), &model::detail::Model_Impl::onChange, this, &InspectorDialog::onWorkspaceChange);
+  m_model.getImpl<model::detail::Model_Impl>().get()->onChange.connect<InspectorDialog, &InspectorDialog::onWorkspaceChange>(this);
 
-  connect(m_model.getImpl<model::detail::Model_Impl>().get(),
-    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::removeWorkspaceObject),
-    this,
-    &InspectorDialog::onRemoveWorkspaceObject);
+  m_model.getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.connect<InspectorDialog, &InspectorDialog::onRemoveWorkspaceObject>(this);
 }
 
 void InspectorDialog::hideSelectionWidget(bool hideSelectionWidget)

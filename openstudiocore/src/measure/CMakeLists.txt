@@ -74,33 +74,33 @@ endif()
 #endif()
 
 CREATE_SRC_GROUPS("${${target_name}_src}")
-CREATE_SRC_GROUPS("${${target_name}_test_src}")
+# CREATE_SRC_GROUPS("${${target_name}_test_src}")
 CREATE_SRC_GROUPS("${${target_name}_swig_src}")
 
-CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends};${RUBY_LIBRARY};${COREFOUNDATION_LIBRARY}")
+# CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends};${RUBY_LIBRARY};${COREFOUNDATION_LIBRARY}")
 MAKE_SWIG_TARGET(OpenStudioMeasure measure "${CMAKE_CURRENT_SOURCE_DIR}/Measure.i" "${${target_name}_swig_src}" ${target_name} OpenStudioOSVersion)
 
-if(BUILD_TESTING)
-  add_dependencies("${target_name}_tests"
-    "openstudio_energyplus_resources"
-    "ruby_OpenStudioUtilitiesCore"
-    "ruby_OpenStudioUtilitiesBCL"
-    "ruby_OpenStudioUtilitiesIdd"
-    "ruby_OpenStudioUtilitiesIdf"
-    "ruby_OpenStudioUtilities"
-    "ruby_OpenStudioModel"
-    "ruby_OpenStudioModelCore"
-    "ruby_OpenStudioModelSimulation"
-    "ruby_OpenStudioModelResources"
-    "ruby_OpenStudioModelGeometry"
-    "ruby_OpenStudioModelHVAC"
-    "ruby_OpenStudioEnergyPlus"
-    "ruby_OpenStudioMeasure"
-  )
-  
-  if(APPLE)
-    # the following script will change the bindings to prefer the version of libruby included with SketchUp to the system library, preventing loading two different copies of libruby
-    add_custom_command(TARGET ${target_name}_tests POST_BUILD COMMAND ${RUBY_EXECUTABLE} "${CMAKE_SOURCE_DIR}/SketchUpInstallName.rb" "$<TARGET_FILE:${target_name}_tests>")
-  endif() 
-endif()
+# if(BUILD_TESTING)
+#  add_dependencies("${target_name}_tests"
+#    "openstudio_energyplus_resources"
+#    "ruby_OpenStudioUtilitiesCore"
+#    "ruby_OpenStudioUtilitiesBCL"
+#    "ruby_OpenStudioUtilitiesIdd"
+#    "ruby_OpenStudioUtilitiesIdf"
+#    "ruby_OpenStudioUtilities"
+#    "ruby_OpenStudioModel"
+#    "ruby_OpenStudioModelCore"
+#    "ruby_OpenStudioModelSimulation"
+#    "ruby_OpenStudioModelResources"
+#    "ruby_OpenStudioModelGeometry"
+#    "ruby_OpenStudioModelHVAC"
+#    "ruby_OpenStudioEnergyPlus"
+#    "ruby_OpenStudioMeasure"
+#  )
+#  
+#  if(APPLE)
+#    # the following script will change the bindings to prefer the version of libruby included with SketchUp to the system library, preventing loading two different copies of libruby
+#    add_custom_command(TARGET ${target_name}_tests POST_BUILD COMMAND ${RUBY_EXECUTABLE} "${CMAKE_SOURCE_DIR}/SketchUpInstallName.rb" "$<TARGET_FILE:${target_name}_tests>")
+#  endif() 
+#endif()
 

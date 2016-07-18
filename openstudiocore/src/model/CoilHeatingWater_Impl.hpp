@@ -30,9 +30,9 @@ class Schedule;
 namespace detail {
 
   class MODEL_API CoilHeatingWater_Impl : public WaterToAirComponent_Impl {
-    Q_OBJECT;
+    
 
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> availabilitySchedule READ availabilityScheduleAsModelObject WRITE setAvailabilityScheduleAsModelObject);
+    
   public:
     /** @name Constructors and Destructors */
     //@{

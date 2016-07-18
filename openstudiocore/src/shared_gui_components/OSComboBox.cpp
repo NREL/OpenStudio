@@ -61,19 +61,13 @@ void OSObjectListCBDS::initialize()
     {
       m_workspaceObjects << modelObject;
 
-      connect(modelObject.getImpl<model::detail::ModelObject_Impl>().get(), &model::detail::ModelObject_Impl::onChange, this, &OSObjectListCBDS::onObjectChanged);
+      modelObject.getImpl<model::detail::ModelObject_Impl>().get()->onChange.connect<OSObjectListCBDS, &OSObjectListCBDS::onObjectChanged>(this);
     }
   }
 
-  connect(m_model.getImpl<model::detail::Model_Impl>().get(),
-    static_cast<void (model::detail::Model_Impl::*)(const WorkspaceObject &, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::addWorkspaceObject), 
-    this,
-    &OSObjectListCBDS::onObjectAdded);
+  m_model.getImpl<model::detail::Model_Impl>().get()->addWorkspaceObject.connect<OSObjectListCBDS, &OSObjectListCBDS::onObjectAdded>(this);
 
-  connect(m_model.getImpl<model::detail::Model_Impl>().get(),
-    static_cast<void (model::detail::Model_Impl::*)(const WorkspaceObject &, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::removeWorkspaceObject), 
-    this,
-    &OSObjectListCBDS::onObjectWillBeRemoved);
+  m_model.getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObject.connect<OSObjectListCBDS, &OSObjectListCBDS::onObjectWillBeRemoved>(this);
 }
 
 int OSObjectListCBDS::numberOfItems()
@@ -107,13 +101,13 @@ QString OSObjectListCBDS::valueAt(int i)
   }
 }
 
-void OSObjectListCBDS::onObjectAdded(const WorkspaceObject & workspaceObject)
+void OSObjectListCBDS::onObjectAdded(const WorkspaceObject & workspaceObject, const openstudio::IddObjectType& type, const openstudio::UUID& uuid)
 {
   if(std::find(m_types.begin(),m_types.end(),workspaceObject.cast<model::ModelObject>().iddObjectType()) != m_types.end())
   {
     m_workspaceObjects << workspaceObject;
 
-    connect(workspaceObject.getImpl<model::detail::ModelObject_Impl>().get(), &model::detail::ModelObject_Impl::onChange, this, &OSObjectListCBDS::onObjectChanged);
+    workspaceObject.getImpl<model::detail::ModelObject_Impl>().get()->onChange.connect<OSObjectListCBDS, &OSObjectListCBDS::onObjectChanged>(this);
     if( m_allowEmptySelection )
     {
       emit itemAdded(m_workspaceObjects.size());
@@ -125,7 +119,7 @@ void OSObjectListCBDS::onObjectAdded(const WorkspaceObject & workspaceObject)
   }
 }
 
-void OSObjectListCBDS::onObjectWillBeRemoved(const WorkspaceObject & workspaceObject)
+void OSObjectListCBDS::onObjectWillBeRemoved(const WorkspaceObject & workspaceObject, const openstudio::IddObjectType& type, const openstudio::UUID& uuid)
 {
   if(std::find(m_types.begin(),m_types.end(),workspaceObject.cast<model::ModelObject>().iddObjectType()) != m_types.end())
   {
@@ -146,22 +140,22 @@ void OSObjectListCBDS::onObjectWillBeRemoved(const WorkspaceObject & workspaceOb
 
 void OSObjectListCBDS::onObjectChanged()
 {
-  WorkspaceObject workspaceObject = qobject_cast<detail::WorkspaceObject_Impl *>(sender())->getObject<WorkspaceObject>();
+  // WorkspaceObject workspaceObject = qobject_cast<detail::WorkspaceObject_Impl *>(sender())->getObject<WorkspaceObject>();
 
-  if(std::find(m_types.begin(),m_types.end(),workspaceObject.cast<model::ModelObject>().iddObjectType()) != m_types.end())
-  {
+  // if(std::find(m_types.begin(),m_types.end(),workspaceObject.cast<model::ModelObject>().iddObjectType()) != m_types.end())
+  // {
 
-    int i = m_workspaceObjects.indexOf(workspaceObject);
+  //   int i = m_workspaceObjects.indexOf(workspaceObject);
 
-    if( m_allowEmptySelection )
-    {
-      emit itemChanged(i + 1);
-    }
-    else
-    {
-      emit itemChanged(i);
-    }
-  }
+  //   if( m_allowEmptySelection )
+  //   {
+  //     emit itemChanged(i + 1);
+  //   }
+  //   else
+  //   {
+  //     emit itemChanged(i);
+  //   }
+  // }
 }
 
 OSComboBox2::OSComboBox2( QWidget * parent, bool editable )
@@ -219,7 +213,12 @@ void OSComboBox2::bind(std::shared_ptr<OSComboBoxDataSource> dataSource)
 
 void OSComboBox2::unbind() {
   if (m_modelObject){
-    disconnect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get() );
+    // disconnect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get() );
+
+    m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onChange.disconnect<OSComboBox2, &OSComboBox2::onModelObjectChanged>(this);
+    m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onRemoveFromWorkspace.disconnect<OSComboBox2, &OSComboBox2::onModelObjectRemoved>(this);
+    // m_modelObject->model().getImpl<openstudio::model::detail::Model_Impl>().get()->onChange.disconnect<OSComboBox2, &OSComboBox2::onChoicesRefreshTrigger>(this);
+
 
     m_modelObject.reset();
     m_choiceConcept.reset();
@@ -258,7 +257,7 @@ void OSComboBox2::onModelObjectChanged() {
   }
 }
 
-void OSComboBox2::onModelObjectRemoved(Handle handle)
+void OSComboBox2::onModelObjectRemoved(const Handle& handle)
 {
   unbind();
 }
@@ -345,9 +344,8 @@ void OSComboBox2::onDataSourceRemove(int i)
 void OSComboBox2::completeBind() {
   if (m_modelObject) {
     // connections
-    connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSComboBox2::onModelObjectChanged);
-
-    connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace, this, &OSComboBox2::onModelObjectRemoved);
+    m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onChange.connect<OSComboBox2, &OSComboBox2::onModelObjectChanged>(this);
+    m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onRemoveFromWorkspace.connect<OSComboBox2, &OSComboBox2::onModelObjectRemoved>(this);
 
     connect(this, static_cast<void (OSComboBox2::*)(const QString &)>(&OSComboBox2::currentIndexChanged), this, &OSComboBox2::onCurrentIndexChanged);
 
@@ -373,7 +371,7 @@ void OSComboBox2::completeBind() {
 
     // if this is too burdensome, implement Workspace_Impl onNameChange() signal and uncomment the above two connections.
     // (IdfObject_Impl already has onNameChange(); Workspace_Impl::onChange() includes object addition and removal.)
-    connect(m_modelObject->model().getImpl<openstudio::model::detail::Model_Impl>().get(), &openstudio::model::detail::Model_Impl::onChange, this, &OSComboBox2::onChoicesRefreshTrigger);
+    // m_modelObject->model().getImpl<openstudio::model::detail::Model_Impl>().get()->onChange.connect<OSComboBox2, &OSComboBox2::onChoicesRefreshTrigger>(this);
 
     // populate choices
     // ETH@20140228 - With extension of this class to choices of ModelObjects, and beyond,
@@ -420,204 +418,204 @@ void OSComboBox2::completeBind() {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-OSComboBox::OSComboBox( QWidget * parent )
-  : QComboBox(parent)
-{
-  this->setAcceptDrops(false);
-  setEnabled(false);
-}
+// OSComboBox::OSComboBox( QWidget * parent )
+//   : QComboBox(parent)
+// {
+//   this->setAcceptDrops(false);
+//   setEnabled(false);
+// }
 
-bool OSComboBox::event( QEvent * e )
-{
-  if( e->type() == QEvent::Wheel )
-  {
-    return false;
-  }
-  else
-  {
-    return QComboBox::event(e);
-  }
-}
+// bool OSComboBox::event( QEvent * e )
+// {
+//   if( e->type() == QEvent::Wheel )
+//   {
+//     return false;
+//   }
+//   else
+//   {
+//     return QComboBox::event(e);
+//   }
+// }
 
-void OSComboBox::bind(model::ModelObject & modelObject, const char * property)
-{
-  m_modelObject = modelObject;
+// void OSComboBox::bind(model::ModelObject & modelObject, const char * property)
+// {
+//   m_modelObject = modelObject;
 
-  m_property = property;
+//   m_property = property;
 
-  m_dataSource.reset();
+//   m_dataSource.reset();
 
-  clear();
+//   clear();
 
-  // Connections
+//   // Connections
 
-  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSComboBox::onModelObjectChanged);
+//   m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onChange.connect<OSComboBox, &OSComboBox::onModelObjectChanged>(this);
 
-  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace, this, &OSComboBox::onModelObjectRemoved);
+//   m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onRemoveFromWorkspace.connect<OSComboBox, &OSComboBox::onModelObjectRemoved>(this);
 
-  connect(this, static_cast<void (OSComboBox::*)(const QString &)>(&OSComboBox::currentIndexChanged), this, &OSComboBox::onCurrentIndexChanged);
+//   connect(this, static_cast<void (OSComboBox::*)(const QString &)>(&OSComboBox::currentIndexChanged), this, &OSComboBox::onCurrentIndexChanged);
 
-  // Populate choices
+//   // Populate choices
 
-  std::string valuesPropertyName = m_property;
-  valuesPropertyName.append("Values");
+//   std::string valuesPropertyName = m_property;
+//   valuesPropertyName.append("Values");
 
-  QVariant variant = m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->property(valuesPropertyName.c_str());
+//   QVariant variant = m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->property(valuesPropertyName.c_str());
 
-  OS_ASSERT( variant.canConvert<std::vector<std::string> >() );
+//   OS_ASSERT( variant.canConvert<std::vector<std::string> >() );
 
-  m_values = variant.value<std::vector<std::string> >();
+//   m_values = variant.value<std::vector<std::string> >();
 
-  this->blockSignals(true);
+//   this->blockSignals(true);
 
-  for( const auto & value : m_values )
-  {
-    addItem(QString::fromStdString(value));
-  }
+//   for( const auto & value : m_values )
+//   {
+//     addItem(QString::fromStdString(value));
+//   }
 
-  // Initialize
+//   // Initialize
 
-  onModelObjectChanged();
+//   onModelObjectChanged();
 
-  this->blockSignals(false);
+//   this->blockSignals(false);
 
-  setEnabled(true);
-}
+//   setEnabled(true);
+// }
 
-void OSComboBox::onModelObjectChanged()
-{
-  OS_ASSERT(m_modelObject);
+// void OSComboBox::onModelObjectChanged()
+// {
+//   OS_ASSERT(m_modelObject);
 
-  QVariant variant = m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->property(m_property.c_str());
+//   QVariant variant = m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->property(m_property.c_str());
 
-  OS_ASSERT( variant.canConvert<std::string>() );
+//   OS_ASSERT( variant.canConvert<std::string>() );
 
-  std::string value = variant.value<std::string>();
+//   std::string value = variant.value<std::string>();
 
-  int i = 0;
-  for( const auto & v : m_values )
-  {
-    if( istringEqual(v,value) )
-    {
-      this->blockSignals(true);
-      setCurrentIndex(i);
-      this->blockSignals(false);
-      break;
-    }
+//   int i = 0;
+//   for( const auto & v : m_values )
+//   {
+//     if( istringEqual(v,value) )
+//     {
+//       this->blockSignals(true);
+//       setCurrentIndex(i);
+//       this->blockSignals(false);
+//       break;
+//     }
 
-    i++;
-  }
-}
+//     i++;
+//   }
+// }
 
-void OSComboBox::onModelObjectRemoved(Handle handle)
-{
-  unbind();
-}
+// void OSComboBox::onModelObjectRemoved(const Handle& handle)
+// {
+//   unbind();
+// }
 
-void OSComboBox::onCurrentIndexChanged(const QString & text)
-{
-  OS_ASSERT(m_modelObject);
+// void OSComboBox::onCurrentIndexChanged(const QString & text)
+// {
+//   OS_ASSERT(m_modelObject);
 
-  QVariant variant = m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->property(m_property.c_str());
-  QVariant textString;
-  if (variant.canConvert<QString>()) {
-    textString = QVariant::fromValue(text); 
-  } else if (variant.canConvert<std::string>()) {
-    textString = QVariant::fromValue(toString(text));
-  }
-  m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->setProperty(m_property.c_str(), textString);
+//   QVariant variant = m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->property(m_property.c_str());
+//   QVariant textString;
+//   if (variant.canConvert<QString>()) {
+//     textString = QVariant::fromValue(text);
+//   } else if (variant.canConvert<std::string>()) {
+//     textString = QVariant::fromValue(toString(text));
+//   }
+//   m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->setProperty(m_property.c_str(), textString);
 
-  // test if property changed
-  variant = m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->property(m_property.c_str());
-  std::string value;
-  if (variant.canConvert<QString>()) {
-    value = variant.toString().toStdString();
-  } else if (variant.canConvert<std::string>()) {
-    value = variant.value<std::string>();
-  }
+//   // test if property changed
+//   variant = m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->property(m_property.c_str());
+//   std::string value;
+//   if (variant.canConvert<QString>()) {
+//     value = variant.toString().toStdString();
+//   } else if (variant.canConvert<std::string>()) {
+//     value = variant.value<std::string>();
+//   }
 
-  if (!istringEqual(value, toString(text))){
-    // failed, reset combo box
-    onModelObjectChanged();
-  }
-}
+//   if (!istringEqual(value, toString(text))){
+//     // failed, reset combo box
+//     onModelObjectChanged();
+//   }
+// }
 
-void OSComboBox::unbind()
-{
-  if (m_modelObject){
-    disconnect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get() );
-  }
-  m_modelObject = boost::none;
+// void OSComboBox::unbind()
+// {
+//   if (m_modelObject){
+//     disconnect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get() );
+//   }
+//   m_modelObject = boost::none;
 
-  m_property = "";
+//   m_property = "";
 
-  m_dataSource.reset();
+//   m_dataSource.reset();
 
-  this->blockSignals(true);
+//   this->blockSignals(true);
 
-  clear();
+//   clear();
 
-  this->blockSignals(false);
+//   this->blockSignals(false);
 
-  setEnabled(false);
-}
+//   setEnabled(false);
+// }
 
-void OSComboBox::onDataSourceChange(int i)
-{
-  this->setItemText(i,m_dataSource->valueAt(i));
-}
+// void OSComboBox::onDataSourceChange(int i)
+// {
+//   this->setItemText(i,m_dataSource->valueAt(i));
+// }
 
-void OSComboBox::onDataSourceAdd(int i)
-{
-  int oldIndex = this->currentIndex();
+// void OSComboBox::onDataSourceAdd(int i)
+// {
+//   int oldIndex = this->currentIndex();
 
-  this->insertItem(i,m_dataSource->valueAt(i));
+//   this->insertItem(i,m_dataSource->valueAt(i));
 
-  if( oldIndex == -1 )
-  {
-    setCurrentIndex(oldIndex);
-  }
-}
+//   if( oldIndex == -1 )
+//   {
+//     setCurrentIndex(oldIndex);
+//   }
+// }
 
-void OSComboBox::onDataSourceRemove(int i)
-{
-  if( currentIndex() == i )
-  {
-    this->setCurrentIndex(-1);
-  }
+// void OSComboBox::onDataSourceRemove(int i)
+// {
+//   if( currentIndex() == i )
+//   {
+//     this->setCurrentIndex(-1);
+//   }
 
-  this->removeItem(i);
-}
+//   this->removeItem(i);
+// }
 
-void OSComboBox::setDataSource(std::shared_ptr<OSComboBoxDataSource> dataSource)
-{
-  unbind();
+// void OSComboBox::setDataSource(std::shared_ptr<OSComboBoxDataSource> dataSource)
+// {
+//   unbind();
 
-  if( m_dataSource )
-  {
-    disconnect(m_dataSource.get(), &OSComboBoxDataSource::itemChanged, this, &OSComboBox::onDataSourceChange);
-    disconnect(m_dataSource.get(), &OSComboBoxDataSource::itemAdded, this, &OSComboBox::onDataSourceAdd);
-    disconnect(m_dataSource.get(), &OSComboBoxDataSource::itemRemoved, this, &OSComboBox::onDataSourceRemove);
-  }
+//   if( m_dataSource )
+//   {
+//     disconnect(m_dataSource.get(), &OSComboBoxDataSource::itemChanged, this, &OSComboBox::onDataSourceChange);
+//     disconnect(m_dataSource.get(), &OSComboBoxDataSource::itemAdded, this, &OSComboBox::onDataSourceAdd);
+//     disconnect(m_dataSource.get(), &OSComboBoxDataSource::itemRemoved, this, &OSComboBox::onDataSourceRemove);
+//   }
 
-  m_dataSource = dataSource;
+//   m_dataSource = dataSource;
 
-  connect(m_dataSource.get(), &OSComboBoxDataSource::itemChanged, this, &OSComboBox::onDataSourceChange);
-  connect(m_dataSource.get(), &OSComboBoxDataSource::itemAdded, this, &OSComboBox::onDataSourceAdd);
-  connect(m_dataSource.get(), &OSComboBoxDataSource::itemRemoved, this, &OSComboBox::onDataSourceRemove);
-  this->clear();
+//   connect(m_dataSource.get(), &OSComboBoxDataSource::itemChanged, this, &OSComboBox::onDataSourceChange);
+//   connect(m_dataSource.get(), &OSComboBoxDataSource::itemAdded, this, &OSComboBox::onDataSourceAdd);
+//   connect(m_dataSource.get(), &OSComboBoxDataSource::itemRemoved, this, &OSComboBox::onDataSourceRemove);
+//   this->clear();
 
-  for( int i = 0;
-       i < m_dataSource->numberOfItems();
-       i++ )
-  {
-    this->addItem(m_dataSource->valueAt(i));
-  }
+//   for( int i = 0;
+//        i < m_dataSource->numberOfItems();
+//        i++ )
+//   {
+//     this->addItem(m_dataSource->valueAt(i));
+//   }
 
-  setCurrentIndex(-1);
+//   setCurrentIndex(-1);
 
-  setEnabled(true);
-}
+//   setEnabled(true);
+// }
 
 } // openstudio
 

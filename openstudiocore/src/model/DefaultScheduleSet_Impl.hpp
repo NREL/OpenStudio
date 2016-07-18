@@ -34,18 +34,18 @@ namespace detail {
 
   /** DefaultScheduleSet_Impl is a ResourceObject_Impl that is the implementation class for DefaultScheduleSet.*/
   class MODEL_API DefaultScheduleSet_Impl : public ResourceObject_Impl {
-    Q_OBJECT;
+    
 
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> hoursofOperationSchedule READ hoursofOperationScheduleAsModelObject WRITE setHoursofOperationScheduleAsModelObject RESET resetHoursofOperationSchedule);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> numberofPeopleSchedule READ numberofPeopleScheduleAsModelObject WRITE setNumberofPeopleScheduleAsModelObject RESET resetNumberofPeopleSchedule);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> peopleActivityLevelSchedule READ peopleActivityLevelScheduleAsModelObject WRITE setPeopleActivityLevelScheduleAsModelObject RESET resetPeopleActivityLevelSchedule);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> lightingSchedule READ lightingScheduleAsModelObject WRITE setLightingScheduleAsModelObject RESET resetLightingSchedule);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> electricEquipmentSchedule READ electricEquipmentScheduleAsModelObject WRITE setElectricEquipmentScheduleAsModelObject RESET resetElectricEquipmentSchedule);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> gasEquipmentSchedule READ gasEquipmentScheduleAsModelObject WRITE setGasEquipmentScheduleAsModelObject RESET resetGasEquipmentSchedule);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> hotWaterEquipmentSchedule READ hotWaterEquipmentScheduleAsModelObject WRITE setHotWaterEquipmentScheduleAsModelObject RESET resetHotWaterEquipmentSchedule);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> infiltrationSchedule READ infiltrationScheduleAsModelObject WRITE setInfiltrationScheduleAsModelObject RESET resetInfiltrationSchedule);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> steamEquipmentSchedule READ steamEquipmentScheduleAsModelObject WRITE setSteamEquipmentScheduleAsModelObject RESET resetSteamEquipmentSchedule);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> otherEquipmentSchedule READ otherEquipmentScheduleAsModelObject WRITE setOtherEquipmentScheduleAsModelObject RESET resetOtherEquipmentSchedule);
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
    public:
     /** @name Constructors and Destructors */
     //@{

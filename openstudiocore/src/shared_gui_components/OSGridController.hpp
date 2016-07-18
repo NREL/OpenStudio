@@ -25,6 +25,8 @@
 #include "../openstudio_lib/OSItem.hpp"
 #include "../openstudio_lib/OSVectorController.hpp"
 
+ #include <model/nano_signal_slot.hpp> // Signal-Slot replacement
+
 #include "../model/Model.hpp"
 #include "../model/ModelObject.hpp"
 
@@ -48,7 +50,7 @@ class QPaintEvent;
 
 namespace openstudio {
 
-class OSComboBox;
+class OSComboBox2;
 class OSGridView;
 
 // forward declaration
@@ -162,7 +164,7 @@ class DataSourceAdapter : public BaseConcept
 
 class OSGridController;
 
-class WidgetLocation : public QObject
+class WidgetLocation : public QObject, public Nano::Observer
 {
   Q_OBJECT;
 
@@ -187,7 +189,7 @@ public slots:
 
 };
 
-class ObjectSelector : public QObject
+class ObjectSelector : public QObject, public Nano::Observer
 {
   Q_OBJECT;
 
@@ -232,7 +234,7 @@ class ObjectSelector : public QObject
     std::function<bool (const model::ModelObject &)> m_objectFilter;
 };
 
-class OSGridController : public QObject
+class OSGridController : public QObject, public Nano::Observer
 {
   Q_OBJECT
 
@@ -739,7 +741,7 @@ private slots:
 //  void mouseMoveEvent ( QMouseEvent * event );
 //}
 
-class Holder : public QWidget
+class Holder : public QWidget, public Nano::Observer
 {
   Q_OBJECT
 
@@ -784,7 +786,7 @@ signals:
 
 };
 
-class HorizontalHeaderWidget : public QWidget
+class HorizontalHeaderWidget : public QWidget, public Nano::Observer
 {
   Q_OBJECT
 

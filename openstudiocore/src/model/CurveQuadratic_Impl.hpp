@@ -30,18 +30,18 @@ namespace detail {
 
   /** CurveQuadratic_Impl is a Curve_Impl that is the implementation class for CurveQuadratic.*/
   class MODEL_API CurveQuadratic_Impl : public Curve_Impl {
-    Q_OBJECT;
-    Q_PROPERTY(double coefficient1Constant READ coefficient1Constant WRITE setCoefficient1Constant);
-    Q_PROPERTY(double coefficient2x READ coefficient2x WRITE setCoefficient2x);
-    Q_PROPERTY(double coefficient3xPOW2 READ coefficient3xPOW2 WRITE setCoefficient3xPOW2);
-    Q_PROPERTY(double minimumValueofx READ minimumValueofx WRITE setMinimumValueofx);
-    Q_PROPERTY(double maximumValueofx READ maximumValueofx WRITE setMaximumValueofx);
-    Q_PROPERTY(boost::optional<double> minimumCurveOutput READ minimumCurveOutput WRITE setMinimumCurveOutput RESET resetMinimumCurveOutput);
-    Q_PROPERTY(boost::optional<double> maximumCurveOutput READ maximumCurveOutput WRITE setMaximumCurveOutput RESET resetMaximumCurveOutput);
-    Q_PROPERTY(std::string inputUnitTypeforX READ inputUnitTypeforX WRITE setInputUnitTypeforX RESET resetInputUnitTypeforX);
-    Q_PROPERTY(bool isInputUnitTypeforXDefaulted READ isInputUnitTypeforXDefaulted);
-    Q_PROPERTY(std::string outputUnitType READ outputUnitType WRITE setOutputUnitType RESET resetOutputUnitType);
-    Q_PROPERTY(bool isOutputUnitTypeDefaulted READ isOutputUnitTypeDefaulted);
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
    public:
 
     /** @name Constructors and Destructors */

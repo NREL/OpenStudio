@@ -36,20 +36,20 @@ namespace detail {
 
   /** SpaceInfiltrationEffectiveLeakageArea_Impl is a SpaceLoad_Impl that is the implementation class for SpaceInfiltrationEffectiveLeakageArea.*/
   class MODEL_API SpaceInfiltrationEffectiveLeakageArea_Impl : public SpaceLoad_Impl {
-    Q_OBJECT;
-    Q_PROPERTY(double effectiveAirLeakageArea READ effectiveAirLeakageArea WRITE setEffectiveAirLeakageArea);
-    Q_PROPERTY(openstudio::Quantity effectiveAirLeakageArea_SI READ effectiveAirLeakageArea_SI WRITE setEffectiveAirLeakageArea);
-    Q_PROPERTY(openstudio::Quantity effectiveAirLeakageArea_IP READ effectiveAirLeakageArea_IP WRITE setEffectiveAirLeakageArea);
+    
+    
+    
+    
 
-    Q_PROPERTY(double stackCoefficient READ stackCoefficient WRITE setStackCoefficient);
-    Q_PROPERTY(openstudio::Quantity stackCoefficient_SI READ stackCoefficient_SI WRITE setStackCoefficient);
-    Q_PROPERTY(openstudio::Quantity stackCoefficient_IP READ stackCoefficient_IP WRITE setStackCoefficient);
+    
+    
+    
 
-    Q_PROPERTY(double windCoefficient READ windCoefficient WRITE setWindCoefficient);
-    Q_PROPERTY(openstudio::Quantity windCoefficient_SI READ windCoefficient_SI WRITE setWindCoefficient);
-    Q_PROPERTY(openstudio::Quantity windCoefficient_IP READ windCoefficient_IP WRITE setWindCoefficient);
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> schedule READ scheduleAsModelObject WRITE setScheduleAsModelObject RESET resetSchedule);
+    
    public:
     /** @name Constructors and Destructors */
     //@{

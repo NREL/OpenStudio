@@ -70,7 +70,7 @@ void WindowMaterialBlindInspectorView::createLayout()
 
   ++row;
 
-  m_nameEdit = new OSLineEdit();
+  m_nameEdit = new OSLineEdit2();
   mainGridLayout->addWidget(m_nameEdit, row, 0, 1, 3);
 
   ++row;
@@ -87,7 +87,7 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_slatOrientation = new OSComboBox();
+  m_slatOrientation = new OSComboBox2();
   m_slatOrientation->addItem("Horizontal");
   m_slatOrientation->addItem("Vertical");
   mainGridLayout->addWidget(m_slatOrientation,row++,0,1,3);
@@ -98,8 +98,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_slatWidth = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_slatWidth, &OSQuantityEdit::onUnitSystemChange);
+  m_slatWidth = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_slatWidth, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_slatWidth,row++,0,1,3);
 
   // Slat Separation
@@ -108,8 +108,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_slatSeparation = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_slatSeparation, &OSQuantityEdit::onUnitSystemChange);
+  m_slatSeparation = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_slatSeparation, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_slatSeparation,row++,0,1,3);
 
   // Slat Thickness
@@ -118,8 +118,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_slatThickness = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_slatThickness, &OSQuantityEdit::onUnitSystemChange);
+  m_slatThickness = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_slatThickness, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_slatThickness,row++,0,1,3);
 
   // Slat Angle
@@ -128,8 +128,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_slatAngle = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_slatAngle, &OSQuantityEdit::onUnitSystemChange);
+  m_slatAngle = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_slatAngle, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_slatAngle,row++,0,1,3);
 
   // Slat Conductivity
@@ -138,8 +138,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_slatConductivity = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_slatConductivity, &OSQuantityEdit::onUnitSystemChange);
+  m_slatConductivity = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_slatConductivity, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_slatConductivity,row++,0,1,3);
 
   // Slat Beam Solar Transmittance
@@ -148,8 +148,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_slatBeamSolarTransmittance = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_slatBeamSolarTransmittance, &OSQuantityEdit::onUnitSystemChange);
+  m_slatBeamSolarTransmittance = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_slatBeamSolarTransmittance, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_slatBeamSolarTransmittance,row++,0,1,3);
 
   // Front Side Slat Beam Solar Reflectance
@@ -158,8 +158,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_frontSideSlatBeamSolarReflectance = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_frontSideSlatBeamSolarReflectance, &OSQuantityEdit::onUnitSystemChange);
+  m_frontSideSlatBeamSolarReflectance = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_frontSideSlatBeamSolarReflectance, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_frontSideSlatBeamSolarReflectance,row++,0,1,3);
 
   // Back Side Slat Beam Solar Reflectance
@@ -168,8 +168,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_backSideSlatBeamSolarReflectance = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_backSideSlatBeamSolarReflectance, &OSQuantityEdit::onUnitSystemChange);
+  m_backSideSlatBeamSolarReflectance = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_backSideSlatBeamSolarReflectance, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_backSideSlatBeamSolarReflectance,row++,0,1,3);
 
   // Slat Diffuse Solar Transmittance
@@ -178,8 +178,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_slatDiffuseSolarTransmittance = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_slatDiffuseSolarTransmittance, &OSQuantityEdit::onUnitSystemChange);
+  m_slatDiffuseSolarTransmittance = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_slatDiffuseSolarTransmittance, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_slatDiffuseSolarTransmittance,row++,0,1,3);
 
   // Front Side Slat Diffuse Solar Reflectance
@@ -188,8 +188,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_frontSideSlatDiffuseSolarReflectance = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_frontSideSlatDiffuseSolarReflectance, &OSQuantityEdit::onUnitSystemChange);
+  m_frontSideSlatDiffuseSolarReflectance = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_frontSideSlatDiffuseSolarReflectance, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_frontSideSlatDiffuseSolarReflectance,row++,0,1,3);
 
   // Back Side Slat Diffuse Solar Reflectance
@@ -198,8 +198,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_backSideSlatDiffuseSolarReflectance = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_backSideSlatDiffuseSolarReflectance, &OSQuantityEdit::onUnitSystemChange);
+  m_backSideSlatDiffuseSolarReflectance = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_backSideSlatDiffuseSolarReflectance, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_backSideSlatDiffuseSolarReflectance,row++,0,1,3);
 
   // Slat Beam Visible Transmittance
@@ -208,8 +208,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_slatBeamVisibleTransmittance = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_slatBeamVisibleTransmittance, &OSQuantityEdit::onUnitSystemChange);
+  m_slatBeamVisibleTransmittance = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_slatBeamVisibleTransmittance, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_slatBeamVisibleTransmittance,row++,0,1,3);
 
   // Front Side Slat Beam Visible Reflectance
@@ -218,8 +218,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_frontSideSlatBeamVisibleReflectance = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_frontSideSlatBeamVisibleReflectance, &OSQuantityEdit::onUnitSystemChange);
+  m_frontSideSlatBeamVisibleReflectance = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_frontSideSlatBeamVisibleReflectance, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_frontSideSlatBeamVisibleReflectance,row++,0,1,3);
 
   // Back Side Slat Beam Visible Reflectance
@@ -228,8 +228,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_backSideSlatBeamVisibleReflectance = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_frontSideSlatBeamVisibleReflectance, &OSQuantityEdit::onUnitSystemChange);
+  m_backSideSlatBeamVisibleReflectance = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_frontSideSlatBeamVisibleReflectance, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_backSideSlatBeamVisibleReflectance,row++,0,1,3);
 
   // Slat Diffuse Visible Transmittance
@@ -238,8 +238,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_slatDiffuseVisibleTransmittance = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_slatDiffuseVisibleTransmittance, &OSQuantityEdit::onUnitSystemChange);
+  m_slatDiffuseVisibleTransmittance = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_slatDiffuseVisibleTransmittance, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_slatDiffuseVisibleTransmittance,row++,0,1,3);
 
   // Front Side Slat Diffuse Visible Reflectance
@@ -248,8 +248,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_frontSideSlatDiffuseVisibleReflectance = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_frontSideSlatDiffuseVisibleReflectance, &OSQuantityEdit::onUnitSystemChange);
+  m_frontSideSlatDiffuseVisibleReflectance = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_frontSideSlatDiffuseVisibleReflectance, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_frontSideSlatDiffuseVisibleReflectance,row++,0,1,3);
 
   // Back Side Slat Diffuse Visible Reflectance
@@ -258,8 +258,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_backSideSlatDiffuseVisibleReflectance = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_backSideSlatDiffuseVisibleReflectance, &OSQuantityEdit::onUnitSystemChange);
+  m_backSideSlatDiffuseVisibleReflectance = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_backSideSlatDiffuseVisibleReflectance, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_backSideSlatDiffuseVisibleReflectance,row++,0,1,3);
 
   // Slat Infrared Hemispherical Transmittance
@@ -268,8 +268,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_slatInfraredHemisphericalTransmittance = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_slatInfraredHemisphericalTransmittance, &OSQuantityEdit::onUnitSystemChange);
+  m_slatInfraredHemisphericalTransmittance = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_slatInfraredHemisphericalTransmittance, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_slatInfraredHemisphericalTransmittance,row++,0,1,3);
 
   // Front Side Slat Infrared Hemispherical Emissivity
@@ -278,8 +278,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_frontSideSlatInfraredHemisphericalEmissivity = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_frontSideSlatInfraredHemisphericalEmissivity, &OSQuantityEdit::onUnitSystemChange);
+  m_frontSideSlatInfraredHemisphericalEmissivity = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_frontSideSlatInfraredHemisphericalEmissivity, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_frontSideSlatInfraredHemisphericalEmissivity,row++,0,1,3);
 
   // Back Side Slat Infrared Hemispherical Emissivity
@@ -288,8 +288,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_backSideSlatInfraredHemisphericalEmissivity = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_backSideSlatInfraredHemisphericalEmissivity, &OSQuantityEdit::onUnitSystemChange);
+  m_backSideSlatInfraredHemisphericalEmissivity = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_backSideSlatInfraredHemisphericalEmissivity, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_backSideSlatInfraredHemisphericalEmissivity,row++,0,1,3);
 
   // Blind To Glass Distance
@@ -298,8 +298,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_blindToGlassDistance = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_blindToGlassDistance, &OSQuantityEdit::onUnitSystemChange);
+  m_blindToGlassDistance = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_blindToGlassDistance, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_blindToGlassDistance,row++,0,1,3);
 
   // Blind Top Opening Multiplier
@@ -308,8 +308,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_blindTopOpeningMultiplier = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_blindTopOpeningMultiplier, &OSQuantityEdit::onUnitSystemChange);
+  m_blindTopOpeningMultiplier = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_blindTopOpeningMultiplier, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_blindTopOpeningMultiplier,row++,0,1,3);
 
   // Blind Bottom Opening Multiplier
@@ -318,8 +318,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_blindBottomOpeningMultiplier = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_blindBottomOpeningMultiplier, &OSQuantityEdit::onUnitSystemChange);
+  m_blindBottomOpeningMultiplier = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_blindBottomOpeningMultiplier, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_blindBottomOpeningMultiplier,row++,0,1,3);
 
   // Blind Left Side Opening Multiplier
@@ -328,8 +328,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_blindLeftSideOpeningMultiplier = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_blindLeftSideOpeningMultiplier, &OSQuantityEdit::onUnitSystemChange);
+  m_blindLeftSideOpeningMultiplier = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_blindLeftSideOpeningMultiplier, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_blindLeftSideOpeningMultiplier,row++,0,1,3);
 
   // Blind Right Side Opening Multiplier
@@ -338,8 +338,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_blindRightSideOpeningMultiplier = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_blindRightSideOpeningMultiplier, &OSQuantityEdit::onUnitSystemChange);
+  m_blindRightSideOpeningMultiplier = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_blindRightSideOpeningMultiplier, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_blindRightSideOpeningMultiplier,row++,0,1,3);
 
   // Minimum Slat Angle
@@ -348,8 +348,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_minimumSlatAngle = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_minimumSlatAngle, &OSQuantityEdit::onUnitSystemChange);
+  m_minimumSlatAngle = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_minimumSlatAngle, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_minimumSlatAngle,row++,0,1,3);
 
   // Maximum Slat Angle
@@ -358,8 +358,8 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_maximumSlatAngle = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_maximumSlatAngle, &OSQuantityEdit::onUnitSystemChange);
+  m_maximumSlatAngle = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_maximumSlatAngle, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_maximumSlatAngle,row++,0,1,3);  
 
   // Stretch
@@ -390,36 +390,306 @@ void WindowMaterialBlindInspectorView::onUpdate()
 
 void WindowMaterialBlindInspectorView::attach(openstudio::model::Blind & material)
 {
-  m_slatOrientation->bind(material,"slatOrientation");
+  // m_slatOrientation->bind(material,"slatOrientation");
+  m_slatOrientation->bind<std::string>(
+      material,
+      static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
+      &model::Blind::slatOrientationValues,
+      std::bind(&model::Blind::slatOrientation, &material),
+      std::bind(&model::Blind::setSlatOrientation, &material, std::placeholders::_1),
+      boost::optional<NoFailAction>(std::bind(&model::Blind::resetSlatOrientation, &material)),
+      boost::optional<BasicQuery>(std::bind(&model::Blind::isSlatOrientationDefaulted, &material)));
 
-  m_nameEdit->bind(material,"name");
-  m_slatWidth->bind(material,"slatWidth",m_isIP);
-  m_slatSeparation->bind(material,"slatSeparation",m_isIP);
-  m_slatThickness->bind(material,"slatThickness",m_isIP);
-  m_slatAngle->bind(material,"slatAngle",m_isIP);
-  m_slatConductivity->bind(material,"slatConductivity",m_isIP);
-  m_slatBeamSolarTransmittance->bind(material,"slatBeamSolarTransmittance",m_isIP);
-  m_frontSideSlatBeamSolarReflectance->bind(material,"frontSideSlatBeamSolarReflectance",m_isIP);
-  m_backSideSlatBeamSolarReflectance->bind(material,"backSideSlatBeamSolarReflectance",m_isIP);
-  m_slatDiffuseSolarTransmittance->bind(material,"slatDiffuseSolarTransmittance",m_isIP);
-  m_frontSideSlatDiffuseSolarReflectance->bind(material,"frontSideSlatDiffuseSolarReflectance",m_isIP);
-  m_backSideSlatDiffuseSolarReflectance->bind(material,"backSideSlatDiffuseSolarReflectance",m_isIP);
-  m_slatBeamVisibleTransmittance->bind(material,"slatBeamVisibleTransmittance",m_isIP);
-  m_frontSideSlatBeamVisibleReflectance->bind(material,"frontSideSlatBeamVisibleReflectance",m_isIP);
-  m_backSideSlatBeamVisibleReflectance->bind(material,"backSideSlatBeamVisibleReflectance",m_isIP);
-  m_slatDiffuseVisibleTransmittance->bind(material,"slatDiffuseVisibleTransmittance",m_isIP);
-  m_frontSideSlatDiffuseVisibleReflectance->bind(material,"frontSideSlatDiffuseVisibleReflectance",m_isIP);
-  m_backSideSlatDiffuseVisibleReflectance->bind(material,"backSideSlatDiffuseVisibleReflectance",m_isIP);
-  m_slatInfraredHemisphericalTransmittance->bind(material,"slatInfraredHemisphericalTransmittance",m_isIP);
-  m_frontSideSlatInfraredHemisphericalEmissivity->bind(material,"frontSideSlatInfraredHemisphericalEmissivity",m_isIP);
-  m_backSideSlatInfraredHemisphericalEmissivity->bind(material,"backSideSlatInfraredHemisphericalEmissivity",m_isIP);
-  m_blindToGlassDistance->bind(material,"blindtoGlassDistance",m_isIP);
-  m_blindTopOpeningMultiplier->bind(material,"blindTopOpeningMultiplier",m_isIP);
-  m_blindBottomOpeningMultiplier->bind(material,"blindBottomOpeningMultiplier",m_isIP);
-  m_blindLeftSideOpeningMultiplier->bind(material,"blindLeftSideOpeningMultiplier",m_isIP);
-  m_blindRightSideOpeningMultiplier->bind(material,"blindRightSideOpeningMultiplier",m_isIP);
-  m_minimumSlatAngle->bind(material,"minimumSlatAngle",m_isIP);
-  m_maximumSlatAngle->bind(material,"maximumSlatAngle",m_isIP);
+  // m_nameEdit->bind(material,"name");
+  boost::optional<model::Blind> m_material = material;
+  m_nameEdit->bind(
+    *m_material,
+    OptionalStringGetter(std::bind(&model::Blind::name, m_material.get_ptr(),true)),
+    boost::optional<StringSetter>(std::bind(&model::Blind::setName, m_material.get_ptr(),std::placeholders::_1))
+  );
+
+  // m_slatWidth->bind(material,"slatWidth",m_isIP);
+  m_slatWidth->bind(
+    m_isIP,
+    *m_material,
+    DoubleGetter(std::bind(&model::Blind::slatWidth, m_material.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Blind::*)(double)>(&model::Blind::setSlatWidth), m_material.get_ptr(), std::placeholders::_1))
+  );
+
+  // m_slatSeparation->bind(material,"slatSeparation",m_isIP);
+  m_slatSeparation->bind(
+    m_isIP,
+    *m_material,
+    DoubleGetter(std::bind(&model::Blind::slatSeparation, m_material.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Blind::*)(double)>(&model::Blind::setSlatSeparation), m_material.get_ptr(), std::placeholders::_1))
+  );
+
+  // m_slatThickness->bind(material,"slatThickness",m_isIP);
+  m_slatThickness->bind(
+    m_isIP,
+    *m_material,
+    DoubleGetter(std::bind(&model::Blind::slatThickness, m_material.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Blind::*)(double)>(&model::Blind::setSlatThickness), m_material.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Blind::resetSlatThickness, m_material.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::Blind::isSlatThicknessDefaulted, m_material.get_ptr()))
+  );
+
+  // m_slatAngle->bind(material,"slatAngle",m_isIP);
+  m_slatAngle->bind(
+    m_isIP,
+    *m_material,
+    DoubleGetter(std::bind(&model::Blind::slatAngle, m_material.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Blind::*)(double)>(&model::Blind::setSlatAngle), m_material.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Blind::resetSlatAngle, m_material.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::Blind::isSlatAngleDefaulted, m_material.get_ptr()))
+  );
+
+  // m_slatConductivity->bind(material,"slatConductivity",m_isIP);
+  m_slatConductivity->bind(
+    m_isIP,
+    *m_material,
+    DoubleGetter(std::bind(&model::Blind::slatConductivity, m_material.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Blind::*)(double)>(&model::Blind::setSlatConductivity), m_material.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Blind::resetSlatConductivity, m_material.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::Blind::isSlatConductivityDefaulted, m_material.get_ptr()))
+  );
+
+  // m_slatBeamSolarTransmittance->bind(material,"slatBeamSolarTransmittance",m_isIP);
+  m_slatBeamSolarTransmittance->bind(
+    m_isIP,
+    *m_material,
+    DoubleGetter(std::bind(&model::Blind::slatBeamSolarTransmittance, m_material.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Blind::*)(double)>(&model::Blind::setSlatBeamSolarTransmittance), m_material.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Blind::resetSlatBeamSolarTransmittance, m_material.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::Blind::isSlatBeamSolarTransmittanceDefaulted, m_material.get_ptr()))
+  );
+
+  // m_frontSideSlatBeamSolarReflectance->bind(material,"frontSideSlatBeamSolarReflectance",m_isIP);
+  m_frontSideSlatBeamSolarReflectance->bind(
+    m_isIP,
+    *m_material,
+    DoubleGetter(std::bind(&model::Blind::frontSideSlatBeamSolarReflectance, m_material.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Blind::*)(double)>(&model::Blind::setFrontSideSlatBeamSolarReflectance), m_material.get_ptr(), std::placeholders::_1))
+  );
+
+  // m_backSideSlatBeamSolarReflectance->bind(material,"backSideSlatBeamSolarReflectance",m_isIP);
+  m_backSideSlatBeamSolarReflectance->bind(
+    m_isIP,
+    *m_material,
+    DoubleGetter(std::bind(&model::Blind::backSideSlatBeamSolarReflectance, m_material.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Blind::*)(double)>(&model::Blind::setBackSideSlatBeamSolarReflectance), m_material.get_ptr(), std::placeholders::_1))
+  );
+
+  // m_slatDiffuseSolarTransmittance->bind(material,"slatDiffuseSolarTransmittance",m_isIP);
+  m_slatDiffuseSolarTransmittance->bind(
+    m_isIP,
+    *m_material,
+    DoubleGetter(std::bind(&model::Blind::slatDiffuseSolarTransmittance, m_material.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Blind::*)(double)>(&model::Blind::setSlatDiffuseSolarTransmittance), m_material.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Blind::resetSlatDiffuseSolarTransmittance, m_material.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::Blind::isSlatDiffuseSolarTransmittanceDefaulted, m_material.get_ptr()))
+  );
+
+  // m_frontSideSlatDiffuseSolarReflectance->bind(material,"frontSideSlatDiffuseSolarReflectance",m_isIP);
+  m_frontSideSlatDiffuseSolarReflectance->bind(
+    m_isIP,
+    *m_material,
+    DoubleGetter(std::bind(&model::Blind::frontSideSlatDiffuseSolarReflectance, m_material.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Blind::*)(double)>(&model::Blind::setFrontSideSlatDiffuseSolarReflectance), m_material.get_ptr(), std::placeholders::_1))
+  );
+
+  // m_backSideSlatDiffuseSolarReflectance->bind(material,"backSideSlatDiffuseSolarReflectance",m_isIP);
+  m_backSideSlatDiffuseSolarReflectance->bind(
+    m_isIP,
+    *m_material,
+    DoubleGetter(std::bind(&model::Blind::backSideSlatDiffuseSolarReflectance, m_material.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Blind::*)(double)>(&model::Blind::setBackSideSlatDiffuseSolarReflectance), m_material.get_ptr(), std::placeholders::_1))
+  );
+
+  // m_slatBeamVisibleTransmittance->bind(material,"slatBeamVisibleTransmittance",m_isIP);
+  m_slatBeamVisibleTransmittance->bind(
+    m_isIP,
+    *m_material,
+    DoubleGetter(std::bind(&model::Blind::slatBeamVisibleTransmittance, m_material.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Blind::*)(double)>(&model::Blind::setSlatBeamVisibleTransmittance), m_material.get_ptr(), std::placeholders::_1))
+  );
+
+  // m_frontSideSlatBeamVisibleReflectance->bind(material,"frontSideSlatBeamVisibleReflectance",m_isIP);
+  m_frontSideSlatBeamVisibleReflectance->bind(
+    m_isIP,
+    *m_material,
+    OptionalDoubleGetter(std::bind(&model::Blind::frontSideSlatBeamVisibleReflectance, m_material.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Blind::*)(double)>(&model::Blind::setFrontSideSlatBeamVisibleReflectance), m_material.get_ptr(), std::placeholders::_1))
+  );
+
+  // m_backSideSlatBeamVisibleReflectance->bind(material,"backSideSlatBeamVisibleReflectance",m_isIP);
+  m_backSideSlatBeamVisibleReflectance->bind(
+    m_isIP,
+    *m_material,
+    OptionalDoubleGetter(std::bind(&model::Blind::backSideSlatBeamVisibleReflectance, m_material.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Blind::*)(double)>(&model::Blind::setBackSideSlatBeamVisibleReflectance), m_material.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Blind::resetBackSideSlatBeamVisibleReflectance, m_material.get_ptr()))
+  );
+
+  // m_slatDiffuseVisibleTransmittance->bind(material,"slatDiffuseVisibleTransmittance",m_isIP);
+  m_slatDiffuseVisibleTransmittance->bind(
+    m_isIP,
+    *m_material,
+    DoubleGetter(std::bind(&model::Blind::slatDiffuseVisibleTransmittance, m_material.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Blind::*)(double)>(&model::Blind::setSlatDiffuseVisibleTransmittance), m_material.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Blind::resetSlatDiffuseVisibleTransmittance, m_material.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::Blind::isSlatDiffuseVisibleTransmittanceDefaulted, m_material.get_ptr()))
+  );
+
+  // m_frontSideSlatDiffuseVisibleReflectance->bind(material,"frontSideSlatDiffuseVisibleReflectance",m_isIP);
+  m_frontSideSlatDiffuseVisibleReflectance->bind(
+    m_isIP,
+    *m_material,
+    OptionalDoubleGetter(std::bind(&model::Blind::frontSideSlatDiffuseVisibleReflectance, m_material.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Blind::*)(double)>(&model::Blind::setFrontSideSlatDiffuseVisibleReflectance), m_material.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Blind::resetFrontSideSlatDiffuseVisibleReflectance, m_material.get_ptr()))
+  );
+
+  // m_backSideSlatDiffuseVisibleReflectance->bind(material,"backSideSlatDiffuseVisibleReflectance",m_isIP);
+  m_backSideSlatDiffuseVisibleReflectance->bind(
+    m_isIP,
+    *m_material,
+    OptionalDoubleGetter(std::bind(&model::Blind::backSideSlatDiffuseVisibleReflectance, m_material.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Blind::*)(double)>(&model::Blind::setBackSideSlatDiffuseVisibleReflectance), m_material.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Blind::resetBackSideSlatDiffuseVisibleReflectance, m_material.get_ptr()))
+  );
+
+  // m_slatInfraredHemisphericalTransmittance->bind(material,"slatInfraredHemisphericalTransmittance",m_isIP);
+  m_slatInfraredHemisphericalTransmittance->bind(
+    m_isIP,
+    *m_material,
+    DoubleGetter(std::bind(&model::Blind::slatInfraredHemisphericalTransmittance, m_material.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Blind::*)(double)>(&model::Blind::setSlatInfraredHemisphericalTransmittance), m_material.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Blind::resetSlatInfraredHemisphericalTransmittance, m_material.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::Blind::isSlatInfraredHemisphericalTransmittanceDefaulted, m_material.get_ptr()))
+  );
+
+  // m_frontSideSlatInfraredHemisphericalEmissivity->bind(material,"frontSideSlatInfraredHemisphericalEmissivity",m_isIP);
+  m_frontSideSlatInfraredHemisphericalEmissivity->bind(
+    m_isIP,
+    *m_material,
+    DoubleGetter(std::bind(&model::Blind::frontSideSlatInfraredHemisphericalEmissivity, m_material.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Blind::*)(double)>(&model::Blind::setFrontSideSlatInfraredHemisphericalEmissivity), m_material.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Blind::resetFrontSideSlatInfraredHemisphericalEmissivity, m_material.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::Blind::isFrontSideSlatInfraredHemisphericalEmissivityDefaulted, m_material.get_ptr()))
+  );
+
+  // m_backSideSlatInfraredHemisphericalEmissivity->bind(material,"backSideSlatInfraredHemisphericalEmissivity",m_isIP);
+  m_backSideSlatInfraredHemisphericalEmissivity->bind(
+    m_isIP,
+    *m_material,
+    DoubleGetter(std::bind(&model::Blind::backSideSlatInfraredHemisphericalEmissivity, m_material.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Blind::*)(double)>(&model::Blind::setBackSideSlatInfraredHemisphericalEmissivity), m_material.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Blind::resetBackSideSlatInfraredHemisphericalEmissivity, m_material.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::Blind::isBackSideSlatInfraredHemisphericalEmissivityDefaulted, m_material.get_ptr()))
+  );
+
+  // m_blindToGlassDistance->bind(material,"blindtoGlassDistance",m_isIP);
+  m_blindToGlassDistance->bind(
+    m_isIP,
+    *m_material,
+    DoubleGetter(std::bind(&model::Blind::blindtoGlassDistance, m_material.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Blind::*)(double)>(&model::Blind::setBlindtoGlassDistance), m_material.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Blind::resetBlindtoGlassDistance, m_material.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::Blind::isBlindtoGlassDistanceDefaulted, m_material.get_ptr()))
+  );
+
+  // m_blindTopOpeningMultiplier->bind(material,"blindTopOpeningMultiplier",m_isIP);
+  m_blindTopOpeningMultiplier->bind(
+    m_isIP,
+    *m_material,
+    DoubleGetter(std::bind(&model::Blind::blindTopOpeningMultiplier, m_material.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Blind::*)(double)>(&model::Blind::setBlindTopOpeningMultiplier), m_material.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Blind::resetBlindTopOpeningMultiplier, m_material.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::Blind::isBlindTopOpeningMultiplierDefaulted, m_material.get_ptr()))
+  );
+
+  // m_blindBottomOpeningMultiplier->bind(material,"blindBottomOpeningMultiplier",m_isIP);
+  m_blindTopOpeningMultiplier->bind(
+    m_isIP,
+    *m_material,
+    DoubleGetter(std::bind(&model::Blind::blindBottomOpeningMultiplier, m_material.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Blind::*)(double)>(&model::Blind::setBlindBottomOpeningMultiplier), m_material.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Blind::resetBlindBottomOpeningMultiplier, m_material.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::Blind::isBlindBottomOpeningMultiplierDefaulted, m_material.get_ptr()))
+  );
+
+  // m_blindLeftSideOpeningMultiplier->bind(material,"blindLeftSideOpeningMultiplier",m_isIP);
+  m_blindLeftSideOpeningMultiplier->bind(
+    m_isIP,
+    *m_material,
+    DoubleGetter(std::bind(&model::Blind::blindLeftSideOpeningMultiplier, m_material.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Blind::*)(double)>(&model::Blind::setBlindLeftSideOpeningMultiplier), m_material.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Blind::resetBlindLeftSideOpeningMultiplier, m_material.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::Blind::isBlindLeftSideOpeningMultiplierDefaulted, m_material.get_ptr()))
+  );
+
+  // m_blindRightSideOpeningMultiplier->bind(material,"blindRightSideOpeningMultiplier",m_isIP);
+  m_blindRightSideOpeningMultiplier->bind(
+    m_isIP,
+    *m_material,
+    DoubleGetter(std::bind(&model::Blind::blindRightSideOpeningMultiplier, m_material.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Blind::*)(double)>(&model::Blind::setBlindRightSideOpeningMultiplier), m_material.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Blind::resetBlindRightSideOpeningMultiplier, m_material.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::Blind::isBlindRightSideOpeningMultiplierDefaulted, m_material.get_ptr()))
+  );
+
+  // m_minimumSlatAngle->bind(material,"minimumSlatAngle",m_isIP);
+  m_minimumSlatAngle->bind(
+    m_isIP,
+    *m_material,
+    DoubleGetter(std::bind(&model::Blind::minimumSlatAngle, m_material.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Blind::*)(double)>(&model::Blind::setMinimumSlatAngle), m_material.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Blind::resetMinimumSlatAngle, m_material.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::Blind::isMinimumSlatAngleDefaulted, m_material.get_ptr()))
+  );
+
+  // m_maximumSlatAngle->bind(material,"maximumSlatAngle",m_isIP);
+  m_maximumSlatAngle->bind(
+    m_isIP,
+    *m_material,
+    DoubleGetter(std::bind(&model::Blind::maximumSlatAngle, m_material.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Blind::*)(double)>(&model::Blind::setMaximumSlatAngle), m_material.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Blind::resetMaximumSlatAngle, m_material.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::Blind::isMaximumSlatAngleDefaulted, m_material.get_ptr()))
+  );
 
   m_standardsInformationWidget->attach(material);
 

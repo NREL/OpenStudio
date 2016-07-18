@@ -70,7 +70,7 @@ void WindowMaterialScreenInspectorView::createLayout()
 
   ++row;
 
-  m_nameEdit = new OSLineEdit();
+  m_nameEdit = new OSLineEdit2();
   mainGridLayout->addWidget(m_nameEdit, row, 0, 1, 3);
 
   ++row;
@@ -87,7 +87,7 @@ void WindowMaterialScreenInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_reflectedBeamTransmittanceAccountingMethod = new OSComboBox();
+  m_reflectedBeamTransmittanceAccountingMethod = new OSComboBox2();
   m_reflectedBeamTransmittanceAccountingMethod->addItem("Do Not Model");
   m_reflectedBeamTransmittanceAccountingMethod->addItem("Model As Direct Beam");
   m_reflectedBeamTransmittanceAccountingMethod->addItem("Model As Diffuse");
@@ -99,8 +99,8 @@ void WindowMaterialScreenInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_diffuseSolarReflectance = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialScreenInspectorView::toggleUnitsClicked, m_diffuseSolarReflectance, &OSQuantityEdit::onUnitSystemChange);
+  m_diffuseSolarReflectance = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialScreenInspectorView::toggleUnitsClicked, m_diffuseSolarReflectance, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_diffuseSolarReflectance,row++,0,1,3);
 
   // Diffuse Visible Reflectance
@@ -109,8 +109,8 @@ void WindowMaterialScreenInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_diffuseVisibleReflectance = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialScreenInspectorView::toggleUnitsClicked, m_diffuseVisibleReflectance, &OSQuantityEdit::onUnitSystemChange);
+  m_diffuseVisibleReflectance = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialScreenInspectorView::toggleUnitsClicked, m_diffuseVisibleReflectance, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_diffuseVisibleReflectance,row++,0,1,3);
 
   // Thermal Hemispherical Emissivity
@@ -119,8 +119,8 @@ void WindowMaterialScreenInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_thermalHemisphericalEmissivity = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialScreenInspectorView::toggleUnitsClicked, m_thermalHemisphericalEmissivity, &OSQuantityEdit::onUnitSystemChange);
+  m_thermalHemisphericalEmissivity = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialScreenInspectorView::toggleUnitsClicked, m_thermalHemisphericalEmissivity, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_thermalHemisphericalEmissivity,row++,0,1,3);
 
   // Conductivity
@@ -129,8 +129,8 @@ void WindowMaterialScreenInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_conductivity = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialScreenInspectorView::toggleUnitsClicked, m_conductivity, &OSQuantityEdit::onUnitSystemChange);
+  m_conductivity = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialScreenInspectorView::toggleUnitsClicked, m_conductivity, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_conductivity,row++,0,1,3);
 
   // Screen Material Spacing
@@ -139,8 +139,8 @@ void WindowMaterialScreenInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_screenMaterialSpacing = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialScreenInspectorView::toggleUnitsClicked, m_screenMaterialSpacing, &OSQuantityEdit::onUnitSystemChange);
+  m_screenMaterialSpacing = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialScreenInspectorView::toggleUnitsClicked, m_screenMaterialSpacing, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_screenMaterialSpacing,row++,0,1,3);
 
   // Screen Material Diameter
@@ -149,8 +149,8 @@ void WindowMaterialScreenInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_screenMaterialDiameter = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialScreenInspectorView::toggleUnitsClicked, m_screenMaterialDiameter, &OSQuantityEdit::onUnitSystemChange);
+  m_screenMaterialDiameter = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialScreenInspectorView::toggleUnitsClicked, m_screenMaterialDiameter, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_screenMaterialDiameter,row++,0,1,3);
 
   // Screen To Glass Distance
@@ -159,8 +159,8 @@ void WindowMaterialScreenInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_screenToGlassDistance = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialScreenInspectorView::toggleUnitsClicked, m_screenToGlassDistance, &OSQuantityEdit::onUnitSystemChange);
+  m_screenToGlassDistance = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialScreenInspectorView::toggleUnitsClicked, m_screenToGlassDistance, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_screenToGlassDistance,row++,0,1,3);
 
   // Top Opening Multiplier
@@ -169,8 +169,8 @@ void WindowMaterialScreenInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_topOpeningMultiplier = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialScreenInspectorView::toggleUnitsClicked, m_topOpeningMultiplier, &OSQuantityEdit::onUnitSystemChange);
+  m_topOpeningMultiplier = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialScreenInspectorView::toggleUnitsClicked, m_topOpeningMultiplier, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_topOpeningMultiplier,row++,0,1,3);
 
   // Bottom Opening Multiplier
@@ -179,8 +179,8 @@ void WindowMaterialScreenInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_bottomOpeningMultiplier = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialScreenInspectorView::toggleUnitsClicked, m_bottomOpeningMultiplier, &OSQuantityEdit::onUnitSystemChange);
+  m_bottomOpeningMultiplier = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialScreenInspectorView::toggleUnitsClicked, m_bottomOpeningMultiplier, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_bottomOpeningMultiplier,row++,0,1,3);
 
   // Left Side Opening Multiplier
@@ -189,8 +189,8 @@ void WindowMaterialScreenInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_leftSideOpeningMultiplier = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialScreenInspectorView::toggleUnitsClicked, m_leftSideOpeningMultiplier, &OSQuantityEdit::onUnitSystemChange);
+  m_leftSideOpeningMultiplier = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialScreenInspectorView::toggleUnitsClicked, m_leftSideOpeningMultiplier, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_leftSideOpeningMultiplier,row++,0,1,3);
 
   // Right Side Opening Multiplier
@@ -199,8 +199,8 @@ void WindowMaterialScreenInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_rightSideOpeningMultiplier = new OSQuantityEdit(m_isIP);
-  connect(this, &WindowMaterialScreenInspectorView::toggleUnitsClicked, m_rightSideOpeningMultiplier, &OSQuantityEdit::onUnitSystemChange);
+  m_rightSideOpeningMultiplier = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &WindowMaterialScreenInspectorView::toggleUnitsClicked, m_rightSideOpeningMultiplier, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_rightSideOpeningMultiplier,row++,0,1,3);  
 
   // Angle Of Resolution For Screen Transmittance Output Map
@@ -209,7 +209,7 @@ void WindowMaterialScreenInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_angleOfResolutionForScreenTransmittanceOutputMap = new OSComboBox();
+  m_angleOfResolutionForScreenTransmittanceOutputMap = new OSComboBox2();
   m_angleOfResolutionForScreenTransmittanceOutputMap->addItem("0"); // TODO needs OS to bind to model
   m_angleOfResolutionForScreenTransmittanceOutputMap->addItem("2");
   m_angleOfResolutionForScreenTransmittanceOutputMap->addItem("3");
@@ -245,21 +245,146 @@ void WindowMaterialScreenInspectorView::onUpdate()
 
 void WindowMaterialScreenInspectorView::attach(openstudio::model::Screen & screen)
 {
-  m_reflectedBeamTransmittanceAccountingMethod->bind(screen,"reflectedBeamTransmittanceAccountingMethod");
-  m_angleOfResolutionForScreenTransmittanceOutputMap->bind(screen,"angleofResolutionforScreenTransmittanceOutputMap");
+  // m_reflectedBeamTransmittanceAccountingMethod->bind(screen,"reflectedBeamTransmittanceAccountingMethod");
+  m_reflectedBeamTransmittanceAccountingMethod->bind<std::string>(
+      screen,
+      static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
+      &model::Screen::reflectedBeamTransmittanceAccountingMethodValues,
+      std::bind(&model::Screen::reflectedBeamTransmittanceAccountingMethod, &screen),
+      std::bind(&model::Screen::setReflectedBeamTransmittanceAccountingMethod, &screen, std::placeholders::_1),
+      boost::optional<NoFailAction>(std::bind(&model::Screen::resetReflectedBeamTransmittanceAccountingMethod, &screen)),
+      boost::optional<BasicQuery>(std::bind(&model::Screen::isReflectedBeamTransmittanceAccountingMethodDefaulted, &screen)));
 
-  m_nameEdit->bind(screen,"name");
-  m_diffuseSolarReflectance->bind(screen,"diffuseSolarReflectance",m_isIP);
-  m_diffuseVisibleReflectance->bind(screen,"diffuseVisibleReflectance",m_isIP);
-  m_thermalHemisphericalEmissivity->bind(screen,"thermalHemisphericalEmissivity",m_isIP);
-  m_conductivity->bind(screen,"conductivity",m_isIP);
-  m_screenMaterialSpacing->bind(screen,"screenMaterialSpacing",m_isIP);
-  m_screenMaterialDiameter->bind(screen,"screenMaterialDiameter",m_isIP);
-  m_screenToGlassDistance->bind(screen,"screentoGlassDistance",m_isIP);
-  m_topOpeningMultiplier->bind(screen,"topOpeningMultiplier",m_isIP);
-  m_bottomOpeningMultiplier->bind(screen,"bottomOpeningMultiplier",m_isIP);
-  m_leftSideOpeningMultiplier->bind(screen,"leftSideOpeningMultiplier",m_isIP);
-  m_rightSideOpeningMultiplier->bind(screen,"rightSideOpeningMultiplier",m_isIP);
+  // m_angleOfResolutionForScreenTransmittanceOutputMap->bind(screen,"angleofResolutionforScreenTransmittanceOutputMap");
+  m_angleOfResolutionForScreenTransmittanceOutputMap->bind<std::string>(
+      screen,
+      static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
+      &model::Screen::angleofResolutionforScreenTransmittanceOutputMapValues,
+      std::bind(&model::Screen::angleofResolutionforScreenTransmittanceOutputMap, &screen),
+      std::bind(&model::Screen::setAngleofResolutionforScreenTransmittanceOutputMap, &screen, std::placeholders::_1),
+      boost::optional<NoFailAction>(std::bind(&model::Screen::resetAngleofResolutionforScreenTransmittanceOutputMap, &screen)),
+      boost::optional<BasicQuery>(std::bind(&model::Screen::isAngleofResolutionforScreenTransmittanceOutputMapDefaulted, &screen)));
+
+  // m_nameEdit->bind(screen,"name");
+  boost::optional<model::Screen> m_screen = screen;
+  m_nameEdit->bind(
+    *m_screen,
+    OptionalStringGetter(std::bind(&model::Screen::name, m_screen.get_ptr(),true)),
+    boost::optional<StringSetter>(std::bind(&model::Screen::setName, m_screen.get_ptr(),std::placeholders::_1))
+  );
+
+  // m_diffuseSolarReflectance->bind(screen,"diffuseSolarReflectance",m_isIP);
+  m_diffuseSolarReflectance->bind(
+    m_isIP,
+    *m_screen,
+    DoubleGetter(std::bind(&model::Screen::diffuseSolarReflectance, m_screen.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Screen::*)(double)>(&model::Screen::setDiffuseSolarReflectance), m_screen.get_ptr(), std::placeholders::_1))
+  );
+
+
+  // m_diffuseVisibleReflectance->bind(screen,"diffuseVisibleReflectance",m_isIP);
+  m_diffuseVisibleReflectance->bind(
+    m_isIP,
+    *m_screen,
+    DoubleGetter(std::bind(&model::Screen::diffuseVisibleReflectance, m_screen.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Screen::*)(double)>(&model::Screen::setDiffuseVisibleReflectance), m_screen.get_ptr(), std::placeholders::_1))
+  );
+
+  // m_thermalHemisphericalEmissivity->bind(screen,"thermalHemisphericalEmissivity",m_isIP);
+  m_thermalHemisphericalEmissivity->bind(
+    m_isIP,
+    *m_screen,
+    DoubleGetter(std::bind(&model::Screen::thermalHemisphericalEmissivity, m_screen.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Screen::*)(double)>(&model::Screen::setThermalHemisphericalEmissivity), m_screen.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Screen::resetThermalHemisphericalEmissivity, m_screen.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::Screen::isThermalHemisphericalEmissivityDefaulted, m_screen.get_ptr()))
+  );
+
+  // m_conductivity->bind(screen,"conductivity",m_isIP);
+  m_conductivity->bind(
+    m_isIP,
+    *m_screen,
+    DoubleGetter(std::bind(&model::Screen::conductivity, m_screen.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Screen::*)(double)>(&model::Screen::setConductivity), m_screen.get_ptr(), std::placeholders::_1))
+  );
+
+  // m_screenMaterialSpacing->bind(screen,"screenMaterialSpacing",m_isIP);
+  m_screenMaterialSpacing->bind(
+    m_isIP,
+    *m_screen,
+    DoubleGetter(std::bind(&model::Screen::screenMaterialSpacing, m_screen.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Screen::*)(double)>(&model::Screen::setScreenMaterialSpacing), m_screen.get_ptr(), std::placeholders::_1))
+  );
+
+  // m_screenMaterialDiameter->bind(screen,"screenMaterialDiameter",m_isIP);
+  m_screenMaterialDiameter->bind(
+    m_isIP,
+    *m_screen,
+    DoubleGetter(std::bind(&model::Screen::screenMaterialDiameter, m_screen.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Screen::*)(double)>(&model::Screen::setScreenMaterialDiameter), m_screen.get_ptr(), std::placeholders::_1))
+  );
+
+  // m_screenToGlassDistance->bind(screen,"screentoGlassDistance",m_isIP);
+  m_screenToGlassDistance->bind(
+    m_isIP,
+    *m_screen,
+    DoubleGetter(std::bind(&model::Screen::screentoGlassDistance, m_screen.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Screen::*)(double)>(&model::Screen::setScreentoGlassDistance), m_screen.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Screen::resetScreentoGlassDistance, m_screen.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::Screen::isScreentoGlassDistanceDefaulted, m_screen.get_ptr()))
+  );
+
+  // m_topOpeningMultiplier->bind(screen,"topOpeningMultiplier",m_isIP);
+  m_topOpeningMultiplier->bind(
+    m_isIP,
+    *m_screen,
+    DoubleGetter(std::bind(&model::Screen::topOpeningMultiplier, m_screen.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Screen::*)(double)>(&model::Screen::setTopOpeningMultiplier), m_screen.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Screen::resetTopOpeningMultiplier, m_screen.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::Screen::isTopOpeningMultiplierDefaulted, m_screen.get_ptr()))
+  );
+
+  // m_bottomOpeningMultiplier->bind(screen,"bottomOpeningMultiplier",m_isIP);
+  m_bottomOpeningMultiplier->bind(
+    m_isIP,
+    *m_screen,
+    DoubleGetter(std::bind(&model::Screen::bottomOpeningMultiplier, m_screen.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Screen::*)(double)>(&model::Screen::setBottomOpeningMultiplier), m_screen.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Screen::resetBottomOpeningMultiplier, m_screen.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::Screen::isBottomOpeningMultiplierDefaulted, m_screen.get_ptr()))
+  );
+
+  // m_leftSideOpeningMultiplier->bind(screen,"leftSideOpeningMultiplier",m_isIP);
+  m_leftSideOpeningMultiplier->bind(
+    m_isIP,
+    *m_screen,
+    DoubleGetter(std::bind(&model::Screen::leftSideOpeningMultiplier, m_screen.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Screen::*)(double)>(&model::Screen::setLeftSideOpeningMultiplier), m_screen.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Screen::resetLeftSideOpeningMultiplier, m_screen.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::Screen::isLeftSideOpeningMultiplierDefaulted, m_screen.get_ptr()))
+  );
+
+  // m_rightSideOpeningMultiplier->bind(screen,"rightSideOpeningMultiplier",m_isIP);
+  m_rightSideOpeningMultiplier->bind(
+    m_isIP,
+    *m_screen,
+    DoubleGetter(std::bind(&model::Screen::rightSideOpeningMultiplier, m_screen.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Screen::*)(double)>(&model::Screen::setRightSideOpeningMultiplier), m_screen.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Screen::resetRightSideOpeningMultiplier, m_screen.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::Screen::isRightSideOpeningMultiplierDefaulted, m_screen.get_ptr()))
+  );
 
   m_standardsInformationWidget->attach(screen);
 

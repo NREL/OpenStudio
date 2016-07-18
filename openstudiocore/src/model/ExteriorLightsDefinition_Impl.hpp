@@ -30,8 +30,8 @@ namespace detail {
 
   /** ExteriorLightsDefinition_Impl is a ResourceObject_Impl that is the implementation class for ExteriorLightsDefinition.*/
   class MODEL_API ExteriorLightsDefinition_Impl : public ResourceObject_Impl {
-    Q_OBJECT;
-    Q_PROPERTY(double designLevel READ designLevel WRITE setDesignLevel);
+    
+    
    public:
     /** @name Constructors and Destructors */
     //@{

@@ -36,40 +36,40 @@ namespace detail {
   /** ZoneHVACPackagedTerminalHeatPump_Impl is a ZoneHVACComponent_Impl that is the implementation class for ZoneHVACPackagedTerminalHeatPump.*/
   class MODEL_API ZoneHVACPackagedTerminalHeatPump_Impl : public ZoneHVACComponent_Impl
   {
-    Q_OBJECT;
-    Q_PROPERTY(std::string outdoorAirMixerObjectType READ outdoorAirMixerObjectType WRITE setOutdoorAirMixerObjectType);
-    Q_PROPERTY(std::string outdoorAirMixerName READ outdoorAirMixerName WRITE setOutdoorAirMixerName);
-    Q_PROPERTY(boost::optional<double> supplyAirFlowRateDuringCoolingOperation READ supplyAirFlowRateDuringCoolingOperation WRITE setSupplyAirFlowRateDuringCoolingOperation);
-    Q_PROPERTY(bool isSupplyAirFlowRateDuringCoolingOperationAutosized READ isSupplyAirFlowRateDuringCoolingOperationAutosized);
-    Q_PROPERTY(boost::optional<double> supplyAirFlowRateDuringHeatingOperation READ supplyAirFlowRateDuringHeatingOperation WRITE setSupplyAirFlowRateDuringHeatingOperation);
-    Q_PROPERTY(bool isSupplyAirFlowRateDuringHeatingOperationAutosized READ isSupplyAirFlowRateDuringHeatingOperationAutosized);
-    Q_PROPERTY(boost::optional<double> supplyAirFlowRateWhenNoCoolingorHeatingisNeeded READ supplyAirFlowRateWhenNoCoolingorHeatingisNeeded WRITE setSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded RESET resetSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded);
-    Q_PROPERTY(bool isSupplyAirFlowRateWhenNoCoolingorHeatingisNeededAutosized READ isSupplyAirFlowRateWhenNoCoolingorHeatingisNeededAutosized);
-    Q_PROPERTY(boost::optional<double> outdoorAirFlowRateDuringCoolingOperation READ outdoorAirFlowRateDuringCoolingOperation WRITE setOutdoorAirFlowRateDuringCoolingOperation);
-    Q_PROPERTY(bool isOutdoorAirFlowRateDuringCoolingOperationAutosized READ isOutdoorAirFlowRateDuringCoolingOperationAutosized);
-    Q_PROPERTY(boost::optional<double> outdoorAirFlowRateDuringHeatingOperation READ outdoorAirFlowRateDuringHeatingOperation WRITE setOutdoorAirFlowRateDuringHeatingOperation);
-    Q_PROPERTY(bool isOutdoorAirFlowRateDuringHeatingOperationAutosized READ isOutdoorAirFlowRateDuringHeatingOperationAutosized);
-    Q_PROPERTY(boost::optional<double> outdoorAirFlowRateWhenNoCoolingorHeatingisNeeded READ outdoorAirFlowRateWhenNoCoolingorHeatingisNeeded WRITE setOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded RESET resetOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded);
-    Q_PROPERTY(bool isOutdoorAirFlowRateWhenNoCoolingorHeatingisNeededAutosized READ isOutdoorAirFlowRateWhenNoCoolingorHeatingisNeededAutosized);
-    Q_PROPERTY(double heatingConvergenceTolerance READ heatingConvergenceTolerance WRITE setHeatingConvergenceTolerance RESET resetHeatingConvergenceTolerance);
-    Q_PROPERTY(bool isHeatingConvergenceToleranceDefaulted READ isHeatingConvergenceToleranceDefaulted);
-    Q_PROPERTY(double minimumOutdoorDryBulbTemperatureforCompressorOperation READ minimumOutdoorDryBulbTemperatureforCompressorOperation WRITE setMinimumOutdoorDryBulbTemperatureforCompressorOperation RESET resetMinimumOutdoorDryBulbTemperatureforCompressorOperation);
-    Q_PROPERTY(bool isMinimumOutdoorDryBulbTemperatureforCompressorOperationDefaulted READ isMinimumOutdoorDryBulbTemperatureforCompressorOperationDefaulted);
-    Q_PROPERTY(double coolingConvergenceTolerance READ coolingConvergenceTolerance WRITE setCoolingConvergenceTolerance RESET resetCoolingConvergenceTolerance);
-    Q_PROPERTY(bool isCoolingConvergenceToleranceDefaulted READ isCoolingConvergenceToleranceDefaulted);
-    Q_PROPERTY(boost::optional<double> maximumSupplyAirTemperaturefromSupplementalHeater READ maximumSupplyAirTemperaturefromSupplementalHeater WRITE setMaximumSupplyAirTemperaturefromSupplementalHeater);
-    Q_PROPERTY(bool isMaximumSupplyAirTemperaturefromSupplementalHeaterAutosized READ isMaximumSupplyAirTemperaturefromSupplementalHeaterAutosized);
-    Q_PROPERTY(double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation READ maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation WRITE setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation RESET resetMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation);
-    Q_PROPERTY(bool isMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperationDefaulted READ isMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperationDefaulted);
-    Q_PROPERTY(std::string fanPlacement READ fanPlacement WRITE setFanPlacement RESET resetFanPlacement);
-    Q_PROPERTY(bool isFanPlacementDefaulted READ isFanPlacementDefaulted);
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> availabilitySchedule READ availabilityScheduleAsModelObject WRITE setAvailabilityScheduleAsModelObject);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> supplyAirFan READ supplyAirFanAsModelObject WRITE setSupplyAirFanAsModelObject);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> heatingCoil READ heatingCoilAsModelObject WRITE setHeatingCoilAsModelObject);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> coolingCoil READ coolingCoilAsModelObject WRITE setCoolingCoilAsModelObject);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> supplementalHeatingCoil READ supplementalHeatingCoilAsModelObject WRITE setSupplementalHeatingCoilAsModelObject);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> supplyAirFanOperatingModeSchedule READ supplyAirFanOperatingModeScheduleAsModelObject WRITE setSupplyAirFanOperatingModeScheduleAsModelObject RESET resetSupplyAirFanOperatingModeSchedule);
+    
+    
+    
+    
+    
+    
    public:
     /** @name Constructors and Destructors */
     //@{

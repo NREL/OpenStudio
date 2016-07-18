@@ -28,9 +28,9 @@ namespace model {
 namespace detail {
 
   class MODEL_API InsideSurfaceConvectionAlgorithm_Impl : public ModelObject_Impl {
-    Q_OBJECT;
-    Q_PROPERTY(std::string algorithm READ algorithm WRITE setAlgorithm RESET resetAlgorithm);
-    Q_PROPERTY(bool isAlgorithmDefaulted READ isAlgorithmDefaulted);
+    
+    
+    
    public:
     /** @name Constructors and Destructors */
     //@{

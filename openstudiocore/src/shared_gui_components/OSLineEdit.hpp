@@ -22,6 +22,7 @@
 
 #include "FieldMethodTypedefs.hpp"
 
+#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
 #include "../model/Model.hpp"
 
 #include <QLineEdit>
@@ -35,7 +36,7 @@ namespace openstudio {
 
 class OSItem;
 
-class OSLineEdit2 : public QLineEdit {
+class OSLineEdit2 : public QLineEdit, public Nano::Observer {
   Q_OBJECT
 
 public:
@@ -101,7 +102,7 @@ signals:
 
   void onModelObjectChange();
 
-  void onModelObjectRemove(Handle handle);
+  void onModelObjectRemove(const Handle& handle);
 
   void emitItemClicked();
 
@@ -132,34 +133,34 @@ signals:
   bool m_deleteObject = false;
 };
 
-class OSLineEdit : public QLineEdit
-{
-  Q_OBJECT
+// class OSLineEdit : public QLineEdit, public Nano::Observer
+// {
+//   Q_OBJECT
 
-  public:
+//   public:
 
-  OSLineEdit(QWidget * parent = nullptr);
+//   OSLineEdit(QWidget * parent = nullptr);
 
-  virtual ~OSLineEdit() {}
+//   virtual ~OSLineEdit() {}
 
-  void bind(model::ModelObject & modelObject, const char * property);
+//   void bind(model::ModelObject & modelObject, const char * property);
 
-  void unbind();
+//   void unbind();
 
-  private slots:
+//   private slots:
 
-  void onEditingFinished();
+//   void onEditingFinished();
 
-  void onModelObjectChange();
+//   void onModelObjectChange();
 
-  void onModelObjectRemove(Handle handle);
+//   void onModelObjectRemove(const Handle& handle);
 
-  private:
+//   private:
 
-  boost::optional<model::ModelObject> m_modelObject;
+//   boost::optional<model::ModelObject> m_modelObject;
 
-  std::string m_property;
-};
+//   std::string m_property;
+// };
 
 } // openstudio
 

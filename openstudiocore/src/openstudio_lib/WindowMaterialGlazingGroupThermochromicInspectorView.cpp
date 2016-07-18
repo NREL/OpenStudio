@@ -69,7 +69,7 @@ void WindowMaterialGlazingGroupThermochromicInspectorView::createLayout()
 
   ++row;
 
-  m_nameEdit = new OSLineEdit();
+  m_nameEdit = new OSLineEdit2();
   mainGridLayout->addWidget(m_nameEdit, row, 0, 1, 3);
 
   ++row;
@@ -98,7 +98,7 @@ void WindowMaterialGlazingGroupThermochromicInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_windowMaterialGlazingName = new OSLineEdit();
+  m_windowMaterialGlazingName = new OSLineEdit2();
   mainGridLayout->addWidget(m_windowMaterialGlazingName,row++,0,1,3);
 
   // Stretch
@@ -129,7 +129,13 @@ void WindowMaterialGlazingGroupThermochromicInspectorView::onUpdate()
 
 void WindowMaterialGlazingGroupThermochromicInspectorView::attach(openstudio::model::ThermochromicGlazing & thermochromicGlazing)
 {
-  m_nameEdit->bind(thermochromicGlazing,"name");
+  // m_nameEdit->bind(thermochromicGlazing,"name");
+  boost::optional<model::ThermochromicGlazing> m_thermochromicGlazing = thermochromicGlazing;
+  m_nameEdit->bind(
+    *m_thermochromicGlazing,
+    OptionalStringGetter(std::bind(&model::ThermochromicGlazing::name, m_thermochromicGlazing.get_ptr(),true)),
+    boost::optional<StringSetter>(std::bind(&model::ThermochromicGlazing::setName, m_thermochromicGlazing.get_ptr(),std::placeholders::_1))
+  );
 
   //m_opticalDataTemperature->bind( // TODO
   //  m_isIP,
@@ -137,7 +143,16 @@ void WindowMaterialGlazingGroupThermochromicInspectorView::attach(openstudio::mo
   //  DoubleGetter(std::bind(&model::ThermochromicGlazing::opticalDataTemperature,thermochromicGlazing)),
   //  DoubleSetterVoidReturn(std::bind(&model::ThermochromicGlazing::setOpticalDataTemperature,thermochromicGlazing,_1)));
 
-  m_windowMaterialGlazingName->bind(thermochromicGlazing,"windowMaterialGlazingName");
+  // m_windowMaterialGlazingName->bind(thermochromicGlazing,"windowMaterialGlazingName");
+  
+  // TODO: Reimplement when "windowMaterialGlazingName" is found
+  // m_windowMaterialGlazingName->bind(
+  //   *m_thermochromicGlazing,
+  //   StringGetter(std::bind(&model::ThermochromicGlazing::windowMaterialGlazingName, m_thermochromicGlazing.get_ptr())),
+  //   boost::optional<StringSetter>(std::bind(&model::ThermochromicGlazing::setWindowMaterialGlazingName, m_thermochromicGlazing.get_ptr(),std::placeholders::_1)),
+  //   boost::optional<NoFailAction>(std::bind(&model::ThermochromicGlazing::resetWindowMaterialGlazingName, m_thermochromicGlazing.get_ptr())),
+  //   boost::optional<BasicQuery>(std::bind(&model::ThermochromicGlazing::isWindowMaterialGlazingNameDefaulted, m_thermochromicGlazing.get_ptr()))
+  // );
 
   m_standardsInformationWidget->attach(thermochromicGlazing);
 

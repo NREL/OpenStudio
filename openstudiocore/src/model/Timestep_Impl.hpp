@@ -28,9 +28,9 @@ namespace model {
 namespace detail {
 
   class MODEL_API Timestep_Impl : public ModelObject_Impl {
-    Q_OBJECT;
-    Q_PROPERTY(int numberOfTimestepsPerHour READ numberOfTimestepsPerHour WRITE setNumberOfTimestepsPerHour RESET resetNumberOfTimestepsPerHour);
-    Q_PROPERTY(bool isNumberOfTimestepsPerHourDefaulted READ isNumberOfTimestepsPerHourDefaulted);
+    
+    
+    
    public:
 
     // constructor

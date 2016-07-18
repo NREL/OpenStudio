@@ -31,13 +31,13 @@ namespace model {
 namespace detail {
 
   class MODEL_API ComponentData_Impl : public ModelObject_Impl {
-    Q_OBJECT;
+    
 
-    Q_PROPERTY(boost::optional<int> creationTimestamp READ creationTimestamp);
-    Q_PROPERTY(boost::optional<int> versionTimestamp READ versionTimestamp);
+    
+    
 
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> primaryComponentObject READ primaryComponentObjectAsModelObject);
-    Q_PROPERTY(std::vector<openstudio::model::ModelObject> componentObjects READ componentObjects);
+    
+    
    public:
     /** @name Constructors and Destructors */
     //@{

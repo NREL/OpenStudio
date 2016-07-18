@@ -198,7 +198,7 @@ namespace openstudio {
           );
       }
       else {
-        // Create a lambda function that collates all of the loads in a space 
+        // Create a lambda function that collates all of the loads in a space
         // and returns them as an std::vector
         std::function<std::vector<model::ModelObject>(const model::Space &)> allLoads(
           [](const model::Space &t_space) {
@@ -538,7 +538,7 @@ namespace openstudio {
           OS_ASSERT(false);
         }
         );
-        
+
         const boost::optional<std::function<void(model::ModelObject *)> > resetMultiplier(
           [](model::ModelObject *t_modelObject) {
           boost::optional<model::InternalMass> im = t_modelObject->optionalCast<model::InternalMass>();
@@ -1174,7 +1174,7 @@ namespace openstudio {
 
   void SpacesLoadsGridController::refreshModelObjects()
   {
-    m_modelObjects = subsetCastVector<model::ModelObject>(m_model.getModelObjects<model::Space>());
+    m_modelObjects = subsetCastVector<model::ModelObject>(m_model.getConcreteModelObjects<model::Space>());
     std::sort(m_modelObjects.begin(), m_modelObjects.end(), ModelObjectNameSorter());
 
     m_inheritedModelObjects.clear();

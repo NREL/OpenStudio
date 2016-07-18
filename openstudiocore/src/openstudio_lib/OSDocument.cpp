@@ -211,7 +211,7 @@ namespace openstudio {
     }
     OS_ASSERT(workflowJSON);
     model->setWorkflowJSON(*workflowJSON);
-    
+
     bool isConnected;
 
     m_verticalId = 0;
@@ -257,7 +257,7 @@ namespace openstudio {
     connect(this, &OSDocument::openLibDlgClicked, this, &OSDocument::openLibDlg);
 
     // update window path after the dialog is shown
-    QTimer::singleShot(0, this, SLOT(updateWindowFilePath())); 
+    QTimer::singleShot(0, this, SLOT(updateWindowFilePath()));
   }
 
   //void OSDocument::showRubyConsole()
@@ -272,7 +272,8 @@ namespace openstudio {
 
   OSDocument::~OSDocument()
   {
-    m_model.getImpl<openstudio::model::detail::Model_Impl>()->blockSignals(true);
+    // blockSignals wouldn't work now anyways because of nano signal slot implementation
+    // m_model.getImpl<openstudio::model::detail::Model_Impl>()->blockSignals(true);
 
     // release the file watchers so can remove model temp dir
     m_mainTabController.reset();
@@ -371,7 +372,7 @@ namespace openstudio {
       QTimer::singleShot(0, this, SLOT(weatherFileReset()));
     }
 
-    connect(m_model.getImpl<model::detail::Model_Impl>().get(), &model::detail::Model_Impl::onChange, this, &OSDocument::markAsModified);
+    m_model.getImpl<model::detail::Model_Impl>().get()->onChange.connect<OSDocument, &OSDocument::markAsModified>(this);
 
     // Main Right Column
 
@@ -466,7 +467,7 @@ namespace openstudio {
       ":images/off_spaces_tab.png",
       ":images/disabled_spaces_tab.png");
 
-    // Thermal Zones 
+    // Thermal Zones
     m_mainWindow->addVerticalTabButton(THERMAL_ZONES,
       "Thermal Zones",
       ":images/on_thermal_zone_tab.png",
@@ -678,7 +679,7 @@ namespace openstudio {
       break;
 
     case THERMAL_ZONES:
-      // Thermal Zones 
+      // Thermal Zones
 
       m_mainTabController = std::shared_ptr<MainTabController>(new ThermalZonesTabController(isIP, m_model));
       m_mainWindow->setView(m_mainTabController->mainContentWidget(), THERMAL_ZONES);
@@ -932,7 +933,7 @@ namespace openstudio {
 
   bool OSDocument::fixWeatherFileInTemp(bool opening)
   {
-    // look for existing weather file 
+    // look for existing weather file
     boost::optional<model::WeatherFile> weatherFile = m_model.getOptionalUniqueModelObject<model::WeatherFile>();
 
     // no weather file, nothing to do
@@ -967,7 +968,7 @@ namespace openstudio {
 
     // check if weather file path is absolute
     if (weatherFilePath->is_complete()){
-        
+
       // absolute weather file path
       epwPathAbsolute = true;
 
@@ -1047,7 +1048,7 @@ namespace openstudio {
 
       // file does not exist in user path
       doCopy = false;
-      
+
     } else if (!epwInTempPathChecksum){
 
       // file does not exist in temp path but does exist in user dir
@@ -1092,8 +1093,8 @@ namespace openstudio {
 
         return false;
       }
-    } 
-    
+    }
+
 
     try{
       EpwFile epwFile(epwInTempPath);
@@ -1271,7 +1272,7 @@ namespace openstudio {
 
     QString defaultDir = savePath().isEmpty() ? mainWindow()->lastPath() : QFileInfo(savePath()).path();
 
-  
+
   QString fileName = QFileDialog::getSaveFileName( this->mainWindow(),
                                                   tr(text.toStdString().c_str()),
                                                   defaultDir,

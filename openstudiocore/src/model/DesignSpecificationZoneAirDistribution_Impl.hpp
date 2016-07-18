@@ -35,24 +35,24 @@ namespace detail {
 
   /** DesignSpecificationZoneAirDistribution_Impl is a ModelObject_Impl that is the implementation class for DesignSpecificationZoneAirDistribution.*/
   class MODEL_API DesignSpecificationZoneAirDistribution_Impl : public ModelObject_Impl {
-    Q_OBJECT;
+    
 
-    Q_PROPERTY(double zoneAirDistributionEffectivenessinCoolingMode READ zoneAirDistributionEffectivenessinCoolingMode WRITE setZoneAirDistributionEffectivenessinCoolingMode RESET resetZoneAirDistributionEffectivenessinCoolingMode);
-    Q_PROPERTY(openstudio::Quantity zoneAirDistributionEffectivenessinCoolingMode_SI READ zoneAirDistributionEffectivenessinCoolingMode_SI WRITE setZoneAirDistributionEffectivenessinCoolingMode RESET resetZoneAirDistributionEffectivenessinCoolingMode);
-    Q_PROPERTY(openstudio::Quantity zoneAirDistributionEffectivenessinCoolingMode_IP READ zoneAirDistributionEffectivenessinCoolingMode_IP WRITE setZoneAirDistributionEffectivenessinCoolingMode RESET resetZoneAirDistributionEffectivenessinCoolingMode);
-    Q_PROPERTY(bool isZoneAirDistributionEffectivenessinCoolingModeDefaulted READ isZoneAirDistributionEffectivenessinCoolingModeDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double zoneAirDistributionEffectivenessinHeatingMode READ zoneAirDistributionEffectivenessinHeatingMode WRITE setZoneAirDistributionEffectivenessinHeatingMode RESET resetZoneAirDistributionEffectivenessinHeatingMode);
-    Q_PROPERTY(openstudio::Quantity zoneAirDistributionEffectivenessinHeatingMode_SI READ zoneAirDistributionEffectivenessinHeatingMode_SI WRITE setZoneAirDistributionEffectivenessinHeatingMode RESET resetZoneAirDistributionEffectivenessinHeatingMode);
-    Q_PROPERTY(openstudio::Quantity zoneAirDistributionEffectivenessinHeatingMode_IP READ zoneAirDistributionEffectivenessinHeatingMode_IP WRITE setZoneAirDistributionEffectivenessinHeatingMode RESET resetZoneAirDistributionEffectivenessinHeatingMode);
-    Q_PROPERTY(bool isZoneAirDistributionEffectivenessinHeatingModeDefaulted READ isZoneAirDistributionEffectivenessinHeatingModeDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double zoneSecondaryRecirculationFraction READ zoneSecondaryRecirculationFraction WRITE setZoneSecondaryRecirculationFraction RESET resetZoneSecondaryRecirculationFraction);
-    Q_PROPERTY(openstudio::Quantity zoneSecondaryRecirculationFraction_SI READ zoneSecondaryRecirculationFraction_SI WRITE setZoneSecondaryRecirculationFraction RESET resetZoneSecondaryRecirculationFraction);
-    Q_PROPERTY(openstudio::Quantity zoneSecondaryRecirculationFraction_IP READ zoneSecondaryRecirculationFraction_IP WRITE setZoneSecondaryRecirculationFraction RESET resetZoneSecondaryRecirculationFraction);
-    Q_PROPERTY(bool isZoneSecondaryRecirculationFractionDefaulted READ isZoneSecondaryRecirculationFractionDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> zoneAirDistributionEffectivenessSchedule READ zoneAirDistributionEffectivenessScheduleAsModelObject WRITE setZoneAirDistributionEffectivenessScheduleAsModelObject RESET resetZoneAirDistributionEffectivenessSchedule);
+    
    public:
     /** @name Constructors and Destructors */
     //@{

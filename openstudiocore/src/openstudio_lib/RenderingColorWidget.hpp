@@ -20,6 +20,7 @@
 #ifndef OPENSTUDIO_RENDERINGCOLORWIDGET_HPP
 #define OPENSTUDIO_RENDERINGCOLORWIDGET_HPP
 
+#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
 #include "../shared_gui_components/FieldMethodTypedefs.hpp"
 
 #include "../model/RenderingColor.hpp"
@@ -30,7 +31,7 @@ class QPushButton;
 
 namespace openstudio {
 
-  class RenderingColorWidget2 : public QWidget
+  class RenderingColorWidget2 : public QWidget, public Nano::Observer
   {
     Q_OBJECT
 
@@ -67,7 +68,7 @@ namespace openstudio {
     boost::optional<model::RenderingColor> m_renderingColor;
   };
 
-class RenderingColorWidget : public QWidget
+class RenderingColorWidget : public QWidget, public Nano::Observer
 {
   Q_OBJECT
 

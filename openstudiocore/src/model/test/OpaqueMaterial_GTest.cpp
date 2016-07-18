@@ -94,18 +94,19 @@ TEST_F(ModelFixture, OpaqueMaterial_AirGap_Attributes)
   Model model;
   AirGap airGap(model);
 
+  // Removed due to removal of attributes
   // thickness always returns 0.0, and setter always returns false
-  ASSERT_TRUE(airGap.getAttribute("thickness"));
-  Attribute airGapThickness = airGap.getAttribute("thickness").get();
-  EXPECT_TRUE(airGapThickness.valueType() == AttributeValueType::Double);
-  EXPECT_DOUBLE_EQ(0.0,airGapThickness.valueAsDouble());
+  // ASSERT_TRUE(airGap.getAttribute("thickness"));
+  // Attribute airGapThickness = airGap.getAttribute("thickness").get();
+  // EXPECT_TRUE(airGapThickness.valueType() == AttributeValueType::Double);
+  // EXPECT_DOUBLE_EQ(0.0,airGapThickness.valueAsDouble());
 
-  EXPECT_FALSE(airGap.setAttribute("thickness", 0.01));
+  // EXPECT_FALSE(airGap.setAttribute("thickness", 0.01));
 
-  ASSERT_TRUE(airGap.getAttribute("thickness"));
-  airGapThickness = airGap.getAttribute("thickness").get();
-  EXPECT_TRUE(airGapThickness.valueType() == AttributeValueType::Double);
-  EXPECT_DOUBLE_EQ(0.0,airGapThickness.valueAsDouble());
+  // ASSERT_TRUE(airGap.getAttribute("thickness"));
+  // airGapThickness = airGap.getAttribute("thickness").get();
+  // EXPECT_TRUE(airGapThickness.valueType() == AttributeValueType::Double);
+  // EXPECT_DOUBLE_EQ(0.0,airGapThickness.valueAsDouble());
 }
 
 TEST_F(ModelFixture, OpaqueMaterial_MasslessOpaqueMaterial_Constructors)
@@ -135,18 +136,19 @@ TEST_F(ModelFixture, OpaqueMaterial_MasslessOpaqueMaterial_Attributes)
   Model model;
   MasslessOpaqueMaterial masslessMaterial(model);
 
+  // Removed due to removal of attributes
   // thickness always returns 0.0, and setter always returns false
-  ASSERT_TRUE(masslessMaterial.getAttribute("thickness"));
-  Attribute masslessMaterialThickness = masslessMaterial.getAttribute("thickness").get();
-  EXPECT_TRUE(masslessMaterialThickness.valueType() == AttributeValueType::Double);
-  EXPECT_DOUBLE_EQ(0.0,masslessMaterialThickness.valueAsDouble());
+  // ASSERT_TRUE(masslessMaterial.getAttribute("thickness"));
+  // Attribute masslessMaterialThickness = masslessMaterial.getAttribute("thickness").get();
+  // EXPECT_TRUE(masslessMaterialThickness.valueType() == AttributeValueType::Double);
+  // EXPECT_DOUBLE_EQ(0.0,masslessMaterialThickness.valueAsDouble());
 
-  EXPECT_FALSE(masslessMaterial.setAttribute("thickness", 0.01));
+  // EXPECT_FALSE(masslessMaterial.setAttribute("thickness", 0.01));
 
-  ASSERT_TRUE(masslessMaterial.getAttribute("thickness"));
-  masslessMaterialThickness = masslessMaterial.getAttribute("thickness").get();
-  EXPECT_TRUE(masslessMaterialThickness.valueType() == AttributeValueType::Double);
-  EXPECT_DOUBLE_EQ(0.0,masslessMaterialThickness.valueAsDouble());
+  // ASSERT_TRUE(masslessMaterial.getAttribute("thickness"));
+  // masslessMaterialThickness = masslessMaterial.getAttribute("thickness").get();
+  // EXPECT_TRUE(masslessMaterialThickness.valueType() == AttributeValueType::Double);
+  // EXPECT_DOUBLE_EQ(0.0,masslessMaterialThickness.valueAsDouble());
 }
 
 TEST_F(ModelFixture, OpaqueMaterial_RoofVegetation_Constructors)
@@ -176,22 +178,23 @@ TEST_F(ModelFixture, OpaqueMaterial_RoofVegetation_Attributes)
   Model model;
   RoofVegetation roofVegetation(model);
 
+  // Removed due to removal of attributes
   // thickness attribute equivalent to thickness field
-  ASSERT_TRUE(roofVegetation.getAttribute("thickness"));
-  Attribute roofVegetationThickness = roofVegetation.getAttribute("thickness").get();
-  EXPECT_TRUE(roofVegetationThickness.valueType() == AttributeValueType::Double);
+  // ASSERT_TRUE(roofVegetation.getAttribute("thickness"));
+  // Attribute roofVegetationThickness = roofVegetation.getAttribute("thickness").get();
+  // EXPECT_TRUE(roofVegetationThickness.valueType() == AttributeValueType::Double);
 
-  // not set yet--will return default value
-  OptionalDouble oDefault = roofVegetation.iddObject().getField(OS_Material_RoofVegetationFields::Thickness).get().properties().numericDefault;
-  ASSERT_TRUE(oDefault);
-  EXPECT_DOUBLE_EQ(*oDefault,roofVegetationThickness.valueAsDouble());
-  EXPECT_FALSE(roofVegetation.getDouble(OS_Material_RoofVegetationFields::Thickness));
-  EXPECT_TRUE(roofVegetation.getDouble(OS_Material_RoofVegetationFields::Thickness,true));
+  // // not set yet--will return default value
+  // OptionalDouble oDefault = roofVegetation.iddObject().getField(OS_Material_RoofVegetationFields::Thickness).get().properties().numericDefault;
+  // ASSERT_TRUE(oDefault);
+  // EXPECT_DOUBLE_EQ(*oDefault,roofVegetationThickness.valueAsDouble());
+  // EXPECT_FALSE(roofVegetation.getDouble(OS_Material_RoofVegetationFields::Thickness));
+  // EXPECT_TRUE(roofVegetation.getDouble(OS_Material_RoofVegetationFields::Thickness,true));
 
-  // should be settable
-  EXPECT_TRUE(roofVegetation.setAttribute("thickness", 0.051));
-  ASSERT_TRUE(roofVegetation.getDouble(OS_Material_RoofVegetationFields::Thickness));
-  EXPECT_DOUBLE_EQ(0.051,roofVegetation.getDouble(OS_Material_RoofVegetationFields::Thickness).get());
+  // // should be settable
+  // EXPECT_TRUE(roofVegetation.setAttribute("thickness", 0.051));
+  // ASSERT_TRUE(roofVegetation.getDouble(OS_Material_RoofVegetationFields::Thickness));
+  // EXPECT_DOUBLE_EQ(0.051,roofVegetation.getDouble(OS_Material_RoofVegetationFields::Thickness).get());
 }
 
 TEST_F(ModelFixture, OpaqueMaterial_StandardOpaqueMaterial_Constructors)

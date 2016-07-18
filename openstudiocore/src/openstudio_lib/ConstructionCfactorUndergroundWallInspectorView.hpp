@@ -33,9 +33,9 @@ namespace model {
 
 }
 
-class OSLineEdit;
+class OSLineEdit2;
 
-class OSQuantityEdit;
+class OSQuantityEdit2;
 
 class OSComboBox2;
 
@@ -69,13 +69,13 @@ class ConstructionCfactorUndergroundWallInspectorView : public ModelObjectInspec
 
     bool m_isIP;
 
-    OSLineEdit * m_nameEdit; 
+    OSLineEdit2 * m_nameEdit; 
 
     StandardsInformationConstructionWidget * m_standardsInformationWidget;
       
-    OSQuantityEdit * m_cfactorEdit;
+    OSQuantityEdit2 * m_cfactorEdit;
 
-    OSQuantityEdit * m_heightEdit;
+    OSQuantityEdit2 * m_heightEdit;
 };
 
 } // openstudio

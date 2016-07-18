@@ -22,6 +22,7 @@
 
 #include "FieldMethodTypedefs.hpp"
 
+#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
 #include "../model/ModelObject.hpp"
 #include "../model/ModelExtensibleGroup.hpp"
 
@@ -36,7 +37,7 @@ class QFocusEvent;
 
 namespace openstudio {
 
-class OSIntegerEdit2: public QLineEdit {
+class OSIntegerEdit2: public QLineEdit, public Nano::Observer {
   Q_OBJECT
 
  public:
@@ -109,7 +110,7 @@ class OSIntegerEdit2: public QLineEdit {
 
   void onModelObjectChange();
 
-  void onModelObjectRemove(Handle handle);
+  void onModelObjectRemove(const Handle& handle);
 
  private:
   boost::optional<model::ModelObject> m_modelObject; // will be set if attached to ModelObject or ModelExtensibleGroup
@@ -139,50 +140,50 @@ class OSIntegerEdit2: public QLineEdit {
   REGISTER_LOGGER("openstudio.OSIntegerEdit");
 };
 
-class OSIntegerEdit: public QLineEdit {
-  Q_OBJECT
+// class OSIntegerEdit: public QLineEdit, public Nano::Observer {
+//   Q_OBJECT
 
- public:
+//  public:
 
-  OSIntegerEdit(QWidget * parent = nullptr);
+//   OSIntegerEdit(QWidget * parent = nullptr);
 
-  virtual ~OSIntegerEdit() {}
+//   virtual ~OSIntegerEdit() {}
 
-  QIntValidator * intValidator() { return m_intValidator; }
+//   QIntValidator * intValidator() { return m_intValidator; }
 
-  void bind(model::ModelObject& modelObject,
-            const char* property,
-            const boost::optional<std::string>& isDefaultedProperty = boost::none,
-            const boost::optional<std::string>& isAutosizedProperty = boost::none,
-            const boost::optional<std::string>& isAutocalucatedProperty = boost::none);
+//   void bind(model::ModelObject& modelObject,
+//             const char* property,
+//             const boost::optional<std::string>& isDefaultedProperty = boost::none,
+//             const boost::optional<std::string>& isAutosizedProperty = boost::none,
+//             const boost::optional<std::string>& isAutocalucatedProperty = boost::none);
 
-  void unbind();
+//   void unbind();
 
- private slots:
+//  private slots:
 
-  void onEditingFinished();
+//   void onEditingFinished();
 
-  void onModelObjectChange();
+//   void onModelObjectChange();
 
-  void onModelObjectRemove(Handle handle);
+//   void onModelObjectRemove(const Handle& handle);
 
- private:
-  boost::optional<model::ModelObject> m_modelObject;
-  std::string m_property;
-  boost::optional<std::string> m_isDefaultedProperty;
-  boost::optional<std::string> m_isAutosizedProperty;
-  boost::optional<std::string> m_isAutocalculatedProperty;
+//  private:
+//   boost::optional<model::ModelObject> m_modelObject;
+//   std::string m_property;
+//   boost::optional<std::string> m_isDefaultedProperty;
+//   boost::optional<std::string> m_isAutosizedProperty;
+//   boost::optional<std::string> m_isAutocalculatedProperty;
 
-  bool m_isScientific;
-  boost::optional<int> m_precision;
-  QIntValidator * m_intValidator = nullptr;
+//   bool m_isScientific;
+//   boost::optional<int> m_precision;
+//   QIntValidator * m_intValidator = nullptr;
 
-  void refreshTextAndLabel();
+//   void refreshTextAndLabel();
 
-  void setPrecision(const std::string& str);
+//   void setPrecision(const std::string& str);
 
-  REGISTER_LOGGER("openstudio.OSIntegerEdit");
-};
+//   REGISTER_LOGGER("openstudio.OSIntegerEdit");
+// };
 
 } // openstudio
 

@@ -30,9 +30,9 @@ namespace model {
 
 }
 
-class OSLineEdit;
+class OSLineEdit2;
 
-class OSQuantityEdit;
+class OSQuantityEdit2;
 
 class StandardsInformationMaterialWidget;
 
@@ -66,35 +66,35 @@ class WindowMaterialShadeInspectorView : public ModelObjectInspectorView
 
     bool m_isIP;
 
-    OSLineEdit * m_nameEdit = nullptr;
+    OSLineEdit2 * m_nameEdit = nullptr;
 
-    OSQuantityEdit * m_solarTransmittance = nullptr;
+    OSQuantityEdit2 * m_solarTransmittance = nullptr;
 
-    OSQuantityEdit * m_solarReflectance = nullptr;
+    OSQuantityEdit2 * m_solarReflectance = nullptr;
 
-    OSQuantityEdit * m_visibleTransmittance = nullptr;
+    OSQuantityEdit2 * m_visibleTransmittance = nullptr;
 
-    OSQuantityEdit * m_visibleReflectance = nullptr;
+    OSQuantityEdit2 * m_visibleReflectance = nullptr;
 
-    OSQuantityEdit * m_thermalHemisphericalEmissivity = nullptr;
+    OSQuantityEdit2 * m_thermalHemisphericalEmissivity = nullptr;
 
-    OSQuantityEdit * m_thermalTransmittance = nullptr;
+    OSQuantityEdit2 * m_thermalTransmittance = nullptr;
 
-    OSQuantityEdit * m_thickness = nullptr;
+    OSQuantityEdit2 * m_thickness = nullptr;
 
-    OSQuantityEdit * m_conductivity = nullptr;
+    OSQuantityEdit2 * m_conductivity = nullptr;
 
-    OSQuantityEdit * m_shadeToGlassDistance = nullptr;
+    OSQuantityEdit2 * m_shadeToGlassDistance = nullptr;
 
-    OSQuantityEdit * m_topOpeningMultiplier = nullptr;
+    OSQuantityEdit2 * m_topOpeningMultiplier = nullptr;
 
-    OSQuantityEdit * m_bottomOpeningMultiplier = nullptr;
+    OSQuantityEdit2 * m_bottomOpeningMultiplier = nullptr;
 
-    OSQuantityEdit * m_leftSideOpeningMultiplier = nullptr;
+    OSQuantityEdit2 * m_leftSideOpeningMultiplier = nullptr;
 
-    OSQuantityEdit * m_rightSideOpeningMultiplier = nullptr;
+    OSQuantityEdit2 * m_rightSideOpeningMultiplier = nullptr;
 
-    OSQuantityEdit * m_airflowPermeability = nullptr;
+    OSQuantityEdit2 * m_airflowPermeability = nullptr;
 
     StandardsInformationMaterialWidget * m_standardsInformationWidget = nullptr;
 

@@ -36,17 +36,17 @@ namespace detail {
 
   /** ScheduleRule_Impl is a ParentObject_Impl that is the implementation class for ScheduleRule.*/
   class MODEL_API ScheduleRule_Impl : public ParentObject_Impl {
-    Q_OBJECT;
-    Q_PROPERTY(int ruleIndex READ ruleIndex WRITE setRuleIndex);
-    Q_PROPERTY(bool applySunday READ applySunday WRITE setApplySunday);
-    Q_PROPERTY(bool applyMonday READ applyMonday WRITE setApplyMonday);
-    Q_PROPERTY(bool applyTuesday READ applyTuesday WRITE setApplyTuesday);
-    Q_PROPERTY(bool applyWednesday READ applyWednesday WRITE setApplyWednesday);
-    Q_PROPERTY(bool applyThursday READ applyThursday WRITE setApplyThursday);
-    Q_PROPERTY(bool applyFriday READ applyFriday WRITE setApplyFriday);
-    Q_PROPERTY(bool applySaturday READ applySaturday WRITE setApplySaturday);
-    //Q_PROPERTY(bool applyHoliday READ applyHoliday WRITE setApplyHoliday);
-    Q_PROPERTY(std::string dateSpecificationType READ dateSpecificationType);
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    //
+    
    public:
     /** @name Constructors and Destructors */
     //@{
