@@ -531,11 +531,13 @@ SpaceLoadInstanceMiniView::SpaceLoadInstanceMiniView(const model::SpaceLoadInsta
   m_multiplierEdit->bind(
     *opt_spaceLoadInstance,
     DoubleGetter(std::bind(&model::SpaceLoadInstance::multiplier, opt_spaceLoadInstance.get_ptr())),
+	boost::optional<DoubleSetter>(),
     boost::none,
     boost::none,
     boost::none,
-    boost::none,
-    boost::optional<BasicQuery>(std::bind(&model::SpaceLoadInstance::isMultiplierDefaulted, opt_spaceLoadInstance.get_ptr()))
+    boost::optional<BasicQuery>(std::bind(&model::SpaceLoadInstance::isMultiplierDefaulted, opt_spaceLoadInstance.get_ptr())),
+	boost::none,
+	boost::none
   );
 
   if (isDefault){
