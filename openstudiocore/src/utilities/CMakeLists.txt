@@ -208,7 +208,6 @@ set(documentation_src
 
 set(${target_name}_depends
   sqlite
-#  dl
   jsoncpp
   #litesql
   #litesql-util
