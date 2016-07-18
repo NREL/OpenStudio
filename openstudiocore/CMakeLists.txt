@@ -584,7 +584,7 @@ if(NOT EXISTS ${QT_INSTALL_DIR})
       set(QT_ZIP_EXPECTED_MD5 "094985d51cc686cdb665c45fff9c088f")
     else()
       set(QT_ZIP_FILENAME "qt_5_6_osx_shared.tar.gz")
-      set(QT_ZIP_EXPECTED_MD5 "550d6a4fcc2cc7eccf82b5d702cff7ad")
+      set(QT_ZIP_EXPECTED_MD5 "326887393d55b5da97a1be9764fb0d1b")
     endif()
 
   elseif(EXISTS "/etc/redhat-release")
