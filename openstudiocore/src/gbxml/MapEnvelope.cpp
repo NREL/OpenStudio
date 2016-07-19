@@ -223,7 +223,9 @@ namespace gbxml {
   {
     boost::optional<QDomElement> result;
 
-    if (constructionBase.isOpaque()){
+    bool isOpaque = constructionBase.isOpaque();
+
+    if (isOpaque){
       result = doc.createElement("Construction");
       m_translatedObjects[constructionBase.handle()] = *result;
     } else{
@@ -240,9 +242,65 @@ namespace gbxml {
     QDomElement nameElement = doc.createElement("Name");
     result->appendChild(nameElement);
     nameElement.appendChild(doc.createTextNode(QString::fromStdString(name)));
-  
+    
+    if (isOpaque){
+      if (constructionBase.optionalCast<model::LayeredConstruction>()){
+        for (const auto& layer : constructionBase.cast<model::LayeredConstruction>().layers()){
+          QDomElement layerIdElement = doc.createElement("LayerId");
+          result->appendChild(layerIdElement);
+          layerIdElement.setAttribute("layerIdRef", escapeName(layer.name().get() + " Layer"));
+
+          m_materials.insert(layer);
+        }
+      }
+    }
+
     return result;
   }
-    
+
+  boost::optional<QDomElement> ForwardTranslator::translateLayer(const openstudio::model::Material& material, QDomDocument& doc)
+  {
+    boost::optional<QDomElement> result;
+
+    result = doc.createElement("Layer");
+
+    std::string materialName = material.name().get();
+    std::string layerName = materialName + " Layer";
+
+    // id
+    result->setAttribute("id", escapeName(layerName));
+
+    // name
+    QDomElement nameElement = doc.createElement("Name");
+    result->appendChild(nameElement);
+    nameElement.appendChild(doc.createTextNode(QString::fromStdString(layerName)));
+
+    // name
+    QDomElement materialIdElement = doc.createElement("MaterialId");
+    result->appendChild(materialIdElement);
+    materialIdElement.setAttribute("materialIdRef", escapeName(materialName));
+
+    return result;
+  }
+  
+  boost::optional<QDomElement> ForwardTranslator::translateMaterial(const openstudio::model::Material& material, QDomDocument& doc)
+  {
+    boost::optional<QDomElement> result;
+
+    result = doc.createElement("Material");
+
+    std::string name = material.name().get();
+
+    // id
+    result->setAttribute("id", escapeName(name));
+
+    // name
+    QDomElement nameElement = doc.createElement("Name");
+    result->appendChild(nameElement);
+    nameElement.appendChild(doc.createTextNode(QString::fromStdString(name)));
+
+    return result;
+  }
+  
 } // gbxml
 } // openstudio

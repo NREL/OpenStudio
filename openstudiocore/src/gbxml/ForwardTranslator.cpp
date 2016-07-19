@@ -65,6 +65,8 @@
 #include <QDomElement>
 #include <QThread>
 
+#include <regex>
+
 namespace openstudio {
 namespace gbxml {
 
@@ -132,10 +134,22 @@ namespace gbxml {
 
   QString ForwardTranslator::escapeName(const std::string& name)
   {
-    QString result = toQString(name);
+    QString result;
+    if (std::regex_match(name, std::regex("^\\d.*"))) {
+      result = toQString("id_" + name);
+    } else {
+      result = toQString(name);
+    }
     result.replace(" ", "_");
     result.replace("(", "_");
     result.replace(")", "_");
+    result.replace("[", "_");
+    result.replace("]", "_");
+    result.replace("{", "_");
+    result.replace("}", "_");
+    result.replace("/", "_");
+    result.replace("\\", "_");
+    result.replace("-", "_");
     return result;
   }
 
@@ -195,16 +209,35 @@ namespace gbxml {
       }
     }
     
-    /*
     // do materials
-    for (const model::Material& material : model.getModelObjects<model::Material>()){
-      boost::optional<QDomElement> materialElement = translateMaterial(material, doc);
-      if (materialElement){
-        projectElement.appendChild(*materialElement);
+    if (m_progressBar){
+      m_progressBar->setWindowTitle(toString("Translating Materials"));
+      m_progressBar->setMinimum(0);
+      m_progressBar->setMaximum((int)2*m_materials.size()); 
+      m_progressBar->setValue(0);
+    }
+
+    for (const model::Material& material : m_materials){
+      boost::optional<QDomElement> layerElement = translateLayer(material, doc);
+      if (layerElement){
+        gbXMLElement.appendChild(*layerElement);
+      }
+
+      if (m_progressBar){
+        m_progressBar->setValue(m_progressBar->value() + 1);
       }
     }
-    */
-    
+    for (const model::Material& material : m_materials){
+      boost::optional<QDomElement> materialElement = translateMaterial(material, doc);
+      if (materialElement){
+        gbXMLElement.appendChild(*materialElement);
+      }
+
+      if (m_progressBar){
+        m_progressBar->setValue(m_progressBar->value() + 1);
+      }
+    }
+
     // do thermal zones
     std::vector<model::ThermalZone> thermalZones = model.getConcreteModelObjects<model::ThermalZone>();
     if (m_progressBar){

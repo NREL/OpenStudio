@@ -89,10 +89,13 @@ namespace gbxml {
     boost::optional<QDomElement> translateSubSurface(const openstudio::model::SubSurface& subSurface, const openstudio::Transformation& transformation, QDomDocument& doc);
     boost::optional<QDomElement> translateShadingSurface(const openstudio::model::ShadingSurface& shadingSurface, QDomDocument& doc);
     boost::optional<QDomElement> translateThermalZone(const openstudio::model::ThermalZone& thermalZone, QDomDocument& doc);
+    boost::optional<QDomElement> translateLayer(const openstudio::model::Material& material, QDomDocument& doc);
     boost::optional<QDomElement> translateMaterial(const openstudio::model::Material& material, QDomDocument& doc);
     boost::optional<QDomElement> translateConstructionBase(const openstudio::model::ConstructionBase& constructionBase, QDomDocument& doc);
 
     std::map<openstudio::Handle, QDomElement> m_translatedObjects;
+
+    std::set<openstudio::model::Material, openstudio::IdfObjectImplLess> m_materials;
 
     StringStreamLogSink m_logSink;
 
