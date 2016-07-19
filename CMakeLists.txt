@@ -547,8 +547,8 @@ endif()
 
 if( APPLE )
   ExternalProject_Add(Ruby
-    URL http://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.2.0.tar.gz
-    URL_MD5 d4d8b600af2f77566515728d5bd7ffa4
+    URL http://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.0.0.tar.gz
+    URL_MD5 07f4e70aba691eb99ef51e8eaab54426
     BUILD_IN_SOURCE 1
     CONFIGURE_COMMAND autoconf && sh -c "./configure --with-static-linked-ext --without-gmp --without-tcl --without-tk --disable-install-doc --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install"
     BUILD_COMMAND $(MAKE)  libenc; $(MAKE) libtrans; $(MAKE)
@@ -556,17 +556,14 @@ if( APPLE )
   )
   find_file( RUBY_CONFIG_INCLUDE_DIR config.h PATHS "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/include/" )
   set(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/libruby-static.a")
-  set(RUBY_INCLUDE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/include/ruby-2.2.0")
-  # Uh... yeah. this line needs some work...
-  #set(RUBY_CONFIG_INCLUDE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/include/ruby-2.2.0/x86_64-darwin15")
-  #set(RUBY_CONFIG_INCLUDE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/include/ruby-2.2.0/x86_64-darwin13")
+  set(RUBY_INCLUDE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/include/ruby-2.0.0")
   set(RUBY_EXECUTABLE "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby")
   set(RUBY_SOURCE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby")
 elseif( UNIX )
   # I had to install autotools-dev on Redhat, http://askubuntu.com/questions/430706/installing-autotools-autoconf
   ExternalProject_Add(Ruby
-    URL http://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.2.0.tar.gz
-    URL_MD5 d4d8b600af2f77566515728d5bd7ffa4
+    URL http://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.0.0.tar.gz
+    URL_MD5 07f4e70aba691eb99ef51e8eaab54426
     BUILD_IN_SOURCE 1
     CONFIGURE_COMMAND autoconf && sh -c "./configure --with-static-linked-ext --without-gmp --without-tcl --without-tk --disable-install-doc --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install"
     BUILD_COMMAND $(MAKE)
@@ -574,7 +571,7 @@ elseif( UNIX )
   )
   find_file( RUBY_CONFIG_INCLUDE_DIR config.h PATHS "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/include/" )
   set(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/libruby-static.a")
-  set(RUBY_INCLUDE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/include/ruby-2.2.0")
+  set(RUBY_INCLUDE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/include/ruby-2.0.0")
   # Uh... yeah. this line needs some work...
   set(RUBY_EXECUTABLE "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby")
   set(RUBY_SOURCE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby")
@@ -583,21 +580,21 @@ else()
   # This will require bison, sed, and at least ruby 1.8 in your path
   # Consider minsys even though the build will be done by msvc the ruby build system uses some traditionally unix tools
   ExternalProject_Add(Ruby
-    URL http://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.2.0.tar.gz
-    URL_MD5 d4d8b600af2f77566515728d5bd7ffa4
+    URL http://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.0.0.tar.gz
+    URL_MD5 07f4e70aba691eb99ef51e8eaab54426
     BUILD_IN_SOURCE 1
     CONFIGURE_COMMAND ""
     BUILD_COMMAND cmd /C "${CMAKE_BINARY_DIR}/build_ruby.bat"
     INSTALL_COMMAND ""
   )
-  set(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install-release/lib/x64-msvcr120-ruby220-static.lib")
-  set(RUBY_INCLUDE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install-release/include/ruby-2.2.0")
+  set(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install-release/lib/x64-msvcr120-ruby200-static.lib")
+  set(RUBY_INCLUDE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install-release/include/ruby-2.0.0")
   find_file( RUBY_CONFIG_INCLUDE_DIR config.h PATHS "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install-release/include/" )
   set(RUBY_EXECUTABLE "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install-release/bin/ruby")
   set(RUBY_SOURCE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-release")
 
-  set(RUBY_LIBRARY_DEBUG "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install-debug/lib/x64-msvcr120-ruby220-static.lib")
-  set(RUBY_INCLUDE_DIR_DEBUG "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install-debug/include/ruby-2.2.0")
+  set(RUBY_LIBRARY_DEBUG "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install-debug/lib/x64-msvcr120-ruby200-static.lib")
+  set(RUBY_INCLUDE_DIR_DEBUG "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install-debug/include/ruby-2.0.0")
   find_file( RUBY_CONFIG_INCLUDE_DIR_DEBUG config.h PATHS "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install-debug/include/" )
   set(RUBY_EXECUTABLE_DEBUG "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install-debug/bin/ruby")
   set(RUBY_SOURCE_DIR_DEBUG "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-debug")

@@ -333,7 +333,7 @@ unset(ENERGYPLUS_WEATHER_DIR CACHE)
 find_package(EnergyPlus "${ENERGYPLUS_VERSION}" REQUIRED)
 
 # Ruby
-find_package(Ruby 2.2 REQUIRED)
+find_package(Ruby 2.0 REQUIRED)
 set(RUBY_MODULE_DIR "Ruby")
 set(RUBY_MODULE_ARCH_DIR "Ruby/openstudio")
 
