@@ -208,7 +208,7 @@ else()
   set(OTHER_EXT_LIBS 
     "${RUBY_SOURCE_DIR}/ext/json/generator/generator.a" 
     "${RUBY_SOURCE_DIR}/ext/json/parser/parser.a"
-    "${RUBY_SOURCE_DIR}/ext/rbconfig/sizeof/sizeof.a"
+    #"${RUBY_SOURCE_DIR}/ext/rbconfig/sizeof/sizeof.a"
     "${RUBY_SOURCE_DIR}/ext/digest/md5/md5.a"
     "${RUBY_SOURCE_DIR}/ext/digest/rmd160/rmd160.a"
     "${RUBY_SOURCE_DIR}/ext/digest/sha1/sha1.a"
