@@ -841,6 +841,8 @@ endif()
 # Include the resources, should happen after find EnergyPlus
 add_subdirectory(resources)
 
+add_subdirectory(ruby)
+
 foreach(D ${project_directories})
   add_subdirectory(src/${D})
 endforeach()

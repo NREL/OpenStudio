@@ -3,29 +3,29 @@ include_directories(${RUBY_INCLUDE_DIRS} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_BIN
 
 # Do this at cmake time instead of build time to keep
 # all network activity isolated to configure time
-#execute_process(
-#  COMMAND bundler "install" "--path=${CMAKE_CURRENT_BINARY_DIR}/gems"
-#  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
-#)
-#
-#file(GLOB_RECURSE RB_FILES FOLLOW_SYMLINKS "${CMAKE_CURRENT_BINARY_DIR}/gems/ruby/2.0.0/bundler/**/*.rb")
-#file(GLOB_RECURSE IDF_FILES FOLLOW_SYMLINKS "${CMAKE_CURRENT_BINARY_DIR}/gems/ruby/2.0.0/bundler/**/*.idf")
-#
-#list(APPEND EMBED_FILES ${RB_FILES})
-#list(APPEND EMBED_FILES ${IDF_FILES})
-#
-#foreach( _FILE ${EMBED_FILES} )
-#  file(RELATIVE_PATH LOCATION "${CMAKE_CURRENT_BINARY_DIR}/gems/ruby/2.0.0/bundler" ${_FILE})
-#  list(APPEND FILES ${_FILE})
-#  list(APPEND EMBEDDED_PATHS ${LOCATION})
-#endforeach()
-#
-#embed_files("${FILES}" "${EMBEDDED_PATHS}" EMBEDDED_SOURCE)
-#set_source_files_properties(${EMBED_SOURCE} PROPERTIES HEADER_FILE_ONLY TRUE)
+execute_process(
+  COMMAND bundler "install" "--path=${CMAKE_CURRENT_BINARY_DIR}/gems"
+  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+)
+
+file(GLOB_RECURSE RB_FILES FOLLOW_SYMLINKS "${CMAKE_CURRENT_BINARY_DIR}/gems/ruby/2.0.0/bundler/**/*.rb")
+file(GLOB_RECURSE IDF_FILES FOLLOW_SYMLINKS "${CMAKE_CURRENT_BINARY_DIR}/gems/ruby/2.0.0/bundler/**/*.idf")
+
+list(APPEND EMBED_FILES ${RB_FILES})
+list(APPEND EMBED_FILES ${IDF_FILES})
+
+foreach( _FILE ${EMBED_FILES} )
+  file(RELATIVE_PATH LOCATION "${CMAKE_CURRENT_BINARY_DIR}/gems/ruby/2.0.0/bundler" ${_FILE})
+  list(APPEND FILES ${_FILE})
+  list(APPEND EMBEDDED_PATHS ${LOCATION})
+endforeach()
+
+embed_files("${FILES}" "${EMBEDDED_PATHS}" EMBEDDED_SOURCE)
+set_source_files_properties(${EMBED_SOURCE} PROPERTIES HEADER_FILE_ONLY TRUE)
 
 add_library( init_openstudio
   init_openstudio.cpp
-  #${EMBEDDED_SOURCE}
+  ${EMBEDDED_SOURCE}
 )
 
 target_link_libraries(init_openstudio
@@ -75,9 +75,6 @@ add_library(
 #target_link_libraries(openstudiorb ${RUBY_LIBRARY})
 # fix this
 target_link_libraries(openstudiorb /System/Library/Frameworks/Ruby.framework)
-if( APPLE )
-  target_link_libraries(openstudiorb ${corefoundation_lib})
-endif()
 
 set_target_properties(openstudiorb PROPERTIES PREFIX "")
 set_target_properties(openstudiorb PROPERTIES OUTPUT_NAME openstudio)
