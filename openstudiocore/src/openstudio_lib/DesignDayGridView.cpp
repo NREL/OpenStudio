@@ -97,8 +97,8 @@ DesignDayGridView::DesignDayGridView(bool isIP, const model::Model & model, QWid
   layout->setSpacing(0);
   layout->setContentsMargins(0,0,0,0);
   setLayout(layout);
- 
-  auto designDays = model.getModelObjects<model::DesignDay>();
+
+  auto designDays = model.getConcreteModelObjects<model::DesignDay>();
   auto designDayModelObjects = subsetCastVector<model::ModelObject>(designDays);
 
   m_gridController = new DesignDayGridController(m_isIP, "Design Days", IddObjectType::OS_SizingPeriod_DesignDay, model, designDayModelObjects);
@@ -128,7 +128,7 @@ DesignDayGridView::DesignDayGridView(bool isIP, const model::Model & model, QWid
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_gridController, SLOT(toggleUnits(bool)));
   OS_ASSERT(isConnected);
 
-  auto designDayVector = model.getModelObjects<model::DesignDay>(); // NOTE for horizontal system lists
+  auto designDayVector = model.getConcreteModelObjects<model::DesignDay>(); // NOTE for horizontal system lists
 
 }
 
@@ -554,7 +554,7 @@ void DesignDayGridController::onItemDropped(const OSItemId& itemId)
 
 void DesignDayGridController::refreshModelObjects()
 {
-  auto desighDays = m_model.getModelObjects<model::DesignDay>();
+  auto desighDays = m_model.getConcreteModelObjects<model::DesignDay>();
   m_modelObjects = subsetCastVector<model::ModelObject>(desighDays);
   std::sort(m_modelObjects.begin(), m_modelObjects.end(), ModelObjectNameSorter());
 }

@@ -21,12 +21,13 @@
 #include "ComponentWatcher_Impl.hpp"
 
 #include "Model.hpp"
-#include "Model_Impl.hpp"
+#include "Model_Impl.hpp" 
 
 #include "ModelObject.hpp"
 #include "ModelObject_Impl.hpp"
 
 #include "ComponentData_Impl.hpp"
+#include "nano_signal_slot.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Compare.hpp"
@@ -55,24 +56,23 @@ namespace detail {
       // connect to object's signals
       implPtr = object.getImpl<ModelObject_Impl>();
       // data change
-      connect(implPtr.get(), &ModelObject_Impl::onDataChange, this, &ComponentWatcher_Impl::dataChange);
+      implPtr.get()->ModelObject_Impl::onDataChange.connect<ComponentWatcher_Impl, &ComponentWatcher_Impl::dataChange>(this);
       // name change
-      connect(implPtr.get(), &ModelObject_Impl::onNameChange, this, &ComponentWatcher_Impl::nameChange);
+      implPtr.get()->ModelObject_Impl::onNameChange.connect<ComponentWatcher_Impl, &ComponentWatcher_Impl::nameChange>(this);
       // relationship change
-      connect(implPtr.get(), &ModelObject_Impl::onRelationshipChange, this, &ComponentWatcher_Impl::relationshipChange);
+      implPtr.get()->ModelObject_Impl::onRelationshipChange.connect<ComponentWatcher_Impl, &ComponentWatcher_Impl::relationshipChange>(this);
       // remove
-      connect(implPtr.get(), &ModelObject_Impl::onRemoveFromWorkspace, this, &ComponentWatcher_Impl::objectRemove);
+      implPtr.get()->ModelObject_Impl::onRemoveFromWorkspace.connect<ComponentWatcher_Impl, &ComponentWatcher_Impl::objectRemove>(this);
     }
     // connect signals for ComponentData, ComponentDataTags, and ComponentDataAttributes
     implPtr = componentData.getImpl<ModelObject_Impl>();
     // component data change
-    connect(implPtr.get(), &ModelObject_Impl::onDataChange, this, &ComponentWatcher_Impl::componentDataChange);
+    implPtr.get()->ModelObject_Impl::onDataChange.connect<ComponentWatcher_Impl, &ComponentWatcher_Impl::componentDataChange>(this);
     // component data remove
-    connect(implPtr.get(), &ModelObject_Impl::onRemoveFromWorkspace, this, &ComponentWatcher_Impl::objectRemove);
+    implPtr.get()->ModelObject_Impl::onRemoveFromWorkspace.connect<ComponentWatcher_Impl, &ComponentWatcher_Impl::objectRemove>(this);
     // connect to addWorkspaceObject signal
     std::shared_ptr<Model_Impl> modelImplPtr = m_componentData.model().getImpl<Model_Impl>();
-    connect(modelImplPtr.get(), static_cast<void (Model_Impl::*)(const WorkspaceObject&, const openstudio::IddObjectType&, const openstudio::UUID&) const>(&Model_Impl::addWorkspaceObject),
-      this, &ComponentWatcher_Impl::objectAdd);
+    modelImplPtr.get()->Model_Impl::addWorkspaceObject.connect<ComponentWatcher_Impl, &ComponentWatcher_Impl::objectAdd>(this);
   }
 
   ComponentWatcher ComponentWatcher_Impl::componentWatcher() const {
@@ -111,17 +111,20 @@ namespace detail {
   }
 
   void ComponentWatcher_Impl::objectRemove(const Handle& handleOfRemovedObject) {
+    
     // no ComponentData means no Component to watch
     if (handleOfRemovedObject == m_componentData.handle()) {
-      emit obsolete(componentWatcher());
+      this->obsolete.nano_emit(componentWatcher());
       return;
     }
+
     // if removedObject is the primary componentObject, nullify the component.
     OS_ASSERT(m_componentObjects.size() > 0);
     if (handleOfRemovedObject == m_componentObjects[0].handle()) {
       mf_removeComponent();
       return;
     }
+
     // if removedObject is a componentObject, remove from the vector and refresh
     // component contents
     auto it = std::find_if(m_componentObjects.begin(),
@@ -135,7 +138,7 @@ namespace detail {
     return;
   }
 
-  void ComponentWatcher_Impl::objectAdd(const WorkspaceObject& addedObject) {
+  void ComponentWatcher_Impl::objectAdd(const WorkspaceObject& addedObject, const openstudio::IddObjectType& type, const openstudio::UUID& uuid) {
     /*IddObjectType type =*/ addedObject.iddObject().type();
     return;
   }
@@ -143,19 +146,19 @@ namespace detail {
   void ComponentWatcher_Impl::mf_changeComponentVersion() {
     // disconnect componentDataChange slot to avoid endless loop
     std::shared_ptr<ModelObject_Impl> implPtr = m_componentData.getImpl<ModelObject_Impl>();
-    disconnect(implPtr.get(), &ModelObject_Impl::onDataChange, this, &ComponentWatcher_Impl::componentDataChange);
+    implPtr.get()->onDataChange.disconnect<ComponentWatcher_Impl, &ComponentWatcher_Impl::componentDataChange>(this);
 
     // change version UUID
     m_componentData.createVersionUUID();
 
     // reconnect componentDataChange
-    connect(implPtr.get(), &ModelObject_Impl::onDataChange, this, &ComponentWatcher_Impl::componentDataChange);
+    implPtr.get()->ModelObject_Impl::onDataChange.connect<ComponentWatcher_Impl, &ComponentWatcher_Impl::componentDataChange>(this);
   }
 
   void ComponentWatcher_Impl::mf_refreshComponentContents(bool logWarnings) {
     // disconnect componentDataChange slot to avoid endless loop
     std::shared_ptr<ModelObject_Impl> implPtr = m_componentData.getImpl<ModelObject_Impl>();
-    disconnect(implPtr.get(), &ModelObject_Impl::onDataChange, this, &ComponentWatcher_Impl::componentDataChange);
+    implPtr.get()->onDataChange.disconnect<ComponentWatcher_Impl, &ComponentWatcher_Impl::componentDataChange>(this);
 
     // \todo logWarnings
     m_componentData.clearExtensibleGroups();
@@ -164,7 +167,7 @@ namespace detail {
     }
 
     // reconnect componentDataChange
-    connect(implPtr.get(), &ModelObject_Impl::onDataChange, this, &ComponentWatcher_Impl::componentDataChange);
+    implPtr.get()->ModelObject_Impl::onDataChange.connect<ComponentWatcher_Impl, &ComponentWatcher_Impl::componentDataChange>(this);
   }
 
   void ComponentWatcher_Impl::mf_removeComponent() {

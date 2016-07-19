@@ -30,13 +30,13 @@ namespace detail {
 
   /** ScheduleVariableInterval_Impl is a ScheduleInterval_Impl that is the implementation class for ScheduleVariableInterval.*/
   class MODEL_API ScheduleVariableInterval_Impl : public ScheduleInterval_Impl {
-    Q_OBJECT;
-    Q_PROPERTY(bool interpolatetoTimestep READ interpolatetoTimestep WRITE setInterpolatetoTimestep RESET resetInterpolatetoTimestep);
-    Q_PROPERTY(bool isInterpolatetoTimestepDefaulted READ isInterpolatetoTimestepDefaulted);
-    Q_PROPERTY(double outOfRangeValue READ outOfRangeValue WRITE setOutOfRangeValue RESET resetOutOfRangeValue);
-    Q_PROPERTY(bool isOutOfRangeValueDefaulted READ isOutOfRangeValueDefaulted);
-    Q_PROPERTY(int startMonth READ startMonth WRITE setStartMonth);
-    Q_PROPERTY(int startDay READ startDay WRITE setStartDay);
+    
+    
+    
+    
+    
+    
+    
    public:
 
     /** @name Constructors and Destructors */

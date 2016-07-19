@@ -33,7 +33,7 @@ namespace detail {
 
   /** RefrigerationGasCoolerAirCooled_Impl is a ParentObject_Impl that is the implementation class for RefrigerationGasCoolerAirCooled.*/
   class MODEL_API RefrigerationGasCoolerAirCooled_Impl : public ParentObject_Impl {
-//    Q_OBJECT;
+//    
    public:
     /** @name Constructors and Destructors */
     //@{

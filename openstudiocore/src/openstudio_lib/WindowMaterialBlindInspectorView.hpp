@@ -30,11 +30,11 @@ namespace model {
 
 }
 
-class OSComboBox;
+class OSComboBox2;
 
-class OSLineEdit;
+class OSLineEdit2;
 
-class OSQuantityEdit;
+class OSQuantityEdit2;
 
 class StandardsInformationMaterialWidget;
 
@@ -68,63 +68,63 @@ class WindowMaterialBlindInspectorView : public ModelObjectInspectorView
 
     bool m_isIP;
 
-    OSLineEdit * m_nameEdit = nullptr;
+    OSLineEdit2 * m_nameEdit = nullptr;
 
-    OSComboBox * m_slatOrientation = nullptr;
+    OSComboBox2 * m_slatOrientation = nullptr;
 
-    OSQuantityEdit * m_slatWidth = nullptr;
+    OSQuantityEdit2 * m_slatWidth = nullptr;
 
-    OSQuantityEdit * m_slatSeparation = nullptr;
+    OSQuantityEdit2 * m_slatSeparation = nullptr;
 
-    OSQuantityEdit * m_slatThickness = nullptr;
+    OSQuantityEdit2 * m_slatThickness = nullptr;
 
-    OSQuantityEdit * m_slatAngle = nullptr;
+    OSQuantityEdit2 * m_slatAngle = nullptr;
 
-    OSQuantityEdit * m_slatConductivity = nullptr;
+    OSQuantityEdit2 * m_slatConductivity = nullptr;
 
-    OSQuantityEdit * m_slatBeamSolarTransmittance = nullptr;
+    OSQuantityEdit2 * m_slatBeamSolarTransmittance = nullptr;
 
-    OSQuantityEdit * m_frontSideSlatBeamSolarReflectance = nullptr;
+    OSQuantityEdit2 * m_frontSideSlatBeamSolarReflectance = nullptr;
 
-    OSQuantityEdit * m_backSideSlatBeamSolarReflectance = nullptr;
+    OSQuantityEdit2 * m_backSideSlatBeamSolarReflectance = nullptr;
 
-    OSQuantityEdit * m_slatDiffuseSolarTransmittance = nullptr;
+    OSQuantityEdit2 * m_slatDiffuseSolarTransmittance = nullptr;
 
-    OSQuantityEdit * m_frontSideSlatDiffuseSolarReflectance = nullptr;
+    OSQuantityEdit2 * m_frontSideSlatDiffuseSolarReflectance = nullptr;
 
-    OSQuantityEdit * m_backSideSlatDiffuseSolarReflectance = nullptr;
+    OSQuantityEdit2 * m_backSideSlatDiffuseSolarReflectance = nullptr;
 
-    OSQuantityEdit * m_slatBeamVisibleTransmittance = nullptr;
+    OSQuantityEdit2 * m_slatBeamVisibleTransmittance = nullptr;
 
-    OSQuantityEdit * m_frontSideSlatBeamVisibleReflectance = nullptr;
+    OSQuantityEdit2 * m_frontSideSlatBeamVisibleReflectance = nullptr;
 
-    OSQuantityEdit * m_backSideSlatBeamVisibleReflectance = nullptr;
+    OSQuantityEdit2 * m_backSideSlatBeamVisibleReflectance = nullptr;
 
-    OSQuantityEdit * m_slatDiffuseVisibleTransmittance = nullptr;
+    OSQuantityEdit2 * m_slatDiffuseVisibleTransmittance = nullptr;
 
-    OSQuantityEdit * m_frontSideSlatDiffuseVisibleReflectance = nullptr;
+    OSQuantityEdit2 * m_frontSideSlatDiffuseVisibleReflectance = nullptr;
 
-    OSQuantityEdit * m_backSideSlatDiffuseVisibleReflectance = nullptr;
+    OSQuantityEdit2 * m_backSideSlatDiffuseVisibleReflectance = nullptr;
 
-    OSQuantityEdit * m_slatInfraredHemisphericalTransmittance = nullptr;
+    OSQuantityEdit2 * m_slatInfraredHemisphericalTransmittance = nullptr;
 
-    OSQuantityEdit * m_frontSideSlatInfraredHemisphericalEmissivity = nullptr;
+    OSQuantityEdit2 * m_frontSideSlatInfraredHemisphericalEmissivity = nullptr;
 
-    OSQuantityEdit * m_backSideSlatInfraredHemisphericalEmissivity = nullptr;
+    OSQuantityEdit2 * m_backSideSlatInfraredHemisphericalEmissivity = nullptr;
 
-    OSQuantityEdit * m_blindToGlassDistance = nullptr;
+    OSQuantityEdit2 * m_blindToGlassDistance = nullptr;
 
-    OSQuantityEdit * m_blindTopOpeningMultiplier = nullptr;
+    OSQuantityEdit2 * m_blindTopOpeningMultiplier = nullptr;
 
-    OSQuantityEdit * m_blindBottomOpeningMultiplier = nullptr;
+    OSQuantityEdit2 * m_blindBottomOpeningMultiplier = nullptr;
 
-    OSQuantityEdit * m_blindLeftSideOpeningMultiplier = nullptr;
+    OSQuantityEdit2 * m_blindLeftSideOpeningMultiplier = nullptr;
 
-    OSQuantityEdit * m_blindRightSideOpeningMultiplier = nullptr;
+    OSQuantityEdit2 * m_blindRightSideOpeningMultiplier = nullptr;
 
-    OSQuantityEdit * m_minimumSlatAngle = nullptr;
+    OSQuantityEdit2 * m_minimumSlatAngle = nullptr;
 
-    OSQuantityEdit * m_maximumSlatAngle = nullptr;
+    OSQuantityEdit2 * m_maximumSlatAngle = nullptr;
 
     StandardsInformationMaterialWidget * m_standardsInformationWidget = nullptr;
 

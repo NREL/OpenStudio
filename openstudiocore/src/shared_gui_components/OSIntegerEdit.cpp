@@ -157,16 +157,18 @@ void OSIntegerEdit2::completeBind() {
 
   connect(this, &OSIntegerEdit2::editingFinished, this, &OSIntegerEdit2::onEditingFinished);
 
-  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSIntegerEdit2::onModelObjectChange);
+  m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onChange.connect<OSIntegerEdit2, &OSIntegerEdit2::onModelObjectChange>(this);
 
-  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace, this, &OSIntegerEdit2::onModelObjectRemove);
+  m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onRemoveFromWorkspace.connect<OSIntegerEdit2, &OSIntegerEdit2::onModelObjectRemove>(this);
 
   refreshTextAndLabel();
 }
 
 void OSIntegerEdit2::unbind() {
   if (m_modelObject){
-    this->disconnect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get());
+    m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onChange.disconnect<OSIntegerEdit2, &OSIntegerEdit2::onModelObjectChange>(this);
+    m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onRemoveFromWorkspace.disconnect<OSIntegerEdit2, &OSIntegerEdit2::onModelObjectRemove>(this);
+
     m_modelObject.reset();
     m_modelExtensibleGroup.reset();
     m_get.reset();
@@ -251,7 +253,7 @@ void OSIntegerEdit2::onModelObjectChange() {
   refreshTextAndLabel();
 }
 
-void OSIntegerEdit2::onModelObjectRemove(Handle handle) {
+void OSIntegerEdit2::onModelObjectRemove(const Handle& handle) {
   unbind();
 }
 
@@ -376,195 +378,197 @@ void OSIntegerEdit2::focusOutEvent(QFocusEvent * e)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-OSIntegerEdit::OSIntegerEdit( QWidget * parent )
-  : m_isScientific(false)
-{
-  this->setFixedWidth(90);
-  this->setAcceptDrops(false);
-  setEnabled(false);
+// OSIntegerEdit::OSIntegerEdit( QWidget * parent )
+//   : m_isScientific(false)
+// {
+//   this->setFixedWidth(90);
+//   this->setAcceptDrops(false);
+//   setEnabled(false);
 
-  m_intValidator = new QIntValidator();
-  this->setValidator(m_intValidator);
-}
+//   m_intValidator = new QIntValidator();
+//   this->setValidator(m_intValidator);
+// }
 
-void OSIntegerEdit::bind(model::ModelObject& modelObject,
-                          const char* property,
-                          const boost::optional<std::string>& isDefaultedProperty,
-                          const boost::optional<std::string>& isAutosizedProperty,
-                          const boost::optional<std::string>& isAutocalculatedProperty)
-{
-  m_modelObject = modelObject;
-  m_property = property;
-  m_isDefaultedProperty = isDefaultedProperty;
-  m_isAutosizedProperty = isAutosizedProperty;
-  m_isAutocalculatedProperty = isAutocalculatedProperty;
+// void OSIntegerEdit::bind(model::ModelObject& modelObject,
+//                           const char* property,
+//                           const boost::optional<std::string>& isDefaultedProperty,
+//                           const boost::optional<std::string>& isAutosizedProperty,
+//                           const boost::optional<std::string>& isAutocalculatedProperty)
+// {
+//   m_modelObject = modelObject;
+//   m_property = property;
+//   m_isDefaultedProperty = isDefaultedProperty;
+//   m_isAutosizedProperty = isAutosizedProperty;
+//   m_isAutocalculatedProperty = isAutocalculatedProperty;
 
-  // only let one of autosize/autocalculate
-  if (isAutosizedProperty && isAutocalculatedProperty) {
-    LOG_AND_THROW("A field can only be autosized or autocalculated, it cannot be both.");
-  }
+//   // only let one of autosize/autocalculate
+//   if (isAutosizedProperty && isAutocalculatedProperty) {
+//     LOG_AND_THROW("A field can only be autosized or autocalculated, it cannot be both.");
+//   }
 
-  // check for attribute existence
-  StringVector attributeNames = modelObject.attributeNames();
-  StringVector::const_iterator anb(attributeNames.begin()),ane(attributeNames.end());
-  OS_ASSERT(std::find(anb,ane,m_property) != ane);
-  if (m_isDefaultedProperty) {
-    OS_ASSERT(std::find(anb,ane,*m_isDefaultedProperty) != ane);
-  }
-  if (m_isAutosizedProperty) {
-    OS_ASSERT(std::find(anb,ane,*m_isAutosizedProperty) != ane);
-  }
-  if (m_isAutocalculatedProperty) {
-    OS_ASSERT(std::find(anb,ane,*m_isAutocalculatedProperty) != ane);
-  }
+//   // check for attribute existence
+//   StringVector attributeNames = modelObject.attributeNames();
+//   StringVector::const_iterator anb(attributeNames.begin()),ane(attributeNames.end());
+//   OS_ASSERT(std::find(anb,ane,m_property) != ane);
+//   if (m_isDefaultedProperty) {
+//     OS_ASSERT(std::find(anb,ane,*m_isDefaultedProperty) != ane);
+//   }
+//   if (m_isAutosizedProperty) {
+//     OS_ASSERT(std::find(anb,ane,*m_isAutosizedProperty) != ane);
+//   }
+//   if (m_isAutocalculatedProperty) {
+//     OS_ASSERT(std::find(anb,ane,*m_isAutocalculatedProperty) != ane);
+//   }
 
-  setEnabled(true);
+//   setEnabled(true);
 
-  connect(this, &OSIntegerEdit::editingFinished, this, &OSIntegerEdit::onEditingFinished);
+//   connect(this, &OSIntegerEdit::editingFinished, this, &OSIntegerEdit::onEditingFinished);
 
-  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSIntegerEdit::onModelObjectChange);
+//   m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onChange.connect<OSIntegerEdit, &OSIntegerEdit::onModelObjectChange>(this);
+//   m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onRemoveFromWorkspace.connect<OSIntegerEdit, &OSIntegerEdit::onModelObjectRemove>(this);
 
-  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace, this, &OSIntegerEdit::onModelObjectRemove);
+//   refreshTextAndLabel();
+// }
 
-  refreshTextAndLabel();
-}
+// void OSIntegerEdit::unbind() {
+//   if (m_modelObject){
+//     this->disconnect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get());
+//     m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onChange.disconnect<OSIntegerEdit, &OSIntegerEdit::onModelObjectChange>(this);
+//     m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onRemoveFromWorkspace.disconnect<OSIntegerEdit, &OSIntegerEdit::onModelObjectRemove>(this);
 
-void OSIntegerEdit::unbind() {
-  if (m_modelObject){
-    this->disconnect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get());
-    m_modelObject.reset();
-    m_property = "";
-    setEnabled(false);
-  }
-}
+//     m_modelObject.reset();
+//     m_property = "";
+//     setEnabled(false);
+//   }
+// }
 
-void OSIntegerEdit::onEditingFinished() {
-  if (m_modelObject) {
-    std::string str = this->text().toStdString();
-    boost::regex autore("[aA][uU][tT][oO]");
-    ModelObject modelObject = m_modelObject.get();
+// void OSIntegerEdit::onEditingFinished() {
+//   if (m_modelObject) {
+//     std::string str = this->text().toStdString();
+//     boost::regex autore("[aA][uU][tT][oO]");
+//     ModelObject modelObject = m_modelObject.get();
 
-    if (str.empty()) {
-      modelObject.resetAttribute(m_property);
-    }
-    else if (boost::regex_search(str,autore)) {
-      if (m_isAutosizedProperty) {
-        if (modelObject.isSettableAttribute(*m_isAutosizedProperty)) {
-          modelObject.setAttribute(*m_isAutosizedProperty,true);
-        }
-        else {
-          modelObject.resetAttribute(m_property);
-        }
-      }
-      if (m_isAutocalculatedProperty) {
-        if (modelObject.isSettableAttribute(*m_isAutocalculatedProperty)) {
-          modelObject.setAttribute(*m_isAutocalculatedProperty,true);
-        }
-        else {
-          modelObject.resetAttribute(m_property);
-        }
-      }
-    }
-    else {
-      try {
-        int value = boost::lexical_cast<int>(str);
-        setPrecision(str);
-        modelObject.setAttribute(m_property,value);
-      }
-      catch (...) {}
-    }
-  }
-}
+//     if (str.empty()) {
+//       modelObject.resetAttribute(m_property); 
+//     }
+//     else if (boost::regex_search(str,autore)) {
+//       if (m_isAutosizedProperty) {
+//         if (modelObject.isSettableAttribute(*m_isAutosizedProperty)) {
+//           modelObject.setAttribute(*m_isAutosizedProperty,true);
+//         }
+//         else {
+//           modelObject.resetAttribute(m_property);
+//         }
+//       }
+//       if (m_isAutocalculatedProperty) {
+//         if (modelObject.isSettableAttribute(*m_isAutocalculatedProperty)) {
+//           modelObject.setAttribute(*m_isAutocalculatedProperty,true);
+//         }
+//         else {
+//           modelObject.resetAttribute(m_property);
+//         }
+//       }
+//     }
+//     else {
+//       try {
+//         int value = boost::lexical_cast<int>(str);
+//         setPrecision(str);
+//         modelObject.setAttribute(m_property,value);
+//       }
+//       catch (...) {}
+//     }
+//   }
+// }
 
-void OSIntegerEdit::onModelObjectChange() {
-  refreshTextAndLabel();
-}
+// void OSIntegerEdit::onModelObjectChange() {
+//   refreshTextAndLabel();
+// }
 
-void OSIntegerEdit::onModelObjectRemove(Handle handle) {
-  m_modelObject.reset();
-  m_property = "";
-  setEnabled(false);
-}
+// void OSIntegerEdit::onModelObjectRemove(const Handle& handle) {
+//   m_modelObject.reset();
+//   m_property = "";
+//   setEnabled(false);
+// }
 
-void OSIntegerEdit::refreshTextAndLabel() {
-  if (m_modelObject) {
-    QString textValue;
-    ModelObject modelObject = m_modelObject.get();
-    std::stringstream ss;
+// void OSIntegerEdit::refreshTextAndLabel() {
+//   if (m_modelObject) {
+//     QString textValue;
+//     ModelObject modelObject = m_modelObject.get();
+//     std::stringstream ss;
 
-    if (m_isAutosizedProperty) {
-      Attribute autosized = modelObject.getAttribute(*m_isAutosizedProperty).get();
-      if (autosized.valueAsBoolean()) {
-        textValue = QString("autosize");
-      }
-    }
+//     if (m_isAutosizedProperty) {
+//       Attribute autosized = modelObject.getAttribute(*m_isAutosizedProperty).get();
+//       if (autosized.valueAsBoolean()) {
+//         textValue = QString("autosize");
+//       }
+//     }
 
-    if (m_isAutocalculatedProperty) {
-      Attribute autocalculated = modelObject.getAttribute(*m_isAutocalculatedProperty).get();
-      if (autocalculated.valueAsBoolean()) {
-        textValue = QString("autocalculate");
-      }
-    }
+//     if (m_isAutocalculatedProperty) {
+//       Attribute autocalculated = modelObject.getAttribute(*m_isAutocalculatedProperty).get();
+//       if (autocalculated.valueAsBoolean()) {
+//         textValue = QString("autocalculate");
+//       }
+//     }
 
-    OptionalAttribute attribute = modelObject.getAttribute(m_property);
-    if (attribute) {
-      int value = attribute->valueAsInteger();
-      if (m_isScientific) {
-        ss << std::scientific;
-      }
-      else {
-        ss << std::fixed;
-      }
-      if (m_precision) {
-        ss << std::setprecision(*m_precision);
-      }
-      ss << value;
-      textValue = toQString(ss.str());
-      ss.str("");
-    }
+//     OptionalAttribute attribute = modelObject.getAttribute(m_property);
+//     if (attribute) {
+//       int value = attribute->valueAsInteger();
+//       if (m_isScientific) {
+//         ss << std::scientific;
+//       }
+//       else {
+//         ss << std::fixed;
+//       }
+//       if (m_precision) {
+//         ss << std::setprecision(*m_precision);
+//       }
+//       ss << value;
+//       textValue = toQString(ss.str());
+//       ss.str("");
+//     }
 
-    this->setText(textValue);
+//     this->setText(textValue);
 
-    if (m_isDefaultedProperty) {
-      Attribute defaulted = modelObject.getAttribute(*m_isDefaultedProperty).get();
-      if (defaulted.valueAsBoolean()) {
-        this->setStyleSheet("color:green");
-      }
-      else {
-        this->setStyleSheet("color:black");
-      }
-    }
-  }
-}
+//     if (m_isDefaultedProperty) {
+//       Attribute defaulted = modelObject.getAttribute(*m_isDefaultedProperty).get();
+//       if (defaulted.valueAsBoolean()) {
+//         this->setStyleSheet("color:green");
+//       }
+//       else {
+//         this->setStyleSheet("color:black");
+//       }
+//     }
+//   }
+// }
 
-void OSIntegerEdit::setPrecision(const std::string& str) {
-  boost::regex rgx("-?([[:digit:]]*)(\\.)?([[:digit:]]+)([EDed][-\\+]?[[:digit:]]+)?");
-  boost::smatch m;
-  if (boost::regex_match(str,m,rgx)) {
-    std::string sci, prefix, postfix;
-    if (m[1].matched) {
-      prefix = std::string(m[1].first,m[1].second);
-    }
-    if (m[3].matched) {
-      postfix = std::string(m[3].first,m[3].second);
-    }
-    if (m[4].matched) {
-      sci = std::string(m[4].first,m[4].second);
-    }
-    m_isScientific = !sci.empty();
+// void OSIntegerEdit::setPrecision(const std::string& str) {
+//   boost::regex rgx("-?([[:digit:]]*)(\\.)?([[:digit:]]+)([EDed][-\\+]?[[:digit:]]+)?");
+//   boost::smatch m;
+//   if (boost::regex_match(str,m,rgx)) {
+//     std::string sci, prefix, postfix;
+//     if (m[1].matched) {
+//       prefix = std::string(m[1].first,m[1].second);
+//     }
+//     if (m[3].matched) {
+//       postfix = std::string(m[3].first,m[3].second);
+//     }
+//     if (m[4].matched) {
+//       sci = std::string(m[4].first,m[4].second);
+//     }
+//     m_isScientific = !sci.empty();
 
-    if (m_isScientific) {
-      m_precision = prefix.size() + postfix.size() - 1;
-    }
-    else {
-      m_precision = 0;
-    }
-  }
-  else {
-    m_isScientific = false;
-    m_precision.reset();
-  }
-}
+//     if (m_isScientific) {
+//       m_precision = prefix.size() + postfix.size() - 1;
+//     }
+//     else {
+//       m_precision = 0;
+//     }
+//   }
+//   else {
+//     m_isScientific = false;
+//     m_precision.reset();
+//   }
+// }
 
 } // openstudio
 

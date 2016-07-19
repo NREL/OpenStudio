@@ -48,7 +48,6 @@ class Model;
 class Component;
 class LifeCycleCost;
 
-class Relationship;
 class ModelExtensibleGroup;
 
 class ParentObject;
@@ -106,21 +105,21 @@ class MODEL_API ModelObject : public openstudio::WorkspaceObject {
   Component createComponent() const;
 
   /** Return all valid relationship names. */
-  std::vector<std::string> relationshipNames() const;
+  // std::vector<std::string> relationshipNames() const;
 
   /** Return all \link Relationship relationships\endlink for this ModelObject. */
-  std::vector<Relationship> relationships() const;
+  // std::vector<Relationship> relationships() const;
 
   /** Get the \link Relationship relationship\endlink named name, if it exists. */
-  boost::optional<Relationship> getRelationship(const std::string& name) const;
+  // boost::optional<Relationship> getRelationship(const std::string& name) const;
 
   /** Set this ModelObject's relationship name to point to relatedModelObject (or clear the 
    *  relationship if relatedModelObject == boost::none). */
-  bool setRelationship(const std::string& name, boost::optional<ModelObject> relatedModelObject);
+  // bool setRelationship(const std::string& name, boost::optional<ModelObject> relatedModelObject);
 
   /** Inserts component into this model and sets this ModelObject's relationship name to 
    *  point to component.primaryObject(). */
-  bool setRelationship(const std::string& name, const Component& component);
+  // bool setRelationship(const std::string& name, const Component& component);
 
   //@}
   /** @name Attributes
@@ -134,43 +133,43 @@ class MODEL_API ModelObject : public openstudio::WorkspaceObject {
   //@{
 
   /** Return all valid attribute names. */
-  std::vector<std::string> attributeNames() const;
+  // std::vector<std::string> attributeNames() const;
 
   /** Return all \link Attribute Attributes\endlink for this ModelObject. */
-  std::vector<openstudio::Attribute> attributes() const;
+  // std::vector<openstudio::Attribute> attributes() const;
 
   /** Get the \link Attribute attribute\endlink named name, if it exists. */
-  boost::optional<openstudio::Attribute> getAttribute(const std::string& name) const;
+  // boost::optional<openstudio::Attribute> getAttribute(const std::string& name) const;
 
   /** Is the named attribute settable. */
-  bool isSettableAttribute(const std::string& name) const;
+  // bool isSettableAttribute(const std::string& name) const;
 
   /** Is the named attribute optional. */
-  bool isOptionalAttribute(const std::string& name) const;
+  // bool isOptionalAttribute(const std::string& name) const;
 
   /** Set the attribute named name, if it exists. */
-  bool setAttribute(const std::string& name, bool value);
+  // bool setAttribute(const std::string& name, bool value);
 
   /** \overload */
-  bool setAttribute(const std::string& name, int value);
+  // bool setAttribute(const std::string& name, int value);
 
   /** \overload */
-  bool setAttribute(const std::string& name, unsigned value);
+  // bool setAttribute(const std::string& name, unsigned value);
 
   /** \overload */
-  bool setAttribute(const std::string& name, double value);
+  // bool setAttribute(const std::string& name, double value);
   
   /** \overload */
-  bool setAttribute(const std::string& name, const Quantity& value);
+  // bool setAttribute(const std::string& name, const Quantity& value);
 
   /** \overload */
-  bool setAttribute(const std::string& name, const std::string& value);
+  // bool setAttribute(const std::string& name, const std::string& value);
 
   /** \overload */
-  bool setAttribute(const std::string& name, const char* value);
+  // bool setAttribute(const std::string& name, const char* value);
 
   /** Reset the attribute named name. Provided for optional types. */
-  bool resetAttribute(const std::string& name);
+  // bool resetAttribute(const std::string& name);
 
   //@}
   /** @name Getters */
@@ -335,7 +334,7 @@ typedef std::vector<ModelObject> ModelObjectVector;
 
 // declare types so we can use model objects in properties
 //Q_DECLARE_METATYPE(openstudio::model::ModelObject); // no default constructor
-Q_DECLARE_METATYPE(boost::optional<openstudio::model::ModelObject>);
-Q_DECLARE_METATYPE(std::vector<openstudio::model::ModelObject>);
+// Q_DECLARE_METATYPE(boost::optional<openstudio::model::ModelObject>);
+// Q_DECLARE_METATYPE(std::vector<openstudio::model::ModelObject>);
 
 #endif // MODEL_MODELOBJECT_HPP

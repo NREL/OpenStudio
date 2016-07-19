@@ -69,7 +69,7 @@ void MaterialNoMassInspectorView::createLayout()
 
   ++row;
 
-  m_nameEdit = new OSLineEdit();
+  m_nameEdit = new OSLineEdit2();
   mainGridLayout->addWidget(m_nameEdit, row, 0, 1, 3);
 
   ++row;
@@ -87,7 +87,7 @@ void MaterialNoMassInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_roughness = new OSComboBox();
+  m_roughness = new OSComboBox2();
   m_roughness->addItem("Very Rough");
   m_roughness->addItem("Rough");
   m_roughness->addItem("Medium Rough");
@@ -102,8 +102,8 @@ void MaterialNoMassInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_thermalResistance = new OSQuantityEdit(m_isIP);
-  connect(this, &MaterialNoMassInspectorView::toggleUnitsClicked, m_thermalResistance, &OSQuantityEdit::onUnitSystemChange);
+  m_thermalResistance = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &MaterialNoMassInspectorView::toggleUnitsClicked, m_thermalResistance, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_thermalResistance,row++,0,1,3);
 
   // Thermal Absorptance
@@ -112,8 +112,8 @@ void MaterialNoMassInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_thermalAbsorptance = new OSQuantityEdit(m_isIP);
-  connect(this, &MaterialNoMassInspectorView::toggleUnitsClicked, m_thermalAbsorptance, &OSQuantityEdit::onUnitSystemChange);
+  m_thermalAbsorptance = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &MaterialNoMassInspectorView::toggleUnitsClicked, m_thermalAbsorptance, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_thermalAbsorptance,row++,0,1,3);
 
   // Solar Absorptance
@@ -122,8 +122,8 @@ void MaterialNoMassInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_solarAbsorptance = new OSQuantityEdit(m_isIP);
-  connect(this, &MaterialNoMassInspectorView::toggleUnitsClicked, m_solarAbsorptance, &OSQuantityEdit::onUnitSystemChange);
+  m_solarAbsorptance = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &MaterialNoMassInspectorView::toggleUnitsClicked, m_solarAbsorptance, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_solarAbsorptance,row++,0,1,3);
 
   // Visible Absorptance
@@ -132,8 +132,8 @@ void MaterialNoMassInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_visibleAbsorptance = new OSQuantityEdit(m_isIP);
-  connect(this, &MaterialNoMassInspectorView::toggleUnitsClicked, m_visibleAbsorptance, &OSQuantityEdit::onUnitSystemChange);
+  m_visibleAbsorptance = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &MaterialNoMassInspectorView::toggleUnitsClicked, m_visibleAbsorptance, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_visibleAbsorptance,row++,0,1,3);
 
   // Stretch
@@ -164,13 +164,71 @@ void MaterialNoMassInspectorView::onUpdate()
 
 void MaterialNoMassInspectorView::attach(openstudio::model::MasslessOpaqueMaterial & masslessOpaqueMaterial)
 {
-  m_roughness->bind(masslessOpaqueMaterial,"roughness");
+  // m_roughness->bind(masslessOpaqueMaterial,"roughness");
+
+  if(m_roughness){
+    m_roughness->bind<std::string>(
+      masslessOpaqueMaterial,
+      static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
+      &model::MasslessOpaqueMaterial::roughnessValues,
+      std::bind(&model::MasslessOpaqueMaterial::roughness, &masslessOpaqueMaterial),
+      std::bind(&model::MasslessOpaqueMaterial::setRoughness, &masslessOpaqueMaterial, std::placeholders::_1),
+      boost::none,
+      boost::none);
+  }
   
-  m_nameEdit->bind(masslessOpaqueMaterial,"name");
-  m_thermalResistance->bind(masslessOpaqueMaterial,"thermalResistance",m_isIP);
-  m_thermalAbsorptance->bind(masslessOpaqueMaterial,"thermalAbsorptance",m_isIP);
-  m_solarAbsorptance->bind(masslessOpaqueMaterial,"solarAbsorptance",m_isIP);
-  m_visibleAbsorptance->bind(masslessOpaqueMaterial,"visibleAbsorptance",m_isIP);
+  boost::optional<model::MasslessOpaqueMaterial> m_masslessOpaqueMaterial = masslessOpaqueMaterial;
+  // m_nameEdit->bind(masslessOpaqueMaterial,"name");
+  m_nameEdit->bind(
+    *m_masslessOpaqueMaterial,
+    OptionalStringGetter(std::bind(&model::MasslessOpaqueMaterial::name, m_masslessOpaqueMaterial.get_ptr(),true)),
+    boost::optional<StringSetter>(std::bind(&model::MasslessOpaqueMaterial::setName, m_masslessOpaqueMaterial.get_ptr(),std::placeholders::_1))
+  );
+
+
+  // m_thermalResistance->bind(masslessOpaqueMaterial,"thermalResistance",m_isIP);
+  m_thermalResistance->bind(
+    m_isIP,
+    *m_masslessOpaqueMaterial,
+    DoubleGetter(std::bind(&model::MasslessOpaqueMaterial::thermalResistance, m_masslessOpaqueMaterial.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::MasslessOpaqueMaterial::*)(double)>(&model::MasslessOpaqueMaterial::setThermalResistance), m_masslessOpaqueMaterial.get_ptr(), std::placeholders::_1))
+  );
+
+  // m_thermalAbsorptance->bind(masslessOpaqueMaterial,"thermalAbsorptance",m_isIP);
+  m_thermalAbsorptance->bind(
+    m_isIP,
+    *m_masslessOpaqueMaterial,
+    OptionalDoubleGetter(std::bind(&model::MasslessOpaqueMaterial::thermalAbsorptance, m_masslessOpaqueMaterial.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::MasslessOpaqueMaterial::*)(double)>(&model::MasslessOpaqueMaterial::setThermalAbsorptance), m_masslessOpaqueMaterial.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::MasslessOpaqueMaterial::resetThermalAbsorptance, m_masslessOpaqueMaterial.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::MasslessOpaqueMaterial::isThermalAbsorptanceDefaulted, m_masslessOpaqueMaterial.get_ptr()))
+  );
+
+  // m_solarAbsorptance->bind(masslessOpaqueMaterial,"solarAbsorptance",m_isIP);
+  m_solarAbsorptance->bind(
+    m_isIP,
+    *m_masslessOpaqueMaterial,
+    OptionalDoubleGetter(std::bind(&model::MasslessOpaqueMaterial::solarAbsorptance, m_masslessOpaqueMaterial.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::MasslessOpaqueMaterial::*)(double)>(&model::MasslessOpaqueMaterial::setSolarAbsorptance), m_masslessOpaqueMaterial.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::MasslessOpaqueMaterial::resetSolarAbsorptance, m_masslessOpaqueMaterial.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::MasslessOpaqueMaterial::isSolarAbsorptanceDefaulted, m_masslessOpaqueMaterial.get_ptr()))
+  );
+
+  // m_visibleAbsorptance->bind(masslessOpaqueMaterial,"visibleAbsorptance",m_isIP);
+  m_visibleAbsorptance->bind(
+    m_isIP,
+    *m_masslessOpaqueMaterial,
+    OptionalDoubleGetter(std::bind(&model::MasslessOpaqueMaterial::visibleAbsorptance, m_masslessOpaqueMaterial.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::MasslessOpaqueMaterial::*)(double)>(&model::MasslessOpaqueMaterial::setVisibleAbsorptance), m_masslessOpaqueMaterial.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::MasslessOpaqueMaterial::resetVisibleAbsorptance, m_masslessOpaqueMaterial.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::MasslessOpaqueMaterial::isVisibleAbsorptanceDefaulted, m_masslessOpaqueMaterial.get_ptr()))
+  );
 
   m_standardsInformationWidget->attach(masslessOpaqueMaterial);
 

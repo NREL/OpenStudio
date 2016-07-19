@@ -70,7 +70,7 @@ void MaterialAirGapInspectorView::createLayout()
 
   ++row;
 
-  m_nameEdit = new OSLineEdit();
+  m_nameEdit = new OSLineEdit2();
   mainGridLayout->addWidget(m_nameEdit, row, 0, 1, 3);
 
   ++row;
@@ -87,8 +87,8 @@ void MaterialAirGapInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_thermalResistance = new OSQuantityEdit(m_isIP);
-  connect(this, &MaterialAirGapInspectorView::toggleUnitsClicked, m_thermalResistance, &OSQuantityEdit::onUnitSystemChange);
+  m_thermalResistance = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &MaterialAirGapInspectorView::toggleUnitsClicked, m_thermalResistance, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_thermalResistance,row++,0,1,3);
 
   // Stretch
@@ -119,8 +119,24 @@ void MaterialAirGapInspectorView::onUpdate()
 
 void MaterialAirGapInspectorView::attach(openstudio::model::AirGap & airGap)
 {
-  m_nameEdit->bind(airGap,"name");
-  m_thermalResistance->bind(airGap,"thermalResistance",m_isIP);
+  boost::optional<model::AirGap> m_airGap = airGap;
+
+  // m_nameEdit->bind(airGap,"name");
+  m_nameEdit->bind(
+    *m_airGap,
+    OptionalStringGetter(std::bind(&model::AirGap::name, m_airGap.get_ptr(),true)),
+    boost::optional<StringSetter>(std::bind(&model::AirGap::setName, m_airGap.get_ptr(),std::placeholders::_1))
+  );
+
+  // m_thermalResistance->bind(airGap,"thermalResistance",m_isIP);
+  m_thermalResistance->bind(
+    m_isIP,
+    *m_airGap,
+    DoubleGetter(std::bind(&model::AirGap::thermalResistance, m_airGap.get_ptr())),
+    //static_cast<void(Client::*)(int)>(&Client::foobar)
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::AirGap::*)(double)>(&model::AirGap::setThermalResistance), m_airGap.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::AirGap::resetThermalResistance, m_airGap.get_ptr()))
+  );
 
   m_standardsInformationWidget->attach(airGap);
 

@@ -31,7 +31,7 @@ namespace model {
 
 }
 
-class OSLineEdit;
+class OSLineEdit2;
 
 class ConstructionWindowDataFileInspectorView : public ModelObjectInspectorView
 {
@@ -61,9 +61,9 @@ class ConstructionWindowDataFileInspectorView : public ModelObjectInspectorView
 
     bool m_isIP;
 
-    OSLineEdit * m_nameEdit;
+    OSLineEdit2 * m_nameEdit;
 
-    OSLineEdit * m_urlEdit;
+    OSLineEdit2 * m_urlEdit;
 };
 
 } // openstudio

@@ -126,7 +126,7 @@ namespace detail {
   boost::optional<ThermalZone> ZoneControlHumidistat_Impl::controlledZone() const
   {
     Handle h = handle();
-    auto zones = model().getModelObjects<model::ThermalZone>();
+    auto zones = model().getConcreteModelObjects<model::ThermalZone>();
     for( const auto & zone: zones ) {
       if( auto humidistat = zone.zoneControlHumidistat() ) {
         if( humidistat->handle() == h ) {

@@ -80,7 +80,7 @@ namespace openstudio {
   FacilityStoriesGridView::FacilityStoriesGridView(bool isIP, const model::Model & model, QWidget * parent)
     : GridViewSubTab(isIP, model, parent)
   {
-    auto modelObjects = subsetCastVector<model::ModelObject>(m_model.getModelObjects<model::BuildingStory>());
+    auto modelObjects = subsetCastVector<model::ModelObject>(m_model.getConcreteModelObjects<model::BuildingStory>());
     std::sort(modelObjects.begin(), modelObjects.end(), ModelObjectNameSorter());
 
     m_gridController = new FacilityStoriesGridController(isIP, "Building Stories", IddObjectType::OS_BuildingStory, model, modelObjects);
@@ -204,7 +204,7 @@ namespace openstudio {
       convertedValue = convert(lowerLimit, "ft", "m");
       OS_ASSERT(convertedValue);
       lowerLimit = *convertedValue;
-    } 
+    }
 
     objectSelector->m_filteredObjects.clear();
 
@@ -369,7 +369,7 @@ namespace openstudio {
 
   void FacilityStoriesGridController::refreshModelObjects()
   {
-    m_modelObjects = subsetCastVector<model::ModelObject>(m_model.getModelObjects<model::BuildingStory>());
+    m_modelObjects = subsetCastVector<model::ModelObject>(m_model.getConcreteModelObjects<model::BuildingStory>());
     std::sort(m_modelObjects.begin(), m_modelObjects.end(), ModelObjectNameSorter());
   }
 

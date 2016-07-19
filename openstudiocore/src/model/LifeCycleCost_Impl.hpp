@@ -34,10 +34,10 @@ namespace detail {
 
 class MODEL_API LifeCycleCost_Impl : public ModelObject_Impl
 {
-  Q_OBJECT;
-  Q_PROPERTY(const std::string& itemType READ itemType);
-  Q_PROPERTY(double cost READ cost WRITE setCost);
-  Q_PROPERTY(std::string costUnits READ costUnits WRITE setCostUnits);
+  
+  
+  
+  
 public:
   // constructor
   LifeCycleCost_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);

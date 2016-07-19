@@ -33,7 +33,7 @@ namespace detail {
    *  most derived setters to avoid invalidating the Component. Also does not support SqlFile
    *  attachment. */
   class MODEL_API Component_Impl : public Model_Impl {
-    Q_OBJECT;
+
    public:
 
     /** @name Constructors and Destructors */
@@ -134,7 +134,6 @@ namespace detail {
     virtual bool save(const openstudio::path& p, bool overwrite=false) override;
 
     //@}
-   public slots :
 
     virtual void obsoleteComponentWatcher(const ComponentWatcher& watcher) override;
 

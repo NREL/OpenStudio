@@ -33,21 +33,21 @@ class OpaqueMaterial;
 namespace detail {
 
   class MODEL_API OpaqueMaterial_Impl : public Material_Impl {
-    Q_OBJECT;
+    
 
-    Q_PROPERTY(double thermalConductivity READ thermalConductivity WRITE setThermalConductivity);
-    Q_PROPERTY(double thermalConductance READ thermalConductance WRITE setThermalConductance);
-    Q_PROPERTY(double thermalResistivity READ thermalResistivity WRITE setThermalResistivity);
-    Q_PROPERTY(double thermalResistance READ thermalResistance WRITE setThermalResistance);
+    
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<double> heatCapacity READ heatCapacity);
+    
 
-    Q_PROPERTY(double thermalAbsorptance READ thermalAbsorptance WRITE setThermalAbsorptance);
-    Q_PROPERTY(boost::optional<double> thermalReflectance READ thermalReflectance WRITE setThermalReflectance);
-    Q_PROPERTY(double solarAbsorptance READ solarAbsorptance WRITE setSolarAbsorptance);
-    Q_PROPERTY(boost::optional<double> solarReflectance READ solarReflectance WRITE setSolarReflectance);
-    Q_PROPERTY(double visibleAbsorptance READ visibleAbsorptance WRITE setVisibleAbsorptance);
-    Q_PROPERTY(boost::optional<double> visibleReflectance READ visibleReflectance WRITE setVisibleReflectance);
+    
+    
+    
+    
+    
+    
 
    public:
 

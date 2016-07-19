@@ -82,7 +82,7 @@
 #define SLATANGLESCHEDULENAME "Slat Angle Schedule Name"
 #define SETPOINT2 "Setpoint 2"
 
-// FRAMEANDDIVIDER "Frame and Divider" 
+// FRAMEANDDIVIDER "Frame and Divider"
 #define FRAMEANDDIVIDERNAME "Frame and Divider"
 #define FRAMEWIDTH "Frame Width"
 #define FRAMEOUTSIDEPROJECTION "Frame Outside Projection"
@@ -213,7 +213,7 @@ namespace openstudio {
     {
       std::vector<QString> fields;
       fields.push_back(SUBSURFACENAME);
-      fields.push_back(SURFACENAME);  
+      fields.push_back(SURFACENAME);
       fields.push_back(FRAMEANDDIVIDERNAME);
       fields.push_back(FRAMEWIDTH);
       fields.push_back(FRAMEOUTSIDEPROJECTION);
@@ -925,7 +925,7 @@ namespace openstudio {
             );
         }
         else if (field == OUTSIDESHELFNAME) {
-          
+
           std::function<bool(model::DaylightingDeviceShelf *, const model::ShadingSurface&)> setter(
             [](model::DaylightingDeviceShelf *t_shelf, const model::ShadingSurface& t_arg) {
             return t_shelf->setOutsideShelf(t_arg);
@@ -982,7 +982,7 @@ namespace openstudio {
 
   void SpacesSubsurfacesGridController::refreshModelObjects()
   {
-    m_modelObjects = subsetCastVector<model::ModelObject>(m_model.getModelObjects<model::Space>());
+    m_modelObjects = subsetCastVector<model::ModelObject>(m_model.getConcreteModelObjects<model::Space>());
     std::sort(m_modelObjects.begin(), m_modelObjects.end(), ModelObjectNameSorter());
   }
 

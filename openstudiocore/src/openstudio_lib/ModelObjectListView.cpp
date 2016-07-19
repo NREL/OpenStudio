@@ -42,17 +42,10 @@ ModelObjectListController::ModelObjectListController(const openstudio::IddObject
                                                      bool showLocalBCL)
   : m_iddObjectType(iddObjectType), m_model(model), m_showLocalBCL(showLocalBCL)
 {
-  connect(model.getImpl<model::detail::Model_Impl>().get(), 
-    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::addWorkspaceObject),
-    this,
-    &ModelObjectListController::objectAdded,
-    Qt::QueuedConnection);
   
-  connect(model.getImpl<model::detail::Model_Impl>().get(), 
-    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::removeWorkspaceObject),
-    this,
-    &ModelObjectListController::objectRemoved,
-    Qt::QueuedConnection);
+  model.getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.connect<ModelObjectListController, &ModelObjectListController::objectAdded>(this);
+  
+  model.getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.connect<ModelObjectListController, &ModelObjectListController::objectRemoved>(this);
 
 }
 

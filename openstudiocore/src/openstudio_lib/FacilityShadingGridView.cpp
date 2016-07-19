@@ -85,7 +85,7 @@ namespace openstudio {
   FacilityShadingGridView::FacilityShadingGridView(bool isIP, const model::Model & model, QWidget * parent)
     : GridViewSubTab(isIP, model, parent)
   {
-    auto modelObjects = subsetCastVector<model::ModelObject>(model.getModelObjects<model::ShadingSurfaceGroup>());
+    auto modelObjects = subsetCastVector<model::ModelObject>(model.getConcreteModelObjects<model::ShadingSurfaceGroup>());
     std::sort(modelObjects.begin(), modelObjects.end(), ModelObjectNameSorter());
 
     m_gridController = new FacilityShadingGridController(isIP, "Shading Surface Group", IddObjectType::OS_ShadingSurfaceGroup, model, modelObjects);
@@ -322,7 +322,7 @@ namespace openstudio {
 
     filterChanged();
   }
-  
+
   void FacilityShadingGridView::tiltFilterChanged()
   {
     m_objectsFilteredByTilt.clear();
@@ -591,7 +591,7 @@ namespace openstudio {
 
   void FacilityShadingGridController::refreshModelObjects()
   {
-    m_modelObjects = subsetCastVector<model::ModelObject>(m_model.getModelObjects<model::ShadingSurfaceGroup>());
+    m_modelObjects = subsetCastVector<model::ModelObject>(m_model.getConcreteModelObjects<model::ShadingSurfaceGroup>());
     std::sort(m_modelObjects.begin(), m_modelObjects.end(), ModelObjectNameSorter());
   }
 

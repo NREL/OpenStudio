@@ -29,7 +29,7 @@
 namespace openstudio {
 
 class OSDropZone;
-class OSLineEdit;
+class OSLineEdit2;
 
 class HoursOfOperationVC : public ModelObjectVectorController
 {
@@ -200,7 +200,7 @@ class ScheduleSetInspectorView : public ModelObjectInspectorView
     void detach();
     void configDropZones();
 
-    OSLineEdit * m_nameEdit;
+    OSLineEdit2 * m_nameEdit;
 
     OSDropZone * m_hoursOfOperationDZ;
     OSDropZone * m_numberOfPeopleDZ;

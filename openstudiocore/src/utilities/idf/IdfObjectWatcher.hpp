@@ -20,10 +20,10 @@
 #ifndef UTILITIES_IDF_IDFOBJECTWATCHER_HPP
 #define UTILITIES_IDF_IDFOBJECTWATCHER_HPP
 
+#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
 #include <utilities/UtilitiesAPI.hpp>
 #include <utilities/idf/IdfObject.hpp>
 
-#include <QObject>
 
 namespace openstudio{
 
@@ -39,8 +39,8 @@ namespace openstudio{
  *  IdfObjectWatcher is an atypical QObject because it is designed to be stack allocated.  In many 
  *  cases it would be preferred to connect your own heap allocated QObject to the Workspace signals 
  *  directly rather than using this convenience class. **/
-class UTILITIES_API IdfObjectWatcher : public QObject {
-  Q_OBJECT;
+class UTILITIES_API IdfObjectWatcher : public Nano::Observer {
+
  public:
 
   /// constructor with IdfObject to watch
@@ -85,7 +85,7 @@ class UTILITIES_API IdfObjectWatcher : public QObject {
   /// called after dirty transitions from true to false if watcher enabled
   virtual void onBecomeClean();
 
- public slots:
+ // public slots:
   void change();
   void dataChange();
   void nameChange();

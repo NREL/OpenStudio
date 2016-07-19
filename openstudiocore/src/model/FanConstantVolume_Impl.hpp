@@ -30,14 +30,14 @@ class Schedule;
 namespace detail {
 
   class MODEL_API FanConstantVolume_Impl : public StraightComponent_Impl {
-    Q_OBJECT;
+    
 
-    Q_PROPERTY(double fanEfficiency READ fanEfficiency WRITE setFanEfficiency);
-    Q_PROPERTY(double pressureRise READ pressureRise WRITE setPressureRise);
-    Q_PROPERTY(boost::optional<double> maximumFlowRate READ maximumFlowRate WRITE setMaximumFlowRate);
-    Q_PROPERTY(double motorEfficiency READ motorEfficiency WRITE setMotorEfficiency);
-    Q_PROPERTY(double motorInAirstreamFraction READ motorInAirstreamFraction WRITE setMotorInAirstreamFraction);
-    Q_PROPERTY(std::string endUseSubcategory READ endUseSubcategory WRITE setEndUseSubcategory);
+    
+    
+    
+    
+    
+    
     Q_PROPERTY( boost::optional<openstudio::model::ModelObject> availabilitySchedule
                 READ availabilityScheduleAsModelObject
                 WRITE setAvailibiltyScheduleAsModelObject);

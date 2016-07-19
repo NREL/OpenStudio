@@ -25,6 +25,7 @@
 #include "../core/String.hpp"
 
 #include <QProgressBar>
+#include <model/nano_signal_slot.hpp>
 
 #include <memory>
 
@@ -37,9 +38,7 @@ namespace openstudio{
    *  would be preferred to connect your own heap allocated QObject to the signals directly rather
    *  than using this convenience class.
    **/
-  class UTILITIES_API ProgressBar : public QObject {
-  
-    Q_OBJECT
+  class UTILITIES_API ProgressBar {
   
   public:
 
@@ -88,7 +87,7 @@ namespace openstudio{
     /// virtual method called every time percentageUpdated fires
     virtual void onPercentageUpdated(double percentage);
 
-  public slots:
+  // public slots:
 
     /// set range
     void setRange(int min, int max);
@@ -99,10 +98,11 @@ namespace openstudio{
     /// set window title
     void setWindowTitle(const QString& windowTitle);
 
-  signals:
+  // signals:
 
     /// called every time progress increases by 1% more than last progress
-    void percentageUpdated(double percentage);
+    Nano::Signal<void(double)> percentageUpdated;
+
 
   protected:
 

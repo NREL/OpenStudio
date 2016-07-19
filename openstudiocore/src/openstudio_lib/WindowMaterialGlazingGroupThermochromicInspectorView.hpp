@@ -30,9 +30,9 @@ namespace model {
 
 }
 
-class OSLineEdit;
+class OSLineEdit2;
 
-class OSQuantityEdit;
+class OSQuantityEdit2;
 
 class OSQuantityEdit2;
 
@@ -68,11 +68,11 @@ class WindowMaterialGlazingGroupThermochromicInspectorView : public ModelObjectI
 
     bool m_isIP;
 
-    OSLineEdit * m_nameEdit = nullptr;
+    OSLineEdit2 * m_nameEdit = nullptr;
 
     OSQuantityEdit2 * m_opticalDataTemperature = nullptr;
 
-    OSLineEdit * m_windowMaterialGlazingName = nullptr;
+    OSLineEdit2 * m_windowMaterialGlazingName = nullptr;
 
     StandardsInformationMaterialWidget * m_standardsInformationWidget = nullptr;
 

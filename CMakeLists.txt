@@ -306,6 +306,105 @@ endif()
 # Use PCH
 option(USE_PCH "Use precompiled headers" OFF)
 
+# Smart find qt location, looking for 64bit when appropriate
+# and preferring opengl installations
+if(MSVC)
+  if(CMAKE_CL_64)
+    set(COMPILER_ARCH_TAG "_64")
+  else()
+    set(COMPILER_ARCH_TAG "")
+  endif()
+
+  if(MSVC_VERSION STREQUAL "1800")
+    set(COMPILER_VER_TAG "2013")
+  else()
+    set(COMPILER_VER_TAG "2014")
+  endif()
+
+  file(GLOB_RECURSE QMAKE_LOCATIONS "C:/Qt/qmake.exe")
+
+  message(STATUS "Qt Locations: ${QMAKE_LOCATIONS}")
+
+  if(QMAKE_LOCATIONS MATCHES ".*msvc${COMPILER_VER_TAG}${COMPILER_ARCH_TAG}_opengl.*")
+    set(HAS_OPENGL_INSTALL TRUE)
+    set(OPENGL_TAG "_opengl")
+  else()
+    set(HAS_OPENGL_INSTALL FALSE)
+    set(OPENGL_TAG "")
+  endif()
+
+  set(QT_HINT_DIR "")
+  foreach(LOC ${QMAKE_LOCATIONS})
+    if(LOC MATCHES ".*msvc${COMPILER_VER_TAG}${COMPILER_ARCH_TAG}${OPENGL_TAG}/")
+      get_filename_component(PDIR "${LOC}" DIRECTORY)
+      get_filename_component(GPDIR "${PDIR}" DIRECTORY)
+      if(HAS_OPENGL_INSTALL)
+        if(GPDIR MATCHES ".*opengl.*")
+          list(APPEND QT_HINT_DIR "${GPDIR}")
+        endif()
+      else()
+        list(APPEND QT_HINT_DIR "${GPDIR}")
+      endif()
+    endif()
+  endforeach()
+
+  # we want sort, this will do both a lexicographical sort of the version numbers, putting the newest last and picking the
+  # longest (aka opengl) last. Then we sort it in reverse to prefer the highest version numbers with opengl
+  list(SORT QT_HINT_DIR)
+  list(REVERSE QT_HINT_DIR)
+else()
+  set(QT_HINT_DIR "")
+endif()
+
+# set CMAKE_PREFIX_PATH to specify specific Qt version
+find_package(Qt5Widgets HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Gui, Qt5Widgets
+find_package(Qt5Sql HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Sql
+find_package(Qt5Network HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Network
+find_package(Qt5Xml HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Xml
+#find_package(Qt5WinExtras HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Gui, Qt5WinExtras
+find_package(Qt5Concurrent HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Concurrent
+find_package(Qt5PrintSupport HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Gui, Qt5PrintSupport, Qt5Widgets
+mark_as_advanced(
+  Qt5Concurrent_DIR
+  Qt5Core_DIR
+  Qt5Gui_DIR
+  Qt5Gui_EGL_LIBRARY
+  Qt5Location_DIR
+  Qt5Multimedia_DIR
+  Qt5MultimediaWidgets_DIR
+  Qt5Network_DIR
+  Qt5OpenGL_DIR
+  Qt5Positioning_DIR
+  Qt5PrintSupport_DIR
+  Qt5Qml_DIR
+  Qt5Quick_DIR
+  Qt5Sensors_DIR
+  Qt5Sql_DIR
+  Qt5Widgets_DIR
+  #Qt5WinExtras_DIR
+  Qt5Xml_DIR
+)
+
+# Build Qt
+if(Qt5Widgets_DIR)
+  option(BUILD_QT "Build Qt" OFF)
+
+  if(${Qt5Widgets_VERSION} VERSION_LESS "5.2.1")
+    message(FATAL_ERROR "Minimum supported Qt is v5.2.1")
+  endif()
+  if(${Qt5Widgets_VERSION} VERSION_LESS "5.4.0")
+    find_package(Qt5WebKit HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Gui, Qt5Network, Qt5WebKit
+    find_package(Qt5WebKitWidgets HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Gui, Qt5Network, Qt5WebKit, Qt5WebKitWidgets, Qt5Widgets
+    mark_as_advanced(Qt5WebKit_DIR Qt5WebKitWidgets_DIR)
+  else()
+    find_package(Qt5WebEngine HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Gui, Qt5Network, Qt5Qml, Qt5Quick, Qt5WebEngine
+    find_package(Qt5WebEngineWidgets HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Gui, Qt5Network, Qt5Qml, Qt5Quick, Qt5WebEngine, Qt5WebEngineWidgets, Qt5Widgets
+    mark_as_advanced(Qt5WebEngine_DIR Qt5WebEngineWidgets_DIR)
+  endif()
+elseif(UNIX)
+  option(BUILD_QT "Build Qt" ON)
+endif()
+
 
 include(ExternalProject)
 include(ProcessorCount)
@@ -448,33 +547,35 @@ endif()
 
 if( APPLE )
   ExternalProject_Add(Ruby
-    URL http://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.0.0.tar.gz
-    URL_MD5 07f4e70aba691eb99ef51e8eaab54426
+    URL http://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.2.0.tar.gz
+    URL_MD5 d4d8b600af2f77566515728d5bd7ffa4
     BUILD_IN_SOURCE 1
     CONFIGURE_COMMAND autoconf && sh -c "./configure --with-static-linked-ext --without-gmp --without-tcl --without-tk --disable-install-doc --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install"
     BUILD_COMMAND $(MAKE)  libenc; $(MAKE) libtrans; $(MAKE)
     INSTALL_COMMAND $(MAKE) install
   )
+  find_file( RUBY_CONFIG_INCLUDE_DIR config.h PATHS "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/include/" )
   set(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/libruby-static.a")
-  set(RUBY_INCLUDE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/include/ruby-2.0.0")
+  set(RUBY_INCLUDE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/include/ruby-2.2.0")
   # Uh... yeah. this line needs some work...
-  set(RUBY_CONFIG_INCLUDE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/include/ruby-2.0.0/x86_64-darwin13.4.0")
+  #set(RUBY_CONFIG_INCLUDE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/include/ruby-2.2.0/x86_64-darwin15")
+  #set(RUBY_CONFIG_INCLUDE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/include/ruby-2.2.0/x86_64-darwin13")
   set(RUBY_EXECUTABLE "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby")
   set(RUBY_SOURCE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby")
 elseif( UNIX )
   # I had to install autotools-dev on Redhat, http://askubuntu.com/questions/430706/installing-autotools-autoconf
   ExternalProject_Add(Ruby
-    URL http://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.0.0.tar.gz
-    URL_MD5 07f4e70aba691eb99ef51e8eaab54426
+    URL http://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.2.0.tar.gz
+    URL_MD5 d4d8b600af2f77566515728d5bd7ffa4
     BUILD_IN_SOURCE 1
     CONFIGURE_COMMAND autoconf && sh -c "./configure --with-static-linked-ext --without-gmp --without-tcl --without-tk --disable-install-doc --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install"
     BUILD_COMMAND $(MAKE)
     INSTALL_COMMAND $(MAKE) install
   )
+  find_file( RUBY_CONFIG_INCLUDE_DIR config.h PATHS "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/include/" )
   set(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/libruby-static.a")
-  set(RUBY_INCLUDE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/include/ruby-2.0.0")
+  set(RUBY_INCLUDE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/include/ruby-2.2.0")
   # Uh... yeah. this line needs some work...
-  set(RUBY_CONFIG_INCLUDE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/include/ruby-2.0.0/x86_64-linux")
   set(RUBY_EXECUTABLE "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby")
   set(RUBY_SOURCE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby")
 else()
@@ -482,22 +583,22 @@ else()
   # This will require bison, sed, and at least ruby 1.8 in your path
   # Consider minsys even though the build will be done by msvc the ruby build system uses some traditionally unix tools
   ExternalProject_Add(Ruby
-    URL http://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.0.0.tar.gz
-    URL_MD5 07f4e70aba691eb99ef51e8eaab54426 
+    URL http://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.2.0.tar.gz
+    URL_MD5 d4d8b600af2f77566515728d5bd7ffa4
     BUILD_IN_SOURCE 1
     CONFIGURE_COMMAND ""
     BUILD_COMMAND cmd /C "${CMAKE_BINARY_DIR}/build_ruby.bat"
     INSTALL_COMMAND ""
   )
-  set(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install-release/lib/x64-msvcr120-ruby200-static.lib")
-  set(RUBY_INCLUDE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install-release/include/ruby-2.0.0")
-  set(RUBY_CONFIG_INCLUDE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install-release/include/ruby-2.0.0/x64-mswin64_120")
+  set(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install-release/lib/x64-msvcr120-ruby220-static.lib")
+  set(RUBY_INCLUDE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install-release/include/ruby-2.2.0")
+  find_file( RUBY_CONFIG_INCLUDE_DIR config.h PATHS "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install-release/include/" )
   set(RUBY_EXECUTABLE "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install-release/bin/ruby")
   set(RUBY_SOURCE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-release")
 
-  set(RUBY_LIBRARY_DEBUG "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install-debug/lib/x64-msvcr120-ruby200-static.lib")
-  set(RUBY_INCLUDE_DIR_DEBUG "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install-debug/include/ruby-2.0.0")
-  set(RUBY_CONFIG_INCLUDE_DIR_DEBUG "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install-debug/include/ruby-2.0.0/x64-mswin64_120")
+  set(RUBY_LIBRARY_DEBUG "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install-debug/lib/x64-msvcr120-ruby220-static.lib")
+  set(RUBY_INCLUDE_DIR_DEBUG "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install-debug/include/ruby-2.2.0")
+  find_file( RUBY_CONFIG_INCLUDE_DIR_DEBUG config.h PATHS "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install-debug/include/" )
   set(RUBY_EXECUTABLE_DEBUG "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install-debug/bin/ruby")
   set(RUBY_SOURCE_DIR_DEBUG "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-debug")
 endif()
@@ -641,7 +742,7 @@ ExternalProject_Add(GeographicLib
   -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=ON
 )
 
-# Don't confuse "GEOGRAPHICLIB"_Dir as something that refers to the 
+# Don't confuse "GEOGRAPHICLIB"_Dir as something that refers to the
 # actual library compiled unit. This variable just refers to where the project is at.
 # We will use this to find the cmake config file provided by the project,
 # and that config file will tell us everything we need to know about the project's targets.
@@ -667,7 +768,7 @@ if(BUILD_QT)
       BUILD_COMMAND sh -c "make -j${CPUCOUNT} && make install"
       INSTALL_COMMAND ""
       BUILD_IN_SOURCE 1
-    )  
+    )
   elseif( UNIX )
     # install deps according to here http://doc.qt.io/qt-5/linux-requirements.html
     if( STATIC_QT )
@@ -692,7 +793,7 @@ if(BUILD_QT)
       set(QT_BUILD_SCRIPT "build_static_qt.bat")
     else()
       set(QT_BUILD_SCRIPT "build_shared_qt.bat")
-    endif()  
+    endif()
     ExternalProject_Add(Qt
       URL http://openstudio-resources.s3.amazonaws.com/dependencies/qt-everywhere-opensource-src-5.6.1.zip
       URL_MD5 c18a4904d9773894437c10c25f93e50f
@@ -702,8 +803,8 @@ if(BUILD_QT)
       BUILD_COMMAND cmd /C "${CMAKE_BINARY_DIR}/${QT_BUILD_SCRIPT}"
       INSTALL_COMMAND ""
     )
-  endif()     
-  
+  endif()
+
 endif()
 
 set(OpenStudioCore_DIR ${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build)
@@ -809,13 +910,13 @@ ExternalProject_Add(OSCore
     -DOPENSSL_ROOT_DIR:PATH=${OPENSSL_ROOT_DIR}
     -DPATCH_EXE:PATH=${PATCH_EXE}
     -DMAXIMIZE_CPU_USAGE:BOOL=${MAXIMIZE_CPU_USAGE}
-    -DRUBY_LIBRARY:PATH=${RUBY_LIBRARY} 
-    -DRUBY_INCLUDE_DIR:PATH=${RUBY_INCLUDE_DIR}  
+    -DRUBY_LIBRARY:PATH=${RUBY_LIBRARY}
+    -DRUBY_INCLUDE_DIR:PATH=${RUBY_INCLUDE_DIR}
     -DRUBY_CONFIG_INCLUDE_DIR:PATH=${RUBY_CONFIG_INCLUDE_DIR}
     -DRUBY_EXECUTABLE:PATH=${RUBY_EXECUTABLE}
     -DRUBY_SOURCE_DIR:PATH=${RUBY_SOURCE_DIR}
-    -DRUBY_LIBRARY_DEBUG:PATH=${RUBY_LIBRARY_DEBUG} 
-    -DRUBY_INCLUDE_DIR_DEBUG:PATH=${RUBY_INCLUDE_DIR_DEBUG}  
+    -DRUBY_LIBRARY_DEBUG:PATH=${RUBY_LIBRARY_DEBUG}
+    -DRUBY_INCLUDE_DIR_DEBUG:PATH=${RUBY_INCLUDE_DIR_DEBUG}
     -DRUBY_CONFIG_INCLUDE_DIR_DEBUG:PATH=${RUBY_CONFIG_INCLUDE_DIR_DEBUG}
     -DRUBY_EXECUTABLE_DEBUG:PATH=${RUBY_EXECUTABLE_DEBUG}
     -DRUBY_SOURCE_DIR_DEBUG:PATH=${RUBY_SOURCE_DIR_DEBUG}

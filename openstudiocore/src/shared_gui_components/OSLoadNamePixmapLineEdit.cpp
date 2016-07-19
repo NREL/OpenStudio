@@ -119,11 +119,7 @@ void OSLoadNamePixmapLineEdit::completeBind() {
 
   setIcon();
 
-  bool isConnected = false;
-
-  isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onChange()),
-                         this,SLOT(onModelObjectChange()) );
-  OS_ASSERT(isConnected);
+  m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onChange.connect<OSLoadNamePixmapLineEdit, &OSLoadNamePixmapLineEdit::onModelObjectChange>(this);
 }
 
 void OSLoadNamePixmapLineEdit::unbind()

@@ -207,27 +207,28 @@ QSharedPointer<LocalLibraryController> MainRightColumnController::measureLibrary
 
 void MainRightColumnController::setEditView(QWidget *widget)
 {
-  //if( QWidget * oldwidget = m_editView->currentWidget() )
-  //{
-  //  LOG(Debug, "Removing old edit widget: " << oldwidget);
-  //  m_editView->removeWidget(oldwidget);
+  if( QWidget * oldwidget = m_editView->currentWidget() )
+  {
+   LOG(Debug, "Removing old edit widget: " << oldwidget);
+   m_editView->removeWidget(oldwidget);
 
-  //  if (oldwidget != m_inspectorController->inspectorView()
-  //      && oldwidget != m_measureEditController->editView.data())
-  //  {
-  //    LOG(Debug, "Deleting old edit widget: " << oldwidget);
-  //    delete oldwidget;
-  //  } else {
-  //    boost::optional<model::ModelObject> nomodelobject;
-  //    m_inspectorController->layoutModelObject(nomodelobject, false);
-  //  }
-  //}
+   if (oldwidget != m_inspectorController->inspectorView()
+      // && oldwidget != m_measureEditController->editView.data()
+      )
+   {
+     LOG(Debug, "Deleting old edit widget: " << oldwidget);
+     delete oldwidget;
+   } else {
+     boost::optional<model::ModelObject> nomodelobject;
+     m_inspectorController->layoutModelObject(nomodelobject, false);
+   }
+  }
 
-  //if( widget )
-  //{
-  //  LOG(Debug, "Setting new edit widget: " << widget);
-  //  m_editView->addWidget(widget);
-  //}
+  if( widget )
+  {
+   LOG(Debug, "Setting new edit widget: " << widget);
+   m_editView->addWidget(widget);
+  }
 }
 
 void MainRightColumnController::setMyModelView(QWidget * widget)

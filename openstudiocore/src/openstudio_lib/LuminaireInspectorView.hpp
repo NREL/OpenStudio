@@ -30,9 +30,9 @@ class LuminaireDefinition;
 
 }
 
-class OSLineEdit;
+class OSLineEdit2;
 
-class OSQuantityEdit;
+class OSQuantityEdit2;
 
 class OSDropZone;
 
@@ -62,15 +62,15 @@ class LuminaireDefinitionInspectorView : public ModelObjectInspectorView
 
     void refresh();
 
-    OSLineEdit* m_nameEdit;
+    OSLineEdit2* m_nameEdit;
 
-    OSQuantityEdit * m_lightingPowerEdit;
+    OSQuantityEdit2 * m_lightingPowerEdit;
 
-    OSQuantityEdit * m_fractionRadiantEdit;
+    OSQuantityEdit2 * m_fractionRadiantEdit;
 
-    OSQuantityEdit * m_fractionVisibleEdit;
+    OSQuantityEdit2 * m_fractionVisibleEdit;
 
-    OSQuantityEdit * m_returnAirFractionEdit;
+    OSQuantityEdit2 * m_returnAirFractionEdit;
 
     bool m_isIP;
 

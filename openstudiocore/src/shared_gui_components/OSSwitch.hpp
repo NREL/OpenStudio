@@ -20,6 +20,7 @@
 #ifndef SHAREDGUICOMPONENTS_OSSWITCH_HPP
 #define SHAREDGUICOMPONENTS_OSSWITCH_HPP
 
+#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
 #include "FieldMethodTypedefs.hpp"
 
 #include "../model/Model.hpp"
@@ -27,7 +28,7 @@
 
 namespace openstudio {
 
-class OSSwitch2 : public QPushButton {
+class OSSwitch2 : public QPushButton, public Nano::Observer {
   Q_OBJECT
  public:
 
@@ -54,7 +55,7 @@ class OSSwitch2 : public QPushButton {
 
   void onModelObjectChange();
 
-  void onModelObjectRemove(Handle handle);
+  void onModelObjectRemove(const Handle& handle);
 
  private:
   boost::optional<model::ModelObject> m_modelObject;
@@ -64,34 +65,34 @@ class OSSwitch2 : public QPushButton {
   boost::optional<BasicQuery> m_isDefaulted;
 };
 
-class OSSwitch : public QPushButton
-{
-  Q_OBJECT
+// class OSSwitch2 : public QPushButton, public Nano::Observer
+// {
+//   Q_OBJECT
 
-  public:
+//   public:
 
-  OSSwitch(QWidget * parent = nullptr);
+//  OSSwitch2(QWidget * parent = nullptr);
 
-  virtual ~OSSwitch() {}
+//   virtual ~OSSwitch2() {}
 
-  void bind(model::ModelObject & modelObject, const char * property);
+//   void bind(model::ModelObject & modelObject, const char * property);
 
-  void unbind();
+//   void unbind();
 
-  private slots:
+//   private slots:
 
-  void onClicked(bool checked);
+//   void onClicked(bool checked);
 
-  void onModelObjectChange();
+//   void onModelObjectChange();
 
-  void onModelObjectRemove(Handle handle);
+//   void onModelObjectRemove(const Handle& handle);
 
-  private:
+//   private:
 
-  boost::optional<model::ModelObject> m_modelObject;
+//   boost::optional<model::ModelObject> m_modelObject;
 
-  std::string m_property;
-};
+//   std::string m_property;
+// };
 
 } // openstudio
 

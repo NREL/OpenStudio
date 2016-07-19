@@ -38,8 +38,13 @@ class WorkspaceReciever : public QObject {
 
   WorkspaceReciever(const Workspace& workspace)
   {
+
+    // Due to the switch to Nano Signals and Slots, testing for connects are no longer
+    // necessary because the NanoS&S are guarenteed to connect, else error on compile
+
     std::shared_ptr<openstudio::detail::Workspace_Impl> impl = workspace.getImpl<openstudio::detail::Workspace_Impl>();
     
+    /*
     bool test;
     test = connect(impl.get(), SIGNAL(removeWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                    this, SLOT(removeWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
@@ -50,6 +55,7 @@ class WorkspaceReciever : public QObject {
                    this, SLOT(addWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                    Qt::QueuedConnection);
     OS_ASSERT(test);
+    */
   }
 
   void clear()

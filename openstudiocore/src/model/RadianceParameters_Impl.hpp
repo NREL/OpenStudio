@@ -33,61 +33,61 @@ namespace detail {
 
   /** RadianceParameters_Impl is a ModelObject_Impl that is the implementation class for RadianceParameters.*/
   class MODEL_API RadianceParameters_Impl : public ModelObject_Impl {
-    Q_OBJECT;
+    
 
-    Q_PROPERTY(int accumulatedRaysperRecord READ accumulatedRaysperRecord WRITE setAccumulatedRaysperRecord RESET resetAccumulatedRaysperRecord);
-    Q_PROPERTY(bool isAccumulatedRaysperRecordDefaulted READ isAccumulatedRaysperRecordDefaulted);
+    
+    
 
-    Q_PROPERTY(double directThreshold READ directThreshold WRITE setDirectThreshold RESET resetDirectThreshold);
-    Q_PROPERTY(openstudio::Quantity directThreshold_SI READ directThreshold_SI WRITE setDirectThreshold RESET resetDirectThreshold);
-    Q_PROPERTY(openstudio::Quantity directThreshold_IP READ directThreshold_IP WRITE setDirectThreshold RESET resetDirectThreshold);
-    Q_PROPERTY(bool isDirectThresholdDefaulted READ isDirectThresholdDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double directCertainty READ directCertainty WRITE setDirectCertainty RESET resetDirectCertainty);
-    Q_PROPERTY(openstudio::Quantity directCertainty_SI READ directCertainty_SI WRITE setDirectCertainty RESET resetDirectCertainty);
-    Q_PROPERTY(openstudio::Quantity directCertainty_IP READ directCertainty_IP WRITE setDirectCertainty RESET resetDirectCertainty);
-    Q_PROPERTY(bool isDirectCertaintyDefaulted READ isDirectCertaintyDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double directJitter READ directJitter WRITE setDirectJitter RESET resetDirectJitter);
-    Q_PROPERTY(openstudio::Quantity directJitter_SI READ directJitter_SI WRITE setDirectJitter RESET resetDirectJitter);
-    Q_PROPERTY(openstudio::Quantity directJitter_IP READ directJitter_IP WRITE setDirectJitter RESET resetDirectJitter);
-    Q_PROPERTY(bool isDirectJitterDefaulted READ isDirectJitterDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double directPretest READ directPretest WRITE setDirectPretest RESET resetDirectPretest);
-    Q_PROPERTY(openstudio::Quantity directPretest_SI READ directPretest_SI WRITE setDirectPretest RESET resetDirectPretest);
-    Q_PROPERTY(openstudio::Quantity directPretest_IP READ directPretest_IP WRITE setDirectPretest RESET resetDirectPretest);
-    Q_PROPERTY(bool isDirectPretestDefaulted READ isDirectPretestDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(int ambientBouncesVMX READ ambientBouncesVMX WRITE setAmbientBouncesVMX RESET resetAmbientBouncesVMX);
-    Q_PROPERTY(bool isAmbientBouncesVMXDefaulted READ isAmbientBouncesVMXDefaulted);
+    
+    
 
-    Q_PROPERTY(int ambientBouncesDMX READ ambientBouncesDMX WRITE setAmbientBouncesDMX RESET resetAmbientBouncesDMX);
-    Q_PROPERTY(bool isAmbientBouncesDMXDefaulted READ isAmbientBouncesDMXDefaulted);
+    
+    
 
-    Q_PROPERTY(int ambientDivisionsVMX READ ambientDivisionsVMX WRITE setAmbientDivisionsVMX RESET resetAmbientDivisionsVMX);
-    Q_PROPERTY(bool isAmbientDivisionsVMXDefaulted READ isAmbientDivisionsVMXDefaulted);
+    
+    
 
-    Q_PROPERTY(int ambientDivisionsDMX READ ambientDivisionsDMX WRITE setAmbientDivisionsDMX RESET resetAmbientDivisionsDMX);
-    Q_PROPERTY(bool isAmbientDivisionsDMXDefaulted READ isAmbientDivisionsDMXDefaulted);
+    
+    
 
-    Q_PROPERTY(int ambientSupersamples READ ambientSupersamples WRITE setAmbientSupersamples RESET resetAmbientSupersamples);
-    Q_PROPERTY(bool isAmbientSupersamplesDefaulted READ isAmbientSupersamplesDefaulted);
+    
+    
 
-    Q_PROPERTY(double limitWeightVMX READ limitWeightVMX WRITE setLimitWeightVMX RESET resetLimitWeightVMX);
-    Q_PROPERTY(openstudio::Quantity limitWeightVMX_SI READ limitWeightVMX_SI WRITE setLimitWeightVMX RESET resetLimitWeightVMX);
-    Q_PROPERTY(openstudio::Quantity limitWeightVMX_IP READ limitWeightVMX_IP WRITE setLimitWeightVMX RESET resetLimitWeightVMX);
-    Q_PROPERTY(bool isLimitWeightVMXDefaulted READ isLimitWeightVMXDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double limitWeightDMX READ limitWeightDMX WRITE setLimitWeightDMX RESET resetLimitWeightDMX);
-    Q_PROPERTY(openstudio::Quantity limitWeightDMX_SI READ limitWeightDMX_SI WRITE setLimitWeightDMX RESET resetLimitWeightDMX);
-    Q_PROPERTY(openstudio::Quantity limitWeightDMX_IP READ limitWeightDMX_IP WRITE setLimitWeightDMX RESET resetLimitWeightDMX);
-    Q_PROPERTY(bool isLimitWeightDMXDefaulted READ isLimitWeightDMXDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(int klemsSamplingDensity READ klemsSamplingDensity WRITE setKlemsSamplingDensity RESET resetKlemsSamplingDensity);
-    Q_PROPERTY(bool isKlemsSamplingDensityDefaulted READ isKlemsSamplingDensityDefaulted);
+    
+    
 
-    Q_PROPERTY(std::string skyDiscretizationResolution READ skyDiscretizationResolution WRITE setSkyDiscretizationResolution RESET resetSkyDiscretizationResolution);
-    Q_PROPERTY(std::vector<std::string> skyDiscretizationResolutionValues READ skyDiscretizationResolutionValues);
+    
+    
 
     // TODO: Add relationships for objects related to this one, but not pointed to by the underlying data.
     //       Such relationships can be generated by the GenerateRelationships.rb script.
@@ -107,7 +107,7 @@ namespace detail {
                             Model_Impl* model,
                             bool keepHandle);
 
-    virtual ~RadianceParameters_Impl() {}
+    virtual ~RadianceParameters_Impl();
 
     //@}
 

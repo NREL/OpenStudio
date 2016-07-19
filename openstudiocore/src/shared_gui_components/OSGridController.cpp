@@ -1712,20 +1712,14 @@ namespace openstudio {
 
   void OSGridController::connectToModel()
   {
-    connect(m_model.getImpl<model::detail::Model_Impl>().get(),
-      static_cast<void (model::detail::Model_Impl::*)(const WorkspaceObject &, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::addWorkspaceObject),
-      this,
-      &OSGridController::onAddWorkspaceObject);
-
-    connect(m_model.getImpl<model::detail::Model_Impl>().get(),
-      static_cast<void (model::detail::Model_Impl::*)(const WorkspaceObject &, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::removeWorkspaceObject),
-      this,
-      &OSGridController::onRemoveWorkspaceObject);
+    m_model.getImpl<model::detail::Model_Impl>().get()->addWorkspaceObject.connect<OSGridController, &OSGridController::onAddWorkspaceObject>(this);
+    m_model.getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObject.connect<OSGridController, &OSGridController::onRemoveWorkspaceObject>(this);
   }
 
   void OSGridController::disconnectFromModel()
   {
-    disconnect(m_model.getImpl<openstudio::model::detail::Model_Impl>().get());
+    m_model.getImpl<model::detail::Model_Impl>().get()->addWorkspaceObject.disconnect<OSGridController, &OSGridController::onAddWorkspaceObject>(this);
+    m_model.getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObject.disconnect<OSGridController, &OSGridController::onRemoveWorkspaceObject>(this);
   }
 
   void OSGridController::onSelectionCleared()

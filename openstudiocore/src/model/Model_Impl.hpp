@@ -27,6 +27,8 @@
 #include "YearDescription.hpp"
 #include "WeatherFile.hpp"
 
+#include "nano_signal_slot.hpp" // Signal-Slot replacement
+
 #include "../utilities/idf/Workspace.hpp"
 #include "../utilities/idf/Workspace_Impl.hpp"
 #include "../utilities/idf/WorkspaceObject.hpp"
@@ -64,7 +66,7 @@ namespace detail {
 
   /** Container for the OpenStudio Building Model hierarchy. */
   class MODEL_API Model_Impl : public openstudio::detail::Workspace_Impl {
-    Q_OBJECT;
+    
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -206,17 +208,23 @@ namespace detail {
 
     void disconnect(ModelObject object, unsigned port);
 
-   public slots :
+    //@}
+    /** @name Nano Signals */
+    //@{
+
+    Nano::Signal<void(openstudio::model::detail::ModelObject_Impl *, IddObjectType, openstudio::UUID)> initialModelObject;
+
+    Nano::Signal<void()> initialReportComplete;
+
+   //@}
+
+   // public slots :
 
     virtual void obsoleteComponentWatcher(const ComponentWatcher& watcher);
 
     virtual void reportInitialModelObjects();
 
-   signals:
-
-    void initialModelObject(openstudio::model::detail::ModelObject_Impl* modelObject, IddObjectType iddObjectType, const openstudio::UUID& handle);
-
-    void initialReportComplete();
+   
 
    private:
     // explicitly unimplemented copy constructor
@@ -247,14 +255,13 @@ namespace detail {
     mutable boost::optional<YearDescription> m_cachedYearDescription;
     mutable boost::optional<WeatherFile> m_cachedWeatherFile;
 
-  private slots:
-
+  // private slots:
     void clearCachedData();
-    void clearCachedBuilding();
-    void clearCachedLifeCycleCostParameters();
-    void clearCachedRunPeriod();
-    void clearCachedYearDescription();
-    void clearCachedWeatherFile();
+    void clearCachedBuilding(const Handle& handle);
+    void clearCachedLifeCycleCostParameters(const Handle& handle);
+    void clearCachedRunPeriod(const Handle& handle);
+    void clearCachedYearDescription(const Handle& handle);
+    void clearCachedWeatherFile(const Handle& handle);
 
   };
 

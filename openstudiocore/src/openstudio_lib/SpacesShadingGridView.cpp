@@ -122,7 +122,7 @@ namespace openstudio {
       std::vector<QString> fields;
       fields.push_back(SHADEDSURFACENAME);
       fields.push_back(SHADINGSURFACEGROUP);
-      fields.push_back(CONSTRUCTION);  
+      fields.push_back(CONSTRUCTION);
       fields.push_back(TRANSMITTANCESCHEDULE);
       //fields.push_back(DAYLIGHTINGSHELFNAME);
       std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("General"), fields);
@@ -301,7 +301,7 @@ namespace openstudio {
 
   void SpacesShadingGridController::refreshModelObjects()
   {
-    m_modelObjects = subsetCastVector<model::ModelObject>(m_model.getModelObjects<model::Space>());
+    m_modelObjects = subsetCastVector<model::ModelObject>(m_model.getConcreteModelObjects<model::Space>());
     std::sort(m_modelObjects.begin(), m_modelObjects.end(), ModelObjectNameSorter());
   }
 

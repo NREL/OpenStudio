@@ -31,7 +31,7 @@
 #include <string>
 #include <ostream>
 #include <vector>
-#include <algorithm>
+#include <algorithm> 
 
 namespace openstudio{
  

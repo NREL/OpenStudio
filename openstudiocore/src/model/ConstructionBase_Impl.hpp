@@ -35,14 +35,14 @@ namespace detail {
 
   class MODEL_API ConstructionBase_Impl : public ResourceObject_Impl
   {
-    Q_OBJECT;
-    Q_PROPERTY(boost::optional<double> heatCapacity READ heatCapacity);
+    
+    
     // may require simulation results.
-    Q_PROPERTY(boost::optional<double> interiorVisibleAbsorptance READ interiorVisibleAbsorptance);
+    
     // may require simulation results.
-    Q_PROPERTY(boost::optional<double> exteriorVisibleAbsorptance READ exteriorVisibleAbsorptance);
+    
     // may require simulation results.
-    Q_PROPERTY(boost::optional<double> visibleTransmittance READ visibleTransmittance);
+    
   public:
 
     /** @name Constructors and Destructors */

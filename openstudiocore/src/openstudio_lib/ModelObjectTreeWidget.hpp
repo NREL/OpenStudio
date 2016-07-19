@@ -21,6 +21,7 @@
 #define OPENSTUDIO_MODELOBJECTTREEWIDGET_HPP
 
 #include "OSItemSelector.hpp"
+#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
 
 #include "../model/Model.hpp"
 
@@ -30,7 +31,7 @@ class QVBoxLayout;
 
 namespace openstudio {
 
-class ModelObjectTreeWidget : public OSItemSelector
+class ModelObjectTreeWidget : public OSItemSelector, public Nano::Observer
 {
   Q_OBJECT
 

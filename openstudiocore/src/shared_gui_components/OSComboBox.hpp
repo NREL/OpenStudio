@@ -23,6 +23,7 @@
 #include "FieldMethodTypedefs.hpp"
 #include "OSConcepts.hpp"
 
+#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
 #include "../model/Model.hpp"
 #include "../model/ModelObject.hpp"
 
@@ -35,7 +36,7 @@
 
 namespace openstudio {
 
-class OSComboBoxDataSource : public QObject
+class OSComboBoxDataSource : public QObject, public Nano::Observer
 {
   Q_OBJECT
 
@@ -78,9 +79,9 @@ class OSObjectListCBDS : public OSComboBoxDataSource
 
   private slots:
 
-  void onObjectAdded(const WorkspaceObject&);
+  void onObjectAdded(const WorkspaceObject&, const openstudio::IddObjectType& type, const openstudio::UUID& uuid);
 
-  void onObjectWillBeRemoved(const WorkspaceObject&);
+  void onObjectWillBeRemoved(const WorkspaceObject&, const openstudio::IddObjectType& type, const openstudio::UUID& uuid);
 
   void onObjectChanged();
 
@@ -95,7 +96,7 @@ class OSObjectListCBDS : public OSComboBoxDataSource
   QList<WorkspaceObject> m_workspaceObjects;
 };
 
-class OSComboBox2 : public QComboBox {
+class OSComboBox2 : public QComboBox, public Nano::Observer {
   Q_OBJECT
  public:
   
@@ -176,7 +177,7 @@ class OSComboBox2 : public QComboBox {
 
   void onModelObjectChanged();
 
-  void onModelObjectRemoved(Handle handle);
+  void onModelObjectRemoved(const Handle& handle);
 
   void onCurrentIndexChanged(const QString & text);
 
@@ -206,49 +207,49 @@ class OSComboBox2 : public QComboBox {
  *
  * Alternatively, a OSComboBoxDataSource can be set to provide data to OSComoboBox.
  **/
-class OSComboBox : public QComboBox {
-  Q_OBJECT
+// class OSComboBox : public QComboBox, public Nano::Observer {
+//   Q_OBJECT
 
- public:
+//  public:
 
-  OSComboBox( QWidget * parent = nullptr );
+//   OSComboBox( QWidget * parent = nullptr );
 
-  virtual ~OSComboBox() {}
+//   virtual ~OSComboBox() {}
 
-  void bind(model::ModelObject & modelObject, const char * property);
+//   void bind(model::ModelObject & modelObject, const char * property);
 
-  void unbind();
+//   void unbind();
 
-  void setDataSource(std::shared_ptr<OSComboBoxDataSource> dataSource);
+//   void setDataSource(std::shared_ptr<OSComboBoxDataSource> dataSource);
 
- protected:
+//  protected:
 
-  bool event( QEvent * e ) override;
+//   bool event( QEvent * e ) override;
 
- private slots:
+//  private slots:
 
-  void onDataSourceChange(int);
+//   void onDataSourceChange(int);
 
-  void onDataSourceAdd(int);
+//   void onDataSourceAdd(int);
   
-  void onDataSourceRemove(int);
+//   void onDataSourceRemove(int);
 
-  void onModelObjectChanged();
+//   void onModelObjectChanged();
 
-  void onModelObjectRemoved(Handle handle);
+//   void onModelObjectRemoved(const Handle& handle);
 
-  void onCurrentIndexChanged(const QString & text);
+//   void onCurrentIndexChanged(const QString & text);
 
- private:
+//  private:
 
-  std::shared_ptr<OSComboBoxDataSource> m_dataSource;
+//   std::shared_ptr<OSComboBoxDataSource> m_dataSource;
 
-  boost::optional<model::ModelObject> m_modelObject;
+//   boost::optional<model::ModelObject> m_modelObject;
 
-  std::string m_property;
+//   std::string m_property;
 
-  std::vector<std::string> m_values;
-};
+//   std::vector<std::string> m_values;
+// };
 
 } // openstudio
 

@@ -123,10 +123,10 @@ namespace openstudio {
     {
       std::vector<QString> fields;
       fields.push_back(SURFACENAME);
-      fields.push_back(SURFACETYPE); 
+      fields.push_back(SURFACETYPE);
       fields.push_back(CONSTRUCTION);
       fields.push_back(OUTSIDEBOUNDARYCONDITION);
-      fields.push_back(OUTSIDEBOUNDARYCONDITIONOBJECT); 
+      fields.push_back(OUTSIDEBOUNDARYCONDITIONOBJECT);
       fields.push_back(SUNEXPOSURE);
       fields.push_back(WINDEXPOSURE);
       //fields.push_back(SHADINGSURFACENAME); // UNDESIRABLE TO SHOW THIS VECTOR IN THIS VIEW
@@ -318,7 +318,7 @@ namespace openstudio {
 
   void SpacesSurfacesGridController::refreshModelObjects()
   {
-    m_modelObjects = subsetCastVector<model::ModelObject>(m_model.getModelObjects<model::Space>());
+    m_modelObjects = subsetCastVector<model::ModelObject>(m_model.getConcreteModelObjects<model::Space>());
     std::sort(m_modelObjects.begin(), m_modelObjects.end(), ModelObjectNameSorter());
   }
 
