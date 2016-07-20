@@ -3,18 +3,25 @@ REM The build process litters the source tree with the extension binaries
 REM so we make a copy of the clean source tree. One for release and one for debug
 XCOPY /e /i /Y . ..\Ruby-release
 XCOPY /e /i /Y . ..\Ruby-debug
+
 cd ..\Ruby-release
 set CFLAGS = MD -Zi -W2 -wd4996 -we4028 -we4142 -O2sy-  -Zm600
-call .\win32\configure.bat --with-static-linked-ext --without-win32ole --disable-install-doc --prefix="${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install-release"
+call .\win32\configure.bat --with-static-linked-ext --without-win32ole --disable-install-doc --prefix="${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/release"
 nmake libenc
 nmake libtrans
 nmake
 nmake install
+REM Using unix tools since we must have them from DevKit anyway, since the ruby build requires them
+find '${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-release' -name '*.a' -exec cp {} '${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/release/lib/' \;
+cp '${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-release/enc/encinit.c' '${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/release/include/'
+
 cd ..\Ruby-debug
 set CFLAGS = MDd -Zi -W2 -wd4996 -we4028 -we4142 -O2sy-  -Zm600
-call .\win32\configure.bat --with-static-linked-ext --without-win32ole --disable-install-doc --prefix="${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install-debug"
+call .\win32\configure.bat --with-static-linked-ext --without-win32ole --disable-install-doc --prefix="${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/debug"
 nmake libenc
 nmake libtrans
 nmake
 nmake install
+find '${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-debug' -name '*.a' -exec cp {} '${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/debug/lib/' \;
+cp '${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-debug/enc/encinit.c' '${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/debug/include/'
 

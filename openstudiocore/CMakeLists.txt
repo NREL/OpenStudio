@@ -415,9 +415,38 @@ elseif(WIN32)
 endif()
 
 # Ruby
+
+set(RUBY_INSTALL_DIR "" CACHE PATH "Path to Ruby Install")
+mark_as_advanced(RUBY_INSTALL_DIR)
+
+if(NOT EXISTS ${RUBY_INSTALL_DIR})
+  if( WIN32 )
+  elseif( APPLE )
+    set(RUBY_ZIP_FILENAME "ruby_2_0_0_osx_static.tar.gz")
+    set(RUBY_ZIP_EXPECTED_MD5 "87875206d6255d4b75e9a5fcbb273e19")
+  elseif(EXISTS "/etc/redhat-release")
+  else()
+  endif()
+
+  set(RUBY_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${RUBY_ZIP_FILENAME}")
+  if(EXISTS "${RUBY_ZIP_LOCAL_PATH}")
+    file(MD5 "${RUBY_ZIP_LOCAL_PATH}" RUBY_ZIP_MD5)
+  endif()
+
+  if( NOT RUBY_ZIP_MD5 STREQUAL RUBY_ZIP_EXPECTED_MD5)
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${RUBY_ZIP_FILENAME}"
+      ${RUBY_ZIP_LOCAL_PATH}
+      INACTIVITY_TIMEOUT 120
+      SHOW_PROGRESS
+      EXPECTED_MD5 ${RUBY_ZIP_EXPECTED_MD5})
+      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${RUBY_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+  endif()
+
+  set(RUBY_INSTALL_DIR "${CMAKE_BINARY_DIR}/Ruby-install/")
+  find_file( RUBY_CONFIG_INCLUDE_DIR config.h PATHS "${RUBY_INSTALL_DIR}/include/" )
+endif()
+
 find_package(Ruby 2.0 REQUIRED)
-set(RUBY_MODULE_DIR "Ruby")
-set(RUBY_MODULE_ARCH_DIR "Ruby/openstudio")
 
 # OpenSSL / libssh support
 if(BUILD_WITH_OPENSSL)
