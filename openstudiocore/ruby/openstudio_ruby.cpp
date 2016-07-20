@@ -9,11 +9,6 @@ extern "C" {
 
 extern "C" {
 void Init_openstudio(void) {
-  //RUBY_INIT_STACK;
-  //ruby_init();
-  //rb_call_inits();
-  //ruby_prog_init();
-  //Init_Encoding();
 
   init_openstudio_internal();
 }
