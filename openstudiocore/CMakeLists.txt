@@ -415,7 +415,7 @@ elseif(WIN32)
 endif()
 
 # Ruby
-find_package(Ruby 2.2 REQUIRED)
+find_package(Ruby 2.0 REQUIRED)
 set(RUBY_MODULE_DIR "Ruby")
 set(RUBY_MODULE_ARCH_DIR "Ruby/openstudio")
 
@@ -963,6 +963,8 @@ endif()
 
 # Include the resources, should happen after find EnergyPlus
 add_subdirectory(resources)
+
+add_subdirectory(ruby)
 
 foreach(D ${project_directories})
   add_subdirectory(src/${D})
