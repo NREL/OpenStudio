@@ -301,7 +301,8 @@ if(MSVC)
   endif()
 
   # treat warnings as errors
-  add_definitions(/WX)
+  # DLM: only do this for our code, added in later
+  # add_definitions(/WX)
 
   # ignore warnings about the stl being insecure
   add_definitions(-D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS)
@@ -616,55 +617,25 @@ add_subdirectory(src/zlib)
 # make sure zconf.h can be found
 include_directories(${CMAKE_BINARY_DIR}/src/zlib)
 
-# Google test library
-add_definitions(-DGTEST_HAS_TR1_TUPLE=0)
-
-ExternalProject_Add(GoogleTest
-  URL http://openstudio-resources.s3.amazonaws.com/dependencies/gtest-1.7.0.tar.gz
-  URL_MD5 bad74f626d18f724cad4c9fe2e6ef27d
-  PATCH_COMMAND "${CMAKE_COMMAND}" -E copy_directory ${CMAKE_SOURCE_DIR}/dependencies/GoogleTest ${CMAKE_BINARY_DIR}/GoogleTest-prefix/src/GoogleTest
-  INSTALL_COMMAND ""
-  CMAKE_CACHE_ARGS
-  -DCMAKE_OSX_ARCHITECTURES:STRING=${CMAKE_OSX_ARCHITECTURES}
-  -DCMAKE_OSX_DEPLOYMENT_TARGET:STRING=${CMAKE_OSX_DEPLOYMENT_TARGET}
-  -DCMAKE_OSX_SYSROOT:STRING=${CMAKE_OSX_SYSROOT}
-  -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
-  -DCMAKE_CXX_COMPILER:STRING=${CMAKE_CXX_COMPILER}
-  -DCMAKE_CXX_FLAGS:STRING=${CMAKE_CXX_FLAGS}
-  -DCMAKE_EXE_LINKER_FLAGS:STRING=${CMAKE_EXE_LINKER_FLAGS}
-  -DCMAKE_MODULE_LINKER_FLAGS:STRING=${CMAKE_MODULE_LINKER_FLAGS}
-  -DCMAKE_SHARED_LINKER_FLAGS:STRING=${CMAKE_SHARED_LINKER_FLAGS}
-)
-
-set(GTEST_INCLUDE_DIR ${CMAKE_BINARY_DIR}/GoogleTest-prefix/src/GoogleTest/include)
-set(GTEST_LIB_DIR ${CMAKE_BINARY_DIR}/GoogleTest-prefix/src/GoogleTest-build)
-include_directories(SYSTEM ${GTEST_INCLUDE_DIR})
-link_directories(${GTEST_LIB_DIR})
+if(BUILD_TESTING)
+  # Google test library
+  set(gtest_force_shared_crt OFF)
+  set(gtest_build_tests OFF)
+  set(gtest_build_samples OFF)
+  set(gtest_disable_pthreads OFF)
+  add_definitions(-DGTEST_HAS_TR1_TUPLE=0) 
+  add_subdirectory(src/google_test)
+endif()
 
 # GeographicLib
-ExternalProject_Add(GeographicLib
-  URL http://openstudio-resources.s3.amazonaws.com/dependencies/GeographicLib-1.45.zip
-  URL_MD5 c3c8f989d700fc88c8ce4584cb298cee
-  #PATCH_COMMAND "${CMAKE_COMMAND}" -E copy_directory ${CMAKE_SOURCE_DIR}/dependencies/GeographicLib ${CMAKE_BINARY_DIR}/GeographicLib-prefix/src/GeographicLib
-  INSTALL_COMMAND ""
-  CMAKE_CACHE_ARGS
-  -DCMAKE_OSX_ARCHITECTURES:STRING=${CMAKE_OSX_ARCHITECTURES}
-  -DCMAKE_OSX_DEPLOYMENT_TARGET:STRING=${CMAKE_OSX_DEPLOYMENT_TARGET}
-  -DCMAKE_OSX_SYSROOT:STRING=${CMAKE_OSX_SYSROOT}
-  -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
-  -DCMAKE_CXX_COMPILER:STRING=${CMAKE_CXX_COMPILER}
-  -DCMAKE_CXX_FLAGS:STRING=${CMAKE_CXX_FLAGS}
-  -DCMAKE_EXE_LINKER_FLAGS:STRING=${CMAKE_EXE_LINKER_FLAGS}
-  -DCMAKE_MODULE_LINKER_FLAGS:STRING=${CMAKE_MODULE_LINKER_FLAGS}
-  -DCMAKE_SHARED_LINKER_FLAGS:STRING=${CMAKE_SHARED_LINKER_FLAGS}
-  -DGEOGRAPHICLIB_LIB_TYPE:STRING=STATIC
-  -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=ON
-)
-
-set(GeographicLib_INCLUDE_DIR ${CMAKE_BINARY_DIR}/GeographicLib-prefix/src/GeographicLib/include)
-set(GeographicLib_LIB_DIR ${CMAKE_BINARY_DIR}/GeographicLib-prefix/src/GeographicLib-build/lib)
-include_directories(SYSTEM ${GeographicLib_INCLUDE_DIR})
-link_directories(${GeographicLib_LIB_DIR})
+set(GEOGRAPHICLIB_LIB_TYPE STATIC)
+set(GEOGRAPHICLIB_STATIC_LIB ON)
+set(GEOGRAPHICLIB_SHARED_LIB OFF)
+set(GEOGRAPHICLIB_DOCUMENTATION OFF)
+set(BUILD_NETGEOGRAPHICLIB OFF)
+set(GEOGRAPHICLIB_PRECISION 2)
+include_directories(SYSTEM src/geographic_lib/include)
+add_subdirectory(src/geographic_lib)
 
 # Boost
 if(APPLE)
@@ -953,6 +924,11 @@ include_directories("${CMAKE_BINARY_DIR}/src/")
 
 ###############################################################################
 # Add project sub directories
+
+if(MSVC)
+  # treat warnings as errors
+  add_definitions(/WX)
+endif()
 
 include("embedded/EmbedFiles.cmake")
 add_subdirectory("embedded")

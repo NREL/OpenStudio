@@ -49,9 +49,9 @@ CREATE_SRC_GROUPS("${${target_name}_swig_src}")
 CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_test_depends}")
 if(BUILD_TESTING)
 
-  add_dependencies("${target_name}_tests"
-    openstudio_osversion_resources
-  )
+  #add_dependencies("${target_name}_tests"
+  #  openstudio_osversion_resources
+  #)
 
 endif()
 

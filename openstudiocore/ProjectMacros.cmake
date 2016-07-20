@@ -75,14 +75,8 @@ macro(CREATE_TEST_TARGETS BASE_NAME SRC DEPENDENCIES)
     )
 
     ADD_GOOGLE_TESTS(${BASE_NAME}_tests ${SRC})
-    add_dependencies("${BASE_NAME}_tests" "${BASE_NAME}_resources")
-
-    if(ENABLE_TEST_RUNNER_TARGETS)
-      add_custom_target(${target_name}_run_tests
-        COMMAND ${BASE_NAME}_tests
-        DEPENDS ${target_name}_tests
-        WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
-      )
+    if(TARGET "${BASE_NAME}_resources")
+      add_dependencies("${BASE_NAME}_tests" "${BASE_NAME}_resources")
     endif()
 
     AddPCH(${BASE_NAME}_tests)

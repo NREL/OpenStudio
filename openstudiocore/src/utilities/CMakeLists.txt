@@ -524,9 +524,7 @@ AddPCH(${target_name})
 #  )
 #endif()
 
-SET(GeographicLib_LIBRARY optimized "Geographic" debug "Geographic_d")
-target_link_libraries(${target_name} PUBLIC ${${target_name}_depends} PRIVATE ${GeographicLib_LIBRARY})
-add_dependencies("${target_name}" GeographicLib)
+target_link_libraries(${target_name} PUBLIC ${${target_name}_depends} PRIVATE GeographicLib_STATIC)
 
 CREATE_SRC_GROUPS("${${target_name}_test_src}")
 CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends}")
