@@ -446,19 +446,43 @@ if(NOT EXISTS ${RUBY_INSTALL_DIR})
   set(RUBY_INSTALL_DIR "${CMAKE_BINARY_DIR}/Ruby-install/")
   find_file( RUBY_CONFIG_INCLUDE_DIR config.h PATHS "${RUBY_INSTALL_DIR}/include/" )
 endif()
-
 find_package(Ruby 2.0 REQUIRED)
 
 # OpenSSL / libssh support
 if(BUILD_WITH_OPENSSL)
-
-  find_package(OpenSSL)
-  if(NOT ${OPENSSL_FOUND})
-    message(SEND_ERROR "OpenSSL could not be found, and is required for HTTPS communication")
-    if(UNIX)
+  if(UNIX)
+    find_package(OpenSSL)
+    if(NOT ${OPENSSL_FOUND})
+      message(SEND_ERROR "OpenSSL could not be found, and is required for HTTPS communication")
       message(SEND_ERROR "Please install OpenSSL development libraries using your package management system (possibly libssl-dev)")
+    else()
+      mark_as_advanced(
+        LIB_EAY_DEBUG
+        LIB_EAY_RELEASE
+        SSL_EAY_DEBUG
+        SSL_EAY_RELEASE
+      )
     endif()
   elseif(WIN32)
+    if(CMAKE_CL_64)
+      set(OPENSSL_ARCH 64)
+      set(OPENSSL_EXPECTED_HASH 3f9c88523634c7b1e27f4026e7c3f3ee)
+    else()
+      set(OPENSSL_ARCH 32)
+      set(OPENSSL_EXPECTED_HASH fb2aa1a8ceb85f68055044a85f1dbc94)
+    endif()
+    set(OPENSSL_VERSION "1.0.2a")
+    set(OPENSSL_PATH "OpenSSL-Win${OPENSSL_ARCH}")
+    if(EXISTS "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip")
+      file(MD5 "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" OPENSSL_HASH)
+    endif()
+    if(NOT EXISTS "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" OR NOT EXISTS "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}" OR NOT "${OPENSSL_HASH}" MATCHES "${OPENSSL_EXPECTED_HASH}")
+      message(STATUS "Downloading OpenSSL ${OPENSSL_VERSION} (${OPENSSL_ARCH}-bit)")
+      file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/OpenSSL-Win${OPENSSL_ARCH}-${OPENSSL_VERSION}.zip" "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${OPENSSL_EXPECTED_HASH})
+      execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}")
+      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+    endif()
+    set(OPENSSL_ROOT_DIR "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}")
     set(LIBEAY32_PATH "${OPENSSL_ROOT_DIR}/libeay32.dll")
     set(SSLEAY32_PATH "${OPENSSL_ROOT_DIR}/ssleay32.dll")
     file(COPY "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION "${CMAKE_BINARY_DIR}/Products/Release/")
@@ -468,7 +492,6 @@ if(BUILD_WITH_OPENSSL)
     #install(FILES "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION "bin")
     #install(FILES "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION ${RUBY_MODULE_ARCH_DIR})
   endif()
-
 endif()
 
 find_package(SWIG 3.0.0 REQUIRED)
@@ -638,28 +661,44 @@ include_directories(SYSTEM src/geographic_lib/include)
 add_subdirectory(src/geographic_lib)
 
 # Boost
-if(APPLE)
-  set(Boost_USE_STATIC_LIBS ON)
-elseif(WIN32)
-  set(Boost_USE_STATIC_LIBS ON)
+set(BOOST_INSTALL_DIR "" CACHE PATH "Path to Boost Install")
+mark_as_advanced(BOOST_INSTALL_DIR)
 
-  # uncomment all of this if we want to force dynamic libs on windows
-  #set(Boost_USE_STATIC_LIBS OFF)
-  #add_definitions(-DBOOST_THREAD_USE_DLL -DBOOST_THREAD_DYN_LINK -DBOOST_PROGRAM_OPTIONS_DYN_LINK  -DBOOST_REGEX_DYN_LINK  -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_DATE_TIME_DYN_LINK)
-  #link_directories(${Boost_LIBRARY_DIRS})
-  #if(MSVC)
-    ##Ignore dll specific warnings that are out of our hands to control, coming from external projects
-    #add_definitions(/wd4251 /wd4275)
-  #endif()
+if(NOT EXISTS ${BOOST_INSTALL_DIR})
+  if( WIN32 )
+    if(CMAKE_CL_64)
+      set(BOOST_ZIP_FILENAME "boost_1_55_0_msvc2013_64_static.zip")
+      set(BOOST_ZIP_EXPECTED_MD5 "3ff90a94d025f139e290296ed0b41263")
+    else()
+    endif()
+  elseif( APPLE )
+  elseif(EXISTS "/etc/redhat-release")
+  else()
+  endif()
+
+  set(BOOST_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${BOOST_ZIP_FILENAME}")
+  if(EXISTS "${BOOST_ZIP_LOCAL_PATH}")
+    file(MD5 "${BOOST_ZIP_LOCAL_PATH}" BOOST_ZIP_MD5)
+  endif()
+
+  if( NOT BOOST_ZIP_MD5 STREQUAL BOOST_ZIP_EXPECTED_MD5)
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${BOOST_ZIP_FILENAME}"
+      ${BOOST_ZIP_LOCAL_PATH}
+      INACTIVITY_TIMEOUT 120
+      SHOW_PROGRESS
+      EXPECTED_MD5 ${BOOST_ZIP_EXPECTED_MD5})
+      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${BOOST_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+  endif()
+  set(BOOST_INSTALL_DIR "${CMAKE_BINARY_DIR}/Boost-install/")
 endif()
-
+set(BOOST_ROOT "${BOOST_INSTALL_DIR}")
+set(Boost_USE_STATIC_LIBS ON)
+find_package(Boost 1.55.0 REQUIRED COMPONENTS filesystem regex program_options system thread date_time log)
+include_directories(SYSTEM ${Boost_INCLUDE_DIR})
 mark_as_advanced(
   Boost_DIR
   BOOST_THREAD_LIBRARY
 )
-
-find_package(Boost 1.55.0 REQUIRED COMPONENTS filesystem regex program_options system thread date_time log)
-include_directories(SYSTEM ${Boost_INCLUDE_DIR})
 
 # require these run time checks
 add_definitions(-DBOOST_UBLAS_CHECK_ENABLE)
@@ -675,13 +714,6 @@ add_definitions(-DBOOST_CHRONO_HEADER_ONLY)
 
 # do not autolink with serialization
 add_definitions(-DBOOST_SERIALIZATION_NO_LIB)
-
-# check if boost is being linked dynamically
-# DLM: should we allow this on Unix or should we force static for all platforms?
-string(REGEX MATCH "^.*libboost_log.so$" BOOST_IS_DYN_LIBS "${Boost_LOG_LIBRARY_RELEASE}")
-if(BOOST_IS_DYN_LIBS)
-  add_definitions(-DBOOST_ALL_DYN_LINK)
-endif()
 
 # SQLite definitions, used in sqlite and litesql
 add_definitions(-DSQLITE_THREADSAFE=1) # 1 is default, serial access
@@ -866,9 +898,7 @@ else()
 	  find_library(PCRE qtpcre PATHS "${QT_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
 	  find_library(SQLITE qsqlite PATHS "${QT_INSTALL_DIR}/plugins/sqldrivers/" NO_DEFAULT_PATH)
 	  find_library(WIN_PLATFORM qwindows PATHS "${QT_INSTALL_DIR}/plugins/platforms/" NO_DEFAULT_PATH)
-	
-	  link_directories("${OPENSSL_ROOT_DIR}/lib/VC/static")
-	
+
 	  find_library(PLATFORM_SUPPORT Qt5PlatformSupport PATHS "${QT_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
 	  find_library(FREETYPE qtfreetype PATHS "${QT_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
 	
@@ -887,8 +917,6 @@ else()
 	  list(APPEND QT_LIBS Crypt32)
 	  list(APPEND QT_LIBS imm32)
 	  list(APPEND QT_LIBS winmm)
-	  list(APPEND QT_LIBS ssleay32MT)
-	  list(APPEND QT_LIBS libeay32MT)
 	  list(APPEND QT_LIBS Gdi32)
 	
 	  list(APPEND QT_LIBS wsock32)
@@ -896,6 +924,13 @@ else()
 	  list(APPEND QT_LIBS iphlpapi)
 	  list(APPEND QT_LIBS dbghelp)
 	  list(APPEND QT_LIBS Shlwapi)
+    
+    if(BUILD_WITH_OPENSSL)
+      link_directories("${OPENSSL_ROOT_DIR}/lib/VC/static")
+      list(APPEND QT_LIBS ssleay32MT)
+      list(APPEND QT_LIBS libeay32MT)
+    endif()
+    
 	endif()
 endif()
 

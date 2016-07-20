@@ -92,43 +92,6 @@ option(BUILD_SHARED_LIBS "Build OS libs as shared libraries" OFF)
 set(MAXIMIZE_CPU_USAGE OFF CACHE BOOL "Attempt to fully load the CPU during builds")
 mark_as_advanced(MAXIMIZE_CPU_USAGE)
 
-# Build with OpenSSL support
-set(BUILD_WITH_OPENSSL ON CACHE INTERNAL "Build With OpenSSL Support For SSH Connections")
-if(UNIX)
-  find_package(OpenSSL)
-  if(NOT ${OPENSSL_FOUND})
-    message(SEND_ERROR "OpenSSL could not be found, and is required for HTTPS communication")
-    message(SEND_ERROR "Please install OpenSSL development libraries using your package management system (possibly libssl-dev)")
-  else()
-    mark_as_advanced(
-      LIB_EAY_DEBUG
-      LIB_EAY_RELEASE
-      SSL_EAY_DEBUG
-      SSL_EAY_RELEASE
-    )
-  endif()
-elseif(WIN32)
-  if(CMAKE_CL_64)
-    set(OPENSSL_ARCH 64)
-    set(OPENSSL_EXPECTED_HASH 3f9c88523634c7b1e27f4026e7c3f3ee)
-  else()
-    set(OPENSSL_ARCH 32)
-    set(OPENSSL_EXPECTED_HASH fb2aa1a8ceb85f68055044a85f1dbc94)
-  endif()
-  set(OPENSSL_VERSION "1.0.2a")
-  set(OPENSSL_PATH "OpenSSL-Win${OPENSSL_ARCH}")
-  if(EXISTS "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip")
-    file(MD5 "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" OPENSSL_HASH)
-  endif()
-  if(NOT EXISTS "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" OR NOT EXISTS "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}" OR NOT "${OPENSSL_HASH}" MATCHES "${OPENSSL_EXPECTED_HASH}")
-    message(STATUS "Downloading OpenSSL ${OPENSSL_VERSION} (${OPENSSL_ARCH}-bit)")
-    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/OpenSSL-Win${OPENSSL_ARCH}-${OPENSSL_VERSION}.zip" "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${OPENSSL_EXPECTED_HASH})
-    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}")
-    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
-  endif()
-  set(OPENSSL_ROOT_DIR "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}")
-endif()
-
 if(MSVC)
   # Visual Studio compiler check
   # http://en.wikipedia.org/wiki/Visual_C%2B%2B#32-bit_and_64-bit_versions
@@ -238,61 +201,9 @@ if(UNIX)
 endif()
 
 mark_as_advanced(
-  Boost_DIR
-  BOOST_THREAD_LIBRARY
   ProcessorCount_cmd_getconf
   ProcessorCount_cmd_sysctl
 )
-
-# Boost
-if(APPLE)
-  set(Boost_USE_STATIC_LIBS ON)
-elseif(WIN32)
-  set(Boost_USE_STATIC_LIBS ON)
-
-  #uncomment all of this if we want to force dynamic libs on windows
-  #  set(Boost_USE_STATIC_LIBS OFF)
-  #  add_definitions(-DBOOST_THREAD_USE_DLL -DBOOST_THREAD_DYN_LINK -DBOOST_PROGRAM_OPTIONS_DYN_LINK -DBOOST_REGEX_DYN_LINK -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK  -DBOOST_DATE_TIME_DYN_LINK)
-  #  link_directories(${Boost_LIBRARY_DIRS})
-  #  if(MSVC)
-  #    #Ignore dll specific warnings that are out of our hands to control, coming from external projects
-  #    add_definitions(/wd4251 /wd4275)
-  #  endif()
-endif()
-
-# DLM: should we allow boost to be linked dynamically on Unix or should we force static for all platforms?
-
-find_package(Boost 1.55.0 COMPONENTS filesystem regex program_options system thread date_time log QUIET)
-
-# Check default Boost install location for Windows if Boost has not been found, and display missing components
-if(MSVC AND NOT Boost_FOUND AND EXISTS "C:/local/boost_1_55_0/")
-  if(CMAKE_CL_64)
-    set(BOOST_ARCH 64)
-  else()
-    set(BOOST_ARCH 32)
-  endif()
-  if(MSVC12)
-    set(BOOST_MSVC 12.0)
-  endif()
-
-  if(EXISTS "C:/local/boost_1_55_0/lib${BOOST_ARCH}-msvc-${BOOST_MSVC}")
-    set(BOOST_ROOT "C:/local/boost_1_55_0")
-    set(BOOST_LIBRARYDIR "C:/local/boost_1_55_0/lib${BOOST_ARCH}-msvc-${BOOST_MSVC}")
-    find_package(Boost 1.55.0 COMPONENTS filesystem regex program_options system thread date_time log QUIET)
-    if(NOT Boost_FOUND)
-      message(STATUS "Could NOT find Boost\n${Boost_ERROR_REASON}")
-    endif()
-  endif()
-elseif(NOT Boost_FOUND)
-  message(STATUS "Could NOT find Boost\n${Boost_ERROR_REASON}")
-endif()
-
-if(Boost_FOUND)
-  option(BUILD_BOOST "Build Boost" OFF)
-else()
-  option(BUILD_BOOST "Build Boost" ON)
-endif()
-
 
 find_package(SWIG 3.0.0)
 mark_as_advanced(
@@ -411,6 +322,8 @@ if(BUILD_SWIG)
   endif()
 endif()
 
+
+option(BUILD_BOOST "Build Boost" OFF)
 if(BUILD_BOOST)
   if(APPLE)
     set(apple-flags "-std=c11 -std=c++11 -stdlib=libc++")
@@ -583,7 +496,6 @@ ExternalProject_Add(OSCore
     -DBUILD_TESTING:BOOL=${BUILD_TESTING}
     -DBUILD_PACKAGE:BOOL=${BUILD_PACKAGE}
     -DBUILD_WITH_MULTIPLE_PROCESSES:BOOL=${BUILD_WITH_MULTIPLE_PROCESSES}
-    -DBUILD_WITH_OPENSSL:BOOL=${BUILD_WITH_OPENSSL}
     -DBUILD_RUBY_GEM:BOOL=${BUILD_RUBY_GEM}
     -DBUILD_RUBY_GEM_WITH_LIBS:BOOL=${BUILD_RUBY_GEM_WITH_LIBS}
     -DUSE_PCH:BOOL=${USE_PCH}
@@ -611,7 +523,6 @@ ExternalProject_Add(OSCore
     -DV8_INCLUDE_DIR:STRING=${V8_INCLUDE_DIR}
     -DDOXYGEN_EXECUTABLE:STRING=${DOXYGEN_EXECUTABLE}
     -DDOXYGEN_DOT_EXECUTABLE:STRING=${DOXYGEN_DOT_EXECUTABLE}
-    -DOPENSSL_ROOT_DIR:PATH=${OPENSSL_ROOT_DIR}
     -DPATCH_EXE:PATH=${PATCH_EXE}
     -DMAXIMIZE_CPU_USAGE:BOOL=${MAXIMIZE_CPU_USAGE}
     -DRUBY_LIBRARY:PATH=${RUBY_LIBRARY}
