@@ -647,6 +647,7 @@ if(BUILD_TESTING)
   set(gtest_build_samples OFF)
   set(gtest_disable_pthreads OFF)
   add_definitions(-DGTEST_HAS_TR1_TUPLE=0) 
+  include_directories(SYSTEM src/google_test/include)
   add_subdirectory(src/google_test)
 endif()
 
