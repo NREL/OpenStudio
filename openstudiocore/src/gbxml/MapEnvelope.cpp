@@ -26,6 +26,8 @@
 #include "../model/ModelObject_Impl.hpp"
 #include "../model/Construction.hpp"
 #include "../model/Construction_Impl.hpp"
+#include "../model/AirGap.hpp"
+#include "../model/AirGap_Impl.hpp"
 #include "../model/MasslessOpaqueMaterial.hpp"
 #include "../model/MasslessOpaqueMaterial_Impl.hpp"
 #include "../model/StandardOpaqueMaterial.hpp"
@@ -253,8 +255,56 @@ namespace gbxml {
           m_materials.insert(layer);
         }
       }
-    }
+    } else{
+      boost::optional<double> visibleTransmittance;
+      boost::optional<double> uFactor;
+      boost::optional<double> solarHeatGainCoefficient;
 
+      if (constructionBase.optionalCast<model::LayeredConstruction>()){
+        std::vector<model::Material> layers = constructionBase.cast<model::LayeredConstruction>().layers();
+        if (layers.size() == 1u){
+          if (layers[0].optionalCast<model::SimpleGlazing>()){
+            model::SimpleGlazing glazing = layers[0].cast<model::SimpleGlazing>();
+            visibleTransmittance = glazing.visibleTransmittance();
+            uFactor = glazing.uFactor();
+            solarHeatGainCoefficient = glazing.solarHeatGainCoefficient();
+          }
+        }
+      }
+
+      if (!visibleTransmittance){
+        visibleTransmittance = constructionBase.visibleTransmittance();
+      }
+      if (!uFactor){
+        uFactor = constructionBase.uFactor();
+      }
+      //if (!solarHeatGainCoefficient){
+      //  solarHeatGainCoefficient = constructionBase.solarHeatGainCoefficient();
+      //}
+
+
+      if (visibleTransmittance){
+        QDomElement element = doc.createElement("Transmittance");
+        result->appendChild(element);
+        element.appendChild(doc.createTextNode(QString::number(*visibleTransmittance)));
+        element.setAttribute("unit", "Fraction");
+        element.setAttribute("type", "Visible");        element.setAttribute("surfaceType", "Both");
+      }
+
+      if (uFactor){
+        QDomElement element = doc.createElement("U-value");
+        result->appendChild(element);
+        element.appendChild(doc.createTextNode(QString::number(*uFactor)));
+        element.setAttribute("unit", "WPerSquareMeterK");
+      }
+
+      if (solarHeatGainCoefficient){
+        QDomElement element = doc.createElement("SolarHeatGainCoeff");
+        result->appendChild(element);
+        element.appendChild(doc.createTextNode(QString::number(*solarHeatGainCoefficient)));
+        element.setAttribute("unit", "Fraction");
+      }
+    }
     return result;
   }
 
@@ -299,6 +349,164 @@ namespace gbxml {
     result->appendChild(nameElement);
     nameElement.appendChild(doc.createTextNode(QString::fromStdString(name)));
 
+    boost::optional<double> thermalReflectance;
+    boost::optional<double> solarReflectance;
+    boost::optional<double> visibleReflectance;
+    boost::optional<std::string> roughness;
+    boost::optional<double> thickness;
+    boost::optional<double> conductivity;
+    boost::optional<double> resistance;
+    boost::optional<double> density;
+    boost::optional<double> specificHeat;
+    boost::optional<double> thermalAbsorptance;
+    boost::optional<double> solarAbsorptance;
+    boost::optional<double> visibleAbsorptance;
+
+    if (material.optionalCast<openstudio::model::StandardOpaqueMaterial>()){
+      openstudio::model::StandardOpaqueMaterial som = material.cast<openstudio::model::StandardOpaqueMaterial>();
+      thermalReflectance = som.thermalReflectance();
+      solarReflectance = som.solarReflectance();
+      visibleReflectance = som.visibleReflectance();
+      roughness = som.roughness();
+      thickness = som.thickness();
+      conductivity = som.conductivity();
+      density = som.density();
+      specificHeat = som.specificHeat(); 
+      thermalAbsorptance = som.thermalAbsorptance();
+      solarAbsorptance = som.solarAbsorptance();
+      visibleAbsorptance = som.visibleAbsorptance();
+    }else if (material.optionalCast<openstudio::model::MasslessOpaqueMaterial>()){
+      openstudio::model::MasslessOpaqueMaterial mom = material.cast<openstudio::model::MasslessOpaqueMaterial>();
+      roughness = mom.roughness();
+      resistance = mom.thermalResistance();
+      thermalAbsorptance = mom.thermalAbsorptance();
+      solarAbsorptance = mom.solarAbsorptance();
+      visibleAbsorptance = mom.visibleAbsorptance();
+    }else if (material.optionalCast<openstudio::model::AirGap>()){
+      openstudio::model::AirGap gap = material.cast<openstudio::model::AirGap>();
+      resistance = gap.thermalResistance();
+    }
+
+    if (thermalReflectance){
+      QDomElement element = doc.createElement("Reflectance");
+      result->appendChild(element);
+      element.appendChild(doc.createTextNode(QString::number(*thermalReflectance)));
+      element.setAttribute("unit", "Fraction");
+      element.setAttribute("type", "ExtIR");      element.setAttribute("surfaceType", "Both");
+
+      element = doc.createElement("Reflectance");
+      result->appendChild(element);
+      element.appendChild(doc.createTextNode(QString::number(*thermalReflectance)));
+      element.setAttribute("unit", "Fraction");
+      element.setAttribute("type", "IntIR");      element.setAttribute("surfaceType", "Both");
+    }
+
+    if (solarReflectance){
+      QDomElement element = doc.createElement("Reflectance");
+      result->appendChild(element);
+      element.appendChild(doc.createTextNode(QString::number(*solarReflectance)));
+      element.setAttribute("unit", "Fraction");
+      element.setAttribute("type", "ExtSolar");      element.setAttribute("surfaceType", "Both");
+
+      element = doc.createElement("Reflectance");
+      result->appendChild(element);
+      element.appendChild(doc.createTextNode(QString::number(*solarReflectance)));
+      element.setAttribute("unit", "Fraction");
+      element.setAttribute("type", "IntSolar");      element.setAttribute("surfaceType", "Both");
+    }
+
+    if (visibleReflectance){
+      QDomElement element = doc.createElement("Reflectance");
+      result->appendChild(element);
+      element.appendChild(doc.createTextNode(QString::number(*visibleReflectance)));
+      element.setAttribute("unit", "Fraction");
+      element.setAttribute("type", "ExtVisible");      element.setAttribute("surfaceType", "Both");
+
+      element = doc.createElement("Reflectance");
+      result->appendChild(element);
+      element.appendChild(doc.createTextNode(QString::number(*visibleReflectance)));
+      element.setAttribute("unit", "Fraction");
+      element.setAttribute("type", "IntVisible");      element.setAttribute("surfaceType", "Both");
+    }
+
+    if (roughness){
+      QDomElement element = doc.createElement("Roughness");
+      result->appendChild(element);
+      element.setAttribute("value", QString::fromStdString(*roughness));
+    }
+
+    if (thickness){
+      QDomElement element = doc.createElement("Thickness");
+      result->appendChild(element);
+      element.appendChild(doc.createTextNode(QString::number(*thickness)));
+      element.setAttribute("unit", "Meters");
+    }
+    
+    if (conductivity){
+      QDomElement element = doc.createElement("Conductivity");
+      result->appendChild(element);
+      element.appendChild(doc.createTextNode(QString::number(*conductivity)));
+      element.setAttribute("unit", "WPerMeterK");
+    }
+
+    if (resistance){
+      QDomElement element = doc.createElement("R-value");
+      result->appendChild(element);
+      element.appendChild(doc.createTextNode(QString::number(*resistance)));
+      element.setAttribute("unit", "SquareMeterKPerW");
+    }
+    
+    if (density){
+      QDomElement element = doc.createElement("Density");
+      result->appendChild(element);
+      element.appendChild(doc.createTextNode(QString::number(*density)));
+      element.setAttribute("unit", "KgPerCubicM");
+    }
+
+    if (specificHeat){
+      QDomElement element = doc.createElement("SpecificHeat");
+      result->appendChild(element);
+      element.appendChild(doc.createTextNode(QString::number(*specificHeat)));
+      element.setAttribute("unit", "JPerKgK");
+    }
+
+    if (thermalAbsorptance){
+      QDomElement element = doc.createElement("Absorptance");
+      result->appendChild(element);
+      element.appendChild(doc.createTextNode(QString::number(*thermalAbsorptance)));
+      element.setAttribute("unit", "Fraction");
+      element.setAttribute("type", "ExtIR");
+
+      element = doc.createElement("Absorptance");
+      result->appendChild(element);
+      element.appendChild(doc.createTextNode(QString::number(*thermalAbsorptance)));
+      element.setAttribute("unit", "Fraction");
+      element.setAttribute("type", "IntIR");
+    }
+
+    if (solarAbsorptance){
+      QDomElement element = doc.createElement("Absorptance");
+      result->appendChild(element);
+      element.appendChild(doc.createTextNode(QString::number(*solarAbsorptance)));
+      element.setAttribute("unit", "Fraction");
+      element.setAttribute("type", "ExtSolar");
+      element = doc.createElement("Absorptance");
+      result->appendChild(element);
+      element.appendChild(doc.createTextNode(QString::number(*solarAbsorptance)));
+      element.setAttribute("unit", "Fraction");
+      element.setAttribute("type", "IntSolar");    }
+
+    if (visibleAbsorptance){
+      QDomElement element = doc.createElement("Absorptance");
+      result->appendChild(element);
+      element.appendChild(doc.createTextNode(QString::number(*visibleAbsorptance)));
+      element.setAttribute("unit", "Fraction");
+      element.setAttribute("type", "ExtVisible");
+      element = doc.createElement("Absorptance");
+      result->appendChild(element);
+      element.appendChild(doc.createTextNode(QString::number(*visibleAbsorptance)));
+      element.setAttribute("unit", "Fraction");
+      element.setAttribute("type", "IntVisible");    }
     return result;
   }
   
