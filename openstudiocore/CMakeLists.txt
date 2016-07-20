@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 2.8.11)
 
 project(OpenStudioCore)
 
+include(ExternalProject)
+
 if( POLICY CMP0022 )
   cmake_policy(SET CMP0022 NEW)
 endif()
@@ -22,20 +24,15 @@ set(OPENSTUDIO_VERSION "${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VE
 set(OPENSTUDIO_LONG_VERSION "${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH}.${CMAKE_VERSION_BUILD}")
 
 # EnergyPlus Idd version
-if(NOT ENERGYPLUS_VERSION_MAJOR)
-  set(ENERGYPLUS_VERSION_MAJOR 8)
-endif()
-if(NOT ENERGYPLUS_VERSION_MINOR)
-  set(ENERGYPLUS_VERSION_MINOR 5)
-endif()
-if(NOT ENERGYPLUS_VERSION_PATCH)
-  set(ENERGYPLUS_VERSION_PATCH 0)
-endif()
+set(ENERGYPLUS_VERSION_MAJOR 8)
+set(ENERGYPLUS_VERSION_MINOR 5)
+set(ENERGYPLUS_VERSION_PATCH 0)
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
-if(NOT ENERGYPLUS_BUILD_SHA)
-  set(ENERGYPLUS_BUILD_SHA "85848eef40")
-endif()
+set(ENERGYPLUS_BUILD_SHA "c87e61b44b")
+
+# Radiance
+set(RADIANCE_VERSION "5.0.a.8")
 
 # configure file with version information
 configure_file(${CMAKE_SOURCE_DIR}/OpenStudio.in ${CMAKE_BINARY_DIR}/src/OpenStudio.hxx)
@@ -107,8 +104,8 @@ option(BUILD_RUBY_GEM "Build Ruby Gem" OFF)
 option(BUILD_SHARED_LIBS "Build OS libs as shared libraries" OFF)
 
 # Build the OpenStudio Application
-# This option will require shared Qt
-option(BUILD_OS_APP "Use Static Qt" ON)
+# This option will require shared libs
+option(BUILD_OS_APP "Build OS App" ON)
 
 # Use static version of Qt
 # This option is used for making static cli
@@ -325,18 +322,102 @@ endif()
 # Dependencies
 
 # EnergyPlus
-set(ENV{ENERGYPLUSDIR} ${ENERGYPLUS_LOCATION})
-unset(ENERGYPLUS_FOUND CACHE)
-unset(ENERGYPLUS_EXE CACHE)
-unset(ENERGYPLUS_IDD CACHE)
-unset(ENERGYPLUS_WEATHER_DIR CACHE)
+if(UNIX)
+  if(APPLE)
+    set(ENERGYPLUS_EXPECTED_HASH 01c4232f7136e42995c344c389d96a61)
+    set(ENERGYPLUS_PLATFORM "Darwin-x86_64")
+  elseif(EXISTS "/etc/redhat-release")
+    #message(FATAL_ERROR "EnergyPlus ${ENERGYPLUS_VERSION} redhat build missing")
+    set(ENERGYPLUS_EXPECTED_HASH ea8cb9e9efc622a85d82fe2306281420)
+    set(ENERGYPLUS_PLATFORM "Redhat-x86_64")
+    #message(FATAL_ERROR "EnergyPlus ${ENERGYPLUS_PLATFORM} redhat build missing")
+  else()
+    set(ENERGYPLUS_EXPECTED_HASH 0053d9b145f9c3485bb49f85ddb61f6c)
+    set(ENERGYPLUS_PLATFORM "Linux-x86_64")
+  endif()
+  set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-${ENERGYPLUS_PLATFORM}")
+  if(EXISTS "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.bz2")
+    file(MD5 "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.bz2" ENERGYPLUS_HASH)
+  endif()
+  if(NOT EXISTS "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.bz2" OR NOT "${ENERGYPLUS_HASH}" MATCHES "${ENERGYPLUS_EXPECTED_HASH}")
+    message(STATUS "Downloading EnergyPlus ${ENERGYPLUS_VERSION} (${ENERGYPLUS_PLATFORM})")
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${ENERGYPLUS_PATH}.tar.bz2" "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.bz2" TIMEOUT 320 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
+    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}")
+    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.bz2" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+  endif()
+  set(ENV{ENERGYPLUSDIR} "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}/EnergyPlus-${ENERGYPLUS_VERSION_MAJOR}-${ENERGYPLUS_VERSION_MINOR}-${ENERGYPLUS_VERSION_PATCH}")
+elseif(WIN32)
+  if(CMAKE_CL_64)
+    set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-x86_64")
+    set(ENERGYPLUS_ARCH 64)
+    set(ENERGYPLUS_EXPECTED_HASH ca4d9e956015453948a40a5010c8dbbb)
+  else()
+    set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-i386")
+    set(ENERGYPLUS_ARCH 32)
+    set(ENERGYPLUS_EXPECTED_HASH 5ecaaaa815f9867cf10a1decbfc59aa1)
+  endif()
+  if(EXISTS "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.zip")
+    file(MD5 "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" ENERGYPLUS_HASH)
+  endif()
+  if(NOT EXISTS "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" OR NOT "${ENERGYPLUS_HASH}" MATCHES "${ENERGYPLUS_EXPECTED_HASH}")
+    message(STATUS "Downloading EnergyPlus ${ENERGYPLUS_VERSION} (${ENERGYPLUS_ARCH}-bit)")
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${ENERGYPLUS_PATH}.zip" "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" TIMEOUT 320 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
+    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}")
+    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+  endif()
+  set(ENV{ENERGYPLUSDIR} "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}/EnergyPlus-${ENERGYPLUS_VERSION_MAJOR}-${ENERGYPLUS_VERSION_MINOR}-${ENERGYPLUS_VERSION_PATCH}")
+endif()
 find_package(EnergyPlus "${ENERGYPLUS_VERSION}" REQUIRED)
+
+# Radiance
+if(UNIX)
+  if(APPLE)
+    set(RADIANCE_EXPECTED_HASH c3e94e19d13c60e556c0005ec0bf723f)
+    set(RADIANCE_PLATFORM "Darwin")
+  elseif(EXISTS "/etc/redhat-release")
+    #message(FATAL_ERROR "Radiance ${RADIANCE_VERSION} redhat build missing")
+    set(RADIANCE_EXPECTED_HASH f43fcdd76f45654daef69f38cd1f58a6)
+    set(RADIANCE_PLATFORM "Redhat-x86_64")
+  else()
+    set(RADIANCE_EXPECTED_HASH 886ac1764a70f2f7b211231e091d32bf)
+    set(RADIANCE_PLATFORM "Linux-x86_64")
+  endif()
+  set(RADIANCE_PATH "Radiance-${RADIANCE_VERSION}-${RADIANCE_PLATFORM}")
+  if(EXISTS "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.tar.bz2")
+    file(MD5 "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.tar.bz2" RADIANCE_HASH)
+  endif()
+  if(NOT EXISTS "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.tar.bz2" OR NOT "${RADIANCE_HASH}" MATCHES "${RADIANCE_EXPECTED_HASH}")
+    message(STATUS "Downloading Radiance ${RADIANCE_VERSION} (${RADIANCE_PLATFORM})")
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/Radiance-${RADIANCE_VERSION}-${RADIANCE_PLATFORM}.tar.bz2" "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.tar.bz2" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${RADIANCE_EXPECTED_HASH})
+    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}")
+    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.tar.bz2" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+  endif()
+  set(RADIANCE_LOCATION "${CMAKE_BINARY_DIR}/radiance")
+elseif(WIN32)
+  if(CMAKE_CL_64)
+    set(RADIANCE_ARCH 64)
+    set(RADIANCE_EXPECTED_HASH 30ea31d1eff986bfd1744e4260c06fb2)
+  else()
+    set(RADIANCE_ARCH 32)
+    set(RADIANCE_EXPECTED_HASH 78eda5d4b0215cd675cc3ec8975e6122)
+  endif()
+  set(RADIANCE_PATH "Radiance-${RADIANCE_VERSION}-win${RADIANCE_ARCH}")
+  if(EXISTS "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.zip")
+    file(MD5 "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.zip" RADIANCE_HASH)
+  endif()
+  if(NOT EXISTS "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.zip" OR NOT "${RADIANCE_HASH}" MATCHES "${RADIANCE_EXPECTED_HASH}")
+    message(STATUS "Downloading Radiance ${RADIANCE_VERSION} (${RADIANCE_ARCH}-bit)")
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/Radiance-${RADIANCE_VERSION}-win${RADIANCE_ARCH}.zip" "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.zip" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${RADIANCE_EXPECTED_HASH})
+    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}")
+    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.zip" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+  endif()
+  set(RADIANCE_LOCATION "${CMAKE_BINARY_DIR}/Radiance")
+endif()
 
 # Ruby
 find_package(Ruby 2.2 REQUIRED)
 set(RUBY_MODULE_DIR "Ruby")
 set(RUBY_MODULE_ARCH_DIR "Ruby/openstudio")
-
 
 # OpenSSL / libssh support
 if(BUILD_WITH_OPENSSL)
@@ -508,12 +589,53 @@ include_directories(${CMAKE_BINARY_DIR}/src/zlib)
 
 # Google test library
 add_definitions(-DGTEST_HAS_TR1_TUPLE=0)
+
+ExternalProject_Add(GoogleTest
+  URL http://openstudio-resources.s3.amazonaws.com/dependencies/gtest-1.7.0.tar.gz
+  URL_MD5 bad74f626d18f724cad4c9fe2e6ef27d
+  PATCH_COMMAND "${CMAKE_COMMAND}" -E copy_directory ${CMAKE_SOURCE_DIR}/dependencies/GoogleTest ${CMAKE_BINARY_DIR}/GoogleTest-prefix/src/GoogleTest
+  INSTALL_COMMAND ""
+  CMAKE_CACHE_ARGS
+  -DCMAKE_OSX_ARCHITECTURES:STRING=${CMAKE_OSX_ARCHITECTURES}
+  -DCMAKE_OSX_DEPLOYMENT_TARGET:STRING=${CMAKE_OSX_DEPLOYMENT_TARGET}
+  -DCMAKE_OSX_SYSROOT:STRING=${CMAKE_OSX_SYSROOT}
+  -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
+  -DCMAKE_CXX_COMPILER:STRING=${CMAKE_CXX_COMPILER}
+  -DCMAKE_CXX_FLAGS:STRING=${CMAKE_CXX_FLAGS}
+  -DCMAKE_EXE_LINKER_FLAGS:STRING=${CMAKE_EXE_LINKER_FLAGS}
+  -DCMAKE_MODULE_LINKER_FLAGS:STRING=${CMAKE_MODULE_LINKER_FLAGS}
+  -DCMAKE_SHARED_LINKER_FLAGS:STRING=${CMAKE_SHARED_LINKER_FLAGS}
+)
+
+set(GTEST_INCLUDE_DIR ${CMAKE_BINARY_DIR}/GoogleTest-prefix/src/GoogleTest/include)
+set(GTEST_LIB_DIR ${CMAKE_BINARY_DIR}/GoogleTest-prefix/src/GoogleTest-build)
 include_directories(SYSTEM ${GTEST_INCLUDE_DIR})
 link_directories(${GTEST_LIB_DIR})
 
-# Geographic library
-find_package(GeographicLib REQUIRED)
-include_directories(SYSTEM ${GeographicLib_INCLUDE_DIRS})
+# GeographicLib
+ExternalProject_Add(GeographicLib
+  URL http://openstudio-resources.s3.amazonaws.com/dependencies/GeographicLib-1.45.zip
+  URL_MD5 c3c8f989d700fc88c8ce4584cb298cee
+  #PATCH_COMMAND "${CMAKE_COMMAND}" -E copy_directory ${CMAKE_SOURCE_DIR}/dependencies/GeographicLib ${CMAKE_BINARY_DIR}/GeographicLib-prefix/src/GeographicLib
+  INSTALL_COMMAND ""
+  CMAKE_CACHE_ARGS
+  -DCMAKE_OSX_ARCHITECTURES:STRING=${CMAKE_OSX_ARCHITECTURES}
+  -DCMAKE_OSX_DEPLOYMENT_TARGET:STRING=${CMAKE_OSX_DEPLOYMENT_TARGET}
+  -DCMAKE_OSX_SYSROOT:STRING=${CMAKE_OSX_SYSROOT}
+  -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
+  -DCMAKE_CXX_COMPILER:STRING=${CMAKE_CXX_COMPILER}
+  -DCMAKE_CXX_FLAGS:STRING=${CMAKE_CXX_FLAGS}
+  -DCMAKE_EXE_LINKER_FLAGS:STRING=${CMAKE_EXE_LINKER_FLAGS}
+  -DCMAKE_MODULE_LINKER_FLAGS:STRING=${CMAKE_MODULE_LINKER_FLAGS}
+  -DCMAKE_SHARED_LINKER_FLAGS:STRING=${CMAKE_SHARED_LINKER_FLAGS}
+  -DGEOGRAPHICLIB_LIB_TYPE:STRING=STATIC
+  -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=ON
+)
+
+set(GeographicLib_INCLUDE_DIR ${CMAKE_BINARY_DIR}/GeographicLib-prefix/src/GeographicLib/include)
+set(GeographicLib_LIB_DIR ${CMAKE_BINARY_DIR}/GeographicLib-prefix/src/GeographicLib-build/lib)
+include_directories(SYSTEM ${GeographicLib_INCLUDE_DIR})
+link_directories(${GeographicLib_LIB_DIR})
 
 # Boost
 if(APPLE)
@@ -565,7 +687,8 @@ endif()
 add_definitions(-DSQLITE_THREADSAFE=1) # 1 is default, serial access
 
 # Qt
-set(QT_INSTALL_DIR "${CMAKE_BINARY_DIR}/../../../Qt-prefix/src/Qt-install/")
+set(QT_INSTALL_DIR "" CACHE PATH "Path to Qt Install")
+mark_as_advanced(QT_INSTALL_DIR)
 
 if(NOT EXISTS ${QT_INSTALL_DIR})
   # download qt
@@ -627,17 +750,17 @@ if(NOT EXISTS ${QT_INSTALL_DIR})
   set(QT_INSTALL_DIR "${CMAKE_BINARY_DIR}/Qt-install/")
 endif()
 
-find_package(Qt5Core REQUIRED HINTS ${QT_INSTALL_DIR})
-find_package(Qt5Widgets REQUIRED HINTS ${QT_INSTALL_DIR})
-find_package(Qt5Sql REQUIRED HINTS ${QT_INSTALL_DIR})
-find_package(Qt5Network REQUIRED HINTS ${QT_INSTALL_DIR})
-find_package(Qt5Xml REQUIRED HINTS ${QT_INSTALL_DIR})
-find_package(Qt5Concurrent REQUIRED HINTS ${QT_INSTALL_DIR})
-find_package(Qt5PrintSupport REQUIRED HINTS ${QT_INSTALL_DIR})
-find_package(Qt5Gui REQUIRED HINTS ${QT_INSTALL_DIR})
+find_package(Qt5Core 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
+find_package(Qt5Widgets 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
+find_package(Qt5Sql 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
+find_package(Qt5Network 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
+find_package(Qt5Xml 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
+find_package(Qt5Concurrent 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
+find_package(Qt5PrintSupport 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
+find_package(Qt5Gui 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
 
 if( WIN32 )
-  find_package(Qt5WinExtras REQUIRED HINTS ${QT_INSTALL_DIR})
+  find_package(Qt5WinExtras 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
 endif()
 
 set(CMAKE_AUTOMOC OFF)
@@ -674,12 +797,12 @@ if(BUILD_OS_APP)
 endif()
 
 if( NOT Qt5Static )
-	find_package(Qt5Quick REQUIRED HINTS ${QT_INSTALL_DIR})
-	find_package(Qt5Qml REQUIRED HINTS ${QT_INSTALL_DIR})
-	find_package(Qt5WebChannel REQUIRED HINTS ${QT_INSTALL_DIR})
-	find_package(Qt5Positioning REQUIRED HINTS ${QT_INSTALL_DIR})
-	find_package(Qt5WebEngine REQUIRED HINTS ${QT_INSTALL_DIR})
-	find_package(Qt5WebEngineWidgets REQUIRED HINTS ${QT_INSTALL_DIR})
+	find_package(Qt5Quick 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
+	find_package(Qt5Qml 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
+	find_package(Qt5WebChannel 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
+	find_package(Qt5Positioning 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
+	find_package(Qt5WebEngine 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
+	find_package(Qt5WebEngineWidgets 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
 
   list(APPEND QT_LIBS Qt5::Quick)
   list(APPEND QT_LIBS Qt5::Qml)

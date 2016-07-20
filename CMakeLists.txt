@@ -5,7 +5,6 @@ else()
   cmake_minimum_required(VERSION 2.8.11)
 endif()
 
-
 project(OpenStudio)
 
 set(CMAKE_VERSION_MAJOR 1)
@@ -44,14 +43,6 @@ string(COMPARE EQUAL "${PATCH_EXE}" "PATCH_EXE-NOTFOUND" PATCH_EXE_NOTFOUND)
 if(PATCH_EXE_NOTFOUND)
   message(SEND_ERROR "Required program patch not found")
 endif()
-
-# EnergyPlus Idd version
-set(ENERGYPLUS_VERSION_MAJOR 8)
-set(ENERGYPLUS_VERSION_MINOR 5)
-set(ENERGYPLUS_VERSION_PATCH 0)
-set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
-# Build SHA is not required to have a value, but if it does OpenStudio will require this build.
-set(ENERGYPLUS_BUILD_SHA "c87e61b44b")
 
 option(NIGHTLY_BUILD "Use configurations for Nightly Build" OFF)
 
@@ -188,100 +179,6 @@ if(APPLE)
 
 endif()
 
-# EnergyPlus
-if(UNIX)
-  if(APPLE)
-    set(ENERGYPLUS_EXPECTED_HASH 01c4232f7136e42995c344c389d96a61)
-    set(ENERGYPLUS_PLATFORM "Darwin-x86_64")
-  elseif(EXISTS "/etc/redhat-release")
-    #message(FATAL_ERROR "EnergyPlus ${ENERGYPLUS_VERSION} redhat build missing")
-    set(ENERGYPLUS_EXPECTED_HASH ea8cb9e9efc622a85d82fe2306281420)
-    set(ENERGYPLUS_PLATFORM "Redhat-x86_64")
-    #message(FATAL_ERROR "EnergyPlus ${ENERGYPLUS_PLATFORM} redhat build missing")
-  else()
-    set(ENERGYPLUS_EXPECTED_HASH 0053d9b145f9c3485bb49f85ddb61f6c)
-    set(ENERGYPLUS_PLATFORM "Linux-x86_64")
-  endif()
-  set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-${ENERGYPLUS_PLATFORM}")
-  if(EXISTS "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.bz2")
-    file(MD5 "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.bz2" ENERGYPLUS_HASH)
-  endif()
-  if(NOT EXISTS "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.bz2" OR NOT "${ENERGYPLUS_HASH}" MATCHES "${ENERGYPLUS_EXPECTED_HASH}")
-    message(STATUS "Downloading EnergyPlus ${ENERGYPLUS_VERSION} (${ENERGYPLUS_PLATFORM})")
-    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${ENERGYPLUS_PATH}.tar.bz2" "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.bz2" TIMEOUT 320 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
-    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}")
-    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.bz2" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
-  endif()
-  set(ENV{ENERGYPLUSDIR} "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}/EnergyPlus-${ENERGYPLUS_VERSION_MAJOR}-${ENERGYPLUS_VERSION_MINOR}-${ENERGYPLUS_VERSION_PATCH}")
-elseif(WIN32)
-  if(CMAKE_CL_64)
-    set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-x86_64")
-    set(ENERGYPLUS_ARCH 64)
-    set(ENERGYPLUS_EXPECTED_HASH ca4d9e956015453948a40a5010c8dbbb)
-  else()
-    set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-i386")
-    set(ENERGYPLUS_ARCH 32)
-    set(ENERGYPLUS_EXPECTED_HASH 5ecaaaa815f9867cf10a1decbfc59aa1)
-  endif()
-  if(EXISTS "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.zip")
-    file(MD5 "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" ENERGYPLUS_HASH)
-  endif()
-  if(NOT EXISTS "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" OR NOT "${ENERGYPLUS_HASH}" MATCHES "${ENERGYPLUS_EXPECTED_HASH}")
-    message(STATUS "Downloading EnergyPlus ${ENERGYPLUS_VERSION} (${ENERGYPLUS_ARCH}-bit)")
-    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${ENERGYPLUS_PATH}.zip" "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" TIMEOUT 320 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
-    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}")
-    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
-  endif()
-  set(ENV{ENERGYPLUSDIR} "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}/EnergyPlus-${ENERGYPLUS_VERSION_MAJOR}-${ENERGYPLUS_VERSION_MINOR}-${ENERGYPLUS_VERSION_PATCH}")
-
-endif()
-find_package(EnergyPlus "${ENERGYPLUS_VERSION}" REQUIRED)
-
-# Radiance
-set(RADIANCE_VERSION "5.0.a.8")
-if(UNIX)
-  if(APPLE)
-    set(RADIANCE_EXPECTED_HASH c3e94e19d13c60e556c0005ec0bf723f)
-    set(RADIANCE_PLATFORM "Darwin")
-  elseif(EXISTS "/etc/redhat-release")
-    #message(FATAL_ERROR "Radiance ${RADIANCE_VERSION} redhat build missing")
-    set(RADIANCE_EXPECTED_HASH f43fcdd76f45654daef69f38cd1f58a6)
-    set(RADIANCE_PLATFORM "Redhat-x86_64")
-  else()
-    set(RADIANCE_EXPECTED_HASH 886ac1764a70f2f7b211231e091d32bf)
-    set(RADIANCE_PLATFORM "Linux-x86_64")
-  endif()
-  set(RADIANCE_PATH "Radiance-${RADIANCE_VERSION}-${RADIANCE_PLATFORM}")
-  if(EXISTS "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.tar.bz2")
-    file(MD5 "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.tar.bz2" RADIANCE_HASH)
-  endif()
-  if(NOT EXISTS "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.tar.bz2" OR NOT "${RADIANCE_HASH}" MATCHES "${RADIANCE_EXPECTED_HASH}")
-    message(STATUS "Downloading Radiance ${RADIANCE_VERSION} (${RADIANCE_PLATFORM})")
-    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/Radiance-${RADIANCE_VERSION}-${RADIANCE_PLATFORM}.tar.bz2" "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.tar.bz2" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${RADIANCE_EXPECTED_HASH})
-    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}")
-    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.tar.bz2" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
-  endif()
-  set(RADIANCE_LOCATION "${CMAKE_BINARY_DIR}/radiance")
-elseif(WIN32)
-  if(CMAKE_CL_64)
-    set(RADIANCE_ARCH 64)
-    set(RADIANCE_EXPECTED_HASH 30ea31d1eff986bfd1744e4260c06fb2)
-  else()
-    set(RADIANCE_ARCH 32)
-    set(RADIANCE_EXPECTED_HASH 78eda5d4b0215cd675cc3ec8975e6122)
-  endif()
-  set(RADIANCE_PATH "Radiance-${RADIANCE_VERSION}-win${RADIANCE_ARCH}")
-  if(EXISTS "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.zip")
-    file(MD5 "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.zip" RADIANCE_HASH)
-  endif()
-  if(NOT EXISTS "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.zip" OR NOT "${RADIANCE_HASH}" MATCHES "${RADIANCE_EXPECTED_HASH}")
-    message(STATUS "Downloading Radiance ${RADIANCE_VERSION} (${RADIANCE_ARCH}-bit)")
-    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/Radiance-${RADIANCE_VERSION}-win${RADIANCE_ARCH}.zip" "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.zip" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${RADIANCE_EXPECTED_HASH})
-    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}")
-    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.zip" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
-  endif()
-  set(RADIANCE_LOCATION "${CMAKE_BINARY_DIR}/Radiance")
-endif()
 
 if(BUILD_V8_BINDINGS)
   if(WIN32)
@@ -305,106 +202,6 @@ endif()
 
 # Use PCH
 option(USE_PCH "Use precompiled headers" OFF)
-
-# Smart find qt location, looking for 64bit when appropriate
-# and preferring opengl installations
-if(MSVC)
-  if(CMAKE_CL_64)
-    set(COMPILER_ARCH_TAG "_64")
-  else()
-    set(COMPILER_ARCH_TAG "")
-  endif()
-
-  if(MSVC_VERSION STREQUAL "1800")
-    set(COMPILER_VER_TAG "2013")
-  else()
-    set(COMPILER_VER_TAG "2014")
-  endif()
-
-  file(GLOB_RECURSE QMAKE_LOCATIONS "C:/Qt/qmake.exe")
-
-  message(STATUS "Qt Locations: ${QMAKE_LOCATIONS}")
-
-  if(QMAKE_LOCATIONS MATCHES ".*msvc${COMPILER_VER_TAG}${COMPILER_ARCH_TAG}_opengl.*")
-    set(HAS_OPENGL_INSTALL TRUE)
-    set(OPENGL_TAG "_opengl")
-  else()
-    set(HAS_OPENGL_INSTALL FALSE)
-    set(OPENGL_TAG "")
-  endif()
-
-  set(QT_HINT_DIR "")
-  foreach(LOC ${QMAKE_LOCATIONS})
-    if(LOC MATCHES ".*msvc${COMPILER_VER_TAG}${COMPILER_ARCH_TAG}${OPENGL_TAG}/")
-      get_filename_component(PDIR "${LOC}" DIRECTORY)
-      get_filename_component(GPDIR "${PDIR}" DIRECTORY)
-      if(HAS_OPENGL_INSTALL)
-        if(GPDIR MATCHES ".*opengl.*")
-          list(APPEND QT_HINT_DIR "${GPDIR}")
-        endif()
-      else()
-        list(APPEND QT_HINT_DIR "${GPDIR}")
-      endif()
-    endif()
-  endforeach()
-
-  # we want sort, this will do both a lexicographical sort of the version numbers, putting the newest last and picking the
-  # longest (aka opengl) last. Then we sort it in reverse to prefer the highest version numbers with opengl
-  list(SORT QT_HINT_DIR)
-  list(REVERSE QT_HINT_DIR)
-else()
-  set(QT_HINT_DIR "")
-endif()
-
-# set CMAKE_PREFIX_PATH to specify specific Qt version
-find_package(Qt5Widgets HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Gui, Qt5Widgets
-find_package(Qt5Sql HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Sql
-find_package(Qt5Network HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Network
-find_package(Qt5Xml HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Xml
-#find_package(Qt5WinExtras HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Gui, Qt5WinExtras
-find_package(Qt5Concurrent HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Concurrent
-find_package(Qt5PrintSupport HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Gui, Qt5PrintSupport, Qt5Widgets
-mark_as_advanced(
-  Qt5Concurrent_DIR
-  Qt5Core_DIR
-  Qt5Gui_DIR
-  Qt5Gui_EGL_LIBRARY
-  Qt5Location_DIR
-  Qt5Multimedia_DIR
-  Qt5MultimediaWidgets_DIR
-  Qt5Network_DIR
-  Qt5OpenGL_DIR
-  Qt5Positioning_DIR
-  Qt5PrintSupport_DIR
-  Qt5Qml_DIR
-  Qt5Quick_DIR
-  Qt5Sensors_DIR
-  Qt5Sql_DIR
-  Qt5Widgets_DIR
-  #Qt5WinExtras_DIR
-  Qt5Xml_DIR
-)
-
-# Build Qt
-if(Qt5Widgets_DIR)
-  option(BUILD_QT "Build Qt" OFF)
-
-  if(${Qt5Widgets_VERSION} VERSION_LESS "5.2.1")
-    message(FATAL_ERROR "Minimum supported Qt is v5.2.1")
-  endif()
-  if(${Qt5Widgets_VERSION} VERSION_LESS "5.4.0")
-    find_package(Qt5WebKit HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Gui, Qt5Network, Qt5WebKit
-    find_package(Qt5WebKitWidgets HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Gui, Qt5Network, Qt5WebKit, Qt5WebKitWidgets, Qt5Widgets
-    mark_as_advanced(Qt5WebKit_DIR Qt5WebKitWidgets_DIR)
-  else()
-    find_package(Qt5WebEngine HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Gui, Qt5Network, Qt5Qml, Qt5Quick, Qt5WebEngine
-    find_package(Qt5WebEngineWidgets HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Gui, Qt5Network, Qt5Qml, Qt5Quick, Qt5WebEngine, Qt5WebEngineWidgets, Qt5Widgets
-    mark_as_advanced(Qt5WebEngine_DIR Qt5WebEngineWidgets_DIR)
-  endif()
-elseif(UNIX)
-  option(BUILD_QT "Build Qt" ON)
-endif()
-
 
 include(ExternalProject)
 include(ProcessorCount)
@@ -702,59 +499,14 @@ if(BUILD_BOOST)
   endif()
 endif()
 
-ExternalProject_Add(GoogleTest
-  URL http://openstudio-resources.s3.amazonaws.com/dependencies/gtest-1.7.0.tar.gz
-  URL_MD5 bad74f626d18f724cad4c9fe2e6ef27d
-  PATCH_COMMAND "${CMAKE_COMMAND}" -E copy_directory ${CMAKE_SOURCE_DIR}/dependencies/GoogleTest ${CMAKE_BINARY_DIR}/GoogleTest-prefix/src/GoogleTest
-  INSTALL_COMMAND ""
-  CMAKE_CACHE_ARGS
-  -DCMAKE_OSX_ARCHITECTURES:STRING=${CMAKE_OSX_ARCHITECTURES}
-  -DCMAKE_OSX_DEPLOYMENT_TARGET:STRING=${CMAKE_OSX_DEPLOYMENT_TARGET}
-  -DCMAKE_OSX_SYSROOT:STRING=${CMAKE_OSX_SYSROOT}
-  -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
-  -DCMAKE_CXX_COMPILER:STRING=${CMAKE_CXX_COMPILER}
-  -DCMAKE_CXX_FLAGS:STRING=${CMAKE_CXX_FLAGS}
-  -DCMAKE_EXE_LINKER_FLAGS:STRING=${CMAKE_EXE_LINKER_FLAGS}
-  -DCMAKE_MODULE_LINKER_FLAGS:STRING=${CMAKE_MODULE_LINKER_FLAGS}
-  -DCMAKE_SHARED_LINKER_FLAGS:STRING=${CMAKE_SHARED_LINKER_FLAGS}
-)
-
-set(GTEST_INCLUDE_DIR ${CMAKE_BINARY_DIR}/GoogleTest-prefix/src/GoogleTest/include)
-set(GTEST_LIB_DIR ${CMAKE_BINARY_DIR}/GoogleTest-prefix/src/GoogleTest-build)
-
-# DLM: how to get this to build in Release and Debug mode on Windows?
-ExternalProject_Add(GeographicLib
-  URL http://openstudio-resources.s3.amazonaws.com/dependencies/GeographicLib-1.45.zip
-  URL_MD5 c3c8f989d700fc88c8ce4584cb298cee
-  #PATCH_COMMAND "${CMAKE_COMMAND}" -E copy_directory ${CMAKE_SOURCE_DIR}/dependencies/GeographicLib ${CMAKE_BINARY_DIR}/GeographicLib-prefix/src/GeographicLib
-  INSTALL_COMMAND ""
-  CMAKE_CACHE_ARGS
-  -DCMAKE_OSX_ARCHITECTURES:STRING=${CMAKE_OSX_ARCHITECTURES}
-  -DCMAKE_OSX_DEPLOYMENT_TARGET:STRING=${CMAKE_OSX_DEPLOYMENT_TARGET}
-  -DCMAKE_OSX_SYSROOT:STRING=${CMAKE_OSX_SYSROOT}
-  -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
-  -DCMAKE_CXX_COMPILER:STRING=${CMAKE_CXX_COMPILER}
-  -DCMAKE_CXX_FLAGS:STRING=${CMAKE_CXX_FLAGS}
-  -DCMAKE_EXE_LINKER_FLAGS:STRING=${CMAKE_EXE_LINKER_FLAGS}
-  -DCMAKE_MODULE_LINKER_FLAGS:STRING=${CMAKE_MODULE_LINKER_FLAGS}
-  -DCMAKE_SHARED_LINKER_FLAGS:STRING=${CMAKE_SHARED_LINKER_FLAGS}
-  -DGEOGRAPHICLIB_LIB_TYPE:STRING=STATIC
-  -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=ON
-)
-
-# Don't confuse "GEOGRAPHICLIB"_Dir as something that refers to the
-# actual library compiled unit. This variable just refers to where the project is at.
-# We will use this to find the cmake config file provided by the project,
-# and that config file will tell us everything we need to know about the project's targets.
-set(GeographicLib_DIR ${CMAKE_BINARY_DIR}/GeographicLib-prefix/src/GeographicLib-build/)
-
 option(BUILD_QT "Build Qt" OFF)
-option(STATIC_QT "Use Static Qt" ON)
+option(Qt5Static "Build Static Qt" OFF)
 
 if(BUILD_QT)
+  
   if(APPLE)
     execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install")
-    if( STATIC_QT )
+    if( Qt5Static )
       set(QT_CONFIGURE_COMMAND "-v -release -opensource -qt-pcre -qt-harfbuzz -static -openssl -no-pch -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -confirm-license -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install")
     else()
       message(WARNING "Shared Apple Qt build untested")
@@ -769,9 +521,11 @@ if(BUILD_QT)
       INSTALL_COMMAND ""
       BUILD_IN_SOURCE 1
     )
+    set(QT_INSTALL_DIR "${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/")
+    
   elseif( UNIX )
     # install deps according to here http://doc.qt.io/qt-5/linux-requirements.html
-    if( STATIC_QT )
+    if( Qt5Static )
       set(QT_CONFIGURE_COMMAND "-v -release -opensource -static -openssl -no-pch -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -qt-xcb -confirm-license  -no-qml-debug -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install")
     else()
       message(WARNING "Shared Unix Qt build untested")
@@ -785,11 +539,13 @@ if(BUILD_QT)
       BUILD_COMMAND sh -c "make -j${CPUCOUNT} && make install"
       INSTALL_COMMAND ""
     )
+    set(QT_INSTALL_DIR "${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/")
+    
   else()
     # to initialize command prompt run: "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" amd64
     configure_file("${CMAKE_SOURCE_DIR}/dependencies/qt/build_static_qt.bat.in" "${CMAKE_BINARY_DIR}/build_static_qt.bat")
     configure_file("${CMAKE_SOURCE_DIR}/dependencies/qt/build_shared_qt.bat.in" "${CMAKE_BINARY_DIR}/build_shared_qt.bat")
-    if( STATIC_QT )
+    if( Qt5Static )
       set(QT_BUILD_SCRIPT "build_static_qt.bat")
     else()
       set(QT_BUILD_SCRIPT "build_shared_qt.bat")
@@ -803,21 +559,18 @@ if(BUILD_QT)
       BUILD_COMMAND cmd /C "${CMAKE_BINARY_DIR}/${QT_BUILD_SCRIPT}"
       INSTALL_COMMAND ""
     )
+    set(QT_INSTALL_DIR "${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/")
   endif()
-
+  
+else()
+  set(QT_INSTALL_DIR "")
 endif()
 
 set(OpenStudioCore_DIR ${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build)
 
 # Set up the dependencies for OpenStudioCore
-set(OpenStudioCore_DEPENDS GoogleTest)
 
-list(APPEND OpenStudioCore_DEPENDS GeographicLib)
 list(APPEND OpenStudioCore_DEPENDS OpenStudio-workflow-gem)
-
-if(BUILD_QT)
-  list(APPEND OpenStudioCore_DEPENDS Qt)
-endif()
 
 if(BUILD_SWIG)
   list(APPEND OpenStudioCore_DEPENDS SWIG)
@@ -848,16 +601,9 @@ ExternalProject_Add(OSCore
   SOURCE_DIR ${CMAKE_SOURCE_DIR}/openstudiocore
   ${OS_BUILD_COMMAND}
   CMAKE_CACHE_ARGS
-    -DGTEST_LIB_DIR:PATH=${GTEST_LIB_DIR}
-    -DGTEST_INCLUDE_DIR:PATH=${GTEST_INCLUDE_DIR}
-    -DGeographicLib_DIR:PATH=${GeographicLib_DIR}
     -DCMAKE_OSX_ARCHITECTURES:STRING=${CMAKE_OSX_ARCHITECTURES}
     -DCMAKE_OSX_DEPLOYMENT_TARGET:STRING=${CMAKE_OSX_DEPLOYMENT_TARGET}
     -DCMAKE_OSX_SYSROOT:STRING=${CMAKE_OSX_SYSROOT}
-    -DENERGYPLUS_VERSION_MAJOR:STRING=${ENERGYPLUS_VERSION_MAJOR}
-    -DENERGYPLUS_VERSION_MINOR:STRING=${ENERGYPLUS_VERSION_MINOR}
-    -DENERGYPLUS_VERSION_PATCH:STRING=${ENERGYPLUS_VERSION_PATCH}
-    -DENERGYPLUS_BUILD_SHA:STRING=${ENERGYPLUS_BUILD_SHA}
     -DBUILD_DOCUMENTATION:BOOL=${BUILD_DOCUMENTATION}
     -DBUILD_CSHARP_BINDINGS:BOOL=${BUILD_CSHARP_BINDINGS}
     -DBUILD_JAVA_BINDINGS:BOOL=${BUILD_JAVA_BINDINGS}
@@ -886,18 +632,8 @@ ExternalProject_Add(OSCore
     -DCMAKE_VERSION_BUILD:STRING=${CMAKE_VERSION_BUILD}
     -DBOOST_ROOT:STRING=${BOOST_ROOT}
     -DBOOST_LIBRARYDIR:STRING=${BOOST_LIBRARYDIR}
-    #-DQt5Widgets_DIR:STRING=${Qt5Widgets_DIR}
-    #-DQt5Sql_DIR:STRING=${Qt5Sql_DIR}
-    #-DQt5Network_DIR:STRING=${Qt5Network_DIR}
-    #-DQt5Xml_DIR:STRING=${Qt5Xml_DIR}
-    #-DQt5WebKit_DIR:STRING=${Qt5WebKit_DIR}
-    #-DQt5WebKitWidgets_DIR:STRING=${Qt5WebKitWidgets_DIR}
-    #-DQt5WebEngine_DIR:STRING=${Qt5WebEngine_DIR}
-    #-DQt5WebEngineWidgets_DIR:STRING=${Qt5WebEngineWidgets_DIR}
-    ##-DQt5WinExtras_DIR:STRING=${Qt5WinExtras_DIR}
-    #-DQt5Concurrent_DIR:STRING=${Qt5Concurrent_DIR}
-    #-DQt5PrintSupport_DIR:STRING=${Qt5PrintSupport_DIR}
-    -DSTATIC_QT:BOOL=${STATIC_QT}
+    -DQT_INSTALL_DIR:PATH=${QT_INSTALL_DIR}
+    -DQt5Static:BOOL=${Qt5Static}
     -DBUILD_SHARED_LIBS:BOOL=${BUILD_SHARED_LIBS}
     -DSWIG_EXECUTABLE:STRING=${SWIG_EXECUTABLE}
     -DNODE_BIN_DIR:STRING=${NODE_BIN_DIR}
@@ -905,8 +641,6 @@ ExternalProject_Add(OSCore
     -DV8_INCLUDE_DIR:STRING=${V8_INCLUDE_DIR}
     -DDOXYGEN_EXECUTABLE:STRING=${DOXYGEN_EXECUTABLE}
     -DDOXYGEN_DOT_EXECUTABLE:STRING=${DOXYGEN_DOT_EXECUTABLE}
-    -DENERGYPLUS_LOCATION:PATH=$ENV{ENERGYPLUSDIR}
-    -DRADIANCE_LOCATION:PATH=${RADIANCE_LOCATION}
     -DOPENSSL_ROOT_DIR:PATH=${OPENSSL_ROOT_DIR}
     -DPATCH_EXE:PATH=${PATCH_EXE}
     -DMAXIMIZE_CPU_USAGE:BOOL=${MAXIMIZE_CPU_USAGE}
@@ -1006,17 +740,7 @@ if(BUILD_REGRESSIONS)
     GIT_TAG develop
     CMAKE_CACHE_ARGS
       -DOPENSTUDIO_BUILD_DIR:PATH=${CMAKE_BINARY_DIR}
-      -DQt5Widgets_DIR:STRING=${Qt5Widgets_DIR}
-      -DQt5Sql_DIR:STRING=${Qt5Sql_DIR}
-      -DQt5Network_DIR:STRING=${Qt5Network_DIR}
-      -DQt5Xml_DIR:STRING=${Qt5Xml_DIR}
-      -DQt5WebKit_DIR:STRING=${Qt5WebKit_DIR}
-      -DQt5WebKitWidgets_DIR:STRING=${Qt5WebKitWidgets_DIR}
-      -DQt5WebEngine_DIR:STRING=${Qt5WebEngine_DIR}
-      -DQt5WebEngineWidgets_DIR:STRING=${Qt5WebEngineWidgets_DIR}
-      #-DQt5WinExtras_DIR:STRING=${Qt5WinExtras_DIR}
-      -DQt5Concurrent_DIR:STRING=${Qt5Concurrent_DIR}
-      -DQt5PrintSupport_DIR:STRING=${Qt5PrintSupport_DIR}
+      -DQT_INSTALL_DIR:PATH=${QT_INSTALL_DIR}
     INSTALL_COMMAND ""
   )
 endif()
