@@ -35,24 +35,30 @@
 #include "../../model/AirLoopHVACOutdoorAirSystem_Impl.hpp"
 #include "../../model/CoilSystemCoolingDXHeatExchangerAssisted.hpp"
 #include "../../model/CoilSystemCoolingDXHeatExchangerAssisted_Impl.hpp"
+#include "../../model/CoilSystemCoolingWaterHeatExchangerAssisted.hpp"
+#include "../../model/CoilSystemCoolingWaterHeatExchangerAssisted_Impl.hpp"
 #include "../../model/AirToAirComponent.hpp"
 #include "../../model/AirToAirComponent_Impl.hpp"
 #include <utilities/idd/AirLoopHVAC_UnitarySystem_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_SingleSpeed_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_TwoSpeed_FieldEnums.hxx>
+#include <utilities/idd/Coil_Cooling_DX_TwoStageWithHumidityControlMode_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_MultiSpeed_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_VariableSpeed_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_Water_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_WaterToAirHeatPump_EquationFit_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFit_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Desuperheater_FieldEnums.hxx>
+#include <utilities/idd/Coil_Heating_DX_MultiSpeed_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_DX_SingleSpeed_FieldEnums.hxx>
-#include <utilities/idd/HeatExchanger_AirToAir_SensibleAndLatent_FieldEnums.hxx>
+#include <utilities/idd/Coil_Heating_DX_VariableSpeed_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Electric_FieldEnums.hxx>
+#include <utilities/idd/Coil_Heating_Gas_MultiStage_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Gas_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Water_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_WaterToAirHeatPump_EquationFit_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit_FieldEnums.hxx>
+#include <utilities/idd/HeatExchanger_AirToAir_SensibleAndLatent_FieldEnums.hxx>
 #include <utilities/idd/Fan_ConstantVolume_FieldEnums.hxx>
 #include <utilities/idd/Fan_OnOff_FieldEnums.hxx>
 #include <utilities/idd/Fan_VariableVolume_FieldEnums.hxx>
@@ -252,7 +258,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
   // Supply Air Flow Rate During Cooling Operation
   if( modelObject.isSupplyAirFlowRateDuringCoolingOperationAutosized() ) {
     unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::CoolingSupplyAirFlowRate,"Autosize");
-  } 
+  }
   else if ( (d = modelObject.supplyAirFlowRateDuringCoolingOperation()) ) {
     unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::CoolingSupplyAirFlowRate,d.get());
   }
@@ -284,7 +290,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
   // Supply Air Flow Rate During Heating Operation
   if( modelObject.isSupplyAirFlowRateDuringHeatingOperationAutosized() ) {
     unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::HeatingSupplyAirFlowRate,"Autosize");
-  } 
+  }
   else if ( (d = modelObject.supplyAirFlowRateDuringHeatingOperation()) ) {
     unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::HeatingSupplyAirFlowRate,d.get());
   }
@@ -316,7 +322,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
   // Supply Air Flow Rate When No Cooling or Heating is Required
   if( modelObject.isSupplyAirFlowRateWhenNoCoolingorHeatingisRequiredAutosized() ) {
     unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::NoLoadSupplyAirFlowRate,"Autosize");
-  } 
+  }
   else if ( (d = modelObject.supplyAirFlowRateWhenNoCoolingorHeatingisRequired()) ) {
     unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::NoLoadSupplyAirFlowRate,d.get());
   }
@@ -354,7 +360,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
   // Maximum Supply Air Temperature
   if( modelObject.isMaximumSupplyAirTemperatureAutosized() ) {
     unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::MaximumSupplyAirTemperature,"Autosize");
-  } 
+  }
   else if ( (d = modelObject.maximumSupplyAirTemperature()) ) {
     unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::MaximumSupplyAirTemperature,d.get());
   }
@@ -553,6 +559,11 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
       _coolingCoil->setString(Coil_Cooling_WaterFields::AirInletNodeName,inletNodeName);
       _coolingCoil->setString(Coil_Cooling_WaterFields::AirOutletNodeName,outletNodeName);
     }
+    else if( _coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_TwoStageWithHumidityControlMode )
+    {
+      _coolingCoil->setString(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::AirInletNodeName,inletNodeName);
+      _coolingCoil->setString(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::AirOutletNodeName,outletNodeName);
+    }
     else if( _coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_WaterToAirHeatPump_EquationFit )
     {
       _coolingCoil->setString(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::AirInletNodeName,inletNodeName);
@@ -575,10 +586,24 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
         _hx->setString(HeatExchanger_AirToAir_SensibleAndLatentFields::SupplyAirInletNodeName,inletNodeName);
         _hx->setString(HeatExchanger_AirToAir_SensibleAndLatentFields::ExhaustAirOutletNodeName,outletNodeName);
       } else {
-        LOG(Warn,modelObject.briefDescription() << ": Contains an unsuported type " << _hx->iddObject().type() << ".");
+        LOG(Warn,modelObject.briefDescription() << ": Contains an unsupported type " << _hx->iddObject().type() << ".");
+      }
+    } else if( _coolingCoil->iddObject().type() == IddObjectType::CoilSystem_Cooling_Water_HeatExchangerAssisted )
+    {
+      OS_ASSERT(coolingCoil);
+      auto coilSystem = coolingCoil->optionalCast<model::CoilSystemCoolingWaterHeatExchangerAssisted>();
+      OS_ASSERT(coilSystem);
+      auto hx = coilSystem->heatExchanger();
+      auto _hx = translateAndMapModelObject(hx);
+      OS_ASSERT(_hx);
+      if( _hx->iddObject().type() == IddObjectType::HeatExchanger_AirToAir_SensibleAndLatent ) {
+        _hx->setString(HeatExchanger_AirToAir_SensibleAndLatentFields::SupplyAirInletNodeName,inletNodeName);
+        _hx->setString(HeatExchanger_AirToAir_SensibleAndLatentFields::ExhaustAirOutletNodeName,outletNodeName);
+      } else {
+        LOG(Warn,modelObject.briefDescription() << ": Contains an unsupported type " << _hx->iddObject().type() << ".");
       }
     } else {
-      LOG(Warn,modelObject.briefDescription() << ": Contains an unsuported type " << _coolingCoil->iddObject().type() << ".");
+      LOG(Warn, modelObject.briefDescription() << ": Contains an unsupported type " << _coolingCoil->iddObject().type() << ".");
     }
   }
 
@@ -621,6 +646,21 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
       _heatingCoil->setString(Coil_Heating_WaterFields::AirInletNodeName,inletNodeName);
       _heatingCoil->setString(Coil_Heating_WaterFields::AirOutletNodeName,outletNodeName);
     }
+    else if( _heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_DX_MultiSpeed )
+    {
+      _heatingCoil->setString(Coil_Heating_DX_MultiSpeedFields::AirInletNodeName,inletNodeName);
+      _heatingCoil->setString(Coil_Heating_DX_MultiSpeedFields::AirOutletNodeName,outletNodeName);
+    }
+    else if( _heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_DX_VariableSpeed )
+    {
+      _heatingCoil->setString(Coil_Heating_DX_VariableSpeedFields::IndoorAirInletNodeName,inletNodeName);
+      _heatingCoil->setString(Coil_Heating_DX_VariableSpeedFields::IndoorAirOutletNodeName,outletNodeName);
+    }
+    else if( _heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Gas_MultiStage )
+    {
+      _heatingCoil->setString(Coil_Heating_Gas_MultiStageFields::AirInletNodeName,inletNodeName);
+      _heatingCoil->setString(Coil_Heating_Gas_MultiStageFields::AirOutletNodeName,outletNodeName);
+    }
     else if( _heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Desuperheater )
     {
       _heatingCoil->setString(Coil_Heating_DesuperheaterFields::AirInletNodeName,inletNodeName);
@@ -635,6 +675,8 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
     {
       _heatingCoil->setString(Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFitFields::IndoorAirInletNodeName,inletNodeName);
       _heatingCoil->setString(Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFitFields::IndoorAirOutletNodeName,outletNodeName);
+    } else {
+      LOG(Warn, modelObject.briefDescription() << ": Contains an unsupported type " << _heatingCoil->iddObject().type() << ".");
     }
   }
 
@@ -673,6 +715,8 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
     {
       _supplementalHeatingCoil->setString(Coil_Heating_DesuperheaterFields::AirInletNodeName,inletNodeName);
       _supplementalHeatingCoil->setString(Coil_Heating_DesuperheaterFields::AirOutletNodeName,airOutletNodeName.get());
+    } else {
+      LOG(Warn, modelObject.briefDescription() << ": Contains an unsupported type " << _supplementalHeatingCoil->iddObject().type() << ".");
     }
   }
 

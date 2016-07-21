@@ -401,8 +401,8 @@ namespace detail {
       auto systems = this->model().getConcreteModelObjects<AirLoopHVACUnitarySystem>();
 
       for( auto const & system : systems ) {
-        if( auto coolingCoil = system.coolingCoil() ) {
-          if( coolingCoil->handle() == this->handle() ) {
+        if( auto heatingCoil = system.heatingCoil() ) {
+          if( heatingCoil->handle() == this->handle() ) {
             return system;
           }
         }
@@ -414,8 +414,8 @@ namespace detail {
       auto systems = this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatPumpAirToAir>();
 
       for( auto const & system : systems ) {
-        auto coolingCoil = system.coolingCoil();
-        if( coolingCoil.handle() == this->handle() ) {
+        auto heatingCoil = system.heatingCoil();
+        if( heatingCoil.handle() == this->handle() ) {
           return system;
         }
       }
@@ -431,8 +431,8 @@ namespace detail {
       auto systems = this->model().getConcreteModelObjects<ZoneHVACPackagedTerminalHeatPump>();
 
       for( auto const & system : systems ) {
-        auto coolingCoil = system.coolingCoil();
-        if( coolingCoil.handle() == this->handle() ) {
+        auto heatingCoil = system.heatingCoil();
+        if( heatingCoil.handle() == this->handle() ) {
           return system;
         }
       }
