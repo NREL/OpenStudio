@@ -61,8 +61,6 @@ class MODEL_API EnergyManagementSystemProgramCallingManager : public ModelObject
 
   bool setEnergyPlusModelCallingPoint(const std::string& energyPlusModelCallingPoint);
 
-  void resetEnergyPlusModelCallingPoint();
-
   // TODO: Handle this object's extensible fields.
 
   //@}
