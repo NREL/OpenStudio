@@ -45,6 +45,10 @@
 #include "../../model/CoilHeatingDXMultiSpeed_Impl.hpp"
 #include "../../model/CoilCoolingDXMultiSpeed.hpp"
 #include "../../model/CoilCoolingDXMultiSpeed_Impl.hpp"
+#include "../../model/CoilHeatingGasMultiStage.hpp"
+#include "../../model/CoilHeatingGasMultiStage_Impl.hpp"
+#include "../../model/CoilHeatingGasMultiStageStageData.hpp"
+#include "../../model/CoilHeatingGasMultiStageStageData_Impl.hpp"
 #include <utilities/idd/AirLoopHVAC_UnitarySystem_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_SingleSpeed_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_TwoSpeed_FieldEnums.hxx>
@@ -470,38 +474,46 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
   // don't do this automatic generation
   
   if( (coolingCoil && (coolingCoil->iddObjectType() == model::CoilCoolingDXMultiSpeed::iddObjectType())) || 
-      (heatingCoil && (heatingCoil->iddObjectType() == model::CoilHeatingDXMultiSpeed::iddObjectType())) ) {
+      (heatingCoil && (heatingCoil->iddObjectType() == model::CoilHeatingDXMultiSpeed::iddObjectType())) ||
+      (heatingCoil && (heatingCoil->iddObjectType() == model::CoilHeatingGasMultiStage::iddObjectType())) ) {
 
     IdfObject _unitarySystemPerformance(openstudio::IddObjectType::UnitarySystemPerformance_Multispeed);
     m_idfObjects.push_back(_unitarySystemPerformance);
     _unitarySystemPerformance.setName(unitarySystem.nameString() + " Unitary System Performance");
     
-    boost::optional<model::CoilHeatingDXMultiSpeed> multispeedHeating;
-    boost::optional<model::CoilCoolingDXMultiSpeed> multispeedCooling;
+    boost::optional<model::CoilHeatingDXMultiSpeed> multispeedDXHeating;
+    boost::optional<model::CoilHeatingGasMultiStage> multistageGasHeating;
+    boost::optional<model::CoilCoolingDXMultiSpeed> multispeedDXCooling;
 
     int maxStages = 0;
 
     if( heatingCoil ) {
-      multispeedHeating = heatingCoil->optionalCast<model::CoilHeatingDXMultiSpeed>();
+      multispeedDXHeating = heatingCoil->optionalCast<model::CoilHeatingDXMultiSpeed>();
+      multistageGasHeating = heatingCoil->optionalCast<model::CoilHeatingGasMultiStage>();
     }
 
     if( coolingCoil ) {
-      multispeedCooling = coolingCoil->optionalCast<model::CoilCoolingDXMultiSpeed>();
+      multispeedDXCooling = coolingCoil->optionalCast<model::CoilCoolingDXMultiSpeed>();
     }
 
     std::vector<model::CoilHeatingDXMultiSpeedStageData> heatingStages;
+    std::vector<model::CoilHeatingGasMultiStageStageData> gasHeatingStages;
     std::vector<model::CoilCoolingDXMultiSpeedStageData> coolingStages;
 
-    if( multispeedHeating ) {
-      heatingStages = multispeedHeating->stages();
-      _unitarySystemPerformance.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating,heatingStages.size());
+    if( multispeedDXHeating ) {
+      heatingStages = multispeedDXHeating->stages();
       maxStages = heatingStages.size();
+      _unitarySystemPerformance.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating,maxStages);
+    } else if( multistageGasHeating ) {
+      gasHeatingStages = multistageGasHeating->stages();
+      maxStages = gasHeatingStages.size();
+      _unitarySystemPerformance.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating,maxStages);
     } else {
       _unitarySystemPerformance.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating,1);
     }
 
-    if( multispeedCooling ) {
-      coolingStages = multispeedCooling->stages();
+    if( multispeedDXCooling ) {
+      coolingStages = multispeedDXCooling->stages();
       _unitarySystemPerformance.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling,coolingStages.size());
       int stages = coolingStages.size();
       if( stages > maxStages ) {
@@ -516,6 +528,14 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
     auto heatingFlow = modelObject.supplyAirFlowRateDuringHeatingOperation();
     auto coolingFlow = modelObject.supplyAirFlowRateDuringCoolingOperation();
 
+    double totalGasHeatingCap = 0;
+    for( const auto & gasStage : gasHeatingStages ) {
+      auto cap = gasStage.nominalCapacity();
+      if( cap ) {
+        totalGasHeatingCap += cap.get();
+      }
+    };
+
     for( int i = 0; i < maxStages; ++i ) {
       auto extensible = _unitarySystemPerformance.pushExtensibleGroup();
 
@@ -524,6 +544,14 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
         auto stageFlow = heatingStage.ratedAirFlowRate();
         if( stageFlow && heatingFlow ) {
           extensible.setDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio,stageFlow.get() / heatingFlow.get());
+        } else {
+          extensible.setString(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio,"Autosize");
+        }
+      } else if( i < gasHeatingStages.size() ) {
+        auto gasHeatingStage = gasHeatingStages[i];
+        auto stageCap = gasHeatingStage.nominalCapacity();
+        if( stageCap ) {
+          extensible.setDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio,stageCap.get() / totalGasHeatingCap);
         } else {
           extensible.setString(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio,"Autosize");
         }
