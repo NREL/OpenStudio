@@ -49,7 +49,9 @@ namespace energyplus {
 if (_scheduleDay){ \
   boost::optional<IdfObject> idfScheduleDay = translateAndMapModelObject(*(_scheduleDay)); \
   if (idfScheduleDay){ \
-    _idfObject.setString(_fieldIndex, idfScheduleDay->name().get()); \
+    test = _idfObject.setString(_fieldIndex, idfScheduleDay->name().get()) && test; \
+  } else { \
+    test = false; \
   } \
 } 
 
@@ -62,6 +64,24 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleWeek( ScheduleWee
 
   scheduleWeek.setName(modelObject.name().get());
 
+  // all fields in scheduleWeek are required, attempt to make sure they are all set
+  if (!modelObject.holidaySchedule()){
+    if (modelObject.sundaySchedule()){
+      modelObject.setHolidaySchedule(modelObject.sundaySchedule().get());
+    }
+  }
+  if (!modelObject.customDay1Schedule()){
+    if (modelObject.holidaySchedule()){
+      modelObject.setCustomDay1Schedule(modelObject.holidaySchedule().get());
+    }
+  }
+  if (!modelObject.customDay2Schedule()){
+    if (modelObject.holidaySchedule()){
+      modelObject.setCustomDay2Schedule(modelObject.holidaySchedule().get());
+    }
+  }
+
+  bool test = true;
   MAP_SCHEDULE(scheduleWeek, Schedule_Week_DailyFields::SundaySchedule_DayName, modelObject.sundaySchedule());
   MAP_SCHEDULE(scheduleWeek, Schedule_Week_DailyFields::MondaySchedule_DayName, modelObject.mondaySchedule());
   MAP_SCHEDULE(scheduleWeek, Schedule_Week_DailyFields::TuesdaySchedule_DayName, modelObject.tuesdaySchedule());
@@ -74,6 +94,10 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleWeek( ScheduleWee
   MAP_SCHEDULE(scheduleWeek, Schedule_Week_DailyFields::WinterDesignDaySchedule_DayName, modelObject.winterDesignDaySchedule());
   MAP_SCHEDULE(scheduleWeek, Schedule_Week_DailyFields::CustomDay1Schedule_DayName, modelObject.customDay1Schedule());
   MAP_SCHEDULE(scheduleWeek, Schedule_Week_DailyFields::CustomDay2Schedule_DayName, modelObject.customDay2Schedule());
+
+  if (!test){
+    LOG(Warn, "ScheduleWeek '" << modelObject.name().get() << "' is missing required fields");
+  }
 
   return scheduleWeek;
 }

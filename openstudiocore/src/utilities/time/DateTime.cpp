@@ -233,6 +233,21 @@ std::string DateTime::toISO8601() const {
   return result;
 }
 
+std::string DateTime::toXsdDateTime() const
+{
+  // 2016-07-13T16:08:43-06:00
+  char buffer[64];
+  Time temp(0, m_utcOffset, 0, 0);
+  if (temp.totalHours() < 0){
+    sprintf(buffer, "%04d-%02d-%02dT%02d:%02d:%02d-%02d:%02d", m_date.year(), m_date.monthOfYear().value(), m_date.dayOfMonth(), m_time.hours(), m_time.minutes(), m_time.seconds(), std::abs(temp.hours()), std::abs(temp.minutes()));
+  } else{
+    sprintf(buffer, "%04d-%02d-%02dT%02d:%02d:%02d+%02d:%02d", m_date.year(), m_date.monthOfYear().value(), m_date.dayOfMonth(), m_time.hours(), m_time.minutes(), m_time.seconds(), std::abs(temp.hours()), std::abs(temp.minutes()));
+  }
+
+  return std::string(buffer);
+}
+
+
 std::time_t DateTime::toEpoch() const {
   // credit: http://stackoverflow.com/questions/4461586/how-do-i-convert-boostposix-timeptime-to-time-t
   boost::posix_time::ptime pt(m_date.impl(), m_time.impl() - boost::posix_time::time_duration(m_utcOffset, 0, 0, 0));
@@ -290,6 +305,11 @@ boost::optional<DateTime> DateTime::fromISO8601(const std::string& str) {
   }
 
   return result;
+}
+
+boost::optional<DateTime> DateTime::fromXsdDateTime(const std::string& str)
+{
+  return fromISO8601(str);
 }
 
 DateTime DateTime::fromEpoch(const std::time_t& time) {
