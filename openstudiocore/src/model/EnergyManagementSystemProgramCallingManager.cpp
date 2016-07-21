@@ -74,11 +74,6 @@ namespace detail {
     return result;
   }
 
-  void EnergyManagementSystemProgramCallingManager_Impl::resetEnergyPlusModelCallingPoint() {
-    bool result = setString(OS_EnergyManagementSystem_ProgramCallingManagerFields::EnergyPlusModelCallingPoint, "");
-    OS_ASSERT(result);
-  }
-
 } // detail
 
 EnergyManagementSystemProgramCallingManager::EnergyManagementSystemProgramCallingManager(const Model& model)
@@ -104,10 +99,6 @@ boost::optional<std::string> EnergyManagementSystemProgramCallingManager::energy
 
 bool EnergyManagementSystemProgramCallingManager::setEnergyPlusModelCallingPoint(const std::string& energyPlusModelCallingPoint) {
   return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->setEnergyPlusModelCallingPoint(energyPlusModelCallingPoint);
-}
-
-void EnergyManagementSystemProgramCallingManager::resetEnergyPlusModelCallingPoint() {
-  getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->resetEnergyPlusModelCallingPoint();
 }
 
 /// @cond

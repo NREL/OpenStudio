@@ -70,8 +70,6 @@ namespace detail {
 
     bool setEnergyPlusModelCallingPoint(const std::string& energyPlusModelCallingPoint);
 
-    void resetEnergyPlusModelCallingPoint();
-
     // TODO: Handle this object's extensible fields.
 
     //@}
