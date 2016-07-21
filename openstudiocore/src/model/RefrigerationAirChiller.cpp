@@ -136,7 +136,7 @@ namespace detail {
   {
     Model m = this->model();
     ModelObject thisObject = this->getObject<ModelObject>();
-    std::vector<ThermalZone> thermalZones = m.getModelObjects<ThermalZone>();
+    std::vector<ThermalZone> thermalZones = m.getConcreteModelObjects<ThermalZone>();
     for( const auto & thermalZone : thermalZones )
     {
       std::vector<ModelObject> equipment = thermalZone.equipment();

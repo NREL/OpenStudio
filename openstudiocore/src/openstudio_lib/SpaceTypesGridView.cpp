@@ -156,7 +156,7 @@ namespace openstudio {
     mainLayout->setContentsMargins(0, 0, 0, 0);
     setLayout(mainLayout);
 
-    auto spaceTypes = model.getModelObjects<model::SpaceType>();
+    auto spaceTypes = model.getConcreteModelObjects<model::SpaceType>();
     auto spaceTypeModelObjects = subsetCastVector<model::ModelObject>(spaceTypes);
 
     m_gridController = new SpaceTypesGridController(m_isIP, "Space Types", IddObjectType::OS_SpaceType, model, spaceTypeModelObjects);
@@ -295,7 +295,7 @@ namespace openstudio {
     isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_gridController, SLOT(toggleUnits(bool)));
     OS_ASSERT(isConnected);
 
-    std::vector<model::SpaceType> spaceType = model.getModelObjects<model::SpaceType>(); // NOTE for horizontal system lists
+    std::vector<model::SpaceType> spaceType = model.getConcreteModelObjects<model::SpaceType>(); // NOTE for horizontal system lists
   }
 
   std::vector<model::ModelObject> SpaceTypesGridView::selectedObjects() const
@@ -510,7 +510,7 @@ namespace openstudio {
         addSelectColumn(Heading(QString(SELECTED), false, false, checkbox), "Check to select this row");
       }
       else if (field == LOADNAME || field == MULTIPLIER || field == DEFINITION || field == SCHEDULE || field == ACTIVITYSCHEDULE || field == SELECTED) {
-        // Create a lambda function that collates all of the loads in a space type 
+        // Create a lambda function that collates all of the loads in a space type
         // and returns them as an std::vector
         std::function<std::vector<model::ModelObject>(const model::SpaceType &)> allLoads(
           [](const model::SpaceType &t_spaceType) {
@@ -1641,7 +1641,7 @@ namespace openstudio {
     // TODO: The code below is currently commented out because a refresh crash bug is precluding rack color
     // updates due to rack assignments to cases and walk-ins.  No colors are better than wrong colors.
 
-    //std::vector<model::RefrigerationSystem> refrigerationSystems = m_model.getModelObjects<model::RefrigerationSystem>();
+    //std::vector<model::RefrigerationSystem> refrigerationSystems = m_model.getConcreteModelObjects<model::RefrigerationSystem>();
 
     //boost::optional<model::SpaceType> refrigerationCase = modelObject.optionalCast<model::SpaceType>();
     //OS_ASSERT(refrigerationCase);
@@ -1684,7 +1684,7 @@ namespace openstudio {
 
   void SpaceTypesGridController::refreshModelObjects()
   {
-    std::vector<model::SpaceType> spaceTypes = m_model.getModelObjects<model::SpaceType>();
+    std::vector<model::SpaceType> spaceTypes = m_model.getConcreteModelObjects<model::SpaceType>();
     m_modelObjects = subsetCastVector<model::ModelObject>(spaceTypes);
     std::sort(m_modelObjects.begin(), m_modelObjects.end(), ModelObjectNameSorter());
   }
