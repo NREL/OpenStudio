@@ -288,7 +288,8 @@ namespace gbxml {
         result->appendChild(element);
         element.appendChild(doc.createTextNode(QString::number(*visibleTransmittance)));
         element.setAttribute("unit", "Fraction");
-        element.setAttribute("type", "Visible");        element.setAttribute("surfaceType", "Both");
+        element.setAttribute("type", "Visible");
+        element.setAttribute("surfaceType", "Both");
       }
 
       if (uFactor){
@@ -392,13 +393,15 @@ namespace gbxml {
       result->appendChild(element);
       element.appendChild(doc.createTextNode(QString::number(*thermalReflectance)));
       element.setAttribute("unit", "Fraction");
-      element.setAttribute("type", "ExtIR");      element.setAttribute("surfaceType", "Both");
+      element.setAttribute("type", "ExtIR");
+      element.setAttribute("surfaceType", "Both");
 
       element = doc.createElement("Reflectance");
       result->appendChild(element);
       element.appendChild(doc.createTextNode(QString::number(*thermalReflectance)));
       element.setAttribute("unit", "Fraction");
-      element.setAttribute("type", "IntIR");      element.setAttribute("surfaceType", "Both");
+      element.setAttribute("type", "IntIR");
+      element.setAttribute("surfaceType", "Both");
     }
 
     if (solarReflectance){
@@ -406,13 +409,15 @@ namespace gbxml {
       result->appendChild(element);
       element.appendChild(doc.createTextNode(QString::number(*solarReflectance)));
       element.setAttribute("unit", "Fraction");
-      element.setAttribute("type", "ExtSolar");      element.setAttribute("surfaceType", "Both");
+      element.setAttribute("type", "ExtSolar");
+      element.setAttribute("surfaceType", "Both");
 
       element = doc.createElement("Reflectance");
       result->appendChild(element);
       element.appendChild(doc.createTextNode(QString::number(*solarReflectance)));
       element.setAttribute("unit", "Fraction");
-      element.setAttribute("type", "IntSolar");      element.setAttribute("surfaceType", "Both");
+      element.setAttribute("type", "IntSolar");
+      element.setAttribute("surfaceType", "Both");
     }
 
     if (visibleReflectance){
@@ -420,13 +425,15 @@ namespace gbxml {
       result->appendChild(element);
       element.appendChild(doc.createTextNode(QString::number(*visibleReflectance)));
       element.setAttribute("unit", "Fraction");
-      element.setAttribute("type", "ExtVisible");      element.setAttribute("surfaceType", "Both");
+      element.setAttribute("type", "ExtVisible");
+      element.setAttribute("surfaceType", "Both");
 
       element = doc.createElement("Reflectance");
       result->appendChild(element);
       element.appendChild(doc.createTextNode(QString::number(*visibleReflectance)));
       element.setAttribute("unit", "Fraction");
-      element.setAttribute("type", "IntVisible");      element.setAttribute("surfaceType", "Both");
+      element.setAttribute("type", "IntVisible");
+      element.setAttribute("surfaceType", "Both");
     }
 
     if (roughness){
@@ -494,7 +501,8 @@ namespace gbxml {
       result->appendChild(element);
       element.appendChild(doc.createTextNode(QString::number(*solarAbsorptance)));
       element.setAttribute("unit", "Fraction");
-      element.setAttribute("type", "IntSolar");    }
+      element.setAttribute("type", "IntSolar");
+    }
 
     if (visibleAbsorptance){
       QDomElement element = doc.createElement("Absorptance");
@@ -506,7 +514,8 @@ namespace gbxml {
       result->appendChild(element);
       element.appendChild(doc.createTextNode(QString::number(*visibleAbsorptance)));
       element.setAttribute("unit", "Fraction");
-      element.setAttribute("type", "IntVisible");    }
+      element.setAttribute("type", "IntVisible");
+    }
     return result;
   }
   
