@@ -63,7 +63,7 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    boost::optional<std::string> outputVariableorOutputMeterIndexKeyName() const;
+    boost::optional<std::string> keyName() const;
 
     OutputVariable outputVariable() const;
     OutputMeter outputMeter() const;
@@ -72,9 +72,7 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    void setOutputVariableorOutputMeterIndexKeyName(const std::string& outputVariableorOutputMeterIndexKeyName);
-
-    void resetOutputVariableorOutputMeterIndexKeyName();
+    void setKeyName(const std::string& keyName);
 
     bool setOutputVariable(const OutputVariable& outputVariable);
     bool setOutputMeter(const OutputMeter& outputMeter);
