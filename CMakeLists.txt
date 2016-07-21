@@ -259,7 +259,7 @@ if( UNIX )
   configure_file("${CMAKE_SOURCE_DIR}/dependencies/ruby/build_ruby.sh.in" "${CMAKE_BINARY_DIR}/build_ruby.sh")
   ExternalProject_Add(Ruby
     URL http://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.0.0.tar.gz
-    URL_MD5 07f4e70aba691eb99ef51e8eaab54426
+    URL_MD5 8ddd18138597ad47094463df901a4ea1
     BUILD_IN_SOURCE 1
     CONFIGURE_COMMAND ""
     BUILD_COMMAND sh "${CMAKE_BINARY_DIR}/build_ruby.sh"
@@ -272,7 +272,7 @@ else()
   # Please install DevKit even though the build will be done by msvc the ruby build system uses some traditionally unix tools
   ExternalProject_Add(Ruby
     URL http://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.0.0.tar.gz
-    URL_MD5 07f4e70aba691eb99ef51e8eaab54426
+    URL_MD5 8ddd18138597ad47094463df901a4ea1
     BUILD_IN_SOURCE 1
     CONFIGURE_COMMAND ""
     BUILD_COMMAND cmd /C "${CMAKE_BINARY_DIR}/build_ruby.bat"
