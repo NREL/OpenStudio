@@ -33,12 +33,24 @@
 #include "../../model/SetpointManagerMixedAir_Impl.hpp"
 #include "../../model/AirLoopHVACOutdoorAirSystem.hpp"
 #include "../../model/AirLoopHVACOutdoorAirSystem_Impl.hpp"
+#include "../../model/CoilCoolingDXMultiSpeedStageData.hpp"
+#include "../../model/CoilCoolingDXMultiSpeedStageData_Impl.hpp"
+#include "../../model/CoilHeatingDXMultiSpeedStageData.hpp"
+#include "../../model/CoilHeatingDXMultiSpeedStageData_Impl.hpp"
 #include "../../model/CoilSystemCoolingDXHeatExchangerAssisted.hpp"
 #include "../../model/CoilSystemCoolingDXHeatExchangerAssisted_Impl.hpp"
 #include "../../model/CoilSystemCoolingWaterHeatExchangerAssisted.hpp"
 #include "../../model/CoilSystemCoolingWaterHeatExchangerAssisted_Impl.hpp"
 #include "../../model/AirToAirComponent.hpp"
 #include "../../model/AirToAirComponent_Impl.hpp"
+#include "../../model/CoilHeatingDXMultiSpeed.hpp"
+#include "../../model/CoilHeatingDXMultiSpeed_Impl.hpp"
+#include "../../model/CoilCoolingDXMultiSpeed.hpp"
+#include "../../model/CoilCoolingDXMultiSpeed_Impl.hpp"
+#include "../../model/CoilHeatingGasMultiStage.hpp"
+#include "../../model/CoilHeatingGasMultiStage_Impl.hpp"
+#include "../../model/CoilHeatingGasMultiStageStageData.hpp"
+#include "../../model/CoilHeatingGasMultiStageStageData_Impl.hpp"
 #include <utilities/idd/AirLoopHVAC_UnitarySystem_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_SingleSpeed_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_TwoSpeed_FieldEnums.hxx>
@@ -63,7 +75,9 @@
 #include <utilities/idd/Fan_OnOff_FieldEnums.hxx>
 #include <utilities/idd/Fan_VariableVolume_FieldEnums.hxx>
 #include <utilities/idd/SetpointManager_MixedAir_FieldEnums.hxx>
+#include <utilities/idd/UnitarySystemPerformance_Multispeed_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
@@ -178,9 +192,8 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
   // Heating Coil Object Type
   // Heating Coil Name
   boost::optional<IdfObject> _heatingCoil;
-
-  if( boost::optional<HVACComponent> heatingCoil = modelObject.heatingCoil() )
-  {
+  auto heatingCoil = modelObject.heatingCoil();
+  if( heatingCoil ) {
     _heatingCoil = translateAndMapModelObject(heatingCoil.get());
 
     if( _heatingCoil && _heatingCoil->name() )
@@ -199,7 +212,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
   // Cooling Coil Object Type
   // Cooling Coil Name
   boost::optional<IdfObject> _coolingCoil;
-  boost::optional<HVACComponent> coolingCoil = modelObject.coolingCoil();
+  auto coolingCoil = modelObject.coolingCoil();
 
   if( coolingCoil )
   {
@@ -460,6 +473,114 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
   //     unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedHeatPumpObjectName,_designSpecificationMultispeedHeatPumpObject->name().get());
   //   }
   // }
+
+  // If not user specified, then generate the UnitarySystemPerformance:Multispeed used for multi speed coils
+  // Note it will never be user specified at this time, because OS does not have the UnitarySystemPerformanceMultispeed object
+  // The plan as of this writting is to eventually support UnitarySystemPerformanceMultispeed and if user specified, then
+  // don't do this automatic generation
+  
+  if( (coolingCoil && (coolingCoil->iddObjectType() == model::CoilCoolingDXMultiSpeed::iddObjectType())) || 
+      (heatingCoil && (heatingCoil->iddObjectType() == model::CoilHeatingDXMultiSpeed::iddObjectType())) ||
+      (heatingCoil && (heatingCoil->iddObjectType() == model::CoilHeatingGasMultiStage::iddObjectType())) ) {
+
+    IdfObject _unitarySystemPerformance(openstudio::IddObjectType::UnitarySystemPerformance_Multispeed);
+    m_idfObjects.push_back(_unitarySystemPerformance);
+    _unitarySystemPerformance.setName(unitarySystem.nameString() + " Unitary System Performance");
+    
+    boost::optional<model::CoilHeatingDXMultiSpeed> multispeedDXHeating;
+    boost::optional<model::CoilHeatingGasMultiStage> multistageGasHeating;
+    boost::optional<model::CoilCoolingDXMultiSpeed> multispeedDXCooling;
+
+    int maxStages = 0;
+
+    if( heatingCoil ) {
+      multispeedDXHeating = heatingCoil->optionalCast<model::CoilHeatingDXMultiSpeed>();
+      multistageGasHeating = heatingCoil->optionalCast<model::CoilHeatingGasMultiStage>();
+    }
+
+    if( coolingCoil ) {
+      multispeedDXCooling = coolingCoil->optionalCast<model::CoilCoolingDXMultiSpeed>();
+    }
+
+    std::vector<model::CoilHeatingDXMultiSpeedStageData> heatingStages;
+    std::vector<model::CoilHeatingGasMultiStageStageData> gasHeatingStages;
+    std::vector<model::CoilCoolingDXMultiSpeedStageData> coolingStages;
+
+    if( multispeedDXHeating ) {
+      heatingStages = multispeedDXHeating->stages();
+      maxStages = heatingStages.size();
+      _unitarySystemPerformance.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating,maxStages);
+    } else if( multistageGasHeating ) {
+      gasHeatingStages = multistageGasHeating->stages();
+      maxStages = gasHeatingStages.size();
+      _unitarySystemPerformance.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating,maxStages);
+    } else {
+      _unitarySystemPerformance.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating,1);
+    }
+
+    if( multispeedDXCooling ) {
+      coolingStages = multispeedDXCooling->stages();
+      _unitarySystemPerformance.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling,coolingStages.size());
+      int stages = coolingStages.size();
+      if( stages > maxStages ) {
+        maxStages = stages;
+      }
+    } else {
+      _unitarySystemPerformance.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling,1);
+    }
+
+    _unitarySystemPerformance.setString(UnitarySystemPerformance_MultispeedFields::SingleModeOperation,"No"); 
+
+    auto heatingFlow = modelObject.supplyAirFlowRateDuringHeatingOperation();
+    auto coolingFlow = modelObject.supplyAirFlowRateDuringCoolingOperation();
+
+    double totalGasHeatingCap = 0;
+    for( const auto & gasStage : gasHeatingStages ) {
+      auto cap = gasStage.nominalCapacity();
+      if( cap ) {
+        totalGasHeatingCap += cap.get();
+      }
+    };
+
+    for( int i = 0; i < maxStages; ++i ) {
+      auto extensible = _unitarySystemPerformance.pushExtensibleGroup();
+
+      if( i < heatingStages.size() ) {
+        auto heatingStage = heatingStages[i];
+        auto stageFlow = heatingStage.ratedAirFlowRate();
+        if( stageFlow && heatingFlow ) {
+          extensible.setDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio,stageFlow.get() / heatingFlow.get());
+        } else {
+          extensible.setString(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio,"Autosize");
+        }
+      } else if( i < gasHeatingStages.size() ) {
+        auto gasHeatingStage = gasHeatingStages[i];
+        auto stageCap = gasHeatingStage.nominalCapacity();
+        if( stageCap ) {
+          extensible.setDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio,stageCap.get() / totalGasHeatingCap);
+        } else {
+          extensible.setString(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio,"Autosize");
+        }
+      } else if( i < 2 ) {
+        extensible.setDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio,1.0);
+      }
+
+      if( i < coolingStages.size() ) {
+        auto coolingStage = coolingStages[i];
+        auto stageFlow = coolingStage.ratedAirFlowRate();
+        if( stageFlow && coolingFlow ) {
+          extensible.setDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio,stageFlow.get() / coolingFlow.get());
+        } else {
+          extensible.setString(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio,"Autosize");
+        }
+      } else if( i < 2 ) {
+        extensible.setDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio,1.0);
+      }
+    }
+
+    unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectType,_unitarySystemPerformance.iddObject().name());
+    unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectName,_unitarySystemPerformance.nameString());
+  } 
 
   // Fill in node names for inner components
   if( !airInletNodeName || !airOutletNodeName ) {

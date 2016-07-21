@@ -494,7 +494,7 @@ namespace gbxml {
       result->appendChild(element);
       element.appendChild(doc.createTextNode(QString::number(*solarAbsorptance)));
       element.setAttribute("unit", "Fraction");
-      element.setAttribute("type", "IntSolar");    }
+      element.setAttribute("type", "IntSolar");    }
 
     if (visibleAbsorptance){
       QDomElement element = doc.createElement("Absorptance");
@@ -506,7 +506,7 @@ namespace gbxml {
       result->appendChild(element);
       element.appendChild(doc.createTextNode(QString::number(*visibleAbsorptance)));
       element.setAttribute("unit", "Fraction");
-      element.setAttribute("type", "IntVisible");    }
+      element.setAttribute("type", "IntVisible");    }
     return result;
   }
   
