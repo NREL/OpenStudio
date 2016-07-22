@@ -501,7 +501,41 @@ if(BUILD_WITH_OPENSSL)
   endif()
 endif()
 
-find_package(SWIG 3.0.0 REQUIRED)
+# swig
+
+set(SWIG_INSTALL_DIR "" CACHE PATH "Path to swig Install")
+mark_as_advanced(SWIG_INSTALL_DIR)
+
+if(NOT EXISTS ${SWIG_INSTALL_DIR})
+  if( WIN32 )
+    set(SWIG_ZIP_FILENAME "swig_3_0_10_Win32.zip")
+    set(SWIG_ZIP_EXPECTED_MD5 "be3c42e6daffde06a05ad1b978338ebd")
+  elseif( APPLE )
+    #set(SWIG_ZIP_FILENAME "swig_3_0_10_osx.tar.gz")
+    #set(SWIG_ZIP_EXPECTED_MD5 "87875206d6255d4b75e9a5fcbb273e19")
+  elseif(EXISTS "/etc/redhat-release")
+  else()
+  endif()
+
+  set(SWIG_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${SWIG_ZIP_FILENAME}")
+  if(EXISTS "${SWIG_ZIP_LOCAL_PATH}")
+    file(MD5 "${SWIG_ZIP_LOCAL_PATH}" SWIG_ZIP_MD5)
+  endif()
+
+  if( NOT SWIG_ZIP_MD5 STREQUAL SWIG_ZIP_EXPECTED_MD5)
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${SWIG_ZIP_FILENAME}"
+      ${SWIG_ZIP_LOCAL_PATH}
+      INACTIVITY_TIMEOUT 120
+      SHOW_PROGRESS
+      EXPECTED_MD5 ${SWIG_ZIP_EXPECTED_MD5})
+      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${SWIG_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+  endif()
+
+  set(SWIG_INSTALL_DIR "${CMAKE_BINARY_DIR}/Swig-install/")
+endif()
+
+list(APPEND CMAKE_PREFIX_PATH "${SWIG_INSTALL_DIR}")
+find_package(SWIG 3.0.10 REQUIRED)
 mark_as_advanced(
   SWIG_DIR
   SWIG_EXECUTABLE
