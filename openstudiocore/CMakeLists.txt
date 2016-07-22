@@ -422,6 +422,8 @@ mark_as_advanced(RUBY_INSTALL_DIR)
 
 if(NOT EXISTS ${RUBY_INSTALL_DIR})
   if( WIN32 )
+    set(RUBY_ZIP_FILENAME "ruby_2_0_0_msvc2013_static.zip")
+    set(RUBY_ZIP_EXPECTED_MD5 "5103afd36c4922888ef591e63e685893")
   elseif( APPLE )
     set(RUBY_ZIP_FILENAME "ruby_2_0_0_osx_static.tar.gz")
     set(RUBY_ZIP_EXPECTED_MD5 "87875206d6255d4b75e9a5fcbb273e19")
