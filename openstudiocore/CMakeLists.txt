@@ -422,6 +422,8 @@ mark_as_advanced(RUBY_INSTALL_DIR)
 
 if(NOT EXISTS ${RUBY_INSTALL_DIR})
   if( WIN32 )
+    set(RUBY_ZIP_FILENAME "ruby_2_0_0_msvc2013_static.zip")
+    set(RUBY_ZIP_EXPECTED_MD5 "0ac2ddbd274bb3f80f82ac7fa83945c4")
   elseif( APPLE )
     set(RUBY_ZIP_FILENAME "ruby_2_0_0_osx_static.tar.gz")
     set(RUBY_ZIP_EXPECTED_MD5 "87875206d6255d4b75e9a5fcbb273e19")
@@ -443,9 +445,14 @@ if(NOT EXISTS ${RUBY_INSTALL_DIR})
       execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${RUBY_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
   endif()
 
-  set(RUBY_INSTALL_DIR "${CMAKE_BINARY_DIR}/Ruby-install/")
-  find_file( RUBY_CONFIG_INCLUDE_DIR config.h PATHS "${RUBY_INSTALL_DIR}/include/" )
+  if( WIN32 )
+    set(RUBY_INSTALL_DIR "${CMAKE_BINARY_DIR}/Ruby-install/release")
+  else()
+    set(RUBY_INSTALL_DIR "${CMAKE_BINARY_DIR}/Ruby-install/")
+  endif()
 endif()
+
+list(APPEND CMAKE_PREFIX_PATH "${RUBY_INSTALL_DIR}")
 find_package(Ruby 2.0 REQUIRED)
 
 # OpenSSL / libssh support
