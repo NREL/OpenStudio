@@ -11,9 +11,10 @@ nmake libenc
 nmake libtrans
 nmake
 nmake install
-REM Using unix tools since we must have them from DevKit anyway, since the ruby build requires them
-find '${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-release' -name '*.a' -exec cp {} '${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/release/lib/' \;
-cp '${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-release/enc/encinit.c' '${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/release/include/'
+"${CMAKE_COMMAND}" -E copy_if_different "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-release/enc/encinit.c" "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/release/include/"
+for /R "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-release/" %%f in (*.lib) do (
+  "${CMAKE_COMMAND}" -E copy_if_different %%f "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/release/lib/"
+)
 
 cd ..\Ruby-debug
 set CFLAGS = MDd -Zi -W2 -wd4996 -we4028 -we4142 -O2sy-  -Zm600
@@ -22,6 +23,7 @@ nmake libenc
 nmake libtrans
 nmake
 nmake install
-find '${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-debug' -name '*.a' -exec cp {} '${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/debug/lib/' \;
-cp '${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-debug/enc/encinit.c' '${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/debug/include/'
-
+"${CMAKE_COMMAND}" -E copy_if_different "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-debug/enc/encinit.c" "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/debug/include/"
+for /R "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-debug/" %%f in (*.lib) do (
+  "${CMAKE_COMMAND}" -E copy_if_different %%f "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/debug/lib/"
+)
