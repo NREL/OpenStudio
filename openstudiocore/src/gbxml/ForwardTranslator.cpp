@@ -149,7 +149,10 @@ namespace gbxml {
     result.replace("}", "_");
     result.replace("/", "_");
     result.replace("\\", "_");
-    result.replace("-", "_");
+    //result.replace("-", "_"); // ok
+    //result.replace(".", "_"); // ok
+    //result.replace(":", "_"); // ok
+    result.replace(";", "_");
     return result;
   }
 
