@@ -545,7 +545,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
     for( int i = 0; i < maxStages; ++i ) {
       auto extensible = _unitarySystemPerformance.pushExtensibleGroup();
 
-      if( i < heatingStages.size() ) {
+      if (static_cast<unsigned>(i) < heatingStages.size()) {
         auto heatingStage = heatingStages[i];
         auto stageFlow = heatingStage.ratedAirFlowRate();
         if( stageFlow && heatingFlow ) {
@@ -553,7 +553,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
         } else {
           extensible.setString(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio,"Autosize");
         }
-      } else if( i < gasHeatingStages.size() ) {
+      } else if (static_cast<unsigned>(i) < gasHeatingStages.size()) {
         auto gasHeatingStage = gasHeatingStages[i];
         auto stageCap = gasHeatingStage.nominalCapacity();
         if( stageCap ) {
@@ -565,7 +565,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
         extensible.setDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio,1.0);
       }
 
-      if( i < coolingStages.size() ) {
+      if (static_cast<unsigned>(i) < coolingStages.size()) {
         auto coolingStage = coolingStages[i];
         auto stageFlow = coolingStage.ratedAirFlowRate();
         if( stageFlow && coolingFlow ) {
