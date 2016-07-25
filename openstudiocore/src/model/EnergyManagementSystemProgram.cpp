@@ -64,6 +64,55 @@ namespace detail {
     return EnergyManagementSystemProgram::iddObjectType();
   }
 
+  boost::optional<std::string> EnergyManagementSystemProgram_Impl::body() const {
+    //return getString(OS_EnergyManagementSystem_ProgramFields::EnergyPlusModelCallingPoint, true);
+    //TODO return body of program
+    std::string result;
+    return result;
+  }
+
+  bool EnergyManagementSystemProgram_Impl::setBody(const std::string& body) {
+    //bool result = setString(OS_EnergyManagementSystem_ProgramFields::EnergyPlusModelCallingPoint, body);
+    //TODO set body of program to input string
+    bool result = true;
+    return result;
+  }
+
+  bool EnergyManagementSystemProgram_Impl::addLine(const std::string& line) {
+    //bool result = setString(OS_EnergyManagementSystem_ProgramFields::EnergyPlusModelCallingPoint, body);
+    //TODO add line to end of program body
+    bool result = true;
+    return result;
+  }
+
+  boost::optional<std::vector<std::string>> EnergyManagementSystemProgram_Impl::lines() const {
+    //return getString(OS_EnergyManagementSystem_ProgramFields::EnergyPlusModelCallingPoint, true);
+    //TODO return lines from body
+    std::vector<std::string> result;
+    return result;
+  }
+
+  bool EnergyManagementSystemProgram_Impl::setLines(const std::vector<std::string>& lines) {
+    //bool result = setString(OS_EnergyManagementSystem_ProgramFields::EnergyPlusModelCallingPoint, body);
+    //TODO set body of program to input vector of strings
+    bool result = true;
+    return result;
+  }
+
+  boost::optional<std::vector<std::string>> EnergyManagementSystemProgram_Impl::referencedObjects() const {
+    //return getString(OS_EnergyManagementSystem_ProgramFields::EnergyPlusModelCallingPoint, true);
+    //TODO return vector of model objects that are referenced in program
+    std::vector<std::string> result;
+    return result;
+  }
+
+  boost::optional<std::vector<ModelObject>> EnergyManagementSystemProgram_Impl::invalidReferencedObjects() const {
+    //return getString(OS_EnergyManagementSystem_ProgramFields::EnergyPlusModelCallingPoint, true);
+    //TODO return vector of body lines that contain missing uid strings for invalid referenced objects
+    std::vector<ModelObject> result;
+    return result;
+  }
+
 } // detail
 
 EnergyManagementSystemProgram::EnergyManagementSystemProgram(const Model& model)
@@ -76,6 +125,34 @@ EnergyManagementSystemProgram::EnergyManagementSystemProgram(const Model& model)
 
 IddObjectType EnergyManagementSystemProgram::iddObjectType() {
   return IddObjectType(IddObjectType::OS_EnergyManagementSystem_Program);
+}
+
+boost::optional<std::string> EnergyManagementSystemProgram::body() const {
+  return getImpl<detail::EnergyManagementSystemProgram_Impl>()->body();
+}
+
+bool EnergyManagementSystemProgram::setBody(const std::string& body) {
+  return getImpl<detail::EnergyManagementSystemProgram_Impl>()->setBody(body);
+}
+
+bool EnergyManagementSystemProgram::addLine(const std::string& line) {
+  return getImpl<detail::EnergyManagementSystemProgram_Impl>()->addLine(line);
+}
+
+boost::optional<std::vector<std::string>> EnergyManagementSystemProgram::lines() const {
+  return getImpl<detail::EnergyManagementSystemProgram_Impl>()->lines();
+}
+
+bool EnergyManagementSystemProgram::setLines(const std::vector<std::string>& lines) {
+  return getImpl<detail::EnergyManagementSystemProgram_Impl>()->setLines(lines);
+}
+
+boost::optional<std::vector<std::string>> EnergyManagementSystemProgram::referencedObjects() const {
+  return getImpl<detail::EnergyManagementSystemProgram_Impl>()->referencedObjects();
+}
+
+boost::optional<std::vector<ModelObject>> EnergyManagementSystemProgram::invalidReferencedObjects() const {
+  return getImpl<detail::EnergyManagementSystemProgram_Impl>()->invalidReferencedObjects();
 }
 
 /// @cond
