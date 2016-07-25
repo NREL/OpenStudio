@@ -60,7 +60,7 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    boost::optional<std::string> energyPlusModelCallingPoint() const;
+    boost::optional<std::string> callingPoint() const;
 
     // TODO: Handle this object's extensible fields.
 
@@ -68,7 +68,7 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    bool setEnergyPlusModelCallingPoint(const std::string& energyPlusModelCallingPoint);
+    bool setCallingPoint(const std::string& callingPoint);
 
     // TODO: Handle this object's extensible fields.
 

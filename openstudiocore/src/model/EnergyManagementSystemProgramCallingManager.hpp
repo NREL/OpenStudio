@@ -46,12 +46,12 @@ class MODEL_API EnergyManagementSystemProgramCallingManager : public ModelObject
 
   static IddObjectType iddObjectType();
 
-  static std::vector<std::string> energyPlusModelCallingPointValues();
+  static std::vector<std::string> validCallingPointValues();
 
   /** @name Getters */
   //@{
 
-  boost::optional<std::string> energyPlusModelCallingPoint() const;
+  boost::optional<std::string> callingPoint() const;
 
   // TODO: Handle this object's extensible fields.
 
@@ -59,7 +59,7 @@ class MODEL_API EnergyManagementSystemProgramCallingManager : public ModelObject
   /** @name Setters */
   //@{
 
-  bool setEnergyPlusModelCallingPoint(const std::string& energyPlusModelCallingPoint);
+  bool setCallingPoint(const std::string& callingPoint);
 
   // TODO: Handle this object's extensible fields.
 
