@@ -97,9 +97,6 @@ set(BUILD_WITH_OPENSSL ON CACHE INTERNAL "Build With OpenSSL Support For SSH Con
 # Build R package
 option(BUILD_R "Build R package" OFF)
 
-# Build Ruby gem
-option(BUILD_RUBY_GEM "Build Ruby Gem" OFF)
-
 # Build shared OS libraries
 option(BUILD_SHARED_LIBS "Build OS libs as shared libraries" OFF)
 
@@ -160,20 +157,6 @@ endif()
 if( WIN32 )
   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /OPT:REF /OPT:NOICF")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zi")
-endif()
-
-
-if(BUILD_RUBY_GEM)
-  find_program(GEM NAMES gem)
-  if(NOT GEM)
-    message(SEND_ERROR "Gem tool not found, cannot build gem")
-    if(UNIX AND NOT APPLE)
-      message(SEND_ERROR "Please install rubygems using your package management system")
-    endif()
-  endif()
-
-  # Build Ruby gem and package up all the libs
-  option(BUILD_RUBY_GEM_WITH_LIBS "Package all required libs with the Ruby Gem" ON)
 endif()
 
 if(BUILD_V8_BINDINGS)
@@ -454,6 +437,25 @@ endif()
 
 list(APPEND CMAKE_PREFIX_PATH "${RUBY_INSTALL_DIR}")
 find_package(Ruby 2.0 REQUIRED)
+
+# openstudio gems
+
+set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems.tar.gz")
+set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "bc574f74016c5ebb6fb3e970e4370d77")
+
+set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
+if(EXISTS "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}")
+  file(MD5 "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}" OPENSTUDIO_GEMS_ZIP_MD5)
+endif()
+
+if( NOT OPENSTUDIO_GEMS_ZIP_MD5 STREQUAL OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5)
+  file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${OPENSTUDIO_GEMS_ZIP_FILENAME}"
+    ${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}
+    INACTIVITY_TIMEOUT 120
+    SHOW_PROGRESS
+    EXPECTED_MD5 ${OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5})
+    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+endif()
 
 # OpenSSL / libssh support
 if(BUILD_WITH_OPENSSL)

@@ -14,15 +14,15 @@ endif()
 
 include_directories(${RUBY_INCLUDE_DIRS} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR} )
 
-# Do this at cmake time instead of build time to keep
-# all network activity isolated to configure time
-execute_process(
-  COMMAND bundler "install" "--path=${CMAKE_CURRENT_BINARY_DIR}/gems"
-  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
-)
+## Do this at cmake time instead of build time to keep
+## all network activity isolated to configure time
+#execute_process(
+#  COMMAND bundler "install" "--path=${CMAKE_CURRENT_BINARY_DIR}/gems"
+#  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+#)
 
-file(GLOB_RECURSE RB_FILES FOLLOW_SYMLINKS "${CMAKE_CURRENT_BINARY_DIR}/gems/ruby/2.0.0/bundler/**/*.rb")
-file(GLOB_RECURSE IDF_FILES FOLLOW_SYMLINKS "${CMAKE_CURRENT_BINARY_DIR}/gems/ruby/2.0.0/bundler/**/*.idf")
+file(GLOB_RECURSE RB_FILES FOLLOW_SYMLINKS "${CMAKE_BINARY_DIR}/openstudio-gems/ruby/2.0.0/bundler/**/*.rb")
+file(GLOB_RECURSE IDF_FILES FOLLOW_SYMLINKS "${CMAKE_BINARY_DIR}/openstudio-gems/ruby/2.0.0/bundler/**/*.idf")
 
 list(APPEND EMBED_FILES ${RB_FILES})
 list(APPEND EMBED_FILES ${IDF_FILES})
