@@ -1,6 +1,7 @@
 #include "RubyInterpreter.hpp"
 #include "GC_Value.hpp"
 #include "InitMacros.hxx"
+#include "../../ruby/init_openstudio.hpp"
 #include <embedded_files.hxx>
 
 #include <iostream>
@@ -25,50 +26,11 @@ extern "C" {
 
   void Init_generator(void);
   void Init_parser(void);
-//../Ruby//ext/json/generator/generator.a
-//../Ruby//ext/json/parser/parser.a
-
-  //void Init_sizeof();
-//./ext/rbconfig/sizeof/sizeof.a
-
   void Init_Encoding(void);
-
   void Init_md5(void);
   void Init_rmd160(void);
   void Init_sha1(void);
   void Init_sha2(void);
-
-  //void Init_openstudioairflow(void);
-  void Init_openstudiomodelcore(void);
-  void Init_openstudiomodelsimulation(void);
-  void Init_openstudioutilitiescore(void);
-  void Init_openstudioutilitiesplot(void);
-  void Init_openstudioenergyplus(void);
-  ////void Init_openstudiomodeleditor(void);
-  void Init_openstudioosversion(void);
-  void Init_openstudioutilitiesdata(void);
-  void Init_openstudioutilitiessql(void);
-  ////void Init_openstudiogbxml(void);
-  void Init_openstudiomodelgenerators(void);
-  ////void Init_openstudioradiance(void);
-  void Init_openstudioutilitiestime(void);
-  ////void Init_openstudioisomodel(void);
-  void Init_openstudiomodelgeometry(void);
-  ////void Init_openstudiosdd(void);
-  void Init_openstudioutilitiesfiletypes(void);
-  void Init_openstudioutilitiesunits(void);
-  ////void Init_openstudiolib(void);
-  void Init_openstudiomodelhvac(void);
-  void Init_openstudioutilities(void);
-  void Init_openstudioutilitiesgeometry(void);
-  void Init_openstudiomeasure(void);
-  void Init_openstudiomodelrefrigeration(void);
-  void Init_openstudioutilitiesbcl(void);
-  void Init_openstudioutilitiesidd(void);
-  void Init_openstudiomodel(void);
-  void Init_openstudiomodelresources(void);
-  void Init_openstudioutilitiescloud(void);
-  void Init_openstudioutilitiesidf(void);
 }
 
 std::vector<std::string> paths;
@@ -106,7 +68,6 @@ int main(int argc, char *argv[])
     swig::GC_VALUE::rshift_id = rb_intern(">>");
 
     INIT_CALLS;
-  
 
     Init_encdb();
     rb_provide("encdb.so");
@@ -118,66 +79,7 @@ int main(int argc, char *argv[])
 
     Init_Encoding();
 
-    Init_openstudioutilitiescore();
-    rb_provide("openstudioutilitiescore");
-    Init_openstudioutilitiestime();
-    rb_provide("openstudioutilitiestime");
-    Init_openstudioutilitiesdata();
-    rb_provide("openstudioutilitiesdata");
-    Init_openstudioutilitiesplot();
-    rb_provide("openstudioutilitiesplot");
-    Init_openstudioutilitiesgeometry();
-    rb_provide("openstudioutilitiesgeometry");
-    Init_openstudioutilitiessql();
-    rb_provide("openstudioutilitiessql");
-    Init_openstudioutilitiesbcl();
-    rb_provide("openstudioutilitiesbcl");
-    Init_openstudioutilitiescloud();
-    rb_provide("openstudioutilitiescloud");
-    Init_openstudioutilitiesunits();
-    rb_provide("openstudioutilitiesunits");
-    Init_openstudioutilitiesidd();
-    rb_provide("openstudioutilitiesidd");
-    Init_openstudioutilitiesidf();
-    rb_provide("openstudioutilitiesidf");
-    Init_openstudioutilitiesfiletypes();
-    rb_provide("openstudioutilitiesfiletypes");
-    Init_openstudioutilities();
-    rb_provide("openstudioutilities");
-    Init_openstudiomodel();
-    rb_provide("openstudiomodel");
-    Init_openstudiomodelcore();
-    rb_provide("openstudiomodelcore");
-    Init_openstudiomodelsimulation();
-    rb_provide("openstudiomodelsimulation");
-    Init_openstudiomodelresources();
-    rb_provide("openstudiomodelresources");
-    Init_openstudiomodelgeometry();
-    rb_provide("openstudiomodelgeometry");
-    Init_openstudiomodelhvac();
-    rb_provide("openstudiomodelhvac");
-    Init_openstudiomodelrefrigeration();
-    rb_provide("openstudiomodelrefrigeration");
-    Init_openstudiomodelgenerators();
-    rb_provide("openstudiomodelgenerators");
-    Init_openstudioenergyplus(); // failing on rb_require("openstudiomodel"), don't know why?
-    rb_provide("openstudioenergyplus");
-    //Init_openstudioradiance();
-    //Init_openstudiogbxml();
-    //Init_openstudioairflow();
-    Init_openstudioosversion();
-    Init_openstudiomeasure();
-    rb_provide("openstudiomeasure");
-    //Init_openstudiomodeleditor();
-    //Init_openstudiolib();
-    //Init_openstudioisomodel();
-    //Init_openstudiosdd();
-
-    //Init_generator();
-    //Init_parser();
-
-    //Init_sizeof();
-    //rb_provide("rbconfig");
+    init_openstudio_internal();
 
     Init_md5();
     rb_provide("digest/md5");
@@ -197,8 +99,6 @@ int main(int argc, char *argv[])
 
   // chop off the first argument which is the exe path/name
   ruby_set_argv(argc - 1,argv + 1);
-  //rubyInterpreter.evalString(R"(require 'irb')");
-  //rubyInterpreter.evalString(R"(IRB.start)");
 
   try{
     rubyInterpreter.evalString("begin \n (require 'openstudio_cli') \n rescue Exception => e \n puts \n puts \"Error: #{e.message}\" \n puts \"Backtrace:\n\t\" + e.backtrace.join(\"\\n\\t\") \n raise \n end");

@@ -18,11 +18,11 @@ module Kernel
   # ":" is our root path to the embedded file system
   # make sure it is in the ruby load path
   $LOAD_PATH << ':'
-  $LOAD_PATH << ':/ruby/2.2.0'
+  $LOAD_PATH << ':/ruby/2.0.0'
   # TODO configure this in a better way
   # these hardcoded platform paths are brain dead
-  $LOAD_PATH << ':/ruby/2.2.0/x86_64-darwin13'
-  $LOAD_PATH << ':/ruby/2.2.0/x64-mswin64_120'
+  $LOAD_PATH << ':/ruby/2.0.0/x86_64-darwin13.4.0'
+  $LOAD_PATH << ':/ruby/2.0.0/x64-mswin64_120'
   $LOAD_PATH << ':/openstudio-workflow-1.0.0.alpha.0/lib'
   $LOADED = []
 

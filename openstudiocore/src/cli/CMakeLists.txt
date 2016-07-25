@@ -1,9 +1,14 @@
 
-IF (APPLE)
+if (APPLE)
    find_library(COREFOUNDATION_LIBRARY CoreFoundation )
-ENDIF (APPLE)
+endif (APPLE)
 
-file(READ "${RUBY_INSTALL_DIR}/include/encinit.c" ENCINIT_FILE_CONTENT)
+if( UNIX )
+  file(READ "${RUBY_INSTALL_DIR}/include/encinit.c" ENCINIT_FILE_CONTENT)
+else()
+  file(READ "${RUBY_INSTALL_DIR}/release/include/encinit.c" ENCINIT_FILE_CONTENT)
+endif()
+
 string(REGEX MATCHALL "init_enc\\([a-zA-Z0-9_]*\\);" ENCINIT_MATCH "${ENCINIT_FILE_CONTENT}")
 set(ENC_INIT_DECLARATIONS "")
 set(ENC_INIT_CALLS "")
@@ -60,8 +65,8 @@ if( UNIX )
   file(GLOB EXTENSION_LIBS "${RUBY_INSTALL_DIR}/lib/*.a")
   set(EXTENSION_LIBS_LIST ${EXTENSION_LIBS})
 else()
-  file(GLOB EXTENSION_LIBS_RELEASE "${RUBY_SOURCE_DIR}/ext/**/*.lib")
-  file(GLOB EXTENSION_LIBS_DEBUG "${RUBY_SOURCE_DIR_DEBUG}/ext/**/*.lib")
+  file(GLOB EXTENSION_LIBS_RELEASE "${RUBY_INSTALL_DIR}/release/*.lib")
+  file(GLOB EXTENSION_LIBS_DEBUG "${RUBY_INSTALL_DIR}/debug/*.lib")
   set(EXTENSION_LIBS optimized ${EXTENSION_LIBS_RELEASE} debug ${EXTENSION_LIBS_DEBUG})
   set(EXTENSION_LIBS_LIST ${EXTENSION_LIBS_RELEASE})
 endif()
@@ -82,34 +87,23 @@ configure_file("InitMacros.hxx.in" "InitMacros.hxx")
 
 file(GLOB_RECURSE  EXTENSION_RB  FOLLOW_SYMLINKS "${RUBY_POSSIBLE_LIB_DIR}/**/*.rb")
 
-#foreach( _FILE ${EXTENSION_RB} )
-#  file(RELATIVE_PATH LOCATION ${RUBY_POSSIBLE_LIB_DIR} ${_FILE})
-#  list(APPEND EMBED_RB ${_FILE} ${LOCATION})
-#endforeach()
-
 foreach( _FILE ${EXTENSION_RB} )
   file(RELATIVE_PATH LOCATION ${RUBY_POSSIBLE_LIB_DIR} ${_FILE})
   list(APPEND FILES ${_FILE})
   list(APPEND EMBEDDED_PATHS ${LOCATION})
 endforeach()
 
-#add_custom_command(
-#  OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/gemstage/gems/openstudio-workflow-1.0.0.alpha.0/lib/openstudio-workflow.rb"
-#  COMMAND "gem" "install" "--install-dir" "${CMAKE_CURRENT_BINARY_DIR}/gemstage" "${OPENSTUDIO_WORKFLOW_GEM}"
-#  DEPENDS "${OPENSTUDIO_WORKFLOW_GEM}"
-#)
+file(GLOB_RECURSE RB_FILES FOLLOW_SYMLINKS "${CMAKE_BINARY_DIR}/openstudio-gems/ruby/2.0.0/bundler/**/*.rb")
+file(GLOB_RECURSE IDF_FILES FOLLOW_SYMLINKS "${CMAKE_BINARY_DIR}/openstudio-gems/ruby/2.0.0/bundler/**/*.idf")
 
-file(GLOB_RECURSE WORKFLOW_RB FOLLOW_SYMLINKS "${OPENSTUDIO_WORKFLOW_GEM}/**/*.rb")
-file(GLOB_RECURSE WORKFLOW_IDF FOLLOW_SYMLINKS "${OPENSTUDIO_WORKFLOW_GEM}/**/*.idf")
-
-foreach( _FILE ${WORKFLOW_RB} )
-  file(RELATIVE_PATH LOCATION "${OPENSTUDIO_WORKFLOW_GEM}/gems" ${_FILE})
+foreach( _FILE ${RB_FILES} )
+  file(RELATIVE_PATH LOCATION "${CMAKE_BINARY_DIR}/openstudio-gems" ${_FILE})
   list(APPEND FILES ${_FILE})
   list(APPEND EMBEDDED_PATHS ${LOCATION})
 endforeach()
 
-foreach( _FILE ${WORKFLOW_IDF} )
-  file(RELATIVE_PATH LOCATION "${OPENSTUDIO_WORKFLOW_GEM}/gems" ${_FILE})
+foreach( _FILE ${IDF_FILES} )
+  file(RELATIVE_PATH LOCATION "${CMAKE_BINARY_DIR}/openstudio-gems" ${_FILE})
   list(APPEND FILES ${_FILE})
   list(APPEND EMBEDDED_PATHS ${LOCATION})
 endforeach()
@@ -175,51 +169,10 @@ add_executable(openstudio
 
 set_source_files_properties("${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap.cxx" PROPERTIES COMPILE_FLAGS "-DRUBY_EMBEDDED" )
 
-set(ENCODING_LIB "")
-set(TRANSLATION_LIB "")
-if( UNIX )
-  set(ENCODING_LIB "${RUBY_SOURCE_DIR}/enc/libenc.a")
-  set(TRANSLATION_LIB "${RUBY_SOURCE_DIR}/enc/libtrans.a")
-else()
-  target_link_libraries(openstudio wsock32 ws2_32 Iphlpapi Dbghelp Shlwapi)
-  set(ENCODING_LIB optimized "${RUBY_SOURCE_DIR}/enc/libenc.lib" debug "${RUBY_SOURCE_DIR_DEBUG}/enc/libenc.lib")
-  set(TRANSLATION_LIB optimized "${RUBY_SOURCE_DIR}/enc/libtrans.lib" debug "${RUBY_SOURCE_DIR_DEBUG}/enc/libtrans.lib")
-endif()
-
 add_definitions(-DRUBY_EXTCONF_H="osruby_config.h")
-
-# TODO: use finder or something better
-if( WIN32 )
-  set(OTHER_EXT_LIBS optimized 
-    "${RUBY_SOURCE_DIR}/ext/json/generator/generator.lib" 
-    "${RUBY_SOURCE_DIR}/ext/json/parser/parser.lib"
-    "${RUBY_SOURCE_DIR}/ext/digest/md5/md5.lib"
-    "${RUBY_SOURCE_DIR}/ext/digest/rmd160/rmd160.lib"
-    "${RUBY_SOURCE_DIR}/ext/digest/sha1/sha1.lib"
-    "${RUBY_SOURCE_DIR}/ext/digest/sha2/sha2.lib"
-    debug
-    "${RUBY_SOURCE_DIR_DEBUG}/ext/json/generator/generator.lib" 
-    "${RUBY_SOURCE_DIR_DEBUG}/ext/json/parser/parser.lib"
-    "${RUBY_SOURCE_DIR_DEBUG}/ext/digest/md5/md5.lib"
-    "${RUBY_SOURCE_DIR_DEBUG}/ext/digest/rmd160/rmd160.lib"
-    "${RUBY_SOURCE_DIR_DEBUG}/ext/digest/sha1/sha1.lib"
-    "${RUBY_SOURCE_DIR_DEBUG}/ext/digest/sha2/sha2.lib")
-else()
-  set(OTHER_EXT_LIBS 
-    "${RUBY_SOURCE_DIR}/ext/json/generator/generator.a" 
-    "${RUBY_SOURCE_DIR}/ext/json/parser/parser.a"
-    #"${RUBY_SOURCE_DIR}/ext/rbconfig/sizeof/sizeof.a"
-    "${RUBY_SOURCE_DIR}/ext/digest/md5/md5.a"
-    "${RUBY_SOURCE_DIR}/ext/digest/rmd160/rmd160.a"
-    "${RUBY_SOURCE_DIR}/ext/digest/sha1/sha1.a"
-    "${RUBY_SOURCE_DIR}/ext/digest/sha2/sha2.a")
-endif()
 
 target_link_libraries(openstudio 
  ${EXTENSION_LIBS} 
- ${OTHER_EXT_LIBS}
- ${ENCODING_LIB}
- ${TRANSLATION_LIB}
  ruby_OpenStudioAirflow
  ruby_OpenStudioModelCore
  ruby_OpenStudioModelSimulation
@@ -255,9 +208,10 @@ target_link_libraries(openstudio
 )
 
 target_link_libraries(openstudio
-	openstudio_utilities
-  	${Boost_LIBRARIES}
-  	${QT_LIBS}
+  openstudio_utilities
+  ${Boost_LIBRARIES}
+  ${QT_LIBS}
+  init_openstudio
 )
 
 if (UNIX AND NOT APPLE)
