@@ -57,7 +57,7 @@ class MODEL_API EnergyManagementSystemProgramCallingManager : public ModelObject
 
   boost::optional<std::string> getProgram(int index) const;
 
-  boost::optional<std::vector<int>> nullPrograms() const;
+  std::vector<int> nullPrograms() const;
 
   // TODO: Handle this object's extensible fields.
 
@@ -78,6 +78,8 @@ class MODEL_API EnergyManagementSystemProgramCallingManager : public ModelObject
   bool setProgram(const std::string& program, int index);
 
   bool setPrograms(const std::vector<std::string>& programs);
+
+  bool removeNullPrograms();
 
 
   // TODO: Handle this object's extensible fields.
