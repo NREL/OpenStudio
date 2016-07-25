@@ -130,13 +130,19 @@ namespace detail {
     return result;
   }
 
-  boost::optional<std::vector<int>> EnergyManagementSystemProgramCallingManager_Impl::nullPrograms() const {
+  std::vector<int> EnergyManagementSystemProgramCallingManager_Impl::nullPrograms() const {
     //return getString(OS_EnergyManagementSystem_ProgramCallingManagerFields::EnergyPlusModelCallingPoint, true);
-    //TODO return vector of program names of type string
+    //TODO return vector of indices of null programs in the program vector
     std::vector<int> result;
     return result;
   }
 
+  bool EnergyManagementSystemProgramCallingManager_Impl::removeNullPrograms() {
+    //bool result = setString(OS_EnergyManagementSystem_ProgramCallingManagerFields::EnergyPlusModelCallingPoint, callingPoint);
+    //TODO remove any null entries in the vector of programs
+    bool result = true;
+    return result;
+  }
 } // detail
 
 EnergyManagementSystemProgramCallingManager::EnergyManagementSystemProgramCallingManager(const Model& model)
@@ -196,8 +202,12 @@ bool EnergyManagementSystemProgramCallingManager::setPrograms(const std::vector<
   return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->setPrograms(programs);
 }
 
-boost::optional<std::vector<int>> EnergyManagementSystemProgramCallingManager::nullPrograms() {
+std::vector<int> EnergyManagementSystemProgramCallingManager::nullPrograms() const {
   return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->nullPrograms();
+}
+
+bool EnergyManagementSystemProgramCallingManager::removeNullPrograms() {
+  return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->removeNullPrograms();
 }
 
 /// @cond
