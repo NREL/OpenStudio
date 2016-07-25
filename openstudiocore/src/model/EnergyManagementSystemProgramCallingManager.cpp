@@ -65,12 +65,12 @@ namespace detail {
     return EnergyManagementSystemProgramCallingManager::iddObjectType();
   }
 
-  boost::optional<std::string> EnergyManagementSystemProgramCallingManager_Impl::energyPlusModelCallingPoint() const {
+  boost::optional<std::string> EnergyManagementSystemProgramCallingManager_Impl::callingPoint() const {
     return getString(OS_EnergyManagementSystem_ProgramCallingManagerFields::EnergyPlusModelCallingPoint,true);
   }
 
-  bool EnergyManagementSystemProgramCallingManager_Impl::setEnergyPlusModelCallingPoint(const std::string& energyPlusModelCallingPoint) {
-    bool result = setString(OS_EnergyManagementSystem_ProgramCallingManagerFields::EnergyPlusModelCallingPoint, energyPlusModelCallingPoint);
+  bool EnergyManagementSystemProgramCallingManager_Impl::setCallingPoint(const std::string& callingPoint) {
+    bool result = setString(OS_EnergyManagementSystem_ProgramCallingManagerFields::EnergyPlusModelCallingPoint, callingPoint);
     return result;
   }
 
@@ -88,17 +88,17 @@ IddObjectType EnergyManagementSystemProgramCallingManager::iddObjectType() {
   return IddObjectType(IddObjectType::OS_EnergyManagementSystem_ProgramCallingManager);
 }
 
-std::vector<std::string> EnergyManagementSystemProgramCallingManager::energyPlusModelCallingPointValues() {
+std::vector<std::string> EnergyManagementSystemProgramCallingManager::validCallingPointValues() {
   return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
                         OS_EnergyManagementSystem_ProgramCallingManagerFields::EnergyPlusModelCallingPoint);
 }
 
-boost::optional<std::string> EnergyManagementSystemProgramCallingManager::energyPlusModelCallingPoint() const {
-  return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->energyPlusModelCallingPoint();
+boost::optional<std::string> EnergyManagementSystemProgramCallingManager::callingPoint() const {
+  return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->callingPoint();
 }
 
-bool EnergyManagementSystemProgramCallingManager::setEnergyPlusModelCallingPoint(const std::string& energyPlusModelCallingPoint) {
-  return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->setEnergyPlusModelCallingPoint(energyPlusModelCallingPoint);
+bool EnergyManagementSystemProgramCallingManager::setCallingPoint(const std::string& callingPoint) {
+  return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->setCallingPoint(callingPoint);
 }
 
 /// @cond
