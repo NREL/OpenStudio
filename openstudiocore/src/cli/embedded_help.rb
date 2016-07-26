@@ -23,7 +23,8 @@ module Kernel
   # these hardcoded platform paths are brain dead
   $LOAD_PATH << ':/ruby/2.0.0/x86_64-darwin13.4.0'
   $LOAD_PATH << ':/ruby/2.0.0/x64-mswin64_120'
-  $LOAD_PATH << ':/openstudio-workflow-1.0.0.alpha.0/lib'
+  $LOAD_PATH << ':/ruby/2.0.0/bundler/gems/openstudio-standards-eb7b32237fb4/openstudio-standards/lib'
+  $LOAD_PATH << ':/ruby/2.0.0/bundler/gems/OpenStudio-workflow-gem-c2f6ed3b5151/lib'
   $LOADED = []
 
   alias :original_require_relative :require_relative
@@ -54,7 +55,8 @@ module Kernel
       end
     end
 
-    if File.extname(path).empty? then
+    extname = File.extname(path)
+    if extname.empty? or extname != '.rb'
       rb_path = path + '.rb'
     end 
 
@@ -90,6 +92,11 @@ module Kernel
 
   def require_relative path
     absolute_path = File.dirname(caller_locations(1,1)[0].path) + '/' + path
+    if absolute_path.chars.first == ':'
+      absolute_path[0] = ''
+      absolute_path = File.expand_path absolute_path
+      absolute_path = ':' + absolute_path
+    end
     return require absolute_path
   end
 
