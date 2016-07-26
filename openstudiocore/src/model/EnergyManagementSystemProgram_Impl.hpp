@@ -66,7 +66,7 @@ namespace detail {
 
     boost::optional<std::vector<std::string>> lines() const;
 
-    boost::optional<std::vector<std::string>> referencedObjects() const;
+    boost::optional<std::vector<ModelObject>> referencedObjects() const;
 
     boost::optional<std::vector<ModelObject>> invalidReferencedObjects() const;
 

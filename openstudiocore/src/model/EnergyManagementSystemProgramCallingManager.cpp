@@ -76,17 +76,17 @@ namespace detail {
     return result;
   }
 
-  boost::optional<std::vector<std::string>> EnergyManagementSystemProgramCallingManager_Impl::programs() const {
+  boost::optional<std::vector<EnergyManagementSystemProgram>> EnergyManagementSystemProgramCallingManager_Impl::programs() const {
     //return getString(OS_EnergyManagementSystem_ProgramCallingManagerFields::EnergyPlusModelCallingPoint, true);
     //TODO return vector of program names of type string
-    std::vector<std::string> result;
+    boost::optional<std::vector<EnergyManagementSystemProgram>> result;
     return result;
   }
 
-  EnergyManagementSystemProgram EnergyManagementSystemProgramCallingManager_Impl::getProgram(int index) const {
+  boost::optional<EnergyManagementSystemProgram> EnergyManagementSystemProgramCallingManager_Impl::getProgram(int index) const {
     //return getString(OS_EnergyManagementSystem_ProgramCallingManagerFields::EnergyPlusModelCallingPoint, true);
     //TODO return program at input index 
-    EnergyManagementSystemProgram result;
+    boost::optional<EnergyManagementSystemProgram> result;
     //std::string index_string = std::to_string(index);
     return result;
   }
@@ -173,11 +173,11 @@ bool EnergyManagementSystemProgramCallingManager::setCallingPoint(const std::str
   return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->setCallingPoint(callingPoint);
 }
 
-boost::optional<std::vector<std::string>> EnergyManagementSystemProgramCallingManager::programs() const {
+boost::optional<std::vector<EnergyManagementSystemProgram>> EnergyManagementSystemProgramCallingManager::programs() const {
   return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->programs();
 }
 
-EnergyManagementSystemProgram EnergyManagementSystemProgramCallingManager::getProgram(int index) const {
+boost::optional<EnergyManagementSystemProgram> EnergyManagementSystemProgramCallingManager::getProgram(int index) const {
   return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->getProgram(index);
 }
 
