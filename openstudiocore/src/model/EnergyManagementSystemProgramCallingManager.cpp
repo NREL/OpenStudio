@@ -19,6 +19,8 @@
 
 #include "EnergyManagementSystemProgramCallingManager.hpp"
 #include "EnergyManagementSystemProgramCallingManager_Impl.hpp"
+#include "EnergyManagementSystemProgram.hpp"
+#include "EnergyManagementSystemProgram_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -102,7 +104,7 @@ namespace detail {
     return result;
   }
 
-  bool EnergyManagementSystemProgramCallingManager_Impl::insertProgram(int index) {
+  bool EnergyManagementSystemProgramCallingManager_Impl::insertProgram(const EnergyManagementSystemProgram& program, int index) {
     //bool result = setString(OS_EnergyManagementSystem_ProgramCallingManagerFields::EnergyPlusModelCallingPoint, callingPoint);
     //TODO erase program at index
     bool result = true;
@@ -186,8 +188,8 @@ bool EnergyManagementSystemProgramCallingManager::erasePrograms() {
   return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->erasePrograms();
 }
 
-bool EnergyManagementSystemProgramCallingManager::insertProgram(int index) {
-  return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->insertProgram(index);
+bool EnergyManagementSystemProgramCallingManager::insertProgram(const EnergyManagementSystemProgram& program, int index) {
+  return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->insertProgram(program, index);
 }
 
 bool EnergyManagementSystemProgramCallingManager::addProgram(const std::string& program) {

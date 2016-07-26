@@ -22,6 +22,7 @@
 
 #include <model/ModelAPI.hpp>
 #include "ModelObject_Impl.hpp"
+#include "EnergyManagementSystemProgram_Impl.hpp"
 
 namespace openstudio {
 namespace model {
@@ -80,7 +81,7 @@ namespace detail {
 
     bool erasePrograms();
 
-    bool insertProgram(int index);
+    bool insertProgram(const EnergyManagementSystemProgram& program, int index);
 
     bool addProgram(const std::string& program);
 
