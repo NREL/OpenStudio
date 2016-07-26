@@ -22,6 +22,7 @@
 
 #include <model/ModelAPI.hpp>
 #include "ModelObject.hpp"
+#include "EnergyManagementSystemProgram.hpp"
 
 namespace openstudio {
 namespace model {
@@ -71,7 +72,7 @@ class MODEL_API EnergyManagementSystemProgramCallingManager : public ModelObject
 
   bool erasePrograms();
 
-  bool insertProgram(int index);
+  bool insertProgram(const EnergyManagementSystemProgram& program, int index);
 
   bool addProgram(const std::string& program);
 
