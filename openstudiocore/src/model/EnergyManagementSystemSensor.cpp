@@ -74,7 +74,7 @@ namespace detail {
     return getString(OS_EnergyManagementSystem_SensorFields::OutputVariableorOutputMeterIndexKeyName, true);
   }
 
-  OutputVariable EnergyManagementSystemSensor_Impl::outputVariable() const {
+  boost::optional<OutputVariable> EnergyManagementSystemSensor_Impl::outputVariable() const {
     boost::optional<OutputVariable> value = optionalOutputVariable();
     if (!value) {
       LOG_AND_THROW(briefDescription() << " does not have an Output Variable or Output Meter attached.");
@@ -82,7 +82,7 @@ namespace detail {
     return value.get();
   }
 
-  OutputMeter EnergyManagementSystemSensor_Impl::outputMeter() const {
+  boost::optional<OutputMeter> EnergyManagementSystemSensor_Impl::outputMeter() const {
     boost::optional<OutputMeter> value = optionalOutputMeter();
     if (!value) {
       LOG_AND_THROW(briefDescription() << " does not have an Output Variable or Output Meter attached.");
@@ -90,9 +90,10 @@ namespace detail {
     return value.get();
   }
 
-  void EnergyManagementSystemSensor_Impl::setKeyName(const std::string& keyName) {
+  bool EnergyManagementSystemSensor_Impl::setKeyName(const std::string& keyName) {
     bool result = setString(OS_EnergyManagementSystem_SensorFields::OutputVariableorOutputMeterIndexKeyName, keyName);
     OS_ASSERT(result);
+    return result;
   }
 
   bool EnergyManagementSystemSensor_Impl::setOutputVariable(const OutputVariable& outputVariable) {
@@ -143,8 +144,8 @@ boost::optional<OutputMeter> EnergyManagementSystemSensor::outputMeter() const {
   return getImpl<detail::EnergyManagementSystemSensor_Impl>()->outputMeter();
 }
 
-void EnergyManagementSystemSensor::setKeyName(const std::string& keyName) {
-  getImpl<detail::EnergyManagementSystemSensor_Impl>()->setKeyName(keyName);
+bool EnergyManagementSystemSensor::setKeyName(const std::string& keyName) {
+  return getImpl<detail::EnergyManagementSystemSensor_Impl>()->setKeyName(keyName);
 }
 
 bool EnergyManagementSystemSensor::setOutputVariable(const OutputVariable& outputVariable) {
