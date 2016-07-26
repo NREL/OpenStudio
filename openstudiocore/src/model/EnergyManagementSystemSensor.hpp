@@ -22,6 +22,10 @@
 
 #include <model/ModelAPI.hpp>
 #include "ModelObject.hpp"
+#include "OutputVariable.hpp"
+#include "OutputVariable_Impl.hpp"
+#include "OutputMeter.hpp"
+#include "OutputMeter_Impl.hpp"
 
 namespace openstudio {
 namespace model {
@@ -54,14 +58,14 @@ class MODEL_API EnergyManagementSystemSensor : public ModelObject {
 
   boost::optional<std::string> keyName() const;
 
-  boost::optional<openstudio::model::OutputVariable> outputVariable() const;
-  boost::optional<openstudio::model::OutputMeter> outputMeter() const;
+  boost::optional<OutputVariable> outputVariable() const;
+  boost::optional<OutputMeter> outputMeter() const;
 
   //@}
   /** @name Setters */
   //@{
 
-  void setKeyName(const std::string& keyName);
+  bool setKeyName(const std::string& keyName);
 
   bool setOutputVariable(const OutputVariable& outputVariable);
   bool setOutputMeter(const OutputMeter& outputMeter);

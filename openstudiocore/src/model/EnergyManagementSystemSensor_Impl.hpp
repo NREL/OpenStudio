@@ -22,12 +22,17 @@
 
 #include <model/ModelAPI.hpp>
 #include "ModelObject_Impl.hpp"
+#include "OutputVariable.hpp"
+#include "OutputVariable_Impl.hpp"
+#include "OutputMeter.hpp"
+#include "OutputMeter_Impl.hpp"
 
 namespace openstudio {
 namespace model {
 
 // TODO: Check the following class names against object getters and setters.
-class OutputVariableMeter;
+class OutputVariable;
+class OutputMeter;
 
 namespace detail {
 
@@ -65,14 +70,14 @@ namespace detail {
 
     boost::optional<std::string> keyName() const;
 
-    OutputVariable outputVariable() const;
-    OutputMeter outputMeter() const;
+    boost::optional<OutputVariable> outputVariable() const;
+    boost::optional<OutputMeter> outputMeter() const;
 
     //@}
     /** @name Setters */
     //@{
 
-    void setKeyName(const std::string& keyName);
+    bool setKeyName(const std::string& keyName);
 
     bool setOutputVariable(const OutputVariable& outputVariable);
     bool setOutputMeter(const OutputMeter& outputMeter);
