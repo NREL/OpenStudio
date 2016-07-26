@@ -99,10 +99,10 @@ namespace detail {
     return result;
   }
 
-  boost::optional<std::vector<std::string>> EnergyManagementSystemProgram_Impl::referencedObjects() const {
+  boost::optional<std::vector<ModelObject>> EnergyManagementSystemProgram_Impl::referencedObjects() const {
     //return getString(OS_EnergyManagementSystem_ProgramFields::EnergyPlusModelCallingPoint, true);
     //TODO return vector of model objects that are referenced in program
-    std::vector<std::string> result;
+    std::vector<ModelObject> result;
     return result;
   }
 
@@ -147,7 +147,7 @@ bool EnergyManagementSystemProgram::setLines(const std::vector<std::string>& lin
   return getImpl<detail::EnergyManagementSystemProgram_Impl>()->setLines(lines);
 }
 
-boost::optional<std::vector<std::string>> EnergyManagementSystemProgram::referencedObjects() const {
+boost::optional<std::vector<ModelObject>> EnergyManagementSystemProgram::referencedObjects() const {
   return getImpl<detail::EnergyManagementSystemProgram_Impl>()->referencedObjects();
 }
 
