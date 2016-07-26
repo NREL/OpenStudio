@@ -65,7 +65,7 @@ namespace detail {
 
     boost::optional<std::vector<std::string>> programs() const;
 
-    boost::optional<std::string> getProgram(int index) const;
+    EnergyManagementSystemProgram getProgram(int index) const;
 
     std::vector<int> nullPrograms() const;
 
@@ -83,11 +83,11 @@ namespace detail {
 
     bool insertProgram(const EnergyManagementSystemProgram& program, int index);
 
-    bool addProgram(const std::string& program);
+    bool addProgram(const EnergyManagementSystemProgram& program);
 
-    bool setProgram(const std::string& program, int index);
+    bool setProgram(const EnergyManagementSystemProgram& program, int index);
 
-    bool setPrograms(const std::vector<std::string>& programs);
+    bool setPrograms(const std::vector<const EnergyManagementSystemProgram>& programs);
 
     bool removeNullPrograms();
 

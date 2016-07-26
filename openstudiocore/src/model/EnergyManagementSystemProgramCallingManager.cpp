@@ -83,10 +83,11 @@ namespace detail {
     return result;
   }
 
-  boost::optional<std::string> EnergyManagementSystemProgramCallingManager_Impl::getProgram(int index) const {
+  EnergyManagementSystemProgram EnergyManagementSystemProgramCallingManager_Impl::getProgram(int index) const {
     //return getString(OS_EnergyManagementSystem_ProgramCallingManagerFields::EnergyPlusModelCallingPoint, true);
-    //TODO return string of program at input index 
-    std::string result = std::to_string(index);
+    //TODO return program at input index 
+    EnergyManagementSystemProgram result;
+    //std::string index_string = std::to_string(index);
     return result;
   }
 
@@ -111,21 +112,21 @@ namespace detail {
     return result;
   }
 
-  bool EnergyManagementSystemProgramCallingManager_Impl::addProgram(const std::string& program) {
+  bool EnergyManagementSystemProgramCallingManager_Impl::addProgram(const EnergyManagementSystemProgram& program) {
     //bool result = setString(OS_EnergyManagementSystem_ProgramCallingManagerFields::EnergyPlusModelCallingPoint, callingPoint);
     //TODO add program to end of vector of programs
     bool result = true;
     return result;
   }
 
-  bool EnergyManagementSystemProgramCallingManager_Impl::setProgram(const std::string& program, int index) {
+  bool EnergyManagementSystemProgramCallingManager_Impl::setProgram(const EnergyManagementSystemProgram& program, int index) {
     //bool result = setString(OS_EnergyManagementSystem_ProgramCallingManagerFields::EnergyPlusModelCallingPoint, callingPoint);
     //TODO add program to end of vector of programs
     bool result = true;
     return result;
   }
 
-  bool EnergyManagementSystemProgramCallingManager_Impl::setPrograms(const std::vector<std::string>& programs) {
+  bool EnergyManagementSystemProgramCallingManager_Impl::setPrograms(const std::vector<const EnergyManagementSystemProgram>& programs) {
     //bool result = setString(OS_EnergyManagementSystem_ProgramCallingManagerFields::EnergyPlusModelCallingPoint, callingPoint);
     //TODO add programs to end of vector of programs
     bool result = true;
@@ -176,7 +177,7 @@ boost::optional<std::vector<std::string>> EnergyManagementSystemProgramCallingMa
   return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->programs();
 }
 
-boost::optional<std::string> EnergyManagementSystemProgramCallingManager::getProgram(int index) const {
+EnergyManagementSystemProgram EnergyManagementSystemProgramCallingManager::getProgram(int index) const {
   return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->getProgram(index);
 }
 
@@ -192,15 +193,15 @@ bool EnergyManagementSystemProgramCallingManager::insertProgram(const EnergyMana
   return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->insertProgram(program, index);
 }
 
-bool EnergyManagementSystemProgramCallingManager::addProgram(const std::string& program) {
+bool EnergyManagementSystemProgramCallingManager::addProgram(const EnergyManagementSystemProgram& program) {
   return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->addProgram(program);
 }
 
-bool EnergyManagementSystemProgramCallingManager::setProgram(const std::string& program, int index) {
+bool EnergyManagementSystemProgramCallingManager::setProgram(const EnergyManagementSystemProgram& program, int index) {
   return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->setProgram(program, index);
 }
 
-bool EnergyManagementSystemProgramCallingManager::setPrograms(const std::vector<std::string>& programs) {
+bool EnergyManagementSystemProgramCallingManager::setPrograms(const std::vector<const EnergyManagementSystemProgram>& programs) {
   return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->setPrograms(programs);
 }
 
