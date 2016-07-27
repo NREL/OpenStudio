@@ -65,10 +65,11 @@ namespace detail {
   }
 
   boost::optional<std::string> EnergyManagementSystemProgram_Impl::body() const {
-    //return getString(OS_EnergyManagementSystem_ProgramFields::EnergyPlusModelCallingPoint, true);
-    //TODO return body of program
-    std::string result;
-    return result;
+    //TODO return program body as string
+    //Doesnt there need to be a loop here?
+    boost::optional<std::string> value = getString(OS_EnergyManagementSystem_ProgramExtensibleFields::ProgramLine, true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
   bool EnergyManagementSystemProgram_Impl::setBody(const std::string& body) {
