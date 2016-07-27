@@ -77,9 +77,12 @@ namespace detail {
   }
 
   std::vector<EnergyManagementSystemProgram> EnergyManagementSystemProgramCallingManager_Impl::programs() const {
-    //return getString(OS_EnergyManagementSystem_ProgramCallingManagerFields::EnergyPlusModelCallingPoint, true);
-    //TODO return vector of program names of type string
+    //TODO return vector of programs
+    //TODO loop through programs?
     std::vector<EnergyManagementSystemProgram> result;
+    EnergyManagementSystemProgram program = this->getTarget(OS_EnergyManagementSystem_ProgramCallingManagerExtensibleFields::ProgramName)->cast<EnergyManagementSystemProgram>();
+    result.push_back(program);
+    
     return result;
   }
 
