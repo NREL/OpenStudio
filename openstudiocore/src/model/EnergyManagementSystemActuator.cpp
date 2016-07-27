@@ -70,11 +70,6 @@ namespace detail {
   ModelObject EnergyManagementSystemActuator_Impl::actuatedComponent() const {
     
     return this->getTarget(OS_EnergyManagementSystem_ActuatorFields::ActuatedComponentName)->cast<ModelObject>();
-    //boost::optional<ModelObject> result;
-    //result = this->actuatedComponentName();
-    //OS_ASSERT(result);
-    //return result.get();
-    //return OS_EnergyManagementSystem_ActuatorFields::ActuatedComponentName();
   }
 
   std::string EnergyManagementSystemActuator_Impl::actuatedComponentControlType() const {
@@ -99,10 +94,6 @@ EnergyManagementSystemActuator::EnergyManagementSystemActuator(const ModelObject
   : ModelObject(EnergyManagementSystemActuator::iddObjectType(), modelObject.model())
 {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemActuator_Impl>());
-
-  // TODO: Appropriately handle the following required object-list fields.
-  // setActuatedComponentName();
-  // setActuatedComponentControlType();
 }
 
 IddObjectType EnergyManagementSystemActuator::iddObjectType() {
