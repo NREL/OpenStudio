@@ -63,7 +63,7 @@ namespace detail {
 
     boost::optional<std::string> callingPoint() const;
 
-    boost::optional<std::vector<EnergyManagementSystemProgram>> programs() const;
+    std::vector<EnergyManagementSystemProgram> programs() const;
 
     boost::optional<EnergyManagementSystemProgram> getProgram(int index) const;
 
