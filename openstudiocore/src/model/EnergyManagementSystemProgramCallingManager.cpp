@@ -83,7 +83,7 @@ namespace detail {
     return result;
   }
 
-  boost::optional<EnergyManagementSystemProgram> EnergyManagementSystemProgramCallingManager_Impl::getProgram(int index) const {
+  boost::optional<EnergyManagementSystemProgram> EnergyManagementSystemProgramCallingManager_Impl::getProgram(unsigned index) const {
     //return getString(OS_EnergyManagementSystem_ProgramCallingManagerFields::EnergyPlusModelCallingPoint, true);
     //TODO return program at input index 
     boost::optional<EnergyManagementSystemProgram> result;
@@ -91,7 +91,7 @@ namespace detail {
     return result;
   }
 
-  bool EnergyManagementSystemProgramCallingManager_Impl::eraseProgram(int index) {
+  bool EnergyManagementSystemProgramCallingManager_Impl::eraseProgram(unsigned index) {
     //bool result = setString(OS_EnergyManagementSystem_ProgramCallingManagerFields::EnergyPlusModelCallingPoint, callingPoint);
     //TODO erase program at index
     bool result = true;
@@ -105,7 +105,7 @@ namespace detail {
     return result;
   }
 
-  bool EnergyManagementSystemProgramCallingManager_Impl::insertProgram(const EnergyManagementSystemProgram& program, int index) {
+  bool EnergyManagementSystemProgramCallingManager_Impl::insertProgram(const EnergyManagementSystemProgram& program, unsigned index) {
     //bool result = setString(OS_EnergyManagementSystem_ProgramCallingManagerFields::EnergyPlusModelCallingPoint, callingPoint);
     //TODO erase program at index
     bool result = true;
@@ -119,7 +119,7 @@ namespace detail {
     return result;
   }
 
-  bool EnergyManagementSystemProgramCallingManager_Impl::setProgram(const EnergyManagementSystemProgram& program, int index) {
+  bool EnergyManagementSystemProgramCallingManager_Impl::setProgram(const EnergyManagementSystemProgram& program, unsigned index) {
     //bool result = setString(OS_EnergyManagementSystem_ProgramCallingManagerFields::EnergyPlusModelCallingPoint, callingPoint);
     //TODO add program to end of vector of programs
     bool result = true;
@@ -133,10 +133,10 @@ namespace detail {
     return result;
   }
 
-  std::vector<int> EnergyManagementSystemProgramCallingManager_Impl::nullPrograms() const {
+  std::vector<unsigned> EnergyManagementSystemProgramCallingManager_Impl::nullPrograms() const {
     //return getString(OS_EnergyManagementSystem_ProgramCallingManagerFields::EnergyPlusModelCallingPoint, true);
     //TODO return vector of indices of null programs in the program vector
-    std::vector<int> result;
+    std::vector<unsigned> result;
     return result;
   }
 
@@ -177,11 +177,11 @@ std::vector<EnergyManagementSystemProgram> EnergyManagementSystemProgramCallingM
   return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->programs();
 }
 
-boost::optional<EnergyManagementSystemProgram> EnergyManagementSystemProgramCallingManager::getProgram(int index) const {
+boost::optional<EnergyManagementSystemProgram> EnergyManagementSystemProgramCallingManager::getProgram(unsigned index) const {
   return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->getProgram(index);
 }
 
-bool EnergyManagementSystemProgramCallingManager::eraseProgram(int index) {
+bool EnergyManagementSystemProgramCallingManager::eraseProgram(unsigned index) {
   return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->eraseProgram(index);
 }
 
@@ -189,7 +189,7 @@ bool EnergyManagementSystemProgramCallingManager::erasePrograms() {
   return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->erasePrograms();
 }
 
-bool EnergyManagementSystemProgramCallingManager::insertProgram(const EnergyManagementSystemProgram& program, int index) {
+bool EnergyManagementSystemProgramCallingManager::insertProgram(const EnergyManagementSystemProgram& program, unsigned index) {
   return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->insertProgram(program, index);
 }
 
@@ -197,7 +197,7 @@ bool EnergyManagementSystemProgramCallingManager::addProgram(const EnergyManagem
   return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->addProgram(program);
 }
 
-bool EnergyManagementSystemProgramCallingManager::setProgram(const EnergyManagementSystemProgram& program, int index) {
+bool EnergyManagementSystemProgramCallingManager::setProgram(const EnergyManagementSystemProgram& program, unsigned index) {
   return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->setProgram(program, index);
 }
 
@@ -205,7 +205,7 @@ bool EnergyManagementSystemProgramCallingManager::setPrograms(const std::vector<
   return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->setPrograms(programs);
 }
 
-std::vector<int> EnergyManagementSystemProgramCallingManager::nullPrograms() const {
+std::vector<unsigned> EnergyManagementSystemProgramCallingManager::nullPrograms() const {
   return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->nullPrograms();
 }
 

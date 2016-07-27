@@ -65,9 +65,9 @@ namespace detail {
 
     std::vector<EnergyManagementSystemProgram> programs() const;
 
-    boost::optional<EnergyManagementSystemProgram> getProgram(int index) const;
+    boost::optional<EnergyManagementSystemProgram> getProgram(unsigned index) const;
 
-    std::vector<int> nullPrograms() const;
+    std::vector<unsigned> nullPrograms() const;
 
     // TODO: Handle this object's extensible fields.
 
@@ -77,15 +77,15 @@ namespace detail {
 
     bool setCallingPoint(const std::string& callingPoint);
 
-    bool eraseProgram(int index);
+    bool eraseProgram(unsigned index);
 
     bool erasePrograms();
 
-    bool insertProgram(const EnergyManagementSystemProgram& program, int index);
+    bool insertProgram(const EnergyManagementSystemProgram& program, unsigned index);
 
     bool addProgram(const EnergyManagementSystemProgram& program);
 
-    bool setProgram(const EnergyManagementSystemProgram& program, int index);
+    bool setProgram(const EnergyManagementSystemProgram& program, unsigned index);
 
     bool setPrograms(const std::vector<const EnergyManagementSystemProgram>& programs);
 
