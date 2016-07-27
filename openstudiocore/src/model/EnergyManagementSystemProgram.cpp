@@ -25,6 +25,8 @@
 
 #include "../utilities/core/Assert.hpp"
 
+#include "ModelExtensibleGroup.hpp"
+
 namespace openstudio {
 namespace model {
 
@@ -66,10 +68,21 @@ namespace detail {
 
   boost::optional<std::string> EnergyManagementSystemProgram_Impl::body() const {
     //TODO return program body as string
-    //Doesnt there need to be a loop here?
-    boost::optional<std::string> value = getString(OS_EnergyManagementSystem_ProgramExtensibleFields::ProgramLine, true);
-    OS_ASSERT(value);
-    return value.get();
+    //Doesn't there need to be a loop here?
+    //boost::optional<std::string> value = getString(OS_EnergyManagementSystem_ProgramExtensibleFields::ProgramLine, true);
+    //OS_ASSERT(value);
+    //return value.get();
+    // loop through extensible groups
+    std::string body;
+    auto groups = extensibleGroups();
+    for (auto group = groups.begin(); group != groups.end(); ++group) {
+      const auto & line = group->getString(OS_EnergyManagementSystem_ProgramExtensibleFields::ProgramLine, true);
+      OS_ASSERT(line);
+      body += line.get();
+    }
+
+    return body;
+
   }
 
   bool EnergyManagementSystemProgram_Impl::setBody(const std::string& body) {
