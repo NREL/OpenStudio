@@ -124,7 +124,6 @@ EnergyManagementSystemSensor::EnergyManagementSystemSensor(const Model& model)
   // TODO: Appropriately handle the following required object-list fields.
   //     OS_EnergyManagementSystem_SensorFields::OutputVariableorOutputMeterName
   bool ok = true;
-  // ok = setOutputVariableorOutputMeter();
   OS_ASSERT(ok);
 }
 
