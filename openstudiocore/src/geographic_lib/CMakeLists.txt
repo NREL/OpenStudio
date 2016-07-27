@@ -487,132 +487,132 @@ if (EXISTS ${PROJECT_SOURCE_DIR}/tests/CMakeLists.txt)
   add_subdirectory (tests)
 endif ()
 
-# Packaging support; we deal with
-# (1) a source distribution: cmake make a tar.gz file and the zip file
-# is created from this.  Only the maintainer can do this, because of
-# the need to generate additional documentation files.
-# (2) a binary distribution: code is included for Linux, Apple, and
-# Windows, but only the Windows distribution has been exercised.
-
-# Need to ensure that system dlls get included in a binary distribution
-if (NOT DEFINED CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_NO_WARNINGS)
-  # Visual Studio Express does include redistributable components so
-  # squelch the warning.
-  set (CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_NO_WARNINGS ON)
-endif ()
-set (CMAKE_INSTALL_DEBUG_LIBRARIES ON)
-include (InstallRequiredSystemLibraries)
-
-# The configuration of CPack is via variable that need to be set before
-# the include (CPack).
-set (CPACK_PACKAGE_CONTACT charles@karney.com)
-set (CPACK_PACKAGE_VENDOR "GeographicLib")
-set (CPACK_PACKAGE_DESCRIPTION_SUMMARY
-  "GeographicLib library, utilities, and documentation")
-# The list of files to be excluded from the source distribution.
-set (CPACK_SOURCE_IGNORE_FILES
-  "#"
-  "~\$"
-  "/\\\\.git"
-  "${PROJECT_SOURCE_DIR}/BUILD"
-  "${PROJECT_SOURCE_DIR}/(tests|testdata|cgi-bin|.*\\\\.cache)/"
-  "${PROJECT_SOURCE_DIR}/(distrib|.*-distrib|.*-installer|geodesic-papers)/"
-  "${PROJECT_SOURCE_DIR}/[^/]*\\\\.(html|kmz|pdf)\$"
-  "${PROJECT_SOURCE_DIR}/(autogen|biblio)\\\\.sh\$"
-  "${PROJECT_SOURCE_DIR}/(geodesic-biblio.txt|makefile-admin|[^/]*\\\\.png)\$"
-  "${PROJECT_SOURCE_DIR}/matlab/.*blurb.txt\$" )
-set (CPACK_SOURCE_GENERATOR TGZ)
-
-set (CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/LICENSE.txt)
-set (CPACK_PACKAGE_INSTALL_DIRECTORY "${PROJECT_NAME}-${PROJECT_VERSION}")
-set (CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}")
-
-if (WIN32)
-  # The Windows binary packager is NSIS.  Set the necessary variables
-  # for this.
-  set (CPACK_NSIS_CONTACT "charles@karney.com")
-  set (CPACK_NSIS_URL_INFO_ABOUT "http://geographiclib.sf.net")
-  set (CPACK_NSIS_HELP_LINK "mailto:charles@karney.com")
-  if (CMAKE_SIZEOF_VOID_P EQUAL 8)
-    # Hardcode the prefix for Visual Studio 11
-    set (CPACK_NSIS_INSTALL_ROOT "C:\\\\pkg-vc11-x64")
-    set (CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}-win64")
-    set (CPACK_NSIS_PACKAGE_NAME "${PROJECT_NAME} x64 ${PROJECT_VERSION}")
-    set (CPACK_PACKAGE_INSTALL_REGISTRY_KEY
-      "${PROJECT_NAME}-x64-${PROJECT_VERSION}")
-  else ()
-    # Hardcode the prefix for Visual Studio 11
-    set (CPACK_NSIS_INSTALL_ROOT "C:\\\\pkg-vc11")
-    set (CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}-win32")
-    set (CPACK_NSIS_PACKAGE_NAME "${PROJECT_NAME} ${PROJECT_VERSION}")
-    set (CPACK_PACKAGE_INSTALL_REGISTRY_KEY
-      "${PROJECT_NAME}-${PROJECT_VERSION}")
-  endif ()
-  set (CPACK_NSIS_DISPLAY_NAME ${CPACK_NSIS_PACKAGE_NAME})
-  set (CPACK_NSIS_MENU_LINKS
-    "http://geographiclib.sf.net/${PROJECT_VERSION}/index.html"
-    "Library documentation"
-    "http://geographiclib.sf.net/${PROJECT_VERSION}/utilities.html"
-    "Utilities documentation"
-    "http://geographiclib.sf.net" "GeographicLib home page"
-    "https://sf.net/projects/geographiclib/" "Main project page")
-  set (CPACK_NSIS_MODIFY_PATH ON)
-elseif (APPLE)
-  # Not tested
-  set (CPACK_GENERATOR Bundle)
-  set (CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}-darwin")
-else ()
-  # Not tested
-  set (CPACK_GENERATOR TGZ)
-endif ()
-
-include (CPack)
-
-# Another maintainer-specific target is building the source distribution
-# via the target dist.  This calls package_source to make a tar.gz file.
-# However this needs to be touched up to support the vanilla Makefiles
-# provided with GeographicLib.  This entails
-# (1) creating Makefile (which includes Makefile.mk);
-# (2) creating a bare-bones Config.h (with just the version information);
-# (3) making sure that make thinks the generated documentation files are
-# up-to-date.
-# Then a new tar.gz file and zip file are created.  To avoid potential
-# problems with directory permissions, tar and zip are told only to
-# archive the files.
-if (MAINTAINER)
-  add_custom_target (dist
-    COMMAND ${CMAKE_MAKE_PROGRAM} package_source
-    COMMAND
-      cd _CPack_Packages/Linux-Source/TGZ/${CPACK_SOURCE_PACKAGE_FILE_NAME} &&
-      echo include Makefile.mk > Makefile &&
-      sed -e "s/Unconfigured/${PROJECT_VERSION}/"
-      -e "s/MAJOR .*/MAJOR ${CPACK_PACKAGE_VERSION_MAJOR}/"
-      -e "s/MINOR .*/MINOR ${CPACK_PACKAGE_VERSION_MINOR}/"
-      -e "s/PATCH .*/PATCH ${CPACK_PACKAGE_VERSION_PATCH}/"
-      include/GeographicLib/Config.h > include/GeographicLib/Config.h.new &&
-      mv include/GeographicLib/Config.h.new include/GeographicLib/Config.h
-    COMMAND
-      cd _CPack_Packages/Linux-Source/TGZ/${CPACK_SOURCE_PACKAGE_FILE_NAME} &&
-      touch man/[A-Za-z]*.usage man/[A-Za-z]*.1 man/[A-Za-z]*.1.html &&
-      chmod -R g-w .
-    COMMAND
-      cd _CPack_Packages/Linux-Source/TGZ &&
-      find ${CPACK_SOURCE_PACKAGE_FILE_NAME} -type f |
-      tar cfzT ${CMAKE_BINARY_DIR}/${CPACK_SOURCE_PACKAGE_FILE_NAME}.tar.gz -
-    COMMAND
-      rm -f ${CMAKE_BINARY_DIR}/${CPACK_SOURCE_PACKAGE_FILE_NAME}.zip &&
-      rsync -a --delete
-      _CPack_Packages/Linux-Source/TGZ/${CPACK_SOURCE_PACKAGE_FILE_NAME}
-      _CPack_Packages/Linux-Source/TGZ.DOS/ &&
-      cd _CPack_Packages/Linux-Source/TGZ.DOS &&
-      find . -type f |
-      egrep -v '/\(compile|config[^/]*|depcomp|install-sh|missing|[Mm]akefile[^/]*|[^/]*\\.\(ac|am|csproj|eps|kmz|m4|pdf|png|resx|settings|sh|sln|vcproj|vcxproj\)\)$$' |
-      xargs unix2dos -q -k &&
-      find ${CPACK_SOURCE_PACKAGE_FILE_NAME} -type f |
-      zip -q ${CMAKE_BINARY_DIR}/${CPACK_SOURCE_PACKAGE_FILE_NAME}.zip -@
-  )
-  add_dependencies (dist distrib-all)
-endif ()
+## Packaging support; we deal with
+## (1) a source distribution: cmake make a tar.gz file and the zip file
+## is created from this.  Only the maintainer can do this, because of
+## the need to generate additional documentation files.
+## (2) a binary distribution: code is included for Linux, Apple, and
+## Windows, but only the Windows distribution has been exercised.
+#
+## Need to ensure that system dlls get included in a binary distribution
+#if (NOT DEFINED CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_NO_WARNINGS)
+#  # Visual Studio Express does include redistributable components so
+#  # squelch the warning.
+#  set (CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_NO_WARNINGS ON)
+#endif ()
+#set (CMAKE_INSTALL_DEBUG_LIBRARIES ON)
+#include (InstallRequiredSystemLibraries)
+#
+## The configuration of CPack is via variable that need to be set before
+## the include (CPack).
+#set (CPACK_PACKAGE_CONTACT charles@karney.com)
+#set (CPACK_PACKAGE_VENDOR "GeographicLib")
+#set (CPACK_PACKAGE_DESCRIPTION_SUMMARY
+#  "GeographicLib library, utilities, and documentation")
+## The list of files to be excluded from the source distribution.
+#set (CPACK_SOURCE_IGNORE_FILES
+#  "#"
+#  "~\$"
+#  "/\\\\.git"
+#  "${PROJECT_SOURCE_DIR}/BUILD"
+#  "${PROJECT_SOURCE_DIR}/(tests|testdata|cgi-bin|.*\\\\.cache)/"
+#  "${PROJECT_SOURCE_DIR}/(distrib|.*-distrib|.*-installer|geodesic-papers)/"
+#  "${PROJECT_SOURCE_DIR}/[^/]*\\\\.(html|kmz|pdf)\$"
+#  "${PROJECT_SOURCE_DIR}/(autogen|biblio)\\\\.sh\$"
+#  "${PROJECT_SOURCE_DIR}/(geodesic-biblio.txt|makefile-admin|[^/]*\\\\.png)\$"
+#  "${PROJECT_SOURCE_DIR}/matlab/.*blurb.txt\$" )
+#set (CPACK_SOURCE_GENERATOR TGZ)
+#
+#set (CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/LICENSE.txt)
+#set (CPACK_PACKAGE_INSTALL_DIRECTORY "${PROJECT_NAME}-${PROJECT_VERSION}")
+#set (CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}")
+#
+#if (WIN32)
+#  # The Windows binary packager is NSIS.  Set the necessary variables
+#  # for this.
+#  set (CPACK_NSIS_CONTACT "charles@karney.com")
+#  set (CPACK_NSIS_URL_INFO_ABOUT "http://geographiclib.sf.net")
+#  set (CPACK_NSIS_HELP_LINK "mailto:charles@karney.com")
+#  if (CMAKE_SIZEOF_VOID_P EQUAL 8)
+#    # Hardcode the prefix for Visual Studio 11
+#    set (CPACK_NSIS_INSTALL_ROOT "C:\\\\pkg-vc11-x64")
+#    set (CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}-win64")
+#    set (CPACK_NSIS_PACKAGE_NAME "${PROJECT_NAME} x64 ${PROJECT_VERSION}")
+#    set (CPACK_PACKAGE_INSTALL_REGISTRY_KEY
+#      "${PROJECT_NAME}-x64-${PROJECT_VERSION}")
+#  else ()
+#    # Hardcode the prefix for Visual Studio 11
+#    set (CPACK_NSIS_INSTALL_ROOT "C:\\\\pkg-vc11")
+#    set (CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}-win32")
+#    set (CPACK_NSIS_PACKAGE_NAME "${PROJECT_NAME} ${PROJECT_VERSION}")
+#    set (CPACK_PACKAGE_INSTALL_REGISTRY_KEY
+#      "${PROJECT_NAME}-${PROJECT_VERSION}")
+#  endif ()
+#  set (CPACK_NSIS_DISPLAY_NAME ${CPACK_NSIS_PACKAGE_NAME})
+#  set (CPACK_NSIS_MENU_LINKS
+#    "http://geographiclib.sf.net/${PROJECT_VERSION}/index.html"
+#    "Library documentation"
+#    "http://geographiclib.sf.net/${PROJECT_VERSION}/utilities.html"
+#    "Utilities documentation"
+#    "http://geographiclib.sf.net" "GeographicLib home page"
+#    "https://sf.net/projects/geographiclib/" "Main project page")
+#  set (CPACK_NSIS_MODIFY_PATH ON)
+#elseif (APPLE)
+#  # Not tested
+#  set (CPACK_GENERATOR Bundle)
+#  set (CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}-darwin")
+#else ()
+#  # Not tested
+#  set (CPACK_GENERATOR TGZ)
+#endif ()
+#
+#include (CPack)
+#
+## Another maintainer-specific target is building the source distribution
+## via the target dist.  This calls package_source to make a tar.gz file.
+## However this needs to be touched up to support the vanilla Makefiles
+## provided with GeographicLib.  This entails
+## (1) creating Makefile (which includes Makefile.mk);
+## (2) creating a bare-bones Config.h (with just the version information);
+## (3) making sure that make thinks the generated documentation files are
+## up-to-date.
+## Then a new tar.gz file and zip file are created.  To avoid potential
+## problems with directory permissions, tar and zip are told only to
+## archive the files.
+#if (MAINTAINER)
+#  add_custom_target (dist
+#    COMMAND ${CMAKE_MAKE_PROGRAM} package_source
+#    COMMAND
+#      cd _CPack_Packages/Linux-Source/TGZ/${CPACK_SOURCE_PACKAGE_FILE_NAME} &&
+#      echo include Makefile.mk > Makefile &&
+#      sed -e "s/Unconfigured/${PROJECT_VERSION}/"
+#      -e "s/MAJOR .*/MAJOR ${CPACK_PACKAGE_VERSION_MAJOR}/"
+#      -e "s/MINOR .*/MINOR ${CPACK_PACKAGE_VERSION_MINOR}/"
+#      -e "s/PATCH .*/PATCH ${CPACK_PACKAGE_VERSION_PATCH}/"
+#      include/GeographicLib/Config.h > include/GeographicLib/Config.h.new &&
+#      mv include/GeographicLib/Config.h.new include/GeographicLib/Config.h
+#    COMMAND
+#      cd _CPack_Packages/Linux-Source/TGZ/${CPACK_SOURCE_PACKAGE_FILE_NAME} &&
+#      touch man/[A-Za-z]*.usage man/[A-Za-z]*.1 man/[A-Za-z]*.1.html &&
+#      chmod -R g-w .
+#    COMMAND
+#      cd _CPack_Packages/Linux-Source/TGZ &&
+#      find ${CPACK_SOURCE_PACKAGE_FILE_NAME} -type f |
+#      tar cfzT ${CMAKE_BINARY_DIR}/${CPACK_SOURCE_PACKAGE_FILE_NAME}.tar.gz -
+#    COMMAND
+#      rm -f ${CMAKE_BINARY_DIR}/${CPACK_SOURCE_PACKAGE_FILE_NAME}.zip &&
+#      rsync -a --delete
+#      _CPack_Packages/Linux-Source/TGZ/${CPACK_SOURCE_PACKAGE_FILE_NAME}
+#      _CPack_Packages/Linux-Source/TGZ.DOS/ &&
+#      cd _CPack_Packages/Linux-Source/TGZ.DOS &&
+#      find . -type f |
+#      egrep -v '/\(compile|config[^/]*|depcomp|install-sh|missing|[Mm]akefile[^/]*|[^/]*\\.\(ac|am|csproj|eps|kmz|m4|pdf|png|resx|settings|sh|sln|vcproj|vcxproj\)\)$$' |
+#      xargs unix2dos -q -k &&
+#      find ${CPACK_SOURCE_PACKAGE_FILE_NAME} -type f |
+#      zip -q ${CMAKE_BINARY_DIR}/${CPACK_SOURCE_PACKAGE_FILE_NAME}.zip -@
+#  )
+#  add_dependencies (dist distrib-all)
+#endif ()
 
 # Add a test target; the tests are in tools.
 enable_testing ()
