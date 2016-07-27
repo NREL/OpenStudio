@@ -33,6 +33,10 @@ module Kernel
   def require path
     rb_path = path
 
+    if path.include? 'openstudio/energyplus/find_energyplus'
+      return false
+    end
+
     jsonparser = 'json/ext/parser' 
     if path == jsonparser
       if $LOADED.include?(jsonparser) then
