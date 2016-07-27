@@ -1041,7 +1041,7 @@ if(BUILD_OS_APP)
   list(APPEND project_directories "qwt")
   #list(APPEND project_directories "gbxml")
   list(APPEND project_directories "bimserver")
-  list(APPEND project_directories "resultsviewer")
+  #list(APPEND project_directories "resultsviewer")
   list(APPEND project_directories "model_editor")
   list(APPEND project_directories "openstudio_lib")
   list(APPEND project_directories "openstudio_app")
@@ -1220,10 +1220,10 @@ if(QtCore_TYPE STREQUAL "SHARED_LIBRARY")
   list(APPEND all_lib_targets "qwt")
 endif()
 
-export(TARGETS
-  ${all_lib_targets}
-  FILE "${TARGETS_FILE}"
-)
+#export(TARGETS
+#  ${all_lib_targets}
+#  FILE "${TARGETS_FILE}"
+#)
 
 set(all_exe_targets
   GenerateIddFactory
@@ -1234,7 +1234,7 @@ set(all_exe_targets
 
 if(QtCore_TYPE STREQUAL "SHARED_LIBRARY")
   list(APPEND all_exe_targets "OpenStudio")
-  list(APPEND all_exe_targets "ResultsViewer")
+  #list(APPEND all_exe_targets "ResultsViewer")
 endif()
 
 if(UNIX AND NOT APPLE)
@@ -1314,3 +1314,6 @@ endif()
 #else()
 #  install(DIRECTORY "${ENERGYPLUS_DIR}" DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}" USE_SOURCE_PERMISSIONS)
 #endif()
+
+INCLUDE(CPack)
+

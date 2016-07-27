@@ -35,10 +35,10 @@ target_link_libraries(${target_name} ${${target_name}_depends})
 AddPCH(${target_name})
 
 #if(NOT APPLE)
-install(TARGETS ${target_name}
-  RUNTIME DESTINATION bin
-  LIBRARY DESTINATION lib
-)
+#install(TARGETS ${target_name}
+#  RUNTIME DESTINATION bin
+#  LIBRARY DESTINATION lib
+#)
 #endif()
 
 CREATE_SRC_GROUPS("${${target_name}_src}")

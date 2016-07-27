@@ -70,3 +70,5 @@ endif()
 
 target_link_libraries(openstudiorb init_openstudio)
 
+install(TARGETS openstudiorb DESTINATION bin)
+
