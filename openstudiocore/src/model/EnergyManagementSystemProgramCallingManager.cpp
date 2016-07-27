@@ -76,10 +76,10 @@ namespace detail {
     return result;
   }
 
-  boost::optional<std::vector<EnergyManagementSystemProgram>> EnergyManagementSystemProgramCallingManager_Impl::programs() const {
+  std::vector<EnergyManagementSystemProgram> EnergyManagementSystemProgramCallingManager_Impl::programs() const {
     //return getString(OS_EnergyManagementSystem_ProgramCallingManagerFields::EnergyPlusModelCallingPoint, true);
     //TODO return vector of program names of type string
-    boost::optional<std::vector<EnergyManagementSystemProgram>> result;
+    std::vector<EnergyManagementSystemProgram> result;
     return result;
   }
 
@@ -173,7 +173,7 @@ bool EnergyManagementSystemProgramCallingManager::setCallingPoint(const std::str
   return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->setCallingPoint(callingPoint);
 }
 
-boost::optional<std::vector<EnergyManagementSystemProgram>> EnergyManagementSystemProgramCallingManager::programs() const {
+std::vector<EnergyManagementSystemProgram> EnergyManagementSystemProgramCallingManager::programs() const {
   return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->programs();
 }
 
