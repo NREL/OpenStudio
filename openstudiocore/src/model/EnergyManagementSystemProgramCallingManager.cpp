@@ -28,6 +28,8 @@
 
 #include "../utilities/core/Assert.hpp"
 
+#include "ModelExtensibleGroup.hpp"
+
 namespace openstudio {
 namespace model {
 
@@ -79,10 +81,20 @@ namespace detail {
   std::vector<EnergyManagementSystemProgram> EnergyManagementSystemProgramCallingManager_Impl::programs() const {
     //TODO return vector of programs
     //TODO loop through programs?
+    //EnergyManagementSystemProgram program = this->getTarget(OS_EnergyManagementSystem_ProgramCallingManagerExtensibleFields::ProgramName)->cast<EnergyManagementSystemProgram>();
+
+    // loop through extensible groups
     std::vector<EnergyManagementSystemProgram> result;
-    EnergyManagementSystemProgram program = this->getTarget(OS_EnergyManagementSystem_ProgramCallingManagerExtensibleFields::ProgramName)->cast<EnergyManagementSystemProgram>();
-    result.push_back(program);
-    
+    auto groups = extensibleGroups();
+
+    for (const auto & elem : groups) {
+      WorkspaceExtensibleGroup group = elem.cast<WorkspaceExtensibleGroup>();
+      boost::optional<WorkspaceObject> wo = group.getTarget(OS_EnergyManagementSystem_ProgramCallingManagerExtensibleFields::ProgramName);
+      if (wo){
+        EnergyManagementSystemProgram program = wo->cast<EnergyManagementSystemProgram>();
+        result.push_back(program);
+      }  
+    }
     return result;
   }
 
