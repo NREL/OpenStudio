@@ -29,6 +29,8 @@
 #include "../model/Construction_Impl.hpp"
 #include "../model/ConstructionWithInternalSource.hpp"
 #include "../model/ConstructionWithInternalSource_Impl.hpp"
+#include "../model/WaterUseEquipment.hpp"
+#include "../model/WaterUseEquipment_Impl.hpp"
 #include "../model/RunPeriod.hpp"
 #include "../model/RunPeriod_Impl.hpp"
 #include "../model/RunPeriodControlSpecialDays.hpp"
@@ -191,6 +193,10 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
 
   // remove orphan loads
   for (SpaceLoad spaceLoad : model.getModelObjects<SpaceLoad>()){
+    if (spaceLoad.optionalCast<model::WaterUseEquipment>()){
+      // WaterUseEquipment is not required to be attached to a space
+      continue;
+    }
     if ((!spaceLoad.space()) && (!spaceLoad.spaceType())){
       LOG(Warn, spaceLoad.briefDescription() << " is not associated with a Space or SpaceType, it will not be translated.");
       spaceLoad.remove();
