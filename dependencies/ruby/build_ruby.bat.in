@@ -12,8 +12,13 @@ nmake libtrans
 nmake
 nmake install
 "${CMAKE_COMMAND}" -E copy_if_different "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-release/enc/encinit.c" "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/release/include/"
-for /R "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-release/" %%f in (*.lib) do (
-  "${CMAKE_COMMAND}" -E copy_if_different %%f "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/release/lib/"
+"${CMAKE_COMMAND}" -E make_directory "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/release/lib/ext/"
+for /R "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-release/ext/" %%f in (*.lib) do (
+  "${CMAKE_COMMAND}" -E copy_if_different %%f "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/release/lib/ext/"
+)
+"${CMAKE_COMMAND}" -E make_directory "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/release/lib/enc/"
+for /R "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-release/enc/" %%f in (*.lib) do (
+  "${CMAKE_COMMAND}" -E copy_if_different %%f "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/release/lib/enc/"
 )
 
 cd ..\Ruby-debug
@@ -24,6 +29,11 @@ nmake libtrans
 nmake
 nmake install
 "${CMAKE_COMMAND}" -E copy_if_different "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-debug/enc/encinit.c" "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/debug/include/"
-for /R "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-debug/" %%f in (*.lib) do (
-  "${CMAKE_COMMAND}" -E copy_if_different %%f "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/debug/lib/"
+"${CMAKE_COMMAND}" -E make_directory "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/debug/lib/ext/"
+for /R "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-debug/ext/" %%f in (*.lib) do (
+  "${CMAKE_COMMAND}" -E copy_if_different %%f "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/debug/lib/ext/"
+)
+"${CMAKE_COMMAND}" -E make_directory "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/debug/lib/enc/"
+for /R "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-debug/enc/" %%f in (*.lib) do (
+  "${CMAKE_COMMAND}" -E copy_if_different %%f "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/debug/lib/enc/"
 )

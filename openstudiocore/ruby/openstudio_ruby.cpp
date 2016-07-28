@@ -1,8 +1,8 @@
 #include "init_openstudio.hpp"
-#include <ruby.h>
+#include "RubyAPI.hpp"
 
 extern "C" {
-void Init_openstudio(void) {
+RUBY_API void Init_openstudio(void) {
 
   init_openstudio_internal();
 }

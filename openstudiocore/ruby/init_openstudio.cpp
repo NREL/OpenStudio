@@ -84,6 +84,7 @@ void init_openstudio_internal() {
   //Init_openstudiogbxml();
   //Init_openstudioairflow();
   Init_openstudioosversion();
+  rb_provide("openstudioversion");
   Init_openstudiomeasure();
   rb_provide("openstudiomeasure");
   //Init_openstudiomodeleditor();

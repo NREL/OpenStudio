@@ -4,12 +4,6 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
   # using GCC
   set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} --unresolved-symbols=ignore-all")
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
-  # using Intel C++
-  set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} --unresolved-symbols=ignore-all")
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-  # using Visual Studio C++
-  set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} /FORCE:UNRESOLVED")
 endif()
 
 include_directories(${RUBY_INCLUDE_DIRS} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR} )
@@ -66,7 +60,14 @@ set_target_properties(openstudiorb PROPERTIES PREFIX "")
 set_target_properties(openstudiorb PROPERTIES OUTPUT_NAME openstudio)
 if(APPLE)
   set_target_properties(openstudiorb PROPERTIES SUFFIX ".bundle" )
+else()
+  set_target_properties(openstudiorb PROPERTIES SUFFIX ".so" )
 endif()
 
 target_link_libraries(openstudiorb init_openstudio)
+
+if( WIN32 )
+  # fix this!
+  target_link_libraries(openstudiorb C:/Ruby200-x64/lib/libx64-msvcrt-ruby200.dll.a)
+endif()
 

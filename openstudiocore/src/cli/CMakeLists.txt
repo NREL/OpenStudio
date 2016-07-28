@@ -3,34 +3,6 @@ if (APPLE)
    find_library(COREFOUNDATION_LIBRARY CoreFoundation )
 endif (APPLE)
 
-if( UNIX )
-  file(READ "${RUBY_INSTALL_DIR}/include/encinit.c" ENCINIT_FILE_CONTENT)
-else()
-  file(READ "${RUBY_INSTALL_DIR}/include/encinit.c" ENCINIT_FILE_CONTENT)
-endif()
-
-string(REGEX MATCHALL "init_enc\\([a-zA-Z0-9_]*\\);" ENCINIT_MATCH "${ENCINIT_FILE_CONTENT}")
-set(ENC_INIT_DECLARATIONS "")
-set(ENC_INIT_CALLS "")
-foreach(MATCH ${ENCINIT_MATCH})
-  string(REPLACE "init_enc(" "" MATCH "${MATCH}")
-  string(REPLACE ")" "" MATCH "${MATCH}")
-  set(ENC_INIT_DECLARATIONS "${ENC_INIT_DECLARATIONS} void Init_${MATCH}();\\\n" )
-  set(ENC_INIT_CALLS "${ENC_INIT_CALLS} Init_${MATCH}();\\\n" )
-  set(ENC_INIT_CALLS "${ENC_INIT_CALLS} rb_provide(\"enc/${MATCH}.so\");\\\n" )
-endforeach()
-
-string(REGEX MATCHALL "init_trans\\([a-zA-Z0-9_]*\\);" TRANSINIT_MATCH "${ENCINIT_FILE_CONTENT}")
-set(TRANS_INIT_DECLARATIONS "")
-set(TRANS_INIT_CALLS "")
-foreach(MATCH ${TRANSINIT_MATCH})
-  string(REPLACE "init_trans(" "" MATCH "${MATCH}")
-  string(REPLACE ")" "" MATCH "${MATCH}")
-  set(TRANS_INIT_DECLARATIONS "${TRANS_INIT_DECLARATIONS} void Init_trans_${MATCH}();\\\n" )
-  set(TRANS_INIT_CALLS "${TRANS_INIT_CALLS} Init_trans_${MATCH}();\\\n" )
-  set(TRANS_INIT_CALLS "${TRANS_INIT_CALLS} rb_provide(\"enc/trans/${MATCH}.so\");\\\n" )
-endforeach()
-
 set(LIBS 
   bigdecimal
   continuation
@@ -64,11 +36,19 @@ set(EXTENSION_LIBS_LIST "")
 if( UNIX )
   file(GLOB EXTENSION_LIBS "${RUBY_INSTALL_DIR}/lib/*.a")
   set(EXTENSION_LIBS_LIST ${EXTENSION_LIBS})
+
+  file(GLOB ENC_LIBS "${RUBY_INSTALL_DIR}/enc/*.a")
+  set(ENC_LIBS_LIST ${ENC_LIBS})
 else()
-  file(GLOB EXTENSION_LIBS_RELEASE "${RUBY_INSTALL_DIR}/lib/*.lib")
-  file(GLOB EXTENSION_LIBS_DEBUG "${RUBY_INSTALL_DIR}/../debug/lib/*.lib")
+  file(GLOB EXTENSION_LIBS_RELEASE "${RUBY_INSTALL_DIR}/lib/ext/*.lib")
+  file(GLOB EXTENSION_LIBS_DEBUG "${RUBY_INSTALL_DIR}/../debug/lib/ext/*.lib")
   set(EXTENSION_LIBS optimized ${EXTENSION_LIBS_RELEASE} debug ${EXTENSION_LIBS_DEBUG})
   set(EXTENSION_LIBS_LIST ${EXTENSION_LIBS_RELEASE})
+
+  file(GLOB ENC_LIBS_RELEASE "${RUBY_INSTALL_DIR}/lib/enc/*.lib")
+  file(GLOB ENC_LIBS_DEBUG "${RUBY_INSTALL_DIR}/../debug/lib/enc/*.lib")
+  set(ENC_LIBS optimized ${ENC_LIBS_RELEASE} debug ${ENC_LIBS_DEBUG})
+  set(ENC_LIBS_LIST ${ENC_LIBS_RELEASE})
 endif()
 
 set(INIT_CALLS "")
@@ -173,6 +153,7 @@ add_definitions(-DRUBY_EXTCONF_H="osruby_config.h")
 
 target_link_libraries(openstudio 
  ${EXTENSION_LIBS} 
+ ${ENC_LIBS} 
  ruby_OpenStudioAirflow
  ruby_OpenStudioModelCore
  ruby_OpenStudioModelSimulation
