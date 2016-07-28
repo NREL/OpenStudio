@@ -32,6 +32,10 @@
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
+// Special case
+#include "../../model/GeneratorMicroTurbineHeatRecovery.hpp"
+#include "../../model/GeneratorMicroTurbine.hpp"
+
 using namespace openstudio::model;
 
 using namespace std;
@@ -65,6 +69,15 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantEquipmentOperationHe
       eg.setString(PlantEquipmentOperation_HeatingLoadExtensibleFields::RangeEquipmentListName,equipmentListName);
 
       for( auto component : equipment ) {
+        
+        // TODO: Find the right way to deal with this
+        // For now, "dirty" (?) fix for Generator:MicroTurbine
+        // @kbenne, FYI
+        if (boost::optional<GeneratorMicroTurbineHeatRecovery> mchp = component.optionalCast<GeneratorMicroTurbineHeatRecovery>())
+        {
+          component = mchp->generatorMicroTurbine();
+        }
+        
         auto eg2 = equipmentList.pushExtensibleGroup();
         auto idf_component = translateAndMapModelObject(component);
         OS_ASSERT(idf_component);
