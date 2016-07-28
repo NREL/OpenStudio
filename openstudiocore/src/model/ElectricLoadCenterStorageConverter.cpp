@@ -27,6 +27,8 @@
 #include "Curve_Impl.hpp"
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 #include "../../model/ScheduleTypeLimits.hpp"
 #include "../../model/ScheduleTypeRegistry.hpp"
 
@@ -212,21 +214,22 @@ namespace detail {
 
   // This method will automatically switch the PowerConversationEfficiencyMethod to "FunctionOfPower" and reset the Simple Fixed Efficiency field.
   bool ElectricLoadCenterStorageConverter_Impl::setEfficiencyFunctionofPowerCurve(const Curve& efficiencyFunctionofPowerCurve) {
-      // Switch the Method
-      bool result = setString(OS_ElectricLoadCenter_Storage_ConverterFields::PowerConversionEfficiencyMethod, "FunctionOfPower");
-      OS_ASSERT(result);
-      // Set the curve
-      result = setPointer(OS_ElectricLoadCenter_Storage_ConverterFields::EfficiencyFunctionofPowerCurveName, efficiencyFunctionofPowerCurve.handle());
-      OS_ASSERT(result);
-      // Reset the Simple Fixed Efficiency
-      result = setString(OS_ElectricLoadCenter_Storage_ConverterFields::SimpleFixedEfficiency, "");
-      OS_ASSERT(result);
-      return result;
+    // Switch the Method
+    bool result = setString(OS_ElectricLoadCenter_Storage_ConverterFields::PowerConversionEfficiencyMethod, "FunctionOfPower");
+    OS_ASSERT(result);
+    // Set the curve
+    result = setPointer(OS_ElectricLoadCenter_Storage_ConverterFields::EfficiencyFunctionofPowerCurveName, efficiencyFunctionofPowerCurve.handle());
+    OS_ASSERT(result);
+    // Reset the Simple Fixed Efficiency
+    result = setString(OS_ElectricLoadCenter_Storage_ConverterFields::SimpleFixedEfficiency, "");
+    OS_ASSERT(result);
+    return result;
   }
 
   bool ElectricLoadCenterStorageConverter_Impl::setAncillaryPowerConsumedInStandby(double ancillaryPowerConsumedInStandby) {
     bool result = setDouble(OS_ElectricLoadCenter_Storage_ConverterFields::AncillaryPowerConsumedInStandby, ancillaryPowerConsumedInStandby);
     OS_ASSERT(result);
+    return result;
   }
 
   void ElectricLoadCenterStorageConverter_Impl::resetAncillaryPowerConsumedInStandby() {
@@ -262,7 +265,7 @@ ElectricLoadCenterStorageConverter::ElectricLoadCenterStorageConverter(const Mod
   OS_ASSERT(getImpl<detail::ElectricLoadCenterStorageConverter_Impl>());
 
   // This is actually the E+ default
-  setSimpleFixedEfficiency(0.95)
+  setSimpleFixedEfficiency(0.95);
   
   // Already defaults to alwaysOnDiscreteSchedule
   //auto availableSchedule = model.alwaysOnDiscreteSchedule();
@@ -339,7 +342,7 @@ bool ElectricLoadCenterStorageConverter::setSimpleFixedEfficiency(double simpleF
 }
 
 bool ElectricLoadCenterStorageConverter::setDesignMaximumContinuousInputPower(double designMaximumContinuousInputPower) {
-  getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->setDesignMaximumContinuousInputPower(designMaximumContinuousInputPower);
+  return getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->setDesignMaximumContinuousInputPower(designMaximumContinuousInputPower);
 }
 
 bool ElectricLoadCenterStorageConverter::setEfficiencyFunctionofPowerCurve(const Curve& efficiencyFunctionofPowerCurve) {
@@ -347,7 +350,7 @@ bool ElectricLoadCenterStorageConverter::setEfficiencyFunctionofPowerCurve(const
 }
 
 bool ElectricLoadCenterStorageConverter::setAncillaryPowerConsumedInStandby(double ancillaryPowerConsumedInStandby) {
-  getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->setAncillaryPowerConsumedInStandby(ancillaryPowerConsumedInStandby);
+  return getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->setAncillaryPowerConsumedInStandby(ancillaryPowerConsumedInStandby);
 }
 
 void ElectricLoadCenterStorageConverter::resetAncillaryPowerConsumedInStandby() {

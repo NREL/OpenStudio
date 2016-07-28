@@ -664,8 +664,8 @@ namespace detail {
 
       } else if (stoOpScheme == "TrackChargeDischargeSchedules") {
         // Storage Converter Object Name
-        boost::optional<ElectricLoadCenterStorageConverter> storageConverter = storageConverter();
-        if (!storageConverter) {
+        boost::optional<ElectricLoadCenterStorageConverter> stoConverter = storageConverter();
+        if (!stoConverter) {
           result = false;
           LOG(Error, briefDescription() << ": You set the Storage Operation Scheme to " << stoOpScheme
             << " but you didn't specify the required 'Storage Converter Object Name'");
@@ -701,8 +701,8 @@ namespace detail {
 
       } else if (stoOpScheme == "FacilityDemandLeveling") {
         // Storage Converter Object Name
-        boost::optional<ElectricLoadCenterStorageConverter> storageConverter = storageConverter();
-        if (!storageConverter) {
+        boost::optional<ElectricLoadCenterStorageConverter> stoConverter = storageConverter();
+        if (!stoConverter) {
           result = false;
           LOG(Error, briefDescription() << ": You set the Storage Operation Scheme to " << stoOpScheme
             << " but you didn't specify the required 'Storage Converter Object Name'");

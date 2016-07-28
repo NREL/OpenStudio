@@ -20,7 +20,7 @@
 #ifndef MODEL_ELECTRICLOADCENTERSTORAGECONVERTER_HPP
 #define MODEL_ELECTRICLOADCENTERSTORAGECONVERTER_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "ParentObject.hpp"
 
 namespace openstudio {
@@ -99,17 +99,11 @@ class MODEL_API ElectricLoadCenterStorageConverter : public ParentObject {
 
   bool setSimpleFixedEfficiency(double simpleFixedEfficiency);
 
-  void resetSimpleFixedEfficiency();
-
-  void setDesignMaximumContinuousInputPower(double designMaximumContinuousInputPower);
-
-  void resetDesignMaximumContinuousInputPower();
+  bool setDesignMaximumContinuousInputPower(double designMaximumContinuousInputPower);
 
   bool setEfficiencyFunctionofPowerCurve(const Curve& efficiencyFunctionofPowerCurve);
 
-  void resetEfficiencyFunctionofPowerCurve();
-
-  void setAncillaryPowerConsumedInStandby(double ancillaryPowerConsumedInStandby);
+  bool setAncillaryPowerConsumedInStandby(double ancillaryPowerConsumedInStandby);
 
   void resetAncillaryPowerConsumedInStandby();
 

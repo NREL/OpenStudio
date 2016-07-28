@@ -20,7 +20,7 @@
 #ifndef MODEL_ELECTRICLOADCENTERSTORAGECONVERTER_IMPL_HPP
 #define MODEL_ELECTRICLOADCENTERSTORAGECONVERTER_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "ParentObject_Impl.hpp"
 
 namespace openstudio {
@@ -35,7 +35,6 @@ namespace detail {
 
   /** ElectricLoadCenterStorageConverter_Impl is a ParentObject_Impl that is the implementation class for ElectricLoadCenterStorageConverter.*/
   class MODEL_API ElectricLoadCenterStorageConverter_Impl : public ParentObject_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -109,11 +108,11 @@ namespace detail {
 
     bool setSimpleFixedEfficiency(double simpleFixedEfficiency);
 
-    void setDesignMaximumContinuousInputPower(double designMaximumContinuousInputPower);
+    bool setDesignMaximumContinuousInputPower(double designMaximumContinuousInputPower);
 
     bool setEfficiencyFunctionofPowerCurve(const Curve& efficiencyFunctionofPowerCurve);
 
-    void setAncillaryPowerConsumedInStandby(double ancillaryPowerConsumedInStandby);
+    bool setAncillaryPowerConsumedInStandby(double ancillaryPowerConsumedInStandby);
 
     void resetAncillaryPowerConsumedInStandby();
 
