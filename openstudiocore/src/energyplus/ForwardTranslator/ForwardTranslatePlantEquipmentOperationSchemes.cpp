@@ -90,6 +90,10 @@
 #include <utilities/idd/PlantEquipmentOperation_Uncontrolled_FieldEnums.hxx>
 #include <utilities/idd/PlantEquipmentList_FieldEnums.hxx>
 
+// Special case
+#include "../../model/GeneratorMicroTurbineHeatRecovery.hpp"
+#include "../../model/GeneratorMicroTurbine.hpp"
+
 using namespace openstudio::model;
 
 using namespace std;
@@ -522,12 +526,19 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantEquipmentOperationSc
         // TODO: Find the right way to deal with this
         // For now, "dirty" (?) fix for Generator:MicroTurbine
         // @kbenne, FYI
-        if (boost::optional<GeneratorMicroTurbineHeatRecovery> mchp = setpointComponent.optionalCast<GeneratorMicroTurbineHeatRecovery>())
+
+        boost::optional<IdfObject> _idfObject;
+
+        if (boost::optional<GeneratorMicroTurbineHeatRecovery> mchpHR = setpointComponent.optionalCast<GeneratorMicroTurbineHeatRecovery>())
         {
-          setpointComponent = mchp->generatorMicroTurbine();
+          GeneratorMicroTurbine mchp = mchpHR->generatorMicroTurbine();
+          _idfObject = translateAndMapModelObject(mchp);
         }
-        
-        boost::optional<IdfObject> _idfObject = translateAndMapModelObject(setpointComponent);
+        else
+        {
+          _idfObject = translateAndMapModelObject(setpointComponent);
+        }
+
         OS_ASSERT(_idfObject);
 
         IdfExtensibleGroup eg = setpointOperation.pushExtensibleGroup();

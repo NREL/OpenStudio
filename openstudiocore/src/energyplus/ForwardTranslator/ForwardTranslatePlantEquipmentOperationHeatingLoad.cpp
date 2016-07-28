@@ -73,13 +73,18 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantEquipmentOperationHe
         // TODO: Find the right way to deal with this
         // For now, "dirty" (?) fix for Generator:MicroTurbine
         // @kbenne, FYI
-        if (boost::optional<GeneratorMicroTurbineHeatRecovery> mchp = component.optionalCast<GeneratorMicroTurbineHeatRecovery>())
+        boost::optional<IdfObject> idf_component;
+
+        if (boost::optional<GeneratorMicroTurbineHeatRecovery> mchpHR = component.optionalCast<GeneratorMicroTurbineHeatRecovery>())
         {
-          component = mchp->generatorMicroTurbine();
+          GeneratorMicroTurbine mchp = mchpHR->generatorMicroTurbine();
+          idf_component = translateAndMapModelObject(mchp);
+        }
+        else {
+          idf_component = translateAndMapModelObject(component);
         }
         
         auto eg2 = equipmentList.pushExtensibleGroup();
-        auto idf_component = translateAndMapModelObject(component);
         OS_ASSERT(idf_component);
         eg2.setString(PlantEquipmentListExtensibleFields::EquipmentObjectType,idf_component->iddObject().name());
         eg2.setString(PlantEquipmentListExtensibleFields::EquipmentName,idf_component->name().get());
