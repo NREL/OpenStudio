@@ -33,8 +33,8 @@
 #include "ElectricalStorage_Impl.hpp"
 //#include "Transformer.hpp"
 //#include "Transformer_Impl.hpp"
-//#include "ElectricLoadCenterStorageConverter.hpp"
-//#include "ElectricLoadCenterStorageConverter_Impl.hpp"
+#include "ElectricLoadCenterStorageConverter.hpp"
+#include "ElectricLoadCenterStorageConverter_Impl.hpp"
 #include "../../model/ScheduleTypeLimits.hpp"
 #include "../../model/ScheduleTypeRegistry.hpp"
 
@@ -212,7 +212,9 @@ namespace detail {
   }
 
   // Storage Converter Object Name
-  //boost::optional<ElectricLoadCenterStorageConverter> storageConverter() const;
+  boost::optional<ElectricLoadCenterStorageConverter> ElectricLoadCenterDistribution_Impl::storageConverter() const {
+    return getObject<ModelObject>().getModelObjectTarget<ElectricLoadCenterStorageConverter>(OS_ElectricLoadCenter_DistributionFields::StorageConverterObjectName);
+  }
 
   // Maximum Storage State of Charge Fraction, required if storage, defaults
   double ElectricLoadCenterDistribution_Impl::maximumStorageStateofChargeFraction() const {
@@ -479,8 +481,14 @@ namespace detail {
 
 
   // Storage Converter Object Name
-  //bool ElectricLoadCenterDistribution_Impl::setStorageConverter(const ElectricLoadCenterStorageConverter& converter);
-  //void ElectricLoadCenterDistribution_Impl::resetStorageConverter();
+  bool ElectricLoadCenterDistribution_Impl::setStorageConverter(const ElectricLoadCenterStorageConverter& converter) {
+    return setPointer(OS_ElectricLoadCenter_DistributionFields::StorageConverterObjectName, converter.handle());
+  }
+  
+  void ElectricLoadCenterDistribution_Impl::resetStorageConverter() {
+    bool result = setString(OS_ElectricLoadCenter_DistributionFields::StorageConverterObjectName, "");
+    OS_ASSERT(result);
+  }
 
   // Maximum Storage State of Charge Fraction, required if storage, defaults
   bool ElectricLoadCenterDistribution_Impl::setMaximumStorageStateofChargeFraction(const double maxStateofCharge) {
@@ -656,12 +664,12 @@ namespace detail {
 
       } else if (stoOpScheme == "TrackChargeDischargeSchedules") {
         // Storage Converter Object Name
-        //boost::optional<ElectricLoadCenterStorageConverter> storageConverter = storageConverter();
-        //if (!storageConverter) {
-        //  result = false;
-        //  LOG(Error, briefDescription() << ": You set the Storage Operation Scheme to " << stoOpScheme
-        //    << " but you didn't specify the required 'Storage Converter Object Name'");
-        //}
+        boost::optional<ElectricLoadCenterStorageConverter> storageConverter = storageConverter();
+        if (!storageConverter) {
+          result = false;
+          LOG(Error, briefDescription() << ": You set the Storage Operation Scheme to " << stoOpScheme
+            << " but you didn't specify the required 'Storage Converter Object Name'");
+        }
 
         // Design Storage Control Charge Power
         if (!designStorageControlChargePower()) {
@@ -693,12 +701,12 @@ namespace detail {
 
       } else if (stoOpScheme == "FacilityDemandLeveling") {
         // Storage Converter Object Name
-        //boost::optional<ElectricLoadCenterStorageConverter> storageConverter = storageConverter();
-        //if (!storageConverter) {
-        //  result = false;
-        //  LOG(Error, briefDescription() << ": You set the Storage Operation Scheme to " << stoOpScheme
-        //    << " but you didn't specify the required 'Storage Converter Object Name'");
-        //}
+        boost::optional<ElectricLoadCenterStorageConverter> storageConverter = storageConverter();
+        if (!storageConverter) {
+          result = false;
+          LOG(Error, briefDescription() << ": You set the Storage Operation Scheme to " << stoOpScheme
+            << " but you didn't specify the required 'Storage Converter Object Name'");
+        }
 
         // Design Storage Control Charge Power
         if (!designStorageControlChargePower()) {
@@ -837,9 +845,9 @@ boost::optional<std::string> ElectricLoadCenterDistribution::storageControlTrack
 }
 
 // Storage Converter Object Name
-//boost::optional<ElectricLoadCenterStorageConverter> ElectricLoadCenterDistribution::storageConverterObjectName() const  {
-//  return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->storageConverterObjectName();
-//}
+boost::optional<ElectricLoadCenterStorageConverter> ElectricLoadCenterDistribution::storageConverter() const  {
+  return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->storageConverter();
+}
 
 // Maximum Storage State of Charge Fraction, required if storage, defaults
 double ElectricLoadCenterDistribution::maximumStorageStateofChargeFraction() const {
@@ -989,12 +997,12 @@ void ElectricLoadCenterDistribution::resetStorageControlTrackMeterName() {
 }
 
 // Storage Converter Object Name
-//bool ElectricLoadCenterDistribution::setStorageConverter(const ElectricLoadCenterStorageConverter& converter) {
-//  return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->setStorageConverter(converter);
-//}
-//void ElectricLoadCenterDistribution::resetStorageConverter() {
-//  getImpl<detail::ElectricLoadCenterDistribution_Impl>()->resetStorageConverter();
-//}
+bool ElectricLoadCenterDistribution::setStorageConverter(const ElectricLoadCenterStorageConverter& converter) {
+  return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->setStorageConverter(converter);
+}
+void ElectricLoadCenterDistribution::resetStorageConverter() {
+  getImpl<detail::ElectricLoadCenterDistribution_Impl>()->resetStorageConverter();
+}
 
 // Maximum Storage State of Charge Fraction, required if storage, defaults
 bool ElectricLoadCenterDistribution::setMaximumStorageStateofChargeFraction(const double maxStateofCharge) {
