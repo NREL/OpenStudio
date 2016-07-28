@@ -1179,7 +1179,6 @@ namespace detail {
           // air wall floors do not count in floor area
           if (surface.isAirWall()){
             needToSetFloorArea = true;
-            spaceType.reset();
             break;
           } 
 
@@ -1193,7 +1192,6 @@ namespace detail {
                 {
                   // this surface is completely inside the zone, need to set floor area since this surface will be removed 
                   needToSetFloorArea = true;
-                  spaceType.reset();
                   break;
                 }
               }
@@ -1276,8 +1274,13 @@ namespace detail {
       }
     }
 
-    // set floor area here if needed
+    // set E+ floor area here if needed, this is only used for reporting total building area
+    // loads are hard sized according to OpenStudio space floor area
     if (needToSetFloorArea){
+      
+      // do not allow per area loads in the space type since we are overriding floor area
+      spaceType.reset();
+
       // don't override if user provided zone floor area
       if (isEmpty(OS_ThermalZoneFields::FloorArea)){
         this->setDouble(OS_ThermalZoneFields::FloorArea, totalFloorArea);
