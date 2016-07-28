@@ -130,7 +130,7 @@ namespace detail {
 
   // Required if powerConversionEfficiencyMethod == "SimpleFixed"
   boost::optional<double> ElectricLoadCenterStorageConverter_Impl::simpleFixedEfficiency() const {
-    return getDouble(OS_ElectricLoadCenter_Storage_ConverterFields::SimpleFixedEfficiency,true);
+    return getDouble(OS_ElectricLoadCenter_Storage_ConverterFields::SimpleFixedEfficiency,false);
   }
 
   // Required if powerConversionEfficiencyMethod == "FunctionOfPower"
