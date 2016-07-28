@@ -92,7 +92,9 @@
 
 // Special case
 #include "../../model/GeneratorMicroTurbineHeatRecovery.hpp"
+#include "../../model/GeneratorMicroTurbineHeatRecovery_Impl.hpp"
 #include "../../model/GeneratorMicroTurbine.hpp"
+#include "../../model/GeneratorMicroTurbine_Impl.hpp"
 
 using namespace openstudio::model;
 
