@@ -68,8 +68,8 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
-    boost::optional<Schedule> availabilitySchedule() const;
+    Schedule availabilitySchedule() const;
+    bool isAvailabilityScheduleDefaulted() const;
 
     std::string powerConversionEfficiencyMethod() const;
 
@@ -102,7 +102,6 @@ namespace detail {
     // TODO: Check argument type. From object lists, some candidates are: Schedule.
   // Note Schedules are passed by reference, not const reference.
     bool setAvailabilitySchedule(Schedule& schedule);
-
     void resetAvailabilitySchedule();
 
     // No Setter, will be done when calling one of the three following functions
@@ -134,6 +133,7 @@ namespace detail {
    protected:
    private:
     REGISTER_LOGGER("openstudio.model.ElectricLoadCenterStorageConverter");
+    boost::optional<Schedule> optionalAvailabilitySchedule() const;
   };
 
 } // detail

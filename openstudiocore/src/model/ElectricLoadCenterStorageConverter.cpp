@@ -102,8 +102,22 @@ namespace detail {
     return result;
   }
 
-  boost::optional<Schedule> ElectricLoadCenterStorageConverter_Impl::availabilitySchedule() const {
+  boost::optional<Schedule> ElectricLoadCenterStorageConverter_Impl::optionalAvailabilitySchedule() const {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ElectricLoadCenter_Storage_ConverterFields::AvailabilityScheduleName);
+  }
+
+  Schedule ElectricLoadCenterStorageConverter_Impl::availabilitySchedule() const {
+    boost::optional<Schedule> value = optionalAvailabilitySchedule();
+    if (!value) {
+      //LOG_AND_THROW(briefDescription() << " does not have an Availability Schedule attached.");
+      // I'm choosing to just return alwaysOnDiscreteSchedule
+      return this->model().alwaysOnDiscreteSchedule();
+    }
+    return value.get();
+  }
+
+  bool ElectricLoadCenterStorageConverter_Impl::isAvailabilityScheduleDefaulted() const {
+    return isEmpty(OS_ElectricLoadCenter_Storage_ConverterFields::AvailabilityScheduleName);
   }
 
   std::string ElectricLoadCenterStorageConverter_Impl::powerConversionEfficiencyMethod() const {
@@ -247,7 +261,13 @@ ElectricLoadCenterStorageConverter::ElectricLoadCenterStorageConverter(const Mod
 {
   OS_ASSERT(getImpl<detail::ElectricLoadCenterStorageConverter_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
+  // This is actually the E+ default
+  setSimpleFixedEfficiency(0.95)
+  
+  // Already defaults to alwaysOnDiscreteSchedule
+  //auto availableSchedule = model.alwaysOnDiscreteSchedule();
+  //setAvailabilitySchedule(availableSchedule);
+
 }
 
 IddObjectType ElectricLoadCenterStorageConverter::iddObjectType() {
@@ -259,8 +279,12 @@ std::vector<std::string> ElectricLoadCenterStorageConverter::powerConversionEffi
                         OS_ElectricLoadCenter_Storage_ConverterFields::PowerConversionEfficiencyMethod);
 }
 
-boost::optional<Schedule> ElectricLoadCenterStorageConverter::availabilitySchedule() const {
+Schedule ElectricLoadCenterStorageConverter::availabilitySchedule() const {
   return getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->availabilitySchedule();
+}
+
+bool ElectricLoadCenterStorageConverter::isAvailabilityScheduleDefaulted() const {
+  return getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->isAvailabilityScheduleDefaulted();
 }
 
 std::string ElectricLoadCenterStorageConverter::powerConversionEfficiencyMethod() const {

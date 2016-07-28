@@ -57,8 +57,8 @@ class MODEL_API ElectricLoadCenterStorageConverter : public ParentObject {
   /** @name Getters */
   //@{
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
-  boost::optional<Schedule> availabilitySchedule() const;
+  Schedule availabilitySchedule() const;
+  bool isAvailabilityScheduleDefaulted() const;
 
   std::string powerConversionEfficiencyMethod() const;
 
