@@ -63,7 +63,7 @@ target_link_libraries(gbXMLToIdf
   openstudio_gbxml
 )
 
-install(TARGETS gbXMLToIdf
-  BUNDLE DESTINATION .
-  RUNTIME DESTINATION bin
-)
+#install(TARGETS gbXMLToIdf
+#  BUNDLE DESTINATION .
+#  RUNTIME DESTINATION bin
+#)

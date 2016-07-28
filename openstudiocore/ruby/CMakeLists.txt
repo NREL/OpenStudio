@@ -71,3 +71,5 @@ if( WIN32 )
   target_link_libraries(openstudiorb C:/Ruby200-x64/lib/libx64-msvcrt-ruby200.dll.a)
 endif()
 
+install(TARGETS openstudiorb DESTINATION bin)
+
