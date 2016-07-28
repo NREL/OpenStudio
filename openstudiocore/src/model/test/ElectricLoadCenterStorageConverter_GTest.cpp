@@ -22,7 +22,7 @@
 #include <model/test/ModelFixture.hpp>
 
 #include "../ElectricLoadCenterStorageConverter.hpp"
-#include "../ElectricLoadCenterStorageConverter_Impl.hpp"
+#include "../ThermalZone.hpp"
 #include "../Schedule.hpp"
 #include "../ScheduleCompact.hpp"
 #include "../CurveQuadratic.hpp"
@@ -31,8 +31,9 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, ElectricLoadCenterInverterSimple_Instantiate) {
+TEST_F(ModelFixture, ElectricLoadCenterStorageConverter_Instantiate) {
 
+  bool result;
   Model model;
   ThermalZone thermalZone(model);
 
@@ -67,17 +68,17 @@ TEST_F(ModelFixture, ElectricLoadCenterInverterSimple_Instantiate) {
   EXPECT_TRUE(elcConv.setSimpleFixedEfficiency(0.80));
   EXPECT_EQ(elcConv.powerConversionEfficiencyMethod(), "SimpleFixed");
   EXPECT_FALSE(elcConv.designMaximumContinuousInputPower());
-  EXPECT_FALSE(elcConv.efficiencyFunctionofPowerCurveName());
+  EXPECT_FALSE(elcConv.efficiencyFunctionofPowerCurve());
   
   
   // efficiencyFunctionofPowerCurveName
   CurveQuadratic effFPower = CurveQuadratic(model);
-  EXPECT_FALSE(elcConv.efficiencyFunctionofPowerCurveName());
-  EXPECT_TRUE(elcConv.setEfficiencyFunctionofPowerCurveName(effFPower));
+  EXPECT_FALSE(elcConv.efficiencyFunctionofPowerCurve());
+  EXPECT_TRUE(elcConv.setEfficiencyFunctionofPowerCurve(effFPower));
   EXPECT_EQ(elcConv.powerConversionEfficiencyMethod(), "FunctionOfPower");
   EXPECT_FALSE(elcConv.simpleFixedEfficiency());
-  ASSERT_TRUE(elcConv.efficiencyFunctionofPowerCurveName());
-  if (boost::optional<Curve> setCurve = elcConv.efficiencyFunctionofPowerCurveName()) {
+  ASSERT_TRUE(elcConv.efficiencyFunctionofPowerCurve());
+  if (boost::optional<Curve> setCurve = elcConv.efficiencyFunctionofPowerCurve()) {
     EXPECT_EQ(effFPower.handle(), setCurve->handle());
   }
 
@@ -87,7 +88,7 @@ TEST_F(ModelFixture, ElectricLoadCenterInverterSimple_Instantiate) {
   EXPECT_TRUE(elcConv.setSimpleFixedEfficiency(0.80));
   EXPECT_EQ(elcConv.powerConversionEfficiencyMethod(), "SimpleFixed");
   EXPECT_FALSE(elcConv.designMaximumContinuousInputPower());
-  EXPECT_FALSE(elcConv.efficiencyFunctionofPowerCurveName());
+  EXPECT_FALSE(elcConv.efficiencyFunctionofPowerCurve());
 
   // ancillaryPowerConsumedInStandby
   EXPECT_TRUE(elcConv.isAncillaryPowerConsumedInStandbyDefaulted());
@@ -105,13 +106,13 @@ TEST_F(ModelFixture, ElectricLoadCenterInverterSimple_Instantiate) {
   ASSERT_TRUE(elcConv.thermalZone());
   
   // radiativeFraction
-  EXPECT_FALSE(elcConv.radiativeFraction());
-  result = elcConv.setRadiativeFraction(value);
+  EXPECT_TRUE(elcConv.isRadiativeFractionDefaulted());
+  result = elcConv.setRadiativeFraction(0.25);
   EXPECT_TRUE(result);
-  EXPECT_TRUE(elcConv.radiativeFraction());
-  EXPECT_EQ(elcConv.radiativeFraction().get(), value);
+  EXPECT_FALSE(elcConv.isRadiativeFractionDefaulted());
+  EXPECT_EQ(elcConv.radiativeFraction(), 0.25);
   elcConv.resetRadiativeFraction();
-  EXPECT_FALSE(elcConv.radiativeFraction());
+  EXPECT_TRUE(elcConv.isRadiativeFractionDefaulted());
 
   // Try to assign it to an ELCD
   ElectricLoadCenterDistribution elcd(model);
