@@ -391,7 +391,7 @@ ComponentType componentType(const HVACComponent & component)
       // Also, should maybe check if it's in mode FollowThermal or FollowThermalLimitElectrical?
       // If not in these two modes, it doesn't care and just runs. Also, it's typically on the demand Side, and this method
       // is only called on the supply side
-      return ComponentType:HEATING;
+      return ComponentType::HEATING;
     }
     default:
     {
