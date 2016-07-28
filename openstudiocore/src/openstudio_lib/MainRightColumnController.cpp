@@ -320,7 +320,7 @@ void MainRightColumnController::configureForSchedulesSubTab(int subTabID)
 
       myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_VariableInterval, "Variable Interval Schedules");
       myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_FixedInterval, "Fixed Interval Schedules");
-      myModelList->addModelObjectType(IddObjectType::OS_Schedule_Year, "Year Schedules");
+      myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_Year, "Year Schedules");
       myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_Constant, "Constant Schedules");
       myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_Compact, "Compact Schedules");
       myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_Ruleset, "Ruleset Schedules");
@@ -575,7 +575,7 @@ void MainRightColumnController::configureForLoadsSubTab(int subTabID)
   myLibraryList->addModelObjectType(IddObjectType::OS_People_Definition, "People Definitions");
   myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_VariableInterval, "Variable Interval Schedules");
   myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_FixedInterval, "Fixed Interval Schedules");
-  myModelList->addModelObjectType(IddObjectType::OS_Schedule_Year, "Year Schedules");
+  myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_Year, "Year Schedules");
   myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_Constant, "Constant Schedules");
   myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_Compact, "Compact Schedules");
   myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_Ruleset, "Ruleset Schedules");
@@ -645,7 +645,7 @@ void MainRightColumnController::configureForSpaceTypesSubTab(int subTabID)
 
   myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_VariableInterval, "Variable Interval Schedules");
   myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_FixedInterval, "Fixed Interval Schedules");
-  myModelList->addModelObjectType(IddObjectType::OS_Schedule_Year, "Year Schedules");
+  myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_Year, "Year Schedules");
   myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_Constant, "Constant Schedules");
   myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_Compact, "Compact Schedules");
   myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_Ruleset, "Ruleset Schedules");
@@ -741,7 +741,7 @@ void MainRightColumnController::configureForFacilitySubTab(int subTabID)
   myLibraryList->addModelObjectType(IddObjectType::OS_Construction, "Constructions");
   myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_VariableInterval, "Variable Interval Schedules");
   myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_FixedInterval, "Fixed Interval Schedules");
-  myModelList->addModelObjectType(IddObjectType::OS_Schedule_Year, "Year Schedules");
+  myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_Year, "Year Schedules");
   myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_Constant, "Constant Schedules");
   myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_Compact, "Compact Schedules");
   myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_Ruleset, "Ruleset Schedules");
@@ -849,7 +849,7 @@ void MainRightColumnController::configureForSpacesSubTab(int subTabID)
   myLibraryList->addModelObjectType(IddObjectType::OS_Construction, "Constructions");
   myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_VariableInterval, "Variable Interval Schedules");
   myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_FixedInterval, "Fixed Interval Schedules");
-  myModelList->addModelObjectType(IddObjectType::OS_Schedule_Year, "Year Schedules");
+  myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_Year, "Year Schedules");
   myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_Constant, "Constant Schedules");
   myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_Compact, "Compact Schedules");
   myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_Ruleset, "Ruleset Schedules");
