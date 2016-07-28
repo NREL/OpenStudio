@@ -1172,6 +1172,36 @@ namespace detail {
       double volume = space.volume();
       sumVolume += volume;
 
+      // check if we have to explicitly set floor area and hard size loads
+      for (const Surface& surface : space.surfaces()) {
+        if (istringEqual(surface.surfaceType(), "Floor")){
+
+          // air wall floors do not count in floor area
+          if (surface.isAirWall()){
+            needToSetFloorArea = true;
+            spaceType.reset();
+            break;
+          } 
+
+          auto adjacentSurface = surface.adjacentSurface();
+          if (adjacentSurface){
+            auto adjacentSpace = adjacentSurface->space();
+            if (adjacentSpace){
+              auto adjacentThermalZone = adjacentSpace->thermalZone();
+              if (adjacentThermalZone){
+                if (adjacentThermalZone->handle() == this->handle())
+                {
+                  // this surface is completely inside the zone, need to set floor area since this surface will be removed 
+                  needToSetFloorArea = true;
+                  spaceType.reset();
+                  break;
+                }
+              }
+            }
+          }
+        }
+      }
+
       // space floor area is counted if any space is part of floor area
       if (space.partofTotalFloorArea()){
         partofTotalFloorArea = true;
@@ -1246,11 +1276,11 @@ namespace detail {
       }
     }
 
-    // if some spaces are part of floor area but others are not, set floor area here
+    // set floor area here if needed
     if (needToSetFloorArea){
+      // don't override if user provided zone floor area
       if (isEmpty(OS_ThermalZoneFields::FloorArea)){
-        // DLM: do we want to do this?
-        //this->setDouble(OS_ThermalZoneFields::FloorArea, totalFloorArea);
+        this->setDouble(OS_ThermalZoneFields::FloorArea, totalFloorArea);
       }
     }
 
@@ -1359,6 +1389,25 @@ namespace detail {
       if (adjacentSurface){
         boost::optional<Space> adjacentSpace = adjacentSurface->space();
         if (adjacentSpace && (newSpace.handle() == adjacentSpace->handle())){
+
+          // handling both the surface and the adjacentSurface
+          mergedSurfaces.insert(surface);
+          mergedSurfaces.insert(*adjacentSurface);
+
+          // don't make interior partitions for interior air walls
+          bool isAirWall = surface.isAirWall();
+          bool isAdjacentAirWall = adjacentSurface->isAirWall();
+
+          if (isAirWall && isAdjacentAirWall){
+            continue;
+          } else if (isAirWall){
+            LOG(Warn, "Interior surface '" << surface.name() << "' is an air wall but adjacent surface '" << adjacentSurface->name() << "' is not, ignoring internal mass.")
+              continue;
+          } else if (isAdjacentAirWall){
+            LOG(Warn, "Interior surface '" << adjacentSurface->name() << "' is an air wall but adjacent surface '" << surface.name() << "' is not, ignoring internal mass.")
+            continue;
+          }
+
           if (!interiorPartitionSurfaceGroup){
             interiorPartitionSurfaceGroup = InteriorPartitionSurfaceGroup(model);
             interiorPartitionSurfaceGroup->setSpace(newSpace);
@@ -1373,9 +1422,6 @@ namespace detail {
           if (construction){
             interiorPartitionSurface.setConstruction(*construction);
           }
-
-          mergedSurfaces.insert(surface);
-          mergedSurfaces.insert(*adjacentSurface);
         }
       }
     }
