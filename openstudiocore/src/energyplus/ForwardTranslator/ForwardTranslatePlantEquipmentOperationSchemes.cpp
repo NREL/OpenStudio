@@ -519,6 +519,14 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantEquipmentOperationSc
 
       for( auto setpointComponent : t_setpointComponents )
       {
+        // TODO: Find the right way to deal with this
+        // For now, "dirty" (?) fix for Generator:MicroTurbine
+        // @kbenne, FYI
+        if (boost::optional<GeneratorMicroTurbineHeatRecovery> mchp = setpointComponent.optionalCast<GeneratorMicroTurbineHeatRecovery>())
+        {
+          setpointComponent = mchp->generatorMicroTurbine();
+        }
+        
         boost::optional<IdfObject> _idfObject = translateAndMapModelObject(setpointComponent);
         OS_ASSERT(_idfObject);
 
