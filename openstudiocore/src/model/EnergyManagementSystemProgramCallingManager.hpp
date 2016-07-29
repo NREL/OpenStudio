@@ -70,7 +70,7 @@ class MODEL_API EnergyManagementSystemProgramCallingManager : public ModelObject
 
   bool eraseProgram(unsigned index);
 
-  bool erasePrograms();
+  void erasePrograms();
 
   bool insertProgram(const EnergyManagementSystemProgram& program, unsigned index);
 
