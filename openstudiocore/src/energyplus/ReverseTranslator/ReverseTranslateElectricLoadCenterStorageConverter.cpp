@@ -33,6 +33,7 @@
 
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
+#include "../../utilities/core/Compare.hpp"
 
 using namespace openstudio::model;
 
@@ -74,7 +75,7 @@ OptionalModelObject ReverseTranslator::translateElectricLoadCenterStorageConvert
   optS = workspaceObject.getString(ElectricLoadCenter_Storage_ConverterFields::PowerConversionEfficiencyMethod);
   if(optS)
   {
-    if ((*optS).toUpper() == 'FUNCTIONOFPOWER')
+    if (istringEqual(*optS, "FunctionOfPower"))
     {
       isSimpleFixed = false;
     }
@@ -103,7 +104,7 @@ OptionalModelObject ReverseTranslator::translateElectricLoadCenterStorageConvert
         // Should technically make sure the curve is the right type, but in this case it's UnivariateCurves, lots of possibilities.
         if (boost::optional<Curve> effFPower = omo->optionalCast<Curve>())
         {
-          elcConv.setEfficiencyFunctionofPowerCurveName(effFPower.get());
+          elcConv.setEfficiencyFunctionofPowerCurve(effFPower.get());
         }
       }
     }
@@ -122,7 +123,7 @@ OptionalModelObject ReverseTranslator::translateElectricLoadCenterStorageConvert
   }
 
   // Radiative Fraction, defaults (double)
-  optD = workspaceObject.getDouble(ElectricLoadCenter_Storage_ConverterFields::RadiativeFractionforZoneHeatGains);
+  optD = workspaceObject.getDouble(ElectricLoadCenter_Storage_ConverterFields::RadiativeFraction);
   if(optD)
   {
     elcConv.setRadiativeFraction(*optD);
