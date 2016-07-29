@@ -54,8 +54,11 @@ boost::optional<IdfObject> ForwardTranslator::translateElectricLoadCenterStorage
   }
 
   // Availability Schedule, defaults to model.alwaysOnDiscrete
-  if (modelObject.availabilitySchedule().name()) {
-    idfObject.setString(ElectricLoadCenter_Storage_ConverterFields::AvailabilityScheduleName, modelObject.availabilitySchedule().name().get());
+  Schedule sched = modelObject.availabilitySchedule();
+  boost::optional<IdfObject> _sched = translateAndMapModelObject(sched);
+  if (_sched) {
+    idfObject.setString(ElectricLoadCenter_Storage_ConverterFields::AvailabilityScheduleName,
+      _sched->name().get());
   }
 
   // PowerConversionEfficiencyMethod, string
@@ -77,7 +80,9 @@ boost::optional<IdfObject> ForwardTranslator::translateElectricLoadCenterStorage
   // efficiencyFunctionofPowerCurveName, optCurve
   boost::optional<Curve> effFPower = modelObject.efficiencyFunctionofPowerCurve();
   if (effFPower) {
-    idfObject.setDouble(ElectricLoadCenter_Storage_ConverterFields::EfficiencyFunctionofPowerCurveName, *effFPower);
+    if (boost::optional<IdfObject> _curve = translateAndMapModelObject(effFPower.get())) {
+      idfObject.setString(ElectricLoadCenter_Storage_ConverterFields::EfficiencyFunctionofPowerCurveName, _curve->name().get());
+    }
   }
   
   // ancillaryPowerConsumedInStandby, double
