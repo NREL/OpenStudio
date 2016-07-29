@@ -206,10 +206,9 @@ TEST_F(ModelFixture,FenestrationMaterial_Gas_Validity)
   EXPECT_TRUE(model.isValid(StrictnessLevel::Draft));
   EXPECT_FALSE(model.isValid(StrictnessLevel::Final));
 
-  // no longer valid at final level because custom gas type requires more data
   EXPECT_TRUE(gas.setGasType("CusTom"));
   EXPECT_TRUE(gas.isValid(StrictnessLevel::Draft));
-  EXPECT_FALSE(gas.isValid(StrictnessLevel::Final));
+  EXPECT_TRUE(gas.isValid(StrictnessLevel::Final));
   EXPECT_TRUE(model.isValid(StrictnessLevel::Draft));
   EXPECT_FALSE(model.isValid(StrictnessLevel::Final));
 

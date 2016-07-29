@@ -1000,7 +1000,7 @@ namespace detail {
   boost::optional<ZoneHVACComponent> WaterHeaterStratified_Impl::containingZoneHVACComponent() const
   {
     {
-      auto hpwhs = model().getModelObjects<model::WaterHeaterHeatPump>();
+      auto hpwhs = model().getConcreteModelObjects<model::WaterHeaterHeatPump>();
       auto t_Handle = handle();
       for( const auto & hpwh : hpwhs ) {
         if( hpwh.tank().handle() == t_Handle ) {
@@ -1010,7 +1010,7 @@ namespace detail {
     }
 
     {
-      auto hpwhs = model().getModelObjects<model::WaterHeaterHeatPumpWrappedCondenser>();
+      auto hpwhs = model().getConcreteModelObjects<model::WaterHeaterHeatPumpWrappedCondenser>();
       auto t_Handle = handle();
       for( const auto & hpwh : hpwhs ) {
         if( hpwh.tank().handle() == t_Handle ) {
@@ -1054,7 +1054,7 @@ WaterHeaterStratified::WaterHeaterStratified(const Model& model)
 
   setHeaterFuelType("Electricity");
   setHeaterThermalEfficiency(0.98);
-  
+
   setOffCycleParasiticFuelConsumptionRate(10.0);
   setOffCycleParasiticFuelType("Electricity");
   setOffCycleParasiticHeatFractiontoTank(0);

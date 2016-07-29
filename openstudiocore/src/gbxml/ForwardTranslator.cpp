@@ -32,12 +32,18 @@
 #include "../model/Building_Impl.hpp"
 #include "../model/Space.hpp"
 #include "../model/Space_Impl.hpp"
+#include "../model/ShadingSurfaceGroup.hpp"
+#include "../model/ShadingSurfaceGroup_Impl.hpp"
+#include "../model/BuildingStory.hpp"
+#include "../model/BuildingStory_Impl.hpp"
 #include "../model/SpaceType.hpp"
 #include "../model/SpaceType_Impl.hpp"
 #include "../model/Surface.hpp"
 #include "../model/Surface_Impl.hpp"
 #include "../model/SubSurface.hpp"
 #include "../model/SubSurface_Impl.hpp"
+#include "../model/ShadingSurface.hpp"
+#include "../model/ShadingSurface_Impl.hpp"
 #include "../model/ThermalZone.hpp"
 #include "../model/ThermalZone_Impl.hpp"
 
@@ -46,7 +52,11 @@
 #include "../utilities/geometry/BoundingBox.hpp"
 #include "../utilities/geometry/Geometry.hpp"
 #include "../utilities/plot/ProgressBar.hpp"
+#include "../utilities/time/DateTime.hpp"
+#include "../utilities/time/Date.hpp"
 #include "../utilities/core/Assert.hpp"
+
+#include <OpenStudio.hxx>
 
 #include <boost/math/constants/constants.hpp>
 
@@ -54,6 +64,8 @@
 #include <QDomDocument>
 #include <QDomElement>
 #include <QThread>
+
+#include <regex>
 
 namespace openstudio {
 namespace gbxml {
@@ -122,10 +134,25 @@ namespace gbxml {
 
   QString ForwardTranslator::escapeName(const std::string& name)
   {
-    QString result = toQString(name);
+    QString result;
+    if (std::regex_match(name, std::regex("^\\d.*"))) {
+      result = toQString("id_" + name);
+    } else {
+      result = toQString(name);
+    }
     result.replace(" ", "_");
     result.replace("(", "_");
     result.replace(")", "_");
+    result.replace("[", "_");
+    result.replace("]", "_");
+    result.replace("{", "_");
+    result.replace("}", "_");
+    result.replace("/", "_");
+    result.replace("\\", "_");
+    //result.replace("-", "_"); // ok
+    //result.replace(".", "_"); // ok
+    //result.replace(":", "_"); // ok
+    result.replace(";", "_");
     return result;
   }
 
@@ -140,13 +167,14 @@ namespace gbxml {
     gbXMLElement.setAttribute("xmlns:xhtml", "http://www.w3.org/1999/xhtml");
     gbXMLElement.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
     gbXMLElement.setAttribute("xmlns:xsd", "http://www.w3.org/2001/XMLSchema");
-    gbXMLElement.setAttribute("xsi:schemaLocation", "http://www.gbxml.org/schema http://www.gbxml.org/schema/0-37/GreenBuildingXML.xsd");
+    gbXMLElement.setAttribute("xsi:schemaLocation", "http://www.gbxml.org/schema http://gbxml.org/schema/6-01/GreenBuildingXML_Ver6.01.xsd");
     gbXMLElement.setAttribute("temperatureUnit", "C");
     gbXMLElement.setAttribute("lengthUnit", "Meters");
     gbXMLElement.setAttribute("areaUnit", "SquareMeters");
     gbXMLElement.setAttribute("volumeUnit", "CubicMeters");
     gbXMLElement.setAttribute("useSIUnitsForResults", "true");
-    gbXMLElement.setAttribute("version", "0.37");
+    gbXMLElement.setAttribute("version", "6.01");
+    gbXMLElement.setAttribute("SurfaceReferenceLocation", "Centerline");
 
     boost::optional<model::Facility> facility = model.getOptionalUniqueModelObject<model::Facility>();
     if (facility){
@@ -155,23 +183,64 @@ namespace gbxml {
         gbXMLElement.appendChild(*campusElement);
       }
     }
-  /*
+
     // do constructions
-    for (const model::ConstructionBase& constructionBase : model.getModelObjects<model::ConstructionBase>()){
+    std::vector<model::ConstructionBase> constructionBases = model.getModelObjects<model::ConstructionBase>();
+
+    // sort by is opaque so we get constructions before window types
+    std::sort(constructionBases.begin(), constructionBases.end(), [](const model::ConstructionBase& a, const model::ConstructionBase& b) {
+      if (a.isOpaque() && !b.isOpaque()){
+        return true;
+      }
+      return false;
+    });
+    if (m_progressBar){
+      m_progressBar->setWindowTitle(toString("Translating Constructions"));
+      m_progressBar->setMinimum(0);
+      m_progressBar->setMaximum((int)constructionBases.size()); 
+      m_progressBar->setValue(0);
+    }
+
+    for (const model::ConstructionBase& constructionBase : constructionBases){
       boost::optional<QDomElement> constructionElement = translateConstructionBase(constructionBase, doc);
       if (constructionElement){
-        projectElement.appendChild(*constructionElement);
+        gbXMLElement.appendChild(*constructionElement);
+      }
+
+      if (m_progressBar){
+        m_progressBar->setValue(m_progressBar->value() + 1);
+      }
+    }
+    
+    // do materials
+    if (m_progressBar){
+      m_progressBar->setWindowTitle(toString("Translating Materials"));
+      m_progressBar->setMinimum(0);
+      m_progressBar->setMaximum((int)2*m_materials.size()); 
+      m_progressBar->setValue(0);
+    }
+
+    for (const model::Material& material : m_materials){
+      boost::optional<QDomElement> layerElement = translateLayer(material, doc);
+      if (layerElement){
+        gbXMLElement.appendChild(*layerElement);
+      }
+
+      if (m_progressBar){
+        m_progressBar->setValue(m_progressBar->value() + 1);
+      }
+    }
+    for (const model::Material& material : m_materials){
+      boost::optional<QDomElement> materialElement = translateMaterial(material, doc);
+      if (materialElement){
+        gbXMLElement.appendChild(*materialElement);
+      }
+
+      if (m_progressBar){
+        m_progressBar->setValue(m_progressBar->value() + 1);
       }
     }
 
-    // do materials
-    for (const model::Material& material : model.getModelObjects<model::Material>()){
-      boost::optional<QDomElement> materialElement = translateMaterial(material, doc);
-      if (materialElement){
-        projectElement.appendChild(*materialElement);
-      }
-    }
-*/
     // do thermal zones
     std::vector<model::ThermalZone> thermalZones = model.getConcreteModelObjects<model::ThermalZone>();
     if (m_progressBar){
@@ -191,6 +260,53 @@ namespace gbxml {
         m_progressBar->setValue(m_progressBar->value() + 1);
       }
     }
+
+    // Document History
+    QDomElement documentHistoryElement = doc.createElement("DocumentHistory");
+    gbXMLElement.appendChild(documentHistoryElement);
+
+    QDomElement createdByElement = doc.createElement("CreatedBy");
+    documentHistoryElement.appendChild(createdByElement);
+    createdByElement.setAttribute("programId", "openstudio");
+    createdByElement.setAttribute("date",  toQString(DateTime::now().toXsdDateTime()));
+    createdByElement.setAttribute("personId", "unknown");
+
+    QDomElement programInfoElement = doc.createElement("ProgramInfo");
+    documentHistoryElement.appendChild(programInfoElement);
+    programInfoElement.setAttribute("id", "openstudio");
+
+    QDomElement productNameElement = doc.createElement("ProductName");
+    programInfoElement.appendChild(productNameElement);
+    productNameElement.appendChild(doc.createTextNode("OpenStudio"));
+
+    QDomElement versionElement = doc.createElement("Version");
+    programInfoElement.appendChild(versionElement);
+    versionElement.appendChild(doc.createTextNode(QString::fromStdString(openStudioVersion())));
+
+    QDomElement platformElement = doc.createElement("Platform");
+    programInfoElement.appendChild(platformElement);
+    #if _WIN32 || _MSC_VER
+      platformElement.appendChild(doc.createTextNode("Windows"));
+    #elif __APPLE__
+      platformElement.appendChild(doc.createTextNode("Apple"));
+    #else
+      platformElement.appendChild(doc.createTextNode("Linux"));
+    #endif
+
+    QDomElement projectEntityElement = doc.createElement("ProjectEntity");
+    programInfoElement.appendChild(projectEntityElement);
+
+    QDomElement personInfoElement = doc.createElement("PersonInfo");
+    documentHistoryElement.appendChild(personInfoElement);
+    personInfoElement.setAttribute("id", "unknown");
+
+    QDomElement firstNameElement = doc.createElement("FirstName");
+    personInfoElement.appendChild(firstNameElement);
+    firstNameElement.appendChild(doc.createTextNode("Unknown"));
+        
+    QDomElement lastNameElement = doc.createElement("LastName");
+    personInfoElement.appendChild(lastNameElement);
+    lastNameElement.appendChild(doc.createTextNode("Unknown"));
 
     return doc;
   }
@@ -247,6 +363,25 @@ namespace gbxml {
       }
     }
   
+    // translate shading surfaces
+    std::vector<model::ShadingSurface> shadingSurfaces = model.getConcreteModelObjects<model::ShadingSurface>();
+    if (m_progressBar){
+      m_progressBar->setWindowTitle(toString("Translating Shading Surfaces"));
+      m_progressBar->setMinimum(0);
+      m_progressBar->setMaximum((int)shadingSurfaces.size());
+      m_progressBar->setValue(0);
+    }
+
+    for (const model::ShadingSurface& shadingSurface : shadingSurfaces){
+      boost::optional<QDomElement> shadingSurfaceElement = translateShadingSurface(shadingSurface, doc);
+      if (shadingSurfaceElement){
+        result.appendChild(*shadingSurfaceElement);
+      }
+
+      if (m_progressBar){
+        m_progressBar->setValue(m_progressBar->value() + 1);
+      }
+    }
 
     return result;
   }
@@ -264,6 +399,12 @@ namespace gbxml {
     //result.setAttribute("buildingType", "Office");
     result.setAttribute("buildingType", "Unknown");
 
+    boost::optional<std::string> standardsBuildingType = building.standardsBuildingType();
+    if (standardsBuildingType){
+      // todo: map to gbXML types
+      //result.setAttribute("buildingType", escapeName(spaceTypeName));
+    }
+
     // space type
     boost::optional<model::SpaceType> spaceType = building.spaceType();
     if (spaceType){
@@ -280,10 +421,23 @@ namespace gbxml {
     // area
     QDomElement areaElement = doc.createElement("Area");
     result.appendChild(areaElement);
-    areaElement.appendChild(doc.createTextNode(QString::number(building.floorArea())));
+
+    // DLM: we want to use gbXML's definition of floor area which includes area from all spaces with people in them
+    //double floorArea = building.floorArea();
+   
+    std::vector<model::Space> spaces = building.spaces();
+
+    double floorArea = 0;
+    for (const model::Space& space : spaces){
+      double numberOfPeople = space.numberOfPeople();
+      if (numberOfPeople > 0.0) {
+        floorArea += space.multiplier() * space.floorArea();
+      }
+    }
+    
+    areaElement.appendChild(doc.createTextNode(QString::number(floorArea, 'f')));
 
     // translate spaces
-    std::vector<model::Space> spaces = building.spaces();
     if (m_progressBar){
       m_progressBar->setWindowTitle(toString("Translating Spaces"));
       m_progressBar->setMinimum(0);
@@ -295,6 +449,46 @@ namespace gbxml {
       boost::optional<QDomElement> spaceElement = translateSpace(space, doc);
       if (spaceElement){
         result.appendChild(*spaceElement);
+      }
+
+      if (m_progressBar){
+        m_progressBar->setValue(m_progressBar->value() + 1);
+      }
+    }
+
+    // translate shading surface groups
+    model::ShadingSurfaceGroupVector shadingSurfaceGroups = building.model().getConcreteModelObjects<model::ShadingSurfaceGroup>();
+    if (m_progressBar){
+      m_progressBar->setWindowTitle(toString("Translating Shading Surface Groups"));
+      m_progressBar->setMinimum(0);
+      m_progressBar->setMaximum((int)shadingSurfaceGroups.size());
+      m_progressBar->setValue(0);
+    }
+
+    for (const model::ShadingSurfaceGroup& shadingSurfaceGroup : shadingSurfaceGroups){
+      boost::optional<QDomElement> shadingSurfaceGroupElement = translateShadingSurfaceGroup(shadingSurfaceGroup, doc);
+      if (shadingSurfaceGroupElement){
+        result.appendChild(*shadingSurfaceGroupElement);
+      }
+
+      if (m_progressBar){
+        m_progressBar->setValue(m_progressBar->value() + 1);
+      }
+    }
+
+    // translate stories
+    model::BuildingStoryVector stories = building.model().getConcreteModelObjects<model::BuildingStory>();
+    if (m_progressBar){
+      m_progressBar->setWindowTitle(toString("Translating Stories"));
+      m_progressBar->setMinimum(0);
+      m_progressBar->setMaximum((int)stories.size());
+      m_progressBar->setValue(0);
+    }
+
+    for (const model::BuildingStory& story : stories){
+      boost::optional<QDomElement> storyElement = translateBuildingStory(story, doc);
+      if (storyElement){
+        result.appendChild(*storyElement);
       }
 
       if (m_progressBar){
@@ -329,6 +523,13 @@ namespace gbxml {
       result.setAttribute("zoneIdRef", escapeName(thermalZoneName));
     }
 
+    // building story
+    boost::optional<model::BuildingStory> story = space.buildingStory();
+    if (story){
+      std::string storyName = story->name().get();
+      result.setAttribute("buildingStoreyIdRef", escapeName(storyName));
+    }
+
     // name
     QDomElement nameElement = doc.createElement("Name");
     result.appendChild(nameElement);
@@ -337,14 +538,79 @@ namespace gbxml {
     // append floor area
     double area = space.floorArea();
     QDomElement areaElement = doc.createElement("Area");
-    areaElement.appendChild(doc.createTextNode(QString::number(area)));
+    areaElement.appendChild(doc.createTextNode(QString::number(area, 'f')));
     result.appendChild(areaElement);
     
     // append volume
     double volume = space.volume();
     QDomElement volumeElement = doc.createElement("Volume");
-    volumeElement.appendChild(doc.createTextNode(QString::number(volume)));
+    volumeElement.appendChild(doc.createTextNode(QString::number(volume, 'f')));
     result.appendChild(volumeElement);
+
+    return result;
+  }
+
+  boost::optional<QDomElement> ForwardTranslator::translateShadingSurfaceGroup(const openstudio::model::ShadingSurfaceGroup& shadingSurfaceGroup, QDomDocument& doc)
+  {
+    if (shadingSurfaceGroup.space()){
+      return boost::none;
+    }
+
+    QDomElement result = doc.createElement("Space");
+    m_translatedObjects[shadingSurfaceGroup.handle()] = result;
+
+    // id
+    std::string name = shadingSurfaceGroup.name().get();
+    result.setAttribute("id", escapeName(name));
+
+    // name
+    QDomElement nameElement = doc.createElement("Name");
+    result.appendChild(nameElement);
+    nameElement.appendChild(doc.createTextNode(QString::fromStdString(name)));
+
+    return result;  
+  }
+
+  boost::optional<QDomElement> ForwardTranslator::translateBuildingStory(const openstudio::model::BuildingStory& story, QDomDocument& doc)
+  {
+    boost::optional<double> zLevel = story.nominalZCoordinate();
+    
+    // z-level not set, attempt to find it
+    if (!zLevel){
+      for (const auto& space : story.spaces()){
+        Transformation t = space.buildingTransformation();
+        for (const auto& surface : space.surfaces()){
+          for (const auto& vertex : surface.vertices()){
+            if (zLevel){
+              zLevel = std::min(*zLevel, vertex.z());
+            } else{
+              zLevel = vertex.z();
+            }
+          }
+        }
+      }
+    }
+
+    if (!zLevel){
+      zLevel = 0;
+    }
+    
+    QDomElement result = doc.createElement("BuildingStorey");
+    m_translatedObjects[story.handle()] = result;
+
+    // id
+    std::string name = story.name().get();
+    result.setAttribute("id", escapeName(name));
+
+    // name
+    QDomElement nameElement = doc.createElement("Name");
+    result.appendChild(nameElement);
+    nameElement.appendChild(doc.createTextNode(QString::fromStdString(name)));
+
+    // append level
+    QDomElement levelElement = doc.createElement("Level");
+    levelElement.appendChild(doc.createTextNode(QString::number(*zLevel, 'f')));
+    result.appendChild(levelElement);
 
     return result;
   }
@@ -364,37 +630,39 @@ namespace gbxml {
     result.setAttribute("id", escapeName(name));
 
     // DLM: currently unhandled
-    //Shade
     //FreestandingColumn
     //EmbeddedColumn
 
+    bool checkSlabOnGrade = false;
+
     if (surface.isAirWall()){
       result.setAttribute("surfaceType", "Air");
-    }else{
+    } else{
       std::string surfaceType = surface.surfaceType();
       std::string outsideBoundaryCondition = surface.outsideBoundaryCondition();
       if (istringEqual("Wall", surfaceType)){
         if (istringEqual("Outdoors", outsideBoundaryCondition)){
           result.setAttribute("surfaceType", "ExteriorWall");
-        }else if (istringEqual("Surface", outsideBoundaryCondition)){
+        } else if (istringEqual("Surface", outsideBoundaryCondition)){
           result.setAttribute("surfaceType", "InteriorWall");
-        }else if (surface.isGroundSurface()){
+        } else if (surface.isGroundSurface()){
           result.setAttribute("surfaceType", "UndergroundWall");
         }
-      }else if (istringEqual("RoofCeiling", surfaceType)){
+      } else if (istringEqual("RoofCeiling", surfaceType)){
         if (istringEqual("Outdoors", outsideBoundaryCondition)){
           result.setAttribute("surfaceType", "Roof");
-        }else if (istringEqual("Surface", outsideBoundaryCondition)){
+        } else if (istringEqual("Surface", outsideBoundaryCondition)){
           result.setAttribute("surfaceType", "Ceiling");
-        }else if (surface.isGroundSurface()){
+        } else if (surface.isGroundSurface()){
           result.setAttribute("surfaceType", "UndergroundCeiling");
         }
-      }else if (istringEqual("Floor", surfaceType)){
+      } else if (istringEqual("Floor", surfaceType)){
         if (istringEqual("Outdoors", outsideBoundaryCondition)){
           result.setAttribute("surfaceType", "RaisedFloor");
-        }else if (surface.isGroundSurface()){
-          result.setAttribute("surfaceType", "UndergroundSlab"); // or SlabOnGrade?
-        }else if (istringEqual("Surface", outsideBoundaryCondition)){
+        } else if (surface.isGroundSurface()){
+          checkSlabOnGrade = true;
+          result.setAttribute("surfaceType", "UndergroundSlab"); // might be SlabOnGrade, check vertices later
+        } else if (istringEqual("Surface", outsideBoundaryCondition)){
           result.setAttribute("surfaceType", "InteriorFloor");
         }
       }
@@ -403,9 +671,12 @@ namespace gbxml {
     // construction
     boost::optional<model::ConstructionBase> construction = surface.construction();
     if (construction){
-      //std::string constructionName = construction->name().get();
-      // todo:: translate construction
-      //result.setAttribute("constructionIdRef", "constructionName");
+      std::string constructionName = construction->name().get();
+      if (construction->isOpaque()){
+        result.setAttribute("constructionIdRef", escapeName(constructionName));
+      } else{
+        result.setAttribute("windowTypeIdRef", escapeName(constructionName));
+      }
     }
 
     // this space
@@ -437,6 +708,19 @@ namespace gbxml {
 
     // transform vertices to world coordinates
     Point3dVector vertices = transformation*surface.vertices();
+
+    if (checkSlabOnGrade){
+      double minZ = std::numeric_limits<double>::max();
+      double maxZ = std::numeric_limits<double>::min();
+      for (const auto& vertex : vertices){
+        minZ = std::min(minZ, vertex.z());
+        maxZ = std::max(maxZ, vertex.z());
+      }
+      if ((maxZ <= 0.01) && (minZ >= -0.01)){
+        result.setAttribute("surfaceType", "SlabOnGrade"); 
+      }
+    }
+
 
     // check if we can make rectangular geometry
     OptionalVector3d outwardNormal = getOutwardNormal(vertices);
@@ -472,7 +756,8 @@ namespace gbxml {
       size_t llcIndex = 0;
       size_t N = vertices.size();
       for (size_t i = 0; i < N; ++i){
-        OS_ASSERT(std::abs(faceVertices[i].z()) < 0.001);
+        double z = faceVertices[i].z();
+        OS_ASSERT(std::abs(z) < 0.001);
         if ((minY > faceVertices[i].y()) || ((minY > faceVertices[i].y() - 0.00001) && (minX > faceVertices[i].x()))){
           llcIndex = i;
           minY = faceVertices[i].y();
@@ -487,34 +772,34 @@ namespace gbxml {
 
       QDomElement azimuthElement = doc.createElement("Azimuth");
       rectangularGeometryElement.appendChild(azimuthElement);
-      azimuthElement.appendChild(doc.createTextNode(QString::number(radToDeg(azimuthRadians))));
+      azimuthElement.appendChild(doc.createTextNode(QString::number(radToDeg(azimuthRadians), 'g')));
 
       QDomElement cartesianPointElement = doc.createElement("CartesianPoint");
       rectangularGeometryElement.appendChild(cartesianPointElement);
 
       QDomElement coordinateXElement = doc.createElement("Coordinate");
       cartesianPointElement.appendChild(coordinateXElement);
-      coordinateXElement.appendChild(doc.createTextNode(QString::number(vertex.x())));
+      coordinateXElement.appendChild(doc.createTextNode(QString::number(vertex.x(), 'f')));
 
       QDomElement coordinateYElement = doc.createElement("Coordinate");
       cartesianPointElement.appendChild(coordinateYElement);
-      coordinateYElement.appendChild(doc.createTextNode(QString::number(vertex.y())));
+      coordinateYElement.appendChild(doc.createTextNode(QString::number(vertex.y(), 'f')));
 
       QDomElement coordinateZElement = doc.createElement("Coordinate");
       cartesianPointElement.appendChild(coordinateZElement);
-      coordinateZElement.appendChild(doc.createTextNode(QString::number(vertex.z())));
+      coordinateZElement.appendChild(doc.createTextNode(QString::number(vertex.z(), 'f')));
 
       QDomElement tiltElement = doc.createElement("Tilt");
       rectangularGeometryElement.appendChild(tiltElement);
-      tiltElement.appendChild(doc.createTextNode(QString::number(radToDeg(tiltRadians))));
+      tiltElement.appendChild(doc.createTextNode(QString::number(radToDeg(tiltRadians), 'g')));
 
       QDomElement widthElement = doc.createElement("Width");
       rectangularGeometryElement.appendChild(widthElement);
-      widthElement.appendChild(doc.createTextNode(QString::number(areaCorrection*width)));
+      widthElement.appendChild(doc.createTextNode(QString::number(areaCorrection*width, 'f')));
 
       QDomElement heightElement = doc.createElement("Height");
       rectangularGeometryElement.appendChild(heightElement);
-      heightElement.appendChild(doc.createTextNode(QString::number(areaCorrection*height)));
+      heightElement.appendChild(doc.createTextNode(QString::number(areaCorrection*height, 'f')));
     }
 
     // planar geometry
@@ -529,15 +814,15 @@ namespace gbxml {
 
       QDomElement coordinateXElement = doc.createElement("Coordinate");
       cartesianPointElement.appendChild(coordinateXElement);
-      coordinateXElement.appendChild(doc.createTextNode(QString::number(vertex.x())));
+      coordinateXElement.appendChild(doc.createTextNode(QString::number(vertex.x(), 'f')));
 
       QDomElement coordinateYElement = doc.createElement("Coordinate");
       cartesianPointElement.appendChild(coordinateYElement);
-      coordinateYElement.appendChild(doc.createTextNode(QString::number(vertex.y())));
+      coordinateYElement.appendChild(doc.createTextNode(QString::number(vertex.y(), 'f')));
 
       QDomElement coordinateZElement = doc.createElement("Coordinate");
       cartesianPointElement.appendChild(coordinateZElement);
-      coordinateZElement.appendChild(doc.createTextNode(QString::number(vertex.z())));
+      coordinateZElement.appendChild(doc.createTextNode(QString::number(vertex.z(), 'f')));
     }
 
     // translate sub surfaces
@@ -568,12 +853,15 @@ namespace gbxml {
     // construction
     boost::optional<model::ConstructionBase> construction = subSurface.construction();
     if (construction){
-      //std::string constructionName = construction->name().get();
-      // todo: translate construction
-      // result.setAttribute("constructionIdRef", "constructionName");
+      std::string constructionName = construction->name().get();
+      if (construction->isOpaque()){
+        result.setAttribute("constructionIdRef", escapeName(constructionName));
+      } else{
+        result.setAttribute("windowTypeIdRef", escapeName(constructionName));
+      }
     }
 
-    // DLM: currently unhandled
+    // DLM: currently unhandled, nothing in os maps to these
     // OperableSkylight
     // SlidingDoor
 
@@ -631,7 +919,8 @@ namespace gbxml {
       size_t llcIndex = 0;
       size_t N = vertices.size();
       for (size_t i = 0; i < N; ++i){
-        OS_ASSERT(std::abs(faceVertices[i].z()) < 0.001);
+        double z = faceVertices[i].z();
+        OS_ASSERT(std::abs(z) < 0.001);
         if ((minY > faceVertices[i].y()) || ((minY > faceVertices[i].y() - 0.00001) && (minX > faceVertices[i].x()))){
           llcIndex = i;
           minY = faceVertices[i].y();
@@ -646,34 +935,34 @@ namespace gbxml {
 
       QDomElement azimuthElement = doc.createElement("Azimuth");
       rectangularGeometryElement.appendChild(azimuthElement);
-      azimuthElement.appendChild(doc.createTextNode(QString::number(radToDeg(azimuthRadians))));
+      azimuthElement.appendChild(doc.createTextNode(QString::number(radToDeg(azimuthRadians), 'g')));
 
       QDomElement cartesianPointElement = doc.createElement("CartesianPoint");
       rectangularGeometryElement.appendChild(cartesianPointElement);
 
       QDomElement coordinateXElement = doc.createElement("Coordinate");
       cartesianPointElement.appendChild(coordinateXElement);
-      coordinateXElement.appendChild(doc.createTextNode(QString::number(vertex.x())));
+      coordinateXElement.appendChild(doc.createTextNode(QString::number(vertex.x(), 'f')));
 
       QDomElement coordinateYElement = doc.createElement("Coordinate");
       cartesianPointElement.appendChild(coordinateYElement);
-      coordinateYElement.appendChild(doc.createTextNode(QString::number(vertex.y())));
+      coordinateYElement.appendChild(doc.createTextNode(QString::number(vertex.y(), 'f')));
 
       QDomElement coordinateZElement = doc.createElement("Coordinate");
       cartesianPointElement.appendChild(coordinateZElement);
-      coordinateZElement.appendChild(doc.createTextNode(QString::number(vertex.z())));
+      coordinateZElement.appendChild(doc.createTextNode(QString::number(vertex.z(), 'f')));
 
       QDomElement tiltElement = doc.createElement("Tilt");
       rectangularGeometryElement.appendChild(tiltElement);
-      tiltElement.appendChild(doc.createTextNode(QString::number(radToDeg(tiltRadians))));
+      tiltElement.appendChild(doc.createTextNode(QString::number(radToDeg(tiltRadians), 'g')));
 
       QDomElement widthElement = doc.createElement("Width");
       rectangularGeometryElement.appendChild(widthElement);
-      widthElement.appendChild(doc.createTextNode(QString::number(areaCorrection*width)));
+      widthElement.appendChild(doc.createTextNode(QString::number(areaCorrection*width, 'f')));
 
       QDomElement heightElement = doc.createElement("Height");
       rectangularGeometryElement.appendChild(heightElement);
-      heightElement.appendChild(doc.createTextNode(QString::number(areaCorrection*height)));
+      heightElement.appendChild(doc.createTextNode(QString::number(areaCorrection*height, 'f')));
     }
 
     // planar geometry
@@ -689,15 +978,171 @@ namespace gbxml {
 
       QDomElement coordinateXElement = doc.createElement("Coordinate");
       cartesianPointElement.appendChild(coordinateXElement);
-      coordinateXElement.appendChild(doc.createTextNode(QString::number(vertex.x())));
+      coordinateXElement.appendChild(doc.createTextNode(QString::number(vertex.x(), 'f')));
 
       QDomElement coordinateYElement = doc.createElement("Coordinate");
       cartesianPointElement.appendChild(coordinateYElement);
-      coordinateYElement.appendChild(doc.createTextNode(QString::number(vertex.y())));
+      coordinateYElement.appendChild(doc.createTextNode(QString::number(vertex.y(), 'f')));
 
       QDomElement coordinateZElement = doc.createElement("Coordinate");
       cartesianPointElement.appendChild(coordinateZElement);
-      coordinateZElement.appendChild(doc.createTextNode(QString::number(vertex.z())));
+      coordinateZElement.appendChild(doc.createTextNode(QString::number(vertex.z(), 'f')));
+    }
+
+    return result;
+  }
+
+  boost::optional<QDomElement> ForwardTranslator::translateShadingSurface(const openstudio::model::ShadingSurface& shadingSurface, QDomDocument& doc)
+  {
+    // return if already translated
+    if (m_translatedObjects.find(shadingSurface.handle()) != m_translatedObjects.end()){
+      return boost::none;
+    }
+
+    QDomElement result = doc.createElement("Surface");
+    m_translatedObjects[shadingSurface.handle()] = result;
+
+    // id
+    std::string name = shadingSurface.name().get();
+    result.setAttribute("id", escapeName(name));
+
+    result.setAttribute("surfaceType", "Shade");
+
+    // construction
+    boost::optional<model::ConstructionBase> construction = shadingSurface.construction();
+    if (construction){
+      std::string constructionName = construction->name().get();
+      if (construction->isOpaque()){
+        result.setAttribute("constructionIdRef", escapeName(constructionName));
+      } else{
+        result.setAttribute("windowTypeIdRef", escapeName(constructionName));
+      }
+    }
+
+    // this space
+    Transformation transformation;
+    boost::optional<model::Space> space = shadingSurface.space();
+    if (space){
+      transformation = space->siteTransformation();
+
+      std::string spaceName = space->name().get();
+      QDomElement adjacentSpaceIdElement = doc.createElement("AdjacentSpaceId");
+      result.appendChild(adjacentSpaceIdElement);
+      adjacentSpaceIdElement.setAttribute("spaceIdRef", escapeName(spaceName));
+    } else{
+      boost::optional<model::ShadingSurfaceGroup> shadingSurfaceGroup = shadingSurface.shadingSurfaceGroup();
+      if (shadingSurfaceGroup){
+        std::string spaceName = shadingSurfaceGroup->name().get();
+        QDomElement adjacentSpaceIdElement = doc.createElement("AdjacentSpaceId");
+        result.appendChild(adjacentSpaceIdElement);
+        adjacentSpaceIdElement.setAttribute("spaceIdRef", escapeName(spaceName));
+      }
+    }
+
+    // transform vertices to world coordinates
+    Point3dVector vertices = transformation*shadingSurface.vertices();
+
+    // check if we can make rectangular geometry
+    OptionalVector3d outwardNormal = getOutwardNormal(vertices);
+    double area = shadingSurface.grossArea();
+    if (outwardNormal && area > 0){
+
+      // get tilt, duplicate code in planar surface
+      Vector3d up(0.0,0.0,1.0);
+      double tiltRadians = getAngle(*outwardNormal, up);
+
+      // get azimuth, duplicate code in planar surface
+      Vector3d north(0.0,1.0,0.0);
+      double azimuthRadians = getAngle(*outwardNormal, north);
+      if (outwardNormal->x() < 0.0) { 
+        azimuthRadians = -azimuthRadians + 2.0*boost::math::constants::pi<double>(); 
+      }
+
+      // transform vertices to face coordinates
+      Transformation faceTransformation = Transformation::alignFace(vertices);
+      Point3dVector faceVertices = faceTransformation.inverse()*vertices;
+      BoundingBox faceBoundingBox;
+      faceBoundingBox.addPoints(faceVertices);
+      double width = faceBoundingBox.maxX().get() - faceBoundingBox.minX().get();
+      double height = faceBoundingBox.maxY().get() - faceBoundingBox.minY().get();
+      double areaCorrection = 1.0;
+      if (width > 0 && height > 0){
+        areaCorrection = sqrt(area/(width*height));
+      }
+
+      // pick lower left corner vertex in face coordinates
+      double minY = std::numeric_limits<double>::max();
+      double minX = std::numeric_limits<double>::max();
+      size_t llcIndex = 0;
+      size_t N = vertices.size();
+      for (size_t i = 0; i < N; ++i){
+        double z = faceVertices[i].z();
+        OS_ASSERT(std::abs(z) < 0.001);
+        if ((minY > faceVertices[i].y()) || ((minY > faceVertices[i].y() - 0.00001) && (minX > faceVertices[i].x()))){
+          llcIndex = i;
+          minY = faceVertices[i].y();
+          minX = faceVertices[i].x();
+        }
+      }
+      Point3d vertex = vertices[llcIndex];
+
+      // rectangular geometry 
+      QDomElement rectangularGeometryElement = doc.createElement("RectangularGeometry");
+      result.appendChild(rectangularGeometryElement);
+
+      QDomElement azimuthElement = doc.createElement("Azimuth");
+      rectangularGeometryElement.appendChild(azimuthElement);
+      azimuthElement.appendChild(doc.createTextNode(QString::number(radToDeg(azimuthRadians), 'g')));
+
+      QDomElement cartesianPointElement = doc.createElement("CartesianPoint");
+      rectangularGeometryElement.appendChild(cartesianPointElement);
+
+      QDomElement coordinateXElement = doc.createElement("Coordinate");
+      cartesianPointElement.appendChild(coordinateXElement);
+      coordinateXElement.appendChild(doc.createTextNode(QString::number(vertex.x(), 'f')));
+
+      QDomElement coordinateYElement = doc.createElement("Coordinate");
+      cartesianPointElement.appendChild(coordinateYElement);
+      coordinateYElement.appendChild(doc.createTextNode(QString::number(vertex.y(), 'f')));
+
+      QDomElement coordinateZElement = doc.createElement("Coordinate");
+      cartesianPointElement.appendChild(coordinateZElement);
+      coordinateZElement.appendChild(doc.createTextNode(QString::number(vertex.z(), 'f')));
+
+      QDomElement tiltElement = doc.createElement("Tilt");
+      rectangularGeometryElement.appendChild(tiltElement);
+      tiltElement.appendChild(doc.createTextNode(QString::number(radToDeg(tiltRadians), 'g')));
+
+      QDomElement widthElement = doc.createElement("Width");
+      rectangularGeometryElement.appendChild(widthElement);
+      widthElement.appendChild(doc.createTextNode(QString::number(areaCorrection*width, 'f')));
+
+      QDomElement heightElement = doc.createElement("Height");
+      rectangularGeometryElement.appendChild(heightElement);
+      heightElement.appendChild(doc.createTextNode(QString::number(areaCorrection*height, 'f')));
+    }
+
+    // planar geometry
+    QDomElement planarGeometryElement = doc.createElement("PlanarGeometry");
+    result.appendChild(planarGeometryElement);
+
+    QDomElement polyLoopElement = doc.createElement("PolyLoop");
+    planarGeometryElement.appendChild(polyLoopElement);
+    for (const Point3d& vertex : vertices){
+      QDomElement cartesianPointElement = doc.createElement("CartesianPoint");
+      polyLoopElement.appendChild(cartesianPointElement);
+
+      QDomElement coordinateXElement = doc.createElement("Coordinate");
+      cartesianPointElement.appendChild(coordinateXElement);
+      coordinateXElement.appendChild(doc.createTextNode(QString::number(vertex.x(), 'f')));
+
+      QDomElement coordinateYElement = doc.createElement("Coordinate");
+      cartesianPointElement.appendChild(coordinateYElement);
+      coordinateYElement.appendChild(doc.createTextNode(QString::number(vertex.y(), 'f')));
+
+      QDomElement coordinateZElement = doc.createElement("Coordinate");
+      cartesianPointElement.appendChild(coordinateZElement);
+      coordinateZElement.appendChild(doc.createTextNode(QString::number(vertex.z(), 'f')));
     }
 
     return result;

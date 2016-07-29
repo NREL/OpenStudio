@@ -250,6 +250,10 @@ namespace openstudio{
     /// Removes all attributes
     void clearAttributes();
 
+    /// Check for all required fields, return true if any are missing
+    /// Does not update the XML
+    bool missingRequiredFields() const;
+
     /// Check for updates to files, will increment versionID and return true
     /// if any files have changed, been added, or removed from the measure
     /// The measure must still be saved to disk to preserve the new versionID

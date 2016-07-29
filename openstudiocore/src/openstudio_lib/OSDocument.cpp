@@ -73,6 +73,18 @@
 #include "../model/Model_Impl.hpp"
 #include "../model/WeatherFile.hpp"
 #include "../model/WeatherFile_Impl.hpp"
+#include "../model/SimulationControl.hpp"
+#include "../model/SimulationControl_Impl.hpp"
+#include "../model/SizingParameters.hpp"
+#include "../model/SizingParameters_Impl.hpp"
+#include "../model/Timestep.hpp"
+#include "../model/Timestep_Impl.hpp"
+#include "../model/ShadowCalculation.hpp"
+#include "../model/ShadowCalculation_Impl.hpp"
+#include "../model/HeatBalanceAlgorithm.hpp"
+#include "../model/HeatBalanceAlgorithm_Impl.hpp"
+#include "../model/RunPeriod.hpp"
+#include "../model/RunPeriod_Impl.hpp"
 
 #include "../utilities/bcl/BCLComponent.hpp"
 #include "../utilities/bcl/LocalBCL.hpp"
@@ -378,6 +390,9 @@ namespace openstudio {
   {
     m_model.getImpl<openstudio::model::detail::Model_Impl>()->blockSignals(true);
 
+    // close the project
+    m_simpleProject.reset();
+
     // release the file watchers so can remove model temp dir
     m_mainTabController.reset();
 
@@ -398,9 +413,28 @@ namespace openstudio {
   {
     // These objects used to be added to the model as you clicked through the App's tabs,
     // resulting in a uncertain set of model changes.  With these changes, every model will
-    // always have the following objects.
+    // always have the following objects after opening in the app.
     openstudio::model::Building building = m_model.getUniqueModelObject<openstudio::model::Building>();
     openstudio::model::Facility facility = m_model.getUniqueModelObject<openstudio::model::Facility>();
+
+    // from simulation tab
+    //m_model.getUniqueModelObject<openstudio::model::RadianceParameters>();
+    m_model.getUniqueModelObject<openstudio::model::SimulationControl>();
+    m_model.getUniqueModelObject<openstudio::model::SizingParameters>();
+    //m_model.getUniqueModelObject<openstudio::model::ProgramControl>();
+    m_model.getUniqueModelObject<openstudio::model::Timestep>();
+    //m_model.getUniqueModelObject<openstudio::model::ReportingTolerances>();
+    //m_model.getUniqueModelObject<openstudio::model::ConvergenceLimits>();
+    m_model.getUniqueModelObject<openstudio::model::ShadowCalculation>();
+    //m_model.getUniqueModelObject<openstudio::model::SurfaceConvectionAlgorithmInside>();
+    //m_model.getUniqueModelObject<openstudio::model::SurfaceConvectionAlgorithmOutside>();
+    m_model.getUniqueModelObject<openstudio::model::HeatBalanceAlgorithm>();
+    //m_model.getUniqueModelObject<openstudio::model::ZoneAirHeatBalanceAlgorithm>();
+    //m_model.getUniqueModelObject<openstudio::model::ZoneAirContaminantBalance>();
+    //m_model.getUniqueModelObject<openstudio::model::ZoneCapacitanceMultiplierResearchSpecial>();
+    m_model.getUniqueModelObject<openstudio::model::RunPeriod>();
+
+
     openstudio::model::LifeCycleCostParameters lifeCycleCostParameters = m_model.getUniqueModelObject<openstudio::model::LifeCycleCostParameters>();
   }
 

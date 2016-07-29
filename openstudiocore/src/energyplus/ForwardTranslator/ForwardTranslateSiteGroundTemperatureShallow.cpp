@@ -58,7 +58,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSiteGroundTemperatureShal
 
   idfObject.setDouble(Site_GroundTemperature_ShallowFields::SeptemberSurfaceGroundTemperature, modelObject.septemberSurfaceGroundTemperature());
 
-  idfObject.setDouble(Site_GroundTemperature_ShallowFields::OctoberGroundTemperature, modelObject.octoberSurfaceGroundTemperature());
+  idfObject.setDouble(Site_GroundTemperature_ShallowFields::OctoberSurfaceGroundTemperature, modelObject.octoberSurfaceGroundTemperature());
 
   idfObject.setDouble(Site_GroundTemperature_ShallowFields::NovemberSurfaceGroundTemperature, modelObject.novemberSurfaceGroundTemperature());
 

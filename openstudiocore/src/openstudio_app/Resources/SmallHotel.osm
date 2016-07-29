@@ -1,7 +1,7 @@
 
 OS:Version,
-  {d747f5c8-75e6-47bb-b89e-a7422f055941}, !- Handle
-  1.10.0;                                 !- Version Identifier
+  {e58fe508-8595-418f-962f-62e6afa8b517}, !- Handle
+  1.12.0;                                 !- Version Identifier
 
 OS:Construction,
   {1f60c951-176e-4e2e-ba99-20cde26be706}, !- Handle
@@ -15066,8 +15066,8 @@ OS:Schedule:Ruleset,
 OS:ScheduleTypeLimits,
   {d4a2944e-f571-4782-bcff-b75ce4cc7d8a}, !- Handle
   Temperature 42,                         !- Name
-  ,                                       !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
+  ,                                       !- Lower Limit Value
+  ,                                       !- Upper Limit Value
   Continuous,                             !- Numeric Type
   Temperature;                            !- Unit Type
 
@@ -15109,8 +15109,8 @@ OS:Schedule:Ruleset,
 OS:ScheduleTypeLimits,
   {d5699880-15af-4d37-afa9-fb7321611b94}, !- Handle
   Temperature 35,                         !- Name
-  ,                                       !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
+  ,                                       !- Lower Limit Value
+  ,                                       !- Upper Limit Value
   Continuous,                             !- Numeric Type
   Temperature;                            !- Unit Type
 
@@ -15391,8 +15391,8 @@ OS:Schedule:Ruleset,
 OS:ScheduleTypeLimits,
   {9c3a25ab-aa09-479b-aa49-7e8b8a7e8d9a}, !- Handle
   ActivityLevel,                          !- Name
-  0,                                      !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
+  0,                                      !- Lower Limit Value
+  ,                                       !- Upper Limit Value
   Continuous,                             !- Numeric Type
   ActivityLevel;                          !- Unit Type
 

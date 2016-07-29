@@ -33,7 +33,7 @@ class EndUses;
 namespace model {
 
 class Building;
-class Meter;
+class OutputMeter;
 class ExteriorLights;
 
 namespace detail {
@@ -47,7 +47,7 @@ namespace detail {
  *  Facility is a unique object which parents the Building in the model.  Conceptually,
  *  the Facility object includes the Building as well as exterior equipment,
  *  parking lot lighting, water systems for grounds, etc.  The Facility object currently does not
- *  have any fields, it is simply used to access \link Meter Meters \endlink and high level results 
+ *  have any fields, it is simply used to access \link OutputMeter OutputMeters \endlink and high level results 
  *  which include exterior end uses. Facility does not have a public constructor because it is a unique ModelObject.  
  *  To get the Facility object for a Model or create one if it does not yet exist use model.getUniqueObject<Facility>().  
  *  To get the Facility object for a Model but not create one if it does not yet exist use model.getOptionalUniqueObject<Facility>().
@@ -75,10 +75,10 @@ class MODEL_API Facility : public ParentObject {
   /// Returns the child Building.
   boost::optional<Building> building() const;
 
-  /// Returns all \link Meter Meters \endlink at the Facility level.
-  std::vector<Meter> meters() const;
+  /// Returns all \link OutputMeter OutputMeters \endlink at the Facility level.
+  std::vector<OutputMeter> meters() const;
   
-  boost::optional<Meter> getMeterByFuelType(
+  boost::optional<OutputMeter> getMeterByFuelType(
       const FuelType& fuelType,
       const std::string& reportingFrequency="Hourly",
       const boost::optional<EndUseType>& endUseType=boost::none,

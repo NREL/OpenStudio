@@ -305,6 +305,7 @@ void MainRightColumnController::configureForSchedulesSubTab(int subTabID)
 
       myModelList->addModelObjectType(IddObjectType::OS_Schedule_VariableInterval, "Variable Interval Schedules");
       myModelList->addModelObjectType(IddObjectType::OS_Schedule_FixedInterval, "Fixed Interval Schedules");
+      myModelList->addModelObjectType(IddObjectType::OS_Schedule_Year, "Year Schedules");
       myModelList->addModelObjectType(IddObjectType::OS_Schedule_Constant, "Constant Schedules");
       myModelList->addModelObjectType(IddObjectType::OS_Schedule_Compact, "Compact Schedules");
       myModelList->addModelObjectType(IddObjectType::OS_Schedule_Ruleset, "Ruleset Schedules");
@@ -319,6 +320,7 @@ void MainRightColumnController::configureForSchedulesSubTab(int subTabID)
 
       myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_VariableInterval, "Variable Interval Schedules");
       myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_FixedInterval, "Fixed Interval Schedules");
+      myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_Year, "Year Schedules");
       myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_Constant, "Constant Schedules");
       myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_Compact, "Compact Schedules");
       myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_Ruleset, "Ruleset Schedules");
@@ -541,6 +543,7 @@ void MainRightColumnController::configureForLoadsSubTab(int subTabID)
   myModelList->addModelObjectType(IddObjectType::OS_Construction, "Constructions");
   myModelList->addModelObjectType(IddObjectType::OS_Schedule_VariableInterval, "Variable Interval Schedules");
   myModelList->addModelObjectType(IddObjectType::OS_Schedule_FixedInterval, "Fixed Interval Schedules");
+  myModelList->addModelObjectType(IddObjectType::OS_Schedule_Year, "Year Schedules");
   myModelList->addModelObjectType(IddObjectType::OS_Schedule_Constant, "Constant Schedules");
   myModelList->addModelObjectType(IddObjectType::OS_Schedule_Compact, "Compact Schedules");
   myModelList->addModelObjectType(IddObjectType::OS_Schedule_Ruleset, "Ruleset Schedules");
@@ -572,6 +575,7 @@ void MainRightColumnController::configureForLoadsSubTab(int subTabID)
   myLibraryList->addModelObjectType(IddObjectType::OS_People_Definition, "People Definitions");
   myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_VariableInterval, "Variable Interval Schedules");
   myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_FixedInterval, "Fixed Interval Schedules");
+  myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_Year, "Year Schedules");
   myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_Constant, "Constant Schedules");
   myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_Compact, "Compact Schedules");
   myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_Ruleset, "Ruleset Schedules");
@@ -599,6 +603,7 @@ void MainRightColumnController::configureForSpaceTypesSubTab(int subTabID)
 
   myModelList->addModelObjectType(IddObjectType::OS_Schedule_VariableInterval, "Variable Interval Schedules");
   myModelList->addModelObjectType(IddObjectType::OS_Schedule_FixedInterval, "Fixed Interval Schedules");
+  myModelList->addModelObjectType(IddObjectType::OS_Schedule_Year, "Year Schedules");
   myModelList->addModelObjectType(IddObjectType::OS_Schedule_Constant, "Constant Schedules");
   myModelList->addModelObjectType(IddObjectType::OS_Schedule_Compact, "Compact Schedules");
   myModelList->addModelObjectType(IddObjectType::OS_Schedule_Ruleset, "Ruleset Schedules");
@@ -640,6 +645,7 @@ void MainRightColumnController::configureForSpaceTypesSubTab(int subTabID)
 
   myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_VariableInterval, "Variable Interval Schedules");
   myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_FixedInterval, "Fixed Interval Schedules");
+  myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_Year, "Year Schedules");
   myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_Constant, "Constant Schedules");
   myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_Compact, "Compact Schedules");
   myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_Ruleset, "Ruleset Schedules");
@@ -687,6 +693,7 @@ void MainRightColumnController::configureForFacilitySubTab(int subTabID)
   myModelList->addModelObjectType(IddObjectType::OS_Construction, "Constructions");
   myModelList->addModelObjectType(IddObjectType::OS_Schedule_VariableInterval, "Variable Interval Schedules");
   myModelList->addModelObjectType(IddObjectType::OS_Schedule_FixedInterval, "Fixed Interval Schedules");
+  myModelList->addModelObjectType(IddObjectType::OS_Schedule_Year, "Year Schedules");
   myModelList->addModelObjectType(IddObjectType::OS_Schedule_Constant, "Constant Schedules");
   myModelList->addModelObjectType(IddObjectType::OS_Schedule_Compact, "Compact Schedules");
   myModelList->addModelObjectType(IddObjectType::OS_Schedule_Ruleset, "Ruleset Schedules");
@@ -734,6 +741,7 @@ void MainRightColumnController::configureForFacilitySubTab(int subTabID)
   myLibraryList->addModelObjectType(IddObjectType::OS_Construction, "Constructions");
   myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_VariableInterval, "Variable Interval Schedules");
   myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_FixedInterval, "Fixed Interval Schedules");
+  myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_Year, "Year Schedules");
   myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_Constant, "Constant Schedules");
   myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_Compact, "Compact Schedules");
   myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_Ruleset, "Ruleset Schedules");
@@ -788,6 +796,7 @@ void MainRightColumnController::configureForSpacesSubTab(int subTabID)
   myModelList->addModelObjectType(IddObjectType::OS_Construction, "Constructions");
   myModelList->addModelObjectType(IddObjectType::OS_Schedule_VariableInterval, "Variable Interval Schedules");
   myModelList->addModelObjectType(IddObjectType::OS_Schedule_FixedInterval, "Fixed Interval Schedules");
+  myModelList->addModelObjectType(IddObjectType::OS_Schedule_Year, "Year Schedules");
   myModelList->addModelObjectType(IddObjectType::OS_Schedule_Constant, "Constant Schedules");
   myModelList->addModelObjectType(IddObjectType::OS_Schedule_Compact, "Compact Schedules");
   myModelList->addModelObjectType(IddObjectType::OS_Schedule_Ruleset, "Ruleset Schedules");
@@ -840,6 +849,7 @@ void MainRightColumnController::configureForSpacesSubTab(int subTabID)
   myLibraryList->addModelObjectType(IddObjectType::OS_Construction, "Constructions");
   myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_VariableInterval, "Variable Interval Schedules");
   myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_FixedInterval, "Fixed Interval Schedules");
+  myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_Year, "Year Schedules");
   myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_Constant, "Constant Schedules");
   myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_Compact, "Compact Schedules");
   myLibraryList->addModelObjectType(IddObjectType::OS_Schedule_Ruleset, "Ruleset Schedules");
@@ -886,6 +896,7 @@ void MainRightColumnController::configureForThermalZonesSubTab(int subTabID)
   myModelList->setShowFilterLayout(true);
   myModelList->addModelObjectType(IddObjectType::OS_Schedule_VariableInterval, "Variable Interval Schedules");
   myModelList->addModelObjectType(IddObjectType::OS_Schedule_FixedInterval, "Fixed Interval Schedules");
+  myModelList->addModelObjectType(IddObjectType::OS_Schedule_Year, "Year Schedules");
   myModelList->addModelObjectType(IddObjectType::OS_Schedule_Constant, "Constant Schedules");
   myModelList->addModelObjectType(IddObjectType::OS_Schedule_Compact, "Compact Schedules");
   myModelList->addModelObjectType(IddObjectType::OS_Schedule_Ruleset, "Ruleset Schedules");
@@ -965,6 +976,7 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
   myModelList->addModelObjectType(IddObjectType::OS_Chiller_Absorption_Indirect,"Chiller - Indirect Absorption");
   myModelList->addModelObjectType(IddObjectType::OS_Schedule_VariableInterval, "Variable Interval Schedules");
   myModelList->addModelObjectType(IddObjectType::OS_Schedule_FixedInterval, "Fixed Interval Schedules");
+  myModelList->addModelObjectType(IddObjectType::OS_Schedule_Year, "Year Schedules");
   myModelList->addModelObjectType(IddObjectType::OS_Schedule_Constant, "Constant Schedules");
   myModelList->addModelObjectType(IddObjectType::OS_Schedule_Compact, "Compact Schedules");
   myModelList->addModelObjectType(IddObjectType::OS_Schedule_Ruleset, "Ruleset Schedules");
@@ -1040,6 +1052,7 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
   libraryWidget->addModelObjectType(IddObjectType::OS_HeatPump_WaterToWater_EquationFit_Cooling,"Heat Pump - Water to Water - Cooling");
   libraryWidget->addModelObjectType(IddObjectType::OS_HeatExchanger_FluidToFluid,"Heat Exchanger Fluid To Fluid");
   libraryWidget->addModelObjectType(IddObjectType::OS_HeatExchanger_AirToAir_SensibleAndLatent,"Heat Exchanger Air To Air Sensible and Latent");
+  libraryWidget->addModelObjectType(IddObjectType::OS_Generator_MicroTurbine_HeatRecovery,"Generator MicroTurbine - Heat Recovery");
   libraryWidget->addModelObjectType(IddObjectType::OS_GroundHeatExchanger_Vertical, "Ground Heat Exchanger - Vertical ");
   libraryWidget->addModelObjectType(IddObjectType::OS_GroundHeatExchanger_HorizontalTrench,"Ground Heat Exchanger - Horizontal");
   libraryWidget->addModelObjectType(IddObjectType::OS_FluidCooler_SingleSpeed,"Fluid Cooler Single Speed");

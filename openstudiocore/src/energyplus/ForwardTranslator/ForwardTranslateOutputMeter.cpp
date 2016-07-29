@@ -20,8 +20,8 @@
 #include "../ForwardTranslator.hpp"
 
 #include "../../model/Model.hpp"
-#include "../../model/Meter.hpp"
-#include "../../model/Meter_Impl.hpp"
+#include "../../model/OutputMeter.hpp"
+#include "../../model/OutputMeter_Impl.hpp"
 
 #include <utilities/idd/Output_Meter_FieldEnums.hxx>
 #include <utilities/idd/Output_Meter_Cumulative_FieldEnums.hxx>
@@ -38,7 +38,7 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateMeter( Meter & modelObject )
+boost::optional<IdfObject> ForwardTranslator::translateOutputMeter( OutputMeter & modelObject )
 {
   boost::optional<IdfObject> idfObject;
 

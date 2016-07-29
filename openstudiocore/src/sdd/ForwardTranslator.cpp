@@ -83,7 +83,7 @@
 #include "../model/LifeCycleCostParameters.hpp"
 #include "../model/LightingDesignDay.hpp"
 #include "../model/LightingSimulationControl.hpp"
-#include "../model/Meter.hpp"
+#include "../model/OutputMeter.hpp"
 #include "../model/ModelObjectList.hpp"
 #include "../model/OutputControlReportingTolerances.hpp"
 #include "../model/OutputVariable.hpp"
@@ -123,6 +123,9 @@
 #include "../model/ShadowCalculation.hpp"
 #include "../model/SiteGroundReflectance.hpp"
 #include "../model/SiteGroundTemperatureBuildingSurface.hpp"
+#include "../model/SiteGroundTemperatureDeep.hpp"
+#include "../model/SiteGroundTemperatureFCfactorMethod.hpp"
+#include "../model/SiteGroundTemperatureShallow.hpp"
 #include "../model/SiteWaterMainsTemperature.hpp"
 #include "../model/SizingParameters.hpp"
 #include "../model/SkyTemperature.hpp"
@@ -320,7 +323,7 @@ namespace sdd {
     //<RunPeriodEndDay>0</RunPeriodEndDay>
     //<RunPeriodYear>0</RunPeriodYear>
 
-    // do materials before constructions 
+    // do materials before constructions
     std::vector<model::Material> materials = model.getModelObjects<model::Material>();
     std::sort(materials.begin(), materials.end(), WorkspaceObjectNameLess());
 
@@ -342,7 +345,7 @@ namespace sdd {
         m_progressBar->setValue(m_progressBar->value() + 1);
       }
     }
-  
+
     // do constructions before geometry
 
     std::vector<model::ConstructionBase> constructions = model.getModelObjects<model::ConstructionBase>();
@@ -387,7 +390,7 @@ namespace sdd {
       if (constructionElement){
         projectElement.appendChild(*constructionElement);
       }
-            
+
       if (m_progressBar){
         m_progressBar->setValue(m_progressBar->value() + 1);
       }
@@ -403,7 +406,7 @@ namespace sdd {
       if (constructionElement){
         projectElement.appendChild(*constructionElement);
       }
-            
+
       if (m_progressBar){
         m_progressBar->setValue(m_progressBar->value() + 1);
       }
@@ -432,7 +435,7 @@ namespace sdd {
     if (m_progressBar){
       m_progressBar->setWindowTitle(toString("Translating Site Shading"));
       m_progressBar->setMinimum(0);
-      m_progressBar->setMaximum((int)shadingSurfaceGroups.size()); 
+      m_progressBar->setMaximum((int)shadingSurfaceGroups.size());
       m_progressBar->setValue(0);
     }
 
@@ -507,10 +510,10 @@ namespace sdd {
     m_ignoreTypes.push_back(model::LifeCycleCostParameters::iddObjectType());
     m_ignoreTypes.push_back(model::LightingDesignDay::iddObjectType());
     m_ignoreTypes.push_back(model::LightingSimulationControl::iddObjectType());
-    m_ignoreTypes.push_back(model::Meter::iddObjectType());
     m_ignoreTypes.push_back(model::ModelObjectList::iddObjectType());
     m_ignoreTypes.push_back(model::Node::iddObjectType());
     m_ignoreTypes.push_back(model::OutputControlReportingTolerances::iddObjectType());
+    m_ignoreTypes.push_back(model::OutputMeter::iddObjectType());
     m_ignoreTypes.push_back(model::OutputVariable::iddObjectType());
     m_ignoreTypes.push_back(model::OutsideSurfaceConvectionAlgorithm::iddObjectType());
     m_ignoreTypes.push_back(model::PortList::iddObjectType());
@@ -573,7 +576,7 @@ namespace sdd {
           // If mo is not in the m_ignoreObjects list
           if(std::find(m_ignoreObjects.begin(),m_ignoreObjects.end(),mo.handle()) == m_ignoreObjects.end()) {
             LOG(Error,mo.briefDescription() << " was not translated.");
-          } 
+          }
         }
       }
     }

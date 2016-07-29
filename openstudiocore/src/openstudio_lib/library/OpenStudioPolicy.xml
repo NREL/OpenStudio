@@ -1522,6 +1522,29 @@
     <rule IddField="Minute" Access="LOCKED"/>
     <rule IddField="Value Until Time" Access="LOCKED"/>
   </POLICY>
+    <POLICY IddObjectType="OS_Schedule_Week">
+    <rule IddField="Name" Access="LOCKED"/>
+    <rule IddField="Schedule Rendering Name" Access="LOCKED"/>
+    <rule IddField="Sunday Schedule:Day Name" Access="LOCKED"/>
+    <rule IddField="Monday Schedule:Day Name" Access="LOCKED"/>
+    <rule IddField="Tuesday Schedule:Day Name" Access="LOCKED"/>
+    <rule IddField="Wednesday Schedule:Day Name" Access="LOCKED"/>
+    <rule IddField="Thursday Schedule:Day Name" Access="LOCKED"/>
+    <rule IddField="Friday Schedule:Day Name" Access="LOCKED"/>
+    <rule IddField="Saturday Schedule:Day Name" Access="LOCKED"/>
+    <rule IddField="Holiday Schedule:Day Name" Access="LOCKED"/>
+    <rule IddField="SummerDesignDay Schedule:Day Name" Access="LOCKED"/>
+    <rule IddField="WinterDesignDay Schedule:Day Name" Access="LOCKED"/>
+    <rule IddField="CustomDay1 Schedule:Day Name" Access="LOCKED"/>
+    <rule IddField="CustomDay2 Schedule:Day Name" Access="LOCKED"/>
+  </POLICY>
+    <POLICY IddObjectType="OS_Schedule_Year">
+    <rule IddField="Name" Access="LOCKED"/>
+    <rule IddField="Schedule Type Limits Name" Access="LOCKED"/>
+    <rule IddField="Month" Access="LOCKED"/>
+    <rule IddField="Day" Access="LOCKED"/>
+    <rule IddField="Week Schedule Until Date" Access="LOCKED"/>
+  </POLICY>
   <POLICY IddObjectType="OS_Schedule_Rule">
     <rule IddField="Name" Access="LOCKED"/>
     <rule IddField="Schedule Ruleset Name" Access="LOCKED"/>
@@ -1556,5 +1579,9 @@
     <rule IddField="Upper Limit Value" Access="LOCKED"/>
     <rule IddField="Numeric Type" Access="LOCKED"/>
     <rule IddField="Unit Type" Access="LOCKED"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_Generator_MicroTurbine_HeatRecovery">
+    <rule IddField="Heat Recovery Water Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Heat Recovery Water Outlet Node Name" Access="HIDDEN"/>
   </POLICY>
 </ROOT>

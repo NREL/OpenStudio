@@ -1,3 +1,78 @@
+## OpenStudio v1.12.2
+###### 2016-07-25 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.12.1...v1.12.2 )
+
+Closed Issues: 12 (#93, #94, #273, #275, #398, #399, #1362, #1925, #1991, #2172, #2278, #2306)
+- ![Fixed:][fixed] [#93]( https://github.com/NREL/OpenStudio/issues/93 ), gbXML translator should convert floor to roof and vice versa when reverses geometry (Bugzilla #634)
+- ![Fixed:][fixed] [#94]( https://github.com/NREL/OpenStudio/issues/94 ), gbXML translator should provide a value for material roughness if not in the file (Bugzilla #635)
+- ![Fixed:][fixed] [#273]( https://github.com/NREL/OpenStudio/issues/273 ), Error working on gbXML file after I imported it (Bugzilla #1053)
+- ![Fixed:][fixed] [#275]( https://github.com/NREL/OpenStudio/issues/275 ), An xml with a zone containing multiple spaces is split into multiple zones on import. (Bugzilla #1056)
+- ![Fixed:][fixed] [#398]( https://github.com/NREL/OpenStudio/issues/398 ), Non-mirror constructions in export of std 140 model to gbXML
+- ![Fixed:][fixed] [#399]( https://github.com/NREL/OpenStudio/issues/399 ), Unable to import gbXML export of hospital reference building into Bentley
+- ![Fixed:][fixed] [#1362]( https://github.com/NREL/OpenStudio/issues/1362 ), OpenStudio GUI does not show ScheduleYear objects where it should
+- ![Fixed:][fixed] [#1925]( https://github.com/NREL/OpenStudio/issues/1925 ), GBXML Export Uses wrong Coordinate Geometry
+- ![Fixed:][fixed] [#1991]( https://github.com/NREL/OpenStudio/issues/1991 ), Shading surfaces not exported to gbXML
+- ![Improved:][improved] [#2172]( https://github.com/NREL/OpenStudio/issues/2172 ), Translate all coils supported by the IDD in AirLoopHVACUnitarySystem
+- ![Fixed:][fixed] [#2278]( https://github.com/NREL/OpenStudio/issues/2278 ), UnitarySystemPerformance:Multispeed is not cloning correctly
+- ![Fixed:][fixed] [#2306]( https://github.com/NREL/OpenStudio/issues/2306 ), Zone overview bug in open studio results
+
+## OpenStudio v1.12.1
+###### 2016-07-07 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.12.0...v1.12.1 )
+
+- ![Fixed:][fixed] [#2248]( https://github.com/NREL/OpenStudio/pull/2248 ), Add Generator:MicroTurbine to OpenStudio
+- ![Fixed:][fixed] [#2263]( https://github.com/NREL/OpenStudio/pull/2263 ), Add Meter:Custom and Meter:CustomDecrement to the SDK
+- ![Fixed:][fixed] [#2276]( https://github.com/NREL/OpenStudio/pull/2276 ), Add ElectricLoadCenter:Storage:Simple and expose rest of ELC:Distribution fields
+- ![Fixed:][fixed] [#2282]( https://github.com/NREL/OpenStudio/pull/2282 ), Jmarrec merge
+- ![Fixed:][fixed] [#2287]( https://github.com/NREL/OpenStudio/pull/2287 ), Spectral dataset
+
+## OpenStudio v1.12.0
+###### 2016-07-01 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.11.6...v1.12.0 )
+
+## OpenStudio v1.11.6
+###### 2016-06-24 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.11.5...v1.11.6 )
+
+- ![Fixed:][fixed] [#2279]( https://github.com/NREL/OpenStudio/issues/2279 ), 1.11.5 - Surface class shadingSurfaceGroup method doesn't work
+
+## OpenStudio v1.11.5
+###### 2016-06-13 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.11.4...v1.11.5 )
+
+- ![Improved:][improved] [#2172]( https://github.com/NREL/OpenStudio/issues/2172 ), Translate all coils supported by the IDD in AirLoopHVACUnitarySystem
+- ![Improved:][improved] [#2213]( https://github.com/NREL/OpenStudio/issues/2213 ), Enable heat recovery for ChillerElectricEIR
+- ![Fixed:][fixed] [#247]( https://github.com/NREL/OpenStudio/issues/247 ), Opening OSM file in SketchUp Plugin changes Daylight Savings values (Bugzilla #1015)
+- ![Fixed:][fixed] [#981]( https://github.com/NREL/OpenStudio/issues/981 ), Daylight savings time in user file is overwritten when opening model in app
+- ![Fixed:][fixed] [#2099]( https://github.com/NREL/OpenStudio/issues/2099 ), TimeStep of 6 per hour in new model isn't respected when simulation is run
+- ![Fixed:][fixed] [#2177]( https://github.com/NREL/OpenStudio/issues/2177 ), WaterHeaterMixed - Ambient Temperature Indicator : Outdoors does not work
+- ![Fixed:][fixed] [#2184]( https://github.com/NREL/OpenStudio/issues/2184 ), unit ventilator object is incomplete in 1.11.0
+- ![Fixed:][fixed] [#2185]( https://github.com/NREL/OpenStudio/issues/2185 ), Daylight savings time allways get the American option
+- ![Fixed:][fixed] [#2204]( https://github.com/NREL/OpenStudio/issues/2204 ), Update forward translator so it doesn't translate orphan surfaces
+- ![Fixed:][fixed] [#2221]( https://github.com/NREL/OpenStudio/issues/2221 ), Temp dir is not deleted
+- ![Fixed:][fixed] [#2237]( https://github.com/NREL/OpenStudio/issues/2237 ), Site:GroundTemperature:Deep not forward translating
+- ![Fixed:][fixed] [#2240]( https://github.com/NREL/OpenStudio/issues/2240 ), Unit conversion error - in^2 to cm^2
+- ![Fixed:][fixed] [#2249]( https://github.com/NREL/OpenStudio/issues/2249 ), Handle "Baseline" checks on PAT XML export
+- ![Fixed:][fixed] [#2265]( https://github.com/NREL/OpenStudio/issues/2265 ), OpenStudio::Workspace constructor creates an OS:Version object that makes reverse translation fail
+- ![Fixed:][fixed] [#2268]( https://github.com/NREL/OpenStudio/issues/2268 ), WaterHeaterMixed is writing a corrupt oa node on translate to idf
+- ![Fixed:][fixed] [#2269]( https://github.com/NREL/OpenStudio/issues/2269 ), 1.11.4 - Coil:Cooling:DX:TwoStageWithHumidityControlMode causes sim to fail
+
+## OpenStudio v1.11.4
+###### 2016-05-27 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.11.3...v1.11.4 )
+
+- ![Fixed:][fixed] [#2126]( https://github.com/NREL/OpenStudio/issues/2126 ), 1.10.4 EnergyPlus crash with Output:Table:SummaryReports measure
+- ![Fixed:][fixed] [#2129]( https://github.com/NREL/OpenStudio/issues/2129 ), Additional Radiance Measure Server Fixes
+- ![Fixed:][fixed] [#2188]( https://github.com/NREL/OpenStudio/issues/2188 ), change 90.1 construction sets to match the PRM
+- ![Fixed:][fixed] [#2223]( https://github.com/NREL/OpenStudio/issues/2223 ), Controller Mechanical Ventilation Availability Schedule
+- ![Fixed:][fixed] [#2226]( https://github.com/NREL/OpenStudio/issues/2226 ), AirConditionerVariableRefrigerantFlow::clone does not include curves
+- ![Fixed:][fixed] [#2231]( https://github.com/NREL/OpenStudio/issues/2231 ), PTHP does not allow water coils
+- ![Fixed:][fixed] [#2233]( https://github.com/NREL/OpenStudio/issues/2233 ), Enhance ZoneHVACBaseboardConvectiveWater
+- ![Fixed:][fixed] [#2235]( https://github.com/NREL/OpenStudio/issues/2235 ), OtherEquipment should allow negative schedule values to -1.
+- ![Fixed:][fixed] [#2238]( https://github.com/NREL/OpenStudio/issues/2238 ), Remove custom populateValidityReport implementations from ModelObject classes
+- ![Fixed:][fixed] [#2242]( https://github.com/NREL/OpenStudio/issues/2242 ), CBECC Translate OA equipment including HX
+- ![Fixed:][fixed] [#2243]( https://github.com/NREL/OpenStudio/issues/2243 ), OpenStudio crashes when going to "Measures" tab on two user models
+- ![Fixed:][fixed] [#2244]( https://github.com/NREL/OpenStudio/issues/2244 ), OA Mixer should be at the end of the oa system equipment list
+
+## OpenStudio v1.11.3
+###### 2016-05-17 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.11.2...v1.11.3 )
+
+- ![Fixed:][fixed] [#2225]( https://github.com/NREL/OpenStudio/issues/2225 ), Daylighting Controls Measure: OS:Daylighting:Control objects do not forward translate in certain cases
+
 ## OpenStudio v1.11.2
 ###### 2016-05-02 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.11.1...v1.11.2 )
 

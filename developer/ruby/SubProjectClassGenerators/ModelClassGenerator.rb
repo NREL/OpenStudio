@@ -81,7 +81,13 @@ class ModelObjectField
   end
 
   def isSchedule?
-    return (objectListClassName.include? "Schedule")
+    result = false
+    @iddField.properties.objectLists.each { |objectList|
+      if objectList == "ScheduleNames"
+        result = true
+      end
+    }
+    return result
   end
 
   def isChoice?
@@ -296,25 +302,13 @@ class ModelObjectField
       if isBooleanChoice?
         result = "bool"
       else
-        result = "std::string"
+        result = "const std::string&"
       end
     elsif isObjectList?
       if isSchedule?
         result = objectListClassName + "&"
       else
         result = "const " + objectListClassName + "&"
-      end
-    end
-    return result
-  end
-
-  def privateClassSetterType
-    result = getterReturnType
-    if isObjectList?
-      if isSchedule?
-        result = objectListClassName + "&"
-      else
-        result = "const " + result + "&"
       end
     end
     return result
@@ -617,7 +611,7 @@ class ModelClassGenerator < SubProjectClassGenerator
 
         preamble = "  bool ok = true;\n"
         @nonextensibleFields.each { |field|
-          if field.isRequired? and not field.isName?
+          if field.isRequired? and not field.isName? and not field.isHandle?
             if field.setCanFail?
               result << preamble
               result << "  // ok = " << field.setterName << "();\n"
@@ -705,6 +699,9 @@ class ModelClassGenerator < SubProjectClassGenerator
 
         if field.isObjectList?
           result << "  // TODO: Check argument type. From object lists, some candidates are: " << field.candidateObjectListClassNames << ".\n"
+          if field.isSchedule?
+            result << "  // Note Schedules are passed by reference, not const reference.\n"
+          end
         end
 
         if field.setCanFail?
@@ -816,12 +813,15 @@ class ModelClassGenerator < SubProjectClassGenerator
 
         if field.isObjectList?
           result << "    // TODO: Check argument type. From object lists, some candidates are: " << field.candidateObjectListClassNames << ".\n"
+          if field.isSchedule?
+            result << "  // Note Schedules are passed by reference, not const reference.\n"
+          end
         end
 
         if field.setCanFail?
-          result << "    bool " << field.setterName << "(" << field.privateClassSetterType << " " << field.setterArgumentName << ");\n\n"
+          result << "    bool " << field.setterName << "(" << field.publicClassSetterType << " " << field.setterArgumentName << ");\n\n"
         else
-          result << "    void " << field.setterName << "(" << field.privateClassSetterType << " " << field.setterArgumentName << ");\n\n"
+          result << "    void " << field.setterName << "(" << field.publicClassSetterType << " " << field.setterArgumentName << ");\n\n"
         end
 
         if field.hasReset?
@@ -993,11 +993,11 @@ class ModelClassGenerator < SubProjectClassGenerator
           result << "  void "
         end
 
-        result << @className << "_Impl::" << field.setterName << "(" << field.privateClassSetterType << " " << field.setterArgumentName << ") {\n"
+        result << @className << "_Impl::" << field.setterName << "(" << field.publicClassSetterType << " " << field.setterArgumentName << ") {\n"
 
         if field.isBooleanChoice?
 
-          if /optional/.match(field.privateClassSetterType)
+          if /optional/.match(field.publicClassSetterType)
             result << "    bool result = false;\n"
             result << "    if (" << field.setterArgumentName << ") {\n"
             result << "      if (" << field.setterArgumentName << ".get()) {\n"
@@ -1015,7 +1015,7 @@ class ModelClassGenerator < SubProjectClassGenerator
             result << "    }\n"
           end
 
-        elsif /optional/.match(field.privateClassSetterType)
+        elsif /optional/.match(field.publicClassSetterType)
 
           #raise "Schedule setters should not take optionals." if field.isSchedule?
 

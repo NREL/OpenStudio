@@ -822,7 +822,7 @@ std::vector<RunPeriod> SimulationControl::runPeriods() const {
 boost::optional<ShadowCalculation> SimulationControl::shadowCalculation() const {
   return getImpl<detail::SimulationControl_Impl>()->shadowCalculation();
 }
-  
+
 boost::optional<SizingParameters> SimulationControl::sizingParameters() const {
   return getImpl<detail::SimulationControl_Impl>()->sizingParameters();
 }

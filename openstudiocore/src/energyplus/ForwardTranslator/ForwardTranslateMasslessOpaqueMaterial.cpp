@@ -69,4 +69,3 @@ boost::optional<IdfObject> ForwardTranslator::translateMasslessOpaqueMaterial( M
 } // energyplus
 
 } // openstudio
-

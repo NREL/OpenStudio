@@ -216,36 +216,6 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void SiteWaterMainsTemperature_Impl::populateValidityReport(ValidityReport& report,bool checkNames) const {
-    // Inherit lower-level errors
-    ModelObject_Impl::populateValidityReport(report,checkNames);
-
-    if (report.level() > StrictnessLevel::Draft) {
-      boost::optional<IddKey> key = iddObject().getField(OS_Site_WaterMainsTemperatureFields::CalculationMethod).get().getKey(calculationMethod());
-      OS_ASSERT(key);
-      if (key->name() == "Schedule") {
-        if (!temperatureSchedule()) {
-          report.insertError(DataError(OS_Site_WaterMainsTemperatureFields::TemperatureScheduleName,
-                                       getObject<ModelObject>(),
-                                       DataErrorType::NullAndRequired));
-        }
-      }
-      else {
-        // Correlation
-        if (!annualAverageOutdoorAirTemperature()) {
-          report.insertError(DataError(OS_Site_WaterMainsTemperatureFields::AnnualAverageOutdoorAirTemperature,
-                                       getObject<ModelObject>(),
-                                       DataErrorType::NullAndRequired));
-        }
-        if (!maximumDifferenceInMonthlyAverageOutdoorAirTemperatures()) {
-          report.insertError(DataError(OS_Site_WaterMainsTemperatureFields::MaximumDifferenceInMonthlyAverageOutdoorAirTemperatures,
-                                       getObject<ModelObject>(),
-                                       DataErrorType::NullAndRequired));
-        }
-      }
-    }
-  }
-
   std::vector<std::string> SiteWaterMainsTemperature_Impl::calculationMethodValues() const {
     return SiteWaterMainsTemperature::calculationMethodValues();
   }

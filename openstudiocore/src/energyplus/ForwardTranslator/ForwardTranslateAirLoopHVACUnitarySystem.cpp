@@ -33,29 +33,51 @@
 #include "../../model/SetpointManagerMixedAir_Impl.hpp"
 #include "../../model/AirLoopHVACOutdoorAirSystem.hpp"
 #include "../../model/AirLoopHVACOutdoorAirSystem_Impl.hpp"
+#include "../../model/CoilCoolingDXMultiSpeedStageData.hpp"
+#include "../../model/CoilCoolingDXMultiSpeedStageData_Impl.hpp"
+#include "../../model/CoilHeatingDXMultiSpeedStageData.hpp"
+#include "../../model/CoilHeatingDXMultiSpeedStageData_Impl.hpp"
 #include "../../model/CoilSystemCoolingDXHeatExchangerAssisted.hpp"
 #include "../../model/CoilSystemCoolingDXHeatExchangerAssisted_Impl.hpp"
+#include "../../model/CoilSystemCoolingWaterHeatExchangerAssisted.hpp"
+#include "../../model/CoilSystemCoolingWaterHeatExchangerAssisted_Impl.hpp"
 #include "../../model/AirToAirComponent.hpp"
 #include "../../model/AirToAirComponent_Impl.hpp"
+#include "../../model/CoilHeatingDXMultiSpeed.hpp"
+#include "../../model/CoilHeatingDXMultiSpeed_Impl.hpp"
+#include "../../model/CoilCoolingDXMultiSpeed.hpp"
+#include "../../model/CoilCoolingDXMultiSpeed_Impl.hpp"
+#include "../../model/CoilHeatingGasMultiStage.hpp"
+#include "../../model/CoilHeatingGasMultiStage_Impl.hpp"
+#include "../../model/CoilHeatingGasMultiStageStageData.hpp"
+#include "../../model/CoilHeatingGasMultiStageStageData_Impl.hpp"
 #include <utilities/idd/AirLoopHVAC_UnitarySystem_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_SingleSpeed_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_TwoSpeed_FieldEnums.hxx>
+#include <utilities/idd/Coil_Cooling_DX_TwoStageWithHumidityControlMode_FieldEnums.hxx>
+#include <utilities/idd/Coil_Cooling_DX_MultiSpeed_FieldEnums.hxx>
+#include <utilities/idd/Coil_Cooling_DX_VariableSpeed_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_Water_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_WaterToAirHeatPump_EquationFit_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFit_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Desuperheater_FieldEnums.hxx>
+#include <utilities/idd/Coil_Heating_DX_MultiSpeed_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_DX_SingleSpeed_FieldEnums.hxx>
-#include <utilities/idd/HeatExchanger_AirToAir_SensibleAndLatent_FieldEnums.hxx>
+#include <utilities/idd/Coil_Heating_DX_VariableSpeed_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Electric_FieldEnums.hxx>
+#include <utilities/idd/Coil_Heating_Gas_MultiStage_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Gas_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Water_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_WaterToAirHeatPump_EquationFit_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit_FieldEnums.hxx>
+#include <utilities/idd/HeatExchanger_AirToAir_SensibleAndLatent_FieldEnums.hxx>
 #include <utilities/idd/Fan_ConstantVolume_FieldEnums.hxx>
 #include <utilities/idd/Fan_OnOff_FieldEnums.hxx>
 #include <utilities/idd/Fan_VariableVolume_FieldEnums.hxx>
 #include <utilities/idd/SetpointManager_MixedAir_FieldEnums.hxx>
+#include <utilities/idd/UnitarySystemPerformance_Multispeed_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
@@ -170,9 +192,8 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
   // Heating Coil Object Type
   // Heating Coil Name
   boost::optional<IdfObject> _heatingCoil;
-
-  if( boost::optional<HVACComponent> heatingCoil = modelObject.heatingCoil() )
-  {
+  auto heatingCoil = modelObject.heatingCoil();
+  if( heatingCoil ) {
     _heatingCoil = translateAndMapModelObject(heatingCoil.get());
 
     if( _heatingCoil && _heatingCoil->name() )
@@ -191,7 +212,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
   // Cooling Coil Object Type
   // Cooling Coil Name
   boost::optional<IdfObject> _coolingCoil;
-  boost::optional<HVACComponent> coolingCoil = modelObject.coolingCoil();
+  auto coolingCoil = modelObject.coolingCoil();
 
   if( coolingCoil )
   {
@@ -250,7 +271,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
   // Supply Air Flow Rate During Cooling Operation
   if( modelObject.isSupplyAirFlowRateDuringCoolingOperationAutosized() ) {
     unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::CoolingSupplyAirFlowRate,"Autosize");
-  } 
+  }
   else if ( (d = modelObject.supplyAirFlowRateDuringCoolingOperation()) ) {
     unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::CoolingSupplyAirFlowRate,d.get());
   }
@@ -282,7 +303,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
   // Supply Air Flow Rate During Heating Operation
   if( modelObject.isSupplyAirFlowRateDuringHeatingOperationAutosized() ) {
     unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::HeatingSupplyAirFlowRate,"Autosize");
-  } 
+  }
   else if ( (d = modelObject.supplyAirFlowRateDuringHeatingOperation()) ) {
     unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::HeatingSupplyAirFlowRate,d.get());
   }
@@ -314,7 +335,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
   // Supply Air Flow Rate When No Cooling or Heating is Required
   if( modelObject.isSupplyAirFlowRateWhenNoCoolingorHeatingisRequiredAutosized() ) {
     unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::NoLoadSupplyAirFlowRate,"Autosize");
-  } 
+  }
   else if ( (d = modelObject.supplyAirFlowRateWhenNoCoolingorHeatingisRequired()) ) {
     unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::NoLoadSupplyAirFlowRate,d.get());
   }
@@ -352,7 +373,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
   // Maximum Supply Air Temperature
   if( modelObject.isMaximumSupplyAirTemperatureAutosized() ) {
     unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::MaximumSupplyAirTemperature,"Autosize");
-  } 
+  }
   else if ( (d = modelObject.maximumSupplyAirTemperature()) ) {
     unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::MaximumSupplyAirTemperature,d.get());
   }
@@ -453,6 +474,114 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
   //   }
   // }
 
+  // If not user specified, then generate the UnitarySystemPerformance:Multispeed used for multi speed coils
+  // Note it will never be user specified at this time, because OS does not have the UnitarySystemPerformanceMultispeed object
+  // The plan as of this writting is to eventually support UnitarySystemPerformanceMultispeed and if user specified, then
+  // don't do this automatic generation
+  
+  if( (coolingCoil && (coolingCoil->iddObjectType() == model::CoilCoolingDXMultiSpeed::iddObjectType())) || 
+      (heatingCoil && (heatingCoil->iddObjectType() == model::CoilHeatingDXMultiSpeed::iddObjectType())) ||
+      (heatingCoil && (heatingCoil->iddObjectType() == model::CoilHeatingGasMultiStage::iddObjectType())) ) {
+
+    IdfObject _unitarySystemPerformance(openstudio::IddObjectType::UnitarySystemPerformance_Multispeed);
+    m_idfObjects.push_back(_unitarySystemPerformance);
+    _unitarySystemPerformance.setName(unitarySystem.nameString() + " Unitary System Performance");
+    
+    boost::optional<model::CoilHeatingDXMultiSpeed> multispeedDXHeating;
+    boost::optional<model::CoilHeatingGasMultiStage> multistageGasHeating;
+    boost::optional<model::CoilCoolingDXMultiSpeed> multispeedDXCooling;
+
+    int maxStages = 0;
+
+    if( heatingCoil ) {
+      multispeedDXHeating = heatingCoil->optionalCast<model::CoilHeatingDXMultiSpeed>();
+      multistageGasHeating = heatingCoil->optionalCast<model::CoilHeatingGasMultiStage>();
+    }
+
+    if( coolingCoil ) {
+      multispeedDXCooling = coolingCoil->optionalCast<model::CoilCoolingDXMultiSpeed>();
+    }
+
+    std::vector<model::CoilHeatingDXMultiSpeedStageData> heatingStages;
+    std::vector<model::CoilHeatingGasMultiStageStageData> gasHeatingStages;
+    std::vector<model::CoilCoolingDXMultiSpeedStageData> coolingStages;
+
+    if( multispeedDXHeating ) {
+      heatingStages = multispeedDXHeating->stages();
+      maxStages = heatingStages.size();
+      _unitarySystemPerformance.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating,maxStages);
+    } else if( multistageGasHeating ) {
+      gasHeatingStages = multistageGasHeating->stages();
+      maxStages = gasHeatingStages.size();
+      _unitarySystemPerformance.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating,maxStages);
+    } else {
+      _unitarySystemPerformance.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating,1);
+    }
+
+    if( multispeedDXCooling ) {
+      coolingStages = multispeedDXCooling->stages();
+      _unitarySystemPerformance.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling,coolingStages.size());
+      int stages = coolingStages.size();
+      if( stages > maxStages ) {
+        maxStages = stages;
+      }
+    } else {
+      _unitarySystemPerformance.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling,1);
+    }
+
+    _unitarySystemPerformance.setString(UnitarySystemPerformance_MultispeedFields::SingleModeOperation,"No"); 
+
+    auto heatingFlow = modelObject.supplyAirFlowRateDuringHeatingOperation();
+    auto coolingFlow = modelObject.supplyAirFlowRateDuringCoolingOperation();
+
+    double totalGasHeatingCap = 0;
+    for( const auto & gasStage : gasHeatingStages ) {
+      auto cap = gasStage.nominalCapacity();
+      if( cap ) {
+        totalGasHeatingCap += cap.get();
+      }
+    };
+
+    for( int i = 0; i < maxStages; ++i ) {
+      auto extensible = _unitarySystemPerformance.pushExtensibleGroup();
+
+      if (static_cast<unsigned>(i) < heatingStages.size()) {
+        auto heatingStage = heatingStages[i];
+        auto stageFlow = heatingStage.ratedAirFlowRate();
+        if( stageFlow && heatingFlow ) {
+          extensible.setDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio,stageFlow.get() / heatingFlow.get());
+        } else {
+          extensible.setString(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio,"Autosize");
+        }
+      } else if (static_cast<unsigned>(i) < gasHeatingStages.size()) {
+        auto gasHeatingStage = gasHeatingStages[i];
+        auto stageCap = gasHeatingStage.nominalCapacity();
+        if( stageCap ) {
+          extensible.setDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio,stageCap.get() / totalGasHeatingCap);
+        } else {
+          extensible.setString(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio,"Autosize");
+        }
+      } else if( i < 2 ) {
+        extensible.setDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio,1.0);
+      }
+
+      if (static_cast<unsigned>(i) < coolingStages.size()) {
+        auto coolingStage = coolingStages[i];
+        auto stageFlow = coolingStage.ratedAirFlowRate();
+        if( stageFlow && coolingFlow ) {
+          extensible.setDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio,stageFlow.get() / coolingFlow.get());
+        } else {
+          extensible.setString(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio,"Autosize");
+        }
+      } else if( i < 2 ) {
+        extensible.setDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio,1.0);
+      }
+    }
+
+    unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectType,_unitarySystemPerformance.iddObject().name());
+    unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectName,_unitarySystemPerformance.nameString());
+  } 
+
   // Fill in node names for inner components
   if( !airInletNodeName || !airOutletNodeName ) {
     LOG(Error,modelObject.briefDescription() << ": Object not attached to AirLoopHVAC");
@@ -536,10 +665,25 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
       _coolingCoil->setString(Coil_Cooling_DX_TwoSpeedFields::AirInletNodeName,inletNodeName);
       _coolingCoil->setString(Coil_Cooling_DX_TwoSpeedFields::AirOutletNodeName,outletNodeName);
     }
+    else if( _coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_MultiSpeed )
+    {
+      _coolingCoil->setString(Coil_Cooling_DX_MultiSpeedFields::AirInletNodeName,inletNodeName);
+      _coolingCoil->setString(Coil_Cooling_DX_MultiSpeedFields::AirOutletNodeName,outletNodeName);
+    }
+    else if( _coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_VariableSpeed )
+    {
+      _coolingCoil->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirInletNodeName,inletNodeName);
+      _coolingCoil->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirOutletNodeName,outletNodeName);
+    }
     else if( _coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_Water )
     {
       _coolingCoil->setString(Coil_Cooling_WaterFields::AirInletNodeName,inletNodeName);
       _coolingCoil->setString(Coil_Cooling_WaterFields::AirOutletNodeName,outletNodeName);
+    }
+    else if( _coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_TwoStageWithHumidityControlMode )
+    {
+      _coolingCoil->setString(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::AirInletNodeName,inletNodeName);
+      _coolingCoil->setString(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::AirOutletNodeName,outletNodeName);
     }
     else if( _coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_WaterToAirHeatPump_EquationFit )
     {
@@ -563,10 +707,24 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
         _hx->setString(HeatExchanger_AirToAir_SensibleAndLatentFields::SupplyAirInletNodeName,inletNodeName);
         _hx->setString(HeatExchanger_AirToAir_SensibleAndLatentFields::ExhaustAirOutletNodeName,outletNodeName);
       } else {
-        LOG(Warn,modelObject.briefDescription() << ": Contains an unsuported type " << _hx->iddObject().type() << ".");
+        LOG(Warn,modelObject.briefDescription() << ": Contains an unsupported type " << _hx->iddObject().type() << ".");
+      }
+    } else if( _coolingCoil->iddObject().type() == IddObjectType::CoilSystem_Cooling_Water_HeatExchangerAssisted )
+    {
+      OS_ASSERT(coolingCoil);
+      auto coilSystem = coolingCoil->optionalCast<model::CoilSystemCoolingWaterHeatExchangerAssisted>();
+      OS_ASSERT(coilSystem);
+      auto hx = coilSystem->heatExchanger();
+      auto _hx = translateAndMapModelObject(hx);
+      OS_ASSERT(_hx);
+      if( _hx->iddObject().type() == IddObjectType::HeatExchanger_AirToAir_SensibleAndLatent ) {
+        _hx->setString(HeatExchanger_AirToAir_SensibleAndLatentFields::SupplyAirInletNodeName,inletNodeName);
+        _hx->setString(HeatExchanger_AirToAir_SensibleAndLatentFields::ExhaustAirOutletNodeName,outletNodeName);
+      } else {
+        LOG(Warn,modelObject.briefDescription() << ": Contains an unsupported type " << _hx->iddObject().type() << ".");
       }
     } else {
-      LOG(Warn,modelObject.briefDescription() << ": Contains an unsuported type " << _coolingCoil->iddObject().type() << ".");
+      LOG(Warn, modelObject.briefDescription() << ": Contains an unsupported type " << _coolingCoil->iddObject().type() << ".");
     }
   }
 
@@ -609,6 +767,21 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
       _heatingCoil->setString(Coil_Heating_WaterFields::AirInletNodeName,inletNodeName);
       _heatingCoil->setString(Coil_Heating_WaterFields::AirOutletNodeName,outletNodeName);
     }
+    else if( _heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_DX_MultiSpeed )
+    {
+      _heatingCoil->setString(Coil_Heating_DX_MultiSpeedFields::AirInletNodeName,inletNodeName);
+      _heatingCoil->setString(Coil_Heating_DX_MultiSpeedFields::AirOutletNodeName,outletNodeName);
+    }
+    else if( _heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_DX_VariableSpeed )
+    {
+      _heatingCoil->setString(Coil_Heating_DX_VariableSpeedFields::IndoorAirInletNodeName,inletNodeName);
+      _heatingCoil->setString(Coil_Heating_DX_VariableSpeedFields::IndoorAirOutletNodeName,outletNodeName);
+    }
+    else if( _heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Gas_MultiStage )
+    {
+      _heatingCoil->setString(Coil_Heating_Gas_MultiStageFields::AirInletNodeName,inletNodeName);
+      _heatingCoil->setString(Coil_Heating_Gas_MultiStageFields::AirOutletNodeName,outletNodeName);
+    }
     else if( _heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Desuperheater )
     {
       _heatingCoil->setString(Coil_Heating_DesuperheaterFields::AirInletNodeName,inletNodeName);
@@ -623,6 +796,8 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
     {
       _heatingCoil->setString(Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFitFields::IndoorAirInletNodeName,inletNodeName);
       _heatingCoil->setString(Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFitFields::IndoorAirOutletNodeName,outletNodeName);
+    } else {
+      LOG(Warn, modelObject.briefDescription() << ": Contains an unsupported type " << _heatingCoil->iddObject().type() << ".");
     }
   }
 
@@ -661,6 +836,8 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
     {
       _supplementalHeatingCoil->setString(Coil_Heating_DesuperheaterFields::AirInletNodeName,inletNodeName);
       _supplementalHeatingCoil->setString(Coil_Heating_DesuperheaterFields::AirOutletNodeName,airOutletNodeName.get());
+    } else {
+      LOG(Warn, modelObject.briefDescription() << ": Contains an unsupported type " << _supplementalHeatingCoil->iddObject().type() << ".");
     }
   }
 

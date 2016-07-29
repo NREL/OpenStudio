@@ -29,6 +29,8 @@
 #include "../model/Construction_Impl.hpp"
 #include "../model/ConstructionWithInternalSource.hpp"
 #include "../model/ConstructionWithInternalSource_Impl.hpp"
+#include "../model/WaterUseEquipment.hpp"
+#include "../model/WaterUseEquipment_Impl.hpp"
 #include "../model/RunPeriod.hpp"
 #include "../model/RunPeriod_Impl.hpp"
 #include "../model/RunPeriodControlSpecialDays.hpp"
@@ -89,7 +91,7 @@ ForwardTranslator::ForwardTranslator()
   m_logSink.setThreadId(QThread::currentThread());
   createFluidPropertiesMap();
 
-  // temp code 
+  // temp code
   m_keepRunControlSpecialDays = false;
   m_ipTabularOutput = false;
   m_excludeLCCObjects = false;
@@ -181,6 +183,26 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
     }
   }
 
+  // remove orphan surfaces
+  for (PlanarSurface planarSurface : model.getModelObjects<PlanarSurface>()){
+    if (!planarSurface.planarSurfaceGroup()){
+      LOG(Warn, planarSurface.briefDescription() << " is not associated with a PlanarSurfaceGroup, it will not be translated.");
+      planarSurface.remove();
+    }
+  }
+
+  // remove orphan loads
+  for (SpaceLoad spaceLoad : model.getModelObjects<SpaceLoad>()){
+    if (spaceLoad.optionalCast<model::WaterUseEquipment>()){
+      // WaterUseEquipment is not required to be attached to a space
+      continue;
+    }
+    if ((!spaceLoad.space()) && (!spaceLoad.spaceType())){
+      LOG(Warn, spaceLoad.briefDescription() << " is not associated with a Space or SpaceType, it will not be translated.");
+      spaceLoad.remove();
+    }
+  }
+
   // next thing to do is combine all spaces in each thermal zone
   // after this each zone will have 0 or 1 spaces and each space will have 0 or 1 zone
   for (ThermalZone thermalZone : model.getConcreteModelObjects<ThermalZone>()){
@@ -210,19 +232,19 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
     boost::optional<SpaceType> spaceTypeOfOtherEquipment = otherEquipment.spaceType();
     if (spaceTypeOfOtherEquipment){
       //loop through the spaces in this space type and make a new instance for each one
-      std::vector<Space> spaces = spaceTypeOfOtherEquipment.get().spaces();      
-      for (Space space : spaces){      
+      std::vector<Space> spaces = spaceTypeOfOtherEquipment.get().spaces();
+      for (Space space : spaces){
         OtherEquipment otherEquipmentForSpace = otherEquipment.clone().cast<OtherEquipment>();
         otherEquipmentForSpace.setSpace(space);
         //make a nice name for the thing
-        
+
         //std::string otherEquipmentForSpaceName = otherEquipment.name()
         //otherEquipment.setName("newName")
       }
       //now, delete the one that points to a spacetype
       otherEquipment.remove();
     }
-  }  
+  }
 
   // Temporary workaround for EnergyPlusTeam #4451
   // requested by http://code.google.com/p/cbecc/issues/detail?id=736
@@ -236,7 +258,7 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
         // lowest point will have z = 0 in relative coordinates
         std::vector<Space> spaces = thermalZone.spaces();
         OS_ASSERT(spaces.size() == 1);
-        
+
         double minZ = z;
         BoundingBox bb = spaces[0].boundingBox();
         if (bb.minZ()){
@@ -251,6 +273,16 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
       }
     }
   }
+  
+  // remove orphan Generator:MicroTurbine
+  for (auto& chp : model.getConcreteModelObjects<GeneratorMicroTurbine>()){
+    if (!chp.electricLoadCenterDistribution()){
+      LOG(Warn, "GeneratorMicroTurbine " << chp.name().get() << " is not referenced by any ElectricLoadCenterDistribution, it will not be translated.");
+      chp.remove();
+      continue;
+    }
+  }
+  
 
   // remove orphan photovoltaics
   for (auto& pv : model.getConcreteModelObjects<GeneratorPhotovoltaic>()){
@@ -290,7 +322,7 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
   if (!m_keepRunControlSpecialDays){
     // DLM: we will not translate these objects until we support holidays in the GUI
     // we will not warn users because these objects are not exposed in the GUI
-    for (model::RunPeriodControlSpecialDays holiday : model.getConcreteModelObjects<model::RunPeriodControlSpecialDays>()){ 
+    for (model::RunPeriodControlSpecialDays holiday : model.getConcreteModelObjects<model::RunPeriodControlSpecialDays>()){
       holiday.remove();
     }
   }
@@ -305,7 +337,7 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
         if (!model.getConcreteModelObjects<LifeCycleCost>().empty()){
           LOG(Warn, "No LifeCycleCostParameters but LifeCycleCosts are present, adding default LifeCycleCostParameters.");
         }
-        
+
         // always add this object so E+ results section exists
         lifeCycleCostParameters = model.getUniqueModelObject<LifeCycleCostParameters>();
       }
@@ -327,9 +359,11 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
     translateAndMapModelObject(*simulationControl);
 
     // Add a ProgramControl object to force a single threaded simulation
-    IdfObject programControl(openstudio::IddObjectType::ProgramControl);
-    programControl.setInt(openstudio::ProgramControlFields::NumberofThreadsAllowed,1);
-    m_idfObjects.push_back(programControl);
+    //AP This code is no longer needed as multithreading has been disabled
+    //in E+ and this object is no longer forward translated anyway.
+    //IdfObject programControl(openstudio::IddObjectType::ProgramControl);
+    //programControl.setInt(openstudio::ProgramControlFields::NumberofThreadsAllowed,1);
+    //m_idfObjects.push_back(programControl);
 
     // ensure that sizing parameters control exists
     boost::optional<model::SizingParameters> sizingParameters = model.getOptionalUniqueModelObject<model::SizingParameters>();
@@ -359,8 +393,8 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
     std::vector<UtilityBill> utilityBills = model.getConcreteModelObjects<UtilityBill>();
     for (UtilityBill utilityBill : utilityBills){
       // these meters and variables will be translated later
-      Meter consumptionMeter = utilityBill.consumptionMeter();
-      boost::optional<Meter> peakDemandMeter = utilityBill.peakDemandMeter();
+      OutputMeter consumptionMeter = utilityBill.consumptionMeter();
+      boost::optional<OutputMeter> peakDemandMeter = utilityBill.peakDemandMeter();
     }
   }
 
@@ -424,13 +458,13 @@ struct ChildSorter {
   ChildSorter(std::vector<IddObjectType>& iddObjectTypes)
     : m_iddObjectTypes(iddObjectTypes)
   {}
-  
+
   // sort first by position in iddObjectTypes and then by name
   bool operator()(const model::ModelObject& a, const model::ModelObject& b) const
   {
     auto ita = std::find(m_iddObjectTypes.begin(), m_iddObjectTypes.end(), a.iddObject().type());
     auto itb = std::find(m_iddObjectTypes.begin(), m_iddObjectTypes.end(), b.iddObject().type());
-  
+
     if (ita < itb){
       return true;
     }else if (ita > itb){
@@ -857,7 +891,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       if( this->isHVACComponentWithinUnitary(coil) ) {
         retVal = translateCoilHeatingDXVariableSpeedWithoutUnitary(coil);
       } else {
-        retVal = translateCoilHeatingDXVariableSpeed(coil); 
+        retVal = translateCoilHeatingDXVariableSpeed(coil);
       }
       break;
     }
@@ -1303,6 +1337,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     retVal = translateElectricLoadCenterInverterSimple(temp);
     break;
   }
+  case openstudio::IddObjectType::OS_ElectricLoadCenter_Storage_Simple:
+  {
+    model::ElectricLoadCenterStorageSimple temp = modelObject.cast<ElectricLoadCenterStorageSimple>();
+    retVal = translateElectricLoadCenterStorageSimple(temp);
+    break;
+  }
   case openstudio::IddObjectType::OS_EvaporativeCooler_Direct_ResearchSpecial :
     {
       model::EvaporativeCoolerDirectResearchSpecial evap = modelObject.cast<EvaporativeCoolerDirectResearchSpecial>();
@@ -1361,13 +1401,13 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateFanVariableVolume(fan);
       break;
     }
-    
+
   case openstudio::IddObjectType::OS_Fan_ZoneExhaust :
     {
       model::FanZoneExhaust fan = modelObject.cast<FanZoneExhaust>();
       retVal = translateFanZoneExhaust(fan);
       break;
-    } 
+    }
   case openstudio::IddObjectType::OS_FluidCooler_SingleSpeed:
   {
     model::FluidCoolerSingleSpeed fluidCoolerSingleSpeed = modelObject.cast<FluidCoolerSingleSpeed>();
@@ -1378,6 +1418,13 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
   {
     model::FluidCoolerTwoSpeed fluidCoolerTwoSpeed = modelObject.cast<FluidCoolerTwoSpeed>();
     retVal = translateFluidCoolerTwoSpeed(fluidCoolerTwoSpeed);
+    break;
+  }
+  case openstudio::IddObjectType::OS_Generator_MicroTurbine:
+  {
+    // Will also translate the Generator:MicroTurbine:HeatRecovery if there is one
+    model::GeneratorMicroTurbine temp = modelObject.cast<GeneratorMicroTurbine>();
+    retVal = translateGeneratorMicroTurbine(temp);
     break;
   }
   case openstudio::IddObjectType::OS_Generator_Photovoltaic:
@@ -1640,16 +1687,28 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateMasslessOpaqueMaterial(material);
       break;
     }
+  case openstudio::IddObjectType::OS_MaterialProperty_GlazingSpectralData :
+    {
+      model::MaterialPropertyGlazingSpectralData spectralData = modelObject.cast<MaterialPropertyGlazingSpectralData>();
+      retVal = translateMaterialPropertyGlazingSpectralData(spectralData);
+      break;
+    }
   case openstudio::IddObjectType::OS_Material_RoofVegetation :
     {
       model::RoofVegetation material = modelObject.cast<RoofVegetation>();
       retVal = translateRoofVegetation(material);
       break;
     }
-  case openstudio::IddObjectType::OS_Meter :
+  case openstudio::IddObjectType::OS_Meter_Custom :
     {
-      model::Meter meter = modelObject.cast<Meter>();
-      retVal = translateMeter(meter);
+      model::MeterCustom meterCustom = modelObject.cast<MeterCustom>();
+      retVal = translateMeterCustom(meterCustom);
+      break;
+    }
+  case openstudio::IddObjectType::OS_Meter_CustomDecrement :
+    {
+      model::MeterCustomDecrement meterCustomDecrement = modelObject.cast<MeterCustomDecrement>();
+      retVal = translateMeterCustomDecrement(meterCustomDecrement);
       break;
     }
   case openstudio::IddObjectType::OS_ModelObjectList :
@@ -1770,6 +1829,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateOutputControlReportingTolerances(outputControl);
       break;
     }
+  case openstudio::IddObjectType::OS_Output_Meter :
+    {
+      model::OutputMeter meter = modelObject.cast<OutputMeter>();
+      retVal = translateOutputMeter(meter);
+      break;
+    }
   case openstudio::IddObjectType::OS_Output_Variable :
     {
       model::OutputVariable outputVariable = modelObject.cast<OutputVariable>();
@@ -1815,7 +1880,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     {
       LOG(Warn, "OS_ProgramControl is not currently translated");
       break;
-    } 
+    }
   case openstudio::IddObjectType::OS_RadianceParameters:
     {
       // no-op
@@ -1903,7 +1968,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       model::RefrigerationTranscriticalSystem refrigerationTranscriticalSystem = modelObject.cast<RefrigerationTranscriticalSystem>();
       retVal = translateRefrigerationTranscriticalSystem(refrigerationTranscriticalSystem);
       break;
-    }    
+    }
   case openstudio::IddObjectType::OS_Refrigeration_WalkIn :
     {
       model::RefrigerationWalkIn refrigerationWalkIn = modelObject.cast<RefrigerationWalkIn>();
@@ -2134,7 +2199,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       model::ShadingControl shadingControl = modelObject.cast<ShadingControl>();
       retVal = translateShadingControl(shadingControl);
       break;
-    }    
+    }
   case  openstudio::IddObjectType::OS_ShadingSurface :
     {
       model::ShadingSurface shadingSurface = modelObject.cast<ShadingSurface>();
@@ -2199,6 +2264,24 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     {
       model::SiteGroundTemperatureBuildingSurface mo = modelObject.cast<SiteGroundTemperatureBuildingSurface>();
       retVal = translateSiteGroundTemperatureBuildingSurface(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_Site_GroundTemperature_Deep :
+    {
+      model::SiteGroundTemperatureDeep mo = modelObject.cast<SiteGroundTemperatureDeep>();
+      retVal = translateSiteGroundTemperatureDeep(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_Site_GroundTemperature_FCfactorMethod :
+    {
+      model::SiteGroundTemperatureFCfactorMethod mo = modelObject.cast<SiteGroundTemperatureFCfactorMethod>();
+      retVal = translateSiteGroundTemperatureFCfactorMethod(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_Site_GroundTemperature_Shallow :
+    {
+      model::SiteGroundTemperatureShallow mo = modelObject.cast<SiteGroundTemperatureShallow>();
+      retVal = translateSiteGroundTemperatureShallow(mo);
       break;
     }
   case openstudio::IddObjectType::OS_Site_WaterMainsTemperature :
@@ -2473,7 +2556,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
   case openstudio::IddObjectType::OS_ZoneAirContaminantBalance :
     {
       auto mo = modelObject.cast<ZoneAirContaminantBalance>();
-      retVal = translateZoneAirContaminantBalance(mo); 
+      retVal = translateZoneAirContaminantBalance(mo);
       break;
     }
   case openstudio::IddObjectType::OS_ZoneAirHeatBalanceAlgorithm :
@@ -2670,7 +2753,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
 
     // sort these objects as well
     std::sort(children.begin(), children.end(), ChildSorter(types));
-    
+
     for(auto & elem : children)
     {
       if (std::find(types.begin(),types.end(),elem.iddObject().type()) != types.end()) {
@@ -2737,6 +2820,9 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_Site);
   result.push_back(IddObjectType::OS_Site_GroundReflectance);
   result.push_back(IddObjectType::OS_Site_GroundTemperature_BuildingSurface);
+  result.push_back(IddObjectType::OS_Site_GroundTemperature_Deep);
+  result.push_back(IddObjectType::OS_Site_GroundTemperature_FCfactorMethod);
+  result.push_back(IddObjectType::OS_Site_GroundTemperature_Shallow);
   result.push_back(IddObjectType::OS_Site_WaterMainsTemperature);
   result.push_back(IddObjectType::OS_ClimateZones);
   result.push_back(IddObjectType::OS_SizingPeriod_DesignDay);
@@ -2834,7 +2920,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_Curve_Triquadratic);
   result.push_back(IddObjectType::OS_Table_MultiVariableLookup);
   result.push_back(IddObjectType::OS_DistrictCooling);
-  result.push_back(IddObjectType::OS_DistrictHeating); 
+  result.push_back(IddObjectType::OS_DistrictHeating);
   result.push_back(IddObjectType::OS_EvaporativeCooler_Direct_ResearchSpecial);
   result.push_back(IddObjectType::OS_Fan_ConstantVolume);
   result.push_back(IddObjectType::OS_Fan_OnOff);
@@ -2854,16 +2940,20 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_Refrigeration_TranscriticalSystem);
 
   result.push_back(IddObjectType::OS_ElectricLoadCenter_Distribution);
+  result.push_back(IddObjectType::OS_Generator_MicroTurbine);
   result.push_back(IddObjectType::OS_Generator_Photovoltaic);
   result.push_back(IddObjectType::OS_PhotovoltaicPerformance_EquivalentOneDiode);
   result.push_back(IddObjectType::OS_PhotovoltaicPerformance_Simple);
   result.push_back(IddObjectType::OS_ElectricLoadCenter_Inverter_LookUpTable);
   result.push_back(IddObjectType::OS_ElectricLoadCenter_Inverter_Simple);
+  result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_Simple);
 
   // put these down here so they have a chance to be translated with their "parent"
   result.push_back(IddObjectType::OS_LifeCycleCost);
 
-  result.push_back(IddObjectType::OS_Meter);
+  result.push_back(IddObjectType::OS_Output_Meter);
+  result.push_back(IddObjectType::OS_Meter_Custom);
+  result.push_back(IddObjectType::OS_Meter_CustomDecrement);
   result.push_back(IddObjectType::OS_Output_Variable);
 
   return result;
@@ -2872,6 +2962,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
 void ForwardTranslator::translateConstructions(const model::Model & model)
 {
   std::vector<IddObjectType> iddObjectTypes;
+  iddObjectTypes.push_back(IddObjectType::OS_MaterialProperty_GlazingSpectralData);
   iddObjectTypes.push_back(IddObjectType::OS_Material);
   iddObjectTypes.push_back(IddObjectType::OS_Material_AirGap);
   iddObjectTypes.push_back(IddObjectType::OS_Material_AirWall);
@@ -2908,7 +2999,7 @@ void ForwardTranslator::translateConstructions(const model::Model & model)
   iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_OtherSideConditionsModel);
 
   for (const IddObjectType& iddObjectType : iddObjectTypes){
-    
+
     // get objects by type in sorted order
     std::vector<WorkspaceObject> objects = model.getObjectsByType(iddObjectType);
     std::sort(objects.begin(), objects.end(), WorkspaceObjectNameLess());
@@ -2953,7 +3044,7 @@ void ForwardTranslator::translateSchedules(const model::Model & model)
   iddObjectTypes.push_back(IddObjectType::OS_Schedule_VariableInterval);
 
   for (const IddObjectType& iddObjectType : iddObjectTypes){
-    
+
     // get objects by type in sorted order
     objects = model.getObjectsByType(iddObjectType);
     std::sort(objects.begin(), objects.end(), WorkspaceObjectNameLess());
@@ -3101,7 +3192,7 @@ model::ConstructionBase ForwardTranslator::reverseConstruction(const model::Cons
   }
 
   model::LayeredConstruction layeredConstruction = construction.cast<model::LayeredConstruction>();
-  
+
   if (layeredConstruction.isSymmetric()){
     m_constructionHandleToReversedConstructions.insert(std::make_pair(construction.handle(), construction));
     return construction;
@@ -3109,13 +3200,13 @@ model::ConstructionBase ForwardTranslator::reverseConstruction(const model::Cons
 
   if (construction.optionalCast<model::Construction>()){
     model::Construction reversed = construction.cast<model::Construction>().reverseConstruction();
-    m_constructionHandleToReversedConstructions.insert(std::make_pair(construction.handle(), reversed)); 
+    m_constructionHandleToReversedConstructions.insert(std::make_pair(construction.handle(), reversed));
     return reversed;
   }
 
   if (construction.optionalCast<model::ConstructionWithInternalSource>()){
     model::ConstructionWithInternalSource reversed = construction.cast<model::ConstructionWithInternalSource>().reverseConstructionWithInternalSource();
-    m_constructionHandleToReversedConstructions.insert(std::make_pair(construction.handle(), reversed)); 
+    m_constructionHandleToReversedConstructions.insert(std::make_pair(construction.handle(), reversed));
     return reversed;
   }
 
@@ -3128,7 +3219,7 @@ model::ConstructionBase ForwardTranslator::reverseConstruction(const model::Cons
   model::Construction reversed = model::Construction(construction.model());
   reversed.setName(construction.name().get() + " Reversed");
   reversed.setLayers(layers);
-  m_constructionHandleToReversedConstructions.insert(std::make_pair(construction.handle(), reversed)); 
+  m_constructionHandleToReversedConstructions.insert(std::make_pair(construction.handle(), reversed));
 
   return reversed;
 }
@@ -3146,7 +3237,7 @@ void ForwardTranslator::resolveMatchedSurfaceConstructionConflicts(model::Model&
     if (processedSurfaces.find(surface.handle()) != processedSurfaces.end()){
       continue;
     }
-    
+
     model::OptionalSurface adjacentSurface = surface.adjacentSurface();
     if (!adjacentSurface){
       processedSurfaces.insert(surface.handle());
@@ -3258,7 +3349,7 @@ void ForwardTranslator::resolveMatchedSurfaceConstructionConflicts(model::Model&
 
     // both surfaces return a construction, they are not the same, and both have same search distance
 
-    if (constructionWithSearchDistance->first.optionalCast<model::LayeredConstruction>() && 
+    if (constructionWithSearchDistance->first.optionalCast<model::LayeredConstruction>() &&
         adjacentConstructionWithSearchDistance->first.optionalCast<model::LayeredConstruction>()){
       if (constructionWithSearchDistance->first.cast<model::LayeredConstruction>().reverseEqualLayers(adjacentConstructionWithSearchDistance->first.cast<model::LayeredConstruction>())){
         // these constructions are reverse equal
@@ -3293,7 +3384,7 @@ void ForwardTranslator::resolveMatchedSubSurfaceConstructionConflicts(model::Mod
     if (processedSubSurfaces.find(subSurface.handle()) != processedSubSurfaces.end()){
       continue;
     }
-    
+
     model::OptionalSubSurface adjacentSubSurface = subSurface.adjacentSubSurface();
     if (!adjacentSubSurface){
       processedSubSurfaces.insert(subSurface.handle());
@@ -3405,7 +3496,7 @@ void ForwardTranslator::resolveMatchedSubSurfaceConstructionConflicts(model::Mod
 
     // both surfaces return a construction, they are not the same, and both have same search distance
 
-    if (constructionWithSearchDistance->first.optionalCast<model::LayeredConstruction>() && 
+    if (constructionWithSearchDistance->first.optionalCast<model::LayeredConstruction>() &&
         adjacentConstructionWithSearchDistance->first.optionalCast<model::LayeredConstruction>()){
       if (constructionWithSearchDistance->first.cast<model::LayeredConstruction>().reverseEqualLayers(adjacentConstructionWithSearchDistance->first.cast<model::LayeredConstruction>())){
         // these constructions are reverse equal
@@ -3517,7 +3608,7 @@ bool ForwardTranslator::isHVACComponentWithinUnitary(const model::HVACComponent&
   else if( hvacComponent.containingStraightComponent() )
   {
     return true;
-  }    
+  }
   else
   {
     return false;
@@ -3778,9 +3869,9 @@ void ForwardTranslator::fixSPMsForUnitarySystem(const model::HVACComponent & uni
     if( ! oaSystems.empty() ) {
       auto reliefComponents = oaSystems.back().oaComponents();
       supplyComponents.insert(supplyComponents.end(),reliefComponents.begin(),reliefComponents.end());
-    } 
+    }
     auto upstreamNodes = subsetCastVector<model::Node>(supplyComponents);
-  
+
     for( const auto & node : upstreamNodes ) {
       auto spms = subsetCastVector<model::SetpointManagerMixedAir>(node.setpointManagers());
       for( auto & spm : spms ) {
