@@ -25560,7 +25560,7 @@ OS:ElectricLoadCenter:Storage:Converter,
         \note enter name of zone to receive converter losses as heat
         \note if blank then converter is assumed to be outdoors
         \type object-list
-        \object-list ZoneNames
+        \object-list ThermalZoneNames
    N4 ; \field Radiative Fraction
         \note fraction of zone heat gains treated as thermal radiation
         \note Only used if a Zone Name is entered.
