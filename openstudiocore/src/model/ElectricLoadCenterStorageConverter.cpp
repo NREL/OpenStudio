@@ -113,18 +113,17 @@ namespace detail {
   }
   
   // Convenience method to find the ELCD linked to this storage device
-  boost::optional<ElectricLoadCenterDistribution> ElectricLoadCenterStorageConverter_Impl::electricLoadCenterDistribution() const
-  {
-    boost::optional<ElectricLoadCenterDistribution> thiselcd;
-    for (const ElectricLoadCenterDistribution& elcd : this->model().getConcreteModelObjects<ElectricLoadCenterDistribution>()) {
-      if (boost::optional<ElectricLoadCenterStorageConverter> elcConv = elcd.storageConverter()) {
-        if (elcConv->handle() == this->handle()) {
-          thiselcd = elcd;
-        }
-      }
+  boost::optional<ElectricLoadCenterDistribution> ElectricLoadCenterStorageConverter_Impl::electricLoadCenterDistribution() const {
+    auto elcds = getObject<ModelObject>().getModelObjectSources<ElectricLoadCenterDistribution>(ElectricLoadCenterDistribution::iddObjectType());
+    if (elcds.empty()) {
+      // no error
+    } else if (elcds.size() == 1u) {
+      return elcds[0];
+    } else {
+      // error
     }
-    OS_ASSERT(thiselcd);
-    return thiselcd.get();
+
+    return boost::none;
   }
 
   Schedule ElectricLoadCenterStorageConverter_Impl::availabilitySchedule() const {

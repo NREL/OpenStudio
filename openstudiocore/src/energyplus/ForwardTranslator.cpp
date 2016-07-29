@@ -292,9 +292,9 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
   }
   
   // Remove orphan Storage
-  for (auto& storage : model.getModelObjects<ElectricStorage>()){
+  for (auto& storage : model.getModelObjects<ElectricalStorage>()) {
     if (!storage.electricLoadCenterDistribution()){
-      LOG(Warn, "Electric Storage " << storage.name().get() << " is not referenced by any ElectricLoadCenterDistribution, it will not be translated.");
+      LOG(Warn, "Electrical Storage " << storage.name().get() << " is not referenced by any ElectricLoadCenterDistribution, it will not be translated.");
       storage.remove();
     }
   }
