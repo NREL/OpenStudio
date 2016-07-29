@@ -32,6 +32,9 @@
 #include "../../model/ScheduleTypeLimits.hpp"
 #include "../../model/ScheduleTypeRegistry.hpp"
 
+#include "ElectricLoadCenterDistribution.hpp"
+#include "ElectricLoadCenterDistribution_Impl.hpp"
+
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_ElectricLoadCenter_Storage_Converter_FieldEnums.hxx>
@@ -114,7 +117,7 @@ namespace detail {
   {
     boost::optional<ElectricLoadCenterDistribution> thiselcd;
     for (const ElectricLoadCenterDistribution& elcd : this->model().getConcreteModelObjects<ElectricLoadCenterDistribution>()) {
-      if (boost::optional<ElectricalStorage> elcConv = elcd.storageConverter()) {
+      if (boost::optional<ElectricLoadCenterStorageConverter> elcConv = elcd.storageConverter()) {
         if (elcConv->handle() == this->handle()) {
           thiselcd = elcd;
         }
@@ -298,7 +301,7 @@ std::vector<std::string> ElectricLoadCenterStorageConverter::powerConversionEffi
                         OS_ElectricLoadCenter_Storage_ConverterFields::PowerConversionEfficiencyMethod);
 }
 
-boost::optional<ElectricLoadCenterDistribution> ElectricalStorage::electricLoadCenterDistribution() const
+boost::optional<ElectricLoadCenterDistribution> ElectricLoadCenterStorageConverter::electricLoadCenterDistribution() const
 {
   return getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->electricLoadCenterDistribution();
 }
