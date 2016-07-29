@@ -24,7 +24,7 @@
 #include "../../model/ElectricLoadCenterDistribution_Impl.hpp"
 #include "../../model/Inverter.hpp"
 #include "../../model/ElectricalStorage.hpp"
-//#include "../../model/ElectricLoadCenterStorageConverter.hpp"
+#include "../../model/ElectricLoadCenterStorageConverter.hpp"
 #include "../../model/Generator.hpp"
 #include "../../model/Schedule.hpp"
 
@@ -188,18 +188,17 @@ boost::optional<IdfObject> ForwardTranslator::translateElectricLoadCenterDistrib
 
     } else if (storageOperationScheme == "TrackChargeDischargeSchedules") {
       // Storage Converter Object Name
-      //boost::optional<ElectricLoadCenterStorageConverter> storageConverter = modelObject.storageConverter();
-      //if (storageConverter) {
-      //  // If the buss is compatible, we translate the invert
-      //  boost::optional<IdfObject> storageConverterIdf = translateAndMapModelObject(*storageConverter);
-      //  if (storageConverterIdf) {
-      //    idfObject.setString(ElectricLoadCenter_DistributionFields
-      //      ::StorageConverterObjectName, storageConverterIdf->name().get());
-      //  }
-      //} else {
-      //  LOG(Error, modelObject.briefDescription() << ": You set the Storage Operation Scheme to " << storageOperationScheme
-      //    << " but you didn't specify the required 'Storage Converter Object Name'");
-      //}
+      boost::optional<ElectricLoadCenterStorageConverter> elcConv = modelObject.storageConverter();
+      if (storageConverter) {
+        // If the buss is compatible, we translate the invert
+        boost::optional<IdfObject> storageConverterIdf = translateAndMapModelObject(*elcConv);
+        if (storageConverterIdf) {
+          idfObject.setString(ElectricLoadCenter_DistributionFields::StorageConverterObjectName, storageConverterIdf->name().get());
+        }
+      } else {
+        LOG(Error, modelObject.briefDescription() << ": You set the Storage Operation Scheme to " << storageOperationScheme
+          << " but you didn't specify the required 'Storage Converter Object Name'");
+      }
 
       // Design Storage Control Charge Power
       if (optD = modelObject.designStorageControlChargePower()) {
