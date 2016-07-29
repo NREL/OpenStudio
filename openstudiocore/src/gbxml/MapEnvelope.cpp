@@ -74,12 +74,12 @@ namespace gbxml {
         QDomNodeList materialIdElements = layerElement.elementsByTagName("MaterialId");
         for (int j = 0; j < materialIdElements.count(); j++){
           QString materialId = materialIdElements.at(j).toElement().attribute("materialIdRef");
-              
-          // we are naming openstudio objects with id to guarantee unique names, there should be a material with this name in the openstudio model
-          std::string materialName = materialId.toStdString();
-          boost::optional<openstudio::model::Material> material = model.getModelObjectByName<openstudio::model::Material>(materialName);
-          OS_ASSERT(material); // Krishnan, what type of error handling do you want?
-          materials.push_back(*material);
+          auto materialIt = m_idToObjectMap.find(materialId);
+          if (materialIt != m_idToObjectMap.end()){
+            boost::optional<openstudio::model::Material> material = materialIt->second.optionalCast<openstudio::model::Material>();
+            OS_ASSERT(material); // Krishnan, what type of error handling do you want?
+            materials.push_back(*material);
+          }
         }
         break;
       }

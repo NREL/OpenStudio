@@ -32,6 +32,8 @@
 #include "../model/ThermalZone_Impl.hpp"
 #include "../model/Space.hpp"
 #include "../model/Space_Impl.hpp"
+#include "../model/SpaceType.hpp"
+#include "../model/SpaceType_Impl.hpp"
 #include "../model/Surface.hpp"
 #include "../model/Surface_Impl.hpp"
 #include "../model/SubSurface.hpp"
@@ -475,6 +477,24 @@ namespace gbxml {
       openstudio::model::ThermalZone thermalZone(model);
       thermalZone.setName(escapeName(id, name) + " ThermalZone");
       space.setThermalZone(thermalZone);
+    }
+
+    // create a stub space type
+    // DLM: is this better than nothing?
+    QString spaceTypeId = element.attribute("spaceType");
+    if (!spaceTypeId.isEmpty()){
+      auto spaceTypeIt = m_idToObjectMap.find(spaceTypeId);
+
+      if (spaceTypeIt == m_idToObjectMap.end()){
+        model::SpaceType spaceType(model);
+        spaceType.setName(escapeName(spaceTypeId, spaceTypeId));
+        spaceTypeIt = m_idToObjectMap.insert(m_idToObjectMap.end(), std::make_pair(spaceTypeId, spaceType));
+      }
+
+      boost::optional<model::SpaceType> spaceType = spaceTypeIt->second.optionalCast<model::SpaceType>();
+      if (spaceType){
+        space.setSpaceType(*spaceType);
+      }
     }
 
     return space;
