@@ -499,18 +499,22 @@ namespace detail {
 
   ModelObject WaterHeaterHeatPumpWrappedCondenser_Impl::clone(Model model) const
   {
+    std::cout << "boom 1" << std::endl;
     auto newWaterHeater = ZoneHVACComponent_Impl::clone(model).cast<WaterHeaterHeatPumpWrappedCondenser>();
 
+    std::cout << "boom 2" << std::endl;
     {
       auto mo = tank().clone(model).cast<HVACComponent>();
       newWaterHeater.setTank(mo);
     }
 
+    std::cout << "boom 3" << std::endl;
     {
-      auto mo = dXCoil().clone(model).cast<HVACComponent>();
+      auto mo = dXCoil().clone(model).cast<ModelObject>();
       newWaterHeater.setDXCoil(mo);
     }
 
+    std::cout << "boom 4" << std::endl;
     {
       auto mo = fan().clone(model).cast<HVACComponent>();
       newWaterHeater.setFan(mo);
