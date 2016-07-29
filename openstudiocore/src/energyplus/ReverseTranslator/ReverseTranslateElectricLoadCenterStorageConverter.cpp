@@ -43,17 +43,11 @@ namespace energyplus {
 OptionalModelObject ReverseTranslator::translateElectricLoadCenterStorageConverter( const WorkspaceObject & workspaceObject )
 {
 
-  OptionalModelObject result,temp;
+  OptionalModelObject result,omo;
   OptionalDouble optD;
   boost::optional<WorkspaceObject> owo;
   OptionalString optS;
   bool isSimpleFixed = true;
-  
-  // TODO: The availability schedule is in the ElectricLoadCenter:Generators (list) in E+, here it's carried by the generator itself
-  // Should also get the Rated Thermal To Electrical Power Ratio in the list
-
-  //Generator:MicroTurbine,
-  //    Capstone C65,            !- Name
 
   openstudio::model::ElectricLoadCenterStorageConverter elcConv( m_model );
   
@@ -67,9 +61,9 @@ OptionalModelObject ReverseTranslator::translateElectricLoadCenterStorageConvert
   // AvailabilityScheduleName
   if( (owo = workspaceObject.getTarget(ElectricLoadCenter_Storage_ConverterFields::AvailabilityScheduleName)) )
   {
-    if( boost::optional<ModelObject> mo = translateAndMapWorkspaceObject(owo.get()) )
+    if (omo = translateAndMapWorkspaceObject(*owo))
     {
-      if( boost::optional<Schedule> schedule = mo->optionalCast<Schedule>() )
+      if (boost::optional<Schedule> schedule = omo->optionalCast<Schedule>())
       {
         elcConv.setAvailabilitySchedule(schedule.get());
       }
@@ -104,10 +98,10 @@ OptionalModelObject ReverseTranslator::translateElectricLoadCenterStorageConvert
     // efficiencyFunctionofPowerCurveName, optCurve
     if( (owo = workspaceObject.getTarget(ElectricLoadCenter_Storage_ConverterFields::EfficiencyFunctionofPowerCurveName)) )
     {
-      if( boost::optional<ModelObject> mo = translateAndMapWorkspaceObject(owo.get()) )
+      if (omo = translateAndMapWorkspaceObject(*owo))
       {
         // Should technically make sure the curve is the right type, but in this case it's UnivariateCurves, lots of possibilities.
-        if( boost::optional<Curve> effFPower = mo->optionalCast<Curve>() )
+        if (boost::optional<Curve> effFPower = omo->optionalCast<Curve>())
         {
           elcConv.setEfficiencyFunctionofPowerCurveName(effFPower.get());
         }
@@ -118,9 +112,9 @@ OptionalModelObject ReverseTranslator::translateElectricLoadCenterStorageConvert
   // ZoneName
   if( (owo = workspaceObject.getTarget(ElectricLoadCenter_Storage_ConverterFields::ZoneName)) )
   {
-    if( boost::optional<ModelObject> mo = translateAndMapWorkspaceObject(owo.get()) )
+    if (omo = translateAndMapWorkspaceObject(owo.get()))
     {
-      if( boost::optional<ThermalZone> thermalZone = mo->optionalCast<ThermalZone>() )
+      if (boost::optional<ThermalZone> thermalZone = omo->optionalCast<ThermalZone>())
       {
         elcConv.setThermalZone(thermalZone.get());
       }
