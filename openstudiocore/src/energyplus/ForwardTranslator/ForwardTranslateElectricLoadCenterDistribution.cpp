@@ -189,7 +189,7 @@ boost::optional<IdfObject> ForwardTranslator::translateElectricLoadCenterDistrib
     } else if (storageOperationScheme == "TrackChargeDischargeSchedules") {
       // Storage Converter Object Name
       boost::optional<ElectricLoadCenterStorageConverter> elcConv = modelObject.storageConverter();
-      if (storageConverter) {
+      if (elcConv) {
         // If the buss is compatible, we translate the invert
         boost::optional<IdfObject> storageConverterIdf = translateAndMapModelObject(*elcConv);
         if (storageConverterIdf) {
