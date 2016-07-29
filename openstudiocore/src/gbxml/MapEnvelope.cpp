@@ -54,7 +54,10 @@ namespace gbxml {
 
     openstudio::model::Construction construction(model);
     QString constructionId = element.attribute("id");
-    construction.setName(escapeName(constructionId));
+    m_idToObjectMap.insert(std::make_pair(constructionId, construction));
+
+    QString constructionName = element.firstChildElement("Name").toElement().text();
+    construction.setName(escapeName(constructionId, constructionName));
         
     QDomNodeList layerIdList = element.elementsByTagName("LayerId");
 
@@ -104,7 +107,10 @@ namespace gbxml {
   {  
     openstudio::model::Construction construction(model);
     QString windowTypeId = element.attribute("id");
-    construction.setName(escapeName(windowTypeId));
+    m_idToObjectMap.insert(std::make_pair(windowTypeId, construction));
+
+    QString windowTypeName = element.firstChildElement("Name").toElement().text();
+    construction.setName(escapeName(windowTypeId, windowTypeName));
 
     boost::optional<double> uValue;
     boost::optional<double> shgc;
@@ -177,8 +183,11 @@ namespace gbxml {
       openstudio::model::StandardOpaqueMaterial material(model);
       result = material;
         
-      QString name = element.attribute("id");
-      material.setName(escapeName(name));
+      QString id = element.attribute("id");
+      m_idToObjectMap.insert(std::make_pair(id, material));
+
+      QString name = element.firstChildElement("Name").toElement().text();
+      material.setName(escapeName(id, name));
         
       material.setDensity(density);
       material.setThermalConductivity(conductivity);
@@ -199,8 +208,11 @@ namespace gbxml {
       openstudio::model::MasslessOpaqueMaterial material(model);
       result = material;
 
-      QString name = element.attribute("id");
-      material.setName(escapeName(name));
+      QString id = element.attribute("id");
+      m_idToObjectMap.insert(std::make_pair(id, material));
+
+      QString name = element.firstChildElement("Name").toElement().text(); 
+      material.setName(escapeName(id, name));
 
       material.setThermalResistance(rvalue);
 
@@ -210,8 +222,11 @@ namespace gbxml {
       openstudio::model::MasslessOpaqueMaterial material(model);
       result = material;
 
-      QString name = element.attribute("id");
-      material.setName(escapeName(name));
+      QString id = element.attribute("id");
+      m_idToObjectMap.insert(std::make_pair(id, material));
+
+      QString name = element.firstChildElement("Name").toElement().text();
+      material.setName(escapeName(id, name));
 
       LOG(Warn, "Creating stub material '" << name.toStdString() << "'");
 

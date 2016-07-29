@@ -72,7 +72,10 @@ namespace gbxml {
   
   private:
 
-    std::string escapeName(QString name);
+    // given id and name from XML (name may be empty) return an OS name
+    std::string escapeName(const QString& id, const QString& name);
+
+    std::map<QString, openstudio::model::ModelObject> m_idToObjectMap;
 
     boost::optional<openstudio::model::Model> convert(const QDomDocument& doc);
     boost::optional<openstudio::model::Model> translateGBXML(const QDomElement& element, const QDomDocument& doc);
