@@ -290,6 +290,22 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
       pv.remove();
     }
   }
+  
+  // Remove orphan Storage
+  for (auto& storage : model.getModelObjects<ElectricStorage>()){
+    if (!storage.electricLoadCenterDistribution()){
+      LOG(Warn, "Electric Storage " << storage.name().get() << " is not referenced by any ElectricLoadCenterDistribution, it will not be translated.");
+      storage.remove();
+    }
+  }
+  
+  // Remove orphan Converters
+  for (auto& converter : model.getModelObjects<ElectricLoadCenterStorageConverter>()){
+    if (!converter.electricLoadCenterDistribution()){
+      LOG(Warn, "Converter " << converter.name().get() << " is not referenced by any ElectricLoadCenterDistribution, it will not be translated.");
+      converter.remove();
+    }
+  }
 
   // Remove empty electric load center distribution objects (e.g. with no generators)
   // requested by jmarrec, https://github.com/NREL/OpenStudio/pull/1927

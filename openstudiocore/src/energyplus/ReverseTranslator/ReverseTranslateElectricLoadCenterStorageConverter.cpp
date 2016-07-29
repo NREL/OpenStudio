@@ -109,6 +109,12 @@ OptionalModelObject ReverseTranslator::translateElectricLoadCenterStorageConvert
       }
     }
   }
+
+  // AncillaryPowerConsumedInStandby, defaults (double)
+  optD = workspaceObject.getDouble(ElectricLoadCenter_Storage_ConverterFields::AncillaryPowerConsumedInStandby);
+  if (optD) {
+    elcConv.setAncillaryPowerConsumedInStandby(*optD);
+  }
   
   // ZoneName
   if( (owo = workspaceObject.getTarget(ElectricLoadCenter_Storage_ConverterFields::ZoneName)) )

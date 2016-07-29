@@ -104,8 +104,24 @@ namespace detail {
     return result;
   }
 
+  // Private protected
   boost::optional<Schedule> ElectricLoadCenterStorageConverter_Impl::optionalAvailabilitySchedule() const {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ElectricLoadCenter_Storage_ConverterFields::AvailabilityScheduleName);
+  }
+  
+  // Convenience method to find the ELCD linked to this storage device
+  boost::optional<ElectricLoadCenterDistribution> ElectricLoadCenterStorageConverter_Impl::electricLoadCenterDistribution() const
+  {
+    boost::optional<ElectricLoadCenterDistribution> thiselcd;
+    for (const ElectricLoadCenterDistribution& elcd : this->model().getConcreteModelObjects<ElectricLoadCenterDistribution>()) {
+      if (boost::optional<ElectricalStorage> elcConv = elcd.storageConverter()) {
+        if (elcConv->handle() == this->handle()) {
+          thiselcd = elcd;
+        }
+      }
+    }
+    OS_ASSERT(thiselcd);
+    return thiselcd.get();
   }
 
   Schedule ElectricLoadCenterStorageConverter_Impl::availabilitySchedule() const {
@@ -280,6 +296,11 @@ IddObjectType ElectricLoadCenterStorageConverter::iddObjectType() {
 std::vector<std::string> ElectricLoadCenterStorageConverter::powerConversionEfficiencyMethodValues() {
   return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
                         OS_ElectricLoadCenter_Storage_ConverterFields::PowerConversionEfficiencyMethod);
+}
+
+boost::optional<ElectricLoadCenterDistribution> ElectricalStorage::electricLoadCenterDistribution() const
+{
+  return getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->electricLoadCenterDistribution();
 }
 
 Schedule ElectricLoadCenterStorageConverter::availabilitySchedule() const {
