@@ -450,6 +450,33 @@ else()
   set(RUBY_STATIC_LIBRARY "${RUBY_STATIC_LIBRARY}/${RUBY_LIBRARY_NAME_WE}-static${CMAKE_STATIC_LIBRARY_SUFFIX}")
 endif()
 
+# Mingw based ruby lib (only the dll stub library) from Ruby Installer
+# We need this for stand alone ruby bindings
+# target to use with typical ruby installations (those that are not msvc)
+# Only need this on Windows systems
+if( WIN32 )
+if(NOT EXISTS ${RUBY_MINGW_LIB_DIR})
+  set(RUBY_MINGW_LIB_ZIP_FILENAME "Ruby-mingw-install.zip")
+  set(RUBY_MINGW_LIB_ZIP_EXPECTED_MD5 "8615ab9cd5a95b9c6a62f98e91e4198e")
+
+  set(RUBY_MINGW_LIB_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${RUBY_MINGW_LIB_ZIP_FILENAME}")
+  if(EXISTS "${RUBY_MINGW_LIB_ZIP_LOCAL_PATH}")
+    file(MD5 "${RUBY_MINGW_LIB_ZIP_LOCAL_PATH}" RUBY_MINGW_LIB_ZIP_MD5)
+  endif()
+
+  if( NOT RUBY_MINGW_LIB_ZIP_MD5 STREQUAL RUBY_MINGW_LIB_ZIP_EXPECTED_MD5)
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${RUBY_MINGW_LIB_ZIP_FILENAME}"
+      ${RUBY_MINGW_LIB_ZIP_LOCAL_PATH}
+      INACTIVITY_TIMEOUT 120
+      SHOW_PROGRESS
+      EXPECTED_MD5 ${RUBY_MINGW_LIB_ZIP_EXPECTED_MD5})
+      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${RUBY_MINGW_LIB_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+  endif()
+
+  set(RUBY_MINGW_STUB_LIB "${CMAKE_BINARY_DIR}/Ruby-mingw-install/libx64-msvcrt-ruby200.dll.a")
+endif()
+endif()
+
 # openstudio gems
 
 set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems.tar.gz")
@@ -783,7 +810,7 @@ mark_as_advanced(QT_INSTALL_DIR)
 if(NOT EXISTS ${QT_INSTALL_DIR})
   # download qt
   if( WIN32 )
- 		if( Qt5Static )
+    if( Qt5Static )
       set(QT_ZIP_FILENAME "qt_5_6_msvc2013_64_static_temp.zip")
       set(QT_ZIP_EXPECTED_MD5 "3f0e1a505e707c9f1bde31e05f17fc47")
     else()

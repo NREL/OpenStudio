@@ -67,8 +67,7 @@ endif()
 target_link_libraries(openstudiorb init_openstudio)
 
 if( WIN32 )
-  # fix this!
-  target_link_libraries(openstudiorb C:/Ruby200-x64/lib/libx64-msvcrt-ruby200.dll.a)
+  target_link_libraries(openstudiorb ${RUBY_MINGW_STUB_LIB})
 endif()
 
 install(TARGETS openstudiorb DESTINATION bin)

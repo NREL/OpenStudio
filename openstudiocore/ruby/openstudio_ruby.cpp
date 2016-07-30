@@ -6,5 +6,6 @@ RUBY_API void Init_openstudio(void) {
 
   init_openstudio_internal();
 }
+
 }
 
