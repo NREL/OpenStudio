@@ -653,8 +653,8 @@ namespace gbxml {
           airWall = model::Construction(model);
           model::AirWallMaterial airWallMaterial(model);
           airWall->setLayer(airWallMaterial);
-          surface.setConstruction(*airWall);
         }
+        surface.setConstruction(*airWall);
 
         // don't translate subsurfaces of air walls?
 
