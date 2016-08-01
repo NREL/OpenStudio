@@ -300,7 +300,7 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
   }
   
   // Remove orphan Converters
-  for (auto& converter : model.getModelObjects<ElectricLoadCenterStorageConverter>()){
+  for (auto& converter : model.getConcreteModelObjects<ElectricLoadCenterStorageConverter>()){
     if (!converter.electricLoadCenterDistribution()){
       LOG(Warn, "Converter " << converter.name().get() << " is not referenced by any ElectricLoadCenterDistribution, it will not be translated.");
       converter.remove();
