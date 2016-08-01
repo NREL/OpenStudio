@@ -54,7 +54,10 @@ namespace gbxml {
 
     openstudio::model::Construction construction(model);
     QString constructionId = element.attribute("id");
-    construction.setName(escapeName(constructionId));
+    m_idToObjectMap.insert(std::make_pair(constructionId, construction));
+
+    QString constructionName = element.firstChildElement("Name").toElement().text();
+    construction.setName(escapeName(constructionId, constructionName));
         
     QDomNodeList layerIdList = element.elementsByTagName("LayerId");
 
@@ -71,12 +74,12 @@ namespace gbxml {
         QDomNodeList materialIdElements = layerElement.elementsByTagName("MaterialId");
         for (int j = 0; j < materialIdElements.count(); j++){
           QString materialId = materialIdElements.at(j).toElement().attribute("materialIdRef");
-              
-          // we are naming openstudio objects with id to guarantee unique names, there should be a material with this name in the openstudio model
-          std::string materialName = materialId.toStdString();
-          boost::optional<openstudio::model::Material> material = model.getModelObjectByName<openstudio::model::Material>(materialName);
-          OS_ASSERT(material); // Krishnan, what type of error handling do you want?
-          materials.push_back(*material);
+          auto materialIt = m_idToObjectMap.find(materialId);
+          if (materialIt != m_idToObjectMap.end()){
+            boost::optional<openstudio::model::Material> material = materialIt->second.optionalCast<openstudio::model::Material>();
+            OS_ASSERT(material); // Krishnan, what type of error handling do you want?
+            materials.push_back(*material);
+          }
         }
         break;
       }
@@ -104,7 +107,10 @@ namespace gbxml {
   {  
     openstudio::model::Construction construction(model);
     QString windowTypeId = element.attribute("id");
-    construction.setName(escapeName(windowTypeId));
+    m_idToObjectMap.insert(std::make_pair(windowTypeId, construction));
+
+    QString windowTypeName = element.firstChildElement("Name").toElement().text();
+    construction.setName(escapeName(windowTypeId, windowTypeName));
 
     boost::optional<double> uValue;
     boost::optional<double> shgc;
@@ -177,8 +183,11 @@ namespace gbxml {
       openstudio::model::StandardOpaqueMaterial material(model);
       result = material;
         
-      QString name = element.attribute("id");
-      material.setName(escapeName(name));
+      QString id = element.attribute("id");
+      m_idToObjectMap.insert(std::make_pair(id, material));
+
+      QString name = element.firstChildElement("Name").toElement().text();
+      material.setName(escapeName(id, name));
         
       material.setDensity(density);
       material.setThermalConductivity(conductivity);
@@ -199,8 +208,11 @@ namespace gbxml {
       openstudio::model::MasslessOpaqueMaterial material(model);
       result = material;
 
-      QString name = element.attribute("id");
-      material.setName(escapeName(name));
+      QString id = element.attribute("id");
+      m_idToObjectMap.insert(std::make_pair(id, material));
+
+      QString name = element.firstChildElement("Name").toElement().text(); 
+      material.setName(escapeName(id, name));
 
       material.setThermalResistance(rvalue);
 
@@ -210,8 +222,11 @@ namespace gbxml {
       openstudio::model::MasslessOpaqueMaterial material(model);
       result = material;
 
-      QString name = element.attribute("id");
-      material.setName(escapeName(name));
+      QString id = element.attribute("id");
+      m_idToObjectMap.insert(std::make_pair(id, material));
+
+      QString name = element.firstChildElement("Name").toElement().text();
+      material.setName(escapeName(id, name));
 
       LOG(Warn, "Creating stub material '" << name.toStdString() << "'");
 
