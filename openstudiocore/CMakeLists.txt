@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 2.8.11)
 
 project(OpenStudioCore)
 
+set(CMAKE_VERSION_MAJOR 1)
+set(CMAKE_VERSION_MINOR 12)
+set(CMAKE_VERSION_PATCH 1)
+
 include(ExternalProject)
 
 if( POLICY CMP0022 )
