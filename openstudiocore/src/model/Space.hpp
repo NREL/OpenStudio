@@ -235,6 +235,7 @@ class MODEL_API Space : public PlanarSurfaceGroup {
   int multiplier() const;
 
   /// Returns the floor area (m^2).
+  /// Does not include area of floor surfaces which are air walls.
   /// Does not consider if space is included in building floor area.
   /// Does not include space multiplier in calculation.
   double floorArea() const;
