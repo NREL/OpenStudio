@@ -95,22 +95,18 @@ namespace detail {
   }
 
   boost::optional<EnergyManagementSystemProgram> EnergyManagementSystemProgramCallingManager_Impl::getProgram(unsigned index) const {
-    //TODO return program at index 
+    //return program at index 
     boost::optional<EnergyManagementSystemProgram> result;
     auto groups = extensibleGroups();
     unsigned sizeOfGroup = numExtensibleGroups();
 
-    //is this < or <=
-    if ((index <= sizeOfGroup) && (!groups[index].empty())) {
+    if ((index < sizeOfGroup) && (!groups[index].empty())) {
       WorkspaceExtensibleGroup group = groups[index].cast<WorkspaceExtensibleGroup>();
       boost::optional<WorkspaceObject> wo = group.getTarget(OS_EnergyManagementSystem_ProgramCallingManagerExtensibleFields::ProgramName);
       if (wo) {
         EnergyManagementSystemProgram program = wo->cast<EnergyManagementSystemProgram>();
         result = program;
       }
-    } else {
-      //assert here?
-      OS_ASSERT(false);
     }
     return result;
   }
@@ -137,7 +133,7 @@ namespace detail {
 
   bool EnergyManagementSystemProgramCallingManager_Impl::insertProgram(const EnergyManagementSystemProgram& program, unsigned index) {
     //bool result = setString(OS_EnergyManagementSystem_ProgramCallingManagerFields::EnergyPlusModelCallingPoint, callingPoint);
-    //TODO erase program at index
+    //TODO what is this method doing?  how is it different that setProgram?
     bool result = true;
     return result;
   }
@@ -156,8 +152,6 @@ namespace detail {
     auto groups = extensibleGroups();
     unsigned sizeOfGroup = numExtensibleGroups();
     if (index <= sizeOfGroup) {
-      //WorkspaceExtensibleGroup group = getObject<ModelObject>().insertExtensibleGroup().cast<WorkspaceExtensibleGroup>();
-      //result = group.setPointer(OS_EnergyManagementSystem_ProgramCallingManagerExtensibleFields::ProgramName, program.handle());
       IdfExtensibleGroup idfGroup = insertExtensibleGroup(index, StringVector());
       OS_ASSERT(!idfGroup.empty());
       ModelExtensibleGroup group = idfGroup.cast<ModelExtensibleGroup>();
@@ -168,9 +162,21 @@ namespace detail {
   }
 
   bool EnergyManagementSystemProgramCallingManager_Impl::setPrograms(const std::vector<const EnergyManagementSystemProgram>& programs) {
-    //bool result = setString(OS_EnergyManagementSystem_ProgramCallingManagerFields::EnergyPlusModelCallingPoint, callingPoint);
-    //TODO add programs to end of vector of programs
-    bool result = true;
+    //add programs to end of vector of programs
+    std::vector<bool> ok(programs.size(), false);
+    bool result = false;
+    for (auto &program : programs) {
+      WorkspaceExtensibleGroup group = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+       result = group.setPointer(OS_EnergyManagementSystem_ProgramCallingManagerExtensibleFields::ProgramName, program.handle());
+       ok.push_back(result);
+    }
+    //check if all the programs set true
+    result = true;
+    for (int i = 0; i<ok.size(); i++) {
+      if (!ok[i]) {//ok value is false
+        result = false; //not all values in array are true
+      }
+    }
     return result;
   }
 
