@@ -684,11 +684,11 @@ set(${target_name}_moc
 
 )
 
-if(${Qt5Widgets_VERSION} VERSION_LESS "5.4.0")
-  list(APPEND ${target_name}_moc ResultsWebView.hpp)
-else()
-  list(APPEND ${target_name}_moc ResultsWebEngineView.hpp)
-endif()
+#if(${Qt5Widgets_VERSION} VERSION_LESS "5.4.0")
+#  list(APPEND ${target_name}_moc ResultsWebView.hpp)
+#else()
+#  list(APPEND ${target_name}_moc ResultsWebEngineView.hpp)
+#endif()
 
 # resource files
 set(${target_name}_qrc
@@ -719,6 +719,7 @@ set(depends
   openstudio_sdd
   openstudio_gbxml
   ${QT_LIBS}
+  ${QT_WEB_LIBS}
   #${RUBY_LIBRARY}
 )
 
