@@ -96,7 +96,7 @@ if( APPLE )
     POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:Qt5::QCocoaIntegrationPlugin> $<TARGET_FILE_DIR:${target_name}>/platforms/ )
 elseif( WIN32 )
-  foreach(LIB ${QT_LIBS})
+  foreach(LIB ${QT_WEB_LIBS})
     add_custom_command(TARGET ${target_name}
       POST_BUILD
       COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:${LIB}> $<TARGET_FILE_DIR:${target_name}>/ )
@@ -116,6 +116,8 @@ set(depends
   openstudio_gbxml
   openstudio_bimserver
   ${QT_LIBS}
+  ${QT_WEB_LIBS}
+  ${RUBY_LIBRARY}
   ${COREFOUNDATION_LIBRARY}
 )
 
