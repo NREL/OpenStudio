@@ -1,15 +1,6 @@
 set(target_name OpenStudioApp)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
-#include_directories(${RUBY_INCLUDE_DIR})
-#include_directories(${SWIG_DIR})
-
-#add_custom_command(
-#  OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.h"
-#  COMMAND "${SWIG_EXECUTABLE}"
-#          "-ruby"
-#          -external-runtime "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.h"
-#)
 
 # source files
 set(${target_name}_SRC
@@ -71,7 +62,7 @@ if(APPLE)
   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Info.plist.in ${CMAKE_CURRENT_BINARY_DIR}/Info.plist)
 endif()
 
-include_directories(${RUBY_INCLUDE_DIRS})
+#include_directories(${RUBY_INCLUDE_DIRS})
 
 add_executable(${target_name}
   WIN32
@@ -125,7 +116,6 @@ set(depends
   openstudio_gbxml
   openstudio_bimserver
   ${QT_LIBS}
-  ${RUBY_LIBRARY}
   ${COREFOUNDATION_LIBRARY}
 )
 
@@ -187,6 +177,7 @@ install(TARGETS ${target_name}
 
 
 # directories to look for dependencies
+# This is probably out of date
 set(DIRS ${QT_LIBRARY_DIR} ${LIBRARY_SEARCH_DIRECTORY})
 
 if(APPLE)
@@ -248,12 +239,12 @@ if(UNIX AND NOT APPLE AND "${CMAKE_INSTALL_PREFIX}" STREQUAL "/usr/local")
   install(FILES ../../icons/ossr_256.png DESTINATION ../share/icons/hicolor/256x256/mimetypes RENAME application-openstudio.ossr.png)
 endif()
 
-#if(WIN32 OR APPLE)
-#  install(CODE "
-#    include(BundleUtilities)
-#    fixup_bundle(\"${APPS}\" \"${QTPLUGINS}\" \"${DIRS}\")
-#  ")
-#endif()
+if(WIN32 OR APPLE)
+  install(CODE "
+    include(BundleUtilities)
+    fixup_bundle(\"${APPS}\" \"${QTPLUGINS}\" \"${DIRS}\")
+  ")
+endif()
 
 if(WIN32)
   include(GetPrerequisites)
