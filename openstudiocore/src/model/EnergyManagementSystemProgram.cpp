@@ -80,9 +80,7 @@ namespace detail {
       OS_ASSERT(line);
       body += line.get();
     }
-
     return body;
-
   }
 
   bool EnergyManagementSystemProgram_Impl::setBody(std::string& body) {
@@ -141,10 +139,8 @@ namespace detail {
   }
 
   boost::optional<std::vector<std::string>> EnergyManagementSystemProgram_Impl::lines() const {
-    //return getString(OS_EnergyManagementSystem_ProgramFields::EnergyPlusModelCallingPoint, true);
-    //TODO return vector of lines from body
+    //return vector of lines from body
     std::vector<std::string> result;
-    //return program body as string
 
     // loop through extensible groups and add ProgramLine to vector result.
     auto groups = extensibleGroups();
@@ -155,7 +151,6 @@ namespace detail {
       result[i] += line.get();
       i++;
     }
-
     return result;
   }
 
