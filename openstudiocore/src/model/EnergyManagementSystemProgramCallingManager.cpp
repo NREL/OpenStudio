@@ -117,8 +117,7 @@ namespace detail {
     auto groups = extensibleGroups();
     unsigned sizeOfGroup = numExtensibleGroups();
 
-    //is this < or <=
-    if (index <= sizeOfGroup) {
+    if (index < sizeOfGroup) {
       eraseExtensibleGroup(index);
       result = true;
     }
@@ -181,9 +180,17 @@ namespace detail {
   }
 
   std::vector<unsigned> EnergyManagementSystemProgramCallingManager_Impl::nullPrograms() const {
-    //return getString(OS_EnergyManagementSystem_ProgramCallingManagerFields::EnergyPlusModelCallingPoint, true);
-    //TODO return vector of indices of null programs in the program vector
+    //return vector of indices of null programs in the program vector
     std::vector<unsigned> result;
+    unsigned i = 0;
+    auto groups = extensibleGroups();
+    unsigned sizeOfGroup = numExtensibleGroups();
+    for (auto &group : groups) {
+      if (group.empty()) {
+        result.push_back(i);
+      };
+      i++;
+    }
     return result;
   }
 
