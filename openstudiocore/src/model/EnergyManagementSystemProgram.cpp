@@ -159,9 +159,37 @@ namespace detail {
   }
 
   bool EnergyManagementSystemProgram_Impl::setLines(const std::vector<std::string>& lines) {
-    //bool result = setString(OS_EnergyManagementSystem_ProgramFields::EnergyPlusModelCallingPoint, body);
-    //TODO set body of program to input vector of strings
-    bool result = true;
+    //set body of program to input vector of strings
+    bool result = false;
+    std::string temp;
+
+    //if body string empty then return false
+    if (lines.empty()) {
+      return false;
+    };
+
+    //clobber existing body
+    this->eraseBody();
+
+    // remove '\r' from the body string
+    //for (int i = 0; i < lines.size(); i++) {
+    //  temp = lines[i];
+    //  lines[i] = temp.erase(std::remove(lines[i].begin(), lines[i].end(), '\r'), lines[i].end());
+    //}
+    //add program lines to body
+    std::vector<bool> ok(lines.size(), false);
+    for (int i = 0; i < lines.size(); i++) {
+      WorkspaceExtensibleGroup group = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+      result = group.setString(OS_EnergyManagementSystem_ProgramExtensibleFields::ProgramLine, lines[i]);
+      ok.push_back(result);
+    }
+    //check if all the programs set true
+    result = true;
+    for (int i = 0; i<ok.size(); i++) {
+      if (!ok[i]) {//the value is false
+        result = false; //not all values in array are true
+      }
+    }
     return result;
   }
 
