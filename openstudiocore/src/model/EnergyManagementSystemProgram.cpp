@@ -141,8 +141,20 @@ namespace detail {
 
   boost::optional<std::vector<std::string>> EnergyManagementSystemProgram_Impl::lines() const {
     //return getString(OS_EnergyManagementSystem_ProgramFields::EnergyPlusModelCallingPoint, true);
-    //TODO return lines from body
+    //TODO return vector of lines from body
     std::vector<std::string> result;
+    //return program body as string
+
+    // loop through extensible groups and add ProgramLine to vector result.
+    auto groups = extensibleGroups();
+    unsigned i = 0;
+    for (auto group = groups.begin(); group != groups.end(); ++group) {
+      const auto & line = group->getString(OS_EnergyManagementSystem_ProgramExtensibleFields::ProgramLine, true);
+      OS_ASSERT(line);
+      result[i] += line.get();
+      i++;
+    }
+
     return result;
   }
 
