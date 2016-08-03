@@ -27,6 +27,9 @@
 
 #include "ModelExtensibleGroup.hpp"
 
+#include "../utilities/core/String.hpp"
+#include "../utilities/core/StringHelpers.hpp"
+
 namespace openstudio {
 namespace model {
 
@@ -82,14 +85,38 @@ namespace detail {
 
   }
 
-  bool EnergyManagementSystemProgram_Impl::setBody(const std::string& body) {
+  bool EnergyManagementSystemProgram_Impl::setBody(std::string& body) {
     //set body of program to input string
     bool result = false;
+    //if body string empty then return false
     if (body.empty()) {
       return false;
     };
 
+    //clobber existing body
+    this->eraseBody();
 
+    // remove '\r' from the body string
+    std::string body_minus_r = body;
+    body_minus_r.erase(std::remove(body.begin(), body.end(), '\r'), body.end());
+
+    //split the body string on newline characters and insert program line for each string line
+    std::vector<std::string> body_minus_nl = splitString(body_minus_r, '\n');
+
+    //add program lines to body
+    std::vector<bool> ok(body_minus_nl.size(), false);
+    for (int i = 0; i < body_minus_nl.size(); i++) {
+      WorkspaceExtensibleGroup group = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+      result = group.setString(OS_EnergyManagementSystem_ProgramExtensibleFields::ProgramLine, body_minus_nl[i]);
+      ok.push_back(result);
+    }
+    //check if all the programs set true
+    result = true;
+    for (int i = 0; i<ok.size(); i++) {
+      if (!ok[i]) {//the value is false
+        result = false; //not all values in array are true
+      }
+    }
     return result;
   }
 
@@ -158,7 +185,7 @@ boost::optional<std::string> EnergyManagementSystemProgram::body() const {
   return getImpl<detail::EnergyManagementSystemProgram_Impl>()->body();
 }
 
-bool EnergyManagementSystemProgram::setBody(const std::string& body) {
+bool EnergyManagementSystemProgram::setBody(std::string& body) {
   return getImpl<detail::EnergyManagementSystemProgram_Impl>()->setBody(body);
 }
 
