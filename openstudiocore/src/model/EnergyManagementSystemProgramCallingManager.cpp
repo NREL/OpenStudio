@@ -127,7 +127,6 @@ namespace detail {
   void EnergyManagementSystemProgramCallingManager_Impl::erasePrograms() {
     //erase all programs in this calling manager
     clearExtensibleGroups();
-    
   }
 
   bool EnergyManagementSystemProgramCallingManager_Impl::insertProgram(const EnergyManagementSystemProgram& program, unsigned index) {
@@ -205,7 +204,6 @@ namespace detail {
         result = this->eraseProgram(i);
       };
     };
-
     return result;
   }
 } // detail
