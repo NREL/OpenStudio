@@ -117,7 +117,6 @@ set(depends
   openstudio_bimserver
   ${QT_LIBS}
   ${QT_WEB_LIBS}
-  ${RUBY_LIBRARY}
   ${COREFOUNDATION_LIBRARY}
 )
 
@@ -180,7 +179,7 @@ install(TARGETS ${target_name}
 
 # directories to look for dependencies
 # This is probably out of date
-set(DIRS ${QT_LIBRARY_DIR} ${LIBRARY_SEARCH_DIRECTORY})
+set(DIRS "${QT_INSTALL_DIR}/bin" "${RUBY_INSTALL_DIR}/bin")
 
 if(APPLE)
   #list(APPEND DIRS "${CMAKE_BINARY_DIR}/Products/OSAppConfigInstall")

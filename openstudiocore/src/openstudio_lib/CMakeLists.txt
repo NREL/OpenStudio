@@ -720,7 +720,6 @@ set(depends
   openstudio_gbxml
   ${QT_LIBS}
   ${QT_WEB_LIBS}
-  #${RUBY_LIBRARY}
 )
 
 target_link_libraries(${target_name} ${depends})
