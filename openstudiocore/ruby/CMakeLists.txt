@@ -10,6 +10,7 @@ include_directories(${RUBY_INCLUDE_DIRS} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_BIN
 
 add_library( init_openstudio
   init_openstudio.cpp
+  RubyAPI.hpp
 )
 
 target_link_libraries(init_openstudio
