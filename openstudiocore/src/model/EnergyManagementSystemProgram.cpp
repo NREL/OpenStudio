@@ -67,12 +67,9 @@ namespace detail {
   }
 
   boost::optional<std::string> EnergyManagementSystemProgram_Impl::body() const {
-    //TODO return program body as string
-    //Doesn't there need to be a loop here?
-    //boost::optional<std::string> value = getString(OS_EnergyManagementSystem_ProgramExtensibleFields::ProgramLine, true);
-    //OS_ASSERT(value);
-    //return value.get();
-    // loop through extensible groups
+    //return program body as string
+
+    // loop through extensible groups and add ProgramLine to body string.
     std::string body;
     auto groups = extensibleGroups();
     for (auto group = groups.begin(); group != groups.end(); ++group) {
@@ -86,10 +83,26 @@ namespace detail {
   }
 
   bool EnergyManagementSystemProgram_Impl::setBody(const std::string& body) {
-    //bool result = setString(OS_EnergyManagementSystem_ProgramFields::EnergyPlusModelCallingPoint, body);
-    //TODO set body of program to input string
-    bool result = true;
+    //set body of program to input string
+    bool result = false;
+    if (body.empty()) {
+      return false;
+    };
+
+
     return result;
+  }
+
+  bool EnergyManagementSystemProgram_Impl::eraseBody() {
+    //erase body of program
+    bool results = false;
+    std::vector< std::vector<std::string> > result;
+    result = clearExtensibleGroups();
+    // if result is not empty, then the group was cleared out since the old values were returned
+    if (!result.empty()) {
+      results = true;
+    };
+    return results;
   }
 
   bool EnergyManagementSystemProgram_Impl::addLine(const std::string& line) {
@@ -147,6 +160,10 @@ boost::optional<std::string> EnergyManagementSystemProgram::body() const {
 
 bool EnergyManagementSystemProgram::setBody(const std::string& body) {
   return getImpl<detail::EnergyManagementSystemProgram_Impl>()->setBody(body);
+}
+
+bool EnergyManagementSystemProgram::eraseBody() {
+  return getImpl<detail::EnergyManagementSystemProgram_Impl>()->eraseBody();
 }
 
 bool EnergyManagementSystemProgram::addLine(const std::string& line) {

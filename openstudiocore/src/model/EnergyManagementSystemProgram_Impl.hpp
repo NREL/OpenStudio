@@ -79,6 +79,8 @@ namespace detail {
 
     bool setBody(const std::string& body);
 
+    bool eraseBody();
+
     bool addLine(const std::string& body);
 
     bool setLines(const std::vector<std::string>& body);
