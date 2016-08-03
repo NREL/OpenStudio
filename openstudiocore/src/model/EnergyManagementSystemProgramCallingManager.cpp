@@ -195,9 +195,17 @@ namespace detail {
   }
 
   bool EnergyManagementSystemProgramCallingManager_Impl::removeNullPrograms() {
-    //bool result = setString(OS_EnergyManagementSystem_ProgramCallingManagerFields::EnergyPlusModelCallingPoint, callingPoint);
-    //TODO remove any null entries in the vector of programs
-    bool result = true;
+    //remove any null entries in the vector of programs
+    bool result = false;
+    std::vector<unsigned> nullProgs;
+    nullProgs = this->nullPrograms();
+
+    if (!nullProgs.empty()) {
+      for (int i = 0; i < nullProgs.size(); i++) {
+        result = this->eraseProgram(i);
+      };
+    };
+
     return result;
   }
 } // detail
