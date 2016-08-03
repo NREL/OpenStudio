@@ -133,9 +133,10 @@ namespace detail {
   }
 
   bool EnergyManagementSystemProgram_Impl::addLine(const std::string& line) {
-    //bool result = setString(OS_EnergyManagementSystem_ProgramFields::EnergyPlusModelCallingPoint, body);
-    //TODO add line to end of program body
+    //add line to end of program body
     bool result = true;
+    WorkspaceExtensibleGroup group = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+    result = group.setString(OS_EnergyManagementSystem_ProgramExtensibleFields::ProgramLine, line);
     return result;
   }
 
