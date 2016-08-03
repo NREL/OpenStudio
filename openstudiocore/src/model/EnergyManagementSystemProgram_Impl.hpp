@@ -77,7 +77,7 @@ namespace detail {
 
     // TODO: Handle this object's extensible fields.
 
-    bool setBody(const std::string& body);
+    bool setBody(std::string& body);
 
     bool eraseBody();
 
