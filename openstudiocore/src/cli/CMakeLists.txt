@@ -34,10 +34,10 @@ set(LIBS
 set(EXTENSION_LIBS "")
 set(EXTENSION_LIBS_LIST "")
 if( UNIX )
-  file(GLOB EXTENSION_LIBS "${RUBY_INSTALL_DIR}/lib/*.a")
+  file(GLOB EXTENSION_LIBS "${RUBY_INSTALL_DIR}/lib/ext/*.a")
   set(EXTENSION_LIBS_LIST ${EXTENSION_LIBS})
 
-  file(GLOB ENC_LIBS "${RUBY_INSTALL_DIR}/enc/*.a")
+  file(GLOB ENC_LIBS "${RUBY_INSTALL_DIR}/lib/enc/*.a")
   set(ENC_LIBS_LIST ${ENC_LIBS})
 else()
   file(GLOB EXTENSION_LIBS_RELEASE "${RUBY_INSTALL_DIR}/lib/ext/*.lib")
@@ -204,7 +204,6 @@ elseif(WIN32)
 else()
   target_link_libraries(openstudio ${RUBY_STATIC_LIBRARY} )
 endif()
-
 
 if( APPLE )
   target_link_libraries(openstudio ${COREFOUNDATION_LIBRARY} )

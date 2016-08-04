@@ -701,7 +701,7 @@ qt5_wrap_cpp_minimally(${target_name}_moc_src ${${target_name}_moc})
 # generate rules for building source files from the resources
 qt5_add_resources(${target_name}_qrcs ${${target_name}_qrc})
 
-add_library(${target_name} SHARED
+add_library(${target_name}
   ${${target_name}_SRC}
   ${${target_name}_moc_src}
   ${${target_name}_moc}

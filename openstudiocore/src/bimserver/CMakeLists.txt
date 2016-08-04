@@ -30,7 +30,7 @@ set(${target_name}_depends
   openstudio_osversion
 )
 
-add_library(${target_name} SHARED ${${target_name}_src})
+add_library(${target_name} ${${target_name}_src})
 target_link_libraries(${target_name} ${${target_name}_depends})
 AddPCH(${target_name})
 

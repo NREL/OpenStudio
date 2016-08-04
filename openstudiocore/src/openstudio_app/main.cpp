@@ -37,6 +37,8 @@
 #include <QAbstractButton>
 #include <QApplication>
 #include <QMessageBox>
+#include <QtPlugin>
+#include <QDir>
 
 #ifdef _WIN32
 #include <Windows.h>
@@ -56,6 +58,12 @@ int main(int argc, char *argv[])
     ruby_init();
   }
   */
+
+#ifdef QT_STATIC
+  Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin)
+  Q_IMPORT_PLUGIN(QSQLiteDriverPlugin)
+  Q_INIT_RESOURCE(openstudio);
+#endif
 
 #if _DEBUG || (__GNUC__ && !NDEBUG)
 #ifdef _WIN32
