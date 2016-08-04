@@ -39,6 +39,7 @@
 #include <QMessageBox>
 #include <QtPlugin>
 #include <QDir>
+#include <QtGlobal>
 
 #ifdef _WIN32
 #include <Windows.h>
@@ -59,11 +60,21 @@ int main(int argc, char *argv[])
   }
   */
 
+#pragma warning(disable : 4930 )
+#pragma warning(disable : 4101 )
+
 #ifdef QT_STATIC
-  Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin)
-  Q_IMPORT_PLUGIN(QSQLiteDriverPlugin)
+  Q_IMPORT_PLUGIN(QSQLiteDriverPlugin);
   Q_INIT_RESOURCE(openstudio);
 #endif
+
+#if defined(Q_OS_OSX) && defined(QT_STATIC)
+  Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
+#elif defined(Q_OS_WIN) && defined(QT_STATIC)
+  Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin);
+#endif
+
+
 
 #if _DEBUG || (__GNUC__ && !NDEBUG)
 #ifdef _WIN32

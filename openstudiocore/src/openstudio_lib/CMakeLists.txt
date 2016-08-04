@@ -725,12 +725,12 @@ set(depends
 target_link_libraries(${target_name} ${depends})
 AddPCH(${target_name})
 
-if(NOT APPLE)
-  install(TARGETS ${target_name}
-    RUNTIME DESTINATION bin 
-    LIBRARY DESTINATION lib
-  )
-endif()
+#if(NOT APPLE)
+#  install(TARGETS ${target_name}
+#    RUNTIME DESTINATION bin 
+#    LIBRARY DESTINATION lib
+#  )
+#endif()
 
 set(${target_name}_test_src
   test/OpenStudioLibFixture.hpp

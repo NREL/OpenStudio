@@ -875,7 +875,7 @@ endif()
 
 set(CMAKE_AUTOMOC OFF)
 
-get_target_property(QtCore_TYPE Qt5::Core TYPE)
+#get_target_property(QtCore_TYPE Qt5::Core TYPE)
 
 #if( Qt5Static )
 #  if(NOT QtCore_TYPE STREQUAL "STATIC_LIBRARY")
@@ -1319,7 +1319,7 @@ if(WIN32)
   list(APPEND all_lib_targets "qtwinmigrate")
 endif()
 
-if(QtCore_TYPE STREQUAL "SHARED_LIBRARY")
+if(NOT Qt5Static)
   list(APPEND all_lib_targets "openstudio_modeleditor")
   #list(APPEND all_lib_targets "openstudio_gbxml")
   list(APPEND all_lib_targets "openstudio_bimserver")
@@ -1339,7 +1339,7 @@ set(all_exe_targets
   #ResultsViewer
 )
 
-if(QtCore_TYPE STREQUAL "SHARED_LIBRARY")
+if(NOT Qt5Static)
   list(APPEND all_exe_targets "OpenStudio")
   #list(APPEND all_exe_targets "ResultsViewer")
 endif()
@@ -1398,7 +1398,7 @@ if(NOT UNIX)
   include(InstallRequiredSystemLibraries)
   if(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS)
     install(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
-      DESTINATION "bin")
+    DESTINATION "Applications")
   endif()
 endif()
 

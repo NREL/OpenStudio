@@ -122,12 +122,12 @@ set(${target_name}_depends
 add_dependencies(${target_name} ${${target_name}_depends})
 target_link_libraries(${target_name} ${${target_name}_depends})
 
-if(NOT APPLE)
-  install(TARGETS ${target_name}
-    RUNTIME DESTINATION bin
-    LIBRARY DESTINATION lib
-  )
-endif()
+#if(NOT APPLE)
+#  install(TARGETS ${target_name}
+#    RUNTIME DESTINATION bin
+#    LIBRARY DESTINATION lib
+#  )
+#endif()
 
 set(${target_name}_test_src
   test/ModelEditorFixture.hpp

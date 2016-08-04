@@ -84,26 +84,36 @@ add_custom_command(TARGET ${target_name}
 )
 endif()
 
-add_custom_command(TARGET ${target_name}
-  POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:${target_name}>/platforms/
-  COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:${target_name}>/sqldrivers/
-  COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:Qt5::QSQLiteDriverPlugin> $<TARGET_FILE_DIR:${target_name}>/sqldrivers/
-)
-
-if( APPLE )
+if( NOT Qt5Static )
   add_custom_command(TARGET ${target_name}
     POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:Qt5::QCocoaIntegrationPlugin> $<TARGET_FILE_DIR:${target_name}>/platforms/ )
-elseif( WIN32 )
+    COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:${target_name}>/platforms/
+    COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:${target_name}>/sqldrivers/
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:Qt5::QSQLiteDriverPlugin> $<TARGET_FILE_DIR:${target_name}>/sqldrivers/
+  )
+  
+  if( APPLE )
+    add_custom_command(TARGET ${target_name}
+      POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:Qt5::QCocoaIntegrationPlugin> $<TARGET_FILE_DIR:${target_name}>/platforms/ )
+  elseif( WIN32 )
+    add_custom_command(TARGET ${target_name}
+      POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:Qt5::QWindowsIntegrationPlugin> $<TARGET_FILE_DIR:${target_name}>/platforms/ )
+    foreach(LIB ${QT_LIBS})
+      add_custom_command(TARGET ${target_name}
+        POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:${LIB}> $<TARGET_FILE_DIR:${target_name}>/ )
+    endforeach()
+  endif()
+endif()
+
+if( WIN32 )
   foreach(LIB ${QT_WEB_LIBS})
     add_custom_command(TARGET ${target_name}
       POST_BUILD
       COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:${LIB}> $<TARGET_FILE_DIR:${target_name}>/ )
   endforeach()
-  add_custom_command(TARGET ${target_name}
-    POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:Qt5::QWindowsIntegrationPlugin> $<TARGET_FILE_DIR:${target_name}>/platforms/ )
 endif()
 
 set(depends
@@ -137,15 +147,15 @@ if(APPLE)
   set(APPS "\${CMAKE_INSTALL_PREFIX}/OpenStudioApp.app")
 elseif(WIN32)
   set(plugin_dest_dir bin)
-  set(APPS "\${CMAKE_INSTALL_PREFIX}/bin/OpenStudioApp.exe")
+  set(APPS "\${CMAKE_INSTALL_PREFIX}/Applications/OpenStudioApp.exe")
 else()
   set(plugin_dest_dir bin)
-  set(APPS "\${CMAKE_INSTALL_PREFIX}/bin/OpenStudioApp")
+  set(APPS "\${CMAKE_INSTALL_PREFIX}/Applications/OpenStudioApp")
 endif()
 
 install(TARGETS ${target_name}
   BUNDLE DESTINATION .
-  RUNTIME DESTINATION bin
+  RUNTIME DESTINATION Applications
 )
 
 #if(APPLE OR WIN32)
@@ -179,7 +189,7 @@ install(TARGETS ${target_name}
 
 # directories to look for dependencies
 # This is probably out of date
-set(DIRS "${QT_INSTALL_DIR}/bin" "${RUBY_INSTALL_DIR}/bin")
+set(DIRS "${QT_INSTALL_DIR}/bin" "${QT_INSTALL_DIR}/lib" "${RUBY_INSTALL_DIR}/bin")
 
 if(APPLE)
   #list(APPEND DIRS "${CMAKE_BINARY_DIR}/Products/OSAppConfigInstall")
@@ -195,11 +205,11 @@ elseif(WIN32)
   #list(APPEND DIRS "${CMAKE_BINARY_DIR}/Products/OSAppConfigInstall/Release" "${CMAKE_BINARY_DIR}/Products/OSAppConfigInstall/Debug")
 
   install(DIRECTORY ${CMAKE_SOURCE_DIR}/src/openstudio_app/Resources/
-          DESTINATION share/openstudio-${OPENSTUDIO_VERSION}/OSApp
+	  DESTINATION Applications/share/openstudio-${OPENSTUDIO_VERSION}/OSApp
   )
 else()
   install(DIRECTORY ${CMAKE_SOURCE_DIR}/src/openstudio_app/Resources/
-          DESTINATION share/openstudio-${OPENSTUDIO_VERSION}/OSApp
+	  DESTINATION Applications/share/openstudio-${OPENSTUDIO_VERSION}/OSApp
   )
 endif()
 
@@ -243,24 +253,25 @@ endif()
 if(WIN32 OR APPLE)
   install(CODE "
     include(BundleUtilities)
+    include(\"${CMAKE_SOURCE_DIR}/CMake/FixupBundleOverrides.cmake\")
     fixup_bundle(\"${APPS}\" \"${QTPLUGINS}\" \"${DIRS}\")
   ")
 endif()
 
-if(WIN32)
-  include(GetPrerequisites)
-  install(CODE "
-    include(GetPrerequisites)
-    get_prerequisites(\"${APPS}\" PREREQS 0 0 \"${APPS}\" \"${DIRS}\")
-    foreach(PREREQ \${PREREQS})
-      #message(\"\${PREREQ}\")
-      if(\"\${PREREQ}\" MATCHES \".*ruby.*\")
-        gp_resolve_item(\"${APPS}\" \"\${PREREQ}\" \"${APPS}\" \"${DIRS}\" FULL_PREREQ)
-        execute_process(COMMAND \"${CMAKE_COMMAND}\" -E copy \"\${FULL_PREREQ}\" \"\${CMAKE_INSTALL_PREFIX}/bin/\")
-      endif()
-    endforeach()
-  ")
-endif()
+#if(WIN32)
+#  include(GetPrerequisites)
+#  install(CODE "
+#    include(GetPrerequisites)
+#    get_prerequisites(\"${APPS}\" PREREQS 0 0 \"${APPS}\" \"${DIRS}\")
+#    foreach(PREREQ \${PREREQS})
+#      #message(\"\${PREREQ}\")
+#      if(\"\${PREREQ}\" MATCHES \".*ruby.*\")
+#        gp_resolve_item(\"${APPS}\" \"\${PREREQ}\" \"${APPS}\" \"${DIRS}\" FULL_PREREQ)
+#        execute_process(COMMAND \"${CMAKE_COMMAND}\" -E copy \"\${FULL_PREREQ}\" \"\${CMAKE_INSTALL_PREFIX}/bin/\")
+#      endif()
+#    endforeach()
+#  ")
+#endif()
 
 ## Due to duplication of the Apple Qt framework inside of the OpenStudio application
 ## we need to fix up and include the Ruby libraries inside of the application
