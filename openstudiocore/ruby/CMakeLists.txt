@@ -8,7 +8,7 @@ endif()
 
 include_directories(${RUBY_INCLUDE_DIRS} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR} )
 
-add_library( init_openstudio
+add_library( init_openstudio STATIC
   init_openstudio.cpp
   RubyAPI.hpp
 )
