@@ -21,8 +21,8 @@ module Kernel
   $LOAD_PATH << ':/ruby/2.0.0'
   $LOAD_PATH << ':/ruby/2.0.0/x86_64-darwin13.4.0'
   $LOAD_PATH << ':/ruby/2.0.0/x64-mswin64_120'
-  $LOAD_PATH << EmbeddedScripting::findFirstFileByName('openstudio-standards.rb').gsub('openstudio-standards.rb', '')
-  $LOAD_PATH << EmbeddedScripting::findFirstFileByName('openstudio-workflow.rb').gsub('openstudio-workflow.rb', '')
+  $LOAD_PATH << EmbeddedScripting::findFirstFileByName('openstudio-standards.rb').gsub('/openstudio-standards.rb', '')
+  $LOAD_PATH << EmbeddedScripting::findFirstFileByName('openstudio-workflow.rb').gsub('/openstudio-workflow.rb', '')
   $LOADED = []
 
   alias :original_require_relative :require_relative
