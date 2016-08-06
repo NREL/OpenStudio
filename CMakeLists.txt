@@ -297,7 +297,7 @@ if(BUILD_OPENSTUDIO_GEMS)
   else()
     add_custom_target(openstudio-gems ALL 
                      rm -rf ${OPENSTUDIO_GEMS_DIR}
-                     COMMAND bundle install --path=${OPENSTUDIO_GEMS_DIR}
+                     COMMAND bundle install --without=test --path=${OPENSTUDIO_GEMS_DIR}
                      COMMAND rm -rf "${OPENSTUDIO_GEMS_DIR}/ruby/2.0.0/cache"
                      WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/dependencies/ruby/"
                      DEPENDS "${CMAKE_SOURCE_DIR}/dependencies/ruby/Gemfile" "${CMAKE_SOURCE_DIR}/dependencies/ruby/build_openstudio_gems.bat")

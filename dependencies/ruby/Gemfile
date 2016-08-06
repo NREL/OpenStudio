@@ -1,7 +1,8 @@
 # gems in this file are packaged into openstudio.exe
 # gems listed here should not have binary components
 # gems listed here must be able to read resource files from the embedded files location
+# need to adjust hard coded paths in embedded_help.rb
 
-gem 'openstudio-workflow', :github => 'NREL/OpenStudio-workflow-gem', :ref => '37f56f9f54f3a9bd030820b47e77d5e72c71c64f'
-gem 'openstudio-standards', :github => 'NREL/openstudio-standards', :ref => 'f960bc5cd123de066e116d170dfa85574c939fa6'
+gem 'openstudio-workflow', :github => 'NREL/OpenStudio-workflow-gem', :ref => '6f5f0b797caa87e4e7e2c07a8cc6c36ae3d8300b'
+gem 'openstudio-standards', :github => 'NREL/openstudio-standards', :ref => 'c65b0ec070d301de89c39b2fbe704376c76b7f1e'
 

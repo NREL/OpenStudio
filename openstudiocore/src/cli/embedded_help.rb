@@ -21,10 +21,11 @@ module Kernel
   $LOAD_PATH << ':/ruby/2.0.0'
   # TODO configure this in a better way
   # these hardcoded platform paths are brain dead
+  # DLM: yes they are :-)
   $LOAD_PATH << ':/ruby/2.0.0/x86_64-darwin13.4.0'
   $LOAD_PATH << ':/ruby/2.0.0/x64-mswin64_120'
-  $LOAD_PATH << ':/ruby/2.0.0/bundler/gems/openstudio-standards-eb7b32237fb4/openstudio-standards/lib'
-  $LOAD_PATH << ':/ruby/2.0.0/bundler/gems/OpenStudio-workflow-gem-c2f6ed3b5151/lib'
+  $LOAD_PATH << ':/ruby/2.0.0/bundler/gems/openstudio-standards-c65b0ec070d3/openstudio-standards/lib'
+  $LOAD_PATH << ':/ruby/2.0.0/bundler/gems/OpenStudio-workflow-gem-6f5f0b797caa/lib'
   $LOADED = []
 
   alias :original_require_relative :require_relative
@@ -99,10 +100,43 @@ module Kernel
     if absolute_path.chars.first == ':'
       absolute_path[0] = ''
       absolute_path = File.expand_path absolute_path
+      
+      # strip Windows drive letters
+      if /[A-Z\:]/.match(absolute_path)
+        absolute_path = absolute_path[2..-1]
+      end
       absolute_path = ':' + absolute_path
     end
     return require absolute_path
   end
+  
+  # this function either reads a file from the embedded archive or from disk, returns file content as a string
+  def load_resource_relative(path, mode='r')
 
+    absolute_path = File.dirname(caller_locations(1,1)[0].path) + '/' + path
+    if absolute_path.chars.first == ':'
+      absolute_path[0] = ''
+      absolute_path = File.expand_path absolute_path
+      
+      # strip Windows drive letters
+      if /[A-Z\:]/.match(absolute_path)
+        absolute_path = absolute_path[2..-1]
+      end
+      absolute_path = ':' + absolute_path
+    end
+    
+    if EmbeddedScripting::hasFile(absolute_path)
+      return EmbeddedScripting::getFileAsString(absolute_path)
+    end
+    
+    result = ""
+    if File.exists?(path)
+      File.open(path, mode) do |file|
+        result = file.read
+      end
+    end
+    return result
+  end
+  
 end
 
