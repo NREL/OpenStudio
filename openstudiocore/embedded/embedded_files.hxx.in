@@ -111,6 +111,27 @@ inline int inf(const EmbeddedFile & file, std::vector<uint8_t> & result)
 
 namespace embedded_files { 
   std::map<std::string, EmbeddedFile > files();
+  
+  inline std::vector<std::string> fileNames() {
+    std::vector<std::string> result;
+    for (const auto& file : files()){
+      result.push_back(file.first);
+    }
+    return result;
+  }
+  
+  inline std::string findFirstFileByName(const std::string &t_filename) {
+    for (const auto& file : files()){
+      const std::string& path = file.first;
+      if (t_filename.size() > path.size()){
+        continue;
+      }
+      if (std::equal(t_filename.rbegin(), t_filename.rend(), path.rbegin())){
+        return path;
+      }
+    }
+    return std::string();
+  }
 
   inline bool hasFile(const std::string &t_filename) {
     const auto fs = files();

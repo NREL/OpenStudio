@@ -19,13 +19,10 @@ module Kernel
   # make sure it is in the ruby load path
   $LOAD_PATH << ':'
   $LOAD_PATH << ':/ruby/2.0.0'
-  # TODO configure this in a better way
-  # these hardcoded platform paths are brain dead
-  # DLM: yes they are :-)
   $LOAD_PATH << ':/ruby/2.0.0/x86_64-darwin13.4.0'
   $LOAD_PATH << ':/ruby/2.0.0/x64-mswin64_120'
-  $LOAD_PATH << ':/ruby/2.0.0/bundler/gems/openstudio-standards-c65b0ec070d3/openstudio-standards/lib'
-  $LOAD_PATH << ':/ruby/2.0.0/bundler/gems/OpenStudio-workflow-gem-6f5f0b797caa/lib'
+  $LOAD_PATH << EmbeddedScripting::findFirstFileByName('openstudio-standards.rb').gsub('openstudio-standards.rb', '')
+  $LOAD_PATH << EmbeddedScripting::findFirstFileByName('openstudio-workflow.rb').gsub('openstudio-workflow.rb', '')
   $LOADED = []
 
   alias :original_require_relative :require_relative

@@ -135,6 +135,8 @@ add_custom_command(
           "-c++"
           -o "${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap.cxx"
           "-fvirtual"
+          "-I${CMAKE_SOURCE_DIR}/src"
+          "-I${CMAKE_BINARY_DIR}/src"
           "-D_WINDOWS"
           "-Fmicrosoft"
           "${CMAKE_CURRENT_SOURCE_DIR}/EmbeddedScripting.i"
