@@ -102,7 +102,7 @@ set(BUILD_WITH_OPENSSL ON CACHE INTERNAL "Build With OpenSSL Support For SSH Con
 option(BUILD_R "Build R package" OFF)
 
 # Build shared OS libraries
-option(BUILD_SHARED_LIBS "Build OS libs as shared libraries" OFF)
+option(BUILD_SHARED_LIBS "Build OS libs as shared libraries" ON)
 
 # Build the OpenStudio Application
 # This option will require shared libs
@@ -110,7 +110,7 @@ option(BUILD_OS_APP "Build OS App" ON)
 
 # Use static version of Qt
 # This option is used for making static cli
-option(Qt5Static "Use Static Qt" Off)
+option(Qt5Static "Use Static Qt" OFF)
 
 if (BUILD_SHARED_LIBS)
   add_definitions("-DSHARED_OS_LIBS")
