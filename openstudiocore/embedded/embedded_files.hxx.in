@@ -1,5 +1,6 @@
 #include <cstdint>
 #include <map>
+#include <vector>
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -112,17 +113,10 @@ inline int inf(const EmbeddedFile & file, std::vector<uint8_t> & result)
 namespace embedded_files { 
   std::map<std::string, EmbeddedFile > files();
   
-  inline std::vector<std::string> fileNames() {
-    std::vector<std::string> result;
-    for (const auto& file : files()){
-      result.push_back(file.first);
-    }
-    return result;
-  }
+  std::vector<std::string> fileNames();
   
   inline std::string findFirstFileByName(const std::string &t_filename) {
-    for (const auto& file : files()){
-      const std::string& path = file.first;
+    for (const auto& path : fileNames()){
       if (t_filename.size() > path.size()){
         continue;
       }
@@ -134,8 +128,8 @@ namespace embedded_files {
   }
 
   inline bool hasFile(const std::string &t_filename) {
-    const auto fs = files();
-    return fs.find(t_filename) != fs.end();
+    const auto fs = fileNames();
+    return (std::find(fs.begin(), fs.end(), t_filename) != fs.end());
   }
 
   inline std::string getFileAsString(const std::string &t_filename) {
