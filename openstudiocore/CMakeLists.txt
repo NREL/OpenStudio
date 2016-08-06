@@ -1398,7 +1398,7 @@ if(NOT UNIX)
   include(InstallRequiredSystemLibraries)
   if(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS)
     install(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
-    DESTINATION "Applications")
+    DESTINATION "bin")
   endif()
 endif()
 
