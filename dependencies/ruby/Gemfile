@@ -1,17 +1,8 @@
-source 'http://rubygems.org'
+# gems in this file are packaged into openstudio.exe
+# gems listed here should not have binary components
+# gems listed here must be able to read resource files from the embedded files location
+# need to adjust hard coded paths in embedded_help.rb
 
-# System gems
-gem 'rake', '= 0.9.6'
-gem 'rdoc', '= 4.0.0'
-gem 'test-unit', '= 2.0.0.0'
-
-# OpenStudio
-gem 'openstudio-aws', '~> 0.4.0.pre1'
-
-gem 'openstudio-standards', '= 0.1.4' # Also update DarwinPostFlight.sh.in when updating gem version
-
-# DLM: openstudio-workflow is currently a top level project
-# not able to install this from local gem, wait until it is on ruby gems
-#gem 'openstudio-workflow', '= 0.2.0', path: '.' 
-
+gem 'openstudio-workflow', :github => 'NREL/OpenStudio-workflow-gem', :ref => '6f5f0b797caa87e4e7e2c07a8cc6c36ae3d8300b'
+gem 'openstudio-standards', :github => 'NREL/openstudio-standards', :ref => 'c65b0ec070d301de89c39b2fbe704376c76b7f1e'
 

@@ -102,7 +102,7 @@ set(BUILD_WITH_OPENSSL ON CACHE INTERNAL "Build With OpenSSL Support For SSH Con
 option(BUILD_R "Build R package" OFF)
 
 # Build shared OS libraries
-option(BUILD_SHARED_LIBS "Build OS libs as shared libraries" OFF)
+option(BUILD_SHARED_LIBS "Build OS libs as shared libraries" ON)
 
 # Build the OpenStudio Application
 # This option will require shared libs
@@ -110,7 +110,7 @@ option(BUILD_OS_APP "Build OS App" ON)
 
 # Use static version of Qt
 # This option is used for making static cli
-option(Qt5Static "Use Static Qt" Off)
+option(Qt5Static "Use Static Qt" OFF)
 
 if (BUILD_SHARED_LIBS)
   add_definitions("-DSHARED_OS_LIBS")
@@ -482,7 +482,7 @@ endif()
 # openstudio gems
 
 set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems.tar.gz")
-set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "bc574f74016c5ebb6fb3e970e4370d77")
+set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "6ea8fdeecc7fbac93731e31da64e284e")
 
 set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
 if(EXISTS "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}")

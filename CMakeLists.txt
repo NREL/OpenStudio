@@ -15,7 +15,7 @@ set(CMAKE_VERSION_BUILD "Unknown" CACHE STRING "Build number")
 find_package(Git)
 
 if(NOT GIT_FOUND)
-  find_program(GIT_EXECUTABLE git HINTS "$ENV{LOCALAPPDATA}/Programs/git/bin")
+  find_program(GIT_EXECUTABLE git HINTS "$ENV{LOCALAPPDATA}/Programs/git/bin" "C:/Program Files/Git/bin")
   if(NOT GIT_EXECUTABLE_NOTFOUND)
     set(GIT_FOUND TRUE)
   endif()
@@ -254,47 +254,58 @@ if(BUILD_V8)
 endif()
 
 # Ruby
-
-if( UNIX )
-  configure_file("${CMAKE_SOURCE_DIR}/dependencies/ruby/build_ruby.sh.in" "${CMAKE_BINARY_DIR}/build_ruby.sh")
-  ExternalProject_Add(Ruby
-    URL http://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.0.0.tar.gz
-    URL_MD5 8ddd18138597ad47094463df901a4ea1
-    BUILD_IN_SOURCE 1
-    CONFIGURE_COMMAND ""
-    BUILD_COMMAND sh "${CMAKE_BINARY_DIR}/build_ruby.sh"
-    INSTALL_COMMAND ""
-  )
-  set(RUBY_INSTALL_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install")
-else()
-  configure_file("${CMAKE_SOURCE_DIR}/dependencies/ruby/build_ruby.bat.in" "${CMAKE_BINARY_DIR}/build_ruby.bat")
-  # This will require bison, sed, and at least ruby 1.8 in your path
-  # Please install DevKit even though the build will be done by msvc the ruby build system uses some traditionally unix tools
-  ExternalProject_Add(Ruby
-    URL http://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.0.0.tar.gz
-    URL_MD5 8ddd18138597ad47094463df901a4ea1
-    BUILD_IN_SOURCE 1
-    CONFIGURE_COMMAND ""
-    BUILD_COMMAND cmd /C "${CMAKE_BINARY_DIR}/build_ruby.bat"
-    INSTALL_COMMAND ""
-  )
-  set(RUBY_INSTALL_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install")
+option(BUILD_RUBY "Build Ruby" OFF)
+if( BUILD_RUBY )
+  if( UNIX )
+    configure_file("${CMAKE_SOURCE_DIR}/dependencies/ruby/build_ruby.sh.in" "${CMAKE_BINARY_DIR}/build_ruby.sh")
+    ExternalProject_Add(Ruby
+      URL http://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.0.0.tar.gz
+      URL_MD5 8ddd18138597ad47094463df901a4ea1
+      BUILD_IN_SOURCE 1
+      CONFIGURE_COMMAND ""
+      BUILD_COMMAND sh "${CMAKE_BINARY_DIR}/build_ruby.sh"
+      INSTALL_COMMAND ""
+    )
+    set(RUBY_INSTALL_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install")
+  else()
+    configure_file("${CMAKE_SOURCE_DIR}/dependencies/ruby/build_ruby.bat.in" "${CMAKE_BINARY_DIR}/build_ruby.bat")
+    # This will require bison, sed, and at least ruby 1.8 in your path
+    # Please install DevKit even though the build will be done by msvc the ruby build system uses some traditionally unix tools
+    ExternalProject_Add(Ruby
+      URL http://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.0.0.tar.gz
+      URL_MD5 8ddd18138597ad47094463df901a4ea1
+      BUILD_IN_SOURCE 1
+      CONFIGURE_COMMAND ""
+      BUILD_COMMAND cmd /C "${CMAKE_BINARY_DIR}/build_ruby.bat"
+      INSTALL_COMMAND ""
+    )
+    set(RUBY_INSTALL_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install")
+  endif()
 endif()
 
-set(SHELL_COMMAND sh -c)
-if( WIN32 )
-  set(SHELL_COMMAND cmd /C)
+# OpenStudio Gems
+
+option(BUILD_OPENSTUDIO_GEMS "Build OpenStudio Gems" OFF)
+if(BUILD_OPENSTUDIO_GEMS)
+  # depends on system Ruby and Git
+  set(OPENSTUDIO_GEMS_DIR "${CMAKE_BINARY_DIR}/openstudio-gems")
+  if(WIN32)
+    add_custom_target(openstudio-gems ALL 
+                     cmd /C "${CMAKE_SOURCE_DIR}/dependencies/ruby/build_openstudio_gems.bat" ${OPENSTUDIO_GEMS_DIR}
+                     WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/dependencies/ruby/"
+                     DEPENDS "${CMAKE_SOURCE_DIR}/dependencies/ruby/Gemfile" "${CMAKE_SOURCE_DIR}/dependencies/ruby/build_openstudio_gems.bat")
+  else()
+    add_custom_target(openstudio-gems ALL 
+                     rm -rf ${OPENSTUDIO_GEMS_DIR}
+                     COMMAND bundle install --without=test --path=${OPENSTUDIO_GEMS_DIR}
+                     COMMAND rm -rf "${OPENSTUDIO_GEMS_DIR}/ruby/2.0.0/cache"
+                     WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/dependencies/ruby/"
+                     DEPENDS "${CMAKE_SOURCE_DIR}/dependencies/ruby/Gemfile" "${CMAKE_SOURCE_DIR}/dependencies/ruby/build_openstudio_gems.bat")
+
+  endif()
 endif()
-ExternalProject_Add(OpenStudio-workflow-gem
-  GIT_REPOSITORY git://github.com/NREL/OpenStudio-workflow-gem.git
-  GIT_TAG c2f6ed3b51515b512378c7a913537b43851e8229
-  BUILD_IN_SOURCE 1
-  CONFIGURE_COMMAND ""
-  BUILD_COMMAND ${SHELL_COMMAND} "gem build --force openstudio-workflow.gemspec"
-  INSTALL_COMMAND ${SHELL_COMMAND} "gem install --force --install-dir ${CMAKE_BINARY_DIR}/OpenStudio-workflow-gem-prefix/src/OpenStudio-workflow-gem-install ${CMAKE_BINARY_DIR}/OpenStudio-workflow-gem-prefix/src/OpenStudio-workflow-gem/openstudio-workflow-1.0.0.alpha.0.gem"
-)
-# Get rid of that version id in the path, or find it or something that doesn't require maintenance
-set(OPENSTUDIO_WORKFLOW_GEM "${CMAKE_BINARY_DIR}/OpenStudio-workflow-gem-prefix/src/OpenStudio-workflow-gem-install")
+
+# SWIG
 
 if(BUILD_SWIG)
   if(UNIX)
@@ -453,8 +464,6 @@ set(OpenStudioCore_DIR ${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build)
 
 # Set up the dependencies for OpenStudioCore
 
-list(APPEND OpenStudioCore_DEPENDS OpenStudio-workflow-gem)
-
 if(BUILD_SWIG)
   list(APPEND OpenStudioCore_DEPENDS SWIG)
 endif()
@@ -463,7 +472,9 @@ if(BUILD_BOOST)
   list(APPEND OpenStudioCore_DEPENDS Boost)
 endif()
 
-list(APPEND OpenStudioCore_DEPENDS Ruby)
+if(BUILD_RUBY)
+  list(APPEND OpenStudioCore_DEPENDS Ruby)
+endif()
 
 if(BUILD_NODE)
   list(APPEND OpenStudioCore_DEPENDS Node)
@@ -496,8 +507,6 @@ ExternalProject_Add(OSCore
     -DBUILD_TESTING:BOOL=${BUILD_TESTING}
     -DBUILD_PACKAGE:BOOL=${BUILD_PACKAGE}
     -DBUILD_WITH_MULTIPLE_PROCESSES:BOOL=${BUILD_WITH_MULTIPLE_PROCESSES}
-    -DBUILD_RUBY_GEM:BOOL=${BUILD_RUBY_GEM}
-    -DBUILD_RUBY_GEM_WITH_LIBS:BOOL=${BUILD_RUBY_GEM_WITH_LIBS}
     -DUSE_PCH:BOOL=${USE_PCH}
     -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
     -DCMAKE_CXX_COMPILER:STRING=${CMAKE_CXX_COMPILER}
@@ -526,7 +535,6 @@ ExternalProject_Add(OSCore
     -DPATCH_EXE:PATH=${PATCH_EXE}
     -DMAXIMIZE_CPU_USAGE:BOOL=${MAXIMIZE_CPU_USAGE}
     -DRUBY_INSTALL_DIR:PATH=${RUBY_INSTALL_DIR}
-    -DOPENSTUDIO_WORKFLOW_GEM:PATH=${OPENSTUDIO_WORKFLOW_GEM}
     INSTALL_COMMAND ""
 )
 

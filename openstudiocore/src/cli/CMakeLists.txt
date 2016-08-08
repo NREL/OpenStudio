@@ -75,6 +75,7 @@ endforeach()
 
 file(GLOB_RECURSE RB_FILES FOLLOW_SYMLINKS "${CMAKE_BINARY_DIR}/openstudio-gems/ruby/2.0.0/bundler/**/*.rb")
 file(GLOB_RECURSE IDF_FILES FOLLOW_SYMLINKS "${CMAKE_BINARY_DIR}/openstudio-gems/ruby/2.0.0/bundler/**/*.idf")
+file(GLOB_RECURSE JSON_FILES FOLLOW_SYMLINKS "${CMAKE_BINARY_DIR}/openstudio-gems/ruby/2.0.0/bundler/**/*.json")
 
 foreach( _FILE ${RB_FILES} )
   file(RELATIVE_PATH LOCATION "${CMAKE_BINARY_DIR}/openstudio-gems" ${_FILE})
@@ -83,6 +84,12 @@ foreach( _FILE ${RB_FILES} )
 endforeach()
 
 foreach( _FILE ${IDF_FILES} )
+  file(RELATIVE_PATH LOCATION "${CMAKE_BINARY_DIR}/openstudio-gems" ${_FILE})
+  list(APPEND FILES ${_FILE})
+  list(APPEND EMBEDDED_PATHS ${LOCATION})
+endforeach()
+
+foreach( _FILE ${JSON_FILES} )
   file(RELATIVE_PATH LOCATION "${CMAKE_BINARY_DIR}/openstudio-gems" ${_FILE})
   list(APPEND FILES ${_FILE})
   list(APPEND EMBEDDED_PATHS ${LOCATION})
@@ -128,6 +135,8 @@ add_custom_command(
           "-c++"
           -o "${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap.cxx"
           "-fvirtual"
+          "-I${CMAKE_SOURCE_DIR}/src"
+          "-I${CMAKE_BINARY_DIR}/src"
           "-D_WINDOWS"
           "-Fmicrosoft"
           "${CMAKE_CURRENT_SOURCE_DIR}/EmbeddedScripting.i"
@@ -137,6 +146,8 @@ add_custom_command(
 )
 
 set_source_files_properties(${EMBED_SOURCE_FILES} PROPERTIES HEADER_FILE_ONLY TRUE)
+
+source_group(embedded_files FILES ${OUTPUT})
 
 add_executable(openstudio
  main.cpp

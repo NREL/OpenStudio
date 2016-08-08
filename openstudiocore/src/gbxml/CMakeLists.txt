@@ -32,7 +32,7 @@ set(${target_name}_depends
   #zkexpat
 )
 
-add_library(${target_name} STATIC ${${target_name}_src})
+add_library(${target_name} ${${target_name}_src})
 target_link_libraries(${target_name} ${${target_name}_depends})
 AddPCH(${target_name})
 
