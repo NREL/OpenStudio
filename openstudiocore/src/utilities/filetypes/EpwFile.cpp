@@ -2030,9 +2030,26 @@ boost::optional<double> EpwDataPoint::wetbulb() const
 EpwFile::EpwFile(const openstudio::path& p, bool storeData)
     : m_path(p), m_latitude(0), m_longitude(0), m_timeZone(0), m_elevation(0), m_isActual(false), m_minutesMatch(true)
 {
-  if (!parse(storeData)){
+  if (!openstudio::filesystem::exists(m_path) || !openstudio::filesystem::is_regular_file(m_path)){
+    LOG_AND_THROW("Path '" << m_path << "' is not an EPW file");
+  }
+
+  // set checksum
+  m_checksum = openstudio::checksum(m_path);
+
+  // open file
+  std::ifstream ifs(openstudio::toString(m_path));
+
+  if (!parse(ifs, storeData)){
+    ifs.close();
     LOG_AND_THROW("EpwFile '" << toString(p) << "' cannot be processed");
   }
+  ifs.close();
+}
+
+EpwFile::EpwFile()
+    : m_latitude(0), m_longitude(0), m_timeZone(0), m_elevation(0), m_isActual(false), m_minutesMatch(true)
+{
 }
 
 boost::optional<EpwFile> EpwFile::load(const openstudio::path& p, bool storeData)
@@ -2044,6 +2061,19 @@ boost::optional<EpwFile> EpwFile::load(const openstudio::path& p, bool storeData
   }
   return result;
 }
+
+boost::optional<EpwFile> EpwFile::loadFromString(const std::string& str, bool storeData)
+{
+  EpwFile result;
+  std::stringstream ss(str);
+  if (result.parse(ss, storeData)){
+    result.m_checksum = openstudio::checksum(str);
+  }else{
+    return boost::none;
+  }
+  return result;
+}
+
 
 openstudio::path EpwFile::path() const
 {
@@ -2139,8 +2169,21 @@ boost::optional<int> EpwFile::endDateActualYear() const
 std::vector<EpwDataPoint> EpwFile::data()
 {
   if(m_data.size()==0){
-    if (!parse(true)){
+    if (!openstudio::filesystem::exists(m_path) || !openstudio::filesystem::is_regular_file(m_path)){
+      LOG_AND_THROW("Path '" << m_path << "' is not an EPW file");
+    }
+
+    // set checksum
+    m_checksum = openstudio::checksum(m_path);
+
+    // open file
+    std::ifstream ifs(openstudio::toString(m_path));
+
+    if (!parse(ifs, true)){
+      ifs.close();
       LOG(Error,"EpwFile '" << toString(m_path) << "' cannot be processed");
+    } else{
+      ifs.close();
     }
   }
   return m_data;
@@ -2149,10 +2192,22 @@ std::vector<EpwDataPoint> EpwFile::data()
 boost::optional<TimeSeries> EpwFile::getTimeSeries(const std::string &name)
 {
   if(m_data.size()==0) {
-    if (!parse(true)) {
+    if (!openstudio::filesystem::exists(m_path) || !openstudio::filesystem::is_regular_file(m_path)){
+      LOG_AND_THROW("Path '" << m_path << "' is not an EPW file");
+    }
+
+    // set checksum
+    m_checksum = openstudio::checksum(m_path);
+
+    // open file
+    std::ifstream ifs(openstudio::toString(m_path));
+
+    if (!parse(ifs, true)) {
+      ifs.close();
       LOG(Error,"EpwFile '" << toString(m_path) << "' cannot be processed");
       return boost::none;
     } 
+    ifs.close();
   }
   EpwDataField id;
   try {
@@ -2187,10 +2242,22 @@ boost::optional<TimeSeries> EpwFile::getTimeSeries(const std::string &name)
 boost::optional<TimeSeries> EpwFile::getComputedTimeSeries(const std::string &name)
 {
   if (m_data.size() == 0) {
-    if (!parse(true)) {
+    if (!openstudio::filesystem::exists(m_path) || !openstudio::filesystem::is_regular_file(m_path)){
+      LOG_AND_THROW("Path '" << m_path << "' is not an EPW file");
+    }
+
+    // set checksum
+    m_checksum = openstudio::checksum(m_path);
+
+    // open file
+    std::ifstream ifs(openstudio::toString(m_path));
+
+    if (!parse(ifs, true)) {
+      ifs.close();
       LOG(Error, "EpwFile '" << toString(m_path) << "' cannot be processed");
       return boost::none;
     }
+    ifs.close();
   }
   EpwComputedField id;
   try {
@@ -2248,10 +2315,22 @@ boost::optional<TimeSeries> EpwFile::getComputedTimeSeries(const std::string &na
 bool EpwFile::translateToWth(openstudio::path path, std::string description)
 {
   if(m_data.size()==0) {
-    if (!parse(true)) {
+    if (!openstudio::filesystem::exists(m_path) || !openstudio::filesystem::is_regular_file(m_path)){
+      LOG_AND_THROW("Path '" << m_path << "' is not an EPW file");
+    }
+
+    // set checksum
+    m_checksum = openstudio::checksum(m_path);
+
+    // open file
+    std::ifstream ifs(openstudio::toString(m_path));
+
+    if (!parse(ifs, true)) {
+      ifs.close();
       LOG(Error,"EpwFile '" << toString(m_path) << "' cannot be processed");
       return false;
     }
+    ifs.close();
   }
 
   if(description.empty()) {
@@ -2325,19 +2404,8 @@ bool EpwFile::translateToWth(openstudio::path path, std::string description)
   return true;
 }
 
-bool EpwFile::parse(bool storeData)
+bool EpwFile::parse(std::istream& ifs, bool storeData)
 {
-  if (!openstudio::filesystem::exists(m_path) || !openstudio::filesystem::is_regular_file(m_path)){
-    LOG(Error, "Path '" << m_path << "' is not an EPW file");
-    return false;
-  }
-
-  // set checksum
-  m_checksum = openstudio::checksum(m_path);
-
-  // open file
-  std::ifstream ifs(openstudio::toString(m_path));
-
   // read line by line
   std::string line;
 
@@ -2348,7 +2416,6 @@ bool EpwFile::parse(bool storeData)
 
     if(!std::getline(ifs, line)) {
       LOG(Error, "Could not read line " << i+1 << " of EPW file '" << m_path << "'");
-      ifs.close();
       return false;
     }
 
@@ -2377,7 +2444,6 @@ bool EpwFile::parse(bool storeData)
   }
 
   if (!result){
-    ifs.close();
     LOG(Error, "Failed to parse EPW file header '" << m_path << "'");
     return false;
   }
@@ -2448,25 +2514,19 @@ bool EpwFile::parse(bool storeData)
             m_data.push_back(pt.get());
           } else {
             LOG(Error, "Failed to parse line " << lineNumber << " of EPW file '" << m_path << "'");
-            ifs.close();
             return false;
           }
         }
 
       } catch(...) {
         LOG(Error, "Could not read line " << lineNumber << " of EPW file '" << m_path << "'");
-        ifs.close();
         return false;
       }
     } else {
       LOG(Error, "Insufficient weather data on line " << lineNumber << " of EPW file '" << m_path << "'");
-      ifs.close();
       return false;
     }
   }
-
-  // close file
-  ifs.close();
 
   if (!startDate) {
     LOG(Error, "Could not find start date in data section of EPW file '" << m_path << "'");

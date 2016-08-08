@@ -68,8 +68,8 @@ module Kernel
       else
         return require_embedded_absolute(rb_path)
       end
-    #elsif rb_path == 'openstudio.rb'
-    #  return true
+    elsif rb_path == 'openstudio.rb'
+      return true
     else
       $LOAD_PATH.each do |p|
         if p.chars.first == ':' then

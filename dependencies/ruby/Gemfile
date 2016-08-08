@@ -4,5 +4,5 @@
 # need to adjust hard coded paths in embedded_help.rb
 
 gem 'openstudio-workflow', :github => 'NREL/OpenStudio-workflow-gem', :ref => '6f5f0b797caa87e4e7e2c07a8cc6c36ae3d8300b'
-gem 'openstudio-standards', :github => 'NREL/openstudio-standards', :ref => 'c65b0ec070d301de89c39b2fbe704376c76b7f1e'
+gem 'openstudio-standards', :github => 'NREL/openstudio-standards', :ref => '922858f7c83e7c3b3a9dcab19bc43157435b9bd1'
 
