@@ -147,15 +147,15 @@ if(APPLE)
   set(APPS "\${CMAKE_INSTALL_PREFIX}/OpenStudioApp.app")
 elseif(WIN32)
   set(plugin_dest_dir bin)
-  set(APPS "\${CMAKE_INSTALL_PREFIX}/Applications/OpenStudioApp.exe")
+  set(APPS "\${CMAKE_INSTALL_PREFIX}/bin/OpenStudioApp.exe")
 else()
   set(plugin_dest_dir bin)
-  set(APPS "\${CMAKE_INSTALL_PREFIX}/Applications/OpenStudioApp")
+  set(APPS "\${CMAKE_INSTALL_PREFIX}/bin/OpenStudioApp")
 endif()
 
 install(TARGETS ${target_name}
   BUNDLE DESTINATION .
-  RUNTIME DESTINATION Applications
+  RUNTIME DESTINATION bin
 )
 
 #if(APPLE OR WIN32)
@@ -205,11 +205,11 @@ elseif(WIN32)
   #list(APPEND DIRS "${CMAKE_BINARY_DIR}/Products/OSAppConfigInstall/Release" "${CMAKE_BINARY_DIR}/Products/OSAppConfigInstall/Debug")
 
   install(DIRECTORY ${CMAKE_SOURCE_DIR}/src/openstudio_app/Resources/
-	  DESTINATION Applications/share/openstudio-${OPENSTUDIO_VERSION}/OSApp
+	  DESTINATION share/openstudio-${OPENSTUDIO_VERSION}/OSApp
   )
 else()
   install(DIRECTORY ${CMAKE_SOURCE_DIR}/src/openstudio_app/Resources/
-	  DESTINATION Applications/share/openstudio-${OPENSTUDIO_VERSION}/OSApp
+	  DESTINATION share/openstudio-${OPENSTUDIO_VERSION}/OSApp
   )
 endif()
 

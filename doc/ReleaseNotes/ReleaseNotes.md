@@ -23,16 +23,17 @@ openstudio.exe openstudio_version
 
 This command will report out the version of the OpenStudio command line interface. At this time, even though this is a 2.0 preview, the version will be reported as 1.x.y corresponding to the version of the OpenStudio model for which it is compatiable.
 
+## Ruby Bindings
+
+The OpenStudio Ruby Bindings are now contained in a single shared library named openstudio.so (.bundle on Mac), located in the installations bin directory. Ruby 2.0.0 is required.
 
 ## Known Issues
 
 Too many to list. This is a work in progress.
 
-* No version translation support. Older osm files will not run using the command line interface, because the version translator is not yet included.
 * Missing Ruby libraries. Most of the Ruby standard library is available from command line interface and therefore accessible from OpenStudio Measures. There are a few libraries that are still missing.
-* Incomplete. There is no OpenStudio Application, Standards Gem, or Prototype buildings included in the package. Those things are coming.
+* Incomplete. There is no Standards Gem, or Prototype buildings included in the package. Those things are coming.
 
 ## Updates
 
-Look for new stuff every two weeks.
 
