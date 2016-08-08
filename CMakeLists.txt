@@ -289,20 +289,10 @@ option(BUILD_OPENSTUDIO_GEMS "Build OpenStudio Gems" OFF)
 if(BUILD_OPENSTUDIO_GEMS)
   # depends on system Ruby and Git
   set(OPENSTUDIO_GEMS_DIR "${CMAKE_BINARY_DIR}/openstudio-gems")
-  if(WIN32)
-    add_custom_target(openstudio-gems ALL 
-                     cmd /C "${CMAKE_SOURCE_DIR}/dependencies/ruby/build_openstudio_gems.bat" ${OPENSTUDIO_GEMS_DIR}
-                     WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/dependencies/ruby/"
-                     DEPENDS "${CMAKE_SOURCE_DIR}/dependencies/ruby/Gemfile" "${CMAKE_SOURCE_DIR}/dependencies/ruby/build_openstudio_gems.bat")
-  else()
-    add_custom_target(openstudio-gems ALL 
-                     rm -rf ${OPENSTUDIO_GEMS_DIR}
-                     COMMAND bundle install --without=test --path=${OPENSTUDIO_GEMS_DIR}
-                     COMMAND rm -rf "${OPENSTUDIO_GEMS_DIR}/ruby/2.0.0/cache"
-                     WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/dependencies/ruby/"
-                     DEPENDS "${CMAKE_SOURCE_DIR}/dependencies/ruby/Gemfile" "${CMAKE_SOURCE_DIR}/dependencies/ruby/build_openstudio_gems.bat")
-
-  endif()
+  add_custom_target(openstudio-gems ALL 
+                    ruby "${CMAKE_SOURCE_DIR}/dependencies/ruby/build_openstudio_gems.rb" "${OPENSTUDIO_GEMS_DIR}"
+                    WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/dependencies/ruby/"
+                    DEPENDS "${CMAKE_SOURCE_DIR}/dependencies/ruby/Gemfile" "${CMAKE_SOURCE_DIR}/dependencies/ruby/build_openstudio_gems.rb")
 endif()
 
 # SWIG
