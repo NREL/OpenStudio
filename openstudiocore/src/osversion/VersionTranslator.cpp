@@ -243,6 +243,13 @@ boost::optional<model::Model> VersionTranslator::loadModel(std::istream& is,
   return updateVersion(is, false, progressBar);
 }
 
+boost::optional<model::Model> VersionTranslator::loadModelFromString(const std::string& str,
+                                                                     ProgressBar* progressBar)
+{
+  std::stringstream ss(str);
+  return updateVersion(ss, false, progressBar);
+}
+
 boost::optional<model::Component> VersionTranslator::loadComponent(const openstudio::path& pathToOldOsc, 
                                                                    ProgressBar* progressBar) 
 {
