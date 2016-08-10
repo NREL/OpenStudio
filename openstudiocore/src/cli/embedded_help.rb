@@ -116,12 +116,12 @@ module Kernel
       absolute_path = File.expand_path absolute_path
       
       # strip Windows drive letters
-      if /[A-Z\:]/.match(absolute_path)
+      if /[A-Z]\:/.match(absolute_path)
         absolute_path = absolute_path[2..-1]
       end
       absolute_path = ':' + absolute_path
     end
-    
+
     if EmbeddedScripting::hasFile(absolute_path)
       return EmbeddedScripting::getFileAsString(absolute_path)
     end
