@@ -193,6 +193,27 @@ namespace detail {
     //return getString(OS_EnergyManagementSystem_ProgramFields::EnergyPlusModelCallingPoint, true);
     //TODO return vector of model objects that are referenced in program
     std::vector<ModelObject> result;
+
+    std::vector<std::string> body;
+    //test vector
+    std::string test;
+    test = "blah";
+    body.push_back(test);
+    test = "set temp = 92093437-80c7-47e2-82bf-015241c60012";
+    body.push_back(test);
+    test = "blah";
+    body.push_back(test);
+
+    //assume body is a vector of strings
+    for (int i = 0; i < body.size(); i++) {
+      std::vector<std::string> results = splitString(body[i], ' ');
+      for (int j = 0; j < results.size(); j++) {
+        if (results[j].size() == 36) {
+          std::string possible_uid = results[j];
+          //look to see if uid is in the model and return the object
+        }
+      }
+    }
     return result;
   }
 
