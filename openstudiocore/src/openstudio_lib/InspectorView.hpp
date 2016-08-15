@@ -30,6 +30,8 @@
 #include "../model/StraightComponent_Impl.hpp"
 #include "../model/WaterToAirComponent.hpp"
 #include "../model/WaterToAirComponent_Impl.hpp"
+#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
+
 
 class InspectorGadget;
 
@@ -105,7 +107,7 @@ class InspectorView : public QWidget
   bool m_mouseOverInspectorView = false;
 };
 
-class BaseInspectorView : public QWidget
+class BaseInspectorView : public QWidget, public Nano::Observer
 {
   Q_OBJECT;
 

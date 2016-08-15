@@ -32,12 +32,12 @@ namespace detail {
 
   /** RenderingColor_Impl is a ResourceObject_Impl that is the implementation class for RenderingColor.*/
   class MODEL_API RenderingColor_Impl : public ResourceObject_Impl {
-    Q_OBJECT;
-    Q_PROPERTY(int renderingRedValue READ renderingRedValue WRITE setRenderingRedValue);
-    Q_PROPERTY(int renderingGreenValue READ renderingGreenValue WRITE setRenderingGreenValue);
-    Q_PROPERTY(int renderingBlueValue READ renderingBlueValue WRITE setRenderingBlueValue);
-    Q_PROPERTY(int renderingAlphaValue READ renderingAlphaValue WRITE setRenderingAlphaValue RESET resetRenderingAlphaValue);
-    Q_PROPERTY(bool isRenderingAlphaValueDefaulted READ isRenderingAlphaValueDefaulted);
+    
+    
+    
+    
+    
+    
    public:
     /** @name Constructors and Destructors */
     //@{

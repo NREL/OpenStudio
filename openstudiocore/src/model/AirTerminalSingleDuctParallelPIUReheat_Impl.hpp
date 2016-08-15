@@ -32,24 +32,24 @@ namespace detail {
 
   /** AirTerminalSingleDuctParallelPIUReheat_Impl is a StraightComponent_Impl that is the implementation class for AirTerminalSingleDuctParallelPIUReheat.*/
   class MODEL_API AirTerminalSingleDuctParallelPIUReheat_Impl : public StraightComponent_Impl {
-    Q_OBJECT;
+    
 
-    Q_PROPERTY(boost::optional<double> maximumPrimaryAirFlowRate READ maximumPrimaryAirFlowRate WRITE setMaximumPrimaryAirFlowRate);
-    Q_PROPERTY(bool isMaximumPrimaryAirFlowRateAutosized READ isMaximumPrimaryAirFlowRateAutosized);
-    Q_PROPERTY(boost::optional<double> maximumSecondaryAirFlowRate READ maximumSecondaryAirFlowRate WRITE setMaximumSecondaryAirFlowRate);
-    Q_PROPERTY(bool isMaximumSecondaryAirFlowRateAutosized READ isMaximumSecondaryAirFlowRateAutosized);
-    Q_PROPERTY(boost::optional<double> minimumPrimaryAirFlowFraction READ minimumPrimaryAirFlowFraction WRITE setMinimumPrimaryAirFlowFraction);
-    Q_PROPERTY(bool isMinimumPrimaryAirFlowFractionAutosized READ isMinimumPrimaryAirFlowFractionAutosized);
-    Q_PROPERTY(boost::optional<double> fanOnFlowFraction READ fanOnFlowFraction WRITE setFanOnFlowFraction);
-    Q_PROPERTY(bool isFanOnFlowFractionAutosized READ isFanOnFlowFractionAutosized);
-    Q_PROPERTY(boost::optional<double> maximumHotWaterorSteamFlowRate READ maximumHotWaterorSteamFlowRate WRITE setMaximumHotWaterorSteamFlowRate RESET resetMaximumHotWaterorSteamFlowRate);
-    Q_PROPERTY(bool isMaximumHotWaterorSteamFlowRateAutosized READ isMaximumHotWaterorSteamFlowRateAutosized);
-    Q_PROPERTY(double minimumHotWaterorSteamFlowRate READ minimumHotWaterorSteamFlowRate WRITE setMinimumHotWaterorSteamFlowRate RESET resetMinimumHotWaterorSteamFlowRate);
-    Q_PROPERTY(bool isMinimumHotWaterorSteamFlowRateDefaulted READ isMinimumHotWaterorSteamFlowRateDefaulted);
-    Q_PROPERTY(double convergenceTolerance READ convergenceTolerance WRITE setConvergenceTolerance RESET resetConvergenceTolerance);
-    Q_PROPERTY(bool isConvergenceToleranceDefaulted READ isConvergenceToleranceDefaulted);
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> availabilitySchedule READ availabilityScheduleAsModelObject WRITE setAvailabilityScheduleAsModelObject);
+    
    public:
     /** @name Constructors and Destructors */
     //@{

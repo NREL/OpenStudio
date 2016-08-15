@@ -119,7 +119,7 @@ namespace openstudio {
   SpacesSubtabGridView::SpacesSubtabGridView(bool isIP, const model::Model & model, QWidget * parent)
     : GridViewSubTab(isIP, model, parent)
   {
-    m_spacesModelObjects = subsetCastVector<model::ModelObject>(model.getModelObjects<model::Space>());
+    m_spacesModelObjects = subsetCastVector<model::ModelObject>(model.getConcreteModelObjects<model::Space>());
 
     // Filters
 
@@ -331,7 +331,7 @@ namespace openstudio {
     m_storyFilter->clear();
     m_storyFilter->addItem(ALL);
     m_storyFilter->addItem(UNASSIGNED);
-    auto buildingStories = this->m_model.getModelObjects<model::BuildingStory>(true);
+    auto buildingStories = this->m_model.getConcreteModelObjects<model::BuildingStory>();
     std::sort(buildingStories.begin(), buildingStories.end(), ModelObjectNameSorter());
     for (auto bd : buildingStories)
     {
@@ -348,7 +348,7 @@ namespace openstudio {
     m_thermalZoneFilter->clear();
     m_thermalZoneFilter->addItem(ALL);
     m_thermalZoneFilter->addItem(UNASSIGNED);
-    auto thermalZones = this->m_model.getModelObjects<model::ThermalZone>(true);
+    auto thermalZones = this->m_model.getConcreteModelObjects<model::ThermalZone>();
     std::sort(thermalZones.begin(), thermalZones.end(), ModelObjectNameSorter());
     for (auto tz : thermalZones)
     {
@@ -364,7 +364,7 @@ namespace openstudio {
   {
     m_spaceTypeFilter->clear();
     m_spaceTypeFilter->addItem(ALL);
-    auto spacetypes = this->m_model.getModelObjects<model::SpaceType>(true);
+    auto spacetypes = this->m_model.getConcreteModelObjects<model::SpaceType>();
     std::sort(spacetypes.begin(), spacetypes.end(), ModelObjectNameSorter());
     for (auto st : spacetypes)
     {
@@ -491,7 +491,7 @@ namespace openstudio {
   {
     m_interiorPartitionGroupFilter->clear();
     m_interiorPartitionGroupFilter->addItem(ALL);
-    auto interiorPartitions = this->m_model.getModelObjects<model::InteriorPartitionSurface>(true);
+    auto interiorPartitions = this->m_model.getConcreteModelObjects<model::InteriorPartitionSurface>();
     std::sort(interiorPartitions.begin(), interiorPartitions.end(), ModelObjectNameSorter());
     for (auto ip : interiorPartitions)
     {
@@ -551,7 +551,7 @@ namespace openstudio {
         }
       }
     }
- 
+
     filterChanged();
   }
 
@@ -580,7 +580,7 @@ namespace openstudio {
 
    filterChanged();
   }
-  
+
   void SpacesSubtabGridView::spaceNameFilterChanged()
   {
     m_objectsFilteredBySpaceName.clear();

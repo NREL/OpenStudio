@@ -21,11 +21,10 @@
 #define UTILITIES_IDF_WORKSPACEOBJECT_IMPL_HPP
 
 #include <utilities/UtilitiesAPI.hpp>
+#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
 
 #include <utilities/idf/IdfObject_Impl.hpp>
 #include <utilities/idf/ObjectPointer.hpp>
-
-#include <QObject>
 
 namespace openstudio {
 
@@ -104,7 +103,6 @@ namespace detail {
   }
 
   class UTILITIES_API WorkspaceObject_Impl : public IdfObject_Impl {
-    Q_OBJECT;
    public:
 
     /** @name Constructors */
@@ -278,14 +276,19 @@ namespace detail {
 
     //@}
 
-   signals:
+   //@}
+    /** @name Nano Signal */
+    //@{
 
     /** Emitted when a pointer field is changed. */
-    void onRelationshipChange(int index, Handle newHandle, Handle oldHandle) const;
+    Nano::Signal<void(int, Handle, Handle)> onRelationshipChange;
 
     /** Emitted when this object is disconnected from the workspace.  Do not
      *  access any methods of this object as it is invalid. */
-    void onRemoveFromWorkspace(Handle handle) const;
+    Nano::Signal<void(const Handle &)> onRemoveFromWorkspace;
+    // Nano::Signal<void(Handle&)> onRemoveFromWorkspaceRef;
+
+    Nano::Signal<void(const openstudio::Handle &)> workspaceObjectRemovedSignal;
 
    protected:
 

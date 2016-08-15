@@ -693,11 +693,11 @@ set(${target_name}_moc
 
 )
 
-if(${Qt5Widgets_VERSION} VERSION_LESS "5.4.0")
-  list(APPEND ${target_name}_moc ResultsWebView.hpp)
-else()
-  list(APPEND ${target_name}_moc ResultsWebEngineView.hpp)
-endif()
+#if(${Qt5Widgets_VERSION} VERSION_LESS "5.4.0")
+#  list(APPEND ${target_name}_moc ResultsWebView.hpp)
+#else()
+#  list(APPEND ${target_name}_moc ResultsWebEngineView.hpp)
+#endif()
 
 # resource files
 set(${target_name}_qrc
@@ -710,7 +710,7 @@ qt5_wrap_cpp_minimally(${target_name}_moc_src ${${target_name}_moc})
 # generate rules for building source files from the resources
 qt5_add_resources(${target_name}_qrcs ${${target_name}_qrc})
 
-add_library(${target_name} SHARED
+add_library(${target_name}
   ${${target_name}_SRC}
   ${${target_name}_moc_src}
   ${${target_name}_moc}
@@ -728,18 +728,18 @@ set(depends
   openstudio_sdd
   openstudio_gbxml
   ${QT_LIBS}
-  #${RUBY_LIBRARY}
+  ${QT_WEB_LIBS}
 )
 
 target_link_libraries(${target_name} ${depends})
 AddPCH(${target_name})
 
-if(NOT APPLE)
-  install(TARGETS ${target_name}
-    RUNTIME DESTINATION bin 
-    LIBRARY DESTINATION lib
-  )
-endif()
+#if(NOT APPLE)
+#  install(TARGETS ${target_name}
+#    RUNTIME DESTINATION bin 
+#    LIBRARY DESTINATION lib
+#  )
+#endif()
 
 set(${target_name}_test_src
   test/OpenStudioLibFixture.hpp

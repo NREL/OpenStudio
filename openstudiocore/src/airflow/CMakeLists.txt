@@ -64,7 +64,7 @@ set(${target_name}_depends
   #zkexpat
 )
 
-add_library(${target_name} STATIC
+add_library(${target_name}
   ${${target_name}_src}
   ${${target_name}_qrcs}
 )

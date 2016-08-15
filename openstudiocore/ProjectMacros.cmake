@@ -75,14 +75,8 @@ macro(CREATE_TEST_TARGETS BASE_NAME SRC DEPENDENCIES)
     )
 
     ADD_GOOGLE_TESTS(${BASE_NAME}_tests ${SRC})
-    add_dependencies("${BASE_NAME}_tests" "${BASE_NAME}_resources")
-
-    if(ENABLE_TEST_RUNNER_TARGETS)
-      add_custom_target(${target_name}_run_tests
-        COMMAND ${BASE_NAME}_tests
-        DEPENDS ${target_name}_tests
-        WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
-      )
+    if(TARGET "${BASE_NAME}_resources")
+      add_dependencies("${BASE_NAME}_tests" "${BASE_NAME}_resources")
     endif()
 
     AddPCH(${BASE_NAME}_tests)
@@ -334,7 +328,8 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
 
 
   if(MSVC)
-    set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-DRUBY_EXTCONF_H=<osruby_config.h> -DRUBY_EMBEDDED /bigobj /wd4996") ## /wd4996 suppresses deprecated warning
+    #set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-DRUBY_EXTCONF_H=<osruby_config.h> -DRUBY_EMBEDDED /bigobj /wd4996") ## /wd4996 suppresses deprecated warning
+    set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj /wd4996") ## /wd4996 suppresses deprecated warning
   elseif(UNIX)
     if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
       # Prevent excessive warnings from generated swig files, suppress deprecated declarations
@@ -359,7 +354,8 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
   #endif()
   set_target_properties(${swig_target} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/ruby/")
   set_target_properties(${swig_target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ruby/")
-  target_link_libraries(${swig_target} ${PARENT_TARGET} ${DEPENDS} ${RUBY_LIBRARY})
+  #target_link_libraries(${swig_target} ${PARENT_TARGET} ${DEPENDS} ${RUBY_LIBRARY})
+  target_link_libraries(${swig_target} ${PARENT_TARGET} ${DEPENDS})
 
   ####Remove binding install related stuff. At least for now. Might need some of this to support sketchup
   ####if(APPLE)

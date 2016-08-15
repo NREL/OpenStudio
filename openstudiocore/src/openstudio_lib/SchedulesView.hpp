@@ -41,6 +41,7 @@
 #include <QDialog>
 #include <QGraphicsItem>
 #include <QGraphicsView>
+#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
 #include <QWidget>
 
 class QPushButton;
@@ -97,7 +98,7 @@ class OSCheckBox;
 
 class OSCheckBox2;
 
-class OSLineEdit;
+class OSLineEdit2;
 
 class ScheduleDayView;
 
@@ -110,7 +111,7 @@ class MonthView;
 class ScheduleCalendarWidget;
 
 // Overall view for the schedules tab, includes left column selector
-class SchedulesView : public QWidget
+class SchedulesView : public QWidget, public Nano::Observer
 {
   Q_OBJECT
 
@@ -203,7 +204,7 @@ class SchedulesView : public QWidget
 
     void onModelObjectRemoved(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&);
 
-    void onScheduleRuleRemoved(Handle handle);
+    void onScheduleRuleRemoved(const Handle& handle);
 
   private:
 
@@ -224,7 +225,7 @@ class SchedulesView : public QWidget
 /******************************************************************************/
 
 // Overall item in left column selector, includes collapsible header and content
-class ScheduleTab : public QWidget
+class ScheduleTab : public QWidget, public Nano::Observer
 {
   Q_OBJECT
 
@@ -297,7 +298,7 @@ private:
 };
 
 // Collapsible header for each schedule ruleset in left column selector
-class ScheduleTabHeader : public QWidget
+class ScheduleTabHeader : public QWidget, public Nano::Observer
 {
   Q_OBJECT
 
@@ -379,7 +380,7 @@ signals:
 
   public slots:
 
-  void scheduleRefresh();
+  void scheduleRefresh(const Handle& handle);
 
   private slots:
 
@@ -403,7 +404,7 @@ private:
 };
 
 // Inner item in ScheduleTabContent, represents a ScheduleRule
-class ScheduleTabRule : public QWidget
+class ScheduleTabRule : public QWidget, public Nano::Observer
 {
   Q_OBJECT
 
@@ -453,7 +454,7 @@ class ScheduleTabRule : public QWidget
 };
 
 // Inner item in ScheduleTabContent, represents a default schedule such as design day or the default schedule
-class ScheduleTabDefault : public QWidget
+class ScheduleTabDefault : public QWidget, public Nano::Observer
 {
   Q_OBJECT
 
@@ -504,7 +505,7 @@ class ScheduleTabDefault : public QWidget
 /******************************************************************************/
 
 // View presented when need to make a new profile (either schedule rule or design day)
-class NewProfileView : public QWidget
+class NewProfileView : public QWidget, public Nano::Observer
 {
   Q_OBJECT
 
@@ -543,7 +544,7 @@ class NewProfileView : public QWidget
 
 
 // View presented only showing schedule name widget
-class ScheduleRulesetNameView : public QWidget
+class ScheduleRulesetNameView : public QWidget, public Nano::Observer
 {
   Q_OBJECT
 
@@ -665,7 +666,7 @@ private:
 
   OSCheckBox2 * m_saturdayButton;
 
-  OSLineEdit * m_nameEditField;
+  OSLineEdit2 * m_nameEditField;
 
   QDateTimeEdit * m_startDateEdit;
 
@@ -678,7 +679,7 @@ private:
 
 
 // Widget which shows the name and schedule type limits of a schedule ruleset
-class ScheduleRulesetNameWidget : public QWidget
+class ScheduleRulesetNameWidget : public QWidget, public Nano::Observer
 {
   Q_OBJECT
 
@@ -694,7 +695,7 @@ class ScheduleRulesetNameWidget : public QWidget
 };
 
 // Overview of the year, held by ScheduleRuleView
-class YearOverview : public QWidget
+class YearOverview : public QWidget, public Nano::Observer
 {
   Q_OBJECT
 
@@ -752,7 +753,7 @@ class YearOverview : public QWidget
 };
 
 // Overview of the month, held by YearOverview
-class MonthView : public QWidget
+class MonthView : public QWidget, public Nano::Observer
 {
   Q_OBJECT
 

@@ -33,6 +33,7 @@
 #include "../shared_gui_components/OSComboBox.hpp"
 #include <QAbstractListModel>
 #include <QPointer>
+#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
 
 namespace openstudio {
 
@@ -67,7 +68,7 @@ class RefrigerationGridController;
 class RefrigerationGridView;
 class VRFController;
 
-class HVACSystemsController : public QObject
+class HVACSystemsController : public QObject, public Nano::Observer
 {
   Q_OBJECT
 
@@ -118,9 +119,9 @@ class HVACSystemsController : public QObject
 
   void onShowGridClicked();
 
-  void onObjectAdded(const WorkspaceObject&);
+  void onObjectAdded(const WorkspaceObject&, const openstudio::IddObjectType& type, const openstudio::UUID& uuid);
 
-  void onObjectRemoved(const WorkspaceObject&);
+  void onObjectRemoved(const WorkspaceObject&, const openstudio::IddObjectType& type, const openstudio::UUID& uuid);
 
   void onObjectChanged();
 
@@ -158,7 +159,7 @@ class HVACSystemsController : public QObject
 
 };
 
-class HVACControlsController : public QObject
+class HVACControlsController : public QObject, public Nano::Observer
 {
   Q_OBJECT;
 
@@ -223,7 +224,7 @@ class HVACControlsController : public QObject
   bool m_dirty;
 };
 
-class HVACLayoutController : public QObject
+class HVACLayoutController : public QObject, public Nano::Observer
 {
   Q_OBJECT;
 

@@ -44,10 +44,11 @@ TEST_F(ModelFixture, SpaceType_InternalGainAttributes_PeoplePerFloorArea) {
   Model model;
   SpaceType spaceType(model);
 
-  OptionalAttribute peoplePerFloorArea = spaceType.getAttribute("peoplePerFloorArea");
-  ASSERT_TRUE(peoplePerFloorArea);
-  EXPECT_TRUE(peoplePerFloorArea->valueType() == AttributeValueType::Double);
-
+  // Removed due to removal of attributes
+  // OptionalAttribute peoplePerFloorArea = spaceType.getAttribute("peoplePerFloorArea");
+  // ASSERT_TRUE(peoplePerFloorArea);
+  // EXPECT_TRUE(peoplePerFloorArea->valueType() == AttributeValueType::Double);
+  
   PeopleDefinition defPerArea(model);
   People instPerArea(defPerArea);
   instPerArea.setSpaceType(spaceType);

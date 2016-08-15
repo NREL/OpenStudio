@@ -2,7 +2,13 @@ cmake_minimum_required(VERSION 2.8.11)
 
 project(OpenStudioCore)
 
-if( POLICY CMP0022 ) 
+set(CMAKE_VERSION_MAJOR 1)
+set(CMAKE_VERSION_MINOR 12)
+set(CMAKE_VERSION_PATCH 1)
+
+include(ExternalProject)
+
+if( POLICY CMP0022 )
   cmake_policy(SET CMP0022 NEW)
 endif()
 cmake_policy(SET CMP0020 NEW)
@@ -22,20 +28,15 @@ set(OPENSTUDIO_VERSION "${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VE
 set(OPENSTUDIO_LONG_VERSION "${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH}.${CMAKE_VERSION_BUILD}")
 
 # EnergyPlus Idd version
-if(NOT ENERGYPLUS_VERSION_MAJOR)
-  set(ENERGYPLUS_VERSION_MAJOR 8)
-endif()
-if(NOT ENERGYPLUS_VERSION_MINOR)
-  set(ENERGYPLUS_VERSION_MINOR 5)
-endif()
-if(NOT ENERGYPLUS_VERSION_PATCH)
-  set(ENERGYPLUS_VERSION_PATCH 0)
-endif()
+set(ENERGYPLUS_VERSION_MAJOR 8)
+set(ENERGYPLUS_VERSION_MINOR 5)
+set(ENERGYPLUS_VERSION_PATCH 0)
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
-if(NOT ENERGYPLUS_BUILD_SHA)
-  set(ENERGYPLUS_BUILD_SHA "85848eef40")
-endif()
+set(ENERGYPLUS_BUILD_SHA "c87e61b44b")
+
+# Radiance
+set(RADIANCE_VERSION "5.0.a.8")
 
 # configure file with version information
 configure_file(${CMAKE_SOURCE_DIR}/OpenStudio.in ${CMAKE_BINARY_DIR}/src/OpenStudio.hxx)
@@ -100,11 +101,16 @@ set(BUILD_WITH_OPENSSL ON CACHE INTERNAL "Build With OpenSSL Support For SSH Con
 # Build R package
 option(BUILD_R "Build R package" OFF)
 
-# Build Ruby gem
-option(BUILD_RUBY_GEM "Build Ruby Gem" OFF)
-
 # Build shared OS libraries
-option(BUILD_SHARED_LIBS "Build OS libs as shared libraries" OFF)
+option(BUILD_SHARED_LIBS "Build OS libs as shared libraries" ON)
+
+# Build the OpenStudio Application
+# This option will require shared libs
+option(BUILD_OS_APP "Build OS App" ON)
+
+# Use static version of Qt
+# This option is used for making static cli
+option(Qt5Static "Use Static Qt" OFF)
 
 if (BUILD_SHARED_LIBS)
   add_definitions("-DSHARED_OS_LIBS")
@@ -155,20 +161,6 @@ endif()
 if( WIN32 )
   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /OPT:REF /OPT:NOICF")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zi")
-endif()
-
-
-if(BUILD_RUBY_GEM)
-  find_program(GEM NAMES gem)
-  if(NOT GEM)
-    message(SEND_ERROR "Gem tool not found, cannot build gem")
-    if(UNIX AND NOT APPLE)
-      message(SEND_ERROR "Please install rubygems using your package management system")
-    endif()
-  endif()
-
-  # Build Ruby gem and package up all the libs
-  option(BUILD_RUBY_GEM_WITH_LIBS "Package all required libs with the Ruby Gem" ON)
 endif()
 
 if(BUILD_V8_BINDINGS)
@@ -296,7 +288,8 @@ if(MSVC)
   endif()
 
   # treat warnings as errors
-  add_definitions(/WX)
+  # DLM: only do this for our code, added in later
+  # add_definitions(/WX)
 
   # ignore warnings about the stl being insecure
   add_definitions(-D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS)
@@ -317,29 +310,231 @@ endif()
 # Dependencies
 
 # EnergyPlus
-set(ENV{ENERGYPLUSDIR} ${ENERGYPLUS_LOCATION})
-unset(ENERGYPLUS_FOUND CACHE)
-unset(ENERGYPLUS_EXE CACHE)
-unset(ENERGYPLUS_IDD CACHE)
-unset(ENERGYPLUS_WEATHER_DIR CACHE)
+if(UNIX)
+  if(APPLE)
+    set(ENERGYPLUS_EXPECTED_HASH 01c4232f7136e42995c344c389d96a61)
+    set(ENERGYPLUS_PLATFORM "Darwin-x86_64")
+  elseif(EXISTS "/etc/redhat-release")
+    #message(FATAL_ERROR "EnergyPlus ${ENERGYPLUS_VERSION} redhat build missing")
+    set(ENERGYPLUS_EXPECTED_HASH ea8cb9e9efc622a85d82fe2306281420)
+    set(ENERGYPLUS_PLATFORM "Redhat-x86_64")
+    #message(FATAL_ERROR "EnergyPlus ${ENERGYPLUS_PLATFORM} redhat build missing")
+  else()
+    set(ENERGYPLUS_EXPECTED_HASH 0053d9b145f9c3485bb49f85ddb61f6c)
+    set(ENERGYPLUS_PLATFORM "Linux-x86_64")
+  endif()
+  set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-${ENERGYPLUS_PLATFORM}")
+  if(EXISTS "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.bz2")
+    file(MD5 "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.bz2" ENERGYPLUS_HASH)
+  endif()
+  if(NOT EXISTS "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.bz2" OR NOT "${ENERGYPLUS_HASH}" MATCHES "${ENERGYPLUS_EXPECTED_HASH}")
+    message(STATUS "Downloading EnergyPlus ${ENERGYPLUS_VERSION} (${ENERGYPLUS_PLATFORM})")
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${ENERGYPLUS_PATH}.tar.bz2" "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.bz2" TIMEOUT 320 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
+    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}")
+    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.bz2" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+  endif()
+  set(ENV{ENERGYPLUSDIR} "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}/EnergyPlus-${ENERGYPLUS_VERSION_MAJOR}-${ENERGYPLUS_VERSION_MINOR}-${ENERGYPLUS_VERSION_PATCH}")
+elseif(WIN32)
+  if(CMAKE_CL_64)
+    set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-x86_64")
+    set(ENERGYPLUS_ARCH 64)
+    set(ENERGYPLUS_EXPECTED_HASH ca4d9e956015453948a40a5010c8dbbb)
+  else()
+    set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-i386")
+    set(ENERGYPLUS_ARCH 32)
+    set(ENERGYPLUS_EXPECTED_HASH 5ecaaaa815f9867cf10a1decbfc59aa1)
+  endif()
+  if(EXISTS "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.zip")
+    file(MD5 "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" ENERGYPLUS_HASH)
+  endif()
+  if(NOT EXISTS "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" OR NOT "${ENERGYPLUS_HASH}" MATCHES "${ENERGYPLUS_EXPECTED_HASH}")
+    message(STATUS "Downloading EnergyPlus ${ENERGYPLUS_VERSION} (${ENERGYPLUS_ARCH}-bit)")
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${ENERGYPLUS_PATH}.zip" "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" TIMEOUT 320 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
+    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}")
+    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+  endif()
+  set(ENV{ENERGYPLUSDIR} "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}/EnergyPlus-${ENERGYPLUS_VERSION_MAJOR}-${ENERGYPLUS_VERSION_MINOR}-${ENERGYPLUS_VERSION_PATCH}")
+endif()
 find_package(EnergyPlus "${ENERGYPLUS_VERSION}" REQUIRED)
 
-# Ruby
-find_package(Ruby 2.2 REQUIRED)
-set(RUBY_MODULE_DIR "Ruby")
-set(RUBY_MODULE_ARCH_DIR "Ruby/openstudio")
+# Radiance
+if(UNIX)
+  if(APPLE)
+    set(RADIANCE_EXPECTED_HASH c3e94e19d13c60e556c0005ec0bf723f)
+    set(RADIANCE_PLATFORM "Darwin")
+  elseif(EXISTS "/etc/redhat-release")
+    #message(FATAL_ERROR "Radiance ${RADIANCE_VERSION} redhat build missing")
+    set(RADIANCE_EXPECTED_HASH f43fcdd76f45654daef69f38cd1f58a6)
+    set(RADIANCE_PLATFORM "Redhat-x86_64")
+  else()
+    set(RADIANCE_EXPECTED_HASH 886ac1764a70f2f7b211231e091d32bf)
+    set(RADIANCE_PLATFORM "Linux-x86_64")
+  endif()
+  set(RADIANCE_PATH "Radiance-${RADIANCE_VERSION}-${RADIANCE_PLATFORM}")
+  if(EXISTS "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.tar.bz2")
+    file(MD5 "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.tar.bz2" RADIANCE_HASH)
+  endif()
+  if(NOT EXISTS "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.tar.bz2" OR NOT "${RADIANCE_HASH}" MATCHES "${RADIANCE_EXPECTED_HASH}")
+    message(STATUS "Downloading Radiance ${RADIANCE_VERSION} (${RADIANCE_PLATFORM})")
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/Radiance-${RADIANCE_VERSION}-${RADIANCE_PLATFORM}.tar.bz2" "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.tar.bz2" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${RADIANCE_EXPECTED_HASH})
+    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}")
+    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.tar.bz2" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+  endif()
+  set(RADIANCE_LOCATION "${CMAKE_BINARY_DIR}/radiance")
+elseif(WIN32)
+  if(CMAKE_CL_64)
+    set(RADIANCE_ARCH 64)
+    set(RADIANCE_EXPECTED_HASH 30ea31d1eff986bfd1744e4260c06fb2)
+  else()
+    set(RADIANCE_ARCH 32)
+    set(RADIANCE_EXPECTED_HASH 78eda5d4b0215cd675cc3ec8975e6122)
+  endif()
+  set(RADIANCE_PATH "Radiance-${RADIANCE_VERSION}-win${RADIANCE_ARCH}")
+  if(EXISTS "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.zip")
+    file(MD5 "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.zip" RADIANCE_HASH)
+  endif()
+  if(NOT EXISTS "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.zip" OR NOT "${RADIANCE_HASH}" MATCHES "${RADIANCE_EXPECTED_HASH}")
+    message(STATUS "Downloading Radiance ${RADIANCE_VERSION} (${RADIANCE_ARCH}-bit)")
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/Radiance-${RADIANCE_VERSION}-win${RADIANCE_ARCH}.zip" "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.zip" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${RADIANCE_EXPECTED_HASH})
+    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}")
+    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.zip" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+  endif()
+  set(RADIANCE_LOCATION "${CMAKE_BINARY_DIR}/Radiance")
+endif()
 
+# Ruby
+
+set(RUBY_INSTALL_DIR "" CACHE PATH "Path to Ruby Install")
+mark_as_advanced(RUBY_INSTALL_DIR)
+
+if(NOT EXISTS ${RUBY_INSTALL_DIR})
+  if( WIN32 )
+    set(RUBY_ZIP_FILENAME "ruby_2_0_0_msvc2013_static.zip")
+    set(RUBY_ZIP_EXPECTED_MD5 "0904d20885480958a6066c26a49b7609")
+  elseif( APPLE )
+    set(RUBY_ZIP_FILENAME "ruby_2_0_0_osx_static.tar.gz")
+    set(RUBY_ZIP_EXPECTED_MD5 "6de65bb3b52a8fe84d63d20686417ad8")
+  elseif(EXISTS "/etc/redhat-release")
+  else()
+  endif()
+
+  set(RUBY_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${RUBY_ZIP_FILENAME}")
+  if(EXISTS "${RUBY_ZIP_LOCAL_PATH}")
+    file(MD5 "${RUBY_ZIP_LOCAL_PATH}" RUBY_ZIP_MD5)
+  endif()
+
+  if( NOT RUBY_ZIP_MD5 STREQUAL RUBY_ZIP_EXPECTED_MD5)
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${RUBY_ZIP_FILENAME}"
+      ${RUBY_ZIP_LOCAL_PATH}
+      INACTIVITY_TIMEOUT 120
+      SHOW_PROGRESS
+      EXPECTED_MD5 ${RUBY_ZIP_EXPECTED_MD5})
+      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${RUBY_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+  endif()
+
+  if( WIN32 )
+    set(RUBY_INSTALL_DIR "${CMAKE_BINARY_DIR}/Ruby-install/release")
+  else()
+    set(RUBY_INSTALL_DIR "${CMAKE_BINARY_DIR}/Ruby-install/")
+  endif()
+endif()
+
+list(APPEND CMAKE_PREFIX_PATH "${RUBY_INSTALL_DIR}")
+find_package(Ruby 2.0 REQUIRED)
+if( WIN32 )
+  get_filename_component(RUBY_LIBRARY_NAME_WE ${RUBY_LIBRARY} NAME_WE)
+  get_filename_component(RUBY_LIBRARY_DIRECTORY ${RUBY_LIBRARY} DIRECTORY)
+  get_filename_component(RUBY_LIBRARY_EXT ${RUBY_LIBRARY} EXT)
+  set(RUBY_STATIC_LIBRARY "${RUBY_LIBRARY_DIRECTORY}/${RUBY_LIBRARY_NAME_WE}-static${CMAKE_STATIC_LIBRARY_SUFFIX}")
+  set(RUBY_STATIC_LIBRARY_DEBUG "${RUBY_LIBRARY_DIRECTORY}/../../debug/lib/${RUBY_LIBRARY_NAME_WE}-static${CMAKE_STATIC_LIBRARY_SUFFIX}")
+  set(RUBY_LIBRARY_DEBUG "${RUBY_LIBRARY_DIRECTORY}/../../debug/lib/${RUBY_LIBRARY_NAME_WE}${CMAKE_STATIC_LIBRARY_SUFFIX}")
+else()
+  set(RUBY_STATIC_LIBRARY "${RUBY_INSTALL_DIR}/lib/libruby-static.a")
+endif()
+
+# Mingw based ruby lib (only the dll stub library) from Ruby Installer
+# We need this for stand alone ruby bindings
+# target to use with typical ruby installations (those that are not msvc)
+# Only need this on Windows systems
+if( WIN32 )
+if(NOT EXISTS ${RUBY_MINGW_LIB_DIR})
+  set(RUBY_MINGW_LIB_ZIP_FILENAME "Ruby-mingw-install.zip")
+  set(RUBY_MINGW_LIB_ZIP_EXPECTED_MD5 "8615ab9cd5a95b9c6a62f98e91e4198e")
+
+  set(RUBY_MINGW_LIB_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${RUBY_MINGW_LIB_ZIP_FILENAME}")
+  if(EXISTS "${RUBY_MINGW_LIB_ZIP_LOCAL_PATH}")
+    file(MD5 "${RUBY_MINGW_LIB_ZIP_LOCAL_PATH}" RUBY_MINGW_LIB_ZIP_MD5)
+  endif()
+
+  if( NOT RUBY_MINGW_LIB_ZIP_MD5 STREQUAL RUBY_MINGW_LIB_ZIP_EXPECTED_MD5)
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${RUBY_MINGW_LIB_ZIP_FILENAME}"
+      ${RUBY_MINGW_LIB_ZIP_LOCAL_PATH}
+      INACTIVITY_TIMEOUT 120
+      SHOW_PROGRESS
+      EXPECTED_MD5 ${RUBY_MINGW_LIB_ZIP_EXPECTED_MD5})
+      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${RUBY_MINGW_LIB_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+  endif()
+
+  set(RUBY_MINGW_STUB_LIB "${CMAKE_BINARY_DIR}/Ruby-mingw-install/libx64-msvcrt-ruby200.dll.a")
+endif()
+endif()
+
+# openstudio gems
+
+set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20160808.tar.gz")
+set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "9cf5fb1c2eb76c73e90e096bb2d7ca1a")
+
+set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
+if(EXISTS "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}")
+  file(MD5 "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}" OPENSTUDIO_GEMS_ZIP_MD5)
+endif()
+
+if( NOT OPENSTUDIO_GEMS_ZIP_MD5 STREQUAL OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5)
+  file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${OPENSTUDIO_GEMS_ZIP_FILENAME}"
+    ${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}
+    INACTIVITY_TIMEOUT 120
+    SHOW_PROGRESS
+    EXPECTED_MD5 ${OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5})
+    
+    # DLM: todo, delete existing directory to clean out old cruft
+    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+endif()
 
 # OpenSSL / libssh support
 if(BUILD_WITH_OPENSSL)
-
-  find_package(OpenSSL)
-  if(NOT ${OPENSSL_FOUND})
-    message(SEND_ERROR "OpenSSL could not be found, and is required for HTTPS communication")
-    if(UNIX)
+  if(UNIX)
+    find_package(OpenSSL)
+    if(NOT ${OPENSSL_FOUND})
+      message(SEND_ERROR "OpenSSL could not be found, and is required for HTTPS communication")
       message(SEND_ERROR "Please install OpenSSL development libraries using your package management system (possibly libssl-dev)")
+    else()
+      mark_as_advanced(
+        LIB_EAY_DEBUG
+        LIB_EAY_RELEASE
+        SSL_EAY_DEBUG
+        SSL_EAY_RELEASE
+      )
     endif()
   elseif(WIN32)
+    if(CMAKE_CL_64)
+      set(OPENSSL_ARCH 64)
+      set(OPENSSL_EXPECTED_HASH 3f9c88523634c7b1e27f4026e7c3f3ee)
+    else()
+      set(OPENSSL_ARCH 32)
+      set(OPENSSL_EXPECTED_HASH fb2aa1a8ceb85f68055044a85f1dbc94)
+    endif()
+    set(OPENSSL_VERSION "1.0.2a")
+    set(OPENSSL_PATH "OpenSSL-Win${OPENSSL_ARCH}")
+    if(EXISTS "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip")
+      file(MD5 "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" OPENSSL_HASH)
+    endif()
+    if(NOT EXISTS "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" OR NOT EXISTS "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}" OR NOT "${OPENSSL_HASH}" MATCHES "${OPENSSL_EXPECTED_HASH}")
+      message(STATUS "Downloading OpenSSL ${OPENSSL_VERSION} (${OPENSSL_ARCH}-bit)")
+      file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/OpenSSL-Win${OPENSSL_ARCH}-${OPENSSL_VERSION}.zip" "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${OPENSSL_EXPECTED_HASH})
+      execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}")
+      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+    endif()
+    set(OPENSSL_ROOT_DIR "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}")
     set(LIBEAY32_PATH "${OPENSSL_ROOT_DIR}/libeay32.dll")
     set(SSLEAY32_PATH "${OPENSSL_ROOT_DIR}/ssleay32.dll")
     file(COPY "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION "${CMAKE_BINARY_DIR}/Products/Release/")
@@ -349,10 +544,43 @@ if(BUILD_WITH_OPENSSL)
     #install(FILES "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION "bin")
     #install(FILES "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION ${RUBY_MODULE_ARCH_DIR})
   endif()
-
 endif()
 
-find_package(SWIG 3.0.0 REQUIRED)
+# swig
+
+set(SWIG_INSTALL_DIR "" CACHE PATH "Path to swig Install")
+mark_as_advanced(SWIG_INSTALL_DIR)
+
+if(NOT EXISTS ${SWIG_INSTALL_DIR})
+  if( WIN32 )
+    set(SWIG_ZIP_FILENAME "swig_3_0_10_Win32.zip")
+    set(SWIG_ZIP_EXPECTED_MD5 "be3c42e6daffde06a05ad1b978338ebd")
+  elseif( APPLE )
+    set(SWIG_ZIP_FILENAME "swig_3_0_10_osx.tar.gz")
+    set(SWIG_ZIP_EXPECTED_MD5 "f0ea8749f8a0345ee37e1766d27a984d")
+  elseif(EXISTS "/etc/redhat-release")
+  else()
+  endif()
+
+  set(SWIG_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${SWIG_ZIP_FILENAME}")
+  if(EXISTS "${SWIG_ZIP_LOCAL_PATH}")
+    file(MD5 "${SWIG_ZIP_LOCAL_PATH}" SWIG_ZIP_MD5)
+  endif()
+
+  if( NOT SWIG_ZIP_MD5 STREQUAL SWIG_ZIP_EXPECTED_MD5)
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${SWIG_ZIP_FILENAME}"
+      ${SWIG_ZIP_LOCAL_PATH}
+      INACTIVITY_TIMEOUT 120
+      SHOW_PROGRESS
+      EXPECTED_MD5 ${SWIG_ZIP_EXPECTED_MD5})
+      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${SWIG_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+  endif()
+
+  set(SWIG_INSTALL_DIR "${CMAKE_BINARY_DIR}/Swig-install/")
+endif()
+
+list(APPEND CMAKE_PREFIX_PATH "${SWIG_INSTALL_DIR}")
+find_package(SWIG 3.0.10 REQUIRED)
 mark_as_advanced(
   SWIG_DIR
   SWIG_EXECUTABLE
@@ -482,9 +710,7 @@ if(BUILD_DOCUMENTATION)
 
 
 endif()
-###############################################################################
 
-###############################################################################
 # Required dependencies
 
 # Threading library
@@ -500,38 +726,68 @@ add_subdirectory(src/zlib)
 # make sure zconf.h can be found
 include_directories(${CMAKE_BINARY_DIR}/src/zlib)
 
-# Google test library
-add_definitions(-DGTEST_HAS_TR1_TUPLE=0)
-include_directories(SYSTEM ${GTEST_INCLUDE_DIR})
-link_directories(${GTEST_LIB_DIR})
-
-# Geographic library
-find_package(GeographicLib REQUIRED)
-include_directories(SYSTEM ${GeographicLib_INCLUDE_DIRS})
-
-# Boost
-if(APPLE)
-  set(Boost_USE_STATIC_LIBS ON)
-elseif(WIN32)
-  set(Boost_USE_STATIC_LIBS ON)
-
-  # uncomment all of this if we want to force dynamic libs on windows
-  #set(Boost_USE_STATIC_LIBS OFF)
-  #add_definitions(-DBOOST_THREAD_USE_DLL -DBOOST_THREAD_DYN_LINK -DBOOST_PROGRAM_OPTIONS_DYN_LINK  -DBOOST_REGEX_DYN_LINK  -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_DATE_TIME_DYN_LINK)
-  #link_directories(${Boost_LIBRARY_DIRS})
-  #if(MSVC)
-    ##Ignore dll specific warnings that are out of our hands to control, coming from external projects
-    #add_definitions(/wd4251 /wd4275)
-  #endif()
+if(BUILD_TESTING)
+  # Google test library
+  set(gtest_force_shared_crt OFF)
+  set(gtest_build_tests OFF)
+  set(gtest_build_samples OFF)
+  set(gtest_disable_pthreads OFF)
+  add_definitions(-DGTEST_HAS_TR1_TUPLE=0) 
+  include_directories(SYSTEM src/google_test/include)
+  add_subdirectory(src/google_test)
 endif()
 
+# GeographicLib
+set(GEOGRAPHICLIB_LIB_TYPE STATIC)
+set(GEOGRAPHICLIB_STATIC_LIB ON)
+set(GEOGRAPHICLIB_SHARED_LIB OFF)
+set(GEOGRAPHICLIB_DOCUMENTATION OFF)
+set(BUILD_NETGEOGRAPHICLIB OFF)
+set(GEOGRAPHICLIB_PRECISION 2)
+include_directories(SYSTEM src/geographic_lib/include)
+add_subdirectory(src/geographic_lib)
+
+# Boost
+set(BOOST_INSTALL_DIR "" CACHE PATH "Path to Boost Install")
+mark_as_advanced(BOOST_INSTALL_DIR)
+
+if(NOT EXISTS ${BOOST_INSTALL_DIR})
+  if( WIN32 )
+    if(CMAKE_CL_64)
+      set(BOOST_ZIP_FILENAME "boost_1_55_0_msvc2013_64_static.zip")
+      set(BOOST_ZIP_EXPECTED_MD5 "3ff90a94d025f139e290296ed0b41263")
+    else()
+    endif()
+  elseif( APPLE )
+      set(BOOST_ZIP_FILENAME "boost_1_55_0_osx.tar.gz")
+      set(BOOST_ZIP_EXPECTED_MD5 "9e4c01a3f5c63e3bbf5cc76021eceb75")
+  elseif(EXISTS "/etc/redhat-release")
+  else()
+  endif()
+
+  set(BOOST_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${BOOST_ZIP_FILENAME}")
+  if(EXISTS "${BOOST_ZIP_LOCAL_PATH}")
+    file(MD5 "${BOOST_ZIP_LOCAL_PATH}" BOOST_ZIP_MD5)
+  endif()
+
+  if( NOT BOOST_ZIP_MD5 STREQUAL BOOST_ZIP_EXPECTED_MD5)
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${BOOST_ZIP_FILENAME}"
+      ${BOOST_ZIP_LOCAL_PATH}
+      INACTIVITY_TIMEOUT 120
+      SHOW_PROGRESS
+      EXPECTED_MD5 ${BOOST_ZIP_EXPECTED_MD5})
+      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${BOOST_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+  endif()
+  set(BOOST_INSTALL_DIR "${CMAKE_BINARY_DIR}/Boost-install/")
+endif()
+set(BOOST_ROOT "${BOOST_INSTALL_DIR}")
+set(Boost_USE_STATIC_LIBS ON)
+find_package(Boost 1.55.0 REQUIRED COMPONENTS filesystem regex program_options system thread date_time log)
+include_directories(SYSTEM ${Boost_INCLUDE_DIR})
 mark_as_advanced(
   Boost_DIR
   BOOST_THREAD_LIBRARY
 )
-
-find_package(Boost 1.55.0 REQUIRED COMPONENTS filesystem regex program_options system thread date_time log)
-include_directories(SYSTEM ${Boost_INCLUDE_DIR})
 
 # require these run time checks
 add_definitions(-DBOOST_UBLAS_CHECK_ENABLE)
@@ -548,232 +804,290 @@ add_definitions(-DBOOST_CHRONO_HEADER_ONLY)
 # do not autolink with serialization
 add_definitions(-DBOOST_SERIALIZATION_NO_LIB)
 
-# check if boost is being linked dynamically
-# DLM: should we allow this on Unix or should we force static for all platforms?
-string(REGEX MATCH "^.*libboost_log.so$" BOOST_IS_DYN_LIBS "${Boost_LOG_LIBRARY_RELEASE}")
-if(BOOST_IS_DYN_LIBS)
-  add_definitions(-DBOOST_ALL_DYN_LINK)
-endif()
-
 # SQLite definitions, used in sqlite and litesql
 add_definitions(-DSQLITE_THREADSAFE=1) # 1 is default, serial access
-#add_definitions(-DSQLITE_DEBUG)
-#add_definitions(-DSQLITE_MEMDEBUG)
 
-#--------------------------------------------------------------------------------
 # Qt
-
-set(QT_INSTALL_DIR "${CMAKE_BINARY_DIR}/../../../Qt-prefix/src/Qt-install/")
+set(QT_INSTALL_DIR "" CACHE PATH "Path to Qt Install")
+mark_as_advanced(QT_INSTALL_DIR)
 
 if(NOT EXISTS ${QT_INSTALL_DIR})
-
-  option(STATIC_QT "Use Static Qt" ON)
-
   # download qt
   if( WIN32 )
-    if( STATIC_QT )
-      set(QT_ZIP_FILENAME "qt_5_6_msvc2013_64_static_temp.zip")
-      set(QT_ZIP_EXPECTED_MD5 "3f0e1a505e707c9f1bde31e05f17fc47")
-    else()
       set(QT_ZIP_FILENAME "qt_5_6_msvc2013_64_shared_temp.zip")
       set(QT_ZIP_EXPECTED_MD5 "2ac0ed2909710350f1c6acd5f38a8b33")
-    endif()
-    
   elseif( APPLE )
-    if( STATIC_QT )
-      set(QT_ZIP_FILENAME "qt_5_6_osx_static_temp.tar.gz")
-      set(QT_ZIP_EXPECTED_MD5 "094985d51cc686cdb665c45fff9c088f")
-    else()
-      message(SEND_ERROR "Shared Apple Qt build not available")
-      #set(QT_ZIP_FILENAME "qt_5_6_osx_shared.tar.gz")
-      #set(QT_ZIP_EXPECTED_MD5 "52424fdb4d553b94156de088881506b5")
-    endif()
-
+      set(QT_ZIP_FILENAME "qt_5_6_osx_shared.tar.gz")
+      set(QT_ZIP_EXPECTED_MD5 "326887393d55b5da97a1be9764fb0d1b")
   elseif(EXISTS "/etc/redhat-release")
-    if( STATIC_QT )
-      set(QT_ZIP_FILENAME "qt_5_6_redhat_64_static_temp.tar.gz")
-      set(QT_ZIP_EXPECTED_MD5 "4c62bd59d1c4ebc14594fe98b33c58fd")
-    else()
-      message(SEND_ERROR "Shared Redhat Qt build not available")
-      #set(QT_ZIP_FILENAME "qt_5_6_redhat_64_shared.tar.gz")
-      #set(QT_ZIP_EXPECTED_MD5 "52424fdb4d553b94156de088881506b5")
-    endif()
-    
+    message(SEND_ERROR "Shared Redhat Qt build not available")
   else()
-    #ubuntu
-    if( STATIC_QT )
-      set(QT_ZIP_FILENAME "qt_5_6_linux_64_static_temp.tar.gz")
-      set(QT_ZIP_EXPECTED_MD5 "1377b18696829ccd7d5b1906b05d9857")
-    else()
-      message(SEND_ERROR "Shared Ubuntu Qt build not available")
-      #set(QT_ZIP_FILENAME "qt_5_6_linux_64_static.tar.gz")
-      #set(QT_ZIP_EXPECTED_MD5 "52424fdb4d553b94156de088881506b5")
-    endif()
-    
+    message(SEND_ERROR "Shared Ubuntu Qt build not available")
   endif()
-  
+
   set(QT_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${QT_ZIP_FILENAME}")
   if(EXISTS "${QT_ZIP_LOCAL_PATH}")
     file(MD5 "${QT_ZIP_LOCAL_PATH}" QT_ZIP_MD5)
   endif()
-    
+
   if( NOT QT_ZIP_MD5 STREQUAL QT_ZIP_EXPECTED_MD5)
-    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${QT_ZIP_FILENAME}" 
-      ${QT_ZIP_LOCAL_PATH} 
-      INACTIVITY_TIMEOUT 120 
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${QT_ZIP_FILENAME}"
+      ${QT_ZIP_LOCAL_PATH}
+      INACTIVITY_TIMEOUT 120
       SHOW_PROGRESS
       EXPECTED_MD5 ${QT_ZIP_EXPECTED_MD5})
       execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
   endif()
-  
+
   set(QT_INSTALL_DIR "${CMAKE_BINARY_DIR}/Qt-install/")
-  
 endif()
 
-find_package(Qt5Core REQUIRED HINTS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-find_package(Qt5Widgets REQUIRED HINTS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-find_package(Qt5Sql REQUIRED HINTS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-find_package(Qt5Network REQUIRED HINTS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-find_package(Qt5Xml REQUIRED HINTS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-find_package(Qt5Concurrent REQUIRED HINTS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-find_package(Qt5PrintSupport REQUIRED HINTS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-find_package(Qt5Gui REQUIRED HINTS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-if( WIN32 )
-  find_package(Qt5WinExtras REQUIRED HINTS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
+if( NOT Qt5Static )
+  find_package(Qt5Core 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
+  find_package(Qt5Widgets 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
+  find_package(Qt5Sql 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
+  find_package(Qt5Network 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
+  find_package(Qt5Xml 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
+  find_package(Qt5Concurrent 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
+  find_package(Qt5PrintSupport 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
+  find_package(Qt5Gui 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
+  find_package(Qt5Quick 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
+  find_package(Qt5Qml 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
+  find_package(Qt5WebChannel 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
+  find_package(Qt5Positioning 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
+
+  list(APPEND QT_LIBS Qt5::Core)
+  list(APPEND QT_LIBS Qt5::Widgets)
+  list(APPEND QT_LIBS Qt5::Sql)
+  list(APPEND QT_LIBS Qt5::Network)
+  list(APPEND QT_LIBS Qt5::Xml)
+  list(APPEND QT_LIBS Qt5::Concurrent)
+  list(APPEND QT_LIBS Qt5::PrintSupport)
+  list(APPEND QT_LIBS Qt5::Gui)
+  list(APPEND QT_WEB_LIBS Qt5::WebChannel)
+  list(APPEND QT_WEB_LIBS Qt5::Positioning)
+  list(APPEND QT_WEB_LIBS Qt5::Quick)
+  list(APPEND QT_WEB_LIBS Qt5::Qml)
+
+  if( WIN32 )
+    find_package(Qt5WinExtras 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
+     list(APPEND QT_LIBS Qt5::WinExtras)
+  endif()
 endif()
-mark_as_advanced(
-  Qt5Concurrent_DIR
-  Qt5Core_DIR
-  Qt5Gui_DIR
-  Qt5Gui_EGL_LIBRARY
-  Qt5Location_DIR
-  Qt5Multimedia_DIR
-  Qt5MultimediaWidgets_DIR
-  Qt5Network_DIR
-  Qt5OpenGL_DIR
-  Qt5Positioning_DIR
-  Qt5PrintSupport_DIR
-  Qt5Qml_DIR
-  Qt5Quick_DIR
-  Qt5Sensors_DIR
-  Qt5Sql_DIR
-  Qt5Widgets_DIR
-  Qt5WinExtras_DIR
-  Qt5Xml_DIR
-)
 
 set(CMAKE_AUTOMOC OFF)
 
-get_target_property(QtCore_TYPE Qt5::Core TYPE)
-message("QtCore_TYPE = ${QtCore_TYPE}")
+#get_target_property(QtCore_TYPE Qt5::Core TYPE)
 
-if(QtCore_TYPE STREQUAL "STATIC_LIBRARY")
+#if( Qt5Static )
+#  if(NOT QtCore_TYPE STREQUAL "STATIC_LIBRARY")
+#    message(ERROR "A shared library version of Qt was found, but the project is configured for static Qt")
+#  endif()
+#else()
+#  if(QtCore_TYPE STREQUAL "STATIC_LIBRARY")
+#    message(ERROR "A static library version of Qt was found, but the project is configured for shared Qt")
+#  endif()
+#endif()
+#
+#if(BUILD_OS_APP)
+#  if( Qt5Static )
+#		message(ERROR "Project is configured for static Qt, which is not a valid configuration when building OS App")
+#  endif()
+#endif()
+
+if( Qt5Static )
   add_definitions(-DQT_STATIC)
-else()
-  find_package(Qt5WebEngineWidgets REQUIRED HINTS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-  
-  list(APPEND QT_LIBS Qt5::WebEngineWidgets)
-endif()
 
-list(APPEND QT_LIBS Qt5::Core)
-list(APPEND QT_LIBS Qt5::Gui)
-list(APPEND QT_LIBS Qt5::Widgets)
-list(APPEND QT_LIBS Qt5::Sql)
-list(APPEND QT_LIBS Qt5::Network)
-list(APPEND QT_LIBS Qt5::Xml)
-list(APPEND QT_LIBS Qt5::Concurrent)
-list(APPEND QT_LIBS Qt5::PrintSupport)
-if( UNIX AND STATIC_QT )
-  list(APPEND QT_LIBS "${QT_INSTALL_DIR}/plugins/sqldrivers/libqsqlite.a")
-  list(APPEND QT_LIBS "${QT_INSTALL_DIR}/lib/libqtharfbuzzng.a")
-  find_package(OpenGL REQUIRED)
-  list(APPEND QT_LIBS "${OPENGL_LIBRARIES}")
-endif()
-
-if( UNIX AND NOT APPLE )
-  find_library(png_lib png)
-  list(APPEND QT_LIBS ${png_lib})
-  if(EXISTS "/etc/redhat-release")
-    list(APPEND QT_LIBS "${QT_INSTALL_DIR}/lib/libqtpcre.a")
-    find_library(rt_lib rt)
-    list(APPEND QT_LIBS ${rt_lib})
-    find_library(jpeg_lib jpeg)
-    list(APPEND QT_LIBS ${jpeg_lib})
-    find_library(glib_lib glib-2.0)
-    list(APPEND QT_LIBS ${glib_lib})
-    find_library(gthread_lib gthread-2.0)
-    list(APPEND QT_LIBS ${gthread_lib})
-    find_library(db_lib db)
-    list(APPEND QT_LIBS ${db_lib})
+  # download qt static
+  if( WIN32 )
+	  set(QT_STATIC_ZIP_FILENAME "qt_5_6_msvc2013_64_static.zip")
+	  set(QT_STATIC_ZIP_EXPECTED_MD5 "e3ea40ee280fc209e50d9aaf4762ea53")
+  elseif( APPLE )
+	  set(QT_STATIC_ZIP_FILENAME "qt_5_6_osx_static.tar.gz")
+          set(QT_STATIC_ZIP_EXPECTED_MD5 "d24756746d2fe07212070f675871cf93")
+  elseif(EXISTS "/etc/redhat-release")
+	  set(QT_STATIC_ZIP_FILENAME "qt_5_6_redhat_64_static_temp.tar.gz")
+	  set(QT_STATIC_ZIP_EXPECTED_MD5 "4c62bd59d1c4ebc14594fe98b33c58fd")
   else()
-    find_library(pcre16_lib pcre16)
-    list(APPEND QT_LIBS ${pcre16_lib})
-  endif()
-  find_library(crypto_lib crypto)
-  list(APPEND QT_LIBS ${crypto_lib})
-endif()
-
-if( APPLE AND STATIC_QT )
-  find_library(corefoundation_lib CoreFoundation)
-  find_library(cfnetwork_lib CFNetwork)
-  find_library(coregraphics_lib CoreGraphics)
-  find_library(carbon_lib Carbon)
-  find_library(appkit_lib AppKit)
-  find_library(systemconfiguration_lib SystemConfiguration)
-  find_library(security_lib Security)
-  list(APPEND QT_LIBS ${corefoundation_lib})
-  list(APPEND QT_LIBS ${cfnetwork_lib})
-  list(APPEND QT_LIBS ${coregraphics_lib})
-  list(APPEND QT_LIBS ${carbon_lib})
-  list(APPEND QT_LIBS ${appkit_lib})
-  list(APPEND QT_LIBS ${systemconfiguration_lib})
-  list(APPEND QT_LIBS ${security_lib})
-  list(APPEND QT_LIBS "${QT_INSTALL_DIR}/lib/libqtpcre.a")
-endif()
-
-if( WIN32 )
-  # This is a dirty hack and only works for release
-  # clean this up
-  find_library(PLATFORM_SUPPORT Qt5PlatformSupport PATHS "${QT_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
-  find_library(FREETYPE qtfreetype PATHS "${QT_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
-  
-  mark_as_advanced(PLATFORM_SUPPORT FREETYPE)
-  
-  list(APPEND QT_LIBS ${PLATFORM_SUPPORT})
-  list(APPEND QT_LIBS ${FREETYPE})
-  
-  list(APPEND QT_LIBS wsock32)
-  list(APPEND QT_LIBS ws2_32)
-  list(APPEND QT_LIBS iphlpapi)
-  list(APPEND QT_LIBS dbghelp)
-  list(APPEND QT_LIBS Shlwapi)
-  
-  if(QtCore_TYPE STREQUAL "STATIC_LIBRARY")
-    find_library(HARFBUZZ qtharfbuzzng PATHS "${QT_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
-    find_library(PCRE qtpcre PATHS "${QT_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
-    find_library(SQLITE qsqlite PATHS "${QT_INSTALL_DIR}/plugins/sqldrivers/" NO_DEFAULT_PATH)
-    find_library(WIN_PLATFORM qwindows PATHS "${QT_INSTALL_DIR}/plugins/platforms/" NO_DEFAULT_PATH)
-    
-    link_directories("${OPENSSL_ROOT_DIR}/lib/VC/static")
-    
-    mark_as_advanced(HARFBUZZ PCRE SQLITE WIN_PLATFORM)
-
-    list(APPEND QT_LIBS ${HARFBUZZ})
-    list(APPEND QT_LIBS ${PCRE})
-    list(APPEND QT_LIBS ${SQLITE})
-    list(APPEND QT_LIBS ${WIN_PLATFORM})
-  
-    list(APPEND QT_LIBS Crypt32)
-    list(APPEND QT_LIBS imm32)
-    list(APPEND QT_LIBS winmm)
-    list(APPEND QT_LIBS ssleay32MT)
-    list(APPEND QT_LIBS libeay32MT)
-    list(APPEND QT_LIBS Gdi32)
+	  set(QT_STATIC_ZIP_FILENAME "qt_5_6_linux_64_static_temp.tar.gz")
+	  set(QT_STATIC_ZIP_EXPECTED_MD5 "1377b18696829ccd7d5b1906b05d9857")
   endif()
 
-  list(APPEND QT_LIBS Qt5::WinExtras)
+  set(QT_STATIC_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${QT_STATIC_ZIP_FILENAME}")
+  if(EXISTS "${QT_STATIC_ZIP_LOCAL_PATH}")
+	  file(MD5 "${QT_STATIC_ZIP_LOCAL_PATH}" QT_STATIC_ZIP_MD5)
+  endif()
+
+  if( NOT QT_STATIC_ZIP_MD5 STREQUAL QT_STATIC_ZIP_EXPECTED_MD5)
+	  file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${QT_STATIC_ZIP_FILENAME}"
+		  ${QT_STATIC_ZIP_LOCAL_PATH}
+      INACTIVITY_TIMEOUT 120
+      SHOW_PROGRES
+      EXPECTED_MD5 ${QT_STATIC_ZIP_EXPECTED_MD5})
+      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_STATIC_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+  endif()
+
+  set(QT_STATIC_INSTALL_DIR "${CMAKE_BINARY_DIR}/Qt-static-install/")
+
+	###find_package(Qt5Quick 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
+  	###find_package(Qt5Qml 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
+  	###find_package(Qt5WebChannel 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
+  	###find_package(Qt5Positioning 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
+  	###find_package(Qt5WebEngine 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
+  	###find_package(Qt5WebEngineWidgets 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
+
+  	###list(APPEND QT_LIBS Qt5::WebEngine)
+  	###list(APPEND QT_LIBS Qt5::WebEngineCore)
+  	###list(APPEND QT_LIBS Qt5::WebEngineWidgets)
+	#else()
+	find_package(Qt5Core 5.6.0 REQUIRED HINTS ${QT_STATIC_INSTALL_DIR})
+	find_package(Qt5Widgets 5.6.0 REQUIRED HINTS ${QT_STATIC_INSTALL_DIR})
+	find_package(Qt5Sql 5.6.0 REQUIRED HINTS ${QT_STATIC_INSTALL_DIR})
+	find_package(Qt5Network 5.6.0 REQUIRED HINTS ${QT_STATIC_INSTALL_DIR})
+	find_package(Qt5Xml 5.6.0 REQUIRED HINTS ${QT_STATIC_INSTALL_DIR})
+	find_package(Qt5Concurrent 5.6.0 REQUIRED HINTS ${QT_STATIC_INSTALL_DIR})
+	find_package(Qt5PrintSupport 5.6.0 REQUIRED HINTS ${QT_STATIC_INSTALL_DIR})
+	find_package(Qt5Gui 5.6.0 REQUIRED HINTS ${QT_STATIC_INSTALL_DIR})
+  find_package(Qt5Quick 5.6.0 REQUIRED HINTS ${QT_STATIC_INSTALL_DIR})
+  find_package(Qt5Qml 5.6.0 REQUIRED HINTS ${QT_STATIC_INSTALL_DIR})
+  find_package(Qt5WebChannel 5.6.0 REQUIRED HINTS ${QT_STATIC_INSTALL_DIR})
+  find_package(Qt5Positioning 5.6.0 REQUIRED HINTS ${QT_STATIC_INSTALL_DIR})
+  find_package(Qt5OpenGL 5.6.0 REQUIRED HINTS ${QT_STATIC_INSTALL_DIR})
+  #find_package(Qt5PlatformSupport 5.6.0 REQUIRED HINTS ${QT_STATIC_INSTALL_DIR})
+
+  list(APPEND QT_LIBS Qt5::Core)
+  list(APPEND QT_LIBS Qt5::Widgets)
+  list(APPEND QT_LIBS Qt5::Sql)
+  list(APPEND QT_LIBS Qt5::Network)
+  list(APPEND QT_LIBS Qt5::Xml)
+  list(APPEND QT_LIBS Qt5::Concurrent)
+  list(APPEND QT_LIBS Qt5::PrintSupport)
+  list(APPEND QT_LIBS Qt5::Gui)
+  list(APPEND QT_LIBS Qt5::Quick)
+  list(APPEND QT_LIBS Qt5::Qml)
+  list(APPEND QT_LIBS Qt5::WebChannel)
+  list(APPEND QT_LIBS Qt5::Positioning)
+  list(APPEND QT_LIBS Qt5::Concurrent)
+  list(APPEND QT_LIBS Qt5::OpenGL)
+
+  if( WIN32 )
+	  find_package(Qt5WinExtras 5.6.0 REQUIRED HINTS ${QT_STATIC_INSTALL_DIR})
+     list(APPEND QT_LIBS Qt5::WinExtras)
+  endif()
+
+        if( UNIX )
+		list(APPEND QT_LIBS "${QT_STATIC_INSTALL_DIR}/plugins/sqldrivers/libqsqlite.a")
+		list(APPEND QT_LIBS "${QT_STATIC_INSTALL_DIR}/lib/libqtharfbuzzng.a")
+  	  find_package(OpenGL REQUIRED)
+  	  list(APPEND QT_LIBS "${OPENGL_LIBRARIES}")
+	endif()
+
+	if( UNIX AND NOT APPLE )
+	  find_library(png_lib png)
+	  list(APPEND QT_LIBS ${png_lib})
+	  if(EXISTS "/etc/redhat-release")
+		  list(APPEND QT_LIBS "${QT_STATIC_INSTALL_DIR}/lib/libqtpcre.a")
+	    find_library(rt_lib rt)
+	    list(APPEND QT_LIBS ${rt_lib})
+	    find_library(jpeg_lib jpeg)
+	    list(APPEND QT_LIBS ${jpeg_lib})
+	    find_library(glib_lib glib-2.0)
+	    list(APPEND QT_LIBS ${glib_lib})
+	    find_library(gthread_lib gthread-2.0)
+	    list(APPEND QT_LIBS ${gthread_lib})
+	    find_library(db_lib db)
+	    list(APPEND QT_LIBS ${db_lib})
+	  else()
+	    find_library(pcre16_lib pcre16)
+	    list(APPEND QT_LIBS ${pcre16_lib})
+	  endif()
+	  find_library(crypto_lib crypto)
+	  list(APPEND QT_LIBS ${crypto_lib})
+	endif()
+
+	if( APPLE )
+  	  find_library(corefoundation_lib CoreFoundation)
+  	  find_library(cfnetwork_lib CFNetwork)
+  	  find_library(coregraphics_lib CoreGraphics)
+  	  find_library(carbon_lib Carbon)
+  	  find_library(appkit_lib AppKit)
+  	  find_library(systemconfiguration_lib SystemConfiguration)
+  	  find_library(security_lib Security)
+  	  list(APPEND QT_LIBS ${corefoundation_lib})
+  	  list(APPEND QT_LIBS ${cfnetwork_lib})
+  	  list(APPEND QT_LIBS ${coregraphics_lib})
+  	  list(APPEND QT_LIBS ${carbon_lib})
+  	  list(APPEND QT_LIBS ${appkit_lib})
+  	  list(APPEND QT_LIBS ${systemconfiguration_lib})
+  	  list(APPEND QT_LIBS ${security_lib})
+  	  list(APPEND QT_LIBS ${io_graphics_lib})
+    list(APPEND QT_LIBS "${QT_STATIC_INSTALL_DIR}/lib/libqtpcre.a")
+    list(APPEND QT_LIBS "${QT_STATIC_INSTALL_DIR}/lib/libqtfreetype.a")
+    list(APPEND QT_LIBS "${QT_STATIC_INSTALL_DIR}/lib/libpoly2tri.a")
+    list(APPEND QT_LIBS "${QT_STATIC_INSTALL_DIR}/lib/libqtharfbuzzng.a")
+    list(APPEND QT_LIBS "${QT_STATIC_INSTALL_DIR}/plugins/platforms/libqcocoa.a")
+    list(APPEND QT_LIBS "${QT_STATIC_INSTALL_DIR}/plugins/sqldrivers/libqsqlite.a")
+    list(APPEND QT_LIBS "${QT_STATIC_INSTALL_DIR}/lib/libQt5PlatformSupport.a")
+    list(APPEND QT_LIBS "${QT_STATIC_INSTALL_DIR}/lib/libQt5OpenGLExtensions.a")
+
+    find_library(iokit IOKit)
+    list(APPEND QT_LIBS "${iokit}")
+    find_library(cocoa Cocoa)
+    list(APPEND QT_LIBS "${cocoa}")
+
+    find_library(cups cups)
+    list(APPEND QT_LIBS "${cups}")
+	endif()
+
+	if( WIN32 )
+		find_library(HARFBUZZ qtharfbuzzng PATHS "${QT_STATIC_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
+		find_library(PCRE qtpcre PATHS "${QT_STATIC_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
+		find_library(SQLITE qsqlite PATHS "${QT_STATIC_INSTALL_DIR}/plugins/sqldrivers/" NO_DEFAULT_PATH)
+		find_library(WIN_PLATFORM qwindows PATHS "${QT_STATIC_INSTALL_DIR}/plugins/platforms/" NO_DEFAULT_PATH)
+
+		find_library(PLATFORM_SUPPORT Qt5PlatformSupport PATHS "${QT_STATIC_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
+		find_library(FREETYPE qtfreetype PATHS "${QT_STATIC_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
+	
+	  mark_as_advanced(PLATFORM_SUPPORT FREETYPE)
+	
+	  list(APPEND QT_LIBS ${PLATFORM_SUPPORT})
+	  list(APPEND QT_LIBS ${FREETYPE})
+	
+	  mark_as_advanced(HARFBUZZ PCRE SQLITE WIN_PLATFORM)
+	
+	  list(APPEND QT_LIBS ${HARFBUZZ})
+	  list(APPEND QT_LIBS ${PCRE})
+	  list(APPEND QT_LIBS ${SQLITE})
+	  list(APPEND QT_LIBS ${WIN_PLATFORM})
+	
+	  list(APPEND QT_LIBS Crypt32)
+	  list(APPEND QT_LIBS imm32)
+	  list(APPEND QT_LIBS winmm)
+	  list(APPEND QT_LIBS Gdi32)
+	
+	  list(APPEND QT_LIBS wsock32)
+	  list(APPEND QT_LIBS ws2_32)
+	  list(APPEND QT_LIBS iphlpapi)
+	  list(APPEND QT_LIBS dbghelp)
+	  list(APPEND QT_LIBS Shlwapi)
     
+    if(BUILD_WITH_OPENSSL)
+      link_directories("${OPENSSL_ROOT_DIR}/lib/VC/static")
+      list(APPEND QT_LIBS ssleay32MT)
+      list(APPEND QT_LIBS libeay32MT)
+    endif()
+    
+	endif()
 endif()
+
+find_package(Qt5WebEngine 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
+find_package(Qt5WebEngineWidgets 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
+
+list(APPEND QT_WEB_LIBS Qt5::WebEngine)
+list(APPEND QT_WEB_LIBS Qt5::WebEngineCore)
+list(APPEND QT_WEB_LIBS Qt5::WebEngineWidgets)
+
+set_target_properties( ${QT_WEB_LIBS} PROPERTIES INTERFACE_LINK_LIBRARIES "" )
 
 ###############################################################################
 ## jsoncpp
@@ -801,6 +1115,11 @@ include_directories("${CMAKE_BINARY_DIR}/src/")
 ###############################################################################
 # Add project sub directories
 
+if(MSVC)
+  # treat warnings as errors
+  add_definitions(/WX)
+endif()
+
 include("embedded/EmbedFiles.cmake")
 add_subdirectory("embedded")
 
@@ -827,11 +1146,11 @@ if(WIN32)
   list(APPEND project_directories "qtwinmigrate")
 endif()
 
-if(QtCore_TYPE STREQUAL "SHARED_LIBRARY")
-  list(APPEND project_directories "qwt")
+if(BUILD_OS_APP)
+  #list(APPEND project_directories "qwt")
   #list(APPEND project_directories "gbxml")
   list(APPEND project_directories "bimserver")
-  list(APPEND project_directories "resultsviewer")
+  #list(APPEND project_directories "resultsviewer")
   list(APPEND project_directories "model_editor")
   list(APPEND project_directories "openstudio_lib")
   list(APPEND project_directories "openstudio_app")
@@ -839,6 +1158,8 @@ endif()
 
 # Include the resources, should happen after find EnergyPlus
 add_subdirectory(resources)
+
+add_subdirectory(ruby)
 
 foreach(D ${project_directories})
   add_subdirectory(src/${D})
@@ -987,7 +1308,7 @@ set(all_lib_targets
   openstudio_gbxml
   #openstudio_bimserver
   openstudio_isomodel
-  #openstudio_lib
+  openstudio_lib
   openstudio_sdd
   openstudio_airflow
   #qwt
@@ -1000,18 +1321,18 @@ if(WIN32)
   list(APPEND all_lib_targets "qtwinmigrate")
 endif()
 
-if(QtCore_TYPE STREQUAL "SHARED_LIBRARY")
+if(NOT Qt5Static)
   list(APPEND all_lib_targets "openstudio_modeleditor")
   #list(APPEND all_lib_targets "openstudio_gbxml")
   list(APPEND all_lib_targets "openstudio_bimserver")
-  list(APPEND all_lib_targets "openstudio_lib")
-  list(APPEND all_lib_targets "qwt")
+  #list(APPEND all_lib_targets "openstudio_lib")
+  #list(APPEND all_lib_targets "qwt")
 endif()
 
-export(TARGETS
-  ${all_lib_targets}
-  FILE "${TARGETS_FILE}"
-)
+#export(TARGETS
+#  ${all_lib_targets}
+#  FILE "${TARGETS_FILE}"
+#)
 
 set(all_exe_targets
   GenerateIddFactory
@@ -1020,9 +1341,9 @@ set(all_exe_targets
   #ResultsViewer
 )
 
-if(QtCore_TYPE STREQUAL "SHARED_LIBRARY")
+if(NOT Qt5Static)
   list(APPEND all_exe_targets "OpenStudio")
-  list(APPEND all_exe_targets "ResultsViewer")
+  #list(APPEND all_exe_targets "ResultsViewer")
 endif()
 
 if(UNIX AND NOT APPLE)
@@ -1079,7 +1400,7 @@ if(NOT UNIX)
   include(InstallRequiredSystemLibraries)
   if(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS)
     install(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
-      DESTINATION "bin")
+    DESTINATION "bin")
   endif()
 endif()
 
@@ -1102,3 +1423,10 @@ endif()
 #else()
 #  install(DIRECTORY "${ENERGYPLUS_DIR}" DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}" USE_SOURCE_PERMISSIONS)
 #endif()
+
+set(CPACK_PACKAGE_VERSION_MAJOR ${CMAKE_VERSION_MAJOR})
+set(CPACK_PACKAGE_VERSION_MINOR ${CMAKE_VERSION_MINOR})
+set(CPACK_PACKAGE_VERSION_PATCH ${CMAKE_VERSION_PATCH})
+
+INCLUDE(CPack)
+

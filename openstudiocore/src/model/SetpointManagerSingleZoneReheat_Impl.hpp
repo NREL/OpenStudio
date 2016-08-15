@@ -31,11 +31,11 @@ class ZoneHVACEquipmentConnections;
 namespace detail {
 
   class MODEL_API SetpointManagerSingleZoneReheat_Impl : public SetpointManager_Impl {
-    Q_OBJECT;
-    Q_PROPERTY(double minimumSupplyAirTemperature READ minimumSupplyAirTemperature WRITE setMinimumSupplyAirTemperature);
-    Q_PROPERTY(double maximumSupplyAirTemperature READ maximumSupplyAirTemperature WRITE setMaximumSupplyAirTemperature);
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> controlZone READ controlZoneAsModelObject WRITE setControlZoneAsModelObject);
+    
    public:
 
     SetpointManagerSingleZoneReheat_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);

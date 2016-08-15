@@ -33,7 +33,7 @@ namespace model {
 namespace detail {
 
   class MODEL_API PlanarSurfaceGroup_Impl : public ParentObject_Impl {
-    Q_OBJECT;
+    
    public:
 
     /** @name Constructors and Destructors */
@@ -104,6 +104,8 @@ namespace detail {
 
     /** Get the BoundingBox in local coordinates. */
     virtual openstudio::BoundingBox boundingBox() const = 0;
+
+    Nano::Signal<void()> onChange;
 
     //@}
    private slots:

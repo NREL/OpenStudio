@@ -35,7 +35,7 @@ class ConstructionObjectVectorController;
 
 class OSDropZone;
 
-class OSLineEdit;
+class OSLineEdit2;
 
 class OSComboBox2;
 
@@ -69,7 +69,7 @@ class ConstructionInspectorView : public ModelObjectInspectorView
 
     bool m_isIP;
 
-    OSLineEdit * m_nameEdit;
+    OSLineEdit2 * m_nameEdit;
 
     StandardsInformationConstructionWidget * m_standardsInformationWidget;
 

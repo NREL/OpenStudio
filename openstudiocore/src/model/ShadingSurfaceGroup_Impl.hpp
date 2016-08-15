@@ -39,19 +39,19 @@ namespace detail {
 
   /** ShadingSurfaceGroup_Impl is a PlanarSurfaceGroup_Impl that is the implementation class for ShadingSurfaceGroup.*/
   class MODEL_API ShadingSurfaceGroup_Impl : public PlanarSurfaceGroup_Impl {
-    Q_OBJECT;
-    Q_PROPERTY(std::string shadingSurfaceType READ shadingSurfaceType WRITE setShadingSurfaceType);
-    Q_PROPERTY(double directionofRelativeNorth READ directionofRelativeNorth WRITE setDirectionofRelativeNorth RESET resetDirectionofRelativeNorth);
-    Q_PROPERTY(bool isDirectionofRelativeNorthDefaulted READ isDirectionofRelativeNorthDefaulted);
-    Q_PROPERTY(double xOrigin READ xOrigin WRITE setXOrigin RESET resetXOrigin);
-    Q_PROPERTY(bool isXOriginDefaulted READ isXOriginDefaulted);
-    Q_PROPERTY(double yOrigin READ yOrigin WRITE setYOrigin RESET resetYOrigin);
-    Q_PROPERTY(bool isYOriginDefaulted READ isYOriginDefaulted);
-    Q_PROPERTY(double zOrigin READ zOrigin WRITE setZOrigin RESET resetZOrigin);
-    Q_PROPERTY(bool isZOriginDefaulted READ isZOriginDefaulted);
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> space READ spaceAsModelObject WRITE setSpaceAsModelObject RESET resetSpace);
-    Q_PROPERTY(std::vector<openstudio::model::ModelObject> shadingSurfaces READ shadingSurfacesAsModelObjects);
+    
+    
    public:
     /** @name Constructors and Destructors */
     //@{

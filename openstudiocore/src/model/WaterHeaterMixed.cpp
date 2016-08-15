@@ -1562,9 +1562,9 @@ namespace detail {
 
   boost::optional<ZoneHVACComponent> WaterHeaterMixed_Impl::containingZoneHVACComponent() const
   {
-    auto hpwhs = model().getModelObjects<model::WaterHeaterHeatPump>();
+    auto hpwhs = model().getConcreteModelObjects<model::WaterHeaterHeatPump>();
     auto t_Handle = handle();
-    
+
     for( const auto & hpwh : hpwhs ) {
       if( hpwh.tank().handle() == t_Handle ) {
         return hpwh;

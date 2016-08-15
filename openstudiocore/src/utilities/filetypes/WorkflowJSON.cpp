@@ -400,6 +400,16 @@ namespace detail{
 
   boost::optional<openstudio::path> WorkflowJSON_Impl::findFile(const openstudio::path& file) const
   {
+    // if absolute check if exists
+    if (file.is_absolute()){
+      if (boost::filesystem::exists(file)){
+        return file;
+      }
+
+      // absolute path does not exist
+      return boost::none;
+    }
+
     for (const auto& path : absoluteFilePaths()){
       openstudio::path p = path / file;
       if (boost::filesystem::exists(p) && boost::filesystem::is_regular_file(p)){
@@ -448,6 +458,16 @@ namespace detail{
 
   boost::optional<openstudio::path> WorkflowJSON_Impl::findMeasure(const openstudio::path& measureDir) const
   {
+    // if absolute check if exists
+    if (measureDir.is_absolute()){
+      if (boost::filesystem::exists(measureDir)){
+        return measureDir;
+      }
+
+      // absolute path does not exist
+      return boost::none;
+    }
+
     for (const auto& path : absoluteMeasurePaths()){
       openstudio::path p = path / measureDir;
       if (boost::filesystem::exists(p) && boost::filesystem::is_directory(p)){

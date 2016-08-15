@@ -30,8 +30,8 @@ class ScheduleConstant;
 namespace detail {
 
   class MODEL_API ScheduleConstant_Impl : public Schedule_Impl {
-    Q_OBJECT;
-    Q_PROPERTY(double value READ value WRITE setValue);
+    
+    
     // ETH@20120724 Could have value_SI, value_IP properties, but these should be
     // boost::optional<Quantity>, not OSOptionalQuantity. The latter is currently supported
     // by Qt + Attribute, but the former is not.

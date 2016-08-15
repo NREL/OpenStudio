@@ -30,11 +30,11 @@ namespace model {
 
 }
 
-class OSLineEdit;
+class OSLineEdit2;
 
-class OSSwitch;
+class OSSwitch2;
 
-class OSQuantityEdit;
+class OSQuantityEdit2;
 
 class StandardsInformationMaterialWidget;
 
@@ -68,27 +68,27 @@ class WindowMaterialGlazingRefractionExtinctionMethodInspectorView : public Mode
 
     bool m_isIP;
 
-    OSLineEdit * m_nameEdit = nullptr;
+    OSLineEdit2 * m_nameEdit = nullptr;
 
-    OSSwitch * m_solarDiffusing = nullptr;
+    OSSwitch2 * m_solarDiffusing = nullptr;
 
-    OSQuantityEdit * m_thickness = nullptr;
+    OSQuantityEdit2 * m_thickness = nullptr;
 
-    OSQuantityEdit * m_solarIndexOfRefraction = nullptr;
+    OSQuantityEdit2 * m_solarIndexOfRefraction = nullptr;
 
-    OSQuantityEdit * m_solarExtinctionCoefficient = nullptr;
+    OSQuantityEdit2 * m_solarExtinctionCoefficient = nullptr;
 
-    OSQuantityEdit * m_visibleIndexOfRefraction = nullptr;
+    OSQuantityEdit2 * m_visibleIndexOfRefraction = nullptr;
 
-    OSQuantityEdit * m_visibleExtinctionCoefficient = nullptr;
+    OSQuantityEdit2 * m_visibleExtinctionCoefficient = nullptr;
 
-    OSQuantityEdit * m_infraredTransmittanceAtNormalIncidence = nullptr;
+    OSQuantityEdit2 * m_infraredTransmittanceAtNormalIncidence = nullptr;
 
-    OSQuantityEdit * m_infraredHemisphericalEmissivity = nullptr;
+    OSQuantityEdit2 * m_infraredHemisphericalEmissivity = nullptr;
 
-    OSQuantityEdit * m_conductivity = nullptr;
+    OSQuantityEdit2 * m_conductivity = nullptr;
 
-    OSQuantityEdit * m_dirtCorrectionFactorForSolarAndVisibleTransmittance = nullptr;
+    OSQuantityEdit2 * m_dirtCorrectionFactorForSolarAndVisibleTransmittance = nullptr;
 
     StandardsInformationMaterialWidget * m_standardsInformationWidget = nullptr;
 

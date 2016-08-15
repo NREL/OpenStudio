@@ -84,7 +84,7 @@ void ConstructionInspectorView::createLayout()
 
   ++row;
 
-  m_nameEdit = new OSLineEdit();
+  m_nameEdit = new OSLineEdit2();
   mainGridLayout->addWidget(m_nameEdit, row, 0, 1, 3);
 
   ++row;
@@ -168,7 +168,13 @@ void ConstructionInspectorView::onUpdate()
 
 void ConstructionInspectorView::attach(openstudio::model::Construction & construction)
 {
-  m_nameEdit->bind(construction,"name");
+  boost::optional<model::Construction> m_construction = construction;
+  // m_nameEdit->bind(construction,"name");
+  m_nameEdit->bind(
+    *m_construction,
+    OptionalStringGetter(std::bind(&model::Construction::name, m_construction.get_ptr(),true)),
+    boost::optional<StringSetter>(std::bind(&model::Construction::setName, m_construction.get_ptr(),std::placeholders::_1))
+  );
 
   m_constructionVC->attach(construction);
   m_constructionVC->reportItems();

@@ -103,7 +103,7 @@ qt5_wrap_ui(${target_name}_uis ${${target_name}_ui})
 qt5_add_resources(${target_name}_qrcs ${${target_name}_qrc})
 
 # make the shared library
-add_library(${target_name} SHARED
+add_library(${target_name} 
   ${${target_name}_src}
   ${${target_name}_moc}
   ${${target_name}_mocs}
@@ -122,12 +122,12 @@ set(${target_name}_depends
 add_dependencies(${target_name} ${${target_name}_depends})
 target_link_libraries(${target_name} ${${target_name}_depends})
 
-if(NOT APPLE)
-  install(TARGETS ${target_name}
-    RUNTIME DESTINATION bin
-    LIBRARY DESTINATION lib
-  )
-endif()
+#if(NOT APPLE)
+#  install(TARGETS ${target_name}
+#    RUNTIME DESTINATION bin
+#    LIBRARY DESTINATION lib
+#  )
+#endif()
 
 set(${target_name}_test_src
   test/ModelEditorFixture.hpp

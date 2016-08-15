@@ -32,20 +32,20 @@ namespace detail {
 
   /** AirTerminalSingleDuctVAVNoReheat_Impl is a StraightComponent_Impl that is the implementation class for AirTerminalSingleDuctVAVNoReheat.*/
   class MODEL_API AirTerminalSingleDuctVAVNoReheat_Impl : public StraightComponent_Impl {
-    Q_OBJECT;
+    
 
-    Q_PROPERTY(boost::optional<double> maximumAirFlowRate READ maximumAirFlowRate WRITE setMaximumAirFlowRate RESET resetMaximumAirFlowRate);
-    Q_PROPERTY(bool isMaximumAirFlowRateAutosized READ isMaximumAirFlowRateAutosized);
+    
+    
 
-    Q_PROPERTY(boost::optional<std::string> zoneMinimumAirFlowInputMethod READ zoneMinimumAirFlowInputMethod WRITE setZoneMinimumAirFlowInputMethod RESET resetZoneMinimumAirFlowInputMethod);
-    Q_PROPERTY(std::vector<std::string> zoneMinimumAirFlowInputMethodValues READ zoneMinimumAirFlowInputMethodValues);
+    
+    
 
-    Q_PROPERTY(boost::optional<double> constantMinimumAirFlowFraction READ constantMinimumAirFlowFraction WRITE setConstantMinimumAirFlowFraction RESET resetConstantMinimumAirFlowFraction);
+    
 
-    Q_PROPERTY(boost::optional<double> fixedMinimumAirFlowRate READ fixedMinimumAirFlowRate WRITE setFixedMinimumAirFlowRate RESET resetFixedMinimumAirFlowRate);
+    
 
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> availabilitySchedule READ availabilityScheduleAsModelObject WRITE setAvailabilityScheduleAsModelObject);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> minimumAirFlowFractionSchedule READ minimumAirFlowFractionScheduleAsModelObject WRITE setMinimumAirFlowFractionScheduleAsModelObject RESET resetMinimumAirFlowFractionSchedule);
+    
+    
    public:
     /** @name Constructors and Destructors */
     //@{

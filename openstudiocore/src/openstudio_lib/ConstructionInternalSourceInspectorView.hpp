@@ -36,11 +36,11 @@ class ConstructionObjectVectorController;
 
 class OSDropZone;
 
-class OSIntegerEdit;
+class OSIntegerEdit2;
 
-class OSLineEdit;
+class OSLineEdit2;
 
-class OSQuantityEdit;
+class OSQuantityEdit2;
 
 class OSComboBox2;
 
@@ -74,7 +74,7 @@ class ConstructionInternalSourceInspectorView : public ModelObjectInspectorView
 
     bool m_isIP;
 
-    OSLineEdit * m_nameEdit;
+    OSLineEdit2 * m_nameEdit;
 
     StandardsInformationConstructionWidget * m_standardsInformationWidget;
 
@@ -82,13 +82,13 @@ class ConstructionInternalSourceInspectorView : public ModelObjectInspectorView
 
     ConstructionObjectVectorController * m_constructionVC;
 
-    OSIntegerEdit * m_sourcePresentAfterLayerNumberEdit;
+    OSIntegerEdit2 * m_sourcePresentAfterLayerNumberEdit;
 
-    OSIntegerEdit * m_temperatureCalculationRequestedAfterLayerNumberEdit;
+    OSIntegerEdit2 * m_temperatureCalculationRequestedAfterLayerNumberEdit;
 
-    OSIntegerEdit * m_dimensionsForTheCTFCalculationEdit;
+    OSIntegerEdit2 * m_dimensionsForTheCTFCalculationEdit;
 
-    OSQuantityEdit * m_tubeSpacingEdit;
+    OSQuantityEdit2 * m_tubeSpacingEdit;
 };
 
 } // openstudio

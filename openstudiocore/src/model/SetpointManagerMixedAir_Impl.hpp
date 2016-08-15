@@ -29,8 +29,8 @@ namespace model {
 namespace detail {
 
   class MODEL_API SetpointManagerMixedAir_Impl : public SetpointManager_Impl {
-    Q_OBJECT;
-    Q_PROPERTY(std::string controlVariable READ controlVariable WRITE setControlVariable);
+    
+    
    public:
 
     SetpointManagerMixedAir_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);

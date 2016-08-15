@@ -454,7 +454,7 @@ ScheduleLimitsView::ScheduleLimitsView(bool isIP,
 
   // Lower Limit
 
-  // Note: QDoubleSpinBox are used, rather than OSQuantityEdit
+  // Note: QDoubleSpinBox are used, rather than OSQuantityEdit2
   // because limits are not connected via Q_PROPERTY. 
   m_lowerViewLimitSpinBox = new QDoubleSpinBox();
   m_lowerViewLimitSpinBox->setFixedWidth(100);
@@ -1951,7 +1951,7 @@ DayScheduleScene::DayScheduleScene(ScheduleDayView * scheduleDayView, const mode
 {
   setSceneRect(0,0,SCENEWIDTH,SCENEHEIGHT);
 
-  connect(m_scheduleDay.getImpl<model::detail::ScheduleDay_Impl>().get(), &model::detail::ScheduleDay_Impl::onChange, this, &DayScheduleScene::scheduleRefresh);
+  m_scheduleDay.getImpl<model::detail::ScheduleDay_Impl>().get()->onChange.connect<DayScheduleScene, &DayScheduleScene::scheduleRefresh>(this);
   
   refresh();
   //scheduleRefresh();

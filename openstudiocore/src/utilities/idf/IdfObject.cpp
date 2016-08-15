@@ -330,7 +330,7 @@ namespace detail {
         }
       }
     }
-    return result;
+    return result; 
   }
 
   boost::optional<QUrl> IdfObject_Impl::getURL(unsigned index, 
@@ -1392,14 +1392,14 @@ namespace detail {
     }
 
     if (nameChange){
-      emit onNameChange();
+      this->onNameChange.nano_emit();
     }
 
     if (dataChange){
-      emit onDataChange();
+      this->onDataChange.nano_emit();
     }
 
-    emit onChange();
+    this->onChange.nano_emit();
 
     m_diffs.clear();
   }

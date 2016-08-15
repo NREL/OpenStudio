@@ -1228,7 +1228,7 @@ void InspectorGadget::onTimeout()
   }
 }
 
-void InspectorGadget::onWorkspaceObjectRemoved()
+void InspectorGadget::onWorkspaceObjectRemoved(const openstudio::Handle &)
 {
   m_workspaceObjectChanged = true;
   clear(true);
@@ -1236,14 +1236,19 @@ void InspectorGadget::onWorkspaceObjectRemoved()
   QTimer::singleShot(0,this,SLOT(onTimeout()));
 }
 
+void InspectorGadget::removeWorkspaceObject(const openstudio::Handle &handle)
+{
+  emit workspaceObjectRemoved(handle);
+}
+
 void InspectorGadget::connectWorkspaceObjectSignals() const
 {
   if (m_workspaceObj){
     openstudio::detail::WorkspaceObject_Impl* impl = m_workspaceObj->getImpl<openstudio::detail::WorkspaceObject_Impl>().get();
     if (impl){
-      connect(impl, &openstudio::detail::WorkspaceObject_Impl::onChange, this, &InspectorGadget::onWorkspaceObjectChanged);
+      impl->openstudio::detail::WorkspaceObject_Impl::onChange.connect<InspectorGadget, &InspectorGadget::onWorkspaceObjectChanged>(const_cast<InspectorGadget *>(this));
 
-      connect(impl, &openstudio::detail::WorkspaceObject_Impl::onRemoveFromWorkspace, this, &InspectorGadget::workspaceObjectRemoved);
+      impl->openstudio::detail::WorkspaceObject_Impl::onRemoveFromWorkspace.connect<InspectorGadget, &InspectorGadget::removeWorkspaceObject>(const_cast<InspectorGadget *>(this));
 
       connect(this, &InspectorGadget::workspaceObjectRemoved, this, &InspectorGadget::onWorkspaceObjectRemoved);
     }
@@ -1253,10 +1258,17 @@ void InspectorGadget::connectWorkspaceObjectSignals() const
 void InspectorGadget::disconnectWorkspaceObjectSignals() const
 {
   if (m_workspaceObj){
-    QObject* impl = m_workspaceObj->getImpl<openstudio::detail::WorkspaceObject_Impl>().get();
+    auto* impl = m_workspaceObj->getImpl<openstudio::detail::WorkspaceObject_Impl>().get();
     if (impl){
       // disconnect all signals from m_workspaceObj to this
-      impl->disconnect(this); 
+
+      impl->openstudio::detail::WorkspaceObject_Impl::onChange.disconnect<InspectorGadget, &InspectorGadget::onWorkspaceObjectChanged>(const_cast<InspectorGadget *>(this));
+
+      impl->openstudio::detail::WorkspaceObject_Impl::onRemoveFromWorkspace.disconnect<InspectorGadget, &InspectorGadget::removeWorkspaceObject>(const_cast<InspectorGadget *>(this));
+
+      disconnect(this, &InspectorGadget::workspaceObjectRemoved, this, &InspectorGadget::onWorkspaceObjectRemoved);
+
+      // impl->disconnect(); 
     }
   }
 }

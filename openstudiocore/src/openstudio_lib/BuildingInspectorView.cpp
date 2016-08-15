@@ -251,7 +251,7 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
   label->setStyleSheet("QLabel { font: bold; }");
   vLayout->addWidget(label);
 
-  m_nameEdit = new OSLineEdit();
+  m_nameEdit = new OSLineEdit2();
   vLayout->addWidget(m_nameEdit);
 
   mainGridLayout->addLayout(vLayout,row,0,1,2);
@@ -424,8 +424,8 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
   label->setStyleSheet("QLabel { font: bold; }");
   vLayout->addWidget(label);
 
-  m_northAxisEdit = new OSQuantityEdit(m_isIP);
-  connect(this, &BuildingInspectorView::toggleUnitsClicked, m_northAxisEdit, &OSQuantityEdit::onUnitSystemChange);
+  m_northAxisEdit = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &BuildingInspectorView::toggleUnitsClicked, m_northAxisEdit, &OSQuantityEdit2::onUnitSystemChange);
 
   vLayout->addWidget(m_northAxisEdit);
 
@@ -554,7 +554,12 @@ void BuildingInspectorView::attach(openstudio::model::Building& building)
 {
   m_building = building;
 
-  m_nameEdit->bind(building, "name");
+  // m_nameEdit->bind(building, "name");
+  m_nameEdit->bind(
+    *m_building,
+    OptionalStringGetter(std::bind(&model::Building::name, m_building.get_ptr(),true)),
+    boost::optional<StringSetter>(std::bind(&model::Building::setName, m_building.get_ptr(),std::placeholders::_1))
+  );
 
   populateStandardsBuildingTypes();
 
@@ -567,7 +572,17 @@ void BuildingInspectorView::attach(openstudio::model::Building& building)
   m_defaultScheduleSetVectorController->attach(building);
   m_defaultScheduleSetVectorController->reportItems();
 
-  m_northAxisEdit->bind(building, "northAxis", m_isIP, std::string("isNorthAxisDefaulted"));
+  // m_northAxisEdit->bind(building, "northAxis", m_isIP, std::string("isNorthAxisDefaulted"));
+  m_northAxisEdit->bind(
+    m_isIP,
+    *m_building,
+    OptionalDoubleGetter(std::bind(&model::Building::northAxis, m_building.get_ptr())),
+    DoubleSetterVoidReturn(std::bind(static_cast<void(model::Building::*)(double)>(&model::Building::setNorthAxis), m_building.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Building::resetNorthAxis, m_building.get_ptr())),
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::Building::isNorthAxisDefaulted, m_building.get_ptr()))
+  );
 
   m_numberLivingUnits->bind(
     building,

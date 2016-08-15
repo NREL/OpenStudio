@@ -30,8 +30,8 @@ namespace detail {
 
   /** Curve_Impl is a ModelObject_Impl that is the implementation class for Curve. */
   class MODEL_API Curve_Impl : public ResourceObject_Impl {
-    Q_OBJECT;
-    Q_PROPERTY(int numVariables READ numVariables);
+    
+    
    public:
     /** @name Constructors and Destructors */
     //@{

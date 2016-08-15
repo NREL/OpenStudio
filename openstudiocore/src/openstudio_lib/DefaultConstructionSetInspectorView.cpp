@@ -1028,7 +1028,7 @@ DefaultConstructionSetInspectorView::DefaultConstructionSetInspectorView(const m
   gridLayout->addWidget(label,row,leftCol);
   row++;
 
-  m_nameEdit = new OSLineEdit();
+  m_nameEdit = new OSLineEdit2();
   gridLayout->addWidget(m_nameEdit,row,leftCol,1,3);
   row++;
 
@@ -1605,7 +1605,14 @@ void DefaultConstructionSetInspectorView::attach(openstudio::model::DefaultConst
   m_siteShadingVC->attach(defaultConstructionSet);
   m_siteShadingVC->reportItems();
 
-  m_nameEdit->bind(defaultConstructionSet, "name");
+  boost::optional<model::DefaultConstructionSet> m_defaultConstructionSet = defaultConstructionSet;
+
+  // m_nameEdit->bind(defaultConstructionSet, "name"); 
+  m_nameEdit->bind(
+    *m_defaultConstructionSet,
+    OptionalStringGetter(std::bind(&model::DefaultConstructionSet::name, m_defaultConstructionSet.get_ptr(),true)),
+    boost::optional<StringSetter>(std::bind(&model::DefaultConstructionSet::setName, m_defaultConstructionSet.get_ptr(),std::placeholders::_1))
+  );
 
   this->stackedWidget()->setCurrentIndex(1);
 }

@@ -29,6 +29,8 @@
 #include "../utilities/core/UUID.hpp"
 #include "../utilities/core/Enum.hpp"
 
+#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
+
 #include <QWidget>
 #include <QMainWindow>
 
@@ -57,9 +59,9 @@ OPENSTUDIO_ENUM( InspectorDialogClient,
 #endif
 
 
-class MODELEDITOR_API InspectorDialog : public QMainWindow
+class MODELEDITOR_API InspectorDialog : public QMainWindow, public Nano::Observer
 {
-  Q_OBJECT
+  Q_OBJECT;
 
 public:
 
@@ -148,10 +150,10 @@ private slots:
   //void onCheckBox(bool checked);
   void onListWidgetSelectionChanged();
   void onTableWidgetSelectionChanged();
-  void onAddWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl);
+  void onAddWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& type, const openstudio::UUID& uuid);
   void onWorkspaceChange();
   void onTimeout();
-  void onRemoveWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl);
+  void onRemoveWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& type, const openstudio::UUID& uuid);
 
 private:
 

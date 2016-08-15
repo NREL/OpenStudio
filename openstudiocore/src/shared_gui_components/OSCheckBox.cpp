@@ -50,9 +50,8 @@ namespace openstudio {
 
     setEnabled(true);
 
-    connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSCheckBox3::onModelObjectChange);
-
-    connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace, this, &OSCheckBox3::onModelObjectRemove);
+    m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->openstudio::model::detail::ModelObject_Impl::onChange.connect<OSCheckBox3, &OSCheckBox3::onModelObjectChange>(this);
+    m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace.connect<OSCheckBox3, &OSCheckBox3::onModelObjectRemove>(this);
 
     connect(this, &OSCheckBox3::toggled, this, &OSCheckBox3::onToggled);
     bool checked = (*m_get)();
@@ -74,9 +73,9 @@ namespace openstudio {
 
     setEnabled(true);
 
-    connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSCheckBox3::onModelObjectChange);
+    m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onChange.connect<OSCheckBox3, &OSCheckBox3::onModelObjectChange>(this);
 
-    connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace, this, &OSCheckBox3::onModelObjectRemove);
+    m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onRemoveFromWorkspace.connect<OSCheckBox3, &OSCheckBox3::onModelObjectRemove>(this);
 
     connect(this, &OSCheckBox3::toggled, this, &OSCheckBox3::onToggled);
     bool checked = (*m_get)();
@@ -87,7 +86,9 @@ namespace openstudio {
   void OSCheckBox3::unbind()
   {
     if (m_modelObject){
-      this->disconnect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get());
+      m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onChange.disconnect<OSCheckBox3, &OSCheckBox3::onModelObjectChange>(this);
+      m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onRemoveFromWorkspace.disconnect<OSCheckBox3, &OSCheckBox3::onModelObjectRemove>(this);
+
       m_get.reset();
       m_set.reset();
       m_setBoolReturn.reset();
@@ -122,7 +123,7 @@ namespace openstudio {
     }
   }
 
-  void OSCheckBox3::onModelObjectRemove(Handle handle)
+  void OSCheckBox3::onModelObjectRemove(const Handle& handle)
   {
     unbind();
   }
@@ -152,9 +153,9 @@ void OSCheckBox2::bind(model::ModelObject & modelObject,
 
   setEnabled(true);
 
-  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSCheckBox2::onModelObjectChange);
+  m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onChange.connect<OSCheckBox2, &OSCheckBox2::onModelObjectChange>(this);
 
-  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace, this, &OSCheckBox2::onModelObjectRemove);
+  m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onRemoveFromWorkspace.connect<OSCheckBox2, &OSCheckBox2::onModelObjectRemove>(this);
 
   connect(this, &OSCheckBox2::toggled, this, &OSCheckBox2::onToggled);
   bool checked = (*m_get)();
@@ -165,7 +166,9 @@ void OSCheckBox2::bind(model::ModelObject & modelObject,
 void OSCheckBox2::unbind()
 {
   if (m_modelObject){
-    this->disconnect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get());
+    m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onChange.disconnect<OSCheckBox2, &OSCheckBox2::onModelObjectChange>(this);
+    m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onRemoveFromWorkspace.disconnect<OSCheckBox2, &OSCheckBox2::onModelObjectRemove>(this);
+
     m_get.reset();
     m_set.reset();
     m_reset.reset();
@@ -190,74 +193,74 @@ void OSCheckBox2::onModelObjectChange()
   }
 }
 
-void OSCheckBox2::onModelObjectRemove(Handle handle)
+void OSCheckBox2::onModelObjectRemove(const Handle& handle)
 {
   unbind();
 }
 
-OSCheckBox::OSCheckBox( QWidget * parent )
-  : QPushButton(parent)
-{
-  setObjectName("StandardGrayButton");
-  this->setAcceptDrops(false);
+// OSCheckBox::OSCheckBox( QWidget * parent )
+//   : QPushButton(parent)
+// {
+//   setObjectName("StandardGrayButton");
+//   this->setAcceptDrops(false);
 
-  this->setCheckable(true);
+//   this->setCheckable(true);
   
-  setEnabled(false);
-}
+//   setEnabled(false);
+// }
 
-void OSCheckBox::bind(model::ModelObject & modelObject, const char * property)
-{
-  m_modelObject = modelObject;
+// void OSCheckBox::bind(model::ModelObject & modelObject, const char * property)
+// {
+//   m_modelObject = modelObject;
 
-  m_property = property;
+//   m_property = property;
 
-  setEnabled(true);
+//   setEnabled(true);
 
-  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSCheckBox::onModelObjectChange);
+//   m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->openstudio::model::detail::ModelObject_Impl::onChange.connect<OSCheckBox, &OSCheckBox::onModelObjectChange>(this);
 
-  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace, this, &OSCheckBox::onModelObjectRemove);
+//   m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace.connect<OSCheckBox, &OSCheckBox::onModelObjectRemove>(this);
 
-  connect(this, &OSCheckBox::toggled, this, &OSCheckBox::onToggled);
-  bool checked = m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->property(m_property.c_str()).toBool();
+//   connect(this, &OSCheckBox::toggled, this, &OSCheckBox::onToggled);
+//   bool checked = m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->property(m_property.c_str()).toBool();
 
-  this->setChecked(checked);
-}
+//   this->setChecked(checked);
+// }
 
-void OSCheckBox::unbind()
-{
-  if (m_modelObject){
-    this->disconnect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get());
-    m_modelObject.reset();
-    m_property = "";
-    setEnabled(false);
-  }
-}
+// void OSCheckBox::unbind()
+// {
+//   if (m_modelObject){
+//     this->disconnect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get());
+//     m_modelObject.reset();
+//     m_property = "";
+//     setEnabled(false);
+//   }
+// }
 
-void OSCheckBox::onToggled(bool checked)
-{
-  if( m_modelObject )
-  {
-    m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->setProperty(m_property.c_str(),checked);
-  }
-}
+// void OSCheckBox::onToggled(bool checked)
+// {
+//   if( m_modelObject )
+//   {
+//     m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->setProperty(m_property.c_str(),checked);
+//   }
+// }
 
-void OSCheckBox::onModelObjectChange()
-{
-  if( m_modelObject )
-  {
-    bool checked = m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->property(m_property.c_str()).toBool();
+// void OSCheckBox::onModelObjectChange()
+// {
+//   if( m_modelObject )
+//   {
+//     bool checked = m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->property(m_property.c_str()).toBool();
 
-    this->setChecked(checked);
-  }
-}
+//     this->setChecked(checked);
+//   }
+// }
 
-void OSCheckBox::onModelObjectRemove(Handle handle)
-{
-  m_modelObject.reset();
-  m_property = "";
-  setEnabled(false);
-}
+// void OSCheckBox::onModelObjectRemove(const Handle& handle)
+// {
+//   m_modelObject.reset();
+//   m_property = "";
+//   setEnabled(false);
+// }
 
 } // openstudio
 

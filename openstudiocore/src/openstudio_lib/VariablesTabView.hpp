@@ -23,6 +23,7 @@
 #include "MainTabView.hpp"
 #include "../model/Model.hpp"
 #include "../model/OutputVariable.hpp"
+#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
 #include <boost/optional.hpp>
 
 class QComboBox;
@@ -30,10 +31,10 @@ class QPushButton;
 class QVBoxLayout;
 
 namespace openstudio {
-  class OSSwitch;
-  class OSComboBox;
+  class OSSwitch2;
+  class OSComboBox2;
 
-  class VariableListItem : public QWidget
+  class VariableListItem : public QWidget, public Nano::Observer
   {
     Q_OBJECT;
 
@@ -60,11 +61,11 @@ namespace openstudio {
       boost::optional<openstudio::model::OutputVariable> m_variable;
       openstudio::model::Model m_model;
 
-      OSComboBox *m_combobox;
-      OSSwitch *m_onOffButton;
+      OSComboBox2 *m_combobox;
+      OSSwitch2 *m_onOffButton;
   };
 
-  class VariablesList : public QWidget
+  class VariablesList : public QWidget, public Nano::Observer
   {
     Q_OBJECT;
 

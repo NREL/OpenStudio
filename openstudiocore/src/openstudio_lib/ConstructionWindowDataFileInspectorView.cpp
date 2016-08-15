@@ -59,7 +59,7 @@ void ConstructionWindowDataFileInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label, 2, 0);
 
-  m_urlEdit = new OSLineEdit();
+  m_urlEdit = new OSLineEdit2();
   mainGridLayout->addWidget(m_urlEdit, 3, 0, 1, 3);
 
   // Stretch
@@ -91,8 +91,23 @@ void ConstructionWindowDataFileInspectorView::onUpdate()
 
 void ConstructionWindowDataFileInspectorView::attach(openstudio::model::WindowDataFile & windowDataFile)
 {
-  m_nameEdit->bind(windowDataFile,"name");
-  m_urlEdit->bind(windowDataFile,"url");
+  boost::optional<model::WindowDataFile> m_windowDataFile = windowDataFile;
+  // m_nameEdit->bind(windowDataFile,"name");
+  m_nameEdit->bind(
+    *m_windowDataFile,
+    OptionalStringGetter(std::bind(&model::WindowDataFile::name, m_windowDataFile.get_ptr(),true)),
+    boost::optional<StringSetter>(std::bind(&model::WindowDataFile::setName, m_windowDataFile.get_ptr(),std::placeholders::_1))
+  );
+
+  // m_urlEdit->bind(windowDataFile,"url");
+  // Replaced to upgrade to OSLineEdit2, but fully removed at the suggestion of @danmacumber
+
+  // m_urlEdit->bind(
+  //   *m_windowDataFile,
+  //   OptionalStringGetter(std::bind(&model::WindowDataFile::getURL, m_windowDataFile.get_ptr(),true)),
+  //   boost::optional<StringSetter>(std::bind(&model::WindowDataFile::setURL, m_windowDataFile.get_ptr(),std::placeholders::_1))
+  // );
+
 }
 
 void ConstructionWindowDataFileInspectorView::detach()

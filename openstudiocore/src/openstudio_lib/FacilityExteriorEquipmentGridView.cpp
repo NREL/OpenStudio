@@ -69,7 +69,7 @@ namespace openstudio {
   FacilityExteriorEquipmentGridView::FacilityExteriorEquipmentGridView(bool isIP, const model::Model & model, QWidget * parent)
     : GridViewSubTab(isIP, model, parent)
   {
-    auto modelObjects = subsetCastVector<model::ModelObject>(model.getModelObjects<model::ExteriorLights>());
+    auto modelObjects = subsetCastVector<model::ModelObject>(model.getConcreteModelObjects<model::ExteriorLights>());
     std::sort(modelObjects.begin(), modelObjects.end(), ModelObjectNameSorter());
 
     m_gridController = new FacilityExteriorEquipmentGridController(isIP, "Exterior Lights", IddObjectType::OS_Exterior_Lights, model, modelObjects);
@@ -108,7 +108,7 @@ namespace openstudio {
     m_itemSelectorButtons->disableRemoveButton();
     m_itemSelectorButtons->disablePurgeButton();
   }
-  
+
   FacilityExteriorEquipmentGridController::FacilityExteriorEquipmentGridController(bool isIP,
     const QString & headerText,
     IddObjectType iddObjectType,
@@ -206,7 +206,7 @@ namespace openstudio {
           boost::optional<DataSource>()
           );
       }
-      else if (field == MULTIPLIER){  
+      else if (field == MULTIPLIER){
         addValueEditColumn(Heading(QString(MULTIPLIER)),
           NullAdapter(&model::ExteriorLights::multiplier),
           NullAdapter(&model::ExteriorLights::setMultiplier),
@@ -250,7 +250,7 @@ namespace openstudio {
 
   void FacilityExteriorEquipmentGridController::refreshModelObjects()
   {
-    m_modelObjects = subsetCastVector<model::ModelObject>(m_model.getModelObjects<model::ExteriorLights>());
+    m_modelObjects = subsetCastVector<model::ModelObject>(m_model.getConcreteModelObjects<model::ExteriorLights>());
     std::sort(m_modelObjects.begin(), m_modelObjects.end(), ModelObjectNameSorter());
   }
 

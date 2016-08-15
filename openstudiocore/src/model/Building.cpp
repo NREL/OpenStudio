@@ -144,7 +144,7 @@ namespace detail {
       // This call clones only the building and it's resources
       result = ModelObject_Impl::clone(t_model).cast<Building>();
 
-      // DLM: why did the ParentObject::clone not work?  
+      // DLM: why did the ParentObject::clone not work?
       // DLM: ParentObject::clone only preserves links between child and parent objects, it does not preserve links between levels of the hierarchy
       // we could potentially add ThermalZone as a resource of Space (or vice versa or both) but I am not sure what the implications of that are
 
@@ -198,7 +198,7 @@ namespace detail {
           clone.setBuildingStory(storyClone);
         }
       }
-      
+
     }
 
     OS_ASSERT(result);
@@ -305,16 +305,16 @@ namespace detail {
     if (standardsBuildingType){
       finder.addTarget(*standardsBuildingType);
     }
-    auto it = std::remove_if(result.begin(), result.end(), finder); 
-    result.resize( std::distance(result.begin(),it) ); 
+    auto it = std::remove_if(result.begin(), result.end(), finder);
+    result.resize( std::distance(result.begin(),it) );
 
     // sort
     std::sort(result.begin(), result.end(), IstringCompare());
 
     // make unique
     // DLM: have to sort before calling unique, unique only works on consecutive elements
-    it = std::unique(result.begin(), result.end(), IstringEqual()); 
-    result.resize( std::distance(result.begin(),it) ); 
+    it = std::unique(result.begin(), result.end(), IstringEqual());
+    result.resize( std::distance(result.begin(),it) );
 
     // add current to front
     if (standardsBuildingType){
@@ -330,7 +330,7 @@ namespace detail {
     OS_ASSERT(value);
     return openstudio::istringEqual(value.get(), "True");
   }
-  
+
   bool Building_Impl::isRelocatableDefaulted() const {
     return isEmpty(OS_BuildingFields::Relocatable);
   }
@@ -390,7 +390,7 @@ namespace detail {
     bool test = setString(OS_BuildingFields::StandardsNumberofLivingUnits, "");
     OS_ASSERT(test);
   }
-  
+
   bool Building_Impl::setNominalFloortoCeilingHeight(double nominalFloortoCeilingHeight) {
     bool result = setDouble(OS_BuildingFields::NominalFloortoCeilingHeight, nominalFloortoCeilingHeight);
     return result;
@@ -586,7 +586,7 @@ namespace detail {
 
   double Building_Impl::exteriorSurfaceArea() const {
     double result(0.0);
-    for (const Surface& surface : model().getModelObjects<Surface>()) {
+    for (const Surface& surface : model().getConcreteModelObjects<Surface>()) {
       OptionalSpace space = surface.space();
       std::string outsideBoundaryCondition = surface.outsideBoundaryCondition();
       if (space && openstudio::istringEqual(outsideBoundaryCondition, "Outdoors")) {
@@ -645,7 +645,7 @@ namespace detail {
     }
     return area / np;
   }
-  
+
   double Building_Impl::lightingPower() const {
     double result(0.0);
     for (const Space& space : spaces()){
@@ -1101,7 +1101,7 @@ void Building::resetStandardsBuildingType(){
 }
 
 void Building::setRelocatable(bool isRelocatable){
-  getImpl<detail::Building_Impl>()->setRelocatable(isRelocatable); 
+  getImpl<detail::Building_Impl>()->setRelocatable(isRelocatable);
 }
 
 void Building::resetRelocatable(){

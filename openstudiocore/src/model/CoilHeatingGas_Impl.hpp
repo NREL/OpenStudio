@@ -30,15 +30,15 @@ class Curve;
 namespace detail {
 
   class MODEL_API CoilHeatingGas_Impl : public StraightComponent_Impl {
-    Q_OBJECT;
+    
 
-    Q_PROPERTY(double gasBurnerEfficiency READ gasBurnerEfficiency WRITE setGasBurnerEfficiency);
-    Q_PROPERTY(double parasiticElectricLoad READ parasiticElectricLoad WRITE setParasiticElectricLoad);
-    Q_PROPERTY(double parasiticGasLoad READ parasiticGasLoad WRITE setParasiticGasLoad);
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> availabilitySchedule READ availabilityScheduleAsModelObject WRITE setAvailabilityScheduleAsModelObject);
+    
 
-    Q_PROPERTY(boost::optional<double> nominalCapacity READ nominalCapacity WRITE setNominalCapacity);
+    
   public:
     /** @name Constructors and Destructors */
     //2{

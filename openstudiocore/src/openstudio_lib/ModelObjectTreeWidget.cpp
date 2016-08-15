@@ -48,17 +48,9 @@ ModelObjectTreeWidget::ModelObjectTreeWidget(const model::Model& model, QWidget*
   
   m_vLayout->addWidget(m_treeWidget);
 
-  connect(model.getImpl<model::detail::Model_Impl>().get(), 
-    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::addWorkspaceObject),
-    this,
-    &ModelObjectTreeWidget::objectAdded,
-    Qt::QueuedConnection);
+  model.getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.connect<ModelObjectTreeWidget, &ModelObjectTreeWidget::objectAdded>(this);
   
-  connect(model.getImpl<model::detail::Model_Impl>().get(), 
-    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::removeWorkspaceObject),
-    this,
-    &ModelObjectTreeWidget::objectRemoved,
-    Qt::QueuedConnection);
+  model.getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.connect<ModelObjectTreeWidget, &ModelObjectTreeWidget::objectRemoved>(this);
 }
 
 OSItem* ModelObjectTreeWidget::selectedItem() const

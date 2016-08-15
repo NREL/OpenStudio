@@ -40,7 +40,7 @@ set(${target_name}_swig_src
   AnnualIlluminanceMap.i
 )
 
-add_library(${target_name} STATIC ${${target_name}_src} ${${target_name}_qrc_src})
+add_library(${target_name} ${${target_name}_src} ${${target_name}_qrc_src})
 target_link_libraries(${target_name} ${${target_name}_depends})
 AddPCH(${target_name})
 

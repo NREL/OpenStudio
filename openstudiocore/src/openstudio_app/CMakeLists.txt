@@ -1,15 +1,6 @@
 set(target_name OpenStudioApp)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
-#include_directories(${RUBY_INCLUDE_DIR})
-#include_directories(${SWIG_DIR})
-
-#add_custom_command(
-#  OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.h"
-#  COMMAND "${SWIG_EXECUTABLE}"
-#          "-ruby"
-#          -external-runtime "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.h"
-#)
 
 # source files
 set(${target_name}_SRC
@@ -71,7 +62,7 @@ if(APPLE)
   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Info.plist.in ${CMAKE_CURRENT_BINARY_DIR}/Info.plist)
 endif()
 
-include_directories(${RUBY_INCLUDE_DIRS})
+#include_directories(${RUBY_INCLUDE_DIRS})
 
 add_executable(${target_name}
   WIN32
@@ -93,6 +84,38 @@ add_custom_command(TARGET ${target_name}
 )
 endif()
 
+if( NOT Qt5Static )
+  add_custom_command(TARGET ${target_name}
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:${target_name}>/platforms/
+    COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:${target_name}>/sqldrivers/
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:Qt5::QSQLiteDriverPlugin> $<TARGET_FILE_DIR:${target_name}>/sqldrivers/
+  )
+  
+  if( APPLE )
+    add_custom_command(TARGET ${target_name}
+      POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:Qt5::QCocoaIntegrationPlugin> $<TARGET_FILE_DIR:${target_name}>/platforms/ )
+  elseif( WIN32 )
+    add_custom_command(TARGET ${target_name}
+      POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:Qt5::QWindowsIntegrationPlugin> $<TARGET_FILE_DIR:${target_name}>/platforms/ )
+    foreach(LIB ${QT_LIBS})
+      add_custom_command(TARGET ${target_name}
+        POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:${LIB}> $<TARGET_FILE_DIR:${target_name}>/ )
+    endforeach()
+  endif()
+endif()
+
+if( WIN32 )
+  foreach(LIB ${QT_WEB_LIBS})
+    add_custom_command(TARGET ${target_name}
+      POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:${LIB}> $<TARGET_FILE_DIR:${target_name}>/ )
+  endforeach()
+endif()
+
 set(depends
   openstudio_lib
   openstudio_osversion
@@ -103,7 +126,7 @@ set(depends
   openstudio_gbxml
   openstudio_bimserver
   ${QT_LIBS}
-  ${RUBY_LIBRARY}
+  ${QT_WEB_LIBS}
   ${COREFOUNDATION_LIBRARY}
 )
 
@@ -124,13 +147,13 @@ endif()
 if(APPLE)
   set_target_properties(${target_name} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_BINARY_DIR}/Info.plist)
   set(plugin_dest_dir OpenStudio.app/Contents/MacOS)
-  set(APPS "\${CMAKE_INSTALL_PREFIX}/OpenStudio.app")
+  set(APPS "\${CMAKE_INSTALL_PREFIX}/OpenStudioApp.app")
 elseif(WIN32)
   set(plugin_dest_dir bin)
-  set(APPS "\${CMAKE_INSTALL_PREFIX}/bin/OpenStudio.exe")
+  set(APPS "\${CMAKE_INSTALL_PREFIX}/bin/OpenStudioApp.exe")
 else()
   set(plugin_dest_dir bin)
-  set(APPS "\${CMAKE_INSTALL_PREFIX}/bin/OpenStudio")
+  set(APPS "\${CMAKE_INSTALL_PREFIX}/bin/OpenStudioApp")
 endif()
 
 install(TARGETS ${target_name}
@@ -138,57 +161,58 @@ install(TARGETS ${target_name}
   RUNTIME DESTINATION bin
 )
 
-if(APPLE OR WIN32)
-
-  get_target_property(QT_QSQLITE_PLUGIN Qt5::QSQLiteDriverPlugin LOCATION)
-
-  install(PROGRAMS "${QT_QSQLITE_PLUGIN}"
-          DESTINATION "${plugin_dest_dir}/sqldrivers/"
-  )
-
-  get_filename_component(QSQLITE_PLUGIN_NAME "${QT_QSQLITE_PLUGIN}" NAME)
-
-  set(QTPLUGINS "\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/sqldrivers/${QSQLITE_PLUGIN_NAME}")
-
-  if(WIN32)
-    get_target_property(QPA_PLUGIN Qt5::QWindowsIntegrationPlugin LOCATION)
-  elseif(APPLE)
-    get_target_property(QPA_PLUGIN Qt5::QCocoaIntegrationPlugin LOCATION)
-  endif()
-
-  install(PROGRAMS "${QPA_PLUGIN}"
-          DESTINATION "${plugin_dest_dir}/platforms/"
-  )
-
-  get_filename_component(QPA_PLUGIN_NAME "${QPA_PLUGIN}" NAME)
-
-  list(APPEND QTPLUGINS "\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/platforms/${QPA_PLUGIN_NAME}")
-
-endif()
+#if(APPLE OR WIN32)
+#
+#  get_target_property(QT_QSQLITE_PLUGIN Qt5::QSQLiteDriverPlugin LOCATION)
+#
+#  install(PROGRAMS "${QT_QSQLITE_PLUGIN}"
+#          DESTINATION "${plugin_dest_dir}/sqldrivers/"
+#  )
+#
+#  get_filename_component(QSQLITE_PLUGIN_NAME "${QT_QSQLITE_PLUGIN}" NAME)
+#
+#  set(QTPLUGINS "\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/sqldrivers/${QSQLITE_PLUGIN_NAME}")
+#
+#  if(WIN32)
+#    get_target_property(QPA_PLUGIN Qt5::QWindowsIntegrationPlugin LOCATION)
+#  elseif(APPLE)
+#    get_target_property(QPA_PLUGIN Qt5::QCocoaIntegrationPlugin LOCATION)
+#  endif()
+#
+#  install(PROGRAMS "${QPA_PLUGIN}"
+#          DESTINATION "${plugin_dest_dir}/platforms/"
+#  )
+#
+#  get_filename_component(QPA_PLUGIN_NAME "${QPA_PLUGIN}" NAME)
+#
+#  list(APPEND QTPLUGINS "\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/platforms/${QPA_PLUGIN_NAME}")
+#
+#endif()
 
 
 # directories to look for dependencies
-set(DIRS ${QT_LIBRARY_DIR} ${LIBRARY_SEARCH_DIRECTORY})
+# This is probably out of date
+set(DIRS "${QT_INSTALL_DIR}/bin" "${QT_INSTALL_DIR}/lib" "${RUBY_INSTALL_DIR}/bin")
 
 if(APPLE)
   #list(APPEND DIRS "${CMAKE_BINARY_DIR}/Products/OSAppConfigInstall")
 
   install(DIRECTORY ${CMAKE_SOURCE_DIR}/src/openstudio_app/Resources/
-          DESTINATION OpenStudio.app/Contents/share/openstudio-${OPENSTUDIO_VERSION}/OSApp
+          DESTINATION OpenStudioApp.app/Contents/share/openstudio-${OPENSTUDIO_VERSION}/OSApp
   )
 
-  install(DIRECTORY ${CMAKE_SOURCE_DIR}/src/pat_app/Measures
-          DESTINATION OpenStudio.app/Contents/share/openstudio-${OPENSTUDIO_VERSION}/pat
-  )
+  #install(DIRECTORY ${CMAKE_SOURCE_DIR}/src/pat_app/Measures
+  #        DESTINATION OpenStudio.app/Contents/share/openstudio-${OPENSTUDIO_VERSION}/pat
+  #)
 elseif(WIN32)
   #list(APPEND DIRS "${CMAKE_BINARY_DIR}/Products/OSAppConfigInstall/Release" "${CMAKE_BINARY_DIR}/Products/OSAppConfigInstall/Debug")
 
   install(DIRECTORY ${CMAKE_SOURCE_DIR}/src/openstudio_app/Resources/
-          DESTINATION share/openstudio-${OPENSTUDIO_VERSION}/OSApp
+	  DESTINATION share/openstudio-${OPENSTUDIO_VERSION}/OSApp
   )
 else()
   install(DIRECTORY ${CMAKE_SOURCE_DIR}/src/openstudio_app/Resources/
-          DESTINATION share/openstudio-${OPENSTUDIO_VERSION}/OSApp
+	  DESTINATION share/openstudio-${OPENSTUDIO_VERSION}/OSApp
   )
 endif()
 
@@ -232,85 +256,86 @@ endif()
 if(WIN32 OR APPLE)
   install(CODE "
     include(BundleUtilities)
+    include(\"${CMAKE_SOURCE_DIR}/CMake/FixupBundleOverrides.cmake\")
     fixup_bundle(\"${APPS}\" \"${QTPLUGINS}\" \"${DIRS}\")
   ")
 endif()
 
-if(WIN32)
-  include(GetPrerequisites)
-  install(CODE "
-    include(GetPrerequisites)
-    get_prerequisites(\"${APPS}\" PREREQS 0 0 \"${APPS}\" \"${DIRS}\")
-    foreach(PREREQ \${PREREQS})
-      #message(\"\${PREREQ}\")
-      if(\"\${PREREQ}\" MATCHES \".*ruby.*\")
-        gp_resolve_item(\"${APPS}\" \"\${PREREQ}\" \"${APPS}\" \"${DIRS}\" FULL_PREREQ)
-        execute_process(COMMAND \"${CMAKE_COMMAND}\" -E copy \"\${FULL_PREREQ}\" \"\${CMAKE_INSTALL_PREFIX}/bin/\")
-      endif()
-    endforeach()
-  ")
-endif()
+#if(WIN32)
+#  include(GetPrerequisites)
+#  install(CODE "
+#    include(GetPrerequisites)
+#    get_prerequisites(\"${APPS}\" PREREQS 0 0 \"${APPS}\" \"${DIRS}\")
+#    foreach(PREREQ \${PREREQS})
+#      #message(\"\${PREREQ}\")
+#      if(\"\${PREREQ}\" MATCHES \".*ruby.*\")
+#        gp_resolve_item(\"${APPS}\" \"\${PREREQ}\" \"${APPS}\" \"${DIRS}\" FULL_PREREQ)
+#        execute_process(COMMAND \"${CMAKE_COMMAND}\" -E copy \"\${FULL_PREREQ}\" \"\${CMAKE_INSTALL_PREFIX}/bin/\")
+#      endif()
+#    endforeach()
+#  ")
+#endif()
 
-# Due to duplication of the Apple Qt framework inside of the OpenStudio application
-# we need to fix up and include the Ruby libraries inside of the application
-# bundle if we want to be able to load them... if we try to load them from the
-# Ruby install path, MacOS thinks we are loading two different sets of Qt dlls
-# at the same time and it causes static initialization problems and a crash
-if(APPLE)
-  install(CODE "
-
-    file(GLOB_RECURSE PLUGINS
-      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioairflow.bundle\"
-      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioanalysis.bundle\"
-      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioanalysisdriver.bundle\"
-      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioenergyplus.bundle\"
-      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudiogbxml.bundle\"
-      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioisomodel.bundle\"
-      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudiolib.bundle\"
-      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudiomodel.bundle\"
-      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudiomodelcore.bundle\"
-      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudiomodeleditor.bundle\"
-      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudiomodelgeometry.bundle\"
-      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudiomodelgenerators.bundle\"
-      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudiomodelhvac.bundle\"
-      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudiomodelrefrigeration.bundle\"
-      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudiomodelresources.bundle\"
-      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudiomodelsimulation.bundle\"
-      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioosversion.bundle\"
-      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioproject.bundle\"
-      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioradiance.bundle\"
-      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudiomeasure.bundle\"
-      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudiorunmanager.bundle\"
-      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudiosdd.bundle\"
-      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioutilities.bundle\"
-      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioutilitiesbcl.bundle\"
-      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioutilitiescloud.bundle\"
-      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioutilitiescore.bundle\"
-      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioutilitiesdata.bundle\"
-      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioutilitieseconomics.bundle\"
-      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioutilitiesfiletypes.bundle\"
-      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioutilitiesgeometry.bundle\"
-      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioutilitiesidd.bundle\"
-      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioutilitiesidf.bundle\"
-      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioutilitiesplot.bundle\"
-      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioutilitiessql.bundle\"
-      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioutilitiestime.bundle\"
-      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioutilitiesunits.bundle\"
-    )
-
-
-    file(COPY \${PLUGINS} DESTINATION \"\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}\")
-
-    file(GLOB_RECURSE FIXUPPLUGINS
-      \"\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/plugins/*${CMAKE_SHARED_LIBRARY_SUFFIX}\"
-      \"\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/*.bundle\"
-    )
-
-    include(BundleUtilities)
-
-    fixup_bundle(\"${APPS}\" \"\${FIXUPPLUGINS}\" \"${DIRS}\")
-  ")
-endif()
+## Due to duplication of the Apple Qt framework inside of the OpenStudio application
+## we need to fix up and include the Ruby libraries inside of the application
+## bundle if we want to be able to load them... if we try to load them from the
+## Ruby install path, MacOS thinks we are loading two different sets of Qt dlls
+## at the same time and it causes static initialization problems and a crash
+#if(APPLE)
+#  install(CODE "
+#
+#    file(GLOB_RECURSE PLUGINS
+#      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioairflow.bundle\"
+#      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioanalysis.bundle\"
+#      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioanalysisdriver.bundle\"
+#      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioenergyplus.bundle\"
+#      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudiogbxml.bundle\"
+#      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioisomodel.bundle\"
+#      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudiolib.bundle\"
+#      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudiomodel.bundle\"
+#      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudiomodelcore.bundle\"
+#      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudiomodeleditor.bundle\"
+#      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudiomodelgeometry.bundle\"
+#      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudiomodelgenerators.bundle\"
+#      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudiomodelhvac.bundle\"
+#      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudiomodelrefrigeration.bundle\"
+#      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudiomodelresources.bundle\"
+#      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudiomodelsimulation.bundle\"
+#      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioosversion.bundle\"
+#      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioproject.bundle\"
+#      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioradiance.bundle\"
+#      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudiomeasure.bundle\"
+#      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudiorunmanager.bundle\"
+#      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudiosdd.bundle\"
+#      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioutilities.bundle\"
+#      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioutilitiesbcl.bundle\"
+#      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioutilitiescloud.bundle\"
+#      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioutilitiescore.bundle\"
+#      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioutilitiesdata.bundle\"
+#      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioutilitieseconomics.bundle\"
+#      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioutilitiesfiletypes.bundle\"
+#      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioutilitiesgeometry.bundle\"
+#      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioutilitiesidd.bundle\"
+#      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioutilitiesidf.bundle\"
+#      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioutilitiesplot.bundle\"
+#      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioutilitiessql.bundle\"
+#      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioutilitiestime.bundle\"
+#      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioutilitiesunits.bundle\"
+#    )
+#
+#
+#    file(COPY \${PLUGINS} DESTINATION \"\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}\")
+#
+#    file(GLOB_RECURSE FIXUPPLUGINS
+#      \"\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/plugins/*${CMAKE_SHARED_LIBRARY_SUFFIX}\"
+#      \"\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/*.bundle\"
+#    )
+#
+#    include(BundleUtilities)
+#
+#    fixup_bundle(\"${APPS}\" \"\${FIXUPPLUGINS}\" \"${DIRS}\")
+#  ")
+#endif()
 
 
 set(${target_name}_test_src

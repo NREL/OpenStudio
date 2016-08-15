@@ -159,7 +159,7 @@ HVACToolbarView::HVACToolbarView()
 
   controlLayout->addStretch();
 
-  systemComboBox = new OSComboBox();
+  systemComboBox = new OSComboBox2();
   systemComboBox->setMinimumContentsLength(40);
   mainHlayout->addWidget(systemComboBox);
   systemComboBox->setEnabled(true);
@@ -242,7 +242,7 @@ void HVACSystemsView::paintEvent ( QPaintEvent * event )
   style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
-//OSComboBox * HVACSystemsView::chooser() const
+//OSComboBox2 * HVACSystemsView::chooser() const
 //{
 //  return m_chooser;
 //}
@@ -338,7 +338,7 @@ HVACControlsView::HVACControlsView()
   auto nightCycleHLayout = new QHBoxLayout();
   nightCycleHLayout->setContentsMargins(0,0,0,0);
   nightCycleHLayout->setSpacing(5);
-  nightCycleComboBox = new OSComboBox();
+  nightCycleComboBox = new OSComboBox2();
   nightCycleComboBox->addItem("Follow the HVAC Operation Schedule","StayOff");
   nightCycleComboBox->addItem("Cycle on Full System if Heating or Cooling Required","CycleOnAny");
   nightCycleComboBox->addItem("Cycle on Zone Terminal Units if Heating or Cooling Required","CycleOnAnyZoneFansOnly");
@@ -391,7 +391,7 @@ MechanicalVentilationView::MechanicalVentilationView()
   economizerTitle->setObjectName("H2");
   economizerHBoxLayout->addWidget(economizerTitle);
 
-  economizerComboBox = new OSComboBox();
+  economizerComboBox = new OSComboBox2();
   economizerComboBox->setEnabled(true);
   economizerComboBox->addItem("Fixed Dry Bulb","FixedDryBulb");
   economizerComboBox->addItem("Fixed Enthalpy","FixedEnthalpy");
@@ -412,7 +412,7 @@ MechanicalVentilationView::MechanicalVentilationView()
   methodHBoxLayout->addWidget(methodTitle);
   methodTitle->setVisible(false);
 
-  ventilationCalcMethodComboBox = new OSComboBox();
+  ventilationCalcMethodComboBox = new OSComboBox2();
   ventilationCalcMethodComboBox->setEnabled(false);
   ventilationCalcMethodComboBox->addItem("Zone Sum","ZoneSum");
   ventilationCalcMethodComboBox->addItem("Ventilation Rate Procedure","VentilationRateProcedure");
@@ -432,7 +432,7 @@ MechanicalVentilationView::MechanicalVentilationView()
   dcvTitle->setObjectName("H2");
   dcvHBoxLayout->addWidget(dcvTitle);
 
-  dcvButton = new OSSwitch();
+  dcvButton = new OSSwitch2();
   dcvHBoxLayout->addWidget(dcvButton);
 
   dcvHBoxLayout->addStretch();
@@ -480,7 +480,7 @@ SingleZoneReheatSPMView::SingleZoneReheatSPMView()
   controlZoneTitle->setObjectName("H2");
   zoneSelectorHBoxLayout->addWidget(controlZoneTitle);
 
-  controlZoneComboBox = new OSComboBox();
+  controlZoneComboBox = new OSComboBox2();
   controlZoneComboBox->setEnabled(true);
   zoneSelectorHBoxLayout->addWidget(controlZoneComboBox);
   zoneSelectorHBoxLayout->addStretch();
@@ -570,7 +570,7 @@ AirLoopHVACUnitaryHeatPumpAirToAirControlView::AirLoopHVACUnitaryHeatPumpAirToAi
   controlZoneTitle->setObjectName("H2");
   zoneSelectorHBoxLayout->addWidget(controlZoneTitle);
 
-  controlZoneComboBox = new OSComboBox();
+  controlZoneComboBox = new OSComboBox2();
   controlZoneComboBox->setEnabled(true);
   zoneSelectorHBoxLayout->addWidget(controlZoneComboBox);
   zoneSelectorHBoxLayout->addStretch();

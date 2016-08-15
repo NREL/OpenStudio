@@ -26,6 +26,8 @@
 #include <QWidget>
 #include <vector>
 
+#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
+
 class QDragEnterEvent;
 class QDropEvent;
 class QLabel;
@@ -57,7 +59,7 @@ private:
   bool m_isDefaulted;
 };
 
-class OSItem : public QWidget
+class OSItem : public QWidget, public Nano::Observer
 {
   Q_OBJECT
 
