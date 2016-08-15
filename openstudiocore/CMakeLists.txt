@@ -440,8 +440,8 @@ if(NOT EXISTS ${RUBY_INSTALL_DIR})
 endif()
 
 list(APPEND CMAKE_PREFIX_PATH "${RUBY_INSTALL_DIR}")
-find_package(Ruby 2.0 REQUIRED)
 if( WIN32 )
+  find_package(Ruby 2.0 REQUIRED)
   get_filename_component(RUBY_LIBRARY_NAME_WE ${RUBY_LIBRARY} NAME_WE)
   get_filename_component(RUBY_LIBRARY_DIRECTORY ${RUBY_LIBRARY} DIRECTORY)
   get_filename_component(RUBY_LIBRARY_EXT ${RUBY_LIBRARY} EXT)
@@ -450,6 +450,11 @@ if( WIN32 )
   set(RUBY_LIBRARY_DEBUG "${RUBY_LIBRARY_DIRECTORY}/../../debug/lib/${RUBY_LIBRARY_NAME_WE}${CMAKE_STATIC_LIBRARY_SUFFIX}")
 else()
   set(RUBY_STATIC_LIBRARY "${RUBY_INSTALL_DIR}/lib/libruby-static.a")
+  list(APPEND RUBY_INCLUDE_DIRS "${RUBY_INSTALL_DIR}/include/ruby-2.0.0")
+  list(APPEND RUBY_INCLUDE_DIRS "${RUBY_INSTALL_DIR}/include/ruby-2.0.0/x86_64-darwin13.4.0")
+  set(RUBY_INCLUDE_DIR "${RUBY_INSTALL_DIR}/include/ruby-2.0.0")
+  set(RUBY_EXECUTABLE "${RUBY_INSTALL_DIR}/bin/ruby")
+  set(RUBY_POSSIBLE_LIB_DIR "${RUBY_INSTALL_DIR}/lib/ruby")
 endif()
 
 # Mingw based ruby lib (only the dll stub library) from Ruby Installer
@@ -922,7 +927,7 @@ if( Qt5Static )
 	  file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${QT_STATIC_ZIP_FILENAME}"
 		  ${QT_STATIC_ZIP_LOCAL_PATH}
       INACTIVITY_TIMEOUT 120
-      SHOW_PROGRES
+      SHOW_PROGRESS
       EXPECTED_MD5 ${QT_STATIC_ZIP_EXPECTED_MD5})
       execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_STATIC_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
   endif()
