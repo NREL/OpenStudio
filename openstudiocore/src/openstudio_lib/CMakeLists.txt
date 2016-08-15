@@ -456,10 +456,10 @@ set(${target_name}_SRC
   ../shared_gui_components/TextEditDialog.hpp 
   ../shared_gui_components/TIDItemModel.cpp
   ../shared_gui_components/TIDItemModel.hpp
-  #../shared_gui_components/VariableList.cpp
-  #../shared_gui_components/VariableList.hpp
-  #../shared_gui_components/VariableView.cpp
-  #../shared_gui_components/VariableView.hpp
+  ../shared_gui_components/WorkflowController.cpp
+  ../shared_gui_components/WorkflowController.hpp
+  ../shared_gui_components/WorkflowView.cpp
+  ../shared_gui_components/WorkflowView.hpp
   ../shared_gui_components/WaitDialog.cpp
   ../shared_gui_components/WaitDialog.hpp
   ../shared_gui_components/WorkflowTools.cpp
@@ -686,8 +686,8 @@ set(${target_name}_moc
   #../shared_gui_components/SyncMeasuresDialogCentralWidget.hpp
   ../shared_gui_components/TextEditDialog.hpp 
   ../shared_gui_components/TIDItemModel.hpp
-  #../shared_gui_components/VariableList.hpp
-  #../shared_gui_components/VariableView.hpp
+  ../shared_gui_components/WorkflowController.hpp
+  ../shared_gui_components/WorkflowView.hpp
   ../shared_gui_components/WaitDialog.hpp
   ../shared_gui_components/NetworkProxyDialog.hpp
 

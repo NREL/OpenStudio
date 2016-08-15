@@ -29,7 +29,6 @@
 //#include "../shared_gui_components/SyncMeasuresDialog.hpp"
 #include "../utilities/plot/ProgressBar.hpp"
 
-//#include "../analysisdriver/SimpleProject.hpp"
 #include "../energyplus/ForwardTranslator.hpp"
 
 #include <QLabel>

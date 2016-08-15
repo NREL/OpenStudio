@@ -18,26 +18,14 @@
 **********************************************************************/
 
 
-#include "VariableList.hpp"
-#include "VariableView.hpp"
+#include "WorkflowController.hpp"
+#include "WorkflowView.hpp"
 #include "MeasureDragData.hpp"
 #include "MeasureManager.hpp"
 #include "EditController.hpp"
 #include "BaseApp.hpp"
 #include "LocalLibraryController.hpp"
 #include "WorkflowTools.hpp"
-
-#include "../analysis/Analysis.hpp"
-#include "../analysis/DataPoint.hpp"
-#include "../analysis/MeasureGroup.hpp"
-#include "../analysis/MeasureGroup_Impl.hpp"
-#include "../analysis/NullMeasure.hpp"
-#include "../analysis/NullMeasure_Impl.hpp"
-#include "../analysis/Problem.hpp"
-#include "../analysis/RubyMeasure.hpp"
-#include "../analysis/RubyMeasure_Impl.hpp"
-#include "../analysis/WorkflowStep.hpp"
-#include "../analysisdriver/SimpleProject.hpp"
 
 #include "../energyplus/ForwardTranslator.hpp"
 
@@ -65,120 +53,116 @@ namespace openstudio{
 
 namespace measuretab {
 
-VariableGroupListController::VariableGroupListController(bool filterFixed, BaseApp *t_app)
+WorkflowController::WorkflowController(BaseApp *t_app)
   : OSListController()
 {
-  QSharedPointer<VariableGroupItem> variableGroupItem;
+  QSharedPointer<WorkflowSectionItem> workflowSectionItem;
 
-  variableGroupItem = QSharedPointer<VariableGroupItem>(new VariableGroupItem(MeasureType::ModelMeasure, "OpenStudio Measures", filterFixed, t_app));
-  addItem(variableGroupItem);
+  workflowSectionItem = QSharedPointer<WorkflowSectionItem>(new WorkflowSectionItem(MeasureType::ModelMeasure, "OpenStudio Measures", t_app));
+  addItem(workflowSectionItem);
 
-  variableGroupItem = QSharedPointer<VariableGroupItem>(new VariableGroupItem(MeasureType::EnergyPlusMeasure, "EnergyPlus Measures", filterFixed, t_app));
-  addItem(variableGroupItem);
+  workflowSectionItem = QSharedPointer<WorkflowSectionItem>(new WorkflowSectionItem(MeasureType::EnergyPlusMeasure, "EnergyPlus Measures", t_app));
+  addItem(workflowSectionItem);
 
-  variableGroupItem = QSharedPointer<VariableGroupItem>(new VariableGroupItem(MeasureType::ReportingMeasure, "Reporting Measures", filterFixed, t_app));
-  addItem(variableGroupItem);
+  workflowSectionItem = QSharedPointer<WorkflowSectionItem>(new WorkflowSectionItem(MeasureType::ReportingMeasure, "Reporting Measures", t_app));
+  addItem(workflowSectionItem);
 }
 
-void VariableGroupListController::addItem(QSharedPointer<OSListItem> item)
+void WorkflowController::addItem(QSharedPointer<OSListItem> item)
 {
-  if( QSharedPointer<VariableGroupItem> variableGroupItem = item.dynamicCast<VariableGroupItem>() )
+  if( QSharedPointer<WorkflowSectionItem> workflowSectionItem = item.dynamicCast<WorkflowSectionItem>() )
   {
-    m_variableGroupItems.push_back(variableGroupItem);
-    variableGroupItem->setController(this);
-    variableGroupItem->variableListController()->setSelectionController(selectionController());
+    m_workflowSectionItems.push_back(workflowSectionItem);
+    workflowSectionItem->setController(this);
+
+    // DLM: TODO
+    //workflowSectionItem->variableListController()->setSelectionController(selectionController());
   }
 }
 
-QSharedPointer<OSListItem> VariableGroupListController::itemAt(int i)
+QSharedPointer<OSListItem> WorkflowController::itemAt(int i)
 {
   if( i >= 0 && i < count() )
   {
-    return m_variableGroupItems[i];
+    return m_workflowSectionItems[i];
   }
 
   return QSharedPointer<OSListItem>();
 }
 
-int VariableGroupListController::count()
+int WorkflowController::count()
 {
-  return m_variableGroupItems.size();
+  return m_workflowSectionItems.size();
 }
 
-VariableGroupItem::VariableGroupItem(MeasureType measureType, const QString & label, bool filterFixed, BaseApp *t_baseApp)
+WorkflowSectionItem::WorkflowSectionItem(MeasureType measureType, const QString & label, BaseApp *t_baseApp)
   : OSListItem(),
-    m_label(label)
+    m_label(label),
+    m_measureType(measureType)
 {
-  m_variableListController = QSharedPointer<VariableListController>(new VariableListController(measureType, filterFixed, t_baseApp));
+  m_workflowStepController = QSharedPointer<WorkflowStepController>(new WorkflowStepController(measureType, t_baseApp));
 }
 
-QString VariableGroupItem::label() const
+QString WorkflowSectionItem::label() const
 {
   return m_label;
 }
 
-QSharedPointer<VariableListController> VariableGroupItem::variableListController() const
+QSharedPointer<WorkflowStepController> WorkflowSectionItem::workflowStepController() const
 {
-  return m_variableListController;
+  return m_workflowStepController;
 }
 
-VariableGroupItemDelegate::VariableGroupItemDelegate(bool t_fixedMeasuresOnly)
-  : m_fixedMeasuresOnly(t_fixedMeasuresOnly)
+WorkflowSectionItemDelegate::WorkflowSectionItemDelegate()
 {
 }
 
-QWidget * VariableGroupItemDelegate::view(QSharedPointer<OSListItem> dataSource)
+QWidget * WorkflowSectionItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 {
-  if( QSharedPointer<VariableGroupItem> variableGroupItem = dataSource.objectCast<VariableGroupItem>() )
+  if( QSharedPointer<WorkflowSectionItem> workflowSectionItem = dataSource.objectCast<WorkflowSectionItem>() )
   {
-    QSharedPointer<VariableListController> variableListController = variableGroupItem->variableListController();
-    QSharedPointer<VariableItemDelegate> variableItemDelegate = QSharedPointer<VariableItemDelegate>(new VariableItemDelegate());
+    QSharedPointer<WorkflowStepController> workflowStepController = workflowSectionItem->workflowStepController();
+    QSharedPointer<WorkflowStepItemDelegate> workflowStepItemDelegate = QSharedPointer<WorkflowStepItemDelegate>(new WorkflowStepItemDelegate());
 
-    MeasureType measureType = variableListController->measureType();
-    QString acceptedMimeType = MeasureDragData::mimeType(measureType);
+    boost::optional<MeasureType> measureType = workflowStepController->measureType();
+    
+    // DLM: for now we are only showing measure steps
+    OS_ASSERT(measureType);
 
-    // reporting measures cannot have measure groups
-    bool fixedMeasuresOnly = (m_fixedMeasuresOnly || (measureType == MeasureType::ReportingMeasure));
-    auto variableGroupItemView = new VariableGroupItemView(fixedMeasuresOnly, measureType);
+    QString acceptedMimeType = MeasureDragData::mimeType(*measureType);
 
-    if (!fixedMeasuresOnly)
-    {
-      variableGroupItemView->variableGroupContentView->newGroupView->setVisible(true);
-      variableGroupItemView->variableGroupContentView->newGroupView->dropZone->setAcceptedMimeType(acceptedMimeType);
+    auto workflowSectionView = new WorkflowSectionView(*measureType);
 
-      connect(variableGroupItemView->variableGroupContentView->newGroupView->dropZone, &NewGroupDropZone::dataDropped, variableListController.data(), &VariableListController::addItemForDroppedMeasure);
-    }
+    workflowSectionView->content->newMeasureDropZone->setAcceptedMimeType(acceptedMimeType);
 
-    variableGroupItemView->variableGroupContentView->newFixedGroupView->dropZone->setAcceptedMimeType(acceptedMimeType);
+    connect(workflowSectionView->content->newMeasureDropZone, &NewMeasureDropZone::dataDropped, workflowStepController.data(), &WorkflowStepController::addItemForDroppedMeasure);
 
-    connect(variableGroupItemView->variableGroupContentView->newFixedGroupView->dropZone, &NewGroupDropZone::dataDropped, variableListController.data(), &VariableListController::addFixedItemForDroppedMeasure);
+    workflowSectionView->content->workflowStepsView->setListController(workflowStepController);
+    workflowSectionView->content->workflowStepsView->setDelegate(workflowStepItemDelegate);
 
-    variableGroupItemView->variableGroupContentView->variableListView->setListController(variableListController);
-    variableGroupItemView->variableGroupContentView->variableListView->setDelegate(variableItemDelegate);
+    workflowSectionView->header->label->setText(workflowSectionItem->label());
 
-    variableGroupItemView->variableGroupHeader->label->setText(variableGroupItem->label());
-
-    return variableGroupItemView;
+    return workflowSectionView;
   }
 
   return new QWidget();
 }
 
-VariableListController::VariableListController(MeasureType measureType, bool filterFixed, openstudio::BaseApp *t_app)
+WorkflowStepController::WorkflowStepController(MeasureType measureType, openstudio::BaseApp *t_app)
   : OSListController(),
     m_app(t_app),
-    m_measureType(measureType),
-    m_filterFixed(filterFixed)
+    m_measureType(measureType)
 {
 }
 
-MeasureType VariableListController::measureType() const
+boost::optional<MeasureType> WorkflowStepController::measureType() const
 {
   return m_measureType;
 }
 
-QSharedPointer<OSListItem> VariableListController::itemAt(int i)
+QSharedPointer<OSListItem> WorkflowStepController::itemAt(int i)
 {
+  /* DLM: TODO 
   std::vector<analysis::MeasureGroup> vars = variables();
 
   if( i >= 0 && i < (int)vars.size() )
@@ -193,15 +177,20 @@ QSharedPointer<OSListItem> VariableListController::itemAt(int i)
 
     return item;
   }
-
-  return QSharedPointer<VariableItem>();
+  */
+  return QSharedPointer<WorkflowStepItem>();
 }
 
-int VariableListController::count()
+int WorkflowStepController::count()
 {
-  return variables().size();
+  return 0;
+
+  // DLM: TODO
+  //return variables().size();
 }
 
+// DLM: TODO
+/*
 std::vector<analysis::MeasureGroup> VariableListController::variables() const
 {
   std::vector<analysis::MeasureGroup> result;
@@ -286,9 +275,10 @@ std::vector<analysis::MeasureGroup> VariableListController::variables() const
 
   return result;
 }
-
-void VariableListController::removeItemForVariable(analysis::MeasureGroup variable)
+*/
+void WorkflowStepController::removeItemForStep(WorkflowStep step)
 {
+  /* DLM: TODO 
   if( boost::optional<analysisdriver::SimpleProject> project = m_app->project() )
   {
     std::vector<analysis::MeasureGroup> vars = variables();
@@ -320,18 +310,16 @@ void VariableListController::removeItemForVariable(analysis::MeasureGroup variab
       emit itemRemoved(i);
     }
   }
+  */
 }
 
-void VariableListController::addItemForDroppedMeasure(QDropEvent *event)
+void WorkflowStepController::addItemForDroppedMeasure(QDropEvent *event)
 {
-  addItemForDroppedMeasureImpl(event, false);
+  // DLM: TODO
+  //addItemForDroppedMeasureImpl(event, false);
 }
 
-void VariableListController::addFixedItemForDroppedMeasure(QDropEvent *event)
-{
-  addItemForDroppedMeasureImpl(event, true);
-}
-
+/* DLM: TODO
 void VariableListController::addItemForDroppedMeasureImpl(QDropEvent * event, bool t_fixed)
 {
   if( boost::optional<analysisdriver::SimpleProject> project = m_app->project() )
@@ -434,8 +422,10 @@ void VariableListController::addItemForDroppedMeasureImpl(QDropEvent * event, bo
     }
   }
 }
+*/
 
-void VariableListController::moveUp(analysis::MeasureGroup variable)
+/* DLM: TODO
+void WorkflowStepController::moveUp(analysis::MeasureGroup variable)
 {
   if( boost::optional<analysisdriver::SimpleProject> project = m_app->project() )
   {
@@ -484,8 +474,10 @@ void VariableListController::moveUp(analysis::MeasureGroup variable)
     }
   }
 }
+*/
 
-void VariableListController::moveDown(analysis::MeasureGroup variable)
+/* DLM: TODO
+void WorkflowStepController::moveDown(analysis::MeasureGroup variable)
 {
   if( boost::optional<analysisdriver::SimpleProject> project = m_app->project() )
   {
@@ -533,57 +525,41 @@ void VariableListController::moveDown(analysis::MeasureGroup variable)
     }
   }
 }
+*/
 
-VariableItem::VariableItem(const analysis::MeasureGroup & variable, MeasureType measureType, openstudio::BaseApp *t_app)
+WorkflowStepItem::WorkflowStepItem(WorkflowStep step, openstudio::BaseApp *t_app)
   : OSListItem(),
     m_app(t_app),
-    m_variable(variable),
-    m_measureType(measureType)
+    m_step(step)
 {
-  m_measureListController = QSharedPointer<MeasureListController>(new MeasureListController(this, t_app));
 }
 
-QString VariableItem::name() const
+QString WorkflowStepItem::name() const
 {
-  return QString::fromStdString(m_variable.name());
+  // DLM: TODO
+  //return QString::fromStdString(m_step.name());
+  return QString();
 }
 
-void VariableItem::setName(const QString & name)
+void WorkflowStepItem::setName(const QString & name)
 {
-  m_variable.setName(name.toStdString());
+  //m_step.setName(name.toStdString());
 }
 
-QString VariableItem::displayName() const
+QString WorkflowStepItem::displayName() const
 {
-  return QString::fromStdString(m_variable.displayName());
+  // DLM: TODO
+  //return QString::fromStdString(m_step.displayName());
+  return QString();
 }
 
-void VariableItem::setDisplayName(const QString & displayName)
+void WorkflowStepItem::setDisplayName(const QString & displayName)
 {
-  m_variable.setDisplayName(displayName.toStdString());
+  // DLM: TODO
+  //m_step.setDisplayName(displayName.toStdString());
 }
 
-bool VariableItem::isAlternativeModelVariable() const
-{
-  if (boost::optional<analysisdriver::SimpleProject> project = m_app->project()){
-    
-    analysis::OptionalMeasureGroup modelSwapVariable = project->getAlternativeModelVariable();
-    analysis::OptionalMeasureGroup dvar = m_variable.optionalCast<analysis::MeasureGroup>();
-
-    if (modelSwapVariable && dvar && (*dvar == *modelSwapVariable)) {
-      return true;
-    }
-  }
-
-  return false;
-}
-
-bool VariableItem::isFixedMeasure()
-{
-  // logic borrowed from Problem.cpp:numStaticTransformations
-  return m_variable.numMeasures(true) < 2;
-}
-
+/* DLM: TODO
 void VariableItem::remove()
 {
   // check if we have data points other than the baseline
@@ -616,21 +592,25 @@ void VariableItem::remove()
 
   qobject_cast<VariableListController *>(controller())->removeItemForVariable(m_variable);
 }
+*/
 
-void VariableItem::moveUp()
+void WorkflowStepItem::moveUp()
 {
-  qobject_cast<VariableListController *>(controller())->moveUp(m_variable);
+  // DLM: TODO
+  //qobject_cast<WorkflowStepController *>(controller())->moveUp(m_step);
 }
 
-void VariableItem::moveDown()
+void WorkflowStepItem::moveDown()
 {
-  qobject_cast<VariableListController *>(controller())->moveDown(m_variable);
+  // DLM: TODO
+  //qobject_cast<WorkflowStepController *>(controller())->moveDown(m_step);
 }
 
-QWidget * VariableItemDelegate::view(QSharedPointer<OSListItem> dataSource)
+QWidget * WorkflowStepItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 {
-  if(QSharedPointer<VariableItem> variableItem = dataSource.objectCast<VariableItem>())
+  if(QSharedPointer<WorkflowStepItem> workflowStepItem = dataSource.objectCast<WorkflowStepItem>())
   {
+    /* DLM: TODO
     auto variableItemView = new VariableItemView(variableItem->isFixedMeasure());
     variableItemView->variableHeaderView->variableNameEdit->setText(variableItem->displayName());
 
@@ -664,11 +644,28 @@ QWidget * VariableItemDelegate::view(QSharedPointer<OSListItem> dataSource)
     }
 
     return variableItemView;
+    */
   }
 
   return new QWidget();
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* DLM: DELETE
 MeasureListController::MeasureListController(VariableItem * variableItem, openstudio::BaseApp *t_app)
   : OSListController(),
     m_app(t_app),
@@ -1090,7 +1087,7 @@ QWidget * MeasureItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 
   return new QWidget();
 }
-
+*/
 } // measuretab
 
 
