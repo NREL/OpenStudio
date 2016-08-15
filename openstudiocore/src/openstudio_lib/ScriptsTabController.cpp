@@ -23,8 +23,8 @@
 #include "ScriptFolderListView.hpp"
 #include "ScriptsTabView.hpp"
 
-//#include "../shared_gui_components/VariableList.hpp"
-#include "../shared_gui_components/VariableView.hpp"
+#include "../shared_gui_components/WorkflowController.hpp"
+#include "../shared_gui_components/WorkflowView.hpp"
 
 #include "../model/Model.hpp"
 
@@ -34,24 +34,11 @@ ScriptsTabController::ScriptsTabController()
   : MainTabController(new ScriptsTabView(nullptr)), scriptsTabView(dynamic_cast<ScriptsTabView *>(mainContentWidget()))
 {
 
-  //m_variableGroupListController = QSharedPointer<openstudio::measuretab::VariableGroupListController>(new openstudio::measuretab::VariableGroupListController(false, OSAppBase::instance()));
-  //m_variableGroupItemDelegate = QSharedPointer<openstudio::measuretab::VariableGroupItemDelegate>(new openstudio::measuretab::VariableGroupItemDelegate(true));
+  m_workflowController = QSharedPointer<openstudio::measuretab::WorkflowController>(new openstudio::measuretab::WorkflowController(OSAppBase::instance()));
+  m_workflowSectionItemDelegate = QSharedPointer<openstudio::measuretab::WorkflowSectionItemDelegate>(new openstudio::measuretab::WorkflowSectionItemDelegate());
 
-  //m_groups[MeasureType::ModelMeasure] = QString("OpenStudio Measures");
-  ////m_groups[MeasureType::EnergyPlusMeasure] = QString("EnergyPlus Measures");
-
-  //for( std::map<MeasureType,QString>::const_iterator it = m_groups.begin();
-  //     it != m_groups.end();
-  //     it++ )
-  //{
-  //  QSharedPointer<VariableGroupItem> variableGroupItem;
-  //  variableGroupItem = QSharedPointer<VariableGroupItem>(new VariableGroupItem(it->first,it->second));
-  //  m_variableGroupListController->addItem(variableGroupItem);
-  //}
-
-  //scriptsTabView->variableGroupListView->setListController(m_variableGroupListController);
-  //scriptsTabView->variableGroupListView->setDelegate(m_variableGroupItemDelegate);
-
+  scriptsTabView->workflowView->setListController(m_workflowController);
+  scriptsTabView->workflowView->setDelegate(m_workflowSectionItemDelegate);
 }
 
 ScriptsTabController::~ScriptsTabController()

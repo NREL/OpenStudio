@@ -53,10 +53,10 @@ ScriptsTabView::ScriptsTabView(QWidget * parent)
 
   addTabWidget(mainContent);
 
-  variableGroupListView = new OSListView(true);
-  variableGroupListView->setContentsMargins(0,0,0,0);
-  variableGroupListView->setSpacing(0);
-  mainContentVLayout->addWidget(variableGroupListView);
+  workflowView = new OSListView(true);
+  workflowView->setContentsMargins(0,0,0,0);
+  workflowView->setSpacing(0);
+  mainContentVLayout->addWidget(workflowView);
 
   QString style;
   style.append("QWidget#Footer {");
@@ -100,7 +100,7 @@ void ScriptsTabView::showEvent(QShowEvent *e)
   //    OSAppBase::instance()->measureManager().updateMeasures(*project, project->measures(), false);
   //  }
   //}
-  variableGroupListView->refreshAllViews();
+  workflowView->refreshAllViews();
 }
 
 //*****SLOTS*****

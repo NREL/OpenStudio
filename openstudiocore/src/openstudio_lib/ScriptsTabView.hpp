@@ -41,7 +41,7 @@ class ScriptsTabView : public MainTabView
 
   QWidget * mainContent;
 
-  OSListView * variableGroupListView;
+  OSListView * workflowView;
 
   protected:
 
