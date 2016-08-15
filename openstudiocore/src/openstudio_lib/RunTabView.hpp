@@ -40,7 +40,7 @@ class QToolButton;
 
 namespace openstudio {
 
-  //class RunView;
+  class RunView;
 
   //namespace runmanager {
   //  class JobStatusWidget;
@@ -84,9 +84,19 @@ namespace openstudio {
   //    //model::myModelClass m_run;
   //};
 
-  //class RunView : public QWidget
-  //{
-  //  Q_OBJECT;
+  class RunView : public QWidget
+  {
+    Q_OBJECT;
+
+    public:
+
+    RunView();
+
+    private:
+
+    QToolButton * m_playButton;
+    QProgressBar * m_progressBar;
+    QLabel * m_statusLabel;
 
 
   //  public:
@@ -157,7 +167,7 @@ namespace openstudio {
   //
   //    bool m_canceling;
   //    bool m_statsConnected;
-  //};
+  };
 
   class RunTabView : public MainTabView
   {
@@ -175,7 +185,7 @@ namespace openstudio {
 
     private:
 
-      //RunView * m_runView;
+      RunView * m_runView;
       //openstudio::runmanager::JobStatusWidget * m_status;
   };
 

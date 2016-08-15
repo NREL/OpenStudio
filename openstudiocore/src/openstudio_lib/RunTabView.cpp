@@ -77,15 +77,51 @@ namespace openstudio {
 
 RunTabView::RunTabView(const model::Model & model,
   QWidget * parent)
-  : MainTabView("Run Simulation", MainTabView::SUB_TAB, parent)
-    //m_runView(new RunView(model)),
+  : MainTabView("Run Simulation", MainTabView::MAIN_TAB, parent),
+    m_runView(new RunView())
     //m_status(new openstudio::runmanager::JobStatusWidget(m_runView->runManager()))
 {
+  addTabWidget(m_runView);
   //addSubTab("Output", m_runView);
   //addSubTab("Tree", m_status);
 
   //connect(m_runView, SIGNAL(resultsGenerated(const openstudio::path &)),
   //    this, SIGNAL(resultsGenerated(const openstudio::path &)));
+}
+
+RunView::RunView()
+  : QWidget()
+{
+  auto mainLayout = new QGridLayout();
+  mainLayout->setContentsMargins(5,5,5,5);
+  mainLayout->setSpacing(5);
+  setLayout(mainLayout);
+
+  m_playButton = new QToolButton();
+  m_playButton->setText("     Run");
+  m_playButton->setCheckable(true);
+  m_playButton->setChecked(false);
+  QIcon playbuttonicon(QPixmap(":/images/run_simulation_button.png"));
+  playbuttonicon.addPixmap(QPixmap(":/images/run_simulation_button.png"), QIcon::Normal, QIcon::Off);
+  playbuttonicon.addPixmap(QPixmap(":/images/cancel_simulation_button.png"), QIcon::Normal, QIcon::On);
+  m_playButton->setStyleSheet("QToolButton { background:transparent; font: bold; }");
+  m_playButton->setIconSize(QSize(35,35));
+  m_playButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+  m_playButton->setIcon(playbuttonicon);
+  m_playButton->setLayoutDirection(Qt::RightToLeft);
+  m_playButton->setStyleSheet("QAbstractButton:!hover { border: none; }");
+  
+  mainLayout->addWidget(m_playButton, 0, 0);
+  //connect(m_playButton, &QToolButton::clicked, this, &RunView::playButtonClicked);
+  
+  // Progress bar area
+  m_progressBar = new QProgressBar();
+  
+  auto progressbarlayout = new QVBoxLayout();
+  progressbarlayout->addWidget(m_progressBar);
+  //m_statusLabel = new QLabel("Ready");
+  //progressbarlayout->addWidget(m_statusLabel);
+  mainLayout->addLayout(progressbarlayout, 0, 1);
 }
 
 //RunView::RunView(const model::Model & model,

@@ -60,8 +60,10 @@ int main(int argc, char *argv[])
   }
   */
 
+#ifdef Q_OS_WIN
 #pragma warning(disable : 4930 )
 #pragma warning(disable : 4101 )
+#endif
 
 #ifdef QT_STATIC
   Q_IMPORT_PLUGIN(QSQLiteDriverPlugin);
