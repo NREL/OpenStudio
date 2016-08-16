@@ -62,9 +62,10 @@ ResultsTabView::ResultsTabView(const QString & tabLabel,
   m_resultsView->setAutoFillBackground(false);
 
   auto savePath = OSAppBase::instance()->currentDocument()->savePath();
-  openstudio::path searchPath = toPath(savePath).parent_path() / toPath(savePath).stem() / openstudio::toPath("run");
-  m_resultsView->searchForExistingResults(searchPath);
-
+  if( ! savePath.isEmpty() ) {
+    openstudio::path searchPath = toPath(savePath).parent_path() / toPath(savePath).stem() / openstudio::toPath("run");
+    m_resultsView->searchForExistingResults(searchPath);
+  }
 }
 
 void ResultsTabView::onUnitSystemChange(bool t_isIP) 
