@@ -37,6 +37,8 @@ class QPushButton;
 class QRadioButton;
 class QStackedWidget;
 class QToolButton;
+class QTextEdit;
+class QProcess;
 
 namespace openstudio {
 
@@ -94,9 +96,15 @@ namespace openstudio {
 
     private:
 
+    REGISTER_LOGGER("openstudio::RunView");
+
+    void playButtonClicked(bool t_checked);
+
     QToolButton * m_playButton;
     QProgressBar * m_progressBar;
     QLabel * m_statusLabel;
+    QTextEdit * m_textInfo;
+    QProcess * m_runProcess;
 
 
   //  public:

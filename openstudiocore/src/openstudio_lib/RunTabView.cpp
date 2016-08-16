@@ -72,6 +72,9 @@
 #include <QTimer>
 #include <QToolButton>
 #include <QVBoxLayout>
+#include <QTextEdit>
+#include <QProcess>
+#include <QStandardPaths>
 
 namespace openstudio {
 
@@ -112,7 +115,7 @@ RunView::RunView()
   m_playButton->setStyleSheet("QAbstractButton:!hover { border: none; }");
   
   mainLayout->addWidget(m_playButton, 0, 0);
-  //connect(m_playButton, &QToolButton::clicked, this, &RunView::playButtonClicked);
+  connect(m_playButton, &QToolButton::clicked, this, &RunView::playButtonClicked);
   
   // Progress bar area
   m_progressBar = new QProgressBar();
@@ -122,6 +125,55 @@ RunView::RunView()
   //m_statusLabel = new QLabel("Ready");
   //progressbarlayout->addWidget(m_statusLabel);
   mainLayout->addLayout(progressbarlayout, 0, 1);
+
+  m_textInfo = new QTextEdit();
+  mainLayout->addWidget(m_textInfo,1,0,1,2);
+
+  m_runProcess = new QProcess(this);
+}
+
+void RunView::playButtonClicked(bool t_checked)
+{
+  LOG(Debug, "playButtonClicked " << t_checked);
+
+  std::shared_ptr<OSDocument> osdocument = OSAppBase::instance()->currentDocument();
+
+  //updateToolsWarnings();
+
+  if (t_checked) {
+    // run
+
+    if(osdocument->modified())
+    {
+      osdocument->save();
+      // save dialog was canceled
+      if(osdocument->modified()) {
+        m_playButton->setChecked(false);
+        return;
+      }
+    }
+
+    QStringList paths;
+    paths << QCoreApplication::applicationDirPath();
+    auto openstudioExePath = QStandardPaths::findExecutable("openstudio", paths);
+
+    QStringList arguments;
+    //QString::fromStdString(osdocument->model().workflowJSON().oswPath()->string())
+    auto savePath = toPath(osdocument->savePath());
+    auto baseName = savePath.stem();
+    auto parentPath = savePath.parent_path();
+    auto workflowPath = parentPath / baseName / "workflow.osw";
+    auto workflowJSONPath = QString::fromStdString(workflowPath.string());
+    arguments << "run" << "-w" << workflowJSONPath;
+
+    LOG(Debug, "run exe" << openstudioExePath.toStdString());
+    LOG(Debug, "run arguments" << arguments.join(";").toStdString());
+
+    m_runProcess->start(openstudioExePath, arguments);
+  } else {
+    // stop running
+    m_runProcess->kill();
+  }
 }
 
 //RunView::RunView(const model::Model & model,
@@ -446,120 +498,6 @@ RunView::RunView()
 //  }
 //}
 //
-//void RunView::playButtonClicked(bool t_checked)
-//{
-//  LOG(Debug, "playButtonClicked " << t_checked);
-//
-//  std::shared_ptr<OSDocument> osdocument = OSAppBase::instance()->currentDocument();
-//
-//  if(osdocument->modified())
-//  {
-//    osdocument->save();
-//    // save dialog was canceled
-//    if(osdocument->modified()) {
-//      return;
-//    }
-//  }
-//
-//  updateToolsWarnings();
-//
-//  if (!t_checked)
-//  {
-//    m_playButton->setChecked(true);
-//
-//    if (!m_canceling)
-//    {
-//      // we are pausing the simulations
-//      m_statusLabel->setText("Canceling");
-//      m_canceling = true;
-//      openstudio::Application::instance().processEvents();
-//      runmanager::RunManager rm = runManager();
-//      pauseRunManager(rm);
-//    } else {
-//      LOG(Debug, "Already canceling, not doing it again");
-//    }
-//  } else {
-//    runmanager::ConfigOptions co(true);
-//    co.findTools(true, true, false, true);
-//    co.saveQSettings();
-//
-//    updateToolsWarnings();
-//
-//    openstudio::runmanager::ToolVersion epver = getRequiredEnergyPlusVersion();
-//    if (co.getTools().getAllByName("energyplus").getAllByVersion(epver).tools().size() == 0)
-//    {
-//      if( auto tag = epver.getTag() ) {
-//        QMessageBox::information(this, 
-//            "Missing EnergyPlus",
-//            QString::fromStdString("EnergyPlus " +
-//            std::to_string(epver.getMajor().get()) + "." +
-//            std::to_string(epver.getMinor().get()) + "." +
-//            std::to_string(epver.getBuild().get()) + " Build \"" +
-//            tag.get() + "\" could not be located, simulation aborted."),
-//            QMessageBox::Ok);
-//      } else {
-//        QMessageBox::information(this, 
-//            "Missing EnergyPlus",
-//            QString::fromStdString("EnergyPlus " +
-//            std::to_string(epver.getMajor().get()) + "." +
-//            std::to_string(epver.getMinor().get()) + "." +
-//            std::to_string(epver.getBuild().get()) + 
-//            " could not be located, simulation aborted."),
-//            QMessageBox::Ok);
-//      }
-//      m_playButton->setChecked(false);
-//      osdocument->enableTabsAfterRun();
-//      return;
-//    }
-//
-//    if (co.getTools().getAllByName("ruby").tools().size() == 0)
-//    {
-//      QMessageBox::information(this,
-//          "Missing Ruby",
-//          "Ruby could not be located, simulation aborted.",
-//          QMessageBox::Ok);
-//      m_playButton->setChecked(false);
-//      osdocument->enableTabsAfterRun();
-//      return;
-//    }
-//
-//    // check for missing measure.rb file
-//    for (const BCLMeasure measure : OSAppBase::instance()->project()->measures()){
-//      if (!measure.primaryRubyScriptPath()){
-//        QMessageBox::information(this, 
-//            "Missing Ruby Script", 
-//            toQString("Measure '" + measure.displayName() + "' is missing it's measure.rb file, update this measure and try again."),
-//            QMessageBox::Ok);
-//        m_playButton->setChecked(false);
-//        osdocument->enableTabsAfterRun();
-//        return;
-//      }
-//    }
-//
-//    // TODO call Dan's ModelToRad translator to determine if there are problems
-//    //if(m_radianceButton->isChecked() && (!m_radianceWarnings.empty() || !m_radianceErrors.empty())) {
-//    //  showRadianceWarningsAndErrors(m_radianceWarnings, m_radianceErrors);
-//    // if(m_radianceErrors.size()){
-//    //    return;
-//    //  }
-//    //  else{
-//    //    // check messageBox return value to run with warnings
-//    //  }
-//    //}
-//
-//    m_canceling = false;
-//    m_outputWindow->clear();
-//
-//    // reset the model's sqlFile
-//    osdocument->model().resetSqlFile();
-//
-//    // Tell OSDoc that great things are happening
-//    osdocument->disableTabsDuringRun();
-//
-//    // we are starting the simulations
-//    QTimer::singleShot(0, this, SLOT(requestStartRunManager()));
-//  }
-//}
 //
 //void RunView::requestStartRunManager()
 //{
