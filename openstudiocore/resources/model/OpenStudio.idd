@@ -26384,6 +26384,7 @@ OS:EnergyManagementSystem:Sensor,
        \note This name becomes a variable for use in Erl programs
        \note No spaces allowed in names for ErlVariableNames
        \reference ErlVariableNames
+       \reference AllObjects
   A3 , \field Output Variable or Output Meter Index Key Name
        \type alpha
        \note key name listed here will override key name in Output:Variable or Output:Meter
@@ -26404,9 +26405,10 @@ OS:EnergyManagementSystem:Actuator,
        \note This name becomes a variable for use in Erl programs
        \note No spaces allowed in names for ErlVariableNames
        \reference ErlVariableNames
+       \reference AllObjects
   A3 , \field Actuated Component Name
        \required-field
-       \type alpha
+       \type object-list
        \object-list AllObjects
   A4 ; \field Actuated Component Control Type
        \required-field

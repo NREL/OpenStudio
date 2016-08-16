@@ -206,6 +206,7 @@ namespace detail {
 
     //assume body is a vector of strings
     for (int i = 0; i < body.size(); i++) {
+      //split string on whitespaces to isolate possible uids
       std::vector<std::string> results = splitString(body[i], ' ');
       for (int j = 0; j < results.size(); j++) {
         if (results[j].size() == 36) {
