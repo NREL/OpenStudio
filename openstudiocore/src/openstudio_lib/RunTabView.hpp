@@ -65,11 +65,17 @@ namespace openstudio {
 
     //void onFileChanged(const QString &path);
 
+    void onOpenSimDirClicked();
+
+    // Given an osm file, return the companion directory
+    path resourcePath(const path & osmPath) const;
+
     QToolButton * m_playButton;
     QProgressBar * m_progressBar;
     QLabel * m_statusLabel;
     QTextEdit * m_textInfo;
     QProcess * m_runProcess;
+    QPushButton * m_openSimDirButton;
     //QFileSystemWatcher * m_simDirWatcher;
     //QFileSystemWatcher * m_eperrWatcher;
   };

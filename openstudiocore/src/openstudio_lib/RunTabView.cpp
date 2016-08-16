@@ -76,6 +76,8 @@
 #include <QProcess>
 #include <QStandardPaths>
 #include <QFileSystemWatcher>
+#include <QDesktopServices>
+#include <QMessageBox>
 
 namespace openstudio {
 
@@ -83,26 +85,20 @@ RunTabView::RunTabView(const model::Model & model,
   QWidget * parent)
   : MainTabView("Run Simulation", MainTabView::MAIN_TAB, parent),
     m_runView(new RunView())
-    //m_status(new openstudio::runmanager::JobStatusWidget(m_runView->runManager()))
 {
   addTabWidget(m_runView);
-  //addSubTab("Output", m_runView);
-  //addSubTab("Tree", m_status);
-
-  //connect(m_runView, SIGNAL(resultsGenerated(const openstudio::path &)),
-  //    this, SIGNAL(resultsGenerated(const openstudio::path &)));
 }
 
 RunView::RunView()
   : QWidget()
 {
   auto mainLayout = new QGridLayout();
-  mainLayout->setContentsMargins(5,5,5,5);
+  mainLayout->setContentsMargins(10,10,10,10);
   mainLayout->setSpacing(5);
   setLayout(mainLayout);
 
   m_playButton = new QToolButton();
-  m_playButton->setText("     Run");
+  m_playButton->setText("Run");
   m_playButton->setCheckable(true);
   m_playButton->setChecked(false);
   QIcon playbuttonicon(QPixmap(":/images/run_simulation_button.png"));
@@ -123,12 +119,17 @@ RunView::RunView()
   
   auto progressbarlayout = new QVBoxLayout();
   progressbarlayout->addWidget(m_progressBar);
-  //m_statusLabel = new QLabel("Ready");
-  //progressbarlayout->addWidget(m_statusLabel);
   mainLayout->addLayout(progressbarlayout, 0, 1);
 
+  m_openSimDirButton = new QPushButton();
+  m_openSimDirButton->setText("Show Simulation");
+  m_openSimDirButton->setFlat(true);
+  m_openSimDirButton->setObjectName("StandardGrayButton");
+  connect(m_openSimDirButton, &QPushButton::clicked, this, &RunView::onOpenSimDirClicked);
+  mainLayout->addWidget(m_openSimDirButton,0,2);
+
   m_textInfo = new QTextEdit();
-  mainLayout->addWidget(m_textInfo,1,0,1,2);
+  mainLayout->addWidget(m_textInfo,1,0,1,3);
 
   m_runProcess = new QProcess(this);
   connect(m_runProcess, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &RunView::onRunProcessFinished);
@@ -136,8 +137,17 @@ RunView::RunView()
   //m_simDirWatcher = new QFileSystemWatcher(this);
   //connect(m_simDirWatcher, &QFileSystemWatcher::directoryChanged, this, &RunView::onSimDirChanged);
   //connect(m_simDirWatcher, &QFileSystemWatcher::fileChanged, this, &RunView::onFileChanged);
+  //m_eperrWatcher = new QFileSystemWatcher(this);
+}
 
-  m_eperrWatcher = new QFileSystemWatcher(this);
+void RunView::onOpenSimDirClicked()
+{
+  std::shared_ptr<OSDocument> osdocument = OSAppBase::instance()->currentDocument();
+  QString url = QString::fromStdString((resourcePath(toPath(osdocument->savePath())) / "run").string());
+  QUrl qurl = QUrl::fromLocalFile(url);
+  if( ! QDesktopServices::openUrl(qurl) ) {
+    QMessageBox::critical(this, "Unable to open simulation", "Please save the OpenStudio Model to view the simulation.");
+  }
 }
 
 void RunView::onRunProcessFinished(int exitCode, QProcess::ExitStatus status)
@@ -155,6 +165,14 @@ void RunView::onRunProcessFinished(int exitCode, QProcess::ExitStatus status)
 //{
 //  LOG(Debug, "File Changed: " << path.toStdString());
 //}
+
+openstudio::path RunView::resourcePath(const openstudio::path & osmPath) const
+{
+  auto baseName = osmPath.stem();
+  auto parentPath = osmPath.parent_path();
+  auto resourcePath = parentPath / baseName;
+  return resourcePath; 
+}
 
 void RunView::playButtonClicked(bool t_checked)
 {
@@ -181,13 +199,9 @@ void RunView::playButtonClicked(bool t_checked)
     paths << QCoreApplication::applicationDirPath();
     auto openstudioExePath = QStandardPaths::findExecutable("openstudio", paths);
 
-    QStringList arguments;
-    auto savePath = toPath(osdocument->savePath());
-    auto baseName = savePath.stem();
-    auto parentPath = savePath.parent_path();
-    auto resourcePath = parentPath / baseName;
-    auto workflowPath = resourcePath / "workflow.osw";
+    auto workflowPath = resourcePath(toPath(osdocument->savePath())) / "workflow.osw";
     auto workflowJSONPath = QString::fromStdString(workflowPath.string());
+    QStringList arguments;
     arguments << "run" << "-w" << workflowJSONPath;
 
     LOG(Debug, "run exe" << openstudioExePath.toStdString());
