@@ -61,26 +61,16 @@ ResultsTabView::ResultsTabView(const QString & tabLabel,
   addTabWidget(m_resultsView);
   m_resultsView->setAutoFillBackground(false);
 
-  connect(this, &ResultsTabView::treeChanged, m_resultsView, &ResultsView::treeChanged);
+  auto savePath = OSAppBase::instance()->currentDocument()->savePath();
+  openstudio::path searchPath = toPath(savePath).parent_path() / toPath(savePath).stem() / openstudio::toPath("run");
+  m_resultsView->searchForExistingResults(searchPath);
 
-}
-
-void ResultsTabView::searchForExistingResults(const openstudio::path &t_runDir)
-{
-  LOG(Debug, "searchForExistingResults " << openstudio::toString(t_runDir));
-  m_resultsView->searchForExistingResults(t_runDir);
 }
 
 void ResultsTabView::onUnitSystemChange(bool t_isIP) 
 {
   LOG(Debug, "onUnitSystemChange " << t_isIP << " reloading results");
   m_resultsView->onUnitSystemChange(t_isIP);
-}
-
-void ResultsTabView::resultsGenerated(const openstudio::path &t_sqlFilePath, const openstudio::path &t_radianceResultsPath)
-{
-  LOG(Debug, "resultsGenerated " << openstudio::toString(t_sqlFilePath) << " " << openstudio::toString(t_radianceResultsPath));
-  m_resultsView->resultsGenerated(t_sqlFilePath, t_radianceResultsPath);
 }
 
 //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

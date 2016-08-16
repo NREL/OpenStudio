@@ -778,10 +778,6 @@ namespace openstudio {
       m_mainTabController = std::shared_ptr<MainTabController>(new RunTabController(m_model, openstudio::toPath(m_savePath), openstudio::toPath(m_modelTempDir)));//, m_simpleProject->runManager()));
       m_mainWindow->setView(m_mainTabController->mainContentWidget(), RUN_SIMULATION);
 
-      //connect(qobject_cast<RunTabController *>(m_mainTabController.get()), &RunTabController::useRadianceStateChanged, this, &OSDocument::markAsModified);
-
-      connect(qobject_cast<RunTabController *>(m_mainTabController.get()), &RunTabController::resultsGenerated, this, &OSDocument::runComplete);
-
       connect(qobject_cast<RunTabController *>(m_mainTabController.get()), &RunTabController::toolsUpdated, this, &OSDocument::markAsModified);
 
       connect(this, &OSDocument::toolsUpdated, this, &OSDocument::markAsModified);
@@ -797,8 +793,6 @@ namespace openstudio {
 
       m_mainTabController = std::shared_ptr<MainTabController>(new ResultsTabController());
       m_mainWindow->setView(m_mainTabController->mainContentWidget(), RESULTS_SUMMARY);
-
-      qobject_cast<ResultsTabController *>(m_mainTabController.get())->searchForExistingResults(openstudio::toPath(m_modelTempDir) / openstudio::toPath("resources") / openstudio::toPath("run"));
 
       connect(this, &OSDocument::toggleUnitsClicked, qobject_cast<ResultsTabController *>(m_mainTabController.get()), &ResultsTabController::onUnitSystemChange);
 
@@ -891,23 +885,6 @@ namespace openstudio {
     m_mainWindow->verticalTabWidget()->enableTabButton(RESULTS_SUMMARY, m_enableTabsAfterRun);
 
     m_mainWindow->verticalTabWidget()->refreshTabButtons();
-  }
-
-  void OSDocument::runComplete()
-  {
-    if (!m_savePath.isEmpty()){
-      // copy all the simulation output to the save location
-      // do not want to save the database or osm here
-      saveModelTempDir(toPath(m_modelTempDir), toPath(m_savePath));
-
-      // search for E+ and Radiance results in the save directory
-      openstudio::path searchPath = toPath(m_savePath).parent_path() / toPath(m_savePath).stem() / openstudio::toPath("run");
-      if (openstudio::filesystem::exists(searchPath)) {
-        if (qobject_cast<ResultsTabController *>(m_mainTabController.get())){
-          qobject_cast<ResultsTabController *>(m_mainTabController.get())->searchForExistingResults(searchPath);
-        }
-      }
-    }
   }
 
   bool OSDocument::modified() const

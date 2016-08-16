@@ -228,8 +228,6 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   void markAsUnmodified();
 
-  void runComplete();
-
   void exportIdf();
 
   void exportgbXML();

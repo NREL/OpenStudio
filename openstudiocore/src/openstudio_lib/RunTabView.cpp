@@ -183,8 +183,6 @@ void RunView::playButtonClicked(bool t_checked)
 
   std::shared_ptr<OSDocument> osdocument = OSAppBase::instance()->currentDocument();
 
-  //updateToolsWarnings();
-
   if (t_checked) {
     // run
 
