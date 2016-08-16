@@ -154,6 +154,9 @@ void RunView::onRunProcessFinished(int exitCode, QProcess::ExitStatus status)
 {
   LOG(Debug, "run finished");
   m_playButton->setChecked(false);
+
+  std::shared_ptr<OSDocument> osdocument = OSAppBase::instance()->currentDocument();
+  osdocument->enableTabsAfterRun();
 }
 
 //void RunView::onSimDirChanged(const QString &path)
@@ -212,6 +215,8 @@ void RunView::playButtonClicked(bool t_checked)
     //std::ofstream outfile((resourcePath / "run/stdout-energyplus").string(),std::ofstream::trunc);
     //outfile.close();
     //m_simDirWatcher->addPath( QString::fromStdString((resourcePath / "run/stdout-energyplus").string()) );
+
+    osdocument->disableTabsDuringRun();
 
     m_runProcess->start(openstudioExePath, arguments);
   } else {
