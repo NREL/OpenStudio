@@ -597,7 +597,9 @@ void LocationView::onWeatherFileBtnClicked()
 
       weatherFile = openstudio::model::WeatherFile::setWeatherFile(m_model, epwFile);
       OS_ASSERT(weatherFile);
-      weatherFile->makeUrlRelative(toPath(m_modelTempDir) / toPath("resources"));
+      weatherFile->makeUrlRelative(toPath(m_modelTempDir) / toPath("resources/files"));
+
+      m_model.workflowJSON().setWeatherFile(newPath.filename());
 
       if (!previousEPWPath.empty()){
         if (previousEPWPath.filename() != newPath.filename()){

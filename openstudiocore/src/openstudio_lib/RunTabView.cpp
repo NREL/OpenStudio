@@ -130,6 +130,13 @@ RunView::RunView()
   mainLayout->addWidget(m_textInfo,1,0,1,2);
 
   m_runProcess = new QProcess(this);
+  connect(m_runProcess, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &RunView::onRunProcessFinished);
+}
+
+void RunView::onRunProcessFinished(int exitCode, QProcess::ExitStatus status)
+{
+  LOG(Debug, "run finished");
+  m_playButton->setChecked(false);
 }
 
 void RunView::playButtonClicked(bool t_checked)

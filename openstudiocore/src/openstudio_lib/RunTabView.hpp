@@ -26,6 +26,7 @@
 #include "MainTabView.hpp"
 #include <QComboBox>
 #include <QWidget>
+#include <QProcess>
 //#include "../runmanager/lib/ConfigOptions.hpp"
 //#include "../runmanager/lib/RunManager.hpp"
 //#include "../runmanager/lib/Workflow.hpp"
@@ -38,7 +39,6 @@ class QRadioButton;
 class QStackedWidget;
 class QToolButton;
 class QTextEdit;
-class QProcess;
 
 namespace openstudio {
 
@@ -99,6 +99,8 @@ namespace openstudio {
     REGISTER_LOGGER("openstudio::RunView");
 
     void playButtonClicked(bool t_checked);
+
+    void onRunProcessFinished(int exitCode, QProcess::ExitStatus status);
 
     QToolButton * m_playButton;
     QProgressBar * m_progressBar;
