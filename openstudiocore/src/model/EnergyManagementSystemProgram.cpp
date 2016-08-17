@@ -110,7 +110,7 @@ namespace detail {
     std::vector<bool> ok(body_minus_nl.size(), false);
     for (int i = 0; i < body_minus_nl.size(); i++) {
       WorkspaceExtensibleGroup group = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
-      result = group.setString(OS_EnergyManagementSystem_ProgramExtensibleFields::ProgramLine, body_minus_nl[i]);
+      result = group.setString(OS_EnergyManagementSystem_ProgramExtensibleFields::ProgramLine, body_minus_nl[i] + '\n');
       ok.push_back(result);
     }
     //check if all the programs set true
@@ -138,8 +138,21 @@ namespace detail {
   bool EnergyManagementSystemProgram_Impl::addLine(const std::string& line) {
     //add line to end of program body
     bool result = true;
+
+    // remove '\r' from the line string
+    std::string line_rn = line;
+    std::string::size_type pos = 0; // Must initialize
+    while ((pos = line_rn.find("\r", pos)) != std::string::npos) {
+      line_rn.erase(pos, 1);
+    }
+    // remove '\n' since we add it back in below
+    pos = 0;
+    while ((pos = line_rn.find("\n", pos)) != std::string::npos) {
+      line_rn.erase(pos, 1);
+    }
+
     WorkspaceExtensibleGroup group = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
-    result = group.setString(OS_EnergyManagementSystem_ProgramExtensibleFields::ProgramLine, line);
+    result = group.setString(OS_EnergyManagementSystem_ProgramExtensibleFields::ProgramLine, line_rn + '\n');
     return result;
   }
 
@@ -149,12 +162,11 @@ namespace detail {
 
     // loop through extensible groups and add ProgramLine to vector result.
     auto groups = extensibleGroups();
-    unsigned i = 0;
+
     for (auto group = groups.begin(); group != groups.end(); ++group) {
       const auto & line = group->getString(OS_EnergyManagementSystem_ProgramExtensibleFields::ProgramLine, true);
       OS_ASSERT(line);
-      result[i] += line.get();
-      i++;
+      result.push_back(line.get());
     }
     return result;
   }
@@ -172,16 +184,11 @@ namespace detail {
     //clobber existing body
     this->eraseBody();
 
-    // remove '\r' from the body string
-    //for (int i = 0; i < lines.size(); i++) {
-    //  temp = lines[i];
-    //  lines[i] = temp.erase(std::remove(lines[i].begin(), lines[i].end(), '\r'), lines[i].end());
-    //}
     //add program lines to body
     std::vector<bool> ok(lines.size(), false);
     for (int i = 0; i < lines.size(); i++) {
-      WorkspaceExtensibleGroup group = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
-      result = group.setString(OS_EnergyManagementSystem_ProgramExtensibleFields::ProgramLine, lines[i]);
+      //use method addLine to add each line
+      result = addLine(lines[i]);
       ok.push_back(result);
     }
     //check if all the programs set true
