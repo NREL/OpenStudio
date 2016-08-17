@@ -30,6 +30,8 @@
 #include "../utilities/core/String.hpp"
 #include "../utilities/core/StringHelpers.hpp"
 
+#include <algorithm>
+
 namespace openstudio {
 namespace model {
 
@@ -96,7 +98,10 @@ namespace detail {
 
     // remove '\r' from the body string
     std::string body_minus_r = body;
-    body_minus_r.erase(std::remove(body.begin(), body.end(), '\r'), body.end());
+    std::string::size_type pos = 0; // Must initialize
+    while ((pos = body_minus_r.find("\r", pos)) != std::string::npos) {
+      body_minus_r.erase(pos, 1);
+    }
 
     //split the body string on newline characters and insert program line for each string line
     std::vector<std::string> body_minus_nl = splitString(body_minus_r, '\n');

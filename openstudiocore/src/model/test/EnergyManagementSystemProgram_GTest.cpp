@@ -27,6 +27,8 @@
 #include "../FanConstantVolume_Impl.hpp"
 #include "../Schedule.hpp"
 #include "../EnergyManagementSystemActuator.hpp"
+#include "../EnergyManagementSystemSensor.hpp"
+#include "../EnergyManagementSystemProgram.hpp"
 #include "../OutputVariable.hpp"
 #include "../OutputVariable_Impl.hpp"
 #include "../Model_Impl.hpp"
@@ -42,7 +44,7 @@ using namespace openstudio;
 using namespace openstudio::model;
 using std::string;
 
-TEST_F(ModelFixture, EMSActuator_EMSActuator)
+TEST_F(ModelFixture, EMSProgram_EMSProgram)
 {
   Model model;
 
@@ -51,18 +53,32 @@ TEST_F(ModelFixture, EMSActuator_EMSActuator)
   ThermalZone zone1(model);
   ThermalZone zone2(model);
 
-  // add fan
+  // add Site Outdoor Air Drybulb Temperature
+  OutputVariable siteOutdoorAirDrybulbTemperature("Site Outdoor Air Drybulb Temperature", model);
+
+  //add sensor
+  EnergyManagementSystemSensor OATdbSensor(model);
+  OATdbSensor.setName("OATdb Sensor");
+  OATdbSensor.setOutputVariable(siteOutdoorAirDrybulbTemperature);
+
+  //add fan
   Schedule s = model.alwaysOnDiscreteSchedule();
   FanConstantVolume fan(model, s);
 
-  // add actuator
+  //add actuator on fan
   EnergyManagementSystemActuator fanActuator(fan);
   std::string fanName = fan.name().get() + "Press Actuator";
   fanActuator.setName(fanName);
   std::string fanControlType = "Fan Pressure Rise";
   fanActuator.setActuatedComponentControlType(fanControlType);
-  EXPECT_EQ(fan, fanActuator.actuatedComponent());
-  EXPECT_EQ(fanControlType, fanActuator.actuatedComponentControlType());
 
+  //add program
+  EnergyManagementSystemProgram fan_program_1(model);
+  std::string programName = fan.name().get() + "Pressure Rise Program by Line";
+  fan_program_1.setName(programName);
+  std::string fan_program_1_body = "SET mult = " + toString(OATdbSensor.handle() ) + " / 15.0 !- This is nonsense\r\nSET " + toString(fanActuator.handle() ) + " = 250 * mult !- More nonsense";
+  fan_program_1.setBody(fan_program_1_body);
+  fan_program_1.lines().get();
+  EXPECT_EQ(2, fan_program_1.lines().get().size());
 }
 
