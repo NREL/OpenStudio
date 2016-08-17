@@ -53,6 +53,7 @@ TEST_F(ModelFixture, EMSSensor_EMSSensor)
   EXPECT_EQ("*", siteOutdoorAirDrybulbTemperature.keyValue());
   EXPECT_EQ("Site Outdoor Air Drybulb Temperature", siteOutdoorAirDrybulbTemperature.variableName());
 
+  // add sensor
   EnergyManagementSystemSensor OATdbSensor(model);
   OATdbSensor.setName("OATdb Sensor");
   OATdbSensor.setOutputVariable(siteOutdoorAirDrybulbTemperature);
