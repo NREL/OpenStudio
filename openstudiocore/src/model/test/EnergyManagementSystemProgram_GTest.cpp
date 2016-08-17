@@ -74,11 +74,76 @@ TEST_F(ModelFixture, EMSProgram_EMSProgram)
 
   //add program
   EnergyManagementSystemProgram fan_program_1(model);
-  std::string programName = fan.name().get() + "Pressure Rise Program by Line";
+  std::string programName = fan.name().get() + "Pressure Rise Program by Body";
   fan_program_1.setName(programName);
+  //this body has /r/n in it
   std::string fan_program_1_body = "SET mult = " + toString(OATdbSensor.handle() ) + " / 15.0 !- This is nonsense\r\nSET " + toString(fanActuator.handle() ) + " = 250 * mult !- More nonsense";
+  //this is what the body should look like with 2 /n's and compare TRUE
+  std::string fan_program_body_test = "SET mult = " + toString(OATdbSensor.handle()) + " / 15.0 !- This is nonsense\nSET " + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense\n";
+  //the added lines should compare TRUE to below
+  std::string line1_test = "SET mult = " + toString(OATdbSensor.handle()) + " / 15.0 !- This is nonsense\n";
+  std::string line2_test = "SET " + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense\n";
+
+  //set body
   fan_program_1.setBody(fan_program_1_body);
-  fan_program_1.lines().get();
-  EXPECT_EQ(2, fan_program_1.lines().get().size());
+
+  //check body
+  boost::optional<std::string> body = fan_program_1.body();
+  EXPECT_EQ(fan_program_body_test, body.get());
+
+  //check lines
+  boost::optional<std::vector<std::string>> lines = fan_program_1.lines();
+  EXPECT_EQ(2, lines.get().size());
+  EXPECT_EQ(line1_test, lines.get()[0]);
+  EXPECT_EQ(line2_test, lines.get()[1]);
+
+  //TODO
+  //EXPECT_EQ(2, fan_program_1.referencedObjects.size())
+  //EXPECT_EQ(0, fan_program_1.invalidReferencedObjects.size())
+  //fan_actuator.remove
+  //EXPECT_EQ(1, fan_program_1.invalidReferencedObjects.size())
+
+  // Create a third program from a vector of lines
+  EnergyManagementSystemProgram fan_program_2(model);
+  programName = fan.name().get() + "Pressure Rise Program by Line";
+  fan_program_2.setName(programName);
+  //create program by individual lines
+  std::string line1 = "SET mult = " + toString(OATdbSensor.handle()) + " / 15.0 !- This is nonsense\r\n";
+  std::string line2 = "SET " + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense\r\n";
+
+  fan_program_2.addLine(line1);
+  fan_program_2.addLine(line2);
+
+  //check body
+  body = fan_program_2.body();
+  EXPECT_EQ(fan_program_body_test, body.get());
+
+  //check lines
+  lines = fan_program_2.lines();
+  EXPECT_EQ(2, lines.get().size());
+  EXPECT_EQ(line1_test, lines.get()[0]);
+  EXPECT_EQ(line2_test, lines.get()[1]);
+
+
+  // # Create a third program from vector of lines
+  EnergyManagementSystemProgram fan_program_3(model);
+  programName = fan.name().get() + "Pressure Rise Program by Vector of Lines";
+  fan_program_3.setName(programName);
+
+  std::vector<std::string> vectorOfLines;
+  vectorOfLines.push_back(line1);
+  vectorOfLines.push_back(line2);
+  fan_program_3.setLines(vectorOfLines);
+
+  //check body
+  body = fan_program_3.body();
+  EXPECT_EQ(fan_program_body_test, body.get());
+
+  //check lines
+  lines = fan_program_3.lines();
+  EXPECT_EQ(2, lines.get().size());
+  EXPECT_EQ(line1_test, lines.get()[0]);
+  EXPECT_EQ(line2_test, lines.get()[1]);
+
 }
 
