@@ -141,7 +141,13 @@ class MeasureManager
       file_updates = result.checkForUpdatesFiles # checks if any files have been updated
       xml_updates = result.checkForUpdatesXML # only checks if xml as loaded has been changed since last save
       
-      if file_updates || xml_updates
+      missing_fields = false
+      begin
+        missing_fields = result.missingRequiredFields
+      rescue
+      end
+      
+      if file_updates || xml_updates || missing_fields
         print_message("Changes detected, updating '#{measure_dir}'")
 
         # clear cache before calling get_measure_info

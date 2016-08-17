@@ -31,6 +31,10 @@ class MeasureManagerServlet < WEBrick::HTTPServlet::AbstractServlet
     @mutex = Mutex.new
     @measure_manager = MeasureManager.new
   end
+
+  def print_message(message)
+    puts message
+  end
   
   def self.get_instance(server, *options)
     @@instance = self.new(server, *options) if @@instance.nil?

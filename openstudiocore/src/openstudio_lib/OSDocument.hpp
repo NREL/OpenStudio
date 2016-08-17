@@ -86,12 +86,12 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   void setModel(const model::Model& model, bool modified, bool saveCurrentTabs);
 
   // Returns the Workspace associated with this document's model
-  boost::optional<Workspace> workspace();
+  //boost::optional<Workspace> workspace();
 
   // Set the Workspace associated with this document's model.
   // Workspace is created by idf translator when the scripts tab is shown.
   // This is used to populate idf measure arguments.
-  void setWorkspace(const boost::optional<Workspace>& workspace);
+  //void setWorkspace(const boost::optional<Workspace>& workspace);
 
   // Returns true if the document has unsaved changes.
   bool modified() const;

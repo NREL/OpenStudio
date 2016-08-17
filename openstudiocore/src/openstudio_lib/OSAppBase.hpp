@@ -56,8 +56,9 @@ class OPENSTUDIO_API OSAppBase : public QApplication, public BaseApp
 
   virtual QWidget *mainWidget() override;
   virtual MeasureManager &measureManager() override;
+  virtual boost::optional<openstudio::path> tempDir() override;
   virtual boost::optional<openstudio::model::Model> currentModel() override;
-  virtual boost::optional<openstudio::Workspace> currentWorkspace() override;
+  //virtual boost::optional<openstudio::Workspace> currentWorkspace() override;
   virtual void updateSelectedMeasureState() override;
   virtual void addMeasure() override;
   virtual void duplicateSelectedMeasure() override;

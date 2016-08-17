@@ -134,6 +134,10 @@ namespace detail {
 
       boost::optional<BCLMeasure> getBCLMeasure(const MeasureStep& step);
 
+      boost::optional<BCLMeasure> getBCLMeasureByUUID(const UUID& id);
+
+      boost::optional<BCLMeasure> addMeasure(const BCLMeasure& bclMeasure);
+
     private:
 
       REGISTER_LOGGER("openstudio.WorkflowJSON");

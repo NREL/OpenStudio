@@ -607,6 +607,18 @@ namespace detail{
     return boost::none;
   }
 
+  boost::optional<BCLMeasure> WorkflowJSON_Impl::getBCLMeasureByUUID(const UUID& id)
+  {
+    // DLM: TODO
+    return boost::none;
+  }
+
+  boost::optional<BCLMeasure> WorkflowJSON_Impl::addMeasure(const BCLMeasure& bclMeasure)
+  {
+    // DLM: TODO
+    return boost::none;
+  }
+
   void WorkflowJSON_Impl::onUpdate()
   {
     m_value["updated_at"] = DateTime::nowUTC().toISO8601();
@@ -929,6 +941,16 @@ bool WorkflowJSON::setMeasureSteps(const MeasureType& measureType, const std::ve
 boost::optional<BCLMeasure> WorkflowJSON::getBCLMeasure(const MeasureStep& step)
 {
   return getImpl<detail::WorkflowJSON_Impl>()->getBCLMeasure(step);
+}
+
+boost::optional<BCLMeasure> WorkflowJSON::getBCLMeasureByUUID(const UUID& id)
+{
+  return getImpl<detail::WorkflowJSON_Impl>()->getBCLMeasureByUUID(id);
+}
+
+boost::optional<BCLMeasure> WorkflowJSON::addMeasure(const BCLMeasure& bclMeasure)
+{
+  return getImpl<detail::WorkflowJSON_Impl>()->addMeasure(bclMeasure);
 }
 
 std::ostream& operator<<(std::ostream& os, const WorkflowJSON& workflowJSON)

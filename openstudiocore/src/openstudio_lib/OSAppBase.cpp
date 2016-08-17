@@ -116,6 +116,17 @@ QWidget *OSAppBase::mainWidget()
   }
 }
 
+boost::optional<openstudio::path> OSAppBase::tempDir()
+{
+  std::shared_ptr<OSDocument> document = currentDocument();
+  if (document)
+  {
+    return toPath(document->modelTempDir());
+  }
+  return boost::none;
+}
+
+
 boost::optional<openstudio::model::Model> OSAppBase::currentModel()
 {
   std::shared_ptr<OSDocument> document = currentDocument();
@@ -127,16 +138,16 @@ boost::optional<openstudio::model::Model> OSAppBase::currentModel()
   }
 }
 
-boost::optional<openstudio::Workspace> OSAppBase::currentWorkspace()
-{
-  std::shared_ptr<OSDocument> document = currentDocument();
-  if (document)
-  {
-    return document->workspace();
-  } else {
-    return boost::none;
-  }
-}
+//boost::optional<openstudio::Workspace> OSAppBase::currentWorkspace()
+//{
+//  std::shared_ptr<OSDocument> document = currentDocument();
+//  if (document)
+//  {
+//    return document->workspace();
+//  } else {
+//    return boost::none;
+//  }
+//}
 
 MeasureManager &OSAppBase::measureManager()
 {
