@@ -23,7 +23,10 @@
 #include "../Building.hpp"
 #include "../Building_Impl.hpp"
 #include "../ThermalZone.hpp"
-#include "../Lights.hpp"
+#include "../FanConstantVolume.hpp"
+#include "../FanConstantVolume_Impl.hpp"
+#include "../Schedule.hpp"
+#include "../EnergyManagementSystemActuator.hpp"
 #include "../OutputVariable.hpp"
 #include "../OutputVariable_Impl.hpp"
 #include "../Model_Impl.hpp"
@@ -48,40 +51,21 @@ TEST_F(ModelFixture, EMSActuator_EMSActuator)
   ThermalZone zone1(model);
   ThermalZone zone2(model);
 
-  for (const ThermalZone& zone : building.thermalZones()) {
+  // add Site Outdoor Air Drybulb Temperature
+  OutputVariable siteOutdoorAirDrybulbTemperature("Site Outdoor Air Drybulb Temperature", model);
+  EXPECT_EQ("*", siteOutdoorAirDrybulbTemperature.keyValue());
+  EXPECT_EQ("Site Outdoor Air Drybulb Temperature", siteOutdoorAirDrybulbTemperature.variableName());
 
-    // all possible variables
-    std::vector<std::string> variableNames = zone.outputVariableNames();
-    EXPECT_TRUE(std::find(variableNames.begin(), variableNames.end(), "Zone Lights Electric Power") != variableNames.end());
-    EXPECT_TRUE(std::find(variableNames.begin(), variableNames.end(), "Zone Lights Radiant Heating Energy") != variableNames.end());
+  Schedule s = model.alwaysOnDiscreteSchedule();
+  FanConstantVolume fan(model, s);
 
-    // variables actually found
-    OutputVariableVector variables = zone.outputVariables();
-    EXPECT_TRUE(variables.empty());
-  }
-
-  // add Zone Lights Electric Power to both zones
-  OutputVariable lightsElectricPower("Zone Lights Electric Power", model);
-  EXPECT_EQ("*", lightsElectricPower.keyValue());
-  EXPECT_EQ("Zone Lights Electric Power", lightsElectricPower.variableName());
-
-  // add Zone Lights Radiant Heating Energy to only zone1
-  OutputVariable lightsRadiantHeatGain("Zone Lights Radiant Heating Energy", model);
-  EXPECT_TRUE(lightsRadiantHeatGain.setKeyValue(zone1.name().get()));
-  EXPECT_EQ(zone1.name().get(), lightsRadiantHeatGain.keyValue());
-  EXPECT_EQ("Zone Lights Radiant Heating Energy", lightsRadiantHeatGain.variableName());
-
-  ASSERT_EQ(2u, zone1.outputVariables().size());
-  if (lightsElectricPower.handle() == zone1.outputVariables()[0].handle()){
-    EXPECT_EQ(lightsElectricPower.handle(), zone1.outputVariables()[0].handle());
-    EXPECT_EQ(lightsRadiantHeatGain.handle(), zone1.outputVariables()[1].handle());
-  }else{
-    EXPECT_EQ(lightsRadiantHeatGain.handle(), zone1.outputVariables()[0].handle());
-    EXPECT_EQ(lightsElectricPower.handle(), zone1.outputVariables()[1].handle());
-  }
-
-  ASSERT_EQ(1u, zone2.outputVariables().size());
-  EXPECT_EQ(lightsElectricPower.handle(), zone2.outputVariables()[0].handle());
+  EnergyManagementSystemActuator fanActuator(fan);
+  std::string fanName = fan.name().get() + "Press Actuator";
+  fanActuator.setName(fanName);
+  std::string fanControlType = "Fan Pressure Rise";
+  fanActuator.setActuatedComponentControlType(fanControlType);
+  EXPECT_EQ(fan, fanActuator.actuatedComponent());
+  EXPECT_EQ(fanControlType, fanActuator.actuatedComponentControlType());
 
 }
 
