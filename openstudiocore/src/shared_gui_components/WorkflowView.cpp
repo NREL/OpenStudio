@@ -23,6 +23,7 @@
 #include "HeaderViews.hpp"
 #include "Buttons.hpp"
 #include "LocalLibraryController.hpp"
+#include "MeasureItemView.hpp"
 #include <QLabel>
 #include <QLineEdit>
 #include <QMimeData>
@@ -40,6 +41,7 @@ namespace openstudio{
   
 namespace measuretab {
 
+/*
 RectangularDropZone::RectangularDropZone()
   : QWidget()
 {
@@ -83,7 +85,7 @@ void RectangularDropZone::dragEnterEvent(QDragEnterEvent * event)
     event->accept();
   }
 }
-
+*/
 
 NewMeasureDropZone::NewMeasureDropZone()
   : RectangularDropZone()

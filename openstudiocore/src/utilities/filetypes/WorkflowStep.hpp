@@ -58,6 +58,9 @@ public:
   /// Resets the optional WorkflowStepResult
   void resetResult();
 
+  /// Tests pointer equality
+  bool operator==(const WorkflowStep& other) const;
+
   /// cast to type T, can throw std::bad_cast
   template<typename T>
   T cast() const{

@@ -34,6 +34,7 @@
 #include "../utilities/core/Containers.hpp"
 #include "../utilities/core/RubyException.hpp"
 #include "../utilities/bcl/BCLMeasure.hpp"
+#include "../utilities/filetypes/WorkflowStep_Impl.hpp"
 #include "../utilities/plot/ProgressBar.hpp"
 
 #include <QByteArray>
@@ -74,9 +75,7 @@ void WorkflowController::addItem(QSharedPointer<OSListItem> item)
   {
     m_workflowSectionItems.push_back(workflowSectionItem);
     workflowSectionItem->setController(this);
-
-    // DLM: TODO
-    //workflowSectionItem->variableListController()->setSelectionController(selectionController());
+    workflowSectionItem->workflowStepController()->setSelectionController(selectionController());
   }
 }
 
@@ -100,7 +99,7 @@ WorkflowSectionItem::WorkflowSectionItem(MeasureType measureType, const QString 
     m_label(label),
     m_measureType(measureType)
 {
-  m_workflowStepController = QSharedPointer<WorkflowStepController>(new WorkflowStepController(measureType, t_baseApp));
+  m_workflowStepController = QSharedPointer<WorkflowStepController>(new MeasureStepController(measureType, t_baseApp));
 }
 
 QString WorkflowSectionItem::label() const
@@ -122,253 +121,137 @@ QWidget * WorkflowSectionItemDelegate::view(QSharedPointer<OSListItem> dataSourc
   if( QSharedPointer<WorkflowSectionItem> workflowSectionItem = dataSource.objectCast<WorkflowSectionItem>() )
   {
     QSharedPointer<WorkflowStepController> workflowStepController = workflowSectionItem->workflowStepController();
-    QSharedPointer<WorkflowStepItemDelegate> workflowStepItemDelegate = QSharedPointer<WorkflowStepItemDelegate>(new WorkflowStepItemDelegate());
 
-    boost::optional<MeasureType> measureType = workflowStepController->measureType();
-    
-    // DLM: for now we are only showing measure steps
-    OS_ASSERT(measureType);
+    if (QSharedPointer<MeasureStepController> measureStepController = qSharedPointerCast<MeasureStepController>(workflowStepController)){
+      
+      QSharedPointer<MeasureStepItemDelegate> measureStepItemDelegate = QSharedPointer<MeasureStepItemDelegate>(new MeasureStepItemDelegate());
 
-    QString acceptedMimeType = MeasureDragData::mimeType(*measureType);
+      MeasureType measureType = measureStepController->measureType();
 
-    auto workflowSectionView = new WorkflowSectionView(*measureType);
+      QString acceptedMimeType = MeasureDragData::mimeType(measureType);
 
-    workflowSectionView->content->newMeasureDropZone->setAcceptedMimeType(acceptedMimeType);
+      auto workflowSectionView = new WorkflowSectionView(measureType);
 
-    connect(workflowSectionView->content->newMeasureDropZone, &NewMeasureDropZone::dataDropped, workflowStepController.data(), &WorkflowStepController::addItemForDroppedMeasure);
+      workflowSectionView->content->newMeasureDropZone->setAcceptedMimeType(acceptedMimeType);
 
-    workflowSectionView->content->workflowStepsView->setListController(workflowStepController);
-    workflowSectionView->content->workflowStepsView->setDelegate(workflowStepItemDelegate);
+      connect(workflowSectionView->content->newMeasureDropZone, &NewMeasureDropZone::dataDropped, measureStepController.data(), &MeasureStepController::addItemForDroppedMeasure);
 
-    workflowSectionView->header->label->setText(workflowSectionItem->label());
+      workflowSectionView->content->workflowStepsView->setListController(measureStepController);
+      workflowSectionView->content->workflowStepsView->setDelegate(measureStepItemDelegate);
 
-    return workflowSectionView;
+      workflowSectionView->header->label->setText(workflowSectionItem->label());
+
+      return workflowSectionView;
+    }
   }
 
   return new QWidget();
 }
 
-WorkflowStepController::WorkflowStepController(MeasureType measureType, openstudio::BaseApp *t_app)
-  : OSListController(),
+WorkflowStepController::WorkflowStepController(openstudio::BaseApp *t_app)
+  : OSListController()
+{}
+
+MeasureStepController::MeasureStepController(MeasureType measureType, openstudio::BaseApp *t_app)
+  : WorkflowStepController(t_app),
     m_app(t_app),
     m_measureType(measureType)
 {
 }
 
-boost::optional<MeasureType> WorkflowStepController::measureType() const
+MeasureType MeasureStepController::measureType() const
 {
   return m_measureType;
 }
 
-QSharedPointer<OSListItem> WorkflowStepController::itemAt(int i)
+std::vector<MeasureStep> MeasureStepController::measureSteps() const
 {
-  /* DLM: TODO 
-  std::vector<analysis::MeasureGroup> vars = variables();
+  WorkflowJSON workflowJSON = m_app->currentModel()->workflowJSON();
+  workflowJSON.getMeasureSteps(m_measureType);
 
-  if( i >= 0 && i < (int)vars.size() )
+  return std::vector<MeasureStep>();
+}
+
+QSharedPointer<OSListItem> MeasureStepController::itemAt(int i)
+{
+  std::vector<MeasureStep> steps = this->measureSteps();
+
+  if( i >= 0 && i < (int)steps.size() )
   {
-    analysis::MeasureGroup var = vars[i];
+    MeasureStep step = steps[i];
 
-    QSharedPointer<VariableItem> item = QSharedPointer<VariableItem>(new VariableItem(var, m_measureType, m_app));
+    QSharedPointer<MeasureStepItem> item = QSharedPointer<MeasureStepItem>(new MeasureStepItem(m_measureType, step, m_app));
 
     item->setController(this);
 
-    item->measureListController()->setSelectionController(selectionController());
-
     return item;
   }
-  */
-  return QSharedPointer<WorkflowStepItem>();
+
+  return QSharedPointer<MeasureStepItem>();
 }
 
-int WorkflowStepController::count()
+int MeasureStepController::count()
 {
-  return 0;
-
-  // DLM: TODO
-  //return variables().size();
+  return measureSteps().size();
 }
 
-// DLM: TODO
-/*
-std::vector<analysis::MeasureGroup> VariableListController::variables() const
+void MeasureStepController::removeItemForStep(MeasureStep step)
 {
-  std::vector<analysis::MeasureGroup> result;
+  std::vector<MeasureStep> oldMeasureSteps = measureSteps();
 
-  boost::optional<analysisdriver::SimpleProject> project = m_app->project();
-
-  if( project ) {
-
-    analysis::Problem problem = project->analysis().problem();
-    analysis::WorkflowStepVector workflow = problem.workflow();
-
-    if (m_measureType == MeasureType::ModelMeasure) {
-      analysis::OptionalMeasureGroup modelSwapVariable = project->getAlternativeModelVariable();
-      OptionalInt stopIndex = getModelMeasureInsertStep(problem);
-      OS_ASSERT(stopIndex);
-      for (int i = 0; i < *stopIndex; ++i) {
-        if (workflow[i].isInputVariable()) {
-          analysis::InputVariable var = workflow[i].inputVariable();
-          if (analysis::OptionalMeasureGroup dvar = var.optionalCast<analysis::MeasureGroup>()) {
-            if (modelSwapVariable && (*dvar == *modelSwapVariable)) {
-              continue;
-            }
-            std::vector<analysis::Measure> measures = dvar->measures(false);
-            if (!m_filterFixed || measures.size() > 1)
-            {
-              // don't add the fixed measures here, they are always selected
-              std::vector<analysis::RubyMeasure> rubyPerts = subsetCastVector<analysis::RubyMeasure>(measures);
-              if (!rubyPerts.empty()) {
-                result.push_back(*dvar);
-              }
-            }
-          }
-        }
-      }
-
-    } else if (m_measureType == MeasureType::EnergyPlusMeasure){
-
-      OptionalInt startIndex = problem.getWorkflowStepIndexByJobType(runmanager::JobType::ExpandObjects);
-      OptionalInt stopIndex = problem.getWorkflowStepIndexByJobType(runmanager::JobType::EnergyPlusPreProcess);
-      OS_ASSERT(startIndex && stopIndex);
-      for (int i = (*startIndex + 1); i < *stopIndex; ++i) {
-        if (workflow[i].isInputVariable()) {
-          analysis::InputVariable var = workflow[i].inputVariable();
-          if (analysis::OptionalMeasureGroup dvar = var.optionalCast<analysis::MeasureGroup>()) {
-            std::vector<analysis::Measure> measures = dvar->measures(false);
-            if (!m_filterFixed || measures.size() > 1)
-            {
-              // don't add the fixed measures here, they are always selected
-              std::vector<analysis::RubyMeasure> rubyPerts = subsetCastVector<analysis::RubyMeasure>(measures);
-              if (!rubyPerts.empty()) {
-                result.push_back(*dvar);
-              }
-            }
-          }
-        }
-      }
-
-    }else{
-      OS_ASSERT(m_measureType == MeasureType::ReportingMeasure);
-
-      OptionalInt startIndex = problem.getWorkflowStepIndexByJobType(runmanager::JobType::EnergyPlus);
-      OptionalInt stopIndex = problem.getWorkflowStepIndexByJobType(runmanager::JobType::OpenStudioPostProcess);
-      OS_ASSERT(startIndex && stopIndex);
-      for (int i = (*startIndex + 1); i < *stopIndex; ++i) {
-        if (workflow[i].isInputVariable()) {
-          analysis::InputVariable var = workflow[i].inputVariable();
-          if (analysis::OptionalMeasureGroup dvar = var.optionalCast<analysis::MeasureGroup>()) {
-            std::vector<analysis::Measure> measures = dvar->measures(false);
-            if (!m_filterFixed || measures.size() > 1)
-            {
-              // don't add the fixed measures here, they are always selected
-              std::vector<analysis::RubyMeasure> rubyPerts = subsetCastVector<analysis::RubyMeasure>(measures);
-              if (!rubyPerts.empty()) {
-                result.push_back(*dvar);
-              }
-            }
-          }
-        }
-      }
+  bool didRemove = false;
+  std::vector<MeasureStep> newMeasureSteps;
+  newMeasureSteps.reserve(oldMeasureSteps.size());
+  for (const auto& oldMeasureStep : oldMeasureSteps){
+    if (oldMeasureStep == step){
+      didRemove = true;
+    } else{
+      newMeasureSteps.push_back(oldMeasureStep);
     }
   }
 
-  return result;
-}
-*/
-void WorkflowStepController::removeItemForStep(WorkflowStep step)
-{
-  /* DLM: TODO 
-  if( boost::optional<analysisdriver::SimpleProject> project = m_app->project() )
-  {
-    std::vector<analysis::MeasureGroup> vars = variables();
-
-    int i = 0;
-    bool bingo = false;
-
-    for( std::vector<analysis::MeasureGroup>::const_iterator it = vars.begin();
-         it != vars.end();
-         ++it )
-    {
-      if( variable == *it )
-      {
-        bingo = true;
-
-        break;
-      }
-
-      i++;
-    }
-
-
-    if( bingo )
-    {
-      analysis::Problem problem = project->analysis().problem();
-
-      problem.erase(variable);
-
-      emit itemRemoved(i);
-    }
+  if (didRemove){
+    m_app->currentModel()->workflowJSON().setMeasureSteps(m_measureType, newMeasureSteps);
   }
-  */
 }
 
-void WorkflowStepController::addItemForDroppedMeasure(QDropEvent *event)
+void MeasureStepController::addItemForDroppedMeasure(QDropEvent *event)
 {
-  // DLM: TODO
-  //addItemForDroppedMeasureImpl(event, false);
-}
+  // accept the event to make the icon refresh
+  event->accept();
+
+  const QMimeData * mimeData = event->mimeData();
+
+  QByteArray byteArray;
+
+  byteArray = mimeData->data(MeasureDragData::mimeType(m_measureType));
+
+  MeasureDragData measureDragData(byteArray);
+
+  UUID id = measureDragData.id();
+
+  // don't allow user to drag standard reports or other managed measures 
+  if (m_app->measureManager().isManagedMeasure(id)){
+    QMessageBox::warning( m_app->mainWidget(), 
+        "Cannot add measure", 
+        "This measure conflicts with a managed measure and cannot be added. Create a duplicate of this measure to add to this project.");
+    return;
+  }
+
+  try {
+
+    // Get the measure
+    // DLM: TODO
+    //BCLMeasure projectMeasure = m_app->measureManager().insertReplaceMeasure(*project, id);
+  
+  } catch (const std::exception &) {
+    // the user canceled the update of the measure
+    return;
+  }
+
 
 /* DLM: TODO
-void VariableListController::addItemForDroppedMeasureImpl(QDropEvent * event, bool t_fixed)
-{
-  if( boost::optional<analysisdriver::SimpleProject> project = m_app->project() )
-  {
-    // Get the measure
 
-    const QMimeData * mimeData = event->mimeData();
-
-    QByteArray byteArray;
-
-    byteArray = mimeData->data(MeasureDragData::mimeType(m_measureType));
-
-    MeasureDragData measureDragData(byteArray);
-
-    UUID id = measureDragData.id();
-
-    // accept the event to make the icon refresh
-    event->accept();
-
-    // don't allow user to drag standard reports or other managed measures 
-    if (m_app->measureManager().isManagedMeasure(id)){
-      QMessageBox::warning( m_app->mainWidget(), 
-          "Cannot add measure", 
-          "This measure conflicts with a managed measure and cannot be added. Create a duplicate of this measure to add to this project.");
-      return;
-    }
-
-    // check if we have data points other than the baseline
-    if (project->analysis().dataPoints().size() > 1){
-      // warn user that this will blow away their data points
-      QMessageBox::StandardButton test = QMessageBox::question( m_app->mainWidget(), 
-          "Add New Measure Group?", 
-          "Adding a new measure group will remove existing design alternatives and save your project, do you want to proceed?", 
-          QMessageBox::Yes |  QMessageBox::No, 
-          QMessageBox::No );
-      if (test == QMessageBox::No){
-        return;
-      }
-    }
-
-    try {
-      // Make a new variable
-      BCLMeasure projectMeasure = m_app->measureManager().insertReplaceMeasure(*project, id);
-
-      // prep discrete variable
-      std::string name = m_app->measureManager().suggestMeasureGroupName(projectMeasure);
-      analysis::MeasureGroup dv(name, analysis::MeasureVector());
-      dv.setDisplayName(name);
-   
       // measure
       analysis::RubyMeasure measure(projectMeasure);
       try{
@@ -381,12 +264,6 @@ void VariableListController::addItemForDroppedMeasureImpl(QDropEvent * event, bo
         return;
       }
 
-      if (!t_fixed)
-      {
-        // null measure
-        analysis::NullMeasure nullPert;
-        dv.push(nullPert);
-      }
 
       // the new measure
       name = m_app->measureManager().suggestMeasureName(projectMeasure, t_fixed);
@@ -421,146 +298,107 @@ void VariableListController::addItemForDroppedMeasureImpl(QDropEvent * event, bo
       return;
     }
   }
+  */
 }
-*/
 
-/* DLM: TODO
-void WorkflowStepController::moveUp(analysis::MeasureGroup variable)
+void MeasureStepController::moveUp(MeasureStep step)  
 {
-  if( boost::optional<analysisdriver::SimpleProject> project = m_app->project() )
-  {
-    if (project->analysis().dataPoints().size() > 1){
-      // warn user that this will blow away their data points
-      QMessageBox::StandardButton test = QMessageBox::question( 
-          m_app->mainWidget(), 
-          "Rearrange Measure Group?", 
-          "Rearranging a measure group will remove existing design alternatives and save your project, do you want to proceed?", 
-          QMessageBox::Yes |  QMessageBox::No, 
-          QMessageBox::No );
-      if (test == QMessageBox::No){
-        return;
-      }
-    }
-
-    // HERE - Logic seems questionable. Also check dirty flags.
-    std::vector<analysis::MeasureGroup> vars = variables();
-
-    int i = 0;
-    bool bingo = false;
-
-    for( std::vector<analysis::MeasureGroup>::const_iterator it = vars.begin();
-         it != vars.end();
-         ++it )
-    {
-      if( variable == *it )
-      {
-        bingo = true;
-
-        break;
-      }
-
-      i++;
-    }
-
-
-    if( bingo && i > 0 )
-    {
-      analysis::Problem problem = project->analysis().problem();
-
-      problem.swap(variable,vars[i - 1]);
-
-      emit itemChanged(i - 1);
-      emit itemChanged(i);
+  std::vector<MeasureStep> oldMeasureSteps = measureSteps();
+  
+  bool found = false;
+  size_t i;
+  size_t n = oldMeasureSteps.size();
+  for (i = 0; i < n; ++i){
+    if (oldMeasureSteps[i] == step){
+      found = true;
+      break;
     }
   }
-}
-*/
 
-/* DLM: TODO
-void WorkflowStepController::moveDown(analysis::MeasureGroup variable)
-{
-  if( boost::optional<analysisdriver::SimpleProject> project = m_app->project() )
+  if( found && i > 0 )
   {
-    if (project->analysis().dataPoints().size() > 1){
-      // warn user that this will blow away their data points
-      QMessageBox::StandardButton test = QMessageBox::question( 
-          m_app->mainWidget(), 
-          "Rearrange Measure Group?", 
-          "Rearranging a measure group will remove existing design alternatives and save your project, do you want to proceed?", 
-          QMessageBox::Yes |  QMessageBox::No, 
-          QMessageBox::No );
-      if (test == QMessageBox::No){
-        return;
-      }
-    }
+    // swap i with i-1
+    MeasureStep temp = oldMeasureSteps[i-1];
+    oldMeasureSteps[i-1] = oldMeasureSteps[i];
+    oldMeasureSteps[i] = temp;
 
-    std::vector<analysis::MeasureGroup> vars = variables();
+    m_app->currentModel()->workflowJSON().setMeasureSteps(m_measureType, oldMeasureSteps);
 
-    int i = 0;
-    bool bingo = false;
-
-    for( std::vector<analysis::MeasureGroup>::const_iterator it = vars.begin();
-         it != vars.end();
-         ++it )
-    {
-      if( variable == *it )
-      {
-        bingo = true;
-
-        break;
-      }
-
-      i++;
-    }
-
-
-    if( bingo && i < (int)vars.size() - 1 )
-    {
-      analysis::Problem problem = project->analysis().problem();
-
-      problem.swap(vars[i + 1],variable);
-
-      emit itemChanged(i);
-      emit itemChanged(i + 1);
-    }
+    emit itemChanged(i - 1);
+    emit itemChanged(i);
   }
 }
-*/
 
-WorkflowStepItem::WorkflowStepItem(WorkflowStep step, openstudio::BaseApp *t_app)
+
+void MeasureStepController::moveDown(MeasureStep step)
+{
+  std::vector<MeasureStep> oldMeasureSteps = measureSteps();
+  
+  bool found = false;
+  size_t i;
+  size_t n = oldMeasureSteps.size();
+  for (i = 0; i < n; ++i){
+    if (oldMeasureSteps[i] == step){
+      found = true;
+      break;
+    }
+  }
+
+  if( found && i < (n-1) )
+  {
+    // swap i with i+1
+    MeasureStep temp = oldMeasureSteps[i+1];
+    oldMeasureSteps[i+1] = oldMeasureSteps[i];
+    oldMeasureSteps[i] = temp;
+
+    m_app->currentModel()->workflowJSON().setMeasureSteps(m_measureType, oldMeasureSteps);
+
+    emit itemChanged(i - 1);
+    emit itemChanged(i);
+  }
+}
+
+MeasureStepItem::MeasureStepItem(MeasureType measureType, MeasureStep step, openstudio::BaseApp *t_app)
   : OSListItem(),
     m_app(t_app),
+    m_measureType(measureType),
     m_step(step)
 {
 }
 
-QString WorkflowStepItem::name() const
+QString MeasureStepItem::name() const
 {
   // DLM: TODO
   //return QString::fromStdString(m_step.name());
   return QString();
 }
 
-void WorkflowStepItem::setName(const QString & name)
+void MeasureStepItem::setName(const QString & name)
 {
   //m_step.setName(name.toStdString());
 }
 
-QString WorkflowStepItem::displayName() const
+QString MeasureStepItem::displayName() const
 {
   // DLM: TODO
   //return QString::fromStdString(m_step.displayName());
   return QString();
 }
 
-void WorkflowStepItem::setDisplayName(const QString & displayName)
+void MeasureStepItem::setDisplayName(const QString & displayName)
 {
   // DLM: TODO
   //m_step.setDisplayName(displayName.toStdString());
 }
 
+void MeasureStepItem::setArgument(const measure::OSArgument& argument)
+{
+  // DLM: TODO
+}
+
+void MeasureStepItem::remove()
+{
 /* DLM: TODO
-void VariableItem::remove()
 {
   // check if we have data points other than the baseline
   if (boost::optional<analysisdriver::SimpleProject> project = m_app->project()){
@@ -593,22 +431,28 @@ void VariableItem::remove()
   qobject_cast<VariableListController *>(controller())->removeItemForVariable(m_variable);
 }
 */
+}
 
-void WorkflowStepItem::moveUp()
+void MeasureStepItem::moveUp()
 {
   // DLM: TODO
   //qobject_cast<WorkflowStepController *>(controller())->moveUp(m_step);
 }
 
-void WorkflowStepItem::moveDown()
+void MeasureStepItem::moveDown()
 {
   // DLM: TODO
   //qobject_cast<WorkflowStepController *>(controller())->moveDown(m_step);
 }
 
-QWidget * WorkflowStepItemDelegate::view(QSharedPointer<OSListItem> dataSource)
+
+
+MeasureStepItemDelegate::MeasureStepItemDelegate()
+{}
+
+QWidget * MeasureStepItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 {
-  if(QSharedPointer<WorkflowStepItem> workflowStepItem = dataSource.objectCast<WorkflowStepItem>())
+  if(QSharedPointer<MeasureStepItem> workflowStepItem = dataSource.objectCast<MeasureStepItem>())
   {
     /* DLM: TODO
     auto variableItemView = new VariableItemView(variableItem->isFixedMeasure());
@@ -649,20 +493,6 @@ QWidget * WorkflowStepItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 
   return new QWidget();
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 /* DLM: DELETE

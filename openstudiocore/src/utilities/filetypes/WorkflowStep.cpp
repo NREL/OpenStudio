@@ -344,6 +344,11 @@ void WorkflowStep::resetResult()
   getImpl<detail::WorkflowStep_Impl>()->resetResult();
 }
 
+bool WorkflowStep::operator==(const WorkflowStep& other) const
+{
+  return m_impl == other.m_impl;
+}
+
 MeasureStep::MeasureStep(const std::string& measureDirName)
   : WorkflowStep(std::shared_ptr<detail::MeasureStep_Impl>(new detail::MeasureStep_Impl(measureDirName)))
 {

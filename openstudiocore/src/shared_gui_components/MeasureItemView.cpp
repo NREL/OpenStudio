@@ -40,19 +40,14 @@ namespace openstudio{
   
 namespace measuretab {
 
-  RectangularDropZone::RectangularDropZone(bool t_fixed)
+  RectangularDropZone::RectangularDropZone()
   : QWidget()
 {
   setAcceptDrops(true);
 
   setFixedHeight(30);
 
-  if (t_fixed)
-  {
-    setStyleSheet("openstudio--measuretab--RectangularDropZone {background: #F4F4F4; border: 2px dashed #A5A5A5;}");
-  } else {
-    setStyleSheet("openstudio--measuretab--RectangularDropZone {background: #E0E0E0; border: 2px dashed gray;}");
-  }
+  setStyleSheet("openstudio--measuretab--RectangularDropZone {background: #F4F4F4; border: 2px dashed #A5A5A5;}");
 
   auto mainHLayout = new QHBoxLayout();
   mainHLayout->setContentsMargins(5,5,5,5);
@@ -90,7 +85,7 @@ void RectangularDropZone::dragEnterEvent(QDragEnterEvent * event)
 }
 
 MeasureDropZone::MeasureDropZone()
-  : RectangularDropZone(false)
+  : RectangularDropZone()
 {
   nameLabel->setStyleSheet("QLabel { color: #7D7D7D; }");
   nameLabel->setText("Drop Measure From Library");

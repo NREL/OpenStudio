@@ -36,8 +36,9 @@ namespace openstudio{
 namespace measuretab {
   
   class WorkflowSectionItem;
-  class WorkflowStepItem;
   class WorkflowStepController;
+  class MeasureStepItem;
+  class MeasureStepController;
 
 } // measuretab
 
@@ -119,19 +120,31 @@ class WorkflowStepController : public OSListController
 
   public:
 
-  WorkflowStepController(MeasureType measureType, BaseApp *t_baseApp);
+  WorkflowStepController(BaseApp *t_baseApp);
+};
+
+// MeasureStepController controls a list of MeasureStepItems
+class MeasureStepController : public WorkflowStepController
+{
+  Q_OBJECT
+
+  public:
+
+  MeasureStepController(MeasureType measureType, BaseApp *t_baseApp);
 
   QSharedPointer<OSListItem> itemAt(int i) override;
 
   int count() override;
 
-  boost::optional<MeasureType> measureType() const;
+  MeasureType measureType() const;
 
-  void removeItemForStep(WorkflowStep step);
+  std::vector<MeasureStep> measureSteps() const;
 
-  void moveUp(WorkflowStep step);
+  void removeItemForStep(MeasureStep step);
 
-  void moveDown(WorkflowStep step);
+  void moveUp(MeasureStep step);
+
+  void moveDown(MeasureStep step);
 
   public slots:
 
@@ -141,20 +154,20 @@ class WorkflowStepController : public OSListController
 
   void addItem(QSharedPointer<OSListItem> item);
 
-  boost::optional<MeasureType> m_measureType;
+  MeasureType m_measureType;
   BaseApp * m_app;
 
-  std::vector<QSharedPointer<WorkflowStepItem> > m_workflowStepItems;
+  std::vector<QSharedPointer<MeasureStepItem> > m_measureStepItems;
 };
 
-// WorkflowStepItemDelegate views a WorkflowStepItem and returns a WorkflowStepView
-class WorkflowStepItemDelegate : public OSItemDelegate
+// MeasureStepItemDelegate views a MeasureStepItem and returns a MeasureStepView
+class MeasureStepItemDelegate : public OSItemDelegate
 {
   Q_OBJECT
 
   public:
 
-  explicit WorkflowStepItemDelegate();
+  explicit MeasureStepItemDelegate();
 
   QWidget * view(QSharedPointer<OSListItem> dataSource) override;
 
@@ -162,20 +175,20 @@ class WorkflowStepItemDelegate : public OSItemDelegate
 
 };
 
-// Each WorkflowStepItem represents a WorkflowStep
-class WorkflowStepItem : public OSListItem
+// Each MeasureStepItem represents a MeasureStep
+class MeasureStepItem : public OSListItem
 {
   Q_OBJECT
 
   public:
 
-  WorkflowStepItem(WorkflowStep step, BaseApp *t_baseApp);
+  MeasureStepItem(MeasureType measureType, MeasureStep step, BaseApp *t_baseApp);
 
   QString name() const;
 
   QString displayName() const;
 
-  boost::optional<MeasureType> measureType() const;
+  MeasureType measureType() const;
 
   QString description() const;
 
@@ -205,7 +218,8 @@ class WorkflowStepItem : public OSListItem
 
   private:
 
-  WorkflowStep m_step;
+  MeasureType m_measureType;
+  MeasureStep m_step;
   BaseApp * m_app;
 
 };

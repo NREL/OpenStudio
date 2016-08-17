@@ -57,7 +57,7 @@ class RectangularDropZone : public QWidget
   
   public:
 
-  RectangularDropZone(bool t_fixed);
+  RectangularDropZone();
 
   virtual ~RectangularDropZone() {}
 

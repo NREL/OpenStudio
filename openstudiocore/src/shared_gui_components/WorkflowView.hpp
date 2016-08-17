@@ -23,6 +23,7 @@
 #include "OSCollapsibleView.hpp"
 #include "OSListView.hpp"
 #include "HeaderViews.hpp"
+#include "MeasureItemView.hpp"
 #include <QAbstractButton>
 
 class QLineEdit;
@@ -42,6 +43,7 @@ namespace measuretab {
 
 namespace measuretab {
 
+  /*
 // RectangularDropZone styles a rectangular drop zone
 class RectangularDropZone : public QWidget
 {
@@ -73,7 +75,7 @@ class RectangularDropZone : public QWidget
 
   QString m_acceptedMimeType;
 };
-
+*/
 // Accepts drop of a measure and emits signal which is connected by VariableGroupItemDelegate
 class NewMeasureDropZone : public RectangularDropZone
 {
