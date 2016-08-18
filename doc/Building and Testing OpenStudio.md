@@ -203,6 +203,12 @@ In CMake **check** the following:
 
 - CPACK\_BINARY\_PACKAGEMAKER
 
+
+In CMake **enter** the following for CMAKE\_BUILD\_TYPE:
+
+- `Release`
+
+
 In CMake type the following:
 
 	c
@@ -422,10 +428,9 @@ bundler install
 
 With Git, make feature branch of OpenStudio-server develop, and name it "OS.x.y.z.sha"
 
-- Update version in `server\lib\openstudio_server\version.rb`: index the minor version for an OpenStudio quarterly release, index the dot version for an OpenStudio iteration release.
-- Update version_ext to "-OS.x.y.z.sha"
-- Update version in `CHANGELOG.md` to be version + version_ext above, update OpenStudio to include its SHA
-- Update version and version_revision with the openstudio SHA in `vagrant\chef\roles\openstudio.rb`
+- In `server\lib\openstudio_server\version.rb`, update VERSION_EXT to `-OS.x.y.z.sha` (ex: `-OS.1.12.2.462ae9e746`).
+- In `CHANGELOG.md`, add new server and openstudio versions (ex: `Version 1.19.1-OS.1.12.2.462ae9e746`, `OpenStudio 1.12.2.462ae9e746`).
+- In `vagrant\chef\roles\openstudio.rb`, update version and version_revision (ex: `1.12.2`, `462ae9e746`) 
 
 With Git, commit above files to new branch (Commit Message = `Bump OpenStudio version to OS.x.y.z.sha`)
 With Git, submit pull request
@@ -450,7 +455,7 @@ In the top level of your docker-openstudio folder, modify `Dockerfile`
 - Update OPENSTUDIO_SHA with current SHA
 - (optional) test that the new Dockerfile works by running `docker build -t test-openstudio .` after starting the docker-machine to make sure that it completes successfully
 
-With Git, commit Dockerfile (Commit Message = Bump OpenStudio version to OS-x.y.z.sha)
+With Git, commit Dockerfile (Commit Message = Bump OpenStudio version to OS.x.y.z.sha)
  
 Verify master branch built successfully at https://hub.docker.com/r/nrel/openstudio/builds/
 

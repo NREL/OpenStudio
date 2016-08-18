@@ -56,7 +56,7 @@ class ResourceObject;
 class Schedule;
 
 class OutputVariable;
-class Meter;
+class OutputMeterMeter;
 class Connection;
 
 namespace detail {

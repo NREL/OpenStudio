@@ -40,8 +40,8 @@
 #include "ShadingSurface_Impl.hpp"
 #include "ShadingSurfaceGroup.hpp"
 #include "ShadingSurfaceGroup_Impl.hpp"
-#include "Meter.hpp"
-#include "Meter_Impl.hpp"
+#include "OutputMeter.hpp"
+#include "OutputMeter_Impl.hpp"
 #include "Surface.hpp"
 #include "Surface_Impl.hpp"
 
@@ -97,7 +97,7 @@ namespace detail {
     std::vector<ModelObject> result;
 
     // meters
-    MeterVector meters = this->meters();
+    OutputMeterVector meters = this->meters();
     result.insert(result.end(),meters.begin(),meters.end());
 
     // building stories
@@ -479,11 +479,11 @@ namespace detail {
     setString(OS_BuildingFields::DefaultScheduleSetName, "");
   }
 
-  MeterVector Building_Impl::meters() const
+  OutputMeterVector Building_Impl::meters() const
   {
-    MeterVector result;
-    MeterVector meters = this->model().getConcreteModelObjects<Meter>();
-    for (const Meter& meter : meters){
+    OutputMeterVector result;
+    OutputMeterVector meters = this->model().getConcreteModelObjects<OutputMeter>();
+    for (const OutputMeter& meter : meters){
       if (meter.installLocationType() && (InstallLocationType::Building == meter.installLocationType().get().value())){
         result.push_back(meter);
       }
@@ -1153,7 +1153,7 @@ void Building::resetDefaultScheduleSet()
   getImpl<detail::Building_Impl>()->resetDefaultScheduleSet();
 }
 
-MeterVector Building::meters() const
+OutputMeterVector Building::meters() const
 {
   return getImpl<detail::Building_Impl>()->meters();
 }

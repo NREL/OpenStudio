@@ -30,6 +30,8 @@
 #include "../model/Construction_Impl.hpp"
 #include "../model/ConstructionWithInternalSource.hpp"
 #include "../model/ConstructionWithInternalSource_Impl.hpp"
+#include "../model/WaterUseEquipment.hpp"
+#include "../model/WaterUseEquipment_Impl.hpp"
 #include "../model/RunPeriod.hpp"
 #include "../model/RunPeriod_Impl.hpp"
 #include "../model/RunPeriodControlSpecialDays.hpp"
@@ -190,6 +192,18 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
     }
   }
 
+  // remove orphan loads
+  for (SpaceLoad spaceLoad : model.getModelObjects<SpaceLoad>()){
+    if (spaceLoad.optionalCast<model::WaterUseEquipment>()){
+      // WaterUseEquipment is not required to be attached to a space
+      continue;
+    }
+    if ((!spaceLoad.space()) && (!spaceLoad.spaceType())){
+      LOG(Warn, spaceLoad.briefDescription() << " is not associated with a Space or SpaceType, it will not be translated.");
+      spaceLoad.remove();
+    }
+  }
+
   // next thing to do is combine all spaces in each thermal zone
   // after this each zone will have 0 or 1 spaces and each space will have 0 or 1 zone
   for (ThermalZone thermalZone : model.getConcreteModelObjects<ThermalZone>()){
@@ -260,6 +274,16 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
       }
     }
   }
+  
+  // remove orphan Generator:MicroTurbine
+  for (auto& chp : model.getConcreteModelObjects<GeneratorMicroTurbine>()){
+    if (!chp.electricLoadCenterDistribution()){
+      LOG(Warn, "GeneratorMicroTurbine " << chp.name().get() << " is not referenced by any ElectricLoadCenterDistribution, it will not be translated.");
+      chp.remove();
+      continue;
+    }
+  }
+  
 
   // remove orphan photovoltaics
   for (auto& pv : model.getConcreteModelObjects<GeneratorPhotovoltaic>()){
@@ -370,8 +394,8 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
     std::vector<UtilityBill> utilityBills = model.getConcreteModelObjects<UtilityBill>();
     for (UtilityBill utilityBill : utilityBills){
       // these meters and variables will be translated later
-      Meter consumptionMeter = utilityBill.consumptionMeter();
-      boost::optional<Meter> peakDemandMeter = utilityBill.peakDemandMeter();
+      OutputMeter consumptionMeter = utilityBill.consumptionMeter();
+      boost::optional<OutputMeter> peakDemandMeter = utilityBill.peakDemandMeter();
     }
   }
 
@@ -1308,6 +1332,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     retVal = translateElectricLoadCenterInverterSimple(temp);
     break;
   }
+  case openstudio::IddObjectType::OS_ElectricLoadCenter_Storage_Simple:
+  {
+    model::ElectricLoadCenterStorageSimple temp = modelObject.cast<ElectricLoadCenterStorageSimple>();
+    retVal = translateElectricLoadCenterStorageSimple(temp);
+    break;
+  }
   case openstudio::IddObjectType::OS_EvaporativeCooler_Direct_ResearchSpecial :
     {
       model::EvaporativeCoolerDirectResearchSpecial evap = modelObject.cast<EvaporativeCoolerDirectResearchSpecial>();
@@ -1383,6 +1413,13 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
   {
     model::FluidCoolerTwoSpeed fluidCoolerTwoSpeed = modelObject.cast<FluidCoolerTwoSpeed>();
     retVal = translateFluidCoolerTwoSpeed(fluidCoolerTwoSpeed);
+    break;
+  }
+  case openstudio::IddObjectType::OS_Generator_MicroTurbine:
+  {
+    // Will also translate the Generator:MicroTurbine:HeatRecovery if there is one
+    model::GeneratorMicroTurbine temp = modelObject.cast<GeneratorMicroTurbine>();
+    retVal = translateGeneratorMicroTurbine(temp);
     break;
   }
   case openstudio::IddObjectType::OS_Generator_Photovoltaic:
@@ -1651,10 +1688,16 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateRoofVegetation(material);
       break;
     }
-  case openstudio::IddObjectType::OS_Meter :
+  case openstudio::IddObjectType::OS_Meter_Custom :
     {
-      model::Meter meter = modelObject.cast<Meter>();
-      retVal = translateMeter(meter);
+      model::MeterCustom meterCustom = modelObject.cast<MeterCustom>();
+      retVal = translateMeterCustom(meterCustom);
+      break;
+    }
+  case openstudio::IddObjectType::OS_Meter_CustomDecrement :
+    {
+      model::MeterCustomDecrement meterCustomDecrement = modelObject.cast<MeterCustomDecrement>();
+      retVal = translateMeterCustomDecrement(meterCustomDecrement);
       break;
     }
   case openstudio::IddObjectType::OS_ModelObjectList :
@@ -1773,6 +1816,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     {
       model::OutputControlReportingTolerances outputControl = modelObject.cast<OutputControlReportingTolerances>();
       retVal = translateOutputControlReportingTolerances(outputControl);
+      break;
+    }
+  case openstudio::IddObjectType::OS_Output_Meter :
+    {
+      model::OutputMeter meter = modelObject.cast<OutputMeter>();
+      retVal = translateOutputMeter(meter);
       break;
     }
   case openstudio::IddObjectType::OS_Output_Variable :
@@ -2880,16 +2929,20 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_Refrigeration_TranscriticalSystem);
 
   result.push_back(IddObjectType::OS_ElectricLoadCenter_Distribution);
+  result.push_back(IddObjectType::OS_Generator_MicroTurbine);
   result.push_back(IddObjectType::OS_Generator_Photovoltaic);
   result.push_back(IddObjectType::OS_PhotovoltaicPerformance_EquivalentOneDiode);
   result.push_back(IddObjectType::OS_PhotovoltaicPerformance_Simple);
   result.push_back(IddObjectType::OS_ElectricLoadCenter_Inverter_LookUpTable);
   result.push_back(IddObjectType::OS_ElectricLoadCenter_Inverter_Simple);
+  result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_Simple);
 
   // put these down here so they have a chance to be translated with their "parent"
   result.push_back(IddObjectType::OS_LifeCycleCost);
 
-  result.push_back(IddObjectType::OS_Meter);
+  result.push_back(IddObjectType::OS_Output_Meter);
+  result.push_back(IddObjectType::OS_Meter_Custom);
+  result.push_back(IddObjectType::OS_Meter_CustomDecrement);
   result.push_back(IddObjectType::OS_Output_Variable);
 
   return result;

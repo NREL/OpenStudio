@@ -55,6 +55,10 @@
 #include "../../model/CoolingTowerSingleSpeed_Impl.hpp"
 #include "../../model/CoolingTowerTwoSpeed.hpp"
 #include "../../model/CoolingTowerTwoSpeed_Impl.hpp"
+#include "../../model/GeneratorMicroTurbine.hpp"
+#include "../../model/GeneratorMicroTurbine_Impl.hpp"
+#include "../../model/GeneratorMicroTurbineHeatRecovery.hpp"
+#include "../../model/GeneratorMicroTurbineHeatRecovery_Impl.hpp"
 #include "../../model/GroundHeatExchangerVertical.hpp"
 #include "../../model/GroundHeatExchangerVertical_Impl.hpp"
 #include "../../model/GroundHeatExchangerHorizontalTrench.hpp"
@@ -145,7 +149,7 @@ IdfObject ForwardTranslator::populateBranch( IdfObject & branchIdfObject,
       {
         inletNode = straightComponent->inletModelObject()->optionalCast<Node>();
         outletNode = straightComponent->outletModelObject()->optionalCast<Node>();
-        //special case for ZoneHVAC:Baseeboard:Convective:Water.  In E+, this object appears on both the 
+        //special case for ZoneHVAC:Baseboard:Convective:Water.  In E+, this object appears on both the 
         //zonehvac:equipmentlist and the branch.  In OpenStudio, this object was broken into 2 objects:
         //ZoneHVACBaseboardConvectiveWater and CoilHeatingWaterBaseboard.  The ZoneHVAC goes onto the zone and
         //has a child coil that goes onto the plantloop.  In order to get the correct translation to E+, we need
@@ -250,6 +254,24 @@ IdfObject ForwardTranslator::populateBranch( IdfObject & branchIdfObject,
               //Get the name and the idd object from the idf object version of this
               objectName = idfZnLowTempRadVar->name().get();
               iddType = idfZnLowTempRadVar->iddObject().name();
+            }
+          }
+        }
+        //special case for Generator:MicroTurbine. 
+        //In OpenStudio, this object was broken into 2 objects:
+        //GeneratorMicroTurbine and GeneratorMicroTurbineHeatRecovery. 
+        //The GeneratorMicroTurbineHeatRecovery goes onto the plantloop.  In order to get the correct translation to E+, we need
+        //to put the name of the linked GeneratorMicroTurbine onto the branch.
+        if (boost::optional<GeneratorMicroTurbineHeatRecovery> mchpHR = modelObject.optionalCast<GeneratorMicroTurbineHeatRecovery>() )
+        {
+          if (boost::optional<GeneratorMicroTurbine> mchp = mchpHR->generatorMicroTurbine())
+          {
+            //translate and map containingZoneHVACBBConvWater
+            if ( boost::optional<IdfObject> idfmchp = this->translateAndMapModelObject(*mchp) )
+            {
+              //Get the name and the idd object from the idf object version of this
+              objectName = idfmchp->name().get();
+              iddType = idfmchp->iddObject().name();
             }
           }
         }

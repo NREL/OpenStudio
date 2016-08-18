@@ -119,6 +119,7 @@
 #include "../../utilities/idf/WorkspaceObjectOrder.hpp"
 #include "../../utilities/core/Logger.hpp"
 #include "../../utilities/core/Assert.hpp"
+#include <utilities/idd/OS_ThermalZone_FieldEnums.hxx>
 #include <utilities/idd/Zone_FieldEnums.hxx>
 #include <utilities/idd/HVACTemplate_Zone_IdealLoadsAirSystem_FieldEnums.hxx>
 #include <utilities/idd/Daylighting_Controls_FieldEnums.hxx>
@@ -169,6 +170,12 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
   if (modelObject.volume()){
     idfObject.setDouble(openstudio::ZoneFields::Volume,modelObject.volume().get());
   }
+
+  // DLM: currently there is no setter for floorArea and the getter does not return the value from this field
+  if (modelObject.getDouble(openstudio::OS_ThermalZoneFields::FloorArea)){
+    idfObject.setDouble(openstudio::ZoneFields::FloorArea, modelObject.getDouble(openstudio::OS_ThermalZoneFields::FloorArea).get());
+  }
+
 
   if (modelObject.zoneInsideConvectionAlgorithm()){
     idfObject.setString(openstudio::ZoneFields::ZoneInsideConvectionAlgorithm,modelObject.zoneInsideConvectionAlgorithm().get());

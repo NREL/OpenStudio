@@ -136,7 +136,7 @@ namespace detail {
     return "Generator:Photovoltaic";
   }
 
-  boost::optional<double> GeneratorPhotovoltaic_Impl::ratedThermalToElectricalPowerRatio() const
+  boost::optional<double> GeneratorPhotovoltaic_Impl::ratedThermaltoElectricalPowerRatio() const
   {
     return boost::none;
   }

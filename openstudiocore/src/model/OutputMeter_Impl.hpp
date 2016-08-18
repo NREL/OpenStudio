@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef MODEL_METER_IMPL_HPP
-#define MODEL_METER_IMPL_HPP
+#ifndef MODEL_OUTPUTMETER_IMPL_HPP
+#define MODEL_OUTPUTMETER_IMPL_HPP
 
 #include "ModelAPI.hpp"
 #include "ModelObject_Impl.hpp"
-#include "Meter.hpp"
+#include "OutputMeter.hpp"
 
 #include "../utilities/core/StaticInitializer.hpp"
 
@@ -35,35 +35,28 @@ class TimeSeries;
 
 namespace model {
 
-class Meter;
+class OutputMeter;
 
 namespace detail {
 
-  /** Meter_Impl is a ModelObject_Impl that is the implementation class for Meter.*/
-  class MODEL_API Meter_Impl : public ModelObject_Impl {
-    
-    
-    
-    
-    
-    
-    
-    
+  /** OutputMeter_Impl is a ModelObject_Impl that is the implementation class for OutputMeter.*/
+  class MODEL_API OutputMeter_Impl : public ModelObject_Impl {
+
    public:
     /** @name Constructors and Destructors */
     //@{
 
-    Meter_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+    OutputMeter_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    Meter_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-               Model_Impl* model,
-               bool keepHandle);
+    OutputMeter_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                     Model_Impl* model,
+                     bool keepHandle);
 
-    Meter_Impl(const Meter_Impl& other,
-               Model_Impl* model,
-               bool keepHandle);
+    OutputMeter_Impl(const OutputMeter_Impl& other,
+                     Model_Impl* model,
+                     bool keepHandle);
 
-    virtual ~Meter_Impl() {}
+    virtual ~OutputMeter_Impl() {}
 
     //@}
 
@@ -153,23 +146,23 @@ namespace detail {
 
    protected:
    private:
-    REGISTER_LOGGER("openstudio.model.Meter");
+    REGISTER_LOGGER("openstudio.model.OutputMeter");
   };
 
-  struct MeterRegexInitializer : StaticInitializer<MeterRegexInitializer>
+  struct OutputMeterRegexInitializer : StaticInitializer<OutputMeterRegexInitializer>
   {
     static void initialize()
     {
-      openstudio::model::Meter::meterRegex();
+      openstudio::model::OutputMeter::meterRegex();
     }
   };
 
-  struct MakeSureMeterRegexInitializerIsInitialized
+  struct MakeSureOutputMeterRegexInitializerIsInitialized
   {
-    MakeSureMeterRegexInitializerIsInitialized()
+    MakeSureOutputMeterRegexInitializerIsInitialized()
     {}
 
-    MeterRegexInitializer m_i;
+    OutputMeterRegexInitializer m_i;
   };
 
 } // detail
@@ -177,5 +170,5 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_METER_IMPL_HPP
+#endif // MODEL_OUTPUTMETER_IMPL_HPP
 

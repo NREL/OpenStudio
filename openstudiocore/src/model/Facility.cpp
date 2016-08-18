@@ -32,8 +32,8 @@
 #include "ExteriorLights_Impl.hpp"
 #include "LifeCycleCostParameters.hpp"
 #include "LifeCycleCostParameters_Impl.hpp"
-#include "Meter.hpp"
-#include "Meter_Impl.hpp"
+#include "OutputMeter.hpp"
+#include "OutputMeter_Impl.hpp"
 #include "PlanarSurface.hpp"
 #include "PlanarSurface_Impl.hpp"
 #include "Site.hpp"
@@ -93,7 +93,7 @@ namespace detail {
   {
     std::vector<ModelObject> result;
 
-    MeterVector meters = this->meters();
+    OutputMeterVector meters = this->meters();
     result.insert(result.end(),meters.begin(),meters.end());
 
     // building
@@ -133,11 +133,11 @@ namespace detail {
   }
 
   /// get meter requests for the facility
-  std::vector<Meter> Facility_Impl::meters() const
+  std::vector<OutputMeter> Facility_Impl::meters() const
   {
-    MeterVector result;
-    MeterVector meters = this->model().getConcreteModelObjects<Meter>();
-    for (const Meter& meter : meters){
+    OutputMeterVector result;
+    OutputMeterVector meters = this->model().getConcreteModelObjects<OutputMeter>();
+    for (const OutputMeter& meter : meters){
       if (meter.installLocationType() && (InstallLocationType::Facility == meter.installLocationType().get().value())){
         result.push_back(meter);
       }
@@ -145,14 +145,14 @@ namespace detail {
     return result;
   }
   
-  boost::optional<Meter> Facility_Impl::getMeterByFuelType(
+  boost::optional<OutputMeter> Facility_Impl::getMeterByFuelType(
     const FuelType& fuelType,
     const std::string& reportingFrequency,
     const boost::optional<EndUseType>& endUseType,
     const boost::optional<std::string>& specificEndUse) const
   {
-    OptionalMeter result;
-    for (const Meter& meter : this->meters()) {
+    OptionalOutputMeter result;
+    for (const OutputMeter& meter : this->meters()) {
       if (meter.fuelType() && (meter.fuelType() == fuelType)) {
         if (istringEqual(meter.reportingFrequency(),reportingFrequency)) {
           OptionalEndUseType meterEndUseType = meter.endUseType();
@@ -1992,12 +1992,12 @@ boost::optional<Building> Facility::building() const
 }
 
 /// get meter requests for the facility
-std::vector<Meter> Facility::meters() const
+std::vector<OutputMeter> Facility::meters() const
 {
   return getImpl<detail::Facility_Impl>()->meters();
 }
 
-boost::optional<Meter> Facility::getMeterByFuelType(
+boost::optional<OutputMeter> Facility::getMeterByFuelType(
     const FuelType& fuelType,
     const std::string& reportingFrequency,
     const boost::optional<EndUseType>& endUseType,

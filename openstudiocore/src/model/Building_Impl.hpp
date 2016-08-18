@@ -32,7 +32,7 @@ class Transformation;
 namespace model {
 
 class Facility;
-class Meter;
+class OutputMeter;
 class ShadingSurfaceGroup;
 class Surface;
 class Space;
@@ -183,7 +183,7 @@ namespace detail {
 
     void resetDefaultScheduleSet();
 
-    std::vector<Meter> meters() const;
+    std::vector<OutputMeter> meters() const;
 
     boost::optional<Facility> facility() const;
 

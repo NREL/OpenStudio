@@ -1,4 +1,4 @@
-!IDD_Version 1.12.1
+!IDD_Version 1.12.3
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -24765,6 +24765,291 @@ OS:SolarCollector:FlatPlate:PhotovoltaicThermal,
 
 \group Electric Load Center-Generator Specifications
 
+OS:Generator:MicroTurbine,
+      \memo MicroTurbine generators are small combustion turbines (e.g., 25kW to 500kW). The model
+      \memo calculates electrical power output, fuel use, standby and ancillary power.
+      \memo Energy recovery from exhaust air can be used to heat water.
+      \min-fields 12
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2, \field Name
+      \required-field
+      \type alpha
+      \reference GeneratorNames
+      \reference MicroTurbineGeneratorNames
+  A3, \field Availability Schedule Name
+      \note Availability schedule name for this generator. Schedule value > 0 means the generator is available.
+      \note If this field is blank, the generator is always available.
+      \type object-list
+      \object-list ScheduleNames
+  N1, \field Reference Electrical Power Output
+      \required-field
+      \type real
+      \units W
+      \minimum> 0.0
+  N2, \field Minimum Full Load Electrical Power Output
+      \type real
+      \units W
+      \minimum 0.0
+      \default 0.0
+  N3, \field Maximum Full Load Electrical Power Output
+      \type real
+      \units W
+      \minimum> 0.0
+      \note If left blank, Maximum Full Load Electrical Power Output will be set
+      \note equal to the Reference Electrical Power Output.
+  N4, \field Reference Electrical Efficiency Using Lower Heating Value
+      \required-field
+      \type real
+      \minimum> 0.0
+      \maximum 1.0
+      \note Electric power output divided by fuel energy input (LHV basis)
+      \note at reference conditions.
+  N5, \field Reference Combustion Air Inlet Temperature
+      \type real
+      \units C
+      \default 15.0
+  N6, \field Reference Combustion Air Inlet Humidity Ratio
+      \type real
+      \units kgWater/kgDryAir
+      \minimum> 0.0
+      \default 0.00638
+  N7, \field Reference Elevation
+      \type real
+      \units m
+      \minimum -300.0
+      \default 0.0
+  A4, \field Electrical Power Function of Temperature and Elevation Curve Name
+      \required-field
+      \type object-list
+      \object-list BiquadraticCurves
+      \object-list BiVariateTables
+      \note curve = a + b*T + c*T**2 + d*Elev + e*Elev**2 + f*T*Elev
+      \note T = combustion air inlet temperature (C)
+      \note Elev = elevation (m)
+  A5, \field Electrical Efficiency Function of Temperature Curve Name
+      \required-field
+      \type object-list
+      \object-list QuadraticCubicCurves
+      \note Quadratic curve = a + b*T + c*T**2
+      \note Cubic curve = a + b*T + c*T**2 + d*T**3
+      \note T = combustion air inlet temperature (C)
+  A6, \field Electrical Efficiency Function of Part Load Ratio Curve Name
+      \required-field
+      \type object-list
+      \object-list QuadraticCubicCurves
+      \note Quadratic curve = a + b*PLR + c*PLR**2
+      \note Cubic curve = a + b*PLR + c*PLR**2 + d*PLR**3
+      \note PLR = ratio of Generator Load to steady state Electrical Power Output at
+      \note current operating conditions
+  A7, \field Fuel Type
+      \type choice
+      \key NaturalGas
+      \key PropaneGas
+      \default NaturalGas
+  N8, \field Fuel Higher Heating Value
+      \type real
+      \units kJ/kg
+      \default 50000
+      \minimum> 0.0
+  N9, \field Fuel Lower Heating Value
+      \type real
+      \units kJ/kg
+      \default 45450
+      \minimum> 0.0
+ N10, \field Standby Power
+      \type real
+      \units W
+      \default 0.0
+      \minimum 0.0
+      \note Electric power consumed when the generator is available but not being called
+      \note by the Electric Load Center.
+ N11, \field Ancillary Power
+      \type real
+      \units W
+      \default 0.0
+      \minimum 0.0
+      \note Electric power consumed by ancillary equipment (e.g., external fuel pressurization pump).
+      \note Set to zero if Reference Electrical Power Output is the 'net' value (ancillary power
+      \note already deducted). Input value is positive, but indicates negative electric generation.
+  A8, \field Ancillary Power Function of Fuel Input Curve Name
+      \type object-list
+      \object-list QuadraticCurves
+      \object-list UniVariateTables
+      \note Quadratic curve = a + b*mdot + c*mdot**2
+      \note mdot = fuel mass flow rate (kg/s)
+      \note If left blank, model assumes ancillary power defined in previous field is constant
+      \note whenever the generator is operating.
+  A9, \field Generator MicroTurbine Heat Recovery Name
+      \type object-list
+      \object-list MicroTurbineHeatRecoveryNames
+      \note Reference an optional OpenStudio specific object for the HeatRecovery Module itself
+ A10, \field Combustion Air Inlet Node Name
+      \type object-list
+      \object-list ConnectionNames
+      \note Must be an outdoor air node.
+ A11, \field Combustion Air Outlet Node Name
+      \type object-list
+      \object-list ConnectionNames
+ N12, \field Reference Exhaust Air Mass Flow Rate
+      \type real
+      \units kg/s
+      \minimum> 0.0
+ A12, \field Exhaust Air Flow Rate Function of Temperature Curve Name
+      \type object-list
+      \object-list QuadraticCubicCurves
+      \object-list UniVariateTables
+      \note Quadratic curve = a + b*T + c*T**2
+      \note Cubic curve = a + b*T + c*T**2 + d*T**3
+      \note T = combustion air inlet temperature (C)
+      \note If field is left blank, model assumes this modifier equals 1 for entire simulation.
+ A13, \field Exhaust Air Flow Rate Function of Part Load Ratio Curve Name
+      \type object-list
+      \object-list QuadraticCubicCurves
+      \object-list UniVariateTables
+      \note Quadratic curve = a + b*PLR + c*PLR**2
+      \note Cubic curve = a + b*PLR + c*PLR**2 + d*PLR**3
+      \note PLR = ratio of Generator Load to steady state Electrical Power Output at
+      \note current operating conditions.
+      \note If field is left blank, model assumes this modifier equals 1 for entire simulation.
+ N13, \field Nominal Exhaust Air Outlet Temperature
+      \type real
+      \note Exhaust air outlet temperature at reference conditions.
+ A14, \field Exhaust Air Temperature Function of Temperature Curve Name
+      \type object-list
+      \object-list QuadraticCubicCurves
+      \object-list UniVariateTables
+      \note Quadratic curve = a + b*T + c*T**2
+      \note Cubic curve = a + b*T + c*T**2 + d*T**3
+      \note T = combustion air inlet temperature (C)
+      \note If field is left blank, model assumes this modifier equals 1 for entire simulation.
+ A15; \field Exhaust Air Temperature Function of Part Load Ratio Curve Name
+      \type object-list
+      \object-list QuadraticCubicCurves
+      \object-list UniVariateTables
+      \note Quadratic curve = a + b*PLR + c*PLR**2
+      \note Cubic curve = a + b*PLR + c*PLR**2 + d*PLR**3
+      \note PLR = ratio of Generator Load to steady state Electrical Power Output at
+      \note current operating conditions.
+      \note If field is left blank, model assumes this modifier equals 1 for entire simulation.
+      
+OS:Generator:MicroTurbine:HeatRecovery,
+      \memo MicroTurbine generators are small combustion turbines (e.g., 25kW to 500kW). The model
+      \memo calculates electrical power output, fuel use, standby and ancillary power.
+      \memo Energy recovery from exhaust air can be used to heat water.
+      \memo this class is purely for OpenStudio to separate
+      \memo the HeatRecovery (StraightComponent) from the Generator:MicroTurbine(Generator)
+      \min-fields 12
+  A1, \field Handle
+      \type handle
+      \required-field
+  A2, \field Name
+      \required-field
+      \type alpha
+      \reference MicroTurbineHeatRecoveryNames
+      \reference ConnectionObject
+  A3, \field Heat Recovery Water Inlet Node Name
+      \type object-list
+      \required-field
+      \object-list ConnectionNames
+  A4, \field Heat Recovery Water Outlet Node Name
+      \type object-list
+      \required-field
+      \object-list ConnectionNames
+ N1 , \field Reference Thermal Efficiency Using Lower Heat Value
+      \type real
+      \minimum 0.0
+      \maximum 1.0
+      \default 0.0
+      \note Reference thermal efficiency (heat recovery to water) based on the
+      \note Lower Heating Value (LHV) of the fuel.
+ N2 , \field Reference Inlet Water Temperature
+      \type real
+      \required-field
+      \units C
+ A5 , \field Heat Recovery Water Flow Operating Mode
+      \type choice
+      \required-field
+      \key PlantControl
+      \key InternalControl
+      \default PlantControl
+      \note PlantControl means the heat recovery water flow rate is determined by the plant,
+      \note but the user needs to supply a heat recovery water flow rate.
+      \note InternalControl means the heat recovery water flow rate is controlled by this generator.
+      \note If 'InternalControl' is selected, then the user needs to supply a reference heat
+      \note recovery water flow rate and optionally the name of a heat recovery flow rate modifier curve.
+ N6 , \field Reference Heat Recovery Water Flow Rate
+      \type real
+      \required-field
+      \units m3/s
+      \ip-units gal/min
+      \minimum> 0.0
+ A6 , \field Heat Recovery Water Flow Rate Function of Temperature and Power Curve Name
+      \type object-list
+      \object-list BiquadraticCurves
+      \object-list BiVariateTables
+      \note curve = a + b*T + c*T**2 + d*Pnet + e*Pnet + f*T*Pnet
+      \note T = heat recovery inlet water temperature
+      \note Pnet = net power output = electric power output - ancillary power
+      \note If left blank, model assumes the heat recovery water flow rate is constant whenever the
+      \note generator is operating, at the Reference HR Water Flow Rate defined in the previous field.
+ A7 , \field Thermal Efficiency Function of Temperature and Elevation Curve Name
+      \type object-list
+      \object-list BicubicBiquadraticCurves
+      \object-list BiVariateTables
+      \note Bicubic curve = a + b*T + c*T**2 + d*Elev + e*Elev**2 + f*T*Elev + g*T**3 + h*Elev**3 + i*T**2*Elev + j*T*Elev**2
+      \note Biquadratic curve = a + b*T + c*T**2 + d*Elev + e*Elev**2 + f*T*Elev
+      \note T = combustion air inlet temperature (C)
+      \note Elev = elevation (m)
+      \note If field is left blank, model assumes this modifier equals 1 for entire simulation.
+ A8 , \field Heat Recovery Rate Function of Part Load Ratio Curve Name
+      \type object-list
+      \object-list QuadraticCubicCurves
+      \object-list UniVariateTables
+      \note Quadratic curve = a + b*PLR + c*PLR**2
+      \note Cubic curve = a + b*PLR + c*PLR**2 + d*PLR**3
+      \note PLR = ratio of Generator Load to steady state Electrical Power Output at
+      \note current operating conditions
+      \note If field is left blank, model assumes this modifier equals 1 for entire simulation.
+ A9 , \field Heat Recovery Rate Function of Inlet Water Temperature Curve Name
+      \type object-list
+      \object-list QuadraticCurves
+      \object-list UniVariateTables
+      \note Quadratic curve = a + b*T + c*T**2
+      \note T = inlet water temperature (C)
+      \note If field is left blank, model assumes this modifier equals 1 for entire simulation.
+ A10, \field Heat Recovery Rate Function of Water Flow Rate Curve Name
+      \type object-list
+      \object-list QuadraticCurves
+      \object-list UniVariateTables
+      \note Quadratic curve = a + b*Flow + c*Flow**2
+      \note Flow = flow rate of water through the heat exchanger (m3/s)
+      \note If field is left blank, model assumes this modifier equals 1 for entire simulation.
+ N7, \field Minimum Heat Recovery Water Flow Rate
+      \type real
+      \units m3/s
+      \ip-units gal/min
+      \minimum 0.0
+      \default 0.0
+ N8, \field Maximum Heat Recovery Water Flow Rate
+      \type real
+      \required-field
+      \units m3/s
+      \ip-units gal/min
+      \minimum 0.0
+      \default 0.0
+      \note Eplus defaults to 0 but here it would be moot to have a Heat
+      \note Recovery module with a max flow of 0 so it is a required field
+ N9, \field Maximum Heat Recovery Water Temperature
+      \type real
+      \units C
+ N10; \field Rated Thermal to Electrical Power Ratio
+      \type real
+      \minimum> 0.0
+      \note Required field when generator is used by an ElectricLoadCenter:Distribution object with Generator Operation Scheme set to FollowThermal or FollowThermalLimitElectrical
+      \note Will default to 'Reference Thermal Efficiency Using Lower Heat Value' divided by 'Reference Electrical Efficiency Using Lower Heating Value'
+
 OS:Generator:Photovoltaic,
         \memo Describes an array of photovoltaic (PV) modules. PV performance is taken from the
         \memo referenced PhotovoltaicPerformance:* object. Array tilt, azimuth, and gross area
@@ -24810,7 +25095,7 @@ OS:Generator:Photovoltaic,
         \note If this field is blank, the generator is always available.
         \type object-list
         \object-list ScheduleNames
-  
+
 OS:PhotovoltaicPerformance:Simple,
         \memo Describes a simple model of photovoltaics that may be useful for early phase
         \memo design analysis. In this model the user has direct access to the efficiency with
@@ -25032,6 +25317,56 @@ OS:ElectricLoadCenter:Inverter:LookUpTable,
         \minimum 0
         \maximum 1.0
 
+OS:ElectricLoadCenter:Storage:Simple,
+       \memo Used to model storage of electricity in an electric load center.  This is a simple
+       \memo model that does not attempt to represent any of the characteristics of a real
+       \memo storage device such as a battery.  The type of power, AC or DC, depends on
+       \memo the configuration chosen as the Electrical Buss Type in the
+       \memo ElectricLoadCenter:Distribution object.
+  A1 , \field Handle
+       \type handle
+       \required-field 
+  A2,  \field Name
+       \reference ElecStorageList
+  A3,  \field Availability Schedule Name
+       \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+       \note If this field is blank, the system is always available.
+       \type object-list
+       \object-list ScheduleNames
+  A4,  \field Zone Name
+       \note Enter name of zone to receive storage losses as heat
+       \note if blank then storage is assumed to be outdoors
+       \type object-list
+       \object-list ThermalZoneNames
+  N1 , \field Radiative Fraction for Zone Heat Gains
+       \maximum 1.0
+       \minimum 0.0
+       \default 0.0
+       \note This field contains the fraction of storage losses that enter the zone as long-wave thermal radiation.
+       \note This should be a factor between 0.0 and 1.0. The balance of the losses are convective.
+       \note This field is not used if the previous field for 'Zone Name' is left blank.
+  N2,  \field Nominal Energetic Efficiency for Charging
+       \maximum 1.0
+       \minimum 0.0
+       \default 1.0
+  N3,  \field Nominal Discharging Energetic Efficiency
+       \maximum 1.0
+       \minimum 0.0
+       \default 1.0
+  N4,  \field Maximum Storage Capacity
+       \required-field
+       \units J
+  N5,  \field Maximum Power for Discharging
+       \required-field
+       \units W
+       \minimum 0.0
+  N6,  \field Maximum Power for Charging
+       \required-field
+       \units W
+       \minimum 0.0
+  N7;  \field Initial State of Charge
+       \units J
+
 OS:ElectricLoadCenter:Distribution,
        \memo a list of meters that can be reported are available after a run on
        \memo the meter dictionary file (.mdd) if the Output:VariableDictionary has been requested.
@@ -25046,10 +25381,16 @@ OS:ElectricLoadCenter:Distribution,
        \object-list ModelObjectLists
   A4 , \field Generator Operation Scheme Type
        \note required if Generator List is entered.
-       \memo Keys DemandLimit, TrackElectrical, TrackSchedule, TrackMeter, FollowThermal and FollowThermalLimitElectrical disabled for now
+       \note Determines how generators are to be controlled
        \type choice
-       \default Baseload
        \key Baseload
+       \key DemandLimit
+       \key TrackElectrical
+       \key TrackSchedule
+       \key TrackMeter
+       \key FollowThermal
+       \key FollowThermalLimitElectrical
+       \default Baseload
   N1 , \field Demand Limit Scheme Purchased Electric Demand Limit
        \type real
        \units W
@@ -25058,15 +25399,19 @@ OS:ElectricLoadCenter:Distribution,
        \type object-list
        \object-list ScheduleNames
   A6 , \field Track Meter Scheme Meter Name
+       \type alpha
        \note required when Generator Operation Scheme Type=TrackMeter
-       \type external-list
-       \external-list autoRDDmeter
+       \memo type external list
+       \memo external list autoRDDmeter
   A7 , \field Electrical Buss Type
        \type choice
-       \memo Keys AlternatingCurrent, AlternatingCurrentWithStorage, DirectCurrentWithInverterDCStorage, and DirectCurrentWithInverterACStorage disabled for now
+       \key AlternatingCurrent
+       \key AlternatingCurrentWithStorage
        \key DirectCurrentWithInverter
+       \key DirectCurrentWithInverterDCStorage
+       \key DirectCurrentWithInverterACStorage
        \default DirectCurrentWithInverter
-  A8 , \field Inverter Object Name
+  A8 , \field Inverter Name
        \note required when Electrical Buss Type=DirectCurrentWithInverter, DirectCurrentWithInverterDCStorage,
        \note or DirectCurrentWithInverterACStorage
        \type object-list
@@ -25076,10 +25421,141 @@ OS:ElectricLoadCenter:Distribution,
        \note or DirectCurrentWithInverterACStorage
        \type object-list
        \object-list ElecStorageList
-  A10; \field Transformer Object Name
+  A10, \field Transformer Object Name
        \note required when power needs to be output from on-site generation to the grid via transformer
        \type object-list
-       \object-list TransformerNames       
+       \object-list TransformerNames
+  A11, \field Storage Operation Scheme
+       \note Select method to govern how storage charge and discharge is controlled
+       \type choice
+       \key TrackFacilityElectricDemandStoreExcessOnSite
+       \note TrackFacilityElectricDemandStoreExcessOnSite indicates that storage control will follow the facility power demand 
+       \note while accounting for any on-site generation.  Only excess on site generation  gets stored (legacy behavior).
+       \default TrackFacilityElectricDemandStoreExcessOnSite
+       \key TrackMeterDemandStoreExcessOnSite
+       \note TrackMeterDemandStoreExcessOnSite indicates that storage discharge control will follow an electric meter named in the field called Storage Control Track Meter Name.  This scheme is similiar 
+       \note to TrackFacilityElectricDemandStoreExcessOnSite except that instead of the main facility electric meter, the control is based off of a user-selected meter.
+       \key TrackChargeDischargeSchedules
+       \note TrackChargeDischargeSchedules indicates that control will follow the charging and discharging power and schedules defined in the fields called Maximum Storage Charge Grid Supply Power,
+       \note Storage Charge Grid Supply Power Fraction Schedule Name, Design Storage Discharge Grid Export Power, and Storage Discharge Grid Export Fraction Schedule Name.
+       \key FacilityDemandLeveling
+       \note FacilityDemandLeveling indicates that storage control will attempt to control the facility's power demand drawn from the utility service to a prescribed level.
+       \note The target utility demand is entered in the fields called Storage Control Utility Demand Limit and Storage Control Utility Demand Limit Fraction Schedule Name
+       \note This scheme first accounts for any on-site generation and during times of high use will discharge storage to reduce facility grid demand to meet the target level
+       \note and during times of low use will charge storage from the grid to increase facility grid demand to meet the target level. 
+  A12, \field Storage Control Track Meter Name
+       \note required when Storage Operation Scheme is set to TrackMeterDemandStoreExcessOnSite.
+       \type alpha
+       \memo type external-list
+       \memo external-list autoRDDmeter
+  A13, \field Storage Converter Object Name
+       \note Name of an ElectricLoadCenter:Storage:Converter used to convert AC to DC when charging DC storage from grid supply.
+       \note A converter is expected when using Storage Operation Schemes FacilityDemandLeveling or TrackChargeDischargeSchedules
+       \note A single bidirectional device will reference both an inverter object (DC to AC) and a converter object (AC to DC).
+       \type object-list
+       \object-list ConverterList
+  N2 , \field Maximum Storage State of Charge Fraction
+       \note Fraction of storage capacity used as upper limit for controlling charging, for all storage operation schemes.
+       \type real
+       \default 1.0
+  N3 , \field Minimum Storage State of Charge Fraction
+       \note Fraction of storage capacity used as lower limit for controlling discharging, for all storage operation schemes.
+       \type real
+       \default 0.0
+  N4 , \field Design Storage Control Charge Power
+       \note Maximum rate that electric power can be charged into storage.
+       \note Storage charging adjusted downward for conversion losses.
+       \note Rate is modified by fractional values in the schedule named in the next field. 
+       \note Required field when using Storage Operation Schemes FacilityDemandLeveling or TrackChargeDischargeSchedules.
+       \type real
+       \units W
+  A14, \field Storage Charge Power Fraction Schedule Name
+       \note Controls timing and magnitude of charging storage.
+       \note Required field if Storage Operation Scheme is set to TrackChargeDischargeSchedules.
+       \note Schedule values should be fractions from 0.0 to 1.0, inclusive.
+       \type object-list
+       \object-list ScheduleNames
+  N5 , \field Design Storage Control Discharge Power
+       \note Maximum rate that electric power can be discharged from storage.
+       \note Rate is modified by fractional values in the schedule named in the next field. 
+       \note Required field when using Storage Operation Schemes FacilityDemandLeveling or TrackChargeDischargeSchedules.
+       \type real
+       \units W
+  A15, \field Storage Discharge Power Fraction Schedule Name
+       \note Controls timing and magnitude of discharging storage
+       \note Required field if Storage Operation Scheme is set to TrackChargeDischargeSchedules.
+       \note Schedule values should be fractions from 0.0 to 1.0, inclusive.
+       \type object-list
+       \object-list ScheduleNames
+  N6,  \field Storage Control Utility Demand Target
+       \note Target utility service demand power for discharge control.  Storage draws are adjusted upwards for conversion losses. 
+       \note Required field for FacilityDemandLeveling storage operation scheme
+       \type real
+       \units W
+  A16; \field Storage Control Utility Demand Target Fraction Schedule Name
+       \note Modifies the target utility service demand power over time.
+       \note Schedule values should be fractions from -1.0 to 1.0, inclusive.
+       \note if omitted a schedule value of 1.0 is used. Negative values indicate export to grid
+       \note Schedule is used if Storage Operation Scheme is set to FacilityDemandLeveling.
+       \type object-list
+       \object-list ScheduleNames
+
+OS:ElectricLoadCenter:Storage:Converter,
+        \memo This model is for converting AC to DC for grid-supplied charging of DC storage
+        \min-fields 4
+   A1 , \field Handle
+        \type handle
+        \required-field
+   A2 , \field Name
+        \reference ConverterList
+   A3 , \field Availability Schedule Name
+        \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+        \note If this field is blank, the converter is always available.
+        \type object-list
+        \object-list ScheduleNames
+   A4 , \field Power Conversion Efficiency Method
+        \type choice
+        \key SimpleFixed
+        \default SimpleFixed
+        \note SimpleFixed indicates power conversion losses are based on Simple Fixed Efficiency
+        \key FunctionOfPower
+        \note FunctionOfPower indicates power conversion losses are a function of normalized power using a curve or table.
+   N1 , \field Simple Fixed Efficiency
+        \note Constant efficiency for conversion of AC to DC at all power levels.
+        \note Field is only used when Power Conversion Efficiency Method is set to SimpleFixed.
+        \type real
+        \minimum> 0.0
+        \maximum 1.0
+        \default 0.95
+   N2,  \field Design Maximum Continuous Input Power
+        \note Required field when Power Conversion Efficiency Method is set to FunctionOfPower.
+        \type real
+        \units W
+   A5 , \field Efficiency Function of Power Curve Name
+        \note Curve or table with a single independent variable that describes efficiency as a function of normalized power.
+        \note The "x" input for curve or table is the ratio of current input power divided by design power in the previous field
+        \note Required field when Power Conversion Efficiency Method is set to FunctionOfPower.
+        \type object-list
+        \object-list UniVariateCurves
+        \object-list UniVariateTables
+   N3 , \field Ancillary Power Consumed In Standby
+        \note Optional standby power consumed when converter is available but no power is being conditioned. 
+        \type real
+        \units W
+        \default 0.0
+   A6 , \field Zone Name
+        \note enter name of zone to receive converter losses as heat
+        \note if blank then converter is assumed to be outdoors
+        \type object-list
+        \object-list ZoneNames
+   N4 ; \field Radiative Fraction
+        \note fraction of zone heat gains treated as thermal radiation
+        \note Only used if a Zone Name is entered.
+        \minimum 0.0
+        \maximum 1.0
+        \default 0.0
+        \memo This field was defaulted to 0.0 here, because the E+ doc says that if omitted,
+        \memo all zone heat gains will be convective
        
 \group OpenStudio Economics
 
@@ -25747,8 +26223,8 @@ OS:OutputControl:ReportingTolerances,
        \minimum 0
        \maximum 10
 
-OS:Meter,
-       \memo each OS:Meter command picks meters to be put onto the standard output file (.eso) and
+OS:Output:Meter,
+       \memo each OS:Output:Meter command picks meters to be put onto the standard output file (.eso) and
        \memo meter file (.mtr). Not all meters are reported in every simulation. A list of
        \memo a list of meters that can be reported are available after a run on
        \memo the meter dictionary file (.mdd).
@@ -25827,4 +26303,62 @@ OS:Output:Variable,
   A6; \field Schedule Name
        \type object-list
        \object-list ScheduleNames
+
+OS:Meter:Custom,
+   \extensible:2
+   \memo Used to allow users to combine specific variables and/or meters into
+   \memo "custom" meter configurations. To access these meters by name, one must
+   \memo first run a simulation to generate the RDD/MDD files and names.
+   A1,  \field Handle
+        \type handle
+        \required-field
+   A2,  \field Name
+        \required-field
+   A3,  \field Fuel Type
+        \type choice
+        \key Electricity
+        \key NaturalGas
+        \key PropaneGas
+        \key FuelOil#1
+        \key FuelOil#2
+        \key Coal
+        \key Diesel
+        \key Gasoline
+        \key Water
+        \key Generic
+        \key OtherFuel1
+        \key OtherFuel2
+   A4,  \field Key Name
+        \begin-extensible
+   A5;  \field Output Variable or Meter Name
+
+OS:Meter:CustomDecrement,
+   \extensible:2 - repeat last two fields, remembering to remove ; from "inner" fields.
+   \memo Used to allow users to combine specific variables and/or meters into
+   \memo "custom" meter configurations. To access these meters by name, one must
+   \memo first run a simulation to generate the RDD/MDD files and names.
+   A1,  \field Handle
+        \type handle
+        \required-field
+   A2,  \field Name
+        \required-field
+   A3,  \field Fuel Type
+        \type choice
+        \key Electricity
+        \key NaturalGas
+        \key PropaneGas
+        \key FuelOil#1
+        \key FuelOil#2
+        \key Coal
+        \key Diesel
+        \key Gasoline
+        \key Water
+        \key Generic
+        \key OtherFuel1
+        \key OtherFuel2
+   A4,  \field Source Meter Name
+        \required-field
+   A5,  \field Key Name
+        \begin-extensible
+   A6;  \field Output Variable or Meter Name
 

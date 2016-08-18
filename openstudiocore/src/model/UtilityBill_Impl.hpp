@@ -147,9 +147,9 @@ namespace detail {
     /** @name Other */
     //@{
 
-    Meter consumptionMeter() const;
+    OutputMeter consumptionMeter() const;
 
-    boost::optional<Meter> peakDemandMeter() const;
+    boost::optional<OutputMeter> peakDemandMeter() const;
 
     unsigned numberBillingPeriodsInCalculations() const;
 

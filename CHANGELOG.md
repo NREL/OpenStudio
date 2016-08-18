@@ -1,3 +1,29 @@
+## OpenStudio v1.12.2
+###### 2016-07-25 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.12.1...v1.12.2 )
+
+Closed Issues: 12 (#93, #94, #273, #275, #398, #399, #1362, #1925, #1991, #2172, #2278, #2306)
+- ![Fixed:][fixed] [#93]( https://github.com/NREL/OpenStudio/issues/93 ), gbXML translator should convert floor to roof and vice versa when reverses geometry (Bugzilla #634)
+- ![Fixed:][fixed] [#94]( https://github.com/NREL/OpenStudio/issues/94 ), gbXML translator should provide a value for material roughness if not in the file (Bugzilla #635)
+- ![Fixed:][fixed] [#273]( https://github.com/NREL/OpenStudio/issues/273 ), Error working on gbXML file after I imported it (Bugzilla #1053)
+- ![Fixed:][fixed] [#275]( https://github.com/NREL/OpenStudio/issues/275 ), An xml with a zone containing multiple spaces is split into multiple zones on import. (Bugzilla #1056)
+- ![Fixed:][fixed] [#398]( https://github.com/NREL/OpenStudio/issues/398 ), Non-mirror constructions in export of std 140 model to gbXML
+- ![Fixed:][fixed] [#399]( https://github.com/NREL/OpenStudio/issues/399 ), Unable to import gbXML export of hospital reference building into Bentley
+- ![Fixed:][fixed] [#1362]( https://github.com/NREL/OpenStudio/issues/1362 ), OpenStudio GUI does not show ScheduleYear objects where it should
+- ![Fixed:][fixed] [#1925]( https://github.com/NREL/OpenStudio/issues/1925 ), GBXML Export Uses wrong Coordinate Geometry
+- ![Fixed:][fixed] [#1991]( https://github.com/NREL/OpenStudio/issues/1991 ), Shading surfaces not exported to gbXML
+- ![Improved:][improved] [#2172]( https://github.com/NREL/OpenStudio/issues/2172 ), Translate all coils supported by the IDD in AirLoopHVACUnitarySystem
+- ![Fixed:][fixed] [#2278]( https://github.com/NREL/OpenStudio/issues/2278 ), UnitarySystemPerformance:Multispeed is not cloning correctly
+- ![Fixed:][fixed] [#2306]( https://github.com/NREL/OpenStudio/issues/2306 ), Zone overview bug in open studio results
+
+## OpenStudio v1.12.1
+###### 2016-07-07 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.12.0...v1.12.1 )
+
+- ![Fixed:][fixed] [#2248]( https://github.com/NREL/OpenStudio/pull/2248 ), Add Generator:MicroTurbine to OpenStudio
+- ![Fixed:][fixed] [#2263]( https://github.com/NREL/OpenStudio/pull/2263 ), Add Meter:Custom and Meter:CustomDecrement to the SDK
+- ![Fixed:][fixed] [#2276]( https://github.com/NREL/OpenStudio/pull/2276 ), Add ElectricLoadCenter:Storage:Simple and expose rest of ELC:Distribution fields
+- ![Fixed:][fixed] [#2282]( https://github.com/NREL/OpenStudio/pull/2282 ), Jmarrec merge
+- ![Fixed:][fixed] [#2287]( https://github.com/NREL/OpenStudio/pull/2287 ), Spectral dataset
+
 ## OpenStudio v1.12.0
 ###### 2016-07-01 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.11.6...v1.12.0 )
 

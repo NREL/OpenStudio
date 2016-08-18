@@ -116,6 +116,7 @@
     <file>images/furnace_multi_stage.png</file>
     <file>images/ground_heat_exchanger_horizontal.png</file>
     <file>images/ground_heat_exchanger_vertical.png</file>
+    <file>images/generator_microturbine_heatrecovery.png</file>
     <file>images/header-backgnd-1px-wide.png</file>
     <file>images/headered_pumps_constant.png</file>
     <file>images/headered_pumps_variable.png</file>
@@ -381,6 +382,7 @@
     <file>images/mini_icons/furnace.png</file>
     <file>images/mini_icons/gas_equipment.png</file>
     <file>images/mini_icons/gas_equipment_definition.png</file>
+    <file>images/mini_icons/generator_microturbine_heatrecovery.png</file>
     <file>images/mini_icons/glare_sensor.png</file>
     <file>images/mini_icons/grassanddirt.png</file>
     <file>images/mini_icons/ground_heat_exchanger_vertical.png</file>

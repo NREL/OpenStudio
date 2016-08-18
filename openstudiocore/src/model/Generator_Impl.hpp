@@ -57,7 +57,7 @@ namespace detail {
 
     virtual boost::optional<Schedule> availabilitySchedule() const = 0;
 
-    virtual boost::optional<double> ratedThermalToElectricalPowerRatio() const = 0;
+    virtual boost::optional<double> ratedThermaltoElectricalPowerRatio() const = 0;
 
     //@}
     /** @name Getters */
