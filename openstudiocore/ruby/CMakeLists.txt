@@ -52,24 +52,46 @@ target_link_libraries(init_openstudio
 )
 
 add_library(
-  openstudiorb
+  openstudio_rb
   MODULE
-  openstudio_ruby.cpp
+  openstudio_rb.cpp
 )
 
-set_target_properties(openstudiorb PROPERTIES PREFIX "")
-set_target_properties(openstudiorb PROPERTIES OUTPUT_NAME openstudio)
+set_target_properties(openstudio_rb PROPERTIES PREFIX "")
+set_target_properties(openstudio_rb PROPERTIES OUTPUT_NAME openstudio)
 if(APPLE)
-  set_target_properties(openstudiorb PROPERTIES SUFFIX ".bundle" )
+  set_target_properties(openstudio_rb PROPERTIES SUFFIX ".bundle" )
 else()
-  set_target_properties(openstudiorb PROPERTIES SUFFIX ".so" )
+  set_target_properties(openstudio_rb PROPERTIES SUFFIX ".so" )
 endif()
 
-target_link_libraries(openstudiorb init_openstudio)
+target_link_libraries(openstudio_rb init_openstudio)
 
 if( WIN32 )
-  target_link_libraries(openstudiorb ${RUBY_MINGW_STUB_LIB})
+  target_link_libraries(openstudio_rb ${RUBY_MINGW_STUB_LIB})
 endif()
 
-install(TARGETS openstudiorb DESTINATION bin)
+install(TARGETS openstudio_rb DESTINATION bin)
+
+add_library(
+  openstudio_gui_rb
+  MODULE
+  openstudio_gui_rb.cpp
+)
+
+target_link_libraries( openstudio_gui_rb ruby_OpenStudioModelEditor)
+
+set_target_properties(openstudio_gui_rb PROPERTIES PREFIX "")
+set_target_properties(openstudio_gui_rb PROPERTIES OUTPUT_NAME openstudio_gui)
+if(APPLE)
+  set_target_properties(openstudio_gui_rb PROPERTIES SUFFIX ".bundle" )
+else()
+  set_target_properties(openstudio_gui_rb PROPERTIES SUFFIX ".so" )
+endif()
+
+if( WIN32 )
+  target_link_libraries(openstudio_gui_rb ${RUBY_MINGW_STUB_LIB})
+endif()
+
+install(TARGETS openstudio_gui_rb DESTINATION bin)
 

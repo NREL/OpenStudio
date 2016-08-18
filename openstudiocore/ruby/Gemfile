@@ -1,3 +1,0 @@
-gem 'openstudio-workflow', :github => 'NREL/OpenStudio-workflow-gem', :ref => 'c2f6ed3b51515b512378c7a913537b43851e8229'
-gem 'openstudio-standards', :github => 'NREL/openstudio-standards', :branch => 'master'
-
