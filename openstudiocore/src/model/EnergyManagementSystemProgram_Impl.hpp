@@ -60,8 +60,6 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    // TODO: Handle this object's extensible fields.
-
     boost::optional<std::string> body() const;
 
     boost::optional<std::vector<std::string>> lines() const;
@@ -74,8 +72,6 @@ namespace detail {
     //@}
     /** @name Setters */
     //@{
-
-    // TODO: Handle this object's extensible fields.
 
     bool setBody(std::string& body);
 

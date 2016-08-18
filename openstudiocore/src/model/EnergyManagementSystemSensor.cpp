@@ -20,7 +20,6 @@
 #include "EnergyManagementSystemSensor.hpp"
 #include "EnergyManagementSystemSensor_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
 #include "OutputVariable.hpp"
 #include "OutputVariable_Impl.hpp"
 #include "OutputMeter.hpp"
@@ -120,11 +119,6 @@ EnergyManagementSystemSensor::EnergyManagementSystemSensor(const Model& model)
   : ModelObject(EnergyManagementSystemSensor::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemSensor_Impl>());
-
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_EnergyManagementSystem_SensorFields::OutputVariableorOutputMeterName
-  bool ok = true;
-  OS_ASSERT(ok);
 }
 
 IddObjectType EnergyManagementSystemSensor::iddObjectType() {

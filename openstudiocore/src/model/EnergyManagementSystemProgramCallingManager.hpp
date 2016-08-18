@@ -60,8 +60,6 @@ class MODEL_API EnergyManagementSystemProgramCallingManager : public ModelObject
 
   std::vector<unsigned> nullPrograms() const;
 
-  // TODO: Handle this object's extensible fields.
-
   //@}
   /** @name Setters */
   //@{
@@ -81,9 +79,6 @@ class MODEL_API EnergyManagementSystemProgramCallingManager : public ModelObject
   bool setPrograms(const std::vector<const EnergyManagementSystemProgram>& programs);
 
   bool removeNullPrograms();
-
-
-  // TODO: Handle this object's extensible fields.
 
   //@}
   /** @name Other */
