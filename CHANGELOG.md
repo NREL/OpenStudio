@@ -1,3 +1,6 @@
+## OpenStudio v1.12.4
+###### 2016-08-18 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.12.3...v1.12.4 )
+
 ## OpenStudio v1.12.3
 ###### 2016-08-10 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.12.2...v1.12.3 )
 
