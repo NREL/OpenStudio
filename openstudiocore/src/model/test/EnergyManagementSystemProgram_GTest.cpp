@@ -187,5 +187,16 @@ TEST_F(ModelFixture, EMSProgram_EMSProgram)
   EXPECT_EQ(1, fan_program_3.invalidReferencedObjects().get().size());
   fanActuator2.remove();
   EXPECT_EQ(2, fan_program_3.invalidReferencedObjects().get().size());
+
+  lines = fan_program_3.lines();
+  EXPECT_EQ(2, lines.get().size());
+  fan_program_3.addLine(line1);
+  lines = fan_program_3.lines();
+  EXPECT_EQ(3, lines.get().size());
+  EXPECT_EQ(line1_test, lines.get()[2]);
+  fan_program_3.eraseBody();
+  body = fan_program_3.body();
+  EXPECT_EQ("", body.get());
+
 }
 
