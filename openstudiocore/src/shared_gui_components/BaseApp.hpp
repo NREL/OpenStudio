@@ -20,6 +20,8 @@
 #ifndef SHAREDGUICOMPONENTS_BASEAPP_HPP
 #define SHAREDGUICOMPONENTS_BASEAPP_HPP
 
+#include "../utilities/core/Path.hpp"
+
 #include <QWidget>
 #include <boost/optional.hpp>
 //#include "EditController.hpp"
@@ -56,9 +58,10 @@ namespace openstudio {
       virtual void openBclDlg() = 0;
 
       virtual void chooseHorizontalEditTab() = 0;
-      //virtual QSharedPointer<openstudio::EditController> editController() = 0;
+      virtual QSharedPointer<openstudio::EditController> editController() = 0;
+      virtual boost::optional<openstudio::path> tempDir() = 0;
       virtual boost::optional<openstudio::model::Model> currentModel() = 0;
-      virtual boost::optional<openstudio::Workspace> currentWorkspace() = 0;
+      //virtual boost::optional<openstudio::Workspace> currentWorkspace() = 0;
   };
 
 }

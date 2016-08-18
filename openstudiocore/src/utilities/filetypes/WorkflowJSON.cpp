@@ -21,6 +21,7 @@
 #include "WorkflowJSON_Impl.hpp"
 
 #include "WorkflowStep.hpp"
+#include "WorkflowStep_Impl.hpp"
 #include "WorkflowStepResult.hpp"
 
 #include "../core/Assert.hpp"
@@ -35,6 +36,8 @@
 
 namespace openstudio{
 namespace detail{
+
+  const int NO_MEASURE_TYPE = -1;
 
   WorkflowJSON_Impl::WorkflowJSON_Impl()
   {
@@ -292,6 +295,7 @@ namespace detail{
     if (path.is_absolute()){
       m_oswFilename = path.filename();
       m_oswDir = path.parent_path();
+      setMeasureTypes();
       onUpdate();
       return true;
     }
@@ -310,6 +314,7 @@ namespace detail{
   {
     if (path.is_absolute()){
       m_oswDir = path;
+      setMeasureTypes();
       onUpdate();
       return true;
     }
@@ -534,8 +539,99 @@ namespace detail{
   bool WorkflowJSON_Impl::setWorkflowSteps(const std::vector<WorkflowStep>& workflowSteps)
   {
     m_steps = workflowSteps;
+    setMeasureTypes();
     onUpdate();
     return true;
+  }
+
+  std::vector<MeasureStep> WorkflowJSON_Impl::getMeasureSteps(const MeasureType& measureType)
+  {
+    std::vector<MeasureStep> result;
+    size_t n = m_steps.size();
+    OS_ASSERT(m_measureTypes.size() == n);
+    for (size_t i = 0; i < n; ++i){
+      if (m_steps[i].optionalCast<MeasureStep>()){
+        if (m_measureTypes[i] == measureType.value()){
+          result.push_back(m_steps[i].cast<MeasureStep>());
+        }
+      }
+    }
+    return result;
+  }
+
+  bool WorkflowJSON_Impl::setMeasureSteps(const MeasureType& measureType, const std::vector<MeasureStep>& steps)
+  {
+
+    // verify steps
+    for (const auto& step : steps){
+      boost::optional<BCLMeasure> bclMeasure = getBCLMeasure(step);
+      if (!bclMeasure){
+        return false;
+      }
+      if (bclMeasure->measureType() != measureType){
+        return false;
+      }
+    }
+
+    // DLM: this implementation may evolve
+    std::vector<WorkflowStep> newSteps;
+
+    if (measureType == MeasureType::ModelMeasure){
+      newSteps.insert(newSteps.end(), steps.begin(), steps.end());
+    } else{
+      std::vector<MeasureStep> oldSteps = getMeasureSteps(MeasureType::ModelMeasure);
+      newSteps.insert(newSteps.end(), oldSteps.begin(), oldSteps.end());
+    }
+
+    if (measureType == MeasureType::EnergyPlusMeasure){
+      newSteps.insert(newSteps.end(), steps.begin(), steps.end());
+    } else{
+      std::vector<MeasureStep> oldSteps = getMeasureSteps(MeasureType::EnergyPlusMeasure);
+      newSteps.insert(newSteps.end(), oldSteps.begin(), oldSteps.end());
+    }
+
+    if (measureType == MeasureType::ReportingMeasure){
+      newSteps.insert(newSteps.end(), steps.begin(), steps.end());
+    } else{
+      std::vector<MeasureStep> oldSteps = getMeasureSteps(MeasureType::ReportingMeasure);
+      newSteps.insert(newSteps.end(), oldSteps.begin(), oldSteps.end());
+    }
+
+    return setWorkflowSteps(newSteps);
+  }
+
+  boost::optional<BCLMeasure> WorkflowJSON_Impl::getBCLMeasure(const MeasureStep& step)
+  {
+    boost::optional<openstudio::path> path = findMeasure(step.measureDirName());
+    if (path){
+      return BCLMeasure::load(*path);
+    }
+    return boost::none;
+  }
+
+  boost::optional<BCLMeasure> WorkflowJSON_Impl::getBCLMeasureByUUID(const UUID& id)
+  {
+    for (const auto& step : m_steps){
+      if (step.optionalCast<MeasureStep>()){
+        boost::optional<BCLMeasure> bclMeasure = getBCLMeasure(step.cast<MeasureStep>());
+        if (bclMeasure && (bclMeasure->uuid() == id)){
+          return bclMeasure;
+        }
+      }
+    }
+    return boost::none;
+  }
+
+  boost::optional<BCLMeasure> WorkflowJSON_Impl::addMeasure(const BCLMeasure& bclMeasure)
+  {
+    boost::optional<BCLMeasure> existingMeasure = getBCLMeasureByUUID(bclMeasure.uuid());
+    if (existingMeasure){
+      boost::filesystem::remove_all(existingMeasure->directory());
+    }
+
+    std::vector<openstudio::path> paths = absoluteMeasurePaths();
+    OS_ASSERT(!paths.empty());
+    return bclMeasure.clone(paths[0] / bclMeasure.directory().stem());
   }
 
   void WorkflowJSON_Impl::onUpdate()
@@ -567,6 +663,24 @@ namespace detail{
 
     m_value.removeMember("steps");
 
+  }
+
+  void WorkflowJSON_Impl::setMeasureTypes()
+  {
+    m_measureTypes.clear();
+    m_measureTypes.reserve(m_steps.size());
+    for (const auto& step : m_steps){
+      if (step.optionalCast<MeasureStep>()){
+        boost::optional<BCLMeasure> bclMeasure = getBCLMeasure(step.cast<MeasureStep>());
+        if (bclMeasure){
+          m_measureTypes.push_back(bclMeasure->measureType().value());
+        }else{
+          m_measureTypes.push_back(NO_MEASURE_TYPE);
+        }
+      } else{
+        m_measureTypes.push_back(NO_MEASURE_TYPE);
+      }
+    }
   }
 
 } // detail
@@ -825,6 +939,31 @@ std::vector<WorkflowStep> WorkflowJSON::workflowSteps() const
 bool WorkflowJSON::setWorkflowSteps(const std::vector<WorkflowStep>& steps)
 {
   return getImpl<detail::WorkflowJSON_Impl>()->setWorkflowSteps(steps);
+}
+
+std::vector<MeasureStep> WorkflowJSON::getMeasureSteps(const MeasureType& measureType)
+{
+  return getImpl<detail::WorkflowJSON_Impl>()->getMeasureSteps(measureType);
+}
+
+bool WorkflowJSON::setMeasureSteps(const MeasureType& measureType, const std::vector<MeasureStep>& steps)
+{
+  return getImpl<detail::WorkflowJSON_Impl>()->setMeasureSteps(measureType, steps);
+}
+
+boost::optional<BCLMeasure> WorkflowJSON::getBCLMeasure(const MeasureStep& step)
+{
+  return getImpl<detail::WorkflowJSON_Impl>()->getBCLMeasure(step);
+}
+
+boost::optional<BCLMeasure> WorkflowJSON::getBCLMeasureByUUID(const UUID& id)
+{
+  return getImpl<detail::WorkflowJSON_Impl>()->getBCLMeasureByUUID(id);
+}
+
+boost::optional<BCLMeasure> WorkflowJSON::addMeasure(const BCLMeasure& bclMeasure)
+{
+  return getImpl<detail::WorkflowJSON_Impl>()->addMeasure(bclMeasure);
 }
 
 std::ostream& operator<<(std::ostream& os, const WorkflowJSON& workflowJSON)

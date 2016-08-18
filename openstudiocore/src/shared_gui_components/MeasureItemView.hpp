@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef SHAREDGUICOMPONENTS_VARIABLEVIEW_HPP
-#define SHAREDGUICOMPONENTS_VARIABLEVIEW_HPP
+#ifndef SHAREDGUICOMPONENTS_MEASUREITEMVIEW_HPP
+#define SHAREDGUICOMPONENTS_MEASUREITEMVIEW_HPP
 
 #include "OSCollapsibleView.hpp"
 #include "OSListView.hpp"
@@ -50,21 +50,6 @@ class MeasureItemButton;
 
 namespace measuretab {
 
-// NewGroupView allows the user to add a new Variable (either for a MeasureGroup or a single fixed Measure)
-// NewGroupView is instantiated underneath a VariableGroupContentView
-class NewGroupView : public QWidget
-{
-  Q_OBJECT
-
-  public:
-
-  NewGroupView(bool t_fixed, bool t_fixedOnly);
-
-  virtual ~NewGroupView() {}
-
-  NewGroupDropZone * dropZone;
-};
-
 // RectangularDropZone styles a rectangular drop zone
 class RectangularDropZone : public QWidget
 {
@@ -72,7 +57,7 @@ class RectangularDropZone : public QWidget
   
   public:
 
-  RectangularDropZone(bool t_fixed);
+  RectangularDropZone();
 
   virtual ~RectangularDropZone() {}
 
@@ -95,115 +80,6 @@ class RectangularDropZone : public QWidget
   private:
 
   QString m_acceptedMimeType;
-};
-
-// Accepts drop of a measure and emits signal which is connected by VariableGroupItemDelegate
-class NewGroupDropZone : public RectangularDropZone
-{
-  Q_OBJECT
-  
-  public:
-
-  NewGroupDropZone(bool t_fixed);
-
-  virtual ~NewGroupDropZone() {}
-};
-
-// VariableGroupItemView displays a VariableGroupItem, e.g. all the Model or EnergyPlus MeasureGroups/Fixed Measures
-// It is configured by the VariableGroupItemDelegate
-class VariableGroupItemView : public OSCollapsibleView
-{
-  Q_OBJECT
-
-  public:
-
-  VariableGroupItemView(bool t_fixed, MeasureType measureType);
-
-  virtual ~VariableGroupItemView() {}
-
-  LightGradientHeader * variableGroupHeader;
-
-  VariableGroupContentView * variableGroupContentView;
-};
-
-class VariableGroupContentView : public QWidget
-{
-  Q_OBJECT
-
-  public:
-
-  VariableGroupContentView(bool t_fixedMeasuresOnly);
-
-  virtual ~VariableGroupContentView() {}
-
-  NewGroupView * newGroupView;
-  NewGroupView * newFixedGroupView;
-
-  OSListView * variableListView;
-};
-
-// VariableItemView displays a VariableItem (either a MeasureGroup or a fixed Measure)
-// It is configured by the VariableItemDelegate
-class VariableItemView : public OSCollapsibleView
-{
-  Q_OBJECT
-
-public:
-
-  VariableItemView(bool t_fixed);
-
-  virtual ~VariableItemView() {}
-
-  VariableHeaderView * variableHeaderView;
-
-  VariableContentView * variableContentView;
-
-protected:
-  void paintEvent(QPaintEvent *);
-};
-
-class VariableHeaderView : public OSHeader
-{
-  Q_OBJECT
-
-  public:
-
-  VariableHeaderView(bool t_fixed);
-
-  virtual ~VariableHeaderView() {}
-
-  QLineEdit * variableNameEdit;
-
-  QPushButton * removeButton;
-
-  QPushButton * upButton;
-
-  QPushButton * downButton;
-
-  OSListView * measureListView;
-
-  private:
-
-  bool m_fixed;
-};
-
-class VariableContentView : public QWidget
-{
-  Q_OBJECT
-
-  public:
-
-  VariableContentView(bool t_fixed);
-
-  virtual ~VariableContentView() {}
-
-  OSListView * measureListView;
-
-  MeasureDropZone * dropZone;
-
-  protected:
-
-  void paintEvent(QPaintEvent *) override;
 };
 
 // MeasureItemView displays a MeasureItem (individual measure)
@@ -269,4 +145,4 @@ class MeasureItemButton : public QAbstractButton
 
 } // openstudio
 
-#endif // SHAREDGUICOMPONENTS_VARIABLEVIEW_HPP
+#endif // SHAREDGUICOMPONENTS_MEASUREITEMVIEW_HPP

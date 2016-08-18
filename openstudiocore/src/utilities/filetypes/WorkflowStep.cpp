@@ -104,7 +104,19 @@ namespace detail{
   {
     Json::Value result;
     result["measure_dir_name"] = m_measureDirName;
+
+    if (m_name){
+      result["name"] = m_name.get();
+    }
     
+    if (m_description){
+      result["description"] = m_description.get();
+    }
+        
+    if (m_modelerDescription){
+      result["modeler_description"] = m_modelerDescription.get();
+    }
+
     Json::Value arguments(Json::objectValue);
     for (const auto& argument : m_arguments){
       std::string name = argument.first;
@@ -141,6 +153,54 @@ namespace detail{
   std::string MeasureStep_Impl::measureDirName() const
   {
     return m_measureDirName;
+  }
+
+  boost::optional<std::string> MeasureStep_Impl::name() const
+  {
+    return m_name;
+  }
+
+  bool MeasureStep_Impl::setName(const std::string& name)
+  {
+    m_name = name;
+    return true;
+  }
+
+  void MeasureStep_Impl::resetName()
+  {
+    m_name.reset();
+  }
+
+  boost::optional<std::string> MeasureStep_Impl::description() const
+  {
+    return m_description;
+  }
+
+  bool MeasureStep_Impl::setDescription(const std::string& description)
+  {
+    m_description = description;
+    return true;
+  }
+
+  void MeasureStep_Impl::resetDescription()
+  {
+    m_description.reset();
+  }
+
+  boost::optional<std::string> MeasureStep_Impl::modelerDescription() const
+  {
+    return m_modelerDescription;
+  }
+
+  bool MeasureStep_Impl::setModelerDescription(const std::string& modelerDescription)
+  {
+    m_modelerDescription = modelerDescription;
+    return true;
+  }
+
+  void MeasureStep_Impl::resetModelerDescription()
+  {
+    m_modelerDescription.reset();
   }
 
   std::map<std::string, Variant> MeasureStep_Impl::arguments() const
@@ -220,6 +280,21 @@ boost::optional<WorkflowStep> WorkflowStep::fromString(const std::string& s)
     MeasureStep measureStep(measureDirName.asString());
     result = measureStep;
 
+    if (value.isMember("name")){
+      Json::Value name = value["name"];
+      measureStep.setName(name.asString());
+    }
+
+    if (value.isMember("description")){
+      Json::Value description = value["description"];
+      measureStep.setDescription(description.asString());
+    }
+
+    if (value.isMember("modeler_description")){
+      Json::Value modelerDescription = value["modeler_description"];
+      measureStep.setModelerDescription(modelerDescription.asString());
+    }
+
     Json::Value arguments = value["arguments"];
     for (const auto& name : arguments.getMemberNames()){
       Json::Value value = arguments[name];
@@ -269,6 +344,11 @@ void WorkflowStep::resetResult()
   getImpl<detail::WorkflowStep_Impl>()->resetResult();
 }
 
+bool WorkflowStep::operator==(const WorkflowStep& other) const
+{
+  return m_impl == other.m_impl;
+}
+
 MeasureStep::MeasureStep(const std::string& measureDirName)
   : WorkflowStep(std::shared_ptr<detail::MeasureStep_Impl>(new detail::MeasureStep_Impl(measureDirName)))
 {
@@ -284,6 +364,51 @@ MeasureStep::MeasureStep(std::shared_ptr<detail::MeasureStep_Impl> impl)
 std::string MeasureStep::measureDirName() const
 {
   return getImpl<detail::MeasureStep_Impl>()->measureDirName();
+}
+
+boost::optional<std::string> MeasureStep::name() const
+{
+  return getImpl<detail::MeasureStep_Impl>()->name();
+}
+
+bool MeasureStep::setName(const std::string& name)
+{
+  return getImpl<detail::MeasureStep_Impl>()->setName(name);
+}
+
+void MeasureStep::resetName()
+{
+  getImpl<detail::MeasureStep_Impl>()->resetName();
+}
+
+boost::optional<std::string> MeasureStep::description() const
+{
+  return getImpl<detail::MeasureStep_Impl>()->description();
+}
+
+bool MeasureStep::setDescription(const std::string& description)
+{
+  return getImpl<detail::MeasureStep_Impl>()->setDescription(description);
+}
+
+void MeasureStep::resetDescription()
+{
+  getImpl<detail::MeasureStep_Impl>()->resetDescription();
+}
+
+boost::optional<std::string> MeasureStep::modelerDescription() const
+{
+  return getImpl<detail::MeasureStep_Impl>()->modelerDescription();
+}
+
+bool MeasureStep::setModelerDescription(const std::string& modelerDescription)
+{
+  return getImpl<detail::MeasureStep_Impl>()->setModelerDescription(modelerDescription);
+}
+
+void MeasureStep::resetModelerDescription()
+{
+  getImpl<detail::MeasureStep_Impl>()->resetModelerDescription();
 }
 
 std::map<std::string, Variant> MeasureStep::arguments() const

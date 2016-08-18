@@ -58,6 +58,9 @@ public:
   /// Resets the optional WorkflowStepResult
   void resetResult();
 
+  /// Tests pointer equality
+  bool operator==(const WorkflowStep& other) const;
+
   /// cast to type T, can throw std::bad_cast
   template<typename T>
   T cast() const{
@@ -110,6 +113,24 @@ public:
   MeasureStep(const std::string& measureDirName);
 
   std::string measureDirName() const;
+
+  boost::optional<std::string> name() const;
+
+  bool setName(const std::string& name);
+
+  void resetName();
+
+  boost::optional<std::string> description() const;
+
+  bool setDescription(const std::string& description);
+
+  void resetDescription();
+
+  boost::optional<std::string> modelerDescription() const;
+
+  bool setModelerDescription(const std::string& modelerDescription);
+
+  void resetModelerDescription();
 
   std::map<std::string, Variant> arguments() const;
 

@@ -158,20 +158,23 @@ end
 class CLI
 
   # This constant maps commands to classes in this CLI and stores meta-data on them
-  COMMAND_LIST = {
-      run: [ Proc.new { ::Run }, {primary: true, working: true}],
-      #apply_measure: [ Proc.new { ::ApplyMeasure }, {primary: true, working: false}],
-      gem_list: [ Proc.new { ::GemList }, {primary: false, working: true}],
-      gem_install: [ Proc.new { ::InstallGem }, {primary: false, working: true}],
-      measure: [ Proc.new { ::Measure }, {primary: true, working: false}],
-      e: [ Proc.new { ::ExecuteRubyScript }, {primary: false, working: true}],
-      i: [ Proc.new { ::InteractiveRubyShell }, {primary: false, working: true}],
-      openstudio_version: [ Proc.new { ::OpenStudioVersion }, {primary: true, working: true}],
-      energyplus_version: [ Proc.new { ::EnergyPlusVersion }, {primary: true, working: true}],
-      ruby_version: [ Proc.new { ::RubyVersion }, {primary: false, working: true}],
-      list_commands: [ Proc.new { ::ListCommands }, {primary: true, working: true}]
-  }
-
+  def command_list
+    {
+        run: [ Proc.new { ::Run }, {primary: true, working: true}],
+        #apply_measure: [ Proc.new { ::ApplyMeasure }, {primary: true, working: false}],
+        gem_list: [ Proc.new { ::GemList }, {primary: false, working: true}],
+        gem_install: [ Proc.new { ::InstallGem }, {primary: false, working: true}],
+        measure: [ Proc.new { ::Measure }, {primary: true, working: false}],
+        update: [ Proc.new { ::Update }, {primary: true, working: false}],
+        e: [ Proc.new { ::ExecuteRubyScript }, {primary: false, working: true}],
+        i: [ Proc.new { ::InteractiveRubyShell }, {primary: false, working: true}],
+        openstudio_version: [ Proc.new { ::OpenStudioVersion }, {primary: true, working: true}],
+        energyplus_version: [ Proc.new { ::EnergyPlusVersion }, {primary: true, working: true}],
+        ruby_version: [ Proc.new { ::RubyVersion }, {primary: false, working: true}],
+        list_commands: [ Proc.new { ::ListCommands }, {primary: true, working: true}]
+    }
+  end
+  
   # This method instantiates the global variables $main_args, $sub_command, and $sub_args
   #
   # @param [Array] argv The arguments passed through the CLI
@@ -199,7 +202,7 @@ class CLI
     # then we also just print the help and exit.
     command_plugin = nil
     if $sub_command
-      command_plugin = COMMAND_LIST[$sub_command.to_sym]
+      command_plugin = command_list[$sub_command.to_sym]
     end
 
     if !command_plugin || !$sub_command
@@ -226,9 +229,9 @@ class CLI
   # Prints out the help text for the CLI
   #
   # @param [Boolean] list_all If set to true, the help prints all commands, however it otherwise only prints those
-  #   marked as primary in #COMMAND_LIST
+  #   marked as primary in #command_list
   # @return [void]
-  # @see #COMMAND_LIST #::ListCommands
+  # @see #command_list #::ListCommands
   #
   def help(list_all=false)
     opts = OptionParser.new do |o|
@@ -244,7 +247,7 @@ class CLI
       # out as well.
       commands = {}
       longest = 0
-      COMMAND_LIST.each do |key, data|
+      command_list.each do |key, data|
         # Skip non-primary commands. These only show up in extended
         # help output.
         next unless data[1][:primary] unless list_all
@@ -648,6 +651,80 @@ class Measure
   end
 end
 
+# Class to update openstudio models
+class Update
+
+  # Provides text for the main help functionality
+  def self.synopsis
+    'Updates OpenStudio Models to the current version'
+  end
+
+  # Executes code to update and compute arguments for measures
+  #
+  # @param [Array] sub_argv Options passed to the e command from the user input
+  # @return [Fixnum] Return status
+  #
+  def execute(sub_argv)
+    
+    options = {}
+    options[:keep] = false
+
+    opts = OptionParser.new do |o|
+      o.banner = 'Usage: openstudio measure [options] PATH'
+      o.separator ''
+      o.separator 'Options:'
+      o.separator ''
+
+      o.on('-k', '--keep', 'Keep original files') do
+        options[:keep] = true
+      end
+    end
+
+    # Parse the options
+    argv = parse_options(opts, sub_argv)
+    return 0 if argv == nil
+    
+    if argv == []
+      $logger.error 'No path provided' 
+      return 1
+    end
+    path = File.expand_path(argv[0])
+
+    $logger.debug("Measure command: #{argv.inspect} #{options.inspect}")
+    $logger.debug("Path to examine is #{path}")
+    
+    paths = []
+    if File.file?(path)
+      $logger.debug("Path is regular file")
+      paths << path
+    else
+      $logger.debug("Path is directory")
+      Dir.glob(path + "/*.osm").each do |path|
+        paths << path
+      end
+    end
+  
+    vt = OpenStudio::OSVersion::VersionTranslator.new
+    
+    result = 0
+    paths.each do |path|
+      if options[:keep]
+        FileUtils.cp(path, path + ".orig")
+      end
+      
+      model = vt.loadModel(path)
+      if model.empty?
+        $logger.error("Could not read model at #{path}")
+        result = 1
+        next
+      end
+      model.get.save(path, true)
+    end
+
+    result
+  end
+end
+
 # Class to execute a ruby script
 class ExecuteRubyScript
     
@@ -678,10 +755,10 @@ class ExecuteRubyScript
     file_path = argv.shift.to_s
     file_path = File.absolute_path(File.join(Dir.pwd, file_path)) unless Pathname.new(file_path).absolute?
     $logger.debug "Path for the file to run: #{file_path}"
-
-    unless argv == []
-      $logger.error 'Extra arguments passed to the e command. Please refer to the help documentation.'
-      return 1
+    
+    ARGV.clear
+    argv.each do |arg|
+      ARGV << arg
     end
 
     unless File.exists? file_path

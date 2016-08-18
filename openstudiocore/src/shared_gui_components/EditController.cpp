@@ -20,11 +20,7 @@
 #include "EditController.hpp"
 #include "EditView.hpp"
 #include "OSViewSwitcher.hpp"
-
-//#include "../analysisdriver/SimpleProject.hpp"
-//
-//#include "../analysis/Analysis.hpp"
-//#include "../analysis/DataPoint.hpp"
+#include "MeasureItem.hpp"
 
 #include "../utilities/bcl/BCLMeasure.hpp"
 #include "../utilities/core/Assert.hpp"
@@ -70,9 +66,9 @@ void EditController::setMeasureItem(measuretab::MeasureItem * measureItem, BaseA
 
   // Ruby Measure Name
 
-  editRubyMeasureView->nameLineEdit->setText(m_measureItem->displayName());
+  editRubyMeasureView->nameLineEdit->setText(m_measureItem->name());
 
-  connect(editRubyMeasureView->nameLineEdit, &QLineEdit::textEdited, m_measureItem.data(), &measuretab::MeasureItem::setDisplayName);
+  connect(editRubyMeasureView->nameLineEdit, &QLineEdit::textEdited, m_measureItem.data(), &measuretab::MeasureItem::setName);
 
   // Measure Description
 
@@ -86,6 +82,8 @@ void EditController::setMeasureItem(measuretab::MeasureItem * measureItem, BaseA
 
   // Inputs
 
+  // DLM: todo, these should come from the definition
+  /*
   std::vector<measure::OSArgument> arguments = m_measureItem->arguments();
 
   for( const auto & arg : arguments )
@@ -96,6 +94,7 @@ void EditController::setMeasureItem(measuretab::MeasureItem * measureItem, BaseA
 
     editRubyMeasureView->addInputView(inputController->inputView);
   }
+  */
 }
 
 measuretab::MeasureItem * EditController::measureItem() const
@@ -317,7 +316,8 @@ void InputController::setValue(const QString & text)
       m_argument.setValue(text.toStdString());
     }
 
-    m_editController->measureItem()->setArgument(m_argument);
+    // DLM: todo
+//    m_editController->measureItem()->setArgument(m_argument);
 
     inputView->setIncomplete(isArgumentIncomplete());
   }
@@ -329,7 +329,8 @@ void InputController::setValue(bool value)
   {
     m_argument.setValue(value);
 
-    m_editController->measureItem()->setArgument(m_argument);
+    // DLM: todo
+//    m_editController->measureItem()->setArgument(m_argument);
 
     inputView->setIncomplete(isArgumentIncomplete());
   }
@@ -350,7 +351,8 @@ void InputController::setValueForIndex(int index)
       m_argument.setValue(value.toStdString());
     }
 
-    m_editController->measureItem()->setArgument(m_argument);
+    // DLM: todo
+//    m_editController->measureItem()->setArgument(m_argument);
 
     inputView->setIncomplete(isArgumentIncomplete());
   }
@@ -359,7 +361,8 @@ void InputController::setValueForIndex(int index)
 bool InputController::isArgumentIncomplete() const
 {
   // Get the argument from the ruby perturbation by the same name as m_argument
-
+  // DLM: todo
+  /*
   std::vector<measure::OSArgument> argumentVector = m_editController->measureItem()->measure().arguments();
 
   std::map<std::string, measure::OSArgument> argumentMap = convertOSArgumentVectorToMap(argumentVector);
@@ -375,12 +378,14 @@ bool InputController::isArgumentIncomplete() const
       return true;
     }
   }
-
+  */
   return false;
 }
 
 bool InputController::isItOKToClearResults()
 {
+  // DLM: todo
+  /*
   bool doOperation(true);
 
   // Find out if there are results
@@ -415,7 +420,7 @@ bool InputController::isItOKToClearResults()
 
     return false;
   }
-
+  */
   return true;
 }
 

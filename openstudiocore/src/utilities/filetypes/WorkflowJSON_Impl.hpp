@@ -128,6 +128,16 @@ namespace detail {
 
       bool setWorkflowSteps(const std::vector<WorkflowStep>& steps);
 
+      std::vector<MeasureStep> getMeasureSteps(const MeasureType& measureType);
+
+      bool setMeasureSteps(const MeasureType& measureType, const std::vector<MeasureStep>& steps);
+
+      boost::optional<BCLMeasure> getBCLMeasure(const MeasureStep& step);
+
+      boost::optional<BCLMeasure> getBCLMeasureByUUID(const UUID& id);
+
+      boost::optional<BCLMeasure> addMeasure(const BCLMeasure& bclMeasure);
+
     private:
 
       REGISTER_LOGGER("openstudio.WorkflowJSON");
@@ -136,10 +146,14 @@ namespace detail {
 
       void parseSteps();
 
+      // synchronize m_measureTypes with m_steps
+      void setMeasureTypes();
+
       openstudio::path m_oswDir;
       openstudio::path m_oswFilename;
       Json::Value m_value;
       std::vector<WorkflowStep> m_steps;
+      std::vector<int> m_measureTypes;
     };
 
 } // detail

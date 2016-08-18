@@ -68,6 +68,24 @@ namespace detail {
 
     std::string measureDirName() const;
 
+    boost::optional<std::string> name() const;
+
+    bool setName(const std::string& name);
+
+    void resetName();
+
+    boost::optional<std::string> description() const;
+
+    bool setDescription(const std::string& description);
+
+    void resetDescription();
+
+    boost::optional<std::string> modelerDescription() const;
+
+    bool setModelerDescription(const std::string& modelerDescription);
+
+    void resetModelerDescription();
+
     std::map<std::string, Variant> arguments() const;
 
     boost::optional<Variant> getArgument(const std::string& name) const;
@@ -88,6 +106,9 @@ namespace detail {
     REGISTER_LOGGER("openstudio.MeasureStep");
 
     std::string m_measureDirName;
+    boost::optional<std::string> m_name;
+    boost::optional<std::string> m_description;
+    boost::optional<std::string> m_modelerDescription;
     std::map<std::string, Variant> m_arguments;
 
   };

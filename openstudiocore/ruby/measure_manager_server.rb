@@ -31,6 +31,10 @@ class MeasureManagerServlet < WEBrick::HTTPServlet::AbstractServlet
     @mutex = Mutex.new
     @measure_manager = MeasureManager.new
   end
+
+  def print_message(message)
+    puts message
+  end
   
   def self.get_instance(server, *options)
     @@instance = self.new(server, *options) if @@instance.nil?
@@ -113,7 +117,7 @@ class MeasureManagerServlet < WEBrick::HTTPServlet::AbstractServlet
           force_reload = data[:force_reload] ? data[:force_reload] : false
 
           # loop over all directories
-          Dir.glob("#{measures_dir}/*/") do |measure_dir|
+          Dir.glob("#{measures_dir}/*/").each do |measure_dir|
           
             measure_dir = File.expand_path(measure_dir)
             if File.directory?(measure_dir)

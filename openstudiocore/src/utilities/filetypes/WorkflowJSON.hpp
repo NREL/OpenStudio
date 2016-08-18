@@ -24,6 +24,7 @@
 
 #include "../core/Logger.hpp"
 #include "../core/Path.hpp"
+#include "../bcl/BCLMeasure.hpp"
 #include "../data/Variant.hpp"
 #include "../data/Attribute.hpp"
 
@@ -32,6 +33,7 @@
 namespace openstudio{
 
 class WorkflowStep;
+class MeasureStep;
 class DateTime;
 
 namespace detail{
@@ -181,6 +183,21 @@ public:
 
   /** Assigns the workflow steps. */
   bool setWorkflowSteps(const std::vector<WorkflowStep>& steps);
+
+  /** Gets measure steps by measure type. */
+  std::vector<MeasureStep> getMeasureSteps(const MeasureType& measureType);
+
+  /** Sets measure steps of a given type. Does not change other measure steps. */
+  bool setMeasureSteps(const MeasureType& measureType, const std::vector<MeasureStep>& steps);
+
+  /** Attempts to find the BCLMeasure for a given MeasureStep. */
+  boost::optional<BCLMeasure> getBCLMeasure(const MeasureStep& step);
+
+  /** Add a measure to the measure dir, replaces existing measure, does not add a step to the workflow. */
+  boost::optional<BCLMeasure> getBCLMeasureByUUID(const UUID& id);
+
+  /** Add a measure to the measure dir, replaces existing measure with same id, does not add a step to the workflow. */
+  boost::optional<BCLMeasure> addMeasure(const BCLMeasure& bclMeasure);
 
 protected:
   

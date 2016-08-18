@@ -24,15 +24,15 @@
 #include "../utilities/bcl/BCLMeasure.hpp"
 #include "../utilities/core/Path.hpp"
 #include "../utilities/core/UUID.hpp"
-#include "../measure/OSMeasureInfoGetter.hpp"
 #include "../model/Model.hpp"
 #include <vector>
 #include <map>
 #include <QSharedPointer>
 #include <QPointer>
 #include <QApplication>
-
+#include <QUrl>
 class QEvent;
+class QNetworkAccessManager;
 
 namespace openstudio {
 
@@ -45,6 +45,11 @@ namespace osversion {
 
 }
 
+namespace measure {
+
+  class OSArgument;
+
+}
 class LocalLibraryController;
 
 /***
@@ -89,13 +94,15 @@ class MeasureManager : public QObject
   Q_OBJECT;
 
   public:
-    // Constructor without OSMeasureInfoGetter
     MeasureManager(BaseApp *t_app);
 
-    // Constructor taking a OSMeasureInfoGetter
-    MeasureManager(const QSharedPointer<measure::OSMeasureInfoGetter> &t_infoGetter, BaseApp *t_app);
-
     virtual ~MeasureManager() {}
+
+    QUrl url() const;
+
+    void setUrl(const QUrl& url);
+
+    void saveTempModel();
 
     // Returns true if given measure is managed by the application and not the user
     bool isManagedMeasure(const UUID & id) const;
@@ -118,21 +125,19 @@ class MeasureManager : public QObject
 
     ///// Updates an individual measure. Does not ask for user approval, approval is assumed.
     ///// \returns true if the update succeeded.
-    //std::pair<bool,std::string> updateMeasure(analysisdriver::SimpleProject &t_project, const BCLMeasure &t_measure);
+    std::pair<bool,std::string> updateMeasure(const BCLMeasure &t_measure);
 
     //// insert / replace a measure by UUID. If the measure already exists in the project
     //// the user is prompted as to how to deal with it. OSArguments are loaded as needed
-    //BCLMeasure insertReplaceMeasure(analysisdriver::SimpleProject &t_project, const UUID &t_id);
+    BCLMeasure insertReplaceMeasure(const UUID &t_id);
 
     //// Updates the given set of measures in the current project. Does not ask for user approval. Approval is assumed
     //// when this method is called.
-    //void updateMeasures(analysisdriver::SimpleProject &t_project, 
-    //  const std::vector<BCLMeasure> &t_newMeasures, 
-    //  bool t_showMessage=true);
+    void updateMeasures(bool t_showMessage=true);
 
     void setLibraryController(const QSharedPointer<LocalLibraryController> &t_libraryController);
 
-    //std::vector<ruleset::OSArgument> getArguments(analysisdriver::SimpleProject &t_project, const BCLMeasure &t_measure);
+    std::vector<measure::OSArgument> getArguments(const BCLMeasure &t_measure);
 
     //std::string suggestMeasureGroupName(const BCLMeasure &t_measure);
 
@@ -171,7 +176,7 @@ class MeasureManager : public QObject
     //void updateBCLMeasures(analysisdriver::SimpleProject &t_project);
 
     /// Checks a BCL measure for updates, returns true if updated
-    bool checkForUpdates(BCLMeasure& measure, bool force=false);
+    //bool checkForUpdates(BCLMeasure& measure, bool force=false);
 
     /// Downloads updated versions of all BCL measures
     void downloadBCLMeasures();
@@ -188,13 +193,17 @@ class MeasureManager : public QObject
 
     void updateMeasuresLists(bool updateUserMeasures);
 
+    bool checkForUpdates(const openstudio::path& measureDir, bool force=false);
+
     BaseApp *m_app;
+    openstudio::path m_tempModelPath;
     std::map<UUID,BCLMeasure> m_managedMeasures;
     std::map<UUID,BCLMeasure> m_openstudioMeasures;
     std::map<UUID,BCLMeasure> m_myMeasures;
     std::map<UUID,BCLMeasure> m_bclMeasures;
-    //QSharedPointer<measure::OSMeasureInfoGetter> m_infoGetter;
+    QUrl m_url;
     QSharedPointer<LocalLibraryController> m_libraryController;
+    QNetworkAccessManager* m_networkAccessManager;
 };
 
 

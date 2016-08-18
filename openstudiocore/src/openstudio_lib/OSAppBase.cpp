@@ -57,7 +57,8 @@ OSAppBase::OSAppBase( int & argc, char ** argv, const QSharedPointer<MeasureMana
     }
   }
 
-  m_measureManager->updateMeasuresLists();
+  // DLM: todo rethink this
+  //m_measureManager->updateMeasuresLists();
 
   m_waitDialog = boost::shared_ptr<WaitDialog>(new WaitDialog("Loading Model","Loading Model"));
 }
@@ -115,6 +116,17 @@ QWidget *OSAppBase::mainWidget()
   }
 }
 
+boost::optional<openstudio::path> OSAppBase::tempDir()
+{
+  std::shared_ptr<OSDocument> document = currentDocument();
+  if (document)
+  {
+    return toPath(document->modelTempDir());
+  }
+  return boost::none;
+}
+
+
 boost::optional<openstudio::model::Model> OSAppBase::currentModel()
 {
   std::shared_ptr<OSDocument> document = currentDocument();
@@ -126,16 +138,16 @@ boost::optional<openstudio::model::Model> OSAppBase::currentModel()
   }
 }
 
-boost::optional<openstudio::Workspace> OSAppBase::currentWorkspace()
-{
-  std::shared_ptr<OSDocument> document = currentDocument();
-  if (document)
-  {
-    return document->workspace();
-  } else {
-    return boost::none;
-  }
-}
+//boost::optional<openstudio::Workspace> OSAppBase::currentWorkspace()
+//{
+//  std::shared_ptr<OSDocument> document = currentDocument();
+//  if (document)
+//  {
+//    return document->workspace();
+//  } else {
+//    return boost::none;
+//  }
+//}
 
 MeasureManager &OSAppBase::measureManager()
 {
@@ -246,17 +258,17 @@ void OSAppBase::chooseHorizontalEditTab()
   }
 }
 
-//QSharedPointer<EditController> OSAppBase::editController()
-//{
-//  std::shared_ptr<OSDocument> document = currentDocument();
-//
-//  if (document)
-//  {
-//    return document->mainRightColumnController()->measuresEditController();
-//  } else {
-//    return QSharedPointer<EditController>();
-//  }
-//}
+QSharedPointer<EditController> OSAppBase::editController()
+{
+  std::shared_ptr<OSDocument> document = currentDocument();
+
+  if (document)
+  {
+    return document->mainRightColumnController()->measuresEditController();
+  } else {
+    return QSharedPointer<EditController>();
+  }
+}
 
 } // openstudio
 

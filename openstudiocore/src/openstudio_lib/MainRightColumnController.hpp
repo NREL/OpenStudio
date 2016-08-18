@@ -23,7 +23,7 @@
 #include "../shared_gui_components/OSQObjectController.hpp"
 #include <boost/smart_ptr.hpp>
 #include "../model/Model.hpp"
-//#include "../shared_gui_components/EditController.hpp"
+#include "../shared_gui_components/EditController.hpp"
 #include "../shared_gui_components/LocalLibraryController.hpp"
 
 #include <QSharedPointer>
@@ -32,7 +32,7 @@ class QStackedWidget;
 
 namespace openstudio {
 
-//class EditController;
+class EditController;
 class HorizontalTabWidget;
 class InspectorController;
 class LocalLibraryController;
@@ -120,7 +120,7 @@ class MainRightColumnController : public OSQObjectController
 
   QSharedPointer<LocalLibraryController> measuresLibraryController();
 
-  //QSharedPointer<EditController> measuresEditController();
+  QSharedPointer<EditController> measuresEditController();
 
   private:
 
@@ -150,7 +150,7 @@ class MainRightColumnController : public OSQObjectController
 
   QSharedPointer<LocalLibraryController> m_measureLibraryController;
 
-  //QSharedPointer<EditController> m_measureEditController;
+  QSharedPointer<EditController> m_measureEditController;
 
   bool m_myModelTabIsHidden;
 

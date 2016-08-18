@@ -56,8 +56,9 @@ class OPENSTUDIO_API OSAppBase : public QApplication, public BaseApp
 
   virtual QWidget *mainWidget() override;
   virtual MeasureManager &measureManager() override;
+  virtual boost::optional<openstudio::path> tempDir() override;
   virtual boost::optional<openstudio::model::Model> currentModel() override;
-  virtual boost::optional<openstudio::Workspace> currentWorkspace() override;
+  //virtual boost::optional<openstudio::Workspace> currentWorkspace() override;
   virtual void updateSelectedMeasureState() override;
   virtual void addMeasure() override;
   virtual void duplicateSelectedMeasure() override;
@@ -66,7 +67,7 @@ class OPENSTUDIO_API OSAppBase : public QApplication, public BaseApp
   virtual void downloadUpdatedBCLMeasures() override;
   virtual void openBclDlg() override;
   virtual void chooseHorizontalEditTab() override;
-  //virtual QSharedPointer<openstudio::EditController> editController() override;
+  virtual QSharedPointer<openstudio::EditController> editController() override;
   boost::shared_ptr<WaitDialog> waitDialog() {return m_waitDialog;}
   virtual bool notify(QObject * receiver, QEvent * e) override;
 
@@ -76,9 +77,9 @@ class OPENSTUDIO_API OSAppBase : public QApplication, public BaseApp
 
   virtual void childEvent(QChildEvent * e) override;
 
-  private:
-
   REGISTER_LOGGER("openstudio.OSAppBase");
+
+  private:
 
   QSharedPointer<openstudio::MeasureManager> m_measureManager;
 
