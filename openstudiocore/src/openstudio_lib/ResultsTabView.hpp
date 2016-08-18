@@ -91,10 +91,9 @@ namespace openstudio {
         TabType tabType,
         QWidget * parent = nullptr);
       virtual ~ResultsTabView() {}
-      void searchForExistingResults(const openstudio::path &t_runDir);
 
     public slots:
-      void resultsGenerated(const openstudio::path &t_sqlFile, const openstudio::path &t_radianceResultsPath);
+
       void onUnitSystemChange(bool t_isIP);
 
     signals:

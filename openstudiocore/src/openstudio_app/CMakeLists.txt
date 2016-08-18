@@ -136,10 +136,10 @@ add_dependencies(${target_name} openstudio)
 target_link_libraries(${target_name} ${depends})
 AddPCH(${target_name})
 
-if(APPLE)
-  # the following script will change the bindings to prefer the version of libruby included with SketchUp to the system library, preventing loading two different copies of libruby
-  add_custom_command(TARGET ${target_name} POST_BUILD COMMAND ${RUBY_EXECUTABLE} "${CMAKE_SOURCE_DIR}/SketchUpInstallName.rb" "$<TARGET_FILE:${target_name}>")
-endif()
+#if(APPLE)
+#  # the following script will change the bindings to prefer the version of libruby included with SketchUp to the system library, preventing loading two different copies of libruby
+#  add_custom_command(TARGET ${target_name} POST_BUILD COMMAND ${RUBY_EXECUTABLE} "${CMAKE_SOURCE_DIR}/SketchUpInstallName.rb" "$<TARGET_FILE:${target_name}>")
+#endif()
 
 #------------------------------------------------------------------------------
 # Installation

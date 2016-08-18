@@ -42,18 +42,10 @@ class ResultsTabController : public MainTabController
     ResultsTabController();
 
     virtual ~ResultsTabController() {}
-    void searchForExistingResults(const openstudio::path &t_runDir);
 
   public slots:
-    void resultsGenerated(const openstudio::path &t_sqlFile, const openstudio::path &t_radianceOutputFile);
+
     void onUnitSystemChange(bool t_isIP);
-
-  private slots:
-
-  //void removeResult(model::myModelClass &);
-  void removeResult();
-  
-  void importResult();
 
   private:
   
