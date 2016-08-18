@@ -167,9 +167,8 @@ MeasureType MeasureStepController::measureType() const
 std::vector<MeasureStep> MeasureStepController::measureSteps() const
 {
   WorkflowJSON workflowJSON = m_app->currentModel()->workflowJSON();
-  workflowJSON.getMeasureSteps(m_measureType);
-
-  return std::vector<MeasureStep>();
+  std::vector<MeasureStep> result = workflowJSON.getMeasureSteps(m_measureType);
+  return result;
 }
 
 QSharedPointer<OSListItem> MeasureStepController::itemAt(int i)
@@ -238,67 +237,54 @@ void MeasureStepController::addItemForDroppedMeasure(QDropEvent *event)
     return;
   }
 
+  boost::optional<BCLMeasure> projectMeasure;
   try {
 
-    // Get the measure
-    // DLM: TODO
-    //BCLMeasure projectMeasure = m_app->measureManager().insertReplaceMeasure(*project, id);
-  
-  } catch (const std::exception &) {
-    // the user canceled the update of the measure
+    // Get the measure, will throw if error occurs
+    projectMeasure = m_app->measureManager().insertReplaceMeasure(id);
+
+  } catch (const std::exception& e) {
+
+    QString errorMessage("Failed to add measure: \n\n");
+    errorMessage += QString::fromStdString(e.what());
+    QMessageBox::information(m_app->mainWidget(), QString("Failed to add measure"), errorMessage);
+    return;
+  }
+  OS_ASSERT(projectMeasure);
+
+  if (projectMeasure->measureType() != m_measureType){
+    QString errorMessage("Failed to add measure at this workflow location.");
+    QMessageBox::information(m_app->mainWidget(), QString("Failed to add measure"), errorMessage);
     return;
   }
 
-
-/* DLM: TODO
-
-      // measure
-      analysis::RubyMeasure measure(projectMeasure);
-      try{
-        measure.setArguments(m_app->measureManager().getArguments(*project, projectMeasure));
-      } catch ( const RubyException&e ) {
-        LOG(Error, "Failed to compute arguments for measure: " << e.what());
-        QString errorMessage("Failed to compute arguments for measure: \n\n");
-        errorMessage += QString::fromStdString(e.what());
-        QMessageBox::information(m_app->mainWidget(), QString("Failed to add measure"), errorMessage);
-        return;
-      }
-
-
-      // the new measure
-      name = m_app->measureManager().suggestMeasureName(projectMeasure, t_fixed);
-      measure.setName(name);
-      measure.setDisplayName(name);
-      measure.setDescription(projectMeasure.description());
-      dv.push(measure);
-
-      // try to add to problem. can fail if measure is of wrong type.
-      analysis::Problem problem = project->analysis().problem();
-      OptionalInt index;
-      if (m_measureType == MeasureType::ModelMeasure) {
-        index = getModelMeasureInsertStep(problem);
-      } else if (m_measureType == MeasureType::EnergyPlusMeasure) {
-        index = problem.getWorkflowStepIndexByJobType(runmanager::JobType::EnergyPlusPreProcess);
-      } else if (m_measureType == MeasureType::ReportingMeasure) {
-        index = problem.getWorkflowStepIndexByJobType(runmanager::JobType::OpenStudioPostProcess);
-      }
-      OS_ASSERT(index);
-
-      bool ok = problem.insert(*index,dv);
-      if (ok) {
-        emit itemInserted(variables().size() - 1);
-      }else{
-        LOG(Error, "Failed to add measure at this workflow location.");
-        QString errorMessage("Failed to add measure at this workflow location.");
-        QMessageBox::information(m_app->mainWidget(), QString("Failed to add measure"), errorMessage);
-      }
-    } catch (const std::exception &) {
-      // the user canceled the update of the measure
-      LOG(Debug, "User canceled update of measure.");
-      return;
-    }
+  // DLM: TODO, would be nice to be able to construct from BCLMeasure or path
+  MeasureStep measureStep(toString(projectMeasure->directory().stem()));
+  try{
+    //measure.setArguments(m_app->measureManager().getArguments(*project, projectMeasure));
+  } catch ( const RubyException&e ) {
+    QString errorMessage("Failed to compute arguments for measure: \n\n");
+    errorMessage += QString::fromStdString(e.what());
+    QMessageBox::information(m_app->mainWidget(), QString("Failed to add measure"), errorMessage);
+    return;
   }
-  */
+
+  // the new measure
+  //std::string name = m_app->measureManager().suggestMeasureName(projectMeasure, t_fixed);
+  std::string name = projectMeasure->name();
+  measureStep.setName(name);
+  //measureStep.setDisplayName(name); // DLM: TODO
+  measureStep.setDescription(projectMeasure->description());
+  measureStep.setModelerDescription(projectMeasure->modelerDescription());
+      
+  WorkflowJSON workflowJSON = m_app->currentModel()->workflowJSON();
+
+  std::vector<MeasureStep> measureSteps = workflowJSON.getMeasureSteps(m_measureType);
+  measureSteps.push_back(measureStep);
+  bool test = workflowJSON.setMeasureSteps(m_measureType, measureSteps);
+  OS_ASSERT(test);
+
+  workflowJSON.save();
 }
 
 void MeasureStepController::moveUp(MeasureStep step)  
@@ -367,34 +353,80 @@ MeasureStepItem::MeasureStepItem(MeasureType measureType, MeasureStep step, open
 }
 
 QString MeasureStepItem::name() const
-{
-  // DLM: TODO
-  //return QString::fromStdString(m_step.name());
-  return QString();
-}
-
-void MeasureStepItem::setName(const QString & name)
-{
-  //m_step.setName(name.toStdString());
+{ 
+  QString result;
+  if (boost::optional<std::string> name = m_step.name()){
+    return result = QString::fromStdString(*name);
+  }
+  return result;
 }
 
 QString MeasureStepItem::displayName() const
 {
-  // DLM: TODO
-  //return QString::fromStdString(m_step.displayName());
-  return QString();
+  // DLM: TODO, add display name
+  QString result;
+  if (boost::optional<std::string> name = m_step.name()){
+    return result = QString::fromStdString(*name);
+  }
+  return result;
 }
 
-void MeasureStepItem::setDisplayName(const QString & displayName)
+MeasureType MeasureStepItem::measureType() const
 {
-  // DLM: TODO
-  //m_step.setDisplayName(displayName.toStdString());
+  OptionalBCLMeasure bclMeasure = this->bclMeasure();
+  OS_ASSERT(bclMeasure);
+  return bclMeasure->measureType();
 }
 
-void MeasureStepItem::setArgument(const measure::OSArgument& argument)
+QString MeasureStepItem::description() const
 {
-  // DLM: TODO
+  QString result;
+  if (boost::optional<std::string> description = m_step.description()){
+    return result = QString::fromStdString(*description);
+  }
+  return result;
 }
+
+QString MeasureStepItem::modelerDescription() const
+{
+  QString result;
+  if (boost::optional<std::string> modelerDescription = m_step.modelerDescription()){
+    return result = QString::fromStdString(*modelerDescription);
+  }
+  return result;
+}
+
+QString MeasureStepItem::scriptFileName() const
+{
+  QString result;
+  OptionalBCLMeasure bclMeasure = this->bclMeasure();
+  if (bclMeasure){
+    boost::optional<path> primaryRubyScriptPath = bclMeasure->primaryRubyScriptPath();
+    if (primaryRubyScriptPath){
+      result = toQString(*primaryRubyScriptPath);
+    }
+  }
+  return result;
+}
+
+OptionalBCLMeasure MeasureStepItem::bclMeasure() const
+{
+  // TODO: DLM
+  return boost::none;
+}
+
+std::vector<measure::OSArgument> MeasureStepItem::arguments() const
+{
+  // TODO: DLM
+  return std::vector<measure::OSArgument>();
+}
+
+bool MeasureStepItem::hasIncompleteArguments() const
+{
+  // TODO: DLM
+  return false;
+}
+
 
 void MeasureStepItem::remove()
 {
@@ -445,50 +477,55 @@ void MeasureStepItem::moveDown()
   //qobject_cast<WorkflowStepController *>(controller())->moveDown(m_step);
 }
 
+void MeasureStepItem::setName(const QString & name)
+{
+  m_step.setName(name.toStdString());
+}
 
+void MeasureStepItem::setDisplayName(const QString & displayName)
+{
+  // DLM: TODO, add setDisplayName
+  m_step.setName(displayName.toStdString());
+}
+
+void MeasureStepItem::setArgument(const measure::OSArgument& argument)
+{
+  // DLM: TODO
+}
 
 MeasureStepItemDelegate::MeasureStepItemDelegate()
 {}
 
 QWidget * MeasureStepItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 {
-  if(QSharedPointer<MeasureStepItem> workflowStepItem = dataSource.objectCast<MeasureStepItem>())
+  if(QSharedPointer<MeasureStepItem> measureStepItem = dataSource.objectCast<MeasureStepItem>())
   {
-    /* DLM: TODO
-    auto variableItemView = new VariableItemView(variableItem->isFixedMeasure());
-    variableItemView->variableHeaderView->variableNameEdit->setText(variableItem->displayName());
+    auto workflowStepView = new WorkflowStepView();
+    workflowStepView->workflowStepButton->nameLabel->setText(measureStepItem->displayName());
 
-    connect(variableItemView->variableHeaderView->variableNameEdit, &QLineEdit::textEdited, variableItem.data(), &VariableItem::setDisplayName);
+    // DLM: TODO connect for when editing in the tab
+    //connect(measureStepItem.data(), &MeasureStepItem::displayNameChanged, workflowStepView->measureItemButton->nameLabel, &QLabel::setText);
 
-    QSharedPointer<MeasureListController> measureListController = variableItem->measureListController();
-    variableItemView->variableContentView->measureListView->setListController(measureListController);
+    // Remove
 
-    QString acceptedMimeType = MeasureDragData::mimeType(variableItem->measureType());
-      
-    if (!variableItem->isFixedMeasure())
-    {
-      variableItemView->variableContentView->dropZone->setAcceptedMimeType(acceptedMimeType);
-      connect(variableItemView->variableContentView->dropZone, &MeasureDropZone::dataDropped,
-        variableItem->measureListController().data(), &MeasureListController::addItemForDroppedMeasure);
-    }
+    connect(workflowStepView->removeButton, &QPushButton::clicked, measureStepItem.data(), &MeasureStepItem::remove);
 
-    connect(variableItemView->variableHeaderView->removeButton, &QPushButton::clicked, variableItem.data(), &VariableItem::remove);
-    
-    connect(variableItemView->variableHeaderView->upButton, &QPushButton::clicked, variableItem.data(), &VariableItem::moveUp);
-    
-    connect(variableItemView->variableHeaderView->downButton, &QPushButton::clicked, variableItem.data(), &VariableItem::moveDown);
-    
-    QSharedPointer<MeasureItemDelegate> measureItemDelegate = QSharedPointer<MeasureItemDelegate>(new MeasureItemDelegate(variableItem->isFixedMeasure()));
-    variableItemView->variableContentView->measureListView->setDelegate(measureItemDelegate);
+    // Selection
 
-    if (variableItem->isFixedMeasure())
-    {
-      variableItemView->variableHeaderView->measureListView->setListController(measureListController);
-      variableItemView->variableHeaderView->measureListView->setDelegate(measureItemDelegate);
-    }
+    workflowStepView->workflowStepButton->setHasEmphasis(measureStepItem->isSelected());
 
-    return variableItemView;
-    */
+    connect(workflowStepView->workflowStepButton, &WorkflowStepButton::clicked, measureStepItem.data(), &MeasureStepItem::toggleSelected);
+
+    connect(measureStepItem.data(), &MeasureStepItem::selectedChanged, workflowStepView->workflowStepButton, &WorkflowStepButton::setHasEmphasis);
+
+    // Warning Icon
+
+    workflowStepView->workflowStepButton->cautionLabel->setVisible(measureStepItem->hasIncompleteArguments());
+
+    // DLM: TODO connect for when editing in the tab
+    //connect(measureStepItem.data(), &MeasureItem::argumentsChanged, workflowStepView->workflowStepButton->cautionLabel, &QLabel::setVisible);
+
+    return workflowStepView;
   }
 
   return new QWidget();

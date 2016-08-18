@@ -154,6 +154,9 @@ std::pair<bool,std::string> MeasureManager::updateMeasure(const BCLMeasure &t_me
 
 BCLMeasure MeasureManager::insertReplaceMeasure(const UUID &t_id)
 {
+  // DLM: TODO, hook up workflowJSON changed signal to doc dirty, same place as conncet model signal
+  // DLM: TODO, emit signal to rebuild WorkflowController
+
   WorkflowJSON workflowJSON = m_app->currentModel()->workflowJSON();
 
   boost::optional<BCLMeasure> measure = getMeasure(t_id);
@@ -196,7 +199,7 @@ BCLMeasure MeasureManager::insertReplaceMeasure(const UUID &t_id)
       if (replace->isChecked())
       {
         LOG(Info, "User chose to replace existing instances with new version of measure");
-        std::pair<bool,std::string> updateResult = updateMeasure(t_project, *measure);
+        std::pair<bool,std::string> updateResult = updateMeasure(*measure);
         if (updateResult.first)
         {
           boost::optional<BCLMeasure> updatedMeasure = getMeasure(t_id);
@@ -218,8 +221,12 @@ BCLMeasure MeasureManager::insertReplaceMeasure(const UUID &t_id)
     return *existingMeasure;
   }
   
-  BCLMeasure projectmeasure = workflowJSON.addMeasure(*measure);
-  return projectmeasure;
+  boost::optional<BCLMeasure> projectmeasure = workflowJSON.addMeasure(*measure);
+  if (!projectmeasure){
+    LOG(Info, "WorkflowJSON::addMeasure failed");
+    throw std::runtime_error("Failed to add measure to the project");
+  }
+  return *projectmeasure;
 }
 
 std::vector<measure::OSArgument> MeasureManager::getArguments(const BCLMeasure &t_measure)
@@ -252,6 +259,7 @@ std::vector<measure::OSArgument> MeasureManager::getArguments(const BCLMeasure &
 
   delete reply;
 
+  // DLM: TODO
   return std::vector<measure::OSArgument>();
 }
 

@@ -815,7 +815,8 @@ void  OpenStudioApp::showAbout()
   if (currentDocument()) {
     parent = currentDocument()->mainWindow();
   }
-  QString details = "Measure Manager Server: " + measureManager().url().toString();
+  QString details = "Measure Manager Server: " + measureManager().url().toString() + "\n";
+  details += "Temp Directory: " + currentDocument()->modelTempDir();
   QMessageBox about(parent);
   about.setText(OPENSTUDIO_ABOUTBOX);
   about.setDetailedText(details);

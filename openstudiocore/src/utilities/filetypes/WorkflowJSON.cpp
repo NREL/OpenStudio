@@ -295,6 +295,7 @@ namespace detail{
     if (path.is_absolute()){
       m_oswFilename = path.filename();
       m_oswDir = path.parent_path();
+      setMeasureTypes();
       onUpdate();
       return true;
     }
@@ -313,6 +314,7 @@ namespace detail{
   {
     if (path.is_absolute()){
       m_oswDir = path;
+      setMeasureTypes();
       onUpdate();
       return true;
     }
@@ -609,14 +611,27 @@ namespace detail{
 
   boost::optional<BCLMeasure> WorkflowJSON_Impl::getBCLMeasureByUUID(const UUID& id)
   {
-    // DLM: TODO
+    for (const auto& step : m_steps){
+      if (step.optionalCast<MeasureStep>()){
+        boost::optional<BCLMeasure> bclMeasure = getBCLMeasure(step.cast<MeasureStep>());
+        if (bclMeasure && (bclMeasure->uuid() == id)){
+          return bclMeasure;
+        }
+      }
+    }
     return boost::none;
   }
 
   boost::optional<BCLMeasure> WorkflowJSON_Impl::addMeasure(const BCLMeasure& bclMeasure)
   {
-    // DLM: TODO
-    return boost::none;
+    boost::optional<BCLMeasure> existingMeasure = getBCLMeasureByUUID(bclMeasure.uuid());
+    if (existingMeasure){
+      boost::filesystem::remove_all(existingMeasure->directory());
+    }
+
+    std::vector<openstudio::path> paths = absoluteMeasurePaths();
+    OS_ASSERT(!paths.empty());
+    return bclMeasure.clone(paths[0] / bclMeasure.directory().stem());
   }
 
   void WorkflowJSON_Impl::onUpdate()
@@ -645,8 +660,6 @@ namespace detail{
         LOG_AND_THROW("Step " << i << " cannot be processed");
       }
     }
-
-    setMeasureTypes();
 
     m_value.removeMember("steps");
 
