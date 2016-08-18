@@ -54,6 +54,7 @@ TEST_F(ModelFixture, EMSActuator_EMSActuator)
   // add fan
   Schedule s = model.alwaysOnDiscreteSchedule();
   FanConstantVolume fan(model, s);
+  FanConstantVolume fan2(model, s);
 
   // add actuator
   EnergyManagementSystemActuator fanActuator(fan);
@@ -63,6 +64,9 @@ TEST_F(ModelFixture, EMSActuator_EMSActuator)
   fanActuator.setActuatedComponentControlType(fanControlType);
   EXPECT_EQ(fan, fanActuator.actuatedComponent());
   EXPECT_EQ(fanControlType, fanActuator.actuatedComponentControlType());
+
+  fanActuator.setActuatedComponent(fan2);
+  EXPECT_EQ(fan2, fanActuator.actuatedComponent());
 
 }
 
