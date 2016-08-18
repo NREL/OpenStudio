@@ -4,7 +4,7 @@ project(OpenStudioCore)
 
 set(CMAKE_VERSION_MAJOR 1)
 set(CMAKE_VERSION_MINOR 12)
-set(CMAKE_VERSION_PATCH 1)
+set(CMAKE_VERSION_PATCH 3)
 
 include(ExternalProject)
 
