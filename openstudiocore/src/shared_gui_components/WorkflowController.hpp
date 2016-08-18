@@ -190,6 +190,8 @@ class MeasureStepItem : public OSListItem
 
   MeasureType measureType() const;
 
+  MeasureStep measureStep() const;
+
   QString description() const;
 
   QString modelerDescription() const;
@@ -214,7 +216,21 @@ class MeasureStepItem : public OSListItem
 
   void setDisplayName(const QString & displayName);
 
+  void setDescription(const QString & description);
+
   void setArgument(const measure::OSArgument& argument);
+
+  void setSelected(bool isSelected) override;
+
+  signals:
+
+  //void nameChanged(const QString & name);
+
+  void displayNameChanged(const QString & displayName);
+
+  void descriptionChanged();
+
+  void argumentsChanged(bool isIncomplete);
 
   private:
 

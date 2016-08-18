@@ -211,6 +211,8 @@ void MeasureStepController::removeItemForStep(MeasureStep step)
 
   if (didRemove){
     m_app->currentModel()->workflowJSON().setMeasureSteps(m_measureType, newMeasureSteps);
+
+    emit modelReset();
   }
 }
 
@@ -284,7 +286,7 @@ void MeasureStepController::addItemForDroppedMeasure(QDropEvent *event)
   bool test = workflowJSON.setMeasureSteps(m_measureType, measureSteps);
   OS_ASSERT(test);
 
-  workflowJSON.save();
+  //workflowJSON.save();
 
   emit modelReset();
 }
@@ -312,7 +314,7 @@ void MeasureStepController::moveUp(MeasureStep step)
 
     m_app->currentModel()->workflowJSON().setMeasureSteps(m_measureType, oldMeasureSteps);
 
-    emit itemChanged(i - 1);
+    emit itemChanged(i-1);
     emit itemChanged(i);
   }
 }
@@ -341,8 +343,8 @@ void MeasureStepController::moveDown(MeasureStep step)
 
     m_app->currentModel()->workflowJSON().setMeasureSteps(m_measureType, oldMeasureSteps);
 
-    emit itemChanged(i - 1);
     emit itemChanged(i);
+    emit itemChanged(i+1);
   }
 }
 
@@ -380,6 +382,12 @@ MeasureType MeasureStepItem::measureType() const
   return bclMeasure->measureType();
 }
 
+
+MeasureStep MeasureStepItem::measureStep() const
+{
+  return m_step;
+}
+
 QString MeasureStepItem::description() const
 {
   QString result;
@@ -413,8 +421,7 @@ QString MeasureStepItem::scriptFileName() const
 
 OptionalBCLMeasure MeasureStepItem::bclMeasure() const
 {
-  // TODO: DLM
-  return boost::none;
+  return m_app->currentModel()->workflowJSON().getBCLMeasure(m_step);
 }
 
 std::vector<measure::OSArgument> MeasureStepItem::arguments() const
@@ -432,51 +439,25 @@ bool MeasureStepItem::hasIncompleteArguments() const
 
 void MeasureStepItem::remove()
 {
-/* DLM: TODO
-{
-  // check if we have data points other than the baseline
-  if (boost::optional<analysisdriver::SimpleProject> project = m_app->project()){
-    if (project->analysis().dataPoints().size() > 1){
-      // warn user that this will blow away their data points
-      QMessageBox::StandardButton test = QMessageBox::question( 
-          m_app->mainWidget(), 
-          "Remove Measure Group?", 
-          "Removing a measure group will remove existing design alternatives and save your project, do you want to proceed?", 
-          QMessageBox::Yes |  QMessageBox::No, 
-          QMessageBox::No );
-      if (test == QMessageBox::No){
-        return;
-      }
+  // if this step is being edited, clear the edit controller
+  MeasureStepItem* measureStepItem = m_app->editController()->measureStepItem();
+  if (measureStepItem){
+    if (measureStepItem->measureStep() == m_step){
+      m_app->editController()->reset();
     }
   }
 
-  // if any of this variable's measures are being edited, clear the edit controller
-  MeasureItem* measureItem = m_app->editController()->measureItem();
-  if (measureItem){
-    analysis::RubyMeasure rubyMeasure = measureItem->measure();
-    for (const auto & measure : m_variable.measures(false)){
-      if (measure == rubyMeasure){
-        m_app->editController()->reset();
-        break;
-      }
-    }
-  }
-
-  qobject_cast<VariableListController *>(controller())->removeItemForVariable(m_variable);
-}
-*/
+  qobject_cast<MeasureStepController *>(controller())->removeItemForStep(m_step);
 }
 
 void MeasureStepItem::moveUp()
 {
-  // DLM: TODO
-  //qobject_cast<WorkflowStepController *>(controller())->moveUp(m_step);
+  qobject_cast<MeasureStepController *>(controller())->moveUp(m_step);
 }
 
 void MeasureStepItem::moveDown()
 {
-  // DLM: TODO
-  //qobject_cast<WorkflowStepController *>(controller())->moveDown(m_step);
+  qobject_cast<MeasureStepController *>(controller())->moveDown(m_step);
 }
 
 void MeasureStepItem::setName(const QString & name)
@@ -490,9 +471,35 @@ void MeasureStepItem::setDisplayName(const QString & displayName)
   m_step.setName(displayName.toStdString());
 }
 
+void MeasureStepItem::setDescription(const QString & description)
+{
+  m_step.setDescription(description.toStdString());
+}
+
+
 void MeasureStepItem::setArgument(const measure::OSArgument& argument)
 {
   // DLM: TODO
+}
+
+void MeasureStepItem::setSelected(bool isSelected)
+{
+  OSListItem::setSelected(isSelected);
+
+  // Ugly hack to prevent the controller from doing this for tab 2.
+  // Please somebody fix, perhaps be using a new signal from OSItemSelectionController.
+  if (!controller()->selectionController()->allowMultipleSelections())
+  {
+    if (isSelected)
+    {
+      m_app->chooseHorizontalEditTab();
+      m_app->editController()->setMeasureStepItem(this, m_app);
+
+    } else
+    {
+      m_app->editController()->reset();
+    }
+  }
 }
 
 MeasureStepItemDelegate::MeasureStepItemDelegate()
@@ -526,6 +533,14 @@ QWidget * MeasureStepItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 
     // DLM: TODO connect for when editing in the tab
     //connect(measureStepItem.data(), &MeasureItem::argumentsChanged, workflowStepView->workflowStepButton->cautionLabel, &QLabel::setVisible);
+
+    // Up and down buttons
+
+    connect(workflowStepView->upButton, &QPushButton::clicked, measureStepItem.data(), &MeasureStepItem::moveUp);
+    
+    connect(workflowStepView->downButton, &QPushButton::clicked, measureStepItem.data(), &MeasureStepItem::moveDown);
+    
+
 
     return workflowStepView;
   }

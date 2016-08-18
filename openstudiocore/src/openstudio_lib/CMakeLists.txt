@@ -399,10 +399,6 @@ set(${target_name}_SRC
   ../shared_gui_components/MeasureBadge.hpp
   ../shared_gui_components/MeasureDragData.cpp
   ../shared_gui_components/MeasureDragData.hpp
-  ../shared_gui_components/MeasureItem.cpp
-  ../shared_gui_components/MeasureItem.hpp
-  ../shared_gui_components/MeasureItemView.cpp
-  ../shared_gui_components/MeasureItemView.hpp
   ../shared_gui_components/MeasureManager.cpp
   ../shared_gui_components/MeasureManager.hpp
   ../shared_gui_components/NetworkProxyDialog.cpp
@@ -660,8 +656,6 @@ set(${target_name}_moc
   ../shared_gui_components/LocalLibraryView.hpp
   ../shared_gui_components/MeasureBadge.hpp
   ../shared_gui_components/MeasureDragData.hpp
-  ../shared_gui_components/MeasureItem.hpp
-  ../shared_gui_components/MeasureItemView.hpp
   ../shared_gui_components/MeasureManager.hpp
   ../shared_gui_components/OSCheckBox.hpp
   ../shared_gui_components/OSCollapsibleView.hpp

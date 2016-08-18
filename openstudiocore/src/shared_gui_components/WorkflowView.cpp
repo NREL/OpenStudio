@@ -23,7 +23,6 @@
 #include "HeaderViews.hpp"
 #include "Buttons.hpp"
 #include "LocalLibraryController.hpp"
-#include "MeasureItemView.hpp"
 #include <QLabel>
 #include <QLineEdit>
 #include <QMimeData>
@@ -41,7 +40,6 @@ namespace openstudio{
   
 namespace measuretab {
 
-/*
 RectangularDropZone::RectangularDropZone()
   : QWidget()
 {
@@ -85,7 +83,6 @@ void RectangularDropZone::dragEnterEvent(QDragEnterEvent * event)
     event->accept();
   }
 }
-*/
 
 NewMeasureDropZone::NewMeasureDropZone()
   : RectangularDropZone()
@@ -143,6 +140,14 @@ WorkflowStepView::WorkflowStepView()
   removeButton = new SofterRemoveButton();
   mainHLayout->addWidget(removeButton);
 
+  mainHLayout->addSpacing(50);
+
+  downButton = new DownButton();
+  mainHLayout->addWidget(downButton);
+
+  upButton = new UpButton();
+  mainHLayout->addWidget(upButton);
+
   duplicateButton->setVisible(false);
   removeButton->setVisible(true);
 }
@@ -184,11 +189,11 @@ void WorkflowStepButton::setHasEmphasis(bool hasEmphasis)
 {
   if( hasEmphasis )
   {
-    setStyleSheet("openstudio--measuretab--MeasureItemButton { background: #FECD60; border: 2px solid #EE641A; }");
+    setStyleSheet("openstudio--measuretab--WorkflowStepButton { background: #FECD60; border: 2px solid #EE641A; }");
   }
   else
   {
-    setStyleSheet("openstudio--measuretab--MeasureItemButton {background: #E0E0E0;}");
+    setStyleSheet("openstudio--measuretab--WorkflowStepButton {background: #E0E0E0; }");
   }
 }
 
