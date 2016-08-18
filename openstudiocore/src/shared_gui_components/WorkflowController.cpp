@@ -285,6 +285,8 @@ void MeasureStepController::addItemForDroppedMeasure(QDropEvent *event)
   OS_ASSERT(test);
 
   workflowJSON.save();
+
+  emit modelReset();
 }
 
 void MeasureStepController::moveUp(MeasureStep step)  
