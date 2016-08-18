@@ -239,10 +239,45 @@ namespace detail {
     return result;
   }
 
-  boost::optional<std::vector<ModelObject>> EnergyManagementSystemProgram_Impl::invalidReferencedObjects() const {
-    //return getString(OS_EnergyManagementSystem_ProgramFields::EnergyPlusModelCallingPoint, true);
+  boost::optional<std::vector<std::string>> EnergyManagementSystemProgram_Impl::invalidReferencedObjects() const {
     //TODO return vector of body lines that contain missing uid strings for invalid referenced objects
-    std::vector<ModelObject> result;
+    std::vector<std::string> result;
+
+    boost::optional<std::vector<std::string>> body = this->lines();
+    if (body.is_initialized()) {
+      //assume body is a vector of strings
+      for (int i = 0; i < body.get().size(); i++) {
+        int found = 0;
+        //split string on whitespaces to isolate possible uids
+        std::vector<std::string> results = splitString(body.get()[i], ' ');
+        for (int j = 0; j < results.size(); j++) {
+          if (results[j].size() == 38) {
+            //possible uid so set found to 1
+            found = 1;
+            //remove {} from uid string
+            std::string possible_uid = results[j].substr(1, results[j].size() - 2);
+            //look to see if uid is in the model and return the object
+            UUID uid = toUUID(possible_uid);
+            //std::vector<Handle> handle = &uid;
+            Model m = this->model();
+            //TODO cant get below to work so try the harder way
+            //m.getModelObjects<model::ModelObject>(&uid);
+            std::vector<model::ModelObject> modelObjects = m.getModelObjects<model::ModelObject>();
+            if (modelObjects.size() > 0) {
+              for (int k = 0; k < modelObjects.size(); k++) {
+                if (modelObjects[k].handle() == uid) {
+                  found++;
+                };
+              }
+            };
+          }
+        }
+        //possible uid not found in model
+        if (found == 1) {
+          result.push_back(body.get()[i]);
+        };
+      }
+    }
     return result;
   }
 
@@ -288,7 +323,7 @@ boost::optional<std::vector<ModelObject>> EnergyManagementSystemProgram::referen
   return getImpl<detail::EnergyManagementSystemProgram_Impl>()->referencedObjects();
 }
 
-boost::optional<std::vector<ModelObject>> EnergyManagementSystemProgram::invalidReferencedObjects() const {
+boost::optional<std::vector<std::string>> EnergyManagementSystemProgram::invalidReferencedObjects() const {
   return getImpl<detail::EnergyManagementSystemProgram_Impl>()->invalidReferencedObjects();
 }
 
