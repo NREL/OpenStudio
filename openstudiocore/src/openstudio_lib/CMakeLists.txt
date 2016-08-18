@@ -232,8 +232,6 @@ set(${target_name}_SRC
   SchedulesTabView.hpp
   SchedulesView.cpp
   SchedulesView.hpp
-  ScriptFolderListView.cpp
-  ScriptFolderListView.hpp
   ScriptItem.cpp
   ScriptItem.hpp
   ScriptsListView.cpp
@@ -573,7 +571,6 @@ set(${target_name}_moc
   SchedulesTabController.hpp
   SchedulesTabView.hpp
   SchedulesView.hpp
-  ScriptFolderListView.hpp
   ScriptItem.hpp
   ScriptsListView.hpp
   ScriptsTabController.hpp

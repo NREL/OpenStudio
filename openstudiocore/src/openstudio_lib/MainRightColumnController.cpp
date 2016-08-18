@@ -33,7 +33,6 @@
 #include "OSItem.hpp"
 #include "OSItemList.hpp"
 #include "SchedulesTabController.hpp"
-#include "ScriptFolderListView.hpp"
 #include "SpaceTypeInspectorView.hpp"
 #include "ThermalZonesView.hpp"
 

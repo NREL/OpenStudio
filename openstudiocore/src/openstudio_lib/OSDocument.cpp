@@ -41,7 +41,6 @@
 #include "RunTabController.hpp"
 #include "RunTabView.hpp"
 #include "SchedulesTabController.hpp"
-#include "ScriptFolderListView.hpp"
 #include "ScriptsTabController.hpp"
 #include "ScriptsTabView.hpp"
 #include "SimSettingsTabController.hpp"
@@ -762,8 +761,6 @@ namespace openstudio {
 
       connect(m_mainTabController->mainContentWidget(), &MainTabView::tabSelected, this, &OSDocument::updateSubTabSelected);
 
-      //connect(m_scriptsTabController->scriptFolderListView(), SIGNAL(scriptListChanged()), this, SLOT(markAsModified()));
-
       //isConnected = QObject::connect(m_scriptsTabController.get(), SIGNAL(downloadComponentsClicked()), this, SIGNAL(downloadComponentsClicked()));
       //OS_ASSERT(isConnected);
 
@@ -1378,8 +1375,6 @@ namespace openstudio {
 
     if (!filePath.isEmpty())
     {
-      //scriptFolderListView()->saveOSArguments();
-
       // remove old model
       if (!m_savePath.isEmpty()){
         openstudio::path oldModelPath = toPath(m_modelTempDir) / toPath(m_savePath).filename();
@@ -1555,16 +1550,6 @@ namespace openstudio {
 
     return modelComponent;
   }
-
-  /*
-  const ScriptFolderListView* OSDocument::scriptFolderListView() const {
-  return m_scriptsTabController->scriptFolderListView();
-  }
-
-  ScriptFolderListView* OSDocument::scriptFolderListView() {
-  return m_scriptsTabController->scriptFolderListView();
-  }
-  */
 
   void OSDocument::toggleUnits(bool displayIP)
   {

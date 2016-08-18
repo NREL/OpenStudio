@@ -20,7 +20,6 @@
 #include "ScriptItem.hpp"
 #include "OSAppBase.hpp"
 #include "OSDocument.hpp"
-#include "ScriptFolderListView.hpp"
 
 //#include "../runmanager/lib/RunManager.hpp"
 //#include "../runmanager/lib/RubyJobUtils.hpp"
@@ -127,22 +126,6 @@ boost::optional<measure::OSMeasureInfo> ScriptItem::userScriptInfo() const {
 }
 
 openstudio::path ScriptItem::resourcesPath() const {
-/*
-  const ScriptFolderListView* scriptFolders =
-      OSAppBase::instance()->currentDocument()->scriptFolderListView();
-  QString folderName = itemId().sourceId();
-  openstudio::path result;
-  if (folderName == "post_energyplus") {
-    result = scriptFolders->rootPath();
-  }
-  else if ((folderName == "idf_resources") || (folderName == "idf_scripts")) {
-    result = scriptFolders->rootPath() / toPath("idf_resources");
-  }
-  else {
-    result = scriptFolders->rootPath() / toPath("model_resources");
-  }
-  return result;
-*/
   return openstudio::path();
 }
 
