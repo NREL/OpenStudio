@@ -212,8 +212,6 @@ EnergyManagementSystemProgramCallingManager::EnergyManagementSystemProgramCallin
   : ModelObject(EnergyManagementSystemProgramCallingManager::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>());
-
-  // TODO: Appropriately handle the following required object-list fields.
 }
 
 IddObjectType EnergyManagementSystemProgramCallingManager::iddObjectType() {

@@ -33,8 +33,6 @@
 #include "../utilities/core/UUID.hpp"
 //#include "../utilities/idf/Handle.hpp"
 
-#include <algorithm>
-
 namespace openstudio {
 namespace model {
 
@@ -240,7 +238,7 @@ namespace detail {
   }
 
   boost::optional<std::vector<std::string>> EnergyManagementSystemProgram_Impl::invalidReferencedObjects() const {
-    //TODO return vector of body lines that contain missing uid strings for invalid referenced objects
+    //return vector of body lines that contain missing uid strings for invalid referenced objects
     std::vector<std::string> result;
 
     boost::optional<std::vector<std::string>> body = this->lines();
@@ -287,8 +285,6 @@ EnergyManagementSystemProgram::EnergyManagementSystemProgram(const Model& model)
   : ModelObject(EnergyManagementSystemProgram::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemProgram_Impl>());
-
-  // TODO: Appropriately handle the following required object-list fields.
 }
 
 IddObjectType EnergyManagementSystemProgram::iddObjectType() {

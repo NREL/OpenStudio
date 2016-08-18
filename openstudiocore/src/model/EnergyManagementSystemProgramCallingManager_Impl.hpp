@@ -69,8 +69,6 @@ namespace detail {
 
     std::vector<unsigned> nullPrograms() const;
 
-    // TODO: Handle this object's extensible fields.
-
     //@}
     /** @name Setters */
     //@{
@@ -90,8 +88,6 @@ namespace detail {
     bool setPrograms(const std::vector<const EnergyManagementSystemProgram>& programs);
 
     bool removeNullPrograms();
-
-    // TODO: Handle this object's extensible fields.
 
     //@}
     /** @name Other */

@@ -49,8 +49,6 @@ class MODEL_API EnergyManagementSystemProgram : public ModelObject {
   /** @name Getters */
   //@{
 
-  // TODO: Handle this object's extensible fields.
-
   boost::optional<std::string> body() const;
 
   boost::optional<std::vector<std::string>> lines() const;
@@ -62,8 +60,6 @@ class MODEL_API EnergyManagementSystemProgram : public ModelObject {
   //@}
   /** @name Setters */
   //@{
-
-  // TODO: Handle this object's extensible fields.
 
   bool setBody(std::string& body);
 

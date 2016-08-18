@@ -30,7 +30,6 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class OutputVariable;
 class OutputMeter;
 
