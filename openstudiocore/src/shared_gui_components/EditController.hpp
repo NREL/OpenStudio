@@ -40,7 +40,7 @@ class BaseApp;
 
 namespace measuretab {
 
-  class MeasureItem;
+  class MeasureStepItem;
 
 }
 
@@ -58,9 +58,9 @@ class EditController : public QObject
 
   virtual ~EditController();
 
-  void setMeasureItem(measuretab::MeasureItem * measureItem, BaseApp *t_app);
+  void setMeasureStepItem(measuretab::MeasureStepItem * measureItem, BaseApp *t_app);
 
-  measuretab::MeasureItem * measureItem() const;
+  measuretab::MeasureStepItem * measureStepItem() const;
 
   // Show something when no RubyMeasure is selected
   void reset();
@@ -77,7 +77,7 @@ class EditController : public QObject
 
   std::vector<QSharedPointer<InputController> > m_inputControllers;
 
-  QPointer<measuretab::MeasureItem> m_measureItem;
+  QPointer<measuretab::MeasureStepItem> m_measureStepItem;
 };
 
 class InputController : public QObject

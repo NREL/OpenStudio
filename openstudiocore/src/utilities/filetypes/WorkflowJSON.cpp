@@ -631,7 +631,21 @@ namespace detail{
 
     std::vector<openstudio::path> paths = absoluteMeasurePaths();
     OS_ASSERT(!paths.empty());
-    return bclMeasure.clone(paths[0] / bclMeasure.directory().stem());
+
+    openstudio::path stem = bclMeasure.directory().stem();
+    if (!toUUID(toString(stem)).isNull()){
+      // directory name is convertible to uuid, use the class name
+      stem = toPath(bclMeasure.className());
+    }
+
+    int i = 1;
+    while (boost::filesystem::exists(paths[0] / stem)){
+      std::stringstream ss;
+      ss << toString(stem) << " " << i;
+      stem = toPath(ss.str());
+    }
+
+    return bclMeasure.clone(paths[0] / stem);
   }
 
   void WorkflowJSON_Impl::onUpdate()

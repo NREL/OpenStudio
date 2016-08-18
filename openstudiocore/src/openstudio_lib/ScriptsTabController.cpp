@@ -20,7 +20,6 @@
 #include "ScriptsTabController.hpp"
 
 #include "OSAppBase.hpp"
-#include "ScriptFolderListView.hpp"
 #include "ScriptsTabView.hpp"
 
 #include "../shared_gui_components/WorkflowController.hpp"

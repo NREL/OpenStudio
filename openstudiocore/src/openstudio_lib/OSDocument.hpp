@@ -49,8 +49,6 @@ class MainWindow;
 
 class LibraryTabWidget;
 
-class ScriptFolderListView;
-
 class OSItemId;
 
 class BuildingComponentDialog;
@@ -137,12 +135,6 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   // Retrieves the Component identified by itemId from the local bcl library, 
   // updates it to the current version and returns it.
   boost::optional<model::Component> getComponent(const OSItemId& itemId) const;
-
-  // Returns the ScriptFolderListView, from which folder display names and
-  // ruleset::UserScriptInfo is available.
-//  const ScriptFolderListView* scriptFolderListView() const;
-
-//  ScriptFolderListView* scriptFolderListView();
 
   // Returns the index of the current tab.
   int verticalTabIndex();

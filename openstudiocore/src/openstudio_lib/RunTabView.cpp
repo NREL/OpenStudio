@@ -22,7 +22,6 @@
 #include "FileOperations.hpp"
 #include "OSAppBase.hpp"
 #include "OSDocument.hpp"
-#include "ScriptFolderListView.hpp"
 #include <OpenStudio.hxx>
 
 #include "../model/DaylightingControl.hpp"

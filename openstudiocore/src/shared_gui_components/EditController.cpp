@@ -20,7 +20,7 @@
 #include "EditController.hpp"
 #include "EditView.hpp"
 #include "OSViewSwitcher.hpp"
-#include "MeasureItem.hpp"
+#include "WorkflowController.hpp"
 
 #include "../utilities/bcl/BCLMeasure.hpp"
 #include "../utilities/core/Assert.hpp"
@@ -56,9 +56,9 @@ EditController::~EditController()
   if( editRubyMeasureView ) { delete editRubyMeasureView; }
 }
 
-void EditController::setMeasureItem(measuretab::MeasureItem * measureItem, BaseApp *t_app)
+void EditController::setMeasureStepItem(measuretab::MeasureStepItem * measureStepItem, BaseApp *t_app)
 {
-  m_measureItem = measureItem;
+  m_measureStepItem = measureStepItem;
 
   editRubyMeasureView->clear();
 
@@ -66,19 +66,19 @@ void EditController::setMeasureItem(measuretab::MeasureItem * measureItem, BaseA
 
   // Ruby Measure Name
 
-  editRubyMeasureView->nameLineEdit->setText(m_measureItem->name());
+  editRubyMeasureView->nameLineEdit->setText(m_measureStepItem->name());
 
-  connect(editRubyMeasureView->nameLineEdit, &QLineEdit::textEdited, m_measureItem.data(), &measuretab::MeasureItem::setName);
+  connect(editRubyMeasureView->nameLineEdit, &QLineEdit::textEdited, m_measureStepItem.data(), &measuretab::MeasureStepItem::setName);
 
   // Measure Description
 
-  editRubyMeasureView->descriptionTextEdit->setText(m_measureItem->description());
+  editRubyMeasureView->descriptionTextEdit->setText(m_measureStepItem->description());
 
   connect(editRubyMeasureView->descriptionTextEdit, &QTextEdit::textChanged, this, &EditController::updateDescription);
 
   // Measure Modeler Description
 
-  editRubyMeasureView->modelerDescriptionTextEdit->setText(m_measureItem->modelerDescription());
+  editRubyMeasureView->modelerDescriptionTextEdit->setText(m_measureStepItem->modelerDescription());
 
   // Inputs
 
@@ -97,20 +97,20 @@ void EditController::setMeasureItem(measuretab::MeasureItem * measureItem, BaseA
   */
 }
 
-measuretab::MeasureItem * EditController::measureItem() const
+measuretab::MeasureStepItem * EditController::measureStepItem() const
 {
-  return m_measureItem;
+  return m_measureStepItem;
 }
 
 void EditController::updateDescription()
 {
-  m_measureItem->setDescription(editRubyMeasureView->descriptionTextEdit->toPlainText());
+  m_measureStepItem->setDescription(editRubyMeasureView->descriptionTextEdit->toPlainText());
 }
 
 void EditController::reset()
 {
   // Evan note: It's bad to play with null pointers
-  if (!m_editNullView || !editView || !m_measureItem || !editRubyMeasureView) {
+  if (!m_editNullView || !editView || !m_measureStepItem || !editRubyMeasureView) {
     //return;
   }
 
@@ -118,7 +118,7 @@ void EditController::reset()
 
   m_inputControllers.clear();
 
-  m_measureItem = nullptr;
+  m_measureStepItem = nullptr;
 
   editRubyMeasureView->nameLineEdit->disconnect();
 
