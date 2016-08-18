@@ -19,7 +19,6 @@
 
 #include "OSItemList.hpp"
 #include "OSVectorController.hpp"
-#include "ScriptsListView.hpp"
 
 #include "../utilities/core/Assert.hpp"
 
@@ -172,6 +171,7 @@ void OSItemList::setItemsRemoveable(bool itemsRemoveable)
 
 void OSItemList::setItemIds(const std::vector<OSItemId>& itemIds)
 {
+  /* DLM: ScriptsListView was removed
   if (qobject_cast<ScriptsListView*>(this)) {
     std::vector<OSItem*> myItems = items();
     size_t n = myItems.size();
@@ -188,6 +188,7 @@ void OSItemList::setItemIds(const std::vector<OSItemId>& itemIds)
       }
     }
   }
+  */
 
   QLayoutItem* child;
   while( (child = m_vLayout->takeAt(0)) != nullptr ){

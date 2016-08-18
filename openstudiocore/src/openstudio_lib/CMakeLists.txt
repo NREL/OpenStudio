@@ -234,8 +234,6 @@ set(${target_name}_SRC
   SchedulesView.hpp
   ScriptItem.cpp
   ScriptItem.hpp
-  ScriptsListView.cpp
-  ScriptsListView.hpp
   ScriptsTabController.cpp
   ScriptsTabController.hpp
   ScriptsTabView.cpp
@@ -572,7 +570,6 @@ set(${target_name}_moc
   SchedulesTabView.hpp
   SchedulesView.hpp
   ScriptItem.hpp
-  ScriptsListView.hpp
   ScriptsTabController.hpp
   ScriptsTabView.hpp
   ServiceWaterGridItems.hpp
