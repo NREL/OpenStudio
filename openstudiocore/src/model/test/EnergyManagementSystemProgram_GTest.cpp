@@ -39,6 +39,7 @@
 #include "../../utilities/data/TimeSeries.hpp"
 #include "../../utilities/core/Compare.hpp"
 #include "../../utilities/core/Optional.hpp"
+#include "../../utilities/core/UUID.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -96,9 +97,11 @@ TEST_F(ModelFixture, EMSProgram_EMSProgram)
   EXPECT_EQ(2, lines.get().size());
   EXPECT_EQ(line1_test, lines.get()[0]);
   EXPECT_EQ(line2_test, lines.get()[1]);
-
+  
+  EXPECT_EQ(2, fan_program_1.referencedObjects().get().size());
+  EXPECT_EQ(true, (fan_program_1.referencedObjects().get()[0].nameString() == fanName) || (fan_program_1.referencedObjects().get()[0].nameString() == "OATdb Sensor"));
+  EXPECT_EQ(true, (fan_program_1.referencedObjects().get()[1].nameString() == fanName) || (fan_program_1.referencedObjects().get()[1].nameString() == "OATdb Sensor"));
   //TODO
-  //EXPECT_EQ(2, fan_program_1.referencedObjects.size())
   //EXPECT_EQ(0, fan_program_1.invalidReferencedObjects.size())
   //fan_actuator.remove
   //EXPECT_EQ(1, fan_program_1.invalidReferencedObjects.size())
