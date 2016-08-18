@@ -152,12 +152,12 @@ endif()
 
 
 # lib swig files
-#set(${target_name}_swig_src
-#  ModelEditor.i
-#)
+set(${target_name}_swig_src
+  ModelEditor.i
+)
 
-#MAKE_SWIG_TARGET(OpenStudioModelEditor modeleditor "${CMAKE_CURRENT_SOURCE_DIR}/ModelEditor.i" "${${target_name}_swig_src}" ${target_name} OpenStudioEnergyPlus)
-#add_dependencies(ruby_OpenStudioModelEditor ruby_OpenStudioModel)
+MAKE_SWIG_TARGET(OpenStudioModelEditor modeleditor "${CMAKE_CURRENT_SOURCE_DIR}/ModelEditor.i" "${${target_name}_swig_src}" ${target_name} OpenStudioEnergyPlus)
+add_dependencies(ruby_OpenStudioModelEditor ruby_OpenStudioModel)
 
 ##--------------------------------------------------------------------------------
 ## Now the ModelEditor.exe stuff below
