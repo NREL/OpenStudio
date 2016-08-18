@@ -1,3 +1,16 @@
+## OpenStudio v1.12.3
+###### 2016-08-10 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.12.2...v1.12.3 )
+
+- ![Fixed:][fixed] [#561]( https://github.com/NREL/OpenStudio/issues/561 ), Adjacent stacked spaces in same zones may result in incorrect area and likely loads as well.
+- ![Fixed:][fixed] [#1361]( https://github.com/NREL/OpenStudio/issues/1361 ), gbXML does not import WindowType elements
+- ![Fixed:][fixed] [#2298]( https://github.com/NREL/OpenStudio/issues/2298 ), gbxml import makes bad OS:Schedule:Week
+- ![Fixed:][fixed] [#2303]( https://github.com/NREL/OpenStudio/issues/2303 ), gbXML import/export should properly use names and ids
+- ![Fixed:][fixed] [#2310]( https://github.com/NREL/OpenStudio/issues/2310 ), Fenestration related "impedance mismatch" between OS and JEPlus
+- ![Fixed:][fixed] [#2313]( https://github.com/NREL/OpenStudio/issues/2313 ), Coil:Cooling:DX:TwoStageWithHumidityControl not working
+- ![Fixed:][fixed] [#2314]( https://github.com/NREL/OpenStudio/issues/2314 ), OS 1.12.1 to 1.12.2 Conversion Error
+- ![Fixed:][fixed] [#2316]( https://github.com/NREL/OpenStudio/issues/2316 ), Year Schedules appears twice in Schedules tab Library pane
+- ![Fixed:][fixed] [#2320]( https://github.com/NREL/OpenStudio/issues/2320 ), PAT select measures 
+
 ## OpenStudio v1.12.2
 ###### 2016-07-25 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.12.1...v1.12.2 )
 
