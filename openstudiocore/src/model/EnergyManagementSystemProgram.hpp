@@ -53,15 +53,15 @@ class MODEL_API EnergyManagementSystemProgram : public ModelObject {
 
   boost::optional<std::vector<std::string>> lines() const;
 
-  boost::optional<std::vector<ModelObject>> referencedObjects() const;
+  std::vector<ModelObject> referencedObjects() const;
 
-  boost::optional<std::vector<std::string>> invalidReferencedObjects() const;
+  std::vector<std::string> invalidReferencedObjects() const;
 
   //@}
   /** @name Setters */
   //@{
 
-  bool setBody(std::string& body);
+  bool setBody(const std::string& body);
 
   bool eraseBody();
 

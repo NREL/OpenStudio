@@ -86,7 +86,7 @@ namespace detail {
     return body;
   }
 
-  bool EnergyManagementSystemProgram_Impl::setBody(std::string& body) {
+  bool EnergyManagementSystemProgram_Impl::setBody(const std::string& body) {
     //set body of program to input string
     bool result = false;
     //if body string empty then return false
@@ -202,7 +202,7 @@ namespace detail {
     return result;
   }
 
-  boost::optional<std::vector<ModelObject>> EnergyManagementSystemProgram_Impl::referencedObjects() const {
+  std::vector<ModelObject> EnergyManagementSystemProgram_Impl::referencedObjects() const {
     //return vector of model objects that are referenced in program
     std::vector<ModelObject> result;
 
@@ -237,7 +237,7 @@ namespace detail {
     return result;
   }
 
-  boost::optional<std::vector<std::string>> EnergyManagementSystemProgram_Impl::invalidReferencedObjects() const {
+  std::vector<std::string> EnergyManagementSystemProgram_Impl::invalidReferencedObjects() const {
     //return vector of body lines that contain missing uid strings for invalid referenced objects
     std::vector<std::string> result;
 
@@ -295,7 +295,7 @@ boost::optional<std::string> EnergyManagementSystemProgram::body() const {
   return getImpl<detail::EnergyManagementSystemProgram_Impl>()->body();
 }
 
-bool EnergyManagementSystemProgram::setBody(std::string& body) {
+bool EnergyManagementSystemProgram::setBody(const std::string& body) {
   return getImpl<detail::EnergyManagementSystemProgram_Impl>()->setBody(body);
 }
 
@@ -315,11 +315,11 @@ bool EnergyManagementSystemProgram::setLines(const std::vector<std::string>& lin
   return getImpl<detail::EnergyManagementSystemProgram_Impl>()->setLines(lines);
 }
 
-boost::optional<std::vector<ModelObject>> EnergyManagementSystemProgram::referencedObjects() const {
+std::vector<ModelObject> EnergyManagementSystemProgram::referencedObjects() const {
   return getImpl<detail::EnergyManagementSystemProgram_Impl>()->referencedObjects();
 }
 
-boost::optional<std::vector<std::string>> EnergyManagementSystemProgram::invalidReferencedObjects() const {
+std::vector<std::string> EnergyManagementSystemProgram::invalidReferencedObjects() const {
   return getImpl<detail::EnergyManagementSystemProgram_Impl>()->invalidReferencedObjects();
 }
 
