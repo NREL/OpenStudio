@@ -2930,6 +2930,11 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_Meter_CustomDecrement);
   result.push_back(IddObjectType::OS_Output_Variable);
 
+  result.push_back(IddObjectType::OS_EnergyManagementSystem_Actuator);
+  result.push_back(IddObjectType::OS_EnergyManagementSystem_Program);
+  result.push_back(IddObjectType::OS_EnergyManagementSystem_ProgramCallingManager);
+  result.push_back(IddObjectType::OS_EnergyManagementSystem_Sensor);
+
   return result;
 }
 
