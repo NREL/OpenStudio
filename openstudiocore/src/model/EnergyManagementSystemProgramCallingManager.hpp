@@ -76,7 +76,7 @@ class MODEL_API EnergyManagementSystemProgramCallingManager : public ModelObject
 
   bool setProgram(const EnergyManagementSystemProgram& program, unsigned index);
 
-  bool setPrograms(const std::vector<const EnergyManagementSystemProgram>& programs);
+  bool setPrograms(const std::vector<EnergyManagementSystemProgram>& programs);
 
   bool removeNullPrograms();
 

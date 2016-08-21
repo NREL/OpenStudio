@@ -153,13 +153,13 @@ namespace detail {
       IdfExtensibleGroup idfGroup = insertExtensibleGroup(index, StringVector());
       OS_ASSERT(!idfGroup.empty());
       ModelExtensibleGroup group = idfGroup.cast<ModelExtensibleGroup>();
-      bool result = group.setPointer(0, program.handle());
+      result = group.setPointer(0, program.handle());
       OS_ASSERT(result); 
     }
     return result;
   }
 
-  bool EnergyManagementSystemProgramCallingManager_Impl::setPrograms(const std::vector<const EnergyManagementSystemProgram>& programs) {
+  bool EnergyManagementSystemProgramCallingManager_Impl::setPrograms(const std::vector<EnergyManagementSystemProgram>& programs) {
     //add programs to end of vector of programs
     std::vector<bool> ok(programs.size(), false);
     bool result = false;
@@ -259,7 +259,7 @@ bool EnergyManagementSystemProgramCallingManager::setProgram(const EnergyManagem
   return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->setProgram(program, index);
 }
 
-bool EnergyManagementSystemProgramCallingManager::setPrograms(const std::vector<const EnergyManagementSystemProgram>& programs) {
+bool EnergyManagementSystemProgramCallingManager::setPrograms(const std::vector<EnergyManagementSystemProgram>& programs) {
   return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->setPrograms(programs);
 }
 
