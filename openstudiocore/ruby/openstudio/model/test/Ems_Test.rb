@@ -29,8 +29,8 @@ require 'minitest/autorun'
 class TestEms < MiniTest::Test
 
   def test_ems
-    model = safe_load_model("#{Dir.pwd}/example.osm")
-
+    #model = safe_load_model("#{Dir.pwd}/example.osm")
+    model = OpenStudio::Model::Model.new
     ### Sensor ###
 
     # Create an output variable for OATdb
@@ -50,7 +50,9 @@ class TestEms < MiniTest::Test
     ### Actuator ###
 
     # Get the first fan from the example model
-    fan = model.getFanConstantVolumes[0]
+    #fan = model.getFanConstantVolumes[0]
+    always_on = model.alwaysOnDiscreteSchedule
+    fan = OpenStudio::Model::FanConstantVolume.new(model,always_on)
 
     # Create an actuator to set the fan pressure rise
     fan_actuator = OpenStudio::Model::EnergyManagementSystemActuator.new(fan)
