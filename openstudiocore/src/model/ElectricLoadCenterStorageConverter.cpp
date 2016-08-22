@@ -202,51 +202,53 @@ namespace detail {
 
   // This method will automatically switch the PowerConversationEfficiencyMethod to "SimpleFixed" and reset the DesignMaximumContinuousInputPower and EfficiencyFunctionofPowerCurveName fields
   bool ElectricLoadCenterStorageConverter_Impl::setSimpleFixedEfficiency(double simpleFixedEfficiency) {
-    // Switch the Method
-    bool result = setString(OS_ElectricLoadCenter_Storage_ConverterFields::PowerConversionEfficiencyMethod, "SimpleFixed");
-    OS_ASSERT(result);
     // Assign the Simple Fixed Efficiency
-    result = setDouble(OS_ElectricLoadCenter_Storage_ConverterFields::SimpleFixedEfficiency, simpleFixedEfficiency);
-    OS_ASSERT(result);
-    // Reset the two others
-    result = setString(OS_ElectricLoadCenter_Storage_ConverterFields::DesignMaximumContinuousInputPower, "");
-    OS_ASSERT(result);
-    result = setString(OS_ElectricLoadCenter_Storage_ConverterFields::EfficiencyFunctionofPowerCurveName, "");
-    OS_ASSERT(result);
+    bool result = setDouble(OS_ElectricLoadCenter_Storage_ConverterFields::SimpleFixedEfficiency, simpleFixedEfficiency);
+    if (result){
+      // Switch the Method
+      result = setString(OS_ElectricLoadCenter_Storage_ConverterFields::PowerConversionEfficiencyMethod, "SimpleFixed");
+      OS_ASSERT(result);
+      // Reset the two others
+      result = setString(OS_ElectricLoadCenter_Storage_ConverterFields::DesignMaximumContinuousInputPower, "");
+      OS_ASSERT(result);
+      result = setString(OS_ElectricLoadCenter_Storage_ConverterFields::EfficiencyFunctionofPowerCurveName, "");
+      OS_ASSERT(result);
+    }
     return result;
   }
 
   // This method will automatically switch the PowerConversationEfficiencyMethod to "FunctionOfPower" and reset the Simple Fixed Efficiency field.
   bool ElectricLoadCenterStorageConverter_Impl::setDesignMaximumContinuousInputPower(double designMaximumContinuousInputPower) {
-    // Switch the Method
-    bool result = setString(OS_ElectricLoadCenter_Storage_ConverterFields::PowerConversionEfficiencyMethod, "FunctionOfPower");
-    OS_ASSERT(result);
     // Assign the Design Maximum Continuous Input Power
-    result = setDouble(OS_ElectricLoadCenter_Storage_ConverterFields::DesignMaximumContinuousInputPower, designMaximumContinuousInputPower);
-    OS_ASSERT(result);
-    // Reset the Simple Fixed Efficiency
-    result = setString(OS_ElectricLoadCenter_Storage_ConverterFields::SimpleFixedEfficiency, "");
-    OS_ASSERT(result);
+    bool result = setDouble(OS_ElectricLoadCenter_Storage_ConverterFields::DesignMaximumContinuousInputPower, designMaximumContinuousInputPower);
+    if (result){
+      // Switch the Method
+      result = setString(OS_ElectricLoadCenter_Storage_ConverterFields::PowerConversionEfficiencyMethod, "FunctionOfPower");
+      OS_ASSERT(result);
+      // Reset the Simple Fixed Efficiency
+      result = setString(OS_ElectricLoadCenter_Storage_ConverterFields::SimpleFixedEfficiency, "");
+      OS_ASSERT(result);
+    }
     return result;
   }
 
   // This method will automatically switch the PowerConversationEfficiencyMethod to "FunctionOfPower" and reset the Simple Fixed Efficiency field.
   bool ElectricLoadCenterStorageConverter_Impl::setEfficiencyFunctionofPowerCurve(const Curve& efficiencyFunctionofPowerCurve) {
-    // Switch the Method
-    bool result = setString(OS_ElectricLoadCenter_Storage_ConverterFields::PowerConversionEfficiencyMethod, "FunctionOfPower");
-    OS_ASSERT(result);
     // Set the curve
-    result = setPointer(OS_ElectricLoadCenter_Storage_ConverterFields::EfficiencyFunctionofPowerCurveName, efficiencyFunctionofPowerCurve.handle());
-    OS_ASSERT(result);
-    // Reset the Simple Fixed Efficiency
-    result = setString(OS_ElectricLoadCenter_Storage_ConverterFields::SimpleFixedEfficiency, "");
-    OS_ASSERT(result);
+    bool result = setPointer(OS_ElectricLoadCenter_Storage_ConverterFields::EfficiencyFunctionofPowerCurveName, efficiencyFunctionofPowerCurve.handle());
+    if (result){
+      // Switch the Method
+      result = setString(OS_ElectricLoadCenter_Storage_ConverterFields::PowerConversionEfficiencyMethod, "FunctionOfPower");
+      OS_ASSERT(result);
+      // Reset the Simple Fixed Efficiency
+      result = setString(OS_ElectricLoadCenter_Storage_ConverterFields::SimpleFixedEfficiency, "");
+      OS_ASSERT(result);
+    }
     return result;
   }
 
   bool ElectricLoadCenterStorageConverter_Impl::setAncillaryPowerConsumedInStandby(double ancillaryPowerConsumedInStandby) {
     bool result = setDouble(OS_ElectricLoadCenter_Storage_ConverterFields::AncillaryPowerConsumedInStandby, ancillaryPowerConsumedInStandby);
-    OS_ASSERT(result);
     return result;
   }
 
