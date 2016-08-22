@@ -100,6 +100,7 @@ class MEASURE_API OSArgument {
 
   /** Constructor provided for deserialization; not for general use. */
   // DLM: OS 2.0, remove?
+  /*
   OSArgument(const UUID& uuid,
              const UUID& versionUUID,
              const std::string& name,
@@ -117,9 +118,10 @@ class MEASURE_API OSArgument {
              const std::vector<std::string>& choiceDisplayNames,
              bool isRead,
              const std::string& extension);
-
+*/
   /** Constructor provided for deserialization; not for general use. */
   // DLM: OS 2.0, remove?
+  /*
   OSArgument(const UUID& uuid,
              const UUID& versionUUID,
              const std::string& name,
@@ -137,7 +139,7 @@ class MEASURE_API OSArgument {
              const std::vector<std::string>& choiceDisplayNames,
              bool isRead,
              const std::string& extension);
-
+             */
   /** Creates a copy with new UUIDs. */
   OSArgument clone() const;
 
@@ -188,9 +190,9 @@ class MEASURE_API OSArgument {
   /** @name Getters */
   //@{
 
-  openstudio::UUID uuid() const;
+  //openstudio::UUID uuid() const;
 
-  openstudio::UUID versionUUID() const;
+  //openstudio::UUID versionUUID() const;
 
   /** Returns the name of this argument. */
   std::string name() const;
@@ -242,9 +244,6 @@ class MEASURE_API OSArgument {
    *  type() != OSArgumentType::Path. */
   openstudio::path valueAsPath() const;
 
-  /** For serialization, not for general use. */
-  QVariant valueAsQVariant() const;
-
   /** Returns true if this argument's default value has been set. */
   bool hasDefaultValue() const;
 
@@ -271,9 +270,6 @@ class MEASURE_API OSArgument {
   /** Returns this argument's default value as an openstudio::path. Throws if not 
    *  hasDefaultValue() or if type() != OSArgumentType::Path. */
   openstudio::path defaultValueAsPath() const;
-
-  /** For serialization, not for general use. */
-  QVariant defaultValueAsQVariant() const;
 
   /** Returns true if this argument has a non-null domain. */
   bool hasDomain() const;
@@ -474,6 +470,10 @@ class MEASURE_API OSArgument {
 
   void onChange();
 
+  QVariant valueAsQVariant() const;
+
+  QVariant defaultValueAsQVariant() const;
+
   openstudio::UUID m_uuid;
   openstudio::UUID m_versionUUID;
   std::string m_name;
@@ -536,13 +536,13 @@ MEASURE_API std::map<std::string,OSArgument> convertOSArgumentVectorToMap(const 
 namespace detail {
 
   /** Non-member function to convert argument into a QJSON-ready QVariant. */
-  MEASURE_API QVariant toVariant(const OSArgument& argument);
+  //MEASURE_API QVariant toVariant(const OSArgument& argument);
 
-  MEASURE_API OSArgument toOSArgument(const QVariant& variant, const VersionString& version);
+  //MEASURE_API OSArgument toOSArgument(const QVariant& variant, const VersionString& version);
 
-  QVariant toQuantityQVariant(const QVariantMap& map,
-                              const std::string& valueKey,
-                              const std::string& unitsKey);
+  //QVariant toQuantityQVariant(const QVariantMap& map,
+  //                            const std::string& valueKey,
+  //                            const std::string& unitsKey);
 
 }
 

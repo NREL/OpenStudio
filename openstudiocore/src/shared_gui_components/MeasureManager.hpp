@@ -34,21 +34,22 @@
 class QEvent;
 class QNetworkAccessManager;
 
+namespace Json{
+  class Value;
+}
+
 namespace openstudio {
 
 class BaseApp;
 class BCLMeasure;
 
 namespace osversion {
-
   class VersionTranslator;
-
 }
 
 namespace measure {
-
   class OSArgument;
-
+  class OSArgumentType;
 }
 class LocalLibraryController;
 
@@ -194,6 +195,8 @@ class MeasureManager : public QObject
     void updateMeasuresLists(bool updateUserMeasures);
 
     bool checkForUpdates(const openstudio::path& measureDir, bool force=false);
+
+    boost::optional<measure::OSArgument> getArgument(const measure::OSArgumentType& type, const Json::Value& jsonArgument);
 
     BaseApp *m_app;
     openstudio::path m_tempModelPath;
