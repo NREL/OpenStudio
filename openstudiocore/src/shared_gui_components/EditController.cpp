@@ -355,67 +355,12 @@ void InputController::setValueForIndex(int index)
 
 bool InputController::isArgumentIncomplete() const
 {
-  // Get the argument from the ruby perturbation by the same name as m_argument
-  // DLM: todo
-  /*
-  std::vector<measure::OSArgument> argumentVector = m_editController->measureItem()->measure().arguments();
-
-  std::map<std::string, measure::OSArgument> argumentMap = convertOSArgumentVectorToMap(argumentVector);
-
-  auto it = argumentMap.find(m_argument.name());
-
-  if(it != argumentMap.end())
-  {
-    // Check the criteria for being incomplete
-
-    if (it->second.required() && !(it->second.hasValue() || it->second.hasDefaultValue()))
-    {
-      return true;
-    }
-  }
-  */
-  return false;
+  return m_editController->measureStepItem()->hasIncompleteArguments();
 }
 
 bool InputController::isItOKToClearResults()
 {
-  // DLM: todo
-  /*
-  bool doOperation(true);
-
-  // Find out if there are results
-  boost::optional<analysisdriver::SimpleProject> project = m_app->project();
-
-  if( ! project ) { return false; }
-
-  if( ! project->analysis().completeDataPoints().empty() )
-  {
-    // Ask user if they are sure they want to edit
-    doOperation = EditMeasureMessageBox::warning(m_app);
-  }
-
-  if( ! doOperation )
-  {
-    // Reset user interface to argument's value
-
-    if( m_argument.hasValue() )
-    {
-      QString argumentValue = QString::fromStdString(m_argument.valueAsString());
-
-      inputView->setDisplayValue(argumentValue);
-    }
-    else if( m_argument.hasDefaultValue() )
-    {
-      inputView->setDisplayValue(QString::fromStdString(m_argument.defaultValueAsString()));
-    }
-    else
-    {
-      inputView->setDisplayValue("");
-    }
-
-    return false;
-  }
-  */
+  // DLM: todo warn user when results are out of date
   return true;
 }
 

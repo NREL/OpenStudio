@@ -225,7 +225,7 @@ class MeasureStepItem : public OSListItem
 
   signals:
 
-  //void nameChanged(const QString & name);
+  void nameChanged(const QString & name);
 
   void displayNameChanged(const QString & displayName);
 

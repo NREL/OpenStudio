@@ -467,7 +467,7 @@ bool MeasureStepItem::hasIncompleteArguments() const
 
   // find any required arguments without a value
   for (const auto& argument : arguments){
-    if (argument.required()){
+    if (argument.required() && !argument.hasDefaultValue()){
       boost::optional<Variant> variant = m_step.getArgument(argument.name());
       if (!variant){
         return true;
@@ -505,12 +505,15 @@ void MeasureStepItem::moveDown()
 void MeasureStepItem::setName(const QString & name)
 {
   m_step.setName(name.toStdString());
+
+  emit nameChanged(name);
 }
 
 void MeasureStepItem::setDisplayName(const QString & displayName)
 {
-  // DLM: TODO, add setDisplayName
   m_step.setName(displayName.toStdString());
+
+  emit displayNameChanged(displayName);
 }
 
 void MeasureStepItem::setDescription(const QString & description)
@@ -537,6 +540,8 @@ void MeasureStepItem::setArgument(const measure::OSArgument& argument)
   } else{
     m_step.removeArgument(argument.name());
   }
+
+  emit argumentsChanged(hasIncompleteArguments());
 }
 
 void MeasureStepItem::setSelected(bool isSelected)
@@ -569,8 +574,7 @@ QWidget * MeasureStepItemDelegate::view(QSharedPointer<OSListItem> dataSource)
     auto workflowStepView = new WorkflowStepView();
     workflowStepView->workflowStepButton->nameLabel->setText(measureStepItem->displayName());
 
-    // DLM: TODO connect for when editing in the tab
-    //connect(measureStepItem.data(), &MeasureStepItem::displayNameChanged, workflowStepView->measureItemButton->nameLabel, &QLabel::setText);
+    connect(measureStepItem.data(), &MeasureStepItem::displayNameChanged, workflowStepView->workflowStepButton->nameLabel, &QLabel::setText);
 
     // Remove
 
@@ -588,8 +592,7 @@ QWidget * MeasureStepItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 
     workflowStepView->workflowStepButton->cautionLabel->setVisible(measureStepItem->hasIncompleteArguments());
 
-    // DLM: TODO connect for when editing in the tab
-    //connect(measureStepItem.data(), &MeasureItem::argumentsChanged, workflowStepView->workflowStepButton->cautionLabel, &QLabel::setVisible);
+    connect(measureStepItem.data(), &MeasureStepItem::argumentsChanged, workflowStepView->workflowStepButton->cautionLabel, &QLabel::setVisible);
 
     // Up and down buttons
 
