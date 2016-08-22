@@ -15,7 +15,8 @@
 inline std::string libraryPath() {
 #if defined _WIN32 
   TCHAR szPath[MAX_PATH];
-  if( !GetModuleFileName( nullptr, szPath, MAX_PATH ) ) {
+  HMODULE handle = GetModuleHandle("openstudio_gui.so");
+  if( GetModuleFileName( handle, szPath, MAX_PATH ) ) {
     return std::string(szPath);
   } else {
       return std::string();
