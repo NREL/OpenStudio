@@ -54,8 +54,8 @@ boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemAct
   }
  
   idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, modelObject.actuatedComponent().nameString());
-  
-  idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, "TODO");
+  //not sure if below will work or not
+  idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, modelObject.iddObjectType().valueName());
 
   idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, modelObject.actuatedComponentControlType());
   
