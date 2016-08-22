@@ -150,15 +150,16 @@ if(APPLE)
   set(APPS "\${CMAKE_INSTALL_PREFIX}/OpenStudioApp.app")
 elseif(WIN32)
   set(plugin_dest_dir bin)
-  set(APPS "\${CMAKE_INSTALL_PREFIX}/bin/OpenStudioApp.exe")
+  set(APPS "\${CMAKE_INSTALL_PREFIX}/packages/OpenStudioApp/data/bin/OpenStudioApp.exe")
 else()
   set(plugin_dest_dir bin)
-  set(APPS "\${CMAKE_INSTALL_PREFIX}/bin/OpenStudioApp")
+  set(APPS "\${CMAKE_INSTALL_PREFIX}/packages/OpenStudioApp/data/bin/OpenStudioApp")
 endif()
 
 install(TARGETS ${target_name}
   BUNDLE DESTINATION .
   RUNTIME DESTINATION bin
+  COMPONENT "OpenStudioApp"
 )
 
 #if(APPLE OR WIN32)
@@ -199,6 +200,7 @@ if(APPLE)
 
   install(DIRECTORY ${CMAKE_SOURCE_DIR}/src/openstudio_app/Resources/
           DESTINATION OpenStudioApp.app/Contents/share/openstudio-${OPENSTUDIO_VERSION}/OSApp
+          COMPONENT "OpenStudioApp"
   )
 
   #install(DIRECTORY ${CMAKE_SOURCE_DIR}/src/pat_app/Measures
@@ -209,10 +211,12 @@ elseif(WIN32)
 
   install(DIRECTORY ${CMAKE_SOURCE_DIR}/src/openstudio_app/Resources/
 	  DESTINATION share/openstudio-${OPENSTUDIO_VERSION}/OSApp
+    COMPONENT "OpenStudioApp"
   )
 else()
   install(DIRECTORY ${CMAKE_SOURCE_DIR}/src/openstudio_app/Resources/
 	  DESTINATION share/openstudio-${OPENSTUDIO_VERSION}/OSApp
+    COMPONENT "OpenStudioApp"
   )
 endif()
 
@@ -253,14 +257,16 @@ if(UNIX AND NOT APPLE AND "${CMAKE_INSTALL_PREFIX}" STREQUAL "/usr/local")
   install(FILES ../../icons/ossr_256.png DESTINATION ../share/icons/hicolor/256x256/mimetypes RENAME application-openstudio.ossr.png)
 endif()
 
+    #fixup_bundle(\"${APPS}\" \"${QTPLUGINS}\" \"${DIRS}\")
 if(WIN32 OR APPLE)
   install(CODE "
     include(BundleUtilities)
     include(\"${CMAKE_SOURCE_DIR}/CMake/FixupBundleOverrides.cmake\")
     fixup_bundle(\"${APPS}\" \"${QTPLUGINS}\" \"${DIRS}\")
-  ")
+    ")
 endif()
 
+    #") COMPONENT "OpenStudioApp")
 #if(WIN32)
 #  include(GetPrerequisites)
 #  install(CODE "

@@ -8,6 +8,8 @@ endif()
 
 include_directories(${RUBY_INCLUDE_DIRS} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR} )
 
+# common library for openstudio.so and openstudio.exe
+
 add_library( init_openstudio STATIC
   init_openstudio.cpp
   RubyAPI.hpp
@@ -51,6 +53,8 @@ target_link_libraries(init_openstudio
  ${QT_LIBS}
 )
 
+# openstudio ruby bindings to load into normal ruby
+
 add_library(
   openstudio_rb
   MODULE
@@ -71,7 +75,9 @@ if( WIN32 )
   target_link_libraries(openstudio_rb ${RUBY_MINGW_STUB_LIB})
 endif()
 
-install(TARGETS openstudio_rb DESTINATION bin)
+install(TARGETS openstudio_rb DESTINATION bin COMPONENT "Ruby API")
+
+# openstudio ruby bindings to gui stuff
 
 add_library(
   openstudio_gui_rb
@@ -93,5 +99,34 @@ if( WIN32 )
   target_link_libraries(openstudio_gui_rb ${RUBY_MINGW_STUB_LIB})
 endif()
 
-install(TARGETS openstudio_gui_rb DESTINATION bin)
+install(TARGETS openstudio_gui_rb DESTINATION bin COMPONENT "SketchUp Plugin")
+
+# sketchup plugin
+
+install(DIRECTORY openstudio/sketchup_plugin DESTINATION share/openstudio COMPONENT "SketchUp Plugin")
+install(FILES openstudio/sketchup_plugin/Startup.rb DESTINATION share/openstudio/Plugins/OpenStudio/ COMPONENT "SketchUp Plugin")
+install(FILES openstudio/sketchup_plugin/OpenStudio.hash DESTINATION share/openstudio/Plugins/OpenStudio/ COMPONENT "SketchUp Plugin")
+install(FILES openstudio/sketchup_plugin/OpenStudio.rb DESTINATION share/openstudio/Plugins/ COMPONENT "SketchUp Plugin")
+
+# add_custom_target(Name [ALL] [command1 [args1...]]
+#                   [COMMAND command2 [args2...] ...]
+#                   [DEPENDS depend depend depend ... ]
+#                   [BYPRODUCTS [files...]]
+#                   [WORKING_DIRECTORY dir]
+#                   [COMMENT comment]
+#                   [VERBATIM] [USES_TERMINAL]
+#                   [SOURCES src1 [src2...]])
+
+# Elaborate shenanigans because we want to make a plugin_test.rb file,
+# that can be copied into the SketchUp plugins directory for testing the 
+# plugin during development.
+# Complicated because important parts of OpenStudio are in <build>/Products/<config>/
+# where config is determined by a cmake generator expression
+add_custom_target( SketchUp_Plugin 
+  COMMAND ${CMAKE_COMMAND} 
+  -DRUBY_SOURCE_DIR="${CMAKE_CURRENT_SOURCE_DIR}" 
+  -DCMAKE_PRODUCTS_DIR="${CMAKE_BINARY_DIR}/Products" 
+  -DOPENSTUDIO_GUI_LIB=$<TARGET_FILE:openstudio_gui_rb> 
+  -P "${CMAKE_CURRENT_SOURCE_DIR}/configure_sketchup_plugin_test.cmake"
+)
 
