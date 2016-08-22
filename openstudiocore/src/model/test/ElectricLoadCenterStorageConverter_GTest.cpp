@@ -94,7 +94,7 @@ TEST_F(ModelFixture, ElectricLoadCenterStorageConverter_Instantiate) {
   EXPECT_TRUE(elcConv.isAncillaryPowerConsumedInStandbyDefaulted());
   EXPECT_EQ(0.0, elcConv.ancillaryPowerConsumedInStandby());
   elcConv.setAncillaryPowerConsumedInStandby(20);
-  EXPECT_EQ(10.0, elcConv.ancillaryPowerConsumedInStandby());
+  EXPECT_EQ(20.0, elcConv.ancillaryPowerConsumedInStandby());
   EXPECT_FALSE(elcConv.isAncillaryPowerConsumedInStandbyDefaulted());
   elcConv.resetAncillaryPowerConsumedInStandby();
   EXPECT_TRUE(elcConv.isAncillaryPowerConsumedInStandbyDefaulted());
@@ -121,6 +121,6 @@ TEST_F(ModelFixture, ElectricLoadCenterStorageConverter_Instantiate) {
     EXPECT_EQ(elcConv.handle(), setConv->handle());
   }
   elcd.resetStorageConverter();
-  EXPECT_FALSE(elcd.setStorageConverter(elcConv));
+  EXPECT_TRUE(elcd.setStorageConverter(elcConv));
 
 }
