@@ -1378,6 +1378,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     retVal = EnergyManagementSystemProgram(temp);
     break;
   }
+  case openstudio::IddObjectType::OS_EnergyManagementSystem_ProgramCallingManager:
+  {
+    model::EnergyManagementSystemProgramCallingManager temp = modelObject.cast<EnergyManagementSystemProgramCallingManager>();
+    retVal = EnergyManagementSystemProgramCallingManager(temp);
+    break;
+  }
   case openstudio::IddObjectType::OS_EnergyManagementSystem_Sensor:
   {
     model::EnergyManagementSystemSensor temp = modelObject.cast<EnergyManagementSystemSensor>();
