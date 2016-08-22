@@ -296,6 +296,22 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
       pv.remove();
     }
   }
+  
+  // Remove orphan Storage
+  for (auto& storage : model.getModelObjects<ElectricalStorage>()) {
+    if (!storage.electricLoadCenterDistribution()){
+      LOG(Warn, "Electrical Storage " << storage.name().get() << " is not referenced by any ElectricLoadCenterDistribution, it will not be translated.");
+      storage.remove();
+    }
+  }
+  
+  // Remove orphan Converters
+  for (auto& converter : model.getConcreteModelObjects<ElectricLoadCenterStorageConverter>()){
+    if (!converter.electricLoadCenterDistribution()){
+      LOG(Warn, "Converter " << converter.name().get() << " is not referenced by any ElectricLoadCenterDistribution, it will not be translated.");
+      converter.remove();
+    }
+  }
 
   // Remove empty electric load center distribution objects (e.g. with no generators)
   // requested by jmarrec, https://github.com/NREL/OpenStudio/pull/1927
@@ -1335,6 +1351,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
   {
     model::ElectricLoadCenterStorageSimple temp = modelObject.cast<ElectricLoadCenterStorageSimple>();
     retVal = translateElectricLoadCenterStorageSimple(temp);
+    break;
+  }
+  case openstudio::IddObjectType::OS_ElectricLoadCenter_Storage_Converter:
+  {
+    model::ElectricLoadCenterStorageConverter temp = modelObject.cast<ElectricLoadCenterStorageConverter>();
+    retVal = translateElectricLoadCenterStorageConverter(temp);
     break;
   }
   case openstudio::IddObjectType::OS_EvaporativeCooler_Direct_ResearchSpecial :
@@ -2935,6 +2957,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_ElectricLoadCenter_Inverter_LookUpTable);
   result.push_back(IddObjectType::OS_ElectricLoadCenter_Inverter_Simple);
   result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_Simple);
+  result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_Converter);
 
   // put these down here so they have a chance to be translated with their "parent"
   result.push_back(IddObjectType::OS_LifeCycleCost);

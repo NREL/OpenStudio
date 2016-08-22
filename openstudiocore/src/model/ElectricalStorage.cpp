@@ -56,20 +56,19 @@ ElectricalStorage_Impl::ElectricalStorage_Impl(const ElectricalStorage_Impl& oth
  : ParentObject_Impl(other, model, keepHandles)
 {}
 
-// Convenience method to find the ELCD linked to this storage device
-boost::optional<ElectricLoadCenterDistribution> ElectricalStorage_Impl::electricLoadCenterDistribution() const
-{
-  boost::optional<ElectricLoadCenterDistribution> thiselcd;
-  for (const ElectricLoadCenterDistribution& elcd : this->model().getConcreteModelObjects<ElectricLoadCenterDistribution>()) {
-    if (boost::optional<ElectricalStorage> elcSto = elcd.electricalStorage()) {
-      if (elcSto->handle() == this->handle()) {
-        thiselcd = elcd;
-      }
+  // Convenience method to find the ELCD linked to this storage device
+  boost::optional<ElectricLoadCenterDistribution> ElectricalStorage_Impl::electricLoadCenterDistribution() const {
+    auto elcds = getObject<ModelObject>().getModelObjectSources<ElectricLoadCenterDistribution>(ElectricLoadCenterDistribution::iddObjectType());
+    if (elcds.empty()) {
+      // no error
+    } else if (elcds.size() == 1u) {
+      return elcds[0];
+    } else {
+      // error
     }
+
+    return boost::none;
   }
-  OS_ASSERT(thiselcd);
-  return thiselcd.get();
-}
 
 } // detail
 
