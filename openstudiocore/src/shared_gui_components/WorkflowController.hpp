@@ -200,6 +200,7 @@ class MeasureStepItem : public OSListItem
 
   OptionalBCLMeasure bclMeasure() const;
 
+  // arguments includes the full list of arguments calculated for the given model along with any values specified in the OSW 
   std::vector<measure::OSArgument> arguments() const;
 
   bool hasIncompleteArguments() const;

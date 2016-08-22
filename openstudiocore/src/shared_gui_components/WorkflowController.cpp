@@ -426,13 +426,55 @@ OptionalBCLMeasure MeasureStepItem::bclMeasure() const
 
 std::vector<measure::OSArgument> MeasureStepItem::arguments() const
 {
-  // TODO: DLM
-  return std::vector<measure::OSArgument>();
+  std::vector<measure::OSArgument> result;
+
+  // get arguments from the BCL Measure (computed using the current model)
+  OptionalBCLMeasure bclMeasure = this->bclMeasure();
+  if (bclMeasure){
+    result = m_app->measureManager().getArguments(*bclMeasure);
+  }
+
+  // fill in with any arguments in this WorkflowJSON
+  for (auto& argument : result){
+     boost::optional<Variant> variant = m_step.getArgument(argument.name());
+     if (variant){
+
+       VariantType variantType = variant->variantType();
+       if (variantType == VariantType::Boolean){
+         argument.setValue(variant->valueAsBoolean());
+       } else if (variantType == VariantType::Integer){
+         argument.setValue(variant->valueAsInteger());
+       } else if (variantType == VariantType::Double){
+         argument.setValue(variant->valueAsDouble());
+       } else if (variantType == VariantType::String){
+         argument.setValue(variant->valueAsString());
+       }
+     }
+  }
+
+  return result;
 }
 
 bool MeasureStepItem::hasIncompleteArguments() const
 {
-  // TODO: DLM
+  std::vector<measure::OSArgument> arguments;
+
+  // get arguments from the BCL Measure (computed using the current model)
+  OptionalBCLMeasure bclMeasure = this->bclMeasure();
+  if (bclMeasure){
+    arguments = m_app->measureManager().getArguments(*bclMeasure);
+  }
+
+  // find any required arguments without a value
+  for (const auto& argument : arguments){
+    if (argument.required()){
+      boost::optional<Variant> variant = m_step.getArgument(argument.name());
+      if (!variant){
+        return true;
+      }
+    }
+  }
+
   return false;
 }
 
@@ -479,7 +521,22 @@ void MeasureStepItem::setDescription(const QString & description)
 
 void MeasureStepItem::setArgument(const measure::OSArgument& argument)
 {
-  // DLM: TODO
+  if (argument.hasValue()){
+
+    if (argument.type() == measure::OSArgumentType::Boolean){
+      m_step.setArgument(argument.name(), argument.valueAsBool());
+    }else if (argument.type() == measure::OSArgumentType::Double){
+      m_step.setArgument(argument.name(), argument.valueAsDouble());
+    }else if (argument.type() == measure::OSArgumentType::Quantity){
+      m_step.setArgument(argument.name(), argument.valueAsDouble());
+    }else if (argument.type() == measure::OSArgumentType::Integer){
+      m_step.setArgument(argument.name(), argument.valueAsInteger());
+    } else{
+      m_step.setArgument(argument.name(), argument.valueAsString());
+    }
+  } else{
+    m_step.removeArgument(argument.name());
+  }
 }
 
 void MeasureStepItem::setSelected(bool isSelected)

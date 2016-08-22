@@ -42,6 +42,8 @@
 #include "../utilities/filetypes/WorkflowStep.hpp"
 #include "../utilities/filetypes/WorkflowStep_Impl.hpp"
 
+#include <jsoncpp/json.h>
+
 #include <QAbstractButton>
 #include <QBoxLayout>
 #include <QDesktopServices>
@@ -236,7 +238,7 @@ std::vector<measure::OSArgument> MeasureManager::getArguments(const BCLMeasure &
 
   std::string url_s = m_url.toString().toStdString();
 
-  QString data = QString("{\"measures_dir\": \"") + toQString(t_measure.directory()) + QString("\", \"osm_path\": \"") + toQString(m_tempModelPath) + QString("\"}");
+  QString data = QString("{\"measure_dir\": \"") + toQString(t_measure.directory()) + QString("\", \"osm_path\": \"") + toQString(m_tempModelPath) + QString("\"}");
 
   QNetworkRequest request(url);
   request.setHeader(QNetworkRequest::ContentTypeHeader, "json");
@@ -252,15 +254,157 @@ std::vector<measure::OSArgument> MeasureManager::getArguments(const BCLMeasure &
   QString replyString = reply->readAll();
   std::string s = replyString.toStdString();
 
-  bool result = true;
+  bool test = true;
   if (reply->error() != QNetworkReply::NoError){
-    result = false;
+    // TODO: handle error
+    test = false;
   }
-
   delete reply;
 
-  // DLM: TODO
-  return std::vector<measure::OSArgument>();
+  std::vector<measure::OSArgument> result;
+  if (test){
+    Json::Reader reader;
+    Json::Value json;
+    bool parsingSuccessful = reader.parse(s, json);
+    if (parsingSuccessful){
+
+      Json::Value arguments = json.get("arguments",  Json::Value(Json::arrayValue));
+
+      Json::ArrayIndex n = arguments.size();
+      for (Json::ArrayIndex i = 0; i < n; ++i){
+
+        Json::Value argument = arguments[i];
+
+        try{
+          std::string typeString = argument.get("type", Json::Value("")).asString();
+          measure::OSArgumentType type(typeString);
+          boost::optional<measure::OSArgument> osArgument = getArgument(type, argument);
+          if (osArgument){
+            result.push_back(*osArgument);
+          } else{
+            // TODO: handle error
+          }
+        } catch (const std::exception& ){
+          // TODO: handle error
+          continue;
+        }
+      }
+
+    } else{
+      // TODO: handle error
+    }
+  }
+
+
+  return result;
+}
+
+boost::optional<measure::OSArgument> MeasureManager::getArgument(const measure::OSArgumentType& type, const Json::Value& argument)
+{
+  std::string name = argument.get("name", Json::Value("")).asString();
+  bool required = argument.get("required", Json::Value(false)).asBool();
+  bool modelDependent = argument.get("model_dependent", Json::Value(false)).asBool();
+
+  boost::optional<measure::OSArgument> result;
+  if (type.value() == measure::OSArgumentType::Boolean){
+    result = measure::OSArgument::makeBoolArgument(name, required, modelDependent);
+
+    if (argument.isMember("default_value")){
+      bool defaultValue = argument.get("default_value", Json::Value(false)).asBool();
+      result->setDefaultValue(defaultValue);
+    }
+
+  } else if (type.value() == measure::OSArgumentType::Double){
+    result = measure::OSArgument::makeDoubleArgument(name, required, modelDependent);
+
+    if (argument.isMember("default_value")){
+      double defaultValue = argument.get("default_value", Json::Value(0.0)).asDouble();
+      result->setDefaultValue(defaultValue);
+    }
+
+  } else if (type.value() == measure::OSArgumentType::Quantity){
+    result = measure::OSArgument::makeQuantityArgument(name, required, modelDependent);
+
+    if (argument.isMember("default_value")){
+      double defaultValue = argument.get("default_value", Json::Value(0.0)).asDouble();
+      result->setDefaultValue(defaultValue);
+    }
+
+  } else if (type.value() == measure::OSArgumentType::Integer){
+    result = measure::OSArgument::makeIntegerArgument(name, required, modelDependent);
+
+    if (argument.isMember("default_value")){
+      double defaultValue = argument.get("default_value", Json::Value(0.0)).asInt();
+      result->setDefaultValue(defaultValue);
+    }
+
+  } else if (type.value() == measure::OSArgumentType::String){
+    result = measure::OSArgument::makeStringArgument(name, required, modelDependent);
+
+    if (argument.isMember("default_value")){
+      std::string defaultValue = argument.get("default_value", Json::Value("")).asString();
+      result->setDefaultValue(defaultValue);
+    }
+
+  } else if (type.value() == measure::OSArgumentType::Choice){
+
+    Json::Value choiceValues = argument.get("choice_values",  Json::Value(Json::arrayValue));
+    Json::Value choiceDisplayNames = argument.get("choice_display_names",  Json::Value(Json::arrayValue));
+
+    Json::ArrayIndex n = choiceValues.size();
+    if (n != choiceDisplayNames.size()){
+      choiceDisplayNames = choiceValues;
+    }
+
+    std::vector<std::string> choices;
+    std::vector<std::string> displayNames;
+    for (Json::ArrayIndex i = 0; i < n; ++i){
+      choices.push_back(choiceValues[i].asString());
+      displayNames.push_back(choiceDisplayNames[i].asString());
+    }
+
+    result = measure::OSArgument::makeChoiceArgument(name, choices, displayNames, required, modelDependent);
+
+    if (argument.isMember("default_value")){
+      std::string defaultValue = argument.get("default_value", Json::Value("")).asString();
+      result->setDefaultValue(defaultValue);
+    }
+
+  } else if (type.value() == measure::OSArgumentType::Path){
+
+    bool isRead = argument.get("is_read",  Json::Value(false)).asBool();
+    std::string extension = argument.get("extension",  Json::Value("*")).asString();
+
+    result = measure::OSArgument::makePathArgument(name, isRead, extension, required, modelDependent);
+
+    if (argument.isMember("default_value")){
+      std::string defaultValue = argument.get("default_value", Json::Value("")).asString();
+      result->setDefaultValue(defaultValue);
+    }
+        
+  } else if (type.value() == measure::OSArgumentType::Separator){
+
+    result = measure::OSArgument::makeSeparatorArgument(name, modelDependent);
+
+  }
+  OS_ASSERT(result);
+
+  if (argument.isMember("display_name")){
+    std::string displayName = argument.get("display_name", Json::Value("")).asString();
+    result->setDisplayName(displayName);
+  }
+
+  if (argument.isMember("description")){
+    std::string description = argument.get("description", Json::Value("")).asString();
+    result->setDescription(description);
+  }
+
+  if (argument.isMember("units")){
+    std::string units = argument.get("units", Json::Value("")).asString();
+    result->setUnits(units);
+  }
+
+  return result;
 }
 
 //std::string MeasureManager::suggestMeasureGroupName(const BCLMeasure &t_measure)

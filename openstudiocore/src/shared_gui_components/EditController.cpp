@@ -82,9 +82,7 @@ void EditController::setMeasureStepItem(measuretab::MeasureStepItem * measureSte
 
   // Inputs
 
-  // DLM: todo, these should come from the definition
-  /*
-  std::vector<measure::OSArgument> arguments = m_measureItem->arguments();
+  std::vector<measure::OSArgument> arguments = m_measureStepItem->arguments();
 
   for( const auto & arg : arguments )
   {
@@ -94,7 +92,6 @@ void EditController::setMeasureStepItem(measuretab::MeasureStepItem * measureSte
 
     editRubyMeasureView->addInputView(inputController->inputView);
   }
-  */
 }
 
 measuretab::MeasureStepItem * EditController::measureStepItem() const
@@ -316,8 +313,8 @@ void InputController::setValue(const QString & text)
       m_argument.setValue(text.toStdString());
     }
 
-    // DLM: todo
-//    m_editController->measureItem()->setArgument(m_argument);
+
+    m_editController->measureStepItem()->setArgument(m_argument);
 
     inputView->setIncomplete(isArgumentIncomplete());
   }
@@ -329,8 +326,7 @@ void InputController::setValue(bool value)
   {
     m_argument.setValue(value);
 
-    // DLM: todo
-//    m_editController->measureItem()->setArgument(m_argument);
+    m_editController->measureStepItem()->setArgument(m_argument);
 
     inputView->setIncomplete(isArgumentIncomplete());
   }
@@ -351,8 +347,7 @@ void InputController::setValueForIndex(int index)
       m_argument.setValue(value.toStdString());
     }
 
-    // DLM: todo
-//    m_editController->measureItem()->setArgument(m_argument);
+    m_editController->measureStepItem()->setArgument(m_argument);
 
     inputView->setIncomplete(isArgumentIncomplete());
   }
