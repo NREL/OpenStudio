@@ -1323,6 +1323,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     retVal = translateElectricLoadCenterStorageSimple(temp);
     break;
   }
+  case openstudio::IddObjectType::OS_EnergyManagementSystem_Actuator:
+  {
+    model::EnergyManagementSystemActuator temp = modelObject.cast<EnergyManagementSystemActuator>();
+    retVal = translateEnergyManagementSystemActuator(temp);
+    break;
+  }
   case openstudio::IddObjectType::OS_EnergyManagementSystem_Sensor:
   {
     model::EnergyManagementSystemSensor temp = modelObject.cast<EnergyManagementSystemSensor>();
