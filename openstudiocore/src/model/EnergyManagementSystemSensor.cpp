@@ -75,16 +75,18 @@ namespace detail {
 
   boost::optional<OutputVariable> EnergyManagementSystemSensor_Impl::outputVariable() const {
     boost::optional<OutputVariable> value = optionalOutputVariable();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Output Variable or Output Meter attached.");
+    if (!value.is_initialized()) {
+      LOG(Info, " does not have an Output Variable attached.");
+      return value;
     }
     return value.get();
   }
 
   boost::optional<OutputMeter> EnergyManagementSystemSensor_Impl::outputMeter() const {
     boost::optional<OutputMeter> value = optionalOutputMeter();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Output Variable or Output Meter attached.");
+    if (!value.is_initialized()) {
+      LOG(Info, " does not have an Output Meter attached.");
+      return value;
     }
     return value.get();
   }

@@ -60,11 +60,11 @@ boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemSen
     idfObject.setString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterIndexKeyName, s.get());
   }
   d = modelObject.outputVariable();
-  if (d) {
+  if (d.is_initialized()) {
     idfObject.setString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName, d.get().nameString());
   }
   m = modelObject.outputMeter();
-  if (m){
+  if (m.is_initialized()){
     idfObject.setString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName, m.get().nameString());
   }
  
