@@ -121,6 +121,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateElectricLoadCenterInverterSimple.cpp
   ForwardTranslator/ForwardTranslateElectricLoadCenterStorageSimple.cpp
   ForwardTranslator/ForwardTranslateElectricLoadCenterStorageConverter.cpp
+  ForwardTranslator/ForwardTranslateEnergyManagementSystemSensor.cpp
   ForwardTranslator/ForwardTranslateEvaporativeCoolerDirectResearchSpecial.cpp
   ForwardTranslator/ForwardTranslateEvaporativeCoolerIndirectResearchSpecial.cpp
   ForwardTranslator/ForwardTranslateEvaporativeFluidCoolerSingleSpeed.cpp
