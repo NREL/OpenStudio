@@ -849,7 +849,7 @@ void MeasureManager::duplicateSelectedMeasure()
     if (bclMeasure){
 
       // check for updates in case measure being copied has changed
-      checkForUpdates(*bclMeasure, true);
+      checkForUpdates(bclMeasure->directory(), true);
 
       // open modal dialog
       //QSharedPointer<BCLMeasureDialog> dialog(new BCLMeasureDialog(*bclMeasure, this->mainWindow));

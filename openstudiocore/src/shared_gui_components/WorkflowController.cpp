@@ -271,7 +271,7 @@ void MeasureStepController::addItemForDroppedMeasure(QDropEvent *event)
   }
 
   // the new measure
-  std::string name = m_app->measureManager().suggestMeasureName(projectMeasure, t_fixed);
+  std::string name = m_app->measureManager().suggestMeasureName(*projectMeasure);
   measureStep.setName(name);
   //measureStep.setDisplayName(name); // DLM: TODO
   measureStep.setDescription(projectMeasure->description());
