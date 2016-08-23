@@ -30,6 +30,9 @@
 
 #include <jsoncpp/json.h>
 
+// DLM: this should be somewhere different
+#include <model/nano_signal_slot.hpp> 
+
 namespace openstudio{
 namespace detail {
 
@@ -48,6 +51,13 @@ namespace detail {
     void setResult(const WorkflowStepResult& result);
 
     void resetResult();
+
+    // Emitted on any change
+    Nano::Signal<void()> onChange;
+
+  protected:
+    
+    void onUpdate();
 
   private:
 

@@ -31,6 +31,7 @@
 namespace openstudio{
 namespace detail{
   class WorkflowStep_Impl;
+  class WorkflowJSON_Impl;
   class MeasureStep_Impl;
 }
 
@@ -91,6 +92,7 @@ protected:
   }
 
   friend class detail::WorkflowStep_Impl;
+  friend class detail::WorkflowJSON_Impl;
 
   /** Protected constructor from impl. */
   WorkflowStep(std::shared_ptr<detail::WorkflowStep_Impl> impl);

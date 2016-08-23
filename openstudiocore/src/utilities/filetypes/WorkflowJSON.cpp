@@ -501,12 +501,14 @@ namespace detail{
   bool WorkflowJSON_Impl::setSeedFile(const openstudio::path& seedFile)
   {
     m_value["seed_file"] = toString(seedFile);
+    onUpdate();
     return true;
   }
 
   void WorkflowJSON_Impl::resetSeedFile()
   {
     m_value.removeMember("seed_file");
+    onUpdate();
   }
 
   boost::optional<openstudio::path> WorkflowJSON_Impl::weatherFile() const
@@ -523,12 +525,14 @@ namespace detail{
   bool WorkflowJSON_Impl::setWeatherFile(const openstudio::path& weatherFile)
   {
     m_value["weather_file"] = toString(weatherFile);
+    onUpdate();
     return true;
   }
     
   void WorkflowJSON_Impl::resetWeatherFile()
   {
     m_value.removeMember("weather_file");
+    onUpdate();
   }
 
   std::vector<WorkflowStep> WorkflowJSON_Impl::workflowSteps() const
@@ -538,10 +542,18 @@ namespace detail{
   
   bool WorkflowJSON_Impl::setWorkflowSteps(const std::vector<WorkflowStep>& workflowSteps)
   {
+    disconnectSteps();
     m_steps = workflowSteps;
     setMeasureTypes();
+    connectSteps();
     onUpdate();
     return true;
+  }
+
+  void WorkflowJSON_Impl::resetWorkflowSteps()
+  {
+    bool test = setWorkflowSteps(std::vector<WorkflowStep>());
+    OS_ASSERT(test);
   }
 
   std::vector<MeasureStep> WorkflowJSON_Impl::getMeasureSteps(const MeasureType& measureType)
@@ -600,7 +612,7 @@ namespace detail{
     return setWorkflowSteps(newSteps);
   }
 
-  boost::optional<BCLMeasure> WorkflowJSON_Impl::getBCLMeasure(const MeasureStep& step)
+  boost::optional<BCLMeasure> WorkflowJSON_Impl::getBCLMeasure(const MeasureStep& step) const
   {
     boost::optional<openstudio::path> path = findMeasure(step.measureDirName());
     if (path){
@@ -609,7 +621,7 @@ namespace detail{
     return boost::none;
   }
 
-  boost::optional<BCLMeasure> WorkflowJSON_Impl::getBCLMeasureByUUID(const UUID& id)
+  boost::optional<BCLMeasure> WorkflowJSON_Impl::getBCLMeasureByUUID(const UUID& id) const
   {
     for (const auto& step : m_steps){
       if (step.optionalCast<MeasureStep>()){
@@ -651,10 +663,12 @@ namespace detail{
   void WorkflowJSON_Impl::onUpdate()
   {
     m_value["updated_at"] = DateTime::nowUTC().toISO8601();
+    this->onChange.nano_emit();
   }
 
   void WorkflowJSON_Impl::parseSteps()
   {
+    disconnectSteps();
     m_steps.clear();
 
     Json::Value defaultValue(Json::arrayValue);
@@ -675,8 +689,24 @@ namespace detail{
       }
     }
 
+    connectSteps();
+
     m_value.removeMember("steps");
 
+  }
+
+  void WorkflowJSON_Impl::disconnectSteps()
+  {
+    for (const auto& step : m_steps){
+      step.getImpl<detail::WorkflowStep_Impl>().get()->WorkflowStep_Impl::onChange.disconnect<WorkflowJSON_Impl, &WorkflowJSON_Impl::onUpdate>(this);
+    }
+  }
+
+  void WorkflowJSON_Impl::connectSteps()
+  {
+    for (const auto& step : m_steps){
+      step.getImpl<detail::WorkflowStep_Impl>().get()->WorkflowStep_Impl::onChange.connect<WorkflowJSON_Impl, &WorkflowJSON_Impl::onUpdate>(this);
+    }
   }
 
   void WorkflowJSON_Impl::setMeasureTypes()
@@ -955,6 +985,11 @@ bool WorkflowJSON::setWorkflowSteps(const std::vector<WorkflowStep>& steps)
   return getImpl<detail::WorkflowJSON_Impl>()->setWorkflowSteps(steps);
 }
 
+void WorkflowJSON::resetWorkflowSteps()
+{
+  getImpl<detail::WorkflowJSON_Impl>()->resetWorkflowSteps();
+}
+
 std::vector<MeasureStep> WorkflowJSON::getMeasureSteps(const MeasureType& measureType)
 {
   return getImpl<detail::WorkflowJSON_Impl>()->getMeasureSteps(measureType);
@@ -965,12 +1000,12 @@ bool WorkflowJSON::setMeasureSteps(const MeasureType& measureType, const std::ve
   return getImpl<detail::WorkflowJSON_Impl>()->setMeasureSteps(measureType, steps);
 }
 
-boost::optional<BCLMeasure> WorkflowJSON::getBCLMeasure(const MeasureStep& step)
+boost::optional<BCLMeasure> WorkflowJSON::getBCLMeasure(const MeasureStep& step) const
 {
   return getImpl<detail::WorkflowJSON_Impl>()->getBCLMeasure(step);
 }
 
-boost::optional<BCLMeasure> WorkflowJSON::getBCLMeasureByUUID(const UUID& id)
+boost::optional<BCLMeasure> WorkflowJSON::getBCLMeasureByUUID(const UUID& id) const
 {
   return getImpl<detail::WorkflowJSON_Impl>()->getBCLMeasureByUUID(id);
 }

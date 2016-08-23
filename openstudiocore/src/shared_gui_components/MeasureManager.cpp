@@ -407,65 +407,30 @@ boost::optional<measure::OSArgument> MeasureManager::getArgument(const measure::
   return result;
 }
 
-//std::string MeasureManager::suggestMeasureGroupName(const BCLMeasure &t_measure)
-//{
-//  std::string baseName = t_measure.displayName();
-//
-//  baseName.append(" Group");
-//
-//  std::set<std::string> allNames;
-//  if( boost::optional<analysisdriver::SimpleProject> project = m_app->project() ){
-//    analysis::Analysis analysis = project->analysis();
-//    analysis::Problem problem = analysis.problem();
-//    for (const analysis::InputVariable& variable : problem.variables()) {
-//      allNames.insert(variable.name());
-//      allNames.insert(variable.displayName());
-//    }
-//  }
-//
-//  std::string result = baseName;
-//  int i = 1;
-//  while (allNames.find(result) != allNames.end()){
-//    result = baseName + " " + QString::number(i).toStdString();
-//    i++;
-//  }
-//
-//  return result;
-//}
+std::string MeasureManager::suggestMeasureName(const BCLMeasure &t_measure)
+{
+  std::string baseName = t_measure.displayName();
 
-//std::string MeasureManager::suggestMeasureName(const BCLMeasure &t_measure, bool t_fixed)
-//{
-//  std::string baseName = t_measure.displayName();
-//
-//  if (!t_fixed)
-//  {
-//    baseName.append(" Alternative");
-//  }
-//
-//  std::set<std::string> allNames;
-//  if( boost::optional<analysisdriver::SimpleProject> project = m_app->project() ){
-//    analysis::Analysis analysis = project->analysis();
-//    analysis::Problem problem = analysis.problem();
-//    for (const analysis::InputVariable& variable : problem.variables()) {
-//      boost::optional<analysis::MeasureGroup> discreteVariable = variable.optionalCast<analysis::MeasureGroup>();
-//      if (discreteVariable){
-//        for (const analysis::Measure& measure : discreteVariable->measures(false)) {
-//          allNames.insert(measure.name());
-//          allNames.insert(measure.displayName());
-//        }
-//      }
-//    }
-//  }
-//
-//  std::string result = baseName;
-//  int i = 1;
-//  while (allNames.find(result) != allNames.end()){
-//    result = baseName + " " + QString::number(i).toStdString();
-//    i++;
-//  }
-//
-//  return result;
-//}
+  std::set<std::string> allNames;
+  WorkflowJSON workflowJSON = m_app->currentModel()->workflowJSON();
+  for (const auto& step : workflowJSON.workflowSteps()){
+    if (step.optionalCast<MeasureStep>()){
+      boost::optional<std::string> name = step.cast<MeasureStep>().name();
+      if (name){
+        allNames.insert(*name);
+      }
+    }
+  }
+
+  std::string result = baseName;
+  int i = 1;
+  while (allNames.find(result) != allNames.end()){
+    result = baseName + " " + QString::number(i).toStdString();
+    i++;
+  }
+
+  return result;
+}
 
 void MeasureManager::updateMeasures(bool t_showMessage)
 {
@@ -884,9 +849,7 @@ void MeasureManager::duplicateSelectedMeasure()
     if (bclMeasure){
 
       // check for updates in case measure being copied has changed
-      // do not save bclMeasure 
-      // DLM: todo
-      //checkForUpdates(*bclMeasure, true);
+      checkForUpdates(*bclMeasure, true);
 
       // open modal dialog
       //QSharedPointer<BCLMeasureDialog> dialog(new BCLMeasureDialog(*bclMeasure, this->mainWindow));

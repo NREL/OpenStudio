@@ -41,11 +41,18 @@ namespace detail{
   void WorkflowStep_Impl::setResult(const WorkflowStepResult& result)
   {
     m_result = result;
+    onUpdate();
   }
 
   void WorkflowStep_Impl::resetResult()
   {
     m_result.reset();
+    onUpdate();
+  }
+
+  void WorkflowStep_Impl::onUpdate()
+  {
+    this->onChange.nano_emit();
   }
 
   MeasureStep_Impl::MeasureStep_Impl(const std::string& measureDirName)
@@ -163,12 +170,14 @@ namespace detail{
   bool MeasureStep_Impl::setName(const std::string& name)
   {
     m_name = name;
+    onUpdate();
     return true;
   }
 
   void MeasureStep_Impl::resetName()
   {
     m_name.reset();
+    onUpdate();
   }
 
   boost::optional<std::string> MeasureStep_Impl::description() const
@@ -179,12 +188,14 @@ namespace detail{
   bool MeasureStep_Impl::setDescription(const std::string& description)
   {
     m_description = description;
+    onUpdate();
     return true;
   }
 
   void MeasureStep_Impl::resetDescription()
   {
     m_description.reset();
+    onUpdate();
   }
 
   boost::optional<std::string> MeasureStep_Impl::modelerDescription() const
@@ -195,12 +206,14 @@ namespace detail{
   bool MeasureStep_Impl::setModelerDescription(const std::string& modelerDescription)
   {
     m_modelerDescription = modelerDescription;
+    onUpdate();
     return true;
   }
 
   void MeasureStep_Impl::resetModelerDescription()
   {
     m_modelerDescription.reset();
+    onUpdate();
   }
 
   std::map<std::string, Variant> MeasureStep_Impl::arguments() const
@@ -220,6 +233,7 @@ namespace detail{
   void MeasureStep_Impl::setArgument(const std::string& name, const Variant& value)
   {
     m_arguments.insert(std::make_pair(name, value));
+    onUpdate();
   }
 
   void MeasureStep_Impl::setArgument(const std::string& name, bool value)
@@ -245,11 +259,13 @@ namespace detail{
   void MeasureStep_Impl::removeArgument(const std::string& name)
   {
     m_arguments.erase(name);
+    onUpdate();
   }
 
   void MeasureStep_Impl::clearArguments()
   {
     m_arguments.clear();
+    onUpdate();
   }
 
 } //detail

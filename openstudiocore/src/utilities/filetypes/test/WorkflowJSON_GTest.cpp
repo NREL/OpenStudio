@@ -20,6 +20,7 @@
 #include <gtest/gtest.h>
 
 #include "../WorkflowJSON.hpp"
+#include "../WorkflowJSON_Impl.hpp"
 #include "../WorkflowStep.hpp"
 #include "../WorkflowStep_Impl.hpp"
 #include "../WorkflowStepResult.hpp"
@@ -31,6 +32,19 @@
 #include <resources.hxx>
 
 using namespace openstudio;
+
+
+class WorkflowJSONListener
+{
+public:
+  WorkflowJSONListener()
+    : dirty(false)
+  {}
+
+  void makeDirty() { dirty = true; }
+  bool dirty;
+};
+
 
 TEST(Filetypes, WorkflowJSON_Min)
 {
@@ -677,4 +691,42 @@ TEST(Filetypes, WorkflowJSON_Setters)
 
   EXPECT_EQ(toPath("../in.osm"), workflowJSON.seedFile().get());
   EXPECT_EQ(toPath("./files/in.epw"), workflowJSON.weatherFile().get());
+}
+
+TEST(Filetypes, WorkflowJSON_Signals)
+{
+  WorkflowJSON workflowJSON;
+  WorkflowJSONListener listener;
+
+  workflowJSON.getImpl<openstudio::detail::WorkflowJSON_Impl>().get()->WorkflowJSON_Impl::onChange.connect<WorkflowJSONListener, &WorkflowJSONListener::makeDirty>(listener);
+
+  EXPECT_EQ(false, listener.dirty);
+  workflowJSON.setSeedFile(toPath("in.osm"));
+  EXPECT_EQ(true, listener.dirty);
+  listener.dirty = false;
+
+  MeasureStep step("My Measure");
+
+  std::vector<WorkflowStep> steps;
+  steps.push_back(step);
+
+  EXPECT_EQ(false, listener.dirty);
+  workflowJSON.setWorkflowSteps(steps);
+  EXPECT_EQ(true, listener.dirty);
+  listener.dirty = false;
+
+  EXPECT_EQ(false, listener.dirty);
+  step.setName("New Name");
+  EXPECT_EQ(true, listener.dirty);
+  listener.dirty = false;
+
+  EXPECT_EQ(false, listener.dirty);
+  workflowJSON.resetWorkflowSteps();
+  EXPECT_EQ(true, listener.dirty);
+  listener.dirty = false;
+
+  EXPECT_EQ(false, listener.dirty);
+  step.setName("New Name");
+  EXPECT_EQ(false, listener.dirty);
+  listener.dirty = false;
 }

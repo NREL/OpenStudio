@@ -97,6 +97,8 @@
 #include "../utilities/idf/ValidityReport.hpp"
 #include "../utilities/idf/Workspace.hpp"
 #include "../utilities/filetypes/EpwFile.hpp"
+#include "../utilities/filetypes/WorkflowJSON.hpp"
+#include "../utilities/filetypes/WorkflowJSON_Impl.hpp"
 
 #include "../osversion/VersionTranslator.hpp"
 
@@ -372,6 +374,7 @@ namespace openstudio {
     }
 
     m_model.getImpl<model::detail::Model_Impl>().get()->onChange.connect<OSDocument, &OSDocument::markAsModified>(this);
+    m_model.workflowJSON().getImpl<detail::WorkflowJSON_Impl>().get()->onChange.connect<OSDocument, &OSDocument::markAsModified>(this);
 
     // Main Right Column
 

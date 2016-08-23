@@ -30,11 +30,14 @@
 
 #include <jsoncpp/json.h>
 
+class Filetypes_WorkflowJSON_Signals_Test;
+
 namespace openstudio{
 
 class WorkflowStep;
 class MeasureStep;
 class DateTime;
+class OSDocument;
 
 namespace detail{
   class WorkflowJSON_Impl;
@@ -184,6 +187,9 @@ public:
   /** Assigns the workflow steps. */
   bool setWorkflowSteps(const std::vector<WorkflowStep>& steps);
 
+  /** Resets the workflow steps. */
+  void resetWorkflowSteps();
+
   /** Gets measure steps by measure type. */
   std::vector<MeasureStep> getMeasureSteps(const MeasureType& measureType);
 
@@ -191,10 +197,10 @@ public:
   bool setMeasureSteps(const MeasureType& measureType, const std::vector<MeasureStep>& steps);
 
   /** Attempts to find the BCLMeasure for a given MeasureStep. */
-  boost::optional<BCLMeasure> getBCLMeasure(const MeasureStep& step);
+  boost::optional<BCLMeasure> getBCLMeasure(const MeasureStep& step) const;
 
   /** Add a measure to the measure dir, replaces existing measure, does not add a step to the workflow. */
-  boost::optional<BCLMeasure> getBCLMeasureByUUID(const UUID& id);
+  boost::optional<BCLMeasure> getBCLMeasureByUUID(const UUID& id) const;
 
   /** Add a measure to the measure dir, replaces existing measure with same id, does not add a step to the workflow. */
   boost::optional<BCLMeasure> addMeasure(const BCLMeasure& bclMeasure);
@@ -207,7 +213,9 @@ protected:
     return std::dynamic_pointer_cast<T>(m_impl);
   }
   
+  friend class OSDocument;
   friend class detail::WorkflowJSON_Impl;
+  friend class ::Filetypes_WorkflowJSON_Signals_Test; // for testing
 
   /** Protected constructor from impl. */
   WorkflowJSON(std::shared_ptr<detail::WorkflowJSON_Impl> impl);

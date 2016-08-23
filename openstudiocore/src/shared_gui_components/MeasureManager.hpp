@@ -140,9 +140,7 @@ class MeasureManager : public QObject
 
     std::vector<measure::OSArgument> getArguments(const BCLMeasure &t_measure);
 
-    //std::string suggestMeasureGroupName(const BCLMeasure &t_measure);
-
-    //std::string suggestMeasureName(const BCLMeasure &t_measure, bool t_fixed);
+    std::string suggestMeasureName(const BCLMeasure &t_measure);
 
     bool isMeasureSelected();
 
