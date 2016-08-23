@@ -61,8 +61,10 @@ boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemAct
   
   std::string n = modelObject.actuatedComponent().iddObject().name();
   IddObjectType x = modelObject.iddObject().type().value();
+  IddObjectType y = modelObject.actuatedComponent().iddObject().type().value();
+  IddObjectType z = openstudio::IddObjectType::OS_Fan_ConstantVolume;
 
-  switch (modelObject.iddObject().type().value()) {
+  switch (modelObject.actuatedComponent().iddObject().type().value()) {
   case openstudio::IddObjectType::OS_Fan_ConstantVolume:
     {
       n = "Fan";
