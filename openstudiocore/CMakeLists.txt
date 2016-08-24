@@ -733,11 +733,11 @@ include_directories(${CMAKE_BINARY_DIR}/src/zlib)
 
 if(BUILD_TESTING)
   # force gtest to build as a static library no matter what
-  set(TEMP_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS})
-  set(BUILD_SHARED_LIBS OFF)
+  #set(TEMP_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS})
+  #set(BUILD_SHARED_LIBS OFF)
   
   # Google test library
-  set(gtest_force_shared_crt ON) # in case we are linking with shared os libraries
+  set(gtest_force_shared_crt ON) # in case we are linking with shared or static os libraries
   set(gtest_build_tests OFF)
   set(gtest_build_samples OFF)
   set(gtest_disable_pthreads OFF)
@@ -746,7 +746,7 @@ if(BUILD_TESTING)
   add_subdirectory(src/google_test)
   
   # restore BUILD_SHARED_LIBS
-  set(BUILD_SHARED_LIBS ${TEMP_BUILD_SHARED_LIBS})
+  #set(BUILD_SHARED_LIBS ${TEMP_BUILD_SHARED_LIBS})
 endif()
 
 # GeographicLib
