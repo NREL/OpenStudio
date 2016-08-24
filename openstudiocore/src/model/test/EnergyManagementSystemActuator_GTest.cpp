@@ -25,6 +25,10 @@
 #include "../ThermalZone.hpp"
 #include "../FanConstantVolume.hpp"
 #include "../FanConstantVolume_Impl.hpp"
+#include "../ElectricEquipment.hpp"
+#include "../ElectricEquipment_Impl.hpp"
+#include "../ElectricEquipmentDefinition.hpp"
+#include "../ElectricEquipmentDefinition_Impl.hpp"
 #include "../Schedule.hpp"
 #include "../EnergyManagementSystemActuator.hpp"
 #include "../OutputVariable.hpp"
@@ -72,6 +76,23 @@ TEST_F(ModelFixture, EMSActuator_EMSActuator)
 
   fanActuator.setActuatedComponent(fan2);
   EXPECT_EQ(fan2, fanActuator.actuatedComponent());
+
+  //add electric equipment actuator
+  ElectricEquipmentDefinition definition(model);
+  ElectricEquipment electricEquipment(definition);
+  EnergyManagementSystemActuator equipActuator(electricEquipment);
+  std::string equipName = electricEquipment.name().get() + "power level Actuator";
+  equipActuator.setName(equipName);
+  std::string equipControlType = "Electric Power Level";
+  equipActuator.setActuatedComponentControlType(equipControlType);
+
+  EXPECT_EQ(electricEquipment, equipActuator.actuatedComponent());
+  EXPECT_EQ(equipControlType, equipActuator.actuatedComponentControlType());
+
+  ComponentType = "ElectricEquipment";
+  equipActuator.setActuatedComponentType(ComponentType);
+  EXPECT_EQ(ComponentType, equipActuator.actuatedComponentType());
+
 
 }
 
