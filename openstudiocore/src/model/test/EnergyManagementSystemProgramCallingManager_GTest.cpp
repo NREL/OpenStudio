@@ -74,6 +74,8 @@ TEST_F(ModelFixture, EMSProgramCallingManager_EMSProgramCallingManager)
   fanActuator.setName(fanName);
   std::string fanControlType = "Fan Pressure Rise";
   fanActuator.setActuatedComponentControlType(fanControlType);
+  std::string ComponentType = "Fan";
+  fanActuator.setActuatedComponentType(ComponentType);
 
   //add program
   EnergyManagementSystemProgram fan_program_1(model);

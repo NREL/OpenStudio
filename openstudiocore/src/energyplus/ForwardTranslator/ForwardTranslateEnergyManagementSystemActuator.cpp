@@ -56,29 +56,9 @@ boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemAct
   idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, modelObject.actuatedComponent().nameString());
 
   idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, modelObject.actuatedComponentControlType());
-  //TODO below does not work, try switch statement
-  //idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, modelObject.iddObjectType().valueName());
+
+  idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, modelObject.actuatedComponentType());
   
-  std::string n = modelObject.actuatedComponent().iddObject().name();
-  IddObjectType x = modelObject.iddObject().type().value();
-  IddObjectType y = modelObject.actuatedComponent().iddObject().type().value();
-  IddObjectType z = openstudio::IddObjectType::OS_Fan_ConstantVolume;
-
-  switch (modelObject.actuatedComponent().iddObject().type().value()) {
-  case openstudio::IddObjectType::OS_Fan_ConstantVolume:
-    {
-      n = "Fan";
-      break;
-    }
-  case openstudio::IddObjectType::OS_ElectricEquipment :
-    {
-      n = "ElectricEquipment";
-      break;
-    }
-  }
-
-  idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, n);
- 
   return idfObject;
 }
 

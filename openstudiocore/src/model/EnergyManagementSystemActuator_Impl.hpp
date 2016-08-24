@@ -64,6 +64,8 @@ namespace detail {
 
     std::string actuatedComponentControlType() const;
 
+    std::string actuatedComponentType() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -71,6 +73,8 @@ namespace detail {
     bool setActuatedComponent(const ModelObject& modelObject);
 
     bool setActuatedComponentControlType(const std::string& actuatedComponentControlType);
+
+    bool setActuatedComponentType(const std::string& actuatedComponentType);
 
     //@}
     /** @name Other */
