@@ -146,6 +146,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_EMS) {
   fanActuator.setActuatedComponentControlType(fanControlType);
   EXPECT_EQ(fan, fanActuator.actuatedComponent());
   EXPECT_EQ(fanControlType, fanActuator.actuatedComponentControlType());
+  std::string ComponentType = "Fan";
+  fanActuator.setActuatedComponentType(ComponentType);
+  EXPECT_EQ(ComponentType, fanActuator.actuatedComponentType());
 
   fanActuator.setActuatedComponent(fan2);
   EXPECT_EQ(fan2, fanActuator.actuatedComponent());
@@ -184,6 +187,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorProgram_EMS) {
   fanActuator.setName(fanName);
   std::string fanControlType = "Fan Pressure Rise";
   fanActuator.setActuatedComponentControlType(fanControlType);
+  std::string ComponentType = "Fan";
+  fanActuator.setActuatedComponentType(ComponentType);
+  EXPECT_EQ(ComponentType, fanActuator.actuatedComponentType());
 
   //add program
   EnergyManagementSystemProgram fan_program_1(model);
@@ -223,6 +229,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorProgram_EMS) {
   fanActuator2.setName(fanName);
   fanControlType = "Fan Pressure Rise";
   fanActuator2.setActuatedComponentControlType(fanControlType);
+  ComponentType = "Fan";
+  fanActuator2.setActuatedComponentType(ComponentType);
+  EXPECT_EQ(ComponentType, fanActuator2.actuatedComponentType());
 
   // Create a second program from a vector of lines
   EnergyManagementSystemProgram fan_program_2(model);
@@ -345,6 +354,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorProgramCallingManager_EMS) {
   fanActuator.setName(fanName);
   std::string fanControlType = "Fan Pressure Rise";
   fanActuator.setActuatedComponentControlType(fanControlType);
+  std::string ComponentType = "Fan";
+  fanActuator.setActuatedComponentType(ComponentType);
+  EXPECT_EQ(ComponentType, fanActuator.actuatedComponentType());
 
   //add program
   EnergyManagementSystemProgram fan_program_1(model);

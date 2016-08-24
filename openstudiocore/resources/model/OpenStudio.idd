@@ -26410,9 +26410,12 @@ OS:EnergyManagementSystem:Actuator,
        \required-field
        \type object-list
        \object-list AllObjects
-  A4 ; \field Actuated Component Control Type
+  A4 , \field Actuated Component Type
        \required-field
-       \type alpha     
+       \type alpha
+  A5 ; \field Actuated Component Control Type
+       \required-field
+       \type alpha      
 
 OS:EnergyManagementSystem:ProgramCallingManager,
        \extensible:1 - repeat last field, remembering to remove ; from "inner" fields.

@@ -78,12 +78,24 @@ namespace detail {
     return value.get();
   }
 
+  std::string EnergyManagementSystemActuator_Impl::actuatedComponentType() const {
+    boost::optional<std::string> value = getString(OS_EnergyManagementSystem_ActuatorFields::ActuatedComponentType, true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
   bool EnergyManagementSystemActuator_Impl::setActuatedComponent(const ModelObject& modelObject) {
     return setPointer(OS_EnergyManagementSystem_ActuatorFields::ActuatedComponentName, modelObject.handle());
   }
 
   bool EnergyManagementSystemActuator_Impl::setActuatedComponentControlType(const std::string& actuatedComponentControlType) {
     bool result = setString(OS_EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, actuatedComponentControlType);
+    OS_ASSERT(result);
+    return result;
+  }
+
+  bool EnergyManagementSystemActuator_Impl::setActuatedComponentType(const std::string& actuatedComponentType) {
+    bool result = setString(OS_EnergyManagementSystem_ActuatorFields::ActuatedComponentType, actuatedComponentType);
     OS_ASSERT(result);
     return result;
   }
@@ -109,12 +121,20 @@ std::string EnergyManagementSystemActuator::actuatedComponentControlType() const
   return getImpl<detail::EnergyManagementSystemActuator_Impl>()->actuatedComponentControlType();
 }
 
+std::string EnergyManagementSystemActuator::actuatedComponentType() const {
+  return getImpl<detail::EnergyManagementSystemActuator_Impl>()->actuatedComponentType();
+}
+
 bool EnergyManagementSystemActuator::setActuatedComponent(const ModelObject& modelObject) {
   return getImpl<detail::EnergyManagementSystemActuator_Impl>()->setActuatedComponent(modelObject);
 }
 
 bool EnergyManagementSystemActuator::setActuatedComponentControlType(const std::string& actuatedComponentControlType) {
   return getImpl<detail::EnergyManagementSystemActuator_Impl>()->setActuatedComponentControlType(actuatedComponentControlType);
+}
+
+bool EnergyManagementSystemActuator::setActuatedComponentType(const std::string& actuatedComponentType) {
+  return getImpl<detail::EnergyManagementSystemActuator_Impl>()->setActuatedComponentType(actuatedComponentType);
 }
 
 /// @cond
