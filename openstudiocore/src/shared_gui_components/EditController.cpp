@@ -82,9 +82,7 @@ void EditController::setMeasureStepItem(measuretab::MeasureStepItem * measureSte
 
   // Inputs
 
-  // DLM: todo, these should come from the definition
-  /*
-  std::vector<measure::OSArgument> arguments = m_measureItem->arguments();
+  std::vector<measure::OSArgument> arguments = m_measureStepItem->arguments();
 
   for( const auto & arg : arguments )
   {
@@ -94,7 +92,6 @@ void EditController::setMeasureStepItem(measuretab::MeasureStepItem * measureSte
 
     editRubyMeasureView->addInputView(inputController->inputView);
   }
-  */
 }
 
 measuretab::MeasureStepItem * EditController::measureStepItem() const
@@ -316,8 +313,8 @@ void InputController::setValue(const QString & text)
       m_argument.setValue(text.toStdString());
     }
 
-    // DLM: todo
-//    m_editController->measureItem()->setArgument(m_argument);
+
+    m_editController->measureStepItem()->setArgument(m_argument);
 
     inputView->setIncomplete(isArgumentIncomplete());
   }
@@ -329,8 +326,7 @@ void InputController::setValue(bool value)
   {
     m_argument.setValue(value);
 
-    // DLM: todo
-//    m_editController->measureItem()->setArgument(m_argument);
+    m_editController->measureStepItem()->setArgument(m_argument);
 
     inputView->setIncomplete(isArgumentIncomplete());
   }
@@ -351,8 +347,7 @@ void InputController::setValueForIndex(int index)
       m_argument.setValue(value.toStdString());
     }
 
-    // DLM: todo
-//    m_editController->measureItem()->setArgument(m_argument);
+    m_editController->measureStepItem()->setArgument(m_argument);
 
     inputView->setIncomplete(isArgumentIncomplete());
   }
@@ -360,67 +355,12 @@ void InputController::setValueForIndex(int index)
 
 bool InputController::isArgumentIncomplete() const
 {
-  // Get the argument from the ruby perturbation by the same name as m_argument
-  // DLM: todo
-  /*
-  std::vector<measure::OSArgument> argumentVector = m_editController->measureItem()->measure().arguments();
-
-  std::map<std::string, measure::OSArgument> argumentMap = convertOSArgumentVectorToMap(argumentVector);
-
-  auto it = argumentMap.find(m_argument.name());
-
-  if(it != argumentMap.end())
-  {
-    // Check the criteria for being incomplete
-
-    if (it->second.required() && !(it->second.hasValue() || it->second.hasDefaultValue()))
-    {
-      return true;
-    }
-  }
-  */
-  return false;
+  return m_editController->measureStepItem()->hasIncompleteArguments();
 }
 
 bool InputController::isItOKToClearResults()
 {
-  // DLM: todo
-  /*
-  bool doOperation(true);
-
-  // Find out if there are results
-  boost::optional<analysisdriver::SimpleProject> project = m_app->project();
-
-  if( ! project ) { return false; }
-
-  if( ! project->analysis().completeDataPoints().empty() )
-  {
-    // Ask user if they are sure they want to edit
-    doOperation = EditMeasureMessageBox::warning(m_app);
-  }
-
-  if( ! doOperation )
-  {
-    // Reset user interface to argument's value
-
-    if( m_argument.hasValue() )
-    {
-      QString argumentValue = QString::fromStdString(m_argument.valueAsString());
-
-      inputView->setDisplayValue(argumentValue);
-    }
-    else if( m_argument.hasDefaultValue() )
-    {
-      inputView->setDisplayValue(QString::fromStdString(m_argument.defaultValueAsString()));
-    }
-    else
-    {
-      inputView->setDisplayValue("");
-    }
-
-    return false;
-  }
-  */
+  // DLM: todo warn user when results are out of date
   return true;
 }
 

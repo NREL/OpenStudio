@@ -38,6 +38,7 @@
 namespace openstudio {
 namespace measure {
 
+  /*
 OSArgument::OSArgument(const UUID& uuid,
                        const UUID& versionUUID,
                        const std::string& name,
@@ -120,6 +121,7 @@ OSArgument::OSArgument(const UUID& uuid,
     m_isRead(isRead),
     m_extension(extension)
 {}
+*/
 
 OSArgument OSArgument::clone() const {
   OSArgument result(*this);
@@ -202,13 +204,13 @@ OSArgument OSArgument::makeSeparatorArgument(const std::string& name, bool model
   return result;
 }
 
-openstudio::UUID OSArgument::uuid() const {
-  return m_uuid;
-}
+//openstudio::UUID OSArgument::uuid() const {
+//  return m_uuid;
+//}
 
-openstudio::UUID OSArgument::versionUUID() const {
-  return m_versionUUID;
-}
+//openstudio::UUID OSArgument::versionUUID() const {
+//  return m_versionUUID;
+//}
 
 std::string OSArgument::name() const {
   return m_name;
@@ -1217,7 +1219,7 @@ std::map<std::string,OSArgument> convertOSArgumentVectorToMap(const std::vector<
 }
 
 namespace detail {
-
+  /*
   QVariant toVariant(const OSArgument& argument) {
     QVariantMap argumentData;
 
@@ -1398,7 +1400,7 @@ namespace detail {
     Quantity q = createQuantity(map[toQString(valueKey)].toDouble(),map[toQString(unitsKey)].toString().toStdString()).get();
     return QVariant::fromValue<openstudio::Quantity>(q);
   }
-
+  */
 } // detail
 
 } // measure
