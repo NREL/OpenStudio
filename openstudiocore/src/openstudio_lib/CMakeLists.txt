@@ -61,8 +61,8 @@ set(${target_name}_SRC
   FacilityTabController.hpp
   FacilityTabView.cpp
   FacilityTabView.hpp
-  FileOperations.cpp
-  FileOperations.hpp
+  #FileOperations.cpp
+  #FileOperations.hpp
   GasEquipmentInspectorView.cpp
   GasEquipmentInspectorView.hpp
   GridItem.cpp
@@ -698,6 +698,19 @@ qt5_wrap_cpp_minimally(${target_name}_moc_src ${${target_name}_moc})
 # generate rules for building source files from the resources
 qt5_add_resources(${target_name}_qrcs ${${target_name}_qrc})
 
+# This library exists only because we want swig bindings for 
+# only the FileOperations and not other parts of OS Lib. We don't want
+# the full link chain of OS Lib.
+# FileOperations is used by plugin.
+add_library(openstudio_fileoperations STATIC
+  FileOperations.cpp
+  FileOperations.hpp
+)
+
+target_link_libraries(openstudio_fileoperations
+  ${QT_LIBS}
+)
+
 add_library(${target_name}
   ${${target_name}_SRC}
   ${${target_name}_moc_src}
@@ -706,13 +719,11 @@ add_library(${target_name}
 )
 
 set(depends
+  openstudio_fileoperations
   openstudio_model
   openstudio_energyplus
   openstudio_modeleditor
-  #openstudio_runmanager
   openstudio_measure
-  #openstudio_analysis
-  #openstudio_analysisdriver
   openstudio_sdd
   openstudio_gbxml
   ${QT_LIBS}
@@ -721,13 +732,6 @@ set(depends
 
 target_link_libraries(${target_name} ${depends})
 AddPCH(${target_name})
-
-#if(NOT APPLE)
-#  install(TARGETS ${target_name}
-#    RUNTIME DESTINATION bin 
-#    LIBRARY DESTINATION lib
-#  )
-#endif()
 
 set(${target_name}_test_src
   test/OpenStudioLibFixture.hpp
@@ -742,16 +746,13 @@ set(${target_name}_test_depends
 CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_test_depends}")
 CREATE_SRC_GROUPS("${${target_name}_test_src}")
 if(BUILD_TESTING)
-
-  #add_dependencies("${target_name}_tests" 
-  #  openstudio_lib_resources 
-  #)
   
 endif()
 
-#set(${target_name}_swig_src
-#  OpenStudioLib.i
-#)
+set(${target_name}_swig_src
+  OpenStudioLib.i
+)
 
-# Don't need this anymore
-# MAKE_SWIG_TARGET(OpenStudioLib openstudiolib "${CMAKE_CURRENT_SOURCE_DIR}/OpenStudioLib.i" "${${target_name}_swig_src}" ${target_name} "OpenStudioEnergyPlus;OpenStudioModelEditor;OpenStudioMeasure")
+# We only really need openstudio_fileoperations
+MAKE_SWIG_TARGET(OpenStudioLib openstudiolib "${CMAKE_CURRENT_SOURCE_DIR}/OpenStudioLib.i" "${${target_name}_swig_src}" openstudio_fileoperations "OpenStudioEnergyPlus;OpenStudioModelEditor;OpenStudioMeasure")
+

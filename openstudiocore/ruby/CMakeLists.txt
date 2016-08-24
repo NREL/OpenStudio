@@ -69,37 +69,22 @@ else()
   set_target_properties(openstudio_rb PROPERTIES SUFFIX ".so" )
 endif()
 
-target_link_libraries(openstudio_rb init_openstudio)
+target_link_libraries(openstudio_rb 
+  init_openstudio
+  ruby_OpenStudioModelEditor
+  ruby_OpenStudioLib
+)
+
+target_link_libraries(openstudio_rb 
+)
+
+
 
 if( WIN32 )
   target_link_libraries(openstudio_rb ${RUBY_MINGW_STUB_LIB})
 endif()
 
 install(TARGETS openstudio_rb DESTINATION bin COMPONENT "Ruby API")
-
-# openstudio ruby bindings to gui stuff
-
-add_library(
-  openstudio_gui_rb
-  MODULE
-  openstudio_gui_rb.cpp
-)
-
-target_link_libraries( openstudio_gui_rb ruby_OpenStudioModelEditor)
-
-set_target_properties(openstudio_gui_rb PROPERTIES PREFIX "")
-set_target_properties(openstudio_gui_rb PROPERTIES OUTPUT_NAME openstudio_gui)
-if(APPLE)
-  set_target_properties(openstudio_gui_rb PROPERTIES SUFFIX ".bundle" )
-else()
-  set_target_properties(openstudio_gui_rb PROPERTIES SUFFIX ".so" )
-endif()
-
-if( WIN32 )
-  target_link_libraries(openstudio_gui_rb ${RUBY_MINGW_STUB_LIB})
-endif()
-
-install(TARGETS openstudio_gui_rb DESTINATION bin COMPONENT "SketchUp Plugin")
 
 # sketchup plugin
 
@@ -123,10 +108,11 @@ install(FILES openstudio/sketchup_plugin/OpenStudio.rb DESTINATION share/openstu
 # Complicated because important parts of OpenStudio are in <build>/Products/<config>/
 # where config is determined by a cmake generator expression
 add_custom_target( SketchUp_Plugin 
+  ALL
   COMMAND ${CMAKE_COMMAND} 
   -DRUBY_SOURCE_DIR="${CMAKE_CURRENT_SOURCE_DIR}" 
-  -DCMAKE_PRODUCTS_DIR="${CMAKE_BINARY_DIR}/Products" 
-  -DOPENSTUDIO_GUI_LIB=$<TARGET_FILE:openstudio_gui_rb> 
+  -DCMAKE_PRODUCTS_DIR="${CMAKE_BINARY_DIR}/Products"
+  -DOPENSTUDIO_LIB=$<TARGET_FILE:openstudio_rb> 
   -P "${CMAKE_CURRENT_SOURCE_DIR}/configure_sketchup_plugin_test.cmake"
 )
 

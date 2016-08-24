@@ -20,20 +20,22 @@
 require 'extensions.rb'   # defines the SketchupExtension class
 
 # look for the new plugin
-new_plugin = Sketchup.find_support_file("OpenStudio-config", "Plugins/OpenStudio")
+# This doesn't work anymore. Consider using openstudio -v from the cli
+#new_plugin = Sketchup.find_support_file("OpenStudio-config", "Plugins/OpenStudio")
+new_plugin = true
 new_version = nil
 if new_plugin
 
   # peek at Startup.rb to figure out version
   new_version = "Unknown"
-  File.open(new_plugin, 'r') do |file|
-    while line = file.gets
-      if matchdata = /\$OPENSTUDIO_SKETCHUPPLUGIN_VERSION = \"([^\.]+\.[^\.]+\.[^\.]+).*?\"/.match(line)
-        new_version = matchdata[1]
-        break
-      end
-    end
-  end
+  #File.open(new_plugin, 'r') do |file|
+  #  while line = file.gets
+  #    if matchdata = /\$OPENSTUDIO_SKETCHUPPLUGIN_VERSION = \"([^\.]+\.[^\.]+\.[^\.]+).*?\"/.match(line)
+  #      new_version = matchdata[1]
+  #      break
+  #    end
+  #  end
+  #end
   
   $OPENSTUDIO_SKETCHUPPLUGIN_NAME = "OpenStudio"
   $OPENSTUDIO_SKETCHUPPLUGIN_VERSION_BRIEF = new_version
@@ -156,7 +158,9 @@ if load_old_plugin and old_plugin
   
 elsif new_plugin
   
-  ext = SketchupExtension.new($OPENSTUDIO_SKETCHUPPLUGIN_NAME, "OpenStudio/Startup.rb")
+  filedir = File.dirname(__FILE__) 
+  # This assumes the structure of the OS install tree
+  ext = SketchupExtension.new($OPENSTUDIO_SKETCHUPPLUGIN_NAME, "#{filedir}/OpenStudio/Startup.rb")
   ext.name = $OPENSTUDIO_SKETCHUPPLUGIN_NAME
   ext.description = "Adds building energy modeling capabilities by coupling SketchUp to the OpenStudio suite of tools.  \r\n\r\nVisit openstudio.net for more information."
   ext.version = new_version

@@ -21,7 +21,9 @@ $OPENSTUDIO_SKETCHUPPLUGIN_VERSION = "${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MIN
 $OPENSTUDIO_SKETCHUPPLUGIN_DEVELOPER_MENU = false
 
 begin
-  load 'OpenStudio/OpenStudio-config'
+  filedir = File.dirname(__FILE__) 
+  require "#{filedir}/../../../../bin/openstudio"
+  $: << "#{filedir}/../../../"
 
   minimum_version = ''
   minimum_version_key = ''

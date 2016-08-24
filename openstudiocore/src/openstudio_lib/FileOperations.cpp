@@ -19,7 +19,7 @@
 
 #include "FileOperations.hpp"
 
-#include "OSDocument.hpp"
+//#include "OSDocument.hpp"
 
 //#include "../runmanager/lib/RunManager.hpp"
 //#include "../runmanager/lib/RubyJobUtils.hpp"
@@ -33,7 +33,7 @@
 
 #include "../osversion/VersionTranslator.hpp"
 
-#include "../measure/OSArgument.hpp"
+//#include "../measure/OSArgument.hpp"
 
 #include "../energyplus/ReverseTranslator.hpp"
 
@@ -54,7 +54,7 @@
 
 
 
-#include "OSAppBase.hpp"
+//#include "OSAppBase.hpp"
 
 namespace openstudio {
 

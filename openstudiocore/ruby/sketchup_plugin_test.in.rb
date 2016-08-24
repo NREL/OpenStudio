@@ -1,7 +1,13 @@
 # Copy this file into the SketchUp plugins directory for development testing
 
-require '${OPENSTUDIO_GUI_LIB}'
+require '${OPENSTUDIO_LIB}'
 $: << '${RUBY_SOURCE_DIR}'
+$: << File.dirname('${OPENSTUDIO_LIB}')
+
+OpenStudio::Application::instance.application(true)
+OpenStudio::Application::instance.application.setOrganizationName("NREL")
+OpenStudio::Application::instance.application.setOrganizationDomain("nrel.gov")
+OpenStudio::Application::instance.application.setApplicationName("OpenStudio")
 
 $OPENSTUDIO_SKETCHUPPLUGIN_NAME = "OpenStudio Development"
 ext = SketchupExtension.new($OPENSTUDIO_SKETCHUPPLUGIN_NAME, "${RUBY_SOURCE_DIR}/openstudio/sketchup_plugin/lib/PluginManager.rb")
