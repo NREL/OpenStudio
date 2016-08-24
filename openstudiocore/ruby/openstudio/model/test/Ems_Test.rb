@@ -47,6 +47,17 @@ class TestEms < MiniTest::Test
     assert_equal oat_sensor_name, oat_sensor.name.get.to_s 
     assert_equal output_var, oat_sensor.outputVariable.get.variableName
 
+    meter = OpenStudio::Model::Meter.new(model)
+    meter.setName("test meter")
+    
+    meter_sensor = OpenStudio::Model::EnergyManagementSystemSensor.new(model)
+    meter_sensor_name = "meter Sensor"
+    meter_sensor.setName(meter_sensor_name)
+    meter_sensor.setOutputMeter(meter)
+    
+    assert_equal meter_sensor_name, meter_sensor.name.get.to_s 
+    assert_equal "test meter", meter_sensor.outputMeter.get.variableName
+    
     ### Actuator ###
 
     # Get the first fan from the example model
@@ -59,11 +70,21 @@ class TestEms < MiniTest::Test
     fan_actuator.setName("#{fan.name} Press Actuator")
     fan_press = "Fan Pressure Rise"
     fan_actuator.setActuatedComponentControlType(fan_press)
+    fan_actuator.setActuatedComponentType("fan")
     fan_actuator.setActuatedComponent(fan)
 
     # Assertions for actuator setters and getters
     assert_equal(fan, fan_actuator.actuatedComponent)
     assert_equal(fan_press, fan_actuator.actuatedComponentControlType)
+    assert_equal("fan", fan_actuator.actuatedComponentType)
+
+    equip = OpenStudio::Model::ElectricEquipment.new(model)
+    # Create an actuator to set the elec equip
+    equip_actuator = OpenStudio::Model::EnergyManagementSystemActuator.new(equip)
+    equip_actuator.setName("#{equip.name} power level actuator")
+    equip_control = "Electric Power Level"
+    equip_actuator.setActuatedComponentControlType(equip_control)
+    equip_actuator.setActuatedComponentType("ElectricEquipment")
 
     ### Program ###
 

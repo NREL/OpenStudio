@@ -26,6 +26,8 @@
 #include "../EnergyManagementSystemSensor.hpp"
 #include "../OutputVariable.hpp"
 #include "../OutputVariable_Impl.hpp"
+#include "../OutputMeter.hpp"
+#include "../OutputMeter_Impl.hpp"
 #include "../Model_Impl.hpp"
 
 #include "../../utilities/idd/IddEnums.hpp"
@@ -77,5 +79,18 @@ TEST_F(ModelFixture, EMSSensor_EMSSensor)
   EXPECT_EQ(zone1.name().get(), lights.keyName().get());
   EXPECT_EQ("Light Sensor", lights.nameString());
   
+  // create meter
+  OutputMeter meter(model);
+  meter.setName("test meter");
+
+  //add sensor to meter
+  EnergyManagementSystemSensor meter_sensor(model);
+  meter_sensor.setName("meter sensor");
+  meter_sensor.setOutputMeter(meter);
+
+  EXPECT_EQ("meter sensor", meter_sensor.nameString());
+  EXPECT_EQ(meter.handle(), meter_sensor.outputMeter().get().handle());
+  EXPECT_EQ(meter, meter_sensor.outputMeter());
+  EXPECT_EQ("", meter_sensor.keyName().get());
 }
 

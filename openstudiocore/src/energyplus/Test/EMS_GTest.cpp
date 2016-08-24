@@ -114,6 +114,20 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorSensor_EMS) {
   EXPECT_EQ(zone1.name().get(), lights.keyName().get());
   EXPECT_EQ("Light Sensor", lights.nameString());
 
+  // create meter
+  OutputMeter meter(model);
+  meter.setName("test meter");
+
+  //add sensor to meter
+  EnergyManagementSystemSensor meter_sensor(model);
+  meter_sensor.setName("meter sensor");
+  meter_sensor.setOutputMeter(meter);
+
+  EXPECT_EQ("meter sensor", meter_sensor.nameString());
+  EXPECT_EQ(meter.handle(), meter_sensor.outputMeter().get().handle());
+  EXPECT_EQ(meter, meter_sensor.outputMeter());
+  EXPECT_EQ("", meter_sensor.keyName().get());
+
 
   //EXPECT_TRUE(model.getOptionalUniqueModelObject<Version>()) << "Example model does not include a Version object.";
   ForwardTranslator forwardTranslator;
