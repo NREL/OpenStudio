@@ -30,7 +30,6 @@ RUBY_API void Init_openstudio(void) {
 
   init_openstudio_internal();
 
-  Init_openstudiolib();
   Init_openstudiomodeleditor();
 }
 

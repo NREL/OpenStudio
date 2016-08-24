@@ -101,6 +101,7 @@
 %include <model/ModelExtensibleGroup.hpp>
 %include <model/Component.hpp>
 // %include <model/Relationship.hpp>
+%include <model/FileOperations.hpp>
 
 namespace openstudio {
 namespace model {

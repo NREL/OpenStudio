@@ -751,9 +751,6 @@ module OpenStudio
           MF_ENABLED
         end
       }
-      
-      #@start_new_dialog_cmd = UI::Command.new("Start New Dialog") { OpenStudio::Openstudiolib::OSDocument.new(OpenStudio::Model::OptionalModel.new(OpenStudio::Plugin.model_manager.model_interface.openstudio_model)) }
-      #@start_new_dialog_cmd.set_validation_proc { MF_ENABLED } 
     end
     
 

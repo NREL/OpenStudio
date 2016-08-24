@@ -74,12 +74,12 @@ module OpenStudio
       @skp_model.model_interface = self
       @skp_model.openstudio_path = openstudio_path
       
-      @model_temp_dir = OpenStudio::Openstudiolib::createModelTempDir
+      @model_temp_dir = OpenStudio::Model::createModelTempDir
       #puts "@model_temp_dir = #{@model_temp_dir}"
       if (openstudio_path)
-        OpenStudio::Openstudiolib::initializeModelTempDir(OpenStudio::Path.new(openstudio_path), @model_temp_dir)
+        OpenStudio::Model::initializeModelTempDir(OpenStudio::Path.new(openstudio_path), @model_temp_dir)
       end
-      OpenStudio::Openstudiolib::updateModelTempDir(@openstudio_model, @model_temp_dir)
+      OpenStudio::Model::updateModelTempDir(@openstudio_model, @model_temp_dir)
       
       @parent = nil
       @children = Set.new  
@@ -400,13 +400,14 @@ module OpenStudio
       begin
         FileUtils.mkdir_p(File.dirname(path))
 
-        saved_path = OpenStudio::Openstudiolib::saveModel(@openstudio_model, OpenStudio::Path.new(path), @model_temp_dir)
+        saved_path = OpenStudio::Model::saveModel(@openstudio_model, OpenStudio::Path.new(path), @model_temp_dir)
 
         # save run manager database first so saveModelTempDir copies it
         # ACS: Commenting this out to prevent scanning for tools (creates run.db for running within SketchUp)
+        # DLM: TODO, this should be saving workflowJSON instead
         #OpenStudio::Openstudiolib::saveRunManagerDatabase(saved_path, @model_temp_dir, false) 
         
-        OpenStudio::Openstudiolib::saveModelTempDir(@model_temp_dir, saved_path)
+        OpenStudio::Model::saveModelTempDir(@model_temp_dir, saved_path)
         
         result = true
       end
@@ -453,7 +454,7 @@ module OpenStudio
       
       begin
         # do not want to save the database or osm here
-        OpenStudio::Openstudiolib::saveModelTempDir(@model_temp_dir, OpenStudio::Path.new(saved_path))
+        OpenStudio::Model::saveModelTempDir(@model_temp_dir, OpenStudio::Path.new(saved_path))
         result = true
       end
       
@@ -1074,7 +1075,7 @@ module OpenStudio
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
        
       # delete the temp dir
-      OpenStudio::Openstudiolib::removeModelTempDir(@model_temp_dir)
+      OpenStudio::Model::removeModelTempDir(@model_temp_dir)
     end    
 
     
@@ -1139,7 +1140,7 @@ module OpenStudio
         @openstudio_model = nil
         
         # delete the temp dir
-        OpenStudio::Openstudiolib::removeModelTempDir(@model_temp_dir)
+        OpenStudio::Model::removeModelTempDir(@model_temp_dir)
 
         # erase openstudio path
         self.openstudio_path = nil

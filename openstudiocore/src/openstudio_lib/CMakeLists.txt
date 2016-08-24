@@ -61,8 +61,6 @@ set(${target_name}_SRC
   FacilityTabController.hpp
   FacilityTabView.cpp
   FacilityTabView.hpp
-  #FileOperations.cpp
-  #FileOperations.hpp
   GasEquipmentInspectorView.cpp
   GasEquipmentInspectorView.hpp
   GridItem.cpp
@@ -698,18 +696,6 @@ qt5_wrap_cpp_minimally(${target_name}_moc_src ${${target_name}_moc})
 # generate rules for building source files from the resources
 qt5_add_resources(${target_name}_qrcs ${${target_name}_qrc})
 
-# This library exists only because we want swig bindings for 
-# only the FileOperations and not other parts of OS Lib. We don't want
-# the full link chain of OS Lib.
-# FileOperations is used by plugin.
-add_library(openstudio_fileoperations STATIC
-  FileOperations.cpp
-  FileOperations.hpp
-)
-
-target_link_libraries(openstudio_fileoperations
-  ${QT_LIBS}
-)
 
 add_library(${target_name}
   ${${target_name}_SRC}
@@ -719,7 +705,6 @@ add_library(${target_name}
 )
 
 set(depends
-  openstudio_fileoperations
   openstudio_model
   openstudio_energyplus
   openstudio_modeleditor
@@ -748,11 +733,3 @@ CREATE_SRC_GROUPS("${${target_name}_test_src}")
 if(BUILD_TESTING)
   
 endif()
-
-set(${target_name}_swig_src
-  OpenStudioLib.i
-)
-
-# We only really need openstudio_fileoperations
-MAKE_SWIG_TARGET(OpenStudioLib openstudiolib "${CMAKE_CURRENT_SOURCE_DIR}/OpenStudioLib.i" "${${target_name}_swig_src}" openstudio_fileoperations "OpenStudioEnergyPlus;OpenStudioModelEditor;OpenStudioMeasure")
-

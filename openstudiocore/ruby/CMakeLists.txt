@@ -72,7 +72,6 @@ endif()
 target_link_libraries(openstudio_rb 
   init_openstudio
   ruby_OpenStudioModelEditor
-  ruby_OpenStudioLib
 )
 
 target_link_libraries(openstudio_rb 

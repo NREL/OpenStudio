@@ -272,10 +272,10 @@ module OpenStudio
         model = nil
         if $OPENSTUDIO_SKETCHUPPLUGIN_PROGRESS_DIALOGS 
           progress_dialog = ProgressDialog.new("Reading OpenStudio Model")
-          model = OpenStudio::Openstudiolib::modelFromOSM(OpenStudio::Path.new(path), versionTranslator, progress_dialog)
+          model = versionTranslator.loadModel(OpenStudio::Path.new(path), progress_dialog)
           progress_dialog.destroy
         else
-          model = OpenStudio::Openstudiolib::modelFromOSM(OpenStudio::Path.new(path), versionTranslator)
+          model = versionTranslator.loadModel(OpenStudio::Path.new(path))
         end
         
         errors = versionTranslator.errors
