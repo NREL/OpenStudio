@@ -49,13 +49,25 @@ class MODEL_API EnergyManagementSystemSubroutine : public ModelObject {
   /** @name Getters */
   //@{
 
-  // TODO: Handle this object's extensible fields.
+  boost::optional<std::string> body() const;
+
+  boost::optional<std::vector<std::string>> lines() const;
+
+  std::vector<ModelObject> referencedObjects() const;
+
+  std::vector<std::string> invalidReferencedObjects() const;
 
   //@}
   /** @name Setters */
   //@{
 
-  // TODO: Handle this object's extensible fields.
+  bool setBody(const std::string& body);
+
+  bool eraseBody();
+
+  bool addLine(const std::string& body);
+
+  bool setLines(const std::vector<std::string>& body);
 
   //@}
   /** @name Other */
