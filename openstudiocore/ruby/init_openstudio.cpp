@@ -2,26 +2,24 @@
 #include <ruby.h>
 
 extern "C" {
-  //void Init_openstudioairflow(void);
+  void Init_openstudioairflow(void);
   void Init_openstudiomodelcore(void);
   void Init_openstudiomodelsimulation(void);
   void Init_openstudioutilitiescore(void);
   void Init_openstudioutilitiesplot(void);
   void Init_openstudioenergyplus(void);
-  ////void Init_openstudiomodeleditor(void);
   void Init_openstudioosversion(void);
   void Init_openstudioutilitiesdata(void);
   void Init_openstudioutilitiessql(void);
-  ////void Init_openstudiogbxml(void);
+  void Init_openstudiogbxml(void);
   void Init_openstudiomodelgenerators(void);
-  ////void Init_openstudioradiance(void);
+  void Init_openstudioradiance(void);
   void Init_openstudioutilitiestime(void);
-  ////void Init_openstudioisomodel(void);
+  void Init_openstudioisomodel(void);
   void Init_openstudiomodelgeometry(void);
-  ////void Init_openstudiosdd(void);
+  void Init_openstudiosdd(void);
   void Init_openstudioutilitiesfiletypes(void);
   void Init_openstudioutilitiesunits(void);
-  ////void Init_openstudiolib(void);
   void Init_openstudiomodelhvac(void);
   void Init_openstudioutilities(void);
   void Init_openstudioutilitiesgeometry(void);
@@ -33,6 +31,8 @@ extern "C" {
   void Init_openstudiomodelresources(void);
   void Init_openstudioutilitiescloud(void);
   void Init_openstudioutilitiesidf(void);
+
+  ////void Init_openstudiomodeleditor(void); # happens separately in openstudio.so only, for SketchUp plug-in
 }
 
 void init_openstudio_internal() {
@@ -80,18 +80,23 @@ void init_openstudio_internal() {
   rb_provide("openstudiomodelgenerators");
   Init_openstudioenergyplus();
   rb_provide("openstudioenergyplus");
-  //Init_openstudioradiance();
-  //Init_openstudiogbxml();
-  //Init_openstudioairflow();
+  Init_openstudioradiance();
+  rb_provide("openstudioradiance");
+  Init_openstudiogbxml();
+  rb_provide("openstudiogbxml");
+  Init_openstudioairflow();
+  rb_provide("openstudioairflow");
   Init_openstudioosversion();
   rb_provide("openstudioversion");
   Init_openstudiomeasure();
   rb_provide("openstudiomeasure");
-  //Init_openstudiomodeleditor();
-  //Init_openstudiolib();
-  //Init_openstudioisomodel();
-  //Init_openstudiosdd();
+  Init_openstudioisomodel();
+  rb_provide("openstudioisomodel");
+  Init_openstudiosdd();
+  rb_provide("openstudiosdd");
 
+  //Init_openstudiomodeleditor(); # happens separately in openstudio.so only, for SketchUp plug-in
+  //rb_provide("openstudiomodeleditor");
 
   // "typedefs" for backwards compatibility
   std::string ruby_typedef_script = R"END(

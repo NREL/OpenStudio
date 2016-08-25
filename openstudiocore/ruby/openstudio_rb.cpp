@@ -2,6 +2,7 @@
 #include <RubyAPI.hpp>
 #include <QtPlugin>
 #include <iostream>
+#include <ruby.h>
 
 #ifdef _MSC_VER
 __declspec(noinline) void importPlugins() {
@@ -31,6 +32,7 @@ RUBY_API void Init_openstudio(void) {
   init_openstudio_internal();
 
   Init_openstudiomodeleditor();
+  rb_provide("openstudiomodeleditor");
 }
 
 }

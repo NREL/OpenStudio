@@ -22,21 +22,19 @@ target_link_libraries(init_openstudio
  ruby_OpenStudioUtilitiesCore
  ruby_OpenStudioUtilitiesPlot
  ruby_OpenStudioEnergyPlus
- ##ruby_OpenStudioModelEditor
+ ##ruby_OpenStudioModelEditor # linked by openstudio.so only, for SketchUp plugin
  ruby_OpenStudioOSVersion
  ruby_OpenStudioUtilitiesData
  ruby_OpenStudioUtilitiesSql
- ##ruby_OpenStudioGBXML
+ ruby_OpenStudioGBXML
  ruby_OpenStudioModelGenerators
- ##ruby_OpenStudioRadiance
- #ruby_OpenStudioUtilitiesEconomics
+ ruby_OpenStudioRadiance
  ruby_OpenStudioUtilitiesTime
- ##ruby_OpenStudioISOModel
+ ruby_OpenStudioISOModel
  ruby_OpenStudioModelGeometry
- ##ruby_OpenStudioSDD
+ ruby_OpenStudioSDD
  ruby_OpenStudioUtilitiesFileTypes
  ruby_OpenStudioUtilitiesUnits
- ##ruby_OpenStudioLib
  ruby_OpenStudioModelHVAC
  ruby_OpenStudioUtilities
  ruby_OpenStudioUtilitiesGeometry
