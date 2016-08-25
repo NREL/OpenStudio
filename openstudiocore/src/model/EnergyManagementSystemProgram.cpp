@@ -109,15 +109,15 @@ namespace detail {
 
     //add program lines to body
     std::vector<bool> ok(body_minus_nl.size(), false);
-    for (int i = 0; i < body_minus_nl.size(); i++) {
+    for (size_t i = 0; i < body_minus_nl.size(); i++) {
       WorkspaceExtensibleGroup group = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
-      result = group.setString(OS_EnergyManagementSystem_ProgramExtensibleFields::ProgramLine, body_minus_nl[i] + '\n');
+      result = group.setString(OS_EnergyManagementSystem_ProgramExtensibleFields::ProgramLine, body_minus_nl.at(i) + '\n');
       ok.push_back(result);
     }
     //check if all the programs set true
     result = true;
-    for (int i = 0; i<ok.size(); i++) {
-      if (!ok[i]) {//the value is false
+    for (size_t i = 0; i<ok.size(); i++) {
+      if (!ok.at(i)) {//the value is false
         result = false; //not all values in array are true
       }
     }
@@ -187,15 +187,15 @@ namespace detail {
 
     //add program lines to body
     std::vector<bool> ok(lines.size(), false);
-    for (int i = 0; i < lines.size(); i++) {
+    for (size_t i = 0; i < lines.size(); i++) {
       //use method addLine to add each line
-      result = addLine(lines[i]);
+      result = addLine(lines.at(i));
       ok.push_back(result);
     }
     //check if all the programs set true
     result = true;
-    for (int i = 0; i<ok.size(); i++) {
-      if (!ok[i]) {//the value is false
+    for (size_t i = 0; i<ok.size(); i++) {
+      if (!ok.at(i)) {//the value is false
         result = false; //not all values in array are true
       }
     }
@@ -209,13 +209,13 @@ namespace detail {
     boost::optional<std::vector<std::string>> body = this->lines();
     if (body.is_initialized()) {
       //assume body is a vector of strings
-      for (int i = 0; i < body.get().size(); i++) {
+      for (size_t i = 0; i < body.get().size(); i++) {
         //split string on whitespaces to isolate possible uids
-        std::vector<std::string> results = splitString(body.get()[i], ' ');
-        for (int j = 0; j < results.size(); j++) {
-          if (results[j].size() == 38) {
+        std::vector<std::string> results = splitString(body.get().at(i), ' ');
+        for (size_t j = 0; j < results.size(); j++) {
+          if (results.at(j).size() == 38) {
             //remove {} from uid string
-            std::string possible_uid = results[j].substr(1, results[j].size() - 2);
+            std::string possible_uid = results.at(j).substr(1, results.at(j).size() - 2);
             //look to see if uid is in the model and return the object
             UUID uid = toUUID(possible_uid);
             //std::vector<Handle> handle = &uid;
@@ -224,9 +224,9 @@ namespace detail {
             //m.getModelObjects<model::ModelObject>(&uid);
             std::vector<model::ModelObject> modelObjects = m.getModelObjects<model::ModelObject>();
             if (modelObjects.size() > 0) {
-              for (int k = 0; k < modelObjects.size(); k++) {
-                if (modelObjects[k].handle() == uid) {
-                  result.push_back(modelObjects[k]);
+              for (size_t k = 0; k < modelObjects.size(); k++) {
+                if (modelObjects.at(k).handle() == uid) {
+                  result.push_back(modelObjects.at(k));
                 };
               }
             };
@@ -244,16 +244,16 @@ namespace detail {
     boost::optional<std::vector<std::string>> body = this->lines();
     if (body.is_initialized()) {
       //assume body is a vector of strings
-      for (int i = 0; i < body.get().size(); i++) {
+      for (size_t i = 0; i < body.get().size(); i++) {
         int found = 0;
         //split string on whitespaces to isolate possible uids
-        std::vector<std::string> results = splitString(body.get()[i], ' ');
-        for (int j = 0; j < results.size(); j++) {
-          if (results[j].size() == 38) {
+        std::vector<std::string> results = splitString(body.get().at(i), ' ');
+        for (size_t j = 0; j < results.size(); j++) {
+          if (results.at(j).size() == 38) {
             //possible uid so set found to 1
             found = 1;
             //remove {} from uid string
-            std::string possible_uid = results[j].substr(1, results[j].size() - 2);
+            std::string possible_uid = results.at(j).substr(1, results.at(j).size() - 2);
             //look to see if uid is in the model and return the object
             UUID uid = toUUID(possible_uid);
             //std::vector<Handle> handle = &uid;
@@ -262,8 +262,8 @@ namespace detail {
             //m.getModelObjects<model::ModelObject>(&uid);
             std::vector<model::ModelObject> modelObjects = m.getModelObjects<model::ModelObject>();
             if (modelObjects.size() > 0) {
-              for (int k = 0; k < modelObjects.size(); k++) {
-                if (modelObjects[k].handle() == uid) {
+              for (size_t k = 0; k < modelObjects.size(); k++) {
+                if (modelObjects.at(k).handle() == uid) {
                   found++;
                 };
               }
@@ -272,7 +272,7 @@ namespace detail {
         }
         //possible uid not found in model
         if (found == 1) {
-          result.push_back(body.get()[i]);
+          result.push_back(body.get().at(i));
         };
       }
     }
