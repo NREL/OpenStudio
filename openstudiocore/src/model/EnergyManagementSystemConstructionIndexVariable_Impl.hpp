@@ -64,14 +64,14 @@ namespace detail {
     //@{
 
     // TODO: Check return type. From object lists, some candidates are: Construction.
-    Construction constructionObject() const;
+    ModelObject constructionObject() const;
 
     //@}
     /** @name Setters */
     //@{
 
     // TODO: Check argument type. From object lists, some candidates are: Construction.
-    bool setConstructionObject(const Construction& construction);
+    bool setConstructionObject(const ModelObject& construction);
 
     //@}
     /** @name Other */
@@ -86,7 +86,7 @@ namespace detail {
     // Optional getters for use by methods like children() so can remove() if the constructor fails.
     // There are other ways for the public versions of these getters to fail--perhaps all required
     // objects should be returned as boost::optionals
-    boost::optional<Construction> optionalConstructionObject() const;
+    boost::optional<ModelObject> optionalConstructionObject() const;
   };
 
 } // detail
