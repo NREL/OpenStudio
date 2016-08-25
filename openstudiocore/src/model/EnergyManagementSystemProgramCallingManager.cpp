@@ -170,8 +170,8 @@ namespace detail {
     }
     //check if all the programs set true
     result = true;
-    for (int i = 0; i<ok.size(); i++) {
-      if (!ok[i]) {//ok value is false
+    for (size_t i = 0; i<ok.size(); i++) {
+      if (!ok.at(i)) {//ok value is false
         result = false; //not all values in array are true
       }
     }
@@ -200,8 +200,10 @@ namespace detail {
     nullProgs = this->nullPrograms();
 
     if (!nullProgs.empty()) {
-      for (int i = 0; i < nullProgs.size(); i++) {
-        result = this->eraseProgram(i);
+      int j = 0;
+      for (size_t i = 0; i < nullProgs.size(); i++) {
+        result = this->eraseProgram(j);
+        j++;
       };
     };
     return result;
