@@ -248,6 +248,6 @@ if( APPLE )
   target_link_libraries(openstudio ${COREFOUNDATION_LIBRARY} )
 endif()
 
-install(TARGETS openstudio DESTINATION bin)
+install(TARGETS openstudio DESTINATION bin COMPONENT "Command Line Interface")
 
 

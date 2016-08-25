@@ -19,11 +19,11 @@
 
 #include "RunTabView.hpp"
 
-#include "FileOperations.hpp"
 #include "OSAppBase.hpp"
 #include "OSDocument.hpp"
 #include <OpenStudio.hxx>
 
+#include "../model/FileOperations.hpp"
 #include "../model/DaylightingControl.hpp"
 #include "../model/DaylightingControl_Impl.hpp"
 #include "../model/GlareSensor.hpp"

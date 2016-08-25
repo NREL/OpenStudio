@@ -31,7 +31,9 @@ set(${target_name}_src
   ModelObjectList.hpp
   ModelObjectList_Impl.hpp
   ModelObjectList.cpp
-
+  FileOperations.hpp
+  FileOperations.cpp
+  
   ConcreteModelObjects.hpp
   AirConditionerVariableRefrigerantFlow.hpp
   AirConditionerVariableRefrigerantFlow_Impl.hpp

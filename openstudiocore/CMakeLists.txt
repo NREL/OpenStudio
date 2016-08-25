@@ -1040,7 +1040,7 @@ if( Qt5Static )
     list(APPEND QT_LIBS "${QT_STATIC_INSTALL_DIR}/plugins/platforms/libqcocoa.a")
     list(APPEND QT_LIBS "${QT_STATIC_INSTALL_DIR}/plugins/sqldrivers/libqsqlite.a")
     list(APPEND QT_LIBS "${QT_STATIC_INSTALL_DIR}/lib/libQt5PlatformSupport.a")
-    list(APPEND QT_LIBS "${QT_STATIC_INSTALL_DIR}/lib/libQt5OpenGLExtensions.a")
+    #list(APPEND QT_LIBS "${QT_STATIC_INSTALL_DIR}/lib/libQt5OpenGLExtensions.a")
 
     find_library(iokit IOKit)
     list(APPEND QT_LIBS "${iokit}")
@@ -1174,6 +1174,8 @@ endif()
 add_subdirectory(resources)
 
 add_subdirectory(ruby)
+
+add_subdirectory(sketchup_plugin)
 
 foreach(D ${project_directories})
   add_subdirectory(src/${D})

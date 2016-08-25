@@ -23,7 +23,6 @@
 #include "StartupView.hpp"
 #include "../openstudio_lib/MainWindow.hpp"
 #include "../openstudio_lib/OSDocument.hpp"
-#include "../openstudio_lib/FileOperations.hpp"
 
 #include "../shared_gui_components/WaitDialog.hpp"
 #include "../shared_gui_components/MeasureManager.hpp"
@@ -187,7 +186,7 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv)
     osversion::VersionTranslator versionTranslator;
     versionTranslator.setAllowNewerVersions(false);
 
-    boost::optional<openstudio::model::Model> model = modelFromOSM(toPath(fileName), versionTranslator);
+    boost::optional<openstudio::model::Model> model = versionTranslator.loadModel(toPath(fileName));
     if( model ){
 
       m_osDocument = std::shared_ptr<OSDocument>( new OSDocument(componentLibrary(), 
@@ -247,7 +246,7 @@ bool OpenStudioApp::openFile(const QString& fileName, bool restoreTabs)
     osversion::VersionTranslator versionTranslator;
     versionTranslator.setAllowNewerVersions(false);
 
-    boost::optional<openstudio::model::Model> temp = modelFromOSM(toPath(fileName), versionTranslator);
+    boost::optional<openstudio::model::Model> temp = versionTranslator.loadModel(toPath(fileName));
 
     if (temp) {
       model::Model model = temp.get();
@@ -776,7 +775,7 @@ void OpenStudioApp::loadLibrary()
       osversion::VersionTranslator versionTranslator;
       versionTranslator.setAllowNewerVersions(false);
 
-      boost::optional<openstudio::model::Model> model = modelFromOSM(toPath(fileName), versionTranslator);
+      boost::optional<openstudio::model::Model> model = versionTranslator.loadModel(toPath(fileName));
       if( model ) {
         this->currentDocument()->setComponentLibrary(*model);
         versionUpdateMessageBox(versionTranslator, true, fileName, openstudio::path());
@@ -846,7 +845,7 @@ void OpenStudioApp::reloadFile(const QString& fileToLoad, bool modified, bool sa
   QFileInfo info(fileToLoad); // handles windows links and "\"
   QString fileName = info.absoluteFilePath();
   osversion::VersionTranslator versionTranslator;
-  boost::optional<openstudio::model::Model> model = modelFromOSM(toPath(fileName), versionTranslator);
+  boost::optional<openstudio::model::Model> model = versionTranslator.loadModel(toPath(fileName));
   if( model ){ 
     
     bool wasQuitOnLastWindowClosed = this->quitOnLastWindowClosed();
