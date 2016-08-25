@@ -68,21 +68,21 @@ namespace detail {
     return EnergyManagementSystemConstructionIndexVariable::iddObjectType();
   }
 
-  Construction EnergyManagementSystemConstructionIndexVariable_Impl::constructionObject() const {
-    boost::optional<Construction> value = optionalConstructionObject();
+  ModelObject EnergyManagementSystemConstructionIndexVariable_Impl::constructionObject() const {
+    boost::optional<ModelObject> value = optionalConstructionObject();
     if (!value) {
       LOG_AND_THROW(briefDescription() << " does not have an Construction Object attached.");
     }
     return value.get();
   }
 
-  bool EnergyManagementSystemConstructionIndexVariable_Impl::setConstructionObject(const Construction& construction) {
+  bool EnergyManagementSystemConstructionIndexVariable_Impl::setConstructionObject(const ModelObject& construction) {
     bool result = setPointer(OS_EnergyManagementSystem_ConstructionIndexVariableFields::ConstructionObjectName, construction.handle());
     return result;
   }
 
-  boost::optional<Construction> EnergyManagementSystemConstructionIndexVariable_Impl::optionalConstructionObject() const {
-    return getObject<ModelObject>().getModelObjectTarget<Construction>(OS_EnergyManagementSystem_ConstructionIndexVariableFields::ConstructionObjectName);
+  boost::optional<ModelObject> EnergyManagementSystemConstructionIndexVariable_Impl::optionalConstructionObject() const {
+    return getObject<ModelObject>().getModelObjectTarget<ModelObject>(OS_EnergyManagementSystem_ConstructionIndexVariableFields::ConstructionObjectName);
   }
 
 } // detail
@@ -103,11 +103,11 @@ IddObjectType EnergyManagementSystemConstructionIndexVariable::iddObjectType() {
   return IddObjectType(IddObjectType::OS_EnergyManagementSystem_ConstructionIndexVariable);
 }
 
-Construction EnergyManagementSystemConstructionIndexVariable::constructionObject() const {
+ModelObject EnergyManagementSystemConstructionIndexVariable::constructionObject() const {
   return getImpl<detail::EnergyManagementSystemConstructionIndexVariable_Impl>()->constructionObject();
 }
 
-bool EnergyManagementSystemConstructionIndexVariable::setConstructionObject(const Construction& construction) {
+bool EnergyManagementSystemConstructionIndexVariable::setConstructionObject(const ModelObject& construction) {
   return getImpl<detail::EnergyManagementSystemConstructionIndexVariable_Impl>()->setConstructionObject(construction);
 }
 
