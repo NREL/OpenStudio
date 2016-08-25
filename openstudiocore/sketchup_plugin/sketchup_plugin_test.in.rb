@@ -4,7 +4,7 @@
 $OpenStudio_Dir = File.dirname('${OPENSTUDIO_LIB}')
 
 # DLM: this is really the path to the sketchup plugin
-$OpenStudio_LibPath = '${RUBY_SOURCE_DIR}'
+$OpenStudio_LibPath = '${RUBY_SOURCE_DIR}/'
 
 $: << $OpenStudio_Dir
 $: << $OpenStudio_LibPath 
