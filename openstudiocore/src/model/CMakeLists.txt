@@ -455,6 +455,24 @@ set(${target_name}_src
   EnergyManagementSystemActuator.cpp
   EnergyManagementSystemActuator.hpp
   EnergyManagementSystemActuator_Impl.hpp
+  EnergyManagementSystemConstructionIndexVariable.cpp
+  EnergyManagementSystemConstructionIndexVariable.hpp
+  EnergyManagementSystemConstructionIndexVariable_Impl.hpp
+  EnergyManagementSystemCurveOrTableIndexVariable.cpp
+  EnergyManagementSystemCurveOrTableIndexVariable.hpp
+  EnergyManagementSystemCurveOrTableIndexVariable_Impl.hpp
+  EnergyManagementSystemGlobalVariable.cpp
+  EnergyManagementSystemGlobalVariable.hpp
+  EnergyManagementSystemGlobalVariable_Impl.hpp
+  EnergyManagementSystemInternalVariable.cpp
+  EnergyManagementSystemInternalVariable.hpp
+  EnergyManagementSystemInternalVariable_Impl.hpp
+  EnergyManagementSystemMeteredOutputVariable.cpp
+  EnergyManagementSystemMeteredOutputVariable.hpp
+  EnergyManagementSystemMeteredOutputVariable_Impl.hpp
+  EnergyManagementSystemOutputVariable.cpp
+  EnergyManagementSystemOutputVariable.hpp
+  EnergyManagementSystemOutputVariable_Impl.hpp
   EnergyManagementSystemProgram.cpp
   EnergyManagementSystemProgram.hpp
   EnergyManagementSystemProgram_Impl.hpp
@@ -464,6 +482,12 @@ set(${target_name}_src
   EnergyManagementSystemSensor.cpp
   EnergyManagementSystemSensor.hpp
   EnergyManagementSystemSensor_Impl.hpp
+  EnergyManagementSystemSubroutine.cpp
+  EnergyManagementSystemSubroutine.hpp
+  EnergyManagementSystemSubroutine_Impl.hpp
+  EnergyManagementSystemTrendVariable.cpp
+  EnergyManagementSystemTrendVariable.hpp
+  EnergyManagementSystemTrendVariable_Impl.hpp
   EvaporativeCoolerDirectResearchSpecial.hpp
   EvaporativeCoolerDirectResearchSpecial_Impl.hpp
   EvaporativeCoolerDirectResearchSpecial.cpp

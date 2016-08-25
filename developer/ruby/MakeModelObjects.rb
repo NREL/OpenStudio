@@ -84,10 +84,18 @@ objects = []
 # objects << ["OS:LightingDesignDay", "LightingDesignDay", "ModelObject"]
 # objects << ["OS:LightingSimulationControl", "LightingSimulationControl", "ModelObject"]
 
-objects << ["OS:EnergyManagementSystem:Sensor", "EnergyManagementSystemSensor", "ModelObject"]
-objects << ["OS:EnergyManagementSystem:Actuator", "EnergyManagementSystemActuator", "ModelObject"]
-objects << ["OS:EnergyManagementSystem:ProgramCallingManager", "EnergyManagementSystemProgramCallingManager", "ModelObject"]
-objects << ["OS:EnergyManagementSystem:Program", "EnergyManagementSystemProgram", "ModelObject"]
+# objects << ["OS:EnergyManagementSystem:Sensor", "EnergyManagementSystemSensor", "ModelObject"]
+# objects << ["OS:EnergyManagementSystem:Actuator", "EnergyManagementSystemActuator", "ModelObject"]
+# objects << ["OS:EnergyManagementSystem:ProgramCallingManager", "EnergyManagementSystemProgramCallingManager", "ModelObject"]
+# objects << ["OS:EnergyManagementSystem:Program", "EnergyManagementSystemProgram", "ModelObject"]
+objects << ["OS:EnergyManagementSystem:GlobalVariable", "EnergyManagementSystemGlobalVariable", "ModelObject"]
+objects << ["OS:EnergyManagementSystem:Subroutine", "EnergyManagementSystemSubroutine", "ModelObject"]
+objects << ["OS:EnergyManagementSystem:OutputVariable", "EnergyManagementSystemOutputVariable", "ModelObject"]
+objects << ["OS:EnergyManagementSystem:MeteredOutputVariable", "EnergyManagementSystemMeteredOutputVariable", "ModelObject"]
+objects << ["OS:EnergyManagementSystem:TrendVariable", "EnergyManagementSystemTrendVariable", "ModelObject"]
+objects << ["OS:EnergyManagementSystem:InternalVariable", "EnergyManagementSystemInternalVariable", "ModelObject"]
+objects << ["OS:EnergyManagementSystem:CurveOrTableIndexVariable", "EnergyManagementSystemCurveOrTableIndexVariable", "ModelObject"]
+objects << ["OS:EnergyManagementSystem:ConstructionIndexVariable", "EnergyManagementSystemConstructionIndexVariable", "ModelObject"]
 
 includePath = nil
 if /mswin/.match(RUBY_PLATFORM) || /mingw/.match(RUBY_PLATFORM)
