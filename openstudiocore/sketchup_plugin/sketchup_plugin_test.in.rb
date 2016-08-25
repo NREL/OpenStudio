@@ -1,8 +1,17 @@
 # Copy this file into the SketchUp plugins directory for development testing
 
+# path to openstudio.so
+$OpenStudio_Dir = File.dirname('${OPENSTUDIO_LIB}')
+
+# DLM: this is really the path to the sketchup plugin
+$OpenStudio_LibPath = '${RUBY_SOURCE_DIR}'
+
+$: << $OpenStudio_Dir
+$: << $OpenStudio_LibPath 
+
+
+
 require '${OPENSTUDIO_LIB}'
-$: << '${RUBY_SOURCE_DIR}'
-$: << File.dirname('${OPENSTUDIO_LIB}')
 
 OpenStudio::Application::instance.application(true)
 OpenStudio::Application::instance.application.setOrganizationName("NREL")

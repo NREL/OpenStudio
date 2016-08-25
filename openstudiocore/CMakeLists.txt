@@ -1175,6 +1175,8 @@ add_subdirectory(resources)
 
 add_subdirectory(ruby)
 
+add_subdirectory(sketchup_plugin)
+
 foreach(D ${project_directories})
   add_subdirectory(src/${D})
 endforeach()
