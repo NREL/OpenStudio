@@ -60,13 +60,15 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    // TODO: Handle this object's extensible fields.
+    std::vector<std::string> getVariables() const;
 
     //@}
     /** @name Setters */
     //@{
 
-    // TODO: Handle this object's extensible fields.
+    bool addVariable(const std::string& variable);
+    bool removeVariable(const std::string& variable);
+    void eraseVariables();
 
     //@}
     /** @name Other */

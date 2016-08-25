@@ -25,6 +25,8 @@
 
 #include "../utilities/core/Assert.hpp"
 
+#include "ModelExtensibleGroup.hpp"
+
 namespace openstudio {
 namespace model {
 
@@ -64,18 +66,76 @@ namespace detail {
     return EnergyManagementSystemGlobalVariable::iddObjectType();
   }
 
+  bool EnergyManagementSystemGlobalVariable_Impl::addVariable(const std::string& variable) {
+    //set global variable
+    bool result = false;
+
+    WorkspaceExtensibleGroup group = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+    result = group.setString(OS_EnergyManagementSystem_GlobalVariableExtensibleFields::ErlVariableName, variable);
+
+    return result;
+  }
+
+  bool EnergyManagementSystemGlobalVariable_Impl::removeVariable(const std::string& variable) {
+    //remove global variable
+    bool result = false;
+
+    auto groups = extensibleGroups();
+    unsigned sizeOfGroup = numExtensibleGroups();
+    int i = 0;
+    for (auto group = groups.begin(); group != groups.end(); ++group) {
+      if (group->getString(OS_EnergyManagementSystem_GlobalVariableExtensibleFields::ErlVariableName, true) == variable) {
+        eraseExtensibleGroup(i);
+        i++;
+        result = true;
+      }
+    }
+    return result;
+  }
+
+  std::vector<std::string> EnergyManagementSystemGlobalVariable_Impl::getVariables() const {
+    //return vector of global variables
+    std::vector<std::string> result;
+    auto groups = extensibleGroups();
+
+    for (auto group = groups.begin(); group != groups.end(); ++group) {
+      const auto & variable = group->getString(OS_EnergyManagementSystem_GlobalVariableExtensibleFields::ErlVariableName, true);
+      OS_ASSERT(variable);
+      result.push_back(variable.get());
+    }
+    return result;
+  }
+
+  void EnergyManagementSystemGlobalVariable_Impl::eraseVariables() {
+    //erase all Variables in this global variable object
+    clearExtensibleGroups();
+  }
 } // detail
 
 EnergyManagementSystemGlobalVariable::EnergyManagementSystemGlobalVariable(const Model& model)
   : ModelObject(EnergyManagementSystemGlobalVariable::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemGlobalVariable_Impl>());
-
-  // TODO: Appropriately handle the following required object-list fields.
 }
 
 IddObjectType EnergyManagementSystemGlobalVariable::iddObjectType() {
   return IddObjectType(IddObjectType::OS_EnergyManagementSystem_GlobalVariable);
+}
+
+bool EnergyManagementSystemGlobalVariable::addVariable(const std::string& variable) {
+  return getImpl<detail::EnergyManagementSystemGlobalVariable_Impl>()->addVariable(variable);
+}
+
+bool EnergyManagementSystemGlobalVariable::removeVariable(const std::string& variable) {
+  return getImpl<detail::EnergyManagementSystemGlobalVariable_Impl>()->removeVariable(variable);
+}
+
+std::vector<std::string> EnergyManagementSystemGlobalVariable::getVariables() const {
+  return getImpl<detail::EnergyManagementSystemGlobalVariable_Impl>()->getVariables();
+}
+
+void EnergyManagementSystemGlobalVariable::eraseVariables() {
+  getImpl<detail::EnergyManagementSystemGlobalVariable_Impl>()->eraseVariables();
 }
 
 /// @cond
