@@ -42,12 +42,7 @@
 #include "../utilities/core/ApplicationPathHelpers.hpp"
 #include "../utilities/core/PathHelpers.hpp"
 #include "../utilities/core/RubyException.hpp"
-
-#include "../runmanager/lib/AdvancedStatus.hpp"
-#include "../runmanager/lib/Job.hpp"
-#include "../runmanager/lib/RunManager.hpp"
-#include "../runmanager/lib/RubyJobUtils.hpp"
-#include "../runmanager/lib/Workflow.hpp"
+#include "../utilities/time/DateTime.hpp"
 
 #include <QBoxLayout>
 #include <QCloseEvent>
@@ -551,16 +546,17 @@ void DataPointJobHeaderView::setLastRunTime(const boost::optional<openstudio::Da
   }
 }
 
-void DataPointJobHeaderView::setStatus(const openstudio::runmanager::AdvancedStatus& status, bool isCanceled)
-{
-  if (!isCanceled)
-  {
-    std::string s = status.toString();
-    m_status->setText(toQString(s));
-  } else {
-    m_status->setText("Canceled");
-  }
-}
+// TODO
+//void DataPointJobHeaderView::setStatus(const openstudio::runmanager::AdvancedStatus& status, bool isCanceled)
+//{
+//  if (!isCanceled)
+//  {
+//    std::string s = status.toString();
+//    m_status->setText(toQString(s));
+//  } else {
+//    m_status->setText("Canceled");
+//  }
+//}
 
 void DataPointJobHeaderView::setNA(bool na)
 {
@@ -761,12 +757,13 @@ void ApplyMeasureNowDialog::on_cancelButton(bool checked)
   if(m_mainPaneStackedWidget->currentIndex() == m_inputPageIdx){
     // Nothing specific here
   } else if(m_mainPaneStackedWidget->currentIndex() == m_runningPageIdx) {
-    if(m_job){
-      m_job->requestStop();
-      this->cancelButton()->setDisabled(true);
-      this->okButton()->setDisabled(true);
-      return;
-    }
+// TODO: fix
+//    if(m_job){
+//      m_job->requestStop();
+//      this->cancelButton()->setDisabled(true);
+//      this->okButton()->setDisabled(true);
+//      return;
+//    }
     m_mainPaneStackedWidget->setCurrentIndex(m_inputPageIdx);
     m_timer->stop();
     this->okButton()->show();

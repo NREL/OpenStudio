@@ -13,8 +13,8 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 # source files
 set(${target_name}_SRC
-  #ApplyMeasureNowDialog.cpp
-  #ApplyMeasureNowDialog.hpp
+  ApplyMeasureNowDialog.cpp
+  ApplyMeasureNowDialog.hpp
   BCLComponentItem.cpp
   BCLComponentItem.hpp
   BuildingInspectorView.cpp
@@ -462,7 +462,7 @@ set(${target_name}_SRC
 
 # moc files
 set(${target_name}_moc
-  #ApplyMeasureNowDialog.hpp
+  ApplyMeasureNowDialog.hpp
   BCLComponentItem.hpp
   BuildingInspectorView.hpp
   CollapsibleInspector.hpp

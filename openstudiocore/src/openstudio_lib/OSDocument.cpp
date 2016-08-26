@@ -19,7 +19,7 @@
 
 #include "OSDocument.hpp"
 
-//#include "ApplyMeasureNowDialog.hpp"
+#include "ApplyMeasureNowDialog.hpp"
 #include "ConstructionsTabController.hpp"
 #include "FacilityTabController.hpp"
 #include "FileOperations.hpp"
@@ -1590,18 +1590,17 @@ namespace openstudio {
       }
     }
 
-    // TODO enable this
     // open modal dialog
-    //m_applyMeasureNowDialog = boost::shared_ptr<ApplyMeasureNowDialog>(new ApplyMeasureNowDialog());
+    m_applyMeasureNowDialog = boost::shared_ptr<ApplyMeasureNowDialog>(new ApplyMeasureNowDialog());
 
-    //// connect signal before exec dialog
-    //connect(m_applyMeasureNowDialog.get(), &ApplyMeasureNowDialog::toolsUpdated, this, &OSDocument::toolsUpdated);
+    // connect signal before exec dialog
+    connect(m_applyMeasureNowDialog.get(), &ApplyMeasureNowDialog::toolsUpdated, this, &OSDocument::toolsUpdated);
 
-    //m_applyMeasureNowDialog->exec();
+    m_applyMeasureNowDialog->exec();
 
-    //// DLM: kill the dialog here as there is logic in the destructor that resets application state
-    //// DLM: this seems overly complicated
-    //m_applyMeasureNowDialog.reset();
+    // DLM: kill the dialog here as there is logic in the destructor that resets application state
+    // DLM: this seems overly complicated
+    m_applyMeasureNowDialog.reset();
   }
 
   void OSDocument::openChangeMeasuresDirDlg()

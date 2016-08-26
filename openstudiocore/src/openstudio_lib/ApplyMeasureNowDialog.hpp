@@ -23,7 +23,6 @@
 #include "../shared_gui_components/HeaderViews.hpp"
 #include "../shared_gui_components/OSDialog.hpp"
 #include "../shared_gui_components/OSListView.hpp"
-#include "../runmanager/lib/Job.hpp"
 
 #include "../model/Model.hpp"
 
@@ -44,11 +43,6 @@ class TextEditDialog;
 
 // Local Forward Decs
 class DataPointJobItemView;
-
-namespace runmanager {
-  class AdvancedStatus;
-  class Job;
-}
 
 namespace measuretab {
   class MeasureItem;
@@ -114,8 +108,6 @@ private:
 
   QSharedPointer<measuretab::MeasureItem> m_currentMeasureItem;
 
-  boost::optional<runmanager::Job> m_job;
-
   boost::optional<model::Model> m_model;
 
   boost::optional<openstudio::path> m_reloadPath;
@@ -166,7 +158,7 @@ class DataPointJobHeaderView : public OSHeader
 
   void setLastRunTime(const boost::optional<openstudio::DateTime>& lastRunTime);
 
-  void setStatus(const openstudio::runmanager::AdvancedStatus& status, bool isCanceled);
+  //void setStatus(const openstudio::runmanager::AdvancedStatus& status, bool isCanceled);
 
   void setNA(bool na);
 
