@@ -126,6 +126,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateEnergyManagementSystemProgramCallingManager.cpp
   ForwardTranslator/ForwardTranslateEnergyManagementSystemSensor.cpp
   ForwardTranslator/ForwardTranslateEnergyManagementSystemSubroutine.cpp
+  ForwardTranslator/ForwardTranslateEnergyManagementSystemTrendVariable.cpp
   ForwardTranslator/ForwardTranslateEvaporativeCoolerDirectResearchSpecial.cpp
   ForwardTranslator/ForwardTranslateEvaporativeCoolerIndirectResearchSpecial.cpp
   ForwardTranslator/ForwardTranslateEvaporativeFluidCoolerSingleSpeed.cpp

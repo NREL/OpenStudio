@@ -1365,6 +1365,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     retVal = EnergyManagementSystemSubroutine(temp);
     break;
   }
+  case openstudio::IddObjectType::OS_EnergyManagementSystem_TrendVariable:
+  {
+    model::EnergyManagementSystemTrendVariable temp = modelObject.cast<EnergyManagementSystemTrendVariable>();
+    retVal = translateEnergyManagementSystemTrendVariable(temp);
+    break;
+  }
   case openstudio::IddObjectType::OS_EvaporativeCooler_Direct_ResearchSpecial :
     {
       model::EvaporativeCoolerDirectResearchSpecial evap = modelObject.cast<EvaporativeCoolerDirectResearchSpecial>();
@@ -2979,6 +2985,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_EnergyManagementSystem_ProgramCallingManager);
   result.push_back(IddObjectType::OS_EnergyManagementSystem_OutputVariable);
   result.push_back(IddObjectType::OS_EnergyManagementSystem_GlobalVariable);
+  result.push_back(IddObjectType::OS_EnergyManagementSystem_TrendVariable);
 
   return result;
 }

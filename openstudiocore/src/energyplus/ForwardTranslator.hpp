@@ -150,6 +150,7 @@ class EnergyManagementSystemProgram;
 class EnergyManagementSystemProgramCallingManager;
 class EnergyManagementSystemSensor;
 class EnergyManagementSystemSubroutine;
+class EnergyManagementSystemTrendVariable;
 class EvaporativeCoolerDirectResearchSpecial;
 class EvaporativeCoolerIndirectResearchSpecial;
 class EvaporativeFluidCoolerSingleSpeed;
@@ -660,6 +661,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateEnergyManagementSystemSensor(model::EnergyManagementSystemSensor & modelObejct );
 
   boost::optional<IdfObject> translateEnergyManagementSystemSubroutine(model::EnergyManagementSystemSubroutine & modelObejct );
+
+  boost::optional<IdfObject> translateEnergyManagementSystemTrendVariable(model::EnergyManagementSystemTrendVariable & modelObejct );
 
   boost::optional<IdfObject> translateEvaporativeFluidCoolerSingleSpeed( model::EvaporativeFluidCoolerSingleSpeed & modelObject );
 
