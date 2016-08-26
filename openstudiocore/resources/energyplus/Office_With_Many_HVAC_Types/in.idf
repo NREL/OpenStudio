@@ -1,4 +1,4 @@
-  Version,8.5;
+  Version,8.6;
 
   Building,
     Building 1,              !- Name
@@ -4088,9 +4088,6 @@
   ZoneAirHeatBalanceAlgorithm,
     AnalyticalSolution;      !- Algorithm
 
-  ProgramControl,
-    1;                       !- Number of Threads Allowed
-
   GlobalGeometryRules,
     UpperLeftCorner,         !- Starting Vertex Position
     Counterclockwise,        !- Vertex Entry Direction
@@ -5712,23 +5709,19 @@
 
   Branch,
     Electric Furnace Supply Branch,  !- Name
-    AutoSize,                !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     Air Loop HVAC Outdoor Air System 3,  !- Component 1 Name
     Node 43,                 !- Component 1 Inlet Node Name
     Node 50,                 !- Component 1 Outlet Node Name
-    Passive,                 !- Component 1 Branch Control Type
     Coil:Heating:Electric,   !- Component 2 Object Type
     Coil Heating Electric 1, !- Component 2 Name
     Node 50,                 !- Component 2 Inlet Node Name
     Node 51,                 !- Component 2 Outlet Node Name
-    Passive,                 !- Component 2 Branch Control Type
     Fan:ConstantVolume,      !- Component 3 Object Type
     Fan Constant Volume 3,   !- Component 3 Name
     Node 51,                 !- Component 3 Inlet Node Name
-    Node 44,                 !- Component 3 Outlet Node Name
-    Passive;                 !- Component 3 Branch Control Type
+    Node 44;                 !- Component 3 Outlet Node Name
 
   AirLoopHVAC:OutdoorAirSystem,
     Air Loop HVAC Outdoor Air System 3,  !- Name
@@ -5927,23 +5920,19 @@
 
   Branch,
     Gas Fired Furnace Supply Branch,  !- Name
-    AutoSize,                !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     Air Loop HVAC Outdoor Air System 2,  !- Component 1 Name
     Node 24,                 !- Component 1 Inlet Node Name
     Node 40,                 !- Component 1 Outlet Node Name
-    Passive,                 !- Component 1 Branch Control Type
-    Coil:Heating:Gas,        !- Component 2 Object Type
+    Coil:Heating:Fuel,       !- Component 2 Object Type
     Coil Heating Gas 2,      !- Component 2 Name
     Node 40,                 !- Component 2 Inlet Node Name
     Node 41,                 !- Component 2 Outlet Node Name
-    Passive,                 !- Component 2 Branch Control Type
     Fan:ConstantVolume,      !- Component 3 Object Type
     Fan Constant Volume 2,   !- Component 3 Name
     Node 41,                 !- Component 3 Inlet Node Name
-    Node 30,                 !- Component 3 Outlet Node Name
-    Passive;                 !- Component 3 Branch Control Type
+    Node 30;                 !- Component 3 Outlet Node Name
 
   AirLoopHVAC:OutdoorAirSystem,
     Air Loop HVAC Outdoor Air System 2,  !- Name
@@ -6016,17 +6005,18 @@
     Node 30,                 !- Fan Outlet Node Name
     Node 40;                 !- Setpoint Node or NodeList Name
 
-  Coil:Heating:Gas,
+  Coil:Heating:Fuel,
     Coil Heating Gas 2,      !- Name
     Always On Discrete,      !- Availability Schedule Name
-    0.8,                     !- Gas Burner Efficiency
+    NaturalGas,              !- Fuel Type
+    0.8,                     !- Burner Efficiency
     AutoSize,                !- Nominal Capacity {W}
     Node 40,                 !- Air Inlet Node Name
     Node 41,                 !- Air Outlet Node Name
     Node 41,                 !- Temperature Setpoint Node Name
     0,                       !- Parasitic Electric Load {W}
     ,                        !- Part Load Fraction Correlation Curve Name
-    0;                       !- Parasitic Gas Load {W}
+    0;                       !- Parasitic Fuel Load {W}
 
   SetpointManager:MixedAir,
     Node 41 OS Default SPM,  !- Name
@@ -6145,28 +6135,23 @@
 
   Branch,
     Packaged Rooftop Air Conditioner Supply Branch,  !- Name
-    AutoSize,                !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     Air Loop HVAC Outdoor Air System 1,  !- Component 1 Name
     Node 20,                 !- Component 1 Inlet Node Name
     Node 27,                 !- Component 1 Outlet Node Name
-    Passive,                 !- Component 1 Branch Control Type
     CoilSystem:Cooling:DX,   !- Component 2 Object Type
     Coil Cooling DX Single Speed 1 CoilSystem,  !- Component 2 Name
     Node 27,                 !- Component 2 Inlet Node Name
     Node 28,                 !- Component 2 Outlet Node Name
-    Passive,                 !- Component 2 Branch Control Type
-    Coil:Heating:Gas,        !- Component 3 Object Type
+    Coil:Heating:Fuel,       !- Component 3 Object Type
     Coil Heating Gas 1,      !- Component 3 Name
     Node 28,                 !- Component 3 Inlet Node Name
     Node 29,                 !- Component 3 Outlet Node Name
-    Passive,                 !- Component 3 Branch Control Type
     Fan:ConstantVolume,      !- Component 4 Object Type
     Fan Constant Volume 1,   !- Component 4 Name
     Node 29,                 !- Component 4 Inlet Node Name
-    Node 21,                 !- Component 4 Outlet Node Name
-    Passive;                 !- Component 4 Branch Control Type
+    Node 21;                 !- Component 4 Outlet Node Name
 
   AirLoopHVAC:OutdoorAirSystem,
     Air Loop HVAC Outdoor Air System 1,  !- Name
@@ -6337,17 +6322,18 @@
     0,                       !- Basin Heater Capacity {W/K}
     10;                      !- Basin Heater Setpoint Temperature {C}
 
-  Coil:Heating:Gas,
+  Coil:Heating:Fuel,
     Coil Heating Gas 1,      !- Name
     Always On Discrete,      !- Availability Schedule Name
-    0.8,                     !- Gas Burner Efficiency
+    NaturalGas,              !- Fuel Type
+    0.8,                     !- Burner Efficiency
     AutoSize,                !- Nominal Capacity {W}
     Node 28,                 !- Air Inlet Node Name
     Node 29,                 !- Air Outlet Node Name
     Node 29,                 !- Temperature Setpoint Node Name
     0,                       !- Parasitic Electric Load {W}
     ,                        !- Part Load Fraction Correlation Curve Name
-    0;                       !- Parasitic Gas Load {W}
+    0;                       !- Parasitic Fuel Load {W}
 
   SetpointManager:MixedAir,
     Node 29 OS Default SPM,  !- Name
@@ -6468,28 +6454,23 @@
 
   Branch,
     Packaged Rooftop VAV with PFP Boxes and Reheat Supply Branch,  !- Name
-    AutoSize,                !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     Air Loop HVAC Outdoor Air System 5,  !- Component 1 Name
     Node 84,                 !- Component 1 Inlet Node Name
     Node 91,                 !- Component 1 Outlet Node Name
-    Passive,                 !- Component 1 Branch Control Type
     CoilSystem:Cooling:DX,   !- Component 2 Object Type
     Coil Cooling DX Two Speed 2 CoilSystem,  !- Component 2 Name
     Node 91,                 !- Component 2 Inlet Node Name
     Node 92,                 !- Component 2 Outlet Node Name
-    Passive,                 !- Component 2 Branch Control Type
     Coil:Heating:Electric,   !- Component 3 Object Type
     Coil Heating Electric 2, !- Component 3 Name
     Node 92,                 !- Component 3 Inlet Node Name
     Node 93,                 !- Component 3 Outlet Node Name
-    Passive,                 !- Component 3 Branch Control Type
     Fan:VariableVolume,      !- Component 4 Object Type
     Fan Variable Volume 2,   !- Component 4 Name
     Node 93,                 !- Component 4 Inlet Node Name
-    Node 85,                 !- Component 4 Outlet Node Name
-    Passive;                 !- Component 4 Branch Control Type
+    Node 85;                 !- Component 4 Outlet Node Name
 
   AirLoopHVAC:OutdoorAirSystem,
     Air Loop HVAC Outdoor Air System 5,  !- Name
@@ -6837,28 +6818,23 @@
 
   Branch,
     Packaged Rooftop VAV with Reheat Supply Branch,  !- Name
-    AutoSize,                !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     Air Loop HVAC Outdoor Air System 4,  !- Component 1 Name
     Node 53,                 !- Component 1 Inlet Node Name
     Node 60,                 !- Component 1 Outlet Node Name
-    Passive,                 !- Component 1 Branch Control Type
     CoilSystem:Cooling:DX,   !- Component 2 Object Type
     Coil Cooling DX Two Speed 1 CoilSystem,  !- Component 2 Name
     Node 60,                 !- Component 2 Inlet Node Name
     Node 61,                 !- Component 2 Outlet Node Name
-    Passive,                 !- Component 2 Branch Control Type
     Coil:Heating:Water,      !- Component 3 Object Type
     Coil Heating Water 1,    !- Component 3 Name
     Node 61,                 !- Component 3 Inlet Node Name
     Node 62,                 !- Component 3 Outlet Node Name
-    Passive,                 !- Component 3 Branch Control Type
     Fan:VariableVolume,      !- Component 4 Object Type
     Fan Variable Volume 1,   !- Component 4 Name
     Node 62,                 !- Component 4 Inlet Node Name
-    Node 54,                 !- Component 4 Outlet Node Name
-    Passive;                 !- Component 4 Branch Control Type
+    Node 54;                 !- Component 4 Outlet Node Name
 
   AirLoopHVAC:OutdoorAirSystem,
     Air Loop HVAC Outdoor Air System 4,  !- Name
@@ -7214,28 +7190,23 @@
 
   Branch,
     VAV with PFP Boxes and Reheat Supply Branch,  !- Name
-    AutoSize,                !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     Air Loop HVAC Outdoor Air System 7,  !- Component 1 Name
     Node 173,                !- Component 1 Inlet Node Name
     Node 180,                !- Component 1 Outlet Node Name
-    Passive,                 !- Component 1 Branch Control Type
     Coil:Cooling:Water,      !- Component 2 Object Type
     Coil Cooling Water 2,    !- Component 2 Name
     Node 180,                !- Component 2 Inlet Node Name
     Node 181,                !- Component 2 Outlet Node Name
-    Passive,                 !- Component 2 Branch Control Type
     Coil:Heating:Electric,   !- Component 3 Object Type
     Coil Heating Electric 5, !- Component 3 Name
     Node 181,                !- Component 3 Inlet Node Name
     Node 182,                !- Component 3 Outlet Node Name
-    Passive,                 !- Component 3 Branch Control Type
     Fan:VariableVolume,      !- Component 4 Object Type
     Fan Variable Volume 4,   !- Component 4 Name
     Node 182,                !- Component 4 Inlet Node Name
-    Node 174,                !- Component 4 Outlet Node Name
-    Passive;                 !- Component 4 Branch Control Type
+    Node 174;                !- Component 4 Outlet Node Name
 
   AirLoopHVAC:OutdoorAirSystem,
     Air Loop HVAC Outdoor Air System 7,  !- Name
@@ -7494,28 +7465,23 @@
 
   Branch,
     VAV with Reheat Supply Branch,  !- Name
-    AutoSize,                !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     Air Loop HVAC Outdoor Air System 6,  !- Component 1 Name
     Node 101,                !- Component 1 Inlet Node Name
     Node 108,                !- Component 1 Outlet Node Name
-    Passive,                 !- Component 1 Branch Control Type
     Coil:Cooling:Water,      !- Component 2 Object Type
     Coil Cooling Water 1,    !- Component 2 Name
     Node 108,                !- Component 2 Inlet Node Name
     Node 109,                !- Component 2 Outlet Node Name
-    Passive,                 !- Component 2 Branch Control Type
     Coil:Heating:Water,      !- Component 3 Object Type
     Coil Heating Water 4,    !- Component 3 Name
     Node 109,                !- Component 3 Inlet Node Name
     Node 110,                !- Component 3 Outlet Node Name
-    Passive,                 !- Component 3 Branch Control Type
     Fan:VariableVolume,      !- Component 4 Object Type
     Fan Variable Volume 3,   !- Component 4 Name
     Node 110,                !- Component 4 Inlet Node Name
-    Node 102,                !- Component 4 Outlet Node Name
-    Passive;                 !- Component 4 Branch Control Type
+    Node 102;                !- Component 4 Outlet Node Name
 
   AirLoopHVAC:OutdoorAirSystem,
     Air Loop HVAC Outdoor Air System 6,  !- Name
@@ -7764,13 +7730,11 @@
 
   Branch,
     Chilled Water Loop Supply Inlet Branch,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pump:VariableSpeed,      !- Component 1 Object Type
     Pump Variable Speed 3,   !- Component 1 Name
     Node 127,                !- Component 1 Inlet Node Name
-    Node 133,                !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    Node 133;                !- Component 1 Outlet Node Name
 
   Pump:VariableSpeed,
     Pump Variable Speed 3,   !- Name
@@ -7790,13 +7754,11 @@
 
   Branch,
     Chilled Water Loop Supply Branch 1,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Chiller:Electric:EIR,    !- Component 1 Object Type
     Chiller Electric EIR 1,  !- Component 1 Name
     Node 129,                !- Component 1 Inlet Node Name
-    Node 134,                !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    Node 134;                !- Component 1 Outlet Node Name
 
   Chiller:Electric:EIR,
     Chiller Electric EIR 1,  !- Name
@@ -7863,13 +7825,11 @@
 
   Branch,
     Chilled Water Loop Supply Branch 2,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Pipe Adiabatic 8,        !- Component 1 Name
     Node 135,                !- Component 1 Inlet Node Name
-    Node 136,                !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    Node 136;                !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     Pipe Adiabatic 8,        !- Name
@@ -7878,13 +7838,11 @@
 
   Branch,
     Chilled Water Loop Supply Outlet Branch,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Pipe Adiabatic 9,        !- Component 1 Name
     Node 137,                !- Component 1 Inlet Node Name
-    Node 128,                !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    Node 128;                !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     Pipe Adiabatic 9,        !- Name
@@ -7922,13 +7880,11 @@
 
   Branch,
     Chilled Water Loop Demand Inlet Branch,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Pipe Adiabatic 11,       !- Component 1 Name
     Node 130,                !- Component 1 Inlet Node Name
-    Node 144,                !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    Node 144;                !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     Pipe Adiabatic 11,       !- Name
@@ -7937,23 +7893,19 @@
 
   Branch,
     Chilled Water Loop Demand Branch 1,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Cooling:Water,      !- Component 1 Object Type
     Coil Cooling Water 1,    !- Component 1 Name
     Node 132,                !- Component 1 Inlet Node Name
-    Node 138,                !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    Node 138;                !- Component 1 Outlet Node Name
 
   Branch,
     Chilled Water Loop Demand Branch 2,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Pipe Adiabatic 10,       !- Component 1 Name
     Node 140,                !- Component 1 Inlet Node Name
-    Node 141,                !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    Node 141;                !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     Pipe Adiabatic 10,       !- Name
@@ -7962,13 +7914,11 @@
 
   Branch,
     Chilled Water Loop Demand Bypass Branch,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Chilled Water Loop Demand Bypass Pipe,  !- Component 1 Name
     Chilled Water Loop Demand Bypass Pipe Inlet Node,  !- Component 1 Inlet Node Name
-    Chilled Water Loop Demand Bypass Pipe Outlet Node,  !- Component 1 Outlet Node Name
-    Bypass;                  !- Component 1 Branch Control Type
+    Chilled Water Loop Demand Bypass Pipe Outlet Node;  !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     Chilled Water Loop Demand Bypass Pipe,  !- Name
@@ -7977,13 +7927,11 @@
 
   Branch,
     Chilled Water Loop Demand Outlet Branch,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Pipe Adiabatic 12,       !- Component 1 Name
     Node 145,                !- Component 1 Inlet Node Name
-    Node 131,                !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    Node 131;                !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     Pipe Adiabatic 12,       !- Name
@@ -8065,13 +8013,11 @@
 
   Branch,
     Chilled Water Loop 1 Supply Inlet Branch,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pump:VariableSpeed,      !- Component 1 Object Type
     Pump Variable Speed 5,   !- Component 1 Name
     Node 183,                !- Component 1 Inlet Node Name
-    Node 189,                !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    Node 189;                !- Component 1 Outlet Node Name
 
   Pump:VariableSpeed,
     Pump Variable Speed 5,   !- Name
@@ -8091,13 +8037,11 @@
 
   Branch,
     Chilled Water Loop 1 Supply Branch 1,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Pipe Adiabatic 18,       !- Component 1 Name
     Node 192,                !- Component 1 Inlet Node Name
-    Node 193,                !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    Node 193;                !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     Pipe Adiabatic 18,       !- Name
@@ -8106,13 +8050,11 @@
 
   Branch,
     Chilled Water Loop 1 Supply Branch 2,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     DistrictCooling,         !- Component 1 Object Type
     District Cooling,        !- Component 1 Name
     Node 185,                !- Component 1 Inlet Node Name
-    Node 190,                !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    Node 190;                !- Component 1 Outlet Node Name
 
   DistrictCooling,
     District Cooling,        !- Name
@@ -8122,13 +8064,11 @@
 
   Branch,
     Chilled Water Loop 1 Supply Outlet Branch,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Pipe Adiabatic 19,       !- Component 1 Name
     Node 194,                !- Component 1 Inlet Node Name
-    Node 184,                !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    Node 184;                !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     Pipe Adiabatic 19,       !- Name
@@ -8163,13 +8103,11 @@
 
   Branch,
     Chilled Water Loop 1 Demand Inlet Branch,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Chilled Water Loop 1 Demand Inlet Pipe,  !- Component 1 Name
     Node 186,                !- Component 1 Inlet Node Name
-    Chilled Water Loop 1 Demand Inlet Pipe Node,  !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    Chilled Water Loop 1 Demand Inlet Pipe Node;  !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     Chilled Water Loop 1 Demand Inlet Pipe,  !- Name
@@ -8178,23 +8116,19 @@
 
   Branch,
     Chilled Water Loop 1 Demand Branch 1,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Cooling:Water,      !- Component 1 Object Type
     Coil Cooling Water 2,    !- Component 1 Name
     Node 188,                !- Component 1 Inlet Node Name
-    Node 191,                !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    Node 191;                !- Component 1 Outlet Node Name
 
   Branch,
     Chilled Water Loop 1 Demand Bypass Branch,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Chilled Water Loop 1 Demand Bypass Pipe,  !- Component 1 Name
     Chilled Water Loop 1 Demand Bypass Pipe Inlet Node,  !- Component 1 Inlet Node Name
-    Chilled Water Loop 1 Demand Bypass Pipe Outlet Node,  !- Component 1 Outlet Node Name
-    Bypass;                  !- Component 1 Branch Control Type
+    Chilled Water Loop 1 Demand Bypass Pipe Outlet Node;  !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     Chilled Water Loop 1 Demand Bypass Pipe,  !- Name
@@ -8203,13 +8137,11 @@
 
   Branch,
     Chilled Water Loop 1 Demand Outlet Branch,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Chilled Water Loop 1 Demand Outlet Pipe,  !- Component 1 Name
     Chilled Water Loop 1 Demand Outlet Pipe Node,  !- Component 1 Inlet Node Name
-    Node 187,                !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    Node 187;                !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     Chilled Water Loop 1 Demand Outlet Pipe,  !- Name
@@ -8291,13 +8223,11 @@
 
   Branch,
     Condenser Water Loop Supply Inlet Branch,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pump:VariableSpeed,      !- Component 1 Object Type
     Pump Variable Speed 4,   !- Component 1 Name
     Node 146,                !- Component 1 Inlet Node Name
-    Node 156,                !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    Node 156;                !- Component 1 Outlet Node Name
 
   Pump:VariableSpeed,
     Pump Variable Speed 4,   !- Name
@@ -8317,13 +8247,11 @@
 
   Branch,
     Condenser Water Loop Supply Branch 1,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     CoolingTower:SingleSpeed,!- Component 1 Object Type
     Cooling Tower Single Speed 1,  !- Component 1 Name
     Node 148,                !- Component 1 Inlet Node Name
-    Node 152,                !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    Node 152;                !- Component 1 Outlet Node Name
 
   CoolingTower:SingleSpeed,
     Cooling Tower Single Speed 1,  !- Name
@@ -8362,13 +8290,11 @@
 
   Branch,
     Condenser Water Loop Supply Branch 2,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Pipe Adiabatic 13,       !- Component 1 Name
     Node 153,                !- Component 1 Inlet Node Name
-    Node 154,                !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    Node 154;                !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     Pipe Adiabatic 13,       !- Name
@@ -8377,13 +8303,11 @@
 
   Branch,
     Condenser Water Loop Supply Outlet Branch,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Pipe Adiabatic 14,       !- Component 1 Name
     Node 155,                !- Component 1 Inlet Node Name
-    Node 147,                !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    Node 147;                !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     Pipe Adiabatic 14,       !- Name
@@ -8421,13 +8345,11 @@
 
   Branch,
     Condenser Water Loop Demand Inlet Branch,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Pipe Adiabatic 16,       !- Component 1 Name
     Node 149,                !- Component 1 Inlet Node Name
-    Node 160,                !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    Node 160;                !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     Pipe Adiabatic 16,       !- Name
@@ -8436,23 +8358,19 @@
 
   Branch,
     Condenser Water Loop Demand Branch 1,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Chiller:Electric:EIR,    !- Component 1 Object Type
     Chiller Electric EIR 1,  !- Component 1 Name
     Node 151,                !- Component 1 Inlet Node Name
-    Node 157,                !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    Node 157;                !- Component 1 Outlet Node Name
 
   Branch,
     Condenser Water Loop Demand Branch 2,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Pipe Adiabatic 15,       !- Component 1 Name
     Node 158,                !- Component 1 Inlet Node Name
-    Node 159,                !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    Node 159;                !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     Pipe Adiabatic 15,       !- Name
@@ -8461,13 +8379,11 @@
 
   Branch,
     Condenser Water Loop Demand Bypass Branch,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Condenser Water Loop Demand Bypass Pipe,  !- Component 1 Name
     Condenser Water Loop Demand Bypass Pipe Inlet Node,  !- Component 1 Inlet Node Name
-    Condenser Water Loop Demand Bypass Pipe Outlet Node,  !- Component 1 Outlet Node Name
-    Bypass;                  !- Component 1 Branch Control Type
+    Condenser Water Loop Demand Bypass Pipe Outlet Node;  !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     Condenser Water Loop Demand Bypass Pipe,  !- Name
@@ -8476,13 +8392,11 @@
 
   Branch,
     Condenser Water Loop Demand Outlet Branch,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Pipe Adiabatic 17,       !- Component 1 Name
     Node 161,                !- Component 1 Inlet Node Name
-    Node 150,                !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    Node 150;                !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     Pipe Adiabatic 17,       !- Name
@@ -8564,13 +8478,11 @@
 
   Branch,
     Hot Water Loop Supply Inlet Branch,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pump:VariableSpeed,      !- Component 1 Object Type
     Pump Variable Speed 1,   !- Component 1 Name
     Node 63,                 !- Component 1 Inlet Node Name
-    Node 69,                 !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    Node 69;                 !- Component 1 Outlet Node Name
 
   Pump:VariableSpeed,
     Pump Variable Speed 1,   !- Name
@@ -8590,13 +8502,11 @@
 
   Branch,
     Hot Water Loop Supply Branch 1,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Boiler:HotWater,         !- Component 1 Object Type
     Boiler Hot Water 1,      !- Component 1 Name
     Node 65,                 !- Component 1 Inlet Node Name
-    Node 70,                 !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    Node 70;                 !- Component 1 Outlet Node Name
 
   Boiler:HotWater,
     Boiler Hot Water 1,      !- Name
@@ -8637,13 +8547,11 @@
 
   Branch,
     Hot Water Loop Supply Branch 2,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Pipe Adiabatic 1,        !- Component 1 Name
     Node 71,                 !- Component 1 Inlet Node Name
-    Node 72,                 !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    Node 72;                 !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     Pipe Adiabatic 1,        !- Name
@@ -8652,13 +8560,11 @@
 
   Branch,
     Hot Water Loop Supply Outlet Branch,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Pipe Adiabatic 2,        !- Component 1 Name
     Node 73,                 !- Component 1 Inlet Node Name
-    Node 64,                 !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    Node 64;                 !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     Pipe Adiabatic 2,        !- Name
@@ -8702,13 +8608,11 @@
 
   Branch,
     Hot Water Loop Demand Inlet Branch,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Hot Water Loop Demand Inlet Pipe,  !- Component 1 Name
     Node 66,                 !- Component 1 Inlet Node Name
-    Hot Water Loop Demand Inlet Pipe Node,  !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    Hot Water Loop Demand Inlet Pipe Node;  !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     Hot Water Loop Demand Inlet Pipe,  !- Name
@@ -8717,53 +8621,43 @@
 
   Branch,
     Hot Water Loop Demand Branch 1,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Coil Heating Water 1,    !- Component 1 Name
     Node 68,                 !- Component 1 Inlet Node Name
-    Node 74,                 !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    Node 74;                 !- Component 1 Outlet Node Name
 
   Branch,
     Hot Water Loop Demand Branch 2,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Coil Heating Water 2,    !- Component 1 Name
     Node 76,                 !- Component 1 Inlet Node Name
-    Node 77,                 !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    Node 77;                 !- Component 1 Outlet Node Name
 
   Branch,
     Hot Water Loop Demand Branch 3,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Coil Heating Water 3,    !- Component 1 Name
     Node 79,                 !- Component 1 Inlet Node Name
-    Node 80,                 !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    Node 80;                 !- Component 1 Outlet Node Name
 
   Branch,
     Hot Water Loop Demand Branch 4,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     PTAC HW Htg Coil,        !- Component 1 Name
     Node 202,                !- Component 1 Inlet Node Name
-    Node 203,                !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    Node 203;                !- Component 1 Outlet Node Name
 
   Branch,
     Hot Water Loop Demand Bypass Branch,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Hot Water Loop Demand Bypass Pipe,  !- Component 1 Name
     Hot Water Loop Demand Bypass Pipe Inlet Node,  !- Component 1 Inlet Node Name
-    Hot Water Loop Demand Bypass Pipe Outlet Node,  !- Component 1 Outlet Node Name
-    Bypass;                  !- Component 1 Branch Control Type
+    Hot Water Loop Demand Bypass Pipe Outlet Node;  !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     Hot Water Loop Demand Bypass Pipe,  !- Name
@@ -8772,13 +8666,11 @@
 
   Branch,
     Hot Water Loop Demand Outlet Branch,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Hot Water Loop Demand Outlet Pipe,  !- Component 1 Name
     Hot Water Loop Demand Outlet Pipe Node,  !- Component 1 Inlet Node Name
-    Node 67,                 !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    Node 67;                 !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     Hot Water Loop Demand Outlet Pipe,  !- Name
@@ -8860,13 +8752,11 @@
 
   Branch,
     Hot Water Loop 1 Supply Inlet Branch,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pump:VariableSpeed,      !- Component 1 Object Type
     Pump Variable Speed 2,   !- Component 1 Name
     Node 111,                !- Component 1 Inlet Node Name
-    Node 117,                !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    Node 117;                !- Component 1 Outlet Node Name
 
   Pump:VariableSpeed,
     Pump Variable Speed 2,   !- Name
@@ -8886,13 +8776,11 @@
 
   Branch,
     Hot Water Loop 1 Supply Branch 1,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Pipe Adiabatic 3,        !- Component 1 Name
     Node 119,                !- Component 1 Inlet Node Name
-    Node 120,                !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    Node 120;                !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     Pipe Adiabatic 3,        !- Name
@@ -8901,13 +8789,11 @@
 
   Branch,
     Hot Water Loop 1 Supply Branch 2,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     DistrictHeating,         !- Component 1 Object Type
     District Heating,        !- Component 1 Name
     Node 113,                !- Component 1 Inlet Node Name
-    Node 118,                !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    Node 118;                !- Component 1 Outlet Node Name
 
   DistrictHeating,
     District Heating,        !- Name
@@ -8917,13 +8803,11 @@
 
   Branch,
     Hot Water Loop 1 Supply Outlet Branch,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Pipe Adiabatic 7,        !- Component 1 Name
     Node 126,                !- Component 1 Inlet Node Name
-    Node 112,                !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    Node 112;                !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     Pipe Adiabatic 7,        !- Name
@@ -8970,13 +8854,11 @@
 
   Branch,
     Hot Water Loop 1 Demand Inlet Branch,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Pipe Adiabatic 5,        !- Component 1 Name
     Node 114,                !- Component 1 Inlet Node Name
-    Node 125,                !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    Node 125;                !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     Pipe Adiabatic 5,        !- Name
@@ -8985,13 +8867,11 @@
 
   Branch,
     Hot Water Loop 1 Demand Branch 1,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Pipe Adiabatic 4,        !- Component 1 Name
     Node 116,                !- Component 1 Inlet Node Name
-    Node 121,                !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    Node 121;                !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     Pipe Adiabatic 4,        !- Name
@@ -9000,53 +8880,43 @@
 
   Branch,
     Hot Water Loop 1 Demand Branch 2,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Coil Heating Water 4,    !- Component 1 Name
     Node 122,                !- Component 1 Inlet Node Name
-    Node 123,                !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    Node 123;                !- Component 1 Outlet Node Name
 
   Branch,
     Hot Water Loop 1 Demand Branch 3,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Coil Heating Water 5,    !- Component 1 Name
     Node 142,                !- Component 1 Inlet Node Name
-    Node 143,                !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    Node 143;                !- Component 1 Outlet Node Name
 
   Branch,
     Hot Water Loop 1 Demand Branch 4,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Coil Heating Water 6,    !- Component 1 Name
     Node 163,                !- Component 1 Inlet Node Name
-    Node 164,                !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    Node 164;                !- Component 1 Outlet Node Name
 
   Branch,
     Hot Water Loop 1 Demand Branch 5,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Coil Heating Water 7,    !- Component 1 Name
     Node 168,                !- Component 1 Inlet Node Name
-    Node 169,                !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    Node 169;                !- Component 1 Outlet Node Name
 
   Branch,
     Hot Water Loop 1 Demand Bypass Branch,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Hot Water Loop 1 Demand Bypass Pipe,  !- Component 1 Name
     Hot Water Loop 1 Demand Bypass Pipe Inlet Node,  !- Component 1 Inlet Node Name
-    Hot Water Loop 1 Demand Bypass Pipe Outlet Node,  !- Component 1 Outlet Node Name
-    Bypass;                  !- Component 1 Branch Control Type
+    Hot Water Loop 1 Demand Bypass Pipe Outlet Node;  !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     Hot Water Loop 1 Demand Bypass Pipe,  !- Name
@@ -9055,13 +8925,11 @@
 
   Branch,
     Hot Water Loop 1 Demand Outlet Branch,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Pipe Adiabatic 6,        !- Component 1 Name
     Node 124,                !- Component 1 Inlet Node Name
-    Node 115,                !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    Node 115;                !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     Pipe Adiabatic 6,        !- Name

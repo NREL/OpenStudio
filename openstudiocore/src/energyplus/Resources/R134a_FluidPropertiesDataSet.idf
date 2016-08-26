@@ -5,9 +5,11 @@
 !                Property Data for Refrigerant R134a
 !
 ! =============================================================================
-
 !  Version,
 !    8.5;                    !- Version Identifier
+
+!  Version,
+!    8.6;                    !- Version Identifier
 
   FluidProperties:Name,
     R134a,                   !- Fluid Name
