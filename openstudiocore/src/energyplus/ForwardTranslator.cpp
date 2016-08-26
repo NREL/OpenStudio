@@ -1329,6 +1329,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     retVal = translateEnergyManagementSystemActuator(temp);
     break;
   }
+  case openstudio::IddObjectType::OS_EnergyManagementSystem_GlobalVariable:
+  {
+    model::EnergyManagementSystemGlobalVariable temp = modelObject.cast<EnergyManagementSystemGlobalVariable>();
+    retVal = translateEnergyManagementSystemGlobalVariable(temp);
+    break;
+  }
   case openstudio::IddObjectType::OS_EnergyManagementSystem_Program:
   {
     model::EnergyManagementSystemProgram temp = modelObject.cast<EnergyManagementSystemProgram>();
@@ -1345,6 +1351,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
   {
     model::EnergyManagementSystemSensor temp = modelObject.cast<EnergyManagementSystemSensor>();
     retVal = translateEnergyManagementSystemSensor(temp);
+    break;
+  }
+  case openstudio::IddObjectType::OS_EnergyManagementSystem_Subroutine:
+  {
+    model::EnergyManagementSystemSubroutine temp = modelObject.cast<EnergyManagementSystemSubroutine>();
+    retVal = EnergyManagementSystemSubroutine(temp);
     break;
   }
   case openstudio::IddObjectType::OS_EvaporativeCooler_Direct_ResearchSpecial :
@@ -2954,10 +2966,12 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_Meter_CustomDecrement);
   result.push_back(IddObjectType::OS_Output_Variable);
 
+  result.push_back(IddObjectType::OS_EnergyManagementSystem_Sensor);
   result.push_back(IddObjectType::OS_EnergyManagementSystem_Actuator);
   result.push_back(IddObjectType::OS_EnergyManagementSystem_Program);
+  result.push_back(IddObjectType::OS_EnergyManagementSystem_Subroutine);
   result.push_back(IddObjectType::OS_EnergyManagementSystem_ProgramCallingManager);
-  result.push_back(IddObjectType::OS_EnergyManagementSystem_Sensor);
+  result.push_back(IddObjectType::OS_EnergyManagementSystem_GlobalVariable);
 
   return result;
 }
