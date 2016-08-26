@@ -155,9 +155,11 @@ class ElectricLoadCenterInverterSimple;
 class ElectricLoadCenterStorageSimple;
 class ElectricLoadCenterStorageConverter;
 class EnergyManagementSystemActuator;
+class EnergyManagementSystemGlobalVariable;
 class EnergyManagementSystemProgram;
 class EnergyManagementSystemProgramCallingManager;
 class EnergyManagementSystemSensor;
+class EnergyManagementSystemSubroutine;
 class EvaporativeCoolerDirectResearchSpecial;
 class EvaporativeCoolerIndirectResearchSpecial;
 class EvaporativeFluidCoolerSingleSpeed;
@@ -662,11 +664,15 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateEnergyManagementSystemActuator(model::EnergyManagementSystemActuator & modelObejct);
 
+  boost::optional<IdfObject> translateEnergyManagementSystemGlobalVariable(model::EnergyManagementSystemGlobalVariable & modelObejct );
+
   boost::optional<IdfObject> translateEnergyManagementSystemProgram(model::EnergyManagementSystemProgram & modelObejct);
 
   boost::optional<IdfObject> translateEnergyManagementSystemProgramCallingManager(model::EnergyManagementSystemProgramCallingManager & modelObejct);
 
   boost::optional<IdfObject> translateEnergyManagementSystemSensor(model::EnergyManagementSystemSensor & modelObejct );
+
+  boost::optional<IdfObject> translateEnergyManagementSystemSubroutine(model::EnergyManagementSystemSubroutine & modelObejct );
 
   boost::optional<IdfObject> translateEvaporativeFluidCoolerSingleSpeed( model::EvaporativeFluidCoolerSingleSpeed & modelObject );
 
