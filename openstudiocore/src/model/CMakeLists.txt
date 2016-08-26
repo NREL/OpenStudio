@@ -709,6 +709,9 @@ set(${target_name}_src
   OutputControlReportingTolerances.hpp
   OutputControlReportingTolerances_Impl.hpp
   OutputControlReportingTolerances.cpp
+  OutputEnergyManagementSystem.cpp
+  OutputEnergyManagementSystem.hpp
+  OutputEnergyManagementSystem_Impl.hpp
   OutputMeter.hpp
   OutputMeter_Impl.hpp
   OutputMeter.cpp
