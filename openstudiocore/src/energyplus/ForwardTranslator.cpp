@@ -1335,6 +1335,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     retVal = translateEnergyManagementSystemGlobalVariable(temp);
     break;
   }
+  case openstudio::IddObjectType::OS_EnergyManagementSystem_OutputVariable:
+  {
+    model::EnergyManagementSystemOutputVariable temp = modelObject.cast<EnergyManagementSystemOutputVariable>();
+    retVal = translateEnergyManagementSystemOutputVariable(temp);
+    break;
+  }
   case openstudio::IddObjectType::OS_EnergyManagementSystem_Program:
   {
     model::EnergyManagementSystemProgram temp = modelObject.cast<EnergyManagementSystemProgram>();
@@ -2971,6 +2977,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_EnergyManagementSystem_Program);
   result.push_back(IddObjectType::OS_EnergyManagementSystem_Subroutine);
   result.push_back(IddObjectType::OS_EnergyManagementSystem_ProgramCallingManager);
+  result.push_back(IddObjectType::OS_EnergyManagementSystem_OutputVariable);
   result.push_back(IddObjectType::OS_EnergyManagementSystem_GlobalVariable);
 
   return result;
