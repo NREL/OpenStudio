@@ -200,6 +200,7 @@ class OutsideSurfaceConvectionAlgorithm;
 class OutputControlReportingTolerances;
 class OutputMeter;
 class OutputVariable;
+class OutputEnergyManagementSystem;
 class People;
 class PhotovoltaicPerformanceEquivalentOneDiode;
 class PhotovoltaicPerformanceSimple;
@@ -761,6 +762,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateOutputMeter( model::OutputMeter & modelObject );
 
   boost::optional<IdfObject> translateOutputVariable( model::OutputVariable & modelObject );
+
+  boost::optional<IdfObject> translateOutputEnergyManagementSystem(model::OutputEnergyManagementSystem & modelObejct);
 
   boost::optional<IdfObject> translatePeople( model::People & modelObject );
 
