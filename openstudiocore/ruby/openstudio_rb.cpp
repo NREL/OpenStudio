@@ -4,21 +4,25 @@
 #include <iostream>
 #include <ruby.h>
 
-#ifdef _MSC_VER
-__declspec(noinline) void importPlugins() {
-#else
-__attribute__((noinline)) void importPlugins() {
-#endif
-  #ifdef QT_STATIC
-    Q_IMPORT_PLUGIN(QSQLiteDriverPlugin);
-    //Q_INIT_RESOURCE(openstudio);
-  #endif
-  
-  #if defined(Q_OS_OSX) && defined(QT_STATIC)
+// this uses the static initialization trick to import plugins
+#ifdef QT_STATIC
+  Q_IMPORT_PLUGIN(QSQLiteDriverPlugin);
+
+  #if defined(Q_OS_OSX)
     Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
-  #elif defined(Q_OS_WIN) && defined(QT_STATIC)
+  #elif defined(Q_OS_WIN)
     Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin);
   #endif
+
+#endif // QT_STATIC
+
+
+inline void initResources() { 
+
+  #ifdef QT_STATIC
+    Q_INIT_RESOURCE(modeleditorlib); 
+  #endif // QT_STATIC
+
 }
 
 extern "C" {
@@ -26,7 +30,8 @@ extern "C" {
 void Init_openstudiomodeleditor();
 
 RUBY_API void Init_openstudio(void) {
-  importPlugins();
+
+  initResources();
 
   init_openstudio_internal();
 
