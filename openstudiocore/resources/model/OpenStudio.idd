@@ -26823,6 +26823,35 @@ OS:Meter:CustomDecrement,
         \begin-extensible
    A6;  \field Output Variable or Meter Name
 
+OS:Output:EnergyManagementSystem,
+   \memo This object is used to control the output produced by the Energy Management System
+   \unique-object
+   \min-fields 2
+   A1, \field Handle
+       \type handle
+       \required-field 
+   A2, \field Name
+       \required-field
+       \type alpha
+   A3, \field Actuator Availability Dictionary Reporting
+       \type choice
+       \key None
+       \key NotByUniqueKeyNames
+       \key Verbose
+       \default None
+   A4, \field Internal Variable Availability Dictionary Reporting
+       \type choice
+       \key None
+       \key NotByUniqueKeyNames
+       \key Verbose
+       \default None
+   A5; \field EMS Runtime Language Debug Output Level
+       \type choice
+       \key None
+       \key ErrorsOnly
+       \key Verbose
+       \default None
+
 \group Energy Management System (EMS)
 
 OS:EnergyManagementSystem:Sensor,
