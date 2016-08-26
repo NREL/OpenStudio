@@ -26,7 +26,7 @@ if(NOT ENERGYPLUS_VERSION_MAJOR)
   set(ENERGYPLUS_VERSION_MAJOR 8)
 endif()
 if(NOT ENERGYPLUS_VERSION_MINOR)
-  set(ENERGYPLUS_VERSION_MINOR 5)
+  set(ENERGYPLUS_VERSION_MINOR 6)
 endif()
 if(NOT ENERGYPLUS_VERSION_PATCH)
   set(ENERGYPLUS_VERSION_PATCH 0)
@@ -34,7 +34,8 @@ endif()
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
 if(NOT ENERGYPLUS_BUILD_SHA)
-  set(ENERGYPLUS_BUILD_SHA "85848eef40")
+  #set(ENERGYPLUS_BUILD_SHA "85848eef40")
+  set(ENERGYPLUS_BUILD_SHA "unknown")
 endif()
 
 # configure file with version information
