@@ -24,7 +24,6 @@ __attribute__((noinline)) void importPlugins() {
 extern "C" {
 
 void Init_openstudiomodeleditor();
-void Init_openstudiolib();
 
 RUBY_API void Init_openstudio(void) {
   importPlugins();
