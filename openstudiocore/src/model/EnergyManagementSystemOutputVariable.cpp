@@ -91,9 +91,9 @@ namespace detail {
     return getString(OS_EnergyManagementSystem_OutputVariableFields::Units,true);
   }
 
-  void EnergyManagementSystemOutputVariable_Impl::setEMSVariableName(const std::string& eMSVariableName) {
+  bool EnergyManagementSystemOutputVariable_Impl::setEMSVariableName(const std::string& eMSVariableName) {
     bool result = setString(OS_EnergyManagementSystem_OutputVariableFields::EMSVariableName, eMSVariableName);
-    OS_ASSERT(result);
+    return result;
   }
 
   bool EnergyManagementSystemOutputVariable_Impl::setTypeofDatainVariable(const std::string& typeofDatainVariable) {
@@ -106,9 +106,9 @@ namespace detail {
     return result;
   }
 
-  void EnergyManagementSystemOutputVariable_Impl::setEMSProgramorSubroutineName(const std::string& eMSProgramorSubroutineName) {
+  bool EnergyManagementSystemOutputVariable_Impl::setEMSProgramorSubroutineName(const std::string& eMSProgramorSubroutineName) {
     bool result = setString(OS_EnergyManagementSystem_OutputVariableFields::EMSProgramorSubroutineName, eMSProgramorSubroutineName);
-    OS_ASSERT(result);
+    return result;
   }
 
   void EnergyManagementSystemOutputVariable_Impl::resetEMSProgramorSubroutineName() {
@@ -116,9 +116,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void EnergyManagementSystemOutputVariable_Impl::setUnits(const std::string& units) {
+  bool EnergyManagementSystemOutputVariable_Impl::setUnits(const std::string& units) {
     bool result = setString(OS_EnergyManagementSystem_OutputVariableFields::Units, units);
-    OS_ASSERT(result);
+    return result;
   }
 
   void EnergyManagementSystemOutputVariable_Impl::resetUnits() {
@@ -132,14 +132,6 @@ EnergyManagementSystemOutputVariable::EnergyManagementSystemOutputVariable(const
   : ModelObject(EnergyManagementSystemOutputVariable::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemOutputVariable_Impl>());
-
-  // TODO: Appropriately handle the following required object-list fields.
-  // setEMSVariableName();
-  bool ok = true;
-  // ok = setTypeofDatainVariable();
-  OS_ASSERT(ok);
-  // ok = setUpdateFrequency();
-  OS_ASSERT(ok);
 }
 
 IddObjectType EnergyManagementSystemOutputVariable::iddObjectType() {
@@ -176,8 +168,8 @@ boost::optional<std::string> EnergyManagementSystemOutputVariable::units() const
   return getImpl<detail::EnergyManagementSystemOutputVariable_Impl>()->units();
 }
 
-void EnergyManagementSystemOutputVariable::setEMSVariableName(const std::string& eMSVariableName) {
-  getImpl<detail::EnergyManagementSystemOutputVariable_Impl>()->setEMSVariableName(eMSVariableName);
+bool EnergyManagementSystemOutputVariable::setEMSVariableName(const std::string& eMSVariableName) {
+  return getImpl<detail::EnergyManagementSystemOutputVariable_Impl>()->setEMSVariableName(eMSVariableName);
 }
 
 bool EnergyManagementSystemOutputVariable::setTypeofDatainVariable(const std::string& typeofDatainVariable) {
@@ -188,16 +180,16 @@ bool EnergyManagementSystemOutputVariable::setUpdateFrequency(const std::string&
   return getImpl<detail::EnergyManagementSystemOutputVariable_Impl>()->setUpdateFrequency(updateFrequency);
 }
 
-void EnergyManagementSystemOutputVariable::setEMSProgramorSubroutineName(const std::string& eMSProgramorSubroutineName) {
-  getImpl<detail::EnergyManagementSystemOutputVariable_Impl>()->setEMSProgramorSubroutineName(eMSProgramorSubroutineName);
+bool EnergyManagementSystemOutputVariable::setEMSProgramorSubroutineName(const std::string& eMSProgramorSubroutineName) {
+  return getImpl<detail::EnergyManagementSystemOutputVariable_Impl>()->setEMSProgramorSubroutineName(eMSProgramorSubroutineName);
 }
 
 void EnergyManagementSystemOutputVariable::resetEMSProgramorSubroutineName() {
   getImpl<detail::EnergyManagementSystemOutputVariable_Impl>()->resetEMSProgramorSubroutineName();
 }
 
-void EnergyManagementSystemOutputVariable::setUnits(const std::string& units) {
-  getImpl<detail::EnergyManagementSystemOutputVariable_Impl>()->setUnits(units);
+bool EnergyManagementSystemOutputVariable::setUnits(const std::string& units) {
+  return getImpl<detail::EnergyManagementSystemOutputVariable_Impl>()->setUnits(units);
 }
 
 void EnergyManagementSystemOutputVariable::resetUnits() {

@@ -56,7 +56,9 @@ class MODEL_API EnergyManagementSystemGlobalVariable : public ModelObject {
   //@{
 
   bool addVariable(const std::string& variable);
+
   bool removeVariable(const std::string& variable);
+
   void eraseVariables();
 
   //@}
