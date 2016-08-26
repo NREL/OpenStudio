@@ -177,11 +177,11 @@ MODELOBJECT_TEMPLATES(EnergyManagementSystemCurveOrTableIndexVariable);
 MODELOBJECT_TEMPLATES(EnergyManagementSystemGlobalVariable);
 MODELOBJECT_TEMPLATES(EnergyManagementSystemInternalVariable);
 MODELOBJECT_TEMPLATES(EnergyManagementSystemMeteredOutputVariable);
-MODELOBJECT_TEMPLATES(EnergyManagementSystemOutputVariable);
 MODELOBJECT_TEMPLATES(EnergyManagementSystemTrendVariable);
 MODELOBJECT_TEMPLATES(EnergyManagementSystemSubroutine);
 MODELOBJECT_TEMPLATES(EnergyManagementSystemProgram);
 MODELOBJECT_TEMPLATES(EnergyManagementSystemProgramCallingManager);
+MODELOBJECT_TEMPLATES(EnergyManagementSystemOutputVariable);
 
 SWIG_MODELOBJECT(ModelObject, 0);
 SWIG_MODELEXTENSIBLEGROUP(ModelExtensibleGroup);
@@ -215,10 +215,10 @@ SWIG_MODELOBJECT(EnergyManagementSystemCurveOrTableIndexVariable, 1);
 SWIG_MODELOBJECT(EnergyManagementSystemGlobalVariable, 1);
 SWIG_MODELOBJECT(EnergyManagementSystemInternalVariable, 1);
 SWIG_MODELOBJECT(EnergyManagementSystemMeteredOutputVariable, 1);
-SWIG_MODELOBJECT(EnergyManagementSystemOutputVariable, 1);
 SWIG_MODELOBJECT(EnergyManagementSystemTrendVariable, 1);
 SWIG_MODELOBJECT(EnergyManagementSystemSubroutine, 1);
 SWIG_MODELOBJECT(EnergyManagementSystemProgram, 1);
 SWIG_MODELOBJECT(EnergyManagementSystemProgramCallingManager, 1);
+SWIG_MODELOBJECT(EnergyManagementSystemOutputVariable, 1);
 
 #endif //MODEL_CORE_I 

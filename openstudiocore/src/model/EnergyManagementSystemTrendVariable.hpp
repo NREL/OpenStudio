@@ -57,7 +57,7 @@ class MODEL_API EnergyManagementSystemTrendVariable : public ModelObject {
   /** @name Setters */
   //@{
 
-  void setEMSVariableName(const std::string& eMSVariableName);
+  bool setEMSVariableName(const std::string& eMSVariableName);
 
   bool setNumberofTimestepstobeLogged(int numberofTimestepstobeLogged);
 

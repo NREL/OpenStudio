@@ -76,9 +76,10 @@ namespace detail {
     return value.get();
   }
 
-  void EnergyManagementSystemTrendVariable_Impl::setEMSVariableName(const std::string& eMSVariableName) {
+  bool EnergyManagementSystemTrendVariable_Impl::setEMSVariableName(const std::string& eMSVariableName) {
     bool result = setString(OS_EnergyManagementSystem_TrendVariableFields::EMSVariableName, eMSVariableName);
     OS_ASSERT(result);
+    return result;
   }
 
   bool EnergyManagementSystemTrendVariable_Impl::setNumberofTimestepstobeLogged(int numberofTimestepstobeLogged) {
@@ -92,12 +93,6 @@ EnergyManagementSystemTrendVariable::EnergyManagementSystemTrendVariable(const M
   : ModelObject(EnergyManagementSystemTrendVariable::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemTrendVariable_Impl>());
-
-  // TODO: Appropriately handle the following required object-list fields.
-  // setEMSVariableName();
-  bool ok = true;
-  // ok = setNumberofTimestepstobeLogged();
-  OS_ASSERT(ok);
 }
 
 IddObjectType EnergyManagementSystemTrendVariable::iddObjectType() {
@@ -112,8 +107,8 @@ int EnergyManagementSystemTrendVariable::numberofTimestepstobeLogged() const {
   return getImpl<detail::EnergyManagementSystemTrendVariable_Impl>()->numberofTimestepstobeLogged();
 }
 
-void EnergyManagementSystemTrendVariable::setEMSVariableName(const std::string& eMSVariableName) {
-  getImpl<detail::EnergyManagementSystemTrendVariable_Impl>()->setEMSVariableName(eMSVariableName);
+bool EnergyManagementSystemTrendVariable::setEMSVariableName(const std::string& eMSVariableName) {
+  return getImpl<detail::EnergyManagementSystemTrendVariable_Impl>()->setEMSVariableName(eMSVariableName);
 }
 
 bool EnergyManagementSystemTrendVariable::setNumberofTimestepstobeLogged(int numberofTimestepstobeLogged) {

@@ -67,17 +67,17 @@ class MODEL_API EnergyManagementSystemOutputVariable : public ModelObject {
   /** @name Setters */
   //@{
 
-  void setEMSVariableName(const std::string& eMSVariableName);
+  bool setEMSVariableName(const std::string& eMSVariableName);
 
   bool setTypeofDatainVariable(const std::string& typeofDatainVariable);
 
   bool setUpdateFrequency(const std::string& updateFrequency);
 
-  void setEMSProgramorSubroutineName(const std::string& eMSProgramorSubroutineName);
+  bool setEMSProgramorSubroutineName(const std::string& eMSProgramorSubroutineName);
 
   void resetEMSProgramorSubroutineName();
 
-  void setUnits(const std::string& units);
+  bool setUnits(const std::string& units);
 
   void resetUnits();
 
