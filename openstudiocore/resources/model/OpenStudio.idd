@@ -26370,7 +26370,6 @@ OS:Meter:CustomDecrement,
 OS:Output:EnergyManagementSystem,
    \memo This object is used to control the output produced by the Energy Management System
    \unique-object
-   \min-fields 2
    A1, \field Handle
        \type handle
        \required-field 
