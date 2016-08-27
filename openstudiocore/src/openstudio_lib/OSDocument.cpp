@@ -1590,11 +1590,11 @@ namespace openstudio {
       }
     }
 
+    // save the temp model for the measure manager to use
+    OSAppBase::instance()->measureManager().saveTempModel();
+
     // open modal dialog
     m_applyMeasureNowDialog = boost::shared_ptr<ApplyMeasureNowDialog>(new ApplyMeasureNowDialog());
-
-    // connect signal before exec dialog
-    connect(m_applyMeasureNowDialog.get(), &ApplyMeasureNowDialog::toolsUpdated, this, &OSDocument::toolsUpdated);
 
     m_applyMeasureNowDialog->exec();
 

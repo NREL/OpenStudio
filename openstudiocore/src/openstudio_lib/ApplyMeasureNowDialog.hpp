@@ -36,17 +36,17 @@ class QTimer;
 namespace openstudio{
 
 class DateTime;
-//class EditController;
+class EditController;
 class LocalLibraryController;
 
 class TextEditDialog;
 
+namespace measuretab{
+  class MeasureStepItem;
+}
+
 // Local Forward Decs
 class DataPointJobItemView;
-
-namespace measuretab {
-  class MeasureItem;
-}
 
 class ApplyMeasureNowDialog : public OSDialog
 {
@@ -62,7 +62,7 @@ public:
 
   void displayMeasure();
 
-  //QSharedPointer<EditController> m_editController;
+  QSharedPointer<EditController> m_editController;
 
   QSharedPointer<LocalLibraryController> m_localLibraryController;
 
@@ -106,7 +106,7 @@ private:
 
   boost::optional<BCLMeasure> m_bclMeasure;
 
-  QSharedPointer<measuretab::MeasureItem> m_currentMeasureItem;
+  QSharedPointer<measuretab::MeasureStepItem> m_currentMeasureStepItem;
 
   boost::optional<model::Model> m_model;
 

@@ -637,8 +637,12 @@ namespace detail{
   boost::optional<BCLMeasure> WorkflowJSON_Impl::addMeasure(const BCLMeasure& bclMeasure)
   {
     boost::optional<BCLMeasure> existingMeasure = getBCLMeasureByUUID(bclMeasure.uuid());
+    boost::optional<openstudio::path> existingMeasureDirName;
     if (existingMeasure){
-      boost::filesystem::remove_all(existingMeasure->directory());
+      // TODO: check that measure type has not changed?
+
+      existingMeasureDirName = existingMeasure->directory();
+      boost::filesystem::remove_all(*existingMeasureDirName);
     }
 
     std::vector<openstudio::path> paths = absoluteMeasurePaths();
@@ -656,8 +660,20 @@ namespace detail{
       ss << toString(stem) << " " << i;
       stem = toPath(ss.str());
     }
+    openstudio::path newMeasureDirName = paths[0] / stem;
 
-    return bclMeasure.clone(paths[0] / stem);
+    if (existingMeasureDirName && (existingMeasureDirName->stem() != newMeasureDirName.stem())){
+      // update steps 
+      for (auto& step : m_steps){
+        if (auto measureStep = step.optionalCast<MeasureStep>()){
+          if (measureStep->measureDirName() == toString(existingMeasureDirName->stem())){
+            measureStep->setMeasureDirName(toString(newMeasureDirName.stem()));
+          }
+        }
+      }
+    }
+
+    return bclMeasure.clone(newMeasureDirName);
   }
 
   void WorkflowJSON_Impl::onUpdate()

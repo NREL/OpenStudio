@@ -152,11 +152,14 @@ protected:
 
   MeasureStep(std::shared_ptr<detail::MeasureStep_Impl> impl);
 
+  bool setMeasureDirName(const std::string& measureDirName);
+
 private:
 
   typedef detail::MeasureStep_Impl ImplType;
 
   friend class WorkflowStep;
+  friend class detail::WorkflowJSON_Impl;
 
   // configure logging
   REGISTER_LOGGER("openstudio.MeasureStep");

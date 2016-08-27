@@ -78,6 +78,8 @@ namespace detail {
 
     std::string measureDirName() const;
 
+    bool setMeasureDirName(const std::string& measureDirName);
+
     boost::optional<std::string> name() const;
 
     bool setName(const std::string& name);

@@ -19,7 +19,7 @@
 
 #include "OSAppBase.hpp"
 
-//#include "ApplyMeasureNowDialog.hpp"
+#include "ApplyMeasureNowDialog.hpp"
 #include "MainRightColumnController.hpp"
 #include "MainWindow.hpp"
 #include "OSDocument.hpp"
@@ -29,8 +29,6 @@
 #include "../shared_gui_components/LocalLibraryView.hpp"
 #include "../shared_gui_components/LocalLibraryController.hpp"
 #include "../shared_gui_components/WaitDialog.hpp"
-
-//#include "../analysisdriver/SimpleProject.hpp"
 
 #include "../utilities/bcl/LocalBCL.hpp"
 #include "../utilities/core/PathHelpers.hpp"
@@ -156,34 +154,33 @@ MeasureManager &OSAppBase::measureManager()
 
 void OSAppBase::updateSelectedMeasureState()
 {
-  // TODO figure this out with new stuff
-  //// DLM: this slot seems out of place here, seems like the connection from the measure list to enabling duplicate buttons, etc 
-  //// should be tighter
-  //std::shared_ptr<OSDocument> document = currentDocument();
+  // DLM: this slot seems out of place here, seems like the connection from the measure list to enabling duplicate buttons, etc 
+  // should be tighter
+  std::shared_ptr<OSDocument> document = currentDocument();
 
-  //if (document)
-  //{
-  //  std::shared_ptr<MainRightColumnController> mainRightColumnController = document->mainRightColumnController();
+  if (document)
+  {
+    std::shared_ptr<MainRightColumnController> mainRightColumnController = document->mainRightColumnController();
 
-  //  if (mainRightColumnController)
-  //  {
-  //    if (measureManager().isMeasureSelected()){
-  //      // DLM: this logic is why we cannot remove m_applyMeasureNowDialog as member of OSDocument
-  //      if( document->m_applyMeasureNowDialog && document->m_applyMeasureNowDialog->isVisible()) {
-  //        document->m_applyMeasureNowDialog->displayMeasure();
-  //        document->m_applyMeasureNowDialog->m_localLibraryController->localLibraryView->duplicateMeasureButton->setEnabled(true);
-  //      } else {
-  //        mainRightColumnController->measuresLibraryController()->localLibraryView->duplicateMeasureButton->setEnabled(true);
-  //      }
-  //    }else{
-  //      if( document->m_applyMeasureNowDialog && document->m_applyMeasureNowDialog->isVisible()) {
-  //        document->m_applyMeasureNowDialog->m_localLibraryController->localLibraryView->duplicateMeasureButton->setEnabled(false);
-  //      } else {
-  //        mainRightColumnController->measuresLibraryController()->localLibraryView->duplicateMeasureButton->setEnabled(false);
-  //      }
-  //    }
-  //  }
-  //}
+    if (mainRightColumnController)
+    {
+      if (measureManager().isMeasureSelected()){
+        // DLM: this logic is why we cannot remove m_applyMeasureNowDialog as member of OSDocument
+        if( document->m_applyMeasureNowDialog && document->m_applyMeasureNowDialog->isVisible()) {
+          document->m_applyMeasureNowDialog->displayMeasure();
+          document->m_applyMeasureNowDialog->m_localLibraryController->localLibraryView->duplicateMeasureButton->setEnabled(true);
+        } else {
+          mainRightColumnController->measuresLibraryController()->localLibraryView->duplicateMeasureButton->setEnabled(true);
+        }
+      }else{
+        if( document->m_applyMeasureNowDialog && document->m_applyMeasureNowDialog->isVisible()) {
+          document->m_applyMeasureNowDialog->m_localLibraryController->localLibraryView->duplicateMeasureButton->setEnabled(false);
+        } else {
+          mainRightColumnController->measuresLibraryController()->localLibraryView->duplicateMeasureButton->setEnabled(false);
+        }
+      }
+    }
+  }
 }
 
 void OSAppBase::addMeasure()

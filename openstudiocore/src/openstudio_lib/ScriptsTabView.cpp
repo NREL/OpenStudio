@@ -91,7 +91,7 @@ void ScriptsTabView::showEvent(QShowEvent *e)
   app->measureManager().saveTempModel();
 
   // update measures
-  app->measureManager().updateMeasures(false);
+  app->measureManager().updateMeasuresLists();
 
   workflowView->refreshAllViews();
 }

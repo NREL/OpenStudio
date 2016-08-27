@@ -27,7 +27,7 @@
 #include "../shared_gui_components/MeasureManager.hpp"
 #include "../shared_gui_components/OSViewSwitcher.hpp"
 #include "../shared_gui_components/TextEditDialog.hpp"
-//#include "../shared_gui_components/VariableList.hpp"
+#include "../shared_gui_components/WorkflowController.hpp"
 
 #include "MainRightColumnController.hpp"
 #include "OSAppBase.hpp"
@@ -42,6 +42,8 @@
 #include "../utilities/core/ApplicationPathHelpers.hpp"
 #include "../utilities/core/PathHelpers.hpp"
 #include "../utilities/core/RubyException.hpp"
+#include "../utilities/filetypes/WorkflowJSON.hpp"
+#include "../utilities/filetypes/WorkflowStep.hpp"
 #include "../utilities/time/DateTime.hpp"
 
 #include <QBoxLayout>
@@ -68,7 +70,7 @@ namespace openstudio {
 
 ApplyMeasureNowDialog::ApplyMeasureNowDialog(QWidget* parent)
   : OSDialog(false, parent),
-  //m_editController(nullptr),
+  m_editController(nullptr),
   m_mainPaneStackedWidget(nullptr),
   m_rightPaneStackedWidget(nullptr),
   m_argumentsFailedTextEdit(nullptr),
@@ -127,7 +129,7 @@ void ApplyMeasureNowDialog::createWidgets()
   m_argumentsFailedTextEdit = new QTextEdit(FAILED_ARG_TEXT);
   m_argumentsFailedTextEdit->setReadOnly(true);
   
-  //m_editController = QSharedPointer<EditController>( new EditController(true) );
+  m_editController = QSharedPointer<EditController>( new EditController(true) );
   bool onlyShowModelMeasures = true;
   m_localLibraryController = QSharedPointer<LocalLibraryController>( new LocalLibraryController(app,onlyShowModelMeasures) );
   m_localLibraryController->localLibraryView->setStyleSheet("QStackedWidget { border-top: 0px; }");
@@ -140,7 +142,7 @@ void ApplyMeasureNowDialog::createWidgets()
   m_argumentsFailedPageIdx = m_rightPaneStackedWidget->addWidget(m_argumentsFailedTextEdit);
 
   auto viewSwitcher = new OSViewSwitcher();
-  //viewSwitcher->setView(m_editController->editView);
+  viewSwitcher->setView(m_editController->editView);
   m_argumentsOkPageIdx = m_rightPaneStackedWidget->addWidget(viewSwitcher);
 
   layout = new QHBoxLayout();
@@ -235,90 +237,66 @@ void ApplyMeasureNowDialog::createWidgets()
 
 void ApplyMeasureNowDialog::displayMeasure()
 {
-  //this->okButton()->setText(APPLY_MEASURE);
-  //this->okButton()->show();
-  //this->okButton()->setEnabled(false);
+  this->okButton()->setText(APPLY_MEASURE);
+  this->okButton()->show();
+  this->okButton()->setEnabled(false);
 
-  //m_rightPaneStackedWidget->setCurrentIndex(m_argumentsOkPageIdx);
+  m_rightPaneStackedWidget->setCurrentIndex(m_argumentsOkPageIdx);
 
-  //m_bclMeasure.reset();
-  //m_currentMeasureItem.clear();
+  m_bclMeasure.reset();
+  m_currentMeasureStepItem.clear();
   //m_job.reset();
-  //m_model.reset();
-  //m_reloadPath.reset();
+  m_model.reset();
+  m_reloadPath.reset();
 
-  //openstudio::OSAppBase * app = OSAppBase::instance();
+  openstudio::OSAppBase * app = OSAppBase::instance();
 
-  //QPointer<LibraryItem> selectedItem = m_localLibraryController->selectedItem();
+  QPointer<LibraryItem> selectedItem = m_localLibraryController->selectedItem();
 
-  //if (!selectedItem){
-  //  return;
-  //}
+  if (!selectedItem){
+    return;
+  }
 
-  //UUID id = selectedItem->uuid();
+  UUID id = selectedItem->uuid();
 
-  //try {
-  //  // Get the selected measure
-  //  m_bclMeasure = app->measureManager().getMeasure(id);
-  //  OS_ASSERT(m_bclMeasure);
-  //  OS_ASSERT(m_bclMeasure->measureType() == MeasureType::ModelMeasure);
+  try {
+    // Get the selected measure
+    m_bclMeasure = app->measureManager().getMeasure(id);
+    OS_ASSERT(m_bclMeasure);
+    OS_ASSERT(m_bclMeasure->measureType() == MeasureType::ModelMeasure);
 
-  //  if (app->measureManager().checkForUpdates(*m_bclMeasure)){
-  //    m_bclMeasure->save();
-  //  }
+    WorkflowJSON tempWorkflow;
+    tempWorkflow.saveAs(toPath("E:/test/temp.osw"));
+    tempWorkflow.addMeasure(*m_bclMeasure);
 
-  //  // measure
-  //  analysis::RubyMeasure rubyMeasure(*m_bclMeasure);
-  //  try{
-  //    // DLM: we don't want to use this, if we need to reload cached arguments for measure from member map we can
-  //    // we could use this t_project.hasStoredArguments(*projectMeasure)
-  //    
-  //    boost::optional<model::Model> currentModel = app->currentModel();
-  //    OS_ASSERT(currentModel);
+    MeasureStep step(toString(m_bclMeasure->directory().stem()));
+    std::vector<WorkflowStep> steps;
+    steps.push_back(step);
+    tempWorkflow.setWorkflowSteps(steps);
 
-  //    // clone the current model in case arguments getting changes model
-  //    m_model = currentModel->clone(true).cast<model::Model>();
+    m_currentMeasureStepItem = QSharedPointer<measuretab::MeasureStepItem>(new measuretab::MeasureStepItem(MeasureType::ModelMeasure, step, app));
 
-  //    // pass in an empty workspace for the idf since you know it is a model measure
-  //    Workspace dummyIdf;
-  //    ruleset::OSMeasureInfo info = app->measureManager().infoGetter()->getInfo(*m_bclMeasure, m_model, dummyIdf);
-  //    std::vector<ruleset::OSArgument> args = info.arguments();
-  //    rubyMeasure.setArguments(args);
+    connect(m_currentMeasureStepItem.data(), &measuretab::MeasureStepItem::argumentsChanged, this, &ApplyMeasureNowDialog::disableOkButton);
 
-  //    // DLM: don't save the arguments to the project, if we need to preserve user inputs save to member variable map or something
-  //    //t_project.registerArguments(t_measure, args);
+    m_currentMeasureStepItem->arguments();
+    bool hasIncompleteArguments = m_currentMeasureStepItem->hasIncompleteArguments();
+    disableOkButton(hasIncompleteArguments);
 
-  //  } catch (const RubyException & e) {
-  //    QString errorMessage("Failed to compute arguments for measure: \n\n");
-  //    errorMessage += QString::fromStdString(e.what());
-  //    errorMessage.prepend(FAILED_ARG_TEXT);
-  //    m_argumentsFailedTextEdit->setText(errorMessage);
-  //    m_rightPaneStackedWidget->setCurrentIndex(m_argumentsFailedPageIdx);
-  //    return;
-  //  }
+    m_currentMeasureStepItem->setName(m_bclMeasure->name().c_str());
+    m_currentMeasureStepItem->setDisplayName(m_bclMeasure->displayName().c_str());
+    m_currentMeasureStepItem->setDescription(m_bclMeasure->description().c_str());
 
-  //  m_currentMeasureItem = QSharedPointer<measuretab::MeasureItem>(new measuretab::MeasureItem(rubyMeasure, app));
+    // DLM: this is ok, call with overload to ignore isItOKToClearResults
+    m_editController->setMeasureStepItem(m_currentMeasureStepItem.data(), app);
 
-  //  connect(m_currentMeasureItem.data(), &measuretab::MeasureItem::argumentsChanged, this, &ApplyMeasureNowDialog::disableOkButton);
-
-  //  bool hasIncompleteArguments = m_currentMeasureItem->hasIncompleteArguments();
-  //  disableOkButton(hasIncompleteArguments);
-
-  //  m_currentMeasureItem->setName(m_bclMeasure->name().c_str());
-  //  m_currentMeasureItem->setDisplayName(m_bclMeasure->displayName().c_str());
-  //  m_currentMeasureItem->setDescription(m_bclMeasure->description().c_str());
-
-  //  // DLM: this is ok, call with overload to ignore isItOKToClearResults
-  //  m_editController->setMeasureItem(m_currentMeasureItem.data(), app);
-
-  //} catch (const std::exception & e) {
-  //  QString errorMessage("Failed to display measure: \n\n");
-  //  errorMessage += QString::fromStdString(e.what());
-  //  errorMessage.prepend(FAILED_ARG_TEXT);
-  //  m_argumentsFailedTextEdit->setText(errorMessage);
-  //  m_rightPaneStackedWidget->setCurrentIndex(m_argumentsFailedPageIdx);
-  //  return;
-  //}
+  } catch (const std::exception & e) {
+    QString errorMessage("Failed to display measure: \n\n");
+    errorMessage += QString::fromStdString(e.what());
+    errorMessage.prepend(FAILED_ARG_TEXT);
+    m_argumentsFailedTextEdit->setText(errorMessage);
+    m_rightPaneStackedWidget->setCurrentIndex(m_argumentsFailedPageIdx);
+    return;
+  }
 }
 
 void ApplyMeasureNowDialog::runMeasure()

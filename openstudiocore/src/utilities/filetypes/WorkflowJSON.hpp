@@ -199,7 +199,7 @@ public:
   /** Attempts to find the BCLMeasure for a given MeasureStep. */
   boost::optional<BCLMeasure> getBCLMeasure(const MeasureStep& step) const;
 
-  /** Add a measure to the measure dir, replaces existing measure, does not add a step to the workflow. */
+  /** Checks BCLMeasure for each MeasureStep attempting to find by id, does not check measures that are not in the workflow. */
   boost::optional<BCLMeasure> getBCLMeasureByUUID(const UUID& id) const;
 
   /** Add a measure to the measure dir, replaces existing measure with same id, does not add a step to the workflow. */

@@ -231,14 +231,6 @@ void MeasureStepController::addItemForDroppedMeasure(QDropEvent *event)
 
   UUID id = measureDragData.id();
 
-  // don't allow user to drag standard reports or other managed measures 
-  if (m_app->measureManager().isManagedMeasure(id)){
-    QMessageBox::warning( m_app->mainWidget(), 
-        "Cannot add measure", 
-        "This measure conflicts with a managed measure and cannot be added. Create a duplicate of this measure to add to this project.");
-    return;
-  }
-
   boost::optional<BCLMeasure> projectMeasure;
   try {
 

@@ -349,13 +349,14 @@ namespace openstudio{
     }
     return result;
   }
-
+  /*
   std::vector<BCLMeasure> BCLMeasure::patApplicationMeasures()
   {
     openstudio::path path = patApplicationMeasuresDir();
     return getMeasuresInDir(path);
   }
-
+  */
+  /*
   openstudio::path BCLMeasure::patApplicationMeasuresDir()
   {
     openstudio::path result;
@@ -366,7 +367,8 @@ namespace openstudio{
     }
     return openstudio::filesystem::system_complete(result);
   }
-
+  */
+  /*
   BCLMeasure BCLMeasure::alternativeModelMeasure() {
     return BCLMeasure(patApplicationMeasuresDir() / toPath("ReplaceModel"));
   }
@@ -386,7 +388,7 @@ namespace openstudio{
   BCLMeasure BCLMeasure::radianceMeasure() {
     return BCLMeasure(patApplicationMeasuresDir() / toPath("RadianceMeasure"));
   }
-
+  */
   std::vector<BCLMeasure> BCLMeasure::localBCLMeasures()
   {
     return LocalBCL::instance().measures();

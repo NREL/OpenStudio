@@ -162,6 +162,12 @@ namespace detail{
     return m_measureDirName;
   }
 
+  bool MeasureStep_Impl::setMeasureDirName(const std::string& measureDirName)
+  {
+    m_measureDirName = measureDirName;
+    return true;
+  }
+
   boost::optional<std::string> MeasureStep_Impl::name() const
   {
     return m_name;
@@ -380,6 +386,11 @@ MeasureStep::MeasureStep(std::shared_ptr<detail::MeasureStep_Impl> impl)
 std::string MeasureStep::measureDirName() const
 {
   return getImpl<detail::MeasureStep_Impl>()->measureDirName();
+}
+
+bool MeasureStep::setMeasureDirName(const std::string& measureDirName)
+{
+  return getImpl<detail::MeasureStep_Impl>()->setMeasureDirName(measureDirName);
 }
 
 boost::optional<std::string> MeasureStep::name() const
