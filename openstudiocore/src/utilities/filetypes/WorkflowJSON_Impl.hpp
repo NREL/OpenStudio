@@ -106,11 +106,17 @@ namespace detail {
       std::vector<openstudio::path> filePaths() const;
       std::vector<openstudio::path> absoluteFilePaths() const;
 
+      bool addFilePath(const openstudio::path& path);
+      void resetFilePaths();
+
       boost::optional<openstudio::path> findFile(const openstudio::path& file) const;
       boost::optional<openstudio::path> findFile(const std::string& fileName) const;
 
       std::vector<openstudio::path> measurePaths() const;
       std::vector<openstudio::path> absoluteMeasurePaths() const;
+
+      bool addMeasurePath(const openstudio::path& path);
+      void resetMeasurePaths();
 
       boost::optional<openstudio::path> findMeasure(const openstudio::path& measureDir) const;
       boost::optional<openstudio::path> findMeasure(const std::string& measureDirName) const;

@@ -136,7 +136,7 @@ TEST_F(BCLFixture, BCLMeasure_CTor)
   boost::optional<BCLMeasure> measure = BCLMeasure::load(dir);
   ASSERT_TRUE(measure);
 }
-
+/*
 TEST_F(BCLFixture, PatApplicationMeasures)
 {
   std::vector<BCLMeasure> patApplicationMeasures = BCLMeasure::patApplicationMeasures();
@@ -196,3 +196,4 @@ TEST_F(BCLFixture, PatApplicationMeasures)
   }
 
 }
+*/

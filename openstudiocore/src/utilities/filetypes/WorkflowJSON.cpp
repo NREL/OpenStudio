@@ -374,13 +374,13 @@ namespace detail{
     std::vector<openstudio::path> result;
 
     Json::Value defaultValue(Json::arrayValue);
-    defaultValue.append("./files");
-    defaultValue.append("./weather");
-    defaultValue.append("../../files");
-    defaultValue.append("../../weather");
-    defaultValue.append("./");
-
+    
     Json::Value paths = m_value.get("file_paths", defaultValue);
+    paths.append("./files");
+    paths.append("./weather");
+    paths.append("../../files");
+    paths.append("../../weather");
+    paths.append("./");
 
     Json::ArrayIndex n = paths.size();
     for (Json::ArrayIndex i = 0; i < n; ++i){
@@ -401,6 +401,20 @@ namespace detail{
       }
     }
     return result;
+  }
+
+  bool WorkflowJSON_Impl::addFilePath(const openstudio::path& path)
+  {
+    if (!m_value.isMember("file_paths") || !m_value["file_paths"].isArray()){
+      m_value["file_paths"] = Json::Value(Json::arrayValue);
+    }
+    m_value["file_paths"].append(toString(path));
+    return true;
+  }
+  
+  void WorkflowJSON_Impl::resetFilePaths()
+  {
+    m_value["file_paths"] = Json::Value(Json::arrayValue);
   }
 
   boost::optional<openstudio::path> WorkflowJSON_Impl::findFile(const openstudio::path& file) const
@@ -434,11 +448,11 @@ namespace detail{
     std::vector<openstudio::path> result;
 
     Json::Value defaultValue(Json::arrayValue);
-    defaultValue.append("./measures");
-    defaultValue.append("../../measures");
-    defaultValue.append("./");
-
+    
     Json::Value paths = m_value.get("measure_paths", defaultValue);
+    paths.append("./measures");
+    paths.append("../../measures");
+    paths.append("./");
 
     Json::ArrayIndex n = paths.size();
     for (Json::ArrayIndex i = 0; i < n; ++i){
@@ -459,6 +473,20 @@ namespace detail{
       }
     }
     return result;
+  }
+
+  bool WorkflowJSON_Impl::addMeasurePath(const openstudio::path& path)
+  {
+    if (!m_value.isMember("measure_paths") || !m_value["measure_paths"].isArray()){
+      m_value["measure_paths"] = Json::Value(Json::arrayValue);
+    }
+    m_value["measure_paths"].append(toString(path));
+    return true;
+  }
+
+  void WorkflowJSON_Impl::resetMeasurePaths()
+  {
+    m_value["measure_paths"] = Json::Value(Json::arrayValue);
   }
 
   boost::optional<openstudio::path> WorkflowJSON_Impl::findMeasure(const openstudio::path& measureDir) const
@@ -931,6 +959,16 @@ std::vector<openstudio::path> WorkflowJSON::absoluteFilePaths() const
   return getImpl<detail::WorkflowJSON_Impl>()->absoluteFilePaths();
 }
 
+bool WorkflowJSON::addFilePath(const openstudio::path& path)
+{
+  return getImpl<detail::WorkflowJSON_Impl>()->addFilePath(path);
+}
+
+void WorkflowJSON::resetFilePaths()
+{
+  getImpl<detail::WorkflowJSON_Impl>()->resetFilePaths();
+}
+
 boost::optional<openstudio::path> WorkflowJSON::findFile(const openstudio::path& file) const
 {
   return getImpl<detail::WorkflowJSON_Impl>()->findFile(file);
@@ -949,6 +987,16 @@ std::vector<openstudio::path> WorkflowJSON::measurePaths() const
 std::vector<openstudio::path> WorkflowJSON::absoluteMeasurePaths() const
 {
   return getImpl<detail::WorkflowJSON_Impl>()->absoluteMeasurePaths();
+}
+
+bool WorkflowJSON::addMeasurePath(const openstudio::path& path)
+{
+  return getImpl<detail::WorkflowJSON_Impl>()->addMeasurePath(path);
+}
+
+void WorkflowJSON::resetMeasurePaths()
+{
+  return getImpl<detail::WorkflowJSON_Impl>()->resetMeasurePaths();
 }
 
 boost::optional<openstudio::path> WorkflowJSON::findMeasure(const openstudio::path& measureDir) const

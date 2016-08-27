@@ -261,18 +261,32 @@ void ApplyMeasureNowDialog::displayMeasure()
 
   try {
     // Get the selected measure
+    
+    // DLM: need to figure out if we are going to copy the measure into the project or run from outside
+    // we may have to temporarily hijack that workflowJSON used by measure manager to use this temp workflowJSON
+    // alternatively, if we copy the measure into the project dir then the normal workflowJSON can find it
+    // finally, do we want users to be able to drag measures from their project into their model? this would be a new class of measure item, project measure
+    
     m_bclMeasure = app->measureManager().getMeasure(id);
     OS_ASSERT(m_bclMeasure);
     OS_ASSERT(m_bclMeasure->measureType() == MeasureType::ModelMeasure);
 
+    WorkflowJSON workflowJSON = app->currentModel()->workflowJSON();
+
     WorkflowJSON tempWorkflow;
-    tempWorkflow.saveAs(toPath("E:/test/temp.osw"));
-    tempWorkflow.addMeasure(*m_bclMeasure);
+    
+    tempWorkflow.addMeasurePath(m_bclMeasure->directory().parent_path());
+
+    for (const auto& absoluteFilePath : workflowJSON.absoluteFilePaths()){
+      tempWorkflow.addFilePath(absoluteFilePath);
+    }
 
     MeasureStep step(toString(m_bclMeasure->directory().stem()));
     std::vector<WorkflowStep> steps;
     steps.push_back(step);
     tempWorkflow.setWorkflowSteps(steps);
+    
+    tempWorkflow.saveAs(toPath("E:/test/temp.osw"));
 
     m_currentMeasureStepItem = QSharedPointer<measuretab::MeasureStepItem>(new measuretab::MeasureStepItem(MeasureType::ModelMeasure, step, app));
 
@@ -286,7 +300,6 @@ void ApplyMeasureNowDialog::displayMeasure()
     m_currentMeasureStepItem->setDisplayName(m_bclMeasure->displayName().c_str());
     m_currentMeasureStepItem->setDescription(m_bclMeasure->description().c_str());
 
-    // DLM: this is ok, call with overload to ignore isItOKToClearResults
     m_editController->setMeasureStepItem(m_currentMeasureStepItem.data(), app);
 
   } catch (const std::exception & e) {

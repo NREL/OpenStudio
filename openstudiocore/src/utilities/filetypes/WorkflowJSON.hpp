@@ -145,6 +145,12 @@ public:
   std::vector<openstudio::path> filePaths() const;
   std::vector<openstudio::path> absoluteFilePaths() const;
 
+  /** Add a path to the paths searched for files. */
+  bool addFilePath(const openstudio::path& path);
+
+  /** Clear paths searched for files. */
+  void resetFilePaths();
+
   /** Attempts to find a file by path.
   *   If file is relative, searches through filePaths in order and returns first match that exists. 
   *   If file is absolute, does not search for file in filePaths, only returns true it file exists.
@@ -155,6 +161,12 @@ public:
   /** Returns the paths that will be searched in order for measures, default value is './measures/'. Evaluated relative to rootDir if not absolute. */
   std::vector<openstudio::path> measurePaths() const;
   std::vector<openstudio::path> absoluteMeasurePaths() const;
+
+  /** Add a path to the paths searched for measures. */
+  bool addMeasurePath(const openstudio::path& path);
+
+  /** Clear paths searched for measures. */
+  void resetMeasurePaths();
 
   /** Attempts to find a measure by path.
   *   If measureDir is relative, searches through measurePaths in order and returns first match that exists. 
