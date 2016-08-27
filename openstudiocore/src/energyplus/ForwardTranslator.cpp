@@ -1914,7 +1914,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     }
   case openstudio::IddObjectType::OS_Output_EnergyManagementSystem:
   {
-    model::Output_EnergyManagementSystem temp = modelObject.cast<Output_EnergyManagementSystem>();
+    model::OutputEnergyManagementSystem temp = modelObject.cast<OutputEnergyManagementSystem>();
     retVal = translateOutputEnergyManagementSystem(temp);
     break;
   }
