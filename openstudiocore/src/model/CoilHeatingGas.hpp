@@ -40,6 +40,8 @@ namespace detail {
  *
  *  The purpose of this class is to simplify the construction and manipulation
  *  OS:Coil:Heating:Gas objects in energyplus.
+ *
+ *  As of EnergyPlus Version 8.6 this object maps to Coil:Heating:Fuel.
  */
 class MODEL_API CoilHeatingGas : public StraightComponent {
 
