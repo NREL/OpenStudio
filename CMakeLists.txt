@@ -51,7 +51,7 @@ set(ENERGYPLUS_VERSION_MINOR 6)
 set(ENERGYPLUS_VERSION_PATCH 0)
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
-set(ENERGYPLUS_BUILD_SHA "unknown")
+set(ENERGYPLUS_BUILD_SHA "a17aa64355")
 
 option(NIGHTLY_BUILD "Use configurations for Nightly Build" OFF)
 
@@ -192,7 +192,7 @@ endif()
 # EnergyPlus
 if(UNIX)
   if(APPLE)
-    set(ENERGYPLUS_EXPECTED_HASH 01c4232f7136e42995c344c389d96a61)
+    set(ENERGYPLUS_EXPECTED_HASH 8c161fb4b450aba79acb1abcd08fdb41)
     set(ENERGYPLUS_PLATFORM "Darwin-x86_64")
   elseif(EXISTS "/etc/redhat-release")
     #message(FATAL_ERROR "EnergyPlus ${ENERGYPLUS_VERSION} redhat build missing")
