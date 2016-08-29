@@ -28,7 +28,7 @@
 #include "../../model/Node_Impl.hpp"
 #include "../../model/ZoneHVACComponent.hpp"
 #include "../../model/ZoneHVACComponent_Impl.hpp"
-#include <utilities/idd/AirTerminal_SingleDuct_InletSideMixer_FieldEnums.hxx>
+#include <utilities/idd/AirTerminal_SingleDuct_Mixer_FieldEnums.hxx>
 #include <utilities/idd/ZoneHVAC_AirDistributionUnit_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
@@ -51,7 +51,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctInle
   IdfObject _airDistributionUnit(openstudio::IddObjectType::ZoneHVAC_AirDistributionUnit);
   _airDistributionUnit.setName("ADU " + baseName ); //ADU: Air Distribution Unit
 
-  IdfObject idfObject(openstudio::IddObjectType::AirTerminal_SingleDuct_InletSideMixer);
+  IdfObject idfObject(openstudio::IddObjectType::AirTerminal_SingleDuct_Mixer);
 
   idfObject.setName(baseName);
 
@@ -80,8 +80,8 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctInle
 
   if( outletNodeName && inletNodeName )
   {
-    idfObject.setString(AirTerminal_SingleDuct_InletSideMixerFields::TerminalUnitOutletNodeName,outletNodeName.get());
-    idfObject.setString(AirTerminal_SingleDuct_InletSideMixerFields::TerminalUnitPrimaryAirInletNodeName,inletNodeName.get());
+    idfObject.setString(AirTerminal_SingleDuct_MixerFields::TerminalUnitOutletNodeName,outletNodeName.get());
+    idfObject.setString(AirTerminal_SingleDuct_MixerFields::TerminalUnitPrimaryAirInletNodeName,inletNodeName.get());
   }
 
   if( boost::optional<AirLoopHVAC> airLoopHVAC = modelObject.airLoopHVAC() ) {
@@ -89,15 +89,17 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctInle
     if( ! zoneHVACs.empty() ) {
       ZoneHVACComponent zoneHVAC = zoneHVACs.front();
       if( boost::optional<IdfObject> _zoneHVAC= translateAndMapModelObject(zoneHVAC) ) {
-        idfObject.setString(AirTerminal_SingleDuct_InletSideMixerFields::ZoneHVACTerminalUnitObjectType,_zoneHVAC->iddObject().name());
-        idfObject.setString(AirTerminal_SingleDuct_InletSideMixerFields::ZoneHVACTerminalUnitName,_zoneHVAC->name().get());
+        idfObject.setString(AirTerminal_SingleDuct_MixerFields::ZoneHVACTerminalUnitObjectType,_zoneHVAC->iddObject().name());
+        idfObject.setString(AirTerminal_SingleDuct_MixerFields::ZoneHVACTerminalUnitName,_zoneHVAC->name().get());
       }
     }
   }
 
+  idfObject.setString(AirTerminal_SingleDuct_MixerFields::MixerConnectionType,"InletSide");
+
   // TerminalUnitSecondaryAirInletNodeName
   if( boost::optional<Node> secondaryInletNode = modelObject.secondaryAirInletNode() ) {
-    idfObject.setString(AirTerminal_SingleDuct_InletSideMixerFields::TerminalUnitSecondaryAirInletNodeName,secondaryInletNode->name().get());
+    idfObject.setString(AirTerminal_SingleDuct_MixerFields::TerminalUnitSecondaryAirInletNodeName,secondaryInletNode->name().get());
   }
 
   // Populate fields for AirDistributionUnit

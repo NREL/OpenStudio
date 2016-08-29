@@ -32,7 +32,8 @@ namespace detail {
 
 } // detail
 
-/** AirTerminalSingleDuctInletSideMixer is a StraightComponent that wraps the OpenStudio IDD object 'OS:AirTerminal:SingleDuct:InletSideMixer'. */
+/** AirTerminalSingleDuctInletSideMixer is a StraightComponent that wraps the OpenStudio IDD object 'OS:AirTerminal:SingleDuct:InletSideMixer'.
+ *  As of EnergyPlus version 8.6 this object maps to AirTerminal:SingleDuct:Mixer. **/
 class MODEL_API AirTerminalSingleDuctInletSideMixer : public StraightComponent {
  public:
   /** @name Constructors and Destructors */
