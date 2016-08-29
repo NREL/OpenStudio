@@ -11553,88 +11553,31 @@ Daylighting:Controls,
        \minimum 0.0
        \default 500
 
-Daylighting:DELight:Controls,
-       \min-fields 8
-       \memo Dimming of overhead electric lighting is determined from
-       \memo DElight calculated interior daylight illuminance at one or more reference points.
-  A1 , \field Name
+Daylighting:ReferencePoint,
+       \min-fields 5
+       \memo Used by Daylighting:Controls to identify the reference point coordinates for each sensor.
+       \memo Reference points are given in coordinates specified in the GlobalGeometryRules object
+       \memo Daylighting Reference Point CoordinateSystem field
+  A1,  \field Name
        \required-field
        \type alpha
-       \reference DElightZoneNames
-  A2 , \field Zone Name
-       \note Name of Thermal Zone hosting the given DElight Zone
+       \reference DaylightReferencePointNames
+  A2,  \field Zone Name
        \required-field
        \type object-list
        \object-list ZoneNames
-  N1 , \field Lighting Control Type
-       \type integer
-       \minimum 1
-       \maximum 3
-       \note 1=continuous,2=stepped,3=continuous/off
-       \default 1
-  N2 , \field Minimum Input Power Fraction for Continuous Dimming Control
-       \type real
-       \minimum 0.0
-       \maximum 0.6
-       \default 0.3
-  N3 , \field Minimum Light Output Fraction for Continuous Dimming Control
-       \type real
-       \minimum 0.0
-       \maximum 0.6
-       \default 0.2
-  N4 , \field Number of Stepped Control Steps
-       \type integer
-       \note for Lighting Control Type=2, this field cannot be zero.
-       \default 1
-  N5 , \field Probability Lighting will be Reset When Needed in Manual Stepped Control
-       \type real
-       \minimum 0.0
-       \maximum 1.0
-       \default 0.0
-  N6;  \field Gridding Resolution
-       \units m2
-       \type real
-       \note Maximum surface area for nodes in gridding all surfaces in the DElight zone.
-       \note All reflective and transmitting surfaces will be subdivided
-       \note into approximately square nodes that do not exceed this maximum.
-       \note Higher resolution subdivisions require greater calculation times,
-       \note but generally produce more accurate results.
-       \minimum> 0.0
-
-Daylighting:DELight:ReferencePoint,
-       \min-fields 7
-       \memo DElight reference point for illuminance calculation and electric lighting dimming.
-       \memo reference points are given in coordinates specified in the GlobalGeometryRules object
-       \memo Daylighting Reference Point CoordinateSystem field
-       \memo There is a maximum number of 100 reference points per DElight daylighting zone.
-  A1 , \field Name
-       \type alpha
-  A2 , \field DElight Name
-       \required-field
-       \type object-list
-       \object-list DElightZoneNames
-  N1 , \field X-coordinate of Reference Point
-       \required-field
+  N1,  \field X-Coordinate of Reference Point
        \units m
-       \type real
-  N2,  \field Y-coordinate of Reference Point
        \required-field
-       \units m
        \type real
-  N3,  \field Z-coordinate of Reference Point
+  N2,  \field Y-Coordinate of Reference Point
+       \units m
        \required-field
+       \type real
+  N3;  \field Z-Coordinate of Reference Point
        \units m
+       \default 0.8
        \type real
-  N4 , \field Fraction of Zone Controlled by Reference Point
-       \type real
-       \minimum 0.0
-       \maximum 1.0
-       \default 1.0
-  N5;  \field Illuminance Setpoint at Reference Point
-       \units lux
-       \type real
-       \minimum 0.0
-       \default 500
 
 Daylighting:DELight:ComplexFenestration,
        \min-fields 5
