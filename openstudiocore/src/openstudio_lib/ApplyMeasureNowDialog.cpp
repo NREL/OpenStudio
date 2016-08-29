@@ -278,7 +278,6 @@ void ApplyMeasureNowDialog::displayMeasure()
 
   m_bclMeasure.reset();
   m_currentMeasureStepItem.clear();
-  //m_job.reset();
   m_model.reset();
   m_reloadPath.reset();
 
@@ -400,39 +399,23 @@ void ApplyMeasureNowDialog::displayResults()
 
   m_advancedOutput.clear();
 
-  //// DLM: always show these files if they exist?
-  ////if(!jobErrors.succeeded()){
-  //  try{
-  //    runmanager::Files files(m_job->outputFiles());
-  //    openstudio::path stdErrPath = files.getLastByFilename("stderr").fullPath;
+  try{
+    runmanager::Files files(m_job->outputFiles());
+    openstudio::path logPath =  m_workingDir / toPath("run/run.log");
 
-  //    m_advancedOutput = "";
+    m_advancedOutput = "";
 
-  //    QFile file(toQString(stdErrPath));
-  //    if (file.open(QFile::ReadOnly))
-  //    {
-  //      QTextStream docIn(&file);
-  //      m_advancedOutput = docIn.readAll();
-  //      file.close();
-  //    }
+    QFile file(toQString(logPath));
+    if (file.open(QFile::ReadOnly))
+    {
+      QTextStream docIn(&file);
+      m_advancedOutput = docIn.readAll();
+      file.close();
+    }
 
-  //    m_advancedOutput += QString("\n");
-  //  }catch(std::exception&){
-  //  }
-  ////}
-
-  //// DLM: always show these files if they exist?
-  ////if(!jobErrors.succeeded()){
-  //  try{
-  //    runmanager::Files files(m_job->outputFiles());
-  //    openstudio::path stdOutPath = files.getLastByFilename("stdout").fullPath;
-  //    std::ifstream ifs(toString(stdOutPath).c_str());
-  //    std::string stdMessage((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
-  //    ifs.close();
-  //    m_advancedOutput += toQString(stdMessage);
-  //  }catch(std::exception&){
-  //  }
-  ////}
+    m_advancedOutput += QString("\n");
+  }catch(std::exception&){
+  }
  
 }
 
@@ -649,7 +632,12 @@ void DataPointJobItemView::update(const BCLMeasure & bclMeasure, const boost::op
   m_dataPointJobContentView->clear();
 
   if (!workflowJSON){
+    // unknown error
     return;
+  }
+
+  if(!workflowJSON->completedStatus() || workflowJSON->completedStatus().get() != "Success"){
+    // error
   }
 
   boost::optional<DateTime> completedAt = workflowJSON->completedAt();
@@ -708,25 +696,6 @@ void DataPointJobItemView::update(const BCLMeasure & bclMeasure, const boost::op
     }
 
   }
-
-  // DLM: TODO
-  // also display std err if job failed and it exists and is not empty
-//  if (job.lastRun() && !job.running() && !jobErrors.succeeded()){
-//    try{
-//      runmanager::Files files(job.outputFiles());
-//      openstudio::path stdErrPath = files.getLastByFilename("stderr").fullPath;
-//      std::string stdErrPathStr = toString(stdErrPath);
-//      std::ifstream ifs(stdErrPathStr.c_str());
-//      std::string stdErrorMessage((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
-//     ifs.close();
-//      if (!stdErrorMessage.empty()){
-//        m_dataPointJobContentView->addStdErrorMessage(stdErrorMessage);
-//      }
-//    }catch(std::exception&){
-//
-//   }
-// }
-
 
 }
 
