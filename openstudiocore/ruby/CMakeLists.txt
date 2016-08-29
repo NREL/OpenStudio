@@ -8,6 +8,8 @@ endif()
 
 include_directories(${RUBY_INCLUDE_DIRS} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR} )
 
+# common library for openstudio.so and openstudio.exe
+
 add_library( init_openstudio STATIC
   init_openstudio.cpp
   RubyAPI.hpp
@@ -20,21 +22,19 @@ target_link_libraries(init_openstudio
  ruby_OpenStudioUtilitiesCore
  ruby_OpenStudioUtilitiesPlot
  ruby_OpenStudioEnergyPlus
- ##ruby_OpenStudioModelEditor
+ ##ruby_OpenStudioModelEditor # linked by openstudio.so only, for SketchUp plugin
  ruby_OpenStudioOSVersion
  ruby_OpenStudioUtilitiesData
  ruby_OpenStudioUtilitiesSql
- ##ruby_OpenStudioGBXML
+ ruby_OpenStudioGBXML
  ruby_OpenStudioModelGenerators
- ##ruby_OpenStudioRadiance
- #ruby_OpenStudioUtilitiesEconomics
+ ruby_OpenStudioRadiance
  ruby_OpenStudioUtilitiesTime
- ##ruby_OpenStudioISOModel
+ ruby_OpenStudioISOModel
  ruby_OpenStudioModelGeometry
- ##ruby_OpenStudioSDD
+ ruby_OpenStudioSDD
  ruby_OpenStudioUtilitiesFileTypes
  ruby_OpenStudioUtilitiesUnits
- ##ruby_OpenStudioLib
  ruby_OpenStudioModelHVAC
  ruby_OpenStudioUtilities
  ruby_OpenStudioUtilitiesGeometry
@@ -51,6 +51,8 @@ target_link_libraries(init_openstudio
  ${QT_LIBS}
 )
 
+# openstudio ruby bindings to load into normal ruby
+
 add_library(
   openstudio_rb
   MODULE
@@ -65,33 +67,18 @@ else()
   set_target_properties(openstudio_rb PROPERTIES SUFFIX ".so" )
 endif()
 
-target_link_libraries(openstudio_rb init_openstudio)
+target_link_libraries(openstudio_rb 
+  init_openstudio
+  ruby_OpenStudioModelEditor
+)
+
+target_link_libraries(openstudio_rb 
+)
+
+
 
 if( WIN32 )
   target_link_libraries(openstudio_rb ${RUBY_MINGW_STUB_LIB})
 endif()
 
-install(TARGETS openstudio_rb DESTINATION bin)
-
-add_library(
-  openstudio_gui_rb
-  MODULE
-  openstudio_gui_rb.cpp
-)
-
-target_link_libraries( openstudio_gui_rb ruby_OpenStudioModelEditor)
-
-set_target_properties(openstudio_gui_rb PROPERTIES PREFIX "")
-set_target_properties(openstudio_gui_rb PROPERTIES OUTPUT_NAME openstudio_gui)
-if(APPLE)
-  set_target_properties(openstudio_gui_rb PROPERTIES SUFFIX ".bundle" )
-else()
-  set_target_properties(openstudio_gui_rb PROPERTIES SUFFIX ".so" )
-endif()
-
-if( WIN32 )
-  target_link_libraries(openstudio_gui_rb ${RUBY_MINGW_STUB_LIB})
-endif()
-
-install(TARGETS openstudio_gui_rb DESTINATION bin)
-
+install(TARGETS openstudio_rb DESTINATION bin COMPONENT "Ruby API")

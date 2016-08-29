@@ -22,7 +22,6 @@
 #include "ApplyMeasureNowDialog.hpp"
 #include "ConstructionsTabController.hpp"
 #include "FacilityTabController.hpp"
-#include "FileOperations.hpp"
 #include "HorizontalTabWidget.hpp"
 #include "HVACSystemsTabController.hpp"
 #include "InspectorController.hpp"
@@ -64,6 +63,7 @@
 
 #include "../model/Building.hpp"
 #include "../model/Building_Impl.hpp"
+#include "../model/FileOperations.hpp"
 #include "../model/Component.hpp"
 #include "../model/Facility.hpp"
 #include "../model/Facility_Impl.hpp"
@@ -179,11 +179,11 @@ namespace openstudio {
       model = openstudio::model::Model();
     }
 
-    openstudio::path modelTempDir = createModelTempDir();
+    openstudio::path modelTempDir = model::createModelTempDir();
     m_modelTempDir = toQString(modelTempDir);
 
     if (!m_savePath.isEmpty()){
-      initializeModelTempDir(toPath(m_savePath), modelTempDir);
+      model::initializeModelTempDir(toPath(m_savePath), modelTempDir);
     }
 
     bool modifiedOnLoad = updateModelTempDir(*model, modelTempDir);
@@ -279,7 +279,7 @@ namespace openstudio {
     // release the file watchers so can remove model temp dir
     m_mainTabController.reset();
 
-    removeDir(m_modelTempDir);
+    model::removeDir(m_modelTempDir);
   }
 
   void OSDocument::showStartTabAndStartSubTab()
