@@ -148,29 +148,32 @@ namespace detail{
     if (!p){
       return false;
     }
-    return saveAs(*p);
-  }
 
-  bool WorkflowJSON_Impl::saveAs(const openstudio::path& p) const
-  {
-    if (makeParentFolder(p)) {
-      std::ofstream outFile(openstudio::toString(p));
+    if (makeParentFolder(*p)) {
+      std::ofstream outFile(openstudio::toString(*p));
       if (outFile) {
         try {
           outFile << string();
           outFile.close();
-
           return true;
         } catch (...) {
-          LOG(Error, "Unable to write file to path '" << toString(p) << "'.");
+          LOG(Error, "Unable to write file to path '" << toString(*p) << "'.");
           return false;
         }
       }
     }
 
-    LOG(Error, "Unable to write file to path '" << toString(p) << "', because parent directory "
+    LOG(Error, "Unable to write file to path '" << toString(*p) << "', because parent directory "
         << "could not be created.");
 
+    return false;
+  }
+
+  bool WorkflowJSON_Impl::saveAs(const openstudio::path& p) 
+  {
+    if (setOswPath(p)) {
+      return save();
+    }
     return false;
   }
   
@@ -839,7 +842,7 @@ bool WorkflowJSON::save() const
   return getImpl<detail::WorkflowJSON_Impl>()->save();
 }
 
-bool WorkflowJSON::saveAs(const openstudio::path& p) const
+bool WorkflowJSON::saveAs(const openstudio::path& p)
 {
   return getImpl<detail::WorkflowJSON_Impl>()->saveAs(p);
 }

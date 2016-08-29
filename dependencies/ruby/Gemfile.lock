@@ -1,7 +1,7 @@
 GIT
   remote: git://github.com/NREL/OpenStudio-workflow-gem.git
-  revision: 6f5f0b797caa87e4e7e2c07a8cc6c36ae3d8300b
-  ref: 6f5f0b797caa87e4e7e2c07a8cc6c36ae3d8300b
+  revision: 4edc9ecda68cf263fc63a7af6f121c9023744617
+  ref: 4edc9ecda68cf263fc63a7af6f121c9023744617
   specs:
     openstudio-workflow (1.0.0.rc1)
       colored (~> 1.2)
@@ -22,6 +22,7 @@ GEM
   specs:
     CFPropertyList (2.2.8)
     colored (1.2)
+    diff-lcs (1.2.5)
     facter (2.4.6)
       CFPropertyList (~> 2.2.6)
     facter (2.4.6-x64-mingw32)
@@ -47,6 +48,19 @@ GEM
       mini_portile2 (~> 2.1.0)
       pkg-config (~> 1.1.7)
     pkg-config (1.1.7)
+    rspec (3.5.0)
+      rspec-core (~> 3.5.0)
+      rspec-expectations (~> 3.5.0)
+      rspec-mocks (~> 3.5.0)
+    rspec-core (3.5.2)
+      rspec-support (~> 3.5.0)
+    rspec-expectations (3.5.0)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.5.0)
+    rspec-mocks (3.5.0)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.5.0)
+    rspec-support (3.5.0)
     rubyXL (3.3.21)
       nokogiri (>= 1.4.4)
       rubyzip (>= 1.1.6)
@@ -65,6 +79,7 @@ PLATFORMS
 DEPENDENCIES
   openstudio-standards!
   openstudio-workflow!
+  rspec
 
 BUNDLED WITH
    1.12.5

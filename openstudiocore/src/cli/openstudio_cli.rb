@@ -349,13 +349,15 @@ class Run
       run_options[:jobs] = [
         { state: :queued, next_state: :initialization, options: { initial: true } },
         { state: :initialization, next_state: :os_measures, job: :RunInitialization,
-          file: './jobs/run_initialization.rb', options: {} },
+          file: 'openstudio/workflow/jobs/run_initialization.rb', options: {} },
         { state: :os_measures, next_state: :translator, job: :RunOpenStudioMeasures,
-          file: './jobs/run_os_measures.rb', options: {} },
+          file: 'openstudio/workflow/jobs/run_os_measures.rb', options: {} },
         { state: :translator, next_state: :ep_measures, job: :RunTranslation,
-          file: './jobs/run_translation.rb', options: {} },
+          file: 'openstudio/workflow/jobs/run_translation.rb', options: {} },
         { state: :ep_measures, next_state: :finished, job: :RunEnergyPlusMeasures,
-          file: './jobs/run_ep_measures.rb', options: {} },
+          file: 'openstudio/workflow/jobs/run_ep_measures.rb', options: {} },
+        { state: :postprocess, next_state: :finished, job: :RunPostprocess,
+          file: 'openstudio/workflow/jobs/run_postprocess.rb', options: {} },
         { state: :finished },
         { state: :errored }
       ]
@@ -363,11 +365,11 @@ class Run
       run_options[:jobs] = [
         { state: :queued, next_state: :initialization, options: { initial: true } },
         { state: :initialization, next_state: :reporting_measures, job: :RunInitialization,
-          file: './jobs/run_initialization.rb', options: {} },
+          file: 'openstudio/workflow/jobs/run_initialization.rb', options: {} },
         { state: :reporting_measures, next_state: :postprocess, job: :RunReportingMeasures,
-          file: './jobs/run_reporting_measures.rb', options: {} },
+          file: 'openstudio/workflow/jobs/run_reporting_measures.rb', options: {} },
         { state: :postprocess, next_state: :finished, job: :RunPostprocess,
-          file: './jobs/run_postprocess.rb', options: {} },
+          file: 'openstudio/workflow/jobs/run_postprocess.rb', options: {} },
         { state: :finished },
         { state: :errored }
       ]

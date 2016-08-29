@@ -62,7 +62,7 @@ namespace detail {
 
       bool save() const;
 
-      bool saveAs(const openstudio::path& p) const;
+      bool saveAs(const openstudio::path& p);
 
       void reset();
 

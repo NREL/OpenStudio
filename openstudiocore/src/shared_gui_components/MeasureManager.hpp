@@ -93,6 +93,9 @@ class MeasureManager : public QObject
 
     void setLibraryController(const QSharedPointer<LocalLibraryController> &t_libraryController);
 
+    //// Get the temp model path
+    openstudio::path tempModelPath() const;
+
     //// Saves the current model to a temp location, used when computing arguments
     void saveTempModel();
 

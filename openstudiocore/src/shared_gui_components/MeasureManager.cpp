@@ -81,6 +81,11 @@ void MeasureManager::setUrl(const QUrl& url)
   m_url = url;
 }
 
+openstudio::path MeasureManager::tempModelPath() const
+{
+  return m_tempModelPath;
+}
+
 void MeasureManager::saveTempModel()
 {
   boost::optional<model::Model> model = m_app->currentModel();

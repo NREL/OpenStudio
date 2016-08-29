@@ -32,13 +32,15 @@ class QPushButton;
 class QStackedWidget;
 class QTextEdit;
 class QTimer;
+class QProcess;
 
 namespace openstudio{
 
 class DateTime;
 class EditController;
 class LocalLibraryController;
-
+class WorkflowStepResult;
+class WorkflowJSON;
 class TextEditDialog;
 
 namespace measuretab{
@@ -132,6 +134,8 @@ private:
 
   int m_argumentsOkPageIdx;
 
+  QProcess * m_runProcess;
+
   QLabel * m_jobPath;
 
   QPushButton * m_showAdvancedOutput;
@@ -142,6 +146,9 @@ private:
 
   TextEditDialog * m_advancedOutputDialog;
 
+  WorkflowJSON m_modelWorkflowJSON;
+
+  WorkflowJSON m_tempWorkflowJSON;
 };
 
 class DataPointJobHeaderView : public OSHeader
@@ -158,7 +165,7 @@ class DataPointJobHeaderView : public OSHeader
 
   void setLastRunTime(const boost::optional<openstudio::DateTime>& lastRunTime);
 
-  //void setStatus(const openstudio::runmanager::AdvancedStatus& status, bool isCanceled);
+  void setStatus(const std::string& status, bool isCanceled);
 
   void setNA(bool na);
 
@@ -226,7 +233,7 @@ protected:
 
 public slots:
 
-  //void update(analysis::RubyMeasure & rubyMeasure, BCLMeasure & bclMeasure, openstudio::runmanager::JobErrors jobErrors, openstudio::runmanager::Job job);
+  void update(const BCLMeasure & bclMeasure, const boost::optional<WorkflowJSON>& outWorkflowJSON, bool canceled);
 
 };
 

@@ -81,8 +81,8 @@ public:
   /** Saves this file to the current location. */
   bool save() const;
 
-  /** Saves this file to a new location. */
-  bool saveAs(const openstudio::path& p) const;
+  /** Saves this file to a new location. Updates the OSW path. */
+  bool saveAs(const openstudio::path& p);
 
   /** Reset to re-run the workflow, does not delete steps. */
   void reset();
