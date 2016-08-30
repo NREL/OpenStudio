@@ -66,7 +66,7 @@ namespace detail {
     return EnergyManagementSystemGlobalVariable::iddObjectType();
   }
 
-  bool EnergyManagementSystemGlobalVariable_Impl::addVariable(const std::string& variable) {
+ /* bool EnergyManagementSystemGlobalVariable_Impl::addVariable(const std::string& variable) {
     //set global variable
     bool result = false;
 
@@ -110,18 +110,21 @@ namespace detail {
     //erase all Variables in this global variable object
     clearExtensibleGroups();
   }
+  */
 } // detail
 
-EnergyManagementSystemGlobalVariable::EnergyManagementSystemGlobalVariable(const Model& model)
+EnergyManagementSystemGlobalVariable::EnergyManagementSystemGlobalVariable(const std::string& variableName, const Model& model)
   : ModelObject(EnergyManagementSystemGlobalVariable::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemGlobalVariable_Impl>());
+  bool test = getImpl<detail::EnergyManagementSystemGlobalVariable_Impl>()->setName(variableName);
+  OS_ASSERT(test);
 }
 
 IddObjectType EnergyManagementSystemGlobalVariable::iddObjectType() {
   return IddObjectType(IddObjectType::OS_EnergyManagementSystem_GlobalVariable);
 }
-
+/*
 bool EnergyManagementSystemGlobalVariable::addVariable(const std::string& variable) {
   return getImpl<detail::EnergyManagementSystemGlobalVariable_Impl>()->addVariable(variable);
 }
@@ -138,6 +141,7 @@ void EnergyManagementSystemGlobalVariable::eraseVariables() {
   getImpl<detail::EnergyManagementSystemGlobalVariable_Impl>()->eraseVariables();
 }
 
+*/
 /// @cond
 EnergyManagementSystemGlobalVariable::EnergyManagementSystemGlobalVariable(std::shared_ptr<detail::EnergyManagementSystemGlobalVariable_Impl> impl)
   : ModelObject(impl)

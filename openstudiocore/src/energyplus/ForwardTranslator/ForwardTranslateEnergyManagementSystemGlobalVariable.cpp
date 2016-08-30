@@ -45,23 +45,23 @@ namespace energyplus {
 
 boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemGlobalVariable(EnergyManagementSystemGlobalVariable & modelObject)
 {
-  boost::optional<OutputVariable> d;
-  boost::optional<OutputMeter> m;
+  //boost::optional<OutputVariable> d;
+  //boost::optional<OutputMeter> m;
   boost::optional<std::string> s;
 
-  //IdfObject idfObject(openstudio::IddObjectType::EnergyManagementSystem_GlobalVariable);
-  //m_idfObjects.push_back(idfObject);
-  IdfObject program = createAndRegisterIdfObject(openstudio::IddObjectType::EnergyManagementSystem_GlobalVariable, modelObject);
+  IdfObject idfObject(openstudio::IddObjectType::EnergyManagementSystem_GlobalVariable);
+  m_idfObjects.push_back(idfObject);
+  //IdfObject program = createAndRegisterIdfObject(openstudio::IddObjectType::EnergyManagementSystem_GlobalVariable, modelObject);
 
   //Name
   s = modelObject.name();
   if (s) {
-    program.setName(*s);
+    idfObject.setName(*s);
   }
-  for (const IdfExtensibleGroup& eg : modelObject.extensibleGroups()) {
-    program.pushExtensibleGroup(eg.fields());
-  }
-  return program;
+  //for (const IdfExtensibleGroup& eg : modelObject.extensibleGroups()) {
+  //  program.pushExtensibleGroup(eg.fields());
+  //}
+  return idfObject;
 }
 
 } // energyplus

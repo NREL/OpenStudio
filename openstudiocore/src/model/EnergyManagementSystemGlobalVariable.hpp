@@ -38,7 +38,7 @@ class MODEL_API EnergyManagementSystemGlobalVariable : public ModelObject {
   /** @name Constructors and Destructors */
   //@{
 
-  explicit EnergyManagementSystemGlobalVariable(const Model& model);
+   explicit EnergyManagementSystemGlobalVariable(const std::string& variableName, const Model& model);
 
   virtual ~EnergyManagementSystemGlobalVariable() {}
 
@@ -49,17 +49,17 @@ class MODEL_API EnergyManagementSystemGlobalVariable : public ModelObject {
   /** @name Getters */
   //@{
 
-  std::vector<std::string> getVariables() const;
+  //std::vector<std::string> getVariables() const;
 
   //@}
   /** @name Setters */
   //@{
 
-  bool addVariable(const std::string& variable);
+  //bool addVariable(const std::string& variable);
 
-  bool removeVariable(const std::string& variable);
+  //bool removeVariable(const std::string& variable);
 
-  void eraseVariables();
+  //void eraseVariables();
 
   //@}
   /** @name Other */
