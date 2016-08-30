@@ -371,7 +371,7 @@ void ApplyMeasureNowDialog::displayResults()
   delete m_runProcess;
   m_runProcess = nullptr;
 
-  m_reloadPath = m_workingDir / toPath("run/out.osm");
+  m_reloadPath = m_workingDir / toPath("run/in.osm");
   openstudio::path outWorkflowJSONPath = m_workingDir / toPath("out.osw");
 
   m_mainPaneStackedWidget->setCurrentIndex(m_outputPageIdx);
@@ -400,7 +400,6 @@ void ApplyMeasureNowDialog::displayResults()
   m_advancedOutput.clear();
 
   try{
-    runmanager::Files files(m_job->outputFiles());
     openstudio::path logPath =  m_workingDir / toPath("run/run.log");
 
     m_advancedOutput = "";

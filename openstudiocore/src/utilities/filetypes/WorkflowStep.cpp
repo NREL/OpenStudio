@@ -238,7 +238,7 @@ namespace detail{
 
   void MeasureStep_Impl::setArgument(const std::string& name, const Variant& value)
   {
-    m_arguments.insert(std::make_pair(name, value));
+    m_arguments[name] = value;
     onUpdate();
   }
 
