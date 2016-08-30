@@ -51,21 +51,8 @@ TEST_F(ModelFixture, EMSGlobalVariable_EMSGlobalVariable)
   ThermalZone zone1(model);
   ThermalZone zone2(model);
 
-  std::vector<std::string> vars;
-
   // add global variable
-  EnergyManagementSystemGlobalVariable var(model);
-  // should be empty
-  EXPECT_EQ(0, var.getVariables().size());
-  // add variable
-  var.addVariable("variable one");
-  vars.push_back("variable one");
-
-  EXPECT_EQ(vars[0], var.getVariables()[0]);
-
-  
-
- // EXPECT_EQ(siteOutdoorAirDrybulbTemperature, var.outputVariable());
- // EXPECT_EQ("", var.keyName().get());
+  EnergyManagementSystemGlobalVariable var("glob var", model);
+  EXPECT_EQ("glob var", var.nameString());
 }
 
