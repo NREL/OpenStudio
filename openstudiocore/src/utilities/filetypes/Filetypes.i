@@ -41,6 +41,8 @@
 %template(EpwFileVector) std::vector<openstudio::EpwFile>;
 %template(OptionalEpwFile) boost::optional<openstudio::EpwFile>;
 
+%template(OptionalStepResult) boost::optional<openstudio::StepResult>;
+
 %ignore std::vector<openstudio::WorkflowStepValue>::vector(size_type);
 %ignore std::vector<openstudio::WorkflowStepValue>::resize(size_type);
 %template(WorkflowStepValueVector) std::vector<openstudio::WorkflowStepValue>;

@@ -486,8 +486,8 @@ endif()
 
 # openstudio gems
 
-set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20160808.tar.gz")
-set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "9cf5fb1c2eb76c73e90e096bb2d7ca1a")
+set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20160824.tar.gz")
+set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "61ff21e085fcf0c1b3edc8b247228226")
 
 set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
 if(EXISTS "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}")
@@ -501,8 +501,8 @@ if( NOT OPENSTUDIO_GEMS_ZIP_MD5 STREQUAL OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5)
     SHOW_PROGRESS
     EXPECTED_MD5 ${OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5})
     
-    # DLM: todo, delete existing directory to clean out old cruft
-    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+  file(REMOVE_RECURSE "${CMAKE_BINARY_DIR}/openstudio-gems")
+  execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
 endif()
 
 # OpenSSL / libssh support
@@ -732,15 +732,15 @@ add_subdirectory(src/zlib)
 include_directories(${CMAKE_BINARY_DIR}/src/zlib)
 
 if(BUILD_TESTING)
-  # force gtest to build as a static library no matter what
+  # force gtest to build as a static library no matter what, otherwise we get error about undefined death test symbols when building shared libs
   set(TEMP_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS})
   set(BUILD_SHARED_LIBS OFF)
   
   # Google test library
-  set(gtest_force_shared_crt ON) # in case we are linking with shared os libraries
-  set(gtest_build_tests OFF)
-  set(gtest_build_samples OFF)
-  set(gtest_disable_pthreads OFF)
+  set(gtest_force_shared_crt ON CACHE BOOL "gtest_force_shared_crt" FORCE) # in case we are linking with shared or static os libraries
+  set(gtest_build_tests OFF CACHE BOOL "gtest_build_tests" FORCE)
+  set(gtest_build_samples OFF CACHE BOOL "gtest_build_samples" FORCE)
+  set(gtest_disable_pthreads OFF CACHE BOOL "gtest_disable_pthreads" FORCE)
   add_definitions(-DGTEST_HAS_TR1_TUPLE=0) 
   include_directories(SYSTEM src/google_test/include)
   add_subdirectory(src/google_test)
