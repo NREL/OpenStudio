@@ -201,45 +201,10 @@ add_definitions(-DRUBY_EXTCONF_H="osruby_config.h")
 target_link_libraries(openstudio 
  ${EXTENSION_LIBS} 
  ${ENC_LIBS} 
- ruby_OpenStudioAirflow
- ruby_OpenStudioModelCore
- ruby_OpenStudioModelSimulation
- ruby_OpenStudioUtilitiesCore
- ruby_OpenStudioUtilitiesPlot
- ruby_OpenStudioEnergyPlus
- ##ruby_OpenStudioModelEditor
- ruby_OpenStudioOSVersion
- ruby_OpenStudioUtilitiesData
- ruby_OpenStudioUtilitiesSql
- ##ruby_OpenStudioGBXML
- ruby_OpenStudioModelGenerators
- ##ruby_OpenStudioRadiance
- #ruby_OpenStudioUtilitiesEconomics
- ruby_OpenStudioUtilitiesTime
- ##ruby_OpenStudioISOModel
- ruby_OpenStudioModelGeometry
- ##ruby_OpenStudioSDD
- ruby_OpenStudioUtilitiesFileTypes
- ruby_OpenStudioUtilitiesUnits
- ##ruby_OpenStudioLib
- ruby_OpenStudioModelHVAC
- ruby_OpenStudioUtilities
- ruby_OpenStudioUtilitiesGeometry
- ruby_OpenStudioMeasure
- ruby_OpenStudioModelRefrigeration
- ruby_OpenStudioUtilitiesBCL
- ruby_OpenStudioUtilitiesIdd
- ruby_OpenStudioModel
- ruby_OpenStudioModelResources
- ruby_OpenStudioUtilitiesCloud
- ruby_OpenStudioUtilitiesIdf
-)
-
-target_link_libraries(openstudio
+  init_openstudio
   openstudio_utilities
   ${Boost_LIBRARIES}
   ${QT_LIBS}
-  init_openstudio
 )
 
 if (UNIX AND NOT APPLE)
