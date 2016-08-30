@@ -1647,6 +1647,7 @@ set(${target_name}_test_src
   test/EnergyManagementSystemProgramCallingManager_GTest.cpp
   test/EnergyManagementSystemSensor_GTest.cpp
   test/EnergyManagementSystemSubroutine_GTest.cpp
+  test/EnergyManagementSystemTrendVariable_GTest.cpp
   test/EvaporativeCoolerDirectResearchSpecial_GTest.cpp
   test/EvaporativeCoolerIndirectResearchSpecial_GTest.cpp
   test/EvaporativeFluidCoolerSingleSpeed_GTest.cpp
