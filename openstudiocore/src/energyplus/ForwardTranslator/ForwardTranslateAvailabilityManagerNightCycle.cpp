@@ -85,7 +85,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerNightC
   }
 
   if( auto tz = modelObject.controlThermalZone() ) {
-    idfObject.setString(AvailabilityManager_NightCycleFields::ControlZoneName,tz->name().get());
+    idfObject.setString(AvailabilityManager_NightCycleFields::ControlZoneorZoneListName,tz->name().get());
   }
   
   return idfObject;

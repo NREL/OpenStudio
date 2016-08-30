@@ -24,7 +24,7 @@
 #include "../../model/Schedule.hpp"
 #include "../../model/Schedule_Impl.hpp"
 
-#include <utilities/idd/Coil_Heating_Gas_FieldEnums.hxx>
+#include <utilities/idd/Coil_Heating_Fuel_FieldEnums.hxx>
 
 using namespace openstudio::model;
 
@@ -39,7 +39,7 @@ OptionalModelObject ReverseTranslator::translateCoilHeatingGas( const WorkspaceO
   OptionalSchedule schedule;
 
  //get the Schedule
-  OptionalWorkspaceObject owo = workspaceObject.getTarget(Coil_Heating_GasFields::AvailabilityScheduleName);
+  OptionalWorkspaceObject owo = workspaceObject.getTarget(Coil_Heating_FuelFields::AvailabilityScheduleName);
   if(!owo)
   {
     LOG(Error, "Error importing object: "
@@ -71,35 +71,35 @@ OptionalModelObject ReverseTranslator::translateCoilHeatingGas( const WorkspaceO
       coil.setName(*optS);
     }
     OptionalDouble d;
-    d = workspaceObject.getDouble(openstudio::Coil_Heating_GasFields::GasBurnerEfficiency);
+    d = workspaceObject.getDouble(openstudio::Coil_Heating_FuelFields::BurnerEfficiency);
     if(d)
     {
       coil.setGasBurnerEfficiency(*d);
     }
-    d = workspaceObject.getDouble(openstudio::Coil_Heating_GasFields::NominalCapacity);
+    d = workspaceObject.getDouble(openstudio::Coil_Heating_FuelFields::NominalCapacity);
     if(d)
     {
       coil.setNominalCapacity(*d);
     }
     //skip inlet and outlet node names. That should be done FOR us by the AirLoop Translator.
-    d = workspaceObject.getDouble(openstudio::Coil_Heating_GasFields::GasBurnerEfficiency);
+    d = workspaceObject.getDouble(openstudio::Coil_Heating_FuelFields::BurnerEfficiency);
     if(d)
     {
       coil.setGasBurnerEfficiency(*d);
     }
 
-    d = workspaceObject.getDouble(openstudio::Coil_Heating_GasFields::NominalCapacity);
+    d = workspaceObject.getDouble(openstudio::Coil_Heating_FuelFields::NominalCapacity);
     if(d)
     {
       coil.setNominalCapacity(*d);
     }
 
-    d = workspaceObject.getDouble(openstudio::Coil_Heating_GasFields::ParasiticElectricLoad);
+    d = workspaceObject.getDouble(openstudio::Coil_Heating_FuelFields::ParasiticElectricLoad);
     if(d)
     {
       coil.setParasiticElectricLoad(*d);
     }
-    d = workspaceObject.getDouble(openstudio::Coil_Heating_GasFields::ParasiticGasLoad);
+    d = workspaceObject.getDouble(openstudio::Coil_Heating_FuelFields::ParasiticFuelLoad);
     if(d)
     {
       coil.setParasiticGasLoad(*d);

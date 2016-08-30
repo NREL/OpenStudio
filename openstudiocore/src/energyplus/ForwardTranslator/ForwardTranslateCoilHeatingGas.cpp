@@ -63,7 +63,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingGas( CoilHeati
 
   ///////////////////////////////////////////////////////////////////////////
   // Field: Gas Burner Efficiency ///////////////////////////////////////////
-  idfObject.setDouble(openstudio::Coil_Heating_FuelFields::GasBurnerEfficiency,modelObject.gasBurnerEfficiency());
+  idfObject.setDouble(openstudio::Coil_Heating_FuelFields::BurnerEfficiency,modelObject.gasBurnerEfficiency());
   ///////////////////////////////////////////////////////////////////////////
 
   ///////////////////////////////////////////////////////////////////////////
@@ -79,7 +79,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingGas( CoilHeati
   }
   ///////////////////////////////////////////////////////////////////////////
   idfObject.setDouble(openstudio::Coil_Heating_FuelFields::ParasiticElectricLoad,modelObject.parasiticElectricLoad());
-  idfObject.setDouble(openstudio::Coil_Heating_FuelFields::ParasiticGasLoad,modelObject.parasiticGasLoad());
+  idfObject.setDouble(openstudio::Coil_Heating_FuelFields::ParasiticFuelLoad,modelObject.parasiticGasLoad());
 
 
   ///////////////////////////////////////////////////////////////////////////

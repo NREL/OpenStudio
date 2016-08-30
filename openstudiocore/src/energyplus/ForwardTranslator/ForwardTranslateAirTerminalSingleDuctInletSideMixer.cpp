@@ -80,8 +80,8 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctInle
 
   if( outletNodeName && inletNodeName )
   {
-    idfObject.setString(AirTerminal_SingleDuct_MixerFields::TerminalUnitOutletNodeName,outletNodeName.get());
-    idfObject.setString(AirTerminal_SingleDuct_MixerFields::TerminalUnitPrimaryAirInletNodeName,inletNodeName.get());
+    idfObject.setString(AirTerminal_SingleDuct_MixerFields::MixerOutletNodeName,outletNodeName.get());
+    idfObject.setString(AirTerminal_SingleDuct_MixerFields::MixerPrimaryAirInletNodeName,inletNodeName.get());
   }
 
   if( boost::optional<AirLoopHVAC> airLoopHVAC = modelObject.airLoopHVAC() ) {
@@ -89,8 +89,8 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctInle
     if( ! zoneHVACs.empty() ) {
       ZoneHVACComponent zoneHVAC = zoneHVACs.front();
       if( boost::optional<IdfObject> _zoneHVAC= translateAndMapModelObject(zoneHVAC) ) {
-        idfObject.setString(AirTerminal_SingleDuct_MixerFields::ZoneHVACTerminalUnitObjectType,_zoneHVAC->iddObject().name());
-        idfObject.setString(AirTerminal_SingleDuct_MixerFields::ZoneHVACTerminalUnitName,_zoneHVAC->name().get());
+        idfObject.setString(AirTerminal_SingleDuct_MixerFields::ZoneHVACUnitObjectType,_zoneHVAC->iddObject().name());
+        idfObject.setString(AirTerminal_SingleDuct_MixerFields::ZoneHVACUnitObjectName,_zoneHVAC->name().get());
       }
     }
   }
@@ -99,7 +99,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctInle
 
   // TerminalUnitSecondaryAirInletNodeName
   if( boost::optional<Node> secondaryInletNode = modelObject.secondaryAirInletNode() ) {
-    idfObject.setString(AirTerminal_SingleDuct_MixerFields::TerminalUnitSecondaryAirInletNodeName,secondaryInletNode->name().get());
+    idfObject.setString(AirTerminal_SingleDuct_MixerFields::MixerSecondaryAirInletNodeName,secondaryInletNode->name().get());
   }
 
   // Populate fields for AirDistributionUnit
