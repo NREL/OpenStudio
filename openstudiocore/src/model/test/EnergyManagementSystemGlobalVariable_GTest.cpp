@@ -20,15 +20,7 @@
 #include <gtest/gtest.h>
 
 #include "ModelFixture.hpp"
-#include "../Building.hpp"
-#include "../Building_Impl.hpp"
-#include "../ThermalZone.hpp"
-#include "../EnergyManagementSystemSensor.hpp"
 #include "../EnergyManagementSystemGlobalVariable.hpp"
-#include "../OutputVariable.hpp"
-#include "../OutputVariable_Impl.hpp"
-#include "../OutputMeter.hpp"
-#include "../OutputMeter_Impl.hpp"
 #include "../Model_Impl.hpp"
 
 #include "../../utilities/idd/IddEnums.hpp"
@@ -45,12 +37,7 @@ using std::string;
 TEST_F(ModelFixture, EMSGlobalVariable_EMSGlobalVariable)
 {
   Model model;
-
-  Building building = model.getUniqueModelObject<Building>();
-
-  ThermalZone zone1(model);
-  ThermalZone zone2(model);
-
+    
   // add global variable
   EnergyManagementSystemGlobalVariable var("glob var", model);
   EXPECT_EQ("glob var", var.nameString());
