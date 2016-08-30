@@ -23,7 +23,6 @@
 #include "../shared_gui_components/HeaderViews.hpp"
 #include "../shared_gui_components/OSDialog.hpp"
 #include "../shared_gui_components/OSListView.hpp"
-#include "../runmanager/lib/Job.hpp"
 
 #include "../model/Model.hpp"
 
@@ -33,26 +32,23 @@ class QPushButton;
 class QStackedWidget;
 class QTextEdit;
 class QTimer;
+class QProcess;
 
 namespace openstudio{
 
 class DateTime;
-//class EditController;
+class EditController;
 class LocalLibraryController;
-
+class WorkflowStepResult;
+class WorkflowJSON;
 class TextEditDialog;
+
+namespace measuretab{
+  class MeasureStepItem;
+}
 
 // Local Forward Decs
 class DataPointJobItemView;
-
-namespace runmanager {
-  class AdvancedStatus;
-  class Job;
-}
-
-namespace measuretab {
-  class MeasureItem;
-}
 
 class ApplyMeasureNowDialog : public OSDialog
 {
@@ -68,7 +64,7 @@ public:
 
   void displayMeasure();
 
-  //QSharedPointer<EditController> m_editController;
+  QSharedPointer<EditController> m_editController;
 
   QSharedPointer<LocalLibraryController> m_localLibraryController;
 
@@ -112,9 +108,7 @@ private:
 
   boost::optional<BCLMeasure> m_bclMeasure;
 
-  QSharedPointer<measuretab::MeasureItem> m_currentMeasureItem;
-
-  boost::optional<runmanager::Job> m_job;
+  QSharedPointer<measuretab::MeasureStepItem> m_currentMeasureStepItem;
 
   boost::optional<model::Model> m_model;
 
@@ -140,6 +134,8 @@ private:
 
   int m_argumentsOkPageIdx;
 
+  QProcess * m_runProcess;
+
   QLabel * m_jobPath;
 
   QPushButton * m_showAdvancedOutput;
@@ -150,6 +146,9 @@ private:
 
   TextEditDialog * m_advancedOutputDialog;
 
+  WorkflowJSON m_modelWorkflowJSON;
+
+  WorkflowJSON m_tempWorkflowJSON;
 };
 
 class DataPointJobHeaderView : public OSHeader
@@ -166,7 +165,7 @@ class DataPointJobHeaderView : public OSHeader
 
   void setLastRunTime(const boost::optional<openstudio::DateTime>& lastRunTime);
 
-  void setStatus(const openstudio::runmanager::AdvancedStatus& status, bool isCanceled);
+  void setStatus(const std::string& status, bool isCanceled);
 
   void setNA(bool na);
 
@@ -234,7 +233,7 @@ protected:
 
 public slots:
 
-  //void update(analysis::RubyMeasure & rubyMeasure, BCLMeasure & bclMeasure, openstudio::runmanager::JobErrors jobErrors, openstudio::runmanager::Job job);
+  void update(const BCLMeasure & bclMeasure, const boost::optional<WorkflowJSON>& outWorkflowJSON, bool canceled);
 
 };
 

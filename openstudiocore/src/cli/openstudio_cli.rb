@@ -239,6 +239,7 @@ class CLI
       o.separator ''
       o.on('-h', '--help', 'Print this help.')
       o.on('--verbose', 'Print the full log to STDOUT')
+      o.on('-I', '--include DIR', 'Add additional directory to Ruby $LOAD_PATH (may be used more than once)')
       o.on('--gem_path PATH', 'Path to use for installing gems to and loading gems from')
       o.separator ''
       o.separator 'Common commands:'
@@ -311,6 +312,9 @@ class Run
       o.on('-p', '--postprocess_only', 'Only run the reporting measures') do
         options[:post_process] = true
       end
+      o.on('-s', '--socket PORT', 'Pipe status messages to a socket on localhost PORT') do |port|
+        options[:socket] = port
+      end      
       o.on('--debug', 'Includes additional outputs for debugging failing workflows and does not clean up the run directory') do |f|
         options[:debug] = f
       end
@@ -331,31 +335,34 @@ class Run
     end
 
     require 'openstudio-workflow'
-
+    
     osw_path = options[:workflow]
     osw_path = File.absolute_path(File.join(Dir.pwd, osw_path)) unless Pathname.new(osw_path).absolute?
     $logger.debug "Path for the OSW: #{osw_path}"
 
-    #adapter_options = {workflow_filename: File.basename(osw_path), output_directory: File.join(Dir.pwd, 'run')}
-    
-    #$logger.debug "Loading input adapter, options = #{adapter_options}"
-    #input_adapter = OpenStudio::Workflow.load_input_adapter 'local', adapter_options
-    
-    #$logger.debug "Loading output adapter, options = #{adapter_options}"
-    #output_adapter = OpenStudio::Workflow.load_output_adapter 'local', adapter_options
-    
     run_options = options[:debug] ? {debug: true, cleanup: false} : {}
+    
+    if options[:socket]
+      require 'openstudio/workflow/adapters/input/local'
+      require 'openstudio/workflow/adapters/output/socket'
+      input_adapter = OpenStudio::Workflow::InputAdapter::Local.new(osw_path)
+      output_adapter = OpenStudio::Workflow::OutputAdapter::Socket.new({output_directory: input_adapter.run_dir, port: options[:socket]})
+      run_options[:output_adapter] = output_adapter
+    end
+    
     if options[:no_simulation]
       run_options[:jobs] = [
         { state: :queued, next_state: :initialization, options: { initial: true } },
         { state: :initialization, next_state: :os_measures, job: :RunInitialization,
-          file: './jobs/run_initialization.rb', options: {} },
+          file: 'openstudio/workflow/jobs/run_initialization.rb', options: {} },
         { state: :os_measures, next_state: :translator, job: :RunOpenStudioMeasures,
-          file: './jobs/run_os_measures.rb', options: {} },
+          file: 'openstudio/workflow/jobs/run_os_measures.rb', options: {} },
         { state: :translator, next_state: :ep_measures, job: :RunTranslation,
-          file: './jobs/run_translation.rb', options: {} },
+          file: 'openstudio/workflow/jobs/run_translation.rb', options: {} },
         { state: :ep_measures, next_state: :finished, job: :RunEnergyPlusMeasures,
-          file: './jobs/run_ep_measures.rb', options: {} },
+          file: 'openstudio/workflow/jobs/run_ep_measures.rb', options: {} },
+        { state: :postprocess, next_state: :finished, job: :RunPostprocess,
+          file: 'openstudio/workflow/jobs/run_postprocess.rb', options: {} },
         { state: :finished },
         { state: :errored }
       ]
@@ -363,11 +370,11 @@ class Run
       run_options[:jobs] = [
         { state: :queued, next_state: :initialization, options: { initial: true } },
         { state: :initialization, next_state: :reporting_measures, job: :RunInitialization,
-          file: './jobs/run_initialization.rb', options: {} },
+          file: 'openstudio/workflow/jobs/run_initialization.rb', options: {} },
         { state: :reporting_measures, next_state: :postprocess, job: :RunReportingMeasures,
-          file: './jobs/run_reporting_measures.rb', options: {} },
+          file: 'openstudio/workflow/jobs/run_reporting_measures.rb', options: {} },
         { state: :postprocess, next_state: :finished, job: :RunPostprocess,
-          file: './jobs/run_postprocess.rb', options: {} },
+          file: 'openstudio/workflow/jobs/run_postprocess.rb', options: {} },
         { state: :finished },
         { state: :errored }
       ]
@@ -963,6 +970,28 @@ if $argv.include? '--verbose'
   $logger.debug 'Set Logger log level to DEBUG'
 end
 $logger.debug "Input ARGV is #{$argv}"
+
+# Operate on the include option to add to $LOAD_PATH
+$argv.each_index do |i|
+  remove_indices = []
+  if $argv[i] == '-I' || $argv[i] == '--include'
+    # remove from further processing
+    remove_indices << i 
+    remove_indices << i+1
+    
+    dir = $argv[i + 1]
+    
+    if dir.nil? 
+      safe_puts "#{$argv[i]} requires second argument DIR"
+      return 0
+    elsif !File.exists?(dir) || !File.directory?(dir)
+      $logger.warn "'#{dir}' passed to #{$argv[i]} is not a directory"
+    end
+    $LOAD_PATH << dir
+  end
+  
+  remove_indices.reverse_each {|i| $argv.delete_at(i)}
+end
 
 # Operate on the gem_path option to set the gem search path
 if $argv.include? '--gem_path'

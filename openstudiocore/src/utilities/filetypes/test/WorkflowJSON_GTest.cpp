@@ -20,6 +20,7 @@
 #include <gtest/gtest.h>
 
 #include "../WorkflowJSON.hpp"
+#include "../WorkflowJSON_Impl.hpp"
 #include "../WorkflowStep.hpp"
 #include "../WorkflowStep_Impl.hpp"
 #include "../WorkflowStepResult.hpp"
@@ -31,6 +32,19 @@
 #include <resources.hxx>
 
 using namespace openstudio;
+
+
+class WorkflowJSONListener
+{
+public:
+  WorkflowJSONListener()
+    : dirty(false)
+  {}
+
+  void makeDirty() { dirty = true; }
+  bool dirty;
+};
+
 
 TEST(Filetypes, WorkflowJSON_Min)
 {
@@ -677,4 +691,73 @@ TEST(Filetypes, WorkflowJSON_Setters)
 
   EXPECT_EQ(toPath("../in.osm"), workflowJSON.seedFile().get());
   EXPECT_EQ(toPath("./files/in.epw"), workflowJSON.weatherFile().get());
+
+  MeasureStep step("rotation_measure");
+  std::vector<WorkflowStep> steps;
+  steps.push_back(step);
+  workflowJSON.setWorkflowSteps(steps);
+  EXPECT_EQ(1u, workflowJSON.workflowSteps().size());
+
+  EXPECT_EQ(0u, step.arguments().size());
+  EXPECT_FALSE(step.getArgument("rotation"));
+
+  step.setArgument("rotation", 0.0);
+  EXPECT_EQ(1u, step.arguments().size());
+  ASSERT_TRUE(step.getArgument("rotation"));
+  ASSERT_TRUE(step.getArgument("rotation")->variantType() == VariantType::Double);
+  EXPECT_EQ(0.0, step.getArgument("rotation")->valueAsDouble());
+
+  step.setArgument("rotation", 90.0);
+  EXPECT_EQ(1u, step.arguments().size());
+  ASSERT_TRUE(step.getArgument("rotation"));
+  ASSERT_TRUE(step.getArgument("rotation")->variantType() == VariantType::Double);
+  EXPECT_EQ(90.0, step.getArgument("rotation")->valueAsDouble());
+
+  step.setArgument("rotation", "none");
+  EXPECT_EQ(1u, step.arguments().size());
+  ASSERT_TRUE(step.getArgument("rotation"));
+  ASSERT_TRUE(step.getArgument("rotation")->variantType() == VariantType::String);
+  EXPECT_EQ("none", step.getArgument("rotation")->valueAsString());
+
+  step.removeArgument("rotation");
+  EXPECT_FALSE(step.getArgument("rotation"));
+  EXPECT_EQ(0, step.arguments().size());
+}
+
+TEST(Filetypes, WorkflowJSON_Signals)
+{
+  WorkflowJSON workflowJSON;
+  WorkflowJSONListener listener;
+
+  workflowJSON.getImpl<openstudio::detail::WorkflowJSON_Impl>().get()->WorkflowJSON_Impl::onChange.connect<WorkflowJSONListener, &WorkflowJSONListener::makeDirty>(listener);
+
+  EXPECT_EQ(false, listener.dirty);
+  workflowJSON.setSeedFile(toPath("in.osm"));
+  EXPECT_EQ(true, listener.dirty);
+  listener.dirty = false;
+
+  MeasureStep step("My Measure");
+
+  std::vector<WorkflowStep> steps;
+  steps.push_back(step);
+
+  EXPECT_EQ(false, listener.dirty);
+  workflowJSON.setWorkflowSteps(steps);
+  EXPECT_EQ(true, listener.dirty);
+  listener.dirty = false;
+
+  EXPECT_EQ(false, listener.dirty);
+  step.setName("New Name");
+  EXPECT_EQ(true, listener.dirty);
+  listener.dirty = false;
+
+  EXPECT_EQ(false, listener.dirty);
+  workflowJSON.resetWorkflowSteps();
+  EXPECT_EQ(true, listener.dirty);
+  listener.dirty = false;
+
+  EXPECT_EQ(false, listener.dirty);
+  step.setName("New Name");
+  EXPECT_EQ(false, listener.dirty);
+  listener.dirty = false;
 }

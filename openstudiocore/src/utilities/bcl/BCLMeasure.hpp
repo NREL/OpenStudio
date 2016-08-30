@@ -91,20 +91,20 @@ namespace openstudio{
     static boost::optional<BCLMeasure> load(const openstudio::path& dir);
 
     /// Load all measures in the PAT application's measures directory.
-    static std::vector<BCLMeasure> patApplicationMeasures();
+    //static std::vector<BCLMeasure> patApplicationMeasures();
 
-    static BCLMeasure alternativeModelMeasure();
+    //static BCLMeasure alternativeModelMeasure();
 
-    static BCLMeasure reportRequestMeasure();
+    //static BCLMeasure reportRequestMeasure();
 
-    static BCLMeasure standardReportMeasure();
+    //static BCLMeasure standardReportMeasure();
 
-    static BCLMeasure calibrationReportMeasure();
+    //static BCLMeasure calibrationReportMeasure();
 
-    static BCLMeasure radianceMeasure();
+    //static BCLMeasure radianceMeasure();
 
     /// Returns the path to the PAT application's measures directory.
-    static openstudio::path patApplicationMeasuresDir();
+    //static openstudio::path patApplicationMeasuresDir();
 
     /// Load all measures in the local BCL.
     static std::vector<BCLMeasure> localBCLMeasures();

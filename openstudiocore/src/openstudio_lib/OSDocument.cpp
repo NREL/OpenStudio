@@ -19,7 +19,7 @@
 
 #include "OSDocument.hpp"
 
-//#include "ApplyMeasureNowDialog.hpp"
+#include "ApplyMeasureNowDialog.hpp"
 #include "ConstructionsTabController.hpp"
 #include "FacilityTabController.hpp"
 #include "HorizontalTabWidget.hpp"
@@ -97,6 +97,8 @@
 #include "../utilities/idf/ValidityReport.hpp"
 #include "../utilities/idf/Workspace.hpp"
 #include "../utilities/filetypes/EpwFile.hpp"
+#include "../utilities/filetypes/WorkflowJSON.hpp"
+#include "../utilities/filetypes/WorkflowJSON_Impl.hpp"
 
 #include "../osversion/VersionTranslator.hpp"
 
@@ -372,6 +374,7 @@ namespace openstudio {
     }
 
     m_model.getImpl<model::detail::Model_Impl>().get()->onChange.connect<OSDocument, &OSDocument::markAsModified>(this);
+    m_model.workflowJSON().getImpl<detail::WorkflowJSON_Impl>().get()->onChange.connect<OSDocument, &OSDocument::markAsModified>(this);
 
     // Main Right Column
 
@@ -1587,18 +1590,17 @@ namespace openstudio {
       }
     }
 
-    // TODO enable this
+    // save the temp model for the measure manager to use
+    OSAppBase::instance()->measureManager().saveTempModel();
+
     // open modal dialog
-    //m_applyMeasureNowDialog = boost::shared_ptr<ApplyMeasureNowDialog>(new ApplyMeasureNowDialog());
+    m_applyMeasureNowDialog = boost::shared_ptr<ApplyMeasureNowDialog>(new ApplyMeasureNowDialog());
 
-    //// connect signal before exec dialog
-    //connect(m_applyMeasureNowDialog.get(), &ApplyMeasureNowDialog::toolsUpdated, this, &OSDocument::toolsUpdated);
+    m_applyMeasureNowDialog->exec();
 
-    //m_applyMeasureNowDialog->exec();
-
-    //// DLM: kill the dialog here as there is logic in the destructor that resets application state
-    //// DLM: this seems overly complicated
-    //m_applyMeasureNowDialog.reset();
+    // DLM: kill the dialog here as there is logic in the destructor that resets application state
+    // DLM: this seems overly complicated
+    m_applyMeasureNowDialog.reset();
   }
 
   void OSDocument::openChangeMeasuresDirDlg()

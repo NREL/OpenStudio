@@ -30,6 +30,9 @@
 
 #include <jsoncpp/json.h>
 
+// DLM: this should be somewhere different
+#include <model/nano_signal_slot.hpp> 
+
 namespace openstudio{
 namespace detail {
 
@@ -49,6 +52,13 @@ namespace detail {
 
     void resetResult();
 
+    // Emitted on any change
+    Nano::Signal<void()> onChange;
+
+  protected:
+    
+    void onUpdate();
+
   private:
 
     // configure logging
@@ -67,6 +77,8 @@ namespace detail {
     virtual std::string string() const;
 
     std::string measureDirName() const;
+
+    bool setMeasureDirName(const std::string& measureDirName);
 
     boost::optional<std::string> name() const;
 

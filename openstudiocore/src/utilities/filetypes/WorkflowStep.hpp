@@ -31,6 +31,7 @@
 namespace openstudio{
 namespace detail{
   class WorkflowStep_Impl;
+  class WorkflowJSON_Impl;
   class MeasureStep_Impl;
 }
 
@@ -91,6 +92,7 @@ protected:
   }
 
   friend class detail::WorkflowStep_Impl;
+  friend class detail::WorkflowJSON_Impl;
 
   /** Protected constructor from impl. */
   WorkflowStep(std::shared_ptr<detail::WorkflowStep_Impl> impl);
@@ -140,6 +142,7 @@ public:
   void setArgument(const std::string& name, bool value);
   void setArgument(const std::string& name, double value);
   void setArgument(const std::string& name, int value);
+  void setArgument(const std::string& name, const char* value);
   void setArgument(const std::string& name, const std::string& value);
 
   void removeArgument(const std::string& name);
@@ -150,11 +153,14 @@ protected:
 
   MeasureStep(std::shared_ptr<detail::MeasureStep_Impl> impl);
 
+  bool setMeasureDirName(const std::string& measureDirName);
+
 private:
 
   typedef detail::MeasureStep_Impl ImplType;
 
   friend class WorkflowStep;
+  friend class detail::WorkflowJSON_Impl;
 
   // configure logging
   REGISTER_LOGGER("openstudio.MeasureStep");

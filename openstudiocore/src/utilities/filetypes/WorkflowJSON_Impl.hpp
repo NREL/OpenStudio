@@ -29,6 +29,9 @@
 #include "../data/Variant.hpp"
 #include "../data/Attribute.hpp"
 
+// DLM: this should be somewhere different
+#include <model/nano_signal_slot.hpp> 
+
 #include <jsoncpp/json.h>
 
 namespace openstudio{
@@ -59,7 +62,7 @@ namespace detail {
 
       bool save() const;
 
-      bool saveAs(const openstudio::path& p) const;
+      bool saveAs(const openstudio::path& p);
 
       void reset();
 
@@ -103,11 +106,17 @@ namespace detail {
       std::vector<openstudio::path> filePaths() const;
       std::vector<openstudio::path> absoluteFilePaths() const;
 
+      bool addFilePath(const openstudio::path& path);
+      void resetFilePaths();
+
       boost::optional<openstudio::path> findFile(const openstudio::path& file) const;
       boost::optional<openstudio::path> findFile(const std::string& fileName) const;
 
       std::vector<openstudio::path> measurePaths() const;
       std::vector<openstudio::path> absoluteMeasurePaths() const;
+
+      bool addMeasurePath(const openstudio::path& path);
+      void resetMeasurePaths();
 
       boost::optional<openstudio::path> findMeasure(const openstudio::path& measureDir) const;
       boost::optional<openstudio::path> findMeasure(const std::string& measureDirName) const;
@@ -128,15 +137,20 @@ namespace detail {
 
       bool setWorkflowSteps(const std::vector<WorkflowStep>& steps);
 
+      void resetWorkflowSteps();
+
       std::vector<MeasureStep> getMeasureSteps(const MeasureType& measureType);
 
       bool setMeasureSteps(const MeasureType& measureType, const std::vector<MeasureStep>& steps);
 
-      boost::optional<BCLMeasure> getBCLMeasure(const MeasureStep& step);
+      boost::optional<BCLMeasure> getBCLMeasure(const MeasureStep& step) const;
 
-      boost::optional<BCLMeasure> getBCLMeasureByUUID(const UUID& id);
+      boost::optional<BCLMeasure> getBCLMeasureByUUID(const UUID& id) const;
 
       boost::optional<BCLMeasure> addMeasure(const BCLMeasure& bclMeasure);
+
+      // Emitted on any change
+      Nano::Signal<void()> onChange;
 
     private:
 
@@ -145,6 +159,10 @@ namespace detail {
       void onUpdate();
 
       void parseSteps();
+
+      void disconnectSteps();
+
+      void connectSteps();
 
       // synchronize m_measureTypes with m_steps
       void setMeasureTypes();

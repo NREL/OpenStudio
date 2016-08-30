@@ -148,29 +148,32 @@ namespace detail{
     if (!p){
       return false;
     }
-    return saveAs(*p);
-  }
 
-  bool WorkflowJSON_Impl::saveAs(const openstudio::path& p) const
-  {
-    if (makeParentFolder(p)) {
-      std::ofstream outFile(openstudio::toString(p));
+    if (makeParentFolder(*p)) {
+      std::ofstream outFile(openstudio::toString(*p));
       if (outFile) {
         try {
           outFile << string();
           outFile.close();
-
           return true;
         } catch (...) {
-          LOG(Error, "Unable to write file to path '" << toString(p) << "'.");
+          LOG(Error, "Unable to write file to path '" << toString(*p) << "'.");
           return false;
         }
       }
     }
 
-    LOG(Error, "Unable to write file to path '" << toString(p) << "', because parent directory "
+    LOG(Error, "Unable to write file to path '" << toString(*p) << "', because parent directory "
         << "could not be created.");
 
+    return false;
+  }
+
+  bool WorkflowJSON_Impl::saveAs(const openstudio::path& p) 
+  {
+    if (setOswPath(p)) {
+      return save();
+    }
     return false;
   }
   
@@ -374,13 +377,13 @@ namespace detail{
     std::vector<openstudio::path> result;
 
     Json::Value defaultValue(Json::arrayValue);
-    defaultValue.append("./files");
-    defaultValue.append("./weather");
-    defaultValue.append("../../files");
-    defaultValue.append("../../weather");
-    defaultValue.append("./");
-
+    
     Json::Value paths = m_value.get("file_paths", defaultValue);
+    paths.append("./files");
+    paths.append("./weather");
+    paths.append("../../files");
+    paths.append("../../weather");
+    paths.append("./");
 
     Json::ArrayIndex n = paths.size();
     for (Json::ArrayIndex i = 0; i < n; ++i){
@@ -401,6 +404,20 @@ namespace detail{
       }
     }
     return result;
+  }
+
+  bool WorkflowJSON_Impl::addFilePath(const openstudio::path& path)
+  {
+    if (!m_value.isMember("file_paths") || !m_value["file_paths"].isArray()){
+      m_value["file_paths"] = Json::Value(Json::arrayValue);
+    }
+    m_value["file_paths"].append(toString(path));
+    return true;
+  }
+  
+  void WorkflowJSON_Impl::resetFilePaths()
+  {
+    m_value["file_paths"] = Json::Value(Json::arrayValue);
   }
 
   boost::optional<openstudio::path> WorkflowJSON_Impl::findFile(const openstudio::path& file) const
@@ -434,11 +451,11 @@ namespace detail{
     std::vector<openstudio::path> result;
 
     Json::Value defaultValue(Json::arrayValue);
-    defaultValue.append("./measures");
-    defaultValue.append("../../measures");
-    defaultValue.append("./");
-
+    
     Json::Value paths = m_value.get("measure_paths", defaultValue);
+    paths.append("./measures");
+    paths.append("../../measures");
+    paths.append("./");
 
     Json::ArrayIndex n = paths.size();
     for (Json::ArrayIndex i = 0; i < n; ++i){
@@ -459,6 +476,20 @@ namespace detail{
       }
     }
     return result;
+  }
+
+  bool WorkflowJSON_Impl::addMeasurePath(const openstudio::path& path)
+  {
+    if (!m_value.isMember("measure_paths") || !m_value["measure_paths"].isArray()){
+      m_value["measure_paths"] = Json::Value(Json::arrayValue);
+    }
+    m_value["measure_paths"].append(toString(path));
+    return true;
+  }
+
+  void WorkflowJSON_Impl::resetMeasurePaths()
+  {
+    m_value["measure_paths"] = Json::Value(Json::arrayValue);
   }
 
   boost::optional<openstudio::path> WorkflowJSON_Impl::findMeasure(const openstudio::path& measureDir) const
@@ -501,12 +532,14 @@ namespace detail{
   bool WorkflowJSON_Impl::setSeedFile(const openstudio::path& seedFile)
   {
     m_value["seed_file"] = toString(seedFile);
+    onUpdate();
     return true;
   }
 
   void WorkflowJSON_Impl::resetSeedFile()
   {
     m_value.removeMember("seed_file");
+    onUpdate();
   }
 
   boost::optional<openstudio::path> WorkflowJSON_Impl::weatherFile() const
@@ -523,12 +556,14 @@ namespace detail{
   bool WorkflowJSON_Impl::setWeatherFile(const openstudio::path& weatherFile)
   {
     m_value["weather_file"] = toString(weatherFile);
+    onUpdate();
     return true;
   }
     
   void WorkflowJSON_Impl::resetWeatherFile()
   {
     m_value.removeMember("weather_file");
+    onUpdate();
   }
 
   std::vector<WorkflowStep> WorkflowJSON_Impl::workflowSteps() const
@@ -538,10 +573,18 @@ namespace detail{
   
   bool WorkflowJSON_Impl::setWorkflowSteps(const std::vector<WorkflowStep>& workflowSteps)
   {
+    disconnectSteps();
     m_steps = workflowSteps;
     setMeasureTypes();
+    connectSteps();
     onUpdate();
     return true;
+  }
+
+  void WorkflowJSON_Impl::resetWorkflowSteps()
+  {
+    bool test = setWorkflowSteps(std::vector<WorkflowStep>());
+    OS_ASSERT(test);
   }
 
   std::vector<MeasureStep> WorkflowJSON_Impl::getMeasureSteps(const MeasureType& measureType)
@@ -600,7 +643,7 @@ namespace detail{
     return setWorkflowSteps(newSteps);
   }
 
-  boost::optional<BCLMeasure> WorkflowJSON_Impl::getBCLMeasure(const MeasureStep& step)
+  boost::optional<BCLMeasure> WorkflowJSON_Impl::getBCLMeasure(const MeasureStep& step) const
   {
     boost::optional<openstudio::path> path = findMeasure(step.measureDirName());
     if (path){
@@ -609,7 +652,7 @@ namespace detail{
     return boost::none;
   }
 
-  boost::optional<BCLMeasure> WorkflowJSON_Impl::getBCLMeasureByUUID(const UUID& id)
+  boost::optional<BCLMeasure> WorkflowJSON_Impl::getBCLMeasureByUUID(const UUID& id) const
   {
     for (const auto& step : m_steps){
       if (step.optionalCast<MeasureStep>()){
@@ -625,8 +668,12 @@ namespace detail{
   boost::optional<BCLMeasure> WorkflowJSON_Impl::addMeasure(const BCLMeasure& bclMeasure)
   {
     boost::optional<BCLMeasure> existingMeasure = getBCLMeasureByUUID(bclMeasure.uuid());
+    boost::optional<openstudio::path> existingMeasureDirName;
     if (existingMeasure){
-      boost::filesystem::remove_all(existingMeasure->directory());
+      // TODO: check that measure type has not changed?
+
+      existingMeasureDirName = existingMeasure->directory();
+      boost::filesystem::remove_all(*existingMeasureDirName);
     }
 
     std::vector<openstudio::path> paths = absoluteMeasurePaths();
@@ -644,17 +691,31 @@ namespace detail{
       ss << toString(stem) << " " << i;
       stem = toPath(ss.str());
     }
+    openstudio::path newMeasureDirName = paths[0] / stem;
 
-    return bclMeasure.clone(paths[0] / stem);
+    if (existingMeasureDirName && (existingMeasureDirName->stem() != newMeasureDirName.stem())){
+      // update steps 
+      for (auto& step : m_steps){
+        if (auto measureStep = step.optionalCast<MeasureStep>()){
+          if (measureStep->measureDirName() == toString(existingMeasureDirName->stem())){
+            measureStep->setMeasureDirName(toString(newMeasureDirName.stem()));
+          }
+        }
+      }
+    }
+
+    return bclMeasure.clone(newMeasureDirName);
   }
 
   void WorkflowJSON_Impl::onUpdate()
   {
     m_value["updated_at"] = DateTime::nowUTC().toISO8601();
+    this->onChange.nano_emit();
   }
 
   void WorkflowJSON_Impl::parseSteps()
   {
+    disconnectSteps();
     m_steps.clear();
 
     Json::Value defaultValue(Json::arrayValue);
@@ -675,8 +736,24 @@ namespace detail{
       }
     }
 
+    connectSteps();
+
     m_value.removeMember("steps");
 
+  }
+
+  void WorkflowJSON_Impl::disconnectSteps()
+  {
+    for (const auto& step : m_steps){
+      step.getImpl<detail::WorkflowStep_Impl>().get()->WorkflowStep_Impl::onChange.disconnect<WorkflowJSON_Impl, &WorkflowJSON_Impl::onUpdate>(this);
+    }
+  }
+
+  void WorkflowJSON_Impl::connectSteps()
+  {
+    for (const auto& step : m_steps){
+      step.getImpl<detail::WorkflowStep_Impl>().get()->WorkflowStep_Impl::onChange.connect<WorkflowJSON_Impl, &WorkflowJSON_Impl::onUpdate>(this);
+    }
   }
 
   void WorkflowJSON_Impl::setMeasureTypes()
@@ -765,7 +842,7 @@ bool WorkflowJSON::save() const
   return getImpl<detail::WorkflowJSON_Impl>()->save();
 }
 
-bool WorkflowJSON::saveAs(const openstudio::path& p) const
+bool WorkflowJSON::saveAs(const openstudio::path& p)
 {
   return getImpl<detail::WorkflowJSON_Impl>()->saveAs(p);
 }
@@ -885,6 +962,16 @@ std::vector<openstudio::path> WorkflowJSON::absoluteFilePaths() const
   return getImpl<detail::WorkflowJSON_Impl>()->absoluteFilePaths();
 }
 
+bool WorkflowJSON::addFilePath(const openstudio::path& path)
+{
+  return getImpl<detail::WorkflowJSON_Impl>()->addFilePath(path);
+}
+
+void WorkflowJSON::resetFilePaths()
+{
+  getImpl<detail::WorkflowJSON_Impl>()->resetFilePaths();
+}
+
 boost::optional<openstudio::path> WorkflowJSON::findFile(const openstudio::path& file) const
 {
   return getImpl<detail::WorkflowJSON_Impl>()->findFile(file);
@@ -903,6 +990,16 @@ std::vector<openstudio::path> WorkflowJSON::measurePaths() const
 std::vector<openstudio::path> WorkflowJSON::absoluteMeasurePaths() const
 {
   return getImpl<detail::WorkflowJSON_Impl>()->absoluteMeasurePaths();
+}
+
+bool WorkflowJSON::addMeasurePath(const openstudio::path& path)
+{
+  return getImpl<detail::WorkflowJSON_Impl>()->addMeasurePath(path);
+}
+
+void WorkflowJSON::resetMeasurePaths()
+{
+  return getImpl<detail::WorkflowJSON_Impl>()->resetMeasurePaths();
 }
 
 boost::optional<openstudio::path> WorkflowJSON::findMeasure(const openstudio::path& measureDir) const
@@ -955,6 +1052,11 @@ bool WorkflowJSON::setWorkflowSteps(const std::vector<WorkflowStep>& steps)
   return getImpl<detail::WorkflowJSON_Impl>()->setWorkflowSteps(steps);
 }
 
+void WorkflowJSON::resetWorkflowSteps()
+{
+  getImpl<detail::WorkflowJSON_Impl>()->resetWorkflowSteps();
+}
+
 std::vector<MeasureStep> WorkflowJSON::getMeasureSteps(const MeasureType& measureType)
 {
   return getImpl<detail::WorkflowJSON_Impl>()->getMeasureSteps(measureType);
@@ -965,12 +1067,12 @@ bool WorkflowJSON::setMeasureSteps(const MeasureType& measureType, const std::ve
   return getImpl<detail::WorkflowJSON_Impl>()->setMeasureSteps(measureType, steps);
 }
 
-boost::optional<BCLMeasure> WorkflowJSON::getBCLMeasure(const MeasureStep& step)
+boost::optional<BCLMeasure> WorkflowJSON::getBCLMeasure(const MeasureStep& step) const
 {
   return getImpl<detail::WorkflowJSON_Impl>()->getBCLMeasure(step);
 }
 
-boost::optional<BCLMeasure> WorkflowJSON::getBCLMeasureByUUID(const UUID& id)
+boost::optional<BCLMeasure> WorkflowJSON::getBCLMeasureByUUID(const UUID& id) const
 {
   return getImpl<detail::WorkflowJSON_Impl>()->getBCLMeasureByUUID(id);
 }

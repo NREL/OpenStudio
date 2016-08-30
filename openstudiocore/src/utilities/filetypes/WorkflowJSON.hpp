@@ -30,11 +30,14 @@
 
 #include <jsoncpp/json.h>
 
+class Filetypes_WorkflowJSON_Signals_Test;
+
 namespace openstudio{
 
 class WorkflowStep;
 class MeasureStep;
 class DateTime;
+class OSDocument;
 
 namespace detail{
   class WorkflowJSON_Impl;
@@ -78,8 +81,8 @@ public:
   /** Saves this file to the current location. */
   bool save() const;
 
-  /** Saves this file to a new location. */
-  bool saveAs(const openstudio::path& p) const;
+  /** Saves this file to a new location. Updates the OSW path. */
+  bool saveAs(const openstudio::path& p);
 
   /** Reset to re-run the workflow, does not delete steps. */
   void reset();
@@ -142,6 +145,12 @@ public:
   std::vector<openstudio::path> filePaths() const;
   std::vector<openstudio::path> absoluteFilePaths() const;
 
+  /** Add a path to the paths searched for files. */
+  bool addFilePath(const openstudio::path& path);
+
+  /** Clear paths searched for files. */
+  void resetFilePaths();
+
   /** Attempts to find a file by path.
   *   If file is relative, searches through filePaths in order and returns first match that exists. 
   *   If file is absolute, does not search for file in filePaths, only returns true it file exists.
@@ -152,6 +161,12 @@ public:
   /** Returns the paths that will be searched in order for measures, default value is './measures/'. Evaluated relative to rootDir if not absolute. */
   std::vector<openstudio::path> measurePaths() const;
   std::vector<openstudio::path> absoluteMeasurePaths() const;
+
+  /** Add a path to the paths searched for measures. */
+  bool addMeasurePath(const openstudio::path& path);
+
+  /** Clear paths searched for measures. */
+  void resetMeasurePaths();
 
   /** Attempts to find a measure by path.
   *   If measureDir is relative, searches through measurePaths in order and returns first match that exists. 
@@ -184,6 +199,9 @@ public:
   /** Assigns the workflow steps. */
   bool setWorkflowSteps(const std::vector<WorkflowStep>& steps);
 
+  /** Resets the workflow steps. */
+  void resetWorkflowSteps();
+
   /** Gets measure steps by measure type. */
   std::vector<MeasureStep> getMeasureSteps(const MeasureType& measureType);
 
@@ -191,10 +209,10 @@ public:
   bool setMeasureSteps(const MeasureType& measureType, const std::vector<MeasureStep>& steps);
 
   /** Attempts to find the BCLMeasure for a given MeasureStep. */
-  boost::optional<BCLMeasure> getBCLMeasure(const MeasureStep& step);
+  boost::optional<BCLMeasure> getBCLMeasure(const MeasureStep& step) const;
 
-  /** Add a measure to the measure dir, replaces existing measure, does not add a step to the workflow. */
-  boost::optional<BCLMeasure> getBCLMeasureByUUID(const UUID& id);
+  /** Checks BCLMeasure for each MeasureStep attempting to find by id, does not check measures that are not in the workflow. */
+  boost::optional<BCLMeasure> getBCLMeasureByUUID(const UUID& id) const;
 
   /** Add a measure to the measure dir, replaces existing measure with same id, does not add a step to the workflow. */
   boost::optional<BCLMeasure> addMeasure(const BCLMeasure& bclMeasure);
@@ -207,7 +225,9 @@ protected:
     return std::dynamic_pointer_cast<T>(m_impl);
   }
   
+  friend class OSDocument;
   friend class detail::WorkflowJSON_Impl;
+  friend class ::Filetypes_WorkflowJSON_Signals_Test; // for testing
 
   /** Protected constructor from impl. */
   WorkflowJSON(std::shared_ptr<detail::WorkflowJSON_Impl> impl);
