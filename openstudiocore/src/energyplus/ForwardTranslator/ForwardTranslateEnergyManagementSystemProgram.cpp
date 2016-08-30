@@ -57,6 +57,7 @@ boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemPro
     program.setName(*s);
   }
  
+  //TODO translate UIDs to UID.name in the program
   for (const IdfExtensibleGroup& eg : modelObject.extensibleGroups()) {
     program.pushExtensibleGroup(eg.fields());
   }
