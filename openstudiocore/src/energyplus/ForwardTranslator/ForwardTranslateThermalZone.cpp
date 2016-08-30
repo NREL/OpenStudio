@@ -123,6 +123,7 @@
 #include <utilities/idd/Zone_FieldEnums.hxx>
 #include <utilities/idd/HVACTemplate_Zone_IdealLoadsAirSystem_FieldEnums.hxx>
 #include <utilities/idd/Daylighting_Controls_FieldEnums.hxx>
+#include <utilities/idd/Daylighting_ReferencePoint_FieldEnums.hxx>
 #include <utilities/idd/Output_IlluminanceMap_FieldEnums.hxx>
 #include <utilities/idd/Schedule_Compact_FieldEnums.hxx>
 #include <utilities/idd/ZoneHVAC_EquipmentConnections_FieldEnums.hxx>
@@ -322,64 +323,79 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
           Daylighting_ControlsFields::ZoneName,
           modelObject.name().get());
 
-      daylightingControlObject.setInt(
-          Daylighting_ControlsFields::TotalDaylightingReferencePoints,
-          numPoints);
-
       // Primary Control
-      daylightingControlObject.setDouble(
-          Daylighting_ControlsFields::XCoordinateofFirstReferencePoint,
+      IdfObject primaryReferencePoint(openstudio::IddObjectType::Daylighting_ReferencePoint);
+      m_idfObjects.push_back(primaryReferencePoint);
+
+      primaryReferencePoint.setDouble(
+          Daylighting_ReferencePointFields::XCoordinateofReferencePoint,
           primaryDaylightingControl->positionXCoordinate());
-      daylightingControlObject.setDouble(
-          Daylighting_ControlsFields::YCoordinateofFirstReferencePoint,
+      primaryReferencePoint.setDouble(
+          Daylighting_ReferencePointFields::YCoordinateofReferencePoint,
           primaryDaylightingControl->positionYCoordinate());
-      daylightingControlObject.setDouble(
-          Daylighting_ControlsFields::ZCoordinateofFirstReferencePoint,
+      primaryReferencePoint.setDouble(
+          Daylighting_ReferencePointFields::ZCoordinateofReferencePoint,
           primaryDaylightingControl->positionZCoordinate());
       
+      std::string fractionofZoneControlledbyFirstReferencePoint;
       if (istringEqual("None", primaryDaylightingControl->lightingControlType())){
-        daylightingControlObject.setDouble(
-            Daylighting_ControlsFields::FractionofZoneControlledbyFirstReferencePoint,
-            0.0);
+        fractionofZoneControlledbyFirstReferencePoint = "0.0";
       }else{
-        daylightingControlObject.setDouble(
-            Daylighting_ControlsFields::FractionofZoneControlledbyFirstReferencePoint,
-            modelObject.fractionofZoneControlledbyPrimaryDaylightingControl());
+        std::stringstream ss;
+        ss << modelObject.fractionofZoneControlledbyPrimaryDaylightingControl();
+        fractionofZoneControlledbyFirstReferencePoint = ss.str();
       }
       
+      std::string illuminanceSetpointatFirstReferencePoint;
       if (!primaryDaylightingControl->isIlluminanceSetpointDefaulted()){
-        daylightingControlObject.setDouble(
-            Daylighting_ControlsFields::IlluminanceSetpointatFirstReferencePoint,
-            primaryDaylightingControl->illuminanceSetpoint());
+        std::stringstream ss;
+        ss << primaryDaylightingControl->illuminanceSetpoint();
+        illuminanceSetpointatFirstReferencePoint = ss.str();
       }
 
+      std::vector<std::string> firstGroup;
+      firstGroup.push_back(primaryReferencePoint.nameString());
+      firstGroup.push_back(fractionofZoneControlledbyFirstReferencePoint);
+      firstGroup.push_back(illuminanceSetpointatFirstReferencePoint);
+      daylightingControlObject.pushExtensibleGroup(firstGroup);
+
       // Secondary Control
+      IdfObject secondaryReferencePoint(openstudio::IddObjectType::Daylighting_ReferencePoint);
+      m_idfObjects.push_back(secondaryReferencePoint);
+
       if (secondaryDaylightingControl){
-        daylightingControlObject.setDouble(
-            Daylighting_ControlsFields::XCoordinateofSecondReferencePoint,
+        secondaryReferencePoint.setDouble(
+            Daylighting_ReferencePointFields::XCoordinateofReferencePoint,
             secondaryDaylightingControl->positionXCoordinate());
-        daylightingControlObject.setDouble(
-            Daylighting_ControlsFields::YCoordinateofSecondReferencePoint,
+        secondaryReferencePoint.setDouble(
+            Daylighting_ReferencePointFields::YCoordinateofReferencePoint,
             secondaryDaylightingControl->positionYCoordinate());
-        daylightingControlObject.setDouble(
-            Daylighting_ControlsFields::ZCoordinateofSecondReferencePoint,
+        secondaryReferencePoint.setDouble(
+            Daylighting_ReferencePointFields::ZCoordinateofReferencePoint,
             secondaryDaylightingControl->positionZCoordinate());
         
+        std::string fractionofZoneControlledbySecondReferencePoint;
         if (istringEqual("None", secondaryDaylightingControl->lightingControlType())){
-          daylightingControlObject.setDouble(
-              Daylighting_ControlsFields::FractionofZoneControlledbySecondReferencePoint,
-              0.0);
+          fractionofZoneControlledbySecondReferencePoint = "0.0";
         }else{
-          daylightingControlObject.setDouble(
-              Daylighting_ControlsFields::FractionofZoneControlledbySecondReferencePoint,
-              modelObject.fractionofZoneControlledbySecondaryDaylightingControl());
+          std::stringstream ss;
+          ss << modelObject.fractionofZoneControlledbySecondaryDaylightingControl();
+          fractionofZoneControlledbySecondReferencePoint = ss.str();
         }
 
+        std::string illuminanceSetpointatSecondReferencePoint;
         if (!secondaryDaylightingControl->isIlluminanceSetpointDefaulted()){
-          daylightingControlObject.setDouble(
-              Daylighting_ControlsFields::IlluminanceSetpointatSecondReferencePoint,
-              secondaryDaylightingControl->illuminanceSetpoint());
+          std::stringstream ss;
+          ss << secondaryDaylightingControl->illuminanceSetpoint();
+          illuminanceSetpointatSecondReferencePoint = ss.str();      
         }
+
+        std::vector<std::string> secondGroup;
+        secondGroup.push_back(secondaryReferencePoint.nameString());
+        secondGroup.push_back(fractionofZoneControlledbySecondReferencePoint);
+        secondGroup.push_back(illuminanceSetpointatSecondReferencePoint);
+        daylightingControlObject.pushExtensibleGroup(secondGroup);
+
       }
 
       // Shared Data
@@ -424,13 +440,13 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
 
       if (!primaryDaylightingControl->isMinimumInputPowerFractionforContinuousDimmingControlDefaulted()){
         daylightingControlObject.setDouble(
-            Daylighting_ControlsFields::MinimumInputPowerFractionforContinuousDimmingControl,
+            Daylighting_ControlsFields::MinimumInputPowerFractionforContinuousorContinuousOffDimmingControl,
             primaryDaylightingControl->minimumInputPowerFractionforContinuousDimmingControl());
       }
 
       if (!primaryDaylightingControl->isMinimumLightOutputFractionforContinuousDimmingControlDefaulted()) {
         daylightingControlObject.setDouble(
-            Daylighting_ControlsFields::MinimumLightOutputFractionforContinuousDimmingControl,
+            Daylighting_ControlsFields::MinimumLightOutputFractionforContinuousorContinuousOffDimmingControl,
             primaryDaylightingControl->minimumLightOutputFractionforContinuousDimmingControl());
       }
 
@@ -452,6 +468,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
     boost::optional<IlluminanceMap> illuminanceMap = modelObject.illuminanceMap();
     if (illuminanceMap){
 
+      /*
       if (!primaryDaylightingControl){
         LOG(Warn, "Daylighting:Controls object is required to trigger daylighting calculations in EnergyPlus, adding a minimal one to Zone " << modelObject.name().get());
 
@@ -464,7 +481,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
         daylightingControlObject.setDouble(Daylighting_ControlsFields::YCoordinateofFirstReferencePoint, 0.0);
         daylightingControlObject.setDouble(Daylighting_ControlsFields::FractionofZoneControlledbyFirstReferencePoint, 0.0);
       }
-
+      */
 
       IdfObject illuminanceMapObject(openstudio::IddObjectType::Output_IlluminanceMap);
       m_idfObjects.push_back(illuminanceMapObject);
