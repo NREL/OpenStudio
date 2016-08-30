@@ -10,6 +10,7 @@ if File.exists?(install_dir)
   FileUtils.rm_rf(install_dir)
 end
 
+ENV['BUNDLE_WITHOUT'] = 'test'
 system("bundle install --without=test --path='#{install_dir}'")
 
 FileUtils.rm_rf("#{install_dir}/ruby/2.0.0/cache")
