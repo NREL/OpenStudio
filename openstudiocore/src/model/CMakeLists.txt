@@ -1654,6 +1654,7 @@ set(${target_name}_test_src
   test/ElectricLoadCenterStorageSimple_GTest.cpp
   test/ElectricLoadCenterStorageConverter_GTest.cpp
   test/EnergyManagementSystemActuator_GTest.cpp
+  test/EnergyManagementSystemGlobalVariable_GTest.cpp
   test/EnergyManagementSystemProgram_GTest.cpp
   test/EnergyManagementSystemProgramCallingManager_GTest.cpp
   test/EnergyManagementSystemSensor_GTest.cpp
