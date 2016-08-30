@@ -468,6 +468,11 @@ void MeasureStep::setArgument(const std::string& name, int value)
   getImpl<detail::MeasureStep_Impl>()->setArgument(name, value);
 }
 
+void MeasureStep::setArgument(const std::string& name, const char* value)
+{
+  getImpl<detail::MeasureStep_Impl>()->setArgument(name, std::string(value));
+}
+
 void MeasureStep::setArgument(const std::string& name, const std::string& value)
 {
   getImpl<detail::MeasureStep_Impl>()->setArgument(name, value);

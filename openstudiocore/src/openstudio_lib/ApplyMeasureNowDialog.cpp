@@ -20,7 +20,7 @@
 #include "ApplyMeasureNowDialog.hpp"
 
 #include "../shared_gui_components/BusyWidget.hpp"
-//#include "../shared_gui_components/EditController.hpp"
+#include "../shared_gui_components/EditController.hpp"
 #include "../shared_gui_components/EditView.hpp"
 #include "../shared_gui_components/LocalLibraryController.hpp"
 #include "../shared_gui_components/LocalLibraryView.hpp"
@@ -93,8 +93,8 @@ ApplyMeasureNowDialog::ApplyMeasureNowDialog(QWidget* parent)
 
   m_advancedOutputDialog = new TextEditDialog("Advanced Output");
 
-  m_workingDir = toPath("E:/test/ApplyMeasureNow");
-  //m_workingDir = openstudio::toPath(app->currentDocument()->modelTempDir()) / openstudio::toPath("ApplyMeasureNow");
+  //m_workingDir = toPath("E:/test/ApplyMeasureNow");
+  m_workingDir = openstudio::toPath(app->currentDocument()->modelTempDir()) / openstudio::toPath("ApplyMeasureNow");
 
   // save the model's workflow JSON
   m_modelWorkflowJSON = app->currentModel()->workflowJSON();

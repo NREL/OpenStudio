@@ -142,6 +142,7 @@ public:
   void setArgument(const std::string& name, bool value);
   void setArgument(const std::string& name, double value);
   void setArgument(const std::string& name, int value);
+  void setArgument(const std::string& name, const char* value);
   void setArgument(const std::string& name, const std::string& value);
 
   void removeArgument(const std::string& name);
