@@ -118,9 +118,6 @@ namespace detail {
 
   bool EnergyManagementSystemOutputVariable_Impl::setUnits(const std::string& units) {
     bool result = setString(OS_EnergyManagementSystem_OutputVariableFields::Units, units);
-    OS_ASSERT(result);
-    std::string name = this->nameString();
-    result = setString(OS_EnergyManagementSystem_OutputVariableFields::Name, name + " [" + units + "]");
     return result;
   }
 
@@ -135,8 +132,6 @@ EnergyManagementSystemOutputVariable::EnergyManagementSystemOutputVariable(const
   : ModelObject(EnergyManagementSystemOutputVariable::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemOutputVariable_Impl>());
-  //bool test = getImpl<detail::EnergyManagementSystemOutputVariable_Impl>()->setUpdateFrequency("SystemTimestep");
-  //OS_ASSERT(test);
 }
 
 IddObjectType EnergyManagementSystemOutputVariable::iddObjectType() {
