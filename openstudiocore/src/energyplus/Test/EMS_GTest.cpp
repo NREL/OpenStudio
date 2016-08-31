@@ -34,6 +34,8 @@
 #include "../../model/OutputVariable_Impl.hpp"
 #include "../../model/OutputMeter.hpp"
 #include "../../model/OutputMeter_Impl.hpp"
+#include "../../model/OutputEnergyManagementSystem.hpp"
+#include "../../model/OutputEnergyManagementSystem_Impl.hpp"
 #include "../../model/Schedule.hpp"
 #include "../../model/Schedule_Impl.hpp"
 #include "../../model/EnergyManagementSystemSensor.hpp"
@@ -58,6 +60,14 @@
 
 #include <utilities/idd/OS_EnergyManagementSystem_Sensor_FieldEnums.hxx>
 #include <utilities/idd/EnergyManagementSystem_Sensor_FieldEnums.hxx>
+#include <utilities/idd/OS_EnergyManagementSystem_Actuator_FieldEnums.hxx>
+#include <utilities/idd/EnergyManagementSystem_Actuator_FieldEnums.hxx>
+#include <utilities/idd/OS_EnergyManagementSystem_Program_FieldEnums.hxx>
+#include <utilities/idd/EnergyManagementSystem_Program_FieldEnums.hxx>
+#include <utilities/idd/OS_EnergyManagementSystem_ProgramCallingManager_FieldEnums.hxx>
+#include <utilities/idd/EnergyManagementSystem_ProgramCallingManager_FieldEnums.hxx>
+#include <utilities/idd/OS_Output_EnergyManagementSystem_FieldEnums.hxx>
+#include <utilities/idd/Output_EnergyManagementSystem_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
@@ -76,7 +86,7 @@ using namespace openstudio::model;
 using namespace openstudio;
 
 
-TEST_F(EnergyPlusFixture,ForwardTranslatorSensor_EMS) {
+TEST_F(EnergyPlusFixture,ForwardTranslatorSensor1_EMS) {
 
   Model model;
 
@@ -87,23 +97,46 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorSensor_EMS) {
 
   // add Site Outdoor Air Drybulb Temperature
   OutputVariable siteOutdoorAirDrybulbTemperature("Site Outdoor Air Drybulb Temperature", model);
-  EXPECT_EQ("*", siteOutdoorAirDrybulbTemperature.keyValue());
-  EXPECT_EQ("Site Outdoor Air Drybulb Temperature", siteOutdoorAirDrybulbTemperature.variableName());
 
   // add sensor
   EnergyManagementSystemSensor OATdbSensor(model);
   OATdbSensor.setName("OATdb Sensor");
   OATdbSensor.setOutputVariable(siteOutdoorAirDrybulbTemperature);
 
-  EXPECT_EQ("OATdb Sensor", OATdbSensor.nameString());
-  EXPECT_EQ(siteOutdoorAirDrybulbTemperature.handle(), OATdbSensor.outputVariable().get().handle());
-  EXPECT_EQ(siteOutdoorAirDrybulbTemperature, OATdbSensor.outputVariable());
-  EXPECT_EQ("", OATdbSensor.keyName().get());
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
+  EXPECT_EQ(0u, forwardTranslator.errors().size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Sensor).size());
+
+  WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Sensor)[0];
+  WorkspaceObject outvar = workspace.getObjectsByType(IddObjectType::Output_Variable)[0];
+
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_SensorFields::Name, false));
+  EXPECT_EQ("OATdb Sensor", object.getString(EnergyManagementSystem_SensorFields::Name, false).get());
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterIndexKeyName, false));
+  EXPECT_EQ("", object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterIndexKeyName, false).get());
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName, false));
+  //std::string name = outvar.nameString();
+  //EXPECT_EQ(name, object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName, false).get());
+
+  //ASSERT_TRUE(object.getTarget(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName));
+  //EXPECT_EQ(outvar.handle(), object.getTarget(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName)->handle());
+
+  model.save(toPath("./EMS_sensor1.osm"), true);
+  workspace.save(toPath("./EMS_sensor1.idf"), true);
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslatorSensor2_EMS) {
+
+  Model model;
+
+  Building building = model.getUniqueModelObject<Building>();
+
+  ThermalZone zone1(model);
+  ThermalZone zone2(model);
 
   // add Zone Lights Electric Power to both zones
   OutputVariable lightsElectricPower("Zone Lights Electric Power", model);
-  EXPECT_EQ("*", lightsElectricPower.keyValue());
-  EXPECT_EQ("Zone Lights Electric Power", lightsElectricPower.variableName());
 
   // add light sensor on zone1
   EnergyManagementSystemSensor lights(model);
@@ -111,8 +144,26 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorSensor_EMS) {
   lights.setOutputVariable(lightsElectricPower);
   lights.setKeyName(zone1.name().get());
 
-  EXPECT_EQ(zone1.name().get(), lights.keyName().get());
-  EXPECT_EQ("Light Sensor", lights.nameString());
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
+  EXPECT_EQ(0u, forwardTranslator.errors().size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Sensor).size());
+
+  //EXPECT_EQ(zone1.name().get(), lights.keyName().get());
+  //EXPECT_EQ("Light Sensor", lights.nameString());
+
+  model.save(toPath("./EMS_sensor2.osm"), true);
+  workspace.save(toPath("./EMS_sensor2.idf"), true);
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslatorSensoronMeter_EMS) {
+
+  Model model;
+
+  Building building = model.getUniqueModelObject<Building>();
+
+  ThermalZone zone1(model);
+  ThermalZone zone2(model);
 
   // create meter
   OutputMeter meter(model);
@@ -123,20 +174,18 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorSensor_EMS) {
   meter_sensor.setName("meter sensor");
   meter_sensor.setOutputMeter(meter);
 
-  EXPECT_EQ("meter sensor", meter_sensor.nameString());
-  EXPECT_EQ(meter.handle(), meter_sensor.outputMeter().get().handle());
-  EXPECT_EQ(meter, meter_sensor.outputMeter());
-  EXPECT_EQ("", meter_sensor.keyName().get());
-
-
-  //EXPECT_TRUE(model.getOptionalUniqueModelObject<Version>()) << "Example model does not include a Version object.";
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
   EXPECT_EQ(0u, forwardTranslator.errors().size());
-  EXPECT_EQ(1u,workspace.getObjectsByType(IddObjectType::Version).size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Sensor).size());
 
-  model.save(toPath("./EMS_example.osm"), true);
-  workspace.save(toPath("./EMS_example.idf"), true);
+  //EXPECT_EQ("meter sensor", meter_sensor.nameString());
+  //EXPECT_EQ(meter.handle(), meter_sensor.outputMeter().get().handle());
+  //EXPECT_EQ(meter, meter_sensor.outputMeter());
+  //EXPECT_EQ("", meter_sensor.keyName().get());
+
+  model.save(toPath("./EMS_sensor_meter.osm"), true);
+  workspace.save(toPath("./EMS_sensor_meter.idf"), true);
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_EMS) {
@@ -169,7 +218,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_EMS) {
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
   EXPECT_EQ(0u, forwardTranslator.errors().size());
-  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Version).size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
 
   model.save(toPath("./EMS_example.osm"), true);
   workspace.save(toPath("./EMS_example.idf"), true);
@@ -336,7 +385,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorProgram_EMS) {
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
   EXPECT_EQ(0u, forwardTranslator.errors().size());
-  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Version).size());
+  //EXPECT_EQ(3u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Program).size());
 
   model.save(toPath("./EMS_example.osm"), true);
   workspace.save(toPath("./EMS_example.idf"), true);
@@ -534,8 +583,36 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorProgramCallingManager_EMS) {
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
   EXPECT_EQ(0u, forwardTranslator.errors().size());
-  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Version).size());
+  //EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_ProgramCallingManager).size());
 
   model.save(toPath("./EMS_example.osm"), true);
   workspace.save(toPath("./EMS_example.idf"), true);
+}
+
+TEST_F(EnergyPlusFixture, noForwardTranslatorOutput_EMS) {
+  Model model;
+
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
+
+  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Output_EnergyManagementSystem).size());
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslatorOutput_EMS) {
+  Model model;
+  OutputEnergyManagementSystem oEMS = model.getUniqueModelObject<OutputEnergyManagementSystem>();
+
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
+
+  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::Output_EnergyManagementSystem).size());
+
+  WorkspaceObject object = workspace.getObjectsByType(IddObjectType::Output_EnergyManagementSystem)[0];
+  //ASSERT_TRUE(object.getString(Output_EnergyManagementSystemFields::ActuatorAvailabilityDictionaryReporting));
+  //EXPECT_EQ("None", object.getString(Output_EnergyManagementSystemFields::ActuatorAvailabilityDictionaryReporting));
+  //ASSERT_TRUE(object.getString(Output_EnergyManagementSystemFields::InternalVariableAvailabilityDictionaryReporting));
+  //EXPECT_EQ("None", object.getString(Output_EnergyManagementSystemFields::InternalVariableAvailabilityDictionaryReporting));
+  //ASSERT_TRUE(object.getString(Output_EnergyManagementSystemFields::EMSRuntimeLanguageDebugOutputLevel));
+  //EXPECT_EQ("None", object.getString(Output_EnergyManagementSystemFields::EMSRuntimeLanguageDebugOutputLevel));
+
 }

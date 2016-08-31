@@ -89,7 +89,7 @@ TEST_F(ModelFixture, EMSOutputVariable_EMSOutputVariable)
   //variable name
   bool varset = outvar.setEMSVariableName("badVariable");
   //TODO above should fail
-  //EXPECT_EQ(false,varset);
+  EXPECT_EQ(false,varset);
   varset = outvar.setEMSVariableName("globalVar");
   EXPECT_EQ(true, varset);
 

@@ -26531,6 +26531,7 @@ OS:EnergyManagementSystem:GlobalVariable,
   A2 ; \field Name
        \required-field
        \type alpha
+	   \reference ErlVariableNames
        \note no spaces allowed in name
 
 OS:EnergyManagementSystem:OutputVariable,
@@ -26545,7 +26546,8 @@ OS:EnergyManagementSystem:OutputVariable,
        \retaincase
   A3 , \field EMS Variable Name
        \required-field
-       \type alpha
+       \type object-list
+	   \object-list ErlVariableNames
        \note must be an acceptable EMS variable
   A4 , \field Type of Data in Variable
        \required-field
@@ -26578,7 +26580,8 @@ OS:EnergyManagementSystem:MeteredOutputVariable,
        \retaincase
   A3 , \field EMS Variable Name
        \required-field
-       \type alpha
+       \type object-list
+	   \object-list ErlVariableNames
        \note must be an acceptable EMS variable, no spaces
   A4 , \field Update Frequency
        \required-field
@@ -26671,7 +26674,8 @@ OS:EnergyManagementSystem:TrendVariable,
        \reference ErlVariableNames
   A3 , \field EMS Variable Name
        \required-field
-       \type alpha
+       \type object-list
+	   \object-list ErlVariableNames
        \note must be a global scope EMS variable
   N1 ; \field Number of Timesteps to be Logged
        \required-field
