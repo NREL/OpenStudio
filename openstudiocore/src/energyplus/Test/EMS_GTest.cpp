@@ -116,9 +116,8 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorSensor1_EMS) {
   ASSERT_TRUE(object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterIndexKeyName, false));
   EXPECT_EQ("", object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterIndexKeyName, false).get());
   ASSERT_TRUE(object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName, false));
-  //std::string name = outvar.nameString();
-  //EXPECT_EQ(name, object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName, false).get());
-
+  //EXPECT_EQ("Site Outdoor Air Drybulb Temperature", object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName, false).get());
+  bool temp = object.getTarget(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName);
   //ASSERT_TRUE(object.getTarget(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName));
   //EXPECT_EQ(outvar.handle(), object.getTarget(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName)->handle());
 
