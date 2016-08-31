@@ -74,9 +74,10 @@ namespace detail {
     return value.get();
   }
 
-  void EnergyManagementSystemInternalVariable_Impl::setInternalDataIndexKeyName(const std::string& internalDataIndexKeyName) {
+  bool EnergyManagementSystemInternalVariable_Impl::setInternalDataIndexKeyName(const std::string& internalDataIndexKeyName) {
     bool result = setString(OS_EnergyManagementSystem_InternalVariableFields::InternalDataIndexKeyName, internalDataIndexKeyName);
     OS_ASSERT(result);
+    return result;
   }
 
   void EnergyManagementSystemInternalVariable_Impl::resetInternalDataIndexKeyName() {
@@ -84,9 +85,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void EnergyManagementSystemInternalVariable_Impl::setInternalDataType(const std::string& internalDataType) {
+  bool EnergyManagementSystemInternalVariable_Impl::setInternalDataType(const std::string& internalDataType) {
     bool result = setString(OS_EnergyManagementSystem_InternalVariableFields::InternalDataType, internalDataType);
     OS_ASSERT(result);
+    return result;
   }
 
 } // detail
@@ -112,16 +114,16 @@ std::string EnergyManagementSystemInternalVariable::internalDataType() const {
   return getImpl<detail::EnergyManagementSystemInternalVariable_Impl>()->internalDataType();
 }
 
-void EnergyManagementSystemInternalVariable::setInternalDataIndexKeyName(const std::string& internalDataIndexKeyName) {
-  getImpl<detail::EnergyManagementSystemInternalVariable_Impl>()->setInternalDataIndexKeyName(internalDataIndexKeyName);
+bool EnergyManagementSystemInternalVariable::setInternalDataIndexKeyName(const std::string& internalDataIndexKeyName) {
+  return getImpl<detail::EnergyManagementSystemInternalVariable_Impl>()->setInternalDataIndexKeyName(internalDataIndexKeyName);
 }
 
 void EnergyManagementSystemInternalVariable::resetInternalDataIndexKeyName() {
   getImpl<detail::EnergyManagementSystemInternalVariable_Impl>()->resetInternalDataIndexKeyName();
 }
 
-void EnergyManagementSystemInternalVariable::setInternalDataType(const std::string& internalDataType) {
-  getImpl<detail::EnergyManagementSystemInternalVariable_Impl>()->setInternalDataType(internalDataType);
+bool EnergyManagementSystemInternalVariable::setInternalDataType(const std::string& internalDataType) {
+  return getImpl<detail::EnergyManagementSystemInternalVariable_Impl>()->setInternalDataType(internalDataType);
 }
 
 /// @cond

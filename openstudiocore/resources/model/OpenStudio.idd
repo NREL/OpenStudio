@@ -27014,7 +27014,7 @@ OS:EnergyManagementSystem:OutputVariable,
        \key ZoneTimestep
        \key SystemTimestep
   A6 , \field EMS Program or Subroutine Name
-       \type alpha
+       \type object-list
        \object-list ErlProgramSubroutineNames
        \note optional for global scope variables, required for local scope variables
   A7 ; \field Units
