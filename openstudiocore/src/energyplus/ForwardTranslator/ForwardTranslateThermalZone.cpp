@@ -321,12 +321,14 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
 
       daylightingControlObject.setString(
           Daylighting_ControlsFields::ZoneName,
-          modelObject.name().get());
+          modelObject.nameString());
 
       // Primary Control
       IdfObject primaryReferencePoint(openstudio::IddObjectType::Daylighting_ReferencePoint);
+      primaryReferencePoint.setName(primaryDaylightingControl->nameString());
       m_idfObjects.push_back(primaryReferencePoint);
 
+      primaryReferencePoint.setString(Daylighting_ReferencePointFields::ZoneName, modelObject.nameString());
       primaryReferencePoint.setDouble(
           Daylighting_ReferencePointFields::XCoordinateofReferencePoint,
           primaryDaylightingControl->positionXCoordinate());
@@ -360,10 +362,12 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
       daylightingControlObject.pushExtensibleGroup(firstGroup);
 
       // Secondary Control
-      IdfObject secondaryReferencePoint(openstudio::IddObjectType::Daylighting_ReferencePoint);
-      m_idfObjects.push_back(secondaryReferencePoint);
-
       if (secondaryDaylightingControl){
+        IdfObject secondaryReferencePoint(openstudio::IddObjectType::Daylighting_ReferencePoint);
+        secondaryReferencePoint.setName(secondaryDaylightingControl->nameString());
+        m_idfObjects.push_back(secondaryReferencePoint);
+
+        secondaryReferencePoint.setString(Daylighting_ReferencePointFields::ZoneName, modelObject.nameString());
         secondaryReferencePoint.setDouble(
             Daylighting_ReferencePointFields::XCoordinateofReferencePoint,
             secondaryDaylightingControl->positionXCoordinate());
