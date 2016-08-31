@@ -68,11 +68,11 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    void setInternalDataIndexKeyName(const std::string& internalDataIndexKeyName);
+    bool setInternalDataIndexKeyName(const std::string& internalDataIndexKeyName);
 
     void resetInternalDataIndexKeyName();
 
-    void setInternalDataType(const std::string& internalDataType);
+    bool setInternalDataType(const std::string& internalDataType);
 
     //@}
     /** @name Other */
