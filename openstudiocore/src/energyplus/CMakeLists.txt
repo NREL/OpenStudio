@@ -122,6 +122,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateElectricLoadCenterInverterLookUpTable.cpp
   ForwardTranslator/ForwardTranslateElectricLoadCenterInverterSimple.cpp
   ForwardTranslator/ForwardTranslateElectricLoadCenterStorageSimple.cpp
+  ForwardTranslator/ForwardTranslateElectricLoadCenterStorageConverter.cpp
   ForwardTranslator/ForwardTranslateEvaporativeCoolerDirectResearchSpecial.cpp
   ForwardTranslator/ForwardTranslateEvaporativeCoolerIndirectResearchSpecial.cpp
   ForwardTranslator/ForwardTranslateEvaporativeFluidCoolerSingleSpeed.cpp
@@ -362,6 +363,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateDesignSpecificationOutdoorAir.cpp
   ReverseTranslator/ReverseTranslateElectricEquipment.cpp
   ReverseTranslator/ReverseTranslateElectricLoadCenterStorageSimple.cpp
+  ReverseTranslator/ReverseTranslateElectricLoadCenterStorageConverter.cpp
   ReverseTranslator/ReverseTranslateEvaporativeCoolerDirectResearchSpecial.cpp
   ReverseTranslator/ReverseTranslateEvaporativeFluidCoolerSingleSpeed.cpp
   ReverseTranslator/ReverseTranslateExteriorLights.cpp

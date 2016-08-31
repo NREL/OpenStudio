@@ -33,7 +33,7 @@
 #include <utilities/idd/Fan_ConstantVolume_FieldEnums.hxx>
 #include <utilities/idd/Fan_OnOff_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_DX_SingleSpeed_FieldEnums.hxx>
-#include <utilities/idd/Coil_Heating_Gas_FieldEnums.hxx>
+#include <utilities/idd/Coil_Heating_Fuel_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Gas_MultiStage_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Electric_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Water_FieldEnums.hxx>
@@ -357,9 +357,9 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitaryHeatPum
     if( _supplementalHeatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Water ) {
       _supplementalHeatingCoil->setString(Coil_Heating_WaterFields::AirInletNodeName,suppCoilInletNodeName);
       _supplementalHeatingCoil->setString(Coil_Heating_WaterFields::AirOutletNodeName,suppCoilOutletNodeName);
-    } else if( _supplementalHeatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Gas ) {
-      _supplementalHeatingCoil->setString(Coil_Heating_GasFields::AirInletNodeName,suppCoilInletNodeName);
-      _supplementalHeatingCoil->setString(Coil_Heating_GasFields::AirOutletNodeName,suppCoilOutletNodeName);
+    } else if( _supplementalHeatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Fuel ) {
+      _supplementalHeatingCoil->setString(Coil_Heating_FuelFields::AirInletNodeName,suppCoilInletNodeName);
+      _supplementalHeatingCoil->setString(Coil_Heating_FuelFields::AirOutletNodeName,suppCoilOutletNodeName);
     } else if( _supplementalHeatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Electric ) {
       _supplementalHeatingCoil->setString(Coil_Heating_ElectricFields::AirInletNodeName,suppCoilInletNodeName);
       _supplementalHeatingCoil->setString(Coil_Heating_ElectricFields::AirOutletNodeName,suppCoilOutletNodeName);

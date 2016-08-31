@@ -349,7 +349,6 @@ IdfObject ForwardTranslator::populateBranch( IdfObject & branchIdfObject,
         eg.setString(BranchExtensibleFields::ComponentName,objectName);
         eg.setString(BranchExtensibleFields::ComponentInletNodeName,inletNode->name().get());
         eg.setString(BranchExtensibleFields::ComponentOutletNodeName,outletNode->name().get());
-        eg.setString(BranchExtensibleFields::ComponentBranchControlType,"Passive");
       }
 
       i++;
@@ -553,7 +552,6 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
     eg.setString(BranchExtensibleFields::ComponentName,pipe.name().get());
     eg.setString(BranchExtensibleFields::ComponentInletNodeName,inletNodeName);
     eg.setString(BranchExtensibleFields::ComponentOutletNodeName,outletNodeName);
-    eg.setString(BranchExtensibleFields::ComponentBranchControlType,"Passive");
   }
 
   // Populate supply equipment branches
@@ -613,7 +611,6 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
       eg.setString(BranchExtensibleFields::ComponentName,pipe.name().get());
       eg.setString(BranchExtensibleFields::ComponentInletNodeName,inletNodeName);
       eg.setString(BranchExtensibleFields::ComponentOutletNodeName,outletNodeName);
-      eg.setString(BranchExtensibleFields::ComponentBranchControlType,"Passive");
     }
 
     ++it2;
@@ -659,7 +656,6 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
     eg.setString(BranchExtensibleFields::ComponentName,pipe.name().get());
     eg.setString(BranchExtensibleFields::ComponentInletNodeName,inletNodeName);
     eg.setString(BranchExtensibleFields::ComponentOutletNodeName,outletNodeName);
-    eg.setString(BranchExtensibleFields::ComponentBranchControlType,"Passive");
   }
 
   // Demand Side
@@ -746,7 +742,6 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
     eg.setString(BranchExtensibleFields::ComponentName,pipe.name().get());
     eg.setString(BranchExtensibleFields::ComponentInletNodeName,inletNodeName);
     eg.setString(BranchExtensibleFields::ComponentOutletNodeName,outletNodeName);
-    eg.setString(BranchExtensibleFields::ComponentBranchControlType,"Passive");
   }
 
   // Populate equipment branches
@@ -806,7 +801,6 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
       eg.setString(BranchExtensibleFields::ComponentName,pipe.name().get());
       eg.setString(BranchExtensibleFields::ComponentInletNodeName,inletNodeName);
       eg.setString(BranchExtensibleFields::ComponentOutletNodeName,outletNodeName);
-      eg.setString(BranchExtensibleFields::ComponentBranchControlType,"Passive");
     }
 
     ++it2;
@@ -845,7 +839,6 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
     eg.setString(BranchExtensibleFields::ComponentName,pipe.name().get());
     eg.setString(BranchExtensibleFields::ComponentInletNodeName,inletNodeName);
     eg.setString(BranchExtensibleFields::ComponentOutletNodeName,outletNodeName);
-    eg.setString(BranchExtensibleFields::ComponentBranchControlType,"Bypass");
   }
 
   // Populate demand outlet branch
@@ -888,7 +881,6 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
     eg.setString(BranchExtensibleFields::ComponentName,pipe.name().get());
     eg.setString(BranchExtensibleFields::ComponentInletNodeName,inletNodeName);
     eg.setString(BranchExtensibleFields::ComponentOutletNodeName,outletNodeName);
-    eg.setString(BranchExtensibleFields::ComponentBranchControlType,"Passive");
   }
 
   // Operation Scheme

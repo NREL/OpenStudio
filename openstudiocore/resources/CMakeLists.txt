@@ -86,7 +86,6 @@ add_custom_target(openstudio_model_resources
 
 CREATE_SRC_GROUPS("${model_resources_src}")
 
-########################################################
 # modeleditor resources
 # clear runs, calls to RUN_ENERGYPLUS will populate this
 set(ENERGYPLUS_OUTPUTS "")

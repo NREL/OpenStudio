@@ -332,7 +332,7 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
       modelObject = translateBuilding(workspaceObject );
       break;
     }
-  case openstudio::IddObjectType::Coil_Heating_Gas :
+  case openstudio::IddObjectType::Coil_Heating_Fuel :
     {
       //modelObject = translateCoilHeatingGas(workspaceObject );
       break;
@@ -479,6 +479,11 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
       modelObject = translateElectricLoadCenterStorageSimple(workspaceObject);
       break;
     }
+  case openstudio::IddObjectType::ElectricLoadCenter_Storage_Converter :
+    {
+      modelObject = translateElectricLoadCenterStorageConverter(workspaceObject);
+      break;
+    }  
   case openstudio::IddObjectType::EvaporativeCooler_Direct_ResearchSpecial :
     {
       //modelObject = translateEvaporativeCoolerDirectResearchSpecial(workspaceObject);

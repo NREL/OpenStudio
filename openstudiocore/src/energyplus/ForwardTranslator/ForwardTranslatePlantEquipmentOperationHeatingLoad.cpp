@@ -32,6 +32,12 @@
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
+// Special case
+#include "../../model/GeneratorMicroTurbineHeatRecovery.hpp"
+#include "../../model/GeneratorMicroTurbineHeatRecovery_Impl.hpp"
+#include "../../model/GeneratorMicroTurbine.hpp"
+#include "../../model/GeneratorMicroTurbine_Impl.hpp"
+
 using namespace openstudio::model;
 
 using namespace std;
@@ -65,8 +71,22 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantEquipmentOperationHe
       eg.setString(PlantEquipmentOperation_HeatingLoadExtensibleFields::RangeEquipmentListName,equipmentListName);
 
       for( auto component : equipment ) {
+        
+        // TODO: Find the right way to deal with this
+        // For now, "dirty" (?) fix for Generator:MicroTurbine
+        // @kbenne, FYI
+        boost::optional<IdfObject> idf_component;
+
+        if (boost::optional<GeneratorMicroTurbineHeatRecovery> mchpHR = component.optionalCast<GeneratorMicroTurbineHeatRecovery>())
+        {
+          GeneratorMicroTurbine mchp = mchpHR->generatorMicroTurbine();
+          idf_component = translateAndMapModelObject(mchp);
+        }
+        else {
+          idf_component = translateAndMapModelObject(component);
+        }
+        
         auto eg2 = equipmentList.pushExtensibleGroup();
-        auto idf_component = translateAndMapModelObject(component);
         OS_ASSERT(idf_component);
         eg2.setString(PlantEquipmentListExtensibleFields::EquipmentObjectType,idf_component->iddObject().name());
         eg2.setString(PlantEquipmentListExtensibleFields::EquipmentName,idf_component->name().get());
