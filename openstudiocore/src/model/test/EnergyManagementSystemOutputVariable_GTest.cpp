@@ -29,6 +29,7 @@
 #include "../EnergyManagementSystemSensor.hpp"
 #include "../EnergyManagementSystemActuator.hpp"
 #include "../EnergyManagementSystemGlobalVariable.hpp"
+#include "../EnergyManagementSystemProgram.hpp"
 #include "../EnergyManagementSystemOutputVariable.hpp"
 #include "../OutputVariable.hpp"
 #include "../OutputVariable_Impl.hpp"
@@ -114,8 +115,16 @@ TEST_F(ModelFixture, EMSOutputVariable_EMSOutputVariable)
   //program or subroutine name
   bool init = outvar.eMSProgramorSubroutineName().is_initialized();
   EXPECT_EQ(false, init);
-  outvar.setEMSProgramorSubroutineName("program name");
-  EXPECT_EQ("program name", outvar.eMSProgramorSubroutineName().get());
+  bool setprogram = outvar.setEMSProgramorSubroutineName("program name");
+  //expect false since program doesnt exist
+  EXPECT_EQ(false, setprogram);
+
+  // add program
+  EnergyManagementSystemProgram program(model);
+  program.setName("program 1");
+  setprogram = outvar.setEMSProgramorSubroutineName("program 1");
+  EXPECT_EQ(true, setprogram);
+  EXPECT_EQ("program 1", outvar.eMSProgramorSubroutineName().get());
 
 
 }
