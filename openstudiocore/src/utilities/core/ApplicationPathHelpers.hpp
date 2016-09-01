@@ -66,10 +66,6 @@ namespace openstudio {
   /// \returns The location to load resources from
   UTILITIES_API openstudio::path getSharedResourcesPath();
 
-  /// \returns The location of the ruby installation intended for aws-sdk use with aws-sdk
-  ///          gem already installed
-  UTILITIES_API openstudio::path getOpenStudioAWSRubyPath();
-
   /// \returns The packaged ruby installation from the embedded ruby version.
   ///          Returns nothing on non-windows platforms
   UTILITIES_API openstudio::path getOpenStudioEmbeddedRubyPath();
