@@ -21,7 +21,7 @@
 #include "../../model/CoilHeatingGas.hpp"
 #include "../../model/Curve.hpp"
 #include "../../model/Schedule.hpp"
-#include <utilities/idd/Coil_Heating_Gas_FieldEnums.hxx>
+#include <utilities/idd/Coil_Heating_Fuel_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
@@ -37,8 +37,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingGas( CoilHeati
   OptionalString s;
   OptionalModelObject temp;
 
-  // Create a new IddObjectType::Fan_OnOff
-  IdfObject idfObject(IddObjectType::Coil_Heating_Gas);
+  IdfObject idfObject(IddObjectType::Coil_Heating_Fuel);
 
   ///////////////////////////////////////////////////////////////////////////
   // Field: Name ////////////////////////////////////////////////////////////
@@ -53,7 +52,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingGas( CoilHeati
   try {
     Schedule sched = modelObject.availableSchedule();
     translateAndMapModelObject(sched);
-    idfObject.setString(Coil_Heating_GasFields::AvailabilityScheduleName,
+    idfObject.setString(Coil_Heating_FuelFields::AvailabilityScheduleName,
                         sched.name().get() );
   }
   catch (std::exception& e) {
@@ -64,7 +63,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingGas( CoilHeati
 
   ///////////////////////////////////////////////////////////////////////////
   // Field: Gas Burner Efficiency ///////////////////////////////////////////
-  idfObject.setDouble(openstudio::Coil_Heating_GasFields::GasBurnerEfficiency,modelObject.gasBurnerEfficiency());
+  idfObject.setDouble(openstudio::Coil_Heating_FuelFields::BurnerEfficiency,modelObject.gasBurnerEfficiency());
   ///////////////////////////////////////////////////////////////////////////
 
   ///////////////////////////////////////////////////////////////////////////
@@ -72,15 +71,15 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingGas( CoilHeati
   OptionalDouble d=modelObject.nominalCapacity();
   if(d)
   {
-    idfObject.setDouble(openstudio::Coil_Heating_GasFields::NominalCapacity,*d);
+    idfObject.setDouble(openstudio::Coil_Heating_FuelFields::NominalCapacity,*d);
   }
   else
   {
-    idfObject.setString(openstudio::Coil_Heating_GasFields::NominalCapacity,"AutoSize");
+    idfObject.setString(openstudio::Coil_Heating_FuelFields::NominalCapacity,"AutoSize");
   }
   ///////////////////////////////////////////////////////////////////////////
-  idfObject.setDouble(openstudio::Coil_Heating_GasFields::ParasiticElectricLoad,modelObject.parasiticElectricLoad());
-  idfObject.setDouble(openstudio::Coil_Heating_GasFields::ParasiticGasLoad,modelObject.parasiticGasLoad());
+  idfObject.setDouble(openstudio::Coil_Heating_FuelFields::ParasiticElectricLoad,modelObject.parasiticElectricLoad());
+  idfObject.setDouble(openstudio::Coil_Heating_FuelFields::ParasiticFuelLoad,modelObject.parasiticGasLoad());
 
 
   ///////////////////////////////////////////////////////////////////////////
@@ -91,7 +90,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingGas( CoilHeati
     s=temp->name();
     if( s )
     {
-      idfObject.setString(openstudio::Coil_Heating_GasFields::AirInletNodeName,*s);
+      idfObject.setString(openstudio::Coil_Heating_FuelFields::AirInletNodeName,*s);
     }
   }
   ///////////////////////////////////////////////////////////////////////////
@@ -104,8 +103,8 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingGas( CoilHeati
     s=temp->name();
     if( s)
     {
-      idfObject.setString(openstudio::Coil_Heating_GasFields::AirOutletNodeName,*s);
-      idfObject.setString(openstudio::Coil_Heating_GasFields::TemperatureSetpointNodeName,*s);
+      idfObject.setString(openstudio::Coil_Heating_FuelFields::AirOutletNodeName,*s);
+      idfObject.setString(openstudio::Coil_Heating_FuelFields::TemperatureSetpointNodeName,*s);
     }
   }
   ///////////////////////////////////////////////////////////////////////////
@@ -117,9 +116,12 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingGas( CoilHeati
   {
     if( boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get()) )
     {
-      idfObject.setString(Coil_Heating_GasFields::PartLoadFractionCorrelationCurveName,_curve->name().get()); 
+      idfObject.setString(Coil_Heating_FuelFields::PartLoadFractionCorrelationCurveName,_curve->name().get()); 
     }
   }
+
+  // New field in EP 8.6
+  idfObject.setString(Coil_Heating_FuelFields::FuelType,"NaturalGas");
 
   return boost::optional<IdfObject>(idfObject);
 }

@@ -332,7 +332,7 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
       modelObject = translateBuilding(workspaceObject );
       break;
     }
-  case openstudio::IddObjectType::Coil_Heating_Gas :
+  case openstudio::IddObjectType::Coil_Heating_Fuel :
     {
       //modelObject = translateCoilHeatingGas(workspaceObject );
       break;

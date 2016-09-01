@@ -64,7 +64,6 @@
 #include <utilities/idd/OutputControl_Table_Style_FieldEnums.hxx>
 #include <utilities/idd/Output_VariableDictionary_FieldEnums.hxx>
 #include <utilities/idd/Output_SQLite_FieldEnums.hxx>
-#include <utilities/idd/ProgramControl_FieldEnums.hxx>
 #include <utilities/idd/LifeCycleCost_NonrecurringCost_FieldEnums.hxx>
 #include <utilities/idd/SetpointManager_MixedAir_FieldEnums.hxx>
 
@@ -373,13 +372,6 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
       simulationControl = model.getUniqueModelObject<model::SimulationControl>();
     }
     translateAndMapModelObject(*simulationControl);
-
-    // Add a ProgramControl object to force a single threaded simulation
-    //AP This code is no longer needed as multithreading has been disabled
-    //in E+ and this object is no longer forward translated anyway.
-    //IdfObject programControl(openstudio::IddObjectType::ProgramControl);
-    //programControl.setInt(openstudio::ProgramControlFields::NumberofThreadsAllowed,1);
-    //m_idfObjects.push_back(programControl);
 
     // ensure that sizing parameters control exists
     boost::optional<model::SizingParameters> sizingParameters = model.getOptionalUniqueModelObject<model::SizingParameters>();

@@ -34,7 +34,7 @@
 #include <utilities/idd/AirTerminal_SingleDuct_SeriesPIU_Reheat_FieldEnums.hxx>
 #include <utilities/idd/ZoneHVAC_AirDistributionUnit_FieldEnums.hxx>
 #include <utilities/idd/AirLoopHVAC_ZoneMixer_FieldEnums.hxx>
-#include <utilities/idd/Coil_Heating_Gas_FieldEnums.hxx>
+#include <utilities/idd/Coil_Heating_Fuel_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Electric_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Water_FieldEnums.hxx>
 #include <utilities/idd/Fan_ConstantVolume_FieldEnums.hxx>
@@ -170,10 +170,10 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctSeri
 
     if( outletNodeName )
     {
-      if( _reheatCoil->iddObject().type() == IddObjectType::Coil_Heating_Gas )
+      if( _reheatCoil->iddObject().type() == IddObjectType::Coil_Heating_Fuel )
       {
-        _reheatCoil->setString(Coil_Heating_GasFields::AirInletNodeName,fanOutletNodeName);
-        _reheatCoil->setString(Coil_Heating_GasFields::AirOutletNodeName,outletNodeName.get());
+        _reheatCoil->setString(Coil_Heating_FuelFields::AirInletNodeName,fanOutletNodeName);
+        _reheatCoil->setString(Coil_Heating_FuelFields::AirOutletNodeName,outletNodeName.get());
       }
       else if( _reheatCoil->iddObject().type() == IddObjectType::Coil_Heating_Electric )
       {

@@ -37,7 +37,7 @@
 #include <utilities/idd/Coil_Heating_Desuperheater_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_DX_SingleSpeed_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Electric_FieldEnums.hxx>
-#include <utilities/idd/Coil_Heating_Gas_FieldEnums.hxx>
+#include <utilities/idd/Coil_Heating_Fuel_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Water_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_WaterToAirHeatPump_EquationFit_FieldEnums.hxx>
 #include <utilities/idd/Fan_ConstantVolume_FieldEnums.hxx>
@@ -317,10 +317,10 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitaryHeatCoo
       _heatingCoil->setString(Coil_Heating_ElectricFields::AirInletNodeName,heatInletNodeName);
       _heatingCoil->setString(Coil_Heating_ElectricFields::AirOutletNodeName,heatOutletNodeName);
     }
-    else if( _heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Gas )
+    else if( _heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Fuel )
     {
-      _heatingCoil->setString(Coil_Heating_GasFields::AirInletNodeName,heatInletNodeName);
-      _heatingCoil->setString(Coil_Heating_GasFields::AirOutletNodeName,heatOutletNodeName);
+      _heatingCoil->setString(Coil_Heating_FuelFields::AirInletNodeName,heatInletNodeName);
+      _heatingCoil->setString(Coil_Heating_FuelFields::AirOutletNodeName,heatOutletNodeName);
     }
     else if( _heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Water )
     {

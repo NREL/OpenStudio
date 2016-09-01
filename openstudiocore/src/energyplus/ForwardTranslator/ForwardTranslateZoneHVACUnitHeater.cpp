@@ -33,7 +33,7 @@
 #include <utilities/idd/Fan_ConstantVolume_FieldEnums.hxx>
 #include <utilities/idd/Fan_VariableVolume_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Water_FieldEnums.hxx>
-#include <utilities/idd/Coil_Heating_Gas_FieldEnums.hxx>
+#include <utilities/idd/Coil_Heating_Fuel_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Electric_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
@@ -204,10 +204,10 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACUnitHeater(
         _heatingCoil->setString(Coil_Heating_ElectricFields::AirInletNodeName,fanOutletNodeName);
         _heatingCoil->setString(Coil_Heating_ElectricFields::AirOutletNodeName,*s);
       }
-      else if( _heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Gas )
+      else if( _heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Fuel )
       {
-        _heatingCoil->setString(Coil_Heating_GasFields::AirInletNodeName,fanOutletNodeName);
-        _heatingCoil->setString(Coil_Heating_GasFields::AirOutletNodeName,*s);
+        _heatingCoil->setString(Coil_Heating_FuelFields::AirInletNodeName,fanOutletNodeName);
+        _heatingCoil->setString(Coil_Heating_FuelFields::AirOutletNodeName,*s);
       }
       else if( _heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Water )
       {

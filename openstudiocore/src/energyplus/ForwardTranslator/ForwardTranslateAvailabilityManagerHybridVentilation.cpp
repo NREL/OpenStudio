@@ -63,14 +63,14 @@ boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerHybrid
 
   // ControlledZoneName
   if( auto zone = modelObject.controlledZone() ) {
-    idfObject.setString(AvailabilityManager_HybridVentilationFields::ControlledZoneName,zone->name().get());
+    idfObject.setString(AvailabilityManager_HybridVentilationFields::ControlZoneName,zone->name().get());
   } else {
     if( airLoopHVAC ) {
       auto zones = airLoopHVAC->thermalZones(); 
       if( ! zones.empty() ) {
         auto default_zone = zones.front();
         LOG(Info,modelObject.briefDescription() << " is missing Control Zone Name, defaulting to " << default_zone.briefDescription() << ".");
-        idfObject.setString(AvailabilityManager_HybridVentilationFields::ControlledZoneName,default_zone.name().get());
+        idfObject.setString(AvailabilityManager_HybridVentilationFields::ControlZoneName,default_zone.name().get());
       }
     }
   }

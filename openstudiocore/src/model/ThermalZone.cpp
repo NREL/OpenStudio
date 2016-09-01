@@ -634,20 +634,14 @@ namespace detail {
 
     bool result = true;
     if (primaryDaylightingControl){
-      boost::optional<Space> space = primaryDaylightingControl->space();
-      if (space && (space->thermalZone()) && (space->thermalZone()->handle() == this->handle())){
-        result = setPointer(OS_ThermalZoneFields::PrimaryDaylightingControlName, primaryDaylightingControl->handle());
-      }
+      result = setPointer(OS_ThermalZoneFields::PrimaryDaylightingControlName, primaryDaylightingControl->handle());
     }
 
     if (secondaryDaylightingControl){
       if (isEmpty(OS_ThermalZoneFields::PrimaryDaylightingControlName)){
         result = false;
       }else{
-        boost::optional<Space> space = secondaryDaylightingControl->space();
-        if (space && (space->thermalZone()) && (space->thermalZone()->handle() == this->handle())){
-          result = result && setPointer(OS_ThermalZoneFields::SecondaryDaylightingControlName, secondaryDaylightingControl->handle());
-        }
+        result = result && setPointer(OS_ThermalZoneFields::SecondaryDaylightingControlName, secondaryDaylightingControl->handle());
       }
     }
 
