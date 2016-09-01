@@ -77,8 +77,12 @@
 #include <QFileSystemWatcher>
 #include <QDesktopServices>
 #include <QMessageBox>
+#include <QTcpServer>
+#include <QTcpSocket>
 
 namespace openstudio {
+
+const unsigned NumberOfStates = 6;
 
 RunTabView::RunTabView(const model::Model & model,
   QWidget * parent)
@@ -115,6 +119,7 @@ RunView::RunView()
   
   // Progress bar area
   m_progressBar = new QProgressBar();
+  m_progressBar->setMaximum(NumberOfStates);
   
   auto progressbarlayout = new QVBoxLayout();
   progressbarlayout->addWidget(m_progressBar);
@@ -128,15 +133,15 @@ RunView::RunView()
   mainLayout->addWidget(m_openSimDirButton,0,2);
 
   m_textInfo = new QTextEdit();
+  m_textInfo->setReadOnly(true);
   mainLayout->addWidget(m_textInfo,1,0,1,3);
 
   m_runProcess = new QProcess(this);
   connect(m_runProcess, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &RunView::onRunProcessFinished);
 
-  //m_simDirWatcher = new QFileSystemWatcher(this);
-  //connect(m_simDirWatcher, &QFileSystemWatcher::directoryChanged, this, &RunView::onSimDirChanged);
-  //connect(m_simDirWatcher, &QFileSystemWatcher::fileChanged, this, &RunView::onFileChanged);
-  //m_eperrWatcher = new QFileSystemWatcher(this);
+  m_runTcpServer = new QTcpServer();
+  m_runTcpServer->listen();
+  connect(m_runTcpServer, &QTcpServer::newConnection, this, &RunView::onNewConnection);
 }
 
 void RunView::onOpenSimDirClicked()
@@ -153,20 +158,15 @@ void RunView::onRunProcessFinished(int exitCode, QProcess::ExitStatus status)
 {
   LOG(Debug, "run finished");
   m_playButton->setChecked(false);
+  m_state = State::stopped;
+  m_progressBar->setValue(NumberOfStates);
 
   std::shared_ptr<OSDocument> osdocument = OSAppBase::instance()->currentDocument();
   osdocument->enableTabsAfterRun();
-}
 
-//void RunView::onSimDirChanged(const QString &path)
-//{
-//  LOG(Debug, "Sim Dir Changed: " << path.toStdString());
-//}
-//
-//void RunView::onFileChanged(const QString &path)
-//{
-//  LOG(Debug, "File Changed: " << path.toStdString());
-//}
+  delete m_runSocket;
+  m_runSocket = nullptr;
+}
 
 openstudio::path RunView::resourcePath(const openstudio::path & osmPath) const
 {
@@ -202,19 +202,15 @@ void RunView::playButtonClicked(bool t_checked)
     auto workflowPath = resourcePath(toPath(osdocument->savePath())) / "workflow.osw";
     auto workflowJSONPath = QString::fromStdString(workflowPath.string());
     QStringList arguments;
-    arguments << "run" << "-w" << workflowJSONPath;
+    arguments << "run" << "-s" << QString::number(m_runTcpServer->serverPort()) << "-w" << workflowJSONPath;
 
     LOG(Debug, "run exe" << openstudioExePath.toStdString());
     LOG(Debug, "run arguments" << arguments.join(";").toStdString());
 
-    // Not a great idea
-    //m_simDirWatcher->addPath( QString::fromStdString((resourcePath / "run/").string()) );
-    //std::ofstream outfile((resourcePath / "run/stdout-energyplus").string(),std::ofstream::trunc);
-    //outfile.close();
-    //m_simDirWatcher->addPath( QString::fromStdString((resourcePath / "run/stdout-energyplus").string()) );
-
     osdocument->disableTabsDuringRun();
 
+    m_progressBar->setValue(0);
+    m_textInfo->clear();
     m_runProcess->start(openstudioExePath, arguments);
   } else {
     // stop running
@@ -223,4 +219,89 @@ void RunView::playButtonClicked(bool t_checked)
   }
 }
 
+void RunView::onNewConnection()
+{
+  m_runSocket = m_runTcpServer->nextPendingConnection();
+  connect(m_runSocket,&QTcpSocket::readyRead,this,&RunView::onRunDataReady); 
+}
+
+void RunView::onRunDataReady()
+{
+  auto appendErrorText = [&](const QString & text) {
+    m_textInfo->setTextColor(Qt::red);
+    m_textInfo->setFontPointSize(15);
+    m_textInfo->append(text);
+  };
+
+  auto appendNormalText = [&](const QString & text) {
+    m_textInfo->setTextColor(Qt::black);
+    m_textInfo->setFontPointSize(12);
+    m_textInfo->append(text);
+  };
+
+  auto appendH1Text = [&](const QString & text) {
+    m_textInfo->setTextColor(Qt::black);
+    m_textInfo->setFontPointSize(18);
+    m_textInfo->append(text);
+  };
+
+  auto appendH2Text = [&](const QString & text) {
+    m_textInfo->setTextColor(Qt::black);
+    m_textInfo->setFontPointSize(15);
+    m_textInfo->append(text);
+  };
+
+  QString data = m_runSocket->readAll();
+
+  //std::cout << data.toStdString() << std::endl;
+
+  if( data.contains("Failure") ) {
+    appendErrorText("Failure");
+    return;
+  }
+
+  // If we are in the simulation state then just 
+  // echo the E+ standard output
+  if( m_state == State::simulation ) {
+    appendNormalText(data.trimmed());
+    return;
+  } 
+
+  if( m_state == State::os_measures ) {
+    if( data.contains("Applying ") ) {
+      appendH2Text(data.trimmed());
+      return;
+    }
+  }
+
+  if( m_state == State::ep_measures ) {
+    if( data.contains("Applying ") ) {
+      appendH2Text(data.trimmed());
+      return;
+    }
+  }
+
+  if( data.contains("Starting state initialization") ) {
+    appendH1Text("Initializing workflow.");
+    m_state = State::initialization;
+    m_progressBar->setValue(1);
+  } else if( data.contains("Starting state os_measures") ) {
+    appendH1Text("Processing OpenStudio Measures.");
+    m_state = State::os_measures;
+    m_progressBar->setValue(2);
+  } else if( data.contains("Starting state translator") ) {
+    appendH1Text("Translating the OpenStudio Model to EnergyPlus.");
+    m_state = State::translator;
+    m_progressBar->setValue(3);
+  } else if( data.contains("Starting state ep_measures") ) {
+    appendH1Text("Processing EnergyPlus Measures.");
+    m_state = State::ep_measures;
+    m_progressBar->setValue(4);
+  } else if( data.contains("Starting state simulation") ) {
+    m_state = State::simulation;
+    m_progressBar->setValue(5);
+  }
+}
+
 } // openstudio
+

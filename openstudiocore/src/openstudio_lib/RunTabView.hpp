@@ -40,6 +40,8 @@ class QStackedWidget;
 class QToolButton;
 class QTextEdit;
 class QFileSystemWatcher;
+class QTcpServer;
+class QTcpSocket;
 
 namespace openstudio {
 
@@ -67,6 +69,10 @@ namespace openstudio {
 
     void onOpenSimDirClicked();
 
+    void onNewConnection();
+
+    void onRunDataReady();
+
     // Given an osm file, return the companion directory
     path resourcePath(const path & osmPath) const;
 
@@ -76,8 +82,13 @@ namespace openstudio {
     QTextEdit * m_textInfo;
     QProcess * m_runProcess;
     QPushButton * m_openSimDirButton;
+    QTcpServer * m_runTcpServer;
+    QTcpSocket * m_runSocket;
     //QFileSystemWatcher * m_simDirWatcher;
     //QFileSystemWatcher * m_eperrWatcher;
+
+    enum State { stopped, initialization, os_measures, translator, ep_measures, preprocess, simulation };
+    State m_state = State::stopped;
   };
 
   class RunTabView : public MainTabView
