@@ -187,20 +187,20 @@ set(bcl_src
   bcl/RemoteBCL.cpp
 )
 
-set(cloud_src
-  cloud/AWSProvider.hpp
-  cloud/AWSProvider_Impl.hpp
-  cloud/AWSProvider.cpp
-  cloud/CloudProvider.hpp
-  cloud/CloudProvider_Impl.hpp
-  cloud/CloudProvider.cpp
-  cloud/OSServer.hpp
-  cloud/OSServer_Impl.hpp
-  cloud/OSServer.cpp
-  cloud/VagrantProvider.hpp
-  cloud/VagrantProvider_Impl.hpp
-  cloud/VagrantProvider.cpp
-)
+#set(cloud_src
+#  cloud/AWSProvider.hpp
+#  cloud/AWSProvider_Impl.hpp
+#  cloud/AWSProvider.cpp
+#  cloud/CloudProvider.hpp
+#  cloud/CloudProvider_Impl.hpp
+#  cloud/CloudProvider.cpp
+#  cloud/OSServer.hpp
+#  cloud/OSServer_Impl.hpp
+#  cloud/OSServer.cpp
+#  cloud/VagrantProvider.hpp
+#  cloud/VagrantProvider_Impl.hpp
+#  cloud/VagrantProvider.cpp
+#)
 
 set(documentation_src
   mainpage.hpp
@@ -230,12 +230,12 @@ set(bcl_moc
   bcl/RemoteBCL.hpp
 )
 
-set(cloud_moc
-  cloud/AWSProvider_Impl.hpp
-  cloud/CloudProvider_Impl.hpp
-  cloud/OSServer_Impl.hpp
-  cloud/VagrantProvider_Impl.hpp
-)
+#set(cloud_moc
+#  cloud/AWSProvider_Impl.hpp
+#  cloud/CloudProvider_Impl.hpp
+#  cloud/OSServer_Impl.hpp
+#  cloud/VagrantProvider_Impl.hpp
+#)
 
 set(core_moc
   core/PathWatcher.hpp
@@ -284,7 +284,7 @@ endforeach()
 
 ## Qt MOC generation
 qt5_wrap_cpp_minimally(bcl_moc_src ${bcl_moc})
-qt5_wrap_cpp_minimally(cloud_moc_src ${cloud_moc})
+#qt5_wrap_cpp_minimally(cloud_moc_src ${cloud_moc})
 qt5_wrap_cpp_minimally(core_moc_src ${core_moc}) # RM
 qt5_wrap_cpp_minimally(idf_moc_src ${idfxx_moc})
 qt5_wrap_cpp_minimally(data_moc_src ${data_moc}) # RM
@@ -311,7 +311,7 @@ embed_files("${E_FILES}" "${E_PATHS}" EMBEDDED_OUTPUT openstudio)
 
 # set up groups of source files for Visual Studio
 source_group(bcl FILES ${bcl_src})
-source_group(cloud FILES ${cloud_src})
+#source_group(cloud FILES ${cloud_src})
 source_group(core FILES ${core_src})
 source_group(data FILES ${data_src})
 source_group(filetypes FILES ${filetypes_src})
@@ -340,8 +340,8 @@ set(${target_name}_src
   "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx" # referenced here to make sure it is generated when and where we expect
   ${bcl_src}
   ${bcl_moc_src}
-  ${cloud_src}
-  ${cloud_moc_src}
+#  ${cloud_src}
+#  ${cloud_moc_src}
   ${core_src}
   ${core_moc_src}
   ${data_src}
@@ -367,8 +367,8 @@ set(${target_name}_test_src
   ${idf_test_moc_src}
   ${sql_test_src}
 
-  cloud/test/AWSProvider_GTest.cpp
-  cloud/test/VagrantProvider_GTest.cpp
+#  cloud/test/AWSProvider_GTest.cpp
+#  cloud/test/VagrantProvider_GTest.cpp
 
   core/test/ApplicationPathHelpers_GTest.cpp
   core/test/CoreFixture.hpp
@@ -479,7 +479,7 @@ set(${target_name}_swig_src
   core/ruby/LanguageSpecific.i
   core/python/LanguageSpecific.i
   core/csharp/LanguageSpecific.i
-  cloud/Cloud.i
+#  cloud/Cloud.i
   filetypes/Filetypes.i
   geometry/Geometry.i
   time/Time.i
@@ -542,7 +542,7 @@ MAKE_SWIG_TARGET(OpenStudioUtilitiesIdd utilitiesidd "${CMAKE_CURRENT_SOURCE_DIR
 MAKE_SWIG_TARGET(OpenStudioUtilitiesIdf utilitiesidf "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesIdf.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesIdd)
 
 MAKE_SWIG_TARGET(OpenStudioUtilitiesBCL utilitiesbcl "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesBCL.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesIdf)
-MAKE_SWIG_TARGET(OpenStudioUtilitiesCloud utilitiescloud "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesCloud.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesCore)
+#MAKE_SWIG_TARGET(OpenStudioUtilitiesCloud utilitiescloud "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesCloud.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesCore)
 MAKE_SWIG_TARGET(OpenStudioUtilitiesData utilitiesdata "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesData.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesBCL)
 MAKE_SWIG_TARGET(OpenStudioUtilitiesGeometry utilitiesgeometry "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesGeometry.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesCore)
 MAKE_SWIG_TARGET(OpenStudioUtilitiesPlot utilitiesplot "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesPlot.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesGeometry)
