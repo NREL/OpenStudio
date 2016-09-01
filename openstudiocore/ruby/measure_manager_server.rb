@@ -180,7 +180,10 @@ class MeasureManagerServlet < WEBrick::HTTPServlet::AbstractServlet
         begin
           data = JSON.parse(request.body, {:symbolize_names=>true})
           measure_dir = data[:measure_dir]
-          name = data[:name]
+          
+          # name = data[:name] # we do not take name as input
+          # the measure's name method actually maps to display name
+          display_name = data[:display_name]
           class_name = data[:class_name]
           taxonomy_tag = data[:taxonomy_tag]
           measure_type = data[:measure_type]
@@ -189,7 +192,7 @@ class MeasureManagerServlet < WEBrick::HTTPServlet::AbstractServlet
           
           # creating measure will throw if directory exists but is not empty
           measure_dir = File.expand_path(measure_dir)
-          OpenStudio::BCLMeasure.new(name, class_name, measure_dir, taxonomy_tag, measure_type.to_MeasureType, description, modeler_description)
+          OpenStudio::BCLMeasure.new(display_name, class_name, measure_dir, taxonomy_tag, measure_type.to_MeasureType, description, modeler_description)
 
           measure = @measure_manager.get_measure(measure_dir, true)
           result = @measure_manager.measure_hash(measure_dir, measure)
@@ -205,19 +208,30 @@ class MeasureManagerServlet < WEBrick::HTTPServlet::AbstractServlet
           data = JSON.parse(request.body, {:symbolize_names=>true})
           old_measure_dir = data[:old_measure_dir]
           measure_dir = data[:measure_dir]
-          name = data[:name]
+
+          # name = data[:name] # we do not take name as input
+          # the measure's name method actually maps to display name
+          display_name = data[:display_name]
           class_name = data[:class_name]
           taxonomy_tag = data[:taxonomy_tag]
           measure_type = data[:measure_type]
           description = data[:description]
           modeler_description = data[:modeler_description]
           force_reload = data[:force_reload] ? data[:force_reload] : false
-          
+
           old_measure_dir = File.expand_path(old_measure_dir)
           old_measure = @measure_manager.get_measure(old_measure_dir, force_reload)
           if old_measure.nil?
             raise "Cannot load measure at '#{old_measure_dir}'"
           end
+          
+          display_name = old_measure.displayName if display_name.nil? 
+          class_name = old_measure.className if class_name.nil? 
+          taxonomy_tag = old_measure.taxonomyTag if taxonomy_tag.nil? 
+          measure_type = old_measure.measureType.valueName if measure_type.nil? 
+          description = old_measure.description if description.nil? 
+          modeler_description = old_measure.modelerDescription if modeler_description.nil?        
+          name = OpenStudio::toUnderscoreCase(class_name)
           
           measure_dir = File.expand_path(measure_dir)
           new_measure = old_measure.clone(measure_dir)
@@ -226,10 +240,24 @@ class MeasureManagerServlet < WEBrick::HTTPServlet::AbstractServlet
           end
           new_measure = new_measure.get
           
+          new_measure.changeUID
+          new_measure.incrementVersionId
+
+          new_measure.setName(name)
+          new_measure.setDisplayName(display_name)
+          new_measure.setClassName(class_name)
+          new_measure.setTaxonomyTag(taxonomy_tag)
+          new_measure.setMeasureType(measure_type.to_MeasureType)
+          new_measure.setDescription(description)
+          new_measure.setModelerDescription(modeler_description)
+
           new_measure.updateMeasureScript(old_measure.measureType, measure_type.to_MeasureType,
                                           old_measure.className, class_name,
-                                          name, description, modeler_description)
-          
+                                          display_name, description, modeler_description)
+          new_measure.updateMeasureTests(old_measure.className, class_name)
+
+          new_measure.save
+
           measure = @measure_manager.get_measure(measure_dir, true)
           result = @measure_manager.measure_hash(measure_dir, measure)
           
