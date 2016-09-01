@@ -328,7 +328,14 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
       primaryReferencePoint.setName(primaryDaylightingControl->nameString());
       m_idfObjects.push_back(primaryReferencePoint);
 
-      primaryReferencePoint.setString(Daylighting_ReferencePointFields::ZoneName, modelObject.nameString());
+      OptionalSpace refSpace = primaryDaylightingControl->space();
+      if (refSpace){
+        OptionalThermalZone refThermalZone = refSpace->thermalZone();
+        if (refThermalZone){
+          primaryReferencePoint.setString(Daylighting_ReferencePointFields::ZoneName, refThermalZone->nameString());
+        }
+      }
+      
       primaryReferencePoint.setDouble(
           Daylighting_ReferencePointFields::XCoordinateofReferencePoint,
           primaryDaylightingControl->positionXCoordinate());
@@ -366,6 +373,14 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
         IdfObject secondaryReferencePoint(openstudio::IddObjectType::Daylighting_ReferencePoint);
         secondaryReferencePoint.setName(secondaryDaylightingControl->nameString());
         m_idfObjects.push_back(secondaryReferencePoint);
+
+        refSpace = secondaryDaylightingControl->space();
+        if (refSpace){
+          OptionalThermalZone refThermalZone = refSpace->thermalZone();
+          if (refThermalZone){
+            secondaryReferencePoint.setString(Daylighting_ReferencePointFields::ZoneName, refThermalZone->nameString());
+          }
+        }
 
         secondaryReferencePoint.setString(Daylighting_ReferencePointFields::ZoneName, modelObject.nameString());
         secondaryReferencePoint.setDouble(
@@ -414,11 +429,11 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
       if (istringEqual("None", lightingControlType)){
         // both fractions are 0
       }else if (istringEqual("Continuous", lightingControlType)){
-        daylightingControlObject.setInt(Daylighting_ControlsFields::LightingControlType, 1);
+        daylightingControlObject.setString(Daylighting_ControlsFields::LightingControlType, "Continuous");
       }else if(istringEqual("Stepped", lightingControlType)){
-        daylightingControlObject.setInt(Daylighting_ControlsFields::LightingControlType, 2);
+        daylightingControlObject.setString(Daylighting_ControlsFields::LightingControlType, "Stepped");
       }else if(istringEqual("Continuous/Off", lightingControlType)){
-        daylightingControlObject.setInt(Daylighting_ControlsFields::LightingControlType, 3);
+        daylightingControlObject.setString(Daylighting_ControlsFields::LightingControlType, "ContinuousOff");
       }else{
         LOG(Warn, "Unknown lighting control type '" << lightingControlType << "' for OS:Daylighting:Control " << primaryDaylightingControl->name().get());
       }
@@ -431,6 +446,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
         LOG(Warn, "Rotation of " << primaryDaylightingControl->phiRotationAroundZAxis() << " degrees about Z axis not mapped for OS:Daylighting:Control " << primaryDaylightingControl->name().get());
       }
 
+      // glare 
       double glareAngle = -openstudio::radToDeg(primaryDaylightingControl->thetaRotationAroundYAxis());
       daylightingControlObject.setDouble(
           Daylighting_ControlsFields::GlareCalculationAzimuthAngleofViewDirectionClockwisefromZoneyAxis,
@@ -438,9 +454,14 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
 
       if (OptionalDouble d = primaryDaylightingControl->maximumAllowableDiscomfortGlareIndex()){
         daylightingControlObject.setDouble(
-            Daylighting_ControlsFields::MaximumAllowableDiscomfortGlareIndex,
-            *d);
+          Daylighting_ControlsFields::MaximumAllowableDiscomfortGlareIndex,
+          *d);
       }
+      
+      daylightingControlObject.setString(
+        Daylighting_ControlsFields::GlareCalculationDaylightingReferencePointName,
+        primaryReferencePoint.nameString());
+      
 
       if (!primaryDaylightingControl->isMinimumInputPowerFractionforContinuousDimmingControlDefaulted()){
         daylightingControlObject.setDouble(
