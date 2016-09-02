@@ -20,7 +20,6 @@
 #include "BCLMeasure.hpp"
 #include "LocalBCL.hpp"
 
-#include "../core/ApplicationPathHelpers.hpp"
 #include "../core/System.hpp"
 #include "../core/Path.hpp"
 #include "../core/PathHelpers.hpp"

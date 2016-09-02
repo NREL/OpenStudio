@@ -136,6 +136,8 @@ class OpenStudioApp : public OSAppBase
 
   void buildCompLibraries();
 
+  void newFromEmptyTemplateSlot( );
+
   void newFromTemplateSlot( NewFromTemplateEnum newFromTemplateEnum );
 
   bool openFromDrag(QString path);

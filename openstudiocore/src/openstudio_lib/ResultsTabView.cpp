@@ -45,9 +45,7 @@
 //#include "../runmanager/lib/JobStatusWidget.hpp"
 //#include "../runmanager/lib/RunManager.hpp"
 
-#include "../utilities/core/ApplicationPathHelpers.hpp"
 #include "../utilities/core/Assert.hpp"
-
 
 
 namespace openstudio {
@@ -132,10 +130,10 @@ void ResultsView::openResultsViewerClicked()
 
 #ifdef Q_OS_MAC
   openstudio::path resultsviewer
-    = openstudio::getApplicationRunDirectory() / openstudio::toPath("../../../ResultsViewer.app/Contents/MacOS/ResultsViewer");
+    = openstudio::toPath(QCoreApplication::applicationDirPath()) / openstudio::toPath("../../../ResultsViewer.app/Contents/MacOS/ResultsViewer");
 #else
   openstudio::path resultsviewer
-    = openstudio::getApplicationRunDirectory() / openstudio::toPath("ResultsViewer");
+    = openstudio::toPath(QCoreApplication::applicationDirPath()) / openstudio::toPath("ResultsViewer");
 #endif
 
   QStringList args;

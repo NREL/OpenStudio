@@ -39,7 +39,6 @@
 
 #include "../openstudio_app/OpenStudioApp.hpp"
 
-#include "../utilities/core/ApplicationPathHelpers.hpp"
 #include "../utilities/core/PathHelpers.hpp"
 #include "../utilities/core/RubyException.hpp"
 #include "../utilities/filetypes/WorkflowJSON.hpp"

@@ -27,7 +27,6 @@
 
 #include "../openstudio_lib/MainWindow.hpp"
 #include "../utilities/core/Application.hpp"
-#include "../utilities/core/ApplicationPathHelpers.hpp"
 #include "../utilities/core/FileLogSink.hpp"
 #include "../utilities/bcl/BCLMeasure.hpp"
 #include "../utilities/core/Logger.hpp"
@@ -112,7 +111,7 @@ int main(int argc, char *argv[])
       new openstudio::measure::EmbeddedRubyMeasureInfoGetter<openstudio::detail::RubyInterpreter>(rubyInterpreter));
        */
     // Make the run path the default plugin search location
-    QCoreApplication::addLibraryPath(openstudio::toQString(openstudio::getApplicationRunDirectory()));
+    QCoreApplication::addLibraryPath(QCoreApplication::applicationDirPath());
 
     openstudio::OpenStudioApp app(argc, argv);
     openstudio::Application::instance().setApplication(&app);

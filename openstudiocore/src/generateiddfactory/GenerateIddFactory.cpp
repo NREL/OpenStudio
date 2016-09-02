@@ -244,7 +244,6 @@ void initializeOutFiles(GenerateIddFactoryOutFiles& outFiles,
     << "#include <utilities/core/Assert.hpp>" << std::endl
     << "#include <utilities/core/Compare.hpp>" << std::endl
     << "#include <utilities/core/Containers.hpp>" << std::endl
-    << "#include <utilities/core/ApplicationPathHelpers.hpp>" << std::endl
     << "#include <utilities/embedded_files.hxx>" << std::endl
     << std::endl
     << "#include <OpenStudio.hxx>" << std::endl

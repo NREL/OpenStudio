@@ -1,8 +1,13 @@
+#include <QByteArray>
+#include <QtPlugin>
+
 #include "RubyInterpreter.hpp"
 #include "GC_Value.hpp"
 #include "InitMacros.hxx"
 #include "../../ruby/init_openstudio.hpp"
 #include <embedded_files.hxx>
+
+#include "../utilities/core/Application.hpp"
 
 #include <iostream>
 
@@ -140,11 +145,11 @@ int main(int argc, char *argv[])
     rb_provide("enc/gbk.so");
     Init_iso_8859_1();
     rb_provide("enc/iso_8859_1.so");
-	Init_iso_8859_2();
+	  Init_iso_8859_2();
     rb_provide("enc/iso_8859_2.so");
     Init_iso_8859_3();
     rb_provide("enc/iso_8859_3.so");
-	Init_iso_8859_4();
+	  Init_iso_8859_4();
     rb_provide("enc/iso_8859_4.so");
     Init_iso_8859_5();
     rb_provide("enc/iso_8859_5.so");
@@ -239,6 +244,19 @@ int main(int argc, char *argv[])
 
     Init_EmbeddedScripting();
   }
+
+  QCoreApplication* app = new QCoreApplication(argc, argv);
+  openstudio::Application::instance().setApplication(app);
+  app->setOrganizationName("NREL");
+  app->setOrganizationDomain("nrel.gov");
+  app->setApplicationName("openstudio");
+
+  // Make the run path the default plugin search location
+  QCoreApplication::addLibraryPath(QCoreApplication::applicationDirPath());
+  
+  #ifdef QT_STATIC
+  Q_IMPORT_PLUGIN(QSQLiteDriverPlugin);
+  #endif
 
   // Need embedded_help for requiring files out of the embedded system
   auto embedded_extensions_string = embedded_files::getFileAsString(":/embedded_help.rb");
