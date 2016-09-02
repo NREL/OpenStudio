@@ -1,7 +1,7 @@
 Package: OpenStudio
 Type: Package
 Title: Imports OpenStudio data into R.
-Version: ${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH}
+Version: ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}
 Date: 2012-07-02
 Author: The OpenStudio Development Team
 Maintainer: The OpenStudio Deveopment Team <openstudio@nrel.gov>

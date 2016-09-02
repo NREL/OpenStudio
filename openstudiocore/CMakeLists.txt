@@ -1,10 +1,11 @@
 cmake_minimum_required(VERSION 2.8.11)
+cmake_policy(SET CMP0048 NEW)
 
-project(OpenStudioCore)
+project(OpenStudioCore VERSION 1.12.5)
 
-set(CMAKE_VERSION_MAJOR 1)
-set(CMAKE_VERSION_MINOR 12)
-set(CMAKE_VERSION_PATCH 5)
+#set(CMAKE_VERSION_MAJOR 1)
+#set(CMAKE_VERSION_MINOR 12)
+#set(CMAKE_VERSION_PATCH 5)
 
 include(ExternalProject)
 
@@ -21,11 +22,11 @@ endif()
 
 ###############################################################################
 # Project version information
-set(CMAKE_VERSION_BUILD "Unknown" CACHE STRING "Build number") # git sha
+set(PROJECT_VERSION_BUILD "Unknown" CACHE STRING "Build number") # git sha
 
 # OpenStudio version
-set(OPENSTUDIO_VERSION "${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH}")
-set(OPENSTUDIO_LONG_VERSION "${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH}.${CMAKE_VERSION_BUILD}")
+set(OPENSTUDIO_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
+set(OPENSTUDIO_LONG_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}.${PROJECT_VERSION_BUILD}")
 
 # EnergyPlus Idd version
 set(ENERGYPLUS_VERSION_MAJOR 8)

@@ -13,7 +13,7 @@ set(${target_name}_src
 # For some reason, package.skeleton FORCE and roxygenize overwrite are not 
 # sufficient to get latest .R files copied over, so deleting by hand.
 if(WIN32)
-  set(R_OutputFile "${CMAKE_CURRENT_BINARY_DIR}/OpenStudio_${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH}.zip")
+  set(R_OutputFile "${CMAKE_CURRENT_BINARY_DIR}/OpenStudio_${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}.zip")
   add_custom_command(
     OUTPUT "${R_OutputFile}"
     COMMAND "${CMAKE_COMMAND}" -E remove_directory "OpenStudio"
@@ -25,7 +25,7 @@ if(WIN32)
   )
 
 else()
-  set(R_OutputFile "${CMAKE_CURRENT_BINARY_DIR}/OpenStudio_${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH}.tar.gz")
+  set(R_OutputFile "${CMAKE_CURRENT_BINARY_DIR}/OpenStudio_${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}.tar.gz")
   add_custom_command(
     OUTPUT "${R_OutputFile}"
     COMMAND "${CMAKE_COMMAND}" -E remove_directory "OpenStudio"
