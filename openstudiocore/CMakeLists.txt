@@ -67,6 +67,8 @@ if(UNIX AND NOT APPLE)
   set(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
 endif()
 
+option(BUILD_PAT "Build PAT" OFF)
+
 # Build C++ documentation using Doxygen
 # Requires: doxygen
 option(BUILD_DOCUMENTATION "Build Documentation" OFF)
@@ -1136,6 +1138,9 @@ endif()
 
 include("embedded/EmbedFiles.cmake")
 add_subdirectory("embedded")
+if( BUILD_PAT )
+  add_subdirectory("pat")
+endif()
 
 # Each subfolder of src is a major sub-project
 set(project_directories
