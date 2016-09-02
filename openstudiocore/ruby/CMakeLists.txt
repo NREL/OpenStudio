@@ -44,7 +44,6 @@ target_link_libraries(init_openstudio
  ruby_OpenStudioUtilitiesIdd
  ruby_OpenStudioModel
  ruby_OpenStudioModelResources
- ruby_OpenStudioUtilitiesCloud
  ruby_OpenStudioUtilitiesIdf
  openstudio_utilities
  ${Boost_LIBRARIES}

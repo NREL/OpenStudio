@@ -19,7 +19,6 @@
 %import <utilities/UtilitiesGeometry.i>
 %import <utilities/UtilitiesSql.i>
 %import <utilities/UtilitiesBCL.i>
-%import <utilities/UtilitiesCloud.i>
 %import <utilities/UtilitiesUnits.i>
 %import <utilities/UtilitiesIdd.i>
 %import <utilities/UtilitiesIdf.i>
