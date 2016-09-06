@@ -1,22 +1,10 @@
 # sketchup plugin
 
 install(DIRECTORY openstudio/sketchup_plugin DESTINATION . COMPONENT "SketchUpPlugin")
-install(FILES openstudio/sketchup_plugin/Startup.rb DESTINATION Plugins/OpenStudio/ COMPONENT "SketchUpPlugin")
-install(FILES openstudio/sketchup_plugin/OpenStudio.hash DESTINATION Plugins/OpenStudio/ COMPONENT "SketchUpPlugin")
-install(FILES openstudio/sketchup_plugin/OpenStudio.rb DESTINATION Plugins/ COMPONENT "SketchUpPlugin")
 
 set(CPACK_COMPONENT_SKETCHUPPLUGIN_DISPLAY_NAME "SketchUp Plugin")
 
 set(CPACK_COMPONENT_SKETCHUPPLUGIN_DEPENDS "Resources")
-
-# add_custom_target(Name [ALL] [command1 [args1...]]
-#                   [COMMAND command2 [args2...] ...]
-#                   [DEPENDS depend depend depend ... ]
-#                   [BYPRODUCTS [files...]]
-#                   [WORKING_DIRECTORY dir]
-#                   [COMMENT comment]
-#                   [VERBATIM] [USES_TERMINAL]
-#                   [SOURCES src1 [src2...]])
 
 # Elaborate shenanigans because we want to make a plugin_test.rb file,
 # that can be copied into the SketchUp plugins directory for testing the 

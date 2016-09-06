@@ -1453,5 +1453,11 @@ if( UNIX )
 set( CPACK_IFW_TARGET_DIRECTORY /usr/local/openstudio-${OpenStudio_VERSION}/ )
 endif()
 
-INCLUDE(CPack)
+include(CPack)
+include(CPackIFW)
+
+cpack_add_component(SketchUpPlugin
+  DISPLAY_NAME "SketchUp Plugin"
+  DESCRIPTION "SketchUp Plugin"
+)
 

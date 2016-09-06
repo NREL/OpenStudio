@@ -17,8 +17,8 @@
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 ######################################################################
 
-require("openstudio/sketchup_plugin/lib/interfaces/SurfaceGroup")
-require("openstudio/sketchup_plugin/lib/watchers/RenderableModelObjectWatcher")
+require("lib/interfaces/SurfaceGroup")
+require("lib/watchers/RenderableModelObjectWatcher")
 
 
 module OpenStudio

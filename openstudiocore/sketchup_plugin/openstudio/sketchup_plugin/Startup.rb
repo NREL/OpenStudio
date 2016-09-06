@@ -22,8 +22,8 @@ $OPENSTUDIO_SKETCHUPPLUGIN_DEVELOPER_MENU = false
 
 begin
   filedir = File.dirname(__FILE__) 
-  require "#{filedir}/../../../../bin/openstudio"
-  $: << "#{filedir}/../../../"
+  require "#{filedir}/../Ruby/openstudio"
+  $: << "#{filedir}"
 
   minimum_version = ''
   minimum_version_key = ''
@@ -42,7 +42,7 @@ begin
     UI.messagebox("OpenStudio is only compatible with SketchUp version " + minimum_version +
       " or higher.\nThe installed version is " + installed_version + ".  The plugin was not loaded.", MB_OK)
   else
-    load("openstudio/sketchup_plugin/lib/PluginManager.rb")
+    load("lib/PluginManager.rb")
   end
 rescue LoadError => e 
   UI.messagebox("Error loading OpenStudio SketchUp Plug-In:\n  #{e.message}", MB_OK)

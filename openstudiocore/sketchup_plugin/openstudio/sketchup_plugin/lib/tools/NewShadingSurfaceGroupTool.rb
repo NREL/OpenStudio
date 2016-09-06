@@ -17,8 +17,8 @@
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 ######################################################################
 
-require("openstudio/sketchup_plugin/lib/interfaces/ShadingSurfaceGroup")
-require("openstudio/sketchup_plugin/lib/tools/NewGroupTool")
+require("lib/interfaces/ShadingSurfaceGroup")
+require("lib/tools/NewGroupTool")
 
 
 module OpenStudio

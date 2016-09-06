@@ -158,9 +158,10 @@ if load_old_plugin and old_plugin
   
 elsif new_plugin
   
-  filedir = File.dirname(__FILE__) 
+  filepath = File.symlink?(__FILE__) ? File.readlink(__FILE__) : __FILE__
+  filedir = File.dirname(filepath) 
   # This assumes the structure of the OS install tree
-  ext = SketchupExtension.new($OPENSTUDIO_SKETCHUPPLUGIN_NAME, "#{filedir}/OpenStudio/Startup.rb")
+  ext = SketchupExtension.new($OPENSTUDIO_SKETCHUPPLUGIN_NAME, "#{filedir}/Startup.rb")
   ext.name = $OPENSTUDIO_SKETCHUPPLUGIN_NAME
   ext.description = "Adds building energy modeling capabilities by coupling SketchUp to the OpenStudio suite of tools.  \r\n\r\nVisit openstudio.net for more information."
   ext.version = new_version

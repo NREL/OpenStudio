@@ -18,7 +18,7 @@
 ######################################################################
 
 
-require("openstudio/sketchup_plugin/lib/dialogs/PreferencesDialog")
+require("lib/dialogs/PreferencesDialog")
 
 module OpenStudio
 

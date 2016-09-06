@@ -17,8 +17,8 @@
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 ######################################################################
 
-require("openstudio/sketchup_plugin/lib/interfaces/Space")
-require("openstudio/sketchup_plugin/lib/tools/NewGroupTool")
+require("lib/interfaces/Space")
+require("lib/tools/NewGroupTool")
 
 
 module OpenStudio

@@ -17,7 +17,7 @@
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 ######################################################################
 
-require("openstudio/sketchup_plugin/sketchup/Geom")
+require("sketchup/Geom")
 
 
 # This file adds new methods to native SketchUp classes.
