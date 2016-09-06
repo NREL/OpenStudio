@@ -67,8 +67,8 @@ namespace openstudio {
 
   #if defined _WIN32 
     TCHAR szPath[MAX_PATH];
-    if( !GetModuleFileName( nullptr, szPath, MAX_PATH ) ) {
-      return completeAndNormalize(toPath(szPath));
+    if( GetModuleFileName( nullptr, szPath, MAX_PATH ) ) {
+      return completeAndNormalize(toPath(szPath).parent_path());
     }
   #else
     Dl_info info;
