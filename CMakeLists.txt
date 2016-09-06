@@ -5,7 +5,7 @@ else()
   cmake_minimum_required(VERSION 2.8.11)
 endif()
 
-project(OpenStudio)
+project(OpenStudioMeta)
 
 set(CMAKE_VERSION_MAJOR 1)
 set(CMAKE_VERSION_MINOR 12)

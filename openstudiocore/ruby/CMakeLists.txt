@@ -80,4 +80,6 @@ if( WIN32 )
   target_link_libraries(openstudio_rb ${RUBY_MINGW_STUB_LIB})
 endif()
 
-install(TARGETS openstudio_rb DESTINATION bin COMPONENT "Ruby API")
+install(TARGETS openstudio_rb DESTINATION Ruby COMPONENT "RubyAPI")
+set(CPACK_COMPONENT_RUBYAPI_DISPLAY_NAME "Ruby API")
+

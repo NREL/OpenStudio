@@ -221,6 +221,7 @@ if( APPLE )
   target_link_libraries(openstudio ${COREFOUNDATION_LIBRARY} )
 endif()
 
-install(TARGETS openstudio DESTINATION bin COMPONENT "Command Line Interface")
+install(TARGETS openstudio DESTINATION bin COMPONENT "CLI")
+set(CPACK_COMPONENT_CLI_DISPLAY_NAME "Command Line Interface")
 
 

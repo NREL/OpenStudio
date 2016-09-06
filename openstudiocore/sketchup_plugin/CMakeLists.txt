@@ -1,9 +1,13 @@
 # sketchup plugin
 
-install(DIRECTORY openstudio/sketchup_plugin DESTINATION share/openstudio COMPONENT "SketchUp Plugin")
-install(FILES openstudio/sketchup_plugin/Startup.rb DESTINATION share/openstudio/Plugins/OpenStudio/ COMPONENT "SketchUp Plugin")
-install(FILES openstudio/sketchup_plugin/OpenStudio.hash DESTINATION share/openstudio/Plugins/OpenStudio/ COMPONENT "SketchUp Plugin")
-install(FILES openstudio/sketchup_plugin/OpenStudio.rb DESTINATION share/openstudio/Plugins/ COMPONENT "SketchUp Plugin")
+install(DIRECTORY openstudio/sketchup_plugin DESTINATION . COMPONENT "SketchUpPlugin")
+install(FILES openstudio/sketchup_plugin/Startup.rb DESTINATION Plugins/OpenStudio/ COMPONENT "SketchUpPlugin")
+install(FILES openstudio/sketchup_plugin/OpenStudio.hash DESTINATION Plugins/OpenStudio/ COMPONENT "SketchUpPlugin")
+install(FILES openstudio/sketchup_plugin/OpenStudio.rb DESTINATION Plugins/ COMPONENT "SketchUpPlugin")
+
+set(CPACK_COMPONENT_SKETCHUPPLUGIN_DISPLAY_NAME "SketchUp Plugin")
+
+set(CPACK_COMPONENT_SKETCHUPPLUGIN_DEPENDS "Resources")
 
 # add_custom_target(Name [ALL] [command1 [args1...]]
 #                   [COMMAND command2 [args2...] ...]

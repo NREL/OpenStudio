@@ -1,13 +1,12 @@
 cmake_minimum_required(VERSION 2.8.11)
 cmake_policy(SET CMP0048 NEW)
 
-project(OpenStudioCore VERSION 1.12.5)
-
-#set(CMAKE_VERSION_MAJOR 1)
-#set(CMAKE_VERSION_MINOR 12)
-#set(CMAKE_VERSION_PATCH 5)
+project(OpenStudio VERSION 1.12.5)
 
 include(ExternalProject)
+include(CPackComponent)
+
+set(CPACK_COMPONENTS_ALL OpenStudioApp PAT Resources SketchUpPlugin CLI RubyAPI)
 
 if( POLICY CMP0022 )
   cmake_policy(SET CMP0022 NEW)
@@ -1446,9 +1445,13 @@ endif()
 #  install(DIRECTORY "${ENERGYPLUS_DIR}" DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}" USE_SOURCE_PERMISSIONS)
 #endif()
 
-set(CPACK_PACKAGE_VERSION_MAJOR ${CMAKE_VERSION_MAJOR})
-set(CPACK_PACKAGE_VERSION_MINOR ${CMAKE_VERSION_MINOR})
-set(CPACK_PACKAGE_VERSION_PATCH ${CMAKE_VERSION_PATCH})
+set(CPACK_PACKAGE_VERSION_MAJOR ${OpenStudio_VERSION_MAJOR})
+set(CPACK_PACKAGE_VERSION_MINOR ${OpenStudio_VERSION_MINOR})
+set(CPACK_PACKAGE_VERSION_PATCH ${OpenStudio_VERSION_PATCH})
+
+if( UNIX )
+set( CPACK_IFW_TARGET_DIRECTORY /usr/local/openstudio-${OpenStudio_VERSION}/ )
+endif()
 
 INCLUDE(CPack)
 
