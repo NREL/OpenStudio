@@ -17,20 +17,20 @@
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 ######################################################################
 
-require("lib/AnimationManager")
-require("lib/CommandManager")
-require("lib/DialogManager")
-require("lib/MenuManager")
-require("lib/ModelManager")
-require("lib/SimulationManager")
-require("lib/ConflictManager")
-require("lib/UpdateManager")
-require("lib/WorkspaceObject")
-require("lib/PluginUserScriptRunner")
+require("openstudio/sketchup_plugin/lib/AnimationManager")
+require("openstudio/sketchup_plugin/lib/CommandManager")
+require("openstudio/sketchup_plugin/lib/DialogManager")
+require("openstudio/sketchup_plugin/lib/MenuManager")
+require("openstudio/sketchup_plugin/lib/ModelManager")
+require("openstudio/sketchup_plugin/lib/SimulationManager")
+require("openstudio/sketchup_plugin/lib/ConflictManager")
+require("openstudio/sketchup_plugin/lib/UpdateManager")
+require("openstudio/sketchup_plugin/lib/WorkspaceObject")
+require("openstudio/sketchup_plugin/lib/PluginUserScriptRunner")
 
-require("sketchup/UI")
-require("sketchup/Sketchup")
-require("sketchup/Geom")
+require("openstudio/sketchup_plugin/sketchup/UI")
+require("openstudio/sketchup_plugin/sketchup/Sketchup")
+require("openstudio/sketchup_plugin/sketchup/Geom")
 
 require("fileutils")
 

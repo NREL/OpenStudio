@@ -17,8 +17,8 @@
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 ######################################################################
 
-require("lib/interfaces/InteriorPartitionSurfaceGroup")
-require("lib/tools/NewGroupTool")
+require("openstudio/sketchup_plugin/lib/interfaces/InteriorPartitionSurfaceGroup")
+require("openstudio/sketchup_plugin/lib/tools/NewGroupTool")
 
 
 module OpenStudio

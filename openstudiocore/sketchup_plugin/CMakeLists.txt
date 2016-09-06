@@ -1,8 +1,9 @@
 # sketchup plugin
 
-install(DIRECTORY openstudio/sketchup_plugin DESTINATION . COMPONENT "SketchUpPlugin")
-
-set(CPACK_COMPONENT_SKETCHUPPLUGIN_DISPLAY_NAME "SketchUp Plugin")
+install(DIRECTORY openstudio/sketchup_plugin DESTINATION ./SketchUpPlugin/openstudio/ COMPONENT "SketchUpPlugin")
+install(FILES plugin/Startup.rb DESTINATION ./SketchUpPlugin/plugin/ COMPONENT "SketchUpPlugin")
+install(FILES plugin/OpenStudio.hash DESTINATION ./SketchUpPlugin/plugin/ COMPONENT "SketchUpPlugin")
+install(FILES plugin/OpenStudio.rb DESTINATION ./SketchUpPlugin/plugin/ COMPONENT "SketchUpPlugin")
 
 set(CPACK_COMPONENT_SKETCHUPPLUGIN_DEPENDS "Resources")
 

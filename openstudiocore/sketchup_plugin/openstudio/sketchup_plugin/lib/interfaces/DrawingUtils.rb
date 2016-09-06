@@ -17,8 +17,8 @@
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 ######################################################################
 
-require("sketchup/Sketchup")
-require("sketchup/Geom")
+require("openstudio/sketchup_plugin/sketchup/Sketchup")
+require("openstudio/sketchup_plugin/sketchup/Geom")
 
 
 # Everything in this module should be strictly based on entities and not drawing interfaces.

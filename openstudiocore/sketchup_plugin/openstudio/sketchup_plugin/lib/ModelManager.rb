@@ -18,9 +18,9 @@
 ######################################################################
 
 
-require("lib/dialogs/ProgressDialog")
-require("lib/interfaces/ModelInterface")
-require("lib/observers/AppObserver")
+require("openstudio/sketchup_plugin/lib/dialogs/ProgressDialog")
+require("openstudio/sketchup_plugin/lib/interfaces/ModelInterface")
+require("openstudio/sketchup_plugin/lib/observers/AppObserver")
 
 module OpenStudio
 

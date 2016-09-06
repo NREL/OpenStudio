@@ -17,8 +17,8 @@
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 ######################################################################
 
-require("lib/dialogs/Dialogs")
-require("lib/dialogs/DialogContainers")
+require("openstudio/sketchup_plugin/lib/dialogs/Dialogs")
+require("openstudio/sketchup_plugin/lib/dialogs/DialogContainers")
 
 
 module OpenStudio

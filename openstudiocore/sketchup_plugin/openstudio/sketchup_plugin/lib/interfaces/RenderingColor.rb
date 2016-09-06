@@ -17,9 +17,9 @@
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 ######################################################################
 
-require("lib/interfaces/DrawingInterface")
-require("lib/interfaces/ModelInterface")
-require("lib/observers/EntityObserver")
+require("openstudio/sketchup_plugin/lib/interfaces/DrawingInterface")
+require("openstudio/sketchup_plugin/lib/interfaces/ModelInterface")
+require("openstudio/sketchup_plugin/lib/observers/EntityObserver")
 
 module OpenStudio
 

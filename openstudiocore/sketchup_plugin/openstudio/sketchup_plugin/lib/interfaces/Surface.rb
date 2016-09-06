@@ -17,7 +17,7 @@
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 ######################################################################
 
-require("lib/interfaces/PlanarSurface")
+require("openstudio/sketchup_plugin/lib/interfaces/PlanarSurface")
 
 
 module OpenStudio
