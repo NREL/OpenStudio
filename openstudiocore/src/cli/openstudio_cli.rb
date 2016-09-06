@@ -19,6 +19,9 @@
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 ######################################################################
 
+#File.open('E:\test\test.log', 'w') do |f|
+#  ENV.each_key {|k| f.puts "#{k} = #{ENV[k]}" }
+#end
 
 #Signal.trap('INT') { abort }
 
