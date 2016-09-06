@@ -28,8 +28,8 @@
 #include "../shared_gui_components/MeasureManager.hpp"
 
 #include "../utilities/core/Assert.hpp"
-#include "../utilities/core/ApplicationPathHelpers.hpp"
 #include "../utilities/core/Compare.hpp"
+#include "../utilities/core/ApplicationPathHelpers.hpp"
 
 #include "../utilities/idf/IdfFile.hpp"
 #include "../utilities/idf/IdfObject.hpp"
@@ -122,7 +122,7 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv)
 {
   setOrganizationName("NREL");
   QCoreApplication::setOrganizationDomain("nrel.gov");
-  setApplicationName("OpenStudio");
+  setApplicationName("OpenStudioApp");
 
   readSettings();
 
@@ -161,8 +161,8 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv)
   QTimer::singleShot(0, this, &OpenStudioApp::startMeasureManagerProcess);
 
   // DLM: does this have to happen here in a blocking way?  it takes a long time to complete
-  this->buildCompLibraries();
-  //QTimer::singleShot(0, this, &OpenStudioApp::buildCompLibraries);
+  //this->buildCompLibraries();
+  QTimer::singleShot(0, this, &OpenStudioApp::buildCompLibraries);
 
   m_startupView = std::shared_ptr<openstudio::StartupView>(new openstudio::StartupView());
 
@@ -230,7 +230,7 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv)
   //}
   //
   if (!openedCommandLine){
-    newFromTemplateSlot( NEWFROMTEMPLATE_EMPTY ); // remove when above code uncommented
+    QTimer::singleShot(0, this, &OpenStudioApp::newFromEmptyTemplateSlot); // remove when above code uncommented
   }
   //
   //*************************************************************************************
@@ -360,6 +360,11 @@ void OpenStudioApp::quit()
   {
     QApplication::quit();
   }
+}
+
+void OpenStudioApp::newFromEmptyTemplateSlot()
+{
+  newFromTemplateSlot(NEWFROMTEMPLATE_EMPTY);
 }
 
 void OpenStudioApp::newFromTemplateSlot( NewFromTemplateEnum newFromTemplateEnum )
@@ -872,7 +877,7 @@ openstudio::path OpenStudioApp::resourcesPath() const
   } 
   else 
   {
-    return getApplicationRunDirectory() / openstudio::toPath("../share/openstudio-" + openStudioVersion() + "/OSApp");
+    return openstudio::toPath(QCoreApplication::applicationDirPath()) / openstudio::toPath("../share/openstudio-" + openStudioVersion() + "/OSApp");
   }
 }
 

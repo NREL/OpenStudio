@@ -47,7 +47,6 @@
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/PathHelpers.hpp"
-#include "../utilities/core/ApplicationPathHelpers.hpp"
 #include "../utilities/core/FilesystemHelpers.hpp"
 #include "../utilities/geometry/Geometry.hpp"
 #include "../utilities/geometry/Transformation.hpp"

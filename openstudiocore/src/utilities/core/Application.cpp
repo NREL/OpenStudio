@@ -18,7 +18,6 @@
 **********************************************************************/
 
 #include "Application.hpp"
-#include "ApplicationPathHelpers.hpp"
 #include "String.hpp"
 #include <OpenStudio.hxx>
 
@@ -69,22 +68,22 @@ QCoreApplication* ApplicationSingleton::application(bool gui)
       QCoreApplication::setAttribute(Qt::AA_MacPluginApplication, true);
 
       // Add this path for gem case (possibly deprecated)
-      QCoreApplication::addLibraryPath(toQString(getApplicationRunDirectory() / toPath("plugins")));
+      QCoreApplication::addLibraryPath(QCoreApplication::applicationDirPath() + QString("/plugins"));
 
       // And for any other random cases (possibly deprecated, applies to super-built Qt on Linux)
-      QCoreApplication::addLibraryPath(toQString(getApplicationRunDirectory().parent_path() / toPath("share/openstudio-" + openStudioVersion() + "/qtplugins")));
+      //QCoreApplication::addLibraryPath(toQString(getApplicationRunDirectory().parent_path() / toPath("share/openstudio-" + openStudioVersion() + "/qtplugins")));
 
-      // Make the run path the backup plugin search location
-      QCoreApplication::addLibraryPath(toQString(getApplicationRunDirectory()));
+      // Add the run path to the backup plugin search location
+      QCoreApplication::addLibraryPath(QCoreApplication::applicationDirPath());
 
       // Make the ruby path the default plugin search location
-#if defined(Q_OS_MAC)
-      openstudio::path p = getApplicationRunDirectory().parent_path().parent_path().parent_path() / toPath("Ruby/openstudio");
-      QCoreApplication::addLibraryPath(toQString(p));
-#elif defined(Q_OS_WIN)
-      openstudio::path p = getApplicationRunDirectory().parent_path() / toPath("Ruby/openstudio");
-      QCoreApplication::addLibraryPath(toQString(p));
-#endif
+//#if defined(Q_OS_MAC)
+//      openstudio::path p = getApplicationRunDirectory().parent_path().parent_path().parent_path() / toPath("Ruby/openstudio");
+//      QCoreApplication::addLibraryPath(toQString(p));
+//#elif defined(Q_OS_WIN)
+//      openstudio::path p = getApplicationRunDirectory().parent_path() / toPath("Ruby/openstudio");
+//      QCoreApplication::addLibraryPath(toQString(p));
+//#endif
 
       static char *argv[] = {nullptr};
       static int argc = sizeof(argv) / sizeof(char*) - 1;

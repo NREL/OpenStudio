@@ -28,6 +28,9 @@
   %ignore openstudio::toQString(const std::wstring& w);
 #endif
 
+%ignore openstudio::getApplicationSourceDirectory();
+%ignore openstudio::getApplicationBuildDirectory();
+%ignore openstudio::applicationIsRunningFromBuildDirectory();
 
 %include <utilities/core/Qt.i>
 %include <utilities/core/Enum.i>

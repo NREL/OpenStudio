@@ -22,7 +22,6 @@
 #include "Model.hpp"
 
 #include "../utilities/filetypes/EpwFile.hpp"
-#include "../utilities/core/ApplicationPathHelpers.hpp"
 #include "../utilities/bcl/BCLMeasure.hpp"
 #include "../utilities/plot/ProgressBar.hpp"
 #include "../utilities/core/Logger.hpp"

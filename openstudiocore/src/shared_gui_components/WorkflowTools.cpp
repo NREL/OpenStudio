@@ -43,8 +43,6 @@
 //#include "../analysis/Analysis.hpp"
 //#include "../analysisdriver/SimpleProject.hpp"
 
-#include "../utilities/core/ApplicationPathHelpers.hpp"
-
 namespace openstudio {
   /*
 void getRadiancePreRunWarningsAndErrors(std::vector<std::string> &t_warnings, 

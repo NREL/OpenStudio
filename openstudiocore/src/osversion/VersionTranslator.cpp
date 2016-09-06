@@ -39,7 +39,6 @@
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
-#include "../utilities/core/ApplicationPathHelpers.hpp"
 #include "../utilities/idf/IdfExtensibleGroup.hpp"
 #include "../utilities/idf/ValidityReport.hpp"
 #include "../utilities/core/PathHelpers.hpp"

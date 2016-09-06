@@ -18,20 +18,16 @@
 **********************************************************************/
 
 #include <utilities/core/ApplicationPathHelpers.hpp>
+#include <utilities/core/Application.hpp>
 #include <utilities/core/PathHelpers.hpp>
 
 #include <OpenStudio.hxx>
 
 #include <QCoreApplication>
+#include <QStandardPaths>
 #include <sstream>
 #include <boost/algorithm/string/case_conv.hpp>
 #include <iostream>
-
-#ifdef Q_OS_WIN
-#include <Windows.h>
-#else
-#include <dlfcn.h>
-#endif
 
 
   bool pathBeginsWith(const openstudio::path &t_shorter, const openstudio::path &t_longer)
@@ -63,230 +59,11 @@ namespace openstudio {
     return openstudio::toPath("${CMAKE_BINARY_DIR}");
   }
 
-  openstudio::path getApplicationInstallDirectory() {
-    return openstudio::toPath("${CMAKE_INSTALL_PREFIX}");
-  }
-
-  openstudio::path getSharedResourcesPath()
-  {
-    if (applicationIsRunningFromBuildDirectory())
-    {
-      return getApplicationSourceDirectory() / openstudio::toPath("resources");
-    }
-    else
-    {
-      openstudio::path candidate;
-#if defined(Q_OS_MAC)
-      candidate = getApplicationRunDirectory().parent_path().parent_path().parent_path() / openstudio::toPath("sharedresources");
-#elif defined(Q_OS_LINUX)
-      candidate = getApplicationRunDirectory().parent_path() / openstudio::toPath("share/openstudio-" + openStudioVersion() + "");
-#else
-      candidate = getApplicationRunDirectory().parent_path() / openstudio::toPath("share/openstudio");
-#endif
-      // revert to build directory location for regression tests and other external projects
-      // that link to a developer build of OpenStudio
-      if (!boost::filesystem::exists(candidate)) {
-        openstudio::path alternate = getApplicationSourceDirectory() / openstudio::toPath("resources");
-        if (boost::filesystem::exists(alternate)) {
-          candidate = alternate;
-        }
-      }
-      return candidate;
-    }
-  }
-
   openstudio::path getApplicationRunDirectory() {
-#ifdef Q_OS_WIN
-    TCHAR path[2048];
-    int size = GetModuleFileName(GetModuleHandle("openstudio_utilities.dll"), path, sizeof(path)-1);
-
-    std::string dllstr(path, size);
-    openstudio::path dllpath = openstudio::toPath(dllstr);
-    openstudio::path rundir = dllpath.parent_path();
-
-    if (openstudio::toString(rundir.filename()) == "openstudio" &&
-        openstudio::toString(rundir.parent_path().filename()) == "Ruby")
-    {
-      // It looks like our DLL was loaded from the installed ruby dir, so we
-      // are going to reset to relative bin dir
-      rundir = rundir.parent_path().parent_path() / openstudio::toPath("bin");
+    if (openstudio::Application::instance().hasApplication()){
+      return openstudio::toPath(QCoreApplication::applicationDirPath());
     }
-
-    return completeAndNormalize(rundir);
-#else
-    Dl_info rInfo;
-    memset( &rInfo, 0, sizeof(rInfo) );
-    if ( !dladdr((void*)(&getApplicationRunDirectory), &rInfo)  || !rInfo.dli_fname ) {
-      return completeAndNormalize(openstudio::toPath(QCoreApplication::applicationDirPath()));
-    }
-
-
-    std::string dllpath(rInfo.dli_fname);
-
-//    std::cout << "dladdr: " << dllpath << std::endl;
-
-    openstudio::path rundir = openstudio::toPath(dllpath).parent_path();
-
-    // Let's see if this is a link that we should expand
-    std::vector<char> buf(2048);
-    size_t pathlen = readlink(openstudio::toString(rundir).c_str(), &buf.front(), buf.size());
-    if (pathlen > 0 && pathlen < buf.size())
-    {
-      rundir = openstudio::toPath(std::string(&buf.front(), pathlen));
-    }
-
-#ifdef Q_OS_MAC
-    if (pathBeginsWith(getApplicationBuildDirectory(), rundir))
-    {
-      // we are definitely running from the build dir, let's reset the path to a known place
-      rundir = getApplicationBuildDirectory() / openstudio::toPath("Products/OpenStudio.app/Contents/MacOS");
-    } else if (rundir.filename() != "MacOS" && rundir.filename() != "openstudio") {
-      // We are not running from a regular run directory, try Qt method instead
-      openstudio::path p = openstudio::toPath(QCoreApplication::applicationDirPath());
-      if (!p.empty())
-      {
-        rundir = p;
-      }
-    }
-
-    if (openstudio::toString(rundir.filename()) == "openstudio" &&
-        openstudio::toString(rundir.parent_path().filename()) == "Ruby")
-    {
-      // It looks like our DLL was loaded from the installed ruby dir, so we
-      // are going to reset to a known application path
-      rundir = rundir.parent_path().parent_path() / openstudio::toPath("OpenStudio.app/Contents/MacOS");
-    }
-
-    if (openstudio::toString(rundir.filename()) == "openstudio" &&
-        openstudio::toString(rundir.parent_path().filename()) == "node")
-    {
-      // It looks like our DLL was loaded from the installed node dir, so we
-      // are going to reset to a known application path
-      rundir = rundir.parent_path().parent_path() / openstudio::toPath("OpenStudio.app/Contents/MacOS");
-    }
-#endif
-
-    std::string filename = openstudio::toString(rundir.filename());
-    std::string parentfilename = openstudio::toString(rundir.parent_path().filename());
-
-    if (filename == "lib" && boost::filesystem::exists(rundir.parent_path() / openstudio::toPath("bin")))
-    {
-      // if we're currently in the lib dir, pop up to the bin dir,
-      // this will maintain consistency with the fallback qt function used above
-      // and previously
-      rundir = rundir.parent_path() / openstudio::toPath("bin");
-    }
-
-    if (filename == "Node-install" || filename == "Ruby-install")
-    {
-      rundir = rundir.parent_path().parent_path().parent_path() / openstudio::toPath("OSCore-prefix/src/OSCore-build/Products");
-    }
-
-    if (parentfilename == "Node-install" || parentfilename == "Ruby-install")
-    {
-      rundir = rundir.parent_path().parent_path().parent_path().parent_path() / openstudio::toPath("OSCore-prefix/src/OSCore-build/Products");
-    }
-
-//    std::cout << "Rundir: " << openstudio::toString(rundir) << std::endl;
-
-
-    return completeAndNormalize(rundir);
-#endif
-  }
-
-  openstudio::path getOpenStudioRubyPath() {
-    if (applicationIsRunningFromBuildDirectory())
-    {
-#if defined(Q_OS_LINUX) || defined(Q_OS_MAC)
-      return getApplicationBuildDirectory() / openstudio::toPath("Products/ruby");
-#else
-      openstudio::path rundir = getApplicationRunDirectory();
-      openstudio::path::const_iterator buildname = rundir.end();
-      --buildname; // Last path name should be build name;
-      return getApplicationBuildDirectory() / openstudio::toPath("Products/ruby") / *buildname;
-#endif
-    } else {
-#ifdef Q_OS_LINUX
-      return getApplicationRunDirectory().parent_path() / openstudio::toPath("${RUBY_MODULE_ARCH_DIR}");
-#elif defined(Q_OS_MAC)
-      return getApplicationRunDirectory(); // get the fixed up ones in the application path
-#else
-      return getApplicationRunDirectory().parent_path() / openstudio::toPath("Ruby/openstudio");
-#endif
-    }
-  }
-
-  openstudio::path getOpenStudioRubyIncludePath() {
-    if (applicationIsRunningFromBuildDirectory())
-    {
-#if defined(Q_OS_LINUX) || defined(Q_OS_MAC)
-      return getApplicationBuildDirectory() / openstudio::toPath("ruby");
-#else
-      openstudio::path rundir = getApplicationRunDirectory();
-      openstudio::path::const_iterator buildname = rundir.end();
-      --buildname; // Last path name should be build name;
-      return getApplicationBuildDirectory() / openstudio::toPath("ruby") / *buildname;
-#endif
-    } else {
-      // DLM: do not rely on installer adding this to the ruby path
-      // installer makes openstudio readily available
-      //return openstudio::path();
-      return getOpenStudioRubyScriptsPath();
-    }
-  }
-
-  std::vector<openstudio::path> getOpenStudioBareRubyPaths()
-  {
-    // mirrors \openstudiocore\ruby\openstudio.rb
-    std::vector<openstudio::path> filenames;
-    filenames.push_back(openstudio::toPath("openstudioutilitiescore"));
-    filenames.push_back(openstudio::toPath("openstudioutilitiestime"));
-    filenames.push_back(openstudio::toPath("openstudioutilitiesdata"));
-    filenames.push_back(openstudio::toPath("openstudioutilitiesplot"));
-    filenames.push_back(openstudio::toPath("openstudioutilitiesgeometry"));
-    filenames.push_back(openstudio::toPath("openstudioutilitiessql"));
-    filenames.push_back(openstudio::toPath("openstudioutilitiesbcl"));
-    filenames.push_back(openstudio::toPath("openstudioutilitiescloud"));
-    filenames.push_back(openstudio::toPath("openstudioutilitiesunits"));
-    filenames.push_back(openstudio::toPath("openstudioutilitiesidd"));
-    filenames.push_back(openstudio::toPath("openstudioutilitiesidf"));
-    filenames.push_back(openstudio::toPath("openstudioutilitiesfiletypes"));
-    filenames.push_back(openstudio::toPath("openstudioutilities"));
-    filenames.push_back(openstudio::toPath("openstudiomodel"));
-    filenames.push_back(openstudio::toPath("openstudiomodelcore"));
-    filenames.push_back(openstudio::toPath("openstudiomodelsimulation"));
-    filenames.push_back(openstudio::toPath("openstudiomodelresources"));
-    filenames.push_back(openstudio::toPath("openstudiomodelgeometry"));
-    filenames.push_back(openstudio::toPath("openstudiomodelhvac"));
-    filenames.push_back(openstudio::toPath("openstudiomodelrefrigeration"));
-    filenames.push_back(openstudio::toPath("openstudiomodelgenerators"));
-    filenames.push_back(openstudio::toPath("openstudioenergyplus"));
-    filenames.push_back(openstudio::toPath("openstudioradiance"));
-    filenames.push_back(openstudio::toPath("openstudiogbxml"));
-    filenames.push_back(openstudio::toPath("openstudioairflow"));
-    filenames.push_back(openstudio::toPath("openstudioosversion"));
-    filenames.push_back(openstudio::toPath("openstudiomeasure"));
-    filenames.push_back(openstudio::toPath("openstudiomodeleditor"));
-    filenames.push_back(openstudio::toPath("openstudiolib"));
-    filenames.push_back(openstudio::toPath("openstudioisomodel"));
-    filenames.push_back(openstudio::toPath("openstudiosdd"));
-
-    return filenames;
-  }
-
-  std::vector<openstudio::path> getOpenStudioRubyPaths()
-  {
-    std::vector<openstudio::path> filenames = getOpenStudioBareRubyPaths();
-    openstudio::path rubylibbasepath = getOpenStudioRubyPath();
-
-    for (std::vector<openstudio::path>::iterator itr = filenames.begin();
-         itr != filenames.end();
-         ++itr)
-    {
-      *itr = rubylibbasepath / *itr;
-    }
-
-    return filenames;
+    return openstudio::path();
   }
 
   bool applicationIsRunningFromBuildDirectory()
@@ -302,134 +79,99 @@ namespace openstudio {
     return pathBeginsWith(buildDir, runDir);
   }
 
-
-openstudio::path getApplicationOutputDirectory(const std::string& outdir) {
-  openstudio::path result(openstudio::toPath(outdir));
-  std::stringstream ss, tss;
-
-  // turn relative path into absolute path
-  result = boost::filesystem::system_complete(result);
-  std::string dirStr = openstudio::toString(result);
-  // create string used in error messages
-  if (dirStr != outdir) { tss << " (" << dirStr << ")"; }
-
-  // result cannot be a file
-  if (boost::filesystem::is_regular_file(result)) {
-    ss << "Invalid outdir, " << outdir << tss.str()
-       << ", is a file instead of a directory with a valid parent_path.";
-    throw std::runtime_error(ss.str().c_str());
+  openstudio::path getEnergyPlusDirectory() {
+    return getEnergyPlusExecutable().parent_path();
   }
 
-  // if result is not yet a directory
-  if (!boost::filesystem::is_directory(result)) {
-    // parent path must be an existing directory
-    if (!boost::filesystem::is_directory(result.parent_path())) {
-      ss << "Invalid outdir, " << outdir << tss.str()
-         << ", has a parent_path, " << openstudio::toString(result.parent_path())
-         << ", that is either invalid, or corresponds to a non-existent directory.";
-      throw std::runtime_error(ss.str().c_str());
+  openstudio::path getEnergyPlusExecutable() {
+    
+    openstudio::path cmakeEnergyPlusPath = openstudio::toPath("${ENERGYPLUS_EXE}");
+    openstudio::path cmakeEnergyPlusDirectory = cmakeEnergyPlusPath.parent_path();
+
+    // handle developer case first
+    if (applicationIsRunningFromBuildDirectory()){
+      if( openstudio::filesystem::exists(cmakeEnergyPlusPath) ){
+        return cmakeEnergyPlusPath;
+      }
     }
-    // make the output directory, if possible
-    std::cout << "Creating output directory " << dirStr << "." << std::endl;
-    bool ok = boost::filesystem::create_directory(result);
-    if (!ok) {
-      ss << "Unable to create outdir " << outdir << tss.str() << ".";
-      throw std::runtime_error(ss.str().c_str());
+
+    // next check environment variable
+    auto envPathString = std::getenv("ENERGYPLUS_EXE_PATH");
+    if( envPathString ) {
+      openstudio::path envPath = openstudio::toPath(envPathString);
+      if( openstudio::filesystem::exists(envPath) ) {
+        return envPath;
+      }
     }
-  }
 
-  std::cout << std::endl << "All output will be directed to " << dirStr << "."
-            << std::endl << std::endl;
-  return result;
-}
+    // next check for installed energyplus
+    if (openstudio::Application::instance().hasApplication()){
+      QStringList paths;
+      paths << QCoreApplication::applicationDirPath() + QString("/../EnergyPlus/energyplus");
+      QString energyPlusExePath = QStandardPaths::findExecutable("energyplus", paths);
+      if (!energyPlusExePath.isEmpty()){
+        openstudio::path installPath = openstudio::toPath(energyPlusExePath);
+        if( openstudio::filesystem::exists(installPath) ) {
+          return installPath;
+        }
+      } 
+    }
 
-openstudio::path getOpenStudioRubyScriptsPath() {
-  if (applicationIsRunningFromBuildDirectory())
-  {
-    return getApplicationSourceDirectory() / openstudio::toPath("ruby");
-  } else {
-#ifdef Q_OS_LINUX
-    return getApplicationInstallDirectory() / openstudio::toPath("share/openstudio-" + openStudioVersion() + "/Ruby");
-#elif defined(Q_OS_MAC)
-    return getApplicationRunDirectory().parent_path().parent_path().parent_path() / openstudio::toPath("Ruby");
-#else
-    return getApplicationRunDirectory().parent_path() / openstudio::toPath("Ruby");
-#endif
-  }
-}
+    // next check default location
+    openstudio::path energyPlusExeName = cmakeEnergyPlusPath.filename();
+    openstudio::path energyPlusDirectoryName = cmakeEnergyPlusDirectory.filename();
 
-openstudio::path getOpenStudioEmbeddedRubyPath() {
-#ifdef Q_OS_WIN
-  if (applicationIsRunningFromBuildDirectory()) {
-    return getApplicationBuildDirectory().parent_path().parent_path().parent_path() / openstudio::toPath("Ruby-prefix/src/Ruby");
-  } else {
-    return getApplicationRunDirectory().parent_path() / openstudio::toPath("ruby-install/ruby");
-  }
-#else
-  return openstudio::path();
-#endif
-}
+  #ifdef Q_OS_LINUX
+    auto systemPath = openstudio::toPath("/usr/local") / energyPlusDirectoryName / energyPlusExeName;
+  #elif defined(Q_OS_MAC)
+    auto systemPath = openstudio::toPath("/Applications") / energyPlusDirectoryName / energyPlusExeName;
+  #else
+    auto systemPath = openstudio::toPath("C:/") / energyPlusDirectoryName / energyPlusExeName;
+  #endif
 
-openstudio::path getEnergyPlusDirectory() {
-  return getEnergyPlusExecutable().parent_path();
-}
+    if( openstudio::filesystem::exists(systemPath) ) {
+      return systemPath;
+    }
 
-openstudio::path getEnergyPlusExecutable() {
-  openstudio::path envPath;
-  auto envPathString = std::getenv("ENERGYPLUS_EXE_PATH");
-  if( envPathString ) {
-    envPath = openstudio::toPath(envPathString);
-  }
-
-  openstudio::path cmakeEnergyPlusPath = openstudio::toPath("${ENERGYPLUS_EXE}");
-  openstudio::path energyPlusExeName = cmakeEnergyPlusPath.filename();
-  openstudio::path cmakeEnergyPlusDirectory = cmakeEnergyPlusPath.parent_path();
-  openstudio::path energyPlusDirectoryName = cmakeEnergyPlusDirectory.filename();
-
-#ifdef Q_OS_LINUX
-  auto systemPath = openstudio::toPath("/usr/local") / energyPlusDirectoryName / energyPlusExeName;
-#elif defined(Q_OS_MAC)
-  auto systemPath = openstudio::toPath("/Applications") / energyPlusDirectoryName / energyPlusExeName;
-#else
-  auto systemPath = openstudio::toPath("C:/") / energyPlusDirectoryName / energyPlusExeName;
-#endif
-
-  if( openstudio::filesystem::exists(envPath) ) {
-    return envPath;
-  } else if( openstudio::filesystem::exists(systemPath) ) {
-    return systemPath;
-  } else {
+    // next check user path
+    //QString userPath = QStandardPaths::findExecutable("energyplus");
+    //if (!userPath.isEmpty()){
+    //  openstudio::path path = openstudio::toPath(userPath);
+    //  if( openstudio::filesystem::exists(path) ) {
+    //    return path;
+    //  }
+    //}
+    
     return openstudio::path();
   }
-}
 
-boost::optional<openstudio::path> getRadianceDirectory() {
-  openstudio::path cmakeRadianceDirectory = openstudio::toPath("${RADIANCE_LOCATION}");
-  openstudio::path radianceDirectoryName;
-  if (!cmakeRadianceDirectory.empty()){
-    radianceDirectoryName = cmakeRadianceDirectory.filename();
+  boost::optional<openstudio::path> getRadianceDirectory() {
+    openstudio::path cmakeRadianceDirectory = openstudio::toPath("${RADIANCE_LOCATION}");
+    openstudio::path radianceDirectoryName;
+    if (!cmakeRadianceDirectory.empty()){
+      radianceDirectoryName = cmakeRadianceDirectory.filename();
+    }
+
+    openstudio::path result;
+
+    if (applicationIsRunningFromBuildDirectory())
+    {
+      result = cmakeRadianceDirectory;
+    } else {
+  #ifdef Q_OS_LINUX
+      result = getApplicationInstallDirectory() / openstudio::toPath("share/openstudio-" + openStudioVersion()) / radianceDirectoryName;
+  #elif defined(Q_OS_MAC)
+      result = getApplicationRunDirectory().parent_path().parent_path().parent_path() / openstudio::toPath("sharedresources") / radianceDirectoryName;
+  #else
+      result = getApplicationRunDirectory().parent_path() / openstudio::toPath("share/openstudio") / radianceDirectoryName;
+  #endif
+    }
+
+    if (exists(result)){
+      return result;
+    }
+
+    return boost::none;
   }
-
-  openstudio::path result;
-
-  if (applicationIsRunningFromBuildDirectory())
-  {
-    result = cmakeRadianceDirectory;
-  } else {
-#ifdef Q_OS_LINUX
-    result = getApplicationInstallDirectory() / openstudio::toPath("share/openstudio-" + openStudioVersion()) / radianceDirectoryName;
-#elif defined(Q_OS_MAC)
-    result = getApplicationRunDirectory().parent_path().parent_path().parent_path() / openstudio::toPath("sharedresources") / radianceDirectoryName;
-#else
-    result = getApplicationRunDirectory().parent_path() / openstudio::toPath("share/openstudio") / radianceDirectoryName;
-#endif
-  }
-
-  if (exists(result)){
-    return result;
-  }
-
-  return boost::none;
-}
 
 } // openstudio

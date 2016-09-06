@@ -73,6 +73,7 @@
 #include <QVBoxLayout>
 #include <QTextEdit>
 #include <QProcess>
+#include <QProcessEnvironment>
 #include <QStandardPaths>
 #include <QFileSystemWatcher>
 #include <QDesktopServices>
@@ -138,6 +139,14 @@ RunView::RunView()
 
   m_runProcess = new QProcess(this);
   connect(m_runProcess, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &RunView::onRunProcessFinished);
+
+  auto energyPlusExePath = getEnergyPlusExecutable();
+  if (!energyPlusExePath.empty()){
+    //QProcessEnvironment env = m_runProcess->processEnvironment();
+    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+    env.insert("ENERGYPLUS_EXE_PATH", toQString(energyPlusExePath));
+    m_runProcess->setProcessEnvironment(env);
+  }
 
   m_runTcpServer = new QTcpServer();
   m_runTcpServer->listen();
