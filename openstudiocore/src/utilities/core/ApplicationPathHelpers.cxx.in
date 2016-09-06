@@ -18,16 +18,20 @@
 **********************************************************************/
 
 #include <utilities/core/ApplicationPathHelpers.hpp>
-#include <utilities/core/Application.hpp>
 #include <utilities/core/PathHelpers.hpp>
 
 #include <OpenStudio.hxx>
 
-#include <QCoreApplication>
-#include <QStandardPaths>
 #include <sstream>
 #include <boost/algorithm/string/case_conv.hpp>
 #include <iostream>
+
+#if defined _WIN32 
+#include <windows.h>
+#else
+#include <stdio.h>
+#include <dlfcn.h>
+#endif
 
 
   bool pathBeginsWith(const openstudio::path &t_shorter, const openstudio::path &t_longer)
@@ -60,15 +64,25 @@ namespace openstudio {
   }
 
   openstudio::path getApplicationRunDirectory() {
-    if (openstudio::Application::instance().hasApplication()){
-      return openstudio::toPath(QCoreApplication::applicationDirPath());
+
+  #if defined _WIN32 
+    TCHAR szPath[MAX_PATH];
+    if( !GetModuleFileName( nullptr, szPath, MAX_PATH ) ) {
+      return completeAndNormalize(toPath(szPath));
     }
+  #else
+    Dl_info info;
+    if (dladdr("main", &info)) {
+       return completeAndNormalize(toPath(info.dli_fname));
+    }
+  #endif
+
     return openstudio::path();
   }
 
   bool applicationIsRunningFromBuildDirectory()
   {
-#ifdef Q_OS_WIN
+#ifdef _WIN32
     openstudio::path buildDir = openstudio::toPath(boost::algorithm::to_upper_copy(openstudio::toString(getApplicationBuildDirectory())));
     openstudio::path runDir = openstudio::toPath(boost::algorithm::to_upper_copy(openstudio::toString(getApplicationRunDirectory())));
 #else
@@ -105,17 +119,14 @@ namespace openstudio {
     }
 
     // next check for installed energyplus
-    if (openstudio::Application::instance().hasApplication()){
-      QStringList paths;
-      paths << QCoreApplication::applicationDirPath() + QString("/../EnergyPlus/energyplus");
-      QString energyPlusExePath = QStandardPaths::findExecutable("energyplus", paths);
-      if (!energyPlusExePath.isEmpty()){
-        openstudio::path installPath = openstudio::toPath(energyPlusExePath);
-        if( openstudio::filesystem::exists(installPath) ) {
-          return installPath;
-        }
-      } 
-    }
+#ifdef _WIN32
+    openstudio::path installPath = getApplicationRunDirectory() / toPath("/../EnergyPlus/energyplus.exe");
+#else
+    openstudio::path installPath = getApplicationRunDirectory() / toPath("/../EnergyPlus/energyplus");
+#endif
+    if( openstudio::filesystem::exists(installPath) ) {
+      return installPath;
+    } 
 
     // next check default location
     openstudio::path energyPlusExeName = cmakeEnergyPlusPath.filename();
