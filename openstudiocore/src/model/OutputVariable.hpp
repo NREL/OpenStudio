@@ -60,6 +60,8 @@ class MODEL_API OutputVariable : public ModelObject {
 
   static IddObjectType iddObjectType();
 
+  static std::vector<std::string> reportingFrequencyValues();
+
   /** @name Getters */
   //@{
 
