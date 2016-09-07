@@ -44,9 +44,9 @@ ApplicationSingleton::ApplicationSingleton()
 
 ApplicationSingleton::~ApplicationSingleton()
 {
-  if (m_sketchUpWidget){
-    delete m_sketchUpWidget;
-  }
+  //if (m_sketchUpWidget){
+  //  delete m_sketchUpWidget;
+  //}
 
   if (m_qApplication)
   {

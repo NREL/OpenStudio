@@ -201,18 +201,25 @@ module OpenStudio
       # process events in OpenStudio Model
       # this may add events to the Plugin event_queue
       OpenStudio::Application.instance.processEvents
-     
+      
+      @model_manager.model_interfaces.each do |model_interface|
+        model_interface.model_watcher.processAddedObjects
+      end
+      
       # process events in SketchUp
-      while not @event_queue.empty?
-        current_queue = Array.new(@event_queue)
-        @event_queue.clear
+      while (not @event_queue.empty?)
+      
+        # put all @event_queue in current_queue
+        current_queue = @event_queue
+        @event_queue = []
+     
         current_queue.each do |proc| 
         
           begin
             #puts "Calling proc #{proc} in event queue"
             Plugin.log(OpenStudio::Debug, "Calling proc #{proc} in event queue")
             
-            # this may add events to the Plugin event_queue
+            # this may add events to @event_queue
             proc.call
             
           rescue StandardError => e
