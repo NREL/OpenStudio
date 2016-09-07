@@ -263,6 +263,8 @@ class MeasureManagerServlet < WEBrick::HTTPServlet::AbstractServlet
           
           response.body = JSON.generate(result)
         rescue Exception => e  
+          puts "error = #{e.message}"
+          puts "backtrace = #{e.backtrace.inspect}"
           response.body = JSON.generate({:error=>e.message, :backtrace=>e.backtrace.inspect})
           response.status = 400
         end
