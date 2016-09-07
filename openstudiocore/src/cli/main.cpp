@@ -7,8 +7,6 @@
 #include "../../ruby/init_openstudio.hpp"
 #include <embedded_files.hxx>
 
-#include "../utilities/core/Application.hpp"
-
 #include <iostream>
 
 #ifndef _MSC_VER
@@ -244,15 +242,6 @@ int main(int argc, char *argv[])
 
     Init_EmbeddedScripting();
   }
-
-  QCoreApplication* app = new QCoreApplication(argc, argv);
-  openstudio::Application::instance().setApplication(app);
-  app->setOrganizationName("NREL");
-  app->setOrganizationDomain("nrel.gov");
-  app->setApplicationName("openstudio");
-
-  // Make the run path the default plugin search location
-  QCoreApplication::addLibraryPath(QCoreApplication::applicationDirPath());
   
   #ifdef QT_STATIC
   Q_IMPORT_PLUGIN(QSQLiteDriverPlugin);
