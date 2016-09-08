@@ -116,10 +116,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorSensor1_EMS) {
   ASSERT_TRUE(object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterIndexKeyName, false));
   EXPECT_EQ("", object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterIndexKeyName, false).get());
   ASSERT_TRUE(object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName, false));
-  //EXPECT_EQ("Site Outdoor Air Drybulb Temperature", object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName, false).get());
-  bool temp = object.getTarget(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName);
-  //ASSERT_TRUE(object.getTarget(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName));
-  //EXPECT_EQ(outvar.handle(), object.getTarget(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName)->handle());
+  EXPECT_EQ("Site Outdoor Air Drybulb Temperature", object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName, false).get());
 
   model.save(toPath("./EMS_sensor1.osm"), true);
   workspace.save(toPath("./EMS_sensor1.idf"), true);
@@ -148,8 +145,15 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorSensor2_EMS) {
   EXPECT_EQ(0u, forwardTranslator.errors().size());
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Sensor).size());
 
-  //EXPECT_EQ(zone1.name().get(), lights.keyName().get());
-  //EXPECT_EQ("Light Sensor", lights.nameString());
+  WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Sensor)[0];
+  WorkspaceObject outvar = workspace.getObjectsByType(IddObjectType::Output_Variable)[0];
+
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_SensorFields::Name, false));
+  EXPECT_EQ("Light Sensor", object.getString(EnergyManagementSystem_SensorFields::Name, false).get());
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterIndexKeyName, false));
+  EXPECT_EQ(zone1.name().get(), object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterIndexKeyName, false).get());
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName, false));
+  EXPECT_EQ("Zone Lights Electric Power", object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName, false).get());
 
   model.save(toPath("./EMS_sensor2.osm"), true);
   workspace.save(toPath("./EMS_sensor2.idf"), true);
@@ -167,6 +171,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorSensoronMeter_EMS) {
   // create meter
   OutputMeter meter(model);
   meter.setName("test meter");
+  meter.setMeterFileOnly(false);
 
   //add sensor to meter
   EnergyManagementSystemSensor meter_sensor(model);
@@ -178,10 +183,15 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorSensoronMeter_EMS) {
   EXPECT_EQ(0u, forwardTranslator.errors().size());
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Sensor).size());
 
-  //EXPECT_EQ("meter sensor", meter_sensor.nameString());
-  //EXPECT_EQ(meter.handle(), meter_sensor.outputMeter().get().handle());
-  //EXPECT_EQ(meter, meter_sensor.outputMeter());
-  //EXPECT_EQ("", meter_sensor.keyName().get());
+  WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Sensor)[0];
+  WorkspaceObject outvar = workspace.getObjectsByType(IddObjectType::Output_Meter)[0];
+
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_SensorFields::Name, false));
+  EXPECT_EQ("meter sensor", object.getString(EnergyManagementSystem_SensorFields::Name, false).get());
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterIndexKeyName, false));
+  EXPECT_EQ("", object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterIndexKeyName, false).get());
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName, false));
+  EXPECT_EQ("test meter", object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName, false).get());
 
   model.save(toPath("./EMS_sensor_meter.osm"), true);
   workspace.save(toPath("./EMS_sensor_meter.idf"), true);
@@ -198,7 +208,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_EMS) {
   // add fan
   Schedule s = model.alwaysOnDiscreteSchedule();
   FanConstantVolume fan(model, s);
-  FanConstantVolume fan2(model, s);
 
   // add actuator
   EnergyManagementSystemActuator fanActuator(fan);
@@ -206,18 +215,25 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_EMS) {
   fanActuator.setName(fanName);
   std::string fanControlType = "Fan Pressure Rise";
   fanActuator.setActuatedComponentControlType(fanControlType);
-  EXPECT_EQ(fan, fanActuator.actuatedComponent());
-  EXPECT_EQ(fanControlType, fanActuator.actuatedComponentControlType());
   std::string ComponentType = "Fan";
   fanActuator.setActuatedComponentType(ComponentType);
-  EXPECT_EQ(ComponentType, fanActuator.actuatedComponentType());
 
-  fanActuator.setActuatedComponent(fan2);
-  EXPECT_EQ(fan2, fanActuator.actuatedComponent());
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
   EXPECT_EQ(0u, forwardTranslator.errors().size());
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
+
+  WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator)[0];
+  WorkspaceObject outvar = workspace.getObjectsByType(IddObjectType::Fan_ConstantVolume)[0];
+
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::Name, false));
+  EXPECT_EQ(fanName, object.getString(EnergyManagementSystem_ActuatorFields::Name, false).get());
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false));
+  EXPECT_EQ(fan.name().get(), object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false).get());
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false));
+  EXPECT_EQ(ComponentType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false).get());
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false));
+  EXPECT_EQ(fanControlType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false).get());
 
   model.save(toPath("./EMS_example.osm"), true);
   workspace.save(toPath("./EMS_example.idf"), true);
@@ -251,18 +267,17 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorProgram_EMS) {
   fanActuator.setActuatedComponentControlType(fanControlType);
   std::string ComponentType = "Fan";
   fanActuator.setActuatedComponentType(ComponentType);
-  EXPECT_EQ(ComponentType, fanActuator.actuatedComponentType());
 
   //add program
   EnergyManagementSystemProgram fan_program_1(model);
   std::string programName = fan.name().get() + "Pressure Rise Program by Body";
   fan_program_1.setName(programName);
   //this body has /r/n in it
-  std::string fan_program_1_body = "SET mult = " + toString(OATdbSensor.handle()) + " / 15.0 !- This is nonsense\r\nSET " + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense";
+  std::string fan_program_1_body = "SET mult = " + toString(OATdbSensor.handle()) + " / 15.0 !- This is !nonsense\r\nSET " + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense\n" + "no comment\n" + "crap !comment!comment";
   //this is what the body should look like with 2 /n's and compare TRUE
-  std::string fan_program_body_test = "SET mult = " + toString(OATdbSensor.handle()) + " / 15.0 !- This is nonsense\nSET " + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense\n";
+  std::string fan_program_body_test = "SET mult = " + toString(OATdbSensor.handle()) + " / 15.0 !- This is !nonsense\nSET " + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense\n" + "no comment\n" + "crap !comment!comment\n";
   //the added lines should compare TRUE to below
-  std::string line1_test = "SET mult = " + toString(OATdbSensor.handle()) + " / 15.0 !- This is nonsense\n";
+  std::string line1_test = "SET mult = " + toString(OATdbSensor.handle()) + " / 15.0 !- This is !nonsense\n";
   std::string line2_test = "SET " + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense\n";
 
   //set body
@@ -274,120 +289,17 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorProgram_EMS) {
 
   //check lines
   boost::optional<std::vector<std::string>> lines = fan_program_1.lines();
-  EXPECT_EQ(2, lines.get().size());
+  EXPECT_EQ(4, lines.get().size());
   EXPECT_EQ(line1_test, lines.get()[0]);
   EXPECT_EQ(line2_test, lines.get()[1]);
-
-  EXPECT_EQ(2, fan_program_1.referencedObjects().size());
-  EXPECT_EQ(true, (fan_program_1.referencedObjects()[0].nameString() == fanName) || (fan_program_1.referencedObjects()[0].nameString() == "OATdb Sensor"));
-  EXPECT_EQ(true, (fan_program_1.referencedObjects()[1].nameString() == fanName) || (fan_program_1.referencedObjects()[1].nameString() == "OATdb Sensor"));
-  EXPECT_EQ(0, fan_program_1.invalidReferencedObjects().size());
-  fanActuator.remove();
-  EXPECT_EQ(1, fan_program_1.invalidReferencedObjects().size());
-
-  //add actuator on fan again
-  EnergyManagementSystemActuator fanActuator2(fan);
-  fanName = fan.name().get() + "Press Actuator";
-  fanActuator2.setName(fanName);
-  fanControlType = "Fan Pressure Rise";
-  fanActuator2.setActuatedComponentControlType(fanControlType);
-  ComponentType = "Fan";
-  fanActuator2.setActuatedComponentType(ComponentType);
-  EXPECT_EQ(ComponentType, fanActuator2.actuatedComponentType());
-
-  // Create a second program from a vector of lines
-  EnergyManagementSystemProgram fan_program_2(model);
-  programName = fan.name().get() + "Pressure Rise Program by Line";
-  fan_program_2.setName(programName);
-  //create program by individual lines
-  std::string line1 = "SET mult = " + toString(OATdbSensor.handle()) + " / 15.0 !- This is nonsense\r\n";
-  std::string line2 = "SET " + toString(fanActuator2.handle()) + " = 250 * mult !- More nonsense\r\n";
-
-  fan_program_2.addLine(line1);
-  fan_program_2.addLine(line2);
-
-  //this is what the body should look like with 2 /n's and compare TRUE
-  fan_program_body_test = "SET mult = " + toString(OATdbSensor.handle()) + " / 15.0 !- This is nonsense\nSET " + toString(fanActuator2.handle()) + " = 250 * mult !- More nonsense\n";
-  //the added lines should compare TRUE to below
-  line1_test = "SET mult = " + toString(OATdbSensor.handle()) + " / 15.0 !- This is nonsense\n";
-  line2_test = "SET " + toString(fanActuator2.handle()) + " = 250 * mult !- More nonsense\n";
-
-  //check body
-  body = fan_program_2.body();
-  EXPECT_EQ(fan_program_body_test, body.get());
-
-  //check lines
-  lines = fan_program_2.lines();
-  EXPECT_EQ(2, lines.get().size());
-  EXPECT_EQ(line1_test, lines.get()[0]);
-  EXPECT_EQ(line2_test, lines.get()[1]);
-
-  EXPECT_EQ(2, fan_program_2.referencedObjects().size());
-  EXPECT_EQ(true, (fan_program_2.referencedObjects()[0].nameString() == fanName) || (fan_program_2.referencedObjects()[0].nameString() == "OATdb Sensor"));
-  EXPECT_EQ(true, (fan_program_2.referencedObjects()[1].nameString() == fanName) || (fan_program_2.referencedObjects()[1].nameString() == "OATdb Sensor"));
-  EXPECT_EQ(0, fan_program_2.invalidReferencedObjects().size());
-  OATdbSensor.remove();
-  EXPECT_EQ(1, fan_program_2.invalidReferencedObjects().size());
-
-  //add sensor back in
-  EnergyManagementSystemSensor OATdbSensor2(model);
-  OATdbSensor2.setName("OATdb Sensor");
-  OATdbSensor2.setOutputVariable(siteOutdoorAirDrybulbTemperature);
-
-  // # Create a third program from vector of lines
-  EnergyManagementSystemProgram fan_program_3(model);
-  programName = fan.name().get() + "Pressure Rise Program by Vector of Lines";
-  fan_program_3.setName(programName);
-
-  std::vector<std::string> vectorOfLines;
-  line1 = "SET mult = " + toString(OATdbSensor2.handle()) + " / 15.0 !- This is nonsense\r\n";
-  line2 = "SET " + toString(fanActuator2.handle()) + " = 250 * mult !- More nonsense\r\n";
-  vectorOfLines.push_back(line1);
-  vectorOfLines.push_back(line2);
-  fan_program_3.setLines(vectorOfLines);
-
-  //this is what the body should look like with 2 /n's and compare TRUE
-  fan_program_body_test = "SET mult = " + toString(OATdbSensor2.handle()) + " / 15.0 !- This is nonsense\nSET " + toString(fanActuator2.handle()) + " = 250 * mult !- More nonsense\n";
-  //the added lines should compare TRUE to below
-  line1_test = "SET mult = " + toString(OATdbSensor2.handle()) + " / 15.0 !- This is nonsense\n";
-  line2_test = "SET " + toString(fanActuator2.handle()) + " = 250 * mult !- More nonsense\n";
-
-  //check body
-  body = fan_program_3.body();
-  EXPECT_EQ(fan_program_body_test, body.get());
-
-  //check lines
-  lines = fan_program_3.lines();
-  EXPECT_EQ(2, lines.get().size());
-  EXPECT_EQ(line1_test, lines.get()[0]);
-  EXPECT_EQ(line2_test, lines.get()[1]);
-
-  EXPECT_EQ(2, fan_program_3.referencedObjects().size());
-  EXPECT_EQ(true, (fan_program_3.referencedObjects()[0].nameString() == fanName) || (fan_program_3.referencedObjects()[0].nameString() == "OATdb Sensor"));
-  EXPECT_EQ(true, (fan_program_3.referencedObjects()[1].nameString() == fanName) || (fan_program_3.referencedObjects()[1].nameString() == "OATdb Sensor"));
-  EXPECT_EQ(0, fan_program_3.invalidReferencedObjects().size());
-  OATdbSensor2.remove();
-  EXPECT_EQ(1, fan_program_3.invalidReferencedObjects().size());
-  fanActuator2.remove();
-  EXPECT_EQ(2, fan_program_3.invalidReferencedObjects().size());
-
-  lines = fan_program_3.lines();
-  EXPECT_EQ(2, lines.get().size());
-  fan_program_3.addLine(line1);
-  lines = fan_program_3.lines();
-  EXPECT_EQ(3, lines.get().size());
-  EXPECT_EQ(line1_test, lines.get()[2]);
-  fan_program_3.eraseBody();
-  body = fan_program_3.body();
-  EXPECT_EQ("", body.get());
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
   EXPECT_EQ(0u, forwardTranslator.errors().size());
-  //EXPECT_EQ(3u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Program).size());
+  //EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Program).size());
 
-  model.save(toPath("./EMS_example.osm"), true);
-  workspace.save(toPath("./EMS_example.idf"), true);
+  model.save(toPath("./EMS_program.osm"), true);
+  workspace.save(toPath("./EMS_program.idf"), true);
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslatorProgramCallingManager_EMS) {
