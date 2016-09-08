@@ -20,7 +20,8 @@ class Array
     (sum / self.size).to_f
   end
 end
-  
+
+
 # start the measure
 class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
@@ -39,6 +40,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     return 'The OpenStudio model is converted to Radiance format. All spaces containing daylighting objects (illuminance map, daylighting control point, and optionally glare sensors) will have annual illuminance calculated using Radiance, and the OS model\'s lighting schedules can be overwritten with those based on daylight responsive lighting controls.'
   end
 
+
   # define the arguments that the user will input
   def arguments(model)
     args = OpenStudio::Ruleset::OSArgumentVector.new
@@ -46,10 +48,10 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     chs = OpenStudio::StringVector.new
     chs << 'Yes'
     chs << 'No'
-    apply_schedules = OpenStudio::Ruleset::OSArgument::makeChoiceArgument('apply_schedules', chs, true)
+    apply_schedules = OpenStudio::Ruleset::OSArgument::makeBoolArgument('apply_schedules', true)
     apply_schedules.setDisplayName('Apply schedules')
-    apply_schedules.setDefaultValue('Yes')
-    apply_schedules.setDescription('Update lighting load schedules with those computed by Radiance')
+    apply_schedules.setDefaultValue('true')
+    apply_schedules.setDescription('Update lighting load schedules for Radiance-daylighting control response')
     args << apply_schedules
     
     chs = OpenStudio::StringVector.new
@@ -157,7 +159,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     end
 
     # assign the user inputs to variables
-    apply_schedules = runner.getStringArgumentValue('apply_schedules', user_arguments)    
+    apply_schedules = runner.getBoolArgumentValue('apply_schedules', user_arguments)    
     use_cores = runner.getStringArgumentValue('use_cores', user_arguments)
     rad_settings = runner.getStringArgumentValue('rad_settings', user_arguments)
     debug_mode = runner.getBoolArgumentValue('debug_mode',user_arguments)
@@ -350,49 +352,73 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     
     ## ModelToRad Workflow
 
-    # save osm for input to eplus pre-process
-    modelPath = OpenStudio::Path.new("eplusin.osm")
-    model.save(modelPath,true)
+    # crude test for OpenStudio version, since OS 2.x mis-reports
+    # TODO get version from cli -- when it reports accurately.
+    legacy = false
+    begin 
+      got_workflow = OpenStudio::Workflow # i can haz wofkflow gem?
+    rescue NameError
+      puts 'Running on legacy OpenStudio (1.x), workflow gem not found.'
+      legacy = true
+    end
+    if !legacy
+      puts 'Radiance measure not yet supported on OpenStudio 2.x, WIP!!'
+    end
 
-    # find EnergyPlus
-    co = OpenStudio::Runmanager::ConfigOptions.new 
-    co.fastFindEnergyPlus
- 
-    # make a workflow (EnergyPlus "pre-run" to get constructions and weather)
-    workflow = OpenStudio::Runmanager::Workflow.new("ModelToRadPreprocess->ModelToIdf->ExpandObjects->EnergyPlus")
-    workflow.add(co.getTools)
+    if legacy
+      # save osm for input to eplus pre-process
+      modelPath = OpenStudio::Path.new("eplusin.osm")
+      model.save(modelPath,true)
 
-    # add model-to-rad workflow
-    modelToRad = OpenStudio::Runmanager::Workflow.new("ModelToRad")
-    workflow.addWorkflow(modelToRad)
+      # find EnergyPlus
+      co = OpenStudio::Runmanager::ConfigOptions.new 
+      co.fastFindEnergyPlus
+   
+      # make a workflow (EnergyPlus "pre-run" to get constructions and weather)
+      workflow = OpenStudio::Runmanager::Workflow.new("ModelToRadPreprocess->ModelToIdf->ExpandObjects->EnergyPlus")
+      workflow.add(co.getTools)
 
-    # minimize file path lengths
-    workflow.addParam(OpenStudio::Runmanager::JobParam.new("flatoutdir"))
-    
-    # make the run manager
-    runDir = OpenStudio::Path.new(epout_dir)
-    runmanager_path = OpenStudio::Path.new("runmanager.db")
-    runmanager = OpenStudio::Runmanager::RunManager.new(runmanager_path, true, true, false, false)
+      # add model-to-rad workflow
+      modelToRad = OpenStudio::Runmanager::Workflow.new("ModelToRad")
+      workflow.addWorkflow(modelToRad)
 
-    OpenStudio::makeParentFolder(runDir, OpenStudio::Path.new(), true)
-    print_statement('Creating workflow', runner)
+      # minimize file path lengths
+      workflow.addParam(OpenStudio::Runmanager::JobParam.new("flatoutdir"))
+      
+      # make the run manager
+      runDir = OpenStudio::Path.new(epout_dir)
+      runmanager_path = OpenStudio::Path.new("runmanager.db")
+      runmanager = OpenStudio::Runmanager::RunManager.new(runmanager_path, true, true, false, false)
 
-    jobtree = workflow.create(OpenStudio::system_complete(runDir), \
-    OpenStudio::system_complete(modelPath), OpenStudio::Path.new(epw_path))
-    runmanager.enqueue(jobtree, true)
-    print_statement("Running jobs in #{runDir}", runner)
-    runmanager.setPaused(false)
-    runmanager.waitForFinished()
-        
-    if jobtree.treeErrors.succeeded
-      print_statement('OpenStudio to Radiance translation complete', runner)
-    
-    else   
-      jobtree.treeErrors.errors.each do |err|
-        print_statement("ERROR: #{err}", runner)
+      OpenStudio::makeParentFolder(runDir, OpenStudio::Path.new(), true)
+      print_statement('Creating workflow', runner)
+
+      jobtree = workflow.create(OpenStudio::system_complete(runDir), \
+      OpenStudio::system_complete(modelPath), OpenStudio::Path.new(epw_path))
+      runmanager.enqueue(jobtree, true)
+      print_statement("Running jobs in #{runDir}", runner)
+      runmanager.setPaused(false)
+      runmanager.waitForFinished()
+          
+      if jobtree.treeErrors.succeeded
+        print_statement('OpenStudio to Radiance translation complete', runner)
+      
+      else   
+        jobtree.treeErrors.errors.each do |err|
+          print_statement("ERROR: #{err}", runner)
+        end
+        print_statement("Model issue(s) caused EnergyPlus preprocess failure, aborting.", runner)
+        abort()     
+
       end
-      print_statement("Model issue(s) caused EnergyPlus preprocess failure, aborting.", runner)
-      abort()     
+
+    else # OS 2.x support (add)
+
+      puts 'trying OS 2.x support...'
+
+      #???.getEnergyPlusExecutable
+      #???.getRadianceDirectory
+
 
     end
 
@@ -2165,12 +2191,16 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
       site_meridian, radPath, building, values, dcVectors, runner)
 
     # make new lighting power schedules based on Radiance daylight data
-    makeSchedules(model, sqlFile, runner)
-
+    if apply_schedules 
+      makeSchedules(model, sqlFile, runner)
+    else
+      print_statement("Lighting schedules have not been modified for daylighting ('Apply Schedules' option was not selected).",runner)
+    end 
     # compute daylight metrics for model
     daylightMetrics(model, sqlFile, runner)
 
     # remove illuminance map and daylighting controls from model, so they are not re-simulated in E+
+    print_statement("Removing daylighting controls for EnergyPlus run...",runner)
     model.getThermalZones.each do |thermalZone|
       thermalZone.resetPrimaryDaylightingControl
       thermalZone.resetSecondaryDaylightingControl

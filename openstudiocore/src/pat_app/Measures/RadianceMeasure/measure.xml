@@ -2,9 +2,9 @@
   <schema_version>3.0</schema_version>
   <name>radiance_measure</name>
   <uid>1e3cfef8-b051-4e60-8bb0-ed2d29d4f45d</uid>
-  <version_id>7657df73-d022-4872-8c9d-448d4d630ea3</version_id>
-  <version_modified>20160331T220901Z</version_modified>
-  <xml_checksum>381B7733</xml_checksum>
+  <version_id>c725924e-ba7b-4c36-8712-4a2f45711ec4</version_id>
+  <version_modified>20160907T154759Z</version_modified>
+  <xml_checksum>A47FB979</xml_checksum>
   <class_name>RadianceMeasure</class_name>
   <display_name>Radiance Daylighting Measure</display_name>
   <description>This measure uses Radiance instead of EnergyPlus for daylighting calculations with OpenStudio.</description>
@@ -13,19 +13,19 @@
     <argument>
       <name>apply_schedules</name>
       <display_name>Apply schedules</display_name>
-      <description>Update lighting load schedules with those computed by Radiance</description>
-      <type>Choice</type>
+      <description>Update lighting load schedules for Radiance-daylighting control response</description>
+      <type>Boolean</type>
       <required>true</required>
       <model_dependent>false</model_dependent>
-      <default_value>Yes</default_value>
+      <default_value>true</default_value>
       <choices>
         <choice>
-          <value>Yes</value>
-          <display_name>Yes</display_name>
+          <value>true</value>
+          <display_name>true</display_name>
         </choice>
         <choice>
-          <value>No</value>
-          <display_name>No</display_name>
+          <value>false</value>
+          <display_name>false</display_name>
         </choice>
       </choices>
     </argument>
@@ -114,6 +114,7 @@
       </choices>
     </argument>
   </arguments>
+  <outputs/>
   <provenances/>
   <tags>
     <tag>Electric Lighting.Electric Lighting Controls</tag>
@@ -173,7 +174,13 @@
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
-      <checksum>73879C56</checksum>
+      <checksum>1A1AD48D</checksum>
+    </file>
+    <file>
+      <filename>.DS_Store</filename>
+      <filetype>DS_Store</filetype>
+      <usage_type>test</usage_type>
+      <checksum>5E924E4D</checksum>
     </file>
   </files>
 </measure>

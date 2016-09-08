@@ -103,7 +103,7 @@ class RadianceMeasureTest < MiniTest::Unit::TestCase
     # create hash of argument values.
     # If the argument has a default that you want to use, you don't need it in the hash
     args_hash = {}
-    args_hash['apply_schedules'] = 'Yes'
+    args_hash['apply_schedules'] = 'true'
     args_hash['use_cores'] = 'Max'
     args_hash['rad_settings'] = 'Testing'
     args_hash['debug_mode'] = 'false'
