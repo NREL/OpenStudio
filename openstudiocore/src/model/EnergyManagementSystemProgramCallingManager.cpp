@@ -166,7 +166,8 @@ namespace detail {
     for (auto &program : programs) {
       WorkspaceExtensibleGroup group = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
        result = group.setPointer(OS_EnergyManagementSystem_ProgramCallingManagerExtensibleFields::ProgramName, program.handle());
-       ok.push_back(result);
+       //ok.push_back(result);
+       ok.at(OS_EnergyManagementSystem_ProgramCallingManagerExtensibleFields::ProgramName) = result;
     }
     //check if all the programs set true
     result = true;
