@@ -102,6 +102,24 @@ void OSAppBase::showMeasureUpdateDlg()
 //  }
 //}
 
+void OSAppBase::addWorkspaceObject(const WorkspaceObject& workspaceObject, const openstudio::IddObjectType& type, const openstudio::UUID& uuid) {
+  // Emit QT Signal
+  emit workspaceObjectAdded(workspaceObject, type, uuid);
+}
+
+void OSAppBase::addWorkspaceObjectPtr(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wPtr, const openstudio::IddObjectType& type, const openstudio::UUID& uuid) {
+  // Emit QT Signal
+  emit workspaceObjectAddedPtr(wPtr, type, uuid);
+}
+
+void OSAppBase::removeWorkspaceObject(const WorkspaceObject& workspaceObject, const openstudio::IddObjectType& type, const openstudio::UUID& uuid) {
+  emit workspaceObjectRemoved(workspaceObject, type, uuid);
+}
+
+void OSAppBase::removeWorkspaceObjectPtr(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wPtr, const openstudio::IddObjectType& type, const openstudio::UUID& uuid ) {
+  emit workspaceObjectRemovedPtr(wPtr.get(), type, uuid);
+}
+
 QWidget *OSAppBase::mainWidget()
 {
   std::shared_ptr<OSDocument> document = currentDocument();
