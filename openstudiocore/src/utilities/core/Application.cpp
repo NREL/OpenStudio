@@ -30,6 +30,8 @@
   #include <QWinWidget>
   #include <Windows.h>
   #include <boost/regex.hpp>
+#else
+  #include <dlfcn.h>
 #endif
 
 #include <iostream>
