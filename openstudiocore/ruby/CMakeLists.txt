@@ -81,5 +81,4 @@ if( WIN32 )
 endif()
 
 install(TARGETS openstudio_rb DESTINATION Ruby COMPONENT "RubyAPI")
-set(CPACK_COMPONENT_RUBYAPI_DISPLAY_NAME "Ruby API")
 

@@ -6,8 +6,6 @@ project(OpenStudio VERSION 1.12.5)
 include(ExternalProject)
 include(CPackComponent)
 
-set(CPACK_COMPONENTS_ALL OpenStudioApp PAT Resources SketchUpPlugin CLI RubyAPI)
-
 if( POLICY CMP0022 )
   cmake_policy(SET CMP0022 NEW)
 endif()
@@ -1160,6 +1158,7 @@ set(project_directories
   #openstudio_lib
   sdd
   cli
+  model_editor
 )
 if(WIN32)
   list(APPEND project_directories "qtwinmigrate")
@@ -1170,7 +1169,7 @@ if(BUILD_OS_APP)
   #list(APPEND project_directories "gbxml")
   list(APPEND project_directories "bimserver")
   #list(APPEND project_directories "resultsviewer")
-  list(APPEND project_directories "model_editor")
+  #list(APPEND project_directories "model_editor")
   list(APPEND project_directories "openstudio_lib")
   list(APPEND project_directories "openstudio_app")
 endif()
@@ -1453,6 +1452,25 @@ if( UNIX )
 set( CPACK_IFW_TARGET_DIRECTORY /usr/local/openstudio-${OpenStudio_VERSION}/ )
 endif()
 
+# expand E+ path if it is a link
+get_filename_component(REAL_ENERGYPLUS_EXE "${ENERGYPLUS_EXE}" REALPATH)
+install(PROGRAMS "${REAL_ENERGYPLUS_EXE}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus )
+install(FILES "${ENERGYPLUS_IDD}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus )
+get_filename_component(ENERGYPLUS_PATH "${ENERGYPLUS_EXE}" DIRECTORY)
+if( APPLE )
+  install(PROGRAMS "${ENERGYPLUS_PATH}/ExpandObjects" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus )
+  install(PROGRAMS "${ENERGYPLUS_PATH}/libgfortran.3.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus )
+  install(PROGRAMS "${ENERGYPLUS_PATH}/libquadmath.0.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus )
+elseif( WIN32 )
+  install(PROGRAMS "${ENERGYPLUS_PATH}/ExpandObjects.exe" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus )
+  #install(PROGRAMS "${ENERGYPLUS_PATH}/libgfortran.3.dylib" DESTINATION ./EnergyPlus/)
+  #install(PROGRAMS "${ENERGYPLUS_PATH}/libquadmath.0.dylib" DESTINATION ./EnergyPlus/)
+else()
+  install(PROGRAMS "${ENERGYPLUS_PATH}/ExpandObjects" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus )
+  #install(PROGRAMS "${ENERGYPLUS_PATH}/libgfortran.3.dylib" DESTINATION ./EnergyPlus/)
+  #install(PROGRAMS "${ENERGYPLUS_PATH}/libquadmath.0.dylib" DESTINATION ./EnergyPlus/)
+endif()
+
 include(CPack)
 include(CPackIFW)
 
@@ -1460,4 +1478,53 @@ cpack_add_component(SketchUpPlugin
   DISPLAY_NAME "SketchUp Plugin"
   DESCRIPTION "SketchUp Plugin"
 )
+
+cpack_add_component(CLI
+  DISPLAY_NAME "Command Line Interface"
+  DESCRIPTION "Command Line Interface"
+)
+
+cpack_add_component(RubyAPI
+  DISPLAY_NAME "Ruby API"
+  DESCRIPTION "Ruby API"
+)
+
+cpack_add_component(PAT
+  DISPLAY_NAME "Parametric Analysis Tool"
+  DESCRIPTION "Parametric Analysis Tool"
+)
+
+cpack_add_component(OpenStudioApp
+  DISPLAY_NAME "OpenStudio Application"
+  DESCRIPTION "OpenStudio Application"
+)
+
+cpack_add_component(EnergyPlus
+  DISPLAY_NAME "EnergyPlus"
+  DESCRIPTION "Minimal EnergyPlus installation"
+)
+
+cpack_add_component(Resources
+  DISPLAY_NAME "Application Resources"
+  DESCRIPTION "Resource Files used by the OpenStudio Application and SketchUp Plugin"
+)
+
+cpack_ifw_configure_component(OpenStudioApp
+  DEPENDS Resources CLI
+  SCRIPT src/OpenStudio_app/install_operations.qs
+)
+
+cpack_ifw_configure_component(CLI
+  SCRIPT src/cli/install_operations.qs
+)
+
+cpack_ifw_configure_component(SketchUpPlugin
+  DEPENDS Resources
+  SCRIPT sketchup_plugin/install_operations.qs
+)
+
+cpack_ifw_configure_component(PAT
+  DEPENDS CLI RubyAPI
+)
+
 

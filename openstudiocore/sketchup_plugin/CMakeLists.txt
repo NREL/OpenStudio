@@ -5,8 +5,6 @@ install(FILES plugin/Startup.rb DESTINATION ./SketchUpPlugin/plugin/ COMPONENT "
 install(FILES plugin/OpenStudio.hash DESTINATION ./SketchUpPlugin/plugin/ COMPONENT "SketchUpPlugin")
 install(FILES plugin/OpenStudio.rb DESTINATION ./SketchUpPlugin/plugin/ COMPONENT "SketchUpPlugin")
 
-set(CPACK_COMPONENT_SKETCHUPPLUGIN_DEPENDS "Resources")
-
 # Elaborate shenanigans because we want to make a plugin_test.rb file,
 # that can be copied into the SketchUp plugins directory for testing the 
 # plugin during development.

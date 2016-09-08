@@ -192,15 +192,6 @@ if(WIN32 OR APPLE)
     " COMPONENT "OpenStudioApp" )
 endif()
 
-set(CPACK_COMPONENT_OPENSTUDIOAPP_DEPENDS "Resources" "CLI")
-set(CPACK_COMPONENT_Resources_DISPLAY_NAME "Application Resources")
-
- cpack_add_component(Resources
-    DISPLAY_NAME "Application Resources"
-    DESCRIPTION "Stuff used by app"
-)
-
-
 set(${target_name}_test_src
   test/OpenStudioAppFixture.hpp
   test/OpenStudioAppFixture.cpp

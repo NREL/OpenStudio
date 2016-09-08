@@ -32,6 +32,4 @@ install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/OpenStudio-PAT-${PAT_SHA}/tmp/Par
 )
 endif()
 
-set(CPACK_COMPONENT_PAT_DISPLAY_NAME "Parametric Analysis Tool")
-
 #TODO figure out what the package structure is like on windows and install that
