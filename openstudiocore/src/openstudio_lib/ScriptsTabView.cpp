@@ -85,13 +85,6 @@ ScriptsTabView::ScriptsTabView(QWidget * parent)
 void ScriptsTabView::showEvent(QShowEvent *e)
 {
   MainTabView::showEvent(e);
-  auto app = OSAppBase::instance();
-
-  // save the current osm to a temp location
-  app->measureManager().saveTempModel();
-
-  // update measures
-  app->measureManager().updateMeasuresLists();
 
   workflowView->refreshAllViews();
 }
