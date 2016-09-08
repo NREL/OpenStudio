@@ -10,6 +10,8 @@ function Component()
     var kernel = systemInfo.kernelType;
     if( kernel != "winnt" ) {
       var exePath = installer.value("TargetDir") + "/bin/openstudio";
+      component.addElevatedOperation("Delete", "/usr/local/bin/openstudio");
+      component.addElevatedOperation("Mkdir", "/usr/local/bin/");
       component.addElevatedOperation("CreateLink", "/usr/local/bin/openstudio", exePath );
     }
   }
