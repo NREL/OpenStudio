@@ -1453,20 +1453,34 @@ set( CPACK_IFW_TARGET_DIRECTORY /usr/local/openstudio-${OpenStudio_VERSION}/ )
 endif()
 
 # expand E+ path if it is a link
-get_filename_component(REAL_ENERGYPLUS_EXE "${ENERGYPLUS_EXE}" REALPATH)
-install(PROGRAMS "${REAL_ENERGYPLUS_EXE}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus )
+#get_filename_component(REAL_ENERGYPLUS_EXE "${ENERGYPLUS_EXE}" REALPATH)
+#install(PROGRAMS "${REAL_ENERGYPLUS_EXE}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus )
+#install(PROGRAMS "${ENERGYPLUS_EXE}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus )
+
+
+#libenergyplusapi.dylib
+#get_filename_component(REAL_ENERGYPLUS_EXE "${ENERGYPLUS_EXE}" REALPATH)
+
 install(FILES "${ENERGYPLUS_IDD}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus )
-get_filename_component(ENERGYPLUS_PATH "${ENERGYPLUS_EXE}" DIRECTORY)
+
+get_filename_component(ENERGYPLUS_DIR "${ENERGYPLUS_EXE}" DIRECTORY)
+
+file(GLOB ENERGYPLUS_FILES "${ENERGYPLUS_DIR}/energyplus*")
+install(PROGRAMS ${ENERGYPLUS_FILES} DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus )
+
+file(GLOB ENERGYPLUS_LIB_FILES "${ENERGYPLUS_DIR}/libenergyplus*")
+install(PROGRAMS ${ENERGYPLUS_LIB_FILES} DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus )
+
+file(GLOB EXPAND_OBJECTS "${ENERGYPLUS_DIR}/ExpandObjects*")
+install(PROGRAMS "${EXPAND_OBJECTS}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus )
+
 if( APPLE )
-  install(PROGRAMS "${ENERGYPLUS_PATH}/ExpandObjects" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus )
-  install(PROGRAMS "${ENERGYPLUS_PATH}/libgfortran.3.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus )
-  install(PROGRAMS "${ENERGYPLUS_PATH}/libquadmath.0.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus )
+  install(PROGRAMS "${ENERGYPLUS_DIR}/libgfortran.3.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus )
+  install(PROGRAMS "${ENERGYPLUS_DIR}/libquadmath.0.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus )
 elseif( WIN32 )
-  install(PROGRAMS "${ENERGYPLUS_PATH}/ExpandObjects.exe" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus )
   #install(PROGRAMS "${ENERGYPLUS_PATH}/libgfortran.3.dylib" DESTINATION ./EnergyPlus/)
   #install(PROGRAMS "${ENERGYPLUS_PATH}/libquadmath.0.dylib" DESTINATION ./EnergyPlus/)
 else()
-  install(PROGRAMS "${ENERGYPLUS_PATH}/ExpandObjects" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus )
   #install(PROGRAMS "${ENERGYPLUS_PATH}/libgfortran.3.dylib" DESTINATION ./EnergyPlus/)
   #install(PROGRAMS "${ENERGYPLUS_PATH}/libquadmath.0.dylib" DESTINATION ./EnergyPlus/)
 endif()
