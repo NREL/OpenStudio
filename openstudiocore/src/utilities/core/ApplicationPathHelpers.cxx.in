@@ -73,7 +73,7 @@ namespace openstudio {
   #else
     Dl_info info;
     if (dladdr("main", &info)) {
-       return completeAndNormalize(toPath(info.dli_fname));
+       return completeAndNormalize(toPath(info.dli_fname).parent_path());
     }
   #endif
 
