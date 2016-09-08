@@ -78,7 +78,6 @@ namespace detail {
 
   bool EnergyManagementSystemTrendVariable_Impl::setEMSVariableName(const std::string& eMSVariableName) {
     bool result = setString(OS_EnergyManagementSystem_TrendVariableFields::EMSVariableName, eMSVariableName);
-    OS_ASSERT(result);
     return result;
   }
 

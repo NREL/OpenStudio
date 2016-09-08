@@ -21,6 +21,7 @@
 
 #include "ModelFixture.hpp"
 #include "../EnergyManagementSystemTrendVariable.hpp"
+#include "../EnergyManagementSystemGlobalVariable.hpp"
 #include "../Model_Impl.hpp"
 
 #include "../../utilities/idd/IddEnums.hpp"
@@ -37,11 +38,16 @@ using std::string;
 TEST_F(ModelFixture, EMSTrendVariable_EMSTrendVariable)
 {
   Model model;
-    
-  // add internal variable
+  
+  // add global variable
+  EnergyManagementSystemGlobalVariable globvar("glob var", model);
+
+  // add trend variable
   EnergyManagementSystemTrendVariable var(model);
-  var.setEMSVariableName("TestName");
-  EXPECT_EQ("TestName", var.eMSVariableName());
+  var.setName("TestName");
+  EXPECT_EQ("TestName", var.name().get());
+  var.setEMSVariableName("glob var");
+  EXPECT_EQ("glob var", var.eMSVariableName());
 
   var.setNumberofTimestepstobeLogged(2);
   EXPECT_EQ(2, var.numberofTimestepstobeLogged());
