@@ -26,6 +26,8 @@ module OpenStudio
       super(model_interface.openstudio_model)
 
       @model_interface = model_interface
+      
+      @added_object_handles = []
     end
 
     #def clearState
@@ -49,30 +51,51 @@ module OpenStudio
     #end
 
     def onObjectAdd(addedObject)
-      #Plugin.log(OpenStudio::Trace, "#{current_method_name}")
+      Plugin.log(OpenStudio::Trace, "#{current_method_name}")
       super
       
-      @model_interface.on_new_model_object(addedObject)
-
-      # object is not yet fully constructed so we can't do:
-      # if addedObject.is_a? OpenStudio::Model::SpaceLoadInstance
-
-      class_name = addedObject.iddObject.name.upcase
-
-      # these objects do not have a drawing interface where we can call check_model_object
-      if class_name == "OS:ELECTRICEQUIPMENT" or 
-         class_name == "OS:GASEQUIPMENT" or 
-         class_name == "OS:HOTWATEREQUIPMENT" or
-         class_name == "OS:INTERNALMASS" or 
-         class_name == "OS:LIGHTS" or 
-         class_name == "OS:LUMINAIRE" or  # should not ever get luminaire
-         class_name == "OS:PEOPLE" 
-
-        spaceLoadInstance = addedObject.to_SpaceLoadInstance
+      # wrapper object is not fully constructed yet, just store the handle
+      @added_object_handles << addedObject.handle
+    end
+    
+    def processAddedObjects
+      Plugin.log(OpenStudio::Trace, "#{current_method_name}")
+      
+      openstudio_model = @model_interface.openstudio_model
+      
+      # loop over all loaded objects
+      @added_object_handles.each do |added_object_handle|
+      
+        model_object = openstudio_model.getObject(added_object_handle)
         
-        OpenStudio::Modeleditor::ensureSpaceLoadDefinition(spaceLoadInstance.get)
+        if model_object.empty?
+          Plugin.log(OpenStudio::Warn, "Can't find added object by handle = #{added_object_handle}")
+        else
+          addedObject = model_object.get
 
+          @model_interface.on_new_model_object(addedObject)
+
+          class_name = addedObject.iddObject.name.upcase
+
+          # these objects do not have a drawing interface where we can call check_model_object
+          if class_name == "OS:ELECTRICEQUIPMENT" or 
+             class_name == "OS:GASEQUIPMENT" or 
+             class_name == "OS:HOTWATEREQUIPMENT" or
+             class_name == "OS:INTERNALMASS" or 
+             class_name == "OS:LIGHTS" or 
+             class_name == "OS:LUMINAIRE" or  # should not ever get luminaire
+             class_name == "OS:PEOPLE" 
+
+            spaceLoadInstance = addedObject.to_SpaceLoadInstance
+            
+            OpenStudio::Modeleditor::ensureSpaceLoadDefinition(spaceLoadInstance.get)
+
+          end
+
+        end
       end
+      
+      @added_object_handles.clear
       
     end
 

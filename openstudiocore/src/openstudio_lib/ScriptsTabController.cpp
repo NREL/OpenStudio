@@ -22,6 +22,7 @@
 #include "OSAppBase.hpp"
 #include "ScriptsTabView.hpp"
 
+#include "../shared_gui_components/MeasureManager.hpp"
 #include "../shared_gui_components/WorkflowController.hpp"
 #include "../shared_gui_components/WorkflowView.hpp"
 
@@ -32,6 +33,13 @@ namespace openstudio {
 ScriptsTabController::ScriptsTabController()
   : MainTabController(new ScriptsTabView(nullptr)), scriptsTabView(dynamic_cast<ScriptsTabView *>(mainContentWidget()))
 {
+  auto app = OSAppBase::instance();
+
+  // save the current osm to a temp location
+  app->measureManager().saveTempModel();
+
+  // update measures
+  app->measureManager().updateMeasuresLists();
 
   m_workflowController = QSharedPointer<openstudio::measuretab::WorkflowController>(new openstudio::measuretab::WorkflowController(OSAppBase::instance()));
   m_workflowSectionItemDelegate = QSharedPointer<openstudio::measuretab::WorkflowSectionItemDelegate>(new openstudio::measuretab::WorkflowSectionItemDelegate());

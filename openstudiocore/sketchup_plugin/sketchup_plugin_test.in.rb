@@ -29,21 +29,20 @@ if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
 
   ENV['PATH'] = "#{front.join(';')};#{$OpenStudio_Dir};#{back.join(';')}"
   
+  dlls = ["icudt51.dll", "icuin51.dll", "icuuc51.dll", "libeay32.dll", "libEGL.dll", "libGLESv2.dll", "Qt5Concurrent.dll", "Qt5Core.dll", "Qt5Gui.dll", "Qt5Network.dll", "Qt5Sql.dll", "Qt5Widgets.dll", "Qt5WinExtras.dll", "Qt5Xml.dll", "ssleay32.dll", "platforms/qtwinmigrate.dll", "sqldrivers/qsqlite.dll"]
+  
   # Pre-load our specific Qt Dll's on Windows to make sure we control which get loaded
   require 'Win32API'
   library = Win32API.new('kernel32','LoadLibrary', 'P', 'L')  
-  library.call("#{$OpenStudio_Dir}/icudt51.dll")
-  library.call("#{$OpenStudio_Dir}/icuin51.dll")
-  library.call("#{$OpenStudio_Dir}/icuuc51.dll")
-  library.call("#{$OpenStudio_Dir}/libEGL.dll")
-  library.call("#{$OpenStudio_Dir}/libGLESv2.dll")
-  library.call("#{$OpenStudio_Dir}/Qt5Core.dll")
-  library.call("#{$OpenStudio_Dir}/Qt5Gui.dll")
-  library.call("#{$OpenStudio_Dir}/Qt5Network.dll")
-  library.call("#{$OpenStudio_Dir}/Qt5Sql.dll")
-  library.call("#{$OpenStudio_Dir}/Qt5Widgets.dll")
-  library.call("#{$OpenStudio_Dir}/Qt5Xml.dll")
-  library.call("#{$OpenStudio_Dir}/qtwinmigrate.dll")
+  dlls.each do |dll|
+    dlld = dll.gsub("\.dll$", "d\.dll$")
+    if File.exists?("#{$OpenStudio_Dir}/#{dll}")
+      library.call("#{$OpenStudio_Dir}/#{dll}")
+    elsif File.exists?("#{$OpenStudio_Dir}/#{dlld}")
+      library.call("#{$OpenStudio_Dir}/#{dlld}")
+    end
+  end
+  
 else
   # Do something here for Mac OSX environments
 end

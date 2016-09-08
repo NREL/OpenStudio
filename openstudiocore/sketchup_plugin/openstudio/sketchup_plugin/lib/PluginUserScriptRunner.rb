@@ -388,24 +388,24 @@ module OpenStudio
         end  
 
         result = self.result
-        if not result.errors.empty?
+        if not result.stepErrors.empty?
           has_errors = true
           error_msg += "Errors: \n"
-          result.errors.each { |error|
-            error_msg += "  " + error.logMessage + "\n"
+          result.stepErrors.each { |error|
+            error_msg += "  " + error + "\n"
           }
         end
-        if not result.warnings.empty?
+        if not result.stepWarnings.empty?
           has_warnings = true
           error_msg += "Warnings: \n"
-          result.warnings.each { |warn|
-            error_msg += "  " + warn.logMessage + "\n"
+          result.stepWarnings.each { |warn|
+            error_msg += "  " + warn + "\n"
           }
         end
-        if not result.info.empty?
+        if not result.stepInfo.empty?
           # error_msg += "Info: "
-          result.info.each { |info|
-            # error_msg += "  " + info.logMessage + "\n"
+          result.stepInfo.each { |info|
+            # error_msg += "  " + info + "\n"
           }
           # error_msg += "\n"
         end

@@ -19,7 +19,6 @@
 
 #include "IdfObjectWatcher.hpp"
 #include "IdfObject_Impl.hpp"
-#include "../core/Application.hpp"
 #include "../core/Assert.hpp"
 
 namespace openstudio {
@@ -27,9 +26,6 @@ namespace openstudio {
 IdfObjectWatcher::IdfObjectWatcher(const IdfObject& idfObject)
   : m_enabled(true), m_dirty(false), m_dataChanged(false), m_nameChanged(false)
 {
-  // make sure a QApplication exists
-  openstudio::Application::instance().application(false);
-  
   detail::IdfObject_ImplPtr objectImpl = idfObject.getImpl<detail::IdfObject_Impl>();
   objectImpl.get()->detail::IdfObject_Impl::onChange.connect<IdfObjectWatcher, &IdfObjectWatcher::change>(this);
   objectImpl.get()->detail::IdfObject_Impl::onDataChange.connect<IdfObjectWatcher, &IdfObjectWatcher::dataChange>(this);

@@ -74,7 +74,8 @@ class UTILITIES_API WorkspaceWatcher {
   /// called after dirty transitions from true to false if watcher enabled
   virtual void onBecomeClean();
 
-  /// called when a new object is added to the workspace if watcher enabled
+  /// called immediately when a new object is added to the workspace if watcher enabled
+  /// the object may not be fully constructed
   /// this may be called when an object is restored after a failed remove
   virtual void onObjectAdd(const WorkspaceObject& addedObject);
 
@@ -89,8 +90,6 @@ class UTILITIES_API WorkspaceWatcher {
   // Note: Args 2 & 3 are simply to comply with Nano::Signal template parameters
   void objectAdd(const WorkspaceObject& addedObject, const openstudio::IddObjectType& type, const openstudio::UUID& uuid);
 
-  void processAddedObjects();
-
   // Note: Args 2 & 3 are simply to comply with Nano::Signal template parameters
   void objectRemove(const WorkspaceObject& removedObject, const openstudio::IddObjectType& type, const openstudio::UUID& uuid);
 
@@ -100,9 +99,6 @@ class UTILITIES_API WorkspaceWatcher {
   bool m_dirty;
   bool m_objectAdded;
   bool m_objectRemoved;
-
-  std::vector<WorkspaceObject> m_addedObjects;
-
 };
 
 }

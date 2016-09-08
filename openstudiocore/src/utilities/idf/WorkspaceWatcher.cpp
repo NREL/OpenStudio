@@ -20,7 +20,6 @@
 
 #include "WorkspaceWatcher.hpp"
 #include "Workspace_Impl.hpp"
-#include "../core/Application.hpp"
 #include "../core/Assert.hpp"
 
 #include <QTimer>
@@ -30,9 +29,6 @@ namespace openstudio {
 WorkspaceWatcher::WorkspaceWatcher(const Workspace& work)
   : m_enabled(true), m_dirty(false), m_objectAdded(false), m_objectRemoved(false)
 {
-  // make sure a QApplication exists
-  openstudio::Application::instance().application(false);
-
   detail::Workspace_ImplPtr wsImpl = work.getImpl<detail::Workspace_Impl>();
   wsImpl.get()->detail::Workspace_Impl::onChange.connect<WorkspaceWatcher, &WorkspaceWatcher::change>(this);
 
@@ -139,25 +135,10 @@ void WorkspaceWatcher::objectAdd(const WorkspaceObject& addedObject, const opens
   m_objectAdded = true;
 
   if (enabled()){
-    m_addedObjects.push_back(addedObject);
-    // QTimer::singleShot(0,this,SLOT(processAddedObjects()));
-    processAddedObjects();
-  }
-}
-
-void WorkspaceWatcher::processAddedObjects()
-{
-  std::vector<WorkspaceObject> addedObjects;
-  std::swap(m_addedObjects, addedObjects);
-  OS_ASSERT(m_addedObjects.empty());
-
-  for (const WorkspaceObject& addedObject : addedObjects){
-    // check for the case where object has been removed before the add was processed
     if (!addedObject.handle().isNull()){
       this->onObjectAdd(addedObject);
     }
   }
-
 }
 
 void WorkspaceWatcher::objectRemove(const WorkspaceObject& removedObject, const openstudio::IddObjectType& type, const openstudio::UUID& uuid)
