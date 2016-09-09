@@ -374,6 +374,9 @@ namespace openstudio {
     }
 
     m_model.getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.connect<OSAppBase, &OSAppBase::addWorkspaceObjectPtr>(OSAppBase::instance());
+    m_model.getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.connect<OSAppBase, &OSAppBase::removeWorkspaceObjectPtr>(OSAppBase::instance());
+    m_model.getImpl<model::detail::Model_Impl>().get()->addWorkspaceObject.connect<OSAppBase, &OSAppBase::addWorkspaceObject>(OSAppBase::instance());
+    m_model.getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObject.connect<OSAppBase, &OSAppBase::removeWorkspaceObject>(OSAppBase::instance());
     m_model.getImpl<model::detail::Model_Impl>().get()->onChange.connect<OSDocument, &OSDocument::markAsModified>(this);
     m_model.workflowJSON().getImpl<detail::WorkflowJSON_Impl>().get()->onChange.connect<OSDocument, &OSDocument::markAsModified>(this);
 
