@@ -19,6 +19,7 @@
 
 #include "ModelObjectTreeWidget.hpp"
 #include "ModelObjectTreeItems.hpp"
+#include "OSAppBase.hpp"
 
 #include "../model/Model.hpp"
 #include "../model/Model_Impl.hpp"

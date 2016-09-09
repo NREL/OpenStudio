@@ -19,6 +19,7 @@
 
 #include "ModelObjectListView.hpp"
 #include "ModelObjectItem.hpp"
+#include "OSAppBase.hpp"
 #include "BCLComponentItem.hpp"
 
 #include "../model/Model_Impl.hpp"

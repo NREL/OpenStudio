@@ -19,6 +19,8 @@
 
 #include "SpaceLoadInstancesWidget.hpp"
 
+#include "OSAppBase.hpp"
+
 #include "IconLibrary.hpp"
 #include "ModelObjectItem.hpp"
 #include "OSDropZone.hpp"
