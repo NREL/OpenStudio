@@ -168,7 +168,8 @@ SchedulesView::SchedulesView(bool isIP, const model::Model & model)
   // m_model.getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.connect<SchedulesView, &SchedulesView::onModelObjectAdded>(this);
   connect(OSAppBase::instance(), &OSAppBase::workspaceObjectAddedPtr, this, &SchedulesView::onModelObjectAdded, Qt::QueuedConnection);
 
-  m_model.getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.connect<SchedulesView, &SchedulesView::onModelObjectRemoved>(this);
+  //m_model.getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.connect<SchedulesView, &SchedulesView::onModelObjectRemoved>(this);
+  connect(OSAppBase::instance(), &OSAppBase::workspaceObjectRemovedPtr, this, &SchedulesView::onModelObjectRemoved, Qt::QueuedConnection);
 
   // get all schedules
   std::vector<model::ScheduleRuleset> schedules = m_model.getConcreteModelObjects<model::ScheduleRuleset>();

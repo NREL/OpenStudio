@@ -52,7 +52,8 @@ ModelObjectTreeWidget::ModelObjectTreeWidget(const model::Model& model, QWidget*
   // model.getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.connect<ModelObjectTreeWidget, &ModelObjectTreeWidget::objectAdded>(this);
   connect(OSAppBase::instance(), &OSAppBase::workspaceObjectAddedPtr, this, &ModelObjectTreeWidget::objectAdded, Qt::QueuedConnection);
 
-  model.getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.connect<ModelObjectTreeWidget, &ModelObjectTreeWidget::objectRemoved>(this);
+  //model.getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.connect<ModelObjectTreeWidget, &ModelObjectTreeWidget::objectRemoved>(this);
+  connect(OSAppBase::instance(), &OSAppBase::workspaceObjectRemovedPtr, this, &ModelObjectTreeWidget::objectRemoved, Qt::QueuedConnection);
 }
 
 OSItem* ModelObjectTreeWidget::selectedItem() const
