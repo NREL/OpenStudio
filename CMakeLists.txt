@@ -205,28 +205,6 @@ mark_as_advanced(
   ProcessorCount_cmd_sysctl
 )
 
-find_package(SWIG 3.0.0)
-mark_as_advanced(
-  SWIG_DIR
-  SWIG_EXECUTABLE
-  SWIG_VERSION
-)
-
-# Currently MacOS (with swig < 3.0.3) and V8 require special builds
-# as of 2015-02-05. This should be re-checked after swig > 3.0.5 is released.
-# 64-bit MSVC also requires BUILD_SWIG
-if(SWIG_FOUND AND NOT BUILD_V8_BINDINGS AND NOT (APPLE AND ${SWIG_VERSION} VERSION_LESS "3.0.3") AND NOT (WIN32 AND MSVC AND CMAKE_CL_64))
-  option(BUILD_SWIG "Build SWIG" OFF)
-else()
-  option(BUILD_SWIG "Build SWIG" ON)
-endif()
-
-if(NOT BUILD_SWIG)
-  if(${SWIG_VERSION} VERSION_LESS "2.0.10")
-    set(BUILD_SWIG ON)
-  endif()
-endif()
-
 if(BUILD_WITH_MULTIPLE_PROCESSES)
   add_definitions(/MP)
 endif()
@@ -299,35 +277,6 @@ if(BUILD_OPENSTUDIO_GEMS)
                     WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/dependencies/ruby/"
                     DEPENDS "${CMAKE_SOURCE_DIR}/dependencies/ruby/Gemfile" "${CMAKE_SOURCE_DIR}/dependencies/ruby/build_openstudio_gems.rb")
 endif()
-
-# SWIG
-
-if(BUILD_SWIG)
-  if(UNIX)
-    # We patch it up with a version of pcre we provide to avoid having to have the requirement locally
-    ExternalProject_Add(SWIG
-      URL http://openstudio-resources.s3.amazonaws.com/dependencies/swig-3.0.7.tar.gz
-      URL_MD5 7fff46c84b8c630ede5b0f0827e3d90a
-
-      PATCH_COMMAND cp ${CMAKE_SOURCE_DIR}/dependencies/pcre-8.31.tar.bz2 ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && cd ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && ../SWIG/Tools/pcre-build.sh
-      CONFIGURE_COMMAND ../SWIG/configure --prefix=${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-install
-      BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && $(MAKE)
-      INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && $(MAKE) install
-      )
-    set(SWIG_EXECUTABLE ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-install/bin/swig)
-  else()
-    # SWIG requires MinGW to compile on windows, so we just copy in the prebuilt binary
-    ExternalProject_Add(SWIG
-      URL http://openstudio-resources.s3.amazonaws.com/dependencies/swigwin-3.0.7.zip
-      URL_MD5 d8b5a9ce49c819cc1bfc1e797b85ba7a
-      CONFIGURE_COMMAND ""
-      BUILD_COMMAND ""
-      INSTALL_COMMAND ""
-    )
-    set(SWIG_EXECUTABLE ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG/swig.exe)
-  endif()
-endif()
-
 
 option(BUILD_BOOST "Build Boost" OFF)
 if(BUILD_BOOST)
@@ -460,10 +409,6 @@ endif()
 set(OpenStudioCore_DIR ${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build)
 
 # Set up the dependencies for OpenStudioCore
-
-if(BUILD_SWIG)
-  list(APPEND OpenStudioCore_DEPENDS SWIG)
-endif()
 
 if(BUILD_BOOST)
   list(APPEND OpenStudioCore_DEPENDS Boost)

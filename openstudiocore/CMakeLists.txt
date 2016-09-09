@@ -553,52 +553,32 @@ if(BUILD_WITH_OPENSSL)
   endif()
 endif()
 
-# swig
+# SWIG
 
-set(SWIG_INSTALL_DIR "" CACHE PATH "Path to swig Install")
-mark_as_advanced(SWIG_INSTALL_DIR)
-
-if(NOT EXISTS ${SWIG_INSTALL_DIR})
-  if( WIN32 )
-    set(SWIG_ZIP_FILENAME "swig_3_0_10_Win32.zip")
-    set(SWIG_ZIP_EXPECTED_MD5 "be3c42e6daffde06a05ad1b978338ebd")
-    set(SWIG_INSTALL_DIR "${CMAKE_BINARY_DIR}/Swig-install/")
-  elseif( APPLE )
-    set(SWIG_ZIP_FILENAME "swig_3_0_10_osx.tar.gz")
-    set(SWIG_ZIP_EXPECTED_MD5 "f0ea8749f8a0345ee37e1766d27a984d")
-	 set(SWIG_INSTALL_DIR "${CMAKE_BINARY_DIR}/Swig-install/")
-  elseif(EXISTS "/etc/redhat-release")
-  else()
-    set(SWIG_ZIP_FILENAME "swig_3_0_10_linux.tar.gz")
-    set(SWIG_ZIP_EXPECTED_MD5 "e4c6b7f392d4748df6aed4bf735bb91a")  
-    set(SWIG_INSTALL_DIR "${CMAKE_BINARY_DIR}/SWIG-install/")
-  endif()
-
-  set(SWIG_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${SWIG_ZIP_FILENAME}")
-  if(EXISTS "${SWIG_ZIP_LOCAL_PATH}")
-    file(MD5 "${SWIG_ZIP_LOCAL_PATH}" SWIG_ZIP_MD5)
-  endif()
-
-  if( NOT SWIG_ZIP_MD5 STREQUAL SWIG_ZIP_EXPECTED_MD5)
-    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${SWIG_ZIP_FILENAME}"
-      ${SWIG_ZIP_LOCAL_PATH}
-      INACTIVITY_TIMEOUT 120
-      SHOW_PROGRESS
-      EXPECTED_MD5 ${SWIG_ZIP_EXPECTED_MD5})
-      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${SWIG_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
-  endif()
-
- 
+if(UNIX)
+  # We patch it up with a version of pcre we provide to avoid having to have the requirement locally
+  ExternalProject_Add(SWIG
+    URL http://openstudio-resources.s3.amazonaws.com/dependencies/swig-3.0.7.tar.gz
+    URL_MD5 7fff46c84b8c630ede5b0f0827e3d90a
+    PATCH_COMMAND cp ${CMAKE_SOURCE_DIR}/../dependencies/pcre-8.31.tar.bz2 ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG && cd ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG && ./Tools/pcre-build.sh
+    CONFIGURE_COMMAND ./autogen.sh && ./configure --prefix=${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-install
+    BUILD_COMMAND $(MAKE)
+    INSTALL_COMMAND $(MAKE) install
+    BUILD_IN_SOURCE 1
+  )
+  set(SWIG_EXECUTABLE ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-install/bin/swig)
+else()
+  # SWIG requires MinGW to compile on windows, so we just copy in the prebuilt binary
+  ExternalProject_Add(SWIG
+    URL http://openstudio-resources.s3.amazonaws.com/dependencies/swigwin-3.0.7.zip
+    URL_MD5 d8b5a9ce49c819cc1bfc1e797b85ba7a
+    CONFIGURE_COMMAND ""
+    BUILD_COMMAND ""
+    INSTALL_COMMAND ""
+  )
+  set(SWIG_EXECUTABLE ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG/swig.exe)
 endif()
 
-list(APPEND CMAKE_PREFIX_PATH "${SWIG_INSTALL_DIR}")
-find_program(SWIG_EXECUTABLE swig HINTS "${SWIG_INSTALL_DIR}" NO_DEFAULT_PATH)
-#find_package(SWIG 3.0.10 REQUIRED)
-#mark_as_advanced(
-#  SWIG_DIR
-#  SWIG_EXECUTABLE
-#  SWIG_VERSION
-#)
 
 set(ALL_RUBY_BINDING_TARGETS "") # global list
 
