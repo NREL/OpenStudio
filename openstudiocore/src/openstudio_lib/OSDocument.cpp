@@ -177,6 +177,7 @@ namespace openstudio {
 
     if (!model){
       model = openstudio::model::Model();
+      model->getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.connect<OSAppBase, &OSAppBase::addWorkspaceObjectPtr>(OSAppBase::instance());
     }
 
     openstudio::path modelTempDir = model::createModelTempDir();
@@ -373,6 +374,7 @@ namespace openstudio {
       QTimer::singleShot(0, this, SLOT(weatherFileReset()));
     }
 
+    m_model.getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.connect<OSAppBase, &OSAppBase::addWorkspaceObjectPtr>(OSAppBase::instance());
     m_model.getImpl<model::detail::Model_Impl>().get()->onChange.connect<OSDocument, &OSDocument::markAsModified>(this);
     m_model.workflowJSON().getImpl<detail::WorkflowJSON_Impl>().get()->onChange.connect<OSDocument, &OSDocument::markAsModified>(this);
 

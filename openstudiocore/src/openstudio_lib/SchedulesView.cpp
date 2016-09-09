@@ -168,8 +168,7 @@ SchedulesView::SchedulesView(bool isIP, const model::Model & model)
   // m_model.getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.connect<SchedulesView, &SchedulesView::onModelObjectAdded>(this);
   connect(OSAppBase::instance(), &OSAppBase::workspaceObjectAddedPtr, this, &SchedulesView::onModelObjectAdded, Qt::QueuedConnection);
 
-  // m_model.getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.connect<SchedulesView, &SchedulesView::onModelObjectRemoved>(this);
-  connect(OSAppBase::instance(), &OSAppBase::workspaceObjectAddedPtr, this, &SchedulesView::onModelObjectRemoved, Qt::QueuedConnection);
+  m_model.getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.connect<SchedulesView, &SchedulesView::onModelObjectRemoved>(this);
 
   // get all schedules
   std::vector<model::ScheduleRuleset> schedules = m_model.getConcreteModelObjects<model::ScheduleRuleset>();
@@ -2046,7 +2045,9 @@ YearOverview::YearOverview(const model::ScheduleRuleset & scheduleRuleset, QWidg
 
   mainLayout->addStretch(10);
 
-  m_scheduleRuleset.model().getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.connect<YearOverview, &YearOverview::onModelAdd>(this);
+  //m_scheduleRuleset.model().getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.connect<YearOverview, &YearOverview::onModelAdd>(this);
+  connect(OSAppBase::instance(), &OSAppBase::workspaceObjectAddedPtr, this, &YearOverview::onModelAdd, Qt::QueuedConnection);
+
 
   std::vector<model::ScheduleRule> scheduleRules = m_scheduleRuleset.scheduleRules();
 

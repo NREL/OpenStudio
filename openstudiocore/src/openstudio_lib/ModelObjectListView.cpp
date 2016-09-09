@@ -47,8 +47,7 @@ ModelObjectListController::ModelObjectListController(const openstudio::IddObject
   // model.getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.connect<ModelObjectListController, &ModelObjectListController::objectAdded>(this);
   connect(OSAppBase::instance(), &OSAppBase::workspaceObjectAddedPtr, this, &ModelObjectListController::objectAdded, Qt::QueuedConnection);
 
-  // model.getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.connect<ModelObjectListController, &ModelObjectListController::objectRemoved>(this);
-  connect(OSAppBase::instance(), &OSAppBase::workspaceObjectAddedPtr, this, &ModelObjectListController::objectRemoved, Qt::QueuedConnection);
+  model.getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.connect<ModelObjectListController, &ModelObjectListController::objectRemoved>(this);
 
 }
 

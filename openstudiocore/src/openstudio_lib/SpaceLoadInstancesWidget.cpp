@@ -785,8 +785,7 @@ void SpaceLoadInstancesWidget::attach(const model::Space& space)
   // m_model->getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.connect<SpaceLoadInstancesWidget, &SpaceLoadInstancesWidget::objectAdded>(this);
   connect(OSAppBase::instance(), &OSAppBase::workspaceObjectAddedPtr, this, &SpaceLoadInstancesWidget::objectAdded, Qt::QueuedConnection);
 
-  // m_model->getImpl<openstudio::model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.connect<SpaceLoadInstancesWidget, &SpaceLoadInstancesWidget::objectRemoved>(this);
-  connect(OSAppBase::instance(), &OSAppBase::workspaceObjectAddedPtr, this, &SpaceLoadInstancesWidget::objectRemoved, Qt::QueuedConnection);
+  m_model->getImpl<openstudio::model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.connect<SpaceLoadInstancesWidget, &SpaceLoadInstancesWidget::objectRemoved>(this);
 
   model::Building building = m_model->getUniqueModelObject<model::Building>();
   building.getImpl<model::detail::ModelObject_Impl>().get()->onRelationshipChange.connect<SpaceLoadInstancesWidget, &SpaceLoadInstancesWidget::onBuildingRelationshipChange>(this);
@@ -811,8 +810,7 @@ void SpaceLoadInstancesWidget::attach(const model::SpaceType& spaceType)
   // m_model->getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.connect<SpaceLoadInstancesWidget, &SpaceLoadInstancesWidget::objectAdded>(this);
   connect(OSAppBase::instance(), &OSAppBase::workspaceObjectAddedPtr, this, &SpaceLoadInstancesWidget::objectAdded, Qt::QueuedConnection);
 
-  // m_model->getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.connect<SpaceLoadInstancesWidget, &SpaceLoadInstancesWidget::objectRemoved>(this);
-  connect(OSAppBase::instance(), &OSAppBase::workspaceObjectAddedPtr, this, &SpaceLoadInstancesWidget::objectRemoved, Qt::QueuedConnection);
+  m_model->getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.connect<SpaceLoadInstancesWidget, &SpaceLoadInstancesWidget::objectRemoved>(this);
 
   model::Building building = m_model->getUniqueModelObject<model::Building>();
   building.getImpl<model::detail::ModelObject_Impl>().get()->onRelationshipChange.connect<SpaceLoadInstancesWidget, &SpaceLoadInstancesWidget::onBuildingRelationshipChange>(this);

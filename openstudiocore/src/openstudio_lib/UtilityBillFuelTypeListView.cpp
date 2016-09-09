@@ -21,6 +21,7 @@
 
 #include "ModelObjectItem.hpp"
 #include "OSItemList.hpp"
+#include "OSAppBase.hpp"
 
 #include "../model/Model_Impl.hpp"
 #include "../model/ModelObject_Impl.hpp"
@@ -38,6 +39,8 @@ UtilityBillFuelTypeListController::UtilityBillFuelTypeListController(const model
   : m_iddObjectType(model::UtilityBill::iddObjectType()), m_fuelType(fuelType), m_model(model)
 {
   model.getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.connect<UtilityBillFuelTypeListController, &UtilityBillFuelTypeListController::objectAdded>(this);
+  connect(OSAppBase::instance(), &OSAppBase::workspaceObjectAddedPtr, this, &UtilityBillFuelTypeListController::objectAdded, Qt::QueuedConnection);
+
   
   model.getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.connect<UtilityBillFuelTypeListController, &UtilityBillFuelTypeListController::objectRemoved>(this);
   

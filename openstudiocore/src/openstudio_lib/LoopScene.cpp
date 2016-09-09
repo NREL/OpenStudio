@@ -56,12 +56,9 @@ LoopScene::LoopScene( model::Loop loop,
     m_dirty(true)
 {
   // loop.model().getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.connect<LoopScene, &LoopScene::addedWorkspaceObject>(this);
-  loop.model().getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.connect<OSAppBase, &OSAppBase::addWorkspaceObjectPtr>(OSAppBase::instance());
   connect(OSAppBase::instance(), &OSAppBase::workspaceObjectAddedPtr, this, &LoopScene::addedWorkspaceObject, Qt::QueuedConnection);
 
-  // loop.model().getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.connect<LoopScene, &LoopScene::removedWorkspaceObject>(this);
-  loop.model().getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.connect<OSAppBase, &OSAppBase::removeWorkspaceObjectPtr>(OSAppBase::instance());
-  connect(OSAppBase::instance(), &OSAppBase::workspaceObjectRemovedPtr, this, &LoopScene::removedWorkspaceObject, Qt::QueuedConnection);
+  loop.model().getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.connect<LoopScene, &LoopScene::removedWorkspaceObject>(this);
 
   layout();
 }
