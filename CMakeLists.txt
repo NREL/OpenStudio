@@ -257,15 +257,20 @@ endif()
 option(BUILD_RUBY "Build Ruby" OFF)
 if( BUILD_RUBY )
   if( UNIX )
-    configure_file("${CMAKE_SOURCE_DIR}/dependencies/ruby/build_ruby.sh.in" "${CMAKE_BINARY_DIR}/build_ruby.sh")
+    # DLM: need to apply this patch https://svn.ruby-lang.org/cgi-bin/viewvc.cgi/trunk/enc/make_encmake.rb?r1=50978&r2=50977&pathrev=50978
     ExternalProject_Add(Ruby
       URL http://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.0.0.tar.gz
       URL_MD5 8ddd18138597ad47094463df901a4ea1
       BUILD_IN_SOURCE 1
-      CONFIGURE_COMMAND ""
-      BUILD_COMMAND sh "${CMAKE_BINARY_DIR}/build_ruby.sh"
-      INSTALL_COMMAND ""
+      CONFIGURE_COMMAND autoconf && sh -c "./configure --with-static-linked-ext --without-gmp --without-tcl --without-tk --disable-install-doc --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install"
+      BUILD_COMMAND $(MAKE) libenc && $(MAKE) libtrans && $(MAKE)
+      INSTALL_COMMAND $(MAKE) install
     )
+    find_file( RUBY_CONFIG_INCLUDE_DIR config.h PATHS "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/include/" )
+    set(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/libruby-static.a")
+    set(RUBY_INCLUDE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/include/ruby-2.0.0")
+    set(RUBY_EXECUTABLE "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby")
+    set(RUBY_SOURCE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby")
     set(RUBY_INSTALL_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install")
   else()
     configure_file("${CMAKE_SOURCE_DIR}/dependencies/ruby/build_ruby.bat.in" "${CMAKE_BINARY_DIR}/build_ruby.bat")
