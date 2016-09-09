@@ -223,6 +223,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(BoilerSteam);
     REGISTER_CONSTRUCTOR(Building);
     REGISTER_CONSTRUCTOR(BuildingStory);
+    REGISTER_CONSTRUCTOR(BuildingUnit);
     // REGISTER_CONSTRUCTOR(CentralHeatPumpSystem);
     // REGISTER_CONSTRUCTOR(CentralHeatPumpSystemModule);
     REGISTER_CONSTRUCTOR(CFactorUndergroundWallConstruction);
@@ -634,6 +635,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(BoilerSteam);
     REGISTER_COPYCONSTRUCTORS(Building);
     REGISTER_COPYCONSTRUCTORS(BuildingStory);
+    REGISTER_COPYCONSTRUCTORS(BuildingUnit);
     // REGISTER_COPYCONSTRUCTORS(CentralHeatPumpSystem);
     // REGISTER_COPYCONSTRUCTORS(CentralHeatPumpSystemModule);
     REGISTER_COPYCONSTRUCTORS(CFactorUndergroundWallConstruction);

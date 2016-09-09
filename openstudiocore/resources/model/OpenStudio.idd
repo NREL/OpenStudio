@@ -1980,6 +1980,32 @@ OS:BuildingStory,
        \units m
        \minimum> 0
 
+OS:BuildingUnit,
+       \min-fields 4
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \type alpha
+       \reference BuildingUnitNames
+       \required-field
+  A3,  \field Rendering Color
+       \type object-list
+       \object-list GroupRenderingNames
+  A4,  \field Building Unit Type
+       \type choice
+       \key Residential
+       \key NonResidential
+       \default Residential
+  A5,  \field Building Unit Feature Name
+       \type alpha
+       \begin-extensible
+       \required-field
+  N1;  \field Building Unit Feature Quantity
+       \type real
+       \required-field
+
+
 OS:DefaultConstructionSet,
        \min-fields 11
   A1, \field Handle
@@ -4893,9 +4919,12 @@ OS:Space,
        \default Yes
        \key Yes
        \key No
-  A9; \field Design Specification Outdoor Air Object Name
+  A9, \field Design Specification Outdoor Air Object Name
        \type object-list
        \object-list DesignSpecificationOutdoorAirNames
+  A10; \field Building Unit Name
+       \type object-list
+       \object-list BuildingUnitNames
 
 OS:Surface,
        \extensible:3
