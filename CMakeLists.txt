@@ -10,7 +10,7 @@ project(OpenStudio)
 
 set(CMAKE_VERSION_MAJOR 1)
 set(CMAKE_VERSION_MINOR 12)
-set(CMAKE_VERSION_PATCH 5)
+set(CMAKE_VERSION_PATCH 6)
 
 set(CMAKE_VERSION_BUILD "Unknown" CACHE STRING "Build number")
 find_package(Git)
