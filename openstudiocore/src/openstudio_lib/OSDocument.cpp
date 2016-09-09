@@ -177,7 +177,6 @@ namespace openstudio {
 
     if (!model){
       model = openstudio::model::Model();
-      model->getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.connect<OSAppBase, &OSAppBase::addWorkspaceObjectPtr>(OSAppBase::instance());
     }
 
     openstudio::path modelTempDir = model::createModelTempDir();
