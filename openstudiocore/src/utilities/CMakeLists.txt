@@ -514,6 +514,8 @@ add_library(${target_name}
   ${${target_name}_src}
 )
 
+add_dependencies("${target_name}" SWIG)
+
 AddPCH(${target_name})
 
 # No need to install static lib
