@@ -333,6 +333,7 @@ add_custom_command(
   COMMAND "${SWIG_EXECUTABLE}"
           "-ruby"
           -external-runtime "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx"
+  DEPENDS SWIG
 )
 
 
