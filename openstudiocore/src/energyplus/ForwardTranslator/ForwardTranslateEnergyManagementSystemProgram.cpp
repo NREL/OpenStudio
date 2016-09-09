@@ -31,6 +31,7 @@
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
+#include <utilities/idd/OS_EnergyManagementSystem_Program_FieldEnums.hxx>
 #include <utilities/idd/EnergyManagementSystem_Program_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
@@ -48,20 +49,25 @@ boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemPro
 {
   boost::optional<std::string> s;
 
-  //IdfObject idfObject(openstudio::IddObjectType::EnergyManagementSystem_Program);
-  //m_idfObjects.push_back(idfObject);
-  IdfObject program = createAndRegisterIdfObject(openstudio::IddObjectType::EnergyManagementSystem_Program,modelObject);
+  IdfObject idfObject(openstudio::IddObjectType::EnergyManagementSystem_Program);
+  m_idfObjects.push_back(idfObject);
+  m_map.insert(std::make_pair(modelObject.handle(), idfObject));
+  //IdfObject program = createAndRegisterIdfObject(openstudio::IddObjectType::EnergyManagementSystem_Program,modelObject);
   //Name
   s = modelObject.name();
   if (s) {
-    program.setName(*s);
+    idfObject.setName(*s);
   }
  
-  //TODO translate UIDs to UID.name in the program
   for (const IdfExtensibleGroup& eg : modelObject.extensibleGroups()) {
-    program.pushExtensibleGroup(eg.fields());
+    IdfExtensibleGroup group = idfObject.pushExtensibleGroup();
+    OptionalString line = eg.getString(OS_EnergyManagementSystem_ProgramExtensibleFields::ProgramLine);
+    //TODO translate UIDs to UID.name in the program
+    if (line) {
+      group.setString(EnergyManagementSystem_ProgramExtensibleFields::ProgramLine, *line);
+    }
   }
-  return program;
+  return idfObject;
 }
 
 } // energyplus

@@ -649,27 +649,27 @@ class ENERGYPLUS_API ForwardTranslator {
   
   boost::optional<IdfObject> translateElectricLoadCenterStorageSimple( model::ElectricLoadCenterStorageSimple & modelObject );
 
-  boost::optional<IdfObject> translateEnergyManagementSystemActuator(model::EnergyManagementSystemActuator & modelObejct);
+  boost::optional<IdfObject> translateEnergyManagementSystemActuator(model::EnergyManagementSystemActuator & modelObject);
 
-  boost::optional<IdfObject> translateEnergyManagementSystemGlobalVariable(model::EnergyManagementSystemGlobalVariable & modelObejct );
+  boost::optional<IdfObject> translateEnergyManagementSystemGlobalVariable(model::EnergyManagementSystemGlobalVariable & modelObject);
 
-  boost::optional<IdfObject> translateEnergyManagementSystemOutputVariable(model::EnergyManagementSystemOutputVariable & modelObejct );
+  boost::optional<IdfObject> translateEnergyManagementSystemOutputVariable(model::EnergyManagementSystemOutputVariable & modelObject);
 
-  boost::optional<IdfObject> translateEnergyManagementSystemProgram(model::EnergyManagementSystemProgram & modelObejct);
+  boost::optional<IdfObject> translateEnergyManagementSystemProgram(model::EnergyManagementSystemProgram & modelObject);
 
-  boost::optional<IdfObject> translateEnergyManagementSystemProgramCallingManager(model::EnergyManagementSystemProgramCallingManager & modelObejct);
+  boost::optional<IdfObject> translateEnergyManagementSystemProgramCallingManager(model::EnergyManagementSystemProgramCallingManager & modelObject);
 
-  boost::optional<IdfObject> translateEnergyManagementSystemSensor(model::EnergyManagementSystemSensor & modelObejct );
+  boost::optional<IdfObject> translateEnergyManagementSystemSensor(model::EnergyManagementSystemSensor & modelObject);
 
-  boost::optional<IdfObject> translateEnergyManagementSystemSubroutine(model::EnergyManagementSystemSubroutine & modelObejct );
+  boost::optional<IdfObject> translateEnergyManagementSystemSubroutine(model::EnergyManagementSystemSubroutine & modelObject);
 
-  boost::optional<IdfObject> translateEnergyManagementSystemTrendVariable(model::EnergyManagementSystemTrendVariable & modelObejct );
+  boost::optional<IdfObject> translateEnergyManagementSystemTrendVariable(model::EnergyManagementSystemTrendVariable & modelObject);
 
   boost::optional<IdfObject> translateEvaporativeFluidCoolerSingleSpeed( model::EvaporativeFluidCoolerSingleSpeed & modelObject );
 
   boost::optional<IdfObject> translateEvaporativeFluidCoolerTwoSpeed( model::EvaporativeFluidCoolerTwoSpeed & modelObject  );
 
-  boost::optional<IdfObject> translateExteriorLights(model::ExteriorLights& modelObject);
+  boost::optional<IdfObject> translateExteriorLights(model::ExteriorLights& modelObject );
 
   boost::optional<IdfObject> translateFanConstantVolume( model::FanConstantVolume & modelObject );
 
@@ -763,7 +763,7 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateOutputVariable( model::OutputVariable & modelObject );
 
-  boost::optional<IdfObject> translateOutputEnergyManagementSystem(model::OutputEnergyManagementSystem & modelObejct);
+  boost::optional<IdfObject> translateOutputEnergyManagementSystem(model::OutputEnergyManagementSystem & modelObject );
 
   boost::optional<IdfObject> translatePeople( model::People & modelObject );
 

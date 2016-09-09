@@ -1325,50 +1325,50 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
   }
   case openstudio::IddObjectType::OS_EnergyManagementSystem_Actuator:
   {
-    model::EnergyManagementSystemActuator temp = modelObject.cast<EnergyManagementSystemActuator>();
-    retVal = translateEnergyManagementSystemActuator(temp);
+    model::EnergyManagementSystemActuator actuator = modelObject.cast<EnergyManagementSystemActuator>();
+    retVal = translateEnergyManagementSystemActuator(actuator);
     break;
   }
   case openstudio::IddObjectType::OS_EnergyManagementSystem_GlobalVariable:
   {
-    model::EnergyManagementSystemGlobalVariable temp = modelObject.cast<EnergyManagementSystemGlobalVariable>();
-    retVal = translateEnergyManagementSystemGlobalVariable(temp);
+    model::EnergyManagementSystemGlobalVariable globalVariable = modelObject.cast<EnergyManagementSystemGlobalVariable>();
+    retVal = translateEnergyManagementSystemGlobalVariable(globalVariable);
     break;
   }
   case openstudio::IddObjectType::OS_EnergyManagementSystem_OutputVariable:
   {
-    model::EnergyManagementSystemOutputVariable temp = modelObject.cast<EnergyManagementSystemOutputVariable>();
-    retVal = translateEnergyManagementSystemOutputVariable(temp);
+    model::EnergyManagementSystemOutputVariable outputVariable = modelObject.cast<EnergyManagementSystemOutputVariable>();
+    retVal = translateEnergyManagementSystemOutputVariable(outputVariable);
     break;
   }
   case openstudio::IddObjectType::OS_EnergyManagementSystem_Program:
   {
-    model::EnergyManagementSystemProgram temp = modelObject.cast<EnergyManagementSystemProgram>();
-    retVal = EnergyManagementSystemProgram(temp);
+    model::EnergyManagementSystemProgram program = modelObject.cast<EnergyManagementSystemProgram>();
+    retVal = translateEnergyManagementSystemProgram(program);
     break;
   }
   case openstudio::IddObjectType::OS_EnergyManagementSystem_ProgramCallingManager:
   {
-    model::EnergyManagementSystemProgramCallingManager temp = modelObject.cast<EnergyManagementSystemProgramCallingManager>();
-    retVal = EnergyManagementSystemProgramCallingManager(temp);
+    model::EnergyManagementSystemProgramCallingManager programCallingManager = modelObject.cast<EnergyManagementSystemProgramCallingManager>();
+    retVal = translateEnergyManagementSystemProgramCallingManager(programCallingManager);
     break;
   }
   case openstudio::IddObjectType::OS_EnergyManagementSystem_Sensor:
   {
-    model::EnergyManagementSystemSensor temp = modelObject.cast<EnergyManagementSystemSensor>();
-    retVal = translateEnergyManagementSystemSensor(temp);
+    model::EnergyManagementSystemSensor sensor = modelObject.cast<EnergyManagementSystemSensor>();
+    retVal = translateEnergyManagementSystemSensor(sensor);
     break;
   }
   case openstudio::IddObjectType::OS_EnergyManagementSystem_Subroutine:
   {
-    model::EnergyManagementSystemSubroutine temp = modelObject.cast<EnergyManagementSystemSubroutine>();
-    retVal = EnergyManagementSystemSubroutine(temp);
+    model::EnergyManagementSystemSubroutine subroutine = modelObject.cast<EnergyManagementSystemSubroutine>();
+    retVal = translateEnergyManagementSystemSubroutine(subroutine);
     break;
   }
   case openstudio::IddObjectType::OS_EnergyManagementSystem_TrendVariable:
   {
-    model::EnergyManagementSystemTrendVariable temp = modelObject.cast<EnergyManagementSystemTrendVariable>();
-    retVal = translateEnergyManagementSystemTrendVariable(temp);
+    model::EnergyManagementSystemTrendVariable trendVariable = modelObject.cast<EnergyManagementSystemTrendVariable>();
+    retVal = translateEnergyManagementSystemTrendVariable(trendVariable);
     break;
   }
   case openstudio::IddObjectType::OS_EvaporativeCooler_Direct_ResearchSpecial :
@@ -1865,8 +1865,8 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     }
   case openstudio::IddObjectType::OS_Output_EnergyManagementSystem:
   {
-    model::OutputEnergyManagementSystem temp = modelObject.cast<OutputEnergyManagementSystem>();
-    retVal = translateOutputEnergyManagementSystem(temp);
+    model::OutputEnergyManagementSystem outputEnergyManagementSystem = modelObject.cast<OutputEnergyManagementSystem>();
+    retVal = translateOutputEnergyManagementSystem(outputEnergyManagementSystem);
     break;
   }
   case openstudio::IddObjectType::OS_People :
@@ -2984,13 +2984,13 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_Meter_CustomDecrement);
   result.push_back(IddObjectType::OS_Output_Variable);
 
+  result.push_back(IddObjectType::OS_EnergyManagementSystem_GlobalVariable);
   result.push_back(IddObjectType::OS_EnergyManagementSystem_Sensor);
   result.push_back(IddObjectType::OS_EnergyManagementSystem_Actuator);
   result.push_back(IddObjectType::OS_EnergyManagementSystem_Program);
   result.push_back(IddObjectType::OS_EnergyManagementSystem_Subroutine);
   result.push_back(IddObjectType::OS_EnergyManagementSystem_ProgramCallingManager);
   result.push_back(IddObjectType::OS_EnergyManagementSystem_OutputVariable);
-  result.push_back(IddObjectType::OS_EnergyManagementSystem_GlobalVariable);
   result.push_back(IddObjectType::OS_EnergyManagementSystem_TrendVariable);
   result.push_back(IddObjectType::OS_Output_EnergyManagementSystem);
 
