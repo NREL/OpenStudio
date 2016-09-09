@@ -36,7 +36,7 @@ namespace openstudio {
 
 ModelObjectTreeWidget::ModelObjectTreeWidget(const model::Model& model, QWidget* parent )
   : OSItemSelector(parent), m_model(model)
-{ 
+{
   m_vLayout = new QVBoxLayout();
   m_vLayout->setContentsMargins(0,7,0,0);
   m_vLayout->setSpacing(7);
@@ -45,12 +45,14 @@ ModelObjectTreeWidget::ModelObjectTreeWidget(const model::Model& model, QWidget*
   m_treeWidget = new QTreeWidget(parent);
   m_treeWidget->setStyleSheet("QTreeWidget { border: none; border-top: 1px solid black; }");
   m_treeWidget->setAttribute(Qt::WA_MacShowFocusRect,0);
-  
+
   m_vLayout->addWidget(m_treeWidget);
 
-  model.getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.connect<ModelObjectTreeWidget, &ModelObjectTreeWidget::objectAdded>(this);
-  
-  model.getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.connect<ModelObjectTreeWidget, &ModelObjectTreeWidget::objectRemoved>(this);
+  // model.getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.connect<ModelObjectTreeWidget, &ModelObjectTreeWidget::objectAdded>(this);
+  connect(OSAppBase::instance(), &OSAppBase::workspaceObjectAddedPtr, this, &ModelObjectTreeWidget::objectAdded, Qt::QueuedConnection);
+
+  // model.getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.connect<ModelObjectTreeWidget, &ModelObjectTreeWidget::objectRemoved>(this);
+  connect(OSAppBase::instance(), &OSAppBase::workspaceObjectAddedPtr, this, &ModelObjectTreeWidget::objectRemoved, Qt::QueuedConnection);
 }
 
 OSItem* ModelObjectTreeWidget::selectedItem() const

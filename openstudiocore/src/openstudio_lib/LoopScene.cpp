@@ -1,23 +1,24 @@
 /**********************************************************************
- *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
- *  
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *  
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *  
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
 #include "LoopScene.hpp"
+#include "OSAppBase.hpp"
 #include "GridItem.hpp"
 #include <QPainter>
 #include <QGraphicsSceneMouseEvent>
@@ -48,8 +49,8 @@ using namespace openstudio::model;
 
 namespace openstudio {
 
-LoopScene::LoopScene( model::Loop loop, 
-                      QObject * parent ) 
+LoopScene::LoopScene( model::Loop loop,
+                      QObject * parent )
   : GridScene(parent),
     m_loop(loop),
     m_dirty(true)
@@ -75,20 +76,20 @@ void LoopScene::layout()
   if( m_dirty && !m_loop.handle().isNull() )
   {
     QList<QGraphicsItem *> itemList = items();
-    for( QList<QGraphicsItem *>::iterator it = itemList.begin(); 
-         it < itemList.end(); 
+    for( QList<QGraphicsItem *>::iterator it = itemList.begin();
+         it < itemList.end();
          ++it )
     {
       removeItem(*it);
       delete *it;
     }
 
-    SystemItem * systemItem = new SystemItem(m_loop,this); 
+    SystemItem * systemItem = new SystemItem(m_loop,this);
 
     systemItem->setPos(50,50);
 
     this->setSceneRect(0,0,(systemItem->getHGridLength() * 100) + 100, ((systemItem->getVGridLength()) * 100) + 100);
-    
+
     update();
 
     m_dirty = false;

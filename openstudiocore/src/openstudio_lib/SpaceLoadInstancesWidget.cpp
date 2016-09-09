@@ -500,7 +500,7 @@ SpaceLoadInstanceMiniView::SpaceLoadInstanceMiniView(const model::SpaceLoadInsta
     m_removeButton->setVisible(false);
   }
   hLayout->addWidget(m_removeButton);
-  
+
   connect(m_removeButton, &QPushButton::clicked, this, &SpaceLoadInstanceMiniView::onRemoveClicked);
 
   // inherited label
@@ -760,9 +760,11 @@ void SpaceLoadInstancesWidget::detach()
       spaceType.getImpl<model::detail::ModelObject_Impl>().get()->onRelationshipChange.disconnect<SpaceLoadInstancesWidget, &SpaceLoadInstancesWidget::onSpaceTypeRelationshipChange>(this);
     }
 
-    m_model->getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.disconnect<SpaceLoadInstancesWidget, &SpaceLoadInstancesWidget::objectAdded>(this);
+    // m_model->getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.disconnect<SpaceLoadInstancesWidget, &SpaceLoadInstancesWidget::objectAdded>(this);
+    connect(OSAppBase::instance(), &OSAppBase::workspaceObjectAddedPtr, this, &SpaceLoadInstancesWidget::objectAdded, Qt::QueuedConnection);
 
-    m_model->getImpl<openstudio::model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.disconnect<SpaceLoadInstancesWidget, &SpaceLoadInstancesWidget::objectRemoved>(this);
+    // m_model->getImpl<openstudio::model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.disconnect<SpaceLoadInstancesWidget, &SpaceLoadInstancesWidget::objectRemoved>(this);
+    connect(OSAppBase::instance(), &OSAppBase::workspaceObjectAddedPtr, this, &SpaceLoadInstancesWidget::objectRemoved, Qt::QueuedConnection);
 
     m_model.reset();
   }
@@ -778,9 +780,11 @@ void SpaceLoadInstancesWidget::attach(const model::Space& space)
   m_space = space;
   m_model = space.model();
 
-  m_model->getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.connect<SpaceLoadInstancesWidget, &SpaceLoadInstancesWidget::objectAdded>(this);
+  // m_model->getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.connect<SpaceLoadInstancesWidget, &SpaceLoadInstancesWidget::objectAdded>(this);
+  connect(OSAppBase::instance(), &OSAppBase::workspaceObjectAddedPtr, this, &SpaceLoadInstancesWidget::objectAdded, Qt::QueuedConnection);
 
-  m_model->getImpl<openstudio::model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.connect<SpaceLoadInstancesWidget, &SpaceLoadInstancesWidget::objectRemoved>(this);
+  // m_model->getImpl<openstudio::model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.connect<SpaceLoadInstancesWidget, &SpaceLoadInstancesWidget::objectRemoved>(this);
+  connect(OSAppBase::instance(), &OSAppBase::workspaceObjectAddedPtr, this, &SpaceLoadInstancesWidget::objectRemoved, Qt::QueuedConnection);
 
   model::Building building = m_model->getUniqueModelObject<model::Building>();
   building.getImpl<model::detail::ModelObject_Impl>().get()->onRelationshipChange.connect<SpaceLoadInstancesWidget, &SpaceLoadInstancesWidget::onBuildingRelationshipChange>(this);
@@ -802,9 +806,11 @@ void SpaceLoadInstancesWidget::attach(const model::SpaceType& spaceType)
   m_spaceType = spaceType;
   m_model = spaceType.model();
 
-  m_model->getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.connect<SpaceLoadInstancesWidget, &SpaceLoadInstancesWidget::objectAdded>(this);
+  // m_model->getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.connect<SpaceLoadInstancesWidget, &SpaceLoadInstancesWidget::objectAdded>(this);
+  connect(OSAppBase::instance(), &OSAppBase::workspaceObjectAddedPtr, this, &SpaceLoadInstancesWidget::objectAdded, Qt::QueuedConnection);
 
-  m_model->getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.connect<SpaceLoadInstancesWidget, &SpaceLoadInstancesWidget::objectRemoved>(this);
+  // m_model->getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.connect<SpaceLoadInstancesWidget, &SpaceLoadInstancesWidget::objectRemoved>(this);
+  connect(OSAppBase::instance(), &OSAppBase::workspaceObjectAddedPtr, this, &SpaceLoadInstancesWidget::objectRemoved, Qt::QueuedConnection);
 
   model::Building building = m_model->getUniqueModelObject<model::Building>();
   building.getImpl<model::detail::ModelObject_Impl>().get()->onRelationshipChange.connect<SpaceLoadInstancesWidget, &SpaceLoadInstancesWidget::onBuildingRelationshipChange>(this);
@@ -904,14 +910,14 @@ void SpaceLoadInstancesWidget::refresh()
   }
   m_dirty = false;
 
-  QLayoutItem *child; 
-  while ((child = m_mainVLayout->takeAt(0)) != nullptr) { 
+  QLayoutItem *child;
+  while ((child = m_mainVLayout->takeAt(0)) != nullptr) {
     QWidget* widget = child->widget();
     if (widget){
       delete widget;
     }
-    delete child; 
-  } 
+    delete child;
+  }
 
   // existing m_newSpaceLoadDropZone and m_newSpaceLoadVectorController were deleted above
   m_newSpaceLoadVectorController = nullptr;
@@ -960,7 +966,7 @@ void SpaceLoadInstancesWidget::refresh()
 
   auto widget = new QWidget();
   widget->setLayout(hLayout);
-  
+
   m_mainVLayout->addWidget(widget);
 }
 
@@ -1011,7 +1017,7 @@ void SpaceLoadInstancesWidget::addSpaceLoads(const model::Space& space)
         line->setFrameShape(QFrame::HLine);
         line->setFrameShadow(QFrame::Sunken);
         m_mainVLayout->addWidget(line);
-  
+
         addSpaceLoadInstance(modelObject.cast<model::SpaceLoadInstance>(), false);
       }
     }

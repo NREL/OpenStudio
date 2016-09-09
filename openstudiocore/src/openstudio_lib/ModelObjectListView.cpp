@@ -37,15 +37,17 @@
 
 namespace openstudio {
 
-ModelObjectListController::ModelObjectListController(const openstudio::IddObjectType& iddObjectType, 
+ModelObjectListController::ModelObjectListController(const openstudio::IddObjectType& iddObjectType,
                                                      const model::Model& model,
                                                      bool showLocalBCL)
   : m_iddObjectType(iddObjectType), m_model(model), m_showLocalBCL(showLocalBCL)
 {
-  
-  model.getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.connect<ModelObjectListController, &ModelObjectListController::objectAdded>(this);
-  
-  model.getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.connect<ModelObjectListController, &ModelObjectListController::objectRemoved>(this);
+
+  // model.getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.connect<ModelObjectListController, &ModelObjectListController::objectAdded>(this);
+  connect(OSAppBase::instance(), &OSAppBase::workspaceObjectAddedPtr, this, &ModelObjectListController::objectAdded, Qt::QueuedConnection);
+
+  // model.getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.connect<ModelObjectListController, &ModelObjectListController::objectRemoved>(this);
+  connect(OSAppBase::instance(), &OSAppBase::workspaceObjectAddedPtr, this, &ModelObjectListController::objectRemoved, Qt::QueuedConnection);
 
 }
 
@@ -86,12 +88,12 @@ std::vector<OSItemId> ModelObjectListController::makeVector()
     pairs.push_back(std::make_pair<std::string,std::string>("OpenStudio Type",m_iddObjectType.valueDescription()));
 
     // get BCL results
-    std::vector<BCLComponent> bclresults = LocalBCL::instance().componentAttributeSearch(pairs); 
+    std::vector<BCLComponent> bclresults = LocalBCL::instance().componentAttributeSearch(pairs);
 
     // sort by name
     std::sort(bclresults.begin(), bclresults.end(), BCLComponentNameGreater());
 
-    for( auto it = bclresults.begin(); 
+    for( auto it = bclresults.begin();
          it != bclresults.end();
          ++it )
     {
@@ -121,8 +123,8 @@ std::vector<OSItemId> ModelObjectListController::makeVector()
   return result;
 }
 
-ModelObjectListView::ModelObjectListView(const openstudio::IddObjectType& iddObjectType, 
-                                         const model::Model& model, 
+ModelObjectListView::ModelObjectListView(const openstudio::IddObjectType& iddObjectType,
+                                         const model::Model& model,
                                          bool addScrollArea,
                                          bool showLocalBCL,
                                          QWidget * parent )

@@ -117,7 +117,7 @@ void OSAppBase::removeWorkspaceObject(const WorkspaceObject& workspaceObject, co
 }
 
 void OSAppBase::removeWorkspaceObjectPtr(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wPtr, const openstudio::IddObjectType& type, const openstudio::UUID& uuid ) {
-  emit workspaceObjectRemovedPtr(wPtr.get(), type, uuid);
+  emit workspaceObjectRemovedPtr(wPtr, type, uuid);
 }
 
 QWidget *OSAppBase::mainWidget()
@@ -172,7 +172,7 @@ MeasureManager &OSAppBase::measureManager()
 
 void OSAppBase::updateSelectedMeasureState()
 {
-  // DLM: this slot seems out of place here, seems like the connection from the measure list to enabling duplicate buttons, etc 
+  // DLM: this slot seems out of place here, seems like the connection from the measure list to enabling duplicate buttons, etc
   // should be tighter
   std::shared_ptr<OSDocument> document = currentDocument();
 
@@ -226,7 +226,7 @@ void OSAppBase::updateMyMeasures()
     //} else {
       LOG(Error, "Unable to update measures, there is no project set...");
     //}
-  } 
+  }
 }
 
 void OSAppBase::updateBCLMeasures()
