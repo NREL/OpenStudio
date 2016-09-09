@@ -1374,7 +1374,7 @@ set(all_exe_targets
 )
 
 if(BUILD_OS_APP)
-  list(APPEND all_exe_targets "OpenStudio")
+  list(APPEND all_exe_targets "OpenStudioApp")
   #list(APPEND all_exe_targets "ResultsViewer")
 endif()
 
