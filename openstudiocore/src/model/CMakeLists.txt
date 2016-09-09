@@ -145,6 +145,9 @@ set(${target_name}_src
   BuildingStory.hpp
   BuildingStory_Impl.hpp
   BuildingStory.cpp
+  BuildingUnit.hpp
+  BuildingUnit_Impl.hpp
+  BuildingUnit.cpp
 ##  CentralHeatPumpSystem.hpp
 ##  CentralHeatPumpSystem_Impl.hpp
 ##  CentralHeatPumpSystem.cpp
