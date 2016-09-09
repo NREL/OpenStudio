@@ -15,18 +15,20 @@ diff --git a/ext/Setup b/ext/Setup
 index 98ffffd..39c5265 100644
 --- a/ext/Setup
 +++ b/ext/Setup
-@@ -1,28 +1,28 @@
+@@ -1,30 +1,30 @@
 -#option nodynamic
 +option nodynamic
  
 -#Win32API
 -#bigdecimal
+-#curses
 -#dbm
 -#digest
 -#digest/md5
 -#digest/rmd160
 -#digest/sha1
 -#digest/sha2
+-#dl
 -#etc
 -#fcntl
 -#gdbm
@@ -47,12 +49,14 @@ index 98ffffd..39c5265 100644
 -#zlib
 +Win32API
 +bigdecimal
++curses
 +dbm
 +digest
 +digest/md5
 +digest/rmd160
 +digest/sha1
 +digest/sha2
++dl
 +etc
 +fcntl
 +gdbm
@@ -71,3 +75,4 @@ index 98ffffd..39c5265 100644
 +tk
 +win32ole
 +zlib
+
