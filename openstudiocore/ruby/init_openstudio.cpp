@@ -1,5 +1,7 @@
 #include "init_openstudio.hpp"
 #include <ruby.h>
+#include <stdexcept>
+
 
 extern "C" {
   void Init_openstudioairflow(void);
