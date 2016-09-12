@@ -242,7 +242,7 @@ if( BUILD_RUBY )
       PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/ruby/Ruby.patch
       CONFIGURE_COMMAND autoconf && sh -c "./configure --with-static-linked-ext --without-gmp --without-tcl --without-tk --disable-install-doc --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install"
       BUILD_COMMAND $(MAKE) libenc && $(MAKE) libtrans && $(MAKE)
-      INSTALL_COMMAND $(MAKE) install
+      INSTALL_COMMAND $(MAKE) install && sh -c "find . -name '*.a' | xargs cp -t ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/"
     )
     find_file( RUBY_CONFIG_INCLUDE_DIR config.h PATHS "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/include/" )
     set(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/libruby-static.a")
