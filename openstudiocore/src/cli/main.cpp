@@ -21,15 +21,6 @@ extern "C" {
   void Init_EmbeddedScripting(void);
   INIT_DECLARATIONS;
 
-  void Init_generator(void);
-  void Init_parser(void);
-  void Init_Encoding(void);
-  void Init_digest(void);
-  void Init_md5(void);
-  void Init_rmd160(void);
-  void Init_sha1(void);
-  void Init_sha2(void);
-
   void Init_encdb();
   void Init_big5();
   void Init_cp949();
@@ -84,6 +75,44 @@ extern "C" {
   void Init_trans_single_byte();
   void Init_trans_utf8_mac();
   void Init_trans_utf_16_32();
+
+  void Init_bigdecimal();
+  void Init_bubblebabble();
+  void Init_callback();
+  void Init_complex();
+  void Init_console();
+  void Init_continuation();
+  void Init_coverage();  
+  void Init_cparse();     
+  void Init_date_core();    
+  void Init_digest();
+  void Init_md5();
+  void Init_rmd160();
+  void Init_sha1();
+  void Init_sha2();
+  void Init_dl();
+  void Init_etc();   
+  void Init_fcntl();   
+  void Init_fiber();
+  void Init_generator();  
+  void Init_nkf();
+  void Init_nonblock();
+  void Init_objspace();
+  //  void Init_openssl();
+  void Init_parser();
+  void Init_pathname();    
+  void Init_psych();
+  void Init_pty();
+  void Init_rational();
+  // void Init_readline();
+  void Init_ripper();
+  void Init_sdbm();
+  void Init_socket();
+  void Init_stringio();
+  void Init_strscan();
+  void Init_syslog();
+  void Init_wait();
+  void Init_zlib();
 }
 
 std::vector<std::string> paths;
@@ -122,6 +151,7 @@ int main(int argc, char *argv[])
 
     INIT_CALLS;
 
+    // encodings
     Init_encdb();
     rb_provide("enc/encdb.so");
     Init_big5();
@@ -230,30 +260,138 @@ int main(int argc, char *argv[])
     Init_trans_utf_16_32();
     rb_provide("enc/trans/utf_16_32.so");
 
-    init_openstudio_internal();
+    // in case any further init methods try to require files, init this first
+    Init_EmbeddedScripting();
 
+    // Need embedded_help for requiring files out of the embedded system
+    auto embedded_extensions_string = embedded_files::getFileAsString(":/embedded_help.rb");
+    rubyInterpreter.evalString(embedded_extensions_string);
+
+    // extensions
+
+    // digest seems to be required early on
     Init_digest();
     rb_provide("digest");
+    rb_provide("digest.so");
+
+    Init_bigdecimal();
+    rb_provide("bigdecimal");
+    
+    Init_bubblebabble();
+    rb_provide("bubblebabble");    
+    
+    //Init_callback();
+    //rb_provide("callback");
+    
+    Init_complex();
+    rb_provide("complex");
+    
+    Init_console();
+    rb_provide("console"); 
+    
+    Init_continuation();
+    rb_provide("continuation");
+    
+    Init_coverage();
+    rb_provide("coverage");
+    
+    Init_cparse();
+    rb_provide("cparse");
+    
+    Init_date_core();
+    rb_provide("date_core");
+  
     Init_md5();
     rb_provide("digest/md5");
+    
     Init_rmd160();
     rb_provide("digest/rmd160");
+    
     Init_sha1();
     rb_provide("digest/sha1");
+    
     Init_sha2();
     rb_provide("digest/sha2");
+    
+    Init_dl();
+    rb_provide("dl");
+    
+    Init_etc();
+    rb_provide("etc");
+    
+    Init_fcntl();
+    rb_provide("fcntl");    
+    
+    Init_fiber();
+    rb_provide("fiber");
+    
+    Init_generator();
+    rb_provide("json/ext/generator");
+    
+    Init_nkf();
+    rb_provide("nkf");
+    
+    Init_nonblock();
+    rb_provide("nonblock");
+    
+    Init_objspace();
+    rb_provide("objspace");
+    
+    //Init_openssl();
+    //rb_provide("openssl");
+    
+    Init_parser();
+    rb_provide("json/ext/parser");
+    
+    Init_pathname();
+    rb_provide("pathname");
+    
+    //Init_psych();
+    //rb_provide("psych");
+    
+    Init_pty();
+    rb_provide("pty");
+    
+    Init_rational();
+    rb_provide("rational");
+    
+    //Init_readline();
+    //rb_provide("readline");
+    
+    Init_ripper();
+    rb_provide("ripper");
+    rb_provide("ripper.so");
+    
+    Init_sdbm();
+    rb_provide("sdbm");
+  
+    Init_socket();
+    rb_provide("socket");
+    rb_provide("socket.so");
+    rb_provide("stringio");
+    
+    Init_strscan();
+    rb_provide("strscan");
+    
+    Init_syslog();
+    rb_provide("syslog");
+    
+    Init_wait();
+    rb_provide("wait");    
+    
+    Init_zlib();
+    rb_provide("zlib");
 
-    Init_EmbeddedScripting();
+    // openstudio
+    init_openstudio_internal();
+    
+
   }
   
   #ifdef QT_STATIC
   Q_IMPORT_PLUGIN(QSQLiteDriverPlugin);
-  #endif
-
-  // Need embedded_help for requiring files out of the embedded system
-  auto embedded_extensions_string = embedded_files::getFileAsString(":/embedded_help.rb");
-  rubyInterpreter.evalString(embedded_extensions_string);
-
+  #endif 
+  
   // chop off the first argument which is the exe path/name
   ruby_set_argv(argc - 1,argv + 1);
 
