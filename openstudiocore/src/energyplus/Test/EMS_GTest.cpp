@@ -273,11 +273,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorProgram_EMS) {
   std::string programName = fan.name().get() + "Pressure Rise Program by Body";
   fan_program_1.setName(programName);
   //this body has /r/n in it
-  std::string fan_program_1_body = "SET mult = " + toString(OATdbSensor.handle()) + " " + toString(fanActuator.handle()) + " / 15.0 !- This is !nonsense\r\nSET " + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense\n" + "no comment\n" + "crap !comment!comment";
+  std::string fan_program_1_body = "SET mult = " + toString(OATdbSensor.handle()) + " + " + toString(fanActuator.handle()) + " / 15.0 !- This is !nonsense\r\nSET " + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense\n" + "no comment\n" + "crap !comment!comment";
   //this is what the body should look like with 2 /n's and compare TRUE
-  std::string fan_program_body_test = "SET mult = " + toString(OATdbSensor.handle()) + " " + toString(fanActuator.handle()) + " / 15.0 !- This is !nonsense\nSET " + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense\n" + "no comment\n" + "crap !comment!comment\n";
+  std::string fan_program_body_test = "SET mult = " + toString(OATdbSensor.handle()) + " + " + toString(fanActuator.handle()) + " / 15.0 !- This is !nonsense\nSET " + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense\n" + "no comment\n" + "crap !comment!comment\n";
   //the added lines should compare TRUE to below
-  std::string line1_test = "SET mult = " + toString(OATdbSensor.handle()) + " " + toString(fanActuator.handle()) + " / 15.0 !- This is !nonsense\n";
+  std::string line1_test = "SET mult = " + toString(OATdbSensor.handle()) + " + " + toString(fanActuator.handle()) + " / 15.0 !- This is !nonsense\n";
   std::string line2_test = "SET " + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense\n";
 
   //set body

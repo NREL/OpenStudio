@@ -63,16 +63,9 @@ boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemPro
     idfObject.setName(*s);
   }
  
-  std::string a;
-  std::string b;
-  std::string c;
-  std::string aa;
-  std::string bb;
-  std::string name;
-  openstudio::Handle uuids;
-  QString temp;
-  //int i;
   int found = 0;
+  UUID prog_uid = modelObject.handle();
+  QString prog_uid_string = modelObject.handle().toString();
 
   for (const IdfExtensibleGroup& eg : modelObject.extensibleGroups()) {
     IdfExtensibleGroup group = idfObject.pushExtensibleGroup();
@@ -100,18 +93,30 @@ boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemPro
           std::vector<model::ModelObject> modelObjects = m.getModelObjects<model::ModelObject>();
           if (modelObjects.size() > 0) {
             for (size_t k = 0; k < modelObjects.size(); k++) {
-              name = modelObjects.at(k).nameString();
-              uuids = modelObjects.at(k).handle();
-              temp = modelObjects.at(k).handle().toString();
+              //name = modelObjects.at(k).nameString();
+              //uuids = modelObjects.at(k).handle();
+              //temp = modelObjects.at(k).handle().toString();
               if (modelObjects.at(k).handle() == uid) {
                 found++;
+                results.at(j) = modelObjects.at(k).nameString();
               };
             }
           };
         }
       }
-
-      group.setString(EnergyManagementSystem_ProgramExtensibleFields::ProgramLine, *line);
+      std::string final_line;
+      for (size_t z = 0; z < results.size(); z++) {
+        final_line += results.at(z) + ' ';
+      }
+      if (final_line.back() == ' ') {
+        boost::erase_last(final_line, " ");
+      }
+      group.setString(EnergyManagementSystem_ProgramExtensibleFields::ProgramLine, final_line);
+      
+    }
+    OptionalString comment = eg.fieldComment(OS_EnergyManagementSystem_ProgramExtensibleFields::ProgramLine);
+    if (comment) {
+      group.setFieldComment(EnergyManagementSystem_ProgramExtensibleFields::ProgramLine, comment.get());
     }
   }
   return idfObject;

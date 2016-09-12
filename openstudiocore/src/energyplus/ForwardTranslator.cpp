@@ -97,7 +97,7 @@ ForwardTranslator::ForwardTranslator()
 
 Workspace ForwardTranslator::translateModel( const Model & model, ProgressBar* progressBar )
 {
-  Model modelCopy = model.clone().cast<Model>();
+  Model modelCopy = model.clone(true).cast<Model>();
 
   m_progressBar = progressBar;
   if (m_progressBar){
