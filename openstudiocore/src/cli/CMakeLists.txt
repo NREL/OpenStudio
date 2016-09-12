@@ -1,35 +1,6 @@
-
 if (APPLE)
    find_library(COREFOUNDATION_LIBRARY CoreFoundation )
 endif (APPLE)
-
-set(LIBS 
-  bigdecimal
-  continuation
-  coverage
-  date_core
-  dbm
-  digest
-  etc
-  fcntl
-  fiber
-  ##fiddle
-  ##nkf
-  objspace
-  pathname
-  ##psych
-  pty
-  ##readline
-  ripper
-  rbconfig
-  sdbm
-  socket
-  stringio
-  strscan
-  syslog
-  thread
-  ##tcltklib
-)
 
 set(EXTENSION_LIBS "")
 set(EXTENSION_LIBS_LIST "")

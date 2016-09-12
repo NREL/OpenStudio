@@ -24,6 +24,7 @@ extern "C" {
   void Init_generator(void);
   void Init_parser(void);
   void Init_Encoding(void);
+  void Init_digest(void);
   void Init_md5(void);
   void Init_rmd160(void);
   void Init_sha1(void);
@@ -231,6 +232,8 @@ int main(int argc, char *argv[])
 
     init_openstudio_internal();
 
+    Init_digest();
+    rb_provide("digest");
     Init_md5();
     rb_provide("digest/md5");
     Init_rmd160();
