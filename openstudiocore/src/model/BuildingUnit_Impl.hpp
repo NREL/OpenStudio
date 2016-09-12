@@ -65,7 +65,7 @@ class MODEL_API BuildingUnit_Impl : public ModelObject_Impl {
 
   boost::optional<RenderingColor> renderingColor() const;
 
-  //boost::optional<std::string> buildingUnitType() const;
+  boost::optional<std::string> buildingUnitType() const;
 
   //@}
 
@@ -76,7 +76,9 @@ class MODEL_API BuildingUnit_Impl : public ModelObject_Impl {
 
   void resetRenderingColor();
 
-  //void setBuildingUnitType(const std::string& buildingUnitType);
+  bool setBuildingUnitType(const std::string& buildingUnitType);
+
+  void resetBuildingUnitType();
 
   //@}
 
