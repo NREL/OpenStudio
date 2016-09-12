@@ -17,6 +17,7 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
+#include <algorithm>
 #include <gtest/gtest.h>
 
 #include "ModelFixture.hpp"
@@ -36,7 +37,6 @@ TEST_F(ModelFixture, BuildingUnit_RenderingColor)
 {
 
     Model model;
-    // TODO: Check constructor.
     BuildingUnit buildingUnit(model);
     RenderingColor color1(model);
 
@@ -59,6 +59,52 @@ TEST_F(ModelFixture, BuildingUnit_RenderingColor)
 
     buildingUnit.resetRenderingColor();
     ASSERT_FALSE(buildingUnit.renderingColor());
+
+}
+
+TEST_F(ModelFixture, BuildingUnit_BuildingUnitType)
+{
+    Model model;
+    BuildingUnit bldgUnit(model);
+
+    std::vector<std::string> bldgUnitTypeValues(bldgUnit.buildingUnitTypeValues());
+
+    // Make sure both Residential and NonResidential are in the list and that there's only two items.
+    EXPECT_NE(std::find(bldgUnitTypeValues.begin(), bldgUnitTypeValues.end(), "Residential"), bldgUnitTypeValues.end());
+    EXPECT_NE(std::find(bldgUnitTypeValues.begin(), bldgUnitTypeValues.end(), "NonResidential"), bldgUnitTypeValues.end());
+    EXPECT_EQ(bldgUnitTypeValues.size(), 2);
+
+    // Check default
+    boost::optional<std::string> bldgUnitType = bldgUnit.buildingUnitType();
+    EXPECT_TRUE(bldgUnitType);
+    if (bldgUnitType) {
+        EXPECT_EQ(*bldgUnitType, "Residential");
+    }
+
+    // Assign New and check that the assignment worked.
+    EXPECT_TRUE(bldgUnit.setBuildingUnitType("NonResidential"));
+    bldgUnitType = bldgUnit.buildingUnitType();
+    EXPECT_TRUE(bldgUnitType);
+    if (bldgUnitType) {
+        EXPECT_EQ(*bldgUnitType, "NonResidential");
+    }
+
+    // Reset and check that its back at the default.
+    bldgUnit.resetBuildingUnitType();
+    bldgUnitType = bldgUnit.buildingUnitType();
+    EXPECT_TRUE(bldgUnitType);
+    if (bldgUnitType) {
+        EXPECT_EQ(*bldgUnitType, "Residential");
+    }
+
+    // Set it to something invalid
+    EXPECT_TRUE(bldgUnit.setBuildingUnitType("NonResidential"));
+    EXPECT_FALSE(bldgUnit.setBuildingUnitType("Bogus"));
+    bldgUnitType = bldgUnit.buildingUnitType();
+    EXPECT_TRUE(bldgUnitType);
+    if (bldgUnitType) {
+        EXPECT_EQ(*bldgUnitType, "NonResidential");
+    }
 
 }
 

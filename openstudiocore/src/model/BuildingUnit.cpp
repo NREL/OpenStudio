@@ -29,6 +29,7 @@
 
 #include <utilities/idd/OS_BuildingUnit_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
+#include <utilities/idd/IddFactory.hxx>
 
 namespace openstudio {
 namespace model {
@@ -78,8 +79,27 @@ bool BuildingUnit_Impl::setRenderingColor(const RenderingColor& renderingColor)
 
 void BuildingUnit_Impl::resetRenderingColor()
 {
-    setString(OS_BuildingUnitFields::RenderingColor, "");
+    bool ok = setString(OS_BuildingUnitFields::RenderingColor, "");
+    OS_ASSERT(ok);
 }
+
+boost::optional<std::string> BuildingUnit_Impl::buildingUnitType() const
+{
+    return getString(OS_BuildingUnitFields::BuildingUnitType, true, true);
+}
+
+bool BuildingUnit_Impl::setBuildingUnitType(const std::string& buildingUnitType)
+{
+    bool ok = setString(OS_BuildingUnitFields::BuildingUnitType, buildingUnitType);
+    return ok;
+}
+
+void BuildingUnit_Impl::resetBuildingUnitType()
+{
+    bool ok = setString(OS_BuildingUnitFields::BuildingUnitType, "");
+    OS_ASSERT(ok);
+}
+
 
 } //detail
 
@@ -107,6 +127,29 @@ bool BuildingUnit::setRenderingColor(const RenderingColor& renderingColor)
 void BuildingUnit::resetRenderingColor()
 {
     getImpl<detail::BuildingUnit_Impl>()->resetRenderingColor();
+}
+
+std::vector<std::string> BuildingUnit::buildingUnitTypeValues()
+{
+    return getIddKeyNames(
+      IddFactory::instance().getObject(iddObjectType()).get(),
+      OS_BuildingUnitFields::BuildingUnitType
+    );
+}
+
+boost::optional<std::string> BuildingUnit::buildingUnitType() const
+{
+    return getImpl<detail::BuildingUnit_Impl>()->buildingUnitType();
+}
+
+bool BuildingUnit::setBuildingUnitType(const std::string& buildingUnitType)
+{
+    return getImpl<detail::BuildingUnit_Impl>()->setBuildingUnitType(buildingUnitType);
+}
+
+void BuildingUnit::resetBuildingUnitType()
+{
+    getImpl<detail::BuildingUnit_Impl>()->resetBuildingUnitType();
 }
 
 /// @cond

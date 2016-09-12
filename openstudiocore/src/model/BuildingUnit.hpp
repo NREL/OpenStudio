@@ -51,7 +51,7 @@ class MODEL_API BuildingUnit : public ModelObject {
   //@{
 
   // List the possible values for building unit type
-  //static std::vector<std::string> buildingUnitTypeValues();
+  static std::vector<std::string> buildingUnitTypeValues();
 
   //@}
 
@@ -64,7 +64,7 @@ class MODEL_API BuildingUnit : public ModelObject {
   boost::optional<RenderingColor> renderingColor() const;
 
   // Gets the building unit type
-  //boost::optional<std::string> buildingUnitType() const;
+  boost::optional<std::string> buildingUnitType() const;
 
 
   //@}
@@ -74,6 +74,11 @@ class MODEL_API BuildingUnit : public ModelObject {
   bool setRenderingColor(const RenderingColor& renderingColor);
 
   void resetRenderingColor();
+
+  bool setBuildingUnitType(const std::string& buildingUnitType);
+
+  void resetBuildingUnitType();
+
   //@}
 
  protected:
