@@ -1373,6 +1373,7 @@ set(${target_name}_test_src
   test/BoilerHotWater_GTest.cpp
   test/BoilerSteam_GTest.cpp
   test/BuildingStory_GTest.cpp
+  test/BuildingUnit_GTest.cpp
   test/Building_GTest.cpp
 ##  test/CentralHeatPumpSystem_GTest.cpp
 ##  test/CentralHeatPumpSystemModule_GTest.cpp
