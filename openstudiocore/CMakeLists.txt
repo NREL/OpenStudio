@@ -417,7 +417,7 @@ if(NOT EXISTS ${RUBY_INSTALL_DIR})
   elseif(EXISTS "/etc/redhat-release")
   else()
     set(RUBY_ZIP_FILENAME "ruby_2_0_0_linux_static.tar.gz")
-    set(RUBY_ZIP_EXPECTED_MD5 "7fb3b4b59c351af88117fb0cdc24d504")
+    set(RUBY_ZIP_EXPECTED_MD5 "9bc9756cb4e3ac3fda525306bd26a9cd")
   endif()
 
   set(RUBY_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${RUBY_ZIP_FILENAME}")
