@@ -49,6 +49,7 @@ class DefaultScheduleType;
 class DefaultScheduleSet;
 class ThermalZone;
 class BuildingStory;
+class BuildingUnit;
 class ShadingSurfaceGroup;
 class InteriorPartitionSurfaceGroup;
 class PlanarSurface;
@@ -292,6 +293,12 @@ namespace detail {
 
     // resets the building story
     void resetBuildingStory();
+
+    boost::optional<BuildingUnit> buildingUnit() const;
+
+    bool setBuildingUnit(const BuildingUnit& buildingUnit);
+
+    void resetBuildingUnit();
 
     /// Returns all \link ShadingSurfaceGroup ShadingSurfaceGroups \endlink in this space.
     std::vector<ShadingSurfaceGroup> shadingSurfaceGroups() const;
@@ -555,6 +562,7 @@ namespace detail {
     boost::optional<ModelObject> defaultScheduleSetAsModelObject() const;
     boost::optional<ModelObject> thermalZoneAsModelObject() const;
     boost::optional<ModelObject> buildingStoryAsModelObject() const;
+    boost::optional<ModelObject> buildingUnitAsModelObject() const;
     std::vector<ModelObject> shadingSurfaceGroupsAsModelObjects() const;
     std::vector<ModelObject> interiorPartitionSurfaceGroupsAsModelObjects() const;
     std::vector<ModelObject> surfacesAsModelObjects() const;
@@ -578,6 +586,7 @@ namespace detail {
     bool setDefaultScheduleSetAsModelObject(const boost::optional<ModelObject>& modelObject);
     bool setThermalZoneAsModelObject(const boost::optional<ModelObject>& modelObject);
     bool setBuildingStoryAsModelObject(const boost::optional<ModelObject>& modelObject);
+    bool setBuildingUnitAsModelObject(const boost::optional<ModelObject>& modelObject);
 
     template <typename T, typename TDef> 
     boost::optional<T> getMySpaceLoadInstance(const boost::optional<T>& templateSpaceLoadInstance);

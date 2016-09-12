@@ -35,121 +35,130 @@ namespace openstudio {
 namespace model {
 namespace detail {
 
-BuildingUnit_Impl::BuildingUnit_Impl(const IdfObject &idfObject, Model_Impl *model, bool keepHandle)
-  : ModelObject_Impl(idfObject, model, keepHandle)
-{
+  BuildingUnit_Impl::BuildingUnit_Impl(const IdfObject &idfObject, Model_Impl *model, bool keepHandle)
+    : ModelObject_Impl(idfObject, model, keepHandle)
+  {
     OS_ASSERT(idfObject.iddObject().type() == BuildingUnit::iddObjectType());
-}
+  }
 
-BuildingUnit_Impl::BuildingUnit_Impl(const openstudio::detail::WorkspaceObject_Impl &other,
-                                     Model_Impl *model,
-                                     bool keepHandle)
-  : ModelObject_Impl(other, model, keepHandle)
-{
+  BuildingUnit_Impl::BuildingUnit_Impl(const openstudio::detail::WorkspaceObject_Impl &other,
+                                       Model_Impl *model,
+                                       bool keepHandle)
+    : ModelObject_Impl(other, model, keepHandle)
+  {
     OS_ASSERT(other.iddObject().type() == BuildingUnit::iddObjectType());
-}
+  }
 
-BuildingUnit_Impl::BuildingUnit_Impl(const BuildingUnit_Impl &other,
-                                     Model_Impl *model,
-                                     bool keepHandle)
-  : ModelObject_Impl(other, model, keepHandle)
-{}
+  BuildingUnit_Impl::BuildingUnit_Impl(const BuildingUnit_Impl &other,
+                                       Model_Impl *model,
+                                       bool keepHandle)
+    : ModelObject_Impl(other, model, keepHandle)
+  {}
 
-const std::vector<std::string>& BuildingUnit_Impl::outputVariableNames() const
-{
+  const std::vector<std::string>& BuildingUnit_Impl::outputVariableNames() const
+  {
     static std::vector<std::string> result;
     if (result.empty()){
     }
     return result;
-}
+  }
 
-IddObjectType BuildingUnit_Impl::iddObjectType() const {
+  IddObjectType BuildingUnit_Impl::iddObjectType() const {
     return BuildingUnit::iddObjectType();
-}
+  }
 
-boost::optional<RenderingColor> BuildingUnit_Impl::renderingColor() const
-{
+  boost::optional<RenderingColor> BuildingUnit_Impl::renderingColor() const
+  {
     return getObject<ModelObject>().getModelObjectTarget<RenderingColor>(OS_BuildingUnitFields::RenderingColor);
-}
+  }
 
-bool BuildingUnit_Impl::setRenderingColor(const RenderingColor& renderingColor)
-{
+  bool BuildingUnit_Impl::setRenderingColor(const RenderingColor& renderingColor)
+  {
     return setPointer(OS_BuildingUnitFields::RenderingColor, renderingColor.handle());
-}
+  }
 
-void BuildingUnit_Impl::resetRenderingColor()
-{
+  void BuildingUnit_Impl::resetRenderingColor()
+  {
     bool ok = setString(OS_BuildingUnitFields::RenderingColor, "");
     OS_ASSERT(ok);
-}
+  }
 
-boost::optional<std::string> BuildingUnit_Impl::buildingUnitType() const
-{
+  boost::optional<std::string> BuildingUnit_Impl::buildingUnitType() const
+  {
     return getString(OS_BuildingUnitFields::BuildingUnitType, true, true);
-}
+  }
 
-bool BuildingUnit_Impl::setBuildingUnitType(const std::string& buildingUnitType)
-{
+  bool BuildingUnit_Impl::setBuildingUnitType(const std::string& buildingUnitType)
+  {
     bool ok = setString(OS_BuildingUnitFields::BuildingUnitType, buildingUnitType);
     return ok;
-}
+  }
 
-void BuildingUnit_Impl::resetBuildingUnitType()
-{
+  void BuildingUnit_Impl::resetBuildingUnitType()
+  {
     bool ok = setString(OS_BuildingUnitFields::BuildingUnitType, "");
     OS_ASSERT(ok);
-}
+  }
 
+  std::vector<Space> BuildingUnit_Impl::spaces() const
+  {
+    return getObject<ModelObject>().getModelObjectSources<Space>(Space::iddObjectType());
+  }
 
 } //detail
 
 BuildingUnit::BuildingUnit(const Model &model)
   : ModelObject(BuildingUnit::iddObjectType(), model)
 {
-    OS_ASSERT(getImpl<detail::BuildingUnit_Impl>());
+  OS_ASSERT(getImpl<detail::BuildingUnit_Impl>());
 }
 
 IddObjectType BuildingUnit::iddObjectType() {
-    IddObjectType result(IddObjectType::OS_BuildingUnit);
-    return result;
+  IddObjectType result(IddObjectType::OS_BuildingUnit);
+  return result;
 }
 
 boost::optional<RenderingColor> BuildingUnit::renderingColor() const
 {
-    return getImpl<detail::BuildingUnit_Impl>()->renderingColor();
+  return getImpl<detail::BuildingUnit_Impl>()->renderingColor();
 }
 
 bool BuildingUnit::setRenderingColor(const RenderingColor& renderingColor)
 {
-    return getImpl<detail::BuildingUnit_Impl>()->setRenderingColor(renderingColor);
+  return getImpl<detail::BuildingUnit_Impl>()->setRenderingColor(renderingColor);
 }
 
 void BuildingUnit::resetRenderingColor()
 {
-    getImpl<detail::BuildingUnit_Impl>()->resetRenderingColor();
+  getImpl<detail::BuildingUnit_Impl>()->resetRenderingColor();
 }
 
 std::vector<std::string> BuildingUnit::buildingUnitTypeValues()
 {
-    return getIddKeyNames(
-      IddFactory::instance().getObject(iddObjectType()).get(),
-      OS_BuildingUnitFields::BuildingUnitType
-    );
+  return getIddKeyNames(
+    IddFactory::instance().getObject(iddObjectType()).get(),
+    OS_BuildingUnitFields::BuildingUnitType
+  );
 }
 
 boost::optional<std::string> BuildingUnit::buildingUnitType() const
 {
-    return getImpl<detail::BuildingUnit_Impl>()->buildingUnitType();
+  return getImpl<detail::BuildingUnit_Impl>()->buildingUnitType();
 }
 
 bool BuildingUnit::setBuildingUnitType(const std::string& buildingUnitType)
 {
-    return getImpl<detail::BuildingUnit_Impl>()->setBuildingUnitType(buildingUnitType);
+  return getImpl<detail::BuildingUnit_Impl>()->setBuildingUnitType(buildingUnitType);
 }
 
 void BuildingUnit::resetBuildingUnitType()
 {
-    getImpl<detail::BuildingUnit_Impl>()->resetBuildingUnitType();
+  getImpl<detail::BuildingUnit_Impl>()->resetBuildingUnitType();
+}
+
+std::vector<Space> BuildingUnit::spaces() const
+{
+  return getImpl<detail::BuildingUnit_Impl>()->spaces();
 }
 
 /// @cond
