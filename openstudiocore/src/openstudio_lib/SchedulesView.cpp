@@ -1674,12 +1674,10 @@ ScheduleRuleView::ScheduleRuleView(bool isIP,
 
   m_nameEditField = new OSLineEdit2();
 
-  // m_nameEditField->bind(m_scheduleRule,"name");
-  boost::optional<model::ScheduleRule> opt_scheduleRule = m_scheduleRule;
   m_nameEditField->bind(
-    *opt_scheduleRule,
-    OptionalStringGetter(std::bind(&model::ScheduleRule::name, opt_scheduleRule.get_ptr(),true)),
-    boost::optional<StringSetter>(std::bind(&model::ScheduleRule::setName, opt_scheduleRule.get_ptr(),std::placeholders::_1))
+    m_scheduleRule,
+    OptionalStringGetter(std::bind(&model::ScheduleRule::name, &m_scheduleRule,true)),
+    boost::optional<StringSetter>(std::bind(&model::ScheduleRule::setName, &m_scheduleRule,std::placeholders::_1))
   );
 
   nameHLayout->addWidget(m_nameEditField);
@@ -1820,6 +1818,8 @@ ScheduleRuleView::ScheduleRuleView(bool isIP,
 
 void ScheduleRuleView::onRemoveClicked()
 {
+  std::cout << "ScheduleRuleView::onRemoveClicked: " << m_scheduleRule << std::endl;
+
   //m_scheduleRule.remove();
   m_scheduleRule.getImpl<openstudio::model::detail::ScheduleRule_Impl>();
 
