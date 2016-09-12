@@ -26,6 +26,8 @@
 #include "../BuildingUnit_Impl.hpp"
 #include "../RenderingColor.hpp"
 #include "../RenderingColor_Impl.hpp"
+#include "../Space.hpp"
+#include "../Space_Impl.hpp"
 
 #include "../../utilities/units/Quantity.hpp"
 #include "../../utilities/units/Unit.hpp"
@@ -36,76 +38,106 @@ using namespace openstudio::model;
 TEST_F(ModelFixture, BuildingUnit_RenderingColor)
 {
 
-    Model model;
-    BuildingUnit buildingUnit(model);
-    RenderingColor color1(model);
+  Model model;
+  BuildingUnit buildingUnit(model);
+  RenderingColor color1(model);
 
-    color1.setRenderingRedValue(255);
-    color1.setRenderingGreenValue(0);
-    color1.setRenderingBlueValue(0);
-    color1.setRenderingAlphaValue(255);
+  color1.setRenderingRedValue(255);
+  color1.setRenderingGreenValue(0);
+  color1.setRenderingBlueValue(0);
+  color1.setRenderingAlphaValue(255);
 
-    EXPECT_FALSE(buildingUnit.renderingColor());
+  EXPECT_FALSE(buildingUnit.renderingColor());
 
-    ASSERT_TRUE(buildingUnit.setRenderingColor(color1));
+  ASSERT_TRUE(buildingUnit.setRenderingColor(color1));
 
-    boost::optional<RenderingColor> color2 = buildingUnit.renderingColor();
-    ASSERT_TRUE(color2);
+  boost::optional<RenderingColor> color2 = buildingUnit.renderingColor();
+  ASSERT_TRUE(color2);
 
-    EXPECT_EQ(color2->renderingRedValue(), 255);
-    EXPECT_EQ(color2->renderingGreenValue(), 0);
-    EXPECT_EQ(color2->renderingBlueValue(), 0);
-    EXPECT_EQ(color2->renderingAlphaValue(), 255);
+  EXPECT_EQ(color2->renderingRedValue(), 255);
+  EXPECT_EQ(color2->renderingGreenValue(), 0);
+  EXPECT_EQ(color2->renderingBlueValue(), 0);
+  EXPECT_EQ(color2->renderingAlphaValue(), 255);
 
-    buildingUnit.resetRenderingColor();
-    ASSERT_FALSE(buildingUnit.renderingColor());
+  buildingUnit.resetRenderingColor();
+  ASSERT_FALSE(buildingUnit.renderingColor());
 
 }
 
 TEST_F(ModelFixture, BuildingUnit_BuildingUnitType)
 {
-    Model model;
-    BuildingUnit bldgUnit(model);
+  Model model;
+  BuildingUnit bldgUnit(model);
 
-    std::vector<std::string> bldgUnitTypeValues(bldgUnit.buildingUnitTypeValues());
+  std::vector<std::string> bldgUnitTypeValues(bldgUnit.buildingUnitTypeValues());
 
-    // Make sure both Residential and NonResidential are in the list and that there's only two items.
-    EXPECT_NE(std::find(bldgUnitTypeValues.begin(), bldgUnitTypeValues.end(), "Residential"), bldgUnitTypeValues.end());
-    EXPECT_NE(std::find(bldgUnitTypeValues.begin(), bldgUnitTypeValues.end(), "NonResidential"), bldgUnitTypeValues.end());
-    EXPECT_EQ(bldgUnitTypeValues.size(), 2);
+  // Make sure both Residential and NonResidential are in the list and that there's only two items.
+  EXPECT_NE(std::find(bldgUnitTypeValues.begin(), bldgUnitTypeValues.end(), "Residential"), bldgUnitTypeValues.end());
+  EXPECT_NE(std::find(bldgUnitTypeValues.begin(), bldgUnitTypeValues.end(), "NonResidential"), bldgUnitTypeValues.end());
+  EXPECT_EQ(bldgUnitTypeValues.size(), 2);
 
-    // Check default
-    boost::optional<std::string> bldgUnitType = bldgUnit.buildingUnitType();
-    EXPECT_TRUE(bldgUnitType);
-    if (bldgUnitType) {
-        EXPECT_EQ(*bldgUnitType, "Residential");
-    }
+  // Check default
+  boost::optional<std::string> bldgUnitType = bldgUnit.buildingUnitType();
+  EXPECT_TRUE(bldgUnitType);
+  if (bldgUnitType) {
+      EXPECT_EQ(*bldgUnitType, "Residential");
+  }
 
-    // Assign New and check that the assignment worked.
-    EXPECT_TRUE(bldgUnit.setBuildingUnitType("NonResidential"));
-    bldgUnitType = bldgUnit.buildingUnitType();
-    EXPECT_TRUE(bldgUnitType);
-    if (bldgUnitType) {
-        EXPECT_EQ(*bldgUnitType, "NonResidential");
-    }
+  // Assign New and check that the assignment worked.
+  EXPECT_TRUE(bldgUnit.setBuildingUnitType("NonResidential"));
+  bldgUnitType = bldgUnit.buildingUnitType();
+  EXPECT_TRUE(bldgUnitType);
+  if (bldgUnitType) {
+      EXPECT_EQ(*bldgUnitType, "NonResidential");
+  }
 
-    // Reset and check that its back at the default.
-    bldgUnit.resetBuildingUnitType();
-    bldgUnitType = bldgUnit.buildingUnitType();
-    EXPECT_TRUE(bldgUnitType);
-    if (bldgUnitType) {
-        EXPECT_EQ(*bldgUnitType, "Residential");
-    }
+  // Reset and check that its back at the default.
+  bldgUnit.resetBuildingUnitType();
+  bldgUnitType = bldgUnit.buildingUnitType();
+  EXPECT_TRUE(bldgUnitType);
+  if (bldgUnitType) {
+      EXPECT_EQ(*bldgUnitType, "Residential");
+  }
 
-    // Set it to something invalid
-    EXPECT_TRUE(bldgUnit.setBuildingUnitType("NonResidential"));
-    EXPECT_FALSE(bldgUnit.setBuildingUnitType("Bogus"));
-    bldgUnitType = bldgUnit.buildingUnitType();
-    EXPECT_TRUE(bldgUnitType);
-    if (bldgUnitType) {
-        EXPECT_EQ(*bldgUnitType, "NonResidential");
-    }
+  // Set it to something invalid
+  EXPECT_TRUE(bldgUnit.setBuildingUnitType("NonResidential"));
+  EXPECT_FALSE(bldgUnit.setBuildingUnitType("Bogus"));
+  bldgUnitType = bldgUnit.buildingUnitType();
+  EXPECT_TRUE(bldgUnitType);
+  if (bldgUnitType) {
+      EXPECT_EQ(*bldgUnitType, "NonResidential");
+  }
 
 }
 
+TEST_F(ModelFixture, BuildingUnit_Spaces)
+{
+  Model model;
+  BuildingUnit bldgUnit(model);
+  bldgUnit.setName("Building Unit 1");
+
+  Space space1 = Space(model);
+  space1.setName("Space 1");
+  EXPECT_TRUE(space1.setBuildingUnit(bldgUnit));
+  boost::optional<BuildingUnit> retrievedBldgUnit(space1.buildingUnit());
+  ASSERT_TRUE(retrievedBldgUnit);
+  EXPECT_EQ(*retrievedBldgUnit, bldgUnit);
+
+  Space space2 = Space(model);
+  space2.setName("Space 2");
+  EXPECT_TRUE(space2.setBuildingUnit(bldgUnit));
+
+  std::vector<Space> spaces(bldgUnit.spaces());
+  EXPECT_EQ(spaces.size(), 2);
+  EXPECT_NE(std::find(spaces.begin(), spaces.end(), space1), spaces.end());
+  EXPECT_NE(std::find(spaces.begin(), spaces.end(), space2), spaces.end());
+
+  space1.resetBuildingUnit();
+  retrievedBldgUnit = space1.buildingUnit();
+  ASSERT_FALSE(retrievedBldgUnit);
+  spaces = bldgUnit.spaces();
+  EXPECT_EQ(spaces.size(), 1);
+  EXPECT_EQ(spaces.at(0), space2);
+
+}
 

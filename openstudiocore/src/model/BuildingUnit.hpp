@@ -66,6 +66,8 @@ class MODEL_API BuildingUnit : public ModelObject {
   // Gets the building unit type
   boost::optional<std::string> buildingUnitType() const;
 
+  std::vector<Space> spaces() const;
+
 
   //@}
   /** @name Setters */
