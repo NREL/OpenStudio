@@ -273,11 +273,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorProgram_EMS) {
   std::string programName = fan.name().get() + "Pressure Rise Program by Body";
   fan_program_1.setName(programName);
   //this body has /r/n in it
-  std::string fan_program_1_body = "SET mult = " + toString(OATdbSensor.handle()) + " / 15.0 !- This is !nonsense\r\nSET " + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense\n" + "no comment\n" + "crap !comment!comment";
+  std::string fan_program_1_body = "SET mult = " + toString(OATdbSensor.handle()) + " " + toString(fanActuator.handle()) + " / 15.0 !- This is !nonsense\r\nSET " + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense\n" + "no comment\n" + "crap !comment!comment";
   //this is what the body should look like with 2 /n's and compare TRUE
-  std::string fan_program_body_test = "SET mult = " + toString(OATdbSensor.handle()) + " / 15.0 !- This is !nonsense\nSET " + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense\n" + "no comment\n" + "crap !comment!comment\n";
+  std::string fan_program_body_test = "SET mult = " + toString(OATdbSensor.handle()) + " " + toString(fanActuator.handle()) + " / 15.0 !- This is !nonsense\nSET " + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense\n" + "no comment\n" + "crap !comment!comment\n";
   //the added lines should compare TRUE to below
-  std::string line1_test = "SET mult = " + toString(OATdbSensor.handle()) + " / 15.0 !- This is !nonsense\n";
+  std::string line1_test = "SET mult = " + toString(OATdbSensor.handle()) + " " + toString(fanActuator.handle()) + " / 15.0 !- This is !nonsense\n";
   std::string line2_test = "SET " + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense\n";
 
   //set body
@@ -293,12 +293,13 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorProgram_EMS) {
   EXPECT_EQ(line1_test, lines.get()[0]);
   EXPECT_EQ(line2_test, lines.get()[1]);
 
+  model.save(toPath("./EMS_program.osm"), true);
+
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
   EXPECT_EQ(0u, forwardTranslator.errors().size());
   //EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Program).size());
 
-  model.save(toPath("./EMS_program.osm"), true);
   workspace.save(toPath("./EMS_program.idf"), true);
 }
 
