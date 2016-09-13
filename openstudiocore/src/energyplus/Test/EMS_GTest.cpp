@@ -50,6 +50,8 @@
 #include "../../model/EnergyManagementSystemProgramCallingManager_Impl.hpp"
 #include "../../model/EnergyManagementSystemGlobalVariable.hpp"
 #include "../../model/EnergyManagementSystemGlobalVariable_Impl.hpp"
+#include "../../model/EnergyManagementSystemOutputVariable.hpp"
+#include "../../model/EnergyManagementSystemOutputVariable_Impl.hpp"
 
 #include "../../model/Version.hpp"
 #include "../../model/Version_Impl.hpp"
@@ -76,6 +78,8 @@
 #include <utilities/idd/Output_EnergyManagementSystem_FieldEnums.hxx>
 #include <utilities/idd/OS_EnergyManagementSystem_GlobalVariable_FieldEnums.hxx>
 #include <utilities/idd/EnergyManagementSystem_GlobalVariable_FieldEnums.hxx>
+#include <utilities/idd/OS_EnergyManagementSystem_OutputVariable_FieldEnums.hxx>
+#include <utilities/idd/EnergyManagementSystem_OutputVariable_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
@@ -597,4 +601,45 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorGlobalVariable_EMS) {
 
   model.save(toPath("./EMS_GlobalVariable.osm"), true);
   workspace.save(toPath("./EMS_GlobalVariable.idf"), true);
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslatorOutputVariable_EMS) {
+  Model model;
+
+  // add global variable
+  EnergyManagementSystemGlobalVariable var("glob var", model);
+  EXPECT_EQ("glob var", var.nameString());
+
+  // add global variable
+  EnergyManagementSystemGlobalVariable var2("glob var 2", model);
+  EXPECT_EQ("glob var 2", var2.nameString());
+
+  // add output variable
+  EnergyManagementSystemOutputVariable outvar(model);
+  //setname
+  outvar.setName("outputVar");
+  EXPECT_EQ("outputVar", outvar.nameString());
+
+  bool varset = outvar.setEMSVariableName("glob var");
+  EXPECT_EQ(true, varset);
+
+  // add output variable
+  EnergyManagementSystemOutputVariable outvar2(model);
+  //setname
+  outvar2.setName("outputVar2");
+  EXPECT_EQ("outputVar2", outvar2.nameString());
+
+  varset = outvar2.setEMSVariableName("glob var 2");
+  EXPECT_EQ(true, varset);
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
+
+  ASSERT_EQ(2u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_OutputVariable).size());
+
+  //WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_OutputVariable)[0];
+  //ASSERT_TRUE(object.getString(EnergyManagementSystem_GlobalVariableExtensibleFields::ErlVariableName, false));
+  //EXPECT_EQ(var.nameString(), object.getString(EnergyManagementSystem_GlobalVariableExtensibleFields::ErlVariableName, false).get());
+
+  model.save(toPath("./EMS_OutputVariable.osm"), true);
+  workspace.save(toPath("./EMS_OutputVariable.idf"), true);
 }
