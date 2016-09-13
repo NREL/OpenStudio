@@ -210,38 +210,32 @@ void ConstructionInternalSourceInspectorView::onUpdate()
 
 void ConstructionInternalSourceInspectorView::attach(openstudio::model::ConstructionWithInternalSource & constructionWithInternalSource)
 {
-  // Wrap to interface properly with Boost
-  boost::optional<model::ConstructionWithInternalSource> m_constructionWithInternalSource = constructionWithInternalSource;
+  m_constructionWithInternalSource = constructionWithInternalSource;
 
-  // m_nameEdit->bind(constructionWithInternalSource,"name");  
   m_nameEdit->bind(
     *m_constructionWithInternalSource,
     OptionalStringGetter(std::bind(&model::ConstructionWithInternalSource::name, m_constructionWithInternalSource.get_ptr(),true)),
     boost::optional<StringSetter>(std::bind(&model::ConstructionWithInternalSource::setName, m_constructionWithInternalSource.get_ptr(),std::placeholders::_1))
   );
 
-  // m_sourcePresentAfterLayerNumberEdit->bind(constructionWithInternalSource,"sourcePresentAfterLayerNumber");
   m_sourcePresentAfterLayerNumberEdit->bind(
     *m_constructionWithInternalSource,
     OptionalIntGetter(std::bind(&model::ConstructionWithInternalSource::sourcePresentAfterLayerNumber, m_constructionWithInternalSource.get_ptr())),
     boost::optional<IntSetter>(std::bind(&model::ConstructionWithInternalSource::setSourcePresentAfterLayerNumber, m_constructionWithInternalSource.get_ptr(), std::placeholders::_1))
   );
 
-  // m_temperatureCalculationRequestedAfterLayerNumberEdit->bind(constructionWithInternalSource,"temperatureCalculationRequestedAfterLayerNumber");
   m_temperatureCalculationRequestedAfterLayerNumberEdit->bind(
     *m_constructionWithInternalSource,
     OptionalIntGetter(std::bind(&model::ConstructionWithInternalSource::temperatureCalculationRequestedAfterLayerNumber,m_constructionWithInternalSource.get_ptr())),
     boost::optional<IntSetter>(std::bind(&model::ConstructionWithInternalSource::setTemperatureCalculationRequestedAfterLayerNumber,m_constructionWithInternalSource.get_ptr(),std::placeholders::_1))
   );
 
-  // m_dimensionsForTheCTFCalculationEdit->bind(constructionWithInternalSource,"dimensionsForTheCTFCalculation");
   m_dimensionsForTheCTFCalculationEdit->bind(
     *m_constructionWithInternalSource,
     OptionalIntGetter(std::bind(&model::ConstructionWithInternalSource::dimensionsForTheCTFCalculation,m_constructionWithInternalSource.get_ptr())),
     boost::optional<IntSetter>(std::bind(&model::ConstructionWithInternalSource::setDimensionsForTheCTFCalculation,m_constructionWithInternalSource.get_ptr(),std::placeholders::_1))
   );
 
-  // m_tubeSpacingEdit->bind(constructionWithInternalSource,"tubeSpacing",m_isIP);
   m_tubeSpacingEdit->bind(
     m_isIP,
     *m_constructionWithInternalSource,
@@ -249,10 +243,10 @@ void ConstructionInternalSourceInspectorView::attach(openstudio::model::Construc
     boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::ConstructionWithInternalSource::*)(double)>(&model::ConstructionWithInternalSource::setTubeSpacing), m_constructionWithInternalSource.get_ptr(), std::placeholders::_1))
   );
 
-  m_constructionVC->attach(constructionWithInternalSource);
+  m_constructionVC->attach(m_constructionWithInternalSource.get());
   m_constructionVC->reportItems();
   
-  m_standardsInformationWidget->attach(constructionWithInternalSource);
+  m_standardsInformationWidget->attach(m_constructionWithInternalSource.get());
 }
 
 void ConstructionInternalSourceInspectorView::detach()
@@ -265,6 +259,8 @@ void ConstructionInternalSourceInspectorView::detach()
   m_tubeSpacingEdit->unbind();
 
   m_standardsInformationWidget->detach();
+
+  m_constructionWithInternalSource = boost::none;
 }
 
 } // openstudio
