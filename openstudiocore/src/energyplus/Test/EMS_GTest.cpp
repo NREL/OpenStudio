@@ -66,6 +66,8 @@
 #include <utilities/idd/EnergyManagementSystem_Actuator_FieldEnums.hxx>
 #include <utilities/idd/OS_EnergyManagementSystem_Program_FieldEnums.hxx>
 #include <utilities/idd/EnergyManagementSystem_Program_FieldEnums.hxx>
+#include <utilities/idd/OS_EnergyManagementSystem_Subroutine_FieldEnums.hxx>
+#include <utilities/idd/EnergyManagementSystem_Subroutine_FieldEnums.hxx>
 #include <utilities/idd/OS_EnergyManagementSystem_ProgramCallingManager_FieldEnums.hxx>
 #include <utilities/idd/EnergyManagementSystem_ProgramCallingManager_FieldEnums.hxx>
 #include <utilities/idd/OS_Output_EnergyManagementSystem_FieldEnums.hxx>
@@ -300,7 +302,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorProgram_EMS) {
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
   EXPECT_EQ(0u, forwardTranslator.errors().size());
-  //EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Program).size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Program).size());
+
+  WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Program)[0];
+
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_ProgramFields::Name, false));
+  EXPECT_EQ(programName, object.getString(EnergyManagementSystem_ProgramFields::Name, false).get());
 
   workspace.save(toPath("./EMS_program.idf"), true);
 }
@@ -364,7 +371,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorSubroutine_EMS) {
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
   EXPECT_EQ(0u, forwardTranslator.errors().size());
-  //EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Program).size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Subroutine).size());
+
+  WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Subroutine)[0];
+
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_SubroutineFields::Name, false));
+  EXPECT_EQ(programName, object.getString(EnergyManagementSystem_SubroutineFields::Name, false).get());
 
   workspace.save(toPath("./EMS_subroutine.idf"), true);
 }
@@ -513,58 +525,19 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorProgramCallingManager_EMS) {
   //set program 3 in program 2 slot moving the rest down
   insert_result = fan_pcm.setProgram(fan_program_3, 1);
   EXPECT_EQ(true, insert_result);
-  //now 4 programs
-  EXPECT_EQ(4, fan_pcm.programs().size());
-  //check program name is now program 3's
-  program = fan_pcm.getProgram(1);
-  EXPECT_EQ(true, program.is_initialized());
-  EXPECT_EQ(fan_program_3.nameString(), program.get().nameString());
-  //erase program 3 in 2nd slot
-  bool erase_prog = fan_pcm.eraseProgram(1);
-  EXPECT_EQ(true, erase_prog);
-  //check for null programs
-  std::vector<unsigned> nullProgs = fan_pcm.nullPrograms();
-  //should not be any if erasePrograms reindexed correctly
-  EXPECT_EQ(0, nullProgs.size());
-  //check program name is back to program 2's
-  program = fan_pcm.getProgram(1);
-  EXPECT_EQ(true, program.is_initialized());
-  EXPECT_EQ(fan_program_2.nameString(), program.get().nameString());
-
-  //erase all programs
-  fan_pcm.erasePrograms();
-  //now 0 programs
-  EXPECT_EQ(0, fan_pcm.programs().size());
-
-  //create vector of programs
-  std::vector<EnergyManagementSystemProgram> new_programs;
-  new_programs.push_back(fan_program_1);
-  new_programs.push_back(fan_program_2);
-  new_programs.push_back(fan_program_3);
-  //set vector of programs
-  insert_result = fan_pcm.setPrograms(new_programs);
-  //3 programs
-  EXPECT_EQ(3, fan_pcm.programs().size());
-  //check program name
-  program = fan_pcm.getProgram(0);
-  EXPECT_EQ(true, program.is_initialized());
-  EXPECT_EQ(fan_program_1.nameString(), program.get().nameString());
-  //check program name
-  program = fan_pcm.getProgram(1);
-  EXPECT_EQ(true, program.is_initialized());
-  EXPECT_EQ(fan_program_2.nameString(), program.get().nameString());
-  //check program name
-  program = fan_pcm.getProgram(2);
-  EXPECT_EQ(true, program.is_initialized());
-  EXPECT_EQ(fan_program_3.nameString(), program.get().nameString());
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
   EXPECT_EQ(0u, forwardTranslator.errors().size());
-  //EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_ProgramCallingManager).size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_ProgramCallingManager).size());
 
-  model.save(toPath("./EMS_example.osm"), true);
-  workspace.save(toPath("./EMS_example.idf"), true);
+  WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_ProgramCallingManager)[0];
+
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_ProgramCallingManagerFields::Name, false));
+  EXPECT_EQ("Best Program Calling Manager", object.getString(EnergyManagementSystem_ProgramCallingManagerFields::Name, false).get());
+
+  model.save(toPath("./EMS_PCM.osm"), true);
+  workspace.save(toPath("./EMS_PCM.idf"), true);
 }
 
 TEST_F(EnergyPlusFixture, noForwardTranslatorOutput_EMS) {
@@ -586,11 +559,14 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorOutput_EMS) {
   ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::Output_EnergyManagementSystem).size());
 
   WorkspaceObject object = workspace.getObjectsByType(IddObjectType::Output_EnergyManagementSystem)[0];
-  //ASSERT_TRUE(object.getString(Output_EnergyManagementSystemFields::ActuatorAvailabilityDictionaryReporting));
-  //EXPECT_EQ("None", object.getString(Output_EnergyManagementSystemFields::ActuatorAvailabilityDictionaryReporting));
-  //ASSERT_TRUE(object.getString(Output_EnergyManagementSystemFields::InternalVariableAvailabilityDictionaryReporting));
-  //EXPECT_EQ("None", object.getString(Output_EnergyManagementSystemFields::InternalVariableAvailabilityDictionaryReporting));
-  //ASSERT_TRUE(object.getString(Output_EnergyManagementSystemFields::EMSRuntimeLanguageDebugOutputLevel));
-  //EXPECT_EQ("None", object.getString(Output_EnergyManagementSystemFields::EMSRuntimeLanguageDebugOutputLevel));
+  ASSERT_TRUE(object.getString(Output_EnergyManagementSystemFields::ActuatorAvailabilityDictionaryReporting, false));
+  EXPECT_EQ("None", object.getString(Output_EnergyManagementSystemFields::ActuatorAvailabilityDictionaryReporting, false).get());
+  ASSERT_TRUE(object.getString(Output_EnergyManagementSystemFields::InternalVariableAvailabilityDictionaryReporting, false));
+  EXPECT_EQ("None", object.getString(Output_EnergyManagementSystemFields::InternalVariableAvailabilityDictionaryReporting, false).get());
+  ASSERT_TRUE(object.getString(Output_EnergyManagementSystemFields::EMSRuntimeLanguageDebugOutputLevel, false));
+  EXPECT_EQ("None", object.getString(Output_EnergyManagementSystemFields::EMSRuntimeLanguageDebugOutputLevel, false).get());
+
+  model.save(toPath("./EMS_output.osm"), true);
+  workspace.save(toPath("./EMS_output.idf"), true);
 
 }
