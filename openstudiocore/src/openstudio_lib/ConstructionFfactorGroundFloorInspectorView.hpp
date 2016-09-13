@@ -22,16 +22,11 @@
 
 #include "ModelObjectInspectorView.hpp"
 #include "ModelObjectVectorController.hpp"
+#include "../model/FFactorGroundFloorConstruction.hpp"
 
 class QComboBox;
 
 namespace openstudio {
-
-namespace model {
-
-  class FFactorGroundFloorConstruction;
-
-}
 
 class OSLineEdit2;
 
@@ -78,6 +73,8 @@ class ConstructionFfactorGroundFloorInspectorView : public ModelObjectInspectorV
     OSQuantityEdit2 * m_areaEdit;
 
     OSQuantityEdit2 * m_perimeterExposedEdit;
+
+    boost::optional<model::FFactorGroundFloorConstruction> m_fFactorGroundFloorConstruction;
 };
 
 } // openstudio

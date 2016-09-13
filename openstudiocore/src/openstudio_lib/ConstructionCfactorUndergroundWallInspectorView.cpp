@@ -145,7 +145,7 @@ void ConstructionCfactorUndergroundWallInspectorView::onUpdate()
 
 void ConstructionCfactorUndergroundWallInspectorView::attach(openstudio::model::CFactorUndergroundWallConstruction & cFactorUndergroundWallConstruction)
 {
-  boost::optional<model::CFactorUndergroundWallConstruction> m_cFactorUndergroundWallConstruction = cFactorUndergroundWallConstruction;
+  m_cFactorUndergroundWallConstruction = cFactorUndergroundWallConstruction;
 
   // m_nameEdit->bind(cFactorUndergroundWallConstruction,"name");
   m_nameEdit->bind(
@@ -170,7 +170,7 @@ void ConstructionCfactorUndergroundWallInspectorView::attach(openstudio::model::
     boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::CFactorUndergroundWallConstruction::*)(double)>(&model::CFactorUndergroundWallConstruction::setHeight), m_cFactorUndergroundWallConstruction.get_ptr(), std::placeholders::_1))
   );
   
-  m_standardsInformationWidget->attach(cFactorUndergroundWallConstruction);
+  m_standardsInformationWidget->attach(m_cFactorUndergroundWallConstruction.get());
 }
 
 void ConstructionCfactorUndergroundWallInspectorView::detach()
@@ -179,6 +179,8 @@ void ConstructionCfactorUndergroundWallInspectorView::detach()
   m_heightEdit->unbind();
 
   m_standardsInformationWidget->detach();
+
+  m_cFactorUndergroundWallConstruction = boost::none;
 }
 
 } // openstudio
