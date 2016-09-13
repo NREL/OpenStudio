@@ -52,7 +52,7 @@ boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemSub
   boost::optional<std::string> s;
   int found = 0;
 
-  IdfObject idfObject(openstudio::IddObjectType::EnergyManagementSystem_Program);
+  IdfObject idfObject(openstudio::IddObjectType::EnergyManagementSystem_Subroutine);
   m_idfObjects.push_back(idfObject);
   m_map.insert(std::make_pair(modelObject.handle(), idfObject));
   //IdfObject program = createAndRegisterIdfObject(openstudio::IddObjectType::EnergyManagementSystem_Subroutine, modelObject);
