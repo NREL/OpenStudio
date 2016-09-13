@@ -606,7 +606,7 @@ private:
 };
 
 // View a schedule rule of a schedule ruleset
-class ScheduleRuleView : public QWidget
+class ScheduleRuleView : public QWidget, public Nano::Observer
 {
   Q_OBJECT
 
