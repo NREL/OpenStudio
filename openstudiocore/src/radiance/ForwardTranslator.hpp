@@ -180,6 +180,9 @@ namespace radiance {
 
   RADIANCE_API std::string cleanName(const std::string& name);
 
+  // simplify model for initial E+ run to calculate window parameters, new model is returned, input model is not changed
+  RADIANCE_API openstudio::model::Model modelToRadPreProcess(const openstudio::model::Model & model);
+
 } // radiance
 } // openstudio
 
