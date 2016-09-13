@@ -49,6 +49,11 @@ void ConstructionObjectVectorController::onChangeRelationship(const model::Model
   emit itemIds(makeVector());
 }
 
+void ConstructionObjectVectorController::onDataChange(const model::ModelObject& modelObject)
+{
+  emit itemIds(makeVector());
+}
+
 std::vector<OSItemId> ConstructionObjectVectorController::makeVector()
 {
   std::vector<OSItemId> result;

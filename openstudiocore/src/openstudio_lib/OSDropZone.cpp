@@ -143,7 +143,7 @@ OSDropZone::OSDropZone(OSVectorController* vectorController,
 
   connect(this, &OSDropZone::addButtonClicked, vectorController, &OSVectorController::makeNewItem);
 
-  connect(vectorController, &OSVectorController::itemIds, this, &OSDropZone::setItemIds, Qt::QueuedConnection);
+  connect(vectorController, &OSVectorController::itemIds, this, &OSDropZone::setItemIds);
 
   emit itemsRequested();
 

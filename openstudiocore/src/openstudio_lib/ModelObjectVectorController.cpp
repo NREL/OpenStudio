@@ -40,10 +40,10 @@ void ModelObjectVectorController::attach(const model::ModelObject& modelObject)
   attachModel(modelObject.model());
 
   // m_model->getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.connect<ModelObjectVectorController, &ModelObjectVectorController::objectAdded>(this);
-  connect(OSAppBase::instance(), &OSAppBase::workspaceObjectAddedPtr, this, &ModelObjectVectorController::objectAdded, Qt::QueuedConnection);
+  //connect(OSAppBase::instance(), &OSAppBase::workspaceObjectAddedPtr, this, &ModelObjectVectorController::objectAdded, Qt::QueuedConnection);
 
   //m_model->getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.connect<ModelObjectVectorController, &ModelObjectVectorController::objectRemoved>(this);
-  connect(OSAppBase::instance(), &OSAppBase::workspaceObjectRemovedPtr, this, &ModelObjectVectorController::objectRemoved, Qt::QueuedConnection);
+  //connect(OSAppBase::instance(), &OSAppBase::workspaceObjectRemovedPtr, this, &ModelObjectVectorController::objectRemoved, Qt::QueuedConnection);
 
   m_modelObject->getImpl<model::detail::ModelObject_Impl>().get()->onRelationshipChange.connect<ModelObjectVectorController, &ModelObjectVectorController::changeRelationship>(this);
 
@@ -57,10 +57,10 @@ void ModelObjectVectorController::attachModel(const model::Model& model)
   if (m_model){
 
     // m_model->getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.disconnect<ModelObjectVectorController, &ModelObjectVectorController::objectAdded>(this);
-    connect(OSAppBase::instance(), &OSAppBase::workspaceObjectAddedPtr, this, &ModelObjectVectorController::objectAdded, Qt::QueuedConnection);
+    disconnect(OSAppBase::instance(), &OSAppBase::workspaceObjectAddedPtr, this, &ModelObjectVectorController::objectAdded);
 
-    // m_model->getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.disconnect<ModelObjectVectorController, &ModelObjectVectorController::objectRemoved>(this);
-    connect(OSAppBase::instance(), &OSAppBase::workspaceObjectRemovedPtr, this, &ModelObjectVectorController::objectRemoved, Qt::QueuedConnection);
+     //m_model->getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.disconnect<ModelObjectVectorController, &ModelObjectVectorController::objectRemoved>(this);
+    disconnect(OSAppBase::instance(), &OSAppBase::workspaceObjectRemovedPtr, this, &ModelObjectVectorController::objectRemoved);
 
     m_model.reset();
   }
@@ -103,10 +103,10 @@ void ModelObjectVectorController::detach()
 
   if (m_model){
     // m_model->getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.disconnect<ModelObjectVectorController, &ModelObjectVectorController::objectAdded>(this);
-    connect(OSAppBase::instance(), &OSAppBase::workspaceObjectAddedPtr, this, &ModelObjectVectorController::objectAdded, Qt::QueuedConnection);
+    disconnect(OSAppBase::instance(), &OSAppBase::workspaceObjectAddedPtr, this, &ModelObjectVectorController::objectAdded);
 
-    // m_model->getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.disconnect<ModelObjectVectorController, &ModelObjectVectorController::objectRemoved>(this);
-    connect(OSAppBase::instance(), &OSAppBase::workspaceObjectRemovedPtr, this, &ModelObjectVectorController::objectRemoved, Qt::QueuedConnection);
+     //m_model->getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.disconnect<ModelObjectVectorController, &ModelObjectVectorController::objectRemoved>(this);
+    disconnect(OSAppBase::instance(), &OSAppBase::workspaceObjectRemovedPtr, this, &ModelObjectVectorController::objectRemoved);
 
     m_model.reset();
   }
@@ -123,9 +123,9 @@ void ModelObjectVectorController::detachOtherModelObject(const model::ModelObjec
     if (it->handle() == modelObject.handle()){
       m_modelObject->getImpl<model::detail::ModelObject_Impl>().get()->onRelationshipChange.disconnect<ModelObjectVectorController, &ModelObjectVectorController::changeRelationship>(this);
 
-      m_modelObject->getImpl<model::detail::ModelObject_Impl>().get()->onDataChange.disconnect<ModelObjectVectorController, &ModelObjectVectorController::dataChange>(this);
+      //m_modelObject->getImpl<model::detail::ModelObject_Impl>().get()->onDataChange.disconnect<ModelObjectVectorController, &ModelObjectVectorController::dataChange>(this);
 
-      m_modelObject->getImpl<model::detail::ModelObject_Impl>().get()->onChange.disconnect<ModelObjectVectorController, &ModelObjectVectorController::change>(this);
+      //m_modelObject->getImpl<model::detail::ModelObject_Impl>().get()->onChange.disconnect<ModelObjectVectorController, &ModelObjectVectorController::change>(this);
 
     }else{
       newVector.push_back(*it);
@@ -138,10 +138,10 @@ void ModelObjectVectorController::detachOtherModelObjects()
 {
   for (const model::ModelObject& modelObject : m_otherModelObjects){
     // m_model->getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.disconnect<ModelObjectVectorController, &ModelObjectVectorController::objectAdded>(this);
-    connect(OSAppBase::instance(), &OSAppBase::workspaceObjectAddedPtr, this, &ModelObjectVectorController::objectAdded, Qt::QueuedConnection);
+    disconnect(OSAppBase::instance(), &OSAppBase::workspaceObjectAddedPtr, this, &ModelObjectVectorController::objectAdded);
 
     // m_model->getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.disconnect<ModelObjectVectorController, &ModelObjectVectorController::objectRemoved>(this);
-    connect(OSAppBase::instance(), &OSAppBase::workspaceObjectRemovedPtr, this, &ModelObjectVectorController::objectRemoved, Qt::QueuedConnection);
+    //connect(OSAppBase::instance(), &OSAppBase::workspaceObjectRemovedPtr, this, &ModelObjectVectorController::objectRemoved, Qt::QueuedConnection);
 
   }
   m_otherModelObjects.clear();
@@ -149,25 +149,22 @@ void ModelObjectVectorController::detachOtherModelObjects()
 
 void ModelObjectVectorController::changeRelationship(int index, Handle newHandle, Handle oldHandle)
 {
-  model::detail::ModelObject_Impl* impl = m_modelObject->getImpl<model::detail::ModelObject_Impl>().get();
-  if (impl){
-    onChangeRelationship(impl->getObject<model::ModelObject>(), index, newHandle, oldHandle);
+  if (m_modelObject){
+    onChangeRelationship(m_modelObject.get(), index, newHandle, oldHandle);
   }
 }
 
 void ModelObjectVectorController::dataChange()
 {
-  model::detail::ModelObject_Impl* impl = m_modelObject->getImpl<model::detail::ModelObject_Impl>().get();
-  if (impl){
-    onDataChange(impl->getObject<model::ModelObject>());
+  if (m_modelObject){
+    onDataChange(m_modelObject.get());
   }
 }
 
 void ModelObjectVectorController::change()
 {
-  model::detail::ModelObject_Impl* impl = m_modelObject->getImpl<model::detail::ModelObject_Impl>().get();
-  if (impl){
-    onChange(impl->getObject<model::ModelObject>());
+  if (m_modelObject){
+    onChange(m_modelObject.get());
   }
 }
 

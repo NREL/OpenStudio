@@ -63,7 +63,7 @@ void ModelObjectInspectorView::update()
    *  call QWidget::update().
    */
   // this->onChange.nano_emit();
-  emit onChange();
+  //emit onChange();
 }
 
 void ModelObjectInspectorView::selectModelObject(const openstudio::model::ModelObject& modelObject)
