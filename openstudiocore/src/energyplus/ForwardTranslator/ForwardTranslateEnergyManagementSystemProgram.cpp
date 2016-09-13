@@ -50,8 +50,9 @@ namespace energyplus {
 boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemProgram(EnergyManagementSystemProgram & modelObject)
 {
   boost::optional<std::string> s;
-  boost::smatch matches;
+  //boost::smatch matches;
   //bool result;
+  int found = 0;
 
   IdfObject idfObject(openstudio::IddObjectType::EnergyManagementSystem_Program);
   m_idfObjects.push_back(idfObject);
@@ -62,15 +63,10 @@ boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemPro
   if (s) {
     idfObject.setName(*s);
   }
- 
-  int found = 0;
-  UUID prog_uid = modelObject.handle();
-  QString prog_uid_string = modelObject.handle().toString();
 
   for (const IdfExtensibleGroup& eg : modelObject.extensibleGroups()) {
     IdfExtensibleGroup group = idfObject.pushExtensibleGroup();
     OptionalString line = eg.getString(OS_EnergyManagementSystem_ProgramExtensibleFields::ProgramLine);
-    //TODO translate UIDs to UID.name in the program
     if (line) {
       //result = boost::regex_search(line.get(), matches, openstudio::uuidInString());
       //boost::sregex_token_iterator iter(line.get().begin(), line.get().end(), openstudio::uuidInString(),0);
@@ -85,17 +81,12 @@ boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemPro
           std::string possible_uid = results.at(j).substr(1, results.at(j).size() - 2);
           //look to see if uid is in the model and return the object
           UUID uid = toUUID(possible_uid);
-          UUID test = toUUID(results.at(j));
-          //std::vector<Handle> handle = &uid;
           Model m = modelObject.model();
           //TODO cant get below to work so try the harder way
           //m.getModelObjects<model::ModelObject>(&uid);
           std::vector<model::ModelObject> modelObjects = m.getModelObjects<model::ModelObject>();
           if (modelObjects.size() > 0) {
             for (size_t k = 0; k < modelObjects.size(); k++) {
-              //name = modelObjects.at(k).nameString();
-              //uuids = modelObjects.at(k).handle();
-              //temp = modelObjects.at(k).handle().toString();
               if (modelObjects.at(k).handle() == uid) {
                 found++;
                 results.at(j) = modelObjects.at(k).nameString();
