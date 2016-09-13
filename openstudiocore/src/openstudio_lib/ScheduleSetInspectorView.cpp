@@ -803,7 +803,7 @@ void ScheduleSetInspectorView::attach(openstudio::model::DefaultScheduleSet& def
     vc->reportItems();
   }
 
-  boost::optional<model::DefaultScheduleSet> m_defaultScheduleSet = defaultScheduleSet;
+  m_defaultScheduleSet = defaultScheduleSet;
   // m_nameEdit->bind(defaultScheduleSet, "name");
   m_nameEdit->bind(
     *m_defaultScheduleSet,
@@ -824,6 +824,8 @@ void ScheduleSetInspectorView::detach()
     vc->detach();
     vc->reportItems();
   }
+
+  m_defaultScheduleSet = boost::none;
 }
 
 } // openstudio

@@ -226,6 +226,8 @@ class ScheduleSetInspectorView : public ModelObjectInspectorView
 
     std::vector<ModelObjectVectorController *> m_vectorControllers;
     std::vector<OSDropZone *> m_dropZones;
+
+    boost::optional<model::DefaultScheduleSet> m_defaultScheduleSet;
 };
 
 } // openstudio
