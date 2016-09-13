@@ -308,6 +308,7 @@ SWIG_MODELOBJECT(AirLoopHVACSupplyPlenum, 1);
 SWIG_MODELOBJECT(AirLoopHVACZoneSplitter, 1);
 SWIG_MODELOBJECT(ConnectorSplitter, 1);
 SWIG_MODELOBJECT(AirTerminalDualDuctVAV, 1);
+SWIG_MODELOBJECT(AirTerminalDualDuctVAVOutdoorAir, 1);
 SWIG_MODELOBJECT(AirTerminalSingleDuctConstantVolumeCooledBeam, 1);
 SWIG_MODELOBJECT(AirTerminalSingleDuctConstantVolumeFourPipeInduction, 1);
 SWIG_MODELOBJECT(AirTerminalSingleDuctConstantVolumeReheat, 1);

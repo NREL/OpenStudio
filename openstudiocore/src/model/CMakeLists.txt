@@ -71,6 +71,9 @@ set(${target_name}_src
   AirTerminalDualDuctVAV.hpp
   AirTerminalDualDuctVAV_Impl.hpp
   AirTerminalDualDuctVAV.cpp
+  AirTerminalDualDuctVAVOutdoorAir.hpp
+  AirTerminalDualDuctVAVOutdoorAir_Impl.hpp
+  AirTerminalDualDuctVAVOutdoorAir.cpp
   AirTerminalSingleDuctInletSideMixer.hpp
   AirTerminalSingleDuctInletSideMixer_Impl.hpp
   AirTerminalSingleDuctInletSideMixer.cpp

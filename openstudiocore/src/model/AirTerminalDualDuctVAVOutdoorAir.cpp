@@ -19,27 +19,26 @@
 
 #include "AirTerminalDualDuctVAVOutdoorAir.hpp"
 #include "AirTerminalDualDuctVAVOutdoorAir_Impl.hpp"
-
-// TODO: Check the following class names against object getters and setters.
+#include "AirLoopHVAC.hpp"
+#include "AirLoopHVAC_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
-#include "Connection.hpp"
-#include "Connection_Impl.hpp"
-#include "Connection.hpp"
-#include "Connection_Impl.hpp"
-#include "Connection.hpp"
-#include "Connection_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "Mixer.hpp"
+#include "Mixer_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
 #include "DesignSpecificationOutdoorAir.hpp"
 #include "DesignSpecificationOutdoorAir_Impl.hpp"
-#include "../../model/ScheduleTypeLimits.hpp"
-#include "../../model/ScheduleTypeRegistry.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_AirTerminal_DualDuct_VAV_OutdoorAir_FieldEnums.hxx>
 
 #include "../utilities/units/Unit.hpp"
-
 #include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
@@ -98,7 +97,7 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_AirTerminal_DualDuct_VAV_OutdoorAirFields::AvailabilitySchedule);
   }
 
-  boost::optional<Connection> AirTerminalDualDuctVAVOutdoorAir_Impl::airOutletNode() const {
+  /*boost::optional<Connection> AirTerminalDualDuctVAVOutdoorAir_Impl::airOutletNode() const {
     return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_AirTerminal_DualDuct_VAV_OutdoorAirFields::AirOutletNode);
   }
 
@@ -108,6 +107,39 @@ namespace detail {
 
   boost::optional<Connection> AirTerminalDualDuctVAVOutdoorAir_Impl::recirculatedAirInletNode() const {
     return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_AirTerminal_DualDuct_VAV_OutdoorAirFields::RecirculatedAirInletNode);
+  }*/
+
+  unsigned AirTerminalDualDuctVAVOutdoorAir_Impl::outletPort() const {
+    return OS_AirTerminal_DualDuct_VAV_OutdoorAirFields::AirOutletNode;
+  }
+
+  unsigned AirTerminalDualDuctVAVOutdoorAir_Impl::inletPort(unsigned branchIndex) const {
+    if( branchIndex == 0 ) {
+      return OS_AirTerminal_DualDuct_VAV_OutdoorAirFields::OutdoorAirInletNode;
+    } else if( branchIndex == 1 ) {
+      return OS_AirTerminal_DualDuct_VAV_OutdoorAirFields::RecirculatedAirInletNode;
+    } else {
+      LOG(Warn, "Calling inletPort with branchIndex greater than 1 for " << briefDescription() << " is not valid.");
+      LOG(Warn, briefDescription() << " has only two branches.");
+      return std::numeric_limits<unsigned>::max();
+    }
+  }
+
+  unsigned AirTerminalDualDuctVAVOutdoorAir_Impl::nextInletPort() const {
+    LOG(Warn, "nextInletPort is not supported for " << briefDescription() << " .");
+    LOG(Warn, "Ports cannot be added or removed for " << briefDescription() << " .");
+    return std::numeric_limits<unsigned>::max();
+  }
+
+  unsigned AirTerminalDualDuctVAVOutdoorAir_Impl::newInletPortAfterBranch(unsigned branchIndex) {
+    LOG(Warn, "newInletPortAfterBranch is not supported for " << briefDescription() << " .");
+    LOG(Warn, "Ports cannot be added or removed for " << briefDescription() << " .");
+    return std::numeric_limits<unsigned>::max();
+  }
+
+  void AirTerminalDualDuctVAVOutdoorAir_Impl::removePortForBranch(unsigned branchIndex) {
+    LOG(Warn, "removePortForBranch is not supported for " << briefDescription() << " .");
+    LOG(Warn, "Ports cannot be added or removed for " << briefDescription() << " .");
   }
 
   boost::optional<double> AirTerminalDualDuctVAVOutdoorAir_Impl::maximumTerminalAirFlowRate() const {
@@ -123,13 +155,13 @@ namespace detail {
     return result;
   }
 
-  DesignSpecificationOutdoorAir AirTerminalDualDuctVAVOutdoorAir_Impl::designSpecificationOutdoorAirObject() const {
+  /*DesignSpecificationOutdoorAir AirTerminalDualDuctVAVOutdoorAir_Impl::designSpecificationOutdoorAirObject() const {
     boost::optional<DesignSpecificationOutdoorAir> value = optionalDesignSpecificationOutdoorAirObject();
     if (!value) {
       LOG_AND_THROW(briefDescription() << " does not have an Design Specification Outdoor Air Object attached.");
     }
     return value.get();
-  }
+  }*/
 
   std::string AirTerminalDualDuctVAVOutdoorAir_Impl::perPersonVentilationRateMode() const {
     boost::optional<std::string> value = getString(OS_AirTerminal_DualDuct_VAV_OutdoorAirFields::PerPersonVentilationRateMode,true);
@@ -150,6 +182,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  /*
   bool AirTerminalDualDuctVAVOutdoorAir_Impl::setAirOutletNode(const Connection& connection) {
     bool result = setPointer(OS_AirTerminal_DualDuct_VAV_OutdoorAirFields::AirOutletNode, connection.handle());
     return result;
@@ -179,6 +212,7 @@ namespace detail {
     bool result = setString(OS_AirTerminal_DualDuct_VAV_OutdoorAirFields::RecirculatedAirInletNode, "");
     OS_ASSERT(result);
   }
+    */
 
   bool AirTerminalDualDuctVAVOutdoorAir_Impl::setMaximumTerminalAirFlowRate(double maximumTerminalAirFlowRate) {
     bool result = setDouble(OS_AirTerminal_DualDuct_VAV_OutdoorAirFields::MaximumTerminalAirFlowRate, maximumTerminalAirFlowRate);
@@ -204,6 +238,52 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<DesignSpecificationOutdoorAir>(OS_AirTerminal_DualDuct_VAV_OutdoorAirFields::DesignSpecificationOutdoorAirObject);
   }
 
+  boost::optional<Node> AirTerminalDualDuctVAVOutdoorAir_Impl::OutdoorAirInletNode() const {
+    boost::optional<Node> node;
+    if( auto mo = inletModelObject(0) ) {
+      node = mo->optionalCast<Node>();
+      OS_ASSERT(node);
+    }
+    return node;
+  }
+
+  boost::optional<Node> AirTerminalDualDuctVAVOutdoorAir_Impl::RecirculatedAirInletNode() const {
+    boost::optional<Node> node;
+    if( auto mo = inletModelObject(1) ) {
+      node = mo->optionalCast<Node>();
+      OS_ASSERT(node);
+    }
+    return node;
+  }
+
+  std::vector<IdfObject> AirTerminalDualDuctVAVOutdoorAir_Impl::remove() {
+    auto modelObject = getObject<AirTerminalDualDuctVAVOutdoorAir>();
+    AirLoopHVAC_Impl::removeDualDuctTerminalFromAirLoopHVAC(modelObject,inletPort(0),inletPort(1),outletPort());
+    return Mixer_Impl::remove();
+  }
+
+  bool AirTerminalDualDuctVAVOutdoorAir_Impl::addToNode(Node & node)
+  {
+    auto mo = getObject<AirTerminalDualDuctVAVOutdoorAir>();
+    return AirLoopHVAC_Impl::addDualDuctTerminalToNode(mo,inletPort(0),inletPort(1),outletPort(),node);
+  }
+
+  ModelObject AirTerminalDualDuctVAVOutdoorAir_Impl::clone(Model model) const
+  {
+    auto t_clone = Mixer_Impl::clone(model).cast<AirTerminalDualDuctVAVOutdoorAir>();
+
+    t_clone.setString(OS_AirTerminal_DualDuct_VAV_OutdoorAirFields::OutdoorAirInletNode,"");
+    t_clone.setString(OS_AirTerminal_DualDuct_VAV_OutdoorAirFields::RecirculatedAirInletNode,"");
+    t_clone.setString(OS_AirTerminal_DualDuct_VAV_OutdoorAirFields::AirOutletNode,"");
+
+    return t_clone;
+  }
+
+  bool AirTerminalDualDuctVAVOutdoorAir_Impl::isRemovable() const
+  {
+    return HVACComponent_Impl::isRemovable();
+  }
+
 } // detail
 
 AirTerminalDualDuctVAVOutdoorAir::AirTerminalDualDuctVAVOutdoorAir(const Model& model)
@@ -215,11 +295,13 @@ AirTerminalDualDuctVAVOutdoorAir::AirTerminalDualDuctVAVOutdoorAir(const Model& 
   //     OS_AirTerminal_DualDuct_VAV_OutdoorAirFields::DesignSpecificationOutdoorAirObject
   bool ok = true;
   // ok = setMaximumTerminalAirFlowRate();
-  OS_ASSERT(ok);
+  //OS_ASSERT(ok);
   // ok = setDesignSpecificationOutdoorAirObject();
-  OS_ASSERT(ok);
+  //OS_ASSERT(ok);
   // ok = setPerPersonVentilationRateMode();
-  OS_ASSERT(ok);
+  //OS_ASSERT(ok);
+  autosizeMaximumTerminalAirFlowRate();
+  setPerPersonVentilationRateMode("CurrentOccupancy");
 }
 
 IddObjectType AirTerminalDualDuctVAVOutdoorAir::iddObjectType() {
@@ -235,16 +317,12 @@ boost::optional<Schedule> AirTerminalDualDuctVAVOutdoorAir::availabilitySchedule
   return getImpl<detail::AirTerminalDualDuctVAVOutdoorAir_Impl>()->availabilitySchedule();
 }
 
-boost::optional<Connection> AirTerminalDualDuctVAVOutdoorAir::airOutletNode() const {
-  return getImpl<detail::AirTerminalDualDuctVAVOutdoorAir_Impl>()->airOutletNode();
+boost::optional<Node> AirTerminalDualDuctVAVOutdoorAir::OutdoorAirInletNode() const {
+  return getImpl<detail::AirTerminalDualDuctVAVOutdoorAir_Impl>()->OutdoorAirInletNode();
 }
 
-boost::optional<Connection> AirTerminalDualDuctVAVOutdoorAir::outdoorAirInletNode() const {
-  return getImpl<detail::AirTerminalDualDuctVAVOutdoorAir_Impl>()->outdoorAirInletNode();
-}
-
-boost::optional<Connection> AirTerminalDualDuctVAVOutdoorAir::recirculatedAirInletNode() const {
-  return getImpl<detail::AirTerminalDualDuctVAVOutdoorAir_Impl>()->recirculatedAirInletNode();
+boost::optional<Node> AirTerminalDualDuctVAVOutdoorAir::RecirculatedAirInletNode() const {
+  return getImpl<detail::AirTerminalDualDuctVAVOutdoorAir_Impl>()->RecirculatedAirInletNode();
 }
 
 boost::optional<double> AirTerminalDualDuctVAVOutdoorAir::maximumTerminalAirFlowRate() const {
@@ -255,9 +333,9 @@ bool AirTerminalDualDuctVAVOutdoorAir::isMaximumTerminalAirFlowRateAutosized() c
   return getImpl<detail::AirTerminalDualDuctVAVOutdoorAir_Impl>()->isMaximumTerminalAirFlowRateAutosized();
 }
 
-DesignSpecificationOutdoorAir AirTerminalDualDuctVAVOutdoorAir::designSpecificationOutdoorAirObject() const {
+/*DesignSpecificationOutdoorAir AirTerminalDualDuctVAVOutdoorAir::designSpecificationOutdoorAirObject() const {
   return getImpl<detail::AirTerminalDualDuctVAVOutdoorAir_Impl>()->designSpecificationOutdoorAirObject();
-}
+}*/
 
 std::string AirTerminalDualDuctVAVOutdoorAir::perPersonVentilationRateMode() const {
   return getImpl<detail::AirTerminalDualDuctVAVOutdoorAir_Impl>()->perPersonVentilationRateMode();
@@ -271,7 +349,7 @@ void AirTerminalDualDuctVAVOutdoorAir::resetAvailabilitySchedule() {
   getImpl<detail::AirTerminalDualDuctVAVOutdoorAir_Impl>()->resetAvailabilitySchedule();
 }
 
-bool AirTerminalDualDuctVAVOutdoorAir::setAirOutletNode(const Connection& connection) {
+/*bool AirTerminalDualDuctVAVOutdoorAir::setAirOutletNode(const Connection& connection) {
   return getImpl<detail::AirTerminalDualDuctVAVOutdoorAir_Impl>()->setAirOutletNode(connection);
 }
 
@@ -293,7 +371,7 @@ bool AirTerminalDualDuctVAVOutdoorAir::setRecirculatedAirInletNode(const Connect
 
 void AirTerminalDualDuctVAVOutdoorAir::resetRecirculatedAirInletNode() {
   getImpl<detail::AirTerminalDualDuctVAVOutdoorAir_Impl>()->resetRecirculatedAirInletNode();
-}
+}*/
 
 bool AirTerminalDualDuctVAVOutdoorAir::setMaximumTerminalAirFlowRate(double maximumTerminalAirFlowRate) {
   return getImpl<detail::AirTerminalDualDuctVAVOutdoorAir_Impl>()->setMaximumTerminalAirFlowRate(maximumTerminalAirFlowRate);
