@@ -358,7 +358,7 @@ class ScheduleTabHeader : public QWidget, public Nano::Observer
 };
 
 // Content under collapsible header, includes a button for each rule and default schedule
-class ScheduleTabContent : public QWidget
+class ScheduleTabContent : public QWidget, public Nano::Observer
 {
   Q_OBJECT
 
