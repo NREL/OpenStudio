@@ -877,7 +877,7 @@ openstudio::path OpenStudioApp::resourcesPath() const
   } 
   else 
   {
-    return openstudio::toPath(QCoreApplication::applicationDirPath()) / openstudio::toPath("../Resources");
+    return getApplicationDirectory() / openstudio::toPath("../Resources");
   }
 }
 
