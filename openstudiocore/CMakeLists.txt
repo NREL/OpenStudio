@@ -1014,12 +1014,18 @@ if( Qt5Static )
 	    list(APPEND QT_LIBS ${glib_lib})
 	    find_library(gthread_lib gthread-2.0)
 	    list(APPEND QT_LIBS ${gthread_lib})
+	    find_library(dbus_glib_lib NAMES dbus-glib-1 libdbus-glib-1.so.2)
+	    list(APPEND QT_LIBS ${dbus_glib_lib})
+	    find_library(gobject_lib gobject-2.0)
+	    list(APPEND QT_LIBS ${gobject_lib})
 	    find_library(db_lib db)
 	    list(APPEND QT_LIBS ${db_lib})
 	    find_library(icui18n_lib icui18n)
 	    list(APPEND QT_LIBS ${icui18n_lib})
 	    find_library(icuuc_lib icuuc)
 	    list(APPEND QT_LIBS ${icuuc_lib})
+      find_library(X11_lib X11)
+	    list(APPEND QT_LIBS ${X11_lib})
 	  else()
 	    list(APPEND QT_LIBS "${QT_STATIC_INSTALL_DIR}/lib/libqtpcre.a")
 	  endif()
@@ -1406,15 +1412,15 @@ install(FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/ReleaseNotes.md" DESTINAT
 ###############################################################################
 
 
-if(UNIX AND NOT APPLE)
-  # if we build on Linux and we built our own Qt, let's grab said Qt and install it
-  if(CMAKE_PREFIX_PATH MATCHES ".*Qt-install.*")
-    install(DIRECTORY "${CMAKE_BINARY_DIR}/../../../Qt-prefix/src/Qt-install/lib"
-            DESTINATION .)
-    install(DIRECTORY "${CMAKE_BINARY_DIR}/../../../Qt-prefix/src/Qt-install/share"
-            DESTINATION .)
-  endif()
-endif()
+#if(UNIX AND NOT APPLE)
+#  # if we build on Linux and we built our own Qt, let's grab said Qt and install it
+#  if(CMAKE_PREFIX_PATH MATCHES ".*Qt-install.*")
+#    install(DIRECTORY "${CMAKE_BINARY_DIR}/../../../Qt-prefix/src/Qt-install/lib"
+#            DESTINATION .)
+#    install(DIRECTORY "${CMAKE_BINARY_DIR}/../../../Qt-prefix/src/Qt-install/share"
+#            DESTINATION .)
+#  endif()
+#endif()
 
 if(NOT UNIX)
   #execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_SOURCE_DIR}/../dependencies/strawberry-perl-5.16.2.1-32bit-portable-reduced.tar.bz2"
@@ -1478,10 +1484,7 @@ file(GLOB ENERGYPLUS_LIB_FILES "${ENERGYPLUS_DIR}/libenergyplus*")
 install(PROGRAMS ${ENERGYPLUS_LIB_FILES} DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus )
 
 file(GLOB EXPAND_OBJECTS "${ENERGYPLUS_DIR}/ExpandObjects*")
-# DLM: my E+ build is missing ExpandObjects, don't know why
-if(EXPAND_OBJECTS)
-  install(PROGRAMS "${EXPAND_OBJECTS}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus )
-endif()
+install(PROGRAMS "${EXPAND_OBJECTS}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus )
 
 if( APPLE )
   install(PROGRAMS "${ENERGYPLUS_DIR}/libgfortran.3.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus )
