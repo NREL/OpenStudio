@@ -119,7 +119,7 @@ void MaterialAirGapInspectorView::onUpdate()
 
 void MaterialAirGapInspectorView::attach(openstudio::model::AirGap & airGap)
 {
-  boost::optional<model::AirGap> m_airGap = airGap;
+  m_airGap = airGap;
 
   // m_nameEdit->bind(airGap,"name");
   m_nameEdit->bind(
@@ -149,6 +149,8 @@ void MaterialAirGapInspectorView::detach()
 
   m_nameEdit->unbind();
   m_thermalResistance->unbind();
+
+  m_airGap = boost::none;
 
   m_standardsInformationWidget->detach();
 }

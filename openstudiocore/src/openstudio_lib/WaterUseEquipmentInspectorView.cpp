@@ -323,7 +323,7 @@ void WaterUseEquipmentDefinitionInspectorView::onUpdate()
 void WaterUseEquipmentDefinitionInspectorView::attach(openstudio::model::WaterUseEquipmentDefinition & waterUseEquipmentDefinition)
 {
   // m_nameEdit->bind(waterUseEquipmentDefinition,"name");
-  boost::optional<model::WaterUseEquipmentDefinition> m_waterUseEquipmentDefinition = waterUseEquipmentDefinition;
+  m_waterUseEquipmentDefinition = waterUseEquipmentDefinition;
   m_nameEdit->bind(
     *m_waterUseEquipmentDefinition,
     OptionalStringGetter(std::bind(&model::WaterUseEquipmentDefinition::name, m_waterUseEquipmentDefinition.get_ptr(),true)),
@@ -338,7 +338,7 @@ void WaterUseEquipmentDefinitionInspectorView::attach(openstudio::model::WaterUs
     boost::optional<NoFailAction>(std::bind(&model::WaterUseEquipmentDefinition::resetEndUseSubcategory, m_waterUseEquipmentDefinition.get_ptr())),
     boost::optional<BasicQuery>(std::bind(&model::WaterUseEquipmentDefinition::isEndUseSubcategoryDefaulted, m_waterUseEquipmentDefinition.get_ptr()))
   );
-  
+
   // m_peakFlowRateEdit->bind(waterUseEquipmentDefinition,"peakFlowRate",m_isIP);
   m_peakFlowRateEdit->bind(
     m_isIP,
@@ -366,6 +366,8 @@ void WaterUseEquipmentDefinitionInspectorView::detach()
   m_nameEdit->unbind();
   m_endUseSubcategoryEdit->unbind();
   m_peakFlowRateEdit->unbind();
+
+  m_waterUseEquipmentDefinition = boost::none;
 
   m_targetTemperatureScheduleVC->detach();
   m_targetTemperatureScheduleVC->reportItems();

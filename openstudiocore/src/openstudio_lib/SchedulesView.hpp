@@ -1,17 +1,17 @@
 /**********************************************************************
- *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
- *  
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *  
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *  
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
@@ -194,7 +194,7 @@ class SchedulesView : public QWidget, public Nano::Observer
 
     void paintEvent ( QPaintEvent * event ) override;
 
-  private slots: 
+  private slots:
 
     void addSchedule( model::ScheduleRuleset & schedule);
 
@@ -321,7 +321,7 @@ class ScheduleTabHeader : public QWidget, public Nano::Observer
   void toggle();
 
   signals:
-  
+
   void scheduleClicked(const model::ScheduleRuleset & schedule);
 
   void toggleHeaderClicked( bool close );
@@ -410,8 +410,8 @@ class ScheduleTabRule : public QWidget, public Nano::Observer
 
   public:
 
-  ScheduleTabRule( ScheduleTab * scheduleTab, 
-                   const model::ScheduleRule & scheduleRule, 
+  ScheduleTabRule( ScheduleTab * scheduleTab,
+                   const model::ScheduleRule & scheduleRule,
                    QWidget * parent = nullptr );
 
   virtual ~ScheduleTabRule() {}
@@ -491,7 +491,7 @@ class ScheduleTabDefault : public QWidget, public Nano::Observer
   bool m_mouseDown;
 
   QLabel * m_label;
-  
+
   ScheduleTab * m_scheduleTab;
 
   ScheduleTabDefaultType m_type;
@@ -525,7 +525,7 @@ class NewProfileView : public QWidget, public Nano::Observer
 
     void addWinterProfileClicked(model::ScheduleRuleset & scheduleRuleset, UUID dayScheduleHandle);
 
-  private slots: 
+  private slots:
 
     void onAddClicked();
 
@@ -569,7 +569,7 @@ class DefaultScheduleDayView : public QWidget
   public:
 
     DefaultScheduleDayView( bool isIP,
-                            const model::ScheduleRuleset & scheduleRuleset, 
+                            const model::ScheduleRuleset & scheduleRuleset,
                             SchedulesView * schedulesView );
 
     virtual ~DefaultScheduleDayView() {}
@@ -692,6 +692,8 @@ class ScheduleRulesetNameWidget : public QWidget, public Nano::Observer
   private:
 
     model::ScheduleRuleset m_scheduleRuleset;
+
+    boost::optional<model::ScheduleRuleset> opt_scheduleRuleset;
 };
 
 // Overview of the year, held by ScheduleRuleView
@@ -721,29 +723,29 @@ class YearOverview : public QWidget, public Nano::Observer
 
   void refreshActiveRuleIndices();
 
-  MonthView * m_januaryView; 
+  MonthView * m_januaryView;
 
-  MonthView * m_februaryView; 
+  MonthView * m_februaryView;
 
-  MonthView * m_marchView; 
+  MonthView * m_marchView;
 
-  MonthView * m_aprilView; 
+  MonthView * m_aprilView;
 
-  MonthView * m_mayView; 
+  MonthView * m_mayView;
 
-  MonthView * m_juneView; 
+  MonthView * m_juneView;
 
-  MonthView * m_julyView; 
+  MonthView * m_julyView;
 
-  MonthView * m_augustView; 
+  MonthView * m_augustView;
 
-  MonthView * m_septemberView; 
+  MonthView * m_septemberView;
 
-  MonthView * m_octoberView; 
+  MonthView * m_octoberView;
 
-  MonthView * m_novemberView; 
+  MonthView * m_novemberView;
 
-  MonthView * m_decemberView; 
+  MonthView * m_decemberView;
 
   model::ScheduleRuleset m_scheduleRuleset;
 

@@ -224,7 +224,7 @@ void MaterialInspectorView::onUpdate()
 
 void MaterialInspectorView::attach(openstudio::model::StandardOpaqueMaterial & standardOpaqueMaterial)
 {
-  boost::optional<model::StandardOpaqueMaterial> m_standardOpaqueMaterial = standardOpaqueMaterial;
+  m_standardOpaqueMaterial = standardOpaqueMaterial;
   // m_nameEdit->bind(standardOpaqueMaterial, "name");
   m_nameEdit->bind(
     *m_standardOpaqueMaterial,
@@ -333,6 +333,8 @@ void MaterialInspectorView::detach()
   m_thermalAbsorptance->unbind();
   m_solarAbsorptance->unbind();
   m_visibleAbsorptance->unbind();
+
+  m_standardOpaqueMaterial = boost::none;
 
   m_standardsInformationWidget->detach();
 }

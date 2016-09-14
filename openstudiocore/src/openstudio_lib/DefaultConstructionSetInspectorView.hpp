@@ -329,6 +329,8 @@ class DefaultConstructionSetInspectorView : public ModelObjectInspectorView
 
     std::vector<ModelObjectVectorController *> m_vectorControllers;
     std::vector<OSDropZone *> m_dropZones;
+
+    boost::optional<model::DefaultConstructionSet> m_defaultConstructionSet;
 };
 
 } // openstudio

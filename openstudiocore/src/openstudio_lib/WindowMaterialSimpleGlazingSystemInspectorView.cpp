@@ -139,7 +139,7 @@ void WindowMaterialSimpleGlazingSystemInspectorView::onUpdate()
 void WindowMaterialSimpleGlazingSystemInspectorView::attach(openstudio::model::SimpleGlazing & simpleGlazing)
 {
   // m_nameEdit->bind(simpleGlazing,"name");
-  boost::optional<model::SimpleGlazing> m_simpleGlazing = simpleGlazing;
+  m_simpleGlazing = simpleGlazing;
   m_nameEdit->bind(
     *m_simpleGlazing,
     OptionalStringGetter(std::bind(&model::SimpleGlazing::name, m_simpleGlazing.get_ptr(),true)),
@@ -184,6 +184,8 @@ void WindowMaterialSimpleGlazingSystemInspectorView::detach()
   m_uFactor->unbind();
   m_solarHeatGainCoefficient->unbind();
   m_visibleTransmittance->unbind();
+
+  m_simpleGlazing = boost::none;
 
   m_standardsInformationWidget->detach();
 }

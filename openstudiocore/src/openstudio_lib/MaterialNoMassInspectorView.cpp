@@ -176,8 +176,8 @@ void MaterialNoMassInspectorView::attach(openstudio::model::MasslessOpaqueMateri
       boost::none,
       boost::none);
   }
-  
-  boost::optional<model::MasslessOpaqueMaterial> m_masslessOpaqueMaterial = masslessOpaqueMaterial;
+
+  m_masslessOpaqueMaterial = masslessOpaqueMaterial;
   // m_nameEdit->bind(masslessOpaqueMaterial,"name");
   m_nameEdit->bind(
     *m_masslessOpaqueMaterial,
@@ -247,6 +247,8 @@ void MaterialNoMassInspectorView::detach()
   m_thermalAbsorptance->unbind();
   m_solarAbsorptance->unbind();
   m_visibleAbsorptance->unbind();
+
+  m_masslessOpaqueMaterial = boost::none;
 
   m_standardsInformationWidget->detach();
 }

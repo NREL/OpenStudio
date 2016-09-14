@@ -481,7 +481,7 @@ SpaceLoadInstanceMiniView::SpaceLoadInstanceMiniView(const model::SpaceLoadInsta
 
   m_nameEdit = new OSLineEdit2();
   // m_nameEdit->bind(m_spaceLoadInstance, "name");
-  boost::optional<model::SpaceLoadInstance> opt_spaceLoadInstance = m_spaceLoadInstance;
+  opt_spaceLoadInstance = m_spaceLoadInstance;
   m_nameEdit->bind(
     *opt_spaceLoadInstance,
     OptionalStringGetter(std::bind(&model::SpaceLoadInstance::name, opt_spaceLoadInstance.get_ptr(),true)),

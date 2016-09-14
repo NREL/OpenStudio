@@ -215,7 +215,7 @@ void WindowMaterialGasInspectorView::attach(openstudio::model::Gas & gas)
       boost::none);
 
   // m_nameEdit->bind(gas,"name");
-  boost::optional<model::Gas> m_gas = gas;
+  m_gas = gas;
   m_nameEdit->bind(
     *m_gas,
     OptionalStringGetter(std::bind(&model::Gas::name, m_gas.get_ptr(),true)),
@@ -314,6 +314,8 @@ void WindowMaterialGasInspectorView::detach()
   m_specificHeatCoefficientA->unbind();
   m_specificHeatCoefficientB->unbind();
   m_molecularWeight->unbind();
+
+  m_gas = boost::none;
 
   m_standardsInformationWidget->detach();
 }

@@ -218,7 +218,7 @@ void WindowMaterialGlazingRefractionExtinctionMethodInspectorView::attach(openst
   );
 
   // m_nameEdit->bind(refractionExtinctionGlazing,"name");
-  boost::optional<model::RefractionExtinctionGlazing> m_refractionExtinctionGlazing = refractionExtinctionGlazing;
+  m_refractionExtinctionGlazing = refractionExtinctionGlazing;
   m_nameEdit->bind(
     *m_refractionExtinctionGlazing,
     OptionalStringGetter(std::bind(&model::RefractionExtinctionGlazing::name, m_refractionExtinctionGlazing.get_ptr(),true)),
@@ -334,6 +334,8 @@ void WindowMaterialGlazingRefractionExtinctionMethodInspectorView::detach()
   m_infraredHemisphericalEmissivity->unbind();
   m_conductivity->unbind();
   m_dirtCorrectionFactorForSolarAndVisibleTransmittance->unbind();
+
+  m_refractionExtinctionGlazing = boost::none;
 
   m_standardsInformationWidget->detach();
 }

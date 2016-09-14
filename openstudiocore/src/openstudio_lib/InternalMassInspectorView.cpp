@@ -134,7 +134,7 @@ void InternalMassDefinitionInspectorView::onUpdate()
 
 void InternalMassDefinitionInspectorView::attach(openstudio::model::InternalMassDefinition & internalMassDefinition)
 {
-  boost::optional<model::InternalMassDefinition> m_internalMassDefinition = internalMassDefinition;
+  m_internalMassDefinition = internalMassDefinition;
 
   // m_nameEdit->bind(internalMassDefinition,"name");
   m_nameEdit->bind(
@@ -181,6 +181,8 @@ void InternalMassDefinitionInspectorView::detach()
   m_surfaceAreaPerPersonEdit->unbind();
   m_surfaceAreaPerSpaceFloorAreaEdit->unbind();
 
+  m_internalMassDefinition = boost::none;
+
   m_ConstructionVectorController->detach();
 }
 
@@ -189,9 +191,9 @@ void InternalMassDefinitionInspectorView::refresh()
 }
 
 void InternalMassDefinitionInspectorView::ConstructionVectorController::onChangeRelationship(
-       const openstudio::model::ModelObject& modelObject, 
-       int index, 
-       Handle newHandle, 
+       const openstudio::model::ModelObject& modelObject,
+       int index,
+       Handle newHandle,
        Handle oldHandle)
 {
   if( index == OS_InternalMass_DefinitionFields::ConstructionName )
@@ -200,7 +202,7 @@ void InternalMassDefinitionInspectorView::ConstructionVectorController::onChange
   }
 }
 
-boost::optional<model::InternalMassDefinition> 
+boost::optional<model::InternalMassDefinition>
   InternalMassDefinitionInspectorView::ConstructionVectorController::internalMassDefinition()
 {
   if( m_modelObject )
@@ -221,7 +223,7 @@ std::vector<OSItemId> InternalMassDefinitionInspectorView::ConstructionVectorCon
   {
     if( boost::optional<model::ConstructionBase> c = mo->construction() )
     {
-      result.push_back(modelObjectToItemId(c.get(), false)); 
+      result.push_back(modelObjectToItemId(c.get(), false));
     }
   }
 

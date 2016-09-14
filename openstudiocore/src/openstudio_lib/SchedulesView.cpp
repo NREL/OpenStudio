@@ -1916,7 +1916,7 @@ ScheduleRulesetNameWidget::ScheduleRulesetNameWidget(const model::ScheduleRulese
 
   auto lineEdit = new OSLineEdit2();
   // lineEdit->bind(m_scheduleRuleset, "name");
-  boost::optional<model::ScheduleRuleset> opt_scheduleRuleset = m_scheduleRuleset;
+  opt_scheduleRuleset = m_scheduleRuleset;
   lineEdit->bind(
     *opt_scheduleRuleset,
     OptionalStringGetter(std::bind(&model::ScheduleRuleset::name, opt_scheduleRuleset.get_ptr(),true)),

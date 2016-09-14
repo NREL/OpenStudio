@@ -91,7 +91,7 @@ void ConstructionWindowDataFileInspectorView::onUpdate()
 
 void ConstructionWindowDataFileInspectorView::attach(openstudio::model::WindowDataFile & windowDataFile)
 {
-  boost::optional<model::WindowDataFile> m_windowDataFile = windowDataFile;
+  m_windowDataFile = windowDataFile;
   // m_nameEdit->bind(windowDataFile,"name");
   m_nameEdit->bind(
     *m_windowDataFile,
@@ -113,6 +113,7 @@ void ConstructionWindowDataFileInspectorView::attach(openstudio::model::WindowDa
 void ConstructionWindowDataFileInspectorView::detach()
 {
   m_urlEdit->unbind();
+  m_windowDataFile = boost::none;
 }
 
 } // openstudio

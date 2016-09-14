@@ -231,7 +231,7 @@ void WindowMaterialGlazingInspectorView::createLayout()
   mainGridLayout->addWidget(label,row++,0);
 
   m_solarDiffusing = new OSSwitch2();
-  mainGridLayout->addWidget(m_solarDiffusing,row++,0,1,3); 
+  mainGridLayout->addWidget(m_solarDiffusing,row++,0,1,3);
 
   // Stretch
 
@@ -282,9 +282,9 @@ void WindowMaterialGlazingInspectorView::attach(openstudio::model::StandardGlazi
     boost::optional<NoFailAction>(std::bind(&model::StandardGlazing::resetSolarDiffusing, glazing)),
     boost::optional<BasicQuery>(std::bind(&model::StandardGlazing::isSolarDiffusingDefaulted, glazing))
   );
-    
+
   // m_nameEdit->bind(glazing,"name");
-  boost::optional<model::StandardGlazing> m_glazing = glazing;
+  m_glazing = glazing;
   m_nameEdit->bind(
     *m_glazing,
     OptionalStringGetter(std::bind(&model::StandardGlazing::name, m_glazing.get_ptr(),true)),
@@ -447,6 +447,8 @@ void WindowMaterialGlazingInspectorView::detach()
   m_backSideInfraredHemisphericalEmissivity->unbind();
   m_conductivity->unbind();
   m_dirtCorrectionFactorForSolarAndVisibleTransmittance->unbind();
+
+  m_glazing = boost::none;
 
   m_standardsInformationWidget->detach();
 }

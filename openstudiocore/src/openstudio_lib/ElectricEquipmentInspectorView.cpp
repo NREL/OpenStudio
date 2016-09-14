@@ -143,8 +143,8 @@ void ElectricEquipmentDefinitionInspectorView::onUpdate()
 
 void ElectricEquipmentDefinitionInspectorView::attach(openstudio::model::ElectricEquipmentDefinition & electricEquipmentDefinition)
 {
-  boost::optional<model::ElectricEquipmentDefinition> m_electricEquipmentDefinition = electricEquipmentDefinition;
-  
+  m_electricEquipmentDefinition = electricEquipmentDefinition;
+
   // m_nameEdit->bind(electricEquipmentDefinition,"name");
   m_nameEdit->bind(
     *m_electricEquipmentDefinition,
@@ -226,6 +226,8 @@ void ElectricEquipmentDefinitionInspectorView::detach()
   m_fractionLatentEdit->unbind();
   m_fractionRadiantEdit->unbind();
   m_fractionLostEdit->unbind();
+
+  m_electricEquipmentDefinition = boost::none;
 }
 
 void ElectricEquipmentDefinitionInspectorView::refresh()

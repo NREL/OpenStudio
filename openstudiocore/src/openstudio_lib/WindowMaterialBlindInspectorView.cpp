@@ -360,7 +360,7 @@ void WindowMaterialBlindInspectorView::createLayout()
 
   m_maximumSlatAngle = new OSQuantityEdit2("","","", m_isIP);
   connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_maximumSlatAngle, &OSQuantityEdit2::onUnitSystemChange);
-  mainGridLayout->addWidget(m_maximumSlatAngle,row++,0,1,3);  
+  mainGridLayout->addWidget(m_maximumSlatAngle,row++,0,1,3);
 
   // Stretch
 
@@ -401,7 +401,7 @@ void WindowMaterialBlindInspectorView::attach(openstudio::model::Blind & materia
       boost::optional<BasicQuery>(std::bind(&model::Blind::isSlatOrientationDefaulted, &material)));
 
   // m_nameEdit->bind(material,"name");
-  boost::optional<model::Blind> m_material = material;
+  m_material = material;
   m_nameEdit->bind(
     *m_material,
     OptionalStringGetter(std::bind(&model::Blind::name, m_material.get_ptr(),true)),
@@ -730,6 +730,8 @@ void WindowMaterialBlindInspectorView::detach()
   m_blindRightSideOpeningMultiplier->unbind();
   m_minimumSlatAngle->unbind();
   m_maximumSlatAngle->unbind();
+
+  m_material = boost::none;
 
   m_standardsInformationWidget->detach();
 }

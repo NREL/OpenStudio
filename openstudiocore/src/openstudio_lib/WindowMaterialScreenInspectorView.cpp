@@ -201,7 +201,7 @@ void WindowMaterialScreenInspectorView::createLayout()
 
   m_rightSideOpeningMultiplier = new OSQuantityEdit2("","","", m_isIP);
   connect(this, &WindowMaterialScreenInspectorView::toggleUnitsClicked, m_rightSideOpeningMultiplier, &OSQuantityEdit2::onUnitSystemChange);
-  mainGridLayout->addWidget(m_rightSideOpeningMultiplier,row++,0,1,3);  
+  mainGridLayout->addWidget(m_rightSideOpeningMultiplier,row++,0,1,3);
 
   // Angle Of Resolution For Screen Transmittance Output Map
 
@@ -266,7 +266,7 @@ void WindowMaterialScreenInspectorView::attach(openstudio::model::Screen & scree
       boost::optional<BasicQuery>(std::bind(&model::Screen::isAngleofResolutionforScreenTransmittanceOutputMapDefaulted, &screen)));
 
   // m_nameEdit->bind(screen,"name");
-  boost::optional<model::Screen> m_screen = screen;
+  m_screen = screen;
   m_nameEdit->bind(
     *m_screen,
     OptionalStringGetter(std::bind(&model::Screen::name, m_screen.get_ptr(),true)),
@@ -410,6 +410,8 @@ void WindowMaterialScreenInspectorView::detach()
   m_bottomOpeningMultiplier->unbind();
   m_leftSideOpeningMultiplier->unbind();
   m_rightSideOpeningMultiplier->unbind();
+
+  m_screen = boost::none;
 
   m_standardsInformationWidget->detach();
 }

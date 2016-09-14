@@ -303,8 +303,8 @@ void MaterialRoofVegetationInspectorView::attach(openstudio::model::RoofVegetati
       boost::optional<BasicQuery>(std::bind(&model::RoofVegetation::isRoughnessDefaulted, &roofVegetation)));
   }
 
-  boost::optional<model::RoofVegetation> m_roofVegetation = roofVegetation;
-  
+  m_roofVegetation = roofVegetation;
+
   // m_nameEdit->bind(roofVegetation,"name");
   m_nameEdit->bind(
     *m_roofVegetation,
@@ -329,7 +329,7 @@ void MaterialRoofVegetationInspectorView::attach(openstudio::model::RoofVegetati
     boost::optional<NoFailAction>(std::bind(&model::RoofVegetation::resetMoistureDiffusionCalculationMethod, m_roofVegetation.get_ptr())),
     boost::optional<BasicQuery>(std::bind(&model::RoofVegetation::isMoistureDiffusionCalculationMethodDefaulted, m_roofVegetation.get_ptr()))
   );
-  
+
   // m_heightOfPlants->bind(roofVegetation,"heightofPlants",m_isIP);
   m_heightOfPlants->bind(
     m_isIP,
@@ -539,6 +539,8 @@ void MaterialRoofVegetationInspectorView::detach()
   m_residualVolumetricMoistureContentOfTheSoilLayer->unbind();
   m_initialVolumetricMoistureContentOfTheSoilLayer->unbind();
   m_solarAbsorptance->unbind();
+
+  m_roofVegetation = boost::none;
 
   m_standardsInformationWidget->detach();
 }

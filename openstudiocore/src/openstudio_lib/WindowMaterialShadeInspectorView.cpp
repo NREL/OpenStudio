@@ -249,7 +249,7 @@ void WindowMaterialShadeInspectorView::onUpdate()
 void WindowMaterialShadeInspectorView::attach(openstudio::model::Shade & shade)
 {
   // m_nameEdit->bind(shade,"name");
-  boost::optional<model::Shade> m_shade = shade;
+  m_shade = shade;
   m_nameEdit->bind(
     *m_shade,
     OptionalStringGetter(std::bind(&model::Shade::name, m_shade.get_ptr(),true)),
@@ -416,6 +416,8 @@ void WindowMaterialShadeInspectorView::detach()
   m_leftSideOpeningMultiplier->unbind();
   m_rightSideOpeningMultiplier->unbind();
   m_airflowPermeability->unbind();
+
+  m_shade = boost::none;
 
   m_standardsInformationWidget->detach();
 }

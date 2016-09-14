@@ -108,7 +108,7 @@ void MaterialAirWallInspectorView::onUpdate()
 
 void MaterialAirWallInspectorView::attach(openstudio::model::AirWallMaterial & airWallMaterial)
 {
-  boost::optional<model::AirWallMaterial> m_airWallMaterial = airWallMaterial;
+  m_airWallMaterial = airWallMaterial;
 
   // m_nameEdit->bind(airWallMaterial,"name");
   m_nameEdit->bind(
@@ -127,6 +127,8 @@ void MaterialAirWallInspectorView::detach()
   this->stackedWidget()->setCurrentIndex(0);
 
   m_nameEdit->unbind();
+
+  m_airWallMaterial = boost::none;
 
   m_standardsInformationWidget->detach();
 }

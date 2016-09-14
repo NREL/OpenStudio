@@ -153,8 +153,8 @@ void GasEquipmentDefinitionInspectorView::onUpdate()
 
 void GasEquipmentDefinitionInspectorView::attach(openstudio::model::GasEquipmentDefinition & gasEquipmentDefinition)
 {
-  boost::optional<model::GasEquipmentDefinition> m_gasEquipmentDefinition = gasEquipmentDefinition;
-  
+  m_gasEquipmentDefinition = gasEquipmentDefinition;
+
   // m_nameEdit->bind(gasEquipmentDefinition,"name");
   m_nameEdit->bind(
     *m_gasEquipmentDefinition,
@@ -249,6 +249,8 @@ void GasEquipmentDefinitionInspectorView::detach()
   m_fractionRadiantEdit->unbind();
   m_fractionLostEdit->unbind();
   m_carbonDioxideGenerationRateEdit->unbind();
+
+  m_gasEquipmentDefinition = boost::none;
 }
 
 void GasEquipmentDefinitionInspectorView::refresh()

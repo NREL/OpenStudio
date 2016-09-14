@@ -272,7 +272,7 @@ void WindowMaterialGasMixtureInspectorView::attach(openstudio::model::GasMixture
 
   // m_numberOfGasesInMixture->bind(gasMixture,"numberofGasesinMixture");
 
-  boost::optional<model::GasMixture> m_gasMixture = gasMixture;
+  m_gasMixture = gasMixture;
 
   m_numberOfGasesInMixture->bind(
     *m_gasMixture,
@@ -354,6 +354,8 @@ void WindowMaterialGasMixtureInspectorView::detach()
   m_gas2Fraction->unbind();
   m_gas3Fraction->unbind();
   m_gas4Fraction->unbind();
+
+  m_gasMixture = boost::none;
 
   m_standardsInformationWidget->detach();
 }
