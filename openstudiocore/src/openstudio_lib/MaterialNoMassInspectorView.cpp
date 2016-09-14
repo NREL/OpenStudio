@@ -164,20 +164,20 @@ void MaterialNoMassInspectorView::onUpdate()
 
 void MaterialNoMassInspectorView::attach(openstudio::model::MasslessOpaqueMaterial & masslessOpaqueMaterial)
 {
-  // m_roughness->bind(masslessOpaqueMaterial,"roughness");
+  m_masslessOpaqueMaterial = masslessOpaqueMaterial;
 
+  // m_roughness->bind(masslessOpaqueMaterial,"roughness");
   if(m_roughness){
     m_roughness->bind<std::string>(
-      masslessOpaqueMaterial,
+      *m_masslessOpaqueMaterial,
       static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
       &model::MasslessOpaqueMaterial::roughnessValues,
-      std::bind(&model::MasslessOpaqueMaterial::roughness, &masslessOpaqueMaterial),
-      std::bind(&model::MasslessOpaqueMaterial::setRoughness, &masslessOpaqueMaterial, std::placeholders::_1),
+      std::bind(&model::MasslessOpaqueMaterial::roughness, m_masslessOpaqueMaterial.get_ptr()),
+      std::bind(&model::MasslessOpaqueMaterial::setRoughness, m_masslessOpaqueMaterial.get_ptr(), std::placeholders::_1),
       boost::none,
       boost::none);
   }
 
-  m_masslessOpaqueMaterial = masslessOpaqueMaterial;
   // m_nameEdit->bind(masslessOpaqueMaterial,"name");
   m_nameEdit->bind(
     *m_masslessOpaqueMaterial,

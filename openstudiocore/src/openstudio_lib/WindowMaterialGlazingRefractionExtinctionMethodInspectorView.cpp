@@ -208,17 +208,18 @@ void WindowMaterialGlazingRefractionExtinctionMethodInspectorView::onUpdate()
 
 void WindowMaterialGlazingRefractionExtinctionMethodInspectorView::attach(openstudio::model::RefractionExtinctionGlazing & refractionExtinctionGlazing)
 {
+  m_refractionExtinctionGlazing = refractionExtinctionGlazing;
+
   // m_solarDiffusing->bind(refractionExtinctionGlazing,"solarDiffusing");
   m_solarDiffusing->bind(
-    refractionExtinctionGlazing,
-    std::bind(&model::RefractionExtinctionGlazing::solarDiffusing, refractionExtinctionGlazing),
-    boost::optional<BoolSetter>(std::bind(&model::RefractionExtinctionGlazing::setSolarDiffusing, refractionExtinctionGlazing, std::placeholders::_1)),
-    boost::optional<NoFailAction>(std::bind(&model::RefractionExtinctionGlazing::resetSolarDiffusing, refractionExtinctionGlazing)),
-    boost::optional<BasicQuery>(std::bind(&model::RefractionExtinctionGlazing::isSolarDiffusingDefaulted, refractionExtinctionGlazing))
+    *m_refractionExtinctionGlazing,
+    std::bind(&model::RefractionExtinctionGlazing::solarDiffusing, m_refractionExtinctionGlazing.get_ptr()),
+    boost::optional<BoolSetter>(std::bind(&model::RefractionExtinctionGlazing::setSolarDiffusing, m_refractionExtinctionGlazing.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::RefractionExtinctionGlazing::resetSolarDiffusing, m_refractionExtinctionGlazing.get_ptr())),
+    boost::optional<BasicQuery>(std::bind(&model::RefractionExtinctionGlazing::isSolarDiffusingDefaulted, m_refractionExtinctionGlazing.get_ptr()))
   );
 
   // m_nameEdit->bind(refractionExtinctionGlazing,"name");
-  m_refractionExtinctionGlazing = refractionExtinctionGlazing;
   m_nameEdit->bind(
     *m_refractionExtinctionGlazing,
     OptionalStringGetter(std::bind(&model::RefractionExtinctionGlazing::name, m_refractionExtinctionGlazing.get_ptr(),true)),

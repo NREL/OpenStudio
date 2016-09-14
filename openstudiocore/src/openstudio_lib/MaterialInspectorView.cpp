@@ -235,11 +235,11 @@ void MaterialInspectorView::attach(openstudio::model::StandardOpaqueMaterial & s
   // m_roughness->bind(standardOpaqueMaterial,"roughness");
   if(m_roughness){
     m_roughness->bind<std::string>(
-      standardOpaqueMaterial,
+      *m_standardOpaqueMaterial,
       static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
       &model::StandardOpaqueMaterial::roughnessValues,
-      std::bind(&model::StandardOpaqueMaterial::roughness, &standardOpaqueMaterial),
-      std::bind(&model::StandardOpaqueMaterial::setRoughness, &standardOpaqueMaterial, std::placeholders::_1),
+      std::bind(&model::StandardOpaqueMaterial::roughness, m_standardOpaqueMaterial.get_ptr()),
+      std::bind(&model::StandardOpaqueMaterial::setRoughness, m_standardOpaqueMaterial.get_ptr(), std::placeholders::_1),
       boost::none,
       boost::none);
   }

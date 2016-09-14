@@ -203,19 +203,19 @@ void WindowMaterialGasInspectorView::onUpdate()
 
 void WindowMaterialGasInspectorView::attach(openstudio::model::Gas & gas)
 {
-  // m_gasType->bind(gas,"gasType");
+  m_gas = gas;
 
+  // m_gasType->bind(gas,"gasType");
   m_gasType->bind<std::string>(
-      gas,
+      *m_gas,
       static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
       &model::Gas::validGasTypes,
-      std::bind(&model::Gas::gasType, &gas),
-      std::bind(&model::Gas::setGasType, &gas, std::placeholders::_1),
+      std::bind(&model::Gas::gasType, m_gas.get_ptr()),
+      std::bind(&model::Gas::setGasType, m_gas.get_ptr(), std::placeholders::_1),
       boost::none,
       boost::none);
 
   // m_nameEdit->bind(gas,"name");
-  m_gas = gas;
   m_nameEdit->bind(
     *m_gas,
     OptionalStringGetter(std::bind(&model::Gas::name, m_gas.get_ptr(),true)),

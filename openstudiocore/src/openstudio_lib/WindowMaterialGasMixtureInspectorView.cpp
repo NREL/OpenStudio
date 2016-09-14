@@ -230,50 +230,49 @@ void WindowMaterialGasMixtureInspectorView::onUpdate()
 
 void WindowMaterialGasMixtureInspectorView::attach(openstudio::model::GasMixture & gasMixture)
 {
+  m_gasMixture = gasMixture;
+
   // m_gas1Type->bind(gasMixture,"gas1Type");
   m_gas1Type->bind<std::string>(
-    gasMixture,
+    *m_gasMixture,
     static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
     &model::GasMixture::gas1TypeValues,
-    std::bind(&model::GasMixture::gas1Type, &gasMixture),
-    std::bind(&model::GasMixture::setGas1Type, &gasMixture, std::placeholders::_1),
-    boost::optional<NoFailAction>(std::bind(&model::GasMixture::resetGas1Type, &gasMixture)),
+    std::bind(&model::GasMixture::gas1Type, m_gasMixture.get_ptr()),
+    std::bind(&model::GasMixture::setGas1Type, m_gasMixture.get_ptr(), std::placeholders::_1),
+    boost::optional<NoFailAction>(std::bind(&model::GasMixture::resetGas1Type, m_gasMixture.get_ptr())),
     boost::none);
 
   // m_gas2Type->bind(gasMixture,"gas2Type");
   m_gas2Type->bind<std::string>(
-    gasMixture,
+    *m_gasMixture,
     static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
     &model::GasMixture::gas2TypeValues,
-    std::bind(&model::GasMixture::gas2Type, &gasMixture),
-    std::bind(&model::GasMixture::setGas2Type, &gasMixture, std::placeholders::_1),
-    boost::optional<NoFailAction>(std::bind(&model::GasMixture::resetGas2Type, &gasMixture)),
+    std::bind(&model::GasMixture::gas2Type, m_gasMixture.get_ptr()),
+    std::bind(&model::GasMixture::setGas2Type, m_gasMixture.get_ptr(), std::placeholders::_1),
+    boost::optional<NoFailAction>(std::bind(&model::GasMixture::resetGas2Type, m_gasMixture.get_ptr())),
     boost::none);
 
   // m_gas3Type->bind(gasMixture,"gas3Type");
   m_gas3Type->bind<std::string>(
-    gasMixture,
+    *m_gasMixture,
     static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
     &model::GasMixture::gas3TypeValues,
-    std::bind(&model::GasMixture::gas3Type, &gasMixture),
-    std::bind(&model::GasMixture::setGas3Type, &gasMixture, std::placeholders::_1),
-    boost::optional<NoFailAction>(std::bind(&model::GasMixture::resetGas3Type, &gasMixture)),
+    std::bind(&model::GasMixture::gas3Type, m_gasMixture.get_ptr()),
+    std::bind(&model::GasMixture::setGas3Type, m_gasMixture.get_ptr(), std::placeholders::_1),
+    boost::optional<NoFailAction>(std::bind(&model::GasMixture::resetGas3Type, m_gasMixture.get_ptr())),
     boost::none);
 
   // m_gas4Type->bind(gasMixture,"gas4Type");
   m_gas4Type->bind<std::string>(
-    gasMixture,
+    *m_gasMixture,
     static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
     &model::GasMixture::gas4TypeValues,
-    std::bind(&model::GasMixture::gas4Type, &gasMixture),
-    std::bind(&model::GasMixture::setGas4Type, &gasMixture, std::placeholders::_1),
-    boost::optional<NoFailAction>(std::bind(&model::GasMixture::resetGas4Type, &gasMixture)),
+    std::bind(&model::GasMixture::gas4Type, m_gasMixture.get_ptr()),
+    std::bind(&model::GasMixture::setGas4Type, m_gasMixture.get_ptr(), std::placeholders::_1),
+    boost::optional<NoFailAction>(std::bind(&model::GasMixture::resetGas4Type, m_gasMixture.get_ptr())),
     boost::none);
 
   // m_numberOfGasesInMixture->bind(gasMixture,"numberofGasesinMixture");
-
-  m_gasMixture = gasMixture;
-
   m_numberOfGasesInMixture->bind(
     *m_gasMixture,
     OptionalIntGetter(std::bind(&model::GasMixture::numberofGasesinMixture, m_gasMixture.get_ptr())),

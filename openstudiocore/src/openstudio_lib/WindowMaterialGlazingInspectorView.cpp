@@ -261,30 +261,31 @@ void WindowMaterialGlazingInspectorView::onUpdate()
 
 void WindowMaterialGlazingInspectorView::attach(openstudio::model::StandardGlazing & glazing)
 {
+  m_glazing = glazing;
+
   // Cast to standard glazing.
   // m_opticalDataType->bind(glazing,"opticalDataType");
   if(m_opticalDataType){
     m_opticalDataType->bind<std::string>(
-      glazing,
+      *m_glazing,
       static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
       &model::StandardGlazing::opticalDataTypeValues,
-      std::bind(&model::StandardGlazing::opticalDataType, &glazing),
-      std::bind(&model::StandardGlazing::setOpticalDataType, &glazing, std::placeholders::_1),
+      std::bind(&model::StandardGlazing::opticalDataType, m_glazing.get_ptr()),
+      std::bind(&model::StandardGlazing::setOpticalDataType, m_glazing.get_ptr(), std::placeholders::_1),
       boost::none,
       boost::none);
   }
 
   // m_solarDiffusing->bind(glazing,"solarDiffusing");
   m_solarDiffusing->bind(
-    glazing,
-    std::bind(&model::StandardGlazing::solarDiffusing, glazing),
-    boost::optional<BoolSetter>(std::bind(&model::StandardGlazing::setSolarDiffusing, glazing, std::placeholders::_1)),
-    boost::optional<NoFailAction>(std::bind(&model::StandardGlazing::resetSolarDiffusing, glazing)),
-    boost::optional<BasicQuery>(std::bind(&model::StandardGlazing::isSolarDiffusingDefaulted, glazing))
+    *m_glazing,
+    std::bind(&model::StandardGlazing::solarDiffusing, m_glazing.get_ptr()),
+    boost::optional<BoolSetter>(std::bind(&model::StandardGlazing::setSolarDiffusing, m_glazing.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::StandardGlazing::resetSolarDiffusing, m_glazing.get_ptr())),
+    boost::optional<BasicQuery>(std::bind(&model::StandardGlazing::isSolarDiffusingDefaulted, m_glazing.get_ptr()))
   );
 
   // m_nameEdit->bind(glazing,"name");
-  m_glazing = glazing;
   m_nameEdit->bind(
     *m_glazing,
     OptionalStringGetter(std::bind(&model::StandardGlazing::name, m_glazing.get_ptr(),true)),
