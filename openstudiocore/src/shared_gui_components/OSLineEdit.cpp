@@ -237,9 +237,6 @@ void OSLineEdit2::onModelObjectChangeInternal(bool startingup) {
 
 void OSLineEdit2::emitItemClicked()
 {
-  // This m_item code is only relevant if we are building in
-  // the context of openstudio_lib
-#ifdef openstudio_lib_EXPORTS
   if (!m_item && m_modelObject) {
     m_item = OSItem::makeItem(modelObjectToItemId(*m_modelObject, false));
     OS_ASSERT(m_item);
@@ -251,7 +248,6 @@ void OSLineEdit2::emitItemClicked()
     // Tell EditView to display this object
     emit itemClicked(m_item);
   }
-#endif
 }
 
 void OSLineEdit2::onModelObjectRemove(const Handle& handle)
