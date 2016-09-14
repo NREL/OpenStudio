@@ -109,6 +109,7 @@
 #include <QPushButton>
 #include <QLabel>
 #include <QLayout>
+#include <QMutex>
 
 namespace openstudio {
 
@@ -127,10 +128,11 @@ HVACSystemsController::HVACSystemsController(bool isIP, const model::Model & mod
 
   m_hvacControlsController = std::shared_ptr<HVACControlsController>(new HVACControlsController(this));
 
-  // m_model.getImpl<model::detail::Model_Impl>().get()->addWorkspaceObject.connect<HVACSystemsController, &HVACSystemsController::onObjectAdded>(this);
-  connect(OSAppBase::instance(), &OSAppBase::workspaceObjectAdded, this, &HVACSystemsController::onObjectAdded, Qt::QueuedConnection);
+  m_model.getImpl<model::detail::Model_Impl>().get()->addWorkspaceObject.connect<HVACSystemsController, &HVACSystemsController::onObjectAdded>(this);
+  //connect(OSAppBase::instance(), &OSAppBase::workspaceObjectAdded, this, &HVACSystemsController::onObjectAdded, Qt::QueuedConnection);
 
   m_model.getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObject.connect<HVACSystemsController, &HVACSystemsController::onObjectRemoved>(this);
+  //connect(OSAppBase::instance(), &OSAppBase::workspaceObjectRemoved, this, &HVACSystemsController::onObjectRemoved, Qt::QueuedConnection);
 
   connect(m_hvacSystemsView->hvacToolbarView->addButton, &QPushButton::clicked, this, &HVACSystemsController::onAddSystemClicked);
 
@@ -144,12 +146,16 @@ HVACSystemsController::HVACSystemsController(bool isIP, const model::Model & mod
 
   connect(m_hvacSystemsView->hvacToolbarView->gridViewButton, &QPushButton::clicked, this, &HVACSystemsController::onShowGridClicked);
 
+  m_updateMutex = new QMutex();
+
   updateLater();
 }
 
 HVACSystemsController::~HVACSystemsController()
 {
   if( m_hvacSystemsView ) { delete m_hvacSystemsView; }
+
+  delete m_updateMutex;
 }
 
 void HVACSystemsController::clearSceneSelection()
@@ -179,6 +185,10 @@ model::Model HVACSystemsController::model() const
 
 void HVACSystemsController::update()
 {
+  if( ! m_updateMutex->tryLock() ) {
+    return;
+  }
+
   if( m_dirty )
   {
     m_hvacSystemsView->setUpdatesEnabled(false);
@@ -369,6 +379,8 @@ void HVACSystemsController::update()
 
     m_dirty = false;
   }
+
+  m_updateMutex->unlock();
 }
 
 void HVACSystemsController::updateLater()
@@ -1485,6 +1497,12 @@ void HVACLayoutController::updateLater()
   QTimer::singleShot(0,this,SLOT(update()));
 }
 
+SystemAvailabilityVectorController::SystemAvailabilityVectorController() 
+  : ModelObjectVectorController()
+{
+  m_reportItemsMutex = new QMutex();
+}
+
 void SystemAvailabilityVectorController::attach(const model::ModelObject& modelObject)
 {
   detach();
@@ -1510,7 +1528,7 @@ void SystemAvailabilityVectorController::detach()
 
   if( m_model )
   {
-    m_model->getImpl<model::detail::Model_Impl>().get()->onChange.connect<SystemAvailabilityVectorController, &SystemAvailabilityVectorController::reportItemsLater>(this);
+    m_model->getImpl<model::detail::Model_Impl>().get()->onChange.disconnect<SystemAvailabilityVectorController, &SystemAvailabilityVectorController::reportItemsLater>(this);
 
     m_model.reset();
   }
@@ -1527,12 +1545,18 @@ void SystemAvailabilityVectorController::reportItemsLater()
 
 void SystemAvailabilityVectorController::reportItems()
 {
+  if( ! m_reportItemsMutex->tryLock() ) {
+    return;
+  }
+
   if( m_reportScheduled )
   {
     m_reportScheduled = false;
 
     ModelObjectVectorController::reportItems();
   }
+
+  m_reportItemsMutex->unlock();
 }
 
 boost::optional<model::AirLoopHVAC>
@@ -1587,6 +1611,12 @@ void SystemAvailabilityVectorController::onReplaceItem(OSItem * currentItem, con
   onDrop(replacementItemId);
 }
 
+SupplyAirTempScheduleVectorController::SupplyAirTempScheduleVectorController()
+  : ModelObjectVectorController()
+{
+  m_reportItemsMutex = new QMutex();
+}
+
 void SupplyAirTempScheduleVectorController::attach(const model::ModelObject& modelObject)
 {
   detach();
@@ -1612,7 +1642,7 @@ void SupplyAirTempScheduleVectorController::detach()
 
   if( m_model )
   {
-    m_model->getImpl<model::detail::Model_Impl>().get()->onChange.connect<SupplyAirTempScheduleVectorController, &SupplyAirTempScheduleVectorController::reportItemsLater>(this);
+    m_model->getImpl<model::detail::Model_Impl>().get()->onChange.disconnect<SupplyAirTempScheduleVectorController, &SupplyAirTempScheduleVectorController::reportItemsLater>(this);
 
     m_model.reset();
   }
@@ -1629,12 +1659,18 @@ void SupplyAirTempScheduleVectorController::reportItemsLater()
 
 void SupplyAirTempScheduleVectorController::reportItems()
 {
+  if( ! m_reportItemsMutex->tryLock() ) {
+    return;
+  }
+
   if( m_reportScheduled )
   {
     m_reportScheduled = false;
 
     ModelObjectVectorController::reportItems();
   }
+
+  m_reportItemsMutex->unlock();
 }
 
 boost::optional<model::SetpointManagerScheduled>
