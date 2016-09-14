@@ -132,6 +132,8 @@ EnergyManagementSystemOutputVariable::EnergyManagementSystemOutputVariable(const
   : ModelObject(EnergyManagementSystemOutputVariable::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemOutputVariable_Impl>());
+  setUpdateFrequency("ZoneTimestep");
+  setTypeofDatainVariable("Averaged");
 }
 
 IddObjectType EnergyManagementSystemOutputVariable::iddObjectType() {

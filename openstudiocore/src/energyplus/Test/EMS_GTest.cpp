@@ -52,6 +52,8 @@
 #include "../../model/EnergyManagementSystemGlobalVariable_Impl.hpp"
 #include "../../model/EnergyManagementSystemOutputVariable.hpp"
 #include "../../model/EnergyManagementSystemOutputVariable_Impl.hpp"
+#include "../../model/EnergyManagementSystemTrendVariable.hpp"
+#include "../../model/EnergyManagementSystemTrendVariable_Impl.hpp"
 
 #include "../../model/Version.hpp"
 #include "../../model/Version_Impl.hpp"
@@ -80,6 +82,8 @@
 #include <utilities/idd/EnergyManagementSystem_GlobalVariable_FieldEnums.hxx>
 #include <utilities/idd/OS_EnergyManagementSystem_OutputVariable_FieldEnums.hxx>
 #include <utilities/idd/EnergyManagementSystem_OutputVariable_FieldEnums.hxx>
+#include <utilities/idd/OS_EnergyManagementSystem_TrendVariable_FieldEnums.hxx>
+#include <utilities/idd/EnergyManagementSystem_TrendVariable_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
@@ -642,4 +646,34 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorOutputVariable_EMS) {
 
   model.save(toPath("./EMS_OutputVariable.osm"), true);
   workspace.save(toPath("./EMS_OutputVariable.idf"), true);
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslatorTrendVariable_EMS) {
+  Model model;
+
+  // add global variable
+  EnergyManagementSystemGlobalVariable globvar("glob var", model);
+
+  // add trend variable
+  EnergyManagementSystemTrendVariable var(model);
+  var.setName("TestName");
+  EXPECT_EQ("TestName", var.name().get());
+  var.setEMSVariableName("glob var");
+  EXPECT_EQ("glob var", var.eMSVariableName());
+
+  var.setNumberofTimestepstobeLogged(2);
+  EXPECT_EQ(2, var.numberofTimestepstobeLogged());
+
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
+
+  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_TrendVariable).size());
+  WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_TrendVariable)[0];
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_TrendVariableFields::EMSVariableName, false));
+  EXPECT_EQ(globvar.nameString(), object.getString(EnergyManagementSystem_TrendVariableFields::EMSVariableName, false).get());
+  ASSERT_TRUE(object.getDouble(EnergyManagementSystem_TrendVariableFields::NumberofTimestepstobeLogged, false));
+  EXPECT_EQ(2, object.getDouble(EnergyManagementSystem_TrendVariableFields::NumberofTimestepstobeLogged, false).get());
+
+  model.save(toPath("./EMS_TrendVariable.osm"), true);
+  workspace.save(toPath("./EMS_TrendVariable.idf"), true);
 }
