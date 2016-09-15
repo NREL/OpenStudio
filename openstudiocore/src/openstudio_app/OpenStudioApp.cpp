@@ -127,8 +127,9 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv)
   readSettings();
 
   QFile f(":/library/OpenStudioPolicy.xml");
-
-  openstudio::model::AccessPolicyStore::Instance().loadFile(f.readAll());
+  if(f.open(QFile::ReadOnly)) {
+    openstudio::model::AccessPolicyStore::Instance().loadFile(f.readAll());
+  }
 
   QFile data(":/openstudiolib.qss");
   QString style;
