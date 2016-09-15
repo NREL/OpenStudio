@@ -66,10 +66,11 @@ TEST_F(ModelFixture, EMSSubroutine_EMSSubroutine)
   //add fan
   Schedule s = model.alwaysOnDiscreteSchedule();
   FanConstantVolume fan(model, s);
+  fan.setName("fan");
 
   //add actuator on fan
   EnergyManagementSystemActuator fanActuator(fan);
-  std::string fanName = fan.name().get() + "Press Actuator";
+  std::string fanName = fan.name().get() + "Press_Actuator";
   fanActuator.setName(fanName);
   std::string fanControlType = "Fan Pressure Rise";
   fanActuator.setActuatedComponentControlType(fanControlType);
@@ -102,15 +103,15 @@ TEST_F(ModelFixture, EMSSubroutine_EMSSubroutine)
   EXPECT_EQ(line2_test, lines.get()[1]);
   
   EXPECT_EQ(2, fan_program_1.referencedObjects().size());
-  EXPECT_EQ(true, (fan_program_1.referencedObjects()[0].nameString() == fanName) || (fan_program_1.referencedObjects()[0].nameString() == "OATdb Sensor"));
-  EXPECT_EQ(true, (fan_program_1.referencedObjects()[1].nameString() == fanName) || (fan_program_1.referencedObjects()[1].nameString() == "OATdb Sensor"));
+  EXPECT_EQ(true, (fan_program_1.referencedObjects()[0].nameString() == fanName) || (fan_program_1.referencedObjects()[0].nameString() == "OATdb_Sensor"));
+  EXPECT_EQ(true, (fan_program_1.referencedObjects()[1].nameString() == fanName) || (fan_program_1.referencedObjects()[1].nameString() == "OATdb_Sensor"));
   EXPECT_EQ(0, fan_program_1.invalidReferencedObjects().size());
   fanActuator.remove();
   EXPECT_EQ(1, fan_program_1.invalidReferencedObjects().size());
 
   //add actuator on fan again
   EnergyManagementSystemActuator fanActuator2(fan);
-  fanName = fan.name().get() + "Press Actuator";
+  fanName = fan.name().get() + "Press_Actuator";
   fanActuator2.setName(fanName);
   fanControlType = "Fan Pressure Rise";
   fanActuator2.setActuatedComponentControlType(fanControlType);
@@ -143,8 +144,8 @@ TEST_F(ModelFixture, EMSSubroutine_EMSSubroutine)
   EXPECT_EQ(line2_test, lines.get()[1]);
 
   EXPECT_EQ(2, fan_program_2.referencedObjects().size());
-  EXPECT_EQ(true, (fan_program_2.referencedObjects()[0].nameString() == fanName) || (fan_program_2.referencedObjects()[0].nameString() == "OATdb Sensor"));
-  EXPECT_EQ(true, (fan_program_2.referencedObjects()[1].nameString() == fanName) || (fan_program_2.referencedObjects()[1].nameString() == "OATdb Sensor"));
+  EXPECT_EQ(true, (fan_program_2.referencedObjects()[0].nameString() == fanName) || (fan_program_2.referencedObjects()[0].nameString() == "OATdb_Sensor"));
+  EXPECT_EQ(true, (fan_program_2.referencedObjects()[1].nameString() == fanName) || (fan_program_2.referencedObjects()[1].nameString() == "OATdb_Sensor"));
   EXPECT_EQ(0, fan_program_2.invalidReferencedObjects().size());
   OATdbSensor.remove();
   EXPECT_EQ(1, fan_program_2.invalidReferencedObjects().size());
@@ -183,8 +184,8 @@ TEST_F(ModelFixture, EMSSubroutine_EMSSubroutine)
   EXPECT_EQ(line2_test, lines.get()[1]);
 
   EXPECT_EQ(2, fan_program_3.referencedObjects().size());
-  EXPECT_EQ(true, (fan_program_3.referencedObjects()[0].nameString() == fanName) || (fan_program_3.referencedObjects()[0].nameString() == "OATdb Sensor"));
-  EXPECT_EQ(true, (fan_program_3.referencedObjects()[1].nameString() == fanName) || (fan_program_3.referencedObjects()[1].nameString() == "OATdb Sensor"));
+  EXPECT_EQ(true, (fan_program_3.referencedObjects()[0].nameString() == fanName) || (fan_program_3.referencedObjects()[0].nameString() == "OATdb_Sensor"));
+  EXPECT_EQ(true, (fan_program_3.referencedObjects()[1].nameString() == fanName) || (fan_program_3.referencedObjects()[1].nameString() == "OATdb_Sensor"));
   EXPECT_EQ(0, fan_program_3.invalidReferencedObjects().size());
   OATdbSensor2.remove();
   EXPECT_EQ(1, fan_program_3.invalidReferencedObjects().size());

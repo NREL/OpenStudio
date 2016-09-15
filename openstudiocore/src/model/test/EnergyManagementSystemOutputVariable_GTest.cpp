@@ -122,9 +122,9 @@ TEST_F(ModelFixture, EMSOutputVariable_EMSOutputVariable)
   // add program
   EnergyManagementSystemProgram program(model);
   program.setName("program 1");
-  setprogram = outvar.setEMSProgramorSubroutineName("program 1");
+  setprogram = outvar.setEMSProgramorSubroutineName("program_1");
   EXPECT_EQ(true, setprogram);
-  EXPECT_EQ("program 1", outvar.eMSProgramorSubroutineName().get());
+  EXPECT_EQ("program_1", outvar.eMSProgramorSubroutineName().get());
 
 
 }

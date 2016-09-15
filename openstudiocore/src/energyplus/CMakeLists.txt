@@ -121,6 +121,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateElectricLoadCenterStorageSimple.cpp
   ForwardTranslator/ForwardTranslateEnergyManagementSystemActuator.cpp
   ForwardTranslator/ForwardTranslateEnergyManagementSystemGlobalVariable.cpp
+  ForwardTranslator/ForwardTranslateEnergyManagementSystemInternalVariable.cpp
   ForwardTranslator/ForwardTranslateEnergyManagementSystemOutputVariable.cpp
   ForwardTranslator/ForwardTranslateEnergyManagementSystemProgram.cpp
   ForwardTranslator/ForwardTranslateEnergyManagementSystemProgramCallingManager.cpp

@@ -1335,6 +1335,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     retVal = translateEnergyManagementSystemGlobalVariable(globalVariable);
     break;
   }
+  case openstudio::IddObjectType::OS_EnergyManagementSystem_InternalVariable:
+  {
+    model::EnergyManagementSystemInternalVariable internalVariable = modelObject.cast<EnergyManagementSystemInternalVariable>();
+    retVal = translateEnergyManagementSystemInternalVariable(internalVariable);
+    break;
+  }
   case openstudio::IddObjectType::OS_EnergyManagementSystem_OutputVariable:
   {
     model::EnergyManagementSystemOutputVariable outputVariable = modelObject.cast<EnergyManagementSystemOutputVariable>();
@@ -2985,6 +2991,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_Output_Variable);
 
   result.push_back(IddObjectType::OS_EnergyManagementSystem_GlobalVariable);
+  result.push_back(IddObjectType::OS_EnergyManagementSystem_InternalVariable);
   result.push_back(IddObjectType::OS_EnergyManagementSystem_Sensor);
   result.push_back(IddObjectType::OS_EnergyManagementSystem_Actuator);
   result.push_back(IddObjectType::OS_EnergyManagementSystem_Program);
