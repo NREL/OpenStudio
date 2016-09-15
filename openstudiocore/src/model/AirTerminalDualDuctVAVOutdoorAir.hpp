@@ -29,9 +29,12 @@ namespace model {
 
 // TODO: Check the following class names against object getters and setters.
 class Schedule;
+/*class Connection;
 class Connection;
-class Connection;
-class Connection;
+class Connection;*/
+class AirLoopHVAC;
+class Model;
+class Node;
 class DesignSpecificationOutdoorAir;
 
 namespace detail {
@@ -59,24 +62,15 @@ class MODEL_API AirTerminalDualDuctVAVOutdoorAir : public Mixer {
   /** @name Getters */
   //@{
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   boost::optional<Schedule> availabilitySchedule() const;
-
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-  boost::optional<Connection> airOutletNode() const;
-
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-  boost::optional<Connection> outdoorAirInletNode() const;
-
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-  boost::optional<Connection> recirculatedAirInletNode() const;
 
   boost::optional<double> maximumTerminalAirFlowRate() const;
 
   bool isMaximumTerminalAirFlowRateAutosized() const;
 
-  // TODO: Check return type. From object lists, some candidates are: DesignSpecificationOutdoorAir.
+  /*// TODO: Check return type. From object lists, some candidates are: DesignSpecificationOutdoorAir.
   DesignSpecificationOutdoorAir designSpecificationOutdoorAirObject() const;
+  */
 
   std::string perPersonVentilationRateMode() const;
 
@@ -84,35 +78,23 @@ class MODEL_API AirTerminalDualDuctVAVOutdoorAir : public Mixer {
   /** @name Setters */
   //@{
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
   // Note Schedules are passed by reference, not const reference.
   bool setAvailabilitySchedule(Schedule& schedule);
 
   void resetAvailabilitySchedule();
 
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
-  bool setAirOutletNode(const Connection& connection);
-
-  void resetAirOutletNode();
-
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
-  bool setOutdoorAirInletNode(const Connection& connection);
-
-  void resetOutdoorAirInletNode();
-
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
-  bool setRecirculatedAirInletNode(const Connection& connection);
-
-  void resetRecirculatedAirInletNode();
-
   bool setMaximumTerminalAirFlowRate(double maximumTerminalAirFlowRate);
 
   void autosizeMaximumTerminalAirFlowRate();
 
-  // TODO: Check argument type. From object lists, some candidates are: DesignSpecificationOutdoorAir.
   bool setDesignSpecificationOutdoorAirObject(const DesignSpecificationOutdoorAir& designSpecificationOutdoorAir);
 
   bool setPerPersonVentilationRateMode(const std::string& perPersonVentilationRateMode);
+
+  boost::optional<Node> OutdoorAirInletNode() const;
+
+  boost::optional<Node> RecirculatedAirInletNode() const;
+
 
   //@}
   /** @name Other */

@@ -69,24 +69,15 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> availabilitySchedule() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    boost::optional<Connection> airOutletNode() const;
+    boost::optional<Node> OutdoorAirInletNode() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    boost::optional<Connection> outdoorAirInletNode() const;
-
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    boost::optional<Connection> recirculatedAirInletNode() const;
+    boost::optional<Node> RecirculatedAirInletNode() const;
 
     boost::optional<double> maximumTerminalAirFlowRate() const;
 
     bool isMaximumTerminalAirFlowRateAutosized() const;
-
-    // TODO: Check return type. From object lists, some candidates are: DesignSpecificationOutdoorAir.
-    DesignSpecificationOutdoorAir designSpecificationOutdoorAirObject() const;
 
     std::string perPersonVentilationRateMode() const;
 
@@ -94,32 +85,15 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
   // Note Schedules are passed by reference, not const reference.
     bool setAvailabilitySchedule(Schedule& schedule);
 
     void resetAvailabilitySchedule();
 
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setAirOutletNode(const Connection& connection);
-
-    void resetAirOutletNode();
-
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setOutdoorAirInletNode(const Connection& connection);
-
-    void resetOutdoorAirInletNode();
-
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setRecirculatedAirInletNode(const Connection& connection);
-
-    void resetRecirculatedAirInletNode();
-
     bool setMaximumTerminalAirFlowRate(double maximumTerminalAirFlowRate);
 
     void autosizeMaximumTerminalAirFlowRate();
 
-    // TODO: Check argument type. From object lists, some candidates are: DesignSpecificationOutdoorAir.
     bool setDesignSpecificationOutdoorAirObject(const DesignSpecificationOutdoorAir& designSpecificationOutdoorAir);
 
     bool setPerPersonVentilationRateMode(const std::string& perPersonVentilationRateMode);
