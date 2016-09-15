@@ -54,6 +54,8 @@
 #include "../../model/EnergyManagementSystemOutputVariable_Impl.hpp"
 #include "../../model/EnergyManagementSystemTrendVariable.hpp"
 #include "../../model/EnergyManagementSystemTrendVariable_Impl.hpp"
+#include "../../model/EnergyManagementSystemInternalVariable.hpp"
+#include "../../model/EnergyManagementSystemInternalVariable_Impl.hpp"
 
 #include "../../model/Version.hpp"
 #include "../../model/Version_Impl.hpp"
@@ -84,6 +86,8 @@
 #include <utilities/idd/EnergyManagementSystem_OutputVariable_FieldEnums.hxx>
 #include <utilities/idd/OS_EnergyManagementSystem_TrendVariable_FieldEnums.hxx>
 #include <utilities/idd/EnergyManagementSystem_TrendVariable_FieldEnums.hxx>
+#include <utilities/idd/OS_EnergyManagementSystem_InternalVariable_FieldEnums.hxx>
+#include <utilities/idd/EnergyManagementSystem_InternalVariable_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
@@ -128,7 +132,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorSensor1_EMS) {
   WorkspaceObject outvar = workspace.getObjectsByType(IddObjectType::Output_Variable)[0];
 
   ASSERT_TRUE(object.getString(EnergyManagementSystem_SensorFields::Name, false));
-  EXPECT_EQ("OATdb Sensor", object.getString(EnergyManagementSystem_SensorFields::Name, false).get());
+  EXPECT_EQ("OATdb_Sensor", object.getString(EnergyManagementSystem_SensorFields::Name, false).get());
   ASSERT_TRUE(object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterIndexKeyName, false));
   EXPECT_EQ("", object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterIndexKeyName, false).get());
   ASSERT_TRUE(object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName, false));
@@ -165,7 +169,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorSensor2_EMS) {
   WorkspaceObject outvar = workspace.getObjectsByType(IddObjectType::Output_Variable)[0];
 
   ASSERT_TRUE(object.getString(EnergyManagementSystem_SensorFields::Name, false));
-  EXPECT_EQ("Light Sensor", object.getString(EnergyManagementSystem_SensorFields::Name, false).get());
+  EXPECT_EQ("Light_Sensor", object.getString(EnergyManagementSystem_SensorFields::Name, false).get());
   ASSERT_TRUE(object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterIndexKeyName, false));
   EXPECT_EQ(zone1.name().get(), object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterIndexKeyName, false).get());
   ASSERT_TRUE(object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName, false));
@@ -203,7 +207,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorSensoronMeter_EMS) {
   WorkspaceObject outvar = workspace.getObjectsByType(IddObjectType::Output_Meter)[0];
 
   ASSERT_TRUE(object.getString(EnergyManagementSystem_SensorFields::Name, false));
-  EXPECT_EQ("meter sensor", object.getString(EnergyManagementSystem_SensorFields::Name, false).get());
+  EXPECT_EQ("meter_sensor", object.getString(EnergyManagementSystem_SensorFields::Name, false).get());
   ASSERT_TRUE(object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterIndexKeyName, false));
   EXPECT_EQ("", object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterIndexKeyName, false).get());
   ASSERT_TRUE(object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName, false));
@@ -243,7 +247,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_EMS) {
   WorkspaceObject outvar = workspace.getObjectsByType(IddObjectType::Fan_ConstantVolume)[0];
 
   ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::Name, false));
-  EXPECT_EQ(fanName, object.getString(EnergyManagementSystem_ActuatorFields::Name, false).get());
+  EXPECT_EQ("Fan_Constant_Volume_1Press_Actuator", object.getString(EnergyManagementSystem_ActuatorFields::Name, false).get());
   ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false));
   EXPECT_EQ(fan.name().get(), object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false).get());
   ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false));
@@ -319,7 +323,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorProgram_EMS) {
   WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Program)[0];
 
   ASSERT_TRUE(object.getString(EnergyManagementSystem_ProgramFields::Name, false));
-  EXPECT_EQ(programName, object.getString(EnergyManagementSystem_ProgramFields::Name, false).get());
+  EXPECT_EQ("Fan_Constant_Volume_1Pressure_Rise_Program_by_Body", object.getString(EnergyManagementSystem_ProgramFields::Name, false).get());
 
   workspace.save(toPath("./EMS_program.idf"), true);
 }
@@ -388,7 +392,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorSubroutine_EMS) {
   WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Subroutine)[0];
 
   ASSERT_TRUE(object.getString(EnergyManagementSystem_SubroutineFields::Name, false));
-  EXPECT_EQ(programName, object.getString(EnergyManagementSystem_SubroutineFields::Name, false).get());
+  EXPECT_EQ("Fan_Constant_Volume_1Pressure_Rise_Program_by_Body", object.getString(EnergyManagementSystem_SubroutineFields::Name, false).get());
 
   workspace.save(toPath("./EMS_subroutine.idf"), true);
 }
@@ -588,11 +592,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorGlobalVariable_EMS) {
 
   // add global variable
   EnergyManagementSystemGlobalVariable var("glob var", model);
-  EXPECT_EQ("glob var", var.nameString());
+  EXPECT_EQ("glob_var", var.nameString());
 
   // add global variable
   EnergyManagementSystemGlobalVariable var2("glob var 2", model);
-  EXPECT_EQ("glob var 2", var2.nameString());
+  EXPECT_EQ("glob_var_2", var2.nameString());
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
@@ -612,11 +616,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorOutputVariable_EMS) {
 
   // add global variable
   EnergyManagementSystemGlobalVariable var("glob var", model);
-  EXPECT_EQ("glob var", var.nameString());
+  EXPECT_EQ("glob_var", var.nameString());
 
   // add global variable
   EnergyManagementSystemGlobalVariable var2("glob var 2", model);
-  EXPECT_EQ("glob var 2", var2.nameString());
+  EXPECT_EQ("glob_var_2", var2.nameString());
 
   // add output variable
   EnergyManagementSystemOutputVariable outvar(model);
@@ -624,7 +628,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorOutputVariable_EMS) {
   outvar.setName("outputVar");
   EXPECT_EQ("outputVar", outvar.nameString());
 
-  bool varset = outvar.setEMSVariableName("glob var");
+  bool varset = outvar.setEMSVariableName("glob_var");
   EXPECT_EQ(true, varset);
 
   // add output variable
@@ -633,7 +637,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorOutputVariable_EMS) {
   outvar2.setName("outputVar2");
   EXPECT_EQ("outputVar2", outvar2.nameString());
 
-  varset = outvar2.setEMSVariableName("glob var 2");
+  varset = outvar2.setEMSVariableName("glob_var_2");
   EXPECT_EQ(true, varset);
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
@@ -658,8 +662,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorTrendVariable_EMS) {
   EnergyManagementSystemTrendVariable var(model);
   var.setName("TestName");
   EXPECT_EQ("TestName", var.name().get());
-  var.setEMSVariableName("glob var");
-  EXPECT_EQ("glob var", var.eMSVariableName());
+  var.setEMSVariableName("glob_var");
+  EXPECT_EQ("glob_var", var.eMSVariableName());
 
   var.setNumberofTimestepstobeLogged(2);
   EXPECT_EQ(2, var.numberofTimestepstobeLogged());
@@ -676,4 +680,27 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorTrendVariable_EMS) {
 
   model.save(toPath("./EMS_TrendVariable.osm"), true);
   workspace.save(toPath("./EMS_TrendVariable.idf"), true);
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslatorInternalVariable_EMS) {
+  Model model;
+
+  // add internal variable
+  EnergyManagementSystemInternalVariable var(model);
+  var.setName("Test name");
+  var.setInternalDataIndexKeyName("TestName");
+  var.setInternalDataType("TestName");
+
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
+
+  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_InternalVariable).size());
+  WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_InternalVariable)[0];
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_InternalVariableFields::InternalDataIndexKeyName, false));
+  EXPECT_EQ("TestName", object.getString(EnergyManagementSystem_InternalVariableFields::InternalDataIndexKeyName, false).get());
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_InternalVariableFields::InternalDataType, false));
+  EXPECT_EQ("TestName", object.getString(EnergyManagementSystem_InternalVariableFields::InternalDataType, false).get());
+
+  model.save(toPath("./EMS_InternalVariable.osm"), true);
+  workspace.save(toPath("./EMS_InternalVariable.idf"), true);
 }

@@ -46,8 +46,8 @@ TEST_F(ModelFixture, EMSTrendVariable_EMSTrendVariable)
   EnergyManagementSystemTrendVariable var(model);
   var.setName("TestName");
   EXPECT_EQ("TestName", var.name().get());
-  var.setEMSVariableName("glob var");
-  EXPECT_EQ("glob var", var.eMSVariableName());
+  var.setEMSVariableName("glob_var");
+  EXPECT_EQ("glob_var", var.eMSVariableName());
 
   var.setNumberofTimestepstobeLogged(2);
   EXPECT_EQ(2, var.numberofTimestepstobeLogged());
