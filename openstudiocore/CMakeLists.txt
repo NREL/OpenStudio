@@ -1059,6 +1059,9 @@ if( Qt5Static )
     list(APPEND QT_LIBS "${QT_STATIC_INSTALL_DIR}/lib/libQt5PlatformSupport.a")
     list(APPEND QT_LIBS "${QT_STATIC_INSTALL_DIR}/lib/libQt5XcbQpa.a")
     list(APPEND QT_LIBS "${QT_STATIC_INSTALL_DIR}/plugins/platforms/libqxcb.a")
+    list(APPEND QT_LIBS "${QT_STATIC_INSTALL_DIR}/plugins/sqldrivers/libqsqlite.a")
+    
+    list(APPEND QT_LIBS ${x11_xcb_lib})
     #list(APPEND QT_LIBS "${QT_STATIC_INSTALL_DIR}/plugins/xcbglintegrations/libqxcb-egl-integration.a")
 	endif()
 
