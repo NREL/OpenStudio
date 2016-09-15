@@ -276,87 +276,114 @@ int main(int argc, char *argv[])
 
     Init_bigdecimal();
     rb_provide("bigdecimal");
+    rb_provide("bigdecimal.so");
     
     Init_bubblebabble();
     rb_provide("bubblebabble");    
-    
+    rb_provide("bubblebabble.so");  
+
     //Init_callback();
     //rb_provide("callback");
     
     Init_complex();
     rb_provide("complex");
-    
+    rb_provide("complex.so");
+
     Init_console();
     rb_provide("console"); 
-    
+    rb_provide("console.so"); 
+
     Init_continuation();
     rb_provide("continuation");
-    
+    rb_provide("continuation.so");
+
     Init_coverage();
     rb_provide("coverage");
-    
+    rb_provide("coverage.so");
+
     Init_cparse();
     rb_provide("cparse");
-    
+    rb_provide("cparse.so");
+
     Init_date_core();
     rb_provide("date_core");
-  
+    rb_provide("date_core.so");
+
     Init_md5();
     rb_provide("digest/md5");
-    
+    rb_provide("digest/md5.so");
+
     Init_rmd160();
     rb_provide("digest/rmd160");
-    
+    rb_provide("digest/rmd160.so");
+
     Init_sha1();
     rb_provide("digest/sha1");
-    
+    rb_provide("digest/sha1.so");
+
     Init_sha2();
     rb_provide("digest/sha2");
-    
+    rb_provide("digest/sha2.so");
+
     Init_dl();
     rb_provide("dl");
-    
+    rb_provide("dl.so");
+
     Init_etc();
     rb_provide("etc");
-    
+    rb_provide("etc.so");
+
     Init_fcntl();
     rb_provide("fcntl");    
-    
+    rb_provide("fcntl.so"); 
+
     Init_fiber();
     rb_provide("fiber");
-    
+    rb_provide("fiber.so");
+
     Init_generator();
     rb_provide("json/ext/generator");
-    
+    rb_provide("json/ext/generator.so");
+
     Init_nkf();
     rb_provide("nkf");
-    
+    rb_provide("nkf.so");
+
     Init_nonblock();
     rb_provide("nonblock");
-    
+    rb_provide("nonblock.so");
+
     Init_objspace();
     rb_provide("objspace");
-    
+    rb_provide("objspace.so");
+
     //Init_openssl();
     //rb_provide("openssl");
+    //rb_provide("openssl.so");
     
     Init_parser();
     rb_provide("json/ext/parser");
-    
+    rb_provide("json/ext/parser.so");
+
     Init_pathname();
     rb_provide("pathname");
+    rb_provide("pathname.so");
     
     //Init_psych();
     //rb_provide("psych");
-    
+    //rb_provide("psych.so");
+
     Init_pty();
     rb_provide("pty");
+    rb_provide("pty.so");
     
     Init_rational();
     rb_provide("rational");
+    rb_provide("rational.so");
     
     //Init_readline();
     //rb_provide("readline");
+    //rb_provide("readline.so");
     
     Init_ripper();
     rb_provide("ripper");
@@ -364,23 +391,29 @@ int main(int argc, char *argv[])
     
     Init_sdbm();
     rb_provide("sdbm");
+    rb_provide("sdbm.so");
   
     Init_socket();
     rb_provide("socket");
     rb_provide("socket.so");
     rb_provide("stringio");
+    rb_provide("stringio.so");
     
     Init_strscan();
     rb_provide("strscan");
+    rb_provide("strscan.so");
     
     Init_syslog();
     rb_provide("syslog");
+    rb_provide("syslog.so");
     
     Init_wait();
     rb_provide("wait");    
-    
+    rb_provide("wait.so"); 
+
     Init_zlib();
     rb_provide("zlib");
+    rb_provide("zlib.so");
 
     // openstudio
     init_openstudio_internal();

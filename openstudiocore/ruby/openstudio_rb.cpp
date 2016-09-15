@@ -13,7 +13,7 @@
   #elif defined(Q_OS_WIN)
     Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin);
   #elif defined(Q_OS_LINUX)
-    Q_IMPORT_PLUGIN(QXcbIntegrationPlugin);    
+    Q_IMPORT_PLUGIN(QXcbIntegrationPlugin);  
   #endif
 
 #endif // QT_STATIC
