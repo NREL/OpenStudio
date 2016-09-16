@@ -206,25 +206,25 @@ TEST_F(ModelFixture, EMSProgram_EMSProgram)
 TEST_F(ModelFixture, EMSProgram_EMSProgram2) {
   Model model;
 
-  Building building = model.getUniqueModelObject<Building>();
+  //Building building = model.getUniqueModelObject<Building>();
 
-  ThermalZone zone1(model);
-  ThermalZone zone2(model);
+  //ThermalZone zone1(model);
+  //ThermalZone zone2(model);
 
   //add program
   EnergyManagementSystemProgram program_1(model);
   std::string programName = "program one";
   program_1.setName(programName);
-  EXPECT_EQ("program one", program_1.nameString());
+  EXPECT_EQ("program_one", program_1.nameString());
   EnergyManagementSystemProgram program_2(model);
   program_2.setName(programName);
-  EXPECT_EQ("program one_1", program_2.nameString());
+  EXPECT_EQ("program_one_1", program_2.nameString());
   EnergyManagementSystemProgram program_3(model);
   program_3.setName(programName);
-  EXPECT_EQ("program one_1", program_3.nameString());
+  EXPECT_EQ("program_one_2", program_3.nameString());
   EnergyManagementSystemProgram program_4(model);
   program_4.setName("program one");
-  EXPECT_EQ("program one_1", program_4.nameString());
+  EXPECT_EQ("program_one_3", program_4.nameString());
 
 }
 
