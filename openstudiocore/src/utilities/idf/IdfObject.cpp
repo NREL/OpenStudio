@@ -432,13 +432,13 @@ namespace detail {
     std::string newName = encodeString(_newName);
 
     switch (m_iddObject.type().value()) {
-      // get all EMS idd object types in both E+ and OS IDD
+    // get all EMS idd object types in both E+ and OS IDD
     case openstudio::IddObjectType::EnergyManagementSystem_Actuator:; // deliberate fall through
     case openstudio::IddObjectType::OS_EnergyManagementSystem_Actuator:; // deliberate fall through
     //case openstudio::IddObjectType::EnergyManagementSystem_ConstructionIndexVariable:; // TODO uncomment when wrapped
     //case openstudio::IddObjectType::OS_EnergyManagementSystem_ConstructionIndexVariable:; // deliberate fall through
-      //case openstudio::IddObjectType::EnergyManagementSystem_CurveOrTableIndexVariable:; // TODO uncomment when wrapped
-      //case openstudio::IddObjectType::OS_EnergyManagementSystem_CurveOrTableIndexVariable:; // deliberate fall through
+    //case openstudio::IddObjectType::EnergyManagementSystem_CurveOrTableIndexVariable:; // TODO uncomment when wrapped
+    //case openstudio::IddObjectType::OS_EnergyManagementSystem_CurveOrTableIndexVariable:; // deliberate fall through
     case openstudio::IddObjectType::EnergyManagementSystem_GlobalVariable:; // deliberate fall through
     case openstudio::IddObjectType::OS_EnergyManagementSystem_GlobalVariable:; // deliberate fall through
     case openstudio::IddObjectType::EnergyManagementSystem_InternalVariable:; // deliberate fall through
@@ -456,7 +456,7 @@ namespace detail {
       break;
     //case openstudio::IddObjectType::EnergyManagementSystem_OutputVariable:; // deliberate fall through
     //case openstudio::IddObjectType::OS_EnergyManagementSystem_OutputVariable:; // deliberate fall through
-      //Enforce Title-Case
+      //TODO Enforce Title-Case
     default:
       // no-op
       break;
@@ -477,36 +477,12 @@ namespace detail {
       if (i < n) {
         std::string oldName = m_fields[i];
         m_fields[i] = newName;
-        //std::size_t found;
-        //switch (m_iddObject.type().value()) {
-        //case openstudio::IddObjectType::EnergyManagementSystem_Program:; // deliberate fall through
-        //case openstudio::IddObjectType::OS_EnergyManagementSystem_Program:; // deliberate fall through
-        //  //check if last is _#
-        //  
-         // found = newName.find_last_of("_");
-        //  if (found + 1 < newName.npos) {         
-        //    std::string poss_num = newName.substr(found + 1, newName.npos);
-        //   std::string::const_iterator it = poss_num.begin();
-        //    while (it != poss_num.end() && std::isdigit(*it)) ++it;
-        //    bool temp = !poss_num.empty() && it == poss_num.end();
-        //    if (temp) {
-        //      //std::replace(newName.begin(), newName.end(), '_', ' ');
-        //      m_diffs.push_back(IdfObjectDiff(i, oldName, _newName));
-        //      break;
-        //    }
-        //  }
-        //  m_diffs.push_back(IdfObjectDiff(i, oldName, newName));
-        //  break;
-        //default:
-          m_diffs.push_back(IdfObjectDiff(i, oldName, newName));
-        //  break;
-        //}
+        m_diffs.push_back(IdfObjectDiff(i, oldName, newName));
       } 
       else { 
         m_fields.push_back(newName);
         m_diffs.push_back(IdfObjectDiff(i, boost::none, newName));
       }
-      //TODO should this be newName or _nameName?? -BLB
       return newName; // success!
     }
     return boost::none; // no name

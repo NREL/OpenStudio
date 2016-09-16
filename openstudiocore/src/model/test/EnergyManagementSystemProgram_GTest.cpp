@@ -206,10 +206,10 @@ TEST_F(ModelFixture, EMSProgram_EMSProgram)
 TEST_F(ModelFixture, EMSProgram_EMSProgram2) {
   Model model;
 
-  //Building building = model.getUniqueModelObject<Building>();
+  Building building = model.getUniqueModelObject<Building>();
 
-  //ThermalZone zone1(model);
-  //ThermalZone zone2(model);
+  ThermalZone zone1(model);
+  ThermalZone zone2(model);
 
   //add program
   EnergyManagementSystemProgram program_1(model);
@@ -226,5 +226,6 @@ TEST_F(ModelFixture, EMSProgram_EMSProgram2) {
   program_4.setName("program one");
   EXPECT_EQ("program_one_3", program_4.nameString());
 
+  model.save(toPath("./EMS_nametest.osm"), true);
 }
 

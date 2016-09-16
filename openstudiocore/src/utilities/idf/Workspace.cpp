@@ -1925,6 +1925,9 @@ namespace detail {
 
   boost::optional<int> Workspace_Impl::getNameSuffix(const std::string& objectName) const {
     std::size_t found = objectName.find_last_of(' ');
+    if (found == string::npos) {
+      found = objectName.find_last_of('_');
+    }
     if ( found != string::npos ) {
       std::string strSuffix = objectName.substr(found+1);
       const char *p = strSuffix.c_str();
@@ -1942,6 +1945,9 @@ namespace detail {
 
   std::string Workspace_Impl::getBaseName(const std::string& objectName) const {
     std::size_t found = objectName.find_last_of(' ');
+    if (found == string::npos) {
+      found = objectName.find_last_of('_');
+    }
     if ( found != string::npos ) {
       std::string strSuffix = objectName.substr(found+1);
       const char *p = strSuffix.c_str();
