@@ -477,13 +477,37 @@ namespace detail {
       if (i < n) {
         std::string oldName = m_fields[i];
         m_fields[i] = newName;
-        m_diffs.push_back(IdfObjectDiff(i, oldName, newName));
+        //std::size_t found;
+        //switch (m_iddObject.type().value()) {
+        //case openstudio::IddObjectType::EnergyManagementSystem_Program:; // deliberate fall through
+        //case openstudio::IddObjectType::OS_EnergyManagementSystem_Program:; // deliberate fall through
+        //  //check if last is _#
+        //  
+         // found = newName.find_last_of("_");
+        //  if (found + 1 < newName.npos) {         
+        //    std::string poss_num = newName.substr(found + 1, newName.npos);
+        //   std::string::const_iterator it = poss_num.begin();
+        //    while (it != poss_num.end() && std::isdigit(*it)) ++it;
+        //    bool temp = !poss_num.empty() && it == poss_num.end();
+        //    if (temp) {
+        //      //std::replace(newName.begin(), newName.end(), '_', ' ');
+        //      m_diffs.push_back(IdfObjectDiff(i, oldName, _newName));
+        //      break;
+        //    }
+        //  }
+        //  m_diffs.push_back(IdfObjectDiff(i, oldName, newName));
+        //  break;
+        //default:
+          m_diffs.push_back(IdfObjectDiff(i, oldName, newName));
+        //  break;
+        //}
       } 
       else { 
         m_fields.push_back(newName);
         m_diffs.push_back(IdfObjectDiff(i, boost::none, newName));
       }
-      return _newName; // success!
+      //TODO should this be newName or _nameName?? -BLB
+      return newName; // success!
     }
     return boost::none; // no name
   }
