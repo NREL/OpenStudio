@@ -1924,10 +1924,23 @@ namespace detail {
   }
 
   boost::optional<int> Workspace_Impl::getNameSuffix(const std::string& objectName) const {
-    std::size_t found = objectName.find_last_of(' ');
-    if (found == string::npos) {
-      found = objectName.find_last_of('_');
+    //Mark method
+    //std::size_t found = objectName.find_last_of(' ');
+    //if (found == string::npos) {
+    //  found = objectName.find_last_of('_');
+    //}
+    //Dan method
+    std::size_t found1 = objectName.find_last_of(' ');
+    std::size_t found2 = objectName.find_last_of('_');
+    std::size_t found = string::npos;
+    if (found1 != string::npos && found2 != string::npos) {
+      found = std::max(found1, found2);
+    } else if (found1 != string::npos) {
+      found = found1;
+    } else if (found2 != string::npos) {
+      found = found2;
     }
+    
     if ( found != string::npos ) {
       std::string strSuffix = objectName.substr(found+1);
       const char *p = strSuffix.c_str();
@@ -1944,10 +1957,23 @@ namespace detail {
   }
 
   std::string Workspace_Impl::getBaseName(const std::string& objectName) const {
-    std::size_t found = objectName.find_last_of(' ');
-    if (found == string::npos) {
-      found = objectName.find_last_of('_');
+    //Mark method
+    //std::size_t found = objectName.find_last_of(' ');
+    //if (found == string::npos) {
+    //  found = objectName.find_last_of('_');
+    //}
+    //Dan method
+    std::size_t found1 = objectName.find_last_of(' ');
+    std::size_t found2 = objectName.find_last_of('_');
+    std::size_t found = string::npos;
+    if (found1 != string::npos && found2 != string::npos) {
+      found = std::max(found1, found2);
+    } else if (found1 != string::npos) {
+      found = found1;
+    } else if (found2 != string::npos) {
+      found = found2;
     }
+    
     if ( found != string::npos ) {
       std::string strSuffix = objectName.substr(found+1);
       const char *p = strSuffix.c_str();
