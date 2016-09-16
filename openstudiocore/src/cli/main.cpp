@@ -373,10 +373,12 @@ int main(int argc, char *argv[])
     //rb_provide("psych");
     //rb_provide("psych.so");
 
+#ifndef _MSC_VER
     Init_pty();
     rb_provide("pty");
     rb_provide("pty.so");
-    
+#endif
+
     Init_rational();
     rb_provide("rational");
     rb_provide("rational.so");
@@ -403,17 +405,21 @@ int main(int argc, char *argv[])
     rb_provide("strscan");
     rb_provide("strscan.so");
     
+#ifndef _MSC_VER
     Init_syslog();
     rb_provide("syslog");
     rb_provide("syslog.so");
-    
+#endif
+
     Init_wait();
     rb_provide("wait");    
     rb_provide("wait.so"); 
 
+#ifndef _MSC_VER
     Init_zlib();
     rb_provide("zlib");
     rb_provide("zlib.so");
+#endif
 
     // openstudio
     init_openstudio_internal();
