@@ -143,7 +143,7 @@ void OtherEquipmentDefinitionInspectorView::onUpdate()
 
 void OtherEquipmentDefinitionInspectorView::attach(openstudio::model::OtherEquipmentDefinition & otherEquipmentDefinition)
 {
-  boost::optional<model::OtherEquipmentDefinition> m_otherEquipmentDefinition = otherEquipmentDefinition;
+  m_otherEquipmentDefinition = otherEquipmentDefinition;
   // m_nameEdit->bind(otherEquipmentDefinition,"name");
   m_nameEdit->bind(
     *m_otherEquipmentDefinition,
@@ -225,6 +225,8 @@ void OtherEquipmentDefinitionInspectorView::detach()
   m_fractionLatentEdit->unbind();
   m_fractionRadiantEdit->unbind();
   m_fractionLostEdit->unbind();
+
+  m_otherEquipmentDefinition = boost::none;
 }
 
 void OtherEquipmentDefinitionInspectorView::refresh()

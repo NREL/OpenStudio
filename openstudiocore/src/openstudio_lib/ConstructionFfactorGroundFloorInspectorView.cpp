@@ -158,15 +158,14 @@ void ConstructionFfactorGroundFloorInspectorView::onUpdate()
 
 void ConstructionFfactorGroundFloorInspectorView::attach(openstudio::model::FFactorGroundFloorConstruction & fFactorGroundFloorConstruction)
 {
-  boost::optional<model::FFactorGroundFloorConstruction> m_fFactorGroundFloorConstruction = fFactorGroundFloorConstruction;
-  // m_nameEdit->bind(fFactorGroundFloorConstruction,"name");
+  m_fFactorGroundFloorConstruction = fFactorGroundFloorConstruction;
+
   m_nameEdit->bind(
     *m_fFactorGroundFloorConstruction,
     OptionalStringGetter(std::bind(&model::FFactorGroundFloorConstruction::name, m_fFactorGroundFloorConstruction.get_ptr(),true)),
     boost::optional<StringSetter>(std::bind(&model::FFactorGroundFloorConstruction::setName, m_fFactorGroundFloorConstruction.get_ptr(),std::placeholders::_1))
   );
 
-  // m_ffactorEdit->bind(fFactorGroundFloorConstruction,"fFactor",m_isIP);
   m_ffactorEdit->bind(
     m_isIP,
     *m_fFactorGroundFloorConstruction,
@@ -174,7 +173,6 @@ void ConstructionFfactorGroundFloorInspectorView::attach(openstudio::model::FFac
     boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::FFactorGroundFloorConstruction::*)(double)>(&model::FFactorGroundFloorConstruction::setFFactor), m_fFactorGroundFloorConstruction.get_ptr(), std::placeholders::_1))
   );
 
-  // m_areaEdit->bind(fFactorGroundFloorConstruction,"area",m_isIP);
   m_areaEdit->bind(
     m_isIP,
     *m_fFactorGroundFloorConstruction,
@@ -182,7 +180,6 @@ void ConstructionFfactorGroundFloorInspectorView::attach(openstudio::model::FFac
     boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::FFactorGroundFloorConstruction::*)(double)>(&model::FFactorGroundFloorConstruction::setArea), m_fFactorGroundFloorConstruction.get_ptr(), std::placeholders::_1))
   );
 
-  // m_perimeterExposedEdit->bind(fFactorGroundFloorConstruction,"perimeterExposed",m_isIP);
   m_perimeterExposedEdit->bind(
     m_isIP,
     *m_fFactorGroundFloorConstruction,
@@ -190,7 +187,7 @@ void ConstructionFfactorGroundFloorInspectorView::attach(openstudio::model::FFac
     boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::FFactorGroundFloorConstruction::*)(double)>(&model::FFactorGroundFloorConstruction::setPerimeterExposed), m_fFactorGroundFloorConstruction.get_ptr(), std::placeholders::_1))
   );
   
-  m_standardsInformationWidget->attach(fFactorGroundFloorConstruction);
+  m_standardsInformationWidget->attach(m_fFactorGroundFloorConstruction.get());
 }
 
 void ConstructionFfactorGroundFloorInspectorView::detach()
@@ -200,6 +197,8 @@ void ConstructionFfactorGroundFloorInspectorView::detach()
   m_perimeterExposedEdit->unbind();
 
   m_standardsInformationWidget->detach();
+
+  m_fFactorGroundFloorConstruction = boost::none;
 }
 
 } // openstudio

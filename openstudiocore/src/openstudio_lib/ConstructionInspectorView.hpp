@@ -21,13 +21,13 @@
 #define OPENSTUDIO_CONSTRUCTIONINSPECTORVIEW_HPP
 
 #include "ModelObjectInspectorView.hpp"
+#include "../model/Construction.hpp"
 
 class QComboBox;
 
 namespace openstudio {
 
 namespace model {
- class Construction;
  class ConstructionBase;
 }
 
@@ -76,6 +76,8 @@ class ConstructionInspectorView : public ModelObjectInspectorView
     OSDropZone * m_constructionDZ;
 
     ConstructionObjectVectorController * m_constructionVC;
+
+    boost::optional<model::Construction> m_construction;
 };
 
 } // openstudio

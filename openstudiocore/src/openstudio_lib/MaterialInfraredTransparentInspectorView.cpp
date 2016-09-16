@@ -108,8 +108,8 @@ void MaterialInfraredTransparentInspectorView::onUpdate()
 
 void MaterialInfraredTransparentInspectorView::attach(openstudio::model::InfraredTransparentMaterial & infraredTransparentMaterial)
 {
-  boost::optional<model::InfraredTransparentMaterial> m_infraredTransparentMaterial = infraredTransparentMaterial;
-  
+  m_infraredTransparentMaterial = infraredTransparentMaterial;
+
   // m_nameEdit->bind(infraredTransparentMaterial,"name");
   m_nameEdit->bind(
     *m_infraredTransparentMaterial,
@@ -127,6 +127,8 @@ void MaterialInfraredTransparentInspectorView::detach()
   this->stackedWidget()->setCurrentIndex(0);
 
   m_nameEdit->unbind();
+
+  m_infraredTransparentMaterial = boost::none;
 
   m_standardsInformationWidget->detach();
 }

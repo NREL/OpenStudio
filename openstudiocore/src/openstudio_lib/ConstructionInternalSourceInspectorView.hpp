@@ -21,16 +21,11 @@
 #define OPENSTUDIO_CONSTRUCTIONINTERNALSOURCEINSPECTORVIEW_HPP
 
 #include "ModelObjectInspectorView.hpp"
+#include "../model/ConstructionWithInternalSource.hpp"
 
 class QComboBox;
 
 namespace openstudio {
-
-namespace model {
-
-  class ConstructionWithInternalSource;
-
-}
 
 class ConstructionObjectVectorController;
 
@@ -89,6 +84,8 @@ class ConstructionInternalSourceInspectorView : public ModelObjectInspectorView
     OSIntegerEdit2 * m_dimensionsForTheCTFCalculationEdit;
 
     OSQuantityEdit2 * m_tubeSpacingEdit;
+
+    boost::optional<model::ConstructionWithInternalSource> m_constructionWithInternalSource;
 };
 
 } // openstudio

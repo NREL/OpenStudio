@@ -1,17 +1,17 @@
 /**********************************************************************
- *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
- *  
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *  
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *  
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
@@ -21,14 +21,9 @@
 #define OPENSTUDIO_MATERIALNOMASSINSPECTORVIEW_HPP
 
 #include "ModelObjectInspectorView.hpp"
+#include "../model/MasslessOpaqueMaterial.hpp"
 
 namespace openstudio {
-
-namespace model {
-
-  class MasslessOpaqueMaterial;
-
-}
 
 class OSComboBox2;
 
@@ -68,10 +63,12 @@ class MaterialNoMassInspectorView : public ModelObjectInspectorView
 
     bool m_isIP;
 
-    OSLineEdit2 * m_nameEdit = nullptr;  
+    boost::optional<model::MasslessOpaqueMaterial> m_masslessOpaqueMaterial;
+
+    OSLineEdit2 * m_nameEdit = nullptr;
 
     OSComboBox2 * m_roughness = nullptr;
-        
+
     OSQuantityEdit2 * m_thermalResistance = nullptr;
 
     OSQuantityEdit2 * m_thermalAbsorptance = nullptr;

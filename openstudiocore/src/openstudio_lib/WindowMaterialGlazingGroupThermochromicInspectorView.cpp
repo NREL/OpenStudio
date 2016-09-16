@@ -130,7 +130,7 @@ void WindowMaterialGlazingGroupThermochromicInspectorView::onUpdate()
 void WindowMaterialGlazingGroupThermochromicInspectorView::attach(openstudio::model::ThermochromicGlazing & thermochromicGlazing)
 {
   // m_nameEdit->bind(thermochromicGlazing,"name");
-  boost::optional<model::ThermochromicGlazing> m_thermochromicGlazing = thermochromicGlazing;
+  m_thermochromicGlazing = thermochromicGlazing;
   m_nameEdit->bind(
     *m_thermochromicGlazing,
     OptionalStringGetter(std::bind(&model::ThermochromicGlazing::name, m_thermochromicGlazing.get_ptr(),true)),
@@ -144,7 +144,7 @@ void WindowMaterialGlazingGroupThermochromicInspectorView::attach(openstudio::mo
   //  DoubleSetterVoidReturn(std::bind(&model::ThermochromicGlazing::setOpticalDataTemperature,thermochromicGlazing,_1)));
 
   // m_windowMaterialGlazingName->bind(thermochromicGlazing,"windowMaterialGlazingName");
-  
+
   // TODO: Reimplement when "windowMaterialGlazingName" is found
   // m_windowMaterialGlazingName->bind(
   //   *m_thermochromicGlazing,
@@ -166,6 +166,8 @@ void WindowMaterialGlazingGroupThermochromicInspectorView::detach()
   m_nameEdit->unbind();
   m_opticalDataTemperature->unbind();
   m_windowMaterialGlazingName->unbind();
+
+  m_thermochromicGlazing = boost::none;
 
   m_standardsInformationWidget->detach();
 }

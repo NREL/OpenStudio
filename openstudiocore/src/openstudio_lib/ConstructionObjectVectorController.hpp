@@ -39,6 +39,8 @@ public:
 protected:
   
   virtual void onChangeRelationship(const model::ModelObject& modelObject, int index, Handle newHandle, Handle oldHandle) override;
+
+  virtual void onDataChange(const model::ModelObject& modelObject) override;
   
   virtual std::vector<OSItemId> makeVector() override;
   

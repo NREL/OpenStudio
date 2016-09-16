@@ -102,6 +102,24 @@ void OSAppBase::showMeasureUpdateDlg()
 //  }
 //}
 
+void OSAppBase::addWorkspaceObject(const WorkspaceObject& workspaceObject, const openstudio::IddObjectType& type, const openstudio::UUID& uuid) {
+  // Emit QT Signal
+  emit workspaceObjectAdded(workspaceObject, type, uuid);
+}
+
+void OSAppBase::addWorkspaceObjectPtr(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wPtr, const openstudio::IddObjectType& type, const openstudio::UUID& uuid) {
+  // Emit QT Signal
+  emit workspaceObjectAddedPtr(wPtr, type, uuid);
+}
+
+void OSAppBase::removeWorkspaceObject(const WorkspaceObject& workspaceObject, const openstudio::IddObjectType& type, const openstudio::UUID& uuid) {
+  emit workspaceObjectRemoved(workspaceObject, type, uuid);
+}
+
+void OSAppBase::removeWorkspaceObjectPtr(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wPtr, const openstudio::IddObjectType& type, const openstudio::UUID& uuid ) {
+  emit workspaceObjectRemovedPtr(wPtr, type, uuid);
+}
+
 QWidget *OSAppBase::mainWidget()
 {
   std::shared_ptr<OSDocument> document = currentDocument();
@@ -154,7 +172,7 @@ MeasureManager &OSAppBase::measureManager()
 
 void OSAppBase::updateSelectedMeasureState()
 {
-  // DLM: this slot seems out of place here, seems like the connection from the measure list to enabling duplicate buttons, etc 
+  // DLM: this slot seems out of place here, seems like the connection from the measure list to enabling duplicate buttons, etc
   // should be tighter
   std::shared_ptr<OSDocument> document = currentDocument();
 
@@ -208,7 +226,7 @@ void OSAppBase::updateMyMeasures()
     //} else {
       LOG(Error, "Unable to update measures, there is no project set...");
     //}
-  } 
+  }
 }
 
 void OSAppBase::updateBCLMeasures()

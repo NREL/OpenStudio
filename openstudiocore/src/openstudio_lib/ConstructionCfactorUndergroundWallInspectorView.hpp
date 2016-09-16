@@ -22,16 +22,11 @@
 
 #include "ModelObjectInspectorView.hpp"
 #include "ModelObjectVectorController.hpp"
+#include "../model/CFactorUndergroundWallConstruction.hpp"
 
 class QComboBox;
 
 namespace openstudio {
-
-namespace model {
-
- class CFactorUndergroundWallConstruction;
-
-}
 
 class OSLineEdit2;
 
@@ -76,6 +71,8 @@ class ConstructionCfactorUndergroundWallInspectorView : public ModelObjectInspec
     OSQuantityEdit2 * m_cfactorEdit;
 
     OSQuantityEdit2 * m_heightEdit;
+
+    boost::optional<model::CFactorUndergroundWallConstruction> m_cFactorUndergroundWallConstruction;
 };
 
 } // openstudio

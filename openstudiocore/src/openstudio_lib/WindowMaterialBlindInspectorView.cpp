@@ -360,7 +360,7 @@ void WindowMaterialBlindInspectorView::createLayout()
 
   m_maximumSlatAngle = new OSQuantityEdit2("","","", m_isIP);
   connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_maximumSlatAngle, &OSQuantityEdit2::onUnitSystemChange);
-  mainGridLayout->addWidget(m_maximumSlatAngle,row++,0,1,3);  
+  mainGridLayout->addWidget(m_maximumSlatAngle,row++,0,1,3);
 
   // Stretch
 
@@ -390,18 +390,19 @@ void WindowMaterialBlindInspectorView::onUpdate()
 
 void WindowMaterialBlindInspectorView::attach(openstudio::model::Blind & material)
 {
+  m_material = material;
+
   // m_slatOrientation->bind(material,"slatOrientation");
   m_slatOrientation->bind<std::string>(
-      material,
+      *m_material,
       static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
       &model::Blind::slatOrientationValues,
-      std::bind(&model::Blind::slatOrientation, &material),
-      std::bind(&model::Blind::setSlatOrientation, &material, std::placeholders::_1),
-      boost::optional<NoFailAction>(std::bind(&model::Blind::resetSlatOrientation, &material)),
-      boost::optional<BasicQuery>(std::bind(&model::Blind::isSlatOrientationDefaulted, &material)));
+      std::bind(&model::Blind::slatOrientation, m_material.get_ptr()),
+      std::bind(&model::Blind::setSlatOrientation, m_material.get_ptr(), std::placeholders::_1),
+      boost::optional<NoFailAction>(std::bind(&model::Blind::resetSlatOrientation, m_material.get_ptr())),
+      boost::optional<BasicQuery>(std::bind(&model::Blind::isSlatOrientationDefaulted, m_material.get_ptr())));
 
   // m_nameEdit->bind(material,"name");
-  boost::optional<model::Blind> m_material = material;
   m_nameEdit->bind(
     *m_material,
     OptionalStringGetter(std::bind(&model::Blind::name, m_material.get_ptr(),true)),
@@ -730,6 +731,8 @@ void WindowMaterialBlindInspectorView::detach()
   m_blindRightSideOpeningMultiplier->unbind();
   m_minimumSlatAngle->unbind();
   m_maximumSlatAngle->unbind();
+
+  m_material = boost::none;
 
   m_standardsInformationWidget->detach();
 }

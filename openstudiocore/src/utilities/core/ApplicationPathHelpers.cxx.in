@@ -63,20 +63,28 @@ namespace openstudio {
     return openstudio::toPath("${CMAKE_BINARY_DIR}");
   }
 
-  openstudio::path getApplicationRunDirectory() {
+  openstudio::path getApplicationPath() {
 
-  #if defined _WIN32 
-    TCHAR szPath[MAX_PATH];
-    if( GetModuleFileName( nullptr, szPath, MAX_PATH ) ) {
-      return completeAndNormalize(toPath(szPath).parent_path());
-    }
-  #else
-    Dl_info info;
-    if (dladdr("main", &info)) {
-       return completeAndNormalize(toPath(info.dli_fname).parent_path());
-    }
-  #endif
+    #if defined _WIN32 
+      TCHAR szPath[MAX_PATH];
+      if( GetModuleFileName( nullptr, szPath, MAX_PATH ) ) {
+        return completeAndNormalize(toPath(szPath));
+      }
+    #else
+      Dl_info info;
+      if (dladdr("main", &info)) {
+         return completeAndNormalize(toPath(info.dli_fname));
+      }
+    #endif
 
+    return openstudio::path();
+  }
+
+  openstudio::path getApplicationDirectory() {
+    openstudio::path p = getApplicationPath();
+    if (!p.empty()){
+      return p.parent_path();
+    }
     return openstudio::path();
   }
 
@@ -84,10 +92,10 @@ namespace openstudio {
   {
 #ifdef _WIN32
     openstudio::path buildDir = openstudio::toPath(boost::algorithm::to_upper_copy(openstudio::toString(getApplicationBuildDirectory())));
-    openstudio::path runDir = openstudio::toPath(boost::algorithm::to_upper_copy(openstudio::toString(getApplicationRunDirectory())));
+    openstudio::path runDir = openstudio::toPath(boost::algorithm::to_upper_copy(openstudio::toString(getApplicationDirectory())));
 #else
     openstudio::path buildDir = getApplicationBuildDirectory();
-    openstudio::path runDir = getApplicationRunDirectory();
+    openstudio::path runDir = getApplicationDirectory();
 #endif
 
     return pathBeginsWith(buildDir, runDir);
@@ -120,9 +128,9 @@ namespace openstudio {
 
     // next check for installed energyplus
 #ifdef _WIN32
-    openstudio::path installPath = getApplicationRunDirectory() / toPath("/../EnergyPlus/energyplus.exe");
+    openstudio::path installPath = getApplicationDirectory() / toPath("/../EnergyPlus/energyplus.exe");
 #else
-    openstudio::path installPath = getApplicationRunDirectory() / toPath("/../EnergyPlus/energyplus");
+    openstudio::path installPath = getApplicationDirectory() / toPath("/../EnergyPlus/energyplus");
 #endif
     if( openstudio::filesystem::exists(installPath) ) {
       return installPath;
@@ -172,9 +180,9 @@ namespace openstudio {
   #ifdef Q_OS_LINUX
       result = getApplicationInstallDirectory() / openstudio::toPath("share/openstudio-" + openStudioVersion()) / radianceDirectoryName;
   #elif defined(Q_OS_MAC)
-      result = getApplicationRunDirectory().parent_path().parent_path().parent_path() / openstudio::toPath("sharedresources") / radianceDirectoryName;
+      result = getApplicationDirectory().parent_path().parent_path().parent_path() / openstudio::toPath("sharedresources") / radianceDirectoryName;
   #else
-      result = getApplicationRunDirectory().parent_path() / openstudio::toPath("share/openstudio") / radianceDirectoryName;
+      result = getApplicationDirectory().parent_path() / openstudio::toPath("share/openstudio") / radianceDirectoryName;
   #endif
     }
 

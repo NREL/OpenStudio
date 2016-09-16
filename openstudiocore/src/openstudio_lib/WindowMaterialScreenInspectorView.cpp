@@ -201,7 +201,7 @@ void WindowMaterialScreenInspectorView::createLayout()
 
   m_rightSideOpeningMultiplier = new OSQuantityEdit2("","","", m_isIP);
   connect(this, &WindowMaterialScreenInspectorView::toggleUnitsClicked, m_rightSideOpeningMultiplier, &OSQuantityEdit2::onUnitSystemChange);
-  mainGridLayout->addWidget(m_rightSideOpeningMultiplier,row++,0,1,3);  
+  mainGridLayout->addWidget(m_rightSideOpeningMultiplier,row++,0,1,3);
 
   // Angle Of Resolution For Screen Transmittance Output Map
 
@@ -245,28 +245,28 @@ void WindowMaterialScreenInspectorView::onUpdate()
 
 void WindowMaterialScreenInspectorView::attach(openstudio::model::Screen & screen)
 {
+  m_screen = screen;
   // m_reflectedBeamTransmittanceAccountingMethod->bind(screen,"reflectedBeamTransmittanceAccountingMethod");
   m_reflectedBeamTransmittanceAccountingMethod->bind<std::string>(
-      screen,
+      *m_screen,
       static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
       &model::Screen::reflectedBeamTransmittanceAccountingMethodValues,
-      std::bind(&model::Screen::reflectedBeamTransmittanceAccountingMethod, &screen),
-      std::bind(&model::Screen::setReflectedBeamTransmittanceAccountingMethod, &screen, std::placeholders::_1),
-      boost::optional<NoFailAction>(std::bind(&model::Screen::resetReflectedBeamTransmittanceAccountingMethod, &screen)),
-      boost::optional<BasicQuery>(std::bind(&model::Screen::isReflectedBeamTransmittanceAccountingMethodDefaulted, &screen)));
+      std::bind(&model::Screen::reflectedBeamTransmittanceAccountingMethod, m_screen.get_ptr()),
+      std::bind(&model::Screen::setReflectedBeamTransmittanceAccountingMethod, m_screen.get_ptr(), std::placeholders::_1),
+      boost::optional<NoFailAction>(std::bind(&model::Screen::resetReflectedBeamTransmittanceAccountingMethod, m_screen.get_ptr())),
+      boost::optional<BasicQuery>(std::bind(&model::Screen::isReflectedBeamTransmittanceAccountingMethodDefaulted, m_screen.get_ptr())));
 
   // m_angleOfResolutionForScreenTransmittanceOutputMap->bind(screen,"angleofResolutionforScreenTransmittanceOutputMap");
   m_angleOfResolutionForScreenTransmittanceOutputMap->bind<std::string>(
-      screen,
+      *m_screen,
       static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
       &model::Screen::angleofResolutionforScreenTransmittanceOutputMapValues,
-      std::bind(&model::Screen::angleofResolutionforScreenTransmittanceOutputMap, &screen),
-      std::bind(&model::Screen::setAngleofResolutionforScreenTransmittanceOutputMap, &screen, std::placeholders::_1),
-      boost::optional<NoFailAction>(std::bind(&model::Screen::resetAngleofResolutionforScreenTransmittanceOutputMap, &screen)),
-      boost::optional<BasicQuery>(std::bind(&model::Screen::isAngleofResolutionforScreenTransmittanceOutputMapDefaulted, &screen)));
+      std::bind(&model::Screen::angleofResolutionforScreenTransmittanceOutputMap, m_screen.get_ptr()),
+      std::bind(&model::Screen::setAngleofResolutionforScreenTransmittanceOutputMap, m_screen.get_ptr(), std::placeholders::_1),
+      boost::optional<NoFailAction>(std::bind(&model::Screen::resetAngleofResolutionforScreenTransmittanceOutputMap, m_screen.get_ptr())),
+      boost::optional<BasicQuery>(std::bind(&model::Screen::isAngleofResolutionforScreenTransmittanceOutputMapDefaulted, m_screen.get_ptr())));
 
   // m_nameEdit->bind(screen,"name");
-  boost::optional<model::Screen> m_screen = screen;
   m_nameEdit->bind(
     *m_screen,
     OptionalStringGetter(std::bind(&model::Screen::name, m_screen.get_ptr(),true)),
@@ -386,7 +386,7 @@ void WindowMaterialScreenInspectorView::attach(openstudio::model::Screen & scree
     boost::optional<BasicQuery>(std::bind(&model::Screen::isRightSideOpeningMultiplierDefaulted, m_screen.get_ptr()))
   );
 
-  m_standardsInformationWidget->attach(screen);
+  m_standardsInformationWidget->attach(m_screen.get());
 
   this->stackedWidget()->setCurrentIndex(1);
 }
@@ -410,6 +410,8 @@ void WindowMaterialScreenInspectorView::detach()
   m_bottomOpeningMultiplier->unbind();
   m_leftSideOpeningMultiplier->unbind();
   m_rightSideOpeningMultiplier->unbind();
+
+  m_screen = boost::none;
 
   m_standardsInformationWidget->detach();
 }

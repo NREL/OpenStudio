@@ -35,7 +35,7 @@ namespace openstudio {
 
 SteamEquipmentDefinitionInspectorView::SteamEquipmentDefinitionInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent)
   : ModelObjectInspectorView(model, true, parent)
-{ 
+{
   m_isIP = isIP;
 
   auto visibleWidget = new QWidget();
@@ -144,7 +144,7 @@ void SteamEquipmentDefinitionInspectorView::onUpdate()
 void SteamEquipmentDefinitionInspectorView::attach(openstudio::model::SteamEquipmentDefinition & steamEquipmentDefinition)
 {
   // m_nameEdit->bind(steamEquipmentDefinition,"name");
-  boost::optional<model::SteamEquipmentDefinition> m_steamEquipmentDefinition = steamEquipmentDefinition;
+  m_steamEquipmentDefinition = steamEquipmentDefinition;
   m_nameEdit->bind(
     *m_steamEquipmentDefinition,
     OptionalStringGetter(std::bind(&model::SteamEquipmentDefinition::name, m_steamEquipmentDefinition.get_ptr(),true)),
@@ -225,6 +225,8 @@ void SteamEquipmentDefinitionInspectorView::detach()
   m_fractionLatentEdit->unbind();
   m_fractionRadiantEdit->unbind();
   m_fractionLostEdit->unbind();
+
+  m_steamEquipmentDefinition = boost::none;
 }
 
 void SteamEquipmentDefinitionInspectorView::refresh()

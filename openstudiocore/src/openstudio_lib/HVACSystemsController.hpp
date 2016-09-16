@@ -35,6 +35,8 @@
 #include <QPointer>
 #include <model/nano_signal_slot.hpp> // Signal-Slot replacement
 
+class QMutex;
+
 namespace openstudio {
 
 namespace model {
@@ -148,6 +150,8 @@ class HVACSystemsController : public QObject, public Nano::Observer
   QString m_currentHandle;
 
   bool m_dirty;
+
+  QMutex * m_updateMutex;
 
   model::Model m_model;
 
@@ -277,7 +281,9 @@ class SystemAvailabilityVectorController : public ModelObjectVectorController
 
   public:
 
-  virtual ~SystemAvailabilityVectorController() {}
+  SystemAvailabilityVectorController();
+
+  virtual ~SystemAvailabilityVectorController() { delete m_reportItemsMutex; }
 
   boost::optional<model::AirLoopHVAC> airLoopHVAC();
 
@@ -302,6 +308,8 @@ class SystemAvailabilityVectorController : public ModelObjectVectorController
   private:
 
   bool m_reportScheduled;
+
+  QMutex * m_reportItemsMutex;
 };
 
 class SupplyAirTempScheduleVectorController : public ModelObjectVectorController
@@ -310,7 +318,9 @@ class SupplyAirTempScheduleVectorController : public ModelObjectVectorController
 
   public:
 
-  virtual ~SupplyAirTempScheduleVectorController() {}
+  SupplyAirTempScheduleVectorController();
+
+  virtual ~SupplyAirTempScheduleVectorController() { delete m_reportItemsMutex; }
 
   boost::optional<model::SetpointManagerScheduled> setpointManagerScheduled();
 
@@ -335,6 +345,8 @@ class SupplyAirTempScheduleVectorController : public ModelObjectVectorController
   private:
 
   bool m_reportScheduled;
+
+  QMutex * m_reportItemsMutex;
 };
 
 } // openstudio

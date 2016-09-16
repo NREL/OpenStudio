@@ -168,8 +168,8 @@ void ConstructionInspectorView::onUpdate()
 
 void ConstructionInspectorView::attach(openstudio::model::Construction & construction)
 {
-  boost::optional<model::Construction> m_construction = construction;
-  // m_nameEdit->bind(construction,"name");
+  m_construction = construction;
+
   m_nameEdit->bind(
     *m_construction,
     OptionalStringGetter(std::bind(&model::Construction::name, m_construction.get_ptr(),true)),
@@ -186,6 +186,7 @@ void ConstructionInspectorView::detach()
 {
   m_standardsInformationWidget->detach();
   m_constructionVC->detach();
+  m_construction = boost::none;
 }
 
 } // openstudio

@@ -143,7 +143,7 @@ void LightsDefinitionInspectorView::onUpdate()
 
 void LightsDefinitionInspectorView::attach(openstudio::model::LightsDefinition & lightsDefinition)
 {
-  boost::optional<model::LightsDefinition> m_lightsDefinition = lightsDefinition;
+  m_lightsDefinition = lightsDefinition;
   // m_nameEdit->bind(lightsDefinition,"name");
 
   m_nameEdit->bind(
@@ -211,6 +211,8 @@ void LightsDefinitionInspectorView::detach()
   m_lightingLevelEdit->unbind();
   m_wattsPerSpaceFloorAreaEdit->unbind();
   m_wattsPerPersonEdit->unbind();
+
+  m_lightsDefinition = boost::none;
 }
 
 void LightsDefinitionInspectorView::refresh()

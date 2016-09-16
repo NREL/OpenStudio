@@ -85,7 +85,7 @@ LuminaireDefinitionInspectorView::LuminaireDefinitionInspectorView(bool isIP, co
   connect(this, &LuminaireDefinitionInspectorView::toggleUnitsClicked, m_fractionVisibleEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_fractionVisibleEdit,5,1);
 
-  // Return Air Fraction 
+  // Return Air Fraction
 
   label = new QLabel("Return Air Fraction: ");
   label->setObjectName("H2");
@@ -123,7 +123,7 @@ void LuminaireDefinitionInspectorView::onUpdate()
 
 void LuminaireDefinitionInspectorView::attach(openstudio::model::LuminaireDefinition & luminaireDefinition)
 {
-  boost::optional<model::LuminaireDefinition> m_luminaireDefinition = luminaireDefinition;
+  m_luminaireDefinition = luminaireDefinition;
 
   // m_nameEdit->bind(luminaireDefinition,"name");
   m_nameEdit->bind(
@@ -191,6 +191,8 @@ void LuminaireDefinitionInspectorView::detach()
   m_fractionRadiantEdit->unbind();
   m_fractionVisibleEdit->unbind();
   m_returnAirFractionEdit->unbind();
+
+  m_luminaireDefinition = boost::none;
 }
 
 void LuminaireDefinitionInspectorView::refresh()

@@ -32,6 +32,12 @@ namespace openstudio {
   /// \returns The directory the application was built in
   UTILITIES_API openstudio::path getApplicationBuildDirectory();
 
+  /// \returns The path to the current executable application
+  UTILITIES_API openstudio::path getApplicationPath();
+
+  /// \returns The directory of the current executable application
+  UTILITIES_API openstudio::path getApplicationDirectory();
+
   /// \returns True if the application is running from the build directory
   UTILITIES_API bool applicationIsRunningFromBuildDirectory();
 
