@@ -210,10 +210,13 @@ TEST_F(ModelFixture, EMSProgram_EMSProgram2) {
 
   ThermalZone zone1(model);
   zone1.setName("Name With Space_1");
+  EXPECT_EQ("Name With Space_1", zone1.nameString());
   ThermalZone zone2(model);
   zone2.setName("Name With Space_1");
+  EXPECT_EQ("Name With Space_2", zone2.nameString());
   ThermalZone zone3(model);
   zone3.setName("Name With Space_1");
+  EXPECT_EQ("Name With Space_3", zone3.nameString());
 
   //add program
   EnergyManagementSystemProgram program_1(model);

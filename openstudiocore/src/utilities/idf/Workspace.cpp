@@ -1960,7 +1960,7 @@ namespace detail {
       }
       if (suffix > 0 && count == strSuffix.size() ) { return std::make_tuple(suffix, spacer); }
     }
-    return std::make_tuple(boost::none, spacer);
+    return std::make_tuple(boost::none, " ");
   }
 
   std::string Workspace_Impl::getBaseName(const std::string& objectName) const {
@@ -2587,6 +2587,8 @@ namespace detail {
     if (spacer == "") {
       spacer = " ";
     }
+    std::string temp = getBaseName(objectName);
+    std::string temp2 = spacer;
     return getBaseName(objectName) + spacer + boost::lexical_cast<std::string>(suffix);
   }
 
