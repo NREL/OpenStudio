@@ -2578,8 +2578,6 @@ namespace detail {
     if (spacer == "") {
       spacer = " ";
     }
-    std::string temp = getBaseName(objectName);
-    std::string temp2 = spacer;
     return getBaseName(objectName) + spacer + boost::lexical_cast<std::string>(suffix);
   }
 
