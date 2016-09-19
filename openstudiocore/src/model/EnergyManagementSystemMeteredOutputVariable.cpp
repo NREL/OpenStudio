@@ -19,6 +19,10 @@
 
 #include "EnergyManagementSystemMeteredOutputVariable.hpp"
 #include "EnergyManagementSystemMeteredOutputVariable_Impl.hpp"
+#include "EnergyManagementSystemProgram.hpp"
+#include "EnergyManagementSystemProgram_Impl.hpp"
+#include "EnergyManagementSystemSubroutine.hpp"
+#include "EnergyManagementSystemSubroutine_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -117,9 +121,16 @@ namespace detail {
     return result;
   }
 
-  void EnergyManagementSystemMeteredOutputVariable_Impl::setEMSProgramorSubroutineName(const std::string& eMSProgramorSubroutineName) {
-    bool result = setString(OS_EnergyManagementSystem_MeteredOutputVariableFields::EMSProgramorSubroutineName, eMSProgramorSubroutineName);
+  bool EnergyManagementSystemMeteredOutputVariable_Impl::setEMSProgramorSubroutineName(const EnergyManagementSystemProgram& program) {
+    bool result = setPointer(OS_EnergyManagementSystem_MeteredOutputVariableFields::EMSProgramorSubroutineName, program.handle());
     OS_ASSERT(result);
+    return result;
+  }
+
+  bool EnergyManagementSystemMeteredOutputVariable_Impl::setEMSProgramorSubroutineName(const EnergyManagementSystemSubroutine& subroutine) {
+    bool result = setPointer(OS_EnergyManagementSystem_MeteredOutputVariableFields::EMSProgramorSubroutineName, subroutine.handle());
+    OS_ASSERT(result);
+    return result;
   }
 
   void EnergyManagementSystemMeteredOutputVariable_Impl::resetEMSProgramorSubroutineName() {
@@ -244,8 +255,12 @@ bool EnergyManagementSystemMeteredOutputVariable::setUpdateFrequency(const std::
   return getImpl<detail::EnergyManagementSystemMeteredOutputVariable_Impl>()->setUpdateFrequency(updateFrequency);
 }
 
-void EnergyManagementSystemMeteredOutputVariable::setEMSProgramorSubroutineName(const std::string& eMSProgramorSubroutineName) {
-  getImpl<detail::EnergyManagementSystemMeteredOutputVariable_Impl>()->setEMSProgramorSubroutineName(eMSProgramorSubroutineName);
+bool EnergyManagementSystemMeteredOutputVariable::setEMSProgramorSubroutineName(const EnergyManagementSystemProgram& program) {
+  return getImpl<detail::EnergyManagementSystemMeteredOutputVariable_Impl>()->setEMSProgramorSubroutineName(program);
+}
+
+bool EnergyManagementSystemMeteredOutputVariable::setEMSProgramorSubroutineName(const EnergyManagementSystemSubroutine& subroutine) {
+  return getImpl<detail::EnergyManagementSystemMeteredOutputVariable_Impl>()->setEMSProgramorSubroutineName(subroutine);
 }
 
 void EnergyManagementSystemMeteredOutputVariable::resetEMSProgramorSubroutineName() {

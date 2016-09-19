@@ -23,6 +23,7 @@
 #include "../EnergyManagementSystemMeteredOutputVariable.hpp"
 #include "../EnergyManagementSystemSensor.hpp"
 #include "../EnergyManagementSystemProgram.hpp"
+#include "../EnergyManagementSystemSubroutine.hpp"
 #include "../Model_Impl.hpp"
 
 #include "../../utilities/idd/IddEnums.hpp"
@@ -53,6 +54,10 @@ TEST_F(ModelFixture, EMSMeteredOutputVariable)
   EnergyManagementSystemProgram program_1(model);
   program_1.setName("program one");
 
+  //add program
+  EnergyManagementSystemSubroutine subroutine_1(model);
+  subroutine_1.setName("subroutine one");
+
   // add metered output variable
   EnergyManagementSystemMeteredOutputVariable meteredoutvar(model);
 
@@ -60,12 +65,12 @@ TEST_F(ModelFixture, EMSMeteredOutputVariable)
   EXPECT_EQ(meteredoutvar.eMSVariableName(), OATdbSensor.name().get());
   meteredoutvar.setUpdateFrequency("ZoneTimestep");
   EXPECT_EQ("ZoneTimestep",meteredoutvar.updateFrequency());
-  meteredoutvar.setEMSProgramorSubroutineName(program_1.name().get());
+  meteredoutvar.setEMSProgramorSubroutineName(program_1);
   EXPECT_EQ(program_1.name().get(), meteredoutvar.eMSProgramorSubroutineName().get());
   meteredoutvar.resetEMSProgramorSubroutineName();
   EXPECT_EQ("", meteredoutvar.eMSProgramorSubroutineName().get());
-  meteredoutvar.setEMSProgramorSubroutineName(program_1.name().get());
-  EXPECT_EQ(program_1.name().get(), meteredoutvar.eMSProgramorSubroutineName().get());
+  meteredoutvar.setEMSProgramorSubroutineName(subroutine_1);
+  EXPECT_EQ(subroutine_1.name().get(), meteredoutvar.eMSProgramorSubroutineName().get());
   meteredoutvar.setResourceType("NaturalGas");
   EXPECT_EQ("NaturalGas", meteredoutvar.resourceType());
   meteredoutvar.setGroupType("HVAC");
