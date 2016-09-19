@@ -235,5 +235,7 @@ TEST_F(ModelFixture, EMSProgramCallingManager_EMSProgramCallingManager)
   program = fan_pcm.getProgram(2);
   EXPECT_EQ(true, program.is_initialized());
   EXPECT_EQ(fan_program_3.nameString(), program.get().nameString());
+
+  model.save(toPath("./EMS_pcm.osm"), true);
 }
 

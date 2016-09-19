@@ -169,16 +169,14 @@ EnergyManagementSystemMeteredOutputVariable::EnergyManagementSystemMeteredOutput
 {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemMeteredOutputVariable_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  // setEMSVariableName();
   bool ok = true;
-  // ok = setUpdateFrequency();
+  ok = setUpdateFrequency("SystemTimestep");
   OS_ASSERT(ok);
-  // ok = setResourceType();
+  ok = setResourceType("Electricity");
   OS_ASSERT(ok);
-  // ok = setGroupType();
+  ok = setGroupType("Building");
   OS_ASSERT(ok);
-  // ok = setEndUseCategory();
+  ok = setEndUseCategory("Fans");
   OS_ASSERT(ok);
 }
 
