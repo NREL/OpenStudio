@@ -39,6 +39,7 @@ RUBY_API void Init_openstudio(void) {
 
   Init_openstudiomodeleditor();
   rb_provide("openstudiomodeleditor");
+  rb_provide("openstudiomodeleditor.so");
 }
 
 }

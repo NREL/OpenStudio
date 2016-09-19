@@ -577,14 +577,20 @@ if(UNIX)
   set(SWIG_EXECUTABLE ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-install/bin/swig)
 else()
   # SWIG requires MinGW to compile on windows, so we just copy in the prebuilt binary
-  ExternalProject_Add(SWIG
-    URL http://openstudio-resources.s3.amazonaws.com/dependencies/swigwin-3.0.7.zip
-    URL_MD5 d8b5a9ce49c819cc1bfc1e797b85ba7a
-    CONFIGURE_COMMAND ""
-    BUILD_COMMAND ""
-    INSTALL_COMMAND ""
-  )
-  set(SWIG_EXECUTABLE ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG/swig.exe)
+  set(SWIG_ZIP "swigwin-3.0.7.zip")
+  set(SWIG_DIR "swigwin-3.0.7")
+  set(SWIG_EXPECTED_HASH "d8b5a9ce49c819cc1bfc1e797b85ba7a")
+  if(EXISTS "${CMAKE_BINARY_DIR}/${SWIG_ZIP}")
+    file(MD5 "${CMAKE_BINARY_DIR}/${SWIG_ZIP}" SWIG_HASH)
+  endif()  
+  if(NOT EXISTS "${CMAKE_BINARY_DIR}/${SWIG_ZIP}" OR NOT EXISTS "${CMAKE_BINARY_DIR}/${SWIG_DIR}" OR NOT "${SWIG_HASH}" MATCHES "${SWIG_EXPECTED_HASH}")
+    message(STATUS "Downloading SWIG)")
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${SWIG_ZIP}" "${CMAKE_BINARY_DIR}/${SWIG_ZIP}" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${SWIG_EXPECTED_HASH})
+    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${SWIG_DIR}")
+    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${SWIG_ZIP}" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+  endif()
+  
+  set(SWIG_EXECUTABLE ${CMAKE_BINARY_DIR}/${SWIG_DIR}/swig.exe)
 endif()
 
 

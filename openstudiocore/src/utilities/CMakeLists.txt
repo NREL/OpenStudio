@@ -327,15 +327,20 @@ source_group(units FILES ${units_src})
 source_group(documentation FILES ${documentation_src})
 source_group(embedded FILES ${EMBEDDED_OUTPUT})
 
+if(UNIX)
+  set(SWIG_DEPENDS "SWIG")
+else()
+  set(SWIG_DEPENDS "")
+endif()
+
 
 add_custom_command(
   OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx"
   COMMAND "${SWIG_EXECUTABLE}"
           "-ruby"
           -external-runtime "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx"
-  DEPENDS SWIG
+  DEPENDS "${SWIG_DEPENDS}"
 )
-
 
 set(${target_name}_src
   UtilitiesAPI.hpp
@@ -515,7 +520,9 @@ add_library(${target_name}
   ${${target_name}_src}
 )
 
-add_dependencies("${target_name}" SWIG)
+if(UNIX)
+  add_dependencies("${target_name}" SWIG)
+endif()
 
 AddPCH(${target_name})
 
