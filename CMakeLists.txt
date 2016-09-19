@@ -119,26 +119,27 @@ endif()
 
 # Apple Sanity Check
 if(APPLE)
-  if(NOT CMAKE_OSX_DEPLOYMENT_TARGET)
-    message(FATAL_ERROR "OSX Deployment Target Must Be Set")
-  endif()
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c11 -std=c++11 -stdlib=libc++")
+  #if(NOT CMAKE_OSX_DEPLOYMENT_TARGET)
+  #  message(FATAL_ERROR "OSX Deployment Target Must Be Set")
+  #endif()
 
-  set(CMAKE_OSX_ARCHITECTURES "x86_64" CACHE STRING "Arch" FORCE)
+  #set(CMAKE_OSX_ARCHITECTURES "x86_64" CACHE STRING "Arch" FORCE)
 
-  if(NOT CMAKE_OSX_SYSROOT)
-    message(FATAL_ERROR "OSX Sysroot must be set")
-  elseif(CMAKE_OSX_SYSROOT MATCHES ".*10\\.9.*")
-    set(OSX_SDK "10.9")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c11 -std=c++11 -stdlib=libc++")
-  elseif(CMAKE_OSX_SYSROOT MATCHES ".*10\\.10.*")
-    set(OSX_SDK "10.10")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c11 -std=c++11 -stdlib=libc++")
-  elseif(CMAKE_OSX_SYSROOT MATCHES ".*10\\.11.*")
-    set(OSX_SDK "10.11")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c11 -std=c++11 -stdlib=libc++")
-  else()
-    message(FATAL_ERROR "OSX Sysroot must use the 10.9, 10.10, or 10.11 SDK")
-  endif()
+  #if(NOT CMAKE_OSX_SYSROOT)
+  #  message(FATAL_ERROR "OSX Sysroot must be set")
+  #elseif(CMAKE_OSX_SYSROOT MATCHES ".*10\\.9.*")
+  #  set(OSX_SDK "10.9")
+  #  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c11 -std=c++11 -stdlib=libc++")
+  #elseif(CMAKE_OSX_SYSROOT MATCHES ".*10\\.10.*")
+  #  set(OSX_SDK "10.10")
+  #  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c11 -std=c++11 -stdlib=libc++")
+  #elseif(CMAKE_OSX_SYSROOT MATCHES ".*10\\.11.*")
+  #  set(OSX_SDK "10.11")
+  #  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c11 -std=c++11 -stdlib=libc++")
+  #else()
+  #  message(FATAL_ERROR "OSX Sysroot must use the 10.9, 10.10, or 10.11 SDK")
+  #endif()
 
 endif()
 
@@ -242,6 +243,11 @@ if( BUILD_RUBY )
       set(RUBY_EXT_CONFIG "--with-openssl-dir=/usr --with-readline-dir=/usr --with-zlib-dir=/usr")
     endif()
     
+    # KSB: For Mac, you may need to install some things...
+    # brew install homebrew/dupes/zlib
+    # brew link --overwrite --force homebrew/dupes/zlib
+    # brew install autoconf automake libtool
+    # brew link autoconf automake libtool
     ExternalProject_Add(Ruby
       URL http://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.0.0.tar.gz
       URL_MD5 8ddd18138597ad47094463df901a4ea1
@@ -249,7 +255,7 @@ if( BUILD_RUBY )
       PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/ruby/Ruby.patch
       CONFIGURE_COMMAND autoconf && sh -c "./configure --with-static-linked-ext ${RUBY_EXT_CONFIG} --without-gmp --without-tcl --without-tk --disable-install-doc --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install"
       BUILD_COMMAND $(MAKE) libenc && $(MAKE) libtrans && $(MAKE) # cd ext/openssl && ../../ruby extconf.rb && cd ../readline && ../../ruby extconf.rb && cd ../../ && $(MAKE)
-      INSTALL_COMMAND $(MAKE) install && sh -c "cp ./rbconfig.rb ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/ruby/2.0.0/." && sh -c "rm -rf ./ext/-test-" && sh -c "mkdir ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/ext" && sh -c "mkdir ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/enc" && sh -c "find ./ext -name '*.a' | xargs cp -t ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/ext/" && sh -c "find ./enc -name '*.a' | xargs cp -t ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/enc"
+      INSTALL_COMMAND $(MAKE) install && sh -c "cp ./rbconfig.rb ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/ruby/2.0.0/." && sh -c "rm -rf ./ext/-test-" && sh -c "mkdir ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/ext" && sh -c "mkdir ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/enc" && sh -c "find ./ext -name '*.a' | xargs -I {} cp {} ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/ext/" && sh -c "find ./enc -name '*.a' | xargs -I {} cp {} ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/enc"
     )
     find_file( RUBY_CONFIG_INCLUDE_DIR config.h PATHS "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/include/" )
     set(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/libruby-static.a")
