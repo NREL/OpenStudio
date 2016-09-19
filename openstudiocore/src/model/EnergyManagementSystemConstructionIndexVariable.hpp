@@ -52,14 +52,12 @@ class MODEL_API EnergyManagementSystemConstructionIndexVariable : public ModelOb
   /** @name Getters */
   //@{
 
-  // TODO: Check return type. From object lists, some candidates are: Construction.
   ModelObject constructionObject() const;
 
   //@}
   /** @name Setters */
   //@{
 
-  // TODO: Check argument type. From object lists, some candidates are: Construction.
   bool setConstructionObject(const ModelObject& construction);
 
   //@}

@@ -435,8 +435,8 @@ namespace detail {
     // get all EMS idd object types in both E+ and OS IDD
     case openstudio::IddObjectType::EnergyManagementSystem_Actuator:; // deliberate fall through
     case openstudio::IddObjectType::OS_EnergyManagementSystem_Actuator:; // deliberate fall through
-    //case openstudio::IddObjectType::EnergyManagementSystem_ConstructionIndexVariable:; // TODO uncomment when wrapped
-    //case openstudio::IddObjectType::OS_EnergyManagementSystem_ConstructionIndexVariable:; // deliberate fall through
+    case openstudio::IddObjectType::EnergyManagementSystem_ConstructionIndexVariable:; // TODO uncomment when wrapped
+    case openstudio::IddObjectType::OS_EnergyManagementSystem_ConstructionIndexVariable:; // deliberate fall through
     //case openstudio::IddObjectType::EnergyManagementSystem_CurveOrTableIndexVariable:; // TODO uncomment when wrapped
     //case openstudio::IddObjectType::OS_EnergyManagementSystem_CurveOrTableIndexVariable:; // deliberate fall through
     case openstudio::IddObjectType::EnergyManagementSystem_GlobalVariable:; // deliberate fall through

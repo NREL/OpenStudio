@@ -71,7 +71,7 @@ namespace detail {
   ModelObject EnergyManagementSystemConstructionIndexVariable_Impl::constructionObject() const {
     boost::optional<ModelObject> value = optionalConstructionObject();
     if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Construction Object attached.");
+      LOG(Info, " does not have an Construction Object attached.");
     }
     return value.get();
   }
@@ -91,12 +91,6 @@ EnergyManagementSystemConstructionIndexVariable::EnergyManagementSystemConstruct
   : ModelObject(EnergyManagementSystemConstructionIndexVariable::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemConstructionIndexVariable_Impl>());
-
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_EnergyManagementSystem_ConstructionIndexVariableFields::ConstructionObjectName
-  bool ok = true;
-  // ok = setConstructionObject();
-  OS_ASSERT(ok);
 }
 
 IddObjectType EnergyManagementSystemConstructionIndexVariable::iddObjectType() {
