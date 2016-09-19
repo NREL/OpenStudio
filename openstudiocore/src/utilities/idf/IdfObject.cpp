@@ -428,8 +428,8 @@ namespace detail {
     case openstudio::IddObjectType::OS_EnergyManagementSystem_Actuator:; // deliberate fall through
     case openstudio::IddObjectType::EnergyManagementSystem_ConstructionIndexVariable:; // TODO uncomment when wrapped
     case openstudio::IddObjectType::OS_EnergyManagementSystem_ConstructionIndexVariable:; // deliberate fall through
-    //case openstudio::IddObjectType::EnergyManagementSystem_CurveOrTableIndexVariable:; // TODO uncomment when wrapped
-    //case openstudio::IddObjectType::OS_EnergyManagementSystem_CurveOrTableIndexVariable:; // deliberate fall through
+    case openstudio::IddObjectType::EnergyManagementSystem_CurveOrTableIndexVariable:; // TODO uncomment when wrapped
+    case openstudio::IddObjectType::OS_EnergyManagementSystem_CurveOrTableIndexVariable:; // deliberate fall through
     case openstudio::IddObjectType::EnergyManagementSystem_GlobalVariable:; // deliberate fall through
     case openstudio::IddObjectType::OS_EnergyManagementSystem_GlobalVariable:; // deliberate fall through
     case openstudio::IddObjectType::EnergyManagementSystem_InternalVariable:; // deliberate fall through

@@ -71,7 +71,7 @@ namespace detail {
   ModelObject EnergyManagementSystemCurveOrTableIndexVariable_Impl::curveorTableObject() const {
     boost::optional<ModelObject> value = optionalCurveorTableObject();
     if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Curveor Table Object attached.");
+      LOG(Info, " does not have an Curveor Table Object attached.");
     }
     return value.get();
   }
@@ -91,12 +91,6 @@ EnergyManagementSystemCurveOrTableIndexVariable::EnergyManagementSystemCurveOrTa
   : ModelObject(EnergyManagementSystemCurveOrTableIndexVariable::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemCurveOrTableIndexVariable_Impl>());
-
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_EnergyManagementSystem_CurveOrTableIndexVariableFields::CurveorTableObjectName
-  bool ok = true;
-  // ok = setCurveorTableObject();
-  OS_ASSERT(ok);
 }
 
 IddObjectType EnergyManagementSystemCurveOrTableIndexVariable::iddObjectType() {
