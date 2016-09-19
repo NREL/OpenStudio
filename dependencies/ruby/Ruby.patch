@@ -1,5 +1,5 @@
 diff --git a/enc/make_encmake.rb b/enc/make_encmake.rb
-index 6ea2213..9b20dee 100755
+index b917eca..7ed8a69 100755
 --- a/enc/make_encmake.rb
 +++ b/enc/make_encmake.rb
 @@ -43,7 +43,7 @@ end
@@ -12,21 +12,23 @@ index 6ea2213..9b20dee 100755
    encs.reject! {|e| !ENC_PATTERNS.any? {|p| File.fnmatch?(p, e)}} if !ENC_PATTERNS.empty?
    encs.reject! {|e| NOENC_PATTERNS.any? {|p| File.fnmatch?(p, e)}}
 diff --git a/ext/Setup b/ext/Setup
-index 98ffffd..39c5265 100644
+index 6870035..10c9a1d 100644
 --- a/ext/Setup
 +++ b/ext/Setup
-@@ -1,28 +1,28 @@
+@@ -1,30 +1,31 @@
 -#option nodynamic
 +option nodynamic
  
 -#Win32API
 -#bigdecimal
+-#curses
 -#dbm
 -#digest
 -#digest/md5
 -#digest/rmd160
 -#digest/sha1
 -#digest/sha2
+-#dl
 -#etc
 -#fcntl
 -#gdbm
@@ -42,21 +44,21 @@ index 98ffffd..39c5265 100644
 -#stringio
 -#strscan
 -#syslog
--#tk
--#win32ole
--#zlib
 +Win32API
 +bigdecimal
++curses
 +dbm
 +digest
 +digest/md5
 +digest/rmd160
 +digest/sha1
 +digest/sha2
++dl
 +etc
 +fcntl
 +gdbm
 +io/wait
++json
 +nkf
 +openssl
 +pty
@@ -68,6 +70,9 @@ index 98ffffd..39c5265 100644
 +stringio
 +strscan
 +syslog
-+tk
+ #tk
+-#win32ole
+-#zlib
 +win32ole
 +zlib
+

@@ -32,6 +32,11 @@ set(ENERGYPLUS_VERSION_PATCH 0)
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
 set(ENERGYPLUS_BUILD_SHA "a17aa64355")
+# temp hack to get E+ build that works on CentOS 6.6
+if(EXISTS "/etc/redhat-release")
+  set(ENERGYPLUS_BUILD_SHA "57127b7bff")
+endif()
+
 
 # Radiance
 set(RADIANCE_VERSION "5.0.a.8")
@@ -73,7 +78,9 @@ option(BUILD_DOCUMENTATION "Build Documentation" OFF)
 
 # Build CSharp bindings
 # Requires: SWIG
-option(BUILD_CSHARP_BINDINGS "Build CSharp bindings" OFF)
+if(WIN32)
+  option(BUILD_CSHARP_BINDINGS "Build CSharp bindings" OFF)
+endif()
 
 # Build Java bindings
 # Requires: SWIG
@@ -105,7 +112,7 @@ option(BUILD_R "Build R package" OFF)
 option(BUILD_SHARED_LIBS "Build OS libs as shared libraries" ON)
 
 # Build the OpenStudio Application
-# This option will require shared libs
+# This option will require shared Qt
 option(BUILD_OS_APP "Build OS App" ON)
 
 # Use static version of Qt
@@ -315,12 +322,10 @@ if(UNIX)
     set(ENERGYPLUS_EXPECTED_HASH 8c161fb4b450aba79acb1abcd08fdb41)
     set(ENERGYPLUS_PLATFORM "Darwin-x86_64")
   elseif(EXISTS "/etc/redhat-release")
-    #message(FATAL_ERROR "EnergyPlus ${ENERGYPLUS_VERSION} redhat build missing")
-    set(ENERGYPLUS_EXPECTED_HASH ea8cb9e9efc622a85d82fe2306281420)
+    set(ENERGYPLUS_EXPECTED_HASH a4b66ff961ac07d3f5e5714f4efc0cc3)
     set(ENERGYPLUS_PLATFORM "Redhat-x86_64")
-    #message(FATAL_ERROR "EnergyPlus ${ENERGYPLUS_PLATFORM} redhat build missing")
   else()
-    set(ENERGYPLUS_EXPECTED_HASH 0053d9b145f9c3485bb49f85ddb61f6c)
+    set(ENERGYPLUS_EXPECTED_HASH f0aa293774f74b6d018439b183fe7ade)
     set(ENERGYPLUS_PLATFORM "Linux-x86_64")
   endif()
   set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-${ENERGYPLUS_PLATFORM}")
@@ -413,9 +418,13 @@ if(NOT EXISTS ${RUBY_INSTALL_DIR})
     set(RUBY_ZIP_EXPECTED_MD5 "0904d20885480958a6066c26a49b7609")
   elseif( APPLE )
     set(RUBY_ZIP_FILENAME "ruby_2_0_0_osx_static.tar.gz")
-    set(RUBY_ZIP_EXPECTED_MD5 "6de65bb3b52a8fe84d63d20686417ad8")
+    set(RUBY_ZIP_EXPECTED_MD5 "5d02dca3f18b4e286ee26c84bcecb06a")
   elseif(EXISTS "/etc/redhat-release")
+    set(RUBY_ZIP_FILENAME "ruby_2_0_0_redhat_static.tar.gz")
+    set(RUBY_ZIP_EXPECTED_MD5 "712d2ecdd3edc5d5ec179e50c22d8a96")
   else()
+    set(RUBY_ZIP_FILENAME "ruby_2_0_0_linux_static.tar.gz")
+    set(RUBY_ZIP_EXPECTED_MD5 "59a5146c99e330cd643e77d554c7ec18")
   endif()
 
   set(RUBY_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${RUBY_ZIP_FILENAME}")
@@ -452,6 +461,7 @@ else()
   set(RUBY_STATIC_LIBRARY "${RUBY_INSTALL_DIR}/lib/libruby-static.a")
   list(APPEND RUBY_INCLUDE_DIRS "${RUBY_INSTALL_DIR}/include/ruby-2.0.0")
   list(APPEND RUBY_INCLUDE_DIRS "${RUBY_INSTALL_DIR}/include/ruby-2.0.0/x86_64-darwin13.4.0")
+  list(APPEND RUBY_INCLUDE_DIRS "${RUBY_INSTALL_DIR}/include/ruby-2.0.0/x86_64-linux")
   set(RUBY_INCLUDE_DIR "${RUBY_INSTALL_DIR}/include/ruby-2.0.0")
   set(RUBY_EXECUTABLE "${RUBY_INSTALL_DIR}/bin/ruby")
   set(RUBY_POSSIBLE_LIB_DIR "${RUBY_INSTALL_DIR}/lib")
@@ -551,46 +561,32 @@ if(BUILD_WITH_OPENSSL)
   endif()
 endif()
 
-# swig
+# SWIG
 
-set(SWIG_INSTALL_DIR "" CACHE PATH "Path to swig Install")
-mark_as_advanced(SWIG_INSTALL_DIR)
-
-if(NOT EXISTS ${SWIG_INSTALL_DIR})
-  if( WIN32 )
-    set(SWIG_ZIP_FILENAME "swig_3_0_10_Win32.zip")
-    set(SWIG_ZIP_EXPECTED_MD5 "be3c42e6daffde06a05ad1b978338ebd")
-  elseif( APPLE )
-    set(SWIG_ZIP_FILENAME "swig_3_0_10_osx.tar.gz")
-    set(SWIG_ZIP_EXPECTED_MD5 "f0ea8749f8a0345ee37e1766d27a984d")
-  elseif(EXISTS "/etc/redhat-release")
-  else()
-  endif()
-
-  set(SWIG_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${SWIG_ZIP_FILENAME}")
-  if(EXISTS "${SWIG_ZIP_LOCAL_PATH}")
-    file(MD5 "${SWIG_ZIP_LOCAL_PATH}" SWIG_ZIP_MD5)
-  endif()
-
-  if( NOT SWIG_ZIP_MD5 STREQUAL SWIG_ZIP_EXPECTED_MD5)
-    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${SWIG_ZIP_FILENAME}"
-      ${SWIG_ZIP_LOCAL_PATH}
-      INACTIVITY_TIMEOUT 120
-      SHOW_PROGRESS
-      EXPECTED_MD5 ${SWIG_ZIP_EXPECTED_MD5})
-      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${SWIG_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
-  endif()
-
-  set(SWIG_INSTALL_DIR "${CMAKE_BINARY_DIR}/Swig-install/")
+if(UNIX)
+  # We patch it up with a version of pcre we provide to avoid having to have the requirement locally
+  ExternalProject_Add(SWIG
+    URL http://openstudio-resources.s3.amazonaws.com/dependencies/swig-3.0.7.tar.gz
+    URL_MD5 7fff46c84b8c630ede5b0f0827e3d90a
+    PATCH_COMMAND cp ${CMAKE_SOURCE_DIR}/../dependencies/pcre-8.31.tar.bz2 ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG && cd ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG && ./Tools/pcre-build.sh
+    CONFIGURE_COMMAND ./autogen.sh && ./configure --prefix=${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-install
+    BUILD_COMMAND $(MAKE)
+    INSTALL_COMMAND $(MAKE) install
+    BUILD_IN_SOURCE 1
+  )
+  set(SWIG_EXECUTABLE ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-install/bin/swig)
+else()
+  # SWIG requires MinGW to compile on windows, so we just copy in the prebuilt binary
+  ExternalProject_Add(SWIG
+    URL http://openstudio-resources.s3.amazonaws.com/dependencies/swigwin-3.0.7.zip
+    URL_MD5 d8b5a9ce49c819cc1bfc1e797b85ba7a
+    CONFIGURE_COMMAND ""
+    BUILD_COMMAND ""
+    INSTALL_COMMAND ""
+  )
+  set(SWIG_EXECUTABLE ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG/swig.exe)
 endif()
 
-list(APPEND CMAKE_PREFIX_PATH "${SWIG_INSTALL_DIR}")
-find_package(SWIG 3.0.10 REQUIRED)
-mark_as_advanced(
-  SWIG_DIR
-  SWIG_EXECUTABLE
-  SWIG_VERSION
-)
 
 set(ALL_RUBY_BINDING_TARGETS "") # global list
 
@@ -774,7 +770,11 @@ if(NOT EXISTS ${BOOST_INSTALL_DIR})
       set(BOOST_ZIP_FILENAME "boost_1_55_0_osx.tar.gz")
       set(BOOST_ZIP_EXPECTED_MD5 "9e4c01a3f5c63e3bbf5cc76021eceb75")
   elseif(EXISTS "/etc/redhat-release")
+    set(BOOST_ZIP_FILENAME "boost_1_55_0_redhat.tar.gz")
+    set(BOOST_ZIP_EXPECTED_MD5 "de952e0c36900a3ad000d74a1c41b7d2")
   else()
+    set(BOOST_ZIP_FILENAME "boost_1_55_0_linux.tar.gz")
+    set(BOOST_ZIP_EXPECTED_MD5 "6b206a76268cd1a98d00d4aafb897ac9")
   endif()
 
   set(BOOST_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${BOOST_ZIP_FILENAME}")
@@ -832,9 +832,11 @@ if(NOT EXISTS ${QT_INSTALL_DIR})
       set(QT_ZIP_FILENAME "qt_5_6_osx_shared.tar.gz")
       set(QT_ZIP_EXPECTED_MD5 "326887393d55b5da97a1be9764fb0d1b")
   elseif(EXISTS "/etc/redhat-release")
-    message(SEND_ERROR "Shared Redhat Qt build not available")
+    set(QT_ZIP_FILENAME "qt_5_6_redhat_shared.tar.gz")
+    set(QT_ZIP_EXPECTED_MD5 "103b00e9327e5ba180c693588f21fbed")
   else()
-    message(SEND_ERROR "Shared Ubuntu Qt build not available")
+    set(QT_ZIP_FILENAME "qt_5_6_linux_shared.tar.gz")
+    set(QT_ZIP_EXPECTED_MD5 "699f5f45db2abbeff420f7823d1aecf3")
   endif()
 
   set(QT_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${QT_ZIP_FILENAME}")
@@ -855,6 +857,8 @@ if(NOT EXISTS ${QT_INSTALL_DIR})
 endif()
 
 if( NOT Qt5Static )
+  list(APPEND CMAKE_PREFIX_PATH "${QT_INSTALL_DIR}")
+  
   find_package(Qt5Core 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
   find_package(Qt5Widgets 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
   find_package(Qt5Sql 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
@@ -880,6 +884,11 @@ if( NOT Qt5Static )
   list(APPEND QT_WEB_LIBS Qt5::Positioning)
   list(APPEND QT_WEB_LIBS Qt5::Quick)
   list(APPEND QT_WEB_LIBS Qt5::Qml)
+  
+  if( UNIX AND NOT APPLE )
+    find_package(Qt5DBus 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
+    list(APPEND QT_LIBS Qt5::DBus)
+  endif()
 
   if( WIN32 )
     find_package(Qt5WinExtras 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
@@ -916,13 +925,13 @@ if( Qt5Static )
 	  set(QT_STATIC_ZIP_EXPECTED_MD5 "e3ea40ee280fc209e50d9aaf4762ea53")
   elseif( APPLE )
 	  set(QT_STATIC_ZIP_FILENAME "qt_5_6_osx_static.tar.gz")
-          set(QT_STATIC_ZIP_EXPECTED_MD5 "d24756746d2fe07212070f675871cf93")
+    set(QT_STATIC_ZIP_EXPECTED_MD5 "d24756746d2fe07212070f675871cf93")
   elseif(EXISTS "/etc/redhat-release")
-	  set(QT_STATIC_ZIP_FILENAME "qt_5_6_redhat_64_static_temp.tar.gz")
-	  set(QT_STATIC_ZIP_EXPECTED_MD5 "4c62bd59d1c4ebc14594fe98b33c58fd")
+	  set(QT_STATIC_ZIP_FILENAME "qt_5_6_redhat_static.tar.gz")
+	  set(QT_STATIC_ZIP_EXPECTED_MD5 "bb397ab9baf9e86bb4e3b808415943c8")
   else()
-	  set(QT_STATIC_ZIP_FILENAME "qt_5_6_linux_64_static_temp.tar.gz")
-	  set(QT_STATIC_ZIP_EXPECTED_MD5 "1377b18696829ccd7d5b1906b05d9857")
+	  set(QT_STATIC_ZIP_FILENAME "qt_5_6_linux_static.tar.gz")
+	  set(QT_STATIC_ZIP_EXPECTED_MD5 "07cdd78ce3897064141835d0a17766cf")
   endif()
 
   set(QT_STATIC_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${QT_STATIC_ZIP_FILENAME}")
@@ -940,26 +949,29 @@ if( Qt5Static )
   endif()
 
   set(QT_STATIC_INSTALL_DIR "${CMAKE_BINARY_DIR}/Qt-static-install/")
+  
+  list(APPEND CMAKE_PREFIX_PATH "${QT_STATIC_INSTALL_DIR}")
+  list(APPEND CMAKE_PREFIX_PATH "${QT_INSTALL_DIR}")
 
-	###find_package(Qt5Quick 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
-  	###find_package(Qt5Qml 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
-  	###find_package(Qt5WebChannel 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
-  	###find_package(Qt5Positioning 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
-  	###find_package(Qt5WebEngine 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
-  	###find_package(Qt5WebEngineWidgets 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
+  ###find_package(Qt5Quick 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
+  ###find_package(Qt5Qml 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
+  ###find_package(Qt5WebChannel 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
+  ###find_package(Qt5Positioning 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
+  ###find_package(Qt5WebEngine 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
+  ###find_package(Qt5WebEngineWidgets 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
 
-  	###list(APPEND QT_LIBS Qt5::WebEngine)
-  	###list(APPEND QT_LIBS Qt5::WebEngineCore)
-  	###list(APPEND QT_LIBS Qt5::WebEngineWidgets)
-	#else()
-	find_package(Qt5Core 5.6.0 REQUIRED HINTS ${QT_STATIC_INSTALL_DIR})
-	find_package(Qt5Widgets 5.6.0 REQUIRED HINTS ${QT_STATIC_INSTALL_DIR})
-	find_package(Qt5Sql 5.6.0 REQUIRED HINTS ${QT_STATIC_INSTALL_DIR})
-	find_package(Qt5Network 5.6.0 REQUIRED HINTS ${QT_STATIC_INSTALL_DIR})
-	find_package(Qt5Xml 5.6.0 REQUIRED HINTS ${QT_STATIC_INSTALL_DIR})
-	find_package(Qt5Concurrent 5.6.0 REQUIRED HINTS ${QT_STATIC_INSTALL_DIR})
-	find_package(Qt5PrintSupport 5.6.0 REQUIRED HINTS ${QT_STATIC_INSTALL_DIR})
-	find_package(Qt5Gui 5.6.0 REQUIRED HINTS ${QT_STATIC_INSTALL_DIR})
+  ###list(APPEND QT_LIBS Qt5::WebEngine)
+  ###list(APPEND QT_LIBS Qt5::WebEngineCore)
+  ###list(APPEND QT_LIBS Qt5::WebEngineWidgets)
+  #else()
+  find_package(Qt5Core 5.6.0 REQUIRED HINTS ${QT_STATIC_INSTALL_DIR})
+  find_package(Qt5Widgets 5.6.0 REQUIRED HINTS ${QT_STATIC_INSTALL_DIR})
+  find_package(Qt5Sql 5.6.0 REQUIRED HINTS ${QT_STATIC_INSTALL_DIR})
+  find_package(Qt5Network 5.6.0 REQUIRED HINTS ${QT_STATIC_INSTALL_DIR})
+  find_package(Qt5Xml 5.6.0 REQUIRED HINTS ${QT_STATIC_INSTALL_DIR})
+  find_package(Qt5Concurrent 5.6.0 REQUIRED HINTS ${QT_STATIC_INSTALL_DIR})
+  find_package(Qt5PrintSupport 5.6.0 REQUIRED HINTS ${QT_STATIC_INSTALL_DIR})
+  find_package(Qt5Gui 5.6.0 REQUIRED HINTS ${QT_STATIC_INSTALL_DIR})
   #find_package(Qt5Quick 5.6.0 REQUIRED HINTS ${QT_STATIC_INSTALL_DIR})
   #find_package(Qt5Qml 5.6.0 REQUIRED HINTS ${QT_STATIC_INSTALL_DIR})
   #find_package(Qt5WebChannel 5.6.0 REQUIRED HINTS ${QT_STATIC_INSTALL_DIR})
@@ -983,56 +995,109 @@ if( Qt5Static )
   #list(APPEND QT_LIBS Qt5::OpenGL)
 
   if( WIN32 )
-	  find_package(Qt5WinExtras 5.6.0 REQUIRED HINTS ${QT_STATIC_INSTALL_DIR})
-     list(APPEND QT_LIBS Qt5::WinExtras)
+    find_package(Qt5WinExtras 5.6.0 REQUIRED HINTS ${QT_STATIC_INSTALL_DIR})
+    list(APPEND QT_LIBS Qt5::WinExtras)
   endif()
 
-        if( UNIX )
-		list(APPEND QT_LIBS "${QT_STATIC_INSTALL_DIR}/plugins/sqldrivers/libqsqlite.a")
-		list(APPEND QT_LIBS "${QT_STATIC_INSTALL_DIR}/lib/libqtharfbuzzng.a")
-  	  find_package(OpenGL REQUIRED)
-  	  list(APPEND QT_LIBS "${OPENGL_LIBRARIES}")
-	endif()
+  if( UNIX )
+    find_package(Qt5DBus 5.6.0 REQUIRED HINTS ${QT_STATIC_INSTALL_DIR})
+    list(APPEND QT_LIBS Qt5::DBus)
+    
+    find_package(OpenGL REQUIRED)
+    list(APPEND QT_LIBS "${OPENGL_LIBRARIES}")
+  endif()
 
-	if( UNIX AND NOT APPLE )
-	  find_library(png_lib png)
+  if( UNIX AND NOT APPLE )
+    # http://doc.qt.io/qt-5/linux-requirements.html
+    # DLM: the order of linking for static archives matter because symbols will only be included if they are needed by previous libraries
+    # in some cases we may need to relink libraries a second time    
+    list(APPEND QT_LIBS "${QT_STATIC_INSTALL_DIR}/lib/libqtpcre.a")
+    list(APPEND QT_LIBS "${QT_STATIC_INSTALL_DIR}/lib/libqtharfbuzzng.a")
+    list(APPEND QT_LIBS "${QT_STATIC_INSTALL_DIR}/lib/libQt5XcbQpa.a")
+    list(APPEND QT_LIBS "${QT_STATIC_INSTALL_DIR}/lib/libQt5PlatformSupport.a")
+    list(APPEND QT_LIBS "${QT_STATIC_INSTALL_DIR}/lib/libQt5Sql.a")
+    list(APPEND QT_LIBS "${QT_STATIC_INSTALL_DIR}/lib/libQt5Gui.a")
+    list(APPEND QT_LIBS "${QT_STATIC_INSTALL_DIR}/lib/libQt5DBus.a")
+    list(APPEND QT_LIBS "${QT_STATIC_INSTALL_DIR}/lib/libQt5Core.a")
+    list(APPEND QT_LIBS "${QT_STATIC_INSTALL_DIR}/plugins/platforms/libqxcb.a")
+    list(APPEND QT_LIBS "${QT_STATIC_INSTALL_DIR}/plugins/sqldrivers/libqsqlite.a") 
+    list(APPEND QT_LIBS "${QT_STATIC_INSTALL_DIR}/lib/libxcb-static.a")
+    	    
+    find_library(expat_lib libexpat.a)
+    list(APPEND QT_LIBS ${expat_lib}) 
+      
+    # shared libraries
+    # DLM: would prefer to link these statically where possible
+    find_library(png_lib png)
 	  list(APPEND QT_LIBS ${png_lib})
-	  if(EXISTS "/etc/redhat-release")
-		  list(APPEND QT_LIBS "${QT_STATIC_INSTALL_DIR}/lib/libqtpcre.a")
-	    find_library(rt_lib rt)
-	    list(APPEND QT_LIBS ${rt_lib})
-	    find_library(jpeg_lib jpeg)
-	    list(APPEND QT_LIBS ${jpeg_lib})
-	    find_library(glib_lib glib-2.0)
-	    list(APPEND QT_LIBS ${glib_lib})
-	    find_library(gthread_lib gthread-2.0)
-	    list(APPEND QT_LIBS ${gthread_lib})
-	    find_library(db_lib db)
-	    list(APPEND QT_LIBS ${db_lib})
-	  else()
-	    find_library(pcre16_lib pcre16)
-	    list(APPEND QT_LIBS ${pcre16_lib})
-	  endif()
+    find_library(jpeg_lib NAMES libjpeg libjpeg.so.8)
+    list(APPEND QT_LIBS ${jpeg_lib})
+    find_library(freetype_lib freetype)
+	  list(APPEND QT_LIBS ${freetype_lib})
+    
+    find_library(dbus_lib libdbus-1.so)
+    list(APPEND QT_LIBS ${dbus_lib})
+    find_library(dbus_glib_lib NAMES dbus-glib-1 libdbus-glib-1.so.2)
+    list(APPEND QT_LIBS ${dbus_glib_lib})
+    
+	  find_library(glib_lib glib-2.0)
+	  list(APPEND QT_LIBS ${glib_lib})
+    find_library(x11_lib libX11.so)
+	  list(APPEND QT_LIBS ${x11_lib})
+	  find_library(xcb_lib libxcb.so)
+	  list(APPEND QT_LIBS ${xcb_lib}) 
+	  find_library(x11_xcb_lib libX11-xcb.so)
+	  list(APPEND QT_LIBS ${x11_xcb_lib})
+    find_library(Xext_lib libXext.so)
+	  list(APPEND QT_LIBS ${Xext_lib})   
 	  find_library(crypto_lib crypto)
 	  list(APPEND QT_LIBS ${crypto_lib})
-	endif()
+    
+    if(EXISTS "/etc/redhat-release")
+	    find_library(rt_lib rt)
+	    list(APPEND QT_LIBS ${rt_lib})
+
+	    find_library(gthread_lib gthread-2.0)
+	    list(APPEND QT_LIBS ${gthread_lib})
+	    find_library(dbus_glib_lib NAMES dbus-glib-1 libdbus-glib-1.so.2)
+	    list(APPEND QT_LIBS ${dbus_glib_lib})
+	    find_library(gobject_lib gobject-2.0)
+	    list(APPEND QT_LIBS ${gobject_lib})
+	    find_library(db_lib db)
+	    list(APPEND QT_LIBS ${db_lib})
+	    find_library(icui18n_lib icui18n)
+	    list(APPEND QT_LIBS ${icui18n_lib})
+	    find_library(icuuc_lib icuuc)
+	    list(APPEND QT_LIBS ${icuuc_lib})
+	  else()
+	    find_library(fontconfig_lib libfontconfig.so)
+	    list(APPEND QT_LIBS ${fontconfig_lib}) 
+      find_library(SM_lib libSM.so)
+	    list(APPEND QT_LIBS ${SM_lib}) 
+      find_library(ICE_lib libICE.so)
+	    list(APPEND QT_LIBS ${ICE_lib})       
+	    find_library(Xi_lib libXi.so)
+	    list(APPEND QT_LIBS ${Xi_lib}) 
+	  endif()
+
+  endif()
 
 	if( APPLE )
-  	  find_library(corefoundation_lib CoreFoundation)
-  	  find_library(cfnetwork_lib CFNetwork)
-  	  find_library(coregraphics_lib CoreGraphics)
-  	  find_library(carbon_lib Carbon)
-  	  find_library(appkit_lib AppKit)
-  	  find_library(systemconfiguration_lib SystemConfiguration)
-  	  find_library(security_lib Security)
-  	  list(APPEND QT_LIBS ${corefoundation_lib})
-  	  list(APPEND QT_LIBS ${cfnetwork_lib})
-  	  list(APPEND QT_LIBS ${coregraphics_lib})
-  	  list(APPEND QT_LIBS ${carbon_lib})
-  	  list(APPEND QT_LIBS ${appkit_lib})
-  	  list(APPEND QT_LIBS ${systemconfiguration_lib})
-  	  list(APPEND QT_LIBS ${security_lib})
-  	  list(APPEND QT_LIBS ${io_graphics_lib})
+    find_library(corefoundation_lib CoreFoundation)
+    find_library(cfnetwork_lib CFNetwork)
+    find_library(coregraphics_lib CoreGraphics)
+    find_library(carbon_lib Carbon)
+    find_library(appkit_lib AppKit)
+    find_library(systemconfiguration_lib SystemConfiguration)
+    find_library(security_lib Security)
+    list(APPEND QT_LIBS ${corefoundation_lib})
+    list(APPEND QT_LIBS ${cfnetwork_lib})
+    list(APPEND QT_LIBS ${coregraphics_lib})
+    list(APPEND QT_LIBS ${carbon_lib})
+    list(APPEND QT_LIBS ${appkit_lib})
+    list(APPEND QT_LIBS ${systemconfiguration_lib})
+    list(APPEND QT_LIBS ${security_lib})
+    list(APPEND QT_LIBS ${io_graphics_lib})
     list(APPEND QT_LIBS "${QT_STATIC_INSTALL_DIR}/lib/libqtpcre.a")
     list(APPEND QT_LIBS "${QT_STATIC_INSTALL_DIR}/lib/libqtfreetype.a")
     list(APPEND QT_LIBS "${QT_STATIC_INSTALL_DIR}/lib/libpoly2tri.a")
@@ -1092,14 +1157,16 @@ if( Qt5Static )
 	endif()
 endif()
 
-find_package(Qt5WebEngine 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
-find_package(Qt5WebEngineWidgets 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
-#find_package(Qt5WebChannel 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
-#find_package(Qt5Positioning 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
+if (BUILD_OS_APP)
+  find_package(Qt5WebEngine 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
+  find_package(Qt5WebEngineWidgets 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
+  #find_package(Qt5WebChannel 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
+  #find_package(Qt5Positioning 5.6.0 REQUIRED HINTS ${QT_INSTALL_DIR})
 
-list(APPEND QT_WEB_LIBS Qt5::WebEngine)
-list(APPEND QT_WEB_LIBS Qt5::WebEngineCore)
-list(APPEND QT_WEB_LIBS Qt5::WebEngineWidgets)
+  list(APPEND QT_WEB_LIBS Qt5::WebEngine)
+  list(APPEND QT_WEB_LIBS Qt5::WebEngineCore)
+  list(APPEND QT_WEB_LIBS Qt5::WebEngineWidgets)
+endif()
 
 set_target_properties( ${QT_WEB_LIBS} PROPERTIES INTERFACE_LINK_LIBRARIES "" )
 
@@ -1154,11 +1221,10 @@ set(project_directories
   osversion
   measure
   #resultsviewer
-  #model_editor
+  model_editor
   #openstudio_lib
   sdd
   cli
-  model_editor
 )
 if(WIN32)
   list(APPEND project_directories "qtwinmigrate")
@@ -1166,10 +1232,8 @@ endif()
 
 if(BUILD_OS_APP)
   #list(APPEND project_directories "qwt")
-  #list(APPEND project_directories "gbxml")
   list(APPEND project_directories "bimserver")
   #list(APPEND project_directories "resultsviewer")
-  #list(APPEND project_directories "model_editor")
   list(APPEND project_directories "openstudio_lib")
   list(APPEND project_directories "openstudio_app")
 endif()
@@ -1320,7 +1384,7 @@ set(TARGETS_FILE ${CMAKE_BINARY_DIR}/OpenStudioTargets.cmake)
 set(all_lib_targets
   openstudio_osversion
   openstudio_model
-  #openstudio_modeleditor
+  openstudio_modeleditor
   openstudio_utilities
   openstudio_energyplus
   openstudio_measure
@@ -1328,7 +1392,7 @@ set(all_lib_targets
   openstudio_gbxml
   #openstudio_bimserver
   openstudio_isomodel
-  openstudio_lib
+  #openstudio_lib
   openstudio_sdd
   openstudio_airflow
   #qwt
@@ -1341,11 +1405,9 @@ if(WIN32)
   list(APPEND all_lib_targets "qtwinmigrate")
 endif()
 
-if(NOT Qt5Static)
-  list(APPEND all_lib_targets "openstudio_modeleditor")
-  #list(APPEND all_lib_targets "openstudio_gbxml")
+if(BUILD_OS_APP)
   list(APPEND all_lib_targets "openstudio_bimserver")
-  #list(APPEND all_lib_targets "openstudio_lib")
+  list(APPEND all_lib_targets "openstudio_lib")
   #list(APPEND all_lib_targets "qwt")
 endif()
 
@@ -1361,8 +1423,8 @@ set(all_exe_targets
   #ResultsViewer
 )
 
-if(NOT Qt5Static)
-  list(APPEND all_exe_targets "OpenStudio")
+if(BUILD_OS_APP)
+  list(APPEND all_exe_targets "OpenStudioApp")
   #list(APPEND all_exe_targets "ResultsViewer")
 endif()
 
@@ -1399,15 +1461,15 @@ install(FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/ReleaseNotes.md" DESTINAT
 ###############################################################################
 
 
-if(UNIX AND NOT APPLE)
-  # if we build on Linux and we built our own Qt, let's grab said Qt and install it
-  if(CMAKE_PREFIX_PATH MATCHES ".*Qt-install.*")
-    install(DIRECTORY "${CMAKE_BINARY_DIR}/../../../Qt-prefix/src/Qt-install/lib"
-            DESTINATION .)
-    install(DIRECTORY "${CMAKE_BINARY_DIR}/../../../Qt-prefix/src/Qt-install/share"
-            DESTINATION .)
-  endif()
-endif()
+#if(UNIX AND NOT APPLE)
+#  # if we build on Linux and we built our own Qt, let's grab said Qt and install it
+#  if(CMAKE_PREFIX_PATH MATCHES ".*Qt-install.*")
+#    install(DIRECTORY "${CMAKE_BINARY_DIR}/../../../Qt-prefix/src/Qt-install/lib"
+#            DESTINATION .)
+#    install(DIRECTORY "${CMAKE_BINARY_DIR}/../../../Qt-prefix/src/Qt-install/share"
+#            DESTINATION .)
+#  endif()
+#endif()
 
 if(NOT UNIX)
   #execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_SOURCE_DIR}/../dependencies/strawberry-perl-5.16.2.1-32bit-portable-reduced.tar.bz2"
@@ -1456,7 +1518,6 @@ endif()
 #get_filename_component(REAL_ENERGYPLUS_EXE "${ENERGYPLUS_EXE}" REALPATH)
 #install(PROGRAMS "${REAL_ENERGYPLUS_EXE}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus )
 #install(PROGRAMS "${ENERGYPLUS_EXE}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus )
-
 
 #libenergyplusapi.dylib
 #get_filename_component(REAL_ENERGYPLUS_EXE "${ENERGYPLUS_EXE}" REALPATH)
@@ -1525,7 +1586,7 @@ cpack_add_component(Resources
 
 cpack_ifw_configure_component(OpenStudioApp
   DEPENDS Resources CLI
-  SCRIPT src/OpenStudio_app/install_operations.qs
+  SCRIPT src/openstudio_app/install_operations.qs
 )
 
 cpack_ifw_configure_component(CLI

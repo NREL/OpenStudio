@@ -35,28 +35,6 @@ module Kernel
       return false
     end
 
-    jsonparser = 'json/ext/parser' 
-    if path == jsonparser
-      if $LOADED.include?(jsonparser) then
-        return true
-      else
-        EmbeddedScripting::initJSONParser()
-        $LOADED << jsonparser
-        return true
-      end
-    end
-
-    jsongenerator = 'json/ext/generator'
-    if path == jsongenerator
-      if $LOADED.include?(jsongenerator) then
-        return true
-      else
-        EmbeddedScripting::initJSONGenerator()
-        $LOADED << jsongenerator
-        return true
-      end
-    end
-
     extname = File.extname(path)
     if extname.empty? or extname != '.rb'
       rb_path = path + '.rb'

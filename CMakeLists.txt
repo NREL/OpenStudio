@@ -119,26 +119,27 @@ endif()
 
 # Apple Sanity Check
 if(APPLE)
-  if(NOT CMAKE_OSX_DEPLOYMENT_TARGET)
-    message(FATAL_ERROR "OSX Deployment Target Must Be Set")
-  endif()
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c11 -std=c++11 -stdlib=libc++")
+  #if(NOT CMAKE_OSX_DEPLOYMENT_TARGET)
+  #  message(FATAL_ERROR "OSX Deployment Target Must Be Set")
+  #endif()
 
-  set(CMAKE_OSX_ARCHITECTURES "x86_64" CACHE STRING "Arch" FORCE)
+  #set(CMAKE_OSX_ARCHITECTURES "x86_64" CACHE STRING "Arch" FORCE)
 
-  if(NOT CMAKE_OSX_SYSROOT)
-    message(FATAL_ERROR "OSX Sysroot must be set")
-  elseif(CMAKE_OSX_SYSROOT MATCHES ".*10\\.9.*")
-    set(OSX_SDK "10.9")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c11 -std=c++11 -stdlib=libc++")
-  elseif(CMAKE_OSX_SYSROOT MATCHES ".*10\\.10.*")
-    set(OSX_SDK "10.10")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c11 -std=c++11 -stdlib=libc++")
-  elseif(CMAKE_OSX_SYSROOT MATCHES ".*10\\.11.*")
-    set(OSX_SDK "10.11")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c11 -std=c++11 -stdlib=libc++")
-  else()
-    message(FATAL_ERROR "OSX Sysroot must use the 10.9, 10.10, or 10.11 SDK")
-  endif()
+  #if(NOT CMAKE_OSX_SYSROOT)
+  #  message(FATAL_ERROR "OSX Sysroot must be set")
+  #elseif(CMAKE_OSX_SYSROOT MATCHES ".*10\\.9.*")
+  #  set(OSX_SDK "10.9")
+  #  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c11 -std=c++11 -stdlib=libc++")
+  #elseif(CMAKE_OSX_SYSROOT MATCHES ".*10\\.10.*")
+  #  set(OSX_SDK "10.10")
+  #  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c11 -std=c++11 -stdlib=libc++")
+  #elseif(CMAKE_OSX_SYSROOT MATCHES ".*10\\.11.*")
+  #  set(OSX_SDK "10.11")
+  #  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c11 -std=c++11 -stdlib=libc++")
+  #else()
+  #  message(FATAL_ERROR "OSX Sysroot must use the 10.9, 10.10, or 10.11 SDK")
+  #endif()
 
 endif()
 
@@ -205,28 +206,6 @@ mark_as_advanced(
   ProcessorCount_cmd_sysctl
 )
 
-find_package(SWIG 3.0.0)
-mark_as_advanced(
-  SWIG_DIR
-  SWIG_EXECUTABLE
-  SWIG_VERSION
-)
-
-# Currently MacOS (with swig < 3.0.3) and V8 require special builds
-# as of 2015-02-05. This should be re-checked after swig > 3.0.5 is released.
-# 64-bit MSVC also requires BUILD_SWIG
-if(SWIG_FOUND AND NOT BUILD_V8_BINDINGS AND NOT (APPLE AND ${SWIG_VERSION} VERSION_LESS "3.0.3") AND NOT (WIN32 AND MSVC AND CMAKE_CL_64))
-  option(BUILD_SWIG "Build SWIG" OFF)
-else()
-  option(BUILD_SWIG "Build SWIG" ON)
-endif()
-
-if(NOT BUILD_SWIG)
-  if(${SWIG_VERSION} VERSION_LESS "2.0.10")
-    set(BUILD_SWIG ON)
-  endif()
-endif()
-
 if(BUILD_WITH_MULTIPLE_PROCESSES)
   add_definitions(/MP)
 endif()
@@ -257,15 +236,32 @@ endif()
 option(BUILD_RUBY "Build Ruby" OFF)
 if( BUILD_RUBY )
   if( UNIX )
-    configure_file("${CMAKE_SOURCE_DIR}/dependencies/ruby/build_ruby.sh.in" "${CMAKE_BINARY_DIR}/build_ruby.sh")
+    set(RUBY_EXT_CONFIG "")
+    if (NOT Apple)
+      # DLM: still missing: curses, dbm, gdbm
+      # sudo apt-get -y install build-essential libssl-dev libreadline-dev zlib1g-dev
+      set(RUBY_EXT_CONFIG "--with-openssl-dir=/usr --with-readline-dir=/usr --with-zlib-dir=/usr")
+    endif()
+    
+    # KSB: For Mac, you may need to install some things...
+    # brew install homebrew/dupes/zlib
+    # brew link --overwrite --force homebrew/dupes/zlib
+    # brew install autoconf automake libtool
+    # brew link autoconf automake libtool
     ExternalProject_Add(Ruby
       URL http://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.0.0.tar.gz
       URL_MD5 8ddd18138597ad47094463df901a4ea1
       BUILD_IN_SOURCE 1
-      CONFIGURE_COMMAND ""
-      BUILD_COMMAND sh "${CMAKE_BINARY_DIR}/build_ruby.sh"
-      INSTALL_COMMAND ""
+      PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/ruby/Ruby.patch
+      CONFIGURE_COMMAND autoconf && sh -c "./configure --with-static-linked-ext ${RUBY_EXT_CONFIG} --without-gmp --without-tcl --without-tk --disable-install-doc --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install"
+      BUILD_COMMAND $(MAKE) libenc && $(MAKE) libtrans && $(MAKE) # cd ext/openssl && ../../ruby extconf.rb && cd ../readline && ../../ruby extconf.rb && cd ../../ && $(MAKE)
+      INSTALL_COMMAND $(MAKE) install && sh -c "cp ./rbconfig.rb ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/ruby/2.0.0/." && sh -c "rm -rf ./ext/-test-" && sh -c "mkdir ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/ext" && sh -c "mkdir ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/enc" && sh -c "find ./ext -name '*.a' | xargs -I {} cp {} ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/ext/" && sh -c "find ./enc -name '*.a' | xargs -I {} cp {} ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/enc"
     )
+    find_file( RUBY_CONFIG_INCLUDE_DIR config.h PATHS "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/include/" )
+    set(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/libruby-static.a")
+    set(RUBY_INCLUDE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/include/ruby-2.0.0")
+    set(RUBY_EXECUTABLE "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby")
+    set(RUBY_SOURCE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby")
     set(RUBY_INSTALL_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install")
   else()
     configure_file("${CMAKE_SOURCE_DIR}/dependencies/ruby/build_ruby.bat.in" "${CMAKE_BINARY_DIR}/build_ruby.bat")
@@ -294,35 +290,6 @@ if(BUILD_OPENSTUDIO_GEMS)
                     WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/dependencies/ruby/"
                     DEPENDS "${CMAKE_SOURCE_DIR}/dependencies/ruby/Gemfile" "${CMAKE_SOURCE_DIR}/dependencies/ruby/build_openstudio_gems.rb")
 endif()
-
-# SWIG
-
-if(BUILD_SWIG)
-  if(UNIX)
-    # We patch it up with a version of pcre we provide to avoid having to have the requirement locally
-    ExternalProject_Add(SWIG
-      URL http://openstudio-resources.s3.amazonaws.com/dependencies/swig-3.0.7.tar.gz
-      URL_MD5 7fff46c84b8c630ede5b0f0827e3d90a
-
-      PATCH_COMMAND cp ${CMAKE_SOURCE_DIR}/dependencies/pcre-8.31.tar.bz2 ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && cd ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && ../SWIG/Tools/pcre-build.sh
-      CONFIGURE_COMMAND ../SWIG/configure --prefix=${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-install
-      BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && $(MAKE)
-      INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && $(MAKE) install
-      )
-    set(SWIG_EXECUTABLE ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-install/bin/swig)
-  else()
-    # SWIG requires MinGW to compile on windows, so we just copy in the prebuilt binary
-    ExternalProject_Add(SWIG
-      URL http://openstudio-resources.s3.amazonaws.com/dependencies/swigwin-3.0.7.zip
-      URL_MD5 d8b5a9ce49c819cc1bfc1e797b85ba7a
-      CONFIGURE_COMMAND ""
-      BUILD_COMMAND ""
-      INSTALL_COMMAND ""
-    )
-    set(SWIG_EXECUTABLE ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG/swig.exe)
-  endif()
-endif()
-
 
 option(BUILD_BOOST "Build Boost" OFF)
 if(BUILD_BOOST)
@@ -391,7 +358,7 @@ if(BUILD_QT)
   if(APPLE)
     execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install")
     if( Qt5Static )
-      set(QT_CONFIGURE_COMMAND "-v -release -opensource -qt-pcre -qt-harfbuzz -static -openssl -no-pch -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -confirm-license -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install")
+      set(QT_CONFIGURE_COMMAND "-v -release -opensource -qt-pcre -qt-harfbuzz -static -openssl -no-pch -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -confirm-license -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-static-install")
     else()
       message(WARNING "Shared Apple Qt build untested")
       set(QT_CONFIGURE_COMMAND "-v -release -opensource -qt-pcre -qt-harfbuzz -shared -openssl -no-pch -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -confirm-license -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install")
@@ -409,8 +376,10 @@ if(BUILD_QT)
     
   elseif( UNIX )
     # install deps according to here http://doc.qt.io/qt-5/linux-requirements.html
+    # also reference https://wiki.qt.io/Building_Qt_5_from_Git
+    # need to apply the workaround at https://bugreports.qt.io/browse/QTBUG-52605 manually
     if( Qt5Static )
-      set(QT_CONFIGURE_COMMAND "-v -release -opensource -static -openssl -no-pch -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -qt-xcb -confirm-license  -no-qml-debug -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install")
+      set(QT_CONFIGURE_COMMAND "-v -release -opensource -static -openssl -no-pch -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -qt-xcb -confirm-license  -no-qml-debug -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-static-install")
     else()
       message(WARNING "Shared Unix Qt build untested")
       set(QT_CONFIGURE_COMMAND "-v -release -opensource -shared -openssl -no-pch -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -qt-xcb -confirm-license  -no-qml-debug -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install")
@@ -422,6 +391,7 @@ if(BUILD_QT)
       PATCH_COMMAND ""
       BUILD_COMMAND sh -c "make -j${CPUCOUNT} && make install"
       INSTALL_COMMAND ""
+      BUILD_IN_SOURCE 1
     )
     set(QT_INSTALL_DIR "${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/")
     
@@ -453,10 +423,6 @@ endif()
 set(OpenStudioCore_DIR ${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build)
 
 # Set up the dependencies for OpenStudioCore
-
-if(BUILD_SWIG)
-  list(APPEND OpenStudioCore_DEPENDS SWIG)
-endif()
 
 if(BUILD_BOOST)
   list(APPEND OpenStudioCore_DEPENDS Boost)

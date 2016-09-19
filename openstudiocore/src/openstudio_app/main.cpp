@@ -73,6 +73,8 @@ int main(int argc, char *argv[])
   Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
 #elif defined(Q_OS_WIN) && defined(QT_STATIC)
   Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin);
+#elif defined(Q_OS_LINUX) && defined(QT_STATIC)
+  Q_IMPORT_PLUGIN(QXcbIntegrationPlugin);
 #endif
 
 
