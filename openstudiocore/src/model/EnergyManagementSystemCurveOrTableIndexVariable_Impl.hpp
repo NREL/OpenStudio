@@ -63,14 +63,12 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    // TODO: Check return type. From object lists, some candidates are: AllCurves.
     ModelObject curveorTableObject() const;
 
     //@}
     /** @name Setters */
     //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: AllCurves.
     bool setCurveorTableObject(const ModelObject& allCurves);
 
     //@}
@@ -82,10 +80,6 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.model.EnergyManagementSystemCurveOrTableIndexVariable");
 
-    // TODO: Check the return types of these methods.
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
     boost::optional<ModelObject> optionalCurveorTableObject() const;
   };
 
