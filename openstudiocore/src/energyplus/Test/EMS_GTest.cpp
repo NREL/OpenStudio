@@ -28,6 +28,28 @@
 #include "../../model/Building.hpp"
 #include "../../model/Building_Impl.hpp"
 #include "../../model/ThermalZone.hpp"
+#include "../../model/Component.hpp"
+#include "../../model/CFactorUndergroundWallConstruction.hpp"
+#include "../../model/CFactorUndergroundWallConstruction_Impl.hpp"
+#include "../../model/Construction.hpp"
+#include "../../model/Construction_Impl.hpp"
+#include "../../model/Curve.hpp"
+#include "../../model/CurveQuadratic.hpp"
+#include "../../model/CurveBiquadratic.hpp"
+#include "../../model/DefaultConstructionSet.hpp"
+#include "../../model/DefaultConstructionSet_Impl.hpp"
+#include "../../model/DefaultSurfaceConstructions.hpp"
+#include "../../model/DefaultSurfaceConstructions_Impl.hpp"
+#include "../../model/DefaultSubSurfaceConstructions.hpp"
+#include "../../model/DefaultSubSurfaceConstructions_Impl.hpp"
+#include "../../model/ConstructionWithInternalSource.hpp"
+#include "../../model/ConstructionWithInternalSource_Impl.hpp"
+#include "../../model/FFactorGroundFloorConstruction.hpp"
+#include "../../model/FFactorGroundFloorConstruction_Impl.hpp"
+#include "../../model/WindowDataFile.hpp"
+#include "../../model/WindowDataFile_Impl.hpp"
+#include "../../model/StandardsInformationConstruction.hpp"
+#include "../../model/StandardsInformationConstruction_Impl.hpp"
 #include "../../model/FanConstantVolume.hpp"
 #include "../../model/FanConstantVolume_Impl.hpp"
 #include "../../model/OutputVariable.hpp"
@@ -42,6 +64,12 @@
 #include "../../model/EnergyManagementSystemSensor_Impl.hpp"
 #include "../../model/EnergyManagementSystemActuator.hpp"
 #include "../../model/EnergyManagementSystemActuator_Impl.hpp"
+#include "../../model/EnergyManagementSystemConstructionIndexVariable.hpp"
+#include "../../model/EnergyManagementSystemConstructionIndexVariable_Impl.hpp"
+#include "../../model/EnergyManagementSystemCurveOrTableIndexVariable.hpp"
+#include "../../model/EnergyManagementSystemCurveOrTableIndexVariable_Impl.hpp"
+#include "../../model/EnergyManagementSystemMeteredOutputVariable.hpp"
+#include "../../model/EnergyManagementSystemMeteredOutputVariable_Impl.hpp"
 #include "../../model/EnergyManagementSystemProgram.hpp"
 #include "../../model/EnergyManagementSystemProgram_Impl.hpp"
 #include "../../model/EnergyManagementSystemSubroutine.hpp"
@@ -57,8 +85,25 @@
 #include "../../model/EnergyManagementSystemInternalVariable.hpp"
 #include "../../model/EnergyManagementSystemInternalVariable_Impl.hpp"
 
+#include "../../model/Material.hpp"
+#include "../../model/Material_Impl.hpp"
+#include "../../model/AirGap.hpp"
+#include "../../model/AirWallMaterial.hpp"
+#include "../../model/StandardOpaqueMaterial.hpp"
+#include "../../model/StandardOpaqueMaterial_Impl.hpp"
+#include "../../model/StandardGlazing.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/Space_Impl.hpp"
+#include "../../model/Surface.hpp"
+#include "../../model/Surface_Impl.hpp"
+#include "../../model/SubSurface.hpp"
+#include "../../model/SubSurface_Impl.hpp"
+#include "../../model/LifeCycleCost.hpp"
+
 #include "../../model/Version.hpp"
 #include "../../model/Version_Impl.hpp"
+
+#include "../../utilities/geometry/Point3d.hpp"
 
 #include "../../utilities/core/Optional.hpp"
 #include "../../utilities/core/Checksum.hpp"
@@ -88,6 +133,15 @@
 #include <utilities/idd/EnergyManagementSystem_TrendVariable_FieldEnums.hxx>
 #include <utilities/idd/OS_EnergyManagementSystem_InternalVariable_FieldEnums.hxx>
 #include <utilities/idd/EnergyManagementSystem_InternalVariable_FieldEnums.hxx>
+#include <utilities/idd/OS_EnergyManagementSystem_ConstructionIndexVariable_FieldEnums.hxx>
+#include <utilities/idd/EnergyManagementSystem_ConstructionIndexVariable_FieldEnums.hxx>
+#include <utilities/idd/OS_EnergyManagementSystem_CurveOrTableIndexVariable_FieldEnums.hxx>
+#include <utilities/idd/EnergyManagementSystem_CurveOrTableIndexVariable_FieldEnums.hxx>
+#include <utilities/idd/OS_EnergyManagementSystem_MeteredOutputVariable_FieldEnums.hxx>
+#include <utilities/idd/EnergyManagementSystem_MeteredOutputVariable_FieldEnums.hxx>
+#include <utilities/idd/OS_Construction_FieldEnums.hxx>
+#include <utilities/idd/OS_Material_FieldEnums.hxx>
+#include <utilities/idd/OS_Material_AirGap_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
@@ -703,4 +757,113 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorInternalVariable_EMS) {
 
   model.save(toPath("./EMS_InternalVariable.osm"), true);
   workspace.save(toPath("./EMS_InternalVariable.idf"), true);
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslatorConstructionIndexVariable_EMS) {
+  Model model;
+
+  // Create some materials
+  StandardOpaqueMaterial exterior(model);
+  AirGap air(model);
+  StandardOpaqueMaterial interior(model);
+
+  OpaqueMaterialVector layers;
+  layers.push_back(exterior);
+  layers.push_back(air);
+  layers.push_back(interior);
+
+  Construction construction(layers);
+
+  EnergyManagementSystemConstructionIndexVariable emsCIV(model);
+  emsCIV.setConstructionObject(construction);
+
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
+
+  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_ConstructionIndexVariable).size());
+  WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_ConstructionIndexVariable)[0];
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_ConstructionIndexVariableFields::ConstructionObjectName, false));
+  EXPECT_EQ(construction.nameString(), object.getString(EnergyManagementSystem_ConstructionIndexVariableFields::ConstructionObjectName, false).get());
+
+  model.save(toPath("./EMS_constructiontest.osm"), true);
+  workspace.save(toPath("./EMS_constructiontest.idf"), true);
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslatorCurveOrTableIndexVariable_EMS) {
+  Model model;
+
+  // Create a curve
+  CurveBiquadratic c1(model);
+
+  EnergyManagementSystemCurveOrTableIndexVariable emsCurve(model);
+  emsCurve.setCurveorTableObject(c1);
+
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
+
+  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_CurveOrTableIndexVariable).size());
+  WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_CurveOrTableIndexVariable)[0];
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_CurveOrTableIndexVariableFields::CurveorTableObjectName, false));
+  EXPECT_EQ(c1.nameString(), object.getString(EnergyManagementSystem_CurveOrTableIndexVariableFields::CurveorTableObjectName, false).get());
+
+  model.save(toPath("./EMS_curvetest.osm"), true);
+  workspace.save(toPath("./EMS_curvetest.idf"), true);
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslatorMeteredOutputVariable_EMS) {
+  Model model;
+  // add Site Outdoor Air Drybulb Temperature
+  OutputVariable siteOutdoorAirDrybulbTemperature("Site Outdoor Air Drybulb Temperature", model);
+  EXPECT_EQ("*", siteOutdoorAirDrybulbTemperature.keyValue());
+  EXPECT_EQ("Site Outdoor Air Drybulb Temperature", siteOutdoorAirDrybulbTemperature.variableName());
+
+  // add sensor
+  EnergyManagementSystemSensor OATdbSensor(model);
+  OATdbSensor.setName("OATdb Sensor");
+  OATdbSensor.setOutputVariable(siteOutdoorAirDrybulbTemperature);
+
+  //add program
+  EnergyManagementSystemProgram program_1(model);
+  program_1.setName("program one");
+
+  //add program
+  EnergyManagementSystemSubroutine subroutine_1(model);
+  subroutine_1.setName("subroutine one");
+
+  // add metered output variable
+  EnergyManagementSystemMeteredOutputVariable meteredoutvar(model);
+
+  meteredoutvar.setEMSVariableName(OATdbSensor.name().get());
+  meteredoutvar.setUpdateFrequency("ZoneTimestep");
+  meteredoutvar.setEMSProgramorSubroutineName(program_1);
+  meteredoutvar.setEMSProgramorSubroutineName(subroutine_1);
+  meteredoutvar.setResourceType("NaturalGas");
+  meteredoutvar.setGroupType("HVAC");
+  meteredoutvar.setEndUseCategory("Heating");
+  meteredoutvar.setEndUseSubcategory("Madeup");
+
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
+
+  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_MeteredOutputVariable).size());
+  WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_MeteredOutputVariable)[0];
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_MeteredOutputVariableFields::EMSVariableName, false));
+  EXPECT_EQ(OATdbSensor.name().get(), object.getString(EnergyManagementSystem_MeteredOutputVariableFields::EMSVariableName, false).get());
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_MeteredOutputVariableFields::UpdateFrequency, false));
+  EXPECT_EQ("ZoneTimestep", object.getString(EnergyManagementSystem_MeteredOutputVariableFields::UpdateFrequency, false).get());
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_MeteredOutputVariableFields::EMSProgramorSubroutineName, false));
+  EXPECT_EQ(subroutine_1.name().get(), object.getString(EnergyManagementSystem_MeteredOutputVariableFields::EMSProgramorSubroutineName, false).get());
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_MeteredOutputVariableFields::ResourceType, false));
+  EXPECT_EQ("NaturalGas", object.getString(EnergyManagementSystem_MeteredOutputVariableFields::ResourceType, false).get());
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_MeteredOutputVariableFields::GroupType, false));
+  EXPECT_EQ("HVAC", object.getString(EnergyManagementSystem_MeteredOutputVariableFields::GroupType, false).get());
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_MeteredOutputVariableFields::EndUseCategory, false));
+  EXPECT_EQ("Heating", object.getString(EnergyManagementSystem_MeteredOutputVariableFields::EndUseCategory, false).get());
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_MeteredOutputVariableFields::EndUseSubcategory, false));
+  EXPECT_EQ("Madeup", object.getString(EnergyManagementSystem_MeteredOutputVariableFields::EndUseSubcategory, false).get());
+  //ASSERT_TRUE(object.getString(EnergyManagementSystem_MeteredOutputVariableFields::Units, false));
+  //EXPECT_EQ("", object.getString(EnergyManagementSystem_MeteredOutputVariableFields::Units, false).get());
+
+  model.save(toPath("./EMS_meteredoutvar.osm"), true);
+  workspace.save(toPath("./EMS_meteredoutvar.idf"), true);
 }

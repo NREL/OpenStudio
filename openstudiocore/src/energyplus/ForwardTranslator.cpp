@@ -1329,6 +1329,18 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     retVal = translateEnergyManagementSystemActuator(actuator);
     break;
   }
+  case openstudio::IddObjectType::OS_EnergyManagementSystem_ConstructionIndexVariable:
+  {
+    model::EnergyManagementSystemConstructionIndexVariable civ = modelObject.cast<EnergyManagementSystemConstructionIndexVariable>();
+    retVal = translateEnergyManagementSystemConstructionIndexVariable(civ);
+    break;
+  }
+  case openstudio::IddObjectType::OS_EnergyManagementSystem_CurveOrTableIndexVariable:
+  {
+    model::EnergyManagementSystemCurveOrTableIndexVariable cotiv = modelObject.cast<EnergyManagementSystemCurveOrTableIndexVariable>();
+    retVal = translateEnergyManagementSystemCurveOrTableIndexVariable(cotiv);
+    break;
+  }
   case openstudio::IddObjectType::OS_EnergyManagementSystem_GlobalVariable:
   {
     model::EnergyManagementSystemGlobalVariable globalVariable = modelObject.cast<EnergyManagementSystemGlobalVariable>();
@@ -1339,6 +1351,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
   {
     model::EnergyManagementSystemInternalVariable internalVariable = modelObject.cast<EnergyManagementSystemInternalVariable>();
     retVal = translateEnergyManagementSystemInternalVariable(internalVariable);
+    break;
+  }
+  case openstudio::IddObjectType::OS_EnergyManagementSystem_MeteredOutputVariable:
+  {
+    model::EnergyManagementSystemMeteredOutputVariable mov = modelObject.cast<EnergyManagementSystemMeteredOutputVariable>();
+    retVal = translateEnergyManagementSystemMeteredOutputVariable(mov);
     break;
   }
   case openstudio::IddObjectType::OS_EnergyManagementSystem_OutputVariable:
@@ -2994,6 +3012,9 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_EnergyManagementSystem_InternalVariable);
   result.push_back(IddObjectType::OS_EnergyManagementSystem_Sensor);
   result.push_back(IddObjectType::OS_EnergyManagementSystem_Actuator);
+  result.push_back(IddObjectType::OS_EnergyManagementSystem_ConstructionIndexVariable);
+  result.push_back(IddObjectType::OS_EnergyManagementSystem_CurveOrTableIndexVariable);
+  result.push_back(IddObjectType::OS_EnergyManagementSystem_MeteredOutputVariable);
   result.push_back(IddObjectType::OS_EnergyManagementSystem_Program);
   result.push_back(IddObjectType::OS_EnergyManagementSystem_Subroutine);
   result.push_back(IddObjectType::OS_EnergyManagementSystem_ProgramCallingManager);
