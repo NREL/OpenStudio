@@ -124,9 +124,10 @@ set(depends
   openstudio_sdd
   openstudio_gbxml
   openstudio_bimserver
-  ${QT_LIBS}
   ${QT_WEB_LIBS}
   ${COREFOUNDATION_LIBRARY}
+  #"${QT_STATIC_INSTALL_DIR}/plugins/platforms/libqcocoa.a"
+  #"${QT_STATIC_INSTALL_DIR}/plugins/sqldrivers/libqsqlite.a"
 )
 
 # because the app calls the cli

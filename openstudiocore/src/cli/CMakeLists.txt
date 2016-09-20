@@ -204,7 +204,6 @@ target_link_libraries(openstudio
   init_openstudio
   openstudio_utilities
   ${Boost_LIBRARIES}
-  ${QT_LIBS}
 )
 
 if (UNIX AND NOT APPLE)

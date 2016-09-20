@@ -57,7 +57,6 @@ set(${target_name}_swig_src
 set(${target_name}_depends
   ${Boost_LIBRARIES}
   ${CMAKE_THREAD_LIBS}
-  ${QT_LIBS}
   openstudio_utilities
   openstudio_model
   openstudio_osversion

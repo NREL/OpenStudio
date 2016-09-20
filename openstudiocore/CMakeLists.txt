@@ -982,6 +982,12 @@ if( Qt5Static )
   #list(APPEND QT_LIBS Qt5::Concurrent)
   #list(APPEND QT_LIBS Qt5::OpenGL)
 
+  include_directories(${Qt5Core_INCLUDE_DIRS})
+  include_directories(${Qt5Widgets_INCLUDE_DIRS})
+  include_directories(${Qt5Xml_INCLUDE_DIRS})
+  include_directories(${Qt5Sql_INCLUDE_DIRS})
+  include_directories(${Qt5Network_INCLUDE_DIRS})
+
   if( WIN32 )
 	  find_package(Qt5WinExtras 5.6.0 REQUIRED HINTS ${QT_STATIC_INSTALL_DIR})
      list(APPEND QT_LIBS Qt5::WinExtras)
@@ -1102,6 +1108,19 @@ list(APPEND QT_WEB_LIBS Qt5::WebEngineCore)
 list(APPEND QT_WEB_LIBS Qt5::WebEngineWidgets)
 
 set_target_properties( ${QT_WEB_LIBS} PROPERTIES INTERFACE_LINK_LIBRARIES "" )
+
+list(APPEND QT_WEB_LIBS "${CMAKE_BINARY_DIR}/Qt-install/lib/QtCore.framework/QtCore")
+list(APPEND QT_WEB_LIBS "${CMAKE_BINARY_DIR}/Qt-install/lib/QtWidgets.framework/QtWidgets")
+list(APPEND QT_WEB_LIBS "${CMAKE_BINARY_DIR}/Qt-install/lib/QtSql.framework/QtSql")
+list(APPEND QT_WEB_LIBS "${CMAKE_BINARY_DIR}/Qt-install/lib/QtNetwork.framework/QtNetwork")
+list(APPEND QT_WEB_LIBS "${CMAKE_BINARY_DIR}/Qt-install/lib/QtXml.framework/QtXml")
+list(APPEND QT_WEB_LIBS "${CMAKE_BINARY_DIR}/Qt-install/lib/QtGui.framework/QtGui")
+
+  #list(APPEND QT_LIBS Qt5::Core)
+  #list(APPEND QT_LIBS Qt5::Widgets)
+  #list(APPEND QT_LIBS Qt5::Sql)
+  #list(APPEND QT_LIBS Qt5::Network)
+  #list(APPEND QT_LIBS Qt5::Xml)
 
 ###############################################################################
 ## jsoncpp

@@ -216,7 +216,6 @@ set(${target_name}_depends
   ${Boost_LIBRARIES}
   #JWD: On Ubuntu 14.04, the thread lib is included in Boost_LIBRARIES
   # ${CMAKE_THREAD_LIBS}
-  ${QT_LIBS}
 )
 
 if(WIN32)

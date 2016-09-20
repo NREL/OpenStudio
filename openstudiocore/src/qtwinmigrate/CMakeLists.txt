@@ -16,7 +16,6 @@ set(${target_name}_src
 
 set(${target_name}_depends
   user32
-  ${QT_LIBS}
 )
 
 include_directories(${Qt5Gui_PRIVATE_INCLUDE_DIRS})
