@@ -38,7 +38,6 @@ extern "C" {
 
 void init_openstudio_internal() {
   rb_provide("openstudio");
-  rb_provide("openstudio.rb");
   rb_provide("openstudio.so");
 
   Init_openstudioutilitiescore();

@@ -59,6 +59,11 @@ add_library(
   openstudio_rb.cpp
 )
 
+add_custom_command(TARGET openstudio_rb
+  POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/openstudio.rb $<TARGET_FILE_DIR:openstudio_rb>/openstudio.rb 
+)
+
 set_target_properties(openstudio_rb PROPERTIES PREFIX "")
 set_target_properties(openstudio_rb PROPERTIES OUTPUT_NAME openstudio)
 if(APPLE)
@@ -93,4 +98,4 @@ if( WIN32 )
 endif()
 
 install(TARGETS openstudio_rb DESTINATION Ruby COMPONENT "RubyAPI")
-
+install(FILES openstudio.rb DESTINATION Ruby COMPONENT "RubyAPI")
