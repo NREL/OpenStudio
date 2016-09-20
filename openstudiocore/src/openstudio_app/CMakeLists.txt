@@ -125,12 +125,15 @@ set(depends
   openstudio_gbxml
   openstudio_bimserver
   ${QT_WEB_LIBS}
+  ${QT_PLUGIN_LIBS}
   ${COREFOUNDATION_LIBRARY}
 )
 
 target_link_libraries(${target_name} ${depends})
 if( Qt5Static )
   target_link_libraries(${target_name} ${QT_SHARED_LIBS})
+else()
+  target_link_libraries(${target_name} ${QT_LIBS})
 endif()
 
 # because the app calls the cli

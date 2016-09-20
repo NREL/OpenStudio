@@ -56,13 +56,13 @@
 #endif
 
 #ifdef QT_STATIC
-  //Q_IMPORT_PLUGIN(QSQLiteDriverPlugin);
+  Q_IMPORT_PLUGIN(QSQLiteDriverPlugin);
 #endif
 
 #if defined(Q_OS_OSX) && defined(QT_STATIC)
-  //Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
+  Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
 #elif defined(Q_OS_WIN) && defined(QT_STATIC)
-  //Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin);
+  Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin);
 #endif
 
 int main(int argc, char *argv[])
