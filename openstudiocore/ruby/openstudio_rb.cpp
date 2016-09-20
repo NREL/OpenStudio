@@ -43,7 +43,7 @@ RUBY_API void Init_openstudio(void) {
 
 
   // DLM: these files should be embedded in the openstudio.so, currently they are only in openstudio.exe
-  rb_provide("openstudio/find_energyplus.rb");
+  rb_provide("openstudio/energyplus/find_energyplus.rb");
   rb_provide("openstudio/measure/ShowRunnerOutput.rb");
   rb_provide("openstudio/ruleset/ShowRunnerOutput.rb");
 
