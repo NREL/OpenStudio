@@ -126,14 +126,16 @@ set(depends
   openstudio_bimserver
   ${QT_WEB_LIBS}
   ${COREFOUNDATION_LIBRARY}
-  #"${QT_STATIC_INSTALL_DIR}/plugins/platforms/libqcocoa.a"
-  #"${QT_STATIC_INSTALL_DIR}/plugins/sqldrivers/libqsqlite.a"
 )
+
+target_link_libraries(${target_name} ${depends})
+if( Qt5Static )
+  target_link_libraries(${target_name} ${QT_SHARED_LIBS})
+endif()
 
 # because the app calls the cli
 add_dependencies(${target_name} openstudio)
 
-target_link_libraries(${target_name} ${depends})
 AddPCH(${target_name})
 
 #------------------------------------------------------------------------------
