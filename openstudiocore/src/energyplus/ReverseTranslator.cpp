@@ -498,9 +498,59 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
     modelObject = translateEnergyManagementSystemActuator(workspaceObject);
     break;
   }
+  case openstudio::IddObjectType::EnergyManagementSystem_ConstructionIndexVariable:
+  {
+    modelObject = translateEnergyManagementSystemConstructionIndexVariable(workspaceObject);
+    break;
+  }
+  case openstudio::IddObjectType::EnergyManagementSystem_CurveOrTableIndexVariable:
+  {
+    modelObject = translateEnergyManagementSystemCurveOrTableIndexVariable(workspaceObject);
+    break;
+  }
+  case openstudio::IddObjectType::EnergyManagementSystem_GlobalVariable:
+  {
+    modelObject = translateEnergyManagementSystemGlobalVariable(workspaceObject);
+    break;
+  }
+  case openstudio::IddObjectType::EnergyManagementSystem_InternalVariable:
+  {
+    modelObject = translateEnergyManagementSystemInternalVariable(workspaceObject);
+    break;
+  }
+  case openstudio::IddObjectType::EnergyManagementSystem_MeteredOutputVariable:
+  {
+    modelObject = translateEnergyManagementSystemMeteredOutputVariable(workspaceObject);
+    break;
+  }
+  case openstudio::IddObjectType::EnergyManagementSystem_OutputVariable:
+  {
+    modelObject = translateEnergyManagementSystemOutputVariable(workspaceObject);
+    break;
+  }
+  case openstudio::IddObjectType::EnergyManagementSystem_Program:
+  {
+    modelObject = translateEnergyManagementSystemProgram(workspaceObject);
+    break;
+  }
+  case openstudio::IddObjectType::EnergyManagementSystem_ProgramCallingManager:
+  {
+    modelObject = translateEnergyManagementSystemProgramCallingManager(workspaceObject);
+    break;
+  }
   case openstudio::IddObjectType::EnergyManagementSystem_Sensor:
   {
     modelObject = translateEnergyManagementSystemSensor(workspaceObject);
+    break;
+  }
+  case openstudio::IddObjectType::EnergyManagementSystem_Subroutine:
+  {
+    modelObject = translateEnergyManagementSystemSubroutine(workspaceObject);
+    break;
+  }
+  case openstudio::IddObjectType::EnergyManagementSystem_TrendVariable:
+  {
+    modelObject = translateEnergyManagementSystemTrendVariable(workspaceObject);
     break;
   }
   case openstudio::IddObjectType::EvaporativeCooler_Direct_ResearchSpecial :
@@ -610,6 +660,11 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
     {
       break; // no-op
     }
+  case openstudio::IddObjectType::Output_EnergyManagementSystem:
+  {
+    modelObject = translateOutputEnergyManagementSystem(workspaceObject);
+    break;
+  }
   case openstudio::IddObjectType::Output_IlluminanceMap :
     {
       modelObject = translateOutputIlluminanceMap(workspaceObject);

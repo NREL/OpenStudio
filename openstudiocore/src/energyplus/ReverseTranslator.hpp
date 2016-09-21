@@ -149,11 +149,31 @@ class ENERGYPLUS_API ReverseTranslator {
   boost::optional<model::ModelObject> translateElectricLoadCenterStorageSimple(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateEnergyManagementSystemActuator(const WorkspaceObject & workspaceObject);
+
+  boost::optional<model::ModelObject> translateEnergyManagementSystemConstructionIndexVariable(const WorkspaceObject & workspaceObject);
+
+  boost::optional<model::ModelObject> translateEnergyManagementSystemCurveOrTableIndexVariable(const WorkspaceObject & workspaceObject);
+
+  boost::optional<model::ModelObject> translateEnergyManagementSystemGlobalVariable(const WorkspaceObject & workspaceObject);
+
+  boost::optional<model::ModelObject> translateEnergyManagementSystemInternalVariable(const WorkspaceObject & workspaceObject);
+
+  boost::optional<model::ModelObject> translateEnergyManagementSystemMeteredOutputVariable(const WorkspaceObject & workspaceObject);
+
+  boost::optional<model::ModelObject> translateEnergyManagementSystemOutputVariable(const WorkspaceObject & workspaceObject);
+
+  boost::optional<model::ModelObject> translateEnergyManagementSystemProgram(const WorkspaceObject & workspaceObject);
+
+  boost::optional<model::ModelObject> translateEnergyManagementSystemProgramCallingManager(const WorkspaceObject & workspaceObject);
   
   boost::optional<model::ModelObject> translateEnergyManagementSystemSensor(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateElectricLoadCenterStorageConverter(const WorkspaceObject & workspaceObject);
-  
+
+  boost::optional<model::ModelObject> translateEnergyManagementSystemSubroutine(const WorkspaceObject & workspaceObject);
+
+  boost::optional<model::ModelObject> translateEnergyManagementSystemTrendVariable(const WorkspaceObject & workspaceObject);
+
   boost::optional<model::ModelObject> translateEvaporativeCoolerDirectResearchSpecial(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateEvaporativeFluidCoolerSingleSpeed(const WorkspaceObject & workspaceObject);
@@ -189,6 +209,8 @@ class ENERGYPLUS_API ReverseTranslator {
   boost::optional<model::ModelObject> translateMeterCustomDecrement(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateOtherEquipment(const WorkspaceObject& workspaceObject);
+
+  boost::optional<model::ModelObject> translateOutputEnergyManagementSystem(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateOutputIlluminanceMap( const WorkspaceObject& workspaceObject);
 

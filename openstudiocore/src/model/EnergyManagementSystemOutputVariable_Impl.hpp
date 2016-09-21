@@ -80,7 +80,9 @@ namespace detail {
 
     bool setUpdateFrequency(const std::string& updateFrequency);
 
-    bool setEMSProgramorSubroutineName(const std::string& eMSProgramorSubroutineName);
+    bool setEMSProgramorSubroutineName(const EnergyManagementSystemProgram& program);
+
+    bool setEMSProgramorSubroutineName(const EnergyManagementSystemSubroutine& subroutine);
 
     void resetEMSProgramorSubroutineName();
 

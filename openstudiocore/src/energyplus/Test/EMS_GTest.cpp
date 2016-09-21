@@ -204,7 +204,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorSensor1_EMS) {
   Workspace inWorkspace(*idfFile);
   ReverseTranslator reverseTranslator;
   Model model = reverseTranslator.translateWorkspace(inWorkspace);
-  model.save(toPath("./EMS_sensor1a.osm"), true);
+  model.save(toPath("./EMS_sensor1T.osm"), true);
 
 }
 
@@ -325,7 +325,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_EMS) {
   workspace.save(toPath("./EMS_example.idf"), true);
 }
 
-TEST_F(EnergyPlusFixture, ReverseTranslatorActuator1_EMS) {
+TEST_F(EnergyPlusFixture, ReverseTranslatorActuator_EMS) {
 
   openstudio::path idfPath = toPath("./EMS_example.idf");
   OptionalIdfFile idfFile = IdfFile::load(idfPath, IddFileType::EnergyPlus);
@@ -333,7 +333,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorActuator1_EMS) {
   Workspace inWorkspace(*idfFile);
   ReverseTranslator reverseTranslator;
   Model model = reverseTranslator.translateWorkspace(inWorkspace);
-  model.save(toPath("./EMS_examplea.osm"), true);
+  model.save(toPath("./EMS_exampleT.osm"), true);
 
 }
 
@@ -406,6 +406,18 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorProgram_EMS) {
   workspace.save(toPath("./EMS_program.idf"), true);
 }
 
+TEST_F(EnergyPlusFixture, ReverseTranslatorProgram_EMS) {
+
+  openstudio::path idfPath = toPath("./EMS_program.idf");
+  OptionalIdfFile idfFile = IdfFile::load(idfPath, IddFileType::EnergyPlus);
+  ASSERT_TRUE(idfFile);
+  Workspace inWorkspace(*idfFile);
+  ReverseTranslator reverseTranslator;
+  Model model = reverseTranslator.translateWorkspace(inWorkspace);
+  model.save(toPath("./EMS_programT.osm"), true);
+
+}
+
 TEST_F(EnergyPlusFixture, ForwardTranslatorSubroutine_EMS) {
   Model model;
 
@@ -473,6 +485,18 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorSubroutine_EMS) {
   EXPECT_EQ("Fan_Constant_Volume_1Pressure_Rise_Program_by_Body", object.getString(EnergyManagementSystem_SubroutineFields::Name, false).get());
 
   workspace.save(toPath("./EMS_subroutine.idf"), true);
+}
+
+TEST_F(EnergyPlusFixture, ReverseTranslatorSubroutine_EMS) {
+
+  openstudio::path idfPath = toPath("./EMS_subroutine.idf");
+  OptionalIdfFile idfFile = IdfFile::load(idfPath, IddFileType::EnergyPlus);
+  ASSERT_TRUE(idfFile);
+  Workspace inWorkspace(*idfFile);
+  ReverseTranslator reverseTranslator;
+  Model model = reverseTranslator.translateWorkspace(inWorkspace);
+  model.save(toPath("./EMS_subroutineT.osm"), true);
+
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslatorProgramCallingManager_EMS) {
@@ -634,6 +658,18 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorProgramCallingManager_EMS) {
   workspace.save(toPath("./EMS_PCM.idf"), true);
 }
 
+TEST_F(EnergyPlusFixture, ReverseTranslatorProgramCallingManager_EMS) {
+
+  openstudio::path idfPath = toPath("./EMS_PCM.idf");
+  OptionalIdfFile idfFile = IdfFile::load(idfPath, IddFileType::EnergyPlus);
+  ASSERT_TRUE(idfFile);
+  Workspace inWorkspace(*idfFile);
+  ReverseTranslator reverseTranslator;
+  Model model = reverseTranslator.translateWorkspace(inWorkspace);
+  model.save(toPath("./EMS_PCMT.osm"), true);
+
+}
+
 TEST_F(EnergyPlusFixture, noForwardTranslatorOutput_EMS) {
   Model model;
 
@@ -662,6 +698,17 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorOutput_EMS) {
 
   model.save(toPath("./EMS_output.osm"), true);
   workspace.save(toPath("./EMS_output.idf"), true);
+}
+
+TEST_F(EnergyPlusFixture, ReverseTranslatorOutput_EMS) {
+
+  openstudio::path idfPath = toPath("./EMS_output.idf");
+  OptionalIdfFile idfFile = IdfFile::load(idfPath, IddFileType::EnergyPlus);
+  ASSERT_TRUE(idfFile);
+  Workspace inWorkspace(*idfFile);
+  ReverseTranslator reverseTranslator;
+  Model model = reverseTranslator.translateWorkspace(inWorkspace);
+  model.save(toPath("./EMS_outputT.osm"), true);
 
 }
 
@@ -687,6 +734,18 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorGlobalVariable_EMS) {
 
   model.save(toPath("./EMS_GlobalVariable.osm"), true);
   workspace.save(toPath("./EMS_GlobalVariable.idf"), true);
+}
+
+TEST_F(EnergyPlusFixture, ReverseTranslatorGlobalVariable_EMS) {
+
+  openstudio::path idfPath = toPath("./EMS_GlobalVariable.idf");
+  OptionalIdfFile idfFile = IdfFile::load(idfPath, IddFileType::EnergyPlus);
+  ASSERT_TRUE(idfFile);
+  Workspace inWorkspace(*idfFile);
+  ReverseTranslator reverseTranslator;
+  Model model = reverseTranslator.translateWorkspace(inWorkspace);
+  model.save(toPath("./EMS_GlobalVariableT.osm"), true);
+
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslatorOutputVariable_EMS) {
@@ -730,6 +789,17 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorOutputVariable_EMS) {
   workspace.save(toPath("./EMS_OutputVariable.idf"), true);
 }
 
+TEST_F(EnergyPlusFixture, ReverseTranslatorOutputVariable_EMS) {
+
+  openstudio::path idfPath = toPath("./EMS_OutputVariable.idf");
+  OptionalIdfFile idfFile = IdfFile::load(idfPath, IddFileType::EnergyPlus);
+  ASSERT_TRUE(idfFile);
+  Workspace inWorkspace(*idfFile);
+  ReverseTranslator reverseTranslator;
+  Model model = reverseTranslator.translateWorkspace(inWorkspace);
+  model.save(toPath("./EMS_OutputVariableT.osm"), true);
+
+}
 TEST_F(EnergyPlusFixture, ForwardTranslatorTrendVariable_EMS) {
   Model model;
 
@@ -760,6 +830,18 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorTrendVariable_EMS) {
   workspace.save(toPath("./EMS_TrendVariable.idf"), true);
 }
 
+TEST_F(EnergyPlusFixture, ReverseTranslatorTrendVariable_EMS) {
+
+  openstudio::path idfPath = toPath("./EMS_TrendVariable.idf");
+  OptionalIdfFile idfFile = IdfFile::load(idfPath, IddFileType::EnergyPlus);
+  ASSERT_TRUE(idfFile);
+  Workspace inWorkspace(*idfFile);
+  ReverseTranslator reverseTranslator;
+  Model model = reverseTranslator.translateWorkspace(inWorkspace);
+  model.save(toPath("./EMS_TrendVariableT.osm"), true);
+
+}
+
 TEST_F(EnergyPlusFixture, ForwardTranslatorInternalVariable_EMS) {
   Model model;
 
@@ -783,6 +865,18 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorInternalVariable_EMS) {
   workspace.save(toPath("./EMS_InternalVariable.idf"), true);
 }
 
+TEST_F(EnergyPlusFixture, ReverseTranslatorInternalVariable_EMS) {
+
+  openstudio::path idfPath = toPath("./EMS_InternalVariable.idf");
+  OptionalIdfFile idfFile = IdfFile::load(idfPath, IddFileType::EnergyPlus);
+  ASSERT_TRUE(idfFile);
+  Workspace inWorkspace(*idfFile);
+  ReverseTranslator reverseTranslator;
+  Model model = reverseTranslator.translateWorkspace(inWorkspace);
+  model.save(toPath("./EMS_InternalVariableT.osm"), true);
+
+
+}
 TEST_F(EnergyPlusFixture, ForwardTranslatorConstructionIndexVariable_EMS) {
   Model model;
 
@@ -813,6 +907,18 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorConstructionIndexVariable_EMS) {
   workspace.save(toPath("./EMS_constructiontest.idf"), true);
 }
 
+TEST_F(EnergyPlusFixture, ReverseTranslatorConstructionIndexVariable_EMS) {
+
+  openstudio::path idfPath = toPath("./EMS_constructiontest.idf");
+  OptionalIdfFile idfFile = IdfFile::load(idfPath, IddFileType::EnergyPlus);
+  ASSERT_TRUE(idfFile);
+  Workspace inWorkspace(*idfFile);
+  ReverseTranslator reverseTranslator;
+  Model model = reverseTranslator.translateWorkspace(inWorkspace);
+  model.save(toPath("./EMS_constructiontestT.osm"), true);
+
+
+}
 TEST_F(EnergyPlusFixture, ForwardTranslatorCurveOrTableIndexVariable_EMS) {
   Model model;
 
@@ -832,6 +938,18 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorCurveOrTableIndexVariable_EMS) {
 
   model.save(toPath("./EMS_curvetest.osm"), true);
   workspace.save(toPath("./EMS_curvetest.idf"), true);
+}
+
+TEST_F(EnergyPlusFixture, ReverseTranslatorCurveOrTableIndexVariable_EMS) {
+
+  openstudio::path idfPath = toPath("./EMS_curvetest.idf");
+  OptionalIdfFile idfFile = IdfFile::load(idfPath, IddFileType::EnergyPlus);
+  ASSERT_TRUE(idfFile);
+  Workspace inWorkspace(*idfFile);
+  ReverseTranslator reverseTranslator;
+  Model model = reverseTranslator.translateWorkspace(inWorkspace);
+  model.save(toPath("./EMS_curvetestT.osm"), true);
+
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslatorMeteredOutputVariable_EMS) {
@@ -890,4 +1008,75 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorMeteredOutputVariable_EMS) {
 
   model.save(toPath("./EMS_meteredoutvar.osm"), true);
   workspace.save(toPath("./EMS_meteredoutvar.idf"), true);
+}
+TEST_F(EnergyPlusFixture, ReverseTranslatorMeteredOutputVariable_EMS) {
+
+  openstudio::path idfPath = toPath("./EMS_meteredoutvar.idf");
+  OptionalIdfFile idfFile = IdfFile::load(idfPath, IddFileType::EnergyPlus);
+  ASSERT_TRUE(idfFile);
+  Workspace inWorkspace(*idfFile);
+  ReverseTranslator reverseTranslator;
+  Model model = reverseTranslator.translateWorkspace(inWorkspace);
+  model.save(toPath("./EMS_meteredoutvarT.osm"), true);
+
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslatorTrendVariable2_EMS) {
+  Model model;
+
+  // add global variable
+  EnergyManagementSystemGlobalVariable globvar("glob var", model);
+
+  // add trend variable
+  EnergyManagementSystemTrendVariable var(model);
+  var.setName("TestName");
+  EXPECT_EQ("TestName", var.name().get());
+  var.setEMSVariableName("glob_var");
+  EXPECT_EQ("glob_var", var.eMSVariableName());
+
+  var.setNumberofTimestepstobeLogged(2);
+  EXPECT_EQ(2, var.numberofTimestepstobeLogged());
+
+  // Create some materials
+  StandardOpaqueMaterial exterior(model);
+  AirGap air(model);
+  StandardOpaqueMaterial interior(model);
+
+  OpaqueMaterialVector layers;
+  layers.push_back(exterior);
+  layers.push_back(air);
+  layers.push_back(interior);
+
+  Construction construction(layers);
+
+  EnergyManagementSystemConstructionIndexVariable emsCIV(model);
+  emsCIV.setConstructionObject(construction);
+
+  // add trend variable
+  EnergyManagementSystemTrendVariable var2(model);
+  var2.setName("TestName2");
+  EXPECT_EQ("TestName2", var2.name().get());
+  var2.setEMSVariableName(emsCIV.name().get());
+  EXPECT_EQ(emsCIV.name().get(), var2.eMSVariableName());
+
+  var2.setNumberofTimestepstobeLogged(3);
+  EXPECT_EQ(3, var2.numberofTimestepstobeLogged());
+
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
+
+  model.save(toPath("./EMS_TrendVariable2.osm"), true);
+  workspace.save(toPath("./EMS_TrendVariable2.idf"), true);
+}
+
+TEST_F(EnergyPlusFixture, ReverseTranslatorTrendVariable2_EMS) {
+
+  openstudio::path idfPath = toPath("./EMS_TrendVariable2.idf");
+  OptionalIdfFile idfFile = IdfFile::load(idfPath, IddFileType::EnergyPlus);
+  ASSERT_TRUE(idfFile);
+  Workspace inWorkspace(*idfFile);
+  ReverseTranslator reverseTranslator;
+  Model model = reverseTranslator.translateWorkspace(inWorkspace);
+  model.save(toPath("./EMS_TrendVariable2T.osm"), true);
+
 }

@@ -22,6 +22,8 @@
 
 #include <model/ModelAPI.hpp>
 #include "ModelObject.hpp"
+#include "EnergyManagementSystemProgram.hpp"
+#include "EnergyManagementSystemSubroutine.hpp"
 
 namespace openstudio {
 namespace model {
@@ -73,7 +75,9 @@ class MODEL_API EnergyManagementSystemOutputVariable : public ModelObject {
 
   bool setUpdateFrequency(const std::string& updateFrequency);
 
-  bool setEMSProgramorSubroutineName(const std::string& eMSProgramorSubroutineName);
+  bool setEMSProgramorSubroutineName(const EnergyManagementSystemProgram& program);
+
+  bool setEMSProgramorSubroutineName(const EnergyManagementSystemSubroutine& subroutine);
 
   void resetEMSProgramorSubroutineName();
 
