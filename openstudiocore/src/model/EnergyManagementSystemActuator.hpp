@@ -40,6 +40,8 @@ class MODEL_API EnergyManagementSystemActuator : public ModelObject {
 
   explicit EnergyManagementSystemActuator(const ModelObject& modelObject);
 
+  explicit EnergyManagementSystemActuator(const Model& model);
+
   virtual ~EnergyManagementSystemActuator() {}
 
   //@}

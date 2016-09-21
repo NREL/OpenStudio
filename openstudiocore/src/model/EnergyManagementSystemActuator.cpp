@@ -109,6 +109,11 @@ EnergyManagementSystemActuator::EnergyManagementSystemActuator(const ModelObject
   setActuatedComponent(modelObject);
 }
 
+EnergyManagementSystemActuator::EnergyManagementSystemActuator(const Model& model)
+  : ModelObject(EnergyManagementSystemActuator::iddObjectType(), model) {
+  OS_ASSERT(getImpl<detail::EnergyManagementSystemActuator_Impl>());
+}
+
 IddObjectType EnergyManagementSystemActuator::iddObjectType() {
   return IddObjectType(IddObjectType::OS_EnergyManagementSystem_Actuator);
 }

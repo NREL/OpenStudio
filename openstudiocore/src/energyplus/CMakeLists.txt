@@ -375,6 +375,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateElectricEquipment.cpp
   ReverseTranslator/ReverseTranslateElectricLoadCenterStorageSimple.cpp
   ReverseTranslator/ReverseTranslateElectricLoadCenterStorageConverter.cpp
+  ReverseTranslator/ReverseTranslateEnergyManagementSystemActuator.cpp
   ReverseTranslator/ReverseTranslateEnergyManagementSystemSensor.cpp
   ReverseTranslator/ReverseTranslateEvaporativeCoolerDirectResearchSpecial.cpp
   ReverseTranslator/ReverseTranslateEvaporativeFluidCoolerSingleSpeed.cpp

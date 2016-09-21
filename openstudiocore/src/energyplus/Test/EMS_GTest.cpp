@@ -325,6 +325,18 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_EMS) {
   workspace.save(toPath("./EMS_example.idf"), true);
 }
 
+TEST_F(EnergyPlusFixture, ReverseTranslatorActuator1_EMS) {
+
+  openstudio::path idfPath = toPath("./EMS_example.idf");
+  OptionalIdfFile idfFile = IdfFile::load(idfPath, IddFileType::EnergyPlus);
+  ASSERT_TRUE(idfFile);
+  Workspace inWorkspace(*idfFile);
+  ReverseTranslator reverseTranslator;
+  Model model = reverseTranslator.translateWorkspace(inWorkspace);
+  model.save(toPath("./EMS_examplea.osm"), true);
+
+}
+
 TEST_F(EnergyPlusFixture, ForwardTranslatorProgram_EMS) {
   Model model;
 
