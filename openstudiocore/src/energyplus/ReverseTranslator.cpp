@@ -479,6 +479,11 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
       modelObject = translateElectricLoadCenterStorageSimple(workspaceObject);
       break;
     }
+  case openstudio::IddObjectType::EnergyManagementSystem_Actuator:
+  {
+    modelObject = translateEnergyManagementSystemActuator(workspaceObject);
+    break;
+  }
   case openstudio::IddObjectType::EnergyManagementSystem_Sensor:
   {
     modelObject = translateEnergyManagementSystemSensor(workspaceObject);
