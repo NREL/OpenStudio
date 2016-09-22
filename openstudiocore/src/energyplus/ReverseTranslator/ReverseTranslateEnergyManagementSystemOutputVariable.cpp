@@ -25,6 +25,8 @@
 #include "../../model/EnergyManagementSystemProgram_Impl.hpp"
 #include "../../model/EnergyManagementSystemSubroutine.hpp"
 #include "../../model/EnergyManagementSystemSubroutine_Impl.hpp"
+#include "../../model/EnergyManagementSystemGlobalVariable.hpp"
+#include "../../model/EnergyManagementSystemGlobalVariable_Impl.hpp"
 
 #include <utilities/idd/EnergyManagementSystem_OutputVariable_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
@@ -56,7 +58,23 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemOutputVari
     LOG(Error, emsOutputVariable.nameString() + ": EMSVariableName not set");
     return boost::none;
   } else {
-    emsOutputVariable.setEMSVariableName(*s);
+    Workspace workspace = workspaceObject.workspace();
+    for (WorkspaceObject& wsObject : workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_GlobalVariable)) {
+      boost::optional<model::ModelObject> modelObject = translateAndMapWorkspaceObject(wsObject);
+      if (modelObject) {
+        if (modelObject.get().cast<EnergyManagementSystemGlobalVariable>().name() == s) {
+          emsOutputVariable.setEMSVariableName(*s);
+          break;
+        }
+      }
+    }
+    for (WorkspaceObject& wsObject : workspace.getObjectsByName(*s)) {
+      boost::optional<model::ModelObject> modelObject = translateAndMapWorkspaceObject(wsObject);
+      if (modelObject) {
+        emsOutputVariable.setEMSVariableName(*s);
+        break;
+      }
+    }
   }
 
   s = workspaceObject.getString(EnergyManagementSystem_OutputVariableFields::UpdateFrequency);

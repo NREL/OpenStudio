@@ -93,7 +93,7 @@ namespace detail {
 
   bool EnergyManagementSystemSensor_Impl::setKeyName(const std::string& keyName) {
     bool result = setString(OS_EnergyManagementSystem_SensorFields::OutputVariableorOutputMeterIndexKeyName, keyName);
-    OS_ASSERT(result);
+    //OS_ASSERT(result);
     return result;
   }
 
