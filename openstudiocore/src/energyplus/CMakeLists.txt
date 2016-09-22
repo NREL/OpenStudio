@@ -383,6 +383,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateEnergyManagementSystemProgram.cpp
   ReverseTranslator/ReverseTranslateEnergyManagementSystemProgramCallingManager.cpp
   ReverseTranslator/ReverseTranslateEnergyManagementSystemSensor.cpp
+  ReverseTranslator/ReverseTranslateEnergyManagementSystemSubroutine.cpp
   ReverseTranslator/ReverseTranslateEnergyManagementSystemTrendVariable.cpp
   ReverseTranslator/ReverseTranslateEvaporativeCoolerDirectResearchSpecial.cpp
   ReverseTranslator/ReverseTranslateEvaporativeFluidCoolerSingleSpeed.cpp
