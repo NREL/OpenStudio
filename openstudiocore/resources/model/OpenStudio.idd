@@ -1982,6 +1982,7 @@ OS:BuildingStory,
 
 OS:BuildingUnit,
        \min-fields 4
+       \extensible:3
   A1,  \field Handle
        \type handle
        \required-field
@@ -2001,10 +2002,16 @@ OS:BuildingUnit,
        \type alpha
        \begin-extensible
        \required-field
-  N1;  \field Building Unit Feature Quantity
-       \type real
+  A6,  \field Building Unit Feature Data Type
+       \type choice
+       \key alpha
+       \key real
+       \key boolean
+       \key integer
        \required-field
-
+  A7;  \field Building Unit Feature Value
+       \type alpha
+       \required-field
 
 OS:DefaultConstructionSet,
        \min-fields 11

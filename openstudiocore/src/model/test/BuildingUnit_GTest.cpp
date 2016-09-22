@@ -20,6 +20,9 @@
 #include <algorithm>
 #include <gtest/gtest.h>
 
+#include <string>
+#include <boost/optional.hpp>
+
 #include "ModelFixture.hpp"
 
 #include "../BuildingUnit.hpp"
@@ -28,6 +31,7 @@
 #include "../RenderingColor_Impl.hpp"
 #include "../Space.hpp"
 #include "../Space_Impl.hpp"
+#include "../TypedFeature.hpp"
 
 #include "../../utilities/units/Quantity.hpp"
 #include "../../utilities/units/Unit.hpp"
@@ -141,3 +145,144 @@ TEST_F(ModelFixture, BuildingUnit_Spaces)
 
 }
 
+TEST_F(ModelFixture, BuildingUnit_TypedFeature)
+{
+  TypedFeature feature = TypedFeature();
+
+  EXPECT_EQ(feature.getDataType(), TYPEDFEATUREDATATYPE_STRING);
+  EXPECT_EQ(feature.getName(), "");
+
+  feature.setName("Name");
+  EXPECT_EQ(feature.getName(), "Name");
+
+  boost::optional<double> dValue;
+  boost::optional<int> iValue;
+  boost::optional<std::string> sValue;
+  boost::optional<bool> bValue;
+
+  feature.setValue(1.0);
+  dValue = feature.getValueAsDouble();
+  iValue = feature.getValueAsInteger();
+  sValue = feature.getValueAsString();
+  bValue = feature.getValueAsBool();
+  EXPECT_EQ(feature.getDataType(), TYPEDFEATUREDATATYPE_DOUBLE);
+  ASSERT_TRUE(dValue);
+  EXPECT_FLOAT_EQ(*dValue, 1.0);
+  EXPECT_FALSE(iValue);
+  EXPECT_FALSE(sValue);
+  EXPECT_FALSE(bValue);
+
+  feature.setValue(1);
+  dValue = feature.getValueAsDouble();
+  iValue = feature.getValueAsInteger();
+  sValue = feature.getValueAsString();
+  bValue = feature.getValueAsBool();
+  EXPECT_EQ(feature.getDataType(), TYPEDFEATUREDATATYPE_INT);
+  ASSERT_TRUE(iValue);
+  EXPECT_EQ(*iValue, 1);
+  EXPECT_FALSE(dValue);
+  EXPECT_FALSE(sValue);
+  EXPECT_FALSE(bValue);
+
+  feature.setValue(true);
+  dValue = feature.getValueAsDouble();
+  iValue = feature.getValueAsInteger();
+  sValue = feature.getValueAsString();
+  bValue = feature.getValueAsBool();
+  EXPECT_EQ(feature.getDataType(), TYPEDFEATUREDATATYPE_BOOL);
+  ASSERT_TRUE(bValue);
+  EXPECT_TRUE(*bValue);
+  EXPECT_FALSE(dValue);
+  EXPECT_FALSE(sValue);
+  EXPECT_FALSE(iValue);
+
+  feature.setValue("one");
+  dValue = feature.getValueAsDouble();
+  iValue = feature.getValueAsInteger();
+  sValue = feature.getValueAsString();
+  bValue = feature.getValueAsBool();
+  EXPECT_EQ(feature.getDataType(), TYPEDFEATUREDATATYPE_STRING);
+  ASSERT_TRUE(sValue);
+  EXPECT_EQ(*sValue, "one");
+  EXPECT_FALSE(dValue);
+  EXPECT_FALSE(bValue);
+  EXPECT_FALSE(iValue);
+
+  feature.setValue(std::string("two"));
+  dValue = feature.getValueAsDouble();
+  iValue = feature.getValueAsInteger();
+  sValue = feature.getValueAsString();
+  bValue = feature.getValueAsBool();
+  EXPECT_EQ(feature.getDataType(), TYPEDFEATUREDATATYPE_STRING);
+  ASSERT_TRUE(sValue);
+  EXPECT_EQ(*sValue, "two");
+  EXPECT_FALSE(dValue);
+  EXPECT_FALSE(bValue);
+  EXPECT_FALSE(iValue);
+
+  feature = TypedFeature("Double Feature", 2.0);
+  dValue = feature.getValueAsDouble();
+  iValue = feature.getValueAsInteger();
+  sValue = feature.getValueAsString();
+  bValue = feature.getValueAsBool();
+  EXPECT_EQ(feature.getName(), "Double Feature");
+  EXPECT_EQ(feature.getDataType(), TYPEDFEATUREDATATYPE_DOUBLE);
+  ASSERT_TRUE(dValue);
+  EXPECT_FLOAT_EQ(*dValue, 2.0);
+  EXPECT_FALSE(iValue);
+  EXPECT_FALSE(sValue);
+  EXPECT_FALSE(bValue);
+
+  feature = TypedFeature("Integer Feature", 2);
+  dValue = feature.getValueAsDouble();
+  iValue = feature.getValueAsInteger();
+  sValue = feature.getValueAsString();
+  bValue = feature.getValueAsBool();
+  EXPECT_EQ(feature.getName(), "Integer Feature");
+  EXPECT_EQ(feature.getDataType(), TYPEDFEATUREDATATYPE_INT);
+  ASSERT_TRUE(iValue);
+  EXPECT_EQ(*iValue, 2);
+  EXPECT_FALSE(dValue);
+  EXPECT_FALSE(sValue);
+  EXPECT_FALSE(bValue);
+
+  feature = TypedFeature("Boolean Feature", false);
+  dValue = feature.getValueAsDouble();
+  iValue = feature.getValueAsInteger();
+  sValue = feature.getValueAsString();
+  bValue = feature.getValueAsBool();
+  EXPECT_EQ(feature.getName(), "Boolean Feature");
+  EXPECT_EQ(feature.getDataType(), TYPEDFEATUREDATATYPE_BOOL);
+  ASSERT_TRUE(bValue);
+  EXPECT_FALSE(*bValue);
+  EXPECT_FALSE(dValue);
+  EXPECT_FALSE(sValue);
+  EXPECT_FALSE(iValue);
+
+  feature = TypedFeature("String Feature 1", "three");
+  dValue = feature.getValueAsDouble();
+  iValue = feature.getValueAsInteger();
+  sValue = feature.getValueAsString();
+  bValue = feature.getValueAsBool();
+  EXPECT_EQ(feature.getName(), "String Feature 1");
+  EXPECT_EQ(feature.getDataType(), TYPEDFEATUREDATATYPE_STRING);
+  ASSERT_TRUE(sValue);
+  EXPECT_EQ(*sValue, "three");
+  EXPECT_FALSE(dValue);
+  EXPECT_FALSE(bValue);
+  EXPECT_FALSE(iValue);
+
+  feature = TypedFeature("String Feature 2", std::string("four"));
+  dValue = feature.getValueAsDouble();
+  iValue = feature.getValueAsInteger();
+  sValue = feature.getValueAsString();
+  bValue = feature.getValueAsBool();
+  EXPECT_EQ(feature.getName(), "String Feature 2");
+  EXPECT_EQ(feature.getDataType(), TYPEDFEATUREDATATYPE_STRING);
+  ASSERT_TRUE(sValue);
+  EXPECT_EQ(*sValue, "four");
+  EXPECT_FALSE(dValue);
+  EXPECT_FALSE(bValue);
+  EXPECT_FALSE(iValue);
+
+}
