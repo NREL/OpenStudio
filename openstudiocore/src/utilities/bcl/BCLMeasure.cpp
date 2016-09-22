@@ -812,7 +812,7 @@ namespace openstudio{
       if (file.is_open()){
 
         QRegularExpression::PatternOptions opts = QRegularExpression::DotMatchesEverythingOption | QRegularExpression::MultilineOption;
-        QString nameFunction = "\\1def name\n\\1  return \" " + toQString(name) + "\"\n\\1end";
+        QString nameFunction = "\\1def name\n\\1  return \"" + toQString(name) + "\"\n\\1end";
         QString descriptionFunction = "\\1def description\n\\1  return \"" + toQString(description) + "\"\n\\1end";
         QString modelerDescriptionFunction = "\\1def modeler_description\n\\1  return \"" + toQString(modelerDescription) + "\"\n\\1end";
 

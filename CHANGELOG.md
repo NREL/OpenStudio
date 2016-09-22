@@ -1,3 +1,13 @@
+## OpenStudio v1.12.6
+###### 2016-09-21 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.12.5...v1.12.6 )
+
+- ![Fixed:][fixed] [#2353]( https://github.com/NREL/OpenStudio/pull/2353 ), Os 2 0 develop linux
+
+## OpenStudio v1.12.5
+###### 2016-09-09 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.12.4...v1.12.5 )
+
+- ![Fixed:][fixed] [#2293]( https://github.com/NREL/OpenStudio/issues/2293 ), User model crashes when delete Zone
+
 ## OpenStudio v1.12.4
 ###### 2016-08-18 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.12.3...v1.12.4 )
 
