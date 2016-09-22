@@ -26,6 +26,7 @@
 #include "Space_Impl.hpp"
 #include "RenderingColor.hpp"
 #include "RenderingColor_Impl.hpp"
+#include "ModelExtensibleGroup.hpp"
 
 #include <utilities/idd/OS_BuildingUnit_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
