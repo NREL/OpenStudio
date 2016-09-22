@@ -39,13 +39,15 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemConstructi
     return boost::none;
   }
 
-  OptionalString s = workspaceObject.getString(EnergyManagementSystem_ConstructionIndexVariableFields::Name);
-  if(!s){
+  OptionalString s1 = workspaceObject.getString(EnergyManagementSystem_ConstructionIndexVariableFields::Name);
+  if(!s1){
+    LOG(Error, "WorkspaceObject EnergyManagementSystem_ConstructionIndexVariable has no Name");
     return boost::none;
   }
 
-  s = workspaceObject.getString(EnergyManagementSystem_ConstructionIndexVariableFields::ConstructionObjectName);
+  OptionalString s = workspaceObject.getString(EnergyManagementSystem_ConstructionIndexVariableFields::ConstructionObjectName);
   if (!s) {
+    LOG(Error, workspaceObject.nameString() + ": has no ConstructionObjectName");
     return boost::none;
   }
 
@@ -56,7 +58,6 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemConstructi
       boost::optional<model::ModelObject> modelObject = translateAndMapWorkspaceObject(wsObject);
       if (modelObject) {
         openstudio::model::EnergyManagementSystemConstructionIndexVariable emsConstructionIndexVariable(m_model);
-        OptionalString s1 = workspaceObject.getString(EnergyManagementSystem_ConstructionIndexVariableFields::Name);
         emsConstructionIndexVariable.setName(*s1);
         emsConstructionIndexVariable.setConstructionObject(modelObject.get());
         return emsConstructionIndexVariable;

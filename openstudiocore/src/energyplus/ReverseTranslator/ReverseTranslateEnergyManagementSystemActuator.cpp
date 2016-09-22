@@ -39,13 +39,15 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemActuator(c
     return boost::none;
   }
 
-  OptionalString s = workspaceObject.getString(EnergyManagementSystem_ActuatorFields::Name);
-  if(!s){
+  OptionalString s1 = workspaceObject.getString(EnergyManagementSystem_ActuatorFields::Name);
+  if(!s1){
+    LOG(Error, "WorkspaceObject EnergyManagementSystem_Actuator has no name");
     return boost::none;
   }
 
-  s = workspaceObject.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName);
+  OptionalString s = workspaceObject.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName);
   if (!s) {
+    LOG(Error, workspaceObject.nameString() + ": has no ActuatedComponentUniqueName");
     return boost::none;
   }
 
@@ -56,7 +58,6 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemActuator(c
       boost::optional<model::ModelObject> modelObject = translateAndMapWorkspaceObject(wsObject);
       if (modelObject) {
         openstudio::model::EnergyManagementSystemActuator emsActuator(modelObject.get());
-        OptionalString s1 = workspaceObject.getString(EnergyManagementSystem_ActuatorFields::Name);
         emsActuator.setName(*s1);
         emsActuator.setActuatedComponent(modelObject.get());
         s1 = workspaceObject.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType);

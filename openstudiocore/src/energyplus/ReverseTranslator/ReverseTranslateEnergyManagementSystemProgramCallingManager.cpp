@@ -46,6 +46,7 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemProgramCal
 
   OptionalString s = workspaceObject.getString(EnergyManagementSystem_ProgramCallingManagerFields::Name);
   if(!s){
+    LOG(Error, "WorkspaceObject EnergyManagementSystem_ProgramCallingManager has no name");
     return boost::none;
   }
 
@@ -54,6 +55,7 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemProgramCal
 
   s = workspaceObject.getString(EnergyManagementSystem_ProgramCallingManagerFields::EnergyPlusModelCallingPoint);
   if (!s) {
+    LOG(Error, emsProgramCallingManager.nameString() + ": has no EnergyPlusModelCallingPoint");
     return boost::none;
   } else {
     emsProgramCallingManager.setCallingPoint(*s);
@@ -73,7 +75,6 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemProgramCal
       }
     }
   }
-
   return emsProgramCallingManager;
 }
 

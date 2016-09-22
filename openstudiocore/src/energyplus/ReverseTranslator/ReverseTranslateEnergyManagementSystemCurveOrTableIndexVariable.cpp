@@ -39,13 +39,15 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemCurveOrTab
     return boost::none;
   }
 
-  OptionalString s = workspaceObject.getString(EnergyManagementSystem_CurveOrTableIndexVariableFields::Name);
-  if(!s){
+  OptionalString s1 = workspaceObject.getString(EnergyManagementSystem_CurveOrTableIndexVariableFields::Name);
+  if(!s1){
+    LOG(Error, "WorkspaceObject EnergyManagementSystem_CurveOrTableIndexVariable has no name");
     return boost::none;
   }
 
-  s = workspaceObject.getString(EnergyManagementSystem_CurveOrTableIndexVariableFields::CurveorTableObjectName);
+  OptionalString s = workspaceObject.getString(EnergyManagementSystem_CurveOrTableIndexVariableFields::CurveorTableObjectName);
   if (!s) {
+    LOG(Error, workspaceObject.nameString() + ": has no CurveorTableObjectName");
     return boost::none;
   }
 
@@ -56,7 +58,6 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemCurveOrTab
       boost::optional<model::ModelObject> modelObject = translateAndMapWorkspaceObject(wsObject);
       if (modelObject) {
         openstudio::model::EnergyManagementSystemCurveOrTableIndexVariable emsCurveOrTableIndexVariable(m_model);
-        OptionalString s1 = workspaceObject.getString(EnergyManagementSystem_CurveOrTableIndexVariableFields::Name);
         emsCurveOrTableIndexVariable.setName(*s1);
         emsCurveOrTableIndexVariable.setCurveorTableObject(modelObject.get());
         return emsCurveOrTableIndexVariable;
