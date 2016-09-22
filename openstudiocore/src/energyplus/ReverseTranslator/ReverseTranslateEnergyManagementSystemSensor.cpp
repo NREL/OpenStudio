@@ -41,19 +41,19 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemSensor(con
 
   OptionalString s = workspaceObject.getString(EnergyManagementSystem_SensorFields::Name);
   if(!s){
+    LOG(Error, "WorkspaceObject EnergyManagementSystem_Sensor has no Name");
     return boost::none;
   }
 
   openstudio::model::EnergyManagementSystemSensor emsSensor(m_model);
+  emsSensor.setName(*s);
 
-  if (s) {
-    emsSensor.setName(*s);
-  }
 
   Workspace workspace = workspaceObject.workspace();
 
   s = workspaceObject.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName);
   if (s) {
+    //look for Output:Variables named *s
     for (const WorkspaceObject& wsObject : workspace.getObjectsByType(IddObjectType::Output_Variable)) {
       boost::optional<model::ModelObject> modelObject = translateAndMapWorkspaceObject(wsObject);
       if (modelObject) {
@@ -66,12 +66,16 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemSensor(con
         }
       }
     }
+    //look for Output:Meters named *s
     for (const WorkspaceObject& wsObject : workspace.getObjectsByType(IddObjectType::Output_Meter)) {
-      boost::optional<openstudio::model::OutputMeter> outvar = wsObject.optionalCast<openstudio::model::OutputMeter>();
-      if (outvar) {
-        if (outvar.get().name() == s) {
-          emsSensor.setOutputMeter(wsObject.cast<openstudio::model::OutputMeter>());
-          break;
+      boost::optional<model::ModelObject> modelObject = translateAndMapWorkspaceObject(wsObject);
+      if (modelObject) {
+        boost::optional<OutputMeter> outvar = modelObject->optionalCast<OutputMeter>();
+        if (outvar) {
+          if (outvar.get().name() == s) {
+            emsSensor.setOutputMeter(outvar.get());
+            break;
+          }
         }
       }
     }

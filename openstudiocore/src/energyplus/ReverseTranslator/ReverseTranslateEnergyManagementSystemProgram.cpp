@@ -44,20 +44,14 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemProgram(co
 
   OptionalString s = workspaceObject.getString(EnergyManagementSystem_ProgramFields::Name);
   if(!s){
+    LOG(Error, "WorkspaceObject EnergyManagementSystem_Program has no Name");
     return boost::none;
   }
 
   openstudio::model::EnergyManagementSystemProgram emsProgram(m_model);
+  emsProgram.setName(*s);
 
-  if (s) {
-    emsProgram.setName(*s);
-  }
-
-  //for (const IdfExtensibleGroup& eg : workspaceObject.extensibleGroups()) {
-    //emsProgram.pushExtensibleGroup(eg.fields());
-  //}
   unsigned n = workspaceObject.numExtensibleGroups();
-  //OptionalWorkspaceObject line;
   OptionalString line;
   for (unsigned i = 0; i < n; ++i) {
     line = workspaceObject.getExtensibleGroup(i).cast<WorkspaceExtensibleGroup>().getString(EnergyManagementSystem_ProgramExtensibleFields::ProgramLine);

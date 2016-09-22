@@ -47,7 +47,7 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemOutputVari
 
   OptionalString s = workspaceObject.getString(EnergyManagementSystem_OutputVariableFields::Name);
   if (!s) {
-    LOG(Error, "EnergyManagementSystem_OutputVariable Name not set");
+    LOG(Error, "EnergyManagementSystem_OutputVariable has no Name");
     return boost::none;
   }
   openstudio::model::EnergyManagementSystemOutputVariable emsOutputVariable(m_model);
@@ -59,6 +59,7 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemOutputVari
     return boost::none;
   } else {
     Workspace workspace = workspaceObject.workspace();
+    //look for GlobalVariables, translate and check if there is a name match since GV's dont have name field.
     for (WorkspaceObject& wsObject : workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_GlobalVariable)) {
       boost::optional<model::ModelObject> modelObject = translateAndMapWorkspaceObject(wsObject);
       if (modelObject) {
@@ -68,6 +69,7 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemOutputVari
         }
       }
     }
+    //look for name match on other (EMS) objects.
     for (WorkspaceObject& wsObject : workspace.getObjectsByName(*s)) {
       boost::optional<model::ModelObject> modelObject = translateAndMapWorkspaceObject(wsObject);
       if (modelObject) {
@@ -104,15 +106,14 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemOutputVari
     for (WorkspaceObject& wsObject : workspace.getObjectsByName(*s)) {
       boost::optional<model::ModelObject> modelObject = translateAndMapWorkspaceObject(wsObject);
       if (modelObject) {
-        if (modelObject.get().iddObjectType() == IddObjectType::EnergyManagementSystem_Program) {
+        if (modelObject.get().iddObjectType() == IddObjectType::OS_EnergyManagementSystem_Program) {
           emsOutputVariable.setEMSProgramorSubroutineName(modelObject.get().cast<EnergyManagementSystemProgram>());
-        } else if (modelObject.get().iddObjectType() == IddObjectType::EnergyManagementSystem_Subroutine) {
+        } else if (modelObject.get().iddObjectType() == IddObjectType::OS_EnergyManagementSystem_Subroutine) {
           emsOutputVariable.setEMSProgramorSubroutineName(modelObject.get().cast<EnergyManagementSystemSubroutine>());
         }
         return emsOutputVariable;
       }
     }
-
   }
 
   return emsOutputVariable;

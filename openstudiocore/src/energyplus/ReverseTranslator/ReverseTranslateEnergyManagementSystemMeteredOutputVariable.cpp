@@ -47,7 +47,7 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemMeteredOut
 
   OptionalString s = workspaceObject.getString(EnergyManagementSystem_MeteredOutputVariableFields::Name);
   if(!s){
-    LOG(Error, "EnergyManagementSystem_MeteredOutputVariable Name not set");
+    LOG(Error, "WorkspaceObject EnergyManagementSystem_MeteredOutputVariable has no Name");
     return boost::none;
   }
   openstudio::model::EnergyManagementSystemMeteredOutputVariable emsOutputVariable(m_model);
@@ -111,7 +111,6 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemMeteredOut
         break;
       }
     }
-
   }
 
   s = workspaceObject.getString(EnergyManagementSystem_MeteredOutputVariableFields::EMSVariableName);
@@ -120,6 +119,7 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemMeteredOut
     return boost::none;
   } else {
     Workspace workspace = workspaceObject.workspace();
+    //look for GlobalVariables, translate and check if there is a name match since GV's dont have name field.
     for (WorkspaceObject& wsObject : workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_GlobalVariable)) {
       boost::optional<model::ModelObject> modelObject = translateAndMapWorkspaceObject(wsObject);
       if (modelObject) {
@@ -129,6 +129,7 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemMeteredOut
         }
       }
     }
+    //look for name match on other (EMS) objects.
     for (WorkspaceObject& wsObject : workspace.getObjectsByName(*s)) {
       boost::optional<model::ModelObject> modelObject = translateAndMapWorkspaceObject(wsObject);
       if (modelObject) {

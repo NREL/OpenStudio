@@ -41,6 +41,7 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemInternalVa
 
   OptionalString s = workspaceObject.getString(EnergyManagementSystem_InternalVariableFields::Name);
   if(!s){
+    LOG(Error, "WorkspaceObject EnergyManagementSystem_InternalVariable has no Name.");
     return boost::none;
   }
 
