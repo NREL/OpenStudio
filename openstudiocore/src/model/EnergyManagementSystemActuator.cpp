@@ -74,13 +74,13 @@ namespace detail {
 
   std::string EnergyManagementSystemActuator_Impl::actuatedComponentControlType() const {
     boost::optional<std::string> value = getString(OS_EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType,true);
-    OS_ASSERT(value);
+    //OS_ASSERT(value);
     return value.get();
   }
 
   std::string EnergyManagementSystemActuator_Impl::actuatedComponentType() const {
     boost::optional<std::string> value = getString(OS_EnergyManagementSystem_ActuatorFields::ActuatedComponentType, true);
-    OS_ASSERT(value);
+    //OS_ASSERT(value);
     return value.get();
   }
 
@@ -90,13 +90,13 @@ namespace detail {
 
   bool EnergyManagementSystemActuator_Impl::setActuatedComponentControlType(const std::string& actuatedComponentControlType) {
     bool result = setString(OS_EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, actuatedComponentControlType);
-    OS_ASSERT(result);
+    //OS_ASSERT(result);
     return result;
   }
 
   bool EnergyManagementSystemActuator_Impl::setActuatedComponentType(const std::string& actuatedComponentType) {
     bool result = setString(OS_EnergyManagementSystem_ActuatorFields::ActuatedComponentType, actuatedComponentType);
-    OS_ASSERT(result);
+    //OS_ASSERT(result);
     return result;
   }
 

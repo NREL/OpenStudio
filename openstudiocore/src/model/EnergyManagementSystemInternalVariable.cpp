@@ -70,7 +70,7 @@ namespace detail {
 
   std::string EnergyManagementSystemInternalVariable_Impl::internalDataType() const {
     boost::optional<std::string> value = getString(OS_EnergyManagementSystem_InternalVariableFields::InternalDataType,true);
-    OS_ASSERT(value);
+    //OS_ASSERT(value);
     return value.get();
   }
 
@@ -82,12 +82,12 @@ namespace detail {
 
   void EnergyManagementSystemInternalVariable_Impl::resetInternalDataIndexKeyName() {
     bool result = setString(OS_EnergyManagementSystem_InternalVariableFields::InternalDataIndexKeyName, "");
-    OS_ASSERT(result);
+    //OS_ASSERT(result);
   }
 
   bool EnergyManagementSystemInternalVariable_Impl::setInternalDataType(const std::string& internalDataType) {
     bool result = setString(OS_EnergyManagementSystem_InternalVariableFields::InternalDataType, internalDataType);
-    OS_ASSERT(result);
+    //OS_ASSERT(result);
     return result;
   }
 

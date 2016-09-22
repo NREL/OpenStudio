@@ -25,6 +25,8 @@
 #include "../../model/EnergyManagementSystemProgram_Impl.hpp"
 #include "../../model/EnergyManagementSystemSubroutine.hpp"
 #include "../../model/EnergyManagementSystemSubroutine_Impl.hpp"
+#include "../../model/EnergyManagementSystemGlobalVariable.hpp"
+#include "../../model/EnergyManagementSystemGlobalVariable_Impl.hpp"
 
 #include <utilities/idd/EnergyManagementSystem_MeteredOutputVariable_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
@@ -50,14 +52,6 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemMeteredOut
   }
   openstudio::model::EnergyManagementSystemMeteredOutputVariable emsOutputVariable(m_model);
   emsOutputVariable.setName(*s);
-
-  s = workspaceObject.getString(EnergyManagementSystem_MeteredOutputVariableFields::EMSVariableName);
-  if (!s) {
-    LOG(Error, emsOutputVariable.nameString() + ": EMSVariableName not set");
-    return boost::none;
-  } else {
-    emsOutputVariable.setEMSVariableName(*s);
-  }
 
   s = workspaceObject.getString(EnergyManagementSystem_MeteredOutputVariableFields::UpdateFrequency);
   if (!s) {
@@ -114,10 +108,34 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemMeteredOut
           EnergyManagementSystemSubroutine subroutine = modelObject.get().cast<EnergyManagementSystemSubroutine>();
           emsOutputVariable.setEMSProgramorSubroutineName(subroutine);
         }
-        return emsOutputVariable;
+        break;
       }
     }
 
+  }
+
+  s = workspaceObject.getString(EnergyManagementSystem_MeteredOutputVariableFields::EMSVariableName);
+  if (!s) {
+    LOG(Error, emsOutputVariable.nameString() + ": EMSVariableName not set");
+    return boost::none;
+  } else {
+    Workspace workspace = workspaceObject.workspace();
+    for (WorkspaceObject& wsObject : workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_GlobalVariable)) {
+      boost::optional<model::ModelObject> modelObject = translateAndMapWorkspaceObject(wsObject);
+      if (modelObject) {
+        if (modelObject.get().cast<EnergyManagementSystemGlobalVariable>().name() == s) {
+          emsOutputVariable.setEMSVariableName(*s);
+          return emsOutputVariable;
+        }
+      }
+    }
+    for (WorkspaceObject& wsObject : workspace.getObjectsByName(*s)) {
+      boost::optional<model::ModelObject> modelObject = translateAndMapWorkspaceObject(wsObject);
+      if (modelObject) {
+        emsOutputVariable.setEMSVariableName(*s);
+        return emsOutputVariable;
+      }
+    }
   }
   
   return emsOutputVariable;
