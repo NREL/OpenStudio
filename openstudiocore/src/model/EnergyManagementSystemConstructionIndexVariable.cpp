@@ -20,7 +20,6 @@
 #include "EnergyManagementSystemConstructionIndexVariable.hpp"
 #include "EnergyManagementSystemConstructionIndexVariable_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
 #include "Construction.hpp"
 #include "Construction_Impl.hpp"
 
@@ -102,6 +101,9 @@ EnergyManagementSystemConstructionIndexVariable::EnergyManagementSystemConstruct
 EnergyManagementSystemConstructionIndexVariable::EnergyManagementSystemConstructionIndexVariable(const Model& model)
   : ModelObject(EnergyManagementSystemConstructionIndexVariable::iddObjectType(), model) {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemConstructionIndexVariable_Impl>());
+  Construction construction = Construction(model);
+  construction.setName("Generic Construction");
+  setConstructionObject(construction);
 }
 
 IddObjectType EnergyManagementSystemConstructionIndexVariable::iddObjectType() {
