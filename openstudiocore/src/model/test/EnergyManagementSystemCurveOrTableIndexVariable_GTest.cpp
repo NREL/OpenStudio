@@ -40,7 +40,7 @@ TEST_F(ModelFixture, EMS_CurveOrTableIndexVariable)
   // Create a curve
   CurveBiquadratic c1(model);
 
-  EnergyManagementSystemCurveOrTableIndexVariable emsCurve(model);
+  EnergyManagementSystemCurveOrTableIndexVariable emsCurve(model, c1);
   emsCurve.setCurveorTableObject(c1);
   EXPECT_EQ(c1.handle(), emsCurve.curveorTableObject().handle());
   model.save(toPath("./EMS_curvetest.osm"), true);

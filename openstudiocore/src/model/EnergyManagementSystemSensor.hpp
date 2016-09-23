@@ -47,6 +47,10 @@ class MODEL_API EnergyManagementSystemSensor : public ModelObject {
 
   explicit EnergyManagementSystemSensor(const Model& model);
 
+  explicit EnergyManagementSystemSensor(const Model& model, OutputVariable& outvar);
+
+  explicit EnergyManagementSystemSensor(const Model& model, OutputMeter& outvar);
+
   virtual ~EnergyManagementSystemSensor() {}
 
   //@}

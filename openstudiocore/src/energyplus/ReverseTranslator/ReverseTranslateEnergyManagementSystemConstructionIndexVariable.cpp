@@ -59,7 +59,7 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemConstructi
       if (modelObject) {
         openstudio::model::EnergyManagementSystemConstructionIndexVariable emsConstructionIndexVariable(m_model);
         emsConstructionIndexVariable.setName(*s1);
-        emsConstructionIndexVariable.setConstructionObject(modelObject.get());
+        //emsConstructionIndexVariable.setConstructionObject(modelObject.get());
         return emsConstructionIndexVariable;
       }
     }

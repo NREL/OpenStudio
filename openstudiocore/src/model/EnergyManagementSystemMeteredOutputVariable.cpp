@@ -71,13 +71,11 @@ namespace detail {
 
   std::string EnergyManagementSystemMeteredOutputVariable_Impl::eMSVariableName() const {
     boost::optional<std::string> value = getString(OS_EnergyManagementSystem_MeteredOutputVariableFields::EMSVariableName,true);
-    //OS_ASSERT(value);
     return value.get();
   }
 
   std::string EnergyManagementSystemMeteredOutputVariable_Impl::updateFrequency() const {
     boost::optional<std::string> value = getString(OS_EnergyManagementSystem_MeteredOutputVariableFields::UpdateFrequency,true);
-    //OS_ASSERT(value);
     return value.get();
   }
 
@@ -87,19 +85,16 @@ namespace detail {
 
   std::string EnergyManagementSystemMeteredOutputVariable_Impl::resourceType() const {
     boost::optional<std::string> value = getString(OS_EnergyManagementSystem_MeteredOutputVariableFields::ResourceType,true);
-    //OS_ASSERT(value);
     return value.get();
   }
 
   std::string EnergyManagementSystemMeteredOutputVariable_Impl::groupType() const {
     boost::optional<std::string> value = getString(OS_EnergyManagementSystem_MeteredOutputVariableFields::GroupType,true);
-    //OS_ASSERT(value);
     return value.get();
   }
 
   std::string EnergyManagementSystemMeteredOutputVariable_Impl::endUseCategory() const {
     boost::optional<std::string> value = getString(OS_EnergyManagementSystem_MeteredOutputVariableFields::EndUseCategory,true);
-    //OS_ASSERT(value);
     return value.get();
   }
 
@@ -111,8 +106,9 @@ namespace detail {
     return getString(OS_EnergyManagementSystem_MeteredOutputVariableFields::Units,true);
   }
 
-  void EnergyManagementSystemMeteredOutputVariable_Impl::setEMSVariableName(const std::string& eMSVariableName) {
+  bool EnergyManagementSystemMeteredOutputVariable_Impl::setEMSVariableName(const std::string& eMSVariableName) {
     bool result = setString(OS_EnergyManagementSystem_MeteredOutputVariableFields::EMSVariableName, eMSVariableName);
+    return result;
   }
 
   bool EnergyManagementSystemMeteredOutputVariable_Impl::setUpdateFrequency(const std::string& updateFrequency) {
@@ -122,19 +118,17 @@ namespace detail {
 
   bool EnergyManagementSystemMeteredOutputVariable_Impl::setEMSProgramorSubroutineName(const EnergyManagementSystemProgram& program) {
     bool result = setPointer(OS_EnergyManagementSystem_MeteredOutputVariableFields::EMSProgramorSubroutineName, program.handle());
-    //OS_ASSERT(result);
     return result;
   }
 
   bool EnergyManagementSystemMeteredOutputVariable_Impl::setEMSProgramorSubroutineName(const EnergyManagementSystemSubroutine& subroutine) {
     bool result = setPointer(OS_EnergyManagementSystem_MeteredOutputVariableFields::EMSProgramorSubroutineName, subroutine.handle());
-    //OS_ASSERT(result);
     return result;
   }
 
   void EnergyManagementSystemMeteredOutputVariable_Impl::resetEMSProgramorSubroutineName() {
     bool result = setString(OS_EnergyManagementSystem_MeteredOutputVariableFields::EMSProgramorSubroutineName, "");
-    //OS_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool EnergyManagementSystemMeteredOutputVariable_Impl::setResourceType(const std::string& resourceType) {
@@ -152,24 +146,24 @@ namespace detail {
     return result;
   }
 
-  void EnergyManagementSystemMeteredOutputVariable_Impl::setEndUseSubcategory(const std::string& endUseSubcategory) {
+  bool EnergyManagementSystemMeteredOutputVariable_Impl::setEndUseSubcategory(const std::string& endUseSubcategory) {
     bool result = setString(OS_EnergyManagementSystem_MeteredOutputVariableFields::EndUseSubcategory, endUseSubcategory);
-    //OS_ASSERT(result);
+    return result;
   }
 
   void EnergyManagementSystemMeteredOutputVariable_Impl::resetEndUseSubcategory() {
     bool result = setString(OS_EnergyManagementSystem_MeteredOutputVariableFields::EndUseSubcategory, "");
-    //OS_ASSERT(result);
+    OS_ASSERT(result);
   }
 
-  void EnergyManagementSystemMeteredOutputVariable_Impl::setUnits(const std::string& units) {
+  bool EnergyManagementSystemMeteredOutputVariable_Impl::setUnits(const std::string& units) {
     bool result = setString(OS_EnergyManagementSystem_MeteredOutputVariableFields::Units, units);
-    //OS_ASSERT(result);
+    return result;
   }
 
   void EnergyManagementSystemMeteredOutputVariable_Impl::resetUnits() {
     bool result = setString(OS_EnergyManagementSystem_MeteredOutputVariableFields::Units, "");
-    //OS_ASSERT(result);
+    OS_ASSERT(result);
   }
 
 } // detail
@@ -178,12 +172,11 @@ EnergyManagementSystemMeteredOutputVariable::EnergyManagementSystemMeteredOutput
   : ModelObject(EnergyManagementSystemMeteredOutputVariable::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemMeteredOutputVariable_Impl>());
-
-  bool ok = true;
-  ok = setUpdateFrequency("SystemTimestep");
-  ok = setResourceType("Electricity");
-  ok = setGroupType("Building");
-  ok = setEndUseCategory("Fans");
+  //TODO setEMSVariableName to a valid default
+  setUpdateFrequency("SystemTimestep");
+  setResourceType("Electricity");
+  setGroupType("Building");
+  setEndUseCategory("Fans");
 }
 
 IddObjectType EnergyManagementSystemMeteredOutputVariable::iddObjectType() {
@@ -242,8 +235,8 @@ boost::optional<std::string> EnergyManagementSystemMeteredOutputVariable::units(
   return getImpl<detail::EnergyManagementSystemMeteredOutputVariable_Impl>()->units();
 }
 
-void EnergyManagementSystemMeteredOutputVariable::setEMSVariableName(const std::string& eMSVariableName) {
-  getImpl<detail::EnergyManagementSystemMeteredOutputVariable_Impl>()->setEMSVariableName(eMSVariableName);
+bool EnergyManagementSystemMeteredOutputVariable::setEMSVariableName(const std::string& eMSVariableName) {
+  return getImpl<detail::EnergyManagementSystemMeteredOutputVariable_Impl>()->setEMSVariableName(eMSVariableName);
 }
 
 bool EnergyManagementSystemMeteredOutputVariable::setUpdateFrequency(const std::string& updateFrequency) {
@@ -274,16 +267,16 @@ bool EnergyManagementSystemMeteredOutputVariable::setEndUseCategory(const std::s
   return getImpl<detail::EnergyManagementSystemMeteredOutputVariable_Impl>()->setEndUseCategory(endUseCategory);
 }
 
-void EnergyManagementSystemMeteredOutputVariable::setEndUseSubcategory(const std::string& endUseSubcategory) {
-  getImpl<detail::EnergyManagementSystemMeteredOutputVariable_Impl>()->setEndUseSubcategory(endUseSubcategory);
+bool EnergyManagementSystemMeteredOutputVariable::setEndUseSubcategory(const std::string& endUseSubcategory) {
+  return getImpl<detail::EnergyManagementSystemMeteredOutputVariable_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
 void EnergyManagementSystemMeteredOutputVariable::resetEndUseSubcategory() {
   getImpl<detail::EnergyManagementSystemMeteredOutputVariable_Impl>()->resetEndUseSubcategory();
 }
 
-void EnergyManagementSystemMeteredOutputVariable::setUnits(const std::string& units) {
-  getImpl<detail::EnergyManagementSystemMeteredOutputVariable_Impl>()->setUnits(units);
+bool EnergyManagementSystemMeteredOutputVariable::setUnits(const std::string& units) {
+  return getImpl<detail::EnergyManagementSystemMeteredOutputVariable_Impl>()->setUnits(units);
 }
 
 void EnergyManagementSystemMeteredOutputVariable::resetUnits() {

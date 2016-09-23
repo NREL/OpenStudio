@@ -71,19 +71,16 @@ namespace detail {
 
   std::string EnergyManagementSystemOutputVariable_Impl::eMSVariableName() const {
     boost::optional<std::string> value = getString(OS_EnergyManagementSystem_OutputVariableFields::EMSVariableName,true);
-    //OS_ASSERT(value);
     return value.get();
   }
 
   std::string EnergyManagementSystemOutputVariable_Impl::typeofDatainVariable() const {
     boost::optional<std::string> value = getString(OS_EnergyManagementSystem_OutputVariableFields::TypeofDatainVariable,true);
-    //OS_ASSERT(value);
     return value.get();
   }
 
   std::string EnergyManagementSystemOutputVariable_Impl::updateFrequency() const {
     boost::optional<std::string> value = getString(OS_EnergyManagementSystem_OutputVariableFields::UpdateFrequency,true);
-    //OS_ASSERT(value);
     return value.get();
   }
 
@@ -112,19 +109,17 @@ namespace detail {
 
   bool EnergyManagementSystemOutputVariable_Impl::setEMSProgramorSubroutineName(const EnergyManagementSystemProgram& program) {
     bool result = setPointer(OS_EnergyManagementSystem_OutputVariableFields::EMSProgramorSubroutineName, program.handle());
-    //OS_ASSERT(result);
     return result;
   }
 
   bool EnergyManagementSystemOutputVariable_Impl::setEMSProgramorSubroutineName(const EnergyManagementSystemSubroutine& subroutine) {
     bool result = setPointer(OS_EnergyManagementSystem_OutputVariableFields::EMSProgramorSubroutineName, subroutine.handle());
-    OS_ASSERT(result);
     return result;
   }
 
   void EnergyManagementSystemOutputVariable_Impl::resetEMSProgramorSubroutineName() {
     bool result = setString(OS_EnergyManagementSystem_OutputVariableFields::EMSProgramorSubroutineName, "");
-    //OS_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool EnergyManagementSystemOutputVariable_Impl::setUnits(const std::string& units) {
@@ -134,7 +129,7 @@ namespace detail {
 
   void EnergyManagementSystemOutputVariable_Impl::resetUnits() {
     bool result = setString(OS_EnergyManagementSystem_OutputVariableFields::Units, "");
-    //OS_ASSERT(result);
+    OS_ASSERT(result);
   }
 
 } // detail
@@ -143,6 +138,7 @@ EnergyManagementSystemOutputVariable::EnergyManagementSystemOutputVariable(const
   : ModelObject(EnergyManagementSystemOutputVariable::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemOutputVariable_Impl>());
+  //TODO setEMSVariableName to a valid default
   setUpdateFrequency("ZoneTimestep");
   setTypeofDatainVariable("Averaged");
 }

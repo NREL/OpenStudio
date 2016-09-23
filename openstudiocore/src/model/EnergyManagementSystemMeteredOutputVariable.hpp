@@ -79,7 +79,7 @@ class MODEL_API EnergyManagementSystemMeteredOutputVariable : public ModelObject
   /** @name Setters */
   //@{
 
-  void setEMSVariableName(const std::string& eMSVariableName);
+  bool setEMSVariableName(const std::string& eMSVariableName);
 
   bool setUpdateFrequency(const std::string& updateFrequency);
 
@@ -95,11 +95,11 @@ class MODEL_API EnergyManagementSystemMeteredOutputVariable : public ModelObject
 
   bool setEndUseCategory(const std::string& endUseCategory);
 
-  void setEndUseSubcategory(const std::string& endUseSubcategory);
+  bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
   void resetEndUseSubcategory();
 
-  void setUnits(const std::string& units);
+  bool setUnits(const std::string& units);
 
   void resetUnits();
 

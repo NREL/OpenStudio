@@ -158,7 +158,6 @@ namespace detail {
       } else {
         result = false;
       }
-      //ok.push_back(result);
       ok.at(i) = result;
     }
     //check if all the programs set true
@@ -228,7 +227,6 @@ namespace detail {
     } else {
       result = false;
     }
-
     return result;
   }
 
@@ -285,7 +283,6 @@ namespace detail {
     for (size_t i = 0; i < lines.size(); i++) {
       //use method addLine to add each line
       result = addLine(lines.at(i));
-      //ok.push_back(result);
       ok.at(i) = result;
     }
     //check if all the programs set true

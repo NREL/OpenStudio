@@ -74,14 +74,20 @@ namespace detail {
 
   std::string EnergyManagementSystemActuator_Impl::actuatedComponentControlType() const {
     boost::optional<std::string> value = getString(OS_EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType,true);
-    //OS_ASSERT(value);
-    return value.get();
+    if (value) {
+      return value.get();
+    } else {
+      return "";
+    }
   }
 
   std::string EnergyManagementSystemActuator_Impl::actuatedComponentType() const {
     boost::optional<std::string> value = getString(OS_EnergyManagementSystem_ActuatorFields::ActuatedComponentType, true);
-    //OS_ASSERT(value);
-    return value.get();
+    if (value) {
+      return value.get();
+    } else {
+      return "";
+    }
   }
 
   bool EnergyManagementSystemActuator_Impl::setActuatedComponent(const ModelObject& modelObject) {
@@ -90,13 +96,11 @@ namespace detail {
 
   bool EnergyManagementSystemActuator_Impl::setActuatedComponentControlType(const std::string& actuatedComponentControlType) {
     bool result = setString(OS_EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, actuatedComponentControlType);
-    //OS_ASSERT(result);
     return result;
   }
 
   bool EnergyManagementSystemActuator_Impl::setActuatedComponentType(const std::string& actuatedComponentType) {
     bool result = setString(OS_EnergyManagementSystem_ActuatorFields::ActuatedComponentType, actuatedComponentType);
-    //OS_ASSERT(result);
     return result;
   }
 
@@ -107,11 +111,20 @@ EnergyManagementSystemActuator::EnergyManagementSystemActuator(const ModelObject
 {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemActuator_Impl>());
   setActuatedComponent(modelObject);
+  //TODO set below to some appropriate default that depends on the modelObject::IddType
+  //setActuatedComponentControlType();
+  //setActuatedComponentType();
 }
 
 EnergyManagementSystemActuator::EnergyManagementSystemActuator(const Model& model)
   : ModelObject(EnergyManagementSystemActuator::iddObjectType(), model) {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemActuator_Impl>());
+  //This constructor is used in the ReverseTranslator when the ActuatedComponent doesnt Reverse Translate.
+  //In that case, a generic Actuator is created with ActuatedComponent blank (but the old value is in a comment)
+  //TODO setActuatedComponent to a default modelObject.
+  //TODO set below to some appropriate default that depends on the modelObject::IddType
+  //setActuatedComponentControlType();
+  //setActuatedComponentType();
 }
 
 IddObjectType EnergyManagementSystemActuator::iddObjectType() {

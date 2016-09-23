@@ -19,6 +19,7 @@
 
 #include "EnergyManagementSystemCurveOrTableIndexVariable.hpp"
 #include "EnergyManagementSystemCurveOrTableIndexVariable_Impl.hpp"
+#include "Curve.hpp"
 
 // TODO: Check the following class names against object getters and setters.
 //#include "AllCurves.hpp"
@@ -87,9 +88,20 @@ namespace detail {
 
 } // detail
 
-EnergyManagementSystemCurveOrTableIndexVariable::EnergyManagementSystemCurveOrTableIndexVariable(const Model& model)
+EnergyManagementSystemCurveOrTableIndexVariable::EnergyManagementSystemCurveOrTableIndexVariable(const Model& model, Curve& curve)
   : ModelObject(EnergyManagementSystemCurveOrTableIndexVariable::iddObjectType(),model)
 {
+  OS_ASSERT(getImpl<detail::EnergyManagementSystemCurveOrTableIndexVariable_Impl>());
+  bool ok = setCurveorTableObject(curve);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s Curve to "
+      << curve.briefDescription() << ".");
+  }
+}
+
+EnergyManagementSystemCurveOrTableIndexVariable::EnergyManagementSystemCurveOrTableIndexVariable(const Model& model)
+  : ModelObject(EnergyManagementSystemCurveOrTableIndexVariable::iddObjectType(), model) {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemCurveOrTableIndexVariable_Impl>());
 }
 
