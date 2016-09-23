@@ -70,24 +70,21 @@ namespace detail {
 
   std::string EnergyManagementSystemInternalVariable_Impl::internalDataType() const {
     boost::optional<std::string> value = getString(OS_EnergyManagementSystem_InternalVariableFields::InternalDataType,true);
-    //OS_ASSERT(value);
     return value.get();
   }
 
   bool EnergyManagementSystemInternalVariable_Impl::setInternalDataIndexKeyName(const std::string& internalDataIndexKeyName) {
     bool result = setString(OS_EnergyManagementSystem_InternalVariableFields::InternalDataIndexKeyName, internalDataIndexKeyName);
-    OS_ASSERT(result);
     return result;
   }
 
   void EnergyManagementSystemInternalVariable_Impl::resetInternalDataIndexKeyName() {
     bool result = setString(OS_EnergyManagementSystem_InternalVariableFields::InternalDataIndexKeyName, "");
-    //OS_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool EnergyManagementSystemInternalVariable_Impl::setInternalDataType(const std::string& internalDataType) {
     bool result = setString(OS_EnergyManagementSystem_InternalVariableFields::InternalDataType, internalDataType);
-    //OS_ASSERT(result);
     return result;
   }
 
@@ -97,9 +94,7 @@ EnergyManagementSystemInternalVariable::EnergyManagementSystemInternalVariable(c
   : ModelObject(EnergyManagementSystemInternalVariable::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemInternalVariable_Impl>());
-
-  // TODO: Appropriately handle the following required object-list fields.
-  // setInternalDataType();
+  //TODO setInternalDataType to valid EIO default value
 }
 
 IddObjectType EnergyManagementSystemInternalVariable::iddObjectType() {

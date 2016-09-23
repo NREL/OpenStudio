@@ -26862,17 +26862,17 @@ OS:EnergyManagementSystem:Sensor,
   A1, \field Handle
        \type handle
        \required-field   
-  A2 , \field Name
+  A2, \field Name
        \required-field
        \type alpha
        \note This name becomes a variable for use in Erl programs
        \note No spaces allowed in names for ErlVariableNames
        \reference ErlVariableNames
        \reference AllObjects
-  A3 , \field Output Variable or Output Meter Index Key Name
+  A3, \field Output Variable or Output Meter Index Key Name
        \type alpha
        \note key name listed here will override key name in Output:Variable or Output:Meter
-  A4 ; \field Output Variable or Output Meter Name
+  A4; \field Output Variable or Output Meter Name
        \required-field
        \type object-list
        \object-list OutputVariableMeterNames
@@ -26883,21 +26883,21 @@ OS:EnergyManagementSystem:Actuator,
   A1, \field Handle
        \type handle
        \required-field 
-  A2 , \field Name
+  A2, \field Name
        \required-field
        \type alpha
        \note This name becomes a variable for use in Erl programs
        \note No spaces allowed in names for ErlVariableNames
        \reference ErlVariableNames
        \reference AllObjects
-  A3 , \field Actuated Component Name
+  A3, \field Actuated Component Name
        \required-field
        \type object-list
        \object-list AllObjects
-  A4 , \field Actuated Component Type
+  A4, \field Actuated Component Type
        \required-field
        \type alpha
-  A5 ; \field Actuated Component Control Type
+  A5; \field Actuated Component Control Type
        \required-field
        \type alpha      
 
@@ -26910,12 +26910,12 @@ OS:EnergyManagementSystem:ProgramCallingManager,
   A1, \field Handle
        \type handle
        \required-field      
-  A2 , \field Name
+  A2, \field Name
        \required-field
        \type alpha
        \reference ErlProgramCallingManagerNames
        \note No spaces allowed in names for ErlProgramCallingManagerNames
-  A3 , \field EnergyPlus Model Calling Point
+  A3, \field EnergyPlus Model Calling Point
        \type choice
        \key BeginNewEnvironment
        \key AfterNewEnvironmentWarmUpIsComplete
@@ -26932,7 +26932,7 @@ OS:EnergyManagementSystem:ProgramCallingManager,
        \key AfterComponentInputReadIn
        \key UserDefinedComponentModel
        \key UnitarySystemSizing
-  A4 ; \field Program Name
+  A4; \field Program Name
        \begin-extensible
        \required-field
        \type object-list
@@ -26947,13 +26947,13 @@ OS:EnergyManagementSystem:Program,
   A1, \field Handle
        \type handle
        \required-field       
-  A2 , \field Name
+  A2, \field Name
        \required-field
        \type alpha
        \reference ErlProgramNames
        \reference ErlProgramSubroutineNames
        \note No spaces allowed in names for ErlProgramNames
-  A3 ; \field Program Line
+  A3; \field Program Line
        \begin-extensible
        \type alpha
        \required-field
@@ -26966,13 +26966,13 @@ OS:EnergyManagementSystem:Subroutine,
   A1, \field Handle
        \type handle
        \required-field     
-  A2 , \field Name
+  A2, \field Name
        \required-field
        \type alpha
        \reference ErlSubroutineNames
        \reference ErlProgramSubroutineNames
        \note No spaces allowed in names for ErlSubroutineNames
-  A3 ; \field Program Line
+  A3; \field Program Line
        \begin-extensible
        \type alpha
        \required-field
@@ -26984,7 +26984,7 @@ OS:EnergyManagementSystem:GlobalVariable,
   A1, \field Handle
        \type handle
        \required-field      
-  A2 ; \field Name
+  A2; \field Name
        \required-field
        \type alpha
 	   \reference ErlVariableNames
@@ -26996,30 +26996,30 @@ OS:EnergyManagementSystem:OutputVariable,
   A1, \field Handle
        \type handle
        \required-field 
-  A2 , \field Name
+  A2, \field Name
        \required-field
        \type alpha
        \retaincase
-  A3 , \field EMS Variable Name
+  A3, \field EMS Variable Name
        \required-field
        \type object-list
 	   \object-list ErlVariableNames
        \note must be an acceptable EMS variable
-  A4 , \field Type of Data in Variable
+  A4, \field Type of Data in Variable
        \required-field
        \type choice
        \key Averaged
        \key Summed
-  A5 , \field Update Frequency
+  A5, \field Update Frequency
        \required-field
        \type choice
        \key ZoneTimestep
        \key SystemTimestep
-  A6 , \field EMS Program or Subroutine Name
+  A6, \field EMS Program or Subroutine Name
        \type object-list
        \object-list ErlProgramSubroutineNames
        \note optional for global scope variables, required for local scope variables
-  A7 ; \field Units
+  A7; \field Units
        \note optional but will result in dimensionless units for blank
        \note EnergyPlus units are standard SI units
        \type alpha
@@ -27030,25 +27030,25 @@ OS:EnergyManagementSystem:MeteredOutputVariable,
   A1, \field Handle
        \type handle
        \required-field
-  A2 , \field Name
+  A2, \field Name
        \required-field
        \type alpha
        \retaincase
-  A3 , \field EMS Variable Name
+  A3, \field EMS Variable Name
        \required-field
        \type object-list
 	   \object-list ErlVariableNames
        \note must be an acceptable EMS variable, no spaces
-  A4 , \field Update Frequency
+  A4, \field Update Frequency
        \required-field
        \type choice
        \key ZoneTimestep
        \key SystemTimestep
-  A5 , \field EMS Program or Subroutine Name
+  A5, \field EMS Program or Subroutine Name
        \type object-list
        \object-list ErlProgramSubroutineNames
        \note optional for global scope variables, required for local scope variables
-  A6 , \field Resource Type
+  A6, \field Resource Type
        \required-field
        \note choose the type of fuel, water, electricity, pollution or heat rate that should be metered.
        \type choice
@@ -27075,7 +27075,7 @@ OS:EnergyManagementSystem:MeteredOutputVariable,
        \key ElectricityProducedOnSite
        \key SolarWaterHeating
        \key SolarAirHeating
-  A7 , \field Group Type
+  A7, \field Group Type
        \note choose a general classification, building (internal services), HVAC (air systems), or plant (hydronic systems), or system
        \type choice
        \required-field
@@ -27083,7 +27083,7 @@ OS:EnergyManagementSystem:MeteredOutputVariable,
        \key HVAC
        \key Plant
        \key System
-  A8 , \field End-Use Category
+  A8, \field End-Use Category
        \note choose how the metered output should be classified for end-use category
        \required-field
        \type choice
@@ -27108,10 +27108,10 @@ OS:EnergyManagementSystem:MeteredOutputVariable,
        \key Baseboard
        \key HeatRecoveryForCooling
        \key HeatRecoveryForHeating
-  A9 , \field End-Use Subcategory
+  A9, \field End-Use Subcategory
        \type alpha
        \note enter a user-defined subcategory for this metered output
-  A10 ; \field Units
+  A10; \field Units
        \note optional but will result in dimensionless units for blank
        \note EnergyPlus units are standard SI units
        \type alpha
@@ -27123,17 +27123,17 @@ OS:EnergyManagementSystem:TrendVariable,
   A1, \field Handle
        \type handle
        \required-field      
-  A2 , \field Name
+  A2, \field Name
        \required-field
        \type alpha
        \note No spaces allowed in names for ErlVariableNames
        \reference ErlVariableNames
-  A3 , \field EMS Variable Name
+  A3, \field EMS Variable Name
        \required-field
        \type object-list
 	   \object-list ErlVariableNames
        \note must be a global scope EMS variable
-  N1 ; \field Number of Timesteps to be Logged
+  N1; \field Number of Timesteps to be Logged
        \required-field
        \type integer
        \minimum 1
@@ -27144,15 +27144,15 @@ OS:EnergyManagementSystem:InternalVariable,
   A1, \field Handle
        \type handle
        \required-field       
-  A2 , \field Name
+  A2, \field Name
        \required-field
        \type alpha
        \note This name becomes a variable for use in Erl programs
        \note No spaces allowed in names for ErlVariableNames
        \reference ErlVariableNames
-  A3 , \field Internal Data Index Key Name
+  A3, \field Internal Data Index Key Name
        \type alpha
-  A4 ; \field Internal Data Type
+  A4; \field Internal Data Type
        \required-field
        \type alpha
 
@@ -27162,13 +27162,13 @@ OS:EnergyManagementSystem:CurveOrTableIndexVariable,
   A1, \field Handle
        \type handle
        \required-field      
-  A2 , \field Name
+  A2, \field Name
        \required-field
        \type alpha
        \note This name becomes a variable for use in Erl programs
        \note No spaces allowed in names for ErlVariableNames
        \reference ErlVariableNames
-  A3 ; \field Curve or Table Object Name
+  A3; \field Curve or Table Object Name
        \type object-list
        \object-list AllCurves
        \required-field
@@ -27179,13 +27179,13 @@ OS:EnergyManagementSystem:ConstructionIndexVariable,
   A1, \field Handle
        \type handle
        \required-field        
-  A2 , \field Name
+  A2, \field Name
        \required-field
        \type alpha
        \note This name becomes a variable for use in Erl programs
        \note No spaces allowed in names for ErlVariableNames
        \reference ErlVariableNames
-  A3 ; \field Construction Object Name
+  A3; \field Construction Object Name
        \type object-list
        \object-list ConstructionNames
        \required-field  

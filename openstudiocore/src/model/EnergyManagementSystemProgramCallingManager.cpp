@@ -129,13 +129,6 @@ namespace detail {
     clearExtensibleGroups();
   }
 
-  bool EnergyManagementSystemProgramCallingManager_Impl::insertProgram(const EnergyManagementSystemProgram& program, unsigned index) {
-    //bool result = setString(OS_EnergyManagementSystem_ProgramCallingManagerFields::EnergyPlusModelCallingPoint, callingPoint);
-    //TODO what is this method doing?  how is it different that setProgram?
-    bool result = true;
-    return result;
-  }
-
   bool EnergyManagementSystemProgramCallingManager_Impl::addProgram(const EnergyManagementSystemProgram& program) {
     //add program to end of vector of programs
     bool result = false;
@@ -154,7 +147,6 @@ namespace detail {
       OS_ASSERT(!idfGroup.empty());
       ModelExtensibleGroup group = idfGroup.cast<ModelExtensibleGroup>();
       result = group.setPointer(0, program.handle());
-      OS_ASSERT(result); 
     }
     return result;
   }
@@ -166,7 +158,6 @@ namespace detail {
     for (auto &program : programs) {
       WorkspaceExtensibleGroup group = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
        result = group.setPointer(OS_EnergyManagementSystem_ProgramCallingManagerExtensibleFields::ProgramName, program.handle());
-       //ok.push_back(result);
        ok.at(OS_EnergyManagementSystem_ProgramCallingManagerExtensibleFields::ProgramName) = result;
     }
     //check if all the programs set true
@@ -248,10 +239,6 @@ bool EnergyManagementSystemProgramCallingManager::eraseProgram(unsigned index) {
 
 void EnergyManagementSystemProgramCallingManager::erasePrograms() {
   getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->erasePrograms();
-}
-
-bool EnergyManagementSystemProgramCallingManager::insertProgram(const EnergyManagementSystemProgram& program, unsigned index) {
-  return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->insertProgram(program, index);
 }
 
 bool EnergyManagementSystemProgramCallingManager::addProgram(const EnergyManagementSystemProgram& program) {

@@ -93,7 +93,6 @@ namespace detail {
 
   bool EnergyManagementSystemSensor_Impl::setKeyName(const std::string& keyName) {
     bool result = setString(OS_EnergyManagementSystem_SensorFields::OutputVariableorOutputMeterIndexKeyName, keyName);
-    //OS_ASSERT(result);
     return result;
   }
 
@@ -117,10 +116,33 @@ namespace detail {
 
 } // detail
 
+EnergyManagementSystemSensor::EnergyManagementSystemSensor(const Model& model, OutputVariable& outvar)
+  : ModelObject(EnergyManagementSystemSensor::iddObjectType(), model) {
+  OS_ASSERT(getImpl<detail::EnergyManagementSystemSensor_Impl>());
+  bool ok = setOutputVariable(outvar);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s OutputVariable to "
+      << outvar.briefDescription() << ".");
+  }
+}
+
+EnergyManagementSystemSensor::EnergyManagementSystemSensor(const Model& model, OutputMeter& outvar)
+  : ModelObject(EnergyManagementSystemSensor::iddObjectType(), model) {
+  OS_ASSERT(getImpl<detail::EnergyManagementSystemSensor_Impl>());
+  bool ok = setOutputMeter(outvar);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s OutputVariable to "
+      << outvar.briefDescription() << ".");
+  }
+}
+
 EnergyManagementSystemSensor::EnergyManagementSystemSensor(const Model& model)
   : ModelObject(EnergyManagementSystemSensor::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemSensor_Impl>());
+  //TODO setOutputVariable() on a default OutputVariable
 }
 
 IddObjectType EnergyManagementSystemSensor::iddObjectType() {

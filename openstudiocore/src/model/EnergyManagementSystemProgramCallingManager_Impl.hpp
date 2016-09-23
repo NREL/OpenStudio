@@ -79,8 +79,6 @@ namespace detail {
 
     void erasePrograms();
 
-    bool insertProgram(const EnergyManagementSystemProgram& program, unsigned index);
-
     bool addProgram(const EnergyManagementSystemProgram& program);
 
     bool setProgram(const EnergyManagementSystemProgram& program, unsigned index);

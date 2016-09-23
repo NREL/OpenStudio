@@ -22,6 +22,7 @@
 
 #include <model/ModelAPI.hpp>
 #include "ModelObject.hpp"
+#include "Curve.hpp"
 
 namespace openstudio {
 namespace model {
@@ -40,6 +41,8 @@ class MODEL_API EnergyManagementSystemCurveOrTableIndexVariable : public ModelOb
  public:
   /** @name Constructors and Destructors */
   //@{
+
+  explicit EnergyManagementSystemCurveOrTableIndexVariable(const Model& model, Curve& curve); //Does Curve cover all object-list AllCurves?
 
   explicit EnergyManagementSystemCurveOrTableIndexVariable(const Model& model);
 

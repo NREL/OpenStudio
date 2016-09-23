@@ -87,9 +87,20 @@ namespace detail {
 
 } // detail
 
-EnergyManagementSystemConstructionIndexVariable::EnergyManagementSystemConstructionIndexVariable(const Model& model)
+EnergyManagementSystemConstructionIndexVariable::EnergyManagementSystemConstructionIndexVariable(const Model& model, Construction& construction)
   : ModelObject(EnergyManagementSystemConstructionIndexVariable::iddObjectType(),model)
 {
+  OS_ASSERT(getImpl<detail::EnergyManagementSystemConstructionIndexVariable_Impl>());
+  bool ok = setConstructionObject(construction);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s Construction to "
+      << construction.briefDescription() << ".");
+  }
+}
+
+EnergyManagementSystemConstructionIndexVariable::EnergyManagementSystemConstructionIndexVariable(const Model& model)
+  : ModelObject(EnergyManagementSystemConstructionIndexVariable::iddObjectType(), model) {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemConstructionIndexVariable_Impl>());
 }
 

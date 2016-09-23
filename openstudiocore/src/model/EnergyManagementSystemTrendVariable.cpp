@@ -66,13 +66,11 @@ namespace detail {
 
   std::string EnergyManagementSystemTrendVariable_Impl::eMSVariableName() const {
     boost::optional<std::string> value = getString(OS_EnergyManagementSystem_TrendVariableFields::EMSVariableName,true);
-    OS_ASSERT(value);
     return value.get();
   }
 
   int EnergyManagementSystemTrendVariable_Impl::numberofTimestepstobeLogged() const {
     boost::optional<int> value = getInt(OS_EnergyManagementSystem_TrendVariableFields::NumberofTimestepstobeLogged,true);
-    OS_ASSERT(value);
     return value.get();
   }
 
@@ -92,6 +90,8 @@ EnergyManagementSystemTrendVariable::EnergyManagementSystemTrendVariable(const M
   : ModelObject(EnergyManagementSystemTrendVariable::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemTrendVariable_Impl>());
+  //TODO setEMSVariableName to a valid default
+  setNumberofTimestepstobeLogged(1);
 }
 
 IddObjectType EnergyManagementSystemTrendVariable::iddObjectType() {

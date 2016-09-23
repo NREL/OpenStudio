@@ -60,17 +60,9 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    //std::vector<std::string> getVariables() const;
-
     //@}
     /** @name Setters */
     //@{
-
-    //bool addVariable(const std::string& variable);
-
-    //bool removeVariable(const std::string& variable);
-
-    //void eraseVariables();
 
     //@}
     /** @name Other */

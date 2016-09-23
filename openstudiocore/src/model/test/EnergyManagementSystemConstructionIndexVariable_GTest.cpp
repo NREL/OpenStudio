@@ -87,7 +87,7 @@ TEST_F(ModelFixture, EMS_ConstructionIndexVariable)
 
   Construction construction(layers);
 
-  EnergyManagementSystemConstructionIndexVariable emsCIV(model);
+  EnergyManagementSystemConstructionIndexVariable emsCIV(model, construction);
   emsCIV.setConstructionObject(construction);
   EXPECT_EQ(construction.handle(), emsCIV.constructionObject().handle());
   model.save(toPath("./EMS_constructiontest.osm"), true);
