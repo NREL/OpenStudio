@@ -294,32 +294,32 @@ namespace detail {
   std::vector<ModelObject> EnergyManagementSystemSubroutine_Impl::referencedObjects() const {
     //return vector of model objects that are referenced in program
     std::vector<ModelObject> result;
+    const int subs[] = {1};
+    std::string possible_uid;
+
+    const Model m = this->model();
+    const std::vector<model::ModelObject> modelObjects = m.getModelObjects<model::ModelObject>();
 
     boost::optional<std::vector<std::string>> body = this->lines();
     if (body.is_initialized()) {
       //assume body is a vector of strings
       for (size_t i = 0; i < body.get().size(); i++) {
-        //split string on whitespaces to isolate possible uids
-        std::vector<std::string> results = splitString(body.get().at(i), ' ');
-        for (size_t j = 0; j < results.size(); j++) {
-          if (results.at(j).size() == 38) {
-            //remove {} from uid string
-            std::string possible_uid = results.at(j).substr(1, results.at(j).size() - 2);
-            //look to see if uid is in the model and return the object
-            UUID uid = toUUID(possible_uid);
-            //std::vector<Handle> handle = &uid;
-            Model m = this->model();
-            //TODO cant get below to work so try the harder way
-            //m.getModelObjects<model::ModelObject>(&uid);
-            std::vector<model::ModelObject> modelObjects = m.getModelObjects<model::ModelObject>();
-            if (modelObjects.size() > 0) {
-              for (size_t k = 0; k < modelObjects.size(); k++) {
-                if (modelObjects.at(k).handle() == uid) {
-                  result.push_back(modelObjects.at(k));
-                };
-              }
-            };
-          }
+        //find uids        
+        boost::sregex_token_iterator j(body.get().at(i).begin(), body.get().at(i).end(), uuidInString(), subs);
+
+        while (j != boost::sregex_token_iterator()) {
+          possible_uid = *j++;
+          //look to see if uid is in the model and return the object
+          UUID uid = toUUID(possible_uid);
+          //TODO cant get below to work so try the manual way
+          //m.getModelObjects<model::ModelObject>(&uid);
+          if (modelObjects.size() > 0) {
+            for (size_t k = 0; k < modelObjects.size(); k++) {
+              if (modelObjects.at(k).handle() == uid) {
+                result.push_back(modelObjects.at(k));
+              };
+            }
+          };
         }
       }
     }
@@ -329,37 +329,36 @@ namespace detail {
   std::vector<std::string> EnergyManagementSystemSubroutine_Impl::invalidReferencedObjects() const {
     //return vector of body lines that contain missing uid strings for invalid referenced objects
     std::vector<std::string> result;
+    const int subs[] = {1};
+    std::string possible_uid;
+
+    const Model m = this->model();
+    const std::vector<model::ModelObject> modelObjects = m.getModelObjects<model::ModelObject>();
 
     boost::optional<std::vector<std::string>> body = this->lines();
     if (body.is_initialized()) {
       //assume body is a vector of strings
       for (size_t i = 0; i < body.get().size(); i++) {
         int found = 0;
-        //split string on whitespaces to isolate possible uids
-        std::vector<std::string> results = splitString(body.get().at(i), ' ');
-        for (size_t j = 0; j < results.size(); j++) {
-          if (results.at(j).size() == 38) {
-            //possible uid so set found to 1
-            found = 1;
-            //remove {} from uid string
-            std::string possible_uid = results.at(j).substr(1, results.at(j).size() - 2);
-            //look to see if uid is in the model and return the object
-            UUID uid = toUUID(possible_uid);
-            //std::vector<Handle> handle = &uid;
-            Model m = this->model();
-            //TODO cant get below to work so try the harder way
-            //m.getModelObjects<model::ModelObject>(&uid);
-            std::vector<model::ModelObject> modelObjects = m.getModelObjects<model::ModelObject>();
-            if (modelObjects.size() > 0) {
-              for (size_t k = 0; k < modelObjects.size(); k++) {
-                if (modelObjects.at(k).handle() == uid) {
-                  found++;
-                };
-              }
-            };
-          }
+        //find uids        
+        boost::sregex_token_iterator j(body.get().at(i).begin(), body.get().at(i).end(), uuidInString(), subs);
+
+        while (j != boost::sregex_token_iterator()) {
+          possible_uid = *j++;
+          found = 1;
+          //look to see if uid is in the model and return the object
+          UUID uid = toUUID(possible_uid);
+          //TODO cant get below to work so try the manual way
+          //m.getModelObjects<model::ModelObject>(&uid);
+          if (modelObjects.size() > 0) {
+            for (size_t k = 0; k < modelObjects.size(); k++) {
+              if (modelObjects.at(k).handle() == uid) {
+                found++;
+              };
+            }
+          };
         }
-        //possible uid not found in model
+        //possible uid NOT found in model
         if (found == 1) {
           result.push_back(body.get().at(i));
         };
