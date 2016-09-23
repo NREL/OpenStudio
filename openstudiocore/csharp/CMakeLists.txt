@@ -20,6 +20,12 @@ if(MSVC)
   set(CSHARP_VERSION_MINOR ${PROJECT_VERSION_MINOR})
   set(CSHARP_VERSION_PATCH ${PROJECT_VERSION_PATCH})
   set(CSHARP_VERSION_BUILD 0)
+  
+  if (CMAKE_CL_64)
+    set(CSHARP_PLATFORM "x64")
+  else()
+    set(CSHARP_PLATFORM "x86")
+  endif()
 
   set(CSHARP_ASSEMBLY_VERSION "${CSHARP_VERSION_MAJOR}.${CSHARP_VERSION_MINOR}.${CSHARP_VERSION_PATCH}.${CSHARP_VERSION_BUILD}")
 
@@ -41,13 +47,7 @@ if(MSVC)
   add_custom_command(
     OUTPUT ${OPENSTUDIO_CSHARP_DLL}
     COMMAND "MSBuild" "${CMAKE_BINARY_DIR}/csharp_wrapper/OpenStudio.csproj" "/p:Configuration=$(ConfigurationName)"
-    DEPENDS ${ALL_CSHARP_WRAPPER_TARGETS}
-  )
-
-  # convenience target to just build the SDK
-  add_custom_target(csharp_sdk ALL
-    DEPENDS ${OPENSTUDIO_CSHARP_DLL}
-    COMMENT "Compiling .NET SDK"
+    DEPENDS ${ALL_CSHARP_WRAPPER_TARGETS} ${ALL_CSHARP_WRAPPER_FILES}
   )
 
   install(FILES "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/csharp/Debug/OpenStudio.dll" DESTINATION CSharp/openstudio/ CONFIGURATIONS DEBUG COMPONENT "CSharpAPI")
@@ -77,6 +77,13 @@ if(MSVC)
 
   install(TARGETS openstudio_csharp DESTINATION CSharp/openstudio/ CONFIGURATIONS DEBUG COMPONENT "CSharpAPI")
   install(TARGETS openstudio_csharp DESTINATION CSharp/openstudio/ CONFIGURATIONS RELEASE COMPONENT "CSharpAPI")
+
+  # convenience target to build the SDK
+  add_custom_target(csharp_sdk ALL
+    DEPENDS ${OPENSTUDIO_CSHARP_DLL} openstudio_csharp
+    COMMENT "Compiling .NET SDK"
+  )
+  
 endif()
 
 
