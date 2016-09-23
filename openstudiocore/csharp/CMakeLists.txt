@@ -51,4 +51,55 @@ if(MSVC)
 
   install(FILES "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/csharp/Debug/OpenStudio.dll" DESTINATION CSharp/openstudio/ CONFIGURATIONS DEBUG)
   install(FILES "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/csharp/Release/OpenStudio.dll" DESTINATION CSharp/openstudio/ CONFIGURATIONS RELEASE)
+  
+  # need to force linking all symbols into openstudio_csharp module
+  # http://stackoverflow.com/questions/3867254/what-is-the-microsoft-visual-studio-equivalent-to-gcc-ld-option-whole-archive
+  set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} /OPT:NOREF")
+  
+  # build a dll to link all the static C# bindings into
+  add_library(
+    openstudio_csharp
+    MODULE
+    CSharpAPI.hpp
+    openstudio_csharp.cpp
+  )
+  
+  target_link_libraries(openstudio_csharp
+   csharp_OpenStudioAirflow
+   csharp_OpenStudioModelCore
+   csharp_OpenStudioModelSimulation
+   csharp_OpenStudioUtilitiesCore
+   csharp_OpenStudioUtilitiesPlot
+   csharp_OpenStudioEnergyPlus
+   csharp_OpenStudioModelEditor 
+   csharp_OpenStudioOSVersion
+   csharp_OpenStudioUtilitiesData
+   csharp_OpenStudioUtilitiesSql
+   csharp_OpenStudioGBXML
+   csharp_OpenStudioModelGenerators
+   csharp_OpenStudioRadiance
+   csharp_OpenStudioUtilitiesTime
+   csharp_OpenStudioISOModel
+   csharp_OpenStudioModelGeometry
+   csharp_OpenStudioSDD
+   csharp_OpenStudioUtilitiesFileTypes
+   csharp_OpenStudioUtilitiesUnits
+   csharp_OpenStudioModelHVAC
+   csharp_OpenStudioUtilities
+   csharp_OpenStudioUtilitiesGeometry
+   csharp_OpenStudioMeasure
+   csharp_OpenStudioModelRefrigeration
+   csharp_OpenStudioUtilitiesBCL
+   csharp_OpenStudioUtilitiesIdd
+   csharp_OpenStudioModel
+   csharp_OpenStudioModelResources
+   csharp_OpenStudioUtilitiesIdf
+   openstudio_utilities
+   ${Boost_LIBRARIES}
+   ${QT_LIBS}
+  )
+
+  
 endif()
+
+
