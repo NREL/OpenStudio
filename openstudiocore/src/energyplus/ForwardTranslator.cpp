@@ -3285,8 +3285,8 @@ void ForwardTranslator::resolveMatchedSurfaceConstructionConflicts(model::Model&
       model::ConstructionBase c2 = reverseConstruction(c1);
 
       if (c1.handle() != c2.handle()){
-        LOG(Warn, "Both surfaces '" << surface.nameString() << "', and '" << adjacentSurface->nameString()
-            << "' reference the same construction '" << c1.nameString() << "' but it is not symmetric, creating a reversed copy.");
+        /// YXC LOG(Warn, "Both surfaces '" << surface.nameString() << "', and '" << adjacentSurface->nameString()
+        /// YXC    << "' reference the same construction '" << c1.nameString() << "' but it is not symmetric, creating a reversed copy.");
 
         // DLM: use surface name to choose which surface gets the original copy, not a good way but at least repeatable
         if (surface.nameString() < adjacentSurface->nameString()){

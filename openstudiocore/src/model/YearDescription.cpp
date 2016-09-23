@@ -233,7 +233,7 @@ namespace detail {
         openstudio::DayOfWeek dow(dayofWeekforStartDay);
         yd.yearStartsOnDayOfWeek = dow;
       }catch(const std::exception& ){
-        LOG(Error, "'" << dayofWeekforStartDay << "' is not yet a supported option for YearDescription");
+        /// YXC LOG(Error, "'" << dayofWeekforStartDay << "' is not yet a supported option for YearDescription");
       }
     }
 

@@ -132,8 +132,8 @@ namespace detail {
       setPointerImpl(index,targetHandle);
       if (targetHandle.isNull()) {
         if (!expectToLosePointers) {
-          LOG(Warn,briefDescription() << ", points to an object named " << targetName
-              << " from field " << index << ", but that object cannot be located.");
+          /// YXC LOG(Warn,briefDescription() << ", points to an object named " << targetName
+          /// YXC    << " from field " << index << ", but that object cannot be located.");
         }
       }
     }

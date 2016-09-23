@@ -111,9 +111,9 @@ path setFileExtension(const path& p,
   if (!pext.empty()) {
     if (pext != wext.string()) {
       if (warnOnMismatch) {
-        LOG_FREE(Warn,"openstudio.setFileExtension","Path p, '" << toString(p)
-                 << "', has an unexpected file extension. Was expecting '" << toString(wext)
-                 << "'.");
+        /// YXC LOG_FREE(Warn,"openstudio.setFileExtension","Path p, '" << toString(p)
+        /// YXC          << "', has an unexpected file extension. Was expecting '" << toString(wext)
+        /// YXC          << "'.");
       }
       if (!replaceOnMismatch) { return result; }
     }
