@@ -1572,6 +1572,11 @@ cpack_add_component(RubyAPI
   DESCRIPTION "Ruby API"
 )
 
+cpack_add_component(CSharpAPI
+  DISPLAY_NAME "C# API"
+  DESCRIPTION "C# API"
+)
+
 cpack_add_component(PAT
   DISPLAY_NAME "Parametric Analysis Tool"
   DESCRIPTION "Parametric Analysis Tool"
