@@ -56,12 +56,16 @@ if(MSVC)
   # http://stackoverflow.com/questions/3867254/what-is-the-microsoft-visual-studio-equivalent-to-gcc-ld-option-whole-archive
   set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} /OPT:NOREF")
   
+  # ignore deprecated
+  add_definitions(/wd4996)
+  
   # build a dll to link all the static C# bindings into
   add_library(
     openstudio_csharp
     MODULE
     CSharpAPI.hpp
     openstudio_csharp.cpp
+    ${ALL_CSHARP_WRAPPERS}
   )
   
   target_link_libraries(openstudio_csharp
