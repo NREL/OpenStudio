@@ -40,7 +40,7 @@ if(MSVC)
   add_custom_command(
     OUTPUT ${OPENSTUDIO_CSHARP_DLL}
     COMMAND "MSBuild" "${CMAKE_BINARY_DIR}/csharp_wrapper/OpenStudio.csproj" "/p:Configuration=$(ConfigurationName)"
-    DEPENDS ${ALL_CSHARP_BINDING_TARGETS}
+    DEPENDS ${ALL_CSHARP_WRAPPER_TARGETS}
   )
 
   # convenience target to just build the SDK
@@ -52,21 +52,21 @@ if(MSVC)
   install(FILES "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/csharp/Debug/OpenStudio.dll" DESTINATION CSharp/openstudio/ CONFIGURATIONS DEBUG)
   install(FILES "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/csharp/Release/OpenStudio.dll" DESTINATION CSharp/openstudio/ CONFIGURATIONS RELEASE)
   
-  # need to force linking all symbols into openstudio_csharp module
-  # http://stackoverflow.com/questions/3867254/what-is-the-microsoft-visual-studio-equivalent-to-gcc-ld-option-whole-archive
-  set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} /OPT:NOREF")
-  
+  # DLM: currently there are some multiply defined symbols, force them for now, investigate later
   set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} /FORCE:MULTIPLE")
   
-  # ignore deprecated
+  # ignore deprecated warnings since we will export deprecated methods
   add_definitions(/wd4996)
   
   # build a dll to link all the static C# bindings into
   add_library(
     openstudio_csharp
     MODULE
-    ${ALL_CSHARP_WRAPPERS}
+    ${ALL_CSHARP_WRAPPER_FILES}
   )
+  add_dependencies(openstudio_csharp ${ALL_CSHARP_WRAPPER_TARGETS})
+  
+  set_source_files_properties(${ALL_CSHARP_WRAPPER_FILES} PROPERTIES GENERATED TRUE)
   
   target_link_libraries(openstudio_csharp
    ${ALL_CSHARP_BINDING_DEPENDS}
@@ -74,7 +74,8 @@ if(MSVC)
    ${QT_LIBS}
   )
 
-  
+  install(TARGETS openstudio_csharp DESTINATION CSharp/openstudio/ CONFIGURATIONS DEBUG)
+  install(TARGETS openstudio_csharp DESTINATION CSharp/openstudio/ CONFIGURATIONS RELEASE)
 endif()
 
 

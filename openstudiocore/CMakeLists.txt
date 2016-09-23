@@ -617,8 +617,9 @@ endif()
 
 # C#
 if(BUILD_CSHARP_BINDINGS)
-  set(ALL_CSHARP_BINDING_DEPENDS "") # global list
-  set(ALL_CSHARP_WRAPPERS "") # global list
+  set(ALL_CSHARP_BINDING_DEPENDS "") # global list of library dependencies of the generated wrapper cxx files
+  set(ALL_CSHARP_WRAPPER_FILES "") # global list of generated wrapper cxx files
+  set(ALL_CSHARP_WRAPPER_TARGETS "") # global list targets that build generated wrapper cxx files
 endif()
 
 # JAVA

@@ -575,8 +575,9 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
 
     set(SWIG_WRAPPER "csharp_${NAME}_wrap.cxx")
     set(SWIG_WRAPPER_FULL_PATH "${CMAKE_CURRENT_BINARY_DIR}/${SWIG_WRAPPER}")
+    set(SWIG_TARGET "generate_csharp_${NAME}_wrap")
 
-    set(CSHARP_OUTPUT_NAME "openstudio_${NAME}_csharp")
+    #set(CSHARP_OUTPUT_NAME "openstudio_${NAME}_csharp")
     set(CSHARP_OUTPUT_NAME "openstudio_csharp")
     set(CSHARP_GENERATED_SRC_DIR "${CMAKE_BINARY_DIR}/csharp_wrapper/generated_sources/${NAME}")
     file(MAKE_DIRECTORY ${CSHARP_GENERATED_SRC_DIR})
@@ -601,12 +602,10 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
 
       )
 
-    if(MAXIMIZE_CPU_USAGE)
-      add_custom_target(${swig_target}_swig
-        SOURCES "${SWIG_WRAPPER}"
-        )
-      add_dependencies(${PARENT_TARGET} ${swig_target}_swig)
-    endif()
+      add_custom_target(${SWIG_TARGET}
+        DEPENDS ${SWIG_WRAPPER_FULL_PATH}
+      )
+      
 
     #add_library(
     #  ${swig_target}
@@ -630,9 +629,12 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     list(APPEND ALL_CSHARP_BINDING_DEPENDS "${PARENT_TARGET}")
     set(ALL_CSHARP_BINDING_DEPENDS "${ALL_CSHARP_BINDING_DEPENDS}" PARENT_SCOPE)
 
-    list(APPEND ALL_CSHARP_WRAPPERS "${SWIG_WRAPPER_FULL_PATH}")
-    set(ALL_CSHARP_WRAPPERS "${ALL_CSHARP_WRAPPERS}" PARENT_SCOPE)
-
+    list(APPEND ALL_CSHARP_WRAPPER_FILES "${SWIG_WRAPPER_FULL_PATH}")
+    set(ALL_CSHARP_WRAPPER_FILES "${ALL_CSHARP_WRAPPER_FILES}" PARENT_SCOPE)
+    
+    list(APPEND ALL_CSHARP_WRAPPER_TARGETS "${SWIG_TARGET}")
+    set(ALL_CSHARP_WRAPPER_TARGETS "${ALL_CSHARP_WRAPPER_TARGETS}" PARENT_SCOPE)
+    
     #if(WIN32)
     #  install(TARGETS ${swig_target} DESTINATION CSharp/openstudio/)
     #
