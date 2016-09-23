@@ -56,6 +56,8 @@ if(MSVC)
   # http://stackoverflow.com/questions/3867254/what-is-the-microsoft-visual-studio-equivalent-to-gcc-ld-option-whole-archive
   set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} /OPT:NOREF")
   
+  set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} /FORCE:MULTIPLE")
+  
   # ignore deprecated
   add_definitions(/wd4996)
   
