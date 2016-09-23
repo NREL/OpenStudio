@@ -246,3 +246,66 @@ TEST_F(ModelFixture, EMSProgram_EMSProgram2) {
   model.save(toPath("./EMS_nametest.osm"), true);
 }
 
+TEST_F(ModelFixture, EMSProgramUid_EMSProgramUid) {
+  Model model;
+
+  Building building = model.getUniqueModelObject<Building>();
+
+  ThermalZone zone1(model);
+  ThermalZone zone2(model);
+
+  // add Site Outdoor Air Drybulb Temperature
+  OutputVariable siteOutdoorAirDrybulbTemperature("Site Outdoor Air Drybulb Temperature", model);
+
+  //add sensor
+  EnergyManagementSystemSensor OATdbSensor(model);
+  OATdbSensor.setName("OATdb Sensor");
+  OATdbSensor.setOutputVariable(siteOutdoorAirDrybulbTemperature);
+
+  //add fan
+  Schedule s = model.alwaysOnDiscreteSchedule();
+  FanConstantVolume fan(model, s);
+  fan.setName("fan");
+
+  //add actuator on fan
+  EnergyManagementSystemActuator fanActuator(fan);
+  std::string fanName = fan.name().get() + "Pressure_Actuator";
+  fanActuator.setName(fanName);
+  std::string fanControlType = "Fan Pressure Rise";
+  fanActuator.setActuatedComponentControlType(fanControlType);
+  std::string ComponentType = "Fan";
+  fanActuator.setActuatedComponentType(ComponentType);
+
+  //add program
+  EnergyManagementSystemProgram fan_program_1(model);
+  std::string programName = fan.name().get() + "Pressure_Rise_Program_by_Body";
+  fan_program_1.setName(programName);
+  //this body has /r/n in it
+  std::string fan_program_1_body = "SET mult = " + toString(fanActuator.handle()) + toString(OATdbSensor.handle()) + " / 15.0 !- This is nonsense\r\nSET " + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense";
+  //this is what the body should look like with 2 /n's and compare TRUE
+  std::string fan_program_body_test = "SET mult = " + toString(fanActuator.handle()) + toString(OATdbSensor.handle()) + " / 15.0 !- This is nonsense\nSET " + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense\n";
+  //the added lines should compare TRUE to below
+  std::string line1_test = "SET mult = " + toString(fanActuator.handle()) + toString(OATdbSensor.handle()) + " / 15.0 !- This is nonsense\n";
+  std::string line2_test = "SET " + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense\n";
+
+  //set body
+  fan_program_1.setBody(fan_program_1_body);
+
+  //check body
+  boost::optional<std::string> body = fan_program_1.body();
+  EXPECT_EQ(fan_program_body_test, body.get());
+
+  //check lines
+  boost::optional<std::vector<std::string>> lines = fan_program_1.lines();
+  EXPECT_EQ(2, lines.get().size());
+  EXPECT_EQ(line1_test, lines.get()[0]);
+  EXPECT_EQ(line2_test, lines.get()[1]);
+
+  model.save(toPath("./EMS_programUID.osm"), true);
+
+  EXPECT_EQ(3, fan_program_1.referencedObjects().size());
+  EXPECT_EQ(true, (fan_program_1.referencedObjects()[0].nameString() == fanName) || (fan_program_1.referencedObjects()[0].nameString() == "OATdb_Sensor"));
+  EXPECT_EQ(true, (fan_program_1.referencedObjects()[1].nameString() == fanName) || (fan_program_1.referencedObjects()[1].nameString() == "OATdb_Sensor"));
+  EXPECT_EQ(true, (fan_program_1.referencedObjects()[2].nameString() == fanName) || (fan_program_1.referencedObjects()[2].nameString() == "OATdb_Sensor"));
+}
+
