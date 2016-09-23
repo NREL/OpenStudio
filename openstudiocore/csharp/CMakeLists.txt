@@ -65,42 +65,11 @@ if(MSVC)
   add_library(
     openstudio_csharp
     MODULE
-    CSharpAPI.hpp
-    openstudio_csharp.cpp
     ${ALL_CSHARP_WRAPPERS}
   )
   
   target_link_libraries(openstudio_csharp
-   csharp_OpenStudioAirflow
-   csharp_OpenStudioModelCore
-   csharp_OpenStudioModelSimulation
-   csharp_OpenStudioUtilitiesCore
-   csharp_OpenStudioUtilitiesPlot
-   csharp_OpenStudioEnergyPlus
-   csharp_OpenStudioModelEditor 
-   csharp_OpenStudioOSVersion
-   csharp_OpenStudioUtilitiesData
-   csharp_OpenStudioUtilitiesSql
-   csharp_OpenStudioGBXML
-   csharp_OpenStudioModelGenerators
-   csharp_OpenStudioRadiance
-   csharp_OpenStudioUtilitiesTime
-   csharp_OpenStudioISOModel
-   csharp_OpenStudioModelGeometry
-   csharp_OpenStudioSDD
-   csharp_OpenStudioUtilitiesFileTypes
-   csharp_OpenStudioUtilitiesUnits
-   csharp_OpenStudioModelHVAC
-   csharp_OpenStudioUtilities
-   csharp_OpenStudioUtilitiesGeometry
-   csharp_OpenStudioMeasure
-   csharp_OpenStudioModelRefrigeration
-   csharp_OpenStudioUtilitiesBCL
-   csharp_OpenStudioUtilitiesIdd
-   csharp_OpenStudioModel
-   csharp_OpenStudioModelResources
-   csharp_OpenStudioUtilitiesIdf
-   openstudio_utilities
+   ${ALL_CSHARP_BINDING_DEPENDS}
    ${Boost_LIBRARIES}
    ${QT_LIBS}
   )

@@ -577,6 +577,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     set(SWIG_WRAPPER_FULL_PATH "${CMAKE_CURRENT_BINARY_DIR}/${SWIG_WRAPPER}")
 
     set(CSHARP_OUTPUT_NAME "openstudio_${NAME}_csharp")
+    set(CSHARP_OUTPUT_NAME "openstudio_csharp")
     set(CSHARP_GENERATED_SRC_DIR "${CMAKE_BINARY_DIR}/csharp_wrapper/generated_sources/${NAME}")
     file(MAKE_DIRECTORY ${CSHARP_GENERATED_SRC_DIR})
     
@@ -586,7 +587,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     endif()
     
     add_custom_command(
-      OUTPUT ${SWIG_WRAPPER}
+      OUTPUT ${SWIG_WRAPPER_FULL_PATH}
       COMMAND "${CMAKE_COMMAND}" -E remove_directory "${CSHARP_GENERATED_SRC_DIR}"
       COMMAND "${CMAKE_COMMAND}" -E make_directory "${CSHARP_GENERATED_SRC_DIR}"
       COMMAND "${SWIG_EXECUTABLE}"
@@ -607,50 +608,50 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
       add_dependencies(${PARENT_TARGET} ${swig_target}_swig)
     endif()
 
-    add_library(
-      ${swig_target}
-      STATIC
-      ${SWIG_WRAPPER}
-    )
+    #add_library(
+    #  ${swig_target}
+    #  STATIC
+    #  ${SWIG_WRAPPER}
+    #)
 
-    set_target_properties(${swig_target} PROPERTIES OUTPUT_NAME "${CSHARP_OUTPUT_NAME}")
-    set_target_properties(${swig_target} PROPERTIES PREFIX "")
-    set_target_properties(${swig_target} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/csharp/")
-    set_target_properties(${swig_target} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/csharp/")
-    set_target_properties(${swig_target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/csharp/")
-    if(MSVC)
-      set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj /wd4996")  ## /wd4996 suppresses deprecated warnings
-    endif()
-    target_link_libraries(${swig_target} ${PARENT_TARGET} ${DEPENDS})
+    #set_target_properties(${swig_target} PROPERTIES OUTPUT_NAME "${CSHARP_OUTPUT_NAME}")
+    #set_target_properties(${swig_target} PROPERTIES PREFIX "")
+    #set_target_properties(${swig_target} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/csharp/")
+    #set_target_properties(${swig_target} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/csharp/")
+    #set_target_properties(${swig_target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/csharp/")
+    #if(MSVC)
+    #  set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj /wd4996")  ## /wd4996 suppresses deprecated warnings
+    #endif()
+    #target_link_libraries(${swig_target} ${PARENT_TARGET} ${DEPENDS})
 
     #ADD_DEPENDENCIES("${swig_target}" "${PARENT_TARGET}_resources")
 
     # add this target to a "global" variable so csharp tests can require these
-    list(APPEND ALL_CSHARP_BINDING_TARGETS "${swig_target}")
-    set(ALL_CSHARP_BINDING_TARGETS "${ALL_CSHARP_BINDING_TARGETS}" PARENT_SCOPE)
+    list(APPEND ALL_CSHARP_BINDING_DEPENDS "${PARENT_TARGET}")
+    set(ALL_CSHARP_BINDING_DEPENDS "${ALL_CSHARP_BINDING_DEPENDS}" PARENT_SCOPE)
 
     list(APPEND ALL_CSHARP_WRAPPERS "${SWIG_WRAPPER_FULL_PATH}")
     set(ALL_CSHARP_WRAPPERS "${ALL_CSHARP_WRAPPERS}" PARENT_SCOPE)
 
-    if(WIN32)
-      install(TARGETS ${swig_target} DESTINATION CSharp/openstudio/)
-
-      install(CODE "
-        include(GetPrerequisites)
-        get_prerequisites(\${CMAKE_INSTALL_PREFIX}/CSharp/openstudio/openstudio_${NAME}_csharp.dll PREREQUISITES 1 1 \"\" \"${Prereq_Dirs}\")
-
-        if(WIN32)
-          list(REVERSE PREREQUISITES)
-        endif()
-
-        foreach(PREREQ IN LISTS PREREQUISITES)
-          gp_resolve_item(\"\" \${PREREQ} \"\" \"${Prereq_Dirs}\" resolved_item_var)
-          execute_process(COMMAND \"${CMAKE_COMMAND}\" -E copy \"\${resolved_item_var}\" \"\${CMAKE_INSTALL_PREFIX}/CSharp/openstudio/\")
-
-          get_filename_component(PREREQNAME \${resolved_item_var} NAME)
-        endforeach()
-      ")
-    endif()
+    #if(WIN32)
+    #  install(TARGETS ${swig_target} DESTINATION CSharp/openstudio/)
+    #
+    #  install(CODE "
+    #    include(GetPrerequisites)
+    #    get_prerequisites(\${CMAKE_INSTALL_PREFIX}/CSharp/openstudio/openstudio_${NAME}_csharp.dll PREREQUISITES 1 1 \"\" \"${Prereq_Dirs}\")
+    #
+    #    if(WIN32)
+    #      list(REVERSE PREREQUISITES)
+    #    endif()
+    #
+    #    foreach(PREREQ IN LISTS PREREQUISITES)
+    #      gp_resolve_item(\"\" \${PREREQ} \"\" \"${Prereq_Dirs}\" resolved_item_var)
+    #      execute_process(COMMAND \"${CMAKE_COMMAND}\" -E copy \"\${resolved_item_var}\" \"\${CMAKE_INSTALL_PREFIX}/CSharp/openstudio/\")
+    #
+    #      get_filename_component(PREREQNAME \${resolved_item_var} NAME)
+    #    endforeach()
+    #  ")
+    #endif()
   endif()
 
   # java

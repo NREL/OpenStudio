@@ -617,7 +617,8 @@ endif()
 
 # C#
 if(BUILD_CSHARP_BINDINGS)
-  set(ALL_CSHARP_BINDING_TARGETS "") # global list
+  set(ALL_CSHARP_BINDING_DEPENDS "") # global list
+  set(ALL_CSHARP_WRAPPERS "") # global list
 endif()
 
 # JAVA
@@ -1328,10 +1329,10 @@ if(BUILD_PYTHON_BINDINGS)
 endif()
 
 
-if(BUILD_CSHARP_BINDINGS)
-  add_custom_target(ALL_CSHARP_BINDINGS)
-  add_dependencies(ALL_CSHARP_BINDINGS csharp_sdk ${ALL_CSHARP_BINDING_TARGETS})
-endif()
+#if(BUILD_CSHARP_BINDINGS)
+  #add_custom_target(ALL_CSHARP_BINDINGS)
+  #add_dependencies(ALL_CSHARP_BINDINGS csharp_sdk ${ALL_CSHARP_BINDING_TARGETS})
+#endif()
 
 if(BUILD_JAVA_BINDINGS)
   add_custom_target(ALL_JAVA_BINDINGS)
