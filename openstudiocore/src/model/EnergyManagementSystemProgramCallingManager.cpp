@@ -206,6 +206,7 @@ EnergyManagementSystemProgramCallingManager::EnergyManagementSystemProgramCallin
   : ModelObject(EnergyManagementSystemProgramCallingManager::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>());
+  setCallingPoint("BeginNewEnvironment");
 }
 
 IddObjectType EnergyManagementSystemProgramCallingManager::iddObjectType() {

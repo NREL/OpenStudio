@@ -20,6 +20,7 @@
 #include "EnergyManagementSystemCurveOrTableIndexVariable.hpp"
 #include "EnergyManagementSystemCurveOrTableIndexVariable_Impl.hpp"
 #include "Curve.hpp"
+#include "CurveLinear.hpp"
 
 // TODO: Check the following class names against object getters and setters.
 //#include "AllCurves.hpp"
@@ -103,6 +104,9 @@ EnergyManagementSystemCurveOrTableIndexVariable::EnergyManagementSystemCurveOrTa
 EnergyManagementSystemCurveOrTableIndexVariable::EnergyManagementSystemCurveOrTableIndexVariable(const Model& model)
   : ModelObject(EnergyManagementSystemCurveOrTableIndexVariable::iddObjectType(), model) {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemCurveOrTableIndexVariable_Impl>());
+  CurveLinear curve = CurveLinear(model);
+  curve.setName("Generic Curve");
+  setCurveorTableObject(curve);
 }
 
 IddObjectType EnergyManagementSystemCurveOrTableIndexVariable::iddObjectType() {
