@@ -50,6 +50,14 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemProgramCal
     return boost::none;
   }
 
+  //make sure all other objects are translated first except below
+  for (const WorkspaceObject& workspaceObject : m_workspace.objects()) {
+    if ((workspaceObject.iddObject().type() != IddObjectType::EnergyManagementSystem_Program)
+      && (workspaceObject.iddObject().type() != IddObjectType::EnergyManagementSystem_ProgramCallingManager)) {
+      translateAndMapWorkspaceObject(workspaceObject);
+    }
+  }
+
   openstudio::model::EnergyManagementSystemProgramCallingManager emsProgramCallingManager(m_model);
   emsProgramCallingManager.setName(*s);
 
