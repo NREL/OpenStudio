@@ -1,6 +1,6 @@
 !-   ===========  ALL OBJECTS IN CLASS: VERSION ===========
 
-  Version,8.5;
+  Version,8.6;
 
 !-   ===========  ALL OBJECTS IN CLASS: BUILDING ===========
 
@@ -339,25 +339,39 @@
     -3.904000,-10.000000,-8.288675;  !- X,Y,Z ==> Vertex 4 {m}
 
   Daylighting:Controls,
+    Zone1_DaylCtrl,          !- Name
     Zone1,                   !- Zone Name
-    2,                       !- Total Daylighting Reference Points
-    0,                       !- X-Coordinate of First Reference Point {m}
-    0,                       !- Y-Coordinate of First Reference Point {m}
-    0,                       !- Z-Coordinate of First Reference Point {m}
-    6,                       !- X-Coordinate of Second Reference Point {m}
-    6,                       !- Y-Coordinate of Second Reference Point {m}
-    1,                       !- Z-Coordinate of Second Reference Point {m}
-    1.0,                     !- Fraction of Zone Controlled by First Reference Point
-    0.0,                     !- Fraction of Zone Controlled by Second Reference Point
-    500,                     !- Illuminance Setpoint at First Reference Point {lux}
-    500,                     !- Illuminance Setpoint at Second Reference Point {lux}
-    1,                       !- Lighting Control Type
+    SplitFlux,               !- Daylighting Method
+    ,                        !- Availability Schedule Name
+    Continuous,              !- Lighting Control Type
+    0.3,                     !- Minimum Input Power Fraction for Continuous or ContinuousOff Dimming Control
+    0.2,                     !- Minimum Light Output Fraction for Continuous or ContinuousOff Dimming Control
+    1,                       !- Number of Stepped Control Steps
+    1.0,                     !- Probability Lighting will be Reset When Needed in Manual Stepped Control
+    Zone1_DaylRefPt1,        !- Glare Calculation Daylighting Reference Point Name
     0,                       !- Glare Calculation Azimuth Angle of View Direction Clockwise from Zone y-Axis {deg}
     22,                      !- Maximum Allowable Discomfort Glare Index
-    0.3,                     !- Minimum Input Power Fraction for Continuous Dimming Control
-    0.2,                     !- Minimum Light Output Fraction for Continuous Dimming Control
-    1,                       !- Number of Stepped Control Steps
-    1.0;                     !- Probability Lighting will be Reset When Needed in Manual Stepped Control
+    ,                        !- DElight Gridding Resolution {m2}
+    Zone1_DaylRefPt1,        !- Daylighting Reference Point 1 Name
+    1.0,                     !- Fraction of Zone Controlled by Reference Point 1
+    500,                     !- Illuminance Setpoint at Reference Point 1 {lux}
+    Zone1_DaylRefPt2,        !- Daylighting Reference Point 2 Name
+    0.0,                     !- Fraction of Zone Controlled by Reference Point 2
+    500;                     !- Illuminance Setpoint at Reference Point 2 {lux}
+
+  Daylighting:ReferencePoint,
+    Zone1_DaylRefPt1,        !- Name
+    Zone1,                   !- Zone Name
+    0,                       !- X-Coordinate of Reference Point {m}
+    0,                       !- Y-Coordinate of Reference Point {m}
+    0;                       !- Z-Coordinate of Reference Point {m}
+
+  Daylighting:ReferencePoint,
+    Zone1_DaylRefPt2,        !- Name
+    Zone1,                   !- Zone Name
+    6,                       !- X-Coordinate of Reference Point {m}
+    6,                       !- Y-Coordinate of Reference Point {m}
+    1;                       !- Z-Coordinate of Reference Point {m}
 
   Output:IlluminanceMap,
     Zone1 Map,               !- Name

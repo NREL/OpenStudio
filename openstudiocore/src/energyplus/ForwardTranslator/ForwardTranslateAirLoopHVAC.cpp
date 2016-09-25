@@ -394,22 +394,6 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
   branchList.setName(airLoopHVACName + " Supply Branches");
   m_idfObjects.push_back(branchList);
 
-  auto maximumFlowRate = [](const std::vector<ModelObject> & objects) {
-    boost::optional<double> result;
-
-    auto constantSpeedfans = subsetCastVector<model::FanConstantVolume>(objects);
-    if( constantSpeedfans.size() > 0u ) {
-      result = constantSpeedfans.back().maximumFlowRate();     
-    }
-
-    auto variableSpeedfans = subsetCastVector<model::FanVariableVolume>(objects);
-    if( variableSpeedfans.size() > 0 ) {
-      result = variableSpeedfans.back().maximumFlowRate();
-    }
-
-    return result;
-  };
-
   auto supplyInletNode = airLoopHVAC.supplyInletNode();
   auto supplyOutletNodes = airLoopHVAC.supplyOutletNodes();
   auto splitter = airLoopHVAC.supplySplitter();
@@ -439,12 +423,6 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
       branch.setName( airLoopHVACName + " Main Branch");
       populateBranch(branch,comps,airLoopHVAC);
 
-      if( auto value = maximumFlowRate(comps) ) {
-        branch.setDouble(BranchFields::MaximumFlowRate,value.get());
-      } else {
-        branch.setString(BranchFields::MaximumFlowRate,"Autosize");
-      }
-
       auto eg = branchList.pushExtensibleGroup();
       eg.setString(BranchListExtensibleFields::BranchName,branch.name().get());
 
@@ -459,12 +437,6 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
       branch.setName( airLoopHVACName + " Dual Duct Branch 1");
       populateBranch(branch,comps,airLoopHVAC);
 
-      if( auto value = maximumFlowRate(comps) ) {
-        branch.setDouble(BranchFields::MaximumFlowRate,value.get());
-      } else {
-        branch.setString(BranchFields::MaximumFlowRate,"Autosize");
-      }
-
       auto eg = branchList.pushExtensibleGroup();
       eg.setString(BranchListExtensibleFields::BranchName,branch.name().get());
 
@@ -478,12 +450,6 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
       m_idfObjects.push_back(branch);
       branch.setName( airLoopHVACName + " Dual Duct Branch 2");
       populateBranch(branch,comps,airLoopHVAC);
-
-      if( auto value = maximumFlowRate(comps) ) {
-        branch.setDouble(BranchFields::MaximumFlowRate,value.get());
-      } else {
-        branch.setString(BranchFields::MaximumFlowRate,"Autosize");
-      }
 
       auto branchListEg = branchList.pushExtensibleGroup();
       branchListEg.setString(BranchListExtensibleFields::BranchName,branch.name().get());
@@ -500,12 +466,6 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
     m_idfObjects.push_back(branch);
     branch.setName( airLoopHVACName + " Main Branch");
     populateBranch(branch,comps,airLoopHVAC);
-
-    if( auto value = maximumFlowRate(comps) ) {
-      branch.setDouble(BranchFields::MaximumFlowRate,value.get());
-    } else {
-      branch.setString(BranchFields::MaximumFlowRate,"Autosize");
-    }
 
     auto eg = branchList.pushExtensibleGroup();
     eg.setString(BranchListExtensibleFields::BranchName,branch.name().get());

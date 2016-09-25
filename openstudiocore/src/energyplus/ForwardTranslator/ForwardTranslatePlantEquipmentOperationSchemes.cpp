@@ -90,6 +90,12 @@
 #include <utilities/idd/PlantEquipmentOperation_Uncontrolled_FieldEnums.hxx>
 #include <utilities/idd/PlantEquipmentList_FieldEnums.hxx>
 
+// Special case
+#include "../../model/GeneratorMicroTurbineHeatRecovery.hpp"
+#include "../../model/GeneratorMicroTurbineHeatRecovery_Impl.hpp"
+#include "../../model/GeneratorMicroTurbine.hpp"
+#include "../../model/GeneratorMicroTurbine_Impl.hpp"
+
 using namespace openstudio::model;
 
 using namespace std;
@@ -385,6 +391,14 @@ ComponentType componentType(const HVACComponent & component)
     {
       return ComponentType::COOLING;
     }
+    case openstudio::IddObjectType::OS_Generator_MicroTurbine_HeatRecovery :
+    {
+      // Maybe that should be both, in the case of an absorption chiller?
+      // Also, should maybe check if it's in mode FollowThermal or FollowThermalLimitElectrical?
+      // If not in these two modes, it doesn't care and just runs. Also, it's typically on the demand Side, and this method
+      // is only called on the supply side
+      return ComponentType::HEATING;
+    }
     default:
     {
       return ComponentType::NONE;
@@ -511,7 +525,22 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantEquipmentOperationSc
 
       for( auto setpointComponent : t_setpointComponents )
       {
-        boost::optional<IdfObject> _idfObject = translateAndMapModelObject(setpointComponent);
+        // TODO: Find the right way to deal with this
+        // For now, "dirty" (?) fix for Generator:MicroTurbine
+        // @kbenne, FYI
+
+        boost::optional<IdfObject> _idfObject;
+
+        if (boost::optional<GeneratorMicroTurbineHeatRecovery> mchpHR = setpointComponent.optionalCast<GeneratorMicroTurbineHeatRecovery>())
+        {
+          GeneratorMicroTurbine mchp = mchpHR->generatorMicroTurbine();
+          _idfObject = translateAndMapModelObject(mchp);
+        }
+        else
+        {
+          _idfObject = translateAndMapModelObject(setpointComponent);
+        }
+
         OS_ASSERT(_idfObject);
 
         IdfExtensibleGroup eg = setpointOperation.pushExtensibleGroup();

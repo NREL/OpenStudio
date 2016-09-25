@@ -35,7 +35,7 @@
 #include <utilities/idd/Fan_ConstantVolume_FieldEnums.hxx>
 #include <utilities/idd/Fan_OnOff_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_DX_SingleSpeed_FieldEnums.hxx>
-#include <utilities/idd/Coil_Heating_Gas_FieldEnums.hxx>
+#include <utilities/idd/Coil_Heating_Fuel_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Electric_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_SingleSpeed_FieldEnums.hxx>
 #include <utilities/idd/OutdoorAir_Mixer_FieldEnums.hxx>
@@ -317,11 +317,11 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACPackagedTerminalH
 
     if( airOutletNodeName )
     {
-      if( _supplementalHeatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Gas )
+      if( _supplementalHeatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Fuel )
       {
-        _supplementalHeatingCoil->setString(Coil_Heating_GasFields::AirInletNodeName,fanOutletNodeName);
+        _supplementalHeatingCoil->setString(Coil_Heating_FuelFields::AirInletNodeName,fanOutletNodeName);
 
-        _supplementalHeatingCoil->setString(Coil_Heating_GasFields::AirOutletNodeName,airOutletNodeName.get());
+        _supplementalHeatingCoil->setString(Coil_Heating_FuelFields::AirOutletNodeName,airOutletNodeName.get());
       }
       else if( _supplementalHeatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Electric )
       {

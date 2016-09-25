@@ -165,7 +165,7 @@ RefrigerationGridView::RefrigerationGridView(bool isIP, const model::Model & mod
   scrollArea->setBackgroundRole(QPalette::NoRole);
   layout->addWidget(scrollArea);
 
-  std::vector<model::RefrigerationCase> refrigerationCases = model.getModelObjects<model::RefrigerationCase>();
+  std::vector<model::RefrigerationCase> refrigerationCases = model.getConcreteModelObjects<model::RefrigerationCase>();
   std::vector<model::ModelObject> caseModelObjects = subsetCastVector<model::ModelObject>(refrigerationCases);
 
   RefrigerationCaseGridController * refrigerationCaseGridController  = new RefrigerationCaseGridController(m_isIP, "Display Cases", IddObjectType::OS_Refrigeration_Case, model, caseModelObjects);
@@ -178,7 +178,7 @@ RefrigerationGridView::RefrigerationGridView(bool isIP, const model::Model & mod
 
   scrollLayout->addWidget(caseGridView,0,Qt::AlignTop);
 
-  std::vector<model::RefrigerationWalkIn> refrigerationWalkIns = model.getModelObjects<model::RefrigerationWalkIn>();
+  std::vector<model::RefrigerationWalkIn> refrigerationWalkIns = model.getConcreteModelObjects<model::RefrigerationWalkIn>();
   std::vector<model::ModelObject> walkInModelObjects = subsetCastVector<model::ModelObject>(refrigerationWalkIns);
 
   RefrigerationWalkInGridController * refrigerationWalkInGridController = new RefrigerationWalkInGridController(m_isIP, "Walk Ins", IddObjectType::OS_Refrigeration_WalkIn, model, walkInModelObjects);
@@ -194,12 +194,12 @@ RefrigerationGridView::RefrigerationGridView(bool isIP, const model::Model & mod
   connect(this, &RefrigerationGridView::toggleUnitsClicked, refrigerationCaseGridController, &RefrigerationCaseGridController::toggleUnitsClicked);
 
   connect(this, &RefrigerationGridView::toggleUnitsClicked, refrigerationWalkInGridController, &RefrigerationWalkInGridController::toggleUnitsClicked);
-  
+
   connect(this, &RefrigerationGridView::toggleUnitsClicked, refrigerationCaseGridController, &RefrigerationCaseGridController::toggleUnits);
 
   connect(this, &RefrigerationGridView::toggleUnitsClicked, refrigerationWalkInGridController, &RefrigerationWalkInGridController::toggleUnits);
 
-  std::vector<model::RefrigerationSystem> refrigerationSystems = model.getModelObjects<model::RefrigerationSystem>(); // NOTE for horizontal system list
+  std::vector<model::RefrigerationSystem> refrigerationSystems = model.getConcreteModelObjects<model::RefrigerationSystem>(); // NOTE for horizontal system list
 
 }
 
@@ -549,7 +549,7 @@ void RefrigerationCaseGridController::addColumns(const QString &/*category*/, st
           NullAdapter(&model::RefrigerationCase::setAvailabilitySchedule),
           NullAdapter(&model::RefrigerationCase::resetAvailabilitySchedule));
     }else if(field == THERMALZONE){
-      addComboBoxColumn<model::ThermalZone,model::RefrigerationCase>( 
+      addComboBoxColumn<model::ThermalZone,model::RefrigerationCase>(
           Heading(QString(THERMALZONE)),
           std::function<std::string (const openstudio::model::ThermalZone &)>(&openstudio::objectName),
           std::function<std::vector<model::ThermalZone> ()>(std::bind(&openstudio::sortByObjectName<model::ThermalZone>,
@@ -591,7 +591,7 @@ QString RefrigerationCaseGridController::getColor(const model:: ModelObject & mo
   // TODO: The code below is currently commented out because a refresh crash bug is precluding rack color
   // updates due to rack assignments to cases and walk-ins.  No colors are better than wrong colors.
 
-  //std::vector<model::RefrigerationSystem> refrigerationSystems = m_model.getModelObjects<model::RefrigerationSystem>();
+  //std::vector<model::RefrigerationSystem> refrigerationSystems = m_model.getConcreteModelObjects<model::RefrigerationSystem>();
 
   //boost::optional<model::RefrigerationCase> refrigerationCase = modelObject.optionalCast<model::RefrigerationCase>();
   //OS_ASSERT(refrigerationCase);
@@ -634,7 +634,7 @@ void RefrigerationCaseGridController::onItemDropped(const OSItemId& itemId)
 
 void RefrigerationCaseGridController::refreshModelObjects()
 {
-  std::vector<model::RefrigerationCase> refrigerationCases = m_model.getModelObjects<model::RefrigerationCase>();
+  std::vector<model::RefrigerationCase> refrigerationCases = m_model.getConcreteModelObjects<model::RefrigerationCase>();
   m_modelObjects = subsetCastVector<model::ModelObject>(refrigerationCases);
   std::sort(m_modelObjects.begin(), m_modelObjects.end(), ModelObjectNameSorter());
 }
@@ -1076,7 +1076,7 @@ QString RefrigerationWalkInGridController::getColor(const model:: ModelObject & 
   // TODO: The code below is currently commented out because a refresh crash bug is precluding rack color
   // updates due to rack assignments to cases and walk-ins.  No colors are better than wrong colors.
 
-  //std::vector<model::RefrigerationSystem> refrigerationSystems = m_model.getModelObjects<model::RefrigerationSystem>();
+  //std::vector<model::RefrigerationSystem> refrigerationSystems = m_model.getConcreteModelObjects<model::RefrigerationSystem>();
 
   //boost::optional<model::RefrigerationWalkIn> refrigerationWalkIn = modelObject.optionalCast<model::RefrigerationWalkIn>();
   //OS_ASSERT(refrigerationWalkIn);
@@ -1119,7 +1119,7 @@ void RefrigerationWalkInGridController::onItemDropped(const OSItemId& itemId)
 
 void RefrigerationWalkInGridController::refreshModelObjects()
 {
-  std::vector<model::RefrigerationWalkIn> refrigerationWalkIns = m_model.getModelObjects<model::RefrigerationWalkIn>();
+  std::vector<model::RefrigerationWalkIn> refrigerationWalkIns = m_model.getConcreteModelObjects<model::RefrigerationWalkIn>();
   m_modelObjects = subsetCastVector<model::ModelObject>(refrigerationWalkIns);
   std::sort(m_modelObjects.begin(), m_modelObjects.end(), ModelObjectNameSorter());
 }

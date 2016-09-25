@@ -29,6 +29,8 @@
 #include "../model/Construction_Impl.hpp"
 #include "../model/ConstructionWithInternalSource.hpp"
 #include "../model/ConstructionWithInternalSource_Impl.hpp"
+#include "../model/WaterUseEquipment.hpp"
+#include "../model/WaterUseEquipment_Impl.hpp"
 #include "../model/RunPeriod.hpp"
 #include "../model/RunPeriod_Impl.hpp"
 #include "../model/RunPeriodControlSpecialDays.hpp"
@@ -62,7 +64,6 @@
 #include <utilities/idd/OutputControl_Table_Style_FieldEnums.hxx>
 #include <utilities/idd/Output_VariableDictionary_FieldEnums.hxx>
 #include <utilities/idd/Output_SQLite_FieldEnums.hxx>
-#include <utilities/idd/ProgramControl_FieldEnums.hxx>
 #include <utilities/idd/LifeCycleCost_NonrecurringCost_FieldEnums.hxx>
 #include <utilities/idd/SetpointManager_MixedAir_FieldEnums.hxx>
 
@@ -189,6 +190,18 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
     }
   }
 
+  // remove orphan loads
+  for (SpaceLoad spaceLoad : model.getModelObjects<SpaceLoad>()){
+    if (spaceLoad.optionalCast<model::WaterUseEquipment>()){
+      // WaterUseEquipment is not required to be attached to a space
+      continue;
+    }
+    if ((!spaceLoad.space()) && (!spaceLoad.spaceType())){
+      LOG(Warn, spaceLoad.briefDescription() << " is not associated with a Space or SpaceType, it will not be translated.");
+      spaceLoad.remove();
+    }
+  }
+
   // next thing to do is combine all spaces in each thermal zone
   // after this each zone will have 0 or 1 spaces and each space will have 0 or 1 zone
   for (ThermalZone thermalZone : model.getConcreteModelObjects<ThermalZone>()){
@@ -282,6 +295,22 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
       pv.remove();
     }
   }
+  
+  // Remove orphan Storage
+  for (auto& storage : model.getModelObjects<ElectricalStorage>()) {
+    if (!storage.electricLoadCenterDistribution()){
+      LOG(Warn, "Electrical Storage " << storage.name().get() << " is not referenced by any ElectricLoadCenterDistribution, it will not be translated.");
+      storage.remove();
+    }
+  }
+  
+  // Remove orphan Converters
+  for (auto& converter : model.getConcreteModelObjects<ElectricLoadCenterStorageConverter>()){
+    if (!converter.electricLoadCenterDistribution()){
+      LOG(Warn, "Converter " << converter.name().get() << " is not referenced by any ElectricLoadCenterDistribution, it will not be translated.");
+      converter.remove();
+    }
+  }
 
   // Remove empty electric load center distribution objects (e.g. with no generators)
   // requested by jmarrec, https://github.com/NREL/OpenStudio/pull/1927
@@ -343,13 +372,6 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
       simulationControl = model.getUniqueModelObject<model::SimulationControl>();
     }
     translateAndMapModelObject(*simulationControl);
-
-    // Add a ProgramControl object to force a single threaded simulation
-    //AP This code is no longer needed as multithreading has been disabled
-    //in E+ and this object is no longer forward translated anyway.
-    //IdfObject programControl(openstudio::IddObjectType::ProgramControl);
-    //programControl.setInt(openstudio::ProgramControlFields::NumberofThreadsAllowed,1);
-    //m_idfObjects.push_back(programControl);
 
     // ensure that sizing parameters control exists
     boost::optional<model::SizingParameters> sizingParameters = model.getOptionalUniqueModelObject<model::SizingParameters>();
@@ -1321,6 +1343,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
   {
     model::ElectricLoadCenterStorageSimple temp = modelObject.cast<ElectricLoadCenterStorageSimple>();
     retVal = translateElectricLoadCenterStorageSimple(temp);
+    break;
+  }
+  case openstudio::IddObjectType::OS_ElectricLoadCenter_Storage_Converter:
+  {
+    model::ElectricLoadCenterStorageConverter temp = modelObject.cast<ElectricLoadCenterStorageConverter>();
+    retVal = translateElectricLoadCenterStorageConverter(temp);
     break;
   }
   case openstudio::IddObjectType::OS_EnergyManagementSystem_Actuator:
@@ -2999,6 +3027,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_ElectricLoadCenter_Inverter_LookUpTable);
   result.push_back(IddObjectType::OS_ElectricLoadCenter_Inverter_Simple);
   result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_Simple);
+  result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_Converter);
 
   // put these down here so they have a chance to be translated with their "parent"
   result.push_back(IddObjectType::OS_LifeCycleCost);

@@ -218,11 +218,10 @@ namespace detail {
     if (optIniStateCharge) {
       // Get it and return
       return optIniStateCharge.get();
-    } else {
-      // We Default it to half the maximum capacity
-      double maxCap = maximumStorageCapacity();
-      return maxCap / 2.0;
-    }
+    } 
+    // We Default it to half the maximum capacity
+    double maxCap = maximumStorageCapacity();
+    return maxCap / 2.0;
   }
   
   bool ElectricLoadCenterStorageSimple_Impl::isInitialStateofChargeDefaulted() const {

@@ -323,6 +323,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(ElectricLoadCenterInverterLookUpTable);
     REGISTER_CONSTRUCTOR(ElectricLoadCenterInverterSimple);
     REGISTER_CONSTRUCTOR(ElectricLoadCenterStorageSimple);
+    REGISTER_CONSTRUCTOR(ElectricLoadCenterStorageConverter);
     REGISTER_CONSTRUCTOR(EnergyManagementSystemActuator);
     REGISTER_CONSTRUCTOR(EnergyManagementSystemConstructionIndexVariable);
     REGISTER_CONSTRUCTOR(EnergyManagementSystemCurveOrTableIndexVariable);
@@ -746,6 +747,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(ElectricLoadCenterInverterLookUpTable);
     REGISTER_COPYCONSTRUCTORS(ElectricLoadCenterInverterSimple);
     REGISTER_COPYCONSTRUCTORS(ElectricLoadCenterStorageSimple);
+    REGISTER_COPYCONSTRUCTORS(ElectricLoadCenterStorageConverter);
     REGISTER_COPYCONSTRUCTORS(EnergyManagementSystemActuator);
     REGISTER_COPYCONSTRUCTORS(EnergyManagementSystemConstructionIndexVariable);
     REGISTER_COPYCONSTRUCTORS(EnergyManagementSystemCurveOrTableIndexVariable);

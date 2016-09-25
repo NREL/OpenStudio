@@ -76,7 +76,10 @@ namespace gbxml {
     QString type = element.attribute("type");
 
     openstudio::model::ScheduleDay result(model);
-    result.setName(escapeName(id));
+    m_idToObjectMap.insert(std::make_pair(id, result));
+
+    QString name = element.firstChildElement("Name").toElement().text();
+    result.setName(escapeName(id, name));
 
     openstudio::model::ScheduleTypeLimits scheduleTypeLimits = getScheduleTypeLimits(type.toStdString(), model);
     result.setScheduleTypeLimits(scheduleTypeLimits);
@@ -98,7 +101,10 @@ namespace gbxml {
     QString type = element.attribute("type");
 
     openstudio::model::ScheduleWeek result(model);
-    result.setName(escapeName(id));
+    m_idToObjectMap.insert(std::make_pair(id, result));
+
+    QString name = element.firstChildElement("Name").toElement().text();
+    result.setName(escapeName(id, name));
 
     // don't need to translate type
     
@@ -167,10 +173,12 @@ namespace gbxml {
   {
     QString id = element.attribute("id");
     QString type = element.attribute("type");
-    QString name = element.elementsByTagName("Name").at(0).toElement().text();
 
     openstudio::model::ScheduleYear result(model);
-    result.setName(escapeName(id));
+    m_idToObjectMap.insert(std::make_pair(id, result));
+
+    QString name = element.firstChildElement("Name").toElement().text();
+    result.setName(escapeName(id, name));
 
     openstudio::model::ScheduleTypeLimits scheduleTypeLimits = getScheduleTypeLimits(type.toStdString(), model);
     result.setScheduleTypeLimits(scheduleTypeLimits);

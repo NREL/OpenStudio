@@ -119,6 +119,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateElectricLoadCenterInverterLookUpTable.cpp
   ForwardTranslator/ForwardTranslateElectricLoadCenterInverterSimple.cpp
   ForwardTranslator/ForwardTranslateElectricLoadCenterStorageSimple.cpp
+  ForwardTranslator/ForwardTranslateElectricLoadCenterStorageConverter.cpp
   ForwardTranslator/ForwardTranslateEnergyManagementSystemActuator.cpp
   ForwardTranslator/ForwardTranslateEnergyManagementSystemConstructionIndexVariable.cpp
   ForwardTranslator/ForwardTranslateEnergyManagementSystemCurveOrTableIndexVariable.cpp
@@ -372,6 +373,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateDesignSpecificationOutdoorAir.cpp
   ReverseTranslator/ReverseTranslateElectricEquipment.cpp
   ReverseTranslator/ReverseTranslateElectricLoadCenterStorageSimple.cpp
+  ReverseTranslator/ReverseTranslateElectricLoadCenterStorageConverter.cpp
   ReverseTranslator/ReverseTranslateEnergyManagementSystemActuator.cpp
   ReverseTranslator/ReverseTranslateEnergyManagementSystemActuator.cpp
   ReverseTranslator/ReverseTranslateEnergyManagementSystemConstructionIndexVariable.cpp

@@ -42,6 +42,7 @@
 #include <utilities/idd/BuildingSurface_Detailed_FieldEnums.hxx>
 #include <utilities/idd/FenestrationSurface_Detailed_FieldEnums.hxx>
 #include <utilities/idd/Daylighting_Controls_FieldEnums.hxx>
+#include <utilities/idd/Daylighting_ReferencePoint_FieldEnums.hxx>
 #include <utilities/idd/Output_IlluminanceMap_FieldEnums.hxx>
 #include <utilities/idd/Wall_Detailed_FieldEnums.hxx>
 #include <utilities/idd/RoofCeiling_Detailed_FieldEnums.hxx>
@@ -2199,8 +2200,13 @@ namespace energyplus {
 
     // daylighting controls
     for (WorkspaceObject daylightingControl : m_workspace.getObjectsByType(IddObjectType::Daylighting_Controls)){
+      // todo: transform glare angle
+    }
+
+    // daylighting reference points
+    for (WorkspaceObject daylightingPoint : m_workspace.getObjectsByType(IddObjectType::Daylighting_ReferencePoint)){
       if (daylightingCoordChange != CoordinateChange::NoChange){
-        OptionalWorkspaceObject zone = daylightingControl.getTarget(Daylighting_ControlsFields::ZoneName);
+        OptionalWorkspaceObject zone = daylightingPoint.getTarget(Daylighting_ReferencePointFields::ZoneName);
         if (!zone){
           LOG(Error, "Could not find zone");
           continue;
@@ -2216,30 +2222,16 @@ namespace energyplus {
         }
 
         // transform sensor points
-        OptionalDouble x = daylightingControl.getDouble(Daylighting_ControlsFields::XCoordinateofFirstReferencePoint, true);
-        OptionalDouble y = daylightingControl.getDouble(Daylighting_ControlsFields::YCoordinateofFirstReferencePoint, true);
-        OptionalDouble z = daylightingControl.getDouble(Daylighting_ControlsFields::ZCoordinateofFirstReferencePoint, true);
+        OptionalDouble x = daylightingPoint.getDouble(Daylighting_ReferencePointFields::XCoordinateofReferencePoint, true);
+        OptionalDouble y = daylightingPoint.getDouble(Daylighting_ReferencePointFields::YCoordinateofReferencePoint, true);
+        OptionalDouble z = daylightingPoint.getDouble(Daylighting_ReferencePointFields::ZCoordinateofReferencePoint, true);
         if (x && y && z){
           Point3d point(*x, *y, *z);
           point = t*point;
-          result = result && daylightingControl.setDouble(Daylighting_ControlsFields::XCoordinateofFirstReferencePoint, point.x());
-          result = result && daylightingControl.setDouble(Daylighting_ControlsFields::YCoordinateofFirstReferencePoint, point.y());
-          result = result && daylightingControl.setDouble(Daylighting_ControlsFields::ZCoordinateofFirstReferencePoint, point.z());
+          result = result && daylightingPoint.setDouble(Daylighting_ReferencePointFields::XCoordinateofReferencePoint, point.x());
+          result = result && daylightingPoint.setDouble(Daylighting_ReferencePointFields::YCoordinateofReferencePoint, point.y());
+          result = result && daylightingPoint.setDouble(Daylighting_ReferencePointFields::ZCoordinateofReferencePoint, point.z());
         }
-
-        x = daylightingControl.getDouble(Daylighting_ControlsFields::XCoordinateofSecondReferencePoint, true);
-        y = daylightingControl.getDouble(Daylighting_ControlsFields::YCoordinateofSecondReferencePoint, true);
-        z = daylightingControl.getDouble(Daylighting_ControlsFields::ZCoordinateofSecondReferencePoint, true);
-        if (x && y && z){
-          Point3d point(*x, *y, *z);
-          point = t*point;
-          result = result && daylightingControl.setDouble(Daylighting_ControlsFields::XCoordinateofSecondReferencePoint, point.x());
-          result = result && daylightingControl.setDouble(Daylighting_ControlsFields::YCoordinateofSecondReferencePoint, point.y());
-          result = result && daylightingControl.setDouble(Daylighting_ControlsFields::ZCoordinateofSecondReferencePoint, point.z());
-        }
-
-        // todo: transform glare angle
-
       }
     }
 

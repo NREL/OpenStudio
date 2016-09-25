@@ -171,7 +171,7 @@ namespace openstudio {
 
     {
       std::vector<QString> fields;
-      //fields.push_back(SPACENAME); 
+      //fields.push_back(SPACENAME);
       //fields.push_back(NAME);
       //fields.push_back(POSITIONXCOORDINATE);
       //fields.push_back(POSITIONYCOORDINATE);
@@ -441,7 +441,7 @@ namespace openstudio {
 
   void SpacesDaylightingGridController::refreshModelObjects()
   {
-    m_modelObjects = subsetCastVector<model::ModelObject>(m_model.getModelObjects<model::Space>());
+    m_modelObjects = subsetCastVector<model::ModelObject>(m_model.getConcreteModelObjects<model::Space>());
     std::sort(m_modelObjects.begin(), m_modelObjects.end(), ModelObjectNameSorter());
   }
 

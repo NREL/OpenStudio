@@ -1,4 +1,47 @@
-## OpenStudio v1.12.0
+## OpenStudio v1.12.6
+###### 2016-09-21 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.12.5...v1.12.6 )
+
+- ![Fixed:][fixed] [#2353]( https://github.com/NREL/OpenStudio/pull/2353 ), Os 2 0 develop linux
+
+## OpenStudio v1.12.5
+###### 2016-09-09 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.12.4...v1.12.5 )
+
+- ![Fixed:][fixed] [#2293]( https://github.com/NREL/OpenStudio/issues/2293 ), User model crashes when delete Zone
+
+## OpenStudio v1.12.4
+###### 2016-08-18 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.12.3...v1.12.4 )
+
+## OpenStudio v1.12.3
+###### 2016-08-10 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.12.2...v1.12.3 )
+
+- ![Fixed:][fixed] [#561]( https://github.com/NREL/OpenStudio/issues/561 ), Adjacent stacked spaces in same zones may result in incorrect area and likely loads as well.
+- ![Fixed:][fixed] [#1361]( https://github.com/NREL/OpenStudio/issues/1361 ), gbXML does not import WindowType elements
+- ![Fixed:][fixed] [#2298]( https://github.com/NREL/OpenStudio/issues/2298 ), gbxml import makes bad OS:Schedule:Week
+- ![Fixed:][fixed] [#2303]( https://github.com/NREL/OpenStudio/issues/2303 ), gbXML import/export should properly use names and ids
+- ![Fixed:][fixed] [#2310]( https://github.com/NREL/OpenStudio/issues/2310 ), Fenestration related "impedance mismatch" between OS and JEPlus
+- ![Fixed:][fixed] [#2313]( https://github.com/NREL/OpenStudio/issues/2313 ), Coil:Cooling:DX:TwoStageWithHumidityControl not working
+- ![Fixed:][fixed] [#2314]( https://github.com/NREL/OpenStudio/issues/2314 ), OS 1.12.1 to 1.12.2 Conversion Error
+- ![Fixed:][fixed] [#2316]( https://github.com/NREL/OpenStudio/issues/2316 ), Year Schedules appears twice in Schedules tab Library pane
+- ![Fixed:][fixed] [#2320]( https://github.com/NREL/OpenStudio/issues/2320 ), PAT select measures 
+
+## OpenStudio v1.12.2
+###### 2016-07-25 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.12.1...v1.12.2 )
+
+Closed Issues: 12 (#93, #94, #273, #275, #398, #399, #1362, #1925, #1991, #2172, #2278, #2306)
+- ![Fixed:][fixed] [#93]( https://github.com/NREL/OpenStudio/issues/93 ), gbXML translator should convert floor to roof and vice versa when reverses geometry (Bugzilla #634)
+- ![Fixed:][fixed] [#94]( https://github.com/NREL/OpenStudio/issues/94 ), gbXML translator should provide a value for material roughness if not in the file (Bugzilla #635)
+- ![Fixed:][fixed] [#273]( https://github.com/NREL/OpenStudio/issues/273 ), Error working on gbXML file after I imported it (Bugzilla #1053)
+- ![Fixed:][fixed] [#275]( https://github.com/NREL/OpenStudio/issues/275 ), An xml with a zone containing multiple spaces is split into multiple zones on import. (Bugzilla #1056)
+- ![Fixed:][fixed] [#398]( https://github.com/NREL/OpenStudio/issues/398 ), Non-mirror constructions in export of std 140 model to gbXML
+- ![Fixed:][fixed] [#399]( https://github.com/NREL/OpenStudio/issues/399 ), Unable to import gbXML export of hospital reference building into Bentley
+- ![Fixed:][fixed] [#1362]( https://github.com/NREL/OpenStudio/issues/1362 ), OpenStudio GUI does not show ScheduleYear objects where it should
+- ![Fixed:][fixed] [#1925]( https://github.com/NREL/OpenStudio/issues/1925 ), GBXML Export Uses wrong Coordinate Geometry
+- ![Fixed:][fixed] [#1991]( https://github.com/NREL/OpenStudio/issues/1991 ), Shading surfaces not exported to gbXML
+- ![Improved:][improved] [#2172]( https://github.com/NREL/OpenStudio/issues/2172 ), Translate all coils supported by the IDD in AirLoopHVACUnitarySystem
+- ![Fixed:][fixed] [#2278]( https://github.com/NREL/OpenStudio/issues/2278 ), UnitarySystemPerformance:Multispeed is not cloning correctly
+- ![Fixed:][fixed] [#2306]( https://github.com/NREL/OpenStudio/issues/2306 ), Zone overview bug in open studio results
+
+## OpenStudio v1.12.1
 ###### 2016-07-07 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.12.0...v1.12.1 )
 
 - ![Fixed:][fixed] [#2248]( https://github.com/NREL/OpenStudio/pull/2248 ), Add Generator:MicroTurbine to OpenStudio

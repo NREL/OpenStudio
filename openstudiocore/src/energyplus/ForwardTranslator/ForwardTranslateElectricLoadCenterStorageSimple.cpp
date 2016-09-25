@@ -49,8 +49,11 @@ boost::optional<IdfObject> ForwardTranslator::translateElectricLoadCenterStorage
   }
 
   // Availability Schedule, defaults to model.alwaysOnDiscrete
-  if (modelObject.availabilitySchedule().name()) {
-    idfObject.setString(ElectricLoadCenter_Storage_SimpleFields::AvailabilityScheduleName, modelObject.availabilitySchedule().name().get());
+  Schedule sched = modelObject.availabilitySchedule();
+  boost::optional<IdfObject> _sched = translateAndMapModelObject(sched);
+  if (_sched) {
+    idfObject.setString(ElectricLoadCenter_Storage_SimpleFields::AvailabilityScheduleName,
+      _sched->name().get());
   }
 
   // ZoneName

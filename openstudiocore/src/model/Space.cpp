@@ -873,6 +873,9 @@ namespace detail {
     for (const Surface& surface : this->surfaces()) {
       if (istringEqual(surface.surfaceType(), "Floor"))
       {
+        if (surface.isAirWall()){
+          continue;
+        }
         result += surface.grossArea();
       }
     }
