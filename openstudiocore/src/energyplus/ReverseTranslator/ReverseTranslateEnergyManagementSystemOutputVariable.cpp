@@ -45,6 +45,17 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemOutputVari
     return boost::none;
   }
 
+  //make sure all other objects are translated first except below
+  for (const WorkspaceObject& workspaceObject : m_workspace.objects()) {
+    if ((workspaceObject.iddObject().type() != IddObjectType::EnergyManagementSystem_Program)
+      && (workspaceObject.iddObject().type() != IddObjectType::EnergyManagementSystem_Subroutine)
+      && (workspaceObject.iddObject().type() != IddObjectType::EnergyManagementSystem_ProgramCallingManager)
+      && (workspaceObject.iddObject().type() != IddObjectType::EnergyManagementSystem_MeteredOutputVariable)
+      && (workspaceObject.iddObject().type() != IddObjectType::EnergyManagementSystem_OutputVariable)) {
+      translateAndMapWorkspaceObject(workspaceObject);
+    }
+  }
+
   OptionalString s = workspaceObject.getString(EnergyManagementSystem_OutputVariableFields::Name);
   if (!s) {
     LOG(Error, "EnergyManagementSystem_OutputVariable has no Name");
