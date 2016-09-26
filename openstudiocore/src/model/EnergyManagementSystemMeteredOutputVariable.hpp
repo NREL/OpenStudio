@@ -40,6 +40,8 @@ class MODEL_API EnergyManagementSystemMeteredOutputVariable : public ModelObject
   /** @name Constructors and Destructors */
   //@{
 
+  explicit EnergyManagementSystemMeteredOutputVariable(const Model& model, std::string eMSVariableName);
+
   explicit EnergyManagementSystemMeteredOutputVariable(const Model& model);
 
   virtual ~EnergyManagementSystemMeteredOutputVariable() {}

@@ -168,6 +168,20 @@ namespace detail {
 
 } // detail
 
+EnergyManagementSystemMeteredOutputVariable::EnergyManagementSystemMeteredOutputVariable(const Model& model, std::string eMSVariableName)
+  : ModelObject(EnergyManagementSystemMeteredOutputVariable::iddObjectType(), model) {
+  OS_ASSERT(getImpl<detail::EnergyManagementSystemMeteredOutputVariable_Impl>());
+  bool ok = setEMSVariableName(eMSVariableName);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s eMSVariableName to " << eMSVariableName << ".");
+  }
+  setUpdateFrequency("SystemTimestep");
+  setResourceType("Electricity");
+  setGroupType("Building");
+  setEndUseCategory("Fans");
+}
+
 EnergyManagementSystemMeteredOutputVariable::EnergyManagementSystemMeteredOutputVariable(const Model& model)
   : ModelObject(EnergyManagementSystemMeteredOutputVariable::iddObjectType(),model)
 {

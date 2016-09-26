@@ -106,6 +106,29 @@ namespace detail {
 
 } // detail
 
+EnergyManagementSystemActuator::EnergyManagementSystemActuator(const ModelObject& modelObject, std::string actuatedComponentType, std::string actuatedComponentControlType)
+  : ModelObject(EnergyManagementSystemActuator::iddObjectType(), modelObject.model()) {
+  OS_ASSERT(getImpl<detail::EnergyManagementSystemActuator_Impl>());
+  bool ok = setActuatedComponent(modelObject);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s setActuatedComponent to "
+      << modelObject.briefDescription() << ".");
+  }
+  ok = setActuatedComponentType(actuatedComponentType);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s actuatedComponentType to "
+      << actuatedComponentType << ".");
+  }
+  ok = setActuatedComponentControlType(actuatedComponentControlType);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s actuatedComponentControlType to "
+      << actuatedComponentControlType << ".");
+  } 
+}
+
 EnergyManagementSystemActuator::EnergyManagementSystemActuator(const ModelObject& modelObject)
   : ModelObject(EnergyManagementSystemActuator::iddObjectType(), modelObject.model())
 {

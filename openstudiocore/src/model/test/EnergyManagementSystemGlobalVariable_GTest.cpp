@@ -39,7 +39,7 @@ TEST_F(ModelFixture, EMSGlobalVariable_EMSGlobalVariable)
   Model model;
     
   // add global variable
-  EnergyManagementSystemGlobalVariable var("glob var", model);
+  EnergyManagementSystemGlobalVariable var(model, "glob var");
   EXPECT_EQ("glob_var", var.nameString());
 }
 

@@ -738,11 +738,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorGlobalVariable_EMS) {
   Model model;
 
   // add global variable
-  EnergyManagementSystemGlobalVariable var("glob var", model);
+  EnergyManagementSystemGlobalVariable var(model, "glob var");
   EXPECT_EQ("glob_var", var.nameString());
 
   // add global variable
-  EnergyManagementSystemGlobalVariable var2("glob var 2", model);
+  EnergyManagementSystemGlobalVariable var2(model, "glob var 2");
   EXPECT_EQ("glob_var_2", var2.nameString());
 
   ForwardTranslator forwardTranslator;
@@ -774,11 +774,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorOutputVariable_EMS) {
   Model model;
 
   // add global variable
-  EnergyManagementSystemGlobalVariable var("glob var", model);
+  EnergyManagementSystemGlobalVariable var(model,"glob var");
   EXPECT_EQ("glob_var", var.nameString());
 
   // add global variable
-  EnergyManagementSystemGlobalVariable var2("glob var 2", model);
+  EnergyManagementSystemGlobalVariable var2(model, "glob var 2");
   EXPECT_EQ("glob_var_2", var2.nameString());
 
   // add output variable
@@ -826,7 +826,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorTrendVariable_EMS) {
   Model model;
 
   // add global variable
-  EnergyManagementSystemGlobalVariable globvar("glob var", model);
+  EnergyManagementSystemGlobalVariable globvar(model, "glob var");
 
   // add trend variable
   EnergyManagementSystemTrendVariable var(model);
@@ -1047,7 +1047,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorTrendVariable2_EMS) {
   Model model;
 
   // add global variable
-  EnergyManagementSystemGlobalVariable globvar("glob var", model);
+  EnergyManagementSystemGlobalVariable globvar(model, "glob var");
 
   // add trend variable
   EnergyManagementSystemTrendVariable var(model);

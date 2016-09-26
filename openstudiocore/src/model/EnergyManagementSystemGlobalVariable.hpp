@@ -38,7 +38,7 @@ class MODEL_API EnergyManagementSystemGlobalVariable : public ModelObject {
   /** @name Constructors and Destructors */
   //@{
 
-   explicit EnergyManagementSystemGlobalVariable(const std::string& variableName, const Model& model);
+  explicit EnergyManagementSystemGlobalVariable(const Model& model, const std::string& variableName);
 
   virtual ~EnergyManagementSystemGlobalVariable() {}
 

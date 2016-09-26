@@ -49,7 +49,7 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemGlobalVari
   for (const IdfExtensibleGroup& eg : workspaceObject.extensibleGroups()) {
     boost::optional<std::string> value = eg.getString(EnergyManagementSystem_GlobalVariableExtensibleFields::ErlVariableName);
     if (value) {
-      openstudio::model::EnergyManagementSystemGlobalVariable emsGlobalVariable(value.get(), m_model);
+      openstudio::model::EnergyManagementSystemGlobalVariable emsGlobalVariable(m_model, value.get());
       if (!result) { 
         result = emsGlobalVariable;
       }
