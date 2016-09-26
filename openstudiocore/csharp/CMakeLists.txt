@@ -81,7 +81,6 @@ if(MSVC)
   # convenience target to build the SDK
   add_custom_target(csharp_sdk ALL
     DEPENDS ${OPENSTUDIO_CSHARP_DLL} openstudio_csharp
-    COMMENT "Compiling .NET SDK"
   )
   
 endif()

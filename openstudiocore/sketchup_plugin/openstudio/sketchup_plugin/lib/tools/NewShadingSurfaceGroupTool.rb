@@ -81,7 +81,7 @@ module OpenStudio
         shading_group.model_object.setYOrigin(initial_position.y.to_m)
         shading_group.model_object.setZOrigin(initial_position.z.to_m)
         shading_group.draw_entity
-        shading_group.create_initial_box("#{$OpenStudio_LibPath}openstudio/sketchup_plugin/lib/resources/components/OpenStudio_NewShadingSurfaceGroup.skp")
+        shading_group.create_initial_box("#{$OPENSTUDIO_SKETCHUPPLUGIN_DIR}/resources/components/OpenStudio_NewShadingSurfaceGroup.skp")
         shading_group.add_observers
         shading_group.add_watcher
       
