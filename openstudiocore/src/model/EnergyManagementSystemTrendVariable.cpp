@@ -86,6 +86,17 @@ namespace detail {
 
 } // detail
 
+EnergyManagementSystemTrendVariable::EnergyManagementSystemTrendVariable(const Model& model, std::string eMSVariableName)
+  : ModelObject(EnergyManagementSystemTrendVariable::iddObjectType(), model) {
+  OS_ASSERT(getImpl<detail::EnergyManagementSystemTrendVariable_Impl>());
+  bool ok = setEMSVariableName(eMSVariableName);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s eMSVariableName to " << eMSVariableName << ".");
+  }
+  setNumberofTimestepstobeLogged(1);
+}
+
 EnergyManagementSystemTrendVariable::EnergyManagementSystemTrendVariable(const Model& model)
   : ModelObject(EnergyManagementSystemTrendVariable::iddObjectType(),model)
 {

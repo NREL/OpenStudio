@@ -39,6 +39,7 @@ class MODEL_API EnergyManagementSystemOutputVariable : public ModelObject {
  public:
   /** @name Constructors and Destructors */
   //@{
+  explicit EnergyManagementSystemOutputVariable(const Model& model, std::string eMSVariableName);
 
   explicit EnergyManagementSystemOutputVariable(const Model& model);
 

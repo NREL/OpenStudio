@@ -134,6 +134,17 @@ namespace detail {
 
 } // detail
 
+EnergyManagementSystemOutputVariable::EnergyManagementSystemOutputVariable(const Model& model, std::string eMSVariableName)
+: ModelObject(EnergyManagementSystemOutputVariable::iddObjectType(), model) {
+  OS_ASSERT(getImpl<detail::EnergyManagementSystemOutputVariable_Impl>());
+  bool ok = setEMSVariableName(eMSVariableName);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s eMSVariableName to " << eMSVariableName << ".");
+  }
+  setUpdateFrequency("ZoneTimestep");
+  setTypeofDatainVariable("Averaged");
+}
 EnergyManagementSystemOutputVariable::EnergyManagementSystemOutputVariable(const Model& model)
   : ModelObject(EnergyManagementSystemOutputVariable::iddObjectType(),model)
 {

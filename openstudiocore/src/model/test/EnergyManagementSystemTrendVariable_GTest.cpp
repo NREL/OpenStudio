@@ -40,7 +40,7 @@ TEST_F(ModelFixture, EMSTrendVariable_EMSTrendVariable)
   Model model;
   
   // add global variable
-  EnergyManagementSystemGlobalVariable globvar("glob var", model);
+  EnergyManagementSystemGlobalVariable globvar(model, "glob var");
 
   // add trend variable
   EnergyManagementSystemTrendVariable var(model);

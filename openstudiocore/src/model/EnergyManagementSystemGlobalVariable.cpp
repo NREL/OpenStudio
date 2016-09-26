@@ -68,7 +68,7 @@ namespace detail {
 
 } // detail
 
-EnergyManagementSystemGlobalVariable::EnergyManagementSystemGlobalVariable(const std::string& variableName, const Model& model)
+EnergyManagementSystemGlobalVariable::EnergyManagementSystemGlobalVariable(const Model& model, const std::string& variableName)
   : ModelObject(EnergyManagementSystemGlobalVariable::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemGlobalVariable_Impl>());

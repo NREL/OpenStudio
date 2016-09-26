@@ -59,7 +59,7 @@ TEST_F(ModelFixture, EMSOutputVariable_EMSOutputVariable)
   ThermalZone zone2(model);
 
   // add global variable
-  EnergyManagementSystemGlobalVariable var("globalVar", model);
+  EnergyManagementSystemGlobalVariable var(model, "globalVar");
 
   // add Site Outdoor Air Drybulb Temperature
   OutputVariable siteOutdoorAirDrybulbTemperature("Site Outdoor Air Drybulb Temperature", model);
