@@ -617,7 +617,9 @@ endif()
 
 # C#
 if(BUILD_CSHARP_BINDINGS)
-  set(ALL_CSHARP_BINDING_TARGETS "") # global list
+  set(ALL_CSHARP_BINDING_DEPENDS "") # global list of library dependencies of the generated wrapper cxx files
+  set(ALL_CSHARP_WRAPPER_FILES "") # global list of generated wrapper cxx files
+  set(ALL_CSHARP_WRAPPER_TARGETS "") # global list targets that build generated wrapper cxx files
 endif()
 
 # JAVA
@@ -1328,10 +1330,10 @@ if(BUILD_PYTHON_BINDINGS)
 endif()
 
 
-if(BUILD_CSHARP_BINDINGS)
-  add_custom_target(ALL_CSHARP_BINDINGS)
-  add_dependencies(ALL_CSHARP_BINDINGS csharp_sdk ${ALL_CSHARP_BINDING_TARGETS})
-endif()
+#if(BUILD_CSHARP_BINDINGS)
+  #add_custom_target(ALL_CSHARP_BINDINGS)
+  #add_dependencies(ALL_CSHARP_BINDINGS csharp_sdk ${ALL_CSHARP_BINDING_TARGETS})
+#endif()
 
 if(BUILD_JAVA_BINDINGS)
   add_custom_target(ALL_JAVA_BINDINGS)
@@ -1568,6 +1570,11 @@ cpack_add_component(CLI
 cpack_add_component(RubyAPI
   DISPLAY_NAME "Ruby API"
   DESCRIPTION "Ruby API"
+)
+
+cpack_add_component(CSharpAPI
+  DISPLAY_NAME "C# API"
+  DESCRIPTION "C# API"
 )
 
 cpack_add_component(PAT

@@ -16,6 +16,9 @@
 #include <windows.h>
 #endif
 
+#ifdef QT_STATIC
+  Q_IMPORT_PLUGIN(QSQLiteDriverPlugin);
+#endif 
 
 extern "C" {
   void Init_EmbeddedScripting(void);
@@ -426,10 +429,6 @@ int main(int argc, char *argv[])
     
 
   }
-  
-  #ifdef QT_STATIC
-  Q_IMPORT_PLUGIN(QSQLiteDriverPlugin);
-  #endif 
   
   // chop off the first argument which is the exe path/name
   ruby_set_argv(argc - 1,argv + 1);
