@@ -34,6 +34,8 @@
 #include "Facility_Impl.hpp"
 #include "Building.hpp"
 #include "Building_Impl.hpp"
+#include "EnergyManagementSystemSensor.hpp"
+#include "EnergyManagementSystemSensor_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
@@ -104,6 +106,22 @@ namespace detail {
 
     }
     return result;
+  }
+
+  std::vector<openstudio::IdfObject> OutputMeter_Impl::remove() {
+    //Note: Cant do /object-list implementation for EMS Sensor since Auto Naming of Objects causes issues.
+    //      Instead, doing an /alpha getString implementation so we need to manually remove any referring Sensors
+    const Model m = this->model();
+
+    std::vector<EnergyManagementSystemSensor> objects = m.getModelObjects<EnergyManagementSystemSensor>();
+    for (auto & sensor : objects) {
+      if (sensor.outputMeter()) {
+        if (sensor.outputMeter().get().name() == this->name()) {
+          sensor.resetOutputMeter();
+        }
+      }
+    }
+    return ModelObject_Impl::remove();
   }
 
   std::string OutputMeter_Impl::name() const {
@@ -632,6 +650,10 @@ openstudio::OptionalTimeSeries OutputMeter::getData(const std::string& envPeriod
 openstudio::OptionalTimeSeries OutputMeter::getData(const std::string& envPeriod, const OptionalString& specificInstallLocation) const
 {
   return getImpl<detail::OutputMeter_Impl>()->getData(envPeriod, specificInstallLocation);
+}
+
+std::vector<IdfObject> OutputMeter::remove() {
+  return getImpl<detail::OutputMeter_Impl>()->remove();
 }
 
 bool MeterFuelTypeEquals(const OutputMeter& meter,const FuelType& ft) {

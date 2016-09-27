@@ -316,7 +316,7 @@ namespace detail {
           //look to see if uid is in the model and return the object
           UUID uid = toUUID(possible_uid);
           //TODO cant get below to work so try the manual way
-          //m.getModelObjects<model::ModelObject>(&uid);
+          //m.getModelObject<model::ModelObject>(uid);
           if (modelObjects.size() > 0) {
             for (size_t k = 0; k < modelObjects.size(); k++) {
               if (modelObjects.at(k).handle() == uid) {

@@ -73,6 +73,10 @@ class MODEL_API EnergyManagementSystemSensor : public ModelObject {
 
   bool setOutputVariable(const OutputVariable& outputVariable);
   bool setOutputMeter(const OutputMeter& outputMeter);
+
+  bool resetOutputVariable();
+  bool resetOutputMeter();
+
   //@}
   /** @name Other */
   //@{

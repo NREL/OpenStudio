@@ -26692,9 +26692,9 @@ OS:Output:Meter,
   A2, \field Name
        \note Form is EnergyUseType:..., e.g. Electricity:* for all Electricity meters
        \note or EndUse:..., e.g. GeneralLights:* for all General Lights
+       \type external-list
        \required-field
-       \reference OutputMeterNames
-       \reference OutputVariableMeterNames
+       \external-list autoRDDmeter
   A3, \field Reporting Frequency
        \note Timestep refers to the zone Timestep/Number of Timesteps in hour value
        \note RunPeriod, Environment, and Annual are the same
@@ -26733,7 +26733,6 @@ OS:Output:Variable,
        \type alpha
        \required-field
        \reference OutputVariableNames
-       \reference OutputVariableMeterNames
   A3, \field Key Value
        \note use '*' (without quotes) to apply this variable to all keys
        \type alpha
@@ -26771,8 +26770,6 @@ OS:Meter:Custom,
         \required-field
    A2,  \field Name
         \required-field
-        \reference OutputMeterNames
-        \reference OutputVariableMeterNames
    A3,  \field Fuel Type
         \type choice
         \key Electricity
@@ -26801,8 +26798,6 @@ OS:Meter:CustomDecrement,
         \required-field
    A2,  \field Name
         \required-field
-        \reference OutputMeterNames
-        \reference OutputVariableMeterNames
    A3,  \field Fuel Type
         \type choice
         \key Electricity
@@ -26874,8 +26869,7 @@ OS:EnergyManagementSystem:Sensor,
        \note key name listed here will override key name in Output:Variable or Output:Meter
   A4; \field Output Variable or Output Meter Name
        \required-field
-       \type object-list
-       \object-list OutputVariableMeterNames
+       \type alpha
        
 OS:EnergyManagementSystem:Actuator,
        \memo Hardware portion of EMS used to set up actuators in the model

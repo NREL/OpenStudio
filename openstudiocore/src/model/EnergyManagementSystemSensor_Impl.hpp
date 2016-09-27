@@ -81,6 +81,9 @@ namespace detail {
     bool setOutputVariable(const OutputVariable& outputVariable);
     bool setOutputMeter(const OutputMeter& outputMeter);
 
+    bool resetOutputVariable();
+    bool resetOutputMeter();
+
     //@}
     /** @name Other */
     //@{
