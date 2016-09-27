@@ -56,6 +56,8 @@ class MODEL_API OutputVariable : public ModelObject {
   /// Constructs a new OutputVariable object in the model.
   explicit OutputVariable(const std::string& variableName, const Model& model);
 
+  virtual std::vector<openstudio::IdfObject> remove();
+
   //@}
 
   static IddObjectType iddObjectType();

@@ -25,10 +25,13 @@
 #include "OutputMeter.hpp"
 #include "OutputMeter_Impl.hpp"
 
+#include "Model.hpp"
+
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_EnergyManagementSystem_Sensor_FieldEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/UUID.hpp"
 
 namespace openstudio {
 namespace model {
@@ -97,21 +100,63 @@ namespace detail {
   }
 
   bool EnergyManagementSystemSensor_Impl::setOutputVariable(const OutputVariable& outputVariable) {
-    bool result = setPointer(OS_EnergyManagementSystem_SensorFields::OutputVariableorOutputMeterName, outputVariable.handle());
+    //bool result = setPointer(OS_EnergyManagementSystem_SensorFields::OutputVariableorOutputMeterName, outputVariable.handle());
+    bool result = setString(OS_EnergyManagementSystem_SensorFields::OutputVariableorOutputMeterName, toString(outputVariable.handle()));
+    return result;
+  }
+
+  bool EnergyManagementSystemSensor_Impl::resetOutputMeter() {
+    //bool result = setPointer(OS_EnergyManagementSystem_SensorFields::OutputVariableorOutputMeterName, outputMeter.handle());
+    bool result = setString(OS_EnergyManagementSystem_SensorFields::OutputVariableorOutputMeterName, "");
+    return result;
+  }
+
+  bool EnergyManagementSystemSensor_Impl::resetOutputVariable() {
+    //bool result = setPointer(OS_EnergyManagementSystem_SensorFields::OutputVariableorOutputMeterName, outputVariable.handle());
+    bool result = setString(OS_EnergyManagementSystem_SensorFields::OutputVariableorOutputMeterName, "");
     return result;
   }
 
   bool EnergyManagementSystemSensor_Impl::setOutputMeter(const OutputMeter& outputMeter) {
-    bool result = setPointer(OS_EnergyManagementSystem_SensorFields::OutputVariableorOutputMeterName, outputMeter.handle());
+    //bool result = setPointer(OS_EnergyManagementSystem_SensorFields::OutputVariableorOutputMeterName, outputMeter.handle());
+    bool result = setString(OS_EnergyManagementSystem_SensorFields::OutputVariableorOutputMeterName, toString(outputMeter.handle()));
     return result;
   }
 
   boost::optional<OutputVariable> EnergyManagementSystemSensor_Impl::optionalOutputVariable() const {
-    return getObject<ModelObject>().getModelObjectTarget<OutputVariable>(OS_EnergyManagementSystem_SensorFields::OutputVariableorOutputMeterName);
+    //Note: Cant do /object-list implementation since Auto Naming of Objects causes issues.
+    //      Instead, doing an /alpha getString implementation 
+    //return getObject<ModelObject>().getModelObjectTarget<OutputVariable>(OS_EnergyManagementSystem_SensorFields::OutputVariableorOutputMeterName);
+    boost::optional<std::string> handle = getString(OS_EnergyManagementSystem_SensorFields::OutputVariableorOutputMeterName);
+    const Model m = this->model();
+    if (handle) {
+      UUID uid = toUUID(handle.get());
+      boost::optional<ModelObject> object = m.getModelObject<model::ModelObject>(uid);
+      if (object) {
+        if (object->optionalCast<OutputVariable>()) {
+          return object->cast<OutputVariable>();
+        }
+      }
+    }
+    return boost::none;
   }
 
   boost::optional<OutputMeter> EnergyManagementSystemSensor_Impl::optionalOutputMeter() const {
-    return getObject<ModelObject>().getModelObjectTarget<OutputMeter>(OS_EnergyManagementSystem_SensorFields::OutputVariableorOutputMeterName);
+    //Note: Cant do /object-list implementation since Auto Naming of Objects causes issues.
+    //      Instead, doing an /alpha getString implementation 
+    //return getObject<ModelObject>().getModelObjectTarget<OutputMeter>(OS_EnergyManagementSystem_SensorFields::OutputVariableorOutputMeterName);
+    boost::optional<std::string> handle = getString(OS_EnergyManagementSystem_SensorFields::OutputVariableorOutputMeterName);
+    const Model m = this->model();
+    if (handle) {
+      UUID uid = toUUID(handle.get());
+      boost::optional<ModelObject> object = m.getModelObject<model::ModelObject>(uid);
+      if (object) {
+        if (object->optionalCast<OutputMeter>()) {
+          return object->cast<OutputMeter>();
+        }
+      }
+    }
+    return boost::none;
   }
 
 } // detail
@@ -171,6 +216,14 @@ bool EnergyManagementSystemSensor::setOutputVariable(const OutputVariable& outpu
 
 bool EnergyManagementSystemSensor::setOutputMeter(const OutputMeter& outputMeter) {
   return getImpl<detail::EnergyManagementSystemSensor_Impl>()->setOutputMeter(outputMeter);
+}
+
+bool EnergyManagementSystemSensor::resetOutputVariable() {
+  return getImpl<detail::EnergyManagementSystemSensor_Impl>()->resetOutputVariable();
+}
+
+bool EnergyManagementSystemSensor::resetOutputMeter() {
+  return getImpl<detail::EnergyManagementSystemSensor_Impl>()->resetOutputMeter();
 }
 
 /// @cond
