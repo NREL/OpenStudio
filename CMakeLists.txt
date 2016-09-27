@@ -51,7 +51,7 @@ set(ENERGYPLUS_VERSION_MINOR 6)
 set(ENERGYPLUS_VERSION_PATCH 0)
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
-set(ENERGYPLUS_BUILD_SHA "a17aa64355")
+set(ENERGYPLUS_BUILD_SHA "198c6a3cff")
 
 option(NIGHTLY_BUILD "Use configurations for Nightly Build" OFF)
 
