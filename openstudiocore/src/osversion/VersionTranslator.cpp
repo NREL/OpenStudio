@@ -3265,14 +3265,19 @@ std::string VersionTranslator::update_1_11_4_to_1_11_5(const IdfFile& idf_1_11_4
 
       size_t newi = 0;
       for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        
+        if( i == 6 ) {
+          newObject.setDouble(i,773.3);
+          newi = i + 1;
+        } else if (i > 6) {
+          newi = i + 1;
+        } else {
+          newi = i;
+        }
+
         if( auto s = object.getString(i) ) {
           newObject.setString(newi,s.get());
-          if( i == 6 ) {
-            newObject.setDouble(newi,773.3);
-            ++newi;
-          }
         }
-        ++newi;
       }
 
       m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
