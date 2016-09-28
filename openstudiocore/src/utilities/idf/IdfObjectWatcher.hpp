@@ -29,7 +29,7 @@
 #ifndef UTILITIES_IDF_IDFOBJECTWATCHER_HPP
 #define UTILITIES_IDF_IDFOBJECTWATCHER_HPP
 
-#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
+#include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
 #include <utilities/UtilitiesAPI.hpp>
 #include <utilities/idf/IdfObject.hpp>
 

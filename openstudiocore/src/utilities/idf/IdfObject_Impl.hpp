@@ -36,7 +36,7 @@
 
 #include <utilities/core/Logger.hpp>
 #include <utilities/core/Containers.hpp>
-#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
+#include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
 
 #include <boost/optional.hpp>
 

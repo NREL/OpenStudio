@@ -30,7 +30,7 @@
 #define OPENSTUDIO_PLANARSURFACEWIDGET_HPP
 
 #include "../model/PlanarSurface.hpp"
-#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
+#include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
 
 #include <QWidget>
 

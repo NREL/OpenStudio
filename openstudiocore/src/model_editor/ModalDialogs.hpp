@@ -32,7 +32,7 @@
 #include "ModelEditorAPI.hpp"
 
 #include "../model/Model.hpp"
-#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
+#include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
 
 #include "../utilities/idd/IddEnums.hpp"
 #include "../utilities/core/UUID.hpp"

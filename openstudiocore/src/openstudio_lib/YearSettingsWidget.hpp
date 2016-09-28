@@ -33,7 +33,7 @@
 #include "../model/Model_Impl.hpp"
 #include "../model/YearDescription.hpp"
 #include "../model/YearDescription_Impl.hpp"
-#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
+#include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
 
 #include <QRadioButton>
 #include <QWidget>

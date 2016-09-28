@@ -31,7 +31,7 @@
 
 #include "FieldMethodTypedefs.hpp"
 
-#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
+#include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
 #include "../model/ModelObject.hpp"
 #include "../model/ModelExtensibleGroup.hpp"
 

@@ -30,7 +30,7 @@
 #define UTILITIES_IDF_WORKSPACEOBJECT_IMPL_HPP
 
 #include <utilities/UtilitiesAPI.hpp>
-#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
+#include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
 
 #include <utilities/idf/IdfObject_Impl.hpp>
 #include <utilities/idf/ObjectPointer.hpp>

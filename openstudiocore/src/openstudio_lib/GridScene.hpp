@@ -30,7 +30,7 @@
 #define OPENSTUDIO_GRIDSCENE_HPP
 
 #include <QGraphicsScene>
-#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
+#include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
 #include "../model/ModelObject.hpp"
 #include "OSItem.hpp"
 

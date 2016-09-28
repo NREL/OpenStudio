@@ -34,7 +34,7 @@
 #include "../model/Model.hpp"
 
 #include <QCheckBox>
-#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
+#include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
 #include <QPushButton>
 
 namespace openstudio {

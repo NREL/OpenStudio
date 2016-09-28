@@ -37,7 +37,7 @@
 #include <utilities/idf/ObjectPointer.hpp>
 
 #include <utilities/idd/IddFileAndFactoryWrapper.hpp>
-#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
+#include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
 
 #include <utilities/core/Logger.hpp>
 

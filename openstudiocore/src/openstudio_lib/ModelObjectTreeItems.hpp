@@ -36,7 +36,7 @@
 
 #include <QObject>
 #include <QTreeWidgetItem>
-#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
+#include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
 
 class QPushButton;
 class QLabel;

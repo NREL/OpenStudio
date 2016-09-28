@@ -31,7 +31,7 @@
 
 #include "ModelObjectVectorController.hpp"
 
-#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
+#include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
 #include "../model/Building.hpp"
 #include "../model/DefaultScheduleSet.hpp"
 #include "../model/Model.hpp"

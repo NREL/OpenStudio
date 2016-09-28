@@ -34,7 +34,7 @@
 #include "../model/Model.hpp"
 #include "../model/ModelObject.hpp"
 #include <vector>
-#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
+#include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
 
 namespace openstudio {
 

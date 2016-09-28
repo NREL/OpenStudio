@@ -38,8 +38,7 @@
 #include "../data/Variant.hpp"
 #include "../data/Attribute.hpp"
 
-// DLM: this should be somewhere different
-#include "../../model/nano_signal_slot.hpp"
+#include <nano/nano_signal_slot.hpp> 
 
 #include <jsoncpp/json.h>
 

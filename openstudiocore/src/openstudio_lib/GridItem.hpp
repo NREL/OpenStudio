@@ -33,7 +33,7 @@
 #include <QCoreApplication>
 #include <QPixmap>
 #include <QPointer>
-#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
+#include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
 #include "../model/ModelObject.hpp"
 #include "../model/Node.hpp"
 #include "../model/Mixer.hpp"

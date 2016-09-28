@@ -50,7 +50,7 @@
 #include <QDialog>
 #include <QGraphicsItem>
 #include <QGraphicsView>
-#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
+#include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
 #include <QWidget>
 
 class QPushButton;
