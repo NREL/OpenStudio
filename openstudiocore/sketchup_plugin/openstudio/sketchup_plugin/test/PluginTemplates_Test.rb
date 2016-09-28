@@ -24,7 +24,7 @@ require 'minitest/autorun'
 class PluginTemplates_Test < MiniTest::Unit::TestCase
 
   def test_Templates
-    templates_path = "#{$OpenStudio_LibPath}/openstudio/sketchup_plugin/resources/templates/"
+    templates_path = "#{$OPENSTUDIO_SKETCHUPPLUGIN_DIR}/../resources/templates/"
     assert(File.exist?(templates_path))
     assert(File.directory?(templates_path))
     templates = Dir.glob(templates_path + "/*.osm")

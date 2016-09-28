@@ -26,6 +26,7 @@
 #include "../../model/ThermalZone.hpp"
 #include "../../model/ThermalZone_Impl.hpp"
 
+#include "../../utilities/core/Compare.hpp"
 #include "../../utilities/geometry/Geometry.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
@@ -54,217 +55,180 @@ OptionalModelObject ReverseTranslator::translateDaylightingControls( const Works
     return boost::none;
   }
 
+  OptionalModelObject result;
+  OptionalThermalZone controlThermalZone;
+  OptionalSpace controlSpace;
+  OptionalWorkspaceObject controlZone = workspaceObject.getTarget(Daylighting_ControlsFields::ZoneName);
+  if (controlZone){
+    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*controlZone);
+    if (modelObject){
+      if (modelObject->optionalCast<Space>()){
+        controlSpace = modelObject->cast<Space>();
+        controlThermalZone = controlSpace->thermalZone();
+      }
+    }
+  }
+
+
   OptionalDouble d;
   double sum = 0;
   std::vector<double> fractions;
   std::vector<std::size_t> indices;
   std::size_t idx = 0;
   for (const auto& group : groups){
-    boost::optional<double> fraction = workspaceObject.getDouble(Daylighting_ControlsExtensibleFields::FractionofZoneControlledbyReferencePoint, true);
+    boost::optional<double> fraction = group.getDouble(Daylighting_ControlsExtensibleFields::FractionofZoneControlledbyReferencePoint, true);
     OS_ASSERT(fraction);
+
+    boost::optional<WorkspaceObject> referencePoint = group.cast<WorkspaceExtensibleGroup>().getTarget(Daylighting_ControlsExtensibleFields::DaylightingReferencePointName);
+    if (!referencePoint){
+      if (*fraction > 0.0){
+        LOG(Warn, "Daylighting:Controls '" << workspaceObject.nameString() << "' missing reference point " << idx << ", setting fraction of zone controlled to 0.");
+        fraction = 0;
+      }
+    }
 
     sum += *fraction;
     fractions.push_back(*fraction);
     indices.push_back(idx);
-    ++idx;
+    idx += 1;
   }
   // sort indices by fraction in descending order
-  sort(indices.begin(), indices.end(), [&fractions](size_t i1, size_t i2) {return fractions[i1] > fractions[i2];});
+  sort(indices.begin(), indices.end(), [&fractions](const size_t& i1, const size_t& i2) {return fractions[i1] > fractions[i2];});
 
   if (sum > 1.0){
     LOG(Warn, "Daylighting:Controls '" << workspaceObject.nameString() << "' specifies fraction controlled greater than one.")
   }
 
-  DaylightingControl daylightingControl(m_model);
+  // loop over the groups in order by indices
+  for (const auto& index : indices){
+    const auto& group = groups[index];
 
-  OptionalThermalZone thermalZone;
-  OptionalSpace space;
-  OptionalWorkspaceObject target = workspaceObject.getTarget(Daylighting_ControlsFields::ZoneName);
-  if (target){
-    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-    if (modelObject){
-      if (modelObject->optionalCast<Space>()){
-        space = modelObject->cast<Space>();
-        thermalZone = space->thermalZone();
+    bool isPrimary = false;
+    bool isSecondary = false;
+
+    if (controlThermalZone){
+      if (!controlThermalZone->primaryDaylightingControl()){
+        isPrimary = true;
+      } else if (!controlThermalZone->secondaryDaylightingControl()){
+        isSecondary = true;
       }
     }
-  }
 
-  if (space){
-    daylightingControl.setSpace(*space);
-  }
+    boost::optional<WorkspaceObject> referencePoint = group.cast<WorkspaceExtensibleGroup>().getTarget(Daylighting_ControlsExtensibleFields::DaylightingReferencePointName);
+    if (!referencePoint){
+      LOG(Warn, "Daylighting:Controls '" << workspaceObject.nameString() << "' missing reference point " << idx << ".");
+      continue;
+    }
 
-  if (thermalZone){
-    thermalZone->setPrimaryDaylightingControl(daylightingControl);
-  }
+    OptionalThermalZone refThermalZone;
+    OptionalSpace refSpace;
+    OptionalWorkspaceObject refZone = referencePoint->getTarget(Daylighting_ReferencePointFields::ZoneName);
+    if (refZone){
+      OptionalModelObject modelObject = translateAndMapWorkspaceObject(*refZone);
+      if (modelObject){
+        if (modelObject->optionalCast<Space>()){
+          refSpace = modelObject->cast<Space>();
+          refThermalZone = refSpace->thermalZone();
+        }
+      }
+    }
 
-  // primary group
-  boost::optional<WorkspaceObject> primaryReferencePoint = groups[indices[0]].cast<WorkspaceExtensibleGroup>().getTarget(Daylighting_ControlsExtensibleFields::DaylightingReferencePointName);
-  if (primaryReferencePoint){
-    d = primaryReferencePoint->getDouble(Daylighting_ReferencePointFields::XCoordinateofReferencePoint);
+    if (!refSpace){
+      LOG(Warn, "Daylighting:ReferencePoint '" << referencePoint->nameString() << "' missing zone, will not be translated.");
+      continue;
+    }
+
+    DaylightingControl daylightingControl(m_model);
+    if (!result){
+      result = daylightingControl;
+    }
+
+    daylightingControl.setName(referencePoint->nameString());
+
+    daylightingControl.setSpace(*refSpace);
+
+    d = referencePoint->getDouble(Daylighting_ReferencePointFields::XCoordinateofReferencePoint);
     if (d){
       daylightingControl.setPositionXCoordinate(*d);
     }
 
-    d = primaryReferencePoint->getDouble(Daylighting_ReferencePointFields::YCoordinateofReferencePoint);
+    d = referencePoint->getDouble(Daylighting_ReferencePointFields::YCoordinateofReferencePoint);
     if (d){
       daylightingControl.setPositionYCoordinate(*d);
     }
 
-    d = primaryReferencePoint->getDouble(Daylighting_ReferencePointFields::ZCoordinateofReferencePoint);
+    d = referencePoint->getDouble(Daylighting_ReferencePointFields::ZCoordinateofReferencePoint);
     if (d){
       daylightingControl.setPositionZCoordinate(*d);
     }
-  }
 
-  d = groups[indices[0]].getDouble(Daylighting_ControlsExtensibleFields::FractionofZoneControlledbyReferencePoint);
-  if (d && thermalZone){
-    thermalZone->setFractionofZoneControlledbyPrimaryDaylightingControl(*d);
-  }
+    d = group.getDouble(Daylighting_ControlsExtensibleFields::IlluminanceSetpointatReferencePoint);
+    if (d){
+      daylightingControl.setIlluminanceSetpoint(*d);
+    }
 
-  d = groups[indices[0]].getDouble(Daylighting_ControlsExtensibleFields::IlluminanceSetpointatReferencePoint);
-  if (d){
-    daylightingControl.setIlluminanceSetpoint(*d);
-  }
-
-  OptionalInt i = workspaceObject.getInt(Daylighting_ControlsFields::LightingControlType);
-  if (i){
-    switch (*i){
-      case 1:
+    OptionalString s = workspaceObject.getString(Daylighting_ControlsFields::LightingControlType, true);
+    if (s) {
+      if (istringEqual(*s, "Continuous")){
         daylightingControl.setLightingControlType("Continuous");
-        break;
-      case 2:
+      } else if (istringEqual(*s, "Stepped")){
         daylightingControl.setLightingControlType("Stepped");
-        break;
-      case 3:
+      } else if (istringEqual(*s, "ContinuousOff")){
         daylightingControl.setLightingControlType("Continuous/Off");
-        break;
-      default:
-        ;
+      }
     }
-  }
 
-  d = workspaceObject.getDouble(Daylighting_ControlsFields::GlareCalculationAzimuthAngleofViewDirectionClockwisefromZoneyAxis);
-  if (d){
-    daylightingControl.setThetaRotationAroundYAxis( -degToRad(*d) );
-  }
-
-  d = workspaceObject.getDouble(Daylighting_ControlsFields::MaximumAllowableDiscomfortGlareIndex);
-  if (d){
-    daylightingControl.setMaximumAllowableDiscomfortGlareIndex(*d);
-  }
-
-  d = workspaceObject.getDouble(Daylighting_ControlsFields::MinimumInputPowerFractionforContinuousorContinuousOffDimmingControl);
-  if (d){
-    daylightingControl.setMinimumInputPowerFractionforContinuousDimmingControl(*d);
-  }
-
-  d = workspaceObject.getDouble(Daylighting_ControlsFields::MinimumLightOutputFractionforContinuousorContinuousOffDimmingControl);
-  if (d){
-    daylightingControl.setMinimumLightOutputFractionforContinuousDimmingControl(*d);
-  }
-
-  i = workspaceObject.getInt(Daylighting_ControlsFields::NumberofSteppedControlSteps);
-  if (i){
-    daylightingControl.setNumberofSteppedControlSteps(*i);
-  }
-
-  d = workspaceObject.getDouble(Daylighting_ControlsFields::ProbabilityLightingwillbeResetWhenNeededinManualSteppedControl);
-  if (d){
-    daylightingControl.setProbabilityLightingwillbeResetWhenNeededinManualSteppedControl(*d);
-  }
-
-  if (groups.size() == 1){
-    return daylightingControl;
-  }
-
-  // secondary group
-  DaylightingControl daylightingControl2(m_model);
-
-  if (space){
-    daylightingControl2.setSpace(*space);
-  }
-
-  if (thermalZone){
-    thermalZone->setSecondaryDaylightingControl(daylightingControl2);
-  }
-
-  boost::optional<WorkspaceObject> secondaryReferencePoint = groups[indices[1]].cast<WorkspaceExtensibleGroup>().getTarget(Daylighting_ControlsExtensibleFields::DaylightingReferencePointName);
-  if (secondaryReferencePoint){
-    d = secondaryReferencePoint->getDouble(Daylighting_ReferencePointFields::XCoordinateofReferencePoint);
+    d = workspaceObject.getDouble(Daylighting_ControlsFields::GlareCalculationAzimuthAngleofViewDirectionClockwisefromZoneyAxis);
     if (d){
-      daylightingControl2.setPositionXCoordinate(*d);
+      daylightingControl.setThetaRotationAroundYAxis(-degToRad(*d));
     }
 
-    d = secondaryReferencePoint->getDouble(Daylighting_ReferencePointFields::YCoordinateofReferencePoint);
+    d = workspaceObject.getDouble(Daylighting_ControlsFields::MaximumAllowableDiscomfortGlareIndex);
     if (d){
-      daylightingControl2.setPositionYCoordinate(*d);
+      daylightingControl.setMaximumAllowableDiscomfortGlareIndex(*d);
     }
 
-    d = secondaryReferencePoint->getDouble(Daylighting_ReferencePointFields::ZCoordinateofReferencePoint);
+    d = workspaceObject.getDouble(Daylighting_ControlsFields::MinimumInputPowerFractionforContinuousorContinuousOffDimmingControl);
     if (d){
-      daylightingControl2.setPositionZCoordinate(*d);
+      daylightingControl.setMinimumInputPowerFractionforContinuousDimmingControl(*d);
+    }
+
+    d = workspaceObject.getDouble(Daylighting_ControlsFields::MinimumLightOutputFractionforContinuousorContinuousOffDimmingControl);
+    if (d){
+      daylightingControl.setMinimumLightOutputFractionforContinuousDimmingControl(*d);
+    }
+
+    OptionalInt i = workspaceObject.getInt(Daylighting_ControlsFields::NumberofSteppedControlSteps);
+    if (i){
+      daylightingControl.setNumberofSteppedControlSteps(*i);
+    }
+
+    d = workspaceObject.getDouble(Daylighting_ControlsFields::ProbabilityLightingwillbeResetWhenNeededinManualSteppedControl);
+    if (d){
+      daylightingControl.setProbabilityLightingwillbeResetWhenNeededinManualSteppedControl(*d);
+    }
+
+    if (isPrimary){
+      d = group.getDouble(Daylighting_ControlsExtensibleFields::FractionofZoneControlledbyReferencePoint, true);
+      if (d && controlThermalZone){
+        controlThermalZone->setPrimaryDaylightingControl(daylightingControl);
+        controlThermalZone->setFractionofZoneControlledbyPrimaryDaylightingControl(*d);
+      }
+    } else if (isSecondary){
+      d = group.getDouble(Daylighting_ControlsExtensibleFields::FractionofZoneControlledbyReferencePoint, true);
+      if (d && controlThermalZone){
+        controlThermalZone->setSecondaryDaylightingControl(daylightingControl);
+        controlThermalZone->setFractionofZoneControlledbyPrimaryDaylightingControl(*d);
+      }
+    } else{
+      d = group.getDouble(Daylighting_ControlsExtensibleFields::FractionofZoneControlledbyReferencePoint, true);
+      if (d && d.get() > 0){
+        LOG(Warn, "Daylighting:Controls '" << workspaceObject.nameString() << "' reference point " << index << ", fraction of zone controlled " << *d << " not translated.");
+      }
     }
   }
-
-  d = groups[indices[1]].getDouble(Daylighting_ControlsExtensibleFields::FractionofZoneControlledbyReferencePoint);
-  if (d && thermalZone){
-    thermalZone->setFractionofZoneControlledbySecondaryDaylightingControl(*d);
-  }
-
-  d = groups[indices[1]].getDouble(Daylighting_ControlsExtensibleFields::IlluminanceSetpointatReferencePoint);
-  if (d){
-    daylightingControl2.setIlluminanceSetpoint(*d);
-  }
-
-  i = workspaceObject.getInt(Daylighting_ControlsFields::LightingControlType);
-  if (i){
-    switch (*i){
-      case 1:
-        daylightingControl2.setLightingControlType("Continuous");
-        break;
-      case 2:
-        daylightingControl2.setLightingControlType("Stepped");
-        break;
-      case 3:
-        daylightingControl2.setLightingControlType("Continuous/Off");
-        break;
-      default:
-        ;
-    }
-  }
-
-  d = workspaceObject.getDouble(Daylighting_ControlsFields::GlareCalculationAzimuthAngleofViewDirectionClockwisefromZoneyAxis);
-  if (d){
-    daylightingControl2.setThetaRotationAroundYAxis( -degToRad(*d) );
-  }
-
-  d = workspaceObject.getDouble(Daylighting_ControlsFields::MaximumAllowableDiscomfortGlareIndex);
-  if (d){
-    daylightingControl2.setMaximumAllowableDiscomfortGlareIndex(*d);
-  }
-
-  d = workspaceObject.getDouble(Daylighting_ControlsFields::MinimumInputPowerFractionforContinuousorContinuousOffDimmingControl);
-  if (d){
-    daylightingControl2.setMinimumInputPowerFractionforContinuousDimmingControl(*d);
-  }
-
-  d = workspaceObject.getDouble(Daylighting_ControlsFields::MinimumLightOutputFractionforContinuousorContinuousOffDimmingControl);
-  if (d){
-    daylightingControl2.setMinimumLightOutputFractionforContinuousDimmingControl(*d);
-  }
-
-  i = workspaceObject.getInt(Daylighting_ControlsFields::NumberofSteppedControlSteps);
-  if (i){
-    daylightingControl2.setNumberofSteppedControlSteps(*i);
-  }
-
-  d = workspaceObject.getDouble(Daylighting_ControlsFields::ProbabilityLightingwillbeResetWhenNeededinManualSteppedControl);
-  if (d){
-    daylightingControl2.setProbabilityLightingwillbeResetWhenNeededinManualSteppedControl(*d);
-  }
-
-  return daylightingControl;
+    
+  return result;
 }
 
 } // energyplus

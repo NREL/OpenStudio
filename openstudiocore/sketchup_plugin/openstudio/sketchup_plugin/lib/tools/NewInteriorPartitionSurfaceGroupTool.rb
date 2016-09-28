@@ -72,7 +72,7 @@ module OpenStudio
         partition_group.model_object.setYOrigin(initial_position.y.to_m)
         partition_group.model_object.setZOrigin(initial_position.z.to_m)      
         partition_group.draw_entity
-        partition_group.create_initial_box("#{$OpenStudio_LibPath}openstudio/sketchup_plugin/lib/resources/components/OpenStudio_NewInteriorPartitionSurfaceGroup.skp")
+        partition_group.create_initial_box("#{$OPENSTUDIO_SKETCHUPPLUGIN_DIR}/resources/components/OpenStudio_NewInteriorPartitionSurfaceGroup.skp")
         partition_group.add_observers
         partition_group.add_watcher
       

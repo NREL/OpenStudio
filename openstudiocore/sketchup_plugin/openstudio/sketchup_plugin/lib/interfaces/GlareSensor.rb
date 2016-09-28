@@ -138,7 +138,7 @@ module OpenStudio
       end    
 
       # add component definition
-      path = "#{$OpenStudio_LibPath}openstudio/sketchup_plugin/lib/resources/components/OpenStudio_GlareSensor.skp"
+      path = "#{$OPENSTUDIO_SKETCHUPPLUGIN_DIR}/resources/components/OpenStudio_GlareSensor.skp"
       definition = Sketchup.active_model.definitions.load(path)
       
       # parent entity is first a Sketchup::Group corresponding to a space
@@ -175,7 +175,7 @@ module OpenStudio
         had_observers = remove_observers
         
         # set definition
-        path = "#{$OpenStudio_LibPath}openstudio/sketchup_plugin/lib/resources/components/OpenStudio_GlareSensor.skp"
+        path = "#{$OPENSTUDIO_SKETCHUPPLUGIN_DIR}/resources/components/OpenStudio_GlareSensor.skp"
         @entity.definition = Sketchup.active_model.definitions.load(path)
         
         # need to make unique

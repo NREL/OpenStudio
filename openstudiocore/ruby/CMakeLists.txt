@@ -3,7 +3,8 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
   set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -undefined dynamic_lookup")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
   # using GCC
-  set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} --unresolved-symbols=ignore-all")
+  #set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} --unresolved-symbols=ignore-all")
+  set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} --unresolved-symbols=ignore-all")
 endif()
 
 include_directories(${RUBY_INCLUDE_DIRS} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR} )
@@ -58,6 +59,11 @@ add_library(
   openstudio_rb.cpp
 )
 
+add_custom_command(TARGET openstudio_rb
+  POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/openstudio.rb $<TARGET_FILE_DIR:openstudio_rb>/openstudio.rb 
+)
+
 set_target_properties(openstudio_rb PROPERTIES PREFIX "")
 set_target_properties(openstudio_rb PROPERTIES OUTPUT_NAME openstudio)
 if(APPLE)
@@ -80,9 +86,25 @@ target_link_libraries(openstudio_rb
   openstudio_radiance_static
 )
 
+if( UNIX AND NOT APPLE )
+  # DLM: dependencies of Qt Static plugins do not seem to be linked in to openstudio.so on Unix. Force these to link fully.
+  target_link_libraries(openstudio_rb 
+    -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libxcb-static.a" -Wl,--no-whole-archive
+  )
+  target_link_libraries(openstudio_rb 
+    -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libQt5PlatformSupport.a" -Wl,--no-whole-archive
+  )
+  target_link_libraries(openstudio_rb 
+    -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libQt5XcbQpa.a" -Wl,--no-whole-archive
+  )
+  target_link_libraries(openstudio_rb 
+    -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libQt5Sql.a" -Wl,--no-whole-archive
+  )
+endif()
+
 if( WIN32 )
   target_link_libraries(openstudio_rb ${RUBY_MINGW_STUB_LIB})
 endif()
 
 install(TARGETS openstudio_rb DESTINATION Ruby COMPONENT "RubyAPI")
-
+install(FILES openstudio.rb DESTINATION Ruby COMPONENT "RubyAPI")

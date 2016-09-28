@@ -1,5 +1,7 @@
 #include "init_openstudio.hpp"
 #include <ruby.h>
+#include <stdexcept>
+
 
 extern "C" {
   void Init_openstudioairflow(void);
@@ -35,65 +37,97 @@ extern "C" {
 }
 
 void init_openstudio_internal() {
+  rb_provide("openstudio");
+  rb_provide("openstudio.so");
+
   Init_openstudioutilitiescore();
   rb_provide("openstudioutilitiescore");
+  rb_provide("openstudioutilitiescore.so");
   Init_openstudioutilitiestime();
   rb_provide("openstudioutilitiestime");
+  rb_provide("openstudioutilitiestime.so");
   Init_openstudioutilitiesdata();
   rb_provide("openstudioutilitiesdata");
+  rb_provide("openstudioutilitiesdata.so");
   Init_openstudioutilitiesplot();
   rb_provide("openstudioutilitiesplot");
+  rb_provide("openstudioutilitiesplot.so");
   Init_openstudioutilitiesgeometry();
   rb_provide("openstudioutilitiesgeometry");
+  rb_provide("openstudioutilitiesgeometry.so");
   Init_openstudioutilitiessql();
   rb_provide("openstudioutilitiessql");
+  rb_provide("openstudioutilitiessql.so");
   Init_openstudioutilitiesbcl();
   rb_provide("openstudioutilitiesbcl");
+  rb_provide("openstudioutilitiesbcl.so");
   Init_openstudioutilitiesunits();
   rb_provide("openstudioutilitiesunits");
+  rb_provide("openstudioutilitiesunits.so");
   Init_openstudioutilitiesidd();
   rb_provide("openstudioutilitiesidd");
+  rb_provide("openstudioutilitiesidd.so");
   Init_openstudioutilitiesidf();
   rb_provide("openstudioutilitiesidf");
+  rb_provide("openstudioutilitiesidf.so");
   Init_openstudioutilitiesfiletypes();
   rb_provide("openstudioutilitiesfiletypes");
+  rb_provide("openstudioutilitiesfiletypes.so");
   Init_openstudioutilities();
   rb_provide("openstudioutilities");
+  rb_provide("openstudioutilities.so");
   Init_openstudiomodel();
   rb_provide("openstudiomodel");
+  rb_provide("openstudiomodel.so");
   Init_openstudiomodelcore();
   rb_provide("openstudiomodelcore");
+  rb_provide("openstudiomodelcore.so");
   Init_openstudiomodelsimulation();
   rb_provide("openstudiomodelsimulation");
+  rb_provide("openstudiomodelsimulation.so");
   Init_openstudiomodelresources();
   rb_provide("openstudiomodelresources");
+  rb_provide("openstudiomodelresources.so");
   Init_openstudiomodelgeometry();
   rb_provide("openstudiomodelgeometry");
+  rb_provide("openstudiomodelgeometry.so");
   Init_openstudiomodelhvac();
   rb_provide("openstudiomodelhvac");
+  rb_provide("openstudiomodelhvac.so");
   Init_openstudiomodelrefrigeration();
   rb_provide("openstudiomodelrefrigeration");
+  rb_provide("openstudiomodelrefrigeration.so");
   Init_openstudiomodelgenerators();
   rb_provide("openstudiomodelgenerators");
+  rb_provide("openstudiomodelgenerators.so");
   Init_openstudioenergyplus();
   rb_provide("openstudioenergyplus");
+  rb_provide("openstudioenergyplus.so");
   Init_openstudioradiance();
   rb_provide("openstudioradiance");
+  rb_provide("openstudioradiance.so");
   Init_openstudiogbxml();
   rb_provide("openstudiogbxml");
+  rb_provide("openstudiogbxml.so");
   Init_openstudioairflow();
   rb_provide("openstudioairflow");
+  rb_provide("openstudioairflow.so");
   Init_openstudioosversion();
   rb_provide("openstudioversion");
+  rb_provide("openstudioversion.so");
   Init_openstudiomeasure();
   rb_provide("openstudiomeasure");
+  rb_provide("openstudiomeasure.so");
   Init_openstudioisomodel();
   rb_provide("openstudioisomodel");
+  rb_provide("openstudioisomodel.so");
   Init_openstudiosdd();
   rb_provide("openstudiosdd");
+  rb_provide("openstudiosdd.so");
 
   //Init_openstudiomodeleditor(); # happens separately in openstudio.so only, for SketchUp plug-in
   //rb_provide("openstudiomodeleditor");
+  //rb_provide("openstudiomodeleditor.so");
 
   // "typedefs" for backwards compatibility
   std::string ruby_typedef_script = R"END(

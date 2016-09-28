@@ -1,16 +1,16 @@
 GIT
   remote: git://github.com/NREL/OpenStudio-workflow-gem.git
-  revision: 01ed781e8a03d63460fb863aa4f9160d6de28a97
-  ref: 01ed781e8a03d63460fb863aa4f9160d6de28a97
+  revision: 9a5a5100dae8881a2ffd8a3d7704e4f97711ad7e
+  ref: 9a5a5100dae8881a2ffd8a3d7704e4f97711ad7e
   specs:
     openstudio-workflow (1.0.0.rc1)
 
 GIT
   remote: git://github.com/NREL/openstudio-standards.git
-  revision: 639fccce66011eb4800628428409d48f086a3f3b
-  ref: 639fccce66011eb4800628428409d48f086a3f3b
+  revision: c0ec088885e64e402371a91f43c2074af0169d6c
+  ref: c0ec088885e64e402371a91f43c2074af0169d6c
   specs:
-    openstudio-standards (0.1.4)
+    openstudio-standards (0.1.5)
 
 GEM
   remote: http://rubygems.org/
@@ -20,7 +20,7 @@ GEM
       rspec-core (~> 3.5.0)
       rspec-expectations (~> 3.5.0)
       rspec-mocks (~> 3.5.0)
-    rspec-core (3.5.2)
+    rspec-core (3.5.3)
       rspec-support (~> 3.5.0)
     rspec-expectations (3.5.0)
       diff-lcs (>= 1.2.0, < 2.0)

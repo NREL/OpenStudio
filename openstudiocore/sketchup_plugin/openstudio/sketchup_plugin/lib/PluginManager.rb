@@ -17,6 +17,7 @@
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 ######################################################################
 
+require("openstudio")
 require("openstudio/sketchup_plugin/lib/AnimationManager")
 require("openstudio/sketchup_plugin/lib/CommandManager")
 require("openstudio/sketchup_plugin/lib/DialogManager")
@@ -33,6 +34,9 @@ require("openstudio/sketchup_plugin/sketchup/Sketchup")
 require("openstudio/sketchup_plugin/sketchup/Geom")
 
 require("fileutils")
+
+$OPENSTUDIO_APPLICATION_DIR
+$OPENSTUDIO_SKETCHUPPLUGIN_DIR = File.dirname(__FILE__)
 
 $OPENSTUDIO_SKETCHUPPLUGIN_DEVELOPER_MENU = false # default is false, enable to see developer menu
 $OPENSTUDIO_SKETCHUPPLUGIN_PROGRESS_DIALOGS = true # default is true, disable to speed up
@@ -110,7 +114,6 @@ module OpenStudio
 
       self.log(OpenStudio::Info, "OpenStudio Plugin started")
       self.log(OpenStudio::Info, "OpenStudio Plugin Version is #{$OPENSTUDIO_SKETCHUPPLUGIN_VERSION}")
-      self.log(OpenStudio::Info, "OpenStudio Platform Version is #{$OpenStudio_MajorVersion}.#{$OpenStudio_MinorVersion}.#{$OpenStudio_PatchVersion}.#{$OpenStudio_BuildVersion}")
       self.log(OpenStudio::Info, "SketchUp version is #{Sketchup.version}")
 
       lastversion = read_pref("Plugin Version");
