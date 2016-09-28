@@ -131,8 +131,8 @@ set(depends
   openstudio_gbxml
   openstudio_bimserver
   ${QT_WEB_LIBS}
-  ${QT_PLUGIN_LIBS}
-  ${COREFOUNDATION_LIBRARY}
+  #${QT_PLUGIN_LIBS}
+  #${COREFOUNDATION_LIBRARY}
 )
 
 target_link_libraries(${target_name} ${depends})
@@ -193,6 +193,14 @@ else()
 	  DESTINATION Resources
     COMPONENT "Resources"
   )
+endif()
+
+# since on apple the whole app bundle is installed (including these webkit components) we can exclude apple
+if( NOT APPLE )
+  install(FILES ${QtWebEngineProcess} DESTINATION bin COMPONENT OpenStudioApp )
+  install(FILES ${icudtl} DESTINATION bin COMPONENT OpenStudioApp )
+  install(PROGRAMS $<TARGET_FILE:Qt5::QWindowsIntegrationPlugin> bin/platforms/ COMPONENT OpenStudioApp)
+  install(PROGRAMS $<TARGET_FILE:Qt5::QSQLiteDriverPlugin> bin/sqldrivers/ COMPONENT OpenStudioApp)
 endif()
 
 if(WIN32 OR APPLE)
