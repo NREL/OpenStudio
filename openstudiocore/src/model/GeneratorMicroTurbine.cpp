@@ -46,8 +46,6 @@
 
 #include "StraightComponent.hpp"
 #include "StraightComponent_Impl.hpp"
-#include "GeneratorMicroTurbineHeatRecovery.hpp"
-#include "GeneratorMicroTurbineHeatRecovery_Impl.hpp"
 
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"

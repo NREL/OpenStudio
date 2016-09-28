@@ -32,7 +32,7 @@
 #include <vector>
 #include "ModelAPI.hpp"
 #include "ModelObject.hpp"
-#include <utilities/time/Date.hpp>
+#include "../utilities/time/Date.hpp"
 
 namespace openstudio {
 namespace model {
