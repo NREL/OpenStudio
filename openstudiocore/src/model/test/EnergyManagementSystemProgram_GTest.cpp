@@ -243,6 +243,20 @@ TEST_F(ModelFixture, EMSProgram_EMSProgram2) {
   EnergyManagementSystemProgram program_6(model);
   program_6.setName("name one_1");
   EXPECT_EQ("name_one_2", program_6.nameString());
+  EnergyManagementSystemProgram program_7(model);
+  program_7.setName("name one_1");
+  EXPECT_EQ("name_one_3", program_7.nameString());
+
+  EnergyManagementSystemProgram program_8(model);
+  program_8.setName("            My (!@#$^&*()least)(*&^$#@!) favorite zone            ");
+  EXPECT_EQ("____________My_(!@#$^&*()least)(*&^$#@!)_favorite_zone____________", program_8.nameString());
+  EnergyManagementSystemProgram program_9(model);
+  program_9.setName("            My (!@#$^&*()least)(*&^$#@!) favorite zone            ");
+  EXPECT_EQ("____________My_(!@#$^&*()least)(*&^$#@!)_favorite_zone_____________1", program_9.nameString());
+  EnergyManagementSystemProgram program_10(model);
+  program_10.setName("            My (!@#$^&*()least)(*&^$#@!) favorite zone             1");
+  EXPECT_EQ("____________My_(!@#$^&*()least)(*&^$#@!)_favorite_zone_____________2", program_10.nameString());
+
   model.save(toPath("./EMS_nametest.osm"), true);
 }
 
