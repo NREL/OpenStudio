@@ -84,6 +84,7 @@ target_link_libraries(openstudio_rb
   openstudio_isomodel_static
   openstudio_gbxml_static
   openstudio_radiance_static
+  openstudio_modeleditor_static
 )
 
 if( UNIX AND NOT APPLE )
