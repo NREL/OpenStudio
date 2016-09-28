@@ -18,7 +18,7 @@ chmod 755 "$config_file"
 chown $USER "$config_file"
 
 
-#---------- Install plugin for SketchUp 201 ----------
+#---------- Install plugin for SketchUp 2016 ----------
 # Check for the SketchUp 16 Application Support directory
 SU16_support_dir="/Library/Application Support/SketchUp 2016"
 mkdir -p "$SU16_support_dir/SketchUp/Plugins/OpenStudio"
