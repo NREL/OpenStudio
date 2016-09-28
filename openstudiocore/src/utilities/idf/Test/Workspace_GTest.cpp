@@ -54,7 +54,6 @@
 #include <utilities/idd/BuildingSurface_Detailed_FieldEnums.hxx>
 #include <utilities/idd/Sizing_Zone_FieldEnums.hxx>
 #include <utilities/idd/OS_WeatherFile_FieldEnums.hxx>
-#include <utilities/idd/Lights_FieldEnums.hxx>
 #include "../WorkspaceWatcher.hpp"
 #include "IdfTestQObjects.hpp"
 

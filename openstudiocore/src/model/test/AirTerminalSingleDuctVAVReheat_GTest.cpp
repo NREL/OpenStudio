@@ -36,8 +36,6 @@
 #include "../BoilerHotWater_Impl.hpp"
 #include "../CoilHeatingElectric.hpp"
 #include "../Schedule.hpp"
-#include "../AirLoopHVAC.hpp"
-#include "../PlantLoop.hpp"
 #include "../Node.hpp"
 #include "../Node_Impl.hpp"
 #include "../AirLoopHVACZoneSplitter.hpp"

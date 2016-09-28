@@ -69,7 +69,6 @@
 #include <QMessageBox>
 #include <QPainter>
 #include <QPlainTextEdit>
-#include <QProcess>
 #include <QProgressBar>
 #include <QPushButton>
 #include <QRadioButton>
@@ -86,7 +85,6 @@
 #include <QStandardPaths>
 #include <QFileSystemWatcher>
 #include <QDesktopServices>
-#include <QMessageBox>
 #include <QTcpServer>
 #include <QTcpSocket>
 
