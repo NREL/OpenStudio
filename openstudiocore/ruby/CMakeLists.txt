@@ -72,20 +72,37 @@ else()
   set_target_properties(openstudio_rb PROPERTIES SUFFIX ".so" )
 endif()
 
-target_link_libraries(openstudio_rb 
-  init_openstudio
-  ruby_OpenStudioModelEditor
-  openstudio_airflow_static
-  openstudio_model_static
-  openstudio_energyplus_static
-  openstudio_measure_static
-  openstudio_osversion_static
-  openstudio_sdd_static
-  openstudio_isomodel_static
-  openstudio_gbxml_static
-  openstudio_radiance_static
-  openstudio_modeleditor_static
-)
+if( Qt5Static )
+  target_link_libraries(openstudio_rb 
+    init_openstudio
+    ruby_OpenStudioModelEditor
+    openstudio_airflow_static
+    openstudio_model_static
+    openstudio_energyplus_static
+    openstudio_measure_static
+    openstudio_osversion_static
+    openstudio_sdd_static
+    openstudio_isomodel_static
+    openstudio_gbxml_static
+    openstudio_radiance_static
+    openstudio_modeleditor_static
+  )
+else()
+  target_link_libraries(openstudio_rb 
+    init_openstudio
+    ruby_OpenStudioModelEditor
+    openstudio_airflow
+    openstudio_model
+    openstudio_energyplus
+    openstudio_measure
+    openstudio_osversion
+    openstudio_sdd
+    openstudio_isomodel
+    openstudio_gbxml
+    openstudio_radiance
+    openstudio_modeleditor
+  )
+endif()
 
 if( UNIX AND NOT APPLE )
   # DLM: dependencies of Qt Static plugins do not seem to be linked in to openstudio.so on Unix. Force these to link fully.
