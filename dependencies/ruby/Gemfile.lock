@@ -7,10 +7,10 @@ GIT
 
 GIT
   remote: git://github.com/NREL/openstudio-standards.git
-  revision: c0ec088885e64e402371a91f43c2074af0169d6c
-  ref: c0ec088885e64e402371a91f43c2074af0169d6c
+  revision: ba8678eed4a2a4f3a950353482466bb4bb8a2072
+  ref: ba8678eed4a2a4f3a950353482466bb4bb8a2072
   specs:
-    openstudio-standards (0.1.5)
+    openstudio-standards (0.1.6)
 
 GEM
   remote: http://rubygems.org/
