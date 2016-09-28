@@ -715,6 +715,11 @@ set(depends
 )
 
 target_link_libraries(${target_name} ${depends})
+
+if( Qt5Static )
+  target_link_libraries(${target_name} ${QT_SHARED_LIBS})
+endif()
+
 AddPCH(${target_name})
 
 set(${target_name}_test_src

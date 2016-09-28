@@ -44,6 +44,16 @@ add_library(${target_name} ${${target_name}_src} ${${target_name}_qrc_src})
 target_link_libraries(${target_name} ${${target_name}_depends})
 AddPCH(${target_name})
 
+if( Qt5Static )
+  set(${target_name}_static_depends
+    openstudio_model_static
+  )
+  
+  add_library(${target_name}_static ${${target_name}_src} ${${target_name}_qrc_src})
+  
+  target_link_libraries(${target_name}_static ${${target_name}_static_depends})
+endif()
+
 # No need to install static library
 #if(NOT APPLE)
 #  install(TARGETS ${target_name}

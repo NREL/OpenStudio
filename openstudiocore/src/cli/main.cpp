@@ -16,6 +16,15 @@
 #include <windows.h>
 #endif
 
+#ifdef Q_OS_WIN
+#pragma warning(disable : 4930 )
+#pragma warning(disable : 4101 )
+#endif
+  
+#ifdef QT_STATIC
+Q_IMPORT_PLUGIN(QSQLiteDriverPlugin);
+#endif
+
 
 extern "C" {
   void Init_EmbeddedScripting(void);
@@ -242,10 +251,6 @@ int main(int argc, char *argv[])
 
     Init_EmbeddedScripting();
   }
-  
-  #ifdef QT_STATIC
-  Q_IMPORT_PLUGIN(QSQLiteDriverPlugin);
-  #endif
 
   // Need embedded_help for requiring files out of the embedded system
   auto embedded_extensions_string = embedded_files::getFileAsString(":/embedded_help.rb");

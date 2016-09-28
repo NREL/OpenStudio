@@ -42,6 +42,18 @@ set(${target_name}_test_depends
   ${${target_name}_depends}
 )
 
+if( Qt5Static )
+  add_library(${target_name}_static
+    ${${target_name}_src}
+  )
+
+  set(${target_name}_static_depends
+    openstudio_model_static
+  )
+
+  target_link_libraries(${target_name}_static ${${target_name}_static_depends})
+endif()
+
 CREATE_SRC_GROUPS("${${target_name}_src}")
 CREATE_SRC_GROUPS("${${target_name}_test_src}")
 CREATE_SRC_GROUPS("${${target_name}_swig_src}")

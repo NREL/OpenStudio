@@ -45,9 +45,9 @@ target_link_libraries(init_openstudio
  ruby_OpenStudioModel
  ruby_OpenStudioModelResources
  ruby_OpenStudioUtilitiesIdf
- openstudio_utilities
- ${Boost_LIBRARIES}
- ${QT_LIBS}
+ #openstudio_utilities
+ #${Boost_LIBRARIES}
+ #${QT_STATIC_LIBS}
 )
 
 # openstudio ruby bindings to load into normal ruby
@@ -69,12 +69,16 @@ endif()
 target_link_libraries(openstudio_rb 
   init_openstudio
   ruby_OpenStudioModelEditor
+  openstudio_airflow_static
+  openstudio_model_static
+  openstudio_energyplus_static
+  openstudio_measure_static
+  openstudio_osversion_static
+  openstudio_sdd_static
+  openstudio_isomodel_static
+  openstudio_gbxml_static
+  openstudio_radiance_static
 )
-
-target_link_libraries(openstudio_rb 
-)
-
-
 
 if( WIN32 )
   target_link_libraries(openstudio_rb ${RUBY_MINGW_STUB_LIB})
