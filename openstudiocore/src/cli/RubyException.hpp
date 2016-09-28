@@ -26,8 +26,8 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
 
-#ifndef UTILITIES_CORE_RUBYEXCEPTION_HPP
-#define UTILITIES_CORE_RUBYEXCEPTION_HPP
+#ifndef CLI_RUBYEXCEPTION_HPP
+#define CLI_RUBYEXCEPTION_HPP
 
 #include <stdexcept>
 #include <string>
@@ -52,4 +52,4 @@
   };
 
 
-#endif // UTILITIES_CORE_RUBYEXCEPTION_HPP
+#endif // CLI_RUBYEXCEPTION_HPP

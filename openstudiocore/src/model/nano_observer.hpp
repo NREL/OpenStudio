@@ -1,5 +1,5 @@
-#ifndef NANO_OBSERVER_HPP
-#define NANO_OBSERVER_HPP
+#ifndef MODEL_NANO_OBSERVER_HPP
+#define MODEL_NANO_OBSERVER_HPP
 
 #include "nano_function.hpp"
 
@@ -109,4 +109,4 @@ class Observer
 
 } // namespace Nano ------------------------------------------------------------
 
-#endif // NANO_OBSERVER_HPP
+#endif // MODEL_NANO_OBSERVER_HPP

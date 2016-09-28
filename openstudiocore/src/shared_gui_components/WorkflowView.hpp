@@ -26,8 +26,8 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
 
-#ifndef SHAREDGUICOMPONENTS_VARIABLEVIEW_HPP
-#define SHAREDGUICOMPONENTS_VARIABLEVIEW_HPP
+#ifndef SHAREDGUICOMPONENTS_WORKFLOWVIEW_HPP
+#define SHAREDGUICOMPONENTS_WORKFLOWVIEW_HPP
 
 #include "OSCollapsibleView.hpp"
 #include "OSListView.hpp"
@@ -183,4 +183,4 @@ class WorkflowStepButton : public QAbstractButton
 
 } // openstudio
 
-#endif // SHAREDGUICOMPONENTS_VARIABLEVIEW_HPP
+#endif // SHAREDGUICOMPONENTS_WORKFLOWVIEW_HPP

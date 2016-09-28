@@ -26,8 +26,8 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
 
-#ifndef UTILITIES_CORE_RUBYINTERPRETER_HPP
-#define UTILITIES_CORE_RUBYINTERPRETER_HPP
+#ifndef CLI_RUBYINTERPRETER_HPP
+#define CLI_RUBYINTERPRETER_HPP
 
 #include "RubyException.hpp"
 
@@ -1570,4 +1570,4 @@ class RubyInterpreter
 #endif
 
 
-#endif // UTILITIES_CORE_RUBYINTERPRETER_HPP
+#endif // CLI_RUBYINTERPRETER_HPP

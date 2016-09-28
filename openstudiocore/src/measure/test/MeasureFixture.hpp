@@ -26,8 +26,8 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
 
-#ifndef RULESET_TEST_MeasureFixture_HPP
-#define RULESET_TEST_MeasureFixture_HPP
+#ifndef MEASURE_TEST_MEASUREFIXTURE_HPP
+#define MEASURE_TEST_MEASUREFIXTURE_HPP
 
 #include <gtest/gtest.h>
 
@@ -65,4 +65,4 @@ class MeasureFixture : public ::testing::Test {
   virtual ~MeasureFixture() {}
 };
 
-#endif // RULESET_TEST_MeasureFixture_HPP
+#endif // MEASURE_TEST_MEASUREFIXTURE_HPP

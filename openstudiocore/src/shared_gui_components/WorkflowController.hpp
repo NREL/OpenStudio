@@ -26,8 +26,8 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
 
-#ifndef SHAREDGUICOMPONENTS_VARIABLELIST_HPP
-#define SHAREDGUICOMPONENTS_VARIABLELIST_HPP
+#ifndef SHAREDGUICOMPONENTS_WORKFLOWCONTROLLER_HPP
+#define SHAREDGUICOMPONENTS_WORKFLOWCONTROLLER_HPP
 
 #include "OSListController.hpp"
 #include "OSListView.hpp"
@@ -254,4 +254,4 @@ class MeasureStepItem : public OSListItem
 
 } // openstudio
 
-#endif // SHAREDGUICOMPONENTS_VARIABLELIST_HPP
+#endif // SHAREDGUICOMPONENTS_WORKFLOWCONTROLLER_HPP
