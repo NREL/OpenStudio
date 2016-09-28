@@ -1993,6 +1993,10 @@ namespace detail {
           ++count;
       }
       if (suffix > 0 && count == strSuffix.size() ) {
+        //debugging end name space issues
+        //std::string temp = objectName.substr(0, found);
+        //int size_temp = temp.size();
+        //int size = objectName.size();
         return objectName.substr(0, found);
       }
     }

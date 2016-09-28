@@ -483,30 +483,9 @@ namespace detail {
         m_fields.push_back(newName);
         m_diffs.push_back(IdfObjectDiff(i, boost::none, newName));
       }
-      switch (m_iddObject.type().value()) {
-        // get all EMS idd object types in both E+ and OS IDD
-      case openstudio::IddObjectType::EnergyManagementSystem_Actuator:; // deliberate fall through
-      case openstudio::IddObjectType::OS_EnergyManagementSystem_Actuator:; // deliberate fall through
-      case openstudio::IddObjectType::EnergyManagementSystem_ConstructionIndexVariable:; // TODO uncomment when wrapped
-      case openstudio::IddObjectType::OS_EnergyManagementSystem_ConstructionIndexVariable:; // deliberate fall through
-      case openstudio::IddObjectType::EnergyManagementSystem_CurveOrTableIndexVariable:; // TODO uncomment when wrapped
-      case openstudio::IddObjectType::OS_EnergyManagementSystem_CurveOrTableIndexVariable:; // deliberate fall through
-      case openstudio::IddObjectType::EnergyManagementSystem_GlobalVariable:; // deliberate fall through
-      case openstudio::IddObjectType::OS_EnergyManagementSystem_GlobalVariable:; // deliberate fall through
-      case openstudio::IddObjectType::EnergyManagementSystem_InternalVariable:; // deliberate fall through
-      case openstudio::IddObjectType::OS_EnergyManagementSystem_InternalVariable:; // deliberate fall through
-      case openstudio::IddObjectType::EnergyManagementSystem_Program:; // deliberate fall through
-      case openstudio::IddObjectType::OS_EnergyManagementSystem_Program:; // deliberate fall through
-      case openstudio::IddObjectType::EnergyManagementSystem_Sensor:; // deliberate fall through
-      case openstudio::IddObjectType::OS_EnergyManagementSystem_Sensor:; // deliberate fall through
-      case openstudio::IddObjectType::EnergyManagementSystem_Subroutine:; // deliberate fall through
-      case openstudio::IddObjectType::OS_EnergyManagementSystem_Subroutine:; // deliberate fall through
-      case openstudio::IddObjectType::EnergyManagementSystem_TrendVariable:; // deliberate fall through
-      case openstudio::IddObjectType::OS_EnergyManagementSystem_TrendVariable:; // deliberate fall through
-        return newName; // success!
-      default:
-        return _newName; // success!
-      }
+      //return decoded string since we might have made changes to it if its an EMS object.
+      newName = decodeString(newName);
+      return newName; // success!
     }
     return boost::none; // no name
   }
