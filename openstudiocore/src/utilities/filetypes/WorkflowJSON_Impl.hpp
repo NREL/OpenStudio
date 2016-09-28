@@ -39,7 +39,7 @@
 #include "../data/Attribute.hpp"
 
 // DLM: this should be somewhere different
-#include <model/nano_signal_slot.hpp> 
+#include "../../model/nano_signal_slot.hpp"
 
 #include <jsoncpp/json.h>
 

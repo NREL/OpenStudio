@@ -34,7 +34,7 @@
 #include "../model/ModelObject_Impl.hpp"
 #include "../utilities/core/Assert.hpp"
 
-#include <model/nano_signal_slot.hpp>
+#include "../model/nano_signal_slot.hpp"
 #include <QStyleOption>
 #include <QPainter>
 #include <QVBoxLayout>

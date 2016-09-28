@@ -29,7 +29,7 @@
 #ifndef MODEL_MATERIALPROPERTYGLAZINGSPECTRALDATA_HPP
 #define MODEL_MATERIALPROPERTYGLAZINGSPECTRALDATA_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "ResourceObject.hpp"
 
 namespace openstudio {
