@@ -976,8 +976,8 @@ if( Qt5Static )
   endif()
 
   if( UNIX )
-    find_package(Qt5DBus 5.6.0 REQUIRED HINTS ${QT_STATIC_INSTALL_DIR})
-    list(APPEND QT_STATIC_LIBS Qt5::DBus)
+    find_library(Qt5DBusStatic NAMES QtDBus Qt5DBus PATHS "${QT_STATIC_INSTALL_DIR}/lib/")
+    list(APPEND QT_STATIC_LIBS "${Qt5DBusStatic}")
     
     find_package(OpenGL REQUIRED)
     list(APPEND QT_STATIC_LIBS "${OPENGL_LIBRARIES}")
@@ -1137,6 +1137,8 @@ if( Qt5Static )
     endif()
   endif()
 endif()
+
+message("QT_STATIC_LIBS: ${QT_STATIC_LIBS}")
 
 ###############################################################################
 ## jsoncpp
