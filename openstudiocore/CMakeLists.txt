@@ -32,6 +32,11 @@ set(ENERGYPLUS_VERSION_PATCH 0)
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
 set(ENERGYPLUS_BUILD_SHA "a17aa64355")
+# temp hack to get E+ build that works on CentOS 6.6
+if(EXISTS "/etc/redhat-release")
+  set(ENERGYPLUS_BUILD_SHA "57127b7bff")
+endif()
+
 
 # Radiance
 set(RADIANCE_VERSION "5.0.a.8")
@@ -73,7 +78,9 @@ option(BUILD_DOCUMENTATION "Build Documentation" OFF)
 
 # Build CSharp bindings
 # Requires: SWIG
-option(BUILD_CSHARP_BINDINGS "Build CSharp bindings" OFF)
+if(WIN32)
+  option(BUILD_CSHARP_BINDINGS "Build CSharp bindings" OFF)
+endif()
 
 # Build Java bindings
 # Requires: SWIG
@@ -315,12 +322,10 @@ if(UNIX)
     set(ENERGYPLUS_EXPECTED_HASH 8c161fb4b450aba79acb1abcd08fdb41)
     set(ENERGYPLUS_PLATFORM "Darwin-x86_64")
   elseif(EXISTS "/etc/redhat-release")
-    #message(FATAL_ERROR "EnergyPlus ${ENERGYPLUS_VERSION} redhat build missing")
-    set(ENERGYPLUS_EXPECTED_HASH ea8cb9e9efc622a85d82fe2306281420)
+    set(ENERGYPLUS_EXPECTED_HASH a4b66ff961ac07d3f5e5714f4efc0cc3)
     set(ENERGYPLUS_PLATFORM "Redhat-x86_64")
-    #message(FATAL_ERROR "EnergyPlus ${ENERGYPLUS_PLATFORM} redhat build missing")
   else()
-    set(ENERGYPLUS_EXPECTED_HASH 0053d9b145f9c3485bb49f85ddb61f6c)
+    set(ENERGYPLUS_EXPECTED_HASH f0aa293774f74b6d018439b183fe7ade)
     set(ENERGYPLUS_PLATFORM "Linux-x86_64")
   endif()
   set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-${ENERGYPLUS_PLATFORM}")
@@ -415,7 +420,11 @@ if(NOT EXISTS ${RUBY_INSTALL_DIR})
     set(RUBY_ZIP_FILENAME "ruby_2_0_0_osx_static.tar.gz")
     set(RUBY_ZIP_EXPECTED_MD5 "5d02dca3f18b4e286ee26c84bcecb06a")
   elseif(EXISTS "/etc/redhat-release")
+    set(RUBY_ZIP_FILENAME "ruby_2_0_0_redhat_static.tar.gz")
+    set(RUBY_ZIP_EXPECTED_MD5 "712d2ecdd3edc5d5ec179e50c22d8a96")
   else()
+    set(RUBY_ZIP_FILENAME "ruby_2_0_0_linux_static.tar.gz")
+    set(RUBY_ZIP_EXPECTED_MD5 "59a5146c99e330cd643e77d554c7ec18")
   endif()
 
   set(RUBY_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${RUBY_ZIP_FILENAME}")
@@ -486,8 +495,8 @@ endif()
 
 # openstudio gems
 
-set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20160830.tar.gz")
-set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "96ac524886d2568f00b8a52a0b6207cd")
+set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20160921.tar.gz")
+set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "1cf54265175291596daa87eae91467e4")
 
 set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
 if(EXISTS "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}")
@@ -551,7 +560,7 @@ if(BUILD_WITH_OPENSSL)
   endif()
 endif()
 
-# swig
+# SWIG
 
 if(UNIX)
   # We patch it up with a version of pcre we provide to avoid having to have the requirement locally
@@ -583,6 +592,7 @@ else()
   set(SWIG_EXECUTABLE ${CMAKE_BINARY_DIR}/${SWIG_DIR}/swig.exe)
 endif()
 
+
 set(ALL_RUBY_BINDING_TARGETS "") # global list
 
 # build rdoc
@@ -606,7 +616,9 @@ endif()
 
 # C#
 if(BUILD_CSHARP_BINDINGS)
-  set(ALL_CSHARP_BINDING_TARGETS "") # global list
+  set(ALL_CSHARP_BINDING_DEPENDS "") # global list of library dependencies of the generated wrapper cxx files
+  set(ALL_CSHARP_WRAPPER_FILES "") # global list of generated wrapper cxx files
+  set(ALL_CSHARP_WRAPPER_TARGETS "") # global list targets that build generated wrapper cxx files
 endif()
 
 # JAVA
@@ -765,7 +777,11 @@ if(NOT EXISTS ${BOOST_INSTALL_DIR})
       set(BOOST_ZIP_FILENAME "boost_1_55_0_osx.tar.gz")
       set(BOOST_ZIP_EXPECTED_MD5 "9e4c01a3f5c63e3bbf5cc76021eceb75")
   elseif(EXISTS "/etc/redhat-release")
+    set(BOOST_ZIP_FILENAME "boost_1_55_0_redhat.tar.gz")
+    set(BOOST_ZIP_EXPECTED_MD5 "de952e0c36900a3ad000d74a1c41b7d2")
   else()
+    set(BOOST_ZIP_FILENAME "boost_1_55_0_linux.tar.gz")
+    set(BOOST_ZIP_EXPECTED_MD5 "6b206a76268cd1a98d00d4aafb897ac9")
   endif()
 
   set(BOOST_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${BOOST_ZIP_FILENAME}")
@@ -823,9 +839,11 @@ if(NOT EXISTS ${QT_INSTALL_DIR})
       set(QT_ZIP_FILENAME "qt_5_6_osx_shared.tar.gz")
       set(QT_ZIP_EXPECTED_MD5 "326887393d55b5da97a1be9764fb0d1b")
   elseif(EXISTS "/etc/redhat-release")
-    message(SEND_ERROR "Shared Redhat Qt build not available")
+    set(QT_ZIP_FILENAME "qt_5_6_redhat_shared.tar.gz")
+    set(QT_ZIP_EXPECTED_MD5 "103b00e9327e5ba180c693588f21fbed")
   else()
-    message(SEND_ERROR "Shared Ubuntu Qt build not available")
+    set(QT_ZIP_FILENAME "qt_5_6_linux_shared.tar.gz")
+    set(QT_ZIP_EXPECTED_MD5 "699f5f45db2abbeff420f7823d1aecf3")
   endif()
 
   set(QT_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${QT_ZIP_FILENAME}")
@@ -1416,15 +1434,15 @@ install(FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/ReleaseNotes.md" DESTINAT
 ###############################################################################
 
 
-if(UNIX AND NOT APPLE)
-  # if we build on Linux and we built our own Qt, let's grab said Qt and install it
-  if(CMAKE_PREFIX_PATH MATCHES ".*Qt-install.*")
-    install(DIRECTORY "${CMAKE_BINARY_DIR}/../../../Qt-prefix/src/Qt-install/lib"
-            DESTINATION .)
-    install(DIRECTORY "${CMAKE_BINARY_DIR}/../../../Qt-prefix/src/Qt-install/share"
-            DESTINATION .)
-  endif()
-endif()
+#if(UNIX AND NOT APPLE)
+#  # if we build on Linux and we built our own Qt, let's grab said Qt and install it
+#  if(CMAKE_PREFIX_PATH MATCHES ".*Qt-install.*")
+#    install(DIRECTORY "${CMAKE_BINARY_DIR}/../../../Qt-prefix/src/Qt-install/lib"
+#            DESTINATION .)
+#    install(DIRECTORY "${CMAKE_BINARY_DIR}/../../../Qt-prefix/src/Qt-install/share"
+#            DESTINATION .)
+#  endif()
+#endif()
 
 if(NOT UNIX)
   #execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_SOURCE_DIR}/../dependencies/strawberry-perl-5.16.2.1-32bit-portable-reduced.tar.bz2"
@@ -1520,6 +1538,11 @@ cpack_add_component(RubyAPI
   DESCRIPTION "Ruby API"
 )
 
+cpack_add_component(CSharpAPI
+  DISPLAY_NAME "C# API"
+  DESCRIPTION "C# API"
+)
+
 cpack_add_component(PAT
   DISPLAY_NAME "Parametric Analysis Tool"
   DESCRIPTION "Parametric Analysis Tool"
@@ -1542,7 +1565,7 @@ cpack_add_component(Resources
 
 cpack_ifw_configure_component(OpenStudioApp
   DEPENDS Resources CLI
-  SCRIPT src/OpenStudio_app/install_operations.qs
+  SCRIPT src/openstudio_app/install_operations.qs
 )
 
 cpack_ifw_configure_component(CLI
