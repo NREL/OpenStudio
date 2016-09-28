@@ -36,7 +36,7 @@
 #include "ModelObject_Impl.hpp"
 
 #include "ComponentData_Impl.hpp"
-#include "nano_signal_slot.hpp"
+#include "../nano/nano_signal_slot.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Compare.hpp"
