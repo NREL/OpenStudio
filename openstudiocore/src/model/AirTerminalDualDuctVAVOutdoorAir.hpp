@@ -27,11 +27,7 @@ namespace openstudio {
 
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class Schedule;
-/*class Connection;
-class Connection;
-class Connection;*/
 class AirLoopHVAC;
 class Model;
 class Node;

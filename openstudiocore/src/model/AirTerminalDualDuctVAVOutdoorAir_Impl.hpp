@@ -26,11 +26,8 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class Schedule;
-class Connection;
-class Connection;
-class Connection;
+class Node;
 class DesignSpecificationOutdoorAir;
 
 namespace detail {
@@ -70,6 +67,16 @@ namespace detail {
     //@{
 
     boost::optional<Schedule> availabilitySchedule() const;
+
+    unsigned outletPort() const;
+
+    unsigned inletPort(unsigned branchIndex) const;
+
+    unsigned nextInletPort() const;
+
+    unsigned newInletPortAfterBranch(unsigned branchIndex);
+
+    void removePortForBranch(unsigned branchIndex);
 
     boost::optional<Node> OutdoorAirInletNode() const;
 
@@ -112,6 +119,10 @@ namespace detail {
     // There are other ways for the public versions of these getters to fail--perhaps all required
     // objects should be returned as boost::optionals
     boost::optional<DesignSpecificationOutdoorAir> optionalDesignSpecificationOutdoorAirObject() const;
+    std::vector<IdfObject> remove();
+    bool addToNode(Node & node);
+    ModelObject clone(Model model) const;
+    bool isRemovable() const;
   };
 
 } // detail
