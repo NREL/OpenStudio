@@ -284,6 +284,13 @@ module Ruleset
 end # module Ruleset
 end # module OpenStudio
 
+module OpenStudio
+  def self.getSharedResourcesPath()
+    OpenStudio::logFree(OpenStudio::Warn, "OpenStudio", "getSharedResourcesPath is deprecated.")
+    return OpenStudio::Path.new()
+  end
+end # module OpenStudio
+
 )END";
 
   evalString(ruby_typedef_script);
