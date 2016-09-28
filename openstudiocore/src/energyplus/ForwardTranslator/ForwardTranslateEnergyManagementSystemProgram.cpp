@@ -65,7 +65,7 @@ boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemPro
   }
 
   const Model m = modelObject.model();
-  const std::vector<model::ModelObject> modelObjects = m.getModelObjects<model::ModelObject>();
+  boost::optional<ModelObject> mObject;
 
   for (const IdfExtensibleGroup& eg : modelObject.extensibleGroups()) { 
     IdfExtensibleGroup group = idfObject.pushExtensibleGroup();
@@ -79,18 +79,14 @@ boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemPro
         possible_uid = *j++;
         //look to see if uid is in the model and return the object
         UUID uid = toUUID(possible_uid);
-        if (modelObjects.size() > 0) {
-          for (size_t k = 0; k < modelObjects.size(); k++) {
-            if (modelObjects.at(k).handle() == uid) {
-              //replace uid with namestring
-              pos = newline.find(possible_uid);
-              if (pos+38 <= newline.length()) {
-                newline.replace(pos, 38, modelObjects.at(k).nameString());
-              }
-              break;
-            };
+        mObject = m.getModelObject<model::ModelObject>(uid);
+        if (mObject) {
+          //replace uid with namestring
+          pos = newline.find(possible_uid);
+          if (pos + 38 <= newline.length()) {
+            newline.replace(pos, 38, mObject.get().nameString());
           }
-        };
+        }
       }
       group.setString(EnergyManagementSystem_ProgramExtensibleFields::ProgramLine, newline);     
     }

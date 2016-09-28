@@ -92,5 +92,17 @@ TEST_F(ModelFixture, EMSSensor_EMSSensor)
   EXPECT_EQ(meter.handle(), meter_sensor.outputMeter().get().handle());
   EXPECT_EQ(meter, meter_sensor.outputMeter());
   EXPECT_EQ("", meter_sensor.keyName().get());
+
+  ASSERT_TRUE(OATdbSensor.outputVariable());
+  ASSERT_FALSE(OATdbSensor.outputMeter());
+  siteOutdoorAirDrybulbTemperature.remove();
+  ASSERT_FALSE(OATdbSensor.outputVariable());
+  ASSERT_FALSE(OATdbSensor.outputMeter());
+
+  ASSERT_TRUE(meter_sensor.outputMeter());
+  ASSERT_FALSE(meter_sensor.outputVariable());
+  meter.remove();
+  ASSERT_FALSE(meter_sensor.outputVariable());
+  ASSERT_FALSE(meter_sensor.outputMeter());
 }
 

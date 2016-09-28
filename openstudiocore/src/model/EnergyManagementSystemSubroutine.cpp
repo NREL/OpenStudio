@@ -298,7 +298,7 @@ namespace detail {
     std::string possible_uid;
 
     const Model m = this->model();
-    const std::vector<model::ModelObject> modelObjects = m.getModelObjects<model::ModelObject>();
+    boost::optional<ModelObject> modelObject;
 
     boost::optional<std::vector<std::string>> body = this->lines();
     if (body.is_initialized()) {
@@ -311,15 +311,10 @@ namespace detail {
           possible_uid = *j++;
           //look to see if uid is in the model and return the object
           UUID uid = toUUID(possible_uid);
-          //TODO cant get below to work so try the manual way
-          //m.getModelObjects<model::ModelObject>(&uid);
-          if (modelObjects.size() > 0) {
-            for (size_t k = 0; k < modelObjects.size(); k++) {
-              if (modelObjects.at(k).handle() == uid) {
-                result.push_back(modelObjects.at(k));
-              };
-            }
-          };
+          modelObject = m.getModelObject<model::ModelObject>(uid);
+          if (modelObject) {
+            result.push_back(modelObject.get());
+          }
         }
       }
     }
@@ -333,7 +328,7 @@ namespace detail {
     std::string possible_uid;
 
     const Model m = this->model();
-    const std::vector<model::ModelObject> modelObjects = m.getModelObjects<model::ModelObject>();
+    boost::optional<ModelObject> modelObject;
 
     boost::optional<std::vector<std::string>> body = this->lines();
     if (body.is_initialized()) {
@@ -348,15 +343,10 @@ namespace detail {
           found = 1;
           //look to see if uid is in the model and return the object
           UUID uid = toUUID(possible_uid);
-          //TODO cant get below to work so try the manual way
-          //m.getModelObjects<model::ModelObject>(&uid);
-          if (modelObjects.size() > 0) {
-            for (size_t k = 0; k < modelObjects.size(); k++) {
-              if (modelObjects.at(k).handle() == uid) {
-                found++;
-              };
-            }
-          };
+          modelObject = m.getModelObject<model::ModelObject>(uid);
+          if (modelObject) {
+            found++;
+          }
         }
         //possible uid NOT found in model
         if (found == 1) {

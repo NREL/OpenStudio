@@ -50,8 +50,6 @@ boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemPro
 {
   boost::optional<std::string> s;
 
-  //IdfObject idfObject(openstudio::IddObjectType::EnergyManagementSystem_Program);
-  //m_idfObjects.push_back(idfObject);
   IdfObject pcm = createAndRegisterIdfObject(openstudio::IddObjectType::EnergyManagementSystem_ProgramCallingManager, modelObject);
   //Name
   s = modelObject.name();
