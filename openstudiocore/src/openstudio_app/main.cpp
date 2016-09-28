@@ -57,7 +57,9 @@ int main(int argc, char *argv[])
   }
   */
 
+#ifdef QT_STATIC
   Q_INIT_RESOURCE(openstudio);
+#endif
 
 #if _DEBUG || (__GNUC__ && !NDEBUG)
 #ifdef _WIN32
