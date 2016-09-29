@@ -68,6 +68,20 @@ class MODEL_API BuildingUnit : public ModelObject {
 
   std::vector<Space> spaces() const;
 
+  std::vector<std::string> featureNames() const;
+
+  boost::optional<std::string> getFeatureDataType(const std::string& name) const;
+
+  boost::optional<std::string> getFeatureAsString(const std::string& name) const;
+
+  boost::optional<double> getFeatureAsDouble(const std::string& name) const;
+
+  boost::optional<int> getFeatureAsInteger(const std::string& name) const;
+
+  boost::optional<bool> getFeatureAsBoolean(const std::string& name) const;
+
+  std::vector<std::string> suggestedFeatures() const;
+
 
   //@}
   /** @name Setters */
@@ -80,6 +94,18 @@ class MODEL_API BuildingUnit : public ModelObject {
   bool setBuildingUnitType(const std::string& buildingUnitType);
 
   void resetBuildingUnitType();
+
+  bool setFeature(const std::string& name, const std::string& value);
+
+  bool setFeature(const std::string& name, const char* value);
+
+  bool setFeature(const std::string& name, double value);
+
+  bool setFeature(const std::string& name, int value);
+
+  bool setFeature(const std::string& name, bool value);
+
+  bool resetFeature(const std::string& name);
 
   //@}
 
