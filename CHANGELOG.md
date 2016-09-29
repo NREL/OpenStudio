@@ -1,3 +1,17 @@
+## OpenStudio v1.13.0
+###### 2016-10-01 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.12.6...v1.13.0 )
+
+- ![Fixed:][fixed] [#2308]( https://github.com/NREL/OpenStudio/issues/2308 ), OS App crashes when switching to Measures tab with specific model
+- ![Fixed:][fixed] [#2355]( https://github.com/NREL/OpenStudio/pull/2355 ), Updates openstudio-standards gem to 0.1.5, which supports baseline au…
+- ![Fixed:][fixed] [#2356]( https://github.com/NREL/OpenStudio/pull/2356 ), Os 2 0 fix static build
+- ![Fixed:][fixed] [#2359]( https://github.com/NREL/OpenStudio/pull/2359 ), License update
+- ![Fixed:][fixed] [#2361]( https://github.com/NREL/OpenStudio/pull/2361 ), Updates openstudio-standards to 0.1.6
+
+## OpenStudio v1.12.6
+###### 2016-09-21 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.12.5...v1.12.6 )
+
+- ![Fixed:][fixed] [#2353]( https://github.com/NREL/OpenStudio/pull/2353 ), Os 2 0 develop linux
+
 ## OpenStudio v1.12.5
 ###### 2016-09-09 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.12.4...v1.12.5 )
 
