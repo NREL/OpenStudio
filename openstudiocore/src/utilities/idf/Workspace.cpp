@@ -1924,13 +1924,7 @@ namespace detail {
   }
 
   std::tuple<boost::optional<int>, std::string> Workspace_Impl::getNameSuffix(const std::string& objectName) const {
-    //Mark method
-    //std::size_t found = objectName.find_last_of(' ');
-    //if (found == string::npos) {
-    //  found = objectName.find_last_of('_');
-    //}
-    //Dan method
-    
+
     std::size_t found1 = objectName.find_last_of(' ');
     std::size_t found2 = objectName.find_last_of('_');
     std::size_t found = string::npos;
@@ -1964,13 +1958,7 @@ namespace detail {
   }
 
   std::string Workspace_Impl::getBaseName(const std::string& objectName) const {
-    //Mark method
-    //std::size_t found = objectName.find_last_of(' ');
-    //if (found == string::npos) {
-    //  found = objectName.find_last_of('_');
-    //}
-    //Dan method
-    
+ 
     std::size_t found1 = objectName.find_last_of(' ');
     std::size_t found2 = objectName.find_last_of('_');
     std::size_t found = string::npos;
@@ -1993,10 +1981,6 @@ namespace detail {
           ++count;
       }
       if (suffix > 0 && count == strSuffix.size() ) {
-        //debugging end name space issues
-        //std::string temp = objectName.substr(0, found);
-        //int size_temp = temp.size();
-        //int size = objectName.size();
         return objectName.substr(0, found);
       }
     }
