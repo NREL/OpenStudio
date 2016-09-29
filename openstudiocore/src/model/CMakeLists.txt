@@ -148,8 +148,6 @@ set(${target_name}_src
   BuildingUnit.hpp
   BuildingUnit_Impl.hpp
   BuildingUnit.cpp
-  TypedFeature.hpp
-  TypedFeature.cpp
 ##  CentralHeatPumpSystem.hpp
 ##  CentralHeatPumpSystem_Impl.hpp
 ##  CentralHeatPumpSystem.cpp
