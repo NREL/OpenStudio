@@ -29,7 +29,7 @@
 #ifndef MODEL_GENERATORMICROTURBINEHEATRECOVERY_HPP
 #define MODEL_GENERATORMICROTURBINEHEATRECOVERY_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "StraightComponent.hpp"
 
 

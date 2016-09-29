@@ -32,7 +32,7 @@
 #include "MainTabView.hpp"
 #include "../model/Model.hpp"
 #include "../model/OutputVariable.hpp"
-#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
+#include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
 #include <boost/optional.hpp>
 
 class QComboBox;

@@ -29,7 +29,7 @@
 #ifndef OPENSTUDIO_UTILITYBILLSVIEW_HPP
 #define OPENSTUDIO_UTILITYBILLSVIEW_HPP
 
-#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
+#include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
 #include "ModelObjectInspectorView.hpp"
 #include "ModelSubTabView.hpp"
 

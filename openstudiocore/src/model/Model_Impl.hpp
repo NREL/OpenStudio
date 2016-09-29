@@ -36,7 +36,7 @@
 #include "YearDescription.hpp"
 #include "WeatherFile.hpp"
 
-#include "nano_signal_slot.hpp" // Signal-Slot replacement
+#include "../nano/nano_signal_slot.hpp" // Signal-Slot replacement
 
 #include "../utilities/idf/Workspace.hpp"
 #include "../utilities/idf/Workspace_Impl.hpp"

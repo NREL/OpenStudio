@@ -30,7 +30,7 @@
 #define OPENSTUDIO_MODELOBJECTTREEWIDGET_HPP
 
 #include "OSItemSelector.hpp"
-#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
+#include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
 
 #include "../model/Model.hpp"
 

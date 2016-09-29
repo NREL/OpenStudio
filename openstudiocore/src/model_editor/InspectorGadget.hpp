@@ -38,7 +38,7 @@
 
 #include "ModelEditorAPI.hpp"
 
-#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
+#include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
 
 #include "../utilities/idd/IddField.hpp"
 #include "../utilities/idf/Workspace.hpp"

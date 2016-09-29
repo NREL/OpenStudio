@@ -31,7 +31,7 @@
 
 #include "ModelAPI.hpp"
 #include "ModelObject.hpp" // required for Q_PROPERTY
-#include "nano_signal_slot.hpp" // Signal-Slot replacement
+#include "../nano/nano_signal_slot.hpp" // Signal-Slot replacement
 
 #include "../utilities/idf/WorkspaceObject_Impl.hpp"
 

@@ -31,7 +31,7 @@
 #include "../core/Application.hpp"
 
 #include <cmath>
-#include <model/nano_signal_slot.hpp>
+#include <nano/nano_signal_slot.hpp>
 
 namespace openstudio{
 

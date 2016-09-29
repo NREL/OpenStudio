@@ -38,7 +38,7 @@
 #include "../utilities/core/UUID.hpp"
 #include "../utilities/core/Enum.hpp"
 
-#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
+#include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
 
 #include <QWidget>
 #include <QMainWindow>

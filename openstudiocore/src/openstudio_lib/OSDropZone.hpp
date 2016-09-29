@@ -30,7 +30,7 @@
 #define OPENSTUDIO_OSDROPZONE_HPP
 
 #include "OSItem.hpp"
-#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
+#include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
 
 #include "../shared_gui_components/FieldMethodTypedefs.hpp"
 

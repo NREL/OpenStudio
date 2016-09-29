@@ -29,7 +29,7 @@
 #ifndef MODEL_GENERATORMICROTURBINE_IMPL_HPP
 #define MODEL_GENERATORMICROTURBINE_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "Generator_Impl.hpp"
 #include "GeneratorMicroTurbineHeatRecovery_Impl.hpp"
 

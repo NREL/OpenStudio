@@ -34,7 +34,7 @@
 #include "../openstudio_lib/OSItem.hpp"
 #include "../openstudio_lib/OSVectorController.hpp"
 
- #include <model/nano_signal_slot.hpp> // Signal-Slot replacement
+ #include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
 
 #include "../model/Model.hpp"
 #include "../model/ModelObject.hpp"

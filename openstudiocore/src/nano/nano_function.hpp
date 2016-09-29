@@ -1,5 +1,5 @@
-#ifndef NANO_FUNCTION_HPP
-#define NANO_FUNCTION_HPP
+#ifndef MODEL_NANO_FUNCTION_HPP
+#define MODEL_NANO_FUNCTION_HPP
 
 #include <cstdint>
 #include <array>
@@ -70,4 +70,4 @@ class Function<RT(Args...)>
 
 } // namespace Nano ------------------------------------------------------------
 
-#endif // NANO_FUNCTION_HPP
+#endif // MODEL_NANO_FUNCTION_HPP

@@ -35,7 +35,7 @@
 #include <QWidget>
 #include <vector>
 
-#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
+#include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
 
 class QDragEnterEvent;
 class QDropEvent;

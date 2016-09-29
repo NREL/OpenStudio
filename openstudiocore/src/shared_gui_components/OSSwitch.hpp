@@ -29,7 +29,7 @@
 #ifndef SHAREDGUICOMPONENTS_OSSWITCH_HPP
 #define SHAREDGUICOMPONENTS_OSSWITCH_HPP
 
-#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
+#include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
 #include "FieldMethodTypedefs.hpp"
 
 #include "../model/Model.hpp"
