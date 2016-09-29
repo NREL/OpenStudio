@@ -411,7 +411,7 @@ If either file was updated, the SketchUp Extension Signature must be updated in
  
 To do this:
 - Build an OpenStudio package
-- Zip the contents (OpenStudio.rb and an OpenStudio folder) in `build\_CPack_Packages\win64\NSIS\OpenStudio-x.y.z.sha-Win64\Ruby\Plugins`
+- Zip the contents (OpenStudio.rb and OpenStudio folder) in `build\_CPack_Packages\win64\NSIS\OpenStudio-x.y.z.sha-Win64\Ruby\Plugins`
 - Change the extension of the zip file from .zip to .rbz
 - Login to https://extensions.sketchup.com/en/developer_center/extension_signature as openstudio@nrel.gov
 - Drag the .rbz file into the upload box, upload the file, click 'Sign The Extension' (do not select any options to encrypt the ruby files)
