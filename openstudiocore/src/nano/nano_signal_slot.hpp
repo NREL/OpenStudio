@@ -1,5 +1,5 @@
-#ifndef NANO_SIGNAL_SLOT_HPP
-#define NANO_SIGNAL_SLOT_HPP
+#ifndef MODEL_NANO_SIGNAL_SLOT_HPP
+#define MODEL_NANO_SIGNAL_SLOT_HPP
 
 #include "nano_function.hpp"
 #include "nano_observer.hpp"
@@ -169,4 +169,4 @@ class Signal<RT(Args...)> : private Observer
 
 } // namespace Nano ------------------------------------------------------------
 
-#endif // NANO_SIGNAL_SLOT_HPP
+#endif // MODEL_NANO_SIGNAL_SLOT_HPP
