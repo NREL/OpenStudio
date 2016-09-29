@@ -219,4 +219,13 @@ TEST_F(ModelFixture, BuildingUnit_Features)
   ASSERT_FALSE(dataType);
   EXPECT_FALSE(bldgUnit.resetFeature("bogusName"));
 
+  // Test suggested feature names
+  EXPECT_TRUE(bldgUnit.setFeature("MyUniqueFeature", 5));
+  BuildingUnit bldgUnit2(model);
+  std::vector<std::string> suggestedFeatures(bldgUnit2.suggestedFeatures());
+  ASSERT_EQ(suggestedFeatures.size(), 3);
+  ASSERT_NE(std::find(suggestedFeatures.begin(), suggestedFeatures.end(), "NumberOfBedrooms"), suggestedFeatures.end());
+  ASSERT_NE(std::find(suggestedFeatures.begin(), suggestedFeatures.end(), "NumberOfBathrooms"), suggestedFeatures.end());
+  ASSERT_NE(std::find(suggestedFeatures.begin(), suggestedFeatures.end(), "MyUniqueFeature"), suggestedFeatures.end());
+
 }

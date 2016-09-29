@@ -225,10 +225,16 @@ namespace detail {
 
   std::vector<std::string> BuildingUnit_Impl::suggestedFeatures() const
   {
+    std::set<std::string> availableFeatureNames;
+    availableFeatureNames.insert("NumberOfBedrooms");
+    availableFeatureNames.insert("NumberOfBathrooms");
+    for (const BuildingUnit& bldgUnit : this->model().getConcreteModelObjects<BuildingUnit>()) {
+      for (const std::string& featureName : bldgUnit.featureNames()) {
+        availableFeatureNames.insert(featureName);
+      }
+    }
     std::vector<std::string> retvals;
-    retvals.push_back("NumberOfBedrooms");
-    retvals.push_back("NumberOfBathrooms");
-    // TODO: Look at other Building Unit feature names and suggest those too.
+    retvals.assign(availableFeatureNames.begin(), availableFeatureNames.end());
     return retvals;
   }
 
