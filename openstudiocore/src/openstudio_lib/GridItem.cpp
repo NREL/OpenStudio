@@ -102,8 +102,6 @@
 #include "../model/Node_Impl.hpp"
 #include "../model/Splitter.hpp"
 #include "../model/Splitter_Impl.hpp"
-#include "../model/AirLoopHVACZoneSplitter.hpp"
-#include "../model/AirLoopHVACZoneSplitter_Impl.hpp"
 #include "../model/Mixer.hpp"
 #include "../model/ThermalZone.hpp"
 #include "../model/ThermalZone_Impl.hpp"
