@@ -139,6 +139,8 @@ namespace detail {
       if (comments.size() > 0) {
         //remove whitespace at end of comments[0]
         boost::trim_right(comments[0]);
+        //remove whitespace at beginning of comments[0]
+        boost::trim_left(comments[0]);
         //insert program line
         result = group.setString(OS_EnergyManagementSystem_ProgramExtensibleFields::ProgramLine, comments[0]);
         //check if comments exist
@@ -208,6 +210,8 @@ namespace detail {
     if (comments.size() > 0) {
       //remove whitespace at end of comments[0]
       boost::trim_right(comments[0]);
+      //remove whitespace at beginning of comments[0]
+      boost::trim_left(comments[0]);
       //insert program line
       result = group.setString(OS_EnergyManagementSystem_ProgramExtensibleFields::ProgramLine, comments[0]);
       //check if comments exist
