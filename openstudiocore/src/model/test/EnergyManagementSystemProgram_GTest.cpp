@@ -81,7 +81,7 @@ TEST_F(ModelFixture, EMSProgram_EMSProgram)
   std::string programName = fan.name().get() + "Pressure_Rise_Program_by_Body";
   fan_program_1.setName(programName);
   //this body has /r/n in it
-  std::string fan_program_1_body = "SET mult = " + toString(OATdbSensor.handle() ) + " / 15.0 !- This is nonsense\r\nSET " + toString(fanActuator.handle() ) + " = 250 * mult !- More nonsense";
+  std::string fan_program_1_body = "    SET mult = " + toString(OATdbSensor.handle() ) + " / 15.0 !- This is nonsense\r\n    SET " + toString(fanActuator.handle() ) + " = 250 * mult !- More nonsense";
   //this is what the body should look like with 2 /n's and compare TRUE
   std::string fan_program_body_test = "SET mult = " + toString(OATdbSensor.handle()) + " / 15.0 !- This is nonsense\nSET " + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense\n";
   //the added lines should compare TRUE to below
@@ -120,8 +120,8 @@ TEST_F(ModelFixture, EMSProgram_EMSProgram)
   programName = fan.name().get() + "Pressure Rise Program by Line";
   fan_program_2.setName(programName);
   //create program by individual lines
-  std::string line1 = "SET mult = " + toString(OATdbSensor.handle()) + " / 15.0 !- This is nonsense\r\n";
-  std::string line2 = "SET " + toString(fanActuator2.handle()) + " = 250 * mult !- More nonsense\r\n";
+  std::string line1 = "   SET mult = " + toString(OATdbSensor.handle()) + " / 15.0 !- This is nonsense\r\n";
+  std::string line2 = "   SET " + toString(fanActuator2.handle()) + " = 250 * mult !- More nonsense\r\n";
 
   fan_program_2.addLine(line1);
   fan_program_2.addLine(line2);
