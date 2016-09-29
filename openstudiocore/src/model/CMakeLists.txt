@@ -3,7 +3,6 @@ set(target_name openstudio_model)
 set(${target_name}_src
 
   mainpage.hpp
-  nano_signal_slot.hpp
   ModelAPI.hpp
   Model.hpp
   Model_Impl.hpp
