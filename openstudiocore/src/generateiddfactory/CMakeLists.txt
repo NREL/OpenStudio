@@ -7,13 +7,13 @@ set(${target_name}_SRC
   GenerateIddFactoryOutFiles.cpp
   GenerateIddFactory.hpp
   GenerateIddFactory.cpp
+  GeneratorApplicationPathHelpers.hpp
+  GeneratorApplicationPathHelpers.cpp
   IddFileFactoryData.hpp
   IddFileFactoryData.cpp
   ../utilities/UtilitiesAPI.hpp
   ../utilities/core/Checksum.hpp
   ../utilities/core/Checksum.cpp
-  ../utilities/core/GeneratorApplicationPathHelpers.hpp
-  ${CMAKE_CURRENT_BINARY_DIR}/../utilities/core/GeneratorApplicationPathHelpers.cxx
   ../utilities/idd/IddRegex.hpp
   ../utilities/idd/IddRegex.cpp
 )

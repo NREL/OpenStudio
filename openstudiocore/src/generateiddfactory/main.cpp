@@ -28,7 +28,7 @@
 
 #include "GenerateIddFactory.hpp"
 
-#include "../utilities/core/GeneratorApplicationPathHelpers.hpp"
+#include "GeneratorApplicationPathHelpers.hpp"
 
 #include <boost/program_options.hpp>
 

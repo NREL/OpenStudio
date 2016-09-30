@@ -12,7 +12,6 @@ include(sql/CMakeLists.txt)
 include(units/CMakeLists.txt)
 
 configure_file("core/ApplicationPathHelpers.cxx.in" "${CMAKE_CURRENT_BINARY_DIR}/core/ApplicationPathHelpers.cxx")
-configure_file("core/GeneratorApplicationPathHelpers.cxx.in" "${CMAKE_CURRENT_BINARY_DIR}/core/GeneratorApplicationPathHelpers.cxx")
 
 set(core_src
   core/ApplicationPathHelpers.hpp
