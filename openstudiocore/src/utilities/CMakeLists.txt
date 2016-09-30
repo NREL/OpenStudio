@@ -266,20 +266,23 @@ set(plot_moc
 # This could be done by simply touching the moc'ed files in the source tree
 # but in the spirit of keeping the source tree clean, we copy them into the
 # build directory instead.
+#
+# DLM: This is no longer needed as GenerateIddFactoryRun will run before anything in utilities is built
+#
 ###############################################################################
-foreach(f IN LISTS idf_moc)
-  string(REGEX REPLACE hpp$ hxx fxx ${f})
-  list(APPEND idfxx_moc ${CMAKE_CURRENT_BINARY_DIR}/${fxx})
-  add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${fxx}
-    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/${f} ${CMAKE_CURRENT_BINARY_DIR}/${fxx}
-    DEPENDS
-    ${CMAKE_CURRENT_BINARY_DIR}/idd/IddEnums.hxx
-    ${CMAKE_CURRENT_BINARY_DIR}/idd/IddFieldEnums.hxx
-    ${CMAKE_CURRENT_BINARY_DIR}/idd/IddFactory.hxx
-    ${CMAKE_CURRENT_BINARY_DIR}/idd/IddFactory.cxx
-    ${CMAKE_CURRENT_SOURCE_DIR}/${f}
-  )
-endforeach()
+#foreach(f IN LISTS idf_moc)
+#  string(REGEX REPLACE hpp$ hxx fxx ${f})
+#  list(APPEND idfxx_moc ${CMAKE_CURRENT_BINARY_DIR}/${fxx})
+#  add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${fxx}
+#    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/${f} ${CMAKE_CURRENT_BINARY_DIR}/${fxx}
+#    DEPENDS
+#    ${CMAKE_CURRENT_BINARY_DIR}/idd/IddEnums.hxx
+#    ${CMAKE_CURRENT_BINARY_DIR}/idd/IddFieldEnums.hxx
+#    ${CMAKE_CURRENT_BINARY_DIR}/idd/IddFactory.hxx
+#    ${CMAKE_CURRENT_BINARY_DIR}/idd/IddFactory.cxx
+#    ${CMAKE_CURRENT_SOURCE_DIR}/${f}
+#  )
+#endforeach()
 ###############################################################################
 
 ## Qt MOC generation
@@ -518,6 +521,7 @@ add_subdirectory(pch)
 add_library(${target_name}
   ${${target_name}_src}
 )
+add_dependencies("${target_name}" GenerateIddFactoryRun)
 
 if(UNIX)
   add_dependencies("${target_name}" SWIG)
