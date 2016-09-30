@@ -66,9 +66,9 @@ int main(int argc, char *argv[])
   }
   */
 
-#ifdef QT_STATIC
+#ifndef SHARED_OS_LIBS
   Q_INIT_RESOURCE(openstudio);
-#endif
+#endif // SHARED_OS_LIBS
 
 #if _DEBUG || (__GNUC__ && !NDEBUG)
 #ifdef _WIN32

@@ -49,9 +49,9 @@
 
 inline void initResources() { 
 
-  #ifdef QT_STATIC
+  #ifndef SHARED_OS_LIBS
     Q_INIT_RESOURCE(modeleditorlib); 
-  #endif // QT_STATIC
+  #endif // SHARED_OS_LIBS
 
 }
 
