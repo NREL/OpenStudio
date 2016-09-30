@@ -89,12 +89,6 @@ if(BUILD_TESTING)
 endif()
 
 if( Qt5Static )
-  MAKE_SWIG_TARGET(OpenStudioAirflow Airflow "${CMAKE_CURRENT_SOURCE_DIR}/Airflow.i" "${${target_name}_swig_src}" ${target_name}_static OpenStudioEnergyPlus)
-else()
-  MAKE_SWIG_TARGET(OpenStudioAirflow Airflow "${CMAKE_CURRENT_SOURCE_DIR}/Airflow.i" "${${target_name}_swig_src}" ${target_name} OpenStudioEnergyPlus)
-endif()
-
-if( Qt5Static )
   set(${target_name}_static_depends
     ${Boost_LIBRARIES}
     ${CMAKE_THREAD_LIBS}
@@ -108,5 +102,11 @@ if( Qt5Static )
     ${${target_name}_qrcs}
   )
   target_link_libraries(${target_name}_static ${${target_name}_static_depends})
+endif()
+
+if( Qt5Static )
+  MAKE_SWIG_TARGET(OpenStudioAirflow Airflow "${CMAKE_CURRENT_SOURCE_DIR}/Airflow.i" "${${target_name}_swig_src}" ${target_name}_static OpenStudioEnergyPlus)
+else()
+  MAKE_SWIG_TARGET(OpenStudioAirflow Airflow "${CMAKE_CURRENT_SOURCE_DIR}/Airflow.i" "${${target_name}_swig_src}" ${target_name} OpenStudioEnergyPlus)
 endif()
 

@@ -1652,9 +1652,9 @@ if(BUILD_TESTING)
 endif()
 
 if( Qt5Static )
-  set(swig_target_name ${target_name}_static
+  set(swig_target_name ${target_name}_static)
 else()
-  set(swig_target_name ${target_name}
+  set(swig_target_name ${target_name})
 endif()
 
 MAKE_SWIG_TARGET(OpenStudioModelCore model "${CMAKE_CURRENT_SOURCE_DIR}/ModelCore.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioUtilities)
