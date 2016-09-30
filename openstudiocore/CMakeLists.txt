@@ -105,9 +105,6 @@ option(BUILD_PACKAGE "Build package" OFF)
 # Build with OpenSSL support
 set(BUILD_WITH_OPENSSL ON CACHE INTERNAL "Build With OpenSSL Support For SSH Connections")
 
-# Build R package
-option(BUILD_R "Build R package" OFF)
-
 # Build shared OS libraries
 option(BUILD_SHARED_LIBS "Build OS libs as shared libraries" ON)
 
@@ -1243,11 +1240,6 @@ if(BUILD_NODE_MODULES)
   add_subdirectory(v8-node)
 endif()
 
-# R, after loading projects
-if(BUILD_R)
-  add_subdirectory(r-scripts)
-endif()
-
 ###############################################################################
 
 ###############################################################################
@@ -1486,7 +1478,12 @@ set(CPACK_PACKAGE_VERSION_MINOR ${OpenStudio_VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${OpenStudio_VERSION_PATCH})
 
 if( UNIX )
-set( CPACK_IFW_TARGET_DIRECTORY /usr/local/openstudio-${OpenStudio_VERSION}/ )
+  set( CPACK_IFW_TARGET_DIRECTORY /usr/local/openstudio-${OpenStudio_VERSION}/ )
+endif()
+
+if(WIN32)
+  set( CPACK_BINARY_NSIS OFF )
+  set( CPACK_BINARY_IFW ON )
 endif()
 
 # expand E+ path if it is a link
