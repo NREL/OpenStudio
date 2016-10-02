@@ -541,7 +541,7 @@ target_link_libraries(${target_name} PUBLIC ${${target_name}_depends} Geographic
 
 CREATE_SRC_GROUPS("${${target_name}_test_src}")
 CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends};GeographicLib_STATIC;${QT_LIBS}")
-
+message("QT_LIBS = ${QT_LIBS}")
 if( Qt5Static )
   set(${target_name}_static_depends
     sqlite
@@ -564,6 +564,11 @@ if( Qt5Static )
   target_include_directories(${target_name}_static PUBLIC ${QT_STATIC_INCLUDES})
   target_link_libraries(${target_name}_static ${QT_STATIC_LIBS})
   target_compile_definitions(${target_name}_static PUBLIC ${QT_DEFS})
+endif()
+
+if(NOT BUILD_SHARED_LIBS)
+  target_compile_definitions(${target_name} PUBLIC openstudio_utilities_EXPORTS)
+  target_compile_definitions(${target_name}_static PUBLIC openstudio_utilities_EXPORTS)
 endif()
 
 if(BUILD_TESTING)

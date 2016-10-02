@@ -5,7 +5,7 @@
 
     #ifdef SHARED_OS_LIBS
 
-      #ifdef openstudio_utilities_EXPORTS
+      #if defined(openstudio_utilities_EXPORTS)
         #define UTILITIES_API __declspec(dllexport)
         #define UTILITIES_TEMPLATE_EXT 
       #else
@@ -16,8 +16,8 @@
     #else
 
       #define UTILITIES_API
-      #ifdef openstudio_utilities_EXPORTS || openstudio_utilities_static_EXPORTS
-        #define UTILITIES_TEMPLATE_EXT 
+      #if defined(openstudio_utilities_EXPORTS) 
+        #define UTILITIES_TEMPLATE_EXT
       #else
         #define UTILITIES_TEMPLATE_EXT extern
       #endif
