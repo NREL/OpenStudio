@@ -540,8 +540,8 @@ AddPCH(${target_name})
 target_link_libraries(${target_name} PUBLIC ${${target_name}_depends} GeographicLib_STATIC ${QT_LIBS})
 
 CREATE_SRC_GROUPS("${${target_name}_test_src}")
-CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends};GeographicLib_STATIC;${QT_LIBS}")
-message("QT_LIBS = ${QT_LIBS}")
+CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends}")
+
 if( Qt5Static )
   set(${target_name}_static_depends
     sqlite
