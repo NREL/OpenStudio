@@ -563,7 +563,15 @@ if( Qt5Static )
   target_link_libraries(${target_name}_static ${${target_name}_static_depends} )
 
   target_include_directories(${target_name}_static PUBLIC ${QT_STATIC_INCLUDES})
-  target_link_libraries(${target_name}_static optimized ${QT_STATIC_LIBS} debug ${QT_STATIC_LIBSD})
+  
+  foreach(lib ${QT_STATIC_LIBS})
+    target_link_libraries(${target_name}_static optimized ${lib})
+  endforeach()
+  
+  foreach(lib ${QT_STATIC_LIBSD})
+    target_link_libraries(${target_name}_static debug ${lib})
+  endforeach()
+  
   target_compile_definitions(${target_name}_static PUBLIC ${QT_DEFS})
 endif()
 
