@@ -73,7 +73,7 @@ AddPCH(gbXMLToIdf)
 target_link_libraries(gbXMLToIdf
   ${${target_name}_depends}
   openstudio_gbxml
-  ${QT_LIBS}  	
+  #${QT_LIBS}  	
 )
 
 #install(TARGETS gbXMLToIdf
