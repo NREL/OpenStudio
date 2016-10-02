@@ -956,7 +956,15 @@ if( Qt5Static )
   find_library(Qt5NetworkStatic NAMES QtNetwork Qt5Network PATHS "${QT_STATIC_INSTALL_DIR}/lib/" NO_DEFAULT_PATH)
   find_library(Qt5GuiStatic NAMES QtGui Qt5Gui PATHS "${QT_STATIC_INSTALL_DIR}/lib/" NO_DEFAULT_PATH)
   find_library(Qt5PrintSupportStatic NAMES QtPrintSupport Qt5PrintSupport PATHS "${QT_STATIC_INSTALL_DIR}/lib/" NO_DEFAULT_PATH)
-
+  
+  find_library(Qt5CoreStaticd NAMES QtCored Qt5Cored PATHS "${QT_STATIC_INSTALL_DIR}/lib/" NO_DEFAULT_PATH)
+  find_library(Qt5WidgetsStaticd NAMES QtWidgetsd Qt5Widgetsd PATHS "${QT_STATIC_INSTALL_DIR}/lib/" NO_DEFAULT_PATH)
+  find_library(Qt5XmlStaticd NAMES QtXmld Qt5Xmld PATHS "${QT_STATIC_INSTALL_DIR}/lib/" NO_DEFAULT_PATH)
+  find_library(Qt5SqlStaticd NAMES QtSqld Qt5Sqld PATHS "${QT_STATIC_INSTALL_DIR}/lib/" NO_DEFAULT_PATH)
+  find_library(Qt5NetworkStaticd NAMES QtNetworkd Qt5Networkd PATHS "${QT_STATIC_INSTALL_DIR}/lib/" NO_DEFAULT_PATH)
+  find_library(Qt5GuiStaticd NAMES QtGuid Qt5Guid PATHS "${QT_STATIC_INSTALL_DIR}/lib/" NO_DEFAULT_PATH)
+  find_library(Qt5PrintSupportStaticd NAMES QtPrintSupportd Qt5PrintSupportd PATHS "${QT_STATIC_INSTALL_DIR}/lib/" NO_DEFAULT_PATH)
+  
   list(APPEND QT_STATIC_LIBS "${Qt5CoreStatic}")
   list(APPEND QT_STATIC_LIBS "${Qt5WidgetsStatic}")
   list(APPEND QT_STATIC_LIBS "${Qt5XmlStatic}")
@@ -965,19 +973,38 @@ if( Qt5Static )
   list(APPEND QT_STATIC_LIBS "${Qt5GuiStatic}")
   list(APPEND QT_STATIC_LIBS "${Qt5PrintSupportStatic}")
 
+  list(APPEND QT_STATIC_LIBSD "${Qt5CoreStaticd}")
+  list(APPEND QT_STATIC_LIBSD "${Qt5WidgetsStaticd}")
+  list(APPEND QT_STATIC_LIBSD "${Qt5XmlStaticd}")
+  list(APPEND QT_STATIC_LIBSD "${Qt5SqlStaticd}")
+  list(APPEND QT_STATIC_LIBSD "${Qt5NetworkStaticd}")
+  list(APPEND QT_STATIC_LIBSD "${Qt5GuiStaticd}")
+  list(APPEND QT_STATIC_LIBSD "${Qt5PrintSupportStaticd}")
+
   if( WIN32 )
     find_library(Qt5WinExtrasStatic NAMES Qt5WinExtras PATHS "${QT_STATIC_INSTALL_DIR}/lib/" NO_DEFAULT_PATH)
     find_library(qtmainStatic NAMES qtmain PATHS "${QT_STATIC_INSTALL_DIR}/lib/" NO_DEFAULT_PATH)
+    
+    find_library(Qt5WinExtrasStaticd NAMES Qt5WinExtrasd PATHS "${QT_STATIC_INSTALL_DIR}/lib/" NO_DEFAULT_PATH)
+    find_library(qtmainStaticd NAMES qtmaind PATHS "${QT_STATIC_INSTALL_DIR}/lib/" NO_DEFAULT_PATH)
+  
     list(APPEND QT_STATIC_LIBS "${qtmainStatic}")
     list(APPEND QT_STATIC_LIBS "${Qt5WinExtrasStatic}")
+    
+    list(APPEND QT_STATIC_LIBSD "${qtmainStaticd}")
+    list(APPEND QT_STATIC_LIBSD "${Qt5WinExtrasStaticd}")
   endif()
 
   if( UNIX )
     find_library(Qt5DBusStatic NAMES QtDBus Qt5DBus PATHS "${QT_STATIC_INSTALL_DIR}/lib/" NO_DEFAULT_PATH)
+    find_library(Qt5DBusStaticd NAMES QtDBusd Qt5DBusd PATHS "${QT_STATIC_INSTALL_DIR}/lib/" NO_DEFAULT_PATH)
+    
     list(APPEND QT_STATIC_LIBS "${Qt5DBusStatic}")
+    list(APPEND QT_STATIC_LIBSD "${Qt5DBusStaticd}")
     
     find_package(OpenGL REQUIRED)
     list(APPEND QT_STATIC_LIBS "${OPENGL_LIBRARIES}")
+    list(APPEND QT_STATIC_LIBSD "${OPENGL_LIBRARIES}")
   endif()
 
   if( UNIX AND NOT APPLE )
@@ -1100,43 +1127,72 @@ if( Qt5Static )
     find_library(PCRE qtpcre PATHS "${QT_STATIC_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
     find_library(SQLITE qsqlite PATHS "${QT_STATIC_INSTALL_DIR}/plugins/sqldrivers/" NO_DEFAULT_PATH)
     find_library(WIN_PLATFORM qwindows PATHS "${QT_STATIC_INSTALL_DIR}/plugins/platforms/" NO_DEFAULT_PATH)
-    
     find_library(PLATFORM_SUPPORT Qt5PlatformSupport PATHS "${QT_STATIC_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
     find_library(FREETYPE qtfreetype PATHS "${QT_STATIC_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
   
-    mark_as_advanced(PLATFORM_SUPPORT FREETYPE)
+    find_library(HARFBUZZD qtharfbuzzngd PATHS "${QT_STATIC_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
+    find_library(PCRED qtpcred PATHS "${QT_STATIC_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
+    find_library(SQLITED qsqlited PATHS "${QT_STATIC_INSTALL_DIR}/plugins/sqldrivers/" NO_DEFAULT_PATH)
+    find_library(WIN_PLATFORMD qwindowsd PATHS "${QT_STATIC_INSTALL_DIR}/plugins/platforms/" NO_DEFAULT_PATH)
+    find_library(PLATFORM_SUPPORTD Qt5PlatformSupportd PATHS "${QT_STATIC_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
+    find_library(FREETYPED qtfreetyped PATHS "${QT_STATIC_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
+  
+    mark_as_advanced(PLATFORM_SUPPORT FREETYPE PLATFORM_SUPPORTD FREETYPED)
   
     list(APPEND QT_STATIC_LIBS ${PLATFORM_SUPPORT})
     list(APPEND QT_STATIC_LIBS ${FREETYPE})
-  
-    mark_as_advanced(HARFBUZZ PCRE SQLITE WIN_PLATFORM)
+
+    list(APPEND QT_STATIC_LIBSD ${PLATFORM_SUPPORTD})
+    list(APPEND QT_STATIC_LIBSD ${FREETYPED})
+    
+    mark_as_advanced(HARFBUZZ PCRE SQLITE WIN_PLATFORM HARFBUZZD PCRED SQLITED WIN_PLATFORMD)
   
     list(APPEND QT_STATIC_LIBS ${HARFBUZZ})
     list(APPEND QT_STATIC_LIBS ${PCRE})
     list(APPEND QT_STATIC_LIBS ${SQLITE})
     list(APPEND QT_STATIC_LIBS ${WIN_PLATFORM})
-  
+
+    list(APPEND QT_STATIC_LIBSD ${HARFBUZZD})
+    list(APPEND QT_STATIC_LIBSD ${PCRED})
+    list(APPEND QT_STATIC_LIBSD ${SQLITED})
+    list(APPEND QT_STATIC_LIBSD ${WIN_PLATFORMD})
+    
     list(APPEND QT_STATIC_LIBS Crypt32)
     list(APPEND QT_STATIC_LIBS imm32)
     list(APPEND QT_STATIC_LIBS winmm)
     list(APPEND QT_STATIC_LIBS Gdi32)
-  
+
+    list(APPEND QT_STATIC_LIBSD Crypt32)
+    list(APPEND QT_STATIC_LIBSD imm32)
+    list(APPEND QT_STATIC_LIBSD winmm)
+    list(APPEND QT_STATIC_LIBSD Gdi32)
+    
     list(APPEND QT_STATIC_LIBS wsock32)
     list(APPEND QT_STATIC_LIBS ws2_32)
     list(APPEND QT_STATIC_LIBS iphlpapi)
     list(APPEND QT_STATIC_LIBS dbghelp)
     list(APPEND QT_STATIC_LIBS Shlwapi)
-  
+
+    list(APPEND QT_STATIC_LIBSD wsock32)
+    list(APPEND QT_STATIC_LIBSD ws2_32)
+    list(APPEND QT_STATIC_LIBSD iphlpapi)
+    list(APPEND QT_STATIC_LIBSD dbghelp)
+    list(APPEND QT_STATIC_LIBSD Shlwapi)
+    
     if(BUILD_WITH_OPENSSL)
       link_directories("${OPENSSL_ROOT_DIR}/lib/VC/static")
       list(APPEND QT_STATIC_LIBS ssleay32MT)
       list(APPEND QT_STATIC_LIBS libeay32MT)
+      
+      list(APPEND QT_STATIC_LIBSD ssleay32MTd)
+      list(APPEND QT_STATIC_LIBSD libeay32MTd)
     endif()
   endif()
 endif()
 
+message("QT_LIBS: ${QT_LIBS}")
 message("QT_STATIC_LIBS: ${QT_STATIC_LIBS}")
-
+message("QT_STATIC_LIBSD: ${QT_STATIC_LIBSD}")
 ###############################################################################
 ## jsoncpp
 add_subdirectory(src/jsoncpp)

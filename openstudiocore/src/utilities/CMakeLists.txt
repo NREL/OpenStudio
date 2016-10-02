@@ -547,6 +547,7 @@ if( Qt5Static )
     sqlite
     jsoncpp
     miniziplib
+    GeographicLib_STATIC
     ${Boost_LIBRARIES}
   )
   
@@ -559,14 +560,15 @@ if( Qt5Static )
     ${${target_name}_src}
   )
 
-  target_link_libraries(${target_name}_static ${${target_name}_static_depends} GeographicLib_STATIC)
+  target_link_libraries(${target_name}_static ${${target_name}_static_depends} )
 
   target_include_directories(${target_name}_static PUBLIC ${QT_STATIC_INCLUDES})
-  target_link_libraries(${target_name}_static ${QT_STATIC_LIBS})
+  target_link_libraries(${target_name}_static optimized ${QT_STATIC_LIBS} debug ${QT_STATIC_LIBSD})
   target_compile_definitions(${target_name}_static PUBLIC ${QT_DEFS})
 endif()
 
 if(NOT BUILD_SHARED_LIBS)
+  # needed for the UTILITIES_TEMPLATE_EXT in UtilitiesAPI.hpp
   target_compile_definitions(${target_name} PUBLIC openstudio_utilities_EXPORTS)
   target_compile_definitions(${target_name}_static PUBLIC openstudio_utilities_EXPORTS)
 endif()
