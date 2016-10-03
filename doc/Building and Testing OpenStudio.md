@@ -22,6 +22,7 @@ If this is a major release, release notes must be written.
 - Incorporate the developers notes previously obtained.
 - Have the release notes reviewed for accuracy.
 - Generate a PDF from the word doc.
+- Update openstudiocore\cmakelists.txt to package the latest release notes pdf.
 - With Git, commit above files (Commit Message = `Updating release notes X.Y.Z`) to the develop branch
 - Generate a markdown document from the word doc.
 
