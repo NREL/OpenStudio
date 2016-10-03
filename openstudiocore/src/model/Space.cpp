@@ -2514,15 +2514,6 @@ namespace detail {
     return result;
   }
 
-  boost::optional<ModelObject> Space_Impl::buildingUnitAsModelObject() const {
-    OptionalModelObject result;
-    boost::optional<BuildingUnit> intermediate = buildingUnit();
-    if (intermediate) {
-      result = *intermediate;
-    }
-    return result;
-  }
-
   std::vector<ModelObject> Space_Impl::shadingSurfaceGroupsAsModelObjects() const {
     ModelObjectVector result = castVector<ModelObject>(shadingSurfaceGroups());
     return result;
@@ -2671,17 +2662,7 @@ namespace detail {
     return false;
   }
 
-  bool Space_Impl::setBuildingUnitAsModelObject(const boost::optional<ModelObject>& modelObject) {
-    if (modelObject) {
-      boost::optional<BuildingUnit> intermediate = modelObject->optionalCast<BuildingUnit>();
-      if (intermediate) {
-        return setBuildingUnit(*intermediate);
-      }
-    }
-    return false;
-  }
-
-  template <typename T, typename TDef> 
+  template <typename T, typename TDef>
   boost::optional<T> Space_Impl::getMySpaceLoadInstance(
       const boost::optional<T>& templateSpaceLoadInstance)
   {
