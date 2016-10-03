@@ -31,7 +31,10 @@
 #include "../RenderingColor_Impl.hpp"
 #include "../Space.hpp"
 #include "../Space_Impl.hpp"
+#include "../Surface.hpp"
+#include "../Surface_Impl.hpp"
 
+#include "../utilities/geometry/Geometry.hpp"
 #include "../../utilities/units/Quantity.hpp"
 #include "../../utilities/units/Unit.hpp"
 
@@ -80,36 +83,24 @@ TEST_F(ModelFixture, BuildingUnit_BuildingUnitType)
   EXPECT_EQ(bldgUnitTypeValues.size(), 2);
 
   // Check default
-  boost::optional<std::string> bldgUnitType = bldgUnit.buildingUnitType();
-  EXPECT_TRUE(bldgUnitType);
-  if (bldgUnitType) {
-      EXPECT_EQ(*bldgUnitType, "Residential");
-  }
+  std::string bldgUnitType = bldgUnit.buildingUnitType();
+  EXPECT_EQ(bldgUnitType, "Residential");
 
   // Assign New and check that the assignment worked.
   EXPECT_TRUE(bldgUnit.setBuildingUnitType("NonResidential"));
   bldgUnitType = bldgUnit.buildingUnitType();
-  EXPECT_TRUE(bldgUnitType);
-  if (bldgUnitType) {
-      EXPECT_EQ(*bldgUnitType, "NonResidential");
-  }
+  EXPECT_EQ(bldgUnitType, "NonResidential");
 
   // Reset and check that its back at the default.
   bldgUnit.resetBuildingUnitType();
   bldgUnitType = bldgUnit.buildingUnitType();
-  EXPECT_TRUE(bldgUnitType);
-  if (bldgUnitType) {
-      EXPECT_EQ(*bldgUnitType, "Residential");
-  }
+  EXPECT_EQ(bldgUnitType, "Residential");
 
   // Set it to something invalid
   EXPECT_TRUE(bldgUnit.setBuildingUnitType("NonResidential"));
   EXPECT_FALSE(bldgUnit.setBuildingUnitType("Bogus"));
   bldgUnitType = bldgUnit.buildingUnitType();
-  EXPECT_TRUE(bldgUnitType);
-  if (bldgUnitType) {
-      EXPECT_EQ(*bldgUnitType, "NonResidential");
-  }
+  EXPECT_EQ(bldgUnitType, "NonResidential");
 
 }
 
@@ -134,6 +125,27 @@ TEST_F(ModelFixture, BuildingUnit_Spaces)
   EXPECT_EQ(spaces.size(), 2);
   EXPECT_NE(std::find(spaces.begin(), spaces.end(), space1), spaces.end());
   EXPECT_NE(std::find(spaces.begin(), spaces.end(), space2), spaces.end());
+
+  std::vector<Point3d> surf1vert;
+  surf1vert.push_back(Point3d(0, 0, 0));
+  surf1vert.push_back(Point3d(10, 0, 0));
+  surf1vert.push_back(Point3d(10, 10, 0));
+  surf1vert.push_back(Point3d(0, 10, 0));
+  Surface surf1(surf1vert, model);
+  surf1.setSurfaceType("Floor");
+  surf1.setSpace(space1);
+
+  std::vector<Point3d> surf2vert;
+  surf2vert.push_back(Point3d(10, 0, 0));
+  surf2vert.push_back(Point3d(15, 0, 0));
+  surf2vert.push_back(Point3d(15, 5, 0));
+  surf2vert.push_back(Point3d(10, 5, 0));
+  Surface surf2(surf2vert, model);
+  surf2.setSurfaceType("Floor");
+  surf2.setSpace(space2);
+
+  double floorArea = bldgUnit.floorArea();
+  EXPECT_FLOAT_EQ(floorArea, 10 * 10 + 5 * 5);
 
   space1.resetBuildingUnit();
   retrievedBldgUnit = space1.buildingUnit();

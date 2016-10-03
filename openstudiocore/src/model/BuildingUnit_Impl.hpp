@@ -65,7 +65,7 @@ class MODEL_API BuildingUnit_Impl : public ModelObject_Impl {
 
   boost::optional<RenderingColor> renderingColor() const;
 
-  boost::optional<std::string> buildingUnitType() const;
+  std::string buildingUnitType() const;
 
   std::vector<Space> spaces() const;
 
