@@ -250,6 +250,7 @@ namespace detail {
       OS_ASSERT(dataTypeOK);
       OS_ASSERT(valueOK);
       this->emitChangeSignals();
+      return true;
     } else {
       std::vector<std::string> temp;
       temp.push_back(name);
