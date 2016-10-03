@@ -107,6 +107,9 @@ class UTILITIES_API IdfExtensibleGroup {
    *  cannot be set for any reason. */
   bool setString(unsigned fieldIndex, const std::string& value);
 
+  /** setString that can delay signal emits. */
+  bool setString(unsigned fieldIndex, const std::string& value, bool checkValidity);
+
   /** Set this extensible group's field fieldIndex to value, if possible. Returns false if it 
    *  cannot be set for any reason. */
   bool setDouble(unsigned fieldIndex, double value);
@@ -238,9 +241,6 @@ class UTILITIES_API IdfExtensibleGroup {
  private:
   /** Private default constructor. */
   IdfExtensibleGroup();
-
-  /** setString that can delay signal emits. */
-  bool setString(unsigned fieldIndex, const std::string& value, bool checkValidity);
 
   REGISTER_LOGGER("openstudio.IdfExtensibleGroup");
 };

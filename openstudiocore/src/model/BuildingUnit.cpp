@@ -244,9 +244,12 @@ namespace detail {
   {
     boost::optional<ModelExtensibleGroup> group(getFeatureGroupByName(name));
     if (group) {
-      const bool dataTypeOK = group->setString(OS_BuildingUnitExtensibleFields::BuildingUnitFeatureDataType, dataType);
-      const bool valueOK = group->setString(OS_BuildingUnitExtensibleFields::BuildingUnitFeatureValue, value);
-      return (dataTypeOK and valueOK);
+      const bool dataTypeOK = group->setString(OS_BuildingUnitExtensibleFields::BuildingUnitFeatureDataType, dataType, false);
+      const bool valueOK = group->setString(OS_BuildingUnitExtensibleFields::BuildingUnitFeatureValue, value, false);
+      // Since we're doing this checking in the public setters, these should always return true.
+      OS_ASSERT(dataTypeOK);
+      OS_ASSERT(valueOK);
+      this->emitChangeSignals();
     } else {
       std::vector<std::string> temp;
       temp.push_back(name);
