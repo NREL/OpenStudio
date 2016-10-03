@@ -61,16 +61,20 @@ TEST_F(ModelFixture, EMSActuator_EMSActuator)
   FanConstantVolume fan2(model, s);
 
   // add actuator
-  EnergyManagementSystemActuator fanActuator(fan);
+  std::string fanControlType = "Fan Pressure Rise";
+  std::string ComponentType = "Fan";
+  EnergyManagementSystemActuator fanActuator(fan, ComponentType, fanControlType);
+  EXPECT_EQ(fanControlType, fanActuator.actuatedComponentControlType());
+  EXPECT_EQ(ComponentType, fanActuator.actuatedComponentType());
+
   std::string fanName = fan.name().get() + "Press Actuator";
   fanActuator.setName(fanName);
-  std::string fanControlType = "Fan Pressure Rise";
+  
   fanActuator.setActuatedComponentControlType(fanControlType);
 
   EXPECT_EQ(fan, fanActuator.actuatedComponent());
   EXPECT_EQ(fanControlType, fanActuator.actuatedComponentControlType());
-
-  std::string ComponentType = "Fan";
+ 
   fanActuator.setActuatedComponentType(ComponentType);
   EXPECT_EQ(ComponentType, fanActuator.actuatedComponentType());
 
@@ -80,19 +84,22 @@ TEST_F(ModelFixture, EMSActuator_EMSActuator)
   //add electric equipment actuator
   ElectricEquipmentDefinition definition(model);
   ElectricEquipment electricEquipment(definition);
-  EnergyManagementSystemActuator equipActuator(electricEquipment);
+  ComponentType = "ElectricEquipment";
+  std::string equipControlType = "Electric Power Level";
+  EnergyManagementSystemActuator equipActuator(electricEquipment, ComponentType, equipControlType);
+  EXPECT_EQ(equipControlType, equipActuator.actuatedComponentControlType());
+  EXPECT_EQ(ComponentType, equipActuator.actuatedComponentType());
+
   std::string equipName = electricEquipment.name().get() + "power level Actuator";
   equipActuator.setName(equipName);
-  std::string equipControlType = "Electric Power Level";
+
   equipActuator.setActuatedComponentControlType(equipControlType);
 
   EXPECT_EQ(electricEquipment, equipActuator.actuatedComponent());
   EXPECT_EQ(equipControlType, equipActuator.actuatedComponentControlType());
 
-  ComponentType = "ElectricEquipment";
   equipActuator.setActuatedComponentType(ComponentType);
   EXPECT_EQ(ComponentType, equipActuator.actuatedComponentType());
-
 
 }
 

@@ -26,6 +26,11 @@
 #include "EnergyManagementSystemSubroutine.hpp"
 
 namespace openstudio {
+
+namespace energyplus {
+  class ReverseTranslator;
+}
+
 namespace model {
 
 namespace detail {
@@ -41,8 +46,6 @@ class MODEL_API EnergyManagementSystemMeteredOutputVariable : public ModelObject
   //@{
 
   explicit EnergyManagementSystemMeteredOutputVariable(const Model& model, std::string eMSVariableName);
-
-  explicit EnergyManagementSystemMeteredOutputVariable(const Model& model);
 
   virtual ~EnergyManagementSystemMeteredOutputVariable() {}
 
@@ -120,9 +123,11 @@ class MODEL_API EnergyManagementSystemMeteredOutputVariable : public ModelObject
   friend class Model;
   friend class IdfObject;
   friend class openstudio::detail::IdfObject_Impl;
+  friend class energyplus::ReverseTranslator;
   /// @endcond
  private:
   REGISTER_LOGGER("openstudio.model.EnergyManagementSystemMeteredOutputVariable");
+  explicit EnergyManagementSystemMeteredOutputVariable(const Model& model);
 };
 
 /** \relates EnergyManagementSystemMeteredOutputVariable*/

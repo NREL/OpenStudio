@@ -59,9 +59,9 @@ TEST_F(ModelFixture, EMSSubroutine_EMSSubroutine)
   OutputVariable siteOutdoorAirDrybulbTemperature("Site Outdoor Air Drybulb Temperature", model);
 
   //add sensor
-  EnergyManagementSystemSensor OATdbSensor(model);
+  EnergyManagementSystemSensor OATdbSensor(model, siteOutdoorAirDrybulbTemperature);
   OATdbSensor.setName("OATdb Sensor");
-  OATdbSensor.setOutputVariable(siteOutdoorAirDrybulbTemperature);
+ // OATdbSensor.setOutputVariable(siteOutdoorAirDrybulbTemperature);
 
   //add fan
   Schedule s = model.alwaysOnDiscreteSchedule();
@@ -69,13 +69,11 @@ TEST_F(ModelFixture, EMSSubroutine_EMSSubroutine)
   fan.setName("fan");
 
   //add actuator on fan
-  EnergyManagementSystemActuator fanActuator(fan);
+  std::string fanControlType = "Fan Pressure Rise";
+  std::string ComponentType = "Fan";
+  EnergyManagementSystemActuator fanActuator(fan, ComponentType, fanControlType);
   std::string fanName = fan.name().get() + "Press_Actuator";
   fanActuator.setName(fanName);
-  std::string fanControlType = "Fan Pressure Rise";
-  fanActuator.setActuatedComponentControlType(fanControlType);
-  std::string ComponentType = "Fan";
-  fanActuator.setActuatedComponentType(ComponentType);
 
   //add program
   EnergyManagementSystemSubroutine fan_program_1(model);
@@ -110,11 +108,11 @@ TEST_F(ModelFixture, EMSSubroutine_EMSSubroutine)
   EXPECT_EQ(1, fan_program_1.invalidReferencedObjects().size());
 
   //add actuator on fan again
-  EnergyManagementSystemActuator fanActuator2(fan);
+  fanControlType = "Fan Pressure Rise";
+  ComponentType = "Fan";
+  EnergyManagementSystemActuator fanActuator2(fan, ComponentType, fanControlType);
   fanName = fan.name().get() + "Press_Actuator";
   fanActuator2.setName(fanName);
-  fanControlType = "Fan Pressure Rise";
-  fanActuator2.setActuatedComponentControlType(fanControlType);
 
   // Create a second program from a vector of lines
   EnergyManagementSystemSubroutine fan_program_2(model);
@@ -151,9 +149,9 @@ TEST_F(ModelFixture, EMSSubroutine_EMSSubroutine)
   EXPECT_EQ(1, fan_program_2.invalidReferencedObjects().size());
 
   //add sensor back in
-  EnergyManagementSystemSensor OATdbSensor2(model);
+  EnergyManagementSystemSensor OATdbSensor2(model, siteOutdoorAirDrybulbTemperature);
   OATdbSensor2.setName("OATdb Sensor");
-  OATdbSensor2.setOutputVariable(siteOutdoorAirDrybulbTemperature);
+ // OATdbSensor2.setOutputVariable(siteOutdoorAirDrybulbTemperature);
 
   // # Create a third program from vector of lines
   EnergyManagementSystemSubroutine fan_program_3(model);

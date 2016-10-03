@@ -173,9 +173,9 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorSensor1_EMS) {
   OutputVariable siteOutdoorAirDrybulbTemperature("Site Outdoor Air Drybulb Temperature", model);
 
   // add sensor
-  EnergyManagementSystemSensor OATdbSensor(model);
+  EnergyManagementSystemSensor OATdbSensor(model, siteOutdoorAirDrybulbTemperature);
   OATdbSensor.setName("OATdb Sensor");
-  OATdbSensor.setOutputVariable(siteOutdoorAirDrybulbTemperature);
+  //OATdbSensor.setOutputVariable(siteOutdoorAirDrybulbTemperature);
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
@@ -221,9 +221,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorSensor2_EMS) {
   OutputVariable lightsElectricPower("Zone Lights Electric Power", model);
 
   // add light sensor on zone1
-  EnergyManagementSystemSensor lights(model);
+  EnergyManagementSystemSensor lights(model, lightsElectricPower);
   lights.setName("Light Sensor");
-  lights.setOutputVariable(lightsElectricPower);
+ // lights.setOutputVariable(lightsElectricPower);
   lights.setKeyName(zone1.name().get());
 
   ForwardTranslator forwardTranslator;
@@ -271,9 +271,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorSensoronMeter_EMS) {
   meter.setMeterFileOnly(false);
 
   //add sensor to meter
-  EnergyManagementSystemSensor meter_sensor(model);
+  EnergyManagementSystemSensor meter_sensor(model, meter);
   meter_sensor.setName("meter sensor");
-  meter_sensor.setOutputMeter(meter);
+  //meter_sensor.setOutputMeter(meter);
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
@@ -318,13 +318,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_EMS) {
   FanConstantVolume fan(model, s);
 
   // add actuator
-  EnergyManagementSystemActuator fanActuator(fan);
+  std::string fanControlType = "Fan Pressure Rise";
+  std::string ComponentType = "Fan";
+  EnergyManagementSystemActuator fanActuator(fan, ComponentType, fanControlType);
   std::string fanName = fan.name().get() + "Press Actuator";
   fanActuator.setName(fanName);
-  std::string fanControlType = "Fan Pressure Rise";
-  fanActuator.setActuatedComponentControlType(fanControlType);
-  std::string ComponentType = "Fan";
-  fanActuator.setActuatedComponentType(ComponentType);
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
@@ -371,22 +369,20 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorProgram_EMS) {
   OutputVariable siteOutdoorAirDrybulbTemperature("Site Outdoor Air Drybulb Temperature", model);
 
   //add sensor
-  EnergyManagementSystemSensor OATdbSensor(model);
+  EnergyManagementSystemSensor OATdbSensor(model, siteOutdoorAirDrybulbTemperature);
   OATdbSensor.setName("OATdb Sensor");
-  OATdbSensor.setOutputVariable(siteOutdoorAirDrybulbTemperature);
+ // OATdbSensor.setOutputVariable(siteOutdoorAirDrybulbTemperature);
 
   //add fan
   Schedule s = model.alwaysOnDiscreteSchedule();
   FanConstantVolume fan(model, s);
 
   //add actuator on fan
-  EnergyManagementSystemActuator fanActuator(fan);
+  std::string fanControlType = "Fan Pressure Rise";
+  std::string ComponentType = "Fan";
+  EnergyManagementSystemActuator fanActuator(fan, ComponentType, fanControlType);
   std::string fanName = fan.name().get() + "Press Actuator";
   fanActuator.setName(fanName);
-  std::string fanControlType = "Fan Pressure Rise";
-  fanActuator.setActuatedComponentControlType(fanControlType);
-  std::string ComponentType = "Fan";
-  fanActuator.setActuatedComponentType(ComponentType);
 
   //add program
   EnergyManagementSystemProgram fan_program_1(model);
@@ -452,22 +448,20 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorSubroutine_EMS) {
   OutputVariable siteOutdoorAirDrybulbTemperature("Site Outdoor Air Drybulb Temperature", model);
 
   //add sensor
-  EnergyManagementSystemSensor OATdbSensor(model);
+  EnergyManagementSystemSensor OATdbSensor(model, siteOutdoorAirDrybulbTemperature);
   OATdbSensor.setName("OATdb Sensor really really really really really long name");
-  OATdbSensor.setOutputVariable(siteOutdoorAirDrybulbTemperature);
+ // OATdbSensor.setOutputVariable(siteOutdoorAirDrybulbTemperature);
 
   //add fan
   Schedule s = model.alwaysOnDiscreteSchedule();
   FanConstantVolume fan(model, s);
 
   //add actuator on fan
-  EnergyManagementSystemActuator fanActuator(fan);
+  std::string fanControlType = "Fan Pressure Rise";
+  std::string ComponentType = "Fan";
+  EnergyManagementSystemActuator fanActuator(fan, ComponentType, fanControlType);
   std::string fanName = fan.name().get() + "Press Actuator";
   fanActuator.setName(fanName + "really really really really really long name");
-  std::string fanControlType = "Fan Pressure Rise";
-  fanActuator.setActuatedComponentControlType(fanControlType);
-  std::string ComponentType = "Fan";
-  fanActuator.setActuatedComponentType(ComponentType);
 
   //add program
   EnergyManagementSystemSubroutine fan_program_1(model);
@@ -533,22 +527,20 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorProgramCallingManager_EMS) {
   OutputVariable siteOutdoorAirDrybulbTemperature("Site Outdoor Air Drybulb Temperature", model);
 
   //add sensor
-  EnergyManagementSystemSensor OATdbSensor(model);
+  EnergyManagementSystemSensor OATdbSensor(model, siteOutdoorAirDrybulbTemperature);
   OATdbSensor.setName("OATdb Sensor");
-  OATdbSensor.setOutputVariable(siteOutdoorAirDrybulbTemperature);
+  //OATdbSensor.setOutputVariable(siteOutdoorAirDrybulbTemperature);
 
   //add fan
   Schedule s = model.alwaysOnDiscreteSchedule();
   FanConstantVolume fan(model, s);
 
   //add actuator on fan
-  EnergyManagementSystemActuator fanActuator(fan);
+  std::string fanControlType = "Fan Pressure Rise";
+  std::string ComponentType = "Fan";
+  EnergyManagementSystemActuator fanActuator(fan, ComponentType, fanControlType);
   std::string fanName = fan.name().get() + "Press Actuator";
   fanActuator.setName(fanName);
-  std::string fanControlType = "Fan Pressure Rise";
-  fanActuator.setActuatedComponentControlType(fanControlType);
-  std::string ComponentType = "Fan";
-  fanActuator.setActuatedComponentType(ComponentType);
   EXPECT_EQ(ComponentType, fanActuator.actuatedComponentType());
 
   //add program
@@ -782,7 +774,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorOutputVariable_EMS) {
   EXPECT_EQ("glob_var_2", var2.nameString());
 
   // add output variable
-  EnergyManagementSystemOutputVariable outvar(model);
+  EnergyManagementSystemOutputVariable outvar(model, "glob_var");
   //setname
   outvar.setName("outputVar");
   EXPECT_EQ("outputVar", outvar.nameString());
@@ -791,7 +783,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorOutputVariable_EMS) {
   EXPECT_EQ(true, varset);
 
   // add output variable
-  EnergyManagementSystemOutputVariable outvar2(model);
+  EnergyManagementSystemOutputVariable outvar2(model, "glob_var_2");
   //setname
   outvar2.setName("outputVar2");
   EXPECT_EQ("outputVar2", outvar2.nameString());
@@ -829,7 +821,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorTrendVariable_EMS) {
   EnergyManagementSystemGlobalVariable globvar(model, "glob var");
 
   // add trend variable
-  EnergyManagementSystemTrendVariable var(model);
+  EnergyManagementSystemTrendVariable var(model, "glob_var");
   var.setName("TestName");
   EXPECT_EQ("TestName", var.name().get());
   var.setEMSVariableName("glob_var");
@@ -868,10 +860,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorInternalVariable_EMS) {
   Model model;
 
   // add internal variable
-  EnergyManagementSystemInternalVariable var(model);
+  EnergyManagementSystemInternalVariable var(model, "TestName");
   var.setName("Test name");
   var.setInternalDataIndexKeyName("TestName");
-  var.setInternalDataType("TestName");
+  //var.setInternalDataType("TestName");
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
@@ -982,9 +974,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorMeteredOutputVariable_EMS) {
   EXPECT_EQ("Site Outdoor Air Drybulb Temperature", siteOutdoorAirDrybulbTemperature.variableName());
 
   // add sensor
-  EnergyManagementSystemSensor OATdbSensor(model);
+  EnergyManagementSystemSensor OATdbSensor(model, siteOutdoorAirDrybulbTemperature);
   OATdbSensor.setName("OATdb Sensor");
-  OATdbSensor.setOutputVariable(siteOutdoorAirDrybulbTemperature);
+  //OATdbSensor.setOutputVariable(siteOutdoorAirDrybulbTemperature);
 
   //add program
   EnergyManagementSystemProgram program_1(model);
@@ -995,9 +987,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorMeteredOutputVariable_EMS) {
   subroutine_1.setName("subroutine one");
 
   // add metered output variable
-  EnergyManagementSystemMeteredOutputVariable meteredoutvar(model);
+  EnergyManagementSystemMeteredOutputVariable meteredoutvar(model, OATdbSensor.name().get());
 
-  meteredoutvar.setEMSVariableName(OATdbSensor.name().get());
+  //meteredoutvar.setEMSVariableName(OATdbSensor.name().get());
   meteredoutvar.setUpdateFrequency("ZoneTimestep");
   meteredoutvar.setEMSProgramorSubroutineName(program_1);
   meteredoutvar.setEMSProgramorSubroutineName(subroutine_1);
@@ -1050,10 +1042,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorTrendVariable2_EMS) {
   EnergyManagementSystemGlobalVariable globvar(model, "glob var");
 
   // add trend variable
-  EnergyManagementSystemTrendVariable var(model);
+  EnergyManagementSystemTrendVariable var(model, "glob_var");
   var.setName("TestName");
   EXPECT_EQ("TestName", var.name().get());
-  var.setEMSVariableName("glob_var");
+  //var.setEMSVariableName("glob_var");
   EXPECT_EQ("glob_var", var.eMSVariableName());
 
   var.setNumberofTimestepstobeLogged(2);
@@ -1075,10 +1067,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorTrendVariable2_EMS) {
   emsCIV.setConstructionObject(construction);
 
   // add trend variable
-  EnergyManagementSystemTrendVariable var2(model);
+  EnergyManagementSystemTrendVariable var2(model, emsCIV.name().get());
   var2.setName("TestName2");
   EXPECT_EQ("TestName2", var2.name().get());
-  var2.setEMSVariableName(emsCIV.name().get());
+  //var2.setEMSVariableName(emsCIV.name().get());
   EXPECT_EQ(emsCIV.name().get(), var2.eMSVariableName());
 
   var2.setNumberofTimestepstobeLogged(3);

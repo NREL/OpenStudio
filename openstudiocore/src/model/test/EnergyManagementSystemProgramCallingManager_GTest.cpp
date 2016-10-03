@@ -60,22 +60,20 @@ TEST_F(ModelFixture, EMSProgramCallingManager_EMSProgramCallingManager)
   OutputVariable siteOutdoorAirDrybulbTemperature("Site Outdoor Air Drybulb Temperature", model);
 
   //add sensor
-  EnergyManagementSystemSensor OATdbSensor(model);
+  EnergyManagementSystemSensor OATdbSensor(model, siteOutdoorAirDrybulbTemperature);
   OATdbSensor.setName("OATdb Sensor");
-  OATdbSensor.setOutputVariable(siteOutdoorAirDrybulbTemperature);
+  //OATdbSensor.setOutputVariable(siteOutdoorAirDrybulbTemperature);
 
   //add fan
   Schedule s = model.alwaysOnDiscreteSchedule();
   FanConstantVolume fan(model, s);
 
   //add actuator on fan
-  EnergyManagementSystemActuator fanActuator(fan);
+  std::string fanControlType = "Fan Pressure Rise";
+  std::string ComponentType = "Fan";
+  EnergyManagementSystemActuator fanActuator(fan, ComponentType, fanControlType);
   std::string fanName = fan.name().get() + "Press Actuator";
   fanActuator.setName(fanName);
-  std::string fanControlType = "Fan Pressure Rise";
-  fanActuator.setActuatedComponentControlType(fanControlType);
-  std::string ComponentType = "Fan";
-  fanActuator.setActuatedComponentType(ComponentType);
 
   //add program
   EnergyManagementSystemProgram fan_program_1(model);

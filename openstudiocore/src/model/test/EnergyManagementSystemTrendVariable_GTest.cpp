@@ -43,10 +43,10 @@ TEST_F(ModelFixture, EMSTrendVariable_EMSTrendVariable)
   EnergyManagementSystemGlobalVariable globvar(model, "glob var");
 
   // add trend variable
-  EnergyManagementSystemTrendVariable var(model);
+  EnergyManagementSystemTrendVariable var(model, "glob_var");
   var.setName("TestName");
   EXPECT_EQ("TestName", var.name().get());
-  var.setEMSVariableName("glob_var");
+  //var.setEMSVariableName("glob_var");
   EXPECT_EQ("glob_var", var.eMSVariableName());
 
   var.setNumberofTimestepstobeLogged(2);

@@ -46,9 +46,9 @@ TEST_F(ModelFixture, EMSMeteredOutputVariable)
   EXPECT_EQ("Site Outdoor Air Drybulb Temperature", siteOutdoorAirDrybulbTemperature.variableName());
 
   // add sensor
-  EnergyManagementSystemSensor OATdbSensor(model);
+  EnergyManagementSystemSensor OATdbSensor(model, siteOutdoorAirDrybulbTemperature);
   OATdbSensor.setName("OATdb Sensor");
-  OATdbSensor.setOutputVariable(siteOutdoorAirDrybulbTemperature);
+  //OATdbSensor.setOutputVariable(siteOutdoorAirDrybulbTemperature);
 
   //add program
   EnergyManagementSystemProgram program_1(model);
@@ -59,9 +59,9 @@ TEST_F(ModelFixture, EMSMeteredOutputVariable)
   subroutine_1.setName("subroutine one");
 
   // add metered output variable
-  EnergyManagementSystemMeteredOutputVariable meteredoutvar(model);
+  EnergyManagementSystemMeteredOutputVariable meteredoutvar(model, OATdbSensor.name().get());
 
-  meteredoutvar.setEMSVariableName(OATdbSensor.name().get());
+  //meteredoutvar.setEMSVariableName(OATdbSensor.name().get());
   EXPECT_EQ(meteredoutvar.eMSVariableName(), OATdbSensor.name().get());
   meteredoutvar.setUpdateFrequency("ZoneTimestep");
   EXPECT_EQ("ZoneTimestep",meteredoutvar.updateFrequency());
