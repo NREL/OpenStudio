@@ -38,6 +38,14 @@ If this is a major release
 - With Git, merge `develop` into `master`.
 
 
+Updating HVAC lib
+=================
+If this is a major release, the HVAC library must be updated.
+
+Run `developer/ruby/UpdateHVACLibrary.rb`
+
+Commit the updated files to develop.
+
 Updating EnergyPlus
 ===================
 
