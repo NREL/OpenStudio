@@ -153,7 +153,7 @@ TEST_F(ModelFixture, BuildingUnit_Features)
   EXPECT_TRUE(bldgUnit.setFeature("NumberOfBedrooms", "five"));
   boost::optional<std::string> dataType = bldgUnit.getFeatureDataType("NumberOfBedrooms");
   ASSERT_TRUE(dataType);
-  EXPECT_EQ(*dataType, "alpha");
+  EXPECT_EQ(*dataType, "String");
   boost::optional<std::string> strValue = bldgUnit.getFeatureAsString("NumberOfBedrooms");
   ASSERT_TRUE(strValue);
   EXPECT_EQ(*strValue, "five");
@@ -162,7 +162,7 @@ TEST_F(ModelFixture, BuildingUnit_Features)
   EXPECT_TRUE(bldgUnit.setFeature("NumberOfBedrooms", "six"));
   dataType = bldgUnit.getFeatureDataType("NumberOfBedrooms");
   ASSERT_TRUE(dataType);
-  EXPECT_EQ(*dataType, "alpha");
+  EXPECT_EQ(*dataType, "String");
   strValue = bldgUnit.getFeatureAsString("NumberOfBedrooms");
   ASSERT_TRUE(strValue);
   EXPECT_EQ(*strValue, "six");
@@ -171,7 +171,7 @@ TEST_F(ModelFixture, BuildingUnit_Features)
   EXPECT_TRUE(bldgUnit.setFeature("isNicePlace", false));
   dataType = bldgUnit.getFeatureDataType("isNicePlace");
   ASSERT_TRUE(dataType);
-  EXPECT_EQ(*dataType, "boolean");
+  EXPECT_EQ(*dataType, "Boolean");
   boost::optional<bool> boolValue = bldgUnit.getFeatureAsBoolean("isNicePlace");
   ASSERT_TRUE(boolValue);
   ASSERT_FALSE(*boolValue);
@@ -180,7 +180,7 @@ TEST_F(ModelFixture, BuildingUnit_Features)
   EXPECT_TRUE(bldgUnit.setFeature("isNicePlace", true));
   dataType = bldgUnit.getFeatureDataType("isNicePlace");
   ASSERT_TRUE(dataType);
-  EXPECT_EQ(*dataType, "boolean");
+  EXPECT_EQ(*dataType, "Boolean");
   boolValue = bldgUnit.getFeatureAsBoolean("isNicePlace");
   ASSERT_TRUE(boolValue);
   ASSERT_TRUE(*boolValue);
@@ -195,7 +195,7 @@ TEST_F(ModelFixture, BuildingUnit_Features)
   EXPECT_TRUE(bldgUnit.setFeature("NumberOfBathrooms", 1.5));
   dataType = bldgUnit.getFeatureDataType("NumberOfBathrooms");
   ASSERT_TRUE(dataType);
-  EXPECT_EQ(*dataType, "real");
+  EXPECT_EQ(*dataType, "Double");
   boost::optional<double> dblValue = bldgUnit.getFeatureAsDouble("NumberOfBathrooms");
   ASSERT_TRUE(dblValue);
   boost::optional<int> intValue = bldgUnit.getFeatureAsInteger("NumberOfBathrooms");
@@ -206,7 +206,7 @@ TEST_F(ModelFixture, BuildingUnit_Features)
   EXPECT_TRUE(bldgUnit.setFeature("NumberOfBedrooms", 3));
   dataType = bldgUnit.getFeatureDataType("NumberOfBedrooms");
   ASSERT_TRUE(dataType);
-  EXPECT_EQ(*dataType, "integer");
+  EXPECT_EQ(*dataType, "Integer");
   dblValue = bldgUnit.getFeatureAsDouble("NumberOfBedrooms");
   ASSERT_FALSE(dblValue);
   intValue = bldgUnit.getFeatureAsInteger("NumberOfBedrooms");

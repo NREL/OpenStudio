@@ -167,12 +167,12 @@ namespace detail {
 
   boost::optional<std::string> BuildingUnit_Impl::getFeatureAsString(const std::string& name) const
   {
-    return getFeatureStringAndCheckForType(name, "alpha");
+    return getFeatureStringAndCheckForType(name, "String");
   }
 
   boost::optional<double> BuildingUnit_Impl::getFeatureAsDouble(const std::string& name) const
   {
-    boost::optional<std::string> strValue(getFeatureStringAndCheckForType(name, "real"));
+    boost::optional<std::string> strValue(getFeatureStringAndCheckForType(name, "Double"));
     boost::optional<double> value;
     if (strValue) {
       try {
@@ -189,7 +189,7 @@ namespace detail {
 
   boost::optional<int> BuildingUnit_Impl::getFeatureAsInteger(const std::string& name) const
   {
-    boost::optional<std::string> strValue(getFeatureStringAndCheckForType(name, "integer"));
+    boost::optional<std::string> strValue(getFeatureStringAndCheckForType(name, "Integer"));
     boost::optional<int> value;
     if (strValue) {
       try {
@@ -206,7 +206,7 @@ namespace detail {
 
   boost::optional<bool> BuildingUnit_Impl::getFeatureAsBoolean(const std::string& name) const
   {
-    boost::optional<std::string> strValue(getFeatureStringAndCheckForType(name, "boolean"));
+    boost::optional<std::string> strValue(getFeatureStringAndCheckForType(name, "Boolean"));
     boost::optional<bool> value;
     if (strValue) {
       if (*strValue == "false") {
@@ -257,7 +257,7 @@ namespace detail {
 
   bool BuildingUnit_Impl::setFeature(const std::string& name, const std::string& value)
   {
-    return setFeatureGroupDataTypeAndValue(name, "alpha", value);
+    return setFeatureGroupDataTypeAndValue(name, "String", value);
   }
 
   bool BuildingUnit_Impl::setFeature(const std::string& name, const char* value)
@@ -267,12 +267,12 @@ namespace detail {
 
   bool BuildingUnit_Impl::setFeature(const std::string& name, double value)
   {
-    return setFeatureGroupDataTypeAndValue(name, "real", boost::lexical_cast<std::string>(value));
+    return setFeatureGroupDataTypeAndValue(name, "Double", boost::lexical_cast<std::string>(value));
   }
 
   bool BuildingUnit_Impl::setFeature(const std::string& name, int value)
   {
-    return setFeatureGroupDataTypeAndValue(name, "integer", boost::lexical_cast<std::string>(value));
+    return setFeatureGroupDataTypeAndValue(name, "Integer", boost::lexical_cast<std::string>(value));
   }
 
   bool BuildingUnit_Impl::setFeature(const std::string& name, bool value)
@@ -283,7 +283,7 @@ namespace detail {
     } else {
       strValue = "false";
     }
-    return setFeatureGroupDataTypeAndValue(name, "boolean", strValue);
+    return setFeatureGroupDataTypeAndValue(name, "Boolean", strValue);
   }
 
   bool BuildingUnit_Impl::resetFeature(const std::string& name)
