@@ -24,6 +24,10 @@
 #include "ModelObject.hpp"
 
 namespace openstudio {
+
+namespace energyplus {
+  class ReverseTranslator;
+}
 namespace model {
 
 namespace detail {
@@ -38,8 +42,6 @@ class MODEL_API EnergyManagementSystemInternalVariable : public ModelObject {
   /** @name Constructors and Destructors */
   //@{
   explicit EnergyManagementSystemInternalVariable(const Model& model, std::string internalDataType);
-
-  explicit EnergyManagementSystemInternalVariable(const Model& model);
 
   virtual ~EnergyManagementSystemInternalVariable() {}
 
@@ -79,9 +81,11 @@ class MODEL_API EnergyManagementSystemInternalVariable : public ModelObject {
   friend class Model;
   friend class IdfObject;
   friend class openstudio::detail::IdfObject_Impl;
+  friend class energyplus::ReverseTranslator;
   /// @endcond
  private:
   REGISTER_LOGGER("openstudio.model.EnergyManagementSystemInternalVariable");
+  explicit EnergyManagementSystemInternalVariable(const Model& model);
 };
 
 /** \relates EnergyManagementSystemInternalVariable*/

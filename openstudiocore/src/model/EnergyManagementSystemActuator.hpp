@@ -24,6 +24,11 @@
 #include "ModelObject.hpp"
 
 namespace openstudio {
+
+namespace energyplus { 
+  class ReverseTranslator;
+}
+
 namespace model {
 
 namespace detail {
@@ -39,10 +44,6 @@ class MODEL_API EnergyManagementSystemActuator : public ModelObject {
   //@{
 
   explicit EnergyManagementSystemActuator(const ModelObject& modelObject, std::string actuatedComponentType, std::string actuatedComponentControlType);
-
-  explicit EnergyManagementSystemActuator(const ModelObject& modelObject);
-
-  explicit EnergyManagementSystemActuator(const Model& model);
 
   virtual ~EnergyManagementSystemActuator() {}
 
@@ -84,9 +85,15 @@ class MODEL_API EnergyManagementSystemActuator : public ModelObject {
   friend class Model;
   friend class IdfObject;
   friend class openstudio::detail::IdfObject_Impl;
+  friend class energyplus::ReverseTranslator;
   /// @endcond
  private:
   REGISTER_LOGGER("openstudio.model.EnergyManagementSystemActuator");
+  //These are for the ReveseTranslator
+  explicit EnergyManagementSystemActuator(const ModelObject& modelObject);
+
+  explicit EnergyManagementSystemActuator(const Model& model);
+
 };
 
 /** \relates EnergyManagementSystemActuator*/

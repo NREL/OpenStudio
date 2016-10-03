@@ -28,6 +28,11 @@
 #include "OutputMeter_Impl.hpp"
 
 namespace openstudio {
+
+namespace energyplus {
+  class ReverseTranslator;
+}
+
 namespace model {
 
 class OutputVariable;
@@ -44,8 +49,6 @@ class MODEL_API EnergyManagementSystemSensor : public ModelObject {
  public:
   /** @name Constructors and Destructors */
   //@{
-
-  explicit EnergyManagementSystemSensor(const Model& model);
 
   explicit EnergyManagementSystemSensor(const Model& model, OutputVariable& outvar);
 
@@ -92,9 +95,11 @@ class MODEL_API EnergyManagementSystemSensor : public ModelObject {
   friend class Model;
   friend class IdfObject;
   friend class openstudio::detail::IdfObject_Impl;
+  friend class energyplus::ReverseTranslator;
   /// @endcond
  private:
   REGISTER_LOGGER("openstudio.model.EnergyManagementSystemSensor");
+  explicit EnergyManagementSystemSensor(const Model& model);
 };
 
 /** \relates EnergyManagementSystemSensor*/

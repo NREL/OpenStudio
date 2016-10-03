@@ -65,9 +65,9 @@ TEST_F(ModelFixture, EMSOutputVariable_EMSOutputVariable)
   OutputVariable siteOutdoorAirDrybulbTemperature("Site Outdoor Air Drybulb Temperature", model);
 
   // add sensor
-  EnergyManagementSystemSensor OATdbSensor(model);
+  EnergyManagementSystemSensor OATdbSensor(model, siteOutdoorAirDrybulbTemperature);
   OATdbSensor.setName("OATdb Sensor");
-  OATdbSensor.setOutputVariable(siteOutdoorAirDrybulbTemperature);
+  //OATdbSensor.setOutputVariable(siteOutdoorAirDrybulbTemperature);
 
   // add fan
   Schedule s = model.alwaysOnDiscreteSchedule();
@@ -75,14 +75,14 @@ TEST_F(ModelFixture, EMSOutputVariable_EMSOutputVariable)
   FanConstantVolume fan2(model, s);
 
   // add actuator
-  EnergyManagementSystemActuator fanActuator(fan);
+  std::string fanControlType = "Fan Pressure Rise";
+  std::string ComponentType = "Fan";
+  EnergyManagementSystemActuator fanActuator(fan, ComponentType, fanControlType);
   std::string fanName = fan.name().get() + "Press Actuator";
   fanActuator.setName(fanName);
-  std::string fanControlType = "Fan Pressure Rise";
-  fanActuator.setActuatedComponentControlType(fanControlType);
 
   // add output variable
-  EnergyManagementSystemOutputVariable outvar(model);
+  EnergyManagementSystemOutputVariable outvar(model, "globalVar");
   //setname
   outvar.setName("outputVar");
   EXPECT_EQ("outputVar", outvar.nameString());

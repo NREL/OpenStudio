@@ -56,9 +56,9 @@ TEST_F(ModelFixture, EMSSensor_EMSSensor)
   EXPECT_EQ("Site Outdoor Air Drybulb Temperature", siteOutdoorAirDrybulbTemperature.variableName());
 
   // add sensor
-  EnergyManagementSystemSensor OATdbSensor(model);
+  EnergyManagementSystemSensor OATdbSensor(model, siteOutdoorAirDrybulbTemperature);
   OATdbSensor.setName("OATdb Sensor");
-  OATdbSensor.setOutputVariable(siteOutdoorAirDrybulbTemperature);
+  //OATdbSensor.setOutputVariable(siteOutdoorAirDrybulbTemperature);
 
   EXPECT_EQ("OATdb_Sensor", OATdbSensor.nameString());
   EXPECT_EQ(siteOutdoorAirDrybulbTemperature.handle(), OATdbSensor.outputVariable().get().handle() );
@@ -71,9 +71,9 @@ TEST_F(ModelFixture, EMSSensor_EMSSensor)
   EXPECT_EQ("Zone Lights Electric Power", lightsElectricPower.variableName());
 
   // add light sensor on zone1
-  EnergyManagementSystemSensor lights(model);
+  EnergyManagementSystemSensor lights(model, lightsElectricPower);
   lights.setName("Light Sensor");
-  lights.setOutputVariable(lightsElectricPower);
+  //lights.setOutputVariable(lightsElectricPower);
   lights.setKeyName(zone1.name().get());
 
   EXPECT_EQ(zone1.name().get(), lights.keyName().get());
@@ -84,9 +84,9 @@ TEST_F(ModelFixture, EMSSensor_EMSSensor)
   meter.setName("test meter");
 
   //add sensor to meter
-  EnergyManagementSystemSensor meter_sensor(model);
+  EnergyManagementSystemSensor meter_sensor(model, meter);
   meter_sensor.setName("meter sensor");
-  meter_sensor.setOutputMeter(meter);
+  //meter_sensor.setOutputMeter(meter);
 
   EXPECT_EQ("meter_sensor", meter_sensor.nameString());
   EXPECT_EQ(meter.handle(), meter_sensor.outputMeter().get().handle());

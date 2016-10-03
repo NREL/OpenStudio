@@ -24,6 +24,11 @@
 #include "ModelObject.hpp"
 
 namespace openstudio {
+
+namespace energyplus {
+  class ReverseTranslator;
+}
+
 namespace model {
 
 namespace detail {
@@ -38,8 +43,6 @@ class MODEL_API EnergyManagementSystemTrendVariable : public ModelObject {
   /** @name Constructors and Destructors */
   //@{
   explicit EnergyManagementSystemTrendVariable(const Model& model, std::string eMSVariableName);
-
-  explicit EnergyManagementSystemTrendVariable(const Model& model);
 
   virtual ~EnergyManagementSystemTrendVariable() {}
 
@@ -77,9 +80,11 @@ class MODEL_API EnergyManagementSystemTrendVariable : public ModelObject {
   friend class Model;
   friend class IdfObject;
   friend class openstudio::detail::IdfObject_Impl;
+  friend class energyplus::ReverseTranslator;
   /// @endcond
  private:
   REGISTER_LOGGER("openstudio.model.EnergyManagementSystemTrendVariable");
+  explicit EnergyManagementSystemTrendVariable(const Model& model);
 };
 
 /** \relates EnergyManagementSystemTrendVariable*/
