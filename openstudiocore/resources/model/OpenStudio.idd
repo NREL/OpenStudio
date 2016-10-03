@@ -2004,10 +2004,10 @@ OS:BuildingUnit,
        \required-field
   A6,  \field Building Unit Feature Data Type
        \type choice
-       \key alpha
-       \key real
-       \key boolean
-       \key integer
+       \key String
+       \key Double
+       \key Boolean
+       \key Integer
        \required-field
   A7;  \field Building Unit Feature Value
        \type alpha
