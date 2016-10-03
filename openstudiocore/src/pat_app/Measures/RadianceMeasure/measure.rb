@@ -133,6 +133,19 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     end
   end
 
+  # crude test for OpenStudio (not model) version, since OS 2.x mis-reports
+  def got_2x
+
+    v2 = true
+    begin 
+      got_workflow = OpenStudio::WorkflowJSON # i can haz wofkflow gem?
+    rescue NameError
+      v2 = false
+      return v2
+    end
+    return v2
+
+  end
 
   # check for number of rmtxop processes
   def merge_count()
@@ -232,10 +245,12 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     print_statement("Using #{sim_cores} core(s) for Radiance jobs", runner)
 
     # help those poor Windows users out
+    programExtension = ""
     perlExtension = ""
     catCommand = "cat"
     osQuote = "\'"
     if OS.windows #/mswin/.match(RUBY_PLATFORM) || /mingw/.match(RUBY_PLATFORM)
+      programExtension = ".exe"
       perlExtension = ".pl"
       catCommand = "type"
       osQuote = "\""
@@ -246,34 +261,54 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     print_statement("### DEBUG: running in debug mode", runner) if debug_mode
 
     # setup environment for Radiance and Perl
-    co = OpenStudio::Runmanager::ConfigOptions.new(true);
-    co.fastFindRadiance();
-    radiancePath = co.getTools().getLastByName("rad").localBinPath.parent_path
-    path = OpenStudio::Path.new(radiancePath).to_s
-    raypath = (OpenStudio::Path.new(radiancePath).parent_path() / 
-    OpenStudio::Path.new('lib')).to_s()   
+    if !got_2x
+      
+      co = OpenStudio::Runmanager::ConfigOptions.new(true);
+      co.fastFindRadiance();
+      radiancePath = co.getTools().getLastByName("rad").localBinPath.parent_path
+      path = OpenStudio::Path.new(radiancePath).to_s
+      raypath = (OpenStudio::Path.new(radiancePath).parent_path() / 
+      OpenStudio::Path.new('lib')).to_s()   
 
-    epw2weapath = (OpenStudio::Path.new(radiancePath) / OpenStudio::Path.new('epw2wea')).to_s
+      epw2weapath = (OpenStudio::Path.new(radiancePath) / OpenStudio::Path.new('epw2wea')).to_s
 
-    programExtension = ""
-    if OS.windows #/mswin/.match(RUBY_PLATFORM) || /mingw/.match(RUBY_PLATFORM)
-      programExtension = ".exe"
-      perlpath = ""
-      if OpenStudio::applicationIsRunningFromBuildDirectory()
-        perlpath = OpenStudio::getApplicationRunDirectory().parent_path().parent_path() / 
-        OpenStudio::Path.new("strawberry-perl-5.16.2.1-32bit-portable-reduced/perl/bin")
+      
+      if OS.windows #/mswin/.match(RUBY_PLATFORM) || /mingw/.match(RUBY_PLATFORM)
+        
+        perlpath = ""
+        if OpenStudio::applicationIsRunningFromBuildDirectory()
+          perlpath = OpenStudio::getApplicationRunDirectory().parent_path().parent_path() / 
+          OpenStudio::Path.new("strawberry-perl-5.16.2.1-32bit-portable-reduced/perl/bin")
+        else
+          perlpath = OpenStudio::getApplicationRunDirectory().parent_path() / 
+          OpenStudio::Path.new("strawberry-perl-5.16.2.1-32bit-portable-reduced/perl/bin")
+        end
+        print_statement("Adding path for local perl: " + perlpath.to_s, runner)
+        ENV["PATH"] = path + ";" + ENV["PATH"] + ";" + perlpath.to_s
+        ENV["RAYPATH"] = path + ";" + raypath + ";."
       else
-        perlpath = OpenStudio::getApplicationRunDirectory().parent_path() / 
-        OpenStudio::Path.new("strawberry-perl-5.16.2.1-32bit-portable-reduced/perl/bin")
+        ENV["PATH"] = path + ":" + ENV["PATH"]
+        ENV["RAYPATH"] = path + ":" + raypath + ":."
       end
-      print_statement("Adding path for local perl: " + perlpath.to_s, runner)
-      ENV["PATH"] = path + ";" + ENV["PATH"] + ";" + perlpath.to_s
-      ENV["RAYPATH"] = path + ";" + raypath + ";."
-    else
-      ENV["PATH"] = path + ":" + ENV["PATH"]
-      ENV["RAYPATH"] = path + ":" + raypath + ":."
+
     end
-    
+
+    if got_2x
+
+      epp = OpenStudio::getEnergyPlusExecutable() # yeah, you know me
+      print_statement("Found EnergyPlus at #{epp}", runner)
+
+      ## **for testing only** ##
+      ## ASSumes Radiance/Perl ##
+      path = "/usr/local/radiance/bin"
+      raypath = "/usr/local/radiance/lib"
+      perlpath = "/usr/bin/perl"
+      ## </ASS> ##
+      
+      #rad = OpenStudio::getRadianceDirectory() #not yet
+
+    end
+
     # Radiance version detection and environment reportage                 
     # need to help Open3 on Windows (path sep issues)             
     returnDir = Dir.pwd
@@ -288,84 +323,90 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     print_statement("Running on Windows (sorry)", runner) if OS.windows && debug_mode
     print_statement("Running on unix", runner) if OS.unix && debug_mode
 
-    if Dir.glob(epw2weapath + programExtension).empty?
-      runner.registerError("Cannot find epw2wea tool in radiance installation at '#{radiancePath}'. You may need to install a newer version of Radiance.")
-      exit false
+    if !got_2x
+    
+      if Dir.glob(epw2weapath + programExtension).empty?
+    
+        runner.registerError("Cannot find epw2wea tool in radiance installation at '#{radiancePath}'. You may need to install a newer version of Radiance.")
+        exit false
+    
+      end
+
     end
 
-    ENV["EPW2WEAPATH"] = epw2weapath + programExtension
+    # Don't think we need this...
+    # ENV["EPW2WEAPATH"] = epw2weapath + programExtension
 
  		if !which("perl")
  		 runner.registerError('Perl could not be found in path, exiting')
  		 exit false
  		end
      
-    # get the epw file
-    # TODO align with long-winded thread from 2015.07.28
-    
-    epw_path = nil
-    
-    # try runner first
-    if runner.lastEpwFilePath.is_initialized
-      test = runner.lastEpwFilePath.get.to_s
-      if File.exist?(test)
-        epw_path = test
+    # get the weather
+
+    if !got_2x     
+
+      epw_path = nil
+      
+      # try runner first
+      if runner.lastEpwFilePath.is_initialized
+        test = runner.lastEpwFilePath.get.to_s
+        if File.exist?(test)
+          epw_path = test
+        end
       end
-    end
-        
-    # try model second
-    if !epw_path
-      if model.weatherFile.is_initialized
-        test = model.weatherFile.get.path
-        if test.is_initialized
-          # have a file name from the model
-          if File.exist?(test.get.to_s)
-            epw_path = test.get
-          else
-            # If this is an always-run Measure, need to check for file in different path
-            alt_weath_path = File.expand_path(File.join(File.dirname(__FILE__), \
-            "../../../resources"))
-            alt_epw_path = File.expand_path(File.join(alt_weath_path, test.get.to_s))
-            server_epw_path = File.expand_path(File.join(File.dirname(__FILE__), \
-            "../../weather/#{File.basename(test.get.to_s)}"))
-            if File.exist?(alt_epw_path)
-              epw_path = OpenStudio::Path.new(alt_epw_path)
-            elsif File.exist? server_epw_path
-              epw_path = OpenStudio::Path.new(server_epw_path)
+          
+      # try model second
+      if !epw_path
+        if model.weatherFile.is_initialized
+          test = model.weatherFile.get.path
+          if test.is_initialized
+            # have a file name from the model
+            if File.exist?(test.get.to_s)
+              epw_path = test.get
             else
-              runner.registerError("Model has been assigned a weather file, but the file is not in \
-              the specified location of '#{test.get}'. server_epw_path: #{server_epw_path}, test \
-              basename: #{File.basename(test.get.to_s)}, test: #{test}")            
-              return false
+              # If this is an always-run Measure, need to check for file in different path
+              alt_weath_path = File.expand_path(File.join(File.dirname(__FILE__), \
+              "../../../resources"))
+              alt_epw_path = File.expand_path(File.join(alt_weath_path, test.get.to_s))
+              server_epw_path = File.expand_path(File.join(File.dirname(__FILE__), \
+              "../../weather/#{File.basename(test.get.to_s)}"))
+              if File.exist?(alt_epw_path)
+                epw_path = OpenStudio::Path.new(alt_epw_path)
+              elsif File.exist? server_epw_path
+                epw_path = OpenStudio::Path.new(server_epw_path)
+              else
+                runner.registerError("Model has been assigned a weather file, but the file is not in \
+                the specified location of '#{test.get}'. server_epw_path: #{server_epw_path}, test \
+                basename: #{File.basename(test.get.to_s)}, test: #{test}")            
+                return false
+              end
             end
+          else
+            runner.registerError('Model has a weather file assigned, but the weather file path has \
+            been deleted.')
+            return false
           end
         else
-          runner.registerError('Model has a weather file assigned, but the weather file path has \
-          been deleted.')
+          runner.registerError('Model has not been assigned a weather file.')
           return false
         end
-      else
-        runner.registerError('Model has not been assigned a weather file.')
-        return false
       end
+
+    else
+
+      ## testing ##
+      ## TODO get wx for 2.x
+      print_statement("no weather", runner)
+
     end
-    
+
+
     ## ModelToRad Workflow
 
-    # crude test for OpenStudio version, since OS 2.x mis-reports
-    # TODO get version from cli -- when it reports accurately.
-    legacy = false
-    begin 
-      got_workflow = OpenStudio::Workflow # i can haz wofkflow gem?
-    rescue NameError
-      puts 'Running on legacy OpenStudio (1.x), workflow gem not found.'
-      legacy = true
-    end
-    if !legacy
-      puts 'Radiance measure not yet supported on OpenStudio 2.x, WIP!!'
-    end
+    modelPath = ''
 
-    if legacy
+    if !got_2x
       # save osm for input to eplus pre-process
       modelPath = OpenStudio::Path.new("eplusin.osm")
       model.save(modelPath,true)
@@ -412,13 +453,48 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
       end
 
-    else # OS 2.x support (add)
+    else # OS 2.x support (under construction)
 
-      puts 'trying OS 2.x support...'
+      require 'openstudio-workflow'
 
-      #???.getEnergyPlusExecutable
-      #???.getRadianceDirectory
+      print_statement('trying OS 2.x support...', runner)
 
+      # waiting on new package to test this out (as of 9-26)
+      #preprocessed_model = OpenStudio::Radiance::modelToRadPreprocess(model.clone.to_Model.get)
+      #preprocessed_model.save(temp_path, true)
+
+      # save osm for input to eplus pre-process
+      modelPath = OpenStudio::Path.new("eplusin.osm")
+      temp_wx = OpenStudio::EpwFile.new('/Users/rgugliel/work/os_support/2B_USA_AZ_PHOENIX.epw')
+      OpenStudio::Model::WeatherFile::setWeatherFile(model, temp_wx)
+      model.save(modelPath,true)
+
+      wf = OpenStudio::WorkflowJSON.new
+      wf.setSeedFile(modelPath)
+      wf_path = File.join(Dir.pwd, 'temp_in.osw')
+      osw = wf.saveAs(wf_path)
+
+      wf = OpenStudio::Workflow::Run.new(wf_path)
+
+      wf.run
+
+      #cs = wf.currentStep (no worky yet)
+      sql_file = OpenStudio::SqlFile.new(File.join(Dir.pwd, 'run/eplusout.sql')) #fix hard coded path
+      old_sql_file = model.sqlFile
+      model.setSqlFile(sql_file)
+     
+      ft = OpenStudio::Radiance::RadianceForwardTranslator.new
+      #radPath = File.join(Dir.pwd, 'rad')
+      radPath = OpenStudio::Path.new('radiance')
+      # print_statement("model = #{model}", runner)
+
+      outfiles = ft.translateModel(radPath, model)
+  
+      if old_sql_file.empty?
+        model.resetSqlFile
+      else
+        model.setSqlFile(old_sql_file.get)
+      end
 
     end
 
@@ -438,13 +514,15 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     FileUtils.mkdir_p("#{radPath}/wx") unless File.exist?("#{radPath}/wx")
     FileUtils.mkdir_p("#{radPath}/octrees") unless File.exist?("#{radPath}/octrees")
  
-    # copy Radiance model up
-    # TODO be smarter about this.
-    FileUtils.copy_entry("#{epout_dir}/4-ModelToRad-0", rad_dir)
-    FileUtils.cp("#{epout_dir}/3-EnergyPlus-0/eplusout.sql", "#{rad_dir}/sql")
+    if !got_2x
+      # copy Radiance model up
+      # TODO be smarter about this.
+      FileUtils.copy_entry("#{epout_dir}/4-ModelToRad-0", rad_dir)
+      FileUtils.cp("#{epout_dir}/3-EnergyPlus-0/eplusout.sql", "#{rad_dir}/sql")
+      # remove the E+ run dir so we don't confuse users 
+      FileUtils.rm_rf(epout_dir)
+    end
     
-    # remove the E+ run dir so we don't confuse users 
-    FileUtils.rm_rf(epout_dir)
 
     # Set Radiance simulation settings
     # TODO: read settings directly from model
@@ -2174,7 +2252,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     end
 
     print_statement("Warning: 'Cleanup data' option was selected; will delete ancilary Radiance data and all Radiance input files, post-simulation.",runner) if debug_mode && cleanup_data
-
+#
     # get the daylight coefficient matrices
     calculateDaylightCoeffecients(radPath, sim_cores, catCommand, options_tregVars, 
     options_klemsDensity, options_skyvecDensity, options_dmx, options_vmx, rad_settings, procsUsed, runner, debug_mode)
