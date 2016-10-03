@@ -158,6 +158,14 @@ if(MSVC)
     # VS2013 Update 5: no-op
   endif()
 
+  if ("${CMAKE_GENERATOR}" STREQUAL "Visual Studio 12 2013 Win64")
+    set(CMAKE_GENERATOR_TOOLSET "v120</PlatformToolset><PreferredToolArchitecture>x64</PreferredToolArchitecture><PlatformToolset>v120")
+  elseif ("${CMAKE_GENERATOR}" STREQUAL "Visual Studio 14 2015 Win64")
+    set(CMAKE_GENERATOR_TOOLSET "v140</PlatformToolset><PreferredToolArchitecture>x64</PreferredToolArchitecture><PlatformToolset>v140")
+  else()
+    message(STATUS "This version of Visual Studio will not use the 64 bit linker. Build times will likely suffer.")
+  endif()
+
   # Build with Multiple Processes
   set(BUILD_WITH_MULTIPLE_PROCESSES ON CACHE BOOL "/MP compiler flag for full processor utilization")
   mark_as_advanced(BUILD_WITH_MULTIPLE_PROCESSES)
