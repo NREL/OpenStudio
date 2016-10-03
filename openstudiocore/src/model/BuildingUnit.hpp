@@ -64,7 +64,7 @@ class MODEL_API BuildingUnit : public ModelObject {
   boost::optional<RenderingColor> renderingColor() const;
 
   // Gets the building unit type
-  boost::optional<std::string> buildingUnitType() const;
+  std::string buildingUnitType() const;
 
   std::vector<Space> spaces() const;
 
@@ -82,6 +82,7 @@ class MODEL_API BuildingUnit : public ModelObject {
 
   std::vector<std::string> suggestedFeatures() const;
 
+  double floorArea() const;
 
   //@}
   /** @name Setters */

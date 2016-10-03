@@ -87,9 +87,11 @@ namespace detail {
     OS_ASSERT(ok);
   }
 
-  boost::optional<std::string> BuildingUnit_Impl::buildingUnitType() const
+  std::string BuildingUnit_Impl::buildingUnitType() const
   {
-    return getString(OS_BuildingUnitFields::BuildingUnitType, true, true);
+    boost::optional<std::string> retval = getString(OS_BuildingUnitFields::BuildingUnitType, true, true);
+    OS_ASSERT(retval);
+    return *retval;
   }
 
   bool BuildingUnit_Impl::setBuildingUnitType(const std::string& buildingUnitType)
@@ -111,12 +113,14 @@ namespace detail {
 
   std::vector<std::string> BuildingUnit_Impl::featureNames() const
   {
-    std::vector<std::string> names;
+    std::set<std::string> nameSet;
     for (const ModelExtensibleGroup& group : castVector<ModelExtensibleGroup>(extensibleGroups())) {
       boost::optional<std::string> name = group.getString(OS_BuildingUnitExtensibleFields::BuildingUnitFeatureName);
       OS_ASSERT(name);
-      names.push_back(*name);
+      nameSet.insert(*name);
     }
+    std::vector<std::string> names;
+    names.assign(nameSet.begin(), nameSet.end());
     return names;
   }
 
@@ -126,12 +130,10 @@ namespace detail {
       const boost::optional<std::string> featureName(group.getString(OS_BuildingUnitExtensibleFields::BuildingUnitFeatureName));
       OS_ASSERT(featureName);
       if (*featureName == name) {
-        boost::optional<ModelExtensibleGroup> modelGroup(group);
-        return modelGroup;
+        return group;
       }
     }
-    boost::optional<ModelExtensibleGroup> nullModelGroup(boost::none);
-    return nullModelGroup;
+    return boost::none;
   }
 
   boost::optional<std::string> BuildingUnit_Impl::getFeatureDataType(const std::string &name) const
@@ -289,9 +291,11 @@ namespace detail {
   bool BuildingUnit_Impl::resetFeature(const std::string& name)
   {
     unsigned n_groups = numExtensibleGroups();
-    std::vector<std::string> featureNames(this->featureNames());
     for (unsigned i=0; i < n_groups; ++i) {
-      if (featureNames[i] == name) {
+      ModelExtensibleGroup group = getExtensibleGroup(i).cast<ModelExtensibleGroup>();
+      const boost::optional<std::string> featureName(group.getString(OS_BuildingUnitExtensibleFields::BuildingUnitFeatureName));
+      OS_ASSERT(featureName);
+      if (*featureName == name) {
         eraseExtensibleGroup(i);
         return true;
       }
@@ -335,7 +339,7 @@ std::vector<std::string> BuildingUnit::buildingUnitTypeValues()
   );
 }
 
-boost::optional<std::string> BuildingUnit::buildingUnitType() const
+std::string BuildingUnit::buildingUnitType() const
 {
   return getImpl<detail::BuildingUnit_Impl>()->buildingUnitType();
 }
@@ -388,6 +392,15 @@ boost::optional<bool> BuildingUnit::getFeatureAsBoolean(const std::string& name)
 std::vector<std::string> BuildingUnit::suggestedFeatures() const
 {
   return getImpl<detail::BuildingUnit_Impl>()->suggestedFeatures();
+}
+
+double BuildingUnit::floorArea() const
+{
+  double totalFloorArea(0.0);
+  for (const auto &space : this->spaces()) {
+    totalFloorArea += space.floorArea();
+  }
+  return totalFloorArea;
 }
 
 bool BuildingUnit::setFeature(const std::string& name, const std::string& value)
