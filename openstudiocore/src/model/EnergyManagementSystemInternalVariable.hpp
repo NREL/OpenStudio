@@ -28,6 +28,7 @@ namespace openstudio {
 namespace energyplus {
   class ReverseTranslator;
 }
+
 namespace model {
 
 namespace detail {
