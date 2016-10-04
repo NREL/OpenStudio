@@ -901,7 +901,7 @@ find_package(Qt5Positioning 5.6.1 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PA
 find_package(Qt5WebEngine 5.6.1 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
 find_package(Qt5WebEngineWidgets 5.6.1 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
 
-find_program(QtWebEngineProcess NAMES QtWebEngineProcess PATHS "${QT_INSTALL_DIR}/bin/" "${QT_INSTALL_DIR}/lib/QtWebEngineCore.framework/Helpers" NO_DEFAULT_PATH)
+find_program(QtWebEngineProcess NAMES QtWebEngineProcess PATHS "${QT_INSTALL_DIR}/bin/" "${QT_INSTALL_DIR}/libexec/" "${QT_INSTALL_DIR}/lib/QtWebEngineCore.framework/Helpers" NO_DEFAULT_PATH)
 find_file(icudtl NAMES icudtl.dat PATHS "${QT_INSTALL_DIR}/resources/" "${QT_INSTALL_DIR}/lib/QtWebEngineCore.framework/Resources" NO_DEFAULT_PATH)
 
 list(APPEND QT_WEB_LIBS Qt5::WebEngine)
