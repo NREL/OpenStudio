@@ -388,7 +388,7 @@ if(BUILD_QT)
       URL http://openstudio-resources.s3.amazonaws.com/dependencies/qt-everywhere-opensource-src-5.6.1.tar.gz
       URL_MD5 ed16ef2a30c674f91f8615678005d44c
       CONFIGURE_COMMAND sh -c "./configure ${QT_CONFIGURE_COMMAND}"
-      PATCH_COMMAND ""
+      PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/qt/qstatic_version_tag.patch
       BUILD_COMMAND sh -c "make -j${CPUCOUNT} && make install"
       INSTALL_COMMAND ""
       BUILD_IN_SOURCE 1

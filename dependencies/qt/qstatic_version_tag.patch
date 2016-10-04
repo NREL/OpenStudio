@@ -1,0 +1,29 @@
+From 3b2678e2c89797418636947a70e26967ec1320c1 Mon Sep 17 00:00:00 2001
+From: Thiago Macieira <thiago.macieira@intel.com>
+Date: Wed, 14 Sep 2016 11:29:37 -0700
+Subject: [PATCH] qversiontagging.h: Don't tag binaries in static mode
+
+Though there should have been no ill-effects, they happen.
+
+Task-number: QTBUG-52605
+Change-Id: I9093948278414644a416fffd147444078edc3183
+---
+ qtbase/src/corelib/global/qversiontagging.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/qtbase/src/corelib/global/qversiontagging.h b/qtbase/src/corelib/global/qversiontagging.h
+index fa824d1c..b46bb7a 100644
+--- a/qtbase/src/corelib/global/qversiontagging.h
++++ b/qtbase/src/corelib/global/qversiontagging.h
+@@ -54,7 +54,7 @@ QT_BEGIN_NAMESPACE
+  * There will only be one copy of the section in the output library or application.
+  */
+ 
+-#if defined(QT_BUILD_CORE_LIB) || defined(QT_BOOTSTRAPPED) || defined(QT_NO_VERSION_TAGGING)
++#if defined(QT_BUILD_CORE_LIB) || defined(QT_BOOTSTRAPPED) || defined(QT_NO_VERSION_TAGGING) || defined(QT_STATIC)
+ // don't make tags in QtCore, bootstrapped systems or if the user asked not to
+ #elif defined(Q_CC_GNU) && !defined(Q_OS_ANDROID)
+ #  if defined(Q_PROCESSOR_X86) && (defined(Q_OS_LINUX) || defined(Q_OS_FREEBSD_KERNEL))
+-- 
+2.7.4
+
