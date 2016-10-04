@@ -1509,6 +1509,7 @@ if( UNIX )
 endif()
 
 if(WIN32)
+  set( CPACK_PACKAGE_INSTALL_DIRECTORY "openstudio2-${OpenStudio_VERSION}" )
   set( CPACK_BINARY_NSIS OFF )
   set( CPACK_BINARY_IFW ON )
 endif()
