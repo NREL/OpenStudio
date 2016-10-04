@@ -20,6 +20,31 @@ endif()
 ###############################################################################
 # Project version information
 set(PROJECT_VERSION_BUILD "Unknown" CACHE STRING "Build number") # git sha
+find_package(Git)
+
+if(NOT GIT_FOUND)
+  find_program(GIT_EXECUTABLE git HINTS "$ENV{LOCALAPPDATA}/Programs/git/bin" "C:/Program Files/Git/bin")
+  if(NOT GIT_EXECUTABLE_NOTFOUND)
+    set(GIT_FOUND TRUE)
+  endif()
+endif()
+
+if(GIT_FOUND)
+  execute_process(COMMAND "${GIT_EXECUTABLE}" "rev-parse" "--short=10" "HEAD"
+                  WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+                  TIMEOUT 10
+                  RESULT_VARIABLE RESULT
+                  OUTPUT_VARIABLE GIT_VERSION
+                  ERROR_QUIET
+                  OUTPUT_STRIP_TRAILING_WHITESPACE)
+  if(${RESULT} EQUAL 0 AND NOT "${GIT_VERSION}" EQUAL "${PROJECT_VERSION_BUILD}")
+    set(PROJECT_VERSION_BUILD ${GIT_VERSION} CACHE STRING "Build number" FORCE) # git sha
+  endif()
+
+  get_filename_component(GIT_DIR "${GIT_EXECUTABLE}" DIRECTORY)
+else()
+  set(GIT_DIR "")
+endif()
 
 # OpenStudio version
 set(OPENSTUDIO_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
@@ -47,7 +72,7 @@ configure_file(${CMAKE_SOURCE_DIR}/OpenStudio.in ${CMAKE_BINARY_DIR}/src/OpenStu
 # universal configuration for mac plists
 if(APPLE)
   set(MACOSX_BUNDLE_SHORT_VERSION_STRING "${OPENSTUDIO_VERSION}")
-  set(MACOSX_BUNDLE_BUNDLE_VERSION "${CMAKE_VERSION_BUILD}")
+  set(MACOSX_BUNDLE_BUNDLE_VERSION "${PROJECT_VERSION_BUILD}")
   set(MACOSX_BUNDLE_COPYRIGHT "Copyright © 2016 National Renewable Energy Laboratory")
 endif()
 
@@ -1481,11 +1506,14 @@ set(CPACK_PACKAGE_VERSION_MAJOR ${OpenStudio_VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${OpenStudio_VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${OpenStudio_VERSION_PATCH})
 
+set(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}2-${OPENSTUDIO_LONG_VERSION}-${CMAKE_SYSTEM_NAME}")
+
 if( UNIX )
-  set( CPACK_IFW_TARGET_DIRECTORY /usr/local/openstudio-${OpenStudio_VERSION}/ )
+  set( CPACK_IFW_TARGET_DIRECTORY /usr/local/openstudio2-${OpenStudio_VERSION}/ )
 endif()
 
 if(WIN32)
+  set( CPACK_PACKAGE_INSTALL_DIRECTORY "openstudio2-${OpenStudio_VERSION}" )
   set( CPACK_BINARY_NSIS OFF )
   set( CPACK_BINARY_IFW ON )
 endif()
