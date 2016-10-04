@@ -103,11 +103,21 @@ int main(int argc, char *argv[])
     QSharedPointer<openstudio::measure::OSMeasureInfoGetter> infoGetter(
       new openstudio::measure::EmbeddedRubyMeasureInfoGetter<openstudio::detail::RubyInterpreter>(rubyInterpreter));
        */
-    // Make the run path the default plugin search location
-    QCoreApplication::addLibraryPath(QCoreApplication::applicationDirPath());
 
     openstudio::OpenStudioApp app(argc, argv);
     openstudio::Application::instance().setApplication(&app);
+
+    // Make the run path the default plugin search location
+    QCoreApplication::addLibraryPath(QCoreApplication::applicationDirPath());
+
+#ifdef Q_OS_DARWIN
+  // Gross but perhaps the simplest way to find the webengine process
+  // Improvements are welcome.
+  auto qtwebengineprocess_path = QCoreApplication::applicationDirPath() + "/QtWebEngineProcess";
+  if( QFile::exists(qtwebengineprocess_path) ) {
+    setenv("QTWEBENGINEPROCESS_PATH", qtwebengineprocess_path.toStdString().c_str(),0);
+  }
+#endif
 
 #if !(_DEBUG || (__GNUC__ && !NDEBUG))
     try {

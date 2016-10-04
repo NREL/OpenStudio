@@ -91,14 +91,6 @@ add_custom_command(TARGET ${target_name}
   COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:Qt5::QSQLiteDriverPlugin> $<TARGET_FILE_DIR:${target_name}>/sqldrivers/
 )
 
-add_custom_command(TARGET ${target_name}
-  POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy_if_different ${QtWebEngineProcess} $<TARGET_FILE_DIR:${target_name}>/ )
-
-add_custom_command(TARGET ${target_name}
-  POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy_if_different ${icudtl} $<TARGET_FILE_DIR:${target_name}>/ )
-
 if( APPLE )
   add_custom_command(TARGET ${target_name}
     POST_BUILD
@@ -119,6 +111,14 @@ elseif( WIN32 )
       POST_BUILD
       COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:${LIB}> $<TARGET_FILE_DIR:${target_name}>/ )
   endforeach()
+
+  add_custom_command(TARGET ${target_name}
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${QtWebEngineProcess} $<TARGET_FILE_DIR:${target_name}>/ )
+  
+  add_custom_command(TARGET ${target_name}
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${icudtl} $<TARGET_FILE_DIR:${target_name}>/ )
 endif()
 
 set(depends
@@ -152,7 +152,7 @@ add_dependencies(${target_name} openstudio)
 #------------------------------------------------------------------------------
 if(APPLE)
   set_target_properties(${target_name} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_BINARY_DIR}/Info.plist)
-  set(plugin_dest_dir OpenStudio.app/Contents/MacOS)
+  set(plugin_dest_dir OpenStudioApp.app/Contents/MacOS)
   set(APPS "\${CMAKE_INSTALL_PREFIX}/OpenStudioApp.app")
 elseif(WIN32)
   set(plugin_dest_dir bin)
@@ -197,10 +197,17 @@ endif()
 
 # since on apple the whole app bundle is installed (including these webkit components) we can exclude apple
 if( NOT APPLE )
-  install(FILES ${QtWebEngineProcess} DESTINATION bin COMPONENT OpenStudioApp )
+  install(PROGRAMS ${QtWebEngineProcess} DESTINATION bin COMPONENT OpenStudioApp )
   install(FILES ${icudtl} DESTINATION bin COMPONENT OpenStudioApp )
   install(PROGRAMS $<TARGET_FILE:Qt5::QWindowsIntegrationPlugin> DESTINATION bin/platforms/ COMPONENT OpenStudioApp)
   install(PROGRAMS $<TARGET_FILE:Qt5::QSQLiteDriverPlugin> DESTINATION bin/sqldrivers/ COMPONENT OpenStudioApp)
+endif()
+
+if( APPLE )
+  list(APPEND QTPLUGINS "\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/platforms/libqcocoa.dylib")
+  list(APPEND QTPLUGINS "\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/sqldrivers/libqsqlite.dylib")
+  install(PROGRAMS ${QtWebEngineProcess} DESTINATION OpenStudioApp.app/Contents/MacOS/ COMPONENT OpenStudioApp )
+  list(APPEND QTPLUGINS "\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/QtWebEngineProcess")
 endif()
 
 if(WIN32 OR APPLE)
