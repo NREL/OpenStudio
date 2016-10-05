@@ -8,9 +8,9 @@ OpenStudio 2.0 is an aggressive overhaul of OpenStudio to make the SDK smaller a
 
 The Ruby and C# binding footprints have also been greatly reduced in the OpenStudio 2.0 package.  Previously, deploying the Ruby and C# bindings required deployment of many shared library and file dependencies.  In OpenStudio 2.0, the Ruby bindings are contained in a single openstudio.so (.bundle on Mac) file and the C# bindings in an OpenStudio.dll and openstudio_csharp.dll file.  These are the only files required to distribute the OpenStudio 2.0 bindings with a third party application.  Note that the openstudio.so Ruby file does not contain any gems or the Ruby standard library, these must be configured using typical Gemfile configuration for your project.  Similarly, the C# bindings do not include a Ruby interpreter or OpenStudio Ruby bindings needed to apply OpenStudio Measures.  If a C# project desires to run measures or simulations, it can write an OSW file and make a system call to the CLI.
 
-A new version of the OpenStudio Parametric Analysis Tool (PAT) is coming soon to OpenStudio 2.0.  This new version of PAT is written around the new OpenStudio 2.0 framework and will be more compatible with the OpenStudio Server for large scale analysis.
+A new version of the OpenStudio Parametric Analysis Tool (PAT) under construction and will be coming soon to the OpenStudio 2.0 prerelease packages.  This new version of PAT is being written from the ground up in JavaScript as an Electron desktop application.  The new PAT is written around the new OpenStudio 2.0 framework and will be more compatible with the OpenStudio Server for large scale analysis.
 
-## Example Usage
+## Example CLI Usage
 
 This is an example OSW included in this package as ```compact_osw``` under the Examples directory. This example contains everything to run a simple OpenStudio workflow from loading a seed model, applying measures, running EnergyPlus, and running reporting measures. To run this example:
 
@@ -38,23 +38,27 @@ The API for OpenStudio Model and other core namespaces was mostly preserved duri
 This is a list of known issues, if you find an issue not on this list please let us know so we can fix it.
 
 CLI
-* The Ruby Gems library (require 'rubygems') cannot be loaded in scripts running from the CLI.  If you need to require Ruby Gems, you can use a system ruby and require the OpenStudio Ruby Bindings as a workaround.
+* The Ruby Gems library (require 'rubygems') cannot be loaded by the CLI.  If you need to require Ruby Gems, you can use a system Ruby 2.0 installation and require the OpenStudio Ruby Bindings as a workaround.
 * Missing Ruby libraries. Most of the Ruby standard library is available from command line interface and therefore accessible from OpenStudio Measures. There are a few libraries that are still missing.
-* Incomplete. There is no Standards Gem, or Prototype buildings included in the package. Those things are coming.
+
+Measures
+* Standard Reporting and other measures are not distributed at this time, they can be downloaded from the BCL as a workaround.
+* Reporting measures do not have access to offline JavaScript libraries.
 
 SketchUp Plug-in
-* Creating an OSM in the SketchUp Plug-in does not create a companion OSW file
-* Cannot load OpenStudio Standards in the SketchUp Plug-in
+* Creating an OSM in the SketchUp Plug-in does not create a companion OSW file.
+* Cannot load OpenStudio Standards in the SketchUp Plug-in.
 
 OpenStudioApp
-* The apply measure now dialog does not work
-* The synch measure dialog does not work
-* The standard reporting measure is not automatically added to a new OSM file
-* The purge resource buttons do not work
-* The user is not prompted to save their model before running
-* OS App crashes if turn on output variable and switch away from and back to output variable tab
-* Firewall rules are not configured at install time, user is prompted to allow http communication between OpenStudioApp and the CLI
+* The apply measure now dialog does not correct report errors, warnings, and advanced output.
+* The synch measure dialog does not work.
+* The standard reporting measure is not automatically added to a new OSM file.
+* The purge resource buttons do not work.
+* The user is not prompted to save their model before running.
+* The app freezes after downloading measures from the BCL.
+* There is a crash if user turns on output variables then switch away from and back to the output variable tab.
+* Firewall rules are not configured at install time, user is prompted to allow http communication between OpenStudioApp and the CLI.
 
-PAT
-* PAT is not currently included in the OpenStudio 2.0 prerelease
+PAT 2.0
+* PAT 2.0 is not currently included in the OpenStudio 2.0 prerelease, it will be included in future prereleases ahead of the official 2.0 release.
 
