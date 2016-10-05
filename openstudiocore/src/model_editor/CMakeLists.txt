@@ -177,7 +177,13 @@ set(${target_name}_swig_src
   ModelEditor.i
 )
 
-MAKE_SWIG_TARGET(OpenStudioModelEditor modeleditor "${CMAKE_CURRENT_SOURCE_DIR}/ModelEditor.i" "${${target_name}_swig_src}" ${target_name} OpenStudioEnergyPlus)
+if( Qt5Static )
+  set(swig_target_name ${target_name}_static)
+else()
+  set(swig_target_name ${target_name})
+endif()
+
+MAKE_SWIG_TARGET(OpenStudioModelEditor modeleditor "${CMAKE_CURRENT_SOURCE_DIR}/ModelEditor.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioEnergyPlus)
 add_dependencies(ruby_OpenStudioModelEditor ruby_OpenStudioModel)
 
 ##--------------------------------------------------------------------------------
