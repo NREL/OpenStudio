@@ -172,7 +172,6 @@ add_definitions(-DRUBY_EXTCONF_H="osruby_config.h")
 if( Qt5Static )
   target_link_libraries(openstudio 
    init_openstudio
-   ${ALL_RUBY_BINDING_TARGETS} # explicitly add these to ensure they are linked before openstudio libs
    ${EXTENSION_LIBS} 
    ${ENC_LIBS} 
    openstudio_airflow_static
@@ -188,7 +187,6 @@ if( Qt5Static )
 else()
   target_link_libraries(openstudio 
    init_openstudio
-   ${ALL_RUBY_BINDING_TARGETS} # explicitly add these to ensure they are linked before openstudio libs
    ${EXTENSION_LIBS} 
    ${ENC_LIBS} 
    openstudio_airflow
