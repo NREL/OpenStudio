@@ -39,7 +39,6 @@ This is a list of known issues, if you find an issue not on this list please let
 
 CLI
 * The Ruby Gems library (require 'rubygems') cannot be loaded by the CLI.  If you need to require Ruby Gems, you can use a system Ruby 2.0 installation and require the OpenStudio Ruby Bindings as a workaround.
-* Missing Ruby libraries. Most of the Ruby standard library is available from command line interface and therefore accessible from OpenStudio Measures. There are a few libraries that are still missing.
 
 Measures
 * Standard Reporting and other measures are not distributed at this time, they can be downloaded from the BCL as a workaround.
