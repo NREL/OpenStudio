@@ -34,7 +34,6 @@ module OsLib_Reporting
     results[:model] = model
     # results[:workspace] = workspace
     results[:sqlFile] = sqlFile
-    results[:web_asset_path] = OpenStudio.getSharedResourcesPath / OpenStudio::Path.new('web_assets')
 
     return results
   end
@@ -2591,8 +2590,8 @@ module OsLib_Reporting
     # create table
     energy_cost_table = {}
     energy_cost_table[:title] = 'Energy Cost Summary'
-    energy_cost_table[:header] = ['', 'Process Subtotal', 'Total Energy Cost']
-    energy_cost_table[:units] = ['', '$', '$']
+    energy_cost_table[:header] = ['', 'Total Energy Cost'] # skipping Process Subtotal
+    energy_cost_table[:units] = ['', '$'] # skipping Process Subtotal
     energy_cost_table[:data] = []
 
     # populate dynamic rows
