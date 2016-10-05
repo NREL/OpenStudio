@@ -1,12 +1,18 @@
 # OpenStudio 2.0 Prerelease
 
-This is an alpha quality build of OpenStudio 2.0. This is an aggressive overhaul of OpenStudio to make the SDK smaller and more accessible. The first component and the focal point of the overhaul is a command line interface that is capable of executing OpenStudio workflows. Principally this means that it is capable of running OpenStudio Measures. The command line is fully self contained, requiring no outside dependencies beyond the system runtime libraries. Ruby and standard librarys are statically linked and archived into the executable.
+This prerelease of OpenStudio 2.0 provides a preview of components that will be officially released as OpenStudio 2.0 in the near future (we are currently targeting a December 2016 release).  At this point, OpenStudio 2.0 should be used for investigation purposes only, it should not be used for production work.  Future backwards compatibility with prerelease builds is not guaranteed.  Any testing, usability, or bug reports are incredibly helpful as we are working to tighten OpenStudio 2.0 up for the first official release.  Please send any such reports through email at OpenStudio@nrel.gov, Slack (https://unmethours.com/question/11053/unmet-hours-slack-channel-chat/), or github (https://github.com/NREL/OpenStudio/issues).  Please make sure to indicate that you are using an OpenStudio 2.0 prerelease in your communications.  We hope you like all that is new in OpenStudio 2.0 and we cannot thank you enough for your help getting OpenStudio 2.0 ready for prime time!
 
-Additional components will be added as optional components in the installer as they are brought back online. Namely the OpenStudio Application and SketchUp Plugin. At this time the command line interface is the only executable in this package.
+# What's New in OpenStudio 2.0
+
+OpenStudio 2.0 is an aggressive overhaul of OpenStudio to make the SDK smaller and more accessible for third party software developers. The first component, and the focal point of the overhaul, is a command line interface (CLI) openstudio.exe. The primary function of this CLI is to run simulation steps described in a OpenStudio Workflow (OSW) file. The OSW file format is described in JSON schema at https://github.com/NREL/OpenStudio-workflow-gem/tree/osw/spec/schema.  The OSW defines a set of paths to search for OpenStudio Measures, inital seed model, weather file, and other supporting files.  These paths may be absolute or relative, if relative they are evaluated relative to the directory containing the OSW.  Next the OSW defines an initial OpenStudio Model (OSM) and weather file to use as the starting point for the simulation workflow.  Finally, the OSW defines a series of OpenStudio Measures that are run as part of the simulation workflow.  OpenStudio Model Measures will be run first, the model is translated to EnergyPlus IDF format and EnergyPlus Measures are run second, the EnergyPlus simulation occurs next, and finally Reporting Measures are run.  The CLI contains the Ruby interpreter, Ruby standard library, OpenStudio Ruby bindings, and a core set of gems (including the OpenStudio Standards Gem).  It does not have any shared library dependencies outside of system runtime libraries.  EnergyPlus and Radiance are not embedded within the CLI, these must be installed separately.  No configuration is needed if EnergyPlus and Radiance are installed to the default system location.  If EnergyPlus is installed in a non-standard location, the ENERGYPLUS_EXE_PATH environment variable is read by the CLI.
+
+The Ruby and C# binding footprints have also been greatly reduced in the OpenStudio 2.0 package.  Previously, deploying the Ruby and C# bindings required deployment of many shared library and file dependencies.  In OpenStudio 2.0, the Ruby bindings are contained in a single openstudio.so (.bundle on Mac) file and the C# bindings in an OpenStudio.dll and openstudio_csharp.dll file.  These are the only files required to distribute the OpenStudio 2.0 bindings with a third party application.  Note that the openstudio.so Ruby file does not contain any gems or the Ruby standard library, these must be configured using typical Gemfile configuration for your project.  Similarly, the C# bindings do not include a Ruby interpreter or OpenStudio Ruby bindings needed to apply OpenStudio Measures.  If a C# project desires to run measures or simulations, it can write an OSW file and make a system call to the CLI.
+
+A new version of the OpenStudio Parametric Analysis Tool (PAT) is coming soon to OpenStudio 2.0.  This new version of PAT is written around the new OpenStudio 2.0 framework and will be more compatible with the OpenStudio Server for large scale analysis.
 
 ## Example Usage
 
-This is an example workflow included in this package as ```compact_osw``` under the Examples directory. This example contains everything to run a simple OpenStudio workflow from seed model, to applying measures, to running EnergyPlus. 
+This is an example OSW included in this package as ```compact_osw``` under the Examples directory. This example contains everything to run a simple OpenStudio workflow from loading a seed model, applying measures, running EnergyPlus, and running reporting measures. To run this example:
 
 ```
 cd path/to/Examples/compact_osw
@@ -21,19 +27,34 @@ The OpenStudio command line needs to access EnergyPlus. It will do this by first
 openstudio.exe openstudio_version
 ```
 
-This command will report out the version of the OpenStudio command line interface. At this time, even though this is a 2.0 preview, the version will be reported as 1.x.y corresponding to the version of the OpenStudio model for which it is compatiable.
+This command will report out the version of the OpenStudio command line interface. At this time, even though this is a 2.0 preview, the version will be reported as 1.x.y corresponding to the version of the OpenStudio Model format for which it is compatible.  This behavior was chosen to allow users of the OpenStudio 2.0 preview to try loading OSM models developed with the current 1.13.0 release.
 
-## Ruby Bindings
+## API Changes
 
-The OpenStudio Ruby Bindings are now contained in a single shared library named openstudio.so (.bundle on Mac), located in the installations bin directory. Ruby 2.0.0 is required.
+The API for OpenStudio Model and other core namespaces was mostly preserved during the OpenStudio 2.0 conversion.  However, the RunManager, Analysis, Project, AnalysisDriver namespaces were completely removed.  The CLI and OSW format replace the functionality of RunManager.  The OpenStudio Analysis (OSA) format replaces the functionality of Analysis, Project, and AnalysisDriver.  The Ruleset namespace has been renamed to Measure to better reflect its functionality.
 
 ## Known Issues
 
-Too many to list. This is a work in progress.
+This is a list of known issues, if you find an issue not on this list please let us know so we can fix it.
 
+CLI
+* The Ruby Gems library (require 'rubygems') cannot be loaded in scripts running from the CLI.  If you need to require Ruby Gems, you can use a system ruby and require the OpenStudio Ruby Bindings as a workaround.
 * Missing Ruby libraries. Most of the Ruby standard library is available from command line interface and therefore accessible from OpenStudio Measures. There are a few libraries that are still missing.
 * Incomplete. There is no Standards Gem, or Prototype buildings included in the package. Those things are coming.
 
-## Updates
+SketchUp Plug-in
+* Creating an OSM in the SketchUp Plug-in does not create a companion OSW file
+* Cannot load OpenStudio Standards in the SketchUp Plug-in
 
+OpenStudioApp
+* The apply measure now dialog does not work
+* The synch measure dialog does not work
+* The standard reporting measure is not automatically added to a new OSM file
+* The purge resource buttons do not work
+* The user is not prompted to save their model before running
+* OS App crashes if turn on output variable and switch away from and back to output variable tab
+* Firewall rules are not configured at install time, user is prompted to allow http communication between OpenStudioApp and the CLI
+
+PAT
+* PAT is not currently included in the OpenStudio 2.0 prerelease
 
