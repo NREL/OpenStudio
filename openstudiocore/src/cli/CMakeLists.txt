@@ -170,7 +170,6 @@ set_source_files_properties("${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap
 add_definitions(-DRUBY_EXTCONF_H="osruby_config.h")
 
 if( Qt5Static )
-  message("ALL_RUBY_BINDING_TARGETS = ${ALL_RUBY_BINDING_TARGETS}")
   target_link_libraries(openstudio 
    init_openstudio
    ${ALL_RUBY_BINDING_TARGETS} # explicitly add these to ensure they are linked before openstudio libs

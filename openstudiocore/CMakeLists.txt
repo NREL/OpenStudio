@@ -1386,7 +1386,7 @@ set(all_lib_targets
   openstudio_gbxml
   #openstudio_bimserver
   openstudio_isomodel
-  openstudio_lib
+  #openstudio_lib
   openstudio_sdd
   openstudio_airflow
   #qwt
@@ -1395,16 +1395,15 @@ set(all_lib_targets
   jsoncpp
   ${ALL_RUBY_BINDING_TARGETS}
 )
+
 if(WIN32)
   list(APPEND all_lib_targets "qtwinmigrate")
 endif()
 
-if(NOT Qt5Static)
+if(BUILD_OS_APP)
   list(APPEND all_lib_targets "openstudio_modeleditor")
-  #list(APPEND all_lib_targets "openstudio_gbxml")
   list(APPEND all_lib_targets "openstudio_bimserver")
-  #list(APPEND all_lib_targets "openstudio_lib")
-  #list(APPEND all_lib_targets "qwt")
+  list(APPEND all_lib_targets "openstudio_app")
 endif()
 
 #export(TARGETS

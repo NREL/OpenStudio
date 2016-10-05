@@ -95,6 +95,15 @@ if( APPLE )
   add_custom_command(TARGET ${target_name}
     POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:Qt5::QCocoaIntegrationPlugin> $<TARGET_FILE_DIR:${target_name}>/platforms/ )
+elseif( UNIX )
+  add_custom_command(TARGET ${target_name}
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:Qt5::QXcbIntegrationPlugin> $<TARGET_FILE_DIR:${target_name}>/platforms/ )
+
+  add_custom_command(TARGET ${target_name}
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:Qt5::WebEngine> $<TARGET_FILE_DIR:${target_name}>/ )
+
 elseif( WIN32 )
   add_custom_command(TARGET ${target_name}
     POST_BUILD
@@ -201,6 +210,8 @@ if( NOT APPLE )
   install(FILES ${icudtl} DESTINATION bin COMPONENT OpenStudioApp )
   if(WIN32)
     install(PROGRAMS $<TARGET_FILE:Qt5::QWindowsIntegrationPlugin> DESTINATION bin/platforms/ COMPONENT OpenStudioApp)
+  elseif(UNIX)
+    install(PROGRAMS $<TARGET_FILE:Qt5::QXcbIntegrationPlugin> DESTINATION bin/platforms/ COMPONENT OpenStudioApp)
   endif()
   install(PROGRAMS $<TARGET_FILE:Qt5::QSQLiteDriverPlugin> DESTINATION bin/sqldrivers/ COMPONENT OpenStudioApp)
 endif()
@@ -218,6 +229,8 @@ if(WIN32 OR APPLE)
     include(\"${CMAKE_SOURCE_DIR}/CMake/FixupBundleOverrides.cmake\")
     fixup_bundle(\"${APPS}\" \"${QTPLUGINS}\" \"${DIRS}\")
     " COMPONENT "OpenStudioApp" )
+else()
+  install(PROGRAMS $<TARGET_FILE:Qt5::WebEngine> DESTINATION bin/ COMPONENT OpenStudioApp)
 endif()
 
 set(${target_name}_test_src
