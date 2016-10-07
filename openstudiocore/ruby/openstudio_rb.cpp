@@ -92,37 +92,41 @@ def show_output(result)
   if result.initialCondition.empty?
     #do nothing
   else
-    puts result.initialCondition.get.logMessage
+    puts result.initialCondition.get
   end  
       
   puts "**FINAL CONDITION**"
   if result.finalCondition.empty?
     #do nothing
   else
-    puts result.finalCondition.get.logMessage
+    puts result.finalCondition.get
   end    
   
   puts "**INFO MESSAGES**"  
-  result.info.each do |info_msg|
-    puts "#{info_msg.logMessage}"
+  result.stepInfo.each do |info_msg|
+    puts "#{info_msg}"
   end
 
   puts "**WARNING MESSAGES**"  
-  result.warnings.each do |info_msg|
-    puts "#{info_msg.logMessage}"
+  result.stepWarnings.each do |info_msg|
+    puts "#{info_msg}"
   end
 
   puts "**ERROR MESSAGES**"  
-  result.errors.each do |info_msg|
-    puts "#{info_msg.logMessage}"
+  result.stepErrors.each do |info_msg|
+    puts "#{info_msg}"
   end
 
-  os_version = OpenStudio::VersionString.new(OpenStudio::openStudioVersion())
-  min_version_registerValue = OpenStudio::VersionString.new("1.2.2")
+  puts "***Machine-Readable Attributes**"
+  values = []
+  result.stepValues.each do |value|
+    values << value.string
+  end
+  puts "[\n#{values.join(',').strip}\n]"
 
-  if os_version >= min_version_registerValue
-    puts "***Machine-Readable Attributes**"
-    puts OpenStudio::toJSON(result.attributes) if not result.attributes.empty?
+  puts "***Files Generated**"
+  result.stepFiles.each do |file|
+    puts "#{file}"
   end
 
   puts "" #space between measures for readability in output

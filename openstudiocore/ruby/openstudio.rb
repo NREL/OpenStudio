@@ -26,4 +26,16 @@
 #  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ########################################################################################################################
 
+# add binary dir to system path
+original_path = ENV['PATH']
+if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
+  ENV['PATH'] = "#{File.dirname(__FILE__)};#{original_path}"
+else
+  ENV['PATH'] = "#{File.dirname(__FILE__)}:#{original_path}"
+end
+
+# require openstudio.so
 require_relative 'openstudio.so'
+
+# restore original path
+ENV['PATH'] = original_path

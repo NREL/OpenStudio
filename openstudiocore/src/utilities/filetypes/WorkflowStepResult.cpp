@@ -31,6 +31,8 @@
 
 #include "../utilities/core/Assert.hpp"
 
+#include "../utilities/data/Attribute.hpp"
+
 #include <jsoncpp/json.h>
 
 namespace openstudio {
@@ -166,12 +168,12 @@ namespace detail {
       }
     }
 
-    if (initialCondition()){
-      value["initial_condition"] = initialCondition().get();
+    if (stepInitialCondition()){
+      value["step_initial_condition"] = stepInitialCondition().get();
     }
 
-    if (finalCondition()){
-      value["final_condition"] = finalCondition().get();
+    if (stepFinalCondition()){
+      value["step_final_condition"] = stepFinalCondition().get();
     }
 
     if (complete || (stepErrors().size() > 0)){
@@ -249,14 +251,14 @@ namespace detail {
     return m_stepResult;
   }
 
-  boost::optional<std::string> WorkflowStepResult_Impl::initialCondition() const
+  boost::optional<std::string> WorkflowStepResult_Impl::stepInitialCondition() const
   {
-    return m_initialCondition;
+    return m_stepInitialCondition;
   }
 
-  boost::optional<std::string> WorkflowStepResult_Impl::finalCondition() const
+  boost::optional<std::string> WorkflowStepResult_Impl::stepFinalCondition() const
   {
-    return m_finalCondition;
+    return m_stepFinalCondition;
   }
 
   std::vector<std::string> WorkflowStepResult_Impl::stepErrors() const
@@ -294,6 +296,102 @@ namespace detail {
     return m_stdErr;
   }
 
+  StepResult WorkflowStepResult_Impl::value() const
+  {
+    LOG(Debug, "WorkflowStepResult::value is deprecated, use stepResult instead");
+    if (m_stepResult){
+      return m_stepResult.get();
+    }
+    LOG(Warn, "WorkflowStepResult value called with undefined stepResult, returning 'Success'");
+    return StepResult::Success;
+  }
+
+  std::vector<LogMessage> WorkflowStepResult_Impl::errors() const
+  {
+    LOG(Debug, "WorkflowStepResult::errors is deprecated, use stepErrors instead");
+    std::vector<LogMessage> result;
+    for (const auto& stepError : stepErrors()){
+      result.push_back(LogMessage(Error, "", stepError));
+    }
+    return result;
+  }
+  
+  std::vector<LogMessage> WorkflowStepResult_Impl::warnings() const
+  {
+    LOG(Debug, "WorkflowStepResult::warnings is deprecated, use stepWarnings instead");
+    std::vector<LogMessage> result;
+    for (const auto& stepWarning : stepWarnings()){
+      result.push_back(LogMessage(Warn, "", stepWarning));
+    }
+    return result;
+  }
+  
+  std::vector<LogMessage> WorkflowStepResult_Impl::info() const
+  {
+    LOG(Debug, "WorkflowStepResult::info is deprecated, use stepInfo instead");
+    std::vector<LogMessage> result;
+    for (const auto& info : stepInfo()){
+      result.push_back(LogMessage(Info, "", info));
+    }
+    return result;
+  }
+  
+  boost::optional<LogMessage> WorkflowStepResult_Impl::initialCondition() const
+  {
+    LOG(Debug, "WorkflowStepResult::initialCondition is deprecated, use stepInitialCondition instead");
+    boost::optional<LogMessage> result;
+    if (m_stepInitialCondition){
+      result = LogMessage(Info, "", *m_stepInitialCondition);
+    }
+    return result;
+  }
+
+  boost::optional<LogMessage> WorkflowStepResult_Impl::finalCondition() const
+  {
+    LOG(Debug, "WorkflowStepResult::finalCondition is deprecated, use stepFinalCondition instead");
+    boost::optional<LogMessage> result;
+    if (m_stepFinalCondition){
+      result = LogMessage(Info, "", *m_stepFinalCondition);
+    }
+    return result;
+  }
+  
+  std::vector<Attribute> WorkflowStepResult_Impl::attributes() const
+  {
+    LOG(Debug, "WorkflowStepResult::attributes is deprecated, use stepValues instead");
+    std::vector<Attribute> result;
+    for (const auto& stepValue : stepValues()){
+      boost::optional<Attribute> attribute;
+
+      VariantType variantType = stepValue.variantType();
+      switch (variantType.value()){
+      case VariantType::Boolean:
+        attribute = Attribute(stepValue.name(), stepValue.valueAsBoolean());
+        break;
+      case VariantType::Double:
+        attribute = Attribute(stepValue.name(), stepValue.valueAsDouble());
+        break;
+      case VariantType::Integer:
+        attribute = Attribute(stepValue.name(), stepValue.valueAsInteger());
+        break;
+      case VariantType::String:
+        attribute = Attribute(stepValue.name(), stepValue.valueAsString());
+        break;
+      default:
+        LOG(Warn, "Unknown Variant Type " << variantType.valueName());
+      }
+
+      if (attribute){
+        attribute->setDisplayName(stepValue.displayName());
+        if (stepValue.units()){
+          attribute->setUnits(stepValue.units().get());
+        }
+        result.push_back(*attribute);
+      }
+    }
+    return result;
+  }
+
   void WorkflowStepResult_Impl::setStartedAt(const DateTime& dateTime)
   {
     m_startedAt = dateTime;
@@ -324,24 +422,24 @@ namespace detail {
     m_stepResult.reset();
   }
 
-  void WorkflowStepResult_Impl::setInitialCondition(const std::string& initialCondition)
+  void WorkflowStepResult_Impl::setStepInitialCondition(const std::string& initialCondition)
   {
-    m_initialCondition = initialCondition;
+    m_stepInitialCondition = initialCondition;
   }
 
-  void WorkflowStepResult_Impl::resetInitialCondition()
+  void WorkflowStepResult_Impl::resetStepInitialCondition()
   {
-    m_initialCondition.reset();
+    m_stepInitialCondition.reset();
   }
 
-  void WorkflowStepResult_Impl::setFinalCondition(const std::string& finalCondition)
+  void WorkflowStepResult_Impl::setStepFinalCondition(const std::string& finalCondition)
   {
-    m_finalCondition = finalCondition;
+    m_stepFinalCondition = finalCondition;
   }
 
-  void WorkflowStepResult_Impl::resetFinalCondition()
+  void WorkflowStepResult_Impl::resetStepFinalCondition()
   {
-    m_finalCondition.reset();
+    m_stepFinalCondition.reset();
   }
 
   void WorkflowStepResult_Impl::addStepError(const std::string& error)
@@ -595,12 +693,12 @@ boost::optional<WorkflowStepResult> WorkflowStepResult::fromString(const std::st
       result.setStepResult(stepResult);
     }
 
-    if (value.isMember("initial_condition")){
-      result.setInitialCondition(value["initial_condition"].asString());
+    if (value.isMember("step_initial_condition")){
+      result.setStepInitialCondition(value["step_initial_condition"].asString());
     }
 
-    if (value.isMember("final_condition")){
-      result.setFinalCondition(value["final_condition"].asString());
+    if (value.isMember("step_final_condition")){
+      result.setStepFinalCondition(value["step_final_condition"].asString());
     }
 
     Json::Value defaultArrayValue(Json::arrayValue);
@@ -676,14 +774,14 @@ boost::optional<StepResult> WorkflowStepResult::stepResult() const
   return getImpl<detail::WorkflowStepResult_Impl>()->stepResult();
 }
 
-boost::optional<std::string> WorkflowStepResult::initialCondition() const
+boost::optional<std::string> WorkflowStepResult::stepInitialCondition() const
 {
-  return getImpl<detail::WorkflowStepResult_Impl>()->initialCondition();
+  return getImpl<detail::WorkflowStepResult_Impl>()->stepInitialCondition();
 }
 
-boost::optional<std::string> WorkflowStepResult::finalCondition() const
+boost::optional<std::string> WorkflowStepResult::stepFinalCondition() const
 {
-  return getImpl<detail::WorkflowStepResult_Impl>()->finalCondition();
+  return getImpl<detail::WorkflowStepResult_Impl>()->stepFinalCondition();
 }
 
 std::vector<std::string> WorkflowStepResult::stepErrors() const
@@ -721,6 +819,41 @@ boost::optional<std::string> WorkflowStepResult::stdErr() const
   return getImpl<detail::WorkflowStepResult_Impl>()->stdErr();
 }
 
+StepResult WorkflowStepResult::value() const
+{
+  return getImpl<detail::WorkflowStepResult_Impl>()->value();
+}
+
+std::vector<LogMessage> WorkflowStepResult::errors() const
+{
+  return getImpl<detail::WorkflowStepResult_Impl>()->errors();
+}
+  
+std::vector<LogMessage> WorkflowStepResult::warnings() const
+{
+  return getImpl<detail::WorkflowStepResult_Impl>()->warnings();
+}
+  
+std::vector<LogMessage> WorkflowStepResult::info() const
+{
+  return getImpl<detail::WorkflowStepResult_Impl>()->info();
+}
+  
+boost::optional<LogMessage> WorkflowStepResult::initialCondition() const
+{
+  return getImpl<detail::WorkflowStepResult_Impl>()->initialCondition();
+}
+
+boost::optional<LogMessage> WorkflowStepResult::finalCondition() const
+{
+  return getImpl<detail::WorkflowStepResult_Impl>()->finalCondition();
+}
+  
+std::vector<Attribute> WorkflowStepResult::attributes() const
+{
+  return getImpl<detail::WorkflowStepResult_Impl>()->attributes();
+}
+
 void WorkflowStepResult::setStartedAt(const DateTime& dateTime)
 {
   getImpl<detail::WorkflowStepResult_Impl>()->setStartedAt(dateTime);
@@ -751,24 +884,24 @@ void WorkflowStepResult::resetStepResult()
   getImpl<detail::WorkflowStepResult_Impl>()->resetStepResult();
 }
 
-void WorkflowStepResult::setInitialCondition(const std::string& initialCondition)
+void WorkflowStepResult::setStepInitialCondition(const std::string& initialCondition)
 {
-  getImpl<detail::WorkflowStepResult_Impl>()->setInitialCondition(initialCondition);
+  getImpl<detail::WorkflowStepResult_Impl>()->setStepInitialCondition(initialCondition);
 }
 
-void WorkflowStepResult::resetInitialCondition()
+void WorkflowStepResult::resetStepInitialCondition()
 {
-  getImpl<detail::WorkflowStepResult_Impl>()->resetInitialCondition();
+  getImpl<detail::WorkflowStepResult_Impl>()->resetStepInitialCondition();
 }
 
-void WorkflowStepResult::setFinalCondition(const std::string& finalCondition)
+void WorkflowStepResult::setStepFinalCondition(const std::string& finalCondition)
 {
-  getImpl<detail::WorkflowStepResult_Impl>()->setFinalCondition(finalCondition);
+  getImpl<detail::WorkflowStepResult_Impl>()->setStepFinalCondition(finalCondition);
 }
 
-void WorkflowStepResult::resetFinalCondition()
+void WorkflowStepResult::resetStepFinalCondition()
 {
-  getImpl<detail::WorkflowStepResult_Impl>()->resetFinalCondition();
+  getImpl<detail::WorkflowStepResult_Impl>()->resetStepFinalCondition();
 }
 
 void WorkflowStepResult::addStepError(const std::string& error)

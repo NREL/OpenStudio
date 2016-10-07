@@ -45,6 +45,9 @@ namespace detail{
 class DateTime;
 class Variant;
 
+// Attribute is deprecated
+class Attribute;
+
 /** \class StepResult
  *  \brief Possible outcomes of running a WorkflowStep.
  *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual
@@ -174,9 +177,9 @@ class UTILITIES_API WorkflowStepResult {
 
   boost::optional<StepResult> stepResult() const;
 
-  boost::optional<std::string> initialCondition() const;
+  boost::optional<std::string> stepInitialCondition() const;
 
-  boost::optional<std::string> finalCondition() const;
+  boost::optional<std::string> stepFinalCondition() const;
 
   std::vector<std::string> stepErrors() const;
 
@@ -192,6 +195,28 @@ class UTILITIES_API WorkflowStepResult {
 
   boost::optional<std::string> stdErr() const;
 
+  // method for backwards compatibility with OpenStudio 1.X
+  // returns StepResult if initialized, if not initialized returns Success for backwards compatibility
+  StepResult value() const;
+  
+  // method for backwards compatibility with OpenStudio 1.X
+  std::vector<LogMessage> errors() const;
+  
+  // method for backwards compatibility with OpenStudio 1.X
+  std::vector<LogMessage> warnings() const;
+  
+  // method for backwards compatibility with OpenStudio 1.X
+  std::vector<LogMessage> info() const;
+  
+  // method for backwards compatibility with OpenStudio 1.X
+  boost::optional<LogMessage> initialCondition() const;
+
+  // method for backwards compatibility with OpenStudio 1.X
+  boost::optional<LogMessage> finalCondition() const;
+  
+  // method for backwards compatibility with OpenStudio 1.X
+  std::vector<Attribute> attributes() const;
+
   //@}
   /** @name Setters */
   //@{
@@ -205,11 +230,11 @@ class UTILITIES_API WorkflowStepResult {
   void setStepResult(const StepResult& result);
   void resetStepResult();
 
-  void setInitialCondition(const std::string& initialCondition);
-  void resetInitialCondition();
+  void setStepInitialCondition(const std::string& initialCondition);
+  void resetStepInitialCondition();
 
-  void setFinalCondition(const std::string& finalCondition);
-  void resetFinalCondition();
+  void setStepFinalCondition(const std::string& finalCondition);
+  void resetStepFinalCondition();
 
   void addStepError(const std::string& error);
   void resetStepErrors();
