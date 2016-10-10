@@ -603,6 +603,11 @@ namespace openstudio{
     return toUUID("{" + versionId() + "}");
   }
 
+  boost::optional<DateTime> BCLMeasure::versionModified() const
+  {
+    return m_bclXML.versionModified();
+  }
+
   std::string BCLMeasure::xmlChecksum() const
   {
     return m_bclXML.xmlChecksum();
