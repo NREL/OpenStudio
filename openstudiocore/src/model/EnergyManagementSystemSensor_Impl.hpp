@@ -71,6 +71,7 @@ namespace detail {
 
     boost::optional<OutputVariable> outputVariable() const;
     boost::optional<OutputMeter> outputMeter() const;
+    boost::optional<std::string> outputVariableOrMeterName() const;
 
     //@}
     /** @name Setters */
@@ -80,9 +81,7 @@ namespace detail {
 
     bool setOutputVariable(const OutputVariable& outputVariable);
     bool setOutputMeter(const OutputMeter& outputMeter);
-
-    bool resetOutputVariable();
-    bool resetOutputMeter();
+    bool setOutputVariableOrMeterName(const std::string& outputVariableOrMeterName);
 
     //@}
     /** @name Other */

@@ -79,6 +79,8 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemSensor(con
         }
       }
     }
+    //set outputVariableOrMeterName to string value
+    emsSensor.setOutputVariableOrMeterName(s.get());
   }
 
   s = workspaceObject.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterIndexKeyName);

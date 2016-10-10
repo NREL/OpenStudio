@@ -94,6 +94,10 @@ namespace detail {
     return value.get();
   }
 
+  boost::optional<std::string> EnergyManagementSystemSensor_Impl::outputVariableOrMeterName() const {
+    return getString(OS_EnergyManagementSystem_SensorFields::OutputVariableorOutputMeterName, true);
+  }
+
   bool EnergyManagementSystemSensor_Impl::setKeyName(const std::string& keyName) {
     bool result = setString(OS_EnergyManagementSystem_SensorFields::OutputVariableorOutputMeterIndexKeyName, keyName);
     return result;
@@ -105,21 +109,15 @@ namespace detail {
     return result;
   }
 
-  bool EnergyManagementSystemSensor_Impl::resetOutputMeter() {
-    //bool result = setPointer(OS_EnergyManagementSystem_SensorFields::OutputVariableorOutputMeterName, outputMeter.handle());
-    bool result = setString(OS_EnergyManagementSystem_SensorFields::OutputVariableorOutputMeterName, "");
-    return result;
-  }
-
-  bool EnergyManagementSystemSensor_Impl::resetOutputVariable() {
-    //bool result = setPointer(OS_EnergyManagementSystem_SensorFields::OutputVariableorOutputMeterName, outputVariable.handle());
-    bool result = setString(OS_EnergyManagementSystem_SensorFields::OutputVariableorOutputMeterName, "");
-    return result;
-  }
-
   bool EnergyManagementSystemSensor_Impl::setOutputMeter(const OutputMeter& outputMeter) {
     //bool result = setPointer(OS_EnergyManagementSystem_SensorFields::OutputVariableorOutputMeterName, outputMeter.handle());
     bool result = setString(OS_EnergyManagementSystem_SensorFields::OutputVariableorOutputMeterName, toString(outputMeter.handle()));
+    return result;
+  }
+
+  bool EnergyManagementSystemSensor_Impl::setOutputVariableOrMeterName(const std::string& outputVariableOrMeterName) {
+    //bool result = setPointer(OS_EnergyManagementSystem_SensorFields::OutputVariableorOutputMeterName, outputMeter.handle());
+    bool result = setString(OS_EnergyManagementSystem_SensorFields::OutputVariableorOutputMeterName, outputVariableOrMeterName);
     return result;
   }
 
@@ -183,6 +181,17 @@ EnergyManagementSystemSensor::EnergyManagementSystemSensor(const Model& model, O
   }
 }
 
+EnergyManagementSystemSensor::EnergyManagementSystemSensor(const Model& model, const std::string& outputVariableOrMeterName)
+  : ModelObject(EnergyManagementSystemSensor::iddObjectType(), model) {
+  OS_ASSERT(getImpl<detail::EnergyManagementSystemSensor_Impl>());
+  bool ok = setString(OS_EnergyManagementSystem_SensorFields::OutputVariableorOutputMeterName, outputVariableOrMeterName);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s OutputVariableOrMeterName to "
+      << outputVariableOrMeterName << ".");
+  }
+}
+
 EnergyManagementSystemSensor::EnergyManagementSystemSensor(const Model& model)
   : ModelObject(EnergyManagementSystemSensor::iddObjectType(),model)
 {
@@ -206,6 +215,10 @@ boost::optional<OutputMeter> EnergyManagementSystemSensor::outputMeter() const {
   return getImpl<detail::EnergyManagementSystemSensor_Impl>()->outputMeter();
 }
 
+boost::optional<std::string> EnergyManagementSystemSensor::outputVariableOrMeterName() const {
+  return getImpl<detail::EnergyManagementSystemSensor_Impl>()->outputVariableOrMeterName();
+}
+
 bool EnergyManagementSystemSensor::setKeyName(const std::string& keyName) {
   return getImpl<detail::EnergyManagementSystemSensor_Impl>()->setKeyName(keyName);
 }
@@ -218,12 +231,8 @@ bool EnergyManagementSystemSensor::setOutputMeter(const OutputMeter& outputMeter
   return getImpl<detail::EnergyManagementSystemSensor_Impl>()->setOutputMeter(outputMeter);
 }
 
-bool EnergyManagementSystemSensor::resetOutputVariable() {
-  return getImpl<detail::EnergyManagementSystemSensor_Impl>()->resetOutputVariable();
-}
-
-bool EnergyManagementSystemSensor::resetOutputMeter() {
-  return getImpl<detail::EnergyManagementSystemSensor_Impl>()->resetOutputMeter();
+bool EnergyManagementSystemSensor::setOutputVariableOrMeterName(const std::string& outputVariableOrMeterName) {
+  return getImpl<detail::EnergyManagementSystemSensor_Impl>()->setOutputVariableOrMeterName(outputVariableOrMeterName);
 }
 
 /// @cond

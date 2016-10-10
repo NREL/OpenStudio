@@ -54,6 +54,8 @@ class MODEL_API EnergyManagementSystemSensor : public ModelObject {
 
   explicit EnergyManagementSystemSensor(const Model& model, OutputMeter& outvar);
 
+  explicit EnergyManagementSystemSensor(const Model& model, const std::string& outputVariableOrMeterName);
+
   virtual ~EnergyManagementSystemSensor() {}
 
   //@}
@@ -67,6 +69,7 @@ class MODEL_API EnergyManagementSystemSensor : public ModelObject {
 
   boost::optional<OutputVariable> outputVariable() const;
   boost::optional<OutputMeter> outputMeter() const;
+  boost::optional<std::string> outputVariableOrMeterName() const;
 
   //@}
   /** @name Setters */
@@ -76,10 +79,7 @@ class MODEL_API EnergyManagementSystemSensor : public ModelObject {
 
   bool setOutputVariable(const OutputVariable& outputVariable);
   bool setOutputMeter(const OutputMeter& outputMeter);
-
-  bool resetOutputVariable();
-  bool resetOutputMeter();
-
+  bool setOutputVariableOrMeterName(const std::string& outputVariableOrMeterName);
   //@}
   /** @name Other */
   //@{
