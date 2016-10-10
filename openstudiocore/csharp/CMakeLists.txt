@@ -72,7 +72,6 @@ if(MSVC)
   target_link_libraries(openstudio_csharp
    ${ALL_CSHARP_BINDING_DEPENDS}
    ${Boost_LIBRARIES}
-   ${QT_LIBS}
   )
 
   install(TARGETS openstudio_csharp DESTINATION CSharp/openstudio/ CONFIGURATIONS DEBUG COMPONENT "CSharpAPI")

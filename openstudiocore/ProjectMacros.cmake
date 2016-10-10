@@ -585,7 +585,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     set(SWIG_TARGET "generate_csharp_${NAME}_wrap")
 
     #set(CSHARP_OUTPUT_NAME "openstudio_${NAME}_csharp")
-    set(CSHARP_OUTPUT_NAME "openstudio_csharp")
+    set(CSHARP_OUTPUT_NAME "openstudio_csharp.dll")
     set(CSHARP_GENERATED_SRC_DIR "${CMAKE_BINARY_DIR}/csharp_wrapper/generated_sources/${NAME}")
     file(MAKE_DIRECTORY ${CSHARP_GENERATED_SRC_DIR})
     
