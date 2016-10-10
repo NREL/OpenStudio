@@ -101,8 +101,8 @@ namespace detail {
     std::vector<EnergyManagementSystemSensor> objects = m.getModelObjects<EnergyManagementSystemSensor>();
     for (auto & sensor : objects) {
       if (sensor.outputVariable()) {
-        if (sensor.outputVariable().get().variableName() == this->name()) {
-          sensor.resetOutputVariable();
+        if (sensor.outputVariable().get().variableName() == this->variableName()) {
+          sensor.remove();
         }
       }
     }

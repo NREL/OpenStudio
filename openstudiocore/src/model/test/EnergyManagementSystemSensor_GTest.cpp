@@ -28,6 +28,7 @@
 #include "../OutputVariable_Impl.hpp"
 #include "../OutputMeter.hpp"
 #include "../OutputMeter_Impl.hpp"
+#include "../Model.hpp"
 #include "../Model_Impl.hpp"
 
 #include "../../utilities/idd/IddEnums.hpp"
@@ -96,13 +97,20 @@ TEST_F(ModelFixture, EMSSensor_EMSSensor)
   ASSERT_TRUE(OATdbSensor.outputVariable());
   ASSERT_FALSE(OATdbSensor.outputMeter());
   siteOutdoorAirDrybulbTemperature.remove();
-  ASSERT_FALSE(OATdbSensor.outputVariable());
-  ASSERT_FALSE(OATdbSensor.outputMeter());
+  boost::optional<ModelObject> object = model.getModelObjectByName<ModelObject>("OATdb_Sensor");
+  ASSERT_FALSE(object);
 
   ASSERT_TRUE(meter_sensor.outputMeter());
   ASSERT_FALSE(meter_sensor.outputVariable());
   meter.remove();
-  ASSERT_FALSE(meter_sensor.outputVariable());
-  ASSERT_FALSE(meter_sensor.outputMeter());
+  object = model.getModelObjectByName<ModelObject>("meter sensor");
+  ASSERT_FALSE(object);
+
+  // add sensor by string
+  EnergyManagementSystemSensor sensor_string(model, "Sensor String");
+  sensor_string.setName("Sensor String Name");
+  EXPECT_EQ("Sensor_String_Name", sensor_string.nameString());
+  ASSERT_TRUE(sensor_string.outputVariableOrMeterName());
+  EXPECT_EQ("Sensor String", sensor_string.outputVariableOrMeterName().get());
 }
 

@@ -117,7 +117,7 @@ namespace detail {
     for (auto & sensor : objects) {
       if (sensor.outputMeter()) {
         if (sensor.outputMeter().get().name() == this->name()) {
-          sensor.resetOutputMeter();
+          sensor.remove();
         }
       }
     }

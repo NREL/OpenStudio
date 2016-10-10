@@ -141,6 +141,10 @@ namespace detail {
         boost::trim_right(comments[0]);
         //remove whitespace at beginning of comments[0]
         boost::trim_left(comments[0]);
+        //remove ,
+        while ((pos = comments[0].find(",", pos)) != std::string::npos) {
+          comments[0].erase(pos, 1);
+        }
         //insert program line
         result = group.setString(OS_EnergyManagementSystem_ProgramExtensibleFields::ProgramLine, comments[0]);
         //check if comments exist
@@ -212,6 +216,10 @@ namespace detail {
       boost::trim_right(comments[0]);
       //remove whitespace at beginning of comments[0]
       boost::trim_left(comments[0]);
+      //remove ,
+      while ((pos = comments[0].find(",", pos)) != std::string::npos) {
+        comments[0].erase(pos, 1);
+      }
       //insert program line
       result = group.setString(OS_EnergyManagementSystem_ProgramExtensibleFields::ProgramLine, comments[0]);
       //check if comments exist
