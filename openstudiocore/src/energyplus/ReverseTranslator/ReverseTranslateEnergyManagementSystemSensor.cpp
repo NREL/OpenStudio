@@ -51,6 +51,11 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemSensor(con
 
   Workspace workspace = workspaceObject.workspace();
 
+  s = workspaceObject.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterIndexKeyName);
+  if (s) {
+    emsSensor.setKeyName(*s);
+  }
+
   s = workspaceObject.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName);
   if (s) {
     //look for Output:Variables named *s
@@ -61,7 +66,7 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemSensor(con
         if (outvar) {
           if (outvar.get().variableName() == s) {
             emsSensor.setOutputVariable(outvar.get());
-            break;
+            return emsSensor;
           }
         }
       }
@@ -74,18 +79,13 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemSensor(con
         if (outvar) {
           if (outvar.get().name() == s) {
             emsSensor.setOutputMeter(outvar.get());
-            break;
+            return emsSensor;
           }
         }
       }
     }
     //set outputVariableOrMeterName to string value
     emsSensor.setOutputVariableOrMeterName(s.get());
-  }
-
-  s = workspaceObject.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterIndexKeyName);
-  if(s){
-    emsSensor.setKeyName(*s);
   }
 
   return emsSensor;
