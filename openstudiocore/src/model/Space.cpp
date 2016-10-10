@@ -49,6 +49,8 @@
 #include "ThermalZone_Impl.hpp"
 #include "BuildingStory.hpp"
 #include "BuildingStory_Impl.hpp"
+#include "BuildingUnit.hpp"
+#include "BuildingUnit_Impl.hpp"
 #include "ShadingSurfaceGroup.hpp"
 #include "ShadingSurfaceGroup_Impl.hpp"
 #include "ShadingSurface.hpp"
@@ -731,6 +733,22 @@ namespace detail {
   void Space_Impl::resetBuildingStory()
   {
     bool result = this->setString(OS_SpaceFields::BuildingStoryName, "");
+    OS_ASSERT(result);
+  }
+
+  boost::optional<BuildingUnit> Space_Impl::buildingUnit() const
+  {
+    return getObject<ModelObject>().getModelObjectTarget<BuildingUnit>(OS_SpaceFields::BuildingUnitName);
+  }
+
+  bool Space_Impl::setBuildingUnit(const BuildingUnit &buildingUnit)
+  {
+    return this->setPointer(OS_SpaceFields::BuildingUnitName, buildingUnit.handle());
+  }
+
+  void Space_Impl::resetBuildingUnit()
+  {
+    bool result = this->setString(OS_SpaceFields::BuildingUnitName, "");
     OS_ASSERT(result);
   }
 
@@ -2644,7 +2662,7 @@ namespace detail {
     return false;
   }
 
-  template <typename T, typename TDef> 
+  template <typename T, typename TDef>
   boost::optional<T> Space_Impl::getMySpaceLoadInstance(
       const boost::optional<T>& templateSpaceLoadInstance)
   {
@@ -3065,6 +3083,20 @@ bool Space::setBuildingStory(const BuildingStory& buildingStory)
 void Space::resetBuildingStory()
 {
   getImpl<detail::Space_Impl>()->resetBuildingStory();
+}
+
+boost::optional<BuildingUnit> Space::buildingUnit() const {
+  return getImpl<detail::Space_Impl>()->buildingUnit();
+}
+
+bool Space::setBuildingUnit(const BuildingUnit& buildingUnit)
+{
+  return getImpl<detail::Space_Impl>()->setBuildingUnit(buildingUnit);
+}
+
+void Space::resetBuildingUnit()
+{
+  getImpl<detail::Space_Impl>()->resetBuildingUnit();
 }
 
 std::vector<ShadingSurfaceGroup> Space::shadingSurfaceGroups() const {
