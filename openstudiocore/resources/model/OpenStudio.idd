@@ -26622,8 +26622,7 @@ OS:EnergyManagementSystem:MeteredOutputVariable,
        \retaincase
   A3, \field EMS Variable Name
        \required-field
-       \type object-list
-	   \object-list ErlVariableNames
+       \type alpha
        \note must be an acceptable EMS variable, no spaces
   A4, \field Update Frequency
        \required-field
