@@ -118,8 +118,8 @@ TEST_F(ModelFixture, EMSProgram_EMSProgram)
   programName = fan.name().get() + "Pressure Rise Program by Line";
   fan_program_2.setName(programName);
   //create program by individual lines
-  std::string line1 = "   SET mult = " + toString(OATdbSensor.handle()) + " / 15.0 !- This is nonsense\r\n";
-  std::string line2 = "   SET " + toString(fanActuator2.handle()) + " = 250 * mult !- More nonsense\r\n";
+  std::string line1 = "   SET mult = " + toString(OATdbSensor.handle()) + " / 15.0, !- This is nonsense\r\n";
+  std::string line2 = "   SET " + toString(fanActuator2.handle()) + " = 250 * mult, !- More nonsense\r\n";
 
   fan_program_2.addLine(line1);
   fan_program_2.addLine(line2);
