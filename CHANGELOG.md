@@ -1,3 +1,7 @@
+## OpenStudio v1.13.1
+
+- ![Added:][added] [#2363]( https://github.com/NREL/OpenStudio/pull/2363 ), Add a BuildingUnit object that is optionally referenced by a space such that it can group together spaces into a unit such as an apartment in a multifamily building
+
 ## OpenStudio v1.13.0
 ###### 2016-10-01 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.12.6...v1.13.0 )
 
