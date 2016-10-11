@@ -19,6 +19,20 @@
 
 #include "EnergyManagementSystemTrendVariable.hpp"
 #include "EnergyManagementSystemTrendVariable_Impl.hpp"
+#include "EnergyManagementSystemSensor.hpp"
+#include "EnergyManagementSystemSensor_Impl.hpp"
+#include "EnergyManagementSystemActuator.hpp"
+#include "EnergyManagementSystemGlobalVariable.hpp"
+#include "EnergyManagementSystemTrendVariable.hpp"
+#include "EnergyManagementSystemInternalVariable.hpp"
+#include "EnergyManagementSystemCurveOrTableIndexVariable.hpp"
+#include "EnergyManagementSystemConstructionIndexVariable.hpp"
+#include "EnergyManagementSystemActuator_Impl.hpp"
+#include "EnergyManagementSystemGlobalVariable_Impl.hpp"
+#include "EnergyManagementSystemTrendVariable_Impl.hpp"
+#include "EnergyManagementSystemInternalVariable_Impl.hpp"
+#include "EnergyManagementSystemCurveOrTableIndexVariable_Impl.hpp"
+#include "EnergyManagementSystemConstructionIndexVariable_Impl.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_EnergyManagementSystem_TrendVariable_FieldEnums.hxx>
@@ -69,6 +83,45 @@ namespace detail {
     return value.get();
   }
 
+  boost::optional<ModelObject> EnergyManagementSystemTrendVariable_Impl::eMSVariableObject() const {
+    boost::optional<ModelObject> value = this->getTarget(OS_EnergyManagementSystem_TrendVariableFields::EMSVariableName)->cast<ModelObject>();
+    return value;
+  }
+  boost::optional< EnergyManagementSystemActuator> EnergyManagementSystemTrendVariable_Impl::emsActuator() const {
+    boost::optional<EnergyManagementSystemActuator> value = this->getTarget(OS_EnergyManagementSystem_TrendVariableFields::EMSVariableName)->cast<EnergyManagementSystemActuator>();
+    return value;
+  }
+
+  boost::optional< EnergyManagementSystemSensor> EnergyManagementSystemTrendVariable_Impl::emsSensor() const {
+    boost::optional<EnergyManagementSystemSensor> value = this->getTarget(OS_EnergyManagementSystem_TrendVariableFields::EMSVariableName)->cast<EnergyManagementSystemSensor>();
+    return value;
+  }
+
+  boost::optional<EnergyManagementSystemGlobalVariable> EnergyManagementSystemTrendVariable_Impl::emsGlobalVariable() const {
+    boost::optional<EnergyManagementSystemGlobalVariable> value = this->getTarget(OS_EnergyManagementSystem_TrendVariableFields::EMSVariableName)->cast<EnergyManagementSystemGlobalVariable>();
+    return value;
+  }
+
+  boost::optional<EnergyManagementSystemTrendVariable> EnergyManagementSystemTrendVariable_Impl::emsTrendVariable() const {
+    boost::optional<EnergyManagementSystemTrendVariable> value = this->getTarget(OS_EnergyManagementSystem_TrendVariableFields::EMSVariableName)->cast<EnergyManagementSystemTrendVariable>();
+    return value;
+  }
+
+  boost::optional<EnergyManagementSystemInternalVariable> EnergyManagementSystemTrendVariable_Impl::emsInternalVariable() const {
+    boost::optional<EnergyManagementSystemInternalVariable> value = this->getTarget(OS_EnergyManagementSystem_TrendVariableFields::EMSVariableName)->cast<EnergyManagementSystemInternalVariable>();
+    return value;
+  }
+
+  boost::optional<EnergyManagementSystemCurveOrTableIndexVariable> EnergyManagementSystemTrendVariable_Impl::emsCurveOrTableIndexVariable() const {
+    boost::optional<EnergyManagementSystemCurveOrTableIndexVariable> value = this->getTarget(OS_EnergyManagementSystem_TrendVariableFields::EMSVariableName)->cast<EnergyManagementSystemCurveOrTableIndexVariable>();
+    return value;
+  }
+
+  boost::optional<EnergyManagementSystemConstructionIndexVariable> EnergyManagementSystemTrendVariable_Impl::emsConstructionIndexVariable() const {
+    boost::optional<EnergyManagementSystemConstructionIndexVariable> value = this->getTarget(OS_EnergyManagementSystem_TrendVariableFields::EMSVariableName)->cast<EnergyManagementSystemConstructionIndexVariable>();
+    return value;
+  }
+
   int EnergyManagementSystemTrendVariable_Impl::numberofTimestepstobeLogged() const {
     boost::optional<int> value = getInt(OS_EnergyManagementSystem_TrendVariableFields::NumberofTimestepstobeLogged,true);
     return value.get();
@@ -76,6 +129,42 @@ namespace detail {
 
   bool EnergyManagementSystemTrendVariable_Impl::setEMSVariableName(const std::string& eMSVariableName) {
     bool result = setString(OS_EnergyManagementSystem_TrendVariableFields::EMSVariableName, eMSVariableName);
+    return result;
+  }
+
+
+  bool EnergyManagementSystemTrendVariable_Impl::setEMSVariableName(const EnergyManagementSystemActuator& object) {
+    bool result = setString(OS_EnergyManagementSystem_TrendVariableFields::EMSVariableName, toString(object.handle()));
+    return result;
+  }
+
+  bool EnergyManagementSystemTrendVariable_Impl::setEMSVariableName(const EnergyManagementSystemSensor& object) {
+    bool result = setString(OS_EnergyManagementSystem_TrendVariableFields::EMSVariableName, toString(object.handle()));
+    return result;
+  }
+
+  bool EnergyManagementSystemTrendVariable_Impl::setEMSVariableName(const EnergyManagementSystemGlobalVariable& object) {
+    bool result = setString(OS_EnergyManagementSystem_TrendVariableFields::EMSVariableName, toString(object.handle()));
+    return result;
+  }
+
+  bool EnergyManagementSystemTrendVariable_Impl::setEMSVariableName(const EnergyManagementSystemTrendVariable& object) {
+    bool result = setString(OS_EnergyManagementSystem_TrendVariableFields::EMSVariableName, toString(object.handle()));
+    return result;
+  }
+
+  bool EnergyManagementSystemTrendVariable_Impl::setEMSVariableName(const EnergyManagementSystemInternalVariable& object) {
+    bool result = setString(OS_EnergyManagementSystem_TrendVariableFields::EMSVariableName, toString(object.handle()));
+    return result;
+  }
+
+  bool EnergyManagementSystemTrendVariable_Impl::setEMSVariableName(const EnergyManagementSystemCurveOrTableIndexVariable& object) {
+    bool result = setString(OS_EnergyManagementSystem_TrendVariableFields::EMSVariableName, toString(object.handle()));
+    return result;
+  }
+
+  bool EnergyManagementSystemTrendVariable_Impl::setEMSVariableName(const EnergyManagementSystemConstructionIndexVariable& object) {
+    bool result = setString(OS_EnergyManagementSystem_TrendVariableFields::EMSVariableName, toString(object.handle()));
     return result;
   }
 
@@ -97,6 +186,85 @@ EnergyManagementSystemTrendVariable::EnergyManagementSystemTrendVariable(const M
   setNumberofTimestepstobeLogged(1);
 }
 
+EnergyManagementSystemTrendVariable::EnergyManagementSystemTrendVariable(const Model& model, EnergyManagementSystemActuator& object)
+  : ModelObject(EnergyManagementSystemTrendVariable::iddObjectType(), model) {
+  OS_ASSERT(getImpl<detail::EnergyManagementSystemTrendVariable_Impl>());
+  bool ok = setEMSVariableName(object);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s eMSVariableName to " 
+      << object.briefDescription() << ".");
+  }
+  setNumberofTimestepstobeLogged(1);
+}
+
+EnergyManagementSystemTrendVariable::EnergyManagementSystemTrendVariable(const Model& model, EnergyManagementSystemSensor& object)
+  : ModelObject(EnergyManagementSystemTrendVariable::iddObjectType(), model) {
+  OS_ASSERT(getImpl<detail::EnergyManagementSystemTrendVariable_Impl>());
+  bool ok = setEMSVariableName(object);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s eMSVariableName to "
+      << object.briefDescription() << ".");
+  }
+  setNumberofTimestepstobeLogged(1);
+}
+EnergyManagementSystemTrendVariable::EnergyManagementSystemTrendVariable(const Model& model, EnergyManagementSystemGlobalVariable& object)
+  : ModelObject(EnergyManagementSystemTrendVariable::iddObjectType(), model) {
+  OS_ASSERT(getImpl<detail::EnergyManagementSystemTrendVariable_Impl>());
+  bool ok = setEMSVariableName(object);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s eMSVariableName to "
+      << object.briefDescription() << ".");
+  }
+  setNumberofTimestepstobeLogged(1);
+}
+EnergyManagementSystemTrendVariable::EnergyManagementSystemTrendVariable(const Model& model, EnergyManagementSystemTrendVariable& object)
+  : ModelObject(EnergyManagementSystemTrendVariable::iddObjectType(), model) {
+  OS_ASSERT(getImpl<detail::EnergyManagementSystemTrendVariable_Impl>());
+  bool ok = setEMSVariableName(object);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s eMSVariableName to "
+      << object.briefDescription() << ".");
+  }
+  setNumberofTimestepstobeLogged(1);
+}
+EnergyManagementSystemTrendVariable::EnergyManagementSystemTrendVariable(const Model& model, EnergyManagementSystemInternalVariable& object)
+  : ModelObject(EnergyManagementSystemTrendVariable::iddObjectType(), model) {
+  OS_ASSERT(getImpl<detail::EnergyManagementSystemTrendVariable_Impl>());
+  bool ok = setEMSVariableName(object);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s eMSVariableName to "
+      << object.briefDescription() << ".");
+  }
+  setNumberofTimestepstobeLogged(1);
+}
+EnergyManagementSystemTrendVariable::EnergyManagementSystemTrendVariable(const Model& model, EnergyManagementSystemCurveOrTableIndexVariable& object)
+  : ModelObject(EnergyManagementSystemTrendVariable::iddObjectType(), model) {
+  OS_ASSERT(getImpl<detail::EnergyManagementSystemTrendVariable_Impl>());
+  bool ok = setEMSVariableName(object);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s eMSVariableName to "
+      << object.briefDescription() << ".");
+  }
+  setNumberofTimestepstobeLogged(1);
+}
+EnergyManagementSystemTrendVariable::EnergyManagementSystemTrendVariable(const Model& model, EnergyManagementSystemConstructionIndexVariable& object)
+  : ModelObject(EnergyManagementSystemTrendVariable::iddObjectType(), model) {
+  OS_ASSERT(getImpl<detail::EnergyManagementSystemTrendVariable_Impl>());
+  bool ok = setEMSVariableName(object);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s eMSVariableName to "
+      << object.briefDescription() << ".");
+  }
+  setNumberofTimestepstobeLogged(1);
+}
+
 EnergyManagementSystemTrendVariable::EnergyManagementSystemTrendVariable(const Model& model)
   : ModelObject(EnergyManagementSystemTrendVariable::iddObjectType(),model)
 {
@@ -113,12 +281,73 @@ std::string EnergyManagementSystemTrendVariable::eMSVariableName() const {
   return getImpl<detail::EnergyManagementSystemTrendVariable_Impl>()->eMSVariableName();
 }
 
+boost::optional<EnergyManagementSystemActuator> EnergyManagementSystemTrendVariable::emsActuator() const {
+  return getImpl<detail::EnergyManagementSystemTrendVariable_Impl>()->emsActuator();
+}
+
+boost::optional<EnergyManagementSystemSensor> EnergyManagementSystemTrendVariable::emsSensor() const {
+  return getImpl<detail::EnergyManagementSystemTrendVariable_Impl>()->emsSensor();
+}
+
+boost::optional<EnergyManagementSystemGlobalVariable> EnergyManagementSystemTrendVariable::emsGlobalVariable() const {
+  return getImpl<detail::EnergyManagementSystemTrendVariable_Impl>()->emsGlobalVariable();
+}
+
+boost::optional<EnergyManagementSystemTrendVariable> EnergyManagementSystemTrendVariable::emsTrendVariable() const {
+  return getImpl<detail::EnergyManagementSystemTrendVariable_Impl>()->emsTrendVariable();
+}
+
+boost::optional<EnergyManagementSystemInternalVariable> EnergyManagementSystemTrendVariable::emsInternalVariable() const {
+  return getImpl<detail::EnergyManagementSystemTrendVariable_Impl>()->emsInternalVariable();
+}
+
+boost::optional<EnergyManagementSystemCurveOrTableIndexVariable> EnergyManagementSystemTrendVariable::emsCurveOrTableIndexVariable() const {
+  return getImpl<detail::EnergyManagementSystemTrendVariable_Impl>()->emsCurveOrTableIndexVariable();
+}
+
+boost::optional<EnergyManagementSystemConstructionIndexVariable> EnergyManagementSystemTrendVariable::emsConstructionIndexVariable() const {
+  return getImpl<detail::EnergyManagementSystemTrendVariable_Impl>()->emsConstructionIndexVariable();
+}
+
+boost::optional<ModelObject> EnergyManagementSystemTrendVariable::eMSVariableObject() const {
+  return getImpl<detail::EnergyManagementSystemTrendVariable_Impl>()->eMSVariableObject();
+}
+
 int EnergyManagementSystemTrendVariable::numberofTimestepstobeLogged() const {
   return getImpl<detail::EnergyManagementSystemTrendVariable_Impl>()->numberofTimestepstobeLogged();
 }
 
 bool EnergyManagementSystemTrendVariable::setEMSVariableName(const std::string& eMSVariableName) {
   return getImpl<detail::EnergyManagementSystemTrendVariable_Impl>()->setEMSVariableName(eMSVariableName);
+}
+
+
+bool EnergyManagementSystemTrendVariable::setEMSVariableName(const EnergyManagementSystemActuator& object) {
+  return getImpl<detail::EnergyManagementSystemTrendVariable_Impl>()->setEMSVariableName(object);
+}
+
+bool EnergyManagementSystemTrendVariable::setEMSVariableName(const EnergyManagementSystemSensor& object) {
+  return getImpl<detail::EnergyManagementSystemTrendVariable_Impl>()->setEMSVariableName(object);
+}
+
+bool EnergyManagementSystemTrendVariable::setEMSVariableName(const EnergyManagementSystemGlobalVariable& object) {
+  return getImpl<detail::EnergyManagementSystemTrendVariable_Impl>()->setEMSVariableName(object);
+}
+
+bool EnergyManagementSystemTrendVariable::setEMSVariableName(const EnergyManagementSystemTrendVariable& object) {
+  return getImpl<detail::EnergyManagementSystemTrendVariable_Impl>()->setEMSVariableName(object);
+}
+
+bool EnergyManagementSystemTrendVariable::setEMSVariableName(const EnergyManagementSystemInternalVariable& object) {
+  return getImpl<detail::EnergyManagementSystemTrendVariable_Impl>()->setEMSVariableName(object);
+}
+
+bool EnergyManagementSystemTrendVariable::setEMSVariableName(const EnergyManagementSystemCurveOrTableIndexVariable& object) {
+  return getImpl<detail::EnergyManagementSystemTrendVariable_Impl>()->setEMSVariableName(object);
+}
+
+bool EnergyManagementSystemTrendVariable::setEMSVariableName(const EnergyManagementSystemConstructionIndexVariable& object) {
+  return getImpl<detail::EnergyManagementSystemTrendVariable_Impl>()->setEMSVariableName(object);
 }
 
 bool EnergyManagementSystemTrendVariable::setNumberofTimestepstobeLogged(int numberofTimestepstobeLogged) {
