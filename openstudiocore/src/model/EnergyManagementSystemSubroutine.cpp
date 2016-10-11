@@ -139,6 +139,7 @@ namespace detail {
         //remove whitespace at beginning of comments[0]
         boost::trim_left(comments[0]);
         //remove ,
+        pos = 0;
         while ((pos = comments[0].find(",", pos)) != std::string::npos) {
           comments[0].erase(pos, 1);
         }
@@ -213,6 +214,7 @@ namespace detail {
       //remove whitespace at beginning of comments[0]
       boost::trim_left(comments[0]);
       //remove ,
+      pos = 0;
       while ((pos = comments[0].find(",", pos)) != std::string::npos) {
         comments[0].erase(pos, 1);
       }
