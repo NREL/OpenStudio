@@ -24,6 +24,13 @@
 #include "ModelObject.hpp"
 #include "EnergyManagementSystemProgram.hpp"
 #include "EnergyManagementSystemSubroutine.hpp"
+#include "EnergyManagementSystemActuator.hpp"
+#include "EnergyManagementSystemSensor.hpp"
+#include "EnergyManagementSystemGlobalVariable.hpp"
+#include "EnergyManagementSystemTrendVariable.hpp"
+#include "EnergyManagementSystemInternalVariable.hpp"
+#include "EnergyManagementSystemCurveOrTableIndexVariable.hpp"
+#include "EnergyManagementSystemConstructionIndexVariable.hpp"
 
 namespace openstudio {
 
@@ -45,6 +52,20 @@ class MODEL_API EnergyManagementSystemOutputVariable : public ModelObject {
   /** @name Constructors and Destructors */
   //@{
   explicit EnergyManagementSystemOutputVariable(const Model& model, std::string eMSVariableName);
+
+  explicit EnergyManagementSystemOutputVariable(const Model& model, EnergyManagementSystemActuator& object);
+
+  explicit EnergyManagementSystemOutputVariable(const Model& model, EnergyManagementSystemSensor& object);
+
+  explicit EnergyManagementSystemOutputVariable(const Model& model, EnergyManagementSystemGlobalVariable& object);
+
+  explicit EnergyManagementSystemOutputVariable(const Model& model, EnergyManagementSystemTrendVariable& object);
+
+  explicit EnergyManagementSystemOutputVariable(const Model& model, EnergyManagementSystemInternalVariable& object);
+
+  explicit EnergyManagementSystemOutputVariable(const Model& model, EnergyManagementSystemCurveOrTableIndexVariable& object);
+
+  explicit EnergyManagementSystemOutputVariable(const Model& model, EnergyManagementSystemConstructionIndexVariable& object);
 
   virtual ~EnergyManagementSystemOutputVariable() {}
 
@@ -69,6 +90,16 @@ class MODEL_API EnergyManagementSystemOutputVariable : public ModelObject {
 
   boost::optional<std::string> units() const;
 
+  boost::optional<ModelObject> eMSVariableObject() const;
+
+  boost::optional<EnergyManagementSystemActuator> emsActuator() const;
+  boost::optional<EnergyManagementSystemSensor> emsSensor() const;
+  boost::optional<EnergyManagementSystemGlobalVariable> emsGlobalVariable() const;
+  boost::optional<EnergyManagementSystemTrendVariable> emsTrendVariable() const;
+  boost::optional<EnergyManagementSystemInternalVariable> emsInternalVariable() const;
+  boost::optional<EnergyManagementSystemCurveOrTableIndexVariable> emsCurveOrTableIndexVariable() const;
+  boost::optional<EnergyManagementSystemConstructionIndexVariable> emsConstructionIndexVariable() const;
+
   //@}
   /** @name Setters */
   //@{
@@ -88,6 +119,15 @@ class MODEL_API EnergyManagementSystemOutputVariable : public ModelObject {
   bool setUnits(const std::string& units);
 
   void resetUnits();
+
+  bool setEMSVariableName(const EnergyManagementSystemActuator& object);
+  bool setEMSVariableName(const EnergyManagementSystemSensor& object);
+  bool setEMSVariableName(const EnergyManagementSystemGlobalVariable& object);
+  bool setEMSVariableName(const EnergyManagementSystemTrendVariable& object);
+  bool setEMSVariableName(const EnergyManagementSystemInternalVariable& object);
+  bool setEMSVariableName(const EnergyManagementSystemCurveOrTableIndexVariable& object);
+  bool setEMSVariableName(const EnergyManagementSystemConstructionIndexVariable& object);
+
 
   //@}
   /** @name Other */

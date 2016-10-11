@@ -23,6 +23,20 @@
 #include "EnergyManagementSystemProgram_Impl.hpp"
 #include "EnergyManagementSystemSubroutine.hpp"
 #include "EnergyManagementSystemSubroutine_Impl.hpp"
+#include "EnergyManagementSystemSensor.hpp"
+#include "EnergyManagementSystemSensor_Impl.hpp"
+#include "EnergyManagementSystemActuator.hpp"
+#include "EnergyManagementSystemGlobalVariable.hpp"
+#include "EnergyManagementSystemTrendVariable.hpp"
+#include "EnergyManagementSystemInternalVariable.hpp"
+#include "EnergyManagementSystemCurveOrTableIndexVariable.hpp"
+#include "EnergyManagementSystemConstructionIndexVariable.hpp"
+#include "EnergyManagementSystemActuator_Impl.hpp"
+#include "EnergyManagementSystemGlobalVariable_Impl.hpp"
+#include "EnergyManagementSystemTrendVariable_Impl.hpp"
+#include "EnergyManagementSystemInternalVariable_Impl.hpp"
+#include "EnergyManagementSystemCurveOrTableIndexVariable_Impl.hpp"
+#include "EnergyManagementSystemConstructionIndexVariable_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -111,6 +125,41 @@ namespace detail {
     return result;
   }
 
+  bool EnergyManagementSystemMeteredOutputVariable_Impl::setEMSVariableName(const EnergyManagementSystemActuator& object) {
+    bool result = setString(OS_EnergyManagementSystem_MeteredOutputVariableFields::EMSVariableName, toString(object.handle()));
+    return result;
+  }
+
+  bool EnergyManagementSystemMeteredOutputVariable_Impl::setEMSVariableName(const EnergyManagementSystemSensor& object) {
+    bool result = setString(OS_EnergyManagementSystem_MeteredOutputVariableFields::EMSVariableName, toString(object.handle()));
+    return result;
+  }
+
+  bool EnergyManagementSystemMeteredOutputVariable_Impl::setEMSVariableName(const EnergyManagementSystemGlobalVariable& object) {
+    bool result = setString(OS_EnergyManagementSystem_MeteredOutputVariableFields::EMSVariableName, toString(object.handle()));
+    return result;
+  }
+
+  bool EnergyManagementSystemMeteredOutputVariable_Impl::setEMSVariableName(const EnergyManagementSystemTrendVariable& object) {
+    bool result = setString(OS_EnergyManagementSystem_MeteredOutputVariableFields::EMSVariableName, toString(object.handle()));
+    return result;
+  }
+
+  bool EnergyManagementSystemMeteredOutputVariable_Impl::setEMSVariableName(const EnergyManagementSystemInternalVariable& object) {
+    bool result = setString(OS_EnergyManagementSystem_MeteredOutputVariableFields::EMSVariableName, toString(object.handle()));
+    return result;
+  }
+
+  bool EnergyManagementSystemMeteredOutputVariable_Impl::setEMSVariableName(const EnergyManagementSystemCurveOrTableIndexVariable& object) {
+    bool result = setString(OS_EnergyManagementSystem_MeteredOutputVariableFields::EMSVariableName, toString(object.handle()));
+    return result;
+  }
+
+  bool EnergyManagementSystemMeteredOutputVariable_Impl::setEMSVariableName(const EnergyManagementSystemConstructionIndexVariable& object) {
+    bool result = setString(OS_EnergyManagementSystem_MeteredOutputVariableFields::EMSVariableName, toString(object.handle()));
+    return result;
+  }
+
   bool EnergyManagementSystemMeteredOutputVariable_Impl::setUpdateFrequency(const std::string& updateFrequency) {
     bool result = setString(OS_EnergyManagementSystem_MeteredOutputVariableFields::UpdateFrequency, updateFrequency);
     return result;
@@ -166,6 +215,46 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  boost::optional<ModelObject> EnergyManagementSystemMeteredOutputVariable_Impl::eMSVariableObject() const {
+    boost::optional<ModelObject> value = this->getTarget(OS_EnergyManagementSystem_MeteredOutputVariableFields::EMSVariableName)->cast<ModelObject>();
+    return value;
+  }
+
+  boost::optional< EnergyManagementSystemActuator> EnergyManagementSystemMeteredOutputVariable_Impl::emsActuator() const {
+    boost::optional<EnergyManagementSystemActuator> value = this->getTarget(OS_EnergyManagementSystem_MeteredOutputVariableFields::EMSVariableName)->cast<EnergyManagementSystemActuator>();
+    return value;
+  }
+
+  boost::optional< EnergyManagementSystemSensor> EnergyManagementSystemMeteredOutputVariable_Impl::emsSensor() const {
+    boost::optional<EnergyManagementSystemSensor> value = this->getTarget(OS_EnergyManagementSystem_MeteredOutputVariableFields::EMSVariableName)->cast<EnergyManagementSystemSensor>();
+    return value;
+  }
+
+  boost::optional<EnergyManagementSystemGlobalVariable> EnergyManagementSystemMeteredOutputVariable_Impl::emsGlobalVariable() const {
+    boost::optional<EnergyManagementSystemGlobalVariable> value = this->getTarget(OS_EnergyManagementSystem_MeteredOutputVariableFields::EMSVariableName)->cast<EnergyManagementSystemGlobalVariable>();
+    return value;
+  }
+
+  boost::optional<EnergyManagementSystemTrendVariable> EnergyManagementSystemMeteredOutputVariable_Impl::emsTrendVariable() const {
+    boost::optional<EnergyManagementSystemTrendVariable> value = this->getTarget(OS_EnergyManagementSystem_MeteredOutputVariableFields::EMSVariableName)->cast<EnergyManagementSystemTrendVariable>();
+    return value;
+  }
+
+  boost::optional<EnergyManagementSystemInternalVariable> EnergyManagementSystemMeteredOutputVariable_Impl::emsInternalVariable() const {
+    boost::optional<EnergyManagementSystemInternalVariable> value = this->getTarget(OS_EnergyManagementSystem_MeteredOutputVariableFields::EMSVariableName)->cast<EnergyManagementSystemInternalVariable>();
+    return value;
+  }
+
+  boost::optional<EnergyManagementSystemCurveOrTableIndexVariable> EnergyManagementSystemMeteredOutputVariable_Impl::emsCurveOrTableIndexVariable() const {
+    boost::optional<EnergyManagementSystemCurveOrTableIndexVariable> value = this->getTarget(OS_EnergyManagementSystem_MeteredOutputVariableFields::EMSVariableName)->cast<EnergyManagementSystemCurveOrTableIndexVariable>();
+    return value;
+  }
+
+  boost::optional<EnergyManagementSystemConstructionIndexVariable> EnergyManagementSystemMeteredOutputVariable_Impl::emsConstructionIndexVariable() const {
+    boost::optional<EnergyManagementSystemConstructionIndexVariable> value = this->getTarget(OS_EnergyManagementSystem_MeteredOutputVariableFields::EMSVariableName)->cast<EnergyManagementSystemConstructionIndexVariable>();
+    return value;
+  }
+
 } // detail
 
 EnergyManagementSystemMeteredOutputVariable::EnergyManagementSystemMeteredOutputVariable(const Model& model, std::string eMSVariableName)
@@ -175,6 +264,111 @@ EnergyManagementSystemMeteredOutputVariable::EnergyManagementSystemMeteredOutput
   if (!ok) {
     remove();
     LOG_AND_THROW("Unable to set " << briefDescription() << "'s eMSVariableName to " << eMSVariableName << ".");
+  }
+  setUpdateFrequency("SystemTimestep");
+  setResourceType("Electricity");
+  setGroupType("Building");
+  setEndUseCategory("Fans");
+}
+
+EnergyManagementSystemMeteredOutputVariable::EnergyManagementSystemMeteredOutputVariable(const Model& model, EnergyManagementSystemActuator& object)
+  : ModelObject(EnergyManagementSystemMeteredOutputVariable::iddObjectType(), model) {
+  OS_ASSERT(getImpl<detail::EnergyManagementSystemMeteredOutputVariable_Impl>());
+  bool ok = setEMSVariableName(object);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s eMSVariableName to " 
+      << object.briefDescription() << ".");
+  }
+  setUpdateFrequency("SystemTimestep");
+  setResourceType("Electricity");
+  setGroupType("Building");
+  setEndUseCategory("Fans");
+}
+
+EnergyManagementSystemMeteredOutputVariable::EnergyManagementSystemMeteredOutputVariable(const Model& model, EnergyManagementSystemSensor& object)
+  : ModelObject(EnergyManagementSystemMeteredOutputVariable::iddObjectType(), model) {
+  OS_ASSERT(getImpl<detail::EnergyManagementSystemMeteredOutputVariable_Impl>());
+  bool ok = setEMSVariableName(object);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s eMSVariableName to "
+      << object.briefDescription() << ".");
+  }
+  setUpdateFrequency("SystemTimestep");
+  setResourceType("Electricity");
+  setGroupType("Building");
+  setEndUseCategory("Fans");
+}
+
+EnergyManagementSystemMeteredOutputVariable::EnergyManagementSystemMeteredOutputVariable(const Model& model, EnergyManagementSystemGlobalVariable& object)
+  : ModelObject(EnergyManagementSystemMeteredOutputVariable::iddObjectType(), model) {
+  OS_ASSERT(getImpl<detail::EnergyManagementSystemMeteredOutputVariable_Impl>());
+  bool ok = setEMSVariableName(object);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s eMSVariableName to "
+      << object.briefDescription() << ".");
+  }
+  setUpdateFrequency("SystemTimestep");
+  setResourceType("Electricity");
+  setGroupType("Building");
+  setEndUseCategory("Fans");
+}
+
+EnergyManagementSystemMeteredOutputVariable::EnergyManagementSystemMeteredOutputVariable(const Model& model, EnergyManagementSystemTrendVariable& object)
+  : ModelObject(EnergyManagementSystemMeteredOutputVariable::iddObjectType(), model) {
+  OS_ASSERT(getImpl<detail::EnergyManagementSystemMeteredOutputVariable_Impl>());
+  bool ok = setEMSVariableName(object);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s eMSVariableName to "
+      << object.briefDescription() << ".");
+  }
+  setUpdateFrequency("SystemTimestep");
+  setResourceType("Electricity");
+  setGroupType("Building");
+  setEndUseCategory("Fans");
+}
+
+EnergyManagementSystemMeteredOutputVariable::EnergyManagementSystemMeteredOutputVariable(const Model& model, EnergyManagementSystemInternalVariable& object)
+  : ModelObject(EnergyManagementSystemMeteredOutputVariable::iddObjectType(), model) {
+  OS_ASSERT(getImpl<detail::EnergyManagementSystemMeteredOutputVariable_Impl>());
+  bool ok = setEMSVariableName(object);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s eMSVariableName to "
+      << object.briefDescription() << ".");
+  }
+  setUpdateFrequency("SystemTimestep");
+  setResourceType("Electricity");
+  setGroupType("Building");
+  setEndUseCategory("Fans");
+}
+
+EnergyManagementSystemMeteredOutputVariable::EnergyManagementSystemMeteredOutputVariable(const Model& model, EnergyManagementSystemCurveOrTableIndexVariable& object)
+  : ModelObject(EnergyManagementSystemMeteredOutputVariable::iddObjectType(), model) {
+  OS_ASSERT(getImpl<detail::EnergyManagementSystemMeteredOutputVariable_Impl>());
+  bool ok = setEMSVariableName(object);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s eMSVariableName to "
+      << object.briefDescription() << ".");
+  }
+  setUpdateFrequency("SystemTimestep");
+  setResourceType("Electricity");
+  setGroupType("Building");
+  setEndUseCategory("Fans");
+}
+
+EnergyManagementSystemMeteredOutputVariable::EnergyManagementSystemMeteredOutputVariable(const Model& model, EnergyManagementSystemConstructionIndexVariable& object)
+  : ModelObject(EnergyManagementSystemMeteredOutputVariable::iddObjectType(), model) {
+  OS_ASSERT(getImpl<detail::EnergyManagementSystemMeteredOutputVariable_Impl>());
+  bool ok = setEMSVariableName(object);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s eMSVariableName to "
+      << object.briefDescription() << ".");
   }
   setUpdateFrequency("SystemTimestep");
   setResourceType("Electricity");
@@ -249,8 +443,33 @@ boost::optional<std::string> EnergyManagementSystemMeteredOutputVariable::units(
   return getImpl<detail::EnergyManagementSystemMeteredOutputVariable_Impl>()->units();
 }
 
-bool EnergyManagementSystemMeteredOutputVariable::setEMSVariableName(const std::string& eMSVariableName) {
-  return getImpl<detail::EnergyManagementSystemMeteredOutputVariable_Impl>()->setEMSVariableName(eMSVariableName);
+
+boost::optional<ModelObject> EnergyManagementSystemMeteredOutputVariable::eMSVariableObject() const {
+  return getImpl<detail::EnergyManagementSystemMeteredOutputVariable_Impl>()->eMSVariableObject();
+}
+
+boost::optional<EnergyManagementSystemActuator> EnergyManagementSystemMeteredOutputVariable::emsActuator() const {
+  return getImpl<detail::EnergyManagementSystemMeteredOutputVariable_Impl>()->emsActuator();
+}
+
+boost::optional<EnergyManagementSystemGlobalVariable> EnergyManagementSystemMeteredOutputVariable::emsGlobalVariable() const {
+  return getImpl<detail::EnergyManagementSystemMeteredOutputVariable_Impl>()->emsGlobalVariable();
+}
+
+boost::optional<EnergyManagementSystemTrendVariable> EnergyManagementSystemMeteredOutputVariable::emsTrendVariable() const {
+  return getImpl<detail::EnergyManagementSystemMeteredOutputVariable_Impl>()->emsTrendVariable();
+}
+
+boost::optional<EnergyManagementSystemInternalVariable> EnergyManagementSystemMeteredOutputVariable::emsInternalVariable() const {
+  return getImpl<detail::EnergyManagementSystemMeteredOutputVariable_Impl>()->emsInternalVariable();
+}
+
+boost::optional<EnergyManagementSystemCurveOrTableIndexVariable> EnergyManagementSystemMeteredOutputVariable::emsCurveOrTableIndexVariable() const {
+  return getImpl<detail::EnergyManagementSystemMeteredOutputVariable_Impl>()->emsCurveOrTableIndexVariable();
+}
+
+boost::optional<EnergyManagementSystemConstructionIndexVariable> EnergyManagementSystemMeteredOutputVariable::emsConstructionIndexVariable() const {
+  return getImpl<detail::EnergyManagementSystemMeteredOutputVariable_Impl>()->emsConstructionIndexVariable();
 }
 
 bool EnergyManagementSystemMeteredOutputVariable::setUpdateFrequency(const std::string& updateFrequency) {
@@ -295,6 +514,38 @@ bool EnergyManagementSystemMeteredOutputVariable::setUnits(const std::string& un
 
 void EnergyManagementSystemMeteredOutputVariable::resetUnits() {
   getImpl<detail::EnergyManagementSystemMeteredOutputVariable_Impl>()->resetUnits();
+}
+
+bool EnergyManagementSystemMeteredOutputVariable::setEMSVariableName(const std::string& eMSVariableName) {
+  return getImpl<detail::EnergyManagementSystemMeteredOutputVariable_Impl>()->setEMSVariableName(eMSVariableName);
+}
+
+bool EnergyManagementSystemMeteredOutputVariable::setEMSVariableName(const EnergyManagementSystemActuator& object) {
+  return getImpl<detail::EnergyManagementSystemMeteredOutputVariable_Impl>()->setEMSVariableName(object);
+}
+
+bool EnergyManagementSystemMeteredOutputVariable::setEMSVariableName(const EnergyManagementSystemSensor& object) {
+  return getImpl<detail::EnergyManagementSystemMeteredOutputVariable_Impl>()->setEMSVariableName(object);
+}
+
+bool EnergyManagementSystemMeteredOutputVariable::setEMSVariableName(const EnergyManagementSystemGlobalVariable& object) {
+  return getImpl<detail::EnergyManagementSystemMeteredOutputVariable_Impl>()->setEMSVariableName(object);
+}
+
+bool EnergyManagementSystemMeteredOutputVariable::setEMSVariableName(const EnergyManagementSystemTrendVariable& object) {
+  return getImpl<detail::EnergyManagementSystemMeteredOutputVariable_Impl>()->setEMSVariableName(object);
+}
+
+bool EnergyManagementSystemMeteredOutputVariable::setEMSVariableName(const EnergyManagementSystemInternalVariable& object) {
+  return getImpl<detail::EnergyManagementSystemMeteredOutputVariable_Impl>()->setEMSVariableName(object);
+}
+
+bool EnergyManagementSystemMeteredOutputVariable::setEMSVariableName(const EnergyManagementSystemCurveOrTableIndexVariable& object) {
+  return getImpl<detail::EnergyManagementSystemMeteredOutputVariable_Impl>()->setEMSVariableName(object);
+}
+
+bool EnergyManagementSystemMeteredOutputVariable::setEMSVariableName(const EnergyManagementSystemConstructionIndexVariable& object) {
+  return getImpl<detail::EnergyManagementSystemMeteredOutputVariable_Impl>()->setEMSVariableName(object);
 }
 
 /// @cond

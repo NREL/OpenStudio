@@ -127,5 +127,17 @@ TEST_F(ModelFixture, EMSOutputVariable_EMSOutputVariable)
   EXPECT_EQ("program_1", outvar.eMSProgramorSubroutineName().get());
 
 
+  // add output variable actuator
+  EnergyManagementSystemOutputVariable outvar_act(model, fanActuator);
+  //setname
+  outvar_act.setName("outputVar act");
+  EXPECT_EQ("outputVar act", outvar_act.nameString());
+
+  // add output variable sensor
+  EnergyManagementSystemOutputVariable outvar_sen(model, OATdbSensor);
+  //setname
+  outvar_sen.setName("outputVar sen");
+  EXPECT_EQ("outputVar sen", outvar_sen.nameString());
+
 }
 
