@@ -26553,8 +26553,7 @@ OS:EnergyManagementSystem:OutputVariable,
        \retaincase
   A3, \field EMS Variable Name
        \required-field
-       \type object-list
-	   \object-list ErlVariableNames
+       \type alpha
        \note must be an acceptable EMS variable
   A4, \field Type of Data in Variable
        \required-field
