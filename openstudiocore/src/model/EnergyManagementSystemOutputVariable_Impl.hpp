@@ -70,6 +70,17 @@ namespace detail {
 
     boost::optional<std::string> units() const;
 
+    boost::optional<ModelObject> eMSVariableObject() const;
+
+    boost::optional<EnergyManagementSystemActuator> emsActuator() const;
+    boost::optional<EnergyManagementSystemSensor> emsSensor() const;
+    boost::optional<EnergyManagementSystemGlobalVariable> emsGlobalVariable() const;
+    boost::optional<EnergyManagementSystemTrendVariable> emsTrendVariable() const;
+    boost::optional<EnergyManagementSystemInternalVariable> emsInternalVariable() const;
+    boost::optional<EnergyManagementSystemCurveOrTableIndexVariable> emsCurveOrTableIndexVariable() const;
+    boost::optional<EnergyManagementSystemConstructionIndexVariable> emsConstructionIndexVariable() const;
+
+
     //@}
     /** @name Setters */
     //@{
@@ -89,6 +100,15 @@ namespace detail {
     bool setUnits(const std::string& units);
 
     void resetUnits();
+
+    bool setEMSVariableName(const EnergyManagementSystemActuator& object);
+    bool setEMSVariableName(const EnergyManagementSystemSensor& object);
+    bool setEMSVariableName(const EnergyManagementSystemGlobalVariable& object);
+    bool setEMSVariableName(const EnergyManagementSystemTrendVariable& object);
+    bool setEMSVariableName(const EnergyManagementSystemInternalVariable& object);
+    bool setEMSVariableName(const EnergyManagementSystemCurveOrTableIndexVariable& object);
+    bool setEMSVariableName(const EnergyManagementSystemConstructionIndexVariable& object);
+
 
     //@}
     /** @name Other */
