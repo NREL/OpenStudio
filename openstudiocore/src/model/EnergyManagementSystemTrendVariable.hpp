@@ -22,6 +22,13 @@
 
 #include <model/ModelAPI.hpp>
 #include "ModelObject.hpp"
+#include "EnergyManagementSystemActuator.hpp"
+#include "EnergyManagementSystemSensor.hpp"
+#include "EnergyManagementSystemGlobalVariable.hpp"
+#include "EnergyManagementSystemTrendVariable.hpp"
+#include "EnergyManagementSystemInternalVariable.hpp"
+#include "EnergyManagementSystemCurveOrTableIndexVariable.hpp"
+#include "EnergyManagementSystemConstructionIndexVariable.hpp"
 
 namespace openstudio {
 
@@ -44,6 +51,20 @@ class MODEL_API EnergyManagementSystemTrendVariable : public ModelObject {
   //@{
   explicit EnergyManagementSystemTrendVariable(const Model& model, std::string eMSVariableName);
 
+  explicit EnergyManagementSystemTrendVariable(const Model& model, EnergyManagementSystemActuator& object);
+
+  explicit EnergyManagementSystemTrendVariable(const Model& model, EnergyManagementSystemSensor& object);
+
+  explicit EnergyManagementSystemTrendVariable(const Model& model, EnergyManagementSystemGlobalVariable& object);
+
+  explicit EnergyManagementSystemTrendVariable(const Model& model, EnergyManagementSystemTrendVariable& object);
+
+  explicit EnergyManagementSystemTrendVariable(const Model& model, EnergyManagementSystemInternalVariable& object);
+
+  explicit EnergyManagementSystemTrendVariable(const Model& model, EnergyManagementSystemCurveOrTableIndexVariable& object);
+
+  explicit EnergyManagementSystemTrendVariable(const Model& model, EnergyManagementSystemConstructionIndexVariable& object);
+
   virtual ~EnergyManagementSystemTrendVariable() {}
 
   //@}
@@ -57,6 +78,16 @@ class MODEL_API EnergyManagementSystemTrendVariable : public ModelObject {
 
   int numberofTimestepstobeLogged() const;
 
+  boost::optional<ModelObject> eMSVariableObject() const;
+
+  boost::optional<EnergyManagementSystemActuator> emsActuator() const;
+  boost::optional<EnergyManagementSystemSensor> emsSensor() const;
+  boost::optional<EnergyManagementSystemGlobalVariable> emsGlobalVariable() const;
+  boost::optional<EnergyManagementSystemTrendVariable> emsTrendVariable() const;
+  boost::optional<EnergyManagementSystemInternalVariable> emsInternalVariable() const;
+  boost::optional<EnergyManagementSystemCurveOrTableIndexVariable> emsCurveOrTableIndexVariable() const;
+  boost::optional<EnergyManagementSystemConstructionIndexVariable> emsConstructionIndexVariable() const;
+
   //@}
   /** @name Setters */
   //@{
@@ -64,6 +95,14 @@ class MODEL_API EnergyManagementSystemTrendVariable : public ModelObject {
   bool setEMSVariableName(const std::string& eMSVariableName);
 
   bool setNumberofTimestepstobeLogged(int numberofTimestepstobeLogged);
+
+  bool setEMSVariableName(const EnergyManagementSystemActuator& object);
+  bool setEMSVariableName(const EnergyManagementSystemSensor& object);
+  bool setEMSVariableName(const EnergyManagementSystemGlobalVariable& object);
+  bool setEMSVariableName(const EnergyManagementSystemTrendVariable& object);
+  bool setEMSVariableName(const EnergyManagementSystemInternalVariable& object);
+  bool setEMSVariableName(const EnergyManagementSystemCurveOrTableIndexVariable& object);
+  bool setEMSVariableName(const EnergyManagementSystemConstructionIndexVariable& object);
 
   //@}
   /** @name Other */
