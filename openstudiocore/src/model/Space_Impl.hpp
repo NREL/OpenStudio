@@ -49,6 +49,7 @@ class DefaultScheduleType;
 class DefaultScheduleSet;
 class ThermalZone;
 class BuildingStory;
+class BuildingUnit;
 class ShadingSurfaceGroup;
 class InteriorPartitionSurfaceGroup;
 class PlanarSurface;
@@ -292,6 +293,12 @@ namespace detail {
 
     // resets the building story
     void resetBuildingStory();
+
+    boost::optional<BuildingUnit> buildingUnit() const;
+
+    bool setBuildingUnit(const BuildingUnit& buildingUnit);
+
+    void resetBuildingUnit();
 
     /// Returns all \link ShadingSurfaceGroup ShadingSurfaceGroups \endlink in this space.
     std::vector<ShadingSurfaceGroup> shadingSurfaceGroups() const;

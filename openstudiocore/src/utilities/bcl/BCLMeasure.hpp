@@ -166,6 +166,8 @@ namespace openstudio{
 
     UUID versionUUID() const;
 
+    boost::optional<DateTime> versionModified() const;
+
     std::string xmlChecksum() const;
 
     std::string name() const;
