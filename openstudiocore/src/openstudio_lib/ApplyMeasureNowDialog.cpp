@@ -666,12 +666,12 @@ void DataPointJobItemView::update(const BCLMeasure & bclMeasure, const boost::op
       continue;
     }
 
-    boost::optional<std::string> initialCondition = result->initialCondition();
+    boost::optional<std::string> initialCondition = result->stepInitialCondition();
     if (initialCondition){
       m_dataPointJobContentView->addInitialConditionMessage(*initialCondition);
     }
 
-    boost::optional<std::string> finalCondition = result->finalCondition();
+    boost::optional<std::string> finalCondition = result->stepFinalCondition();
     if (finalCondition){
       m_dataPointJobContentView->addFinalConditionMessage(*finalCondition);
     }

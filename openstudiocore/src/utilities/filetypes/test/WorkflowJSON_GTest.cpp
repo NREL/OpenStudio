@@ -320,8 +320,8 @@ WorkflowStepResult getWorkflowStepResult(const WorkflowStep& step)
   workflowStepResult.setStartedAt(DateTime::nowUTC());
   workflowStepResult.setCompletedAt(DateTime::nowUTC());
   workflowStepResult.setStepResult(StepResult::Success);
-  workflowStepResult.setInitialCondition(stepName + " Initial Condition");
-  workflowStepResult.setFinalCondition(stepName + " Final Condition");
+  workflowStepResult.setStepInitialCondition(stepName + " Initial Condition");
+  workflowStepResult.setStepFinalCondition(stepName + " Final Condition");
   workflowStepResult.addStepError(stepName + " Error 1");
   workflowStepResult.addStepError(stepName + " Error 2");
   workflowStepResult.addStepError(stepName + " Error 3");
@@ -362,11 +362,11 @@ void checkWorkflowStepResult(const WorkflowStep& step)
   ASSERT_TRUE(workflowStepResult.stepResult ());
   EXPECT_EQ(StepResult::Success, workflowStepResult.stepResult().get().value());
 
-  ASSERT_TRUE(workflowStepResult.initialCondition());
-  EXPECT_EQ(stepName + " Initial Condition", workflowStepResult.initialCondition());
+  ASSERT_TRUE(workflowStepResult.stepInitialCondition());
+  EXPECT_EQ(stepName + " Initial Condition", workflowStepResult.stepInitialCondition());
 
-  ASSERT_TRUE(workflowStepResult.finalCondition());
-  EXPECT_EQ(stepName + " Final Condition", workflowStepResult.finalCondition());
+  ASSERT_TRUE(workflowStepResult.stepFinalCondition());
+  EXPECT_EQ(stepName + " Final Condition", workflowStepResult.stepFinalCondition());
 
   ASSERT_EQ(3u, workflowStepResult.stepErrors().size());
   EXPECT_EQ(stepName + " Error 1", workflowStepResult.stepErrors()[0]);
@@ -595,8 +595,8 @@ TEST(Filetypes, WorkflowStepResult_EscapeCharacters)
 {
   WorkflowStepResult result;
 
-  result.setInitialCondition("\"Initial Condition\"");
-  result.setFinalCondition("\"Final Condition\"");
+  result.setStepInitialCondition("\"Initial Condition\"");
+  result.setStepFinalCondition("\"Final Condition\"");
   result.addStepError("\"Step Error\"");
   result.addStepWarning("\"Step Warning\"");
   result.addStepInfo("\"Step Info\"");
@@ -612,9 +612,9 @@ TEST(Filetypes, WorkflowStepResult_EscapeCharacters)
   std::cout << result.string() << std::endl;
 
   ASSERT_TRUE(result2->initialCondition());
-  EXPECT_EQ("\"Initial Condition\"", result2->initialCondition().get());
+  EXPECT_EQ("\"Initial Condition\"", result2->stepInitialCondition().get());
   ASSERT_TRUE(result2->finalCondition());
-  EXPECT_EQ("\"Final Condition\"", result2->finalCondition().get());
+  EXPECT_EQ("\"Final Condition\"", result2->stepFinalCondition().get());
   /*ASSERT_TRUE(result2->initialCondition());
   result2.addStepError("\"Step Error\"");
   ASSERT_TRUE(result2->initialCondition());
@@ -634,8 +634,8 @@ TEST(Filetypes, WorkflowStepResult_EscapeCharacters2)
 {
   WorkflowStepResult result;
 
-  result.setInitialCondition(R"("Initial Condition")");
-  result.setFinalCondition(R"("Final Condition")");
+  result.setStepInitialCondition(R"("Initial Condition")");
+  result.setStepFinalCondition(R"("Final Condition")");
   result.addStepError(R"("Step Error")");
   result.addStepWarning(R"("Step Warning")");
   result.addStepInfo(R"("Step Info")");
@@ -650,10 +650,10 @@ TEST(Filetypes, WorkflowStepResult_EscapeCharacters2)
 
   std::cout << result.string() << std::endl;
 
-  ASSERT_TRUE(result2->initialCondition());
-  EXPECT_EQ("\"Initial Condition\"", result2->initialCondition().get());
-  ASSERT_TRUE(result2->finalCondition());
-  EXPECT_EQ("\"Final Condition\"", result2->finalCondition().get());
+  ASSERT_TRUE(result2->stepInitialCondition());
+  EXPECT_EQ("\"Initial Condition\"", result2->stepInitialCondition().get());
+  ASSERT_TRUE(result2->stepFinalCondition());
+  EXPECT_EQ("\"Final Condition\"", result2->stepFinalCondition().get());
   /*ASSERT_TRUE(result2->initialCondition());
   result2.addStepError("\"Step Error\"");
   ASSERT_TRUE(result2->initialCondition());

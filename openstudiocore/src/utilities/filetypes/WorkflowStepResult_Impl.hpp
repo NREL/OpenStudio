@@ -106,9 +106,9 @@ class UTILITIES_API WorkflowStepResult_Impl {
 
   boost::optional<StepResult> stepResult() const;
 
-  boost::optional<std::string> initialCondition() const;
+  boost::optional<std::string> stepInitialCondition() const;
 
-  boost::optional<std::string> finalCondition() const;
+  boost::optional<std::string> stepFinalCondition() const;
 
   std::vector<std::string> stepErrors() const;
 
@@ -124,6 +124,15 @@ class UTILITIES_API WorkflowStepResult_Impl {
 
   boost::optional<std::string> stdErr() const;
 
+  // methods for backwards compatibility with OpenStudio 1.X
+  StepResult value() const;
+  std::vector<LogMessage> errors() const;
+  std::vector<LogMessage> warnings() const;
+  std::vector<LogMessage> info() const;
+  boost::optional<LogMessage> initialCondition() const;
+  boost::optional<LogMessage> finalCondition() const;
+  std::vector<Attribute> attributes() const;
+
   void setStartedAt(const DateTime& dateTime);
   void resetStartedAt();
 
@@ -133,11 +142,11 @@ class UTILITIES_API WorkflowStepResult_Impl {
   void setStepResult(const StepResult& result);
   void resetStepResult();
 
-  void setInitialCondition(const std::string& initialCondition);
-  void resetInitialCondition();
+  void setStepInitialCondition(const std::string& initialCondition);
+  void resetStepInitialCondition();
 
-  void setFinalCondition(const std::string& finalCondition);
-  void resetFinalCondition();
+  void setStepFinalCondition(const std::string& finalCondition);
+  void resetStepFinalCondition();
 
   void addStepError(const std::string& error);
   void resetStepErrors();
@@ -166,8 +175,8 @@ class UTILITIES_API WorkflowStepResult_Impl {
    boost::optional<DateTime> m_startedAt;
    boost::optional<DateTime> m_completedAt;
    boost::optional<StepResult> m_stepResult;
-   boost::optional<std::string> m_initialCondition;
-   boost::optional<std::string> m_finalCondition;
+   boost::optional<std::string> m_stepInitialCondition;
+   boost::optional<std::string> m_stepFinalCondition;
    std::vector<std::string> m_stepErrors;
    std::vector<std::string> m_stepWarnings;
    std::vector<std::string> m_stepInfo;

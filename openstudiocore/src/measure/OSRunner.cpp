@@ -289,11 +289,11 @@ void OSRunner::registerAsNotApplicable(const std::string& message) {
 }
 
 void OSRunner::registerInitialCondition(const std::string& message) {
-  m_result.setInitialCondition(message);
+  m_result.setStepInitialCondition(message);
 }
 
 void OSRunner::registerFinalCondition(const std::string& message) {
-  m_result.setFinalCondition(message);
+  m_result.setStepFinalCondition(message);
 }
 
 
