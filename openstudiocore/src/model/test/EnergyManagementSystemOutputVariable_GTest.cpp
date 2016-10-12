@@ -139,5 +139,9 @@ TEST_F(ModelFixture, EMSOutputVariable_EMSOutputVariable)
   outvar_sen.setName("outputVar sen");
   EXPECT_EQ("outputVar sen", outvar_sen.nameString());
 
+  ASSERT_TRUE(outvar_sen.eMSVariableObject());
+  ASSERT_TRUE(outvar_sen.emsSensor());
+  EXPECT_EQ(outvar_sen.eMSVariableObject().get(), outvar_sen.emsSensor().get());
+
 }
 

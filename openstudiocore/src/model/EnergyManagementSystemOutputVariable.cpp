@@ -38,6 +38,8 @@
 #include "EnergyManagementSystemCurveOrTableIndexVariable_Impl.hpp"
 #include "EnergyManagementSystemConstructionIndexVariable_Impl.hpp"
 
+#include "Model.hpp"
+
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_EnergyManagementSystem_OutputVariable_FieldEnums.hxx>
@@ -182,42 +184,82 @@ namespace detail {
   }
 
   boost::optional<ModelObject> EnergyManagementSystemOutputVariable_Impl::eMSVariableObject() const {
-    boost::optional<ModelObject> value = this->getTarget(OS_EnergyManagementSystem_OutputVariableFields::EMSVariableName)->cast<ModelObject>();
+    boost::optional<ModelObject> value;
+    boost::optional<std::string> handle = getString(OS_EnergyManagementSystem_OutputVariableFields::EMSVariableName, true);
+    if (handle) {
+      const Model m = this->model();
+      value = m.getModelObject<ModelObject>(toUUID(handle.get()));
+    }
     return value;
   }
 
   boost::optional< EnergyManagementSystemActuator> EnergyManagementSystemOutputVariable_Impl::emsActuator() const {
-    boost::optional<EnergyManagementSystemActuator> value = this->getTarget(OS_EnergyManagementSystem_OutputVariableFields::EMSVariableName)->cast<EnergyManagementSystemActuator>();
+    boost::optional<EnergyManagementSystemActuator> value;
+    boost::optional<std::string> handle = getString(OS_EnergyManagementSystem_OutputVariableFields::EMSVariableName, true);
+    if (handle) {
+      const Model m = this->model();
+      value = m.getModelObject<EnergyManagementSystemActuator>(toUUID(handle.get()));
+    }
     return value;
   }
 
   boost::optional< EnergyManagementSystemSensor> EnergyManagementSystemOutputVariable_Impl::emsSensor() const {
-    boost::optional<EnergyManagementSystemSensor> value = this->getTarget(OS_EnergyManagementSystem_OutputVariableFields::EMSVariableName)->cast<EnergyManagementSystemSensor>();
+    boost::optional<EnergyManagementSystemSensor> value;
+    boost::optional<std::string> handle = getString(OS_EnergyManagementSystem_OutputVariableFields::EMSVariableName, true);
+    if (handle) {
+      const Model m = this->model();
+      value = m.getModelObject<EnergyManagementSystemSensor>(toUUID(handle.get()));
+    }
     return value;
   }
 
   boost::optional<EnergyManagementSystemGlobalVariable> EnergyManagementSystemOutputVariable_Impl::emsGlobalVariable() const {
-    boost::optional<EnergyManagementSystemGlobalVariable> value = this->getTarget(OS_EnergyManagementSystem_OutputVariableFields::EMSVariableName)->cast<EnergyManagementSystemGlobalVariable>();
+    boost::optional<EnergyManagementSystemGlobalVariable> value;
+    boost::optional<std::string> handle = getString(OS_EnergyManagementSystem_OutputVariableFields::EMSVariableName, true);
+    if (handle) {
+      const Model m = this->model();
+      value = m.getModelObject<EnergyManagementSystemGlobalVariable>(toUUID(handle.get()));
+    }
     return value;
   }
 
   boost::optional<EnergyManagementSystemTrendVariable> EnergyManagementSystemOutputVariable_Impl::emsTrendVariable() const {
-    boost::optional<EnergyManagementSystemTrendVariable> value = this->getTarget(OS_EnergyManagementSystem_OutputVariableFields::EMSVariableName)->cast<EnergyManagementSystemTrendVariable>();
+    boost::optional<EnergyManagementSystemTrendVariable> value;
+    boost::optional<std::string> handle = getString(OS_EnergyManagementSystem_OutputVariableFields::EMSVariableName, true);
+    if (handle) {
+      const Model m = this->model();
+      value = m.getModelObject<EnergyManagementSystemTrendVariable>(toUUID(handle.get()));
+    }
     return value;
   }
 
   boost::optional<EnergyManagementSystemInternalVariable> EnergyManagementSystemOutputVariable_Impl::emsInternalVariable() const {
-    boost::optional<EnergyManagementSystemInternalVariable> value = this->getTarget(OS_EnergyManagementSystem_OutputVariableFields::EMSVariableName)->cast<EnergyManagementSystemInternalVariable>();
+    boost::optional<EnergyManagementSystemInternalVariable> value;
+    boost::optional<std::string> handle = getString(OS_EnergyManagementSystem_OutputVariableFields::EMSVariableName, true);
+    if (handle) {
+      const Model m = this->model();
+      value = m.getModelObject<EnergyManagementSystemInternalVariable>(toUUID(handle.get()));
+    }
     return value;
   }
 
   boost::optional<EnergyManagementSystemCurveOrTableIndexVariable> EnergyManagementSystemOutputVariable_Impl::emsCurveOrTableIndexVariable() const {
-    boost::optional<EnergyManagementSystemCurveOrTableIndexVariable> value = this->getTarget(OS_EnergyManagementSystem_OutputVariableFields::EMSVariableName)->cast<EnergyManagementSystemCurveOrTableIndexVariable>();
+    boost::optional<EnergyManagementSystemCurveOrTableIndexVariable> value;
+    boost::optional<std::string> handle = getString(OS_EnergyManagementSystem_OutputVariableFields::EMSVariableName, true);
+    if (handle) {
+      const Model m = this->model();
+      value = m.getModelObject<EnergyManagementSystemCurveOrTableIndexVariable>(toUUID(handle.get()));
+    }
     return value;
   }
 
   boost::optional<EnergyManagementSystemConstructionIndexVariable> EnergyManagementSystemOutputVariable_Impl::emsConstructionIndexVariable() const {
-    boost::optional<EnergyManagementSystemConstructionIndexVariable> value = this->getTarget(OS_EnergyManagementSystem_OutputVariableFields::EMSVariableName)->cast<EnergyManagementSystemConstructionIndexVariable>();
+    boost::optional<EnergyManagementSystemConstructionIndexVariable> value;
+    boost::optional<std::string> handle = getString(OS_EnergyManagementSystem_OutputVariableFields::EMSVariableName, true);
+    if (handle) {
+      const Model m = this->model();
+      value = m.getModelObject<EnergyManagementSystemConstructionIndexVariable>(toUUID(handle.get()));
+    }
     return value;
   }
 
