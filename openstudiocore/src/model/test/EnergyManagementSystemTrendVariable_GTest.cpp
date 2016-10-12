@@ -51,5 +51,17 @@ TEST_F(ModelFixture, EMSTrendVariable_EMSTrendVariable)
 
   var.setNumberofTimestepstobeLogged(2);
   EXPECT_EQ(2, var.numberofTimestepstobeLogged());
+
+  EXPECT_EQ(globvar,var.emsGlobalVariable().get());
+
+  // add global variable
+  EnergyManagementSystemGlobalVariable globvar2(model, "glob var2");
+
+  EnergyManagementSystemTrendVariable var2(model, globvar2);
+  EXPECT_EQ("glob_var2", var2.eMSVariableName());
+  ASSERT_TRUE(var2.eMSVariableObject());
+  ASSERT_TRUE(var2.emsGlobalVariable());
+  EXPECT_EQ(globvar2, var2.emsGlobalVariable().get());
+  EXPECT_EQ(var2.eMSVariableObject().get(), var2.emsGlobalVariable().get());
 }
 

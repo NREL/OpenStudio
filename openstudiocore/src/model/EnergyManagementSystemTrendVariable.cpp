@@ -134,37 +134,37 @@ namespace detail {
 
 
   bool EnergyManagementSystemTrendVariable_Impl::setEMSVariableName(const EnergyManagementSystemActuator& object) {
-    bool result = setString(OS_EnergyManagementSystem_TrendVariableFields::EMSVariableName, toString(object.handle()));
+    bool result = setPointer(OS_EnergyManagementSystem_TrendVariableFields::EMSVariableName, object.handle());
     return result;
   }
 
   bool EnergyManagementSystemTrendVariable_Impl::setEMSVariableName(const EnergyManagementSystemSensor& object) {
-    bool result = setString(OS_EnergyManagementSystem_TrendVariableFields::EMSVariableName, toString(object.handle()));
+    bool result = setPointer(OS_EnergyManagementSystem_TrendVariableFields::EMSVariableName, object.handle());
     return result;
   }
 
   bool EnergyManagementSystemTrendVariable_Impl::setEMSVariableName(const EnergyManagementSystemGlobalVariable& object) {
-    bool result = setString(OS_EnergyManagementSystem_TrendVariableFields::EMSVariableName, toString(object.handle()));
+    bool result = setPointer(OS_EnergyManagementSystem_TrendVariableFields::EMSVariableName, object.handle());
     return result;
   }
 
   bool EnergyManagementSystemTrendVariable_Impl::setEMSVariableName(const EnergyManagementSystemTrendVariable& object) {
-    bool result = setString(OS_EnergyManagementSystem_TrendVariableFields::EMSVariableName, toString(object.handle()));
+    bool result = setPointer(OS_EnergyManagementSystem_TrendVariableFields::EMSVariableName, object.handle());
     return result;
   }
 
   bool EnergyManagementSystemTrendVariable_Impl::setEMSVariableName(const EnergyManagementSystemInternalVariable& object) {
-    bool result = setString(OS_EnergyManagementSystem_TrendVariableFields::EMSVariableName, toString(object.handle()));
+    bool result = setPointer(OS_EnergyManagementSystem_TrendVariableFields::EMSVariableName, object.handle());
     return result;
   }
 
   bool EnergyManagementSystemTrendVariable_Impl::setEMSVariableName(const EnergyManagementSystemCurveOrTableIndexVariable& object) {
-    bool result = setString(OS_EnergyManagementSystem_TrendVariableFields::EMSVariableName, toString(object.handle()));
+    bool result = setPointer(OS_EnergyManagementSystem_TrendVariableFields::EMSVariableName, object.handle());
     return result;
   }
 
   bool EnergyManagementSystemTrendVariable_Impl::setEMSVariableName(const EnergyManagementSystemConstructionIndexVariable& object) {
-    bool result = setString(OS_EnergyManagementSystem_TrendVariableFields::EMSVariableName, toString(object.handle()));
+    bool result = setPointer(OS_EnergyManagementSystem_TrendVariableFields::EMSVariableName, object.handle());
     return result;
   }
 
