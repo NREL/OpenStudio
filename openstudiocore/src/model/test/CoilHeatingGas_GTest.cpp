@@ -63,6 +63,14 @@ TEST_F(ModelFixture,CoilHeatingGas) {
   ScheduleConstant schedule2(model);
   coilHeatingGas.setAvailableSchedule(schedule2);
   EXPECT_EQ(coilHeatingGas.availableSchedule(),schedule2);
+
+  EXPECT_EQ(coilHeatingGas.fuelType(), "Gas");
+  bool isOk = coilHeatingGas.setFuelType("PropaneGas");
+  EXPECT_TRUE(isOk);
+  EXPECT_EQ(coilHeatingGas.fuelType(), "PropaneGas");
+  coilHeatingGas.resetFuelType();
+  EXPECT_EQ(coilHeatingGas.fuelType(), "Gas");
+
 }
 
 TEST_F(ModelFixture,CoilHeatingGas_addToNode) {
