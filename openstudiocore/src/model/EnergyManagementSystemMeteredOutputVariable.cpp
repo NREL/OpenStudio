@@ -452,6 +452,10 @@ boost::optional<EnergyManagementSystemActuator> EnergyManagementSystemMeteredOut
   return getImpl<detail::EnergyManagementSystemMeteredOutputVariable_Impl>()->emsActuator();
 }
 
+boost::optional<EnergyManagementSystemSensor> EnergyManagementSystemMeteredOutputVariable::emsSensor() const {
+  return getImpl<detail::EnergyManagementSystemMeteredOutputVariable_Impl>()->emsSensor();
+}
+
 boost::optional<EnergyManagementSystemGlobalVariable> EnergyManagementSystemMeteredOutputVariable::emsGlobalVariable() const {
   return getImpl<detail::EnergyManagementSystemMeteredOutputVariable_Impl>()->emsGlobalVariable();
 }
