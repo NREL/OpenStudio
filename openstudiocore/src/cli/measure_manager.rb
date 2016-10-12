@@ -326,6 +326,12 @@ class MeasureManager
     result[:uuid] = measure.uuid.to_s
     result[:version_id] = measure.versionId
     result[:version_uuid] = measure.versionUUID.to_s
+    version_modified = measure.versionModified
+    if version_modified.is_initialized
+      result[:version_modified] = version_modified.get.to_s
+    else
+      result[:version_modified] = nil
+    end
     result[:xml_checksum] = measure.xmlChecksum
     result[:name] = measure.name
     result[:display_name] = measure.displayName
