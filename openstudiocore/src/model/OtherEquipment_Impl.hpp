@@ -91,6 +91,8 @@ namespace detail {
     /** @name Getters */
     //@{
 
+    std::string fuelType() const;
+
     OtherEquipmentDefinition otherEquipmentDefinition() const;
 
     /** Returns the (fractional) equipment schedule.  If this object does not
@@ -103,6 +105,10 @@ namespace detail {
     //@}
     /** @name Setters */
     //@{
+
+    bool setFuelType(const std::string& fuelType);
+
+    void resetFuelType();
 
     bool setOtherEquipmentDefinition(const OtherEquipmentDefinition& definition);
 

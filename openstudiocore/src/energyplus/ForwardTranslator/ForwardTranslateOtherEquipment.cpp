@@ -116,8 +116,7 @@ boost::optional<IdfObject> ForwardTranslator::translateOtherEquipment(
     idfObject.setDouble(OtherEquipmentFields::FractionLost, definition.fractionLost());
   }
 
-  // New in EP 8.6
-  idfObject.setString(OtherEquipmentFields::FuelType,"None");
+  idfObject.setString(OtherEquipmentFields::FuelType, modelObject.fuelType());
 
   return idfObject;
 }
