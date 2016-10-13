@@ -30,8 +30,8 @@
 #include "GeneratorFuelCellAuxiliaryHeater_Impl.hpp"
 
 // TODO: Check the following class names against object getters and setters.
-//#include "Zone.hpp"
-//#include "Zone_Impl.hpp"
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -100,8 +100,8 @@ namespace detail {
     return getString(OS_Generator_FuelCell_AuxiliaryHeaterFields::SkinLossDestination,true);
   }
 
-  boost::optional<Zone> GeneratorFuelCellAuxiliaryHeater_Impl::zonetoReceiveSkinLosses() const {
-    return getObject<ModelObject>().getModelObjectTarget<Zone>(OS_Generator_FuelCell_AuxiliaryHeaterFields::ZoneNametoReceiveSkinLosses);
+  boost::optional<ThermalZone> GeneratorFuelCellAuxiliaryHeater_Impl::zonetoReceiveSkinLosses() const {
+    return getObject<ModelObject>().getModelObjectTarget<ThermalZone>(OS_Generator_FuelCell_AuxiliaryHeaterFields::ZoneNametoReceiveSkinLosses);
   }
 
   boost::optional<std::string> GeneratorFuelCellAuxiliaryHeater_Impl::heatingCapacityUnits() const {
@@ -174,7 +174,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool GeneratorFuelCellAuxiliaryHeater_Impl::setZonetoReceiveSkinLosses(const Zone& zone) {
+  bool GeneratorFuelCellAuxiliaryHeater_Impl::setZonetoReceiveSkinLosses(const ThermalZone& zone) {
     bool result = setPointer(OS_Generator_FuelCell_AuxiliaryHeaterFields::ZoneNametoReceiveSkinLosses, zone.handle());
     return result;
   }
@@ -278,7 +278,7 @@ boost::optional<std::string> GeneratorFuelCellAuxiliaryHeater::skinLossDestinati
   return getImpl<detail::GeneratorFuelCellAuxiliaryHeater_Impl>()->skinLossDestination();
 }
 
-boost::optional<Zone> GeneratorFuelCellAuxiliaryHeater::zonetoReceiveSkinLosses() const {
+boost::optional<ThermalZone> GeneratorFuelCellAuxiliaryHeater::zonetoReceiveSkinLosses() const {
   return getImpl<detail::GeneratorFuelCellAuxiliaryHeater_Impl>()->zonetoReceiveSkinLosses();
 }
 
@@ -342,7 +342,7 @@ void GeneratorFuelCellAuxiliaryHeater::resetSkinLossDestination() {
   getImpl<detail::GeneratorFuelCellAuxiliaryHeater_Impl>()->resetSkinLossDestination();
 }
 
-bool GeneratorFuelCellAuxiliaryHeater::setZonetoReceiveSkinLosses(const Zone& zone) {
+bool GeneratorFuelCellAuxiliaryHeater::setZonetoReceiveSkinLosses(const ThermalZone& zone) {
   return getImpl<detail::GeneratorFuelCellAuxiliaryHeater_Impl>()->setZonetoReceiveSkinLosses(zone);
 }
 

@@ -34,8 +34,8 @@
 #include "CurveCubic_Impl.hpp"
 #include "CurveQuadratic.hpp"
 #include "CurveQuadratic_Impl.hpp"
-//#include "Zone.hpp"
-//#include "Zone_Impl.hpp"
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
 #include "Connection.hpp"
 #include "Connection_Impl.hpp"
 
@@ -174,8 +174,8 @@ namespace detail {
     return getString(OS_Generator_FuelCell_PowerModuleFields::SkinLossCalculationMode,true);
   }
 
-  boost::optional<Zone> GeneratorFuelCellPowerModule_Impl::zone() const {
-    return getObject<ModelObject>().getModelObjectTarget<Zone>(OS_Generator_FuelCell_PowerModuleFields::ZoneName);
+  boost::optional<ThermalZone> GeneratorFuelCellPowerModule_Impl::zone() const {
+    return getObject<ModelObject>().getModelObjectTarget<ThermalZone>(OS_Generator_FuelCell_PowerModuleFields::ZoneName);
   }
 
   boost::optional<double> GeneratorFuelCellPowerModule_Impl::skinLossRadiativeFraction() const {
@@ -423,7 +423,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool GeneratorFuelCellPowerModule_Impl::setZone(const Zone& zone) {
+  bool GeneratorFuelCellPowerModule_Impl::setZone(const ThermalZone& zone) {
     bool result = setPointer(OS_Generator_FuelCell_PowerModuleFields::ZoneName, zone.handle());
     return result;
   }
@@ -649,7 +649,7 @@ boost::optional<std::string> GeneratorFuelCellPowerModule::skinLossCalculationMo
   return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->skinLossCalculationMode();
 }
 
-boost::optional<Zone> GeneratorFuelCellPowerModule::zone() const {
+boost::optional<ThermalZone> GeneratorFuelCellPowerModule::zone() const {
   return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->zone();
 }
 
@@ -857,7 +857,7 @@ void GeneratorFuelCellPowerModule::resetSkinLossCalculationMode() {
   getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->resetSkinLossCalculationMode();
 }
 
-bool GeneratorFuelCellPowerModule::setZone(const Zone& zone) {
+bool GeneratorFuelCellPowerModule::setZone(const ThermalZone& zone) {
   return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setZone(zone);
 }
 

@@ -37,7 +37,7 @@ namespace model {
 
 // TODO: Check the following class names against object getters and setters.
 class QuadraticCurves;
-class Zone;
+class ThermalZone;
 class QuadraticCurves;
 class Connection;
 class Connection;
@@ -120,7 +120,7 @@ namespace detail {
     boost::optional<std::string> skinLossCalculationMode() const;
 
     // TODO: Check return type. From object lists, some candidates are: Zone.
-    boost::optional<Zone> zone() const;
+    boost::optional<ThermalZone> zone() const;
 
     boost::optional<double> skinLossRadiativeFraction() const;
 
@@ -233,7 +233,7 @@ namespace detail {
     void resetSkinLossCalculationMode();
 
     // TODO: Check argument type. From object lists, some candidates are: Zone.
-    bool setZone(const Zone& zone);
+    bool setZone(const ThermalZone& zone);
 
     void resetZone();
 

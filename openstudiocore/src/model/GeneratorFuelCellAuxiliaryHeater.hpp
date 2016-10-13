@@ -31,13 +31,15 @@
 
 #include <model/ModelAPI.hpp>
 #include "ModelObject.hpp"
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
 
 namespace openstudio {
 
 namespace model {
 
 // TODO: Check the following class names against object getters and setters.
-class Zone;
+class ThermalZone;
 
 namespace detail {
 
@@ -77,7 +79,7 @@ class MODEL_API GeneratorFuelCellAuxiliaryHeater : public ModelObject {
   boost::optional<std::string> skinLossDestination() const;
 
   // TODO: Check return type. From object lists, some candidates are: Zone.
-  boost::optional<Zone> zonetoReceiveSkinLosses() const;
+  boost::optional<ThermalZone> zonetoReceiveSkinLosses() const;
 
   boost::optional<std::string> heatingCapacityUnits() const;
 
@@ -114,7 +116,7 @@ class MODEL_API GeneratorFuelCellAuxiliaryHeater : public ModelObject {
   void resetSkinLossDestination();
 
   // TODO: Check argument type. From object lists, some candidates are: Zone.
-  bool setZonetoReceiveSkinLosses(const Zone& zone);
+  bool setZonetoReceiveSkinLosses(const ThermalZone& zone);
 
   void resetZonetoReceiveSkinLosses();
 

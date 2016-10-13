@@ -25412,7 +25412,7 @@ OS:Generator:FuelCell:PowerModule,
       \key QuadraticFunctionOfFuelRate
   A6, \field Zone Name
       \type object-list
-      \object-list ZoneNames
+      \object-list ThermalZoneNames
   N19,\field Skin Loss Radiative Fraction
       \minimum 0.0
       \maximum 1.0
@@ -25561,7 +25561,7 @@ OS:Generator:FuelCell:AuxiliaryHeater,
       \key AirInletForFuelCell
   A4, \field Zone Name to Receive Skin Losses
       \type object-list
-      \object-list ZoneNames
+      \object-list ThermalZoneNames
   A5, \field Heating Capacity Units
       \type choice
       \key Watts
