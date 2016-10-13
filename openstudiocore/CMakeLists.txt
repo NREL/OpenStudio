@@ -657,9 +657,10 @@ if(BUILD_PYTHON_BINDINGS)
   find_package(PythonInterp 2.7 REQUIRED)
   find_package(PythonLibs 2.7 REQUIRED)
   include_directories(SYSTEM ${PYTHON_INCLUDE_DIRS})
-  set(ALL_PYTHON_BINDING_TARGETS "") # global list
 
-
+  set(ALL_PYTHON_BINDING_DEPENDS "") # global list of library dependencies of the generated wrapper cxx files
+  set(ALL_PYTHON_WRAPPER_FILES "") # global list of generated wrapper cxx files
+  set(ALL_PYTHON_WRAPPER_TARGETS "") # global list targets that build generated wrapper cxx files
 endif()
 
 # Doxygen
@@ -1262,6 +1263,11 @@ if(BUILD_JAVA_BINDINGS)
   add_subdirectory(java)
 endif()
 
+# python, after loading projects
+if(BUILD_PYTHON_BINDINGS)
+  add_subdirectory(python)
+endif()
+
 # v8-node
 if(BUILD_NODE_MODULES)
   add_subdirectory(v8-node)
@@ -1276,41 +1282,7 @@ add_dependencies(ALL_RUBY_BINDINGS ${ALL_RUBY_BINDING_TARGETS})
 
 if(BUILD_PYTHON_BINDINGS)
   add_custom_target(ALL_PYTHON_BINDINGS)
-  add_dependencies(ALL_PYTHON_BINDINGS ${ALL_PYTHON_BINDING_TARGETS})
-
-    # PYTHONPATH=~/openstudio/build/OSCore-prefix/src/OSCore-build/Products/python/ python testpath.py
-
-
-  add_test(NAME "PythonSanityCheck"
-    COMMAND "${PYTHON_EXECUTABLE}" "${CMAKE_SOURCE_DIR}/python/testpath.py"
-    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/Products/python"
-  )
-
-  if (MSVC)
-    file(TO_NATIVE_PATH "${CMAKE_BINARY_DIR}" NATIVE_BINARY_DIR)
-    add_custom_command(
-      OUTPUT "${CMAKE_BINARY_DIR}/python_copied.stamp"
-      COMMAND ${CMAKE_COMMAND} -E touch "${CMAKE_BINARY_DIR}/python_copied.stamp"
-      COMMAND cmd /C del "${NATIVE_BINARY_DIR}\\Products\\python\\$<CONFIGURATION>\\*.py"
-      COMMAND cmd /C copy "${NATIVE_BINARY_DIR}\\Products\\python\\*.py" "${NATIVE_BINARY_DIR}\\Products\\python\\$<CONFIGURATION>"
-      DEPENDS ALL_PYTHON_BINDINGS
-    )
-
-    add_custom_target(PYTHON_SDK ALL
-      DEPENDS "${CMAKE_BINARY_DIR}/python_copied.stamp"
-    )
-
-    set_property(TEST PythonSanityCheck
-      PROPERTY ENVIRONMENT
-      "PYTHONPATH=${CMAKE_BINARY_DIR}/Products/python/$<CONFIGURATION>"
-    )
-  else()
-    set_property(TEST PythonSanityCheck
-      PROPERTY ENVIRONMENT
-      "PYTHONPATH=${CMAKE_BINARY_DIR}/Products/python"
-    )
-  endif()
-
+  #add_dependencies(ALL_PYTHON_BINDINGS python_sdk ${ALL_PYTHON_BINDING_TARGETS})
 endif()
 
 

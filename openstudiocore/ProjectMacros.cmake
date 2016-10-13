@@ -465,106 +465,77 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
 
     set(MODULE ${LOWER_NAME})
     
+    set(SWIG_WRAPPER "python_${NAME}_wrap.cxx")
+    set(SWIG_WRAPPER_FULL_PATH "${CMAKE_CURRENT_BINARY_DIR}/${SWIG_WRAPPER}")
+    set(SWIG_TARGET "generate_python_${NAME}_wrap")
+
+    set(PYTHON_GENERATED_SRC_DIR "${CMAKE_BINARY_DIR}/python_wrapper/generated_sources/")
+    file(MAKE_DIRECTORY ${PYTHON_GENERATED_SRC_DIR})
+    
     set(PYTHON_AUTODOC "")
     if(BUILD_DOCUMENTATION)
       set(PYTHON_AUTODOC -features autodoc=1)
     endif()
     
     add_custom_command(
-      OUTPUT "python_${NAME}_wrap.cxx"
+      OUTPUT "${SWIG_WRAPPER_FULL_PATH}"
       COMMAND "${SWIG_EXECUTABLE}"
                "-python" "-c++" ${PYTHON_AUTODOC}
-               -outdir ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/python "-I${CMAKE_SOURCE_DIR}/src" "-I${CMAKE_BINARY_DIR}/src"
+               -outdir ${PYTHON_GENERATED_SRC_DIR} "-I${CMAKE_SOURCE_DIR}/src" "-I${CMAKE_BINARY_DIR}/src"
                -module "${MODULE}"
                -o "${CMAKE_CURRENT_BINARY_DIR}/python_${NAME}_wrap.cxx"
                "${SWIG_DEFINES}" ${SWIG_COMMON} ${KEY_I_FILE}
       DEPENDS ${this_depends}
     )
 
-    if(MAXIMIZE_CPU_USAGE)
-      add_custom_target(${swig_target}_swig
-        SOURCES "${SWIG_WRAPPER}"
-        )
-      add_dependencies(${PARENT_TARGET} ${swig_target}_swig)
-    endif()
-
-
-    add_library(
-      ${swig_target}
-      MODULE
-      python_${NAME}_wrap.cxx
+    add_custom_target(${SWIG_TARGET}
+      DEPENDS ${SWIG_WRAPPER_FULL_PATH}
     )
 
-    set_target_properties(${swig_target} PROPERTIES OUTPUT_NAME _${LOWER_NAME})
-    set_target_properties(${swig_target} PROPERTIES PREFIX "")
-    set_target_properties(${swig_target} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/python/")
-    set_target_properties(${swig_target} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/python/")
-    set_target_properties(${swig_target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/python/")
-    if(MSVC)
-      set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj /wd4996") ## /wd4996 suppresses deprecated warning
-      set_target_properties(${swig_target} PROPERTIES SUFFIX ".pyd")
-    elseif(UNIX)
-      set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-DRUBY_EMBEDDED -Wno-deprecated-declarations")
+    #add_library(
+    #  ${swig_target}
+    #  MODULE
+    #  python_${NAME}_wrap.cxx
+    #)
+
+    #set_target_properties(${swig_target} PROPERTIES OUTPUT_NAME _${LOWER_NAME})
+    #set_target_properties(${swig_target} PROPERTIES PREFIX "")
+    #set_target_properties(${swig_target} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/python/")
+    #set_target_properties(${swig_target} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/python/")
+    #set_target_properties(${swig_target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/python/")
+    #if(MSVC)
+    #  set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj /wd4996") ## /wd4996 suppresses deprecated warning
+    #  set_target_properties(${swig_target} PROPERTIES SUFFIX ".pyd")
+    #elseif(UNIX)
+    #  set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-DRUBY_EMBEDDED -Wno-deprecated-declarations")
       #if(APPLE AND NOT CMAKE_COMPILER_IS_GNUCXX)
       #  set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-dynamic-class-memaccess -Wno-deprecated-declarations")
       #else()
       #  set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations")
       #endif()
-    endif()
+    #endif()
 
-    target_link_libraries(${swig_target} ${PARENT_TARGET} ${DEPENDS} ${PYTHON_LIBRARY})
+    #target_link_libraries(${swig_target} ${PARENT_TARGET} ${DEPENDS} ${PYTHON_LIBRARY})
 
-    add_dependencies("${swig_target}" "${PARENT_TARGET}_resources")
+    #add_dependencies("${swig_target}" "${PARENT_TARGET}_resources")
 
-    if(MSVC)
-      set(_NAME "_${LOWER_NAME}.pyd")
-    else()
-      set(_NAME "_${LOWER_NAME}.so")
-    endif()
-
-    if(WIN32 OR APPLE)
-      install(TARGETS ${swig_target} DESTINATION Python/openstudio/)
-
-
-      install(CODE "
-        include(GetPrerequisites)
-        get_prerequisites(\${CMAKE_INSTALL_PREFIX}/Python/openstudio/${_NAME} PREREQUISITES 1 1 \"\" \"${Prereq_Dirs}\")
-
-        if(WIN32)
-          list(REVERSE PREREQUISITES)
-        endif()
-
-        foreach(PREREQ IN LISTS PREREQUISITES)
-          gp_resolve_item( \"\" \${PREREQ} \"\" \"${Prereq_Dirs}\" resolved_item_var)
-         execute_process(COMMAND \"${CMAKE_COMMAND}\" -E copy \"\${resolved_item_var}\" \"\${CMAKE_INSTALL_PREFIX}/Python/openstudio/\")
-
-         get_filename_component(PREREQNAME \${resolved_item_var} NAME)
-
-         if(APPLE)
-           execute_process(COMMAND \"install_name_tool\" -change \"\${PREREQ}\" \"@loader_path/\${PREREQNAME}\" \"\${CMAKE_INSTALL_PREFIX}/Python/openstudio/${_NAME}\")
-           foreach(PR IN LISTS PREREQUISITES)
-             gp_resolve_item(\"\" \${PR} \"\" \"\" PRPATH)
-             get_filename_component(PRNAME \${PRPATH} NAME)
-             execute_process(COMMAND \"install_name_tool\" -change \"\${PR}\" \"@loader_path/\${PRNAME}\" \"\${CMAKE_INSTALL_PREFIX}/Python/openstudio/\${PREREQNAME}\")
-           endforeach()
-         endif()
-       endforeach(PREREQ IN LISTS PREREQUISITES)
-
-       if(APPLE)
-         file(COPY \"${QT_LIBRARY_DIR}/QtGui.framework/Resources/qt_menu.nib\" 
-              DESTINATION \"\${CMAKE_INSTALL_PREFIX}/Python/openstudio/Resources/\")
-       endif()
-      ")
-    else()
-      install(TARGETS ${swig_target} DESTINATION "lib/openstudio/python")
-    endif()
-
-    install(FILES ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/python/${LOWER_NAME}.py DESTINATION Python/openstudio/)
+    #if(MSVC)
+    #  set(_NAME "_${LOWER_NAME}.pyd")
+    #else()
+    #  set(_NAME "_${LOWER_NAME}.so")
+    #endif()
+    
+    add_dependencies(${SWIG_TARGET} ${PARENT_TARGET})
     
     # add this target to a "global" variable so python tests can require these
-    list(APPEND ALL_PYTHON_BINDING_TARGETS "${swig_target}")
-
-    set(ALL_PYTHON_BINDING_TARGETS "${ALL_PYTHON_BINDING_TARGETS}" PARENT_SCOPE)
+    list(APPEND ALL_PYTHON_BINDING_DEPENDS "${PARENT_TARGET}")
+    set(ALL_PYTHON_BINDING_DEPENDS "${ALL_PYTHON_BINDING_DEPENDS}" PARENT_SCOPE)
+    
+    list(APPEND ALL_PYTHON_WRAPPER_FILES "${SWIG_WRAPPER_FULL_PATH}")
+    set(ALL_PYTHON_WRAPPER_FILES "${ALL_PYTHON_WRAPPER_FILES}" PARENT_SCOPE)
+    
+    list(APPEND ALL_PYTHON_WRAPPER_TARGETS "${SWIG_TARGET}")
+    set(ALL_PYTHON_WRAPPER_TARGETS "${ALL_PYTHON_WRAPPER_TARGETS}" PARENT_SCOPE)
   endif()
 
   # csharp
@@ -631,6 +602,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     #target_link_libraries(${swig_target} ${PARENT_TARGET} ${DEPENDS})
 
     #ADD_DEPENDENCIES("${swig_target}" "${PARENT_TARGET}_resources")
+    add_dependencies(${SWIG_TARGET} ${PARENT_TARGET})
 
     # add this target to a "global" variable so csharp tests can require these
     list(APPEND ALL_CSHARP_BINDING_DEPENDS "${PARENT_TARGET}")
