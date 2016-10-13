@@ -106,16 +106,16 @@ namespace detail {
     return getDouble(OS_Generator_FuelCell_AirSupplyFields::StoichiometricRatio,true);
   }
 
-  boost::optional<QuadraticCurves> GeneratorFuelCellAirSupply_Impl::airRateFunctionofElectricPowerCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<QuadraticCurves>(OS_Generator_FuelCell_AirSupplyFields::AirRateFunctionofElectricPowerCurveName);
+  boost::optional<CurveQuadratic> GeneratorFuelCellAirSupply_Impl::airRateFunctionofElectricPowerCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<CurveQuadratic>(OS_Generator_FuelCell_AirSupplyFields::AirRateFunctionofElectricPowerCurveName);
   }
 
   boost::optional<double> GeneratorFuelCellAirSupply_Impl::airRateAirTemperatureCoefficient() const {
     return getDouble(OS_Generator_FuelCell_AirSupplyFields::AirRateAirTemperatureCoefficient,true);
   }
 
-  boost::optional<QuadraticCurves> GeneratorFuelCellAirSupply_Impl::airRateFunctionofFuelRateCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<QuadraticCurves>(OS_Generator_FuelCell_AirSupplyFields::AirRateFunctionofFuelRateCurveName);
+  boost::optional<CurveQuadratic> GeneratorFuelCellAirSupply_Impl::airRateFunctionofFuelRateCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<CurveQuadratic>(OS_Generator_FuelCell_AirSupplyFields::AirRateFunctionofFuelRateCurveName);
   }
 
   std::string GeneratorFuelCellAirSupply_Impl::airIntakeHeatRecoveryMode() const {
@@ -269,7 +269,7 @@ boost::optional<Connection> GeneratorFuelCellAirSupply::airInletNode() const {
   return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->airInletNode();
 }
 
-boost::optional<CubicCurves> GeneratorFuelCellAirSupply::blowerPowerCurve() const {
+boost::optional<CurveCubic> GeneratorFuelCellAirSupply::blowerPowerCurve() const {
   return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->blowerPowerCurve();
 }
 
@@ -285,7 +285,7 @@ boost::optional<double> GeneratorFuelCellAirSupply::stoichiometricRatio() const 
   return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->stoichiometricRatio();
 }
 
-boost::optional<QuadraticCurves> GeneratorFuelCellAirSupply::airRateFunctionofElectricPowerCurve() const {
+boost::optional<CurveQuadratic> GeneratorFuelCellAirSupply::airRateFunctionofElectricPowerCurve() const {
   return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->airRateFunctionofElectricPowerCurve();
 }
 
@@ -293,7 +293,7 @@ boost::optional<double> GeneratorFuelCellAirSupply::airRateAirTemperatureCoeffic
   return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->airRateAirTemperatureCoefficient();
 }
 
-boost::optional<QuadraticCurves> GeneratorFuelCellAirSupply::airRateFunctionofFuelRateCurve() const {
+boost::optional<CurveQuadratic> GeneratorFuelCellAirSupply::airRateFunctionofFuelRateCurve() const {
   return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->airRateFunctionofFuelRateCurve();
 }
 
@@ -317,7 +317,7 @@ void GeneratorFuelCellAirSupply::resetAirInletNode() {
   getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->resetAirInletNode();
 }
 
-bool GeneratorFuelCellAirSupply::setBlowerPowerCurve(const CubicCurves& cubicCurves) {
+bool GeneratorFuelCellAirSupply::setBlowerPowerCurve(const CurveCubic& cubicCurves) {
   return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->setBlowerPowerCurve(cubicCurves);
 }
 
@@ -345,7 +345,7 @@ void GeneratorFuelCellAirSupply::resetStoichiometricRatio() {
   getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->resetStoichiometricRatio();
 }
 
-bool GeneratorFuelCellAirSupply::setAirRateFunctionofElectricPowerCurve(const QuadraticCurves& quadraticCurves) {
+bool GeneratorFuelCellAirSupply::setAirRateFunctionofElectricPowerCurve(const CurveQuadratic& quadraticCurves) {
   return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->setAirRateFunctionofElectricPowerCurve(quadraticCurves);
 }
 
@@ -361,7 +361,7 @@ void GeneratorFuelCellAirSupply::resetAirRateAirTemperatureCoefficient() {
   getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->resetAirRateAirTemperatureCoefficient();
 }
 
-bool GeneratorFuelCellAirSupply::setAirRateFunctionofFuelRateCurve(const QuadraticCurves& quadraticCurves) {
+bool GeneratorFuelCellAirSupply::setAirRateFunctionofFuelRateCurve(const CurveQuadratic& quadraticCurves) {
   return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->setAirRateFunctionofFuelRateCurve(quadraticCurves);
 }
 

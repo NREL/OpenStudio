@@ -113,8 +113,8 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Generator_FuelSupplyFields::FuelTemperatureScheduleName);
   }
 
-  boost::optional<CubicCurves> GeneratorFuelSupply_Impl::compressorPowerMultiplierFunctionofFuelRateCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<CubicCurves>(OS_Generator_FuelSupplyFields::CompressorPowerMultiplierFunctionofFuelRateCurveName);
+  boost::optional<CurveCubic> GeneratorFuelSupply_Impl::compressorPowerMultiplierFunctionofFuelRateCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<CurveCubic>(OS_Generator_FuelSupplyFields::CompressorPowerMultiplierFunctionofFuelRateCurveName);
   }
 
   boost::optional<double> GeneratorFuelSupply_Impl::compressorHeatLossFactor() const {
@@ -294,7 +294,7 @@ boost::optional<Schedule> GeneratorFuelSupply::fuelTemperatureSchedule() const {
   return getImpl<detail::GeneratorFuelSupply_Impl>()->fuelTemperatureSchedule();
 }
 
-boost::optional<CubicCurves> GeneratorFuelSupply::compressorPowerMultiplierFunctionofFuelRateCurve() const {
+boost::optional<CurveCubic> GeneratorFuelSupply::compressorPowerMultiplierFunctionofFuelRateCurve() const {
   return getImpl<detail::GeneratorFuelSupply_Impl>()->compressorPowerMultiplierFunctionofFuelRateCurve();
 }
 
@@ -350,7 +350,7 @@ void GeneratorFuelSupply::resetFuelTemperatureSchedule() {
   getImpl<detail::GeneratorFuelSupply_Impl>()->resetFuelTemperatureSchedule();
 }
 
-bool GeneratorFuelSupply::setCompressorPowerMultiplierFunctionofFuelRateCurve(const CubicCurves& cubicCurves) {
+bool GeneratorFuelSupply::setCompressorPowerMultiplierFunctionofFuelRateCurve(const CurveCubic& cubicCurves) {
   return getImpl<detail::GeneratorFuelSupply_Impl>()->setCompressorPowerMultiplierFunctionofFuelRateCurve(cubicCurves);
 }
 

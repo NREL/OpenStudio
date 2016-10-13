@@ -36,8 +36,8 @@ namespace openstudio {
 namespace model {
 
 // TODO: Check the following class names against object getters and setters.
-class QuadraticCurves;
-class CubicCurves;
+class CurveQuadratic;
+class CurveCubic;
 class Connection;
 class Schedule;
 

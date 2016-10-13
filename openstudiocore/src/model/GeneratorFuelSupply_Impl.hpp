@@ -85,7 +85,7 @@ namespace detail {
     boost::optional<Schedule> fuelTemperatureSchedule() const;
 
     // TODO: Check return type. From object lists, some candidates are: CubicCurves, UniVariateTables.
-    boost::optional<CubicCurves> compressorPowerMultiplierFunctionofFuelRateCurve() const;
+    boost::optional<CurveCubic> compressorPowerMultiplierFunctionofFuelRateCurve() const;
 
     boost::optional<double> compressorHeatLossFactor() const;
 
@@ -123,7 +123,7 @@ namespace detail {
     void resetFuelTemperatureSchedule();
 
     // TODO: Check argument type. From object lists, some candidates are: CubicCurves, UniVariateTables.
-    bool setCompressorPowerMultiplierFunctionofFuelRateCurve(const CubicCurves& cubicCurves);
+    bool setCompressorPowerMultiplierFunctionofFuelRateCurve(const CurveCubic& cubicCurves);
 
     void resetCompressorPowerMultiplierFunctionofFuelRateCurve();
 

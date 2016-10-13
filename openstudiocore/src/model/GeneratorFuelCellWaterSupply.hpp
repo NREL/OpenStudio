@@ -37,8 +37,8 @@ namespace openstudio {
 namespace model {
 
 // TODO: Check the following class names against object getters and setters.
-class QuadraticCurves;
-class CubicCurves;
+class CurveQuadratic;
+class CurveCubic;
 class Connection;
 class Schedule;
 
@@ -68,10 +68,10 @@ class MODEL_API GeneratorFuelCellWaterSupply : public ModelObject {
   //@{
 
   // TODO: Check return type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
-  boost::optional<QuadraticCurves> reformerWaterFlowRateFunctionofFuelRateCurve() const;
+  boost::optional<CurveQuadratic> reformerWaterFlowRateFunctionofFuelRateCurve() const;
 
   // TODO: Check return type. From object lists, some candidates are: CubicCurves, UniVariateTables.
-  boost::optional<CubicCurves> reformerWaterPumpPowerFunctionofFuelRateCurve() const;
+  boost::optional<CurveCubic> reformerWaterPumpPowerFunctionofFuelRateCurve() const;
 
   boost::optional<double> pumpHeatLossFactor() const;
 
@@ -88,12 +88,12 @@ class MODEL_API GeneratorFuelCellWaterSupply : public ModelObject {
   //@{
 
   // TODO: Check argument type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
-  bool setReformerWaterFlowRateFunctionofFuelRateCurve(const QuadraticCurves& quadraticCurves);
+  bool setReformerWaterFlowRateFunctionofFuelRateCurve(const CurveQuadratic& quadraticCurves);
 
   void resetReformerWaterFlowRateFunctionofFuelRateCurve();
 
   // TODO: Check argument type. From object lists, some candidates are: CubicCurves, UniVariateTables.
-  bool setReformerWaterPumpPowerFunctionofFuelRateCurve(const CubicCurves& cubicCurves);
+  bool setReformerWaterPumpPowerFunctionofFuelRateCurve(const CurveCubic& cubicCurves);
 
   void resetReformerWaterPumpPowerFunctionofFuelRateCurve();
 

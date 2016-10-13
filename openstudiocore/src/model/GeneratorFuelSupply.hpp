@@ -39,7 +39,7 @@ namespace model {
 // TODO: Check the following class names against object getters and setters.
 class Connection;
 class Schedule;
-class CubicCurves;
+class CurveCubic;
 
 namespace detail {
 
@@ -77,7 +77,7 @@ class MODEL_API GeneratorFuelSupply : public ModelObject {
   boost::optional<Schedule> fuelTemperatureSchedule() const;
 
   // TODO: Check return type. From object lists, some candidates are: CubicCurves, UniVariateTables.
-  boost::optional<CubicCurves> compressorPowerMultiplierFunctionofFuelRateCurve() const;
+  boost::optional<CurveCubic> compressorPowerMultiplierFunctionofFuelRateCurve() const;
 
   boost::optional<double> compressorHeatLossFactor() const;
 
@@ -115,7 +115,7 @@ class MODEL_API GeneratorFuelSupply : public ModelObject {
   void resetFuelTemperatureSchedule();
 
   // TODO: Check argument type. From object lists, some candidates are: CubicCurves, UniVariateTables.
-  bool setCompressorPowerMultiplierFunctionofFuelRateCurve(const CubicCurves& cubicCurves);
+  bool setCompressorPowerMultiplierFunctionofFuelRateCurve(const CurveCubic& cubicCurves);
 
   void resetCompressorPowerMultiplierFunctionofFuelRateCurve();
 

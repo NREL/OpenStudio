@@ -533,8 +533,8 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  boost::optional<QuadraticCurves> GeneratorFuelCellPowerModule_Impl::optionalEfficiencyCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<QuadraticCurves>(OS_Generator_FuelCell_PowerModuleFields::EfficiencyCurveName);
+  boost::optional<CurveQuadratic> GeneratorFuelCellPowerModule_Impl::optionalEfficiencyCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<CurveQuadratic>(OS_Generator_FuelCell_PowerModuleFields::EfficiencyCurveName);
   }
 
 } // detail
@@ -665,7 +665,7 @@ boost::optional<double> GeneratorFuelCellPowerModule::skinLossUFactorTimesAreaTe
   return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->skinLossUFactorTimesAreaTerm();
 }
 
-boost::optional<QuadraticCurves> GeneratorFuelCellPowerModule::skinLossQuadraticCurve() const {
+boost::optional<CurveQuadratic> GeneratorFuelCellPowerModule::skinLossQuadraticCurve() const {
   return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->skinLossQuadraticCurve();
 }
 
@@ -701,7 +701,7 @@ void GeneratorFuelCellPowerModule::resetEfficiencyCurveMode() {
   getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->resetEfficiencyCurveMode();
 }
 
-bool GeneratorFuelCellPowerModule::setEfficiencyCurve(const QuadraticCurves& quadraticCurves) {
+bool GeneratorFuelCellPowerModule::setEfficiencyCurve(const CurveQuadratic& quadraticCurves) {
   return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setEfficiencyCurve(quadraticCurves);
 }
 
@@ -889,7 +889,7 @@ void GeneratorFuelCellPowerModule::resetSkinLossUFactorTimesAreaTerm() {
   getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->resetSkinLossUFactorTimesAreaTerm();
 }
 
-bool GeneratorFuelCellPowerModule::setSkinLossQuadraticCurve(const QuadraticCurves& quadraticCurves) {
+bool GeneratorFuelCellPowerModule::setSkinLossQuadraticCurve(const CurveQuadratic& quadraticCurves) {
   return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setSkinLossQuadraticCurve(quadraticCurves);
 }
 

@@ -151,7 +151,7 @@ boost::optional<double> GeneratorFuelCellInverter::inverterEfficiency() const {
   return getImpl<detail::GeneratorFuelCellInverter_Impl>()->inverterEfficiency();
 }
 
-boost::optional<QuadraticCurves> GeneratorFuelCellInverter::efficiencyFunctionofDCPowerCurve() const {
+boost::optional<CurveQuadratic> GeneratorFuelCellInverter::efficiencyFunctionofDCPowerCurve() const {
   return getImpl<detail::GeneratorFuelCellInverter_Impl>()->efficiencyFunctionofDCPowerCurve();
 }
 
@@ -171,7 +171,7 @@ void GeneratorFuelCellInverter::resetInverterEfficiency() {
   getImpl<detail::GeneratorFuelCellInverter_Impl>()->resetInverterEfficiency();
 }
 
-bool GeneratorFuelCellInverter::setEfficiencyFunctionofDCPowerCurve(const QuadraticCurves& quadraticCurves) {
+bool GeneratorFuelCellInverter::setEfficiencyFunctionofDCPowerCurve(const CurveQuadratic& quadraticCurves) {
   return getImpl<detail::GeneratorFuelCellInverter_Impl>()->setEfficiencyFunctionofDCPowerCurve(quadraticCurves);
 }
 

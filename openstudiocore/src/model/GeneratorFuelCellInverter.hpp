@@ -37,7 +37,7 @@ namespace openstudio {
 namespace model {
 
 // TODO: Check the following class names against object getters and setters.
-class QuadraticCurves;
+class CurveQuadratic;
 
 namespace detail {
 
@@ -69,7 +69,7 @@ class MODEL_API GeneratorFuelCellInverter : public ModelObject {
   boost::optional<double> inverterEfficiency() const;
 
   // TODO: Check return type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
-  boost::optional<QuadraticCurves> efficiencyFunctionofDCPowerCurve() const;
+  boost::optional<CurveQuadratic> efficiencyFunctionofDCPowerCurve() const;
 
   //@}
   /** @name Setters */
@@ -84,7 +84,7 @@ class MODEL_API GeneratorFuelCellInverter : public ModelObject {
   void resetInverterEfficiency();
 
   // TODO: Check argument type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
-  bool setEfficiencyFunctionofDCPowerCurve(const QuadraticCurves& quadraticCurves);
+  bool setEfficiencyFunctionofDCPowerCurve(const CurveQuadratic& quadraticCurves);
 
   void resetEfficiencyFunctionofDCPowerCurve();
 
