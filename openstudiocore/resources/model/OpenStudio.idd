@@ -5996,7 +5996,19 @@ OS:OtherEquipment,
        \type object-list
        \required-field
        \object-list OtherEquipmentDefinitionNames
-  A4,  \field Fuel Type
+  A4, \field Space or SpaceType Name
+       \type object-list
+       \object-list SpaceAndSpaceTypeNames
+  A5, \field Schedule Name
+       \note Leave blank to match with default schedule
+       \note units in Schedule should be fraction applied to design level of other equipment, generally (0.0 - 1.0)
+       \type object-list
+       \object-list ScheduleNames
+  N1, \field Multiplier
+       \type real
+       \minimum 0.0
+       \default 1.0
+  A6;  \field Fuel Type
        \type choice
        \key None
        \key Electricity
@@ -6013,18 +6025,6 @@ OS:OtherEquipment,
        \key DistrictHeating
        \key DistrictCooling
        \default None
-  A5, \field Space or SpaceType Name
-       \type object-list
-       \object-list SpaceAndSpaceTypeNames
-  A6, \field Schedule Name
-       \note Leave blank to match with default schedule
-       \note units in Schedule should be fraction applied to design level of other equipment, generally (0.0 - 1.0)
-       \type object-list
-       \object-list ScheduleNames
-  N1; \field Multiplier
-       \type real
-       \minimum 0.0
-       \default 1.0
 
 OS:SpaceInfiltration:DesignFlowRate,
        \memo Infiltration is specified as a design level which is modified by a Schedule fraction, temperature difference and wind speed:
@@ -14544,18 +14544,6 @@ OS:Coil:Heating:Gas,
        \type object-list
        \required-field
        \object-list ScheduleNames
-  A4 , \field Fuel Type
-       \type choice
-       \key Gas
-       \key NaturalGas
-       \key PropaneGas
-       \key Diesel
-       \key Gasoline
-       \key FuelOil#1
-       \key FuelOil#2
-       \key OtherFuel1
-       \key OtherFuel2
-       \default Gas
   N1, \field Gas Burner Efficiency
        \type real
        \minimum 0
@@ -14566,15 +14554,15 @@ OS:Coil:Heating:Gas,
        \autosizable
        \units W
        \default Autosize
-  A5, \field Air Inlet Node Name
+  A4, \field Air Inlet Node Name
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A6, \field Air Outlet Node Name
+  A5, \field Air Outlet Node Name
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A7, \field Temperature Setpoint Node Name
+  A6, \field Temperature Setpoint Node Name
        \note optional, used if coil is temperature control and not load-base controlled
        \type alpha
   N3, \field Parasitic Electric Load
@@ -14584,7 +14572,7 @@ OS:Coil:Heating:Gas,
        \type real
        \units W
        \ip-units W
-  A8, \field Part Load Fraction Correlation Curve Name
+  A7, \field Part Load Fraction Correlation Curve Name
        \note quadratic curve, PLF = a + b*PLR + c*PLR**2
        \note cubic curve, PLF = a + b*PLR + c*PLR**2 + d*PLR**3
        \note PLF = part load fraction
@@ -14594,10 +14582,21 @@ OS:Coil:Heating:Gas,
        \note increase the gas consumption of the coil due to transient coil operation.
        \type object-list
        \object-list QuadraticCubicCurves
-  N4; \field Parasitic Gas Load
+  N4, \field Parasitic Gas Load
        \note parasitic gas load associated with the gas coil operation (i.e., standing pilot)
        \type real
        \units W
+  A8;  \field Fuel Type
+       \type choice
+       \key NaturalGas
+       \key PropaneGas
+       \key Diesel
+       \key Gasoline
+       \key FuelOil#1
+       \key FuelOil#2
+       \key OtherFuel1
+       \key OtherFuel2
+       \default NaturalGas
 
 OS:Coil:Heating:Gas:MultiStage,
        \extensible:1
