@@ -1,21 +1,30 @@
-/**********************************************************************
-*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
-*  All rights reserved.
-*
-*  This library is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU Lesser General Public
-*  License as published by the Free Software Foundation; either
-*  version 2.1 of the License, or (at your option) any later version.
-*
-*  This library is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*  Lesser General Public License for more details.
-*
-*  You should have received a copy of the GNU Lesser General Public
-*  License along with this library; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-**********************************************************************/
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
+ *
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
+ *
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include "GeometryTranslator.hpp"
 #include "MapFields.hpp"
@@ -42,6 +51,7 @@
 #include <utilities/idd/BuildingSurface_Detailed_FieldEnums.hxx>
 #include <utilities/idd/FenestrationSurface_Detailed_FieldEnums.hxx>
 #include <utilities/idd/Daylighting_Controls_FieldEnums.hxx>
+#include <utilities/idd/Daylighting_ReferencePoint_FieldEnums.hxx>
 #include <utilities/idd/Output_IlluminanceMap_FieldEnums.hxx>
 #include <utilities/idd/Wall_Detailed_FieldEnums.hxx>
 #include <utilities/idd/RoofCeiling_Detailed_FieldEnums.hxx>
@@ -2199,8 +2209,13 @@ namespace energyplus {
 
     // daylighting controls
     for (WorkspaceObject daylightingControl : m_workspace.getObjectsByType(IddObjectType::Daylighting_Controls)){
+      // todo: transform glare angle
+    }
+
+    // daylighting reference points
+    for (WorkspaceObject daylightingPoint : m_workspace.getObjectsByType(IddObjectType::Daylighting_ReferencePoint)){
       if (daylightingCoordChange != CoordinateChange::NoChange){
-        OptionalWorkspaceObject zone = daylightingControl.getTarget(Daylighting_ControlsFields::ZoneName);
+        OptionalWorkspaceObject zone = daylightingPoint.getTarget(Daylighting_ReferencePointFields::ZoneName);
         if (!zone){
           LOG(Error, "Could not find zone");
           continue;
@@ -2216,30 +2231,16 @@ namespace energyplus {
         }
 
         // transform sensor points
-        OptionalDouble x = daylightingControl.getDouble(Daylighting_ControlsFields::XCoordinateofFirstReferencePoint, true);
-        OptionalDouble y = daylightingControl.getDouble(Daylighting_ControlsFields::YCoordinateofFirstReferencePoint, true);
-        OptionalDouble z = daylightingControl.getDouble(Daylighting_ControlsFields::ZCoordinateofFirstReferencePoint, true);
+        OptionalDouble x = daylightingPoint.getDouble(Daylighting_ReferencePointFields::XCoordinateofReferencePoint, true);
+        OptionalDouble y = daylightingPoint.getDouble(Daylighting_ReferencePointFields::YCoordinateofReferencePoint, true);
+        OptionalDouble z = daylightingPoint.getDouble(Daylighting_ReferencePointFields::ZCoordinateofReferencePoint, true);
         if (x && y && z){
           Point3d point(*x, *y, *z);
           point = t*point;
-          result = result && daylightingControl.setDouble(Daylighting_ControlsFields::XCoordinateofFirstReferencePoint, point.x());
-          result = result && daylightingControl.setDouble(Daylighting_ControlsFields::YCoordinateofFirstReferencePoint, point.y());
-          result = result && daylightingControl.setDouble(Daylighting_ControlsFields::ZCoordinateofFirstReferencePoint, point.z());
+          result = result && daylightingPoint.setDouble(Daylighting_ReferencePointFields::XCoordinateofReferencePoint, point.x());
+          result = result && daylightingPoint.setDouble(Daylighting_ReferencePointFields::YCoordinateofReferencePoint, point.y());
+          result = result && daylightingPoint.setDouble(Daylighting_ReferencePointFields::ZCoordinateofReferencePoint, point.z());
         }
-
-        x = daylightingControl.getDouble(Daylighting_ControlsFields::XCoordinateofSecondReferencePoint, true);
-        y = daylightingControl.getDouble(Daylighting_ControlsFields::YCoordinateofSecondReferencePoint, true);
-        z = daylightingControl.getDouble(Daylighting_ControlsFields::ZCoordinateofSecondReferencePoint, true);
-        if (x && y && z){
-          Point3d point(*x, *y, *z);
-          point = t*point;
-          result = result && daylightingControl.setDouble(Daylighting_ControlsFields::XCoordinateofSecondReferencePoint, point.x());
-          result = result && daylightingControl.setDouble(Daylighting_ControlsFields::YCoordinateofSecondReferencePoint, point.y());
-          result = result && daylightingControl.setDouble(Daylighting_ControlsFields::ZCoordinateofSecondReferencePoint, point.z());
-        }
-
-        // todo: transform glare angle
-
       }
     }
 

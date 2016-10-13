@@ -1,21 +1,30 @@
-/**********************************************************************
- *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
- *  All rights reserved.
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
  *
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
  *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- **********************************************************************/
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
@@ -634,20 +643,14 @@ namespace detail {
 
     bool result = true;
     if (primaryDaylightingControl){
-      boost::optional<Space> space = primaryDaylightingControl->space();
-      if (space && (space->thermalZone()) && (space->thermalZone()->handle() == this->handle())){
-        result = setPointer(OS_ThermalZoneFields::PrimaryDaylightingControlName, primaryDaylightingControl->handle());
-      }
+      result = setPointer(OS_ThermalZoneFields::PrimaryDaylightingControlName, primaryDaylightingControl->handle());
     }
 
     if (secondaryDaylightingControl){
       if (isEmpty(OS_ThermalZoneFields::PrimaryDaylightingControlName)){
         result = false;
       }else{
-        boost::optional<Space> space = secondaryDaylightingControl->space();
-        if (space && (space->thermalZone()) && (space->thermalZone()->handle() == this->handle())){
-          result = result && setPointer(OS_ThermalZoneFields::SecondaryDaylightingControlName, secondaryDaylightingControl->handle());
-        }
+        result = result && setPointer(OS_ThermalZoneFields::SecondaryDaylightingControlName, secondaryDaylightingControl->handle());
       }
     }
 
@@ -1172,6 +1175,34 @@ namespace detail {
       double volume = space.volume();
       sumVolume += volume;
 
+      // check if we have to explicitly set floor area and hard size loads
+      for (const Surface& surface : space.surfaces()) {
+        if (istringEqual(surface.surfaceType(), "Floor")){
+
+          // air wall floors do not count in floor area
+          if (surface.isAirWall()){
+            needToSetFloorArea = true;
+            break;
+          } 
+
+          auto adjacentSurface = surface.adjacentSurface();
+          if (adjacentSurface){
+            auto adjacentSpace = adjacentSurface->space();
+            if (adjacentSpace){
+              auto adjacentThermalZone = adjacentSpace->thermalZone();
+              if (adjacentThermalZone){
+                if (adjacentThermalZone->handle() == this->handle())
+                {
+                  // this surface is completely inside the zone, need to set floor area since this surface will be removed 
+                  needToSetFloorArea = true;
+                  break;
+                }
+              }
+            }
+          }
+        }
+      }
+
       // space floor area is counted if any space is part of floor area
       if (space.partofTotalFloorArea()){
         partofTotalFloorArea = true;
@@ -1246,11 +1277,16 @@ namespace detail {
       }
     }
 
-    // if some spaces are part of floor area but others are not, set floor area here
+    // set E+ floor area here if needed, this is only used for reporting total building area
+    // loads are hard sized according to OpenStudio space floor area
     if (needToSetFloorArea){
+      
+      // do not allow per area loads in the space type since we are overriding floor area
+      spaceType.reset();
+
+      // don't override if user provided zone floor area
       if (isEmpty(OS_ThermalZoneFields::FloorArea)){
-        // DLM: do we want to do this?
-        //this->setDouble(OS_ThermalZoneFields::FloorArea, totalFloorArea);
+        this->setDouble(OS_ThermalZoneFields::FloorArea, totalFloorArea);
       }
     }
 
@@ -1359,6 +1395,25 @@ namespace detail {
       if (adjacentSurface){
         boost::optional<Space> adjacentSpace = adjacentSurface->space();
         if (adjacentSpace && (newSpace.handle() == adjacentSpace->handle())){
+
+          // handling both the surface and the adjacentSurface
+          mergedSurfaces.insert(surface);
+          mergedSurfaces.insert(*adjacentSurface);
+
+          // don't make interior partitions for interior air walls
+          bool isAirWall = surface.isAirWall();
+          bool isAdjacentAirWall = adjacentSurface->isAirWall();
+
+          if (isAirWall && isAdjacentAirWall){
+            continue;
+          } else if (isAirWall){
+            LOG(Warn, "Interior surface '" << surface.name() << "' is an air wall but adjacent surface '" << adjacentSurface->name() << "' is not, ignoring internal mass.")
+              continue;
+          } else if (isAdjacentAirWall){
+            LOG(Warn, "Interior surface '" << adjacentSurface->name() << "' is an air wall but adjacent surface '" << surface.name() << "' is not, ignoring internal mass.")
+            continue;
+          }
+
           if (!interiorPartitionSurfaceGroup){
             interiorPartitionSurfaceGroup = InteriorPartitionSurfaceGroup(model);
             interiorPartitionSurfaceGroup->setSpace(newSpace);
@@ -1373,9 +1428,6 @@ namespace detail {
           if (construction){
             interiorPartitionSurface.setConstruction(*construction);
           }
-
-          mergedSurfaces.insert(surface);
-          mergedSurfaces.insert(*adjacentSurface);
         }
       }
     }

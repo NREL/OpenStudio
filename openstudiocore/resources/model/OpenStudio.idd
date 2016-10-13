@@ -1,4 +1,4 @@
-!IDD_Version 1.12.3
+!IDD_Version 1.13.1
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -1979,6 +1979,39 @@ OS:BuildingStory,
        \type real
        \units m
        \minimum> 0
+
+OS:BuildingUnit,
+       \min-fields 4
+       \extensible:3
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \type alpha
+       \reference BuildingUnitNames
+       \required-field
+  A3,  \field Rendering Color
+       \type object-list
+       \object-list GroupRenderingNames
+  A4,  \field Building Unit Type
+       \type choice
+       \key Residential
+       \key NonResidential
+       \default Residential
+  A5,  \field Building Unit Feature Name
+       \type alpha
+       \begin-extensible
+       \required-field
+  A6,  \field Building Unit Feature Data Type
+       \type choice
+       \key String
+       \key Double
+       \key Boolean
+       \key Integer
+       \required-field
+  A7;  \field Building Unit Feature Value
+       \type alpha
+       \required-field
 
 OS:DefaultConstructionSet,
        \min-fields 11
@@ -4893,9 +4926,12 @@ OS:Space,
        \default Yes
        \key Yes
        \key No
-  A9; \field Design Specification Outdoor Air Object Name
+  A9, \field Design Specification Outdoor Air Object Name
        \type object-list
        \object-list DesignSpecificationOutdoorAirNames
+  A10; \field Building Unit Name
+       \type object-list
+       \object-list BuildingUnitNames
 
 OS:Surface,
        \extensible:3
@@ -16221,6 +16257,7 @@ OS:Curve:Linear,
        \required-field
        \reference LinearCurves
        \reference LinearOrQuadraticCurves
+       \reference UniVariateCurves
        \reference AllCurves
   N1, \field Coefficient1 Constant
        \type real
@@ -16269,6 +16306,7 @@ OS:Curve:Quadratic,
        \required-field
        \reference QuadraticCurves
        \reference LinearOrQuadraticCurves
+       \reference UniVariateCurves
        \reference AllCurves
        \reference QuadraticCubicCurves
        \reference BiquadraticQuadraticCubicCurves
@@ -16321,6 +16359,7 @@ OS:Curve:Cubic,
        \required-field
        \reference CubicCurves
        \reference AllCurves
+       \reference UniVariateCurves
        \reference QuadraticCubicCurves
        \reference BiquadraticCubicCurves
        \reference BiquadraticQuadraticCubicCurves
@@ -16375,6 +16414,7 @@ OS:Curve:Quartic,
        \type alpha
        \required-field
        \reference QuarticCurves
+       \reference UniVariateCurves
        \reference AllCurves
   N1, \field Coefficient1 Constant
        \type real
@@ -16431,6 +16471,7 @@ OS:Curve:Exponent,
        \type alpha
        \required-field
        \reference ExponentCurves
+       \reference UniVariateCurves
        \reference AllCurves
   N1, \field Coefficient1 Constant
        \type real
@@ -16846,6 +16887,7 @@ OS:Curve:Functional:PressureDrop,
        \type alpha
        \required-field
        \reference AllCurves
+       \reference UniVariateCurves
        \reference PressureDropCurves
   N1, \field Diameter
        \note "D" in above expression, used to also calculate local velocity
@@ -16938,6 +16980,7 @@ OS:Curve:ExponentialSkewNormal,
        \type alpha
        \required-field
        \reference ExponentialSkewNormalCurves
+       \reference UniVariateCurves
        \reference AllCurves
   N1, \field Coefficient1 C1
        \type real
@@ -16982,6 +17025,7 @@ OS:Curve:Sigmoid,
        \type alpha
        \required-field
        \reference SigmoidCurves
+       \reference UniVariateCurves
        \reference AllCurves
   N1, \field Coefficient1 C1
        \type real
@@ -17029,6 +17073,7 @@ OS:Curve:RectangularHyperbola1,
        \type alpha
        \required-field
        \reference RectangularHyperbola1Curves
+       \reference UniVariateCurves
        \reference AllCurves
   N1, \field Coefficient1 C1
        \type real
@@ -17070,6 +17115,7 @@ OS:Curve:RectangularHyperbola2,
        \type alpha
        \required-field
        \reference RectangularHyperbola2Curves
+       \reference UniVariateCurves
        \reference AllCurves
   N1, \field Coefficient1 C1
        \type real
@@ -17111,6 +17157,7 @@ OS:Curve:ExponentialDecay,
        \type alpha
        \required-field
        \reference ExponentialDecayCurves
+       \reference UniVariateCurves
        \reference AllCurves
   N1, \field Coefficient1 C1
        \type real
@@ -17151,6 +17198,8 @@ OS:Curve:DoubleExponentialDecay,
        \type alpha
        \required-field
        \reference DoubleExponentialDecayCurves
+       \reference UniVariateCurves
+       \reference AllCurves
   N1, \field Coefficient1 C1
        \type real
        \required-field
@@ -25926,7 +25975,7 @@ OS:ElectricLoadCenter:Storage:Converter,
         \note enter name of zone to receive converter losses as heat
         \note if blank then converter is assumed to be outdoors
         \type object-list
-        \object-list ZoneNames
+        \object-list ThermalZoneNames
    N4 ; \field Radiative Fraction
         \note fraction of zone heat gains treated as thermal radiation
         \note Only used if a Zone Name is entered.

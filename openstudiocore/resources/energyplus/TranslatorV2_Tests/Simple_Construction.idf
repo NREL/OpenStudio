@@ -5,9 +5,11 @@
 ! Layer 2: Roof Insulation [55]
 !  Version,
 !    7.2.0.002;              !- Version Identifier
-
 !  Version,
 !    8.5;                    !- Version Identifier
+
+!  Version,
+!    8.6;                    !- Version Identifier
 
   Material,
     Metal Roofing,           !- Name

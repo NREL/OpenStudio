@@ -143,6 +143,9 @@ set(${target_name}_src
   BuildingStory.hpp
   BuildingStory_Impl.hpp
   BuildingStory.cpp
+  BuildingUnit.hpp
+  BuildingUnit_Impl.hpp
+  BuildingUnit.cpp
 ##  CentralHeatPumpSystem.hpp
 ##  CentralHeatPumpSystem_Impl.hpp
 ##  CentralHeatPumpSystem.cpp
@@ -455,6 +458,9 @@ set(${target_name}_src
   ElectricLoadCenterStorageSimple.hpp
   ElectricLoadCenterStorageSimple_Impl.hpp
   ElectricLoadCenterStorageSimple.cpp
+  ElectricLoadCenterStorageConverter.hpp
+  ElectricLoadCenterStorageConverter_Impl.hpp
+  ElectricLoadCenterStorageConverter.cpp
   EvaporativeCoolerDirectResearchSpecial.hpp
   EvaporativeCoolerDirectResearchSpecial_Impl.hpp
   EvaporativeCoolerDirectResearchSpecial.cpp
@@ -1537,6 +1543,7 @@ set(${target_name}_test_src
   test/BoilerHotWater_GTest.cpp
   test/BoilerSteam_GTest.cpp
   test/BuildingStory_GTest.cpp
+  test/BuildingUnit_GTest.cpp
   test/Building_GTest.cpp
 ##  test/CentralHeatPumpSystem_GTest.cpp
 ##  test/CentralHeatPumpSystemModule_GTest.cpp
@@ -1606,6 +1613,7 @@ set(${target_name}_test_src
   test/ElectricLoadCenterInverterSimple_GTest.cpp
   test/ElectricLoadCenterInverterLookUpTable_GTest.cpp
   test/ElectricLoadCenterStorageSimple_GTest.cpp
+  test/ElectricLoadCenterStorageConverter_GTest.cpp
   test/EvaporativeCoolerDirectResearchSpecial_GTest.cpp
   test/EvaporativeCoolerIndirectResearchSpecial_GTest.cpp
   test/EvaporativeFluidCoolerSingleSpeed_GTest.cpp
