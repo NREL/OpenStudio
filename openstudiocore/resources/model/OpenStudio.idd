@@ -25721,6 +25721,69 @@ OS:Generator:FuelCell:Inverter,
   N17, \field Stack Air Cooler Fan Coefficient f1
   N18; \field Stack Air Cooler Fan Coefficient f2
 
+OS:Generator:FuelSupply,
+      \extensible:2
+      \max-fields 36
+      \memo Used only with Generator:FuelCell and Generator:MicroCHP
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2, \field Name
+      \required-field
+      \reference GenFuelSupNames
+  A3, \field Fuel Temperature Modeling Mode
+      \type choice
+      \key TemperatureFromAirNode
+      \key Scheduled
+  A4, \field Fuel Temperature Reference Node Name
+      \type object-list
+      \object-list ConnectionNames
+  A5, \field Fuel Temperature Schedule Name
+      \type object-list
+      \object-list ScheduleNames
+  A6, \field Compressor Power Multiplier Function of Fuel Rate Curve Name
+      \type object-list
+      \object-list CubicCurves
+      \object-list UniVariateTables
+  N1, \field Compressor Heat Loss Factor
+      \minimum 0.0
+      \maximum 1.0
+  A7, \field Fuel Type
+      \type choice
+      \key GaseousConstituents
+      \key LiquidGeneric
+  N2, \field Liquid Generic Fuel Lower Heating Value
+      \units kJ/kg
+  N3, \field Liquid Generic Fuel Higher Heating Value
+      \units kJ/kg
+  N4, \field Liquid Generic Fuel Molecular Weight
+      \units g/mol
+  N5, \field Liquid Generic Fuel CO2 Emission Factor
+  N6, \field Number of Constituents in Gaseous Constituent Fuel Supply
+      \minimum 0.0
+      \maximum 12.0
+  ! sets of input data on each constituent
+  A8, \field Constituent 1 Name
+      \type choice
+      \key CarbonDioxide
+      \key Nitrogen
+      \key Oxygen
+      \key Water
+      \key Argon
+      \key Hydrogen
+      \key Methane
+      \key Ethane
+      \key Propane
+      \key Butane
+      \key Pentane
+      \key Hexane
+      \key Methanol
+      \key Ethanol
+      \begin-extensible
+  N7; \field Constituent 1 Molar Fraction
+      \minimum 0.0
+      \maximum 1.0
+
 OS:ElectricLoadCenter:Inverter:Simple,
         \memo Electric power inverter to convert from direct current (DC) to alternating current
         \memo (AC) in an electric load center that contains photovoltaic modules. This input

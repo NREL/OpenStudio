@@ -105,6 +105,7 @@ objects << ["OS:Generator:FuelCell:ExhaustGasToWaterHeatExchanger", "GeneratorFu
 objects << ["OS:Generator:FuelCell:ElectricalStorage", "GeneratorFuelCellElectricalStorage", "ModelObject"]
 objects << ["OS:Generator:FuelCell:Inverter", "GeneratorFuelCellInverter", "ModelObject"]
 objects << ["OS:Generator:FuelCell:StackCooler", "GeneratorFuelCellStackCooler", "ModelObject"]
+#objects << ["OS:Generator:FuelSupply", "GeneratorFuelSupply", "ModelObject"]
 
 includePath = nil
 if /mswin/.match(RUBY_PLATFORM) || /mingw/.match(RUBY_PLATFORM)
