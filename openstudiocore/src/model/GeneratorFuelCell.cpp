@@ -94,15 +94,15 @@ namespace detail {
   }
 
   GeneratorFuelCellPowerModule GeneratorFuelCell_Impl::powerModule() const {
-    boost::optional<FCPM> value = optionalPowerModule();
+    boost::optional<GeneratorFuelCellPowerModule> value = optionalPowerModule();
     if (!value) {
       LOG_AND_THROW(briefDescription() << " does not have an Power Module attached.");
     }
     return value.get();
   }
 
-  GeneratorFuelCellAirSupply_Impl GeneratorFuelCell_Impl::airSupply() const {
-    boost::optional<FCAirSup> value = optionalAirSupply();
+  GeneratorFuelCellAirSupply GeneratorFuelCell_Impl::airSupply() const {
+    boost::optional<GeneratorFuelCellAirSupply> value = optionalAirSupply();
     if (!value) {
       LOG_AND_THROW(briefDescription() << " does not have an Air Supply attached.");
     }
@@ -110,7 +110,7 @@ namespace detail {
   }
 
   GeneratorFuelSupply GeneratorFuelCell_Impl::fuelSupply() const {
-    boost::optional<GenFuelSup> value = optionalFuelSupply();
+    boost::optional<GeneratorFuelSupply> value = optionalFuelSupply();
     if (!value) {
       LOG_AND_THROW(briefDescription() << " does not have an Fuel Supply attached.");
     }
@@ -118,7 +118,7 @@ namespace detail {
   }
 
   GeneratorFuelCellWaterSupply GeneratorFuelCell_Impl::waterSupply() const {
-    boost::optional<FCWaterSup> value = optionalWaterSupply();
+    boost::optional<GeneratorFuelCellWaterSupply> value = optionalWaterSupply();
     if (!value) {
       LOG_AND_THROW(briefDescription() << " does not have an Water Supply attached.");
     }
@@ -126,7 +126,7 @@ namespace detail {
   }
 
   GeneratorFuelCellAuxiliaryHeater GeneratorFuelCell_Impl::auxiliaryHeater() const {
-    boost::optional<FCAuxHeat> value = optionalAuxiliaryHeater();
+    boost::optional<GeneratorFuelCellAuxiliaryHeater> value = optionalAuxiliaryHeater();
     if (!value) {
       LOG_AND_THROW(briefDescription() << " does not have an Auxiliary Heater attached.");
     }
@@ -134,7 +134,7 @@ namespace detail {
   }
 
   GeneratorFuelCellExhaustGasToWaterHeatExchanger GeneratorFuelCell_Impl::heatExchanger() const {
-    boost::optional<FCExhaustHX> value = optionalHeatExchanger();
+    boost::optional<GeneratorFuelCellExhaustGasToWaterHeatExchanger> value = optionalHeatExchanger();
     if (!value) {
       LOG_AND_THROW(briefDescription() << " does not have an Heat Exchanger attached.");
     }
@@ -142,7 +142,7 @@ namespace detail {
   }
 
   GeneratorFuelCellElectricalStorage GeneratorFuelCell_Impl::electricalStorage() const {
-    boost::optional<FCStorage> value = optionalElectricalStorage();
+    boost::optional<GeneratorFuelCellElectricalStorage> value = optionalElectricalStorage();
     if (!value) {
       LOG_AND_THROW(briefDescription() << " does not have an Electrical Storage attached.");
     }
@@ -150,7 +150,7 @@ namespace detail {
   }
 
   GeneratorFuelCellInverter GeneratorFuelCell_Impl::inverter() const {
-    boost::optional<FCInverter> value = optionalInverter();
+    boost::optional<GeneratorFuelCellInverter> value = optionalInverter();
     if (!value) {
       LOG_AND_THROW(briefDescription() << " does not have an Inverter attached.");
     }
@@ -158,50 +158,50 @@ namespace detail {
   }
 
   boost::optional<GeneratorFuelCellStackCooler> GeneratorFuelCell_Impl::stackCooler() const {
-    return getObject<ModelObject>().getModelObjectTarget<FCStackCooler>(OS_Generator_FuelCellFields::StackCoolerName);
+    return getObject<ModelObject>().getModelObjectTarget<GeneratorFuelCellStackCooler>(OS_Generator_FuelCellFields::StackCoolerName);
   }
 
-  bool GeneratorFuelCell_Impl::setPowerModule(const FCPM& fCPM) {
+  bool GeneratorFuelCell_Impl::setPowerModule(const GeneratorFuelCellPowerModule& fCPM) {
     bool result = setPointer(OS_Generator_FuelCellFields::PowerModuleName, fCPM.handle());
     return result;
   }
 
-  bool GeneratorFuelCell_Impl::setAirSupply(const FCAirSup& fCAirSup) {
+  bool GeneratorFuelCell_Impl::setAirSupply(const GeneratorFuelCellAirSupply& fCAirSup) {
     bool result = setPointer(OS_Generator_FuelCellFields::AirSupplyName, fCAirSup.handle());
     return result;
   }
 
-  bool GeneratorFuelCell_Impl::setFuelSupply(const GenFuelSup& genFuelSup) {
+  bool GeneratorFuelCell_Impl::setFuelSupply(const GeneratorFuelSupply& genFuelSup) {
     bool result = setPointer(OS_Generator_FuelCellFields::FuelSupplyName, genFuelSup.handle());
     return result;
   }
 
-  bool GeneratorFuelCell_Impl::setWaterSupply(const FCWaterSup& fCWaterSup) {
+  bool GeneratorFuelCell_Impl::setWaterSupply(const GeneratorFuelCellWaterSupply& fCWaterSup) {
     bool result = setPointer(OS_Generator_FuelCellFields::WaterSupplyName, fCWaterSup.handle());
     return result;
   }
 
-  bool GeneratorFuelCell_Impl::setAuxiliaryHeater(const FCAuxHeat& fCAuxHeat) {
+  bool GeneratorFuelCell_Impl::setAuxiliaryHeater(const GeneratorFuelCellAuxiliaryHeater& fCAuxHeat) {
     bool result = setPointer(OS_Generator_FuelCellFields::AuxiliaryHeaterName, fCAuxHeat.handle());
     return result;
   }
 
-  bool GeneratorFuelCell_Impl::setHeatExchanger(const FCExhaustHX& fCExhaustHX) {
+  bool GeneratorFuelCell_Impl::setHeatExchanger(const GeneratorFuelCellExhaustGasToWaterHeatExchanger& fCExhaustHX) {
     bool result = setPointer(OS_Generator_FuelCellFields::HeatExchangerName, fCExhaustHX.handle());
     return result;
   }
 
-  bool GeneratorFuelCell_Impl::setElectricalStorage(const FCStorage& fCStorage) {
+  bool GeneratorFuelCell_Impl::setElectricalStorage(const GeneratorFuelCellElectricalStorage& fCStorage) {
     bool result = setPointer(OS_Generator_FuelCellFields::ElectricalStorageName, fCStorage.handle());
     return result;
   }
 
-  bool GeneratorFuelCell_Impl::setInverter(const FCInverter& fCInverter) {
+  bool GeneratorFuelCell_Impl::setInverter(const GeneratorFuelCellInverter& fCInverter) {
     bool result = setPointer(OS_Generator_FuelCellFields::InverterName, fCInverter.handle());
     return result;
   }
 
-  bool GeneratorFuelCell_Impl::setStackCooler(const FCStackCooler& fCStackCooler) {
+  bool GeneratorFuelCell_Impl::setStackCooler(const GeneratorFuelCellStackCooler& fCStackCooler) {
     bool result = setPointer(OS_Generator_FuelCellFields::StackCoolerName, fCStackCooler.handle());
     return result;
   }
@@ -211,36 +211,36 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  boost::optional<FCPM> GeneratorFuelCell_Impl::optionalPowerModule() const {
-    return getObject<ModelObject>().getModelObjectTarget<FCPM>(OS_Generator_FuelCellFields::PowerModuleName);
+  boost::optional<GeneratorFuelCellPowerModule> GeneratorFuelCell_Impl::optionalPowerModule() const {
+    return getObject<ModelObject>().getModelObjectTarget<GeneratorFuelCellPowerModule>(OS_Generator_FuelCellFields::PowerModuleName);
   }
 
-  boost::optional<FCAirSup> GeneratorFuelCell_Impl::optionalAirSupply() const {
-    return getObject<ModelObject>().getModelObjectTarget<FCAirSup>(OS_Generator_FuelCellFields::AirSupplyName);
+  boost::optional<GeneratorFuelCellAirSupply> GeneratorFuelCell_Impl::optionalAirSupply() const {
+    return getObject<ModelObject>().getModelObjectTarget<GeneratorFuelCellAirSupply>(OS_Generator_FuelCellFields::AirSupplyName);
   }
 
-  boost::optional<GenFuelSup> GeneratorFuelCell_Impl::optionalFuelSupply() const {
-    return getObject<ModelObject>().getModelObjectTarget<GenFuelSup>(OS_Generator_FuelCellFields::FuelSupplyName);
+  boost::optional<GeneratorFuelSupply> GeneratorFuelCell_Impl::optionalFuelSupply() const {
+    return getObject<ModelObject>().getModelObjectTarget<GeneratorFuelSupply>(OS_Generator_FuelCellFields::FuelSupplyName);
   }
 
-  boost::optional<FCWaterSup> GeneratorFuelCell_Impl::optionalWaterSupply() const {
-    return getObject<ModelObject>().getModelObjectTarget<FCWaterSup>(OS_Generator_FuelCellFields::WaterSupplyName);
+  boost::optional<GeneratorFuelCellWaterSupply> GeneratorFuelCell_Impl::optionalWaterSupply() const {
+    return getObject<ModelObject>().getModelObjectTarget<GeneratorFuelCellWaterSupply>(OS_Generator_FuelCellFields::WaterSupplyName);
   }
 
-  boost::optional<FCAuxHeat> GeneratorFuelCell_Impl::optionalAuxiliaryHeater() const {
-    return getObject<ModelObject>().getModelObjectTarget<FCAuxHeat>(OS_Generator_FuelCellFields::AuxiliaryHeaterName);
+  boost::optional<GeneratorFuelCellAuxiliaryHeater> GeneratorFuelCell_Impl::optionalAuxiliaryHeater() const {
+    return getObject<ModelObject>().getModelObjectTarget<GeneratorFuelCellAuxiliaryHeater>(OS_Generator_FuelCellFields::AuxiliaryHeaterName);
   }
 
-  boost::optional<FCExhaustHX> GeneratorFuelCell_Impl::optionalHeatExchanger() const {
-    return getObject<ModelObject>().getModelObjectTarget<FCExhaustHX>(OS_Generator_FuelCellFields::HeatExchangerName);
+  boost::optional<GeneratorFuelCellExhaustGasToWaterHeatExchanger> GeneratorFuelCell_Impl::optionalHeatExchanger() const {
+    return getObject<ModelObject>().getModelObjectTarget<GeneratorFuelCellExhaustGasToWaterHeatExchanger>(OS_Generator_FuelCellFields::HeatExchangerName);
   }
 
-  boost::optional<FCStorage> GeneratorFuelCell_Impl::optionalElectricalStorage() const {
-    return getObject<ModelObject>().getModelObjectTarget<FCStorage>(OS_Generator_FuelCellFields::ElectricalStorageName);
+  boost::optional<GeneratorFuelCellElectricalStorage> GeneratorFuelCell_Impl::optionalElectricalStorage() const {
+    return getObject<ModelObject>().getModelObjectTarget<GeneratorFuelCellElectricalStorage>(OS_Generator_FuelCellFields::ElectricalStorageName);
   }
 
-  boost::optional<FCInverter> GeneratorFuelCell_Impl::optionalInverter() const {
-    return getObject<ModelObject>().getModelObjectTarget<FCInverter>(OS_Generator_FuelCellFields::InverterName);
+  boost::optional<GeneratorFuelCellInverter> GeneratorFuelCell_Impl::optionalInverter() const {
+    return getObject<ModelObject>().getModelObjectTarget<GeneratorFuelCellInverter>(OS_Generator_FuelCellFields::InverterName);
   }
 
 } // detail
@@ -282,75 +282,75 @@ IddObjectType GeneratorFuelCell::iddObjectType() {
   return IddObjectType(IddObjectType::OS_Generator_FuelCell);
 }
 
-FCPM GeneratorFuelCell::powerModule() const {
+GeneratorFuelCellPowerModule GeneratorFuelCell::powerModule() const {
   return getImpl<detail::GeneratorFuelCell_Impl>()->powerModule();
 }
 
-FCAirSup GeneratorFuelCell::airSupply() const {
+GeneratorFuelCellAirSupply GeneratorFuelCell::airSupply() const {
   return getImpl<detail::GeneratorFuelCell_Impl>()->airSupply();
 }
 
-GenFuelSup GeneratorFuelCell::fuelSupply() const {
+GeneratorFuelSupply GeneratorFuelCell::fuelSupply() const {
   return getImpl<detail::GeneratorFuelCell_Impl>()->fuelSupply();
 }
 
-FCWaterSup GeneratorFuelCell::waterSupply() const {
+GeneratorFuelCellWaterSupply GeneratorFuelCell::waterSupply() const {
   return getImpl<detail::GeneratorFuelCell_Impl>()->waterSupply();
 }
 
-FCAuxHeat GeneratorFuelCell::auxiliaryHeater() const {
+GeneratorFuelCellAuxiliaryHeater GeneratorFuelCell::auxiliaryHeater() const {
   return getImpl<detail::GeneratorFuelCell_Impl>()->auxiliaryHeater();
 }
 
-FCExhaustHX GeneratorFuelCell::heatExchanger() const {
+GeneratorFuelCellExhaustGasToWaterHeatExchanger GeneratorFuelCell::heatExchanger() const {
   return getImpl<detail::GeneratorFuelCell_Impl>()->heatExchanger();
 }
 
-FCStorage GeneratorFuelCell::electricalStorage() const {
+GeneratorFuelCellElectricalStorage GeneratorFuelCell::electricalStorage() const {
   return getImpl<detail::GeneratorFuelCell_Impl>()->electricalStorage();
 }
 
-FCInverter GeneratorFuelCell::inverter() const {
+GeneratorFuelCellInverter GeneratorFuelCell::inverter() const {
   return getImpl<detail::GeneratorFuelCell_Impl>()->inverter();
 }
 
-boost::optional<FCStackCooler> GeneratorFuelCell::stackCooler() const {
+boost::optional<GeneratorFuelCellStackCooler> GeneratorFuelCell::stackCooler() const {
   return getImpl<detail::GeneratorFuelCell_Impl>()->stackCooler();
 }
 
-bool GeneratorFuelCell::setPowerModule(const FCPM& fCPM) {
+bool GeneratorFuelCell::setPowerModule(const GeneratorFuelCellPowerModule& fCPM) {
   return getImpl<detail::GeneratorFuelCell_Impl>()->setPowerModule(fCPM);
 }
 
-bool GeneratorFuelCell::setAirSupply(const FCAirSup& fCAirSup) {
+bool GeneratorFuelCell::setAirSupply(const GeneratorFuelCellAirSupply& fCAirSup) {
   return getImpl<detail::GeneratorFuelCell_Impl>()->setAirSupply(fCAirSup);
 }
 
-bool GeneratorFuelCell::setFuelSupply(const GenFuelSup& genFuelSup) {
+bool GeneratorFuelCell::setFuelSupply(const GeneratorFuelSupply& genFuelSup) {
   return getImpl<detail::GeneratorFuelCell_Impl>()->setFuelSupply(genFuelSup);
 }
 
-bool GeneratorFuelCell::setWaterSupply(const FCWaterSup& fCWaterSup) {
+bool GeneratorFuelCell::setWaterSupply(const GeneratorFuelCellWaterSupply& fCWaterSup) {
   return getImpl<detail::GeneratorFuelCell_Impl>()->setWaterSupply(fCWaterSup);
 }
 
-bool GeneratorFuelCell::setAuxiliaryHeater(const FCAuxHeat& fCAuxHeat) {
+bool GeneratorFuelCell::setAuxiliaryHeater(const GeneratorFuelCellAuxiliaryHeater& fCAuxHeat) {
   return getImpl<detail::GeneratorFuelCell_Impl>()->setAuxiliaryHeater(fCAuxHeat);
 }
 
-bool GeneratorFuelCell::setHeatExchanger(const FCExhaustHX& fCExhaustHX) {
+bool GeneratorFuelCell::setHeatExchanger(const GeneratorFuelCellExhaustGasToWaterHeatExchanger& fCExhaustHX) {
   return getImpl<detail::GeneratorFuelCell_Impl>()->setHeatExchanger(fCExhaustHX);
 }
 
-bool GeneratorFuelCell::setElectricalStorage(const FCStorage& fCStorage) {
+bool GeneratorFuelCell::setElectricalStorage(const GeneratorFuelCellElectricalStorage& fCStorage) {
   return getImpl<detail::GeneratorFuelCell_Impl>()->setElectricalStorage(fCStorage);
 }
 
-bool GeneratorFuelCell::setInverter(const FCInverter& fCInverter) {
+bool GeneratorFuelCell::setInverter(const GeneratorFuelCellInverter& fCInverter) {
   return getImpl<detail::GeneratorFuelCell_Impl>()->setInverter(fCInverter);
 }
 
-bool GeneratorFuelCell::setStackCooler(const FCStackCooler& fCStackCooler) {
+bool GeneratorFuelCell::setStackCooler(const GeneratorFuelCellStackCooler& fCStackCooler) {
   return getImpl<detail::GeneratorFuelCell_Impl>()->setStackCooler(fCStackCooler);
 }
 

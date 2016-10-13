@@ -90,8 +90,8 @@ namespace detail {
     return getDouble(OS_Generator_FuelCell_InverterFields::InverterEfficiency,true);
   }
 
-  boost::optional<QuadraticCurves> GeneratorFuelCellInverter_Impl::efficiencyFunctionofDCPowerCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<QuadraticCurves>(OS_Generator_FuelCell_InverterFields::EfficiencyFunctionofDCPowerCurveName);
+  boost::optional<CurveQuadratic> GeneratorFuelCellInverter_Impl::efficiencyFunctionofDCPowerCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<CurveQuadratic>(OS_Generator_FuelCell_InverterFields::EfficiencyFunctionofDCPowerCurveName);
   }
 
   bool GeneratorFuelCellInverter_Impl::setInverterEfficiencyCalculationMode(const std::string& inverterEfficiencyCalculationMode) {
@@ -114,7 +114,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool GeneratorFuelCellInverter_Impl::setEfficiencyFunctionofDCPowerCurve(const QuadraticCurves& quadraticCurves) {
+  bool GeneratorFuelCellInverter_Impl::setEfficiencyFunctionofDCPowerCurve(const CurveQuadratic& quadraticCurves) {
     bool result = setPointer(OS_Generator_FuelCell_InverterFields::EfficiencyFunctionofDCPowerCurveName, quadraticCurves.handle());
     return result;
   }

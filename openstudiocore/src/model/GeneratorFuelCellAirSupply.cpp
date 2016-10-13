@@ -88,8 +88,8 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_Generator_FuelCell_AirSupplyFields::AirInletNodeName);
   }
 
-  boost::optional<CubicCurves> GeneratorFuelCellAirSupply_Impl::blowerPowerCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<CubicCurves>(OS_Generator_FuelCell_AirSupplyFields::BlowerPowerCurveName);
+  boost::optional<CurveCubic> GeneratorFuelCellAirSupply_Impl::blowerPowerCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<CurveCubic>(OS_Generator_FuelCell_AirSupplyFields::BlowerPowerCurveName);
   }
 
   boost::optional<double> GeneratorFuelCellAirSupply_Impl::blowerHeatLossFactor() const {
@@ -144,7 +144,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool GeneratorFuelCellAirSupply_Impl::setBlowerPowerCurve(const CubicCurves& cubicCurves) {
+  bool GeneratorFuelCellAirSupply_Impl::setBlowerPowerCurve(const CurveCubic& cubicCurves) {
     bool result = setPointer(OS_Generator_FuelCell_AirSupplyFields::BlowerPowerCurveName, cubicCurves.handle());
     return result;
   }
@@ -179,7 +179,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool GeneratorFuelCellAirSupply_Impl::setAirRateFunctionofElectricPowerCurve(const QuadraticCurves& quadraticCurves) {
+  bool GeneratorFuelCellAirSupply_Impl::setAirRateFunctionofElectricPowerCurve(const CurveQuadratic& quadraticCurves) {
     bool result = setPointer(OS_Generator_FuelCell_AirSupplyFields::AirRateFunctionofElectricPowerCurveName, quadraticCurves.handle());
     return result;
   }
@@ -199,7 +199,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool GeneratorFuelCellAirSupply_Impl::setAirRateFunctionofFuelRateCurve(const QuadraticCurves& quadraticCurves) {
+  bool GeneratorFuelCellAirSupply_Impl::setAirRateFunctionofFuelRateCurve(const CurveQuadratic& quadraticCurves) {
     bool result = setPointer(OS_Generator_FuelCell_AirSupplyFields::AirRateFunctionofFuelRateCurveName, quadraticCurves.handle());
     return result;
   }

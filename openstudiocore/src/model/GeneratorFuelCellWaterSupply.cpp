@@ -125,7 +125,7 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Generator_FuelCell_WaterSupplyFields::WaterTemperatureScheduleName);
   }
 
-  bool GeneratorFuelCellWaterSupply_Impl::setReformerWaterFlowRateFunctionofFuelRateCurve(const QuadraticCurves& quadraticCurves) {
+  bool GeneratorFuelCellWaterSupply_Impl::setReformerWaterFlowRateFunctionofFuelRateCurve(const CurveQuadratic& quadraticCurves) {
     bool result = setPointer(OS_Generator_FuelCell_WaterSupplyFields::ReformerWaterFlowRateFunctionofFuelRateCurveName, quadraticCurves.handle());
     return result;
   }
@@ -135,7 +135,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool GeneratorFuelCellWaterSupply_Impl::setReformerWaterPumpPowerFunctionofFuelRateCurve(const CubicCurves& cubicCurves) {
+  bool GeneratorFuelCellWaterSupply_Impl::setReformerWaterPumpPowerFunctionofFuelRateCurve(const CurveCubic& cubicCurves) {
     bool result = setPointer(OS_Generator_FuelCell_WaterSupplyFields::ReformerWaterPumpPowerFunctionofFuelRateCurveName, cubicCurves.handle());
     return result;
   }

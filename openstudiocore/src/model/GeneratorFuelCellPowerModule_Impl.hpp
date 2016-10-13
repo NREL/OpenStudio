@@ -79,7 +79,7 @@ namespace detail {
     boost::optional<std::string> efficiencyCurveMode() const;
 
     // TODO: Check return type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
-    QuadraticCurves efficiencyCurve() const;
+    CurveQuadratic efficiencyCurve() const;
 
     boost::optional<double> nominalEfficiency() const;
 
@@ -129,7 +129,7 @@ namespace detail {
     boost::optional<double> skinLossUFactorTimesAreaTerm() const;
 
     // TODO: Check return type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
-    boost::optional<QuadraticCurves> skinLossQuadraticCurve() const;
+    boost::optional<CurveQuadratic> skinLossQuadraticCurve() const;
 
     boost::optional<double> dilutionAirFlowRate() const;
 
@@ -154,7 +154,7 @@ namespace detail {
     void resetEfficiencyCurveMode();
 
     // TODO: Check argument type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
-    bool setEfficiencyCurve(const QuadraticCurves& quadraticCurves);
+    bool setEfficiencyCurve(const CurveQuadratic& quadraticCurves);
 
     void setNominalEfficiency(double nominalEfficiency);
 
@@ -250,7 +250,7 @@ namespace detail {
     void resetSkinLossUFactorTimesAreaTerm();
 
     // TODO: Check argument type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
-    bool setSkinLossQuadraticCurve(const QuadraticCurves& quadraticCurves);
+    bool setSkinLossQuadraticCurve(const CurveQuadratic& quadraticCurves);
 
     void resetSkinLossQuadraticCurve();
 
@@ -293,7 +293,7 @@ namespace detail {
     // Optional getters for use by methods like children() so can remove() if the constructor fails.
     // There are other ways for the public versions of these getters to fail--perhaps all required
     // objects should be returned as boost::optionals
-    boost::optional<QuadraticCurves> optionalEfficiencyCurve() const;
+    boost::optional<CurveQuadratic> optionalEfficiencyCurve() const;
   };
 
 } // detail

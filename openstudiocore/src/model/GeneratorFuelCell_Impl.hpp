@@ -36,15 +36,15 @@ namespace openstudio {
 namespace model {
 
 // TODO: Check the following class names against object getters and setters.
-class FCPM;
-class FCAirSup;
-class GenFuelSup;
-class FCWaterSup;
-class FCAuxHeat;
-class FCExhaustHX;
-class FCStorage;
-class FCInverter;
-class FCStackCooler;
+class GeneratorFuelCellPowerModule;
+class GeneratorFuelCellAirSupply;
+class GeneratorFuelSupply;
+class GeneratorFuelCellWaterSupply;
+class GeneratorFuelCellAuxiliaryHeater;
+class GeneratorFuelCellExhaustGasToWaterHeatExchanger;
+class GeneratorFuelCellElectricalStorage;
+class GeneratorFuelCellInverter;
+class GeneratorFuelCellStackCooler;
 
 namespace detail {
 
@@ -81,62 +81,62 @@ namespace detail {
     //@{
 
     // TODO: Check return type. From object lists, some candidates are: FCPM.
-    FCPM powerModule() const;
+    GeneratorFuelCellPowerModule powerModule() const;
 
     // TODO: Check return type. From object lists, some candidates are: FCAirSup.
-    FCAirSup airSupply() const;
+    GeneratorFuelCellAirSupply airSupply() const;
 
     // TODO: Check return type. From object lists, some candidates are: GenFuelSup.
-    GenFuelSup fuelSupply() const;
+    GeneratorFuelSupply fuelSupply() const;
 
     // TODO: Check return type. From object lists, some candidates are: FCWaterSup.
-    FCWaterSup waterSupply() const;
+    GeneratorFuelCellWaterSupply waterSupply() const;
 
     // TODO: Check return type. From object lists, some candidates are: FCAuxHeat.
-    FCAuxHeat auxiliaryHeater() const;
+    GeneratorFuelCellAuxiliaryHeater auxiliaryHeater() const;
 
     // TODO: Check return type. From object lists, some candidates are: FCExhaustHX.
-    FCExhaustHX heatExchanger() const;
+    GeneratorFuelCellExhaustGasToWaterHeatExchanger heatExchanger() const;
 
     // TODO: Check return type. From object lists, some candidates are: FCStorage.
-    FCStorage electricalStorage() const;
+    GeneratorFuelCellElectricalStorage electricalStorage() const;
 
     // TODO: Check return type. From object lists, some candidates are: FCInverter.
-    FCInverter inverter() const;
+    GeneratorFuelCellInverter inverter() const;
 
     // TODO: Check return type. From object lists, some candidates are: FCStackCooler.
-    boost::optional<FCStackCooler> stackCooler() const;
+    boost::optional<GeneratorFuelCellStackCooler> stackCooler() const;
 
     //@}
     /** @name Setters */
     //@{
 
     // TODO: Check argument type. From object lists, some candidates are: FCPM.
-    bool setPowerModule(const FCPM& fCPM);
+    bool setPowerModule(const GeneratorFuelCellPowerModule& fCPM);
 
     // TODO: Check argument type. From object lists, some candidates are: FCAirSup.
-    bool setAirSupply(const FCAirSup& fCAirSup);
+    bool setAirSupply(const GeneratorFuelCellAirSupply& fCAirSup);
 
     // TODO: Check argument type. From object lists, some candidates are: GenFuelSup.
-    bool setFuelSupply(const GenFuelSup& genFuelSup);
+    bool setFuelSupply(const GeneratorFuelSupply& genFuelSup);
 
     // TODO: Check argument type. From object lists, some candidates are: FCWaterSup.
-    bool setWaterSupply(const FCWaterSup& fCWaterSup);
+    bool setWaterSupply(const GeneratorFuelCellWaterSupply& fCWaterSup);
 
     // TODO: Check argument type. From object lists, some candidates are: FCAuxHeat.
-    bool setAuxiliaryHeater(const FCAuxHeat& fCAuxHeat);
+    bool setAuxiliaryHeater(const GeneratorFuelCellAuxiliaryHeater& fCAuxHeat);
 
     // TODO: Check argument type. From object lists, some candidates are: FCExhaustHX.
-    bool setHeatExchanger(const FCExhaustHX& fCExhaustHX);
+    bool setHeatExchanger(const GeneratorFuelCellExhaustGasToWaterHeatExchanger& fCExhaustHX);
 
     // TODO: Check argument type. From object lists, some candidates are: FCStorage.
-    bool setElectricalStorage(const FCStorage& fCStorage);
+    bool setElectricalStorage(const GeneratorFuelCellElectricalStorage& fCStorage);
 
     // TODO: Check argument type. From object lists, some candidates are: FCInverter.
-    bool setInverter(const FCInverter& fCInverter);
+    bool setInverter(const GeneratorFuelCellInverter& fCInverter);
 
     // TODO: Check argument type. From object lists, some candidates are: FCStackCooler.
-    bool setStackCooler(const FCStackCooler& fCStackCooler);
+    bool setStackCooler(const GeneratorFuelCellStackCooler& fCStackCooler);
 
     void resetStackCooler();
 
@@ -153,14 +153,14 @@ namespace detail {
     // Optional getters for use by methods like children() so can remove() if the constructor fails.
     // There are other ways for the public versions of these getters to fail--perhaps all required
     // objects should be returned as boost::optionals
-    boost::optional<FCPM> optionalPowerModule() const;
-    boost::optional<FCAirSup> optionalAirSupply() const;
-    boost::optional<GenFuelSup> optionalFuelSupply() const;
-    boost::optional<FCWaterSup> optionalWaterSupply() const;
-    boost::optional<FCAuxHeat> optionalAuxiliaryHeater() const;
-    boost::optional<FCExhaustHX> optionalHeatExchanger() const;
-    boost::optional<FCStorage> optionalElectricalStorage() const;
-    boost::optional<FCInverter> optionalInverter() const;
+    boost::optional<GeneratorFuelCellPowerModule> optionalPowerModule() const;
+    boost::optional<GeneratorFuelCellAirSupply> optionalAirSupply() const;
+    boost::optional<GeneratorFuelSupply> optionalFuelSupply() const;
+    boost::optional<GeneratorFuelCellWaterSupply> optionalWaterSupply() const;
+    boost::optional<GeneratorFuelCellAuxiliaryHeater> optionalAuxiliaryHeater() const;
+    boost::optional<GeneratorFuelCellExhaustGasToWaterHeatExchanger> optionalHeatExchanger() const;
+    boost::optional<GeneratorFuelCellElectricalStorage> optionalElectricalStorage() const;
+    boost::optional<GeneratorFuelCellInverter> optionalInverter() const;
   };
 
 } // detail

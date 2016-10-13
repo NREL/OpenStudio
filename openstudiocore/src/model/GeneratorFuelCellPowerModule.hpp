@@ -37,10 +37,8 @@ namespace openstudio {
 namespace model {
 
 // TODO: Check the following class names against object getters and setters.
-class QuadraticCurves;
+class CurveQuadratic;
 class Zone;
-class QuadraticCurves;
-class Connection;
 class Connection;
 
 namespace detail {
@@ -73,7 +71,7 @@ class MODEL_API GeneratorFuelCellPowerModule : public ModelObject {
   boost::optional<std::string> efficiencyCurveMode() const;
 
   // TODO: Check return type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
-  QuadraticCurves efficiencyCurve() const;
+  CurveQuadratic efficiencyCurve() const;
 
   boost::optional<double> nominalEfficiency() const;
 
@@ -123,7 +121,7 @@ class MODEL_API GeneratorFuelCellPowerModule : public ModelObject {
   boost::optional<double> skinLossUFactorTimesAreaTerm() const;
 
   // TODO: Check return type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
-  boost::optional<QuadraticCurves> skinLossQuadraticCurve() const;
+  boost::optional<CurveQuadratic> skinLossQuadraticCurve() const;
 
   boost::optional<double> dilutionAirFlowRate() const;
 
@@ -148,7 +146,7 @@ class MODEL_API GeneratorFuelCellPowerModule : public ModelObject {
   void resetEfficiencyCurveMode();
 
   // TODO: Check argument type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
-  bool setEfficiencyCurve(const QuadraticCurves& quadraticCurves);
+  bool setEfficiencyCurve(const CurveQuadratic& quadraticCurves);
 
   void setNominalEfficiency(double nominalEfficiency);
 
@@ -244,7 +242,7 @@ class MODEL_API GeneratorFuelCellPowerModule : public ModelObject {
   void resetSkinLossUFactorTimesAreaTerm();
 
   // TODO: Check argument type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
-  bool setSkinLossQuadraticCurve(const QuadraticCurves& quadraticCurves);
+  bool setSkinLossQuadraticCurve(const CurveQuadratic& quadraticCurves);
 
   void resetSkinLossQuadraticCurve();
 

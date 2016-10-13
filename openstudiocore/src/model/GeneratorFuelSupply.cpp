@@ -178,7 +178,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool GeneratorFuelSupply_Impl::setCompressorPowerMultiplierFunctionofFuelRateCurve(const CubicCurves& cubicCurves) {
+  bool GeneratorFuelSupply_Impl::setCompressorPowerMultiplierFunctionofFuelRateCurve(const CurveCubic& cubicCurves) {
     bool result = setPointer(OS_Generator_FuelSupplyFields::CompressorPowerMultiplierFunctionofFuelRateCurveName, cubicCurves.handle());
     return result;
   }

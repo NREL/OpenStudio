@@ -37,9 +37,8 @@ namespace model {
 
 // TODO: Check the following class names against object getters and setters.
 class Connection;
-class CubicCurves;
-class QuadraticCurves;
-class QuadraticCurves;
+class CurveCubic;
+class CurveQuadratic;
 
 namespace detail {
 
@@ -79,7 +78,7 @@ namespace detail {
     boost::optional<Connection> airInletNode() const;
 
     // TODO: Check return type. From object lists, some candidates are: CubicCurves, UniVariateTables.
-    boost::optional<CubicCurves> blowerPowerCurve() const;
+    boost::optional<CurveCubic> blowerPowerCurve() const;
 
     boost::optional<double> blowerHeatLossFactor() const;
 
@@ -88,12 +87,12 @@ namespace detail {
     boost::optional<double> stoichiometricRatio() const;
 
     // TODO: Check return type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
-    boost::optional<QuadraticCurves> airRateFunctionofElectricPowerCurve() const;
+    boost::optional<CurveQuadratic> airRateFunctionofElectricPowerCurve() const;
 
     boost::optional<double> airRateAirTemperatureCoefficient() const;
 
     // TODO: Check return type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
-    boost::optional<QuadraticCurves> airRateFunctionofFuelRateCurve() const;
+    boost::optional<CurveQuadratic> airRateFunctionofFuelRateCurve() const;
 
     std::string airIntakeHeatRecoveryMode() const;
 
@@ -113,7 +112,7 @@ namespace detail {
     void resetAirInletNode();
 
     // TODO: Check argument type. From object lists, some candidates are: CubicCurves, UniVariateTables.
-    bool setBlowerPowerCurve(const CubicCurves& cubicCurves);
+    bool setBlowerPowerCurve(const CurveCubic& cubicCurves);
 
     void resetBlowerPowerCurve();
 
@@ -128,7 +127,7 @@ namespace detail {
     void resetStoichiometricRatio();
 
     // TODO: Check argument type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
-    bool setAirRateFunctionofElectricPowerCurve(const QuadraticCurves& quadraticCurves);
+    bool setAirRateFunctionofElectricPowerCurve(const CurveQuadratic& quadraticCurves);
 
     void resetAirRateFunctionofElectricPowerCurve();
 
@@ -137,7 +136,7 @@ namespace detail {
     void resetAirRateAirTemperatureCoefficient();
 
     // TODO: Check argument type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
-    bool setAirRateFunctionofFuelRateCurve(const QuadraticCurves& quadraticCurves);
+    bool setAirRateFunctionofFuelRateCurve(const CurveQuadratic& quadraticCurves);
 
     void resetAirRateFunctionofFuelRateCurve();
 
