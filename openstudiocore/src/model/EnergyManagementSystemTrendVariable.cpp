@@ -269,7 +269,6 @@ EnergyManagementSystemTrendVariable::EnergyManagementSystemTrendVariable(const M
   : ModelObject(EnergyManagementSystemTrendVariable::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemTrendVariable_Impl>());
-  //TODO setEMSVariableName to a valid default
   setNumberofTimestepstobeLogged(1);
 }
 
