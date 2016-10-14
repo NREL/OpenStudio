@@ -38,7 +38,6 @@ namespace model {
 
 // TODO: Check the following class names against object getters and setters.
 class Connection;
-class Connection;
 
 namespace detail {
 
