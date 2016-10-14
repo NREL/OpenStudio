@@ -467,67 +467,68 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     
     set(SWIG_WRAPPER "python_${NAME}_wrap.cxx")
     set(SWIG_WRAPPER_FULL_PATH "${CMAKE_CURRENT_BINARY_DIR}/${SWIG_WRAPPER}")
-    set(SWIG_TARGET "generate_python_${NAME}_wrap")
-
+   
     set(PYTHON_GENERATED_SRC_DIR "${CMAKE_BINARY_DIR}/python_wrapper/generated_sources/")
     file(MAKE_DIRECTORY ${PYTHON_GENERATED_SRC_DIR})
     
+    set(PYTHON_GENERATED_SRC "${PYTHON_GENERATED_SRC_DIR}/${LOWER_NAME}.py")
+  
     set(PYTHON_AUTODOC "")
     if(BUILD_DOCUMENTATION)
       set(PYTHON_AUTODOC -features autodoc=1)
     endif()
     
     add_custom_command(
-      OUTPUT "${SWIG_WRAPPER_FULL_PATH}"
+      OUTPUT "${SWIG_WRAPPER_FULL_PATH}" 
       COMMAND "${SWIG_EXECUTABLE}"
                "-python" "-c++" ${PYTHON_AUTODOC}
                -outdir ${PYTHON_GENERATED_SRC_DIR} "-I${CMAKE_SOURCE_DIR}/src" "-I${CMAKE_BINARY_DIR}/src"
                -module "${MODULE}"
-               -o "${CMAKE_CURRENT_BINARY_DIR}/python_${NAME}_wrap.cxx"
+               -o "${SWIG_WRAPPER_FULL_PATH}"
                "${SWIG_DEFINES}" ${SWIG_COMMON} ${KEY_I_FILE}
       DEPENDS ${this_depends}
     )
 
-    add_custom_target(${SWIG_TARGET}
-      DEPENDS ${SWIG_WRAPPER_FULL_PATH}
-    )
+    set_source_files_properties(${SWIG_WRAPPER_FULL_PATH} PROPERTIES GENERATED TRUE)
+    set_source_files_properties(${PYTHON_GENERATED_SRC} PROPERTIES GENERATED TRUE)
 
-    #add_library(
-    #  ${swig_target}
-    #  MODULE
-    #  python_${NAME}_wrap.cxx
+    #add_custom_target(${SWIG_TARGET}
+    #  DEPENDS ${SWIG_WRAPPER_FULL_PATH}
     #)
-
-    #set_target_properties(${swig_target} PROPERTIES OUTPUT_NAME _${LOWER_NAME})
-    #set_target_properties(${swig_target} PROPERTIES PREFIX "")
-    #set_target_properties(${swig_target} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/python/")
-    #set_target_properties(${swig_target} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/python/")
-    #set_target_properties(${swig_target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/python/")
-    #if(MSVC)
-    #  set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj /wd4996") ## /wd4996 suppresses deprecated warning
-    #  set_target_properties(${swig_target} PROPERTIES SUFFIX ".pyd")
-    #elseif(UNIX)
-    #  set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-DRUBY_EMBEDDED -Wno-deprecated-declarations")
-      #if(APPLE AND NOT CMAKE_COMPILER_IS_GNUCXX)
-      #  set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-dynamic-class-memaccess -Wno-deprecated-declarations")
-      #else()
-      #  set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations")
-      #endif()
-    #endif()
-
-    #target_link_libraries(${swig_target} ${PARENT_TARGET} ${DEPENDS} ${PYTHON_LIBRARY})
-
-    #add_dependencies("${swig_target}" "${PARENT_TARGET}_resources")
-
-    #if(MSVC)
-    #  set(_NAME "_${LOWER_NAME}.pyd")
-    #else()
-    #  set(_NAME "_${LOWER_NAME}.so")
-    #endif()
     
-    add_dependencies(${SWIG_TARGET} ${PARENT_TARGET})
+    add_library(
+      ${swig_target}
+      MODULE
+      ${SWIG_WRAPPER}
+    )
+    
+    install(FILES "${PYTHON_GENERATED_SRC}" DESTINATION Python COMPONENT "Python")
+    install(TARGETS ${swig_target} DESTINATION Python COMPONENT "Python")
+    
+    set_target_properties(${swig_target} PROPERTIES OUTPUT_NAME _${LOWER_NAME})
+    set_target_properties(${swig_target} PROPERTIES PREFIX "")
+    set_target_properties(${swig_target} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/python/")
+    set_target_properties(${swig_target} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/python/")
+    set_target_properties(${swig_target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/python/")
+    if(MSVC)
+      set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj /wd4996 /wd4005") ## /wd4996 suppresses deprecated warning, /wd4005 suppresses macro redefinition warning
+      set_target_properties(${swig_target} PROPERTIES SUFFIX ".pyd")
+    elseif(UNIX)
+      if(APPLE AND NOT CMAKE_COMPILER_IS_GNUCXX)
+        set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-dynamic-class-memaccess -Wno-deprecated-declarations")
+      else()
+        set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations")
+      endif()
+    endif()
+
+    target_link_libraries(${swig_target} ${PARENT_TARGET} ${PYTHON_LIBRARY})
+
+    add_dependencies(${swig_target} ${PARENT_TARGET})
     
     # add this target to a "global" variable so python tests can require these
+    list(APPEND ALL_PYTHON_BINDINGS "${swig_target}")
+    set(ALL_PYTHON_BINDINGS "${ALL_PYTHON_BINDINGS}" PARENT_SCOPE)
+    
     list(APPEND ALL_PYTHON_BINDING_DEPENDS "${PARENT_TARGET}")
     set(ALL_PYTHON_BINDING_DEPENDS "${ALL_PYTHON_BINDING_DEPENDS}" PARENT_SCOPE)
     

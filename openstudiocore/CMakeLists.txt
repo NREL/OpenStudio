@@ -657,7 +657,7 @@ if(BUILD_PYTHON_BINDINGS)
   find_package(PythonInterp 2.7 REQUIRED)
   find_package(PythonLibs 2.7 REQUIRED)
   include_directories(SYSTEM ${PYTHON_INCLUDE_DIRS})
-
+  set(ALL_PYTHON_BINDINGS "") # global list of python bindings
   set(ALL_PYTHON_BINDING_DEPENDS "") # global list of library dependencies of the generated wrapper cxx files
   set(ALL_PYTHON_WRAPPER_FILES "") # global list of generated wrapper cxx files
   set(ALL_PYTHON_WRAPPER_TARGETS "") # global list targets that build generated wrapper cxx files
