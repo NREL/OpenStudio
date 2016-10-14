@@ -26,6 +26,8 @@
 
 #install(TARGETS openstudio_python DESTINATION Python CONFIGURATIONS COMPONENT "Python")
 
+install(FILES "openstudio.py" DESTINATION Python COMPONENT "Python")
+
 # convenience target to build the SDK
 add_custom_target(python_sdk ALL
   DEPENDS ${ALL_PYTHON_BINDINGS}
