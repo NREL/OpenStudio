@@ -135,7 +135,7 @@ TEST_F(ModelFixture, EMSOutputVariable_EMSOutputVariable)
 
   // add output variable sensor
   EnergyManagementSystemOutputVariable outvar_sen(model, OATdbSensor);
-  //setname
+
   outvar_sen.setName("outputVar sen");
   EXPECT_EQ("outputVar sen", outvar_sen.nameString());
 
