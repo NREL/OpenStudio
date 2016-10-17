@@ -1,6 +1,12 @@
 ## OpenStudio v1.13.1
+###### 2016-10-15 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.13.0...v1.13.1 )
 
 - ![Added:][added] [#2363]( https://github.com/NREL/OpenStudio/pull/2363 ), Add a BuildingUnit object that is optionally referenced by a space such that it can group together spaces into a unit such as an apartment in a multifamily building
+- ![Fixed:][fixed] [#2247]( https://github.com/NREL/OpenStudio/issues/2247 ), Update class generator
+- ![Fixed:][fixed] [#2360]( https://github.com/NREL/OpenStudio/issues/2360 ), Incorrect Zone Volume in Outdoor Air - OpenStudio report
+- ![Fixed:][fixed] [#2371]( https://github.com/NREL/OpenStudio/issues/2371 ), OpenStudio 2.0: Importing C# library in IronPython threw 'OpenStudio.OpenStudioModelCorePINVOKE'
+- ![Fixed:][fixed] [#2374]( https://github.com/NREL/OpenStudio/pull/2374 ), Make OpenStudio 2.X more backwards compatible with 1.X measure tests
+- ![Fixed:][fixed] [#2378]( https://github.com/NREL/OpenStudio/pull/2378 ), Updates openstudio-standards to 0.1.7
 
 ## OpenStudio v1.13.0
 ###### 2016-10-01 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.12.6...v1.13.0 )
@@ -50,9 +56,9 @@ Closed Issues: 12 (#93, #94, #273, #275, #398, #399, #1362, #1925, #1991, #2172,
 - ![Fixed:][fixed] [#1362]( https://github.com/NREL/OpenStudio/issues/1362 ), OpenStudio GUI does not show ScheduleYear objects where it should
 - ![Fixed:][fixed] [#1925]( https://github.com/NREL/OpenStudio/issues/1925 ), GBXML Export Uses wrong Coordinate Geometry
 - ![Fixed:][fixed] [#1991]( https://github.com/NREL/OpenStudio/issues/1991 ), Shading surfaces not exported to gbXML
-- ![Improved:][improved] [#2172]( https://github.com/NREL/OpenStudio/issues/2172 ), Translate all coils supported by the IDD in AirLoopHVACUnitarySystem
 - ![Fixed:][fixed] [#2278]( https://github.com/NREL/OpenStudio/issues/2278 ), UnitarySystemPerformance:Multispeed is not cloning correctly
 - ![Fixed:][fixed] [#2306]( https://github.com/NREL/OpenStudio/issues/2306 ), Zone overview bug in open studio results
+- ![Improved:][improved] [#2172]( https://github.com/NREL/OpenStudio/issues/2172 ), Translate all coils supported by the IDD in AirLoopHVACUnitarySystem
 
 ## OpenStudio v1.12.1
 ###### 2016-07-07 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.12.0...v1.12.1 )
