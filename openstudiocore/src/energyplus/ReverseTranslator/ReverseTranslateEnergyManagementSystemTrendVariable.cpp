@@ -63,14 +63,19 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemTrendVaria
     LOG(Error, emsTrendVariable.nameString() + ": EMSVariableName not set");
     return boost::none;
   } else {
+    bool result = false;
     Workspace workspace = workspaceObject.workspace();
     //look for GlobalVariables, translate and check if there is a name match since GV's dont have name field.
     for (WorkspaceObject& wsObject : workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_GlobalVariable)) {
       boost::optional<model::ModelObject> modelObject = translateAndMapWorkspaceObject(wsObject);
       if (modelObject) {
         if (modelObject.get().cast<EnergyManagementSystemGlobalVariable>().name() == s) {
-          emsTrendVariable.setEMSVariableName(*s);
-          return emsTrendVariable;
+          result = emsTrendVariable.setEMSVariableName(*s);          
+          if (result) {
+            return emsTrendVariable;
+          } else {
+            return boost::none;
+          }
         }
       }
     }
@@ -78,8 +83,12 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemTrendVaria
     for (WorkspaceObject& wsObject : workspace.getObjectsByName(*s)) {
       boost::optional<model::ModelObject> modelObject = translateAndMapWorkspaceObject(wsObject);
       if (modelObject) {
-        emsTrendVariable.setEMSVariableName(*s);
-        return emsTrendVariable;
+        result = emsTrendVariable.setEMSVariableName(*s);
+        if (result) {
+          return emsTrendVariable;
+        } else {
+          return boost::none;
+        }
       }
     }
   }
