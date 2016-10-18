@@ -762,6 +762,19 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorGlobalVariable_EMS) {
 
 }
 
+/*
+TEST_F(EnergyPlusFixture, ReverseTranslatorGlobalVariable2_EMS) {
+
+  openstudio::path idfPath = toPath("./EMS_GlobalVariable2.idf");
+  OptionalIdfFile idfFile = IdfFile::load(idfPath, IddFileType::EnergyPlus);
+  ASSERT_TRUE(idfFile);
+  Workspace inWorkspace(*idfFile);
+  ReverseTranslator reverseTranslator;
+  Model model = reverseTranslator.translateWorkspace(inWorkspace);
+  model.save(toPath("./EMS_GlobalVariable2T.osm"), true);
+
+}
+*/
 TEST_F(EnergyPlusFixture, ForwardTranslatorOutputVariable_EMS) {
   Model model;
 

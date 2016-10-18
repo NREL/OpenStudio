@@ -129,14 +129,19 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemMeteredOut
     LOG(Error, emsOutputVariable.nameString() + ": EMSVariableName not set");
     return boost::none;
   } else {
+    bool result = false;
     Workspace workspace = workspaceObject.workspace();
     //look for GlobalVariables, translate and check if there is a name match since GV's dont have name field.
     for (WorkspaceObject& wsObject : workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_GlobalVariable)) {
       boost::optional<model::ModelObject> modelObject = translateAndMapWorkspaceObject(wsObject);
       if (modelObject) {
         if (modelObject.get().cast<EnergyManagementSystemGlobalVariable>().name() == s) {
-          emsOutputVariable.setEMSVariableName(*s);
-          return emsOutputVariable;
+          result = emsOutputVariable.setEMSVariableName(*s);
+          if (result) {
+            return emsOutputVariable;
+          } else {
+            return boost::none;
+          } 
         }
       }
     }
@@ -144,8 +149,12 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemMeteredOut
     for (WorkspaceObject& wsObject : workspace.getObjectsByName(*s)) {
       boost::optional<model::ModelObject> modelObject = translateAndMapWorkspaceObject(wsObject);
       if (modelObject) {
-        emsOutputVariable.setEMSVariableName(*s);
-        return emsOutputVariable;
+        result = emsOutputVariable.setEMSVariableName(*s);
+        if (result) {
+          return emsOutputVariable;
+        } else {
+          return boost::none;
+        }
       }
     }
   }
