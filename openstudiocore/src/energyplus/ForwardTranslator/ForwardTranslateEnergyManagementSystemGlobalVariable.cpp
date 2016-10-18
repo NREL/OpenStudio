@@ -49,7 +49,7 @@ boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemGlo
   //TODO add all the global variables to one object in the IDF
   IdfObject idfObject(openstudio::IddObjectType::EnergyManagementSystem_GlobalVariable);
   m_idfObjects.push_back(idfObject);
-  m_map.insert(std::make_pair(modelObject.handle(), idfObject));
+  //m_map.insert(std::make_pair(modelObject.handle(), idfObject));
 
   //AddErlVariable
   s = modelObject.name();
