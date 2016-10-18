@@ -54,8 +54,17 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemCurveOrTab
   Workspace workspace = workspaceObject.workspace();
 
   if (s) {
-    for ( WorkspaceObject& wsObject : workspace.getObjectsByName(*s)) {
-      boost::optional<model::ModelObject> modelObject = translateAndMapWorkspaceObject(wsObject);
+    //for ( WorkspaceObject& wsObject : workspace.getObjectsByName(*s)) {
+    std::vector<WorkspaceObject> wsObjects = workspace.getObjectsByName(*s);
+    if (wsObjects.size() > 1) {
+      LOG(Error, workspaceObject.nameString() + ": CurveorTableObject is not unique.  More than 1 object with that name.");
+      return boost::none;
+    }
+    if (wsObjects.size() == 0) {
+      LOG(Error, workspaceObject.nameString() + ": CurveorTableObject not found.");
+      return boost::none;
+    } else {
+      boost::optional<model::ModelObject> modelObject = translateAndMapWorkspaceObject(wsObjects[0]);
       if (modelObject) {
         openstudio::model::EnergyManagementSystemCurveOrTableIndexVariable emsCurveOrTableIndexVariable(m_model);
         emsCurveOrTableIndexVariable.setName(*s1);
