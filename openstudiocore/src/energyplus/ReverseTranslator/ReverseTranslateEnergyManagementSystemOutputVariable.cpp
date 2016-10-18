@@ -71,12 +71,13 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemOutputVari
   } else {
     Workspace workspace = workspaceObject.workspace();
     //look for GlobalVariables, translate and check if there is a name match since GV's dont have name field.
-    for (WorkspaceObject& wsObject : workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_GlobalVariable)) {
-      boost::optional<model::ModelObject> modelObject = translateAndMapWorkspaceObject(wsObject);
+    boost::optional<WorkspaceObject> wsObject = workspace.getObjectByTypeAndName(IddObjectType::EnergyManagementSystem_GlobalVariable, *s);
+    //for (WorkspaceObject& wsObject : workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_GlobalVariable)) {
+    if (wsObject) {
+      boost::optional<model::ModelObject> modelObject = translateAndMapWorkspaceObject(wsObject.get());
       if (modelObject) {
         if (modelObject.get().cast<EnergyManagementSystemGlobalVariable>().name() == s) {
           emsOutputVariable.setEMSVariableName(*s);
-          break;
         }
       }
     }
