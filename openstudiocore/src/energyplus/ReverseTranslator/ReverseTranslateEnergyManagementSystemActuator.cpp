@@ -54,8 +54,17 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemActuator(c
   Workspace workspace = workspaceObject.workspace();
 
   if (s) {
-    for ( WorkspaceObject& wsObject : workspace.getObjectsByName(*s)) {
-      boost::optional<model::ModelObject> modelObject = translateAndMapWorkspaceObject(wsObject);
+    std::vector<WorkspaceObject> wsObjects = workspace.getObjectsByName(*s);
+    if (wsObjects.size() > 1) {
+      LOG(Error, workspaceObject.nameString() + ": ActuatedComponentUniqueName is not unique.  More than 1 object with that name.");
+      return boost::none;
+    }
+    if (wsObjects.size() == 0) {
+      LOG(Error, workspaceObject.nameString() + ": ActuatedComponentUniqueName not found.");
+      return boost::none;
+    } else {
+      //ActuatedComponent's name is unique so we can continue and try to translate that object.
+      boost::optional<model::ModelObject> modelObject = translateAndMapWorkspaceObject(wsObjects[0]);
       if (modelObject) {
         openstudio::model::EnergyManagementSystemActuator emsActuator(modelObject.get());
         emsActuator.setName(*s1);
@@ -71,7 +80,7 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemActuator(c
         }
         return emsActuator;
       } else {
-        LOG(Warn, "ATTENTION: Actuated Object " + wsObject.nameString() + " does not reverse translate. ActuatedComponent is NOT set.");
+        LOG(Warn, "ATTENTION: Actuated Object " + wsObjects[0].nameString() + " does not reverse translate. ActuatedComponent is NOT set.");
         openstudio::model::EnergyManagementSystemActuator emsActuator(m_model);
         OptionalString s1 = workspaceObject.getString(EnergyManagementSystem_ActuatorFields::Name);
         emsActuator.setName(*s1);
