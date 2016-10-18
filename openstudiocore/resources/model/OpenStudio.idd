@@ -26449,7 +26449,7 @@ OS:EnergyManagementSystem:Sensor,
        \min-fields 4
   A1, \field Handle
        \type handle
-       \required-field   
+       \required-field
   A2, \field Name
        \required-field
        \type alpha
@@ -26463,7 +26463,7 @@ OS:EnergyManagementSystem:Sensor,
   A4; \field Output Variable or Output Meter Name
        \required-field
        \type alpha
-       
+
 OS:EnergyManagementSystem:Actuator,
        \memo Hardware portion of EMS used to set up actuators in the model
        \min-fields 4
@@ -26486,7 +26486,7 @@ OS:EnergyManagementSystem:Actuator,
        \type alpha
   A5; \field Actuated Component Control Type
        \required-field
-       \type alpha      
+       \type alpha
 
 OS:EnergyManagementSystem:ProgramCallingManager,
        \extensible:1 - repeat last field, remembering to remove ; from "inner" fields.
@@ -26496,7 +26496,7 @@ OS:EnergyManagementSystem:ProgramCallingManager,
        \min-fields 4
   A1, \field Handle
        \type handle
-       \required-field      
+       \required-field
   A2, \field Name
        \required-field
        \type alpha
@@ -26533,7 +26533,7 @@ OS:EnergyManagementSystem:Program,
        \min-fields 3
   A1, \field Handle
        \type handle
-       \required-field       
+       \required-field
   A2, \field Name
        \required-field
        \type alpha
@@ -26552,7 +26552,7 @@ OS:EnergyManagementSystem:Subroutine,
        \min-fields 3
   A1, \field Handle
        \type handle
-       \required-field     
+       \required-field
   A2, \field Name
        \required-field
        \type alpha
@@ -26563,18 +26563,18 @@ OS:EnergyManagementSystem:Subroutine,
        \begin-extensible
        \type alpha
        \required-field
-  
+
 OS:EnergyManagementSystem:GlobalVariable,
        \memo Declares Erl variable as having global scope
        \memo No spaces allowed in names used for Erl variables
        \min-fields 2
   A1, \field Handle
        \type handle
-       \required-field      
+       \required-field
   A2; \field Name
        \required-field
        \type alpha
-	   \reference ErlVariableNames
+       \reference ErlVariableNames
        \note no spaces allowed in name
 
 OS:EnergyManagementSystem:OutputVariable,
@@ -26716,7 +26716,7 @@ OS:EnergyManagementSystem:TrendVariable,
   A3, \field EMS Variable Name
        \required-field
        \type object-list
-	   \object-list ErlVariableNames
+       \object-list ErlVariableNames
        \note must be a global scope EMS variable
   N1; \field Number of Timesteps to be Logged
        \required-field
@@ -26728,7 +26728,7 @@ OS:EnergyManagementSystem:InternalVariable,
        \min-fields 4
   A1, \field Handle
        \type handle
-       \required-field       
+       \required-field
   A2, \field Name
        \required-field
        \type alpha
@@ -26746,7 +26746,7 @@ OS:EnergyManagementSystem:CurveOrTableIndexVariable,
        \min-fields 3
   A1, \field Handle
        \type handle
-       \required-field      
+       \required-field
   A2, \field Name
        \required-field
        \type alpha
@@ -26763,7 +26763,7 @@ OS:EnergyManagementSystem:ConstructionIndexVariable,
        \min-fields 3
   A1, \field Handle
        \type handle
-       \required-field        
+       \required-field
   A2, \field Name
        \required-field
        \type alpha
@@ -26773,5 +26773,5 @@ OS:EnergyManagementSystem:ConstructionIndexVariable,
   A3; \field Construction Object Name
        \type object-list
        \object-list ConstructionNames
-       \required-field  
+       \required-field
 

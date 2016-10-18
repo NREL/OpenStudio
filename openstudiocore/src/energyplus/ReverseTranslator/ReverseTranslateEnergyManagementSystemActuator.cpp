@@ -71,7 +71,7 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemActuator(c
         }
         return emsActuator;
       } else {
-        LOG(Error, "ATTENTION: Actuated Object " + wsObject.nameString() + " does not reverse translate. ActuatedComponent is NOT set.");
+        LOG(Warn, "ATTENTION: Actuated Object " + wsObject.nameString() + " does not reverse translate. ActuatedComponent is NOT set.");
         openstudio::model::EnergyManagementSystemActuator emsActuator(m_model);
         OptionalString s1 = workspaceObject.getString(EnergyManagementSystem_ActuatorFields::Name);
         emsActuator.setName(*s1);
