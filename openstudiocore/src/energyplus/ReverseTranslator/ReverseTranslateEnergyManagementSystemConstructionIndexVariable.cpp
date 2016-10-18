@@ -21,6 +21,7 @@
 
 #include "../../model/EnergyManagementSystemConstructionIndexVariable.hpp"
 #include "../../model/EnergyManagementSystemConstructionIndexVariable_Impl.hpp"
+//#include "../../model/Construction.hpp"
 
 #include <utilities/idd/EnergyManagementSystem_ConstructionIndexVariable_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
@@ -54,8 +55,17 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemConstructi
   Workspace workspace = workspaceObject.workspace();
 
   if (s) {
-    for ( WorkspaceObject& wsObject : workspace.getObjectsByName(*s)) {
-      boost::optional<model::ModelObject> modelObject = translateAndMapWorkspaceObject(wsObject);
+    //std::vector<WorkspaceObject> wsObjects = workspace.getObjectsByTypeAndName(IddObjectType::Construction, *s);
+    std::vector<WorkspaceObject> wsObjects = workspace.getObjectsByName(*s);
+    if (wsObjects.size() > 1) {
+      LOG(Error, workspaceObject.nameString() + ": Construction is not unique.  More than 1 object with that name.");
+      return boost::none;
+    }
+    if (wsObjects.size() == 0) {
+      LOG(Error, workspaceObject.nameString() + ": Construction not found.");
+      return boost::none;
+    } else {
+      boost::optional<model::ModelObject> modelObject = translateAndMapWorkspaceObject(wsObjects[0]);
       if (modelObject) {
         openstudio::model::EnergyManagementSystemConstructionIndexVariable emsConstructionIndexVariable(m_model);
         emsConstructionIndexVariable.setName(*s1);
