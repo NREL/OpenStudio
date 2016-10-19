@@ -29,6 +29,8 @@
 #include "../../model/EnergyManagementSystemSensor.hpp"
 #include "../../model/EnergyManagementSystemSensor_Impl.hpp"
 
+#include "../../utilities/core/UUID.hpp"
+#include "../../utilities/core/StringHelpers.hpp"
 
 #include <utilities/idd/EnergyManagementSystem_Sensor_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
@@ -57,7 +59,30 @@ boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemSen
   }
   s = modelObject.keyName();
   if (s) {
-    idfObject.setString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterIndexKeyName, s.get());
+    //find uids
+    const int subs[] = {1};
+    std::string newline = s.get();
+    std::string possible_uid;
+    size_t pos;
+    const Model m = modelObject.model();
+    boost::optional<ModelObject> mObject;
+
+    boost::sregex_token_iterator j(s.get().begin(), s.get().end(), uuidInString(), subs);
+
+    while (j != boost::sregex_token_iterator()) {
+      possible_uid = *j++;
+      //look to see if uid is in the model and return the object
+      UUID uid = toUUID(possible_uid);
+      mObject = m.getModelObject<model::ModelObject>(uid);
+      if (mObject) {
+        //replace uid with namestring
+        pos = newline.find(possible_uid);
+        if (pos + 38 <= newline.length()) {
+          newline.replace(pos, 38, mObject.get().nameString());
+        }
+      }
+    }
+    idfObject.setString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterIndexKeyName, newline);
   }
   d = modelObject.outputVariable();
   if (d.is_initialized()) {
