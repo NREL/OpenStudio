@@ -1,9 +1,9 @@
 <measure>
   <schema_version>3.0</schema_version>
   <name>open_studio_results</name>
-  <uid>a6b9a024-0912-4be3-a55d-57dfe0b8586c</uid>
-  <version_id>6a6bfe68-013a-464c-947e-864f7d44b8d5</version_id>
-  <version_modified>20161013T181335Z</version_modified>
+  <uid>675e0a1f-d1f9-4639-aed5-3fd8b21d5503</uid>
+  <version_id>c4f473b0-59e4-464c-8479-c3d34b26b4b7</version_id>
+  <version_modified>20161019T172655Z</version_modified>
   <xml_checksum>557BF06F</xml_checksum>
   <class_name>OpenStudioResults</class_name>
   <display_name>OpenStudio Results</display_name>
@@ -469,12 +469,6 @@
       <checksum>E7812BB5</checksum>
     </file>
     <file>
-      <filename>OpenStudioResults_Test.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>test</usage_type>
-      <checksum>476EEE0E</checksum>
-    </file>
-    <file>
       <filename>1004_SmallHotel_a.osm</filename>
       <filetype>osm</filetype>
       <usage_type>test</usage_type>
@@ -487,6 +481,18 @@
       <checksum>26E63BAF</checksum>
     </file>
     <file>
+      <filename>os_lib_reporting.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>53EE754D</checksum>
+    </file>
+    <file>
+      <filename>OpenStudioResults_Test.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>test</usage_type>
+      <checksum>AB0A4C99</checksum>
+    </file>
+    <file>
       <version>
         <software_program>OpenStudio</software_program>
         <identifier>1.10.5</identifier>
@@ -495,13 +501,7 @@
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
-      <checksum>4CA38E70</checksum>
-    </file>
-    <file>
-      <filename>os_lib_reporting.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>53EE754D</checksum>
+      <checksum>0485ECB6</checksum>
     </file>
   </files>
 </measure>

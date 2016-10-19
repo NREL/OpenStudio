@@ -147,11 +147,20 @@ class OpenStudioResults < OpenStudio::Ruleset::ReportingUserScript
 
     # create a array of sections to loop through in erb file
     @sections = []
-
     # check units of tabular E+ results
     column_units_query = "SELECT DISTINCT  units FROM tabulardatawithstrings WHERE ReportName='AnnualBuildingUtilityPerformanceSummary' and TableName='Building Area'"
-    energy_plus_area_units = sql_file.execAndReturnVectorOfString(column_units_query).get
-    if energy_plus_area_units.first.to_s == "m2"
+    energy_plus_area_units = sql_file.execAndReturnVectorOfString(column_units_query)
+    if energy_plus_area_units.is_initialized
+      if energy_plus_area_units.get.size == 0
+        runner.registerError("Can't find any contents in Building Area Table to get tabular units. Measure can't run")
+        return false
+      end
+    else
+      runner.registerError("Can't find Building Area to get tabular units. Measure can't run")
+      return false
+    end
+
+    if energy_plus_area_units.get.first.to_s == "m2"
 
       # generate data for requested sections
       sections_made = 0
@@ -199,7 +208,7 @@ class OpenStudioResults < OpenStudio::Ruleset::ReportingUserScript
       end
 
     else
-      wrong_tabular_units_string = "IP units were provide, SI units were expected. Leave EnergyPlus tabular results in SI units to run this report."
+      wrong_tabular_units_string = "IP units were provided, SI units were expected. Leave EnergyPlus tabular results in SI units to run this report."
       runner.registerWarning(wrong_tabular_units_string)
       section = {}
       section[:title] = "Tabular EnergyPlus results provided in wrong units."
