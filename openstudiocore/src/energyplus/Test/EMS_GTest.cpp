@@ -99,6 +99,10 @@
 #include "../../model/SubSurface.hpp"
 #include "../../model/SubSurface_Impl.hpp"
 #include "../../model/LifeCycleCost.hpp"
+#include "../../model/LifeCycleCost_Impl.hpp"
+#include "../../model/CoilCoolingDXSingleSpeed.hpp"
+#include "../../model/CoilCoolingDXSingleSpeed_Impl.hpp"
+
 
 #include "../../model/Version.hpp"
 #include "../../model/Version_Impl.hpp"
@@ -194,6 +198,52 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorSensor1_EMS) {
 
   model.save(toPath("./EMS_sensor1.osm"), true);
   workspace.save(toPath("./EMS_sensor1.idf"), true);
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslatorSensorRename_EMS) {
+
+  Model model;
+
+  Building building = model.getUniqueModelObject<Building>();
+
+  ThermalZone zone1(model);
+  ThermalZone zone2(model);
+
+  Schedule s = model.alwaysOnDiscreteSchedule();
+  CurveBiquadratic totalCoolingCapacityFunctionofTemperatureCurve(model);
+  CurveQuadratic totalCoolingCapacityFunctionofFlowFractionCurve(model);
+  CurveBiquadratic energyInputRatioFunctionofTemperatureCurve(model);
+  CurveQuadratic energyInputRatioFunctionofFlowFractionCurve(model);
+  CurveQuadratic partLoadFractionCorrelationCurve(model);
+  // make cooling coil
+  CoilCoolingDXSingleSpeed dx_coil(model, s,
+    totalCoolingCapacityFunctionofTemperatureCurve,
+    totalCoolingCapacityFunctionofFlowFractionCurve,
+    energyInputRatioFunctionofTemperatureCurve,
+    energyInputRatioFunctionofFlowFractionCurve,
+    partLoadFractionCorrelationCurve);
+
+  dx_coil.setName("Coil Name Before Change");
+  EXPECT_EQ("Coil Name Before Change",dx_coil.nameString());
+
+  // add sensor
+  EnergyManagementSystemSensor sensor(model, "Cooling Coil Runtime Fraction");
+  sensor.setKeyName(toString(dx_coil.handle()));
+ 
+  //change name
+  dx_coil.setName("New Coil Name");
+
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
+  EXPECT_EQ(0u, forwardTranslator.errors().size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Coil_Cooling_DX_SingleSpeed).size());
+
+  WorkspaceObject object = workspace.getObjectsByType(IddObjectType::Coil_Cooling_DX_SingleSpeed)[0];
+
+  EXPECT_EQ("New Coil Name", object.nameString());
+
+  model.save(toPath("./EMS_sensorRename.osm"), true);
+  workspace.save(toPath("./EMS_sensorRename.idf"), true);
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslatorSensor1_EMS) {
