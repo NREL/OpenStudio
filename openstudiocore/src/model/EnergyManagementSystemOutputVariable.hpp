@@ -87,6 +87,10 @@ class MODEL_API EnergyManagementSystemOutputVariable : public ModelObject {
   std::string updateFrequency() const;
 
   boost::optional<std::string> eMSProgramorSubroutineName() const;
+  //TODO
+  //boost::optional<EnergyManagementSystemProgram> eMSProgram() const;
+
+  //boost::optional<EnergyManagementSystemSubroutine> eMSSubroutine() const;
 
   boost::optional<std::string> units() const;
 

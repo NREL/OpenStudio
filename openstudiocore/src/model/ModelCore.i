@@ -182,7 +182,7 @@ MODELOBJECT_TEMPLATES(EnergyManagementSystemSubroutine);
 MODELOBJECT_TEMPLATES(EnergyManagementSystemProgram);
 MODELOBJECT_TEMPLATES(EnergyManagementSystemProgramCallingManager);
 MODELOBJECT_TEMPLATES(EnergyManagementSystemOutputVariable);
-MODELOBJECT_TEMPLATES(OutputEnergyManagementSystem);
+UNIQUEMODELOBJECT_TEMPLATES(OutputEnergyManagementSystem);
 
 SWIG_MODELOBJECT(ModelObject, 0);
 SWIG_MODELEXTENSIBLEGROUP(ModelExtensibleGroup);
@@ -221,6 +221,6 @@ SWIG_MODELOBJECT(EnergyManagementSystemSubroutine, 1);
 SWIG_MODELOBJECT(EnergyManagementSystemProgram, 1);
 SWIG_MODELOBJECT(EnergyManagementSystemProgramCallingManager, 1);
 SWIG_MODELOBJECT(EnergyManagementSystemOutputVariable, 1);
-SWIG_MODELOBJECT(OutputEnergyManagementSystem, 1);
+SWIG_UNIQUEMODELOBJECT(OutputEnergyManagementSystem);
 
 #endif //MODEL_CORE_I 

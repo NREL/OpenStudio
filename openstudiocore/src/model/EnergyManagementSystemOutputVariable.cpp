@@ -101,7 +101,13 @@ namespace detail {
   }
 
   boost::optional<std::string> EnergyManagementSystemOutputVariable_Impl::eMSProgramorSubroutineName() const {
-    return getString(OS_EnergyManagementSystem_OutputVariableFields::EMSProgramorSubroutineName,true);
+    //return getString(OS_EnergyManagementSystem_OutputVariableFields::EMSProgramorSubroutineName,true);
+    boost::optional<WorkspaceObject> object = getTarget(OS_EnergyManagementSystem_OutputVariableFields::EMSProgramorSubroutineName);
+    if (object) {
+      return object.get().nameString();
+    }
+    boost::optional<std::string> temp;
+    return temp;
   }
 
   boost::optional<std::string> EnergyManagementSystemOutputVariable_Impl::units() const {
@@ -170,6 +176,7 @@ namespace detail {
 
   void EnergyManagementSystemOutputVariable_Impl::resetEMSProgramorSubroutineName() {
     bool result = setString(OS_EnergyManagementSystem_OutputVariableFields::EMSProgramorSubroutineName, "");
+    //bool result = setPointer(OS_EnergyManagementSystem_OutputVariableFields::EMSProgramorSubroutineName, NULL);
     OS_ASSERT(result);
   }
 

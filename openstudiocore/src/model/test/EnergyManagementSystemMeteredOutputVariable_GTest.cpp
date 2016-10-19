@@ -68,7 +68,7 @@ TEST_F(ModelFixture, EMSMeteredOutputVariable)
   meteredoutvar.setEMSProgramorSubroutineName(program_1);
   EXPECT_EQ(program_1.name().get(), meteredoutvar.eMSProgramorSubroutineName().get());
   meteredoutvar.resetEMSProgramorSubroutineName();
-  EXPECT_EQ("", meteredoutvar.eMSProgramorSubroutineName().get());
+  EXPECT_FALSE(meteredoutvar.eMSProgramorSubroutineName());
   meteredoutvar.setEMSProgramorSubroutineName(subroutine_1);
   EXPECT_EQ(subroutine_1.name().get(), meteredoutvar.eMSProgramorSubroutineName().get());
   meteredoutvar.setResourceType("NaturalGas");

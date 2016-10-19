@@ -352,24 +352,19 @@ namespace detail {
     if (body.is_initialized()) {
       //assume body is a vector of strings
       for (size_t i = 0; i < body.get().size(); i++) {
-        int found = 0;
         //find uids        
         boost::sregex_token_iterator j(body.get().at(i).begin(), body.get().at(i).end(), uuidInString(), subs);
 
         while (j != boost::sregex_token_iterator()) {
           possible_uid = *j++;
-          found = 1;
           //look to see if uid is in the model and return the object
           UUID uid = toUUID(possible_uid);
           modelObject = m.getModelObject<model::ModelObject>(uid);
-          if (modelObject) {
-            found++;
+          if (!modelObject) {
+            result.push_back(body.get().at(i));
+            break;
           }
-        }
-        //possible uid NOT found in model
-        if (found == 1) {
-          result.push_back(body.get().at(i));
-        };
+        }        
       }
     }
     return result;
