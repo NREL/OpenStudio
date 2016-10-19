@@ -86,6 +86,7 @@ namespace detail {
   }
 
   std::string EnergyManagementSystemMeteredOutputVariable_Impl::eMSVariableName() const {
+    //TODO call emsVAriableObject() return .nameString()
     boost::optional<std::string> value = getString(OS_EnergyManagementSystem_MeteredOutputVariableFields::EMSVariableName,true);
     return value.get();
   }
@@ -96,7 +97,13 @@ namespace detail {
   }
 
   boost::optional<std::string> EnergyManagementSystemMeteredOutputVariable_Impl::eMSProgramorSubroutineName() const {
-    return getString(OS_EnergyManagementSystem_MeteredOutputVariableFields::EMSProgramorSubroutineName,true);
+    //return getString(OS_EnergyManagementSystem_MeteredOutputVariableFields::EMSProgramorSubroutineName,true);
+    boost::optional<WorkspaceObject> object = getTarget(OS_EnergyManagementSystem_MeteredOutputVariableFields::EMSProgramorSubroutineName);
+    if (object) {
+      return object.get().nameString();
+    }
+    boost::optional<std::string> temp;
+    return temp;
   }
 
   std::string EnergyManagementSystemMeteredOutputVariable_Impl::resourceType() const {
@@ -179,6 +186,7 @@ namespace detail {
 
   void EnergyManagementSystemMeteredOutputVariable_Impl::resetEMSProgramorSubroutineName() {
     bool result = setString(OS_EnergyManagementSystem_MeteredOutputVariableFields::EMSProgramorSubroutineName, "");
+    //bool result = setPointer(OS_EnergyManagementSystem_MeteredOutputVariableFields::EMSProgramorSubroutineName, NULL);
     OS_ASSERT(result);
   }
 

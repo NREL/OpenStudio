@@ -98,7 +98,7 @@ namespace detail {
     //      Instead, doing an /alpha getString implementation so we need to manually remove any referring Sensors
     const Model m = this->model();
 
-    std::vector<EnergyManagementSystemSensor> objects = m.getModelObjects<EnergyManagementSystemSensor>();
+    std::vector<EnergyManagementSystemSensor> objects = m.getConcreteModelObjects<EnergyManagementSystemSensor>();
     for (auto & sensor : objects) {
       if (sensor.outputVariable()) {
         if (sensor.outputVariable().get().variableName() == this->variableName()) {
