@@ -54,11 +54,11 @@ boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemTre
   if (s) {
     idfObject.setName(*s);
   }
-  s = modelObject.eMSVariableName();
+  s = modelObject.emsVariableName();
   if (s) {
     idfObject.setString(EnergyManagementSystem_TrendVariableFields::EMSVariableName, s.get());
   }
-  i = modelObject.numberofTimestepstobeLogged();
+  i = modelObject.numberOfTimestepsToBeLogged();
   if (i.is_initialized()) {
     idfObject.setInt(EnergyManagementSystem_TrendVariableFields::NumberofTimestepstobeLogged, i.get());
   }

@@ -85,12 +85,12 @@ namespace detail {
     return EnergyManagementSystemOutputVariable::iddObjectType();
   }
 
-  std::string EnergyManagementSystemOutputVariable_Impl::eMSVariableName() const {
+  std::string EnergyManagementSystemOutputVariable_Impl::emsVariableName() const {
     boost::optional<std::string> value = getString(OS_EnergyManagementSystem_OutputVariableFields::EMSVariableName,true);
     return value.get();
   }
 
-  std::string EnergyManagementSystemOutputVariable_Impl::typeofDatainVariable() const {
+  std::string EnergyManagementSystemOutputVariable_Impl::typeOfDataInVariable() const {
     boost::optional<std::string> value = getString(OS_EnergyManagementSystem_OutputVariableFields::TypeofDatainVariable,true);
     return value.get();
   }
@@ -100,18 +100,39 @@ namespace detail {
     return value.get();
   }
 
-  boost::optional<std::string> EnergyManagementSystemOutputVariable_Impl::eMSProgramorSubroutineName() const {
+  std::string EnergyManagementSystemOutputVariable_Impl::emsProgramOrSubroutineName() const {
     //return getString(OS_EnergyManagementSystem_OutputVariableFields::EMSProgramorSubroutineName,true);
     boost::optional<WorkspaceObject> object = getTarget(OS_EnergyManagementSystem_OutputVariableFields::EMSProgramorSubroutineName);
     if (object) {
       return object.get().nameString();
     }
-    boost::optional<std::string> temp;
-    return temp;
+    return "";
   }
 
-  boost::optional<std::string> EnergyManagementSystemOutputVariable_Impl::units() const {
-    return getString(OS_EnergyManagementSystem_OutputVariableFields::Units,true);
+  boost::optional<EnergyManagementSystemProgram> EnergyManagementSystemOutputVariable_Impl::emsProgram() const {
+    boost::optional<EnergyManagementSystemProgram> result;
+    OptionalWorkspaceObject object = getTarget(OS_EnergyManagementSystem_OutputVariableFields::EMSProgramorSubroutineName);
+    if (object) {
+      result = object->optionalCast<EnergyManagementSystemProgram>();
+    }
+    return result;
+  }
+
+  boost::optional<EnergyManagementSystemSubroutine> EnergyManagementSystemOutputVariable_Impl::emsSubroutine() const {
+    boost::optional<EnergyManagementSystemSubroutine> result;
+    OptionalWorkspaceObject object = getTarget(OS_EnergyManagementSystem_OutputVariableFields::EMSProgramorSubroutineName);
+    if (object) {
+      result = object->optionalCast<EnergyManagementSystemSubroutine>();
+    }
+    return result;
+  }
+
+  std::string EnergyManagementSystemOutputVariable_Impl::units() const {
+    OptionalString results = getString(OS_EnergyManagementSystem_OutputVariableFields::Units,true);
+    if (results) {
+      return results.get();
+    }
+    return "";
   }
 
   bool EnergyManagementSystemOutputVariable_Impl::setEMSVariableName(const std::string& eMSVariableName) {
@@ -154,7 +175,7 @@ namespace detail {
     return result;
   }
 
-  bool EnergyManagementSystemOutputVariable_Impl::setTypeofDatainVariable(const std::string& typeofDatainVariable) {
+  bool EnergyManagementSystemOutputVariable_Impl::setTypeOfDataInVariable(const std::string& typeofDatainVariable) {
     bool result = setString(OS_EnergyManagementSystem_OutputVariableFields::TypeofDatainVariable, typeofDatainVariable);
     return result;
   }
@@ -164,17 +185,17 @@ namespace detail {
     return result;
   }
 
-  bool EnergyManagementSystemOutputVariable_Impl::setEMSProgramorSubroutineName(const EnergyManagementSystemProgram& program) {
+  bool EnergyManagementSystemOutputVariable_Impl::setEMSProgramOrSubroutineName(const EnergyManagementSystemProgram& program) {
     bool result = setPointer(OS_EnergyManagementSystem_OutputVariableFields::EMSProgramorSubroutineName, program.handle());
     return result;
   }
 
-  bool EnergyManagementSystemOutputVariable_Impl::setEMSProgramorSubroutineName(const EnergyManagementSystemSubroutine& subroutine) {
+  bool EnergyManagementSystemOutputVariable_Impl::setEMSProgramOrSubroutineName(const EnergyManagementSystemSubroutine& subroutine) {
     bool result = setPointer(OS_EnergyManagementSystem_OutputVariableFields::EMSProgramorSubroutineName, subroutine.handle());
     return result;
   }
 
-  void EnergyManagementSystemOutputVariable_Impl::resetEMSProgramorSubroutineName() {
+  void EnergyManagementSystemOutputVariable_Impl::resetEMSProgramOrSubroutineName() {
     bool result = setString(OS_EnergyManagementSystem_OutputVariableFields::EMSProgramorSubroutineName, "");
     //bool result = setPointer(OS_EnergyManagementSystem_OutputVariableFields::EMSProgramorSubroutineName, NULL);
     OS_ASSERT(result);
@@ -190,7 +211,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  boost::optional<ModelObject> EnergyManagementSystemOutputVariable_Impl::eMSVariableObject() const {
+  boost::optional<ModelObject> EnergyManagementSystemOutputVariable_Impl::emsVariableObject() const {
     boost::optional<ModelObject> value;
     boost::optional<std::string> handle = getString(OS_EnergyManagementSystem_OutputVariableFields::EMSVariableName, true);
     if (handle) {
@@ -272,7 +293,7 @@ namespace detail {
 
 } // detail
 
-EnergyManagementSystemOutputVariable::EnergyManagementSystemOutputVariable(const Model& model, std::string eMSVariableName)
+EnergyManagementSystemOutputVariable::EnergyManagementSystemOutputVariable(const Model& model, const std::string eMSVariableName)
 : ModelObject(EnergyManagementSystemOutputVariable::iddObjectType(), model) {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemOutputVariable_Impl>());
   bool ok = setEMSVariableName(eMSVariableName);
@@ -281,10 +302,10 @@ EnergyManagementSystemOutputVariable::EnergyManagementSystemOutputVariable(const
     LOG_AND_THROW("Unable to set " << briefDescription() << "'s eMSVariableName to " << eMSVariableName << ".");
   }
   setUpdateFrequency("ZoneTimestep");
-  setTypeofDatainVariable("Averaged");
+  setTypeOfDataInVariable("Averaged");
 }
 
-EnergyManagementSystemOutputVariable::EnergyManagementSystemOutputVariable(const Model& model, EnergyManagementSystemActuator& object)
+EnergyManagementSystemOutputVariable::EnergyManagementSystemOutputVariable(const Model& model, const EnergyManagementSystemActuator& object)
   : ModelObject(EnergyManagementSystemOutputVariable::iddObjectType(), model) {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemOutputVariable_Impl>());
   bool ok = setEMSVariableName(object);
@@ -294,10 +315,10 @@ EnergyManagementSystemOutputVariable::EnergyManagementSystemOutputVariable(const
       << object.briefDescription() << ".");
   }
   setUpdateFrequency("ZoneTimestep");
-  setTypeofDatainVariable("Averaged");
+  setTypeOfDataInVariable("Averaged");
 }
 
-EnergyManagementSystemOutputVariable::EnergyManagementSystemOutputVariable(const Model& model, EnergyManagementSystemSensor& object)
+EnergyManagementSystemOutputVariable::EnergyManagementSystemOutputVariable(const Model& model, const EnergyManagementSystemSensor& object)
   : ModelObject(EnergyManagementSystemOutputVariable::iddObjectType(), model) {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemOutputVariable_Impl>());
   bool ok = setEMSVariableName(object);
@@ -307,10 +328,10 @@ EnergyManagementSystemOutputVariable::EnergyManagementSystemOutputVariable(const
       << object.briefDescription() << ".");
   }
   setUpdateFrequency("ZoneTimestep");
-  setTypeofDatainVariable("Averaged");
+  setTypeOfDataInVariable("Averaged");
 }
 
-EnergyManagementSystemOutputVariable::EnergyManagementSystemOutputVariable(const Model& model, EnergyManagementSystemGlobalVariable& object)
+EnergyManagementSystemOutputVariable::EnergyManagementSystemOutputVariable(const Model& model, const EnergyManagementSystemGlobalVariable& object)
   : ModelObject(EnergyManagementSystemOutputVariable::iddObjectType(), model) {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemOutputVariable_Impl>());
   bool ok = setEMSVariableName(object);
@@ -320,10 +341,10 @@ EnergyManagementSystemOutputVariable::EnergyManagementSystemOutputVariable(const
       << object.briefDescription() << ".");
   }
   setUpdateFrequency("ZoneTimestep");
-  setTypeofDatainVariable("Averaged");
+  setTypeOfDataInVariable("Averaged");
 }
 
-EnergyManagementSystemOutputVariable::EnergyManagementSystemOutputVariable(const Model& model, EnergyManagementSystemTrendVariable& object)
+EnergyManagementSystemOutputVariable::EnergyManagementSystemOutputVariable(const Model& model, const EnergyManagementSystemTrendVariable& object)
   : ModelObject(EnergyManagementSystemOutputVariable::iddObjectType(), model) {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemOutputVariable_Impl>());
   bool ok = setEMSVariableName(object);
@@ -333,10 +354,10 @@ EnergyManagementSystemOutputVariable::EnergyManagementSystemOutputVariable(const
       << object.briefDescription() << ".");
   }
   setUpdateFrequency("ZoneTimestep");
-  setTypeofDatainVariable("Averaged");
+  setTypeOfDataInVariable("Averaged");
 }
 
-EnergyManagementSystemOutputVariable::EnergyManagementSystemOutputVariable(const Model& model, EnergyManagementSystemInternalVariable& object)
+EnergyManagementSystemOutputVariable::EnergyManagementSystemOutputVariable(const Model& model, const EnergyManagementSystemInternalVariable& object)
   : ModelObject(EnergyManagementSystemOutputVariable::iddObjectType(), model) {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemOutputVariable_Impl>());
   bool ok = setEMSVariableName(object);
@@ -346,10 +367,10 @@ EnergyManagementSystemOutputVariable::EnergyManagementSystemOutputVariable(const
       << object.briefDescription() << ".");
   }
   setUpdateFrequency("ZoneTimestep");
-  setTypeofDatainVariable("Averaged");
+  setTypeOfDataInVariable("Averaged");
 }
 
-EnergyManagementSystemOutputVariable::EnergyManagementSystemOutputVariable(const Model& model, EnergyManagementSystemCurveOrTableIndexVariable& object)
+EnergyManagementSystemOutputVariable::EnergyManagementSystemOutputVariable(const Model& model, const EnergyManagementSystemCurveOrTableIndexVariable& object)
   : ModelObject(EnergyManagementSystemOutputVariable::iddObjectType(), model) {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemOutputVariable_Impl>());
   bool ok = setEMSVariableName(object);
@@ -359,10 +380,10 @@ EnergyManagementSystemOutputVariable::EnergyManagementSystemOutputVariable(const
       << object.briefDescription() << ".");
   }
   setUpdateFrequency("ZoneTimestep");
-  setTypeofDatainVariable("Averaged");
+  setTypeOfDataInVariable("Averaged");
 }
 
-EnergyManagementSystemOutputVariable::EnergyManagementSystemOutputVariable(const Model& model, EnergyManagementSystemConstructionIndexVariable& object)
+EnergyManagementSystemOutputVariable::EnergyManagementSystemOutputVariable(const Model& model, const EnergyManagementSystemConstructionIndexVariable& object)
   : ModelObject(EnergyManagementSystemOutputVariable::iddObjectType(), model) {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemOutputVariable_Impl>());
   bool ok = setEMSVariableName(object);
@@ -372,7 +393,7 @@ EnergyManagementSystemOutputVariable::EnergyManagementSystemOutputVariable(const
       << object.briefDescription() << ".");
   }
   setUpdateFrequency("ZoneTimestep");
-  setTypeofDatainVariable("Averaged");
+  setTypeOfDataInVariable("Averaged");
 }
 
 EnergyManagementSystemOutputVariable::EnergyManagementSystemOutputVariable(const Model& model)
@@ -381,14 +402,14 @@ EnergyManagementSystemOutputVariable::EnergyManagementSystemOutputVariable(const
   OS_ASSERT(getImpl<detail::EnergyManagementSystemOutputVariable_Impl>());
   //TODO setEMSVariableName to a valid default
   setUpdateFrequency("ZoneTimestep");
-  setTypeofDatainVariable("Averaged");
+  setTypeOfDataInVariable("Averaged");
 }
 
 IddObjectType EnergyManagementSystemOutputVariable::iddObjectType() {
   return IddObjectType(IddObjectType::OS_EnergyManagementSystem_OutputVariable);
 }
 
-std::vector<std::string> EnergyManagementSystemOutputVariable::typeofDatainVariableValues() {
+std::vector<std::string> EnergyManagementSystemOutputVariable::typeOfDataInVariableValues() {
   return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
                         OS_EnergyManagementSystem_OutputVariableFields::TypeofDatainVariable);
 }
@@ -398,28 +419,36 @@ std::vector<std::string> EnergyManagementSystemOutputVariable::updateFrequencyVa
                         OS_EnergyManagementSystem_OutputVariableFields::UpdateFrequency);
 }
 
-std::string EnergyManagementSystemOutputVariable::eMSVariableName() const {
-  return getImpl<detail::EnergyManagementSystemOutputVariable_Impl>()->eMSVariableName();
+std::string EnergyManagementSystemOutputVariable::emsVariableName() const {
+  return getImpl<detail::EnergyManagementSystemOutputVariable_Impl>()->emsVariableName();
 }
 
-std::string EnergyManagementSystemOutputVariable::typeofDatainVariable() const {
-  return getImpl<detail::EnergyManagementSystemOutputVariable_Impl>()->typeofDatainVariable();
+std::string EnergyManagementSystemOutputVariable::typeOfDataInVariable() const {
+  return getImpl<detail::EnergyManagementSystemOutputVariable_Impl>()->typeOfDataInVariable();
 }
 
 std::string EnergyManagementSystemOutputVariable::updateFrequency() const {
   return getImpl<detail::EnergyManagementSystemOutputVariable_Impl>()->updateFrequency();
 }
 
-boost::optional<std::string> EnergyManagementSystemOutputVariable::eMSProgramorSubroutineName() const {
-  return getImpl<detail::EnergyManagementSystemOutputVariable_Impl>()->eMSProgramorSubroutineName();
+std::string EnergyManagementSystemOutputVariable::emsProgramOrSubroutineName() const {
+  return getImpl<detail::EnergyManagementSystemOutputVariable_Impl>()->emsProgramOrSubroutineName();
 }
 
-boost::optional<std::string> EnergyManagementSystemOutputVariable::units() const {
+boost::optional<EnergyManagementSystemProgram> EnergyManagementSystemOutputVariable::emsProgram() const {
+  return getImpl<detail::EnergyManagementSystemOutputVariable_Impl>()->emsProgram();
+}
+
+boost::optional<EnergyManagementSystemSubroutine> EnergyManagementSystemOutputVariable::emsSubroutine() const {
+  return getImpl<detail::EnergyManagementSystemOutputVariable_Impl>()->emsSubroutine();
+}
+
+std::string EnergyManagementSystemOutputVariable::units() const {
   return getImpl<detail::EnergyManagementSystemOutputVariable_Impl>()->units();
 }
 
-boost::optional<ModelObject> EnergyManagementSystemOutputVariable::eMSVariableObject() const {
-  return getImpl<detail::EnergyManagementSystemOutputVariable_Impl>()->eMSVariableObject();
+boost::optional<ModelObject> EnergyManagementSystemOutputVariable::emsVariableObject() const {
+  return getImpl<detail::EnergyManagementSystemOutputVariable_Impl>()->emsVariableObject();
 }
 
 boost::optional<EnergyManagementSystemActuator> EnergyManagementSystemOutputVariable::emsActuator() const {
@@ -450,24 +479,24 @@ boost::optional<EnergyManagementSystemConstructionIndexVariable> EnergyManagemen
   return getImpl<detail::EnergyManagementSystemOutputVariable_Impl>()->emsConstructionIndexVariable();
 }
 
-bool EnergyManagementSystemOutputVariable::setTypeofDatainVariable(const std::string& typeofDatainVariable) {
-  return getImpl<detail::EnergyManagementSystemOutputVariable_Impl>()->setTypeofDatainVariable(typeofDatainVariable);
+bool EnergyManagementSystemOutputVariable::setTypeOfDataInVariable(const std::string& typeofDatainVariable) {
+  return getImpl<detail::EnergyManagementSystemOutputVariable_Impl>()->setTypeOfDataInVariable(typeofDatainVariable);
 }
 
 bool EnergyManagementSystemOutputVariable::setUpdateFrequency(const std::string& updateFrequency) {
   return getImpl<detail::EnergyManagementSystemOutputVariable_Impl>()->setUpdateFrequency(updateFrequency);
 }
 
-bool EnergyManagementSystemOutputVariable::setEMSProgramorSubroutineName(const EnergyManagementSystemProgram& program) {
-  return getImpl<detail::EnergyManagementSystemOutputVariable_Impl>()->setEMSProgramorSubroutineName(program);
+bool EnergyManagementSystemOutputVariable::setEMSProgramOrSubroutineName(const EnergyManagementSystemProgram& program) {
+  return getImpl<detail::EnergyManagementSystemOutputVariable_Impl>()->setEMSProgramOrSubroutineName(program);
 }
 
-bool EnergyManagementSystemOutputVariable::setEMSProgramorSubroutineName(const EnergyManagementSystemSubroutine& subroutine) {
-  return getImpl<detail::EnergyManagementSystemOutputVariable_Impl>()->setEMSProgramorSubroutineName(subroutine);
+bool EnergyManagementSystemOutputVariable::setEMSProgramOrSubroutineName(const EnergyManagementSystemSubroutine& subroutine) {
+  return getImpl<detail::EnergyManagementSystemOutputVariable_Impl>()->setEMSProgramOrSubroutineName(subroutine);
 }
 
-void EnergyManagementSystemOutputVariable::resetEMSProgramorSubroutineName() {
-  getImpl<detail::EnergyManagementSystemOutputVariable_Impl>()->resetEMSProgramorSubroutineName();
+void EnergyManagementSystemOutputVariable::resetEMSProgramOrSubroutineName() {
+  getImpl<detail::EnergyManagementSystemOutputVariable_Impl>()->resetEMSProgramOrSubroutineName();
 }
 
 bool EnergyManagementSystemOutputVariable::setUnits(const std::string& units) {

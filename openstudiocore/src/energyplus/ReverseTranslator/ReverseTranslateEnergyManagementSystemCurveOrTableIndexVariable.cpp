@@ -21,6 +21,8 @@
 
 #include "../../model/EnergyManagementSystemCurveOrTableIndexVariable.hpp"
 #include "../../model/EnergyManagementSystemCurveOrTableIndexVariable_Impl.hpp"
+#include "../../model/Curve.hpp"
+#include "../../model/Curve_Impl.hpp"
 
 #include <utilities/idd/EnergyManagementSystem_CurveOrTableIndexVariable_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
@@ -68,8 +70,12 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemCurveOrTab
       if (modelObject) {
         openstudio::model::EnergyManagementSystemCurveOrTableIndexVariable emsCurveOrTableIndexVariable(m_model);
         emsCurveOrTableIndexVariable.setName(*s1);
-        emsCurveOrTableIndexVariable.setCurveorTableObject(modelObject.get());
-        return emsCurveOrTableIndexVariable;
+        boost::optional<model::Curve> curve = modelObject.get().optionalCast<model::Curve>();
+        if (curve) {
+          emsCurveOrTableIndexVariable.setCurveOrTableObject(curve.get());
+          return emsCurveOrTableIndexVariable;
+        }
+        return boost::none;
       }
     }
   }

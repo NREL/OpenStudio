@@ -62,11 +62,15 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    std::string eMSVariableName() const;
+    std::string emsVariableName() const;
 
     std::string updateFrequency() const;
 
-    boost::optional<std::string> eMSProgramorSubroutineName() const;
+    std::string emsProgramOrSubroutineName() const;
+
+    boost::optional<EnergyManagementSystemProgram> emsProgram() const;
+
+    boost::optional<EnergyManagementSystemSubroutine> emsSubroutine() const;
 
     std::string resourceType() const;
 
@@ -74,11 +78,11 @@ namespace detail {
 
     std::string endUseCategory() const;
 
-    boost::optional<std::string> endUseSubcategory() const;
+    std::string endUseSubcategory() const;
 
-    boost::optional<std::string> units() const;
+    std::string units() const;
 
-    boost::optional<ModelObject> eMSVariableObject() const;
+    boost::optional<ModelObject> emsVariableObject() const;
 
     boost::optional<EnergyManagementSystemActuator> emsActuator() const;
     boost::optional<EnergyManagementSystemSensor> emsSensor() const;
@@ -96,11 +100,11 @@ namespace detail {
 
     bool setUpdateFrequency(const std::string& updateFrequency);
 
-    bool setEMSProgramorSubroutineName(const EnergyManagementSystemProgram& program);
+    bool setEMSProgramOrSubroutineName(const EnergyManagementSystemProgram& program);
 
-    bool setEMSProgramorSubroutineName(const EnergyManagementSystemSubroutine& subroutine);
+    bool setEMSProgramOrSubroutineName(const EnergyManagementSystemSubroutine& subroutine);
 
-    void resetEMSProgramorSubroutineName();
+    void resetEMSProgramOrSubroutineName();
 
     bool setResourceType(const std::string& resourceType);
 

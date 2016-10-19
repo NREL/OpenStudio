@@ -49,9 +49,9 @@ class MODEL_API EnergyManagementSystemProgram : public ModelObject {
   /** @name Getters */
   //@{
 
-  boost::optional<std::string> body() const;
+  std::string body() const;
 
-  boost::optional<std::vector<std::string>> lines() const;
+  std::vector<std::string> lines() const;
 
   std::vector<ModelObject> referencedObjects() const;
 
@@ -63,7 +63,7 @@ class MODEL_API EnergyManagementSystemProgram : public ModelObject {
 
   bool setBody(const std::string& body);
 
-  bool eraseBody();
+  bool resetBody();
 
   bool addLine(const std::string& body);
 

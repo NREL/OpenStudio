@@ -64,8 +64,12 @@ namespace detail {
     return EnergyManagementSystemInternalVariable::iddObjectType();
   }
 
-  boost::optional<std::string> EnergyManagementSystemInternalVariable_Impl::internalDataIndexKeyName() const {
-    return getString(OS_EnergyManagementSystem_InternalVariableFields::InternalDataIndexKeyName,true);
+  std::string EnergyManagementSystemInternalVariable_Impl::internalDataIndexKeyName() const {
+    OptionalString result = getString(OS_EnergyManagementSystem_InternalVariableFields::InternalDataIndexKeyName,true);
+    if (result) {
+      return result.get();
+    }
+    return "";
   }
 
   std::string EnergyManagementSystemInternalVariable_Impl::internalDataType() const {
@@ -90,7 +94,7 @@ namespace detail {
 
 } // detail
 
-EnergyManagementSystemInternalVariable::EnergyManagementSystemInternalVariable(const Model& model, std::string internalDataType)
+EnergyManagementSystemInternalVariable::EnergyManagementSystemInternalVariable(const Model& model, const std::string internalDataType)
 : ModelObject(EnergyManagementSystemInternalVariable::iddObjectType(), model) {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemInternalVariable_Impl>());
   bool ok = setInternalDataType(internalDataType);
@@ -111,7 +115,7 @@ IddObjectType EnergyManagementSystemInternalVariable::iddObjectType() {
   return IddObjectType(IddObjectType::OS_EnergyManagementSystem_InternalVariable);
 }
 
-boost::optional<std::string> EnergyManagementSystemInternalVariable::internalDataIndexKeyName() const {
+std::string EnergyManagementSystemInternalVariable::internalDataIndexKeyName() const {
   return getImpl<detail::EnergyManagementSystemInternalVariable_Impl>()->internalDataIndexKeyName();
 }
 

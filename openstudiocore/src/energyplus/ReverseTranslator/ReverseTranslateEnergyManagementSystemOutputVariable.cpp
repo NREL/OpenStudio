@@ -104,7 +104,7 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemOutputVari
     LOG(Error, emsOutputVariable.nameString() + ": TypeofDatainVariable not set");
     return boost::none;
   } else {
-    emsOutputVariable.setTypeofDatainVariable(*s);
+    emsOutputVariable.setTypeOfDataInVariable(*s);
   }
 
   s = workspaceObject.getString(EnergyManagementSystem_OutputVariableFields::Units);
@@ -119,9 +119,9 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemOutputVari
       boost::optional<model::ModelObject> modelObject = translateAndMapWorkspaceObject(wsObject);
       if (modelObject) {
         if (modelObject.get().iddObjectType() == IddObjectType::OS_EnergyManagementSystem_Program) {
-          emsOutputVariable.setEMSProgramorSubroutineName(modelObject.get().cast<EnergyManagementSystemProgram>());
+          emsOutputVariable.setEMSProgramOrSubroutineName(modelObject.get().cast<EnergyManagementSystemProgram>());
         } else if (modelObject.get().iddObjectType() == IddObjectType::OS_EnergyManagementSystem_Subroutine) {
-          emsOutputVariable.setEMSProgramorSubroutineName(modelObject.get().cast<EnergyManagementSystemSubroutine>());
+          emsOutputVariable.setEMSProgramOrSubroutineName(modelObject.get().cast<EnergyManagementSystemSubroutine>());
         }
         return emsOutputVariable;
       }

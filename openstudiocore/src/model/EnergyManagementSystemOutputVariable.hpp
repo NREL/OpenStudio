@@ -51,21 +51,21 @@ class MODEL_API EnergyManagementSystemOutputVariable : public ModelObject {
  public:
   /** @name Constructors and Destructors */
   //@{
-  explicit EnergyManagementSystemOutputVariable(const Model& model, std::string eMSVariableName);
+  explicit EnergyManagementSystemOutputVariable(const Model& model, const std::string eMSVariableName);
 
-  explicit EnergyManagementSystemOutputVariable(const Model& model, EnergyManagementSystemActuator& object);
+  explicit EnergyManagementSystemOutputVariable(const Model& model, const EnergyManagementSystemActuator& object);
 
-  explicit EnergyManagementSystemOutputVariable(const Model& model, EnergyManagementSystemSensor& object);
+  explicit EnergyManagementSystemOutputVariable(const Model& model, const EnergyManagementSystemSensor& object);
 
-  explicit EnergyManagementSystemOutputVariable(const Model& model, EnergyManagementSystemGlobalVariable& object);
+  explicit EnergyManagementSystemOutputVariable(const Model& model, const EnergyManagementSystemGlobalVariable& object);
 
-  explicit EnergyManagementSystemOutputVariable(const Model& model, EnergyManagementSystemTrendVariable& object);
+  explicit EnergyManagementSystemOutputVariable(const Model& model, const EnergyManagementSystemTrendVariable& object);
 
-  explicit EnergyManagementSystemOutputVariable(const Model& model, EnergyManagementSystemInternalVariable& object);
+  explicit EnergyManagementSystemOutputVariable(const Model& model, const EnergyManagementSystemInternalVariable& object);
 
-  explicit EnergyManagementSystemOutputVariable(const Model& model, EnergyManagementSystemCurveOrTableIndexVariable& object);
+  explicit EnergyManagementSystemOutputVariable(const Model& model, const EnergyManagementSystemCurveOrTableIndexVariable& object);
 
-  explicit EnergyManagementSystemOutputVariable(const Model& model, EnergyManagementSystemConstructionIndexVariable& object);
+  explicit EnergyManagementSystemOutputVariable(const Model& model, const EnergyManagementSystemConstructionIndexVariable& object);
 
   virtual ~EnergyManagementSystemOutputVariable() {}
 
@@ -73,28 +73,28 @@ class MODEL_API EnergyManagementSystemOutputVariable : public ModelObject {
 
   static IddObjectType iddObjectType();
 
-  static std::vector<std::string> typeofDatainVariableValues();
+  static std::vector<std::string> typeOfDataInVariableValues();
 
   static std::vector<std::string> updateFrequencyValues();
 
   /** @name Getters */
   //@{
 
-  std::string eMSVariableName() const;
+  std::string emsVariableName() const;
 
-  std::string typeofDatainVariable() const;
+  std::string typeOfDataInVariable() const;
 
   std::string updateFrequency() const;
 
-  boost::optional<std::string> eMSProgramorSubroutineName() const;
-  //TODO
-  //boost::optional<EnergyManagementSystemProgram> eMSProgram() const;
+  std::string emsProgramOrSubroutineName() const;
 
-  //boost::optional<EnergyManagementSystemSubroutine> eMSSubroutine() const;
+  boost::optional<EnergyManagementSystemProgram> emsProgram() const;
 
-  boost::optional<std::string> units() const;
+  boost::optional<EnergyManagementSystemSubroutine> emsSubroutine() const;
 
-  boost::optional<ModelObject> eMSVariableObject() const;
+  std::string units() const;
+
+  boost::optional<ModelObject> emsVariableObject() const;
 
   boost::optional<EnergyManagementSystemActuator> emsActuator() const;
   boost::optional<EnergyManagementSystemSensor> emsSensor() const;
@@ -110,15 +110,15 @@ class MODEL_API EnergyManagementSystemOutputVariable : public ModelObject {
 
   bool setEMSVariableName(const std::string& eMSVariableName);
 
-  bool setTypeofDatainVariable(const std::string& typeofDatainVariable);
+  bool setTypeOfDataInVariable(const std::string& typeofDatainVariable);
 
   bool setUpdateFrequency(const std::string& updateFrequency);
 
-  bool setEMSProgramorSubroutineName(const EnergyManagementSystemProgram& program);
+  bool setEMSProgramOrSubroutineName(const EnergyManagementSystemProgram& program);
 
-  bool setEMSProgramorSubroutineName(const EnergyManagementSystemSubroutine& subroutine);
+  bool setEMSProgramOrSubroutineName(const EnergyManagementSystemSubroutine& subroutine);
 
-  void resetEMSProgramorSubroutineName();
+  void resetEMSProgramOrSubroutineName();
 
   bool setUnits(const std::string& units);
 

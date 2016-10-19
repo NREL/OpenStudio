@@ -78,12 +78,12 @@ namespace detail {
     return EnergyManagementSystemTrendVariable::iddObjectType();
   }
 
-  std::string EnergyManagementSystemTrendVariable_Impl::eMSVariableName() const {
+  std::string EnergyManagementSystemTrendVariable_Impl::emsVariableName() const {
     boost::optional<std::string> value = getString(OS_EnergyManagementSystem_TrendVariableFields::EMSVariableName,true);
     return value.get();
   }
 
-  boost::optional<ModelObject> EnergyManagementSystemTrendVariable_Impl::eMSVariableObject() const {
+  boost::optional<ModelObject> EnergyManagementSystemTrendVariable_Impl::emsVariableObject() const {
     boost::optional<ModelObject> value = this->getTarget(OS_EnergyManagementSystem_TrendVariableFields::EMSVariableName)->cast<ModelObject>();
     return value;
   }
@@ -122,7 +122,7 @@ namespace detail {
     return value;
   }
 
-  int EnergyManagementSystemTrendVariable_Impl::numberofTimestepstobeLogged() const {
+  int EnergyManagementSystemTrendVariable_Impl::numberOfTimestepsToBeLogged() const {
     boost::optional<int> value = getInt(OS_EnergyManagementSystem_TrendVariableFields::NumberofTimestepstobeLogged,true);
     return value.get();
   }
@@ -168,14 +168,14 @@ namespace detail {
     return result;
   }
 
-  bool EnergyManagementSystemTrendVariable_Impl::setNumberofTimestepstobeLogged(int numberofTimestepstobeLogged) {
+  bool EnergyManagementSystemTrendVariable_Impl::setNumberOfTimestepsToBeLogged(int numberofTimestepstobeLogged) {
     bool result = setInt(OS_EnergyManagementSystem_TrendVariableFields::NumberofTimestepstobeLogged, numberofTimestepstobeLogged);
     return result;
   }
 
 } // detail
 
-EnergyManagementSystemTrendVariable::EnergyManagementSystemTrendVariable(const Model& model, std::string eMSVariableName)
+EnergyManagementSystemTrendVariable::EnergyManagementSystemTrendVariable(const Model& model, const std::string eMSVariableName)
   : ModelObject(EnergyManagementSystemTrendVariable::iddObjectType(), model) {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemTrendVariable_Impl>());
   bool ok = setEMSVariableName(eMSVariableName);
@@ -183,10 +183,10 @@ EnergyManagementSystemTrendVariable::EnergyManagementSystemTrendVariable(const M
     remove();
     LOG_AND_THROW("Unable to set " << briefDescription() << "'s eMSVariableName to " << eMSVariableName << ".");
   }
-  setNumberofTimestepstobeLogged(1);
+  setNumberOfTimestepsToBeLogged(1);
 }
 
-EnergyManagementSystemTrendVariable::EnergyManagementSystemTrendVariable(const Model& model, EnergyManagementSystemActuator& object)
+EnergyManagementSystemTrendVariable::EnergyManagementSystemTrendVariable(const Model& model, const EnergyManagementSystemActuator& object)
   : ModelObject(EnergyManagementSystemTrendVariable::iddObjectType(), model) {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemTrendVariable_Impl>());
   bool ok = setEMSVariableName(object);
@@ -195,10 +195,10 @@ EnergyManagementSystemTrendVariable::EnergyManagementSystemTrendVariable(const M
     LOG_AND_THROW("Unable to set " << briefDescription() << "'s eMSVariableName to " 
       << object.briefDescription() << ".");
   }
-  setNumberofTimestepstobeLogged(1);
+  setNumberOfTimestepsToBeLogged(1);
 }
 
-EnergyManagementSystemTrendVariable::EnergyManagementSystemTrendVariable(const Model& model, EnergyManagementSystemSensor& object)
+EnergyManagementSystemTrendVariable::EnergyManagementSystemTrendVariable(const Model& model, const EnergyManagementSystemSensor& object)
   : ModelObject(EnergyManagementSystemTrendVariable::iddObjectType(), model) {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemTrendVariable_Impl>());
   bool ok = setEMSVariableName(object);
@@ -207,9 +207,9 @@ EnergyManagementSystemTrendVariable::EnergyManagementSystemTrendVariable(const M
     LOG_AND_THROW("Unable to set " << briefDescription() << "'s eMSVariableName to "
       << object.briefDescription() << ".");
   }
-  setNumberofTimestepstobeLogged(1);
+  setNumberOfTimestepsToBeLogged(1);
 }
-EnergyManagementSystemTrendVariable::EnergyManagementSystemTrendVariable(const Model& model, EnergyManagementSystemGlobalVariable& object)
+EnergyManagementSystemTrendVariable::EnergyManagementSystemTrendVariable(const Model& model, const EnergyManagementSystemGlobalVariable& object)
   : ModelObject(EnergyManagementSystemTrendVariable::iddObjectType(), model) {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemTrendVariable_Impl>());
   bool ok = setEMSVariableName(object);
@@ -218,9 +218,9 @@ EnergyManagementSystemTrendVariable::EnergyManagementSystemTrendVariable(const M
     LOG_AND_THROW("Unable to set " << briefDescription() << "'s eMSVariableName to "
       << object.briefDescription() << ".");
   }
-  setNumberofTimestepstobeLogged(1);
+  setNumberOfTimestepsToBeLogged(1);
 }
-EnergyManagementSystemTrendVariable::EnergyManagementSystemTrendVariable(const Model& model, EnergyManagementSystemTrendVariable& object)
+EnergyManagementSystemTrendVariable::EnergyManagementSystemTrendVariable(const Model& model, const EnergyManagementSystemTrendVariable& object)
   : ModelObject(EnergyManagementSystemTrendVariable::iddObjectType(), model) {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemTrendVariable_Impl>());
   bool ok = setEMSVariableName(object);
@@ -229,9 +229,9 @@ EnergyManagementSystemTrendVariable::EnergyManagementSystemTrendVariable(const M
     LOG_AND_THROW("Unable to set " << briefDescription() << "'s eMSVariableName to "
       << object.briefDescription() << ".");
   }
-  setNumberofTimestepstobeLogged(1);
+  setNumberOfTimestepsToBeLogged(1);
 }
-EnergyManagementSystemTrendVariable::EnergyManagementSystemTrendVariable(const Model& model, EnergyManagementSystemInternalVariable& object)
+EnergyManagementSystemTrendVariable::EnergyManagementSystemTrendVariable(const Model& model, const EnergyManagementSystemInternalVariable& object)
   : ModelObject(EnergyManagementSystemTrendVariable::iddObjectType(), model) {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemTrendVariable_Impl>());
   bool ok = setEMSVariableName(object);
@@ -240,9 +240,9 @@ EnergyManagementSystemTrendVariable::EnergyManagementSystemTrendVariable(const M
     LOG_AND_THROW("Unable to set " << briefDescription() << "'s eMSVariableName to "
       << object.briefDescription() << ".");
   }
-  setNumberofTimestepstobeLogged(1);
+  setNumberOfTimestepsToBeLogged(1);
 }
-EnergyManagementSystemTrendVariable::EnergyManagementSystemTrendVariable(const Model& model, EnergyManagementSystemCurveOrTableIndexVariable& object)
+EnergyManagementSystemTrendVariable::EnergyManagementSystemTrendVariable(const Model& model, const EnergyManagementSystemCurveOrTableIndexVariable& object)
   : ModelObject(EnergyManagementSystemTrendVariable::iddObjectType(), model) {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemTrendVariable_Impl>());
   bool ok = setEMSVariableName(object);
@@ -251,9 +251,9 @@ EnergyManagementSystemTrendVariable::EnergyManagementSystemTrendVariable(const M
     LOG_AND_THROW("Unable to set " << briefDescription() << "'s eMSVariableName to "
       << object.briefDescription() << ".");
   }
-  setNumberofTimestepstobeLogged(1);
+  setNumberOfTimestepsToBeLogged(1);
 }
-EnergyManagementSystemTrendVariable::EnergyManagementSystemTrendVariable(const Model& model, EnergyManagementSystemConstructionIndexVariable& object)
+EnergyManagementSystemTrendVariable::EnergyManagementSystemTrendVariable(const Model& model, const EnergyManagementSystemConstructionIndexVariable& object)
   : ModelObject(EnergyManagementSystemTrendVariable::iddObjectType(), model) {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemTrendVariable_Impl>());
   bool ok = setEMSVariableName(object);
@@ -262,22 +262,22 @@ EnergyManagementSystemTrendVariable::EnergyManagementSystemTrendVariable(const M
     LOG_AND_THROW("Unable to set " << briefDescription() << "'s eMSVariableName to "
       << object.briefDescription() << ".");
   }
-  setNumberofTimestepstobeLogged(1);
+  setNumberOfTimestepsToBeLogged(1);
 }
 
 EnergyManagementSystemTrendVariable::EnergyManagementSystemTrendVariable(const Model& model)
   : ModelObject(EnergyManagementSystemTrendVariable::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemTrendVariable_Impl>());
-  setNumberofTimestepstobeLogged(1);
+  setNumberOfTimestepsToBeLogged(1);
 }
 
 IddObjectType EnergyManagementSystemTrendVariable::iddObjectType() {
   return IddObjectType(IddObjectType::OS_EnergyManagementSystem_TrendVariable);
 }
 
-std::string EnergyManagementSystemTrendVariable::eMSVariableName() const {
-  return getImpl<detail::EnergyManagementSystemTrendVariable_Impl>()->eMSVariableName();
+std::string EnergyManagementSystemTrendVariable::emsVariableName() const {
+  return getImpl<detail::EnergyManagementSystemTrendVariable_Impl>()->emsVariableName();
 }
 
 boost::optional<EnergyManagementSystemActuator> EnergyManagementSystemTrendVariable::emsActuator() const {
@@ -308,12 +308,12 @@ boost::optional<EnergyManagementSystemConstructionIndexVariable> EnergyManagemen
   return getImpl<detail::EnergyManagementSystemTrendVariable_Impl>()->emsConstructionIndexVariable();
 }
 
-boost::optional<ModelObject> EnergyManagementSystemTrendVariable::eMSVariableObject() const {
-  return getImpl<detail::EnergyManagementSystemTrendVariable_Impl>()->eMSVariableObject();
+boost::optional<ModelObject> EnergyManagementSystemTrendVariable::emsVariableObject() const {
+  return getImpl<detail::EnergyManagementSystemTrendVariable_Impl>()->emsVariableObject();
 }
 
-int EnergyManagementSystemTrendVariable::numberofTimestepstobeLogged() const {
-  return getImpl<detail::EnergyManagementSystemTrendVariable_Impl>()->numberofTimestepstobeLogged();
+int EnergyManagementSystemTrendVariable::numberOfTimestepsToBeLogged() const {
+  return getImpl<detail::EnergyManagementSystemTrendVariable_Impl>()->numberOfTimestepsToBeLogged();
 }
 
 bool EnergyManagementSystemTrendVariable::setEMSVariableName(const std::string& eMSVariableName) {
@@ -349,8 +349,8 @@ bool EnergyManagementSystemTrendVariable::setEMSVariableName(const EnergyManagem
   return getImpl<detail::EnergyManagementSystemTrendVariable_Impl>()->setEMSVariableName(object);
 }
 
-bool EnergyManagementSystemTrendVariable::setNumberofTimestepstobeLogged(int numberofTimestepstobeLogged) {
-  return getImpl<detail::EnergyManagementSystemTrendVariable_Impl>()->setNumberofTimestepstobeLogged(numberofTimestepstobeLogged);
+bool EnergyManagementSystemTrendVariable::setNumberOfTimestepsToBeLogged(int numberofTimestepstobeLogged) {
+  return getImpl<detail::EnergyManagementSystemTrendVariable_Impl>()->setNumberOfTimestepsToBeLogged(numberofTimestepstobeLogged);
 }
 
 /// @cond

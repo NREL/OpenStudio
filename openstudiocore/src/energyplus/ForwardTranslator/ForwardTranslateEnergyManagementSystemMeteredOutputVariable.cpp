@@ -53,11 +53,11 @@ boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemMet
     idfObject.setName(*s);
   }
  
-  idfObject.setString(EnergyManagementSystem_MeteredOutputVariableFields::EMSVariableName, modelObject.eMSVariableName());
+  idfObject.setString(EnergyManagementSystem_MeteredOutputVariableFields::EMSVariableName, modelObject.emsVariableName());
 
   idfObject.setString(EnergyManagementSystem_MeteredOutputVariableFields::UpdateFrequency, modelObject.updateFrequency());
   
-  s = modelObject.eMSProgramorSubroutineName();
+  s = modelObject.emsProgramOrSubroutineName();
   if (s.is_initialized()) {
     idfObject.setString(EnergyManagementSystem_MeteredOutputVariableFields::EMSProgramorSubroutineName, s.get());
   }

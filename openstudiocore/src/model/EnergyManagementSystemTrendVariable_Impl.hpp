@@ -60,11 +60,11 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    std::string eMSVariableName() const;
+    std::string emsVariableName() const;
 
-    int numberofTimestepstobeLogged() const;
+    int numberOfTimestepsToBeLogged() const;
 
-    boost::optional<ModelObject> eMSVariableObject() const;
+    boost::optional<ModelObject> emsVariableObject() const;
 
     boost::optional<EnergyManagementSystemActuator> emsActuator() const;
     boost::optional<EnergyManagementSystemSensor> emsSensor() const;
@@ -80,7 +80,7 @@ namespace detail {
 
     bool setEMSVariableName(const std::string& eMSVariableName);
 
-    bool setNumberofTimestepstobeLogged(int numberofTimestepstobeLogged);
+    bool setNumberOfTimestepsToBeLogged(int numberofTimestepstobeLogged);
 
     bool setEMSVariableName(const EnergyManagementSystemActuator& object);
     bool setEMSVariableName(const EnergyManagementSystemSensor& object);

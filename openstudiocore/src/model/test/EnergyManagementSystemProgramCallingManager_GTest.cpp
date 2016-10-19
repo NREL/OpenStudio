@@ -149,7 +149,7 @@ TEST_F(ModelFixture, EMSProgramCallingManager_EMSProgramCallingManager)
 
   bool callpt = fan_pcm.setCallingPoint("BeginNewEnvironment");
   EXPECT_EQ(true, callpt);
-  EXPECT_EQ("BeginNewEnvironment", fan_pcm.callingPoint().get());
+  EXPECT_EQ("BeginNewEnvironment", fan_pcm.callingPoint());
 
   //should start with 0 programs
   std::vector<EnergyManagementSystemProgram> programs = fan_pcm.programs();
@@ -198,10 +198,6 @@ TEST_F(ModelFixture, EMSProgramCallingManager_EMSProgramCallingManager)
   //erase program 3 in 2nd slot
   bool erase_prog = fan_pcm.eraseProgram(1);
   EXPECT_EQ(true, erase_prog);
-  //check for null programs
-  std::vector<unsigned> nullProgs = fan_pcm.nullPrograms();
-  //should not be any if erasePrograms reindexed correctly
-  EXPECT_EQ(0, nullProgs.size());
   //check program name is back to program 2's
   program = fan_pcm.getProgram(1);
   EXPECT_EQ(true, program.is_initialized());

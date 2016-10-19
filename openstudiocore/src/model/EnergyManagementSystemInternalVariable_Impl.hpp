@@ -60,7 +60,7 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    boost::optional<std::string> internalDataIndexKeyName() const;
+    std::string internalDataIndexKeyName() const;
 
     std::string internalDataType() const;
 

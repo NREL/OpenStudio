@@ -52,13 +52,11 @@ class MODEL_API EnergyManagementSystemProgramCallingManager : public ModelObject
   /** @name Getters */
   //@{
 
-  boost::optional<std::string> callingPoint() const;
+  std::string callingPoint() const;
 
   std::vector<EnergyManagementSystemProgram> programs() const;
 
   boost::optional<EnergyManagementSystemProgram> getProgram(unsigned index) const;
-
-  std::vector<unsigned> nullPrograms() const;
 
   //@}
   /** @name Setters */
@@ -76,7 +74,6 @@ class MODEL_API EnergyManagementSystemProgramCallingManager : public ModelObject
 
   bool setPrograms(const std::vector<EnergyManagementSystemProgram>& programs);
 
-  bool removeNullPrograms();
 
   //@}
   /** @name Other */

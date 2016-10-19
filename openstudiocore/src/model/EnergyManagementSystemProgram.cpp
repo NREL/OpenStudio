@@ -74,7 +74,7 @@ namespace detail {
     return EnergyManagementSystemProgram::iddObjectType();
   }
 
-  boost::optional<std::string> EnergyManagementSystemProgram_Impl::body() const {
+  std::string EnergyManagementSystemProgram_Impl::body() const {
     //return program body as string
 
     // loop through extensible groups and add ProgramLine to body string.
@@ -113,7 +113,7 @@ namespace detail {
     };
 
     //clobber existing body
-    this->eraseBody();
+    this->resetBody();
 
     // remove '\r' from the body string
     std::string body_minus_r = body;
@@ -129,7 +129,6 @@ namespace detail {
     std::string comment;
 
     //add program lines to body
-    std::vector<bool> ok(body_minus_nl.size(), false);
     for (size_t i = 0; i < body_minus_nl.size(); i++) {
       //split string on comment character !
       comments = splitString(body_minus_nl.at(i), '!');
@@ -148,6 +147,9 @@ namespace detail {
         }
         //insert program line
         result = group.setString(OS_EnergyManagementSystem_ProgramExtensibleFields::ProgramLine, comments[0]);
+        if (!result) {
+          return result;
+        }
         //check if comments exist
         if (comments.size() > 1) {
           //clear out the old comment
@@ -165,19 +167,11 @@ namespace detail {
       } else {
         result = false;
       }
-      ok.at(i) = result;
-    }
-    //check if all the programs set true
-    result = true;
-    for (size_t i = 0; i<ok.size(); i++) {
-      if (!ok.at(i)) {//the value is false
-        result = false; //not all values in array are true
-      }
     }
     return result;
   }
 
-  bool EnergyManagementSystemProgram_Impl::eraseBody() {
+  bool EnergyManagementSystemProgram_Impl::resetBody() {
     //erase body of program
     bool results = false;
     std::vector< std::vector<std::string> > result;
@@ -244,7 +238,7 @@ namespace detail {
     return result;
   }
 
-  boost::optional<std::vector<std::string>> EnergyManagementSystemProgram_Impl::lines() const {
+  std::vector<std::string> EnergyManagementSystemProgram_Impl::lines() const {
     //return vector of lines from body
     std::vector<std::string> result;
     boost::optional<std::string> comment;
@@ -290,20 +284,14 @@ namespace detail {
     };
 
     //clobber existing body
-    this->eraseBody();
+    this->resetBody();
 
     //add program lines to body
-    std::vector<bool> ok(lines.size(), false);
     for (size_t i = 0; i < lines.size(); i++) {
       //use method addLine to add each line
       result = addLine(lines.at(i));
-      ok.at(i) = result;
-    }
-    //check if all the programs set true
-    result = true;
-    for (size_t i = 0; i<ok.size(); i++) {
-      if (!ok.at(i)) {//the value is false
-        result = false; //not all values in array are true
+      if (!result) {
+        return result;
       }
     }
     return result;
@@ -382,7 +370,7 @@ IddObjectType EnergyManagementSystemProgram::iddObjectType() {
   return IddObjectType(IddObjectType::OS_EnergyManagementSystem_Program);
 }
 
-boost::optional<std::string> EnergyManagementSystemProgram::body() const {
+std::string EnergyManagementSystemProgram::body() const {
   return getImpl<detail::EnergyManagementSystemProgram_Impl>()->body();
 }
 
@@ -390,15 +378,15 @@ bool EnergyManagementSystemProgram::setBody(const std::string& body) {
   return getImpl<detail::EnergyManagementSystemProgram_Impl>()->setBody(body);
 }
 
-bool EnergyManagementSystemProgram::eraseBody() {
-  return getImpl<detail::EnergyManagementSystemProgram_Impl>()->eraseBody();
+bool EnergyManagementSystemProgram::resetBody() {
+  return getImpl<detail::EnergyManagementSystemProgram_Impl>()->resetBody();
 }
 
 bool EnergyManagementSystemProgram::addLine(const std::string& line) {
   return getImpl<detail::EnergyManagementSystemProgram_Impl>()->addLine(line);
 }
 
-boost::optional<std::vector<std::string>> EnergyManagementSystemProgram::lines() const {
+std::vector<std::string> EnergyManagementSystemProgram::lines() const {
   return getImpl<detail::EnergyManagementSystemProgram_Impl>()->lines();
 }
 

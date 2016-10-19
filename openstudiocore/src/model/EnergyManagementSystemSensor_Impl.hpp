@@ -67,11 +67,11 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    boost::optional<std::string> keyName() const;
+    std::string keyName() const;
 
     boost::optional<OutputVariable> outputVariable() const;
     boost::optional<OutputMeter> outputMeter() const;
-    boost::optional<std::string> outputVariableOrMeterName() const;
+    std::string outputVariableOrMeterName() const;
 
     //@}
     /** @name Setters */

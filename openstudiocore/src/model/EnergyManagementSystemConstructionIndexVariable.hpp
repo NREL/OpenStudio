@@ -41,7 +41,7 @@ class MODEL_API EnergyManagementSystemConstructionIndexVariable : public ModelOb
   /** @name Constructors and Destructors */
   //@{
 
-  explicit EnergyManagementSystemConstructionIndexVariable(const Model& model, Construction& construction);
+  explicit EnergyManagementSystemConstructionIndexVariable(const Model& model, const Construction& construction);
 
   explicit EnergyManagementSystemConstructionIndexVariable(const Model& model);
 

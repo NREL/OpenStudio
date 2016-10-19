@@ -617,7 +617,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorProgramCallingManager_EMS) {
 
   bool callpt = fan_pcm.setCallingPoint("BeginNewEnvironment");
   EXPECT_EQ(true, callpt);
-  EXPECT_EQ("BeginNewEnvironment", fan_pcm.callingPoint().get());
+  EXPECT_EQ("BeginNewEnvironment", fan_pcm.callingPoint());
 
   //should start with 0 programs
   std::vector<EnergyManagementSystemProgram> programs = fan_pcm.programs();
@@ -838,10 +838,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorTrendVariable_EMS) {
   var.setName("TestName");
   EXPECT_EQ("TestName", var.name().get());
   var.setEMSVariableName("glob_var");
-  EXPECT_EQ("glob_var", var.eMSVariableName());
+  EXPECT_EQ("glob_var", var.emsVariableName());
 
-  var.setNumberofTimestepstobeLogged(2);
-  EXPECT_EQ(2, var.numberofTimestepstobeLogged());
+  var.setNumberOfTimestepsToBeLogged(2);
+  EXPECT_EQ(2, var.numberOfTimestepsToBeLogged());
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
@@ -953,7 +953,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorCurveOrTableIndexVariable_EMS) {
   CurveBiquadratic c1(model);
 
   EnergyManagementSystemCurveOrTableIndexVariable emsCurve(model);
-  emsCurve.setCurveorTableObject(c1);
+  emsCurve.setCurveOrTableObject(c1);
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
@@ -1004,8 +1004,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorMeteredOutputVariable_EMS) {
 
   //meteredoutvar.setEMSVariableName(OATdbSensor.name().get());
   meteredoutvar.setUpdateFrequency("ZoneTimestep");
-  meteredoutvar.setEMSProgramorSubroutineName(program_1);
-  meteredoutvar.setEMSProgramorSubroutineName(subroutine_1);
+  meteredoutvar.setEMSProgramOrSubroutineName(program_1);
+  meteredoutvar.setEMSProgramOrSubroutineName(subroutine_1);
   meteredoutvar.setResourceType("NaturalGas");
   meteredoutvar.setGroupType("HVAC");
   meteredoutvar.setEndUseCategory("Heating");
@@ -1059,10 +1059,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorTrendVariable2_EMS) {
   var.setName("TestName");
   EXPECT_EQ("TestName", var.name().get());
   //var.setEMSVariableName("glob_var");
-  EXPECT_EQ("glob_var", var.eMSVariableName());
+  EXPECT_EQ("glob_var", var.emsVariableName());
 
-  var.setNumberofTimestepstobeLogged(2);
-  EXPECT_EQ(2, var.numberofTimestepstobeLogged());
+  var.setNumberOfTimestepsToBeLogged(2);
+  EXPECT_EQ(2, var.numberOfTimestepsToBeLogged());
 
   // Create some materials
   StandardOpaqueMaterial exterior(model);
@@ -1084,10 +1084,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorTrendVariable2_EMS) {
   var2.setName("TestName2");
   EXPECT_EQ("TestName2", var2.name().get());
   //var2.setEMSVariableName(emsCIV.name().get());
-  EXPECT_EQ(emsCIV.name().get(), var2.eMSVariableName());
+  EXPECT_EQ(emsCIV.name().get(), var2.emsVariableName());
 
-  var2.setNumberofTimestepstobeLogged(3);
-  EXPECT_EQ(3, var2.numberofTimestepstobeLogged());
+  var2.setNumberOfTimestepsToBeLogged(3);
+  EXPECT_EQ(3, var2.numberOfTimestepsToBeLogged());
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);

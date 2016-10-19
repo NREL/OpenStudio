@@ -55,7 +55,7 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemTrendVaria
     LOG(Error, emsTrendVariable.nameString() + ": NumberofTimestepstobeLogged not set");
     return boost::none;
   } else {
-    emsTrendVariable.setNumberofTimestepstobeLogged(*i);
+    emsTrendVariable.setNumberOfTimestepsToBeLogged(*i);
   }
 
   s = workspaceObject.getString(EnergyManagementSystem_TrendVariableFields::EMSVariableName);

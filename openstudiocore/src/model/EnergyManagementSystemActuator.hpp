@@ -43,7 +43,7 @@ class MODEL_API EnergyManagementSystemActuator : public ModelObject {
   /** @name Constructors and Destructors */
   //@{
 
-  explicit EnergyManagementSystemActuator(const ModelObject& modelObject, std::string actuatedComponentType, std::string actuatedComponentControlType);
+  explicit EnergyManagementSystemActuator(const ModelObject& modelObject, const std::string actuatedComponentType, const std::string actuatedComponentControlType);
 
   virtual ~EnergyManagementSystemActuator() {}
 
