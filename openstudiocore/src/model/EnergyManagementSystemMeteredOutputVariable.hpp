@@ -52,21 +52,21 @@ class MODEL_API EnergyManagementSystemMeteredOutputVariable : public ModelObject
   /** @name Constructors and Destructors */
   //@{
 
-  explicit EnergyManagementSystemMeteredOutputVariable(const Model& model, std::string eMSVariableName);
+  explicit EnergyManagementSystemMeteredOutputVariable(const Model& model, const std::string eMSVariableName);
 
-  explicit EnergyManagementSystemMeteredOutputVariable(const Model& model, EnergyManagementSystemActuator& object);
+  explicit EnergyManagementSystemMeteredOutputVariable(const Model& model, const EnergyManagementSystemActuator& object);
 
-  explicit EnergyManagementSystemMeteredOutputVariable(const Model& model, EnergyManagementSystemSensor& object);
+  explicit EnergyManagementSystemMeteredOutputVariable(const Model& model, const EnergyManagementSystemSensor& object);
 
-  explicit EnergyManagementSystemMeteredOutputVariable(const Model& model, EnergyManagementSystemGlobalVariable& object);
+  explicit EnergyManagementSystemMeteredOutputVariable(const Model& model, const EnergyManagementSystemGlobalVariable& object);
 
-  explicit EnergyManagementSystemMeteredOutputVariable(const Model& model, EnergyManagementSystemTrendVariable& object);
+  explicit EnergyManagementSystemMeteredOutputVariable(const Model& model, const EnergyManagementSystemTrendVariable& object);
 
-  explicit EnergyManagementSystemMeteredOutputVariable(const Model& model, EnergyManagementSystemInternalVariable& object);
+  explicit EnergyManagementSystemMeteredOutputVariable(const Model& model, const EnergyManagementSystemInternalVariable& object);
 
-  explicit EnergyManagementSystemMeteredOutputVariable(const Model& model, EnergyManagementSystemCurveOrTableIndexVariable& object);
+  explicit EnergyManagementSystemMeteredOutputVariable(const Model& model, const EnergyManagementSystemCurveOrTableIndexVariable& object);
 
-  explicit EnergyManagementSystemMeteredOutputVariable(const Model& model, EnergyManagementSystemConstructionIndexVariable& object);
+  explicit EnergyManagementSystemMeteredOutputVariable(const Model& model, const EnergyManagementSystemConstructionIndexVariable& object);
 
   virtual ~EnergyManagementSystemMeteredOutputVariable() {}
 
@@ -85,11 +85,15 @@ class MODEL_API EnergyManagementSystemMeteredOutputVariable : public ModelObject
   /** @name Getters */
   //@{
 
-  std::string eMSVariableName() const;
+  std::string emsVariableName() const;
 
   std::string updateFrequency() const;
 
-  boost::optional<std::string> eMSProgramorSubroutineName() const;
+  std::string emsProgramOrSubroutineName() const;
+
+  boost::optional<EnergyManagementSystemProgram> emsProgram() const;
+
+  boost::optional<EnergyManagementSystemSubroutine> emsSubroutine() const;
 
   std::string resourceType() const;
 
@@ -97,11 +101,11 @@ class MODEL_API EnergyManagementSystemMeteredOutputVariable : public ModelObject
 
   std::string endUseCategory() const;
 
-  boost::optional<std::string> endUseSubcategory() const;
+  std::string endUseSubcategory() const;
 
-  boost::optional<std::string> units() const;
+  std::string units() const;
 
-  boost::optional<ModelObject> eMSVariableObject() const;
+  boost::optional<ModelObject> emsVariableObject() const;
 
   boost::optional<EnergyManagementSystemActuator> emsActuator() const;
   boost::optional<EnergyManagementSystemSensor> emsSensor() const;
@@ -119,11 +123,11 @@ class MODEL_API EnergyManagementSystemMeteredOutputVariable : public ModelObject
 
   bool setUpdateFrequency(const std::string& updateFrequency);
 
-  bool setEMSProgramorSubroutineName(const EnergyManagementSystemProgram& program);
+  bool setEMSProgramOrSubroutineName(const EnergyManagementSystemProgram& program);
 
-  bool setEMSProgramorSubroutineName(const EnergyManagementSystemSubroutine& subroutine);
+  bool setEMSProgramOrSubroutineName(const EnergyManagementSystemSubroutine& subroutine);
 
-  void resetEMSProgramorSubroutineName();
+  void resetEMSProgramOrSubroutineName();
 
   bool setResourceType(const std::string& resourceType);
 

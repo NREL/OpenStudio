@@ -42,6 +42,6 @@ TEST_F(ModelFixture, EMS_CurveOrTableIndexVariable)
 
   EnergyManagementSystemCurveOrTableIndexVariable emsCurve(model, c1);
   //emsCurve.setCurveorTableObject(c1);
-  EXPECT_EQ(c1.handle(), emsCurve.curveorTableObject().handle());
+  EXPECT_EQ(c1.handle(), emsCurve.curveOrTableObject().handle());
   model.save(toPath("./EMS_curvetest.osm"), true);
 }

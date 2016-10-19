@@ -69,8 +69,12 @@ namespace detail {
     return EnergyManagementSystemProgramCallingManager::iddObjectType();
   }
 
-  boost::optional<std::string> EnergyManagementSystemProgramCallingManager_Impl::callingPoint() const {
-    return getString(OS_EnergyManagementSystem_ProgramCallingManagerFields::EnergyPlusModelCallingPoint,true);
+  std::string EnergyManagementSystemProgramCallingManager_Impl::callingPoint() const {
+    OptionalString results = getString(OS_EnergyManagementSystem_ProgramCallingManagerFields::EnergyPlusModelCallingPoint,true);
+    if (results) {
+      return results.get();
+    }
+    return "";
   }
 
   bool EnergyManagementSystemProgramCallingManager_Impl::setCallingPoint(const std::string& callingPoint) {
@@ -170,36 +174,6 @@ namespace detail {
     return result;
   }
 
-  std::vector<unsigned> EnergyManagementSystemProgramCallingManager_Impl::nullPrograms() const {
-    //return vector of indices of null programs in the program vector
-    std::vector<unsigned> result;
-    unsigned i = 0;
-    auto groups = extensibleGroups();
-    unsigned sizeOfGroup = numExtensibleGroups();
-    for (auto &group : groups) {
-      if (group.empty()) {
-        result.push_back(i);
-      };
-      i++;
-    }
-    return result;
-  }
-
-  bool EnergyManagementSystemProgramCallingManager_Impl::removeNullPrograms() {
-    //remove any null entries in the vector of programs
-    bool result = false;
-    std::vector<unsigned> nullProgs;
-    nullProgs = this->nullPrograms();
-
-    if (!nullProgs.empty()) {
-      int j = 0;
-      for (size_t i = 0; i < nullProgs.size(); i++) {
-        result = this->eraseProgram(j);
-        j++;
-      };
-    };
-    return result;
-  }
 } // detail
 
 EnergyManagementSystemProgramCallingManager::EnergyManagementSystemProgramCallingManager(const Model& model)
@@ -218,7 +192,7 @@ std::vector<std::string> EnergyManagementSystemProgramCallingManager::validCalli
                         OS_EnergyManagementSystem_ProgramCallingManagerFields::EnergyPlusModelCallingPoint);
 }
 
-boost::optional<std::string> EnergyManagementSystemProgramCallingManager::callingPoint() const {
+std::string EnergyManagementSystemProgramCallingManager::callingPoint() const {
   return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->callingPoint();
 }
 
@@ -252,14 +226,6 @@ bool EnergyManagementSystemProgramCallingManager::setProgram(const EnergyManagem
 
 bool EnergyManagementSystemProgramCallingManager::setPrograms(const std::vector<EnergyManagementSystemProgram>& programs) {
   return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->setPrograms(programs);
-}
-
-std::vector<unsigned> EnergyManagementSystemProgramCallingManager::nullPrograms() const {
-  return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->nullPrograms();
-}
-
-bool EnergyManagementSystemProgramCallingManager::removeNullPrograms() {
-  return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->removeNullPrograms();
 }
 
 /// @cond

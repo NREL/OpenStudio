@@ -71,7 +71,7 @@ namespace detail {
     return EnergyManagementSystemSubroutine::iddObjectType();
   }
 
-  boost::optional<std::string> EnergyManagementSystemSubroutine_Impl::body() const {
+  std::string EnergyManagementSystemSubroutine_Impl::body() const {
     //return program body as string
 
     // loop through extensible groups and add ProgramLine to body string.
@@ -110,7 +110,7 @@ namespace detail {
     };
 
     //clobber existing body
-    this->eraseBody();
+    this->resetBody();
 
     // remove '\r' from the body string
     std::string body_minus_r = body;
@@ -126,7 +126,6 @@ namespace detail {
     std::string comment;
 
     //add program lines to body
-    std::vector<bool> ok(body_minus_nl.size(), false);
     for (size_t i = 0; i < body_minus_nl.size(); i++) {
       //split string on comment character !
       comments = splitString(body_minus_nl.at(i), '!');
@@ -145,6 +144,9 @@ namespace detail {
         }
         //insert program line
         result = group.setString(OS_EnergyManagementSystem_SubroutineExtensibleFields::ProgramLine, comments[0]);
+        if (!result) {
+          return result;
+        }
         //check if comments exist
         if (comments.size() > 1) {
           //clear out the old comment
@@ -162,19 +164,11 @@ namespace detail {
       } else {
         result = false;
       }
-      ok.at(i) = result;
-    }
-    //check if all the programs set true
-    result = true;
-    for (size_t i = 0; i<ok.size(); i++) {
-      if (!ok.at(i)) {//the value is false
-        result = false; //not all values in array are true
-      }
     }
     return result;
   }
 
-  bool EnergyManagementSystemSubroutine_Impl::eraseBody() {
+  bool EnergyManagementSystemSubroutine_Impl::resetBody() {
     //erase body of program
     bool results = false;
     std::vector< std::vector<std::string> > result;
@@ -240,7 +234,7 @@ namespace detail {
     return result;
   }
 
-  boost::optional<std::vector<std::string>> EnergyManagementSystemSubroutine_Impl::lines() const {
+  std::vector<std::string> EnergyManagementSystemSubroutine_Impl::lines() const {
     //return vector of lines from body
     std::vector<std::string> result;
     boost::optional<std::string> comment;
@@ -286,20 +280,14 @@ namespace detail {
     };
 
     //clobber existing body
-    this->eraseBody();
+    this->resetBody();
 
     //add program lines to body
-    std::vector<bool> ok(lines.size(), false);
     for (size_t i = 0; i < lines.size(); i++) {
       //use method addLine to add each line
       result = addLine(lines.at(i));
-      ok.at(i) = result;
-    }
-    //check if all the programs set true
-    result = true;
-    for (size_t i = 0; i<ok.size(); i++) {
-      if (!ok.at(i)) {//the value is false
-        result = false; //not all values in array are true
+      if (!result) {
+        return result;
       }
     }
     return result;
@@ -383,7 +371,7 @@ IddObjectType EnergyManagementSystemSubroutine::iddObjectType() {
 }
 
 
-boost::optional<std::string> EnergyManagementSystemSubroutine::body() const {
+std::string EnergyManagementSystemSubroutine::body() const {
   return getImpl<detail::EnergyManagementSystemSubroutine_Impl>()->body();
 }
 
@@ -391,15 +379,15 @@ bool EnergyManagementSystemSubroutine::setBody(const std::string& body) {
   return getImpl<detail::EnergyManagementSystemSubroutine_Impl>()->setBody(body);
 }
 
-bool EnergyManagementSystemSubroutine::eraseBody() {
-  return getImpl<detail::EnergyManagementSystemSubroutine_Impl>()->eraseBody();
+bool EnergyManagementSystemSubroutine::resetBody() {
+  return getImpl<detail::EnergyManagementSystemSubroutine_Impl>()->resetBody();
 }
 
 bool EnergyManagementSystemSubroutine::addLine(const std::string& line) {
   return getImpl<detail::EnergyManagementSystemSubroutine_Impl>()->addLine(line);
 }
 
-boost::optional<std::vector<std::string>> EnergyManagementSystemSubroutine::lines() const {
+std::vector<std::string> EnergyManagementSystemSubroutine::lines() const {
   return getImpl<detail::EnergyManagementSystemSubroutine_Impl>()->lines();
 }
 

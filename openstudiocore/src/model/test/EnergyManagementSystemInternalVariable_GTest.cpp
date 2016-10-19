@@ -41,9 +41,9 @@ TEST_F(ModelFixture, EMSInternalVariable_EMSInternalVariable)
   // add internal variable
   EnergyManagementSystemInternalVariable var(model, "TestName");
   var.setInternalDataIndexKeyName("TestName");
-  EXPECT_EQ("TestName", var.internalDataIndexKeyName().get());
+  EXPECT_EQ("TestName", var.internalDataIndexKeyName());
   var.resetInternalDataIndexKeyName();
-  EXPECT_EQ("", var.internalDataIndexKeyName().get());
+  EXPECT_EQ("", var.internalDataIndexKeyName());
   //var.setInternalDataType("TestName");
   EXPECT_EQ("TestName", var.internalDataType());
 }

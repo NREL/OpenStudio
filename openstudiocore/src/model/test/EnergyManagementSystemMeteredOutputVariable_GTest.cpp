@@ -62,15 +62,17 @@ TEST_F(ModelFixture, EMSMeteredOutputVariable)
   EnergyManagementSystemMeteredOutputVariable meteredoutvar(model, OATdbSensor.name().get());
 
   //meteredoutvar.setEMSVariableName(OATdbSensor.name().get());
-  EXPECT_EQ(meteredoutvar.eMSVariableName(), OATdbSensor.name().get());
+  EXPECT_EQ(meteredoutvar.emsVariableName(), OATdbSensor.name().get());
   meteredoutvar.setUpdateFrequency("ZoneTimestep");
   EXPECT_EQ("ZoneTimestep",meteredoutvar.updateFrequency());
-  meteredoutvar.setEMSProgramorSubroutineName(program_1);
-  EXPECT_EQ(program_1.name().get(), meteredoutvar.eMSProgramorSubroutineName().get());
-  meteredoutvar.resetEMSProgramorSubroutineName();
-  EXPECT_FALSE(meteredoutvar.eMSProgramorSubroutineName());
-  meteredoutvar.setEMSProgramorSubroutineName(subroutine_1);
-  EXPECT_EQ(subroutine_1.name().get(), meteredoutvar.eMSProgramorSubroutineName().get());
+  meteredoutvar.setEMSProgramOrSubroutineName(program_1);
+  EXPECT_EQ(program_1.name().get(), meteredoutvar.emsProgramOrSubroutineName());
+  EXPECT_EQ(program_1, meteredoutvar.emsProgram());
+  meteredoutvar.resetEMSProgramOrSubroutineName();
+  EXPECT_EQ("",meteredoutvar.emsProgramOrSubroutineName());
+  meteredoutvar.setEMSProgramOrSubroutineName(subroutine_1);
+  EXPECT_EQ(subroutine_1.name().get(), meteredoutvar.emsProgramOrSubroutineName());
+  EXPECT_EQ(subroutine_1, meteredoutvar.emsSubroutine());
   meteredoutvar.setResourceType("NaturalGas");
   EXPECT_EQ("NaturalGas", meteredoutvar.resourceType());
   meteredoutvar.setGroupType("HVAC");
@@ -78,7 +80,7 @@ TEST_F(ModelFixture, EMSMeteredOutputVariable)
   meteredoutvar.setEndUseCategory("Heating");
   EXPECT_EQ("Heating", meteredoutvar.endUseCategory());
   meteredoutvar.setEndUseSubcategory("Madeup");
-  EXPECT_EQ("Madeup", meteredoutvar.endUseSubcategory().get());
+  EXPECT_EQ("Madeup", meteredoutvar.endUseSubcategory());
 
   model.save(toPath("./EMS_meteredoutvar.osm"), true);
 
@@ -88,8 +90,8 @@ TEST_F(ModelFixture, EMSMeteredOutputVariable)
   outvar_sen.setName("outputVar sen");
   EXPECT_EQ("outputVar sen", outvar_sen.nameString());
 
-  ASSERT_TRUE(outvar_sen.eMSVariableObject());
+  ASSERT_TRUE(outvar_sen.emsVariableObject());
   ASSERT_TRUE(outvar_sen.emsSensor());
-  EXPECT_EQ(outvar_sen.eMSVariableObject().get(), outvar_sen.emsSensor().get());
+  EXPECT_EQ(outvar_sen.emsVariableObject().get(), outvar_sen.emsSensor().get());
 }
 

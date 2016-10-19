@@ -49,21 +49,21 @@ class MODEL_API EnergyManagementSystemTrendVariable : public ModelObject {
  public:
   /** @name Constructors and Destructors */
   //@{
-  explicit EnergyManagementSystemTrendVariable(const Model& model, std::string eMSVariableName);
+  explicit EnergyManagementSystemTrendVariable(const Model& model, const std::string eMSVariableName);
 
-  explicit EnergyManagementSystemTrendVariable(const Model& model, EnergyManagementSystemActuator& object);
+  explicit EnergyManagementSystemTrendVariable(const Model& model, const EnergyManagementSystemActuator& object);
 
-  explicit EnergyManagementSystemTrendVariable(const Model& model, EnergyManagementSystemSensor& object);
+  explicit EnergyManagementSystemTrendVariable(const Model& model, const EnergyManagementSystemSensor& object);
 
-  explicit EnergyManagementSystemTrendVariable(const Model& model, EnergyManagementSystemGlobalVariable& object);
+  explicit EnergyManagementSystemTrendVariable(const Model& model, const EnergyManagementSystemGlobalVariable& object);
 
-  explicit EnergyManagementSystemTrendVariable(const Model& model, EnergyManagementSystemTrendVariable& object);
+  explicit EnergyManagementSystemTrendVariable(const Model& model, const EnergyManagementSystemTrendVariable& object);
 
-  explicit EnergyManagementSystemTrendVariable(const Model& model, EnergyManagementSystemInternalVariable& object);
+  explicit EnergyManagementSystemTrendVariable(const Model& model, const EnergyManagementSystemInternalVariable& object);
 
-  explicit EnergyManagementSystemTrendVariable(const Model& model, EnergyManagementSystemCurveOrTableIndexVariable& object);
+  explicit EnergyManagementSystemTrendVariable(const Model& model, const EnergyManagementSystemCurveOrTableIndexVariable& object);
 
-  explicit EnergyManagementSystemTrendVariable(const Model& model, EnergyManagementSystemConstructionIndexVariable& object);
+  explicit EnergyManagementSystemTrendVariable(const Model& model, const EnergyManagementSystemConstructionIndexVariable& object);
 
   virtual ~EnergyManagementSystemTrendVariable() {}
 
@@ -74,11 +74,11 @@ class MODEL_API EnergyManagementSystemTrendVariable : public ModelObject {
   /** @name Getters */
   //@{
 
-  std::string eMSVariableName() const;
+  std::string emsVariableName() const;
 
-  int numberofTimestepstobeLogged() const;
+  int numberOfTimestepsToBeLogged() const;
 
-  boost::optional<ModelObject> eMSVariableObject() const;
+  boost::optional<ModelObject> emsVariableObject() const;
 
   boost::optional<EnergyManagementSystemActuator> emsActuator() const;
   boost::optional<EnergyManagementSystemSensor> emsSensor() const;
@@ -94,7 +94,7 @@ class MODEL_API EnergyManagementSystemTrendVariable : public ModelObject {
 
   bool setEMSVariableName(const std::string& eMSVariableName);
 
-  bool setNumberofTimestepstobeLogged(int numberofTimestepstobeLogged);
+  bool setNumberOfTimestepsToBeLogged(int numberofTimestepstobeLogged);
 
   bool setEMSVariableName(const EnergyManagementSystemActuator& object);
   bool setEMSVariableName(const EnergyManagementSystemSensor& object);

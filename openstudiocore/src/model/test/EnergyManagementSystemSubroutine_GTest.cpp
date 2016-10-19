@@ -196,7 +196,7 @@ TEST_F(ModelFixture, EMSSubroutine_EMSSubroutine)
   lines = fan_program_3.lines();
   EXPECT_EQ(3, lines.get().size());
   EXPECT_EQ(line1_test, lines.get()[2]);
-  fan_program_3.eraseBody();
+  fan_program_3.resetBody();
   body = fan_program_3.body();
   EXPECT_EQ("", body.get());
 

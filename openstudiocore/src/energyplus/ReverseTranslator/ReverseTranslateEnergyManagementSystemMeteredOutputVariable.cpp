@@ -114,10 +114,10 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemMeteredOut
       if (modelObject) {
         if (modelObject.get().iddObjectType() == IddObjectType::OS_EnergyManagementSystem_Program) {
           EnergyManagementSystemProgram program = modelObject.get().cast<EnergyManagementSystemProgram>();
-          emsOutputVariable.setEMSProgramorSubroutineName(program);
+          emsOutputVariable.setEMSProgramOrSubroutineName(program);
         } else if (modelObject.get().iddObjectType() == IddObjectType::OS_EnergyManagementSystem_Subroutine) {
           EnergyManagementSystemSubroutine subroutine = modelObject.get().cast<EnergyManagementSystemSubroutine>();
-          emsOutputVariable.setEMSProgramorSubroutineName(subroutine);
+          emsOutputVariable.setEMSProgramOrSubroutineName(subroutine);
         }
         break;
       }

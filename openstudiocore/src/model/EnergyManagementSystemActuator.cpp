@@ -106,7 +106,7 @@ namespace detail {
 
 } // detail
 
-EnergyManagementSystemActuator::EnergyManagementSystemActuator(const ModelObject& modelObject, std::string actuatedComponentType, std::string actuatedComponentControlType)
+EnergyManagementSystemActuator::EnergyManagementSystemActuator(const ModelObject& modelObject, const std::string actuatedComponentType, const std::string actuatedComponentControlType)
   : ModelObject(EnergyManagementSystemActuator::iddObjectType(), modelObject.model()) {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemActuator_Impl>());
   bool ok = setActuatedComponent(modelObject);

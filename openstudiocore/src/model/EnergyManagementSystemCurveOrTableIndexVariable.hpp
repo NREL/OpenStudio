@@ -22,13 +22,11 @@
 
 #include <model/ModelAPI.hpp>
 #include "ModelObject.hpp"
-#include "Curve.hpp"
 
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
-class Curves;
+class Curve;
 
 namespace detail {
 
@@ -42,7 +40,7 @@ class MODEL_API EnergyManagementSystemCurveOrTableIndexVariable : public ModelOb
   /** @name Constructors and Destructors */
   //@{
 
-  explicit EnergyManagementSystemCurveOrTableIndexVariable(const Model& model, Curve& curve); //Does Curve cover all object-list AllCurves?
+  explicit EnergyManagementSystemCurveOrTableIndexVariable(const Model& model, const Curve& curve);
 
   explicit EnergyManagementSystemCurveOrTableIndexVariable(const Model& model);
 
@@ -55,13 +53,13 @@ class MODEL_API EnergyManagementSystemCurveOrTableIndexVariable : public ModelOb
   /** @name Getters */
   //@{
 
-  ModelObject curveorTableObject() const;
+  ModelObject curveOrTableObject() const;
 
   //@}
   /** @name Setters */
   //@{
 
-  bool setCurveorTableObject(const ModelObject& allCurves);
+  bool setCurveOrTableObject(const Curve& allCurves);
 
   //@}
   /** @name Other */

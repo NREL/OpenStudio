@@ -86,7 +86,7 @@ namespace detail {
 
 } // detail
 
-EnergyManagementSystemConstructionIndexVariable::EnergyManagementSystemConstructionIndexVariable(const Model& model, Construction& construction)
+EnergyManagementSystemConstructionIndexVariable::EnergyManagementSystemConstructionIndexVariable(const Model& model, const Construction& construction)
   : ModelObject(EnergyManagementSystemConstructionIndexVariable::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemConstructionIndexVariable_Impl>());

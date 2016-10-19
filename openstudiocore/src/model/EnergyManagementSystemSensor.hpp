@@ -50,9 +50,9 @@ class MODEL_API EnergyManagementSystemSensor : public ModelObject {
   /** @name Constructors and Destructors */
   //@{
 
-  explicit EnergyManagementSystemSensor(const Model& model, OutputVariable& outvar);
+  explicit EnergyManagementSystemSensor(const Model& model, const OutputVariable& outvar);
 
-  explicit EnergyManagementSystemSensor(const Model& model, OutputMeter& outvar);
+  explicit EnergyManagementSystemSensor(const Model& model, const OutputMeter& outvar);
 
   explicit EnergyManagementSystemSensor(const Model& model, const std::string& outputVariableOrMeterName);
 
@@ -65,11 +65,11 @@ class MODEL_API EnergyManagementSystemSensor : public ModelObject {
   /** @name Getters */
   //@{
 
-  boost::optional<std::string> keyName() const;
+  std::string keyName() const;
 
   boost::optional<OutputVariable> outputVariable() const;
   boost::optional<OutputMeter> outputMeter() const;
-  boost::optional<std::string> outputVariableOrMeterName() const;
+  std::string outputVariableOrMeterName() const;
 
   //@}
   /** @name Setters */

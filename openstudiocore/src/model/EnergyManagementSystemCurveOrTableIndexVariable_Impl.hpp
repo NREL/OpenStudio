@@ -26,8 +26,7 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
-class Curves;
+class Curve;
 
 namespace detail {
 
@@ -63,13 +62,13 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    ModelObject curveorTableObject() const;
+    ModelObject curveOrTableObject() const;
 
     //@}
     /** @name Setters */
     //@{
 
-    bool setCurveorTableObject(const ModelObject& allCurves);
+    bool setCurveOrTableObject(const Curve& allCurves);
 
     //@}
     /** @name Other */
@@ -80,7 +79,7 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.model.EnergyManagementSystemCurveOrTableIndexVariable");
 
-    boost::optional<ModelObject> optionalCurveorTableObject() const;
+    boost::optional<ModelObject> optionalCurveOrTableObject() const;
   };
 
 } // detail

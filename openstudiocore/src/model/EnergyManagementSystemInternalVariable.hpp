@@ -42,7 +42,7 @@ class MODEL_API EnergyManagementSystemInternalVariable : public ModelObject {
  public:
   /** @name Constructors and Destructors */
   //@{
-  explicit EnergyManagementSystemInternalVariable(const Model& model, std::string internalDataType);
+  explicit EnergyManagementSystemInternalVariable(const Model& model, const std::string internalDataType);
 
   virtual ~EnergyManagementSystemInternalVariable() {}
 
@@ -53,7 +53,7 @@ class MODEL_API EnergyManagementSystemInternalVariable : public ModelObject {
   /** @name Getters */
   //@{
 
-  boost::optional<std::string> internalDataIndexKeyName() const;
+  std::string internalDataIndexKeyName() const;
 
   std::string internalDataType() const;
 

@@ -72,8 +72,12 @@ namespace detail {
     return EnergyManagementSystemSensor::iddObjectType();
   }
 
-  boost::optional<std::string> EnergyManagementSystemSensor_Impl::keyName() const {
-    return getString(OS_EnergyManagementSystem_SensorFields::OutputVariableorOutputMeterIndexKeyName, true);
+  std::string EnergyManagementSystemSensor_Impl::keyName() const {
+    OptionalString results = getString(OS_EnergyManagementSystem_SensorFields::OutputVariableorOutputMeterIndexKeyName, true);
+    if (results) {
+      return results.get();
+    }
+    return "";
   }
 
   boost::optional<OutputVariable> EnergyManagementSystemSensor_Impl::outputVariable() const {
@@ -94,8 +98,12 @@ namespace detail {
     return value.get();
   }
 
-  boost::optional<std::string> EnergyManagementSystemSensor_Impl::outputVariableOrMeterName() const {
-    return getString(OS_EnergyManagementSystem_SensorFields::OutputVariableorOutputMeterName, true);
+  std::string EnergyManagementSystemSensor_Impl::outputVariableOrMeterName() const {
+    OptionalString results = getString(OS_EnergyManagementSystem_SensorFields::OutputVariableorOutputMeterName, true);
+    if (results) {
+      return results.get();
+    }
+    return "";
   }
 
   bool EnergyManagementSystemSensor_Impl::setKeyName(const std::string& keyName) {
@@ -159,7 +167,7 @@ namespace detail {
 
 } // detail
 
-EnergyManagementSystemSensor::EnergyManagementSystemSensor(const Model& model, OutputVariable& outvar)
+EnergyManagementSystemSensor::EnergyManagementSystemSensor(const Model& model, const OutputVariable& outvar)
   : ModelObject(EnergyManagementSystemSensor::iddObjectType(), model) {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemSensor_Impl>());
   bool ok = setOutputVariable(outvar);
@@ -170,7 +178,7 @@ EnergyManagementSystemSensor::EnergyManagementSystemSensor(const Model& model, O
   }
 }
 
-EnergyManagementSystemSensor::EnergyManagementSystemSensor(const Model& model, OutputMeter& outvar)
+EnergyManagementSystemSensor::EnergyManagementSystemSensor(const Model& model, const OutputMeter& outvar)
   : ModelObject(EnergyManagementSystemSensor::iddObjectType(), model) {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemSensor_Impl>());
   bool ok = setOutputMeter(outvar);
@@ -203,7 +211,7 @@ IddObjectType EnergyManagementSystemSensor::iddObjectType() {
   return IddObjectType(IddObjectType::OS_EnergyManagementSystem_Sensor);
 }
 
-boost::optional<std::string> EnergyManagementSystemSensor::keyName() const {
+std::string EnergyManagementSystemSensor::keyName() const {
   return getImpl<detail::EnergyManagementSystemSensor_Impl>()->keyName();
 }
 
@@ -215,7 +223,7 @@ boost::optional<OutputMeter> EnergyManagementSystemSensor::outputMeter() const {
   return getImpl<detail::EnergyManagementSystemSensor_Impl>()->outputMeter();
 }
 
-boost::optional<std::string> EnergyManagementSystemSensor::outputVariableOrMeterName() const {
+std::string EnergyManagementSystemSensor::outputVariableOrMeterName() const {
   return getImpl<detail::EnergyManagementSystemSensor_Impl>()->outputVariableOrMeterName();
 }
 

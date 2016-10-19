@@ -64,7 +64,7 @@ TEST_F(ModelFixture, EMSSensor_EMSSensor)
   EXPECT_EQ("OATdb_Sensor", OATdbSensor.nameString());
   EXPECT_EQ(siteOutdoorAirDrybulbTemperature.handle(), OATdbSensor.outputVariable().get().handle() );
   EXPECT_EQ(siteOutdoorAirDrybulbTemperature, OATdbSensor.outputVariable());
-  EXPECT_EQ("", OATdbSensor.keyName().get());
+  EXPECT_EQ("", OATdbSensor.keyName());
 
   // add Zone Lights Electric Power to both zones
   OutputVariable lightsElectricPower("Zone Lights Electric Power", model);
@@ -77,7 +77,7 @@ TEST_F(ModelFixture, EMSSensor_EMSSensor)
   //lights.setOutputVariable(lightsElectricPower);
   lights.setKeyName(zone1.name().get());
 
-  EXPECT_EQ(zone1.name().get(), lights.keyName().get());
+  EXPECT_EQ(zone1.name().get(), lights.keyName());
   EXPECT_EQ("Light_Sensor", lights.nameString());
   
   // create meter
@@ -92,7 +92,7 @@ TEST_F(ModelFixture, EMSSensor_EMSSensor)
   EXPECT_EQ("meter_sensor", meter_sensor.nameString());
   EXPECT_EQ(meter.handle(), meter_sensor.outputMeter().get().handle());
   EXPECT_EQ(meter, meter_sensor.outputMeter());
-  EXPECT_EQ("", meter_sensor.keyName().get());
+  EXPECT_EQ("", meter_sensor.keyName());
 
   ASSERT_TRUE(OATdbSensor.outputVariable());
   ASSERT_FALSE(OATdbSensor.outputMeter());
@@ -110,7 +110,6 @@ TEST_F(ModelFixture, EMSSensor_EMSSensor)
   EnergyManagementSystemSensor sensor_string(model, "Sensor String");
   sensor_string.setName("Sensor String Name");
   EXPECT_EQ("Sensor_String_Name", sensor_string.nameString());
-  ASSERT_TRUE(sensor_string.outputVariableOrMeterName());
-  EXPECT_EQ("Sensor String", sensor_string.outputVariableOrMeterName().get());
+  EXPECT_EQ("Sensor String", sensor_string.outputVariableOrMeterName());
 }
 

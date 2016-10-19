@@ -106,15 +106,14 @@ TEST_F(ModelFixture, EMSOutputVariable_EMSOutputVariable)
   outvar.setUpdateFrequency("SystemTimestep");
   EXPECT_EQ("SystemTimestep", outvar.updateFrequency());
   //type of data in variable
-  update = outvar.setTypeofDatainVariable("BadValue");
+  update = outvar.setTypeOfDataInVariable("BadValue");
   EXPECT_EQ(false, update);
-  outvar.setTypeofDatainVariable("Averaged");
-  EXPECT_EQ("Averaged", outvar.typeofDatainVariable());
-  outvar.setTypeofDatainVariable("Summed");
-  EXPECT_EQ("Summed", outvar.typeofDatainVariable());
+  outvar.setTypeOfDataInVariable("Averaged");
+  EXPECT_EQ("Averaged", outvar.typeOfDataInVariable());
+  outvar.setTypeOfDataInVariable("Summed");
+  EXPECT_EQ("Summed", outvar.typeOfDataInVariable());
   //program or subroutine name
-  bool init = outvar.eMSProgramorSubroutineName().is_initialized();
-  EXPECT_EQ(false, init);
+  EXPECT_EQ("", outvar.emsProgramOrSubroutineName());
   //bool setprogram = outvar.setEMSProgramorSubroutineName("program name");
   //expect false since program doesnt exist
   //EXPECT_EQ(false, setprogram);
@@ -122,9 +121,10 @@ TEST_F(ModelFixture, EMSOutputVariable_EMSOutputVariable)
   // add program
   EnergyManagementSystemProgram program(model);
   program.setName("program 1");
-  bool setprogram = outvar.setEMSProgramorSubroutineName(program);
+  bool setprogram = outvar.setEMSProgramOrSubroutineName(program);
   EXPECT_EQ(true, setprogram);
-  EXPECT_EQ("program_1", outvar.eMSProgramorSubroutineName().get());
+  EXPECT_EQ("program_1", outvar.emsProgramOrSubroutineName());
+  EXPECT_EQ(program, outvar.emsProgram());
 
 
   // add output variable actuator
@@ -139,9 +139,9 @@ TEST_F(ModelFixture, EMSOutputVariable_EMSOutputVariable)
   outvar_sen.setName("outputVar sen");
   EXPECT_EQ("outputVar sen", outvar_sen.nameString());
 
-  ASSERT_TRUE(outvar_sen.eMSVariableObject());
+  ASSERT_TRUE(outvar_sen.emsVariableObject());
   ASSERT_TRUE(outvar_sen.emsSensor());
-  EXPECT_EQ(outvar_sen.eMSVariableObject().get(), outvar_sen.emsSensor().get());
+  EXPECT_EQ(outvar_sen.emsVariableObject().get(), outvar_sen.emsSensor().get());
 
 }
 
