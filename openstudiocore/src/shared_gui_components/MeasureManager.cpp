@@ -511,7 +511,7 @@ boost::optional<measure::OSArgument> MeasureManager::getArgument(const measure::
     result = measure::OSArgument::makeIntegerArgument(name, required, modelDependent);
 
     if (argument.isMember("default_value")){
-      double defaultValue = argument.get("default_value", Json::Value(0.0)).asInt();
+      int defaultValue = argument.get("default_value", Json::Value(0.0)).asInt();
       result->setDefaultValue(defaultValue);
     }
 
