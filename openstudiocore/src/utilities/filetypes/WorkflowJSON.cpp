@@ -311,6 +311,7 @@ namespace detail{
       onUpdate();
       return true;
     }
+    LOG(Warn, "Path " << toString(path) << " is not absolute, WorkflowJSON::setOswPath failed");
     return false;
   }
 

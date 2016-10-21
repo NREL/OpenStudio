@@ -32,6 +32,8 @@
 #include <OpenStudio.hxx>
 
 #include <sstream>
+#include <boost/regex.hpp>
+#include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/case_conv.hpp>
 #include <iostream>
 
@@ -114,6 +116,71 @@ namespace openstudio {
     return getEnergyPlusExecutable().parent_path();
   }
 
+  // define the function GetCurrentModule so we can get its address
+  #if defined _WIN32 
+  HMODULE GetCurrentModule()
+  {
+	  HMODULE hModule = NULL;
+	  // hModule is NULL if GetModuleHandleEx fails.
+	  GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS
+						  | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
+						  (LPCTSTR)GetCurrentModule, &hModule);
+	  return hModule;
+  }
+  #else
+  bool GetCurrentModule()
+  {
+    return true;
+  }
+  #endif
+
+  openstudio::path getOpenStudioModule()
+  {
+    openstudio::path openstudioDirPath;
+    #if defined _WIN32 
+      TCHAR szPath[MAX_PATH];
+      if( GetModuleFileName( GetCurrentModule(), szPath, MAX_PATH ) ) {
+        openstudioDirPath = completeAndNormalize(toPath(szPath));
+      }
+    #else
+      Dl_info info;
+      if (dladdr("GetCurrentModule", &info)) {
+          openstudioDirPath = completeAndNormalize(toPath(info.dli_fname));
+      }
+    #endif
+    return openstudioDirPath;
+  }
+
+  openstudio::path getOpenStudioModuleDirectory()
+  {
+    return getOpenStudioModule().parent_path();
+  }
+
+  openstudio::path getOpenStudioCLI(){
+    openstudio::path cliPath;
+    #if defined _WIN32 
+      cliPath = getOpenStudioModuleDirectory() / toPath("openstudio.exe");
+    #else
+      cliPath = getOpenStudioModuleDirectory() / toPath("openstudio");
+    #endif
+
+    if( openstudio::filesystem::exists(cliPath) ){
+      return cliPath;
+    }
+
+    #if defined _WIN32 
+      cliPath = getOpenStudioModuleDirectory() / toPath("../bin/openstudio.exe");
+    #else
+      cliPath = getOpenStudioModuleDirectory() / toPath("../bin/openstudio");
+    #endif
+
+    if( openstudio::filesystem::exists(cliPath) ){
+      return cliPath;
+    }
+
+    return openstudio::path();
+  }
+
   openstudio::path getEnergyPlusExecutable() {
     
     openstudio::path cmakeEnergyPlusPath = openstudio::toPath("${ENERGYPLUS_EXE}");
@@ -149,16 +216,32 @@ namespace openstudio {
     openstudio::path energyPlusExeName = cmakeEnergyPlusPath.filename();
     openstudio::path energyPlusDirectoryName = cmakeEnergyPlusDirectory.filename();
 
-  #ifdef Q_OS_LINUX
-    auto systemPath = openstudio::toPath("/usr/local") / energyPlusDirectoryName / energyPlusExeName;
-  #elif defined(Q_OS_MAC)
-    auto systemPath = openstudio::toPath("/Applications") / energyPlusDirectoryName / energyPlusExeName;
-  #else
-    auto systemPath = openstudio::toPath("C:/") / energyPlusDirectoryName / energyPlusExeName;
-  #endif
+    #ifdef Q_OS_LINUX
+      auto systemPath = openstudio::toPath("/usr/local") / energyPlusDirectoryName / energyPlusExeName;
+    #elif defined(Q_OS_MAC)
+      auto systemPath = openstudio::toPath("/Applications") / energyPlusDirectoryName / energyPlusExeName;
+    #else
+      auto systemPath = openstudio::toPath("C:/") / energyPlusDirectoryName / energyPlusExeName;
+    #endif
 
     if( openstudio::filesystem::exists(systemPath) ) {
       return systemPath;
+    }
+
+    std::string energyPlusDirectoryNameStr = toString(energyPlusDirectoryName);
+    std::string energyPlusDirectoryNameStr2 = boost::replace_first_copy(energyPlusDirectoryNameStr,"EnergyPlus-","EnergyPlusV");
+    if (energyPlusDirectoryNameStr != energyPlusDirectoryNameStr2){
+      #ifdef Q_OS_LINUX
+       systemPath = openstudio::toPath("/usr/local") / toPath(energyPlusDirectoryNameStr2) / energyPlusExeName;
+      #elif defined(Q_OS_MAC)
+        systemPath = openstudio::toPath("/Applications") / toPath(energyPlusDirectoryNameStr2) / energyPlusExeName;
+      #else
+        systemPath = openstudio::toPath("C:/") / toPath(energyPlusDirectoryNameStr2) / energyPlusExeName;
+      #endif
+
+      if( openstudio::filesystem::exists(systemPath) ) {
+        return systemPath;
+      }
     }
 
     // next check user path

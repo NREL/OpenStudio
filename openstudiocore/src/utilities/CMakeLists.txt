@@ -381,6 +381,7 @@ set(${target_name}_test_src
 
   core/test/CoreFixture.hpp
   core/test/CoreFixture.cpp
+  core/test/ApplicationPathHelpers_GTest.cpp
   core/test/Checksum_GTest.cpp
   core/test/Compare_GTest.cpp
   core/test/Containers_GTest.cpp

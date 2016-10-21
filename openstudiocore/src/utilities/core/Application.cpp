@@ -65,24 +65,6 @@ ApplicationSingleton::~ApplicationSingleton()
   }
 }
 
-// define the function GetCurrentModule so we can get its address
-#if defined _WIN32 
-HMODULE GetCurrentModule()
-{
-	HMODULE hModule = NULL;
-	// hModule is NULL if GetModuleHandleEx fails.
-	GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS
-						| GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
-						(LPCTSTR)GetCurrentModule, &hModule);
-	return hModule;
-}
-#else
-bool GetCurrentModule()
-{
-  return true;
-}
-#endif
-
 /// get the QApplication, if no QApplication has been set this will create a default one
 QCoreApplication* ApplicationSingleton::application(bool gui)
 {
@@ -99,18 +81,7 @@ QCoreApplication* ApplicationSingleton::application(bool gui)
       QCoreApplication::setAttribute(Qt::AA_MacPluginApplication, true);
 
       // dir containing the current module, can be openstudio.so or openstudio.exe
-      openstudio::path openstudioDirPath;
-      #if defined _WIN32 
-        TCHAR szPath[MAX_PATH];
-        if( GetModuleFileName( GetCurrentModule(), szPath, MAX_PATH ) ) {
-          openstudioDirPath = completeAndNormalize(toPath(szPath).parent_path());
-        }
-      #else
-        Dl_info info;
-        if (dladdr("GetCurrentModule", &info)) {
-           openstudioDirPath = completeAndNormalize(toPath(info.dli_fname));
-        }
-      #endif
+      openstudio::path openstudioDirPath = getOpenStudioModuleDirectory();
 
       // Add the current module path to the backup plugin search location
       QCoreApplication::addLibraryPath(toQString(openstudioDirPath));

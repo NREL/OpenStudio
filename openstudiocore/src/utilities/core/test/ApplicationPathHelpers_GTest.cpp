@@ -26,48 +26,27 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
 
-#ifndef UTILITIES_CORE_APPLICATIONPATHHELPERS_HPP
-#define UTILITIES_CORE_APPLICATIONPATHHELPERS_HPP
+#include <gtest/gtest.h>
 
-#include "../UtilitiesAPI.hpp"
-#include "Path.hpp"
-#include <vector>
+#include "../ApplicationPathHelpers.hpp"
 
-namespace openstudio {
+using namespace openstudio;
 
-  /// \returns The source directory the application was built from
-  UTILITIES_API openstudio::path getApplicationSourceDirectory();
+TEST(ApplicationPathHelpers, Strings)
+{
+  path applicationPath = getApplicationPath();
+  path applicationDir = getApplicationDirectory();
+  path openstudioModule = getOpenStudioModule();
+  path openstudioModuleDirectory = getOpenStudioModuleDirectory();
+  path openstudioCLI = getOpenStudioCLI();
+  path energyplusDirectory = getEnergyPlusDirectory();
+  path energyplusExecutable = getEnergyPlusExecutable();
 
-  /// \returns The directory the application was built in
-  UTILITIES_API openstudio::path getApplicationBuildDirectory();
-
-  /// \returns The path to the current executable application
-  UTILITIES_API openstudio::path getApplicationPath();
-
-  /// \returns The directory of the current executable application
-  UTILITIES_API openstudio::path getApplicationDirectory();
-
-  /// \returns True if the application is running from the build directory
-  UTILITIES_API bool applicationIsRunningFromBuildDirectory();
-
-  /// \returns Will return path to the binary containing OpenStudio Utilities, could be openstudio.exe, openstudio.so, etc.
-  UTILITIES_API openstudio::path getOpenStudioModule();
-
-  /// \returns Will return dir containing the binary containing OpenStudio Utilities, could be openstudio.exe, openstudio.so, etc.
-  UTILITIES_API openstudio::path getOpenStudioModuleDirectory();
-
-  /// \returns The path to the OpenStudio Command Line Interface  if it exists.
-  UTILITIES_API openstudio::path getOpenStudioCLI();
-
-  /// \returns The packaged EnergyPlus installation if it exists.
-  UTILITIES_API openstudio::path getEnergyPlusDirectory();
-
-  /// \returns The path to the packaged EnergyPlus executable if it exists.
-  UTILITIES_API openstudio::path getEnergyPlusExecutable();
-
-  /// \returns The packaged Radiance installation if it exists.
-  UTILITIES_API boost::optional<openstudio::path> getRadianceDirectory();
-
-} // openstudio
-
-#endif //UTILITIES_CORE_PATHHELPERS_HPP
+  EXPECT_TRUE(exists(applicationPath));
+  EXPECT_TRUE(exists(applicationDir));
+  EXPECT_TRUE(exists(openstudioModule));
+  EXPECT_TRUE(exists(openstudioModuleDirectory));
+  EXPECT_TRUE(exists(openstudioCLI));
+  EXPECT_TRUE(exists(energyplusDirectory));
+  EXPECT_TRUE(exists(energyplusExecutable));
+}
