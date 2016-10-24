@@ -5992,7 +5992,7 @@ OS:OtherEquipment,
        \reference SpaceItemNames
        \reference SpaceLoadNames
        \reference SpaceComponentInstanceNames
-  A3, \field Other Equipment Definition Name
+  A3,  \field Other Equipment Definition Name
        \type object-list
        \required-field
        \object-list OtherEquipmentDefinitionNames
@@ -6004,10 +6004,27 @@ OS:OtherEquipment,
        \note units in Schedule should be fraction applied to design level of other equipment, generally (0.0 - 1.0)
        \type object-list
        \object-list ScheduleNames
-  N1; \field Multiplier
+  N1, \field Multiplier
        \type real
        \minimum 0.0
        \default 1.0
+  A6;  \field Fuel Type
+       \type choice
+       \key None
+       \key Electricity
+       \key NaturalGas
+       \key PropaneGas
+       \key FuelOil#1
+       \key FuelOil#2
+       \key Diesel
+       \key Gasoline
+       \key Coal
+       \key OtherFuel1
+       \key OtherFuel2
+       \key Steam
+       \key DistrictHeating
+       \key DistrictCooling
+       \default None
 
 OS:SpaceInfiltration:DesignFlowRate,
        \memo Infiltration is specified as a design level which is modified by a Schedule fraction, temperature difference and wind speed:
@@ -14565,10 +14582,21 @@ OS:Coil:Heating:Gas,
        \note increase the gas consumption of the coil due to transient coil operation.
        \type object-list
        \object-list QuadraticCubicCurves
-  N4; \field Parasitic Gas Load
+  N4, \field Parasitic Gas Load
        \note parasitic gas load associated with the gas coil operation (i.e., standing pilot)
        \type real
        \units W
+  A8;  \field Fuel Type
+       \type choice
+       \key NaturalGas
+       \key PropaneGas
+       \key Diesel
+       \key Gasoline
+       \key FuelOil#1
+       \key FuelOil#2
+       \key OtherFuel1
+       \key OtherFuel2
+       \default NaturalGas
 
 OS:Coil:Heating:Gas:MultiStage,
        \extensible:1

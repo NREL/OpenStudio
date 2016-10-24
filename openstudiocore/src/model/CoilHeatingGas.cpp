@@ -55,6 +55,7 @@
 #include "AirLoopHVAC_Impl.hpp"
 #include <utilities/idd/OS_Coil_Heating_Gas_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
+#include <utilities/idd/IddFactory.hxx>
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/units/Quantity.hpp"
@@ -140,6 +141,21 @@ namespace detail{
                               "Availability",
                               schedule);
     return result;
+  }
+
+  std::string CoilHeatingGas_Impl::fuelType() const
+  {
+    return this->getString(OS_Coil_Heating_GasFields::FuelType, true).get();
+  }
+
+  bool CoilHeatingGas_Impl::setFuelType(const std::string &fuelType)
+  {
+    return this->setString(OS_Coil_Heating_GasFields::FuelType, fuelType);
+  }
+
+  void CoilHeatingGas_Impl::resetFuelType()
+  {
+    this->setString(OS_Coil_Heating_GasFields::FuelType, "");
   }
 
   double CoilHeatingGas_Impl::gasBurnerEfficiency() const
@@ -493,6 +509,26 @@ bool CoilHeatingGas::setAvailabilitySchedule(Schedule & schedule )
 bool CoilHeatingGas::setAvailableSchedule(Schedule & schedule )
 {
   return getImpl<detail::CoilHeatingGas_Impl>()->setAvailabilitySchedule( schedule );
+}
+
+std::vector<std::string> CoilHeatingGas::validFuelTypeValues()
+{
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_Coil_Heating_GasFields::FuelType);
+}
+
+std::string CoilHeatingGas::fuelType() const
+{
+  return getImpl<detail::CoilHeatingGas_Impl>()->fuelType();
+}
+
+bool CoilHeatingGas::setFuelType(const std::string& fuelType)
+{
+  return getImpl<detail::CoilHeatingGas_Impl>()->setFuelType(fuelType);
+}
+
+void CoilHeatingGas::resetFuelType()
+{
+  getImpl<detail::CoilHeatingGas_Impl>()->resetFuelType();
 }
 
 double CoilHeatingGas::gasBurnerEfficiency() const

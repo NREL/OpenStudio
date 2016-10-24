@@ -63,6 +63,20 @@ TEST_F(ModelFixture,CoilHeatingGas) {
   ScheduleConstant schedule2(model);
   coilHeatingGas.setAvailableSchedule(schedule2);
   EXPECT_EQ(coilHeatingGas.availableSchedule(),schedule2);
+
+  EXPECT_EQ(coilHeatingGas.fuelType(), "NaturalGas");
+  bool isOk = coilHeatingGas.setFuelType("PropaneGas");
+  EXPECT_TRUE(isOk);
+  EXPECT_EQ(coilHeatingGas.fuelType(), "PropaneGas");
+  coilHeatingGas.resetFuelType();
+  EXPECT_EQ(coilHeatingGas.fuelType(), "NaturalGas");
+
+  std::vector<std::string> validFuelTypes(coilHeatingGas.validFuelTypeValues());
+  EXPECT_NE(std::find(validFuelTypes.begin(), validFuelTypes.end(), "PropaneGas"), validFuelTypes.end());
+  EXPECT_NE(std::find(validFuelTypes.begin(), validFuelTypes.end(), "NaturalGas"), validFuelTypes.end());
+  EXPECT_NE(std::find(validFuelTypes.begin(), validFuelTypes.end(), "Diesel"), validFuelTypes.end());
+  EXPECT_EQ(validFuelTypes.size(), 9);
+
 }
 
 TEST_F(ModelFixture,CoilHeatingGas_addToNode) {
