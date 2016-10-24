@@ -913,6 +913,24 @@
     <rule IddField="Tank" Access="LOCKED"/>
     <rule IddField="DX Coil" Access="LOCKED"/>
     <rule IddField="Fan" Access="LOCKED"/>
+  <POLICY IddObjectType="OS_WaterHeater_HeatPump_WrappedCondenser">
+    <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Outdoor Air Node Name" Access="HIDDEN"/>
+    <rule IddField="Tank Name" Access="LOCKED"/>
+    <rule IddField="DX Coil Name" Access="LOCKED"/>
+    <rule IddField="Fan Name" Access="LOCKED"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_Coil_WaterHeating_AirToWaterHeatPump_Wrapped">
+    <rule IddField="Evaporator Air Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Evaporator Air Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Heating Capacity Function of Temperature Curve Name" Access="LOCKED"/>
+    <rule IddField="Heating Capacity Function of Air Flow Fraction Curve Name" Access="LOCKED"/>
+    <rule IddField="Heating Capacity Function of Water Flow Fraction Curve Name" Access="LOCKED"/>
+    <rule IddField="Heating COP Function of Temperature Curve Name" Access="LOCKED"/>
+    <rule IddField="Heating COP Function of Air Flow Fraction Curve Name" Access="LOCKED"/>
+    <rule IddField="Heating COP Function of Water Flow Fraction Curve Name" Access="LOCKED"/>
+    <rule IddField="Part Load Fraction Correlation Curve Name" Access="LOCKED"/>
   </POLICY>
   <POLICY IddObjectType="OS_Coil_WaterHeating_AirToWaterHeatPump">
     <rule IddField="Evaporator Air Inlet Node Name" Access="HIDDEN"/>

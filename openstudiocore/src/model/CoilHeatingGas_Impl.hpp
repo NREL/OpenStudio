@@ -92,6 +92,12 @@ namespace detail {
 
     bool setAvailabilitySchedule(Schedule& schedule);
 
+    std::string fuelType() const;
+
+    bool setFuelType(const std::string& fuelType);
+
+    void resetFuelType();
+
     // Get GasBurnerEfficiency
     double gasBurnerEfficiency() const;
 

@@ -71,6 +71,12 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingGas( CoilHeati
   }
 
   ///////////////////////////////////////////////////////////////////////////
+  // Field: Fuel Type
+  ///////////////////////////////////////////////////////////////////////////
+  idfObject.setString(openstudio::Coil_Heating_FuelFields::FuelType, modelObject.fuelType());
+  ///////////////////////////////////////////////////////////////////////////
+
+  ///////////////////////////////////////////////////////////////////////////
   // Field: Gas Burner Efficiency ///////////////////////////////////////////
   idfObject.setDouble(openstudio::Coil_Heating_FuelFields::BurnerEfficiency,modelObject.gasBurnerEfficiency());
   ///////////////////////////////////////////////////////////////////////////
@@ -128,9 +134,6 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingGas( CoilHeati
       idfObject.setString(Coil_Heating_FuelFields::PartLoadFractionCorrelationCurveName,_curve->name().get()); 
     }
   }
-
-  // New field in EP 8.6
-  idfObject.setString(Coil_Heating_FuelFields::FuelType,"NaturalGas");
 
   return boost::optional<IdfObject>(idfObject);
 }

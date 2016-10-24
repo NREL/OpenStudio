@@ -148,19 +148,27 @@ UUID toUUID(const std::string& str)
   }
 }
 
+// Finds Version 4 uuid in a string including {}
+boost::regex &uuidInString() {
+  static boost::regex result("(\\{[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}\\})");
+  return result;
+}
+
 bool operator!= ( const UUID & lhs, const UUID & rhs ) {
   return static_cast<const boost::uuids::uuid&>(lhs) != static_cast<const boost::uuids::uuid&>(rhs);
 }
+
 bool operator< ( const UUID & lhs, const UUID & rhs ) {
   return static_cast<const boost::uuids::uuid&>(lhs) < static_cast<const boost::uuids::uuid&>(rhs);
 }
+
 bool operator== ( const UUID & lhs, const UUID & rhs ) {
   return static_cast<const boost::uuids::uuid&>(lhs) == static_cast<const boost::uuids::uuid&>(rhs);
 }
+
 bool operator> ( const UUID & lhs, const UUID & rhs ) {
   return static_cast<const boost::uuids::uuid&>(lhs) > static_cast<const boost::uuids::uuid&>(rhs);
 }
-
 
 std::string toString(const UUID& uuid)
 {

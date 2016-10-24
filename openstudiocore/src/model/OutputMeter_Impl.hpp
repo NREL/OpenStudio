@@ -75,6 +75,8 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const override;
 
+    virtual std::vector<openstudio::IdfObject> remove() override;
+
     /** @name Getters */
     //@{
 

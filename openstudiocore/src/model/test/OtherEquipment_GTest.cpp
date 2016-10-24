@@ -26,6 +26,8 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
 
+#include <algorithm>
+
 #include <gtest/gtest.h>
 
 #include "ModelFixture.hpp"
@@ -82,4 +84,23 @@ TEST_F(ModelFixture, OtherEquipment_Instance)
   OtherEquipmentDefinition definition(model);
   OtherEquipment instance(definition);
   EXPECT_TRUE(instance.definition().optionalCast<OtherEquipmentDefinition>());
+}
+
+TEST_F(ModelFixture, OtherEquipment_FuelType)
+{
+  Model model;
+  OtherEquipmentDefinition definition(model);
+  OtherEquipment equipment(definition);
+
+  EXPECT_EQ(equipment.fuelType(), "None");
+  EXPECT_TRUE(equipment.setFuelType("NaturalGas"));
+  EXPECT_EQ(equipment.fuelType(), "NaturalGas");
+  equipment.resetFuelType();
+  EXPECT_EQ(equipment.fuelType(), "None");
+  std::vector<std::string> validFuelTypes(equipment.validFuelTypeValues());
+  EXPECT_NE(std::find(validFuelTypes.begin(), validFuelTypes.end(), "Electricity"), validFuelTypes.end());
+  EXPECT_NE(std::find(validFuelTypes.begin(), validFuelTypes.end(), "NaturalGas"), validFuelTypes.end());
+  EXPECT_NE(std::find(validFuelTypes.begin(), validFuelTypes.end(), "Coal"), validFuelTypes.end());
+  EXPECT_EQ(validFuelTypes.size(), 14);
+
 }

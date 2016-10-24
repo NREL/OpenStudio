@@ -537,7 +537,7 @@ namespace detail {
     bool baseNamesMatch(const std::string& baseName, const std::string& objectName) const;
 
     /** Returns optional suffix integer from objectName. */
-    boost::optional<int> getNameSuffix(const std::string& objectName) const;
+    std::tuple<boost::optional<int>, std::string> getNameSuffix(const std::string& objectName) const;
 
     /** Returns objectName in with any suffix integers removed. */
     std::string getBaseName(const std::string& objectName) const;

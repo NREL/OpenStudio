@@ -1923,8 +1923,25 @@ namespace detail {
     return istringEqual(baseName, getBaseName(objectName));
   }
 
-  boost::optional<int> Workspace_Impl::getNameSuffix(const std::string& objectName) const {
-    std::size_t found = objectName.find_last_of(' ');
+  std::tuple<boost::optional<int>, std::string> Workspace_Impl::getNameSuffix(const std::string& objectName) const {
+
+    std::size_t found1 = objectName.find_last_of(' ');
+    std::size_t found2 = objectName.find_last_of('_');
+    std::size_t found = string::npos;
+    std::string spacer = " ";
+    if (found1 != string::npos && found2 != string::npos) {
+      found = std::max(found1, found2);
+      if (found2 > found1) {
+        spacer = "_";
+      }
+    } else if (found1 != string::npos) {
+      found = found1;
+      spacer = " ";
+    } else if (found2 != string::npos) {
+      found = found2;
+      spacer = "_";
+    }
+    
     if ( found != string::npos ) {
       std::string strSuffix = objectName.substr(found+1);
       const char *p = strSuffix.c_str();
@@ -1935,13 +1952,24 @@ namespace detail {
           ++p;
           ++count;
       }
-      if (suffix > 0 && count == strSuffix.size() ) { return suffix; }
+      if (suffix > 0 && count == strSuffix.size() ) { return std::make_tuple(suffix, spacer); }
     }
-    return boost::none;
+    return std::make_tuple(boost::none, " ");
   }
 
   std::string Workspace_Impl::getBaseName(const std::string& objectName) const {
-    std::size_t found = objectName.find_last_of(' ');
+ 
+    std::size_t found1 = objectName.find_last_of(' ');
+    std::size_t found2 = objectName.find_last_of('_');
+    std::size_t found = string::npos;
+    if (found1 != string::npos && found2 != string::npos) {
+      found = std::max(found1, found2);
+    } else if (found1 != string::npos) {
+      found = found1;
+    } else if (found2 != string::npos) {
+      found = found2;
+    }
+    
     if ( found != string::npos ) {
       std::string strSuffix = objectName.substr(found+1);
       const char *p = strSuffix.c_str();
@@ -2518,9 +2546,11 @@ namespace detail {
                                                 bool fillIn) const
   {
     vector<int> takenValues;
+    std::tuple<boost::optional<int>, std::string> takenSuffix;
     for (const WorkspaceObject& object : objectsInTheSeries) {
-      if (boost::optional<int> takenSuffix = getNameSuffix(*(object.name()))) {
-        takenValues.push_back(*takenSuffix);
+      takenSuffix = getNameSuffix(*(object.name()));
+      if (std::get<0>(takenSuffix)) {
+        takenValues.push_back(*std::get<0>(takenSuffix));
       }
     }
     std::sort(takenValues.begin(), takenValues.end());
@@ -2542,8 +2572,11 @@ namespace detail {
         suffix = *(takenValues.rbegin()) + 1;
       }
     }
-
-    return getBaseName(objectName) + ' ' + boost::lexical_cast<std::string>(suffix);
+    std::string spacer = std::get<1>(takenSuffix);
+    if (spacer == "") {
+      spacer = " ";
+    }
+    return getBaseName(objectName) + spacer + boost::lexical_cast<std::string>(suffix);
   }
 
   std::vector< std::vector<WorkspaceObject> > Workspace_Impl::nameConflicts(
