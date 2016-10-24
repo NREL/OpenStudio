@@ -7,8 +7,7 @@ if(NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/OpenStudio-PAT-${PAT_SHA}.zip)
   endforeach()
 
   # Make github public and use a direct github url please
-  # https://github.com/NREL/OpenStudio-PAT/archive/e63190d426bbbd615e3798419a83067039697939.zip
-  file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/OpenStudio-PAT-${PAT_SHA}.zip"
+  file(DOWNLOAD "https://github.com/NREL/OpenStudio-PAT/archive/${PAT_SHA}.zip"
     "${CMAKE_CURRENT_BINARY_DIR}/OpenStudio-PAT-${PAT_SHA}.zip"
     TIMEOUT 120 INACTIVITY_TIMEOUT 120 
     SHOW_PROGRESS
