@@ -2,6 +2,8 @@
 ###### 2016-10-29 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.13.1...v1.13.2 )
 
 - ![Added:][added] [#2382]( https://github.com/NREL/OpenStudio/pull/2382 ), Added support for EMS functionality.
+- ![Added:][added] [#2375]( https://github.com/NREL/OpenStudio/pull/2375 ), Added Fuel Type to OtherEquipment:Definition and Coil:Heating:Gas.
+- ![Fixed:][fixed] [#2380]( https://github.com/NREL/OpenStudio/pull/2380 ), Removed CAV and VAV fan limit from air loops.
 
 ## OpenStudio v1.13.1
 ###### 2016-10-15 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.13.0...v1.13.1 )
