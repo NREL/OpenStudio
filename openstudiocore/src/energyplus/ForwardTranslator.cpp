@@ -107,7 +107,7 @@ ForwardTranslator::ForwardTranslator()
 
 Workspace ForwardTranslator::translateModel( const Model & model, ProgressBar* progressBar )
 {
-  Model modelCopy = model.clone().cast<Model>();
+  Model modelCopy = model.clone(true).cast<Model>();
 
   m_progressBar = progressBar;
   if (m_progressBar){
@@ -1366,6 +1366,78 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     retVal = translateElectricLoadCenterStorageConverter(temp);
     break;
   }
+  case openstudio::IddObjectType::OS_EnergyManagementSystem_Actuator:
+  {
+    model::EnergyManagementSystemActuator actuator = modelObject.cast<EnergyManagementSystemActuator>();
+    retVal = translateEnergyManagementSystemActuator(actuator);
+    break;
+  }
+  case openstudio::IddObjectType::OS_EnergyManagementSystem_ConstructionIndexVariable:
+  {
+    model::EnergyManagementSystemConstructionIndexVariable civ = modelObject.cast<EnergyManagementSystemConstructionIndexVariable>();
+    retVal = translateEnergyManagementSystemConstructionIndexVariable(civ);
+    break;
+  }
+  case openstudio::IddObjectType::OS_EnergyManagementSystem_CurveOrTableIndexVariable:
+  {
+    model::EnergyManagementSystemCurveOrTableIndexVariable cotiv = modelObject.cast<EnergyManagementSystemCurveOrTableIndexVariable>();
+    retVal = translateEnergyManagementSystemCurveOrTableIndexVariable(cotiv);
+    break;
+  }
+  case openstudio::IddObjectType::OS_EnergyManagementSystem_GlobalVariable:
+  {
+    model::EnergyManagementSystemGlobalVariable globalVariable = modelObject.cast<EnergyManagementSystemGlobalVariable>();
+    retVal = translateEnergyManagementSystemGlobalVariable(globalVariable);
+    break;
+  }
+  case openstudio::IddObjectType::OS_EnergyManagementSystem_InternalVariable:
+  {
+    model::EnergyManagementSystemInternalVariable internalVariable = modelObject.cast<EnergyManagementSystemInternalVariable>();
+    retVal = translateEnergyManagementSystemInternalVariable(internalVariable);
+    break;
+  }
+  case openstudio::IddObjectType::OS_EnergyManagementSystem_MeteredOutputVariable:
+  {
+    model::EnergyManagementSystemMeteredOutputVariable mov = modelObject.cast<EnergyManagementSystemMeteredOutputVariable>();
+    retVal = translateEnergyManagementSystemMeteredOutputVariable(mov);
+    break;
+  }
+  case openstudio::IddObjectType::OS_EnergyManagementSystem_OutputVariable:
+  {
+    model::EnergyManagementSystemOutputVariable outputVariable = modelObject.cast<EnergyManagementSystemOutputVariable>();
+    retVal = translateEnergyManagementSystemOutputVariable(outputVariable);
+    break;
+  }
+  case openstudio::IddObjectType::OS_EnergyManagementSystem_Program:
+  {
+    model::EnergyManagementSystemProgram program = modelObject.cast<EnergyManagementSystemProgram>();
+    retVal = translateEnergyManagementSystemProgram(program);
+    break;
+  }
+  case openstudio::IddObjectType::OS_EnergyManagementSystem_ProgramCallingManager:
+  {
+    model::EnergyManagementSystemProgramCallingManager programCallingManager = modelObject.cast<EnergyManagementSystemProgramCallingManager>();
+    retVal = translateEnergyManagementSystemProgramCallingManager(programCallingManager);
+    break;
+  }
+  case openstudio::IddObjectType::OS_EnergyManagementSystem_Sensor:
+  {
+    model::EnergyManagementSystemSensor sensor = modelObject.cast<EnergyManagementSystemSensor>();
+    retVal = translateEnergyManagementSystemSensor(sensor);
+    break;
+  }
+  case openstudio::IddObjectType::OS_EnergyManagementSystem_Subroutine:
+  {
+    model::EnergyManagementSystemSubroutine subroutine = modelObject.cast<EnergyManagementSystemSubroutine>();
+    retVal = translateEnergyManagementSystemSubroutine(subroutine);
+    break;
+  }
+  case openstudio::IddObjectType::OS_EnergyManagementSystem_TrendVariable:
+  {
+    model::EnergyManagementSystemTrendVariable trendVariable = modelObject.cast<EnergyManagementSystemTrendVariable>();
+    retVal = translateEnergyManagementSystemTrendVariable(trendVariable);
+    break;
+  }
   case openstudio::IddObjectType::OS_EvaporativeCooler_Direct_ResearchSpecial :
     {
       model::EvaporativeCoolerDirectResearchSpecial evap = modelObject.cast<EvaporativeCoolerDirectResearchSpecial>();
@@ -1864,6 +1936,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateOutputVariable(outputVariable);
       break;
     }
+  case openstudio::IddObjectType::OS_Output_EnergyManagementSystem:
+  {
+    model::OutputEnergyManagementSystem outputEnergyManagementSystem = modelObject.cast<OutputEnergyManagementSystem>();
+    retVal = translateOutputEnergyManagementSystem(outputEnergyManagementSystem);
+    break;
+  }
   case openstudio::IddObjectType::OS_People :
     {
       model::People people = modelObject.cast<People>();
@@ -2979,6 +3057,20 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_Meter_Custom);
   result.push_back(IddObjectType::OS_Meter_CustomDecrement);
   result.push_back(IddObjectType::OS_Output_Variable);
+
+  result.push_back(IddObjectType::OS_EnergyManagementSystem_GlobalVariable);
+  result.push_back(IddObjectType::OS_EnergyManagementSystem_InternalVariable);
+  result.push_back(IddObjectType::OS_EnergyManagementSystem_Sensor);
+  result.push_back(IddObjectType::OS_EnergyManagementSystem_Actuator);
+  result.push_back(IddObjectType::OS_EnergyManagementSystem_ConstructionIndexVariable);
+  result.push_back(IddObjectType::OS_EnergyManagementSystem_CurveOrTableIndexVariable);
+  result.push_back(IddObjectType::OS_EnergyManagementSystem_MeteredOutputVariable);
+  result.push_back(IddObjectType::OS_EnergyManagementSystem_Program);
+  result.push_back(IddObjectType::OS_EnergyManagementSystem_Subroutine);
+  result.push_back(IddObjectType::OS_EnergyManagementSystem_ProgramCallingManager);
+  result.push_back(IddObjectType::OS_EnergyManagementSystem_OutputVariable);
+  result.push_back(IddObjectType::OS_EnergyManagementSystem_TrendVariable);
+  result.push_back(IddObjectType::OS_Output_EnergyManagementSystem);
 
   return result;
 }

@@ -121,6 +121,18 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateElectricLoadCenterInverterSimple.cpp
   ForwardTranslator/ForwardTranslateElectricLoadCenterStorageSimple.cpp
   ForwardTranslator/ForwardTranslateElectricLoadCenterStorageConverter.cpp
+  ForwardTranslator/ForwardTranslateEnergyManagementSystemActuator.cpp
+  ForwardTranslator/ForwardTranslateEnergyManagementSystemConstructionIndexVariable.cpp
+  ForwardTranslator/ForwardTranslateEnergyManagementSystemCurveOrTableIndexVariable.cpp
+  ForwardTranslator/ForwardTranslateEnergyManagementSystemGlobalVariable.cpp
+  ForwardTranslator/ForwardTranslateEnergyManagementSystemInternalVariable.cpp
+  ForwardTranslator/ForwardTranslateEnergyManagementSystemMeteredOutputVariable.cpp
+  ForwardTranslator/ForwardTranslateEnergyManagementSystemOutputVariable.cpp
+  ForwardTranslator/ForwardTranslateEnergyManagementSystemProgram.cpp
+  ForwardTranslator/ForwardTranslateEnergyManagementSystemProgramCallingManager.cpp
+  ForwardTranslator/ForwardTranslateEnergyManagementSystemSensor.cpp
+  ForwardTranslator/ForwardTranslateEnergyManagementSystemSubroutine.cpp
+  ForwardTranslator/ForwardTranslateEnergyManagementSystemTrendVariable.cpp
   ForwardTranslator/ForwardTranslateEvaporativeCoolerDirectResearchSpecial.cpp
   ForwardTranslator/ForwardTranslateEvaporativeCoolerIndirectResearchSpecial.cpp
   ForwardTranslator/ForwardTranslateEvaporativeFluidCoolerSingleSpeed.cpp
@@ -170,6 +182,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateOutputControlReportingTolerances.cpp
   ForwardTranslator/ForwardTranslateOutputMeter.cpp
   ForwardTranslator/ForwardTranslateOutputVariable.cpp
+  ForwardTranslator/ForwardTranslateOutputEnergyManagementSystem.cpp
   ForwardTranslator/ForwardTranslatePeople.cpp
   ForwardTranslator/ForwardTranslatePhotovoltaicPerformanceEquivalentOneDiode.cpp
   ForwardTranslator/ForwardTranslatePhotovoltaicPerformanceSimple.cpp
@@ -363,6 +376,19 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateElectricEquipment.cpp
   ReverseTranslator/ReverseTranslateElectricLoadCenterStorageSimple.cpp
   ReverseTranslator/ReverseTranslateElectricLoadCenterStorageConverter.cpp
+  ReverseTranslator/ReverseTranslateEnergyManagementSystemActuator.cpp
+  ReverseTranslator/ReverseTranslateEnergyManagementSystemActuator.cpp
+  ReverseTranslator/ReverseTranslateEnergyManagementSystemConstructionIndexVariable.cpp
+  ReverseTranslator/ReverseTranslateEnergyManagementSystemCurveOrTableIndexVariable.cpp
+  ReverseTranslator/ReverseTranslateEnergyManagementSystemGlobalVariable.cpp
+  ReverseTranslator/ReverseTranslateEnergyManagementSystemInternalVariable.cpp
+  ReverseTranslator/ReverseTranslateEnergyManagementSystemMeteredOutputVariable.cpp
+  ReverseTranslator/ReverseTranslateEnergyManagementSystemOutputVariable.cpp
+  ReverseTranslator/ReverseTranslateEnergyManagementSystemProgram.cpp
+  ReverseTranslator/ReverseTranslateEnergyManagementSystemProgramCallingManager.cpp
+  ReverseTranslator/ReverseTranslateEnergyManagementSystemSensor.cpp
+  ReverseTranslator/ReverseTranslateEnergyManagementSystemSubroutine.cpp
+  ReverseTranslator/ReverseTranslateEnergyManagementSystemTrendVariable.cpp
   ReverseTranslator/ReverseTranslateEvaporativeCoolerDirectResearchSpecial.cpp
   ReverseTranslator/ReverseTranslateEvaporativeFluidCoolerSingleSpeed.cpp
   ReverseTranslator/ReverseTranslateExteriorLights.cpp
@@ -381,6 +407,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateMeterCustom.cpp
   ReverseTranslator/ReverseTranslateMeterCustomDecrement.cpp
   ReverseTranslator/ReverseTranslateOtherEquipment.cpp
+  ReverseTranslator/ReverseTranslateOutputEnergyManagementSystem.cpp
   ReverseTranslator/ReverseTranslateOutputIlluminanceMap.cpp
   ReverseTranslator/ReverseTranslateOutputMeter.cpp
   ReverseTranslator/ReverseTranslateOutputMeterCumulative.cpp
@@ -456,6 +483,7 @@ set(${target_name}_test_src
   Test/DaylightingDeviceShelf_GTest.cpp
   Test/DesignSpecificationOutdoorAir_GTest.cpp
   Test/ElectricEquipment_GTest.cpp
+  Test/EMS_GTest.cpp
   Test/ExteriorLights_GTest.cpp
   Test/GasEquipment_GTest.cpp
   Test/HotWaterEquipment_GTest.cpp
