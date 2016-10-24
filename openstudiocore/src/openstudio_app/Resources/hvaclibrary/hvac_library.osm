@@ -2465,7 +2465,7 @@ OS:WaterHeater:Mixed,
 OS:WaterHeater:HeatPump:WrappedCondenser,
   {0cf7ccd6-da8e-427d-8d2f-0acd55b7e681}, !- Handle
   Water Heater Heat Pump Wrapped Condenser, !- Name
-  {85d00318-5838-4159-b61a-046b8e1cab60}, !- Availability Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   {a7ad7f6b-31b7-46d9-975d-8a1f58241fa7}, !- Compressor Setpoint Temperature Schedule Name
   3.89,                                   !- Dead Band Temperature Difference {deltaC}
   0.0664166667,                           !- Condenser Bottom Location {m}
