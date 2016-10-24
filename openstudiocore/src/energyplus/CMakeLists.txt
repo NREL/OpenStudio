@@ -119,6 +119,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateElectricLoadCenterDistribution.cpp
   ForwardTranslator/ForwardTranslateElectricLoadCenterInverterLookUpTable.cpp
   ForwardTranslator/ForwardTranslateElectricLoadCenterInverterSimple.cpp
+  ForwardTranslator/ForwardTranslateElectricLoadCenterStorageConverter.cpp
   ForwardTranslator/ForwardTranslateElectricLoadCenterStorageSimple.cpp
   ForwardTranslator/ForwardTranslateEnergyManagementSystemActuator.cpp
   ForwardTranslator/ForwardTranslateEnergyManagementSystemConstructionIndexVariable.cpp
