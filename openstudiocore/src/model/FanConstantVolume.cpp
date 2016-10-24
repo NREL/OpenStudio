@@ -217,11 +217,6 @@ namespace detail {
           fanCount += subsetCastVector<FanVariableVolume>(oaSystem->components()).size();
         }
 
-        if( fanCount > 1 )
-        {
-          return false;
-        }
-
         if( StraightComponent_Impl::addToNode(node) ) 
         {
           SetpointManagerMixedAir::updateFanInletOutletNodes(airLoop.get());
@@ -581,4 +576,3 @@ void FanConstantVolume::autosizeMaximumFlowRate() {
 
 } // model
 } // openstudio
-
