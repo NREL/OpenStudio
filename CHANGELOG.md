@@ -1,3 +1,8 @@
+## OpenStudio v1.13.2
+###### 2016-10-29 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.13.1...v1.13.2 )
+
+- ![Added:][added] [#2382]( https://github.com/NREL/OpenStudio/pull/2382 ), Added support for EMS functionality.
+
 ## OpenStudio v1.13.1
 ###### 2016-10-15 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.13.0...v1.13.1 )
 
