@@ -1,4 +1,4 @@
-set(PAT_SHA "e63190d426bbbd615e3798419a83067039697939")
+set(PAT_SHA "248b78e65076238e5a9c6235febbc9eecd724a8e")
 
 find_program(NPM_COMMAND npm)
 
@@ -26,10 +26,15 @@ add_custom_target(PAT ALL
 )
 
 if( APPLE )
-install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/OpenStudio-PAT-${PAT_SHA}/tmp/ParametricAnalysisTool.app" DESTINATION .
-  USE_SOURCE_PERMISSIONS 
-  COMPONENT PAT
-)
+  install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/OpenStudio-PAT-${PAT_SHA}/tmp/ParametricAnalysisTool.app" DESTINATION .
+    USE_SOURCE_PERMISSIONS 
+    COMPONENT PAT
+  )
+else()
+  install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/OpenStudio-PAT-${PAT_SHA}/tmp/pat" DESTINATION .
+    USE_SOURCE_PERMISSIONS 
+    COMPONENT PAT
+  )
 endif()
 
 #TODO figure out what the package structure is like on windows and install that
