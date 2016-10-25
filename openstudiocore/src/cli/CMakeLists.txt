@@ -217,4 +217,13 @@ endif()
 
 install(TARGETS openstudio DESTINATION bin COMPONENT "CLI")
 
+if( BUILD_PAT )
+  if( APPLE )
+    install(TARGETS openstudio
+      DESTINATION ParametricAnalysisTool.app/Contents/Resources/OpenStudio/bin/
+      COMPONENT PAT
+    )
+  endif()
+endif()
+
 

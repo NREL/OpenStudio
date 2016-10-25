@@ -3,3 +3,5 @@ execute_process(COMMAND "${NPM_COMMAND}" install WORKING_DIRECTORY "${CMAKE_CURR
 execute_process(COMMAND "${NPM_COMMAND}" install bower WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/OpenStudio-PAT-${PAT_SHA}")
 execute_process(COMMAND "${CMAKE_CURRENT_BINARY_DIR}/OpenStudio-PAT-${PAT_SHA}/node_modules/.bin/bower" install WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/OpenStudio-PAT-${PAT_SHA}")
 execute_process(COMMAND "${NPM_COMMAND}" run release WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/OpenStudio-PAT-${PAT_SHA}")
+set(PAT_RESOURCE_PREFIX tmp/ParametricAnalysisTool.app/Contents/Resources/)
+execute_process(COMMAND "${CMAKE_CURRENT_BINARY_DIR}/OpenStudio-PAT-${PAT_SHA}/node_modules/.bin/gulp" install-deps --exclude=openstudio --prefix="${PAT_RESOURCE_PREFIX}" WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/OpenStudio-PAT-${PAT_SHA}")
