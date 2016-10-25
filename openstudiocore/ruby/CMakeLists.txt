@@ -128,3 +128,13 @@ endif()
 
 install(TARGETS openstudio_rb DESTINATION Ruby COMPONENT "RubyAPI")
 install(FILES openstudio.rb DESTINATION Ruby COMPONENT "RubyAPI")
+
+if( BUILD_PAT )
+  if( APPLE )
+    install(TARGETS openstudio_rb
+      DESTINATION ParametricAnalysisTool.app/Contents/Resources/OpenStudio/Ruby/
+      COMPONENT PAT
+    )
+  endif()
+endif()
+
