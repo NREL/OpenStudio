@@ -33,11 +33,16 @@
 #include "CollapsibleComponentList.hpp"
 #include "Component.hpp"
 #include "ComponentList.hpp"
+#include "BaseApp.hpp"
+#include "MeasureManager.hpp"
+
+#include "../measure/OSArgument.hpp"
 
 #include "../utilities/bcl/BCL.hpp"
 #include "../utilities/bcl/LocalBCL.hpp"
 #include "../utilities/bcl/RemoteBCL.hpp"
 #include "../utilities/data/Attribute.hpp"
+#include "../utilities/core/Application.hpp"
 #include "../utilities/core/Assert.hpp"
 
 #include <QApplication>
@@ -363,6 +368,7 @@ void BuildingComponentDialogCentralWidget::measureDownloadComplete(const std::st
 
   if (measure){
     // good
+
     // remove old measure
     boost::optional<BCLMeasure> oldMeasure = LocalBCL::instance().getMeasure(measure->uid());
     if (oldMeasure && oldMeasure->versionId() != measure->versionId()){
@@ -377,6 +383,18 @@ void BuildingComponentDialogCentralWidget::measureDownloadComplete(const std::st
         break;
       }
     }
+  }
+
+  BaseApp* app = dynamic_cast<BaseApp*>(Application::instance().application());
+  if (app){
+    if (measure){
+      try{
+        app->measureManager().getArguments(*measure);
+      } catch (const std::exception&){
+
+      }
+    }
+    app->measureManager().updateMeasuresLists();
   }
 
   m_pendingDownloads.erase(uid);
