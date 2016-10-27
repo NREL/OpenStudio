@@ -43,3 +43,4 @@ FileUtils.rm_rf("#{workflow_gem_dir}/test")
 
 # tar -zcvf openstudio-gems.tar.gz openstudio-gems
 # md5sum openstudio-gems.tar.gz
+# upload gems to s3, update openstudiocore/CMakeLists.txt
