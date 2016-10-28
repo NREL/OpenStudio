@@ -44,6 +44,7 @@ namespace detail{
   class MeasureStep_Impl;
 }
 
+class MeasureType;
 class WorkflowStepResult;
 
 /** Base class for defining a step in an OpenStudio Workflow. */
@@ -125,26 +126,43 @@ public:
 
   std::string measureDirName() const;
 
+  boost::optional<std::string> measureId() const;
+  bool setMeasureId(const std::string& id);
+  void resetMeasureId();
+
+  boost::optional<UUID> measureUUID() const;
+  bool setMeasureUUID(const UUID& uuid);
+  void resetMeasureUUID();
+
+  boost::optional<std::string> versionId() const;
+  bool setVersionId(const std::string& id);
+  void resetVersionId();
+
+  boost::optional<UUID> versionUUID() const;
+  bool setVersionUUID(const UUID& uuid);
+  void resetVersionUUID();
+
+  boost::optional<std::string> taxonomy() const;
+  bool setTaxonomy(const std::string& taxonomy);
+  void resetTaxonomy();
+
+  boost::optional<MeasureType> measureType() const;
+  bool setMeasureType(const MeasureType& measureType);
+  void resetMeasureType();
+
   boost::optional<std::string> name() const;
-
   bool setName(const std::string& name);
-
   void resetName();
 
   boost::optional<std::string> description() const;
-
   bool setDescription(const std::string& description);
-
   void resetDescription();
 
   boost::optional<std::string> modelerDescription() const;
-
   bool setModelerDescription(const std::string& modelerDescription);
-
   void resetModelerDescription();
 
   std::map<std::string, Variant> arguments() const;
-
   boost::optional<Variant> getArgument(const std::string& name) const;
 
   void setArgument(const std::string& name, const Variant& value);
