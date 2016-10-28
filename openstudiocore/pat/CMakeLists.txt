@@ -15,6 +15,8 @@ else()
   set(PAT_PRODUCT_FILE "${CMAKE_CURRENT_BINARY_DIR}/OpenStudio-PAT/tmp/ParametricAnalysisTool")
 endif()
 
+get_filename_component(GIT_DIR ${GIT_EXECUTABLE} DIRECTORY)
+
 configure_file(BuildPat.bat.in BuildPat.bat)
 
 add_custom_command(OUTPUT "${PAT_PRODUCT_FILE}"
