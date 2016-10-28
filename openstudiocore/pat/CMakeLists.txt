@@ -1,4 +1,4 @@
-set(PAT_SHA "248b78e65076238e5a9c6235febbc9eecd724a8e")
+set(PAT_SHA "fb2c5c18b5c3eba21d13a20f0ed25b67f2fee30d")
 
 find_program(NPM_COMMAND npm)
 
@@ -8,7 +8,7 @@ add_custom_command(OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/OpenStudio-PAT-${PAT_SHA}
 )
 
 if( APPLE )
-  set(PAT_PRODUCT_FILE "${CMAKE_CURRENT_BINARY_DIR}/OpenStudio-PAT}/tmp/ParametricAnalysisTool.app/Contents/MacOS/ParametricAnalysisTool")
+  set(PAT_PRODUCT_FILE "${CMAKE_CURRENT_BINARY_DIR}/OpenStudio-PAT/tmp/ParametricAnalysisTool.app/Contents/MacOS/ParametricAnalysisTool")
 elseif( WIN32 )
   set(PAT_PRODUCT_FILE "${CMAKE_CURRENT_BINARY_DIR}/OpenStudio-PAT/tmp/pat/ParametricAnalysisTool.exe")
 else()
