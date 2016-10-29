@@ -169,7 +169,7 @@ namespace gbxml {
     result.replace("\\", "_");
     //result.replace("-", "_"); // ok
     //result.replace(".", "_"); // ok
-    //result.replace(":", "_"); // ok
+    result.replace(":", "_"); 
     result.replace(";", "_");
     return result;
   }
@@ -345,6 +345,7 @@ namespace gbxml {
         boost::optional<double> flow;
         QString thermalZoneId = escapeName(thermalZone.name().get());
         
+        // DLM: these queries are taken from the OpenStudio standards, should be ported to Model
         query = "SELECT Value ";
         query += "FROM tabulardatawithstrings ";
         query += "WHERE ReportName='HVACSizingSummary' ";
@@ -396,10 +397,9 @@ namespace gbxml {
         if (heatLoad){
           QDomElement resultsElement = doc.createElement("Results");
           gbXMLElement.appendChild(resultsElement);
-          gbXMLElement.setAttribute("id", thermalZoneId + "HeatLoad");
-          gbXMLElement.setAttribute("objectIdRef", thermalZoneId);
-          gbXMLElement.setAttribute("resultsType", "HeatLoad");
-          gbXMLElement.setAttribute("unit", "W");
+          resultsElement.setAttribute("id", thermalZoneId + "HeatLoad");
+          resultsElement.setAttribute("resultsType", "HeatLoad");
+          resultsElement.setAttribute("unit", "Kilowatt");
 
           QDomElement objectIdElement = doc.createElement("ObjectId");
           resultsElement.appendChild(objectIdElement);
@@ -407,16 +407,15 @@ namespace gbxml {
 
           QDomElement valueElement = doc.createElement("Value");
           resultsElement.appendChild(valueElement);
-          valueElement.appendChild(doc.createTextNode(QString::number(*heatLoad, 'f')));
+          valueElement.appendChild(doc.createTextNode(QString::number(*heatLoad/1000.0, 'f')));
         }
 
         if (coolingLoad){
           QDomElement resultsElement = doc.createElement("Results");
           gbXMLElement.appendChild(resultsElement);
-          gbXMLElement.setAttribute("id", thermalZoneId + "CoolingLoad");
-          gbXMLElement.setAttribute("objectIdRef", thermalZoneId);
-          gbXMLElement.setAttribute("resultsType", "CoolingLoad");
-          gbXMLElement.setAttribute("unit", "W");
+          resultsElement.setAttribute("id", thermalZoneId + "CoolingLoad");
+          resultsElement.setAttribute("resultsType", "CoolingLoad");
+          resultsElement.setAttribute("unit", "Kilowatt");
 
           QDomElement objectIdElement = doc.createElement("ObjectId");
           resultsElement.appendChild(objectIdElement);
@@ -424,16 +423,15 @@ namespace gbxml {
 
           QDomElement valueElement = doc.createElement("Value");
           resultsElement.appendChild(valueElement);
-          valueElement.appendChild(doc.createTextNode(QString::number(*coolingLoad, 'f')));
+          valueElement.appendChild(doc.createTextNode(QString::number(*coolingLoad/1000.0, 'f')));
         }
 
         if (flow){
           QDomElement resultsElement = doc.createElement("Results");
           gbXMLElement.appendChild(resultsElement);
-          gbXMLElement.setAttribute("id", thermalZoneId + "Flow");
-          gbXMLElement.setAttribute("objectIdRef", thermalZoneId);
-          gbXMLElement.setAttribute("resultsType", "Flow");
-          gbXMLElement.setAttribute("unit", "m3/s");
+          resultsElement.setAttribute("id", thermalZoneId + "Flow");
+          resultsElement.setAttribute("resultsType", "Flow");
+          resultsElement.setAttribute("unit", "CubicMPerHr");
 
           QDomElement objectIdElement = doc.createElement("ObjectId");
           resultsElement.appendChild(objectIdElement);
@@ -441,7 +439,7 @@ namespace gbxml {
 
           QDomElement valueElement = doc.createElement("Value");
           resultsElement.appendChild(valueElement);
-          valueElement.appendChild(doc.createTextNode(QString::number(*flow, 'f')));
+          valueElement.appendChild(doc.createTextNode(QString::number(*flow*3600, 'f')));
         }
 
         if (m_progressBar){
@@ -696,8 +694,9 @@ namespace gbxml {
     // InfiltrationFlow
 
     // PeopleNumber
-    double floorAreaPerPerson = space.floorAreaPerPerson();
-    if (floorAreaPerPerson > 0){
+    double numberOfPeople = space.numberOfPeople();
+    if (numberOfPeople > 0){
+      double floorAreaPerPerson = space.floorAreaPerPerson();
       QDomElement peopleNumberElement = doc.createElement("PeopleNumber");
       peopleNumberElement.setAttribute("unit", "SquareMPerPerson");
       peopleNumberElement.appendChild(doc.createTextNode(QString::number(floorAreaPerPerson, 'f')));
