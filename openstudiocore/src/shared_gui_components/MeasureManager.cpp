@@ -309,6 +309,7 @@ std::pair<bool,std::string> MeasureManager::updateMeasure(const BCLMeasure &t_me
 
   std::pair<bool,std::string> result(true,"");
   try {
+    // this check is just to make sure the script does not have errors
     measure::OSArgumentVector args = getArguments(t_measure);
 
     WorkflowJSON workflowJSON = m_app->currentModel()->workflowJSON();
@@ -325,18 +326,14 @@ std::pair<bool,std::string> MeasureManager::updateMeasure(const BCLMeasure &t_me
   return result;
 }
 
-/*
-void MeasureManager::updateMeasures(bool t_showMessage)
+void MeasureManager::updateMeasures(const std::vector<BCLMeasure>& newMeasures, bool t_showMessage)
 {
   std::vector<BCLMeasure> measures;
 
   WorkflowJSON workflowJSON = m_app->currentModel()->workflowJSON();
-  for (const auto& step : workflowJSON.workflowSteps()){
-    if (step.optionalCast<MeasureStep>()){
-      boost::optional<BCLMeasure> measure = workflowJSON.getBCLMeasure(step.cast<MeasureStep>());
-      if (measure){
-        measures.push_back(*measure);
-      }
+  for (const auto& newMeasure : newMeasures){
+    if (workflowJSON.getBCLMeasureByUUID(newMeasure.uuid())){
+      measures.push_back(newMeasure);
     }
   }
 
@@ -404,7 +401,6 @@ void MeasureManager::updateMeasures(bool t_showMessage)
     }
   }
 }
-*/
 
 std::vector<measure::OSArgument> MeasureManager::getArguments(const BCLMeasure &t_measure)
 {

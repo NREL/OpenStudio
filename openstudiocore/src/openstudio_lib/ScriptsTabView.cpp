@@ -35,7 +35,9 @@
 #include "../shared_gui_components/Buttons.hpp"
 #include "../shared_gui_components/MeasureManager.hpp"
 #include "../shared_gui_components/OSListView.hpp"
-//#include "../shared_gui_components/SyncMeasuresDialog.hpp"
+#include "../shared_gui_components/SyncMeasuresDialog.hpp"
+#include "../shared_gui_components/EditController.hpp"
+
 #include "../utilities/plot/ProgressBar.hpp"
 
 #include "../energyplus/ForwardTranslator.hpp"
@@ -104,15 +106,14 @@ void ScriptsTabView::openUpdateMeasuresDlg()
 {
   openstudio::OSAppBase * app = OSAppBase::instance();
 
-  //boost::optional<analysisdriver::SimpleProject> project = app->project();
-  //OS_ASSERT(project);
+  WorkflowJSON workflow = app->currentDocument()->model().workflowJSON();
 
-  //m_syncMeasuresDialog = boost::shared_ptr<SyncMeasuresDialog>(new SyncMeasuresDialog(&(project.get()),&(app->measureManager())));
-  //m_syncMeasuresDialog->setGeometry(app->currentDocument()->mainWindow()->geometry());
-  //m_syncMeasuresDialog->exec();
+  m_syncMeasuresDialog = boost::shared_ptr<SyncMeasuresDialog>(new SyncMeasuresDialog(workflow,&(app->measureManager())));
+  m_syncMeasuresDialog->setGeometry(app->currentDocument()->mainWindow()->geometry());
+  m_syncMeasuresDialog->exec();
 
-  // DLM: temp
-  app->measureManager().updateMeasuresLists();
+  app->editController()->reset();
+  workflowView->refreshAllViews();
 }
 
 } // openstudio

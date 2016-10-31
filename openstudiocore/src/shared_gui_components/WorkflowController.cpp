@@ -218,6 +218,10 @@ void MeasureStepController::removeItemForStep(MeasureStep step)
   }
 
   if (didRemove){
+    // DLM: TODO actually remove the directory here, make sure it not being used by any other steps first
+    // maybe want a purge unused measures in WorkflowJSON?
+
+    // set the new steps
     m_app->currentModel()->workflowJSON().setMeasureSteps(m_measureType, newMeasureSteps);
 
     emit modelReset();

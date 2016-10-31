@@ -132,7 +132,7 @@ class MeasureManager : public QObject
 
     //// Updates the given set of measures in the current project. Does not ask for user approval. Approval is assumed
     //// when this method is called.
-    //void updateMeasures(bool t_showMessage=true);
+    void updateMeasures(const std::vector<BCLMeasure>& newMeasures, bool t_showMessage=true);
 
     //// Get arguments for given measure using current model
     //// Will throw if arguments cannot be computed.
