@@ -92,6 +92,18 @@ class MODEL_API CoilHeatingGas : public StraightComponent {
   /** \deprecated */
   bool setAvailableSchedule(Schedule& schedule);
 
+  /** Returns a list of valid fuel types. **/
+  static std::vector<std::string> validFuelTypeValues();
+
+  /** Gets the coil fuel type **/
+  std::string fuelType() const;
+
+  /** Sets the fuel type. **/
+  bool setFuelType(const std::string& fuelType);
+
+  /** Resets the fuel type to its default. **/
+  void resetFuelType();
+
   /** Returns the value of the GasBurnerEfficiency field. **/
   double gasBurnerEfficiency() const;
 

@@ -279,6 +279,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(CoilSystemCoolingWaterHeatExchangerAssisted);
     REGISTER_CONSTRUCTOR(CoilSystemCoolingDXHeatExchangerAssisted);
     REGISTER_CONSTRUCTOR(CoilWaterHeatingAirToWaterHeatPump);
+    REGISTER_CONSTRUCTOR(CoilWaterHeatingAirToWaterHeatPumpWrapped);
     REGISTER_CONSTRUCTOR(CoilWaterHeatingDesuperheater);
     REGISTER_CONSTRUCTOR(ComponentCostAdjustments);
     REGISTER_CONSTRUCTOR(ComponentData);
@@ -334,6 +335,18 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(ElectricLoadCenterInverterSimple);
     REGISTER_CONSTRUCTOR(ElectricLoadCenterStorageSimple);
     REGISTER_CONSTRUCTOR(ElectricLoadCenterStorageConverter);
+    REGISTER_CONSTRUCTOR(EnergyManagementSystemActuator);
+    REGISTER_CONSTRUCTOR(EnergyManagementSystemConstructionIndexVariable);
+    REGISTER_CONSTRUCTOR(EnergyManagementSystemCurveOrTableIndexVariable);
+    REGISTER_CONSTRUCTOR(EnergyManagementSystemGlobalVariable);
+    REGISTER_CONSTRUCTOR(EnergyManagementSystemInternalVariable);
+    REGISTER_CONSTRUCTOR(EnergyManagementSystemMeteredOutputVariable);
+    REGISTER_CONSTRUCTOR(EnergyManagementSystemOutputVariable);
+    REGISTER_CONSTRUCTOR(EnergyManagementSystemProgram);
+    REGISTER_CONSTRUCTOR(EnergyManagementSystemProgramCallingManager);
+    REGISTER_CONSTRUCTOR(EnergyManagementSystemSensor);
+    REGISTER_CONSTRUCTOR(EnergyManagementSystemSubroutine);
+    REGISTER_CONSTRUCTOR(EnergyManagementSystemTrendVariable);
     REGISTER_CONSTRUCTOR(EvaporativeCoolerDirectResearchSpecial);
     REGISTER_CONSTRUCTOR(EvaporativeCoolerIndirectResearchSpecial);
     REGISTER_CONSTRUCTOR(EvaporativeFluidCoolerSingleSpeed);
@@ -405,6 +418,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(OtherEquipment);
     REGISTER_CONSTRUCTOR(OtherEquipmentDefinition);
     REGISTER_CONSTRUCTOR(OutputControlReportingTolerances);
+    REGISTER_CONSTRUCTOR(OutputEnergyManagementSystem);
     REGISTER_CONSTRUCTOR(OutputMeter);
     REGISTER_CONSTRUCTOR(OutputVariable);
     REGISTER_CONSTRUCTOR(OutsideSurfaceConvectionAlgorithm);
@@ -545,6 +559,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(Version);
     REGISTER_CONSTRUCTOR(WaterHeaterMixed);
     REGISTER_CONSTRUCTOR(WaterHeaterHeatPump);
+    REGISTER_CONSTRUCTOR(WaterHeaterHeatPumpWrappedCondenser);
     REGISTER_CONSTRUCTOR(WaterHeaterStratified);
     REGISTER_CONSTRUCTOR(WaterUseConnections);
     REGISTER_CONSTRUCTOR(WaterUseEquipment);
@@ -701,6 +716,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(CoilSystemCoolingWaterHeatExchangerAssisted);
     REGISTER_COPYCONSTRUCTORS(CoilSystemCoolingDXHeatExchangerAssisted);
     REGISTER_COPYCONSTRUCTORS(CoilWaterHeatingAirToWaterHeatPump);
+    REGISTER_COPYCONSTRUCTORS(CoilWaterHeatingAirToWaterHeatPumpWrapped);
     REGISTER_COPYCONSTRUCTORS(CoilWaterHeatingDesuperheater);
     REGISTER_COPYCONSTRUCTORS(ComponentCostAdjustments);
     REGISTER_COPYCONSTRUCTORS(ComponentData);
@@ -756,6 +772,18 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(ElectricLoadCenterInverterSimple);
     REGISTER_COPYCONSTRUCTORS(ElectricLoadCenterStorageSimple);
     REGISTER_COPYCONSTRUCTORS(ElectricLoadCenterStorageConverter);
+    REGISTER_COPYCONSTRUCTORS(EnergyManagementSystemActuator);
+    REGISTER_COPYCONSTRUCTORS(EnergyManagementSystemConstructionIndexVariable);
+    REGISTER_COPYCONSTRUCTORS(EnergyManagementSystemCurveOrTableIndexVariable);
+    REGISTER_COPYCONSTRUCTORS(EnergyManagementSystemGlobalVariable);
+    REGISTER_COPYCONSTRUCTORS(EnergyManagementSystemInternalVariable);
+    REGISTER_COPYCONSTRUCTORS(EnergyManagementSystemMeteredOutputVariable);
+    REGISTER_COPYCONSTRUCTORS(EnergyManagementSystemOutputVariable);
+    REGISTER_COPYCONSTRUCTORS(EnergyManagementSystemProgram);
+    REGISTER_COPYCONSTRUCTORS(EnergyManagementSystemProgramCallingManager);
+    REGISTER_COPYCONSTRUCTORS(EnergyManagementSystemSensor);
+    REGISTER_COPYCONSTRUCTORS(EnergyManagementSystemSubroutine);
+    REGISTER_COPYCONSTRUCTORS(EnergyManagementSystemTrendVariable);
     REGISTER_COPYCONSTRUCTORS(EvaporativeCoolerDirectResearchSpecial);
     REGISTER_COPYCONSTRUCTORS(EvaporativeCoolerIndirectResearchSpecial);
     REGISTER_COPYCONSTRUCTORS(EvaporativeFluidCoolerSingleSpeed);
@@ -827,6 +855,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(OtherEquipment);
     REGISTER_COPYCONSTRUCTORS(OtherEquipmentDefinition);
     REGISTER_COPYCONSTRUCTORS(OutputControlReportingTolerances);
+    REGISTER_COPYCONSTRUCTORS(OutputEnergyManagementSystem);
     REGISTER_COPYCONSTRUCTORS(OutputMeter);
     REGISTER_COPYCONSTRUCTORS(OutputVariable);
     REGISTER_COPYCONSTRUCTORS(OutsideSurfaceConvectionAlgorithm);
@@ -967,6 +996,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(Version);
     REGISTER_COPYCONSTRUCTORS(WaterHeaterMixed);
     REGISTER_COPYCONSTRUCTORS(WaterHeaterHeatPump);
+    REGISTER_COPYCONSTRUCTORS(WaterHeaterHeatPumpWrappedCondenser);
     REGISTER_COPYCONSTRUCTORS(WaterHeaterStratified);
     REGISTER_COPYCONSTRUCTORS(WaterUseConnections);
     REGISTER_COPYCONSTRUCTORS(WaterUseEquipment);

@@ -43,6 +43,7 @@
 
 #include <utilities/idd/OS_OtherEquipment_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
+#include <utilities/idd/IddFactory.hxx>
 
 #include "../utilities/core/Assert.hpp"
 
@@ -136,6 +137,11 @@ namespace detail {
     return result;
   }
 
+  std::string OtherEquipment_Impl::fuelType() const
+  {
+    return this->getString(OS_OtherEquipmentFields::FuelType, true).get();
+  }
+
   OtherEquipmentDefinition OtherEquipment_Impl::otherEquipmentDefinition() const {
     return definition().cast<OtherEquipmentDefinition>();
   }
@@ -179,6 +185,16 @@ namespace detail {
 
   bool OtherEquipment_Impl::setOtherEquipmentDefinition(const OtherEquipmentDefinition& definition) {
     return setPointer(definitionIndex(),definition.handle());
+  }
+
+  bool OtherEquipment_Impl::setFuelType(const std::string &fuelType)
+  {
+    return this->setString(OS_OtherEquipmentFields::FuelType, fuelType);
+  }
+
+  void OtherEquipment_Impl::resetFuelType()
+  {
+    this->setString(OS_OtherEquipmentFields::FuelType, "");
   }
 
   bool OtherEquipment_Impl::setDefinition(const SpaceLoadDefinition& definition) {
@@ -284,6 +300,24 @@ OtherEquipment::OtherEquipment(const OtherEquipmentDefinition& definition)
 IddObjectType OtherEquipment::iddObjectType() {
   IddObjectType result(IddObjectType::OS_OtherEquipment);
   return result;
+}
+
+std::vector<std::string> OtherEquipment::validFuelTypeValues() {
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_OtherEquipmentFields::FuelType);
+}
+
+std::string OtherEquipment::fuelType() const {
+  return getImpl<detail::OtherEquipment_Impl>()->fuelType();
+}
+
+bool OtherEquipment::setFuelType(const std::string& fuelType)
+{
+  return getImpl<detail::OtherEquipment_Impl>()->setFuelType(fuelType);
+}
+
+void OtherEquipment::resetFuelType()
+{
+  getImpl<detail::OtherEquipment_Impl>()->resetFuelType();
 }
 
 OtherEquipmentDefinition OtherEquipment::otherEquipmentDefinition() const {

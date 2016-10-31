@@ -30,6 +30,7 @@
 #define UTILITIES_CORE_UUID_HPP
 
 #include "../UtilitiesAPI.hpp"
+#include <boost/regex.hpp>
 
 #include <QUuid>
 #include <QMetaType>
@@ -57,6 +58,9 @@ namespace openstudio {
 
   /// create a std::string from a UUID
   UTILITIES_API std::string toString(const UUID& uuid);
+
+  /// Find version 4 UUIDs in a string.
+  UTILITIES_API boost::regex &uuidInString();
 
   /// create a unique name, prefix << " " << UUID.
   UTILITIES_API std::string createUniqueName(const std::string& prefix);

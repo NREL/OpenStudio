@@ -30,6 +30,8 @@
 #include "WaterHeaterStratified_Impl.hpp"
 #include "WaterHeaterHeatPump.hpp"
 #include "WaterHeaterHeatPump_Impl.hpp"
+#include "WaterHeaterHeatPumpWrappedCondenser.hpp"
+#include "WaterHeaterHeatPumpWrappedCondenser_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
 #include "ThermalZone.hpp"
@@ -1006,12 +1008,23 @@ namespace detail {
 
   boost::optional<ZoneHVACComponent> WaterHeaterStratified_Impl::containingZoneHVACComponent() const
   {
-    auto hpwhs = model().getConcreteModelObjects<model::WaterHeaterHeatPump>();
-    auto t_Handle = handle();
+    {
+      auto hpwhs = model().getConcreteModelObjects<model::WaterHeaterHeatPump>();
+      auto t_Handle = handle();
+      for( const auto & hpwh : hpwhs ) {
+        if( hpwh.tank().handle() == t_Handle ) {
+          return hpwh;
+        }
+      }
+    }
 
-    for( const auto & hpwh : hpwhs ) {
-      if( hpwh.tank().handle() == t_Handle ) {
-        return hpwh;
+    {
+      auto hpwhs = model().getConcreteModelObjects<model::WaterHeaterHeatPumpWrappedCondenser>();
+      auto t_Handle = handle();
+      for( const auto & hpwh : hpwhs ) {
+        if( hpwh.tank().handle() == t_Handle ) {
+          return hpwh;
+        }
       }
     }
 

@@ -30,6 +30,10 @@
 #include "OutputVariable_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
+#include "EnergyManagementSystemSensor.hpp"
+#include "EnergyManagementSystemSensor_Impl.hpp"
+
+#include "Model.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
@@ -87,6 +91,23 @@ namespace detail {
 
   IddObjectType OutputVariable_Impl::iddObjectType() const {
     return OutputVariable::iddObjectType();
+  }
+
+  std::vector<openstudio::IdfObject> OutputVariable_Impl::remove() {
+    //Note: Cant do /object-list implementation for EMS Sensor since Auto Naming of Objects causes issues.
+    //      Instead, doing an /alpha getString implementation so we need to manually remove any referring Sensors
+    const Model m = this->model();
+
+    std::vector<EnergyManagementSystemSensor> objects = m.getConcreteModelObjects<EnergyManagementSystemSensor>();
+    for (auto & sensor : objects) {
+      if (sensor.outputVariable()) {
+        if (sensor.outputVariable().get().variableName() == this->variableName()) {
+          sensor.remove();
+        }
+      }
+    }
+
+    return ModelObject_Impl::remove();
   }
 
   std::vector<ScheduleTypeKey> OutputVariable_Impl::getScheduleTypeKeys(const Schedule& schedule) const
@@ -303,6 +324,10 @@ bool OutputVariable::setSchedule(Schedule& schedule)
 void OutputVariable::resetSchedule()
 {
   getImpl<detail::OutputVariable_Impl>()->resetSchedule();
+}
+
+std::vector<IdfObject> OutputVariable::remove() {
+  return getImpl<detail::OutputVariable_Impl>()->remove();
 }
 
 } // model

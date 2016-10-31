@@ -34,7 +34,6 @@ module OsLib_Reporting
     results[:model] = model
     # results[:workspace] = workspace
     results[:sqlFile] = sqlFile
-    results[:web_asset_path] = OpenStudio.getSharedResourcesPath / OpenStudio::Path.new('web_assets')
 
     return results
   end
@@ -2591,8 +2590,8 @@ module OsLib_Reporting
     # create table
     energy_cost_table = {}
     energy_cost_table[:title] = 'Energy Cost Summary'
-    energy_cost_table[:header] = ['', 'Process Subtotal', 'Total Energy Cost']
-    energy_cost_table[:units] = ['', '$', '$']
+    energy_cost_table[:header] = ['', 'Total Energy Cost'] # skipping Process Subtotal
+    energy_cost_table[:units] = ['', '$'] # skipping Process Subtotal
     energy_cost_table[:data] = []
 
     # populate dynamic rows
@@ -3228,7 +3227,7 @@ module OsLib_Reporting
     # data for query
     report_name = 'InputVerificationandResultsSummary'
     table_name = 'Zone Summary'
-    columns = ['', 'Area', 'Conditioned (Y/N)', 'Part of Total Floor Area (Y/N)', 'Volume', 'Multiplier', 'Gross Wall Area', 'Window Glass Area', 'Lighting', 'People', 'Plug and Process']
+    columns = ['', 'Area', 'Conditioned (Y/N)', 'Part of Total Floor Area (Y/N)', 'Volume', 'Multiplier', 'Above Ground Gross Wall Area', 'Underground Gross Wall Area', 'Window Glass Area', 'Lighting', 'People', 'Plug and Process']
 
     # test looking at getting entire table to get rows
     # query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='#{report_name}' and TableName='#{table_name}'"
@@ -3256,8 +3255,8 @@ module OsLib_Reporting
     target_units_volume = 'ft^3'
     source_units_pd = 'W/m^2'
     target_units_pd = 'W/ft^2'
-    zone_summary_table[:units] = ['', target_units_area, '', '', target_units_volume, '', target_units_area, target_units_area, target_units_pd, target_units_area_per_person, target_units_pd]
-    zone_summary_table[:source_units] = ['', source_units_area, '', '', source_units_volume, '', source_units_area, source_units_area, source_units_pd, source_units_area_per_person, source_units_pd] # used for conversation, not needed for rendering.
+    zone_summary_table[:units] = ['', target_units_area, '', '', target_units_volume, '', target_units_area, target_units_area, target_units_area, target_units_pd, target_units_area_per_person, target_units_pd]
+    zone_summary_table[:source_units] = ['', source_units_area, '', '', source_units_volume, '', source_units_area, source_units_area, source_units_area, source_units_pd, source_units_area_per_person, source_units_pd] # used for conversation, not needed for rendering.
     zone_summary_table[:data] = []
 
     # run query and populate zone_summary_table

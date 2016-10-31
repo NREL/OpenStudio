@@ -63,6 +63,12 @@ class MODEL_API OtherEquipment : public SpaceLoadInstance {
   /** @name Getters */
   //@{
 
+  /** Returns a list of valid fuel types. **/
+  static std::vector<std::string> validFuelTypeValues();
+
+  /** Gets the equipment fuel type **/
+  std::string fuelType() const;
+
   OtherEquipmentDefinition otherEquipmentDefinition() const;
 
   /** Returns the (fractional) equipment schedule.  If this object does not
@@ -75,6 +81,12 @@ class MODEL_API OtherEquipment : public SpaceLoadInstance {
   //@}
   /** @name Setters */
   //@{
+
+  /** Sets the fuel type. **/
+  bool setFuelType(const std::string& fuelType);
+
+  /** Resets the fuel type to its default. **/
+  void resetFuelType();
 
   bool setOtherEquipmentDefinition(const OtherEquipmentDefinition& definition);
 

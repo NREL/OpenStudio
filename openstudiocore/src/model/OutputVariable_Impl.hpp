@@ -83,6 +83,8 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
+    virtual std::vector<openstudio::IdfObject> remove() override;
+
     //@}
     /** @name Getters */
     //@{

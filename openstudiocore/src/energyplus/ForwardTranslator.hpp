@@ -110,6 +110,7 @@ class CoilSystemCoolingDXHeatExchangerAssisted;
 class CoilSystemCoolingWaterHeatExchangerAssisted;
 class CoilWaterHeatingDesuperheater;
 class CoilWaterHeatingAirToWaterHeatPump;
+class CoilWaterHeatingAirToWaterHeatPumpWrapped;
 class Construction;
 class ConstructionWithInternalSource;
 class ControllerOutdoorAir;
@@ -153,6 +154,18 @@ class ElectricLoadCenterInverterLookUpTable;
 class ElectricLoadCenterInverterSimple;
 class ElectricLoadCenterStorageSimple;
 class ElectricLoadCenterStorageConverter;
+class EnergyManagementSystemActuator;
+class EnergyManagementSystemConstructionIndexVariable;
+class EnergyManagementSystemCurveOrTableIndexVariable;
+class EnergyManagementSystemGlobalVariable;
+class EnergyManagementSystemInternalVariable;
+class EnergyManagementSystemMeteredOutputVariable;
+class EnergyManagementSystemOutputVariable;
+class EnergyManagementSystemProgram;
+class EnergyManagementSystemProgramCallingManager;
+class EnergyManagementSystemSensor;
+class EnergyManagementSystemSubroutine;
+class EnergyManagementSystemTrendVariable;
 class EvaporativeCoolerDirectResearchSpecial;
 class EvaporativeCoolerIndirectResearchSpecial;
 class EvaporativeFluidCoolerSingleSpeed;
@@ -202,6 +215,7 @@ class OutsideSurfaceConvectionAlgorithm;
 class OutputControlReportingTolerances;
 class OutputMeter;
 class OutputVariable;
+class OutputEnergyManagementSystem;
 class People;
 class PhotovoltaicPerformanceEquivalentOneDiode;
 class PhotovoltaicPerformanceSimple;
@@ -321,6 +335,7 @@ class Timestep;
 class Version;
 class WaterHeaterMixed;
 class WaterHeaterHeatPump;
+class WaterHeaterHeatPumpWrappedCondenser;
 class WaterHeaterStratified;
 class WaterUseConnections;
 class WaterUseEquipment;
@@ -566,6 +581,8 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateCoilWaterHeatingAirToWaterHeatPump( model::CoilWaterHeatingAirToWaterHeatPump & modelObject );
 
+  boost::optional<IdfObject> translateCoilWaterHeatingAirToWaterHeatPumpWrapped( model::CoilWaterHeatingAirToWaterHeatPumpWrapped & modelObject );
+
   boost::optional<IdfObject> translateConstruction( model::Construction & modelObject );
 
   boost::optional<IdfObject> translateConstructionWithInternalSource( model::ConstructionWithInternalSource & modelObject );
@@ -652,11 +669,35 @@ class ENERGYPLUS_API ForwardTranslator {
   
   boost::optional<IdfObject> translateElectricLoadCenterStorageConverter( model::ElectricLoadCenterStorageConverter & modelObject );
 
+  boost::optional<IdfObject> translateEnergyManagementSystemActuator(model::EnergyManagementSystemActuator & modelObject);
+
+  boost::optional<IdfObject> translateEnergyManagementSystemConstructionIndexVariable(model::EnergyManagementSystemConstructionIndexVariable & modelObject);
+
+  boost::optional<IdfObject> translateEnergyManagementSystemCurveOrTableIndexVariable(model::EnergyManagementSystemCurveOrTableIndexVariable & modelObject);
+
+  boost::optional<IdfObject> translateEnergyManagementSystemGlobalVariable(model::EnergyManagementSystemGlobalVariable & modelObject);
+
+  boost::optional<IdfObject> translateEnergyManagementSystemInternalVariable(model::EnergyManagementSystemInternalVariable & modelObject);
+
+  boost::optional<IdfObject> translateEnergyManagementSystemMeteredOutputVariable(model::EnergyManagementSystemMeteredOutputVariable & modelObject);
+
+  boost::optional<IdfObject> translateEnergyManagementSystemOutputVariable(model::EnergyManagementSystemOutputVariable & modelObject);
+
+  boost::optional<IdfObject> translateEnergyManagementSystemProgram(model::EnergyManagementSystemProgram & modelObject);
+
+  boost::optional<IdfObject> translateEnergyManagementSystemProgramCallingManager(model::EnergyManagementSystemProgramCallingManager & modelObject);
+
+  boost::optional<IdfObject> translateEnergyManagementSystemSensor(model::EnergyManagementSystemSensor & modelObject);
+
+  boost::optional<IdfObject> translateEnergyManagementSystemSubroutine(model::EnergyManagementSystemSubroutine & modelObject);
+
+  boost::optional<IdfObject> translateEnergyManagementSystemTrendVariable(model::EnergyManagementSystemTrendVariable & modelObject);
+
   boost::optional<IdfObject> translateEvaporativeFluidCoolerSingleSpeed( model::EvaporativeFluidCoolerSingleSpeed & modelObject );
 
   boost::optional<IdfObject> translateEvaporativeFluidCoolerTwoSpeed( model::EvaporativeFluidCoolerTwoSpeed & modelObject  );
 
-  boost::optional<IdfObject> translateExteriorLights(model::ExteriorLights& modelObject);
+  boost::optional<IdfObject> translateExteriorLights(model::ExteriorLights& modelObject );
 
   boost::optional<IdfObject> translateFanConstantVolume( model::FanConstantVolume & modelObject );
 
@@ -749,6 +790,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateOutputMeter( model::OutputMeter & modelObject );
 
   boost::optional<IdfObject> translateOutputVariable( model::OutputVariable & modelObject );
+
+  boost::optional<IdfObject> translateOutputEnergyManagementSystem(model::OutputEnergyManagementSystem & modelObject );
 
   boost::optional<IdfObject> translatePeople( model::People & modelObject );
 
@@ -987,6 +1030,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateWaterHeaterMixed( model::WaterHeaterMixed & modelObject );
 
   boost::optional<IdfObject> translateWaterHeaterHeatPump( model::WaterHeaterHeatPump & modelObject );
+
+  boost::optional<IdfObject> translateWaterHeaterHeatPumpWrappedCondenser( model::WaterHeaterHeatPumpWrappedCondenser & modelObject );
 
   boost::optional<IdfObject> translateWaterHeaterStratified( model::WaterHeaterStratified & modelObject );
 

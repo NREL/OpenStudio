@@ -7,9 +7,15 @@ require_relative '../measure.rb'
 require 'fileutils'
 
 class ReportingMeasure_Test < MiniTest::Unit::TestCase
-
-  # class level variable
-  @@co = OpenStudio::Runmanager::ConfigOptions.new(true)
+  
+  def is_openstudio_2?
+    begin
+      workflow = OpenStudio::WorkflowJSON.new
+    rescue
+      return false
+    end
+    return true
+  end
 
   def model_in_path
     return "#{File.dirname(__FILE__)}/example_model.osm"
@@ -17,9 +23,18 @@ class ReportingMeasure_Test < MiniTest::Unit::TestCase
   
   def epw_path
     # make sure we have a weather data location
-    assert(!@@co.getDefaultEPWLocation.to_s.empty?)
-    epw = @@co.getDefaultEPWLocation / OpenStudio::Path.new("USA_CO_Golden-NREL.724666_TMY3.epw")
-    assert(File.exist?(epw.to_s))
+    epw = nil
+    
+    if is_openstudio_2?
+      puts "ep_dir = #{OpenStudio.getEnergyPlusDirectory}"
+      epw = OpenStudio.getEnergyPlusDirectory / OpenStudio::Path.new("WeatherData/USA_CO_Golden-NREL.724666_TMY3.epw")
+    else
+      co = OpenStudio::Runmanager::ConfigOptions.new(true)
+      co.findTools(false, true, false, true)
+      assert(!co.getDefaultEPWLocation.to_s.empty?)
+      epw = co.getDefaultEPWLocation / OpenStudio::Path.new("USA_CO_Golden-NREL.724666_TMY3.epw")
+      assert(File.exist?(epw.to_s))
+    end
     
     return epw.to_s
   end
@@ -34,18 +49,53 @@ class ReportingMeasure_Test < MiniTest::Unit::TestCase
   end
   
   def sql_path(test_name)
-    return "#{run_dir(test_name)}/ModelToIdf/EnergyPlusPreProcess-0/EnergyPlus-0/eplusout.sql"
+    if is_openstudio_2?
+      return "#{run_dir(test_name)}/run/eplusout.sql"
+    else
+      return "#{run_dir(test_name)}/ModelToIdf/EnergyPlusPreProcess-0/EnergyPlus-0/eplusout.sql"
+    end
   end
   
   def report_path(test_name)
     return "#{run_dir(test_name)}/report.html"
   end
+  # method for running the test simulation using OpenStudio 1.x API
+  def setup_test_1(test_name)
+  
+    co = OpenStudio::Runmanager::ConfigOptions.new(true)
+    co.findTools(false, true, false, true)
 
+    if !File.exist?(sql_path(test_name))
+      puts "Running EnergyPlus"
+
+      wf = OpenStudio::Runmanager::Workflow.new("modeltoidf->energypluspreprocess->energyplus")
+      wf.add(co.getTools())
+      job = wf.create(OpenStudio::Path.new(run_dir(test_name)), OpenStudio::Path.new(model_out_path(test_name)), OpenStudio::Path.new(epw_path))
+
+      rm = OpenStudio::Runmanager::RunManager.new
+      rm.enqueue(job, true)
+      rm.waitForFinished
+    end  
+  end
+  
+  # method for running the test simulation using OpenStudio 2.x API
+  def setup_test_2(test_name)
+    osw_path = File.join(run_dir(test_name), 'in.osw')
+    osw_path = File.absolute_path(osw_path)  
+    
+    workflow = OpenStudio::WorkflowJSON.new
+    workflow.setSeedFile(File.absolute_path(model_out_path(test_name)))
+    workflow.setWeatherFile(File.absolute_path(epw_path))
+    workflow.saveAs(osw_path)
+    
+    cli_path = OpenStudio.getOpenStudioCLI
+    cmd = "\"#{cli_path}\" run -w \"#{osw_path}\""
+    puts cmd
+    system(cmd)
+  end
   # create test files if they do not exist when the test first runs 
   def setup_test(test_name, idf_output_requests)
   
-    @@co.findTools(false, true, false, true)
-    
     if !File.exist?(run_dir(test_name))
       FileUtils.mkdir_p(run_dir(test_name))
     end
@@ -73,17 +123,11 @@ class ReportingMeasure_Test < MiniTest::Unit::TestCase
     model = model.get
     model.addObjects(request_model.objects)
     model.save(model_out_path(test_name), true)
-
-    if !File.exist?(sql_path(test_name))
-      puts "Running EnergyPlus"
-
-      wf = OpenStudio::Runmanager::Workflow.new("modeltoidf->energypluspreprocess->energyplus")
-      wf.add(@@co.getTools())
-      job = wf.create(OpenStudio::Path.new(run_dir(test_name)), OpenStudio::Path.new(model_out_path(test_name)), OpenStudio::Path.new(epw_path))
-
-      rm = OpenStudio::Runmanager::RunManager.new
-      rm.enqueue(job, true)
-      rm.waitForFinished
+    
+    if is_openstudio_2?
+      setup_test_2(test_name)
+    else
+      setup_test_1(test_name)
     end
   end
 

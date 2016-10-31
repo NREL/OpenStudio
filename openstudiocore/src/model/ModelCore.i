@@ -170,6 +170,19 @@ MODELOBJECT_TEMPLATES(ScheduleRuleset);
 MODELOBJECT_TEMPLATES(OutputVariable);
 MODELOBJECT_TEMPLATES(GenericModelObject);
 MODELOBJECT_TEMPLATES(ModelObjectList);
+MODELOBJECT_TEMPLATES(EnergyManagementSystemSensor);
+MODELOBJECT_TEMPLATES(EnergyManagementSystemActuator);
+MODELOBJECT_TEMPLATES(EnergyManagementSystemConstructionIndexVariable);
+MODELOBJECT_TEMPLATES(EnergyManagementSystemCurveOrTableIndexVariable);
+MODELOBJECT_TEMPLATES(EnergyManagementSystemGlobalVariable);
+MODELOBJECT_TEMPLATES(EnergyManagementSystemInternalVariable);
+MODELOBJECT_TEMPLATES(EnergyManagementSystemMeteredOutputVariable);
+MODELOBJECT_TEMPLATES(EnergyManagementSystemTrendVariable);
+MODELOBJECT_TEMPLATES(EnergyManagementSystemSubroutine);
+MODELOBJECT_TEMPLATES(EnergyManagementSystemProgram);
+MODELOBJECT_TEMPLATES(EnergyManagementSystemProgramCallingManager);
+MODELOBJECT_TEMPLATES(EnergyManagementSystemOutputVariable);
+UNIQUEMODELOBJECT_TEMPLATES(OutputEnergyManagementSystem);
 
 SWIG_MODELOBJECT(ModelObject, 0);
 SWIG_MODELEXTENSIBLEGROUP(ModelExtensibleGroup);
@@ -196,5 +209,18 @@ SWIG_MODELOBJECT(ScheduleRuleset, 1);
 SWIG_MODELOBJECT(OutputVariable, 1);
 SWIG_MODELOBJECT(GenericModelObject, 0); 
 SWIG_MODELOBJECT(ModelObjectList, 1);
+SWIG_MODELOBJECT(EnergyManagementSystemSensor, 1);
+SWIG_MODELOBJECT(EnergyManagementSystemActuator, 1);
+SWIG_MODELOBJECT(EnergyManagementSystemConstructionIndexVariable, 1);
+SWIG_MODELOBJECT(EnergyManagementSystemCurveOrTableIndexVariable, 1);
+SWIG_MODELOBJECT(EnergyManagementSystemGlobalVariable, 1);
+SWIG_MODELOBJECT(EnergyManagementSystemInternalVariable, 1);
+SWIG_MODELOBJECT(EnergyManagementSystemMeteredOutputVariable, 1);
+SWIG_MODELOBJECT(EnergyManagementSystemTrendVariable, 1);
+SWIG_MODELOBJECT(EnergyManagementSystemSubroutine, 1);
+SWIG_MODELOBJECT(EnergyManagementSystemProgram, 1);
+SWIG_MODELOBJECT(EnergyManagementSystemProgramCallingManager, 1);
+SWIG_MODELOBJECT(EnergyManagementSystemOutputVariable, 1);
+SWIG_UNIQUEMODELOBJECT(OutputEnergyManagementSystem);
 
 #endif //MODEL_CORE_I 

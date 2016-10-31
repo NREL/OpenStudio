@@ -66,6 +66,8 @@ class MODEL_API OutputMeter : public ModelObject {
 
   virtual ~OutputMeter() {}
 
+  virtual std::vector<openstudio::IdfObject> remove();
+
   //@}
   /** @name Static Methods */
   //@{
