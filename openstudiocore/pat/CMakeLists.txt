@@ -19,11 +19,18 @@ get_filename_component(GIT_DIR ${GIT_EXECUTABLE} DIRECTORY)
 
 configure_file(BuildPat.bat.in BuildPat.bat)
 
-add_custom_command(OUTPUT "${PAT_PRODUCT_FILE}"
-  COMMAND cmd /C "${CMAKE_CURRENT_BINARY_DIR}/BuildPat.bat"
-  DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/OpenStudio-PAT-${PAT_SHA}.zip"
-  WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
-)
+if( WIN32 )
+  add_custom_command(OUTPUT "${PAT_PRODUCT_FILE}"
+    COMMAND cmd /C "${CMAKE_CURRENT_BINARY_DIR}/BuildPat.bat"
+    DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/OpenStudio-PAT-${PAT_SHA}.zip"
+    WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
+  )
+else()
+  add_custom_command(OUTPUT "${PAT_PRODUCT_FILE}"
+    COMMAND "${CMAKE_COMMAND}" "-D" "NPM_COMMAND=${NPM_COMMAND}" "-D" "CMAKE_CURRENT_BINARY_DIR=${CMAKE_CURRENT_BINARY_DIR}" "-D" "PAT_SHA=${PAT_SHA}" -P "${CMAKE_CURRENT_SOURCE_DIR}/BuildPat.cmake"
+    DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/OpenStudio-PAT-${PAT_SHA}.zip"
+  )
+endif()
 
 add_custom_target(PAT ALL 
   "${CMAKE_COMMAND}" "-E" echo "Building PAT" 
@@ -31,7 +38,7 @@ add_custom_target(PAT ALL
 )
 
 if( APPLE )
-  install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/OpenStudio-PAT-${PAT_SHA}/tmp/ParametricAnalysisTool.app" DESTINATION .
+  install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/OpenStudio-PAT/tmp/ParametricAnalysisTool.app" DESTINATION .
     USE_SOURCE_PERMISSIONS 
     COMPONENT PAT
   )
