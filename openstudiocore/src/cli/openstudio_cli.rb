@@ -28,6 +28,11 @@
 #  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ########################################################################################################################
 
+OpenStudio::Application::instance().application(false)
+if (!OpenStudio::RemoteBCL::initializeSSL())
+  puts "Unable to initialize OpenSSL: Verify that openstudio.exe can access the OpenSSL libraries"
+end
+
 #File.open('E:\test\test.log', 'w') do |f|
 #  ENV.each_key {|k| f.puts "#{k} = #{ENV[k]}" }
 #end

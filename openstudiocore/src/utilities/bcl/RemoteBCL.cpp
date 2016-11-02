@@ -551,26 +551,34 @@ namespace openstudio{
 
   boost::optional<BCLComponent> RemoteBCL::waitForComponentDownload(int msec) const
   {
-    waitForLock(msec);
-    return m_lastComponentDownload;
+    if (waitForLock(msec)){
+      return m_lastComponentDownload;
+    }
+    return boost::none;
   }
 
   boost::optional<BCLMeasure> RemoteBCL::waitForMeasureDownload(int msec) const
   {
-    waitForLock(msec);
-    return m_lastMeasureDownload;
+    if (waitForLock(msec)){
+      return m_lastMeasureDownload;
+    }
+    return boost::none;
   }
 
   boost::optional<BCLMetaSearchResult> RemoteBCL::waitForMetaSearch(int msec) const
   {
-    waitForLock(msec);
-    return m_lastMetaSearch;
+    if (waitForLock(msec)){
+      return m_lastMetaSearch;
+    }
+    return boost::none;
   }
 
   std::vector<BCLSearchResult> RemoteBCL::waitForSearch(int msec) const
   {
-    waitForLock(msec);
-    return m_lastSearch;
+    if (waitForLock(msec)){
+      return m_lastSearch;
+    }
+    return std::vector<BCLSearchResult>();
   }
 
   ///////////////////////////////////////////////////////////////////////////
@@ -616,6 +624,12 @@ namespace openstudio{
 #endif
 
     m_downloadReply = m_networkManager->get(request);
+    if (!m_downloadReply->isRunning()){
+      m_mutex->unlock();
+      m_downloadReply->deleteLater();
+      m_downloadReply = nullptr;
+      return false;
+    }
         
     connect(m_downloadReply, &QNetworkReply::readyRead, this, &RemoteBCL::downloadData);
 
@@ -843,6 +857,7 @@ namespace openstudio{
       ++current;
     }
 
+    m_mutex->unlock();
     return false;
   }
 
@@ -1152,9 +1167,9 @@ namespace openstudio{
 
   void RemoteBCL::catchSslErrors(QNetworkReply* reply, const QList<QSslError>& errorList)
   {
-    /*for (const QSslError& error : errorList) {
-      std::cout << error.errorString().toStdString() << std::endl;
-    }*/
+    for (const QSslError& error : errorList) {
+      LOG(Error, error.errorString().toStdString());
+    }
   }
 
 } // openstudio

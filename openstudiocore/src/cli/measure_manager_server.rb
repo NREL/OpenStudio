@@ -59,6 +59,7 @@ class MeasureManagerServlet < WEBrick::HTTPServlet::AbstractServlet
       response.content_type = 'application/json'
       
       result = {:status => "running"}
+      result[:my_measures_dir] = OpenStudio::BCLMeasure.userMeasuresDir
       
       case request.path
       when "/internal_state"
@@ -117,12 +118,95 @@ class MeasureManagerServlet < WEBrick::HTTPServlet::AbstractServlet
         
         response.body = JSON.generate({})
         
+      when "/set"
+        begin
+          result = {}
+          result[:success] = true
+          
+          data = JSON.parse(request.body, {:symbolize_names=>true})
+          my_measures_dir = data[:my_measures_dir]
+          
+          if my_measures_dir
+            test = OpenStudio::BCLMeasure.setUserMeasuresDir(OpenStudio::toPath(my_measures_dir))
+            result[:my_measures_dir] = OpenStudio::BCLMeasure.userMeasuresDir
+            result[:result] = result[:success] && test
+          end
+          
+          response.body = JSON.generate(result)
+        rescue Exception => e  
+          response.body = JSON.generate({:error=>e.message, :backtrace=>e.backtrace.inspect})
+          response.status = 400
+          
+          puts e.message
+          puts e.backtrace.inspect
+        end
+        
+      when "/download_bcl_measure"
+        begin
+          result = []
+          
+          data = JSON.parse(request.body, {:symbolize_names=>true})
+          uid = data[:uid]
+          
+          if uid
+            # each request is handled on a separate thread, need to construct RemoteBCL here
+            remote_bcl = OpenStudio::RemoteBCL.new
+            measure = remote_bcl.getMeasure(uid)
+            if measure.is_initialized
+              measure = measure.get
+              measure_dir = measure.directory
+              result << @measure_manager.measure_hash(measure_dir, measure)
+            else
+              puts "Failed to download measure '#{uid}'"
+            end
+          else
+            puts "Missing required argument 'uid'"
+          end
+          
+          response.body = JSON.generate(result)
+        rescue Exception => e  
+          response.body = JSON.generate({:error=>e.message, :backtrace=>e.backtrace.inspect})
+          response.status = 400
+        end
+        
+      when "/bcl_measures"
+        begin
+          result = []
+          
+          data = JSON.parse(request.body, {:symbolize_names=>true})
+          force_reload = false
+
+          # loop over all local BCL measures
+          OpenStudio::LocalBCL.instance.measures.each do |local_measure|
+            measure_dir = local_measure.directory.to_s
+            puts "measure_dir = #{measure_dir}"
+            measure_dir = File.expand_path(measure_dir)
+            if File.directory?(measure_dir)
+           
+              measure = @measure_manager.get_measure(measure_dir, force_reload)
+              if measure.nil?
+                print_message("Directory #{measure_dir} is not a measure")
+              else
+                result << @measure_manager.measure_hash(measure_dir, measure)
+              end
+            end
+          end
+
+          response.body = JSON.generate(result)
+        rescue Exception => e  
+          response.body = JSON.generate({:error=>e.message, :backtrace=>e.backtrace.inspect})
+          response.status = 400
+          
+          puts e.message
+          puts e.backtrace.inspect
+        end
+        
       when "/update_measures"
         begin
           result = []
           
           data = JSON.parse(request.body, {:symbolize_names=>true})
-          measures_dir = data[:measures_dir]
+          measures_dir = data[:measures_dir] ? data[:measures_dir] : OpenStudio::BCLMeasure.userMeasuresDir.to_s
           force_reload = data[:force_reload] ? data[:force_reload] : false
 
           # loop over all directories
