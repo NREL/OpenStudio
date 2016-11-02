@@ -335,36 +335,42 @@ GeneratorFuelCell::GeneratorFuelCell(const Model& model)
     remove();
     LOG_AND_THROW("Unable to set " << briefDescription() << "'s GeneratorFuelCellAirSupply");
   }
+  //create generic fuel supply
   GeneratorFuelSupply fS(model);
   ok = setFuelSupply(fS);
   if (!ok) {
     remove();
     LOG_AND_THROW("Unable to set " << briefDescription() << "'s GeneratorFuelSupply");
   }
+  //create generic water supply
   GeneratorFuelCellWaterSupply fCWS(model);
   ok = setWaterSupply(fCWS);
   if (!ok) {
     remove();
     LOG_AND_THROW("Unable to set " << briefDescription() << "'s GeneratorFuelCellWaterSupply");
   }
+  //create generic aux heater
   GeneratorFuelCellAuxiliaryHeater fCAH(model);
   ok = setAuxiliaryHeater(fCAH);
   if (!ok) {
     remove();
     LOG_AND_THROW("Unable to set " << briefDescription() << "'s GeneratorFuelCellAuxiliaryHeater");
   }
+  //create generic exhaust HX
   GeneratorFuelCellExhaustGasToWaterHeatExchanger fCExhaustHX(model);
   ok = setHeatExchanger(fCExhaustHX);
   if (!ok) {
     remove();
     LOG_AND_THROW("Unable to set " << briefDescription() << "'s GeneratorFuelCellExhaustGasToWaterHeatExchanger");
   }
+  //create generic storage
   GeneratorFuelCellElectricalStorage fCES(model);
   ok = setElectricalStorage(fCES);
   if (!ok) {
     remove();
     LOG_AND_THROW("Unable to set " << briefDescription() << "'s GeneratorFuelCellElectricalStorage");
   }
+  //create generic inverter
   GeneratorFuelCellInverter fCInverter(model);
   ok = setInverter(fCInverter);
   if (!ok) {

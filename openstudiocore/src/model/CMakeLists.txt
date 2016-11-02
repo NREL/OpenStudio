@@ -1710,6 +1710,7 @@ set(${target_name}_test_src
   test/GasEquipment_GTest.cpp
   test/GasMixture_GTest.cpp
   test/Gas_GTest.cpp
+  test/GeneratorFuelCell_GTest.cpp
   test/GeneratorPhotovoltaic_GTest.cpp
   test/GeneratorMicroTurbine_GTest.cpp
   test/GlareSensor_GTest.cpp
