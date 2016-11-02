@@ -188,39 +188,13 @@ namespace openstudio {
       model = openstudio::model::Model();
     }
 
-    openstudio::path modelTempDir = model::createModelTempDir();
-    m_modelTempDir = toQString(modelTempDir);
-
+    openstudio::path modelTempDir;
     if (!m_savePath.isEmpty()){
-      model::initializeModelTempDir(toPath(m_savePath), modelTempDir);
+      modelTempDir = model::initializeModel(*model, toPath(m_savePath));
+    } else{
+      modelTempDir = model::initializeModel(*model);
     }
-
-    bool modifiedOnLoad = updateModelTempDir(*model, modelTempDir);
-
-    if (m_savePath.isEmpty()){
-      modifiedOnLoad = false;
-    }
-
-    // Look in the companion directory for a workflow.osw file, e.g. if the OSM is ‘my_model.osm’ look for ‘./my_model/workflow.osw’ ie self contained form.
-    boost::optional<WorkflowJSON> workflowJSON;
-
-    openstudio::path oswPath = openstudio::toPath(m_modelTempDir) / openstudio::toPath("resources/workflow.osw");
-    if (boost::filesystem::exists(oswPath)){
-      workflowJSON = WorkflowJSON::load(oswPath);
-      if (workflowJSON){
-        LOG(Debug, "Opening existing workflow.osw file");
-      } else{
-        LOG(Error, "Could not open existing workflow.osw file");
-      }
-    }
-
-    if (!workflowJSON){
-      workflowJSON = WorkflowJSON();
-      workflowJSON->setOswPath(oswPath);
-      workflowJSON->save();
-    }
-    OS_ASSERT(workflowJSON);
-    model->setWorkflowJSON(*workflowJSON);
+    m_modelTempDir = toQString(modelTempDir);
 
     bool isConnected;
 
@@ -230,7 +204,7 @@ namespace openstudio {
     OS_ASSERT(m_subTabIds.size() == static_cast<unsigned>(RESULTS_SUMMARY + 1));
 
     // set the model, this will create widgets
-    setModel(*model, modifiedOnLoad, false);
+    setModel(*model, false, false);
 
     // connect signals to main window
     connect(m_mainWindow, &MainWindow::downloadComponentsClicked, this, &OSDocument::openBclDlg);
@@ -288,7 +262,7 @@ namespace openstudio {
     // release the file watchers so can remove model temp dir
     m_mainTabController.reset();
 
-    model::removeDir(m_modelTempDir);
+    model::removeModelTempDir(toPath(m_modelTempDir));
   }
 
   void OSDocument::showStartTabAndStartSubTab()
@@ -1329,12 +1303,11 @@ namespace openstudio {
       // DLM: should not happen unless user sets an absolute path to epw file in a measure
       fixWeatherFileInTemp(false);
 
-      // save the osw, do before temp dirs get copied
-      m_model.workflowJSON().save();
+      openstudio::path modelPath = toPath(m_savePath);
 
       // saves the model to modelTempDir / m_savePath.filename()
       // also copies the temp files to user location
-      openstudio::path modelPath = saveModel(this->model(), toPath(m_savePath), toPath(m_modelTempDir));
+      bool saved = saveModel(this->model(), modelPath, toPath(m_modelTempDir));
 
       this->setSavePath(toQString(modelPath));
 
@@ -1399,15 +1372,14 @@ namespace openstudio {
         }
       }
 
-      // set the new seed name
-      m_model.workflowJSON().setSeedFile(toPath("..") / toPath(filePath).filename());
-
-      // save the osw, do before temp dirs get copied
-      m_model.workflowJSON().save();
+      openstudio::path modelPath = toPath(filePath);
+      if (getFileExtension(modelPath).empty()) {
+        modelPath = setFileExtension(modelPath, modelFileExtension(), false, true);
+      }
 
       // saves the model to modelTempDir / filePath.filename()
       // also copies the temp files to user location
-      openstudio::path modelPath = saveModel(this->model(), toPath(filePath), toPath(m_modelTempDir));
+      bool saved = saveModel(this->model(), modelPath, toPath(m_modelTempDir));
 
       this->setSavePath(toQString(modelPath));
 

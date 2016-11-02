@@ -48,29 +48,39 @@ namespace model {
 
   // Recursively remove dirName.
   // Returns true on success and false if there is an error.
-  MODEL_API bool removeDir(const QString & dirName);
+  //MODEL_API bool removeDir(const QString & dirName);
 
   // Recursively copies srcPath to dstPath;
   // If dstPath already exists it will be removed.
-  MODEL_API bool copyDir(const QString &srcPath, const QString &dstPath);
+  //MODEL_API bool copyDir(const QString &srcPath, const QString &dstPath);
 
   /// Create a temporary directory for an openstudio model
   /// This is where changes to the files, etc are staged
-  MODEL_API openstudio::path createModelTempDir();
+  //MODEL_API openstudio::path createModelTempDir();
 
-  /// Copy existing model resources to temp dir
-  MODEL_API bool initializeModelTempDir(const openstudio::path& osmPath, const openstudio::path& modelTempDir);
+  /// Copy existing model resources to temp dir. Returns true if the directory was successfully initialized.
+  //MODEL_API bool initializeModelTempDir(const openstudio::path& osmPath, const openstudio::path& modelTempDir);
 
   /// Update the model in the temp directory to include the correct
   /// directory structure, copy files to relative locations, etc
   /// Returns true if any changes were made
-  MODEL_API bool updateModelTempDir(openstudio::model::Model& model, const openstudio::path& modelTempDir);
+  //MODEL_API bool updateModelTempDir(openstudio::model::Model& model, const openstudio::path& modelTempDir);
+    
+  /// Connect the model to WorkflowJSON found in the temp directory.
+  /// Returns true if existing WorkflowJSON was found.  If no existing WorkflowJSON is found, a new one is created in the temp dir.
+  //MODEL_API bool attachWorkflow(openstudio::model::Model& model, const openstudio::path& modelTempDir);
+
+  /// Initialize a temporary directory for a given model, if savedPath is passed in then existing companion directories are copied to 
+  /// the temporary directory.  Returns path to the temporary directory.
+  /// This method combines calls to createModelTempDir, initializeModelTempDir, updateModelTempDir, and attachWorkflow.
+  MODEL_API openstudio::path initializeModel(openstudio::model::Model model);
+  MODEL_API openstudio::path initializeModel(openstudio::model::Model model, const openstudio::path& savedPath);
 
   // Saves the model temporary directory to a new directory alongside the osm file.
-  MODEL_API void saveModelTempDir(const openstudio::path& modelTempDir, const openstudio::path& osmPath);
+  //MODEL_API bool saveModelTempDir(const openstudio::path& modelTempDir, const openstudio::path& osmPath);
 
-  // Saves the model to osm and copies files from temp dir, returns the path to the osm which may have been corrected
-  MODEL_API openstudio::path saveModel(openstudio::model::Model model, const openstudio::path& osmPath, const openstudio::path& modelTempDir);
+  // Saves the workflow and model to their temp locations and copies files from temp dir, returns true if successful.
+  MODEL_API bool saveModel(openstudio::model::Model model, const openstudio::path& osmPath, const openstudio::path& modelTempDir);
 
   // Removes the model temporary directory.
   MODEL_API void removeModelTempDir(const openstudio::path& modelTempDir);

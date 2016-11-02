@@ -83,12 +83,11 @@ module OpenStudio
       @skp_model.model_interface = self
       @skp_model.openstudio_path = openstudio_path
       
-      @model_temp_dir = OpenStudio::Model::createModelTempDir
-      #puts "@model_temp_dir = #{@model_temp_dir}"
       if (openstudio_path)
-        OpenStudio::Model::initializeModelTempDir(OpenStudio::Path.new(openstudio_path), @model_temp_dir)
+        @model_temp_dir = OpenStudio::Model::initializeModel(openstudio_model, OpenStudio::Path.new(openstudio_path))
+      else
+        @model_temp_dir = OpenStudio::Model::initializeModel(openstudio_model)
       end
-      OpenStudio::Model::updateModelTempDir(@openstudio_model, @model_temp_dir)
       
       @parent = nil
       @children = Set.new  
@@ -409,61 +408,10 @@ module OpenStudio
       begin
         FileUtils.mkdir_p(File.dirname(path))
 
-        saved_path = OpenStudio::Model::saveModel(@openstudio_model, OpenStudio::Path.new(path), @model_temp_dir)
-
-        # save run manager database first so saveModelTempDir copies it
-        # ACS: Commenting this out to prevent scanning for tools (creates run.db for running within SketchUp)
-        # DLM: TODO, this should be saving workflowJSON instead
-        #OpenStudio::Openstudiolib::saveRunManagerDatabase(saved_path, @model_temp_dir, false) 
+        model_path = OpenStudio::Path.new(path)
         
-        OpenStudio::Model::saveModelTempDir(@model_temp_dir, saved_path)
+        OpenStudio::Model::saveModel(@openstudio_model, model_path, @model_temp_dir)
         
-        result = true
-      end
-      
-      if @path_watcher
-        # if path changed then we will have a new path watcher
-        @path_watcher_to_unignore = @path_watcher
-        proc = Proc.new {
-          #puts "@path_watcher #{@path_watcher}, @path_watcher_to_unignore #{@path_watcher_to_unignore}"
-          if @path_watcher == @path_watcher_to_unignore
-            #puts "un-ignoring path_watcher #{@path_watcher}"
-            @path_watcher.clearState
-            @path_watcher.enable
-          end
-        }
-        Plugin.add_event( proc )
-      end
-            
-      # resume event processing
-      Plugin.start_event_processing if event_processing_stopped
-      
-      return(result)
-    end
-
-    # save the osm file and resources files
-    def save_model_temp_dir 
-      Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
-      saved_path = self.openstudio_path
-      
-      if not openstudio_path or openstudio_path.empty?
-        return false
-      end
-      
-      # pause event processing
-      event_processing_stopped = Plugin.stop_event_processing
-      
-      if @path_watcher
-        #puts "ignoring path_watcher #{@path_watcher}"
-        @path_watcher.disable
-      end
-      
-      result = false
-      
-      begin
-        # do not want to save the database or osm here
-        OpenStudio::Model::saveModelTempDir(@model_temp_dir, OpenStudio::Path.new(saved_path))
         result = true
       end
       

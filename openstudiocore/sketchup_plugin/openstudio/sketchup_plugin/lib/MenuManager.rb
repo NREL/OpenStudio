@@ -564,11 +564,11 @@ module OpenStudio
             # DLM: Used to use Thread.new here, suspect that was causing crashes when OpenStudio app was opened in plug-in
             # empty "" is required after start, first parameter is the name of the process to start
             # http://stackoverflow.com/questions/154075/using-the-dos-start-command-with-parameters-passed-to-the-started-program
-            puts "start \"\" \"#{$OPENSTUDIO_APPLICATION_DIR}OpenStudioApp\" \"#{openstudio_path}\""
-            system("start \"\" \"#{$OPENSTUDIO_APPLICATION_DIR}OpenStudioApp\" \"#{openstudio_path}\"")
+            puts "start \"\" \"#{$OPENSTUDIO_APPLICATION_DIR}\\OpenStudioApp\" \"#{openstudio_path}\""
+            system("start \"\" \"#{$OPENSTUDIO_APPLICATION_DIR}\\OpenStudioApp\" \"#{openstudio_path}\"")
           elsif Plugin.platform == Platform_Mac
-            puts "open -a \"#{$OPENSTUDIO_APPLICATION_DIR}OpenStudioApp.app\" --args \"#{openstudio_path}\""
-            system("open -a \"#{$OPENSTUDIO_APPLICATION_DIR}OpenStudioApp.app\" --args \"#{openstudio_path}\"")
+            puts "open -a \"#{$OPENSTUDIO_APPLICATION_DIR}/OpenStudioApp.app\" --args \"#{openstudio_path}\""
+            system("open -a \"#{$OPENSTUDIO_APPLICATION_DIR}/OpenStudioApp.app\" --args \"#{openstudio_path}\"")
           end
         end
       end

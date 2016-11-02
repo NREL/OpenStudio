@@ -349,10 +349,10 @@ class MODEL_API Model : public openstudio::Workspace {
 
   //@}
 
-  /** Load Model from file. */
+  /** Load Model from file, attempts to load WorkflowJSON from standard path. */
   static boost::optional<Model> load(const path& osmPath);
 
-  /** Load Model and WorkflowJSON from files. */
+  /** Load Model and WorkflowJSON from files, fails if either osm or workflowJSON cannot be loaded. */
   static boost::optional<Model> load(const path& osmPath, const path& workflowJSONPath);
 
   /// Equality test, tests if this Model shares the same implementation object with other.

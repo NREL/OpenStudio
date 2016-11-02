@@ -291,7 +291,7 @@ namespace model {
 
     // Create folder layout
     openstudio::path runpath = modelTempDir / openstudio::toPath("resources/run");
-    openstudio::path scriptspath = modelTempDir / openstudio::toPath("resources/scripts");
+    openstudio::path scriptspath = modelTempDir / openstudio::toPath("resources/measures");
     openstudio::path filespath = modelTempDir / openstudio::toPath("resources/files");
 
     if (!openstudio::filesystem::exists(runpath))
@@ -317,7 +317,53 @@ namespace model {
     return modified;
   }
 
-  void saveModelTempDir(const openstudio::path& modelTempDir, const openstudio::path& osmPath)
+  bool attachWorkflow(openstudio::model::Model& model, const openstudio::path& modelTempDir)
+  {
+    boost::optional<WorkflowJSON> workflowJSON;
+    bool result = false;
+
+    openstudio::path oswPath = modelTempDir / openstudio::toPath("resources/workflow.osw");
+    if (boost::filesystem::exists(oswPath)){
+      workflowJSON = WorkflowJSON::load(oswPath);
+      if (workflowJSON){
+        result = true;
+        LOG_FREE(Debug, "attachWorkflow", "Opened existing workflow.osw file");
+      } else{
+        LOG_FREE(Error, "attachWorkflow", "Could not open existing workflow.osw file");
+      }
+    }
+
+    if (!workflowJSON){
+      workflowJSON = WorkflowJSON();
+      workflowJSON->setOswPath(oswPath);
+      workflowJSON->save();
+    }
+    OS_ASSERT(workflowJSON);
+    model.setWorkflowJSON(*workflowJSON);
+
+    return result;
+  }
+
+  openstudio::path initializeModel(openstudio::model::Model model)
+  {
+    return initializeModel(model, openstudio::path());
+  }
+
+  openstudio::path initializeModel(openstudio::model::Model model, const openstudio::path& savedPath)
+  {
+    openstudio::path modelTempDir = createModelTempDir();
+
+    if (!savedPath.empty() && exists(savedPath)){
+      initializeModelTempDir(savedPath, modelTempDir);
+    }
+
+    updateModelTempDir(model, modelTempDir);
+    attachWorkflow(model, modelTempDir);
+      
+    return modelTempDir;
+  }
+
+  bool saveModelTempDir(const openstudio::path& modelTempDir, const openstudio::path& osmPath)
   {
     bool test = true;
 
@@ -351,26 +397,35 @@ namespace model {
       }
 
     }
+
+    return test;
   }
 
-  openstudio::path saveModel(openstudio::model::Model model, const openstudio::path& osmPath, const openstudio::path& modelTempDir)
-  {
+  bool saveModel(openstudio::model::Model model, const openstudio::path& osmPath, const openstudio::path& modelTempDir)
+  { 
+    // set the workflow's path
+    openstudio::path oswPath = modelTempDir / openstudio::toPath("resources/workflow.osw");
+    model.workflowJSON().setOswPath(oswPath);
 
-    openstudio::path modelPath = osmPath;
+    // set the seed name
+    model.workflowJSON().setSeedFile(toPath("..") / osmPath.filename());
 
-    if (getFileExtension(osmPath).empty()) {
-      modelPath = setFileExtension(osmPath, modelFileExtension(), false, true);
-    }
+    // save the osw, do before temp dirs get copied
+    model.workflowJSON().save();
 
     // save osm to temp directory, saveModelTempDir will copy to real location
-    openstudio::path tempModelPath = modelTempDir / modelPath.filename();
-    model.save(tempModelPath, true);
+    openstudio::path tempModelPath = modelTempDir / osmPath.filename();
+    bool modelSaved = model.save(tempModelPath, true);
 
-    LOG_FREE(Debug, "saveModel", "Saved model to '" << toString(tempModelPath) << "'");
-
-    saveModelTempDir(modelTempDir, modelPath);
-
-    return modelPath;
+    if (modelSaved){
+      LOG_FREE(Debug, "saveModel", "Saved model to '" << toString(tempModelPath) << "'");
+    } else{
+      LOG_FREE(Error, "saveModel", "Failed to save model to '" << toString(tempModelPath) << "'");
+    }
+    
+    bool tempDirSaved = saveModelTempDir(modelTempDir, osmPath);
+    
+    return (modelSaved && tempDirSaved);
   }
 
   void removeModelTempDir(const openstudio::path& modelTempDir)

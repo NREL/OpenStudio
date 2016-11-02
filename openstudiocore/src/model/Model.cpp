@@ -1658,6 +1658,17 @@ boost::optional<Model> Model::load(const path& p) {
     }
     catch (...) {}
   }
+
+  if (result){
+    path workflowJSONPath = p.parent_path() / p.stem() / toPath("workflow.osw");
+    if (exists(workflowJSONPath)){
+      boost::optional<WorkflowJSON> workflowJSON = WorkflowJSON::load(workflowJSONPath);
+      if (workflowJSON){
+        result->setWorkflowJSON(*workflowJSON);
+      }
+    }
+  }
+
   return result;
 }
 
