@@ -560,6 +560,36 @@ set(${target_name}_src
   Generator.hpp
   Generator_Impl.hpp
   Generator.cpp
+  GeneratorFuelCell.hpp
+  GeneratorFuelCell_Impl.hpp
+  GeneratorFuelCell.cpp
+  GeneratorFuelCellAirSupply.hpp
+  GeneratorFuelCellAirSupply_Impl.hpp
+  GeneratorFuelCellAirSupply.cpp
+  GeneratorFuelCellAuxiliaryHeater.hpp
+  GeneratorFuelCellAuxiliaryHeater_Impl.hpp
+  GeneratorFuelCellAuxiliaryHeater.cpp
+  GeneratorFuelCellElectricalStorage.hpp
+  GeneratorFuelCellElectricalStorage_Impl.hpp
+  GeneratorFuelCellElectricalStorage.cpp
+  GeneratorFuelCellExhaustGasToWaterHeatExchanger.hpp
+  GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl.hpp
+  GeneratorFuelCellExhaustGasToWaterHeatExchanger.cpp
+  GeneratorFuelCellInverter.hpp
+  GeneratorFuelCellInverter_Impl.hpp
+  GeneratorFuelCellInverter.cpp
+  GeneratorFuelCellPowerModule.hpp
+  GeneratorFuelCellPowerModule_Impl.hpp
+  GeneratorFuelCellPowerModule.cpp
+  GeneratorFuelCellStackCooler.hpp
+  GeneratorFuelCellStackCooler_Impl.hpp
+  GeneratorFuelCellStackCooler.cpp
+  GeneratorFuelCellWaterSupply.hpp
+  GeneratorFuelCellWaterSupply_Impl.hpp
+  GeneratorFuelCellWaterSupply.cpp
+  GeneratorFuelSupply.hpp
+  GeneratorFuelSupply_Impl.hpp
+  GeneratorFuelSupply.cpp
   GeneratorMicroTurbine.hpp
   GeneratorMicroTurbine_Impl.hpp
   GeneratorMicroTurbine.cpp
