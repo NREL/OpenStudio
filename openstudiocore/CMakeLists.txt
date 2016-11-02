@@ -1,4 +1,9 @@
-﻿cmake_minimum_required(VERSION 2.8.11)
+﻿if(CMAKE_HOST_WIN32)
+  # Necessary to do with FindOpenSSL on Windows
+  cmake_minimum_required(VERSION 3.2.3)
+else()
+  cmake_minimum_required(VERSION 2.8.11)
+endif()
 
 project(OpenStudioCore)
 
