@@ -1012,7 +1012,8 @@ namespace openstudio{
     std::vector<Point3d> allPoints;
 
     boost::optional<BoostPolygon> bp = nonIntersectingBoostPolygonFromVertices(polygon, allPoints, tol);
-    if (!bp){
+    if (bp){
+      // able to get a non intersecting polygon, so does not self intersect
       return false;
     }
     return true;

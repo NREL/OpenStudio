@@ -9,7 +9,7 @@ project(OpenStudioMeta)
 
 set(CMAKE_VERSION_MAJOR 1)
 set(CMAKE_VERSION_MINOR 13)
-set(CMAKE_VERSION_PATCH 2)
+set(CMAKE_VERSION_PATCH 3)
 
 set(CMAKE_VERSION_BUILD "Unknown" CACHE STRING "Build number")
 find_package(Git)

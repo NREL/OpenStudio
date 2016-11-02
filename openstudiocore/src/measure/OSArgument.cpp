@@ -671,10 +671,23 @@ bool OSArgument::setDefaultValue(int defaultValue)
 }
 
 bool OSArgument::setDefaultValue(const std::string& defaultValue) {
-  bool result = setStringInternal(m_defaultValue, defaultValue);
-  if (result) {
+  bool result = false;
+  if (m_type == OSArgumentType::String) {
+    m_defaultValue.setValue(toQString(defaultValue));
     OS_ASSERT(hasDefaultValue());
     onChange();
+    result = true;
+  } else if (m_type == OSArgumentType::Choice) {
+    if ((std::find(m_choices.begin(), m_choices.end(), defaultValue) != m_choices.end()) ||
+        (std::find(m_choiceDisplayNames.begin(), m_choiceDisplayNames.end(), defaultValue) != m_choiceDisplayNames.end()))
+    {
+      m_defaultValue.setValue(toQString(defaultValue));
+      OS_ASSERT(hasDefaultValue());
+      onChange();
+      result = true;
+    }
+  } else{
+    result = setStringInternal(m_defaultValue, defaultValue);
   }
   return result;
 }
