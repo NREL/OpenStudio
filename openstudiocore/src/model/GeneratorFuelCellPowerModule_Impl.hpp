@@ -154,7 +154,7 @@ namespace detail {
     void resetEfficiencyCurveMode();
 
     // TODO: Check argument type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
-    bool setEfficiencyCurve(const CurveQuadratic& quadraticCurves);
+    bool setEfficiencyCurve(const CurveQuadratic& quadraticCurve);
 
     void setNominalEfficiency(double nominalEfficiency);
 

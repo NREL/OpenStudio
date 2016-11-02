@@ -48,6 +48,8 @@
 #include "GeneratorFuelCellStackCooler_Impl.hpp"
 #include "GeneratorFuelSupply.hpp"
 #include "GeneratorFuelSupply_Impl.hpp"
+#include "CurveQuadratic.hpp"
+#include "CurveQuadratic_Impl.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_Generator_FuelCell_FieldEnums.hxx>
@@ -96,7 +98,7 @@ namespace detail {
   GeneratorFuelCellPowerModule GeneratorFuelCell_Impl::powerModule() const {
     boost::optional<GeneratorFuelCellPowerModule> value = optionalPowerModule();
     if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Power Module attached.");
+      LOG(Info, " does not have an Power Module attached.");
     }
     return value.get();
   }
@@ -104,7 +106,7 @@ namespace detail {
   GeneratorFuelCellAirSupply GeneratorFuelCell_Impl::airSupply() const {
     boost::optional<GeneratorFuelCellAirSupply> value = optionalAirSupply();
     if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Air Supply attached.");
+      LOG(Info, " does not have an Air Supply attached.");
     }
     return value.get();
   }
@@ -112,7 +114,7 @@ namespace detail {
   GeneratorFuelSupply GeneratorFuelCell_Impl::fuelSupply() const {
     boost::optional<GeneratorFuelSupply> value = optionalFuelSupply();
     if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Fuel Supply attached.");
+      LOG(Info, " does not have an Fuel Supply attached.");
     }
     return value.get();
   }
@@ -120,7 +122,7 @@ namespace detail {
   GeneratorFuelCellWaterSupply GeneratorFuelCell_Impl::waterSupply() const {
     boost::optional<GeneratorFuelCellWaterSupply> value = optionalWaterSupply();
     if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Water Supply attached.");
+      LOG(Info, " does not have an Water Supply attached.");
     }
     return value.get();
   }
@@ -128,7 +130,7 @@ namespace detail {
   GeneratorFuelCellAuxiliaryHeater GeneratorFuelCell_Impl::auxiliaryHeater() const {
     boost::optional<GeneratorFuelCellAuxiliaryHeater> value = optionalAuxiliaryHeater();
     if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Auxiliary Heater attached.");
+      LOG(Info, " does not have an Auxiliary Heater attached.");
     }
     return value.get();
   }
@@ -136,7 +138,7 @@ namespace detail {
   GeneratorFuelCellExhaustGasToWaterHeatExchanger GeneratorFuelCell_Impl::heatExchanger() const {
     boost::optional<GeneratorFuelCellExhaustGasToWaterHeatExchanger> value = optionalHeatExchanger();
     if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Heat Exchanger attached.");
+      LOG(Info, " does not have an Heat Exchanger attached.");
     }
     return value.get();
   }
@@ -144,7 +146,7 @@ namespace detail {
   GeneratorFuelCellElectricalStorage GeneratorFuelCell_Impl::electricalStorage() const {
     boost::optional<GeneratorFuelCellElectricalStorage> value = optionalElectricalStorage();
     if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Electrical Storage attached.");
+      LOG(Info, " does not have an Electrical Storage attached.");
     }
     return value.get();
   }
@@ -152,7 +154,7 @@ namespace detail {
   GeneratorFuelCellInverter GeneratorFuelCell_Impl::inverter() const {
     boost::optional<GeneratorFuelCellInverter> value = optionalInverter();
     if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Inverter attached.");
+      LOG(Info, " does not have an Inverter attached.");
     }
     return value.get();
   }
@@ -245,37 +247,130 @@ namespace detail {
 
 } // detail
 
+GeneratorFuelCell::GeneratorFuelCell(const Model& model,
+                                     const GeneratorFuelCellPowerModule& fCPM,
+                                     const GeneratorFuelCellAirSupply& fCAS,
+                                     const GeneratorFuelCellWaterSupply& fCWS,
+                                     const GeneratorFuelCellAuxiliaryHeater& fCAH,
+                                     const GeneratorFuelCellExhaustGasToWaterHeatExchanger& fCExhaustHX,
+                                     const GeneratorFuelCellElectricalStorage& fCES,
+                                     const GeneratorFuelCellInverter& fCInverter,
+                                     const GeneratorFuelSupply& fS)
+  : ModelObject(GeneratorFuelCell::iddObjectType(), model) {
+  OS_ASSERT(getImpl<detail::GeneratorFuelCell_Impl>());
+
+  bool ok = setPowerModule(fCPM);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s GeneratorFuelCellPowerModule to "
+      << fCPM.briefDescription() << ".");
+  }
+  ok = setAirSupply(fCAS);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s GeneratorFuelCellAirSupply to "
+      << fCAS.briefDescription() << ".");
+  }
+  ok = setFuelSupply(fS);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s GeneratorFuelSupply to "
+      << fS.briefDescription() << ".");
+  }
+  ok = setWaterSupply(fCWS);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s GeneratorFuelCellWaterSupply to "
+      << fCWS.briefDescription() << ".");
+  }
+  ok = setAuxiliaryHeater(fCAH);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s GeneratorFuelCellAuxiliaryHeater to "
+      << fCAH.briefDescription() << ".");
+  }
+  ok = setHeatExchanger(fCExhaustHX);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s GeneratorFuelCellExhaustGasToWaterHeatExchanger to "
+      << fCExhaustHX.briefDescription() << ".");
+  }
+  ok = setElectricalStorage(fCES);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s GeneratorFuelCellElectricalStorage to "
+      << fCES.briefDescription() << ".");
+  }
+  ok = setInverter(fCInverter);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s GeneratorFuelCellInverter to "
+      << fCInverter.briefDescription() << ".");
+  }
+}
+
 GeneratorFuelCell::GeneratorFuelCell(const Model& model)
   : ModelObject(GeneratorFuelCell::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::GeneratorFuelCell_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_Generator_FuelCellFields::PowerModuleName
-  //     OS_Generator_FuelCellFields::AirSupplyName
-  //     OS_Generator_FuelCellFields::FuelSupplyName
-  //     OS_Generator_FuelCellFields::WaterSupplyName
-  //     OS_Generator_FuelCellFields::AuxiliaryHeaterName
-  //     OS_Generator_FuelCellFields::HeatExchangerName
-  //     OS_Generator_FuelCellFields::ElectricalStorageName
-  //     OS_Generator_FuelCellFields::InverterName
-  bool ok = true;
-  // ok = setPowerModule();
-  OS_ASSERT(ok);
-  // ok = setAirSupply();
-  OS_ASSERT(ok);
-  // ok = setFuelSupply();
-  OS_ASSERT(ok);
-  // ok = setWaterSupply();
-  OS_ASSERT(ok);
-  // ok = setAuxiliaryHeater();
-  OS_ASSERT(ok);
-  // ok = setHeatExchanger();
-  OS_ASSERT(ok);
-  // ok = setElectricalStorage();
-  OS_ASSERT(ok);
-  // ok = setInverter();
-  OS_ASSERT(ok);
+  //create generic curve
+  CurveQuadratic curveQuadratic(model);
+  curveQuadratic.setCoefficient1Constant(1);
+  curveQuadratic.setCoefficient2x(0);
+  curveQuadratic.setCoefficient3xPOW2(0);
+  curveQuadratic.setMinimumValueofx(0.0);
+  curveQuadratic.setMaximumValueofx(1.0);
+  //create generic FCPM
+  GeneratorFuelCellPowerModule fCPM(model, curveQuadratic);
+  bool ok = setPowerModule(fCPM);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s GeneratorFuelCellPowerModule");
+  }
+  //create generic FCAS
+  GeneratorFuelCellAirSupply fCAS(model);
+  ok = setAirSupply(fCAS);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s GeneratorFuelCellAirSupply");
+  }
+  GeneratorFuelSupply fS(model);
+  ok = setFuelSupply(fS);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s GeneratorFuelSupply");
+  }
+  GeneratorFuelCellWaterSupply fCWS(model);
+  ok = setWaterSupply(fCWS);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s GeneratorFuelCellWaterSupply");
+  }
+  GeneratorFuelCellAuxiliaryHeater fCAH(model);
+  ok = setAuxiliaryHeater(fCAH);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s GeneratorFuelCellAuxiliaryHeater");
+  }
+  GeneratorFuelCellExhaustGasToWaterHeatExchanger fCExhaustHX(model);
+  ok = setHeatExchanger(fCExhaustHX);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s GeneratorFuelCellExhaustGasToWaterHeatExchanger");
+  }
+  GeneratorFuelCellElectricalStorage fCES(model);
+  ok = setElectricalStorage(fCES);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s GeneratorFuelCellElectricalStorage");
+  }
+  GeneratorFuelCellInverter fCInverter(model);
+  ok = setInverter(fCInverter);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s GeneratorFuelCellInverter");
+  }
 }
 
 IddObjectType GeneratorFuelCell::iddObjectType() {

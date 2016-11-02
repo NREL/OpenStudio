@@ -236,14 +236,10 @@ GeneratorFuelCellAirSupply::GeneratorFuelCellAirSupply(const Model& model)
 {
   OS_ASSERT(getImpl<detail::GeneratorFuelCellAirSupply_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  bool ok = true;
-  // ok = setAirSupplyRateCalculationMode();
-  OS_ASSERT(ok);
-  // ok = setAirIntakeHeatRecoveryMode();
-  OS_ASSERT(ok);
-  // ok = setAirSupplyConstituentMode();
-  OS_ASSERT(ok);
+  setAirSupplyRateCalculationMode("AirRatiobyStoics");
+  setStoichiometricRatio(1.0);
+  setAirIntakeHeatRecoveryMode("NoRecovery");
+  setAirSupplyConstituentMode("AmbientAir");
 }
 
 IddObjectType GeneratorFuelCellAirSupply::iddObjectType() {

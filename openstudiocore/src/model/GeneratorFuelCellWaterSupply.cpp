@@ -194,8 +194,6 @@ GeneratorFuelCellWaterSupply::GeneratorFuelCellWaterSupply(const Model& model)
   : ModelObject(GeneratorFuelCellWaterSupply::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::GeneratorFuelCellWaterSupply_Impl>());
-
-  // TODO: Appropriately handle the following required object-list fields.
 }
 
 IddObjectType GeneratorFuelCellWaterSupply::iddObjectType() {

@@ -55,7 +55,7 @@ class MODEL_API GeneratorFuelCellPowerModule : public ModelObject {
   /** @name Constructors and Destructors */
   //@{
 
-  explicit GeneratorFuelCellPowerModule(const Model& model);
+  explicit GeneratorFuelCellPowerModule(const Model& model, const CurveQuadratic& quadraticCurve);
 
   virtual ~GeneratorFuelCellPowerModule() {}
 
@@ -148,7 +148,7 @@ class MODEL_API GeneratorFuelCellPowerModule : public ModelObject {
   void resetEfficiencyCurveMode();
 
   // TODO: Check argument type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
-  bool setEfficiencyCurve(const CurveQuadratic& quadraticCurves);
+  bool setEfficiencyCurve(const CurveQuadratic& quadraticCurve);
 
   void setNominalEfficiency(double nominalEfficiency);
 

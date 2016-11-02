@@ -54,7 +54,7 @@ class MODEL_API GeneratorFuelCellAirSupply : public ModelObject {
   //@{
 
   explicit GeneratorFuelCellAirSupply(const Model& model);
-
+  
   virtual ~GeneratorFuelCellAirSupply() {}
 
   //@}

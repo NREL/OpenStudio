@@ -93,7 +93,7 @@ namespace detail {
   CurveQuadratic GeneratorFuelCellPowerModule_Impl::efficiencyCurve() const {
     boost::optional<CurveQuadratic> value = optionalEfficiencyCurve();
     if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Efficiency Curve attached.");
+      LOG(Info, " does not have an Efficiency Curve attached.");
     }
     return value.get();
   }
@@ -228,8 +228,8 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool GeneratorFuelCellPowerModule_Impl::setEfficiencyCurve(const CurveQuadratic& quadraticCurves) {
-    bool result = setPointer(OS_Generator_FuelCell_PowerModuleFields::EfficiencyCurveName, quadraticCurves.handle());
+  bool GeneratorFuelCellPowerModule_Impl::setEfficiencyCurve(const CurveQuadratic& quadraticCurve) {
+    bool result = setPointer(OS_Generator_FuelCell_PowerModuleFields::EfficiencyCurveName, quadraticCurve.handle());
     return result;
   }
 
@@ -539,16 +539,16 @@ namespace detail {
 
 } // detail
 
-GeneratorFuelCellPowerModule::GeneratorFuelCellPowerModule(const Model& model)
+GeneratorFuelCellPowerModule::GeneratorFuelCellPowerModule(const Model& model, const CurveQuadratic& quadraticCurve)
   : ModelObject(GeneratorFuelCellPowerModule::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::GeneratorFuelCellPowerModule_Impl>());
-
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_Generator_FuelCell_PowerModuleFields::EfficiencyCurveName
-  bool ok = true;
-  // ok = setEfficiencyCurve();
-  OS_ASSERT(ok);
+  bool ok = setEfficiencyCurve(quadraticCurve);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s CurveQuadratic to "
+      << quadraticCurve.briefDescription() << ".");
+  }
 }
 
 IddObjectType GeneratorFuelCellPowerModule::iddObjectType() {
@@ -701,8 +701,8 @@ void GeneratorFuelCellPowerModule::resetEfficiencyCurveMode() {
   getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->resetEfficiencyCurveMode();
 }
 
-bool GeneratorFuelCellPowerModule::setEfficiencyCurve(const CurveQuadratic& quadraticCurves) {
-  return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setEfficiencyCurve(quadraticCurves);
+bool GeneratorFuelCellPowerModule::setEfficiencyCurve(const CurveQuadratic& quadraticCurve) {
+  return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setEfficiencyCurve(quadraticCurve);
 }
 
 void GeneratorFuelCellPowerModule::setNominalEfficiency(double nominalEfficiency) {

@@ -77,6 +77,16 @@ class MODEL_API GeneratorFuelCell : public ModelObject {
   /** @name Constructors and Destructors */
   //@{
 
+  explicit GeneratorFuelCell(const Model& model,
+                             const GeneratorFuelCellPowerModule& fCPM,
+                             const GeneratorFuelCellAirSupply& fCAS,
+                             const GeneratorFuelCellWaterSupply& fCWS,
+                             const GeneratorFuelCellAuxiliaryHeater& fCAH,
+                             const GeneratorFuelCellExhaustGasToWaterHeatExchanger& fCExhaustHX,
+                             const GeneratorFuelCellElectricalStorage& fCES,
+                             const GeneratorFuelCellInverter& fCInverter,
+                             const GeneratorFuelSupply& fS);
+
   explicit GeneratorFuelCell(const Model& model);
 
   virtual ~GeneratorFuelCell() {}
