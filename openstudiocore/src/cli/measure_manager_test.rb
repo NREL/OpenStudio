@@ -149,13 +149,13 @@ def compute_arguments(measure_dir, osm_path = nil)
   return result
 end
 
-def create_measure(measure_dir, name, class_name, taxonomy_tag, measure_type, description, modeler_description)
+def create_measure(measure_dir, display_name, class_name, taxonomy_tag, measure_type, description, modeler_description)
   measure_dir = File.absolute_path(measure_dir)
   
   result = {}
   
   begin
-    json_request = JSON.generate({:measure_dir => measure_dir, :name => name, :class_name => class_name, :taxonomy_tag => taxonomy_tag,:measure_type => measure_type, :description => description, :modeler_description => modeler_description})
+    json_request = JSON.generate({:measure_dir => measure_dir, :display_name => display_name, :class_name => class_name, :taxonomy_tag => taxonomy_tag,:measure_type => measure_type, :description => description, :modeler_description => modeler_description})
     request = RestClient::Resource.new("#{@host}/create_measure", user: @user, password: @pass)
     response = request.post(json_request, content_type: :json, accept: :json)
     result = JSON.parse(response.body, :symbolize_names => true)
