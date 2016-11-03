@@ -256,6 +256,9 @@ TEST(String, UnderscoreCase) {
   EXPECT_EQ("n_packages", toUnderscoreCase("nPackages"));
 
   EXPECT_EQ("ashrae_9012007_hvac_system_5_packaged_va_vwithwithhotwaterreheat", toUnderscoreCase("ASHRAE9012007HVACSystem5PackagedVAVwithwithhotwaterreheat"));
+
+  EXPECT_EQ("openstudio_results", toUnderscoreCase("OpenStudioResults"));
+  EXPECT_EQ("run_energyplus", toUnderscoreCase("RunEnergyPlus"));
 }
 
 TEST(String,NeatStrings) {
