@@ -105,11 +105,11 @@ endforeach()
 list(APPEND FILES "${CMAKE_CURRENT_SOURCE_DIR}/embedded_help.rb")
 list(APPEND EMBEDDED_PATHS "embedded_help.rb")
 
-list(APPEND FILES "${CMAKE_CURRENT_SOURCE_DIR}/scope_test.rb")
-list(APPEND EMBEDDED_PATHS "scope_test.rb")
+#list(APPEND FILES "${CMAKE_CURRENT_SOURCE_DIR}/scope_test.rb")
+#list(APPEND EMBEDDED_PATHS "scope_test.rb")
 
-list(APPEND FILES "${CMAKE_CURRENT_SOURCE_DIR}/openstudio.rb")
-list(APPEND EMBEDDED_PATHS "openstudio.rb")
+#list(APPEND FILES "${CMAKE_CURRENT_SOURCE_DIR}/openstudio.rb")
+#list(APPEND EMBEDDED_PATHS "openstudio.rb")
 
 list(APPEND FILES "${CMAKE_CURRENT_SOURCE_DIR}/openstudio_cli.rb")
 list(APPEND EMBEDDED_PATHS "openstudio_cli.rb")
