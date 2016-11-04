@@ -281,6 +281,8 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   void updateSubTabSelected(int id);
 
+  void addStandardMeasures();
+
   public slots:
 
   void enableTabsAfterRun();
@@ -297,6 +299,8 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   };
 
   void exportFile(fileType type);
+
+  boost::optional<BCLMeasure> standardReportMeasure();
 
   friend class OpenStudioApp;
 

@@ -126,6 +126,9 @@ namespace openstudio{
     /** @name Blocking class members */
     //@{
 
+    /// Returns true if there is an internet connection
+    bool isOnline() const;
+
     /// Returns the last downloaded component if there is one
     boost::optional<BCLComponent> lastComponentDownload() const;
 

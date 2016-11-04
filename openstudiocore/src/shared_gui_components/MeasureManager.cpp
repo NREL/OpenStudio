@@ -44,6 +44,7 @@
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/PathHelpers.hpp"
 #include "../utilities/core/RubyException.hpp"
+#include "../utilities/core/System.hpp"
 #include "../utilities/bcl/BCLMeasure.hpp"
 #include "../utilities/bcl/RemoteBCL.hpp"
 #include "../utilities/bcl/LocalBCL.hpp"
@@ -74,7 +75,7 @@
 namespace openstudio {
 
 MeasureManager::MeasureManager(BaseApp *t_app)
-  : m_app(t_app)
+  : m_app(t_app), m_started(false)
 {
   m_networkAccessManager = new QNetworkAccessManager(this);
 }
@@ -89,6 +90,54 @@ void MeasureManager::setUrl(const QUrl& url)
   m_url = url;
 }
 
+void MeasureManager::waitForStarted(int msec)
+{
+  if (m_started){
+    return;
+  }
+
+  // ping server until get a started response
+  bool success = false;
+
+  QUrl url(m_url);
+  url.setPath("/");
+
+  int msecPerLoop = 20;
+  int numTries = msec / msecPerLoop;
+  int current = 0;
+  while (!success && current < numTries)
+  {
+    QNetworkRequest request(url);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "json");
+
+    QNetworkAccessManager manager;
+
+    QNetworkReply* reply = manager.get(request);
+
+    while (reply->isRunning()){
+      Application::instance().processEvents();
+    }
+
+    auto error = reply->error();
+    delete reply;
+
+    if (error == QNetworkReply::NoError){
+      success = true;
+    } else{
+      // this calls process events
+      System::msleep(msecPerLoop);
+    }
+
+    ++current;
+  }
+
+  if (success){
+    m_started = true;
+  }else{
+    LOG(Error, "Measure manager server failed to start.")
+  }
+}
+
 openstudio::path MeasureManager::tempModelPath() const
 {
   return m_tempModelPath;
@@ -96,6 +145,8 @@ openstudio::path MeasureManager::tempModelPath() const
 
 void MeasureManager::saveTempModel()
 {
+  waitForStarted();
+
   boost::optional<model::Model> model = m_app->currentModel();
   boost::optional<path> tempDir = m_app->tempDir();
 
@@ -313,7 +364,16 @@ std::pair<bool,std::string> MeasureManager::updateMeasure(const BCLMeasure &t_me
     measure::OSArgumentVector args = getArguments(t_measure);
 
     WorkflowJSON workflowJSON = m_app->currentModel()->workflowJSON();
-    workflowJSON.addMeasure(t_measure);
+    boost::optional<BCLMeasure> measure = workflowJSON.addMeasure(t_measure);
+
+    if (measure){
+      result = std::pair<bool, std::string>(true, toString(measure->directory().stem()));
+    } else{
+      std::stringstream ss;
+      ss << "An error occurred while adding measure '" << t_measure.displayName() << "' to the project.";
+      LOG(Error, ss.str());
+      result = std::pair<bool, std::string>(false, ss.str());
+    }
 
   } catch ( const RubyException &e ) {
     std::stringstream ss;
@@ -691,8 +751,7 @@ void MeasureManager::updateMeasuresLists(bool updateUserMeasures)
   m_myMeasures.clear();
   m_bclMeasures.clear();
 
-  // TODO: check for updates in LocalBCL, have to glob over all the measures in multiple dirs
-  //checkForUpdates(toPath(LocalBCL::instance().libraryPath()), false);
+  checkForLocalBCLUpdates();
 
   if (updateUserMeasures) {
     checkForUpdates(BCLMeasure::userMeasuresDir(), false);
@@ -770,11 +829,45 @@ void MeasureManager::updateMeasuresLists(bool updateUserMeasures)
 //  updateMeasures(t_project, toUpdate);
 //}
 
+bool MeasureManager::checkForLocalBCLUpdates()
+{
+  waitForStarted();
 
+  QUrl url(m_url);
+  url.setPath("/bcl_measures");
 
+  std::string url_s = m_url.toString().toStdString();
+
+  QString data = QString("{}");
+
+  QNetworkRequest request(url);
+  request.setHeader(QNetworkRequest::ContentTypeHeader, "json");
+
+  QNetworkAccessManager manager;
+
+  QNetworkReply* reply = manager.post(request, data.toUtf8());
+
+  while (reply->isRunning()){
+    Application::instance().processEvents();
+  }
+
+  QString replyString = reply->readAll();
+  std::string s = replyString.toStdString();
+
+  bool result = true;
+  if (reply->error() != QNetworkReply::NoError){
+    result = false;
+  }
+
+  delete reply;
+
+  return result;
+}
 
 bool MeasureManager::checkForUpdates(const openstudio::path& measureDir, bool force)
 {
+  waitForStarted();
+
   QUrl url(m_url);
   url.setPath("/update_measures");
 
@@ -833,13 +926,6 @@ void MeasureManager::downloadBCLMeasures()
 
   delete remoteBCL;
 }
-
-
-
-
-
-
-
 
 void MeasureManager::addMeasure()
 {
@@ -913,15 +999,10 @@ void MeasureManager::duplicateSelectedMeasure()
 }
 
 
-
 //QSharedPointer<measure::OSMeasureInfoGetter> MeasureManager::infoGetter() const
 //{
 //  return m_infoGetter;
 //}
-
-
-
-
 
 void MeasureManager::setLibraryController(const QSharedPointer<LocalLibraryController> &t_controller)
 {

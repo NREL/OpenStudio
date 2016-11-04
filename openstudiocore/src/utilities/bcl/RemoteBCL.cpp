@@ -365,6 +365,15 @@ namespace openstudio{
   /// Blocking class members
   ///////////////////////////////////////////////////////////////////////////
 
+
+  bool RemoteBCL::isOnline() const
+  {
+    if (m_networkManager->networkAccessible() == QNetworkAccessManager::NotAccessible){
+      return false;
+    }
+    return true;
+  }
+
   boost::optional<BCLComponent> RemoteBCL::lastComponentDownload() const
   {
     return m_lastComponentDownload;

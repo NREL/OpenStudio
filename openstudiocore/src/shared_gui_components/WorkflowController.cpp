@@ -276,6 +276,12 @@ void MeasureStepController::addItemForDroppedMeasure(QDropEvent *event)
 
   // the new measure
   std::string name = m_app->measureManager().suggestMeasureName(*projectMeasure);
+  measureStep.setMeasureId(projectMeasure->uid());
+  measureStep.setVersionId(projectMeasure->versionId());
+  std::vector<std::string> tags = projectMeasure->tags();
+  if (!tags.empty()){
+    measureStep.setTaxonomy(tags[0]);
+  }
   measureStep.setName(name);
   //measureStep.setDisplayName(name); // DLM: TODO
   measureStep.setDescription(projectMeasure->description());

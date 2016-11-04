@@ -100,6 +100,8 @@ class MeasureManager : public QObject
 
     void setUrl(const QUrl& url);
 
+    void waitForStarted(int msec=10000);
+
     void setLibraryController(const QSharedPointer<LocalLibraryController> &t_libraryController);
 
     //// Get the temp model path
@@ -126,7 +128,7 @@ class MeasureManager : public QObject
     BCLMeasure insertReplaceMeasure(const UUID &t_id);
 
     //// Updates an individual measure in the project with a measure outside the project, computes arguments on the external measure before copying to project. 
-    //// result.first is true if the update succeeded and arguments were computed for current model.
+    //// result.first is true if the update succeeded and arguments were computed for current model, result.second is the new measure dir name.
     //// result.first is false if the update failed or arguments were not computed for current model, result.second is error message.
     std::pair<bool,std::string> updateMeasure(const BCLMeasure &t_measure);
 
@@ -181,6 +183,8 @@ class MeasureManager : public QObject
 
     void updateMeasuresLists(bool updateUserMeasures);
 
+    bool checkForLocalBCLUpdates();
+
     bool checkForUpdates(const openstudio::path& measureDir, bool force=false);
 
     boost::optional<measure::OSArgument> getArgument(const measure::OSArgumentType& type, const Json::Value& jsonArgument);
@@ -192,6 +196,7 @@ class MeasureManager : public QObject
     QUrl m_url;
     QSharedPointer<LocalLibraryController> m_libraryController;
     QNetworkAccessManager* m_networkAccessManager;
+    bool m_started;
 };
 
 
