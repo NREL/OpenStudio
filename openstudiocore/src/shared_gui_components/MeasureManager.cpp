@@ -945,6 +945,10 @@ void MeasureManager::addMeasure()
 
       updateMeasuresLists();
 
+      // reload measure that has been updated
+      measure = getMeasure(measure->uuid());
+      OS_ASSERT(measure);
+
       // emit signal
       emit newMeasure(*measure);
     }else{

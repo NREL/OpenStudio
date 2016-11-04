@@ -6,7 +6,7 @@ require_relative '../measure.rb'
 
 require 'fileutils'
 
-class ReportingMeasure_Test < MiniTest::Unit::TestCase
+class ReportingMeasureName_Test < MiniTest::Unit::TestCase
   
   def is_openstudio_2?
     begin
@@ -133,7 +133,7 @@ class ReportingMeasure_Test < MiniTest::Unit::TestCase
 
   def test_number_of_arguments_and_argument_names
     # create an instance of the measure
-    measure = ReportingMeasure.new
+    measure = ReportingMeasureName.new
 
     # get arguments and test that they are what we are expecting
     arguments = measure.arguments()
@@ -145,7 +145,7 @@ class ReportingMeasure_Test < MiniTest::Unit::TestCase
     test_name = "test_good_argument_values"
 
     # create an instance of the measure
-    measure = ReportingMeasure.new
+    measure = ReportingMeasureName.new
 
     # create an instance of a runner
     runner = OpenStudio::Ruleset::OSRunner.new

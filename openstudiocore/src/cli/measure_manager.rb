@@ -62,13 +62,14 @@ class MeasureManager
       @measure_info.each_value {|value| value[osm_path] = nil} 
       force_reload = true
     end    
+    
+    current_checksum = OpenStudio::checksum(OpenStudio::toPath(osm_path))
 
     result = nil
     if !force_reload
       # load from cache
       temp = @osms[osm_path]
       if temp
-        current_checksum = OpenStudio::checksum(OpenStudio::toPath(osm_path))
         last_checksum = temp[:checksum]
         if last_checksum && current_checksum == last_checksum
           model = temp[:model]

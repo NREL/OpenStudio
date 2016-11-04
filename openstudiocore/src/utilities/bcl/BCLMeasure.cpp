@@ -118,7 +118,7 @@ namespace openstudio{
       measureTemplate = ":/templates/ModelMeasure/measure.rb";
       testTemplate = ":/templates/ModelMeasure/tests/model_measure_test.rb";
       testOSM = ":/templates/ModelMeasure/tests/example_model.osm";
-      templateClassName = "ModelMeasure";
+      templateClassName = "ModelMeasureName";
 
       createDirectory(dir / toPath("tests"));
       testOSMPath = dir / toPath("tests/example_model.osm");
@@ -136,7 +136,7 @@ namespace openstudio{
     }else if (measureType == MeasureType::EnergyPlusMeasure){
       measureTemplate = ":/templates/EnergyPlusMeasure/measure.rb";
       testTemplate = ":/templates/EnergyPlusMeasure/tests/energyplus_measure_test.rb";
-      templateClassName = "EnergyPlusMeasure";
+      templateClassName = "EnergyPlusMeasureName";
 
       createDirectory(dir / toPath("tests"));
 
@@ -153,7 +153,7 @@ namespace openstudio{
     }else if (measureType == MeasureType::UtilityMeasure){
       measureTemplate = ":/templates/UtilityMeasure/measure.rb";
       testTemplate = ":/templates/UtilityMeasure/tests/utility_measure_test.rb";
-      templateClassName = "UtilityMeasure";
+      templateClassName = "UtilityMeasureName";
 
       createDirectory(dir / toPath("tests"));
 
@@ -162,7 +162,7 @@ namespace openstudio{
       testTemplate = ":/templates/ReportingMeasure/tests/reporting_measure_test.rb";
       testOSM = ":/templates/ReportingMeasure/tests/example_model.osm";
       resourceFile = ":/templates/ReportingMeasure/resources/report.html.in";
-      templateClassName = "ReportingMeasure";
+      templateClassName = "ReportingMeasureName";
 
       createDirectory(dir / toPath("tests"));
       testOSMPath = dir / toPath("tests/example_model.osm");
