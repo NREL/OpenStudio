@@ -23,11 +23,12 @@
 #include "../Building.hpp"
 #include "../Building_Impl.hpp"
 #include "../ThermalZone.hpp"
-#include "../EnergyManagementSystemSensor.hpp"
-#include "../OutputVariable.hpp"
-#include "../OutputVariable_Impl.hpp"
-#include "../OutputMeter.hpp"
-#include "../OutputMeter_Impl.hpp"
+#include "../GeneratorFuelCell.hpp"
+#include "../GeneratorFuelCell_Impl.hpp"
+#include "../GeneratorFuelCellPowerModule.hpp"
+#include "../GeneratorFuelCellPowerModule_Impl.hpp"
+#include "../CurveQuadratic.hpp"
+#include "../CurveQuadratic_Impl.hpp"
 #include "../Model.hpp"
 #include "../Model_Impl.hpp"
 
@@ -52,64 +53,13 @@ TEST_F(ModelFixture, FuelCell)
   ThermalZone zone2(model);
 
   // add Site Outdoor Air Drybulb Temperature
-  OutputVariable siteOutdoorAirDrybulbTemperature("Site Outdoor Air Drybulb Temperature", model);
-  EXPECT_EQ("*", siteOutdoorAirDrybulbTemperature.keyValue());
-  EXPECT_EQ("Site Outdoor Air Drybulb Temperature", siteOutdoorAirDrybulbTemperature.variableName());
+  GeneratorFuelCell fuelcell(model);
+  GeneratorFuelCellPowerModule fCPM = fuelcell.powerModule();
+  CurveQuadratic curve = fCPM.efficiencyCurve();
 
-  // add sensor
-  EnergyManagementSystemSensor OATdbSensor(model, siteOutdoorAirDrybulbTemperature);
-  OATdbSensor.setName("OATdb Sensor");
-  //OATdbSensor.setOutputVariable(siteOutdoorAirDrybulbTemperature);
+  EXPECT_EQ(1, curve.coefficient1Constant());
+  EXPECT_EQ(0, curve.coefficient2x());
+  EXPECT_EQ(0, curve.coefficient3xPOW2());
 
-  EXPECT_EQ("OATdb_Sensor", OATdbSensor.nameString());
-  EXPECT_EQ(siteOutdoorAirDrybulbTemperature.handle(), OATdbSensor.outputVariable().get().handle() );
-  EXPECT_EQ(siteOutdoorAirDrybulbTemperature, OATdbSensor.outputVariable());
-  EXPECT_EQ("", OATdbSensor.keyName());
-
-  // add Zone Lights Electric Power to both zones
-  OutputVariable lightsElectricPower("Zone Lights Electric Power", model);
-  EXPECT_EQ("*", lightsElectricPower.keyValue());
-  EXPECT_EQ("Zone Lights Electric Power", lightsElectricPower.variableName());
-
-  // add light sensor on zone1
-  EnergyManagementSystemSensor lights(model, lightsElectricPower);
-  lights.setName("Light Sensor");
-  //lights.setOutputVariable(lightsElectricPower);
-  lights.setKeyName(zone1.name().get());
-
-  EXPECT_EQ(zone1.name().get(), lights.keyName());
-  EXPECT_EQ("Light_Sensor", lights.nameString());
-  
-  // create meter
-  OutputMeter meter(model);
-  meter.setName("test meter");
-
-  //add sensor to meter
-  EnergyManagementSystemSensor meter_sensor(model, meter);
-  meter_sensor.setName("meter sensor");
-  //meter_sensor.setOutputMeter(meter);
-
-  EXPECT_EQ("meter_sensor", meter_sensor.nameString());
-  EXPECT_EQ(meter.handle(), meter_sensor.outputMeter().get().handle());
-  EXPECT_EQ(meter, meter_sensor.outputMeter());
-  EXPECT_EQ("", meter_sensor.keyName());
-
-  ASSERT_TRUE(OATdbSensor.outputVariable());
-  ASSERT_FALSE(OATdbSensor.outputMeter());
-  siteOutdoorAirDrybulbTemperature.remove();
-  boost::optional<ModelObject> object = model.getModelObjectByName<ModelObject>("OATdb_Sensor");
-  ASSERT_FALSE(object);
-
-  ASSERT_TRUE(meter_sensor.outputMeter());
-  ASSERT_FALSE(meter_sensor.outputVariable());
-  meter.remove();
-  object = model.getModelObjectByName<ModelObject>("meter sensor");
-  ASSERT_FALSE(object);
-
-  // add sensor by string
-  EnergyManagementSystemSensor sensor_string(model, "Sensor String");
-  sensor_string.setName("Sensor String Name");
-  EXPECT_EQ("Sensor_String_Name", sensor_string.nameString());
-  EXPECT_EQ("Sensor String", sensor_string.outputVariableOrMeterName());
 }
 
