@@ -24,18 +24,8 @@ class ReportingMeasure_Test < MiniTest::Unit::TestCase
   def epw_path
     # make sure we have a weather data location
     epw = nil
-    
-    if is_openstudio_2?
-      puts "ep_dir = #{OpenStudio.getEnergyPlusDirectory}"
-      epw = OpenStudio.getEnergyPlusDirectory / OpenStudio::Path.new("WeatherData/USA_CO_Golden-NREL.724666_TMY3.epw")
-    else
-      co = OpenStudio::Runmanager::ConfigOptions.new(true)
-      co.findTools(false, true, false, true)
-      assert(!co.getDefaultEPWLocation.to_s.empty?)
-      epw = co.getDefaultEPWLocation / OpenStudio::Path.new("USA_CO_Golden-NREL.724666_TMY3.epw")
-      assert(File.exist?(epw.to_s))
-    end
-    
+    epw = OpenStudio::Path.new("#{File.dirname(__FILE__)}/USA_CO_Golden-NREL.724666_TMY3.epw")
+    assert(File.exist?(epw.to_s))
     return epw.to_s
   end
 
