@@ -24,7 +24,7 @@ class ReportingMeasureName_Test < MiniTest::Unit::TestCase
   def epw_path_default
     # make sure we have a weather data location
     epw = nil
-    epw = OpenStudio::Path.new("#{File.dirname(__FILE__)}/USA_CO_Golden-NREL.724666_TMY3.epw")
+    epw = OpenStudio::Path.new(File.expand_path("#{File.dirname(__FILE__)}/USA_CO_Golden-NREL.724666_TMY3.epw"))
     assert(File.exist?(epw.to_s))
     return epw.to_s
   end
