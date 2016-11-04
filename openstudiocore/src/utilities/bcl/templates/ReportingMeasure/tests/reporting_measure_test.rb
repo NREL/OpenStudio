@@ -6,13 +6,8 @@ require_relative '../measure.rb'
 
 require 'fileutils'
 
-<<<<<<< HEAD
 class ReportingMeasureName_Test < MiniTest::Unit::TestCase
   
-=======
-class ReportingMeasure_Test < MiniTest::Unit::TestCase
-
->>>>>>> remotes/origin/131770395_reporting_measure_2x_support
   def is_openstudio_2?
     begin
       workflow = OpenStudio::WorkflowJSON.new
