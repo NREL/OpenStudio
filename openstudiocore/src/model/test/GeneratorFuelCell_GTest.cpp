@@ -27,6 +27,8 @@
 #include "../GeneratorFuelCell_Impl.hpp"
 #include "../GeneratorFuelCellPowerModule.hpp"
 #include "../GeneratorFuelCellPowerModule_Impl.hpp"
+#include "../Curve.hpp"
+#include "../Curve_Impl.hpp"
 #include "../CurveQuadratic.hpp"
 #include "../CurveQuadratic_Impl.hpp"
 #include "../Model.hpp"
@@ -55,11 +57,11 @@ TEST_F(ModelFixture, FuelCell)
   // add Site Outdoor Air Drybulb Temperature
   GeneratorFuelCell fuelcell(model);
   GeneratorFuelCellPowerModule fCPM = fuelcell.powerModule();
-  CurveQuadratic curve = fCPM.efficiencyCurve();
-
-  EXPECT_EQ(1, curve.coefficient1Constant());
-  EXPECT_EQ(0, curve.coefficient2x());
-  EXPECT_EQ(0, curve.coefficient3xPOW2());
+  Curve curve = fCPM.efficiencyCurve();
+  CurveQuadratic curveQ = curve.cast<CurveQuadratic>();
+  EXPECT_EQ(1, curveQ.coefficient1Constant());
+  EXPECT_EQ(0, curveQ.coefficient2x());
+  EXPECT_EQ(0, curveQ.coefficient3xPOW2());
 
 }
 

@@ -36,10 +36,8 @@ namespace openstudio {
 namespace model {
 
 // TODO: Check the following class names against object getters and setters.
-class QuadraticCurves;
+class Curve;
 class ThermalZone;
-class QuadraticCurves;
-class Connection;
 class Connection;
 
 namespace detail {
@@ -79,7 +77,7 @@ namespace detail {
     boost::optional<std::string> efficiencyCurveMode() const;
 
     // TODO: Check return type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
-    CurveQuadratic efficiencyCurve() const;
+    Curve efficiencyCurve() const;
 
     boost::optional<double> nominalEfficiency() const;
 
@@ -129,7 +127,7 @@ namespace detail {
     boost::optional<double> skinLossUFactorTimesAreaTerm() const;
 
     // TODO: Check return type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
-    boost::optional<CurveQuadratic> skinLossQuadraticCurve() const;
+    boost::optional<Curve> skinLossQuadraticCurve() const;
 
     boost::optional<double> dilutionAirFlowRate() const;
 
@@ -154,7 +152,7 @@ namespace detail {
     void resetEfficiencyCurveMode();
 
     // TODO: Check argument type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
-    bool setEfficiencyCurve(const CurveQuadratic& quadraticCurve);
+    bool setEfficiencyCurve(const Curve& quadraticCurve);
 
     void setNominalEfficiency(double nominalEfficiency);
 
@@ -250,7 +248,7 @@ namespace detail {
     void resetSkinLossUFactorTimesAreaTerm();
 
     // TODO: Check argument type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
-    bool setSkinLossQuadraticCurve(const CurveQuadratic& quadraticCurves);
+    bool setSkinLossQuadraticCurve(const Curve& quadraticCurves);
 
     void resetSkinLossQuadraticCurve();
 
@@ -293,7 +291,7 @@ namespace detail {
     // Optional getters for use by methods like children() so can remove() if the constructor fails.
     // There are other ways for the public versions of these getters to fail--perhaps all required
     // objects should be returned as boost::optionals
-    boost::optional<CurveQuadratic> optionalEfficiencyCurve() const;
+    boost::optional<Curve> optionalEfficiencyCurve() const;
   };
 
 } // detail

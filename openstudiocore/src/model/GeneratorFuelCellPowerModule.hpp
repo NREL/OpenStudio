@@ -39,7 +39,7 @@ namespace openstudio {
 namespace model {
 
 // TODO: Check the following class names against object getters and setters.
-class CurveQuadratic;
+class Curve;
 class ThermalZone;
 class Connection;
 
@@ -55,7 +55,7 @@ class MODEL_API GeneratorFuelCellPowerModule : public ModelObject {
   /** @name Constructors and Destructors */
   //@{
 
-  explicit GeneratorFuelCellPowerModule(const Model& model, const CurveQuadratic& quadraticCurve);
+  explicit GeneratorFuelCellPowerModule(const Model& model, const Curve& quadraticCurve);
 
   virtual ~GeneratorFuelCellPowerModule() {}
 
@@ -73,7 +73,7 @@ class MODEL_API GeneratorFuelCellPowerModule : public ModelObject {
   boost::optional<std::string> efficiencyCurveMode() const;
 
   // TODO: Check return type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
-  CurveQuadratic efficiencyCurve() const;
+  Curve efficiencyCurve() const;
 
   boost::optional<double> nominalEfficiency() const;
 
@@ -123,7 +123,7 @@ class MODEL_API GeneratorFuelCellPowerModule : public ModelObject {
   boost::optional<double> skinLossUFactorTimesAreaTerm() const;
 
   // TODO: Check return type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
-  boost::optional<CurveQuadratic> skinLossQuadraticCurve() const;
+  boost::optional<Curve> skinLossQuadraticCurve() const;
 
   boost::optional<double> dilutionAirFlowRate() const;
 
@@ -148,7 +148,7 @@ class MODEL_API GeneratorFuelCellPowerModule : public ModelObject {
   void resetEfficiencyCurveMode();
 
   // TODO: Check argument type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
-  bool setEfficiencyCurve(const CurveQuadratic& quadraticCurve);
+  bool setEfficiencyCurve(const Curve& quadraticCurve);
 
   void setNominalEfficiency(double nominalEfficiency);
 
@@ -244,7 +244,7 @@ class MODEL_API GeneratorFuelCellPowerModule : public ModelObject {
   void resetSkinLossUFactorTimesAreaTerm();
 
   // TODO: Check argument type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
-  bool setSkinLossQuadraticCurve(const CurveQuadratic& quadraticCurves);
+  bool setSkinLossQuadraticCurve(const Curve& quadraticCurves);
 
   void resetSkinLossQuadraticCurve();
 
