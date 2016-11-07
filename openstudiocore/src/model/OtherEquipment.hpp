@@ -75,6 +75,9 @@ class MODEL_API OtherEquipment : public SpaceLoadInstance {
   /** Gets the equipment fuel type **/
   std::string fuelType() const;
 
+  /** Returns true if the fuel type is defaulted **/
+  bool isFuelTypeDefaulted() const;
+
   OtherEquipmentDefinition otherEquipmentDefinition() const;
 
   /** Returns the (fractional) equipment schedule.  If this object does not

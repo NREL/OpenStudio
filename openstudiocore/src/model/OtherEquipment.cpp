@@ -150,6 +150,10 @@ namespace detail {
     return this->getString(OS_OtherEquipmentFields::FuelType, true).get();
   }
 
+  bool OtherEquipment_Impl::isFuelTypeDefaulted() const {
+    return isEmpty(OS_OtherEquipmentFields::FuelType);
+  }
+
   OtherEquipmentDefinition OtherEquipment_Impl::otherEquipmentDefinition() const {
     return definition().cast<OtherEquipmentDefinition>();
   }
@@ -340,6 +344,10 @@ void OtherEquipment::resetEndUseSubcategory() {
 
 std::string OtherEquipment::fuelType() const {
   return getImpl<detail::OtherEquipment_Impl>()->fuelType();
+}
+
+bool OtherEquipment::isFuelTypeDefaulted() const {
+  return getImpl<detail::OtherEquipment_Impl>()->isFuelTypeDefaulted();
 }
 
 bool OtherEquipment::setFuelType(const std::string& fuelType)

@@ -97,6 +97,8 @@ namespace detail {
 
     std::string fuelType() const;
 
+    bool isFuelTypeDefaulted() const;
+
     OtherEquipmentDefinition otherEquipmentDefinition() const;
 
     /** Returns the (fractional) equipment schedule.  If this object does not
