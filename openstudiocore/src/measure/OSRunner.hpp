@@ -311,6 +311,8 @@ class MEASURE_API OSRunner {
  private:
   REGISTER_LOGGER("openstudio.measure.OSRunner");
 
+  std::string cleanValueName(const std::string& name) const;
+
   void captureStreams();
   void restoreStreams();
 

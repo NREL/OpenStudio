@@ -35,6 +35,7 @@
 #include "../utilities/idf/WorkspaceObject.hpp"
 #include "../utilities/math/FloatCompare.hpp"
 #include "../utilities/filetypes/WorkflowStep.hpp"
+#include "../utilities/core/StringHelpers.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/PathHelpers.hpp"
@@ -298,7 +299,7 @@ void OSRunner::registerFinalCondition(const std::string& message) {
 
 
 void OSRunner::registerValue(const std::string& name, bool value) {
-  WorkflowStepValue stepValue(name,value);
+  WorkflowStepValue stepValue(cleanValueName(name),value);
   m_result.addStepValue(stepValue);
 }
 
@@ -306,18 +307,18 @@ void OSRunner::registerValue(const std::string& name,
                              const std::string& displayName,
                              bool value)
 {
-  WorkflowStepValue stepValue(name,value);
+  WorkflowStepValue stepValue(cleanValueName(name),value);
   stepValue.setDisplayName(displayName);
   m_result.addStepValue(stepValue);
 }
 
 void OSRunner::registerValue(const std::string& name, double value) {
-  WorkflowStepValue stepValue(name,value);
+  WorkflowStepValue stepValue(cleanValueName(name),value);
   m_result.addStepValue(stepValue);
 }
 
 void OSRunner::registerValue(const std::string& name, double value, const std::string& units) {
-  WorkflowStepValue stepValue(name,value);
+  WorkflowStepValue stepValue(cleanValueName(name),value);
   stepValue.setUnits(units);
   m_result.addStepValue(stepValue);
 }
@@ -326,7 +327,7 @@ void OSRunner::registerValue(const std::string& name,
                              const std::string& displayName,
                              double value)
 {
-  WorkflowStepValue stepValue(name,value);
+  WorkflowStepValue stepValue(cleanValueName(name),value);
   stepValue.setDisplayName(displayName);
   m_result.addStepValue(stepValue);
 }
@@ -336,18 +337,18 @@ void OSRunner::registerValue(const std::string& name,
                              double value,
                              const std::string& units)
 {
-  WorkflowStepValue stepValue(name,value);
+  WorkflowStepValue stepValue(cleanValueName(name),value);
   stepValue.setDisplayName(displayName);
   stepValue.setUnits(units);
   m_result.addStepValue(stepValue);
 }
 
 void OSRunner::registerValue(const std::string& name, int value) {
-  WorkflowStepValue stepValue(name,value);
+  WorkflowStepValue stepValue(cleanValueName(name),value);
   m_result.addStepValue(stepValue);}
 
 void OSRunner::registerValue(const std::string& name, int value, const std::string& units) {
-  WorkflowStepValue stepValue(name,value);
+  WorkflowStepValue stepValue(cleanValueName(name),value);
   stepValue.setUnits(units);
   m_result.addStepValue(stepValue);
 }
@@ -356,7 +357,7 @@ void OSRunner::registerValue(const std::string& name,
                              const std::string& displayName,
                              int value)
 {
-  WorkflowStepValue stepValue(name,value);
+  WorkflowStepValue stepValue(cleanValueName(name),value);
   stepValue.setDisplayName(displayName);
   m_result.addStepValue(stepValue);
 }
@@ -366,14 +367,14 @@ void OSRunner::registerValue(const std::string& name,
                              int value,
                              const std::string& units)
 {
-  WorkflowStepValue stepValue(name,value);
+  WorkflowStepValue stepValue(cleanValueName(name),value);
   stepValue.setDisplayName(displayName);
   stepValue.setUnits(units);
   m_result.addStepValue(stepValue);
 }
 
 void OSRunner::registerValue(const std::string& name, const std::string& value) {
-  WorkflowStepValue stepValue(name,value);
+  WorkflowStepValue stepValue(cleanValueName(name),value);
   m_result.addStepValue(stepValue);
 }
 
@@ -381,7 +382,7 @@ void OSRunner::registerValue(const std::string& name,
                              const std::string& displayName,
                              const std::string& value)
 {
-  WorkflowStepValue stepValue(name,value);
+  WorkflowStepValue stepValue(cleanValueName(name),value);
   stepValue.setDisplayName(displayName);
   m_result.addStepValue(stepValue);
 }
@@ -907,6 +908,24 @@ bool OSRunner::setLanguagePreference(const std::string& languagePreference)
 void OSRunner::resetLanguagePreference()
 {
   m_languagePreference = "en";
+}
+
+std::string OSRunner::cleanValueName(const std::string& name) const
+{
+  static const boost::regex allowableCharacters("[^0-9a-zA-Z]");
+  static const boost::regex leadingUnderscore("^_+");
+  static const boost::regex trailingUnderscore("_+$");
+  static const boost::regex leadingNumber("^([0-9])");
+  static const boost::regex multipleUnderscore("[_]+");
+
+
+  std::string result = boost::regex_replace(name, allowableCharacters, "_");
+  result = boost::regex_replace(result, leadingUnderscore, "");
+  result = boost::regex_replace(result, trailingUnderscore, "");
+  result = boost::regex_replace(result, leadingNumber, "_$1");
+  result = boost::regex_replace(result, multipleUnderscore, "_");
+  result = toUnderscoreCase(result);
+  return result;
 }
 
 void OSRunner::captureStreams()

@@ -31,7 +31,7 @@ set(${target_name}_test_src
   test/OSMeasure_GTest.cpp
   test/OSOutput_GTest.cpp
   test/OSArgument_GTest.cpp
-  test/EmbeddedRuby_GTest.cpp
+  #test/EmbeddedRuby_GTest.cpp
 )
 
 set(${target_name}_swig_src
@@ -94,7 +94,9 @@ if( Qt5Static )
   endif()
 endif()
 
-# CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends};${RUBY_LIBRARY};${COREFOUNDATION_LIBRARY}")
+#CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends};${RUBY_LIBRARY};${COREFOUNDATION_LIBRARY}")
+CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends};${COREFOUNDATION_LIBRARY}")
+
 if( Qt5Static )
   MAKE_SWIG_TARGET(OpenStudioMeasure measure "${CMAKE_CURRENT_SOURCE_DIR}/Measure.i" "${${target_name}_swig_src}" ${target_name}_static OpenStudioOSVersion)
 else()

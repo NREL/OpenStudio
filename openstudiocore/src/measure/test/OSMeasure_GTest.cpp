@@ -128,9 +128,9 @@ TEST_F(MeasureFixture, UserScript_TestModelUserScript1) {
   EXPECT_EQ(0u,result.stepWarnings().size());
   EXPECT_EQ(0u,result.stepInfo().size());
   ASSERT_TRUE(result.initialCondition());
-  EXPECT_EQ("Initial model had 0 spaces.",result.initialCondition().get());
+  EXPECT_EQ("Initial model had 0 spaces.",result.initialCondition()->logMessage());
   ASSERT_TRUE(result.finalCondition());
-  EXPECT_EQ("Removed the 0 original spaces, and added one new one named 'Space 1'.",result.finalCondition().get());
+  EXPECT_EQ("Removed the 0 original spaces, and added one new one named 'Space 1'.",result.finalCondition()->logMessage());
 
   // test with populated model
   openstudio::model::Model model2;
@@ -147,9 +147,9 @@ TEST_F(MeasureFixture, UserScript_TestModelUserScript1) {
   EXPECT_EQ(0u,result.stepWarnings().size());
   EXPECT_EQ(0u,result.stepInfo().size());
   ASSERT_TRUE(result.initialCondition());
-  EXPECT_EQ("Initial model had 2 spaces.",result.initialCondition().get());
+  EXPECT_EQ("Initial model had 2 spaces.",result.initialCondition()->logMessage());
   ASSERT_TRUE(result.finalCondition());
-  EXPECT_EQ("Removed the 2 original spaces, and added one new one named 'Space 1'.",result.finalCondition().get());
+  EXPECT_EQ("Removed the 2 original spaces, and added one new one named 'Space 1'.",result.finalCondition()->logMessage());
 }
 
 class TestModelUserScript2 : public ModelMeasure {
@@ -362,4 +362,27 @@ TEST_F(MeasureFixture, UserScript_TestModelUserScript2) {
 
   EXPECT_DOUBLE_EQ(4.0,lightsDef.wattsperSpaceFloorArea().get());
 
+}
+
+TEST_F(MeasureFixture, RegisterValueNames) {
+  WorkflowJSON workflow;
+  OSRunner runner(workflow);
+  runner.registerValue("value", 0);
+  runner.registerValue("ValueTwo", 1);
+  runner.registerValue("VALUETHREE", 2);
+  runner.registerValue("4ValueFour", 3);
+  runner.registerValue("Value<Five>", 4);
+  runner.registerValue("#V|a@l#u$e%F^i&v*e(V)a{l}u_e[F]i;v:e'V\"a,l<u.e>F\\i/v?e+V=", 5);
+  runner.registerValue("Value&$@$Six", 6);
+  runner.registerValue("Value____Seven", 7);
+  std::vector<Attribute> attributes = runner.result().attributes();
+  ASSERT_EQ(8u, attributes.size());
+  EXPECT_EQ("value", attributes[0].name());
+  EXPECT_EQ("value_two", attributes[1].name());
+  EXPECT_EQ("valuethree", attributes[2].name());
+  EXPECT_EQ("_4_value_four", attributes[3].name());
+  EXPECT_EQ("value_five", attributes[4].name());
+  EXPECT_EQ("v_a_l_u_e_f_i_v_e_v_a_l_u_e_f_i_v_e_v_a_l_u_e_f_i_v_e_v", attributes[5].name());
+  EXPECT_EQ("value_six", attributes[6].name());
+  EXPECT_EQ("value_seven", attributes[7].name());
 }

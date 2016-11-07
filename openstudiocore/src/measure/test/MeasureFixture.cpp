@@ -30,14 +30,14 @@
 
 
 #include "../../utilities/core/Path.hpp"
+#include "../../utilities/core/FileLogSink.hpp"
 #include "../utilities/core/ApplicationPathHelpers.hpp"
 
 #include "../../utilities/idd/IddEnums.hpp"
 
-
-
 #include <resources.hxx>
 
+/*
 // Pretty much the only safe place to include these files is here (or another app)
 // and in this order
 
@@ -51,6 +51,13 @@
 #include <cli/embedded_files.hxx>
 
 namespace embedded_files {
+
+  
+  std::vector<std::string> fileNames()
+  {
+    return std::vector<std::string>();
+  }
+
   std::map<std::string, std::pair<size_t, const uint8_t *> > files()
   {
     return std::map<std::string, std::pair<size_t, const uint8_t *> >();
@@ -92,12 +99,15 @@ void MeasureFixture::SetUp()
   }
 
 }
+*/
+
+void MeasureFixture::SetUp(){}
 
 void MeasureFixture::TearDown() {}
 
 void MeasureFixture::SetUpTestCase() {
   // set up logging
-  logFile = FileLogSink(toPath("./MeasureFixture.log"));
+  logFile = openstudio::FileLogSink(openstudio::toPath("./MeasureFixture.log"));
   logFile->setLogLevel(Info);
   openstudio::Logger::instance().standardOutLogger().disable();
 
