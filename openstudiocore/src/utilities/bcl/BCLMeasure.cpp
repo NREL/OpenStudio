@@ -111,14 +111,16 @@ namespace openstudio{
     std::vector<BCLMeasureArgument> arguments;
     std::vector<BCLMeasureOutput> outputs;
     std::string testOSM;
+    std::string testEPW;
     std::string resourceFile;
     openstudio::path testOSMPath;
+    openstudio::path testEPWPath;
     openstudio::path resourceFilePath;
     if (measureType == MeasureType::ModelMeasure){
       measureTemplate = ":/templates/ModelMeasure/measure.rb";
       testTemplate = ":/templates/ModelMeasure/tests/model_measure_test.rb";
       testOSM = ":/templates/ModelMeasure/tests/example_model.osm";
-      templateClassName = "ModelMeasure";
+      templateClassName = "ModelMeasureName";
 
       createDirectory(dir / toPath("tests"));
       testOSMPath = dir / toPath("tests/example_model.osm");
@@ -136,7 +138,7 @@ namespace openstudio{
     }else if (measureType == MeasureType::EnergyPlusMeasure){
       measureTemplate = ":/templates/EnergyPlusMeasure/measure.rb";
       testTemplate = ":/templates/EnergyPlusMeasure/tests/energyplus_measure_test.rb";
-      templateClassName = "EnergyPlusMeasure";
+      templateClassName = "EnergyPlusMeasureName";
 
       createDirectory(dir / toPath("tests"));
 
@@ -153,7 +155,7 @@ namespace openstudio{
     }else if (measureType == MeasureType::UtilityMeasure){
       measureTemplate = ":/templates/UtilityMeasure/measure.rb";
       testTemplate = ":/templates/UtilityMeasure/tests/utility_measure_test.rb";
-      templateClassName = "UtilityMeasure";
+      templateClassName = "UtilityMeasureName";
 
       createDirectory(dir / toPath("tests"));
 
@@ -161,11 +163,13 @@ namespace openstudio{
       measureTemplate = ":/templates/ReportingMeasure/measure.rb";
       testTemplate = ":/templates/ReportingMeasure/tests/reporting_measure_test.rb";
       testOSM = ":/templates/ReportingMeasure/tests/example_model.osm";
+      testEPW = ":/templates/ReportingMeasure/tests/USA_CO_Golden-NREL.724666_TMY3.epw";
       resourceFile = ":/templates/ReportingMeasure/resources/report.html.in";
-      templateClassName = "ReportingMeasure";
+      templateClassName = "ReportingMeasureName";
 
       createDirectory(dir / toPath("tests"));
       testOSMPath = dir / toPath("tests/example_model.osm");
+      testEPWPath = dir / toPath("tests/USA_CO_Golden-NREL.724666_TMY3.epw");
 
       createDirectory(dir / toPath("resources"));
       resourceFilePath = dir / toPath("resources/report.html.in");
@@ -190,6 +194,11 @@ namespace openstudio{
     QString testOSMString;
     if (!testOSM.empty()){
       testOSMString = toQString(::openstudio::embedded_files::getFileAsString(testOSM));
+    }
+
+    QString testEPWString;
+    if (!testEPW.empty()){
+      testEPWString = toQString(::openstudio::embedded_files::getFileAsString(testEPW));
     }
 
     QString resourceFileString;
@@ -244,6 +253,24 @@ namespace openstudio{
         BCLFileReference measureTestOSMFileReference(testOSMPath, true);
         measureTestOSMFileReference.setUsageType("test");
         m_bclXML.addFile(measureTestOSMFileReference);
+      }
+    }
+
+    // write test epw
+    { 
+      if (!testEPWString.isEmpty()){
+        QFile file(toQString(testEPWPath));
+        bool opened = file.open(QIODevice::WriteOnly);
+        if (!opened){
+          LOG_AND_THROW("Cannot write test epw file to '" << toString(testEPWPath) << "'");
+        }
+        QTextStream textStream(&file);
+        textStream << testEPWString;
+        file.close();
+
+        BCLFileReference measureTestEPWFileReference(testEPWPath, true);
+        measureTestEPWFileReference.setUsageType("test");
+        m_bclXML.addFile(measureTestEPWFileReference);
       }
     }
 

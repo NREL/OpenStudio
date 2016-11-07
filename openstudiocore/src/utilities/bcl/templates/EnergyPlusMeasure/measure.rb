@@ -2,7 +2,7 @@
 # http://nrel.github.io/OpenStudio-user-documentation/reference/measure_writing_guide/
 
 # start the measure
-class EnergyPlusMeasure < OpenStudio::Ruleset::WorkspaceUserScript
+class EnergyPlusMeasureName < OpenStudio::Ruleset::WorkspaceUserScript
 
   # human readable name
   def name
@@ -89,4 +89,4 @@ class EnergyPlusMeasure < OpenStudio::Ruleset::WorkspaceUserScript
 end 
 
 # register the measure to be used by the application
-EnergyPlusMeasure.new.registerWithApplication
+EnergyPlusMeasureName.new.registerWithApplication
