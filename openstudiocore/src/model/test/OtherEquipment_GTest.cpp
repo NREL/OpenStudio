@@ -104,3 +104,21 @@ TEST_F(ModelFixture, OtherEquipment_FuelType)
   EXPECT_EQ(validFuelTypes.size(), 14);
 
 }
+
+TEST_F(ModelFixture, OtherEquipment_EndUseSubcategory)
+{
+  Model model;
+  OtherEquipmentDefinition definition(model);
+  OtherEquipment equipment(definition);
+
+  EXPECT_EQ(equipment.endUseSubcategory(), "General");
+  EXPECT_TRUE(equipment.isEndUseSubcategoryDefaulted());
+  EXPECT_TRUE(equipment.setEndUseSubcategory("Category A"));
+  EXPECT_EQ(equipment.endUseSubcategory(), "Category A");
+  EXPECT_TRUE(equipment.setEndUseSubcategory("Category B"));
+  EXPECT_EQ(equipment.endUseSubcategory(), "Category B");
+  equipment.resetEndUseSubcategory();
+  EXPECT_EQ(equipment.endUseSubcategory(), "General");
+  EXPECT_TRUE(equipment.isEndUseSubcategoryDefaulted());
+
+}

@@ -63,6 +63,12 @@ class MODEL_API OtherEquipment : public SpaceLoadInstance {
   /** @name Getters */
   //@{
 
+  /** Returns the End-Use Subcategory **/
+  std::string endUseSubcategory() const;
+
+  /** Returns true if the end-use subcategory is defaulted **/
+  bool isEndUseSubcategoryDefaulted() const;
+
   /** Returns a list of valid fuel types. **/
   static std::vector<std::string> validFuelTypeValues();
 
@@ -81,6 +87,12 @@ class MODEL_API OtherEquipment : public SpaceLoadInstance {
   //@}
   /** @name Setters */
   //@{
+
+  /** Sets the End-Use Subcategory **/
+  bool setEndUseSubcategory(const std::string& endUseSubcategory);
+
+  /** Resets the End-Use Subcategory **/
+  void resetEndUseSubcategory();
 
   /** Sets the fuel type. **/
   bool setFuelType(const std::string& fuelType);
