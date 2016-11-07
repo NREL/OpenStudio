@@ -115,8 +115,10 @@ namespace openstudio{
     QString templateModelerDescription = "MODELER_DESCRIPTION_TEXT";
     std::vector<BCLMeasureArgument> arguments;
     QString testOSM;
+    QString testEPW;
     QString resourceFile;
     openstudio::path testOSMPath;
+    openstudio::path testEPWPath;
     openstudio::path resourceFilePath;
     if (measureType == MeasureType::ModelMeasure){
       measureTemplate = ":/templates/ModelMeasure/measure.rb";
@@ -165,11 +167,13 @@ namespace openstudio{
       measureTemplate = ":/templates/ReportingMeasure/measure.rb";
       testTemplate = ":/templates/ReportingMeasure/tests/reporting_measure_test.rb";
       testOSM = ":/templates/ReportingMeasure/tests/example_model.osm";
+      testEPW = ":/templates/ReportingMeasure/tests/USA_CO_Golden-NREL.724666_TMY3.epw";
       resourceFile = ":/templates/ReportingMeasure/resources/report.html.in";
       templateClassName = "ReportingMeasure";
 
       createDirectory(dir / toPath("tests"));
       testOSMPath = dir / toPath("tests/example_model.osm");
+      testEPWPath = dir / toPath("tests/USA_CO_Golden-NREL.724666_TMY3.epw");
 
       createDirectory(dir / toPath("resources"));
       resourceFilePath = dir / toPath("resources/report.html.in");
@@ -207,6 +211,16 @@ namespace openstudio{
       if(file.open(QFile::ReadOnly)){
         QTextStream docIn(&file);
         testOSMString = docIn.readAll();
+        file.close();
+      }
+    }
+
+    QString testEPWString;
+    if (!testEPW.isEmpty()){
+      QFile file(testEPW);
+      if(file.open(QFile::ReadOnly)){
+        QTextStream docIn(&file);
+        testEPWString = docIn.readAll();
         file.close();
       }
     }
@@ -274,6 +288,24 @@ namespace openstudio{
         BCLFileReference measureTestOSMFileReference(testOSMPath, true);
         measureTestOSMFileReference.setUsageType("test");
         m_bclXML.addFile(measureTestOSMFileReference);
+      }
+    }
+
+    // write test epw
+    { 
+      if (!testEPWString.isEmpty()){
+        QFile file(toQString(testEPWPath));
+        bool opened = file.open(QIODevice::WriteOnly);
+        if (!opened){
+          LOG_AND_THROW("Cannot write test epw file to '" << toString(testEPWPath) << "'");
+        }
+        QTextStream textStream(&file);
+        textStream << testEPWString;
+        file.close();
+
+        BCLFileReference measureTestEPWFileReference(testEPWPath, true);
+        measureTestEPWFileReference.setUsageType("test");
+        m_bclXML.addFile(measureTestEPWFileReference);
       }
     }
 
