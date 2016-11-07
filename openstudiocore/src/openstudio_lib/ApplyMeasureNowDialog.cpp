@@ -174,6 +174,7 @@ void ApplyMeasureNowDialog::createWidgets()
   bool onlyShowModelMeasures = true;
   m_localLibraryController = QSharedPointer<LocalLibraryController>( new LocalLibraryController(app,onlyShowModelMeasures) );
   m_localLibraryController->localLibraryView->setStyleSheet("QStackedWidget { border-top: 0px; }");
+  m_localLibraryController->localLibraryView->addBCLMeasureButton->setVisible(false);
 
   // DLM: this is changing application state, needs to be undone in the destructor
   app->measureManager().setLibraryController(m_localLibraryController); 
