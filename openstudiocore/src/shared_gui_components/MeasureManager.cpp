@@ -143,21 +143,23 @@ openstudio::path MeasureManager::tempModelPath() const
   return m_tempModelPath;
 }
 
-void MeasureManager::saveTempModel()
+void MeasureManager::saveTempModel(const path& tempDir)
 {
   waitForStarted();
 
   boost::optional<model::Model> model = m_app->currentModel();
-  boost::optional<path> tempDir = m_app->tempDir();
+  
+  // DLM: don't get tempDir from app because this requires OSDocument and we may call saveTempModel from OSDocument ctor
+  //boost::optional<path> tempDir2 = m_app->tempDir();
 
   if (!model){
     return;
   }
-  if (!tempDir){
+  if (!exists(tempDir)){
     return;
   }
 
-  m_tempModelPath = tempDir.get() / toPath("temp_measure_manager.osm");
+  m_tempModelPath = tempDir / toPath("temp_measure_manager.osm");
 
   model->save(m_tempModelPath, true);
 

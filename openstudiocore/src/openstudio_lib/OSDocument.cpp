@@ -1302,7 +1302,7 @@ namespace openstudio {
   void OSDocument::addStandardMeasures()
   {
     // needed before we can compute arguments
-    OSAppBase::instance()->measureManager().saveTempModel();
+    OSAppBase::instance()->measureManager().saveTempModel(toPath(m_modelTempDir));
 
     WorkflowJSON workflow = m_model.workflowJSON();
     std::vector<WorkflowStep> steps;
@@ -1638,7 +1638,7 @@ namespace openstudio {
     }
 
     // save the temp model for the measure manager to use
-    OSAppBase::instance()->measureManager().saveTempModel();
+    OSAppBase::instance()->measureManager().saveTempModel(toPath(m_modelTempDir));
 
     // open modal dialog
     m_applyMeasureNowDialog = boost::shared_ptr<ApplyMeasureNowDialog>(new ApplyMeasureNowDialog());

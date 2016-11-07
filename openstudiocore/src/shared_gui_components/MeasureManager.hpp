@@ -108,7 +108,7 @@ class MeasureManager : public QObject
     openstudio::path tempModelPath() const;
 
     //// Saves the current model to a temp location, used when computing arguments
-    void saveTempModel();
+    void saveTempModel(const path& tempDir);
 
     //// Measures downloaded from the BCL.
     std::vector<BCLMeasure> bclMeasures() const;

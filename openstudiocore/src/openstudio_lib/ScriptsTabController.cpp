@@ -43,9 +43,11 @@ ScriptsTabController::ScriptsTabController()
   : MainTabController(new ScriptsTabView(nullptr)), scriptsTabView(dynamic_cast<ScriptsTabView *>(mainContentWidget()))
 {
   auto app = OSAppBase::instance();
+  boost::optional<path> tempDir = app->tempDir();
+  OS_ASSERT(tempDir);
 
   // save the current osm to a temp location
-  app->measureManager().saveTempModel();
+  app->measureManager().saveTempModel(*tempDir);
 
   // update measures
   app->measureManager().updateMeasuresLists();

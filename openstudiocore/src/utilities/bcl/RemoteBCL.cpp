@@ -1003,6 +1003,8 @@ namespace openstudio{
       m_downloadReply = m_networkManager->get(request);
       connect(m_downloadReply, &QNetworkReply::readyRead, this, &RemoteBCL::downloadData);
     } else {
+      QString fileName = m_downloadFile->fileName();
+      m_downloadFile->flush();
       m_downloadFile->close();
       std::string componentType;
 
@@ -1017,7 +1019,7 @@ namespace openstudio{
         }*/
 
           // Extract the files to a temp location
-          openstudio::path src = toPath(QDir::tempPath().append(toQString("/" + m_downloadUid + ".bcl")));
+          openstudio::path src = toPath(fileName);
           openstudio::path tempDest = toPath(QDir::tempPath().append(toQString("/" + m_downloadUid + "/")));
 
           if (QDir().exists(toQString(tempDest))) {
