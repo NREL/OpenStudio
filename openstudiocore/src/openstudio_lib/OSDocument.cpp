@@ -1311,29 +1311,35 @@ namespace openstudio {
     bool srmAdded = false;
     boost::optional<BCLMeasure> srm = standardReportMeasure();
     if (srm){
-      std::pair<bool, std::string> result = OSAppBase::instance()->measureManager().updateMeasure(*srm);
-      if (result.first){
-        // have to reload in case measure manager updated
-        srm = BCLMeasure::load(srm->directory());
-        OS_ASSERT(srm);
+      try{
+        std::pair<bool, std::string> result = OSAppBase::instance()->measureManager().updateMeasure(*srm);
+        if (result.first){
+          // have to reload in case measure manager updated
+          srm = BCLMeasure::load(srm->directory());
+          OS_ASSERT(srm);
 
-        MeasureStep srmStep(result.second);
-        srmStep.setMeasureId(srm->uid());
-        srmStep.setVersionId(srm->versionId());
-        std::vector<std::string> tags = srm->tags();
-        if (!tags.empty()){
-          srmStep.setTaxonomy(tags[0]);
+          MeasureStep srmStep(result.second);
+          srmStep.setMeasureId(srm->uid());
+          srmStep.setVersionId(srm->versionId());
+          std::vector<std::string> tags = srm->tags();
+          if (!tags.empty()){
+            srmStep.setTaxonomy(tags[0]);
+          }
+          srmStep.setName(srm->displayName());
+          srmStep.setDescription(srm->description());
+          srmStep.setModelerDescription(srm->modelerDescription());
+          steps.push_back(srmStep);
+          srmAdded = true;
         }
-        srmStep.setName(srm->displayName());
-        srmStep.setDescription(srm->description());
-        srmStep.setModelerDescription(srm->modelerDescription());
-        steps.push_back(srmStep);
-        srmAdded = true;
+      } catch (const std::exception&){
+        QMessageBox::warning(mainWindow(), "Failed to Compute Arguments", "Could not compute arguments for OpenStudio Results Measure.");
+        return;
       }
     }
        
     if (!srmAdded){
       QMessageBox::warning(mainWindow(), "OpenStudio Results Measure Not Found", "Could not find or download OpenStudio Results Measure.");
+      return;
     }
 
     workflow.setWorkflowSteps(steps);
