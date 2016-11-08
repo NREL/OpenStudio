@@ -68,20 +68,6 @@ namespace detail {
 
     boost::optional<Schedule> availabilitySchedule() const;
 
-    unsigned outletPort() const;
-
-    unsigned inletPort(unsigned branchIndex) const;
-
-    unsigned nextInletPort() const;
-
-    unsigned newInletPortAfterBranch(unsigned branchIndex);
-
-    void removePortForBranch(unsigned branchIndex);
-
-    boost::optional<Node> OutdoorAirInletNode() const;
-
-    boost::optional<Node> RecirculatedAirInletNode() const;
-
     boost::optional<double> maximumTerminalAirFlowRate() const;
 
     bool isMaximumTerminalAirFlowRateAutosized() const;
@@ -109,20 +95,35 @@ namespace detail {
     /** @name Other */
     //@{
 
+    unsigned outletPort() const;
+
+    unsigned inletPort(unsigned branchIndex) const;
+
+    unsigned nextInletPort() const;
+
+    unsigned newInletPortAfterBranch(unsigned branchIndex);
+
+    void removePortForBranch(unsigned branchIndex);
+
+    boost::optional<Node> OutdoorAirInletNode() const;
+
+    boost::optional<Node> RecirculatedAirInletNode() const;
+
+    boost::optional<DesignSpecificationOutdoorAir> optionalDesignSpecificationOutdoorAirObject() const;
+
+    std::vector<IdfObject> remove() override;
+
+    bool addToNode(Node & node) override;
+
+    virtual ModelObject clone(Model model) const override;
+
+    bool isRemovable() const override;
+
     //@}
    protected:
    private:
     REGISTER_LOGGER("openstudio.model.AirTerminalDualDuctVAVOutdoorAir");
 
-    // TODO: Check the return types of these methods.
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
-    boost::optional<DesignSpecificationOutdoorAir> optionalDesignSpecificationOutdoorAirObject() const;
-    std::vector<IdfObject> remove();
-    bool addToNode(Node & node);
-    ModelObject clone(Model model) const;
-    bool isRemovable() const;
   };
 
 } // detail
