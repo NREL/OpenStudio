@@ -26,17 +26,13 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class Schedule;
-class Connection;
-class Connection;
-class Connection;
+class Node;
 
 namespace detail {
 
   /** AirTerminalDualDuctConstantVolume_Impl is a Mixer_Impl that is the implementation class for AirTerminalDualDuctConstantVolume.*/
   class MODEL_API AirTerminalDualDuctConstantVolume_Impl : public Mixer_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -69,17 +65,7 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> availabilitySchedule() const;
-
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    boost::optional<Connection> airOutletNode() const;
-
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    boost::optional<Connection> hotAirInletNode() const;
-
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    boost::optional<Connection> coldAirInletNode() const;
 
     boost::optional<double> maximumAirFlowRate() const;
 
@@ -89,26 +75,10 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
   // Note Schedules are passed by reference, not const reference.
     bool setAvailabilitySchedule(Schedule& schedule);
 
     void resetAvailabilitySchedule();
-
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setAirOutletNode(const Connection& connection);
-
-    void resetAirOutletNode();
-
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setHotAirInletNode(const Connection& connection);
-
-    void resetHotAirInletNode();
-
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setColdAirInletNode(const Connection& connection);
-
-    void resetColdAirInletNode();
 
     bool setMaximumAirFlowRate(double maximumAirFlowRate);
 
@@ -117,6 +87,28 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
+
+    unsigned outletPort() const;
+
+    unsigned inletPort(unsigned branchIndex) const;
+
+    unsigned nextInletPort() const;
+
+    unsigned newInletPortAfterBranch(unsigned branchIndex);
+
+    void removePortForBranch(unsigned branchIndex);
+
+    boost::optional<Node> HotAirInletNode() const;
+
+    boost::optional<Node> ColdAirInletNode() const;
+
+    bool addToNode(Node & node) override;
+
+    std::vector<IdfObject> remove() override;
+
+    virtual ModelObject clone(Model model) const override;
+
+    bool isRemovable() const override;
 
     //@}
    protected:

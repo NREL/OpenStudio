@@ -29,9 +29,10 @@
 #include "Mixer_Impl.hpp"
 #include "Node.hpp"
 #include "Node_Impl.hpp"
-#include "../../model/ScheduleTypeLimits.hpp"
-#include "../../model/ScheduleTypeRegistry.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
 
+#include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_AirTerminal_DualDuct_ConstantVolume_FieldEnums.hxx>
 
@@ -93,17 +94,38 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_AirTerminal_DualDuct_ConstantVolumeFields::AvailabilitySchedule);
   }
 
-  /*boost::optional<Connection> AirTerminalDualDuctConstantVolume_Impl::airOutletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_AirTerminal_DualDuct_ConstantVolumeFields::AirOutletNode);
+  unsigned AirTerminalDualDuctConstantVolume_Impl::outletPort() const {
+    return OS_AirTerminal_DualDuct_ConstantVolumeFields::AirOutletNode;
   }
 
-  boost::optional<Connection> AirTerminalDualDuctConstantVolume_Impl::hotAirInletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_AirTerminal_DualDuct_ConstantVolumeFields::HotAirInletNode);
+  unsigned AirTerminalDualDuctConstantVolume_Impl::inletPort(unsigned branchIndex) const {
+    if( branchIndex == 0 ) {
+      return OS_AirTerminal_DualDuct_ConstantVolumeFields::HotAirInletNode;
+    } else if( branchIndex == 1 ) {
+      return OS_AirTerminal_DualDuct_ConstantVolumeFields::ColdAirInletNode;
+    } else {
+      LOG(Warn, "Calling inletPort with branchIndex greater than 1 for " << briefDescription() << " is not valid.");
+      LOG(Warn, briefDescription() << " has only two branches.");
+      return std::numeric_limits<unsigned>::max();
+    }
   }
 
-  boost::optional<Connection> AirTerminalDualDuctConstantVolume_Impl::coldAirInletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_AirTerminal_DualDuct_ConstantVolumeFields::ColdAirInletNode);
-  }*/
+  unsigned AirTerminalDualDuctConstantVolume_Impl::nextInletPort() const {
+    LOG(Warn, "nextInletPort is not supported for " << briefDescription() << " .");
+    LOG(Warn, "Ports cannot be added or removed for " << briefDescription() << " .");
+    return std::numeric_limits<unsigned>::max();
+  }
+
+  unsigned AirTerminalDualDuctConstantVolume_Impl::newInletPortAfterBranch(unsigned branchIndex) {
+    LOG(Warn, "newInletPortAfterBranch is not supported for " << briefDescription() << " .");
+    LOG(Warn, "Ports cannot be added or removed for " << briefDescription() << " .");
+    return std::numeric_limits<unsigned>::max();
+  }
+
+  void AirTerminalDualDuctConstantVolume_Impl::removePortForBranch(unsigned branchIndex) {
+    LOG(Warn, "removePortForBranch is not supported for " << briefDescription() << " .");
+    LOG(Warn, "Ports cannot be added or removed for " << briefDescription() << " .");
+  }
 
   boost::optional<double> AirTerminalDualDuctConstantVolume_Impl::maximumAirFlowRate() const {
     return getDouble(OS_AirTerminal_DualDuct_ConstantVolumeFields::MaximumAirFlowRate,true);
@@ -131,37 +153,6 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  /*
-  bool AirTerminalDualDuctConstantVolume_Impl::setAirOutletNode(const Connection& connection) {
-    bool result = setPointer(OS_AirTerminal_DualDuct_ConstantVolumeFields::AirOutletNode, connection.handle());
-    return result;
-  }
-
-  void AirTerminalDualDuctConstantVolume_Impl::resetAirOutletNode() {
-    bool result = setString(OS_AirTerminal_DualDuct_ConstantVolumeFields::AirOutletNode, "");
-    OS_ASSERT(result);
-  }
-
-  bool AirTerminalDualDuctConstantVolume_Impl::setHotAirInletNode(const Connection& connection) {
-    bool result = setPointer(OS_AirTerminal_DualDuct_ConstantVolumeFields::HotAirInletNode, connection.handle());
-    return result;
-  }
-
-  void AirTerminalDualDuctConstantVolume_Impl::resetHotAirInletNode() {
-    bool result = setString(OS_AirTerminal_DualDuct_ConstantVolumeFields::HotAirInletNode, "");
-    OS_ASSERT(result);
-  }
-
-  bool AirTerminalDualDuctConstantVolume_Impl::setColdAirInletNode(const Connection& connection) {
-    bool result = setPointer(OS_AirTerminal_DualDuct_ConstantVolumeFields::ColdAirInletNode, connection.handle());
-    return result;
-  }
-
-  void AirTerminalDualDuctConstantVolume_Impl::resetColdAirInletNode() {
-    bool result = setString(OS_AirTerminal_DualDuct_ConstantVolumeFields::ColdAirInletNode, "");
-    OS_ASSERT(result);
-  }*/
-
   bool AirTerminalDualDuctConstantVolume_Impl::setMaximumAirFlowRate(double maximumAirFlowRate) {
     bool result = setDouble(OS_AirTerminal_DualDuct_ConstantVolumeFields::MaximumAirFlowRate, maximumAirFlowRate);
     return result;
@@ -172,6 +163,52 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  boost::optional<Node> AirTerminalDualDuctConstantVolume_Impl::HotAirInletNode() const {
+    boost::optional<Node> node;
+    if( auto mo = inletModelObject(0) ) {
+      node = mo->optionalCast<Node>();
+      OS_ASSERT(node);
+    }
+    return node;
+  }
+
+  boost::optional<Node> AirTerminalDualDuctConstantVolume_Impl::ColdAirInletNode() const {
+    boost::optional<Node> node;
+    if( auto mo = inletModelObject(1) ) {
+      node = mo->optionalCast<Node>();
+      OS_ASSERT(node);
+    }
+    return node;
+  }
+
+  std::vector<IdfObject> AirTerminalDualDuctConstantVolume_Impl::remove() {
+    auto modelObject = getObject<AirTerminalDualDuctConstantVolume>();
+    AirLoopHVAC_Impl::removeDualDuctTerminalFromAirLoopHVAC(modelObject,inletPort(0),inletPort(1),outletPort());
+    return Mixer_Impl::remove();
+  }
+
+  bool AirTerminalDualDuctConstantVolume_Impl::addToNode(Node & node)
+  {
+    auto mo = getObject<AirTerminalDualDuctConstantVolume>();
+    return AirLoopHVAC_Impl::addDualDuctTerminalToNode(mo,inletPort(0),inletPort(1),outletPort(),node);
+  }
+
+  ModelObject AirTerminalDualDuctConstantVolume_Impl::clone(Model model) const
+  {
+    auto t_clone = Mixer_Impl::clone(model).cast<AirTerminalDualDuctConstantVolume>();
+
+    t_clone.setString(OS_AirTerminal_DualDuct_ConstantVolumeFields::HotAirInletNode,"");
+    t_clone.setString(OS_AirTerminal_DualDuct_ConstantVolumeFields::ColdAirInletNode,"");
+    t_clone.setString(OS_AirTerminal_DualDuct_ConstantVolumeFields::AirOutletNode,"");
+
+    return t_clone;
+  }
+
+  bool AirTerminalDualDuctConstantVolume_Impl::isRemovable() const
+  {
+    return HVACComponent_Impl::isRemovable();
+  }
+
 } // detail
 
 AirTerminalDualDuctConstantVolume::AirTerminalDualDuctConstantVolume(const Model& model)
@@ -180,9 +217,10 @@ AirTerminalDualDuctConstantVolume::AirTerminalDualDuctConstantVolume(const Model
   OS_ASSERT(getImpl<detail::AirTerminalDualDuctConstantVolume_Impl>());
 
   // TODO: Appropriately handle the following required object-list fields.
-  bool ok = true;
+  // bool ok = true;
   // ok = setMaximumAirFlowRate();
-  OS_ASSERT(ok);
+  // OS_ASSERT(ok);
+  autosizeMaximumAirFlowRate();
 }
 
 IddObjectType AirTerminalDualDuctConstantVolume::iddObjectType() {
@@ -193,16 +231,12 @@ boost::optional<Schedule> AirTerminalDualDuctConstantVolume::availabilitySchedul
   return getImpl<detail::AirTerminalDualDuctConstantVolume_Impl>()->availabilitySchedule();
 }
 
-boost::optional<Connection> AirTerminalDualDuctConstantVolume::airOutletNode() const {
-  return getImpl<detail::AirTerminalDualDuctConstantVolume_Impl>()->airOutletNode();
+boost::optional<Node> AirTerminalDualDuctConstantVolume::HotAirInletNode() const {
+  return getImpl<detail::AirTerminalDualDuctConstantVolume_Impl>()->HotAirInletNode();
 }
 
-boost::optional<Connection> AirTerminalDualDuctConstantVolume::hotAirInletNode() const {
-  return getImpl<detail::AirTerminalDualDuctConstantVolume_Impl>()->hotAirInletNode();
-}
-
-boost::optional<Connection> AirTerminalDualDuctConstantVolume::coldAirInletNode() const {
-  return getImpl<detail::AirTerminalDualDuctConstantVolume_Impl>()->coldAirInletNode();
+boost::optional<Node> AirTerminalDualDuctConstantVolume::ColdAirInletNode() const {
+  return getImpl<detail::AirTerminalDualDuctConstantVolume_Impl>()->ColdAirInletNode();
 }
 
 boost::optional<double> AirTerminalDualDuctConstantVolume::maximumAirFlowRate() const {
@@ -219,30 +253,6 @@ bool AirTerminalDualDuctConstantVolume::setAvailabilitySchedule(Schedule& schedu
 
 void AirTerminalDualDuctConstantVolume::resetAvailabilitySchedule() {
   getImpl<detail::AirTerminalDualDuctConstantVolume_Impl>()->resetAvailabilitySchedule();
-}
-
-bool AirTerminalDualDuctConstantVolume::setAirOutletNode(const Connection& connection) {
-  return getImpl<detail::AirTerminalDualDuctConstantVolume_Impl>()->setAirOutletNode(connection);
-}
-
-void AirTerminalDualDuctConstantVolume::resetAirOutletNode() {
-  getImpl<detail::AirTerminalDualDuctConstantVolume_Impl>()->resetAirOutletNode();
-}
-
-bool AirTerminalDualDuctConstantVolume::setHotAirInletNode(const Connection& connection) {
-  return getImpl<detail::AirTerminalDualDuctConstantVolume_Impl>()->setHotAirInletNode(connection);
-}
-
-void AirTerminalDualDuctConstantVolume::resetHotAirInletNode() {
-  getImpl<detail::AirTerminalDualDuctConstantVolume_Impl>()->resetHotAirInletNode();
-}
-
-bool AirTerminalDualDuctConstantVolume::setColdAirInletNode(const Connection& connection) {
-  return getImpl<detail::AirTerminalDualDuctConstantVolume_Impl>()->setColdAirInletNode(connection);
-}
-
-void AirTerminalDualDuctConstantVolume::resetColdAirInletNode() {
-  getImpl<detail::AirTerminalDualDuctConstantVolume_Impl>()->resetColdAirInletNode();
 }
 
 bool AirTerminalDualDuctConstantVolume::setMaximumAirFlowRate(double maximumAirFlowRate) {

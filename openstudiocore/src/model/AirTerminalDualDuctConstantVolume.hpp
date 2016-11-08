@@ -27,11 +27,10 @@ namespace openstudio {
 
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class Schedule;
-class Connection;
-class Connection;
-class Connection;
+class AirLoopHVAC;
+class Model;
+class Node;
 
 namespace detail {
 
@@ -56,17 +55,7 @@ class MODEL_API AirTerminalDualDuctConstantVolume : public Mixer {
   /** @name Getters */
   //@{
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   boost::optional<Schedule> availabilitySchedule() const;
-
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-  boost::optional<Connection> airOutletNode() const;
-
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-  boost::optional<Connection> hotAirInletNode() const;
-
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-  boost::optional<Connection> coldAirInletNode() const;
 
   boost::optional<double> maximumAirFlowRate() const;
 
@@ -76,30 +65,18 @@ class MODEL_API AirTerminalDualDuctConstantVolume : public Mixer {
   /** @name Setters */
   //@{
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
   // Note Schedules are passed by reference, not const reference.
   bool setAvailabilitySchedule(Schedule& schedule);
 
   void resetAvailabilitySchedule();
 
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
-  bool setAirOutletNode(const Connection& connection);
-
-  void resetAirOutletNode();
-
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
-  bool setHotAirInletNode(const Connection& connection);
-
-  void resetHotAirInletNode();
-
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
-  bool setColdAirInletNode(const Connection& connection);
-
-  void resetColdAirInletNode();
-
   bool setMaximumAirFlowRate(double maximumAirFlowRate);
 
   void autosizeMaximumAirFlowRate();
+
+  boost::optional<Node> HotAirInletNode() const;
+
+  boost::optional<Node> ColdAirInletNode() const;
 
   //@}
   /** @name Other */
