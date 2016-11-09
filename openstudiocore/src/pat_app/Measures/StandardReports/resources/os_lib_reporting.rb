@@ -103,6 +103,18 @@ module OsLib_Reporting
     return html_out_path
   end
 
+  # clean up unkown strings used for runner.registerValue names
+  def self.reg_val_string_prep(string)
+
+    # replace non alpha-numberic characters with an underscore
+    string = string.gsub(/[^0-9a-z]/i, '_')
+
+    # snake case string
+    string = OpenStudio.toUnderscoreCase(string)
+
+    return string
+  end
+
   # create template section
   def self.template_section(model, sqlFile, runner, name_only = false)
     # array to hold tables
@@ -231,7 +243,7 @@ module OsLib_Reporting
     target_units = 'building_name'
     value = model.getBuilding.name.to_s
     general_building_information[:data] << [display, value, target_units]
-    runner.registerValue(display.downcase.gsub(" ","_"), value, target_units)
+    runner.registerValue(OsLib_Reporting.reg_val_string_prep(display), value, target_units)
 
     # net site energy
     display = 'Net Site Energy'
@@ -240,7 +252,7 @@ module OsLib_Reporting
     value = OpenStudio.convert(sqlFile.netSiteEnergy.get, source_units, target_units).get
     value_neat = OpenStudio.toNeatString(value, 0, true)
     general_building_information[:data] << [display, value_neat, target_units]
-    runner.registerValue(display.downcase.gsub(" ","_"), value, target_units)
+    runner.registerValue(OsLib_Reporting.reg_val_string_prep(display), value, target_units)
 
     # total building area
     query = 'SELECT Value FROM tabulardatawithstrings WHERE '
@@ -261,7 +273,7 @@ module OsLib_Reporting
       value = OpenStudio.convert(query_results.get, source_units, target_units).get
       value_neat = OpenStudio.toNeatString(value, 0, true)
       general_building_information[:data] << [display, value_neat, target_units]
-      runner.registerValue(display.downcase.gsub(" ","_"), value, target_units)
+      runner.registerValue(OsLib_Reporting.reg_val_string_prep(display), value, target_units)
     end
 
     # temp code to check OS vs. E+ area
@@ -279,7 +291,7 @@ module OsLib_Reporting
     if query_results.get > 0.0 # don't calculate EUI if building doesn't have any area
       value = OpenStudio.convert(eui, source_units, target_units).get
       value_neat = OpenStudio.toNeatString(value, 2, true)
-      runner.registerValue(display.downcase.gsub(" ","_"), value, target_units) # is it ok not to calc EUI if no area in model
+      runner.registerValue(OsLib_Reporting.reg_val_string_prep(display), value, target_units) # is it ok not to calc EUI if no area in model
     else
       value_neat = "can't calculate EUI."
     end
@@ -362,7 +374,7 @@ module OsLib_Reporting
       end
 
       output_data_space_type_breakdown[:data] << [display, value_neat,standards_building_type,standards_space_type]
-      runner.registerValue("space_type_#{display.downcase.gsub(" ","_")}", value, units)
+      runner.registerValue("space_type_#{OsLib_Reporting.reg_val_string_prep(display)}", value, units)
 
       # data for graph
       output_data_space_type_breakdown[:chart] << JSON.generate(label: display, value: value, color: color)
@@ -385,7 +397,7 @@ module OsLib_Reporting
       value = OpenStudio.convert(no_space_type_area_counter, 'm^2', units).get
       value_neat = OpenStudio.toNeatString(value, 0, true)
       output_data_space_type_breakdown[:data] << [display, value_neat]
-      runner.registerValue("space_type_#{display.downcase.gsub(" ","_")}", value, units)
+      runner.registerValue("space_type_#{OsLib_Reporting.reg_val_string_prep(display)}", value, units)
 
       # data for graph
       color = 'rgb(20,20,20)' # maybe do random or let d3 pick color instead of this?
@@ -591,7 +603,7 @@ module OsLib_Reporting
         value = setpoint_not_met_cat_value.get
         value_neat = value # OpenStudio::toNeatString(value,0,true)
         setpoint_not_met_summary[:data] << [display, value_neat]
-        runner.registerValue("unmet_hours_#{display.downcase.gsub(" ","_")}", value, target_units)
+        runner.registerValue("unmet_hours_#{OsLib_Reporting.reg_val_string_prep(display)}", value, target_units)
 
       end
     end # setpoint_not_met_cat.each do
@@ -1633,7 +1645,7 @@ module OsLib_Reporting
         r_value_ip_neat = ''
       end
       surface_data[:data] << [construction.name, net_area_ip_neat, surface_count, r_value_ip_neat]
-      runner.registerValue(construction.name.to_s.downcase.gsub(" ","_"), net_area_ip, area_units)
+      runner.registerValue(OsLib_Reporting.reg_val_string_prep(construction.name.to_s), net_area_ip, area_units)
     end
     envelope_tables << surface_data
 
@@ -1671,7 +1683,7 @@ module OsLib_Reporting
         u_factor_ip_neat = ''
       end
       sub_surface_data[:data] << [construction.name, net_area_ip_neat, surface_count, u_factor_ip_neat]
-      runner.registerValue(construction.name.to_s.downcase.gsub(" ","_"), net_area_ip, area_units)
+      runner.registerValue(OsLib_Reporting.reg_val_string_prep(construction.name.to_s), net_area_ip, area_units)
     end
     envelope_tables << sub_surface_data
 
@@ -1720,8 +1732,8 @@ module OsLib_Reporting
         display = fenestration
         fenestration_data[:data] << [display, total.get, north.get, east.get, south.get, west.get]
         fenestration_data[:data] << ["#{display} (Conditioned)", total_cond.get, north_cond.get, east_cond.get, south_cond.get, west_cond.get]
-        runner.registerValue("#{display.downcase.gsub(" ","_")}", total.get, target_units)
-        runner.registerValue("#{display.downcase.gsub(" ","_")}_conditioned", total_cond.get, target_units)
+        runner.registerValue("#{OsLib_Reporting.reg_val_string_prep(display)}", total.get, target_units)
+        runner.registerValue("#{OsLib_Reporting.reg_val_string_prep(display)}_conditioned", total_cond.get, target_units)
 
         # skylight
         # skylight seems to provide back percentage vs. fraction. Changing to fraction to match vertical fenestration.
@@ -1794,7 +1806,7 @@ module OsLib_Reporting
         target_temp_range = ''
       end
       water_use_data[:data] << [instance.name, plant_loop, water_use_equipment_def.name, space, peak_flow_rate_ip_neat, water_use_equipment_flow_rate_sch, target_temp_range]
-      runner.registerValue(instance.name.to_s.downcase.gsub(" ","_"), peak_flow_rate_ip, target_units)
+      runner.registerValue(OsLib_Reporting.reg_val_string_prep(instance.name.to_s), peak_flow_rate_ip, target_units)
     end
 
     # don't create empty table
@@ -1883,7 +1895,7 @@ module OsLib_Reporting
       count = instance.multiplier
 
       @elevator_data[:data] << [instance.name.to_s, elec_equip_def.name, elev_zone.name.get, elev_power_neat, units, OpenStudio.toNeatString(count, 2, true)]
-      runner.registerValue(instance.name.to_s.downcase.gsub(" ","_"), elev_power, units)
+      runner.registerValue(OsLib_Reporting.reg_val_string_prep(instance.name.to_s), elev_power, units)
     end
 
     return @elevator_data
@@ -2651,12 +2663,13 @@ module OsLib_Reporting
     for i in 0..(temperature_bins_temps_ip.size - 1)
       if i == 0
         temperature_bins["< #{temperature_bins_temps_ip[i]}"] = 0
-      elsif i == temperature_bins_temps_ip.size - 1
-        temperature_bins[">= #{temperature_bins_temps_ip[i]}"] = 0
       else
         temperature_bins["#{temperature_bins_temps_ip[i - 1]}-#{temperature_bins_temps_ip[i]}"] = 0
       end
     end
+	
+	# catchall bin for values over the top
+	temperature_bins[">= #{temperature_bins_temps_ip.last}"] = 0
 
     # create table
     temperature_table = {}
@@ -2703,8 +2716,14 @@ module OsLib_Reporting
               if found_bin == false && output_timeseries[i] < temperature_bins_temps_si[j]
                 temperature_bins[temperature_bins.keys[j]] += 1
                 found_bin = true
-              end
+              end	
             end
+			
+			# add to top if larger than all other hash values
+			if not found_bin
+			  temperature_bins[temperature_bins.keys.last] += 1
+			end
+			
           end # end of for i in 0..(output_timeseries.size - 1)
         else
           runner.registerWarning("Didn't find data for Zone Air Temperature")
@@ -2751,21 +2770,22 @@ module OsLib_Reporting
     # add table to array of tables
     zone_condition_tables << temperature_table
 
-    humidity_bins_temps_ip = [30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80]
-    humidity_bins_temps_si = humidity_bins_temps_ip
+    humidity_bins_ip = [30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80]
+    humidity_bins_si = humidity_bins_ip
 
     # hash to store hours
     humidity_bins = {}
-    for i in 0..(humidity_bins_temps_ip.size - 1)
+    for i in 0..(humidity_bins_ip.size - 1)
       if i == 0
-        humidity_bins["< #{humidity_bins_temps_ip[i]}"] = 0
-      elsif i == humidity_bins_temps_ip.size - 1
-        humidity_bins[">= #{humidity_bins_temps_ip[i]}"] = 0
+        humidity_bins["< #{humidity_bins_ip[i]}"] = 0
       else
-        humidity_bins["#{humidity_bins_temps_ip[i - 1]}-#{humidity_bins_temps_ip[i]}"] = 0
+        humidity_bins["#{humidity_bins_ip[i - 1]}-#{humidity_bins_ip[i]}"] = 0
       end
     end
 
+	# add catch all bin at top
+	humidity_bins[">= #{humidity_bins_ip.last}"] = 0
+	
     # create table
     humidity_table = {}
     humidity_table[:title] = 'Humidity (Table values represent hours spent in each Humidity range)'
@@ -2807,12 +2827,18 @@ module OsLib_Reporting
             humidity_sum += output_timeseries[i]
 
             found_bin = false
-            for j in 0..(humidity_bins_temps_si.size - 1)
-              if found_bin == false && output_timeseries[i] < humidity_bins_temps_si[j]
+            for j in 0..(humidity_bins_si.size - 1)
+              if found_bin == false && output_timeseries[i] < humidity_bins_si[j]
                 humidity_bins[humidity_bins.keys[j]] += 1
                 found_bin = true
               end
             end
+			
+			# add to top if larger than all other hash values
+			if not found_bin
+			  humidity_bins[humidity_bins.keys.last] += 1
+			end
+			
           end # end of for i in 0..(output_timeseries.size - 1)
         else
           runner.registerWarning("Didn't find data for Zone Air Relative Humidity")
