@@ -1036,10 +1036,14 @@ namespace openstudio{
     openstudio::path ignoreDir = srcDir / "output";
     for (const QFileInfo &info : QDir(toQString(srcDir)).entryInfoList(QDir::Files))
     {
-      openstudio::path srcItemPath = srcDir / toPath(info.fileName());
+      QString fileName = info.fileName();
+      openstudio::path srcItemPath = srcDir / toPath(fileName);
       openstudio::path parentPath = srcItemPath.parent_path();
       bool ignore = false;
-      while (!parentPath.empty()){
+      if (fileName.startsWith(".")){
+        ignore = true;
+      }
+      while (!ignore && !parentPath.empty()){
         if (parentPath == ignoreDir){
           ignore = true;
           break;
