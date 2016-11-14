@@ -46,6 +46,8 @@
 #include <QSettings>
 #include <QRegularExpression>
 
+#include <boost/algorithm/string/predicate.hpp>
+
 #include <src/utilities/embedded_files.hxx>
 
 namespace openstudio{
@@ -995,9 +997,13 @@ namespace openstudio{
     std::vector<BCLFileReference> filesToRemove;
     std::vector<BCLFileReference> filesToAdd;
     for (BCLFileReference file : m_bclXML.files()) {
+      std::string filename = file.fileName();
       if (!exists(file.path())){
         result = true;
         // what if this is the measure.rb file?
+        filesToRemove.push_back(file);
+      }else if (filename.empty() || boost::starts_with(filename, ".")){
+        result = true;
         filesToRemove.push_back(file);
       }else if (file.checkForUpdate()){
         result = true;
@@ -1008,13 +1014,20 @@ namespace openstudio{
     // look for new files and add them
     openstudio::path srcDir = m_directory / "tests";
     openstudio::path ignoreDir = srcDir / "output";
+
     if (openstudio::filesystem::is_directory(srcDir)) {
       for (const auto &file : openstudio::filesystem::directory_files(srcDir))
       {
         openstudio::path srcItemPath = srcDir / file;
         openstudio::path parentPath = srcItemPath.parent_path();
         bool ignore = false;
-        while (!parentPath.empty()){
+
+        std::string filename = toString(file.filename());
+        if (filename.empty() || boost::starts_with(filename, ".")){
+          ignore = true;
+        }
+
+        while (!ignore && !parentPath.empty()){
           if (parentPath == ignoreDir){
             ignore = true;
             break;
@@ -1040,6 +1053,12 @@ namespace openstudio{
       for (const auto &file : openstudio::filesystem::directory_files(srcDir))
       {
         openstudio::path srcItemPath = srcDir / file;
+
+        std::string filename = toString(file.filename());
+        if (filename.empty() || boost::starts_with(filename, ".")){
+          continue;
+        }
+
         if (!m_bclXML.hasFile(srcItemPath)){
           BCLFileReference file(srcItemPath, true);
           file.setUsageType("resource");
