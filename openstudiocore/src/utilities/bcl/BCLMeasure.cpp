@@ -47,6 +47,8 @@
 #include <QSettings>
 #include <QRegularExpression>
 
+#include <boost/algorithm/string/predicate.hpp>
+
 #include <boost/filesystem.hpp>
 
 namespace openstudio{
@@ -1021,9 +1023,13 @@ namespace openstudio{
     std::vector<BCLFileReference> filesToRemove;
     std::vector<BCLFileReference> filesToAdd;
     for (BCLFileReference file : m_bclXML.files()) {
+      std::string filename = file.fileName();
       if (!exists(file.path())){
         result = true;
         // what if this is the measure.rb file?
+        filesToRemove.push_back(file);
+      }else if (filename.empty() || boost::starts_with(filename, ".")){
+        result = true;
         filesToRemove.push_back(file);
       }else if (file.checkForUpdate()){
         result = true;
@@ -1039,7 +1045,12 @@ namespace openstudio{
       openstudio::path srcItemPath = srcDir / toPath(info.fileName());
       openstudio::path parentPath = srcItemPath.parent_path();
       bool ignore = false;
-      while (!parentPath.empty()){
+
+      std::string filename = toString(info.fileName());
+      if (filename.empty() || boost::starts_with(filename, ".")){
+        ignore = true;
+      }
+      while (!ignore && !parentPath.empty()){
         if (parentPath == ignoreDir){
           ignore = true;
           break;
@@ -1063,6 +1074,12 @@ namespace openstudio{
     for (const QFileInfo &info : QDir(toQString(srcDir)).entryInfoList(QDir::Files))
     {
       openstudio::path srcItemPath = srcDir / toPath(info.fileName());
+
+      std::string filename = toString(srcItemPath.filename());
+      if (filename.empty() || boost::starts_with(filename, ".")){
+        continue;
+      }
+
       if (!m_bclXML.hasFile(srcItemPath)){
         BCLFileReference file(srcItemPath, true);
         file.setUsageType("resource");
