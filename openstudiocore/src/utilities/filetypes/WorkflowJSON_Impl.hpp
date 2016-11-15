@@ -94,6 +94,10 @@ namespace detail {
 
       boost::optional<DateTime> completedAt() const;
 
+      boost::optional<std::string> eplusoutErr() const;
+
+      void setEplusoutErr(const std::string& eplusoutErr);
+
       boost::optional<openstudio::path> oswPath() const;
 
       bool setOswPath(const openstudio::path& path);

@@ -126,6 +126,12 @@ public:
   /** Returns the time this WorkflowJSON was completed at. */
   boost::optional<DateTime> completedAt() const;
 
+  /** Returns the content of eplusout.err file. */
+  boost::optional<std::string> eplusoutErr() const;
+
+  /** Sets the content of eplusout.err file. */
+  void setEplusoutErr(const std::string& eplusoutErr);
+
   /** Returns the absolute path this workflow was loaded from or saved to, empty for new WorkflowJSON. */
   boost::optional<openstudio::path> oswPath() const;
 

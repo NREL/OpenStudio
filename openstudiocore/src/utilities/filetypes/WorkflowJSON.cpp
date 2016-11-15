@@ -294,6 +294,22 @@ namespace detail{
     return DateTime::fromISO8601(str);
   }
 
+  boost::optional<std::string> WorkflowJSON_Impl::eplusoutErr() const
+  {
+    Json::Value defaultValue("");
+    Json::Value value = m_value.get("eplusout_err", defaultValue);
+    std::string str = value.asString();
+    if (str.empty()){
+      return boost::none;
+    }
+    return str;
+  }
+
+  void WorkflowJSON_Impl::setEplusoutErr(const std::string& eplusoutErr)
+  {
+    m_value["eplusout_err"] = eplusoutErr;
+  }
+
   boost::optional<openstudio::path> WorkflowJSON_Impl::oswPath() const
   {
     if (m_oswFilename.empty() || m_oswDir.empty()){
@@ -910,6 +926,16 @@ boost::optional<DateTime> WorkflowJSON::updatedAt() const
 boost::optional<DateTime> WorkflowJSON::completedAt() const
 {
   return getImpl<detail::WorkflowJSON_Impl>()->completedAt();
+}
+
+boost::optional<std::string> WorkflowJSON::eplusoutErr() const
+{
+  return getImpl<detail::WorkflowJSON_Impl>()->eplusoutErr();
+}
+
+void WorkflowJSON::setEplusoutErr(const std::string& eplusoutErr)
+{
+  getImpl<detail::WorkflowJSON_Impl>()->setEplusoutErr(eplusoutErr);
 }
 
 boost::optional<openstudio::path> WorkflowJSON::oswPath() const
