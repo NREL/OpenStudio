@@ -70,74 +70,69 @@ class MODEL_API GeneratorFuelCellPowerModule : public ModelObject {
   /** @name Getters */
   //@{
 
-  boost::optional<std::string> efficiencyCurveMode() const;
+  std::string efficiencyCurveMode() const;
 
-  // TODO: Check return type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
   Curve efficiencyCurve() const;
 
-  boost::optional<double> nominalEfficiency() const;
+  double nominalEfficiency() const;
 
-  boost::optional<double> nominalElectricalPower() const;
+  double nominalElectricalPower() const;
 
-  boost::optional<double> numberofStopsatStartofSimulation() const;
+  double numberofStopsatStartofSimulation() const;
 
-  boost::optional<double> cyclingPerformanceDegradationCoefficient() const;
+  double cyclingPerformanceDegradationCoefficient() const;
 
-  boost::optional<double> numberofRunHoursatBeginningofSimulation() const;
+  double numberofRunHoursatBeginningofSimulation() const;
 
-  boost::optional<double> accumulatedRunTimeDegradationCoefficient() const;
+  double accumulatedRunTimeDegradationCoefficient() const;
 
-  boost::optional<double> runTimeDegradationInitiationTimeThreshold() const;
+  double runTimeDegradationInitiationTimeThreshold() const;
 
-  boost::optional<double> powerUpTransientLimit() const;
+  double powerUpTransientLimit() const;
 
-  boost::optional<double> powerDownTransientLimit() const;
+  double powerDownTransientLimit() const;
 
-  boost::optional<double> startUpTime() const;
+  double startUpTime() const;
 
-  boost::optional<double> startUpFuel() const;
+  double startUpFuel() const;
 
-  boost::optional<double> startUpElectricityConsumption() const;
+  double startUpElectricityConsumption() const;
 
-  boost::optional<double> startUpElectricityProduced() const;
+  double startUpElectricityProduced() const;
 
-  boost::optional<double> shutDownTime() const;
+  double shutDownTime() const;
 
-  boost::optional<double> shutDownFuel() const;
+  double shutDownFuel() const;
 
-  boost::optional<double> shutDownElectricityConsumption() const;
+  double shutDownElectricityConsumption() const;
 
-  boost::optional<double> ancillaryElectricityConstantTerm() const;
+  double ancillaryElectricityConstantTerm() const;
 
-  boost::optional<double> ancillaryElectricityLinearTerm() const;
+  double ancillaryElectricityLinearTerm() const;
 
-  boost::optional<std::string> skinLossCalculationMode() const;
+  std::string skinLossCalculationMode() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Zone.
   boost::optional<ThermalZone> zone() const;
 
-  boost::optional<double> skinLossRadiativeFraction() const;
+  double skinLossRadiativeFraction() const;
 
-  boost::optional<double> constantSkinLossRate() const;
+  double constantSkinLossRate() const;
 
-  boost::optional<double> skinLossUFactorTimesAreaTerm() const;
+  double skinLossUFactorTimesAreaTerm() const;
 
-  // TODO: Check return type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
   boost::optional<Curve> skinLossQuadraticCurve() const;
 
-  boost::optional<double> dilutionAirFlowRate() const;
+  double dilutionAirFlowRate() const;
 
-  boost::optional<double> stackHeatlosstoDilutionAir() const;
+  double stackHeatlosstoDilutionAir() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Connection.
   boost::optional<Connection> dilutionInletAirNode() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Connection.
   boost::optional<Connection> dilutionOutletAirNode() const;
 
-  boost::optional<double> minimumOperatingPoint() const;
+  double minimumOperatingPoint() const;
 
-  boost::optional<double> maximumOperatingPoint() const;
+  double maximumOperatingPoint() const;
 
   //@}
   /** @name Setters */
@@ -147,7 +142,6 @@ class MODEL_API GeneratorFuelCellPowerModule : public ModelObject {
 
   void resetEfficiencyCurveMode();
 
-  // TODO: Check argument type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
   bool setEfficiencyCurve(const Curve& quadraticCurve);
 
   void setNominalEfficiency(double nominalEfficiency);
@@ -226,7 +220,6 @@ class MODEL_API GeneratorFuelCellPowerModule : public ModelObject {
 
   void resetSkinLossCalculationMode();
 
-  // TODO: Check argument type. From object lists, some candidates are: Zone.
   bool setZone(const ThermalZone& zone);
 
   void resetZone();
@@ -243,7 +236,6 @@ class MODEL_API GeneratorFuelCellPowerModule : public ModelObject {
 
   void resetSkinLossUFactorTimesAreaTerm();
 
-  // TODO: Check argument type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
   bool setSkinLossQuadraticCurve(const Curve& quadraticCurves);
 
   void resetSkinLossQuadraticCurve();
@@ -256,12 +248,10 @@ class MODEL_API GeneratorFuelCellPowerModule : public ModelObject {
 
   void resetStackHeatlosstoDilutionAir();
 
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
   bool setDilutionInletAirNode(const Connection& connection);
 
   void resetDilutionInletAirNode();
 
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
   bool setDilutionOutletAirNode(const Connection& connection);
 
   void resetDilutionOutletAirNode();

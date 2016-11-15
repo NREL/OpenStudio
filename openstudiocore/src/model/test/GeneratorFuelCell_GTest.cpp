@@ -54,14 +54,46 @@ TEST_F(ModelFixture, FuelCell)
   ThermalZone zone1(model);
   ThermalZone zone2(model);
 
-  // add Site Outdoor Air Drybulb Temperature
+  // create default fuelcell
   GeneratorFuelCell fuelcell(model);
+  // get default power module
   GeneratorFuelCellPowerModule fCPM = fuelcell.powerModule();
+  // check default power module curve values
   Curve curve = fCPM.efficiencyCurve();
   CurveQuadratic curveQ = curve.cast<CurveQuadratic>();
   EXPECT_EQ(1, curveQ.coefficient1Constant());
   EXPECT_EQ(0, curveQ.coefficient2x());
   EXPECT_EQ(0, curveQ.coefficient3xPOW2());
+  EXPECT_EQ("Annex42", fCPM.efficiencyCurveMode());
+
+
+  // check default Airsupply
+  GeneratorFuelCellAirSupply fAS = fuelcell.airSupply();
+  EXPECT_EQ("AirRatiobyStoics",fAS.airSupplyRateCalculationMode());
+  EXPECT_EQ(1.0,fAS.stoichiometricRatio());
+  EXPECT_EQ("NoRecovery",fAS.airIntakeHeatRecoveryMode());
+  EXPECT_EQ("AmbientAir",fAS.airSupplyConstituentMode());
+
+  // check default fuel supply
+  GeneratorFuelSupply fS = fuelcell.fuelSupply();
+
+  // check default water supply
+  GeneratorFuelCellWaterSupply fWS = fuelcell.waterSupply();
+
+  // check default aux heater
+  GeneratorFuelCellAuxiliaryHeater fAX = fuelcell.auxiliaryHeater();
+
+  // check default heat exchanger
+  GeneratorFuelCellExhaustGasToWaterHeatExchanger fHX = fuelcell.heatExchanger();
+
+  // check default electric storage
+  GeneratorFuelCellElectricalStorage fES = fuelcell.electricalStorage();
+
+  // check default inverter
+  GeneratorFuelCellInverter fI = fuelcell.inverter();
+
+  // check default optional stackcooler 
+  boost::optional<GeneratorFuelCellStackCooler> fSC = fuelcell.stackCooler();
 
 }
 

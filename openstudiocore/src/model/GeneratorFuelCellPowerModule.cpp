@@ -32,6 +32,8 @@
 // TODO: Check the following class names against object getters and setters.
 #include "Curve.hpp"
 #include "Curve_Impl.hpp"
+#include "CurveQuadratic.hpp"
+#include "CurveQuadratic_Impl.hpp"
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
 #include "Connection.hpp"
@@ -84,120 +86,220 @@ namespace detail {
     return GeneratorFuelCellPowerModule::iddObjectType();
   }
 
-  boost::optional<std::string> GeneratorFuelCellPowerModule_Impl::efficiencyCurveMode() const {
-    return getString(OS_Generator_FuelCell_PowerModuleFields::EfficiencyCurveMode,true);
+  std::string GeneratorFuelCellPowerModule_Impl::efficiencyCurveMode() const {
+    boost::optional<std::string> value = getString(OS_Generator_FuelCell_PowerModuleFields::EfficiencyCurveMode,true);
+    if (!value) {
+      LOG_AND_THROW(" does not have an Efficiency Curve Mode defined.");
+    }
+    return value.get();
   }
 
   Curve GeneratorFuelCellPowerModule_Impl::efficiencyCurve() const {
     boost::optional<Curve> value = optionalEfficiencyCurve();
     if (!value) {
-      LOG(Info, " does not have an Efficiency Curve attached.");
+      LOG_AND_THROW(" does not have an Efficiency Curve attached.");
     }
     return value.get();
   }
 
-  boost::optional<double> GeneratorFuelCellPowerModule_Impl::nominalEfficiency() const {
-    return getDouble(OS_Generator_FuelCell_PowerModuleFields::NominalEfficiency,true);
+  double GeneratorFuelCellPowerModule_Impl::nominalEfficiency() const {
+    boost::optional<double> value = getDouble(OS_Generator_FuelCell_PowerModuleFields::NominalEfficiency,true);
+    if (!value) {
+      LOG_AND_THROW(" does not have an Nominal Efficiency.");
+    }
+    return value.get();
   }
 
-  boost::optional<double> GeneratorFuelCellPowerModule_Impl::nominalElectricalPower() const {
-    return getDouble(OS_Generator_FuelCell_PowerModuleFields::NominalElectricalPower,true);
+  double GeneratorFuelCellPowerModule_Impl::nominalElectricalPower() const {
+    boost::optional<double> value = getDouble(OS_Generator_FuelCell_PowerModuleFields::NominalElectricalPower, true);
+    if (!value) {
+      LOG_AND_THROW(" does not have an Nominal Electrical Power.");
+    }
+    return value.get();
   }
 
-  boost::optional<double> GeneratorFuelCellPowerModule_Impl::numberofStopsatStartofSimulation() const {
-    return getDouble(OS_Generator_FuelCell_PowerModuleFields::NumberofStopsatStartofSimulation,true);
+  double GeneratorFuelCellPowerModule_Impl::numberofStopsatStartofSimulation() const {
+    boost::optional<double> value = getDouble(OS_Generator_FuelCell_PowerModuleFields::NumberofStopsatStartofSimulation, true);
+    if (!value) {
+      LOG_AND_THROW(" does not have numberofStopsatStartofSimulation.");
+    }
+    return value.get();
   }
 
-  boost::optional<double> GeneratorFuelCellPowerModule_Impl::cyclingPerformanceDegradationCoefficient() const {
-    return getDouble(OS_Generator_FuelCell_PowerModuleFields::CyclingPerformanceDegradationCoefficient,true);
+  double GeneratorFuelCellPowerModule_Impl::cyclingPerformanceDegradationCoefficient() const {
+    boost::optional<double> value = getDouble(OS_Generator_FuelCell_PowerModuleFields::CyclingPerformanceDegradationCoefficient, true);
+    if (!value) {
+      LOG_AND_THROW(" does not have cyclingPerformanceDegradationCoefficient.");
+    }
+    return value.get();
   }
 
-  boost::optional<double> GeneratorFuelCellPowerModule_Impl::numberofRunHoursatBeginningofSimulation() const {
-    return getDouble(OS_Generator_FuelCell_PowerModuleFields::NumberofRunHoursatBeginningofSimulation,true);
+  double GeneratorFuelCellPowerModule_Impl::numberofRunHoursatBeginningofSimulation() const {
+    boost::optional<double> value = getDouble(OS_Generator_FuelCell_PowerModuleFields::NumberofRunHoursatBeginningofSimulation, true);
+    if (!value) {
+      LOG_AND_THROW(" does not have numberofRunHoursatBeginningofSimulation.");
+    }
+    return value.get();
   }
 
-  boost::optional<double> GeneratorFuelCellPowerModule_Impl::accumulatedRunTimeDegradationCoefficient() const {
-    return getDouble(OS_Generator_FuelCell_PowerModuleFields::AccumulatedRunTimeDegradationCoefficient,true);
+  double GeneratorFuelCellPowerModule_Impl::accumulatedRunTimeDegradationCoefficient() const {
+    boost::optional<double> value = getDouble(OS_Generator_FuelCell_PowerModuleFields::AccumulatedRunTimeDegradationCoefficient, true);
+    if (!value) {
+      LOG_AND_THROW(" does not have accumulatedRunTimeDegradationCoefficient.");
+    }
+    return value.get();
   }
 
-  boost::optional<double> GeneratorFuelCellPowerModule_Impl::runTimeDegradationInitiationTimeThreshold() const {
-    return getDouble(OS_Generator_FuelCell_PowerModuleFields::RunTimeDegradationInitiationTimeThreshold,true);
+  double GeneratorFuelCellPowerModule_Impl::runTimeDegradationInitiationTimeThreshold() const {
+    boost::optional<double> value = getDouble(OS_Generator_FuelCell_PowerModuleFields::RunTimeDegradationInitiationTimeThreshold, true);
+    if (!value) {
+      LOG_AND_THROW(" does not have runTimeDegradationInitiationTimeThreshold.");
+    }
+    return value.get();
   }
 
-  boost::optional<double> GeneratorFuelCellPowerModule_Impl::powerUpTransientLimit() const {
-    return getDouble(OS_Generator_FuelCell_PowerModuleFields::PowerUpTransientLimit,true);
+  double GeneratorFuelCellPowerModule_Impl::powerUpTransientLimit() const {
+    boost::optional<double> value = getDouble(OS_Generator_FuelCell_PowerModuleFields::PowerUpTransientLimit, true);
+    if (!value) {
+      LOG_AND_THROW(" does not have powerUpTransientLimit.");
+    }
+    return value.get();
   }
 
-  boost::optional<double> GeneratorFuelCellPowerModule_Impl::powerDownTransientLimit() const {
-    return getDouble(OS_Generator_FuelCell_PowerModuleFields::PowerDownTransientLimit,true);
+  double GeneratorFuelCellPowerModule_Impl::powerDownTransientLimit() const {
+    boost::optional<double> value = getDouble(OS_Generator_FuelCell_PowerModuleFields::PowerDownTransientLimit, true);
+    if (!value) {
+      LOG_AND_THROW(" does not have powerDownTransientLimit.");
+    }
+    return value.get();
   }
 
-  boost::optional<double> GeneratorFuelCellPowerModule_Impl::startUpTime() const {
-    return getDouble(OS_Generator_FuelCell_PowerModuleFields::StartUpTime,true);
+  double GeneratorFuelCellPowerModule_Impl::startUpTime() const {
+    boost::optional<double> value = getDouble(OS_Generator_FuelCell_PowerModuleFields::StartUpTime, true);
+    if (!value) {
+      LOG_AND_THROW(" does not have startUpTime.");
+    }
+    return value.get();
   }
 
-  boost::optional<double> GeneratorFuelCellPowerModule_Impl::startUpFuel() const {
-    return getDouble(OS_Generator_FuelCell_PowerModuleFields::StartUpFuel,true);
+  double GeneratorFuelCellPowerModule_Impl::startUpFuel() const {
+    boost::optional<double> value = getDouble(OS_Generator_FuelCell_PowerModuleFields::StartUpFuel, true);
+    if (!value) {
+      LOG_AND_THROW(" does not have startUpFuel.");
+    }
+    return value.get();
   }
 
-  boost::optional<double> GeneratorFuelCellPowerModule_Impl::startUpElectricityConsumption() const {
-    return getDouble(OS_Generator_FuelCell_PowerModuleFields::StartUpElectricityConsumption,true);
+  double GeneratorFuelCellPowerModule_Impl::startUpElectricityConsumption() const {
+    boost::optional<double> value = getDouble(OS_Generator_FuelCell_PowerModuleFields::StartUpElectricityConsumption, true);
+    if (!value) {
+      LOG_AND_THROW(" does not have startUpElectricityConsumption.");
+    }
+    return value.get();
   }
 
-  boost::optional<double> GeneratorFuelCellPowerModule_Impl::startUpElectricityProduced() const {
-    return getDouble(OS_Generator_FuelCell_PowerModuleFields::StartUpElectricityProduced,true);
+  double GeneratorFuelCellPowerModule_Impl::startUpElectricityProduced() const {
+    boost::optional<double> value = getDouble(OS_Generator_FuelCell_PowerModuleFields::StartUpElectricityProduced, true);
+    if (!value) {
+      LOG_AND_THROW(" does not have startUpElectricityProduced.");
+    }
+    return value.get();
   }
 
-  boost::optional<double> GeneratorFuelCellPowerModule_Impl::shutDownTime() const {
-    return getDouble(OS_Generator_FuelCell_PowerModuleFields::ShutDownTime,true);
+  double GeneratorFuelCellPowerModule_Impl::shutDownTime() const {
+    boost::optional<double> value = getDouble(OS_Generator_FuelCell_PowerModuleFields::ShutDownTime, true);
+    if (!value) {
+      LOG_AND_THROW(" does not have shutDownTime.");
+    }
+    return value.get();
   }
 
-  boost::optional<double> GeneratorFuelCellPowerModule_Impl::shutDownFuel() const {
-    return getDouble(OS_Generator_FuelCell_PowerModuleFields::ShutDownFuel,true);
+  double GeneratorFuelCellPowerModule_Impl::shutDownFuel() const {
+    boost::optional<double> value = getDouble(OS_Generator_FuelCell_PowerModuleFields::ShutDownFuel, true);
+    if (!value) {
+      LOG_AND_THROW(" does not have shutDownFuel.");
+    }
+    return value.get();
   }
 
-  boost::optional<double> GeneratorFuelCellPowerModule_Impl::shutDownElectricityConsumption() const {
-    return getDouble(OS_Generator_FuelCell_PowerModuleFields::ShutDownElectricityConsumption,true);
+  double GeneratorFuelCellPowerModule_Impl::shutDownElectricityConsumption() const {
+    boost::optional<double> value = getDouble(OS_Generator_FuelCell_PowerModuleFields::ShutDownElectricityConsumption, true);
+    if (!value) {
+      LOG_AND_THROW(" does not have shutDownElectricityConsumption.");
+    }
+    return value.get();
   }
 
-  boost::optional<double> GeneratorFuelCellPowerModule_Impl::ancillaryElectricityConstantTerm() const {
-    return getDouble(OS_Generator_FuelCell_PowerModuleFields::AncillaryElectricityConstantTerm,true);
+  double GeneratorFuelCellPowerModule_Impl::ancillaryElectricityConstantTerm() const {
+    boost::optional<double> value = getDouble(OS_Generator_FuelCell_PowerModuleFields::AncillaryElectricityConstantTerm, true);
+    if (!value) {
+      LOG_AND_THROW(" does not have ancillaryElectricityConstantTerm.");
+    }
+    return value.get();
   }
 
-  boost::optional<double> GeneratorFuelCellPowerModule_Impl::ancillaryElectricityLinearTerm() const {
-    return getDouble(OS_Generator_FuelCell_PowerModuleFields::AncillaryElectricityLinearTerm,true);
+  double GeneratorFuelCellPowerModule_Impl::ancillaryElectricityLinearTerm() const {
+    boost::optional<double> value = getDouble(OS_Generator_FuelCell_PowerModuleFields::AncillaryElectricityLinearTerm, true);
+    if (!value) {
+      LOG_AND_THROW(" does not have ancillaryElectricityLinearTerm.");
+    }
+    return value.get();
   }
 
-  boost::optional<std::string> GeneratorFuelCellPowerModule_Impl::skinLossCalculationMode() const {
-    return getString(OS_Generator_FuelCell_PowerModuleFields::SkinLossCalculationMode,true);
+  std::string GeneratorFuelCellPowerModule_Impl::skinLossCalculationMode() const {
+    boost::optional<std::string> value = getString(OS_Generator_FuelCell_PowerModuleFields::SkinLossCalculationMode,true);
+    if (!value) {
+      LOG_AND_THROW(" does not have skinLossCalculationMode.");
+    }
+    return value.get();
   }
 
   boost::optional<ThermalZone> GeneratorFuelCellPowerModule_Impl::zone() const {
     return getObject<ModelObject>().getModelObjectTarget<ThermalZone>(OS_Generator_FuelCell_PowerModuleFields::ZoneName);
   }
 
-  boost::optional<double> GeneratorFuelCellPowerModule_Impl::skinLossRadiativeFraction() const {
-    return getDouble(OS_Generator_FuelCell_PowerModuleFields::SkinLossRadiativeFraction,true);
+  double GeneratorFuelCellPowerModule_Impl::skinLossRadiativeFraction() const {
+    boost::optional<double> value = getDouble(OS_Generator_FuelCell_PowerModuleFields::SkinLossRadiativeFraction, true);
+    if (!value) {
+      LOG_AND_THROW(" does not have skinLossRadiativeFraction.");
+    }
+    return value.get();
   }
 
-  boost::optional<double> GeneratorFuelCellPowerModule_Impl::constantSkinLossRate() const {
-    return getDouble(OS_Generator_FuelCell_PowerModuleFields::ConstantSkinLossRate,true);
+  double GeneratorFuelCellPowerModule_Impl::constantSkinLossRate() const {
+    boost::optional<double> value = getDouble(OS_Generator_FuelCell_PowerModuleFields::ConstantSkinLossRate, true);
+    if (!value) {
+      LOG_AND_THROW(" does not have constantSkinLossRate.");
+    }
+    return value.get();
   }
 
-  boost::optional<double> GeneratorFuelCellPowerModule_Impl::skinLossUFactorTimesAreaTerm() const {
-    return getDouble(OS_Generator_FuelCell_PowerModuleFields::SkinLossUFactorTimesAreaTerm,true);
+  double GeneratorFuelCellPowerModule_Impl::skinLossUFactorTimesAreaTerm() const {
+    boost::optional<double> value = getDouble(OS_Generator_FuelCell_PowerModuleFields::SkinLossUFactorTimesAreaTerm, true);
+    if (!value) {
+      LOG_AND_THROW(" does not have skinLossUFactorTimesAreaTerm.");
+    }
+    return value.get();
   }
 
   boost::optional<Curve> GeneratorFuelCellPowerModule_Impl::skinLossQuadraticCurve() const {
     return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Generator_FuelCell_PowerModuleFields::SkinLossQuadraticCurveName);
   }
 
-  boost::optional<double> GeneratorFuelCellPowerModule_Impl::dilutionAirFlowRate() const {
-    return getDouble(OS_Generator_FuelCell_PowerModuleFields::DilutionAirFlowRate,true);
+  double GeneratorFuelCellPowerModule_Impl::dilutionAirFlowRate() const {
+    boost::optional<double> value = getDouble(OS_Generator_FuelCell_PowerModuleFields::DilutionAirFlowRate, true);
+    if (!value) {
+      LOG_AND_THROW(" does not have dilutionAirFlowRate.");
+    }
+    return value.get();
   }
 
-  boost::optional<double> GeneratorFuelCellPowerModule_Impl::stackHeatlosstoDilutionAir() const {
-    return getDouble(OS_Generator_FuelCell_PowerModuleFields::StackHeatlosstoDilutionAir,true);
+  double GeneratorFuelCellPowerModule_Impl::stackHeatlosstoDilutionAir() const {
+    boost::optional<double> value = getDouble(OS_Generator_FuelCell_PowerModuleFields::StackHeatlosstoDilutionAir, true);
+    if (!value) {
+      LOG_AND_THROW(" does not have stackHeatlosstoDilutionAir.");
+    }
+    return value.get();
   }
 
   boost::optional<Connection> GeneratorFuelCellPowerModule_Impl::dilutionInletAirNode() const {
@@ -208,12 +310,20 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_Generator_FuelCell_PowerModuleFields::DilutionOutletAirNodeName);
   }
 
-  boost::optional<double> GeneratorFuelCellPowerModule_Impl::minimumOperatingPoint() const {
-    return getDouble(OS_Generator_FuelCell_PowerModuleFields::MinimumOperatingPoint,true);
+  double GeneratorFuelCellPowerModule_Impl::minimumOperatingPoint() const {
+    boost::optional<double> value = getDouble(OS_Generator_FuelCell_PowerModuleFields::MinimumOperatingPoint, true);
+    if (!value) {
+      LOG_AND_THROW(" does not have minimumOperatingPoint.");
+    }
+    return value.get();
   }
 
-  boost::optional<double> GeneratorFuelCellPowerModule_Impl::maximumOperatingPoint() const {
-    return getDouble(OS_Generator_FuelCell_PowerModuleFields::MaximumOperatingPoint,true);
+  double GeneratorFuelCellPowerModule_Impl::maximumOperatingPoint() const {
+    boost::optional<double> value = getDouble(OS_Generator_FuelCell_PowerModuleFields::MaximumOperatingPoint, true);
+    if (!value) {
+      LOG_AND_THROW(" does not have maximumOperatingPoint.");
+    }
+    return value.get();
   }
 
   bool GeneratorFuelCellPowerModule_Impl::setEfficiencyCurveMode(const std::string& efficiencyCurveMode) {
@@ -541,12 +651,51 @@ GeneratorFuelCellPowerModule::GeneratorFuelCellPowerModule(const Model& model, c
   : ModelObject(GeneratorFuelCellPowerModule::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::GeneratorFuelCellPowerModule_Impl>());
+  setEfficiencyCurveMode("Annex42");
   bool ok = setEfficiencyCurve(quadraticCurve);
   if (!ok) {
     remove();
     LOG_AND_THROW("Unable to set " << briefDescription() << "'s CurveQuadratic to "
       << quadraticCurve.briefDescription() << ".");
   }
+  setNominalEfficiency(1.0);
+  setNominalElectricalPower(3400);
+  setNumberofStopsatStartofSimulation(0);
+  setCyclingPerformanceDegradationCoefficient(0.0);
+  setNumberofRunHoursatBeginningofSimulation(0);
+  setAccumulatedRunTimeDegradationCoefficient(0.0);
+  setRunTimeDegradationInitiationTimeThreshold(10000);
+  setPowerUpTransientLimit(1.4);
+  setPowerDownTransientLimit(0.2);
+  setStartUpTime(0.0);
+  setStartUpFuel(0.2);
+  setStartUpElectricityConsumption(0);
+  setStartUpElectricityProduced(0.0);
+  setShutDownTime(0.0);
+  setShutDownFuel(0.2);
+  setShutDownElectricityConsumption(0);
+  setAncillaryElectricityConstantTerm(0.0);
+  setAncillaryElectricityLinearTerm(0.0);
+  //TODO
+  //setZone();
+  setSkinLossCalculationMode("ConstantRate");
+  setSkinLossRadiativeFraction(0.6392);
+  setConstantSkinLossRate(729);
+  setSkinLossUFactorTimesAreaTerm(0.0);
+  //create default curve
+  CurveQuadratic curveQuadratic(model);
+  curveQuadratic.setCoefficient1Constant(1);
+  curveQuadratic.setCoefficient2x(0);
+  curveQuadratic.setCoefficient3xPOW2(0);
+  setSkinLossQuadraticCurve(curveQuadratic);
+
+  setDilutionAirFlowRate(0.006156);
+  setStackHeatlosstoDilutionAir(2307);
+  //TODO
+  //setDilutionInletAirNode();
+  //setDilutionOutletAirNode();
+  setMinimumOperatingPoint(3010);
+  setMaximumOperatingPoint(3728);
 }
 
 IddObjectType GeneratorFuelCellPowerModule::iddObjectType() {
@@ -563,7 +712,7 @@ std::vector<std::string> GeneratorFuelCellPowerModule::skinLossCalculationModeVa
                         OS_Generator_FuelCell_PowerModuleFields::SkinLossCalculationMode);
 }
 
-boost::optional<std::string> GeneratorFuelCellPowerModule::efficiencyCurveMode() const {
+std::string GeneratorFuelCellPowerModule::efficiencyCurveMode() const {
   return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->efficiencyCurveMode();
 }
 
@@ -571,79 +720,79 @@ Curve GeneratorFuelCellPowerModule::efficiencyCurve() const {
   return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->efficiencyCurve();
 }
 
-boost::optional<double> GeneratorFuelCellPowerModule::nominalEfficiency() const {
+double GeneratorFuelCellPowerModule::nominalEfficiency() const {
   return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->nominalEfficiency();
 }
 
-boost::optional<double> GeneratorFuelCellPowerModule::nominalElectricalPower() const {
+double GeneratorFuelCellPowerModule::nominalElectricalPower() const {
   return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->nominalElectricalPower();
 }
 
-boost::optional<double> GeneratorFuelCellPowerModule::numberofStopsatStartofSimulation() const {
+double GeneratorFuelCellPowerModule::numberofStopsatStartofSimulation() const {
   return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->numberofStopsatStartofSimulation();
 }
 
-boost::optional<double> GeneratorFuelCellPowerModule::cyclingPerformanceDegradationCoefficient() const {
+double GeneratorFuelCellPowerModule::cyclingPerformanceDegradationCoefficient() const {
   return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->cyclingPerformanceDegradationCoefficient();
 }
 
-boost::optional<double> GeneratorFuelCellPowerModule::numberofRunHoursatBeginningofSimulation() const {
+double GeneratorFuelCellPowerModule::numberofRunHoursatBeginningofSimulation() const {
   return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->numberofRunHoursatBeginningofSimulation();
 }
 
-boost::optional<double> GeneratorFuelCellPowerModule::accumulatedRunTimeDegradationCoefficient() const {
+double GeneratorFuelCellPowerModule::accumulatedRunTimeDegradationCoefficient() const {
   return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->accumulatedRunTimeDegradationCoefficient();
 }
 
-boost::optional<double> GeneratorFuelCellPowerModule::runTimeDegradationInitiationTimeThreshold() const {
+double GeneratorFuelCellPowerModule::runTimeDegradationInitiationTimeThreshold() const {
   return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->runTimeDegradationInitiationTimeThreshold();
 }
 
-boost::optional<double> GeneratorFuelCellPowerModule::powerUpTransientLimit() const {
+double GeneratorFuelCellPowerModule::powerUpTransientLimit() const {
   return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->powerUpTransientLimit();
 }
 
-boost::optional<double> GeneratorFuelCellPowerModule::powerDownTransientLimit() const {
+double GeneratorFuelCellPowerModule::powerDownTransientLimit() const {
   return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->powerDownTransientLimit();
 }
 
-boost::optional<double> GeneratorFuelCellPowerModule::startUpTime() const {
+double GeneratorFuelCellPowerModule::startUpTime() const {
   return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->startUpTime();
 }
 
-boost::optional<double> GeneratorFuelCellPowerModule::startUpFuel() const {
+double GeneratorFuelCellPowerModule::startUpFuel() const {
   return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->startUpFuel();
 }
 
-boost::optional<double> GeneratorFuelCellPowerModule::startUpElectricityConsumption() const {
+double GeneratorFuelCellPowerModule::startUpElectricityConsumption() const {
   return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->startUpElectricityConsumption();
 }
 
-boost::optional<double> GeneratorFuelCellPowerModule::startUpElectricityProduced() const {
+double GeneratorFuelCellPowerModule::startUpElectricityProduced() const {
   return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->startUpElectricityProduced();
 }
 
-boost::optional<double> GeneratorFuelCellPowerModule::shutDownTime() const {
+double GeneratorFuelCellPowerModule::shutDownTime() const {
   return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->shutDownTime();
 }
 
-boost::optional<double> GeneratorFuelCellPowerModule::shutDownFuel() const {
+double GeneratorFuelCellPowerModule::shutDownFuel() const {
   return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->shutDownFuel();
 }
 
-boost::optional<double> GeneratorFuelCellPowerModule::shutDownElectricityConsumption() const {
+double GeneratorFuelCellPowerModule::shutDownElectricityConsumption() const {
   return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->shutDownElectricityConsumption();
 }
 
-boost::optional<double> GeneratorFuelCellPowerModule::ancillaryElectricityConstantTerm() const {
+double GeneratorFuelCellPowerModule::ancillaryElectricityConstantTerm() const {
   return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->ancillaryElectricityConstantTerm();
 }
 
-boost::optional<double> GeneratorFuelCellPowerModule::ancillaryElectricityLinearTerm() const {
+double GeneratorFuelCellPowerModule::ancillaryElectricityLinearTerm() const {
   return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->ancillaryElectricityLinearTerm();
 }
 
-boost::optional<std::string> GeneratorFuelCellPowerModule::skinLossCalculationMode() const {
+std::string GeneratorFuelCellPowerModule::skinLossCalculationMode() const {
   return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->skinLossCalculationMode();
 }
 
@@ -651,15 +800,15 @@ boost::optional<ThermalZone> GeneratorFuelCellPowerModule::zone() const {
   return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->zone();
 }
 
-boost::optional<double> GeneratorFuelCellPowerModule::skinLossRadiativeFraction() const {
+double GeneratorFuelCellPowerModule::skinLossRadiativeFraction() const {
   return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->skinLossRadiativeFraction();
 }
 
-boost::optional<double> GeneratorFuelCellPowerModule::constantSkinLossRate() const {
+double GeneratorFuelCellPowerModule::constantSkinLossRate() const {
   return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->constantSkinLossRate();
 }
 
-boost::optional<double> GeneratorFuelCellPowerModule::skinLossUFactorTimesAreaTerm() const {
+double GeneratorFuelCellPowerModule::skinLossUFactorTimesAreaTerm() const {
   return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->skinLossUFactorTimesAreaTerm();
 }
 
@@ -667,11 +816,11 @@ boost::optional<Curve> GeneratorFuelCellPowerModule::skinLossQuadraticCurve() co
   return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->skinLossQuadraticCurve();
 }
 
-boost::optional<double> GeneratorFuelCellPowerModule::dilutionAirFlowRate() const {
+double GeneratorFuelCellPowerModule::dilutionAirFlowRate() const {
   return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->dilutionAirFlowRate();
 }
 
-boost::optional<double> GeneratorFuelCellPowerModule::stackHeatlosstoDilutionAir() const {
+double GeneratorFuelCellPowerModule::stackHeatlosstoDilutionAir() const {
   return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->stackHeatlosstoDilutionAir();
 }
 
@@ -683,11 +832,11 @@ boost::optional<Connection> GeneratorFuelCellPowerModule::dilutionOutletAirNode(
   return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->dilutionOutletAirNode();
 }
 
-boost::optional<double> GeneratorFuelCellPowerModule::minimumOperatingPoint() const {
+double GeneratorFuelCellPowerModule::minimumOperatingPoint() const {
   return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->minimumOperatingPoint();
 }
 
-boost::optional<double> GeneratorFuelCellPowerModule::maximumOperatingPoint() const {
+double GeneratorFuelCellPowerModule::maximumOperatingPoint() const {
   return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->maximumOperatingPoint();
 }
 
