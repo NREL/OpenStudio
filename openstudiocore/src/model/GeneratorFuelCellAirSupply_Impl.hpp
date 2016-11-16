@@ -80,16 +80,16 @@ namespace detail {
     // TODO: Check return type. From object lists, some candidates are: CubicCurves, UniVariateTables.
     boost::optional<CurveCubic> blowerPowerCurve() const;
 
-    boost::optional<double> blowerHeatLossFactor() const;
+    double blowerHeatLossFactor() const;
 
     std::string airSupplyRateCalculationMode() const;
 
-    boost::optional<double> stoichiometricRatio() const;
+    double stoichiometricRatio() const;
 
     // TODO: Check return type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
     boost::optional<CurveQuadratic> airRateFunctionofElectricPowerCurve() const;
 
-    boost::optional<double> airRateAirTemperatureCoefficient() const;
+    double airRateAirTemperatureCoefficient() const;
 
     // TODO: Check return type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
     boost::optional<CurveQuadratic> airRateFunctionofFuelRateCurve() const;
@@ -98,7 +98,7 @@ namespace detail {
 
     std::string airSupplyConstituentMode() const;
 
-    boost::optional<double> numberofUserDefinedConstituents() const;
+    double numberofUserDefinedConstituents() const;
 
     // TODO: Handle this object's extensible fields.
 

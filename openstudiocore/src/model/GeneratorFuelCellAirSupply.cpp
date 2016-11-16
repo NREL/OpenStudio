@@ -92,8 +92,12 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<CurveCubic>(OS_Generator_FuelCell_AirSupplyFields::BlowerPowerCurveName);
   }
 
-  boost::optional<double> GeneratorFuelCellAirSupply_Impl::blowerHeatLossFactor() const {
-    return getDouble(OS_Generator_FuelCell_AirSupplyFields::BlowerHeatLossFactor,true);
+  double GeneratorFuelCellAirSupply_Impl::blowerHeatLossFactor() const {
+    boost::optional<double> value = getDouble(OS_Generator_FuelCell_AirSupplyFields::BlowerHeatLossFactor, true);
+    if (!value) {
+      LOG_AND_THROW(" does not have blowerHeatLossFactor.");
+    }
+    return value.get();
   }
 
   std::string GeneratorFuelCellAirSupply_Impl::airSupplyRateCalculationMode() const {
@@ -102,16 +106,24 @@ namespace detail {
     return value.get();
   }
 
-  boost::optional<double> GeneratorFuelCellAirSupply_Impl::stoichiometricRatio() const {
-    return getDouble(OS_Generator_FuelCell_AirSupplyFields::StoichiometricRatio,true);
+  double GeneratorFuelCellAirSupply_Impl::stoichiometricRatio() const {
+    boost::optional<double> value = getDouble(OS_Generator_FuelCell_AirSupplyFields::StoichiometricRatio, true);
+    if (!value) {
+      LOG_AND_THROW(" does not have stoichiometricRatio.");
+    }
+    return value.get();
   }
 
   boost::optional<CurveQuadratic> GeneratorFuelCellAirSupply_Impl::airRateFunctionofElectricPowerCurve() const {
     return getObject<ModelObject>().getModelObjectTarget<CurveQuadratic>(OS_Generator_FuelCell_AirSupplyFields::AirRateFunctionofElectricPowerCurveName);
   }
 
-  boost::optional<double> GeneratorFuelCellAirSupply_Impl::airRateAirTemperatureCoefficient() const {
-    return getDouble(OS_Generator_FuelCell_AirSupplyFields::AirRateAirTemperatureCoefficient,true);
+  double GeneratorFuelCellAirSupply_Impl::airRateAirTemperatureCoefficient() const {
+    boost::optional<double> value = getDouble(OS_Generator_FuelCell_AirSupplyFields::AirRateAirTemperatureCoefficient, true);
+    if (!value) {
+      LOG_AND_THROW(" does not have airRateAirTemperatureCoefficient.");
+    }
+    return value.get();
   }
 
   boost::optional<CurveQuadratic> GeneratorFuelCellAirSupply_Impl::airRateFunctionofFuelRateCurve() const {
@@ -130,8 +142,12 @@ namespace detail {
     return value.get();
   }
 
-  boost::optional<double> GeneratorFuelCellAirSupply_Impl::numberofUserDefinedConstituents() const {
-    return getDouble(OS_Generator_FuelCell_AirSupplyFields::NumberofUserDefinedConstituents,true);
+  double GeneratorFuelCellAirSupply_Impl::numberofUserDefinedConstituents() const {
+    boost::optional<double> value = getDouble(OS_Generator_FuelCell_AirSupplyFields::NumberofUserDefinedConstituents, true);
+    if (!value) {
+      LOG_AND_THROW(" does not have numberofUserDefinedConstituents.");
+    }
+    return value.get();
   }
 
   bool GeneratorFuelCellAirSupply_Impl::setAirInletNode(const Connection& connection) {
@@ -235,11 +251,21 @@ GeneratorFuelCellAirSupply::GeneratorFuelCellAirSupply(const Model& model)
   : ModelObject(GeneratorFuelCellAirSupply::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::GeneratorFuelCellAirSupply_Impl>());
-
+  //TODO
+  //setAirInletNode();
+  //setBlowerPowerCurve();
+  setBlowerHeatLossFactor(1.0);
   setAirSupplyRateCalculationMode("AirRatiobyStoics");
   setStoichiometricRatio(1.0);
+  //TODO
+  //setAirRateFunctionofElectricPowerCurve();
+  setAirRateAirTemperatureCoefficient(0.00283);
+  //TODO
+  //setAirRateFunctionofFuelRateCurve();
   setAirIntakeHeatRecoveryMode("NoRecovery");
   setAirSupplyConstituentMode("AmbientAir");
+  //TODO
+  //setNumberofUserDefinedConstituents();
 }
 
 IddObjectType GeneratorFuelCellAirSupply::iddObjectType() {
@@ -269,7 +295,7 @@ boost::optional<CurveCubic> GeneratorFuelCellAirSupply::blowerPowerCurve() const
   return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->blowerPowerCurve();
 }
 
-boost::optional<double> GeneratorFuelCellAirSupply::blowerHeatLossFactor() const {
+double GeneratorFuelCellAirSupply::blowerHeatLossFactor() const {
   return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->blowerHeatLossFactor();
 }
 
@@ -277,7 +303,7 @@ std::string GeneratorFuelCellAirSupply::airSupplyRateCalculationMode() const {
   return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->airSupplyRateCalculationMode();
 }
 
-boost::optional<double> GeneratorFuelCellAirSupply::stoichiometricRatio() const {
+double GeneratorFuelCellAirSupply::stoichiometricRatio() const {
   return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->stoichiometricRatio();
 }
 
@@ -285,7 +311,7 @@ boost::optional<CurveQuadratic> GeneratorFuelCellAirSupply::airRateFunctionofEle
   return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->airRateFunctionofElectricPowerCurve();
 }
 
-boost::optional<double> GeneratorFuelCellAirSupply::airRateAirTemperatureCoefficient() const {
+double GeneratorFuelCellAirSupply::airRateAirTemperatureCoefficient() const {
   return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->airRateAirTemperatureCoefficient();
 }
 
@@ -301,7 +327,7 @@ std::string GeneratorFuelCellAirSupply::airSupplyConstituentMode() const {
   return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->airSupplyConstituentMode();
 }
 
-boost::optional<double> GeneratorFuelCellAirSupply::numberofUserDefinedConstituents() const {
+double GeneratorFuelCellAirSupply::numberofUserDefinedConstituents() const {
   return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->numberofUserDefinedConstituents();
 }
 

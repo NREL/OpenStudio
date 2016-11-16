@@ -70,31 +70,27 @@ class MODEL_API GeneratorFuelCellAirSupply : public ModelObject {
   /** @name Getters */
   //@{
 
-  // TODO: Check return type. From object lists, some candidates are: Connection.
   boost::optional<Connection> airInletNode() const;
 
-  // TODO: Check return type. From object lists, some candidates are: CubicCurves, UniVariateTables.
   boost::optional<CurveCubic> blowerPowerCurve() const;
 
-  boost::optional<double> blowerHeatLossFactor() const;
+  double blowerHeatLossFactor() const;
 
   std::string airSupplyRateCalculationMode() const;
 
-  boost::optional<double> stoichiometricRatio() const;
+  double stoichiometricRatio() const;
 
-  // TODO: Check return type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
   boost::optional<CurveQuadratic> airRateFunctionofElectricPowerCurve() const;
 
-  boost::optional<double> airRateAirTemperatureCoefficient() const;
+  double airRateAirTemperatureCoefficient() const;
 
-  // TODO: Check return type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
   boost::optional<CurveQuadratic> airRateFunctionofFuelRateCurve() const;
 
   std::string airIntakeHeatRecoveryMode() const;
 
   std::string airSupplyConstituentMode() const;
 
-  boost::optional<double> numberofUserDefinedConstituents() const;
+  double numberofUserDefinedConstituents() const;
 
   // TODO: Handle this object's extensible fields.
 
@@ -102,12 +98,10 @@ class MODEL_API GeneratorFuelCellAirSupply : public ModelObject {
   /** @name Setters */
   //@{
 
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
   bool setAirInletNode(const Connection& connection);
 
   void resetAirInletNode();
 
-  // TODO: Check argument type. From object lists, some candidates are: CubicCurves, UniVariateTables.
   bool setBlowerPowerCurve(const CurveCubic& cubicCurves);
 
   void resetBlowerPowerCurve();
@@ -122,7 +116,6 @@ class MODEL_API GeneratorFuelCellAirSupply : public ModelObject {
 
   void resetStoichiometricRatio();
 
-  // TODO: Check argument type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
   bool setAirRateFunctionofElectricPowerCurve(const CurveQuadratic& quadraticCurves);
 
   void resetAirRateFunctionofElectricPowerCurve();
@@ -131,7 +124,6 @@ class MODEL_API GeneratorFuelCellAirSupply : public ModelObject {
 
   void resetAirRateAirTemperatureCoefficient();
 
-  // TODO: Check argument type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
   bool setAirRateFunctionofFuelRateCurve(const CurveQuadratic& quadraticCurves);
 
   void resetAirRateFunctionofFuelRateCurve();
@@ -139,7 +131,8 @@ class MODEL_API GeneratorFuelCellAirSupply : public ModelObject {
   bool setAirIntakeHeatRecoveryMode(const std::string& airIntakeHeatRecoveryMode);
 
   bool setAirSupplyConstituentMode(const std::string& airSupplyConstituentMode);
-
+  //TODO
+  //should be extensible
   bool setNumberofUserDefinedConstituents(double numberofUserDefinedConstituents);
 
   void resetNumberofUserDefinedConstituents();

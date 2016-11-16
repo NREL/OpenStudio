@@ -72,28 +72,27 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    boost::optional<double> excessAirRatio() const;
+    double excessAirRatio() const;
 
-    boost::optional<double> ancillaryPowerConstantTerm() const;
+    double ancillaryPowerConstantTerm() const;
 
-    boost::optional<double> ancillaryPowerLinearTerm() const;
+    double ancillaryPowerLinearTerm() const;
 
-    boost::optional<double> skinLossUFactorTimesAreaValue() const;
+    double skinLossUFactorTimesAreaValue() const;
 
-    boost::optional<std::string> skinLossDestination() const;
+    std::string skinLossDestination() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Zone.
     boost::optional<ThermalZone> zonetoReceiveSkinLosses() const;
 
-    boost::optional<std::string> heatingCapacityUnits() const;
+    std::string heatingCapacityUnits() const;
 
-    boost::optional<double> maximumHeatingCapacityinWatts() const;
+    double maximumHeatingCapacityinWatts() const;
 
-    boost::optional<double> minimumHeatingCapacityinWatts() const;
+    double minimumHeatingCapacityinWatts() const;
 
-    boost::optional<double> maximumHeatingCapacityinKmolperSecond() const;
+    double maximumHeatingCapacityinKmolperSecond() const;
 
-    boost::optional<double> minimumHeatingCapacityinKmolperSecond() const;
+    double minimumHeatingCapacityinKmolperSecond() const;
 
     //@}
     /** @name Setters */
