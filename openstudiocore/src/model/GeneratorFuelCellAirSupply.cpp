@@ -176,7 +176,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellAirSupply_Impl::resetBlowerHeatLossFactor() {
-    bool result = setString(OS_Generator_FuelCell_AirSupplyFields::BlowerHeatLossFactor, "");
+    bool result = setDouble(OS_Generator_FuelCell_AirSupplyFields::BlowerHeatLossFactor, 0);
     OS_ASSERT(result);
   }
 
@@ -191,7 +191,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellAirSupply_Impl::resetStoichiometricRatio() {
-    bool result = setString(OS_Generator_FuelCell_AirSupplyFields::StoichiometricRatio, "");
+    bool result = setDouble(OS_Generator_FuelCell_AirSupplyFields::StoichiometricRatio, 0);
     OS_ASSERT(result);
   }
 
@@ -211,7 +211,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellAirSupply_Impl::resetAirRateAirTemperatureCoefficient() {
-    bool result = setString(OS_Generator_FuelCell_AirSupplyFields::AirRateAirTemperatureCoefficient, "");
+    bool result = setDouble(OS_Generator_FuelCell_AirSupplyFields::AirRateAirTemperatureCoefficient, 0);
     OS_ASSERT(result);
   }
 

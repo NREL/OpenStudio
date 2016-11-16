@@ -54,6 +54,11 @@ class MODEL_API GeneratorFuelCellExhaustGasToWaterHeatExchanger : public ModelOb
 
   explicit GeneratorFuelCellExhaustGasToWaterHeatExchanger(const Model& model);
 
+  explicit GeneratorFuelCellExhaustGasToWaterHeatExchanger(const Model& model,
+                                                           const Connection& waterInletNode,
+                                                           const Connection& waterOutletNode,
+                                                           const Connection& exhaustOutletAirNode);
+
   virtual ~GeneratorFuelCellExhaustGasToWaterHeatExchanger() {}
 
   //@}

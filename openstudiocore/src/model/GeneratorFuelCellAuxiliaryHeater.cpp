@@ -180,7 +180,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellAuxiliaryHeater_Impl::resetExcessAirRatio() {
-    bool result = setString(OS_Generator_FuelCell_AuxiliaryHeaterFields::ExcessAirRatio, "");
+    bool result = setDouble(OS_Generator_FuelCell_AuxiliaryHeaterFields::ExcessAirRatio, 0);
     OS_ASSERT(result);
   }
 
@@ -190,7 +190,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellAuxiliaryHeater_Impl::resetAncillaryPowerConstantTerm() {
-    bool result = setString(OS_Generator_FuelCell_AuxiliaryHeaterFields::AncillaryPowerConstantTerm, "");
+    bool result = setDouble(OS_Generator_FuelCell_AuxiliaryHeaterFields::AncillaryPowerConstantTerm, 0);
     OS_ASSERT(result);
   }
 
@@ -200,7 +200,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellAuxiliaryHeater_Impl::resetAncillaryPowerLinearTerm() {
-    bool result = setString(OS_Generator_FuelCell_AuxiliaryHeaterFields::AncillaryPowerLinearTerm, "");
+    bool result = setDouble(OS_Generator_FuelCell_AuxiliaryHeaterFields::AncillaryPowerLinearTerm, 0);
     OS_ASSERT(result);
   }
 
@@ -210,7 +210,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellAuxiliaryHeater_Impl::resetSkinLossUFactorTimesAreaValue() {
-    bool result = setString(OS_Generator_FuelCell_AuxiliaryHeaterFields::SkinLossUFactorTimesAreaValue, "");
+    bool result = setDouble(OS_Generator_FuelCell_AuxiliaryHeaterFields::SkinLossUFactorTimesAreaValue, 0.5);
     OS_ASSERT(result);
   }
 
@@ -220,7 +220,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellAuxiliaryHeater_Impl::resetSkinLossDestination() {
-    bool result = setString(OS_Generator_FuelCell_AuxiliaryHeaterFields::SkinLossDestination, "");
+    bool result = setString(OS_Generator_FuelCell_AuxiliaryHeaterFields::SkinLossDestination, "SurroundingZone");
     OS_ASSERT(result);
   }
 
@@ -240,7 +240,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellAuxiliaryHeater_Impl::resetHeatingCapacityUnits() {
-    bool result = setString(OS_Generator_FuelCell_AuxiliaryHeaterFields::HeatingCapacityUnits, "");
+    bool result = setString(OS_Generator_FuelCell_AuxiliaryHeaterFields::HeatingCapacityUnits, "Watts");
     OS_ASSERT(result);
   }
 
@@ -250,7 +250,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellAuxiliaryHeater_Impl::resetMaximumHeatingCapacityinWatts() {
-    bool result = setString(OS_Generator_FuelCell_AuxiliaryHeaterFields::MaximumHeatingCapacityinWatts, "");
+    bool result = setDouble(OS_Generator_FuelCell_AuxiliaryHeaterFields::MaximumHeatingCapacityinWatts, 0);
     OS_ASSERT(result);
   }
 
@@ -260,7 +260,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellAuxiliaryHeater_Impl::resetMinimumHeatingCapacityinWatts() {
-    bool result = setString(OS_Generator_FuelCell_AuxiliaryHeaterFields::MinimumHeatingCapacityinWatts, "");
+    bool result = setDouble(OS_Generator_FuelCell_AuxiliaryHeaterFields::MinimumHeatingCapacityinWatts, 0);
     OS_ASSERT(result);
   }
 
@@ -270,7 +270,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellAuxiliaryHeater_Impl::resetMaximumHeatingCapacityinKmolperSecond() {
-    bool result = setString(OS_Generator_FuelCell_AuxiliaryHeaterFields::MaximumHeatingCapacityinKmolperSecond, "");
+    bool result = setDouble(OS_Generator_FuelCell_AuxiliaryHeaterFields::MaximumHeatingCapacityinKmolperSecond, 0);
     OS_ASSERT(result);
   }
 
@@ -280,7 +280,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellAuxiliaryHeater_Impl::resetMinimumHeatingCapacityinKmolperSecond() {
-    bool result = setString(OS_Generator_FuelCell_AuxiliaryHeaterFields::MinimumHeatingCapacityinKmolperSecond, "");
+    bool result = setDouble(OS_Generator_FuelCell_AuxiliaryHeaterFields::MinimumHeatingCapacityinKmolperSecond, 0);
     OS_ASSERT(result);
   }
 
