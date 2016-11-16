@@ -62,47 +62,45 @@ class MODEL_API GeneratorFuelCellStackCooler : public ModelObject {
   /** @name Getters */
   //@{
 
-  // TODO: Check return type. From object lists, some candidates are: Connection.
   boost::optional<Connection> heatRecoveryWaterInletNode() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Connection.
   boost::optional<Connection> heatRecoveryWaterOutletNode() const;
 
-  boost::optional<double> nominalStackTemperature() const;
+  double nominalStackTemperature() const;
 
-  boost::optional<double> actualStackTemperature() const;
+  double actualStackTemperature() const;
 
-  boost::optional<double> coefficientr0() const;
+  double coefficientr0() const;
 
-  boost::optional<double> coefficientr1() const;
+  double coefficientr1() const;
 
-  boost::optional<double> coefficientr2() const;
+  double coefficientr2() const;
 
-  boost::optional<double> coefficientr3() const;
+  double coefficientr3() const;
 
-  boost::optional<double> stackCoolantFlowRate() const;
+  double stackCoolantFlowRate() const;
 
-  boost::optional<double> stackCoolerUFactorTimesAreaValue() const;
+  double stackCoolerUFactorTimesAreaValue() const;
 
-  boost::optional<double> fscogenAdjustmentFactor() const;
+  double fscogenAdjustmentFactor() const;
 
-  boost::optional<double> stackCogenerationExchangerArea() const;
+  double stackCogenerationExchangerArea() const;
 
-  boost::optional<double> stackCogenerationExchangerNominalFlowRate() const;
+  double stackCogenerationExchangerNominalFlowRate() const;
 
-  boost::optional<double> stackCogenerationExchangerNominalHeatTransferCoefficient() const;
+  double stackCogenerationExchangerNominalHeatTransferCoefficient() const;
 
-  boost::optional<double> stackCogenerationExchangerNominalHeatTransferCoefficientExponent() const;
+  double stackCogenerationExchangerNominalHeatTransferCoefficientExponent() const;
 
-  boost::optional<double> stackCoolerPumpPower() const;
+  double stackCoolerPumpPower() const;
 
-  boost::optional<double> stackCoolerPumpHeatLossFraction() const;
+  double stackCoolerPumpHeatLossFraction() const;
 
-  boost::optional<double> stackAirCoolerFanCoefficientf0() const;
+  double stackAirCoolerFanCoefficientf0() const;
 
-  boost::optional<double> stackAirCoolerFanCoefficientf1() const;
+  double stackAirCoolerFanCoefficientf1() const;
 
-  boost::optional<double> stackAirCoolerFanCoefficientf2() const;
+  double stackAirCoolerFanCoefficientf2() const;
 
   //@}
   /** @name Setters */
