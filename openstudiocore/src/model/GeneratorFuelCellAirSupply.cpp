@@ -247,25 +247,83 @@ namespace detail {
 
 } // detail
 
+GeneratorFuelCellAirSupply::GeneratorFuelCellAirSupply(const Model& model,
+  const Connection& airInletNode)
+  : ModelObject(GeneratorFuelCellAirSupply::iddObjectType(), model) {
+  OS_ASSERT(getImpl<detail::GeneratorFuelCellAirSupply_Impl>());
+
+  setAirInletNode(airInletNode);
+
+  CurveCubic curveCubic(model);
+  curveCubic.setCoefficient1Constant(0);
+  curveCubic.setCoefficient2x(0);
+  curveCubic.setCoefficient3xPOW2(0);
+  curveCubic.setCoefficient4xPOW3(0);
+  curveCubic.setMinimumValueofx(-1.0e10);
+  curveCubic.setMaximumValueofx(1.0e10);
+  setBlowerPowerCurve(curveCubic);
+
+  setBlowerHeatLossFactor(1.0);
+  setAirSupplyRateCalculationMode("AirRatiobyStoics");
+  setStoichiometricRatio(1.0);
+
+  setAirRateAirTemperatureCoefficient(0.00283);
+
+  setAirIntakeHeatRecoveryMode("NoRecovery");
+  setAirSupplyConstituentMode("AmbientAir");
+}
+
+GeneratorFuelCellAirSupply::GeneratorFuelCellAirSupply(const Model& model, 
+                                                       const Connection& airInletNode,
+                                                       const CurveQuadratic& electricPowerCurve,
+                                                       const CurveQuadratic& fuelRateCurve)
+  : ModelObject(GeneratorFuelCellAirSupply::iddObjectType(), model) {
+  OS_ASSERT(getImpl<detail::GeneratorFuelCellAirSupply_Impl>());
+
+  setAirInletNode(airInletNode);
+
+  CurveCubic curveCubic(model);
+  curveCubic.setCoefficient1Constant(0);
+  curveCubic.setCoefficient2x(0);
+  curveCubic.setCoefficient3xPOW2(0);
+  curveCubic.setCoefficient4xPOW3(0);
+  curveCubic.setMinimumValueofx(-1.0e10);
+  curveCubic.setMaximumValueofx(1.0e10);
+  setBlowerPowerCurve(curveCubic);
+
+  setBlowerHeatLossFactor(1.0);
+  setAirSupplyRateCalculationMode("AirRatiobyStoics");
+  setStoichiometricRatio(1.0);
+
+  setAirRateFunctionofElectricPowerCurve(electricPowerCurve);
+  setAirRateAirTemperatureCoefficient(0.00283);
+
+  setAirRateFunctionofFuelRateCurve(fuelRateCurve);
+  setAirIntakeHeatRecoveryMode("NoRecovery");
+  setAirSupplyConstituentMode("AmbientAir");
+}
+
 GeneratorFuelCellAirSupply::GeneratorFuelCellAirSupply(const Model& model)
   : ModelObject(GeneratorFuelCellAirSupply::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::GeneratorFuelCellAirSupply_Impl>());
   //TODO
   //setAirInletNode();
-  //setBlowerPowerCurve();
+  CurveCubic curveCubic(model);
+  curveCubic.setCoefficient1Constant(0);
+  curveCubic.setCoefficient2x(0);
+  curveCubic.setCoefficient3xPOW2(0);
+  curveCubic.setCoefficient4xPOW3(0);
+  curveCubic.setMinimumValueofx(-1.0e10);
+  curveCubic.setMaximumValueofx(1.0e10);
+  setBlowerPowerCurve(curveCubic);
+
   setBlowerHeatLossFactor(1.0);
   setAirSupplyRateCalculationMode("AirRatiobyStoics");
   setStoichiometricRatio(1.0);
-  //TODO
-  //setAirRateFunctionofElectricPowerCurve();
   setAirRateAirTemperatureCoefficient(0.00283);
-  //TODO
-  //setAirRateFunctionofFuelRateCurve();
   setAirIntakeHeatRecoveryMode("NoRecovery");
   setAirSupplyConstituentMode("AmbientAir");
-  //TODO
-  //setNumberofUserDefinedConstituents();
 }
 
 IddObjectType GeneratorFuelCellAirSupply::iddObjectType() {

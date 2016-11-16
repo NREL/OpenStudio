@@ -98,7 +98,7 @@ namespace detail {
   GeneratorFuelCellPowerModule GeneratorFuelCell_Impl::powerModule() const {
     boost::optional<GeneratorFuelCellPowerModule> value = optionalPowerModule();
     if (!value) {
-      LOG(Info, " does not have an Power Module attached.");
+      LOG_AND_THROW(" does not have an Power Module attached.");
     }
     return value.get();
   }
@@ -106,7 +106,7 @@ namespace detail {
   GeneratorFuelCellAirSupply GeneratorFuelCell_Impl::airSupply() const {
     boost::optional<GeneratorFuelCellAirSupply> value = optionalAirSupply();
     if (!value) {
-      LOG(Info, " does not have an Air Supply attached.");
+      LOG_AND_THROW(" does not have an Air Supply attached.");
     }
     return value.get();
   }
@@ -114,7 +114,7 @@ namespace detail {
   GeneratorFuelSupply GeneratorFuelCell_Impl::fuelSupply() const {
     boost::optional<GeneratorFuelSupply> value = optionalFuelSupply();
     if (!value) {
-      LOG(Info, " does not have an Fuel Supply attached.");
+      LOG_AND_THROW(" does not have an Fuel Supply attached.");
     }
     return value.get();
   }
@@ -122,7 +122,7 @@ namespace detail {
   GeneratorFuelCellWaterSupply GeneratorFuelCell_Impl::waterSupply() const {
     boost::optional<GeneratorFuelCellWaterSupply> value = optionalWaterSupply();
     if (!value) {
-      LOG(Info, " does not have an Water Supply attached.");
+      LOG_AND_THROW(" does not have an Water Supply attached.");
     }
     return value.get();
   }
@@ -130,7 +130,7 @@ namespace detail {
   GeneratorFuelCellAuxiliaryHeater GeneratorFuelCell_Impl::auxiliaryHeater() const {
     boost::optional<GeneratorFuelCellAuxiliaryHeater> value = optionalAuxiliaryHeater();
     if (!value) {
-      LOG(Info, " does not have an Auxiliary Heater attached.");
+      LOG_AND_THROW(" does not have an Auxiliary Heater attached.");
     }
     return value.get();
   }
@@ -138,7 +138,7 @@ namespace detail {
   GeneratorFuelCellExhaustGasToWaterHeatExchanger GeneratorFuelCell_Impl::heatExchanger() const {
     boost::optional<GeneratorFuelCellExhaustGasToWaterHeatExchanger> value = optionalHeatExchanger();
     if (!value) {
-      LOG(Info, " does not have an Heat Exchanger attached.");
+      LOG_AND_THROW(" does not have an Heat Exchanger attached.");
     }
     return value.get();
   }
@@ -146,7 +146,7 @@ namespace detail {
   GeneratorFuelCellElectricalStorage GeneratorFuelCell_Impl::electricalStorage() const {
     boost::optional<GeneratorFuelCellElectricalStorage> value = optionalElectricalStorage();
     if (!value) {
-      LOG(Info, " does not have an Electrical Storage attached.");
+      LOG_AND_THROW(" does not have an Electrical Storage attached.");
     }
     return value.get();
   }
@@ -154,7 +154,7 @@ namespace detail {
   GeneratorFuelCellInverter GeneratorFuelCell_Impl::inverter() const {
     boost::optional<GeneratorFuelCellInverter> value = optionalInverter();
     if (!value) {
-      LOG(Info, " does not have an Inverter attached.");
+      LOG_AND_THROW(" does not have an Inverter attached.");
     }
     return value.get();
   }

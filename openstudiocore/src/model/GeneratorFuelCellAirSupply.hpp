@@ -54,6 +54,14 @@ class MODEL_API GeneratorFuelCellAirSupply : public ModelObject {
   //@{
 
   explicit GeneratorFuelCellAirSupply(const Model& model);
+
+  explicit GeneratorFuelCellAirSupply(const Model& model,
+                                      const Connection& airInletNode);
+
+  explicit GeneratorFuelCellAirSupply(const Model& model,
+                                      const Connection& airInletNode,
+                                      const CurveQuadratic& electricPowerCurve,
+                                      const CurveQuadratic& fuelRateCurve);
   
   virtual ~GeneratorFuelCellAirSupply() {}
 
