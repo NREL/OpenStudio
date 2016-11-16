@@ -76,30 +76,27 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    boost::optional<std::string> fuelTemperatureModelingMode() const;
+    std::string fuelTemperatureModelingMode() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Connection.
     boost::optional<Connection> fuelTemperatureReferenceNode() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> fuelTemperatureSchedule() const;
 
-    // TODO: Check return type. From object lists, some candidates are: CubicCurves, UniVariateTables.
-    boost::optional<CurveCubic> compressorPowerMultiplierFunctionofFuelRateCurve() const;
+    CurveCubic compressorPowerMultiplierFunctionofFuelRateCurve() const;
 
-    boost::optional<double> compressorHeatLossFactor() const;
+    double compressorHeatLossFactor() const;
 
-    boost::optional<std::string> fuelType() const;
+    std::string fuelType() const;
 
-    boost::optional<double> liquidGenericFuelLowerHeatingValue() const;
+    double liquidGenericFuelLowerHeatingValue() const;
 
-    boost::optional<double> liquidGenericFuelHigherHeatingValue() const;
+    double liquidGenericFuelHigherHeatingValue() const;
 
-    boost::optional<double> liquidGenericFuelMolecularWeight() const;
+    double liquidGenericFuelMolecularWeight() const;
 
-    boost::optional<double> liquidGenericFuelCO2EmissionFactor() const;
+    double liquidGenericFuelCO2EmissionFactor() const;
 
-    boost::optional<double> numberofConstituentsinGaseousConstituentFuelSupply() const;
+    double numberofConstituentsinGaseousConstituentFuelSupply() const;
 
     // TODO: Handle this object's extensible fields.
 
@@ -111,18 +108,15 @@ namespace detail {
 
     void resetFuelTemperatureModelingMode();
 
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
     bool setFuelTemperatureReferenceNode(const Connection& connection);
 
     void resetFuelTemperatureReferenceNode();
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
   // Note Schedules are passed by reference, not const reference.
     bool setFuelTemperatureSchedule(Schedule& schedule);
 
     void resetFuelTemperatureSchedule();
 
-    // TODO: Check argument type. From object lists, some candidates are: CubicCurves, UniVariateTables.
     bool setCompressorPowerMultiplierFunctionofFuelRateCurve(const CurveCubic& cubicCurves);
 
     void resetCompressorPowerMultiplierFunctionofFuelRateCurve();
