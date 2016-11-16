@@ -30,6 +30,8 @@
 #include "GeneratorFuelCellWaterSupply_Impl.hpp"
 
 // TODO: Check the following class names against object getters and setters.
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 #include "CurveCubic.hpp"
 #include "CurveCubic_Impl.hpp"
 #include "CurveQuadratic.hpp"
@@ -106,7 +108,7 @@ namespace detail {
   CurveQuadratic GeneratorFuelCellWaterSupply_Impl::reformerWaterFlowRateFunctionofFuelRateCurve() const {
     boost::optional<CurveQuadratic> value = getObject<ModelObject>().getModelObjectTarget<CurveQuadratic>(OS_Generator_FuelCell_WaterSupplyFields::ReformerWaterFlowRateFunctionofFuelRateCurveName);
     if (!value) {
-      LOG(Info, " does not have an reformerWaterFlowRateFunctionofFuelRateCurve attached.");
+      LOG_AND_THROW(" does not have an reformerWaterFlowRateFunctionofFuelRateCurve attached.");
     }
     return value.get();
   }
@@ -114,7 +116,7 @@ namespace detail {
   CurveCubic GeneratorFuelCellWaterSupply_Impl::reformerWaterPumpPowerFunctionofFuelRateCurve() const {
     boost::optional<CurveCubic> value = getObject<ModelObject>().getModelObjectTarget<CurveCubic>(OS_Generator_FuelCell_WaterSupplyFields::ReformerWaterPumpPowerFunctionofFuelRateCurveName);
     if (!value) {
-      LOG(Info, " does not have an reformerWaterPumpPowerFunctionofFuelRateCurve attached.");
+      LOG_AND_THROW(" does not have an reformerWaterPumpPowerFunctionofFuelRateCurve attached.");
     }
     return value.get();
   }
@@ -122,7 +124,7 @@ namespace detail {
   double GeneratorFuelCellWaterSupply_Impl::pumpHeatLossFactor() const {
     boost::optional<double> value = getDouble(OS_Generator_FuelCell_WaterSupplyFields::PumpHeatLossFactor, true);
     if (!value) {
-      LOG(Info, " does not have an pumpHeatLossFactor.");
+      LOG_AND_THROW(" does not have an pumpHeatLossFactor.");
     }
     return value.get();
   }
@@ -130,7 +132,7 @@ namespace detail {
   std::string GeneratorFuelCellWaterSupply_Impl::waterTemperatureModelingMode() const {
     boost::optional<std::string> value = getString(OS_Generator_FuelCell_WaterSupplyFields::WaterTemperatureModelingMode, true);
     if (!value) {
-      LOG(Info, " does not have an waterTemperatureModelingMode.");
+      LOG_AND_THROW(" does not have an waterTemperatureModelingMode.");
     }
     return value.get();
   }
@@ -149,8 +151,15 @@ namespace detail {
   }
 
   void GeneratorFuelCellWaterSupply_Impl::resetReformerWaterFlowRateFunctionofFuelRateCurve() {
-    bool result = setString(OS_Generator_FuelCell_WaterSupplyFields::ReformerWaterFlowRateFunctionofFuelRateCurveName, "");
+    CurveQuadratic curveQuadratic(this->model());
+    curveQuadratic.setCoefficient1Constant(0);
+    curveQuadratic.setCoefficient2x(0);
+    curveQuadratic.setCoefficient3xPOW2(0);
+    curveQuadratic.setMinimumValueofx(-1.0e10);
+    curveQuadratic.setMaximumValueofx(1.0e10);
+    bool result = setReformerWaterFlowRateFunctionofFuelRateCurve(curveQuadratic);
     OS_ASSERT(result);
+
   }
 
   bool GeneratorFuelCellWaterSupply_Impl::setReformerWaterPumpPowerFunctionofFuelRateCurve(const CurveCubic& cubicCurves) {
@@ -159,7 +168,14 @@ namespace detail {
   }
 
   void GeneratorFuelCellWaterSupply_Impl::resetReformerWaterPumpPowerFunctionofFuelRateCurve() {
-    bool result = setString(OS_Generator_FuelCell_WaterSupplyFields::ReformerWaterPumpPowerFunctionofFuelRateCurveName, "");
+    CurveCubic curveCubic(this->model());
+    curveCubic.setCoefficient1Constant(0);
+    curveCubic.setCoefficient2x(0);
+    curveCubic.setCoefficient3xPOW2(0);
+    curveCubic.setCoefficient4xPOW3(0);
+    curveCubic.setMinimumValueofx(-1.0e10);
+    curveCubic.setMaximumValueofx(1.0e10);
+    bool result = setReformerWaterPumpPowerFunctionofFuelRateCurve(curveCubic);
     OS_ASSERT(result);
   }
 
@@ -169,7 +185,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellWaterSupply_Impl::resetPumpHeatLossFactor() {
-    bool result = setString(OS_Generator_FuelCell_WaterSupplyFields::PumpHeatLossFactor, "");
+    bool result = setDouble(OS_Generator_FuelCell_WaterSupplyFields::PumpHeatLossFactor, 0);
     OS_ASSERT(result);
   }
 
@@ -179,7 +195,11 @@ namespace detail {
   }
 
   void GeneratorFuelCellWaterSupply_Impl::resetWaterTemperatureModelingMode() {
-    bool result = setString(OS_Generator_FuelCell_WaterSupplyFields::WaterTemperatureModelingMode, "");
+    bool result = setString(OS_Generator_FuelCell_WaterSupplyFields::WaterTemperatureModelingMode, "TemperatureFromSchedule");
+    OS_ASSERT(result);
+    ScheduleConstant schedule(this->model());
+    schedule.setValue(20);
+    result = setWaterTemperatureSchedule(schedule);
     OS_ASSERT(result);
   }
 
@@ -207,6 +227,71 @@ namespace detail {
   }
 
 } // detail
+
+GeneratorFuelCellWaterSupply::GeneratorFuelCellWaterSupply(const Model& model,
+  const CurveQuadratic& flowRateCurve,
+  const CurveCubic& pumpPowerCurve,
+  const Connection& waterTempNode,
+  const std::string& waterTempMode)
+  : ModelObject(GeneratorFuelCellWaterSupply::iddObjectType(), model) {
+  OS_ASSERT(getImpl<detail::GeneratorFuelCellWaterSupply_Impl>());
+
+  bool ok = setReformerWaterFlowRateFunctionofFuelRateCurve(flowRateCurve);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s flowrate curve to "
+      << flowRateCurve.briefDescription() << ".");
+  }
+  ok = setReformerWaterPumpPowerFunctionofFuelRateCurve(pumpPowerCurve);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s pump power curve to "
+      << pumpPowerCurve.briefDescription() << ".");
+  }
+  setPumpHeatLossFactor(0.0);
+  ok = setWaterTemperatureModelingMode(waterTempMode);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s water temp modeling mode to "
+      << waterTempMode << ".");
+  }
+  setWaterTemperatureModelingMode("TemperatueFromSchedule");
+  ok = setWaterTemperatureReferenceNode(waterTempNode);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s water temp reference node to "
+      << waterTempNode.briefDescription() << ".");
+  }
+}
+
+GeneratorFuelCellWaterSupply::GeneratorFuelCellWaterSupply(const Model& model,
+                                                           const CurveQuadratic& flowRateCurve,
+                                                           const CurveCubic& pumpPowerCurve,
+                                                           Schedule tempSchedule)
+  : ModelObject(GeneratorFuelCellWaterSupply::iddObjectType(), model) {
+  OS_ASSERT(getImpl<detail::GeneratorFuelCellWaterSupply_Impl>());
+
+  bool ok = setReformerWaterFlowRateFunctionofFuelRateCurve(flowRateCurve);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s flowrate curve to "
+      << flowRateCurve.briefDescription() << ".");
+  }
+  ok = setReformerWaterPumpPowerFunctionofFuelRateCurve(pumpPowerCurve);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s pump power curve to "
+      << pumpPowerCurve.briefDescription() << ".");
+  }
+  setPumpHeatLossFactor(0.0);
+  setWaterTemperatureModelingMode("TemperatueFromSchedule");
+  ok = setWaterTemperatureSchedule(tempSchedule);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s temp schedule to "
+      << tempSchedule.briefDescription() << ".");
+  }
+}
 
 GeneratorFuelCellWaterSupply::GeneratorFuelCellWaterSupply(const Model& model)
   : ModelObject(GeneratorFuelCellWaterSupply::iddObjectType(),model)

@@ -56,6 +56,17 @@ class MODEL_API GeneratorFuelCellWaterSupply : public ModelObject {
 
   explicit GeneratorFuelCellWaterSupply(const Model& model);
 
+  explicit GeneratorFuelCellWaterSupply(const Model& model,
+    const CurveQuadratic& flowRateCurve,
+    const CurveCubic& pumpPowerCurve,
+    Schedule tempSchedule);
+
+  explicit GeneratorFuelCellWaterSupply(const Model& model,
+    const CurveQuadratic& flowRateCurve,
+    const CurveCubic& pumpPowerCurve,
+    const Connection& waterTempNode,
+    const std::string& waterTempMode);
+
   virtual ~GeneratorFuelCellWaterSupply() {}
 
   //@}
