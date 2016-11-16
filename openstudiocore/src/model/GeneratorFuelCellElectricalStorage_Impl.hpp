@@ -69,19 +69,19 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    boost::optional<std::string> choiceofModel() const;
+    std::string choiceofModel() const;
 
-    boost::optional<double> nominalChargingEnergeticEfficiency() const;
+    double nominalChargingEnergeticEfficiency() const;
 
-    boost::optional<double> nominalDischargingEnergeticEfficiency() const;
+    double nominalDischargingEnergeticEfficiency() const;
 
-    boost::optional<double> simpleMaximumCapacity() const;
+    double simpleMaximumCapacity() const;
 
-    boost::optional<double> simpleMaximumPowerDraw() const;
+    double simpleMaximumPowerDraw() const;
 
-    boost::optional<double> simpleMaximumPowerStore() const;
+    double simpleMaximumPowerStore() const;
 
-    boost::optional<double> initialChargeState() const;
+    double initialChargeState() const;
 
     //@}
     /** @name Setters */

@@ -76,32 +76,60 @@ namespace detail {
     return GeneratorFuelCellElectricalStorage::iddObjectType();
   }
 
-  boost::optional<std::string> GeneratorFuelCellElectricalStorage_Impl::choiceofModel() const {
-    return getString(OS_Generator_FuelCell_ElectricalStorageFields::ChoiceofModel,true);
+  std::string GeneratorFuelCellElectricalStorage_Impl::choiceofModel() const {
+    boost::optional<std::string> value = getString(OS_Generator_FuelCell_ElectricalStorageFields::ChoiceofModel, true);
+    if (!value) {
+      LOG(Info, " does not have choiceofModel");
+    }
+    return value.get();
   }
 
-  boost::optional<double> GeneratorFuelCellElectricalStorage_Impl::nominalChargingEnergeticEfficiency() const {
-    return getDouble(OS_Generator_FuelCell_ElectricalStorageFields::NominalChargingEnergeticEfficiency,true);
+  double GeneratorFuelCellElectricalStorage_Impl::nominalChargingEnergeticEfficiency() const {
+    boost::optional<double> value = getDouble(OS_Generator_FuelCell_ElectricalStorageFields::NominalChargingEnergeticEfficiency, true);
+    if (!value) {
+      LOG(Info, " does not have nominalChargingEnergeticEfficiency");
+    }
+    return value.get();
   }
 
-  boost::optional<double> GeneratorFuelCellElectricalStorage_Impl::nominalDischargingEnergeticEfficiency() const {
-    return getDouble(OS_Generator_FuelCell_ElectricalStorageFields::NominalDischargingEnergeticEfficiency,true);
+  double GeneratorFuelCellElectricalStorage_Impl::nominalDischargingEnergeticEfficiency() const {
+    boost::optional<double> value = getDouble(OS_Generator_FuelCell_ElectricalStorageFields::NominalDischargingEnergeticEfficiency, true);
+    if (!value) {
+      LOG(Info, " does not have nominalDischargingEnergeticEfficiency");
+    }
+    return value.get();
   }
 
-  boost::optional<double> GeneratorFuelCellElectricalStorage_Impl::simpleMaximumCapacity() const {
-    return getDouble(OS_Generator_FuelCell_ElectricalStorageFields::SimpleMaximumCapacity,true);
+  double GeneratorFuelCellElectricalStorage_Impl::simpleMaximumCapacity() const {
+    boost::optional<double> value = getDouble(OS_Generator_FuelCell_ElectricalStorageFields::SimpleMaximumCapacity, true);
+    if (!value) {
+      LOG(Info, " does not have simpleMaximumCapacity");
+    }
+    return value.get();
   }
 
-  boost::optional<double> GeneratorFuelCellElectricalStorage_Impl::simpleMaximumPowerDraw() const {
-    return getDouble(OS_Generator_FuelCell_ElectricalStorageFields::SimpleMaximumPowerDraw,true);
+  double GeneratorFuelCellElectricalStorage_Impl::simpleMaximumPowerDraw() const {
+    boost::optional<double> value = getDouble(OS_Generator_FuelCell_ElectricalStorageFields::SimpleMaximumPowerDraw, true);
+    if (!value) {
+      LOG(Info, " does not have simpleMaximumPowerDraw");
+    }
+    return value.get();
   }
 
-  boost::optional<double> GeneratorFuelCellElectricalStorage_Impl::simpleMaximumPowerStore() const {
-    return getDouble(OS_Generator_FuelCell_ElectricalStorageFields::SimpleMaximumPowerStore,true);
+  double GeneratorFuelCellElectricalStorage_Impl::simpleMaximumPowerStore() const {
+    boost::optional<double> value = getDouble(OS_Generator_FuelCell_ElectricalStorageFields::SimpleMaximumPowerStore, true);
+    if (!value) {
+      LOG(Info, " does not have simpleMaximumPowerStore.");
+    }
+    return value.get();
   }
 
-  boost::optional<double> GeneratorFuelCellElectricalStorage_Impl::initialChargeState() const {
-    return getDouble(OS_Generator_FuelCell_ElectricalStorageFields::InitialChargeState,true);
+  double GeneratorFuelCellElectricalStorage_Impl::initialChargeState() const {
+    boost::optional<double> value = getDouble(OS_Generator_FuelCell_ElectricalStorageFields::InitialChargeState, true);
+    if (!value) {
+      LOG(Info, " does not have initialChargeState.");
+    }
+    return value.get();
   }
 
   bool GeneratorFuelCellElectricalStorage_Impl::setChoiceofModel(const std::string& choiceofModel) {
@@ -181,7 +209,13 @@ GeneratorFuelCellElectricalStorage::GeneratorFuelCellElectricalStorage(const Mod
 {
   OS_ASSERT(getImpl<detail::GeneratorFuelCellElectricalStorage_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
+  setChoiceofModel("SimpleEfficiencyWithConstraints");
+  setNominalChargingEnergeticEfficiency(1.0);
+  setNominalDischargingEnergeticEfficiency(1.0);
+  setSimpleMaximumCapacity(0);
+  setSimpleMaximumPowerDraw(0);
+  setSimpleMaximumPowerStore(0);
+  setInitialChargeState(0);
 }
 
 IddObjectType GeneratorFuelCellElectricalStorage::iddObjectType() {
@@ -193,31 +227,31 @@ std::vector<std::string> GeneratorFuelCellElectricalStorage::choiceofModelValues
                         OS_Generator_FuelCell_ElectricalStorageFields::ChoiceofModel);
 }
 
-boost::optional<std::string> GeneratorFuelCellElectricalStorage::choiceofModel() const {
+std::string GeneratorFuelCellElectricalStorage::choiceofModel() const {
   return getImpl<detail::GeneratorFuelCellElectricalStorage_Impl>()->choiceofModel();
 }
 
-boost::optional<double> GeneratorFuelCellElectricalStorage::nominalChargingEnergeticEfficiency() const {
+double GeneratorFuelCellElectricalStorage::nominalChargingEnergeticEfficiency() const {
   return getImpl<detail::GeneratorFuelCellElectricalStorage_Impl>()->nominalChargingEnergeticEfficiency();
 }
 
-boost::optional<double> GeneratorFuelCellElectricalStorage::nominalDischargingEnergeticEfficiency() const {
+double GeneratorFuelCellElectricalStorage::nominalDischargingEnergeticEfficiency() const {
   return getImpl<detail::GeneratorFuelCellElectricalStorage_Impl>()->nominalDischargingEnergeticEfficiency();
 }
 
-boost::optional<double> GeneratorFuelCellElectricalStorage::simpleMaximumCapacity() const {
+double GeneratorFuelCellElectricalStorage::simpleMaximumCapacity() const {
   return getImpl<detail::GeneratorFuelCellElectricalStorage_Impl>()->simpleMaximumCapacity();
 }
 
-boost::optional<double> GeneratorFuelCellElectricalStorage::simpleMaximumPowerDraw() const {
+double GeneratorFuelCellElectricalStorage::simpleMaximumPowerDraw() const {
   return getImpl<detail::GeneratorFuelCellElectricalStorage_Impl>()->simpleMaximumPowerDraw();
 }
 
-boost::optional<double> GeneratorFuelCellElectricalStorage::simpleMaximumPowerStore() const {
+double GeneratorFuelCellElectricalStorage::simpleMaximumPowerStore() const {
   return getImpl<detail::GeneratorFuelCellElectricalStorage_Impl>()->simpleMaximumPowerStore();
 }
 
-boost::optional<double> GeneratorFuelCellElectricalStorage::initialChargeState() const {
+double GeneratorFuelCellElectricalStorage::initialChargeState() const {
   return getImpl<detail::GeneratorFuelCellElectricalStorage_Impl>()->initialChargeState();
 }
 
