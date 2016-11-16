@@ -55,7 +55,26 @@ class MODEL_API GeneratorFuelCellPowerModule : public ModelObject {
   /** @name Constructors and Destructors */
   //@{
 
-  explicit GeneratorFuelCellPowerModule(const Model& model, const Curve& quadraticCurve);
+  explicit GeneratorFuelCellPowerModule(const Model& model,
+                                        const ThermalZone& heatlossZone,
+                                        const Connection& dilutionInletAirNode,
+                                        const Connection& dilutionOutletAirNode);
+
+  explicit GeneratorFuelCellPowerModule(const Model& model,
+                                        const Curve& efficiencyCurve,
+                                        const ThermalZone& heatlossZone,
+                                        const Connection& dilutionInletAirNode,
+                                        const Connection& dilutionOutletAirNode);
+
+  explicit GeneratorFuelCellPowerModule(const Model& model,
+                                        const Curve& efficiencyCurve,
+                                        const ThermalZone& heatlossZone,
+                                        const Connection& dilutionInletAirNode,
+                                        const Connection& dilutionOutletAirNode,
+                                        const Curve& skinlossCurve);
+
+  explicit GeneratorFuelCellPowerModule(const Model& model,
+                                        const Curve& efficiencyCurve);
 
   virtual ~GeneratorFuelCellPowerModule() {}
 

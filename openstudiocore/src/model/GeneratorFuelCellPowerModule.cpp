@@ -332,7 +332,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellPowerModule_Impl::resetEfficiencyCurveMode() {
-    bool result = setString(OS_Generator_FuelCell_PowerModuleFields::EfficiencyCurveMode, "");
+    bool result = setString(OS_Generator_FuelCell_PowerModuleFields::EfficiencyCurveMode, "Annex42");
     OS_ASSERT(result);
   }
 
@@ -347,7 +347,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellPowerModule_Impl::resetNominalEfficiency() {
-    bool result = setString(OS_Generator_FuelCell_PowerModuleFields::NominalEfficiency, "");
+    bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::NominalEfficiency, 1);
     OS_ASSERT(result);
   }
 
@@ -357,7 +357,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellPowerModule_Impl::resetNominalElectricalPower() {
-    bool result = setString(OS_Generator_FuelCell_PowerModuleFields::NominalElectricalPower, "");
+    bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::NominalElectricalPower, 3400);
     OS_ASSERT(result);
   }
 
@@ -367,7 +367,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellPowerModule_Impl::resetNumberofStopsatStartofSimulation() {
-    bool result = setString(OS_Generator_FuelCell_PowerModuleFields::NumberofStopsatStartofSimulation, "");
+    bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::NumberofStopsatStartofSimulation, 0);
     OS_ASSERT(result);
   }
 
@@ -377,7 +377,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellPowerModule_Impl::resetCyclingPerformanceDegradationCoefficient() {
-    bool result = setString(OS_Generator_FuelCell_PowerModuleFields::CyclingPerformanceDegradationCoefficient, "");
+    bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::CyclingPerformanceDegradationCoefficient, 0);
     OS_ASSERT(result);
   }
 
@@ -387,7 +387,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellPowerModule_Impl::resetNumberofRunHoursatBeginningofSimulation() {
-    bool result = setString(OS_Generator_FuelCell_PowerModuleFields::NumberofRunHoursatBeginningofSimulation, "");
+    bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::NumberofRunHoursatBeginningofSimulation, 0);
     OS_ASSERT(result);
   }
 
@@ -397,7 +397,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellPowerModule_Impl::resetAccumulatedRunTimeDegradationCoefficient() {
-    bool result = setString(OS_Generator_FuelCell_PowerModuleFields::AccumulatedRunTimeDegradationCoefficient, "");
+    bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::AccumulatedRunTimeDegradationCoefficient, 0);
     OS_ASSERT(result);
   }
 
@@ -407,7 +407,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellPowerModule_Impl::resetRunTimeDegradationInitiationTimeThreshold() {
-    bool result = setString(OS_Generator_FuelCell_PowerModuleFields::RunTimeDegradationInitiationTimeThreshold, "");
+    bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::RunTimeDegradationInitiationTimeThreshold, 10000);
     OS_ASSERT(result);
   }
 
@@ -417,7 +417,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellPowerModule_Impl::resetPowerUpTransientLimit() {
-    bool result = setString(OS_Generator_FuelCell_PowerModuleFields::PowerUpTransientLimit, "");
+    bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::PowerUpTransientLimit, 1.4);
     OS_ASSERT(result);
   }
 
@@ -427,7 +427,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellPowerModule_Impl::resetPowerDownTransientLimit() {
-    bool result = setString(OS_Generator_FuelCell_PowerModuleFields::PowerDownTransientLimit, "");
+    bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::PowerDownTransientLimit, 0.2);
     OS_ASSERT(result);
   }
 
@@ -437,7 +437,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellPowerModule_Impl::resetStartUpTime() {
-    bool result = setString(OS_Generator_FuelCell_PowerModuleFields::StartUpTime, "");
+    bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::StartUpTime, 0);
     OS_ASSERT(result);
   }
 
@@ -447,7 +447,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellPowerModule_Impl::resetStartUpFuel() {
-    bool result = setString(OS_Generator_FuelCell_PowerModuleFields::StartUpFuel, "");
+    bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::StartUpFuel, 0);
     OS_ASSERT(result);
   }
 
@@ -457,7 +457,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellPowerModule_Impl::resetStartUpElectricityConsumption() {
-    bool result = setString(OS_Generator_FuelCell_PowerModuleFields::StartUpElectricityConsumption, "");
+    bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::StartUpElectricityConsumption, 0);
     OS_ASSERT(result);
   }
 
@@ -467,7 +467,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellPowerModule_Impl::resetStartUpElectricityProduced() {
-    bool result = setString(OS_Generator_FuelCell_PowerModuleFields::StartUpElectricityProduced, "");
+    bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::StartUpElectricityProduced, 0);
     OS_ASSERT(result);
   }
 
@@ -477,7 +477,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellPowerModule_Impl::resetShutDownTime() {
-    bool result = setString(OS_Generator_FuelCell_PowerModuleFields::ShutDownTime, "");
+    bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::ShutDownTime, 0);
     OS_ASSERT(result);
   }
 
@@ -487,7 +487,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellPowerModule_Impl::resetShutDownFuel() {
-    bool result = setString(OS_Generator_FuelCell_PowerModuleFields::ShutDownFuel, "");
+    bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::ShutDownFuel, 0);
     OS_ASSERT(result);
   }
 
@@ -497,7 +497,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellPowerModule_Impl::resetShutDownElectricityConsumption() {
-    bool result = setString(OS_Generator_FuelCell_PowerModuleFields::ShutDownElectricityConsumption, "");
+    bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::ShutDownElectricityConsumption, 0);
     OS_ASSERT(result);
   }
 
@@ -507,7 +507,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellPowerModule_Impl::resetAncillaryElectricityConstantTerm() {
-    bool result = setString(OS_Generator_FuelCell_PowerModuleFields::AncillaryElectricityConstantTerm, "");
+    bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::AncillaryElectricityConstantTerm, 0);
     OS_ASSERT(result);
   }
 
@@ -517,7 +517,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellPowerModule_Impl::resetAncillaryElectricityLinearTerm() {
-    bool result = setString(OS_Generator_FuelCell_PowerModuleFields::AncillaryElectricityLinearTerm, "");
+    bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::AncillaryElectricityLinearTerm, 0);
     OS_ASSERT(result);
   }
 
@@ -527,7 +527,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellPowerModule_Impl::resetSkinLossCalculationMode() {
-    bool result = setString(OS_Generator_FuelCell_PowerModuleFields::SkinLossCalculationMode, "");
+    bool result = setString(OS_Generator_FuelCell_PowerModuleFields::SkinLossCalculationMode, "ConstantRate");
     OS_ASSERT(result);
   }
 
@@ -547,7 +547,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellPowerModule_Impl::resetSkinLossRadiativeFraction() {
-    bool result = setString(OS_Generator_FuelCell_PowerModuleFields::SkinLossRadiativeFraction, "");
+    bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::SkinLossRadiativeFraction, 1);
     OS_ASSERT(result);
   }
 
@@ -557,7 +557,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellPowerModule_Impl::resetConstantSkinLossRate() {
-    bool result = setString(OS_Generator_FuelCell_PowerModuleFields::ConstantSkinLossRate, "");
+    bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::ConstantSkinLossRate, 0);
     OS_ASSERT(result);
   }
 
@@ -567,7 +567,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellPowerModule_Impl::resetSkinLossUFactorTimesAreaTerm() {
-    bool result = setString(OS_Generator_FuelCell_PowerModuleFields::SkinLossUFactorTimesAreaTerm, "");
+    bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::SkinLossUFactorTimesAreaTerm, 1);
     OS_ASSERT(result);
   }
 
@@ -587,7 +587,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellPowerModule_Impl::resetDilutionAirFlowRate() {
-    bool result = setString(OS_Generator_FuelCell_PowerModuleFields::DilutionAirFlowRate, "");
+    bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::DilutionAirFlowRate, 0);
     OS_ASSERT(result);
   }
 
@@ -597,7 +597,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellPowerModule_Impl::resetStackHeatlosstoDilutionAir() {
-    bool result = setString(OS_Generator_FuelCell_PowerModuleFields::StackHeatlosstoDilutionAir, "");
+    bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::StackHeatlosstoDilutionAir, 0);
     OS_ASSERT(result);
   }
 
@@ -627,7 +627,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellPowerModule_Impl::resetMinimumOperatingPoint() {
-    bool result = setString(OS_Generator_FuelCell_PowerModuleFields::MinimumOperatingPoint, "");
+    bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::MinimumOperatingPoint, 0);
     OS_ASSERT(result);
   }
 
@@ -637,7 +637,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellPowerModule_Impl::resetMaximumOperatingPoint() {
-    bool result = setString(OS_Generator_FuelCell_PowerModuleFields::MaximumOperatingPoint, "");
+    bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::MaximumOperatingPoint, 0);
     OS_ASSERT(result);
   }
 
@@ -647,16 +647,235 @@ namespace detail {
 
 } // detail
 
-GeneratorFuelCellPowerModule::GeneratorFuelCellPowerModule(const Model& model, const Curve& quadraticCurve)
+GeneratorFuelCellPowerModule::GeneratorFuelCellPowerModule(const Model& model,
+                                                           const ThermalZone& heatlossZone,
+                                                           const Connection& dilutionInletAirNode,
+                                                           const Connection& dilutionOutletAirNode)
+  : ModelObject(GeneratorFuelCellPowerModule::iddObjectType(), model) {
+  OS_ASSERT(getImpl<detail::GeneratorFuelCellPowerModule_Impl>());
+  setEfficiencyCurveMode("Annex42");
+  //create default curve
+  CurveQuadratic curveQuadratic(model);
+  curveQuadratic.setCoefficient1Constant(1);
+  curveQuadratic.setCoefficient2x(0);
+  curveQuadratic.setCoefficient3xPOW2(0);
+  curveQuadratic.setMinimumValueofx(0);
+  curveQuadratic.setMaximumValueofx(1);
+
+  bool ok = setEfficiencyCurve(curveQuadratic);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s efficiencyCurve to "
+      << curveQuadratic.briefDescription() << ".");
+  }
+  setNominalEfficiency(1.0);
+  setNominalElectricalPower(3400);
+  setNumberofStopsatStartofSimulation(0);
+  setCyclingPerformanceDegradationCoefficient(0.0);
+  setNumberofRunHoursatBeginningofSimulation(0);
+  setAccumulatedRunTimeDegradationCoefficient(0.0);
+  setRunTimeDegradationInitiationTimeThreshold(10000);
+  setPowerUpTransientLimit(1.4);
+  setPowerDownTransientLimit(0.2);
+  setStartUpTime(0.0);
+  setStartUpFuel(0.2);
+  setStartUpElectricityConsumption(0);
+  setStartUpElectricityProduced(0.0);
+  setShutDownTime(0.0);
+  setShutDownFuel(0.2);
+  setShutDownElectricityConsumption(0);
+  setAncillaryElectricityConstantTerm(0.0);
+  setAncillaryElectricityLinearTerm(0.0);
+  ok = setZone(heatlossZone);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s heat loss zone to "
+      << heatlossZone.briefDescription() << ".");
+  }
+  setSkinLossCalculationMode("ConstantRate");
+  setSkinLossRadiativeFraction(0.6392);
+  setConstantSkinLossRate(729);
+  setSkinLossUFactorTimesAreaTerm(0.0);
+
+  ok = setSkinLossQuadraticCurve(curveQuadratic);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s skin Loss Curve to "
+      << curveQuadratic.briefDescription() << ".");
+  }
+
+  setDilutionAirFlowRate(0.006156);
+  setStackHeatlosstoDilutionAir(2307);
+
+  ok = setDilutionInletAirNode(dilutionInletAirNode);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s dilution inlet air node to "
+      << dilutionInletAirNode.briefDescription() << ".");
+  }
+  ok = setDilutionOutletAirNode(dilutionOutletAirNode);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s dilution outlet air node to "
+      << dilutionOutletAirNode.briefDescription() << ".");
+  }
+  setMinimumOperatingPoint(3010);
+  setMaximumOperatingPoint(3728);
+}
+
+
+GeneratorFuelCellPowerModule::GeneratorFuelCellPowerModule(const Model& model,
+                                                           const Curve& efficiencyCurve,
+                                                           const ThermalZone& heatlossZone,
+                                                           const Connection& dilutionInletAirNode,
+                                                           const Connection& dilutionOutletAirNode,
+                                                           const Curve& skinlossCurve)
+  : ModelObject(GeneratorFuelCellPowerModule::iddObjectType(), model) {
+  OS_ASSERT(getImpl<detail::GeneratorFuelCellPowerModule_Impl>());
+  setEfficiencyCurveMode("Annex42");
+  bool ok = setEfficiencyCurve(efficiencyCurve);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s efficiencyCurve to "
+      << efficiencyCurve.briefDescription() << ".");
+  }
+  setNominalEfficiency(1.0);
+  setNominalElectricalPower(3400);
+  setNumberofStopsatStartofSimulation(0);
+  setCyclingPerformanceDegradationCoefficient(0.0);
+  setNumberofRunHoursatBeginningofSimulation(0);
+  setAccumulatedRunTimeDegradationCoefficient(0.0);
+  setRunTimeDegradationInitiationTimeThreshold(10000);
+  setPowerUpTransientLimit(1.4);
+  setPowerDownTransientLimit(0.2);
+  setStartUpTime(0.0);
+  setStartUpFuel(0.2);
+  setStartUpElectricityConsumption(0);
+  setStartUpElectricityProduced(0.0);
+  setShutDownTime(0.0);
+  setShutDownFuel(0.2);
+  setShutDownElectricityConsumption(0);
+  setAncillaryElectricityConstantTerm(0.0);
+  setAncillaryElectricityLinearTerm(0.0);
+  ok = setZone(heatlossZone);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s heatloss zone to "
+      << heatlossZone.briefDescription() << ".");
+  }
+  setSkinLossCalculationMode("ConstantRate");
+  setSkinLossRadiativeFraction(0.6392);
+  setConstantSkinLossRate(729);
+  setSkinLossUFactorTimesAreaTerm(0.0);
+
+  ok = setSkinLossQuadraticCurve(skinlossCurve);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s skin loss curve to "
+      << skinlossCurve.briefDescription() << ".");
+  }
+
+  setDilutionAirFlowRate(0.006156);
+  setStackHeatlosstoDilutionAir(2307);
+
+  ok = setDilutionInletAirNode(dilutionInletAirNode);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s dilution inlet air node to "
+      << dilutionInletAirNode.briefDescription() << ".");
+  }
+  ok = setDilutionOutletAirNode(dilutionOutletAirNode);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s dilution outlet air node to "
+      << dilutionOutletAirNode.briefDescription() << ".");
+  }
+  setMinimumOperatingPoint(3010);
+  setMaximumOperatingPoint(3728);
+}
+
+GeneratorFuelCellPowerModule::GeneratorFuelCellPowerModule(const Model& model, 
+                                                           const Curve& efficiencyCurve,
+                                                           const ThermalZone& heatlossZone,
+                                                           const Connection& dilutionInletAirNode,
+                                                           const Connection& dilutionOutletAirNode)
+  : ModelObject(GeneratorFuelCellPowerModule::iddObjectType(), model) {
+  OS_ASSERT(getImpl<detail::GeneratorFuelCellPowerModule_Impl>());
+  setEfficiencyCurveMode("Annex42");
+  bool ok = setEfficiencyCurve(efficiencyCurve);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s efficiencyCurve to "
+      << efficiencyCurve.briefDescription() << ".");
+  }
+  setNominalEfficiency(1.0);
+  setNominalElectricalPower(3400);
+  setNumberofStopsatStartofSimulation(0);
+  setCyclingPerformanceDegradationCoefficient(0.0);
+  setNumberofRunHoursatBeginningofSimulation(0);
+  setAccumulatedRunTimeDegradationCoefficient(0.0);
+  setRunTimeDegradationInitiationTimeThreshold(10000);
+  setPowerUpTransientLimit(1.4);
+  setPowerDownTransientLimit(0.2);
+  setStartUpTime(0.0);
+  setStartUpFuel(0.2);
+  setStartUpElectricityConsumption(0);
+  setStartUpElectricityProduced(0.0);
+  setShutDownTime(0.0);
+  setShutDownFuel(0.2);
+  setShutDownElectricityConsumption(0);
+  setAncillaryElectricityConstantTerm(0.0);
+  setAncillaryElectricityLinearTerm(0.0);
+  ok = setZone(heatlossZone);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s heat loss zone to "
+      << heatlossZone.briefDescription() << ".");
+  }
+  setSkinLossCalculationMode("ConstantRate");
+  setSkinLossRadiativeFraction(0.6392);
+  setConstantSkinLossRate(729);
+  setSkinLossUFactorTimesAreaTerm(0.0);
+  //create default curve
+  CurveQuadratic curveQuadratic(model);
+  curveQuadratic.setCoefficient1Constant(1);
+  curveQuadratic.setCoefficient2x(0);
+  curveQuadratic.setCoefficient3xPOW2(0);
+  ok = setSkinLossQuadraticCurve(curveQuadratic);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s skin loss curve to "
+      << curveQuadratic.briefDescription() << ".");
+  }
+  setDilutionAirFlowRate(0.006156);
+  setStackHeatlosstoDilutionAir(2307);
+
+  ok = setDilutionInletAirNode(dilutionInletAirNode);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s dilution inlet air node to "
+      << dilutionInletAirNode.briefDescription() << ".");
+  }
+  ok = setDilutionOutletAirNode(dilutionOutletAirNode);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s dilution outlet air node to "
+      << dilutionOutletAirNode.briefDescription() << ".");
+  }
+  setMinimumOperatingPoint(3010);
+  setMaximumOperatingPoint(3728);
+}
+
+GeneratorFuelCellPowerModule::GeneratorFuelCellPowerModule(const Model& model, const Curve& efficiencyCurve)
   : ModelObject(GeneratorFuelCellPowerModule::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::GeneratorFuelCellPowerModule_Impl>());
   setEfficiencyCurveMode("Annex42");
-  bool ok = setEfficiencyCurve(quadraticCurve);
+  bool ok = setEfficiencyCurve(efficiencyCurve);
   if (!ok) {
     remove();
-    LOG_AND_THROW("Unable to set " << briefDescription() << "'s CurveQuadratic to "
-      << quadraticCurve.briefDescription() << ".");
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s efficiencyCurve to "
+      << efficiencyCurve.briefDescription() << ".");
   }
   setNominalEfficiency(1.0);
   setNominalElectricalPower(3400);
