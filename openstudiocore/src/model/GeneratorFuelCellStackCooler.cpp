@@ -92,7 +92,7 @@ namespace detail {
   double GeneratorFuelCellStackCooler_Impl::nominalStackTemperature() const {
     boost::optional<double> value = getDouble(OS_Generator_FuelCell_StackCoolerFields::NominalStackTemperature, true);
     if (!value) {
-      LOG(Info, " does not have nominalStackTemperature");
+      LOG_AND_THROW(" does not have nominalStackTemperature");
     }
     return value.get();
   }
@@ -100,7 +100,7 @@ namespace detail {
   double GeneratorFuelCellStackCooler_Impl::actualStackTemperature() const {
     boost::optional<double> value = getDouble(OS_Generator_FuelCell_StackCoolerFields::ActualStackTemperature, true);
     if (!value) {
-      LOG(Info, " does not have actualStackTemperature");
+      LOG_AND_THROW(" does not have actualStackTemperature");
     }
     return value.get();
   }
@@ -108,7 +108,7 @@ namespace detail {
   double GeneratorFuelCellStackCooler_Impl::coefficientr0() const {
     boost::optional<double> value = getDouble(OS_Generator_FuelCell_StackCoolerFields::Coefficientr0, true);
     if (!value) {
-      LOG(Info, " does not have coefficientr0");
+      LOG_AND_THROW(" does not have coefficientr0");
     }
     return value.get();
   }
@@ -116,7 +116,7 @@ namespace detail {
   double GeneratorFuelCellStackCooler_Impl::coefficientr1() const {
     boost::optional<double> value = getDouble(OS_Generator_FuelCell_StackCoolerFields::Coefficientr1, true);
     if (!value) {
-      LOG(Info, " does not have coefficientr1");
+      LOG_AND_THROW(" does not have coefficientr1");
     }
     return value.get();
   }
@@ -124,7 +124,7 @@ namespace detail {
   double GeneratorFuelCellStackCooler_Impl::coefficientr2() const {
     boost::optional<double> value = getDouble(OS_Generator_FuelCell_StackCoolerFields::Coefficientr2, true);
     if (!value) {
-      LOG(Info, " does not have coefficientr2");
+      LOG_AND_THROW(" does not have coefficientr2");
     }
     return value.get();
   }
@@ -132,7 +132,7 @@ namespace detail {
   double GeneratorFuelCellStackCooler_Impl::coefficientr3() const {
     boost::optional<double> value = getDouble(OS_Generator_FuelCell_StackCoolerFields::Coefficientr3, true);
     if (!value) {
-      LOG(Info, " does not have coefficientr3");
+      LOG_AND_THROW(" does not have coefficientr3");
     }
     return value.get();
   }
@@ -140,7 +140,7 @@ namespace detail {
   double GeneratorFuelCellStackCooler_Impl::stackCoolantFlowRate() const {
     boost::optional<double> value = getDouble(OS_Generator_FuelCell_StackCoolerFields::StackCoolantFlowRate, true);
     if (!value) {
-      LOG(Info, " does not have stackCoolantFlowRate");
+      LOG_AND_THROW(" does not have stackCoolantFlowRate");
     }
     return value.get();
   }
@@ -148,7 +148,7 @@ namespace detail {
   double GeneratorFuelCellStackCooler_Impl::stackCoolerUFactorTimesAreaValue() const {
     boost::optional<double> value = getDouble(OS_Generator_FuelCell_StackCoolerFields::StackCoolerUFactorTimesAreaValue, true);
     if (!value) {
-      LOG(Info, " does not have stackCoolerUFactorTimesAreaValue");
+      LOG_AND_THROW(" does not have stackCoolerUFactorTimesAreaValue");
     }
     return value.get();
   }
@@ -156,7 +156,7 @@ namespace detail {
   double GeneratorFuelCellStackCooler_Impl::fscogenAdjustmentFactor() const {
     boost::optional<double> value = getDouble(OS_Generator_FuelCell_StackCoolerFields::FscogenAdjustmentFactor, true);
     if (!value) {
-      LOG(Info, " does not have fscogenAdjustmentFactor");
+      LOG_AND_THROW(" does not have fscogenAdjustmentFactor");
     }
     return value.get();
   }
@@ -164,7 +164,7 @@ namespace detail {
   double GeneratorFuelCellStackCooler_Impl::stackCogenerationExchangerArea() const {
     boost::optional<double> value = getDouble(OS_Generator_FuelCell_StackCoolerFields::StackCogenerationExchangerArea, true);
     if (!value) {
-      LOG(Info, " does not have stackCogenerationExchangerArea");
+      LOG_AND_THROW(" does not have stackCogenerationExchangerArea");
     }
     return value.get();
   }
@@ -172,7 +172,7 @@ namespace detail {
   double GeneratorFuelCellStackCooler_Impl::stackCogenerationExchangerNominalFlowRate() const {
     boost::optional<double> value = getDouble(OS_Generator_FuelCell_StackCoolerFields::StackCogenerationExchangerNominalFlowRate, true);
     if (!value) {
-      LOG(Info, " does not have stackCogenerationExchangerNominalFlowRate");
+      LOG_AND_THROW(" does not have stackCogenerationExchangerNominalFlowRate");
     }
     return value.get();
   }
@@ -180,7 +180,7 @@ namespace detail {
   double GeneratorFuelCellStackCooler_Impl::stackCogenerationExchangerNominalHeatTransferCoefficient() const {
     boost::optional<double> value = getDouble(OS_Generator_FuelCell_StackCoolerFields::StackCogenerationExchangerNominalHeatTransferCoefficient, true);
     if (!value) {
-      LOG(Info, " does not have stackCogenerationExchangerNominalHeatTransferCoefficient");
+      LOG_AND_THROW(" does not have stackCogenerationExchangerNominalHeatTransferCoefficient");
     }
     return value.get();
   }
@@ -188,7 +188,7 @@ namespace detail {
   double GeneratorFuelCellStackCooler_Impl::stackCogenerationExchangerNominalHeatTransferCoefficientExponent() const {
     boost::optional<double> value = getDouble(OS_Generator_FuelCell_StackCoolerFields::StackCogenerationExchangerNominalHeatTransferCoefficientExponent, true);
     if (!value) {
-      LOG(Info, " does not have stackCogenerationExchangerNominalHeatTransferCoefficientExponent");
+      LOG_AND_THROW(" does not have stackCogenerationExchangerNominalHeatTransferCoefficientExponent");
     }
     return value.get();
   }
@@ -196,7 +196,7 @@ namespace detail {
   double GeneratorFuelCellStackCooler_Impl::stackCoolerPumpPower() const {
     boost::optional<double> value = getDouble(OS_Generator_FuelCell_StackCoolerFields::StackCoolerPumpPower, true);
     if (!value) {
-      LOG(Info, " does not have stackCoolerPumpPower");
+      LOG_AND_THROW(" does not have stackCoolerPumpPower");
     }
     return value.get();
   }
@@ -204,7 +204,7 @@ namespace detail {
   double GeneratorFuelCellStackCooler_Impl::stackCoolerPumpHeatLossFraction() const {
     boost::optional<double> value = getDouble(OS_Generator_FuelCell_StackCoolerFields::StackCoolerPumpHeatLossFraction, true);
     if (!value) {
-      LOG(Info, " does not have stackCoolerPumpHeatLossFraction");
+      LOG_AND_THROW(" does not have stackCoolerPumpHeatLossFraction");
     }
     return value.get();
   }
@@ -212,7 +212,7 @@ namespace detail {
   double GeneratorFuelCellStackCooler_Impl::stackAirCoolerFanCoefficientf0() const {
     boost::optional<double> value = getDouble(OS_Generator_FuelCell_StackCoolerFields::StackAirCoolerFanCoefficientf0, true);
     if (!value) {
-      LOG(Info, " does not have stackAirCoolerFanCoefficientf0");
+      LOG_AND_THROW(" does not have stackAirCoolerFanCoefficientf0");
     }
     return value.get();
   }
@@ -220,7 +220,7 @@ namespace detail {
   double GeneratorFuelCellStackCooler_Impl::stackAirCoolerFanCoefficientf1() const {
     boost::optional<double> value = getDouble(OS_Generator_FuelCell_StackCoolerFields::StackAirCoolerFanCoefficientf1, true);
     if (!value) {
-      LOG(Info, " does not have stackAirCoolerFanCoefficientf1");
+      LOG_AND_THROW(" does not have stackAirCoolerFanCoefficientf1");
     }
     return value.get();
   }
@@ -228,7 +228,7 @@ namespace detail {
   double GeneratorFuelCellStackCooler_Impl::stackAirCoolerFanCoefficientf2() const {
     boost::optional<double> value = getDouble(OS_Generator_FuelCell_StackCoolerFields::StackAirCoolerFanCoefficientf2, true);
     if (!value) {
-      LOG(Info, " does not have stackAirCoolerFanCoefficientf2");
+      LOG_AND_THROW(" does not have stackAirCoolerFanCoefficientf2");
     }
     return value.get();
   }
@@ -259,7 +259,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellStackCooler_Impl::resetNominalStackTemperature() {
-    bool result = setString(OS_Generator_FuelCell_StackCoolerFields::NominalStackTemperature, "");
+    bool result = setDouble(OS_Generator_FuelCell_StackCoolerFields::NominalStackTemperature, 20);
     OS_ASSERT(result);
   }
 
@@ -269,7 +269,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellStackCooler_Impl::resetActualStackTemperature() {
-    bool result = setString(OS_Generator_FuelCell_StackCoolerFields::ActualStackTemperature, "");
+    bool result = setDouble(OS_Generator_FuelCell_StackCoolerFields::ActualStackTemperature, 20);
     OS_ASSERT(result);
   }
 
@@ -279,7 +279,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellStackCooler_Impl::resetCoefficientr0() {
-    bool result = setString(OS_Generator_FuelCell_StackCoolerFields::Coefficientr0, "");
+    bool result = setDouble(OS_Generator_FuelCell_StackCoolerFields::Coefficientr0, 0);
     OS_ASSERT(result);
   }
 
@@ -289,7 +289,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellStackCooler_Impl::resetCoefficientr1() {
-    bool result = setString(OS_Generator_FuelCell_StackCoolerFields::Coefficientr1, "");
+    bool result = setDouble(OS_Generator_FuelCell_StackCoolerFields::Coefficientr1, 0);
     OS_ASSERT(result);
   }
 
@@ -299,7 +299,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellStackCooler_Impl::resetCoefficientr2() {
-    bool result = setString(OS_Generator_FuelCell_StackCoolerFields::Coefficientr2, "");
+    bool result = setDouble(OS_Generator_FuelCell_StackCoolerFields::Coefficientr2, 0);
     OS_ASSERT(result);
   }
 
@@ -309,7 +309,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellStackCooler_Impl::resetCoefficientr3() {
-    bool result = setString(OS_Generator_FuelCell_StackCoolerFields::Coefficientr3, "");
+    bool result = setDouble(OS_Generator_FuelCell_StackCoolerFields::Coefficientr3, 0);
     OS_ASSERT(result);
   }
 
@@ -319,7 +319,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellStackCooler_Impl::resetStackCoolantFlowRate() {
-    bool result = setString(OS_Generator_FuelCell_StackCoolerFields::StackCoolantFlowRate, "");
+    bool result = setDouble(OS_Generator_FuelCell_StackCoolerFields::StackCoolantFlowRate, 1);
     OS_ASSERT(result);
   }
 
@@ -329,7 +329,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellStackCooler_Impl::resetStackCoolerUFactorTimesAreaValue() {
-    bool result = setString(OS_Generator_FuelCell_StackCoolerFields::StackCoolerUFactorTimesAreaValue, "");
+    bool result = setDouble(OS_Generator_FuelCell_StackCoolerFields::StackCoolerUFactorTimesAreaValue, 1);
     OS_ASSERT(result);
   }
 
@@ -339,7 +339,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellStackCooler_Impl::resetFscogenAdjustmentFactor() {
-    bool result = setString(OS_Generator_FuelCell_StackCoolerFields::FscogenAdjustmentFactor, "");
+    bool result = setDouble(OS_Generator_FuelCell_StackCoolerFields::FscogenAdjustmentFactor, 0);
     OS_ASSERT(result);
   }
 
@@ -349,7 +349,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellStackCooler_Impl::resetStackCogenerationExchangerArea() {
-    bool result = setString(OS_Generator_FuelCell_StackCoolerFields::StackCogenerationExchangerArea, "");
+    bool result = setDouble(OS_Generator_FuelCell_StackCoolerFields::StackCogenerationExchangerArea, 1);
     OS_ASSERT(result);
   }
 
@@ -359,7 +359,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellStackCooler_Impl::resetStackCogenerationExchangerNominalFlowRate() {
-    bool result = setString(OS_Generator_FuelCell_StackCoolerFields::StackCogenerationExchangerNominalFlowRate, "");
+    bool result = setDouble(OS_Generator_FuelCell_StackCoolerFields::StackCogenerationExchangerNominalFlowRate, 1);
     OS_ASSERT(result);
   }
 
@@ -369,7 +369,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellStackCooler_Impl::resetStackCogenerationExchangerNominalHeatTransferCoefficient() {
-    bool result = setString(OS_Generator_FuelCell_StackCoolerFields::StackCogenerationExchangerNominalHeatTransferCoefficient, "");
+    bool result = setDouble(OS_Generator_FuelCell_StackCoolerFields::StackCogenerationExchangerNominalHeatTransferCoefficient, 0);
     OS_ASSERT(result);
   }
 
@@ -379,7 +379,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellStackCooler_Impl::resetStackCogenerationExchangerNominalHeatTransferCoefficientExponent() {
-    bool result = setString(OS_Generator_FuelCell_StackCoolerFields::StackCogenerationExchangerNominalHeatTransferCoefficientExponent, "");
+    bool result = setDouble(OS_Generator_FuelCell_StackCoolerFields::StackCogenerationExchangerNominalHeatTransferCoefficientExponent, 0);
     OS_ASSERT(result);
   }
 
@@ -389,7 +389,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellStackCooler_Impl::resetStackCoolerPumpPower() {
-    bool result = setString(OS_Generator_FuelCell_StackCoolerFields::StackCoolerPumpPower, "");
+    bool result = setDouble(OS_Generator_FuelCell_StackCoolerFields::StackCoolerPumpPower, 0);
     OS_ASSERT(result);
   }
 
@@ -399,7 +399,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellStackCooler_Impl::resetStackCoolerPumpHeatLossFraction() {
-    bool result = setString(OS_Generator_FuelCell_StackCoolerFields::StackCoolerPumpHeatLossFraction, "");
+    bool result = setDouble(OS_Generator_FuelCell_StackCoolerFields::StackCoolerPumpHeatLossFraction, 0);
     OS_ASSERT(result);
   }
 
@@ -409,7 +409,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellStackCooler_Impl::resetStackAirCoolerFanCoefficientf0() {
-    bool result = setString(OS_Generator_FuelCell_StackCoolerFields::StackAirCoolerFanCoefficientf0, "");
+    bool result = setDouble(OS_Generator_FuelCell_StackCoolerFields::StackAirCoolerFanCoefficientf0, 0);
     OS_ASSERT(result);
   }
 
@@ -419,7 +419,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellStackCooler_Impl::resetStackAirCoolerFanCoefficientf1() {
-    bool result = setString(OS_Generator_FuelCell_StackCoolerFields::StackAirCoolerFanCoefficientf1, "");
+    bool result = setDouble(OS_Generator_FuelCell_StackCoolerFields::StackAirCoolerFanCoefficientf1, 0);
     OS_ASSERT(result);
   }
 
@@ -429,11 +429,49 @@ namespace detail {
   }
 
   void GeneratorFuelCellStackCooler_Impl::resetStackAirCoolerFanCoefficientf2() {
-    bool result = setString(OS_Generator_FuelCell_StackCoolerFields::StackAirCoolerFanCoefficientf2, "");
+    bool result = setDouble(OS_Generator_FuelCell_StackCoolerFields::StackAirCoolerFanCoefficientf2, 0);
     OS_ASSERT(result);
   }
 
 } // detail
+
+GeneratorFuelCellStackCooler::GeneratorFuelCellStackCooler(const Model& model,
+                                                           const Connection& waterInletNode,
+                                                           const Connection& waterOutletNode)
+  : ModelObject(GeneratorFuelCellStackCooler::iddObjectType(), model) {
+  OS_ASSERT(getImpl<detail::GeneratorFuelCellStackCooler_Impl>());
+
+  bool ok = setHeatRecoveryWaterInletNode(waterInletNode);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s waterInletNode to "
+      << waterInletNode.briefDescription() << ".");
+  }
+  ok = setHeatRecoveryWaterOutletNode(waterOutletNode);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s waterOutletNode to "
+      << waterOutletNode.briefDescription() << ".");
+  }
+  setNominalStackTemperature(20);
+  setActualStackTemperature(20);
+  setCoefficientr0(0);
+  setCoefficientr1(0);
+  setCoefficientr2(0);
+  setCoefficientr3(0);
+  setStackCoolantFlowRate(1);
+  setStackCoolerUFactorTimesAreaValue(1);
+  setFscogenAdjustmentFactor(0);
+  setStackCogenerationExchangerArea(1);
+  setStackCogenerationExchangerNominalFlowRate(1);
+  setStackCogenerationExchangerNominalHeatTransferCoefficient(0);
+  setStackCogenerationExchangerNominalHeatTransferCoefficientExponent(0);
+  setStackCoolerPumpPower(0);
+  setStackCoolerPumpHeatLossFraction(0);
+  setStackAirCoolerFanCoefficientf0(0);
+  setStackAirCoolerFanCoefficientf1(0);
+  setStackAirCoolerFanCoefficientf2(0);
+}
 
 GeneratorFuelCellStackCooler::GeneratorFuelCellStackCooler(const Model& model)
   : ModelObject(GeneratorFuelCellStackCooler::iddObjectType(),model)
