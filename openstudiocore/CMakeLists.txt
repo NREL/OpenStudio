@@ -1,4 +1,4 @@
-﻿cmake_minimum_required(VERSION 2.8.11)
+cmake_minimum_required(VERSION 2.8.11)
 cmake_policy(SET CMP0048 NEW)
 
 project(OpenStudio VERSION 1.13.4)
