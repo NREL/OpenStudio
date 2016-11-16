@@ -83,7 +83,8 @@ namespace detail {
   double GeneratorFuelCellAuxiliaryHeater_Impl::excessAirRatio() const {
     boost::optional<double> value = getDouble(OS_Generator_FuelCell_AuxiliaryHeaterFields::ExcessAirRatio,true);
     if (!value) {
-      LOG_AND_THROW(" does not have excessAirRatio.");
+      LOG(Info, " does not have excessAirRatio.");
+      return 0;
     }
     return value.get();
   }
@@ -91,7 +92,8 @@ namespace detail {
   double GeneratorFuelCellAuxiliaryHeater_Impl::ancillaryPowerConstantTerm() const {
     boost::optional<double> value = getDouble(OS_Generator_FuelCell_AuxiliaryHeaterFields::AncillaryPowerConstantTerm, true);
     if (!value) {
-      LOG_AND_THROW(" does not have ancillaryPowerConstantTerm.");
+      LOG(Info, " does not have ancillaryPowerConstantTerm.");
+      return 0;
     }
     return value.get();
   }
@@ -99,7 +101,8 @@ namespace detail {
   double GeneratorFuelCellAuxiliaryHeater_Impl::ancillaryPowerLinearTerm() const {
     boost::optional<double> value = getDouble(OS_Generator_FuelCell_AuxiliaryHeaterFields::AncillaryPowerLinearTerm, true);
     if (!value) {
-      LOG_AND_THROW(" does not have ancillaryPowerLinearTerm.");
+      LOG(Info, " does not have ancillaryPowerLinearTerm.");
+      return 0;
     }
     return value.get();
   }
@@ -107,13 +110,18 @@ namespace detail {
   double GeneratorFuelCellAuxiliaryHeater_Impl::skinLossUFactorTimesAreaValue() const {
     boost::optional<double> value = getDouble(OS_Generator_FuelCell_AuxiliaryHeaterFields::SkinLossUFactorTimesAreaValue, true);
     if (!value) {
-      LOG_AND_THROW(" does not have skinLossUFactorTimesAreaValue.");
+      LOG(Info, " does not have skinLossUFactorTimesAreaValue.");
+      return 0;
     }
     return value.get();
   }
 
   std::string GeneratorFuelCellAuxiliaryHeater_Impl::skinLossDestination() const {
     boost::optional<std::string> value = getString(OS_Generator_FuelCell_AuxiliaryHeaterFields::SkinLossDestination,true);
+    if (!value) {
+      LOG(Info, " does not have skinLossDestination.");
+      return "";
+    }
     return value.get();
   }
 
@@ -123,6 +131,10 @@ namespace detail {
 
   std::string GeneratorFuelCellAuxiliaryHeater_Impl::heatingCapacityUnits() const {
     boost::optional<std::string> value = getString(OS_Generator_FuelCell_AuxiliaryHeaterFields::HeatingCapacityUnits,true);
+    if (!value) {
+      LOG(Info, " does not have heatingCapacityUnits.");
+      return "";
+    }
     return value.get();
   }
 
