@@ -72,9 +72,9 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    boost::optional<std::string> inverterEfficiencyCalculationMode() const;
+    std::string inverterEfficiencyCalculationMode() const;
 
-    boost::optional<double> inverterEfficiency() const;
+    double inverterEfficiency() const;
 
     boost::optional<CurveQuadratic> efficiencyFunctionofDCPowerCurve() const;
 
@@ -90,7 +90,6 @@ namespace detail {
 
     void resetInverterEfficiency();
 
-    // TODO: Check argument type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
     bool setEfficiencyFunctionofDCPowerCurve(const CurveQuadratic& quadraticCurves);
 
     void resetEfficiencyFunctionofDCPowerCurve();

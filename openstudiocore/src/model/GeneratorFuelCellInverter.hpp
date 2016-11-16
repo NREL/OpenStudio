@@ -53,6 +53,9 @@ class MODEL_API GeneratorFuelCellInverter : public ModelObject {
 
   explicit GeneratorFuelCellInverter(const Model& model);
 
+  explicit GeneratorFuelCellInverter(const Model& model,
+                                     const CurveQuadratic& powerCurve);
+
   virtual ~GeneratorFuelCellInverter() {}
 
   //@}
@@ -64,9 +67,9 @@ class MODEL_API GeneratorFuelCellInverter : public ModelObject {
   /** @name Getters */
   //@{
 
-  boost::optional<std::string> inverterEfficiencyCalculationMode() const;
+  std::string inverterEfficiencyCalculationMode() const;
 
-  boost::optional<double> inverterEfficiency() const;
+  double inverterEfficiency() const;
 
   boost::optional<CurveQuadratic> efficiencyFunctionofDCPowerCurve() const;
 
@@ -82,7 +85,6 @@ class MODEL_API GeneratorFuelCellInverter : public ModelObject {
 
   void resetInverterEfficiency();
 
-  // TODO: Check argument type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
   bool setEfficiencyFunctionofDCPowerCurve(const CurveQuadratic& quadraticCurves);
 
   void resetEfficiencyFunctionofDCPowerCurve();

@@ -82,12 +82,20 @@ namespace detail {
     return GeneratorFuelCellInverter::iddObjectType();
   }
 
-  boost::optional<std::string> GeneratorFuelCellInverter_Impl::inverterEfficiencyCalculationMode() const {
-    return getString(OS_Generator_FuelCell_InverterFields::InverterEfficiencyCalculationMode,true);
+  std::string GeneratorFuelCellInverter_Impl::inverterEfficiencyCalculationMode() const {
+    boost::optional<std::string> value = getString(OS_Generator_FuelCell_InverterFields::InverterEfficiencyCalculationMode, true);
+    if (!value) {
+      LOG_AND_THROW(" does not have inverterEfficiencyCalculationMode");
+    }
+    return value.get();
   }
 
-  boost::optional<double> GeneratorFuelCellInverter_Impl::inverterEfficiency() const {
-    return getDouble(OS_Generator_FuelCell_InverterFields::InverterEfficiency,true);
+  double GeneratorFuelCellInverter_Impl::inverterEfficiency() const {
+    boost::optional<double> value = getDouble(OS_Generator_FuelCell_InverterFields::InverterEfficiency, true);
+    if (!value) {
+      LOG_AND_THROW(" does not have inverterEfficiency");
+    }
+    return value.get();
   }
 
   boost::optional<CurveQuadratic> GeneratorFuelCellInverter_Impl::efficiencyFunctionofDCPowerCurve() const {
@@ -100,7 +108,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellInverter_Impl::resetInverterEfficiencyCalculationMode() {
-    bool result = setString(OS_Generator_FuelCell_InverterFields::InverterEfficiencyCalculationMode, "");
+    bool result = setString(OS_Generator_FuelCell_InverterFields::InverterEfficiencyCalculationMode, "Constant");
     OS_ASSERT(result);
   }
 
@@ -110,7 +118,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellInverter_Impl::resetInverterEfficiency() {
-    bool result = setString(OS_Generator_FuelCell_InverterFields::InverterEfficiency, "");
+    bool result = setDouble(OS_Generator_FuelCell_InverterFields::InverterEfficiency, 1);
     OS_ASSERT(result);
   }
 
@@ -135,6 +143,16 @@ GeneratorFuelCellInverter::GeneratorFuelCellInverter(const Model& model)
   setInverterEfficiency(1.0);
 }
 
+GeneratorFuelCellInverter::GeneratorFuelCellInverter(const Model& model,
+                                                     const CurveQuadratic& powerCurve)
+  : ModelObject(GeneratorFuelCellInverter::iddObjectType(), model) {
+  OS_ASSERT(getImpl<detail::GeneratorFuelCellInverter_Impl>());
+
+  setInverterEfficiencyCalculationMode("Quadratic");
+  setInverterEfficiency(1.0);
+  setEfficiencyFunctionofDCPowerCurve(powerCurve);
+}
+
 IddObjectType GeneratorFuelCellInverter::iddObjectType() {
   return IddObjectType(IddObjectType::OS_Generator_FuelCell_Inverter);
 }
@@ -144,11 +162,11 @@ std::vector<std::string> GeneratorFuelCellInverter::inverterEfficiencyCalculatio
                         OS_Generator_FuelCell_InverterFields::InverterEfficiencyCalculationMode);
 }
 
-boost::optional<std::string> GeneratorFuelCellInverter::inverterEfficiencyCalculationMode() const {
+std::string GeneratorFuelCellInverter::inverterEfficiencyCalculationMode() const {
   return getImpl<detail::GeneratorFuelCellInverter_Impl>()->inverterEfficiencyCalculationMode();
 }
 
-boost::optional<double> GeneratorFuelCellInverter::inverterEfficiency() const {
+double GeneratorFuelCellInverter::inverterEfficiency() const {
   return getImpl<detail::GeneratorFuelCellInverter_Impl>()->inverterEfficiency();
 }
 
