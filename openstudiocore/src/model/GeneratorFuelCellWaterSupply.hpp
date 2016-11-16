@@ -67,32 +67,26 @@ class MODEL_API GeneratorFuelCellWaterSupply : public ModelObject {
   /** @name Getters */
   //@{
 
-  // TODO: Check return type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
-  boost::optional<CurveQuadratic> reformerWaterFlowRateFunctionofFuelRateCurve() const;
+  CurveQuadratic reformerWaterFlowRateFunctionofFuelRateCurve() const;
 
-  // TODO: Check return type. From object lists, some candidates are: CubicCurves, UniVariateTables.
-  boost::optional<CurveCubic> reformerWaterPumpPowerFunctionofFuelRateCurve() const;
+  CurveCubic reformerWaterPumpPowerFunctionofFuelRateCurve() const;
 
-  boost::optional<double> pumpHeatLossFactor() const;
+  double pumpHeatLossFactor() const;
 
-  boost::optional<std::string> waterTemperatureModelingMode() const;
+  std::string waterTemperatureModelingMode() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Connection.
   boost::optional<Connection> waterTemperatureReferenceNode() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   boost::optional<Schedule> waterTemperatureSchedule() const;
 
   //@}
   /** @name Setters */
   //@{
 
-  // TODO: Check argument type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
   bool setReformerWaterFlowRateFunctionofFuelRateCurve(const CurveQuadratic& quadraticCurves);
 
   void resetReformerWaterFlowRateFunctionofFuelRateCurve();
 
-  // TODO: Check argument type. From object lists, some candidates are: CubicCurves, UniVariateTables.
   bool setReformerWaterPumpPowerFunctionofFuelRateCurve(const CurveCubic& cubicCurves);
 
   void resetReformerWaterPumpPowerFunctionofFuelRateCurve();
@@ -105,12 +99,10 @@ class MODEL_API GeneratorFuelCellWaterSupply : public ModelObject {
 
   void resetWaterTemperatureModelingMode();
 
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
   bool setWaterTemperatureReferenceNode(const Connection& connection);
 
   void resetWaterTemperatureReferenceNode();
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
   // Note Schedules are passed by reference, not const reference.
   bool setWaterTemperatureSchedule(Schedule& schedule);
 
