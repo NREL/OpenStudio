@@ -76,7 +76,6 @@ namespace detail {
 
     boost::optional<double> inverterEfficiency() const;
 
-    // TODO: Check return type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
     boost::optional<CurveQuadratic> efficiencyFunctionofDCPowerCurve() const;
 
     //@}

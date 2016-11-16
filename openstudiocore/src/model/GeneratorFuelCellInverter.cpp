@@ -131,7 +131,8 @@ GeneratorFuelCellInverter::GeneratorFuelCellInverter(const Model& model)
 {
   OS_ASSERT(getImpl<detail::GeneratorFuelCellInverter_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
+  setInverterEfficiencyCalculationMode("Constant");
+  setInverterEfficiency(1.0);
 }
 
 IddObjectType GeneratorFuelCellInverter::iddObjectType() {
