@@ -55,6 +55,8 @@ class MODEL_API GeneratorFuelSupply : public ModelObject {
 
   explicit GeneratorFuelSupply(const Model& model);
 
+  explicit GeneratorFuelSupply(const Model& model, Schedule& tempSchedule, const CurveCubic& powerCurve);
+
   virtual ~GeneratorFuelSupply() {}
 
   //@}

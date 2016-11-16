@@ -32,6 +32,8 @@
 // TODO: Check the following class names against object getters and setters.
 #include "Connection.hpp"
 #include "Connection_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
 #include "ScheduleConstant.hpp"
@@ -106,8 +108,7 @@ namespace detail {
   std::string GeneratorFuelSupply_Impl::fuelTemperatureModelingMode() const {
     boost::optional<std::string> value = getString(OS_Generator_FuelSupplyFields::FuelTemperatureModelingMode, true);
     if (!value) {
-      LOG(Info, " does not have fuelTemperatureModelingMode");
-      return "";
+      LOG_AND_THROW(" does not have fuelTemperatureModelingMode");
     }
     return value.get();
   }
@@ -131,8 +132,7 @@ namespace detail {
   double GeneratorFuelSupply_Impl::compressorHeatLossFactor() const {
     boost::optional<double> value = getDouble(OS_Generator_FuelSupplyFields::CompressorHeatLossFactor, true);
     if (!value) {
-      LOG(Info, " does not have compressorHeatLossFactor");
-      return 0;
+      LOG_AND_THROW(" does not have compressorHeatLossFactor");
     }
     return value.get();
   }
@@ -140,8 +140,7 @@ namespace detail {
   std::string GeneratorFuelSupply_Impl::fuelType() const {
     boost::optional<std::string> value = getString(OS_Generator_FuelSupplyFields::FuelType, true);
     if (!value) {
-      LOG(Info, " does not have fuelType");
-      return "";
+      LOG_AND_THROW(" does not have fuelType");
     }
     return value.get();
   }
@@ -149,8 +148,7 @@ namespace detail {
   double GeneratorFuelSupply_Impl::liquidGenericFuelLowerHeatingValue() const {
     boost::optional<double> value = getDouble(OS_Generator_FuelSupplyFields::LiquidGenericFuelLowerHeatingValue, true);
     if (!value) {
-      LOG(Info, " does not have liquidGenericFuelLowerHeatingValue");
-      return 0;
+      LOG_AND_THROW(" does not have liquidGenericFuelLowerHeatingValue");
     }
     return value.get();
   }
@@ -158,8 +156,7 @@ namespace detail {
   double GeneratorFuelSupply_Impl::liquidGenericFuelHigherHeatingValue() const {
     boost::optional<double> value = getDouble(OS_Generator_FuelSupplyFields::LiquidGenericFuelHigherHeatingValue, true);
     if (!value) {
-      LOG(Info, " does not have liquidGenericFuelHigherHeatingValue");
-      return 0;
+      LOG_AND_THROW(" does not have liquidGenericFuelHigherHeatingValue");
     }
     return value.get();
   }
@@ -167,8 +164,7 @@ namespace detail {
   double GeneratorFuelSupply_Impl::liquidGenericFuelMolecularWeight() const {
     boost::optional<double> value = getDouble(OS_Generator_FuelSupplyFields::LiquidGenericFuelMolecularWeight, true);
     if (!value) {
-      LOG(Info, " does not have liquidGenericFuelMolecularWeight");
-      return 0;
+      LOG_AND_THROW(" does not have liquidGenericFuelMolecularWeight");
     }
     return value.get();
   }
@@ -176,8 +172,7 @@ namespace detail {
   double GeneratorFuelSupply_Impl::liquidGenericFuelCO2EmissionFactor() const {
     boost::optional<double> value = getDouble(OS_Generator_FuelSupplyFields::LiquidGenericFuelCO2EmissionFactor, true);
     if (!value) {
-      LOG(Info, " does not have liquidGenericFuelCO2EmissionFactor");
-      return 0;
+      LOG_AND_THROW(" does not have liquidGenericFuelCO2EmissionFactor");
     }
     return value.get();
   }
@@ -197,7 +192,11 @@ namespace detail {
   }
 
   void GeneratorFuelSupply_Impl::resetFuelTemperatureModelingMode() {
-    bool result = setString(OS_Generator_FuelSupplyFields::FuelTemperatureModelingMode, "");
+    bool result = setString(OS_Generator_FuelSupplyFields::FuelTemperatureModelingMode, "Scheduled");
+    OS_ASSERT(result);
+    ScheduleConstant schedule(this->model());
+    schedule.setValue(20);
+    result = setFuelTemperatureSchedule(schedule);
     OS_ASSERT(result);
   }
 
@@ -240,7 +239,7 @@ namespace detail {
   }
 
   void GeneratorFuelSupply_Impl::resetCompressorHeatLossFactor() {
-    bool result = setString(OS_Generator_FuelSupplyFields::CompressorHeatLossFactor, "");
+    bool result = setDouble(OS_Generator_FuelSupplyFields::CompressorHeatLossFactor, 0);
     OS_ASSERT(result);
   }
 
@@ -260,7 +259,7 @@ namespace detail {
   }
 
   void GeneratorFuelSupply_Impl::resetLiquidGenericFuelLowerHeatingValue() {
-    bool result = setString(OS_Generator_FuelSupplyFields::LiquidGenericFuelLowerHeatingValue, "");
+    bool result = setDouble(OS_Generator_FuelSupplyFields::LiquidGenericFuelLowerHeatingValue, 0);
     OS_ASSERT(result);
   }
 
@@ -270,7 +269,7 @@ namespace detail {
   }
 
   void GeneratorFuelSupply_Impl::resetLiquidGenericFuelHigherHeatingValue() {
-    bool result = setString(OS_Generator_FuelSupplyFields::LiquidGenericFuelHigherHeatingValue, "");
+    bool result = setDouble(OS_Generator_FuelSupplyFields::LiquidGenericFuelHigherHeatingValue, 0);
     OS_ASSERT(result);
   }
 
@@ -280,7 +279,7 @@ namespace detail {
   }
 
   void GeneratorFuelSupply_Impl::resetLiquidGenericFuelMolecularWeight() {
-    bool result = setString(OS_Generator_FuelSupplyFields::LiquidGenericFuelMolecularWeight, "");
+    bool result = setDouble(OS_Generator_FuelSupplyFields::LiquidGenericFuelMolecularWeight, 0);
     OS_ASSERT(result);
   }
 
@@ -290,7 +289,7 @@ namespace detail {
   }
 
   void GeneratorFuelSupply_Impl::resetLiquidGenericFuelCO2EmissionFactor() {
-    bool result = setString(OS_Generator_FuelSupplyFields::LiquidGenericFuelCO2EmissionFactor, "");
+    bool result = setDouble(OS_Generator_FuelSupplyFields::LiquidGenericFuelCO2EmissionFactor, 0);
     OS_ASSERT(result);
   }
 
@@ -300,11 +299,36 @@ namespace detail {
   }
 
   void GeneratorFuelSupply_Impl::resetNumberofConstituentsinGaseousConstituentFuelSupply() {
-    bool result = setString(OS_Generator_FuelSupplyFields::NumberofConstituentsinGaseousConstituentFuelSupply, "");
+    bool result = setDouble(OS_Generator_FuelSupplyFields::NumberofConstituentsinGaseousConstituentFuelSupply, 0);
     OS_ASSERT(result);
   }
 
 } // detail
+
+GeneratorFuelSupply::GeneratorFuelSupply(const Model& model, Schedule& tempSchedule, const CurveCubic& powerCurve)
+  : ModelObject(GeneratorFuelSupply::iddObjectType(), model) {
+  OS_ASSERT(getImpl<detail::GeneratorFuelSupply_Impl>());
+
+  setFuelTemperatureModelingMode("Scheduled");
+  bool ok = setFuelTemperatureSchedule(tempSchedule);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s temp schedule to "
+      << tempSchedule.briefDescription() << ".");
+  }
+
+  ok = setCompressorPowerMultiplierFunctionofFuelRateCurve(powerCurve);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s power curve to "
+      << powerCurve.briefDescription() << ".");
+  }
+  setCompressorHeatLossFactor(1);
+  setFuelType("LiquidGeneric");
+  setLiquidGenericFuelLowerHeatingValue(43100);
+  setLiquidGenericFuelHigherHeatingValue(46200);
+  setLiquidGenericFuelMolecularWeight(170);
+}
 
 GeneratorFuelSupply::GeneratorFuelSupply(const Model& model)
   : ModelObject(GeneratorFuelSupply::iddObjectType(),model)
