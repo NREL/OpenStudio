@@ -72,18 +72,15 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    // TODO: Check return type. From object lists, some candidates are: Connection.
     boost::optional<Connection> heatRecoveryWaterInletNode() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Connection.
     boost::optional<Connection> heatRecoveryWaterOutletNode() const;
 
-    boost::optional<double> heatRecoveryWaterMaximumFlowRate() const;
+    double heatRecoveryWaterMaximumFlowRate() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Connection.
     boost::optional<Connection> exhaustOutletAirNode() const;
 
-    boost::optional<std::string> heatExchangerCalculationMethod() const;
+    std::string heatExchangerCalculationMethod() const;
 
     boost::optional<double> method1HeatExchangerEffectiveness() const;
 
@@ -125,12 +122,10 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
     bool setHeatRecoveryWaterInletNode(const Connection& connection);
 
     void resetHeatRecoveryWaterInletNode();
 
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
     bool setHeatRecoveryWaterOutletNode(const Connection& connection);
 
     void resetHeatRecoveryWaterOutletNode();
@@ -139,7 +134,6 @@ namespace detail {
 
     void resetHeatRecoveryWaterMaximumFlowRate();
 
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
     bool setExhaustOutletAirNode(const Connection& connection);
 
     void resetExhaustOutletAirNode();

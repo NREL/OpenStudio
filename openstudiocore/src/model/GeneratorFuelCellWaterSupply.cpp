@@ -216,6 +216,8 @@ GeneratorFuelCellWaterSupply::GeneratorFuelCellWaterSupply(const Model& model)
   curveQuadratic.setCoefficient1Constant(0);
   curveQuadratic.setCoefficient2x(0);
   curveQuadratic.setCoefficient3xPOW2(0);
+  curveQuadratic.setMinimumValueofx(-1.0e10);
+  curveQuadratic.setMaximumValueofx(1.0e10);
   setReformerWaterFlowRateFunctionofFuelRateCurve(curveQuadratic);
 
   CurveCubic curveCubic(model);
@@ -223,6 +225,8 @@ GeneratorFuelCellWaterSupply::GeneratorFuelCellWaterSupply(const Model& model)
   curveCubic.setCoefficient2x(0);
   curveCubic.setCoefficient3xPOW2(0);
   curveCubic.setCoefficient4xPOW3(0);
+  curveCubic.setMinimumValueofx(-1.0e10);
+  curveCubic.setMaximumValueofx(1.0e10);
   setReformerWaterPumpPowerFunctionofFuelRateCurve(curveCubic);
 
   setPumpHeatLossFactor(0.0);
