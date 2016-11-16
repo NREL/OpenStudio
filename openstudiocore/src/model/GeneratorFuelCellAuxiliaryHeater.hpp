@@ -114,7 +114,6 @@ class MODEL_API GeneratorFuelCellAuxiliaryHeater : public ModelObject {
 
   void resetSkinLossDestination();
 
-  // TODO: Check argument type. From object lists, some candidates are: Zone.
   bool setZonetoReceiveSkinLosses(const ThermalZone& zone);
 
   void resetZonetoReceiveSkinLosses();

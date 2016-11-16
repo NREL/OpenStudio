@@ -278,8 +278,14 @@ GeneratorFuelCellAuxiliaryHeater::GeneratorFuelCellAuxiliaryHeater(const Model& 
   : ModelObject(GeneratorFuelCellAuxiliaryHeater::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::GeneratorFuelCellAuxiliaryHeater_Impl>());
+  setExcessAirRatio(0.0);
+  setAncillaryPowerConstantTerm(0.0);
+  setAncillaryPowerLinearTerm(0.0);
+  setSkinLossUFactorTimesAreaValue(0.5);
   setSkinLossDestination("AirInletForFuelCell");
   setHeatingCapacityUnits("Watts");
+  setMaximumHeatingCapacityinWatts(0.0);
+  setMinimumHeatingCapacityinWatts(0.0);
 }
 
 IddObjectType GeneratorFuelCellAuxiliaryHeater::iddObjectType() {
