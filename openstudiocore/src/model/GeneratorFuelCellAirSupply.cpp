@@ -248,27 +248,35 @@ namespace detail {
 } // detail
 
 GeneratorFuelCellAirSupply::GeneratorFuelCellAirSupply(const Model& model,
-  const Connection& airInletNode)
+                                                       const Connection& airInletNode,
+                                                       const CurveQuadratic& electricPowerCurve,
+                                                       const CurveQuadratic& fuelRateCurve,
+                                                       const CurveCubic& blowerPowerCurve)
   : ModelObject(GeneratorFuelCellAirSupply::iddObjectType(), model) {
   OS_ASSERT(getImpl<detail::GeneratorFuelCellAirSupply_Impl>());
 
-  setAirInletNode(airInletNode);
+  bool ok = setAirInletNode(airInletNode);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s airInletNode to "
+      << airInletNode.briefDescription() << ".");
+  }
 
-  CurveCubic curveCubic(model);
-  curveCubic.setCoefficient1Constant(0);
-  curveCubic.setCoefficient2x(0);
-  curveCubic.setCoefficient3xPOW2(0);
-  curveCubic.setCoefficient4xPOW3(0);
-  curveCubic.setMinimumValueofx(-1.0e10);
-  curveCubic.setMaximumValueofx(1.0e10);
-  setBlowerPowerCurve(curveCubic);
+  ok = setBlowerPowerCurve(blowerPowerCurve);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s blowerPowerCurve to "
+      << blowerPowerCurve.briefDescription() << ".");
+  }
 
   setBlowerHeatLossFactor(1.0);
   setAirSupplyRateCalculationMode("AirRatiobyStoics");
   setStoichiometricRatio(1.0);
 
+  setAirRateFunctionofElectricPowerCurve(electricPowerCurve);
   setAirRateAirTemperatureCoefficient(0.00283);
 
+  setAirRateFunctionofFuelRateCurve(fuelRateCurve);
   setAirIntakeHeatRecoveryMode("NoRecovery");
   setAirSupplyConstituentMode("AmbientAir");
 }
@@ -280,7 +288,12 @@ GeneratorFuelCellAirSupply::GeneratorFuelCellAirSupply(const Model& model,
   : ModelObject(GeneratorFuelCellAirSupply::iddObjectType(), model) {
   OS_ASSERT(getImpl<detail::GeneratorFuelCellAirSupply_Impl>());
 
-  setAirInletNode(airInletNode);
+  bool ok = setAirInletNode(airInletNode);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s airInletNode to "
+      << airInletNode.briefDescription() << ".");
+  }
 
   CurveCubic curveCubic(model);
   curveCubic.setCoefficient1Constant(0);
@@ -289,16 +302,67 @@ GeneratorFuelCellAirSupply::GeneratorFuelCellAirSupply(const Model& model,
   curveCubic.setCoefficient4xPOW3(0);
   curveCubic.setMinimumValueofx(-1.0e10);
   curveCubic.setMaximumValueofx(1.0e10);
-  setBlowerPowerCurve(curveCubic);
+  ok = setBlowerPowerCurve(curveCubic);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s setBlowerPowerCurve to "
+      << curveCubic.briefDescription() << ".");
+  }
 
   setBlowerHeatLossFactor(1.0);
   setAirSupplyRateCalculationMode("AirRatiobyStoics");
   setStoichiometricRatio(1.0);
 
-  setAirRateFunctionofElectricPowerCurve(electricPowerCurve);
+  ok = setAirRateFunctionofElectricPowerCurve(electricPowerCurve);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s electricPowerCurve to "
+      << electricPowerCurve.briefDescription() << ".");
+  }
   setAirRateAirTemperatureCoefficient(0.00283);
 
-  setAirRateFunctionofFuelRateCurve(fuelRateCurve);
+  ok = setAirRateFunctionofFuelRateCurve(fuelRateCurve);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s fuelRateCurve to "
+      << fuelRateCurve.briefDescription() << ".");
+  }
+  setAirIntakeHeatRecoveryMode("NoRecovery");
+  setAirSupplyConstituentMode("AmbientAir");
+}
+
+GeneratorFuelCellAirSupply::GeneratorFuelCellAirSupply(const Model& model,
+  const Connection& airInletNode)
+  : ModelObject(GeneratorFuelCellAirSupply::iddObjectType(), model) {
+  OS_ASSERT(getImpl<detail::GeneratorFuelCellAirSupply_Impl>());
+
+  bool ok = setAirInletNode(airInletNode);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s airInletNode to "
+      << airInletNode.briefDescription() << ".");
+  }
+
+  CurveCubic curveCubic(model);
+  curveCubic.setCoefficient1Constant(0);
+  curveCubic.setCoefficient2x(0);
+  curveCubic.setCoefficient3xPOW2(0);
+  curveCubic.setCoefficient4xPOW3(0);
+  curveCubic.setMinimumValueofx(-1.0e10);
+  curveCubic.setMaximumValueofx(1.0e10);
+  ok = setBlowerPowerCurve(curveCubic);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s setBlowerPowerCurve to "
+      << curveCubic.briefDescription() << ".");
+  }
+
+  setBlowerHeatLossFactor(1.0);
+  setAirSupplyRateCalculationMode("AirRatiobyStoics");
+  setStoichiometricRatio(1.0);
+
+  setAirRateAirTemperatureCoefficient(0.00283);
+
   setAirIntakeHeatRecoveryMode("NoRecovery");
   setAirSupplyConstituentMode("AmbientAir");
 }
@@ -316,7 +380,12 @@ GeneratorFuelCellAirSupply::GeneratorFuelCellAirSupply(const Model& model)
   curveCubic.setCoefficient4xPOW3(0);
   curveCubic.setMinimumValueofx(-1.0e10);
   curveCubic.setMaximumValueofx(1.0e10);
-  setBlowerPowerCurve(curveCubic);
+  bool ok = setBlowerPowerCurve(curveCubic);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s setBlowerPowerCurve to "
+      << curveCubic.briefDescription() << ".");
+  }
 
   setBlowerHeatLossFactor(1.0);
   setAirSupplyRateCalculationMode("AirRatiobyStoics");
