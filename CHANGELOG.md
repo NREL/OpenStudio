@@ -1,3 +1,8 @@
+## OpenStudio v1.13.3
+###### 2016-11-10 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.13.2...v1.13.3 )
+
+- ![Fixed:][fixed] [#2388]( https://github.com/NREL/OpenStudio/pull/2388 ), 131770395 reporting measure 2x support
+
 ## OpenStudio v1.13.2
 ###### 2016-10-29 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.13.1...v1.13.2 )
 

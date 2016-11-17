@@ -35,7 +35,7 @@
 #include "../utilities/idf/WorkspaceObject.hpp"
 #include "../utilities/units/Quantity.hpp"
 #include "../utilities/math/FloatCompare.hpp"
-
+#include "../utilities/core/StringHelpers.hpp"
 #include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
@@ -165,7 +165,8 @@ void OSRunner::registerAttribute(Attribute& attribute) {
 }
 
 void OSRunner::registerValue(const std::string& name, bool value) {
-  Attribute attribute(name,value);
+  Attribute attribute(cleanValueName(name),value);
+  attribute.setDisplayName(name);
   registerAttribute(attribute);
 }
 
@@ -173,18 +174,18 @@ void OSRunner::registerValue(const std::string& name,
                              const std::string& displayName,
                              bool value)
 {
-  Attribute attribute(name,value);
+  Attribute attribute(cleanValueName(name),value);
   attribute.setDisplayName(displayName);
   registerAttribute(attribute);
 }
 
 void OSRunner::registerValue(const std::string& name, double value) {
-  Attribute attribute(name,value);
+  Attribute attribute(cleanValueName(name),value);
   registerAttribute(attribute);
 }
 
 void OSRunner::registerValue(const std::string& name, double value, const std::string& units) {
-  Attribute attribute(name,value,units);
+  Attribute attribute(cleanValueName(name),value,units);
   registerAttribute(attribute);
 }
 
@@ -192,7 +193,7 @@ void OSRunner::registerValue(const std::string& name,
                              const std::string& displayName,
                              double value)
 {
-  Attribute attribute(name,value);
+  Attribute attribute(cleanValueName(name),value);
   attribute.setDisplayName(displayName);
   registerAttribute(attribute);
 }
@@ -202,18 +203,18 @@ void OSRunner::registerValue(const std::string& name,
                              double value,
                              const std::string& units)
 {
-  Attribute attribute(name,value,units);
+  Attribute attribute(cleanValueName(name),value,units);
   attribute.setDisplayName(displayName);
   registerAttribute(attribute);
 }
 
 void OSRunner::registerValue(const std::string& name, int value) {
-  Attribute attribute(name,value);
+  Attribute attribute(cleanValueName(name),value);
   registerAttribute(attribute);
 }
 
 void OSRunner::registerValue(const std::string& name, int value, const std::string& units) {
-  Attribute attribute(name,value,units);
+  Attribute attribute(cleanValueName(name),value,units);
   registerAttribute(attribute);
 }
 
@@ -221,7 +222,7 @@ void OSRunner::registerValue(const std::string& name,
                              const std::string& displayName,
                              int value)
 {
-  Attribute attribute(name,value);
+  Attribute attribute(cleanValueName(name),value);
   attribute.setDisplayName(displayName);
   registerAttribute(attribute);
 }
@@ -231,13 +232,13 @@ void OSRunner::registerValue(const std::string& name,
                              int value,
                              const std::string& units)
 {
-  Attribute attribute(name,value,units);
+  Attribute attribute(cleanValueName(name),value,units);
   attribute.setDisplayName(displayName);
   registerAttribute(attribute);
 }
 
 void OSRunner::registerValue(const std::string& name, const std::string& value) {
-  Attribute attribute(name,value);
+  Attribute attribute(cleanValueName(name),value);
   registerAttribute(attribute);
 }
 
@@ -245,7 +246,7 @@ void OSRunner::registerValue(const std::string& name,
                              const std::string& displayName,
                              const std::string& value)
 {
-  Attribute attribute(name,value);
+  Attribute attribute(cleanValueName(name),value);
   attribute.setDisplayName(displayName);
   registerAttribute(attribute);
 }
@@ -804,6 +805,24 @@ void OSRunner::resetLastEpwFilePath()
 {
   m_lastEpwFilePath.reset();
   m_lastEpwFile.reset();
+}
+
+std::string OSRunner::cleanValueName(const std::string& name) const
+{
+  static const boost::regex allowableCharacters("[^0-9a-zA-Z]");
+  static const boost::regex leadingUnderscore("^_+");
+  static const boost::regex trailingUnderscore("_+$");
+  static const boost::regex leadingNumber("^([0-9])");
+  static const boost::regex multipleUnderscore("[_]+");
+
+
+  std::string result = boost::regex_replace(name, allowableCharacters, "_");
+  result = boost::regex_replace(result, leadingUnderscore, "");
+  result = boost::regex_replace(result, trailingUnderscore, "");
+  result = boost::regex_replace(result, leadingNumber, "_$1");
+  result = boost::regex_replace(result, multipleUnderscore, "_");
+  result = toUnderscoreCase(result);
+  return result;
 }
 
 } // ruleset
