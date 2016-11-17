@@ -249,7 +249,11 @@ GeneratorFuelCellWaterSupply::GeneratorFuelCellWaterSupply(const Model& model,
       << pumpPowerCurve.briefDescription() << ".");
   }
   setPumpHeatLossFactor(0.0);
-  ok = setWaterTemperatureModelingMode(waterTempMode);
+  if ((waterTempMode == "TemperatureFromAirNode") || (waterTempMode == "TemperatureFromWaterNode")) {
+    ok = setWaterTemperatureModelingMode(waterTempMode);
+  } else {
+    ok = false;
+  }
   if (!ok) {
     remove();
     LOG_AND_THROW("Unable to set " << briefDescription() << "'s water temp modeling mode to "
