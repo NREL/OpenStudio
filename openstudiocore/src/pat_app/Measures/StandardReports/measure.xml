@@ -2,8 +2,8 @@
   <schema_version>3.0</schema_version>
   <name>open_studio_results</name>
   <uid>675e0a1f-d1f9-4639-aed5-3fd8b21d5503</uid>
-  <version_id>c4f473b0-59e4-464c-8479-c3d34b26b4b7</version_id>
-  <version_modified>20161019T172655Z</version_modified>
+  <version_id>d170a84e-f4bb-4c56-9bf4-a10103a7a241</version_id>
+  <version_modified>20161109T213246Z</version_modified>
   <xml_checksum>557BF06F</xml_checksum>
   <class_name>OpenStudioResults</class_name>
   <display_name>OpenStudio Results</display_name>
@@ -481,12 +481,6 @@
       <checksum>26E63BAF</checksum>
     </file>
     <file>
-      <filename>os_lib_reporting.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>53EE754D</checksum>
-    </file>
-    <file>
       <filename>OpenStudioResults_Test.rb</filename>
       <filetype>rb</filetype>
       <usage_type>test</usage_type>
@@ -502,6 +496,12 @@
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
       <checksum>0485ECB6</checksum>
+    </file>
+    <file>
+      <filename>os_lib_reporting.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>C01ED962</checksum>
     </file>
   </files>
 </measure>
