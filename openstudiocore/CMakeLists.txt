@@ -144,6 +144,10 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
   add_definitions(-Qunused-arguments)
 endif()
 
+if( WIN32 )
+  option(BUILD_NUGET_PACKAGE "Build NuGet Package" OFF)
+endif()
+
 # Enable runtime checking features
 if(CMAKE_COMPILER_IS_GNUCC OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
   option(ENABLE_THREAD_SANITIZER "Enable thread sanitizer testing in gcc/clang" OFF)
@@ -1580,5 +1584,16 @@ cpack_ifw_configure_component(SketchUpPlugin
 cpack_ifw_configure_component(PAT
   DEPENDS CLI RubyAPI
 )
+
+if( BUILD_NUGET_PACKAGE )
+  configure_file( OpenStudio.nuspec.in OpenStudio.nuspec )
+  
+  add_custom_target(nuget_package
+    COMMAND NuGet pack OpenStudio.nuspec -BasePath "${CMAKE_BINARY_DIR}/" -properties Configuration=$<CONFIGURATION>
+    DEPENDS csharp_sdk
+    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
+  )
+endif()
+
 
 
