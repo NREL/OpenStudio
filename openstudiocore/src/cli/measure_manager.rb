@@ -329,7 +329,7 @@ class MeasureManager
     result[:version_uuid] = measure.versionUUID.to_s
     version_modified = measure.versionModified
     if version_modified.is_initialized
-      result[:version_modified] = version_modified.get.to_s
+      result[:version_modified] = version_modified.get.toISO8601
     else
       result[:version_modified] = nil
     end
