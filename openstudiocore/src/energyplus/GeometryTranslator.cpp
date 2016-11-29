@@ -131,6 +131,57 @@ namespace energyplus {
   {
     bool result = true;
 
+    IddObjectTypeVector translatedTypes = {
+      IddObjectType::Building,
+      IddObjectType::Zone,
+      IddObjectType::BuildingSurface_Detailed,
+      IddObjectType::Wall_Detailed,
+      IddObjectType::Wall_Exterior,
+      IddObjectType::Wall_Adiabatic,
+      IddObjectType::Wall_Underground,
+      IddObjectType::Wall_Interzone,
+      IddObjectType::RoofCeiling_Detailed,
+      IddObjectType::Roof,
+      IddObjectType::Ceiling_Adiabatic,
+      IddObjectType::Ceiling_Interzone,
+      IddObjectType::Floor_Detailed,
+      IddObjectType::Floor_GroundContact,
+      IddObjectType::Floor_Adiabatic,
+      IddObjectType::Floor_Interzone,
+      IddObjectType::Shading_Site,
+      IddObjectType::Shading_Site_Detailed,
+      IddObjectType::Shading_Building,
+      IddObjectType::Shading_Building_Detailed,
+      IddObjectType::Shading_Zone_Detailed,
+      IddObjectType::Shading_Overhang,
+      IddObjectType::Shading_Overhang_Projection,
+      IddObjectType::Shading_Fin,
+      IddObjectType::Shading_Fin_Projection,
+      IddObjectType::FenestrationSurface_Detailed,
+      IddObjectType::Window,
+      IddObjectType::Window_Interzone,
+      IddObjectType::Door,
+      IddObjectType::GlazedDoor,
+      IddObjectType::Door_Interzone,
+      IddObjectType::GlazedDoor_Interzone,
+      IddObjectType::Daylighting_Controls,
+      IddObjectType::Daylighting_ReferencePoint,
+      IddObjectType::Output_IlluminanceMap
+    };
+
+    bool skipConvert = true;
+    for (const auto& type : translatedTypes){
+      if (m_workspace.getObjectsByType(type).size() > 0){
+        skipConvert = false;
+        break;
+      }
+    }
+
+    if (skipConvert){
+      return true;
+    }
+
+
     // current geometry rules
     GlobalGeometryRules currentRules = globalGeometryRules();
 
