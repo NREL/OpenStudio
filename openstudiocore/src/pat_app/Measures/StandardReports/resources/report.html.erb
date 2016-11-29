@@ -297,6 +297,30 @@
                     </script>
                   </div>
 
+              <% elsif table[:chart_type] == 'line' %>
+
+                  <% chart_index += 1 %>
+                  <div id="chartContainer_<%= chart_index %>">
+                    <script type="text/javascript">
+                      var svg = dimple.newSvg("#chartContainer_<%= chart_index %>", 1000, 430);
+                      var data = [<%= table[:chart].join(",") %>];
+                      var myChart = new dimple.chart(svg, data);
+                      myChart.setBounds(50, 20, 800, 300);
+                      var x = myChart.addCategoryAxis("x", ["label_x", "label"]);
+                      x.addOrderRule("label_x");
+                      var y = myChart.addMeasureAxis("y", "value");
+                      myChart.addSeries("label", dimple.plot.line);
+                      myChart.addLegend(900, 200, 125, 300, "left");
+                      <% table[:chart].each do |i| %>
+                      <% next if JSON.parse(i)['color'] == nil %>
+                      myChart.assignColor('<%= JSON.parse(i)['label'] %>', '<%= JSON.parse(i)['color'] %>', 'white', 1);
+                      <% end %>
+                      myChart.draw();
+                      x.titleShape.text('<%= table[:chart_attributes][:label_x]%>');
+                      y.titleShape.text('<%= table[:chart_attributes][:value]%>');
+                    </script>
+                  </div>
+
               <% elsif table[:chart_type] == 'scatter' %>
 
                   <% chart_index += 1 %>

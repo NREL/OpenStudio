@@ -3554,6 +3554,16 @@ module OsLib_Reporting
     cost_summary_table[:chart_attributes] = { value: 'Annual Cash Flow ($)', label_x: 'Date', sort_yaxis: yaxis_order }
     cost_summary_table[:chart] = []
 
+    # create table for running total
+    running_cost_table = {}
+    running_cost_table[:title] = 'Running Annual Cash Flow <br>(Not adjusted for inflation or utility escalation)'
+    running_cost_table[:header] = ['Year', 'Annual Cost']
+    running_cost_table[:units] = ['', '$']
+    running_cost_table[:data] = []
+    running_cost_table[:chart_type] = 'line'
+    running_cost_table[:chart_attributes] = { value: 'Running Annual Cash Flow ($)', label_x: 'Date', sort_yaxis: yaxis_order }
+    running_cost_table[:chart] = []
+
     # inflation approach
     inf_appr_query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='Life-Cycle Cost Report' AND ReportForString='Entire Facility' AND TableName='Life-Cycle Cost Parameters' AND RowName='Inflation Approach' AND ColumnName='Value'"
     inf_appr = sqlFile.execAndReturnFirstString(inf_appr_query)
@@ -3655,31 +3665,31 @@ module OsLib_Reporting
       end
 
       # energy cost cash flows (by fuel)
-      electricity_purchased_query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='Life-Cycle Cost Report' AND ReportForString='Entire Facility' AND TableName='Energy Cost Cash Flows (Without Escalation)' AND RowName='#{yr}' AND ColumnName='ElectricityPurchased'"
+      electricity_purchased_query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='Life-Cycle Cost Report' AND ReportForString='Entire Facility' AND TableName='Energy and Water Cost Cash Flows (Without Escalation)' AND RowName='#{yr}' AND ColumnName='ElectricityPurchased'"
       electricity_purchased = sqlFile.execAndReturnFirstDouble(electricity_purchased_query)
       if electricity_purchased.is_initialized
         ann_electricity_cash += electricity_purchased.get
       end
 
-      gas_query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='Life-Cycle Cost Report' AND ReportForString='Entire Facility' AND TableName='Energy Cost Cash Flows (Without Escalation)' AND RowName='#{yr}' AND ColumnName='Gas'"
+      gas_query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='Life-Cycle Cost Report' AND ReportForString='Entire Facility' AND TableName='Energy and Water Cost Cash Flows (Without Escalation)' AND RowName='#{yr}' AND ColumnName='Gas'"
       gas = sqlFile.execAndReturnFirstDouble(gas_query)
       if gas.is_initialized
         ann_gas_cash += gas.get
       end
 
-      dist_htg_query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='Life-Cycle Cost Report' AND ReportForString='Entire Facility' AND TableName='Energy Cost Cash Flows (Without Escalation)' AND RowName='#{yr}' AND ColumnName='DistrictHeating'"
+      dist_htg_query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='Life-Cycle Cost Report' AND ReportForString='Entire Facility' AND TableName='Energy and Water Cost Cash Flows (Without Escalation)' AND RowName='#{yr}' AND ColumnName='DistrictHeating'"
       dist_htg = sqlFile.execAndReturnFirstDouble(dist_htg_query)
       if dist_htg.is_initialized
         ann_dist_htg_cash += dist_htg.get
       end
 
-      dist_clg_query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='Life-Cycle Cost Report' AND ReportForString='Entire Facility' AND TableName='Energy Cost Cash Flows (Without Escalation)' AND RowName='#{yr}' AND ColumnName='DistrictCooling'"
+      dist_clg_query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='Life-Cycle Cost Report' AND ReportForString='Entire Facility' AND TableName='Energy and Water Cost Cash Flows (Without Escalation)' AND RowName='#{yr}' AND ColumnName='DistrictCooling'"
       dist_clg = sqlFile.execAndReturnFirstDouble(dist_clg_query)
       if dist_clg.is_initialized
         ann_dist_clg_cash += dist_clg.get
       end
 
-      water_query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='Life-Cycle Cost Report' AND ReportForString='Entire Facility' AND TableName='Energy Cost Cash Flows (Without Escalation)' AND RowName='#{yr}' AND ColumnName='Water'"
+      water_query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='Life-Cycle Cost Report' AND ReportForString='Entire Facility' AND TableName='Energy and Water Cost Cash Flows (Without Escalation)' AND RowName='#{yr}' AND ColumnName='Water'"
       water = sqlFile.execAndReturnFirstDouble(water_query)
       if water.is_initialized
         ann_water_cash += water.get
@@ -3693,14 +3703,6 @@ module OsLib_Reporting
         ann_tot_cash += energy_cash.get
       end
 
-      # water cash flow (not currently used but should be in future)
-      water_cash_query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='Life-Cycle Cost Report' AND ReportForString='Entire Facility' AND TableName='Operating Cash Flow by Category (Without Escalation)' AND RowName='#{yr}' AND ColumnName='Water'"
-      water_cash = sqlFile.execAndReturnFirstDouble(water_cash_query)
-      if water_cash.is_initialized
-        ann_water_cash += water_cash.get
-        ann_tot_cash += water_cash.get
-      end
-
       # log the values for this year
       cap_cash_flow[yr] = ann_cap_cash
       om_cash_flow[yr] = ann_om_cash
@@ -3709,7 +3711,7 @@ module OsLib_Reporting
       energy_cash_flow[yr] = ann_energy_cash
       water_cash_flow[yr] = ann_water_cash
       tot_cash_flow[yr] = ann_tot_cash
-      ann_additional_cash = ann_energy_cash - ann_electricity_cash - ann_gas_cash - ann_water_cash - ann_dist_htg_cash - ann_dist_clg_cash
+      ann_additional_cash = ann_energy_cash - ann_electricity_cash - ann_gas_cash - ann_dist_htg_cash - ann_dist_clg_cash
       additional_cash_flow[yr] = ann_additional_cash
 
       # populate table row
@@ -3740,15 +3742,19 @@ module OsLib_Reporting
 
       # gather running total data for line plot
       running_total += ann_tot_cash
+      running_cost_table[:data] << [yr, running_total]
+      running_cost_table[:chart] << JSON.generate(label: 'Running Total', label_x: yr, value: running_total)
 
     end # next year
 
     # add table to array of tables
     if running_total > 0
       cost_summary_section_tables << cost_summary_table
+      cost_summary_section_tables << running_cost_table
     else
       # don't make chart of no data to add to it.
       cost_summary_table[:chart] = []
+      running_cost_table[:chart] = []
     end
 
     return @cost_summary_section
