@@ -310,6 +310,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateZoneAirContaminantBalance.cpp
   ForwardTranslator/ForwardTranslateZoneAirHeatBalanceAlgorithm.cpp
   ForwardTranslator/ForwardTranslateZoneAirMassFlowConservation.cpp
+  ForwardTranslator/ForwardTranslateZoneCapacitanceMultiplierResearchSpecial.cpp
   ForwardTranslator/ForwardTranslateZoneControlContaminantController.cpp
   ForwardTranslator/ForwardTranslateZoneControlHumidistat.cpp
   ForwardTranslator/ForwardTranslateZoneControlThermostatStagedDualSetpoint.cpp
