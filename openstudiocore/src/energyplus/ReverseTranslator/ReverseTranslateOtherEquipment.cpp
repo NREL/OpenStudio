@@ -153,6 +153,11 @@ OptionalModelObject ReverseTranslator::translateOtherEquipment(
       }
     }
   }
+
+  s = workspaceObject.getString(openstudio::OtherEquipmentFields::EndUseSubcategory);
+  if (s) {
+    otherEquipment.setEndUseSubcategory(*s);
+  }
        
   return otherEquipment;
 }
