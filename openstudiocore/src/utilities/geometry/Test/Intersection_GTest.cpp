@@ -1278,3 +1278,51 @@ TEST_F(GeometryFixture, Subtract_Within_Up)
   test = subtract(points2, holes, tol);
   EXPECT_TRUE(test.empty());
 }
+
+
+TEST_F(GeometryFixture, selfIntersects)
+{
+  double tol = 0.01;
+
+  std::vector<std::vector<Point3d> > test;
+  std::vector<std::vector<Point3d> > holes;
+  Point3dVector points;
+
+  points.clear();
+  points.push_back(Point3d(0, 1, 0));
+  points.push_back(Point3d(2, 1, 0));
+  points.push_back(Point3d(2, 0, 0));
+  points.push_back(Point3d(0, 0, 0));
+  EXPECT_FALSE(selfIntersects(points,tol));
+
+  points.clear();
+  points.push_back(Point3d(0, 1, 0));
+  points.push_back(Point3d(2, 1, 0));
+  points.push_back(Point3d(0, 0, 0));
+  points.push_back(Point3d(2, 0, 0));
+  EXPECT_TRUE(selfIntersects(points,tol));
+
+  points.clear();
+  points.push_back(Point3d(0, 1, 0));
+  points.push_back(Point3d(1, 0.2, 0));
+  points.push_back(Point3d(2, 1, 0));
+  points.push_back(Point3d(2, 0, 0));
+  points.push_back(Point3d(0, 0, 0));
+  EXPECT_FALSE(selfIntersects(points,tol));
+
+  points.clear();
+  points.push_back(Point3d(0, 1, 0));
+  points.push_back(Point3d(1, 0, 0));
+  points.push_back(Point3d(2, 1, 0));
+  points.push_back(Point3d(2, 0, 0));
+  points.push_back(Point3d(0, 0, 0));
+  EXPECT_FALSE(selfIntersects(points,tol));
+
+  points.clear();
+  points.push_back(Point3d(0, 1, 0));
+  points.push_back(Point3d(1, -1, 0));
+  points.push_back(Point3d(2, 1, 0));
+  points.push_back(Point3d(2, 0, 0));
+  points.push_back(Point3d(0, 0, 0));
+  EXPECT_TRUE(selfIntersects(points,tol));
+}

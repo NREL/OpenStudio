@@ -64,8 +64,12 @@ std::string toUnderscoreCase(const std::string& s) {
   //std::string result = toLowerCamelCase(s);
   //result = boost::regex_replace(result,boost::regex("(.)([A-Z])"),"$1_\\l$2");
 
+  std::string result = boost::replace_all_copy(s, "OpenStudio", "Openstudio");  
+  boost::replace_all(result, "EnergyPlus", "Energyplus");  
+
   //http://stackoverflow.com/questions/1509915/converting-camel-case-to-underscore-case-in-ruby
-  std::string result = boost::regex_replace(s, boost::regex("[^a-zA-Z0-9]"), " ");
+  // DLM: there is a to_underscore method in the BCL gem, this should be synchronized
+  result = boost::regex_replace(result, boost::regex("[^a-zA-Z0-9]"), " ");
   result = boost::regex_replace(result, boost::regex("([\\-]+)"), "_");
   result = boost::regex_replace(result, boost::regex("([\\s]+)"), "_");
   result = boost::regex_replace(result, boost::regex("([A-Za-z])([0-9])"), "$1_$2");

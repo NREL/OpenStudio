@@ -422,7 +422,9 @@ namespace detail {
         ofs << "    WaterSystems:Electricity,!- Variable or Meter 12 Name" << std::endl;
         ofs << "    ValueWhenMaximumOrMinimum,            !- Aggregation Type for Variable or Meter 12" << std::endl;
         ofs << "    Cogeneration:Electricity,!- Variable or Meter 13 Name" << std::endl;
-        ofs << "    ValueWhenMaximumOrMinimum;            !- Aggregation Type for Variable or Meter 13" << std::endl;
+        ofs << "    ValueWhenMaximumOrMinimum,            !- Aggregation Type for Variable or Meter 13" << std::endl;
+        ofs << "    Refrigeration:Electricity,!- Variable or Meter 14 Name" << std::endl;
+        ofs << "    ValueWhenMaximumOrMinimum;            !- Aggregation Type for Variable or Meter 14" << std::endl;
 
         ofs << "Output:Table:Monthly," << std::endl;
         ofs << "  Building Energy Performance - Natural Gas Peak Demand,  !- Name" << std::endl;

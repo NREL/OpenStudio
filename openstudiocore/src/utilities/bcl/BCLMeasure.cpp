@@ -47,6 +47,8 @@
 #include <QSettings>
 #include <QRegularExpression>
 
+#include <boost/algorithm/string/predicate.hpp>
+
 #include <boost/filesystem.hpp>
 
 namespace openstudio{
@@ -115,8 +117,10 @@ namespace openstudio{
     QString templateModelerDescription = "MODELER_DESCRIPTION_TEXT";
     std::vector<BCLMeasureArgument> arguments;
     QString testOSM;
+    QString testEPW;
     QString resourceFile;
     openstudio::path testOSMPath;
+    openstudio::path testEPWPath;
     openstudio::path resourceFilePath;
     if (measureType == MeasureType::ModelMeasure){
       measureTemplate = ":/templates/ModelMeasure/measure.rb";
@@ -165,11 +169,13 @@ namespace openstudio{
       measureTemplate = ":/templates/ReportingMeasure/measure.rb";
       testTemplate = ":/templates/ReportingMeasure/tests/reporting_measure_test.rb";
       testOSM = ":/templates/ReportingMeasure/tests/example_model.osm";
+      testEPW = ":/templates/ReportingMeasure/tests/USA_CO_Golden-NREL.724666_TMY3.epw";
       resourceFile = ":/templates/ReportingMeasure/resources/report.html.in";
       templateClassName = "ReportingMeasure";
 
       createDirectory(dir / toPath("tests"));
       testOSMPath = dir / toPath("tests/example_model.osm");
+      testEPWPath = dir / toPath("tests/USA_CO_Golden-NREL.724666_TMY3.epw");
 
       createDirectory(dir / toPath("resources"));
       resourceFilePath = dir / toPath("resources/report.html.in");
@@ -207,6 +213,16 @@ namespace openstudio{
       if(file.open(QFile::ReadOnly)){
         QTextStream docIn(&file);
         testOSMString = docIn.readAll();
+        file.close();
+      }
+    }
+
+    QString testEPWString;
+    if (!testEPW.isEmpty()){
+      QFile file(testEPW);
+      if(file.open(QFile::ReadOnly)){
+        QTextStream docIn(&file);
+        testEPWString = docIn.readAll();
         file.close();
       }
     }
@@ -274,6 +290,24 @@ namespace openstudio{
         BCLFileReference measureTestOSMFileReference(testOSMPath, true);
         measureTestOSMFileReference.setUsageType("test");
         m_bclXML.addFile(measureTestOSMFileReference);
+      }
+    }
+
+    // write test epw
+    { 
+      if (!testEPWString.isEmpty()){
+        QFile file(toQString(testEPWPath));
+        bool opened = file.open(QIODevice::WriteOnly);
+        if (!opened){
+          LOG_AND_THROW("Cannot write test epw file to '" << toString(testEPWPath) << "'");
+        }
+        QTextStream textStream(&file);
+        textStream << testEPWString;
+        file.close();
+
+        BCLFileReference measureTestEPWFileReference(testEPWPath, true);
+        measureTestEPWFileReference.setUsageType("test");
+        m_bclXML.addFile(measureTestEPWFileReference);
       }
     }
 
@@ -989,9 +1023,13 @@ namespace openstudio{
     std::vector<BCLFileReference> filesToRemove;
     std::vector<BCLFileReference> filesToAdd;
     for (BCLFileReference file : m_bclXML.files()) {
+      std::string filename = file.fileName();
       if (!exists(file.path())){
         result = true;
         // what if this is the measure.rb file?
+        filesToRemove.push_back(file);
+      }else if (filename.empty() || boost::starts_with(filename, ".")){
+        result = true;
         filesToRemove.push_back(file);
       }else if (file.checkForUpdate()){
         result = true;
@@ -1007,7 +1045,12 @@ namespace openstudio{
       openstudio::path srcItemPath = srcDir / toPath(info.fileName());
       openstudio::path parentPath = srcItemPath.parent_path();
       bool ignore = false;
-      while (!parentPath.empty()){
+
+      std::string filename = toString(info.fileName());
+      if (filename.empty() || boost::starts_with(filename, ".")){
+        ignore = true;
+      }
+      while (!ignore && !parentPath.empty()){
         if (parentPath == ignoreDir){
           ignore = true;
           break;
@@ -1031,6 +1074,12 @@ namespace openstudio{
     for (const QFileInfo &info : QDir(toQString(srcDir)).entryInfoList(QDir::Files))
     {
       openstudio::path srcItemPath = srcDir / toPath(info.fileName());
+
+      std::string filename = toString(srcItemPath.filename());
+      if (filename.empty() || boost::starts_with(filename, ".")){
+        continue;
+      }
+
       if (!m_bclXML.hasFile(srcItemPath)){
         BCLFileReference file(srcItemPath, true);
         file.setUsageType("resource");
