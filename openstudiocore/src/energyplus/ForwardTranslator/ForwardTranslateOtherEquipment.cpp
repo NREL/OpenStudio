@@ -118,6 +118,10 @@ boost::optional<IdfObject> ForwardTranslator::translateOtherEquipment(
 
   idfObject.setString(OtherEquipmentFields::FuelType, modelObject.fuelType());
 
+  if (!modelObject.isEndUseSubcategoryDefaulted()) {
+    idfObject.setString(OtherEquipmentFields::EndUseSubcategory, modelObject.endUseSubcategory());
+  }
+
   return idfObject;
 }
 
