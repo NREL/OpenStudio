@@ -330,97 +330,105 @@ void StandardsInformationConstructionWidget::hideFenestration()
 
 void StandardsInformationConstructionWidget::enableFenestration()
 {
-  m_fenestrationType->setEnabled(true);
-  m_fenestrationAssemblyContext->setEnabled(true);
-  m_fenestrationNumberOfPanes->setEnabled(true);
-  m_fenestrationFrameType->setEnabled(true);
-  m_fenestrationDividerType->setEnabled(true);
-  m_fenestrationTint->setEnabled(true);
-  m_fenestrationGasFill->setEnabled(true);
-  m_fenestrationLowEmissivityCoating->setEnabled(true);
+  if (!m_fenestrationEnabled){
+    m_fenestrationEnabled = true;
 
-  m_fenestrationType->bind<std::string>(
-    *m_standardsInformation,
-    static_cast<std::string(*)(const std::string&)>(&openstudio::toString),
-    std::bind(&openstudio::model::StandardsInformationConstruction::fenestrationTypeValues),
-    std::function<boost::optional<std::string>()>(std::bind(&openstudio::model::StandardsInformationConstruction::fenestrationType, m_standardsInformation.get_ptr())),
-    std::bind(&openstudio::model::StandardsInformationConstruction::setFenestrationType, m_standardsInformation.get_ptr(), std::placeholders::_1),
-    NoFailAction(std::bind(&model::StandardsInformationConstruction::resetFenestrationType, m_standardsInformation.get_ptr())));
+    m_fenestrationType->setEnabled(true);
+    m_fenestrationAssemblyContext->setEnabled(true);
+    m_fenestrationNumberOfPanes->setEnabled(true);
+    m_fenestrationFrameType->setEnabled(true);
+    m_fenestrationDividerType->setEnabled(true);
+    m_fenestrationTint->setEnabled(true);
+    m_fenestrationGasFill->setEnabled(true);
+    m_fenestrationLowEmissivityCoating->setEnabled(true);
 
-  m_fenestrationAssemblyContext->bind<std::string>(
-    *m_standardsInformation,
-    static_cast<std::string(*)(const std::string&)>(&openstudio::toString),
-    std::bind(&openstudio::model::StandardsInformationConstruction::fenestrationAssemblyContextValues),
-    std::function<boost::optional<std::string>()>(std::bind(&openstudio::model::StandardsInformationConstruction::fenestrationAssemblyContext, m_standardsInformation.get_ptr())),
-    std::bind(&openstudio::model::StandardsInformationConstruction::setFenestrationAssemblyContext, m_standardsInformation.get_ptr(), std::placeholders::_1),
-    NoFailAction(std::bind(&model::StandardsInformationConstruction::resetFenestrationAssemblyContext, m_standardsInformation.get_ptr())));
+    m_fenestrationType->bind<std::string>(
+      *m_standardsInformation,
+      static_cast<std::string(*)(const std::string&)>(&openstudio::toString),
+      std::bind(&openstudio::model::StandardsInformationConstruction::fenestrationTypeValues),
+      std::function<boost::optional<std::string>()>(std::bind(&openstudio::model::StandardsInformationConstruction::fenestrationType, m_standardsInformation.get_ptr())),
+      std::bind(&openstudio::model::StandardsInformationConstruction::setFenestrationType, m_standardsInformation.get_ptr(), std::placeholders::_1),
+      NoFailAction(std::bind(&model::StandardsInformationConstruction::resetFenestrationType, m_standardsInformation.get_ptr())));
 
-  m_fenestrationNumberOfPanes->bind<std::string>(
-    *m_standardsInformation,
-    static_cast<std::string(*)(const std::string&)>(&openstudio::toString),
-    std::bind(&openstudio::model::StandardsInformationConstruction::fenestrationNumberOfPanesValues),
-    std::function<boost::optional<std::string>()>(std::bind(&openstudio::model::StandardsInformationConstruction::fenestrationNumberOfPanes, m_standardsInformation.get_ptr())),
-    std::bind(&openstudio::model::StandardsInformationConstruction::setFenestrationNumberOfPanes, m_standardsInformation.get_ptr(), std::placeholders::_1),
-    NoFailAction(std::bind(&model::StandardsInformationConstruction::resetFenestrationNumberOfPanes, m_standardsInformation.get_ptr())));
+    m_fenestrationAssemblyContext->bind<std::string>(
+      *m_standardsInformation,
+      static_cast<std::string(*)(const std::string&)>(&openstudio::toString),
+      std::bind(&openstudio::model::StandardsInformationConstruction::fenestrationAssemblyContextValues),
+      std::function<boost::optional<std::string>()>(std::bind(&openstudio::model::StandardsInformationConstruction::fenestrationAssemblyContext, m_standardsInformation.get_ptr())),
+      std::bind(&openstudio::model::StandardsInformationConstruction::setFenestrationAssemblyContext, m_standardsInformation.get_ptr(), std::placeholders::_1),
+      NoFailAction(std::bind(&model::StandardsInformationConstruction::resetFenestrationAssemblyContext, m_standardsInformation.get_ptr())));
 
-  m_fenestrationFrameType->bind<std::string>(
-    *m_standardsInformation,
-    static_cast<std::string(*)(const std::string&)>(&openstudio::toString),
-    std::bind(&openstudio::model::StandardsInformationConstruction::fenestrationFrameTypeValues),
-    std::function<boost::optional<std::string>()>(std::bind(&openstudio::model::StandardsInformationConstruction::fenestrationFrameType, m_standardsInformation.get_ptr())),
-    std::bind(&openstudio::model::StandardsInformationConstruction::setFenestrationFrameType, m_standardsInformation.get_ptr(), std::placeholders::_1),
-    NoFailAction(std::bind(&model::StandardsInformationConstruction::resetFenestrationFrameType, m_standardsInformation.get_ptr())));
+    m_fenestrationNumberOfPanes->bind<std::string>(
+      *m_standardsInformation,
+      static_cast<std::string(*)(const std::string&)>(&openstudio::toString),
+      std::bind(&openstudio::model::StandardsInformationConstruction::fenestrationNumberOfPanesValues),
+      std::function<boost::optional<std::string>()>(std::bind(&openstudio::model::StandardsInformationConstruction::fenestrationNumberOfPanes, m_standardsInformation.get_ptr())),
+      std::bind(&openstudio::model::StandardsInformationConstruction::setFenestrationNumberOfPanes, m_standardsInformation.get_ptr(), std::placeholders::_1),
+      NoFailAction(std::bind(&model::StandardsInformationConstruction::resetFenestrationNumberOfPanes, m_standardsInformation.get_ptr())));
 
-  m_fenestrationDividerType->bind<std::string>(
-    *m_standardsInformation,
-    static_cast<std::string(*)(const std::string&)>(&openstudio::toString),
-    std::bind(&openstudio::model::StandardsInformationConstruction::fenestrationDividerTypeValues),
-    std::function<boost::optional<std::string>()>(std::bind(&openstudio::model::StandardsInformationConstruction::fenestrationDividerType, m_standardsInformation.get_ptr())),
-    std::bind(&openstudio::model::StandardsInformationConstruction::setFenestrationDividerType, m_standardsInformation.get_ptr(), std::placeholders::_1),
-    NoFailAction(std::bind(&model::StandardsInformationConstruction::resetFenestrationDividerType, m_standardsInformation.get_ptr())));
+    m_fenestrationFrameType->bind<std::string>(
+      *m_standardsInformation,
+      static_cast<std::string(*)(const std::string&)>(&openstudio::toString),
+      std::bind(&openstudio::model::StandardsInformationConstruction::fenestrationFrameTypeValues),
+      std::function<boost::optional<std::string>()>(std::bind(&openstudio::model::StandardsInformationConstruction::fenestrationFrameType, m_standardsInformation.get_ptr())),
+      std::bind(&openstudio::model::StandardsInformationConstruction::setFenestrationFrameType, m_standardsInformation.get_ptr(), std::placeholders::_1),
+      NoFailAction(std::bind(&model::StandardsInformationConstruction::resetFenestrationFrameType, m_standardsInformation.get_ptr())));
 
-  m_fenestrationTint->bind<std::string>(
-    *m_standardsInformation,
-    static_cast<std::string(*)(const std::string&)>(&openstudio::toString),
-    std::bind(&openstudio::model::StandardsInformationConstruction::fenestrationTintValues),
-    std::function<boost::optional<std::string>()>(std::bind(&openstudio::model::StandardsInformationConstruction::fenestrationTint, m_standardsInformation.get_ptr())),
-    std::bind(&openstudio::model::StandardsInformationConstruction::setFenestrationTint, m_standardsInformation.get_ptr(), std::placeholders::_1),
-    NoFailAction(std::bind(&model::StandardsInformationConstruction::resetFenestrationTint, m_standardsInformation.get_ptr())));
+    m_fenestrationDividerType->bind<std::string>(
+      *m_standardsInformation,
+      static_cast<std::string(*)(const std::string&)>(&openstudio::toString),
+      std::bind(&openstudio::model::StandardsInformationConstruction::fenestrationDividerTypeValues),
+      std::function<boost::optional<std::string>()>(std::bind(&openstudio::model::StandardsInformationConstruction::fenestrationDividerType, m_standardsInformation.get_ptr())),
+      std::bind(&openstudio::model::StandardsInformationConstruction::setFenestrationDividerType, m_standardsInformation.get_ptr(), std::placeholders::_1),
+      NoFailAction(std::bind(&model::StandardsInformationConstruction::resetFenestrationDividerType, m_standardsInformation.get_ptr())));
 
-  m_fenestrationGasFill->bind<std::string>(
-    *m_standardsInformation,
-    static_cast<std::string(*)(const std::string&)>(&openstudio::toString),
-    std::bind(&openstudio::model::StandardsInformationConstruction::fenestrationGasFillValues),
-    std::function<boost::optional<std::string>()>(std::bind(&openstudio::model::StandardsInformationConstruction::fenestrationGasFill, m_standardsInformation.get_ptr())),
-    std::bind(&openstudio::model::StandardsInformationConstruction::setFenestrationGasFill, m_standardsInformation.get_ptr(), std::placeholders::_1),
-    NoFailAction(std::bind(&model::StandardsInformationConstruction::resetFenestrationGasFill, m_standardsInformation.get_ptr())));
+    m_fenestrationTint->bind<std::string>(
+      *m_standardsInformation,
+      static_cast<std::string(*)(const std::string&)>(&openstudio::toString),
+      std::bind(&openstudio::model::StandardsInformationConstruction::fenestrationTintValues),
+      std::function<boost::optional<std::string>()>(std::bind(&openstudio::model::StandardsInformationConstruction::fenestrationTint, m_standardsInformation.get_ptr())),
+      std::bind(&openstudio::model::StandardsInformationConstruction::setFenestrationTint, m_standardsInformation.get_ptr(), std::placeholders::_1),
+      NoFailAction(std::bind(&model::StandardsInformationConstruction::resetFenestrationTint, m_standardsInformation.get_ptr())));
 
-  m_fenestrationLowEmissivityCoating->bind(
-   *m_standardsInformation,
-    std::bind(&openstudio::model::StandardsInformationConstruction::fenestrationLowEmissivityCoating, m_standardsInformation.get_ptr()),
-    BoolSetter(std::bind(&openstudio::model::StandardsInformationConstruction::setFenestrationLowEmissivityCoating, m_standardsInformation.get_ptr(), std::placeholders::_1)),
-    NoFailAction(std::bind(&model::StandardsInformationConstruction::resetFenestrationLowEmissivityCoating, m_standardsInformation.get_ptr())));
+    m_fenestrationGasFill->bind<std::string>(
+      *m_standardsInformation,
+      static_cast<std::string(*)(const std::string&)>(&openstudio::toString),
+      std::bind(&openstudio::model::StandardsInformationConstruction::fenestrationGasFillValues),
+      std::function<boost::optional<std::string>()>(std::bind(&openstudio::model::StandardsInformationConstruction::fenestrationGasFill, m_standardsInformation.get_ptr())),
+      std::bind(&openstudio::model::StandardsInformationConstruction::setFenestrationGasFill, m_standardsInformation.get_ptr(), std::placeholders::_1),
+      NoFailAction(std::bind(&model::StandardsInformationConstruction::resetFenestrationGasFill, m_standardsInformation.get_ptr())));
+
+    m_fenestrationLowEmissivityCoating->bind(
+      *m_standardsInformation,
+      std::bind(&openstudio::model::StandardsInformationConstruction::fenestrationLowEmissivityCoating, m_standardsInformation.get_ptr()),
+      BoolSetter(std::bind(&openstudio::model::StandardsInformationConstruction::setFenestrationLowEmissivityCoating, m_standardsInformation.get_ptr(), std::placeholders::_1)),
+      NoFailAction(std::bind(&model::StandardsInformationConstruction::resetFenestrationLowEmissivityCoating, m_standardsInformation.get_ptr())));
+  }
 }
 
 void StandardsInformationConstructionWidget::disableFenestration()
 {
-  m_fenestrationType->setEnabled(false);
-  m_fenestrationAssemblyContext->setEnabled(false);
-  m_fenestrationNumberOfPanes->setEnabled(false);
-  m_fenestrationFrameType->setEnabled(false);
-  m_fenestrationDividerType->setEnabled(false);
-  m_fenestrationTint->setEnabled(false);
-  m_fenestrationGasFill->setEnabled(false);
-  m_fenestrationLowEmissivityCoating->setEnabled(false);
+  if (m_fenestrationEnabled){
+    m_fenestrationEnabled = false;
 
-  m_fenestrationType->unbind();
-  m_fenestrationAssemblyContext->unbind();
-  m_fenestrationNumberOfPanes->unbind();
-  m_fenestrationFrameType->unbind();
-  m_fenestrationDividerType->unbind();
-  m_fenestrationTint->unbind();
-  m_fenestrationGasFill->unbind();
-  m_fenestrationLowEmissivityCoating->unbind();
+    m_fenestrationType->setEnabled(false);
+    m_fenestrationAssemblyContext->setEnabled(false);
+    m_fenestrationNumberOfPanes->setEnabled(false);
+    m_fenestrationFrameType->setEnabled(false);
+    m_fenestrationDividerType->setEnabled(false);
+    m_fenestrationTint->setEnabled(false);
+    m_fenestrationGasFill->setEnabled(false);
+    m_fenestrationLowEmissivityCoating->setEnabled(false);
+
+    m_fenestrationType->unbind();
+    m_fenestrationAssemblyContext->unbind();
+    m_fenestrationNumberOfPanes->unbind();
+    m_fenestrationFrameType->unbind();
+    m_fenestrationDividerType->unbind();
+    m_fenestrationTint->unbind();
+    m_fenestrationGasFill->unbind();
+    m_fenestrationLowEmissivityCoating->unbind();
+  }
 }
 
 void StandardsInformationConstructionWidget::toggleUnits(bool displayIP)
