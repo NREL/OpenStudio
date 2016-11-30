@@ -902,26 +902,30 @@ namespace openstudio{
         std::string oldLowerClassName = toUnderscoreCase(oldClassName);
         std::string newLowerClassName = toUnderscoreCase(newClassName);
 
-        QString oldPath = toQString(fileRef.path());
-        QString newPath = oldPath;
+        openstudio::path oldPath = fileRef.path();
+        openstudio::path newPath = oldPath;
+
+        QString oldFileName = toQString(fileRef.path().filename());
+        QString newFileName = oldFileName;
         if (!oldLowerClassName.empty() && !newLowerClassName.empty() && oldLowerClassName != newLowerClassName){
           QString temp = toQString(oldLowerClassName);
-          int index = newPath.lastIndexOf(temp);
+          int index = newFileName.lastIndexOf(temp);
           if (index >= 0){
-            newPath.replace(index, temp.size(), toQString(newLowerClassName));
+            newFileName.replace(index, temp.size(), toQString(newLowerClassName));
+            newPath = oldPath.parent_path() / toPath(newFileName);
+
+            if (openstudio::filesystem::exists(newPath)) {
+              // somehow this file already exists (e.g. no name change), don't clobber it
+              newPath = oldPath;
+            }else{
+              openstudio::filesystem::copy_file(oldPath, newPath);
+              openstudio::filesystem::remove(oldPath);
+            }
           }
         }
 
-        if (openstudio::filesystem::exists(openstudio::toPath(newPath))) {
-          // somehow this file already exists, don't clobber it
-          newPath = oldPath;
-        }else{
-          openstudio::filesystem::copy_file(openstudio::toPath(oldPath), openstudio::toPath(newPath));
-          openstudio::filesystem::remove(openstudio::toPath(oldPath));
-        }
-        
         QString fileString;
-        openstudio::filesystem::ifstream file(openstudio::toPath(newPath), std::ios_base::binary);
+        openstudio::filesystem::ifstream file(newPath, std::ios_base::binary);
         if (file.is_open()){
 
           fileString = openstudio::filesystem::read_as_QByteArray(file);
@@ -932,7 +936,7 @@ namespace openstudio{
           }
           file.close();
 
-          openstudio::filesystem::ofstream file2(openstudio::toPath(newPath), std::ios_base::binary);
+          openstudio::filesystem::ofstream file2(newPath, std::ios_base::binary);
           if (file2.is_open()){
             openstudio::filesystem::write(file2, fileString);
             file2.close();
