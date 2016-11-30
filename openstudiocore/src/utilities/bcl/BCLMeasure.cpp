@@ -927,26 +927,30 @@ namespace openstudio{
         std::string oldLowerClassName = toUnderscoreCase(oldClassName);
         std::string newLowerClassName = toUnderscoreCase(newClassName);
 
-        QString oldPath = toQString(fileRef.path());
-        QString newPath = oldPath;
+        openstudio::path oldPath = fileRef.path();
+        openstudio::path newPath = oldPath;
+
+        QString oldFileName = toQString(fileRef.path().filename());
+        QString newFileName = oldFileName;
         if (!oldLowerClassName.empty() && !newLowerClassName.empty() && oldLowerClassName != newLowerClassName){
           QString temp = toQString(oldLowerClassName);
-          int index = newPath.lastIndexOf(temp);
+          int index = newFileName.lastIndexOf(temp);
           if (index >= 0){
-            newPath.replace(index, temp.size(), toQString(newLowerClassName));
+            newFileName.replace(index, temp.size(), toQString(newLowerClassName));
+            newPath = oldPath.parent_path() / toPath(newFileName);
+
+            if (QFile::exists(toQString(newPath))) {
+              // somehow this file already exists, don't clobber it
+              newPath = oldPath;
+            }else{
+              QFile::copy(toQString(oldPath), toQString(newPath));
+              QFile::remove(toQString(oldPath));
+            }
           }
         }
 
-        if (QFile::exists(newPath)) {
-          // somehow this file already exists, don't clobber it
-          newPath = oldPath;
-        }else{
-          QFile::copy(oldPath, newPath);
-          QFile::remove(oldPath);
-        }
-        
         QString fileString;
-        QFile file(newPath);
+        QFile file(toQString(newPath));
         if (file.open(QFile::ReadOnly)){
 
           QTextStream docIn(&file);
