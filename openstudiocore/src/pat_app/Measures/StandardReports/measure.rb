@@ -246,6 +246,34 @@ class OpenStudioResults < OpenStudio::Ruleset::ReportingUserScript
       end
     end
 
+    # adding additional runner.registerValues needed for project scripts in 2.x PAT
+    # note: these are not in begin rescue like individual sections. Won't fail gracefully if any SQL query's can't be found
+
+    # annual_peak_electric_demand
+    annual_peak_electric_demand_k_query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='DemandEndUseComponentsSummary' and ReportForString='Entire Facility' and TableName='End Uses' and RowName= 'Total End Uses' and ColumnName='Electricity' and Units='W'"
+    annual_peak_electric_demand_kw = OpenStudio.convert(sql_file.execAndReturnFirstDouble(annual_peak_electric_demand_k_query).get, 'W', 'kW').get
+    runner.registerValue('annual_peak_electric_demand',annual_peak_electric_demand_kw,'kW')
+
+    # get base year for use in first_year_cap_cost
+    baseYrString_query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='Life-Cycle Cost Report' and ReportForString='Entire Facility' and TableName='Life-Cycle Cost Parameters' and RowName= 'Base Date' and ColumnName= 'Value'"
+    baseYrString = sql_file.execAndReturnFirstString(baseYrString_query).get
+    # get first_year_cap_cost
+    first_year_cap_cost_query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='Life-Cycle Cost Report' and ReportForString='Entire Facility' and TableName='Capital Cash Flow by Category (Without Escalation)' and RowName= '#{baseYrString}' and ColumnName= 'Total'"
+    first_year_cap_cost = sql_file.execAndReturnFirstDouble(first_year_cap_cost_query).get
+    runner.registerValue('first_year_capital_cost',first_year_cap_cost,'$')
+
+    # annual_utility_cost
+    annual_utility_cost = sql_file.annualTotalUtilityCost
+    if annual_utility_cost.is_initialized
+      runner.registerValue('annual_utility_cost',annual_utility_cost.get,'$')
+    else
+      runner.registerValue('annual_utility_cost',0.0,'$')
+    end
+
+    # total_lifecycle_cost
+    total_lifecycle_cost_query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='Life-Cycle Cost Report' and ReportForString='Entire Facility' and TableName='Present Value by Year' and RowName= 'TOTAL' and ColumnName= 'Present Value of Costs'"
+    runner.registerValue('total_lifecycle_cost',sql_file.execAndReturnFirstDouble(total_lifecycle_cost_query).get,'$')
+
     # closing the sql file
     sql_file.close
 
