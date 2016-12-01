@@ -577,3 +577,25 @@ TEST_F(RulesetFixture, UserScript_TestModelUserScript2) {
   ASSERT_TRUE(it->units());
   EXPECT_EQ("ft^2",it->units().get());
 }
+
+TEST_F(RulesetFixture, RegisterValueNames) {
+  OSRunner runner;
+  runner.registerValue("value", 0);
+  runner.registerValue("ValueTwo", 1);
+  runner.registerValue("VALUETHREE", 2);
+  runner.registerValue("4ValueFour", 3);
+  runner.registerValue("Value<Five>", 4);
+  runner.registerValue("#V|a@l#u$e%F^i&v*e(V)a{l}u_e[F]i;v:e'V\"a,l<u.e>F\\i/v?e+V=", 5);
+  runner.registerValue("Value&$@$Six", 6);
+  runner.registerValue("Value____Seven", 7);
+  std::vector<Attribute> attributes = runner.result().attributes();
+  ASSERT_EQ(8u, attributes.size());
+  EXPECT_EQ("value", attributes[0].name());
+  EXPECT_EQ("value_two", attributes[1].name());
+  EXPECT_EQ("valuethree", attributes[2].name());
+  EXPECT_EQ("_4_value_four", attributes[3].name());
+  EXPECT_EQ("value_five", attributes[4].name());
+  EXPECT_EQ("v_a_l_u_e_f_i_v_e_v_a_l_u_e_f_i_v_e_v_a_l_u_e_f_i_v_e_v", attributes[5].name());
+  EXPECT_EQ("value_six", attributes[6].name());
+  EXPECT_EQ("value_seven", attributes[7].name());
+}

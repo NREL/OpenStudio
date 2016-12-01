@@ -43,6 +43,7 @@
 
 #include <utilities/idd/OS_OtherEquipment_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
+#include <utilities/idd/IddFactory.hxx>
 
 #include "../utilities/core/Assert.hpp"
 
@@ -136,6 +137,23 @@ namespace detail {
     return result;
   }
 
+  std::string OtherEquipment_Impl::endUseSubcategory() const {
+    return getString(OS_OtherEquipmentFields::EndUseSubcategory, true).get();
+  }
+
+  bool OtherEquipment_Impl::isEndUseSubcategoryDefaulted() const {
+    return isEmpty(OS_OtherEquipmentFields::EndUseSubcategory);
+  }
+
+  std::string OtherEquipment_Impl::fuelType() const
+  {
+    return this->getString(OS_OtherEquipmentFields::FuelType, true).get();
+  }
+
+  bool OtherEquipment_Impl::isFuelTypeDefaulted() const {
+    return isEmpty(OS_OtherEquipmentFields::FuelType);
+  }
+
   OtherEquipmentDefinition OtherEquipment_Impl::otherEquipmentDefinition() const {
     return definition().cast<OtherEquipmentDefinition>();
   }
@@ -179,6 +197,24 @@ namespace detail {
 
   bool OtherEquipment_Impl::setOtherEquipmentDefinition(const OtherEquipmentDefinition& definition) {
     return setPointer(definitionIndex(),definition.handle());
+  }
+
+  bool OtherEquipment_Impl::setEndUseSubcategory(const std::string &endUseSubcategory) {
+    return setString(OS_OtherEquipmentFields::EndUseSubcategory, endUseSubcategory);
+  }
+
+  void OtherEquipment_Impl::resetEndUseSubcategory() {
+    OS_ASSERT(setString(OS_OtherEquipmentFields::EndUseSubcategory, ""));
+  }
+
+  bool OtherEquipment_Impl::setFuelType(const std::string &fuelType)
+  {
+    return this->setString(OS_OtherEquipmentFields::FuelType, fuelType);
+  }
+
+  void OtherEquipment_Impl::resetFuelType()
+  {
+    this->setString(OS_OtherEquipmentFields::FuelType, "");
   }
 
   bool OtherEquipment_Impl::setDefinition(const SpaceLoadDefinition& definition) {
@@ -284,6 +320,44 @@ OtherEquipment::OtherEquipment(const OtherEquipmentDefinition& definition)
 IddObjectType OtherEquipment::iddObjectType() {
   IddObjectType result(IddObjectType::OS_OtherEquipment);
   return result;
+}
+
+std::vector<std::string> OtherEquipment::validFuelTypeValues() {
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_OtherEquipmentFields::FuelType);
+}
+
+std::string OtherEquipment::endUseSubcategory() const {
+  return getImpl<detail::OtherEquipment_Impl>()->endUseSubcategory();
+}
+
+bool OtherEquipment::isEndUseSubcategoryDefaulted() const {
+  return getImpl<detail::OtherEquipment_Impl>()->isEndUseSubcategoryDefaulted();
+}
+
+bool OtherEquipment::setEndUseSubcategory(const std::string &endUseSubcategory) {
+  return getImpl<detail::OtherEquipment_Impl>()->setEndUseSubcategory(endUseSubcategory);
+}
+
+void OtherEquipment::resetEndUseSubcategory() {
+  getImpl<detail::OtherEquipment_Impl>()->resetEndUseSubcategory();
+}
+
+std::string OtherEquipment::fuelType() const {
+  return getImpl<detail::OtherEquipment_Impl>()->fuelType();
+}
+
+bool OtherEquipment::isFuelTypeDefaulted() const {
+  return getImpl<detail::OtherEquipment_Impl>()->isFuelTypeDefaulted();
+}
+
+bool OtherEquipment::setFuelType(const std::string& fuelType)
+{
+  return getImpl<detail::OtherEquipment_Impl>()->setFuelType(fuelType);
+}
+
+void OtherEquipment::resetFuelType()
+{
+  getImpl<detail::OtherEquipment_Impl>()->resetFuelType();
 }
 
 OtherEquipmentDefinition OtherEquipment::otherEquipmentDefinition() const {

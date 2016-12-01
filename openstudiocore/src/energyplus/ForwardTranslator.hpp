@@ -110,6 +110,7 @@ class CoilSystemCoolingDXHeatExchangerAssisted;
 class CoilSystemCoolingWaterHeatExchangerAssisted;
 class CoilWaterHeatingDesuperheater;
 class CoilWaterHeatingAirToWaterHeatPump;
+class CoilWaterHeatingAirToWaterHeatPumpWrapped;
 class Construction;
 class ConstructionWithInternalSource;
 class ControllerOutdoorAir;
@@ -334,6 +335,7 @@ class Timestep;
 class Version;
 class WaterHeaterMixed;
 class WaterHeaterHeatPump;
+class WaterHeaterHeatPumpWrappedCondenser;
 class WaterHeaterStratified;
 class WaterUseConnections;
 class WaterUseEquipment;
@@ -341,6 +343,7 @@ class WindowPropertyFrameAndDivider;
 class ZoneAirContaminantBalance;
 class ZoneAirHeatBalanceAlgorithm;
 class ZoneAirMassFlowConservation;
+class ZoneCapacitanceMultiplierResearchSpecial;
 class ZoneControlContaminantController;
 class ZoneControlHumidistat;
 class ZoneControlThermostatStagedDualSetpoint;
@@ -578,6 +581,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateCoilWaterHeatingDesuperheater( model::CoilWaterHeatingDesuperheater & modelObject );
 
   boost::optional<IdfObject> translateCoilWaterHeatingAirToWaterHeatPump( model::CoilWaterHeatingAirToWaterHeatPump & modelObject );
+
+  boost::optional<IdfObject> translateCoilWaterHeatingAirToWaterHeatPumpWrapped( model::CoilWaterHeatingAirToWaterHeatPumpWrapped & modelObject );
 
   boost::optional<IdfObject> translateConstruction( model::Construction & modelObject );
 
@@ -1027,6 +1032,8 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateWaterHeaterHeatPump( model::WaterHeaterHeatPump & modelObject );
 
+  boost::optional<IdfObject> translateWaterHeaterHeatPumpWrappedCondenser( model::WaterHeaterHeatPumpWrappedCondenser & modelObject );
+
   boost::optional<IdfObject> translateWaterHeaterStratified( model::WaterHeaterStratified & modelObject );
 
   boost::optional<IdfObject> translateWaterUseConnections( model::WaterUseConnections & modelObject );
@@ -1040,6 +1047,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateZoneAirContaminantBalance( model::ZoneAirContaminantBalance & modelObject );
 
   boost::optional<IdfObject> translateZoneAirMassFlowConservation(model::ZoneAirMassFlowConservation & modelObject);
+
+  boost::optional<IdfObject> translateZoneCapacitanceMultiplierResearchSpecial( model::ZoneCapacitanceMultiplierResearchSpecial & modelObject );
 
   boost::optional<IdfObject> translateZoneControlContaminantController( model::ZoneControlContaminantController& modelObject );
 

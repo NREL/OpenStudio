@@ -303,6 +303,8 @@ class RULESET_API OSRunner {
  private:
   REGISTER_LOGGER("openstudio.ruleset.OSRunner");
 
+  std::string cleanValueName(const std::string& name) const;
+
   OSResult m_result;
   std::string m_measureName;
   std::string m_channel;

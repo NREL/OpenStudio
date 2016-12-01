@@ -1019,6 +1019,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateCoilWaterHeatingAirToWaterHeatPump(mo);
       break;
     }
+  case openstudio::IddObjectType::OS_Coil_WaterHeating_AirToWaterHeatPump_Wrapped :
+    {
+      auto mo = modelObject.cast<CoilWaterHeatingAirToWaterHeatPumpWrapped>();
+      retVal = translateCoilWaterHeatingAirToWaterHeatPumpWrapped(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_ComponentData :
     {
       // no-op
@@ -1654,6 +1660,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     {
       auto mo = modelObject.cast<WaterHeaterHeatPump>();
       retVal = translateWaterHeaterHeatPump(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_WaterHeater_HeatPump_WrappedCondenser :
+    {
+      auto mo = modelObject.cast<WaterHeaterHeatPumpWrappedCondenser>();
+      retVal = translateWaterHeaterHeatPumpWrappedCondenser(mo);
       break;
     }
   case openstudio::IddObjectType::OS_WaterHeater_Stratified :
@@ -2662,8 +2674,9 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     }
   case openstudio::IddObjectType::OS_ZoneCapacitanceMultiplier_ResearchSpecial :
     {
-      // no-op
-      return retVal;
+      model::ZoneCapacitanceMultiplierResearchSpecial mo = modelObject.cast<ZoneCapacitanceMultiplierResearchSpecial>();
+      retVal = translateZoneCapacitanceMultiplierResearchSpecial(mo);
+      break;
     }
   case openstudio::IddObjectType::OS_ZoneControl_ContaminantController :
     {

@@ -284,6 +284,9 @@ set(${target_name}_src
   CoilWaterHeatingAirToWaterHeatPump.hpp
   CoilWaterHeatingAirToWaterHeatPump_Impl.hpp
   CoilWaterHeatingAirToWaterHeatPump.cpp
+  CoilWaterHeatingAirToWaterHeatPumpWrapped.hpp
+  CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl.hpp
+  CoilWaterHeatingAirToWaterHeatPumpWrapped.cpp
   CoilWaterHeatingDesuperheater.hpp
   CoilWaterHeatingDesuperheater_Impl.hpp
   CoilWaterHeatingDesuperheater.cpp
@@ -1201,6 +1204,9 @@ set(${target_name}_src
   WaterHeaterMixed.hpp
   WaterHeaterMixed_Impl.hpp
   WaterHeaterMixed.cpp
+  WaterHeaterHeatPumpWrappedCondenser.hpp
+  WaterHeaterHeatPumpWrappedCondenser_Impl.hpp
+  WaterHeaterHeatPumpWrappedCondenser.cpp
   WaterHeaterHeatPump.hpp
   WaterHeaterHeatPump_Impl.hpp
   WaterHeaterHeatPump.cpp

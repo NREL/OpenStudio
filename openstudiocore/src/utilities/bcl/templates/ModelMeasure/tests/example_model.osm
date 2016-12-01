@@ -1,7 +1,7 @@
 
 OS:Version,
-  {42fd8b60-e9fb-40ec-9458-6fb439032475}, !- Handle
-  1.6.0;                                  !- Version Identifier
+  {f19c731b-418b-4769-bbe8-2634b34ddb76}, !- Handle
+  1.13.0;                                 !- Version Identifier
 
 OS:SpaceType,
   {d83c9d8c-b4ea-4352-92bc-43a5e8551039}, !- Handle
@@ -346,8 +346,8 @@ OS:Schedule:Ruleset,
 OS:ScheduleTypeLimits,
   {65bf6a03-1758-4903-8383-db583a09d8f8}, !- Handle
   ActivityLevel,                          !- Name
-  0,                                      !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
+  0,                                      !- Lower Limit Value
+  ,                                       !- Upper Limit Value
   Continuous,                             !- Numeric Type
   ActivityLevel;                          !- Unit Type
 
@@ -667,8 +667,8 @@ OS:Schedule:Ruleset,
 OS:ScheduleTypeLimits,
   {12c61fd1-4fe2-4b95-9432-26b57b327856}, !- Handle
   Temperature 36,                         !- Name
-  ,                                       !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
+  ,                                       !- Lower Limit Value
+  ,                                       !- Upper Limit Value
   Continuous,                             !- Numeric Type
   Temperature;                            !- Unit Type
 
@@ -780,8 +780,8 @@ OS:Schedule:Ruleset,
 OS:ScheduleTypeLimits,
   {7e87320c-a0b8-49c9-bbc8-d0b2f472ac54}, !- Handle
   Temperature 37,                         !- Name
-  ,                                       !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
+  ,                                       !- Lower Limit Value
+  ,                                       !- Upper Limit Value
   Continuous,                             !- Numeric Type
   Temperature;                            !- Unit Type
 
@@ -2285,8 +2285,8 @@ OS:Schedule:Ruleset,
 OS:ScheduleTypeLimits,
   {55c44e2f-3c81-40b0-84f7-9b6efa1c1036}, !- Handle
   Fractional,                             !- Name
-  0,                                      !- Lower Limit Value {BasedOnField A4}
-  1,                                      !- Upper Limit Value {BasedOnField A4}
+  0,                                      !- Lower Limit Value
+  1,                                      !- Upper Limit Value
   Continuous;                             !- Numeric Type
 
 OS:Schedule:Day,
@@ -2584,8 +2584,8 @@ OS:Schedule:Ruleset,
 OS:ScheduleTypeLimits,
   {d29d6f61-dbb6-43a0-8e80-994bfb4a73b2}, !- Handle
   ActivityLevel 5,                        !- Name
-  0,                                      !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
+  0,                                      !- Lower Limit Value
+  ,                                       !- Upper Limit Value
   Continuous,                             !- Numeric Type
   ActivityLevel;                          !- Unit Type
 
@@ -2905,8 +2905,8 @@ OS:Schedule:Ruleset,
 OS:ScheduleTypeLimits,
   {81589aa3-85f3-4555-b92c-d10e45fa9ee1}, !- Handle
   Temperature 3,                          !- Name
-  ,                                       !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
+  ,                                       !- Lower Limit Value
+  ,                                       !- Upper Limit Value
   Continuous,                             !- Numeric Type
   Temperature;                            !- Unit Type
 
@@ -3018,8 +3018,8 @@ OS:Schedule:Ruleset,
 OS:ScheduleTypeLimits,
   {088565a9-dd39-48f6-99d3-bfe5073149c2}, !- Handle
   Temperature 5,                          !- Name
-  ,                                       !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
+  ,                                       !- Lower Limit Value
+  ,                                       !- Upper Limit Value
   Continuous,                             !- Numeric Type
   Temperature;                            !- Unit Type
 
@@ -3345,8 +3345,8 @@ OS:Schedule:Ruleset,
 OS:ScheduleTypeLimits,
   {95269861-8fab-46f9-aa04-a6e9bad28f6a}, !- Handle
   ActivityLevel 13,                       !- Name
-  0,                                      !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
+  0,                                      !- Lower Limit Value
+  ,                                       !- Upper Limit Value
   Continuous,                             !- Numeric Type
   ActivityLevel;                          !- Unit Type
 
@@ -3871,8 +3871,8 @@ OS:Schedule:Ruleset,
 OS:ScheduleTypeLimits,
   {ab8bd902-d0dc-41a0-936a-32afa4684057}, !- Handle
   ActivityLevel 12,                       !- Name
-  0,                                      !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
+  0,                                      !- Lower Limit Value
+  ,                                       !- Upper Limit Value
   Continuous,                             !- Numeric Type
   ActivityLevel;                          !- Unit Type
 
@@ -4186,8 +4186,8 @@ OS:Schedule:Ruleset,
 OS:ScheduleTypeLimits,
   {0e9a66b1-0d84-4b86-b6d1-08ec793ba821}, !- Handle
   Temperature 11,                         !- Name
-  ,                                       !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
+  ,                                       !- Lower Limit Value
+  ,                                       !- Upper Limit Value
   Continuous,                             !- Numeric Type
   Temperature;                            !- Unit Type
 
@@ -4299,8 +4299,8 @@ OS:Schedule:Ruleset,
 OS:ScheduleTypeLimits,
   {c998de07-a854-476f-88ee-694f57ede232}, !- Handle
   Temperature 4,                          !- Name
-  ,                                       !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
+  ,                                       !- Lower Limit Value
+  ,                                       !- Upper Limit Value
   Continuous,                             !- Numeric Type
   Temperature;                            !- Unit Type
 
@@ -7999,4 +7999,79 @@ OS:SubSurface,
   0, -0.0254, 0.76,                       !- X,Y,Z Vertex 2 {m}
   0, -3.0226, 0.76,                       !- X,Y,Z Vertex 3 {m}
   0, -3.0226, 1.99986440677966;           !- X,Y,Z Vertex 4 {m}
+
+OS:Site,
+  {e923bd3f-b042-4911-a936-d37cf26af839}, !- Handle
+  Site 1,                                 !- Name
+  ,                                       !- Latitude {deg}
+  ,                                       !- Longitude {deg}
+  ,                                       !- Time Zone {hr}
+  ,                                       !- Elevation {m}
+  ;                                       !- Terrain
+
+OS:YearDescription,
+  {b216c53e-5b6b-4973-8442-5822dbdeacee}; !- Handle
+
+OS:ClimateZones,
+  {221ea9ed-6eb8-4a9e-8e5a-9f17ea245a5b}, !- Handle
+  ,                                       !- Active Institution
+  ,                                       !- Active Year
+  ASHRAE,                                 !- Climate Zone Institution Name 1
+  ANSI/ASHRAE Standard 169,               !- Climate Zone Document Name 1
+  2006,                                   !- Climate Zone Document Year 1
+  ,                                       !- Climate Zone Value 1
+  CEC,                                    !- Climate Zone Institution Name 2
+  California Climate Zone Descriptions,   !- Climate Zone Document Name 2
+  1995,                                   !- Climate Zone Document Year 2
+  ;                                       !- Climate Zone Value 2
+
+OS:SimulationControl,
+  {d7639ae2-d32d-4ec9-8805-d736b33d8ed7}; !- Handle
+
+OS:Sizing:Parameters,
+  {3e229137-ae9f-4efa-8ea3-4acd5b93cbd8}, !- Handle
+  1.25,                                   !- Heating Sizing Factor
+  1.15;                                   !- Cooling Sizing Factor
+
+OS:Timestep,
+  {92bdf5f7-18f8-48b3-8bdf-5b839c3592c3}, !- Handle
+  6;                                      !- Number of Timesteps per Hour
+
+OS:ShadowCalculation,
+  {ec138f8c-4f93-4204-88a2-991a62608f6a}, !- Handle
+  20,                                     !- Calculation Frequency
+  15000;                                  !- Maximum Figures in Shadow Overlap Calculations
+
+OS:HeatBalanceAlgorithm,
+  {f9a03de5-79c9-409d-a764-bd2a8d39b93c}, !- Handle
+  ConductionTransferFunction,             !- Algorithm
+  200;                                    !- Surface Temperature Upper Limit {C}
+
+OS:RunPeriod,
+  {1e31b0fa-d387-4896-8e7e-30f2368f9e58}, !- Handle
+  Run Period 1,                           !- Name
+  1,                                      !- Begin Month
+  1,                                      !- Begin Day of Month
+  12,                                     !- End Month
+  31,                                     !- End Day of Month
+  ,                                       !- Use Weather File Holidays and Special Days
+  ,                                       !- Use Weather File Daylight Saving Period
+  ,                                       !- Apply Weekend Holiday Rule
+  ,                                       !- Use Weather File Rain Indicators
+  ,                                       !- Use Weather File Snow Indicators
+  ;                                       !- Number of Times Runperiod to be Repeated
+
+OS:LifeCycleCost:Parameters,
+  {a836c392-6031-4709-b70f-0f9efa66e717}, !- Handle
+  ,                                       !- Analysis Type
+  ,                                       !- Discounting Convention
+  ,                                       !- Inflation Approach
+  ,                                       !- Real Discount Rate
+  ,                                       !- Nominal Discount Rate
+  ,                                       !- Inflation
+  ,                                       !- Base Date Month
+  ,                                       !- Base Date Year
+  ,                                       !- Service Date Month
+  ,                                       !- Service Date Year
+  ;                                       !- Length of Study Period in Years
 

@@ -31,24 +31,15 @@ $OPENSTUDIO_SKETCHUPPLUGIN_DEVELOPER_MENU = false
 
 begin
   load 'OpenStudio/OpenStudio-config'
+  
+  minimum_version = '14'
+  maximum_version = '16'
+  installed_version = Sketchup.version.split('.').first
 
-  minimum_version = ''
-  minimum_version_key = ''
-  if (RUBY_PLATFORM =~ /mswin/ || RUBY_PLATFORM =~ /mingw/)  # Windows
-    minimum_version = '14.0.0000'
-    minimum_version_key = '001400000000'
-  elsif (RUBY_PLATFORM =~ /darwin/)  # Mac OS X
-    minimum_version = '14.0.0000'
-    minimum_version_key = '001400000000'
-  end
-
-  installed_version = Sketchup.version
-  installed_version_key = ''; installed_version.split('.').each { |e| installed_version_key += e.rjust(4, '0') }
-
-  if (installed_version_key < minimum_version_key)
-    UI.messagebox("OpenStudio is only compatible with SketchUp version " + minimum_version +
-      " or higher.\nThe installed version is " + installed_version + ".  The plugin was not loaded.", MB_OK)
+  if (installed_version < minimum_version || installed_version > maximum_version)
+    UI.messagebox("OpenStudio #{$OPENSTUDIO_SKETCHUPPLUGIN_VERSION} is compatible with SketchUp 2014, 2015, or 2016.\nThe installed version is 20#{installed_version}.  The plugin was not loaded.", MB_OK)
   else
+    require 'openstudio'
     load("openstudio/sketchup_plugin/lib/PluginManager.rb")
   end
 rescue LoadError => e 

@@ -1,3 +1,24 @@
+## OpenStudio v1.13.3
+###### 2016-11-10 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.13.2...v1.13.3 )
+
+- ![Fixed:][fixed] [#2388]( https://github.com/NREL/OpenStudio/pull/2388 ), 131770395 reporting measure 2x support
+
+## OpenStudio v1.13.2
+###### 2016-10-29 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.13.1...v1.13.2 )
+
+- ![Added:][added] [#2382]( https://github.com/NREL/OpenStudio/pull/2382 ), Added support for EMS functionality.
+- ![Added:][added] [#2230]( https://github.com/NREL/OpenStudio/pull/2230 ), Added OS:WaterHeater:HeatPump:WrappedCondenser and OS:Coil:WaterHeating:AirToWaterHeatPump:Wrapped objects.
+- ![Added:][added] [#2375]( https://github.com/NREL/OpenStudio/pull/2375 ), Added Fuel Type to OS:OtherEquipment:Definition and OS:Coil:Heating:Gas.
+- ![Fixed:][fixed] [#2230]( https://github.com/NREL/OpenStudio/pull/2230 ), 2091 wrapped hpwh
+- ![Fixed:][fixed] [#2366]( https://github.com/NREL/OpenStudio/pull/2366 ), Set PreferredToolArchitecture = x64 when possible.
+- ![Fixed:][fixed] [#2367]( https://github.com/NREL/OpenStudio/pull/2367 ), Updating standard report in pat_app dir
+- ![Fixed:][fixed] [#2375]( https://github.com/NREL/OpenStudio/pull/2375 ), Adding Fuel Type to OtherEquipment and Coil:Heating:Gas
+- ![Fixed:][fixed] [#2377]( https://github.com/NREL/OpenStudio/issues/2377 ), remove limit on number of fans on air loops
+- ![Fixed:][fixed] [#2380]( https://github.com/NREL/OpenStudio/pull/2380 ), removed CAV and VAV fan limit from air loops
+- ![Fixed:][fixed] [#2381]( https://github.com/NREL/OpenStudio/pull/2381 ), Pull request for EMS
+- ![Fixed:][fixed] [#2382]( https://github.com/NREL/OpenStudio/pull/2382 ), EMS
+- ![Fixed:][fixed] [#2386]( https://github.com/NREL/OpenStudio/pull/2386 ), Updates openstudio-standards to 0.1.8 to fix issue hit during PSD tra…
+
 ## OpenStudio v1.13.1
 ###### 2016-10-15 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.13.0...v1.13.1 )
 

@@ -147,9 +147,9 @@ class ENERGYPLUS_API ReverseTranslator {
   boost::optional<model::ModelObject> translateElectricEquipment(const WorkspaceObject & workspaceObject);
   
   boost::optional<model::ModelObject> translateElectricLoadCenterStorageSimple(const WorkspaceObject & workspaceObject);
-
-  boost::optional<model::ModelObject> translateElectricLoadCenterStorageConverter(const WorkspaceObject & workspaceObject);
   
+  boost::optional<model::ModelObject> translateElectricLoadCenterStorageConverter(const WorkspaceObject & workspaceObject);
+
   boost::optional<model::ModelObject> translateEnergyManagementSystemActuator(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateEnergyManagementSystemConstructionIndexVariable(const WorkspaceObject & workspaceObject);

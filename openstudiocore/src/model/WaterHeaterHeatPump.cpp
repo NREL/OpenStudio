@@ -32,6 +32,8 @@
 #include "Model_Impl.hpp"
 #include "WaterHeaterMixed.hpp"
 #include "WaterHeaterMixed_Impl.hpp"
+#include "WaterHeaterStratified.hpp"
+#include "WaterHeaterStratified_Impl.hpp"
 #include "FanOnOff.hpp"
 #include "FanOnOff_Impl.hpp"
 #include "CoilWaterHeatingAirToWaterHeatPump.hpp"
@@ -526,6 +528,9 @@ namespace detail {
       if( auto waterHeaterMixed = t_tank.optionalCast<WaterHeaterMixed>() ) {
         waterHeaterMixed->setAmbientTemperatureIndicator("ThermalZone");
         waterHeaterMixed->setAmbientTemperatureThermalZone(thermalZone);
+      } else if( auto waterHeaterStratified = t_tank.optionalCast<WaterHeaterStratified>() ) {
+        waterHeaterStratified->setAmbientTemperatureIndicator("ThermalZone");
+        waterHeaterStratified->setAmbientTemperatureThermalZone(thermalZone);
       }
     }
 
@@ -618,7 +623,6 @@ WaterHeaterHeatPump::WaterHeaterHeatPump(const Model& model)
   setOffCycleParasiticElectricLoad(0.0);
   setParasiticHeatRejectionLocation("Outdoors");
   setControlSensorLocationInStratifiedTank("Heater1");
-
 }
 
 IddObjectType WaterHeaterHeatPump::iddObjectType() {

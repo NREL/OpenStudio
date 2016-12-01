@@ -6,16 +6,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>OpenStudio Results</title>
   <link href="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
-  <link href="file:///<%= web_asset_path %>/bootstrap.min.css" rel="stylesheet">
 
   <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-  <script type="text/javascript" src="file:///<%= web_asset_path %>/jquery.min.js"></script>
   <script type="text/javascript" src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-  <script type="text/javascript" src="file:///<%= web_asset_path %>/bootstrap.min.js"></script>
   <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/d3/3.4.8/d3.min.js"></script>
-  <script type="text/javascript" src="file:///<%= web_asset_path %>/d3.min.js"></script>
   <script type="text/javascript" src="http://dimplejs.org/dist/dimple.v2.1.2.min.js"></script>
-  <script type="text/javascript" src="file:///<%= web_asset_path %>/dimple.v2.1.2.min.js"></script>
   <style>
       body {
           position: relative;
@@ -194,13 +189,41 @@
                   <% chart_index += 1 %>
                   <div id="chartContainer_<%= chart_index %>">
                     <script type="text/javascript">
-                        var svg = dimple.newSvg("#chartContainer_<%= chart_index %>", 500, 240);
-                        var data = [<%= table[:chart].join(',') %>];
-                        var myChart = new dimple.chart(svg, data);
-                        myChart.setBounds(0, 20, 200, 200);
-                        myChart.addMeasureAxis("p", "value");
-                        myChart.addSeries("label", dimple.plot.pie);
-                        myChart.addLegend(225, 75, 175, 150, "left");
+
+                        <% if table[:chart].size < 13 %>
+                          var svg = dimple.newSvg("#chartContainer_<%= chart_index %>", 500, 240);
+                          var data = [<%= table[:chart].join(',') %>];
+                          var myChart = new dimple.chart(svg, data);
+                          myChart.setBounds(0, 40, 200, 200);
+                          myChart.addMeasureAxis("p", "value");
+                          myChart.addSeries("label", dimple.plot.pie);
+                          myChart.addLegend(225, 50, 175, 180, "left");
+                        <% elsif table[:chart].size < 18 %>
+                          var svg = dimple.newSvg("#chartContainer_<%= chart_index %>", 500, 310);
+                          var data = [<%= table[:chart].join(',') %>];
+                          var myChart = new dimple.chart(svg, data);
+                          myChart.setBounds(0, 20, 200, 200);
+                          myChart.addMeasureAxis("p", "value");
+                          myChart.addSeries("label", dimple.plot.pie);
+                          myChart.addLegend(225, 25, 175, 250, "left");
+                        <% elsif table[:chart].size < 24 %>
+                          var svg = dimple.newSvg("#chartContainer_<%= chart_index %>", 500, 380);
+                          var data = [<%= table[:chart].join(',') %>];
+                          var myChart = new dimple.chart(svg, data);
+                          myChart.setBounds(0, 20, 200, 200);
+                          myChart.addMeasureAxis("p", "value");
+                          myChart.addSeries("label", dimple.plot.pie);
+                          myChart.addLegend(225, 25, 175, 320, "left");
+                        <% else %>
+                          var svg = dimple.newSvg("#chartContainer_<%= chart_index %>", 500, 520);
+                          var data = [<%= table[:chart].join(',') %>];
+                          var myChart = new dimple.chart(svg, data);
+                          myChart.setBounds(0, 20, 200, 200);
+                          myChart.addMeasureAxis("p", "value");
+                          myChart.addSeries("label", dimple.plot.pie);
+                          myChart.addLegend(225, 25, 175, 460, "left");
+                        <% end %>
+
                         <% table[:chart].each do |i| %>
                         <% next if JSON.parse(i)['color'] == nil %>
                         myChart.assignColor('<%= JSON.parse(i)['label'] %>', '<%= JSON.parse(i)['color'] %>', 'white', 1);
@@ -271,6 +294,30 @@
                         myChart.draw();
                         x.titleShape.text('<%= table[:chart_attributes][:label_x]%>');
                         y.titleShape.text('<%= table[:chart_attributes][:value]%>');
+                    </script>
+                  </div>
+
+              <% elsif table[:chart_type] == 'line' %>
+
+                  <% chart_index += 1 %>
+                  <div id="chartContainer_<%= chart_index %>">
+                    <script type="text/javascript">
+                      var svg = dimple.newSvg("#chartContainer_<%= chart_index %>", 1000, 430);
+                      var data = [<%= table[:chart].join(",") %>];
+                      var myChart = new dimple.chart(svg, data);
+                      myChart.setBounds(50, 20, 800, 300);
+                      var x = myChart.addCategoryAxis("x", ["label_x", "label"]);
+                      x.addOrderRule("label_x");
+                      var y = myChart.addMeasureAxis("y", "value");
+                      myChart.addSeries("label", dimple.plot.line);
+                      myChart.addLegend(900, 200, 125, 300, "left");
+                      <% table[:chart].each do |i| %>
+                      <% next if JSON.parse(i)['color'] == nil %>
+                      myChart.assignColor('<%= JSON.parse(i)['label'] %>', '<%= JSON.parse(i)['color'] %>', 'white', 1);
+                      <% end %>
+                      myChart.draw();
+                      x.titleShape.text('<%= table[:chart_attributes][:label_x]%>');
+                      y.titleShape.text('<%= table[:chart_attributes][:value]%>');
                     </script>
                   </div>
 

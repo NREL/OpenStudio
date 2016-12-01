@@ -91,6 +91,14 @@ namespace detail {
     /** @name Getters */
     //@{
 
+    std::string endUseSubcategory() const;
+
+    bool isEndUseSubcategoryDefaulted() const;
+
+    std::string fuelType() const;
+
+    bool isFuelTypeDefaulted() const;
+
     OtherEquipmentDefinition otherEquipmentDefinition() const;
 
     /** Returns the (fractional) equipment schedule.  If this object does not
@@ -103,6 +111,14 @@ namespace detail {
     //@}
     /** @name Setters */
     //@{
+
+    bool setEndUseSubcategory(const std::string& endUseSubcategory);
+
+    void resetEndUseSubcategory();
+
+    bool setFuelType(const std::string& fuelType);
+
+    void resetFuelType();
 
     bool setOtherEquipmentDefinition(const OtherEquipmentDefinition& definition);
 
