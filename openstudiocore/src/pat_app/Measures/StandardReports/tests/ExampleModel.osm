@@ -1,7 +1,7 @@
 
 OS:Version,
-  {38c2d8db-a7a8-4ea9-bac5-9b2bb64fa982}, !- Handle
-  1.11.0;                                 !- Version Identifier
+  {6e436918-86a4-41b9-b589-c16f65b2d237}, !- Handle
+  1.13.3;                                 !- Version Identifier
 
 OS:SimulationControl,
   {41f65c43-2dc9-4d82-a6e4-a562bae08803}, !- Handle
@@ -48,6 +48,20 @@ OS:Site,
   -7,                                     !- Time Zone {hr}
   1829,                                   !- Elevation {m}
   ;                                       !- Terrain
+
+OS:WeatherFile,
+  {f8d26468-476f-405d-bb2c-6a73e549fd50}, !- Handle
+  Denver Centennial  Golden   Nr,         !- City
+  CO,                                     !- State Province Region
+  USA,                                    !- Country
+  TMY3,                                   !- Data Source
+  724666,                                 !- WMO Number
+  39.74,                                  !- Latitude {deg}
+  -105.18,                                !- Longitude {deg}
+  -7,                                     !- Time Zone {hr}
+  1829,                                   !- Elevation {m}
+  file:files/USA_CO_Golden-NREL.724666_TMY3.epw, !- Url
+  BDF687C1;                               !- Checksum
 
 OS:Site:GroundTemperature:BuildingSurface,
   {2d661510-368a-464f-97bd-5b2b69e35b08}, !- Handle
@@ -3146,17 +3160,17 @@ OS:Output:Variable,
   *,                                      !- Key Value
   Surface Outside Face Temperature;       !- Variable Name
 
-OS:Meter,
+OS:Output:Meter,
   {a60ebd85-57b3-471b-a95f-21bda9b0dc8a}, !- Handle
   Electricity:Facility,                   !- Name
   Hourly;                                 !- Reporting Frequency
 
-OS:Meter,
+OS:Output:Meter,
   {47503b76-9590-4fa7-95f3-d730ed27e9fc}, !- Handle
   Gas:Facility,                           !- Name
   Hourly;                                 !- Reporting Frequency
 
-OS:Meter,
+OS:Output:Meter,
   {46cc5b2e-bbf7-48a5-9ee1-89b94a4d6cb9}, !- Handle
   Propane:Facility,                       !- Name
   Hourly;                                 !- Reporting Frequency
@@ -6405,17 +6419,42 @@ OS:Connection,
   {3ac6de72-4ea4-483d-960c-138d32cbf8d9}, !- Target Object
   2;                                      !- Inlet Port
 
-OS:WeatherFile,
-  {f8d26468-476f-405d-bb2c-6a73e549fd50}, !- Handle
-  Denver Centennial  Golden   Nr,         !- City
-  CO,                                     !- State Province Region
-  USA,                                    !- Country
-  TMY3,                                   !- Data Source
-  724666,                                 !- WMO Number
-  39.74,                                  !- Latitude {deg}
-  -105.18,                                !- Longitude {deg}
-  -7,                                     !- Time Zone {hr}
-  1829,                                   !- Elevation {m}
-  file:files/USA_CO_Golden-NREL.724666_TMY3.epw, !- Url
-  BDF687C1;                               !- Checksum
+OS:LifeCycleCost,
+  {963d46b8-5a9f-4b8a-abc0-e8c357873e07}, !- Handle
+  LCC_Mat - Building - Life Cycle Costs,  !- Name
+  Construction,                           !- Category
+  Building,                               !- Item Type
+  {e11b34af-2bb6-4f16-8082-cbd61ee7679e}, !- Item Name
+  322.917312501292,                       !- Cost
+  CostPerArea,                            !- Cost Units
+  ,                                       !- Start of Costs
+  ,                                       !- Years from Start
+  ,                                       !- Months from Start
+  20;                                     !- Repeat Period Years
+
+OS:LifeCycleCost,
+  {870df233-18f8-4695-bc69-ab0f737794ca}, !- Handle
+  LCC_Demo - Building - Life Cycle Costs, !- Name
+  Salvage,                                !- Category
+  Building,                               !- Item Type
+  {e11b34af-2bb6-4f16-8082-cbd61ee7679e}, !- Item Name
+  0,                                      !- Cost
+  CostPerArea,                            !- Cost Units
+  ,                                       !- Start of Costs
+  20,                                     !- Years from Start
+  ,                                       !- Months from Start
+  20;                                     !- Repeat Period Years
+
+OS:LifeCycleCost,
+  {edffe4a0-d5b1-4012-8c36-40d3abc2cdc6}, !- Handle
+  LCC_OM - Building - Life Cycle Costs,   !- Name
+  Maintenance,                            !- Category
+  Building,                               !- Item Type
+  {e11b34af-2bb6-4f16-8082-cbd61ee7679e}, !- Item Name
+  2.69097760417743,                       !- Cost
+  CostPerArea,                            !- Cost Units
+  ,                                       !- Start of Costs
+  ,                                       !- Years from Start
+  ,                                       !- Months from Start
+  3;                                      !- Repeat Period Years
 

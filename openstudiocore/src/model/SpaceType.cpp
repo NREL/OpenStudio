@@ -182,6 +182,24 @@ namespace detail {
     return result;
   }
 
+  boost::optional<std::string> SpaceType_Impl::setName(const std::string& newName)
+  {
+    // don't allow user to change name of plenum space type since this is found by name in Model::plenumSpaceType
+    if (istringEqual("Plenum Space Type", this->nameString())){
+      return this->nameString();
+    }
+    return ResourceObject_Impl::setName(newName);
+  }
+
+  boost::optional<std::string> SpaceType_Impl::setName(const std::string& newName, bool checkValidity)
+  {
+    // don't allow user to change name of plenum space type since this is found by name in Model::plenumSpaceType
+    if (istringEqual("Plenum Space Type", this->nameString())){
+      return this->nameString();
+    }
+    return ResourceObject_Impl::setName(newName, checkValidity);
+  }
+
   boost::optional<DefaultConstructionSet> SpaceType_Impl::defaultConstructionSet() const
   {
     return getObject<ModelObject>().getModelObjectTarget<DefaultConstructionSet>(OS_SpaceTypeFields::DefaultConstructionSetName);

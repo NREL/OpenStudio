@@ -65,6 +65,8 @@
 #include "../../model/Construction.hpp"
 #include "../../model/Version.hpp"
 #include "../../model/Version_Impl.hpp"
+#include "../../model/ZoneCapacitanceMultiplierResearchSpecial.hpp"
+#include "../../model/ZoneCapacitanceMultiplierResearchSpecial_Impl.hpp"
 
 #include "../../utilities/core/Optional.hpp"
 #include "../../utilities/core/Checksum.hpp"
@@ -660,4 +662,22 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorTest_MultiThreadedLogMessages) {
     EXPECT_EQ(numWarnings, thread3.translator.warnings().size());
     EXPECT_EQ(numWarnings, thread4.translator.warnings().size());
   }
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslatorTest_TranslateZoneCapacitanceMultiplierResearchSpecial) {
+  openstudio::model::Model model;
+  openstudio::model::ZoneCapacitanceMultiplierResearchSpecial zcm = model.getUniqueModelObject<openstudio::model::ZoneCapacitanceMultiplierResearchSpecial>();
+
+  zcm.setTemperatureCapacityMultiplier(2.0);
+  zcm.setHumidityCapacityMultiplier(3.0);
+  zcm.setCarbonDioxideCapacityMultiplier(4.0);
+
+  ForwardTranslator trans;
+  Workspace workspace = trans.translateModelObject(zcm);
+  ASSERT_EQ(1u, workspace.numObjectsOfType(IddObjectType::ZoneCapacitanceMultiplier_ResearchSpecial));
+
+  IdfObject zcmidf = workspace.getObjectsByType(IddObjectType::ZoneCapacitanceMultiplier_ResearchSpecial)[0];
+  EXPECT_FLOAT_EQ(zcmidf.getDouble(0).get(), 2.0);
+  EXPECT_FLOAT_EQ(zcmidf.getDouble(1).get(), 3.0);
+  EXPECT_FLOAT_EQ(zcmidf.getDouble(2).get(), 4.0);
 }

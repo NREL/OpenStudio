@@ -6008,7 +6008,7 @@ OS:OtherEquipment,
        \type real
        \minimum 0.0
        \default 1.0
-  A6;  \field Fuel Type
+  A6,  \field Fuel Type
        \type choice
        \key None
        \key Electricity
@@ -6025,6 +6025,14 @@ OS:OtherEquipment,
        \key DistrictHeating
        \key DistrictCooling
        \default None
+  A7;  \field End-Use Subcategory
+       \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
+       \note The following special tags will also place the end-use in specific rows in the LEED Summary table
+       \note EAp2-4/5. Performance Rating Method Compliance:
+       \note Fans-Parking Garage, Interior Lighting-Process, Cooking, Industrial Process, Elevators and Escalators.
+       \type alpha
+       \retaincase
+       \default General
 
 OS:SpaceInfiltration:DesignFlowRate,
        \memo Infiltration is specified as a design level which is modified by a Schedule fraction, temperature difference and wind speed:

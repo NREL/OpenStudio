@@ -91,7 +91,13 @@ namespace detail {
     /** @name Getters */
     //@{
 
+    std::string endUseSubcategory() const;
+
+    bool isEndUseSubcategoryDefaulted() const;
+
     std::string fuelType() const;
+
+    bool isFuelTypeDefaulted() const;
 
     OtherEquipmentDefinition otherEquipmentDefinition() const;
 
@@ -105,6 +111,10 @@ namespace detail {
     //@}
     /** @name Setters */
     //@{
+
+    bool setEndUseSubcategory(const std::string& endUseSubcategory);
+
+    void resetEndUseSubcategory();
 
     bool setFuelType(const std::string& fuelType);
 

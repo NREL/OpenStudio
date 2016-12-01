@@ -93,14 +93,34 @@ TEST_F(ModelFixture, OtherEquipment_FuelType)
   OtherEquipment equipment(definition);
 
   EXPECT_EQ(equipment.fuelType(), "None");
+  EXPECT_TRUE(equipment.isFuelTypeDefaulted());
   EXPECT_TRUE(equipment.setFuelType("NaturalGas"));
   EXPECT_EQ(equipment.fuelType(), "NaturalGas");
   equipment.resetFuelType();
   EXPECT_EQ(equipment.fuelType(), "None");
+  EXPECT_TRUE(equipment.isFuelTypeDefaulted());
   std::vector<std::string> validFuelTypes(equipment.validFuelTypeValues());
   EXPECT_NE(std::find(validFuelTypes.begin(), validFuelTypes.end(), "Electricity"), validFuelTypes.end());
   EXPECT_NE(std::find(validFuelTypes.begin(), validFuelTypes.end(), "NaturalGas"), validFuelTypes.end());
   EXPECT_NE(std::find(validFuelTypes.begin(), validFuelTypes.end(), "Coal"), validFuelTypes.end());
   EXPECT_EQ(validFuelTypes.size(), 14);
+
+}
+
+TEST_F(ModelFixture, OtherEquipment_EndUseSubcategory)
+{
+  Model model;
+  OtherEquipmentDefinition definition(model);
+  OtherEquipment equipment(definition);
+
+  EXPECT_EQ(equipment.endUseSubcategory(), "General");
+  EXPECT_TRUE(equipment.isEndUseSubcategoryDefaulted());
+  EXPECT_TRUE(equipment.setEndUseSubcategory("Category A"));
+  EXPECT_EQ(equipment.endUseSubcategory(), "Category A");
+  EXPECT_TRUE(equipment.setEndUseSubcategory("Category B"));
+  EXPECT_EQ(equipment.endUseSubcategory(), "Category B");
+  equipment.resetEndUseSubcategory();
+  EXPECT_EQ(equipment.endUseSubcategory(), "General");
+  EXPECT_TRUE(equipment.isEndUseSubcategoryDefaulted());
 
 }
