@@ -54,6 +54,8 @@
 #include "../model/ModelObject_Impl.hpp"
 #include "../model/PlanarSurface.hpp"
 #include "../model/PlanarSurface_Impl.hpp"
+#include "../model/SpaceType.hpp"
+#include "../model/SpaceType_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
 
@@ -874,10 +876,19 @@ namespace openstudio {
 
       nameLineEdit->setDeleteObject(nameLineEditConcept->deleteObject());
 
+      bool readOnly = nameLineEditConcept->readOnly();
+
+      // handle special case for space types
+      if (t_mo.optionalCast<model::SpaceType>()){
+        if (istringEqual("Plenum Space Type", t_mo.nameString())){
+          readOnly = true;
+        }
+      }
+
       nameLineEdit->bind(t_mo,
         OptionalStringGetter(std::bind(&NameLineEditConcept::get, nameLineEditConcept.data(), t_mo, true)),
         // If the concept is read only, pass an empty optional
-        nameLineEditConcept->readOnly() ? boost::none : boost::optional<StringSetter>(std::bind(&NameLineEditConcept::set, nameLineEditConcept.data(), t_mo, std::placeholders::_1)),
+        readOnly ? boost::none : boost::optional<StringSetter>(std::bind(&NameLineEditConcept::set, nameLineEditConcept.data(), t_mo, std::placeholders::_1)),
         boost::optional<NoFailAction>(std::bind(&NameLineEditConcept::reset, nameLineEditConcept.data(), t_mo)));
 
       if (nameLineEditConcept->isInspectable()) {
