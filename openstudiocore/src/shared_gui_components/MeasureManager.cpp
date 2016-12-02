@@ -767,9 +767,6 @@ void MeasureManager::updateMeasuresLists(bool updateUserMeasures)
       if (m_myMeasures.find(measure.uuid()) != m_myMeasures.end()){
         updateUUID = true;
       }
-      if (m_bclMeasures.find(measure.uuid()) != m_bclMeasures.end()){
-        updateUUID = true;
-      }
 
       if (updateUUID){
         // duplicate measure detected, manual copy and paste likely cause

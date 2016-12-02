@@ -112,6 +112,9 @@ namespace detail {
 
     virtual std::vector<ModelObject> children() const override;
 
+    virtual boost::optional<std::string> setName(const std::string& newName) override;
+    virtual boost::optional<std::string> setName(const std::string& newName, bool checkValidity) override;
+
     //@}
     /** @name Getters */
     //@{

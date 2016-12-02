@@ -2675,8 +2675,9 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     }
   case openstudio::IddObjectType::OS_ZoneCapacitanceMultiplier_ResearchSpecial :
     {
-      // no-op
-      return retVal;
+      model::ZoneCapacitanceMultiplierResearchSpecial mo = modelObject.cast<ZoneCapacitanceMultiplierResearchSpecial>();
+      retVal = translateZoneCapacitanceMultiplierResearchSpecial(mo);
+      break;
     }
   case openstudio::IddObjectType::OS_ZoneControl_ContaminantController :
     {

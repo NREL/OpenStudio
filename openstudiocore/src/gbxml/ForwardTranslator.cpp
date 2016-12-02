@@ -55,6 +55,14 @@
 #include "../model/ShadingSurface_Impl.hpp"
 #include "../model/ThermalZone.hpp"
 #include "../model/ThermalZone_Impl.hpp"
+#include "../model/ThermostatSetpointDualSetpoint.hpp"
+#include "../model/ThermostatSetpointDualSetpoint_Impl.hpp"
+#include "../model/ScheduleRuleset.hpp"
+#include "../model/ScheduleRuleset_Impl.hpp"
+#include "../model/ScheduleConstant.hpp"
+#include "../model/ScheduleConstant_Impl.hpp"
+#include "../model/ScheduleDay.hpp"
+#include "../model/ScheduleDay_Impl.hpp"
 
 #include "../utilities/geometry/Transformation.hpp"
 #include "../utilities/geometry/EulerAngles.hpp"
@@ -63,6 +71,7 @@
 #include "../utilities/plot/ProgressBar.hpp"
 #include "../utilities/time/DateTime.hpp"
 #include "../utilities/time/Date.hpp"
+#include "../utilities/sql/SqlFile.hpp"
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/FilesystemHelpers.hpp"
 
@@ -158,7 +167,7 @@ namespace gbxml {
     result.replace("\\", "_");
     //result.replace("-", "_"); // ok
     //result.replace(".", "_"); // ok
-    //result.replace(":", "_"); // ok
+    result.replace(":", "_"); 
     result.replace(";", "_");
     return result;
   }
@@ -314,6 +323,128 @@ namespace gbxml {
     QDomElement lastNameElement = doc.createElement("LastName");
     personInfoElement.appendChild(lastNameElement);
     lastNameElement.appendChild(doc.createTextNode("Unknown"));
+
+    // translate results
+    boost::optional<SqlFile> sqlFile = model.sqlFile();
+    if (sqlFile){
+
+      // thermal zone results
+      if (m_progressBar){
+        m_progressBar->setWindowTitle(toString("Translating Thermal Zone Results"));
+        m_progressBar->setMinimum(0);
+        m_progressBar->setMaximum((int)thermalZones.size()); 
+        m_progressBar->setValue(0);
+      }
+
+      for (const model::ThermalZone& thermalZone : thermalZones){
+        std::string query;
+        boost::optional<double> heatLoad;
+        boost::optional<double> coolingLoad;
+        boost::optional<double> flow;
+        QString thermalZoneId = escapeName(thermalZone.name().get());
+        
+        // DLM: these queries are taken from the OpenStudio standards, should be ported to Model
+        query = "SELECT Value ";
+        query += "FROM tabulardatawithstrings ";
+        query += "WHERE ReportName='HVACSizingSummary' ";
+        query += "AND ReportForString='Entire Facility' ";
+        query += "AND TableName='Zone Sensible Heating' ";
+        query += "AND ColumnName='User Design Load' ";
+        query += "AND RowName='" + boost::to_upper_copy(thermalZone.name().get()) + "' ";
+        query += "AND Units='W'";         
+        heatLoad = sqlFile->execAndReturnFirstDouble(query);
+
+        query = "SELECT Value ";
+        query += "FROM tabulardatawithstrings ";
+        query += "WHERE ReportName='HVACSizingSummary' ";
+        query += "AND ReportForString='Entire Facility' ";
+        query += "AND TableName='Zone Sensible Cooling' ";
+        query += "AND ColumnName='User Design Load' ";
+        query += "AND RowName='" + boost::to_upper_copy(thermalZone.name().get()) + "' ";
+        query += "AND Units='W'";         
+        coolingLoad = sqlFile->execAndReturnFirstDouble(query);
+
+        query = "SELECT Value ";
+        query += "FROM tabulardatawithstrings ";
+        query += "WHERE ReportName='HVACSizingSummary' ";
+        query += "AND ReportForString='Entire Facility' ";
+        query += "AND TableName='Zone Sensible Cooling' ";
+        query += "AND ColumnName='User Design Air Flow' ";
+        query += "AND RowName='" + boost::to_upper_copy(thermalZone.name().get()) + "' ";
+        query += "AND Units='m3/s'";         
+        boost::optional<double> coolingFlow = sqlFile->execAndReturnFirstDouble(query);
+
+        query = "SELECT Value ";
+        query += "FROM tabulardatawithstrings ";
+        query += "WHERE ReportName='HVACSizingSummary' ";
+        query += "AND ReportForString='Entire Facility' ";
+        query += "AND TableName='Zone Sensible Heating' ";
+        query += "AND ColumnName='User Design Air Flow' ";
+        query += "AND RowName='" + boost::to_upper_copy(thermalZone.name().get()) + "' ";
+        query += "AND Units='m3/s'";         
+        boost::optional<double> heatingFlow = sqlFile->execAndReturnFirstDouble(query);
+
+        if (heatingFlow && coolingFlow){
+          flow = std::max(*heatingFlow, *coolingFlow);
+        } else if (heatingFlow){
+          flow = heatingFlow;
+        } else if (coolingFlow){
+          flow = coolingFlow;
+        }
+
+        if (heatLoad){
+          QDomElement resultsElement = doc.createElement("Results");
+          gbXMLElement.appendChild(resultsElement);
+          resultsElement.setAttribute("id", thermalZoneId + "HeatLoad");
+          resultsElement.setAttribute("resultsType", "HeatLoad");
+          resultsElement.setAttribute("unit", "Kilowatt");
+
+          QDomElement objectIdElement = doc.createElement("ObjectId");
+          resultsElement.appendChild(objectIdElement);
+          objectIdElement.appendChild(doc.createTextNode(thermalZoneId));
+
+          QDomElement valueElement = doc.createElement("Value");
+          resultsElement.appendChild(valueElement);
+          valueElement.appendChild(doc.createTextNode(QString::number(*heatLoad/1000.0, 'f')));
+        }
+
+        if (coolingLoad){
+          QDomElement resultsElement = doc.createElement("Results");
+          gbXMLElement.appendChild(resultsElement);
+          resultsElement.setAttribute("id", thermalZoneId + "CoolingLoad");
+          resultsElement.setAttribute("resultsType", "CoolingLoad");
+          resultsElement.setAttribute("unit", "Kilowatt");
+
+          QDomElement objectIdElement = doc.createElement("ObjectId");
+          resultsElement.appendChild(objectIdElement);
+          objectIdElement.appendChild(doc.createTextNode(thermalZoneId));
+
+          QDomElement valueElement = doc.createElement("Value");
+          resultsElement.appendChild(valueElement);
+          valueElement.appendChild(doc.createTextNode(QString::number(*coolingLoad/1000.0, 'f')));
+        }
+
+        if (flow){
+          QDomElement resultsElement = doc.createElement("Results");
+          gbXMLElement.appendChild(resultsElement);
+          resultsElement.setAttribute("id", thermalZoneId + "Flow");
+          resultsElement.setAttribute("resultsType", "Flow");
+          resultsElement.setAttribute("unit", "CubicMPerHr");
+
+          QDomElement objectIdElement = doc.createElement("ObjectId");
+          resultsElement.appendChild(objectIdElement);
+          objectIdElement.appendChild(doc.createTextNode(thermalZoneId));
+
+          QDomElement valueElement = doc.createElement("Value");
+          resultsElement.appendChild(valueElement);
+          valueElement.appendChild(doc.createTextNode(QString::number(*flow*3600, 'f')));
+        }
+
+        if (m_progressBar){
+          m_progressBar->setValue(m_progressBar->value() + 1);
+        }
+      }
+    }
 
     return doc;
   }
@@ -553,6 +684,47 @@ namespace gbxml {
     QDomElement volumeElement = doc.createElement("Volume");
     volumeElement.appendChild(doc.createTextNode(QString::number(volume, 'f')));
     result.appendChild(volumeElement);
+
+    // Lighting
+
+    // LightingControl
+
+    // InfiltrationFlow
+
+    // PeopleNumber
+    double numberOfPeople = space.numberOfPeople();
+    if (numberOfPeople > 0){
+      double floorAreaPerPerson = space.floorAreaPerPerson();
+      QDomElement peopleNumberElement = doc.createElement("PeopleNumber");
+      peopleNumberElement.setAttribute("unit", "SquareMPerPerson");
+      peopleNumberElement.appendChild(doc.createTextNode(QString::number(floorAreaPerPerson, 'f')));
+      result.appendChild(peopleNumberElement);
+    }
+
+    // PeopleHeatGain
+    // unit "WattPerPerson", BtuPerHourPerson"
+    // heatGainType "Total",  "Sensible", "Latent"
+
+    // LightPowerPerArea
+    double lightingPowerPerFloorArea = space.lightingPowerPerFloorArea();
+    if (lightingPowerPerFloorArea > 0){
+      QDomElement lightPowerPerAreaElement = doc.createElement("LightPowerPerArea");
+      lightPowerPerAreaElement.setAttribute("unit", "WattPerSquareMeter");
+      lightPowerPerAreaElement.appendChild(doc.createTextNode(QString::number(lightingPowerPerFloorArea, 'f')));
+      result.appendChild(lightPowerPerAreaElement);
+    }
+
+    // EquipPowerPerArea
+    double electricEquipmentPowerPerFloorArea = space.electricEquipmentPowerPerFloorArea();
+    if (electricEquipmentPowerPerFloorArea > 0){
+      QDomElement equipPowerPerAreaElement = doc.createElement("EquipPowerPerArea");
+      equipPowerPerAreaElement.setAttribute("unit", "WattPerSquareMeter");
+      equipPowerPerAreaElement.appendChild(doc.createTextNode(QString::number(electricEquipmentPowerPerFloorArea, 'f')));
+      result.appendChild(equipPowerPerAreaElement);
+    }
+
+    //  Temperature
+    // unit "F", "C", "K", "R"
 
     return result;
   }
@@ -1168,6 +1340,52 @@ namespace gbxml {
     QDomElement nameElement = doc.createElement("Name");
     result.appendChild(nameElement);
     nameElement.appendChild(doc.createTextNode(QString::fromStdString(name)));
+
+    // heating setpoint
+    boost::optional<double> designHeatT;
+    boost::optional<double> designCoolT;
+    boost::optional<model::Thermostat> thermostat = thermalZone.thermostat();
+    if (thermostat && thermostat->optionalCast<model::ThermostatSetpointDualSetpoint>()){
+      model::ThermostatSetpointDualSetpoint thermostatDualSetpoint = thermostat->cast<model::ThermostatSetpointDualSetpoint>();
+
+      boost::optional<model::Schedule> heatingSchedule = thermostatDualSetpoint.heatingSetpointTemperatureSchedule();
+      if (heatingSchedule){
+        if (heatingSchedule->optionalCast<model::ScheduleRuleset>()){
+          model::ScheduleRuleset scheduleRuleset = heatingSchedule->cast<model::ScheduleRuleset>();
+          model::ScheduleDay winterDesignDaySchedule = scheduleRuleset.winterDesignDaySchedule();
+          std::vector<double> values = winterDesignDaySchedule.values();
+          if (!values.empty()){
+            designHeatT = *std::max_element(values.begin(), values.end());
+          }
+        }
+      }
+
+      boost::optional<model::Schedule> coolingSchedule = thermostatDualSetpoint.coolingSetpointTemperatureSchedule();
+      if (coolingSchedule){
+        if (coolingSchedule->optionalCast<model::ScheduleRuleset>()){
+          model::ScheduleRuleset scheduleRuleset = coolingSchedule->cast<model::ScheduleRuleset>();
+          model::ScheduleDay summerDesignDaySchedule = scheduleRuleset.summerDesignDaySchedule();
+          std::vector<double> values = summerDesignDaySchedule.values();
+          if (!values.empty()){
+            designCoolT = *std::min_element(values.begin(), values.end());
+          }
+        }
+      }
+    }
+
+    if (designHeatT){
+      QDomElement designHeatTElement = doc.createElement("DesignHeatT");
+      designHeatTElement.setAttribute("unit", "C");
+      designHeatTElement.appendChild(doc.createTextNode(QString::number(*designHeatT, 'f')));
+      result.appendChild(designHeatTElement);
+    }
+
+    if (designCoolT){
+      QDomElement designCoolTElement = doc.createElement("DesignCoolT");
+      designCoolTElement.setAttribute("unit", "C");
+      designCoolTElement.appendChild(doc.createTextNode(QString::number(*designCoolT, 'f')));
+      result.appendChild(designCoolTElement);
+    }
 
     return result;
   }

@@ -64,7 +64,8 @@ ConstructionInternalSourceInspectorView::ConstructionInternalSourceInspectorView
     m_sourcePresentAfterLayerNumberEdit(nullptr),
     m_temperatureCalculationRequestedAfterLayerNumberEdit(nullptr),
     m_dimensionsForTheCTFCalculationEdit(nullptr),
-    m_tubeSpacingEdit(nullptr)
+    m_tubeSpacingEdit(nullptr),
+    m_constructionVC(nullptr)
 {
   createLayout();
 }
@@ -215,6 +216,7 @@ void ConstructionInternalSourceInspectorView::onSelectModelObject(const openstud
 
 void ConstructionInternalSourceInspectorView::onUpdate()
 {
+  m_constructionVC->reportItems();
 }
 
 void ConstructionInternalSourceInspectorView::attach(openstudio::model::ConstructionWithInternalSource & constructionWithInternalSource)
@@ -260,8 +262,6 @@ void ConstructionInternalSourceInspectorView::attach(openstudio::model::Construc
 
 void ConstructionInternalSourceInspectorView::detach()
 {
-  m_constructionVC->detach();
-
   m_sourcePresentAfterLayerNumberEdit->unbind();
   m_temperatureCalculationRequestedAfterLayerNumberEdit->unbind();
   m_dimensionsForTheCTFCalculationEdit->unbind();

@@ -808,6 +808,35 @@ TEST_F(ModelFixture, ScheduleRuleset_InsertObjects)
   EXPECT_FALSE(addedObjects.empty());
 }
 
+TEST_F(ModelFixture, ScheduleRuleset_DesignDays)
+{
+  Model model;
+  ScheduleTypeLimits typeLimits(model);
+
+  ScheduleRuleset schedule(model);
+  schedule.setName("Always_On");
+  EXPECT_EQ("Always_On", schedule.name().get());
+  schedule.setScheduleTypeLimits(typeLimits);
+
+  EXPECT_EQ(1u, model.getConcreteModelObjects<ScheduleDay>().size());
+
+  ScheduleDay winterSchedule(model);
+  schedule.setWinterDesignDaySchedule(winterSchedule);
+  EXPECT_NE(winterSchedule.handle(), schedule.winterDesignDaySchedule().handle());
+
+  ScheduleDay summerSchedule(model);
+  schedule.setSummerDesignDaySchedule(summerSchedule);
+  EXPECT_NE(summerSchedule.handle(), schedule.summerDesignDaySchedule().handle());
+
+  EXPECT_EQ(5u, model.getConcreteModelObjects<ScheduleDay>().size());
+
+  schedule.remove();
+
+  EXPECT_EQ(2u, model.getConcreteModelObjects<ScheduleDay>().size());
+  EXPECT_FALSE(winterSchedule.handle().isNull());
+  EXPECT_FALSE(summerSchedule.handle().isNull());
+}
+
 /*
 January
 

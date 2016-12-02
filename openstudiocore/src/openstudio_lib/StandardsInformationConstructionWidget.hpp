@@ -128,6 +128,7 @@ class StandardsInformationConstructionWidget : public QWidget
     QLabel * m_fenestrationLowEmissivityCoatingLabel = nullptr;
 
     bool m_isIP = false;
+    bool m_fenestrationEnabled = false;
 
     boost::optional<openstudio::model::ConstructionBase> m_construction;
 

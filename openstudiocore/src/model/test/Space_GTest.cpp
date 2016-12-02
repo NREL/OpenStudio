@@ -1360,6 +1360,25 @@ TEST_F(ModelFixture,Space_Plenum)
   EXPECT_EQ(plenumSpaceType.handle(), returnSpace.spaceType()->handle());
   EXPECT_FALSE(returnSpace.partofTotalFloorArea());
 
+  std::vector<Space> plenumSpaces = plenumSpaceType.spaces();
+  ASSERT_EQ(2u, plenumSpaces.size());
+
+  EXPECT_EQ("Plenum Space Type", plenumSpaceType.nameString());
+  plenumSpaceType.setName("Some Other Name");
+  EXPECT_EQ("Plenum Space Type", plenumSpaceType.nameString());
+
+  ASSERT_TRUE(supplySpace.spaceType());
+  EXPECT_EQ(plenumSpaceType.handle(), supplySpace.spaceType()->handle());
+  EXPECT_FALSE(supplySpace.partofTotalFloorArea());
+  ASSERT_TRUE(space.spaceType());
+  EXPECT_EQ(spaceType.handle(), space.spaceType()->handle());
+  EXPECT_TRUE(space.partofTotalFloorArea());
+  ASSERT_TRUE(returnSpace.spaceType());
+  EXPECT_EQ(plenumSpaceType.handle(), returnSpace.spaceType()->handle());
+  EXPECT_FALSE(returnSpace.partofTotalFloorArea());
+
+  plenumSpaces = plenumSpaceType.spaces();
+  ASSERT_EQ(2u, plenumSpaces.size());
 }
 
 
