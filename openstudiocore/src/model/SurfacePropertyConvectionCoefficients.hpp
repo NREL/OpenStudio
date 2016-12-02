@@ -31,6 +31,9 @@
 
 #include "ModelAPI.hpp"
 #include "ModelObject.hpp"
+#include "Surface.hpp"
+#include "SubSurface.hpp"
+#include "InternalMass.hpp"
 
 namespace openstudio {
 
@@ -50,15 +53,17 @@ class MODEL_API SurfacePropertyConvectionCoefficients : public ModelObject {
   /** @name Constructors and Destructors */
   //@{
 
-  explicit SurfacePropertyConvectionCoefficients(const Model& model);
+  explicit SurfacePropertyConvectionCoefficients(const Surface& surface);
+
+  explicit SurfacePropertyConvectionCoefficients(const SubSurface& surface);
+
+  explicit SurfacePropertyConvectionCoefficients(const InternalMass& surface);
 
   virtual ~SurfacePropertyConvectionCoefficients() {}
 
   //@}
 
   static IddObjectType iddObjectType();
-
-  static std::vector<std::string> surfaceTypeValues();
 
   static std::vector<std::string> convectionCoefficient1LocationValues();
 
@@ -71,7 +76,13 @@ class MODEL_API SurfacePropertyConvectionCoefficients : public ModelObject {
   /** @name Getters */
   //@{
 
-  boost::optional<std::string> surfaceType() const;
+  ModelObject surfaceAsModelObject() const;
+
+  boost::optional<Surface> surfaceAsSurface() const;
+
+//  boost::optional<SubSurface> surfaceAsSubSurface() const;
+//
+//  boost::optional<InternalMass> surfaceAsInternalMass() const;
 
   boost::optional<std::string> convectionCoefficient1Location() const;
 
@@ -93,9 +104,7 @@ class MODEL_API SurfacePropertyConvectionCoefficients : public ModelObject {
   /** @name Setters */
   //@{
 
-  bool setSurfaceType(const std::string& surfaceType);
-
-  void resetSurfaceType();
+  bool setSurface(const ModelObject& surface);
 
   bool setConvectionCoefficient1Location(const std::string& convectionCoefficient1Location);
 
