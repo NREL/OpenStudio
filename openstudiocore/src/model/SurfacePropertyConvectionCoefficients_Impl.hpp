@@ -67,13 +67,17 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
-
     //@}
     /** @name Getters */
     //@{
 
-    boost::optional<std::string> surfaceType() const;
+    ModelObject surfaceAsModelObject() const;
+
+    boost::optional<Surface> surfaceAsSurface() const;
+
+//    boost::optional<SubSurface> surfaceAsSubSurface() const;
+//
+//    boost::optional<InternalMass> surfaceAsInternalMass() const;
 
     boost::optional<std::string> convectionCoefficient1Location() const;
 
@@ -95,9 +99,7 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    bool setSurfaceType(const std::string& surfaceType);
-
-    void resetSurfaceType();
+    bool setSurface(const ModelObject& surface);
 
     bool setConvectionCoefficient1Location(const std::string& convectionCoefficient1Location);
 
