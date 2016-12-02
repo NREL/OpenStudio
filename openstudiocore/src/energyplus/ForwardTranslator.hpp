@@ -343,6 +343,7 @@ class WindowPropertyFrameAndDivider;
 class ZoneAirContaminantBalance;
 class ZoneAirHeatBalanceAlgorithm;
 class ZoneAirMassFlowConservation;
+class ZoneCapacitanceMultiplierResearchSpecial;
 class ZoneControlContaminantController;
 class ZoneControlHumidistat;
 class ZoneControlThermostatStagedDualSetpoint;
@@ -1046,6 +1047,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateZoneAirContaminantBalance( model::ZoneAirContaminantBalance & modelObject );
 
   boost::optional<IdfObject> translateZoneAirMassFlowConservation(model::ZoneAirMassFlowConservation & modelObject);
+
+  boost::optional<IdfObject> translateZoneCapacitanceMultiplierResearchSpecial( model::ZoneCapacitanceMultiplierResearchSpecial & modelObject );
 
   boost::optional<IdfObject> translateZoneControlContaminantController( model::ZoneControlContaminantController& modelObject );
 

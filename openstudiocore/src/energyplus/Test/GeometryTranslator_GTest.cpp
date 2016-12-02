@@ -140,26 +140,39 @@ Workspace testWorkspace(const CoordinateSystem& system, const CoordinateSystem& 
     10.0,0.0,1.;  !- X,Y,Z ==> Vertex 4 {m} \n\
     \n\
   Daylighting:Controls, \n\
+    Daylighting Controls,    !- Name \n\
     Zone,                    !- Zone Name \n\
-    2,                       !- Total Daylighting Reference Points \n\
-    0.0,                     !- X-Coordinate of First Reference Point {m} \n\
-    0.0,                     !- Y-Coordinate of First Reference Point {m} \n\
-    0.8,                     !- Z-Coordinate of First Reference Point {m} \n\
-    1.0,                     !- X-Coordinate of Second Reference Point {m} \n\
-    1.0,                     !- Y-Coordinate of Second Reference Point {m} \n\
-    0.8,                     !- Z-Coordinate of Second Reference Point {m} \n\
-    1.0,                     !- Fraction of Zone Controlled by First Reference Point \n\
-    0.0,                     !- Fraction of Zone Controlled by Second Reference Point \n\
-    550,                     !- Illuminance Setpoint at First Reference Point {lux} \n\
-    0,                       !- Illuminance Setpoint at Second Reference Point {lux} \n\
-    1,                       !- Lighting Control Type \n\
+    SplitFlux,               !- Daylighting Method \n\
+    ,                        !- Availability Schedule Name \n\
+    Continuous,              !- Lighting Control Type \n\
+    0.3,                     !- Minimum Input Power Fraction for Continuous or ContinuousOff Dimming Control \n\
+    0.2,                     !- Minimum Light Output Fraction for Continuous or ContinuousOff Dimming Control \n\
+    ,                        !- Number of Stepped Control Steps \n\
+    1.0,                     !- Probability Lighting will be Reset When Needed in Manual Stepped Control \n\
+    Daylighting RefPt1,      !- Glare Calculation Daylighting Reference Point Name \n\
     0.0,                     !- Glare Calculation Azimuth Angle of View Direction Clockwise from Zone y-Axis {deg} \n\
     20.0,                    !- Maximum Allowable Discomfort Glare Index \n\
-    0.3,                     !- Minimum Input Power Fraction for Continuous Dimming Control \n\
-    0.2,                     !- Minimum Light Output Fraction for Continuous Dimming Control \n\
-    0,                       !- Number of Stepped Control Steps \n\
-    1.0;                     !- Probability Lighting will be Reset When Needed in Manual Stepped Control \n\
+    ,                        !- DElight Gridding Resolution {m2} \n\
+    Daylighting RefPt1,      !- Daylighting Reference Point 1 Name \n\
+    1.0,                     !- Fraction of Zone Controlled by Reference Point 1 \n\
+    550,                     !- Illuminance Setpoint at Reference Point 1 {lux} \n\
+    Daylighting RefPt2,      !- Daylighting Reference Point 2 Name \n\
+    0.0,                     !- Fraction of Zone Controlled by Reference Point 2 \n\
+    0;                       !- Illuminance Setpoint at Reference Point 2 {lux} \n\
     \n\
+  Daylighting:ReferencePoint, \n\
+    Daylighting RefPt1,      !- Name \n\
+    Zone,                    !- Zone Name \n\
+    0.0,                     !- X-Coordinate of Reference Point {m} \n\
+    0.0,                     !- Y-Coordinate of Reference Point {m} \n\
+    0.8;                     !- Z-Coordinate of Reference Point {m} \n\
+    \n\
+  Daylighting:ReferencePoint, \n\
+    Daylighting RefPt2,      !- Name \n\
+    Zone,                    !- Zone Name \n\
+    1.0,                     !- X-Coordinate of Reference Point {m} \n\
+    1.0,                     !- Y-Coordinate of Reference Point {m} \n\
+    0.8;                     !- Z-Coordinate of Reference Point {m} \n\
   Output:IlluminanceMap, \n\
     Daylight Map,            !- Name \n\
     Zone,                    !- Zone Name \n\
