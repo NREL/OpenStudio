@@ -73,7 +73,8 @@ TEST_F(gbXMLFixture, ReverseTranslator_ZNETH)
 
   // add test to see that surfaces that reference two spaces get "surface" boundary condition
   // e.g. surface named "su-76" should have "Surface" string for OutsideBoundaryCondition
-  OptionalSurface osurf = model->getModelObjectByName<Surface>("su-76");
+  //OptionalSurface osurf = model->getModelObjectByName<Surface>("su-76"); // su-76 is the id
+  OptionalSurface osurf = model->getModelObjectByName<Surface>("B-101-201-I-F-76"); // B-101-201-I-F-76 is the name
   ASSERT_TRUE(osurf);
   EXPECT_EQ("Surface",osurf->outsideBoundaryCondition());
 

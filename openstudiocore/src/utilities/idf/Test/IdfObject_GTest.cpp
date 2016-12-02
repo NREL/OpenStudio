@@ -463,7 +463,7 @@ TEST_F(IdfFixture, IdfObject_StringFieldGetterWithReturnDefaultOption) {
   oObj = IdfObject::load(text.str());
   ASSERT_TRUE(oObj);
   object = *oObj;
-  EXPECT_EQ(6u,object.numFields());
+  EXPECT_EQ(7u,object.numFields());
 
   // returns set values
   idfField = object.getString(0,true);
@@ -473,13 +473,13 @@ TEST_F(IdfFixture, IdfObject_StringFieldGetterWithReturnDefaultOption) {
   ASSERT_TRUE(idfField);
   EXPECT_EQ("2.0",*idfField);
 
-  // returns default for non-existent, non-extensible fields
+  // returns default for empty fields
   idfField = object.getString(6,true);
   ASSERT_TRUE(idfField);
   EXPECT_EQ("0.28",*idfField);
-  EXPECT_EQ(6u,object.numFields());
+  EXPECT_EQ(7u,object.numFields());
   idfField = object.getString(6);
-  EXPECT_FALSE(idfField);
+  EXPECT_TRUE(idfField);
 
   StringVector newGroup;
   newGroup.push_back("MyFirstTransistionZone");
@@ -556,22 +556,22 @@ TEST_F(IdfFixture, IdfObject_UnsignedFieldGetterWithReturnDefaultOption) {
 
 TEST_F(IdfFixture, IdfObject_IntFieldGetterWithReturnDefaultOption) {
   std::stringstream text;
-  text << "Daylighting:DELight:Controls," << std::endl
-       << "  MyControl," << std::endl
-       << "  MyZone," << std::endl
-       << "  ," << std::endl // default 1
-       << "  ," << std::endl // default 0.3
-       << "  ," << std::endl // default 0.2
-       << "  ," << std::endl // default 1 (any integer but 0)
+  text << "Building," << std::endl
+       << "  Building," << std::endl
        << "  ," << std::endl // default 0.0
-       << "  1.0;";
+       << "  ," << std::endl // default Suburbs
+       << "  ," << std::endl // default 0.04
+       << "  ," << std::endl // default 0.4
+       << "  ," << std::endl // default FullExterior
+       << "  ," << std::endl // default 25
+       << "  6;"; // default 25
   OptionalIdfObject oObj = IdfObject::load(text.str());
   ASSERT_TRUE(oObj);
   IdfObject object = *oObj;
   // is able to cast default value
-  OptionalInt iIdfField = object.getInt(5,true);
+  OptionalInt iIdfField = object.getInt(6,true);
   ASSERT_TRUE(iIdfField);
-  EXPECT_EQ(1,*iIdfField);
+  EXPECT_EQ(25,*iIdfField);
   EXPECT_FALSE(object.getInt(5));
 
   // returns set values
@@ -583,46 +583,9 @@ TEST_F(IdfFixture, IdfObject_IntFieldGetterWithReturnDefaultOption) {
 }
 
 TEST_F(IdfFixture, IdfObject_FieldSettingWithHiddenPushes) {
-  // SHOULD BE VALID
   std::stringstream text;
-  text << "ZoneHVAC:HighTemperatureRadiant," << std::endl
-       << "  MyRadiantSystem," << std::endl
-       << "  MyHVACSchedule," << std::endl
-       << "  MyCoreZone," << std::endl
-       << "  HeatingDesignCapacity," << std::endl
-       << "  Autosize," << std::endl
-       << "  ," << std::endl
-       << "  ," << std::endl
-       << "  Electricity;";
-  OptionalIdfObject oObj = IdfObject::load(text.str());
-  ASSERT_TRUE(oObj);
-  IdfObject object = *oObj;
-  EXPECT_EQ(8u,object.numFields());
-  // hidden pushing for setting nonextensible string
-
-  // hidden pushing for setting nonextensible double
-
-  // hidden pushing for setting extensible string
-  bool result = object.setString(16,"MyCoreZoneSurface1");
-  EXPECT_TRUE(result);
-  // adds an extra field to keep groups together
-  EXPECT_EQ(18u,object.numFields());
-  OptionalString sValue = object.getString(16);
-  ASSERT_TRUE(sValue);
-  EXPECT_EQ("MyCoreZoneSurface1",*sValue);
-  sValue = object.getString(17);
-  ASSERT_TRUE(sValue);
-  EXPECT_EQ("",*sValue);
-
-  // hidden pushing for setting extensible double
-  result = object.setDouble(21,0.01);
-  EXPECT_TRUE(result);
-  EXPECT_EQ(static_cast<unsigned>(22),object.numFields());
-  OptionalDouble dValue = object.getDouble(21);
-  ASSERT_TRUE(dValue);
-  EXPECT_NEAR(0.01,*dValue,tol);
-  dValue = object.getDouble(19);
-  EXPECT_FALSE(dValue);
+  OptionalIdfObject oObj;
+  bool result;
 
   // SHOULD NOT BE VALID
   text.str("");
@@ -639,14 +602,14 @@ TEST_F(IdfFixture, IdfObject_FieldSettingWithHiddenPushes) {
        << "  0.8;";
   oObj = IdfObject::load(text.str());
   ASSERT_TRUE(oObj);
-  object = *oObj;
+  IdfObject object = *oObj;
   // impossible field index
   result = object.setString(20,"not a field");
   EXPECT_FALSE(result);
-  EXPECT_EQ(static_cast<unsigned>(10),object.numFields());
+  EXPECT_EQ(static_cast<unsigned>(11),object.numFields());
   result = object.setUnsigned(20,1);
   EXPECT_FALSE(result);
-  EXPECT_EQ(static_cast<unsigned>(10),object.numFields());
+  EXPECT_EQ(static_cast<unsigned>(11),object.numFields());
 }
 
 TEST_F(IdfFixture, IdfObject_GetQuantity)

@@ -2,9 +2,9 @@
   <schema_version>3.0</schema_version>
   <name>openstudio_results</name>
   <uid>675e0a1f-d1f9-4639-aed5-3fd8b21d5503</uid>
-  <version_id>b3afd557-f37a-44fd-9fdf-6da61afdaa80</version_id>
-  <version_modified>20161121T160259Z</version_modified>
-  <xml_checksum>A94354BA</xml_checksum>
+  <version_id>21e70ea9-b80f-46f8-939a-fe2498f9e0f6</version_id>
+  <version_modified>20161202T004241Z</version_modified>
+  <xml_checksum>557BF06F</xml_checksum>
   <class_name>OpenStudioResults</class_name>
   <display_name>OpenStudio Results</display_name>
   <description>This measure creates high level tables and charts pulling both from model inputs and EnergyPlus results. It has building level information as well as detail on space types, thermal zones, HVAC systems, envelope characteristics, and economics. Click the heading above a chart to view a table of the chart data.</description>
@@ -389,7 +389,6 @@
       </choices>
     </argument>
   </arguments>
-  <outputs/>
   <provenances/>
   <tags>
     <tag>Reporting.QAQC</tag>
