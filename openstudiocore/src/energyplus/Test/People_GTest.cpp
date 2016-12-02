@@ -72,20 +72,5 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_People)
   ASSERT_EQ(1u, peopleObjects.size());
 }
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_People_NoSpace)
-{
-  Model model;
-
-  PeopleDefinition def(model);
-
-  People people(def);
-  
-  ForwardTranslator ft;
-  Workspace workspace = ft.translateModel(model);
-
-  std::vector<WorkspaceObject> peopleObjects = workspace.getObjectsByType(IddObjectType::People);
-  //ASSERT_EQ(0u, peopleObjects.size()); // for now we will let the object come through, this will cause an error in E+
-  ASSERT_EQ(1u, peopleObjects.size());
-}
 
 

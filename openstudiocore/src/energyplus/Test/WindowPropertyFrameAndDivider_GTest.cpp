@@ -66,7 +66,9 @@ TEST_F(EnergyPlusFixture, WindowPropertyFrameAndDivider)
   Model model;
 
   ThermalZone thermalZone(model);
+
   Space space(model);
+  space.setThermalZone(thermalZone);
 
   std::vector<Point3d> vertices;
   vertices.push_back(Point3d(0, 0, 10));
@@ -75,6 +77,7 @@ TEST_F(EnergyPlusFixture, WindowPropertyFrameAndDivider)
   vertices.push_back(Point3d(10, 0, 10));
 
   Surface surface(vertices, model);
+  surface.setSpace(space);
 
   vertices.clear();
   vertices.push_back(Point3d(0, 0, 1));
@@ -84,9 +87,11 @@ TEST_F(EnergyPlusFixture, WindowPropertyFrameAndDivider)
 
   SubSurface subSurface1(vertices, model);
   subSurface1.setName("No Offset");
+  subSurface1.setSurface(surface);
 
   SubSurface subSurface2(vertices, model);
   subSurface2.setName("Offset");
+  subSurface2.setSurface(surface);
 
   Vector3d normal = subSurface1.outwardNormal();
   EXPECT_DOUBLE_EQ(0.0, normal.x());
@@ -96,8 +101,12 @@ TEST_F(EnergyPlusFixture, WindowPropertyFrameAndDivider)
   WindowPropertyFrameAndDivider frameAndDivider(model);
   frameAndDivider.setOutsideRevealDepth(1.0);
 
-  subSurface2.setWindowPropertyFrameAndDivider(frameAndDivider);
-  subSurface2.setName("Offset");
+  EXPECT_FALSE(subSurface2.allowWindowPropertyFrameAndDivider());
+  EXPECT_TRUE(subSurface2.setSubSurfaceType("GlassDoor"));
+  EXPECT_TRUE(subSurface2.allowWindowPropertyFrameAndDivider());
+
+  EXPECT_TRUE(subSurface2.setWindowPropertyFrameAndDivider(frameAndDivider));
+  ASSERT_TRUE(subSurface2.windowPropertyFrameAndDivider());
 
   ForwardTranslator forwardTranslator;
   OptionalWorkspace outWorkspace = forwardTranslator.translateModel(model);

@@ -75,9 +75,9 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Surface)
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
   EXPECT_EQ(0u, forwardTranslator.errors().size());
-  EXPECT_EQ(0u, forwardTranslator.warnings().size());
+  EXPECT_EQ(1u, forwardTranslator.warnings().size());
 
-  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::BuildingSurface_Detailed).size());
+  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::BuildingSurface_Detailed).size());
 }
 
 TEST_F(EnergyPlusFixture,ForwardTranslator_Surface_Zone)

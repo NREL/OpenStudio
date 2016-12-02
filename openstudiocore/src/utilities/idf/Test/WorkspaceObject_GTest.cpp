@@ -287,7 +287,7 @@ TEST_F(IdfFixture, WorkspaceObject_FieldSettingWithHiddenPushes) {
   OptionalWorkspaceObject tObject = scratch.getObject(w1->handle ());
   ASSERT_TRUE(tObject);
   WorkspaceObject object = *tObject;
-  EXPECT_EQ(static_cast<unsigned>(8),object.numFields());
+  EXPECT_EQ(static_cast<unsigned>(14),object.numFields());
 
   // create schedule object to point to from non-extensible field
   text.str("");
@@ -346,15 +346,15 @@ TEST_F(IdfFixture, WorkspaceObject_FieldSettingWithHiddenPushes) {
 
   // hidden pushing for setting nonextensible double
   EXPECT_FALSE(object.setDouble(9,1.5));
-  EXPECT_EQ(8u,object.numFields());
+  EXPECT_EQ(14u,object.numFields());
   EXPECT_TRUE(object.setDouble(9,0.6));
-  EXPECT_EQ(10u,object.numFields());
+  EXPECT_EQ(14u,object.numFields());
 
   // hidden pushing for setting nonextensible string
   EXPECT_FALSE(object.setString(12,"bad key"));
-  EXPECT_EQ(10u,object.numFields());
+  EXPECT_EQ(14u,object.numFields());
   EXPECT_TRUE(object.setString(12,"MeanAirTemperature"));
-  EXPECT_EQ(13u,object.numFields());
+  EXPECT_EQ(14u,object.numFields());
 
   // hidden pushing for setting nonextensible pointer
   EXPECT_TRUE(object.setString(14,""));

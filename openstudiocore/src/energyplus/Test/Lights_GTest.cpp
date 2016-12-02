@@ -105,10 +105,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_NoSpace)
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
 
-  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::Lights).size());
-
-  WorkspaceObject object = workspace.getObjectsByType(IddObjectType::Lights)[0];
-  EXPECT_TRUE(object.isEmpty(LightsFields::ZoneorZoneListName));
+  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Lights).size());
 }
 
 TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_Space)
