@@ -2006,12 +2006,6 @@ TEST_F(IdfFixture, Workspace_Signals)
   WorkspaceObject object = workspace.addObject(IdfObject(IddObjectType::Zone)).get();
   Handle handle = object.handle();
 
-  EXPECT_FALSE(reciever->m_objectImpl);
-  EXPECT_FALSE(reciever->m_iddObjectType);
-  EXPECT_FALSE(reciever->m_handle);
-
-  openstudio::Application::instance().processEvents();
-
   ASSERT_TRUE(reciever->m_objectImpl.get());
   ASSERT_TRUE(reciever->m_iddObjectType);
   EXPECT_EQ(IddObjectType::Zone, reciever->m_iddObjectType->value());
@@ -2025,12 +2019,6 @@ TEST_F(IdfFixture, Workspace_Signals)
   EXPECT_FALSE(reciever->m_handle);
 
   object.remove();
-
-  EXPECT_FALSE(reciever->m_objectImpl);
-  EXPECT_FALSE(reciever->m_iddObjectType);
-  EXPECT_FALSE(reciever->m_handle);
-
-  Application::instance().processEvents();
 
   ASSERT_TRUE(reciever->m_objectImpl.get());
   ASSERT_TRUE(reciever->m_iddObjectType);
