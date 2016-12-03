@@ -30,6 +30,7 @@
 #include "../EpwFile.hpp"
 #include "../../time/Time.hpp"
 #include "../../time/Date.hpp"
+#include "../../core/Checksum.hpp"
 
 #include <resources.hxx>
 
@@ -49,7 +50,8 @@ TEST(Filetypes, EpwFile)
     path p = resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3.epw");
     EpwFile epwFile(p);
     EXPECT_EQ(p, epwFile.path());
-    EXPECT_EQ("F188656D", epwFile.checksum());
+    EXPECT_EQ("BDF687C1", epwFile.checksum());
+    EXPECT_EQ(openstudio::checksum(epwFile.path()), epwFile.checksum());
     EXPECT_EQ("Denver Centennial  Golden   Nr", epwFile.city());
     EXPECT_EQ("CO", epwFile.stateProvinceRegion());
     EXPECT_EQ("USA", epwFile.country());
@@ -74,7 +76,8 @@ TEST(Filetypes, EpwFile_Data)
     path p = resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3.epw");
     EpwFile epwFile(p);
     EXPECT_EQ(p, epwFile.path());
-    EXPECT_EQ("F188656D", epwFile.checksum());
+    EXPECT_EQ("BDF687C1", epwFile.checksum());
+    EXPECT_EQ(openstudio::checksum(epwFile.path()), epwFile.checksum());
     EXPECT_EQ("Denver Centennial  Golden   Nr", epwFile.city());
     EXPECT_EQ("CO", epwFile.stateProvinceRegion());
     EXPECT_EQ("USA", epwFile.country());
@@ -144,7 +147,8 @@ TEST(Filetypes, EpwFile_Data)
     }
     // We should redo the original tests because we have reparsed the entire file
     EXPECT_EQ(p, epwFile.path());
-    EXPECT_EQ("F188656D", epwFile.checksum());
+    EXPECT_EQ("BDF687C1", epwFile.checksum());
+    EXPECT_EQ(openstudio::checksum(epwFile.path()), epwFile.checksum());
     EXPECT_EQ("Denver Centennial  Golden   Nr", epwFile.city());
     EXPECT_EQ("CO", epwFile.stateProvinceRegion());
     EXPECT_EQ("USA", epwFile.country());
