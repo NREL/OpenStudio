@@ -37,6 +37,8 @@
 #include "../../time/DateTime.hpp"
 
 #include "../../core/Exception.hpp"
+#include "../../core/System.hpp"
+#include "../../core/Checksum.hpp"
 
 #include <resources.hxx>
 
@@ -53,6 +55,50 @@ public:
   void makeDirty() { dirty = true; }
   bool dirty;
 };
+
+TEST(Filetypes, WorkflowJSON_Load)
+{
+  path p = resourcesPath() / toPath("utilities/Filetypes/min.osw");
+  path p2 = resourcesPath() / toPath("utilities/Filetypes/min.2.osw");
+  path p3 = resourcesPath() / toPath("utilities/Filetypes/min.3.osw");
+  ASSERT_TRUE(WorkflowJSON::load(p));
+
+  WorkflowJSON workflow1(p);
+  EXPECT_TRUE(workflow1.checkForUpdates());
+  EXPECT_TRUE(workflow1.saveAs(p2));
+
+  boost::optional<DateTime> time1 = workflow1.updatedAt();
+  ASSERT_TRUE(time1);
+
+  // needed so there would be a time delay in updated timestamp
+  System::msleep(2000);
+
+  ASSERT_TRUE(WorkflowJSON::load(p2));
+  WorkflowJSON workflow2(p2);
+
+  boost::optional<DateTime> time2 = workflow2.updatedAt();
+  ASSERT_TRUE(time2);
+
+  EXPECT_EQ(*time1, *time2);
+
+  std::string s1 = workflow1.string(false);
+  std::string s2 = workflow2.string(false);
+  EXPECT_EQ(s1, s2);
+
+  EXPECT_EQ(workflow1.hash(), workflow2.hash());
+  EXPECT_EQ(workflow1.computeHash(), workflow2.computeHash());
+  EXPECT_EQ(checksum(s1), checksum(s2));
+  EXPECT_EQ(workflow2.hash(), workflow2.computeHash());
+  EXPECT_EQ(workflow2.hash(), checksum(s2));
+  EXPECT_EQ(workflow2.computeHash(), checksum(s2));
+
+  EXPECT_FALSE(workflow2.checkForUpdates());
+
+  s1 = workflow1.string(false);
+  s2 = workflow2.string(false);
+  EXPECT_EQ(s1, s2);
+
+}
 
 
 TEST(Filetypes, WorkflowJSON_Min)
@@ -120,6 +166,7 @@ TEST(Filetypes, WorkflowJSON_Min)
   try{
     WorkflowJSON workflow(p2);
     EXPECT_FALSE(workflow.checkForUpdates());
+
     ASSERT_TRUE(workflow.oswPath());
     EXPECT_EQ(p2, workflow.oswPath().get());
     EXPECT_EQ(".", toString(workflow.rootDir()));
@@ -184,20 +231,39 @@ TEST(Filetypes, WorkflowJSON_Full)
     EXPECT_EQ(p, workflow.oswPath().get());
     EXPECT_EQ("../../", toString(workflow.rootDir()));
     EXPECT_EQ(toString(resourcesPath()), toString(workflow.absoluteRootDir()));
+
     ASSERT_TRUE(workflow.seedFile());
     EXPECT_EQ("1_9_0/example.osm", workflow.seedFile().get());
+   
+    // DLM: version resources went away, so make a file for ourselves
+    openstudio::path expectedSeedPath = resourcesPath() / toPath("osversion/1_9_0/example.osm");
+    if (!boost::filesystem::exists(expectedSeedPath)){
+      boost::filesystem::create_directories(expectedSeedPath.parent_path());
+      std::ofstream outFile(openstudio::toString(expectedSeedPath));
+      if (outFile) {
+        outFile << "OS:Version,\n\
+                    {8b3ac8ca-71e7-486e-ac28-74f6e601c3f2}, !- Handle\n\
+                    1.12.0;                                 !- Version Identifier\n";
+        outFile.close();
+      }
+    }
+
     boost::optional<path> test = workflow.findFile(workflow.seedFile().get());
     ASSERT_TRUE(test);
-    EXPECT_EQ(toString(resourcesPath() / toPath("osversion/1_9_0/example.osm")), toString(*test));
+    EXPECT_EQ(toString(expectedSeedPath), toString(*test));
+
     ASSERT_TRUE(workflow.weatherFile());
     EXPECT_EQ("./USA_CO_Golden-NREL.724666_TMY3.epw", workflow.weatherFile().get());
+
     test = workflow.findFile(workflow.weatherFile().get());
     ASSERT_TRUE(test);
-    EXPECT_EQ(toString(resourcesPath() / toPath("utilities/Filetypes/./USA_CO_Golden-NREL.724666_TMY3.epw")), toString(*test));
+    EXPECT_EQ(toString(resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3.epw")), toString(*test));
+
     test = workflow.findMeasure(toPath("SetWindowToWallRatioByFacade"));
     ASSERT_TRUE(test);
     EXPECT_EQ(toString(resourcesPath() / toPath("utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade")), toString(*test));
 
+    EXPECT_FALSE(workflow.checkForUpdates());
     EXPECT_TRUE(workflow.saveAs(p2));
 
     std::vector<WorkflowStep> workflowSteps = workflow.workflowSteps();
@@ -260,7 +326,7 @@ TEST(Filetypes, WorkflowJSON_Full)
     EXPECT_EQ("./USA_CO_Golden-NREL.724666_TMY3.epw", workflow.weatherFile().get());
     test = workflow.findFile(workflow.weatherFile().get());
     ASSERT_TRUE(test);
-    EXPECT_EQ(toString(resourcesPath() / toPath("utilities/Filetypes/./USA_CO_Golden-NREL.724666_TMY3.epw")), toString(*test));
+    EXPECT_EQ(toString(resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3.epw")), toString(*test));
     test = workflow.findMeasure(toPath("SetWindowToWallRatioByFacade"));
     ASSERT_TRUE(test);
     EXPECT_EQ(toString(resourcesPath() / toPath("utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade")), toString(*test));

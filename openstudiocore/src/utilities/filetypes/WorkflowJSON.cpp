@@ -145,8 +145,9 @@ namespace detail{
     std::string h2 = computeHash();
     bool result = (h1 != h2);
     if (result){
-      m_value["hash"] = h2;
       onUpdate();
+      h2 = computeHash(); // recompute hash after updating timestamps
+      m_value["hash"] = h2;
     }
     return result;
   }
@@ -324,7 +325,6 @@ namespace detail{
       m_oswFilename = path.filename();
       m_oswDir = path.parent_path();
       setMeasureTypes();
-      onUpdate();
       return true;
     }
     LOG(Warn, "Path " << toString(path) << " is not absolute, WorkflowJSON::setOswPath failed");
@@ -361,7 +361,7 @@ namespace detail{
   {
     openstudio::path result = rootDir();
     if (result.is_relative()){
-      return boost::filesystem::absolute(result, oswDir());
+      return boost::filesystem::canonical(result, oswDir());
     }
     return result;
   }
@@ -377,7 +377,7 @@ namespace detail{
   {
     openstudio::path result = runDir();
     if (result.is_relative()){
-      return boost::filesystem::absolute(result, absoluteRootDir());
+      return boost::filesystem::canonical(result, absoluteRootDir());
     }
     return result;
   }
@@ -393,7 +393,7 @@ namespace detail{
   {
     openstudio::path result = outPath();
     if (result.is_relative()){
-      return boost::filesystem::absolute(result, oswDir());
+      return boost::filesystem::canonical(result, oswDir());
     }
     return result;
   }
@@ -426,6 +426,7 @@ namespace detail{
       if (path.is_absolute()){
         result.push_back(path);
       }else{
+        // DLM: canonical does not work here, use absolute
         result.push_back(boost::filesystem::absolute(path, absoluteRootDir()));
       }
     }
@@ -498,6 +499,7 @@ namespace detail{
       if (path.is_absolute()){
         result.push_back(path);
       } else{
+        // DLM: canonical does not work here, use absolute
         result.push_back(boost::filesystem::absolute(path, absoluteRootDir()));
       }
     }
