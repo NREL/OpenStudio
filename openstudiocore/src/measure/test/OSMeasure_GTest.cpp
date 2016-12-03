@@ -45,6 +45,7 @@
 
 #include "../../utilities/core/Finder.hpp"
 #include "../../utilities/filetypes/WorkflowJSON.hpp"
+#include "../../utilities/filetypes/WorkflowStep.hpp"
 
 #include "../../utilities/units/QuantityConverter.hpp"
 
@@ -82,7 +83,9 @@ class TestModelUserScript1 : public ModelMeasure {
   {
     ModelMeasure::run(model,runner,user_arguments);
 
-    // no arguments, so do not bother validating them
+    if (!runner.validateUserArguments(arguments(model), user_arguments)){
+      return false;
+    }
 
     std::stringstream ss;
 
@@ -107,11 +110,17 @@ class TestModelUserScript1 : public ModelMeasure {
 
 };
 
+
 TEST_F(MeasureFixture, UserScript_TestModelUserScript1) {
   TestModelUserScript1 script;
   EXPECT_EQ("TestModelUserScript1", script.name());
 
+  std::vector<WorkflowStep> steps;
+  steps.push_back(MeasureStep("dummy"));
+
   WorkflowJSON workflow;
+  workflow.setWorkflowSteps(steps);
+
   TestOSRunner runner(workflow);
   std::map<std::string, OSArgument> user_arguments;
 
@@ -271,8 +280,13 @@ TEST_F(MeasureFixture, UserScript_TestModelUserScript2) {
   openstudio::path fileDir = toPath("./OSResultOSSRs");
   openstudio::filesystem::create_directory(fileDir);
 
-  // call with no arguments
+  std::vector<WorkflowStep> steps;
+  steps.push_back(MeasureStep("dummy"));
+
   WorkflowJSON workflow;
+  workflow.setWorkflowSteps(steps);
+
+  // call with no arguments
   TestOSRunner runner(workflow);
   std::map<std::string, OSArgument> user_arguments;
   bool ok = script.run(model,runner,user_arguments);
@@ -288,6 +302,7 @@ TEST_F(MeasureFixture, UserScript_TestModelUserScript2) {
   EXPECT_TRUE(result.stepValues().empty());
 
   // call with required argument, but no lights definitions in model
+  runner.reset();
   LightsDefinition lightsDef(model);
   OSArgumentVector definitions = script.arguments(model);
   user_arguments = runner.getUserInput(definitions);
@@ -309,6 +324,7 @@ TEST_F(MeasureFixture, UserScript_TestModelUserScript2) {
   EXPECT_EQ(2u,result.stepValues().size()); // registers argument values
  
   // call properly using default multiplier, but lights definition not Watts/Area
+  runner.reset();
   lightsDef = LightsDefinition(model);
   lightsDef.setLightingLevel(700.0);
   definitions = script.arguments(model);
@@ -329,6 +345,7 @@ TEST_F(MeasureFixture, UserScript_TestModelUserScript2) {
   EXPECT_EQ(3u,result.stepValues().size()); // Registers lights definition name, then fails
   
   // call properly using default multiplier
+  runner.reset();
   lightsDef.setWattsperSpaceFloorArea(10.0);
   ok = script.run(model,runner,user_arguments);
   EXPECT_TRUE(ok);
@@ -345,6 +362,7 @@ TEST_F(MeasureFixture, UserScript_TestModelUserScript2) {
   EXPECT_DOUBLE_EQ(8.0,lightsDef.wattsperSpaceFloorArea().get());
   
   // call properly using different multiplier
+  runner.reset();
   arg = definitions[1];
   arg.setValue(0.5);
   user_arguments["multiplier"] = arg;

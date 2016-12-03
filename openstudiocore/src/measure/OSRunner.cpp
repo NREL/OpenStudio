@@ -152,6 +152,7 @@ std::map<std::string, OSArgument> OSRunner::getUserInput(std::vector<OSArgument>
 void OSRunner::reset()
 {
   m_workflow.reset();
+  m_startedStep = false;
 
   restoreStreams();
 
@@ -159,6 +160,18 @@ void OSRunner::reset()
   //m_languagePreference; // do not reset
 
   m_result = WorkflowStepResult();
+
+  m_lastOpenStudioModel.reset();
+  m_lastOpenStudioModelPath.reset();
+  m_lastEnergyPlusWorkspace.reset();
+  m_lastEnergyPlusWorkspacePath.reset();
+  m_lastEnergyPlusSqlFile.reset();
+  m_lastEnergyPlusSqlFilePath.reset();
+  m_lastEpwFile.reset();
+  m_lastEpwFilePath.reset();
+
+  m_currentDir.reset();
+  m_currentDirFiles.clear();
 }
 
 bool OSRunner::incrementStep()
