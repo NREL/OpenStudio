@@ -10163,6 +10163,7 @@ OS:AirTerminal:SingleDuct:VAV:Reheat,
        \default Normal
        \key Normal
        \key Reverse
+       \key ReverseWithLimits
   N7, \field Maximum Flow per Zone Floor Area During Reheat
        \note Used only when Reheat Coil Object Type = Coil:Heating:Water and Damper Heating Action = Reverse
        \note When autocalculating, the maximum flow per zone is set to 0.002032 m3/s-m2 (0.4 cfm/sqft)
