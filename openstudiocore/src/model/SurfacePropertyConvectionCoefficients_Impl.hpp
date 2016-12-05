@@ -75,9 +75,9 @@ namespace detail {
 
     boost::optional<Surface> surfaceAsSurface() const;
 
-//    boost::optional<SubSurface> surfaceAsSubSurface() const;
-//
-//    boost::optional<InternalMass> surfaceAsInternalMass() const;
+    boost::optional<SubSurface> surfaceAsSubSurface() const;
+
+    boost::optional<InternalMass> surfaceAsInternalMass() const;
 
     boost::optional<std::string> convectionCoefficient1Location() const;
 

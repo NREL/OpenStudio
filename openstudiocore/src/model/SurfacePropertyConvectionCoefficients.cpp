@@ -109,6 +109,14 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Surface>(OS_SurfaceProperty_ConvectionCoefficientsFields::SurfaceName);
   }
 
+  boost::optional<SubSurface> SurfacePropertyConvectionCoefficients_Impl::surfaceAsSubSurface() const {
+    return getObject<ModelObject>().getModelObjectTarget<SubSurface>(OS_SurfaceProperty_ConvectionCoefficientsFields::SurfaceName);
+  }
+
+  boost::optional<InternalMass> SurfacePropertyConvectionCoefficients_Impl::surfaceAsInternalMass() const {
+    return getObject<ModelObject>().getModelObjectTarget<InternalMass>(OS_SurfaceProperty_ConvectionCoefficientsFields::SurfaceName);
+  }
+
   boost::optional<std::string> SurfacePropertyConvectionCoefficients_Impl::convectionCoefficient1Location() const {
     return getString(OS_SurfaceProperty_ConvectionCoefficientsFields::ConvectionCoefficient1Location,true);
   }
@@ -257,6 +265,14 @@ ModelObject SurfacePropertyConvectionCoefficients::surfaceAsModelObject() const 
 
 boost::optional<Surface> SurfacePropertyConvectionCoefficients::surfaceAsSurface() const {
   return getImpl<ImplType>()->surfaceAsSurface();
+}
+
+boost::optional<SubSurface> SurfacePropertyConvectionCoefficients::surfaceAsSubSurface() const {
+  return getImpl<ImplType>()->surfaceAsSubSurface();
+}
+
+boost::optional<InternalMass> SurfacePropertyConvectionCoefficients::surfaceAsInternalMass() const {
+  return getImpl<ImplType>()->surfaceAsInternalMass();
 }
 
 bool SurfacePropertyConvectionCoefficients::setSurface(const ModelObject& surface) {
