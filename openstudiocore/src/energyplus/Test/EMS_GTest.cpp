@@ -27,6 +27,10 @@
 #include "../../model/Model.hpp"
 #include "../../model/Building.hpp"
 #include "../../model/Building_Impl.hpp"
+#include "../../model/Site.hpp"
+#include "../../model/Site_Impl.hpp"
+#include "../../model/WeatherFile.hpp"
+#include "../../model/WeatherFile_Impl.hpp"
 #include "../../model/ThermalZone.hpp"
 #include "../../model/Component.hpp"
 #include "../../model/CFactorUndergroundWallConstruction.hpp"
@@ -405,6 +409,86 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorActuator_EMS) {
   Model model = reverseTranslator.translateWorkspace(inWorkspace);
   model.save(toPath("./EMS_exampleT.osm"), true);
 
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslatorWeatherActuator_EMS) {
+  Model model;
+
+  Building building = model.getUniqueModelObject<Building>();
+
+  ThermalZone zone1(model);
+  ThermalZone zone2(model);
+
+  // weatherFile
+  WeatherFile weatherFile = model.getUniqueModelObject<WeatherFile>();
+  EXPECT_TRUE(model.getOptionalUniqueModelObject<WeatherFile>());
+
+  // add actuator
+  std::string controlType = "Outdoor Dry Bulb";
+  std::string componentType = "Weather Data";
+  EnergyManagementSystemActuator weatherActuator(weatherFile, componentType, controlType);
+  std::string actuatorName = "Weather_Actuator";
+  weatherActuator.setName(actuatorName);
+
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
+  EXPECT_EQ(0u, forwardTranslator.errors().size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
+
+  WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator)[0];
+
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::Name, false));
+  EXPECT_EQ(actuatorName, object.getString(EnergyManagementSystem_ActuatorFields::Name, false).get());
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false));
+  EXPECT_EQ("Environment", object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false).get());
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false));
+  EXPECT_EQ(componentType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false).get());
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false));
+  EXPECT_EQ(controlType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false).get());
+
+  model.save(toPath("./EMS_weatheractuator.osm"), true);
+  workspace.save(toPath("./EMS_weatheractuator.idf"), true);
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslatorWeatherActuator2_EMS) {
+  Model model;
+
+  Building building = model.getUniqueModelObject<Building>();
+
+  ThermalZone zone1(model);
+  ThermalZone zone2(model);
+
+  // get site
+  Site site = model.getUniqueModelObject<Site>();
+  EXPECT_TRUE(model.getOptionalUniqueModelObject<Site>());
+  //OptionalSite oSite = model.getOptionalUniqueModelObject<Site>();
+  //EXPECT_TRUE(oSite);
+
+  // add actuator
+  std::string controlType = "Outdoor Dry Bulb";
+  std::string componentType = "Weather Data";
+  EnergyManagementSystemActuator weatherActuator(site, componentType, controlType);
+  std::string actuatorName = "Weather_Actuator";
+  weatherActuator.setName(actuatorName);
+
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
+  EXPECT_EQ(0u, forwardTranslator.errors().size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
+
+  WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator)[0];
+
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::Name, false));
+  EXPECT_EQ(actuatorName, object.getString(EnergyManagementSystem_ActuatorFields::Name, false).get());
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false));
+  EXPECT_EQ("Environment", object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false).get());
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false));
+  EXPECT_EQ(componentType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false).get());
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false));
+  EXPECT_EQ(controlType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false).get());
+
+  model.save(toPath("./EMS_weatheractuator2.osm"), true);
+  workspace.save(toPath("./EMS_weatheractuator2.idf"), true);
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslatorProgram_EMS) {
