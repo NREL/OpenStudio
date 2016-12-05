@@ -36,6 +36,8 @@
 #include "../SubSurface_Impl.hpp"
 #include "../InternalMass.hpp"
 #include "../InternalMass_Impl.hpp"
+#include "../InternalMassDefinition.hpp"
+#include "../InternalMassDefinition_Impl.hpp"
 #include "../SurfacePropertyConvectionCoefficients.hpp"
 #include "../SurfacePropertyConvectionCoefficients_Impl.hpp"
 
@@ -59,7 +61,11 @@ TEST_F(ModelFixture, SurfacePropertyConvectionCoefficients) {
   ModelObject surfaceModelObj = convectionCoefficients.surfaceAsModelObject();
   ASSERT_EQ(surfaceModelObj, surface);
   OptionalSurface surface2 = convectionCoefficients.surfaceAsSurface();
+  OptionalSubSurface subsurface2 = convectionCoefficients.surfaceAsSubSurface();
+  OptionalInternalMass internalmass2 = convectionCoefficients.surfaceAsInternalMass();
   ASSERT_TRUE(surface2);
+  ASSERT_FALSE(subsurface2);
+  ASSERT_FALSE(internalmass2);
   ASSERT_EQ(*surface2, surface);
 
   SubSurface subSurface(vertices, model);
@@ -67,5 +73,23 @@ TEST_F(ModelFixture, SurfacePropertyConvectionCoefficients) {
   surfaceModelObj = convectionCoefficients.surfaceAsModelObject();
   ASSERT_EQ(surfaceModelObj, subSurface);
   surface2 = convectionCoefficients.surfaceAsSurface();
+  subsurface2 = convectionCoefficients.surfaceAsSubSurface();
+  internalmass2 = convectionCoefficients.surfaceAsInternalMass();
   ASSERT_FALSE(surface2);
+  ASSERT_TRUE(subsurface2);
+  ASSERT_FALSE(internalmass2);
+  ASSERT_EQ(*subsurface2, subSurface);
+
+  InternalMassDefinition internalMassDefn(model);
+  InternalMass internalMass(internalMassDefn);
+  ASSERT_TRUE(convectionCoefficients.setSurface(internalMass));
+  surfaceModelObj = convectionCoefficients.surfaceAsModelObject();
+  ASSERT_EQ(surfaceModelObj, internalMass);
+  surface2 = convectionCoefficients.surfaceAsSurface();
+  subsurface2 = convectionCoefficients.surfaceAsSubSurface();
+  internalmass2 = convectionCoefficients.surfaceAsInternalMass();
+  ASSERT_FALSE(surface2);
+  ASSERT_FALSE(subsurface2);
+  ASSERT_TRUE(internalmass2);
+  ASSERT_EQ(*internalmass2, internalMass);
 }
