@@ -2,9 +2,9 @@
   <schema_version>3.0</schema_version>
   <name>openstudio_results</name>
   <uid>675e0a1f-d1f9-4639-aed5-3fd8b21d5503</uid>
-  <version_id>21e70ea9-b80f-46f8-939a-fe2498f9e0f6</version_id>
-  <version_modified>20161202T004241Z</version_modified>
-  <xml_checksum>557BF06F</xml_checksum>
+  <version_id>8a056b0a-c597-4c4d-b2c0-5da8de7610bc</version_id>
+  <version_modified>20161201T173013Z</version_modified>
+  <xml_checksum>A94354BA</xml_checksum>
   <class_name>OpenStudioResults</class_name>
   <display_name>OpenStudio Results</display_name>
   <description>This measure creates high level tables and charts pulling both from model inputs and EnergyPlus results. It has building level information as well as detail on space types, thermal zones, HVAC systems, envelope characteristics, and economics. Click the heading above a chart to view a table of the chart data.</description>
@@ -389,6 +389,7 @@
       </choices>
     </argument>
   </arguments>
+  <outputs/>
   <provenances/>
   <tags>
     <tag>Reporting.QAQC</tag>
@@ -469,17 +470,6 @@
       <checksum>C62949E8</checksum>
     </file>
     <file>
-      <version>
-        <software_program>OpenStudio</software_program>
-        <identifier>1.10.5</identifier>
-        <min_compatible>1.10.5</min_compatible>
-      </version>
-      <filename>measure.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>script</usage_type>
-      <checksum>0485ECB6</checksum>
-    </file>
-    <file>
       <filename>PeriodInConstName.osm</filename>
       <filetype>osm</filetype>
       <usage_type>test</usage_type>
@@ -498,16 +488,33 @@
       <checksum>7DC1F0A7</checksum>
     </file>
     <file>
+      <version>
+        <software_program>OpenStudio</software_program>
+        <identifier>1.10.5</identifier>
+        <min_compatible>1.10.5</min_compatible>
+      </version>
+      <filename>measure.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>script</usage_type>
+      <checksum>6E91E4F2</checksum>
+    </file>
+    <file>
       <filename>os_lib_reporting.rb</filename>
       <filetype>rb</filetype>
       <usage_type>resource</usage_type>
-      <checksum>2083FA39</checksum>
+      <checksum>0F9C02BF</checksum>
     </file>
     <file>
       <filename>OpenStudioResults_Test.rb</filename>
       <filetype>rb</filetype>
       <usage_type>test</usage_type>
-      <checksum>25C22344</checksum>
+      <checksum>50A163F9</checksum>
+    </file>
+    <file>
+      <filename>HeatingOnly.osm</filename>
+      <filetype>osm</filetype>
+      <usage_type>test</usage_type>
+      <checksum>99A21A4F</checksum>
     </file>
   </files>
 </measure>
