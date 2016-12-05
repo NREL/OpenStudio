@@ -77,7 +77,7 @@ OSQuantityEdit2::OSQuantityEdit2(const std::string& modelUnits, const std::strin
   hLayout->addWidget(m_units);
 
   m_doubleValidator = new QDoubleValidator();
-  m_lineEdit->setValidator(m_doubleValidator);
+  //m_lineEdit->setValidator(m_doubleValidator);
 
   m_lineEdit->setMinimumWidth(60);
 
@@ -231,34 +231,57 @@ void OSQuantityEdit2::onEditingFinished() {
   emit inFocus(true, hasData());
 
   QString text = m_lineEdit->text();
-  if (text.isEmpty() || m_text == text) return;
+  if (m_text == text) return;
 
+  int pos = 0;
+  QValidator::State state = m_doubleValidator->validate(text, pos);
+  bool isAuto = false;
+  if (state != QValidator::Acceptable){
+    if (text.isEmpty()){
+      // ok
+    } else{
+      boost::regex autore("[aA][uU][tT][oO]");
+      isAuto = boost::regex_search(text.toStdString(), autore);
+      if (isAuto){
+        // ok
+      } else{
+        // not ok
+        refreshTextAndLabel();
+        return;
+      }
+    }
+  }
   if (m_modelObject) {
-    std::string str = m_lineEdit->text().toStdString();
-    boost::regex autore("[aA][uU][tT][oO]");
+    std::string str = text.toStdString();
     ModelObject modelObject = m_modelObject.get();
 
     if (str.empty()) {
       if (m_reset) {
         (*m_reset)();
+      } else{
+        refreshTextAndLabel();
       }
     }
-    else if (boost::regex_search(str,autore)) {
+    else if (isAuto) {
       if (m_isAutosized) {
         if (m_autosize) {
           (*m_autosize)();
-        }
-        else if (m_reset) {
+        } else if (m_reset) {
           (*m_reset)();
+        } else {
+          refreshTextAndLabel();
         }
-      }
-      if (m_isAutocalculated) {
+      }else if (m_isAutocalculated) {
         if (m_autocalculate) {
           (*m_autocalculate)();
         }
         else if (m_reset) {
           (*m_reset)();
+        } else {
+          refreshTextAndLabel();
         }
+      } else {
+        refreshTextAndLabel();
       }
     }
     else {
@@ -278,16 +301,12 @@ void OSQuantityEdit2::onEditingFinished() {
         OS_ASSERT(modelValue);
 
         if (m_set) {
-          QString text = m_lineEdit->text();
-          if (text.isEmpty() || m_text == text) return;
           bool result = (*m_set)(*modelValue);
           if (!result){
             // restore
             refreshTextAndLabel();
           }
         } else if (m_setVoidReturn){
-          QString text = m_lineEdit->text();
-          if (text.isEmpty() || m_text == text) return;
           (*m_setVoidReturn)(*modelValue);
         }
       }
@@ -301,6 +320,13 @@ void OSQuantityEdit2::onEditingFinished() {
 }
 
 void OSQuantityEdit2::onModelObjectChange() {
+  //if (m_modelExtensibleGroup){
+  //  if (m_modelExtensibleGroup->empty()){
+  //    // this is equivalent to onModelObjectRemove for the extensible group
+  //    unbind();
+  //    return;
+  //  }
+  //}  
   refreshTextAndLabel();
 }
 
@@ -324,7 +350,7 @@ void OSQuantityEdit2::refreshTextAndLabel() {
     units = m_siUnits;
   }
 
-  if (m_text == text && m_unitsStr == units) return;
+  //if (m_text == text && m_unitsStr == units) return;
 
   if (m_modelObject) {
     QString textValue;
@@ -381,15 +407,12 @@ void OSQuantityEdit2::refreshTextAndLabel() {
       m_units->setStyleSheet("color:grey");
     }
 
-    if ( (!textValue.isEmpty() && m_text != textValue) || m_unitsStr != units){
+    if (m_text != textValue || text != textValue || m_unitsStr != units){
       m_text = textValue;
       m_unitsStr = units;
       m_lineEdit->blockSignals(true);
       m_lineEdit->setText(textValue);
       m_lineEdit->blockSignals(false);
-    }
-    else {
-      return;
     }
 
     ss << units;
@@ -397,6 +420,7 @@ void OSQuantityEdit2::refreshTextAndLabel() {
     m_units->setTextFormat(Qt::RichText);
     m_units->setText(toQString(formatUnitString(ss.str(),DocumentFormat::XHTML)));
     m_units->blockSignals(false);
+  
     if (m_isDefaulted) {
       if ((*m_isDefaulted)()) {
         m_lineEdit->setStyleSheet("color:green");

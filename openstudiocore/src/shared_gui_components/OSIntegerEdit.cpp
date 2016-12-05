@@ -51,7 +51,7 @@ OSIntegerEdit2::OSIntegerEdit2( QWidget * parent )
   setEnabled(false);
 
   m_intValidator = new QIntValidator();
-  this->setValidator(m_intValidator);
+  //this->setValidator(m_intValidator);
 }
 
 OSIntegerEdit2::~OSIntegerEdit2()
@@ -198,34 +198,58 @@ void OSIntegerEdit2::onEditingFinished() {
   emit inFocus(true, hasData());
 
   QString text = this->text();
-  if (text.isEmpty() || m_text == text) return;
+  if (m_text == text) return;
 
+  int pos = 0;
+  QValidator::State state = m_intValidator->validate(text, pos);
+  bool isAuto = false;
+  if (state != QValidator::Acceptable){
+    if (text.isEmpty()){
+      // ok
+    } else{
+      boost::regex autore("[aA][uU][tT][oO]");
+      isAuto = boost::regex_search(text.toStdString(), autore);
+      if (isAuto){
+        // ok
+      } else{
+        // not ok
+        refreshTextAndLabel();
+        return;
+      }
+    }
+  }
+  
   if (m_modelObject) {
-    std::string str = this->text().toStdString();
-    boost::regex autore("[aA][uU][tT][oO]");
+    std::string str = text.toStdString();
     ModelObject modelObject = m_modelObject.get();
 
     if (str.empty()) {
       if (m_reset) {
         (*m_reset)();
+      } else{
+        refreshTextAndLabel();
       }
     }
-    else if (boost::regex_search(str,autore)) {
+    else if (isAuto) {
       if (m_isAutosized) {
         if (m_autosize) {
           (*m_autosize)();
-        }
-        else if (m_reset) {
+        } else if (m_reset) {
           (*m_reset)();
+        } else {
+          refreshTextAndLabel();
         }
-      }
-      if (m_isAutocalculated) {
+      }else if (m_isAutocalculated) {
         if (m_autocalculate) {
           (*m_autocalculate)();
         }
         else if (m_reset) {
           (*m_reset)();
+        } else {
+          refreshTextAndLabel();
         }
+      } else {
+        refreshTextAndLabel();
       }
     }
     else {
@@ -233,8 +257,6 @@ void OSIntegerEdit2::onEditingFinished() {
         int value = boost::lexical_cast<int>(str);
         setPrecision(str);
         if (m_set) {
-          QString text = this->text();
-          if (text.isEmpty() || m_text == text) return;
           bool result = (*m_set)(value);
           if (!result){
             //restore
@@ -270,7 +292,7 @@ void OSIntegerEdit2::refreshTextAndLabel() {
 
   QString text = this->text();
 
-  if (m_text == text) return;
+  //if (m_text == text) return;
 
   if (m_modelObject) {
     QString textValue;
@@ -288,8 +310,7 @@ void OSIntegerEdit2::refreshTextAndLabel() {
     OptionalInt oi;
     if (m_get) {
       oi = (*m_get)();
-    }
-    else {
+    } else {
       OS_ASSERT(m_getOptional);
       oi = (*m_getOptional)();
     }
@@ -309,14 +330,11 @@ void OSIntegerEdit2::refreshTextAndLabel() {
       ss.str("");
     }
 
-    if (!textValue.isEmpty() && m_text != textValue){
+    if (m_text != textValue || text != textValue){
       m_text = textValue;
       this->blockSignals(true);
       this->setText(m_text);
       this->blockSignals(false);
-    }
-    else {
-      return;
     }
 
     if (m_isDefaulted) {
