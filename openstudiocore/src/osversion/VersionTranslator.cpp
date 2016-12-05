@@ -116,7 +116,7 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("1.11.4")] = &VersionTranslator::update_1_11_3_to_1_11_4;
   m_updateMethods[VersionString("1.11.5")] = &VersionTranslator::update_1_11_4_to_1_11_5;
   m_updateMethods[VersionString("1.12.1")] = &VersionTranslator::update_1_12_0_to_1_12_1;
-  m_updateMethods[VersionString("1.13.4")] = &VersionTranslator::defaultUpdate;
+  m_updateMethods[VersionString("1.13.4")] = &VersionTranslator::update_1_12_3_to_1_12_4;
 
 
   // List of previous versions that may be updated to this one.
@@ -3325,6 +3325,44 @@ std::string VersionTranslator::update_1_12_0_to_1_12_1(const IdfFile& idf_1_12_0
           newObject.setString(newi,s.get());
         }
         ++newi;
+      }
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
+    } else {
+      ss << object;
+    }
+  }
+
+  return ss.str();
+}
+
+std::string VersionTranslator::update_1_12_3_to_1_12_4(const IdfFile& idf_1_12_3, const IddFileAndFactoryWrapper& idd_1_12_4) {
+  std::stringstream ss;
+
+  ss << idf_1_12_3.header() << std::endl << std::endl;
+  IdfFile targetIdf(idd_1_12_4.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  for (const IdfObject& object : idf_1_12_3.objects()) {
+    auto iddname = object.iddObject().name();
+
+    if (iddname == "OS:AirTerminal:SingleDuct:VAV:Reheat") {
+      auto iddObject = idd_1_12_4.getObject("OS:AirTerminal:SingleDuct:VAV:Reheat");
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        if ( auto s = object.getString(i) ) {
+          if( i == 14u ) {
+            if ( istringEqual("Reverse",s.get()) ) {
+              newObject.setString(i,"ReverseWithLimits");
+            } else {
+              newObject.setString(i,s.get());
+            }
+          } else {
+            newObject.setString(i,s.get());
+          }
+        }
       }
 
       m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
