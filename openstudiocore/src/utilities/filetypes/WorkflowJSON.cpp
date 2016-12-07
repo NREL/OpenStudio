@@ -52,17 +52,15 @@ namespace detail{
   {
     path result;
     if (p.is_absolute()){
-      if (exists(p)){
-        result = boost::filesystem::canonical(p);
-      } else{
-        result = p;
-      }
-    } else{
+      result = p;
+    } else {
       result = boost::filesystem::absolute(p, base);
-      if (exists(result)){
-        result = boost::filesystem::canonical(p, base);
-      }
     }
+
+    if (exists(result)){
+      result = boost::filesystem::canonical(result);
+    }
+
     return result;
   }
 
