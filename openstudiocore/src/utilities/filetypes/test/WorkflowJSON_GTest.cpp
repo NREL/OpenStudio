@@ -61,6 +61,7 @@ TEST(Filetypes, WorkflowJSON_Load)
   path p = resourcesPath() / toPath("utilities/Filetypes/min.osw");
   path p2 = resourcesPath() / toPath("utilities/Filetypes/min.2.osw");
   path p3 = resourcesPath() / toPath("utilities/Filetypes/min.3.osw");
+  path p4 = resourcesPath() / toPath("utilities/Filetypes/out.osw");
   ASSERT_TRUE(WorkflowJSON::load(p));
 
   WorkflowJSON workflow1(p);
@@ -97,6 +98,31 @@ TEST(Filetypes, WorkflowJSON_Load)
   s1 = workflow1.string(false);
   s2 = workflow2.string(false);
   EXPECT_EQ(s1, s2);
+
+  if (exists(p3)){
+    remove(p3);
+  }
+  EXPECT_FALSE(exists(p3));
+
+  workflow2.setOswPath(p3);
+  ASSERT_TRUE(workflow2.oswPath());
+  EXPECT_EQ(toString(p3), toString(workflow2.oswPath().get()));
+  EXPECT_EQ(toString(p4), toString(workflow2.absoluteOutPath()));
+  workflow2.save();
+  EXPECT_EQ(toString(p3), toString(workflow2.oswPath().get()));
+  EXPECT_EQ(toString(p4), toString(workflow2.absoluteOutPath()));
+  EXPECT_TRUE(exists(p3));
+
+  if (exists(p3)){
+    remove(p3);
+  }
+  EXPECT_FALSE(exists(p3));
+
+  workflow1.saveAs(p3);
+  ASSERT_TRUE(workflow1.oswPath());
+  EXPECT_EQ(toString(p3), toString(workflow1.oswPath().get()));
+  EXPECT_EQ(toString(p4), toString(workflow1.absoluteOutPath()));
+  EXPECT_TRUE(exists(p3));
 
 }
 

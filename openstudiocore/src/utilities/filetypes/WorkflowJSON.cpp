@@ -48,6 +48,25 @@ namespace detail{
 
   const int NO_MEASURE_TYPE = -1;
 
+  path canonicalOrAbsolute(const path& p, const path& base = boost::filesystem::current_path())
+  {
+    path result;
+    if (p.is_absolute()){
+      if (exists(p)){
+        result = boost::filesystem::canonical(p);
+      } else{
+        result = p;
+      }
+    } else{
+      result = boost::filesystem::absolute(p, base);
+      if (exists(result)){
+        result = boost::filesystem::canonical(p, base);
+      }
+    }
+    return result;
+  }
+
+
   WorkflowJSON_Impl::WorkflowJSON_Impl()
   {
     m_value["created_at"] = DateTime::nowUTC().toISO8601();
@@ -361,7 +380,7 @@ namespace detail{
   {
     openstudio::path result = rootDir();
     if (result.is_relative()){
-      return boost::filesystem::canonical(result, oswDir());
+      return canonicalOrAbsolute(result, oswDir());
     }
     return result;
   }
@@ -377,7 +396,7 @@ namespace detail{
   {
     openstudio::path result = runDir();
     if (result.is_relative()){
-      return boost::filesystem::canonical(result, absoluteRootDir());
+      return canonicalOrAbsolute(result, absoluteRootDir());
     }
     return result;
   }
@@ -393,7 +412,7 @@ namespace detail{
   {
     openstudio::path result = outPath();
     if (result.is_relative()){
-      return boost::filesystem::canonical(result, oswDir());
+      return canonicalOrAbsolute(result, oswDir());
     }
     return result;
   }
@@ -426,8 +445,7 @@ namespace detail{
       if (path.is_absolute()){
         result.push_back(path);
       }else{
-        // DLM: canonical does not work here, use absolute
-        result.push_back(boost::filesystem::absolute(path, absoluteRootDir()));
+        result.push_back(canonicalOrAbsolute(path, absoluteRootDir()));
       }
     }
     return result;
@@ -462,7 +480,7 @@ namespace detail{
     for (const auto& path : absoluteFilePaths()){
       openstudio::path p = path / file;
       if (boost::filesystem::exists(p) && boost::filesystem::is_regular_file(p)){
-        return boost::filesystem::canonical(p);
+        return canonicalOrAbsolute(p);
       }
     }
     return boost::none;
@@ -499,8 +517,7 @@ namespace detail{
       if (path.is_absolute()){
         result.push_back(path);
       } else{
-        // DLM: canonical does not work here, use absolute
-        result.push_back(boost::filesystem::absolute(path, absoluteRootDir()));
+        result.push_back(canonicalOrAbsolute(path, absoluteRootDir()));
       }
     }
     return result;
@@ -535,7 +552,7 @@ namespace detail{
     for (const auto& path : absoluteMeasurePaths()){
       openstudio::path p = path / measureDir;
       if (boost::filesystem::exists(p) && boost::filesystem::is_directory(p)){
-        return boost::filesystem::canonical(p);
+        return canonicalOrAbsolute(p);
       }
     }
     return boost::none;
