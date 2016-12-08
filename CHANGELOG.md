@@ -1,3 +1,28 @@
+## OpenStudio v1.13.4
+###### 2016-11-10 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.13.3...v1.13.4 )
+
+- ![Fixed:][fixed] [#105]( https://github.com/NREL/OpenStudio/issues/105 ), Deleting Schedule Ruleset object leaves Schedule Day objects behind (Bugzilla #662)
+- ![Fixed:][fixed] [#1459]( https://github.com/NREL/OpenStudio/issues/1459 ), LowTemperatureRadiant system input 'Radiant Surface Type' translates unexpected surfaces to SurfaceGroup
+- ![Fixed:][fixed] [#1597]( https://github.com/NREL/OpenStudio/issues/1597 ), API allows you to enter invalid object names
+- ![Fixed:][fixed] [#2195]( https://github.com/NREL/OpenStudio/issues/2195 ), Timeseries Not Found is being thrown on template reporting measure
+- ![Fixed:][fixed] [#2216]( https://github.com/NREL/OpenStudio/issues/2216 ), Spectral Data Set name doesn't forward translate to IDF
+- ![Fixed:][fixed] [#2217]( https://github.com/NREL/OpenStudio/issues/2217 ), BCLMeasure should force update if measure.xml missing class_name or other required fields
+- ![Fixed:][fixed] [#2241]( https://github.com/NREL/OpenStudio/issues/2241 ), Bad data in energyPlusOutputRequests of reporting measure can break simulation
+- ![Fixed:][fixed] [#2251]( https://github.com/NREL/OpenStudio/issues/2251 ), Cannot load openstudio-standards in SketchUp user scripts
+- ![Fixed:][fixed] [#2304]( https://github.com/NREL/OpenStudio/issues/2304 ), Missing Objects in EnergyPlus Forward Translator
+- ![Fixed:][fixed] [#2312]( https://github.com/NREL/OpenStudio/issues/2312 ), Cannot create custom window construction
+- ![Fixed:][fixed] [#2328]( https://github.com/NREL/OpenStudio/issues/2328 ), Need backwards compatible shim for require 'openstudio/ruleset/ShowRunnerOutput'
+- ![Fixed:][fixed] [#2331]( https://github.com/NREL/OpenStudio/issues/2331 ), Clean up and embed ruby files in openstudiocore/ruby/openstudio
+- ![Fixed:][fixed] [#2332]( https://github.com/NREL/OpenStudio/issues/2332 ), Export zone loads to gbXML
+- ![Fixed:][fixed] [#2354]( https://github.com/NREL/OpenStudio/issues/2354 ), ZoneCapacitanceMultiplierResearchSpecial not translated to E+
+- ![Fixed:][fixed] [#2362]( https://github.com/NREL/OpenStudio/issues/2362 ), files missing
+- ![Fixed:][fixed] [#2368]( https://github.com/NREL/OpenStudio/issues/2368 ), OpenStudio Measure test templates don't work in 2.x
+- ![Fixed:][fixed] [#2369]( https://github.com/NREL/OpenStudio/issues/2369 ), OpenStudio 2.x not backwards compatible with 1.x measure tests
+- ![Fixed:][fixed] [#2383]( https://github.com/NREL/OpenStudio/issues/2383 ), Refrigeration missing from monthly peak demand
+- ![Fixed:][fixed] [#2393]( https://github.com/NREL/OpenStudio/issues/2393 ), Cash flow for fuels not populating because of E+ query change
+- ![Fixed:][fixed] [#2394]( https://github.com/NREL/OpenStudio/issues/2394 ), Allow more zone hvac to be drag and dropped from the airloophvac view
+- ![Fixed:][fixed] [#2396]( https://github.com/NREL/OpenStudio/issues/2396 ), GeneratorPhotovoltaic::simple constructor makes incomplete object
+
 ## OpenStudio v1.13.3
 ###### 2016-11-10 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.13.2...v1.13.3 )
 

@@ -20,6 +20,7 @@
 #include "../ForwardTranslator.hpp"
 
 #include "../../model/Model.hpp"
+#include "../../model/ModelObject.hpp"
 #include "../../model/OutputVariable.hpp"
 #include "../../model/OutputVariable_Impl.hpp"
 #include "../../model/OutputMeter.hpp"
@@ -28,6 +29,8 @@
 #include "../../model/Schedule_Impl.hpp"
 #include "../../model/EnergyManagementSystemActuator.hpp"
 #include "../../model/EnergyManagementSystemActuator_Impl.hpp"
+#include "../../model/Site.hpp"
+#include "../../model/WeatherFile.hpp"
 
 #include <utilities/idd/EnergyManagementSystem_Actuator_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
@@ -52,12 +55,18 @@ boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemAct
   if (s) {
     idfObject.setName(*s);
   }
- 
-  idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, modelObject.actuatedComponent().nameString());
-
+  const ModelObject m = modelObject.actuatedComponent();
+  if (m.iddObjectType() == openstudio::IddObjectType::OS_Site || m.iddObjectType() == openstudio::IddObjectType::OS_WeatherFile) {
+    idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, "Environment");
+    idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, "Weather Data");
+  }
+  else {
+    idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, m.nameString());
+    idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, modelObject.actuatedComponentType());
+    
+  }
+  
   idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, modelObject.actuatedComponentControlType());
-
-  idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, modelObject.actuatedComponentType());
   
   return idfObject;
 }

@@ -32,84 +32,13 @@
 #include "ModelObjectInspectorView.hpp"
 #include "../model/PeopleDefinition.hpp"
 
-class QLabel;
-class QPushButton;
-class QColor;
-
 namespace openstudio {
 
 class OSDoubleEdit2;
-class OSDropZone;
-class OSLineEdit;
+
 class OSLineEdit2;
-class OSQuantityEdit;
 class OSQuantityEdit2;
-class OSCheckBox;
-class OSComboBox;
 
-class PeopleNumberofPeopleScheduleVectorController;
-class PeopleActivityLevelScheduleVectorController;
-class PeopleAngleFactorListVectorController;
-class PeopleWorkEfficiencyScheduleVectorController;
-class PeopleClothingInsulationScheduleVectorController;
-class PeopleAirVelocityScheduleVectorController;
-
-namespace model {
-  class People;
-}
-
-class PeopleInspectorView : public ModelObjectInspectorView
-{
-  Q_OBJECT
-
-  public:
-
-    PeopleInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent = nullptr );
-
-    virtual ~PeopleInspectorView() {}
-
-  protected:
-
-    virtual void onClearSelection() override;
-
-    virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject) override;
-
-    virtual void onUpdate() override;
-
-  private:
-
-    void attach(openstudio::model::People& people);
-
-    void detach();
-
-    void refresh();
-
-    OSLineEdit* m_nameEdit;
-
-    OSQuantityEdit* m_multiplierEdit;
-
-    OSComboBox* m_peopleDefinitionComboBox;
-
-    PeopleNumberofPeopleScheduleVectorController* m_numberofPeopleScheduleVectorController;
-    OSDropZone* m_numberofPeopleScheduleDropZone;
-
-    PeopleActivityLevelScheduleVectorController* m_activityLevelScheduleVectorController;
-    OSDropZone* m_activityLevelScheduleDropZone;
-
-    PeopleAngleFactorListVectorController* m_angleFactorListVectorController;
-    OSDropZone* m_angleFactorListDropZone;
-
-    PeopleWorkEfficiencyScheduleVectorController* m_workEfficiencyScheduleVectorController;
-    OSDropZone* m_workEfficiencyScheduleDropZone;
-
-    PeopleClothingInsulationScheduleVectorController* m_clothingInsulationScheduleVectorController;
-    OSDropZone* m_clothingInsulationScheduleDropZone;
-
-    PeopleAirVelocityScheduleVectorController* m_airVelocityScheduleVectorController;
-    OSDropZone* m_airVelocityScheduleDropZone;
-
-    bool m_isIP;
-};
 
 class PeopleDefinitionInspectorView : public ModelObjectInspectorView
 {

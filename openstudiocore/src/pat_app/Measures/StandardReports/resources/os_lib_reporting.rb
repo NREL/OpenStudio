@@ -469,6 +469,7 @@ module OsLib_Reporting
 
     # loop through fuels for consumption tables
     counter = 0
+    found_value = false
     OpenStudio::EndUseCategoryType.getValues.each do |end_use|
       # get end uses
       end_use = OpenStudio::EndUseCategoryType.new(end_use).valueDescription
@@ -480,12 +481,18 @@ module OsLib_Reporting
       runner.registerValue("end_use_electricity_#{end_use.downcase.gsub(" ","_")}", value, target_units)
       if value > 0
         output_data_end_use_electricity[:chart] << JSON.generate(label: end_use, value: value, color: end_use_colors[counter])
+        found_value = true
       end
 
       counter += 1
     end
 
-    return output_data_end_use_electricity
+    if found_value
+      return output_data_end_use_electricity
+    else
+      return false
+    end
+
   end
 
   # create table with general building information
@@ -507,6 +514,7 @@ module OsLib_Reporting
 
     # loop through fuels for consumption tables
     counter = 0
+    found_value = false
     OpenStudio::EndUseCategoryType.getValues.each do |end_use|
       # get end uses
       end_use = OpenStudio::EndUseCategoryType.new(end_use).valueDescription
@@ -518,12 +526,18 @@ module OsLib_Reporting
       runner.registerValue("end_use_natural_gas_#{end_use.downcase.gsub(" ","_")}", value, target_units)
       if value > 0
         output_data_end_use_gas[:chart] << JSON.generate(label: end_use, value: value, color: end_use_colors[counter])
+        found_value = true
       end
 
       counter += 1
     end
 
-    return output_data_end_use_gas
+    if found_value
+      return output_data_end_use_gas
+    else
+      return false
+    end
+
   end
 
   # create table with general building information
@@ -3318,16 +3332,24 @@ module OsLib_Reporting
     columns_query = ['', 'Heating/Cooling', 'Calculated Design Load', 'User Design Load', 'Calculated Design Air Flow', 'User Design Air Flow', 'Date/Time Of Peak {TIMESTAMP}', 'Outdoor Temperature at Peak Load', 'Outdoor Humidity Ratio at Peak Load']
 
     # populate dynamic rows
-    rows_name_query = "SELECT DISTINCT  RowName FROM tabulardatawithstrings WHERE ReportName='#{report_name}' and TableName='#{table_01_name}'"
-    row_names = sqlFile.execAndReturnVectorOfString(rows_name_query).get
     rows = []
-    row_names.each do |row_name|
+    rows_name_query = "SELECT DISTINCT  RowName FROM tabulardatawithstrings WHERE ReportName='#{report_name}' and TableName='#{table_01_name}'"
+    row_names_clg = sqlFile.execAndReturnVectorOfString(rows_name_query).get
+    row_names_clg.each do |row_name|
+      next if row_name == 'None'
+      rows << row_name
+    end
+    # second query is used to support heating only models where zone names are not the same for heating and cooling tables
+    rows_name_query = "SELECT DISTINCT  RowName FROM tabulardatawithstrings WHERE ReportName='#{report_name}' and TableName='#{table_02_name}'"
+    row_names_htg = sqlFile.execAndReturnVectorOfString(rows_name_query).get
+    row_names_htg.each do |row_name|
+      next if row_name == 'None'
       rows << row_name
     end
 
     # create zone_dd_table
     zone_dd_table = {}
-    zone_dd_table[:title] = 'Zone Sensible Cooling and Heating Sensible Sizing'
+    zone_dd_table[:title] = 'Zone Sensible Heating and Cooling Sizing'
     zone_dd_table[:header] = columns
     source_units_power = 'W'
     target_units_power_clg = 'ton'
@@ -3341,7 +3363,8 @@ module OsLib_Reporting
     zone_dd_table[:data] = []
 
     # run query and populate zone_dd_table
-    rows.each do |row|
+    rows.uniq.each do |row|
+
       # populate cooling row
       row_data = [row, 'Cooling']
       column_counter = -1
@@ -3362,7 +3385,11 @@ module OsLib_Reporting
           row_data << results
         end
       end
-      zone_dd_table[:data] << row_data
+      if row_names_clg.include?(row.to_s)
+        zone_dd_table[:data] << row_data
+      else
+        zone_dd_table[:data] << [row, 'No Cooling','','','','','','','']
+      end
 
       # populate heating row
       row_data = [row, 'Heating']
@@ -3384,7 +3411,11 @@ module OsLib_Reporting
           row_data << results
         end
       end
-      zone_dd_table[:data] << row_data
+      if row_names_htg.include?(row.to_s)
+        zone_dd_table[:data] << row_data
+      else
+        zone_dd_table[:data] << [row, 'No Heating','','','','','','','']
+      end
     end
 
     # add zone_dd_table to array of tables

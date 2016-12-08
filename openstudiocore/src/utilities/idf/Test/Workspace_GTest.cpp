@@ -2067,17 +2067,17 @@ TEST_F(IdfFixture, Workspace_DaylightingControlsZoneName)
   ASSERT_TRUE(daylightingControl);
 
   zone->setName("Zone 1");
-  EXPECT_FALSE(daylightingControl->getString(0,false,true));
-  EXPECT_TRUE(daylightingControl->setPointer(0, zone->handle()));
-  ASSERT_TRUE(daylightingControl->getString(0,false,true));
-  EXPECT_EQ("Zone 1", daylightingControl->getString(0,false,true).get());
+  EXPECT_FALSE(daylightingControl->getString(1,false,true));
+  EXPECT_TRUE(daylightingControl->setPointer(1, zone->handle()));
+  ASSERT_TRUE(daylightingControl->getString(1,false,true));
+  EXPECT_EQ("Zone 1", daylightingControl->getString(1,false,true).get());
 
-  EXPECT_TRUE(daylightingControl->setString(0, ""));
-  EXPECT_FALSE(daylightingControl->getString(0,false,true));
+  EXPECT_TRUE(daylightingControl->setString(1, ""));
+  EXPECT_FALSE(daylightingControl->getString(1,false,true));
 
-  EXPECT_TRUE(daylightingControl->setString(0, "Zone 1"));
-  ASSERT_TRUE(daylightingControl->getString(0,false,true));
-  EXPECT_EQ("Zone 1", daylightingControl->getString(0,false,true).get());
+  EXPECT_TRUE(daylightingControl->setString(1, "Zone 1"));
+  ASSERT_TRUE(daylightingControl->getString(1,false,true));
+  EXPECT_EQ("Zone 1", daylightingControl->getString(1,false,true).get());
 
 }
 
