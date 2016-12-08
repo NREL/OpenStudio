@@ -153,8 +153,7 @@ class MODEL_API GeneratorFuelCellAirSupply : public ModelObject {
   bool setAirIntakeHeatRecoveryMode(const std::string& airIntakeHeatRecoveryMode);
 
   bool setAirSupplyConstituentMode(const std::string& airSupplyConstituentMode);
-  //TODO
-  //should be extensible
+
   bool setNumberofUserDefinedConstituents(double numberofUserDefinedConstituents);
 
   void resetNumberofUserDefinedConstituents();

@@ -311,13 +311,11 @@ namespace detail {
     bool temp = eg.setString(OS_Generator_FuelSupplyExtensibleFields::ConstituentName, name);
     bool ok = eg.setString(OS_Generator_FuelSupplyExtensibleFields::ConstituentMolarFraction, molarFraction);
 
-    if (temp) {
-      temp = ok;
-    }
-
-    if (!temp) {
+    if (temp && ok) {
+      double num = numberofConstituentsinGaseousConstituentFuelSupply();
+      setNumberofConstituentsinGaseousConstituentFuelSupply(num + 1);
+    } else {
       getObject<ModelObject>().eraseExtensibleGroup(eg.groupIndex());
-      return temp;
     }
     return temp;
   }
@@ -326,11 +324,14 @@ namespace detail {
     unsigned numberofDataPairs = numExtensibleGroups();
     if (groupIndex < numberofDataPairs) {
       getObject<ModelObject>().eraseExtensibleGroup(groupIndex);
+      double num = numberofConstituentsinGaseousConstituentFuelSupply();
+      setNumberofConstituentsinGaseousConstituentFuelSupply(num - 1);
     }
   }
 
   void GeneratorFuelSupply_Impl::removeAllConstituents() {
     getObject<ModelObject>().clearExtensibleGroups();
+    resetNumberofConstituentsinGaseousConstituentFuelSupply();
   }
 
   std::vector< std::pair<std::string, std::string> > GeneratorFuelSupply_Impl::constituents() {
@@ -374,7 +375,8 @@ GeneratorFuelSupply::GeneratorFuelSupply(const Model& model, Schedule& tempSched
   setFuelType("LiquidGeneric");
   setLiquidGenericFuelLowerHeatingValue(43100);
   setLiquidGenericFuelHigherHeatingValue(46200);
-  setLiquidGenericFuelMolecularWeight(170);
+  setLiquidGenericFuelMolecularWeight(1);
+  setNumberofConstituentsinGaseousConstituentFuelSupply(0);
 }
 
 GeneratorFuelSupply::GeneratorFuelSupply(const Model& model)
@@ -399,7 +401,8 @@ GeneratorFuelSupply::GeneratorFuelSupply(const Model& model)
   setFuelType("LiquidGeneric");
   setLiquidGenericFuelLowerHeatingValue(43100);
   setLiquidGenericFuelHigherHeatingValue(46200);
-  setLiquidGenericFuelMolecularWeight(170);
+  setLiquidGenericFuelMolecularWeight(1);
+  setNumberofConstituentsinGaseousConstituentFuelSupply(0);
 }
 
 IddObjectType GeneratorFuelSupply::iddObjectType() {

@@ -253,13 +253,11 @@ namespace detail {
     bool temp = eg.setString(OS_Generator_FuelCell_AirSupplyExtensibleFields::ConstituentName, name);
     bool ok = eg.setString(OS_Generator_FuelCell_AirSupplyExtensibleFields::MolarFraction, molarFraction);
 
-    if (temp) {
-      temp = ok;
-    }
-
-    if (!temp) {
+    if (temp && ok) {
+      double num = numberofUserDefinedConstituents();
+      setNumberofUserDefinedConstituents(num + 1);
+    } else {
       getObject<ModelObject>().eraseExtensibleGroup(eg.groupIndex());
-      return temp;
     }
     return temp;
   }
@@ -268,11 +266,14 @@ namespace detail {
     unsigned numberofDataPairs = numExtensibleGroups();
     if (groupIndex < numberofDataPairs) {
       getObject<ModelObject>().eraseExtensibleGroup(groupIndex);
+      double num = numberofUserDefinedConstituents();
+      setNumberofUserDefinedConstituents(num - 1);
     }
   }
 
   void GeneratorFuelCellAirSupply_Impl::removeAllConstituents() {
     getObject<ModelObject>().clearExtensibleGroups();
+    resetNumberofUserDefinedConstituents();
   }
 
   std::vector< std::pair<std::string, std::string> > GeneratorFuelCellAirSupply_Impl::constituents() {
@@ -326,6 +327,7 @@ GeneratorFuelCellAirSupply::GeneratorFuelCellAirSupply(const Model& model,
   setAirRateFunctionofFuelRateCurve(fuelRateCurve);
   setAirIntakeHeatRecoveryMode("NoRecovery");
   setAirSupplyConstituentMode("AmbientAir");
+  setNumberofUserDefinedConstituents(0);
 }
 
 GeneratorFuelCellAirSupply::GeneratorFuelCellAirSupply(const Model& model, 
@@ -376,6 +378,7 @@ GeneratorFuelCellAirSupply::GeneratorFuelCellAirSupply(const Model& model,
   }
   setAirIntakeHeatRecoveryMode("NoRecovery");
   setAirSupplyConstituentMode("AmbientAir");
+  setNumberofUserDefinedConstituents(0);
 }
 
 GeneratorFuelCellAirSupply::GeneratorFuelCellAirSupply(const Model& model,
@@ -412,6 +415,7 @@ GeneratorFuelCellAirSupply::GeneratorFuelCellAirSupply(const Model& model,
 
   setAirIntakeHeatRecoveryMode("NoRecovery");
   setAirSupplyConstituentMode("AmbientAir");
+  setNumberofUserDefinedConstituents(0);
 }
 
 GeneratorFuelCellAirSupply::GeneratorFuelCellAirSupply(const Model& model)
@@ -440,6 +444,7 @@ GeneratorFuelCellAirSupply::GeneratorFuelCellAirSupply(const Model& model)
   setAirRateAirTemperatureCoefficient(0.00283);
   setAirIntakeHeatRecoveryMode("NoRecovery");
   setAirSupplyConstituentMode("AmbientAir");
+  setNumberofUserDefinedConstituents(0);
 }
 
 IddObjectType GeneratorFuelCellAirSupply::iddObjectType() {

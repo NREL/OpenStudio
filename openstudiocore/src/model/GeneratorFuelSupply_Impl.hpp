@@ -120,7 +120,6 @@ namespace detail {
 
     void resetFuelTemperatureReferenceNode();
 
-  // Note Schedules are passed by reference, not const reference.
     bool setFuelTemperatureSchedule(Schedule& schedule);
 
     void resetFuelTemperatureSchedule();
