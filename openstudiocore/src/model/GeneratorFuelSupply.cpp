@@ -45,6 +45,8 @@
 #include "../../model/ScheduleTypeLimits.hpp"
 #include "../../model/ScheduleTypeRegistry.hpp"
 
+#include "../utilities/idf/WorkspaceExtensibleGroup.hpp"
+
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_Generator_FuelSupply_FieldEnums.hxx>
@@ -303,6 +305,51 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  bool GeneratorFuelSupply_Impl::addConstituent(std::string name, std::string molarFraction) {
+    WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+
+    bool temp = eg.setString(OS_Generator_FuelSupplyExtensibleFields::ConstituentName, name);
+    bool ok = eg.setString(OS_Generator_FuelSupplyExtensibleFields::ConstituentMolarFraction, molarFraction);
+
+    if (temp) {
+      temp = ok;
+    }
+
+    if (!temp) {
+      getObject<ModelObject>().eraseExtensibleGroup(eg.groupIndex());
+      return temp;
+    }
+    return temp;
+  }
+
+  void GeneratorFuelSupply_Impl::removeConstituent(unsigned groupIndex) {
+    unsigned numberofDataPairs = numExtensibleGroups();
+    if (groupIndex < numberofDataPairs) {
+      getObject<ModelObject>().eraseExtensibleGroup(groupIndex);
+    }
+  }
+
+  void GeneratorFuelSupply_Impl::removeAllConstituents() {
+    getObject<ModelObject>().clearExtensibleGroups();
+  }
+
+  std::vector< std::pair<std::string, std::string> > GeneratorFuelSupply_Impl::constituents() {
+    std::vector< std::pair<std::string, std::string> > result;
+
+    std::vector<IdfExtensibleGroup> groups = extensibleGroups();
+
+    for (const auto & group : groups) {
+      boost::optional<std::string> name = group.cast<WorkspaceExtensibleGroup>().getString(OS_Generator_FuelSupplyExtensibleFields::ConstituentName);
+      boost::optional<std::string> molarFraction = group.cast<WorkspaceExtensibleGroup>().getString(OS_Generator_FuelSupplyExtensibleFields::ConstituentMolarFraction);
+
+      if (name && molarFraction) {
+        result.push_back(std::make_pair(name.get(), molarFraction.get()));
+      }
+    }
+
+    return result;
+  }
+
 } // detail
 
 GeneratorFuelSupply::GeneratorFuelSupply(const Model& model, Schedule& tempSchedule, const CurveCubic& powerCurve)
@@ -357,6 +404,22 @@ GeneratorFuelSupply::GeneratorFuelSupply(const Model& model)
 
 IddObjectType GeneratorFuelSupply::iddObjectType() {
   return IddObjectType(IddObjectType::OS_Generator_FuelSupply);
+}
+
+bool GeneratorFuelSupply::addConstituent(std::string name, std::string molarFraction) {
+  return getImpl<detail::GeneratorFuelSupply_Impl>()->addConstituent(name, molarFraction);
+}
+
+void GeneratorFuelSupply::removeConstituent(int groupIndex) {
+  return getImpl<detail::GeneratorFuelSupply_Impl>()->removeConstituent(groupIndex);
+}
+
+void GeneratorFuelSupply::removeAllConstituents() {
+  return getImpl<detail::GeneratorFuelSupply_Impl>()->removeAllConstituents();
+}
+
+std::vector< std::pair<std::string, std::string> > GeneratorFuelSupply::constituents() {
+  return getImpl<detail::GeneratorFuelSupply_Impl>()->constituents();
 }
 
 std::vector<std::string> GeneratorFuelSupply::fuelTemperatureModelingModeValues() {

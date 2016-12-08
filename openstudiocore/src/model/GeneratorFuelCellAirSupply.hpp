@@ -81,6 +81,16 @@ class MODEL_API GeneratorFuelCellAirSupply : public ModelObject {
 
   static std::vector<std::string> airSupplyConstituentModeValues();
 
+  //extensible fields
+
+  bool addConstituent(std::string name, std::string molarFraction);
+
+  void removeConstituent(int groupIndex);
+
+  void removeAllConstituents();
+
+  std::vector< std::pair<std::string, std::string> > constituents();
+
   /** @name Getters */
   //@{
 
@@ -105,8 +115,6 @@ class MODEL_API GeneratorFuelCellAirSupply : public ModelObject {
   std::string airSupplyConstituentMode() const;
 
   double numberofUserDefinedConstituents() const;
-
-  // TODO: Handle this object's extensible fields.
 
   //@}
   /** @name Setters */
@@ -150,8 +158,6 @@ class MODEL_API GeneratorFuelCellAirSupply : public ModelObject {
   bool setNumberofUserDefinedConstituents(double numberofUserDefinedConstituents);
 
   void resetNumberofUserDefinedConstituents();
-
-  // TODO: Handle this object's extensible fields.
 
   //@}
   /** @name Other */

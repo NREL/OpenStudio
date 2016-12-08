@@ -41,6 +41,8 @@
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_Generator_FuelCell_AirSupply_FieldEnums.hxx>
 
+#include "../utilities/idf/WorkspaceExtensibleGroup.hpp"
+
 #include "../utilities/units/Unit.hpp"
 
 #include "../utilities/core/Assert.hpp"
@@ -245,6 +247,51 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  bool GeneratorFuelCellAirSupply_Impl::addConstituent(std::string name, std::string molarFraction) {
+    WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+
+    bool temp = eg.setString(OS_Generator_FuelCell_AirSupplyExtensibleFields::ConstituentName, name);
+    bool ok = eg.setString(OS_Generator_FuelCell_AirSupplyExtensibleFields::MolarFraction, molarFraction);
+
+    if (temp) {
+      temp = ok;
+    }
+
+    if (!temp) {
+      getObject<ModelObject>().eraseExtensibleGroup(eg.groupIndex());
+      return temp;
+    }
+    return temp;
+  }
+
+  void GeneratorFuelCellAirSupply_Impl::removeConstituent(unsigned groupIndex) {
+    unsigned numberofDataPairs = numExtensibleGroups();
+    if (groupIndex < numberofDataPairs) {
+      getObject<ModelObject>().eraseExtensibleGroup(groupIndex);
+    }
+  }
+
+  void GeneratorFuelCellAirSupply_Impl::removeAllConstituents() {
+    getObject<ModelObject>().clearExtensibleGroups();
+  }
+
+  std::vector< std::pair<std::string, std::string> > GeneratorFuelCellAirSupply_Impl::constituents() {
+    std::vector< std::pair<std::string, std::string> > result;
+
+    std::vector<IdfExtensibleGroup> groups = extensibleGroups();
+
+    for (const auto & group : groups) {
+      boost::optional<std::string> name = group.cast<WorkspaceExtensibleGroup>().getString(OS_Generator_FuelCell_AirSupplyExtensibleFields::ConstituentName);
+      boost::optional<std::string> molarFraction = group.cast<WorkspaceExtensibleGroup>().getString(OS_Generator_FuelCell_AirSupplyExtensibleFields::MolarFraction);
+
+      if (name && molarFraction) {
+        result.push_back(std::make_pair(name.get(), molarFraction.get()));
+      }
+    }
+
+    return result;
+  }
+
 } // detail
 
 GeneratorFuelCellAirSupply::GeneratorFuelCellAirSupply(const Model& model,
@@ -397,6 +444,22 @@ GeneratorFuelCellAirSupply::GeneratorFuelCellAirSupply(const Model& model)
 
 IddObjectType GeneratorFuelCellAirSupply::iddObjectType() {
   return IddObjectType(IddObjectType::OS_Generator_FuelCell_AirSupply);
+}
+
+bool GeneratorFuelCellAirSupply::addConstituent(std::string name, std::string molarFraction) {
+  return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->addConstituent(name, molarFraction);
+}
+
+void GeneratorFuelCellAirSupply::removeConstituent(int groupIndex) {
+  return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->removeConstituent(groupIndex);
+}
+
+void GeneratorFuelCellAirSupply::removeAllConstituents() {
+  return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->removeAllConstituents();
+}
+
+std::vector< std::pair<std::string, std::string> > GeneratorFuelCellAirSupply::constituents() {
+  return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->constituents();
 }
 
 std::vector<std::string> GeneratorFuelCellAirSupply::airSupplyRateCalculationModeValues() {

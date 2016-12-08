@@ -25856,7 +25856,7 @@ OS:Generator:FuelCell:PowerModule,
 
 OS:Generator:FuelCell:AirSupply,
       \memo Used to define details of the air supply subsystem for a fuel cell power generator.
-      \extensible:2 - repeat last two fields, remembering to remove ; from "inner" fields.
+      \extensible:2
   A1, \field Handle
        \type handle
        \required-field    
@@ -26176,7 +26176,6 @@ OS:Generator:FuelSupply,
   N6, \field Number of Constituents in Gaseous Constituent Fuel Supply
       \minimum 0.0
       \maximum 12.0
-  ! sets of input data on each constituent
   A8, \field Constituent 1 Name
       \type choice
       \key CarbonDioxide

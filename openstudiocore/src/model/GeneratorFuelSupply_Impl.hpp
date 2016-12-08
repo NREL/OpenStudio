@@ -72,6 +72,16 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
 
+    //extensible fields
+
+    bool addConstituent(std::string name, std::string molarFraction);
+
+    void removeConstituent(unsigned groupIndex);
+
+    void removeAllConstituents();
+
+    std::vector< std::pair<std::string, std::string> > constituents();
+
     //@}
     /** @name Getters */
     //@{
@@ -97,8 +107,6 @@ namespace detail {
     double liquidGenericFuelCO2EmissionFactor() const;
 
     double numberofConstituentsinGaseousConstituentFuelSupply() const;
-
-    // TODO: Handle this object's extensible fields.
 
     //@}
     /** @name Setters */
@@ -148,8 +156,6 @@ namespace detail {
     bool setNumberofConstituentsinGaseousConstituentFuelSupply(double numberofConstituentsinGaseousConstituentFuelSupply);
 
     void resetNumberofConstituentsinGaseousConstituentFuelSupply();
-
-    // TODO: Handle this object's extensible fields.
 
     //@}
     /** @name Other */

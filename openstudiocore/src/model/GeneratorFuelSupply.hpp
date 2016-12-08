@@ -67,6 +67,16 @@ class MODEL_API GeneratorFuelSupply : public ModelObject {
 
   static std::vector<std::string> fuelTypeValues();
 
+  //extensible fields
+
+  bool addConstituent(std::string name, std::string molarFraction);
+
+  void removeConstituent(int groupIndex);
+
+  void removeAllConstituents();
+
+  std::vector< std::pair<std::string, std::string> > constituents();
+
   /** @name Getters */
   //@{
 
@@ -92,7 +102,6 @@ class MODEL_API GeneratorFuelSupply : public ModelObject {
 
   double numberofConstituentsinGaseousConstituentFuelSupply() const;
 
-  // TODO: Handle this object's extensible fields.
 
   //@}
   /** @name Setters */
@@ -143,7 +152,6 @@ class MODEL_API GeneratorFuelSupply : public ModelObject {
 
   void resetNumberofConstituentsinGaseousConstituentFuelSupply();
 
-  // TODO: Handle this object's extensible fields.
 
   //@}
   /** @name Other */

@@ -70,6 +70,18 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const;
 
+    //extensible fields.
+
+    //extensible fields
+
+    bool addConstituent(std::string name, std::string molarFraction);
+
+    void removeConstituent(unsigned groupIndex);
+
+    void removeAllConstituents();
+
+    std::vector< std::pair<std::string, std::string> > constituents();
+
     //@}
     /** @name Getters */
     //@{
@@ -99,8 +111,6 @@ namespace detail {
     std::string airSupplyConstituentMode() const;
 
     double numberofUserDefinedConstituents() const;
-
-    // TODO: Handle this object's extensible fields.
 
     //@}
     /** @name Setters */
@@ -147,8 +157,6 @@ namespace detail {
     bool setNumberofUserDefinedConstituents(double numberofUserDefinedConstituents);
 
     void resetNumberofUserDefinedConstituents();
-
-    // TODO: Handle this object's extensible fields.
 
     //@}
     /** @name Other */
