@@ -54,7 +54,6 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class GeneratorFuelCellPowerModule;
 class GeneratorFuelCellAirSupply;
 class GeneratorFuelSupply;
@@ -98,62 +97,44 @@ class MODEL_API GeneratorFuelCell : public ModelObject {
   /** @name Getters */
   //@{
 
-  // TODO: Check return type. From object lists, some candidates are: FCPM.
   GeneratorFuelCellPowerModule powerModule() const;
 
-  // TODO: Check return type. From object lists, some candidates are: FCAirSup.
   GeneratorFuelCellAirSupply airSupply() const;
 
-  // TODO: Check return type. From object lists, some candidates are: GenFuelSup.
   GeneratorFuelSupply fuelSupply() const;
 
-  // TODO: Check return type. From object lists, some candidates are: FCWaterSup.
   GeneratorFuelCellWaterSupply waterSupply() const;
 
-  // TODO: Check return type. From object lists, some candidates are: FCAuxHeat.
   GeneratorFuelCellAuxiliaryHeater auxiliaryHeater() const;
 
-  // TODO: Check return type. From object lists, some candidates are: FCExhaustHX.
   GeneratorFuelCellExhaustGasToWaterHeatExchanger heatExchanger() const;
 
-  // TODO: Check return type. From object lists, some candidates are: FCStorage.
   GeneratorFuelCellElectricalStorage electricalStorage() const;
 
-  // TODO: Check return type. From object lists, some candidates are: FCInverter.
   GeneratorFuelCellInverter inverter() const;
 
-  // TODO: Check return type. From object lists, some candidates are: FCStackCooler.
   boost::optional<GeneratorFuelCellStackCooler> stackCooler() const;
 
   //@}
   /** @name Setters */
   //@{
 
-  // TODO: Check argument type. From object lists, some candidates are: FCPM.
   bool setPowerModule(const GeneratorFuelCellPowerModule& fCPM);
 
-  // TODO: Check argument type. From object lists, some candidates are: FCAirSup.
   bool setAirSupply(const GeneratorFuelCellAirSupply& fCAirSup);
 
-  // TODO: Check argument type. From object lists, some candidates are: GenFuelSup.
   bool setFuelSupply(const GeneratorFuelSupply& genFuelSup);
 
-  // TODO: Check argument type. From object lists, some candidates are: FCWaterSup.
   bool setWaterSupply(const GeneratorFuelCellWaterSupply& fCWaterSup);
 
-  // TODO: Check argument type. From object lists, some candidates are: FCAuxHeat.
   bool setAuxiliaryHeater(const GeneratorFuelCellAuxiliaryHeater& fCAuxHeat);
 
-  // TODO: Check argument type. From object lists, some candidates are: FCExhaustHX.
   bool setHeatExchanger(const GeneratorFuelCellExhaustGasToWaterHeatExchanger& fCExhaustHX);
 
-  // TODO: Check argument type. From object lists, some candidates are: FCStorage.
   bool setElectricalStorage(const GeneratorFuelCellElectricalStorage& fCStorage);
 
-  // TODO: Check argument type. From object lists, some candidates are: FCInverter.
   bool setInverter(const GeneratorFuelCellInverter& fCInverter);
 
-  // TODO: Check argument type. From object lists, some candidates are: FCStackCooler.
   bool setStackCooler(const GeneratorFuelCellStackCooler& fCStackCooler);
 
   void resetStackCooler();

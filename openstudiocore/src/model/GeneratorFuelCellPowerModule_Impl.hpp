@@ -130,10 +130,8 @@ namespace detail {
 
     double stackHeatlosstoDilutionAir() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Connection.
     boost::optional<Connection> dilutionInletAirNode() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Connection.
     boost::optional<Connection> dilutionOutletAirNode() const;
 
     double minimumOperatingPoint() const;
@@ -148,7 +146,6 @@ namespace detail {
 
     void resetEfficiencyCurveMode();
 
-    // TODO: Check argument type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
     bool setEfficiencyCurve(const Curve& quadraticCurve);
 
     void setNominalEfficiency(double nominalEfficiency);
@@ -243,7 +240,6 @@ namespace detail {
 
     void resetSkinLossUFactorTimesAreaTerm();
 
-    // TODO: Check argument type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
     bool setSkinLossQuadraticCurve(const Curve& quadraticCurves);
 
     void resetSkinLossQuadraticCurve();
@@ -256,12 +252,10 @@ namespace detail {
 
     void resetStackHeatlosstoDilutionAir();
 
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
     bool setDilutionInletAirNode(const Connection& connection);
 
     void resetDilutionInletAirNode();
 
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
     bool setDilutionOutletAirNode(const Connection& connection);
 
     void resetDilutionOutletAirNode();

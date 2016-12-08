@@ -110,12 +110,10 @@ class MODEL_API GeneratorFuelCellStackCooler : public ModelObject {
   /** @name Setters */
   //@{
 
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
   bool setHeatRecoveryWaterInletNode(const Connection& connection);
 
   void resetHeatRecoveryWaterInletNode();
 
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
   bool setHeatRecoveryWaterOutletNode(const Connection& connection);
 
   void resetHeatRecoveryWaterOutletNode();

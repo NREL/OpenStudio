@@ -114,7 +114,6 @@ class MODEL_API GeneratorFuelCellWaterSupply : public ModelObject {
 
   void resetWaterTemperatureReferenceNode();
 
-  // Note Schedules are passed by reference, not const reference.
   bool setWaterTemperatureSchedule(Schedule& schedule);
 
   void resetWaterTemperatureSchedule();
