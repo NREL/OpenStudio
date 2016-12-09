@@ -29,7 +29,6 @@
 #include "GeneratorFuelCellWaterSupply.hpp"
 #include "GeneratorFuelCellWaterSupply_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
 #include "Model.hpp"
 #include "Model_Impl.hpp"
 #include "CurveCubic.hpp"
@@ -42,8 +41,8 @@
 #include "Schedule_Impl.hpp"
 #include "ScheduleConstant.hpp"
 #include "ScheduleConstant_Impl.hpp"
-#include "../../model/ScheduleTypeLimits.hpp"
-#include "../../model/ScheduleTypeRegistry.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>

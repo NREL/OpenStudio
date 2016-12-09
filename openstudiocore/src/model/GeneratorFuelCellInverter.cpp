@@ -29,7 +29,6 @@
 #include "GeneratorFuelCellInverter.hpp"
 #include "GeneratorFuelCellInverter_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
 #include "CurveCubic.hpp"
 #include "CurveCubic_Impl.hpp"
 #include "CurveQuadratic.hpp"

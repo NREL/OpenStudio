@@ -29,7 +29,6 @@
 #include "GeneratorFuelCellAirSupply.hpp"
 #include "GeneratorFuelCellAirSupply_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
 #include "Connection.hpp"
 #include "Connection_Impl.hpp"
 #include "CurveCubic.hpp"

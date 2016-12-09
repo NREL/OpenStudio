@@ -29,7 +29,6 @@
 #include "GeneratorFuelCellAuxiliaryHeater.hpp"
 #include "GeneratorFuelCellAuxiliaryHeater_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
 

@@ -29,7 +29,6 @@
 #include "GeneratorFuelCellExhaustGasToWaterHeatExchanger.hpp"
 #include "GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
 #include "Connection.hpp"
 #include "Connection_Impl.hpp"
 #include "Connection.hpp"

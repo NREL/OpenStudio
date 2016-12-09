@@ -29,7 +29,6 @@
 #include "GeneratorFuelSupply.hpp"
 #include "GeneratorFuelSupply_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
 #include "Connection.hpp"
 #include "Connection_Impl.hpp"
 #include "Model.hpp"
@@ -42,8 +41,8 @@
 #include "CurveCubic_Impl.hpp"
 #include "CurveQuadratic.hpp"
 #include "CurveQuadratic_Impl.hpp"
-#include "../../model/ScheduleTypeLimits.hpp"
-#include "../../model/ScheduleTypeRegistry.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
 
 #include "../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
