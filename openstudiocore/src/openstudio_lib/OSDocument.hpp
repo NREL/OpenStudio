@@ -285,6 +285,10 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   public slots:
 
+  void enable();
+
+  void disable();
+
   void enableTabsAfterRun();
 
   void disableTabsDuringRun();

@@ -104,16 +104,24 @@ void ScriptsTabView::showEvent(QShowEvent *e)
 
 void ScriptsTabView::openUpdateMeasuresDlg()
 {
+  m_updateMeasuresButton->setEnabled(false);
+
   openstudio::OSAppBase * app = OSAppBase::instance();
 
+  app->currentDocument()->disable();
+ 
   WorkflowJSON workflow = app->currentDocument()->model().workflowJSON();
 
   m_syncMeasuresDialog = boost::shared_ptr<SyncMeasuresDialog>(new SyncMeasuresDialog(workflow,&(app->measureManager())));
   m_syncMeasuresDialog->setGeometry(app->currentDocument()->mainWindow()->geometry());
   m_syncMeasuresDialog->exec();
 
+  app->currentDocument()->enable();
+
   app->editController()->reset();
   workflowView->refreshAllViews();
+
+  m_updateMeasuresButton->setEnabled(true);
 }
 
 } // openstudio

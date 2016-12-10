@@ -880,6 +880,52 @@ namespace openstudio {
     m_mainWindow->verticalTabWidget()->refreshTabButtons();
   }
 
+  void OSDocument::disable()
+  {
+    m_mainWindow->setEnabled(false);
+
+    m_mainWindow->verticalTabWidget()->enableTabButton(SITE, false);
+    m_mainWindow->verticalTabWidget()->enableTabButton(SCHEDULES, false);
+    m_mainWindow->verticalTabWidget()->enableTabButton(CONSTRUCTIONS, false);
+    m_mainWindow->verticalTabWidget()->enableTabButton(LOADS, false);
+    m_mainWindow->verticalTabWidget()->enableTabButton(SPACE_TYPES, false);
+    m_mainWindow->verticalTabWidget()->enableTabButton(FACILITY, false);
+    m_mainWindow->verticalTabWidget()->enableTabButton(SPACES, false);
+    m_mainWindow->verticalTabWidget()->enableTabButton(THERMAL_ZONES, false);
+    m_mainWindow->verticalTabWidget()->enableTabButton(HVAC_SYSTEMS, false);
+    //m_mainWindow->verticalTabWidget()->enableTabButton(BUILDING_SUMMARY, false); No Summary tab available
+    m_mainWindow->verticalTabWidget()->enableTabButton(OUTPUT_VARIABLES, false);
+    m_mainWindow->verticalTabWidget()->enableTabButton(SIMULATION_SETTINGS, false);
+    m_mainWindow->verticalTabWidget()->enableTabButton(RUBY_SCRIPTS, false);
+    m_mainWindow->verticalTabWidget()->enableTabButton(RUN_SIMULATION, false); 
+    m_mainWindow->verticalTabWidget()->enableTabButton(RESULTS_SUMMARY, false);
+
+    m_mainWindow->verticalTabWidget()->refreshTabButtons();
+  }
+
+  void OSDocument::enable()
+  {
+    m_mainWindow->setEnabled(true);
+
+    m_mainWindow->verticalTabWidget()->enableTabButton(SITE, true);
+    m_mainWindow->verticalTabWidget()->enableTabButton(SCHEDULES, true);
+    m_mainWindow->verticalTabWidget()->enableTabButton(CONSTRUCTIONS, true);
+    m_mainWindow->verticalTabWidget()->enableTabButton(LOADS, true);
+    m_mainWindow->verticalTabWidget()->enableTabButton(SPACE_TYPES, true);
+    m_mainWindow->verticalTabWidget()->enableTabButton(FACILITY, true);
+    m_mainWindow->verticalTabWidget()->enableTabButton(SPACES, true);
+    m_mainWindow->verticalTabWidget()->enableTabButton(THERMAL_ZONES, true);
+    m_mainWindow->verticalTabWidget()->enableTabButton(HVAC_SYSTEMS, true);
+    //m_mainWindow->verticalTabWidget()->enableTabButton(BUILDING_SUMMARY, true); No Summary tab available
+    m_mainWindow->verticalTabWidget()->enableTabButton(OUTPUT_VARIABLES, true);
+    m_mainWindow->verticalTabWidget()->enableTabButton(SIMULATION_SETTINGS, true);
+    m_mainWindow->verticalTabWidget()->enableTabButton(RUBY_SCRIPTS, true);
+    m_mainWindow->verticalTabWidget()->enableTabButton(RUN_SIMULATION, true); 
+    m_mainWindow->verticalTabWidget()->enableTabButton(RESULTS_SUMMARY, true);
+
+    m_mainWindow->verticalTabWidget()->refreshTabButtons();
+  }
+
   bool OSDocument::modified() const
   {
     return m_mainWindow->isWindowModified();
@@ -1301,6 +1347,8 @@ namespace openstudio {
 
   void OSDocument::addStandardMeasures()
   {
+    disable();
+
     // needed before we can compute arguments
     OSAppBase::instance()->measureManager().saveTempModel(toPath(m_modelTempDir));
 
@@ -1343,6 +1391,8 @@ namespace openstudio {
     }
 
     workflow.setWorkflowSteps(steps);
+
+    enable();
   }
 
   boost::optional<BCLMeasure> OSDocument::standardReportMeasure()
@@ -1681,7 +1731,9 @@ namespace openstudio {
 
     if (!userMeasuresDir.empty()){
       if (BCLMeasure::setUserMeasuresDir(userMeasuresDir)){
+        OSAppBase::instance()->currentDocument()->disable();
         OSAppBase::instance()->measureManager().updateMeasuresLists();
+        OSAppBase::instance()->currentDocument()->enable();
       }
     }
   }
@@ -1827,7 +1879,9 @@ namespace openstudio {
   void OSDocument::on_closeMeasuresBclDlg()
   {
     if (m_onlineMeasuresBclDialog->showNewComponents()){
+      OSAppBase::instance()->currentDocument()->disable();
       OSAppBase::instance()->measureManager().updateMeasuresLists();
+      OSAppBase::instance()->currentDocument()->enable();
       m_onlineMeasuresBclDialog->setShowNewComponents(false);
     }
   }

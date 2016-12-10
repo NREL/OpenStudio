@@ -394,6 +394,7 @@ void BuildingComponentDialogCentralWidget::measureDownloadComplete(const std::st
 
       }
     }
+    // DLM: move this
     app->measureManager().updateMeasuresLists();
   }
 

@@ -34,12 +34,14 @@
 #include "../utilities/core/Path.hpp"
 #include "../utilities/core/UUID.hpp"
 #include "../model/Model.hpp"
+#include "../measure/OSArgument.hpp"
 #include <vector>
 #include <map>
 #include <QSharedPointer>
 #include <QPointer>
 #include <QApplication>
 #include <QUrl>
+#include <QMutex>
 class QEvent;
 class QNetworkAccessManager;
 
@@ -193,10 +195,12 @@ class MeasureManager : public QObject
     openstudio::path m_tempModelPath;
     std::map<UUID,BCLMeasure> m_myMeasures;
     std::map<UUID,BCLMeasure> m_bclMeasures;
+    std::map<openstudio::path, std::vector<measure::OSArgument> > m_measureArguments;
     QUrl m_url;
     QSharedPointer<LocalLibraryController> m_libraryController;
     QNetworkAccessManager* m_networkAccessManager;
     bool m_started;
+    QMutex m_mutex;
 };
 
 
