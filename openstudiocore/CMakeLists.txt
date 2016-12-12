@@ -1387,7 +1387,7 @@ endif()
 
 set(all_exe_targets
   GenerateIddFactory
-  gbXMLToIdf
+  #gbXMLToIdf
   #OpenStudio
   #ResultsViewer
 )
