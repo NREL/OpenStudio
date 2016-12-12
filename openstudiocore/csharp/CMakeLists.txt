@@ -57,7 +57,7 @@ if(MSVC)
   set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} /FORCE:MULTIPLE")
   
   # ignore deprecated warnings since we will export deprecated methods
-  add_definitions(/wd4996)
+  add_definitions(/wd4996 /bigobj)
   
   # build a dll to link all the static C# bindings into
   add_library(

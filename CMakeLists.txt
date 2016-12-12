@@ -218,6 +218,43 @@ if(BUILD_WITH_MULTIPLE_PROCESSES)
   add_definitions(/MP)
 endif()
 
+# Build with OpenSSL support
+set(BUILD_WITH_OPENSSL ON CACHE INTERNAL "Build With OpenSSL Support For SSH Connections")
+if(UNIX)
+  find_package(OpenSSL)
+  if(NOT ${OPENSSL_FOUND})
+    message(SEND_ERROR "OpenSSL could not be found, and is required for HTTPS communication")
+    message(SEND_ERROR "Please install OpenSSL development libraries using your package management system (possibly libssl-dev)")
+  else()
+    mark_as_advanced(
+      LIB_EAY_DEBUG
+      LIB_EAY_RELEASE
+      SSL_EAY_DEBUG
+      SSL_EAY_RELEASE
+    )
+  endif()
+elseif(WIN32)
+  if(CMAKE_CL_64)
+    set(OPENSSL_ARCH 64)
+    set(OPENSSL_EXPECTED_HASH 3f9c88523634c7b1e27f4026e7c3f3ee)
+  else()
+    set(OPENSSL_ARCH 32)
+    set(OPENSSL_EXPECTED_HASH fb2aa1a8ceb85f68055044a85f1dbc94)
+  endif()
+  set(OPENSSL_VERSION "1.0.2a")
+  set(OPENSSL_PATH "OpenSSL-Win${OPENSSL_ARCH}")
+  if(EXISTS "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip")
+    file(MD5 "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" OPENSSL_HASH)
+  endif()
+  if(NOT EXISTS "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" OR NOT "${OPENSSL_HASH}" MATCHES "${OPENSSL_EXPECTED_HASH}")
+    message(STATUS "Downloading OpenSSL ${OPENSSL_VERSION} (${OPENSSL_ARCH}-bit)")
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/OpenSSL-Win${OPENSSL_ARCH}-${OPENSSL_VERSION}.zip" "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${OPENSSL_EXPECTED_HASH})
+    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}")
+    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+  endif()
+  set(OPENSSL_ROOT_DIR "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}")
+endif()
+
 if(BUILD_NODE)
   # OSX can work with a static ruby library
   ExternalProject_Add(Node
