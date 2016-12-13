@@ -178,7 +178,9 @@ void ApplyMeasureNowDialog::createWidgets()
 
   // DLM: this is changing application state, needs to be undone in the destructor
   app->measureManager().setLibraryController(m_localLibraryController); 
+  app->currentDocument()->disable();
   app->measureManager().updateMeasuresLists();
+  app->currentDocument()->enable();
 
   m_rightPaneStackedWidget = new  QStackedWidget();
   m_argumentsFailedPageIdx = m_rightPaneStackedWidget->addWidget(m_argumentsFailedTextEdit);

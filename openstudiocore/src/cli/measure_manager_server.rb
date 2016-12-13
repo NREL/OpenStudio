@@ -38,6 +38,7 @@ class MeasureManagerServlet < WEBrick::HTTPServlet::AbstractServlet
   def initialize(server)
     super
     @mutex = Mutex.new
+    #print_message("new @mutex = #{@mutex}")
     @measure_manager = MeasureManager.new
   end
 
@@ -53,7 +54,9 @@ class MeasureManagerServlet < WEBrick::HTTPServlet::AbstractServlet
   def do_GET(request, response)
   
     begin
+      #print_message("waiting for @mutex = #{@mutex}")
       @mutex.lock
+      #print_message("locked @mutex = #{@mutex}")
         
       response.status = 200
       response.content_type = 'application/json'
@@ -119,7 +122,9 @@ class MeasureManagerServlet < WEBrick::HTTPServlet::AbstractServlet
   def do_POST (request, response)
   
     begin
+      #print_message("waiting for @mutex = #{@mutex}")
       @mutex.lock
+      #print_message("locked @mutex = #{@mutex}")
         
       response.status = 200
       response.content_type = 'application/json'
@@ -180,7 +185,7 @@ class MeasureManagerServlet < WEBrick::HTTPServlet::AbstractServlet
         # loop over all local BCL measures
         OpenStudio::LocalBCL.instance.measures.each do |local_measure|
           measure_dir = local_measure.directory.to_s
-          puts "measure_dir = #{measure_dir}"
+          #print_message("measure_dir = #{measure_dir}")
           measure_dir = File.expand_path(measure_dir)
           if File.directory?(measure_dir)
          
@@ -204,7 +209,8 @@ class MeasureManagerServlet < WEBrick::HTTPServlet::AbstractServlet
         force_reload = data[:force_reload] ? data[:force_reload] : false
 
         # loop over all directories
-        Dir.glob("#{measures_dir}/*/").each do |measure_dir|
+        measure_dirs = Dir.glob("#{measures_dir}/*/")
+        measure_dirs.each do |measure_dir|
         
           measure_dir = File.expand_path(measure_dir)
           if File.directory?(measure_dir)

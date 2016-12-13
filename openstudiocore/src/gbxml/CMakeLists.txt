@@ -67,14 +67,14 @@ else()
   MAKE_SWIG_TARGET(OpenStudioGBXML gbXML "${CMAKE_CURRENT_SOURCE_DIR}/gbXML.i" "${${target_name}_swig_src}" ${target_name} OpenStudioEnergyPlus)
 endif()
 
-add_executable(gbXMLToIdf gbXMLToIdf.cpp)
-AddPCH(gbXMLToIdf)
+#add_executable(gbXMLToIdf gbXMLToIdf.cpp)
+#AddPCH(gbXMLToIdf)
 
-target_link_libraries(gbXMLToIdf
-  ${${target_name}_depends}
-  openstudio_gbxml
-  ${QT_LIBS}  	
-)
+#target_link_libraries(gbXMLToIdf
+#  ${${target_name}_depends}
+#  openstudio_gbxml
+#  ${QT_LIBS}  	
+#)
 
 #install(TARGETS gbXMLToIdf
 #  BUNDLE DESTINATION .

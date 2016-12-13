@@ -394,7 +394,8 @@ void BuildingComponentDialogCentralWidget::measureDownloadComplete(const std::st
 
       }
     }
-    app->measureManager().updateMeasuresLists();
+    // DLM: handled in OSDocument::on_closeMeasuresBclDlg
+    // app->measureManager().updateMeasuresLists();
   }
 
   m_pendingDownloads.erase(uid);

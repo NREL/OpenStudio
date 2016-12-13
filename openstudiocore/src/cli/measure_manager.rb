@@ -40,6 +40,23 @@ class MeasureManager
     
     eval(OpenStudio::Ruleset::infoExtractorRubyFunction)
   end
+  
+  def force_encoding(object, encoding = 'utf-8')
+    type = object.class
+    if type == Hash
+      object.keys.each do |key|
+        force_encoding(object[key], encoding)
+      end 
+    elsif type == Array
+      object.each do |val|
+        force_encoding(val, encoding)
+      end 
+    elsif type == String
+      object.force_encoding(encoding)
+    end
+    
+    return object
+  end
 
   def print_message(message)
     puts message
@@ -262,7 +279,7 @@ class MeasureManager
       return get_arguments_from_measure_info(info)
     end
     
-    return result
+    return force_encoding(result, 'utf-8')
   end
   
   def get_arguments_from_measure_info(measure_info)
@@ -312,7 +329,7 @@ class MeasureManager
       result << arg
     end
     
-    return result
+    return force_encoding(result, 'utf-8')
   end
   
   def measure_hash(measure_dir, measure, measure_info = nil)
@@ -382,7 +399,7 @@ class MeasureManager
       result[:arguments] = get_arguments_from_measure(measure_dir, measure)
     end
     
-    return result
+    return force_encoding(result, 'utf-8')
   end
   
 end

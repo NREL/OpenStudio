@@ -29,6 +29,7 @@
 #include "ScriptsTabController.hpp"
 
 #include "OSAppBase.hpp"
+#include "OSDocument.hpp"
 #include "ScriptsTabView.hpp"
 
 #include "../shared_gui_components/MeasureManager.hpp"
@@ -50,7 +51,9 @@ ScriptsTabController::ScriptsTabController()
   app->measureManager().saveTempModel(*tempDir);
 
   // update measures
+  app->currentDocument()->disable();
   app->measureManager().updateMeasuresLists();
+  app->currentDocument()->enable();
 
   m_workflowController = QSharedPointer<openstudio::measuretab::WorkflowController>(new openstudio::measuretab::WorkflowController(OSAppBase::instance()));
   m_workflowSectionItemDelegate = QSharedPointer<openstudio::measuretab::WorkflowSectionItemDelegate>(new openstudio::measuretab::WorkflowSectionItemDelegate());

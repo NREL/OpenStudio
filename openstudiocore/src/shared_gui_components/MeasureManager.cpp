@@ -75,7 +75,7 @@
 namespace openstudio {
 
 MeasureManager::MeasureManager(BaseApp *t_app)
-  : m_app(t_app), m_started(false)
+  : m_app(t_app), m_started(false), m_mutex(QMutex::NonRecursive)
 {
   m_networkAccessManager = new QNetworkAccessManager(this);
 }
@@ -163,38 +163,8 @@ void MeasureManager::saveTempModel(const path& tempDir)
 
   model->save(m_tempModelPath, true);
 
-  QUrl url(m_url);
-  url.setPath("/reset");
+  m_measureArguments.clear();
 
-  std::string url_s = m_url.toString().toStdString();
-
-  QString data("{}");
-
-  QNetworkRequest request(url);
-  request.setHeader(QNetworkRequest::ContentTypeHeader, "json");
-
-  QNetworkAccessManager manager;
-
-  QNetworkReply* reply = manager.post(request, data.toUtf8());
-
-  while (reply->isRunning()){
-    Application::instance().processEvents();
-  }
-
-  QString replyString = reply->readAll();
-  std::string s = replyString.toStdString();
-
-  bool result = true;
-  if (reply->error() != QNetworkReply::NoError){
-    result = false;
-  }
-
-  if (!result)
-  {
-    // TODO: handle error
-  }
-
-  delete reply;
 }
 
 std::vector<BCLMeasure> MeasureManager::bclMeasures() const
@@ -466,6 +436,12 @@ void MeasureManager::updateMeasures(const std::vector<BCLMeasure>& newMeasures, 
 
 std::vector<measure::OSArgument> MeasureManager::getArguments(const BCLMeasure &t_measure)
 {
+
+  auto it = m_measureArguments.find(t_measure.directory());
+  if (it != m_measureArguments.end()){
+    return it->second;
+  }
+
   QUrl url(m_url);
   url.setPath("/compute_arguments");
 
@@ -530,6 +506,8 @@ std::vector<measure::OSArgument> MeasureManager::getArguments(const BCLMeasure &
   if (!errorString.empty()){
     LOG_AND_THROW(errorString);
   }
+
+  m_measureArguments.insert(std::make_pair(t_measure.directory(), result));
 
   return result;
 }
@@ -750,14 +728,19 @@ void MeasureManager::updateMeasuresLists()
 
 void MeasureManager::updateMeasuresLists(bool updateUserMeasures)
 {
-  m_myMeasures.clear();
-  m_bclMeasures.clear();
-
   checkForLocalBCLUpdates();
 
   if (updateUserMeasures) {
     checkForUpdates(BCLMeasure::userMeasuresDir(), false);
   }
+   
+  if (!m_mutex.tryLock()) {
+    return;
+  }
+
+  m_myMeasures.clear();
+  m_bclMeasures.clear();
+  m_measureArguments.clear();
 
   if (updateUserMeasures) {
    std::vector<BCLMeasure> userMeasures = BCLMeasure::userMeasures();
@@ -791,6 +774,8 @@ void MeasureManager::updateMeasuresLists(bool updateUserMeasures)
       m_bclMeasures.insert(std::pair<UUID,BCLMeasure>(measure.uuid(),measure));
     }
   }
+
+  m_mutex.unlock();
 
   if (m_libraryController)
   {
@@ -832,6 +817,10 @@ bool MeasureManager::checkForLocalBCLUpdates()
 {
   waitForStarted();
 
+  if (!m_mutex.tryLock()){
+    return false;
+  }
+  
   QUrl url(m_url);
   url.setPath("/bcl_measures");
 
@@ -860,12 +849,18 @@ bool MeasureManager::checkForLocalBCLUpdates()
 
   delete reply;
 
+  m_mutex.unlock();
+
   return result;
 }
 
 bool MeasureManager::checkForUpdates(const openstudio::path& measureDir, bool force)
 {
   waitForStarted();
+
+  if (!m_mutex.tryLock()){
+    return false;
+  }
 
   QUrl url(m_url);
   url.setPath("/update_measures");
@@ -894,6 +889,8 @@ bool MeasureManager::checkForUpdates(const openstudio::path& measureDir, bool fo
   }
 
   delete reply;
+
+  m_mutex.unlock();
 
   return result;
 }
