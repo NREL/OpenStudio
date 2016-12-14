@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>OpenStudio</id>
-    <version>@OPENSTUDIO_VERSION@-rc1</version>
+    <version>@OPENSTUDIO_VERSION@-rc3</version>
     <authors>NREL</authors>
     <owners>NREL</owners>
     <licenseUrl>http://github.com/NREL/OpenStudio/blob/develop/LICENSE.md</licenseUrl>
@@ -14,7 +14,9 @@
     </references>
   </metadata>
   <files>
-    <file src="Products/$CONFIGURATION$/openstudio_csharp.dll" target="lib" />
     <file src="Products/csharp/$CONFIGURATION$/OpenStudio.dll" target="lib" />
+    <file src="Products/$CONFIGURATION$/openstudio_csharp.dll" target="build" />
+    <file src="Products/$CONFIGURATION$/openstudio_translators_csharp.dll" target="build" />
+    <file src="@CMAKE_SOURCE_DIR@/OpenStudio.targets" target="build" />
   </files>
 </package>
