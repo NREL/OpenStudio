@@ -30,9 +30,9 @@
 
 #include <QSysInfo>
 
-#include "../runmanager/lib/RunManager.hpp"
-#include "../runmanager/lib/WorkItem.hpp"
-#include "../runmanager/lib/Workflow.hpp"
+//#include "../runmanager/lib/RunManager.hpp"
+//#include "../runmanager/lib/WorkItem.hpp"
+//#include "../runmanager/lib/Workflow.hpp"
 
 #include "../model/ThermalZone.hpp"
 #include "../model/DaylightingControl.hpp"
@@ -48,11 +48,9 @@
 #include "../model/IlluminanceMap_Impl.hpp"
 #include "../model/GlareSensor_Impl.hpp"
 
-#include "../analysis/Problem.hpp"
-#include "../analysis/Analysis.hpp"
-#include "../analysisdriver/SimpleProject.hpp"
-
-#include "../utilities/core/ApplicationPathHelpers.hpp"
+//#include "../analysis/Problem.hpp"
+//#include "../analysis/Analysis.hpp"
+//#include "../analysisdriver/SimpleProject.hpp"
 
 namespace openstudio {
   /*
@@ -181,26 +179,26 @@ OptionalInt getProjectRadianceJobIndex(const openstudio::analysisdriver::SimpleP
 }
 
 */
-OptionalInt getModelMeasureInsertStep(const openstudio::analysis::Problem &t_problem)
-{
-  OptionalInt stopIndex = t_problem.getWorkflowStepIndexByJobType(runmanager::JobType::ModelToIdf);
-  if (stopIndex)
-  {
-    int idx = *stopIndex;
-    if (idx > 0)
-    {
-      --idx;
-      std::vector<openstudio::analysis::WorkflowStep> workflow = t_problem.workflow();
-
-      if (workflow[idx].isWorkItem() && workflow[idx].workItem().jobkeyname == "pat-radiance-job")
-      {
-        return idx;
-      }
-    }
-  }
-
-  return stopIndex;
-}
+//OptionalInt getModelMeasureInsertStep(const openstudio::analysis::Problem &t_problem)
+//{
+//  OptionalInt stopIndex = t_problem.getWorkflowStepIndexByJobType(runmanager::JobType::ModelToIdf);
+//  if (stopIndex)
+//  {
+//    int idx = *stopIndex;
+//    if (idx > 0)
+//    {
+//      --idx;
+//      std::vector<openstudio::analysis::WorkflowStep> workflow = t_problem.workflow();
+//
+//      if (workflow[idx].isWorkItem() && workflow[idx].workItem().jobkeyname == "pat-radiance-job")
+//      {
+//        return idx;
+//      }
+//    }
+//  }
+//
+//  return stopIndex;
+//}
 
 /*
 bool projectHasRadiance(const openstudio::analysisdriver::SimpleProject &t_project)

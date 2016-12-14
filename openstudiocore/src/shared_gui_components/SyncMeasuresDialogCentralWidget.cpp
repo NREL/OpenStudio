@@ -36,8 +36,6 @@
 #include "../shared_gui_components/MeasureManager.hpp"
 #include "../shared_gui_components/SyncMeasuresDialog.hpp"
 
-#include "../analysisdriver/SimpleProject.hpp"
-
 #include "../utilities/plot/ProgressBar.hpp"
 #include "../utilities/core/Assert.hpp"
 
@@ -49,14 +47,14 @@
 
 namespace openstudio {
 
-SyncMeasuresDialogCentralWidget::SyncMeasuresDialogCentralWidget(analysisdriver::SimpleProject * project,
+SyncMeasuresDialogCentralWidget::SyncMeasuresDialogCentralWidget(const WorkflowJSON& workflow,
   MeasureManager * measureManager,
   QWidget * parent)
   : QWidget(parent),
   m_collapsibleComponentList(nullptr),
   m_componentList(nullptr),
   m_pageIdx(0),
-  m_project(project),
+  m_workflow(workflow),
   m_measureManager(measureManager)
 {
   init();
@@ -217,7 +215,7 @@ void SyncMeasuresDialogCentralWidget::lowerPushButtonClicked()
 
   if(!newMeasures.empty()){
     bool showMessage = true;
-    m_measureManager->updateMeasures(*m_project,newMeasures,showMessage);
+    m_measureManager->updateMeasures(newMeasures,showMessage);
   }
 
   emit closeDlg();

@@ -32,7 +32,6 @@
 
 #include "../BCLFileReference.hpp"
 
-#include <QFile>
 #include <QTextStream>
 
 using namespace openstudio;
@@ -51,21 +50,18 @@ TEST_F(BCLFixture, BCLFileReference)
   EXPECT_EQ("BCLFileReference.txt", ref.fileName());
   EXPECT_EQ("txt", ref.fileType());
   
-  QFile file(toQString(path));
-  bool opened = file.open(QIODevice::WriteOnly | QIODevice::Text);
-  ASSERT_TRUE(opened);
-  QTextStream textStream(&file);
-  textStream << "Hi";
+  openstudio::filesystem::ofstream file(path);
+  ASSERT_TRUE(file.is_open());
+  file << "Hi";
   file.close();
 
   EXPECT_TRUE(ref.checkForUpdate());
 
   EXPECT_FALSE(ref.checkForUpdate());
 
-  opened = file.open(QIODevice::WriteOnly | QIODevice::Text);
-  ASSERT_TRUE(opened);
-  QTextStream textStream2(&file);
-  textStream2 << "Bye";
+  file.open(path);
+  ASSERT_TRUE(file.is_open());
+  file << "Bye";
   file.close();
 
   EXPECT_TRUE(ref.checkForUpdate());

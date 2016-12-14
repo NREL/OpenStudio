@@ -44,13 +44,13 @@ class StandardsInformationMaterial;
 namespace detail {
 
   class MODEL_API Material_Impl : public ResourceObject_Impl {
-    Q_OBJECT;
+    
 
-    Q_PROPERTY(double thickness READ thickness WRITE setThickness);
+    
 
-    Q_PROPERTY(boost::optional<double> visibleTransmiattance READ getVisibleTransmittance);
-    Q_PROPERTY(boost::optional<double> interiorVisibleAbsorptance READ interiorVisibleAbsorptance);
-    Q_PROPERTY(boost::optional<double> exteriorVisibleAbsorptance READ exteriorVisibleAbsorptance);
+    
+    
+    
    public:
 
     /** @name Constructors and Destructors */

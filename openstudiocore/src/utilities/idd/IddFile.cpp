@@ -37,7 +37,7 @@
 #include "../core/Assert.hpp"
 
 #include "../core/Containers.hpp"
-#include <boost/filesystem/fstream.hpp>
+
 
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
@@ -468,7 +468,7 @@ OptionalIddFile IddFile::load(std::istream& is)
 OptionalIddFile IddFile::load(const openstudio::path& p) {
   openstudio::path wp = completePathToFile(p,path(),"idd",true);
   if (wp.empty()) { return boost::none; }
-  boost::filesystem::ifstream inFile(wp);
+  openstudio::filesystem::ifstream inFile(wp);
   if (!inFile) { return boost::none; }
   return load(inFile);
 }
@@ -517,7 +517,7 @@ bool IddFile::save(const openstudio::path& p, bool overwrite) {
     return false;
   }
   if (makeParentFolder(p)) {
-    boost::filesystem::ofstream outFile(p);
+    openstudio::filesystem::ofstream outFile(p);
     if (outFile) {
       try {
         print(outFile);

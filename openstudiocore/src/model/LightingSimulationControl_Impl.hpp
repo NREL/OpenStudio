@@ -39,11 +39,11 @@ namespace detail {
 
   /** LightingSimulationControl_Impl is a ModelObject_Impl that is the implementation class for LightingSimulationControl.*/
   class MODEL_API LightingSimulationControl_Impl : public ModelObject_Impl {
-    Q_OBJECT;
-    Q_PROPERTY(bool runSimulationforDesignDays READ runSimulationforDesignDays WRITE setRunSimulationforDesignDays RESET resetRunSimulationforDesignDays);
-    Q_PROPERTY(bool isRunSimulationforDesignDaysDefaulted READ isRunSimulationforDesignDaysDefaulted);
-    Q_PROPERTY(bool runSimulationforWeatherFileRunPeriods READ runSimulationforWeatherFileRunPeriods WRITE setRunSimulationforWeatherFileRunPeriods RESET resetRunSimulationforWeatherFileRunPeriods);
-    Q_PROPERTY(bool isRunSimulationforWeatherFileRunPeriodsDefaulted READ isRunSimulationforWeatherFileRunPeriodsDefaulted);
+    
+    
+    
+    
+    
    public:
 
     /** @name Constructors and Destructors */

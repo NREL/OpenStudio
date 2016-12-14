@@ -35,7 +35,9 @@
 
 #include "../utilities/core/Logger.hpp"
 
-#include <QObject>
+// Signals/Slots QT Replacement
+#include "../nano/nano_signal_slot.hpp"
+
 
 namespace openstudio {
 namespace model {
@@ -44,8 +46,8 @@ class ComponentWatcher;
 
 namespace detail {
 
-  class MODEL_API ComponentWatcher_Impl : public QObject, public std::enable_shared_from_this<ComponentWatcher_Impl> {
-    Q_OBJECT;
+  class MODEL_API ComponentWatcher_Impl : public std::enable_shared_from_this<ComponentWatcher_Impl>, public Nano::Observer {
+
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -63,11 +65,11 @@ namespace detail {
     ComponentData componentData() const;
 
     //@}
-   signals: 
+    /** @name Nano Signals */
+    //@{ 
+    
+    Nano::Signal<void(const ComponentWatcher &)> obsolete;
 
-    void obsolete(const ComponentWatcher& watcher);
-
-   public slots:
 
     void dataChange();
 
@@ -79,7 +81,7 @@ namespace detail {
     
     void objectRemove(const Handle& handleOfRemovedObject);
 
-    void objectAdd(const WorkspaceObject& addedObject);
+    void objectAdd(const WorkspaceObject& addedObject, const openstudio::IddObjectType& type, const openstudio::UUID& uuid);
 
    private:
     ComponentData m_componentData;

@@ -43,18 +43,18 @@ namespace detail {
 
 /** WaterUseEquipmentDefinition_Impl is a SpaceLoadDefinition_Impl that is the implementation class for WaterUseEquipmentDefinition.*/
 class MODEL_API WaterUseEquipmentDefinition_Impl : public SpaceLoadDefinition_Impl {
-  Q_OBJECT;
+  
 
-  Q_PROPERTY(std::string endUseSubcategory READ endUseSubcategory WRITE setEndUseSubcategory RESET resetEndUseSubcategory);
-  Q_PROPERTY(bool isEndUseSubcategoryDefaulted READ isEndUseSubcategoryDefaulted);
+  
+  
 
-  Q_PROPERTY(double peakFlowRate READ peakFlowRate WRITE setPeakFlowRate);
-  Q_PROPERTY(openstudio::Quantity peakFlowRate_SI READ peakFlowRate_SI WRITE setPeakFlowRate);
-  Q_PROPERTY(openstudio::Quantity peakFlowRate_IP READ peakFlowRate_IP WRITE setPeakFlowRate);
+  
+  
+  
 
-  Q_PROPERTY(boost::optional<openstudio::model::ModelObject> targetTemperatureSchedule READ targetTemperatureScheduleAsModelObject WRITE setTargetTemperatureScheduleAsModelObject RESET resetTargetTemperatureSchedule);
-  Q_PROPERTY(boost::optional<openstudio::model::ModelObject> sensibleFractionSchedule READ sensibleFractionScheduleAsModelObject WRITE setSensibleFractionScheduleAsModelObject RESET resetSensibleFractionSchedule);
-  Q_PROPERTY(boost::optional<openstudio::model::ModelObject> latentFractionSchedule READ latentFractionScheduleAsModelObject WRITE setLatentFractionScheduleAsModelObject RESET resetLatentFractionSchedule);
+  
+  
+  
 
   public:
 

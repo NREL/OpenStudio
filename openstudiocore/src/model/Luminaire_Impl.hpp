@@ -50,51 +50,51 @@ namespace detail {
 
   /** Luminaire_Impl is a SpaceLoadInstance_Impl that is the implementation class for Luminaire.*/
   class MODEL_API Luminaire_Impl : public SpaceLoadInstance_Impl {
-    Q_OBJECT;
-    Q_PROPERTY(bool isScheduleDefaulted READ isScheduleDefaulted);
+    
+    
 
-    Q_PROPERTY(double positionXcoordinate READ positionXcoordinate WRITE setPositionXcoordinate);
-    Q_PROPERTY(openstudio::Quantity positionXcoordinate_SI READ positionXcoordinate_SI WRITE setPositionXcoordinate);
-    Q_PROPERTY(openstudio::Quantity positionXcoordinate_IP READ positionXcoordinate_IP WRITE setPositionXcoordinate);
+    
+    
+    
 
-    Q_PROPERTY(double positionYcoordinate READ positionYcoordinate WRITE setPositionYcoordinate);
-    Q_PROPERTY(openstudio::Quantity positionYcoordinate_SI READ positionYcoordinate_SI WRITE setPositionYcoordinate);
-    Q_PROPERTY(openstudio::Quantity positionYcoordinate_IP READ positionYcoordinate_IP WRITE setPositionYcoordinate);
+    
+    
+    
 
-    Q_PROPERTY(double positionZcoordinate READ positionZcoordinate WRITE setPositionZcoordinate);
-    Q_PROPERTY(openstudio::Quantity positionZcoordinate_SI READ positionZcoordinate_SI WRITE setPositionZcoordinate);
-    Q_PROPERTY(openstudio::Quantity positionZcoordinate_IP READ positionZcoordinate_IP WRITE setPositionZcoordinate);
+    
+    
+    
 
-    Q_PROPERTY(double psiRotationAroundXaxis READ psiRotationAroundXaxis WRITE setPsiRotationAroundXaxis RESET resetPsiRotationAroundXaxis);
-    Q_PROPERTY(openstudio::Quantity psiRotationAroundXaxis_SI READ psiRotationAroundXaxis_SI WRITE setPsiRotationAroundXaxis RESET resetPsiRotationAroundXaxis);
-    Q_PROPERTY(openstudio::Quantity psiRotationAroundXaxis_IP READ psiRotationAroundXaxis_IP WRITE setPsiRotationAroundXaxis RESET resetPsiRotationAroundXaxis);
-    Q_PROPERTY(bool isPsiRotationAroundXaxisDefaulted READ isPsiRotationAroundXaxisDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double thetaRotationAroundYaxis READ thetaRotationAroundYaxis WRITE setThetaRotationAroundYaxis RESET resetThetaRotationAroundYaxis);
-    Q_PROPERTY(openstudio::Quantity thetaRotationAroundYaxis_SI READ thetaRotationAroundYaxis_SI WRITE setThetaRotationAroundYaxis RESET resetThetaRotationAroundYaxis);
-    Q_PROPERTY(openstudio::Quantity thetaRotationAroundYaxis_IP READ thetaRotationAroundYaxis_IP WRITE setThetaRotationAroundYaxis RESET resetThetaRotationAroundYaxis);
-    Q_PROPERTY(bool isThetaRotationAroundYaxisDefaulted READ isThetaRotationAroundYaxisDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double phiRotationAroundZaxis READ phiRotationAroundZaxis WRITE setPhiRotationAroundZaxis RESET resetPhiRotationAroundZaxis);
-    Q_PROPERTY(openstudio::Quantity phiRotationAroundZaxis_SI READ phiRotationAroundZaxis_SI WRITE setPhiRotationAroundZaxis RESET resetPhiRotationAroundZaxis);
-    Q_PROPERTY(openstudio::Quantity phiRotationAroundZaxis_IP READ phiRotationAroundZaxis_IP WRITE setPhiRotationAroundZaxis RESET resetPhiRotationAroundZaxis);
-    Q_PROPERTY(bool isPhiRotationAroundZaxisDefaulted READ isPhiRotationAroundZaxisDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double fractionReplaceable READ fractionReplaceable WRITE setFractionReplaceable RESET resetFractionReplaceable);
-    Q_PROPERTY(openstudio::Quantity fractionReplaceable_SI READ fractionReplaceable_SI WRITE setFractionReplaceable RESET resetFractionReplaceable);
-    Q_PROPERTY(openstudio::Quantity fractionReplaceable_IP READ fractionReplaceable_IP WRITE setFractionReplaceable RESET resetFractionReplaceable);
-    Q_PROPERTY(bool isFractionReplaceableDefaulted READ isFractionReplaceableDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double multiplier READ multiplier WRITE setMultiplier RESET resetMultiplier);
-    Q_PROPERTY(bool isMultiplierDefaulted READ isMultiplierDefaulted);
+    
+    
 
-    Q_PROPERTY(std::string endUseSubcategory READ endUseSubcategory WRITE setEndUseSubcategory RESET resetEndUseSubcategory);
-    Q_PROPERTY(bool isEndUseSubcategoryDefaulted READ isEndUseSubcategoryDefaulted);
+    
+    
 
-    Q_PROPERTY(double lightingPower READ lightingPower);
+    
 
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> luminaireDefinition READ luminaireDefinitionAsModelObject WRITE setLuminaireDefinitionAsModelObject);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> schedule READ scheduleAsModelObject WRITE setScheduleAsModelObject RESET resetSchedule);
+    
+    
    public:
     /** @name Constructors and Destructors */
     //@{

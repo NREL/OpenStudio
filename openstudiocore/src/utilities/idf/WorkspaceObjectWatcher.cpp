@@ -39,9 +39,9 @@ WorkspaceObjectWatcher::WorkspaceObjectWatcher(const openstudio::WorkspaceObject
 {
   detail::WorkspaceObject_ImplPtr objectImpl = workspaceObject.getImpl<detail::WorkspaceObject_Impl>();
  
-  connect(objectImpl.get(), &detail::WorkspaceObject_Impl::onRelationshipChange, this, &WorkspaceObjectWatcher::relationshipChange);
+  objectImpl.get()->detail::WorkspaceObject_Impl::onRelationshipChange.connect<WorkspaceObjectWatcher, &WorkspaceObjectWatcher::relationshipChange>(this);
 
-  connect(objectImpl.get(), &detail::WorkspaceObject_Impl::onRemoveFromWorkspace, this, static_cast<void (WorkspaceObjectWatcher::*)(Handle)>(&WorkspaceObjectWatcher::removedFromWorkspace));
+  objectImpl.get()->detail::WorkspaceObject_Impl::onRemoveFromWorkspace.connect<WorkspaceObjectWatcher, &WorkspaceObjectWatcher::removedFromWorkspace>(this);
 }
 
 WorkspaceObjectWatcher::~WorkspaceObjectWatcher() {}
@@ -63,7 +63,7 @@ void WorkspaceObjectWatcher::clearState()
   IdfObjectWatcher::clearState();
 }
 
-void WorkspaceObjectWatcher::onRelationshipChange(int index, Handle newHandle,Handle oldHandle) 
+void WorkspaceObjectWatcher::onRelationshipChange(int index, Handle newHandle,  Handle oldHandle) 
 {
   // onChange will be emitted with onRelationshipChange, that will set dirty
 }
@@ -73,16 +73,16 @@ void WorkspaceObjectWatcher::onRemoveFromWorkspace(Handle handle)
   // onChange will not be emitted with onRemoveFromWorkspace, dirty will not be set
 }
 
-void WorkspaceObjectWatcher::relationshipChange(int index,Handle newHandle,Handle oldHandle) 
+void WorkspaceObjectWatcher::relationshipChange(int index, Handle newHandle, Handle oldHandle) 
 {
   m_relationshipChanged = true;
 
   if (enabled()){
-    onRelationshipChange(index,newHandle,oldHandle);
+    onRelationshipChange(index, newHandle, oldHandle);
   }
 }
 
-void WorkspaceObjectWatcher::removedFromWorkspace(Handle handle)
+void WorkspaceObjectWatcher::removedFromWorkspace(const Handle &handle)
 {
   m_removedFromWorkspace = true;
 

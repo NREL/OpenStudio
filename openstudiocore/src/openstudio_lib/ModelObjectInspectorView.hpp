@@ -62,6 +62,7 @@ class ModelObjectInspectorView : public OSInspectorView
     // (eg, via GridView)
     virtual bool supportsMultipleObjectSelection() const { return false; }
     virtual std::vector<model::ModelObject> selectedObjects() const;
+    void update();
 
   signals:
 
@@ -74,6 +75,8 @@ class ModelObjectInspectorView : public OSInspectorView
     void itemsRequested();
 
     void dropZoneItemClicked(OSItem* item);
+
+    void onChange();
 
   public slots:
 

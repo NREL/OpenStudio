@@ -439,8 +439,8 @@ TEST_F(ModelFixture, ExampleModel_Save)
   Model model = exampleModel();
 
   openstudio::path path = toPath("./ExampleModel_Save.osm");
-  if(boost::filesystem::exists(path)){
-    boost::filesystem::remove(path);
+  if(openstudio::filesystem::exists(path)){
+    openstudio::filesystem::remove(path);
   }
 
   EXPECT_TRUE(model.save(path, true));
@@ -470,12 +470,12 @@ TEST_F(ModelFixture, ExampleModel_ReloadTwoTimes)
   Model model = exampleModel();
 
   openstudio::path path1 = toPath("./ExampleModel_ReloadTwoTimes1.osm");
-  if(boost::filesystem::exists(path1)){
-    boost::filesystem::remove(path1);
+  if(openstudio::filesystem::exists(path1)){
+    openstudio::filesystem::remove(path1);
   }
   openstudio::path path2 = toPath("./ExampleModel_ReloadTwoTimes2.osm");
-  if(boost::filesystem::exists(path2)){
-    boost::filesystem::remove(path2);
+  if(openstudio::filesystem::exists(path2)){
+    openstudio::filesystem::remove(path2);
   }
 
   EXPECT_TRUE(model.save(path1, true));

@@ -54,42 +54,42 @@ class ZoneCapacitanceMultiplierResearchSpecial;
 namespace detail {
 
   class MODEL_API SimulationControl_Impl : public ParentObject_Impl {
-    Q_OBJECT;
+    
 
-    Q_PROPERTY(bool doZoneSizingCalculation READ doZoneSizingCalculation WRITE setDoZoneSizingCalculation RESET resetDoZoneSizingCalculation);
-    Q_PROPERTY(bool isDoZoneSizingCalculationDefaulted READ isDoZoneSizingCalculationDefaulted);
+    
+    
 
-    Q_PROPERTY(bool doSystemSizingCalculation READ doSystemSizingCalculation WRITE setDoSystemSizingCalculation RESET resetDoSystemSizingCalculation);
-    Q_PROPERTY(bool isDoSystemSizingCalculationDefaulted READ isDoSystemSizingCalculationDefaulted);
+    
+    
 
-    Q_PROPERTY(bool doPlantSizingCalculation READ doPlantSizingCalculation WRITE setDoPlantSizingCalculation RESET resetDoPlantSizingCalculation);
-    Q_PROPERTY(bool isDoPlantSizingCalculationDefaulted READ isDoPlantSizingCalculationDefaulted);
+    
+    
 
-    Q_PROPERTY(bool runSimulationforSizingPeriods READ runSimulationforSizingPeriods WRITE setRunSimulationforSizingPeriods RESET resetRunSimulationforSizingPeriods);
-    Q_PROPERTY(bool isRunSimulationforSizingPeriodsDefaulted READ isRunSimulationforSizingPeriodsDefaulted);
+    
+    
 
-    Q_PROPERTY(bool runSimulationforWeatherFileRunPeriods READ runSimulationforWeatherFileRunPeriods WRITE setRunSimulationforWeatherFileRunPeriods RESET resetRunSimulationforWeatherFileRunPeriods);
-    Q_PROPERTY(bool isRunSimulationforWeatherFileRunPeriodsDefaulted READ isRunSimulationforWeatherFileRunPeriodsDefaulted);
+    
+    
 
-    Q_PROPERTY(double loadsConvergenceToleranceValue READ loadsConvergenceToleranceValue WRITE setLoadsConvergenceToleranceValue RESET resetLoadsConvergenceToleranceValue);
-    Q_PROPERTY(openstudio::Quantity loadsConvergenceToleranceValue_SI READ loadsConvergenceToleranceValue_SI WRITE setLoadsConvergenceToleranceValue RESET resetLoadsConvergenceToleranceValue);
-    Q_PROPERTY(openstudio::Quantity loadsConvergenceToleranceValue_IP READ loadsConvergenceToleranceValue_IP WRITE setLoadsConvergenceToleranceValue RESET resetLoadsConvergenceToleranceValue);
-    Q_PROPERTY(bool isLoadsConvergenceToleranceValueDefaulted READ isLoadsConvergenceToleranceValueDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double temperatureConvergenceToleranceValue READ temperatureConvergenceToleranceValue WRITE setTemperatureConvergenceToleranceValue RESET resetTemperatureConvergenceToleranceValue);
-    Q_PROPERTY(openstudio::Quantity temperatureConvergenceToleranceValue_SI READ temperatureConvergenceToleranceValue_SI WRITE setTemperatureConvergenceToleranceValue RESET resetTemperatureConvergenceToleranceValue);
-    Q_PROPERTY(openstudio::Quantity temperatureConvergenceToleranceValue_IP READ temperatureConvergenceToleranceValue_IP WRITE setTemperatureConvergenceToleranceValue RESET resetTemperatureConvergenceToleranceValue);
-    Q_PROPERTY(bool isTemperatureConvergenceToleranceValueDefaulted READ isTemperatureConvergenceToleranceValueDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(std::string solarDistribution READ solarDistribution WRITE setSolarDistribution RESET resetSolarDistribution);
-    Q_PROPERTY(bool isSolarDistributionDefaulted READ isSolarDistributionDefaulted);
-    Q_PROPERTY(std::vector<std::string> solarDistributionValues READ solarDistributionValues);
+    
+    
+    
 
-    Q_PROPERTY(int maximumNumberofWarmupDays READ maximumNumberofWarmupDays WRITE setMaximumNumberofWarmupDays RESET resetMaximumNumberofWarmupDays);
-    Q_PROPERTY(bool isMaximumNumberofWarmupDaysDefaulted READ isMaximumNumberofWarmupDaysDefaulted);
+    
+    
 
-    Q_PROPERTY(int minimumNumberofWarmupDays READ minimumNumberofWarmupDays WRITE setMinimumNumberofWarmupDays RESET resetMinimumNumberofWarmupDays);
-    Q_PROPERTY(bool isMinimumNumberofWarmupDaysDefaulted READ isMinimumNumberofWarmupDaysDefaulted);
+    
+    
 
    public:
 

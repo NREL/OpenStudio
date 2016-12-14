@@ -49,7 +49,7 @@ TEST_F(OpenStudioAppFixture, Resources_Templates)
 {
   openstudio::path resourcesPath = getApplicationSourceDirectory() / openstudio::toPath("src/openstudio_app/Resources");
 
-  ASSERT_TRUE(boost::filesystem::exists(resourcesPath));
+  ASSERT_TRUE(openstudio::filesystem::exists(resourcesPath));
   ASSERT_FALSE(isEmptyDirectory(resourcesPath));
 
   QDir resourcesDir(toQString(resourcesPath));
@@ -59,7 +59,7 @@ TEST_F(OpenStudioAppFixture, Resources_Templates)
   EXPECT_FALSE(files.empty());
   for (const QFileInfo& file : files) {
     openstudio::path path = toPath(file.absoluteFilePath());
-    EXPECT_TRUE(boost::filesystem::exists(path));
+    EXPECT_TRUE(openstudio::filesystem::exists(path));
 
     osversion::VersionTranslator vt;
     boost::optional<model::Model> model = vt.loadModel(path);
@@ -81,7 +81,7 @@ TEST_F(OpenStudioAppFixture, Resources_HVACLibrary)
 {
   openstudio::path hvacPath = getApplicationSourceDirectory() / openstudio::toPath("src/openstudio_app/Resources/hvaclibrary/hvac_library.osm");
 
-  ASSERT_TRUE(boost::filesystem::exists(hvacPath));
+  ASSERT_TRUE(openstudio::filesystem::exists(hvacPath));
 
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(hvacPath);

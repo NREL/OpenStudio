@@ -43,20 +43,20 @@ namespace detail {
 
   /** SizingPlant_Impl is a ModelObject_Impl that is the implementation class for SizingPlant.*/
   class MODEL_API SizingPlant_Impl : public ModelObject_Impl {
-    Q_OBJECT;
+    
 
-    Q_PROPERTY(std::string loopType READ loopType WRITE setLoopType);
-    Q_PROPERTY(std::vector<std::string> loopTypeValues READ loopTypeValues);
+    
+    
 
-    Q_PROPERTY(double designLoopExitTemperature READ designLoopExitTemperature WRITE setDesignLoopExitTemperature);
-    Q_PROPERTY(openstudio::Quantity designLoopExitTemperature_SI READ designLoopExitTemperature_SI WRITE setDesignLoopExitTemperature);
-    Q_PROPERTY(openstudio::Quantity designLoopExitTemperature_IP READ designLoopExitTemperature_IP WRITE setDesignLoopExitTemperature);
+    
+    
+    
 
-    Q_PROPERTY(double loopDesignTemperatureDifference READ loopDesignTemperatureDifference WRITE setLoopDesignTemperatureDifference);
-    Q_PROPERTY(openstudio::Quantity loopDesignTemperatureDifference_SI READ loopDesignTemperatureDifference_SI WRITE setLoopDesignTemperatureDifference);
-    Q_PROPERTY(openstudio::Quantity loopDesignTemperatureDifference_IP READ loopDesignTemperatureDifference_IP WRITE setLoopDesignTemperatureDifference);
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> plantLoop READ plantLoopAsModelObject WRITE setPlantLoopAsModelObject);
+    
 
     public:
 

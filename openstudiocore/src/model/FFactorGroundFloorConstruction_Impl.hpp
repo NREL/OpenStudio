@@ -40,19 +40,19 @@ namespace detail {
 
   class MODEL_API FFactorGroundFloorConstruction_Impl : public ConstructionBase_Impl 
   {
-    Q_OBJECT;
+    
 
-    Q_PROPERTY(double fFactor READ fFactor WRITE setFFactor);
-    Q_PROPERTY(openstudio::Quantity fFactor_SI READ fFactor_SI WRITE setFFactor);
-    Q_PROPERTY(openstudio::Quantity fFactor_IP READ fFactor_IP WRITE setFFactor);    
+    
+    
+        
 
-    Q_PROPERTY(double area READ area WRITE setArea);
-    Q_PROPERTY(openstudio::Quantity area_SI READ area_SI WRITE setArea);
-    Q_PROPERTY(openstudio::Quantity area_IP READ area_IP WRITE setArea);    
+    
+    
+        
 
-    Q_PROPERTY(double perimeterExposed READ perimeterExposed WRITE setPerimeterExposed);
-    Q_PROPERTY(openstudio::Quantity perimeterExposed_SI READ perimeterExposed_SI WRITE setPerimeterExposed);
-    Q_PROPERTY(openstudio::Quantity perimeterExposed_IP READ perimeterExposed_IP WRITE setPerimeterExposed);    
+    
+    
+        
 
   public:
 

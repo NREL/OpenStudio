@@ -44,19 +44,19 @@ namespace detail {
 
   /** ZoneHVACBaseboardConvectiveElectric_Impl is a ZoneHVACComponent_Impl that is the implementation class for ZoneHVACBaseboardConvectiveElectric.*/
   class MODEL_API ZoneHVACBaseboardConvectiveElectric_Impl : public ZoneHVACComponent_Impl {
-    Q_OBJECT;
+    
 
-    Q_PROPERTY(boost::optional<double> nominalCapacity READ nominalCapacity WRITE setNominalCapacity);
-    Q_PROPERTY(openstudio::OSOptionalQuantity nominalCapacity_SI READ nominalCapacity_SI WRITE setNominalCapacity);
-    Q_PROPERTY(openstudio::OSOptionalQuantity nominalCapacity_IP READ nominalCapacity_IP WRITE setNominalCapacity);
-    Q_PROPERTY(bool isNominalCapacityAutosized READ isNominalCapacityAutosized);
+    
+    
+    
+    
 
-    Q_PROPERTY(double efficiency READ efficiency WRITE setEfficiency RESET resetEfficiency);
-    Q_PROPERTY(openstudio::Quantity efficiency_SI READ efficiency_SI WRITE setEfficiency RESET resetEfficiency);
-    Q_PROPERTY(openstudio::Quantity efficiency_IP READ efficiency_IP WRITE setEfficiency RESET resetEfficiency);
-    Q_PROPERTY(bool isEfficiencyDefaulted READ isEfficiencyDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> availabilitySchedule READ availabilityScheduleAsModelObject WRITE setAvailabilityScheduleAsModelObject);
+    
    public:
     /** @name Constructors and Destructors */
     //@{

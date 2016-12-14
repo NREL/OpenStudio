@@ -45,45 +45,45 @@ namespace detail {
 
   /** SetpointManagerOutdoorAirReset_Impl is a SetpointManager_Impl that is the implementation class for SetpointManagerOutdoorAirReset.*/
   class MODEL_API SetpointManagerOutdoorAirReset_Impl : public SetpointManager_Impl {
-    Q_OBJECT;
+    
 
-    Q_PROPERTY(std::string controlVariable READ controlVariable WRITE setControlVariable RESET resetControlVariable);
-    Q_PROPERTY(bool isControlVariableDefaulted READ isControlVariableDefaulted);
-    Q_PROPERTY(std::vector<std::string> controlVariableValues READ controlVariableValues);
+    
+    
+    
 
-    Q_PROPERTY(double setpointatOutdoorLowTemperature READ setpointatOutdoorLowTemperature WRITE setSetpointatOutdoorLowTemperature);
-    Q_PROPERTY(openstudio::Quantity setpointatOutdoorLowTemperature_SI READ setpointatOutdoorLowTemperature_SI WRITE setSetpointatOutdoorLowTemperature);
-    Q_PROPERTY(openstudio::Quantity setpointatOutdoorLowTemperature_IP READ setpointatOutdoorLowTemperature_IP WRITE setSetpointatOutdoorLowTemperature);
+    
+    
+    
 
-    Q_PROPERTY(double outdoorLowTemperature READ outdoorLowTemperature WRITE setOutdoorLowTemperature);
-    Q_PROPERTY(openstudio::Quantity outdoorLowTemperature_SI READ outdoorLowTemperature_SI WRITE setOutdoorLowTemperature);
-    Q_PROPERTY(openstudio::Quantity outdoorLowTemperature_IP READ outdoorLowTemperature_IP WRITE setOutdoorLowTemperature);
+    
+    
+    
 
-    Q_PROPERTY(double setpointatOutdoorHighTemperature READ setpointatOutdoorHighTemperature WRITE setSetpointatOutdoorHighTemperature);
-    Q_PROPERTY(openstudio::Quantity setpointatOutdoorHighTemperature_SI READ setpointatOutdoorHighTemperature_SI WRITE setSetpointatOutdoorHighTemperature);
-    Q_PROPERTY(openstudio::Quantity setpointatOutdoorHighTemperature_IP READ setpointatOutdoorHighTemperature_IP WRITE setSetpointatOutdoorHighTemperature);
+    
+    
+    
 
-    Q_PROPERTY(double outdoorHighTemperature READ outdoorHighTemperature WRITE setOutdoorHighTemperature);
-    Q_PROPERTY(openstudio::Quantity outdoorHighTemperature_SI READ outdoorHighTemperature_SI WRITE setOutdoorHighTemperature);
-    Q_PROPERTY(openstudio::Quantity outdoorHighTemperature_IP READ outdoorHighTemperature_IP WRITE setOutdoorHighTemperature);
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<double> setpointatOutdoorLowTemperature2 READ setpointatOutdoorLowTemperature2 WRITE setSetpointatOutdoorLowTemperature2 RESET resetSetpointatOutdoorLowTemperature2);
-    Q_PROPERTY(openstudio::OSOptionalQuantity setpointatOutdoorLowTemperature2_SI READ setpointatOutdoorLowTemperature2_SI WRITE setSetpointatOutdoorLowTemperature2 RESET resetSetpointatOutdoorLowTemperature2);
-    Q_PROPERTY(openstudio::OSOptionalQuantity setpointatOutdoorLowTemperature2_IP READ setpointatOutdoorLowTemperature2_IP WRITE setSetpointatOutdoorLowTemperature2 RESET resetSetpointatOutdoorLowTemperature2);
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<double> outdoorLowTemperature2 READ outdoorLowTemperature2 WRITE setOutdoorLowTemperature2 RESET resetOutdoorLowTemperature2);
-    Q_PROPERTY(openstudio::OSOptionalQuantity outdoorLowTemperature2_SI READ outdoorLowTemperature2_SI WRITE setOutdoorLowTemperature2 RESET resetOutdoorLowTemperature2);
-    Q_PROPERTY(openstudio::OSOptionalQuantity outdoorLowTemperature2_IP READ outdoorLowTemperature2_IP WRITE setOutdoorLowTemperature2 RESET resetOutdoorLowTemperature2);
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<double> setpointatOutdoorHighTemperature2 READ setpointatOutdoorHighTemperature2 WRITE setSetpointatOutdoorHighTemperature2 RESET resetSetpointatOutdoorHighTemperature2);
-    Q_PROPERTY(openstudio::OSOptionalQuantity setpointatOutdoorHighTemperature2_SI READ setpointatOutdoorHighTemperature2_SI WRITE setSetpointatOutdoorHighTemperature2 RESET resetSetpointatOutdoorHighTemperature2);
-    Q_PROPERTY(openstudio::OSOptionalQuantity setpointatOutdoorHighTemperature2_IP READ setpointatOutdoorHighTemperature2_IP WRITE setSetpointatOutdoorHighTemperature2 RESET resetSetpointatOutdoorHighTemperature2);
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<double> outdoorHighTemperature2 READ outdoorHighTemperature2 WRITE setOutdoorHighTemperature2 RESET resetOutdoorHighTemperature2);
-    Q_PROPERTY(openstudio::OSOptionalQuantity outdoorHighTemperature2_SI READ outdoorHighTemperature2_SI WRITE setOutdoorHighTemperature2 RESET resetOutdoorHighTemperature2);
-    Q_PROPERTY(openstudio::OSOptionalQuantity outdoorHighTemperature2_IP READ outdoorHighTemperature2_IP WRITE setOutdoorHighTemperature2 RESET resetOutdoorHighTemperature2);
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> schedule READ scheduleAsModelObject WRITE setScheduleAsModelObject RESET resetSchedule);
+    
    public:
     /** @name Constructors and Destructors */
     //@{

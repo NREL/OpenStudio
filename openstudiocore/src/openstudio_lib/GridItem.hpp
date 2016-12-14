@@ -33,6 +33,7 @@
 #include <QCoreApplication>
 #include <QPixmap>
 #include <QPointer>
+#include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
 #include "../model/ModelObject.hpp"
 #include "../model/Node.hpp"
 #include "../model/Mixer.hpp"
@@ -51,7 +52,7 @@ class RemoveButtonItem;
 
 class NodeContextButtonItem;
 
-class ModelObjectGraphicsItem : public QGraphicsObject
+class ModelObjectGraphicsItem : public QGraphicsObject, public Nano::Observer
 {
   Q_OBJECT;
 

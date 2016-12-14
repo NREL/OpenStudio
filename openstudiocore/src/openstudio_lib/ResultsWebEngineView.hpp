@@ -35,7 +35,7 @@
 namespace openstudio {
   class ResultsWebView : public QWebEngineView
   {
-    Q_OBJECT;
+    //Q_OBJECT;
 
     public:
 

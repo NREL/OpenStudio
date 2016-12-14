@@ -30,13 +30,14 @@
 #define SHAREDGUICOMPONENTS_OSQOBJECTCONTROLLER_HPP
 
 #include <QObject>
+#include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
 
 #include <vector>
 
 namespace openstudio{
   
 
-class OSQObjectController : public QObject
+class OSQObjectController : public QObject, public Nano::Observer
 {
   Q_OBJECT
 

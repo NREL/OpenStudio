@@ -35,7 +35,7 @@
 #include "../utilities/core/Enum.hpp"
 #include "../utilities/core/Logger.hpp"
 
-#include <boost/filesystem/fstream.hpp>
+
 #include <string>
 #include <vector>
 
@@ -74,7 +74,7 @@ namespace energyplus {
 
     REGISTER_LOGGER("energyplus.ErrorFile");
 
-    void parse(boost::filesystem::ifstream& is);
+    void parse(openstudio::filesystem::ifstream& is);
 
     std::vector<std::string> m_warnings;
     std::vector<std::string> m_severeErrors;

@@ -503,9 +503,9 @@ namespace detail {
 
     int i = 0;
     int N = objectImplPtrs.size();
-    emit progressRange(0, 3*N);
-    emit progressValue(0);
-    emit progressCaption("Adding Objects");
+    this->progressRange.nano_emit(0, 3*N);
+    this->progressValue.nano_emit(0);
+    this->progressCaption.nano_emit("Adding Objects");
 
     // step 1: add to maps
     bool ok = true;
@@ -518,14 +518,14 @@ namespace detail {
       else {
         LOG(Error,"Tried to add two objects with the same handle: " << ptr->handle());
       }
-      emit progressValue(++i);
+      this->progressValue.nano_emit(++i);
     }
 
     // step 2: replace string pointers
     if (ok){
       for (WorkspaceObject_ImplPtr& ptr : objectImplPtrs) {
         ptr->initializeOnAdd(expectToLosePointers);
-        emit progressValue(++i);
+        this->progressValue.nano_emit(++i);
       }
     }
 
@@ -539,7 +539,7 @@ namespace detail {
       for (WorkspaceObject_ImplPtr& ptr : objectImplPtrs) {
         ptr->setInitialized();
         newObjects.push_back(WorkspaceObject(ptr));
-        emit progressValue(++i);
+        this->progressValue.nano_emit(++i);
       }
     }
 
@@ -594,13 +594,13 @@ namespace detail {
     int i = 0;
     int N = objectImplPtrs.size();
     if (oldNewHandleMap.empty()) {
-      emit progressRange(0, 2*N);
+      this->progressRange.nano_emit(0, 2*N);
     }
     else {
-      emit progressRange(0, 3*N);
+      this->progressRange.nano_emit(0, 3*N);
     }
-    emit progressValue(0);
-    emit progressCaption("Cloning Objects");
+    this->progressValue.nano_emit(0);
+    this->progressCaption.nano_emit("Cloning Objects");
 
     // step 1: add objects to maps
     HandleVector newHandles;
@@ -609,14 +609,14 @@ namespace detail {
       m_workspaceObjectMap.insert(WorkspaceObjectMap::value_type(newHandles.back(),ptr));
       insertIntoIddObjectTypeMap(ptr);
       insertIntoIdfReferencesMap(ptr);
-      emit progressValue(++i);
+      this->progressValue.nano_emit(++i);
     }
 
     // step 2: apply handle map to pointers
     if (!oldNewHandleMap.empty()) {
       for (const WorkspaceObject_ImplPtr& ptr : objectImplPtrs) {
         ptr->initializeOnClone(oldNewHandleMap);
-        emit progressValue(++i);
+        this->progressValue.nano_emit(++i);
       }
     }
 
@@ -647,7 +647,7 @@ namespace detail {
     for (WorkspaceObject_ImplPtr& ptr : objectImplPtrs) {
       ptr->setInitialized();
       newObjects.push_back(WorkspaceObject(ptr));
-      emit progressValue(++i);
+      this->progressValue.nano_emit(++i);
     }
 
     // step 6: check validity
@@ -1493,8 +1493,8 @@ namespace detail {
       return true;
     } // trivially satisfied
 
-    emit removeWorkspaceObject(WorkspaceObject(objectData->objectImplPtr), objectData->objectImplPtr->iddObject().type(), objectData->handle);
-    emit removeWorkspaceObject(objectData->objectImplPtr, objectData->objectImplPtr->iddObject().type(), objectData->handle);
+    this->removeWorkspaceObject.nano_emit(WorkspaceObject(objectData->objectImplPtr), objectData->objectImplPtr->iddObject().type(), objectData->handle);
+    this->removeWorkspaceObjectPtr.nano_emit(objectData->objectImplPtr, objectData->objectImplPtr->iddObject().type(), objectData->handle);
 
     // actual work of removing from maps--is always successful
     WorkspaceObjectVector sources = nominallyRemoveObject(handle);
@@ -1504,7 +1504,7 @@ namespace detail {
     if ((m_strictnessLevel < StrictnessLevel::Final) || isValid()) {
       std::vector<Handle> removedHandles(1, handle);
       registerRemovalOfObject(objectData->objectImplPtr,sources,removedHandles);
-      emit onChange();
+      this->onChange.nano_emit();
       return true;
     }
     else {
@@ -1527,8 +1527,8 @@ namespace detail {
     }
 
     for (SavedWorkspaceObject savedObject : objectData) {
-      emit removeWorkspaceObject(WorkspaceObject(savedObject.objectImplPtr), savedObject.objectImplPtr->iddObject().type(), savedObject.handle);
-      emit removeWorkspaceObject(savedObject.objectImplPtr, savedObject.objectImplPtr->iddObject().type(), savedObject.handle);
+      this->removeWorkspaceObject.nano_emit(WorkspaceObject(savedObject.objectImplPtr), savedObject.objectImplPtr->iddObject().type(), savedObject.handle);
+      this->removeWorkspaceObjectPtr.nano_emit(savedObject.objectImplPtr, savedObject.objectImplPtr->iddObject().type(), savedObject.handle);
     }
 
     // actual work of removing from maps--is always successful
@@ -1536,7 +1536,7 @@ namespace detail {
 
     if ((m_strictnessLevel < StrictnessLevel::Final) || isValid()) {
       registerRemovalOfObjects(objectData,sources,handles);
-      emit onChange();
+      this->onChange.nano_emit();
       return true;
     }
     else {
@@ -1726,9 +1726,9 @@ namespace detail {
     ValidityReport report(level);
 
     int i = 0;
-    emit progressRange(0, static_cast<int>(numObjects()));
-    emit progressValue(i);
-    emit progressCaption("Checking Validity");
+    this->progressRange.nano_emit(0, static_cast<int>(numObjects()));
+    this->progressValue.nano_emit(i);
+    this->progressCaption.nano_emit("Checking Validity");
 
     // StrictnessLevel::None
     // DataErrorType::NoIdd
@@ -1798,7 +1798,7 @@ namespace detail {
         }
       } // StrictnessLevel::Draft
 
-      emit progressValue(++i);
+      this->progressValue.nano_emit(++i);
     }
 
     // StrictnessLevel::Draft
@@ -2326,7 +2326,7 @@ namespace detail {
       }
     }
     ptr->disconnect();
-    disconnect(ptr.get(), &WorkspaceObject_Impl::onChange, this, &Workspace_Impl::change);
+    ptr.get()->onChange.disconnect<Workspace_Impl, &Workspace_Impl::change>(this);
   }
 
   void Workspace_Impl::registerRemovalOfObjects(std::vector<SavedWorkspaceObject>& savedObjects,
@@ -2339,10 +2339,11 @@ namespace detail {
   }
 
   void Workspace_Impl::registerAdditionOfObject(const WorkspaceObject& object) {
-    connect(object.getImpl<WorkspaceObject_Impl>().get(), &WorkspaceObject_Impl::onChange, this, &Workspace_Impl::change);
-    emit addWorkspaceObject(object, object.iddObject().type(), object.handle());
-    emit addWorkspaceObject(object.getImpl<WorkspaceObject_Impl>(), object.iddObject().type(), object.handle());
-    emit onChange();
+    object.getImpl<WorkspaceObject_Impl>().get()->WorkspaceObject_Impl::onChange.connect<Workspace_Impl, &Workspace_Impl::change>(this);
+    auto sh_ptr = object.getImpl<WorkspaceObject_Impl>();
+    this->addWorkspaceObject.nano_emit(object, object.iddObject().type(), object.handle());
+    this->addWorkspaceObjectPtr.nano_emit(sh_ptr, object.iddObject().type(), object.handle());
+    this->onChange.nano_emit();
   }
 
   void Workspace_Impl::restoreObject(SavedWorkspaceObject& savedObject) {
@@ -2407,10 +2408,10 @@ namespace detail {
         {
           if (relativity == URLSearchPath::ToInputFile)
           {
-            completesearchpath = boost::filesystem::complete(searchpath, t_infile.parent_path());
+            completesearchpath = openstudio::filesystem::complete(searchpath, t_infile.parent_path());
           } else {
             // relative to where app was started from
-            completesearchpath = boost::filesystem::complete(searchpath);
+            completesearchpath = openstudio::filesystem::complete(searchpath);
           }
         }
 
@@ -2647,7 +2648,7 @@ namespace detail {
   }
 
   void Workspace_Impl::change() {
-    emit onChange();
+    this->onChange.nano_emit();
   }
 
   void Workspace_Impl::createAndAddClonedObjects(
@@ -3019,19 +3020,27 @@ bool Workspace::operator!=(const Workspace& other) const {
 }
 
 // connect a progress bar
-bool Workspace::connectProgressBar(const openstudio::ProgressBar& progressBar) const
+bool Workspace::connectProgressBar(openstudio::ProgressBar& progressBar)
 {
-  bool result = true;
-  result = result && progressBar.connect(m_impl.get(), SIGNAL(progressRange(int, int)), SLOT(setRange(int, int)));
-  result = result && progressBar.connect(m_impl.get(), SIGNAL(progressValue(int)), SLOT(setValue(int)));
-  result = result && progressBar.connect(m_impl.get(), SIGNAL(progressCaption(const QString&)), SLOT(setWindowTitle(const QString&)));
-  return result;
+  m_impl.get()->progressRange.connect<ProgressBar, &ProgressBar::setRange>(&progressBar);
+  m_impl.get()->progressValue.connect<ProgressBar, &ProgressBar::setValue>(&progressBar);
+  m_impl.get()->progressCaption.connect<ProgressBar, &ProgressBar::setWindowTitle>(&progressBar);
+
+  // result = result && progressBar.connect(m_impl.get(), SIGNAL(progressRange(int, int)), SLOT(setRange(int, int)));
+  // result = result && progressBar.connect(m_impl.get(), SIGNAL(progressValue(int)), SLOT(setValue(int)));
+  // result = result && progressBar.connect(m_impl.get(), SIGNAL(progressCaption(const QString&)), SLOT(setWindowTitle(const QString&)));
+  return true;
 }
 
 // disconnect a progress bar
-bool Workspace::disconnectProgressBar(const openstudio::ProgressBar& progressBar) const
+bool Workspace::disconnectProgressBar(openstudio::ProgressBar& progressBar)
 {
-  return m_impl.get()->disconnect(&progressBar);
+  
+  m_impl.get()->progressRange.disconnect<ProgressBar, &ProgressBar::setRange>(&progressBar);
+  m_impl.get()->progressValue.disconnect<ProgressBar, &ProgressBar::setValue>(&progressBar);
+  m_impl.get()->progressCaption.disconnect<ProgressBar, &ProgressBar::setWindowTitle>(&progressBar);
+
+  return true; /* m_impl.get()->disconnect(&progressBar); */
 }
 
 // SERIALIZATION

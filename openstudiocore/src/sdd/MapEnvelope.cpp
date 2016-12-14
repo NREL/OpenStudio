@@ -64,7 +64,6 @@
 #include "../utilities/units/WhUnit.hpp"
 #include "../utilities/core/Assert.hpp"
 
-#include <QFile>
 #include <QDomDocument>
 #include <QDomElement>
 

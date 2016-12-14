@@ -30,15 +30,13 @@
 #define GENERATEIDDFACTORY_GENERATEIDDFACTORY_HPP
 
 #include "IddFileFactoryData.hpp"
-
-#include <boost/filesystem/fstream.hpp>
-#include <boost/filesystem/path.hpp>
+#include "../utilities/core/Filesystem.hpp"
 
 #include <vector>
 
 namespace openstudio {
 
-typedef boost::filesystem::path path;
+typedef openstudio::filesystem::path path;
 
 /** Initialize one IddFileFactoryData object per Idd file, based on user input arguments. Throws 
  *  on input error. */

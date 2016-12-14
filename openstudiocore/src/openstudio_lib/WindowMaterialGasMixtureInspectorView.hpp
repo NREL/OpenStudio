@@ -30,22 +30,17 @@
 #define OPENSTUDIO_WINDOWMATERIALGASMIXTUREINSPECTORVIEW_HPP
 
 #include "ModelObjectInspectorView.hpp"
+#include "../model/GasMixture.hpp"
 
 namespace openstudio {
 
-namespace model {
+class OSComboBox2;
 
-  class GasMixture;
+class OSIntegerEdit2;
 
-}
+class OSLineEdit2;
 
-class OSComboBox;
-
-class OSIntegerEdit;
-
-class OSLineEdit;
-
-class OSQuantityEdit;
+class OSQuantityEdit2;
 
 class StandardsInformationMaterialWidget;
 
@@ -79,30 +74,32 @@ class WindowMaterialGasMixtureInspectorView : public ModelObjectInspectorView
 
     bool m_isIP;
 
-    OSLineEdit * m_nameEdit = nullptr;
+    boost::optional<model::GasMixture> m_gasMixture;
 
-    OSComboBox * m_gas1Type = nullptr;
-    OSComboBox * m_gas2Type = nullptr;
-    OSComboBox * m_gas3Type = nullptr;
-    OSComboBox * m_gas4Type = nullptr;
+    OSLineEdit2 * m_nameEdit = nullptr;
 
-    OSLineEdit * m_2AEdit = nullptr;
+    OSComboBox2 * m_gas1Type = nullptr;
+    OSComboBox2 * m_gas2Type = nullptr;
+    OSComboBox2 * m_gas3Type = nullptr;
+    OSComboBox2 * m_gas4Type = nullptr;
 
-    OSLineEdit * m_3AEdit = nullptr;
+    OSLineEdit2 * m_2AEdit = nullptr;
 
-    OSLineEdit * m_4AEdit = nullptr;
+    OSLineEdit2 * m_3AEdit = nullptr;
 
-    OSQuantityEdit * m_thickness = nullptr;
+    OSLineEdit2 * m_4AEdit = nullptr;
 
-    OSIntegerEdit * m_numberOfGasesInMixture = nullptr;
+    OSQuantityEdit2 * m_thickness = nullptr;
 
-    OSQuantityEdit * m_gas1Fraction = nullptr;
+    OSIntegerEdit2 * m_numberOfGasesInMixture = nullptr;
 
-    OSQuantityEdit * m_gas2Fraction = nullptr;
+    OSQuantityEdit2 * m_gas1Fraction = nullptr;
 
-    OSQuantityEdit * m_gas3Fraction = nullptr;
+    OSQuantityEdit2 * m_gas2Fraction = nullptr;
 
-    OSQuantityEdit * m_gas4Fraction = nullptr;
+    OSQuantityEdit2 * m_gas3Fraction = nullptr;
+
+    OSQuantityEdit2 * m_gas4Fraction = nullptr;
 
     StandardsInformationMaterialWidget * m_standardsInformationWidget = nullptr;
 

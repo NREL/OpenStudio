@@ -38,7 +38,7 @@
 namespace openstudio {
 
 class OSDropZone;
-class OSLineEdit;
+class OSLineEdit2;
 
 class HoursOfOperationVC : public ModelObjectVectorController
 {
@@ -209,7 +209,7 @@ class ScheduleSetInspectorView : public ModelObjectInspectorView
     void detach();
     void configDropZones();
 
-    OSLineEdit * m_nameEdit;
+    OSLineEdit2 * m_nameEdit;
 
     OSDropZone * m_hoursOfOperationDZ;
     OSDropZone * m_numberOfPeopleDZ;
@@ -235,6 +235,8 @@ class ScheduleSetInspectorView : public ModelObjectInspectorView
 
     std::vector<ModelObjectVectorController *> m_vectorControllers;
     std::vector<OSDropZone *> m_dropZones;
+
+    boost::optional<model::DefaultScheduleSet> m_defaultScheduleSet;
 };
 
 } // openstudio

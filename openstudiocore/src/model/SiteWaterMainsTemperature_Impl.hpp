@@ -44,19 +44,19 @@ namespace detail {
 
   /** SiteWaterMainsTemperature_Impl is a ModelObject_Impl that is the implementation class for SiteWaterMainsTemperature.*/
   class MODEL_API SiteWaterMainsTemperature_Impl : public ModelObject_Impl {
-    Q_OBJECT;
-    Q_PROPERTY(std::string calculationMethod READ calculationMethod WRITE setCalculationMethod);
-    Q_PROPERTY(std::vector<std::string> calculationMethodValues READ calculationMethodValues);
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<double> annualAverageOutdoorAirTemperature READ annualAverageOutdoorAirTemperature WRITE setAnnualAverageOutdoorAirTemperature RESET resetAnnualAverageOutdoorAirTemperature);
-    Q_PROPERTY(openstudio::OSOptionalQuantity annualAverageOutdoorAirTemperature_SI READ annualAverageOutdoorAirTemperature_SI WRITE setAnnualAverageOutdoorAirTemperature RESET resetAnnualAverageOutdoorAirTemperature);
-    Q_PROPERTY(openstudio::OSOptionalQuantity annualAverageOutdoorAirTemperature_IP READ annualAverageOutdoorAirTemperature_IP WRITE setAnnualAverageOutdoorAirTemperature RESET resetAnnualAverageOutdoorAirTemperature);
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<double> maximumDifferenceInMonthlyAverageOutdoorAirTemperatures READ maximumDifferenceInMonthlyAverageOutdoorAirTemperatures WRITE setMaximumDifferenceInMonthlyAverageOutdoorAirTemperatures RESET resetMaximumDifferenceInMonthlyAverageOutdoorAirTemperatures);
-    Q_PROPERTY(openstudio::OSOptionalQuantity maximumDifferenceInMonthlyAverageOutdoorAirTemperatures_SI READ maximumDifferenceInMonthlyAverageOutdoorAirTemperatures_SI WRITE setMaximumDifferenceInMonthlyAverageOutdoorAirTemperatures RESET resetMaximumDifferenceInMonthlyAverageOutdoorAirTemperatures);
-    Q_PROPERTY(openstudio::OSOptionalQuantity maximumDifferenceInMonthlyAverageOutdoorAirTemperatures_IP READ maximumDifferenceInMonthlyAverageOutdoorAirTemperatures_IP WRITE setMaximumDifferenceInMonthlyAverageOutdoorAirTemperatures RESET resetMaximumDifferenceInMonthlyAverageOutdoorAirTemperatures);
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> temperatureSchedule READ temperatureScheduleAsModelObject WRITE setTemperatureScheduleAsModelObject RESET resetTemperatureSchedule);
+    
    public:
     /** @name Constructors and Destructors */
     //@{

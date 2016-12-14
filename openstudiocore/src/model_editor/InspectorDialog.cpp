@@ -202,7 +202,7 @@ bool InspectorDialog::setSelectedObjectHandles(const std::vector<openstudio::Han
 
     QString handleString = m_tableWidget->item(i,0)->data(Qt::UserRole).toString();
     //std::string temp = toString(handleString);
-    Handle handle(handleString);
+    Handle handle(toUUID(handleString));
 
     auto it = std::find(m_selectedObjectHandles.begin(),
                         m_selectedObjectHandles.end(),
@@ -289,9 +289,6 @@ void InspectorDialog::setModel(openstudio::model::Model& model, bool force)
   if ((model == m_model) && !force){
     return;
   }
-
-  // disconnect all signals with previous model
-  disconnect(m_model.getImpl<openstudio::model::detail::Model_Impl>().get(), nullptr, this, nullptr);
 
   // change model
   m_model = model;
@@ -442,7 +439,7 @@ void InspectorDialog::onTableWidgetSelectionChanged()
   setSelectedObjectHandles(selectedObjectHandles, true);
 }
 
-void InspectorDialog::onAddWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl)
+void InspectorDialog::onAddWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& type, const openstudio::UUID& uuid)
 {
   m_workspaceObjectAdded = true;
   m_workspaceChanged = true;
@@ -492,7 +489,7 @@ void InspectorDialog::onTimeout()
   }
 }
 
-void InspectorDialog::onRemoveWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl)
+void InspectorDialog::onRemoveWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& type, const openstudio::UUID& uuid)
 {
   m_workspaceObjectRemoved = true;
   m_workspaceChanged = true;
@@ -540,7 +537,7 @@ void InspectorDialog::init(InspectorDialogClient client)
       break;
     case InspectorDialogClient::SketchUpPlugin:
 
-      openstudio::model::AccessPolicyStore::Instance().loadFile(sketchUpPluginPolicy);
+      openstudio::model::AccessPolicyStore::Instance().loadFile(sketchUpPluginPolicy.readAll());
 
       m_iddFile = IddFactory::instance().getIddFile(IddFileType::OpenStudio);
 
@@ -951,17 +948,11 @@ void InspectorDialog::connectSelfSignalsAndSlots()
 
 void InspectorDialog::connectModelSignalsAndSlots()
 {
-  connect(m_model.getImpl<model::detail::Model_Impl>().get(),
-    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::addWorkspaceObject),
-    this,
-    &InspectorDialog::onAddWorkspaceObject);
+  m_model.getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.connect<InspectorDialog, &InspectorDialog::onAddWorkspaceObject>(this);
 
-  connect(m_model.getImpl<model::detail::Model_Impl>().get(), &model::detail::Model_Impl::onChange, this, &InspectorDialog::onWorkspaceChange);
+  m_model.getImpl<model::detail::Model_Impl>().get()->onChange.connect<InspectorDialog, &InspectorDialog::onWorkspaceChange>(this);
 
-  connect(m_model.getImpl<model::detail::Model_Impl>().get(),
-    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::removeWorkspaceObject),
-    this,
-    &InspectorDialog::onRemoveWorkspaceObject);
+  m_model.getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.connect<InspectorDialog, &InspectorDialog::onRemoveWorkspaceObject>(this);
 }
 
 void InspectorDialog::hideSelectionWidget(bool hideSelectionWidget)
@@ -1126,7 +1117,7 @@ void InspectorDialog::loadTableWidgetData()
 
     auto tableItem = new QTableWidgetItem(displayName);
     tableItem->setFlags(Qt::NoItemFlags | Qt::ItemIsEnabled | Qt::ItemIsSelectable);
-    QString handleString(object.handle().toString());
+    QString handleString(toQString(object.handle()));
     //std::string temp = toString(handleString);
     tableItem->setData(Qt::UserRole, handleString);
     m_tableWidget->setItem(i,j++,tableItem);
@@ -1160,7 +1151,7 @@ void InspectorDialog::getTableWidgetSelected(std::vector<openstudio::Handle>& se
     if (column == 0){
       QString handleString = selectedItems.at(i)->data(Qt::UserRole).toString();
       //std::string temp = toString(handleString);
-      selectedHandles.push_back(Handle(handleString));
+      selectedHandles.push_back(Handle(toUUID(handleString)));
     }
   }
 

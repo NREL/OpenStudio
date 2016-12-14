@@ -36,9 +36,10 @@
 #include "../shared_gui_components/MeasureManager.hpp"
 #include "../shared_gui_components/OSListView.hpp"
 #include "../shared_gui_components/SyncMeasuresDialog.hpp"
+#include "../shared_gui_components/EditController.hpp"
+
 #include "../utilities/plot/ProgressBar.hpp"
 
-#include "../analysisdriver/SimpleProject.hpp"
 #include "../energyplus/ForwardTranslator.hpp"
 
 #include <QLabel>
@@ -63,10 +64,10 @@ ScriptsTabView::ScriptsTabView(QWidget * parent)
 
   addTabWidget(mainContent);
 
-  variableGroupListView = new OSListView(true);
-  variableGroupListView->setContentsMargins(0,0,0,0);
-  variableGroupListView->setSpacing(0);
-  mainContentVLayout->addWidget(variableGroupListView);
+  workflowView = new OSListView(true);
+  workflowView->setContentsMargins(0,0,0,0);
+  workflowView->setSpacing(0);
+  mainContentVLayout->addWidget(workflowView);
 
   QString style;
   style.append("QWidget#Footer {");
@@ -95,36 +96,32 @@ ScriptsTabView::ScriptsTabView(QWidget * parent)
 void ScriptsTabView::showEvent(QShowEvent *e)
 {
   MainTabView::showEvent(e);
-  auto app = OSAppBase::instance();
-  auto doc = app->currentDocument();
 
-  // updateMeasures will need the model and idf workspace (in MeasureManager::getArguments
-  // , so we use the app/doc as a cache and manage its update here.
-  if( auto project = app->project() ) {
-    if( auto model = app->currentModel() ) {
-      ProgressBar progress(app->mainWidget()); 
-      energyplus::ForwardTranslator translator;
-      auto workspace = translator.translateModel(model.get(),&progress);
-      doc->setWorkspace(workspace);
-        
-      OSAppBase::instance()->measureManager().updateMeasures(*project, project->measures(), false);
-    }
-  }
-  variableGroupListView->refreshAllViews();
+  workflowView->refreshAllViews();
 }
 
 //*****SLOTS*****
 
 void ScriptsTabView::openUpdateMeasuresDlg()
 {
+  m_updateMeasuresButton->setEnabled(false);
+
   openstudio::OSAppBase * app = OSAppBase::instance();
 
-  boost::optional<analysisdriver::SimpleProject> project = app->project();
-  OS_ASSERT(project);
+  app->currentDocument()->disable();
+ 
+  WorkflowJSON workflow = app->currentDocument()->model().workflowJSON();
 
-  m_syncMeasuresDialog = boost::shared_ptr<SyncMeasuresDialog>(new SyncMeasuresDialog(&(project.get()),&(app->measureManager())));
+  m_syncMeasuresDialog = boost::shared_ptr<SyncMeasuresDialog>(new SyncMeasuresDialog(workflow,&(app->measureManager())));
   m_syncMeasuresDialog->setGeometry(app->currentDocument()->mainWindow()->geometry());
   m_syncMeasuresDialog->exec();
+
+  app->currentDocument()->enable();
+
+  app->editController()->reset();
+  workflowView->refreshAllViews();
+
+  m_updateMeasuresButton->setEnabled(true);
 }
 
 } // openstudio

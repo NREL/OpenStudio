@@ -30,18 +30,13 @@
 #define OPENSTUDIO_MATERIALINFRAREDTRANSPARENTINSPECTORVIEW_HPP
 
 #include "ModelObjectInspectorView.hpp"
+#include "../model/InfraredTransparentMaterial.hpp"
 
 namespace openstudio {
 
-namespace model {
+class OSLineEdit2;
 
-  class InfraredTransparentMaterial;
-
-}
-
-class OSLineEdit;
-
-class OSQuantityEdit;
+class OSQuantityEdit2;
 
 class StandardsInformationMaterialWidget;
 
@@ -75,7 +70,9 @@ class MaterialInfraredTransparentInspectorView : public ModelObjectInspectorView
 
     bool m_isIP;
 
-    OSLineEdit * m_nameEdit = nullptr;
+    boost::optional<model::InfraredTransparentMaterial> m_infraredTransparentMaterial;
+
+    OSLineEdit2 * m_nameEdit = nullptr;
 
     StandardsInformationMaterialWidget * m_standardsInformationWidget = nullptr;
 

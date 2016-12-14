@@ -60,7 +60,7 @@
 
 #include "../energyplus/ReverseTranslator.hpp"
 
-#include "../runmanager/lib/ConfigOptions.hpp"
+//#include "../runmanager/lib/ConfigOptions.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/filetypes/EpwFile.hpp"
@@ -558,8 +558,8 @@ void LocationView::onWeatherFileBtnClicked()
 
   QString lastPath = m_lastEpwPathOpened;
   if (lastPath.isEmpty() && m_lastDdyPathOpened.isEmpty()){
-    openstudio::runmanager::ConfigOptions co(true);
-    lastPath = toQString(co.getDefaultEPWLocation().native());
+    //openstudio::runmanager::ConfigOptions co(true);
+    //lastPath = toQString(co.getDefaultEPWLocation().native());
   } else if (lastPath.isEmpty()) {
     QString path = m_lastDdyPathOpened;
     lastPath = path.replace(".ddy", ".epw");
@@ -593,7 +593,7 @@ void LocationView::onWeatherFileBtnClicked()
       
       // duplicate code in OSDocument::fixWeatherFilePath
 
-      boost::filesystem::copy_file(epwPath, newPath, boost::filesystem::copy_option::overwrite_if_exists);
+      openstudio::filesystem::copy_file(epwPath, newPath, openstudio::filesystem::copy_option::overwrite_if_exists);
       
       // this can throw
       EpwFile epwFile(newPath);
@@ -606,12 +606,14 @@ void LocationView::onWeatherFileBtnClicked()
 
       weatherFile = openstudio::model::WeatherFile::setWeatherFile(m_model, epwFile);
       OS_ASSERT(weatherFile);
-      weatherFile->makeUrlRelative(toPath(m_modelTempDir) / toPath("resources"));
+      weatherFile->makeUrlRelative(toPath(m_modelTempDir) / toPath("resources/files"));
+
+      m_model.workflowJSON().setWeatherFile(newPath.filename());
 
       if (!previousEPWPath.empty()){
         if (previousEPWPath.filename() != newPath.filename()){
-          if (boost::filesystem::exists(previousEPWPath)){
-            boost::filesystem::remove_all(previousEPWPath);
+          if (openstudio::filesystem::exists(previousEPWPath)){
+            openstudio::filesystem::remove_all(previousEPWPath);
           }
         }
       }
@@ -640,7 +642,7 @@ void LocationView::onWeatherFileBtnClicked()
 
     }catch(...){
 
-      boost::filesystem::remove_all(newPath);
+      openstudio::filesystem::remove_all(newPath);
 
       QMessageBox box(QMessageBox::Warning, "Failed To Set Weather File", QString("Failed To Set Weather File To ") + fileName, QMessageBox::Ok);
       box.setDetailedText(toQString(ss.string())); 
@@ -653,7 +655,7 @@ void LocationView::onWeatherFileBtnClicked()
           if (!previousEPWPath.empty()){
             if (previousEPWPath.filename() != weatherFilePath->filename()){
               weatherFile->remove();
-            }else if (!boost::filesystem::exists(previousEPWPath)){
+            }else if (!openstudio::filesystem::exists(previousEPWPath)){
               weatherFile->remove();
             }
           }
@@ -671,8 +673,8 @@ void LocationView::onDesignDayBtnClicked()
 
   QString lastPath = m_lastDdyPathOpened;
   if (lastPath.isEmpty() && m_lastEpwPathOpened.isEmpty()){
-    openstudio::runmanager::ConfigOptions co(true);
-    lastPath = toQString(co.getDefaultEPWLocation().native());
+    //openstudio::runmanager::ConfigOptions co(true);
+    //lastPath = toQString(co.getDefaultEPWLocation().native());
   } else if (lastPath.isEmpty()) {
     QString path = m_lastEpwPathOpened;
     lastPath = path.replace(".epw", ".ddy");

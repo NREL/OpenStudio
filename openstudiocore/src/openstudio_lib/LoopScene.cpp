@@ -27,6 +27,7 @@
  **********************************************************************************************************************/
 
 #include "LoopScene.hpp"
+#include "OSAppBase.hpp"
 #include "GridItem.hpp"
 #include <QPainter>
 #include <QGraphicsSceneMouseEvent>
@@ -57,21 +58,16 @@ using namespace openstudio::model;
 
 namespace openstudio {
 
-LoopScene::LoopScene( model::Loop loop, 
-                      QObject * parent ) 
+LoopScene::LoopScene( model::Loop loop,
+                      QObject * parent )
   : GridScene(parent),
     m_loop(loop),
     m_dirty(true)
 {
-  connect(loop.model().getImpl<model::detail::Model_Impl>().get(),
-    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::addWorkspaceObject),
-    this,
-    &LoopScene::addedWorkspaceObject);
+  // loop.model().getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.connect<LoopScene, &LoopScene::addedWorkspaceObject>(this);
+  connect(OSAppBase::instance(), &OSAppBase::workspaceObjectAddedPtr, this, &LoopScene::addedWorkspaceObject, Qt::QueuedConnection);
 
-  connect(loop.model().getImpl<model::detail::Model_Impl>().get(),
-    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::removeWorkspaceObject),
-    this,
-    &LoopScene::removedWorkspaceObject);
+  loop.model().getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.connect<LoopScene, &LoopScene::removedWorkspaceObject>(this);
 
   layout();
 }
@@ -83,23 +79,23 @@ void LoopScene::initDefault()
 
 void LoopScene::layout()
 {
-  if( m_dirty && m_loop.handle() != nullptr )
+  if( m_dirty && !m_loop.handle().isNull() )
   {
     QList<QGraphicsItem *> itemList = items();
-    for( QList<QGraphicsItem *>::iterator it = itemList.begin(); 
-         it < itemList.end(); 
+    for( QList<QGraphicsItem *>::iterator it = itemList.begin();
+         it < itemList.end();
          ++it )
     {
       removeItem(*it);
       delete *it;
     }
 
-    SystemItem * systemItem = new SystemItem(m_loop,this); 
+    SystemItem * systemItem = new SystemItem(m_loop,this);
 
     systemItem->setPos(50,50);
 
     this->setSceneRect(0,0,(systemItem->getHGridLength() * 100) + 100, ((systemItem->getVGridLength()) * 100) + 100);
-    
+
     update();
 
     m_dirty = false;
@@ -135,7 +131,7 @@ model::Loop LoopScene::loop()
   return m_loop;
 }
 
-void LoopScene::addedWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wPtr )
+void LoopScene::addedWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wPtr, const openstudio::IddObjectType& type, const openstudio::UUID& uuid )
 {
   model::detail::HVACComponent_Impl* hvac_impl = dynamic_cast<model::detail::HVACComponent_Impl*>(wPtr.get());
   if(hvac_impl)
@@ -146,7 +142,7 @@ void LoopScene::addedWorkspaceObject(std::shared_ptr<openstudio::detail::Workspa
   }
 }
 
-void LoopScene::removedWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> )
+void LoopScene::removedWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wPtr, const openstudio::IddObjectType& type, const openstudio::UUID& uuid )
 {
   m_dirty = true;
 

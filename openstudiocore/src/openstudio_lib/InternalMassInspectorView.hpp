@@ -31,18 +31,13 @@
 
 #include "ModelObjectInspectorView.hpp"
 #include "ModelObjectVectorController.hpp"
+#include "../model/InternalMassDefinition.hpp"
 
 namespace openstudio {
 
-namespace model {
+class OSLineEdit2;
 
-class InternalMassDefinition;
-
-}
-
-class OSLineEdit;
-
-class OSQuantityEdit;
+class OSQuantityEdit2;
 
 class OSDropZone;
 
@@ -74,19 +69,21 @@ class InternalMassDefinitionInspectorView : public ModelObjectInspectorView
 
     void refresh();
 
-    OSLineEdit* m_nameEdit;
+    OSLineEdit2* m_nameEdit;
 
-    OSQuantityEdit * m_surfaceAreaEdit;
+    OSQuantityEdit2 * m_surfaceAreaEdit;
 
-    OSQuantityEdit * m_surfaceAreaPerSpaceFloorAreaEdit;
+    OSQuantityEdit2 * m_surfaceAreaPerSpaceFloorAreaEdit;
 
-    OSQuantityEdit * m_surfaceAreaPerPersonEdit;
+    OSQuantityEdit2 * m_surfaceAreaPerPersonEdit;
 
     OSDropZone * m_ConstructionDropZone;
 
     ModelObjectVectorController * m_ConstructionVectorController;
 
     bool m_isIP;
+
+    boost::optional<model::InternalMassDefinition> m_internalMassDefinition;
 
     class ConstructionVectorController : public ModelObjectVectorController
     {
@@ -99,9 +96,9 @@ class InternalMassDefinitionInspectorView : public ModelObjectInspectorView
       std::vector<OSItemId> makeVector() override;
 
       void onChangeRelationship(
-             const openstudio::model::ModelObject& modelObject, 
-             int index, 
-             Handle newHandle, 
+             const openstudio::model::ModelObject& modelObject,
+             int index,
+             Handle newHandle,
              Handle oldHandle) override;
 
       void onRemoveItem(OSItem* item) override;

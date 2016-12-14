@@ -59,7 +59,7 @@
 #include "../utilities/core/Assert.hpp"
 
 #include "EditorFrame.hpp"
-#include <boost/filesystem/fstream.hpp>
+
 
 namespace modeleditor
 {
@@ -618,7 +618,7 @@ bool EditorFrame::saveFile(const QString& fileName, const QString& extension)
 {
   openstudio::model::Model model = mModelExplorer->getModel();
 
-  boost::filesystem::ofstream stream(openstudio::toPath(fileName));
+  openstudio::filesystem::ofstream stream(openstudio::toPath(fileName));
   if(extension.toLower().toStdString() == "idf"){
     openstudio::energyplus::ForwardTranslator forwardTranslator;
     openstudio::Workspace workspace = forwardTranslator.translateModel(model);

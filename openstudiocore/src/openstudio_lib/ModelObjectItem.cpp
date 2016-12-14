@@ -47,7 +47,7 @@ OSItemId modelObjectToItemId(const openstudio::model::ModelObject& modelObject, 
 {
   std::stringstream ss;
   ss << modelObject;
-  return OSItemId(modelObject.handle().toString(), modelToSourceId(modelObject.model()), isDefaulted, toQString(ss.str()));
+  return OSItemId(toQString(modelObject.handle()), modelToSourceId(modelObject.model()), isDefaulted, toQString(ss.str()));
 }
 
 QString modelToSourceId(const openstudio::model::Model& model)
@@ -68,8 +68,7 @@ ModelObjectItem::ModelObjectItem(const openstudio::model::ModelObject& modelObje
 {
   this->setText(QString::fromStdString(m_modelObject.name().get()));
 
-  connect(m_modelObject.getImpl<model::detail::ModelObject_Impl>().get(), &model::detail::ModelObject_Impl::onChange,
-          this, &ModelObjectItem::onObjectChanged);
+  m_modelObject.getImpl<model::detail::ModelObject_Impl>().get()->onChange.connect<ModelObjectItem, &ModelObjectItem::onObjectChanged>(this);
 
   if (!modelObject.getModelObjectSources<model::ComponentData>().empty()){
     m_measureBadge->setMeasureBadgeType(MeasureBadgeType::BCLMeasure);

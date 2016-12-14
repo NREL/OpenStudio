@@ -31,6 +31,7 @@
 #include "../core/Application.hpp"
 
 #include <cmath>
+#include <nano/nano_signal_slot.hpp>
 
 namespace openstudio{
 
@@ -186,7 +187,7 @@ namespace openstudio{
 
     if (fabs(newPercentage-m_percentage) >= 1.0){
       m_percentage = newPercentage;
-      emit percentageUpdated(m_percentage);
+      this->percentageUpdated.nano_emit(m_percentage);
       onPercentageUpdated(m_percentage);
     }
   }

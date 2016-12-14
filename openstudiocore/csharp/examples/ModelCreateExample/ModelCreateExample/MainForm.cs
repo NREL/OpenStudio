@@ -7,17 +7,16 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace RunManagerExample
+namespace ModelCreateExample
 {
     public partial class MainForm : Form
     {
-        private OpenStudio.RunManager m_runmanager;
 
         public MainForm()
         {
             try
             {
-                m_runmanager = new OpenStudio.RunManager(new OpenStudio.Path("runmanager.db"));
+              OpenStudio.Model model = new OpenStudio.Model();
             }
             catch (Exception e)
             {
@@ -110,6 +109,17 @@ namespace RunManagerExample
             if (model.save(new OpenStudio.Path(fname), true))
             {
               MessageBox.Show("Model saved to: " + fname);
+
+              OpenStudio.OptionalModel optionalModel = OpenStudio.Model.load(new OpenStudio.Path(fname));
+              if (optionalModel.is_initialized())
+              {
+                OpenStudio.Model model2 = optionalModel.get();
+                MessageBox.Show("Model loaded from: " + fname);
+              }
+              else
+              {
+                MessageBox.Show("Error loading model from: " + fname);
+              }
             }
             else
             {

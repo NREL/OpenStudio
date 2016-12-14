@@ -28,7 +28,7 @@
 
 #include "EnergyPlusFixture.hpp"
 
-#include <boost/filesystem.hpp>
+
 
 #include <resources.hxx>
 
@@ -62,12 +62,12 @@ void EnergyPlusFixture::SetUpTestCase() {
   // delete translated components
   for (const ComponentDirectoryAndType& idfComponent : idfComponents) {
     // delete any *.osc and oscomponent.xml files in the directory
-    for (boost::filesystem::directory_iterator it(idfComponent.first), itEnd; it != itEnd; ++it) {
-      if (boost::filesystem::is_regular_file(it->status())) {
-        std::string ext = openstudio::toString(boost::filesystem::extension(*it));
-        if (ext == ".osc") { boost::filesystem::remove(it->path()); }
+    for (openstudio::filesystem::directory_iterator it(idfComponent.first), itEnd; it != itEnd; ++it) {
+      if (openstudio::filesystem::is_regular_file(it->status())) {
+        std::string ext = openstudio::toString(openstudio::filesystem::extension(*it));
+        if (ext == ".osc") { openstudio::filesystem::remove(it->path()); }
         if ((ext == ".xml") && (openstudio::toString(it->path().filename()) == "oscomponent")) { 
-          boost::filesystem::remove(it->path()); 
+          openstudio::filesystem::remove(it->path()); 
         }
       }
     } // for iterator over directory

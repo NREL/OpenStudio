@@ -674,7 +674,7 @@ DesignDay::DesignDay(const Model& model)
   setDaylightSavingTimeIndicator(false);
   setHumidityIndicatingType("WetBulb");
   setDryBulbTemperatureRangeModifierType("DefaultMultipliers");
-  setSolarModelIndicator("AshraeClearSky");
+  setSolarModelIndicator("ASHRAEClearSky");
 }
 
 // constructor

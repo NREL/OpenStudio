@@ -39,7 +39,6 @@
 #include <QObject> 
 
 class QDomElement;
-class QFile;
 class QNetworkReply;
 
 namespace openstudio{

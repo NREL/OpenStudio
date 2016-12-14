@@ -38,7 +38,7 @@
 namespace openstudio {
 
 class OSDropZone;
-class OSLineEdit;
+class OSLineEdit2;
 
 class WallConstructionVC : public ModelObjectVectorController
 {
@@ -284,7 +284,7 @@ class DefaultConstructionSetInspectorView : public ModelObjectInspectorView
     void detach();
     void configDropZones();
 
-    OSLineEdit * m_nameEdit;
+    OSLineEdit2 * m_nameEdit;
 
     OSDropZone * m_exteriorWallConstructionDZ;
     OSDropZone * m_exteriorFloorConstructionDZ;
@@ -338,6 +338,8 @@ class DefaultConstructionSetInspectorView : public ModelObjectInspectorView
 
     std::vector<ModelObjectVectorController *> m_vectorControllers;
     std::vector<OSDropZone *> m_dropZones;
+
+    boost::optional<model::DefaultConstructionSet> m_defaultConstructionSet;
 };
 
 } // openstudio

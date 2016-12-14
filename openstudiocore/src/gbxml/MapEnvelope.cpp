@@ -49,7 +49,6 @@
 #include "../model/ModelPartitionMaterial_Impl.hpp"
 #include "../utilities/core/Assert.hpp"
 
-#include <QFile>
 #include <QDomDocument>
 #include <QDomElement>
 

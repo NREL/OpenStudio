@@ -37,9 +37,9 @@ namespace model {
 namespace detail {
 
   class MODEL_API ParentObject_Impl : public ModelObject_Impl {
-    Q_OBJECT;
+    
 
-    Q_PROPERTY(std::vector<openstudio::model::ModelObject> children READ children);
+    
    public:
 
     // constructor

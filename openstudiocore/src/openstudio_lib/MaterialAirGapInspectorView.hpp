@@ -30,18 +30,13 @@
 #define OPENSTUDIO_MATERIALAIRGAPINSPECTORVIEW_HPP
 
 #include "ModelObjectInspectorView.hpp"
+#include "../model/AirGap.hpp"
 
 namespace openstudio {
 
-namespace model {
+class OSLineEdit2;
 
-  class AirGap;
-
-}
-
-class OSLineEdit;
-
-class OSQuantityEdit;
+class OSQuantityEdit2;
 
 class StandardsInformationMaterialWidget;
 
@@ -75,9 +70,11 @@ class MaterialAirGapInspectorView : public ModelObjectInspectorView
 
     bool m_isIP;
 
-    OSLineEdit * m_nameEdit = nullptr;
+    boost::optional<model::AirGap> m_airGap;
 
-    OSQuantityEdit * m_thermalResistance = nullptr;
+    OSLineEdit2 * m_nameEdit = nullptr;
+
+    OSQuantityEdit2 * m_thermalResistance = nullptr;
 
     StandardsInformationMaterialWidget * m_standardsInformationWidget = nullptr;
 

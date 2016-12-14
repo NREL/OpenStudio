@@ -31,12 +31,11 @@
 
 #include <map>
 #include <vector>
-#include <boost/filesystem/fstream.hpp>
-#include <boost/filesystem/path.hpp>
+#include "../utilities/core/Filesystem.hpp"
 
 namespace openstudio {
 
-typedef boost::filesystem::path path;
+typedef openstudio::filesystem::path path;
 
 class IddFileFactoryData;
 
@@ -44,7 +43,7 @@ struct IddFactoryOutFile {
   std::string filename;
   openstudio::path finalPath;
   openstudio::path tempPath;
-  boost::filesystem::ofstream tempFile;
+  openstudio::filesystem::ofstream tempFile;
 
   IddFactoryOutFile(const std::string& filename,
                     const openstudio::path& outPath,

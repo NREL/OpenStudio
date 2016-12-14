@@ -78,7 +78,7 @@ void MaterialAirWallInspectorView::createLayout()
 
   ++row;
 
-  m_nameEdit = new OSLineEdit();
+  m_nameEdit = new OSLineEdit2();
   mainGridLayout->addWidget(m_nameEdit, row, 0, 1, 3);
 
   ++row;
@@ -117,7 +117,14 @@ void MaterialAirWallInspectorView::onUpdate()
 
 void MaterialAirWallInspectorView::attach(openstudio::model::AirWallMaterial & airWallMaterial)
 {
-  m_nameEdit->bind(airWallMaterial,"name");
+  m_airWallMaterial = airWallMaterial;
+
+  // m_nameEdit->bind(airWallMaterial,"name");
+  m_nameEdit->bind(
+    *m_airWallMaterial,
+    OptionalStringGetter(std::bind(&model::AirWallMaterial::name, m_airWallMaterial.get_ptr(),true)),
+    boost::optional<StringSetter>(std::bind(&model::AirWallMaterial::setName, m_airWallMaterial.get_ptr(),std::placeholders::_1))
+  );
 
   m_standardsInformationWidget->attach(airWallMaterial);
 
@@ -129,6 +136,8 @@ void MaterialAirWallInspectorView::detach()
   this->stackedWidget()->setCurrentIndex(0);
 
   m_nameEdit->unbind();
+
+  m_airWallMaterial = boost::none;
 
   m_standardsInformationWidget->detach();
 }

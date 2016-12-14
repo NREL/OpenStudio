@@ -38,13 +38,9 @@
 namespace openstudio {
 
 namespace measuretab {
-class VariableListController;
-class VariableItemDelegate;
-class VariableGroupListController;
-class VariableGroupItemDelegate;
-class MeasureListController;
-class VariableGroupItem;
-class VariableItem;
+
+class WorkflowController;
+class WorkflowSectionItemDelegate;
 }
 
 class ScriptsTabController : public MainTabController
@@ -61,13 +57,12 @@ class ScriptsTabController : public MainTabController
 
   QPointer<ScriptsTabView> scriptsTabView;
 
-
-
   private:
+
   REGISTER_LOGGER("openstudio.measuretab.MeasuresTabController");
 
-  QSharedPointer<measuretab::VariableGroupListController> m_variableGroupListController;
-  QSharedPointer<measuretab::VariableGroupItemDelegate> m_variableGroupItemDelegate;
+  QSharedPointer<measuretab::WorkflowController> m_workflowController;
+  QSharedPointer<measuretab::WorkflowSectionItemDelegate> m_workflowSectionItemDelegate;
 
 };
 

@@ -48,7 +48,7 @@ void ModelFixture::SetUpTestCase() {
   Logger::instance().standardOutLogger().disable();
 
   // create resources folder for scratch files
-  boost::filesystem::create_directory(resourcesPath()/toPath("model"));
+  openstudio::filesystem::create_directory(resourcesPath()/toPath("model"));
 }
 
 void ModelFixture::TearDownTestCase()

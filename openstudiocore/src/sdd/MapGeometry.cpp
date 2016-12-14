@@ -108,7 +108,6 @@
 #include "../utilities/plot/ProgressBar.hpp"
 #include "../utilities/core/Assert.hpp"
 
-#include <QFile>
 #include <QDomDocument>
 #include <QDomElement>
 #include <QStringList>

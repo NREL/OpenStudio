@@ -6,6 +6,7 @@
   #include <boost/function.hpp>
   #include <utilities/data/DataEnums.hpp>
   #include <utilities/data/Tag.hpp>
+  #include <utilities/data/Variant.hpp>
   
   #include <utilities/units/Quantity.hpp>
   #include <utilities/units/Unit.hpp>
@@ -42,6 +43,7 @@
 
 %include <utilities/data/DataEnums.hpp>
 %include <utilities/data/Attribute.i>
+%include <utilities/data/Variant.i>
 %include <utilities/data/CalibrationResult.i>
 %include <utilities/data/EndUses.i>
 %include <utilities/data/Vector.i>

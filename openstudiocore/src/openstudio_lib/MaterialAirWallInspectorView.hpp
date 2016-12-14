@@ -30,18 +30,13 @@
 #define OPENSTUDIO_MATERIALAIRWALLINSPECTORVIEW_HPP
 
 #include "ModelObjectInspectorView.hpp"
+#include "../model/AirWallMaterial.hpp"
 
 namespace openstudio {
 
-namespace model {
+class OSLineEdit2;
 
-  class AirWallMaterial;
-
-}
-
-class OSLineEdit;
-
-class OSQuantityEdit;
+class OSQuantityEdit2;
 
 class StandardsInformationMaterialWidget;
 
@@ -75,7 +70,9 @@ class MaterialAirWallInspectorView : public ModelObjectInspectorView
 
     bool m_isIP;
 
-    OSLineEdit * m_nameEdit = nullptr;
+    boost::optional<model::AirWallMaterial> m_airWallMaterial;
+
+    OSLineEdit2 * m_nameEdit = nullptr;
 
     StandardsInformationMaterialWidget * m_standardsInformationWidget = nullptr;
 

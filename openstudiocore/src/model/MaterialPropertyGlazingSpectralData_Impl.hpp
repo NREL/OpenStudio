@@ -43,6 +43,7 @@ namespace detail {
   class MODEL_API MaterialPropertyGlazingSpectralData_Impl : public ResourceObject_Impl {
   
   public:
+
     /** @name Constructors and Destructors */
     //@{
 

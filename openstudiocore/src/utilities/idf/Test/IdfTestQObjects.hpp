@@ -29,8 +29,6 @@
 #ifndef UTILITIES_IDF_TEST_IDFTESTQOBJECTS_HPP
 #define UTILITIES_IDF_TEST_IDFTESTQOBJECTS_HPP
 
-#include <QObject>
-
 #include "../Workspace.hpp"
 #include "../Workspace_Impl.hpp"
 #include "../WorkspaceObject.hpp"
@@ -41,24 +39,30 @@
 
 using namespace openstudio;
 
-class WorkspaceReciever : public QObject {
-  Q_OBJECT;
+class WorkspaceReciever  {
  public:
 
   WorkspaceReciever(const Workspace& workspace)
   {
+
+    // Due to the switch to Nano Signals and Slots, testing for connects are no longer
+    // necessary because the NanoS&S are guarenteed to connect, else error on compile
+
     std::shared_ptr<openstudio::detail::Workspace_Impl> impl = workspace.getImpl<openstudio::detail::Workspace_Impl>();
     
-    bool test;
-    test = connect(impl.get(), SIGNAL(removeWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
-                   this, SLOT(removeWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
-                   Qt::QueuedConnection);
-    OS_ASSERT(test);
+    impl->Workspace_Impl::removeWorkspaceObject.connect<WorkspaceReciever, &WorkspaceReciever::removeWorkspaceObject>(this);
 
-    test = connect(impl.get(), SIGNAL(addWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
-                   this, SLOT(addWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
-                   Qt::QueuedConnection);
-    OS_ASSERT(test);
+    //test = connect(impl.get(), SIGNAL(removeWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+    //               this, SLOT(removeWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+    //               Qt::QueuedConnection);
+    //OS_ASSERT(test);
+
+    impl->Workspace_Impl::addWorkspaceObject.connect<WorkspaceReciever, &WorkspaceReciever::addWorkspaceObject>(this);
+
+    //test = connect(impl.get(), SIGNAL(addWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+    //               this, SLOT(addWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+    //               Qt::QueuedConnection);
+    //OS_ASSERT(test);
   }
 
   void clear()
@@ -74,18 +78,18 @@ class WorkspaceReciever : public QObject {
 
   boost::optional<Handle> m_handle;
 
- public slots:
+ public:
 
-  void removeWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle) 
+  void removeWorkspaceObject(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle) 
   {
-    m_objectImpl = object;
+    m_objectImpl = object.getImpl<detail::WorkspaceObject_Impl>();
     m_iddObjectType = iddObjectType;
     m_handle = handle;
   }
 
-  void addWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle) 
+  void addWorkspaceObject(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle) 
   {
-    m_objectImpl = object;
+    m_objectImpl = object.getImpl<detail::WorkspaceObject_Impl>();
     m_iddObjectType = iddObjectType;
     m_handle = handle;
   }

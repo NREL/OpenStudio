@@ -42,7 +42,6 @@
 #include "OSItem.hpp"
 #include "OSItemList.hpp"
 #include "SchedulesTabController.hpp"
-#include "ScriptFolderListView.hpp"
 #include "SpaceTypeInspectorView.hpp"
 #include "ThermalZonesView.hpp"
 
@@ -75,7 +74,6 @@ MainRightColumnController::MainRightColumnController(const model::Model & model,
 {
   m_measureLibraryController->localLibraryView->setStyleSheet("QStackedWidget { border-top: 0px; }");
   OSAppBase::instance()->measureManager().setLibraryController(m_measureLibraryController);
-  OSAppBase::instance()->measureManager().updateMeasuresLists();
   m_horizontalTabWidget = new HorizontalTabWidget();
   addQObject(m_horizontalTabWidget);
 

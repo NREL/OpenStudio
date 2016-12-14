@@ -42,6 +42,9 @@
 #include "../shared_gui_components/OSComboBox.hpp"
 #include <QAbstractListModel>
 #include <QPointer>
+#include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
+
+class QMutex;
 
 namespace openstudio {
 
@@ -76,7 +79,7 @@ class RefrigerationGridController;
 class RefrigerationGridView;
 class VRFController;
 
-class HVACSystemsController : public QObject
+class HVACSystemsController : public QObject, public Nano::Observer
 {
   Q_OBJECT
 
@@ -127,9 +130,9 @@ class HVACSystemsController : public QObject
 
   void onShowGridClicked();
 
-  void onObjectAdded(const WorkspaceObject&);
+  void onObjectAdded(const WorkspaceObject&, const openstudio::IddObjectType& type, const openstudio::UUID& uuid);
 
-  void onObjectRemoved(const WorkspaceObject&);
+  void onObjectRemoved(const WorkspaceObject&, const openstudio::IddObjectType& type, const openstudio::UUID& uuid);
 
   void onObjectChanged();
 
@@ -157,6 +160,8 @@ class HVACSystemsController : public QObject
 
   bool m_dirty;
 
+  QMutex * m_updateMutex;
+
   model::Model m_model;
 
   bool m_isIP;
@@ -167,7 +172,7 @@ class HVACSystemsController : public QObject
 
 };
 
-class HVACControlsController : public QObject
+class HVACControlsController : public QObject, public Nano::Observer
 {
   Q_OBJECT;
 
@@ -232,7 +237,7 @@ class HVACControlsController : public QObject
   bool m_dirty;
 };
 
-class HVACLayoutController : public QObject
+class HVACLayoutController : public QObject, public Nano::Observer
 {
   Q_OBJECT;
 
@@ -285,7 +290,9 @@ class SystemAvailabilityVectorController : public ModelObjectVectorController
 
   public:
 
-  virtual ~SystemAvailabilityVectorController() {}
+  SystemAvailabilityVectorController();
+
+  virtual ~SystemAvailabilityVectorController() { delete m_reportItemsMutex; }
 
   boost::optional<model::AirLoopHVAC> airLoopHVAC();
 
@@ -310,6 +317,8 @@ class SystemAvailabilityVectorController : public ModelObjectVectorController
   private:
 
   bool m_reportScheduled;
+
+  QMutex * m_reportItemsMutex;
 };
 
 class SupplyAirTempScheduleVectorController : public ModelObjectVectorController
@@ -318,7 +327,9 @@ class SupplyAirTempScheduleVectorController : public ModelObjectVectorController
 
   public:
 
-  virtual ~SupplyAirTempScheduleVectorController() {}
+  SupplyAirTempScheduleVectorController();
+
+  virtual ~SupplyAirTempScheduleVectorController() { delete m_reportItemsMutex; }
 
   boost::optional<model::SetpointManagerScheduled> setpointManagerScheduled();
 
@@ -343,6 +354,8 @@ class SupplyAirTempScheduleVectorController : public ModelObjectVectorController
   private:
 
   bool m_reportScheduled;
+
+  QMutex * m_reportItemsMutex;
 };
 
 } // openstudio

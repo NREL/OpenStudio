@@ -28,6 +28,7 @@
 
 #include "SchedulesView.hpp"
 #include "ScheduleDayView.hpp"
+#include "OSAppBase.hpp"
 
 #include "../shared_gui_components/OSCheckBox.hpp"
 #include "OSItem.hpp"
@@ -173,17 +174,11 @@ SchedulesView::SchedulesView(bool isIP, const model::Model & model)
   m_contentLayout->setContentsMargins(0, 0, 0, 0);
   mainHLayout->addLayout(m_contentLayout, 100);
 
-  connect(m_model.getImpl<model::detail::Model_Impl>().get(),
-          static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::addWorkspaceObject),
-          this,
-          &SchedulesView::onModelObjectAdded,
-          Qt::QueuedConnection);
+  // m_model.getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.connect<SchedulesView, &SchedulesView::onModelObjectAdded>(this);
+  connect(OSAppBase::instance(), &OSAppBase::workspaceObjectAddedPtr, this, &SchedulesView::onModelObjectAdded, Qt::QueuedConnection);
 
-  connect(m_model.getImpl<model::detail::Model_Impl>().get(),
-          static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::removeWorkspaceObject),
-          this,
-          &SchedulesView::onModelObjectRemoved,
-          Qt::QueuedConnection);
+  m_model.getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.connect<SchedulesView, &SchedulesView::onModelObjectRemoved>(this);
+  //connect(OSAppBase::instance(), &OSAppBase::workspaceObjectRemovedPtr, this, &SchedulesView::onModelObjectRemoved, Qt::QueuedConnection);
 
   // get all schedules
   std::vector<model::ScheduleRuleset> schedules = m_model.getConcreteModelObjects<model::ScheduleRuleset>();
@@ -214,7 +209,7 @@ SchedulesView::SchedulesView(bool isIP, const model::Model & model)
   if (!schedules.empty()){
     setCurrentSchedule(schedules.back());
   }
-  
+
 }
 
 void SchedulesView::closeAllTabs() const
@@ -287,12 +282,9 @@ void SchedulesView::addScheduleRule(model::ScheduleRule & rule)
 
   if (tab)
   {
-    tab->scheduleTabContent()->scheduleRefresh();
+    tab->scheduleTabContent()->scheduleRefresh(scheduleRuleset.handle()); // Handle as dummy
 
-    connect(rule.getImpl<model::detail::ScheduleRule_Impl>().get(),
-            &model::detail::ScheduleRule_Impl::onRemoveFromWorkspace,
-            tab->scheduleTabContent(),
-            &ScheduleTabContent::scheduleRefresh);
+    rule.getImpl<model::detail::ScheduleRule_Impl>().get()->onRemoveFromWorkspace.connect<ScheduleTabContent, &ScheduleTabContent::scheduleRefresh>(tab->scheduleTabContent());
   }
 
 }
@@ -311,6 +303,8 @@ void SchedulesView::onModelObjectAdded(std::shared_ptr<openstudio::detail::Works
   boost::optional<model::ScheduleRule> rule = m_model.getModelObject<model::ScheduleRule>(workspaceObjectImpl->handle());
   if (rule)
   {
+    rule->getImpl<detail::WorkspaceObject_Impl>().get()->onRemoveFromWorkspace.connect<SchedulesView, &SchedulesView::onScheduleRuleRemoved>(this);
+
     addScheduleRule(rule.get());
   }
 }
@@ -472,9 +466,6 @@ void SchedulesView::showScheduleRule(model::ScheduleRule scheduleRule)
 
   m_contentLayout->addWidget(scheduleView);
 
-  connect(scheduleRule.getImpl<detail::WorkspaceObject_Impl>().get(), &detail::WorkspaceObject_Impl::onRemoveFromWorkspace,
-          this, &SchedulesView::onScheduleRuleRemoved);
-
   scheduleView->show();
 
   setUpdatesEnabled(true);
@@ -483,7 +474,7 @@ void SchedulesView::showScheduleRule(model::ScheduleRule scheduleRule)
   emit modelObjectSelected(mo, true);
 }
 
-void SchedulesView::onScheduleRuleRemoved(Handle handle)
+void SchedulesView::onScheduleRuleRemoved(const Handle& handle)
 {
   // DLM: todo, show something else?
   showEmptyPage();
@@ -842,8 +833,7 @@ ScheduleTabHeader::ScheduleTabHeader(ScheduleTab * scheduleTab, QWidget * parent
 
   connect(this, &ScheduleTabHeader::scheduleClicked, m_scheduleTab, &ScheduleTab::scheduleClicked);
 
-  connect(m_scheduleTab->schedule().getImpl<model::detail::ScheduleRuleset_Impl>().get(),
-          &model::detail::ScheduleRuleset_Impl::onChange, this, &ScheduleTabHeader::refresh);
+  m_scheduleTab->schedule().getImpl<model::detail::ScheduleRuleset_Impl>().get()->onChange.connect<ScheduleTabHeader, &ScheduleTabHeader::refresh>(this);
 }
 
 void ScheduleTabHeader::expand()
@@ -1034,7 +1024,7 @@ void ScheduleTabContent::refresh()
   }
 }
 
-void ScheduleTabContent::scheduleRefresh()
+void ScheduleTabContent::scheduleRefresh(const Handle& handle)
 {
   m_dirty = true;
 
@@ -1090,8 +1080,7 @@ ScheduleTabRule::ScheduleTabRule(ScheduleTab * scheduleTab,
 
   scheduleRefresh();
 
-  connect(m_scheduleRule.getImpl<model::detail::ScheduleRule_Impl>().get(), &model::detail::ScheduleRule_Impl::onChange,
-          this, &ScheduleTabRule::scheduleRefresh);
+  m_scheduleRule.getImpl<model::detail::ScheduleRule_Impl>().get()->onChange.connect<ScheduleTabRule, &ScheduleTabRule::scheduleRefresh>(this);
 
   setMouseTracking(true);
 }
@@ -1376,7 +1365,7 @@ NewProfileView::NewProfileView(const model::ScheduleRuleset & scheduleRuleset, S
 
   auto mainHLayout = new QHBoxLayout();
   mainHLayout->setContentsMargins(0, 0, 0, 0);
-  
+
 
   auto box = new QWidget();
 
@@ -1425,7 +1414,7 @@ NewProfileView::NewProfileView(const model::ScheduleRuleset & scheduleRuleset, S
 void NewProfileView::onAddClicked()
 {
   int currentIndex = m_scheduleRuleComboBox->currentIndex();
-  UUID handle = m_scheduleRuleComboBox->itemData(currentIndex).toUuid();
+  UUID handle = toUUID(m_scheduleRuleComboBox->itemData(currentIndex).toString());
 
   switch (m_type)
   {
@@ -1442,22 +1431,22 @@ void NewProfileView::onAddClicked()
 
 void NewProfileView::populateComboBox(const model::ScheduleRuleset & scheduleRuleset)
 {
-  
 
-  m_scheduleRuleComboBox->addItem("<New Profile>", UUID());
 
-  m_scheduleRuleComboBox->addItem("Default Day Schedule", scheduleRuleset.defaultDaySchedule().handle());
+  m_scheduleRuleComboBox->addItem("<New Profile>", toQString(UUID()));
+
+  m_scheduleRuleComboBox->addItem("Default Day Schedule", toQString(scheduleRuleset.defaultDaySchedule().handle()));
 
   if (!scheduleRuleset.isSummerDesignDayScheduleDefaulted()){
-    m_scheduleRuleComboBox->addItem("Summer Design Day Schedule", scheduleRuleset.summerDesignDaySchedule().handle());
+    m_scheduleRuleComboBox->addItem("Summer Design Day Schedule", toQString(scheduleRuleset.summerDesignDaySchedule().handle()));
   }
 
   if (!scheduleRuleset.isWinterDesignDayScheduleDefaulted()){
-    m_scheduleRuleComboBox->addItem("Winter Design Day Schedule", scheduleRuleset.winterDesignDaySchedule().handle());
+    m_scheduleRuleComboBox->addItem("Winter Design Day Schedule", toQString(scheduleRuleset.winterDesignDaySchedule().handle()));
   }
 
   for (const auto& rule : scheduleRuleset.scheduleRules()){
-    m_scheduleRuleComboBox->addItem(toQString(rule.name().get()), rule.daySchedule().handle());
+    m_scheduleRuleComboBox->addItem(toQString(rule.name().get()), toQString(rule.daySchedule().handle()));
   }
 
   m_scheduleRuleComboBox->setCurrentIndex(0);
@@ -1504,7 +1493,7 @@ DefaultScheduleDayView::DefaultScheduleDayView(bool isIP,
   mainVLayout->setSpacing(10);
   mainHLayout->addLayout(mainVLayout, 100);
 
-  // Name 
+  // Name
 
   auto scheduleRulesetNameWidget = new ScheduleRulesetNameWidget(scheduleRuleset);
   mainVLayout->addWidget(scheduleRulesetNameWidget);
@@ -1560,7 +1549,7 @@ SizingScheduleDayView::SizingScheduleDayView(bool isIP,
   mainVLayout->setSpacing(10);
   mainHLayout->addLayout(mainVLayout, 100);
 
-  // Name 
+  // Name
 
   auto scheduleRulesetNameWidget = new ScheduleRulesetNameWidget(scheduleRuleset);
   mainVLayout->addWidget(scheduleRulesetNameWidget);
@@ -1573,7 +1562,7 @@ SizingScheduleDayView::SizingScheduleDayView(bool isIP,
     {
       QLabel * label = new QLabel("Summer design day profile.");
       label->setObjectName("H2");
-      
+
       auto hLayout = new QHBoxLayout();
       hLayout->setContentsMargins(60, 0, 0, 10);
       hLayout->addWidget(label);
@@ -1636,7 +1625,7 @@ ScheduleRuleView::ScheduleRuleView(bool isIP,
   mainVLayout->setSpacing(10);
   mainHLayout->addLayout(mainVLayout,100);
 
-  // Name 
+  // Name
 
   model::ScheduleRuleset scheduleRuleset = scheduleRule.scheduleRuleset();
   auto scheduleRulesetNameWidget = new ScheduleRulesetNameWidget(scheduleRuleset);
@@ -1692,8 +1681,14 @@ ScheduleRuleView::ScheduleRuleView(bool isIP,
 
   nameHLayout->addSpacing(10);
 
-  m_nameEditField = new OSLineEdit();
-  m_nameEditField->bind(m_scheduleRule,"name");
+  m_nameEditField = new OSLineEdit2();
+
+  m_nameEditField->bind(
+    m_scheduleRule,
+    OptionalStringGetter(std::bind(&model::ScheduleRule::name, &m_scheduleRule,true)),
+    boost::optional<StringSetter>(std::bind(&model::ScheduleRule::setName, &m_scheduleRule,std::placeholders::_1))
+  );
+
   nameHLayout->addWidget(m_nameEditField);
 
   ruleVLayout->addLayout(nameHLayout);
@@ -1702,7 +1697,7 @@ ScheduleRuleView::ScheduleRuleView(bool isIP,
 
   QLabel * dateRangeLabel = new QLabel("Date Range:");
   dateHLayout->addWidget(dateRangeLabel);
-  
+
   m_startDateEdit = new QDateTimeEdit();
   m_startDateEdit->setDisplayFormat("MM/dd");
   m_startDateEdit->setCalendarPopup(true);
@@ -1816,9 +1811,9 @@ ScheduleRuleView::ScheduleRuleView(bool isIP,
 
   // Connect
 
-  connect(m_scheduleRule.getImpl<model::detail::ScheduleRule_Impl>().get(), &model::detail::ScheduleRule_Impl::onChange, this, &ScheduleRuleView::scheduleRefresh);
+  m_scheduleRule.getImpl<model::detail::ScheduleRule_Impl>().get()->onChange.connect<ScheduleRuleView, &ScheduleRuleView::scheduleRefresh>(this);
 
-  connect(m_yearDescription->getImpl<model::detail::YearDescription_Impl>().get(), &model::detail::YearDescription_Impl::onChange, this, &ScheduleRuleView::scheduleRefresh);
+  m_yearDescription->getImpl<model::detail::YearDescription_Impl>().get()->onChange.connect<ScheduleRuleView, &ScheduleRuleView::scheduleRefresh>(this);
 
   connect(this, &ScheduleRuleView::startDateTimeChanged, m_schedulesView, &SchedulesView::startDateTimeChanged);
 
@@ -1832,6 +1827,8 @@ ScheduleRuleView::ScheduleRuleView(bool isIP,
 
 void ScheduleRuleView::onRemoveClicked()
 {
+  std::cout << "ScheduleRuleView::onRemoveClicked: " << m_scheduleRule << std::endl;
+
   //m_scheduleRule.remove();
   m_scheduleRule.getImpl<openstudio::model::detail::ScheduleRule_Impl>();
 
@@ -1860,7 +1857,7 @@ void ScheduleRuleView::refresh()
     if( startDate )
     {
       QDate qstartDate(startDate->year(),startDate->monthOfYear().value(),startDate->dayOfMonth());
-    
+
       m_startDateEdit->setDate(qstartDate);
 
       m_startDateEdit->calendarWidget()->setSelectedDate(qstartDate);
@@ -1870,7 +1867,7 @@ void ScheduleRuleView::refresh()
     if( endDate )
     {
       QDate qendDate(endDate->year(),endDate->monthOfYear().value(),endDate->dayOfMonth());
-    
+
       m_endDateEdit->setDate(qendDate);
 
       m_endDateEdit->calendarWidget()->setSelectedDate(qendDate);
@@ -1886,7 +1883,7 @@ void ScheduleRuleView::refresh()
 void ScheduleRuleView::scheduleRefresh()
 {
   m_dirty = true;
-  
+
   QTimer::singleShot(0,this,SLOT(refresh()));
 }
 
@@ -1926,8 +1923,15 @@ ScheduleRulesetNameWidget::ScheduleRulesetNameWidget(const model::ScheduleRulese
   label->setObjectName("H2");
   hLayout->addWidget(label);
 
-  auto lineEdit = new OSLineEdit();
-  lineEdit->bind(m_scheduleRuleset, "name");
+  auto lineEdit = new OSLineEdit2();
+  // lineEdit->bind(m_scheduleRuleset, "name");
+  opt_scheduleRuleset = m_scheduleRuleset;
+  lineEdit->bind(
+    *opt_scheduleRuleset,
+    OptionalStringGetter(std::bind(&model::ScheduleRuleset::name, opt_scheduleRuleset.get_ptr(),true)),
+    boost::optional<StringSetter>(std::bind(&model::ScheduleRuleset::setName, opt_scheduleRuleset.get_ptr(),std::placeholders::_1))
+  );
+
   hLayout->addWidget(lineEdit);
 
   // Schedule Type
@@ -2051,11 +2055,9 @@ YearOverview::YearOverview(const model::ScheduleRuleset & scheduleRuleset, QWidg
 
   mainLayout->addStretch(10);
 
-  connect(m_scheduleRuleset.model().getImpl<model::detail::Model_Impl>().get(),
-          static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::addWorkspaceObject),
-          this,
-          &YearOverview::onModelAdd,
-          Qt::QueuedConnection);
+  //m_scheduleRuleset.model().getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.connect<YearOverview, &YearOverview::onModelAdd>(this);
+  connect(OSAppBase::instance(), &OSAppBase::workspaceObjectAddedPtr, this, &YearOverview::onModelAdd, Qt::QueuedConnection);
+
 
   std::vector<model::ScheduleRule> scheduleRules = m_scheduleRuleset.scheduleRules();
 
@@ -2063,13 +2065,12 @@ YearOverview::YearOverview(const model::ScheduleRuleset & scheduleRuleset, QWidg
        it < scheduleRules.end();
        ++it)
   {
-    connect(it->getImpl<model::detail::ScheduleRule_Impl>().get(), &model::detail::ScheduleRule_Impl::onChange, this, &YearOverview::scheduleRefresh);
+    it->getImpl<model::detail::ScheduleRule_Impl>().get()->onChange.connect<YearOverview, &YearOverview::scheduleRefresh>(this);
   }
 
   model::YearDescription yearDescription = m_scheduleRuleset.model().getUniqueModelObject<model::YearDescription>();
 
-  connect(yearDescription.getImpl<model::detail::YearDescription_Impl>().get(), &model::detail::YearDescription_Impl::onChange,
-          this, &YearOverview::scheduleRefresh);
+  yearDescription.getImpl<model::detail::YearDescription_Impl>().get()->onChange.connect<YearOverview, &YearOverview::scheduleRefresh>(this);
 
   refresh();
 }
@@ -2096,8 +2097,7 @@ void YearOverview::onModelAdd(std::shared_ptr<openstudio::detail::WorkspaceObjec
   {
     if (scheduleRule->scheduleRuleset().handle() == m_scheduleRuleset.handle())
     {
-      connect(scheduleRule->getImpl<model::detail::ScheduleRule_Impl>().get(), &model::detail::ScheduleRule_Impl::onChange,
-              this, &YearOverview::scheduleRefresh);
+      scheduleRule->getImpl<model::detail::ScheduleRule_Impl>().get()->onChange.connect<YearOverview, &YearOverview::scheduleRefresh>(this);
     }
   }
 }

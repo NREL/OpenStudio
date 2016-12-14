@@ -448,10 +448,10 @@ class UTILITIES_API Workspace {
   //@{
 
   // connect a progress bar
-  bool connectProgressBar(const openstudio::ProgressBar& progressBar) const;
+  bool connectProgressBar(openstudio::ProgressBar& progressBar);
 
   // disconnect a progress bar
-  bool disconnectProgressBar(const openstudio::ProgressBar &progressBar) const;
+  bool disconnectProgressBar(openstudio::ProgressBar &progressBar);
 
   //@}
   /** @name Type Casing */

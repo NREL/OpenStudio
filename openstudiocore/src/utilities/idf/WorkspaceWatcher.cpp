@@ -28,7 +28,6 @@
 
 #include "WorkspaceWatcher.hpp"
 #include "Workspace_Impl.hpp"
-#include "../core/Application.hpp"
 #include "../core/Assert.hpp"
 
 #include <QTimer>
@@ -38,24 +37,15 @@ namespace openstudio {
 WorkspaceWatcher::WorkspaceWatcher(const Workspace& work)
   : m_enabled(true), m_dirty(false), m_objectAdded(false), m_objectRemoved(false)
 {
-  // make sure a QApplication exists
-  openstudio::Application::instance().application(false);
-
   detail::Workspace_ImplPtr wsImpl = work.getImpl<detail::Workspace_Impl>();
-  connect(wsImpl.get(), &detail::Workspace_Impl::onChange, this, &WorkspaceWatcher::change);
+  wsImpl.get()->detail::Workspace_Impl::onChange.connect<WorkspaceWatcher, &WorkspaceWatcher::change>(this);
 
   // ideally this would be a queued connection so objects can be initialized before signal is processed
   // However, WorkspaceObject is not a QObject.  Instead we use QTimer to give a delay.
-  connect(wsImpl.get(),
-    static_cast<void (detail::Workspace_Impl::*)(const WorkspaceObject &, const IddObjectType &, const UUID &) const>(&detail::Workspace_Impl::addWorkspaceObject),
-    this,
-    &WorkspaceWatcher::objectAdd);
+  wsImpl.get()->detail::Workspace_Impl::addWorkspaceObject.connect<WorkspaceWatcher, &WorkspaceWatcher::objectAdd>(this);
 
   // this signal happens immediately
-  connect(wsImpl.get(),
-    static_cast<void (detail::Workspace_Impl::*)(const WorkspaceObject &, const IddObjectType &, const UUID &) const>(&detail::Workspace_Impl::removeWorkspaceObject),
-    this,
-    &WorkspaceWatcher::objectRemove);
+  wsImpl.get()->detail::Workspace_Impl::removeWorkspaceObject.connect<WorkspaceWatcher, &WorkspaceWatcher::objectRemove>(this);
 }
 
 WorkspaceWatcher::~WorkspaceWatcher()
@@ -145,34 +135,23 @@ void WorkspaceWatcher::change()
   }
 }
 
-void WorkspaceWatcher::objectAdd(const WorkspaceObject& addedObject)
+
+void WorkspaceWatcher::objectAdd(const WorkspaceObject& addedObject, const openstudio::IddObjectType& type, const openstudio::UUID& uuid)
 {
+  // Note: Args 2 & 3 are simply to comply with Nano::Signal template parameters
   // let change() handle m_dirty and onChangeWorkspace();
   m_objectAdded = true;
 
   if (enabled()){
-    m_addedObjects.push_back(addedObject);
-    QTimer::singleShot(0,this,SLOT(processAddedObjects()));
-  }
-}
-
-void WorkspaceWatcher::processAddedObjects()
-{
-  std::vector<WorkspaceObject> addedObjects;
-  std::swap(m_addedObjects, addedObjects);
-  OS_ASSERT(m_addedObjects.empty());
-
-  for (const WorkspaceObject& addedObject : addedObjects){
-    // check for the case where object has been removed before the add was processed
     if (!addedObject.handle().isNull()){
       this->onObjectAdd(addedObject);
     }
   }
-
 }
 
-void WorkspaceWatcher::objectRemove(const WorkspaceObject& removedObject)
+void WorkspaceWatcher::objectRemove(const WorkspaceObject& removedObject, const openstudio::IddObjectType& type, const openstudio::UUID& uuid)
 {
+  // Note: Args 2 & 3 are simply to comply with Nano::Signal template parameters
   // let change() handle m_dirty and onChangeWorkspace();
   m_objectRemoved = true;
 

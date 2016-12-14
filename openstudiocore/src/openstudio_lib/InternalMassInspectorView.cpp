@@ -68,7 +68,7 @@ InternalMassDefinitionInspectorView::InternalMassDefinitionInspectorView(bool is
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,0,0);
 
-  m_nameEdit = new OSLineEdit();
+  m_nameEdit = new OSLineEdit2();
   mainGridLayout->addWidget(m_nameEdit,1,0,1,3);
 
   // Surface Area
@@ -77,8 +77,8 @@ InternalMassDefinitionInspectorView::InternalMassDefinitionInspectorView(bool is
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,2,0);
 
-  m_surfaceAreaEdit = new OSQuantityEdit(m_isIP);
-  connect(this, &InternalMassDefinitionInspectorView::toggleUnitsClicked, m_surfaceAreaEdit, &OSQuantityEdit::onUnitSystemChange);
+  m_surfaceAreaEdit = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &InternalMassDefinitionInspectorView::toggleUnitsClicked, m_surfaceAreaEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_surfaceAreaEdit,3,0);
 
   // Surface Area Per Space Floor Area
@@ -87,8 +87,8 @@ InternalMassDefinitionInspectorView::InternalMassDefinitionInspectorView(bool is
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,2,1);
 
-  m_surfaceAreaPerSpaceFloorAreaEdit = new OSQuantityEdit(m_isIP);
-  connect(this, &InternalMassDefinitionInspectorView::toggleUnitsClicked, m_surfaceAreaPerSpaceFloorAreaEdit, &OSQuantityEdit::onUnitSystemChange);
+  m_surfaceAreaPerSpaceFloorAreaEdit = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &InternalMassDefinitionInspectorView::toggleUnitsClicked, m_surfaceAreaPerSpaceFloorAreaEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_surfaceAreaPerSpaceFloorAreaEdit,3,1);
 
   // Surface Area Per Person
@@ -97,8 +97,8 @@ InternalMassDefinitionInspectorView::InternalMassDefinitionInspectorView(bool is
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,2,2);
 
-  m_surfaceAreaPerPersonEdit = new OSQuantityEdit(m_isIP);
-  connect(this, &InternalMassDefinitionInspectorView::toggleUnitsClicked, m_surfaceAreaPerPersonEdit, &OSQuantityEdit::onUnitSystemChange);
+  m_surfaceAreaPerPersonEdit = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &InternalMassDefinitionInspectorView::toggleUnitsClicked, m_surfaceAreaPerPersonEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_surfaceAreaPerPersonEdit,3,2);
 
   // Construction
@@ -143,10 +143,38 @@ void InternalMassDefinitionInspectorView::onUpdate()
 
 void InternalMassDefinitionInspectorView::attach(openstudio::model::InternalMassDefinition & internalMassDefinition)
 {
-  m_nameEdit->bind(internalMassDefinition,"name");
-  m_surfaceAreaEdit->bind(internalMassDefinition,"surfaceArea",m_isIP);
-  m_surfaceAreaPerPersonEdit->bind(internalMassDefinition,"surfaceAreaperPerson",m_isIP);
-  m_surfaceAreaPerSpaceFloorAreaEdit->bind(internalMassDefinition,"surfaceAreaperSpaceFloorArea",m_isIP);
+  m_internalMassDefinition = internalMassDefinition;
+
+  // m_nameEdit->bind(internalMassDefinition,"name");
+  m_nameEdit->bind(
+    *m_internalMassDefinition,
+    OptionalStringGetter(std::bind(&model::InternalMassDefinition::name, m_internalMassDefinition.get_ptr(),true)),
+    boost::optional<StringSetter>(std::bind(&model::InternalMassDefinition::setName, m_internalMassDefinition.get_ptr(),std::placeholders::_1))
+  );
+
+  // m_surfaceAreaEdit->bind(internalMassDefinition,"surfaceArea",m_isIP);
+  m_surfaceAreaEdit->bind(
+    m_isIP,
+    *m_internalMassDefinition,
+    OptionalDoubleGetter(std::bind(&model::InternalMassDefinition::surfaceArea, m_internalMassDefinition.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::InternalMassDefinition::*)(double)>(&model::InternalMassDefinition::setSurfaceArea), m_internalMassDefinition.get_ptr(), std::placeholders::_1))
+  );
+
+  // m_surfaceAreaPerPersonEdit->bind(internalMassDefinition,"surfaceAreaperPerson",m_isIP);
+  m_surfaceAreaPerPersonEdit->bind(
+    m_isIP,
+    *m_internalMassDefinition,
+    OptionalDoubleGetter(std::bind(&model::InternalMassDefinition::surfaceAreaperPerson, m_internalMassDefinition.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::InternalMassDefinition::*)(double)>(&model::InternalMassDefinition::setSurfaceAreaperPerson), m_internalMassDefinition.get_ptr(), std::placeholders::_1))
+  );
+
+  // m_surfaceAreaPerSpaceFloorAreaEdit->bind(internalMassDefinition,"surfaceAreaperSpaceFloorArea",m_isIP);
+  m_surfaceAreaPerSpaceFloorAreaEdit->bind(
+    m_isIP,
+    *m_internalMassDefinition,
+    OptionalDoubleGetter(std::bind(&model::InternalMassDefinition::surfaceAreaperSpaceFloorArea, m_internalMassDefinition.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::InternalMassDefinition::*)(double)>(&model::InternalMassDefinition::setSurfaceAreaperSpaceFloorArea), m_internalMassDefinition.get_ptr(), std::placeholders::_1))
+  );
 
   m_ConstructionVectorController->attach(internalMassDefinition);
 
@@ -162,6 +190,8 @@ void InternalMassDefinitionInspectorView::detach()
   m_surfaceAreaPerPersonEdit->unbind();
   m_surfaceAreaPerSpaceFloorAreaEdit->unbind();
 
+  m_internalMassDefinition = boost::none;
+
   m_ConstructionVectorController->detach();
 }
 
@@ -170,9 +200,9 @@ void InternalMassDefinitionInspectorView::refresh()
 }
 
 void InternalMassDefinitionInspectorView::ConstructionVectorController::onChangeRelationship(
-       const openstudio::model::ModelObject& modelObject, 
-       int index, 
-       Handle newHandle, 
+       const openstudio::model::ModelObject& modelObject,
+       int index,
+       Handle newHandle,
        Handle oldHandle)
 {
   if( index == OS_InternalMass_DefinitionFields::ConstructionName )
@@ -181,7 +211,7 @@ void InternalMassDefinitionInspectorView::ConstructionVectorController::onChange
   }
 }
 
-boost::optional<model::InternalMassDefinition> 
+boost::optional<model::InternalMassDefinition>
   InternalMassDefinitionInspectorView::ConstructionVectorController::internalMassDefinition()
 {
   if( m_modelObject )
@@ -202,7 +232,7 @@ std::vector<OSItemId> InternalMassDefinitionInspectorView::ConstructionVectorCon
   {
     if( boost::optional<model::ConstructionBase> c = mo->construction() )
     {
-      result.push_back(modelObjectToItemId(c.get(), false)); 
+      result.push_back(modelObjectToItemId(c.get(), false));
     }
   }
 

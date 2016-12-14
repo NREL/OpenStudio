@@ -374,7 +374,7 @@ namespace openstudio {
 
   void SpaceTypesGridController::filterChanged(const QString & text)
   {
-    LOG(Debug, "Load filter changed: " << text);
+    LOG(Debug, "Load filter changed: " << toString(text));
 
     auto objectSelector = getObjectSelector();
     if (text == SHOWALLLOADS)

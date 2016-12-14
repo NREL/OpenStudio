@@ -31,6 +31,7 @@
 
 #include "ModelObjectVectorController.hpp"
 
+#include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
 #include "../model/Building.hpp"
 #include "../model/DefaultScheduleSet.hpp"
 #include "../model/Model.hpp"
@@ -48,10 +49,10 @@ class QVBoxLayout;
 
 namespace openstudio {
 
-class OSDoubleEdit;
+class OSDoubleEdit2;
 class OSDropZone;
 class OSIntegerEdit;
-class OSLineEdit;
+class OSLineEdit2;
 
 class SpaceLoadInstanceDefinitionVectorController : public ModelObjectVectorController
 {
@@ -127,8 +128,8 @@ private slots:
   void onRemoveClicked();
 
 private:
-  OSDoubleEdit* m_multiplierEdit;
-  OSLineEdit* m_nameEdit;
+  OSDoubleEdit2* m_multiplierEdit;
+  OSLineEdit2* m_nameEdit;
   QLabel* m_activityScheduleLabel;
   QPushButton* m_removeButton;
 
@@ -143,6 +144,8 @@ private:
 
   model::SpaceLoadInstance m_spaceLoadInstance;
   bool m_isDefault;
+
+  boost::optional<model::SpaceLoadInstance> opt_spaceLoadInstance;
 
 private:
   void createLayout(bool isDefault);
@@ -160,7 +163,7 @@ protected:
   virtual void onDrop(const OSItemId& itemId) override;
 };
 
-class SpaceLoadInstancesWidget : public QWidget
+class SpaceLoadInstancesWidget : public QWidget, public Nano::Observer
 {
   Q_OBJECT
 
@@ -185,7 +188,7 @@ private slots:
   void objectAdded(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&);
 
   void objectRemoved(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&);
-  
+
   void refresh();
 
 private:

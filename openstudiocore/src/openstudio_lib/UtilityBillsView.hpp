@@ -29,6 +29,7 @@
 #ifndef OPENSTUDIO_UTILITYBILLSVIEW_HPP
 #define OPENSTUDIO_UTILITYBILLSVIEW_HPP
 
+#include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
 #include "ModelObjectInspectorView.hpp"
 #include "ModelSubTabView.hpp"
 
@@ -195,7 +196,7 @@ private slots:
 
 };
 
-class BillingPeriodWidget : public QWidget
+class BillingPeriodWidget : public QWidget, public Nano::Observer
 {
 
   Q_OBJECT

@@ -79,7 +79,7 @@ namespace model {
       : ParentObject_Impl(type, model)
     {
       // connect signals
-      connect(this, &PlanarSurface_Impl::onChange, this, &PlanarSurface_Impl::clearCachedVariables);
+      this->PlanarSurface_Impl::onChange.connect<PlanarSurface_Impl, &PlanarSurface_Impl::clearCachedVariables>(this);
     }
 
     // constructor
@@ -89,7 +89,7 @@ namespace model {
       : ParentObject_Impl(idfObject, model, keepHandle)
     {
       // connect signals
-      connect(this, &PlanarSurface_Impl::onChange, this, &PlanarSurface_Impl::clearCachedVariables);
+      this->PlanarSurface_Impl::onChange.connect<PlanarSurface_Impl, &PlanarSurface_Impl::clearCachedVariables>(this);
     }
 
     PlanarSurface_Impl::PlanarSurface_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -98,7 +98,7 @@ namespace model {
       : ParentObject_Impl(other,model,keepHandle)
     {
       // connect signals
-      connect(this, &PlanarSurface_Impl::onChange, this, &PlanarSurface_Impl::clearCachedVariables);
+      this->PlanarSurface_Impl::onChange.connect<PlanarSurface_Impl, &PlanarSurface_Impl::clearCachedVariables>(this);
     }
 
     PlanarSurface_Impl::PlanarSurface_Impl(const PlanarSurface_Impl& other,
@@ -107,9 +107,9 @@ namespace model {
       : ParentObject_Impl(other,model,keepHandle)
     {
       // connect signals
-      connect(this, &PlanarSurface_Impl::onChange, this, &PlanarSurface_Impl::clearCachedVariables);
+      this->PlanarSurface_Impl::onChange.connect<PlanarSurface_Impl, &PlanarSurface_Impl::clearCachedVariables>(this);
     }
-
+    
     boost::optional<ConstructionBase> PlanarSurface_Impl::construction() const
     {
       boost::optional<std::pair<ConstructionBase, int> > result = this->constructionWithSearchDistance();

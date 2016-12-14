@@ -27,6 +27,7 @@
  **********************************************************************************************************************/
 
 #include "EnergyPlusAPI.hpp"
+#include <src/energyplus/embedded_files.hxx>
 
 #include "ForwardTranslator.hpp"
 
@@ -60,6 +61,7 @@
 #include "../utilities/idf/WorkspaceObjectOrder.hpp"
 #include "../utilities/core/Logger.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/FilesystemHelpers.hpp"
 #include "../utilities/geometry/BoundingBox.hpp"
 #include "../utilities/time/Time.hpp"
 #include "../utilities/plot/ProgressBar.hpp"
@@ -79,7 +81,6 @@
 #include "../utilities/idd/IddEnums.hpp"
 
 #include <QFile>
-#include <QTextStream>
 #include <QThread>
 
 #include <sstream>
@@ -3701,14 +3702,8 @@ IdfObject ForwardTranslator::createRegisterAndNameIdfObject(const IddObjectType&
 }
 
 boost::optional<IdfFile> ForwardTranslator::findIdfFile(const std::string& path) {
-  QFile file(QString().fromStdString(path));
-  bool opened = file.open(QIODevice::ReadOnly | QIODevice::Text);
-  OS_ASSERT(opened);
-
-  QTextStream in(&file);
   std::stringstream ss;
-  ss << in.readAll().toStdString();
-
+  ss << ::energyplus::embedded_files::getFileAsString(path);
   return IdfFile::load(ss, IddFileType::EnergyPlus);
 }
 

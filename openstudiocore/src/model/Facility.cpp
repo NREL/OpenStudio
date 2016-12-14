@@ -55,7 +55,6 @@
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Optional.hpp"
 #include "../utilities/core/Compare.hpp"
-#include "../utilities/economics/Economics.hpp"
 #include "../utilities/sql/SqlFile.hpp"
 
 using openstudio::Handle;
@@ -301,10 +300,6 @@ namespace detail {
   OptionalDouble Facility_Impl::economicsCapitalCost() const
   {
     OptionalDouble result;
-    Economics::BuildingType referenceBldg = Economics::btReference;
-    Economics economics;
-    if(!initEconomics(economics)) return result;
-    result = economics.firstCosts(referenceBldg);
     return result;
   }
 
@@ -321,27 +316,18 @@ namespace detail {
   OptionalDouble Facility_Impl::economicsVirtualRateGas() const
   {
     OptionalDouble result;
-    Economics economics;
-    if(!initEconomics(economics)) return result;
-    result = economics.getVirtualRate(Economics::btReference,Economics::vrGas);
     return result;
   }
 
   OptionalDouble Facility_Impl::economicsVirtualRateElec() const
   {
     OptionalDouble result;
-    Economics economics;
-    if(!initEconomics(economics)) return result;
-    result = economics.getVirtualRate(Economics::btReference,Economics::vrElec);
     return result;
   }
 
   OptionalDouble Facility_Impl::economicsVirtualRateCombined() const
   {
     OptionalDouble result;
-    Economics economics;
-    if(!initEconomics(economics)) return result;
-    result = economics.getVirtualRate(Economics::btReference,Economics::vrCombined);
     return result;
   }
 
@@ -385,153 +371,33 @@ namespace detail {
     return getElecOrGasCost(false);
   }
 
-  bool Facility_Impl::initEconomics(Economics& economics) const
-  {
-    bool success = false;
-
-/*
-    // DLM: we are redoing this function
-
-    Economics::BuildingType referenceBldg = Economics::btReference;
-    OptionalDouble matCost;
-    OptionalDouble installCost;
-    OptionalDouble fixedOM;
-    OptionalDouble variableOM;
-    OptionalInt expectedLife;
-    OptionalDouble salvageCost;
-    double netArea;
-    std::string constructionName;
-    ComponentCostLineItemVector componentCostLineItems = this->model().getModelObjects<ComponentCostLineItem>();
-    for (ComponentCostLineItem componentCostLineItem : componentCostLineItems){
-
-      ModelObject item = componentCostLineItem.item();
-
-      if(item.optionalCast<ConstructionBase>()){
-
-        ConstructionBase construction = item.cast<ConstructionBase>();
-
-        // query area of construction from model
-        std::vector<PlanarSurface> surfaces = construction.getModelObjectSources<PlanarSurface>();
-
-        netArea = 0;
-        for (PlanarSurface surface : surfaces){
-          netArea += surface.netArea();
-        }
-
-        matCost = componentCostLineItem.materialCost();
-        installCost = componentCostLineItem.installationCost();
-        //fixedOM = componentCostLineItem.fixedOM();
-        //variableOM = componentCostLineItem.variableOM();
-        //expectedLife = componentCostLineItem.expectedLife();
-        //salvageCost = componentCostLineItem.salvageValue();
-
-        economics.addCostInstance(referenceBldg,"Obj",matCost,installCost,fixedOM,variableOM,expectedLife,salvageCost,netArea);
-
-        if (!matCost) matCost = 0;
-        if (!installCost) installCost = 0;
-        if (!fixedOM) fixedOM = 0;
-        if (!variableOM) variableOM = 0;
-        if (!expectedLife) expectedLife = 0;
-        if (!salvageCost) salvageCost = 0;
-
-        LOG(Debug, "Added cost object " << componentCostLineItem << " for construction of name '" << constructionName << "'." << std::endl
-          << "matCost = " << *matCost << ", installCost = " << *installCost << ", fixedOM = " << *fixedOM << ", variableOM = " << *variableOM
-          << ", expectedLife = " << *expectedLife << ", salvageCost = " << *salvageCost << ", netArea = " << netArea );
-
-
-        // set at least 1 cost instance
-        success = true;
-      }else{
-        LOG(Warn, "Cost object " << componentCostLineItem << " could not be added to the total cost because its type is not currently handled");
-      }
-    }
-
-    if(!success){
-      LOG(Error, "No cost objects processed in initEconomics.");
-      return success;
-    }
-    else{
-      // reset to false and test more conditions
-      success = false;
-    }
-
-    OptionalLifeCycleCost_Parameters lifeCycleCostParameters = this->model().getUniqueModelObject<LifeCycleCost_Parameters>();
-    if(!lifeCycleCostParameters) {
-      LOG(Error, "LifeCycleCost_Parameters object not found.");
-      return success;
-    }
-
-    OptionalDouble inflation = lifeCycleCostParameters->inflation();
-    OptionalDouble omInflation = lifeCycleCostParameters->omInflation();
-    OptionalDouble discountRate = lifeCycleCostParameters->nominalDiscountRate();
-    OptionalInt analysisPeriod = lifeCycleCostParameters->lengthOfStudyPeriodInYears();
-
-    // economics.addDistrictCool(referenceBldg,use,cost,inflation);  TODO Nick: district cooling not available in tariff, see Dan
-    // economics.addDistrictHeat(referenceBldg,use,cost,inflation);  TODO Nick: distruct heating not available in tariff, see Dan
-
-    OptionalDouble elecUse = this->elecUse();
-    OptionalDouble elecCost = this->elecCost();
-    OptionalDouble gasUse = this->gasUse();
-    OptionalDouble gasCost = this->gasCost();
-
-    economics.addElectricity(referenceBldg,elecUse,elecCost,inflation);
-    economics.addGas(referenceBldg,gasUse,gasCost,inflation);
-    economics.setInflation(referenceBldg,inflation);
-    economics.setOMInflation(referenceBldg,omInflation);
-    economics.setDiscountRate(discountRate);
-    economics.setAnalysisPeriod(analysisPeriod);
-
-    economics.calculateSingleEconomics(referenceBldg);
-
-    success = true;
-
-    LOG(Debug, "initEconomics completed successfully");
-*/
-    return success;
-  }
-
   OptionalDouble Facility_Impl::economicsTLCC() const
   {
     OptionalDouble result;
-    Economics economics;
-    if(!initEconomics(economics)) return result;
-    result = economics.getTLCC(Economics::btReference);
     return result;
   }
 
   OptionalDouble Facility_Impl::economicsSPB() const
   {
     OptionalDouble result;
-    Economics economics;
-    if(!initEconomics(economics)) return result;
-    result = economics.simplePayback();
     return result;
   }
 
   OptionalDouble Facility_Impl::economicsDPB() const
   {
     OptionalDouble result;
-    Economics economics;
-    if(!initEconomics(economics)) return result;
-    result = economics.discountedPayback();
     return result;
   }
 
   OptionalDouble Facility_Impl::economicsNPV() const
   {
     OptionalDouble result;
-    Economics economics;
-    if(!initEconomics(economics)) return result;
-    result = economics.netPresentValue();
     return result;
   }
 
   OptionalDouble Facility_Impl::economicsIRR() const
   {
     OptionalDouble result;
-    Economics economics;
-    if(!initEconomics(economics)) return result;
-    result = economics.internalRateOfReturn();
     return result;
   }
 

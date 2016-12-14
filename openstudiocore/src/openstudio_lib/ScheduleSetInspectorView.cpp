@@ -609,7 +609,7 @@ ScheduleSetInspectorView::ScheduleSetInspectorView(const model::Model& model,
   label->setWordWrap(true);
   label->setText("Name");
 
-  m_nameEdit = new OSLineEdit();
+  m_nameEdit = new OSLineEdit2();
 
   auto gridLayout = new QGridLayout();
   gridLayout->setContentsMargins(10,10,10,10);
@@ -812,7 +812,13 @@ void ScheduleSetInspectorView::attach(openstudio::model::DefaultScheduleSet& def
     vc->reportItems();
   }
 
-  m_nameEdit->bind(defaultScheduleSet, "name");
+  m_defaultScheduleSet = defaultScheduleSet;
+  // m_nameEdit->bind(defaultScheduleSet, "name");
+  m_nameEdit->bind(
+    *m_defaultScheduleSet,
+    OptionalStringGetter(std::bind(&model::DefaultScheduleSet::name, m_defaultScheduleSet.get_ptr(),true)),
+    boost::optional<StringSetter>(std::bind(&model::DefaultScheduleSet::setName, m_defaultScheduleSet.get_ptr(),std::placeholders::_1))
+  );
 
   this->stackedWidget()->setCurrentIndex(1);
 }
@@ -827,6 +833,8 @@ void ScheduleSetInspectorView::detach()
     vc->detach();
     vc->reportItems();
   }
+
+  m_defaultScheduleSet = boost::none;
 }
 
 } // openstudio

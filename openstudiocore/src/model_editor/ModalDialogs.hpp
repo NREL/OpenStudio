@@ -32,6 +32,7 @@
 #include "ModelEditorAPI.hpp"
 
 #include "../model/Model.hpp"
+#include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
 
 #include "../utilities/idd/IddEnums.hpp"
 #include "../utilities/core/UUID.hpp"
@@ -55,7 +56,7 @@ namespace openstudio{
   }
 }
 
-class MODELEDITOR_API ModelObjectSelectorDialog : public QDialog
+class MODELEDITOR_API ModelObjectSelectorDialog : public QDialog, public Nano::Observer
 {
   Q_OBJECT
 
@@ -92,8 +93,8 @@ signals:
 
 private slots:
 
-  void onAddWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl);
-  void onRemoveWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl);
+  void onAddWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& type, const openstudio::UUID& uuid);
+  void onRemoveWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& type, const openstudio::UUID& uuid);
 
 private:
 
@@ -115,7 +116,7 @@ private:
   void loadComboBoxData();
 };
 
-class MODELEDITOR_API ModelObjectSelectorDialogWatcher : public QObject
+class MODELEDITOR_API ModelObjectSelectorDialogWatcher : public QObject, public Nano::Observer
 {
   Q_OBJECT
   

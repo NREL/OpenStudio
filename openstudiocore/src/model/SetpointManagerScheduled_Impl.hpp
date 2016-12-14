@@ -40,12 +40,12 @@ class Schedule;
 namespace detail {
 
 class MODEL_API SetpointManagerScheduled_Impl : public SetpointManager_Impl {
-  Q_OBJECT;
+  
 
-  Q_PROPERTY(std::string controlVariable READ controlVariable WRITE setControlVariable);
-  Q_PROPERTY(std::vector<std::string> controlVariableValues READ controlVariableValues);
+  
+  
 
-  Q_PROPERTY(boost::optional<openstudio::model::ModelObject> schedule READ scheduleAsModelObject WRITE setScheduleAsModelObject);
+  
  public:
   /** @name Constructors and Destructors */
   //@{

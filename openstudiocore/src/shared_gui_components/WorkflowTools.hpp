@@ -52,7 +52,7 @@ namespace openstudio
 
   //void removeRadianceFromProject(openstudio::analysisdriver::SimpleProject &t_project);
 
-  boost::optional<int> getModelMeasureInsertStep(const openstudio::analysis::Problem &t_problem);
+  //boost::optional<int> getModelMeasureInsertStep(const openstudio::analysis::Problem &t_problem);
 }
 
 #endif // SHAREDGUICOMPONENTS_WORKFLOWTOOLS_HPP

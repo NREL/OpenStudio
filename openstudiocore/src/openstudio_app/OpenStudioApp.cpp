@@ -32,14 +32,13 @@
 #include "StartupView.hpp"
 #include "../openstudio_lib/MainWindow.hpp"
 #include "../openstudio_lib/OSDocument.hpp"
-#include "../openstudio_lib/FileOperations.hpp"
 
 #include "../shared_gui_components/WaitDialog.hpp"
 #include "../shared_gui_components/MeasureManager.hpp"
 
 #include "../utilities/core/Assert.hpp"
-#include "../utilities/core/ApplicationPathHelpers.hpp"
 #include "../utilities/core/Compare.hpp"
+#include "../utilities/core/ApplicationPathHelpers.hpp"
 
 #include "../utilities/idf/IdfFile.hpp"
 #include "../utilities/idf/IdfObject.hpp"
@@ -116,6 +115,8 @@
 #include <QThread>
 #include <QTimer>
 #include <QWidget>
+#include <QProcess>
+#include <QTcpServer>
 
 #include <OpenStudio.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -124,19 +125,20 @@ using namespace openstudio::model;
 
 namespace openstudio {
 
-OpenStudioApp::OpenStudioApp( int & argc, char ** argv, const QSharedPointer<ruleset::RubyUserScriptInfoGetter> &t_infoGetter)
-  : OSAppBase(argc, argv, QSharedPointer<MeasureManager>(new MeasureManager(t_infoGetter, this))),
-    m_infoGetter(t_infoGetter)
+OpenStudioApp::OpenStudioApp( int & argc, char ** argv)
+  : OSAppBase(argc, argv, QSharedPointer<MeasureManager>(new MeasureManager(this))),
+    m_measureManagerProcess(nullptr)
 {
   setOrganizationName("NREL");
   QCoreApplication::setOrganizationDomain("nrel.gov");
-  setApplicationName("OpenStudio");
+  setApplicationName("OpenStudioApp");
 
   readSettings();
 
   QFile f(":/library/OpenStudioPolicy.xml");
-
-  openstudio::model::AccessPolicyStore::Instance().loadFile(f);
+  if(f.open(QFile::ReadOnly)) {
+    openstudio::model::AccessPolicyStore::Instance().loadFile(f.readAll());
+  }
 
   QFile data(":/openstudiolib.qss");
   QString style;
@@ -165,7 +167,12 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv, const QSharedPointer<rul
     connect(m_startupMenu.get(), &StartupMenu::aboutClicked, this, &OpenStudioApp::showAbout);
   #endif
 
-  this->buildCompLibraries();
+  // measure manager server needs to be started after event loop is started
+  QTimer::singleShot(0, this, &OpenStudioApp::startMeasureManagerProcess);
+
+  // DLM: does this have to happen here in a blocking way?  it takes a long time to complete
+  //this->buildCompLibraries();
+  QTimer::singleShot(0, this, &OpenStudioApp::buildCompLibraries);
 
   m_startupView = std::shared_ptr<openstudio::StartupView>(new openstudio::StartupView());
 
@@ -189,7 +196,7 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv, const QSharedPointer<rul
     osversion::VersionTranslator versionTranslator;
     versionTranslator.setAllowNewerVersions(false);
 
-    boost::optional<openstudio::model::Model> model = modelFromOSM(toPath(fileName), versionTranslator);
+    boost::optional<openstudio::model::Model> model = versionTranslator.loadModel(toPath(fileName));
     if( model ){
 
       m_osDocument = std::shared_ptr<OSDocument>( new OSDocument(componentLibrary(), 
@@ -206,7 +213,7 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv, const QSharedPointer<rul
           m_osDocument->setSavePath("");
           QTimer::singleShot(0, m_osDocument.get(), SLOT(markAsModified())); 
         }else{
-          LOG_FREE(Warn, "OpenStudio", "Incorrect second argument '" << args.at(1) << "'");
+          LOG_FREE(Warn, "OpenStudio", "Incorrect second argument '" << toString(args.at(1)) << "'");
         }
       }
 
@@ -233,7 +240,7 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv, const QSharedPointer<rul
   //}
   //
   if (!openedCommandLine){
-    newFromTemplateSlot( NEWFROMTEMPLATE_EMPTY ); // remove when above code uncommented
+    QTimer::singleShot(0, this, &OpenStudioApp::newFromEmptyTemplateSlot); // remove when above code uncommented
   }
   //
   //*************************************************************************************
@@ -249,7 +256,7 @@ bool OpenStudioApp::openFile(const QString& fileName, bool restoreTabs)
     osversion::VersionTranslator versionTranslator;
     versionTranslator.setAllowNewerVersions(false);
 
-    boost::optional<openstudio::model::Model> temp = modelFromOSM(toPath(fileName), versionTranslator);
+    boost::optional<openstudio::model::Model> temp = versionTranslator.loadModel(toPath(fileName));
 
     if (temp) {
       model::Model model = temp.get();
@@ -363,6 +370,11 @@ void OpenStudioApp::quit()
   {
     QApplication::quit();
   }
+}
+
+void OpenStudioApp::newFromEmptyTemplateSlot()
+{
+  newFromTemplateSlot(NEWFROMTEMPLATE_EMPTY);
 }
 
 void OpenStudioApp::newFromTemplateSlot( NewFromTemplateEnum newFromTemplateEnum )
@@ -778,7 +790,7 @@ void OpenStudioApp::loadLibrary()
       osversion::VersionTranslator versionTranslator;
       versionTranslator.setAllowNewerVersions(false);
 
-      boost::optional<openstudio::model::Model> model = modelFromOSM(toPath(fileName), versionTranslator);
+      boost::optional<openstudio::model::Model> model = versionTranslator.loadModel(toPath(fileName));
       if( model ) {
         this->currentDocument()->setComponentLibrary(*model);
         versionUpdateMessageBox(versionTranslator, true, fileName, openstudio::path());
@@ -831,8 +843,11 @@ void  OpenStudioApp::showAbout()
   if (currentDocument()) {
     parent = currentDocument()->mainWindow();
   }
+  QString details = "Measure Manager Server: " + measureManager().url().toString() + "\n";
+  details += "Temp Directory: " + currentDocument()->modelTempDir();
   QMessageBox about(parent);
   about.setText(OPENSTUDIO_ABOUTBOX);
+  about.setDetailedText(details);
   about.setStyleSheet("qproperty-alignment: AlignCenter;");
   about.setWindowTitle("About " + applicationName());
   about.exec();
@@ -845,7 +860,7 @@ void OpenStudioApp::reloadFile(const QString& fileToLoad, bool modified, bool sa
   QFileInfo info(fileToLoad); // handles windows links and "\"
   QString fileName = info.absoluteFilePath();
   osversion::VersionTranslator versionTranslator;
-  boost::optional<openstudio::model::Model> model = modelFromOSM(toPath(fileName), versionTranslator);
+  boost::optional<openstudio::model::Model> model = versionTranslator.loadModel(toPath(fileName));
   if( model ){ 
     
     bool wasQuitOnLastWindowClosed = this->quitOnLastWindowClosed();
@@ -872,8 +887,19 @@ openstudio::path OpenStudioApp::resourcesPath() const
   } 
   else 
   {
-    return getApplicationRunDirectory() / openstudio::toPath("../share/openstudio-" + openStudioVersion() + "/OSApp");
+    return getApplicationDirectory() / openstudio::toPath("../Resources");
   }
+}
+
+openstudio::path OpenStudioApp::openstudioCLIPath() const
+{
+  auto dir = applicationDirPath();
+  auto ext = QFileInfo(applicationFilePath()).suffix();
+  if (ext.isEmpty())
+  {
+    return openstudio::toPath(dir + "/openstudio");
+  }
+  return openstudio::toPath(dir + "/openstudio." + ext);
 }
 
 bool OpenStudioApp::notify(QObject* receiver, QEvent* event)
@@ -944,10 +970,10 @@ void OpenStudioApp::versionUpdateMessageBox(const osversion::VersionTranslator& 
           itr != scriptfolders.end();
           ++itr)
       {
-        if (boost::filesystem::exists(*itr))
+        if (openstudio::filesystem::exists(*itr))
         {
           removedScriptDirs = true;
-          boost::filesystem::remove_all(*itr);
+          openstudio::filesystem::remove_all(*itr);
         }
       }
     }
@@ -1051,6 +1077,73 @@ void OpenStudioApp::connectOSDocumentSignals()
   connect(m_osDocument.get(), &OSDocument::newClicked, this, &OpenStudioApp::newModel);
   connect(m_osDocument.get(), &OSDocument::helpClicked, this, &OpenStudioApp::showHelp);
   connect(m_osDocument.get(), &OSDocument::aboutClicked, this, &OpenStudioApp::showAbout);
+}
+
+void OpenStudioApp::measureManagerProcessStateChanged(QProcess::ProcessState newState)
+{
+}
+
+void OpenStudioApp::measureManagerProcessFinished()
+{
+  // any exit of the cli is an error
+  // DLM: I can't get this to fire when I terminate the process in taskmanager
+  OS_ASSERT(m_measureManagerProcess);
+
+  // the cli crashed
+  QByteArray stdErr = m_measureManagerProcess->readAllStandardError();
+  QByteArray stdOut = m_measureManagerProcess->readAllStandardOutput();
+
+  QString message = "Measure Manager has crashed, attempting to restart\n\n";
+  message += stdErr;
+  message += stdOut;
+
+  QMessageBox::warning(nullptr, QString("Measure Manager has crashed"), message);
+
+  startMeasureManagerProcess();
+}
+
+void OpenStudioApp::startMeasureManagerProcess(){
+  if (m_measureManagerProcess){
+    // will terminate the existing process, blocking call
+    delete m_measureManagerProcess;
+  }
+
+  // find available port
+  QTcpServer* tcpServer = new QTcpServer(this);
+
+  tcpServer->listen(QHostAddress::LocalHost);
+  quint16 port = tcpServer->serverPort();
+  tcpServer->close();
+  delete tcpServer;
+
+  QString portString = QString::number(port);
+  QString urlString = "http://127.0.0.1:" + portString;
+  QUrl url(urlString);
+
+  m_measureManagerProcess = new QProcess(this);
+
+  bool test;
+  // finished is an overloaded signal so have to be clear about which version to use
+  test = connect(m_measureManagerProcess, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &OpenStudioApp::measureManagerProcessFinished);
+  OS_ASSERT(test);
+  test = connect(m_measureManagerProcess, &QProcess::errorOccurred, this, &OpenStudioApp::measureManagerProcessFinished);
+  OS_ASSERT(test);
+  test = connect(m_measureManagerProcess, &QProcess::stateChanged, this, &OpenStudioApp::measureManagerProcessStateChanged);
+  OS_ASSERT(test);
+
+  QString program = toQString(openstudioCLIPath());
+  QStringList arguments;
+  arguments << "measure";
+  arguments << "-s";
+  arguments << portString;
+
+  LOG(Debug, "Starting measure manager server at " << url.toString().toStdString());
+
+  m_measureManagerProcess->start(program, arguments);
+  bool started = m_measureManagerProcess->waitForStarted();
+  OS_ASSERT(started);
+
+  measureManager().setUrl(url);
 }
 
 } // openstudio

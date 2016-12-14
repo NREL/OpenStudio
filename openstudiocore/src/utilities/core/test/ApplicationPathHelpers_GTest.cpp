@@ -28,17 +28,25 @@
 
 #include <gtest/gtest.h>
 
-
-#include <boost/filesystem.hpp>
-#include "CoreFixture.hpp"
-#include "../Path.hpp"
 #include "../ApplicationPathHelpers.hpp"
 
-using openstudio::toPath;
-using openstudio::toString;
+using namespace openstudio;
 
-TEST_F(CoreFixture, ApplicationPathHelpers_EnergyPlus)
+TEST(ApplicationPathHelpers, Strings)
 {
-  openstudio::path ep = openstudio::getEnergyPlusExecutable();
-  EXPECT_TRUE(boost::filesystem::exists(ep));
+  path applicationPath = getApplicationPath();
+  path applicationDir = getApplicationDirectory();
+  path openstudioModule = getOpenStudioModule();
+  path openstudioModuleDirectory = getOpenStudioModuleDirectory();
+  path openstudioCLI = getOpenStudioCLI();
+  path energyplusDirectory = getEnergyPlusDirectory();
+  path energyplusExecutable = getEnergyPlusExecutable();
+
+  EXPECT_TRUE(exists(applicationPath));
+  EXPECT_TRUE(exists(applicationDir));
+  EXPECT_TRUE(exists(openstudioModule));
+  EXPECT_TRUE(exists(openstudioModuleDirectory));
+  EXPECT_TRUE(exists(openstudioCLI));
+  EXPECT_TRUE(exists(energyplusDirectory));
+  EXPECT_TRUE(exists(energyplusExecutable));
 }

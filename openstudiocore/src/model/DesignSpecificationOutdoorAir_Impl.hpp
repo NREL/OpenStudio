@@ -45,33 +45,33 @@ namespace detail {
   /** DesignSpecificationOutdoorAir_Impl is a ModelObject_Impl that is the
    *  implementation class for DesignSpecificationOutdoorAir.*/
   class MODEL_API DesignSpecificationOutdoorAir_Impl : public ResourceObject_Impl {
-    Q_OBJECT;
+    
 
-    Q_PROPERTY(std::string outdoorAirMethod READ outdoorAirMethod WRITE setOutdoorAirMethod RESET resetOutdoorAirMethod);
-    Q_PROPERTY(bool isOutdoorAirMethodDefaulted READ isOutdoorAirMethodDefaulted);
-    Q_PROPERTY(std::vector<std::string> outdoorAirMethodValues READ outdoorAirMethodValues);
+    
+    
+    
 
-    Q_PROPERTY(double outdoorAirFlowperPerson READ outdoorAirFlowperPerson WRITE setOutdoorAirFlowperPerson RESET resetOutdoorAirFlowperPerson);
-    Q_PROPERTY(openstudio::Quantity outdoorAirFlowperPerson_SI READ outdoorAirFlowperPerson_SI WRITE setOutdoorAirFlowperPerson RESET resetOutdoorAirFlowperPerson);
-    Q_PROPERTY(openstudio::Quantity outdoorAirFlowperPerson_IP READ outdoorAirFlowperPerson_IP WRITE setOutdoorAirFlowperPerson RESET resetOutdoorAirFlowperPerson);
-    Q_PROPERTY(bool isOutdoorAirFlowperPersonDefaulted READ isOutdoorAirFlowperPersonDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double outdoorAirFlowperFloorArea READ outdoorAirFlowperFloorArea WRITE setOutdoorAirFlowperFloorArea RESET resetOutdoorAirFlowperFloorArea);
-    Q_PROPERTY(openstudio::Quantity outdoorAirFlowperFloorArea_SI READ outdoorAirFlowperFloorArea_SI WRITE setOutdoorAirFlowperFloorArea RESET resetOutdoorAirFlowperFloorArea);
-    Q_PROPERTY(openstudio::Quantity outdoorAirFlowperFloorArea_IP READ outdoorAirFlowperFloorArea_IP WRITE setOutdoorAirFlowperFloorArea RESET resetOutdoorAirFlowperFloorArea);
-    Q_PROPERTY(bool isOutdoorAirFlowperFloorAreaDefaulted READ isOutdoorAirFlowperFloorAreaDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double outdoorAirFlowRate READ outdoorAirFlowRate WRITE setOutdoorAirFlowRate RESET resetOutdoorAirFlowRate);
-    Q_PROPERTY(openstudio::Quantity outdoorAirFlowRate_SI READ outdoorAirFlowRate_SI WRITE setOutdoorAirFlowRate RESET resetOutdoorAirFlowRate);
-    Q_PROPERTY(openstudio::Quantity outdoorAirFlowRate_IP READ outdoorAirFlowRate_IP WRITE setOutdoorAirFlowRate RESET resetOutdoorAirFlowRate);
-    Q_PROPERTY(bool isOutdoorAirFlowRateDefaulted READ isOutdoorAirFlowRateDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double outdoorAirFlowAirChangesperHour READ outdoorAirFlowAirChangesperHour WRITE setOutdoorAirFlowAirChangesperHour RESET resetOutdoorAirFlowAirChangesperHour);
-    Q_PROPERTY(openstudio::Quantity outdoorAirFlowAirChangesperHour_SI READ outdoorAirFlowAirChangesperHour_SI WRITE setOutdoorAirFlowAirChangesperHour RESET resetOutdoorAirFlowAirChangesperHour);
-    Q_PROPERTY(openstudio::Quantity outdoorAirFlowAirChangesperHour_IP READ outdoorAirFlowAirChangesperHour_IP WRITE setOutdoorAirFlowAirChangesperHour RESET resetOutdoorAirFlowAirChangesperHour);
-    Q_PROPERTY(bool isOutdoorAirFlowAirChangesperHourDefaulted READ isOutdoorAirFlowAirChangesperHourDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> outdoorAirFlowRateFractionSchedule READ outdoorAirFlowRateFractionScheduleAsModelObject WRITE setOutdoorAirFlowRateFractionScheduleAsModelObject RESET resetOutdoorAirFlowRateFractionSchedule);
+    
    public:
     /** @name Constructors and Destructors */
     //@{

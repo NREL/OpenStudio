@@ -100,20 +100,20 @@ namespace openstudio{
     static boost::optional<BCLMeasure> load(const openstudio::path& dir);
 
     /// Load all measures in the PAT application's measures directory.
-    static std::vector<BCLMeasure> patApplicationMeasures();
+    //static std::vector<BCLMeasure> patApplicationMeasures();
 
-    static BCLMeasure alternativeModelMeasure();
+    //static BCLMeasure alternativeModelMeasure();
 
-    static BCLMeasure reportRequestMeasure();
+    //static BCLMeasure reportRequestMeasure();
 
-    static BCLMeasure standardReportMeasure();
+    //static BCLMeasure standardReportMeasure();
 
-    static BCLMeasure calibrationReportMeasure();
+    //static BCLMeasure calibrationReportMeasure();
 
-    static BCLMeasure radianceMeasure();
+    //static BCLMeasure radianceMeasure();
 
     /// Returns the path to the PAT application's measures directory.
-    static openstudio::path patApplicationMeasuresDir();
+    //static openstudio::path patApplicationMeasuresDir();
 
     /// Load all measures in the local BCL.
     static std::vector<BCLMeasure> localBCLMeasures();
@@ -182,6 +182,8 @@ namespace openstudio{
 
     std::vector <BCLMeasureArgument> arguments() const;
 
+    std::vector <BCLMeasureOutput> outputs() const;
+
     // ETH: provenance?
     // DLM: we can do this later
 
@@ -212,6 +214,7 @@ namespace openstudio{
 
     void setArguments(const std::vector<BCLMeasureArgument>& arguments);
 
+    void setOutputs(const std::vector<BCLMeasureOutput>& outputs);
 
     //@}
     /** @name Operators */

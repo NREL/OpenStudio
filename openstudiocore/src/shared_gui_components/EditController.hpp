@@ -29,13 +29,11 @@
 #ifndef SHAREDGUICOMPONENTS_EDITCONTROLLER_HPP
 #define SHAREDGUICOMPONENTS_EDITCONTROLLER_HPP
 
-#include "../ruleset/OSArgument.hpp"
+#include "../measure/OSArgument.hpp"
 #include "../utilities/core/Logger.hpp"
-#include "../analysis/RubyMeasure.hpp"
 #include <QObject>
 #include <QPointer>
 #include <QSharedPointer> 
-#include "VariableList.hpp"
 
 class QWidget;
 
@@ -47,10 +45,11 @@ class EditRubyMeasureView;
 class EditNullView;
 class InputController;
 class InputView;
+class BaseApp;
 
 namespace measuretab {
 
-  class MeasureItem;
+  class MeasureStepItem;
 
 }
 
@@ -68,9 +67,9 @@ class EditController : public QObject
 
   virtual ~EditController();
 
-  void setMeasureItem(measuretab::MeasureItem * measureItem, BaseApp *t_app);
+  void setMeasureStepItem(measuretab::MeasureStepItem * measureItem, BaseApp *t_app);
 
-  measuretab::MeasureItem * measureItem() const;
+  measuretab::MeasureStepItem * measureStepItem() const;
 
   // Show something when no RubyMeasure is selected
   void reset();
@@ -87,7 +86,7 @@ class EditController : public QObject
 
   std::vector<QSharedPointer<InputController> > m_inputControllers;
 
-  QPointer<measuretab::MeasureItem> m_measureItem;
+  QPointer<measuretab::MeasureStepItem> m_measureStepItem;
 };
 
 class InputController : public QObject
@@ -96,7 +95,7 @@ class InputController : public QObject
 
   public:
 
-  InputController(EditController * editController,const ruleset::OSArgument & argument, BaseApp *t_app);
+  InputController(EditController * editController,const measure::OSArgument & argument, BaseApp *t_app);
 
   virtual ~InputController();
 
@@ -120,7 +119,7 @@ class InputController : public QObject
 
   QPointer<EditController> m_editController;
 
-  ruleset::OSArgument m_argument;
+  measure::OSArgument m_argument;
 };
 
 } // openstudio

@@ -78,25 +78,25 @@ void RefrigerationController::refreshRefrigerationSystemView(RefrigerationSystem
 
   if( system )
   {
-    systemView->setId(OSItemId(system->handle().toString(),QString(),false));
+    systemView->setId(OSItemId(toQString(system->handle()), QString(),false));
 
     if( boost::optional<model::RefrigerationSubcoolerLiquidSuction> subcooler = system->liquidSuctionHeatExchangerSubcooler() )
     {
-      systemView->refrigerationSHXView->setId(OSItemId(subcooler->handle().toString(),QString(),false));
+      systemView->refrigerationSHXView->setId(OSItemId(toQString(subcooler->handle()), QString(),false));
 
       systemView->refrigerationSHXView->setName(QString::fromStdString(subcooler->name().get()));
     }
 
     if( boost::optional<model::RefrigerationSubcoolerMechanical> subcooler = system->mechanicalSubcooler() )
     {
-      systemView->refrigerationSubCoolerView->setId(OSItemId(subcooler->handle().toString(),QString(),false));
+      systemView->refrigerationSubCoolerView->setId(OSItemId(toQString(subcooler->handle()), QString(),false));
 
       systemView->refrigerationSubCoolerView->setName(QString::fromStdString(subcooler->name().get()));
     }
 
     if( boost::optional<model::ModelObject> condenser = system->refrigerationCondenser() )
     {
-      systemView->refrigerationCondenserView->setCondenserId(OSItemId(condenser->handle().toString(),QString(),false));
+      systemView->refrigerationCondenserView->setCondenserId(OSItemId(toQString(condenser->handle()), QString(),false));
 
       systemView->refrigerationCondenserView->setCondenserName(QString::fromStdString(condenser->name().get()));
 
@@ -139,7 +139,7 @@ void RefrigerationController::refreshRefrigerationSystemView(RefrigerationSystem
     {
       auto detailView = new RefrigerationCompressorDetailView(); 
 
-      detailView->setId(OSItemId(it->handle().toString(),QString(),false));
+      detailView->setId(OSItemId(toQString(it->handle()), QString(),false));
 
       detailView->setLabel(QString::number(compressorIndex));
 
@@ -164,7 +164,7 @@ void RefrigerationController::refreshRefrigerationSystemView(RefrigerationSystem
     {
       auto detailView = new RefrigerationCaseDetailView();
 
-      detailView->setId(OSItemId(it->handle().toString(),QString(),false));
+      detailView->setId(OSItemId(toQString(it->handle()), QString(),false));
 
       detailView->setName(QString::fromStdString(it->name().get()));
 
@@ -187,7 +187,7 @@ void RefrigerationController::refreshRefrigerationSystemView(RefrigerationSystem
     {
       auto detailView = new RefrigerationCaseDetailView();
 
-      detailView->setId(OSItemId(it->handle().toString(),QString(),false));
+      detailView->setId(OSItemId(toQString(it->handle()), QString(),false));
 
       detailView->setName(QString::fromStdString(it->name().get()));
 
@@ -606,7 +606,7 @@ void RefrigerationController::removeSubCooler(const OSItemId & itemid)
 {
   if( boost::optional<model::Model> model = OSAppBase::instance()->currentModel() )
   {
-    if(boost::optional<model::ModelObject> mo = model->getModelObject<model::ModelObject>(Handle(itemid.itemId())))
+    if(boost::optional<model::ModelObject> mo = model->getModelObject<model::ModelObject>(toUUID(itemid.itemId())))
     {
       mo->remove();
 
@@ -668,7 +668,7 @@ void RefrigerationController::removeSubCoolerLiquidSuction(const OSItemId & item
 {
   if( boost::optional<model::Model> model = OSAppBase::instance()->currentModel() )
   {
-    if(boost::optional<model::ModelObject> mo = model->getModelObject<model::ModelObject>(Handle(itemid.itemId())))
+    if(boost::optional<model::ModelObject> mo = model->getModelObject<model::ModelObject>(toUUID(itemid.itemId())))
     {
       mo->remove();
 
@@ -709,7 +709,7 @@ void RefrigerationController::inspectOSItem(const OSItemId & itemid)
 
   OS_ASSERT(m_currentSystem);
 
-  boost::optional<model::ModelObject> mo = m_currentSystem->model().getModelObject<model::ModelObject>(Handle(itemid.itemId()));
+  boost::optional<model::ModelObject> mo = m_currentSystem->model().getModelObject<model::ModelObject>(toUUID(itemid.itemId()));
 
   doc->mainRightColumnController()->inspectModelObject(mo,false);
 }
@@ -718,7 +718,7 @@ void RefrigerationController::removeCompressor(const OSItemId & itemid)
 {
   if( boost::optional<model::Model> model = OSAppBase::instance()->currentModel() )
   {
-    if(boost::optional<model::ModelObject> mo = model->getModelObject<model::ModelObject>(Handle(itemid.itemId())))
+    if(boost::optional<model::ModelObject> mo = model->getModelObject<model::ModelObject>(toUUID(itemid.itemId())))
     {
       mo->remove();
 
@@ -731,7 +731,7 @@ void RefrigerationController::removeCondenser(const OSItemId & itemid)
 {
   if( boost::optional<model::Model> model = OSAppBase::instance()->currentModel() )
   {
-    if(boost::optional<model::ModelObject> mo = model->getModelObject<model::ModelObject>(Handle(itemid.itemId())))
+    if(boost::optional<model::ModelObject> mo = model->getModelObject<model::ModelObject>(toUUID(itemid.itemId())))
     {
       mo->remove();
 
@@ -746,7 +746,7 @@ void RefrigerationController::removeCase(const OSItemId & itemid)
 {
   if( boost::optional<model::Model> model = OSAppBase::instance()->currentModel() )
   {
-    if(boost::optional<model::ModelObject> mo = model->getModelObject<model::ModelObject>(Handle(itemid.itemId())))
+    if(boost::optional<model::ModelObject> mo = model->getModelObject<model::ModelObject>(toUUID(itemid.itemId())))
     {
       mo->remove();
 
@@ -765,10 +765,7 @@ RefrigerationSystemListController::RefrigerationSystemListController(Refrigerati
 {
   std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
   model::Model t_model = doc->model();
-  connect(t_model.getImpl<model::detail::Model_Impl>().get(),
-    static_cast<void (model::detail::Model_Impl::*)(const WorkspaceObject &, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::addWorkspaceObject),
-    this,
-    &RefrigerationSystemListController::onModelObjectAdd);
+  t_model.getImpl<model::detail::Model_Impl>().get()->addWorkspaceObject.connect<RefrigerationSystemListController, &RefrigerationSystemListController::onModelObjectAdd>(this);
 
   connect(this, &RefrigerationSystemListController::itemInsertedPrivate, this, &RefrigerationSystemListController::itemInserted, Qt::QueuedConnection);
 }

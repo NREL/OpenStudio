@@ -73,12 +73,12 @@
 #include "../utilities/time/Date.hpp"
 #include "../utilities/sql/SqlFile.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/FilesystemHelpers.hpp"
 
 #include <OpenStudio.hxx>
 
 #include <boost/math/constants/constants.hpp>
 
-#include <QFile>
 #include <QDomDocument>
 #include <QDomElement>
 #include <QThread>
@@ -112,11 +112,9 @@ namespace gbxml {
       return false;
     }
 
-    QFile file(toQString(path));
-    if (file.open(QFile::WriteOnly)){
-      QTextStream textStream(&file);
-      textStream.setCodec("UTF-8");
-      textStream << doc->toString(2);
+    openstudio::filesystem::ofstream file(path, std::ios_base::binary);
+    if (file.is_open()){
+      openstudio::filesystem::write(file, doc->toString(2));
       file.close();
       return true;
     }

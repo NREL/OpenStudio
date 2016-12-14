@@ -267,14 +267,14 @@ namespace
     openstudio::Logger::instance().standardOutLogger().disable();
 
     openstudio::path path = toPath("./file_logger.log");
-    boost::filesystem::remove(path);
-    ASSERT_FALSE(boost::filesystem::exists(path));
+    openstudio::filesystem::remove(path);
+    ASSERT_FALSE(openstudio::filesystem::exists(path));
 
     {
       FileLogSink sink(path);
       sink.setLogLevel(Error);
       sink.setChannelRegex(boost::regex("hello\\..*"));
-      ASSERT_TRUE(boost::filesystem::exists(path));
+      ASSERT_TRUE(openstudio::filesystem::exists(path));
 
       freeLogging();
       classLogging();
@@ -282,7 +282,7 @@ namespace
 #ifdef BOOST_WINDOWS
       // You can delete an open file on Unix platforms, so this aspect of the test
       // is only valid on Windows
-      EXPECT_THROW(boost::filesystem::remove(path), std::exception);
+      EXPECT_THROW(openstudio::filesystem::remove(path), std::exception);
 #endif
 
       std::vector<LogMessage> logMessages = sink.logMessages();
@@ -295,7 +295,7 @@ namespace
 #ifdef BOOST_WINDOWS
     // You can delete an open file on Unix platforms, so this aspect of the test
     // is only valid on Windows
-    EXPECT_THROW(boost::filesystem::remove(path), std::exception);
+    EXPECT_THROW(openstudio::filesystem::remove(path), std::exception);
 #endif
 
   }
@@ -305,14 +305,14 @@ namespace
     openstudio::Logger::instance().standardOutLogger().disable();
 
     openstudio::path path = toPath("./file_logger_disable.log");
-    boost::filesystem::remove(path);
-    ASSERT_FALSE(boost::filesystem::exists(path));
+    openstudio::filesystem::remove(path);
+    ASSERT_FALSE(openstudio::filesystem::exists(path));
 
     {
       FileLogSink sink(path);
       sink.setLogLevel(Error);
       sink.setChannelRegex(boost::regex("hello\\..*"));
-      ASSERT_TRUE(boost::filesystem::exists(path));
+      ASSERT_TRUE(openstudio::filesystem::exists(path));
 
       freeLogging();
       classLogging();
@@ -320,7 +320,7 @@ namespace
 #ifdef BOOST_WINDOWS
       // You can delete an open file on Unix platforms, so this aspect of the test
       // is only valid on Windows
-      EXPECT_THROW(boost::filesystem::remove(path), std::exception);
+      EXPECT_THROW(openstudio::filesystem::remove(path), std::exception);
 #endif
 
 
@@ -329,7 +329,7 @@ namespace
 #ifdef BOOST_WINDOWS
       // You can delete an open file on Unix platforms, so this aspect of the test
       // is only valid on Windows
-      EXPECT_THROW(boost::filesystem::remove(path), std::exception);
+      EXPECT_THROW(openstudio::filesystem::remove(path), std::exception);
 #endif
 
 
@@ -340,6 +340,6 @@ namespace
       EXPECT_EQ("Hello Error", sink.logMessages()[0].logMessage());
     }
 
-    EXPECT_NO_THROW(boost::filesystem::remove(path));
+    EXPECT_NO_THROW(openstudio::filesystem::remove(path));
   }
 }

@@ -39,8 +39,8 @@ TEST_F(DataFixture, CalibrationResult)
 {
 
   openstudio::path xmlPath = toPath("./calibration_report.xml");
-  if(boost::filesystem::exists(xmlPath)){
-    boost::filesystem::remove(xmlPath);
+  if(openstudio::filesystem::exists(xmlPath)){
+    openstudio::filesystem::remove(xmlPath);
   }
 
   // these objects do no calculations they just store data as entered

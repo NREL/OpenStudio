@@ -32,8 +32,6 @@
 #include "../shared_gui_components/MeasureManager.hpp"
 #include "../shared_gui_components/SyncMeasuresDialogCentralWidget.hpp"
 
-#include "../analysisdriver/SimpleProject.hpp"
-
 #include "../utilities/bcl/BCLMeasure.hpp"
 #include "../utilities/core/Assert.hpp"
 
@@ -49,7 +47,7 @@
 
 namespace openstudio {
 
-SyncMeasuresDialog::SyncMeasuresDialog(analysisdriver::SimpleProject * project,
+SyncMeasuresDialog::SyncMeasuresDialog(const WorkflowJSON& workflow,
   MeasureManager * measureManager,
   QWidget * parent)
 : QDialog(parent, Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint),
@@ -57,7 +55,7 @@ SyncMeasuresDialog::SyncMeasuresDialog(analysisdriver::SimpleProject * project,
   m_rightScrollArea(nullptr),
   m_expandedComponent(nullptr),
   m_measuresNeedingUpdates(std::vector<BCLMeasure>()),
-  m_project(project),
+  m_workflow(workflow),
   m_measureManager(measureManager)
 {
   createLayout();
@@ -75,7 +73,7 @@ void SyncMeasuresDialog::createLayout()
   setObjectName("BlueGradientWidget");
 
   // The central pane
-  m_centralWidget = new SyncMeasuresDialogCentralWidget(m_project, m_measureManager);
+  m_centralWidget = new SyncMeasuresDialogCentralWidget(m_workflow, m_measureManager);
 
   connect(m_centralWidget, &SyncMeasuresDialogCentralWidget::componentClicked, this, &SyncMeasuresDialog::on_componentClicked);
 
@@ -112,8 +110,10 @@ void SyncMeasuresDialog::createLayout()
 
 void SyncMeasuresDialog::findUpdates()
 {
-  // DLM: measure manager will filter out duplicate measures for us
+  // this will update the xmls
   m_measureManager->updateMeasuresLists();
+  
+  // DLM: measure manager will filter out duplicate measures for us
   std::vector<BCLMeasure> measures = m_measureManager->combinedMeasures();
 
   // DLM: should we sort these in any way?
@@ -132,15 +132,10 @@ void SyncMeasuresDialog::findUpdates()
   {
     m_centralWidget->progressBar->setValue(progressValue);
 
-    bool isNewVersion = m_measureManager->checkForUpdates(*itr);
-    if (isNewVersion) {
-      itr->save();
-    }
-
-    boost::optional<BCLMeasure> projectmeasure = m_project->getMeasureByUUID(itr->uuid());
-    if (projectmeasure)
+    boost::optional<BCLMeasure> workflowMeasure = m_workflow.getBCLMeasureByUUID(itr->uuid());
+    if (workflowMeasure)
     {
-      if (projectmeasure->versionUUID() != itr->versionUUID())
+      if (workflowMeasure->versionUUID() != itr->versionUUID())
       {
         m_measuresNeedingUpdates.push_back(*itr);
       }
@@ -155,10 +150,6 @@ void SyncMeasuresDialog::findUpdates()
 
   // DLM: if m_measuresNeedingUpdates is empty should we do something else?  
   // just say "No updates available" and quit?
-
-  if (!m_measuresNeedingUpdates.empty()){
-    m_measureManager->updateMeasuresLists();
-  }
 
   m_centralWidget->setMeasures(m_measuresNeedingUpdates);
 

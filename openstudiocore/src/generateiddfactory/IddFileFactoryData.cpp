@@ -33,7 +33,7 @@
 
 #include <boost/regex.hpp>
 #include <boost/algorithm/string.hpp>
-#include <boost/filesystem/operations.hpp>
+
 
 #include <iostream>
 #include <sstream>
@@ -67,8 +67,8 @@ IddFileFactoryData::IddFileFactoryData(const std::string& fileNameAndPathPair) {
   m_filePath = path(secondStr);
 
   // validate filePath
-  m_filePath = boost::filesystem::system_complete(m_filePath);
-  if (!boost::filesystem::is_regular_file(m_filePath)) {
+  m_filePath = openstudio::filesystem::system_complete(m_filePath);
+  if (!openstudio::filesystem::is_regular_file(m_filePath)) {
     ss << "Unable to locate intended idd file from input argument '"
        << fileNameAndPathPair << "'. User-supplied path resolved to '"
        << m_filePath.string() << "'.";
@@ -99,7 +99,7 @@ void IddFileFactoryData::parseFile(const path& outPath,
 {
   std::stringstream ss;
 
-  boost::filesystem::ifstream iddFile(m_filePath);
+  openstudio::filesystem::ifstream iddFile(m_filePath);
   if (!iddFile) {
     ss << "Unable to open Idd file " << m_fileName << " located at " << m_filePath.string() << ".";
     throw std::runtime_error(ss.str().c_str());

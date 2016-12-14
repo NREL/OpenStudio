@@ -39,31 +39,31 @@ namespace detail {
 
   /** SiteGroundReflectance_Impl is a ModelObject_Impl that is the implementation class for SiteGroundReflectance.*/
   class MODEL_API SiteGroundReflectance_Impl : public ModelObject_Impl {
-    Q_OBJECT;
-    Q_PROPERTY(double januaryGroundReflectance READ januaryGroundReflectance WRITE setJanuaryGroundReflectance RESET resetJanuaryGroundReflectance);
-    Q_PROPERTY(bool isJanuaryGroundReflectanceDefaulted READ isJanuaryGroundReflectanceDefaulted);
-    Q_PROPERTY(double februaryGroundReflectance READ februaryGroundReflectance WRITE setFebruaryGroundReflectance RESET resetFebruaryGroundReflectance);
-    Q_PROPERTY(bool isFebruaryGroundReflectanceDefaulted READ isFebruaryGroundReflectanceDefaulted);
-    Q_PROPERTY(double marchGroundReflectance READ marchGroundReflectance WRITE setMarchGroundReflectance RESET resetMarchGroundReflectance);
-    Q_PROPERTY(bool isMarchGroundReflectanceDefaulted READ isMarchGroundReflectanceDefaulted);
-    Q_PROPERTY(double aprilGroundReflectance READ aprilGroundReflectance WRITE setAprilGroundReflectance RESET resetAprilGroundReflectance);
-    Q_PROPERTY(bool isAprilGroundReflectanceDefaulted READ isAprilGroundReflectanceDefaulted);
-    Q_PROPERTY(double mayGroundReflectance READ mayGroundReflectance WRITE setMayGroundReflectance RESET resetMayGroundReflectance);
-    Q_PROPERTY(bool isMayGroundReflectanceDefaulted READ isMayGroundReflectanceDefaulted);
-    Q_PROPERTY(double juneGroundReflectance READ juneGroundReflectance WRITE setJuneGroundReflectance RESET resetJuneGroundReflectance);
-    Q_PROPERTY(bool isJuneGroundReflectanceDefaulted READ isJuneGroundReflectanceDefaulted);
-    Q_PROPERTY(double julyGroundReflectance READ julyGroundReflectance WRITE setJulyGroundReflectance RESET resetJulyGroundReflectance);
-    Q_PROPERTY(bool isJulyGroundReflectanceDefaulted READ isJulyGroundReflectanceDefaulted);
-    Q_PROPERTY(double augustGroundReflectance READ augustGroundReflectance WRITE setAugustGroundReflectance RESET resetAugustGroundReflectance);
-    Q_PROPERTY(bool isAugustGroundReflectanceDefaulted READ isAugustGroundReflectanceDefaulted);
-    Q_PROPERTY(double septemberGroundReflectance READ septemberGroundReflectance WRITE setSeptemberGroundReflectance RESET resetSeptemberGroundReflectance);
-    Q_PROPERTY(bool isSeptemberGroundReflectanceDefaulted READ isSeptemberGroundReflectanceDefaulted);
-    Q_PROPERTY(double octoberGroundReflectance READ octoberGroundReflectance WRITE setOctoberGroundReflectance RESET resetOctoberGroundReflectance);
-    Q_PROPERTY(bool isOctoberGroundReflectanceDefaulted READ isOctoberGroundReflectanceDefaulted);
-    Q_PROPERTY(double novemberGroundReflectance READ novemberGroundReflectance WRITE setNovemberGroundReflectance RESET resetNovemberGroundReflectance);
-    Q_PROPERTY(bool isNovemberGroundReflectanceDefaulted READ isNovemberGroundReflectanceDefaulted);
-    Q_PROPERTY(double decemberGroundReflectance READ decemberGroundReflectance WRITE setDecemberGroundReflectance RESET resetDecemberGroundReflectance);
-    Q_PROPERTY(bool isDecemberGroundReflectanceDefaulted READ isDecemberGroundReflectanceDefaulted);
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
    public:
 
     /** @name Constructors and Destructors */

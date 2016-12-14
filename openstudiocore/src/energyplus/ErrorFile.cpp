@@ -38,7 +38,7 @@ namespace energyplus {
   ErrorFile::ErrorFile(const openstudio::path& errPath)
     : m_completed(false), m_completedSuccessfully(false)
   {
-    boost::filesystem::ifstream ifs(errPath);
+    openstudio::filesystem::ifstream ifs(errPath);
     parse(ifs);
     ifs.close();
   }
@@ -74,7 +74,7 @@ namespace energyplus {
     return m_completedSuccessfully;
   }
 
-  void ErrorFile::parse(boost::filesystem::ifstream& is)
+  void ErrorFile::parse(openstudio::filesystem::ifstream& is)
   {
     std::string line;
 

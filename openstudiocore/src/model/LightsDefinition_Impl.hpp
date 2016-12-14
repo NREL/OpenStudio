@@ -42,11 +42,11 @@ namespace detail {
 
   /** LightsDefinition_Impl is a SpaceLoadDefinition_Impl that is the implementation class for LightsDefinition.*/
   class MODEL_API LightsDefinition_Impl : public SpaceLoadDefinition_Impl {
-    Q_OBJECT;
+    
 
-    Q_PROPERTY(std::string designLevelCalculationMethod READ designLevelCalculationMethod);
+    
 
-    Q_PROPERTY(boost::optional<double> lightingLevel READ lightingLevel WRITE setLightingLevel);
+    
     Q_PROPERTY(openstudio::OSOptionalQuantity lightingLevel_SI 
                READ lightingLevel_SI 
                WRITE setLightingLevel);
@@ -54,7 +54,7 @@ namespace detail {
                READ lightingLevel_IP 
                WRITE setLightingLevel);
 
-    Q_PROPERTY(boost::optional<double> wattsperSpaceFloorArea READ wattsperSpaceFloorArea WRITE setWattsperSpaceFloorArea);
+    
     Q_PROPERTY(openstudio::OSOptionalQuantity wattsperSpaceFloorArea_SI 
                READ wattsperSpaceFloorArea_SI 
                WRITE setWattsperSpaceFloorArea);
@@ -62,7 +62,7 @@ namespace detail {
                READ wattsperSpaceFloorArea_IP 
                WRITE setWattsperSpaceFloorArea);
 
-    Q_PROPERTY(boost::optional<double> wattsperPerson READ wattsperPerson WRITE setWattsperPerson);
+    
     Q_PROPERTY(openstudio::OSOptionalQuantity wattsperPerson_SI 
                READ wattsperPerson_SI 
                WRITE setWattsperPerson);
@@ -70,8 +70,8 @@ namespace detail {
                READ wattsperPerson_IP 
                WRITE setWattsperPerson);
 
-    Q_PROPERTY(double fractionRadiant READ fractionRadiant WRITE setFractionRadiant RESET resetFractionRadiant);
-    Q_PROPERTY(bool isFractionRadiantDefaulted READ isFractionRadiantDefaulted);
+    
+    
     Q_PROPERTY(openstudio::Quantity fractionRadiant_SI 
                READ fractionRadiant_SI 
                WRITE setFractionRadiant);
@@ -79,8 +79,8 @@ namespace detail {
                READ fractionRadiant_IP 
                WRITE setFractionRadiant);
 
-    Q_PROPERTY(double fractionVisible READ fractionVisible WRITE setFractionVisible RESET resetFractionVisible);
-    Q_PROPERTY(bool isFractionVisibleDefaulted READ isFractionVisibleDefaulted);
+    
+    
     Q_PROPERTY(openstudio::Quantity fractionVisible_SI 
                READ fractionVisible_SI 
                WRITE setFractionVisible);
@@ -88,8 +88,8 @@ namespace detail {
                READ fractionVisible_IP 
                WRITE setFractionVisible);
 
-    Q_PROPERTY(double returnAirFraction READ returnAirFraction WRITE setReturnAirFraction RESET resetReturnAirFraction);
-    Q_PROPERTY(bool isReturnAirFractionDefaulted READ isReturnAirFractionDefaulted);
+    
+    
     Q_PROPERTY(openstudio::Quantity returnAirFraction_SI 
                READ returnAirFraction_SI 
                WRITE setReturnAirFraction);
@@ -97,12 +97,12 @@ namespace detail {
                READ returnAirFraction_IP 
                WRITE setReturnAirFraction);
 
-    Q_PROPERTY(bool returnAirFractionCalculatedfromPlenumTemperature READ returnAirFractionCalculatedfromPlenumTemperature WRITE setReturnAirFractionCalculatedfromPlenumTemperature RESET resetReturnAirFractionCalculatedfromPlenumTemperature);
-    Q_PROPERTY(bool isReturnAirFractionCalculatedfromPlenumTemperatureDefaulted READ isReturnAirFractionCalculatedfromPlenumTemperatureDefaulted);
-    Q_PROPERTY(double returnAirFractionFunctionofPlenumTemperatureCoefficient1 READ returnAirFractionFunctionofPlenumTemperatureCoefficient1 WRITE setReturnAirFractionFunctionofPlenumTemperatureCoefficient1 RESET resetReturnAirFractionFunctionofPlenumTemperatureCoefficient1);
-    Q_PROPERTY(bool isReturnAirFractionFunctionofPlenumTemperatureCoefficient1Defaulted READ isReturnAirFractionFunctionofPlenumTemperatureCoefficient1Defaulted);
-    Q_PROPERTY(double returnAirFractionFunctionofPlenumTemperatureCoefficient2 READ returnAirFractionFunctionofPlenumTemperatureCoefficient2 WRITE setReturnAirFractionFunctionofPlenumTemperatureCoefficient2 RESET resetReturnAirFractionFunctionofPlenumTemperatureCoefficient2);
-    Q_PROPERTY(bool isReturnAirFractionFunctionofPlenumTemperatureCoefficient2Defaulted READ isReturnAirFractionFunctionofPlenumTemperatureCoefficient2Defaulted);
+    
+    
+    
+    
+    
+    
    public:
     /** @name Constructors and Destructors */
     //@{

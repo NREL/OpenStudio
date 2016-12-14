@@ -31,16 +31,11 @@
 
 #include "ModelObjectInspectorView.hpp"
 #include "ModelObjectVectorController.hpp"
+#include "../model/WindowDataFile.hpp"
 
 namespace openstudio {
 
-namespace model {
-
- class WindowDataFile;
-
-}
-
-class OSLineEdit;
+class OSLineEdit2;
 
 class ConstructionWindowDataFileInspectorView : public ModelObjectInspectorView
 {
@@ -70,9 +65,11 @@ class ConstructionWindowDataFileInspectorView : public ModelObjectInspectorView
 
     bool m_isIP;
 
-    OSLineEdit * m_nameEdit;
+    OSLineEdit2 * m_nameEdit;
 
-    OSLineEdit * m_urlEdit;
+    OSLineEdit2 * m_urlEdit;
+
+    boost::optional<model::WindowDataFile> m_windowDataFile;
 };
 
 } // openstudio

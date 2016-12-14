@@ -1499,11 +1499,11 @@ namespace detail {
 
   std::vector<IdfObject> ThermalZone_Impl::remove()
   {
-    this->blockSignals(true);
+    // this->blockSignals(true);
 
     Model m = model();
 
-    m.getImpl<QObject>()->blockSignals(true);
+    // m.getImpl<QObject>()->blockSignals(true);
 
     ThermalZone thermalZone = this->getObject<ThermalZone>();
 
@@ -1545,9 +1545,9 @@ namespace detail {
     }
 
     //turn the object back on and proceed
-    this->blockSignals(false);
+    // this->blockSignals(false);
 
-    m.getImpl<QObject>()->blockSignals(false);
+    // m.getImpl<QObject>()->blockSignals(false);
 
     return HVACComponent_Impl::remove();
   }

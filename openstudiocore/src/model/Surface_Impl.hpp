@@ -48,28 +48,28 @@ namespace detail {
 
   /** Surface_Impl is a PlanarSurface_Impl that is the implementation class for Surface.*/
   class MODEL_API Surface_Impl : public PlanarSurface_Impl {
-    Q_OBJECT;
-    Q_PROPERTY(std::string surfaceType READ surfaceType WRITE setSurfaceType);
-    Q_PROPERTY(std::vector<std::string> surfaceTypeValues READ surfaceTypeValues);
-    Q_PROPERTY(std::string outsideBoundaryCondition READ outsideBoundaryCondition WRITE setOutsideBoundaryCondition);
-    Q_PROPERTY(std::vector<std::string> outsideBoundaryConditionValues READ outsideBoundaryConditionValues);
-    Q_PROPERTY(std::string sunExposure READ sunExposure WRITE setSunExposure RESET resetSunExposure);
-    Q_PROPERTY(std::vector<std::string> sunExposureValues READ sunExposureValues);
-    Q_PROPERTY(bool isSunExposureDefaulted READ isSunExposureDefaulted);
-    Q_PROPERTY(std::string windExposure READ windExposure WRITE setWindExposure RESET resetWindExposure);
-    Q_PROPERTY(std::vector<std::string> windExposureValues READ windExposureValues);
-    Q_PROPERTY(bool isWindExposureDefaulted READ isWindExposureDefaulted);
-    Q_PROPERTY(boost::optional<double> viewFactortoGround READ viewFactortoGround WRITE setViewFactortoGround RESET resetViewFactortoGround);
-    Q_PROPERTY(bool isViewFactortoGroundDefaulted READ isViewFactortoGroundDefaulted);
-    Q_PROPERTY(bool isViewFactortoGroundAutocalculated READ isViewFactortoGroundAutocalculated);
-    Q_PROPERTY(boost::optional<double> numberofVertices READ numberofVertices WRITE setNumberofVertices RESET resetNumberofVertices);
-    Q_PROPERTY(bool isNumberofVerticesDefaulted READ isNumberofVerticesDefaulted);
-    Q_PROPERTY(bool isNumberofVerticesAutocalculated READ isNumberofVerticesAutocalculated);
-    Q_PROPERTY(bool isPartOfEnvelope READ isPartOfEnvelope);
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> space READ spaceAsModelObject WRITE setSpaceAsModelObject);
-    Q_PROPERTY(std::vector<openstudio::model::ModelObject> subSurfaces READ subSurfacesAsModelObjects);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> adjacentSurface READ adjacentSurfaceAsModelObject WRITE setAdjacentSurfaceAsModelObject RESET resetAdjacentSurface);
+    
+    
+    
    public:
     /** @name Constructors and Destructors */
     //@{

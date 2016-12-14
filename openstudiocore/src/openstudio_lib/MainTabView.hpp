@@ -32,6 +32,7 @@
 #include <QPointer>
 #include <QWidget>
 
+#include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
 #include <vector>
 
 class QLabel;
@@ -43,7 +44,7 @@ namespace openstudio {
 
 class OSViewSwitcher;
 
-class MainTabView : public QWidget
+class MainTabView : public QWidget, public Nano::Observer
 {
   Q_OBJECT
 

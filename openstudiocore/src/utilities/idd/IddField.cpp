@@ -45,7 +45,7 @@
 #include "../core/Assert.hpp"
 #include "../core/Containers.hpp"
 
-#include <boost/filesystem/fstream.hpp>
+
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
 

@@ -40,8 +40,8 @@ namespace openstudio {
   /// constructor
   PathWatcher::PathWatcher(const openstudio::path& p, int msec)
     : m_impl(new QFileSystemWatcher()),
-    m_enabled(true), m_isDirectory(boost::filesystem::is_directory(p) || toString(p.filename())=="." || toString(p.filename())=="/"), 
-    m_exists(boost::filesystem::exists(p)), m_dirty(false),
+    m_enabled(true), m_isDirectory(openstudio::filesystem::is_directory(p) || toString(p.filename())=="." || toString(p.filename())=="/"), 
+    m_exists(openstudio::filesystem::exists(p)), m_dirty(false),
     m_checksum(openstudio::checksum(p)), m_path(p), m_msec(msec)
   {
     // make sure a QApplication exists
@@ -110,7 +110,7 @@ namespace openstudio {
 
   void PathWatcher::clearState()
   {
-    m_exists = boost::filesystem::exists(m_path);
+    m_exists = openstudio::filesystem::exists(m_path);
     m_dirty = false;
     m_checksum = openstudio::checksum(m_path);
   }
@@ -129,7 +129,7 @@ namespace openstudio {
 
   void PathWatcher::directoryChanged(const QString & path)
   {
-    bool exists = boost::filesystem::exists(m_path);
+    bool exists = openstudio::filesystem::exists(m_path);
 
     if (m_exists && exists){
 
@@ -172,7 +172,7 @@ namespace openstudio {
 
   void PathWatcher::checkFile()
   {
-    bool exists = boost::filesystem::exists(m_path);
+    bool exists = openstudio::filesystem::exists(m_path);
     std::string checksum = openstudio::checksum(m_path);
 
     if (checksum == "00000000"){

@@ -51,10 +51,10 @@ class ModelPartitionMaterial;
 namespace detail {
 
   class MODEL_API LayeredConstruction_Impl : public ConstructionBase_Impl {
-    Q_OBJECT;
-    Q_PROPERTY(unsigned numberOfLayers READ numLayers STORED false);
+    
+    
 
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> insulation READ insulationAsModelObject WRITE setInsulationAsModelObject RESET resetInsulation);
+    
    public:
     /** @name Constructors and Destructors */
     //@{

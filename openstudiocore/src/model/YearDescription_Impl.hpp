@@ -45,12 +45,12 @@ namespace detail {
 
   /** YearDescription_Impl is a ParentObject_Impl that is the implementation class for YearDescription.*/
   class MODEL_API YearDescription_Impl : public ParentObject_Impl {
-    Q_OBJECT;
-    Q_PROPERTY(boost::optional<int> calendarYear READ calendarYear WRITE setCalendarYear RESET resetCalendarYear);
-    Q_PROPERTY(std::string dayofWeekforStartDay READ dayofWeekforStartDay WRITE setDayofWeekforStartDay RESET resetDayofWeekforStartDay);
-    Q_PROPERTY(bool isDayofWeekforStartDayDefaulted READ isDayofWeekforStartDayDefaulted);
-    Q_PROPERTY(bool isLeapYear READ isLeapYear WRITE setIsLeapYear RESET resetIsLeapYear);
-    Q_PROPERTY(bool isIsLeapYearDefaulted READ isIsLeapYearDefaulted);
+    
+    
+    
+    
+    
+    
    public:
 
     /** @name Constructors and Destructors */

@@ -40,17 +40,17 @@ namespace detail {
 
   class MODEL_API ConstructionWithInternalSource_Impl : public LayeredConstruction_Impl 
   {
-    Q_OBJECT;
-
-    Q_PROPERTY(int sourcePresentAfterLayerNumber READ sourcePresentAfterLayerNumber WRITE setSourcePresentAfterLayerNumber);
-
-    Q_PROPERTY(int dimensionsForTheCTFCalculation READ dimensionsForTheCTFCalculation WRITE setDimensionsForTheCTFCalculation);
     
-    Q_PROPERTY(int temperatureCalculationRequestedAfterLayerNumber READ temperatureCalculationRequestedAfterLayerNumber WRITE setTemperatureCalculationRequestedAfterLayerNumber);
 
-    Q_PROPERTY(double tubeSpacing READ tubeSpacing WRITE setTubeSpacing);
-    Q_PROPERTY(openstudio::Quantity tubeSpacing_SI READ tubeSpacing_SI WRITE setTubeSpacing);
-    Q_PROPERTY(openstudio::Quantity tubeSpacing_IP READ tubeSpacing_IP WRITE setTubeSpacing);    
+    
+
+    
+    
+    
+
+    
+    
+        
 
   public:
 

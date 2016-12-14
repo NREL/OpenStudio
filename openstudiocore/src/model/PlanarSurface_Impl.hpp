@@ -35,6 +35,8 @@
 #include "../utilities/geometry/Point3d.hpp"
 #include "../utilities/geometry/Vector3d.hpp"
 
+#include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
+
 namespace openstudio {
 
 namespace model {
@@ -48,30 +50,30 @@ class GeneratorPhotovoltaic;
 namespace detail {
 
   // derive PlanarSurface_Impl from ParentObject_Impl to override virtual methods
-  class MODEL_API PlanarSurface_Impl : public ParentObject_Impl{
-    Q_OBJECT;
-    Q_PROPERTY(double area READ grossArea);
-    Q_PROPERTY(double grossArea READ grossArea);
-    Q_PROPERTY(double netArea READ netArea);
+  class MODEL_API PlanarSurface_Impl : public ParentObject_Impl {
+    
+    
+    
+    
 
     // includes film coefficients. may require simulation results.
-    Q_PROPERTY(boost::optional<double> uFactor READ uFactor WRITE setUFactor);
+    
     // does not include film coefficients. may require simulation results.
-    Q_PROPERTY(boost::optional<double> thermalConductance READ thermalConductance WRITE setThermalConductance);
+    
 
-    Q_PROPERTY(boost::optional<double> heatCapacity READ heatCapacity);
+    
 
     // may require simulation results.
-    Q_PROPERTY(boost::optional<double> interiorVisibleAbsorptance READ interiorVisibleAbsorptance);
+    
     // may require simulation results.
-    Q_PROPERTY(boost::optional<double> exteriorVisibleAbsorptance READ exteriorVisibleAbsorptance);
+    
     // may require simulation results.
-    Q_PROPERTY(boost::optional<double> visibleTransmittance READ visibleTransmittance);
+    
 
     // relationships
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> construction READ constructionAsModelObject WRITE setConstructionAsModelObject );
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> planarSurfaceGroup READ planarSurfaceGroupAsModelObject);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> space READ spaceAsModelObject);
+    
+    
+    
    public:
 
     /** @name Constructors and Destructors */

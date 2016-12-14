@@ -37,10 +37,10 @@ namespace model {
 namespace detail {
 
   class MODEL_API AirTerminalSingleDuctVAVReheat_Impl : public StraightComponent_Impl {
-    Q_OBJECT;
+    
 
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> availabilitySchedule READ availabilityScheduleAsModelObject WRITE setAvailabilityScheduleAsModelObject);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> minimumAirFlowFractionSchedule READ minimumAirFlowFractionScheduleAsModelObject WRITE setMinimumAirFlowFractionScheduleAsModelObject RESET resetMinimumAirFlowFractionSchedule);
+    
+    
    public:
     /** @name Constructors and Destructors */
     //@{

@@ -44,9 +44,9 @@ class WaterUseEquipmentDefinition;
 namespace detail {
 
 class MODEL_API WaterUseEquipment_Impl : public SpaceLoadInstance_Impl {
-  Q_OBJECT;
+  
 
-  Q_PROPERTY(boost::optional<openstudio::model::ModelObject> flowRateFractionSchedule READ flowRateFractionScheduleAsModelObject WRITE setFlowRateFractionScheduleAsModelObject RESET resetFlowRateFractionSchedule);
+  
 
   public:
 

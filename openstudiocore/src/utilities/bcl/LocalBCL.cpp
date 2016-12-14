@@ -38,7 +38,6 @@
 #include "../core/System.hpp"
 
 #include <QDir>
-#include <QFile>
 #include <QIcon>
 #include <QInputDialog>
 #include <QSettings>
@@ -73,7 +72,7 @@ namespace openstudio{
       QDir().mkpath(m_libraryPath);
     }
     //Check for local database
-    if (!QFile(m_libraryPath+m_dbName).exists())
+    if (!openstudio::filesystem::exists(openstudio::toPath(m_libraryPath+m_dbName)))
     {
       initializeLocalDb();
     }
@@ -267,9 +266,9 @@ namespace openstudio{
         while (query.next()) {
           path src = toPath(m_libraryPath + "/" + query.value(0).toString() + "/" + query.value(1).toString() + query.value(2).toString().mid(query.value(2).toString().lastIndexOf("/")));
           path dest = src.parent_path();
-          QFile::remove(toQString(dest / toPath("DISCLAIMER.txt")));
-          QFile::remove(toQString(dest / toPath("README.txt")));
-          QFile::remove(toQString(dest / toPath("output.xml")));
+          openstudio::filesystem::remove(dest / toPath("DISCLAIMER.txt"));
+          openstudio::filesystem::remove(dest / toPath("README.txt"));
+          openstudio::filesystem::remove(dest / toPath("output.xml"));
           copyDirectory(src, dest);
           removeDirectory(src);
         }
@@ -868,7 +867,7 @@ namespace openstudio{
     }
     m_libraryPath = path;
 
-    if (!QFile(path+m_dbName).exists())
+    if (!openstudio::filesystem::exists(openstudio::toPath(path+m_dbName)))
     {
       QSqlDatabase database = QSqlDatabase::addDatabase("QSQLITE", path+m_dbName);
       database.setDatabaseName(path+m_dbName);

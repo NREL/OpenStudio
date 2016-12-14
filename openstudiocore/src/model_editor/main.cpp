@@ -44,7 +44,9 @@ using openstudio::Application;
 
 int main(int argc, char *argv[])
 {     
+#ifndef SHARED_OS_LIBS
   Q_INIT_RESOURCE(application);
+#endif // SHARED_OS_LIBS
 
   QApplication app(argc, argv);
   app.setOrganizationName("NREL");

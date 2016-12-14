@@ -85,7 +85,7 @@
 #include "../utilities/idf/WorkspaceObject.hpp"
 #include "../utilities/idf/IdfExtensibleGroup.hpp"
 
-#include <boost/filesystem.hpp>
+
 
 using openstudio::IddObjectType;
 using openstudio::GlobalGeometryRulesFields;

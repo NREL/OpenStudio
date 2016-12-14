@@ -42,10 +42,10 @@ namespace detail {
 
   /** LuminaireDefinition_Impl is a SpaceLoadDefinition_Impl that is the implementation class for LuminaireDefinition.*/
   class MODEL_API LuminaireDefinition_Impl : public SpaceLoadDefinition_Impl {
-    Q_OBJECT;
+    
 
-    Q_PROPERTY(double lightingPower READ lightingPower WRITE setLightingPower RESET resetLightingPower);
-    Q_PROPERTY(bool isLightingPowerDefaulted READ isLightingPowerDefaulted);
+    
+    
     Q_PROPERTY(openstudio::Quantity lightingPower_SI 
                READ lightingPower_SI 
                WRITE setLightingPower);
@@ -53,8 +53,8 @@ namespace detail {
                READ lightingPower_IP 
                WRITE setLightingPower);
 
-    Q_PROPERTY(double fractionRadiant READ fractionRadiant WRITE setFractionRadiant RESET resetFractionRadiant);
-    Q_PROPERTY(bool isFractionRadiantDefaulted READ isFractionRadiantDefaulted);
+    
+    
     Q_PROPERTY(openstudio::Quantity fractionRadiant_SI 
                READ fractionRadiant_SI 
                WRITE setFractionRadiant);
@@ -62,8 +62,8 @@ namespace detail {
                READ fractionRadiant_IP 
                WRITE setFractionRadiant);
 
-    Q_PROPERTY(double fractionVisible READ fractionVisible WRITE setFractionVisible RESET resetFractionVisible);
-    Q_PROPERTY(bool isFractionVisibleDefaulted READ isFractionVisibleDefaulted);
+    
+    
     Q_PROPERTY(openstudio::Quantity fractionVisible_SI 
                READ fractionVisible_SI 
                WRITE setFractionVisible);
@@ -71,8 +71,8 @@ namespace detail {
                READ fractionVisible_IP 
                WRITE setFractionVisible);
 
-    Q_PROPERTY(double returnAirFraction READ returnAirFraction WRITE setReturnAirFraction RESET resetReturnAirFraction);
-    Q_PROPERTY(bool isReturnAirFractionDefaulted READ isReturnAirFractionDefaulted);
+    
+    
     Q_PROPERTY(openstudio::Quantity returnAirFraction_SI 
                READ returnAirFraction_SI 
                WRITE setReturnAirFraction);
@@ -80,12 +80,12 @@ namespace detail {
                READ returnAirFraction_IP 
                WRITE setReturnAirFraction);
 
-    Q_PROPERTY(bool returnAirFractionCalculatedfromPlenumTemperature READ returnAirFractionCalculatedfromPlenumTemperature WRITE setReturnAirFractionCalculatedfromPlenumTemperature RESET resetReturnAirFractionCalculatedfromPlenumTemperature);
-    Q_PROPERTY(bool isReturnAirFractionCalculatedfromPlenumTemperatureDefaulted READ isReturnAirFractionCalculatedfromPlenumTemperatureDefaulted);
-    Q_PROPERTY(double returnAirFractionFunctionofPlenumTemperatureCoefficient1 READ returnAirFractionFunctionofPlenumTemperatureCoefficient1 WRITE setReturnAirFractionFunctionofPlenumTemperatureCoefficient1 RESET resetReturnAirFractionFunctionofPlenumTemperatureCoefficient1);
-    Q_PROPERTY(bool isReturnAirFractionFunctionofPlenumTemperatureCoefficient1Defaulted READ isReturnAirFractionFunctionofPlenumTemperatureCoefficient1Defaulted);
-    Q_PROPERTY(double returnAirFractionFunctionofPlenumTemperatureCoefficient2 READ returnAirFractionFunctionofPlenumTemperatureCoefficient2 WRITE setReturnAirFractionFunctionofPlenumTemperatureCoefficient2 RESET resetReturnAirFractionFunctionofPlenumTemperatureCoefficient2);
-    Q_PROPERTY(bool isReturnAirFractionFunctionofPlenumTemperatureCoefficient2Defaulted READ isReturnAirFractionFunctionofPlenumTemperatureCoefficient2Defaulted);
+    
+    
+    
+    
+    
+    
    public:
     /** @name Constructors and Destructors */
     //@{

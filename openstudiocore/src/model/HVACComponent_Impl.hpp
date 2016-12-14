@@ -48,12 +48,12 @@ class ZoneHVACComponent;
 namespace detail {
 
 class MODEL_API HVACComponent_Impl : public ParentObject_Impl {
-  Q_OBJECT;
+  
 
-  Q_PROPERTY(bool isRemovable READ isRemovable);
-  Q_PROPERTY(boost::optional<openstudio::model::ModelObject> airLoopHVAC READ airLoopHVACAsModelObject);
-  Q_PROPERTY(boost::optional<openstudio::model::ModelObject> plantLoop READ plantLoopAsModelObject);
-  Q_PROPERTY(boost::optional<openstudio::model::ModelObject> airLoopHVACOutdoorAirSystem READ airLoopHVACOutdoorAirSystemAsModelObject);
+  
+  
+  
+  
 
  public:
 

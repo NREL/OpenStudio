@@ -415,6 +415,9 @@ public:
 
   /// static load method
   static boost::optional<EpwFile> load(const openstudio::path& p, bool storeData=false);
+  
+  /// static load method
+  static boost::optional<EpwFile> loadFromString(const std::string& str, bool storeData=false);
 
   /// get the path
   openstudio::path path() const;
@@ -490,7 +493,8 @@ public:
 
 private:
 
-  bool parse(bool storeData=false);
+  EpwFile();
+  bool parse(std::istream& is, bool storeData=false);
   bool parseLocation(const std::string& line);
   bool parseDataPeriod(const std::string& line);
 

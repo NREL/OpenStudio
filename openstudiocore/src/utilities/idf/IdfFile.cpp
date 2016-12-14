@@ -49,8 +49,8 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/split.hpp>
 #include <boost/regex.hpp>
-#include <boost/filesystem.hpp>
-#include <boost/filesystem/fstream.hpp>
+
+
 #include <boost/iostreams/filter/newline.hpp>
 #include <boost/iostreams/filtering_stream.hpp>
 
@@ -369,7 +369,7 @@ OptionalIdfFile IdfFile::load(const path& p, ProgressBar* progressBar) {
   IddFileType iddType(IddFileType::EnergyPlus); // default
 
   // switch if file extension equal to modelFileExtension() or componentFileExtension()
-  std::string pext = toString(boost::filesystem::extension(p));
+  std::string pext = toString(openstudio::filesystem::extension(p));
   if (!pext.empty()) {
     // remove '.'
     pext = std::string(++pext.begin(),pext.end());
@@ -398,7 +398,7 @@ OptionalIdfFile IdfFile::load(const path& p,
   }
 
   // try to open file and parse
-  boost::filesystem::ifstream inFile(wp);
+  openstudio::filesystem::ifstream inFile(wp);
   if (inFile) {
     try {
       return load(inFile, iddFileType, progressBar);
@@ -414,7 +414,7 @@ OptionalIdfFile IdfFile::load(const path& p, const IddFile& iddFile, ProgressBar
   path wp = completePathToFile(p,path(),"idf",false);
 
   // try to open file and parse
-  boost::filesystem::ifstream inFile(wp);
+  openstudio::filesystem::ifstream inFile(wp);
   if (inFile) {
     try {
       return load(inFile, iddFile, progressBar);
@@ -444,7 +444,7 @@ boost::optional<VersionString> IdfFile::loadVersionOnly(std::istream& is) {
 boost::optional<VersionString> IdfFile::loadVersionOnly(const path& p) {
   boost::optional<VersionString> result;
   path wp = completePathToFile(p,path(),"idf",false);
-  boost::filesystem::ifstream inFile(wp);
+  openstudio::filesystem::ifstream inFile(wp);
   if (inFile) {
     try {
       return loadVersionOnly(inFile);
@@ -508,7 +508,7 @@ bool IdfFile::save(const openstudio::path& p, bool overwrite) {
   }
 
   if (makeParentFolder(wp)) {
-    boost::filesystem::ofstream outFile(wp);
+    openstudio::filesystem::ofstream outFile(wp);
     if (outFile) {
       try {
         print(outFile);

@@ -43,11 +43,11 @@ namespace detail {
 
   /** InternalMassDefinition_Impl is a SpaceLoadDefinition_Impl that is the implementation class for InternalMassDefinition.*/
   class MODEL_API InternalMassDefinition_Impl : public SpaceLoadDefinition_Impl {
-    Q_OBJECT;
+    
 
-    Q_PROPERTY(std::string designLevelCalculationMethod READ designLevelCalculationMethod);
+    
 
-    Q_PROPERTY(boost::optional<double> surfaceArea READ surfaceArea WRITE setSurfaceArea);
+    
     Q_PROPERTY(openstudio::OSOptionalQuantity surfaceArea_SI 
                READ surfaceArea_SI 
                WRITE setSurfaceArea);
@@ -81,10 +81,10 @@ namespace detail {
                RESET resetConstruction);
 
  
-//    Q_PROPERTY(boost::optional<double> supplyAirFlowRateDuringCoolingOperation READ supplyAirFlowRateDuringCoolingOperation WRITE setSupplyAirFlowRateDuringCoolingOperation);
-//    Q_PROPERTY(openstudio::OSOptionalQuantity supplyAirFlowRateDuringCoolingOperation_SI READ supplyAirFlowRateDuringCoolingOperation_SI WRITE setSupplyAirFlowRateDuringCoolingOperation);
-//    Q_PROPERTY(openstudio::OSOptionalQuantity supplyAirFlowRateDuringCoolingOperation_IP READ supplyAirFlowRateDuringCoolingOperation_IP WRITE setSupplyAirFlowRateDuringCoolingOperation);
-//    Q_PROPERTY(bool isSupplyAirFlowRateDuringCoolingOperationAutosized READ isSupplyAirFlowRateDuringCoolingOperationAutosized);
+//    
+//    
+//    
+//    
 
 
    public:

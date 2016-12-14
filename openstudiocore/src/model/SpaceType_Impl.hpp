@@ -60,32 +60,32 @@ namespace detail {
 
   /** SpaceType_Impl is a ResourceObject_Impl that is the implementation class for SpaceType.*/
   class MODEL_API SpaceType_Impl : public ResourceObject_Impl {
-    Q_OBJECT;
+    
 
-    Q_PROPERTY(boost::optional<double> peoplePerFloorArea READ peoplePerFloorArea WRITE setPeoplePerFloorArea);
-    Q_PROPERTY(boost::optional<double> spaceFloorAreaPerPerson READ spaceFloorAreaPerPerson WRITE setSpaceFloorAreaPerPerson);
-    Q_PROPERTY(boost::optional<double> lightingPowerPerFloorArea READ lightingPowerPerFloorArea WRITE setLightingPowerPerFloorArea);
-    Q_PROPERTY(boost::optional<double> lightingPowerPerPerson READ lightingPowerPerPerson WRITE setLightingPowerPerPerson);
-    Q_PROPERTY(boost::optional<double> electricEquipmentPowerPerFloorArea READ electricEquipmentPowerPerFloorArea WRITE setElectricEquipmentPowerPerFloorArea);
-    Q_PROPERTY(boost::optional<double> electricEquipmentPowerPerPerson READ electricEquipmentPowerPerPerson WRITE setElectricEquipmentPowerPerPerson);
-    Q_PROPERTY(boost::optional<double> gasEquipmentPowerPerFloorArea READ gasEquipmentPowerPerFloorArea WRITE setGasEquipmentPowerPerFloorArea);
-    Q_PROPERTY(boost::optional<double> gasEquipmentPowerPerPerson READ gasEquipmentPowerPerPerson WRITE setGasEquipmentPowerPerPerson);
+    
+    
+    
+    
+    
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> defaultConstructionSet READ defaultConstructionSetAsModelObject WRITE setDefaultConstructionSetAsModelObject RESET resetDefaultConstructionSet);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> defaultScheduleSet READ defaultScheduleSetAsModelObject WRITE setDefaultScheduleSetAsModelObject RESET resetDefaultScheduleSet);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> renderingColor READ renderingColorAsModelObject WRITE setRenderingColorAsModelObject RESET resetRenderingColor);
+    
+    
+    
 
-    Q_PROPERTY(std::vector<openstudio::model::ModelObject> internalMass READ internalMassAsModelObjects);
-    Q_PROPERTY(std::vector<openstudio::model::ModelObject> people READ peopleAsModelObjects);
-    Q_PROPERTY(std::vector<openstudio::model::ModelObject> lights READ lightsAsModelObjects);
-    Q_PROPERTY(std::vector<openstudio::model::ModelObject> luminaires READ luminairesAsModelObjects);
-    Q_PROPERTY(std::vector<openstudio::model::ModelObject> electricEquipment READ electricEquipmentAsModelObjects);
-    Q_PROPERTY(std::vector<openstudio::model::ModelObject> gasEquipment READ gasEquipmentAsModelObjects);
-    Q_PROPERTY(std::vector<openstudio::model::ModelObject> hotWaterEquipment READ hotWaterEquipmentAsModelObjects);
-    Q_PROPERTY(std::vector<openstudio::model::ModelObject> steamEquipment READ steamEquipmentAsModelObjects);
-    Q_PROPERTY(std::vector<openstudio::model::ModelObject> otherEquipment READ otherEquipmentAsModelObjects);
-    Q_PROPERTY(std::vector<openstudio::model::ModelObject> spaceInfiltrationDesignFlowRates READ spaceInfiltrationDesignFlowRatesAsModelObjects);
-    Q_PROPERTY(std::vector<openstudio::model::ModelObject> spaceInfiltrationEffectiveLeakageAreas READ spaceInfiltrationEffectiveLeakageAreasAsModelObjects);
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
    public:
     /** @name Constructors and Destructors */
     //@{

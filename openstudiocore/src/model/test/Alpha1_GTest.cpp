@@ -283,9 +283,9 @@ TEST_F(ModelFixture, Alpha1)
   ASSERT_TRUE(outWorkspace);
 
   // write files
-  boost::filesystem::remove_all(epDir / toPath("alpha1/"));
-  boost::filesystem::create_directory(epDir / toPath("alpha1/"));
-  boost::filesystem::ofstream ofs(epDir / toPath("alpha1/in.idf"));
+  openstudio::filesystem::remove_all(epDir / toPath("alpha1/"));
+  openstudio::filesystem::create_directory(epDir / toPath("alpha1/"));
+  openstudio::filesystem::ofstream ofs(epDir / toPath("alpha1/in.idf"));
   outWorkspace->toIdfFile().print(ofs);
   ofs.close();
 

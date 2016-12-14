@@ -35,58 +35,34 @@
 
 namespace openstudio {
 
-  /** If possible, creates an openstudio::path to a system directory from outdir, otherwise throws 
-   *  a std::runtime_error. For use by auto-generation applications that are writing files for 
-   *  OpenStudio. Requires that the path represented by outdir exist up to the parent level of the
-   *  final directory. Outputs informative messages to std::cout. */
-  UTILITIES_API openstudio::path getApplicationOutputDirectory(const std::string& outdir);
-
   /// \returns The source directory the application was built from
   UTILITIES_API openstudio::path getApplicationSourceDirectory();
 
   /// \returns The directory the application was built in
   UTILITIES_API openstudio::path getApplicationBuildDirectory();
 
-  /// \returns The directory the application was configured to be installed in (install prefix)
-  UTILITIES_API openstudio::path getApplicationInstallDirectory();
+  /// \returns The path to the current executable application
+  UTILITIES_API openstudio::path getApplicationPath();
 
-  /// \returns The directory the application binary lives in
-  UTILITIES_API openstudio::path getApplicationRunDirectory();
+  /// \returns The directory of the current executable application
+  UTILITIES_API openstudio::path getApplicationDirectory();
 
   /// \returns True if the application is running from the build directory
   UTILITIES_API bool applicationIsRunningFromBuildDirectory();
 
-  /// \returns The bare paths of the openstudio ruby libraries, with no root specified
-  UTILITIES_API std::vector<openstudio::path> getOpenStudioBareRubyPaths();
-  
-  /// \returns The locations of the openstudio ruby libraries appropriate for this application instance can be found
-  UTILITIES_API std::vector<openstudio::path> getOpenStudioRubyPaths();
+  /// \returns Will return path to the binary containing OpenStudio Utilities, could be openstudio.exe, openstudio.so, etc.
+  UTILITIES_API openstudio::path getOpenStudioModule();
 
-  /// \returns The directory the openstudio ruby library appropriate for this application instance can be found
-  UTILITIES_API openstudio::path getOpenStudioRubyPath();
+  /// \returns Will return dir containing the binary containing OpenStudio Utilities, could be openstudio.exe, openstudio.so, etc.
+  UTILITIES_API openstudio::path getOpenStudioModuleDirectory();
 
-  /** \returns The directory that should be included when making calls to ruby scripts from a ruby
-   *  job (to make require 'openstudio' work). */
-  UTILITIES_API openstudio::path getOpenStudioRubyIncludePath();
+  /// \returns The path to the OpenStudio Command Line Interface  if it exists.
+  UTILITIES_API openstudio::path getOpenStudioCLI();
 
-  /// \returns The openstudio ruby scripts library appropriate for this application instance.
-  UTILITIES_API openstudio::path getOpenStudioRubyScriptsPath();
-
-  /// \returns The location to load resources from
-  UTILITIES_API openstudio::path getSharedResourcesPath();
-
-  /// \returns The location of the ruby installation intended for aws-sdk use with aws-sdk
-  ///          gem already installed
-  UTILITIES_API openstudio::path getOpenStudioAWSRubyPath();
-
-  /// \returns The packaged ruby installation from the embedded ruby version.
-  ///          Returns nothing on non-windows platforms
-  UTILITIES_API openstudio::path getOpenStudioEmbeddedRubyPath();
-
-  /// \returns The packaged EnergyPlus installation.
+  /// \returns The packaged EnergyPlus installation if it exists.
   UTILITIES_API openstudio::path getEnergyPlusDirectory();
 
-  /// \returns The path to the packaged EnergyPlus executable.
+  /// \returns The path to the packaged EnergyPlus executable if it exists.
   UTILITIES_API openstudio::path getEnergyPlusExecutable();
 
   /// \returns The packaged Radiance installation if it exists.

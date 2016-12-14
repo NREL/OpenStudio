@@ -142,6 +142,9 @@ class UTILITIES_API IddFileAndFactoryWrapper {
   REGISTER_LOGGER("utilities.IddFileAndFactoryWrapper");
 };
 
+// helper function to get a particular Idd File that was released with CBECC-Com but not OpenStudio
+UTILITIES_API IddFile get_1_9_0_CBECC_IddFile();
+
 } // openstudio
 
 #endif // UTILITIES_IDD_IDDFILEANDFACTORYWRAPPER_HPP

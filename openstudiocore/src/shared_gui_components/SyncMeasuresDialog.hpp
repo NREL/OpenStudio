@@ -32,6 +32,7 @@
 #include <QDialog>
 
 #include "../utilities/bcl/BCLMeasure.hpp"
+#include "../utilities/filetypes/WorkflowJSON.hpp"
 
 #include <vector>
 
@@ -44,17 +45,13 @@ class Component;
 class MeasureManager;
 class SyncMeasuresDialogCentralWidget;
 
-namespace analysisdriver {
 
-class SimpleProject;
-
-}
 class SyncMeasuresDialog : public QDialog
 {
   Q_OBJECT
 
 public:
-  SyncMeasuresDialog(analysisdriver::SimpleProject * project,
+  SyncMeasuresDialog(const WorkflowJSON& workflow,
     MeasureManager * measureManager,
     QWidget * parent = nullptr);
   virtual ~SyncMeasuresDialog() {}
@@ -70,7 +67,7 @@ private:
   QScrollArea * m_rightScrollArea;
   Component * m_expandedComponent;
   std::vector<BCLMeasure> m_measuresNeedingUpdates;
-  analysisdriver::SimpleProject * m_project; // DLM: why is this a raw pointer?
+  WorkflowJSON m_workflow; 
   MeasureManager * m_measureManager; // DLM: why is this a raw pointer?
 
 private slots:

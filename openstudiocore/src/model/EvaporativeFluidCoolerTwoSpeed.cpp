@@ -34,8 +34,8 @@
 // #include "WaterStorageTank.hpp"
 // #include "WaterStorageTank_Impl.hpp"
 #include "Node.hpp"
-#include "../../model/ScheduleTypeLimits.hpp"
-#include "../../model/ScheduleTypeRegistry.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>

@@ -36,10 +36,6 @@
 #include "../model/Model.hpp"
 #include "../model/ModelObject.hpp"
 
-#include "../ruleset/RubyUserScriptArgumentGetter.hpp"
-
-#include "../analysisdriver/SimpleProject.hpp"
-
 #include <QObject>
 #include <QString>
 
@@ -61,8 +57,6 @@ class InspectorController;
 class MainWindow;
 
 class LibraryTabWidget;
-
-class ScriptFolderListView;
 
 class OSItemId;
 
@@ -99,12 +93,12 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   void setModel(const model::Model& model, bool modified, bool saveCurrentTabs);
 
   // Returns the Workspace associated with this document's model
-  boost::optional<Workspace> workspace();
+  //boost::optional<Workspace> workspace();
 
   // Set the Workspace associated with this document's model.
   // Workspace is created by idf translator when the scripts tab is shown.
   // This is used to populate idf measure arguments.
-  void setWorkspace(const boost::optional<Workspace>& workspace);
+  //void setWorkspace(const boost::optional<Workspace>& workspace);
 
   // Returns true if the document has unsaved changes.
   bool modified() const;
@@ -150,14 +144,6 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   // Retrieves the Component identified by itemId from the local bcl library, 
   // updates it to the current version and returns it.
   boost::optional<model::Component> getComponent(const OSItemId& itemId) const;
-
-  boost::optional<analysisdriver::SimpleProject> project() const;
-
-  // Returns the ScriptFolderListView, from which folder display names and
-  // ruleset::UserScriptInfo is available.
-//  const ScriptFolderListView* scriptFolderListView() const;
-
-//  ScriptFolderListView* scriptFolderListView();
 
   // Returns the index of the current tab.
   int verticalTabIndex();
@@ -243,8 +229,6 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   void markAsUnmodified();
 
-  void runComplete();
-
   void exportIdf();
 
   void exportgbXML();
@@ -297,7 +281,13 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   void updateSubTabSelected(int id);
 
+  void addStandardMeasures();
+
   public slots:
+
+  void enable();
+
+  void disable();
 
   void enableTabsAfterRun();
 
@@ -313,6 +303,8 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   };
 
   void exportFile(fileType type);
+
+  boost::optional<BCLMeasure> standardReportMeasure();
 
   friend class OpenStudioApp;
 
@@ -360,8 +352,6 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   std::shared_ptr<InspectorController> m_inspectorController;
 
   std::shared_ptr<MainRightColumnController> m_mainRightColumnController;
-
-  boost::optional<analysisdriver::SimpleProject> m_simpleProject;
 
   QString m_savePath = QString();
   QString m_modelTempDir = QString();

@@ -30,18 +30,13 @@
 #define OPENSTUDIO_GASEQUIPMENTINSPECTORVIEW_HPP
 
 #include "ModelObjectInspectorView.hpp"
+#include "../model/GasEquipmentDefinition.hpp"
 
 namespace openstudio {
 
-namespace model {
+class OSLineEdit2;
 
-class GasEquipmentDefinition;
-
-}
-
-class OSLineEdit;
-
-class OSQuantityEdit;
+class OSQuantityEdit2;
 
 class OSDropZone;
 
@@ -72,23 +67,25 @@ class GasEquipmentDefinitionInspectorView : public ModelObjectInspectorView
 
     void refresh();
 
-    OSLineEdit * m_nameEdit;
+    OSLineEdit2 * m_nameEdit;
 
-    OSQuantityEdit * m_designLevelEdit;
+    OSQuantityEdit2 * m_designLevelEdit;
 
-    OSQuantityEdit * m_wattsPerSpaceFloorAreaEdit;
+    OSQuantityEdit2 * m_wattsPerSpaceFloorAreaEdit;
 
-    OSQuantityEdit * m_wattsPerPersonEdit;
+    OSQuantityEdit2 * m_wattsPerPersonEdit;
 
-    OSQuantityEdit * m_fractionLatentEdit;
+    OSQuantityEdit2 * m_fractionLatentEdit;
 
-    OSQuantityEdit * m_fractionRadiantEdit;
+    OSQuantityEdit2 * m_fractionRadiantEdit;
 
-    OSQuantityEdit * m_fractionLostEdit;
+    OSQuantityEdit2 * m_fractionLostEdit;
 
-    OSQuantityEdit * m_carbonDioxideGenerationRateEdit;
+    OSQuantityEdit2 * m_carbonDioxideGenerationRateEdit;
 
     bool m_isIP;
+
+    boost::optional<model::GasEquipmentDefinition> m_gasEquipmentDefinition;
 
   public slots:
 

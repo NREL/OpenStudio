@@ -44,8 +44,8 @@ namespace detail {
 
   /** ScheduleBase_Impl is a ResourceObject_Impl that is the implementation class for ScheduleBase.*/
   class MODEL_API ScheduleBase_Impl : public ResourceObject_Impl {
-    Q_OBJECT;
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> scheduleTypeLimits READ scheduleTypeLimitsAsModelObject WRITE setScheduleTypeLimitsAsModelObject RESET resetScheduleTypeLimits);
+    
+    
    public:
     /** @name Constructors and Destructors */
     //@{
