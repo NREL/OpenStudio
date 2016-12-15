@@ -562,7 +562,20 @@ add_library(${target_name}_static
 target_link_libraries(${target_name}_static ${${target_name}_static_depends} GeographicLib_STATIC)
 
 target_include_directories(${target_name}_static PUBLIC ${QT_STATIC_INCLUDES})
-target_link_libraries(${target_name}_static ${QT_STATIC_LIBS})
+
+list(LENGTH QT_STATIC_LIBS QT_STATIC_LIBS_LENGTH)
+list(LENGTH QT_STATIC_LIBS_D QT_STATIC_LIBS_D_LENGTH)
+if (NOT ${QT_STATIC_LIBS_LENGTH} EQUAL ${QT_STATIC_LIBS_D_LENGTH})
+  message(FATAL_ERROR "Mismatched sizes QT_STATIC_LIBS ${QT_STATIC_LIBS_LENGTH} != QT_STATIC_LIBS_D #{QT_STATIC_LIBS_D_LENGTH}")
+endif()
+
+math(EXPR N "${QT_STATIC_LIBS_LENGTH} - 1")
+foreach(i RANGE ${N})
+  list(GET QT_STATIC_LIBS ${i} lib_)
+  list(GET QT_STATIC_LIBS_D ${i} libd)
+  target_link_libraries(${target_name}_static optimized ${lib_} debug ${libd})
+endforeach()
+
 target_compile_definitions(${target_name}_static PUBLIC ${QT_DEFS})
 
 if(NOT BUILD_SHARED_LIBS)
