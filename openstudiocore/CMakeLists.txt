@@ -1486,7 +1486,7 @@ endif()
 if(BUILD_OS_APP)
   list(APPEND all_lib_targets "openstudio_modeleditor")
   list(APPEND all_lib_targets "openstudio_bimserver")
-  list(APPEND all_lib_targets "openstudio_app")
+  list(APPEND all_lib_targets "openstudio_lib")
 endif()
 
 #export(TARGETS
@@ -1497,12 +1497,12 @@ endif()
 set(all_exe_targets
   GenerateIddFactory
   #gbXMLToIdf
-  #OpenStudio
+  openstudio
   #ResultsViewer
 )
 
 if(BUILD_OS_APP)
-  list(APPEND all_exe_targets "OpenStudio")
+  list(APPEND all_exe_targets "OpenStudioApp")
   #list(APPEND all_exe_targets "ResultsViewer")
 endif()
 
