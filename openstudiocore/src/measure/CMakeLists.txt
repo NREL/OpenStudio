@@ -77,31 +77,25 @@ CREATE_SRC_GROUPS("${${target_name}_src}")
 # CREATE_SRC_GROUPS("${${target_name}_test_src}")
 CREATE_SRC_GROUPS("${${target_name}_swig_src}")
 
-if( Qt5Static )
-  set(${target_name}_static_depends
-    openstudio_osversion_static
-  )
-  
-  add_library(${target_name}_static
-    ${${target_name}_src}
-    ${${target_name}_moc_src}
-  )
-  
-  target_link_libraries(${target_name}_static ${${target_name}_static_depends})
+set(${target_name}_static_depends
+  openstudio_osversion_static
+)
 
-  if( MSVC )
-    target_compile_definitions(${target_name}_static PUBLIC ${WIN_MVC})
-  endif()
+add_library(${target_name}_static
+  ${${target_name}_src}
+  ${${target_name}_moc_src}
+)
+
+target_link_libraries(${target_name}_static ${${target_name}_static_depends})
+
+if( MSVC )
+  target_compile_definitions(${target_name}_static PUBLIC ${WIN_MVC})
 endif()
 
 #CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends};${RUBY_LIBRARY};${COREFOUNDATION_LIBRARY}")
 CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends};${COREFOUNDATION_LIBRARY}")
 
-if( Qt5Static )
-  MAKE_SWIG_TARGET(OpenStudioMeasure measure "${CMAKE_CURRENT_SOURCE_DIR}/Measure.i" "${${target_name}_swig_src}" ${target_name}_static OpenStudioOSVersion)
-else()
-  MAKE_SWIG_TARGET(OpenStudioMeasure measure "${CMAKE_CURRENT_SOURCE_DIR}/Measure.i" "${${target_name}_swig_src}" ${target_name} OpenStudioOSVersion)
-endif()
+MAKE_SWIG_TARGET(OpenStudioMeasure measure "${CMAKE_CURRENT_SOURCE_DIR}/Measure.i" "${${target_name}_swig_src}" ${target_name}_static OpenStudioOSVersion)
 
 # if(BUILD_TESTING)
 #  add_dependencies("${target_name}_tests"

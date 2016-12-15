@@ -169,37 +169,20 @@ set_source_files_properties("${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap
 
 add_definitions(-DRUBY_EXTCONF_H="osruby_config.h")
 
-if( Qt5Static )
-  target_link_libraries(openstudio 
-   init_openstudio
-   ${EXTENSION_LIBS} 
-   ${ENC_LIBS} 
-   openstudio_airflow_static
-   openstudio_model_static
-   openstudio_energyplus_static
-   openstudio_measure_static
-   openstudio_osversion_static
-   openstudio_sdd_static
-   openstudio_isomodel_static
-   openstudio_gbxml_static
-   openstudio_radiance_static
-  )
-else()
-  target_link_libraries(openstudio 
-   init_openstudio
-   ${EXTENSION_LIBS} 
-   ${ENC_LIBS} 
-   openstudio_airflow
-   openstudio_model
-   openstudio_energyplus
-   openstudio_measure
-   openstudio_osversion
-   openstudio_sdd
-   openstudio_isomodel
-   openstudio_gbxml
-   openstudio_radiance
-  )
-endif()
+target_link_libraries(openstudio 
+ init_openstudio
+ ${EXTENSION_LIBS} 
+ ${ENC_LIBS} 
+ openstudio_airflow_static
+ openstudio_model_static
+ openstudio_energyplus_static
+ openstudio_measure_static
+ openstudio_osversion_static
+ openstudio_sdd_static
+ openstudio_isomodel_static
+ openstudio_gbxml_static
+ openstudio_radiance_static
+)
 
 if (UNIX AND NOT APPLE)
   target_link_libraries(openstudio ${RUBY_STATIC_LIBRARY}  "dl" "crypt")

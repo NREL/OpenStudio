@@ -59,14 +59,12 @@ add_library(${target_name} ${${target_name}_src})
 target_link_libraries(${target_name} ${${target_name}_depends})
 AddPCH(${target_name})
 
-if( Qt5Static )
-  set(${target_name}_static_depends
-    openstudio_model_static
-  )
-  
-  add_library(${target_name}_static ${${target_name}_src})
-  target_link_libraries(${target_name}_static ${${target_name}_static_depends})
-endif()
+set(${target_name}_static_depends
+  openstudio_model_static
+)
+
+add_library(${target_name}_static ${${target_name}_src})
+target_link_libraries(${target_name}_static ${${target_name}_static_depends})
 
 #No need to install static library
 #if(NOT APPLE)
@@ -85,9 +83,5 @@ if(BUILD_TESTING)
   add_dependencies(${target_name}_tests openstudio_isomodel_resources)
 endif()
 
-if( Qt5Static )
-  MAKE_SWIG_TARGET(OpenStudioISOModel ISOModel "${CMAKE_CURRENT_SOURCE_DIR}/ISOModel.i" "${${target_name}_swig_src}" ${target_name}_static OpenStudioModel)
-else()
-  MAKE_SWIG_TARGET(OpenStudioISOModel ISOModel "${CMAKE_CURRENT_SOURCE_DIR}/ISOModel.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModel)
-endif()
+MAKE_SWIG_TARGET(OpenStudioISOModel ISOModel "${CMAKE_CURRENT_SOURCE_DIR}/ISOModel.i" "${${target_name}_swig_src}" ${target_name}_static OpenStudioModel)
 

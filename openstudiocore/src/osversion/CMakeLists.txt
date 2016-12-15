@@ -42,17 +42,15 @@ set(${target_name}_test_depends
   ${${target_name}_depends}
 )
 
-if( Qt5Static )
-  add_library(${target_name}_static
-    ${${target_name}_src}
-  )
+add_library(${target_name}_static
+  ${${target_name}_src}
+)
 
-  set(${target_name}_static_depends
-    openstudio_model_static
-  )
+set(${target_name}_static_depends
+  openstudio_model_static
+)
 
-  target_link_libraries(${target_name}_static ${${target_name}_static_depends})
-endif()
+target_link_libraries(${target_name}_static ${${target_name}_static_depends})
 
 CREATE_SRC_GROUPS("${${target_name}_src}")
 CREATE_SRC_GROUPS("${${target_name}_test_src}")
@@ -67,9 +65,4 @@ if(BUILD_TESTING)
 
 endif()
 
-if( Qt5Static )
-  MAKE_SWIG_TARGET(OpenStudioOSVersion OSVersion "${CMAKE_CURRENT_SOURCE_DIR}/OSVersion.i" "${${target_name}_swig_src}" ${target_name}_static OpenStudioModel)
-else()
-  MAKE_SWIG_TARGET(OpenStudioOSVersion OSVersion "${CMAKE_CURRENT_SOURCE_DIR}/OSVersion.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModel)
-endif()
-
+MAKE_SWIG_TARGET(OpenStudioOSVersion OSVersion "${CMAKE_CURRENT_SOURCE_DIR}/OSVersion.i" "${${target_name}_swig_src}" ${target_name}_static OpenStudioModel)

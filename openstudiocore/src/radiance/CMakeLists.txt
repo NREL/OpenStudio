@@ -44,15 +44,13 @@ add_library(${target_name} ${${target_name}_src} ${${target_name}_qrc_src})
 target_link_libraries(${target_name} ${${target_name}_depends})
 AddPCH(${target_name})
 
-if( Qt5Static )
-  set(${target_name}_static_depends
-    openstudio_model_static
-  )
-  
-  add_library(${target_name}_static ${${target_name}_src} ${${target_name}_qrc_src})
-  
-  target_link_libraries(${target_name}_static ${${target_name}_static_depends})
-endif()
+set(${target_name}_static_depends
+  openstudio_model_static
+)
+
+add_library(${target_name}_static ${${target_name}_src} ${${target_name}_qrc_src})
+
+target_link_libraries(${target_name}_static ${${target_name}_static_depends})
 
 # No need to install static library
 #if(NOT APPLE)
@@ -64,9 +62,5 @@ endif()
 
 CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends}")
 
-if( Qt5Static )
-  MAKE_SWIG_TARGET(OpenStudioRadiance radiance "${CMAKE_CURRENT_SOURCE_DIR}/Radiance.i" "${${target_name}_swig_src}" ${target_name}_static OpenStudioModel)
-else()
-  MAKE_SWIG_TARGET(OpenStudioRadiance radiance "${CMAKE_CURRENT_SOURCE_DIR}/Radiance.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModel)
-endif()
+MAKE_SWIG_TARGET(OpenStudioRadiance radiance "${CMAKE_CURRENT_SOURCE_DIR}/Radiance.i" "${${target_name}_swig_src}" ${target_name}_static OpenStudioModel)
 

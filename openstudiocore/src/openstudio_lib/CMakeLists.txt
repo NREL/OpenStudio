@@ -716,9 +716,7 @@ set(depends
 
 target_link_libraries(${target_name} ${depends})
 
-if( Qt5Static )
-  target_link_libraries(${target_name} ${QT_SHARED_LIBS})
-endif()
+target_link_libraries(${target_name} ${QT_SHARED_LIBS})
 
 AddPCH(${target_name})
 

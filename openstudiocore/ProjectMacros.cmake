@@ -357,13 +357,9 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
   target_link_libraries(${swig_target} ${PARENT_TARGET})
   add_dependencies(${swig_target} ${PARENT_TARGET} ${DEPENDS})
 
-  if( Qt5Static )
-    target_include_directories(${swig_target} PUBLIC ${QT_STATIC_INCLUDES})
-    target_compile_definitions(${swig_target} PUBLIC ${QT_DEFS})
-  else()
-    target_include_directories(${swig_target} PUBLIC ${QT_INCLUDES})
-  endif()
-
+  target_include_directories(${swig_target} PUBLIC ${QT_STATIC_INCLUDES})
+  target_compile_definitions(${swig_target} PUBLIC ${QT_DEFS})
+    
   ####Remove binding install related stuff. At least for now. Might need some of this to support sketchup
   ####if(APPLE)
   ####  set(_NAME "${LOWER_NAME}.bundle")

@@ -122,26 +122,24 @@ set(${target_name}_depends
 add_dependencies(${target_name} ${${target_name}_depends})
 target_link_libraries(${target_name} ${${target_name}_depends})
 
-if( Qt5Static )
-  # make the shared library
-  add_library(${target_name}_static
-    ${${target_name}_src}
-    ${${target_name}_moc}
-    ${${target_name}_mocs}
-    ${${target_name}_qrc}
-    ${${target_name}_qrcs}
-    ${${target_name}_ui}
-    ${${target_name}_uis}
-  )
-  
-  # lib dependencies
-  set(${target_name}_static_depends
-    openstudio_energyplus_static
-    openstudio_model_static
-  )
-  
-  target_link_libraries(${target_name}_static ${${target_name}_static_depends})
-endif()
+# make the static library
+add_library(${target_name}_static
+  ${${target_name}_src}
+  ${${target_name}_moc}
+  ${${target_name}_mocs}
+  ${${target_name}_qrc}
+  ${${target_name}_qrcs}
+  ${${target_name}_ui}
+  ${${target_name}_uis}
+)
+
+# lib dependencies
+set(${target_name}_static_depends
+  openstudio_energyplus_static
+  openstudio_model_static
+)
+
+target_link_libraries(${target_name}_static ${${target_name}_static_depends})
 
 #if(NOT APPLE)
 #  install(TARGETS ${target_name}
@@ -171,17 +169,12 @@ if(BUILD_TESTING)
 
 endif()
 
-
 # lib swig files
 set(${target_name}_swig_src
   ModelEditor.i
 )
 
-if( Qt5Static )
-  set(swig_target_name ${target_name}_static)
-else()
-  set(swig_target_name ${target_name})
-endif()
+set(swig_target_name ${target_name}_static)
 
 MAKE_SWIG_TARGET(OpenStudioModelEditor modeleditor "${CMAKE_CURRENT_SOURCE_DIR}/ModelEditor.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioEnergyPlus)
 add_dependencies(ruby_OpenStudioModelEditor ruby_OpenStudioModel)
