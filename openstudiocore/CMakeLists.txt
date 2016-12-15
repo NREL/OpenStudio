@@ -46,6 +46,12 @@ else()
   set(GIT_DIR "")
 endif()
 
+find_program(PATCH_EXE patch HINTS "${GIT_DIR}" "${GIT_DIR}/../bin/" "${GIT_DIR}/../usr/bin/")
+string(COMPARE EQUAL "${PATCH_EXE}" "PATCH_EXE-NOTFOUND" PATCH_EXE_NOTFOUND)
+if(PATCH_EXE_NOTFOUND)
+  message(SEND_ERROR "Required program patch not found")
+endif()
+
 # OpenStudio version
 set(OPENSTUDIO_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
 set(OPENSTUDIO_LONG_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}.${PROJECT_VERSION_BUILD}")
@@ -190,9 +196,6 @@ endif()
 if(BUILD_V8_BINDINGS)
   option(BUILD_NODE_MODULES "Build V8 Bindings as Node Modules" ON)
 endif()
-
-# Configure vagrant
-set(SHOW_VAGRANT "false" CACHE BOOL "Show vagrant option to GUI users")
 
 # Use PCH
 option(USE_PCH "Use precompiled headers" OFF)
@@ -929,7 +932,6 @@ list(APPEND QT_INCLUDES ${Qt5Sql_INCLUDE_DIRS})
 list(APPEND QT_INCLUDES ${Qt5Network_INCLUDE_DIRS})
 
 set(CMAKE_AUTOMOC OFF)
-
 
 # download qt static
 if( WIN32 )
