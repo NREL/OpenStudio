@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
+   <assemblyidentity version="1.0.0.0" name="install_utility" type="win32"></assemblyidentity>
+   <description>OpenStudio Install Utility</description>
+   <!-- Identify the application security requirements. -->
+   <trustinfo xmlns="urn:schemas-microsoft-com:asm.v2">
+      <security>
+         <requestedprivileges>
+            <requestedexecutionlevel level="requireAdministrator" uiAccess="false"></requestedexecutionlevel>
+         </requestedprivileges>
+      </security>
+   </trustinfo>
+</assembly>
+

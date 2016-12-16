@@ -1332,6 +1332,7 @@ set(project_directories
   sdd
   cli
   model_editor
+  install_utility
 )
 if(WIN32)
   list(APPEND project_directories "qtwinmigrate")
