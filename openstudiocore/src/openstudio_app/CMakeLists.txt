@@ -98,7 +98,19 @@ if( APPLE )
 elseif( UNIX )
   add_custom_command(TARGET ${target_name}
     POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:Qt5::QXcbIntegrationPlugin> $<TARGET_FILE_DIR:${target_name}>/platforms/ )
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:Qt5::QXcbIntegrationPlugin> $<TARGET_FILE_DIR:${target_name}>/platforms/
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${Qt5XcbQpaLib} $<TARGET_FILE_DIR:${target_name}>/ )
+
+  # DLM: need to figure out how to do this as part of POST_BUILD command, CMake keeps mangling the command string due to escaping rules
+  # chrpath -r '$ORIGIN/..' Products/platforms/libqxcb.so
+  # chrpath -r '$ORIGIN/..' Products/sqldrivers/libqsqlite.so
+
+  foreach(LIB ${QT_WEB_LIBS})
+
+    add_custom_command(TARGET ${target_name}
+      POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_SONAME_FILE:${LIB}> $<TARGET_FILE_DIR:${target_name}>/ )
+  endforeach()
 
   add_custom_command(TARGET ${target_name}
     POST_BUILD

@@ -905,10 +905,20 @@ if(BUILD_OS_APP)
   find_program(QtWebEngineProcess NAMES QtWebEngineProcess PATHS "${QT_INSTALL_DIR}/bin/" "${QT_INSTALL_DIR}/libexec/" "${QT_INSTALL_DIR}/lib/QtWebEngineCore.framework/Helpers" NO_DEFAULT_PATH)
   find_file(icudtl NAMES icudtl.dat PATHS "${QT_INSTALL_DIR}/resources/" "${QT_INSTALL_DIR}/lib/QtWebEngineCore.framework/Resources" NO_DEFAULT_PATH)
 
+  list(APPEND QT_WEB_LIBS Qt5::Core)
+  list(APPEND QT_WEB_LIBS Qt5::Gui)
   list(APPEND QT_WEB_LIBS Qt5::WebEngine)
   list(APPEND QT_WEB_LIBS Qt5::WebEngineCore)
   list(APPEND QT_WEB_LIBS Qt5::WebEngineWidgets)
   set_target_properties( ${QT_WEB_LIBS} PROPERTIES INTERFACE_LINK_LIBRARIES "" )
+
+  if(UNIX AND NOT APPLE)
+	find_package(Qt5DBus 5.6.1 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
+	list(APPEND QT_WEB_LIBS Qt5::DBus)
+
+	# there does not appear to be a normal qt finder for this
+    find_library(Qt5XcbQpaLib NAMES libQt5XcbQpa.so.5 PATHS ${QT_INSTALL_DIR}/lib NO_DEFAULT_PATH)
+  endif()
 endif()
 
 list(APPEND QT_LIBS Qt5::Core)
@@ -930,6 +940,10 @@ list(APPEND QT_INCLUDES ${Qt5Widgets_INCLUDE_DIRS})
 list(APPEND QT_INCLUDES ${Qt5Xml_INCLUDE_DIRS})
 list(APPEND QT_INCLUDES ${Qt5Sql_INCLUDE_DIRS})
 list(APPEND QT_INCLUDES ${Qt5Network_INCLUDE_DIRS})
+
+if( UNIX )
+  list(APPEND QT_INCLUDES ${Qt5XcbQpa_INCLUDE_DIRS})
+endif()
 
 set(CMAKE_AUTOMOC OFF)
 
