@@ -132,6 +132,8 @@ elseif( WIN32 )
       POST_BUILD
       COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:${LIB}> $<TARGET_FILE_DIR:${target_name}>/ )
   endforeach()
+  
+  target_link_libraries(${target_name} optimized ${QT_MAIN_LIB} debug ${QT_MAIN_LIB_D})
 
   add_custom_command(TARGET ${target_name}
     POST_BUILD
