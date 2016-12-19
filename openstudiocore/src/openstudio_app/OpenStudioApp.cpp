@@ -894,7 +894,10 @@ openstudio::path OpenStudioApp::resourcesPath() const
 openstudio::path OpenStudioApp::openstudioCLIPath() const
 {
   auto dir = applicationDirPath();
-  auto ext = QFileInfo(applicationFilePath()).suffix();
+  QString ext;
+  #ifdef _WIN32
+    ext = QFileInfo(applicationFilePath()).suffix();
+  #endif
   if (ext.isEmpty())
   {
     return openstudio::toPath(dir + "/openstudio");
@@ -1138,7 +1141,8 @@ void OpenStudioApp::startMeasureManagerProcess(){
   arguments << portString;
 
   LOG(Debug, "Starting measure manager server at " << url.toString().toStdString());
-
+  LOG(Debug, "Command: " << toString(openstudioCLIPath()) << " measure -s " << toString(portString));
+  
   m_measureManagerProcess->start(program, arguments);
   bool started = m_measureManagerProcess->waitForStarted();
   OS_ASSERT(started);
