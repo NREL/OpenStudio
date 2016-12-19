@@ -913,10 +913,10 @@ if(BUILD_OS_APP)
   set_target_properties( ${QT_WEB_LIBS} PROPERTIES INTERFACE_LINK_LIBRARIES "" )
 
   if(UNIX AND NOT APPLE)
-	find_package(Qt5DBus 5.6.1 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-	list(APPEND QT_WEB_LIBS Qt5::DBus)
+    find_package(Qt5DBus 5.6.1 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
+    list(APPEND QT_WEB_LIBS Qt5::DBus)
 
-	# there does not appear to be a normal qt finder for this
+    # there does not appear to be a normal qt finder for this
     find_library(Qt5XcbQpaLib NAMES libQt5XcbQpa.so.5 PATHS ${QT_INSTALL_DIR}/lib NO_DEFAULT_PATH)
   endif()
 endif()
