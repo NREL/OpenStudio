@@ -56,6 +56,16 @@
 #define WSAAPI
 #include "../utilities/core/Path.hpp"
 
+// OS App is linked to the dynamic plugins
+//Q_IMPORT_PLUGIN(QSQLiteDriverPlugin);
+//#if defined(Q_OS_OSX)
+//  Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
+//#elif defined(Q_OS_WIN)
+//  Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin);
+//#elif defined(Q_OS_LINUX)
+//  Q_IMPORT_PLUGIN(QXcbIntegrationPlugin);  
+//#endif
+
 int main(int argc, char *argv[])
 {
   /*

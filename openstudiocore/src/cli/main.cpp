@@ -48,10 +48,8 @@
 #pragma warning(disable : 4930 )
 #pragma warning(disable : 4101 )
 #endif
-  
-#ifdef QT_STATIC
+
 Q_IMPORT_PLUGIN(QSQLiteDriverPlugin);
-#endif
 
 extern "C" {
   void Init_EmbeddedScripting(void);

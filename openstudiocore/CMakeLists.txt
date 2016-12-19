@@ -46,6 +46,12 @@ else()
   set(GIT_DIR "")
 endif()
 
+find_program(PATCH_EXE patch HINTS "${GIT_DIR}" "${GIT_DIR}/../bin/" "${GIT_DIR}/../usr/bin/")
+string(COMPARE EQUAL "${PATCH_EXE}" "PATCH_EXE-NOTFOUND" PATCH_EXE_NOTFOUND)
+if(PATCH_EXE_NOTFOUND)
+  message(SEND_ERROR "Required program patch not found")
+endif()
+
 # OpenStudio version
 set(OPENSTUDIO_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
 set(OPENSTUDIO_LONG_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}.${PROJECT_VERSION_BUILD}")
@@ -190,9 +196,6 @@ endif()
 if(BUILD_V8_BINDINGS)
   option(BUILD_NODE_MODULES "Build V8 Bindings as Node Modules" ON)
 endif()
-
-# Configure vagrant
-set(SHOW_VAGRANT "false" CACHE BOOL "Show vagrant option to GUI users")
 
 # Use PCH
 option(USE_PCH "Use precompiled headers" OFF)
@@ -902,10 +905,20 @@ if(BUILD_OS_APP)
   find_program(QtWebEngineProcess NAMES QtWebEngineProcess PATHS "${QT_INSTALL_DIR}/bin/" "${QT_INSTALL_DIR}/libexec/" "${QT_INSTALL_DIR}/lib/QtWebEngineCore.framework/Helpers" NO_DEFAULT_PATH)
   find_file(icudtl NAMES icudtl.dat PATHS "${QT_INSTALL_DIR}/resources/" "${QT_INSTALL_DIR}/lib/QtWebEngineCore.framework/Resources" NO_DEFAULT_PATH)
 
+  list(APPEND QT_WEB_LIBS Qt5::Core)
+  list(APPEND QT_WEB_LIBS Qt5::Gui)
   list(APPEND QT_WEB_LIBS Qt5::WebEngine)
   list(APPEND QT_WEB_LIBS Qt5::WebEngineCore)
   list(APPEND QT_WEB_LIBS Qt5::WebEngineWidgets)
   set_target_properties( ${QT_WEB_LIBS} PROPERTIES INTERFACE_LINK_LIBRARIES "" )
+
+  if(UNIX AND NOT APPLE)
+    find_package(Qt5DBus 5.6.1 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
+    list(APPEND QT_WEB_LIBS Qt5::DBus)
+
+    # there does not appear to be a normal qt finder for this
+    find_library(Qt5XcbQpaLib NAMES libQt5XcbQpa.so.5 PATHS ${QT_INSTALL_DIR}/lib NO_DEFAULT_PATH)
+  endif()
 endif()
 
 list(APPEND QT_LIBS Qt5::Core)
@@ -920,6 +933,9 @@ list(APPEND QT_LIBS Qt5::Gui)
 if( WIN32 )
   find_package(Qt5WinExtras 5.6.1 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
   list(APPEND QT_LIBS Qt5::WinExtras)
+  
+  find_library(QT_MAIN_LIB NAMES qtmain PATHS "${QT_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
+  find_library(QT_MAIN_LIB_D NAMES qtmaind PATHS "${QT_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
 endif()
 
 list(APPEND QT_INCLUDES ${Qt5Core_INCLUDE_DIRS})
@@ -928,8 +944,11 @@ list(APPEND QT_INCLUDES ${Qt5Xml_INCLUDE_DIRS})
 list(APPEND QT_INCLUDES ${Qt5Sql_INCLUDE_DIRS})
 list(APPEND QT_INCLUDES ${Qt5Network_INCLUDE_DIRS})
 
-set(CMAKE_AUTOMOC OFF)
+if( UNIX )
+  list(APPEND QT_INCLUDES ${Qt5XcbQpa_INCLUDE_DIRS})
+endif()
 
+set(CMAKE_AUTOMOC OFF)
 
 # download qt static
 if( WIN32 )
@@ -1485,7 +1504,7 @@ endif()
 if(BUILD_OS_APP)
   list(APPEND all_lib_targets "openstudio_modeleditor")
   list(APPEND all_lib_targets "openstudio_bimserver")
-  list(APPEND all_lib_targets "openstudio_app")
+  list(APPEND all_lib_targets "openstudio_lib")
 endif()
 
 #export(TARGETS
@@ -1496,12 +1515,12 @@ endif()
 set(all_exe_targets
   GenerateIddFactory
   #gbXMLToIdf
-  #OpenStudio
+  openstudio
   #ResultsViewer
 )
 
 if(BUILD_OS_APP)
-  list(APPEND all_exe_targets "OpenStudio")
+  list(APPEND all_exe_targets "OpenStudioApp")
   #list(APPEND all_exe_targets "ResultsViewer")
 endif()
 
@@ -1532,7 +1551,7 @@ endif()
 
 
 # Install additional Documents, such as release notes
-install(FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_1_14_0_20161216.pdf" DESTINATION .)
+install(FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_2_0_0_20161216.pdf" DESTINATION .)
 
 ###############################################################################
 
