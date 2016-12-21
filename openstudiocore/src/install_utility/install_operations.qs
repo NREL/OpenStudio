@@ -12,6 +12,11 @@ function Component()
       var exePath = installer.value("TargetDir") + "\\bin\\install_utility.exe";
       component.addElevatedOperation("Execute", exePath, "Install", "UNDOEXECUTE", exePath, "Remove" );
     }
+
+    if( kernel == "darwin" ) {
+      var exePath = installer.value("TargetDir") + "/bin/install_utility";
+      component.addElevatedOperation("Execute", exePath, "Install", "UNDOEXECUTE", exePath, "Remove" );
+    }
   }
 }
 

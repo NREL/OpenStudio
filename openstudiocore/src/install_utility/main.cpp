@@ -39,8 +39,14 @@
 #endif
 #include "../utilities/core/Filesystem.hpp"
 
+#ifdef __APPLE__
+  #include <boost/filesystem.hpp>
+  namespace fs = boost::filesystem;
+#endif
+
 inline std::string applicationFilePath() {
 #ifdef __APPLE__
+// This is for create_symlink which is not included in utilities core filesystem
   char path[PATH_MAX + 1];
   uint32_t size = sizeof(path);
   if (_NSGetExecutablePath(path, &size) == 0) {
@@ -57,6 +63,32 @@ inline std::string applicationFilePath() {
 
 int main(int argc, char *argv[])
 {
+
+#ifdef __APPLE__
+  if (argc > 1u) {
+    openstudio::filesystem::path appDir = openstudio::filesystem::path(applicationFilePath()).parent_path();
+		openstudio::filesystem::path cliPath = appDir / "openstudio";
+		openstudio::filesystem::path appPath = appDir.parent_path() / "OpenStudioApp.app";
+
+  	if (std::string(argv[1]) == "Install") {
+      try {
+        if( openstudio::filesystem::exists(cliPath) ) {
+          openstudio::filesystem::path dir("/usr/local/bin");
+          if( ! openstudio::filesystem::exists(dir) ) {
+            openstudio::filesystem::create_directories(dir);
+          }
+          fs::create_symlink(cliPath.string(),"/usr/local/bin/openstudio");
+        }
+      } catch(...) {}
+
+		} else if (std::string(argv[1]) == "Remove") {
+      try {
+        openstudio::filesystem::remove("/usr/local/bin/openstudio");
+      } catch(...) {}
+    }
+  }
+#endif
+
 #if defined _WIN32
 	if (argc > 1u) {
  		if (std::string(argv[1]) == "Install"){
@@ -76,8 +108,7 @@ int main(int argc, char *argv[])
 			<< "action=allow";
 			std::system(oss2.str().c_str());
 			
-		}
-		else if (std::string(argv[1]) == "Remove") {
+		} else if (std::string(argv[1]) == "Remove") {
 			std::ostringstream oss;
 			oss << "netsh advfirewall firewall delete rule name=\"Allow OpenStudio CLI\"";
 			std::system(oss.str().c_str());
