@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
  		if (std::string(argv[1]) == "Install"){
 			openstudio::filesystem::path appDir = openstudio::filesystem::path(applicationFilePath()).parent_path();
 			openstudio::filesystem::path cliPath = appDir / "openstudio.exe";
-			openstudio::filesystem::path mongoPath = appDir / "pat\\mongo\\bin\\mongod.exe";
+			openstudio::filesystem::path mongoPath = appDir.parent_path() / "pat\\mongo\\bin\\mongod.exe";
 			
 			std::ostringstream oss;
 			oss << "netsh advfirewall firewall add rule name=\"Allow OpenStudio CLI\" dir=in program="\
