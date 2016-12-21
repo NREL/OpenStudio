@@ -1381,12 +1381,14 @@ namespace openstudio {
         }
       } catch (const std::exception&){
         QMessageBox::warning(mainWindow(), "Failed to Compute Arguments", "Could not compute arguments for OpenStudio Results Measure.");
+	enable();
         return;
       }
     }
        
     if (!srmAdded){
       QMessageBox::warning(mainWindow(), "OpenStudio Results Measure Not Found", "Could not find or download OpenStudio Results Measure.");
+      enable();
       return;
     }
 

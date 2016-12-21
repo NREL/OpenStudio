@@ -15,6 +15,10 @@ function Component()
       component.addElevatedOperation("Mkdir", mkPath);
       component.addElevatedOperation("CopyDirectory", epPath, appPath);
     }
+
+    if( kernel == "winnt" ) {
+      component.addOperation("CreateShortcut", "@TargetDir@/bin/OpenStudioApp.exe", "@StartMenuDir@/OpenStudio.lnk");
+    }
   }
 }
 

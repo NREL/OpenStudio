@@ -1351,6 +1351,7 @@ set(project_directories
   sdd
   cli
   model_editor
+  install_utility
 )
 if(WIN32)
   list(APPEND project_directories "qtwinmigrate")
@@ -1713,8 +1714,13 @@ cpack_ifw_configure_component(SketchUpPlugin
   SCRIPT sketchup_plugin/install_operations.qs
 )
 
+cpack_ifw_configure_component(Unspecified
+  SCRIPT src/install_utility/install_operations.qs
+)
+
 cpack_ifw_configure_component(PAT
   DEPENDS CLI RubyAPI
+  SCRIPT pat/install_operations.qs
 )
 
 if( BUILD_NUGET_PACKAGE )
