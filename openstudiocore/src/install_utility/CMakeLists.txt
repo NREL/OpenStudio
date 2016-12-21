@@ -11,4 +11,9 @@ if( WIN32 )
   )
 endif()
 
+# This is silly but we can't control the order of install so we need 
+# to make sure install_utility is already there for post flight of each component
 install(TARGETS install_utility DESTINATION bin)
+install(TARGETS install_utility DESTINATION bin COMPONENT OpenStudioApp)
+install(TARGETS install_utility DESTINATION bin COMPONENT CLI)
+install(TARGETS install_utility DESTINATION bin COMPONENT PAT)

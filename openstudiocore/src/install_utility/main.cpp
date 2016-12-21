@@ -69,8 +69,9 @@ int main(int argc, char *argv[])
     openstudio::filesystem::path appDir = openstudio::filesystem::path(applicationFilePath()).parent_path();
 		openstudio::filesystem::path cliPath = appDir / "openstudio";
 		openstudio::filesystem::path appPath = appDir.parent_path() / "OpenStudioApp.app";
+		openstudio::filesystem::path patPath = appDir.parent_path() / "ParametricAnalysisTool.app";
 
-  	if (std::string(argv[1]) == "Install") {
+  	if (std::string(argv[1]) == "InstallCLI") {
       try {
         if( openstudio::filesystem::exists(cliPath) ) {
           openstudio::filesystem::path dir("/usr/local/bin");
@@ -80,10 +81,31 @@ int main(int argc, char *argv[])
           fs::create_symlink(cliPath.string(),"/usr/local/bin/openstudio");
         }
       } catch(...) {}
-
-		} else if (std::string(argv[1]) == "Remove") {
+    } else if(std::string(argv[1]) == "InstallApp") {
+      try {
+        if( openstudio::filesystem::exists(appPath) ) {
+          // void rename(const path& old_p, const path& new_p);
+          fs::rename(appPath, "/Applications/OpenStudioApp.app");
+        }
+      } catch(...) {}
+    } else if(std::string(argv[1]) == "InstallPat") {
+      try {
+        if( openstudio::filesystem::exists(patPath) ) {
+          // void rename(const path& old_p, const path& new_p);
+          fs::rename(patPath, "/Applications/ParametricAnalysisTool.app");
+        }
+      } catch(...) {}
+		} else if (std::string(argv[1]) == "RemoveCLI") {
       try {
         openstudio::filesystem::remove("/usr/local/bin/openstudio");
+      } catch(...) {}
+		} else if (std::string(argv[1]) == "RemoveApp") {
+      try {
+        openstudio::filesystem::remove_all("/Applications/OpenStudioApp.app");
+      } catch(...) {}
+		} else if (std::string(argv[1]) == "RemovePat") {
+      try {
+        openstudio::filesystem::remove_all("/Applications/ParametricAnalysisTool.app");
       } catch(...) {}
     }
   }

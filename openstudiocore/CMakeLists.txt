@@ -1695,13 +1695,14 @@ cpack_add_component(EnergyPlus
   DESCRIPTION "Minimal EnergyPlus installation"
 )
 
-cpack_add_component(Resources
-  DISPLAY_NAME "Application Resources"
-  DESCRIPTION "Resource Files used by the OpenStudio Application and SketchUp Plugin"
-)
+#cpack_add_component(Resources
+#  DISPLAY_NAME "Application Resources"
+#  PRIORITY 7
+#  DESCRIPTION "Resource Files used by the OpenStudio Application and SketchUp Plugin"
+#)
 
 cpack_ifw_configure_component(OpenStudioApp
-  DEPENDS Resources CLI
+  DEPENDS CLI
   SCRIPT src/openstudio_app/install_operations.qs
 )
 
@@ -1710,17 +1711,17 @@ cpack_ifw_configure_component(CLI
 )
 
 cpack_ifw_configure_component(SketchUpPlugin
-  DEPENDS Resources
+  DEPENDS OpenStudioApp
   SCRIPT sketchup_plugin/install_operations.qs
-)
-
-cpack_ifw_configure_component(Unspecified
-  SCRIPT src/install_utility/install_operations.qs
 )
 
 cpack_ifw_configure_component(PAT
   DEPENDS CLI RubyAPI
   SCRIPT pat/install_operations.qs
+)
+
+cpack_ifw_configure_component(Unspecified
+  SCRIPT src/install_utility/install_operations.qs
 )
 
 if( BUILD_NUGET_PACKAGE )

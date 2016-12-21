@@ -202,17 +202,17 @@ set(DIRS "${QT_INSTALL_DIR}/bin" "${QT_INSTALL_DIR}/lib" "${RUBY_INSTALL_DIR}/bi
 if(APPLE)
   install(DIRECTORY ${CMAKE_SOURCE_DIR}/src/openstudio_app/Resources/
           DESTINATION OpenStudioApp.app/Contents/Resources
-          COMPONENT "Resources"
+          COMPONENT "OpenStudioApp"
   )
 elseif(WIN32)
   install(DIRECTORY ${CMAKE_SOURCE_DIR}/src/openstudio_app/Resources/
     DESTINATION Resources
-    COMPONENT "Resources"
+    COMPONENT "OpenStudioApp"
   )
 else()
   install(DIRECTORY ${CMAKE_SOURCE_DIR}/src/openstudio_app/Resources/
 	  DESTINATION Resources
-    COMPONENT "Resources"
+    COMPONENT "OpenStudioApp"
   )
 endif()
 

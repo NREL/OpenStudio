@@ -9,10 +9,8 @@ function Component()
 
     var kernel = systemInfo.kernelType;
     if( kernel == "darwin" ) {
-      //var exePath = installer.value("TargetDir") + "/bin/openstudio";
-      //component.addElevatedOperation("Delete", "/usr/local/bin/openstudio");
-      //component.addElevatedOperation("Mkdir", "/usr/local/bin/");
-      //component.addElevatedOperation("CreateLink", "/usr/local/bin/openstudio", exePath );
+      var exePath = installer.value("TargetDir") + "/bin/install_utility";
+      component.addElevatedOperation("Execute", exePath, "InstallCLI", "UNDOEXECUTE", exePath, "RemoveCLI" );
     }
   }
 }

@@ -9,11 +9,8 @@ function Component()
 
     var kernel = systemInfo.kernelType;
     if( kernel == "darwin" ) {
-      var epPath = installer.value("TargetDir") + "/EnergyPlus";
-      var appPath = installer.value("TargetDir") + "/OpenStudioApp.app/Contents/";
-      var mkPath = appPath + "EnergyPLus";
-      component.addElevatedOperation("Mkdir", mkPath);
-      component.addElevatedOperation("CopyDirectory", epPath, appPath);
+      var exePath = installer.value("TargetDir") + "/bin/install_utility";
+      component.addElevatedOperation("Execute", exePath, "InstallApp", "UNDOEXECUTE", exePath, "RemoveApp" );
     }
 
     if( kernel == "winnt" ) {
