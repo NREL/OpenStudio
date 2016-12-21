@@ -1609,11 +1609,11 @@ set(CPACK_PACKAGE_VERSION_PATCH ${OpenStudio_VERSION_PATCH})
 set(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}2-${OPENSTUDIO_LONG_VERSION}-${CMAKE_SYSTEM_NAME}")
 
 if( UNIX )
-  set( CPACK_IFW_TARGET_DIRECTORY /usr/local/openstudio2-${OpenStudio_VERSION}/ )
+  set( CPACK_IFW_TARGET_DIRECTORY /usr/local/openstudio-${OpenStudio_VERSION}/ )
 endif()
 
 if(WIN32)
-  set( CPACK_PACKAGE_INSTALL_DIRECTORY "openstudio2-${OpenStudio_VERSION}" )
+  set( CPACK_PACKAGE_INSTALL_DIRECTORY "openstudio-${OpenStudio_VERSION}" )
   set( CPACK_BINARY_NSIS OFF )
   set( CPACK_BINARY_IFW ON )
 endif()
