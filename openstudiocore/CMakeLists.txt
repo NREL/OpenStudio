@@ -1714,6 +1714,10 @@ cpack_ifw_configure_component(SketchUpPlugin
   SCRIPT sketchup_plugin/install_operations.qs
 )
 
+cpack_ifw_configure_component(Unspecified
+  SCRIPT src/install_utility/install_operations.qs
+)
+
 cpack_ifw_configure_component(PAT
   DEPENDS CLI RubyAPI
 )
