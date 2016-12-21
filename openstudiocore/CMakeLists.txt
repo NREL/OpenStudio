@@ -1720,6 +1720,7 @@ cpack_ifw_configure_component(Unspecified
 
 cpack_ifw_configure_component(PAT
   DEPENDS CLI RubyAPI
+  SCRIPT pat/install_operations.qs
 )
 
 if( BUILD_NUGET_PACKAGE )
