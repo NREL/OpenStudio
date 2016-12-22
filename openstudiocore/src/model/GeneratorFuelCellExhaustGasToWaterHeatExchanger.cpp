@@ -31,10 +31,6 @@
 
 #include "Connection.hpp"
 #include "Connection_Impl.hpp"
-#include "Connection.hpp"
-#include "Connection_Impl.hpp"
-#include "Connection.hpp"
-#include "Connection_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
