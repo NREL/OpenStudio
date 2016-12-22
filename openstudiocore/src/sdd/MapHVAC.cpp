@@ -4500,11 +4500,17 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
   QDomElement primAirCondSysRefElement = thermalZoneElement.firstChildElement("PriAirCondgSysRef");
   QDomElement znSysElement = findZnSysElement(primAirCondSysRefElement.text(),doc);
   QDomElement ventSysRefElement = thermalZoneElement.firstChildElement("VentSysRef");
+  QDomElement simSysRefElement = thermalZoneElement.firstChildElement("SimSysRef");
+  QDomElement znSysElementForSimSysRef = findZnSysElement(simSysRefElement.text(),doc);
+
+        //<SimSysRef>Core Beam TrmlUnit ZnSys</SimSysRef>
+        //<SimSysRefPriority>1</SimSysRefPriority>
 
   // These will store values to set priority later
   // Will be terminal or zone hvac
   boost::optional<model::ModelObject> primAirCondEquip;
   boost::optional<model::ModelObject> ventSysEquip;
+  boost::optional<model::ModelObject> simSysEquip;
 
   // ThermalZoneVentilationSystem
   if( ventSysRefElement.text() != primAirCondSysRefElement.text() )
@@ -4560,71 +4566,75 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
     }
   }
 
-  // PrimaryAirConditioningSystemReference
-  if( ! znSysElement.isNull() )
-  {
-    boost::optional<model::ModelObject> mo = translateZnSys(znSysElement,doc,model);
-    primAirCondEquip = mo;
-
-    if( mo )
+  auto translateSystemForZone = [&](const QDomElement & t_znSysElement, const QDomElement & t_sysRefElement, boost::optional<model::ModelObject> & modelObjectResult) {
+    if( ! t_znSysElement.isNull() )
     {
-      boost::optional<model::ZoneHVACComponent> zoneHVACComponent = mo->optionalCast<model::ZoneHVACComponent>();
+      boost::optional<model::ModelObject> mo = translateZnSys(t_znSysElement,doc,model);
+      modelObjectResult = mo;
 
-      if( zoneHVACComponent )
+      if( mo )
       {
-        zoneHVACComponent->addToThermalZone(thermalZone);
+        boost::optional<model::ZoneHVACComponent> zoneHVACComponent = mo->optionalCast<model::ZoneHVACComponent>();
 
-        // If not the ventilation system we lock down the oa system of the zone equipment
-        if( primAirCondSysRefElement.text() != ventSysRefElement.text() ) {
-          if( boost::optional<model::ZoneHVACPackagedTerminalAirConditioner> ptac = 
-              zoneHVACComponent->optionalCast<model::ZoneHVACPackagedTerminalAirConditioner>() ) {
-            ptac->setOutdoorAirFlowRateDuringHeatingOperation(0.0);
-            ptac->setOutdoorAirFlowRateDuringCoolingOperation(0.0);
-            ptac->setOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded(0.0); }
-          else if( boost::optional<model::ZoneHVACPackagedTerminalHeatPump> pthp = 
-              zoneHVACComponent->optionalCast<model::ZoneHVACPackagedTerminalHeatPump>() ) {
-            pthp->setOutdoorAirFlowRateDuringHeatingOperation(0.0);
-            pthp->setOutdoorAirFlowRateDuringCoolingOperation(0.0);
-            pthp->setOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded(0.0);
-          } else if( boost::optional<model::ZoneHVACFourPipeFanCoil> fanCoil = 
-              zoneHVACComponent->optionalCast<model::ZoneHVACFourPipeFanCoil>() ) {
-            fanCoil->setMaximumOutdoorAirFlowRate(0.0);
-          }
-        }
-      }
-    }
-  }
-  else
-  {
-    airLoopHVAC = model.getModelObjectByName<model::AirLoopHVAC>(primAirCondSysRefElement.text().toStdString());
-
-    if( airLoopHVAC && ! thermalZone.airLoopHVAC() )
-    {
-      QDomElement trmlUnitElement = findTrmlUnitElementForZone(nameElement.text(),doc);
-      if( ! trmlUnitElement.isNull() ) {
-        if( boost::optional<model::ModelObject> trmlUnit = translateTrmlUnit(trmlUnitElement,doc,model) )
+        if( zoneHVACComponent )
         {
-          primAirCondEquip = trmlUnit;
-          airLoopHVAC->addBranchForZone(thermalZone,trmlUnit->cast<model::StraightComponent>());
-          QDomElement inducedAirZnRefElement = trmlUnitElement.firstChildElement("InducedAirZnRef");
-          if( boost::optional<model::ThermalZone> tz = model.getModelObjectByName<model::ThermalZone>(inducedAirZnRefElement.text().toStdString()) )
-          {
-             if( tz->isPlenum() )
-             {
-               if( boost::optional<model::AirTerminalSingleDuctSeriesPIUReheat> piu = trmlUnit->optionalCast<model::AirTerminalSingleDuctSeriesPIUReheat>() )
-               {
-                 piu->getImpl<model::detail::AirTerminalSingleDuctSeriesPIUReheat_Impl>()->setInducedAirPlenumZone(tz.get()); 
-               }
-               else if( boost::optional<model::AirTerminalSingleDuctParallelPIUReheat> piu = trmlUnit->optionalCast<model::AirTerminalSingleDuctParallelPIUReheat>() )
-               {
-                 piu->getImpl<model::detail::AirTerminalSingleDuctParallelPIUReheat_Impl>()->setInducedAirPlenumZone(tz.get()); 
-               }
-             }
+          zoneHVACComponent->addToThermalZone(thermalZone);
+
+          // If not the ventilation system we lock down the oa system of the zone equipment
+          if( t_sysRefElement.text() != ventSysRefElement.text() ) {
+            if( boost::optional<model::ZoneHVACPackagedTerminalAirConditioner> ptac = 
+                zoneHVACComponent->optionalCast<model::ZoneHVACPackagedTerminalAirConditioner>() ) {
+              ptac->setOutdoorAirFlowRateDuringHeatingOperation(0.0);
+              ptac->setOutdoorAirFlowRateDuringCoolingOperation(0.0);
+              ptac->setOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded(0.0); }
+            else if( boost::optional<model::ZoneHVACPackagedTerminalHeatPump> pthp = 
+                zoneHVACComponent->optionalCast<model::ZoneHVACPackagedTerminalHeatPump>() ) {
+              pthp->setOutdoorAirFlowRateDuringHeatingOperation(0.0);
+              pthp->setOutdoorAirFlowRateDuringCoolingOperation(0.0);
+              pthp->setOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded(0.0);
+            } else if( boost::optional<model::ZoneHVACFourPipeFanCoil> fanCoil = 
+                zoneHVACComponent->optionalCast<model::ZoneHVACFourPipeFanCoil>() ) {
+              fanCoil->setMaximumOutdoorAirFlowRate(0.0);
+            }
           }
         }
       }
     }
-  }
+    else
+    {
+      airLoopHVAC = model.getModelObjectByName<model::AirLoopHVAC>(t_sysRefElement.text().toStdString());
+
+      if( airLoopHVAC && ! thermalZone.airLoopHVAC() )
+      {
+        QDomElement trmlUnitElement = findTrmlUnitElementForZone(nameElement.text(),doc);
+        if( ! trmlUnitElement.isNull() ) {
+          if( boost::optional<model::ModelObject> trmlUnit = translateTrmlUnit(trmlUnitElement,doc,model) )
+          {
+            modelObjectResult = trmlUnit;
+            airLoopHVAC->addBranchForZone(thermalZone,trmlUnit->cast<model::StraightComponent>());
+            QDomElement inducedAirZnRefElement = trmlUnitElement.firstChildElement("InducedAirZnRef");
+            if( boost::optional<model::ThermalZone> tz = model.getModelObjectByName<model::ThermalZone>(inducedAirZnRefElement.text().toStdString()) )
+            {
+               if( tz->isPlenum() )
+               {
+                 if( boost::optional<model::AirTerminalSingleDuctSeriesPIUReheat> piu = trmlUnit->optionalCast<model::AirTerminalSingleDuctSeriesPIUReheat>() )
+                 {
+                   piu->getImpl<model::detail::AirTerminalSingleDuctSeriesPIUReheat_Impl>()->setInducedAirPlenumZone(tz.get()); 
+                 }
+                 else if( boost::optional<model::AirTerminalSingleDuctParallelPIUReheat> piu = trmlUnit->optionalCast<model::AirTerminalSingleDuctParallelPIUReheat>() )
+                 {
+                   piu->getImpl<model::detail::AirTerminalSingleDuctParallelPIUReheat_Impl>()->setInducedAirPlenumZone(tz.get()); 
+                 }
+               }
+            }
+          }
+        }
+      }
+    }
+  };
+
+  translateSystemForZone(znSysElement,primAirCondSysRefElement,primAirCondEquip);
+  translateSystemForZone(znSysElementForSimSysRef,simSysRefElement,simSysEquip);
 
   if( primAirCondEquip ) {
     auto priAirCondgSysPriorityElement = thermalZoneElement.firstChildElement("PriAirCondgSysPriority");
@@ -4641,6 +4651,15 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
     if( ok ) {
       thermalZone.setCoolingPriority(ventSysEquip.get(),value);  
       thermalZone.setHeatingPriority(ventSysEquip.get(),value);  
+    }
+  }
+
+  if( simSysEquip ) {
+    auto simSysPriorityElement = thermalZoneElement.firstChildElement("SimSysPriority");
+    value = simSysPriorityElement.text().toInt(&ok);
+    if( ok ) {
+      thermalZone.setCoolingPriority(simSysEquip.get(),value);  
+      thermalZone.setHeatingPriority(simSysEquip.get(),value);  
     }
   }
 
