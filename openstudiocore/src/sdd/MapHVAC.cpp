@@ -64,6 +64,8 @@
 #include "../model/CurveQuadratic_Impl.hpp"
 #include "../model/Curve.hpp"
 #include "../model/Curve_Impl.hpp"
+#include "../model/TableMultiVariableLookup.hpp"
+#include "../model/TableMultiVariableLookup_Impl.hpp"
 #include "../model/Duct.hpp"
 #include "../model/Duct_Impl.hpp"
 #include "../model/ScheduleRuleset.hpp"
@@ -8531,6 +8533,89 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCrvQ
   }
 
   return curve;
+}
+
+boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCrvMapSglVar(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model)
+{
+  if( ! istringEqual(element.tagName().toStdString(),"CrvMapSglVar") ) {
+    return boost::none;
+  }
+
+  model::TableMultiVariableLookup table(model,1);
+
+  auto nameElement = element.firstChildElement("Name");
+  table.setName(nameElement.text().toStdString());
+
+  std::vector<QDomElement> arrayVar1Elements;
+  std::vector<QDomElement> arrayOutElements;
+
+  auto childNodes = element.childNodes();
+  for(int i = 0; i != childNodes.count(); i++) {
+    auto element = childNodes.at(i).toElement();
+    if( istringEqual(element.nodeName().toStdString(),"ArrayVar1") ) {
+      arrayVar1Elements.push_back(element);
+    } else if( istringEqual(element.nodeName().toStdString(),"ArrayOut") ) {
+      arrayOutElements.push_back(element);
+    }
+  }
+
+  if( arrayVar1Elements.size() != arrayOutElements.size() ) {
+    return table;
+  }
+
+  for(int i = 0; i != arrayVar1Elements.size(); i++) {
+    bool varOk = false;
+    bool outOk = false;
+    auto arrayVar1 = arrayVar1Elements.at(i).toElement().text().toDouble(&varOk);
+    auto arrayOut = arrayOutElements.at(i).toElement().text().toDouble(&outOk);
+
+    if( varOk && outOk ) {
+      table.addPoint(arrayVar1,arrayOut);
+    }
+  }
+
+  bool ok = false;
+  double value;
+  std::string text;
+
+  value = element.firstChildElement("MinOut").text().toDouble(&ok);
+  if( ok ) {
+    table.setMinimumTableOutput(value);
+  }
+
+  value = element.firstChildElement("MaxOut").text().toDouble(&ok);
+  if( ok ) {
+    table.setMaximumTableOutput(value);
+  }
+
+  text = element.firstChildElement("UnitTypeVar1").text().toStdString();
+  table.setInputUnitTypeforX1(text);
+
+  text = element.firstChildElement("UnitTypeOut").text().toStdString();
+  table.setOutputUnitType(text);
+
+  value = element.firstChildElement("MinVar1").text().toDouble(&ok);
+  if( ok ) {
+    table.setMinimumValueofX1(value);
+  }
+
+  value = element.firstChildElement("MaxVar1").text().toDouble(&ok);
+  if( ok ) {
+    table.setMaximumValueofX1(value);
+  }
+
+  text = element.firstChildElement("InterpMthd").text().toStdString();
+  table.setInterpolationMethod(text);
+
+  value = element.firstChildElement("NormalizationPt").text().toDouble(&ok);
+  if( ok ) {
+    table.setNormalizationReference(value);
+  }
+
+  text = element.firstChildElement("Type").text().toStdString();
+  table.setCurveType(text);
+
+  return table;
 }
 
 QDomElement ReverseTranslator::findZnSysElement(const QString & znSysName,const QDomDocument & doc)
