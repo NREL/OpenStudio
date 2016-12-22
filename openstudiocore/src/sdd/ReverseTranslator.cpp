@@ -424,6 +424,15 @@ namespace sdd {
         }
       }
 
+      auto crvMapDblVarElements = projectElement.elementsByTagName("CrvMapDblVar");
+      for (int i = 0; i < crvMapDblVarElements.count(); i++){
+        auto crvMapDblVarElement = crvMapDblVarElements.at(i).toElement();
+        auto curve = translateCrvMapDblVar(crvMapDblVarElement, doc, *result);
+        if (!curve){
+          LOG(Error, "Failed to translate 'CrvMapDblVar' element " << i);
+        }
+      }
+
       // do schedules before loads
       QDomNodeList scheduleDayElements = projectElement.elementsByTagName("SchDay");
       if (m_progressBar){

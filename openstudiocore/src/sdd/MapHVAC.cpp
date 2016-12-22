@@ -8535,6 +8535,111 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCrvQ
   return curve;
 }
 
+boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCrvMapDblVar(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model)
+{
+  if( ! istringEqual(element.tagName().toStdString(),"CrvMapDblVar") ) {
+    return boost::none;
+  }
+
+  model::TableMultiVariableLookup table(model,2);
+
+  auto nameElement = element.firstChildElement("Name");
+  table.setName(nameElement.text().toStdString());
+
+  std::vector<QDomElement> arrayVar1Elements;
+  std::vector<QDomElement> arrayVar2Elements;
+  std::vector<QDomElement> arrayOutElements;
+
+  auto childNodes = element.childNodes();
+  for(int i = 0; i != childNodes.count(); i++) {
+    auto element = childNodes.at(i).toElement();
+    if( istringEqual(element.nodeName().toStdString(),"ArrayVar1") ) {
+      arrayVar1Elements.push_back(element);
+    } else if( istringEqual(element.nodeName().toStdString(),"ArrayVar2") ) {
+      arrayVar2Elements.push_back(element);
+    } else if( istringEqual(element.nodeName().toStdString(),"ArrayOut") ) {
+      arrayOutElements.push_back(element);
+    }
+  }
+
+  if( arrayVar1Elements.size() != arrayOutElements.size() ) {
+    return table;
+  }
+
+  if( arrayVar2Elements.size() != arrayOutElements.size() ) {
+    return table;
+  }
+
+  for(int i = 0; i != arrayVar1Elements.size(); i++) {
+    bool var1Ok = false;
+    bool var2Ok = false;
+    bool outOk = false;
+    auto arrayVar1 = arrayVar1Elements.at(i).toElement().text().toDouble(&var1Ok);
+    auto arrayVar2 = arrayVar2Elements.at(i).toElement().text().toDouble(&var2Ok);
+    auto arrayOut = arrayOutElements.at(i).toElement().text().toDouble(&outOk);
+
+    if( var1Ok && var2Ok && outOk ) {
+      table.addPoint(arrayVar1, arrayVar2, arrayOut);
+    }
+  }
+
+  bool ok = false;
+  double value;
+  std::string text;
+
+  value = element.firstChildElement("MinOut").text().toDouble(&ok);
+  if( ok ) {
+    table.setMinimumTableOutput(value);
+  }
+
+  value = element.firstChildElement("MaxOut").text().toDouble(&ok);
+  if( ok ) {
+    table.setMaximumTableOutput(value);
+  }
+
+  text = element.firstChildElement("UnitTypeVar1").text().toStdString();
+  table.setInputUnitTypeforX1(text);
+
+  text = element.firstChildElement("UnitTypeVar2").text().toStdString();
+  table.setInputUnitTypeforX2(text);
+
+  text = element.firstChildElement("UnitTypeOut").text().toStdString();
+  table.setOutputUnitType(text);
+
+  value = element.firstChildElement("MinVar1").text().toDouble(&ok);
+  if( ok ) {
+    table.setMinimumValueofX1(value);
+  }
+
+  value = element.firstChildElement("MaxVar1").text().toDouble(&ok);
+  if( ok ) {
+    table.setMaximumValueofX1(value);
+  }
+
+  value = element.firstChildElement("MinVar2").text().toDouble(&ok);
+  if( ok ) {
+    table.setMinimumValueofX2(value);
+  }
+
+  value = element.firstChildElement("MaxVar2").text().toDouble(&ok);
+  if( ok ) {
+    table.setMaximumValueofX2(value);
+  }
+
+  text = element.firstChildElement("InterpMthd").text().toStdString();
+  table.setInterpolationMethod(text);
+
+  value = element.firstChildElement("NormalizationPt").text().toDouble(&ok);
+  if( ok ) {
+    table.setNormalizationReference(value);
+  }
+
+  text = element.firstChildElement("Type").text().toStdString();
+  table.setCurveType(text);
+
+  return table;
+}
+
 boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCrvMapSglVar(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model)
 {
   if( ! istringEqual(element.tagName().toStdString(),"CrvMapSglVar") ) {
