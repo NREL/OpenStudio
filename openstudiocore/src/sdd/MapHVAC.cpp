@@ -50,6 +50,8 @@
 #include "../model/CoilHeatingGas_Impl.hpp"
 #include "../model/CoilHeatingElectric.hpp"
 #include "../model/CoilHeatingDXSingleSpeed.hpp"
+#include "../model/CoilWaterHeatingAirToWaterHeatPump.hpp"
+#include "../model/CoilWaterHeatingAirToWaterHeatPump_Impl.hpp"
 #include "../model/ControllerWaterCoil.hpp"
 #include "../model/ControllerWaterCoil_Impl.hpp"
 #include "../model/CurveBiquadratic.hpp"
@@ -171,6 +173,8 @@
 #include "../model/CoilHeatingWaterBaseboard_Impl.hpp"
 #include "../model/WaterHeaterMixed.hpp"
 #include "../model/WaterHeaterMixed_Impl.hpp"
+#include "../model/WaterHeaterHeatPump.hpp"
+#include "../model/WaterHeaterHeatPump_Impl.hpp"
 #include "../model/Model.hpp"
 #include "../model/PortList.hpp"
 #include "../model/SizingPlant.hpp"
@@ -6920,157 +6924,250 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
     return result;
   }
 
-  model::WaterHeaterMixed waterHeaterMixed(model);
+  std::string text;
+  double value;
 
-  // Name
+  text = element.firstChildElement("Type").text().toStdString();
+  if( istringEqual(text,"HPSplit") ) {
+    model::WaterHeaterHeatPump heatPump(model);
+    auto waterHeater = heatPump.tank().cast<model::WaterHeaterMixed>();
+    auto coil = heatPump.dXCoil().cast<model::CoilWaterHeatingAirToWaterHeatPump>();
+    auto fan = heatPump.fan().cast<model::FanOnOff>();
 
-  QDomElement nameElement = element.firstChildElement("Name");
+    text = element.firstChildElement("Name").text().toStdString();
+    heatPump.setName(text);
+    waterHeater.setName(text + " Storage Tank");
 
-  waterHeaterMixed.setName(nameElement.text().toStdString());
+    value = element.firstChildElement("StorCap").text().toDouble(&ok);
+    if( ok ) {
+      waterHeater.setTankVolume(unitToUnit(value,"gal","m^3").get());
+    }
 
-  // ThrmlEff
+    value = element.firstChildElement("CapRtd").text().toDouble(&ok);
+    if( ok ) {
+      coil.setRatedHeatingCapacity(unitToUnit(value,"Btu/h","W").get());
+    }
 
-  QDomElement thrmlEffElement = element.firstChildElement("ThrmlEff");
-  
-  double thrmlEff = thrmlEffElement.text().toDouble(&ok);
+    value = element.firstChildElement("COP").text().toDouble(&ok);
+    if( ok ) {
+      coil.setRatedCOP(value);
+    }
 
-  if( ok )
-  {
-    waterHeaterMixed.setHeaterThermalEfficiency(thrmlEff);
-  }
+    text = element.firstChildElement("CprsrZn").text().toStdString();
+    if( istringEqual(text,"Zone") ) {
+      heatPump.setCompressorLocation("ZoneAirOnly");
+    } else {
+      heatPump.setCompressorLocation("OutdoorAirOnly");
+    }
 
-  // Ambient water temperature indicator
+    // Might have to relocate after zones are available
+    text = element.firstChildElement("CprsrZnRef").text().toStdString();
+    if( auto zone = model.getModelObjectByName<model::ThermalZone>(text) ) {
+      heatPump.addToThermalZone(zone.get());
+    }
 
-  waterHeaterMixed.setAmbientTemperatureIndicator("Schedule");
+    text = element.firstChildElement("StorZn").text().toStdString();
+    if( istringEqual(text,"Zone") ) {
+      waterHeater.setAmbientTemperatureIndicator("ThermalZone");
+    } else {
+      waterHeater.setAmbientTemperatureIndicator("Schedule");
+    }
 
-  model::ScheduleRuleset scheduleRuleset = model::ScheduleRuleset(model);
+    text = element.firstChildElement("StorZnRef").text().toStdString();
+    if( auto zone = model.getModelObjectByName<model::ThermalZone>(text) ) {
+      waterHeater.setAmbientTemperatureThermalZone(zone.get());
+    }
 
-  scheduleRuleset.setName(QString(nameElement.text() + " Ambient Temperature").toStdString());
-
-  model::ScheduleDay scheduleDay = scheduleRuleset.defaultDaySchedule();
-
-  scheduleDay.addValue(Time(1.0),20.0);
-
-  waterHeaterMixed.setAmbientTemperatureSchedule(scheduleRuleset);
-
-  // StorCap
-
-  QDomElement wtrHtrStorCapElement = element.firstChildElement("StorCap");
-
-  double wtrHtrStorCap = wtrHtrStorCapElement.text().toDouble(&ok);
-
-  if( ok )
-  {
-    waterHeaterMixed.setTankVolume(unitToUnit(wtrHtrStorCap,"gal","m^3").get());
-  }
-
-  // CapRtd
-  
-  QDomElement wtrHtrMaxCapElement = element.firstChildElement("CapRtd");
-
-  double wtrHtrMaxCap = wtrHtrMaxCapElement.text().toDouble(&ok);
-
-  if( ok )
-  {
-    waterHeaterMixed.setHeaterMaximumCapacity(unitToUnit(wtrHtrMaxCap,"Btu/h","W").get());
-  }
-
-  // MinCap
-
-  QDomElement minCapElement = element.firstChildElement("MinCap");
-
-  double minCap = minCapElement.text().toDouble(&ok);
-
-  if( ok )
-  {
-    waterHeaterMixed.setHeaterMinimumCapacity(unitToUnit(minCap,"Btu/h","W").get());
-  }
-
-  // OffCyclePrstcLoss
-
-  QDomElement offCyclePrstcLossElement = element.firstChildElement("OffCyclePrstcLoss");
-
-  double offCyclePrstcLoss = offCyclePrstcLossElement.text().toDouble(&ok);
-
-  if( ok )
-  {
-    waterHeaterMixed.setOffCycleParasiticFuelConsumptionRate(offCyclePrstcLoss);
-  }
-
-  // OnCyclePrstcLoss
-
-  QDomElement onCyclePrstcLossElement = element.firstChildElement("OnCyclePrstcLoss");
-
-  double onCyclePrstcLoss = onCyclePrstcLossElement.text().toDouble(&ok);
-
-  if( ok )
-  {
-    waterHeaterMixed.setOnCycleParasiticFuelConsumptionRate(onCyclePrstcLoss);
-  }
-
-  // TankOffCycleLossCoef
-
-  QDomElement tankOffCycleLossCoefElement = element.firstChildElement("TankOffCycleLossCoef");
-
-  double tankOffCycleLossCoef = tankOffCycleLossCoefElement.text().toDouble(&ok);
-
-  if( ok )
-  {
-    // Convert Btu/h-F to W/K
-    waterHeaterMixed.setOffCycleLossCoefficienttoAmbientTemperature(tankOffCycleLossCoef * 0.5275);
-  }
-
-  // TankOnCycleLossCoef
-
-  QDomElement tankOnCycleLossCoefElement = element.firstChildElement("TankOnCycleLossCoef");
-
-  double tankOnCycleLossCoef = tankOnCycleLossCoefElement.text().toDouble(&ok);
-
-  if( ok )
-  {
-    // Convert Btu/h-F to W/K
-    waterHeaterMixed.setOnCycleLossCoefficienttoAmbientTemperature(tankOnCycleLossCoef * 0.5275);
-  }
-
-  // Setpoint schedule
-  auto fixedSupTempElement = element.parentNode().toElement().firstChildElement("FixedSupTemp");
-  if( ! fixedSupTempElement.isNull() ) {
-    auto value = fixedSupTempElement.text().toDouble(&ok);
+    value = element.firstChildElement("MinAirTemp").text().toDouble(&ok);
     if( ok ) {
       value = unitToUnit(value,"F","C").get();
-      model::ScheduleRuleset schedule(model);
-      schedule.setName(waterHeaterMixed.name().get() + " Setpoint Temp");
-      auto scheduleDay = schedule.defaultDaySchedule();
-      scheduleDay.addValue(Time(1.0),value);
-      waterHeaterMixed.setSetpointTemperatureSchedule(schedule); 
+      heatPump.setMinimumInletAirTemperatureforCompressorOperation(value);
     }
+
+    value = element.firstChildElement("CndsrPumpPwr").text().toDouble(&ok);
+    if( ok ) {
+      coil.setCondenserWaterPumpPower(unitToUnit(value,"Btu/h","W").get());
+    }
+
+    value = element.firstChildElement("CrankcaseHtrCap").text().toDouble(&ok);
+    if( ok ) {
+      coil.setCrankcaseHeaterCapacity(unitToUnit(value,"Btu/h","W").get());
+    }
+
+    value = element.firstChildElement("CrankcaseHtrHiLimTemp").text().toDouble(&ok);
+    if( ok ) {
+      coil.setMaximumAmbientTemperatureforCrankcaseHeaterOperation(unitToUnit(value,"F","C").get());
+    }
+
+    text = element.firstChildElement("WtrHtrTempSetptSchRef").text().toStdString();
+    if( auto schedule = model.getModelObjectByName<model::Schedule>(text) ) {
+      heatPump.setCompressorSetpointTemperatureSchedule(schedule.get());
+    }
+
+    value = element.firstChildElement("FanTotStaticPress").text().toDouble(&ok);
+    if( ok ) {
+      fan.setPressureRise(value * 249.0889 );
+    }
+
+    value = element.firstChildElement("FanFlowCap").text().toDouble(&ok);
+    if( ok ) {
+      fan.setMaximumFlowRate(unitToUnit(value,"cfm","m^3/s").get());
+    }
+
+    return waterHeater;
   } else {
-    model::Schedule setpointTempSchedule = serviceHotWaterSetpointSchedule(model);
-    waterHeaterMixed.setSetpointTemperatureSchedule(setpointTempSchedule);
+    model::WaterHeaterMixed waterHeaterMixed(model);
+
+    // Name
+
+    QDomElement nameElement = element.firstChildElement("Name");
+
+    waterHeaterMixed.setName(nameElement.text().toStdString());
+
+    // ThrmlEff
+
+    QDomElement thrmlEffElement = element.firstChildElement("ThrmlEff");
+    
+    double thrmlEff = thrmlEffElement.text().toDouble(&ok);
+
+    if( ok )
+    {
+      waterHeaterMixed.setHeaterThermalEfficiency(thrmlEff);
+    }
+
+    // Ambient water temperature indicator
+
+    waterHeaterMixed.setAmbientTemperatureIndicator("Schedule");
+
+    model::ScheduleRuleset scheduleRuleset = model::ScheduleRuleset(model);
+
+    scheduleRuleset.setName(QString(nameElement.text() + " Ambient Temperature").toStdString());
+
+    model::ScheduleDay scheduleDay = scheduleRuleset.defaultDaySchedule();
+
+    scheduleDay.addValue(Time(1.0),20.0);
+
+    waterHeaterMixed.setAmbientTemperatureSchedule(scheduleRuleset);
+
+    // StorCap
+
+    QDomElement wtrHtrStorCapElement = element.firstChildElement("StorCap");
+
+    double wtrHtrStorCap = wtrHtrStorCapElement.text().toDouble(&ok);
+
+    if( ok )
+    {
+      waterHeaterMixed.setTankVolume(unitToUnit(wtrHtrStorCap,"gal","m^3").get());
+    }
+
+    // CapRtd
+    
+    QDomElement wtrHtrMaxCapElement = element.firstChildElement("CapRtd");
+
+    double wtrHtrMaxCap = wtrHtrMaxCapElement.text().toDouble(&ok);
+
+    if( ok )
+    {
+      waterHeaterMixed.setHeaterMaximumCapacity(unitToUnit(wtrHtrMaxCap,"Btu/h","W").get());
+    }
+
+    // MinCap
+
+    QDomElement minCapElement = element.firstChildElement("MinCap");
+
+    double minCap = minCapElement.text().toDouble(&ok);
+
+    if( ok )
+    {
+      waterHeaterMixed.setHeaterMinimumCapacity(unitToUnit(minCap,"Btu/h","W").get());
+    }
+
+    // OffCyclePrstcLoss
+
+    QDomElement offCyclePrstcLossElement = element.firstChildElement("OffCyclePrstcLoss");
+
+    double offCyclePrstcLoss = offCyclePrstcLossElement.text().toDouble(&ok);
+
+    if( ok )
+    {
+      waterHeaterMixed.setOffCycleParasiticFuelConsumptionRate(offCyclePrstcLoss);
+    }
+
+    // OnCyclePrstcLoss
+
+    QDomElement onCyclePrstcLossElement = element.firstChildElement("OnCyclePrstcLoss");
+
+    double onCyclePrstcLoss = onCyclePrstcLossElement.text().toDouble(&ok);
+
+    if( ok )
+    {
+      waterHeaterMixed.setOnCycleParasiticFuelConsumptionRate(onCyclePrstcLoss);
+    }
+
+    // TankOffCycleLossCoef
+
+    QDomElement tankOffCycleLossCoefElement = element.firstChildElement("TankOffCycleLossCoef");
+
+    double tankOffCycleLossCoef = tankOffCycleLossCoefElement.text().toDouble(&ok);
+
+    if( ok )
+    {
+      // Convert Btu/h-F to W/K
+      waterHeaterMixed.setOffCycleLossCoefficienttoAmbientTemperature(tankOffCycleLossCoef * 0.5275);
+    }
+
+    // TankOnCycleLossCoef
+
+    QDomElement tankOnCycleLossCoefElement = element.firstChildElement("TankOnCycleLossCoef");
+
+    double tankOnCycleLossCoef = tankOnCycleLossCoefElement.text().toDouble(&ok);
+
+    if( ok )
+    {
+      // Convert Btu/h-F to W/K
+      waterHeaterMixed.setOnCycleLossCoefficienttoAmbientTemperature(tankOnCycleLossCoef * 0.5275);
+    }
+
+    // Setpoint schedule
+    auto fixedSupTempElement = element.parentNode().toElement().firstChildElement("FixedSupTemp");
+    if( ! fixedSupTempElement.isNull() ) {
+      auto value = fixedSupTempElement.text().toDouble(&ok);
+      if( ok ) {
+        value = unitToUnit(value,"F","C").get();
+        model::ScheduleRuleset schedule(model);
+        schedule.setName(waterHeaterMixed.name().get() + " Setpoint Temp");
+        auto scheduleDay = schedule.defaultDaySchedule();
+        scheduleDay.addValue(Time(1.0),value);
+        waterHeaterMixed.setSetpointTemperatureSchedule(schedule); 
+      }
+    } else {
+      model::Schedule setpointTempSchedule = serviceHotWaterSetpointSchedule(model);
+      waterHeaterMixed.setSetpointTemperatureSchedule(setpointTempSchedule);
+    }
+
+    // HIR_fPLRCrvRef
+
+    QDomElement hirfPLRCrvRefElement = element.firstChildElement("HIR_fPLRCrvRef");
+    boost::optional<model::CurveCubic> hirfPLRCrv = model.getModelObjectByName<model::CurveCubic>(hirfPLRCrvRefElement.text().toStdString());
+    if( hirfPLRCrv )
+    {
+      waterHeaterMixed.setPartLoadFactorCurve(hirfPLRCrv.get());
+    }
+
+    // FuelSrc
+    auto fuelSrcElement = element.firstChildElement("FuelSrc");
+    waterHeaterMixed.setHeaterFuelType(fuelSrcElement.text().toStdString());
+
+    // OffCycleFuelSrc
+    auto offCycleFuelSrcElement = element.firstChildElement("OffCycleFuelSrc");
+    waterHeaterMixed.setOffCycleParasiticFuelType(offCycleFuelSrcElement.text().toStdString());
+
+    // OnCycleFuelSrc
+    auto onCycleFuelSrcElement = element.firstChildElement("OnCycleFuelSrc");
+    waterHeaterMixed.setOnCycleParasiticFuelType(onCycleFuelSrcElement.text().toStdString());
+
+    return waterHeaterMixed;
   }
-
-  // HIR_fPLRCrvRef
-
-  QDomElement hirfPLRCrvRefElement = element.firstChildElement("HIR_fPLRCrvRef");
-  boost::optional<model::CurveCubic> hirfPLRCrv = model.getModelObjectByName<model::CurveCubic>(hirfPLRCrvRefElement.text().toStdString());
-  if( hirfPLRCrv )
-  {
-    waterHeaterMixed.setPartLoadFactorCurve(hirfPLRCrv.get());
-  }
-
-  // FuelSrc
-  auto fuelSrcElement = element.firstChildElement("FuelSrc");
-  waterHeaterMixed.setHeaterFuelType(fuelSrcElement.text().toStdString());
-
-  // OffCycleFuelSrc
-  auto offCycleFuelSrcElement = element.firstChildElement("OffCycleFuelSrc");
-  waterHeaterMixed.setOffCycleParasiticFuelType(offCycleFuelSrcElement.text().toStdString());
-
-  // OnCycleFuelSrc
-  auto onCycleFuelSrcElement = element.firstChildElement("OnCycleFuelSrc");
-  waterHeaterMixed.setOnCycleParasiticFuelType(onCycleFuelSrcElement.text().toStdString());
-
-  return waterHeaterMixed;
 }
 
 boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSys(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model)
