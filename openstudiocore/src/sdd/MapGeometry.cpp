@@ -1553,6 +1553,9 @@ namespace sdd {
         }
       }
 
+      // Convert surface convection coefficients
+      translateConvectionCoefficients(element, doc, subSurface);
+
     }else if (tagName == "Skylt"){
 
       subSurface.setSubSurfaceType("Skylight");

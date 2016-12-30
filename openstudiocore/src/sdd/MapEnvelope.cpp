@@ -296,6 +296,13 @@ namespace sdd {
       // m^2-K/W
       double rValueSI = 1.0 / uFactorWh->value();
 
+      // 5.6783 hr-ft2-F/Btu = 1 m^2-K/W
+      const double intFilmRValueSI = 0.170/5.6783; // 0.170 hr-ft2-F/Btu
+      const double extFilmRValueSI = 0.680/5.6783; // 0.680 hr-ft2-F/Btu
+
+      // if total rvalue is less than sum of interior and exterior film rvalue, surface coefficients will be added to door separately
+      rValueSI = std::max(rValueSI - intFilmRValueSI - extFilmRValueSI, 0.001);
+
       std::string name = escapeName(nameElement.text());
 
       model::MasslessOpaqueMaterial material(model);

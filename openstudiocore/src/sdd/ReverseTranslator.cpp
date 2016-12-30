@@ -1145,6 +1145,38 @@ namespace sdd {
         }
       }
 
+      // SimVarsDr
+
+      QDomElement simVarsDrElement = projectElement.firstChildElement("SimVarsDr");
+
+      if ((simVarsDrElement.text().toInt() == 1))
+      {
+        for (const auto& subSurface : result->getConcreteModelObjects<model::SubSurface>())
+        {
+          std::string subSurfaceType = subSurface.subSurfaceType();
+
+          if (istringEqual(subSurfaceType, "Door") ||
+              istringEqual(subSurfaceType, "OverheadDoor"))
+          {
+            model::OutputVariable var("Surface Average Face Conduction Heat Gain Rate", *result);
+            var.setKeyValue(subSurface.name().get());
+            var.setReportingFrequency(interval);
+
+            var = model::OutputVariable("Surface Average Face Conduction Heat Loss Rate", *result);
+            var.setKeyValue(subSurface.name().get());
+            var.setReportingFrequency(interval);
+
+            var = model::OutputVariable("Surface Inside Face Adjacent Air Temperature", *result);
+            var.setKeyValue(subSurface.name().get());
+            var.setReportingFrequency(interval);
+
+            var = model::OutputVariable("Surface Outside Face Outdoor Air Drybulb Temperature", *result);
+            var.setKeyValue(subSurface.name().get());
+            var.setReportingFrequency(interval);
+          }
+        }
+      }
+
       // SimVarsThrmlZn
 
       QDomElement simVarsThrmlZnElement = projectElement.firstChildElement("SimVarsThrmlZn");      
