@@ -29,7 +29,7 @@
 #ifndef MODEL_ENERGYMANAGEMENTSYSTEMTRENDVARIABLE_HPP
 #define MODEL_ENERGYMANAGEMENTSYSTEMTRENDVARIABLE_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "ModelObject.hpp"
 #include "EnergyManagementSystemActuator.hpp"
 #include "EnergyManagementSystemSensor.hpp"

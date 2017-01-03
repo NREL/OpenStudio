@@ -29,7 +29,7 @@
 #ifndef MODEL_ENERGYMANAGEMENTSYSTEMOUTPUTVARIABLE_HPP
 #define MODEL_ENERGYMANAGEMENTSYSTEMOUTPUTVARIABLE_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "ModelObject.hpp"
 #include "EnergyManagementSystemProgram.hpp"
 #include "EnergyManagementSystemSubroutine.hpp"

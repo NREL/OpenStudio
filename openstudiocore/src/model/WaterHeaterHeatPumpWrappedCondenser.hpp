@@ -29,7 +29,7 @@
 #ifndef MODEL_WATERHEATERHEATPUMPWRAPPEDCONDENSER_HPP
 #define MODEL_WATERHEATERHEATPUMPWRAPPEDCONDENSER_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "ZoneHVACComponent.hpp"
 
 namespace openstudio {
