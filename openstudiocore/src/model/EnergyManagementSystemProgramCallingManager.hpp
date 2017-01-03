@@ -29,7 +29,7 @@
 #ifndef MODEL_ENERGYMANAGEMENTSYSTEMPROGRAMCALLINGMANAGER_HPP
 #define MODEL_ENERGYMANAGEMENTSYSTEMPROGRAMCALLINGMANAGER_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "ModelObject.hpp"
 #include "EnergyManagementSystemProgram.hpp"
 

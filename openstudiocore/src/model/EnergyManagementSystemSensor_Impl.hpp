@@ -29,7 +29,7 @@
 #ifndef MODEL_ENERGYMANAGEMENTSYSTEMSENSOR_IMPL_HPP
 #define MODEL_ENERGYMANAGEMENTSYSTEMSENSOR_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "ModelObject_Impl.hpp"
 #include "OutputVariable.hpp"
 #include "OutputVariable_Impl.hpp"
