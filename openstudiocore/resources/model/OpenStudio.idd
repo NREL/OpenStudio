@@ -11,15 +11,6 @@
 !                    to keep track of references. It also enables \object-list AllObjects, which
 !                    can point to any object.
 !
-!  \type url         The field references a file on at some location.  The reference
-!                    may be a relative file path (in which case a set of search locations
-!                    are used to find the file at run time), or it may be an 
-!                    absolute path to a local file.
-!
-! Object-level comments:
-!
-!  \url-object       Use if the object includes one or more fields of url type.
-!
 ! Grouping comments:
 !
 ! The groups in the OpenStudio IDD represent high level groupings of similar objects.
@@ -1866,7 +1857,6 @@ OS:UtilityCost:Variable,
 
 OS:WeatherFile,
        \unique-object
-       \url-object
        \min-fields 12
        \memo OS:WeatherFile object uniquely identifies a weather file for lookup in a database
   A1, \field Handle
@@ -1915,9 +1905,9 @@ OS:WeatherFile,
        \minimum -300
        \maximum< 8900
        \default 0.0
-  A7, \field Url
+  A7, \field File Name
        \retaincase
-       \type url
+       \type alpha
   A8; \field Checksum
        \type alpha
 
@@ -3485,8 +3475,7 @@ OS:Construction:InternalSource,
        \object-list MaterialNames
 
 OS:Construction:WindowDataFile,
-       \memo Initiates search of the Window5 data file for a window called Name.
-       \url-object
+       \memo Initiates search of the Window5 data file for a window called File Name.
        \min-fields 1
   A1, \field Handle
        \type handle
@@ -3495,10 +3484,9 @@ OS:Construction:WindowDataFile,
        \type alpha
        \required-field
        \reference ConstructionNames
-  A3, \field Url
+  A3, \field File Name
        \retaincase
-       \retaincase
-       \type url
+       \type alpha
   A4; \field Surface Rendering Name
        \type object-list
        \object-list SurfaceRenderingNames
@@ -3818,7 +3806,6 @@ OS:Lights:Definition,
        \default 0.0
 
 OS:Luminaire:Definition,
-       \url-object
        \min-fields 1
   A1, \field Handle
        \type handle
@@ -3828,10 +3815,9 @@ OS:Luminaire:Definition,
        \required-field
        \reference LuminaireDefinitionNames
        \reference SpaceComponentDefinitionNames
-  A3, \field IES File Path
+  A3, \field IES File Name
        \retaincase
-       \retaincase
-       \type url
+       \type alpha
   N1, \field Lighting Power
        \type real
        \units W
