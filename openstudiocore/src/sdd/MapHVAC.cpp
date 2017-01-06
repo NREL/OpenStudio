@@ -1000,8 +1000,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
   }
 
   // Type
-  QDomElement typeElement = airSystemElement.firstChildElement("Type");
-  if( typeElement.text().compare("Exhaust",Qt::CaseInsensitive) == 0 )
+  QDomElement airSystemTypeElement = airSystemElement.firstChildElement("TypeSim");
+  if( airSystemTypeElement.text().compare("Exhaust",Qt::CaseInsensitive) == 0 )
   {
     return boost::none;
   }
@@ -1016,10 +1016,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
   model::Node supplyOutletNode = airLoopHVAC.supplyOutletNode();
   model::Node supplyInletNode = airLoopHVAC.supplyInletNode();
 
-  QDomElement airSystemTypeElement = airSystemElement.firstChildElement("Type");
-
   QDomElement airSystemClgCtrlElement = airSystemElement.firstChildElement("ClgCtrl");
-
   QDomElement airHndlrAvailSchElement = airSystemElement.firstChildElement("AvailSchRef");
 
   // Availability Schedule
@@ -2848,7 +2845,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFan(
     {
       // Type 
 
-      QDomElement znSysTypeElement = parentElement.firstChildElement("Type");
+      QDomElement znSysTypeElement = parentElement.firstChildElement("TypeSim");
       QDomElement znSysFanCtrlElement = parentElement.firstChildElement("FanCtrl");
 
       if( znSysTypeElement.text().compare("FPFC",Qt::CaseInsensitive) == 0 || 
@@ -4883,7 +4880,7 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
   boost::optional<model::Schedule> availSch = model.getModelObjectByName<model::Schedule>(availSchRefElement.text().toStdString());
 
   // Type
-  QDomElement typeElement = trmlUnitElement.firstChildElement("Type");
+  QDomElement typeElement = trmlUnitElement.firstChildElement("TypeSim");
 
   // PriAirFlow
   QDomElement priAirFlowElement = trmlUnitElement.firstChildElement("PriAirFlowMaxSim");
@@ -4910,7 +4907,7 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
   QDomElement airSystemTypeElement;
   if( ! airSysElement.isNull() )
   {
-    airSystemTypeElement = airSysElement.firstChildElement("Type");
+    airSystemTypeElement = airSysElement.firstChildElement("TypeSim");
   }
 
   if( istringEqual("VAVNoReheatBox",typeElement.text().toStdString()) )
@@ -7204,7 +7201,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
   std::string name = element.firstChildElement("Name").text().toStdString();
 
   // Type
-  QDomElement typeElement = element.firstChildElement("Type");
+  QDomElement typeElement = element.firstChildElement("TypeSim");
   if( typeElement.text().compare("Exhaust",Qt::CaseInsensitive) == 0 )
   {
     return boost::none;
@@ -8883,7 +8880,7 @@ boost::optional<QDomElement> ForwardTranslator::translateAirLoopHVAC(const model
 
   OS_ASSERT( ! type.empty() );
 
-  auto typeElement = doc.createElement("Type");
+  auto typeElement = doc.createElement("TypeSim");
   result.appendChild(typeElement);
   typeElement.appendChild(doc.createTextNode(escapeName(type)));
 
