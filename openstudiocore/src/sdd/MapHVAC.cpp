@@ -1675,8 +1675,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
       }
 
       // TODO Remove this in the future, but for now play it safe and use legacy OpenStudio default.
-      if( (typeElement.text().compare("SZVAVAC",Qt::CaseInsensitive) == 0) ||
-          (typeElement.text().compare("SZVAVHP",Qt::CaseInsensitive) ==0) ) {
+      if( (airSystemTypeElement.text().compare("SZVAVAC",Qt::CaseInsensitive) == 0) ||
+          (airSystemTypeElement.text().compare("SZVAVHP",Qt::CaseInsensitive) ==0) ) {
         oaController.setHeatRecoveryBypassControlType("BypassWhenOAFlowGreaterThanMinimum");
       }
       
