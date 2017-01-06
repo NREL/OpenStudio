@@ -32,6 +32,8 @@
 #include "../../model/Schedule_Impl.hpp"
 #include "../../model/FanOnOff.hpp"
 #include "../../model/FanOnOff_Impl.hpp"
+#include "../../model/AirloopHVAC.hpp"
+#include "../../model/AirloopHVAC_Impl.hpp"
 #include "../../model/FanConstantVolume.hpp"
 #include "../../model/FanConstantVolume_Impl.hpp"
 #include "../../model/Node.hpp"
@@ -85,6 +87,8 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACTerminalUnitVaria
   {
     idfObject.setName(*s);
   }
+
+  auto t_airLoopHVAC = modelObject.airLoopHVAC();
 
   // TerminalUnitAvailabilityschedule
 
@@ -246,30 +250,31 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACTerminalUnitVaria
   }
 
   // OutdoorAirMixer
+  if( ! t_airLoopHVAC ) {
+    IdfObject _outdoorAirMixer(IddObjectType::OutdoorAir_Mixer);
+    _outdoorAirMixer.setName(modelObject.name().get() + " OA Mixer");
+    m_idfObjects.push_back(_outdoorAirMixer);
 
-  IdfObject _outdoorAirMixer(IddObjectType::OutdoorAir_Mixer);
-  _outdoorAirMixer.setName(modelObject.name().get() + " OA Mixer");
-  m_idfObjects.push_back(_outdoorAirMixer);
+    _outdoorAirMixer.setString(OutdoorAir_MixerFields::MixedAirNodeName,mixerOutletNodeName);
 
-  _outdoorAirMixer.setString(OutdoorAir_MixerFields::MixedAirNodeName,mixerOutletNodeName);
+    _outdoorAirMixer.setString(OutdoorAir_MixerFields::ReturnAirStreamNodeName,inletNodeName);
 
-  _outdoorAirMixer.setString(OutdoorAir_MixerFields::ReturnAirStreamNodeName,inletNodeName);
+    IdfObject _oaNodeList(openstudio::IddObjectType::OutdoorAir_NodeList);
+    _oaNodeList.setString(0,oaNodeName);
+    m_idfObjects.push_back(_oaNodeList);
 
-  IdfObject _oaNodeList(openstudio::IddObjectType::OutdoorAir_NodeList);
-  _oaNodeList.setString(0,oaNodeName);
-  m_idfObjects.push_back(_oaNodeList);
+    _outdoorAirMixer.setString(OutdoorAir_MixerFields::ReliefAirStreamNodeName,modelObject.name().get() + " Relief Node Name");
 
-  _outdoorAirMixer.setString(OutdoorAir_MixerFields::ReliefAirStreamNodeName,modelObject.name().get() + " Relief Node Name");
+    _outdoorAirMixer.setString(OutdoorAir_MixerFields::OutdoorAirStreamNodeName,oaNodeName);
 
-  _outdoorAirMixer.setString(OutdoorAir_MixerFields::OutdoorAirStreamNodeName,oaNodeName);
+    // OutsideAirMixerObjectType
 
-  // OutsideAirMixerObjectType
+    idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::OutsideAirMixerObjectType,_outdoorAirMixer.iddObject().name());
 
-  idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::OutsideAirMixerObjectType,_outdoorAirMixer.iddObject().name());
+    // OutsideAirMixerObjectName
 
-  // OutsideAirMixerObjectName
-
-  idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::OutsideAirMixerObjectName,_outdoorAirMixer.name().get());
+    idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::OutsideAirMixerObjectName,_outdoorAirMixer.name().get());
+  }
 
   model::ModelObject coolingCoil = modelObject.coolingCoil();
   
@@ -283,7 +288,12 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACTerminalUnitVaria
     
     idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::CoolingCoilObjectName,_coolingCoil->name().get());
 
-    _coolingCoil->setString(Coil_Cooling_DX_VariableRefrigerantFlowFields::CoilAirInletNode,mixerOutletNodeName);
+    std::string coolingCoilInletNodeName = mixerOutletNodeName;
+    if( t_airLoopHVAC ) {
+      coolingCoilInletNodeName = inletNodeName;
+    }
+
+    _coolingCoil->setString(Coil_Cooling_DX_VariableRefrigerantFlowFields::CoilAirInletNode,coolingCoilInletNodeName);
 
     _coolingCoil->setString(Coil_Cooling_DX_VariableRefrigerantFlowFields::CoilAirOutletNode,coolOutletNodeName);
   }
