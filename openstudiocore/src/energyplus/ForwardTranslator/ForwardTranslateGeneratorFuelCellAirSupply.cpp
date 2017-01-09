@@ -64,7 +64,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellAirSuppl
 {
   boost::optional<std::string> s;
   boost::optional<double> d;
-  //boost::optional<Node> node;
+  boost::optional<Node> node;
   boost::optional<CurveCubic> curve;
   boost::optional<CurveQuadratic> curvequad;
   std::vector< std::pair<std::string, std::string> > constituents;
@@ -75,21 +75,20 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellAirSuppl
   if (s) {
     pcm.setName(*s);
   }
-  /*
-  //AirInletNodeName //TODO Node or Connection??
+
+  //AirInletNodeName
   node = modelObject.airInletNode();
   if (node) {
     pcm.setString(Generator_FuelCell_AirSupplyFields::AirInletNodeName, node.get().nameString());
   } else {
+    //TODO create OA node
     pcm.setString(Generator_FuelCell_AirSupplyFields::AirInletNodeName, "");
   }
-  */
+
   //blowerPowerCurve
   curve = modelObject.blowerPowerCurve();
   if (curve) {
     pcm.setString(Generator_FuelCell_AirSupplyFields::BlowerPowerCurveName, curve.get().nameString());
-  } else {
-    pcm.setString(Generator_FuelCell_AirSupplyFields::BlowerPowerCurveName, "");
   }
 
   //BlowerHeatLossFactor
@@ -114,8 +113,6 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellAirSuppl
   curvequad = modelObject.airRateFunctionofElectricPowerCurve();
   if (curvequad) {
     pcm.setString(Generator_FuelCell_AirSupplyFields::AirRateFunctionofElectricPowerCurveName, curvequad.get().nameString());
-  } else {
-    pcm.setString(Generator_FuelCell_AirSupplyFields::AirRateFunctionofElectricPowerCurveName, "");
   }
 
   //AirRateAirTemperatureCoefficient
@@ -128,8 +125,6 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellAirSuppl
   curvequad = modelObject.airRateFunctionofElectricPowerCurve();
   if (curvequad) {
     pcm.setString(Generator_FuelCell_AirSupplyFields::AirRateFunctionofElectricPowerCurveName, curvequad.get().nameString());
-  } else {
-    pcm.setString(Generator_FuelCell_AirSupplyFields::AirRateFunctionofElectricPowerCurveName, "");
   }
 
   //AirIntakeHeatRecoveryMode

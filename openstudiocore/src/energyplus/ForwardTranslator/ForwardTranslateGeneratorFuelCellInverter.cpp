@@ -72,8 +72,6 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellInverter
   curvequad = modelObject.efficiencyFunctionofDCPowerCurve();
   if (curvequad) {
     pcm.setString(Generator_FuelCell_InverterFields::EfficiencyFunctionofDCPowerCurveName, curvequad.get().nameString());
-  } else {
-    pcm.setString(Generator_FuelCell_InverterFields::EfficiencyFunctionofDCPowerCurveName, "");
   }
 
   return pcm;

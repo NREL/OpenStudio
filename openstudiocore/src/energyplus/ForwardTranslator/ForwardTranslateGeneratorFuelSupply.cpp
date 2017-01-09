@@ -25,6 +25,8 @@
 
 #include "../../model/Connection.hpp"
 #include "../../model/Connection_Impl.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/Node_Impl.hpp"
 #include "../../model/Schedule.hpp"
 #include "../../model/Schedule_Impl.hpp"
 #include "../../model/ScheduleConstant.hpp"
@@ -54,6 +56,11 @@ namespace energyplus {
 boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelSupply(GeneratorFuelSupply & modelObject)
 {
   boost::optional<std::string> s;
+  boost::optional<double> d;
+  boost::optional<Node> node;
+  boost::optional<Schedule> schedule;
+  boost::optional<CurveCubic> curve;
+  std::vector< std::pair<std::string, std::string> > constituents;
   
   IdfObject pcm = createAndRegisterIdfObject(openstudio::IddObjectType::Generator_FuelSupply, modelObject);
   //Name
@@ -61,18 +68,83 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelSupply(Gener
   if (s) {
     pcm.setName(*s);
   }
-  /*
-  //callingpoint
-  s = modelObject.callingPoint();
+
+  //fuelTemperatureModelingMode
+  s = modelObject.fuelTemperatureModelingMode();
   if (s) {
-    pcm.setString(EnergyManagementSystem_ProgramCallingManagerFields::EnergyPlusModelCallingPoint, s.get());
+    pcm.setString(Generator_FuelSupplyFields::FuelTemperatureModelingMode, s.get());
   }
- 
-  //program names
-  for (const IdfExtensibleGroup& eg : modelObject.extensibleGroups()) {
-    pcm.pushExtensibleGroup(eg.fields());
+
+  //FuelTemperatureReferenceNodeName
+  node = modelObject.fuelTemperatureReferenceNode();
+  if (node) {
+    pcm.setString(Generator_FuelSupplyFields::FuelTemperatureReferenceNodeName, node.get().nameString());
   }
-  */
+
+  //FuelTemperatureScheduleName
+  schedule = modelObject.fuelTemperatureSchedule();
+  if (schedule) {
+    pcm.setString(Generator_FuelSupplyFields::FuelTemperatureScheduleName, schedule.get().nameString());
+  }
+
+  //CompressorPowerMultiplierFunctionofFuelRateCurveName
+  curve = modelObject.compressorPowerMultiplierFunctionofFuelRateCurve();
+  if (curve) {
+    pcm.setString(Generator_FuelSupplyFields::CompressorPowerMultiplierFunctionofFuelRateCurveName, curve.get().nameString());
+  }
+
+  //CompressorHeatLossFactor
+  d = modelObject.compressorHeatLossFactor();
+  if (d) {
+    pcm.setDouble(Generator_FuelSupplyFields::CompressorHeatLossFactor, d.get());
+  }
+
+  //FuelType
+  s = modelObject.fuelType();
+  if (s) {
+    pcm.setString(Generator_FuelSupplyFields::FuelType, s.get());
+  }
+
+  //LiquidGenericFuelLowerHeatingValue
+  d = modelObject.liquidGenericFuelLowerHeatingValue();
+  if (d) {
+    pcm.setDouble(Generator_FuelSupplyFields::LiquidGenericFuelLowerHeatingValue, d.get());
+  }
+
+  //LiquidGenericFuelHigherHeatingValue
+  d = modelObject.liquidGenericFuelHigherHeatingValue();
+  if (d) {
+    pcm.setDouble(Generator_FuelSupplyFields::LiquidGenericFuelHigherHeatingValue, d.get());
+  }
+
+  //LiquidGenericFuelMolecularWeight
+  d = modelObject.liquidGenericFuelMolecularWeight();
+  if (d) {
+    pcm.setDouble(Generator_FuelSupplyFields::LiquidGenericFuelMolecularWeight, d.get());
+  }
+
+  //LiquidGenericFuelCO2EmissionFactor
+  d = modelObject.liquidGenericFuelCO2EmissionFactor();
+  if (d) {
+    pcm.setDouble(Generator_FuelSupplyFields::LiquidGenericFuelCO2EmissionFactor, d.get());
+  }
+
+  //UserDefinedConstituents
+  constituents = modelObject.constituents();
+  if (!constituents.empty()) {
+    for (auto constituent : constituents) {
+      auto eg = pcm.pushExtensibleGroup();
+      eg.setString(Generator_FuelSupplyExtensibleFields::ConstituentName, constituent.first);
+      eg.setString(Generator_FuelSupplyExtensibleFields::ConstituentMolarFraction, constituent.second);
+    }
+  }
+
+  //NumberofUserDefinedConstituents
+  d = constituents.size();
+  if (d) {
+    pcm.setDouble(Generator_FuelSupplyFields::NumberofConstituentsinGaseousConstituentFuelSupply, d.get());
+  }
+
   return pcm;
  
 }

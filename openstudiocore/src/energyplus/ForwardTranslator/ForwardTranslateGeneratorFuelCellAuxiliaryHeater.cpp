@@ -88,8 +88,6 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellAuxiliar
   tz = modelObject.zonetoReceiveSkinLosses();
   if (tz) {
     pcm.setString(Generator_FuelCell_AuxiliaryHeaterFields::ZoneNametoReceiveSkinLosses, tz.get().nameString());
-  } else {
-    pcm.setString(Generator_FuelCell_AuxiliaryHeaterFields::ZoneNametoReceiveSkinLosses, "");
   }
 
   //HeatingCapacityUnits

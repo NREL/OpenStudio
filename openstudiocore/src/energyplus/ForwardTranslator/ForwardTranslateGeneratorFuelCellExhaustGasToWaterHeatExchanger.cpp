@@ -25,8 +25,8 @@
 
 #include "../../model/Connection.hpp"
 #include "../../model/Connection_Impl.hpp"
-#include "../../model/Node.hpp"
-#include "../../model/Node_Impl.hpp"
+//#include "../../model/Node.hpp"
+//#include "../../model/Node_Impl.hpp"
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
@@ -47,7 +47,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellExhaustG
 {
   boost::optional<std::string> s;
   boost::optional<double> d;
-  //boost::optional<Node> node;
+  boost::optional<Connection> connection;
   
   IdfObject pcm = createAndRegisterIdfObject(openstudio::IddObjectType::Generator_FuelCell_ExhaustGasToWaterHeatExchanger, modelObject);
   //Name
@@ -55,25 +55,19 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellExhaustG
   if (s) {
     pcm.setName(*s);
   }
-  /*
-  //HeatRecoveryWaterInletNodeName //TODO Node or Connection??
-  node = modelObject.heatRecoveryWaterInletNodeName();
-  if (node) {
-  pcm.setString(Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::HeatRecoveryWaterInletNodeName, node.get().nameString());
-  } else {
-  pcm.setString(Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::HeatRecoveryWaterInletNodeName, "");
+ 
+  //HeatRecoveryWaterInletNodeName 
+  connection = modelObject.heatRecoveryWaterInletNode();
+  if (connection) {
+    pcm.setString(Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::HeatRecoveryWaterInletNodeName, connection.get().nameString());
   }
-  */
 
-  /*
-  //HeatRecoveryWaterOutletNodeName //TODO Node or Connection??
-  node = modelObject.heatRecoveryWaterOutletNodeName();
-  if (node) {
-  pcm.setString(Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::HeatRecoveryWaterOutletNodeName, node.get().nameString());
-  } else {
-  pcm.setString(Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::HeatRecoveryWaterOutletNodeName, "");
+  //HeatRecoveryWaterOutletNodeName 
+  connection = modelObject.heatRecoveryWaterOutletNode();
+  if (connection) {
+    pcm.setString(Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::HeatRecoveryWaterOutletNodeName, connection.get().nameString());
   }
-  */
+
 
   //HeatRecoveryWaterMaximumFlowRate
   d = modelObject.heatRecoveryWaterMaximumFlowRate();
@@ -81,15 +75,11 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellExhaustG
     pcm.setDouble(Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::HeatRecoveryWaterMaximumFlowRate, d.get());
   }
 
-  /*
-  //ExhaustOutletAirNodeName //TODO Node or Connection??
-  node = modelObject.exhaustOutletAirNodeName();
-  if (node) {
-  pcm.setString(Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::ExhaustOutletAirNodeName, node.get().nameString());
-  } else {
-  pcm.setString(Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::ExhaustOutletAirNodeName, "");
+  //ExhaustOutletAirNodeName 
+  connection = modelObject.exhaustOutletAirNode();
+  if (connection) {
+    pcm.setString(Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::ExhaustOutletAirNodeName, connection.get().nameString());
   }
-  */
 
   //HeatExchangerCalculationMethod
   s = modelObject.heatExchangerCalculationMethod();

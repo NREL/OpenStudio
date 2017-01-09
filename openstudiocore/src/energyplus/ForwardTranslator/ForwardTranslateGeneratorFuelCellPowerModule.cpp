@@ -53,7 +53,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellPowerMod
 {
   boost::optional<std::string> s;
   boost::optional<double> d;
-  //boost::optional<Node> node;
+  boost::optional<Connection> connection;
   boost::optional<Curve> curve;
   boost::optional<ThermalZone> tz;
   
@@ -74,8 +74,6 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellPowerMod
   curve = modelObject.efficiencyCurve();
   if (curve) {
     pcm.setString(Generator_FuelCell_PowerModuleFields::EfficiencyCurveName, curve.get().nameString());
-  } else {
-    pcm.setString(Generator_FuelCell_PowerModuleFields::EfficiencyCurveName, "");
   }
 
   //NominalEfficiency
@@ -233,19 +231,19 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellPowerMod
   if (d) {
     pcm.setDouble(Generator_FuelCell_PowerModuleFields::StackHeatlosstoDilutionAir, d.get());
   }
-  /*
+
   //DilutionInletAirNodeName
-  node = modelObject.dilutionInletAirNode();
-  if (node) {
-    pcm.setString(Generator_FuelCell_PowerModuleFields::DilutionInletAirNodeName, node.get().nameString());
+  connection = modelObject.dilutionInletAirNode();
+  if (connection) {
+    pcm.setString(Generator_FuelCell_PowerModuleFields::DilutionInletAirNodeName, connection.get().nameString());
   }
 
   //DilutionOutletAirNodeName
-  node = modelObject.dilutionOutletAirNode();
-  if (node) {
-    pcm.setString(Generator_FuelCell_PowerModuleFields::DilutionOutletAirNodeName, node.get().nameString());
+  connection = modelObject.dilutionOutletAirNode();
+  if (connection) {
+    pcm.setString(Generator_FuelCell_PowerModuleFields::DilutionOutletAirNodeName, connection.get().nameString());
   }
-  */
+
   //MinimumOperatingPoint
   d = modelObject.minimumOperatingPoint();
   if (d) {

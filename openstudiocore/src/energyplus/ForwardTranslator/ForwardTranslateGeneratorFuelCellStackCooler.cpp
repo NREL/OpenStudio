@@ -45,7 +45,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellStackCoo
 {
   boost::optional<std::string> s;
   boost::optional<double> d;
-  //boost::optional<Node> node;
+  boost::optional<Connection> connection;
   
   IdfObject pcm = createAndRegisterIdfObject(openstudio::IddObjectType::Generator_FuelCell_StackCooler, modelObject);
   //Name
@@ -53,19 +53,18 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellStackCoo
   if (s) {
     pcm.setName(*s);
   }
-  /*
+
   //HeatRecoveryWaterInletNodeName
-  node = modelObject.heatRecoveryWaterInletNode();
-  if (node) {
-  pcm.setString(Generator_FuelCell_StackCoolerFields::HeatRecoveryWaterInletNodeName, node.get().nameString());
+  connection = modelObject.heatRecoveryWaterInletNode();
+  if (connection) {
+    pcm.setString(Generator_FuelCell_StackCoolerFields::HeatRecoveryWaterInletNodeName, connection.get().nameString());
   }
 
   //HeatRecoveryWaterOutletNodeName
-  node = modelObject.heatRecoveryWaterOutletNode();
-  if (node) {
-  pcm.setString(Generator_FuelCell_StackCoolerFields::HeatRecoveryWaterOutletNodeName, node.get().nameString());
+  connection = modelObject.heatRecoveryWaterOutletNode();
+  if (connection) {
+    pcm.setString(Generator_FuelCell_StackCoolerFields::HeatRecoveryWaterOutletNodeName, connection.get().nameString());
   }
-  */
 
   //NominalStackTemperature
   d = modelObject.nominalStackTemperature();

@@ -55,7 +55,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellWaterSup
 {
   boost::optional<std::string> s;
   boost::optional<double> d;
-  //boost::optional<Node> node;
+  boost::optional<Node> node;
   boost::optional<CurveQuadratic> curvequad;
   boost::optional<CurveCubic> curvecubic;
   boost::optional<Schedule> sch;
@@ -71,16 +71,12 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellWaterSup
   curvequad = modelObject.reformerWaterFlowRateFunctionofFuelRateCurve();
   if (curvequad) {
     pcm.setString(Generator_FuelCell_WaterSupplyFields::ReformerWaterFlowRateFunctionofFuelRateCurveName, curvequad.get().nameString());
-  } else {
-    pcm.setString(Generator_FuelCell_WaterSupplyFields::ReformerWaterFlowRateFunctionofFuelRateCurveName, "");
   }
 
   //ReformerWaterPumpPowerFunctionofFuelRateCurveName
   curvecubic = modelObject.reformerWaterPumpPowerFunctionofFuelRateCurve();
   if (curvecubic) {
     pcm.setString(Generator_FuelCell_WaterSupplyFields::ReformerWaterPumpPowerFunctionofFuelRateCurveName, curvecubic.get().nameString());
-  } else {
-    pcm.setString(Generator_FuelCell_WaterSupplyFields::ReformerWaterPumpPowerFunctionofFuelRateCurveName, "");
   }
 
   //PumpHeatLossFactor
@@ -94,13 +90,13 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellWaterSup
   if (s) {
     pcm.setString(Generator_FuelCell_WaterSupplyFields::WaterTemperatureModelingMode, s.get());
   }
-  /*
+
   //WaterTemperatureReferenceNodeName
   node = modelObject.waterTemperatureReferenceNode();
   if (node) {
     pcm.setString(Generator_FuelCell_WaterSupplyFields::WaterTemperatureReferenceNodeName, node.get().nameString());
   }
-  */
+
   //WaterTemperatureScheduleName
   sch = modelObject.waterTemperatureSchedule();
   if (sch) {
