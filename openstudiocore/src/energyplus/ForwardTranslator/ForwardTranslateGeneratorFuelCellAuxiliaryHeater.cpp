@@ -44,26 +44,86 @@ namespace energyplus {
 boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellAuxiliaryHeater(GeneratorFuelCellAuxiliaryHeater & modelObject)
 {
   boost::optional<std::string> s;
-  /*
-  IdfObject pcm = createAndRegisterIdfObject(openstudio::IddObjectType::EnergyManagementSystem_ProgramCallingManager, modelObject);
+  boost::optional<double> d;
+  boost::optional<ThermalZone> tz;
+  
+  IdfObject pcm = createAndRegisterIdfObject(openstudio::IddObjectType::Generator_FuelCell_AuxiliaryHeater, modelObject);
   //Name
   s = modelObject.name();
   if (s) {
     pcm.setName(*s);
   }
 
-  //callingpoint
-  s = modelObject.callingPoint();
+  //ExcessAirRatio
+  d = modelObject.excessAirRatio();
+  if (d) {
+    pcm.setDouble(Generator_FuelCell_AuxiliaryHeaterFields::ExcessAirRatio, d.get());
+  }
+
+  //AncillaryPowerConstantTerm
+  d = modelObject.ancillaryPowerConstantTerm();
+  if (d) {
+    pcm.setDouble(Generator_FuelCell_AuxiliaryHeaterFields::AncillaryPowerConstantTerm, d.get());
+  }
+
+  //AncillaryPowerLinearTerm
+  d = modelObject.ancillaryPowerLinearTerm();
+  if (d) {
+    pcm.setDouble(Generator_FuelCell_AuxiliaryHeaterFields::AncillaryPowerLinearTerm, d.get());
+  }
+
+  //SkinLossUFactorTimesAreaValue
+  d = modelObject.skinLossUFactorTimesAreaValue();
+  if (d) {
+    pcm.setDouble(Generator_FuelCell_AuxiliaryHeaterFields::SkinLossUFactorTimesAreaValue, d.get());
+  }
+  
+  //SkinLossDestination
+  s = modelObject.skinLossDestination();
   if (s) {
-    pcm.setString(EnergyManagementSystem_ProgramCallingManagerFields::EnergyPlusModelCallingPoint, s.get());
+    pcm.setString(Generator_FuelCell_AuxiliaryHeaterFields::SkinLossDestination, s.get());
   }
- 
-  //program names
-  for (const IdfExtensibleGroup& eg : modelObject.extensibleGroups()) {
-    pcm.pushExtensibleGroup(eg.fields());
+
+  //ZoneNametoReceiveSkinLosses
+  tz = modelObject.zonetoReceiveSkinLosses();
+  if (tz) {
+    pcm.setString(Generator_FuelCell_AuxiliaryHeaterFields::ZoneNametoReceiveSkinLosses, tz.get().nameString());
+  } else {
+    pcm.setString(Generator_FuelCell_AuxiliaryHeaterFields::ZoneNametoReceiveSkinLosses, "");
   }
+
+  //HeatingCapacityUnits
+  s = modelObject.heatingCapacityUnits();
+  if (s) {
+    pcm.setString(Generator_FuelCell_AuxiliaryHeaterFields::HeatingCapacityUnits, s.get());
+  }
+
+  //MaximumHeatingCapacityinWatts
+  d = modelObject.maximumHeatingCapacityinWatts();
+  if (d) {
+    pcm.setDouble(Generator_FuelCell_AuxiliaryHeaterFields::MaximumHeatingCapacityinWatts, d.get());
+  }
+
+  //MinimumHeatingCapacityinWatts
+  d = modelObject.minimumHeatingCapacityinWatts();
+  if (d) {
+    pcm.setDouble(Generator_FuelCell_AuxiliaryHeaterFields::MinimumHeatingCapacityinWatts, d.get());
+  }
+
+  //MaximumHeatingCapacityinKmolperSecond
+  d = modelObject.maximumHeatingCapacityinKmolperSecond();
+  if (d) {
+    pcm.setDouble(Generator_FuelCell_AuxiliaryHeaterFields::MaximumHeatingCapacityinKmolperSecond, d.get());
+  }
+
+  //MinimumHeatingCapacityinKmolperSecond
+  d = modelObject.minimumHeatingCapacityinKmolperSecond();
+  if (d) {
+    pcm.setDouble(Generator_FuelCell_AuxiliaryHeaterFields::MinimumHeatingCapacityinKmolperSecond, d.get());
+  }
+
   return pcm;
-  */
+  
 }
 
 } // energyplus

@@ -46,26 +46,38 @@ namespace energyplus {
 boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellInverter(GeneratorFuelCellInverter & modelObject)
 {
   boost::optional<std::string> s;
-  /*
-  IdfObject pcm = createAndRegisterIdfObject(openstudio::IddObjectType::EnergyManagementSystem_ProgramCallingManager, modelObject);
+  boost::optional<double> d;
+  boost::optional<CurveQuadratic> curvequad;
+  
+  IdfObject pcm = createAndRegisterIdfObject(openstudio::IddObjectType::Generator_FuelCell_Inverter, modelObject);
   //Name
   s = modelObject.name();
   if (s) {
     pcm.setName(*s);
   }
 
-  //callingpoint
-  s = modelObject.callingPoint();
+  //InverterEfficiencyCalculationMode
+  s = modelObject.inverterEfficiencyCalculationMode();
   if (s) {
-    pcm.setString(EnergyManagementSystem_ProgramCallingManagerFields::EnergyPlusModelCallingPoint, s.get());
+    pcm.setString(Generator_FuelCell_InverterFields::InverterEfficiencyCalculationMode, s.get());
   }
- 
-  //program names
-  for (const IdfExtensibleGroup& eg : modelObject.extensibleGroups()) {
-    pcm.pushExtensibleGroup(eg.fields());
+
+  //InverterEfficiency
+  d = modelObject.inverterEfficiency();
+  if (d) {
+    pcm.setDouble(Generator_FuelCell_InverterFields::InverterEfficiency, d.get());
   }
+
+  //EfficiencyFunctionofDCPowerCurveName
+  curvequad = modelObject.efficiencyFunctionofDCPowerCurve();
+  if (curvequad) {
+    pcm.setString(Generator_FuelCell_InverterFields::EfficiencyFunctionofDCPowerCurveName, curvequad.get().nameString());
+  } else {
+    pcm.setString(Generator_FuelCell_InverterFields::EfficiencyFunctionofDCPowerCurveName, "");
+  }
+
   return pcm;
-  */
+  
 }
 
 } // energyplus

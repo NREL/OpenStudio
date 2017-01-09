@@ -31,13 +31,15 @@
 
 #include <model/ModelAPI.hpp>
 #include "ModelObject.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
 
 namespace openstudio {
 
 namespace model {
 
 // TODO: Check the following class names against object getters and setters.
-class Connection;
+//class Connection;
 class CurveCubic;
 class CurveQuadratic;
 
@@ -56,15 +58,15 @@ class MODEL_API GeneratorFuelCellAirSupply : public ModelObject {
   explicit GeneratorFuelCellAirSupply(const Model& model);
 
   explicit GeneratorFuelCellAirSupply(const Model& model,
-                                      const Connection& airInletNode);
+                                      const Node& airInletNode);
 
   explicit GeneratorFuelCellAirSupply(const Model& model,
-                                      const Connection& airInletNode,
+                                      const Node& airInletNode,
                                       const CurveQuadratic& electricPowerCurve,
                                       const CurveQuadratic& fuelRateCurve);
 
   explicit GeneratorFuelCellAirSupply(const Model& model,
-                                      const Connection& airInletNode,
+                                      const Node& airInletNode,
                                       const CurveQuadratic& electricPowerCurve,
                                       const CurveQuadratic& fuelRateCurve,
                                       const CurveCubic& blowerPowerCurve);
@@ -94,7 +96,7 @@ class MODEL_API GeneratorFuelCellAirSupply : public ModelObject {
   /** @name Getters */
   //@{
 
-  boost::optional<Connection> airInletNode() const;
+  boost::optional<Node> airInletNode() const;
 
   boost::optional<CurveCubic> blowerPowerCurve() const;
 
@@ -120,7 +122,7 @@ class MODEL_API GeneratorFuelCellAirSupply : public ModelObject {
   /** @name Setters */
   //@{
 
-  bool setAirInletNode(const Connection& connection);
+  bool setAirInletNode(const Node& connection);
 
   void resetAirInletNode();
 

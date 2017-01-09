@@ -38,7 +38,7 @@ namespace model {
 // TODO: Check the following class names against object getters and setters.
 class CurveQuadratic;
 class CurveCubic;
-class Connection;
+//class Connection;
 class Schedule;
 
 namespace detail {
@@ -85,7 +85,7 @@ namespace detail {
 
     std::string waterTemperatureModelingMode() const;
 
-    boost::optional<Connection> waterTemperatureReferenceNode() const;
+    boost::optional<Node> waterTemperatureReferenceNode() const;
 
     boost::optional<Schedule> waterTemperatureSchedule() const;
 
@@ -109,7 +109,7 @@ namespace detail {
 
     void resetWaterTemperatureModelingMode();
 
-    bool setWaterTemperatureReferenceNode(const Connection& connection);
+    bool setWaterTemperatureReferenceNode(const Node& connection);
 
     void resetWaterTemperatureReferenceNode();
 

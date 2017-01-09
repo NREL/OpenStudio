@@ -31,6 +31,8 @@
 
 #include <model/ModelAPI.hpp>
 #include "ModelObject.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
 
 namespace openstudio {
 
@@ -39,7 +41,7 @@ namespace model {
 // TODO: Check the following class names against object getters and setters.
 class CurveQuadratic;
 class CurveCubic;
-class Connection;
+//class Connection;
 class Schedule;
 
 namespace detail {
@@ -64,7 +66,7 @@ class MODEL_API GeneratorFuelCellWaterSupply : public ModelObject {
   explicit GeneratorFuelCellWaterSupply(const Model& model,
     const CurveQuadratic& flowRateCurve,
     const CurveCubic& pumpPowerCurve,
-    const Connection& waterTempNode,
+    const Node& waterTempNode,
     const std::string& waterTempMode);
 
   virtual ~GeneratorFuelCellWaterSupply() {}
@@ -86,7 +88,7 @@ class MODEL_API GeneratorFuelCellWaterSupply : public ModelObject {
 
   std::string waterTemperatureModelingMode() const;
 
-  boost::optional<Connection> waterTemperatureReferenceNode() const;
+  boost::optional<Node> waterTemperatureReferenceNode() const;
 
   boost::optional<Schedule> waterTemperatureSchedule() const;
 
@@ -110,7 +112,7 @@ class MODEL_API GeneratorFuelCellWaterSupply : public ModelObject {
 
   void resetWaterTemperatureModelingMode();
 
-  bool setWaterTemperatureReferenceNode(const Connection& connection);
+  bool setWaterTemperatureReferenceNode(const Node& connection);
 
   void resetWaterTemperatureReferenceNode();
 

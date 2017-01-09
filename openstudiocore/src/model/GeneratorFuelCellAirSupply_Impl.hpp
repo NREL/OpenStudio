@@ -36,7 +36,7 @@ namespace openstudio {
 namespace model {
 
 // TODO: Check the following class names against object getters and setters.
-class Connection;
+//class Connection;
 class CurveCubic;
 class CurveQuadratic;
 
@@ -84,7 +84,7 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    boost::optional<Connection> airInletNode() const;
+    boost::optional<Node> airInletNode() const;
 
     boost::optional<CurveCubic> blowerPowerCurve() const;
 
@@ -110,7 +110,7 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    bool setAirInletNode(const Connection& connection);
+    bool setAirInletNode(const Node& connection);
 
     void resetAirInletNode();
 

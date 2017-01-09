@@ -25845,10 +25845,10 @@ OS:Generator:FuelCell:PowerModule,
       \units W
   A8, \field Dilution Inlet Air Node Name
       \type object-list
-      \object-list ConnectionNames
+      \object-list Node
   A9 ,\field Dilution Outlet Air Node Name
       \type object-list
-      \object-list ConnectionNames
+      \object-list Node
   N24, \field Minimum Operating Point
        \units W
   N25; \field Maximum Operating Point
@@ -25866,7 +25866,7 @@ OS:Generator:FuelCell:AirSupply,
       \reference ConnectionObject
   A3, \field Air Inlet Node Name
       \type object-list
-      \object-list ConnectionNames
+      \object-list Node
   A4, \field Blower Power Curve Name
       \type object-list
       \object-list CubicCurves
@@ -25948,7 +25948,7 @@ OS:Generator:FuelCell:WaterSupply,
       \key MainsWaterTemperature
   A6, \field Water Temperature Reference Node Name
       \type object-list
-      \object-list ConnectionNames
+      \object-list Node
   A7; \field Water Temperature Schedule Name
       \type object-list
       \object-list ScheduleNames
@@ -26151,7 +26151,7 @@ OS:Generator:FuelSupply,
       \key Scheduled
   A4, \field Fuel Temperature Reference Node Name
       \type object-list
-      \object-list ConnectionNames
+      \object-list Node
   A5, \field Fuel Temperature Schedule Name
       \type object-list
       \object-list ScheduleNames

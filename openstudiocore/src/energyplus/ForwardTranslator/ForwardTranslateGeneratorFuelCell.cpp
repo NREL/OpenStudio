@@ -64,27 +64,69 @@ namespace energyplus {
 
 boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCell(GeneratorFuelCell & modelObject)
 {
-  boost::optional<std::string> s;
-  /*
-  IdfObject pcm = createAndRegisterIdfObject(openstudio::IddObjectType::EnergyManagementSystem_ProgramCallingManager, modelObject);
+  
+  IdfObject pcm = createAndRegisterIdfObject(openstudio::IddObjectType::Generator_FuelCell, modelObject);
   //Name
-  s = modelObject.name();
+  boost::optional<std::string> s = modelObject.name();
   if (s) {
     pcm.setName(*s);
   }
 
-  //callingpoint
-  s = modelObject.callingPoint();
-  if (s) {
-    pcm.setString(EnergyManagementSystem_ProgramCallingManagerFields::EnergyPlusModelCallingPoint, s.get());
+  //PowerModuleName
+  boost::optional<GeneratorFuelCellPowerModule> pm = modelObject.powerModule();
+  if (pm) {
+    pcm.setString(Generator_FuelCellFields::PowerModuleName, pm.get().nameString());
   }
- 
-  //program names
-  for (const IdfExtensibleGroup& eg : modelObject.extensibleGroups()) {
-    pcm.pushExtensibleGroup(eg.fields());
+
+  //AirSupplyName
+  boost::optional<GeneratorFuelCellAirSupply> as = modelObject.airSupply();
+  if (as) {
+    pcm.setString(Generator_FuelCellFields::AirSupplyName, as.get().nameString());
   }
+
+  //FuelSupplyName
+  boost::optional<GeneratorFuelSupply> fs = modelObject.fuelSupply();
+  if (fs) {
+    pcm.setString(Generator_FuelCellFields::FuelSupplyName, fs.get().nameString());
+  }
+
+  //WaterSupplyName
+  boost::optional<GeneratorFuelCellWaterSupply> ws = modelObject.waterSupply();
+  if (ws) {
+    pcm.setString(Generator_FuelCellFields::WaterSupplyName, ws.get().nameString());
+  }
+  //AuxiliaryHeaterName
+  boost::optional<GeneratorFuelCellAuxiliaryHeater> ah = modelObject.auxiliaryHeater();
+  if (ah) {
+    pcm.setString(Generator_FuelCellFields::AuxiliaryHeaterName, ah.get().nameString());
+  }
+
+  //HeatExchangerName
+  boost::optional<GeneratorFuelCellExhaustGasToWaterHeatExchanger> he = modelObject.heatExchanger();
+  if (he) {
+    pcm.setString(Generator_FuelCellFields::HeatExchangerName, he.get().nameString());
+  }
+
+  //ElectricalStorageName
+  boost::optional<GeneratorFuelCellElectricalStorage> es = modelObject.electricalStorage();
+  if (es) {
+    pcm.setString(Generator_FuelCellFields::ElectricalStorageName, es.get().nameString());
+  }
+
+  //InverterName
+  boost::optional<GeneratorFuelCellInverter> inv = modelObject.inverter();
+  if (inv) {
+    pcm.setString(Generator_FuelCellFields::InverterName, inv.get().nameString());
+  }
+
+  //StackCoolerName
+  boost::optional<GeneratorFuelCellStackCooler> sc = modelObject.stackCooler();
+  if (sc) {
+    pcm.setString(Generator_FuelCellFields::StackCoolerName, sc.get().nameString());
+  }
+
   return pcm;
-  */
+  
 }
 
 } // energyplus

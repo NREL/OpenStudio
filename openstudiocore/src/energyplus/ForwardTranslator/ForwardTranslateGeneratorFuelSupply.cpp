@@ -54,14 +54,14 @@ namespace energyplus {
 boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelSupply(GeneratorFuelSupply & modelObject)
 {
   boost::optional<std::string> s;
-  /*
-  IdfObject pcm = createAndRegisterIdfObject(openstudio::IddObjectType::EnergyManagementSystem_ProgramCallingManager, modelObject);
+  
+  IdfObject pcm = createAndRegisterIdfObject(openstudio::IddObjectType::Generator_FuelSupply, modelObject);
   //Name
   s = modelObject.name();
   if (s) {
     pcm.setName(*s);
   }
-
+  /*
   //callingpoint
   s = modelObject.callingPoint();
   if (s) {
@@ -72,8 +72,9 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelSupply(Gener
   for (const IdfExtensibleGroup& eg : modelObject.extensibleGroups()) {
     pcm.pushExtensibleGroup(eg.fields());
   }
-  return pcm;
   */
+  return pcm;
+ 
 }
 
 } // energyplus

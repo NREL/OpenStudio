@@ -31,6 +31,8 @@
 
 #include "Connection.hpp"
 #include "Connection_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
 #include "CurveCubic.hpp"
 #include "CurveCubic_Impl.hpp"
 #include "CurveQuadratic.hpp"
@@ -85,8 +87,8 @@ namespace detail {
     return GeneratorFuelCellAirSupply::iddObjectType();
   }
 
-  boost::optional<Connection> GeneratorFuelCellAirSupply_Impl::airInletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_Generator_FuelCell_AirSupplyFields::AirInletNodeName);
+  boost::optional<Node> GeneratorFuelCellAirSupply_Impl::airInletNode() const {
+    return getObject<ModelObject>().getModelObjectTarget<Node>(OS_Generator_FuelCell_AirSupplyFields::AirInletNodeName);
   }
 
   boost::optional<CurveCubic> GeneratorFuelCellAirSupply_Impl::blowerPowerCurve() const {
@@ -151,7 +153,7 @@ namespace detail {
     return value.get();
   }
 
-  bool GeneratorFuelCellAirSupply_Impl::setAirInletNode(const Connection& connection) {
+  bool GeneratorFuelCellAirSupply_Impl::setAirInletNode(const Node& connection) {
     bool result = setPointer(OS_Generator_FuelCell_AirSupplyFields::AirInletNodeName, connection.handle());
     return result;
   }
@@ -295,7 +297,7 @@ namespace detail {
 } // detail
 
 GeneratorFuelCellAirSupply::GeneratorFuelCellAirSupply(const Model& model,
-                                                       const Connection& airInletNode,
+                                                       const Node& airInletNode,
                                                        const CurveQuadratic& electricPowerCurve,
                                                        const CurveQuadratic& fuelRateCurve,
                                                        const CurveCubic& blowerPowerCurve)
@@ -330,7 +332,7 @@ GeneratorFuelCellAirSupply::GeneratorFuelCellAirSupply(const Model& model,
 }
 
 GeneratorFuelCellAirSupply::GeneratorFuelCellAirSupply(const Model& model, 
-                                                       const Connection& airInletNode,
+                                                       const Node& airInletNode,
                                                        const CurveQuadratic& electricPowerCurve,
                                                        const CurveQuadratic& fuelRateCurve)
   : ModelObject(GeneratorFuelCellAirSupply::iddObjectType(), model) {
@@ -381,7 +383,7 @@ GeneratorFuelCellAirSupply::GeneratorFuelCellAirSupply(const Model& model,
 }
 
 GeneratorFuelCellAirSupply::GeneratorFuelCellAirSupply(const Model& model,
-  const Connection& airInletNode)
+  const Node& airInletNode)
   : ModelObject(GeneratorFuelCellAirSupply::iddObjectType(), model) {
   OS_ASSERT(getImpl<detail::GeneratorFuelCellAirSupply_Impl>());
 
@@ -481,7 +483,7 @@ std::vector<std::string> GeneratorFuelCellAirSupply::airSupplyConstituentModeVal
                         OS_Generator_FuelCell_AirSupplyFields::AirSupplyConstituentMode);
 }
 
-boost::optional<Connection> GeneratorFuelCellAirSupply::airInletNode() const {
+boost::optional<Node> GeneratorFuelCellAirSupply::airInletNode() const {
   return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->airInletNode();
 }
 
@@ -525,7 +527,7 @@ double GeneratorFuelCellAirSupply::numberofUserDefinedConstituents() const {
   return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->numberofUserDefinedConstituents();
 }
 
-bool GeneratorFuelCellAirSupply::setAirInletNode(const Connection& connection) {
+bool GeneratorFuelCellAirSupply::setAirInletNode(const Node& connection) {
   return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->setAirInletNode(connection);
 }
 

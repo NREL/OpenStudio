@@ -31,6 +31,8 @@
 
 #include "Connection.hpp"
 #include "Connection_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
 #include "Model.hpp"
 #include "Model_Impl.hpp"
 #include "Schedule.hpp"
@@ -114,8 +116,8 @@ namespace detail {
     return value.get();
   }
 
-  boost::optional<Connection> GeneratorFuelSupply_Impl::fuelTemperatureReferenceNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_Generator_FuelSupplyFields::FuelTemperatureReferenceNodeName);
+  boost::optional<Node> GeneratorFuelSupply_Impl::fuelTemperatureReferenceNode() const {
+    return getObject<ModelObject>().getModelObjectTarget<Node>(OS_Generator_FuelSupplyFields::FuelTemperatureReferenceNodeName);
   }
 
   boost::optional<Schedule> GeneratorFuelSupply_Impl::fuelTemperatureSchedule() const {
@@ -201,7 +203,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool GeneratorFuelSupply_Impl::setFuelTemperatureReferenceNode(const Connection& connection) {
+  bool GeneratorFuelSupply_Impl::setFuelTemperatureReferenceNode(const Node& connection) {
     bool result = setPointer(OS_Generator_FuelSupplyFields::FuelTemperatureReferenceNodeName, connection.handle());
     return result;
   }
@@ -438,7 +440,7 @@ std::string GeneratorFuelSupply::fuelTemperatureModelingMode() const {
   return getImpl<detail::GeneratorFuelSupply_Impl>()->fuelTemperatureModelingMode();
 }
 
-boost::optional<Connection> GeneratorFuelSupply::fuelTemperatureReferenceNode() const {
+boost::optional<Node> GeneratorFuelSupply::fuelTemperatureReferenceNode() const {
   return getImpl<detail::GeneratorFuelSupply_Impl>()->fuelTemperatureReferenceNode();
 }
 
@@ -486,7 +488,7 @@ void GeneratorFuelSupply::resetFuelTemperatureModelingMode() {
   getImpl<detail::GeneratorFuelSupply_Impl>()->resetFuelTemperatureModelingMode();
 }
 
-bool GeneratorFuelSupply::setFuelTemperatureReferenceNode(const Connection& connection) {
+bool GeneratorFuelSupply::setFuelTemperatureReferenceNode(const Node& connection) {
   return getImpl<detail::GeneratorFuelSupply_Impl>()->setFuelTemperatureReferenceNode(connection);
 }
 

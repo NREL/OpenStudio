@@ -37,6 +37,8 @@
 #include "CurveQuadratic_Impl.hpp"
 #include "Connection.hpp"
 #include "Connection_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
 #include "ScheduleConstant.hpp"
@@ -136,8 +138,8 @@ namespace detail {
     return value.get();
   }
 
-  boost::optional<Connection> GeneratorFuelCellWaterSupply_Impl::waterTemperatureReferenceNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_Generator_FuelCell_WaterSupplyFields::WaterTemperatureReferenceNodeName);
+  boost::optional<Node> GeneratorFuelCellWaterSupply_Impl::waterTemperatureReferenceNode() const {
+    return getObject<ModelObject>().getModelObjectTarget<Node>(OS_Generator_FuelCell_WaterSupplyFields::WaterTemperatureReferenceNodeName);
   }
 
   boost::optional<Schedule> GeneratorFuelCellWaterSupply_Impl::waterTemperatureSchedule() const {
@@ -202,7 +204,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool GeneratorFuelCellWaterSupply_Impl::setWaterTemperatureReferenceNode(const Connection& connection) {
+  bool GeneratorFuelCellWaterSupply_Impl::setWaterTemperatureReferenceNode(const Node& connection) {
     bool result = setPointer(OS_Generator_FuelCell_WaterSupplyFields::WaterTemperatureReferenceNodeName, connection.handle());
     return result;
   }
@@ -230,7 +232,7 @@ namespace detail {
 GeneratorFuelCellWaterSupply::GeneratorFuelCellWaterSupply(const Model& model,
   const CurveQuadratic& flowRateCurve,
   const CurveCubic& pumpPowerCurve,
-  const Connection& waterTempNode,
+  const Node& waterTempNode,
   const std::string& waterTempMode)
   : ModelObject(GeneratorFuelCellWaterSupply::iddObjectType(), model) {
   OS_ASSERT(getImpl<detail::GeneratorFuelCellWaterSupply_Impl>());
@@ -349,7 +351,7 @@ std::string GeneratorFuelCellWaterSupply::waterTemperatureModelingMode() const {
   return getImpl<detail::GeneratorFuelCellWaterSupply_Impl>()->waterTemperatureModelingMode();
 }
 
-boost::optional<Connection> GeneratorFuelCellWaterSupply::waterTemperatureReferenceNode() const {
+boost::optional<Node> GeneratorFuelCellWaterSupply::waterTemperatureReferenceNode() const {
   return getImpl<detail::GeneratorFuelCellWaterSupply_Impl>()->waterTemperatureReferenceNode();
 }
 
@@ -389,7 +391,7 @@ void GeneratorFuelCellWaterSupply::resetWaterTemperatureModelingMode() {
   getImpl<detail::GeneratorFuelCellWaterSupply_Impl>()->resetWaterTemperatureModelingMode();
 }
 
-bool GeneratorFuelCellWaterSupply::setWaterTemperatureReferenceNode(const Connection& connection) {
+bool GeneratorFuelCellWaterSupply::setWaterTemperatureReferenceNode(const Node& connection) {
   return getImpl<detail::GeneratorFuelCellWaterSupply_Impl>()->setWaterTemperatureReferenceNode(connection);
 }
 

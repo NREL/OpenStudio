@@ -40,6 +40,10 @@
 #include "../../model/GeneratorFuelSupply_Impl.hpp"
 #include "../../model/CurveQuadratic.hpp"
 #include "../../model/CurveQuadratic_Impl.hpp"
+#include "../../model/CurveCubic.hpp"
+#include "../../model/CurveCubic_Impl.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/Node_Impl.hpp"
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
@@ -59,26 +63,105 @@ namespace energyplus {
 boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellAirSupply(GeneratorFuelCellAirSupply & modelObject)
 {
   boost::optional<std::string> s;
-  /*
-  IdfObject pcm = createAndRegisterIdfObject(openstudio::IddObjectType::EnergyManagementSystem_ProgramCallingManager, modelObject);
+  boost::optional<double> d;
+  //boost::optional<Node> node;
+  boost::optional<CurveCubic> curve;
+  boost::optional<CurveQuadratic> curvequad;
+  std::vector< std::pair<std::string, std::string> > constituents;
+  
+  IdfObject pcm = createAndRegisterIdfObject(openstudio::IddObjectType::Generator_FuelCell_AirSupply, modelObject);
   //Name
   s = modelObject.name();
   if (s) {
     pcm.setName(*s);
   }
-
-  //callingpoint
-  s = modelObject.callingPoint();
-  if (s) {
-    pcm.setString(EnergyManagementSystem_ProgramCallingManagerFields::EnergyPlusModelCallingPoint, s.get());
+  /*
+  //AirInletNodeName //TODO Node or Connection??
+  node = modelObject.airInletNode();
+  if (node) {
+    pcm.setString(Generator_FuelCell_AirSupplyFields::AirInletNodeName, node.get().nameString());
+  } else {
+    pcm.setString(Generator_FuelCell_AirSupplyFields::AirInletNodeName, "");
   }
- 
-  //program names
-  for (const IdfExtensibleGroup& eg : modelObject.extensibleGroups()) {
-    pcm.pushExtensibleGroup(eg.fields());
-  }
-  return pcm;
   */
+  //blowerPowerCurve
+  curve = modelObject.blowerPowerCurve();
+  if (curve) {
+    pcm.setString(Generator_FuelCell_AirSupplyFields::BlowerPowerCurveName, curve.get().nameString());
+  } else {
+    pcm.setString(Generator_FuelCell_AirSupplyFields::BlowerPowerCurveName, "");
+  }
+
+  //BlowerHeatLossFactor
+  d = modelObject.blowerHeatLossFactor();
+  if (d) {
+    pcm.setDouble(Generator_FuelCell_AirSupplyFields::BlowerHeatLossFactor, d.get());
+  }
+
+  //AirSupplyRateCalculationMode
+  s = modelObject.airSupplyRateCalculationMode();
+  if (s) {
+    pcm.setString(Generator_FuelCell_AirSupplyFields::AirSupplyRateCalculationMode, s.get());
+  }
+
+  //StoichiometricRatio
+  d = modelObject.stoichiometricRatio();
+  if (d) {
+    pcm.setDouble(Generator_FuelCell_AirSupplyFields::StoichiometricRatio, d.get());
+  }
+
+  //AirRateFunctionofElectricPowerCurveName
+  curvequad = modelObject.airRateFunctionofElectricPowerCurve();
+  if (curvequad) {
+    pcm.setString(Generator_FuelCell_AirSupplyFields::AirRateFunctionofElectricPowerCurveName, curvequad.get().nameString());
+  } else {
+    pcm.setString(Generator_FuelCell_AirSupplyFields::AirRateFunctionofElectricPowerCurveName, "");
+  }
+
+  //AirRateAirTemperatureCoefficient
+  d = modelObject.airRateAirTemperatureCoefficient();
+  if (d) {
+    pcm.setDouble(Generator_FuelCell_AirSupplyFields::AirRateAirTemperatureCoefficient, d.get());
+  }
+
+  //AirRateFunctionofElectricPowerCurveName
+  curvequad = modelObject.airRateFunctionofElectricPowerCurve();
+  if (curvequad) {
+    pcm.setString(Generator_FuelCell_AirSupplyFields::AirRateFunctionofElectricPowerCurveName, curvequad.get().nameString());
+  } else {
+    pcm.setString(Generator_FuelCell_AirSupplyFields::AirRateFunctionofElectricPowerCurveName, "");
+  }
+
+  //AirIntakeHeatRecoveryMode
+  s = modelObject.airIntakeHeatRecoveryMode();
+  if (s) {
+    pcm.setString(Generator_FuelCell_AirSupplyFields::AirIntakeHeatRecoveryMode, s.get());
+  }
+
+  //AirSupplyConstituentMode
+  s = modelObject.airSupplyConstituentMode();
+  if (s) {
+    pcm.setString(Generator_FuelCell_AirSupplyFields::AirSupplyConstituentMode, s.get());
+  }
+
+  //UserDefinedConstituents
+  constituents = modelObject.constituents();
+  if (!constituents.empty()) {
+    for (auto constituent : constituents) {
+      auto eg = pcm.pushExtensibleGroup();
+      eg.setString(Generator_FuelCell_AirSupplyExtensibleFields::ConstituentName, constituent.first);
+      eg.setString(Generator_FuelCell_AirSupplyExtensibleFields::MolarFraction, constituent.second);
+    }
+  }
+
+  //NumberofUserDefinedConstituents
+  d = constituents.size();
+  if (d) {
+    pcm.setDouble(Generator_FuelCell_AirSupplyFields::NumberofUserDefinedConstituents, d.get());
+  }
+
+  return pcm;
+  
 }
 
 } // energyplus

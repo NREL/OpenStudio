@@ -36,7 +36,7 @@ namespace openstudio {
 namespace model {
 
 // TODO: Check the following class names against object getters and setters.
-class Connection;
+//class Connection;
 class Schedule;
 class CurveCubic;
 
@@ -88,7 +88,7 @@ namespace detail {
 
     std::string fuelTemperatureModelingMode() const;
 
-    boost::optional<Connection> fuelTemperatureReferenceNode() const;
+    boost::optional<Node> fuelTemperatureReferenceNode() const;
 
     boost::optional<Schedule> fuelTemperatureSchedule() const;
 
@@ -116,7 +116,7 @@ namespace detail {
 
     void resetFuelTemperatureModelingMode();
 
-    bool setFuelTemperatureReferenceNode(const Connection& connection);
+    bool setFuelTemperatureReferenceNode(const Node& connection);
 
     void resetFuelTemperatureReferenceNode();
 

@@ -41,26 +41,59 @@ namespace energyplus {
 boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellElectricalStorage(GeneratorFuelCellElectricalStorage & modelObject)
 {
   boost::optional<std::string> s;
-  /*
-  IdfObject pcm = createAndRegisterIdfObject(openstudio::IddObjectType::EnergyManagementSystem_ProgramCallingManager, modelObject);
+  boost::optional<double> d;
+  
+  IdfObject pcm = createAndRegisterIdfObject(openstudio::IddObjectType::Generator_FuelCell_ElectricalStorage, modelObject);
   //Name
   s = modelObject.name();
   if (s) {
     pcm.setName(*s);
   }
 
-  //callingpoint
-  s = modelObject.callingPoint();
+  //ChoiceofModel
+  s = modelObject.choiceofModel();
   if (s) {
-    pcm.setString(EnergyManagementSystem_ProgramCallingManagerFields::EnergyPlusModelCallingPoint, s.get());
+    pcm.setString(Generator_FuelCell_ElectricalStorageFields::ChoiceofModel, s.get());
   }
- 
-  //program names
-  for (const IdfExtensibleGroup& eg : modelObject.extensibleGroups()) {
-    pcm.pushExtensibleGroup(eg.fields());
+
+  //NominalChargingEnergeticEfficiency
+  d = modelObject.nominalChargingEnergeticEfficiency();
+  if (d) {
+    pcm.setDouble(Generator_FuelCell_ElectricalStorageFields::NominalChargingEnergeticEfficiency, d.get());
   }
+
+  //NominalDischargingEnergeticEfficiency
+  d = modelObject.nominalDischargingEnergeticEfficiency();
+  if (d) {
+    pcm.setDouble(Generator_FuelCell_ElectricalStorageFields::NominalDischargingEnergeticEfficiency, d.get());
+  }
+
+  //SimpleMaximumCapacity
+  d = modelObject.simpleMaximumCapacity();
+  if (d) {
+    pcm.setDouble(Generator_FuelCell_ElectricalStorageFields::SimpleMaximumCapacity, d.get());
+  }
+
+  //SimpleMaximumPowerDraw
+  d = modelObject.simpleMaximumPowerDraw();
+  if (d) {
+    pcm.setDouble(Generator_FuelCell_ElectricalStorageFields::SimpleMaximumPowerDraw, d.get());
+  }
+
+  //SimpleMaximumPowerStore
+  d = modelObject.simpleMaximumPowerStore();
+  if (d) {
+    pcm.setDouble(Generator_FuelCell_ElectricalStorageFields::SimpleMaximumPowerStore, d.get());
+  }
+
+  //InitialChargeState
+  d = modelObject.initialChargeState();
+  if (d) {
+    pcm.setDouble(Generator_FuelCell_ElectricalStorageFields::InitialChargeState, d.get());
+  }
+
   return pcm;
-  */
+  
 }
 
 } // energyplus
