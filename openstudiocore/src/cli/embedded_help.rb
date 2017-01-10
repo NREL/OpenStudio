@@ -18,9 +18,9 @@ module Kernel
   # ":" is our root path to the embedded file system
   # make sure it is in the ruby load path
   $LOAD_PATH << ':'
-  $LOAD_PATH << ':/ruby/2.0.0'
-  $LOAD_PATH << ':/ruby/2.0.0/x86_64-darwin13.4.0'
-  $LOAD_PATH << ':/ruby/2.0.0/x64-mswin64_120'
+  $LOAD_PATH << ':/ruby/2.2.0'
+  $LOAD_PATH << ':/ruby/2.2.0/x86_64-darwin15'
+  $LOAD_PATH << ':/ruby/2.2.0/x64-mswin64_120'
   $LOAD_PATH << EmbeddedScripting::findFirstFileByName('openstudio-standards.rb').gsub('/openstudio-standards.rb', '')
   $LOAD_PATH << EmbeddedScripting::findFirstFileByName('openstudio-workflow.rb').gsub('/openstudio-workflow.rb', '')
   $LOADED = []
