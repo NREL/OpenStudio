@@ -71,3 +71,48 @@ index 98ffffd..39c5265 100644
 +tk
 +win32ole
 +zlib
+diff --git a/load.c b/load.c
+index bf5d9cf..c4d8d5b 100644
+--- a/load.c
++++ b/load.c
+@@ -9,6 +9,9 @@
+ #include "probes.h"
+ #include "node.h"
+ 
++int rb_hasFile(const char *t_filename);
++int rb_require_embedded(const char *t_filename);
++
+ VALUE ruby_dln_librefs;
+ 
+ #define IS_RBEXT(e) (strcmp((e), ".rb") == 0)
+@@ -1075,9 +1078,13 @@ rb_require_safe(VALUE fname, int safe)
+ VALUE
+ rb_require(const char *fname)
+ {
++  if( rb_hasFile(fname) ) {
++    return rb_require_embedded(fname);
++  } else {
+     VALUE fn = rb_str_new2(fname);
+     OBJ_FREEZE(fn);
+     return rb_require_safe(fn, rb_safe_level());
++  }
+ }
+ 
+ static int
+diff --git a/main.c b/main.c
+index 16da117..c3146a4 100644
+--- a/main.c
++++ b/main.c
+@@ -36,3 +36,12 @@ main(int argc, char **argv)
+ 	return ruby_run_node(ruby_options(argc, argv));
+     }
+ }
++
++int rb_hasFile(const char *t_filename) {
++  return 0;
++}
++
++int rb_require_embedded(const char *t_filename) {
++  return 0;
++}
++
