@@ -25845,10 +25845,10 @@ OS:Generator:FuelCell:PowerModule,
       \units W
   A8, \field Dilution Inlet Air Node Name
       \type object-list
-      \object-list Node
+      \object-list ConnectionNames
   A9 ,\field Dilution Outlet Air Node Name
       \type object-list
-      \object-list Node
+      \object-list ConnectionNames
   N24, \field Minimum Operating Point
        \units W
   N25; \field Maximum Operating Point
