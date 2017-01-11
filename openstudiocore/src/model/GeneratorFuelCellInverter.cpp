@@ -29,8 +29,6 @@
 #include "GeneratorFuelCellInverter.hpp"
 #include "GeneratorFuelCellInverter_Impl.hpp"
 
-#include "CurveCubic.hpp"
-#include "CurveCubic_Impl.hpp"
 #include "CurveQuadratic.hpp"
 #include "CurveQuadratic_Impl.hpp"
 

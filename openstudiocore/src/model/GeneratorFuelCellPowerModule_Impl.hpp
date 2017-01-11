@@ -35,7 +35,6 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class Curve;
 class ThermalZone;
 class Connection;
@@ -277,10 +276,6 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.model.GeneratorFuelCellPowerModule");
 
-    // TODO: Check the return types of these methods.
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
     boost::optional<Curve> optionalEfficiencyCurve() const;
   };
 

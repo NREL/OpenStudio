@@ -29,8 +29,6 @@
 #include "GeneratorFuelCellAirSupply.hpp"
 #include "GeneratorFuelCellAirSupply_Impl.hpp"
 
-#include "Connection.hpp"
-#include "Connection_Impl.hpp"
 #include "Node.hpp"
 #include "Node_Impl.hpp"
 #include "CurveCubic.hpp"
@@ -422,9 +420,8 @@ GeneratorFuelCellAirSupply::GeneratorFuelCellAirSupply(const Model& model,
 GeneratorFuelCellAirSupply::GeneratorFuelCellAirSupply(const Model& model)
   : ModelObject(GeneratorFuelCellAirSupply::iddObjectType(),model)
 {
-  OS_ASSERT(getImpl<detail::GeneratorFuelCellAirSupply_Impl>());
-  //TODO
-  //setAirInletNode();
+  OS_ASSERT(getImpl<detail::GeneratorFuelCellAirSupply_Impl>()); 
+  //setAirInletNode();  //A new OA node is created on Forward Translation if one is not set, so this method can be left blank
   CurveCubic curveCubic(model);
   curveCubic.setCoefficient1Constant(0);
   curveCubic.setCoefficient2x(0);

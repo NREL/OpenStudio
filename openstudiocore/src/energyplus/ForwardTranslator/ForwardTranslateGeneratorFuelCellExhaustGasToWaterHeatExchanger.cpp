@@ -25,8 +25,6 @@
 
 #include "../../model/Connection.hpp"
 #include "../../model/Connection_Impl.hpp"
-//#include "../../model/Node.hpp"
-//#include "../../model/Node_Impl.hpp"
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 

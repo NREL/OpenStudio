@@ -29,8 +29,6 @@
 #include "GeneratorFuelSupply.hpp"
 #include "GeneratorFuelSupply_Impl.hpp"
 
-#include "Connection.hpp"
-#include "Connection_Impl.hpp"
 #include "Node.hpp"
 #include "Node_Impl.hpp"
 #include "Model.hpp"
@@ -41,8 +39,6 @@
 #include "ScheduleConstant_Impl.hpp"
 #include "CurveCubic.hpp"
 #include "CurveCubic_Impl.hpp"
-#include "CurveQuadratic.hpp"
-#include "CurveQuadratic_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
 
@@ -97,7 +93,6 @@ namespace detail {
 
   std::vector<ScheduleTypeKey> GeneratorFuelSupply_Impl::getScheduleTypeKeys(const Schedule& schedule) const
   {
-    // TODO: Check schedule display names.
     std::vector<ScheduleTypeKey> result;
     UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
     UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());

@@ -31,14 +31,11 @@
 
 #include <model/ModelAPI.hpp>
 #include "ModelObject.hpp"
-#include "ThermalZone.hpp"
-#include "ThermalZone_Impl.hpp"
 
 namespace openstudio {
 
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class Curve;
 class ThermalZone;
 class Connection;

@@ -31,17 +31,14 @@
 
 #include <model/ModelAPI.hpp>
 #include "ModelObject.hpp"
-#include "Node.hpp"
-#include "Node_Impl.hpp"
 
 namespace openstudio {
 
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class CurveQuadratic;
 class CurveCubic;
-//class Connection;
+class Node;
 class Schedule;
 
 namespace detail {

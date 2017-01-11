@@ -81,8 +81,12 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellAirSuppl
   if (node) {
     pcm.setString(Generator_FuelCell_AirSupplyFields::AirInletNodeName, node.get().nameString());
   } else {
-    //TODO create OA node
-    pcm.setString(Generator_FuelCell_AirSupplyFields::AirInletNodeName, "");
+    auto name = modelObject.name().get() + " OA Node";
+    IdfObject oaNodeListIdf(openstudio::IddObjectType::OutdoorAir_NodeList);
+    oaNodeListIdf.setString(0, name);
+    m_idfObjects.push_back(oaNodeListIdf);
+
+    pcm.setString(openstudio::Generator_FuelCell_AirSupplyFields::AirInletNodeName, name);
   }
 
   //blowerPowerCurve
