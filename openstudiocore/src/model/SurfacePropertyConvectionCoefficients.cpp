@@ -88,14 +88,7 @@ namespace detail {
   }
 
   bool SurfacePropertyConvectionCoefficients_Impl::setSurface(const ModelObject &surface) {
-    IddObjectType iddType(surface.iddObjectType());
-    if (iddType == IddObjectType::OS_InternalMass || iddType == IddObjectType::OS_Surface || iddType == IddObjectType::OS_SubSurface) {
-      const boost::optional<std::string> surfaceName(surface.name());
-      OS_ASSERT(surfaceName);
-      return setString(OS_SurfaceProperty_ConvectionCoefficientsFields::SurfaceName, *surfaceName);
-    } else {
-      return false;
-    }
+    return setPointer(OS_SurfaceProperty_ConvectionCoefficientsFields::SurfaceName, surface.handle());
   }
 
   ModelObject SurfacePropertyConvectionCoefficients_Impl::surfaceAsModelObject() const {

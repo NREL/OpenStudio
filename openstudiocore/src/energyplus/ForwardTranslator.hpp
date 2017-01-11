@@ -322,6 +322,7 @@ class SpaceType;
 class SteamEquipment;
 class SubSurface;
 class Surface;
+class SurfacePropertyConvectionCoefficients;
 class SurfacePropertyConvectionCoefficientsMultipleSurface;
 class SurfacePropertyOtherSideCoefficients;
 class SurfacePropertyOtherSideConditionsModel;
@@ -1005,6 +1006,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateSubSurface( model::SubSurface & modelObject );
 
   boost::optional<IdfObject> translateSurface( model::Surface & modelObject );
+
+  boost::optional<IdfObject> translateSurfacePropertyConvectionCoefficients(model::SurfacePropertyConvectionCoefficients & modelObject);
 
   boost::optional<IdfObject> translateSurfacePropertyConvectionCoefficientsMultipleSurface(model::SurfacePropertyConvectionCoefficientsMultipleSurface & modelObject);
 
