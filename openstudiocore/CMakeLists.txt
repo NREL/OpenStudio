@@ -670,80 +670,6 @@ if(BUILD_PYTHON_BINDINGS)
   set(ALL_PYTHON_WRAPPER_TARGETS "") # global list targets that build generated wrapper cxx files
 endif()
 
-# Doxygen
-if(BUILD_DOCUMENTATION)
-  # need doxygen
-  find_package(Doxygen REQUIRED)
-
-  # if have dot you have more options
-  #if(DOXYGEN_DOT_FOUND)
-
-  #endif()
-
-  configure_file(${CMAKE_SOURCE_DIR}/doc/index.html ${CMAKE_BINARY_DIR}/doc/index.html COPYONLY)
-
-  set(doxygen_directories ${project_directories})
-  # Add the idd files to the documentation list as a separate entry, along with shared_gui_components
-  list(APPEND doxygen_directories utilities/idd shared_gui_components)
-
-  # Remove directories we don't want documentation generated for
-  list(REMOVE_ITEM doxygen_directories generateiddfactory)
-
-  add_custom_target(openstudio_doc_resources
-    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/doc/css" "css"
-    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/doc/fonts" "fonts"
-    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/doc/js" "js"
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/doc
-  )
-
-  foreach(D ${doxygen_directories})
-    string(REPLACE "/" "_" DOC_NAME ${D})
-
-    set(DOXY_INPUT_DIR "\"${CMAKE_SOURCE_DIR}/src/${D}\"")
-    set(DOXY_ADDITIONAL_DIR "")
-    set(DOXY_EXCLUDE_DIR "")
-    set(DOXY_TAGFILES "")
-
-    # Specific settings
-    if(${D} STREQUAL "utilities/idd")
-      # We want to build the idd documentation separately because of the generated files
-      set(DOXY_ADDITIONAL_DIR "\"${CMAKE_BINARY_DIR}/src/${D}\"")
-    elseif(${D} STREQUAL "utilities")
-      # Exclude the idd directory when building the utilities documentation
-      set(DOXY_EXCLUDE_DIR "\"${CMAKE_SOURCE_DIR}/src/utilities/idd\"")
-      set(DOXY_TAGFILES "utilities_idd/utilities_idd.tag=../../utilities_idd/html")
-    elseif(${D} STREQUAL "model")
-      set(DOXY_TAGFILES "utilities_idd/utilities_idd.tag=../../utilities_idd/html utilities/utilities.tag=../../utilities/html")
-    endif()
-    configure_file(${CMAKE_SOURCE_DIR}/Doxyfile.in ${CMAKE_BINARY_DIR}/doc/${DOC_NAME}.cfg)
-
-    add_custom_target(openstudio_${DOC_NAME}_doc
-      COMMAND ${CMAKE_COMMAND} -E remove_directory "${DOC_NAME}"
-      COMMAND ${CMAKE_COMMAND} -E make_directory "${DOC_NAME}"
-      COMMAND ${DOXYGEN_EXECUTABLE} ${DOC_NAME}.cfg
-      COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/doc/search" "${DOC_NAME}/html/search"
-      COMMAND ${PATCH_EXE} "${DOC_NAME}/html/search/search.js" < "${CMAKE_SOURCE_DIR}/doc/patch/search.js.patch"
-      DEPENDS openstudio_doc_resources
-      WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/doc
-    )
-
-    set(ALL_CPP_DOC_TARGETS ${ALL_CPP_DOC_TARGETS}
-      openstudio_${DOC_NAME}_doc
-    )
-
-  endforeach()
-
-  # Set up dependencies after all targets have been created
-  add_dependencies(openstudio_utilities_doc
-    openstudio_utilities_idd_doc
-  )
-  add_dependencies(openstudio_model_doc
-    openstudio_utilities_doc
-    openstudio_utilities_idd_doc
-  )
-
-
-endif()
 
 # Required dependencies
 
@@ -1457,6 +1383,83 @@ mark_as_advanced(MAXIMIZE_CPU_USAGE)
 
 ###############################################################################
 # Targets that combine all documentation targets
+
+# Doxygen
+if(BUILD_DOCUMENTATION)
+  # need doxygen
+  find_package(Doxygen REQUIRED)
+
+  # if have dot you have more options
+  #if(DOXYGEN_DOT_FOUND)
+
+  #endif()
+
+  configure_file(${CMAKE_SOURCE_DIR}/doc/index.html ${CMAKE_BINARY_DIR}/doc/index.html COPYONLY)
+
+  set(doxygen_directories ${project_directories})
+  # Add the idd files to the documentation list as a separate entry, along with shared_gui_components
+  list(APPEND doxygen_directories utilities/idd shared_gui_components)
+
+  # Remove directories we don't want documentation generated for
+  list(REMOVE_ITEM doxygen_directories generateiddfactory)
+
+  add_custom_target(openstudio_doc_resources
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/doc/css" "css"
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/doc/fonts" "fonts"
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/doc/js" "js"
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/doc
+  )
+
+  foreach(D ${doxygen_directories})
+    string(REPLACE "/" "_" DOC_NAME ${D})
+
+    set(DOXY_INPUT_DIR "\"${CMAKE_SOURCE_DIR}/src/${D}\"")
+    set(DOXY_ADDITIONAL_DIR "")
+    set(DOXY_EXCLUDE_DIR "")
+    set(DOXY_TAGFILES "")
+
+    
+    # Specific settings
+    if(${D} STREQUAL "utilities/idd")
+      # We want to build the idd documentation separately because of the generated files
+      set(DOXY_ADDITIONAL_DIR "\"${CMAKE_BINARY_DIR}/src/${D}\"")
+    elseif(${D} STREQUAL "utilities")
+      # Exclude the idd directory when building the utilities documentation
+      set(DOXY_EXCLUDE_DIR "\"${CMAKE_SOURCE_DIR}/src/utilities/idd\"")
+      set(DOXY_TAGFILES "utilities_idd/utilities_idd.tag=../../utilities_idd/html")
+    elseif(${D} STREQUAL "model")
+      set(DOXY_TAGFILES "utilities_idd/utilities_idd.tag=../../utilities_idd/html utilities/utilities.tag=../../utilities/html")
+    endif()
+    configure_file(${CMAKE_SOURCE_DIR}/Doxyfile.in ${CMAKE_BINARY_DIR}/doc/${DOC_NAME}.cfg)
+
+    add_custom_target(openstudio_${DOC_NAME}_doc
+      COMMAND ${CMAKE_COMMAND} -E remove_directory "${DOC_NAME}"
+      COMMAND ${CMAKE_COMMAND} -E make_directory "${DOC_NAME}"
+      COMMAND ${DOXYGEN_EXECUTABLE} ${DOC_NAME}.cfg
+      COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/doc/search" "${DOC_NAME}/html/search"
+      COMMAND ${PATCH_EXE} "${DOC_NAME}/html/search/search.js" < "${CMAKE_SOURCE_DIR}/doc/patch/search.js.patch"
+      DEPENDS openstudio_doc_resources
+      WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/doc
+    )
+
+    set(ALL_CPP_DOC_TARGETS ${ALL_CPP_DOC_TARGETS}
+      openstudio_${DOC_NAME}_doc
+    )
+
+  endforeach()
+
+  # Set up dependencies after all targets have been created
+  add_dependencies(openstudio_utilities_doc
+    openstudio_utilities_idd_doc
+  )
+  add_dependencies(openstudio_model_doc
+    openstudio_utilities_doc
+    openstudio_utilities_idd_doc
+  )
+
+endif()
+
+
 if(BUILD_DOCUMENTATION)
 
   add_custom_target(ALL_DOXYGEN)
