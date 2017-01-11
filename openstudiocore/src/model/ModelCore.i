@@ -71,8 +71,8 @@
 %template(OptionalComponent) boost::optional<openstudio::model::Component>;
 %ignore std::vector<openstudio::model::Relationship>::vector(size_type);
 %ignore std::vector<openstudio::model::Relationship>::resize(size_type);
-%template(RelationshipVector) std::vector<openstudio::model::Relationship>;
-%template(OptionalRelationship) boost::optional<openstudio::model::Relationship>;
+// %template(RelationshipVector) std::vector<openstudio::model::Relationship>;
+// %template(OptionalRelationship) boost::optional<openstudio::model::Relationship>;
 
 // ignore visitor for now.
 %ignore openstudio::model::ModelObject::accept;
@@ -100,7 +100,8 @@
 %include <model/Model.hpp>
 %include <model/ModelExtensibleGroup.hpp>
 %include <model/Component.hpp>
-%include <model/Relationship.hpp>
+// %include <model/Relationship.hpp>
+%include <model/FileOperations.hpp>
 
 namespace openstudio {
 namespace model {

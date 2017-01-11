@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -27,6 +27,7 @@
  **********************************************************************************************************************/
 
 #include "EnergyPlusAPI.hpp"
+#include <src/energyplus/embedded_files.hxx>
 
 #include "ForwardTranslator.hpp"
 
@@ -60,6 +61,7 @@
 #include "../utilities/idf/WorkspaceObjectOrder.hpp"
 #include "../utilities/core/Logger.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/FilesystemHelpers.hpp"
 #include "../utilities/geometry/BoundingBox.hpp"
 #include "../utilities/time/Time.hpp"
 #include "../utilities/plot/ProgressBar.hpp"
@@ -79,7 +81,6 @@
 #include "../utilities/idd/IddEnums.hpp"
 
 #include <QFile>
-#include <QTextStream>
 #include <QThread>
 
 #include <sstream>
@@ -2684,8 +2685,9 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     }
   case openstudio::IddObjectType::OS_ZoneCapacitanceMultiplier_ResearchSpecial :
     {
-      // no-op
-      return retVal;
+      model::ZoneCapacitanceMultiplierResearchSpecial mo = modelObject.cast<ZoneCapacitanceMultiplierResearchSpecial>();
+      retVal = translateZoneCapacitanceMultiplierResearchSpecial(mo);
+      break;
     }
   case openstudio::IddObjectType::OS_ZoneControl_ContaminantController :
     {
@@ -3711,14 +3713,8 @@ IdfObject ForwardTranslator::createRegisterAndNameIdfObject(const IddObjectType&
 }
 
 boost::optional<IdfFile> ForwardTranslator::findIdfFile(const std::string& path) {
-  QFile file(QString().fromStdString(path));
-  bool opened = file.open(QIODevice::ReadOnly | QIODevice::Text);
-  OS_ASSERT(opened);
-
-  QTextStream in(&file);
   std::stringstream ss;
-  ss << in.readAll().toStdString();
-
+  ss << ::energyplus::embedded_files::getFileAsString(path);
   return IdfFile::load(ss, IddFileType::EnergyPlus);
 }
 

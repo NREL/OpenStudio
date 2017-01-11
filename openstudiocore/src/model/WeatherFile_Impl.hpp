@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -45,19 +45,19 @@ namespace detail {
 
   /** WeatherFile_Impl is a ModelObject_Impl that is the implementation class for WeatherFile.*/
   class MODEL_API WeatherFile_Impl : public ModelObject_Impl {
-    Q_OBJECT;
-    Q_PROPERTY(std::string city READ city WRITE setCity);
-    Q_PROPERTY(std::string stateProvinceRegion READ stateProvinceRegion WRITE setStateProvinceRegion);
-    Q_PROPERTY(std::string country READ country WRITE setCountry);
-    Q_PROPERTY(std::string dataSource READ dataSource WRITE setDataSource);
-    Q_PROPERTY(std::string wMONumber READ wMONumber WRITE setWMONumber);
-    Q_PROPERTY(double latitude READ latitude WRITE setLatitude);
-    Q_PROPERTY(double longitude READ longitude WRITE setLongitude);
-    Q_PROPERTY(double timeZone READ timeZone WRITE setTimeZone);
-    Q_PROPERTY(double elevation READ elevation WRITE setElevation RESET resetElevation);
-    Q_PROPERTY(bool isElevationDefaulted READ isElevationDefaulted);
-    Q_PROPERTY(boost::optional<std::string> url READ url);
-    Q_PROPERTY(boost::optional<std::string> checksum READ checksum);
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
    public:
     /** @name Constructors and Destructors */
     //@{

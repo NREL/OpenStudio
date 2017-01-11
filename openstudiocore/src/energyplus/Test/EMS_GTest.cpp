@@ -1,21 +1,30 @@
-/**********************************************************************
-*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
-*  All rights reserved.
-*
-*  This library is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU Lesser General Public
-*  License as published by the Free Software Foundation; either
-*  version 2.1 of the License, or (at your option) any later version.
-*
-*  This library is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*  Lesser General Public License for more details.
-*
-*  You should have received a copy of the GNU Lesser General Public
-*  License along with this library; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-**********************************************************************/
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
+ *
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
+ *
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include <gtest/gtest.h>
 #include "EnergyPlusFixture.hpp"
@@ -27,6 +36,10 @@
 #include "../../model/Model.hpp"
 #include "../../model/Building.hpp"
 #include "../../model/Building_Impl.hpp"
+#include "../../model/Site.hpp"
+#include "../../model/Site_Impl.hpp"
+#include "../../model/WeatherFile.hpp"
+#include "../../model/WeatherFile_Impl.hpp"
 #include "../../model/ThermalZone.hpp"
 #include "../../model/Component.hpp"
 #include "../../model/CFactorUndergroundWallConstruction.hpp"
@@ -405,6 +418,86 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorActuator_EMS) {
   Model model = reverseTranslator.translateWorkspace(inWorkspace);
   model.save(toPath("./EMS_exampleT.osm"), true);
 
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslatorWeatherActuator_EMS) {
+  Model model;
+
+  Building building = model.getUniqueModelObject<Building>();
+
+  ThermalZone zone1(model);
+  ThermalZone zone2(model);
+
+  // weatherFile
+  WeatherFile weatherFile = model.getUniqueModelObject<WeatherFile>();
+  EXPECT_TRUE(model.getOptionalUniqueModelObject<WeatherFile>());
+
+  // add actuator
+  std::string controlType = "Outdoor Dry Bulb";
+  std::string componentType = "Weather Data";
+  EnergyManagementSystemActuator weatherActuator(weatherFile, componentType, controlType);
+  std::string actuatorName = "Weather_Actuator";
+  weatherActuator.setName(actuatorName);
+
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
+  EXPECT_EQ(0u, forwardTranslator.errors().size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
+
+  WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator)[0];
+
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::Name, false));
+  EXPECT_EQ(actuatorName, object.getString(EnergyManagementSystem_ActuatorFields::Name, false).get());
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false));
+  EXPECT_EQ("Environment", object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false).get());
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false));
+  EXPECT_EQ(componentType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false).get());
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false));
+  EXPECT_EQ(controlType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false).get());
+
+  model.save(toPath("./EMS_weatheractuator.osm"), true);
+  workspace.save(toPath("./EMS_weatheractuator.idf"), true);
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslatorWeatherActuator2_EMS) {
+  Model model;
+
+  Building building = model.getUniqueModelObject<Building>();
+
+  ThermalZone zone1(model);
+  ThermalZone zone2(model);
+
+  // get site
+  Site site = model.getUniqueModelObject<Site>();
+  EXPECT_TRUE(model.getOptionalUniqueModelObject<Site>());
+  //OptionalSite oSite = model.getOptionalUniqueModelObject<Site>();
+  //EXPECT_TRUE(oSite);
+
+  // add actuator
+  std::string controlType = "Outdoor Dry Bulb";
+  std::string componentType = "Weather Data";
+  EnergyManagementSystemActuator weatherActuator(site, componentType, controlType);
+  std::string actuatorName = "Weather_Actuator";
+  weatherActuator.setName(actuatorName);
+
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
+  EXPECT_EQ(0u, forwardTranslator.errors().size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
+
+  WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator)[0];
+
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::Name, false));
+  EXPECT_EQ(actuatorName, object.getString(EnergyManagementSystem_ActuatorFields::Name, false).get());
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false));
+  EXPECT_EQ("Environment", object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false).get());
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false));
+  EXPECT_EQ(componentType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false).get());
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false));
+  EXPECT_EQ(controlType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false).get());
+
+  model.save(toPath("./EMS_weatheractuator2.osm"), true);
+  workspace.save(toPath("./EMS_weatheractuator2.idf"), true);
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslatorProgram_EMS) {

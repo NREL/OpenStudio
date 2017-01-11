@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -28,6 +28,7 @@
 
 #include "Application.hpp"
 #include "ApplicationPathHelpers.hpp"
+#include "PathHelpers.hpp"
 #include "String.hpp"
 #include <OpenStudio.hxx>
 
@@ -38,6 +39,8 @@
   #include <QWinWidget>
   #include <Windows.h>
   #include <boost/regex.hpp>
+#else
+  #include <dlfcn.h>
 #endif
 
 #include <iostream>
@@ -52,9 +55,9 @@ ApplicationSingleton::ApplicationSingleton()
 
 ApplicationSingleton::~ApplicationSingleton()
 {
-  if (m_sketchUpWidget){
-    delete m_sketchUpWidget;
-  }
+  //if (m_sketchUpWidget){
+  //  delete m_sketchUpWidget;
+  //}
 
   if (m_qApplication)
   {
@@ -77,23 +80,20 @@ QCoreApplication* ApplicationSingleton::application(bool gui)
       QCoreApplication::setAttribute(Qt::AA_DontUseNativeMenuBar, true);
       QCoreApplication::setAttribute(Qt::AA_MacPluginApplication, true);
 
-      // Add this path for gem case (possibly deprecated)
-      QCoreApplication::addLibraryPath(toQString(getApplicationRunDirectory() / toPath("plugins")));
+      // dir containing the current module, can be openstudio.so or openstudio.exe
+      openstudio::path openstudioDirPath = getOpenStudioModuleDirectory();
 
-      // And for any other random cases (possibly deprecated, applies to super-built Qt on Linux)
-      QCoreApplication::addLibraryPath(toQString(getApplicationRunDirectory().parent_path() / toPath("share/openstudio-" + openStudioVersion() + "/qtplugins")));
-
-      // Make the run path the backup plugin search location
-      QCoreApplication::addLibraryPath(toQString(getApplicationRunDirectory()));
+      // Add the current module path to the backup plugin search location
+      QCoreApplication::addLibraryPath(toQString(openstudioDirPath));
 
       // Make the ruby path the default plugin search location
-#if defined(Q_OS_MAC)
-      openstudio::path p = getApplicationRunDirectory().parent_path().parent_path().parent_path() / toPath("Ruby/openstudio");
-      QCoreApplication::addLibraryPath(toQString(p));
-#elif defined(Q_OS_WIN)
-      openstudio::path p = getApplicationRunDirectory().parent_path() / toPath("Ruby/openstudio");
-      QCoreApplication::addLibraryPath(toQString(p));
-#endif
+//#if defined(Q_OS_MAC)
+//      openstudio::path p = getApplicationRunDirectory().parent_path().parent_path().parent_path() / toPath("Ruby/openstudio");
+//      QCoreApplication::addLibraryPath(toQString(p));
+//#elif defined(Q_OS_WIN)
+//      openstudio::path p = getApplicationRunDirectory().parent_path() / toPath("Ruby/openstudio");
+//      QCoreApplication::addLibraryPath(toQString(p));
+//#endif
 
       static char *argv[] = {nullptr};
       static int argc = sizeof(argv) / sizeof(char*) - 1;

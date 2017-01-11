@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -75,7 +75,7 @@ TEST_F(ModelFixture,CoilHeatingGas) {
   EXPECT_NE(std::find(validFuelTypes.begin(), validFuelTypes.end(), "PropaneGas"), validFuelTypes.end());
   EXPECT_NE(std::find(validFuelTypes.begin(), validFuelTypes.end(), "NaturalGas"), validFuelTypes.end());
   EXPECT_NE(std::find(validFuelTypes.begin(), validFuelTypes.end(), "Diesel"), validFuelTypes.end());
-  EXPECT_EQ(validFuelTypes.size(), 9);
+  EXPECT_EQ(validFuelTypes.size(), 8);
 
 }
 

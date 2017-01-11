@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -37,32 +37,6 @@ ResultsTabController::ResultsTabController()
   : MainTabController(new ResultsTabView("Results Summary", MainTabView::MAIN_TAB))
 {
   m_resultsTabView = static_cast<ResultsTabView *>(mainContentWidget());
-
-  connect(m_resultsTabView, &ResultsTabView::removeResultClicked, this, &ResultsTabController::removeResult);
-
-  connect(m_resultsTabView, &ResultsTabView::importResultClicked, this, &ResultsTabController::importResult);
-}
-
-//void ResultsController::removeResult(model::myModelClass & result)
-void ResultsTabController::removeResult()
-{
-  //result.remove();
-}
-  
-void ResultsTabController::importResult()
-{
-}
-
-void ResultsTabController::resultsGenerated(const openstudio::path &t_sqlFile, const openstudio::path &t_radianceOutputFile)
-{
-  LOG(Debug, "resultsGenerated " << openstudio::toString(t_sqlFile) << " " << openstudio::toString(t_radianceOutputFile));
-  m_resultsTabView->resultsGenerated(t_sqlFile, t_radianceOutputFile);
-}
-
-void ResultsTabController::searchForExistingResults(const openstudio::path &t_runDir)
-{
-  LOG(Debug, "searchForExistingResults " << openstudio::toString(t_runDir));
-  m_resultsTabView->searchForExistingResults(t_runDir);
 }
 
 void ResultsTabController::onUnitSystemChange(bool t_isIP)

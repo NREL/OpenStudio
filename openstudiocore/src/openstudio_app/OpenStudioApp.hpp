@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -57,6 +57,8 @@
 
 #include "../utilities/core/Path.hpp"
 
+#include <QProcess>
+
 #include <vector>
 #include <map>
 
@@ -87,7 +89,7 @@ class OpenStudioApp : public OSAppBase
 
  public:
 
-  OpenStudioApp( int & argc, char ** argv, const QSharedPointer<ruleset::RubyUserScriptInfoGetter> &t_infoGetter);
+  OpenStudioApp( int & argc, char ** argv);
 
   virtual ~OpenStudioApp() {}
 
@@ -100,6 +102,8 @@ class OpenStudioApp : public OSAppBase
   openstudio::model::Model hvacComponentLibrary() const;
 
   openstudio::path resourcesPath() const; 
+
+  openstudio::path openstudioCLIPath() const;
 
   virtual bool notify(QObject* receiver, QEvent* event) override;
 
@@ -139,6 +143,10 @@ class OpenStudioApp : public OSAppBase
 
  private slots:
 
+  void buildCompLibraries();
+
+  void newFromEmptyTemplateSlot( );
+
   void newFromTemplateSlot( NewFromTemplateEnum newFromTemplateEnum );
 
   bool openFromDrag(QString path);
@@ -146,6 +154,12 @@ class OpenStudioApp : public OSAppBase
   bool closeDocument();
 
   void onCloseClicked();
+
+  void measureManagerProcessStateChanged(QProcess::ProcessState newState);
+
+  void measureManagerProcessFinished();
+
+  void startMeasureManagerProcess();
 
  private:
 
@@ -157,8 +171,6 @@ class OpenStudioApp : public OSAppBase
   void import(fileType type);
 
   bool openFile(const QString& fileName, bool restoreTabs = false);
-
-  void buildCompLibraries();
 
   void versionUpdateMessageBox(const osversion::VersionTranslator& translator, bool successful, const QString& fileName, 
       const openstudio::path &tempModelDir);
@@ -173,7 +185,7 @@ class OpenStudioApp : public OSAppBase
 
   void connectOSDocumentSignals();
 
-  QSharedPointer<ruleset::RubyUserScriptInfoGetter> m_infoGetter;
+  QProcess* m_measureManagerProcess;
 
   openstudio::model::Model m_compLibrary;
 

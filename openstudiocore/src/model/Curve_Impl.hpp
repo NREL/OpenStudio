@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -39,8 +39,8 @@ namespace detail {
 
   /** Curve_Impl is a ModelObject_Impl that is the implementation class for Curve. */
   class MODEL_API Curve_Impl : public ResourceObject_Impl {
-    Q_OBJECT;
-    Q_PROPERTY(int numVariables READ numVariables);
+    
+    
    public:
     /** @name Constructors and Destructors */
     //@{

@@ -1,0 +1,50 @@
+#include "embedded_files.hxx"
+
+@BEGIN_NAMESPACE@
+
+namespace embedded_files {
+
+  static const size_t embedded_file_count = @NUMFILES@;
+
+@EMBEDDED_FILE_INCLUDES@
+
+  static const char *embedded_file_names[] = {
+@EMBEDDED_FILE_NAMES@
+  };
+
+  static const size_t embedded_file_lens[] = {
+@EMBEDDED_FILE_LENS@
+  };
+
+  static const uint8_t *embedded_files[] = {
+@EMBEDDED_FILES@
+  };
+  
+  std::vector<std::string> fileNames() {
+    static std::vector<std::string> result;
+    if (result.empty()){
+      result.reserve(embedded_file_count);
+      for (size_t i = 0; i < embedded_file_count; ++i) {
+        result.push_back(std::string(embedded_file_names[i]));
+      }
+    }
+    return result;
+  }
+
+  std::map<std::string, std::pair<size_t, const uint8_t *>> files()
+  {
+    static std::map<std::string, std::pair<size_t, const uint8_t *>> fs;
+    if (fs.empty()){
+      for (size_t i = 0; i < embedded_file_count; ++i) {
+        fs.insert(std::make_pair(std::string(embedded_file_names[i]), 
+                                 std::make_pair(embedded_file_lens[i],
+                                                embedded_files[i])));
+      }
+    }
+    return fs;
+  }
+
+}
+
+@END_NAMESPACE@
+

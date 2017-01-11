@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -45,18 +45,18 @@ namespace detail {
 
   /** GlareSensor_Impl is a SpaceItem_Impl that is the implementation class for GlareSensor.*/
   class MODEL_API GlareSensor_Impl : public SpaceItem_Impl {
-    Q_OBJECT;
-    Q_PROPERTY(double positionXCoordinate READ positionXCoordinate WRITE setPositionXCoordinate);
-    Q_PROPERTY(double positionYCoordinate READ positionYCoordinate WRITE setPositionYCoordinate);
-    Q_PROPERTY(double positionZCoordinate READ positionZCoordinate WRITE setPositionZCoordinate);
-    Q_PROPERTY(double psiRotationAroundXAxis READ psiRotationAroundXAxis WRITE setPsiRotationAroundXAxis RESET resetPsiRotationAroundXAxis);
-    Q_PROPERTY(bool isPsiRotationAroundXAxisDefaulted READ isPsiRotationAroundXAxisDefaulted);
-    Q_PROPERTY(double thetaRotationAroundYAxis READ thetaRotationAroundYAxis WRITE setThetaRotationAroundYAxis RESET resetThetaRotationAroundYAxis);
-    Q_PROPERTY(bool isThetaRotationAroundYAxisDefaulted READ isThetaRotationAroundYAxisDefaulted);
-    Q_PROPERTY(double phiRotationAroundZAxis READ phiRotationAroundZAxis WRITE setPhiRotationAroundZAxis RESET resetPhiRotationAroundZAxis);
-    Q_PROPERTY(bool isPhiRotationAroundZAxisDefaulted READ isPhiRotationAroundZAxisDefaulted);
-    Q_PROPERTY(int numberofGlareViewVectors READ numberofGlareViewVectors WRITE setNumberofGlareViewVectors RESET resetNumberofGlareViewVectors);
-    Q_PROPERTY(boost::optional<double> maximumAllowableDaylightGlareProbability READ maximumAllowableDaylightGlareProbability WRITE setMaximumAllowableDaylightGlareProbability RESET resetMaximumAllowableDaylightGlareProbability);
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
    public:
     /** @name Constructors and Destructors */
     //@{

@@ -1,4 +1,4 @@
-!IDD_Version 1.13.4
+!IDD_Version 2.0.0
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -6150,7 +6150,7 @@ OS:OtherEquipment,
        \type real
        \minimum 0.0
        \default 1.0
-  A6;  \field Fuel Type
+  A6,  \field Fuel Type
        \type choice
        \key None
        \key Electricity
@@ -6167,6 +6167,14 @@ OS:OtherEquipment,
        \key DistrictHeating
        \key DistrictCooling
        \default None
+  A7;  \field End-Use Subcategory
+       \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
+       \note The following special tags will also place the end-use in specific rows in the LEED Summary table
+       \note EAp2-4/5. Performance Rating Method Compliance:
+       \note Fans-Parking Garage, Interior Lighting-Process, Cooking, Industrial Process, Elevators and Escalators.
+       \type alpha
+       \retaincase
+       \default General
 
 OS:SpaceInfiltration:DesignFlowRate,
        \memo Infiltration is specified as a design level which is modified by a Schedule fraction, temperature difference and wind speed:
@@ -10297,6 +10305,7 @@ OS:AirTerminal:SingleDuct:VAV:Reheat,
        \default Normal
        \key Normal
        \key Reverse
+       \key ReverseWithLimits
   N7, \field Maximum Flow per Zone Floor Area During Reheat
        \note Used only when Reheat Coil Object Type = Coil:Heating:Water and Damper Heating Action = Reverse
        \note When autocalculating, the maximum flow per zone is set to 0.002032 m3/s-m2 (0.4 cfm/sqft)
@@ -25568,7 +25577,6 @@ OS:Generator:MicroTurbine:HeatRecovery,
       \units C
  A5 , \field Heat Recovery Water Flow Operating Mode
       \type choice
-      \required-field
       \key PlantControl
       \key InternalControl
       \default PlantControl
@@ -25632,13 +25640,12 @@ OS:Generator:MicroTurbine:HeatRecovery,
       \default 0.0
  N8, \field Maximum Heat Recovery Water Flow Rate
       \type real
-      \required-field
       \units m3/s
       \ip-units gal/min
       \minimum 0.0
       \default 0.0
       \note Eplus defaults to 0 but here it would be moot to have a Heat
-      \note Recovery module with a max flow of 0 so it is a required field
+      \note Recovery module with a max flow of 0 
  N9, \field Maximum Heat Recovery Water Temperature
       \type real
       \units C

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -32,12 +32,12 @@
 #include "../openstudio_lib/OpenStudioAPI.hpp"
 #include "OpenStudioApp.hpp"
 
+#include "../measure/OSArgument.hpp"
+
 #include "../openstudio_lib/MainWindow.hpp"
 #include "../utilities/core/Application.hpp"
-#include "../utilities/core/ApplicationPathHelpers.hpp"
 #include "../utilities/core/FileLogSink.hpp"
 #include "../utilities/bcl/BCLMeasure.hpp"
-#include "../ruleset/OSArgument.hpp"
 #include "../utilities/core/Logger.hpp"
 #include "../utilities/core/String.hpp"
 #include "../utilities/idf/Workspace_Impl.hpp"
@@ -45,6 +45,9 @@
 #include <QAbstractButton>
 #include <QApplication>
 #include <QMessageBox>
+#include <QtPlugin>
+#include <QDir>
+#include <QtGlobal>
 
 #ifdef _WIN32
 #include <Windows.h>
@@ -52,18 +55,30 @@
 
 #define WSAAPI
 #include "../utilities/core/Path.hpp"
-#include "../utilities/core/RubyInterpreter.hpp"
-#include "../ruleset/EmbeddedRubyUserScriptInfoGetter.hpp"
+
+// OS App is linked to the dynamic plugins
+//Q_IMPORT_PLUGIN(QSQLiteDriverPlugin);
+//#if defined(Q_OS_OSX)
+//  Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
+//#elif defined(Q_OS_WIN)
+//  Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin);
+//#elif defined(Q_OS_LINUX)
+//  Q_IMPORT_PLUGIN(QXcbIntegrationPlugin);  
+//#endif
 
 int main(int argc, char *argv[])
 {
-
+  /*
   ruby_sysinit(&argc, &argv);
   {
     RUBY_INIT_STACK;
     ruby_init();
   }
+  */
 
+#ifndef SHARED_OS_LIBS
+  Q_INIT_RESOURCE(openstudio);
+#endif // SHARED_OS_LIBS
 
 #if _DEBUG || (__GNUC__ && !NDEBUG)
 #ifdef _WIN32
@@ -81,28 +96,38 @@ int main(int argc, char *argv[])
   bool cont = true;
   while(cont) {
     cont = false;
-
+    /*
     std::vector<std::string> modules;
     for (const auto& path : openstudio::getOpenStudioBareRubyPaths()){
       modules.push_back(openstudio::toString(path));
     }
-
+    
     //try {
     // Initialize the embedded Ruby interpreter
     std::shared_ptr<openstudio::detail::RubyInterpreter> rubyInterpreter(
         new openstudio::detail::RubyInterpreter(openstudio::getOpenStudioRubyPath(),
           openstudio::getOpenStudioRubyScriptsPath(),
           modules));
+         
+    // Initialize the measure info getter
+    QSharedPointer<openstudio::measure::OSMeasureInfoGetter> infoGetter(
+      new openstudio::measure::EmbeddedRubyMeasureInfoGetter<openstudio::detail::RubyInterpreter>(rubyInterpreter));
+       */
 
-    // Initialize the argument getter
-    QSharedPointer<openstudio::ruleset::RubyUserScriptInfoGetter> infoGetter(
-      new openstudio::ruleset::EmbeddedRubyUserScriptInfoGetter<openstudio::detail::RubyInterpreter>(rubyInterpreter));
+    openstudio::OpenStudioApp app(argc, argv);
+    openstudio::Application::instance().setApplication(&app);
 
     // Make the run path the default plugin search location
-    QCoreApplication::addLibraryPath(openstudio::toQString(openstudio::getApplicationRunDirectory()));
+    QCoreApplication::addLibraryPath(QCoreApplication::applicationDirPath());
 
-    openstudio::OpenStudioApp app(argc, argv, infoGetter);
-    openstudio::Application::instance().setApplication(&app);
+#ifdef Q_OS_DARWIN
+  // Gross but perhaps the simplest way to find the webengine process
+  // Improvements are welcome.
+  auto qtwebengineprocess_path = QCoreApplication::applicationDirPath() + "/QtWebEngineProcess";
+  if( QFile::exists(qtwebengineprocess_path) ) {
+    setenv("QTWEBENGINEPROCESS_PATH", qtwebengineprocess_path.toStdString().c_str(),0);
+  }
+#endif
 
 #if !(_DEBUG || (__GNUC__ && !NDEBUG))
     try {

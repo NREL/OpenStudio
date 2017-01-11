@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -32,7 +32,7 @@
 #include <sstream>
 
 #include <boost/crc.hpp> 
-#include <boost/filesystem/fstream.hpp>
+
 
 namespace openstudio {
 
@@ -90,7 +90,7 @@ namespace openstudio {
   { 
     std::string result = "00000000";
     try{
-      boost::filesystem::ifstream  ifs(p, std::ios_base::binary );
+      openstudio::filesystem::ifstream  ifs(p, std::ios_base::binary );
       if ( ifs ){
         result = checksum(ifs);
       }

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -31,9 +31,10 @@
 
 #include "OSItem.hpp"
 
-#include "../ruleset/OSArgument.hpp"
-#include "../runmanager/lib/RunManager.hpp"
-#include "../runmanager/lib/RubyJobUtils.hpp"
+#include "../measure/OSArgument.hpp"
+#include "../measure/OSMeasureInfoGetter.hpp"
+//#include "../runmanager/lib/RunManager.hpp"
+//#include "../runmanager/lib/RubyJobUtils.hpp"
 
 #include "../utilities/core/Path.hpp"
 
@@ -67,11 +68,11 @@ class ScriptItem : public OSItem {
 
   void setIsUserScript(bool isUserScript);
 
-  void refreshArgumentsFromScript(runmanager::RunManager t_rm);
+  //void refreshArgumentsFromScript(runmanager::RunManager t_rm);
 
-  std::vector<ruleset::OSArgument> osArguments() const;
+  std::vector<measure::OSArgument> osArguments() const;
 
-  boost::optional<ruleset::UserScriptInfo> userScriptInfo() const;
+  boost::optional<measure::OSMeasureInfo> userScriptInfo() const;
 
   /** Returns the resources path that corresponds to this script's path, if possible.
    *  Otherwise, returns the root scripts path. */
@@ -93,7 +94,7 @@ class ScriptItem : public OSItem {
 
  public slots:
 
-  void setOSArgument(const ruleset::OSArgument& arg);
+  void setOSArgument(const measure::OSArgument& arg);
 
  private slots:
 
@@ -101,7 +102,7 @@ class ScriptItem : public OSItem {
 
  private:
   bool m_removed;
-  runmanager::ScriptInfo m_scriptInfo;
+  //runmanager::ScriptInfo m_scriptInfo;
 
   REGISTER_LOGGER("openstudio.ScriptItem");
 

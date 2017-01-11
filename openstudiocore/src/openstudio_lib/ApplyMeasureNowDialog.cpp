@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -36,7 +36,7 @@
 #include "../shared_gui_components/MeasureManager.hpp"
 #include "../shared_gui_components/OSViewSwitcher.hpp"
 #include "../shared_gui_components/TextEditDialog.hpp"
-#include "../shared_gui_components/VariableList.hpp"
+#include "../shared_gui_components/WorkflowController.hpp"
 
 #include "MainRightColumnController.hpp"
 #include "OSAppBase.hpp"
@@ -48,15 +48,12 @@
 
 #include "../openstudio_app/OpenStudioApp.hpp"
 
-#include "../utilities/core/ApplicationPathHelpers.hpp"
 #include "../utilities/core/PathHelpers.hpp"
 #include "../utilities/core/RubyException.hpp"
-
-#include "../runmanager/lib/AdvancedStatus.hpp"
-#include "../runmanager/lib/Job.hpp"
-#include "../runmanager/lib/RunManager.hpp"
-#include "../runmanager/lib/RubyJobUtils.hpp"
-#include "../runmanager/lib/Workflow.hpp"
+#include "../utilities/filetypes/WorkflowJSON.hpp"
+#include "../utilities/filetypes/WorkflowStep.hpp"
+#include "../utilities/filetypes/WorkflowStepResult.hpp"
+#include "../utilities/time/DateTime.hpp"
 
 #include <QBoxLayout>
 #include <QCloseEvent>
@@ -70,6 +67,7 @@
 #include <QStackedWidget>
 #include <QTextEdit>
 #include <QTimer>
+#include <QStandardPaths>
 
 #include <fstream>
 
@@ -102,6 +100,34 @@ ApplyMeasureNowDialog::ApplyMeasureNowDialog(QWidget* parent)
   connect(this, &ApplyMeasureNowDialog::reloadFile, static_cast<OpenStudioApp *>(app), &OpenStudioApp::reloadFile, Qt::QueuedConnection);
 
   m_advancedOutputDialog = new TextEditDialog("Advanced Output");
+
+  //m_workingDir = toPath("E:/test/ApplyMeasureNow");
+  m_workingDir = openstudio::toPath(app->currentDocument()->modelTempDir()) / openstudio::toPath("ApplyMeasureNow");
+
+  // save the model's workflow JSON
+  m_modelWorkflowJSON = app->currentModel()->workflowJSON();
+
+  // set a temporary workflow JSON
+  m_tempWorkflowJSON = WorkflowJSON();
+
+  // use the temp model as the seed
+  m_tempWorkflowJSON.setSeedFile(app->measureManager().tempModelPath());
+
+  // copy the weather file reference
+  boost::optional<openstudio::path> weatherFile = m_modelWorkflowJSON.weatherFile();
+  if (weatherFile){
+    m_tempWorkflowJSON.setWeatherFile(*weatherFile);
+  }
+
+  // add file paths from current workflow so we can find weather file
+  for (const auto& absoluteFilePath : m_modelWorkflowJSON.absoluteFilePaths()){
+    m_tempWorkflowJSON.addFilePath(absoluteFilePath);
+  }
+
+  m_tempWorkflowJSON.saveAs(m_workingDir / toPath("temp.osw"));
+
+  // temporarily swap app's workflow for this one
+  app->currentModel()->setWorkflowJSON(m_tempWorkflowJSON);
 }
 
 ApplyMeasureNowDialog::~ApplyMeasureNowDialog()
@@ -111,6 +137,9 @@ ApplyMeasureNowDialog::~ApplyMeasureNowDialog()
   openstudio::OSAppBase * app = OSAppBase::instance();
   if (app){
     app->measureManager().setLibraryController(app->currentDocument()->mainRightColumnController()->measureLibraryController()); 
+
+    // restore the model's workflow JSON
+    app->currentModel()->setWorkflowJSON(m_modelWorkflowJSON);
   }
 
   if(m_advancedOutputDialog){
@@ -145,10 +174,13 @@ void ApplyMeasureNowDialog::createWidgets()
   bool onlyShowModelMeasures = true;
   m_localLibraryController = QSharedPointer<LocalLibraryController>( new LocalLibraryController(app,onlyShowModelMeasures) );
   m_localLibraryController->localLibraryView->setStyleSheet("QStackedWidget { border-top: 0px; }");
+  m_localLibraryController->localLibraryView->addBCLMeasureButton->setVisible(false);
 
   // DLM: this is changing application state, needs to be undone in the destructor
   app->measureManager().setLibraryController(m_localLibraryController); 
+  app->currentDocument()->disable();
   app->measureManager().updateMeasuresLists();
+  app->currentDocument()->enable();
 
   m_rightPaneStackedWidget = new  QStackedWidget();
   m_argumentsFailedPageIdx = m_rightPaneStackedWidget->addWidget(m_argumentsFailedTextEdit);
@@ -256,8 +288,7 @@ void ApplyMeasureNowDialog::displayMeasure()
   m_rightPaneStackedWidget->setCurrentIndex(m_argumentsOkPageIdx);
 
   m_bclMeasure.reset();
-  m_currentMeasureItem.clear();
-  m_job.reset();
+  m_currentMeasureStepItem.clear();
   m_model.reset();
   m_reloadPath.reset();
 
@@ -273,57 +304,34 @@ void ApplyMeasureNowDialog::displayMeasure()
 
   try {
     // Get the selected measure
+
     m_bclMeasure = app->measureManager().getMeasure(id);
     OS_ASSERT(m_bclMeasure);
     OS_ASSERT(m_bclMeasure->measureType() == MeasureType::ModelMeasure);
 
-    if (app->measureManager().checkForUpdates(*m_bclMeasure)){
-      m_bclMeasure->save();
-    }
+    m_tempWorkflowJSON.resetMeasurePaths();
+    m_tempWorkflowJSON.addMeasurePath(m_bclMeasure->directory().parent_path());
 
-    // measure
-    analysis::RubyMeasure rubyMeasure(*m_bclMeasure);
-    try{
-      // DLM: we don't want to use this, if we need to reload cached arguments for measure from member map we can
-      // we could use this t_project.hasStoredArguments(*projectMeasure)
-      
-      boost::optional<model::Model> currentModel = app->currentModel();
-      OS_ASSERT(currentModel);
+    MeasureStep step(toString(m_bclMeasure->directory().stem()));
+    std::vector<WorkflowStep> steps;
+    steps.push_back(step);
+    m_tempWorkflowJSON.setWorkflowSteps(steps);
+    
+    m_tempWorkflowJSON.save();
 
-      // clone the current model in case arguments getting changes model
-      m_model = currentModel->clone(true).cast<model::Model>();
+    m_currentMeasureStepItem = QSharedPointer<measuretab::MeasureStepItem>(new measuretab::MeasureStepItem(MeasureType::ModelMeasure, step, app));
 
-      // pass in an empty workspace for the idf since you know it is a model measure
-      Workspace dummyIdf;
-      ruleset::RubyUserScriptInfo info = app->measureManager().infoGetter()->getInfo(*m_bclMeasure, m_model, dummyIdf);
-      std::vector<ruleset::OSArgument> args = info.arguments();
-      rubyMeasure.setArguments(args);
+    connect(m_currentMeasureStepItem.data(), &measuretab::MeasureStepItem::argumentsChanged, this, &ApplyMeasureNowDialog::disableOkButton);
 
-      // DLM: don't save the arguments to the project, if we need to preserve user inputs save to member variable map or something
-      //t_project.registerArguments(t_measure, args);
-
-    } catch (const RubyException & e) {
-      QString errorMessage("Failed to compute arguments for measure: \n\n");
-      errorMessage += QString::fromStdString(e.what());
-      errorMessage.prepend(FAILED_ARG_TEXT);
-      m_argumentsFailedTextEdit->setText(errorMessage);
-      m_rightPaneStackedWidget->setCurrentIndex(m_argumentsFailedPageIdx);
-      return;
-    }
-
-    m_currentMeasureItem = QSharedPointer<measuretab::MeasureItem>(new measuretab::MeasureItem(rubyMeasure, app));
-
-    connect(m_currentMeasureItem.data(), &measuretab::MeasureItem::argumentsChanged, this, &ApplyMeasureNowDialog::disableOkButton);
-
-    bool hasIncompleteArguments = m_currentMeasureItem->hasIncompleteArguments();
+    m_currentMeasureStepItem->arguments();
+    bool hasIncompleteArguments = m_currentMeasureStepItem->hasIncompleteArguments();
     disableOkButton(hasIncompleteArguments);
 
-    m_currentMeasureItem->setName(m_bclMeasure->name().c_str());
-    m_currentMeasureItem->setDisplayName(m_bclMeasure->displayName().c_str());
-    m_currentMeasureItem->setDescription(m_bclMeasure->description().c_str());
+    m_currentMeasureStepItem->setName(m_bclMeasure->name().c_str());
+    m_currentMeasureStepItem->setDisplayName(m_bclMeasure->displayName().c_str());
+    m_currentMeasureStepItem->setDescription(m_bclMeasure->description().c_str());
 
-    // DLM: this is ok, call with overload to ignore isItOKToClearResults
-    m_editController->setMeasureItem(m_currentMeasureItem.data(), app);
+    m_editController->setMeasureStepItem(m_currentMeasureStepItem.data(), app);
 
   } catch (const std::exception & e) {
     QString errorMessage("Failed to display measure: \n\n");
@@ -337,163 +345,87 @@ void ApplyMeasureNowDialog::displayMeasure()
 
 void ApplyMeasureNowDialog::runMeasure()
 {
-  runmanager::ConfigOptions co(true);
-
-  if (co.getTools().getAllByName("ruby").tools().size() == 0) 
-  {
-    QMessageBox::information(this,
-      "Missing Ruby",
-      "Ruby could not be located.\nOpenStudio will scan for tools.",
-      QMessageBox::Ok);
-
-    co.findTools(true);
-    openstudio::runmanager::RunManager rm;
-    rm.setConfigOptions(co);
-    rm.showConfigGui();
-
-    rm.getConfigOptions().saveQSettings();
-
-    emit toolsUpdated();
-
-    if (co.getTools().getAllByName("ruby").tools().size() == 0)
-    {
-      QMessageBox::information(this,
-        "Missing Ruby",
-        "Ruby was not located by tool search.\nPlease ensure Ruby correctly installed.\nSimulation aborted.",
-        QMessageBox::Ok);
-
-      m_mainPaneStackedWidget->setCurrentIndex(m_inputPageIdx);
-      m_timer->stop();
-      this->okButton()->hide();
-      this->backButton()->hide();
-
-      return;
-    }
-  }
-
   m_mainPaneStackedWidget->setCurrentIndex(m_runningPageIdx);
   m_timer->start(50);
   this->okButton()->hide();
   this->backButton()->hide();
 
   openstudio::OSAppBase * app = OSAppBase::instance();
-  m_workingDir = openstudio::toPath(app->currentDocument()->modelTempDir()) / openstudio::toPath("ApplyMeasureNow");
-  openstudio::path modelPath = m_workingDir / openstudio::toPath("modelClone.osm");
-  openstudio::path epwPath; // DLM: todo look at how this is done in the run tab
 
   removeWorkingDir();
 
-  // DLM: do we want to get the original model or the one that was potentially altered when getting arguments?
-  boost::optional<model::Model> currentModel = app->currentModel();
-  OS_ASSERT(currentModel);
-  currentModel->save(modelPath, true);
-  
-  // save cloned model to temp directory
-  //OS_ASSERT(m_model);
-  //m_model->save(modelPath,true); 
-
-  // remove? this is shown only in debug (Evan)
-  QString path("Measure Output Location: ");
-  path.append(toQString(m_workingDir));
-  m_jobPath->setText(path);
-
-  analysis::RubyMeasure rubyMeasure = m_currentMeasureItem->measure();
+  m_tempWorkflowJSON.save();
 
   // DLM: should be able to assert this
-  bool hasIncompleteArguments = m_currentMeasureItem->hasIncompleteArguments();
+  bool hasIncompleteArguments = m_currentMeasureStepItem->hasIncompleteArguments();
   OS_ASSERT(!hasIncompleteArguments);
 
-  runmanager::RubyJobBuilder rjb(*m_bclMeasure, rubyMeasure.arguments());
+  m_runProcess = new QProcess(this);
+  connect(m_runProcess, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &ApplyMeasureNowDialog::displayResults);
+    
+  QStringList paths;
+  paths << QCoreApplication::applicationDirPath();
+  auto openstudioExePath = QStandardPaths::findExecutable("openstudio", paths);
 
-  openstudio::path p = getOpenStudioRubyIncludePath();
-  QString arg = "-I";
-  arg.append(toQString(p));
-  rjb.addToolArgument(arg.toStdString());
+  boost::optional<openstudio::path> tempWorkflowJSONPath = m_tempWorkflowJSON.oswPath();
+  OS_ASSERT(tempWorkflowJSONPath);
 
-  openstudio::runmanager::Workflow wf;
-  rjb.addToWorkflow(wf);
-  wf.add(co.getTools());
-  wf.setInputFiles(modelPath, openstudio::path());
+  QStringList arguments;
+  arguments << "run" << "-m" << "-w" << toQString(*tempWorkflowJSONPath);
 
-  m_job = wf.create(m_workingDir, modelPath);
+  m_runProcess->start(openstudioExePath, arguments);
 
-  // DLM: you could make rm a class member then you would not have to call waitForFinished here
-  runmanager::RunManager rm;
-  bool queued = rm.enqueue(*m_job, true);
-  OS_ASSERT(queued);
-  std::vector<runmanager::Job> jobs = rm.getJobs();
-  OS_ASSERT(jobs.size() == 1);
-  rm.waitForFinished ();
-
-  QTimer::singleShot(0, this, SLOT(displayResults()));
 }
 
 void ApplyMeasureNowDialog::displayResults()
 {
-  analysis::RubyMeasure rubyMeasure = m_currentMeasureItem->measure();
+  delete m_runProcess;
+  m_runProcess = nullptr;
 
-  try{
-    m_reloadPath = m_job->allFiles().getLastByFilename("out.osm").fullPath;
-  }catch(...){
-  }
+  m_reloadPath = m_workingDir / toPath("run/in.osm");
+  openstudio::path outWorkflowJSONPath = m_workingDir / toPath("out.osw");
 
   m_mainPaneStackedWidget->setCurrentIndex(m_outputPageIdx);
   m_timer->stop();
 
   this->okButton()->setText(ACCEPT_CHANGES);
   this->okButton()->show();
-  if (m_reloadPath){
+  if (boost::filesystem::exists(*m_reloadPath)){
     this->okButton()->setEnabled(true);
-  }else{
+  } else{
     this->okButton()->setEnabled(false);
   }
   this->backButton()->show();
   this->backButton()->setEnabled(true);
   this->cancelButton()->setEnabled(true);
 
-  runmanager::JobErrors jobErrors = m_job->errors();
-  OS_ASSERT(m_jobItemView);
-  m_jobItemView->update(rubyMeasure, *m_bclMeasure, jobErrors, *m_job);
+  boost::optional<WorkflowJSON> outWorkflowJSON = WorkflowJSON::load(outWorkflowJSONPath);
+
+  m_jobItemView->update(*m_bclMeasure, outWorkflowJSON, false);
   m_jobItemView->setExpanded(true);
 
-  if(!jobErrors.errors().empty()){
+  if(!outWorkflowJSON || !outWorkflowJSON->completedStatus() || outWorkflowJSON->completedStatus().get() != "Success"){
     this->okButton()->setDisabled(true);
   }
 
   m_advancedOutput.clear();
-  // DLM: always show these files if they exist?
-  //if(!jobErrors.succeeded()){
-    try{
-      runmanager::Files files(m_job->outputFiles());
-      openstudio::path stdErrPath = files.getLastByFilename("stderr").fullPath;
 
-      m_advancedOutput = "";
+  try{
+    openstudio::path logPath =  m_workingDir / toPath("run/run.log");
 
-      QFile file(toQString(stdErrPath));
-      if (file.open(QFile::ReadOnly))
-      {
-        QTextStream docIn(&file);
-        m_advancedOutput = docIn.readAll();
-        file.close();
-      }
+    m_advancedOutput = "";
 
-      m_advancedOutput += QString("\n");
-    }catch(std::exception&){
+    QFile file(toQString(logPath));
+    if (file.open(QFile::ReadOnly))
+    {
+      QTextStream docIn(&file);
+      m_advancedOutput = docIn.readAll();
+      file.close();
     }
-  //}
 
-  // DLM: always show these files if they exist?
-  //if(!jobErrors.succeeded()){
-    try{
-      runmanager::Files files(m_job->outputFiles());
-      openstudio::path stdOutPath = files.getLastByFilename("stdout").fullPath;
-      std::ifstream ifs(toString(stdOutPath).c_str());
-      std::string stdMessage((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
-      ifs.close();
-      m_advancedOutput += toQString(stdMessage);
-    }catch(std::exception&){
-    }
-  //}
+    m_advancedOutput += QString("\n");
+  }catch(std::exception&){
+  }
  
 }
 
@@ -560,14 +492,13 @@ void DataPointJobHeaderView::setLastRunTime(const boost::optional<openstudio::Da
   }
 }
 
-void DataPointJobHeaderView::setStatus(const openstudio::runmanager::AdvancedStatus& status, bool isCanceled)
+void DataPointJobHeaderView::setStatus(const std::string& status, bool isCanceled)
 {
   if (!isCanceled)
   {
-    std::string s = status.toString();
-    m_status->setText(toQString(s));
+    m_status->setText(toQString(status));
   } else {
-    m_status->setText("Canceled");
+   m_status->setText("Canceled");  
   }
 }
 
@@ -697,13 +628,11 @@ void DataPointJobItemView::paintEvent(QPaintEvent * e)
   style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
-void DataPointJobItemView::update(analysis::RubyMeasure & rubyMeasure, BCLMeasure & bclMeasure, openstudio::runmanager::JobErrors jobErrors, openstudio::runmanager::Job job)
+void DataPointJobItemView::update(const BCLMeasure & bclMeasure, const boost::optional<WorkflowJSON>& workflowJSON, bool canceled)
 {
   OS_ASSERT(m_dataPointJobHeaderView);
 
-  m_dataPointJobHeaderView->setName(rubyMeasure.name());
-  m_dataPointJobHeaderView->setLastRunTime(job.lastRun());
-  m_dataPointJobHeaderView->setStatus(job.status(), job.canceled());
+  m_dataPointJobHeaderView->setName(bclMeasure.className());
 
   m_dataPointJobHeaderView->m_na->setText("");
   m_dataPointJobHeaderView->m_warnings->setText("");
@@ -712,70 +641,88 @@ void DataPointJobItemView::update(analysis::RubyMeasure & rubyMeasure, BCLMeasur
   OS_ASSERT(m_dataPointJobContentView);
   m_dataPointJobContentView->clear();
 
-  std::vector<std::string> initialConditions = jobErrors.initialConditions();
-  for (const std::string& initialCondition : initialConditions){
-    m_dataPointJobContentView->addInitialConditionMessage(initialCondition);
+  if (!workflowJSON){
+    // unknown error
+    return;
   }
 
-  std::vector<std::string> finalConditions = jobErrors.finalConditions();
-  for (const std::string& finalCondition : finalConditions){
-    m_dataPointJobContentView->addFinalConditionMessage(finalCondition);
+  if(!workflowJSON->completedStatus() || workflowJSON->completedStatus().get() != "Success"){
+    // error
   }
 
-  std::vector<std::string> errors = jobErrors.errors();
-  m_dataPointJobHeaderView->setNumErrors(errors.size());
-  for (const std::string& errorMessage : errors){
-    m_dataPointJobContentView->addErrorMessage(errorMessage);
+  boost::optional<DateTime> completedAt = workflowJSON->completedAt();
+  if (completedAt){
+    m_dataPointJobHeaderView->setLastRunTime(*completedAt);
   }
 
-  // also display std err if job failed and it exists and is not empty
-  if (job.lastRun() && !job.running() && !jobErrors.succeeded()){
-    try{
-      runmanager::Files files(job.outputFiles());
-      openstudio::path stdErrPath = files.getLastByFilename("stderr").fullPath;
-      std::string stdErrPathStr = toString(stdErrPath);
-      std::ifstream ifs(stdErrPathStr.c_str());
-      std::string stdErrorMessage((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
-      ifs.close();
-      if (!stdErrorMessage.empty()){
-        m_dataPointJobContentView->addStdErrorMessage(stdErrorMessage);
-      }
-    }catch(std::exception&){
-
-    }
-  }
-
-  std::vector<std::string> warnings = jobErrors.warnings();
-  m_dataPointJobHeaderView->setNumWarnings(warnings.size());
-  for (const std::string& warningMessage : warnings){
-    m_dataPointJobContentView->addWarningMessage(warningMessage);
-  }
-
-  std::vector<std::string> infos = jobErrors.infos();
-  for (const std::string& infoMessage : infos){
-    m_dataPointJobContentView->addInfoMessage(infoMessage);
-  }
-
-  if (jobErrors.result == ruleset::OSResultValue::NA){
-    m_dataPointJobHeaderView->setNA(true);
+  boost::optional<std::string> completedStatus = workflowJSON->completedStatus();
+  if (completedStatus){
+    m_dataPointJobHeaderView->setStatus(*completedStatus, canceled);
   }else{
-    m_dataPointJobHeaderView->setNA(false);
+    m_dataPointJobHeaderView->setStatus("Unknown", canceled);
   }
+
+  for (const auto& step : workflowJSON->workflowSteps()){
+
+    boost::optional<WorkflowStepResult> result = step.result();
+    if (!result){
+      continue;
+    }
+
+    boost::optional<std::string> initialCondition = result->stepInitialCondition();
+    if (initialCondition){
+      m_dataPointJobContentView->addInitialConditionMessage(*initialCondition);
+    }
+
+    boost::optional<std::string> finalCondition = result->stepFinalCondition();
+    if (finalCondition){
+      m_dataPointJobContentView->addFinalConditionMessage(*finalCondition);
+    }
+
+    std::vector<std::string> errors = result->stepErrors();
+    m_dataPointJobHeaderView->setNumErrors(errors.size());
+    for (const std::string& errorMessage : errors){
+      m_dataPointJobContentView->addErrorMessage(errorMessage);
+    }
+
+    std::vector<std::string> warnings = result->stepWarnings();
+    m_dataPointJobHeaderView->setNumWarnings(warnings.size());
+    for (const std::string& warningMessage : warnings){
+      m_dataPointJobContentView->addWarningMessage(warningMessage);
+    }
+
+    std::vector<std::string> infos = result->stepInfo();
+    m_dataPointJobHeaderView->setNumWarnings(infos.size());
+    for (const std::string& info : infos){
+      m_dataPointJobContentView->addInfoMessage(info);
+    }
+
+    // there should only be on step so this is ok
+    boost::optional<StepResult> stepResult = result->stepResult();
+    if (stepResult && stepResult->value() == StepResult::NA){
+      m_dataPointJobHeaderView->setNA(true);
+    }else{
+      m_dataPointJobHeaderView->setNA(false);
+    }
+
+  }
+
 }
 
-//***** SLOTS *****
+/***** SLOTS *****/
 
 void ApplyMeasureNowDialog::on_cancelButton(bool checked)
 {
   if(m_mainPaneStackedWidget->currentIndex() == m_inputPageIdx){
     // Nothing specific here
   } else if(m_mainPaneStackedWidget->currentIndex() == m_runningPageIdx) {
-    if(m_job){
-      m_job->requestStop();
-      this->cancelButton()->setDisabled(true);
-      this->okButton()->setDisabled(true);
-      return;
-    }
+// TODO: fix
+//    if(m_job){
+//      m_job->requestStop();
+//      this->cancelButton()->setDisabled(true);
+//      this->okButton()->setDisabled(true);
+//      return;
+//    }
     m_mainPaneStackedWidget->setCurrentIndex(m_inputPageIdx);
     m_timer->stop();
     this->okButton()->show();

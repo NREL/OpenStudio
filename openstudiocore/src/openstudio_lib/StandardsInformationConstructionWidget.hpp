@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -48,7 +48,7 @@ namespace model {
 
 }
 
-class OSLineEdit;
+class OSLineEdit2;
 
 class OSComboBox2;
 
@@ -128,6 +128,7 @@ class StandardsInformationConstructionWidget : public QWidget
     QLabel * m_fenestrationLowEmissivityCoatingLabel = nullptr;
 
     bool m_isIP = false;
+    bool m_fenestrationEnabled = false;
 
     boost::optional<openstudio::model::ConstructionBase> m_construction;
 

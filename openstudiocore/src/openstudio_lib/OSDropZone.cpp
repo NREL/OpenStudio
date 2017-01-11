@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -152,7 +152,7 @@ OSDropZone::OSDropZone(OSVectorController* vectorController,
 
   connect(this, &OSDropZone::addButtonClicked, vectorController, &OSVectorController::makeNewItem);
 
-  connect(vectorController, &OSVectorController::itemIds, this, &OSDropZone::setItemIds, Qt::QueuedConnection);
+  connect(vectorController, &OSVectorController::itemIds, this, &OSDropZone::setItemIds);
 
   emit itemsRequested();
 
@@ -689,7 +689,7 @@ void OSDropZone2::dropEvent(QDropEvent *event)
 
     connect(m_item, &OSItem::itemRemoveClicked, this, &OSDropZone2::onItemRemoveClicked);
 
-    connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSDropZone2::refresh);
+    m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->openstudio::model::detail::ModelObject_Impl::onChange.connect<OSDropZone2, &OSDropZone2::refresh>(this);
 
     if(modelObject){
       if(OSAppBase::instance()->currentDocument()->fromComponentLibrary(itemId)){
@@ -798,7 +798,7 @@ void OSDropZone2::makeItem()
       m_item->setParent(this);
       connect(m_item, &OSItem::itemRemoveClicked, this, &OSDropZone2::onItemRemoveClicked);
 
-      connect(modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSDropZone2::refresh);
+      modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->openstudio::model::detail::ModelObject_Impl::onChange.connect<OSDropZone2, &OSDropZone2::refresh>(this);
     }
   }
 }

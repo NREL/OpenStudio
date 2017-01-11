@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -374,7 +374,7 @@ namespace openstudio {
 
   void SpaceTypesGridController::filterChanged(const QString & text)
   {
-    LOG(Debug, "Load filter changed: " << text);
+    LOG(Debug, "Load filter changed: " << toString(text));
 
     auto objectSelector = getObjectSelector();
     if (text == SHOWALLLOADS)

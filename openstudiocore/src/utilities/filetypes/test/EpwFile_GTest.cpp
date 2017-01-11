@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -30,6 +30,7 @@
 #include "../EpwFile.hpp"
 #include "../../time/Time.hpp"
 #include "../../time/Date.hpp"
+#include "../../core/Checksum.hpp"
 
 #include <resources.hxx>
 
@@ -46,10 +47,11 @@ TEST(Filetypes, EpwFile)
     // COMMENTS 1,California Climate Zone 01 Version 2;
     // COMMENTS 2, -- Ground temps produced with a standard soil diffusivity of 2.3225760E-03 {m**2/day}
     // DATA PERIODS,1,1,Data,Sunday, 1/ 1,12/31
-    path p = resourcesPath() / toPath("runmanager/USA_CO_Golden-NREL.724666_TMY3.epw");
+    path p = resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3.epw");
     EpwFile epwFile(p);
     EXPECT_EQ(p, epwFile.path());
-    EXPECT_EQ("F188656D", epwFile.checksum());
+    EXPECT_EQ("BDF687C1", epwFile.checksum());
+    EXPECT_EQ(openstudio::checksum(epwFile.path()), epwFile.checksum());
     EXPECT_EQ("Denver Centennial  Golden   Nr", epwFile.city());
     EXPECT_EQ("CO", epwFile.stateProvinceRegion());
     EXPECT_EQ("USA", epwFile.country());
@@ -71,10 +73,11 @@ TEST(Filetypes, EpwFile)
 TEST(Filetypes, EpwFile_Data)
 {
   try{
-    path p = resourcesPath() / toPath("runmanager/USA_CO_Golden-NREL.724666_TMY3.epw");
+    path p = resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3.epw");
     EpwFile epwFile(p);
     EXPECT_EQ(p, epwFile.path());
-    EXPECT_EQ("F188656D", epwFile.checksum());
+    EXPECT_EQ("BDF687C1", epwFile.checksum());
+    EXPECT_EQ(openstudio::checksum(epwFile.path()), epwFile.checksum());
     EXPECT_EQ("Denver Centennial  Golden   Nr", epwFile.city());
     EXPECT_EQ("CO", epwFile.stateProvinceRegion());
     EXPECT_EQ("USA", epwFile.country());
@@ -144,7 +147,8 @@ TEST(Filetypes, EpwFile_Data)
     }
     // We should redo the original tests because we have reparsed the entire file
     EXPECT_EQ(p, epwFile.path());
-    EXPECT_EQ("F188656D", epwFile.checksum());
+    EXPECT_EQ("BDF687C1", epwFile.checksum());
+    EXPECT_EQ(openstudio::checksum(epwFile.path()), epwFile.checksum());
     EXPECT_EQ("Denver Centennial  Golden   Nr", epwFile.city());
     EXPECT_EQ("CO", epwFile.stateProvinceRegion());
     EXPECT_EQ("USA", epwFile.country());

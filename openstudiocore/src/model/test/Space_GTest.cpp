@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -259,29 +259,31 @@ TEST_F(ModelFixture, Space_Attributes)
 {
   Model model;
   Space space(model);
-  boost::optional<openstudio::Attribute> attribute;
-  std::vector<Attribute> attributes = space.attributes();
+
+  // Removed due to removal of attributes
+  // boost::optional<openstudio::Attribute> attribute;
+  // std::vector<Attribute> attributes = space.attributes();
 
   ASSERT_TRUE(space.name());
   std::string spaceName = space.name().get();
 
-  EXPECT_TRUE(space.isSettableAttribute("name"));
-  EXPECT_TRUE(space.isOptionalAttribute("name"));
-  attribute = space.getAttribute("name");
-  ASSERT_TRUE(attribute);
-  EXPECT_EQ("name", attribute->name()); // from ModelObject
-  EXPECT_EQ(spaceName, attribute->valueAsString());
-  EXPECT_TRUE(space.setAttribute("name", "Office Space"));
-  EXPECT_EQ("Office Space", space.name().get());
+  // EXPECT_TRUE(space.isSettableAttribute("name"));
+  // EXPECT_TRUE(space.isOptionalAttribute("name"));
+  // attribute = space.getAttribute("name");
+  // ASSERT_TRUE(attribute);
+  // EXPECT_EQ("name", attribute->name()); // from ModelObject
+  // EXPECT_EQ(spaceName, attribute->valueAsString());
+  // EXPECT_TRUE(space.setAttribute("name", "Office Space"));
+  // EXPECT_EQ("Office Space", space.name().get());
 
-  EXPECT_FALSE(space.isSettableAttribute("floorArea"));
-  EXPECT_FALSE(space.isOptionalAttribute("floorArea"));
-  attribute = space.getAttribute("floorArea");
-  ASSERT_TRUE(attribute);
-  ASSERT_EQ("floorArea", attribute->name());
-  EXPECT_NO_THROW(attribute->valueAsDouble());
-  EXPECT_THROW(attribute->valueAsBoolean(),std::exception);
-  EXPECT_FALSE(space.setAttribute("floorArea", 0.0));
+  // EXPECT_FALSE(space.isSettableAttribute("floorArea"));
+  // EXPECT_FALSE(space.isOptionalAttribute("floorArea"));
+  // attribute = space.getAttribute("floorArea");
+  // ASSERT_TRUE(attribute);
+  // ASSERT_EQ("floorArea", attribute->name());
+  // EXPECT_NO_THROW(attribute->valueAsDouble());
+  // EXPECT_THROW(attribute->valueAsBoolean(),std::exception);
+  // EXPECT_FALSE(space.setAttribute("floorArea", 0.0));
 }
 
 TEST_F(ModelFixture, Space_ThermalZone)
@@ -1358,6 +1360,25 @@ TEST_F(ModelFixture,Space_Plenum)
   EXPECT_EQ(plenumSpaceType.handle(), returnSpace.spaceType()->handle());
   EXPECT_FALSE(returnSpace.partofTotalFloorArea());
 
+  std::vector<Space> plenumSpaces = plenumSpaceType.spaces();
+  ASSERT_EQ(2u, plenumSpaces.size());
+
+  EXPECT_EQ("Plenum Space Type", plenumSpaceType.nameString());
+  plenumSpaceType.setName("Some Other Name");
+  EXPECT_EQ("Plenum Space Type", plenumSpaceType.nameString());
+
+  ASSERT_TRUE(supplySpace.spaceType());
+  EXPECT_EQ(plenumSpaceType.handle(), supplySpace.spaceType()->handle());
+  EXPECT_FALSE(supplySpace.partofTotalFloorArea());
+  ASSERT_TRUE(space.spaceType());
+  EXPECT_EQ(spaceType.handle(), space.spaceType()->handle());
+  EXPECT_TRUE(space.partofTotalFloorArea());
+  ASSERT_TRUE(returnSpace.spaceType());
+  EXPECT_EQ(plenumSpaceType.handle(), returnSpace.spaceType()->handle());
+  EXPECT_FALSE(returnSpace.partofTotalFloorArea());
+
+  plenumSpaces = plenumSpaceType.spaces();
+  ASSERT_EQ(2u, plenumSpaces.size());
 }
 
 

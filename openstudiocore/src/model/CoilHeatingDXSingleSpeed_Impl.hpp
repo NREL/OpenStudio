@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -42,32 +42,32 @@ namespace detail {
 
 /** CoilHeatingDXSingleSpeed_Impl is a StraightComponent_Impl that is the implementation class for CoilHeatingDXSingleSpeed.*/
 class MODEL_API CoilHeatingDXSingleSpeed_Impl : public StraightComponent_Impl {
-  Q_OBJECT;
+  
 
-  Q_PROPERTY(boost::optional<double> ratedTotalHeatingCapacity READ ratedTotalHeatingCapacity WRITE setRatedTotalHeatingCapacity);
-  Q_PROPERTY(bool isRatedTotalHeatingCapacityAutosized READ isRatedTotalHeatingCapacityAutosized);
-  Q_PROPERTY(double ratedCOP READ ratedCOP WRITE setRatedCOP);
-  Q_PROPERTY(boost::optional<double> ratedAirFlowRate READ ratedAirFlowRate WRITE setRatedAirFlowRate);
-  Q_PROPERTY(bool isRatedAirFlowRateAutosized READ isRatedAirFlowRateAutosized);
-  Q_PROPERTY(double minimumOutdoorDryBulbTemperatureforCompressorOperation READ minimumOutdoorDryBulbTemperatureforCompressorOperation WRITE setMinimumOutdoorDryBulbTemperatureforCompressorOperation RESET resetMinimumOutdoorDryBulbTemperatureforCompressorOperation);
-  Q_PROPERTY(bool isMinimumOutdoorDryBulbTemperatureforCompressorOperationDefaulted READ isMinimumOutdoorDryBulbTemperatureforCompressorOperationDefaulted);
-  Q_PROPERTY(double maximumOutdoorDryBulbTemperatureforDefrostOperation READ maximumOutdoorDryBulbTemperatureforDefrostOperation WRITE setMaximumOutdoorDryBulbTemperatureforDefrostOperation RESET resetMaximumOutdoorDryBulbTemperatureforDefrostOperation);
-  Q_PROPERTY(bool isMaximumOutdoorDryBulbTemperatureforDefrostOperationDefaulted READ isMaximumOutdoorDryBulbTemperatureforDefrostOperationDefaulted);
-  Q_PROPERTY(double crankcaseHeaterCapacity READ crankcaseHeaterCapacity WRITE setCrankcaseHeaterCapacity RESET resetCrankcaseHeaterCapacity);
-  Q_PROPERTY(bool isCrankcaseHeaterCapacityDefaulted READ isCrankcaseHeaterCapacityDefaulted);
-  Q_PROPERTY(double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation READ maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation WRITE setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation RESET resetMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation);
-  Q_PROPERTY(bool isMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperationDefaulted READ isMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperationDefaulted);
-  Q_PROPERTY(std::string defrostStrategy READ defrostStrategy WRITE setDefrostStrategy RESET resetDefrostStrategy);
-  Q_PROPERTY(bool isDefrostStrategyDefaulted READ isDefrostStrategyDefaulted);
-  Q_PROPERTY(std::string defrostControl READ defrostControl WRITE setDefrostControl RESET resetDefrostControl);
-  Q_PROPERTY(bool isDefrostControlDefaulted READ isDefrostControlDefaulted);
-  Q_PROPERTY(double defrostTimePeriodFraction READ defrostTimePeriodFraction WRITE setDefrostTimePeriodFraction RESET resetDefrostTimePeriodFraction);
-  Q_PROPERTY(bool isDefrostTimePeriodFractionDefaulted READ isDefrostTimePeriodFractionDefaulted);
-  Q_PROPERTY(boost::optional<double> resistiveDefrostHeaterCapacity READ resistiveDefrostHeaterCapacity WRITE setResistiveDefrostHeaterCapacity RESET resetResistiveDefrostHeaterCapacity);
-  Q_PROPERTY(bool isResistiveDefrostHeaterCapacityDefaulted READ isResistiveDefrostHeaterCapacityDefaulted);
-  Q_PROPERTY(bool isResistiveDefrostHeaterCapacityAutosized READ isResistiveDefrostHeaterCapacityAutosized);
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 
-  Q_PROPERTY(boost::optional<openstudio::model::ModelObject> availabilitySchedule READ availabilityScheduleAsModelObject WRITE setAvailabilityScheduleAsModelObject);
+  
  public:
   /** @name Constructors and Destructors */
   //@{

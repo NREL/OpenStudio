@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -42,14 +42,14 @@ namespace detail {
 
   /** OtherEquipment_Impl is a SpaceLoadInstance_Impl that is the implementation class for OtherEquipment.*/
   class MODEL_API OtherEquipment_Impl : public SpaceLoadInstance_Impl {
-    Q_OBJECT;
-    Q_PROPERTY(bool isScheduleDefaulted READ isScheduleDefaulted);
+    
+    
 
-    Q_PROPERTY(double multiplier READ multiplier WRITE setMultiplier RESET resetMultiplier);
-    Q_PROPERTY(bool isMultiplierDefaulted READ isMultiplierDefaulted);
+    
+    
 
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> otherEquipmentDefinition READ otherEquipmentDefinitionAsModelObject WRITE setOtherEquipmentDefinitionAsModelObject);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> schedule READ scheduleAsModelObject WRITE setScheduleAsModelObject RESET resetSchedule);
+    
+    
    public:
 
     /** @name Constructors and Destructors */
@@ -91,7 +91,13 @@ namespace detail {
     /** @name Getters */
     //@{
 
+    std::string endUseSubcategory() const;
+
+    bool isEndUseSubcategoryDefaulted() const;
+
     std::string fuelType() const;
+
+    bool isFuelTypeDefaulted() const;
 
     OtherEquipmentDefinition otherEquipmentDefinition() const;
 
@@ -105,6 +111,10 @@ namespace detail {
     //@}
     /** @name Setters */
     //@{
+
+    bool setEndUseSubcategory(const std::string& endUseSubcategory);
+
+    void resetEndUseSubcategory();
 
     bool setFuelType(const std::string& fuelType);
 

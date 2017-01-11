@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -30,18 +30,13 @@
 #define OPENSTUDIO_WINDOWMATERIALGLAZINGGROUPTHERMOCHROMICINSPECTORVIEW_HPP
 
 #include "ModelObjectInspectorView.hpp"
+#include "../model/ThermochromicGlazing.hpp"
 
 namespace openstudio {
 
-namespace model {
+class OSLineEdit2;
 
-  class ThermochromicGlazing;
-
-}
-
-class OSLineEdit;
-
-class OSQuantityEdit;
+class OSQuantityEdit2;
 
 class OSQuantityEdit2;
 
@@ -77,11 +72,13 @@ class WindowMaterialGlazingGroupThermochromicInspectorView : public ModelObjectI
 
     bool m_isIP;
 
-    OSLineEdit * m_nameEdit = nullptr;
+    boost::optional<model::ThermochromicGlazing> m_thermochromicGlazing;
+
+    OSLineEdit2 * m_nameEdit = nullptr;
 
     OSQuantityEdit2 * m_opticalDataTemperature = nullptr;
 
-    OSLineEdit * m_windowMaterialGlazingName = nullptr;
+    OSLineEdit2 * m_windowMaterialGlazingName = nullptr;
 
     StandardsInformationMaterialWidget * m_standardsInformationWidget = nullptr;
 

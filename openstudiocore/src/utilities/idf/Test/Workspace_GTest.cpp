@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -68,8 +68,8 @@
 
 #include <resources.hxx>
 
-#include <boost/filesystem/fstream.hpp>
-#include <boost/filesystem.hpp>
+
+
 
 using namespace openstudio;
 
@@ -91,7 +91,7 @@ TEST_F(IdfFixture, IdfFile_Workspace_Roundtrip)
   IdfFile copyOfIdfFile = workspace.toIdfFile();
   // until == available, print out for diff
   openstudio::path outPath = outDir/toPath("passedThroughWorkspace.idf");
-  boost::filesystem::ofstream outFile(outPath); ASSERT_TRUE(outFile?true:false);
+  openstudio::filesystem::ofstream outFile(outPath); ASSERT_TRUE(outFile?true:false);
   copyOfIdfFile.print(outFile); outFile.close();
 }
 
@@ -2006,12 +2006,6 @@ TEST_F(IdfFixture, Workspace_Signals)
   WorkspaceObject object = workspace.addObject(IdfObject(IddObjectType::Zone)).get();
   Handle handle = object.handle();
 
-  EXPECT_FALSE(reciever->m_objectImpl);
-  EXPECT_FALSE(reciever->m_iddObjectType);
-  EXPECT_FALSE(reciever->m_handle);
-
-  openstudio::Application::instance().processEvents();
-
   ASSERT_TRUE(reciever->m_objectImpl.get());
   ASSERT_TRUE(reciever->m_iddObjectType);
   EXPECT_EQ(IddObjectType::Zone, reciever->m_iddObjectType->value());
@@ -2025,12 +2019,6 @@ TEST_F(IdfFixture, Workspace_Signals)
   EXPECT_FALSE(reciever->m_handle);
 
   object.remove();
-
-  EXPECT_FALSE(reciever->m_objectImpl);
-  EXPECT_FALSE(reciever->m_iddObjectType);
-  EXPECT_FALSE(reciever->m_handle);
-
-  Application::instance().processEvents();
 
   ASSERT_TRUE(reciever->m_objectImpl.get());
   ASSERT_TRUE(reciever->m_iddObjectType);
@@ -2067,17 +2055,17 @@ TEST_F(IdfFixture, Workspace_DaylightingControlsZoneName)
   ASSERT_TRUE(daylightingControl);
 
   zone->setName("Zone 1");
-  EXPECT_FALSE(daylightingControl->getString(0,false,true));
-  EXPECT_TRUE(daylightingControl->setPointer(0, zone->handle()));
-  ASSERT_TRUE(daylightingControl->getString(0,false,true));
-  EXPECT_EQ("Zone 1", daylightingControl->getString(0,false,true).get());
+  EXPECT_FALSE(daylightingControl->getString(1,false,true));
+  EXPECT_TRUE(daylightingControl->setPointer(1, zone->handle()));
+  ASSERT_TRUE(daylightingControl->getString(1,false,true));
+  EXPECT_EQ("Zone 1", daylightingControl->getString(1,false,true).get());
 
-  EXPECT_TRUE(daylightingControl->setString(0, ""));
-  EXPECT_FALSE(daylightingControl->getString(0,false,true));
+  EXPECT_TRUE(daylightingControl->setString(1, ""));
+  EXPECT_FALSE(daylightingControl->getString(1,false,true));
 
-  EXPECT_TRUE(daylightingControl->setString(0, "Zone 1"));
-  ASSERT_TRUE(daylightingControl->getString(0,false,true));
-  EXPECT_EQ("Zone 1", daylightingControl->getString(0,false,true).get());
+  EXPECT_TRUE(daylightingControl->setString(1, "Zone 1"));
+  ASSERT_TRUE(daylightingControl->getString(1,false,true));
+  EXPECT_EQ("Zone 1", daylightingControl->getString(1,false,true).get());
 
 }
 

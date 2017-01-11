@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -253,7 +253,7 @@ void initializeOutFiles(GenerateIddFactoryOutFiles& outFiles,
     << "#include <utilities/core/Assert.hpp>" << std::endl
     << "#include <utilities/core/Compare.hpp>" << std::endl
     << "#include <utilities/core/Containers.hpp>" << std::endl
-    << "#include <utilities/core/ApplicationPathHelpers.hpp>" << std::endl
+    << "#include <utilities/embedded_files.hxx>" << std::endl
     << std::endl
     << "#include <OpenStudio.hxx>" << std::endl
     << std::endl
@@ -798,12 +798,14 @@ void completeOutFiles(const IddFileFactoryDataVector& iddFiles,
     << "    if (it != m_osIddFiles.end()) {" << std::endl
     << "      return it->second;" << std::endl
     << "    }" << std::endl
-    << "    openstudio::path iddPath = getSharedResourcesPath() / toPath(\"osversion\");" << std::endl
+    << "    std::string iddPath = \":/idd/versions\";" << std::endl
     << "    std::stringstream folderString;" << std::endl
     << "    folderString << version.major() << \"_\" << version.minor() << \"_\" << version.patch().get();" << std::endl
-    << "    iddPath = iddPath / toPath(folderString.str() + \"/OpenStudio.idd\");" << std::endl
-    << "    if (boost::filesystem::exists(iddPath) && (version < currentVersion)) {" << std::endl
-    << "      result = IddFile::load(iddPath);" << std::endl
+    << "    iddPath += \"/\" + folderString.str() + \"/OpenStudio.idd\";" << std::endl
+    << "    if (::openstudio::embedded_files::hasFile(iddPath) && (version < currentVersion)) {" << std::endl
+    << "      std::stringstream ss;" << std::endl
+    << "      ss << ::openstudio::embedded_files::getFileAsString(iddPath);" << std::endl
+    << "      result = IddFile::load(ss);" << std::endl
     << "    }" << std::endl
     << "    if (result) {" << std::endl
     << "      QMutexLocker l(&m_callbackmutex);" << std::endl

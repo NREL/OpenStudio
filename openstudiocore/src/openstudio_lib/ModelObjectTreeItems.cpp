@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -159,11 +159,11 @@ ModelObjectTreeItem::ModelObjectTreeItem(const openstudio::model::ModelObject& m
   this->setText(0, toQString(modelObject.name().get()));
   this->setStyle(0, "");
 
-  connect(m_modelObject->getImpl<model::detail::ModelObject_Impl>().get(), &model::detail::ModelObject_Impl::onNameChange, this, &ModelObjectTreeItem::changeName);
+  m_modelObject->getImpl<model::detail::ModelObject_Impl>().get()->onNameChange.connect<ModelObjectTreeItem, &ModelObjectTreeItem::changeName>(this);
    
-  connect(m_modelObject->getImpl<model::detail::ModelObject_Impl>().get(), &model::detail::ModelObject_Impl::onChange, this, &ModelObjectTreeItem::change);
+  m_modelObject->getImpl<model::detail::ModelObject_Impl>().get()->onChange.connect<ModelObjectTreeItem, &ModelObjectTreeItem::change>(this);
 
-  connect(m_modelObject->getImpl<model::detail::ModelObject_Impl>().get(), &model::detail::ModelObject_Impl::onRelationshipChange, this, &ModelObjectTreeItem::changeRelationship);
+  m_modelObject->getImpl<model::detail::ModelObject_Impl>().get()->onRelationshipChange.connect<ModelObjectTreeItem, &ModelObjectTreeItem::changeRelationship>(this);
 }
 
 ModelObjectTreeItem::ModelObjectTreeItem(const std::string& name, const openstudio::model::Model& model, QTreeWidgetItem* parent)

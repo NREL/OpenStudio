@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -344,6 +344,7 @@ class WindowPropertyFrameAndDivider;
 class ZoneAirContaminantBalance;
 class ZoneAirHeatBalanceAlgorithm;
 class ZoneAirMassFlowConservation;
+class ZoneCapacitanceMultiplierResearchSpecial;
 class ZoneControlContaminantController;
 class ZoneControlHumidistat;
 class ZoneControlThermostatStagedDualSetpoint;
@@ -1049,6 +1050,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateZoneAirContaminantBalance( model::ZoneAirContaminantBalance & modelObject );
 
   boost::optional<IdfObject> translateZoneAirMassFlowConservation(model::ZoneAirMassFlowConservation & modelObject);
+
+  boost::optional<IdfObject> translateZoneCapacitanceMultiplierResearchSpecial( model::ZoneCapacitanceMultiplierResearchSpecial & modelObject );
 
   boost::optional<IdfObject> translateZoneControlContaminantController( model::ZoneControlContaminantController& modelObject );
 

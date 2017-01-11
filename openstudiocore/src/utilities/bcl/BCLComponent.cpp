@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -29,9 +29,9 @@
 #include "BCLComponent.hpp"
 #include "../core/System.hpp"
 #include "../data/Attribute.hpp"
+#include "../core/FilesystemHelpers.hpp"
 
 #include <QDomDocument>
-#include <QFile>
 
 namespace openstudio{
 
@@ -46,10 +46,7 @@ namespace openstudio{
     m_directory(dir)
   {
     QDomDocument component("component.xml");
-    QFile file(toQString(m_directory+"/component.xml"));
-    file.open(QIODevice::ReadOnly | QIODevice::Text);
-    component.setContent(&file);
-    file.close();
+    component.setContent(openstudio::filesystem::read_as_QByteArray(openstudio::toPath(m_directory) / "component.xml"));
 
     QDomElement comp = component.firstChildElement("component");
     m_name = comp.firstChildElement("name").firstChild().nodeValue().replace("_", " ")

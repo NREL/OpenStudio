@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -29,15 +29,15 @@
 #ifndef GENERATEIDDFACTORY_IDDFILEFACTORYDATA_HPP
 #define GENERATEIDDFACTORY_IDDFILEFACTORYDATA_HPP
 
+#include "../utilities/core/Filesystem.hpp"
 #include "GenerateIddFactoryOutFiles.hpp"
 
-#include <boost/filesystem/path.hpp>
 
 #include <vector>
 
 namespace openstudio {
 
-typedef boost::filesystem::path path;
+typedef openstudio::filesystem::path path;
 typedef std::pair<std::string,std::string> StringPair;
 
 class IddFileFactoryData {

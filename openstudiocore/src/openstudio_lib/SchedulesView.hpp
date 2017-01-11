@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -50,6 +50,7 @@
 #include <QDialog>
 #include <QGraphicsItem>
 #include <QGraphicsView>
+#include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
 #include <QWidget>
 
 class QPushButton;
@@ -106,7 +107,7 @@ class OSCheckBox;
 
 class OSCheckBox2;
 
-class OSLineEdit;
+class OSLineEdit2;
 
 class ScheduleDayView;
 
@@ -119,7 +120,7 @@ class MonthView;
 class ScheduleCalendarWidget;
 
 // Overall view for the schedules tab, includes left column selector
-class SchedulesView : public QWidget
+class SchedulesView : public QWidget, public Nano::Observer
 {
   Q_OBJECT
 
@@ -202,7 +203,7 @@ class SchedulesView : public QWidget
 
     void paintEvent ( QPaintEvent * event ) override;
 
-  private slots: 
+  private slots:
 
     void addSchedule( model::ScheduleRuleset & schedule);
 
@@ -212,7 +213,7 @@ class SchedulesView : public QWidget
 
     void onModelObjectRemoved(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&);
 
-    void onScheduleRuleRemoved(Handle handle);
+    void onScheduleRuleRemoved(const Handle& handle);
 
   private:
 
@@ -233,7 +234,7 @@ class SchedulesView : public QWidget
 /******************************************************************************/
 
 // Overall item in left column selector, includes collapsible header and content
-class ScheduleTab : public QWidget
+class ScheduleTab : public QWidget, public Nano::Observer
 {
   Q_OBJECT
 
@@ -306,7 +307,7 @@ private:
 };
 
 // Collapsible header for each schedule ruleset in left column selector
-class ScheduleTabHeader : public QWidget
+class ScheduleTabHeader : public QWidget, public Nano::Observer
 {
   Q_OBJECT
 
@@ -329,7 +330,7 @@ class ScheduleTabHeader : public QWidget
   void toggle();
 
   signals:
-  
+
   void scheduleClicked(const model::ScheduleRuleset & schedule);
 
   void toggleHeaderClicked( bool close );
@@ -366,7 +367,7 @@ class ScheduleTabHeader : public QWidget
 };
 
 // Content under collapsible header, includes a button for each rule and default schedule
-class ScheduleTabContent : public QWidget
+class ScheduleTabContent : public QWidget, public Nano::Observer
 {
   Q_OBJECT
 
@@ -388,7 +389,7 @@ signals:
 
   public slots:
 
-  void scheduleRefresh();
+  void scheduleRefresh(const Handle& handle);
 
   private slots:
 
@@ -412,14 +413,14 @@ private:
 };
 
 // Inner item in ScheduleTabContent, represents a ScheduleRule
-class ScheduleTabRule : public QWidget
+class ScheduleTabRule : public QWidget, public Nano::Observer
 {
   Q_OBJECT
 
   public:
 
-  ScheduleTabRule( ScheduleTab * scheduleTab, 
-                   const model::ScheduleRule & scheduleRule, 
+  ScheduleTabRule( ScheduleTab * scheduleTab,
+                   const model::ScheduleRule & scheduleRule,
                    QWidget * parent = nullptr );
 
   virtual ~ScheduleTabRule() {}
@@ -462,7 +463,7 @@ class ScheduleTabRule : public QWidget
 };
 
 // Inner item in ScheduleTabContent, represents a default schedule such as design day or the default schedule
-class ScheduleTabDefault : public QWidget
+class ScheduleTabDefault : public QWidget, public Nano::Observer
 {
   Q_OBJECT
 
@@ -499,7 +500,7 @@ class ScheduleTabDefault : public QWidget
   bool m_mouseDown;
 
   QLabel * m_label;
-  
+
   ScheduleTab * m_scheduleTab;
 
   ScheduleTabDefaultType m_type;
@@ -513,7 +514,7 @@ class ScheduleTabDefault : public QWidget
 /******************************************************************************/
 
 // View presented when need to make a new profile (either schedule rule or design day)
-class NewProfileView : public QWidget
+class NewProfileView : public QWidget, public Nano::Observer
 {
   Q_OBJECT
 
@@ -533,7 +534,7 @@ class NewProfileView : public QWidget
 
     void addWinterProfileClicked(model::ScheduleRuleset & scheduleRuleset, UUID dayScheduleHandle);
 
-  private slots: 
+  private slots:
 
     void onAddClicked();
 
@@ -552,7 +553,7 @@ class NewProfileView : public QWidget
 
 
 // View presented only showing schedule name widget
-class ScheduleRulesetNameView : public QWidget
+class ScheduleRulesetNameView : public QWidget, public Nano::Observer
 {
   Q_OBJECT
 
@@ -577,7 +578,7 @@ class DefaultScheduleDayView : public QWidget
   public:
 
     DefaultScheduleDayView( bool isIP,
-                            const model::ScheduleRuleset & scheduleRuleset, 
+                            const model::ScheduleRuleset & scheduleRuleset,
                             SchedulesView * schedulesView );
 
     virtual ~DefaultScheduleDayView() {}
@@ -614,7 +615,7 @@ private:
 };
 
 // View a schedule rule of a schedule ruleset
-class ScheduleRuleView : public QWidget
+class ScheduleRuleView : public QWidget, public Nano::Observer
 {
   Q_OBJECT
 
@@ -674,7 +675,7 @@ private:
 
   OSCheckBox2 * m_saturdayButton;
 
-  OSLineEdit * m_nameEditField;
+  OSLineEdit2 * m_nameEditField;
 
   QDateTimeEdit * m_startDateEdit;
 
@@ -687,7 +688,7 @@ private:
 
 
 // Widget which shows the name and schedule type limits of a schedule ruleset
-class ScheduleRulesetNameWidget : public QWidget
+class ScheduleRulesetNameWidget : public QWidget, public Nano::Observer
 {
   Q_OBJECT
 
@@ -700,10 +701,12 @@ class ScheduleRulesetNameWidget : public QWidget
   private:
 
     model::ScheduleRuleset m_scheduleRuleset;
+
+    boost::optional<model::ScheduleRuleset> opt_scheduleRuleset;
 };
 
 // Overview of the year, held by ScheduleRuleView
-class YearOverview : public QWidget
+class YearOverview : public QWidget, public Nano::Observer
 {
   Q_OBJECT
 
@@ -729,29 +732,29 @@ class YearOverview : public QWidget
 
   void refreshActiveRuleIndices();
 
-  MonthView * m_januaryView; 
+  MonthView * m_januaryView;
 
-  MonthView * m_februaryView; 
+  MonthView * m_februaryView;
 
-  MonthView * m_marchView; 
+  MonthView * m_marchView;
 
-  MonthView * m_aprilView; 
+  MonthView * m_aprilView;
 
-  MonthView * m_mayView; 
+  MonthView * m_mayView;
 
-  MonthView * m_juneView; 
+  MonthView * m_juneView;
 
-  MonthView * m_julyView; 
+  MonthView * m_julyView;
 
-  MonthView * m_augustView; 
+  MonthView * m_augustView;
 
-  MonthView * m_septemberView; 
+  MonthView * m_septemberView;
 
-  MonthView * m_octoberView; 
+  MonthView * m_octoberView;
 
-  MonthView * m_novemberView; 
+  MonthView * m_novemberView;
 
-  MonthView * m_decemberView; 
+  MonthView * m_decemberView;
 
   model::ScheduleRuleset m_scheduleRuleset;
 
@@ -761,7 +764,7 @@ class YearOverview : public QWidget
 };
 
 // Overview of the month, held by YearOverview
-class MonthView : public QWidget
+class MonthView : public QWidget, public Nano::Observer
 {
   Q_OBJECT
 

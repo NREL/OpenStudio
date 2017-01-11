@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -54,6 +54,8 @@
 #include "../model/ModelObject_Impl.hpp"
 #include "../model/PlanarSurface.hpp"
 #include "../model/PlanarSurface_Impl.hpp"
+#include "../model/SpaceType.hpp"
+#include "../model/SpaceType_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
 
@@ -874,10 +876,19 @@ namespace openstudio {
 
       nameLineEdit->setDeleteObject(nameLineEditConcept->deleteObject());
 
+      bool readOnly = nameLineEditConcept->readOnly();
+
+      // handle special case for space types
+      if (t_mo.optionalCast<model::SpaceType>()){
+        if (istringEqual("Plenum Space Type", t_mo.nameString())){
+          readOnly = true;
+        }
+      }
+
       nameLineEdit->bind(t_mo,
         OptionalStringGetter(std::bind(&NameLineEditConcept::get, nameLineEditConcept.data(), t_mo, true)),
         // If the concept is read only, pass an empty optional
-        nameLineEditConcept->readOnly() ? boost::none : boost::optional<StringSetter>(std::bind(&NameLineEditConcept::set, nameLineEditConcept.data(), t_mo, std::placeholders::_1)),
+        readOnly ? boost::none : boost::optional<StringSetter>(std::bind(&NameLineEditConcept::set, nameLineEditConcept.data(), t_mo, std::placeholders::_1)),
         boost::optional<NoFailAction>(std::bind(&NameLineEditConcept::reset, nameLineEditConcept.data(), t_mo)));
 
       if (nameLineEditConcept->isInspectable()) {
@@ -1721,20 +1732,14 @@ namespace openstudio {
 
   void OSGridController::connectToModel()
   {
-    connect(m_model.getImpl<model::detail::Model_Impl>().get(),
-      static_cast<void (model::detail::Model_Impl::*)(const WorkspaceObject &, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::addWorkspaceObject),
-      this,
-      &OSGridController::onAddWorkspaceObject);
-
-    connect(m_model.getImpl<model::detail::Model_Impl>().get(),
-      static_cast<void (model::detail::Model_Impl::*)(const WorkspaceObject &, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::removeWorkspaceObject),
-      this,
-      &OSGridController::onRemoveWorkspaceObject);
+    m_model.getImpl<model::detail::Model_Impl>().get()->addWorkspaceObject.connect<OSGridController, &OSGridController::onAddWorkspaceObject>(this);
+    m_model.getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObject.connect<OSGridController, &OSGridController::onRemoveWorkspaceObject>(this);
   }
 
   void OSGridController::disconnectFromModel()
   {
-    disconnect(m_model.getImpl<openstudio::model::detail::Model_Impl>().get());
+    m_model.getImpl<model::detail::Model_Impl>().get()->addWorkspaceObject.disconnect<OSGridController, &OSGridController::onAddWorkspaceObject>(this);
+    m_model.getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObject.disconnect<OSGridController, &OSGridController::onRemoveWorkspaceObject>(this);
   }
 
   void OSGridController::onSelectionCleared()

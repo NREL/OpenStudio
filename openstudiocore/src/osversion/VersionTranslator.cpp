@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -48,7 +48,6 @@
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
-#include "../utilities/core/ApplicationPathHelpers.hpp"
 #include "../utilities/idf/IdfExtensibleGroup.hpp"
 #include "../utilities/idf/ValidityReport.hpp"
 #include "../utilities/core/PathHelpers.hpp"
@@ -67,7 +66,7 @@
 
 #include <boost/regex.hpp>
 #include <boost/lexical_cast.hpp>
-#include <boost/filesystem/fstream.hpp>
+
 
 namespace openstudio {
 namespace osversion {
@@ -116,7 +115,8 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("1.11.4")] = &VersionTranslator::update_1_11_3_to_1_11_4;
   m_updateMethods[VersionString("1.11.5")] = &VersionTranslator::update_1_11_4_to_1_11_5;
   m_updateMethods[VersionString("1.12.1")] = &VersionTranslator::update_1_12_0_to_1_12_1;
-  m_updateMethods[VersionString("1.13.4")] = &VersionTranslator::defaultUpdate;
+  m_updateMethods[VersionString("1.13.4")] = &VersionTranslator::update_1_12_3_to_1_12_4;
+  m_updateMethods[VersionString("2.0.0")] = &VersionTranslator::defaultUpdate;
 
 
   // List of previous versions that may be updated to this one.
@@ -236,6 +236,8 @@ VersionTranslator::VersionTranslator()
   m_startVersions.push_back(VersionString("1.13.1"));
   m_startVersions.push_back(VersionString("1.13.2"));
   m_startVersions.push_back(VersionString("1.13.3"));
+  m_startVersions.push_back(VersionString("1.13.4"));
+  m_startVersions.push_back(VersionString("1.14.0"));
 }
 
 boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm, 
@@ -250,7 +252,7 @@ boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::pat
   }
   
   path wp = completePathToFile(pathToOldOsm,path(),modelFileExtension(),false);
-  boost::filesystem::ifstream inFile(wp);
+  openstudio::filesystem::ifstream inFile(wp);
   if (inFile) {
     return loadModel(inFile,progressBar);
   }
@@ -261,6 +263,13 @@ boost::optional<model::Model> VersionTranslator::loadModel(std::istream& is,
                                                            ProgressBar* progressBar)
 {
   return updateVersion(is, false, progressBar);
+}
+
+boost::optional<model::Model> VersionTranslator::loadModelFromString(const std::string& str,
+                                                                     ProgressBar* progressBar)
+{
+  std::stringstream ss(str);
+  return updateVersion(ss, false, progressBar);
 }
 
 boost::optional<model::Component> VersionTranslator::loadComponent(const openstudio::path& pathToOldOsc, 
@@ -274,7 +283,7 @@ boost::optional<model::Component> VersionTranslator::loadComponent(const openstu
     return boost::none;
   }
   path wp = completePathToFile(pathToOldOsc,path(),componentFileExtension(),false);
-  boost::filesystem::ifstream inFile(wp);
+  openstudio::filesystem::ifstream inFile(wp);
   if (inFile) {
     return loadComponent(inFile,progressBar);
   }
@@ -510,12 +519,12 @@ void VersionTranslator::initializeMap(std::istream& is) {
           // get the sizing objects and save them for later,
           // we will reintrodce the sizing objects in the version 1.10.2 phase of the translation
           // when they were officially part of OS
-          auto cbeccIddFile = IddFile::load( getSharedResourcesPath() / "osversion/1_9_0_CBECC/OpenStudio.idd");
-          OS_ASSERT(cbeccIddFile);
+          auto cbeccIddFile = get_1_9_0_CBECC_IddFile();
+
           is.seekg(0, std::ios::beg);
-          auto cbeccIdfFile = IdfFile::load(is,cbeccIddFile.get());
+          auto cbeccIdfFile = IdfFile::load(is,cbeccIddFile);
           OS_ASSERT(cbeccIdfFile);
-          m_cbeccSizingObjects = cbeccIdfFile->getObjectsByType(cbeccIddFile->getObject("OS:Sizing:Zone").get());
+          m_cbeccSizingObjects = cbeccIdfFile->getObjectsByType(cbeccIddFile.getObject("OS:Sizing:Zone").get());
         }
 
       }
@@ -1324,10 +1333,10 @@ std::string VersionTranslator::update_0_9_1_to_0_9_2(const IdfFile& idf_0_9_1, c
       boost::optional<std::string> s;
 
       IdfObject newInletPortList(idd_0_9_2.getObject("OS:PortList").get());
-      newInletPortList.setString(0,createUUID().toString().toStdString());
+      newInletPortList.setString(0,toString(createUUID()));
 
       IdfObject newExhaustPortList(idd_0_9_2.getObject("OS:PortList").get());
-      newExhaustPortList.setString(0,createUUID().toString().toStdString());
+      newExhaustPortList.setString(0,toString(createUUID()));
 
       IdfObject newZoneHVACEquipmentList(idd_0_9_2.getObject("OS:ZoneHVAC:EquipmentList").get());
 
@@ -1458,7 +1467,7 @@ std::string VersionTranslator::update_0_9_1_to_0_9_2(const IdfFile& idf_0_9_1, c
                           connection.setUnsigned(3,2);
 
                           newFPTSecondaryInletConn = IdfObject(idd_0_9_2.getObject("OS:Connection").get());
-                          newFPTSecondaryInletConn->setString(0,createUUID().toString().toStdString());
+                          newFPTSecondaryInletConn->setString(0,toString(createUUID()));
 
                           newFPTSecondaryInletConn->setString(2,node.getString(0).get());
                           newFPTSecondaryInletConn->setUnsigned(3,3);
@@ -1559,7 +1568,7 @@ std::string VersionTranslator::update_0_9_5_to_0_9_6(const IdfFile& idf_0_9_5, c
     {
       IdfObject newSizingPlant(idd_0_9_6.getObject("OS:Sizing:Plant").get());
 
-      newSizingPlant.setString(0,createUUID().toString().toStdString());
+      newSizingPlant.setString(0,toString(createUUID()));
 
       newSizingPlant.setString(1,object.getString(0).get());
 
@@ -1780,7 +1789,7 @@ std::string VersionTranslator::update_0_11_1_to_0_11_2(const IdfFile& idf_0_11_1
     {
       alwaysOnSchedule = IdfObject(idd_0_11_2.getObject("OS:Schedule:Constant").get());
 
-      alwaysOnSchedule->setString(0,createUUID().toString().toStdString());
+      alwaysOnSchedule->setString(0,toString(createUUID()));
 
       alwaysOnSchedule->setString(1,"Always On Discrete");
 
@@ -1789,7 +1798,7 @@ std::string VersionTranslator::update_0_11_1_to_0_11_2(const IdfFile& idf_0_11_1
 
       IdfObject typeLimits(idd_0_11_2.getObject("OS:ScheduleTypeLimits").get());
 
-      typeLimits.setString(0,createUUID().toString().toStdString());
+      typeLimits.setString(0,toString(createUUID()));
 
       typeLimits.setString(1,"Always On Discrete Limits");
 
@@ -1824,7 +1833,7 @@ std::string VersionTranslator::update_0_11_1_to_0_11_2(const IdfFile& idf_0_11_1
 
       IdfObject newMechVentController(idd_0_11_2.getObject("OS:Controller:MechanicalVentilation").get());
 
-      newMechVentController.setString(0,createUUID().toString().toStdString());
+      newMechVentController.setString(0,toString(createUUID()));
 
       newMechVentController.setString(4,"ZoneSum");
 
@@ -1846,14 +1855,14 @@ std::string VersionTranslator::update_0_11_1_to_0_11_2(const IdfFile& idf_0_11_1
 
       IdfObject newAvailList(idd_0_11_2.getObject("OS:AvailabilityManagerAssignmentList").get());
 
-      newAvailList.setString(0,createUUID().toString().toStdString());
+      newAvailList.setString(0,toString(createUUID()));
 
       newAirLoopHVAC.setString(3,newAvailList.getString(0).get());
 
 
       IdfObject newAvailabilityManagerScheduled(idd_0_11_2.getObject("OS:AvailabilityManager:Scheduled").get());
 
-      newAvailabilityManagerScheduled.setString(0,createUUID().toString().toStdString());
+      newAvailabilityManagerScheduled.setString(0,toString(createUUID()));
 
       newAvailabilityManagerScheduled.setString(2,alwaysOnSchedule->getString(0).get());
 
@@ -1864,7 +1873,7 @@ std::string VersionTranslator::update_0_11_1_to_0_11_2(const IdfFile& idf_0_11_1
 
       IdfObject newAvailabilityManagerNightCycle(idd_0_11_2.getObject("OS:AvailabilityManager:NightCycle").get());
 
-      newAvailabilityManagerNightCycle.setString(0,createUUID().toString().toStdString());
+      newAvailabilityManagerNightCycle.setString(0,toString(createUUID()));
 
       eg = newAvailList.insertExtensibleGroup(1);
 
@@ -2975,10 +2984,10 @@ std::string VersionTranslator::update_1_9_4_to_1_9_5(const IdfFile& idf_1_9_4, c
           for( const auto & coil : coils ) {
             // waterInletConnection will be a handle to a connection object
             if( auto waterInletConnectionHandle = coil.getString(waterInletIndex) ) {
-              if( auto waterInletConnection = idf_1_9_4.getObject(Handle(QString::fromStdString(waterInletConnectionHandle.get()))) ) {
+              if( auto waterInletConnection = idf_1_9_4.getObject(toUUID(waterInletConnectionHandle.get()))) {
                 if( auto sourceHandle = waterInletConnection->getString(2) ) {
                   if( sourceHandle.get() == actuatorNodeHandle.get() ) {
-                    result = coil.handle().toString().toStdString();
+                    result = toString(coil.handle());
                     break;
                   }
                 }
@@ -3325,6 +3334,44 @@ std::string VersionTranslator::update_1_12_0_to_1_12_1(const IdfFile& idf_1_12_0
           newObject.setString(newi,s.get());
         }
         ++newi;
+      }
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
+    } else {
+      ss << object;
+    }
+  }
+
+  return ss.str();
+}
+
+std::string VersionTranslator::update_1_12_3_to_1_12_4(const IdfFile& idf_1_12_3, const IddFileAndFactoryWrapper& idd_1_12_4) {
+  std::stringstream ss;
+
+  ss << idf_1_12_3.header() << std::endl << std::endl;
+  IdfFile targetIdf(idd_1_12_4.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  for (const IdfObject& object : idf_1_12_3.objects()) {
+    auto iddname = object.iddObject().name();
+
+    if (iddname == "OS:AirTerminal:SingleDuct:VAV:Reheat") {
+      auto iddObject = idd_1_12_4.getObject("OS:AirTerminal:SingleDuct:VAV:Reheat");
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        if ( auto s = object.getString(i) ) {
+          if( i == 14u ) {
+            if ( istringEqual("Reverse",s.get()) ) {
+              newObject.setString(i,"ReverseWithLimits");
+            } else {
+              newObject.setString(i,s.get());
+            }
+          } else {
+            newObject.setString(i,s.get());
+          }
+        }
       }
 
       m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );

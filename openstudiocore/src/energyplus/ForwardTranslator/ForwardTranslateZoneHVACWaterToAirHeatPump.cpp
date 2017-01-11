@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -30,6 +30,8 @@
 #include "../../model/Model.hpp"
 #include "../../model/Schedule.hpp"
 #include "../../model/Schedule_Impl.hpp"
+#include "../../model/AirLoopHVAC.hpp"
+#include "../../model/AirLoopHVAC_Impl.hpp"
 #include "../../model/Node.hpp"
 #include "../../model/Node_Impl.hpp"
 #include "../../model/ThermalZone.hpp"
@@ -105,6 +107,8 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACWaterToAirHeatPum
     }
   }
 
+  auto t_airLoopHVAC = modelObject.airLoopHVAC();
+
   // AirInletNodeName
   boost::optional<std::string> airInletNodeName;
 
@@ -132,34 +136,35 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACWaterToAirHeatPum
   }
 
   // Outdoor Air Mixer
+  if( ! t_airLoopHVAC ) {
+    std::string oaMixerName = baseName + " OA Mixer";  
 
-  std::string oaMixerName = baseName + " OA Mixer";  
+    IdfObject _outdoorAirMixer(IddObjectType::OutdoorAir_Mixer);
+    _outdoorAirMixer.setName(oaMixerName);
+    m_idfObjects.push_back(_outdoorAirMixer);
 
-  IdfObject _outdoorAirMixer(IddObjectType::OutdoorAir_Mixer);
-  _outdoorAirMixer.setName(oaMixerName);
-  m_idfObjects.push_back(_outdoorAirMixer);
+    _outdoorAirMixer.setString(OutdoorAir_MixerFields::MixedAirNodeName,mixedAirNodeName);
 
-  _outdoorAirMixer.setString(OutdoorAir_MixerFields::MixedAirNodeName,mixedAirNodeName);
+    _outdoorAirMixer.setString(OutdoorAir_MixerFields::OutdoorAirStreamNodeName,oaNodeName);
 
-  _outdoorAirMixer.setString(OutdoorAir_MixerFields::OutdoorAirStreamNodeName,oaNodeName);
+    IdfObject _oaNodeList(openstudio::IddObjectType::OutdoorAir_NodeList);
+    _oaNodeList.setString(0,oaNodeName);
+    m_idfObjects.push_back(_oaNodeList);
 
-  IdfObject _oaNodeList(openstudio::IddObjectType::OutdoorAir_NodeList);
-  _oaNodeList.setString(0,oaNodeName);
-  m_idfObjects.push_back(_oaNodeList);
+    _outdoorAirMixer.setString(OutdoorAir_MixerFields::ReliefAirStreamNodeName,reliefAirNodeName);
 
-  _outdoorAirMixer.setString(OutdoorAir_MixerFields::ReliefAirStreamNodeName,reliefAirNodeName);
+    if(airInletNodeName)
+    {
+      _outdoorAirMixer.setString(OutdoorAir_MixerFields::ReturnAirStreamNodeName,airInletNodeName.get());
+    }
 
-  if(airInletNodeName)
-  {
-    _outdoorAirMixer.setString(OutdoorAir_MixerFields::ReturnAirStreamNodeName,airInletNodeName.get());
+    // OutdoorAirMixerObjectType
+    idfObject.setString(ZoneHVAC_WaterToAirHeatPumpFields::OutdoorAirMixerObjectType,
+                        _outdoorAirMixer.iddObject().name());
+
+    // OutdoorAirMixerName
+    idfObject.setString(ZoneHVAC_WaterToAirHeatPumpFields::OutdoorAirMixerName,oaMixerName);
   }
-
-  // OutdoorAirMixerObjectType
-  idfObject.setString(ZoneHVAC_WaterToAirHeatPumpFields::OutdoorAirMixerObjectType,
-                      _outdoorAirMixer.iddObject().name());
-
-  // OutdoorAirMixerName
-  idfObject.setString(ZoneHVAC_WaterToAirHeatPumpFields::OutdoorAirMixerName,oaMixerName);
 
   // SupplyAirFlowRateDuringCoolingOperation
   if( modelObject.isSupplyAirFlowRateDuringCoolingOperationAutosized() )
@@ -226,13 +231,18 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACWaterToAirHeatPum
 
   if( boost::optional<IdfObject> _supplyAirFan = translateAndMapModelObject(supplyAirFan) )
   {
+    std::string fanInletNodeName = mixedAirNodeName;
+    if( t_airLoopHVAC && airInletNodeName ) {
+     fanInletNodeName = airInletNodeName.get();
+    }
+
     idfObject.setString(ZoneHVAC_WaterToAirHeatPumpFields::SupplyAirFanObjectType,_supplyAirFan->iddObject().name() );
 
     idfObject.setString(ZoneHVAC_WaterToAirHeatPumpFields::SupplyAirFanName,_supplyAirFan->name().get());
 
     if( _supplyAirFan->iddObject().type() == IddObjectType::Fan_OnOff )
     {
-      _supplyAirFan->setString(Fan_OnOffFields::AirInletNodeName,mixedAirNodeName);
+      _supplyAirFan->setString(Fan_OnOffFields::AirInletNodeName,fanInletNodeName);
 
       _supplyAirFan->setString(Fan_OnOffFields::AirOutletNodeName,fanOutletNodeName);
     }

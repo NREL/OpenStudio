@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -55,7 +55,7 @@
 #include "../units/OSOptionalQuantity.hpp"
 #include "../units/QuantityConverter.hpp"
 
-#include <boost/filesystem/fstream.hpp> 
+ 
 #include <boost/lexical_cast.hpp>
 #include <boost/numeric/conversion/cast.hpp>
 
@@ -339,7 +339,7 @@ namespace detail {
         }
       }
     }
-    return result;
+    return result; 
   }
 
   boost::optional<QUrl> IdfObject_Impl::getURL(unsigned index, 
@@ -1434,14 +1434,14 @@ namespace detail {
     }
 
     if (nameChange){
-      emit onNameChange();
+      this->onNameChange.nano_emit();
     }
 
     if (dataChange){
-      emit onDataChange();
+      this->onDataChange.nano_emit();
     }
 
-    emit onChange();
+    this->onChange.nano_emit();
 
     m_diffs.clear();
   }

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -42,7 +42,7 @@ namespace detail {
 
   /** RefrigerationGasCoolerAirCooled_Impl is a ParentObject_Impl that is the implementation class for RefrigerationGasCoolerAirCooled.*/
   class MODEL_API RefrigerationGasCoolerAirCooled_Impl : public ParentObject_Impl {
-//    Q_OBJECT;
+//    
    public:
     /** @name Constructors and Destructors */
     //@{

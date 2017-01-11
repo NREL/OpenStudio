@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -609,14 +609,14 @@ namespace isomodel {
     openstudio::path weatherFilename;
     //see if weather file path is absolute path
     //if so, use it, else assemble relative path
-    if(boost::filesystem::exists( _weatherFilePath ))
+    if(openstudio::filesystem::exists( _weatherFilePath ))
     {
       weatherFilename = _weatherFilePath;      
     }
     else
     {
       weatherFilename = _dataFile.parent_path() / _weatherFilePath;
-      if ( !boost::filesystem::exists( weatherFilename ) )
+      if ( !openstudio::filesystem::exists( weatherFilename ) )
       {
         LOG(Error, "Weather File Not Found: " << openstudio::toString(_weatherFilePath));
         _valid = false;
@@ -648,7 +648,7 @@ namespace isomodel {
   void UserModel::load(const openstudio::path &buildingFile){
     _dataFile = buildingFile;
     _valid = true;
-    if ( !boost::filesystem::exists( buildingFile ) )
+    if ( !openstudio::filesystem::exists( buildingFile ) )
     {
       LOG(Error, "ISO Model File Not Found: " << openstudio::toString(buildingFile));
       _valid = false;

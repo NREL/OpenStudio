@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -44,15 +44,15 @@ namespace detail {
   /** CoilHeatingElectric_Impl is a StraightComponent_Impl that is the
    *  implementation class for CoilHeatingElectric.*/
   class MODEL_API CoilHeatingElectric_Impl : public StraightComponent_Impl {
-    Q_OBJECT;
+    
 
-    Q_PROPERTY(double efficiency READ efficiency WRITE setEfficiency RESET resetEfficiency);
-    Q_PROPERTY(bool isEfficiencyDefaulted READ isEfficiencyDefaulted);
-    Q_PROPERTY(boost::optional<double> nominalCapacity READ nominalCapacity WRITE setNominalCapacity RESET resetNominalCapacity);
-    Q_PROPERTY(bool isNominalCapacityDefaulted READ isNominalCapacityDefaulted);
-    Q_PROPERTY(bool isNominalCapacityAutosized READ isNominalCapacityAutosized);
+    
+    
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> availabilitySchedule READ availabilityScheduleAsModelObject WRITE setAvailabilityScheduleAsModelObject);
+    
   public:
     /** @name Constructors and Destructors */
     //@{

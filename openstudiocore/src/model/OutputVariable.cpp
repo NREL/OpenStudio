@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -227,18 +227,7 @@ namespace detail {
 
   std::vector<std::string> OutputVariable_Impl::reportingFrequencyValues() const
   {
-    std::vector<std::string> retvals;
-
-    std::map<int, std::string> names = openstudio::ReportingFrequency::getNames();
-
-    for (std::map<int, std::string>::const_iterator itr = names.begin();
-        itr != names.end();
-        ++itr)
-    {
-      retvals.push_back(itr->second);
-    }
-
-    return retvals;
+    return OutputVariable::reportingFrequencyValues();
   }
 } // detail
 
@@ -257,6 +246,22 @@ OutputVariable::OutputVariable(std::shared_ptr<detail::OutputVariable_Impl> impl
 IddObjectType OutputVariable::iddObjectType() {
   IddObjectType result(IddObjectType::OS_Output_Variable);
   return result;
+}
+
+std::vector<std::string> OutputVariable::reportingFrequencyValues()
+{
+  std::vector<std::string> retvals;
+
+  std::map<int, std::string> names = openstudio::ReportingFrequency::getNames();
+
+  for (std::map<int, std::string>::const_iterator itr = names.begin();
+      itr != names.end();
+      ++itr)
+  {
+    retvals.push_back(itr->second);
+  }
+
+  return retvals;
 }
 
 std::string OutputVariable::keyValue() const

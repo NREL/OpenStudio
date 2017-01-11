@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -180,6 +180,24 @@ namespace detail {
     result.insert(result.end(), spaceInfiltrationEffectiveLeakageAreas.begin(), spaceInfiltrationEffectiveLeakageAreas.end());
 
     return result;
+  }
+
+  boost::optional<std::string> SpaceType_Impl::setName(const std::string& newName)
+  {
+    // don't allow user to change name of plenum space type since this is found by name in Model::plenumSpaceType
+    if (istringEqual("Plenum Space Type", this->nameString())){
+      return this->nameString();
+    }
+    return ResourceObject_Impl::setName(newName);
+  }
+
+  boost::optional<std::string> SpaceType_Impl::setName(const std::string& newName, bool checkValidity)
+  {
+    // don't allow user to change name of plenum space type since this is found by name in Model::plenumSpaceType
+    if (istringEqual("Plenum Space Type", this->nameString())){
+      return this->nameString();
+    }
+    return ResourceObject_Impl::setName(newName, checkValidity);
   }
 
   boost::optional<DefaultConstructionSet> SpaceType_Impl::defaultConstructionSet() const

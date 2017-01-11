@@ -56,6 +56,9 @@
 
 #include <qevent.h>
 
+#include <QtPlugin>
+//Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin)
+
 #include "qwinwidget.h"
 
 #include <qt_windows.h>

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -245,8 +245,7 @@ void ModelObjectGraphicsItem::setModelObject( model::OptionalModelObject modelOb
 
   if( m_modelObject )
   {
-    connect(m_modelObject->getImpl<detail::IdfObject_Impl>().get(), &detail::IdfObject_Impl::onNameChange,
-            this, &ModelObjectGraphicsItem::onNameChange);
+    m_modelObject->getImpl<detail::IdfObject_Impl>().get()->detail::IdfObject_Impl::onNameChange.connect<ModelObjectGraphicsItem, &ModelObjectGraphicsItem::onNameChange>(this);
 
     setFlag(QGraphicsItem::ItemIsSelectable);
 

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -62,6 +62,8 @@
 #include "../../model/Site_Impl.hpp"
 #include "../../model/ScheduleDay.hpp"
 #include "../../model/ScheduleDay_Impl.hpp"
+#include "../../model/OtherEquipment.hpp"
+#include "../../model/OtherEquipment_Impl.hpp"
 
 #include "../../utilities/core/Optional.hpp"
 #include "../../utilities/core/Checksum.hpp"
@@ -71,6 +73,7 @@
 #include "../../utilities/idf/IdfFile.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include "../../utilities/idd/IddEnums.hpp"
+#include <utilities/idd/OtherEquipment_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/Version_FieldEnums.hxx>
 #include <utilities/idd/Lights_FieldEnums.hxx>
@@ -452,4 +455,22 @@ TEST_F(EnergyPlusFixture,ReverseTranslator_ScheduleDayInterval) {
   ASSERT_EQ(2u,times.size());
   EXPECT_EQ(Time(0,12,0),times[0]);
   EXPECT_EQ(Time(0,24,0),times[1]);
+}
+
+TEST_F(EnergyPlusFixture, ReverseTranslator_OtherEquipment) {
+  Workspace ws(StrictnessLevel::Draft,IddFileType(IddFileType::EnergyPlus));
+  OptionalWorkspaceObject owo = ws.addObject(IdfObject(IddObjectType::OtherEquipment));
+  ASSERT_TRUE(owo);
+  WorkspaceObject object = *owo;
+
+  object.setName("Other Eq 1");
+  object.setString(OtherEquipmentFields::EndUseSubcategory, "Category A");
+
+  ReverseTranslator trans;
+  Model model = trans.translateWorkspace(ws);
+
+  OtherEquipmentVector otherEquipments = model.getModelObjects<OtherEquipment>();
+  ASSERT_EQ(1u, otherEquipments.size());
+  EXPECT_EQ(otherEquipments[0].name().get(), "Other Eq 1");
+  EXPECT_EQ(otherEquipments[0].endUseSubcategory(), "Category A");
 }

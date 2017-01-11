@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -41,7 +41,7 @@ namespace openstudio{
     FileLogSink_Impl::FileLogSink_Impl(const openstudio::path& path)
       : m_path(path)
     {
-      m_ofs = boost::shared_ptr<boost::filesystem::ofstream>(new boost::filesystem::ofstream(path));
+      m_ofs = boost::shared_ptr<openstudio::filesystem::ofstream>(new openstudio::filesystem::ofstream(path));
       this->setStream(m_ofs);
       this->enable();
     }
@@ -61,7 +61,7 @@ namespace openstudio{
 
     std::vector<LogMessage> FileLogSink_Impl::logMessages() const
     {
-      boost::filesystem::ifstream ifs(m_path);
+      openstudio::filesystem::ifstream ifs(m_path);
       std::string line;
       std::string text;
       while(std::getline(ifs, line)){

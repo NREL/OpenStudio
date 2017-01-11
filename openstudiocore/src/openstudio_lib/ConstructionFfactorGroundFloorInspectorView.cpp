@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -83,7 +83,7 @@ void ConstructionFfactorGroundFloorInspectorView::createLayout()
 
   ++row;
 
-  m_nameEdit = new OSLineEdit();
+  m_nameEdit = new OSLineEdit2();
   mainGridLayout->addWidget(m_nameEdit, row, 0, 1, 3);
 
   ++row;
@@ -104,8 +104,8 @@ void ConstructionFfactorGroundFloorInspectorView::createLayout()
 
   ++row;
 
-  m_ffactorEdit = new OSQuantityEdit(m_isIP);
-  connect(this, &ConstructionFfactorGroundFloorInspectorView::toggleUnitsClicked, m_ffactorEdit, &OSQuantityEdit::onUnitSystemChange);
+  m_ffactorEdit = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &ConstructionFfactorGroundFloorInspectorView::toggleUnitsClicked, m_ffactorEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_ffactorEdit, row, 0);
 
   ++row;
@@ -118,8 +118,8 @@ void ConstructionFfactorGroundFloorInspectorView::createLayout()
 
   ++row;
 
-  m_areaEdit = new OSQuantityEdit(m_isIP);
-  connect(this, &ConstructionFfactorGroundFloorInspectorView::toggleUnitsClicked, m_areaEdit, &OSQuantityEdit::onUnitSystemChange);
+  m_areaEdit = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &ConstructionFfactorGroundFloorInspectorView::toggleUnitsClicked, m_areaEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_areaEdit, row, 0);
 
   ++row;
@@ -132,8 +132,8 @@ void ConstructionFfactorGroundFloorInspectorView::createLayout()
 
   ++row;
 
-  m_perimeterExposedEdit = new OSQuantityEdit(m_isIP);
-  connect(this, &ConstructionFfactorGroundFloorInspectorView::toggleUnitsClicked, m_perimeterExposedEdit, &OSQuantityEdit::onUnitSystemChange);
+  m_perimeterExposedEdit = new OSQuantityEdit2("","","", m_isIP);
+  connect(this, &ConstructionFfactorGroundFloorInspectorView::toggleUnitsClicked, m_perimeterExposedEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_perimeterExposedEdit, row, 0);
 
   ++row;
@@ -167,12 +167,36 @@ void ConstructionFfactorGroundFloorInspectorView::onUpdate()
 
 void ConstructionFfactorGroundFloorInspectorView::attach(openstudio::model::FFactorGroundFloorConstruction & fFactorGroundFloorConstruction)
 {
-  m_nameEdit->bind(fFactorGroundFloorConstruction,"name");
-  m_ffactorEdit->bind(fFactorGroundFloorConstruction,"fFactor",m_isIP);
-  m_areaEdit->bind(fFactorGroundFloorConstruction,"area",m_isIP);
-  m_perimeterExposedEdit->bind(fFactorGroundFloorConstruction,"perimeterExposed",m_isIP);
+  m_fFactorGroundFloorConstruction = fFactorGroundFloorConstruction;
+
+  m_nameEdit->bind(
+    *m_fFactorGroundFloorConstruction,
+    OptionalStringGetter(std::bind(&model::FFactorGroundFloorConstruction::name, m_fFactorGroundFloorConstruction.get_ptr(),true)),
+    boost::optional<StringSetter>(std::bind(&model::FFactorGroundFloorConstruction::setName, m_fFactorGroundFloorConstruction.get_ptr(),std::placeholders::_1))
+  );
+
+  m_ffactorEdit->bind(
+    m_isIP,
+    *m_fFactorGroundFloorConstruction,
+    DoubleGetter(std::bind(&model::FFactorGroundFloorConstruction::fFactor, m_fFactorGroundFloorConstruction.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::FFactorGroundFloorConstruction::*)(double)>(&model::FFactorGroundFloorConstruction::setFFactor), m_fFactorGroundFloorConstruction.get_ptr(), std::placeholders::_1))
+  );
+
+  m_areaEdit->bind(
+    m_isIP,
+    *m_fFactorGroundFloorConstruction,
+    DoubleGetter(std::bind(&model::FFactorGroundFloorConstruction::area, m_fFactorGroundFloorConstruction.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::FFactorGroundFloorConstruction::*)(double)>(&model::FFactorGroundFloorConstruction::setArea), m_fFactorGroundFloorConstruction.get_ptr(), std::placeholders::_1))
+  );
+
+  m_perimeterExposedEdit->bind(
+    m_isIP,
+    *m_fFactorGroundFloorConstruction,
+    DoubleGetter(std::bind(&model::FFactorGroundFloorConstruction::perimeterExposed, m_fFactorGroundFloorConstruction.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::FFactorGroundFloorConstruction::*)(double)>(&model::FFactorGroundFloorConstruction::setPerimeterExposed), m_fFactorGroundFloorConstruction.get_ptr(), std::placeholders::_1))
+  );
   
-  m_standardsInformationWidget->attach(fFactorGroundFloorConstruction);
+  m_standardsInformationWidget->attach(m_fFactorGroundFloorConstruction.get());
 }
 
 void ConstructionFfactorGroundFloorInspectorView::detach()
@@ -182,6 +206,8 @@ void ConstructionFfactorGroundFloorInspectorView::detach()
   m_perimeterExposedEdit->unbind();
 
   m_standardsInformationWidget->detach();
+
+  m_fFactorGroundFloorConstruction = boost::none;
 }
 
 } // openstudio

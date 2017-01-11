@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -30,20 +30,15 @@
 #define OPENSTUDIO_WINDOWMATERIALGLAZINGREFRACTIONEXTINCTIONMETHODINSPECTORVIEW_HPP
 
 #include "ModelObjectInspectorView.hpp"
+#include "../model/RefractionExtinctionGlazing.hpp"
 
 namespace openstudio {
 
-namespace model {
+class OSLineEdit2;
 
-  class RefractionExtinctionGlazing;
+class OSSwitch2;
 
-}
-
-class OSLineEdit;
-
-class OSSwitch;
-
-class OSQuantityEdit;
+class OSQuantityEdit2;
 
 class StandardsInformationMaterialWidget;
 
@@ -77,27 +72,29 @@ class WindowMaterialGlazingRefractionExtinctionMethodInspectorView : public Mode
 
     bool m_isIP;
 
-    OSLineEdit * m_nameEdit = nullptr;
+    boost::optional<model::RefractionExtinctionGlazing> m_refractionExtinctionGlazing;
 
-    OSSwitch * m_solarDiffusing = nullptr;
+    OSLineEdit2 * m_nameEdit = nullptr;
 
-    OSQuantityEdit * m_thickness = nullptr;
+    OSSwitch2 * m_solarDiffusing = nullptr;
 
-    OSQuantityEdit * m_solarIndexOfRefraction = nullptr;
+    OSQuantityEdit2 * m_thickness = nullptr;
 
-    OSQuantityEdit * m_solarExtinctionCoefficient = nullptr;
+    OSQuantityEdit2 * m_solarIndexOfRefraction = nullptr;
 
-    OSQuantityEdit * m_visibleIndexOfRefraction = nullptr;
+    OSQuantityEdit2 * m_solarExtinctionCoefficient = nullptr;
 
-    OSQuantityEdit * m_visibleExtinctionCoefficient = nullptr;
+    OSQuantityEdit2 * m_visibleIndexOfRefraction = nullptr;
 
-    OSQuantityEdit * m_infraredTransmittanceAtNormalIncidence = nullptr;
+    OSQuantityEdit2 * m_visibleExtinctionCoefficient = nullptr;
 
-    OSQuantityEdit * m_infraredHemisphericalEmissivity = nullptr;
+    OSQuantityEdit2 * m_infraredTransmittanceAtNormalIncidence = nullptr;
 
-    OSQuantityEdit * m_conductivity = nullptr;
+    OSQuantityEdit2 * m_infraredHemisphericalEmissivity = nullptr;
 
-    OSQuantityEdit * m_dirtCorrectionFactorForSolarAndVisibleTransmittance = nullptr;
+    OSQuantityEdit2 * m_conductivity = nullptr;
+
+    OSQuantityEdit2 * m_dirtCorrectionFactorForSolarAndVisibleTransmittance = nullptr;
 
     StandardsInformationMaterialWidget * m_standardsInformationWidget = nullptr;
 

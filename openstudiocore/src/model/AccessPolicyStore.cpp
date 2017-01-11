@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -35,6 +35,7 @@
 #include "AccessPolicyStore.hpp"
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/FilesystemHelpers.hpp"
 #include "../utilities/idd/IddFileAndFactoryWrapper.hpp"
 
 using std::map;
@@ -293,18 +294,16 @@ namespace openstudio
       return *s_instance;
     }
 
-    bool AccessPolicyStore::loadFile( QFile& file)
+    bool AccessPolicyStore::loadFile( const QByteArray &data)
     {
       QXmlSimpleReader xmlReader;
       AccessParser ap;
       xmlReader.setContentHandler( &ap );
 
-      if(!file.exists())
-      {
-        LOG(Debug,"file:"<<file.fileName().toStdString()<<" was not found\n");
-        return false;
-      }
-      auto source = new QXmlInputSource( &file );
+      //JMT 2016-03-22 this looks like a memory leak to me. I don't see an assigned owner
+      //               in Qt nor a delete
+      auto source = new QXmlInputSource( );
+      source->setData( data );
       //LER:: add error handler
       if(!xmlReader.parse(source))
       {
@@ -312,12 +311,26 @@ namespace openstudio
         return false;
       }
       return true;
+    }
 
+    bool AccessPolicyStore::loadFile( openstudio::filesystem::ifstream& file)
+    {
+      QXmlSimpleReader xmlReader;
+      AccessParser ap;
+      xmlReader.setContentHandler( &ap );
+
+      if(!file.is_open())
+      {
+        LOG(Debug,"file was not found\n");
+        return false;
+      }
+
+      return loadFile(openstudio::filesystem::read_as_QByteArray(file));
     }
 
     bool AccessPolicyStore::loadFile(const openstudio::path& path)
     {
-      QFile file(toQString(path));
+      openstudio::filesystem::ifstream file(path);
       return loadFile(file);
     }
 

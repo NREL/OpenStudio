@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -40,18 +40,18 @@ namespace detail {
 
 /** ControllerWaterCoil_Impl is a HVACComponent_Impl that is the implementation class for ControllerWaterCoil.*/
 class MODEL_API ControllerWaterCoil_Impl : public HVACComponent_Impl {
-  Q_OBJECT;
+  
 
-  Q_PROPERTY(boost::optional<std::string> controlVariable READ controlVariable WRITE setControlVariable RESET resetControlVariable);
-  Q_PROPERTY(boost::optional<std::string> action READ action WRITE setAction RESET resetAction);
-  Q_PROPERTY(boost::optional<std::string> actuatorVariable READ actuatorVariable WRITE setActuatorVariable RESET resetActuatorVariable);
-  Q_PROPERTY(boost::optional<double> controllerConvergenceTolerance READ controllerConvergenceTolerance WRITE setControllerConvergenceTolerance RESET resetControllerConvergenceTolerance);
-  Q_PROPERTY(bool isControllerConvergenceToleranceDefaulted READ isControllerConvergenceToleranceDefaulted);
-  Q_PROPERTY(bool isControllerConvergenceToleranceAutosized READ isControllerConvergenceToleranceAutosized);
-  Q_PROPERTY(boost::optional<double> maximumActuatedFlow READ maximumActuatedFlow WRITE setMaximumActuatedFlow RESET resetMaximumActuatedFlow);
-  Q_PROPERTY(bool isMaximumActuatedFlowAutosized READ isMaximumActuatedFlowAutosized);
-  Q_PROPERTY(double minimumActuatedFlow READ minimumActuatedFlow WRITE setMinimumActuatedFlow RESET resetMinimumActuatedFlow);
-  Q_PROPERTY(bool isMinimumActuatedFlowDefaulted READ isMinimumActuatedFlowDefaulted);
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
  public:
 
   /** @name Constructors and Destructors */

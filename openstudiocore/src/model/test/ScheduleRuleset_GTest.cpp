@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -806,6 +806,35 @@ TEST_F(ModelFixture, ScheduleRuleset_InsertObjects)
 
   // the add should not fail
   EXPECT_FALSE(addedObjects.empty());
+}
+
+TEST_F(ModelFixture, ScheduleRuleset_DesignDays)
+{
+  Model model;
+  ScheduleTypeLimits typeLimits(model);
+
+  ScheduleRuleset schedule(model);
+  schedule.setName("Always_On");
+  EXPECT_EQ("Always_On", schedule.name().get());
+  schedule.setScheduleTypeLimits(typeLimits);
+
+  EXPECT_EQ(1u, model.getConcreteModelObjects<ScheduleDay>().size());
+
+  ScheduleDay winterSchedule(model);
+  schedule.setWinterDesignDaySchedule(winterSchedule);
+  EXPECT_NE(winterSchedule.handle(), schedule.winterDesignDaySchedule().handle());
+
+  ScheduleDay summerSchedule(model);
+  schedule.setSummerDesignDaySchedule(summerSchedule);
+  EXPECT_NE(summerSchedule.handle(), schedule.summerDesignDaySchedule().handle());
+
+  EXPECT_EQ(5u, model.getConcreteModelObjects<ScheduleDay>().size());
+
+  schedule.remove();
+
+  EXPECT_EQ(2u, model.getConcreteModelObjects<ScheduleDay>().size());
+  EXPECT_FALSE(winterSchedule.handle().isNull());
+  EXPECT_FALSE(summerSchedule.handle().isNull());
 }
 
 /*
