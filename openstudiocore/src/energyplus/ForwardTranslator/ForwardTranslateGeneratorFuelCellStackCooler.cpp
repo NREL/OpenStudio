@@ -56,22 +56,22 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellStackCoo
     pcm.setName(*s);
   }
 
-  // InletNodeName
+  // HeatRecoveryWaterInletNodeName
 
   if (boost::optional<ModelObject> mo = modelObject.inletModelObject()) {
     if (boost::optional<Node> node = mo->optionalCast<Node>()) {
-      pcm.setString(Generator_FuelCell_StackCoolerFields::InletNodeName, node->name().get());
+      pcm.setString(Generator_FuelCell_StackCoolerFields::HeatRecoveryWaterInletNodeName, node->name().get());
     }
   }
 
-  // OutletNodeName
+  // HeatRecoveryWaterOutletNodeName
 
   if (boost::optional<ModelObject> mo = modelObject.outletModelObject()) {
     if (boost::optional<Node> node = mo->optionalCast<Node>()) {
-      pcm.setString(Generator_FuelCell_StackCoolerFields::OutletNodeName, node->name().get());
+      pcm.setString(Generator_FuelCell_StackCoolerFields::HeatRecoveryWaterOutletNodeName, node->name().get());
     }
   }
-
+  /*
   //HeatRecoveryWaterInletNodeName
   connection = modelObject.heatRecoveryWaterInletNode();
   if (connection) {
@@ -83,7 +83,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellStackCoo
   if (connection) {
     pcm.setString(Generator_FuelCell_StackCoolerFields::HeatRecoveryWaterOutletNodeName, connection.get().nameString());
   }
-
+  */
   //NominalStackTemperature
   d = modelObject.nominalStackTemperature();
   if (d) {
