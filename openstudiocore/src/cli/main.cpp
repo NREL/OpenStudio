@@ -157,7 +157,9 @@ extern "C" {
   void Init_coverage();
   void Init_cparse();
   void Init_date_core();
+#ifndef _MSC_VER
   void Init_dbm();
+#endif
   void Init_digest();
   void Init_etc();
   void Init_fcntl();
@@ -171,7 +173,9 @@ extern "C" {
   void Init_parser();
   void Init_pathname();
   void Init_psych();
+#ifndef _MSC_VER
   void Init_pty();
+#endif
   void Init_rational();
   //void Init_readline();
   void Init_ripper();
@@ -183,10 +187,14 @@ extern "C" {
   void Init_socket();
   void Init_stringio();
   void Init_strscan();
+#ifndef _MSC_VER
   void Init_syslog();
+#endif
   void Init_thread();
   void Init_wait();
+#ifndef _MSC_VER
   void Init_zlib();
+#endif
 
 
 }
@@ -533,9 +541,11 @@ int main(int argc, char *argv[])
   rb_provide("date_core");
   rb_provide("date_core.so");
   
+#ifndef _MSC_VER
   Init_dbm();
   rb_provide("dbm");
   rb_provide("dbm.so");
+#endif
   
   Init_etc();
   rb_provide("etc");
@@ -585,9 +595,11 @@ int main(int argc, char *argv[])
   rb_provide("psych");
   rb_provide("psych.so");
   
+#ifndef _MSC_VER
   Init_pty();
   rb_provide("pty");
   rb_provide("pty.so");
+#endif
   
   Init_rational();
   rb_provide("rational");
@@ -633,9 +645,11 @@ int main(int argc, char *argv[])
   rb_provide("strscan");
   rb_provide("strscan.so");
   
+#ifndef _MSC_VER
   Init_syslog();
   rb_provide("syslog");
   rb_provide("syslog.so");
+#endif
   
   Init_thread();
   rb_provide("thread");
@@ -645,9 +659,11 @@ int main(int argc, char *argv[])
   rb_provide("wait");
   rb_provide("wait.so");
   
+#ifndef _MSC_VER
   Init_zlib();
   rb_provide("zlib");
   rb_provide("zlib.so");
+#endif
 
     // openstudio
     init_openstudio_internal();
