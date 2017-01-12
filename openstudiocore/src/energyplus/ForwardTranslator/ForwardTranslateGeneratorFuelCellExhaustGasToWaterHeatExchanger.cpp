@@ -57,6 +57,22 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellExhaustG
     pcm.setName(*s);
   }
  
+  // InletNodeName
+
+  if (boost::optional<ModelObject> mo = modelObject.inletModelObject()) {
+    if (boost::optional<Node> node = mo->optionalCast<Node>()) {
+      pcm.setString(Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::InletNodeName, node->name().get());
+    }
+  }
+
+  // OutletNodeName
+
+  if (boost::optional<ModelObject> mo = modelObject.outletModelObject()) {
+    if (boost::optional<Node> node = mo->optionalCast<Node>()) {
+      pcm.setString(Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::OutletNodeName, node->name().get());
+    }
+  }
+
   //HeatRecoveryWaterInletNodeName 
   connection = modelObject.heatRecoveryWaterInletNode();
   if (connection) {

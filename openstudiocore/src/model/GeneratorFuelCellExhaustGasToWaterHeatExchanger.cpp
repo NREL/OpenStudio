@@ -50,7 +50,7 @@ namespace detail {
   GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl(const IdfObject& idfObject,
                                                                                                              Model_Impl* model,
                                                                                                              bool keepHandle)
-    : ModelObject_Impl(idfObject,model,keepHandle)
+    : StraightComponent_Impl(idfObject,model,keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == GeneratorFuelCellExhaustGasToWaterHeatExchanger::iddObjectType());
   }
@@ -58,7 +58,7 @@ namespace detail {
   GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                                                                                              Model_Impl* model,
                                                                                                              bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : StraightComponent_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == GeneratorFuelCellExhaustGasToWaterHeatExchanger::iddObjectType());
   }
@@ -66,7 +66,7 @@ namespace detail {
   GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl(const GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl& other,
                                                                                                              Model_Impl* model,
                                                                                                              bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : StraightComponent_Impl(other,model,keepHandle)
   {}
 
   const std::vector<std::string>& GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::outputVariableNames() const
@@ -411,13 +411,29 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  unsigned GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::inletPort() {
+    return OS_Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::InletNodeName;
+  }
+
+  unsigned GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::outletPort() {
+    return OS_Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::OutletNodeName;
+  }
+
+  bool GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::addToNode(Node & node) {
+    if (boost::optional<PlantLoop> plant = node.plantLoop()) {
+      return StraightComponent_Impl::addToNode(node);
+    }
+
+    return false;
+  }
+
 } // detail
 
 GeneratorFuelCellExhaustGasToWaterHeatExchanger::GeneratorFuelCellExhaustGasToWaterHeatExchanger(const Model& model,
                                                                                                  const Connection& waterInletNode,
                                                                                                  const Connection& waterOutletNode,
                                                                                                  const Node& exhaustOutletAirNode)
-  : ModelObject(GeneratorFuelCellExhaustGasToWaterHeatExchanger::iddObjectType(), model) {
+  : StraightComponent(GeneratorFuelCellExhaustGasToWaterHeatExchanger::iddObjectType(), model) {
   OS_ASSERT(getImpl<detail::GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl>());
 
   //note: This field contains the name of the node that connects the heat exchanger s inlet to the plant loop. This water is used for heat recovery.
@@ -433,7 +449,7 @@ GeneratorFuelCellExhaustGasToWaterHeatExchanger::GeneratorFuelCellExhaustGasToWa
 }
 
 GeneratorFuelCellExhaustGasToWaterHeatExchanger::GeneratorFuelCellExhaustGasToWaterHeatExchanger(const Model& model)
-  : ModelObject(GeneratorFuelCellExhaustGasToWaterHeatExchanger::iddObjectType(),model)
+  : StraightComponent(GeneratorFuelCellExhaustGasToWaterHeatExchanger::iddObjectType(), model)
 {
   OS_ASSERT(getImpl<detail::GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl>());
 
@@ -737,7 +753,7 @@ void GeneratorFuelCellExhaustGasToWaterHeatExchanger::resetMethod4CondensationTh
 
 /// @cond
 GeneratorFuelCellExhaustGasToWaterHeatExchanger::GeneratorFuelCellExhaustGasToWaterHeatExchanger(std::shared_ptr<detail::GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl> impl)
-  : ModelObject(impl)
+  : StraightComponent(impl)
 {}
 /// @endcond
 

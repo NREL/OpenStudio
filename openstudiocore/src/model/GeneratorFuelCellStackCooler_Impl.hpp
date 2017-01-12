@@ -30,7 +30,7 @@
 #define MODEL_GENERATORFUELCELLSTACKCOOLER_IMPL_HPP
 
 #include <model/ModelAPI.hpp>
-#include "ModelObject_Impl.hpp"
+#include "StraightComponent_Impl.hpp"
 
 namespace openstudio {
 namespace model {
@@ -40,7 +40,7 @@ class Connection;
 namespace detail {
 
   /** GeneratorFuelCellStackCooler_Impl is a ModelObject_Impl that is the implementation class for GeneratorFuelCellStackCooler.*/
-  class MODEL_API GeneratorFuelCellStackCooler_Impl : public ModelObject_Impl {
+  class MODEL_API GeneratorFuelCellStackCooler_Impl : public StraightComponent_Impl {
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -198,11 +198,19 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
+    unsigned inletPort() override;
 
+    unsigned outletPort() override;
+
+    bool addToNode(Node & node) override;
     //@}
    protected:
    private:
     REGISTER_LOGGER("openstudio.model.GeneratorFuelCellStackCooler");
+
+    boost::optional<Connection> optionalInletNode() const;
+    boost::optional<Connection> optionalOutletNode() const;
+
   };
 
 } // detail

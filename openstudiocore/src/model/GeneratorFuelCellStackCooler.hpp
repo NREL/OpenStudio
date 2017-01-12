@@ -30,7 +30,7 @@
 #define MODEL_GENERATORFUELCELLSTACKCOOLER_HPP
 
 #include <model/ModelAPI.hpp>
-#include "ModelObject.hpp"
+#include "StraightComponent.hpp"
 
 namespace openstudio {
 
@@ -45,7 +45,7 @@ namespace detail {
 } // detail
 
 /** GeneratorFuelCellStackCooler is a ModelObject that wraps the OpenStudio IDD object 'OS:Generator:FuelCell:StackCooler'. */
-class MODEL_API GeneratorFuelCellStackCooler : public ModelObject {
+class MODEL_API GeneratorFuelCellStackCooler : public StraightComponent {
  public:
   /** @name Constructors and Destructors */
   //@{

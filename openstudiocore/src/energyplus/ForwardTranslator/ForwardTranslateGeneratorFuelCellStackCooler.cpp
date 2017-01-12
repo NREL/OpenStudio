@@ -25,6 +25,8 @@
 
 #include "../../model/Connection.hpp"
 #include "../../model/Connection_Impl.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/Node_Impl.hpp"
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
@@ -52,6 +54,22 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellStackCoo
   s = modelObject.name();
   if (s) {
     pcm.setName(*s);
+  }
+
+  // InletNodeName
+
+  if (boost::optional<ModelObject> mo = modelObject.inletModelObject()) {
+    if (boost::optional<Node> node = mo->optionalCast<Node>()) {
+      pcm.setString(Generator_FuelCell_StackCoolerFields::InletNodeName, node->name().get());
+    }
+  }
+
+  // OutletNodeName
+
+  if (boost::optional<ModelObject> mo = modelObject.outletModelObject()) {
+    if (boost::optional<Node> node = mo->optionalCast<Node>()) {
+      pcm.setString(Generator_FuelCell_StackCoolerFields::OutletNodeName, node->name().get());
+    }
   }
 
   //HeatRecoveryWaterInletNodeName

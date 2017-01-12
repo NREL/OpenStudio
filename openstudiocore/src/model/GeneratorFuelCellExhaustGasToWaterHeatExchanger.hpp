@@ -30,7 +30,7 @@
 #define MODEL_GENERATORFUELCELLEXHAUSTGASTOWATERHEATEXCHANGER_HPP
 
 #include <model/ModelAPI.hpp>
-#include "ModelObject.hpp"
+#include "StraightComponent.hpp"
 
 namespace openstudio {
 
@@ -46,7 +46,7 @@ namespace detail {
 } // detail
 
 /** GeneratorFuelCellExhaustGasToWaterHeatExchanger is a ModelObject that wraps the OpenStudio IDD object 'OS:Generator:FuelCell:ExhaustGasToWaterHeatExchanger'. */
-class MODEL_API GeneratorFuelCellExhaustGasToWaterHeatExchanger : public ModelObject {
+class MODEL_API GeneratorFuelCellExhaustGasToWaterHeatExchanger : public StraightComponent {
  public:
   /** @name Constructors and Destructors */
   //@{

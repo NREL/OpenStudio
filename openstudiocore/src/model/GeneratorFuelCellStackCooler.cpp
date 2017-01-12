@@ -31,6 +31,8 @@
 
 #include "Connection.hpp"
 #include "Connection_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_Generator_FuelCell_StackCooler_FieldEnums.hxx>
@@ -47,7 +49,7 @@ namespace detail {
   GeneratorFuelCellStackCooler_Impl::GeneratorFuelCellStackCooler_Impl(const IdfObject& idfObject,
                                                                        Model_Impl* model,
                                                                        bool keepHandle)
-    : ModelObject_Impl(idfObject,model,keepHandle)
+    : StraightComponent_Impl(idfObject,model,keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == GeneratorFuelCellStackCooler::iddObjectType());
   }
@@ -55,7 +57,7 @@ namespace detail {
   GeneratorFuelCellStackCooler_Impl::GeneratorFuelCellStackCooler_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                                                        Model_Impl* model,
                                                                        bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : StraightComponent_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == GeneratorFuelCellStackCooler::iddObjectType());
   }
@@ -63,7 +65,7 @@ namespace detail {
   GeneratorFuelCellStackCooler_Impl::GeneratorFuelCellStackCooler_Impl(const GeneratorFuelCellStackCooler_Impl& other,
                                                                        Model_Impl* model,
                                                                        bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : StraightComponent_Impl(other,model,keepHandle)
   {}
 
   const std::vector<std::string>& GeneratorFuelCellStackCooler_Impl::outputVariableNames() const
@@ -430,12 +432,28 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  unsigned GeneratorFuelCellStackCooler_Impl::inletPort() {
+    return OS_Generator_FuelCell_StackCoolerFields::InletNodeName;
+  }
+
+  unsigned GeneratorFuelCellStackCooler_Impl::outletPort() {
+    return OS_Generator_FuelCell_StackCoolerFields::OutletNodeName;
+  }
+
+  bool GeneratorFuelCellStackCooler_Impl::addToNode(Node & node) {
+    if (boost::optional<PlantLoop> plant = node.plantLoop()) {
+      return StraightComponent_Impl::addToNode(node);
+    }
+
+    return false;
+  }
+
 } // detail
 
 GeneratorFuelCellStackCooler::GeneratorFuelCellStackCooler(const Model& model,
                                                            const Connection& waterInletNode,
                                                            const Connection& waterOutletNode)
-  : ModelObject(GeneratorFuelCellStackCooler::iddObjectType(), model) {
+  : StraightComponent(GeneratorFuelCellStackCooler::iddObjectType(), model) {
   OS_ASSERT(getImpl<detail::GeneratorFuelCellStackCooler_Impl>());
 
   bool ok = setHeatRecoveryWaterInletNode(waterInletNode);
@@ -471,7 +489,7 @@ GeneratorFuelCellStackCooler::GeneratorFuelCellStackCooler(const Model& model,
 }
 
 GeneratorFuelCellStackCooler::GeneratorFuelCellStackCooler(const Model& model)
-  : ModelObject(GeneratorFuelCellStackCooler::iddObjectType(),model)
+  : StraightComponent(GeneratorFuelCellStackCooler::iddObjectType(), model)
 {
   OS_ASSERT(getImpl<detail::GeneratorFuelCellStackCooler_Impl>());
 
@@ -744,7 +762,7 @@ void GeneratorFuelCellStackCooler::resetStackAirCoolerFanCoefficientf2() {
 
 /// @cond
 GeneratorFuelCellStackCooler::GeneratorFuelCellStackCooler(std::shared_ptr<detail::GeneratorFuelCellStackCooler_Impl> impl)
-  : ModelObject(impl)
+  : StraightComponent(impl)
 {}
 /// @endcond
 
