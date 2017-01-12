@@ -493,8 +493,8 @@ endif()
 # Only need this on Windows systems
 if( WIN32 )
 if(NOT EXISTS ${RUBY_MINGW_LIB_DIR})
-  set(RUBY_MINGW_LIB_ZIP_FILENAME "Ruby-mingw-install.zip")
-  set(RUBY_MINGW_LIB_ZIP_EXPECTED_MD5 "8615ab9cd5a95b9c6a62f98e91e4198e")
+  set(RUBY_MINGW_LIB_ZIP_FILENAME "Ruby-mingw-install.tar.gz")
+  set(RUBY_MINGW_LIB_ZIP_EXPECTED_MD5 "f88386bf2eee08e06e84ee981e43dc98")
 
   set(RUBY_MINGW_LIB_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${RUBY_MINGW_LIB_ZIP_FILENAME}")
   if(EXISTS "${RUBY_MINGW_LIB_ZIP_LOCAL_PATH}")
@@ -510,7 +510,7 @@ if(NOT EXISTS ${RUBY_MINGW_LIB_DIR})
       execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${RUBY_MINGW_LIB_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
   endif()
 
-  set(RUBY_MINGW_STUB_LIB "${CMAKE_BINARY_DIR}/Ruby-mingw-install/libx64-msvcrt-ruby200.dll.a")
+  set(RUBY_MINGW_STUB_LIB "${CMAKE_BINARY_DIR}/Ruby-mingw-install/libx64-msvcrt-ruby220.dll.a")
 endif()
 endif()
 
