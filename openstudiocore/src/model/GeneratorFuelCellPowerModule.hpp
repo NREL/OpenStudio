@@ -38,7 +38,7 @@ namespace model {
 
 class Curve;
 class ThermalZone;
-class Connection;
+class Node;
 
 namespace detail {
 
@@ -54,20 +54,20 @@ class MODEL_API GeneratorFuelCellPowerModule : public ModelObject {
 
   explicit GeneratorFuelCellPowerModule(const Model& model,
                                         const ThermalZone& heatlossZone,
-                                        const Connection& dilutionInletAirNode,
-                                        const Connection& dilutionOutletAirNode);
+                                        const Node& dilutionInletAirNode,
+                                        const Node& dilutionOutletAirNode);
 
   explicit GeneratorFuelCellPowerModule(const Model& model,
                                         const Curve& efficiencyCurve,
                                         const ThermalZone& heatlossZone,
-                                        const Connection& dilutionInletAirNode,
-                                        const Connection& dilutionOutletAirNode);
+                                        const Node& dilutionInletAirNode,
+                                        const Node& dilutionOutletAirNode);
 
   explicit GeneratorFuelCellPowerModule(const Model& model,
                                         const Curve& efficiencyCurve,
                                         const ThermalZone& heatlossZone,
-                                        const Connection& dilutionInletAirNode,
-                                        const Connection& dilutionOutletAirNode,
+                                        const Node& dilutionInletAirNode,
+                                        const Node& dilutionOutletAirNode,
                                         const Curve& skinlossCurve);
 
   explicit GeneratorFuelCellPowerModule(const Model& model,
@@ -142,9 +142,9 @@ class MODEL_API GeneratorFuelCellPowerModule : public ModelObject {
 
   double stackHeatlosstoDilutionAir() const;
 
-  boost::optional<Connection> dilutionInletAirNode() const;
+  boost::optional<Node> dilutionInletAirNode() const;
 
-  boost::optional<Connection> dilutionOutletAirNode() const;
+  boost::optional<Node> dilutionOutletAirNode() const;
 
   double minimumOperatingPoint() const;
 
@@ -264,11 +264,11 @@ class MODEL_API GeneratorFuelCellPowerModule : public ModelObject {
 
   void resetStackHeatlosstoDilutionAir();
 
-  bool setDilutionInletAirNode(const Connection& connection);
+  bool setDilutionInletAirNode(const Node& connection);
 
   void resetDilutionInletAirNode();
 
-  bool setDilutionOutletAirNode(const Connection& connection);
+  bool setDilutionOutletAirNode(const Node& connection);
 
   void resetDilutionOutletAirNode();
 

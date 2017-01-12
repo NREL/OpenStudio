@@ -25,6 +25,8 @@
 
 #include "../../model/Connection.hpp"
 #include "../../model/Connection_Impl.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/Node_Impl.hpp"
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
@@ -46,6 +48,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellExhaustG
   boost::optional<std::string> s;
   boost::optional<double> d;
   boost::optional<Connection> connection;
+  boost::optional<Node> node;
   
   IdfObject pcm = createAndRegisterIdfObject(openstudio::IddObjectType::Generator_FuelCell_ExhaustGasToWaterHeatExchanger, modelObject);
   //Name
@@ -74,9 +77,9 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellExhaustG
   }
 
   //ExhaustOutletAirNodeName 
-  connection = modelObject.exhaustOutletAirNode();
-  if (connection) {
-    pcm.setString(Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::ExhaustOutletAirNodeName, connection.get().nameString());
+  node = modelObject.exhaustOutletAirNode();
+  if (node) {
+    pcm.setString(Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::ExhaustOutletAirNodeName, node.get().nameString());
   }
 
   //HeatExchangerCalculationMethod

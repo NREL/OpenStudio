@@ -35,8 +35,8 @@
 #include "CurveQuadratic_Impl.hpp"
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
-#include "Connection.hpp"
-#include "Connection_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -301,12 +301,12 @@ namespace detail {
     return value.get();
   }
 
-  boost::optional<Connection> GeneratorFuelCellPowerModule_Impl::dilutionInletAirNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_Generator_FuelCell_PowerModuleFields::DilutionInletAirNodeName);
+  boost::optional<Node> GeneratorFuelCellPowerModule_Impl::dilutionInletAirNode() const {
+    return getObject<ModelObject>().getModelObjectTarget<Node>(OS_Generator_FuelCell_PowerModuleFields::DilutionInletAirNodeName);
   }
 
-  boost::optional<Connection> GeneratorFuelCellPowerModule_Impl::dilutionOutletAirNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_Generator_FuelCell_PowerModuleFields::DilutionOutletAirNodeName);
+  boost::optional<Node> GeneratorFuelCellPowerModule_Impl::dilutionOutletAirNode() const {
+    return getObject<ModelObject>().getModelObjectTarget<Node>(OS_Generator_FuelCell_PowerModuleFields::DilutionOutletAirNodeName);
   }
 
   double GeneratorFuelCellPowerModule_Impl::minimumOperatingPoint() const {
@@ -600,8 +600,8 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool GeneratorFuelCellPowerModule_Impl::setDilutionInletAirNode(const Connection& connection) {
-    bool result = setPointer(OS_Generator_FuelCell_PowerModuleFields::DilutionInletAirNodeName, connection.handle());
+  bool GeneratorFuelCellPowerModule_Impl::setDilutionInletAirNode(const Node& node) {
+    bool result = setPointer(OS_Generator_FuelCell_PowerModuleFields::DilutionInletAirNodeName, node.handle());
     return result;
   }
 
@@ -610,8 +610,8 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool GeneratorFuelCellPowerModule_Impl::setDilutionOutletAirNode(const Connection& connection) {
-    bool result = setPointer(OS_Generator_FuelCell_PowerModuleFields::DilutionOutletAirNodeName, connection.handle());
+  bool GeneratorFuelCellPowerModule_Impl::setDilutionOutletAirNode(const Node& node) {
+    bool result = setPointer(OS_Generator_FuelCell_PowerModuleFields::DilutionOutletAirNodeName, node.handle());
     return result;
   }
 
@@ -648,8 +648,8 @@ namespace detail {
 
 GeneratorFuelCellPowerModule::GeneratorFuelCellPowerModule(const Model& model,
                                                            const ThermalZone& heatlossZone,
-                                                           const Connection& dilutionInletAirNode,
-                                                           const Connection& dilutionOutletAirNode)
+                                                           const Node& dilutionInletAirNode,
+                                                           const Node& dilutionOutletAirNode)
   : ModelObject(GeneratorFuelCellPowerModule::iddObjectType(), model) {
   OS_ASSERT(getImpl<detail::GeneratorFuelCellPowerModule_Impl>());
   setEfficiencyCurveMode("Annex42");
@@ -726,8 +726,8 @@ GeneratorFuelCellPowerModule::GeneratorFuelCellPowerModule(const Model& model,
 GeneratorFuelCellPowerModule::GeneratorFuelCellPowerModule(const Model& model,
                                                            const Curve& efficiencyCurve,
                                                            const ThermalZone& heatlossZone,
-                                                           const Connection& dilutionInletAirNode,
-                                                           const Connection& dilutionOutletAirNode,
+                                                           const Node& dilutionInletAirNode,
+                                                           const Node& dilutionOutletAirNode,
                                                            const Curve& skinlossCurve)
   : ModelObject(GeneratorFuelCellPowerModule::iddObjectType(), model) {
   OS_ASSERT(getImpl<detail::GeneratorFuelCellPowerModule_Impl>());
@@ -796,8 +796,8 @@ GeneratorFuelCellPowerModule::GeneratorFuelCellPowerModule(const Model& model,
 GeneratorFuelCellPowerModule::GeneratorFuelCellPowerModule(const Model& model, 
                                                            const Curve& efficiencyCurve,
                                                            const ThermalZone& heatlossZone,
-                                                           const Connection& dilutionInletAirNode,
-                                                           const Connection& dilutionOutletAirNode)
+                                                           const Node& dilutionInletAirNode,
+                                                           const Node& dilutionOutletAirNode)
   : ModelObject(GeneratorFuelCellPowerModule::iddObjectType(), model) {
   OS_ASSERT(getImpl<detail::GeneratorFuelCellPowerModule_Impl>());
   setEfficiencyCurveMode("Annex42");
@@ -1042,11 +1042,11 @@ double GeneratorFuelCellPowerModule::stackHeatlosstoDilutionAir() const {
   return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->stackHeatlosstoDilutionAir();
 }
 
-boost::optional<Connection> GeneratorFuelCellPowerModule::dilutionInletAirNode() const {
+boost::optional<Node> GeneratorFuelCellPowerModule::dilutionInletAirNode() const {
   return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->dilutionInletAirNode();
 }
 
-boost::optional<Connection> GeneratorFuelCellPowerModule::dilutionOutletAirNode() const {
+boost::optional<Node> GeneratorFuelCellPowerModule::dilutionOutletAirNode() const {
   return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->dilutionOutletAirNode();
 }
 
@@ -1278,16 +1278,16 @@ void GeneratorFuelCellPowerModule::resetStackHeatlosstoDilutionAir() {
   getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->resetStackHeatlosstoDilutionAir();
 }
 
-bool GeneratorFuelCellPowerModule::setDilutionInletAirNode(const Connection& connection) {
-  return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setDilutionInletAirNode(connection);
+bool GeneratorFuelCellPowerModule::setDilutionInletAirNode(const Node& node) {
+  return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setDilutionInletAirNode(node);
 }
 
 void GeneratorFuelCellPowerModule::resetDilutionInletAirNode() {
   getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->resetDilutionInletAirNode();
 }
 
-bool GeneratorFuelCellPowerModule::setDilutionOutletAirNode(const Connection& connection) {
-  return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setDilutionOutletAirNode(connection);
+bool GeneratorFuelCellPowerModule::setDilutionOutletAirNode(const Node& node) {
+  return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setDilutionOutletAirNode(node);
 }
 
 void GeneratorFuelCellPowerModule::resetDilutionOutletAirNode() {

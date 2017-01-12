@@ -31,6 +31,8 @@
 
 #include "Connection.hpp"
 #include "Connection_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -95,8 +97,8 @@ namespace detail {
     return value.get();
   }
 
-  boost::optional<Connection> GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::exhaustOutletAirNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::ExhaustOutletAirNodeName);
+  boost::optional<Node> GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::exhaustOutletAirNode() const {
+    return getObject<ModelObject>().getModelObjectTarget<Node>(OS_Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::ExhaustOutletAirNodeName);
   }
 
   std::string GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::heatExchangerCalculationMethod() const {
@@ -209,8 +211,8 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::setExhaustOutletAirNode(const Connection& connection) {
-    bool result = setPointer(OS_Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::ExhaustOutletAirNodeName, connection.handle());
+  bool GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::setExhaustOutletAirNode(const Node& node) {
+    bool result = setPointer(OS_Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::ExhaustOutletAirNodeName, node.handle());
     return result;
   }
 
@@ -414,7 +416,7 @@ namespace detail {
 GeneratorFuelCellExhaustGasToWaterHeatExchanger::GeneratorFuelCellExhaustGasToWaterHeatExchanger(const Model& model,
                                                                                                  const Connection& waterInletNode,
                                                                                                  const Connection& waterOutletNode,
-                                                                                                 const Connection& exhaustOutletAirNode)
+                                                                                                 const Node& exhaustOutletAirNode)
   : ModelObject(GeneratorFuelCellExhaustGasToWaterHeatExchanger::iddObjectType(), model) {
   OS_ASSERT(getImpl<detail::GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl>());
 
@@ -469,7 +471,7 @@ double GeneratorFuelCellExhaustGasToWaterHeatExchanger::heatRecoveryWaterMaximum
   return getImpl<detail::GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl>()->heatRecoveryWaterMaximumFlowRate();
 }
 
-boost::optional<Connection> GeneratorFuelCellExhaustGasToWaterHeatExchanger::exhaustOutletAirNode() const {
+boost::optional<Node> GeneratorFuelCellExhaustGasToWaterHeatExchanger::exhaustOutletAirNode() const {
   return getImpl<detail::GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl>()->exhaustOutletAirNode();
 }
 
@@ -573,8 +575,8 @@ void GeneratorFuelCellExhaustGasToWaterHeatExchanger::resetHeatRecoveryWaterMaxi
   getImpl<detail::GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl>()->resetHeatRecoveryWaterMaximumFlowRate();
 }
 
-bool GeneratorFuelCellExhaustGasToWaterHeatExchanger::setExhaustOutletAirNode(const Connection& connection) {
-  return getImpl<detail::GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl>()->setExhaustOutletAirNode(connection);
+bool GeneratorFuelCellExhaustGasToWaterHeatExchanger::setExhaustOutletAirNode(const Node& node) {
+  return getImpl<detail::GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl>()->setExhaustOutletAirNode(node);
 }
 
 void GeneratorFuelCellExhaustGasToWaterHeatExchanger::resetExhaustOutletAirNode() {

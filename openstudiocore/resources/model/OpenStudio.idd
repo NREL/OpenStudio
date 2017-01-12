@@ -25845,10 +25845,10 @@ OS:Generator:FuelCell:PowerModule,
       \units W
   A8, \field Dilution Inlet Air Node Name
       \type object-list
-      \object-list ConnectionNames
+      \object-list Node
   A9 ,\field Dilution Outlet Air Node Name
       \type object-list
-      \object-list ConnectionNames
+      \object-list Node
   N24, \field Minimum Operating Point
        \units W
   N25; \field Maximum Operating Point
@@ -26010,7 +26010,7 @@ OS:Generator:FuelCell:ExhaustGasToWaterHeatExchanger,
       \ip-units gal/min
   A5, \field Exhaust Outlet Air Node Name
       \type object-list
-      \object-list ConnectionNames
+      \object-list Node
   A6, \field Heat Exchanger Calculation Method
       \type choice
       \key FixedEffectiveness

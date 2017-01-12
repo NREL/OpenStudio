@@ -37,7 +37,7 @@ namespace model {
 
 class Curve;
 class ThermalZone;
-class Connection;
+class Node;
 
 namespace detail {
 
@@ -129,9 +129,9 @@ namespace detail {
 
     double stackHeatlosstoDilutionAir() const;
 
-    boost::optional<Connection> dilutionInletAirNode() const;
+    boost::optional<Node> dilutionInletAirNode() const;
 
-    boost::optional<Connection> dilutionOutletAirNode() const;
+    boost::optional<Node> dilutionOutletAirNode() const;
 
     double minimumOperatingPoint() const;
 
@@ -251,11 +251,11 @@ namespace detail {
 
     void resetStackHeatlosstoDilutionAir();
 
-    bool setDilutionInletAirNode(const Connection& connection);
+    bool setDilutionInletAirNode(const Node& connection);
 
     void resetDilutionInletAirNode();
 
-    bool setDilutionOutletAirNode(const Connection& connection);
+    bool setDilutionOutletAirNode(const Node& connection);
 
     void resetDilutionOutletAirNode();
 

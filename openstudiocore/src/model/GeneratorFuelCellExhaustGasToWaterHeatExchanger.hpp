@@ -37,6 +37,7 @@ namespace openstudio {
 namespace model {
 
 class Connection;
+class Node;
 
 namespace detail {
 
@@ -55,7 +56,7 @@ class MODEL_API GeneratorFuelCellExhaustGasToWaterHeatExchanger : public ModelOb
   explicit GeneratorFuelCellExhaustGasToWaterHeatExchanger(const Model& model,
                                                            const Connection& waterInletNode,
                                                            const Connection& waterOutletNode,
-                                                           const Connection& exhaustOutletAirNode);
+                                                           const Node& exhaustOutletAirNode);
 
   virtual ~GeneratorFuelCellExhaustGasToWaterHeatExchanger() {}
 
@@ -74,7 +75,7 @@ class MODEL_API GeneratorFuelCellExhaustGasToWaterHeatExchanger : public ModelOb
 
   double heatRecoveryWaterMaximumFlowRate() const;
 
-  boost::optional<Connection> exhaustOutletAirNode() const;
+  boost::optional<Node> exhaustOutletAirNode() const;
 
   std::string heatExchangerCalculationMethod() const;
 
@@ -130,7 +131,7 @@ class MODEL_API GeneratorFuelCellExhaustGasToWaterHeatExchanger : public ModelOb
 
   void resetHeatRecoveryWaterMaximumFlowRate();
 
-  bool setExhaustOutletAirNode(const Connection& connection);
+  bool setExhaustOutletAirNode(const Node& node);
 
   void resetExhaustOutletAirNode();
 

@@ -29,8 +29,8 @@
 #include "../../model/CurveQuadratic_Impl.hpp"
 #include "../../model/ThermalZone.hpp"
 #include "../../model/ThermalZone_Impl.hpp"
-#include "../../model/Connection.hpp"
-#include "../../model/Connection_Impl.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/Node_Impl.hpp"
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
@@ -51,7 +51,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellPowerMod
 {
   boost::optional<std::string> s;
   boost::optional<double> d;
-  boost::optional<Connection> connection;
+  boost::optional<Node> node;
   boost::optional<Curve> curve;
   boost::optional<ThermalZone> tz;
   
@@ -231,15 +231,15 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellPowerMod
   }
 
   //DilutionInletAirNodeName
-  connection = modelObject.dilutionInletAirNode();
-  if (connection) {
-    pcm.setString(Generator_FuelCell_PowerModuleFields::DilutionInletAirNodeName, connection.get().nameString());
+  node = modelObject.dilutionInletAirNode();
+  if (node) {
+    pcm.setString(Generator_FuelCell_PowerModuleFields::DilutionInletAirNodeName, node.get().nameString());
   }
 
   //DilutionOutletAirNodeName
-  connection = modelObject.dilutionOutletAirNode();
-  if (connection) {
-    pcm.setString(Generator_FuelCell_PowerModuleFields::DilutionOutletAirNodeName, connection.get().nameString());
+  node = modelObject.dilutionOutletAirNode();
+  if (node) {
+    pcm.setString(Generator_FuelCell_PowerModuleFields::DilutionOutletAirNodeName, node.get().nameString());
   }
 
   //MinimumOperatingPoint

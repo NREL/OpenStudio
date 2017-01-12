@@ -36,6 +36,7 @@ namespace openstudio {
 namespace model {
 
 class Connection;
+class Node;
 
 namespace detail {
 
@@ -77,7 +78,7 @@ namespace detail {
 
     double heatRecoveryWaterMaximumFlowRate() const;
 
-    boost::optional<Connection> exhaustOutletAirNode() const;
+    boost::optional<Node> exhaustOutletAirNode() const;
 
     std::string heatExchangerCalculationMethod() const;
 
@@ -133,7 +134,7 @@ namespace detail {
 
     void resetHeatRecoveryWaterMaximumFlowRate();
 
-    bool setExhaustOutletAirNode(const Connection& connection);
+    bool setExhaustOutletAirNode(const Node& node);
 
     void resetExhaustOutletAirNode();
 
