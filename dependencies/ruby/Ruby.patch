@@ -69,7 +69,7 @@ index 98ffffd..39c5265 100644
 +strscan
 +syslog
 +tk
-+win32ole
++#win32ole
 +zlib
 diff --git a/load.c b/load.c
 index bf5d9cf..c4d8d5b 100644

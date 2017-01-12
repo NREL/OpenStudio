@@ -316,6 +316,7 @@ if( BUILD_RUBY )
       URL https://codeload.github.com/ruby/ruby/tar.gz/v2_2_4
       URL_MD5 3f0d280116092dc5278b6cff31948aad
       BUILD_IN_SOURCE 1
+      PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/ruby/Ruby.patch
       CONFIGURE_COMMAND ""
       BUILD_COMMAND cmd /C "${CMAKE_BINARY_DIR}/build_ruby.bat"
       INSTALL_COMMAND ""
