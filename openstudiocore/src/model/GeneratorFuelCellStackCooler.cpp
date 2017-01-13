@@ -433,11 +433,11 @@ namespace detail {
   }
 
   unsigned GeneratorFuelCellStackCooler_Impl::inletPort() {
-    return OS_Generator_FuelCell_StackCoolerFields::InletNodeName;
+    return OS_Generator_FuelCell_StackCoolerFields::HeatRecoveryWaterInletNodeName;
   }
 
   unsigned GeneratorFuelCellStackCooler_Impl::outletPort() {
-    return OS_Generator_FuelCell_StackCoolerFields::OutletNodeName;
+    return OS_Generator_FuelCell_StackCoolerFields::HeatRecoveryWaterOutletNodeName;
   }
 
   bool GeneratorFuelCellStackCooler_Impl::addToNode(Node & node) {

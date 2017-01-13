@@ -412,11 +412,11 @@ namespace detail {
   }
 
   unsigned GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::inletPort() {
-    return OS_Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::InletNodeName;
+    return OS_Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::HeatRecoveryWaterInletNodeName;
   }
 
   unsigned GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::outletPort() {
-    return OS_Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::OutletNodeName;
+    return OS_Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::HeatRecoveryWaterOutletNodeName;
   }
 
   bool GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::addToNode(Node & node) {
