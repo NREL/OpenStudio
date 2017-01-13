@@ -183,9 +183,9 @@ IF (APPLE)
    find_library(COREFOUNDATION_LIBRARY CoreFoundation )
 ENDIF (APPLE)
 
-if(UNIX AND NOT APPLE AND BUILD_TESTING)
+if(UNIX AND NOT APPLE)
   # Enable libgtest linking
-  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lpthread")
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pthread")
 endif()
 
 if( WIN32 )
