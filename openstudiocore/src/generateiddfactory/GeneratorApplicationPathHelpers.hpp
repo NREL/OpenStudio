@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -26,8 +26,8 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
 
-#ifndef UTILITIES_CORE_GENERATORAPPLICATIONPATHHELPERS_HPP
-#define UTILITIES_CORE_GENERATORAPPLICATIONPATHHELPERS_HPP
+#ifndef GENERATEIDDFACTORY_GENERATORAPPLICATIONPATHHELPERS_HPP
+#define GENERATEIDDFACTORY_GENERATORAPPLICATIONPATHHELPERS_HPP
 
 #include "../utilities/core/Filesystem.hpp"
 #include <vector>
@@ -44,4 +44,4 @@ path getApplicationOutputDirectory(const std::string& outdir);
 
 } // openstudio
 
-#endif //UTILITIES_CORE_PATHHELPERS_HPP
+#endif //GENERATEIDDFACTORY_GENERATORAPPLICATIONPATHHELPERS_HPP

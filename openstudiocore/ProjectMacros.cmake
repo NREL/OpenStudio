@@ -586,11 +586,19 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
   if(BUILD_CSHARP_BINDINGS)
     set(swig_target "csharp_${NAME}")
 
+    set( translator_names
+      OpenStudioEnergyPlus
+      OpenStudioRadiance
+      OpenStudioGBXML
+      OpenStudioAirflow
+      OpenStudioISOModel
+      OpenStudioSDD
+    )
+
     if(IS_UTILTIES)
       set(NAMESPACE "OpenStudio")
       set(MODULE "${NAME}")
     else()
-      #set(NAMESPACE "OpenStudio.${NAME}")
       set(NAMESPACE "OpenStudio")
       set(MODULE "${NAME}")
     endif()
@@ -599,8 +607,13 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     set(SWIG_WRAPPER_FULL_PATH "${CMAKE_CURRENT_BINARY_DIR}/${SWIG_WRAPPER}")
     set(SWIG_TARGET "generate_csharp_${NAME}_wrap")
 
-    #set(CSHARP_OUTPUT_NAME "openstudio_${NAME}_csharp")
-    set(CSHARP_OUTPUT_NAME "openstudio_csharp.dll")
+    list(FIND translator_names ${NAME} name_found)
+    if( name_found GREATER -1 )
+      set(CSHARP_OUTPUT_NAME "openstudio_translators_csharp.dll")
+    else()
+      set(CSHARP_OUTPUT_NAME "openstudio_csharp.dll")
+    endif()
+
     set(CSHARP_GENERATED_SRC_DIR "${CMAKE_BINARY_DIR}/csharp_wrapper/generated_sources/${NAME}")
     file(MAKE_DIRECTORY ${CSHARP_GENERATED_SRC_DIR})
     

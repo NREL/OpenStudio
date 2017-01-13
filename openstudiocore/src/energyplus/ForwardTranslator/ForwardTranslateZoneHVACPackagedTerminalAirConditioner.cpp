@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -32,6 +32,8 @@
 #include "../../model/Schedule_Impl.hpp"
 #include "../../model/Node.hpp"
 #include "../../model/Node_Impl.hpp"
+#include "../../model/AirLoopHVAC.hpp"
+#include "../../model/AirLoopHVAC_Impl.hpp"
 #include "../../model/ZoneHVACPackagedTerminalAirConditioner.hpp"
 #include "../../model/ZoneHVACPackagedTerminalAirConditioner_Impl.hpp"
 #include "../../model/ThermalZone.hpp"
@@ -93,6 +95,8 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACPackagedTerminalA
     }
   }
 
+  auto t_airLoopHVAC = modelObject.airLoopHVAC();
+
   // AirInletNodeName
 
   boost::optional<std::string> airInletNodeName;
@@ -121,33 +125,35 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACPackagedTerminalA
     }
   }
 
-  // OutdoorAirMixerObjectType
-  idfObject.setString(ZoneHVAC_PackagedTerminalAirConditionerFields::OutdoorAirMixerObjectType,
-                      modelObject.outdoorAirMixerObjectType());
+  if( ! t_airLoopHVAC ) {
+    // OutdoorAirMixerObjectType
+    idfObject.setString(ZoneHVAC_PackagedTerminalAirConditionerFields::OutdoorAirMixerObjectType,
+                        modelObject.outdoorAirMixerObjectType());
 
-  // OutdoorAirMixerName
-  
-  std::string oaMixerName = modelObject.name().get() + " OA Mixer";  
+    // OutdoorAirMixerName
+    
+    std::string oaMixerName = modelObject.name().get() + " OA Mixer";  
 
-  idfObject.setString(ZoneHVAC_PackagedTerminalAirConditionerFields::OutdoorAirMixerName,oaMixerName);
+    idfObject.setString(ZoneHVAC_PackagedTerminalAirConditionerFields::OutdoorAirMixerName,oaMixerName);
 
-  IdfObject _outdoorAirMixer(IddObjectType::OutdoorAir_Mixer);
-  _outdoorAirMixer.setName(oaMixerName);
-  m_idfObjects.push_back(_outdoorAirMixer);
+    IdfObject _outdoorAirMixer(IddObjectType::OutdoorAir_Mixer);
+    _outdoorAirMixer.setName(oaMixerName);
+    m_idfObjects.push_back(_outdoorAirMixer);
 
-  _outdoorAirMixer.setString(OutdoorAir_MixerFields::MixedAirNodeName,mixedAirNodeName);
+    _outdoorAirMixer.setString(OutdoorAir_MixerFields::MixedAirNodeName,mixedAirNodeName);
 
-  _outdoorAirMixer.setString(OutdoorAir_MixerFields::OutdoorAirStreamNodeName,oaNodeName);
+    _outdoorAirMixer.setString(OutdoorAir_MixerFields::OutdoorAirStreamNodeName,oaNodeName);
 
-  IdfObject _oaNodeList(openstudio::IddObjectType::OutdoorAir_NodeList);
-  _oaNodeList.setString(0,oaNodeName);
-  m_idfObjects.push_back(_oaNodeList);
+    IdfObject _oaNodeList(openstudio::IddObjectType::OutdoorAir_NodeList);
+    _oaNodeList.setString(0,oaNodeName);
+    m_idfObjects.push_back(_oaNodeList);
 
-  _outdoorAirMixer.setString(OutdoorAir_MixerFields::ReliefAirStreamNodeName,reliefAirNodeName);
+    _outdoorAirMixer.setString(OutdoorAir_MixerFields::ReliefAirStreamNodeName,reliefAirNodeName);
 
-  if(airInletNodeName)
-  {
-    _outdoorAirMixer.setString(OutdoorAir_MixerFields::ReturnAirStreamNodeName,airInletNodeName.get());
+    if(airInletNodeName)
+    {
+      _outdoorAirMixer.setString(OutdoorAir_MixerFields::ReturnAirStreamNodeName,airInletNodeName.get());
+    }
   }
 
   // SupplyAirFlowRateDuringCoolingOperation
@@ -290,13 +296,18 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACPackagedTerminalA
 
   if( _coolingCoil )
   {
+    std::string coolingCoilInletNodeName = mixedAirNodeName;
+    if( t_airLoopHVAC && airInletNodeName ) {
+      coolingCoilInletNodeName = airInletNodeName.get();
+    }
+
     idfObject.setString(ZoneHVAC_PackagedTerminalAirConditionerFields::CoolingCoilObjectType,_coolingCoil->iddObject().name() );
 
     idfObject.setString(ZoneHVAC_PackagedTerminalAirConditionerFields::CoolingCoilName,_coolingCoil->name().get() );
 
     if( _coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_SingleSpeed )
     {
-      _coolingCoil->setString(Coil_Cooling_DX_SingleSpeedFields::AirInletNodeName,mixedAirNodeName);
+      _coolingCoil->setString(Coil_Cooling_DX_SingleSpeedFields::AirInletNodeName,coolingCoilInletNodeName);
 
       _coolingCoil->setString(Coil_Cooling_DX_SingleSpeedFields::AirOutletNodeName,coolingCoilOutletNodeName);
     }

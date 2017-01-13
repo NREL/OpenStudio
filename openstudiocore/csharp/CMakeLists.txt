@@ -88,29 +88,6 @@ if(MSVC)
   # ignore deprecated warnings since we will export deprecated methods
   add_definitions(/wd4996 /bigobj)
 
-  set(core_wrappers
-    csharp_OpenStudioUtilitiesCore_wrap.cxx
-    csharp_OpenStudioUtilitiesIdd_wrap.cxx
-    csharp_OpenStudioUtilitiesIdf_wrap.cxx
-    csharp_OpenStudioUtilitiesBCL_wrap.cxx
-    csharp_OpenStudioUtilitiesData_wrap.cxx
-    csharp_OpenStudioUtilitiesGeometry_wrap.cxx
-    csharp_OpenStudioUtilitiesSql_wrap.cxx
-    csharp_OpenStudioUtilitiesTime_wrap.cxx
-    csharp_OpenStudioUtilitiesUnits_wrap.cxx
-    csharp_OpenStudioUtilitiesFileTypes_wrap.cxx
-    csharp_OpenStudioUtilities_wrap.cxx
-    csharp_OpenStudioModelCore_wrap.cxx
-    csharp_OpenStudioModelSimulation_wrap.cxx
-    csharp_OpenStudioModelResources_wrap.cxx
-    csharp_OpenStudioModelGeometry_wrap.cxx
-    csharp_OpenStudioModelHVAC_wrap.cxx
-    csharp_OpenStudioModelRefrigeration_wrap.cxx
-    csharp_OpenStudioModelGenerators_wrap.cxx
-    csharp_OpenStudioModel_wrap.cxx
-    csharp_OpenStudioOSVersion_wrap.cxx
-  )
-
   set(translator_wrappers
     csharp_OpenStudioEnergyPlus_wrap.cxx
     csharp_OpenStudioRadiance_wrap.cxx
@@ -125,21 +102,16 @@ if(MSVC)
 
     set(notfound TRUE)
 
-    foreach(core_wrapper IN LISTS core_wrappers)
-      if( wrapper_name STREQUAL core_wrapper )
-        list(APPEND core_wrapper_files ${wrapper_file})
+    foreach(translator_wrapper IN LISTS translator_wrappers)
+      if( wrapper_name STREQUAL translator_wrapper )
+        list(APPEND translator_wrapper_files ${wrapper_file})
         set(notfound FALSE)
         break()
       endif()
     endforeach()
 
     if( notfound )
-      foreach(translator_wrapper IN LISTS translator_wrappers)
-        if( wrapper_name STREQUAL translator_wrapper )
-          list(APPEND translator_wrapper_files ${wrapper_file})
-          break()
-        endif()
-      endforeach()
+      list(APPEND core_wrapper_files ${wrapper_file})
     endif()
   endforeach()
 

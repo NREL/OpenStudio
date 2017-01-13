@@ -74,7 +74,7 @@ configure_file(${CMAKE_SOURCE_DIR}/OpenStudio.in ${CMAKE_BINARY_DIR}/src/OpenStu
 if(APPLE)
   set(MACOSX_BUNDLE_SHORT_VERSION_STRING "${OPENSTUDIO_VERSION}")
   set(MACOSX_BUNDLE_BUNDLE_VERSION "${PROJECT_VERSION_BUILD}")
-  set(MACOSX_BUNDLE_COPYRIGHT "Copyright © 2016 National Renewable Energy Laboratory")
+  set(MACOSX_BUNDLE_COPYRIGHT "Copyright © 2017 National Renewable Energy Laboratory")
 endif()
 
 # compiler id for about boxes
@@ -434,8 +434,12 @@ mark_as_advanced(RUBY_INSTALL_DIR)
 
 if(NOT EXISTS ${RUBY_INSTALL_DIR})
   if( WIN32 )
-    set(RUBY_ZIP_FILENAME "ruby_2_0_0_msvc2013_static.zip")
-    set(RUBY_ZIP_EXPECTED_MD5 "0904d20885480958a6066c26a49b7609")
+    if(CMAKE_CL_64)
+      set(RUBY_ZIP_FILENAME "ruby_2_0_0_msvc2013_static.zip")
+      set(RUBY_ZIP_EXPECTED_MD5 "0904d20885480958a6066c26a49b7609")
+    else()
+	  message(SEND_ERROR "Missing boost 32 bit build")
+	endif()
   elseif( APPLE )
     set(RUBY_ZIP_FILENAME "ruby_2_0_0_osx_static.tar.gz")
     set(RUBY_ZIP_EXPECTED_MD5 "5d02dca3f18b4e286ee26c84bcecb06a")
@@ -516,8 +520,8 @@ endif()
 
 # openstudio gems
 
-set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20161205.tar.gz")
-set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "580603a7cdf757c66230df7d9d1a8f80")
+set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20161220.tar.gz")
+set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "08ba4a0d05f40dfbd254180dd9891f0a")
 
 set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
 if(EXISTS "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}")
@@ -666,80 +670,6 @@ if(BUILD_PYTHON_BINDINGS)
   set(ALL_PYTHON_WRAPPER_TARGETS "") # global list targets that build generated wrapper cxx files
 endif()
 
-# Doxygen
-if(BUILD_DOCUMENTATION)
-  # need doxygen
-  find_package(Doxygen REQUIRED)
-
-  # if have dot you have more options
-  #if(DOXYGEN_DOT_FOUND)
-
-  #endif()
-
-  configure_file(${CMAKE_SOURCE_DIR}/doc/index.html ${CMAKE_BINARY_DIR}/doc/index.html COPYONLY)
-
-  set(doxygen_directories ${project_directories})
-  # Add the idd files to the documentation list as a separate entry, along with shared_gui_components
-  list(APPEND doxygen_directories utilities/idd shared_gui_components)
-
-  # Remove directories we don't want documentation generated for
-  list(REMOVE_ITEM doxygen_directories generateiddfactory)
-
-  add_custom_target(openstudio_doc_resources
-    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/doc/css" "css"
-    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/doc/fonts" "fonts"
-    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/doc/js" "js"
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/doc
-  )
-
-  foreach(D ${doxygen_directories})
-    string(REPLACE "/" "_" DOC_NAME ${D})
-
-    set(DOXY_INPUT_DIR "\"${CMAKE_SOURCE_DIR}/src/${D}\"")
-    set(DOXY_ADDITIONAL_DIR "")
-    set(DOXY_EXCLUDE_DIR "")
-    set(DOXY_TAGFILES "")
-
-    # Specific settings
-    if(${D} STREQUAL "utilities/idd")
-      # We want to build the idd documentation separately because of the generated files
-      set(DOXY_ADDITIONAL_DIR "\"${CMAKE_BINARY_DIR}/src/${D}\"")
-    elseif(${D} STREQUAL "utilities")
-      # Exclude the idd directory when building the utilities documentation
-      set(DOXY_EXCLUDE_DIR "\"${CMAKE_SOURCE_DIR}/src/utilities/idd\"")
-      set(DOXY_TAGFILES "utilities_idd/utilities_idd.tag=../../utilities_idd/html")
-    elseif(${D} STREQUAL "model")
-      set(DOXY_TAGFILES "utilities_idd/utilities_idd.tag=../../utilities_idd/html utilities/utilities.tag=../../utilities/html")
-    endif()
-    configure_file(${CMAKE_SOURCE_DIR}/Doxyfile.in ${CMAKE_BINARY_DIR}/doc/${DOC_NAME}.cfg)
-
-    add_custom_target(openstudio_${DOC_NAME}_doc
-      COMMAND ${CMAKE_COMMAND} -E remove_directory "${DOC_NAME}"
-      COMMAND ${CMAKE_COMMAND} -E make_directory "${DOC_NAME}"
-      COMMAND ${DOXYGEN_EXECUTABLE} ${DOC_NAME}.cfg
-      COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/doc/search" "${DOC_NAME}/html/search"
-      COMMAND ${PATCH_EXE} "${DOC_NAME}/html/search/search.js" < "${CMAKE_SOURCE_DIR}/doc/patch/search.js.patch"
-      DEPENDS openstudio_doc_resources
-      WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/doc
-    )
-
-    set(ALL_CPP_DOC_TARGETS ${ALL_CPP_DOC_TARGETS}
-      openstudio_${DOC_NAME}_doc
-    )
-
-  endforeach()
-
-  # Set up dependencies after all targets have been created
-  add_dependencies(openstudio_utilities_doc
-    openstudio_utilities_idd_doc
-  )
-  add_dependencies(openstudio_model_doc
-    openstudio_utilities_doc
-    openstudio_utilities_idd_doc
-  )
-
-
-endif()
 
 # Required dependencies
 
@@ -794,6 +724,7 @@ if(NOT EXISTS ${BOOST_INSTALL_DIR})
       set(BOOST_ZIP_FILENAME "boost_1_55_0_msvc2013_64_static.zip")
       set(BOOST_ZIP_EXPECTED_MD5 "3ff90a94d025f139e290296ed0b41263")
     else()
+      message(SEND_ERROR "Missing boost 32 bit build")
     endif()
   elseif( APPLE )
       set(BOOST_ZIP_FILENAME "boost_1_55_0_osx.tar.gz")
@@ -913,9 +844,22 @@ if(BUILD_OS_APP)
   set_target_properties( ${QT_WEB_LIBS} PROPERTIES INTERFACE_LINK_LIBRARIES "" )
 
   if(UNIX AND NOT APPLE)
+    
+    find_package(Qt5WebChannel 5.6.1 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
+    list(APPEND QT_WEB_LIBS Qt5::WebChannel)
+    
     find_package(Qt5DBus 5.6.1 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
     list(APPEND QT_WEB_LIBS Qt5::DBus)
-
+    
+    find_package(Qt5Quick 5.6.1 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
+    list(APPEND QT_WEB_LIBS Qt5::Quick)
+    
+    find_package(Qt5Qml 5.6.1 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
+    list(APPEND QT_WEB_LIBS Qt5::Qml)
+    
+    find_package(Qt5Positioning 5.6.1 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
+    list(APPEND QT_WEB_LIBS Qt5::Positioning)
+    
     # there does not appear to be a normal qt finder for this
     find_library(Qt5XcbQpaLib NAMES libQt5XcbQpa.so.5 PATHS ${QT_INSTALL_DIR}/lib NO_DEFAULT_PATH)
   endif()
@@ -1351,6 +1295,7 @@ set(project_directories
   sdd
   cli
   model_editor
+  install_utility
 )
 if(WIN32)
   list(APPEND project_directories "qtwinmigrate")
@@ -1438,6 +1383,83 @@ mark_as_advanced(MAXIMIZE_CPU_USAGE)
 
 ###############################################################################
 # Targets that combine all documentation targets
+
+# Doxygen
+if(BUILD_DOCUMENTATION)
+  # need doxygen
+  find_package(Doxygen REQUIRED)
+
+  # if have dot you have more options
+  #if(DOXYGEN_DOT_FOUND)
+
+  #endif()
+
+  configure_file(${CMAKE_SOURCE_DIR}/doc/index.html ${CMAKE_BINARY_DIR}/doc/index.html COPYONLY)
+
+  set(doxygen_directories ${project_directories})
+  # Add the idd files to the documentation list as a separate entry, along with shared_gui_components
+  list(APPEND doxygen_directories utilities/idd shared_gui_components)
+
+  # Remove directories we don't want documentation generated for
+  list(REMOVE_ITEM doxygen_directories generateiddfactory)
+
+  add_custom_target(openstudio_doc_resources
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/doc/css" "css"
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/doc/fonts" "fonts"
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/doc/js" "js"
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/doc
+  )
+
+  foreach(D ${doxygen_directories})
+    string(REPLACE "/" "_" DOC_NAME ${D})
+
+    set(DOXY_INPUT_DIR "\"${CMAKE_SOURCE_DIR}/src/${D}\"")
+    set(DOXY_ADDITIONAL_DIR "")
+    set(DOXY_EXCLUDE_DIR "")
+    set(DOXY_TAGFILES "")
+
+    
+    # Specific settings
+    if(${D} STREQUAL "utilities/idd")
+      # We want to build the idd documentation separately because of the generated files
+      set(DOXY_ADDITIONAL_DIR "\"${CMAKE_BINARY_DIR}/src/${D}\"")
+    elseif(${D} STREQUAL "utilities")
+      # Exclude the idd directory when building the utilities documentation
+      set(DOXY_EXCLUDE_DIR "\"${CMAKE_SOURCE_DIR}/src/utilities/idd\"")
+      set(DOXY_TAGFILES "utilities_idd/utilities_idd.tag=../../utilities_idd/html")
+    elseif(${D} STREQUAL "model")
+      set(DOXY_TAGFILES "utilities_idd/utilities_idd.tag=../../utilities_idd/html utilities/utilities.tag=../../utilities/html")
+    endif()
+    configure_file(${CMAKE_SOURCE_DIR}/Doxyfile.in ${CMAKE_BINARY_DIR}/doc/${DOC_NAME}.cfg)
+
+    add_custom_target(openstudio_${DOC_NAME}_doc
+      COMMAND ${CMAKE_COMMAND} -E remove_directory "${DOC_NAME}"
+      COMMAND ${CMAKE_COMMAND} -E make_directory "${DOC_NAME}"
+      COMMAND ${DOXYGEN_EXECUTABLE} ${DOC_NAME}.cfg
+      COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/doc/search" "${DOC_NAME}/html/search"
+      COMMAND ${PATCH_EXE} "${DOC_NAME}/html/search/search.js" < "${CMAKE_SOURCE_DIR}/doc/patch/search.js.patch"
+      DEPENDS openstudio_doc_resources
+      WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/doc
+    )
+
+    set(ALL_CPP_DOC_TARGETS ${ALL_CPP_DOC_TARGETS}
+      openstudio_${DOC_NAME}_doc
+    )
+
+  endforeach()
+
+  # Set up dependencies after all targets have been created
+  add_dependencies(openstudio_utilities_doc
+    openstudio_utilities_idd_doc
+  )
+  add_dependencies(openstudio_model_doc
+    openstudio_utilities_doc
+    openstudio_utilities_idd_doc
+  )
+
+endif()
+
+
 if(BUILD_DOCUMENTATION)
 
   add_custom_target(ALL_DOXYGEN)
@@ -1605,14 +1627,14 @@ set(CPACK_PACKAGE_VERSION_MAJOR ${OpenStudio_VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${OpenStudio_VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${OpenStudio_VERSION_PATCH})
 
-set(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}2-${OPENSTUDIO_LONG_VERSION}-${CMAKE_SYSTEM_NAME}")
+set(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${OPENSTUDIO_LONG_VERSION}-${CMAKE_SYSTEM_NAME}")
 
 if( UNIX )
-  set( CPACK_IFW_TARGET_DIRECTORY /usr/local/openstudio2-${OpenStudio_VERSION}/ )
+  set( CPACK_IFW_TARGET_DIRECTORY /usr/local/openstudio-${OpenStudio_VERSION}/ )
 endif()
 
 if(WIN32)
-  set( CPACK_PACKAGE_INSTALL_DIRECTORY "openstudio2-${OpenStudio_VERSION}" )
+  set( CPACK_PACKAGE_INSTALL_DIRECTORY "openstudio-${OpenStudio_VERSION}" )
   set( CPACK_BINARY_NSIS OFF )
   set( CPACK_BINARY_IFW ON )
 endif()
@@ -1713,8 +1735,13 @@ cpack_ifw_configure_component(SketchUpPlugin
   SCRIPT sketchup_plugin/install_operations.qs
 )
 
+cpack_ifw_configure_component(Unspecified
+  SCRIPT src/install_utility/install_operations.qs
+)
+
 cpack_ifw_configure_component(PAT
   DEPENDS CLI RubyAPI
+  SCRIPT pat/install_operations.qs
 )
 
 if( BUILD_NUGET_PACKAGE )

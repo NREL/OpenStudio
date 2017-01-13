@@ -9,7 +9,7 @@ GEM
   remote: http://rubygems.org/
   specs:
     diff-lcs (1.2.5)
-    openstudio-standards (0.1.9)
+    openstudio-standards (0.1.10)
     rspec (3.5.0)
       rspec-core (~> 3.5.0)
       rspec-expectations (~> 3.5.0)
@@ -30,7 +30,7 @@ PLATFORMS
   x86-mingw32
 
 DEPENDENCIES
-  openstudio-standards (= 0.1.9)
+  openstudio-standards (= 0.1.10)
   openstudio-workflow!
   rspec
 
