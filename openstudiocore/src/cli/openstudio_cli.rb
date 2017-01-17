@@ -336,7 +336,7 @@ class Run
       o.on('-s', '--socket PORT', 'Pipe status messages to a socket on localhost PORT') do |port|
         options[:socket] = port
       end      
-      o.on('--debug', 'Includes additional outputs for debugging failing workflows and does not clean up the run directory, overrides option in OSW') do |f|
+      o.on('--debug', 'Includes additional outputs for debugging failing workflows and does not clean up the run directory') do |f|
         options[:debug] = f
       end
     end
