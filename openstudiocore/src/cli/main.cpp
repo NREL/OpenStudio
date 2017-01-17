@@ -313,10 +313,25 @@ int main(int argc, char *argv[])
     auto embedded_extensions_string = embedded_files::getFileAsString(":/embedded_help.rb");
     rubyInterpreter.evalString(embedded_extensions_string);
 
-  
   Init_digest();
   rb_provide("digest");
   rb_provide("digest.so");
+  
+  Init_rmd160();
+  rb_provide("digest/rmd160");
+  rb_provide("digest/rmd160.so");
+  
+  Init_sha1();
+  rb_provide("digest/sha1");
+  rb_provide("digest/sha1.so");
+  
+  Init_sha2();
+  rb_provide("digest/sha2");
+  rb_provide("digest/sha2.so");
+  
+  Init_md5();
+  rb_provide("digest/md5");
+  rb_provide("digest/md5.so");
 
   Init_bigdecimal();
   rb_provide("bigdecimal");
@@ -378,10 +393,6 @@ int main(int argc, char *argv[])
   rb_provide("generator");
   rb_provide("generator.so");
   
-  Init_md5();
-  rb_provide("md5");
-  rb_provide("md5.so");
-  
   Init_nkf();
   rb_provide("nkf");
   rb_provide("nkf.so");
@@ -423,22 +434,10 @@ int main(int argc, char *argv[])
   Init_ripper();
   rb_provide("ripper");
   rb_provide("ripper.so");
-  
-  Init_rmd160();
-  rb_provide("rmd160");
-  rb_provide("rmd160.so");
-  
+
   Init_sdbm();
   rb_provide("sdbm");
   rb_provide("sdbm.so");
-  
-  Init_sha1();
-  rb_provide("sha1");
-  rb_provide("sha1.so");
-  
-  Init_sha2();
-  rb_provide("sha2");
-  rb_provide("sha2.so");
   
   Init_sizeof();
   rb_provide("sizeof");
@@ -476,8 +475,14 @@ int main(int argc, char *argv[])
   rb_provide("zlib.so");
 #endif
 
-    // openstudio
-    init_openstudio_internal();
+  Init_generator();
+  rb_provide("json/ext/parser");
+
+  Init_parser();
+  rb_provide("json/ext/generator");
+
+   // openstudio
+   init_openstudio_internal();
   }
   
   // chop off the first argument which is the exe path/name
