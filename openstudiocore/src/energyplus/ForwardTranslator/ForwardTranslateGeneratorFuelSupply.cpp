@@ -55,6 +55,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelSupply(Gener
 {
   boost::optional<std::string> s;
   boost::optional<double> d;
+  boost::optional<int> i;
   boost::optional<Node> node;
   boost::optional<Schedule> schedule;
   boost::optional<CurveCubic> curve;
@@ -138,9 +139,9 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelSupply(Gener
   }
 
   //NumberofUserDefinedConstituents
-  d = constituents.size();
-  if (d) {
-    pcm.setDouble(Generator_FuelSupplyFields::NumberofConstituentsinGaseousConstituentFuelSupply, d.get());
+  i = constituents.size();
+  if (i) {
+    pcm.setDouble(Generator_FuelSupplyFields::NumberofConstituentsinGaseousConstituentFuelSupply, i.get());
   }
 
   return pcm;

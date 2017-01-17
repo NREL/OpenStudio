@@ -64,6 +64,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellAirSuppl
 {
   boost::optional<std::string> s;
   boost::optional<double> d;
+  boost::optional<int> i;
   boost::optional<Node> node;
   boost::optional<CurveCubic> curve;
   boost::optional<CurveQuadratic> curvequad;
@@ -154,9 +155,9 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellAirSuppl
   }
 
   //NumberofUserDefinedConstituents
-  d = constituents.size();
-  if (d) {
-    pcm.setDouble(Generator_FuelCell_AirSupplyFields::NumberofUserDefinedConstituents, d.get());
+  i = constituents.size();
+  if (i) {
+    pcm.setDouble(Generator_FuelCell_AirSupplyFields::NumberofUserDefinedConstituents, i.get());
   }
 
   return pcm;

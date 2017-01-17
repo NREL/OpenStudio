@@ -450,52 +450,11 @@ namespace detail {
 
 } // detail
 
-GeneratorFuelCellStackCooler::GeneratorFuelCellStackCooler(const Model& model,
-                                                           const Connection& waterInletNode,
-                                                           const Connection& waterOutletNode)
-  : StraightComponent(GeneratorFuelCellStackCooler::iddObjectType(), model) {
-  OS_ASSERT(getImpl<detail::GeneratorFuelCellStackCooler_Impl>());
-
-  bool ok = setHeatRecoveryWaterInletNode(waterInletNode);
-  if (!ok) {
-    remove();
-    LOG_AND_THROW("Unable to set " << briefDescription() << "'s waterInletNode to "
-      << waterInletNode.briefDescription() << ".");
-  }
-  ok = setHeatRecoveryWaterOutletNode(waterOutletNode);
-  if (!ok) {
-    remove();
-    LOG_AND_THROW("Unable to set " << briefDescription() << "'s waterOutletNode to "
-      << waterOutletNode.briefDescription() << ".");
-  }
-  setNominalStackTemperature(20);
-  setActualStackTemperature(20);
-  setCoefficientr0(0);
-  setCoefficientr1(0);
-  setCoefficientr2(0);
-  setCoefficientr3(0);
-  setStackCoolantFlowRate(1);
-  setStackCoolerUFactorTimesAreaValue(1);
-  setFscogenAdjustmentFactor(0);
-  setStackCogenerationExchangerArea(1);
-  setStackCogenerationExchangerNominalFlowRate(1);
-  setStackCogenerationExchangerNominalHeatTransferCoefficient(0);
-  setStackCogenerationExchangerNominalHeatTransferCoefficientExponent(0);
-  setStackCoolerPumpPower(0);
-  setStackCoolerPumpHeatLossFraction(0);
-  setStackAirCoolerFanCoefficientf0(0);
-  setStackAirCoolerFanCoefficientf1(0);
-  setStackAirCoolerFanCoefficientf2(0);
-}
-
 GeneratorFuelCellStackCooler::GeneratorFuelCellStackCooler(const Model& model)
   : StraightComponent(GeneratorFuelCellStackCooler::iddObjectType(), model)
 {
   OS_ASSERT(getImpl<detail::GeneratorFuelCellStackCooler_Impl>());
 
-  // TODO:
-  //setHeatRecoveryWaterInletNode();
-  //setHeatRecoveryWaterOutletNode();
   setNominalStackTemperature(20);
   setActualStackTemperature(20);
   setCoefficientr0(0);

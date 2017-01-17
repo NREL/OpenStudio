@@ -52,10 +52,6 @@ class MODEL_API GeneratorFuelCellStackCooler : public StraightComponent {
 
   explicit GeneratorFuelCellStackCooler(const Model& model);
 
-  explicit GeneratorFuelCellStackCooler(const Model& model,
-                                        const Connection& waterInletNode,
-                                        const Connection& waterOutletNode);
-
   virtual ~GeneratorFuelCellStackCooler() {}
 
   //@}
