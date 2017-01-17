@@ -101,7 +101,7 @@ RunTabView::RunTabView(const model::Model & model,
 }
 
 RunView::RunView()
-  : QWidget()
+  : QWidget(), m_runSocket(nullptr)
 {
   auto mainLayout = new QGridLayout();
   mainLayout->setContentsMargins(10,10,10,10);
@@ -180,7 +180,9 @@ void RunView::onRunProcessFinished(int exitCode, QProcess::ExitStatus status)
   std::shared_ptr<OSDocument> osdocument = OSAppBase::instance()->currentDocument();
   osdocument->enableTabsAfterRun();
 
-  delete m_runSocket;
+  if (m_runSocket){
+    delete m_runSocket;
+  }
   m_runSocket = nullptr;
 }
 

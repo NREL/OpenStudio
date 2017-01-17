@@ -357,7 +357,7 @@ class Run
 
     require 'openstudio-workflow'
     
-    osw_path = options[:workflow]
+    osw_path = options[:osw_path]
     osw_path = File.absolute_path(File.join(Dir.pwd, osw_path)) unless Pathname.new(osw_path).absolute?
     $logger.debug "Path for the OSW: #{osw_path}"
 
