@@ -308,10 +308,14 @@ class Run
   # @return [Fixnum] Return status
   #
   def execute(sub_argv)
+  
+    # options are local to this method, run_methods are what get passed to workflow gem
+    run_options = {}
+    
     options = {}
     options[:debug] = false
     options[:no_simulation] = false
-    options[:workflow] = './workflow.osw'
+    options[:osw_path] = './workflow.osw'
     options[:post_process] = false
 
     opts = OptionParser.new do |o|
@@ -320,8 +324,8 @@ class Run
       o.separator 'Options:'
       o.separator ''
 
-      o.on('-w', '--workflow [FILE]', 'Specify the FILE path to the workflow to run') do |workflow|
-        options[:workflow] = workflow
+      o.on('-w', '--workflow [FILE]', 'Specify the FILE path to the workflow to run') do |osw_path|
+        options[:osw_path] = osw_path
       end
       o.on('-m', '--measures_only', 'Only run the OpenStudio and EnergyPlus measures') do
         options[:no_simulation] = true
@@ -332,7 +336,7 @@ class Run
       o.on('-s', '--socket PORT', 'Pipe status messages to a socket on localhost PORT') do |port|
         options[:socket] = port
       end      
-      o.on('--debug', 'Includes additional outputs for debugging failing workflows and does not clean up the run directory') do |f|
+      o.on('--debug', 'Includes additional outputs for debugging failing workflows and does not clean up the run directory, overrides option in OSW') do |f|
         options[:debug] = f
       end
     end
@@ -357,7 +361,10 @@ class Run
     osw_path = File.absolute_path(File.join(Dir.pwd, osw_path)) unless Pathname.new(osw_path).absolute?
     $logger.debug "Path for the OSW: #{osw_path}"
 
-    run_options = options[:debug] ? {debug: true, cleanup: false} : {}
+    if options[:debug]
+      run_options[:debug] = true
+      run_options[:cleanup] = false
+    end
     
     if options[:socket]
       require 'openstudio/workflow/adapters/input/local'
@@ -395,9 +402,6 @@ class Run
         { state: :finished },
         { state: :errored }
       ]
-      run_options[:load_simulation_osm] = true
-      run_options[:load_simulation_idf] = true
-      run_options[:load_simulation_sql] = true
       run_options[:preserve_run_dir] = true
     end
     
