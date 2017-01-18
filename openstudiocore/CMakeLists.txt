@@ -1485,7 +1485,7 @@ if(BUILD_DOCUMENTATION)
       POST_BUILD
       COMMAND ${CMAKE_COMMAND} -E remove OpenStudio-${OPENSTUDIO_VERSION}-rdoc.zip
       COMMAND ${CMAKE_BINARY_DIR}/7za a -mmt -mx9 -tzip OpenStudio-${OPENSTUDIO_VERSION}-rdoc.zip * -r
-      WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/ruby/rdocify
+      WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/rdoc
     )
   endif()
 
