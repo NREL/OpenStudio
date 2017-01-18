@@ -284,6 +284,7 @@ if( BUILD_RUBY )
     set(RUBY_EXT_CONFIG "")
     if (NOT Apple)
       # DLM: still missing: curses, dbm, gdbm
+      # sudo apt-get -y install ruby autoconf automake libtool bison libgdbm-dev zlib1g-dev libffi-dev libssl-dev
       # sudo apt-get -y install build-essential libssl-dev libreadline-dev zlib1g-dev
       set(RUBY_EXT_CONFIG "--with-openssl-dir=/usr --with-readline-dir=/usr --with-zlib-dir=/usr")
     endif()
