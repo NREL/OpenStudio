@@ -61,10 +61,6 @@ class MODEL_API GeneratorFuelCellStackCooler : public StraightComponent {
   /** @name Getters */
   //@{
 
-  boost::optional<Connection> heatRecoveryWaterInletNode() const;
-
-  boost::optional<Connection> heatRecoveryWaterOutletNode() const;
-
   double nominalStackTemperature() const;
 
   double actualStackTemperature() const;
@@ -104,14 +100,6 @@ class MODEL_API GeneratorFuelCellStackCooler : public StraightComponent {
   //@}
   /** @name Setters */
   //@{
-
-  bool setHeatRecoveryWaterInletNode(const Connection& connection);
-
-  void resetHeatRecoveryWaterInletNode();
-
-  bool setHeatRecoveryWaterOutletNode(const Connection& connection);
-
-  void resetHeatRecoveryWaterOutletNode();
 
   void setNominalStackTemperature(double nominalStackTemperature);
 

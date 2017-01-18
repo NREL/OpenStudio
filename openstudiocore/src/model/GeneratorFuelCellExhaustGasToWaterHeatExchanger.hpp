@@ -54,8 +54,6 @@ class MODEL_API GeneratorFuelCellExhaustGasToWaterHeatExchanger : public Straigh
   explicit GeneratorFuelCellExhaustGasToWaterHeatExchanger(const Model& model);
 
   explicit GeneratorFuelCellExhaustGasToWaterHeatExchanger(const Model& model,
-                                                           const Connection& waterInletNode,
-                                                           const Connection& waterOutletNode,
                                                            const Node& exhaustOutletAirNode);
 
   virtual ~GeneratorFuelCellExhaustGasToWaterHeatExchanger() {}
@@ -68,10 +66,6 @@ class MODEL_API GeneratorFuelCellExhaustGasToWaterHeatExchanger : public Straigh
 
   /** @name Getters */
   //@{
-
-  boost::optional<Connection> heatRecoveryWaterInletNode() const;
-
-  boost::optional<Connection> heatRecoveryWaterOutletNode() const;
 
   double heatRecoveryWaterMaximumFlowRate() const;
 
@@ -118,14 +112,6 @@ class MODEL_API GeneratorFuelCellExhaustGasToWaterHeatExchanger : public Straigh
   //@}
   /** @name Setters */
   //@{
-
-  bool setHeatRecoveryWaterInletNode(const Connection& connection);
-
-  void resetHeatRecoveryWaterInletNode();
-
-  bool setHeatRecoveryWaterOutletNode(const Connection& connection);
-
-  void resetHeatRecoveryWaterOutletNode();
 
   void setHeatRecoveryWaterMaximumFlowRate(double heatRecoveryWaterMaximumFlowRate);
 

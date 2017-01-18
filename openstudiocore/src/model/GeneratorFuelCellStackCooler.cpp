@@ -80,14 +80,6 @@ namespace detail {
     return GeneratorFuelCellStackCooler::iddObjectType();
   }
 
-  boost::optional<Connection> GeneratorFuelCellStackCooler_Impl::heatRecoveryWaterInletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_Generator_FuelCell_StackCoolerFields::HeatRecoveryWaterInletNodeName);
-  }
-
-  boost::optional<Connection> GeneratorFuelCellStackCooler_Impl::heatRecoveryWaterOutletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_Generator_FuelCell_StackCoolerFields::HeatRecoveryWaterOutletNodeName);
-  }
-
   double GeneratorFuelCellStackCooler_Impl::nominalStackTemperature() const {
     boost::optional<double> value = getDouble(OS_Generator_FuelCell_StackCoolerFields::NominalStackTemperature, true);
     if (!value) {
@@ -230,26 +222,6 @@ namespace detail {
       LOG_AND_THROW(" does not have stackAirCoolerFanCoefficientf2");
     }
     return value.get();
-  }
-
-  bool GeneratorFuelCellStackCooler_Impl::setHeatRecoveryWaterInletNode(const Connection& connection) {
-    bool result = setPointer(OS_Generator_FuelCell_StackCoolerFields::HeatRecoveryWaterInletNodeName, connection.handle());
-    return result;
-  }
-
-  void GeneratorFuelCellStackCooler_Impl::resetHeatRecoveryWaterInletNode() {
-    bool result = setString(OS_Generator_FuelCell_StackCoolerFields::HeatRecoveryWaterInletNodeName, "");
-    OS_ASSERT(result);
-  }
-
-  bool GeneratorFuelCellStackCooler_Impl::setHeatRecoveryWaterOutletNode(const Connection& connection) {
-    bool result = setPointer(OS_Generator_FuelCell_StackCoolerFields::HeatRecoveryWaterOutletNodeName, connection.handle());
-    return result;
-  }
-
-  void GeneratorFuelCellStackCooler_Impl::resetHeatRecoveryWaterOutletNode() {
-    bool result = setString(OS_Generator_FuelCell_StackCoolerFields::HeatRecoveryWaterOutletNodeName, "");
-    OS_ASSERT(result);
   }
 
   void GeneratorFuelCellStackCooler_Impl::setNominalStackTemperature(double nominalStackTemperature) {
@@ -479,14 +451,6 @@ IddObjectType GeneratorFuelCellStackCooler::iddObjectType() {
   return IddObjectType(IddObjectType::OS_Generator_FuelCell_StackCooler);
 }
 
-boost::optional<Connection> GeneratorFuelCellStackCooler::heatRecoveryWaterInletNode() const {
-  return getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->heatRecoveryWaterInletNode();
-}
-
-boost::optional<Connection> GeneratorFuelCellStackCooler::heatRecoveryWaterOutletNode() const {
-  return getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->heatRecoveryWaterOutletNode();
-}
-
 double GeneratorFuelCellStackCooler::nominalStackTemperature() const {
   return getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->nominalStackTemperature();
 }
@@ -557,22 +521,6 @@ double GeneratorFuelCellStackCooler::stackAirCoolerFanCoefficientf1() const {
 
 double GeneratorFuelCellStackCooler::stackAirCoolerFanCoefficientf2() const {
   return getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->stackAirCoolerFanCoefficientf2();
-}
-
-bool GeneratorFuelCellStackCooler::setHeatRecoveryWaterInletNode(const Connection& connection) {
-  return getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->setHeatRecoveryWaterInletNode(connection);
-}
-
-void GeneratorFuelCellStackCooler::resetHeatRecoveryWaterInletNode() {
-  getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->resetHeatRecoveryWaterInletNode();
-}
-
-bool GeneratorFuelCellStackCooler::setHeatRecoveryWaterOutletNode(const Connection& connection) {
-  return getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->setHeatRecoveryWaterOutletNode(connection);
-}
-
-void GeneratorFuelCellStackCooler::resetHeatRecoveryWaterOutletNode() {
-  getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->resetHeatRecoveryWaterOutletNode();
 }
 
 void GeneratorFuelCellStackCooler::setNominalStackTemperature(double nominalStackTemperature) {

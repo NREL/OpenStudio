@@ -81,14 +81,6 @@ namespace detail {
     return GeneratorFuelCellExhaustGasToWaterHeatExchanger::iddObjectType();
   }
 
-  boost::optional<Connection> GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::heatRecoveryWaterInletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::HeatRecoveryWaterInletNodeName);
-  }
-
-  boost::optional<Connection> GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::heatRecoveryWaterOutletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::HeatRecoveryWaterOutletNodeName);
-  }
-
   double GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::heatRecoveryWaterMaximumFlowRate() const {
     boost::optional<double> value = getDouble(OS_Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::HeatRecoveryWaterMaximumFlowRate,true);
     if (!value) {
@@ -179,26 +171,6 @@ namespace detail {
 
   boost::optional<double> GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::method4CondensationThreshold() const {
     return getDouble(OS_Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::Method4CondensationThreshold,true);
-  }
-
-  bool GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::setHeatRecoveryWaterInletNode(const Connection& connection) {
-    bool result = setPointer(OS_Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::HeatRecoveryWaterInletNodeName, connection.handle());
-    return result;
-  }
-
-  void GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::resetHeatRecoveryWaterInletNode() {
-    bool result = setString(OS_Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::HeatRecoveryWaterInletNodeName, "");
-    OS_ASSERT(result);
-  }
-
-  bool GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::setHeatRecoveryWaterOutletNode(const Connection& connection) {
-    bool result = setPointer(OS_Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::HeatRecoveryWaterOutletNodeName, connection.handle());
-    return result;
-  }
-
-  void GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::resetHeatRecoveryWaterOutletNode() {
-    bool result = setString(OS_Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::HeatRecoveryWaterOutletNodeName, "");
-    OS_ASSERT(result);
   }
 
   void GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::setHeatRecoveryWaterMaximumFlowRate(double heatRecoveryWaterMaximumFlowRate) {
@@ -430,16 +402,14 @@ namespace detail {
 } // detail
 
 GeneratorFuelCellExhaustGasToWaterHeatExchanger::GeneratorFuelCellExhaustGasToWaterHeatExchanger(const Model& model,
-                                                                                                 const Connection& waterInletNode,
-                                                                                                 const Connection& waterOutletNode,
                                                                                                  const Node& exhaustOutletAirNode)
   : StraightComponent(GeneratorFuelCellExhaustGasToWaterHeatExchanger::iddObjectType(), model) {
   OS_ASSERT(getImpl<detail::GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl>());
 
   //note: This field contains the name of the node that connects the heat exchanger s inlet to the plant loop. This water is used for heat recovery.
-  setHeatRecoveryWaterInletNode(waterInletNode);
+  //setHeatRecoveryWaterInletNode(waterInletNode);
   //note: This field contains the name of the node that connects the heat exchanger s outlet to the plant loop.
-  setHeatRecoveryWaterOutletNode(waterOutletNode);
+  //setHeatRecoveryWaterOutletNode(waterOutletNode);
   //note: This field is used to determine which node will receive the exhaust air stream leaving the FC. This node will usually be outside and not be referenced elsewhere. 
   //      However, if the exhaust stream is used in a heat recovery ventilator (as described in section 11 of the Annex 42 specification) then the node would be reference in the heat recovery ventilator object.
   setExhaustOutletAirNode(exhaustOutletAirNode);
@@ -473,14 +443,6 @@ IddObjectType GeneratorFuelCellExhaustGasToWaterHeatExchanger::iddObjectType() {
 std::vector<std::string> GeneratorFuelCellExhaustGasToWaterHeatExchanger::heatExchangerCalculationMethodValues() {
   return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
                         OS_Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::HeatExchangerCalculationMethod);
-}
-
-boost::optional<Connection> GeneratorFuelCellExhaustGasToWaterHeatExchanger::heatRecoveryWaterInletNode() const {
-  return getImpl<detail::GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl>()->heatRecoveryWaterInletNode();
-}
-
-boost::optional<Connection> GeneratorFuelCellExhaustGasToWaterHeatExchanger::heatRecoveryWaterOutletNode() const {
-  return getImpl<detail::GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl>()->heatRecoveryWaterOutletNode();
 }
 
 double GeneratorFuelCellExhaustGasToWaterHeatExchanger::heatRecoveryWaterMaximumFlowRate() const {
@@ -565,22 +527,6 @@ boost::optional<double> GeneratorFuelCellExhaustGasToWaterHeatExchanger::method4
 
 boost::optional<double> GeneratorFuelCellExhaustGasToWaterHeatExchanger::method4CondensationThreshold() const {
   return getImpl<detail::GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl>()->method4CondensationThreshold();
-}
-
-bool GeneratorFuelCellExhaustGasToWaterHeatExchanger::setHeatRecoveryWaterInletNode(const Connection& connection) {
-  return getImpl<detail::GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl>()->setHeatRecoveryWaterInletNode(connection);
-}
-
-void GeneratorFuelCellExhaustGasToWaterHeatExchanger::resetHeatRecoveryWaterInletNode() {
-  getImpl<detail::GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl>()->resetHeatRecoveryWaterInletNode();
-}
-
-bool GeneratorFuelCellExhaustGasToWaterHeatExchanger::setHeatRecoveryWaterOutletNode(const Connection& connection) {
-  return getImpl<detail::GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl>()->setHeatRecoveryWaterOutletNode(connection);
-}
-
-void GeneratorFuelCellExhaustGasToWaterHeatExchanger::resetHeatRecoveryWaterOutletNode() {
-  getImpl<detail::GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl>()->resetHeatRecoveryWaterOutletNode();
 }
 
 void GeneratorFuelCellExhaustGasToWaterHeatExchanger::setHeatRecoveryWaterMaximumFlowRate(double heatRecoveryWaterMaximumFlowRate) {

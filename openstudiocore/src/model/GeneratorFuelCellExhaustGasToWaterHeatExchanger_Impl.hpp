@@ -72,10 +72,6 @@ class MODEL_API GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl : public St
     /** @name Getters */
     //@{
 
-    boost::optional<Connection> heatRecoveryWaterInletNode() const;
-
-    boost::optional<Connection> heatRecoveryWaterOutletNode() const;
-
     double heatRecoveryWaterMaximumFlowRate() const;
 
     boost::optional<Node> exhaustOutletAirNode() const;
@@ -121,14 +117,6 @@ class MODEL_API GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl : public St
     //@}
     /** @name Setters */
     //@{
-
-    bool setHeatRecoveryWaterInletNode(const Connection& connection);
-
-    void resetHeatRecoveryWaterInletNode();
-
-    bool setHeatRecoveryWaterOutletNode(const Connection& connection);
-
-    void resetHeatRecoveryWaterOutletNode();
 
     void setHeatRecoveryWaterMaximumFlowRate(double heatRecoveryWaterMaximumFlowRate);
 
