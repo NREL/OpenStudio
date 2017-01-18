@@ -120,9 +120,9 @@ extern "C" {
   void Init_coverage();
   void Init_cparse();
   void Init_date_core();
-#ifndef _MSC_VER
-  void Init_dbm();
-#endif
+//#ifndef _MSC_VER
+//  void Init_dbm();
+//#endif
   void Init_digest();
   void Init_etc();
   void Init_fcntl();
@@ -367,11 +367,11 @@ int main(int argc, char *argv[])
   rb_provide("date_core");
   rb_provide("date_core.so");
   
-#ifndef _MSC_VER
-  Init_dbm();
-  rb_provide("dbm");
-  rb_provide("dbm.so");
-#endif
+//#ifndef _MSC_VER
+//  Init_dbm();
+//  rb_provide("dbm");
+//  rb_provide("dbm.so");
+//#endif
   
   Init_etc();
   rb_provide("etc");
