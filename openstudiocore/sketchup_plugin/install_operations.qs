@@ -24,9 +24,9 @@ function Component()
     var pluginsDir = "";
     var kernel = systemInfo.kernelType;
     if( kernel == "darwin" ) {
-      pluginsDir = "/Library/Application Support/SketchUp 2016/SketchUp/Plugins/";
+      pluginsDir = "/Library/Application Support/SketchUp 2017/SketchUp/Plugins/";
     } else {
-      pluginsDir = "C:/ProgramData/SketchUp/SketchUp 2016/SketchUp/Plugins/";
+      pluginsDir = "C:/ProgramData/SketchUp/SketchUp 2017/SketchUp/Plugins/";
     }
     
     // make dir
