@@ -44,6 +44,7 @@ class Filetypes_WorkflowJSON_Signals_Test;
 namespace openstudio{
 
 class WorkflowStep;
+class RunOptions;
 class MeasureStep;
 class DateTime;
 class OSDocument;
@@ -231,6 +232,15 @@ public:
 
   /** Add a measure to the measure dir, replaces existing measure with same id, does not add a step to the workflow. */
   boost::optional<BCLMeasure> addMeasure(const BCLMeasure& bclMeasure);
+
+  /** Get RunOptions for this workflow. */
+  boost::optional<RunOptions> runOptions() const;
+
+  /** Set RunOptions for this workflow. */
+  bool setRunOptions(const RunOptions& options);
+
+  /** Reset RunOptions for this workflow. */
+  void resetRunOptions();
 
 protected:
   

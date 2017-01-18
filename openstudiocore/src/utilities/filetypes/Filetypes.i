@@ -5,6 +5,8 @@
   namespace openstudio{}
   using namespace openstudio;
   #include <utilities/filetypes/EpwFile.hpp>
+  #include <utilities/filetypes/RunOptions.hpp>
+  #include <utilities/filetypes/RunOptions_Impl.hpp>
   #include <utilities/filetypes/WorkflowStepResult.hpp>
   #include <utilities/filetypes/WorkflowStep.hpp>
   #include <utilities/filetypes/WorkflowStep_Impl.hpp>
@@ -41,6 +43,10 @@
 %template(EpwFileVector) std::vector<openstudio::EpwFile>;
 %template(OptionalEpwFile) boost::optional<openstudio::EpwFile>;
 
+%template(OptionalCustomOutputAdapter) boost::optional<openstudio::CustomOutputAdapter>;
+
+%template(OptionalRunOptions) boost::optional<openstudio::RunOptions>;
+
 %template(OptionalStepResult) boost::optional<openstudio::StepResult>;
 
 %ignore std::vector<openstudio::WorkflowStepValue>::vector(size_type);
@@ -65,11 +71,20 @@
 %template(OptionalWorkflowJSON) boost::optional<openstudio::WorkflowJSON>;
 
 %include <utilities/filetypes/EpwFile.hpp>
+%include <utilities/filetypes/RunOptions.hpp>
 %include <utilities/filetypes/WorkflowStepResult.hpp>
 %include <utilities/filetypes/WorkflowStep.hpp>
 %include <utilities/filetypes/WorkflowJSON.hpp>
 
 // extend class
+%extend openstudio::RunOptions{
+  std::string __str__() {
+    std::ostringstream os;
+    os << *self;
+    return os.str();
+  }
+};
+
 %extend openstudio::WorkflowStepResult{
   std::string __str__() {
     std::ostringstream os;

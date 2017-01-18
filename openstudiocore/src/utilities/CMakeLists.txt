@@ -112,6 +112,9 @@ set(data_src
 set(filetypes_src
   filetypes/EpwFile.hpp
   filetypes/EpwFile.cpp
+  filetypes/RunOptions.hpp
+  filetypes/RunOptions_Impl.hpp
+  filetypes/RunOptions.cpp
   filetypes/WorkflowJSON.hpp
   filetypes/WorkflowJSON_Impl.hpp
   filetypes/WorkflowJSON.cpp
