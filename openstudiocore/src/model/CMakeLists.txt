@@ -1711,6 +1711,14 @@ set(${target_name}_test_src
   test/GasMixture_GTest.cpp
   test/Gas_GTest.cpp
   test/GeneratorFuelCell_GTest.cpp
+  test/GeneratorFuelCellAirSupply_GTest.cpp
+  test/GeneratorFuelCellAuxiliaryHeater_GTest.cpp
+  test/GeneratorFuelCellElectricalStorage_GTest.cpp
+  test/GeneratorFuelCellExhaustGasToWaterHeatExchanger_GTest.cpp
+  test/GeneratorFuelCellInverter_GTest.cpp
+  test/GeneratorFuelCellPowerModule_GTest.cpp
+  test/GeneratorFuelCellStackCooler_GTest.cpp
+  test/GeneratorFuelCellWaterSupply_GTest.cpp
   test/GeneratorPhotovoltaic_GTest.cpp
   test/GeneratorMicroTurbine_GTest.cpp
   test/GlareSensor_GTest.cpp
