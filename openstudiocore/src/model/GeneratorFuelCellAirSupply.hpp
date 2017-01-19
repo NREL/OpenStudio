@@ -82,13 +82,13 @@ class MODEL_API GeneratorFuelCellAirSupply : public ModelObject {
 
   //extensible fields
 
-  bool addConstituent(std::string name, std::string molarFraction);
+  bool addConstituent(std::string name, double molarFraction);
 
   void removeConstituent(int groupIndex);
 
   void removeAllConstituents();
 
-  std::vector< std::pair<std::string, std::string> > constituents();
+  std::vector< std::pair<std::string, double> > constituents();
 
   /** @name Getters */
   //@{

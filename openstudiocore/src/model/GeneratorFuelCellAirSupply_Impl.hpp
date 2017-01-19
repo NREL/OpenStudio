@@ -71,13 +71,13 @@ namespace detail {
 
     //extensible fields.
 
-    bool addConstituent(std::string name, std::string molarFraction);
+    bool addConstituent(std::string name, double molarFraction);
 
     void removeConstituent(unsigned groupIndex);
 
     void removeAllConstituents();
 
-    std::vector< std::pair<std::string, std::string> > constituents();
+    std::vector< std::pair<std::string, double> > constituents();
 
     //@}
     /** @name Getters */
