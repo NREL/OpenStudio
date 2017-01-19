@@ -96,7 +96,21 @@ objects = []
 #objects << ["OS:EnergyManagementSystem:InternalVariable", "EnergyManagementSystemInternalVariable", "ModelObject"]
 #objects << ["OS:EnergyManagementSystem:CurveOrTableIndexVariable", "EnergyManagementSystemCurveOrTableIndexVariable", "ModelObject"]
 #objects << ["OS:EnergyManagementSystem:ConstructionIndexVariable", "EnergyManagementSystemConstructionIndexVariable", "ModelObject"]
-objects << ["OS:Output:EnergyManagementSystem", "OutputEnergyManagementSystem", "ModelObject"]
+#objects << ["OS:Output:EnergyManagementSystem", "OutputEnergyManagementSystem", "ModelObject"]
+
+#objects << ["OS:ExternalInterface", "ExternalInterface", "ModelObject"]
+#objects << ["OS:ExternalInterface:Schedule", "ExternalInterfaceSchedule", "ModelObject"]
+#objects << ["OS:ExternalInterface:Variable", "ExternalInterfaceVariable", "ModelObject"]
+#objects << ["OS:ExternalInterface:Actuator", "ExternalInterfaceActuator", "ModelObject"]
+#objects << ["OS:ExternalInterface:FunctionalMockupUnitImport", "ExternalInterfaceFunctionalMockupUnitImport", "ModelObject"]
+#objects << ["OS:ExternalInterface:FunctionalMockupUnitImport:From:Variable", "ExternalInterfaceFunctionalMockupUnitImportFromVariable", "ModelObject"]
+#objects << ["OS:ExternalInterface:FunctionalMockupUnitImport:To:Schedule", "ExternalInterfaceFunctionalMockupUnitImportToSchedule", "ModelObject"]
+#objects << ["OS:ExternalInterface:FunctionalMockupUnitImport:To:Actuator", "ExternalInterfaceFunctionalMockupUnitImportToActuator", "ModelObject"]
+objects << ["OS:ExternalInterface:FunctionalMockupUnitImport:To:Variable", "ExternalInterfaceFunctionalMockupUnitImportToVariable", "ModelObject"]
+objects << ["OS:ExternalInterface:FunctionalMockupUnitExport:From:Variable", "ExternalInterfaceFunctionalMockupUnitExportFromVariable", "ModelObject"]
+objects << ["OS:ExternalInterface:FunctionalMockupUnitExport:To:Schedule", "ExternalInterfaceFunctionalMockupUnitExportToSchedule", "ModelObject"]
+objects << ["OS:ExternalInterface:FunctionalMockupUnitExport:To:Actuator", "ExternalInterfaceFunctionalMockupUnitExportToActuator", "ModelObject"]
+objects << ["OS:ExternalInterface:FunctionalMockupUnitExport:To:Variable", "ExternalInterfaceFunctionalMockupUnitExportToVariable", "ModelObject"]
 
 includePath = nil
 if /mswin/.match(RUBY_PLATFORM) || /mingw/.match(RUBY_PLATFORM)
