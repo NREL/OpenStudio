@@ -33,6 +33,20 @@
 #include "../GeneratorFuelCellExhaustGasToWaterHeatExchanger.hpp"
 #include "../GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl.hpp"
 
+#include "../Node.hpp"
+#include "../Node_Impl.hpp"
+
 using namespace openstudio;
 using namespace openstudio::model;
+using std::string;
+
+TEST_F(ModelFixture, FuelCellExhaustGasToWaterHeatExchanger) {
+  Model model;
+
+  GeneratorFuelCellExhaustGasToWaterHeatExchanger exhaustHX(model);
+  EXPECT_EQ(0.0004, exhaustHX.heatRecoveryWaterMaximumFlowRate());
+  EXPECT_EQ("FixedEffectiveness", exhaustHX.heatExchangerCalculationMethod());
+  EXPECT_EQ(1.0, exhaustHX.method1HeatExchangerEffectiveness());
+  ASSERT_FALSE(exhaustHX.exhaustOutletAirNode());
+}
 
