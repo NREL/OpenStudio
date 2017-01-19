@@ -219,17 +219,19 @@ namespace detail {
   }
 
   void GeneratorFuelCellAuxiliaryHeater_Impl::resetSkinLossDestination() {
-    bool result = setString(OS_Generator_FuelCell_AuxiliaryHeaterFields::SkinLossDestination, "SurroundingZone");
+    bool result = setString(OS_Generator_FuelCell_AuxiliaryHeaterFields::SkinLossDestination, "AirInletForFuelCell");
     OS_ASSERT(result);
   }
 
   bool GeneratorFuelCellAuxiliaryHeater_Impl::setZonetoReceiveSkinLosses(const ThermalZone& zone) {
     bool result = setPointer(OS_Generator_FuelCell_AuxiliaryHeaterFields::ZoneNametoReceiveSkinLosses, zone.handle());
+    this->setSkinLossDestination("SurroundingZone");
     return result;
   }
 
   void GeneratorFuelCellAuxiliaryHeater_Impl::resetZonetoReceiveSkinLosses() {
     bool result = setString(OS_Generator_FuelCell_AuxiliaryHeaterFields::ZoneNametoReceiveSkinLosses, "");
+    this->setSkinLossDestination("AirInletForFuelCell");
     OS_ASSERT(result);
   }
 
