@@ -1029,7 +1029,7 @@ if( UNIX AND NOT APPLE )
   #list(APPEND QT_STATIC_LIBS ${freetype_lib})
   
   FIND_QT_STATIC_LIB("png" "*")
-  FIND_QT_STATIC_LIB("libjpeg;libjpeg.so.8" "*")
+  FIND_QT_STATIC_LIB("libjpeg;libjpeg.so;libjpeg.so.8" "*")
   FIND_QT_STATIC_LIB("freetype" "*")
   
   #find_library(dbus_lib libdbus-1.so)
@@ -1085,8 +1085,7 @@ if( UNIX AND NOT APPLE )
     FIND_QT_STATIC_LIB("db" "*")
     FIND_QT_STATIC_LIB("icui18n" "*")
     FIND_QT_STATIC_LIB("icuuc" "*")
-    
-    
+    FIND_QT_STATIC_LIB("z.so" "*")    
   else()
     #find_library(fontconfig_lib libfontconfig.so)
     #list(APPEND QT_STATIC_LIBS ${fontconfig_lib}) 
