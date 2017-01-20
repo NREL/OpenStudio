@@ -32,6 +32,8 @@
 #include "WorkflowStep.hpp"
 #include "WorkflowStep_Impl.hpp"
 #include "WorkflowStepResult.hpp"
+#include "RunOptions.hpp"
+#include "RunOptions_Impl.hpp"
 
 #include "../core/Assert.hpp"
 #include "../core/PathHelpers.hpp"
@@ -81,6 +83,7 @@ namespace detail{
     }
 
     parseSteps();
+    parseRunOptions();
   }
 
   WorkflowJSON_Impl::WorkflowJSON_Impl(const openstudio::path& p)
@@ -100,6 +103,7 @@ namespace detail{
     }
 
     parseSteps();
+    parseRunOptions();
 
     setOswPath(p);
   }
@@ -136,6 +140,13 @@ namespace detail{
       }
     }
     clone["steps"] = steps;
+
+    if (m_runOptions){
+      Json::Reader reader;
+      Json::Value options;
+      bool parsingSuccessful = reader.parse(m_runOptions->string(), options);
+      clone["run_options"] = options;
+    }
 
     Json::StyledWriter writer;
     std::string result = writer.write(clone);
@@ -750,6 +761,24 @@ namespace detail{
     return bclMeasure.clone(newMeasureDirName);
   }
 
+  boost::optional<RunOptions> WorkflowJSON_Impl::runOptions() const
+  {
+    return m_runOptions;
+  }
+
+  bool WorkflowJSON_Impl::setRunOptions(const RunOptions& options)
+  {
+    disconnectRunOptions();
+    m_runOptions = options;
+    connectRunOptions();
+    return true;
+  }
+
+  void WorkflowJSON_Impl::resetRunOptions(){
+    disconnectRunOptions();
+    m_runOptions.reset();
+  }
+
   void WorkflowJSON_Impl::onUpdate()
   {
     m_value["updated_at"] = DateTime::nowUTC().toISO8601();
@@ -796,6 +825,43 @@ namespace detail{
   {
     for (const auto& step : m_steps){
       step.getImpl<detail::WorkflowStep_Impl>().get()->WorkflowStep_Impl::onChange.connect<WorkflowJSON_Impl, &WorkflowJSON_Impl::onUpdate>(this);
+    }
+  }
+  
+  void WorkflowJSON_Impl::parseRunOptions()
+  {
+    if (m_runOptions){
+      disconnectRunOptions();
+      m_runOptions.reset();
+    }
+
+    if (m_value.isMember("run_options")){
+      Json::Value options = m_value["run_options"];
+
+      Json::FastWriter writer;
+      std::string s = writer.write(options);
+
+      m_runOptions = RunOptions::fromString(s);
+      if (!m_runOptions){
+        LOG_AND_THROW("Run options cannot be processed");
+      }
+
+      connectRunOptions();
+      m_value.removeMember("run_options");
+    }
+  }
+      
+  void WorkflowJSON_Impl::disconnectRunOptions()
+  {
+    if (m_runOptions){
+      m_runOptions->getImpl<detail::RunOptions_Impl>().get()->RunOptions_Impl::onChange.disconnect<WorkflowJSON_Impl, &WorkflowJSON_Impl::onUpdate>(this);
+    }
+  }
+ 
+  void WorkflowJSON_Impl::connectRunOptions()
+  {
+    if (m_runOptions){
+      m_runOptions->getImpl<detail::RunOptions_Impl>().get()->RunOptions_Impl::onChange.connect<WorkflowJSON_Impl, &WorkflowJSON_Impl::onUpdate>(this);
     }
   }
 
@@ -1133,6 +1199,20 @@ boost::optional<BCLMeasure> WorkflowJSON::getBCLMeasureByUUID(const UUID& id) co
 boost::optional<BCLMeasure> WorkflowJSON::addMeasure(const BCLMeasure& bclMeasure)
 {
   return getImpl<detail::WorkflowJSON_Impl>()->addMeasure(bclMeasure);
+}
+
+boost::optional<RunOptions> WorkflowJSON::runOptions() const
+{
+  return getImpl<detail::WorkflowJSON_Impl>()->runOptions();
+}
+
+bool WorkflowJSON::setRunOptions(const RunOptions& options)
+{
+  return getImpl<detail::WorkflowJSON_Impl>()->setRunOptions(options);
+}
+
+void WorkflowJSON::resetRunOptions(){
+  getImpl<detail::WorkflowJSON_Impl>()->resetRunOptions();
 }
 
 std::ostream& operator<<(std::ostream& os, const WorkflowJSON& workflowJSON)
