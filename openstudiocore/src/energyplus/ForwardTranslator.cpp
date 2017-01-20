@@ -124,10 +124,6 @@ Workspace ForwardTranslator::translateModelObject( ModelObject & modelObject )
   Model modelCopy;
   modelObject.clone(modelCopy);
 
-  std::cout << "------------------------------------------------" << std::endl;
-  std::cout << modelCopy << std::endl;
-  std::cout << "------------------------------------------------" << std::endl;
-
   m_progressBar = nullptr;
 
   return translateModelPrivate(modelCopy, false);
