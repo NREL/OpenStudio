@@ -28,19 +28,14 @@
 
 #include "../ForwardTranslator.hpp"
 
-#include "../../model/Model.hpp"
 #include "../../model/SurfacePropertyConvectionCoefficients.hpp"
 #include "../../model/SurfacePropertyConvectionCoefficients_Impl.hpp"
 #include "../../model/Schedule.hpp"
-#include "../../model/ModelObject.hpp"
 
 #include <utilities/idd/SurfaceProperty_ConvectionCoefficients_FieldEnums.hxx>
 
-#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
-
-#include "../../utilities/core/Assert.hpp"
 
 using namespace openstudio::model;
 
