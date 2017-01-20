@@ -78,6 +78,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SurfacePropertyConvectionCoefficient
 
   cc.setConvectionCoefficient1Location("Inside");
   cc.setConvectionCoefficient1Type("Value");
+  cc.setConvectionCoefficient1(5.0);
   cc.setConvectionCoefficient2Location("Outside");
   cc.setConvectionCoefficient2Type("Schedule");
   ScheduleConstant sched(model);
@@ -86,9 +87,48 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SurfacePropertyConvectionCoefficient
   cc.setConvectionCoefficient2Schedule(sched);
 
   ForwardTranslator trans;
-  Workspace workspace = trans.translateModelObject(cc);
+  Workspace workspace = trans.translateModel(model);
 
-  ASSERT_EQ(1u, workspace.numObjectsOfType(IddObjectType::SurfaceProperty_ConvectionCoefficients));
+  std::vector<WorkspaceObject> objVector(workspace.getObjectsByType(IddObjectType::SurfaceProperty_ConvectionCoefficients));
+  ASSERT_EQ(objVector.size(), 1);
+  WorkspaceObject wo(objVector.at(0));
+
+  boost::optional<std::string> cc1loc(wo.getString(SurfaceProperty_ConvectionCoefficientsFields::ConvectionCoefficient1Location));
+  EXPECT_TRUE(cc1loc);
+  if (cc1loc) {
+    EXPECT_EQ(cc1loc.get(), "Inside");
+  }
+  boost::optional<std::string> cc1type(wo.getString(SurfaceProperty_ConvectionCoefficientsFields::ConvectionCoefficient1Type));
+  EXPECT_TRUE(cc1type);
+  if (cc1type) {
+    EXPECT_EQ(cc1type.get(), "Value");
+  }
+  boost::optional<double> cc1value(wo.getDouble(SurfaceProperty_ConvectionCoefficientsFields::ConvectionCoefficient1));
+  EXPECT_TRUE(cc1value);
+  if (cc1value) {
+    EXPECT_EQ(cc1value.get(), 5.0);
+  }
+  boost::optional<std::string> cc2loc(wo.getString(SurfaceProperty_ConvectionCoefficientsFields::ConvectionCoefficient2Location));
+  EXPECT_TRUE(cc2loc);
+  if (cc2loc) {
+    EXPECT_EQ(cc2loc.get(), "Outside");
+  }
+  boost::optional<std::string> cc2type(wo.getString(SurfaceProperty_ConvectionCoefficientsFields::ConvectionCoefficient2Type));
+  EXPECT_TRUE(cc2type);
+  if (cc2type) {
+    EXPECT_EQ(cc2type.get(), "Schedule");
+  }
+  boost::optional<WorkspaceObject> woSched(wo.getTarget(SurfaceProperty_ConvectionCoefficientsFields::ConvectionCoefficient2ScheduleName));
+  EXPECT_TRUE(woSched);
+  if (woSched) {
+    EXPECT_EQ(woSched->iddObject().type(), IddObjectType::Schedule_Constant);
+  }
+  boost::optional<WorkspaceObject> woIntMass(wo.getTarget(SurfaceProperty_ConvectionCoefficientsFields::SurfaceName));
+  EXPECT_TRUE(woIntMass);
+  if (woIntMass) {
+    EXPECT_EQ(woIntMass->iddObject().type(), IddObjectType::InternalMass);
+  }
+
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_SurfacePropertyConvectionCoefficients_Surface) {
@@ -125,7 +165,46 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SurfacePropertyConvectionCoefficient
   cc.setConvectionCoefficient2Schedule(sched);
 
   ForwardTranslator trans;
-  Workspace workspace = trans.translateModelObject(cc);
+  Workspace workspace = trans.translateModel(model);
 
-  ASSERT_EQ(1u, workspace.numObjectsOfType(IddObjectType::SurfaceProperty_ConvectionCoefficients));
+  std::vector<WorkspaceObject> objVector(workspace.getObjectsByType(IddObjectType::SurfaceProperty_ConvectionCoefficients));
+  ASSERT_EQ(objVector.size(), 1);
+  WorkspaceObject wo(objVector.at(0));
+
+  boost::optional<std::string> cc1loc(wo.getString(SurfaceProperty_ConvectionCoefficientsFields::ConvectionCoefficient1Location));
+  EXPECT_TRUE(cc1loc);
+  if (cc1loc) {
+    EXPECT_EQ(cc1loc.get(), "Inside");
+  }
+  boost::optional<std::string> cc1type(wo.getString(SurfaceProperty_ConvectionCoefficientsFields::ConvectionCoefficient1Type));
+  EXPECT_TRUE(cc1type);
+  if (cc1type) {
+    EXPECT_EQ(cc1type.get(), "Value");
+  }
+  boost::optional<double> cc1value(wo.getDouble(SurfaceProperty_ConvectionCoefficientsFields::ConvectionCoefficient1));
+  EXPECT_TRUE(cc1value);
+  if (cc1value) {
+    EXPECT_EQ(cc1value.get(), 3.0);
+  }
+  boost::optional<std::string> cc2loc(wo.getString(SurfaceProperty_ConvectionCoefficientsFields::ConvectionCoefficient2Location));
+  EXPECT_TRUE(cc2loc);
+  if (cc2loc) {
+    EXPECT_EQ(cc2loc.get(), "Outside");
+  }
+  boost::optional<std::string> cc2type(wo.getString(SurfaceProperty_ConvectionCoefficientsFields::ConvectionCoefficient2Type));
+  EXPECT_TRUE(cc2type);
+  if (cc2type) {
+    EXPECT_EQ(cc2type.get(), "Schedule");
+  }
+  boost::optional<WorkspaceObject> woSched(wo.getTarget(SurfaceProperty_ConvectionCoefficientsFields::ConvectionCoefficient2ScheduleName));
+  EXPECT_TRUE(woSched);
+  if (woSched) {
+    EXPECT_EQ(woSched->iddObject().type(), IddObjectType::Schedule_Constant);
+  }
+  boost::optional<WorkspaceObject> woSurface(wo.getTarget(SurfaceProperty_ConvectionCoefficientsFields::SurfaceName));
+  EXPECT_TRUE(woSurface);
+  if (woSurface) {
+    EXPECT_EQ(woSurface->iddObject().type(), IddObjectType::BuildingSurface_Detailed);
+  }
+
 }

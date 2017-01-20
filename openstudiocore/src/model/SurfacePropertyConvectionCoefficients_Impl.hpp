@@ -63,7 +63,7 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
     virtual IddObjectType iddObjectType() const override;
 
@@ -136,8 +136,6 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
-
-    virtual ModelObject clone(Model model) const override;
 
     //@}
    protected:
