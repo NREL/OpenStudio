@@ -124,8 +124,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SurfacePropertyConvectionCoefficient
   sched.setValue(1.0);
   cc.setConvectionCoefficient2Schedule(sched);
 
-  std::cout << model << std::endl;
-  std::cout << "------------------------------------------------------" << std::endl;
   ForwardTranslator trans;
   Workspace workspace = trans.translateModelObject(cc);
 

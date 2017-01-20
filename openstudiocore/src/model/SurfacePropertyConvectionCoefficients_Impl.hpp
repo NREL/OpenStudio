@@ -65,7 +65,7 @@ namespace detail {
 
     virtual const std::vector<std::string>& outputVariableNames() const;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
     //@}
     /** @name Getters */
@@ -136,6 +136,8 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
+
+    virtual ModelObject clone(Model model) const override;
 
     //@}
    protected:

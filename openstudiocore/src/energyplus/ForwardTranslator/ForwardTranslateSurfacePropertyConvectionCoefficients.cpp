@@ -52,7 +52,6 @@ namespace energyplus {
 
 boost::optional<IdfObject> ForwardTranslator::translateSurfacePropertyConvectionCoefficients(model::SurfacePropertyConvectionCoefficients & modelObject)
 {
-  std::cout << modelObject.model() << std::endl;
   boost::optional<ModelObject> convectionCoefficientSurface = modelObject.surfaceAsModelObject();
   boost::optional<std::string> convectionCoefficient1Location = modelObject.convectionCoefficient1Location();
   boost::optional<std::string> convectionCoefficient1Type = modelObject.convectionCoefficient1Type();
