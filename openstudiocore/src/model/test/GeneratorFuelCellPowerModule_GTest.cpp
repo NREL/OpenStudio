@@ -81,3 +81,47 @@ TEST_F(ModelFixture, FuelCellPowerModule) {
 
 }
 
+TEST_F(ModelFixture, FuelCellPowerModule2) {
+  Model model;
+
+  // check default PowerModule
+  CurveQuadratic curve(model);
+  Node inletNode(model);
+  Node outletNode(model);
+  ThermalZone tz(model);
+  GeneratorFuelCellPowerModule powerModule(model, curve, tz, inletNode, outletNode);
+  EXPECT_EQ(tz, powerModule.zone());
+  EXPECT_EQ(inletNode, powerModule.dilutionInletAirNode());
+  EXPECT_EQ(outletNode, powerModule.dilutionOutletAirNode());
+
+}
+
+TEST_F(ModelFixture, FuelCellPowerModule3) {
+  Model model;
+
+  // check default PowerModule
+  CurveQuadratic curve(model);
+  CurveQuadratic skinlossCurve(model);
+  Node inletNode(model);
+  Node outletNode(model);
+  ThermalZone tz(model);
+  GeneratorFuelCellPowerModule powerModule(model, curve, tz, inletNode, outletNode, skinlossCurve);
+  EXPECT_EQ(tz, powerModule.zone());
+  EXPECT_EQ(inletNode, powerModule.dilutionInletAirNode());
+  EXPECT_EQ(outletNode, powerModule.dilutionOutletAirNode());
+  EXPECT_EQ(skinlossCurve, powerModule.skinLossQuadraticCurve());
+}
+
+TEST_F(ModelFixture, FuelCellPowerModule4) {
+  Model model;
+
+  // check default PowerModule
+  Node inletNode(model);
+  Node outletNode(model);
+  ThermalZone tz(model);
+  GeneratorFuelCellPowerModule powerModule(model, tz, inletNode, outletNode);
+  EXPECT_EQ(tz, powerModule.zone());
+  EXPECT_EQ(inletNode, powerModule.dilutionInletAirNode());
+  EXPECT_EQ(outletNode, powerModule.dilutionOutletAirNode());
+
+}
