@@ -32,12 +32,12 @@ $OPENSTUDIO_SKETCHUPPLUGIN_DEVELOPER_MENU = false
 begin
   load 'OpenStudio/OpenStudio-config'
   
-  minimum_version = '14'
-  maximum_version = '16'
+  minimum_version = '17'
+  maximum_version = '9999'
   installed_version = Sketchup.version.split('.').first
 
   if (installed_version < minimum_version || installed_version > maximum_version)
-    UI.messagebox("OpenStudio #{$OPENSTUDIO_SKETCHUPPLUGIN_VERSION} is compatible with SketchUp 2014, 2015, or 2016.\nThe installed version is 20#{installed_version}.  The plugin was not loaded.", MB_OK)
+    UI.messagebox("OpenStudio #{$OPENSTUDIO_SKETCHUPPLUGIN_VERSION} is compatible with SketchUp 2017.\nThe installed version is 20#{installed_version}.  The plugin was not loaded.", MB_OK)
   else
     require 'openstudio'
     load("openstudio/sketchup_plugin/lib/PluginManager.rb")

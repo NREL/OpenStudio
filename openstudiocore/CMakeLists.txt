@@ -183,9 +183,9 @@ IF (APPLE)
    find_library(COREFOUNDATION_LIBRARY CoreFoundation )
 ENDIF (APPLE)
 
-if(UNIX AND NOT APPLE AND BUILD_TESTING)
+if(UNIX AND NOT APPLE)
   # Enable libgtest linking
-  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lpthread")
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pthread")
 endif()
 
 if( WIN32 )
@@ -435,20 +435,20 @@ mark_as_advanced(RUBY_INSTALL_DIR)
 if(NOT EXISTS ${RUBY_INSTALL_DIR})
   if( WIN32 )
     if(CMAKE_CL_64)
-      set(RUBY_ZIP_FILENAME "ruby_2_0_0_msvc2013_static.zip")
-      set(RUBY_ZIP_EXPECTED_MD5 "0904d20885480958a6066c26a49b7609")
+      set(RUBY_ZIP_FILENAME "ruby_2_2_4_msvc2013_static.tar.gz")
+      set(RUBY_ZIP_EXPECTED_MD5 "93c52cefdade4aad579236292033396a")
     else()
-	  message(SEND_ERROR "Missing boost 32 bit build")
-	endif()
+	    message(SEND_ERROR "Missing boost 32 bit build")
+	  endif()
   elseif( APPLE )
-    set(RUBY_ZIP_FILENAME "ruby_2_0_0_osx_static.tar.gz")
-    set(RUBY_ZIP_EXPECTED_MD5 "5d02dca3f18b4e286ee26c84bcecb06a")
+    set(RUBY_ZIP_FILENAME "ruby_2_2_4_osx_static.tar.gz")
+    set(RUBY_ZIP_EXPECTED_MD5 "7ac16f5791d210d425aef268d97bf734")
   elseif(EXISTS "/etc/redhat-release")
-    set(RUBY_ZIP_FILENAME "ruby_2_0_0_redhat_static.tar.gz")
-    set(RUBY_ZIP_EXPECTED_MD5 "712d2ecdd3edc5d5ec179e50c22d8a96")
+    set(RUBY_ZIP_FILENAME "ruby_2_2_4_redhat_static.tar.gz")
+    set(RUBY_ZIP_EXPECTED_MD5 "0491123e60186896bae838f7d148bf20")
   else()
-    set(RUBY_ZIP_FILENAME "ruby_2_0_0_linux_static.tar.gz")
-    set(RUBY_ZIP_EXPECTED_MD5 "59a5146c99e330cd643e77d554c7ec18")
+    set(RUBY_ZIP_FILENAME "ruby_2_2_4_linux_static.tar.gz")
+    set(RUBY_ZIP_EXPECTED_MD5 "d238febf646382fe1b323bcdf16ea0e2")
   endif()
 
   set(RUBY_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${RUBY_ZIP_FILENAME}")
@@ -474,7 +474,7 @@ endif()
 
 list(APPEND CMAKE_PREFIX_PATH "${RUBY_INSTALL_DIR}")
 if( WIN32 )
-  find_package(Ruby 2.0 REQUIRED)
+  find_package(Ruby 2.2 REQUIRED)
   get_filename_component(RUBY_LIBRARY_NAME_WE ${RUBY_LIBRARY} NAME_WE)
   get_filename_component(RUBY_LIBRARY_DIRECTORY ${RUBY_LIBRARY} DIRECTORY)
   get_filename_component(RUBY_LIBRARY_EXT ${RUBY_LIBRARY} EXT)
@@ -483,10 +483,10 @@ if( WIN32 )
   set(RUBY_LIBRARY_DEBUG "${RUBY_LIBRARY_DIRECTORY}/../../debug/lib/${RUBY_LIBRARY_NAME_WE}${CMAKE_STATIC_LIBRARY_SUFFIX}")
 else()
   set(RUBY_STATIC_LIBRARY "${RUBY_INSTALL_DIR}/lib/libruby-static.a")
-  list(APPEND RUBY_INCLUDE_DIRS "${RUBY_INSTALL_DIR}/include/ruby-2.0.0")
-  list(APPEND RUBY_INCLUDE_DIRS "${RUBY_INSTALL_DIR}/include/ruby-2.0.0/x86_64-linux")
-  list(APPEND RUBY_INCLUDE_DIRS "${RUBY_INSTALL_DIR}/include/ruby-2.0.0/x86_64-darwin13.4.0")
-  set(RUBY_INCLUDE_DIR "${RUBY_INSTALL_DIR}/include/ruby-2.0.0")
+  list(APPEND RUBY_INCLUDE_DIRS "${RUBY_INSTALL_DIR}/include/ruby-2.2.0")
+  list(APPEND RUBY_INCLUDE_DIRS "${RUBY_INSTALL_DIR}/include/ruby-2.2.0/x86_64-linux")
+  list(APPEND RUBY_INCLUDE_DIRS "${RUBY_INSTALL_DIR}/include/ruby-2.2.0/x86_64-darwin15")
+  set(RUBY_INCLUDE_DIR "${RUBY_INSTALL_DIR}/include/ruby-2.2.0")
   set(RUBY_EXECUTABLE "${RUBY_INSTALL_DIR}/bin/ruby")
   set(RUBY_POSSIBLE_LIB_DIR "${RUBY_INSTALL_DIR}/lib")
 endif()
@@ -497,8 +497,8 @@ endif()
 # Only need this on Windows systems
 if( WIN32 )
 if(NOT EXISTS ${RUBY_MINGW_LIB_DIR})
-  set(RUBY_MINGW_LIB_ZIP_FILENAME "Ruby-mingw-install.zip")
-  set(RUBY_MINGW_LIB_ZIP_EXPECTED_MD5 "8615ab9cd5a95b9c6a62f98e91e4198e")
+  set(RUBY_MINGW_LIB_ZIP_FILENAME "Ruby-mingw-install.tar.gz")
+  set(RUBY_MINGW_LIB_ZIP_EXPECTED_MD5 "f88386bf2eee08e06e84ee981e43dc98")
 
   set(RUBY_MINGW_LIB_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${RUBY_MINGW_LIB_ZIP_FILENAME}")
   if(EXISTS "${RUBY_MINGW_LIB_ZIP_LOCAL_PATH}")
@@ -514,14 +514,14 @@ if(NOT EXISTS ${RUBY_MINGW_LIB_DIR})
       execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${RUBY_MINGW_LIB_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
   endif()
 
-  set(RUBY_MINGW_STUB_LIB "${CMAKE_BINARY_DIR}/Ruby-mingw-install/libx64-msvcrt-ruby200.dll.a")
+  set(RUBY_MINGW_STUB_LIB "${CMAKE_BINARY_DIR}/Ruby-mingw-install/libx64-msvcrt-ruby220.dll.a")
 endif()
 endif()
 
 # openstudio gems
 
-set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20161220.tar.gz")
-set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "08ba4a0d05f40dfbd254180dd9891f0a")
+set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20170117.tar.gz")
+set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "e1d4f7cf4bbe17d24ec579592d872df8")
 
 set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
 if(EXISTS "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}")
@@ -843,13 +843,10 @@ if(BUILD_OS_APP)
   list(APPEND QT_WEB_LIBS Qt5::WebEngineWidgets)
   set_target_properties( ${QT_WEB_LIBS} PROPERTIES INTERFACE_LINK_LIBRARIES "" )
 
-  if(UNIX AND NOT APPLE)
+  if(NOT APPLE)
     
     find_package(Qt5WebChannel 5.6.1 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
     list(APPEND QT_WEB_LIBS Qt5::WebChannel)
-    
-    find_package(Qt5DBus 5.6.1 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-    list(APPEND QT_WEB_LIBS Qt5::DBus)
     
     find_package(Qt5Quick 5.6.1 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
     list(APPEND QT_WEB_LIBS Qt5::Quick)
@@ -859,9 +856,14 @@ if(BUILD_OS_APP)
     
     find_package(Qt5Positioning 5.6.1 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
     list(APPEND QT_WEB_LIBS Qt5::Positioning)
-    
-    # there does not appear to be a normal qt finder for this
-    find_library(Qt5XcbQpaLib NAMES libQt5XcbQpa.so.5 PATHS ${QT_INSTALL_DIR}/lib NO_DEFAULT_PATH)
+        
+    if(UNIX)
+      find_package(Qt5DBus 5.6.1 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
+      list(APPEND QT_WEB_LIBS Qt5::DBus)
+
+      # there does not appear to be a normal qt finder for this
+      find_library(Qt5XcbQpaLib NAMES libQt5XcbQpa.so.5 PATHS ${QT_INSTALL_DIR}/lib NO_DEFAULT_PATH)
+    endif()
   endif()
 endif()
 
@@ -1027,7 +1029,7 @@ if( UNIX AND NOT APPLE )
   #list(APPEND QT_STATIC_LIBS ${freetype_lib})
   
   FIND_QT_STATIC_LIB("png" "*")
-  FIND_QT_STATIC_LIB("libjpeg;libjpeg.so.8" "*")
+  FIND_QT_STATIC_LIB("libjpeg;libjpeg.so;libjpeg.so.8" "*")
   FIND_QT_STATIC_LIB("freetype" "*")
   
   #find_library(dbus_lib libdbus-1.so)
@@ -1083,8 +1085,7 @@ if( UNIX AND NOT APPLE )
     FIND_QT_STATIC_LIB("db" "*")
     FIND_QT_STATIC_LIB("icui18n" "*")
     FIND_QT_STATIC_LIB("icuuc" "*")
-    
-    
+    FIND_QT_STATIC_LIB("z.so" "*")    
   else()
     #find_library(fontconfig_lib libfontconfig.so)
     #list(APPEND QT_STATIC_LIBS ${fontconfig_lib}) 
@@ -1485,7 +1486,7 @@ if(BUILD_DOCUMENTATION)
       POST_BUILD
       COMMAND ${CMAKE_COMMAND} -E remove OpenStudio-${OPENSTUDIO_VERSION}-rdoc.zip
       COMMAND ${CMAKE_BINARY_DIR}/7za a -mmt -mx9 -tzip OpenStudio-${OPENSTUDIO_VERSION}-rdoc.zip * -r
-      WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/ruby/rdocify
+      WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/rdoc
     )
   endif()
 
@@ -1628,6 +1629,7 @@ set(CPACK_PACKAGE_VERSION_MINOR ${OpenStudio_VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${OpenStudio_VERSION_PATCH})
 
 set(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${OPENSTUDIO_LONG_VERSION}-${CMAKE_SYSTEM_NAME}")
+set(CPACK_PACKAGE_CONTACT "openstudio@nrel.gov")
 
 if( UNIX )
   set( CPACK_IFW_TARGET_DIRECTORY /usr/local/openstudio-${OpenStudio_VERSION}/ )

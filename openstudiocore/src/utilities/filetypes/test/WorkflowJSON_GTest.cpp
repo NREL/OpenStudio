@@ -862,3 +862,35 @@ TEST(Filetypes, WorkflowJSON_Signals)
   EXPECT_EQ(false, listener.dirty);
   listener.dirty = false;
 }
+
+TEST(Filetypes, RunOptions)
+{
+  WorkflowJSON workflow;
+
+  EXPECT_FALSE(workflow.runOptions());
+
+  CustomOutputAdapter adapter("my_ruby_file.rb", "MyOutputAdapter", "{}");
+  
+  RunOptions options;
+  options.setDebug(true);
+  options.setCustomOutputAdapter(adapter);
+
+  workflow.setRunOptions(options);
+
+  ASSERT_TRUE(workflow.runOptions());
+  EXPECT_TRUE(workflow.runOptions()->debug());
+  ASSERT_TRUE(workflow.runOptions()->customOutputAdapter());
+  EXPECT_EQ("my_ruby_file.rb", workflow.runOptions()->customOutputAdapter()->customFileName());
+  EXPECT_EQ("MyOutputAdapter", workflow.runOptions()->customOutputAdapter()->className());
+
+  std::string s = workflow.string();
+
+  boost::optional<WorkflowJSON> workflow2 = WorkflowJSON::load(s);
+  ASSERT_TRUE(workflow2);
+
+  ASSERT_TRUE(workflow2->runOptions());
+  EXPECT_TRUE(workflow2->runOptions()->debug());
+  ASSERT_TRUE(workflow2->runOptions()->customOutputAdapter());
+  EXPECT_EQ("my_ruby_file.rb", workflow2->runOptions()->customOutputAdapter()->customFileName());
+  EXPECT_EQ("MyOutputAdapter", workflow2->runOptions()->customOutputAdapter()->className());
+}

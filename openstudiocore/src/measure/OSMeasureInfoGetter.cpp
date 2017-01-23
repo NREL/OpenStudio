@@ -199,7 +199,33 @@ namespace measure {
       }
     }
 
-    // DLM: todo, update outputs
+    // handle outputs
+    n = m_outputs.size();
+    std::vector<BCLMeasureOutput> bclOutputs;
+    bclOutputs.reserve(n);
+    for (const OSOutput& output : m_outputs){
+      std::string bclOutputType = output.type().valueName();
+
+      BCLMeasureOutput bclOutput(output.name(), output.displayName(),
+                                 output.shortName(), output.description(),
+                                 bclOutputType, output.units(),
+                                 output.modelDependent());
+      bclOutputs.push_back(bclOutput);
+    }
+
+    std::vector<BCLMeasureOutput> otherOutputs = measure.outputs();
+    if (otherOutputs.size() != n){
+      result = true;
+      measure.setOutputs(bclOutputs);
+    } else{
+      for (unsigned i = 0; i < n; ++i){
+        if (!(bclOutputs[i] == otherOutputs[i])){
+          result = true;
+          measure.setOutputs(bclOutputs);
+          break;
+        }
+      }
+    }
 
     return result;
   }

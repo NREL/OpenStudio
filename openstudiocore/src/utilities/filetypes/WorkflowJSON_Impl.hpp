@@ -32,6 +32,7 @@
 #include "../UtilitiesAPI.hpp"
 
 #include "WorkflowStep.hpp"
+#include "RunOptions.hpp"
 
 #include "../core/Logger.hpp"
 #include "../core/Path.hpp"
@@ -161,6 +162,12 @@ namespace detail {
 
       boost::optional<BCLMeasure> addMeasure(const BCLMeasure& bclMeasure);
 
+      boost::optional<RunOptions> runOptions() const;
+
+      bool setRunOptions(const RunOptions& options);
+
+      void resetRunOptions();
+
       // Emitted on any change
       Nano::Signal<void()> onChange;
 
@@ -176,6 +183,12 @@ namespace detail {
 
       void connectSteps();
 
+      void parseRunOptions();
+
+      void disconnectRunOptions();
+
+      void connectRunOptions();
+
       // synchronize m_measureTypes with m_steps
       void setMeasureTypes();
 
@@ -184,6 +197,7 @@ namespace detail {
       Json::Value m_value;
       std::vector<WorkflowStep> m_steps;
       std::vector<int> m_measureTypes;
+      boost::optional<RunOptions> m_runOptions;
     };
 
 } // detail
