@@ -36,7 +36,7 @@ namespace openstudio {
 
 namespace model {
 
-class Curve;
+class CurveQuadratic;
 class ThermalZone;
 class Node;
 
@@ -58,20 +58,20 @@ class MODEL_API GeneratorFuelCellPowerModule : public ModelObject {
                                         const Node& dilutionOutletAirNode);
 
   explicit GeneratorFuelCellPowerModule(const Model& model,
-                                        const Curve& efficiencyCurve,
+                                        const CurveQuadratic& efficiencyCurve,
                                         const ThermalZone& heatlossZone,
                                         const Node& dilutionInletAirNode,
                                         const Node& dilutionOutletAirNode);
 
   explicit GeneratorFuelCellPowerModule(const Model& model,
-                                        const Curve& efficiencyCurve,
+                                        const CurveQuadratic& efficiencyCurve,
                                         const ThermalZone& heatlossZone,
                                         const Node& dilutionInletAirNode,
                                         const Node& dilutionOutletAirNode,
-                                        const Curve& skinlossCurve);
+                                        const CurveQuadratic& skinlossCurve);
 
   explicit GeneratorFuelCellPowerModule(const Model& model,
-                                        const Curve& efficiencyCurve);
+                                        const CurveQuadratic& efficiencyCurve);
 
   virtual ~GeneratorFuelCellPowerModule() {}
 
@@ -88,7 +88,7 @@ class MODEL_API GeneratorFuelCellPowerModule : public ModelObject {
 
   std::string efficiencyCurveMode() const;
 
-  Curve efficiencyCurve() const;
+  CurveQuadratic efficiencyCurve() const;
 
   double nominalEfficiency() const;
 
@@ -136,7 +136,7 @@ class MODEL_API GeneratorFuelCellPowerModule : public ModelObject {
 
   double skinLossUFactorTimesAreaTerm() const;
 
-  boost::optional<Curve> skinLossQuadraticCurve() const;
+  boost::optional<CurveQuadratic> skinLossQuadraticCurve() const;
 
   double dilutionAirFlowRate() const;
 
@@ -158,7 +158,7 @@ class MODEL_API GeneratorFuelCellPowerModule : public ModelObject {
 
   void resetEfficiencyCurveMode();
 
-  bool setEfficiencyCurve(const Curve& quadraticCurve);
+  bool setEfficiencyCurve(const CurveQuadratic& quadraticCurve);
 
   void setNominalEfficiency(double nominalEfficiency);
 
@@ -252,7 +252,7 @@ class MODEL_API GeneratorFuelCellPowerModule : public ModelObject {
 
   void resetSkinLossUFactorTimesAreaTerm();
 
-  bool setSkinLossQuadraticCurve(const Curve& quadraticCurves);
+  bool setSkinLossQuadraticCurve(const CurveQuadratic& quadraticCurves);
 
   void resetSkinLossQuadraticCurve();
 

@@ -35,7 +35,7 @@
 namespace openstudio {
 namespace model {
 
-class Curve;
+class CurveQuadratic;
 class ThermalZone;
 class Node;
 
@@ -75,7 +75,7 @@ namespace detail {
 
     std::string efficiencyCurveMode() const;
 
-    Curve efficiencyCurve() const;
+    CurveQuadratic efficiencyCurve() const;
 
     double nominalEfficiency() const;
 
@@ -123,7 +123,7 @@ namespace detail {
 
     double skinLossUFactorTimesAreaTerm() const;
 
-    boost::optional<Curve> skinLossQuadraticCurve() const;
+    boost::optional<CurveQuadratic> skinLossQuadraticCurve() const;
 
     double dilutionAirFlowRate() const;
 
@@ -145,7 +145,7 @@ namespace detail {
 
     void resetEfficiencyCurveMode();
 
-    bool setEfficiencyCurve(const Curve& quadraticCurve);
+    bool setEfficiencyCurve(const CurveQuadratic& quadraticCurve);
 
     void setNominalEfficiency(double nominalEfficiency);
 
@@ -239,7 +239,7 @@ namespace detail {
 
     void resetSkinLossUFactorTimesAreaTerm();
 
-    bool setSkinLossQuadraticCurve(const Curve& quadraticCurves);
+    bool setSkinLossQuadraticCurve(const CurveQuadratic& quadraticCurves);
 
     void resetSkinLossQuadraticCurve();
 
@@ -276,7 +276,7 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.model.GeneratorFuelCellPowerModule");
 
-    boost::optional<Curve> optionalEfficiencyCurve() const;
+    boost::optional<CurveQuadratic> optionalEfficiencyCurve() const;
   };
 
 } // detail

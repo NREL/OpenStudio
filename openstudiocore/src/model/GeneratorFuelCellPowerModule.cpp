@@ -29,8 +29,6 @@
 #include "GeneratorFuelCellPowerModule.hpp"
 #include "GeneratorFuelCellPowerModule_Impl.hpp"
 
-#include "Curve.hpp"
-#include "Curve_Impl.hpp"
 #include "CurveQuadratic.hpp"
 #include "CurveQuadratic_Impl.hpp"
 #include "ThermalZone.hpp"
@@ -93,8 +91,8 @@ namespace detail {
     return value.get();
   }
 
-  Curve GeneratorFuelCellPowerModule_Impl::efficiencyCurve() const {
-    boost::optional<Curve> value = optionalEfficiencyCurve();
+  CurveQuadratic GeneratorFuelCellPowerModule_Impl::efficiencyCurve() const {
+    boost::optional<CurveQuadratic> value = optionalEfficiencyCurve();
     if (!value) {
       LOG_AND_THROW(" does not have an Efficiency Curve attached.");
     }
@@ -281,8 +279,8 @@ namespace detail {
     return value.get();
   }
 
-  boost::optional<Curve> GeneratorFuelCellPowerModule_Impl::skinLossQuadraticCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Generator_FuelCell_PowerModuleFields::SkinLossQuadraticCurveName);
+  boost::optional<CurveQuadratic> GeneratorFuelCellPowerModule_Impl::skinLossQuadraticCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<CurveQuadratic>(OS_Generator_FuelCell_PowerModuleFields::SkinLossQuadraticCurveName);
   }
 
   double GeneratorFuelCellPowerModule_Impl::dilutionAirFlowRate() const {
@@ -335,7 +333,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool GeneratorFuelCellPowerModule_Impl::setEfficiencyCurve(const Curve& quadraticCurve) {
+  bool GeneratorFuelCellPowerModule_Impl::setEfficiencyCurve(const CurveQuadratic& quadraticCurve) {
     bool result = setPointer(OS_Generator_FuelCell_PowerModuleFields::EfficiencyCurveName, quadraticCurve.handle());
     return result;
   }
@@ -570,7 +568,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool GeneratorFuelCellPowerModule_Impl::setSkinLossQuadraticCurve(const Curve& quadraticCurves) {
+  bool GeneratorFuelCellPowerModule_Impl::setSkinLossQuadraticCurve(const CurveQuadratic& quadraticCurves) {
     bool result = setPointer(OS_Generator_FuelCell_PowerModuleFields::SkinLossQuadraticCurveName, quadraticCurves.handle());
     return result;
   }
@@ -640,8 +638,8 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  boost::optional<Curve> GeneratorFuelCellPowerModule_Impl::optionalEfficiencyCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Generator_FuelCell_PowerModuleFields::EfficiencyCurveName);
+  boost::optional<CurveQuadratic> GeneratorFuelCellPowerModule_Impl::optionalEfficiencyCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<CurveQuadratic>(OS_Generator_FuelCell_PowerModuleFields::EfficiencyCurveName);
   }
 
 } // detail
@@ -724,11 +722,11 @@ GeneratorFuelCellPowerModule::GeneratorFuelCellPowerModule(const Model& model,
 
 
 GeneratorFuelCellPowerModule::GeneratorFuelCellPowerModule(const Model& model,
-                                                           const Curve& efficiencyCurve,
+                                                           const CurveQuadratic& efficiencyCurve,
                                                            const ThermalZone& heatlossZone,
                                                            const Node& dilutionInletAirNode,
                                                            const Node& dilutionOutletAirNode,
-                                                           const Curve& skinlossCurve)
+                                                           const CurveQuadratic& skinlossCurve)
   : ModelObject(GeneratorFuelCellPowerModule::iddObjectType(), model) {
   OS_ASSERT(getImpl<detail::GeneratorFuelCellPowerModule_Impl>());
   setEfficiencyCurveMode("Annex42");
@@ -794,7 +792,7 @@ GeneratorFuelCellPowerModule::GeneratorFuelCellPowerModule(const Model& model,
 }
 
 GeneratorFuelCellPowerModule::GeneratorFuelCellPowerModule(const Model& model, 
-                                                           const Curve& efficiencyCurve,
+                                                           const CurveQuadratic& efficiencyCurve,
                                                            const ThermalZone& heatlossZone,
                                                            const Node& dilutionInletAirNode,
                                                            const Node& dilutionOutletAirNode)
@@ -835,17 +833,7 @@ GeneratorFuelCellPowerModule::GeneratorFuelCellPowerModule(const Model& model,
   setSkinLossRadiativeFraction(0.6392);
   setConstantSkinLossRate(729);
   setSkinLossUFactorTimesAreaTerm(0.0);
-  //create default curve
-  CurveQuadratic curveQuadratic(model);
-  curveQuadratic.setCoefficient1Constant(1);
-  curveQuadratic.setCoefficient2x(0);
-  curveQuadratic.setCoefficient3xPOW2(0);
-  ok = setSkinLossQuadraticCurve(curveQuadratic);
-  if (!ok) {
-    remove();
-    LOG_AND_THROW("Unable to set " << briefDescription() << "'s skin loss curve to "
-      << curveQuadratic.briefDescription() << ".");
-  }
+
   setDilutionAirFlowRate(0.006156);
   setStackHeatlosstoDilutionAir(2307);
 
@@ -865,7 +853,7 @@ GeneratorFuelCellPowerModule::GeneratorFuelCellPowerModule(const Model& model,
   setMaximumOperatingPoint(3728);
 }
 
-GeneratorFuelCellPowerModule::GeneratorFuelCellPowerModule(const Model& model, const Curve& efficiencyCurve)
+GeneratorFuelCellPowerModule::GeneratorFuelCellPowerModule(const Model& model, const CurveQuadratic& efficiencyCurve)
   : ModelObject(GeneratorFuelCellPowerModule::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::GeneratorFuelCellPowerModule_Impl>());
@@ -900,12 +888,6 @@ GeneratorFuelCellPowerModule::GeneratorFuelCellPowerModule(const Model& model, c
   setSkinLossRadiativeFraction(0.6392);
   setConstantSkinLossRate(729);
   setSkinLossUFactorTimesAreaTerm(0.0);
-  //create default curve
-  CurveQuadratic curveQuadratic(model);
-  curveQuadratic.setCoefficient1Constant(1);
-  curveQuadratic.setCoefficient2x(0);
-  curveQuadratic.setCoefficient3xPOW2(0);
-  setSkinLossQuadraticCurve(curveQuadratic);
 
   setDilutionAirFlowRate(0.006156);
   setStackHeatlosstoDilutionAir(2307);
@@ -934,7 +916,7 @@ std::string GeneratorFuelCellPowerModule::efficiencyCurveMode() const {
   return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->efficiencyCurveMode();
 }
 
-Curve GeneratorFuelCellPowerModule::efficiencyCurve() const {
+CurveQuadratic GeneratorFuelCellPowerModule::efficiencyCurve() const {
   return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->efficiencyCurve();
 }
 
@@ -1030,7 +1012,7 @@ double GeneratorFuelCellPowerModule::skinLossUFactorTimesAreaTerm() const {
   return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->skinLossUFactorTimesAreaTerm();
 }
 
-boost::optional<Curve> GeneratorFuelCellPowerModule::skinLossQuadraticCurve() const {
+boost::optional<CurveQuadratic> GeneratorFuelCellPowerModule::skinLossQuadraticCurve() const {
   return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->skinLossQuadraticCurve();
 }
 
@@ -1066,7 +1048,7 @@ void GeneratorFuelCellPowerModule::resetEfficiencyCurveMode() {
   getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->resetEfficiencyCurveMode();
 }
 
-bool GeneratorFuelCellPowerModule::setEfficiencyCurve(const Curve& quadraticCurve) {
+bool GeneratorFuelCellPowerModule::setEfficiencyCurve(const CurveQuadratic& quadraticCurve) {
   return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setEfficiencyCurve(quadraticCurve);
 }
 
@@ -1254,7 +1236,7 @@ void GeneratorFuelCellPowerModule::resetSkinLossUFactorTimesAreaTerm() {
   getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->resetSkinLossUFactorTimesAreaTerm();
 }
 
-bool GeneratorFuelCellPowerModule::setSkinLossQuadraticCurve(const Curve& quadraticCurves) {
+bool GeneratorFuelCellPowerModule::setSkinLossQuadraticCurve(const CurveQuadratic& quadraticCurves) {
   return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setSkinLossQuadraticCurve(quadraticCurves);
 }
 

@@ -23,8 +23,6 @@
 #include "../../model/GeneratorFuelCellPowerModule.hpp"
 #include "../../model/GeneratorFuelCellPowerModule_Impl.hpp"
 
-#include "../../model/Curve.hpp"
-#include "../../model/Curve_Impl.hpp"
 #include "../../model/CurveQuadratic.hpp"
 #include "../../model/CurveQuadratic_Impl.hpp"
 #include "../../model/ThermalZone.hpp"
@@ -52,7 +50,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellPowerMod
   boost::optional<std::string> s;
   boost::optional<double> d;
   boost::optional<Node> node;
-  boost::optional<Curve> curve;
+  boost::optional<CurveQuadratic> curve;
   boost::optional<ThermalZone> tz;
   
   IdfObject pcm = createAndRegisterIdfObject(openstudio::IddObjectType::Generator_FuelCell_PowerModule, modelObject);
