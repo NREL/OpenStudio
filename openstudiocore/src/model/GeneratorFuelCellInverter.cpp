@@ -106,6 +106,7 @@ namespace detail {
 
   void GeneratorFuelCellInverter_Impl::resetInverterEfficiencyCalculationMode() {
     bool result = setString(OS_Generator_FuelCell_InverterFields::InverterEfficiencyCalculationMode, "Constant");
+    this->setInverterEfficiency(1.0);
     OS_ASSERT(result);
   }
 
@@ -146,8 +147,8 @@ GeneratorFuelCellInverter::GeneratorFuelCellInverter(const Model& model,
   OS_ASSERT(getImpl<detail::GeneratorFuelCellInverter_Impl>());
 
   setInverterEfficiencyCalculationMode("Quadratic");
-  setInverterEfficiency(1.0);
   setEfficiencyFunctionofDCPowerCurve(powerCurve);
+  setInverterEfficiency(1.0);
 }
 
 IddObjectType GeneratorFuelCellInverter::iddObjectType() {
