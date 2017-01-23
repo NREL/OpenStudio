@@ -301,19 +301,23 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool GeneratorFuelSupply_Impl::addConstituent(std::string name, std::string molarFraction) {
+  bool GeneratorFuelSupply_Impl::addConstituent(std::string name, double molarFraction) {
     WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
-
-    bool temp = eg.setString(OS_Generator_FuelSupplyExtensibleFields::ConstituentName, name);
-    bool ok = eg.setString(OS_Generator_FuelSupplyExtensibleFields::ConstituentMolarFraction, molarFraction);
-
+    bool temp = false;
+    bool ok = false;
+    double num = numberofConstituentsinGaseousConstituentFuelSupply();
+    //max number of constituents is 12
+    if (num < 12) {
+      temp = eg.setString(OS_Generator_FuelSupplyExtensibleFields::ConstituentName, name);
+      ok = eg.setDouble(OS_Generator_FuelSupplyExtensibleFields::ConstituentMolarFraction, molarFraction);
+    }
     if (temp && ok) {
-      double num = numberofConstituentsinGaseousConstituentFuelSupply();
       setNumberofConstituentsinGaseousConstituentFuelSupply(num + 1);
     } else {
       getObject<ModelObject>().eraseExtensibleGroup(eg.groupIndex());
     }
     return temp;
+
   }
 
   void GeneratorFuelSupply_Impl::removeConstituent(unsigned groupIndex) {
@@ -330,14 +334,14 @@ namespace detail {
     resetNumberofConstituentsinGaseousConstituentFuelSupply();
   }
 
-  std::vector< std::pair<std::string, std::string> > GeneratorFuelSupply_Impl::constituents() {
-    std::vector< std::pair<std::string, std::string> > result;
+  std::vector< std::pair<std::string, double> > GeneratorFuelSupply_Impl::constituents() {
+    std::vector< std::pair<std::string, double> > result;
 
     std::vector<IdfExtensibleGroup> groups = extensibleGroups();
 
     for (const auto & group : groups) {
       boost::optional<std::string> name = group.cast<WorkspaceExtensibleGroup>().getString(OS_Generator_FuelSupplyExtensibleFields::ConstituentName);
-      boost::optional<std::string> molarFraction = group.cast<WorkspaceExtensibleGroup>().getString(OS_Generator_FuelSupplyExtensibleFields::ConstituentMolarFraction);
+      boost::optional<double> molarFraction = group.cast<WorkspaceExtensibleGroup>().getDouble(OS_Generator_FuelSupplyExtensibleFields::ConstituentMolarFraction);
 
       if (name && molarFraction) {
         result.push_back(std::make_pair(name.get(), molarFraction.get()));
@@ -405,7 +409,7 @@ IddObjectType GeneratorFuelSupply::iddObjectType() {
   return IddObjectType(IddObjectType::OS_Generator_FuelSupply);
 }
 
-bool GeneratorFuelSupply::addConstituent(std::string name, std::string molarFraction) {
+bool GeneratorFuelSupply::addConstituent(std::string name, double molarFraction) {
   return getImpl<detail::GeneratorFuelSupply_Impl>()->addConstituent(name, molarFraction);
 }
 
@@ -417,7 +421,7 @@ void GeneratorFuelSupply::removeAllConstituents() {
   return getImpl<detail::GeneratorFuelSupply_Impl>()->removeAllConstituents();
 }
 
-std::vector< std::pair<std::string, std::string> > GeneratorFuelSupply::constituents() {
+std::vector< std::pair<std::string, double> > GeneratorFuelSupply::constituents() {
   return getImpl<detail::GeneratorFuelSupply_Impl>()->constituents();
 }
 

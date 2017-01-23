@@ -59,7 +59,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelSupply(Gener
   boost::optional<Node> node;
   boost::optional<Schedule> schedule;
   boost::optional<CurveCubic> curve;
-  std::vector< std::pair<std::string, std::string> > constituents;
+  std::vector< std::pair<std::string, double> > constituents;
   
   IdfObject pcm = createAndRegisterIdfObject(openstudio::IddObjectType::Generator_FuelSupply, modelObject);
   //Name
@@ -134,7 +134,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelSupply(Gener
     for (auto constituent : constituents) {
       auto eg = pcm.pushExtensibleGroup();
       eg.setString(Generator_FuelSupplyExtensibleFields::ConstituentName, constituent.first);
-      eg.setString(Generator_FuelSupplyExtensibleFields::ConstituentMolarFraction, constituent.second);
+      eg.setDouble(Generator_FuelSupplyExtensibleFields::ConstituentMolarFraction, constituent.second);
     }
   }
 

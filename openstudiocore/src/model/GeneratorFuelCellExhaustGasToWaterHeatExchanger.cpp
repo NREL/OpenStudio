@@ -195,11 +195,37 @@ namespace detail {
 
   bool GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::setHeatExchangerCalculationMethod(const std::string& heatExchangerCalculationMethod) {
     bool result = setString(OS_Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::HeatExchangerCalculationMethod, heatExchangerCalculationMethod);
+    if (heatExchangerCalculationMethod == "FixedEffectiveness") {
+      this->setMethod1HeatExchangerEffectiveness(1.0);
+    }
+    else if (heatExchangerCalculationMethod == "EmpiricalUAeff") {
+      this->setMethod2Parameterhxs0(1.0);
+      this->setMethod2Parameterhxs1(0.0);
+      this->setMethod2Parameterhxs2(0.0);
+      this->setMethod2Parameterhxs3(0.0);
+      this->setMethod2Parameterhxs4(0.0);
+    }
+    else if (heatExchangerCalculationMethod == "FundementalUAeff") {
+      this->setMethod3FAdjustmentFactor(0.0);
+      this->setMethod3GasArea(1.0);
+      this->setMethod3h0GasCoefficient(1.0);
+      this->setMethod3h0WaterCoefficient(1.0);
+      this->setMethod3mCoefficient(1.0);
+      this->setMethod3nCoefficient(1.0);
+      this->setMethod3NdotGasRefCoefficient(1.0);
+      this->setMethod3NdotWaterrefCoefficient(1.0);
+      this->setMethod3WaterArea(1.0);
+    }
+    else if (heatExchangerCalculationMethod == "Condensing") {
+      this->setMethod4CondensationThreshold(35.0);
+      this->setMethod4hxl1Coefficient(1.0);
+      this->setMethod4hxl2Coefficient(1.0);
+    }
     return result;
   }
 
   void GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::resetHeatExchangerCalculationMethod() {
-    bool result = setString(OS_Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::HeatExchangerCalculationMethod, "FixedEffectiveness");
+    bool result = this->setHeatExchangerCalculationMethod("FixedEffectiveness");
     OS_ASSERT(result);
   }
 
@@ -415,7 +441,6 @@ GeneratorFuelCellExhaustGasToWaterHeatExchanger::GeneratorFuelCellExhaustGasToWa
   setExhaustOutletAirNode(exhaustOutletAirNode);
   setHeatRecoveryWaterMaximumFlowRate(0.0004);
   setHeatExchangerCalculationMethod("FixedEffectiveness");
-  setMethod1HeatExchangerEffectiveness(1.0);
 }
 
 GeneratorFuelCellExhaustGasToWaterHeatExchanger::GeneratorFuelCellExhaustGasToWaterHeatExchanger(const Model& model)
@@ -433,7 +458,6 @@ GeneratorFuelCellExhaustGasToWaterHeatExchanger::GeneratorFuelCellExhaustGasToWa
   //setExhaustOutletAirNode();
   setHeatRecoveryWaterMaximumFlowRate(0.0004);
   setHeatExchangerCalculationMethod("FixedEffectiveness");
-  setMethod1HeatExchangerEffectiveness(1.0);
 }
 
 IddObjectType GeneratorFuelCellExhaustGasToWaterHeatExchanger::iddObjectType() {
