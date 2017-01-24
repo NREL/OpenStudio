@@ -824,7 +824,7 @@ namespace gbxml {
       // translate construction
       QString constructionIdRef = element.attribute("constructionIdRef");
       if (constructionIdRef.isEmpty()){
-        QString constructionIdRef = element.attribute("windowTypeIdRef");
+        constructionIdRef = element.attribute("windowTypeIdRef");
       }
       auto constructionIt = m_idToObjectMap.find(constructionIdRef);
       if (constructionIt != m_idToObjectMap.end()){
