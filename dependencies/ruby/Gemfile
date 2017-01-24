@@ -8,4 +8,5 @@ gem 'openstudio-workflow', :github => 'NREL/OpenStudio-workflow-gem', :ref => 'c
 gem 'openstudio-standards', '= 0.1.10' 
 #gem 'openstudio-standards', :github => 'NREL/openstudio-standards', :ref => '143191b8e72056c6d3396a20a6c8d961b1e1ca91'
 
-gem 'rspec'
+gem 'rspec', '~>3.5.0'
+gem 'minitest', '~>5.10.1'

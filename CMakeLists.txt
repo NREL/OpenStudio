@@ -346,10 +346,14 @@ endif()
 
 option(BUILD_OPENSTUDIO_GEMS "Build OpenStudio Gems" OFF)
 if(BUILD_OPENSTUDIO_GEMS)
-  # depends on system Ruby and Git
+  # depends on system Ruby and Git, Ruby must be same version as OpenStudio 
+  if (WIN32)
+    file(GLOB POTENTIAL_RUBY_LOCATIONS "c:/ruby*2.2.*/bin")
+  endif()
+  find_program(RUBY_EXE ruby HINTS ${POTENTIAL_RUBY_LOCATIONS})
   set(OPENSTUDIO_GEMS_DIR "${CMAKE_BINARY_DIR}/openstudio-gems")
   add_custom_target(openstudio-gems ALL 
-                    ruby "${CMAKE_SOURCE_DIR}/dependencies/ruby/build_openstudio_gems.rb" "${OPENSTUDIO_GEMS_DIR}"
+                    ${RUBY_EXE} "${CMAKE_SOURCE_DIR}/dependencies/ruby/build_openstudio_gems.rb" "${OPENSTUDIO_GEMS_DIR}" "2.2.4" 
                     WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/dependencies/ruby/"
                     DEPENDS "${CMAKE_SOURCE_DIR}/dependencies/ruby/Gemfile" "${CMAKE_SOURCE_DIR}/dependencies/ruby/build_openstudio_gems.rb")
 endif()
