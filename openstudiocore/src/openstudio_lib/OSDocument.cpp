@@ -1006,17 +1006,28 @@ namespace openstudio {
 
       if (!m_savePath.isEmpty()){
         openstudio::path osmPath = toPath(m_savePath);
-        openstudio::path searchDir = osmPath.parent_path() / osmPath.stem();
+        openstudio::path searchResourcesDir = osmPath.parent_path() / osmPath.stem();
+        openstudio::path searchFilesDir = osmPath.parent_path() / toPath("files") / osmPath.stem();
 
-        epwInUserPath = searchDir / *weatherFilePath;
+        epwInUserPath = searchResourcesDir / *weatherFilePath;
         if (boost::filesystem::exists(epwInUserPath)){
           epwInUserPathChecksum = checksum(epwInUserPath);
+        } else{
+          epwInUserPath = searchFilesDir / *weatherFilePath;
+          if (boost::filesystem::exists(epwInUserPath)){
+            epwInUserPathChecksum = checksum(epwInUserPath);
+          } 
         }
       }
 
       epwInTempPath = tempResourcesDir / *weatherFilePath;
       if (boost::filesystem::exists(epwInTempPath)){
         epwInTempPathChecksum = checksum(epwInTempPath);
+      } else{
+        epwInTempPath = tempFilesDir / *weatherFilePath;
+        if (boost::filesystem::exists(epwInTempPath)){
+          epwInTempPathChecksum = checksum(epwInTempPath);
+        }
       }
 
     }
