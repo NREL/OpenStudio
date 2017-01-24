@@ -27,17 +27,17 @@ module Kernel
 
   # dynamically add gem paths to load path
   # DLM: the better thing to do would be to append the embedded locations to GEM_PATH
-  extra_include_paths = []
-  EmbeddedScripting::allFileNamesAsString().split(';').each do |f|
-    if md = /:\/ruby\/2.2.0\/gems\/([^\/]*)\//.match(f)
-      extra_include_paths << ':/ruby/2.2.0/gems/' + md[1] + '/lib'
-    elsif md = /:\/ruby\/2.2.0\/bundler\/gems\/([^\/]*)\//.match(f)
-      extra_include_paths << ':/ruby/2.2.0/bundler/gems/' + md[1]  + '/lib'
-    end 
-  end
-  extra_include_paths.uniq.each do |f|
-    $LOAD_PATH << f
-  end 
+  #extra_include_paths = []
+  #EmbeddedScripting::allFileNamesAsString().split(';').each do |f|
+  #  if md = /:\/ruby\/2.2.0\/gems\/([^\/]*)\//.match(f)
+  #    extra_include_paths << ':/ruby/2.2.0/gems/' + md[1] + '/lib'
+  #  elsif md = /:\/ruby\/2.2.0\/bundler\/gems\/([^\/]*)\//.match(f)
+  #    extra_include_paths << ':/ruby/2.2.0/bundler/gems/' + md[1]  + '/lib'
+  #  end 
+  #end
+  #extra_include_paths.uniq.each do |f|
+  #  $LOAD_PATH << f
+  #end 
 
   alias :original_require_relative :require_relative
   alias :original_require :require
