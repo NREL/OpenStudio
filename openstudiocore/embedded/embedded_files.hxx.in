@@ -116,6 +116,14 @@ namespace embedded_files {
   std::map<std::string, EmbeddedFile > files();
   
   std::vector<std::string> fileNames();
+
+  inline std::string allFileNamesAsString(){
+    std::string result;
+    for (const auto& fileName: fileNames()){
+      result += (fileName + ";");
+    }
+    return result;
+  }
   
   inline std::string findFirstFileByName(const std::string &t_filename) {
     for (const auto& path : fileNames()){
