@@ -152,12 +152,10 @@ extern "C" {
   void Init_strscan();
 #ifndef _MSC_VER
   void Init_syslog();
+  void Init_wait();
 #endif
   void Init_thread();
-  void Init_wait();
-#ifndef _MSC_VER
   void Init_zlib();
-#endif
 
 }
 
@@ -465,15 +463,15 @@ int main(int argc, char *argv[])
   rb_provide("thread");
   rb_provide("thread.so");
   
+#ifndef _MSC_VER
   Init_wait();
   rb_provide("wait");
   rb_provide("wait.so");
-  
-#ifndef _MSC_VER
+#endif
+
   Init_zlib();
   rb_provide("zlib");
   rb_provide("zlib.so");
-#endif
 
   Init_generator();
   rb_provide("json/ext/parser");
