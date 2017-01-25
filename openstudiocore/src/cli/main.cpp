@@ -491,15 +491,15 @@ int main(int argc, char *argv[])
   } catch (const std::exception& e){
     rubyInterpreter.evalString(R"(STDOUT.flush)");
     std::cout << "Exception: " << e.what() << std::endl; // endl will flush
-    return 1;
+    return ruby_cleanup(1);
   } catch (...){
     rubyInterpreter.evalString(R"(STDOUT.flush)");
     std::cout << "Unknown Exception" << std::endl; // endl will flush
-    return 1;
+    return ruby_cleanup(1);
   }
   rubyInterpreter.evalString(R"(STDOUT.flush)");
   std::cout << std::flush;
-  return 0;
+  return ruby_cleanup(0);
 }
 
 extern "C" {

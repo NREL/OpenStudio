@@ -21,23 +21,10 @@ module Kernel
   $LOAD_PATH << ':/ruby/2.2.0'
   $LOAD_PATH << ':/ruby/2.2.0/x86_64-darwin15'
   $LOAD_PATH << ':/ruby/2.2.0/x64-mswin64_120'
-  $LOAD_PATH << EmbeddedScripting::findFirstFileByName('openstudio-standards.rb').gsub('/openstudio-standards.rb', '')
-  $LOAD_PATH << EmbeddedScripting::findFirstFileByName('openstudio-workflow.rb').gsub('/openstudio-workflow.rb', '')
+  # DLM: now done in embedded gem initialization section in openstudio_cli.rb
+  #$LOAD_PATH << EmbeddedScripting::findFirstFileByName('openstudio-standards.rb').gsub('/openstudio-standards.rb', '')
+  #$LOAD_PATH << EmbeddedScripting::findFirstFileByName('openstudio-workflow.rb').gsub('/openstudio-workflow.rb', '')
   $LOADED = []
-
-  # dynamically add gem paths to load path
-  # DLM: the better thing to do would be to append the embedded locations to GEM_PATH
-  #extra_include_paths = []
-  #EmbeddedScripting::allFileNamesAsString().split(';').each do |f|
-  #  if md = /:\/ruby\/2.2.0\/gems\/([^\/]*)\//.match(f)
-  #    extra_include_paths << ':/ruby/2.2.0/gems/' + md[1] + '/lib'
-  #  elsif md = /:\/ruby\/2.2.0\/bundler\/gems\/([^\/]*)\//.match(f)
-  #    extra_include_paths << ':/ruby/2.2.0/bundler/gems/' + md[1]  + '/lib'
-  #  end 
-  #end
-  #extra_include_paths.uniq.each do |f|
-  #  $LOAD_PATH << f
-  #end 
 
   alias :original_require_relative :require_relative
   alias :original_require :require
@@ -119,7 +106,11 @@ module Kernel
     end
     
     result = ""
-    if File.exists?(path)
+    if File.exists?(absolute_path)
+      File.open(absolute_path, mode) do |file|
+        result = file.read
+      end
+    elsif File.exists?(path)
       File.open(path, mode) do |file|
         result = file.read
       end
