@@ -37,6 +37,7 @@
 #include <utilities/idd/Fan_VariableVolume_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_Water_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Water_FieldEnums.hxx>
+#include <utilities/idd/Coil_Heating_Electric_FieldEnums.hxx>
 #include <utilities/idd/OutdoorAir_Mixer_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
@@ -161,10 +162,12 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACFourPipeFanCoil(
       // HeatingCoilName
       idfObject.setString(ZoneHVAC_FourPipeFanCoilFields::HeatingCoilName,_heatingCoil->name().get() );
       // Heating Coil Inlet and Outlet Nodes
-      if( _heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Water )
-      {
+      if( _heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Water ) {
         _heatingCoil->setString(Coil_Heating_WaterFields::AirInletNodeName,coolingCoilOutletNodeName );
         _heatingCoil->setString(Coil_Heating_WaterFields::AirOutletNodeName,airOutletNodeName.get() );
+      } else if( _heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Electric ) {
+        _heatingCoil->setString(Coil_Heating_ElectricFields::AirInletNodeName,coolingCoilOutletNodeName );
+        _heatingCoil->setString(Coil_Heating_ElectricFields::AirOutletNodeName,airOutletNodeName.get() );
       }
     }
   }

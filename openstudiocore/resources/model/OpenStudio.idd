@@ -21585,6 +21585,7 @@ OS:ZoneHVAC:FourPipeFanCoil,
         \required-field
         \type object-list
         \object-list HeatingCoilsWater
+        \object-list HeatingCoilsElectric
    N8 , \field Maximum Hot Water Flow Rate
         \required-field
         \autosizable
