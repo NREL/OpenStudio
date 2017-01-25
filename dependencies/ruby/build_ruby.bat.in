@@ -5,8 +5,9 @@ XCOPY /e /i /Y . ..\Ruby-release
 XCOPY /e /i /Y . ..\Ruby-debug
 
 cd ..\Ruby-release
-set CFLAGS = MD -Zi -W2 -wd4996 -we4028 -we4142 -O2sy-  -Zm600
-call .\win32\configure.bat --with-static-linked-ext --without-win32ole --disable-install-doc --prefix="${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/release"
+set CFLAGS = MD -Zi -W2 -wd4996 -we4028 -we4142 -O2sy-  -Zm600 
+call .\win32\configure.bat --with-static-linked-ext --with-zlib-dir="${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/" --without-win32ole --disable-install-doc --prefix="${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/release"
+set EXTLIBS="${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/lib/zlibstatic.lib"
 nmake libenc
 nmake libtrans
 nmake
@@ -23,7 +24,8 @@ for /R "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-release/enc/" %%f in (*.lib) do
 
 cd ..\Ruby-debug
 set CFLAGS = MDd -Zi -W2 -wd4996 -we4028 -we4142 -O2sy-  -Zm600
-call .\win32\configure.bat --with-static-linked-ext --without-win32ole --disable-install-doc --prefix="${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/debug"
+call .\win32\configure.bat --with-static-linked-ext --with-zlib-dir="${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/" --without-win32ole --disable-install-doc --prefix="${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/debug"
+set EXTLIBS="${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/lib/zlibstaticd.lib"
 nmake libenc
 nmake libtrans
 nmake

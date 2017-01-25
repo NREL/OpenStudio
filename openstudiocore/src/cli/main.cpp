@@ -152,12 +152,10 @@ extern "C" {
   void Init_strscan();
 #ifndef _MSC_VER
   void Init_syslog();
+  void Init_wait();
 #endif
   void Init_thread();
-  void Init_wait();
-#ifndef _MSC_VER
   void Init_zlib();
-#endif
 
 }
 
@@ -465,15 +463,15 @@ int main(int argc, char *argv[])
   rb_provide("thread");
   rb_provide("thread.so");
   
+#ifndef _MSC_VER
   Init_wait();
   rb_provide("wait");
   rb_provide("wait.so");
-  
-#ifndef _MSC_VER
+#endif
+
   Init_zlib();
   rb_provide("zlib");
   rb_provide("zlib.so");
-#endif
 
   Init_generator();
   rb_provide("json/ext/parser");
@@ -493,15 +491,15 @@ int main(int argc, char *argv[])
   } catch (const std::exception& e){
     rubyInterpreter.evalString(R"(STDOUT.flush)");
     std::cout << "Exception: " << e.what() << std::endl; // endl will flush
-    return 1;
+    return ruby_cleanup(1);
   } catch (...){
     rubyInterpreter.evalString(R"(STDOUT.flush)");
     std::cout << "Unknown Exception" << std::endl; // endl will flush
-    return 1;
+    return ruby_cleanup(1);
   }
   rubyInterpreter.evalString(R"(STDOUT.flush)");
   std::cout << std::flush;
-  return 0;
+  return ruby_cleanup(0);
 }
 
 extern "C" {

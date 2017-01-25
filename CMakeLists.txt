@@ -9,7 +9,7 @@ project(OpenStudioMeta)
 
 set(CMAKE_VERSION_MAJOR 2)
 set(CMAKE_VERSION_MINOR 0)
-set(CMAKE_VERSION_PATCH 0)
+set(CMAKE_VERSION_PATCH 2)
 
 set(CMAKE_VERSION_BUILD "Unknown" CACHE STRING "Build number")
 find_package(Git)
@@ -280,6 +280,21 @@ endif()
 # Ruby
 option(BUILD_RUBY "Build Ruby" OFF)
 if( BUILD_RUBY )
+  if( NOT UNIX )
+
+    ExternalProject_Add(ZLib
+      URL_HASH SHA256=c3e5e9fdd5004dcb542feda5ee4f0ff0744628baf8ed2dd5d66f8ca1197cb1a1 
+      URL http://zlib.net/zlib-1.2.11.tar.gz
+      BUILD_COMMAND "${CMAKE_COMMAND}" --build "${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-build" --config $(Release) --config $(Debug) --target INSTALL
+      CMAKE_CACHE_ARGS
+        -DINSTALL_BIN_DIR:STRING=${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/bin/
+        -DINSTALL_INC_DIR:STRING=${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/include/
+        -DINSTALL_LIB_DIR:STRING=${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/lib/
+        -DINSTALL_MAN_DIR:STRING=${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/share/man/
+        -DINSTALL_PKGCONFIG_DIR:STRING=${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/share/pkgconfig/
+    )
+  endif()
+
   if( UNIX )
     set(RUBY_EXT_CONFIG "")
     if (NOT Apple)
@@ -314,6 +329,7 @@ if( BUILD_RUBY )
     # This will require bison, sed, and at least ruby 1.8 in your path
     # Please install DevKit even though the build will be done by msvc the ruby build system uses some traditionally unix tools
     ExternalProject_Add(Ruby
+      DEPENDS ZLib
       URL https://codeload.github.com/ruby/ruby/tar.gz/v2_2_4
       URL_MD5 3f0d280116092dc5278b6cff31948aad
       BUILD_IN_SOURCE 1
@@ -330,10 +346,14 @@ endif()
 
 option(BUILD_OPENSTUDIO_GEMS "Build OpenStudio Gems" OFF)
 if(BUILD_OPENSTUDIO_GEMS)
-  # depends on system Ruby and Git
+  # depends on system Ruby and Git, Ruby must be same version as OpenStudio 
+  if (WIN32)
+    file(GLOB POTENTIAL_RUBY_LOCATIONS "c:/ruby*2.2.*/bin")
+  endif()
+  find_program(RUBY_EXE ruby HINTS ${POTENTIAL_RUBY_LOCATIONS})
   set(OPENSTUDIO_GEMS_DIR "${CMAKE_BINARY_DIR}/openstudio-gems")
   add_custom_target(openstudio-gems ALL 
-                    ruby "${CMAKE_SOURCE_DIR}/dependencies/ruby/build_openstudio_gems.rb" "${OPENSTUDIO_GEMS_DIR}"
+                    ${RUBY_EXE} "${CMAKE_SOURCE_DIR}/dependencies/ruby/build_openstudio_gems.rb" "${OPENSTUDIO_GEMS_DIR}" "2.2.4" 
                     WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/dependencies/ruby/"
                     DEPENDS "${CMAKE_SOURCE_DIR}/dependencies/ruby/Gemfile" "${CMAKE_SOURCE_DIR}/dependencies/ruby/build_openstudio_gems.rb")
 endif()

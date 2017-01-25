@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8.11)
 cmake_policy(SET CMP0048 NEW)
 
-project(OpenStudio VERSION 2.0.0)
+project(OpenStudio VERSION 2.0.2)
 
 include(ExternalProject)
 include(CPackComponent)
@@ -436,7 +436,7 @@ if(NOT EXISTS ${RUBY_INSTALL_DIR})
   if( WIN32 )
     if(CMAKE_CL_64)
       set(RUBY_ZIP_FILENAME "ruby_2_2_4_msvc2013_static.tar.gz")
-      set(RUBY_ZIP_EXPECTED_MD5 "93c52cefdade4aad579236292033396a")
+      set(RUBY_ZIP_EXPECTED_MD5 "f55c2ced4dab19c910fa6f828df5d97e")
     else()
 	    message(SEND_ERROR "Missing boost 32 bit build")
 	  endif()
@@ -520,8 +520,8 @@ endif()
 
 # openstudio gems
 
-set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20170117.tar.gz")
-set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "e1d4f7cf4bbe17d24ec579592d872df8")
+set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20170124.tar.gz")
+set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "11b94293b79c323f1b7b6a7780e0b410")
 
 set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
 if(EXISTS "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}")

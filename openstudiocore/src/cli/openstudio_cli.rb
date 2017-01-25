@@ -53,6 +53,131 @@ $logger.level = Logger::WARN
 #OpenStudio::Logger.instance.standardOutLogger.setLogLevel(OpenStudio::Warn)
 OpenStudio::Logger.instance.standardOutLogger.setLogLevel(OpenStudio::Error)
 
+# load embedded ruby gems
+require 'rubygems'
+
+module Gem
+class Specification < BasicSpecification
+  def gem_dir
+    embedded = false
+    tmp_loaded_from = loaded_from.clone
+    if tmp_loaded_from.chars.first == ':'
+      tmp_loaded_from[0] = ''
+      embedded = true
+    end
+  
+    joined = File.join(gems_dir, full_name)
+    if embedded
+      test = /bundler\/gems/.match(tmp_loaded_from)
+      if test
+        @gem_dir = ':' + (File.dirname tmp_loaded_from)
+      else
+        @gem_dir = joined
+      end
+    else
+      @gem_dir = File.expand_path joined
+    end
+  end
+  
+  def full_gem_path
+    # TODO: This is a heavily used method by gems, so we'll need
+    # to aleast just alias it to #gem_dir rather than remove it.
+    embedded = false
+    tmp_loaded_from = loaded_from.clone
+    if tmp_loaded_from.chars.first == ':'
+      tmp_loaded_from[0] = ''
+      embedded = true
+    end
+    
+    joined = File.join(gems_dir, full_name)
+    if embedded
+      test = /bundler\/gems/.match(tmp_loaded_from)
+      if test    
+        @full_gem_path = ':' + (File.dirname tmp_loaded_from)
+        @full_gem_path.untaint
+        return @full_gem_path      
+      else
+        @full_gem_path = joined
+        @full_gem_path.untaint
+        return @full_gem_path
+      end
+    else
+      @full_gem_path = File.expand_path joined
+      @full_gem_path.untaint
+    end
+    return @full_gem_path if File.directory? @full_gem_path
+
+    @full_gem_path = File.expand_path File.join(gems_dir, original_name)
+  end  
+  
+  def gems_dir
+    # TODO: this logic seems terribly broken, but tests fail if just base_dir
+    @gems_dir = File.join(loaded_from && base_dir || Gem.dir, "gems")
+  end
+
+  def base_dir
+    return Gem.dir unless loaded_from
+    
+    embedded = false
+    tmp_loaded_from = loaded_from.clone
+    if tmp_loaded_from.chars.first == ':'
+      tmp_loaded_from[0] = ''
+      embedded = true
+    end
+    
+    test = /bundler\/gems/.match(tmp_loaded_from)
+    result = if (default_gem? || test) then
+        File.dirname File.dirname File.dirname tmp_loaded_from
+      else
+        File.dirname File.dirname tmp_loaded_from
+      end
+            
+    if embedded
+      result = ':' + result
+    end
+    @base_dir = result
+  end
+  
+end
+end
+
+Gem.paths.path << ':/ruby/2.2.0/gems/'
+Gem.paths.path << ':/ruby/2.2.0/bundler/gems/'
+    
+EmbeddedScripting::allFileNamesAsString().split(';').each do |f|
+  if md = /\.gemspec$/.match(f)
+    begin
+      spec = EmbeddedScripting::getFileAsString(f)
+      s = eval(spec)
+      s.loaded_from = f
+      Gem::Specification.add_spec(s)
+    rescue
+    end
+  end 
+end
+
+embedded_gems = []
+user_gems = []
+Gem::Specification.each do |spec|
+  if spec.gem_dir.chars.first == ':'
+    embedded_gems << spec
+  else
+    user_gems << spec
+  end
+end
+
+embedded_gems.each do |spec|
+  if user_gems.index {|s| s.name == spec.name}
+    Gem::Specification.remove_spec(spec)
+  end
+end
+
+Gem::Specification.each do |spec|
+  if spec.gem_dir.chars.first == ':'
+    spec.activate
+  end
+end
+
 # This is the code chunk to allow for an embedded IRB shell. From Jason Roelofs, found on StackOverflow
 module IRB # :nodoc:
   def self.start_session(binding)
@@ -468,7 +593,6 @@ class GemList
   #
   def execute(sub_argv)
     require 'rubygems'
-    require 'rubygems/gem_runner'
 
     # Parse the options
     opts = OptionParser.new do |o|
@@ -481,7 +605,24 @@ class GemList
     end
 
     begin
-      Gem::GemRunner.new.run ['list']
+      embedded = []
+      user = []
+      Gem::Specification.find_all.each do |spec| 
+        if spec.gem_dir.chars.first == ':'
+          embedded << spec
+        else
+          user << spec
+        end
+      end
+      
+      embedded.each do |spec|
+        puts "#{spec.name} (#{spec.version}) '#{spec.gem_dir}'" 
+      end
+      
+      user.each do |spec|
+        puts "#{spec.name} (#{spec.version}) '#{spec.gem_dir}'" 
+      end
+      
     rescue => e
       $logger.error "Error listing gems: #{e.message} in #{e.backtrace.join("\n")}"
       exit e.exit_code
@@ -506,22 +647,41 @@ class InstallGem
   #
   def execute(sub_argv)
     require 'rubygems'
-    require 'rubygems/gem_runner'
+    require 'rubygems/commands/install_command'
 
     # Parse the options
-    argv = sub_argv.unshift('install')
-    if argv.include? '--install-dir'
-      $logger.error 'The rubygems option --install-dir is not supported. Please use the --gem_path option'
-      return 1
-    else
-      argv.push '--install-dir'
-      argv.push ENV['GEM_PATH']
+    opts = OptionParser.new do |o|
+      o.banner = 'Usage: openstudio gem_install gem_name gem_version'
+      o.separator ''
+      o.separator 'Options:'
+      o.separator ''
     end
-    $logger.debug "GemInstall command: #{argv.inspect}"
-    $logger.debug "Invoking the GemRunner with argv: #{argv}"
+
+    # Parse the options
+    argv = parse_options(opts, sub_argv)
+    return 0 if argv == nil
+    
+    if argv == []
+      $logger.error 'No gem name provided' 
+      return 1
+    end
+    gem_name = argv[0]
+    gem_version = argv[1]
+
+    cmd = Gem::Commands::InstallCommand.new
+    cmd.handle_options ["--no-ri", "--no-rdoc", 'rake', '--version', '0.9']  # or omit --version and the following option to install the latest
+
+    ARGV.clear
+    ARGV << gem_name
+    if gem_version
+      ARGV << '--version'
+      ARGV << gem_version
+    end
+    
+    puts ENV['GEM_HOME']
 
     begin
-      Gem::GemRunner.new.run argv
+      cmd.execute
     rescue => e
       $logger.error "Error installing gem: #{e.message} in #{e.backtrace.join("\n")}"
       exit e.exit_code

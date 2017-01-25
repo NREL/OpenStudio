@@ -61,18 +61,23 @@ add_library(
   openstudio_rb.cpp
 )
 
-add_custom_command(TARGET openstudio_rb
-  POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/openstudio.rb $<TARGET_FILE_DIR:openstudio_rb>/openstudio.rb 
-)
-
 set_target_properties(openstudio_rb PROPERTIES PREFIX "")
 set_target_properties(openstudio_rb PROPERTIES OUTPUT_NAME openstudio)
+
+# change output directory so the openstudio.pdb file does not conflict between this target and the CLI
+set_target_properties(openstudio_rb PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/ruby/")
+set_target_properties(openstudio_rb PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/ruby/")
+set_target_properties(openstudio_rb PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ruby/")
 if(APPLE)
   set_target_properties(openstudio_rb PROPERTIES SUFFIX ".bundle" )
 else()
   set_target_properties(openstudio_rb PROPERTIES SUFFIX ".so" )
 endif()
+
+add_custom_command(TARGET openstudio_rb
+  POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/openstudio.rb $<TARGET_FILE_DIR:openstudio_rb>/openstudio.rb 
+)
 
 target_link_libraries(openstudio_rb 
   init_openstudio

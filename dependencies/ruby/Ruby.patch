@@ -70,6 +70,19 @@ index 98ffffd..a738f11 100644
 +syslog
 +tk
 +zlib
+diff --git a/ext/zlib/extconf.rb b/ext/zlib/extconf.rb
+index b4348ce..e23b3d5 100644
+--- a/ext/zlib/extconf.rb
++++ b/ext/zlib/extconf.rb
+@@ -10,7 +10,7 @@ require 'rbconfig'
+ dir_config 'zlib'
+ 
+ 
+-if %w'z libz zlib1 zlib zdll zlibwapi'.find {|z| have_library(z, 'deflateReset')} and
++if %w'zlibstatic zlibstaticd'.find {|z| have_library(z, 'deflateReset', 'zlib.h')} and
+     have_header('zlib.h') then
+ 
+   defines = []
 diff --git a/lib/rubygems.rb b/lib/rubygems.rb
 index 98e7dfa..48cb26c 100644
 --- a/lib/rubygems.rb
@@ -169,3 +182,16 @@ index 16da117..c3146a4 100644
 +  return 0;
 +}
 +
+diff --git a/win32/Makefile.sub b/win32/Makefile.sub
+index 668f9e1..73e5429 100644
+--- a/win32/Makefile.sub
++++ b/win32/Makefile.sub
+@@ -282,7 +282,7 @@ MINIRUBY = $(RUBY) -I$(MAKEDIR) -r$(arch)-fake
+ RUNRUBY = $(MINIRUBY)
+ !else
+ MINIRUBY = .\miniruby$(EXEEXT) -I$(srcdir)/lib -I.
+-RUNRUBY = .\$(PROGRAM) -I$(srcdir)/lib -I"$(EXTOUT)/$(arch)" -I.
++RUNRUBY = .\$(PROGRAM) -I$(srcdir)/lib -I"$(EXTOUT)/$(arch)" -I. -I./ext/date/lib/
+ !endif
+ MINIRUBY = $(MINIRUBY) $(MINIRUBYOPT)
+ RUNRUBY = $(RUNRUBY) "$(srcdir)/tool/runruby.rb" --extout="$(EXTOUT)" $(RUNRUBYOPT) -- $(RUN_OPTS)

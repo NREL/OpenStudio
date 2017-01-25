@@ -21,8 +21,9 @@ module Kernel
   $LOAD_PATH << ':/ruby/2.2.0'
   $LOAD_PATH << ':/ruby/2.2.0/x86_64-darwin15'
   $LOAD_PATH << ':/ruby/2.2.0/x64-mswin64_120'
-  $LOAD_PATH << EmbeddedScripting::findFirstFileByName('openstudio-standards.rb').gsub('/openstudio-standards.rb', '')
-  $LOAD_PATH << EmbeddedScripting::findFirstFileByName('openstudio-workflow.rb').gsub('/openstudio-workflow.rb', '')
+  # DLM: now done in embedded gem initialization section in openstudio_cli.rb
+  #$LOAD_PATH << EmbeddedScripting::findFirstFileByName('openstudio-standards.rb').gsub('/openstudio-standards.rb', '')
+  #$LOAD_PATH << EmbeddedScripting::findFirstFileByName('openstudio-workflow.rb').gsub('/openstudio-workflow.rb', '')
   $LOADED = []
 
   alias :original_require_relative :require_relative
@@ -105,7 +106,11 @@ module Kernel
     end
     
     result = ""
-    if File.exists?(path)
+    if File.exists?(absolute_path)
+      File.open(absolute_path, mode) do |file|
+        result = file.read
+      end
+    elsif File.exists?(path)
       File.open(path, mode) do |file|
         result = file.read
       end
