@@ -173,7 +173,7 @@ embedded_gems.each do |spec|
 end
 
 Gem::Specification.each do |spec|
-  if embedded_gems.index 
+  if spec.gem_dir.chars.first == ':'
     spec.activate
   end
 end
