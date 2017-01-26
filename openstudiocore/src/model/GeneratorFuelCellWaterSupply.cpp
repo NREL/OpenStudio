@@ -227,10 +227,10 @@ namespace detail {
 } // detail
 
 GeneratorFuelCellWaterSupply::GeneratorFuelCellWaterSupply(const Model& model,
-  const CurveQuadratic& flowRateCurve,
-  const CurveCubic& pumpPowerCurve,
-  const Node& waterTempNode,
-  const std::string& waterTempMode)
+                                                           const CurveQuadratic& flowRateCurve,
+                                                           const CurveCubic& pumpPowerCurve,
+                                                           const Node& waterTempNode,
+                                                           const std::string& waterTempMode)
   : ModelObject(GeneratorFuelCellWaterSupply::iddObjectType(), model) {
   OS_ASSERT(getImpl<detail::GeneratorFuelCellWaterSupply_Impl>());
 
@@ -257,7 +257,7 @@ GeneratorFuelCellWaterSupply::GeneratorFuelCellWaterSupply(const Model& model,
     LOG_AND_THROW("Unable to set " << briefDescription() << "'s water temp modeling mode to "
       << waterTempMode << ".");
   }
-  setWaterTemperatureModelingMode("TemperatueFromSchedule");
+  setWaterTemperatureModelingMode("TemperatureFromSchedule");
   ok = setWaterTemperatureReferenceNode(waterTempNode);
   if (!ok) {
     remove();
@@ -286,7 +286,7 @@ GeneratorFuelCellWaterSupply::GeneratorFuelCellWaterSupply(const Model& model,
       << pumpPowerCurve.briefDescription() << ".");
   }
   setPumpHeatLossFactor(0.0);
-  setWaterTemperatureModelingMode("TemperatueFromSchedule");
+  setWaterTemperatureModelingMode("TemperatureFromSchedule");
   ok = setWaterTemperatureSchedule(tempSchedule);
   if (!ok) {
     remove();
@@ -317,7 +317,7 @@ GeneratorFuelCellWaterSupply::GeneratorFuelCellWaterSupply(const Model& model)
   setReformerWaterPumpPowerFunctionofFuelRateCurve(curveCubic);
 
   setPumpHeatLossFactor(0.0);
-  setWaterTemperatureModelingMode("TemperatueFromSchedule");
+  setWaterTemperatureModelingMode("TemperatureFromSchedule");
   ScheduleConstant schedule(model);
   schedule.setValue(20);
   setWaterTemperatureSchedule(schedule);
