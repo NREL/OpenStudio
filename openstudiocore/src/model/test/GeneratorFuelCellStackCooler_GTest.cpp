@@ -35,4 +35,30 @@
 
 using namespace openstudio;
 using namespace openstudio::model;
+using std::string;
 
+TEST_F(ModelFixture, FuelCellStackCooler) {
+  Model model;
+
+  // check default StackCooler
+  GeneratorFuelCellStackCooler stackCooler(model);
+  EXPECT_EQ(20, stackCooler.nominalStackTemperature());
+  EXPECT_EQ(20, stackCooler.actualStackTemperature());
+  EXPECT_EQ(0, stackCooler.coefficientr0());
+  EXPECT_EQ(0, stackCooler.coefficientr1());
+  EXPECT_EQ(0, stackCooler.coefficientr2());
+  EXPECT_EQ(0, stackCooler.coefficientr3());
+  EXPECT_EQ(1, stackCooler.stackCoolantFlowRate());
+  EXPECT_EQ(1, stackCooler.stackCoolerUFactorTimesAreaValue());
+  EXPECT_EQ(0, stackCooler.fscogenAdjustmentFactor());
+  EXPECT_EQ(1, stackCooler.stackCogenerationExchangerArea());
+  EXPECT_EQ(1, stackCooler.stackCogenerationExchangerNominalFlowRate());
+  EXPECT_EQ(0, stackCooler.stackCogenerationExchangerNominalHeatTransferCoefficient());
+  EXPECT_EQ(0, stackCooler.stackCogenerationExchangerNominalHeatTransferCoefficientExponent());
+  EXPECT_EQ(0, stackCooler.stackCoolerPumpPower());
+  EXPECT_EQ(0, stackCooler.stackCoolerPumpHeatLossFraction());
+  EXPECT_EQ(0, stackCooler.stackAirCoolerFanCoefficientf0());
+  EXPECT_EQ(0, stackCooler.stackAirCoolerFanCoefficientf1());
+  EXPECT_EQ(0, stackCooler.stackAirCoolerFanCoefficientf2());
+
+}
