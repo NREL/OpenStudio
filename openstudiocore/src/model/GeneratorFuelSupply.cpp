@@ -373,6 +373,7 @@ GeneratorFuelSupply::GeneratorFuelSupply(const Model& model, Schedule& tempSched
   setLiquidGenericFuelLowerHeatingValue(43100);
   setLiquidGenericFuelHigherHeatingValue(46200);
   setLiquidGenericFuelMolecularWeight(1);
+  setLiquidGenericFuelCO2EmissionFactor(0);
   setNumberofConstituentsinGaseousConstituentFuelSupply(0);
 }
 
@@ -380,6 +381,8 @@ GeneratorFuelSupply::GeneratorFuelSupply(const Model& model)
   : ModelObject(GeneratorFuelSupply::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::GeneratorFuelSupply_Impl>());
+
+  setLiquidGenericFuelCO2EmissionFactor(0);
 
   setFuelTemperatureModelingMode("Scheduled");
   ScheduleConstant schedule(model);

@@ -495,6 +495,7 @@ set(${target_name}_test_src
   Test/DesignSpecificationOutdoorAir_GTest.cpp
   Test/ElectricEquipment_GTest.cpp
   Test/EMS_GTest.cpp
+  Test/GeneratorFuelCell_GTest.cpp
   Test/ExteriorLights_GTest.cpp
   Test/GasEquipment_GTest.cpp
   Test/HotWaterEquipment_GTest.cpp
