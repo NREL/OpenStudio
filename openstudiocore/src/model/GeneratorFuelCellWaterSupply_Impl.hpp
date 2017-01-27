@@ -94,11 +94,7 @@ namespace detail {
 
     bool setReformerWaterFlowRateFunctionofFuelRateCurve(const CurveQuadratic& quadraticCurves);
 
-    void resetReformerWaterFlowRateFunctionofFuelRateCurve();
-
     bool setReformerWaterPumpPowerFunctionofFuelRateCurve(const CurveCubic& cubicCurves);
-
-    void resetReformerWaterPumpPowerFunctionofFuelRateCurve();
 
     void setPumpHeatLossFactor(double pumpHeatLossFactor);
 

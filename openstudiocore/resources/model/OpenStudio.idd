@@ -25935,10 +25935,12 @@ OS:Generator:FuelCell:WaterSupply,
       \type object-list
       \object-list QuadraticCurves
       \object-list UniVariateTables
+      \required-field
   A4, \field Reformer Water Pump Power Function of Fuel Rate Curve Name
       \type object-list
       \object-list CubicCurves
       \object-list UniVariateTables
+      \required-field
   N1, \field Pump Heat Loss Factor
   A5, \field Water Temperature Modeling Mode
       \type choice

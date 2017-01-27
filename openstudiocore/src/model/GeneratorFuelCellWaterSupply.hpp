@@ -95,11 +95,7 @@ class MODEL_API GeneratorFuelCellWaterSupply : public ModelObject {
 
   bool setReformerWaterFlowRateFunctionofFuelRateCurve(const CurveQuadratic& quadraticCurves);
 
-  void resetReformerWaterFlowRateFunctionofFuelRateCurve();
-
   bool setReformerWaterPumpPowerFunctionofFuelRateCurve(const CurveCubic& cubicCurves);
-
-  void resetReformerWaterPumpPowerFunctionofFuelRateCurve();
 
   void setPumpHeatLossFactor(double pumpHeatLossFactor);
 
