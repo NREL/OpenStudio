@@ -522,6 +522,18 @@ namespace detail {
     return value.get();
   }
 
+  double WaterHeaterStratified_Impl::node11AdditionalLossCoefficient() const {
+    boost::optional<double> value = getDouble(OS_WaterHeater_StratifiedFields::Node11AdditionalLossCoefficient,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  double WaterHeaterStratified_Impl::node12AdditionalLossCoefficient() const {
+    boost::optional<double> value = getDouble(OS_WaterHeater_StratifiedFields::Node12AdditionalLossCoefficient,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
   std::string WaterHeaterStratified_Impl::sourceSideFlowControlMode() const {
     boost::optional<std::string> value = getString(OS_WaterHeater_StratifiedFields::SourceSideFlowControlMode,true);
     OS_ASSERT(value);
@@ -980,6 +992,16 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  void WaterHeaterStratified_Impl::setNode11AdditionalLossCoefficient(double node11AdditionalLossCoefficient) {
+    bool result = setDouble(OS_WaterHeater_StratifiedFields::Node11AdditionalLossCoefficient, node11AdditionalLossCoefficient);
+    OS_ASSERT(result);
+  }
+
+  void WaterHeaterStratified_Impl::setNode12AdditionalLossCoefficient(double node12AdditionalLossCoefficient) {
+    bool result = setDouble(OS_WaterHeater_StratifiedFields::Node12AdditionalLossCoefficient, node12AdditionalLossCoefficient);
+    OS_ASSERT(result);
+  }
+
   bool WaterHeaterStratified_Impl::setSourceSideFlowControlMode(std::string sourceSideFlowControlMode) {
     bool result = setString(OS_WaterHeater_StratifiedFields::SourceSideFlowControlMode, sourceSideFlowControlMode);
     return result;
@@ -1110,6 +1132,8 @@ WaterHeaterStratified::WaterHeaterStratified(const Model& model)
   setNode8AdditionalLossCoefficient(0);
   setNode9AdditionalLossCoefficient(0);
   setNode10AdditionalLossCoefficient(0);
+  setNode11AdditionalLossCoefficient(0);
+  setNode12AdditionalLossCoefficient(0);
 
   setSourceSideFlowControlMode("IndirectHeatPrimarySetpoint");
 }
@@ -1418,6 +1442,14 @@ double WaterHeaterStratified::node10AdditionalLossCoefficient() const {
   return getImpl<detail::WaterHeaterStratified_Impl>()->node10AdditionalLossCoefficient();
 }
 
+double WaterHeaterStratified::node11AdditionalLossCoefficient() const {
+  return getImpl<detail::WaterHeaterStratified_Impl>()->node11AdditionalLossCoefficient();
+}
+
+double WaterHeaterStratified::node12AdditionalLossCoefficient() const {
+  return getImpl<detail::WaterHeaterStratified_Impl>()->node12AdditionalLossCoefficient();
+}
+
 std::string WaterHeaterStratified::sourceSideFlowControlMode() const {
   return getImpl<detail::WaterHeaterStratified_Impl>()->sourceSideFlowControlMode();
 }
@@ -1720,6 +1752,14 @@ void WaterHeaterStratified::setNode9AdditionalLossCoefficient(double node9Additi
 
 void WaterHeaterStratified::setNode10AdditionalLossCoefficient(double node10AdditionalLossCoefficient) {
   getImpl<detail::WaterHeaterStratified_Impl>()->setNode10AdditionalLossCoefficient(node10AdditionalLossCoefficient);
+}
+
+void WaterHeaterStratified::setNode11AdditionalLossCoefficient(double node11AdditionalLossCoefficient) {
+  getImpl<detail::WaterHeaterStratified_Impl>()->setNode11AdditionalLossCoefficient(node11AdditionalLossCoefficient);
+}
+
+void WaterHeaterStratified::setNode12AdditionalLossCoefficient(double node12AdditionalLossCoefficient) {
+  getImpl<detail::WaterHeaterStratified_Impl>()->setNode12AdditionalLossCoefficient(node12AdditionalLossCoefficient);
 }
 
 bool WaterHeaterStratified::setSourceSideFlowControlMode(std::string sourceSideFlowControlMode) {

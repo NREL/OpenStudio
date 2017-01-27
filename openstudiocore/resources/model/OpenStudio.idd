@@ -24128,7 +24128,7 @@ OS:WaterHeater:Stratified,
        \required-field
        \type integer
        \minimum 1
-       \maximum 10
+       \maximum 12
   N33, \field Additional Destratification Conductivity
        \required-field
        \type real
@@ -24171,6 +24171,14 @@ OS:WaterHeater:Stratified,
        \type real
        \units W/m2-K
   N43, \field Node 10 Additional Loss Coefficient
+       \required-field
+       \type real
+       \units W/m2-K
+  N43, \field Node 11 Additional Loss Coefficient
+       \required-field
+       \type real
+       \units W/m2-K
+  N43, \field Node 12 Additional Loss Coefficient
        \required-field
        \type real
        \units W/m2-K
