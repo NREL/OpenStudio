@@ -85,6 +85,13 @@ TEST_F(ModelFixture, FuelCellAirSupply) {
   EXPECT_EQ(5, airSupply.numberofUserDefinedConstituents());
   //should fail since only 5 allowed
   ASSERT_FALSE(airSupply.addConstituent("Argon", 0.0092));
+  airSupply.removeConstituent(3);
+  ASSERT_TRUE(airSupply.addConstituent("Argon", 0.0092));
+  EXPECT_EQ(5, airSupply.numberofUserDefinedConstituents());
+  airSupply.removeAllConstituents();
+  EXPECT_EQ(0, airSupply.numberofUserDefinedConstituents());
+  airSupply.removeConstituent(0);
+  EXPECT_EQ(0, airSupply.numberofUserDefinedConstituents());
 }
 
 TEST_F(ModelFixture, FuelCellAirSupply2) {
@@ -105,5 +112,11 @@ TEST_F(ModelFixture, FuelCellAirSupply2) {
   EXPECT_EQ(curveQ2, airSupply.airRateFunctionofFuelRateCurve());
   CurveCubic blowerCurve(model);
   ASSERT_TRUE(airSupply.setBlowerPowerCurve(blowerCurve));
+  airSupply.resetBlowerPowerCurve();
+  ASSERT_FALSE(airSupply.blowerPowerCurve());
+  airSupply.resetAirRateFunctionofElectricPowerCurve();
+  ASSERT_FALSE(airSupply.airRateFunctionofElectricPowerCurve());
+  airSupply.resetAirRateFunctionofFuelRateCurve();
+  ASSERT_FALSE(airSupply.airRateFunctionofFuelRateCurve());
 }
 

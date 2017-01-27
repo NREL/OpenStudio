@@ -1719,6 +1719,7 @@ set(${target_name}_test_src
   test/GeneratorFuelCellPowerModule_GTest.cpp
   test/GeneratorFuelCellStackCooler_GTest.cpp
   test/GeneratorFuelCellWaterSupply_GTest.cpp
+  test/GeneratorFuelSupply_GTest.cpp
   test/GeneratorPhotovoltaic_GTest.cpp
   test/GeneratorMicroTurbine_GTest.cpp
   test/GlareSensor_GTest.cpp

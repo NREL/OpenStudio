@@ -242,7 +242,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellAirSupply_Impl::resetNumberofUserDefinedConstituents() {
-    bool result = setString(OS_Generator_FuelCell_AirSupplyFields::NumberofUserDefinedConstituents, "");
+    bool result = setDouble(OS_Generator_FuelCell_AirSupplyFields::NumberofUserDefinedConstituents, 0);
     OS_ASSERT(result);
   }
 

@@ -125,8 +125,6 @@ namespace detail {
 
     bool setCompressorPowerMultiplierFunctionofFuelRateCurve(const CurveCubic& cubicCurves);
 
-    void resetCompressorPowerMultiplierFunctionofFuelRateCurve();
-
     bool setCompressorHeatLossFactor(double compressorHeatLossFactor);
 
     void resetCompressorHeatLossFactor();

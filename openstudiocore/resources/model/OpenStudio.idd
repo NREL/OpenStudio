@@ -26139,7 +26139,7 @@ OS:Generator:FuelCell:Inverter,
 
 OS:Generator:FuelSupply,
       \extensible:2
-      \max-fields 36
+      \max-fields 38
       \memo Used only with Generator:FuelCell and Generator:MicroCHP
   A1, \field Handle
        \type handle

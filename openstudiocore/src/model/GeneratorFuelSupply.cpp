@@ -226,11 +226,6 @@ namespace detail {
     return result;
   }
 
-  void GeneratorFuelSupply_Impl::resetCompressorPowerMultiplierFunctionofFuelRateCurve() {
-    bool result = setString(OS_Generator_FuelSupplyFields::CompressorPowerMultiplierFunctionofFuelRateCurveName, "");
-    OS_ASSERT(result);
-  }
-
   bool GeneratorFuelSupply_Impl::setCompressorHeatLossFactor(double compressorHeatLossFactor) {
     bool result = setDouble(OS_Generator_FuelSupplyFields::CompressorHeatLossFactor, compressorHeatLossFactor);
     return result;
@@ -247,7 +242,7 @@ namespace detail {
   }
 
   void GeneratorFuelSupply_Impl::resetFuelType() {
-    bool result = setString(OS_Generator_FuelSupplyFields::FuelType, "");
+    bool result = setString(OS_Generator_FuelSupplyFields::FuelType, "LiquidGeneric");
     OS_ASSERT(result);
   }
 
@@ -314,7 +309,9 @@ namespace detail {
     if (temp && ok) {
       setNumberofConstituentsinGaseousConstituentFuelSupply(num + 1);
     } else {
-      getObject<ModelObject>().eraseExtensibleGroup(eg.groupIndex());
+      if (!eg.empty()) {
+        getObject<ModelObject>().eraseExtensibleGroup(eg.groupIndex());
+      }
     }
     return temp;
 
@@ -505,10 +502,6 @@ void GeneratorFuelSupply::resetFuelTemperatureSchedule() {
 
 bool GeneratorFuelSupply::setCompressorPowerMultiplierFunctionofFuelRateCurve(const CurveCubic& cubicCurves) {
   return getImpl<detail::GeneratorFuelSupply_Impl>()->setCompressorPowerMultiplierFunctionofFuelRateCurve(cubicCurves);
-}
-
-void GeneratorFuelSupply::resetCompressorPowerMultiplierFunctionofFuelRateCurve() {
-  getImpl<detail::GeneratorFuelSupply_Impl>()->resetCompressorPowerMultiplierFunctionofFuelRateCurve();
 }
 
 bool GeneratorFuelSupply::setCompressorHeatLossFactor(double compressorHeatLossFactor) {
