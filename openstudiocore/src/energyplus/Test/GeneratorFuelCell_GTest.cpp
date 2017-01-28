@@ -117,8 +117,8 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorFuelCell) {
 
   Building building = model.getUniqueModelObject<Building>();
 
-  ThermalZone zone1(model);
-  ThermalZone zone2(model);
+  //ThermalZone zone1(model);
+  //ThermalZone zone2(model);
 
   // create default fuelcell
   GeneratorFuelCell fuelcell(model);

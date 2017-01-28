@@ -42,6 +42,7 @@
 #include "ScheduleConstant.hpp"
 #include "ScheduleConstant_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeLimits_Impl.hpp"
 #include "ScheduleTypeRegistry.hpp"
 #include "SiteWaterMainsTemperature.hpp"
 #include "SiteWaterMainsTemperature_Impl.hpp"
@@ -302,6 +303,7 @@ GeneratorFuelCellWaterSupply::GeneratorFuelCellWaterSupply(const Model& model)
   ScheduleConstant schedule(model);
   schedule.setValue(20);
   setWaterTemperatureSchedule(schedule);
+
 }
 
 IddObjectType GeneratorFuelCellWaterSupply::iddObjectType() {

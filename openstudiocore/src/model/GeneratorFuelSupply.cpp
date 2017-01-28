@@ -40,6 +40,7 @@
 #include "CurveCubic.hpp"
 #include "CurveCubic_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeLimits_Impl.hpp"
 #include "ScheduleTypeRegistry.hpp"
 
 #include "../utilities/idf/WorkspaceExtensibleGroup.hpp"
