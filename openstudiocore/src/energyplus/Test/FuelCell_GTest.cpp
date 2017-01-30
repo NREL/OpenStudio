@@ -145,6 +145,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorFuelCell) {
 
   // check default water supply
   GeneratorFuelCellWaterSupply fWS = fuelcell.waterSupply();
+  fWS.setWaterTemperatureModelingMode("MainsWaterTemperature");
 
   // check default aux heater
   GeneratorFuelCellAuxiliaryHeater fAX = fuelcell.auxiliaryHeater();

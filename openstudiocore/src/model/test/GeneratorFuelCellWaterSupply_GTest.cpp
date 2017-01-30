@@ -42,6 +42,8 @@
 #include "../Schedule_Impl.hpp"
 #include "../ScheduleConstant.hpp"
 #include "../ScheduleConstant_Impl.hpp"
+#include "../SiteWaterMainsTemperature.hpp"
+#include "../SiteWaterMainsTemperature_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -111,3 +113,14 @@ TEST_F(ModelFixture, FuelCellWaterSupply3) {
   ASSERT_FALSE(watersupply.waterTemperatureSchedule());
 }
 
+TEST_F(ModelFixture, FuelCellWaterSupply4) {
+  Model model;
+  EXPECT_FALSE(model.getOptionalUniqueModelObject<SiteWaterMainsTemperature>());
+  CurveQuadratic curveQuadratic(model);
+  CurveCubic curveCubic(model);
+  Node node(model);
+  GeneratorFuelCellWaterSupply watersupply(model, "MainsWaterTemperature");
+  EXPECT_EQ("MainsWaterTemperature", watersupply.waterTemperatureModelingMode());
+  ASSERT_FALSE(watersupply.waterTemperatureSchedule());
+  EXPECT_TRUE(model.getOptionalUniqueModelObject<SiteWaterMainsTemperature>());
+}

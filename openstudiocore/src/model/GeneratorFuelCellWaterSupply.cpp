@@ -170,7 +170,12 @@ namespace detail {
     bool result = setString(OS_Generator_FuelCell_WaterSupplyFields::WaterTemperatureModelingMode, waterTemperatureModelingMode);
     //make sure SiteWaterMainsTemperature object exits for MainsWaterTemperature mode
     if (waterTemperatureModelingMode == "MainsWaterTemperature") {
-      SiteWaterMainsTemperature watertemp = this->model().getUniqueModelObject<SiteWaterMainsTemperature>();
+      if (!this->model().getOptionalUniqueModelObject<SiteWaterMainsTemperature>()) {
+        SiteWaterMainsTemperature watertemp = this->model().getUniqueModelObject<SiteWaterMainsTemperature>();
+        watertemp.setCalculationMethod("Correlation");
+        watertemp.setAnnualAverageOutdoorAirTemperature(9.69);
+        watertemp.setMaximumDifferenceInMonthlyAverageOutdoorAirTemperatures(28.1);
+      }
     }
     return result;
   }
@@ -238,7 +243,7 @@ GeneratorFuelCellWaterSupply::GeneratorFuelCellWaterSupply(const Model& model,
   if (!ok) {
     remove();
     LOG_AND_THROW("Unable to set " << briefDescription() << "'s water temp modeling mode to "
-      << waterTempMode << ".");
+      << waterTempMode << ". Try a different Constructor");
   }
   ok = setWaterTemperatureReferenceNode(waterTempNode);
   if (!ok) {
@@ -274,6 +279,44 @@ GeneratorFuelCellWaterSupply::GeneratorFuelCellWaterSupply(const Model& model,
     remove();
     LOG_AND_THROW("Unable to set " << briefDescription() << "'s temp schedule to "
       << tempSchedule.briefDescription() << ".");
+  }
+}
+
+GeneratorFuelCellWaterSupply::GeneratorFuelCellWaterSupply(const Model& model, const std::string& waterTempMode)
+  : ModelObject(GeneratorFuelCellWaterSupply::iddObjectType(), model) {
+  OS_ASSERT(getImpl<detail::GeneratorFuelCellWaterSupply_Impl>());
+  CurveQuadratic curveQuadratic(model);
+  curveQuadratic.setCoefficient1Constant(0);
+  curveQuadratic.setCoefficient2x(0);
+  curveQuadratic.setCoefficient3xPOW2(0);
+  curveQuadratic.setMinimumValueofx(-1.0e10);
+  curveQuadratic.setMaximumValueofx(1.0e10);
+  setReformerWaterFlowRateFunctionofFuelRateCurve(curveQuadratic);
+
+  CurveCubic curveCubic(model);
+  curveCubic.setCoefficient1Constant(0);
+  curveCubic.setCoefficient2x(0);
+  curveCubic.setCoefficient3xPOW2(0);
+  curveCubic.setCoefficient4xPOW3(0);
+  curveCubic.setMinimumValueofx(-1.0e10);
+  curveCubic.setMaximumValueofx(1.0e10);
+  setReformerWaterPumpPowerFunctionofFuelRateCurve(curveCubic);
+
+  setPumpHeatLossFactor(0.0);
+  bool ok = false;
+  if (waterTempMode == "TemperatureFromSchedule") {
+    ok = setWaterTemperatureModelingMode(waterTempMode);
+    setWaterTemperatureModelingMode("TemperatureFromSchedule");
+    ScheduleConstant schedule(model);
+    schedule.setValue(20);
+    setWaterTemperatureSchedule(schedule);
+  } else if (waterTempMode == "MainsWaterTemperature") {
+    ok = setWaterTemperatureModelingMode(waterTempMode);
+  }
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s water temp modeling mode to "
+      << waterTempMode << ".  Try a different constructor");
   }
 }
 
