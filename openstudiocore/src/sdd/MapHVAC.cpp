@@ -4494,24 +4494,78 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
   // Optional AirLoopHVAC
   boost::optional<model::AirLoopHVAC> airLoopHVAC;
 
-  QDomElement primAirCondSysRefElement = thermalZoneElement.firstChildElement("PriAirCondgSysRef");
-  QDomElement znSysElement = findZnSysElement(primAirCondSysRefElement.text(),doc);
+  // Map of SysRefElement to SysElement. SysElement will be a zone sys or null
+  struct SysInfo {
+    QDomElement SysRefElement;
+    QDomElement ZnSysElement;
+    QDomElement AirSysElement;
+    int Index;
+    boost::optional<model::ModelObject>ModelObject;
+    //int Priority;
+  };
+
+  std::vector<SysInfo> priAirCondInfo;
+  std::vector<SysInfo> simSysInfo;
+
+  {
+    auto elements = thermalZoneElement.elementsByTagName("PriAirCondgSysRef");
+    for (int i = 0; i < elements.count(); i++)
+    {
+      const auto & element = elements.at(i).toElement();
+      SysInfo sysInfo;
+      sysInfo.SysRefElement = element;
+      sysInfo.ZnSysElement = findZnSysElement(element.text(),doc);
+      sysInfo.AirSysElement = findAirSysElement(element.text(),doc);
+      bool ok = false;
+      auto index = element.attribute("index").toInt(&ok);
+      if( ok ) {
+        sysInfo.Index = index;
+      }
+      priAirCondInfo.push_back(sysInfo);
+    }
+  }
+
+  {
+    auto elements = thermalZoneElement.elementsByTagName("SimSysRef");
+    for (int i = 0; i < elements.count(); i++)
+    {
+      const auto & element = elements.at(i).toElement();
+      SysInfo sysInfo;
+      sysInfo.SysRefElement = element;
+      sysInfo.ZnSysElement = findZnSysElement(element.text(),doc);
+      sysInfo.AirSysElement = findAirSysElement(element.text(),doc);
+      bool ok = false;
+      auto index = element.attribute("index").toInt(&ok);
+      if( ok ) {
+        sysInfo.Index = index;
+      }
+      simSysInfo.push_back(sysInfo);
+    }
+  }
+
   QDomElement ventSysRefElement = thermalZoneElement.firstChildElement("VentSysRef");
-  QDomElement simSysRefElement = thermalZoneElement.firstChildElement("SimSysRef");
-  QDomElement znSysElementForSimSysRef = findZnSysElement(simSysRefElement.text(),doc);
-
-        //<SimSysRef>Core Beam TrmlUnit ZnSys</SimSysRef>
-        //<SimSysRefPriority>1</SimSysRefPriority>
-
-  // These will store values to set priority later
-  // Will be terminal or zone hvac
-  boost::optional<model::ModelObject> primAirCondEquip;
   boost::optional<model::ModelObject> ventSysEquip;
-  boost::optional<model::ModelObject> simSysEquip;
 
   // ThermalZoneVentilationSystem
-  if( ventSysRefElement.text() != primAirCondSysRefElement.text() )
-  {
+  // Find out if ventSys is already a simsys or a priaircondgsys
+  bool translateVentSys = false;
+  for( const auto & info : priAirCondInfo ) {
+    if( info.SysRefElement == ventSysRefElement ) {
+      translateVentSys = true;
+      break;
+    }
+  }
+
+  if( ! translateVentSys ) {
+    for( const auto & info : simSysInfo ) {
+      if( info.SysRefElement == ventSysRefElement ) {
+        translateVentSys = true;
+        break;
+      }
+    }
+  }
+
+  if( translateVentSys ) {
     airLoopHVAC = model.getModelObjectByName<model::AirLoopHVAC>(ventSysRefElement.text().toStdString());
 
     if( airLoopHVAC && ! thermalZone.airLoopHVAC() )
@@ -4563,11 +4617,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
     }
   }
 
-  auto translateSystemForZone = [&](const QDomElement & t_znSysElement, const QDomElement & t_sysRefElement, boost::optional<model::ModelObject> & modelObjectResult) {
-    if( ! t_znSysElement.isNull() )
+  auto translateSystemForZone = [&](SysInfo & sysInfo) {
+    if( ! sysInfo.ZnSysElement.isNull() )
     {
-      boost::optional<model::ModelObject> mo = translateZnSys(t_znSysElement,doc,model);
-      modelObjectResult = mo;
+      boost::optional<model::ModelObject> mo = translateZnSys(sysInfo.ZnSysElement,doc,model);
+      sysInfo.ModelObject = mo;
 
       if( mo )
       {
@@ -4578,7 +4632,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
           zoneHVACComponent->addToThermalZone(thermalZone);
 
           // If not the ventilation system we lock down the oa system of the zone equipment
-          if( t_sysRefElement.text() != ventSysRefElement.text() ) {
+          if( sysInfo.SysRefElement.text() != ventSysRefElement.text() ) {
             if( boost::optional<model::ZoneHVACPackagedTerminalAirConditioner> ptac = 
                 zoneHVACComponent->optionalCast<model::ZoneHVACPackagedTerminalAirConditioner>() ) {
               ptac->setOutdoorAirFlowRateDuringHeatingOperation(0.0);
@@ -4599,7 +4653,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
     }
     else
     {
-      airLoopHVAC = model.getModelObjectByName<model::AirLoopHVAC>(t_sysRefElement.text().toStdString());
+      airLoopHVAC = model.getModelObjectByName<model::AirLoopHVAC>(sysInfo.SysRefElement.text().toStdString());
 
       if( airLoopHVAC && ! thermalZone.airLoopHVAC() )
       {
@@ -4607,7 +4661,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
         if( ! trmlUnitElement.isNull() ) {
           if( boost::optional<model::ModelObject> trmlUnit = translateTrmlUnit(trmlUnitElement,doc,model) )
           {
-            modelObjectResult = trmlUnit;
+            sysInfo.ModelObject = trmlUnit;
             airLoopHVAC->addBranchForZone(thermalZone,trmlUnit->cast<model::StraightComponent>());
             QDomElement inducedAirZnRefElement = trmlUnitElement.firstChildElement("InducedAirZnRef");
             if( boost::optional<model::ThermalZone> tz = model.getModelObjectByName<model::ThermalZone>(inducedAirZnRefElement.text().toStdString()) )
@@ -4630,16 +4684,41 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
     }
   };
 
-  translateSystemForZone(znSysElement,primAirCondSysRefElement,primAirCondEquip);
-  translateSystemForZone(znSysElementForSimSysRef,simSysRefElement,simSysEquip);
+  for( auto & sysInfo : priAirCondInfo ) {
+    translateSystemForZone(sysInfo);
+  }
+  for( auto & sysInfo : simSysInfo ) {
+    translateSystemForZone(sysInfo);
+  }
 
-  if( primAirCondEquip ) {
-    auto priAirCondgSysPriorityElement = thermalZoneElement.firstChildElement("PriAirCondgSysPriority");
-    value = priAirCondgSysPriorityElement.text().toInt(&ok); 
-    if( ok ) {
-      thermalZone.setCoolingPriority(primAirCondEquip.get(),value);  
-      thermalZone.setHeatingPriority(primAirCondEquip.get(),value);  
+  // Set priority
+  auto setPriority = [&](const SysInfo & sysInfo, const QString & priorityElement) {
+    if( sysInfo.ModelObject ) {
+      auto elements = thermalZoneElement.elementsByTagName(priorityElement);
+      for (int i = 0; i < elements.count(); i++)
+      {
+        const auto & element = elements.at(i).toElement();
+        bool ok = false;
+        auto index = element.attribute("index").toInt(&ok);
+        if( ok ) {
+          if( index == sysInfo.Index ) {
+            auto priority = element.text().toInt(&ok);
+            if( ok ) {
+              thermalZone.setCoolingPriority(sysInfo.ModelObject.get(),priority);  
+              thermalZone.setHeatingPriority(sysInfo.ModelObject.get(),priority);  
+            }
+            break;
+          }
+        }
+      }
     }
+  };
+
+  for( auto & sysInfo : priAirCondInfo ) {
+    setPriority(sysInfo, "PriAirCondgSysPriority");
+  }
+  for( auto & sysInfo : simSysInfo ) {
+    setPriority(sysInfo, "VentSysPriority");
   }
 
   if( ventSysEquip ) {
@@ -4648,15 +4727,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
     if( ok ) {
       thermalZone.setCoolingPriority(ventSysEquip.get(),value);  
       thermalZone.setHeatingPriority(ventSysEquip.get(),value);  
-    }
-  }
-
-  if( simSysEquip ) {
-    auto simSysPriorityElement = thermalZoneElement.firstChildElement("SimSysPriority");
-    value = simSysPriorityElement.text().toInt(&ok);
-    if( ok ) {
-      thermalZone.setCoolingPriority(simSysEquip.get(),value);  
-      thermalZone.setHeatingPriority(simSysEquip.get(),value);  
     }
   }
 
@@ -4835,20 +4905,22 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
       zoneVent.setMaximumOutdoorTemperature(operableWinOALimHi);
     }
 
-    // primAirCondSysRefElement
-    // Could be a zn sys or an air sys
-    auto znSysElement = findZnSysElement(primAirCondSysRefElement.text(),doc);
-    auto airSysElement = findAirSysElement(primAirCondSysRefElement.text(),doc);
-    if( ! znSysElement.isNull() ) {
-      auto availSchRefElement = znSysElement.firstChildElement("AvailSchRef");
-      if( auto availSch = model.getModelObjectByName<model::Schedule>(availSchRefElement.text().toStdString()) ) {
-        zoneVent.setSchedule(availSch.get());
-      }
-    } else if( ! airSysElement.isNull() ) {
-      auto availSchRefElement = airSysElement.firstChildElement("AvailSchRef");
-      auto availSch = model.getModelObjectByName<model::Schedule>(availSchRefElement.text().toStdString());
-      if( auto availSch = model.getModelObjectByName<model::Schedule>(availSchRefElement.text().toStdString()) ) {
-        zoneVent.setSchedule(availSch.get());
+    // priAirCondInfo zoneVent
+
+    for( const auto & info : priAirCondInfo ) {
+      if( ! info.ZnSysElement.isNull() ) {
+        auto availSchRefElement = info.ZnSysElement.firstChildElement("AvailSchRef");
+        if( auto availSch = model.getModelObjectByName<model::Schedule>(availSchRefElement.text().toStdString()) ) {
+          zoneVent.setSchedule(availSch.get());
+          break;
+        }
+      } else if( ! info.AirSysElement.isNull() ) {
+        auto availSchRefElement = info.AirSysElement.firstChildElement("AvailSchRef");
+        auto availSch = model.getModelObjectByName<model::Schedule>(availSchRefElement.text().toStdString());
+        if( auto availSch = model.getModelObjectByName<model::Schedule>(availSchRefElement.text().toStdString()) ) {
+          zoneVent.setSchedule(availSch.get());
+          break;
+        }
       }
     }
 
