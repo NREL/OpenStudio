@@ -4215,12 +4215,17 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
 
   QDomElement exhFlowRtSimElement = thermalZoneElement.firstChildElement("ExhFlowSim");
   QDomElement exhFanNameElement = thermalZoneElement.firstChildElement("ExhFanName");
+  QDomElement exhFanEndUseCatElement = thermalZoneElement.firstChildElement("ExhFanEndUseCat");
 
   value = exhFlowRtSimElement.text().toDouble(&ok);
   if( ok && (! exhFanNameElement.isNull()) )
   {
     model::FanZoneExhaust exhaustFan(model);
     exhaustFan.setName(exhFanNameElement.text().toStdString());
+
+    if( ! exhFanEndUseCatElement.text().isEmpty() ) {
+      exhaustFan.setEndUseSubcategory(exhFanEndUseCatElement.text().toStdString());
+    }
 
     value = unitToUnit(value,"cfm","m^3/s").get();
     exhaustFan.setMaximumFlowRate(value);
