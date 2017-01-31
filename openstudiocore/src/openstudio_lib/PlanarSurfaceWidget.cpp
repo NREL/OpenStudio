@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -60,8 +60,7 @@ void PlanarSurfaceWidget::attach(const openstudio::model::PlanarSurface& planarS
 
   m_planarSurface = planarSurface;
 
-  connect(m_planarSurface->getImpl<model::detail::ModelObject_Impl>().get(), &model::detail::ModelObject_Impl::onChange,
-    this, &PlanarSurfaceWidget::refresh);
+  m_planarSurface->getImpl<model::detail::ModelObject_Impl>().get()->onChange.connect<PlanarSurfaceWidget, &PlanarSurfaceWidget::refresh>(this);
 
   refresh();
 }
@@ -71,7 +70,8 @@ void PlanarSurfaceWidget::detach()
   clear();
 
   if (m_planarSurface){
-    disconnect(m_planarSurface->getImpl<model::detail::ModelObject_Impl>().get());
+    // disconnect(m_planarSurface->getImpl<model::detail::ModelObject_Impl>().get());
+    m_planarSurface->getImpl<model::detail::ModelObject_Impl>().get()->onChange.disconnect<PlanarSurfaceWidget, &PlanarSurfaceWidget::refresh>(this);
     m_planarSurface.reset();
   }
 }

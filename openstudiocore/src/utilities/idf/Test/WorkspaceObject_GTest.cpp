@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -287,7 +287,7 @@ TEST_F(IdfFixture, WorkspaceObject_FieldSettingWithHiddenPushes) {
   OptionalWorkspaceObject tObject = scratch.getObject(w1->handle ());
   ASSERT_TRUE(tObject);
   WorkspaceObject object = *tObject;
-  EXPECT_EQ(static_cast<unsigned>(8),object.numFields());
+  EXPECT_EQ(static_cast<unsigned>(14),object.numFields());
 
   // create schedule object to point to from non-extensible field
   text.str("");
@@ -346,15 +346,15 @@ TEST_F(IdfFixture, WorkspaceObject_FieldSettingWithHiddenPushes) {
 
   // hidden pushing for setting nonextensible double
   EXPECT_FALSE(object.setDouble(9,1.5));
-  EXPECT_EQ(8u,object.numFields());
+  EXPECT_EQ(14u,object.numFields());
   EXPECT_TRUE(object.setDouble(9,0.6));
-  EXPECT_EQ(10u,object.numFields());
+  EXPECT_EQ(14u,object.numFields());
 
   // hidden pushing for setting nonextensible string
   EXPECT_FALSE(object.setString(12,"bad key"));
-  EXPECT_EQ(10u,object.numFields());
+  EXPECT_EQ(14u,object.numFields());
   EXPECT_TRUE(object.setString(12,"MeanAirTemperature"));
-  EXPECT_EQ(13u,object.numFields());
+  EXPECT_EQ(14u,object.numFields());
 
   // hidden pushing for setting nonextensible pointer
   EXPECT_TRUE(object.setString(14,""));
@@ -423,7 +423,7 @@ TEST_F(IdfFixture, WorkspaceObject_RestoreHandleInAddObjects)
   EXPECT_EQ(1u, ws1.objects().size());
   OptionalString h1String = w1->getString(0);
   ASSERT_TRUE(h1String);
-  Handle h1(toQString(*h1String));
+  Handle h1(toUUID(*h1String));
   EXPECT_FALSE(h1.isNull());
   EXPECT_EQ(h1, w1->handle());
 
@@ -433,7 +433,7 @@ TEST_F(IdfFixture, WorkspaceObject_RestoreHandleInAddObjects)
   WorkspaceObject w2 = ws2.objects()[0];
   OptionalString h2String = w2.getString(0);
   ASSERT_TRUE(h2String);
-  Handle h2(toQString(*h2String));
+  Handle h2(toUUID(*h2String));
   EXPECT_FALSE(h2.isNull());
   EXPECT_EQ(h2, w2.handle());
 }
@@ -447,7 +447,7 @@ TEST_F(IdfFixture, WorkspaceObject_RestoreHandleInAddObjects2)
   EXPECT_EQ(1u, ws1.objects().size());
   OptionalString h1String = w1->getString(0);
   ASSERT_TRUE(h1String);
-  Handle h1(toQString(*h1String));
+  Handle h1(toUUID(*h1String));
   EXPECT_FALSE(h1.isNull());
   EXPECT_EQ(h1, w1->handle());
 
@@ -456,7 +456,7 @@ TEST_F(IdfFixture, WorkspaceObject_RestoreHandleInAddObjects2)
   IdfObject i1 = idf1.objects()[0];
   OptionalString i1hString = i1.getString(0);
   ASSERT_TRUE(i1hString);
-  Handle ih(toQString(*i1hString));
+  Handle ih(toUUID(*i1hString));
   EXPECT_FALSE(ih.isNull());
   EXPECT_EQ(ih,i1.handle());
 
@@ -466,7 +466,7 @@ TEST_F(IdfFixture, WorkspaceObject_RestoreHandleInAddObjects2)
   WorkspaceObject w2 = ws2.objects()[0];
   OptionalString h2String = w2.getString(0);
   ASSERT_TRUE(h2String);
-  Handle h2(toQString(*h2String));
+  Handle h2(toUUID(*h2String));
   EXPECT_FALSE(h2.isNull());
   EXPECT_EQ(h2, w2.handle());
 }

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -39,15 +39,15 @@ namespace model {
 namespace detail {
 
   class MODEL_API CFactorUndergroundWallConstruction_Impl : public ConstructionBase_Impl {
-    Q_OBJECT;
+    
 
-    Q_PROPERTY(double cFactor READ cFactor WRITE setCFactor);
-    Q_PROPERTY(openstudio::Quantity cFactor_SI READ cFactor_SI WRITE setCFactor);
-    Q_PROPERTY(openstudio::Quantity cFactor_IP READ cFactor_IP WRITE setCFactor);    
+    
+    
+        
 
-    Q_PROPERTY(double height READ height WRITE setHeight);
-    Q_PROPERTY(openstudio::Quantity height_SI READ height_SI WRITE setHeight);
-    Q_PROPERTY(openstudio::Quantity height_IP READ height_IP WRITE setHeight);    
+    
+    
+        
 
    public:
 

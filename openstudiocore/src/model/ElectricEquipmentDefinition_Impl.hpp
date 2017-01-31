@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -42,11 +42,11 @@ namespace detail {
 
   /** ElectricEquipmentDefinition_Impl is a SpaceLoadDefinition_Impl that is the implementation class for ElectricEquipmentDefinition.*/
   class MODEL_API ElectricEquipmentDefinition_Impl : public SpaceLoadDefinition_Impl {
-    Q_OBJECT;
+    
 
-    Q_PROPERTY(std::string designLevelCalculationMethod READ designLevelCalculationMethod);
+    
 
-    Q_PROPERTY(boost::optional<double> designLevel READ designLevel WRITE setDesignLevel);
+    
     Q_PROPERTY(openstudio::OSOptionalQuantity designLevel_SI 
                READ designLevel_SI 
                WRITE setDesignLevel);
@@ -54,7 +54,7 @@ namespace detail {
                READ designLevel_IP 
                WRITE setDesignLevel);
 
-    Q_PROPERTY(boost::optional<double> wattsperSpaceFloorArea READ wattsperSpaceFloorArea WRITE setWattsperSpaceFloorArea);
+    
     Q_PROPERTY(openstudio::OSOptionalQuantity wattsperSpaceFloorArea_SI 
                READ wattsperSpaceFloorArea_SI 
                WRITE setWattsperSpaceFloorArea);
@@ -62,7 +62,7 @@ namespace detail {
                READ wattsperSpaceFloorArea_IP 
                WRITE setWattsperSpaceFloorArea);
 
-    Q_PROPERTY(boost::optional<double> wattsperPerson READ wattsperPerson WRITE setWattsperPerson);
+    
     Q_PROPERTY(openstudio::OSOptionalQuantity wattsperPerson_SI 
                READ wattsperPerson_SI 
                WRITE setWattsperPerson);
@@ -70,8 +70,8 @@ namespace detail {
                READ wattsperPerson_IP 
                WRITE setWattsperPerson);
 
-    Q_PROPERTY(double fractionRadiant READ fractionRadiant WRITE setFractionRadiant RESET resetFractionRadiant);
-    Q_PROPERTY(bool isFractionRadiantDefaulted READ isFractionRadiantDefaulted);
+    
+    
     Q_PROPERTY(openstudio::Quantity fractionRadiant_SI 
                READ fractionRadiant_SI 
                WRITE setFractionRadiant);
@@ -79,8 +79,8 @@ namespace detail {
                READ fractionRadiant_IP 
                WRITE setFractionRadiant);
 
-    Q_PROPERTY(double fractionLatent READ fractionLatent WRITE setFractionLatent RESET resetFractionLatent);
-    Q_PROPERTY(bool isFractionLatentDefaulted READ isFractionLatentDefaulted);
+    
+    
     Q_PROPERTY(openstudio::Quantity fractionLatent_SI 
                READ fractionLatent_SI 
                WRITE setFractionLatent);
@@ -88,8 +88,8 @@ namespace detail {
                READ fractionLatent_IP 
                WRITE setFractionLatent);
 
-    Q_PROPERTY(double fractionLost READ fractionLost WRITE setFractionLost RESET resetFractionLost);
-    Q_PROPERTY(bool isFractionLostDefaulted READ isFractionLostDefaulted);
+    
+    
     Q_PROPERTY(openstudio::Quantity fractionLost_SI 
                READ fractionLost_SI 
                WRITE setFractionLost);

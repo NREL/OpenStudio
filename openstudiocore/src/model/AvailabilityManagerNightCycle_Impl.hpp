@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -44,23 +44,23 @@ namespace detail {
 
   /** AvailabilityManagerNightCycle_Impl is a ModelObject_Impl that is the implementation class for AvailabilityManagerNightCycle.*/
   class MODEL_API AvailabilityManagerNightCycle_Impl : public AvailabilityManager_Impl {
-    Q_OBJECT;
+    
 
-    Q_PROPERTY(std::string controlType READ controlType WRITE setControlType RESET resetControlType);
-    Q_PROPERTY(bool isControlTypeDefaulted READ isControlTypeDefaulted);
-    Q_PROPERTY(std::vector<std::string> controlTypeValues READ controlTypeValues);
+    
+    
+    
 
-    Q_PROPERTY(double thermostatTolerance READ thermostatTolerance WRITE setThermostatTolerance RESET resetThermostatTolerance);
-    Q_PROPERTY(openstudio::Quantity thermostatTolerance_SI READ thermostatTolerance_SI WRITE setThermostatTolerance RESET resetThermostatTolerance);
-    Q_PROPERTY(openstudio::Quantity thermostatTolerance_IP READ thermostatTolerance_IP WRITE setThermostatTolerance RESET resetThermostatTolerance);
-    Q_PROPERTY(bool isThermostatToleranceDefaulted READ isThermostatToleranceDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double cyclingRunTime READ cyclingRunTime WRITE setCyclingRunTime RESET resetCyclingRunTime);
-    Q_PROPERTY(openstudio::Quantity cyclingRunTime_SI READ cyclingRunTime_SI WRITE setCyclingRunTime RESET resetCyclingRunTime);
-    Q_PROPERTY(openstudio::Quantity cyclingRunTime_IP READ cyclingRunTime_IP WRITE setCyclingRunTime RESET resetCyclingRunTime);
-    Q_PROPERTY(bool isCyclingRunTimeDefaulted READ isCyclingRunTimeDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> controlThermalZone READ controlThermalZoneAsModelObject WRITE setControlThermalZoneAsModelObject RESET resetControlThermalZone);
+    
    public:
 
     AvailabilityManagerNightCycle_Impl(const IdfObject& idfObject,

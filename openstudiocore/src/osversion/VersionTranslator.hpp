@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -104,6 +104,10 @@ class OSVERSION_API VersionTranslator {
   /** \overload */
   boost::optional<model::Model> loadModel(std::istream& is,
                                           ProgressBar* progressBar = nullptr);
+
+  /** Load a model from string. Not overloading loadModel so paths passed as strings in bindings will work.*/
+  boost::optional<model::Model> loadModelFromString(const std::string& str,
+                                                    ProgressBar* progressBar = nullptr);
 
   /** Returns a current-version OpenStudio Component, if possible. The file at pathToOldOsc 
    *  must be an osc of version 0.7.0 or later. */
@@ -212,6 +216,7 @@ class OSVERSION_API VersionTranslator {
   std::string update_1_11_3_to_1_11_4(const IdfFile& idf_1_11_3, const IddFileAndFactoryWrapper& idd_1_11_4);
   std::string update_1_11_4_to_1_11_5(const IdfFile& idf_1_11_4, const IddFileAndFactoryWrapper& idd_1_11_5);
   std::string update_1_12_0_to_1_12_1(const IdfFile& idf_1_12_0, const IddFileAndFactoryWrapper& idd_1_12_1);
+  std::string update_1_12_3_to_1_12_4(const IdfFile& idf_1_12_3, const IddFileAndFactoryWrapper& idd_1_12_4);
 
   IdfObject updateUrlField_0_7_1_to_0_7_2(const IdfObject& object, unsigned index);
 

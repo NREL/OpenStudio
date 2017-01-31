@@ -54,8 +54,8 @@ var OpenStudioModel = require('OpenStudioModel');
 if (typeof OpenStudioModel.OpenStudioModel != 'undefined') OpenStudioModel = OpenStudioModel.OpenStudioModel;
 var OpenStudioOSVersion = require('OpenStudioOSVersion');
 if (typeof OpenStudioOSVersion.OpenStudioOSVersion != 'undefined') OpenStudioOSVersion = OpenStudioOSVersion.OpenStudioOSVersion;
-var OpenStudioRuleset = require('OpenStudioRuleset');
-if (typeof OpenStudioRuleset.OpenStudioRuleset != 'undefined') OpenStudioRuleset = OpenStudioRuleset.OpenStudioRuleset;
+var OpenStudioMeasure = require('OpenStudioMeasure');
+if (typeof OpenStudioMeasure.OpenStudioMeasure != 'undefined') OpenStudioMeasure = OpenStudioMeasure.OpenStudioMeasure;
 var OpenStudioISOModel = require('OpenStudioISOModel');
 if (typeof OpenStudioISOModel.OpenStudioISOModel != 'undefined') OpenStudioISOModel = OpenStudioISOModel.OpenStudioISOModel;
 var OpenStudioRunManager = require('OpenStudioRunManager');
@@ -103,7 +103,7 @@ openstudio.model = merge_objects(openstudio.model, OpenStudioModel);
 
 openstudio.osversion = OpenStudioOSVersion;
 
-openstudio.ruleset = OpenStudioRuleset;
+openstudio.measure = OpenStudioMeasure;
 
 openstudio.isomodel = OpenStudioISOModel;
 

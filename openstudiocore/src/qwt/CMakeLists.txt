@@ -241,14 +241,16 @@ set(${target_name}_moc
 
 qt5_wrap_cpp_minimally(${target_name}_moc_src ${${target_name}_moc})
 
-add_definitions(-DQT_DLL -DQWT_DLL -DQWT_MAKEDLL -DQWT_NO_SVG -DQWT_NO_OPENGL)
-add_library(${target_name} SHARED
+#add_definitions(-DQT_DLL -DQWT_DLL -DQWT_MAKEDLL -DQWT_NO_SVG -DQWT_NO_OPENGL)
+add_definitions(-DQWT_NO_SVG -DQWT_NO_OPENGL)
+#add_library(${target_name} SHARED
+add_library(${target_name}
   ${${target_name}_src}
   ${${target_name}_moc_src}
 )
 
 target_link_libraries(${target_name}
-  ${QT_LIBS}
+	#${QT_LIBS}
 )
 
 if(NOT APPLE)

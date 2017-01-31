@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -73,6 +73,7 @@
 
 #include "../utilities/core/Compare.hpp"
 
+#include <QFile>
 #include <QLabel>
 #include <QComboBox>
 #include <QPushButton>
@@ -114,7 +115,7 @@ boost::optional<openstudio::model::ModelObject> ModelObjectSelectorDialog::selec
   if (currentIndex >= 0){
     QVariant itemData = m_comboBox->itemData(currentIndex);
     OS_ASSERT(itemData.isValid());
-    Handle handle(itemData.toString());
+    Handle handle(toUUID(itemData.toString()));
     result = m_model.getModelObject<ModelObject>(handle);
   }
   return result;
@@ -155,7 +156,7 @@ void ModelObjectSelectorDialog::onPushButtonCancel(bool)
   emit closed(modelObject);
 }
 
-void ModelObjectSelectorDialog::onAddWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl)
+void ModelObjectSelectorDialog::onAddWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& type, const openstudio::UUID& uuid)
 {
   std::vector<openstudio::IddObjectType>::const_iterator it = std::find(m_typesToDisplay.begin(), m_typesToDisplay.end(), impl->iddObject().type());
   if (it != m_typesToDisplay.end()){
@@ -163,7 +164,7 @@ void ModelObjectSelectorDialog::onAddWorkspaceObject(std::shared_ptr<openstudio:
   }
 }
 
-void ModelObjectSelectorDialog::onRemoveWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl)
+void ModelObjectSelectorDialog::onRemoveWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& type, const openstudio::UUID& uuid)
 {
   std::vector<openstudio::IddObjectType>::const_iterator it = std::find(m_typesToDisplay.begin(), m_typesToDisplay.end(), impl->iddObject().type());
   if (it != m_typesToDisplay.end()){
@@ -236,15 +237,9 @@ void ModelObjectSelectorDialog::connectSignalsAndSlots()
 
   connect(m_cancelButton, &QPushButton::clicked, this, &ModelObjectSelectorDialog::onPushButtonCancel);
 
-  connect(m_model.getImpl<model::detail::Model_Impl>().get(),
-    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::addWorkspaceObject),
-    this,
-    &ModelObjectSelectorDialog::onAddWorkspaceObject);
+  m_model.getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.connect<ModelObjectSelectorDialog, &ModelObjectSelectorDialog::onAddWorkspaceObject>(this);
 
-  connect(m_model.getImpl<model::detail::Model_Impl>().get(),
-    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::removeWorkspaceObject),
-    this,
-    &ModelObjectSelectorDialog::onRemoveWorkspaceObject);
+  m_model.getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.connect<ModelObjectSelectorDialog, &ModelObjectSelectorDialog::onRemoveWorkspaceObject>(this);
 }
 
 void ModelObjectSelectorDialog::loadStyleSheet()
@@ -288,7 +283,7 @@ void ModelObjectSelectorDialog::loadComboBoxData()
   for (WorkspaceObject workspaceObject : workspaceObjects){
     OS_ASSERT(workspaceObject.name());
     std::string objectName = workspaceObject.name().get();
-    m_comboBox->addItem(toQString(objectName), workspaceObject.handle().toString());
+    m_comboBox->addItem(toQString(objectName), toQString(workspaceObject.handle()));
   }
 
   if (m_comboBox->count() > 0){

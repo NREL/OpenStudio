@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -86,7 +86,6 @@ class UTILITIES_API FileReference {
                 const std::string& description,
                 const openstudio::path& p,
                 const FileReferenceType& fileType,
-                const DateTime& timestampCreate,
                 const DateTime& timestampLast,
                 const std::string& checksumCreate,
                 const std::string& checksumLast);
@@ -113,9 +112,6 @@ class UTILITIES_API FileReference {
 
   FileReferenceType fileType() const;
 
-  /** Time this object was created or time file was created, depending on
-   *  whether path exists at time of construction. */
-  DateTime timestampCreate() const;
 
   /** Last modified time of this file, or time object was created if path
    *  does not actually exist on the file system. */
@@ -157,16 +153,12 @@ class UTILITIES_API FileReference {
   std::string m_description;
   openstudio::path m_path;
   FileReferenceType m_fileType;
-  DateTime m_timestampCreate;
   DateTime m_timestampLast;
   std::string m_checksumCreate;
   std::string m_checksumLast;
 
   REGISTER_LOGGER("openstudio.utilities.FileReference");
 
-  /** Sets timestamps and checksums. If lastOnly, does not try to
-   *  determine timestampCreate. */
-  bool update(const openstudio::path& searchDirectory,bool lastOnly);
 };
 
 /** \relates FileReference*/

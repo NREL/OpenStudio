@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -29,6 +29,7 @@
 #include "IddFileAndFactoryWrapper.hpp"
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
+#include <utilities/embedded_files.hxx>
 
 #include "../core/Assert.hpp"
 #include "../core/Containers.hpp"
@@ -324,5 +325,15 @@ bool IddFileAndFactoryWrapper::isInFile(const std::string& objectName) const {
   LOG_AND_THROW("Invalid IddFactoryWrapper has no IddFile set.");
   return false;
 }
+
+IddFile get_1_9_0_CBECC_IddFile()
+{
+  std::stringstream ss;
+  ss << ::openstudio::embedded_files::getFileAsString(":/idd/versions/1_9_0_CBECC/OpenStudio.idd");
+  auto cbeccIddFile = IddFile::load(ss);
+  OS_ASSERT(cbeccIddFile);
+  return cbeccIddFile.get();
+}
+
 
 } // openstudio

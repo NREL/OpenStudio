@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -40,30 +40,30 @@ namespace detail {
 
   /** BoilerHotWater_Impl is a StraightComponent_Impl that is the implementation class for BoilerHotWater.*/
   class MODEL_API BoilerHotWater_Impl : public StraightComponent_Impl {
-    Q_OBJECT;
-    Q_PROPERTY(std::string fuelType READ fuelType WRITE setFuelType);
-    Q_PROPERTY(boost::optional<double> nominalCapacity READ nominalCapacity WRITE setNominalCapacity RESET resetNominalCapacity);
-    Q_PROPERTY(bool isNominalCapacityAutosized READ isNominalCapacityAutosized);
-    Q_PROPERTY(double nominalThermalEfficiency READ nominalThermalEfficiency WRITE setNominalThermalEfficiency);
-    Q_PROPERTY(boost::optional<std::string> efficiencyCurveTemperatureEvaluationVariable READ efficiencyCurveTemperatureEvaluationVariable WRITE setEfficiencyCurveTemperatureEvaluationVariable RESET resetEfficiencyCurveTemperatureEvaluationVariable);
-    Q_PROPERTY(boost::optional<double> designWaterOutletTemperature READ designWaterOutletTemperature WRITE setDesignWaterOutletTemperature RESET resetDesignWaterOutletTemperature);
-    Q_PROPERTY(boost::optional<double> designWaterFlowRate READ designWaterFlowRate WRITE setDesignWaterFlowRate RESET resetDesignWaterFlowRate);
-    Q_PROPERTY(bool isDesignWaterFlowRateAutosized READ isDesignWaterFlowRateAutosized);
-    Q_PROPERTY(double minimumPartLoadRatio READ minimumPartLoadRatio WRITE setMinimumPartLoadRatio RESET resetMinimumPartLoadRatio);
-    Q_PROPERTY(bool isMinimumPartLoadRatioDefaulted READ isMinimumPartLoadRatioDefaulted);
-    Q_PROPERTY(double maximumPartLoadRatio READ maximumPartLoadRatio WRITE setMaximumPartLoadRatio RESET resetMaximumPartLoadRatio);
-    Q_PROPERTY(bool isMaximumPartLoadRatioDefaulted READ isMaximumPartLoadRatioDefaulted);
-    Q_PROPERTY(double optimumPartLoadRatio READ optimumPartLoadRatio WRITE setOptimumPartLoadRatio RESET resetOptimumPartLoadRatio);
-    Q_PROPERTY(bool isOptimumPartLoadRatioDefaulted READ isOptimumPartLoadRatioDefaulted);
-    Q_PROPERTY(double waterOutletUpperTemperatureLimit READ waterOutletUpperTemperatureLimit WRITE setWaterOutletUpperTemperatureLimit RESET resetWaterOutletUpperTemperatureLimit);
-    Q_PROPERTY(bool isWaterOutletUpperTemperatureLimitDefaulted READ isWaterOutletUpperTemperatureLimitDefaulted);
-    Q_PROPERTY(std::string boilerFlowMode READ boilerFlowMode WRITE setBoilerFlowMode RESET resetBoilerFlowMode);
-    Q_PROPERTY(bool isBoilerFlowModeDefaulted READ isBoilerFlowModeDefaulted);
-    Q_PROPERTY(boost::optional<double> parasiticElectricLoad READ parasiticElectricLoad WRITE setParasiticElectricLoad RESET resetParasiticElectricLoad);
-    Q_PROPERTY(double sizingFactor READ sizingFactor WRITE setSizingFactor RESET resetSizingFactor);
-    Q_PROPERTY(bool isSizingFactorDefaulted READ isSizingFactorDefaulted);
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> normalizedBoilerEfficiencyCurve READ normalizedBoilerEfficiencyCurveAsModelObject WRITE setNormalizedBoilerEfficiencyCurveAsModelObject RESET resetNormalizedBoilerEfficiencyCurve);
+    
    public:
 
     /** @name Constructors and Destructors */

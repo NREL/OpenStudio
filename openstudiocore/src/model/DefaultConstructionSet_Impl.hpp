@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -45,17 +45,17 @@ namespace detail {
 
   /** DefaultConstructionSet_Impl is a ResourceObject_Impl that is the implementation class for DefaultConstructionSet.*/
   class MODEL_API DefaultConstructionSet_Impl : public ResourceObject_Impl {
-    Q_OBJECT;
+    
 
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> defaultExteriorSurfaceConstructions READ defaultExteriorSurfaceConstructionsAsModelObject WRITE setDefaultExteriorSurfaceConstructionsAsModelObject RESET resetDefaultExteriorSurfaceConstructions);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> defaultInteriorSurfaceConstructions READ defaultInteriorSurfaceConstructionsAsModelObject WRITE setDefaultInteriorSurfaceConstructionsAsModelObject RESET resetDefaultInteriorSurfaceConstructions);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> defaultGroundContactSurfaceConstructions READ defaultGroundContactSurfaceConstructionsAsModelObject WRITE setDefaultGroundContactSurfaceConstructionsAsModelObject RESET resetDefaultGroundContactSurfaceConstructions);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> defaultExteriorSubSurfaceConstructions READ defaultExteriorSubSurfaceConstructionsAsModelObject WRITE setDefaultExteriorSubSurfaceConstructionsAsModelObject RESET resetDefaultExteriorSubSurfaceConstructions);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> defaultInteriorSubSurfaceConstructions READ defaultInteriorSubSurfaceConstructionsAsModelObject WRITE setDefaultInteriorSubSurfaceConstructionsAsModelObject RESET resetDefaultInteriorSubSurfaceConstructions);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> interiorPartitionConstruction READ interiorPartitionConstructionAsModelObject WRITE setInteriorPartitionConstructionAsModelObject RESET resetInteriorPartitionConstruction);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> spaceShadingConstruction READ spaceShadingConstructionAsModelObject WRITE setSpaceShadingConstructionAsModelObject RESET resetSpaceShadingConstruction);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> buildingShadingConstruction READ buildingShadingConstructionAsModelObject WRITE setBuildingShadingConstructionAsModelObject RESET resetBuildingShadingConstruction);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> siteShadingConstruction READ siteShadingConstructionAsModelObject WRITE setSiteShadingConstructionAsModelObject RESET resetSiteShadingConstruction);
+    
+    
+    
+    
+    
+    
+    
+    
+    
    public:
     /** @name Constructors and Destructors */
     //@{

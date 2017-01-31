@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -502,20 +502,29 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
     boost::optional<IlluminanceMap> illuminanceMap = modelObject.illuminanceMap();
     if (illuminanceMap){
 
-      /*
+      
       if (!primaryDaylightingControl){
         LOG(Warn, "Daylighting:Controls object is required to trigger daylighting calculations in EnergyPlus, adding a minimal one to Zone " << modelObject.name().get());
+        
+        IdfObject referencePoint(openstudio::IddObjectType::Daylighting_ReferencePoint);
+        referencePoint.setName(modelObject.nameString() + " Daylighting Reference Point");
+        m_idfObjects.push_back(referencePoint);
+        referencePoint.setString(Daylighting_ReferencePointFields::ZoneName, modelObject.nameString());
+        referencePoint.setDouble(Daylighting_ReferencePointFields::XCoordinateofReferencePoint, illuminanceMap->originXCoordinate() + 0.5*illuminanceMap->xLength());
+        referencePoint.setDouble(Daylighting_ReferencePointFields::YCoordinateofReferencePoint, illuminanceMap->originYCoordinate() + 0.5*illuminanceMap->yLength());
+        referencePoint.setDouble(Daylighting_ReferencePointFields::ZCoordinateofReferencePoint, illuminanceMap->originZCoordinate());
 
         IdfObject daylightingControlObject(openstudio::IddObjectType::Daylighting_Controls);
         m_idfObjects.push_back(daylightingControlObject);
 
-        daylightingControlObject.setString(Daylighting_ControlsFields::ZoneName, modelObject.name().get());
-        daylightingControlObject.setInt(Daylighting_ControlsFields::TotalDaylightingReferencePoints, 1);
-        daylightingControlObject.setDouble(Daylighting_ControlsFields::XCoordinateofFirstReferencePoint, 0.0);
-        daylightingControlObject.setDouble(Daylighting_ControlsFields::YCoordinateofFirstReferencePoint, 0.0);
-        daylightingControlObject.setDouble(Daylighting_ControlsFields::FractionofZoneControlledbyFirstReferencePoint, 0.0);
+        daylightingControlObject.setString(Daylighting_ControlsFields::ZoneName, modelObject.nameString());
+        std::vector<std::string> group;
+        group.push_back(referencePoint.nameString()); // ref point name
+        group.push_back("0.0"); // fraction controlled
+        group.push_back(""); // illuminance setpoint
+        daylightingControlObject.pushExtensibleGroup(group);
       }
-      */
+      
 
       IdfObject illuminanceMapObject(openstudio::IddObjectType::Output_IlluminanceMap);
       m_idfObjects.push_back(illuminanceMapObject);

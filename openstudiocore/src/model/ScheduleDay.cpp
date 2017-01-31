@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -63,7 +63,7 @@ namespace detail {
     OS_ASSERT(idfObject.iddObject().type() == ScheduleDay::iddObjectType());
 
     // connect signals
-    connect(this, &ScheduleDay_Impl::onChange, this, &ScheduleDay_Impl::clearCachedVariables);
+    this->ScheduleDay_Impl::onChange.connect<ScheduleDay_Impl, &ScheduleDay_Impl::clearCachedVariables>(this);
   }
 
   ScheduleDay_Impl::ScheduleDay_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -74,7 +74,7 @@ namespace detail {
     OS_ASSERT(other.iddObject().type() == ScheduleDay::iddObjectType());
 
     // connect signals
-    connect(this, &ScheduleDay_Impl::onChange, this, &ScheduleDay_Impl::clearCachedVariables);
+    this->ScheduleDay_Impl::onChange.connect<ScheduleDay_Impl, &ScheduleDay_Impl::clearCachedVariables>(this);
   }
 
   ScheduleDay_Impl::ScheduleDay_Impl(const ScheduleDay_Impl& other,
@@ -83,7 +83,7 @@ namespace detail {
     : ScheduleBase_Impl(other,model,keepHandle)
   {
     // connect signals
-    connect(this, &ScheduleDay_Impl::onChange, this, &ScheduleDay_Impl::clearCachedVariables);
+    this->ScheduleDay_Impl::onChange.connect<ScheduleDay_Impl, &ScheduleDay_Impl::clearCachedVariables>(this);
   }
 
   std::vector<IdfObject> ScheduleDay_Impl::remove() {

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -448,10 +448,10 @@ class UTILITIES_API Workspace {
   //@{
 
   // connect a progress bar
-  bool connectProgressBar(const openstudio::ProgressBar& progressBar) const;
+  bool connectProgressBar(openstudio::ProgressBar& progressBar);
 
   // disconnect a progress bar
-  bool disconnectProgressBar(const openstudio::ProgressBar &progressBar) const;
+  bool disconnectProgressBar(openstudio::ProgressBar &progressBar);
 
   //@}
   /** @name Type Casing */

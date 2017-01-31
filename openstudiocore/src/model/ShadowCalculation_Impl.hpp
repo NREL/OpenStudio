@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -37,13 +37,13 @@ namespace model {
 namespace detail {
 
   class MODEL_API ShadowCalculation_Impl : public ModelObject_Impl {
-    Q_OBJECT;
-    Q_PROPERTY(int calculationFrequency READ calculationFrequency WRITE setCalculationFrequency RESET resetCalculationFrequency);
-    Q_PROPERTY(bool isCalculationFrequencyDefaulted READ isCalculationFrequencyDefaulted);
-    Q_PROPERTY(int maximumFiguresInShadowOverlapCalculations READ maximumFiguresInShadowOverlapCalculations WRITE setMaximumFiguresInShadowOverlapCalculations RESET resetMaximumFiguresInShadowOverlapCalculations);
-    Q_PROPERTY(bool isMaximumFiguresInShadowOverlapCalculationsDefaulted READ isMaximumFiguresInShadowOverlapCalculationsDefaulted);
-    Q_PROPERTY(boost::optional<std::string> polygonClippingAlgorithm READ polygonClippingAlgorithm WRITE setPolygonClippingAlgorithm RESET resetPolygonClippingAlgorithm);
-    Q_PROPERTY(boost::optional<std::string> skyDiffuseModelingAlgorithm READ skyDiffuseModelingAlgorithm WRITE setSkyDiffuseModelingAlgorithm RESET resetSkyDiffuseModelingAlgorithm);
+    
+    
+    
+    
+    
+    
+    
    public:
 
     // constructor

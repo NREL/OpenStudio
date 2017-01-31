@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -106,9 +106,10 @@ namespace detail {
   // copy constructor, used for clone
   Model_Impl::Model_Impl(const Model_Impl& other, bool keepHandles)
     : Workspace_Impl(other, keepHandles),
+      m_workflowJSON(WorkflowJSON(other.m_workflowJSON)),
       m_sqlFile((other.m_sqlFile)?(std::shared_ptr<SqlFile>(new SqlFile(*other.m_sqlFile))):(other.m_sqlFile))
   {
-    // notice we are cloning the sqlfile too, if necessary
+    // notice we are cloning the workflow and sqlfile too, if necessary
     // careful not to call anything that calls shared_from_this here, this is not yet constructed
   }
 
@@ -118,9 +119,10 @@ namespace detail {
                          bool keepHandles,
                          StrictnessLevel level)
     : Workspace_Impl(other,hs,keepHandles,level),
+      m_workflowJSON(WorkflowJSON(other.m_workflowJSON)),
       m_sqlFile((other.m_sqlFile)?(std::shared_ptr<SqlFile>(new SqlFile(*other.m_sqlFile))):(other.m_sqlFile))
   {
-    // notice we are cloning the sqlfile too, if necessary
+    // notice we are cloning the workflow and sqlfile too, if necessary
   }
   Workspace Model_Impl::clone(bool keepHandles) const {
     // copy everything but objects
@@ -155,6 +157,10 @@ namespace detail {
     // swap Model-level data
     std::shared_ptr<Model_Impl> otherImpl = other.getImpl<detail::Model_Impl>();
 
+    WorkflowJSON twf = m_workflowJSON;
+    setWorkflowJSON(otherImpl->workflowJSON());
+    otherImpl->setWorkflowJSON(twf);
+
     std::shared_ptr<SqlFile> tsf = m_sqlFile;
     m_sqlFile = otherImpl->m_sqlFile;
     otherImpl->m_sqlFile = tsf;
@@ -163,13 +169,8 @@ namespace detail {
     m_componentWatchers = otherImpl->m_componentWatchers;
     otherImpl->m_componentWatchers = tcw;
 
-    OptionalBuilding tcb = m_cachedBuilding;
-    m_cachedBuilding = otherImpl->m_cachedBuilding;
-    otherImpl->m_cachedBuilding = tcb;
-
-    OptionalLifeCycleCostParameters tclccp = m_cachedLifeCycleCostParameters;
-    m_cachedLifeCycleCostParameters = otherImpl->m_cachedLifeCycleCostParameters;
-    otherImpl->m_cachedLifeCycleCostParameters = tclccp;
+    clearCachedData();
+    otherImpl->clearCachedData();
   }
 
   void Model_Impl::createComponentWatchers() {
@@ -1061,7 +1062,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     boost::optional<Building> result = this->model().getOptionalUniqueModelObject<Building>();
     if (result){
       m_cachedBuilding = result;
-      QObject::connect(result->getImpl<Building_Impl>().get(), &Building_Impl::onRemoveFromWorkspace, this, &Model_Impl::clearCachedBuilding);
+      result->getImpl<Building_Impl>().get()->Building_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedBuilding>(const_cast<openstudio::model::detail::Model_Impl *>(this));
     }
 
     return m_cachedBuilding;
@@ -1076,8 +1077,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     boost::optional<LifeCycleCostParameters> result = this->model().getOptionalUniqueModelObject<LifeCycleCostParameters>();
     if (result){
       m_cachedLifeCycleCostParameters = result;
-      QObject::connect(result->getImpl<LifeCycleCostParameters_Impl>().get(), &LifeCycleCostParameters_Impl::onRemoveFromWorkspace,
-        this, &Model_Impl::clearCachedLifeCycleCostParameters);
+      result->getImpl<LifeCycleCostParameters_Impl>().get()->LifeCycleCostParameters_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedLifeCycleCostParameters>(const_cast<openstudio::model::detail::Model_Impl *>(this));
     }
 
     return m_cachedLifeCycleCostParameters;
@@ -1092,7 +1092,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     boost::optional<RunPeriod> result = this->model().getOptionalUniqueModelObject<RunPeriod>();
     if (result){
       m_cachedRunPeriod = result;
-      QObject::connect(result->getImpl<RunPeriod_Impl>().get(), &RunPeriod_Impl::onRemoveFromWorkspace, this, &Model_Impl::clearCachedRunPeriod);
+      result->getImpl<RunPeriod_Impl>().get()->RunPeriod_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedRunPeriod>(const_cast<openstudio::model::detail::Model_Impl *>(this));
     }
 
     return m_cachedRunPeriod;
@@ -1107,8 +1107,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     boost::optional<YearDescription> result = this->model().getOptionalUniqueModelObject<YearDescription>();
     if (result){
       m_cachedYearDescription = result;
-      QObject::connect(result->getImpl<YearDescription_Impl>().get(), &YearDescription_Impl::onRemoveFromWorkspace,
-        this, &Model_Impl::clearCachedYearDescription);
+      result->getImpl<YearDescription_Impl>().get()->YearDescription_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedYearDescription>(const_cast<openstudio::model::detail::Model_Impl *>(this));
     }
 
     return m_cachedYearDescription;
@@ -1123,7 +1122,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     boost::optional<WeatherFile> result = this->model().getOptionalUniqueModelObject<WeatherFile>();
     if (result){
       m_cachedWeatherFile = result;
-      QObject::connect(result->getImpl<WeatherFile_Impl>().get(), &WeatherFile_Impl::onRemoveFromWorkspace, this, &Model_Impl::clearCachedWeatherFile);
+      result->getImpl<WeatherFile_Impl>().get()->WeatherFile_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedWeatherFile>(const_cast<openstudio::model::detail::Model_Impl *>(this));
     }
 
     return m_cachedWeatherFile;
@@ -1309,6 +1308,11 @@ if (_className::iddObjectType() == typeToCreate) { \
     return spaceType;
   }
 
+  WorkflowJSON Model_Impl::workflowJSON() const
+  {
+    return m_workflowJSON;
+  }
+
   /// get the sql file
   boost::optional<openstudio::SqlFile> Model_Impl::sqlFile() const
   {
@@ -1318,6 +1322,17 @@ if (_className::iddObjectType() == typeToCreate) { \
     } else {
       return boost::optional<openstudio::SqlFile>();
     }
+  }
+
+  bool Model_Impl::setWorkflowJSON(const openstudio::WorkflowJSON& workflowJSON)
+  {
+    m_workflowJSON = workflowJSON;
+    return true;
+  }
+
+  void Model_Impl::resetWorkflowJSON()
+  {
+    m_workflowJSON = WorkflowJSON();
   }
 
   /// set the sql file
@@ -1533,15 +1548,15 @@ if (_className::iddObjectType() == typeToCreate) { \
   void Model_Impl::reportInitialModelObjects()
   {
     for (const WorkspaceObject& workspaceObject : this->objects()) {
-      emit initialModelObject(workspaceObject.getImpl<detail::ModelObject_Impl>().get(), workspaceObject.iddObject().type(), workspaceObject.handle());
+      this->initialModelObject.nano_emit(workspaceObject.getImpl<detail::ModelObject_Impl>().get(), workspaceObject.iddObject().type(), workspaceObject.handle());
     }
-    emit initialReportComplete();
+    this->initialReportComplete.nano_emit();
   }
 
   void Model_Impl::mf_createComponentWatcher(ComponentData& componentData) {
     try {
       ComponentWatcher watcher(componentData);
-      QObject::connect(watcher.getImpl().get(), &ComponentWatcher_Impl::obsolete, this, &Model_Impl::obsoleteComponentWatcher);
+      watcher.getImpl().get()->ComponentWatcher_Impl::obsolete.connect<Model_Impl, &Model_Impl::obsoleteComponentWatcher>(this); // #HASHTAG Problem?
       m_componentWatchers.push_back(watcher);
     }
     catch (...) {
@@ -1550,27 +1565,37 @@ if (_className::iddObjectType() == typeToCreate) { \
     }
   }
 
-  void Model_Impl::clearCachedBuilding()
+  void Model_Impl::clearCachedData()
+  {
+    Handle dummy;
+    clearCachedBuilding(dummy);
+    clearCachedLifeCycleCostParameters(dummy);
+    clearCachedRunPeriod(dummy);
+    clearCachedYearDescription(dummy);
+    clearCachedWeatherFile(dummy);
+  }
+
+  void Model_Impl::clearCachedBuilding(const Handle &)
   {
     m_cachedBuilding.reset();
   }
 
-  void Model_Impl::clearCachedLifeCycleCostParameters()
+  void Model_Impl::clearCachedLifeCycleCostParameters(const Handle &handle)
   {
     m_cachedLifeCycleCostParameters.reset();
   }
 
-  void Model_Impl::clearCachedRunPeriod()
+  void Model_Impl::clearCachedRunPeriod(const Handle& handle)
   {
     m_cachedRunPeriod.reset();
   }
 
-  void Model_Impl::clearCachedYearDescription()
+  void Model_Impl::clearCachedYearDescription(const Handle& handle)
   {
     m_cachedYearDescription.reset();
   }
 
-  void Model_Impl::clearCachedWeatherFile()
+  void Model_Impl::clearCachedWeatherFile(const Handle& handle)
   {
     m_cachedWeatherFile.reset();
   }
@@ -1633,8 +1658,34 @@ boost::optional<Model> Model::load(const path& p) {
     }
     catch (...) {}
   }
+
+  if (result){
+    path workflowJSONPath = p.parent_path() / p.stem() / toPath("workflow.osw");
+    if (exists(workflowJSONPath)){
+      boost::optional<WorkflowJSON> workflowJSON = WorkflowJSON::load(workflowJSONPath);
+      if (workflowJSON){
+        result->setWorkflowJSON(*workflowJSON);
+      }
+    }
+  }
+
   return result;
 }
+
+boost::optional<Model> Model::load(const path& osmPath, const path& workflowJSONPath)
+{
+  OptionalModel result = load(osmPath);
+  if (result){
+    boost::optional<WorkflowJSON> workflowJSON = WorkflowJSON::load(workflowJSONPath);
+    if (workflowJSON){
+      result->setWorkflowJSON(*workflowJSON);
+    } else{
+      result.reset();
+    }
+  }
+  return result;
+}
+
 
 Model::Model(std::shared_ptr<detail::Model_Impl> p)
   : Workspace(p)
@@ -1683,6 +1734,21 @@ Schedule Model::alwaysOnContinuousSchedule() const
 SpaceType Model::plenumSpaceType() const
 {
   return getImpl<detail::Model_Impl>()->plenumSpaceType();
+}
+
+openstudio::WorkflowJSON Model::workflowJSON() const
+{
+  return getImpl<detail::Model_Impl>()->workflowJSON();
+}
+
+bool Model::setWorkflowJSON(const openstudio::WorkflowJSON& setWorkflowJSON)
+{
+  return getImpl<detail::Model_Impl>()->setWorkflowJSON(setWorkflowJSON);
+}
+
+void Model::resetWorkflowJSON()
+{
+  return getImpl<detail::Model_Impl>()->resetWorkflowJSON();
 }
 
 openstudio::OptionalSqlFile Model::sqlFile() const

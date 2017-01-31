@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -45,31 +45,31 @@ namespace detail {
 
   /** DaylightingControl_Impl is a SpaceItem_Impl that is the implementation class for DaylightingControl.*/
   class MODEL_API DaylightingControl_Impl : public SpaceItem_Impl {
-    Q_OBJECT;
-    Q_PROPERTY(double positionXCoordinate READ positionXCoordinate WRITE setPositionXCoordinate);
-    Q_PROPERTY(double positionYCoordinate READ positionYCoordinate WRITE setPositionYCoordinate);
-    Q_PROPERTY(double positionZCoordinate READ positionZCoordinate WRITE setPositionZCoordinate);
-    Q_PROPERTY(double psiRotationAroundXAxis READ psiRotationAroundXAxis WRITE setPsiRotationAroundXAxis RESET resetPsiRotationAroundXAxis);
-    Q_PROPERTY(bool isPsiRotationAroundXAxisDefaulted READ isPsiRotationAroundXAxisDefaulted);
-    Q_PROPERTY(double thetaRotationAroundYAxis READ thetaRotationAroundYAxis WRITE setThetaRotationAroundYAxis RESET resetThetaRotationAroundYAxis);
-    Q_PROPERTY(bool isThetaRotationAroundYAxisDefaulted READ isThetaRotationAroundYAxisDefaulted);
-    Q_PROPERTY(double phiRotationAroundZAxis READ phiRotationAroundZAxis WRITE setPhiRotationAroundZAxis RESET resetPhiRotationAroundZAxis);
-    Q_PROPERTY(bool isPhiRotationAroundZAxisDefaulted READ isPhiRotationAroundZAxisDefaulted);
-    Q_PROPERTY(double illuminanceSetpoint READ illuminanceSetpoint WRITE setIlluminanceSetpoint RESET resetIlluminanceSetpoint);
-    Q_PROPERTY(bool isIlluminanceSetpointDefaulted READ isIlluminanceSetpointDefaulted);
-    Q_PROPERTY(std::string lightingControlType READ lightingControlType WRITE setLightingControlType RESET resetLightingControlType);
-    Q_PROPERTY(bool isLightingControlTypeDefaulted READ isLightingControlTypeDefaulted);
-    Q_PROPERTY(double minimumInputPowerFractionforContinuousDimmingControl READ minimumInputPowerFractionforContinuousDimmingControl WRITE setMinimumInputPowerFractionforContinuousDimmingControl RESET resetMinimumInputPowerFractionforContinuousDimmingControl);
-    Q_PROPERTY(bool isMinimumInputPowerFractionforContinuousDimmingControlDefaulted READ isMinimumInputPowerFractionforContinuousDimmingControlDefaulted);
-    Q_PROPERTY(double minimumLightOutputFractionforContinuousDimmingControl READ minimumLightOutputFractionforContinuousDimmingControl WRITE setMinimumLightOutputFractionforContinuousDimmingControl RESET resetMinimumLightOutputFractionforContinuousDimmingControl);
-    Q_PROPERTY(bool isMinimumLightOutputFractionforContinuousDimmingControlDefaulted READ isMinimumLightOutputFractionforContinuousDimmingControlDefaulted);
-    Q_PROPERTY(int numberofSteppedControlSteps READ numberofSteppedControlSteps WRITE setNumberofSteppedControlSteps RESET resetNumberofSteppedControlSteps);
-    Q_PROPERTY(bool isNumberofSteppedControlStepsDefaulted READ isNumberofSteppedControlStepsDefaulted);
-    Q_PROPERTY(double probabilityLightingwillbeResetWhenNeededinManualSteppedControl READ probabilityLightingwillbeResetWhenNeededinManualSteppedControl WRITE setProbabilityLightingwillbeResetWhenNeededinManualSteppedControl RESET resetProbabilityLightingwillbeResetWhenNeededinManualSteppedControl);
-    Q_PROPERTY(bool isProbabilityLightingwillbeResetWhenNeededinManualSteppedControlDefaulted READ isProbabilityLightingwillbeResetWhenNeededinManualSteppedControlDefaulted);
-    Q_PROPERTY(int numberofDaylightingViews READ numberofDaylightingViews WRITE setNumberofDaylightingViews RESET resetNumberofDaylightingViews);
-    Q_PROPERTY(bool isNumberofDaylightingViewsDefaulted READ isNumberofDaylightingViewsDefaulted);
-    Q_PROPERTY(boost::optional<double> maximumAllowableDiscomfortGlareIndex READ maximumAllowableDiscomfortGlareIndex WRITE setMaximumAllowableDiscomfortGlareIndex RESET resetMaximumAllowableDiscomfortGlareIndex);
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
    public:
     /** @name Constructors and Destructors */
     //@{

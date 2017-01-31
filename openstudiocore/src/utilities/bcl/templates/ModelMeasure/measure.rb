@@ -2,7 +2,7 @@
 # http://nrel.github.io/OpenStudio-user-documentation/reference/measure_writing_guide/
 
 # start the measure
-class ModelMeasure < OpenStudio::Ruleset::ModelUserScript
+class ModelMeasureName < OpenStudio::Ruleset::ModelUserScript
 
   # human readable name
   def name
@@ -71,4 +71,4 @@ class ModelMeasure < OpenStudio::Ruleset::ModelUserScript
 end
 
 # register the measure to be used by the application
-ModelMeasure.new.registerWithApplication
+ModelMeasureName.new.registerWithApplication

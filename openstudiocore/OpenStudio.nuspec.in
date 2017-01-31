@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>OpenStudio</id>
+    <version>@OPENSTUDIO_VERSION@-rc4</version>
+    <authors>NREL</authors>
+    <owners>NREL</owners>
+    <licenseUrl>http://github.com/NREL/OpenStudio/blob/develop/LICENSE.md</licenseUrl>
+    <projectUrl>http://github.com/NREL/OpenStudio</projectUrl>
+    <description>Whole building energy simulation</description>
+    <tags>OpenStudio EnergyPlus Simulation Modeling</tags>
+    <references>
+	    <reference file="OpenStudio.dll" />
+    </references>
+  </metadata>
+  <files>
+    <file src="Products/csharp/$CONFIGURATION$/OpenStudio.dll" target="lib" />
+    <file src="Products/$CONFIGURATION$/openstudio_csharp.dll" target="build" />
+    <file src="Products/$CONFIGURATION$/openstudio_translators_csharp.dll" target="build" />
+    <file src="@CMAKE_SOURCE_DIR@/OpenStudio.targets" target="build" />
+  </files>
+</package>

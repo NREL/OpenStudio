@@ -4,7 +4,7 @@ require 'minitest/autorun'
 
 require_relative '../measure.rb'
 
-class UtilityMeasure_Test < MiniTest::Unit::TestCase
+class UtilityMeasureName_Test < MiniTest::Unit::TestCase
 
   # def setup
   # end
@@ -12,10 +12,10 @@ class UtilityMeasure_Test < MiniTest::Unit::TestCase
   # def teardown
   # end
 
-  def test_UtilityMeasure
+  def test_basic
 
     # create an instance of the measure
-    measure = UtilityMeasure.new
+    measure = UtilityMeasureName.new
 
     # create an instance of a runner
     runner = OpenStudio::Ruleset::OSRunner.new

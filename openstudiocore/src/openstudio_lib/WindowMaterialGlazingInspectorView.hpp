@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -30,22 +30,17 @@
 #define OPENSTUDIO_WINDOWMATERIALGLAZINGINSPECTORVIEW_HPP
 
 #include "ModelObjectInspectorView.hpp"
+#include "../model/StandardGlazing.hpp"
 
 namespace openstudio {
 
-namespace model {
+class OSComboBox2;
 
-  class Glazing;
+class OSLineEdit2;
 
-}
+class OSQuantityEdit2;
 
-class OSComboBox;
-
-class OSLineEdit;
-
-class OSQuantityEdit;
-
-class OSSwitch;
+class OSSwitch2;
 
 class StandardsInformationMaterialWidget;
 
@@ -71,7 +66,7 @@ class WindowMaterialGlazingInspectorView : public ModelObjectInspectorView
 
     void createLayout();
 
-    void attach(openstudio::model::Glazing & Glazing);
+    void attach(openstudio::model::StandardGlazing & Glazing);
 
     void detach();
 
@@ -79,37 +74,39 @@ class WindowMaterialGlazingInspectorView : public ModelObjectInspectorView
 
     bool m_isIP;
 
-    OSLineEdit * m_nameEdit = nullptr;
+    boost::optional<model::StandardGlazing> m_glazing;
 
-    OSComboBox * m_opticalDataType = nullptr;
+    OSLineEdit2 * m_nameEdit = nullptr;
 
-    OSSwitch * m_solarDiffusing = nullptr;
+    OSComboBox2 * m_opticalDataType = nullptr;
 
-    OSLineEdit * m_windowGlassSpectralDataSetName = nullptr;
+    OSSwitch2 * m_solarDiffusing = nullptr;
 
-    OSQuantityEdit * m_thickness = nullptr;
+    // OSLineEdit2 * m_windowGlassSpectralDataSetName = nullptr;
 
-    OSQuantityEdit * m_solarTransmittanceAtNormalIncidence = nullptr;
+    OSQuantityEdit2 * m_thickness = nullptr;
 
-    OSQuantityEdit * m_frontSideSolarReflectanceAtNormalIncidence = nullptr;
+    OSQuantityEdit2 * m_solarTransmittanceAtNormalIncidence = nullptr;
 
-    OSQuantityEdit * m_backSideSolarReflectanceAtNormalIncidence = nullptr;
+    OSQuantityEdit2 * m_frontSideSolarReflectanceAtNormalIncidence = nullptr;
 
-    OSQuantityEdit * m_visibleTransmittanceAtNormalIncidence = nullptr;
+    OSQuantityEdit2 * m_backSideSolarReflectanceAtNormalIncidence = nullptr;
 
-    OSQuantityEdit * m_frontSideVisibleReflectanceAtNormalIncidence = nullptr;
+    OSQuantityEdit2 * m_visibleTransmittanceAtNormalIncidence = nullptr;
 
-    OSQuantityEdit * m_backSideVisibleReflectanceAtNormalIncidence = nullptr;
+    OSQuantityEdit2 * m_frontSideVisibleReflectanceAtNormalIncidence = nullptr;
 
-    OSQuantityEdit * m_infraredTransmittanceAtNormalIncidence = nullptr;
+    OSQuantityEdit2 * m_backSideVisibleReflectanceAtNormalIncidence = nullptr;
 
-    OSQuantityEdit * m_frontSideInfraredHemisphericalEmissivity = nullptr;
+    OSQuantityEdit2 * m_infraredTransmittanceAtNormalIncidence = nullptr;
 
-    OSQuantityEdit * m_backSideInfraredHemisphericalEmissivity = nullptr;
+    OSQuantityEdit2 * m_frontSideInfraredHemisphericalEmissivity = nullptr;
 
-    OSQuantityEdit * m_conductivity = nullptr;
+    OSQuantityEdit2 * m_backSideInfraredHemisphericalEmissivity = nullptr;
 
-    OSQuantityEdit * m_dirtCorrectionFactorForSolarAndVisibleTransmittance = nullptr;
+    OSQuantityEdit2 * m_conductivity = nullptr;
+
+    OSQuantityEdit2 * m_dirtCorrectionFactorForSolarAndVisibleTransmittance = nullptr;
 
     StandardsInformationMaterialWidget * m_standardsInformationWidget = nullptr;
 

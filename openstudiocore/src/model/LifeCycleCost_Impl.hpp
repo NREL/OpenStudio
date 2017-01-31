@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -43,10 +43,10 @@ namespace detail {
 
 class MODEL_API LifeCycleCost_Impl : public ModelObject_Impl
 {
-  Q_OBJECT;
-  Q_PROPERTY(const std::string& itemType READ itemType);
-  Q_PROPERTY(double cost READ cost WRITE setCost);
-  Q_PROPERTY(std::string costUnits READ costUnits WRITE setCostUnits);
+  
+  
+  
+  
 public:
   // constructor
   LifeCycleCost_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);

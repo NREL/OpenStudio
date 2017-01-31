@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -37,33 +37,32 @@
 #include "../core/System.hpp"
 #include "../core/Checksum.hpp"
 #include "../core/Assert.hpp"
+#include "../core/FilesystemHelpers.hpp"
 #include "../time/DateTime.hpp"
 
 #include <QDomDocument>
-#include <QFile>
 
 namespace openstudio{
 
   BCLXML::BCLXML(const BCLXMLType& bclXMLType)
     : m_bclXMLType(bclXMLType)
   {
-    m_uid = removeBraces(UUID::createUuid());
-    m_versionId = removeBraces(UUID::createUuid());
+    m_uid = removeBraces(openstudio::createUUID());
+    m_versionId = removeBraces(openstudio::createUUID());
     m_versionModified = DateTime::nowUTC().toISO8601();
   }
 
   BCLXML::BCLXML(const openstudio::path& xmlPath):
-    m_path(boost::filesystem::system_complete(xmlPath))
+    m_path(openstudio::filesystem::system_complete(xmlPath))
   {
-    if (!boost::filesystem::exists(xmlPath) || !boost::filesystem::is_regular_file(xmlPath)){
+    if (!openstudio::filesystem::exists(xmlPath) || !openstudio::filesystem::is_regular_file(xmlPath)){
       LOG_AND_THROW("'" << toString(xmlPath) << "' does not exist");
     }
 
     QDomDocument bclXML("bclXML");
-    QFile file(toQString(m_path));
-    bool opened = file.open(QIODevice::ReadOnly | QIODevice::Text);
-    if (opened){
-      bclXML.setContent(&file);
+    openstudio::filesystem::ifstream file(m_path);
+    if (file.is_open()){
+      bclXML.setContent(openstudio::filesystem::read_as_QByteArray(file));
       file.close();
     }else{
       file.close();
@@ -151,6 +150,18 @@ namespace openstudio{
           }
         }
         argumentElement = argumentElement.nextSiblingElement("argument");
+      }
+
+      QDomElement outputElement = element.firstChildElement("outputs").firstChildElement("output");
+      while (!outputElement.isNull()){
+        if (outputElement.hasChildNodes()){
+          try{
+            m_outputs.push_back(BCLMeasureOutput(outputElement));
+          } catch (const std::exception&){
+            LOG(Error, "Bad output in xml");
+          }
+        }
+        outputElement = outputElement.nextSiblingElement("output");
       }
     }
 
@@ -391,6 +402,11 @@ namespace openstudio{
     return m_arguments;
   }
 
+  std::vector<BCLMeasureOutput> BCLXML::outputs() const
+  {
+    return m_outputs;
+  }
+
   std::vector<BCLFileReference> BCLXML::files() const
   {
     return m_files;
@@ -497,6 +513,12 @@ namespace openstudio{
     m_arguments = arguments;
   }
 
+  void BCLXML::setOutputs(const std::vector<BCLMeasureOutput>& outputs)
+  {
+    incrementVersionId();
+    m_outputs = outputs;
+  }
+
   void BCLXML::addFile(const BCLFileReference& file)
   {
     removeFile(file.path());
@@ -509,7 +531,7 @@ namespace openstudio{
   {
     bool result = false;
 
-    openstudio::path test = boost::filesystem::system_complete(path);
+    openstudio::path test = openstudio::filesystem::system_complete(path);
 
     for (const BCLFileReference& file : m_files) {
       if (file.path() == test){
@@ -525,7 +547,7 @@ namespace openstudio{
   {
     bool result = false;
 
-    openstudio::path test = boost::filesystem::system_complete(path);
+    openstudio::path test = openstudio::filesystem::system_complete(path);
 
     std::vector<BCLFileReference> newFiles;
     for (const BCLFileReference& file : m_files) {
@@ -689,6 +711,14 @@ namespace openstudio{
         element.appendChild(argumentElement);
         argument.writeValues(doc, argumentElement);
       }
+
+      element = doc.createElement("outputs");
+      docElement.appendChild(element);
+      for (const BCLMeasureOutput& output : m_outputs){
+        QDomElement outputElement = doc.createElement("output");
+        element.appendChild(outputElement);
+        output.writeValues(doc, outputElement);
+      }
     }
 
     // TODO: write provenances
@@ -786,15 +816,12 @@ namespace openstudio{
     }
 
     // write to disk
-    QFile file(toQString(m_path));
-    bool opened = file.open(QIODevice::WriteOnly | QIODevice::Text);
-    if (!opened){
-      file.close();
+    openstudio::filesystem::ofstream file(m_path);
+    if (!file.is_open()){
       return false;
     }
 
-    QTextStream textStream(&file);
-    textStream << doc.toString(2);
+    openstudio::filesystem::write(file, doc.toString(2));
     file.close();
     return true;
   }
@@ -802,19 +829,19 @@ namespace openstudio{
   bool BCLXML::saveAs(const openstudio::path& xmlPath)
   {
     incrementVersionId();
-    m_path = boost::filesystem::system_complete(xmlPath);
+    m_path = openstudio::filesystem::system_complete(xmlPath);
     return save();
   }
 
   void BCLXML::changeUID()
   {
-    m_uid = removeBraces(UUID::createUuid());
+    m_uid = removeBraces(openstudio::createUUID());
     // DLM: should this call incrementVersionId() ?
   }
 
   void BCLXML::incrementVersionId()
   {
-    m_versionId = removeBraces(UUID::createUuid());
+    m_versionId = removeBraces(openstudio::createUUID());
     m_versionModified = DateTime::nowUTC().toISO8601();
   }
 
@@ -910,10 +937,11 @@ namespace openstudio{
     //ss << toJSONWithoutMetadata(m_attributes); // don't use this because it may change
 
     // tags are edited in the xml
-    ss << "Tags: " << std::endl;
-    for (const std::string& tag : m_tags){
-      ss << "  " << tag << std::endl;
-    }
+    // DLM: taxonomy tag is the only tag and is now in the ruby file
+    //ss << "Tags: " << std::endl;
+    //for (const std::string& tag : m_tags){
+    //  ss << "  " << tag << std::endl;
+    //}
 
     //std::cout << "Checksum computed on:" << std::endl;
     //std::cout << ss.str() << std::endl;

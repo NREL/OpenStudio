@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -28,7 +28,6 @@
 
 #include "OSItemList.hpp"
 #include "OSVectorController.hpp"
-#include "ScriptsListView.hpp"
 
 #include "../utilities/core/Assert.hpp"
 
@@ -181,6 +180,7 @@ void OSItemList::setItemsRemoveable(bool itemsRemoveable)
 
 void OSItemList::setItemIds(const std::vector<OSItemId>& itemIds)
 {
+  /* DLM: ScriptsListView was removed
   if (qobject_cast<ScriptsListView*>(this)) {
     std::vector<OSItem*> myItems = items();
     size_t n = myItems.size();
@@ -197,6 +197,7 @@ void OSItemList::setItemIds(const std::vector<OSItemId>& itemIds)
       }
     }
   }
+  */
 
   QLayoutItem* child;
   while( (child = m_vLayout->takeAt(0)) != nullptr ){

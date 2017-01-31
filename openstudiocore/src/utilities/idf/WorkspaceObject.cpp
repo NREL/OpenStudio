@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -944,7 +944,7 @@ namespace detail {
             oldHandle = workspaceObjectDiff.oldHandle().get();
           }
 
-          emit onRelationshipChange(*index, newHandle, oldHandle);
+          this->onRelationshipChange.nano_emit(*index, newHandle, oldHandle);
 
         } else if (oIddField && oIddField->isNameField()) {
           nameChange = true;
@@ -955,14 +955,14 @@ namespace detail {
     }
 
     if (nameChange){
-      emit onNameChange();
+      this->onNameChange.nano_emit();
     }
 
     if (dataChange){
-      emit onDataChange();
-    }
+      this->onDataChange.nano_emit();
+    } 
 
-    emit onChange();
+    this->onChange.nano_emit();
 
     m_diffs.clear();
   }
@@ -974,7 +974,7 @@ namespace detail {
   }
 
   void WorkspaceObject_Impl::disconnect() {
-    emit onRemoveFromWorkspace(m_handle);
+    this->onRemoveFromWorkspace.nano_emit(m_handle);
     m_handle = Handle();
     m_workspace = nullptr;
   }

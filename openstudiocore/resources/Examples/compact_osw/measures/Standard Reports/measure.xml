@@ -1,0 +1,61 @@
+<measure>
+  <schema_version>3.0</schema_version>
+  <name>standard_reports</name>
+  <uid>fc337100-8634-404e-8966-01243d292a79</uid>
+  <version_id>879df589-44e1-41b9-bc1b-3d3e13130792</version_id>
+  <version_modified>20160610T204427Z</version_modified>
+  <xml_checksum>9F9D8C87</xml_checksum>
+  <class_name>StandardReports</class_name>
+  <display_name>Standard Reports</display_name>
+  <description>Change me</description>
+  <modeler_description>Change me</modeler_description>
+  <arguments/>
+  <outputs/>
+  <provenances/>
+  <tags>
+    <tag>Reporting.QAQC</tag>
+  </tags>
+  <attributes>
+    <attribute>
+      <name>Measure Type</name>
+      <value>ReportingMeasure</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Uses SketchUp API</name>
+      <value>false</value>
+      <datatype>boolean</datatype>
+    </attribute>
+  </attributes>
+  <files>
+    <file>
+      <filename>StandardReports_Test.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>test</usage_type>
+      <checksum>F8EF9C7D</checksum>
+    </file>
+    <file>
+      <version>
+        <software_program>OpenStudio</software_program>
+        <identifier>1.1.2</identifier>
+        <min_compatible>1.1.2</min_compatible>
+      </version>
+      <filename>measure.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>script</usage_type>
+      <checksum>C25558B0</checksum>
+    </file>
+    <file>
+      <filename>ExampleModel.osm</filename>
+      <filetype>osm</filetype>
+      <usage_type>test</usage_type>
+      <checksum>F769B601</checksum>
+    </file>
+    <file>
+      <filename>report.html.in</filename>
+      <filetype>in</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>DEB83B8D</checksum>
+    </file>
+  </files>
+</measure>

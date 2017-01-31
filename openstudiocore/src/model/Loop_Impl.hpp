@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -46,11 +46,11 @@ namespace detail {
 
   class MODEL_API Loop_Impl : public ParentObject_Impl {
 
-    Q_OBJECT;
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> supplyInletNode READ supplyInletNodeAsModelObject);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> supplyOutletNode READ supplyOutletNodeAsModelObject);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> demandInletNode READ demandInletNodeAsModelObject);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> demandOutletNode READ demandOutletNodeAsModelObject);
+    
+    
+    
+    
+    
 
   public:
 

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -36,8 +36,8 @@
 #include "../Application.hpp"
 #include "../System.hpp"
 
-#include <boost/filesystem/fstream.hpp>
-#include <boost/filesystem/operations.hpp>
+
+
 
 #include <QThread>
 
@@ -72,7 +72,7 @@ struct TestFileWriter : public QThread{
   {}
 
   void run() override{
-    boost::filesystem::ofstream outFile(m_path, ios_base::out | ios_base::trunc);
+    openstudio::filesystem::ofstream outFile(m_path, ios_base::out | ios_base::trunc);
     ASSERT_TRUE(outFile?true:false);
     outFile << m_contents;
     outFile.close();
@@ -90,7 +90,7 @@ struct TestFileRemover : public QThread{
   {}
 
   void run() override{
-    boost::filesystem::remove(m_path);
+    openstudio::filesystem::remove(m_path);
   }
 
   openstudio::path m_path;
@@ -106,7 +106,7 @@ TEST_F(CoreFixture, PathWatcher_File)
     // do not call process events
     QThread::yieldCurrentThread();
   }
-  ASSERT_TRUE(boost::filesystem::exists(path));
+  ASSERT_TRUE(openstudio::filesystem::exists(path));
 
   TestPathWatcher watcher(path);
   EXPECT_FALSE(watcher.added);
@@ -120,7 +120,7 @@ TEST_F(CoreFixture, PathWatcher_File)
     // do not call process events
     QThread::yieldCurrentThread();
   }
-  EXPECT_TRUE(boost::filesystem::exists(path));
+  EXPECT_TRUE(openstudio::filesystem::exists(path));
 
   // calls processEvents
   System::msleep(10);
@@ -136,7 +136,7 @@ TEST_F(CoreFixture, PathWatcher_File)
     // do not call process events
     QThread::yieldCurrentThread();
   }
-  EXPECT_FALSE(boost::filesystem::exists(path));
+  EXPECT_FALSE(openstudio::filesystem::exists(path));
 
   // calls processEvents
   System::msleep(10);
@@ -151,13 +151,13 @@ TEST_F(CoreFixture, PathWatcher_Dir)
   Application::instance().application(false);
 
   openstudio::path path = toPath("./");
-  ASSERT_TRUE(boost::filesystem::exists(path));
+  ASSERT_TRUE(openstudio::filesystem::exists(path));
 
   openstudio::path filePath = toPath("./PathWatcher_Dir");
-  if (boost::filesystem::exists(filePath)){
-    boost::filesystem::remove(filePath);
+  if (openstudio::filesystem::exists(filePath)){
+    openstudio::filesystem::remove(filePath);
   }
-  ASSERT_FALSE(boost::filesystem::exists(filePath));
+  ASSERT_FALSE(openstudio::filesystem::exists(filePath));
 
   TestPathWatcher watcher(path);
   EXPECT_FALSE(watcher.changed);
@@ -170,7 +170,7 @@ TEST_F(CoreFixture, PathWatcher_Dir)
     // do not call process events
     QThread::yieldCurrentThread();
   }
-  EXPECT_TRUE(boost::filesystem::exists(filePath));
+  EXPECT_TRUE(openstudio::filesystem::exists(filePath));
 
   // calls processEvents
   System::msleep(10);
@@ -185,7 +185,7 @@ TEST_F(CoreFixture, PathWatcher_Dir)
     // do not call process events
     QThread::yieldCurrentThread();
   }
-  EXPECT_TRUE(boost::filesystem::exists(filePath));
+  EXPECT_TRUE(openstudio::filesystem::exists(filePath));
 
   // calls processEvents
   System::msleep(10);
@@ -198,7 +198,7 @@ TEST_F(CoreFixture, PathWatcher_Dir)
     // do not call process events
     QThread::yieldCurrentThread();
   }
-  EXPECT_FALSE(boost::filesystem::exists(filePath));
+  EXPECT_FALSE(openstudio::filesystem::exists(filePath));
 
   // calls processEvents
   System::msleep(10);

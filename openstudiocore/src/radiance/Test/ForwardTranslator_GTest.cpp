@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -189,12 +189,12 @@ TEST(Radiance, ForwardTranslator_ExampleModel)
   Model model = exampleModel();
   
   openstudio::path outpath = toPath("./ForwardTranslator_ExampleModel");
-  boost::filesystem::remove_all(outpath);
-  ASSERT_FALSE(boost::filesystem::exists(outpath));
+  openstudio::filesystem::remove_all(outpath);
+  ASSERT_FALSE(openstudio::filesystem::exists(outpath));
 
   ForwardTranslator ft;
   std::vector<path> outpaths = ft.translateModel(outpath, model);
-  EXPECT_TRUE(boost::filesystem::exists(outpath));
+  EXPECT_TRUE(openstudio::filesystem::exists(outpath));
   EXPECT_FALSE(outpaths.empty());
   EXPECT_TRUE(ft.errors().empty());
   EXPECT_TRUE(ft.warnings().empty());
@@ -215,12 +215,12 @@ TEST(Radiance, ForwardTranslator_ExampleModelWithShadingControl)
   }
 
   openstudio::path outpath = toPath("./ForwardTranslator_ExampleModelWithShadingControl");
-  boost::filesystem::remove_all(outpath);
-  ASSERT_FALSE(boost::filesystem::exists(outpath));
+  openstudio::filesystem::remove_all(outpath);
+  ASSERT_FALSE(openstudio::filesystem::exists(outpath));
 
   ForwardTranslator ft;
   std::vector<path> outpaths = ft.translateModel(outpath, model);
-  EXPECT_TRUE(boost::filesystem::exists(outpath));
+  EXPECT_TRUE(openstudio::filesystem::exists(outpath));
   EXPECT_FALSE(outpaths.empty()) << printPaths(outpaths);
   EXPECT_TRUE(ft.errors().empty()) << printLogMessages(ft.errors());
   EXPECT_TRUE(ft.warnings().empty()) << printLogMessages(ft.warnings());
@@ -236,12 +236,12 @@ TEST(Radiance, ForwardTranslator_ExampleModel_NoIllumMaps)
   } 
   
   openstudio::path outpath = toPath("./ForwardTranslator_ExampleModel_NoIllumMaps");
-  boost::filesystem::remove_all(outpath);
-  ASSERT_FALSE(boost::filesystem::exists(outpath));
+  openstudio::filesystem::remove_all(outpath);
+  ASSERT_FALSE(openstudio::filesystem::exists(outpath));
 
   ForwardTranslator ft;
   std::vector<path> outpaths = ft.translateModel(outpath, model);
-  EXPECT_FALSE(boost::filesystem::exists(outpath));
+  EXPECT_FALSE(openstudio::filesystem::exists(outpath));
   EXPECT_TRUE(outpaths.empty());
   EXPECT_FALSE(ft.errors().empty());
   EXPECT_TRUE(ft.warnings().empty());
@@ -256,12 +256,12 @@ TEST(Radiance, ForwardTranslator_ExampleModel_NoDaylightingControls)
   } 
   
   openstudio::path outpath = toPath("./ForwardTranslator_ExampleModel_NoDaylightingControls");
-  boost::filesystem::remove_all(outpath);
-  ASSERT_FALSE(boost::filesystem::exists(outpath));
+  openstudio::filesystem::remove_all(outpath);
+  ASSERT_FALSE(openstudio::filesystem::exists(outpath));
 
   ForwardTranslator ft;
   std::vector<path> outpaths = ft.translateModel(outpath, model);
-  EXPECT_FALSE(boost::filesystem::exists(outpath));
+  EXPECT_FALSE(openstudio::filesystem::exists(outpath));
   EXPECT_TRUE(outpaths.empty());
   EXPECT_FALSE(ft.errors().empty());
   EXPECT_TRUE(ft.warnings().empty());
@@ -276,12 +276,12 @@ TEST(Radiance, ForwardTranslator_ExampleModel_NoGlareSensors)
   } 
   
   openstudio::path outpath = toPath("./ForwardTranslator_ExampleModel_NoGlareSensors");
-  boost::filesystem::remove_all(outpath);
-  ASSERT_FALSE(boost::filesystem::exists(outpath));
+  openstudio::filesystem::remove_all(outpath);
+  ASSERT_FALSE(openstudio::filesystem::exists(outpath));
 
   ForwardTranslator ft;
   std::vector<path> outpaths = ft.translateModel(outpath, model);
-  EXPECT_TRUE(boost::filesystem::exists(outpath));
+  EXPECT_TRUE(openstudio::filesystem::exists(outpath));
   EXPECT_FALSE(outpaths.empty());
   EXPECT_TRUE(ft.errors().empty());
   EXPECT_FALSE(ft.warnings().empty());
@@ -298,12 +298,12 @@ TEST(Radiance, ForwardTranslator_ExampleModel_NoThermalZoneLinks)
   } 
   
   openstudio::path outpath = toPath("./ForwardTranslator_ExampleModel_NoThermalZoneLinks");
-  boost::filesystem::remove_all(outpath);
-  ASSERT_FALSE(boost::filesystem::exists(outpath));
+  openstudio::filesystem::remove_all(outpath);
+  ASSERT_FALSE(openstudio::filesystem::exists(outpath));
 
   ForwardTranslator ft;
   std::vector<path> outpaths = ft.translateModel(outpath, model);
-  EXPECT_FALSE(boost::filesystem::exists(outpath));
+  EXPECT_FALSE(openstudio::filesystem::exists(outpath));
   EXPECT_TRUE(outpaths.empty());
   EXPECT_FALSE(ft.errors().empty());
   EXPECT_FALSE(ft.warnings().empty());

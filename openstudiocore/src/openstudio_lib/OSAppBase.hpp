@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -31,7 +31,7 @@
 
 #include "../shared_gui_components/BaseApp.hpp"
 
-#include "../ruleset/RubyUserScriptInfoGetter.hpp"
+#include "../measure/OSMeasureInfoGetter.hpp"
 
 #include "OpenStudioAPI.hpp"
 #include "../utilities/core/Logger.hpp"
@@ -51,7 +51,7 @@ class WaitDialog;
 class OPENSTUDIO_API OSAppBase : public QApplication, public BaseApp
 {
 
-  Q_OBJECT
+  Q_OBJECT;
 
   public:
 
@@ -63,11 +63,11 @@ class OPENSTUDIO_API OSAppBase : public QApplication, public BaseApp
 
   static OSAppBase * instance();
 
-  virtual boost::optional<openstudio::analysisdriver::SimpleProject> project() override;
   virtual QWidget *mainWidget() override;
   virtual MeasureManager &measureManager() override;
+  virtual boost::optional<openstudio::path> tempDir() override;
   virtual boost::optional<openstudio::model::Model> currentModel() override;
-  virtual boost::optional<openstudio::Workspace> currentWorkspace() override;
+  //virtual boost::optional<openstudio::Workspace> currentWorkspace() override;
   virtual void updateSelectedMeasureState() override;
   virtual void addMeasure() override;
   virtual void duplicateSelectedMeasure() override;
@@ -80,15 +80,29 @@ class OPENSTUDIO_API OSAppBase : public QApplication, public BaseApp
   boost::shared_ptr<WaitDialog> waitDialog() {return m_waitDialog;}
   virtual bool notify(QObject * receiver, QEvent * e) override;
 
+  // Slots
+  void addWorkspaceObject(const WorkspaceObject& workspaceObject, const openstudio::IddObjectType& type, const openstudio::UUID& uuid);
+  void addWorkspaceObjectPtr(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wPtr, const openstudio::IddObjectType& type, const openstudio::UUID& uuid);
+
+  void removeWorkspaceObject(const WorkspaceObject& workspaceObject, const openstudio::IddObjectType& type, const openstudio::UUID& uuid);
+  void removeWorkspaceObjectPtr(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wPtr, const openstudio::IddObjectType& type, const openstudio::UUID& uuid );
+
+  signals:
+  void workspaceObjectAdded(const WorkspaceObject& workspaceObject, const openstudio::IddObjectType& type, const openstudio::UUID& uuid);
+  void workspaceObjectAddedPtr(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wPtr, const openstudio::IddObjectType& type, const openstudio::UUID& uuid);
+
+  void workspaceObjectRemoved(const WorkspaceObject& workspaceObject, const openstudio::IddObjectType& type, const openstudio::UUID& uuid);
+  void workspaceObjectRemovedPtr(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wPtr, const openstudio::IddObjectType& type, const openstudio::UUID& uuid);
+
   protected:
 
   virtual bool event(QEvent * e) override;
 
   virtual void childEvent(QChildEvent * e) override;
 
-  private:
-
   REGISTER_LOGGER("openstudio.OSAppBase");
+
+  private:
 
   QSharedPointer<openstudio::MeasureManager> m_measureManager;
 

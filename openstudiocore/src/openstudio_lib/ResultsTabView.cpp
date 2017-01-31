@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -38,6 +38,7 @@
 
 #include "OSAppBase.hpp"
 
+#include <QFile>
 #include <QBoxLayout>
 #include <QComboBox>
 #include <QDesktopWidget>
@@ -49,14 +50,12 @@
 #include <QString>
 #include <QRegExp>
 
-#include "../runmanager/lib/FileInfo.hpp"
-#include "../runmanager/lib/JobStatusWidget.hpp"
-#include "../runmanager/lib/RunManager.hpp"
+//#include "../runmanager/lib/FileInfo.hpp"
+//#include "../runmanager/lib/JobStatusWidget.hpp"
+//#include "../runmanager/lib/RunManager.hpp"
 
-#include "../utilities/core/ApplicationPathHelpers.hpp"
 #include "../utilities/core/Assert.hpp"
 
-#include <boost/filesystem.hpp>
 
 namespace openstudio {
 
@@ -69,26 +68,17 @@ ResultsTabView::ResultsTabView(const QString & tabLabel,
   addTabWidget(m_resultsView);
   m_resultsView->setAutoFillBackground(false);
 
-  connect(this, &ResultsTabView::treeChanged, m_resultsView, &ResultsView::treeChanged);
-
-}
-
-void ResultsTabView::searchForExistingResults(const openstudio::path &t_runDir)
-{
-  LOG(Debug, "searchForExistingResults " << openstudio::toString(t_runDir));
-  m_resultsView->searchForExistingResults(t_runDir);
+  auto savePath = OSAppBase::instance()->currentDocument()->savePath();
+  if( ! savePath.isEmpty() ) {
+    openstudio::path searchPath = toPath(savePath).parent_path() / toPath(savePath).stem() / openstudio::toPath("run");
+    m_resultsView->searchForExistingResults(searchPath);
+  }
 }
 
 void ResultsTabView::onUnitSystemChange(bool t_isIP) 
 {
   LOG(Debug, "onUnitSystemChange " << t_isIP << " reloading results");
   m_resultsView->onUnitSystemChange(t_isIP);
-}
-
-void ResultsTabView::resultsGenerated(const openstudio::path &t_sqlFilePath, const openstudio::path &t_radianceResultsPath)
-{
-  LOG(Debug, "resultsGenerated " << openstudio::toString(t_sqlFilePath) << " " << openstudio::toString(t_radianceResultsPath));
-  m_resultsView->resultsGenerated(t_sqlFilePath, t_radianceResultsPath);
 }
 
 //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -149,10 +139,10 @@ void ResultsView::openResultsViewerClicked()
 
 #ifdef Q_OS_MAC
   openstudio::path resultsviewer
-    = openstudio::getApplicationRunDirectory() / openstudio::toPath("../../../ResultsViewer.app/Contents/MacOS/ResultsViewer");
+    = openstudio::toPath(QCoreApplication::applicationDirPath()) / openstudio::toPath("../../../ResultsViewer.app/Contents/MacOS/ResultsViewer");
 #else
   openstudio::path resultsviewer
-    = openstudio::getApplicationRunDirectory() / openstudio::toPath("ResultsViewer");
+    = openstudio::toPath(QCoreApplication::applicationDirPath()) / openstudio::toPath("ResultsViewer");
 #endif
 
   QStringList args;
@@ -227,7 +217,7 @@ void ResultsView::searchForExistingResults(const openstudio::path &t_runDir)
   std::vector<openstudio::path> radout;
   std::vector<openstudio::path> reports;
 
-  for ( boost::filesystem::recursive_directory_iterator end, dir(t_runDir); 
+  for ( openstudio::filesystem::recursive_directory_iterator end, dir(t_runDir); 
         dir != end; 
         ++dir ) 
   {
@@ -264,53 +254,53 @@ void ResultsView::resultsGenerated(const openstudio::path &t_path, const openstu
   m_radianceResultsPath = t_radianceResultsPath;
 }
 
-openstudio::runmanager::RunManager ResultsView::runManager()
-{
-  return OSAppBase::instance()->project()->runManager();
-}
+//openstudio::runmanager::RunManager ResultsView::runManager()
+//{
+//  return OSAppBase::instance()->project()->runManager();
+//}
 
 void ResultsView::treeChanged(const openstudio::UUID &t_uuid)
 {
-  try {
-    openstudio::runmanager::Job j = runManager().getJob(t_uuid);
-    while (j.parent())
-    {
-      j = j.parent().get();
-    }
+  //try {
+  //  openstudio::runmanager::Job j = runManager().getJob(t_uuid);
+  //  while (j.parent())
+  //  {
+  //    j = j.parent().get();
+  //  }
 
-    openstudio::runmanager::TreeStatusEnum status = j.treeStatus();
+  //  openstudio::runmanager::TreeStatusEnum status = j.treeStatus();
 
-    QString fullPathString;
-    openstudio::path path;
+  //  QString fullPathString;
+  //  openstudio::path path;
 
-    if (status == openstudio::runmanager::TreeStatusEnum::Finished)
-    {
-      try {
-        openstudio::runmanager::Files f = j.treeAllFiles().getAllByFilename("report.html");
-        std::vector<openstudio::runmanager::FileInfo> t_files = f.files();
-        std::vector<openstudio::path> reports;
-        for (const openstudio::runmanager::FileInfo& file : t_files) {
-          reports.push_back(file.fullPath);
-        }
-        f = j.treeAllFiles().getAllByFilename("eplustbl.htm");
-        t_files = f.files();
-        for (const openstudio::runmanager::FileInfo& file : t_files) {
-          reports.push_back(file.fullPath);
-        }
-        populateComboBox(reports);
-      } catch (const std::exception &e) {
-        LOG(Debug, "Tree finished, error getting html file: " << e.what());
-      } catch (...) {
-        LOG(Debug, "Tree finished, error getting html file");
-        // no html file exists
-      }
-    } 
-  } catch (const std::exception &e) {
-    LOG(Debug, "Tree finished, error getting status: " << e.what());
-  } catch (...) {
-    LOG(Debug, "Tree finished, error getting status");
-    // no html file exists
-  }
+  //  if (status == openstudio::runmanager::TreeStatusEnum::Finished)
+  //  {
+  //    try {
+  //      openstudio::runmanager::Files f = j.treeAllFiles().getAllByFilename("report.html");
+  //      std::vector<openstudio::runmanager::FileInfo> t_files = f.files();
+  //      std::vector<openstudio::path> reports;
+  //      for (const openstudio::runmanager::FileInfo& file : t_files) {
+  //        reports.push_back(file.fullPath);
+  //      }
+  //      f = j.treeAllFiles().getAllByFilename("eplustbl.htm");
+  //      t_files = f.files();
+  //      for (const openstudio::runmanager::FileInfo& file : t_files) {
+  //        reports.push_back(file.fullPath);
+  //      }
+  //      populateComboBox(reports);
+  //    } catch (const std::exception &e) {
+  //      LOG(Debug, "Tree finished, error getting html file: " << e.what());
+  //    } catch (...) {
+  //      LOG(Debug, "Tree finished, error getting html file");
+  //      // no html file exists
+  //    }
+  //  } 
+  //} catch (const std::exception &e) {
+  //  LOG(Debug, "Tree finished, error getting status: " << e.what());
+  //} catch (...) {
+  //  LOG(Debug, "Tree finished, error getting status");
+  //  // no html file exists
+  //}
 }
 
 void ResultsView::populateComboBox(std::vector<openstudio::path> reports)

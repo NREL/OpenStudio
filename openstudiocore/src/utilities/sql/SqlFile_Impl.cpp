@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -38,7 +38,7 @@
 #include "../time/DateTime.hpp"
 #include "../core/Assert.hpp"
 
-#include <boost/filesystem.hpp>
+
 #include <boost/lexical_cast.hpp>
 #include <boost/regex.hpp>
 
@@ -62,8 +62,8 @@ namespace openstudio{
     SqlFile_Impl::SqlFile_Impl(const openstudio::path& path, const bool createIndexes)
       : m_path(path), m_connectionOpen(false), m_supportedVersion(false)
     {
-      if (boost::filesystem::exists(m_path)){
-        m_path = boost::filesystem::canonical(m_path);
+      if (openstudio::filesystem::exists(m_path)){
+        m_path = openstudio::filesystem::canonical(m_path);
       }
       reopen();
       if (createIndexes) this->createIndexes();
@@ -73,15 +73,15 @@ namespace openstudio{
         const openstudio::Calendar &t_calendar, const bool createIndexes)
       : m_path(t_path)
     {
-      if (boost::filesystem::exists(m_path)){
-        m_path = boost::filesystem::canonical(m_path);
+      if (openstudio::filesystem::exists(m_path)){
+        m_path = openstudio::filesystem::canonical(m_path);
       }
       m_sqliteFilename = toString(m_path.make_preferred().native());
       std::string fileName = m_sqliteFilename;
 
       bool initschema = false;
 
-      if (!boost::filesystem::exists(m_path))
+      if (!openstudio::filesystem::exists(m_path))
       {
         initschema = true;
       }

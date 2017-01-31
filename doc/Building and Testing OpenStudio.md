@@ -42,7 +42,7 @@ Updating HVAC lib
 =================
 If this is a major release, the HVAC library must be updated.
 
-Run `developer/ruby/UpdateHVACLibrary.rb`
+Run `developer/ruby/UpdateHVACLibrary.rb` (ruby -I E:\Git\OS1\build\OSCore-prefix\src\OSCore-build\ruby\Release UpdateHVACLibrary.rb)
 
 Commit the updated files to develop.
 
@@ -397,9 +397,9 @@ Version Update
 
 The current version (X.Y.Z) being built, and the updated version (X.Y.Z+1) for the upcoming iteration need to be correctly incorporated into their respective documents.
 
-- In `build\OSCore-prefix\src\OSCore-build\resources\osversion` copy directory X.Y.Z to `openstudiocore\resources\osversion` (new folder, 3 files)
-- In the top level of your OpenStudio folder, update `CMakeLists.txt` version to X.Y.Z+1 (1 line)
-- In `openstudiocore\resources` update `CMakeLists.txt` version to X.Y.Z (3 lines, 1 location)
+- Copy file `openstudiocore\resources\model\OpenStudio.idd` to `openstudiocore\src\utilities\idd\versions\x_Y_Z+1` (new folder)
+- In the top level of your OpenStudio folder, update `CMakeLists.txt` version to X.Y.Z+1 (3 lines), e.g. `set(CMAKE_VERSION_MAJOR 2)`, `set(CMAKE_VERSION_MINOR 0)`, `set(CMAKE_VERSION_PATCH 1)`
+- In the openstudiocore level of your OpenStudio folder, update `CMakeLists.txt` version to X.Y.Z+1 (1 line), e.g. `project(OpenStudio VERSION 2.0.1)`
 - In `openstudiocore\resources\model` update `OpenStudio.idd` version to X.Y.Z+1 (1 line)
 - In `openstudiocore\src\osversion` update `VersionTranslator.cpp` version to X.Y.Z+1 in first location, and X.Y.Z in second location
 

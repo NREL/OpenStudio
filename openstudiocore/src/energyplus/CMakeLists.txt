@@ -1,5 +1,8 @@
 set(target_name openstudio_energyplus)
 
+include_directories(${CMAKE_BINARY_DIR})
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
 set(${target_name}_src
   EnergyPlusAPI.hpp
   mainpage.hpp
@@ -518,30 +521,71 @@ set(${target_name}_swig_src
   EnergyPlus.i
 )
 
-## resource files
-set(${target_name}_qrc
-  EnergyPlus.qrc
-)
-
-# generate rules for building source files from the resources
-qt5_add_resources(${target_name}_qrcs ${${target_name}_qrc})
+### resource files
+#set(${target_name}_qrc
+#  EnergyPlus.qrc
+#)
+#
+## generate rules for building source files from the resources
+##qt5_add_resources(${target_name}_qrcs ${${target_name}_qrc})
 
 set(${target_name}_depends
   openstudio_model
 )
 
+set(FILES 
+  "${CMAKE_CURRENT_SOURCE_DIR}/Resources/LCCusePriceEscalationDataSet2011.idf"
+  "${CMAKE_CURRENT_SOURCE_DIR}/Resources/R11_FluidPropertiesDataSet.idf"
+  "${CMAKE_CURRENT_SOURCE_DIR}/Resources/R12_FluidPropertiesDataSet.idf"
+  "${CMAKE_CURRENT_SOURCE_DIR}/Resources/R22_FluidPropertiesDataSet.idf"
+  "${CMAKE_CURRENT_SOURCE_DIR}/Resources/R123_FluidPropertiesDataSet.idf"
+  "${CMAKE_CURRENT_SOURCE_DIR}/Resources/R134a_FluidPropertiesDataSet.idf"
+  "${CMAKE_CURRENT_SOURCE_DIR}/Resources/R404a_FluidPropertiesDataSet.idf"
+  "${CMAKE_CURRENT_SOURCE_DIR}/Resources/R407a_FluidPropertiesDataSet.idf"
+  "${CMAKE_CURRENT_SOURCE_DIR}/Resources/R410a_FluidPropertiesDataSet.idf"
+  "${CMAKE_CURRENT_SOURCE_DIR}/Resources/NH3_FluidPropertiesDataSet.idf"
+  "${CMAKE_CURRENT_SOURCE_DIR}/Resources/R507a_FluidPropertiesDataSet.idf"
+  "${CMAKE_CURRENT_SOURCE_DIR}/Resources/R744_FluidPropertiesDataSet.idf"
+)
 
-add_library(${target_name} SHARED ${${target_name}_src} ${${target_name}_qrcs})
+set(EMBEDDED_PATHS 
+  Resources/LCCusePriceEscalationDataSet2011.idf
+  Resources/R11_FluidPropertiesDataSet.idf
+  Resources/R12_FluidPropertiesDataSet.idf
+  Resources/R22_FluidPropertiesDataSet.idf
+  Resources/R123_FluidPropertiesDataSet.idf
+  Resources/R134a_FluidPropertiesDataSet.idf
+  Resources/R404a_FluidPropertiesDataSet.idf
+  Resources/R407a_FluidPropertiesDataSet.idf
+  Resources/R410a_FluidPropertiesDataSet.idf
+  Resources/NH3_FluidPropertiesDataSet.idf
+  Resources/R507a_FluidPropertiesDataSet.idf
+  Resources/R744_FluidPropertiesDataSet.idf
+)
+
+include("${CMAKE_SOURCE_DIR}/embedded/EmbedFiles.cmake")
+embed_files("${FILES}" "${EMBEDDED_PATHS}" OUTPUT energyplus)
+
+add_library(${target_name} ${${target_name}_src} ${OUTPUT})
 target_link_libraries(${target_name} ${${target_name}_depends})
 
 AddPCH(${target_name})
 
-if(NOT APPLE)
-  install(TARGETS ${target_name}
-    RUNTIME DESTINATION bin
-    LIBRARY DESTINATION lib
-  )
-endif()
+set(${target_name}_static_depends
+  openstudio_model_static
+)
+
+add_library(${target_name}_static ${${target_name}_src} ${OUTPUT})
+
+target_link_libraries(${target_name}_static ${${target_name}_static_depends})
+
+# No need to install static lib
+#if(NOT APPLE)
+#  install(TARGETS ${target_name}
+#    RUNTIME DESTINATION bin
+#    LIBRARY DESTINATION lib
+#  )
+#endif()
 
 CREATE_SRC_GROUPS("${${target_name}_src}")
 #CREATE_SRC_GROUPS("${${target_name}_test_src}")
@@ -557,4 +601,5 @@ if(BUILD_TESTING)
 
 endif()
 
-MAKE_SWIG_TARGET(OpenStudioEnergyPlus EnergyPlus "${CMAKE_CURRENT_SOURCE_DIR}/EnergyPlus.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModel)
+MAKE_SWIG_TARGET(OpenStudioEnergyPlus EnergyPlus "${CMAKE_CURRENT_SOURCE_DIR}/EnergyPlus.i" "${${target_name}_swig_src}" ${target_name}_static OpenStudioModel)
+

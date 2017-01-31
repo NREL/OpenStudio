@@ -1,28 +1,29 @@
+GIT
+  remote: git://github.com/NREL/OpenStudio-workflow-gem.git
+  revision: c2ad7e012bc8a4b4de071a0cd752e84babdf1ee5
+  ref: c2ad7e012bc8a4b4de071a0cd752e84babdf1ee5
+  specs:
+    openstudio-workflow (1.0.0)
+
 GEM
   remote: http://rubygems.org/
   specs:
-    aws-sdk-core (2.0.48)
-      builder (~> 3.0)
-      jmespath (~> 1.0)
-      multi_json (~> 1.0)
-    builder (3.2.2)
-    jmespath (1.0.2)
-      multi_json (~> 1.0)
-    multi_json (1.11.0)
-    net-scp (1.2.1)
-      net-ssh (>= 2.6.5)
-    net-ssh (2.9.2)
-    openstudio-aws (0.4.0.pre1)
-      aws-sdk-core (~> 2.0)
-      net-scp (~> 1.1)
-      semantic (~> 1.4)
-      sshkey (~> 1.7)
-    openstudio-standards (0.1.8)
-    rake (0.9.6)
-    rdoc (4.0.0)
-    semantic (1.4.1)
-    sshkey (1.7.0)
-    test-unit (2.0.0)
+    diff-lcs (1.2.5)
+    minitest (5.10.1)
+    openstudio-standards (0.1.10)
+    rspec (3.5.0)
+      rspec-core (~> 3.5.0)
+      rspec-expectations (~> 3.5.0)
+      rspec-mocks (~> 3.5.0)
+    rspec-core (3.5.3)
+      rspec-support (~> 3.5.0)
+    rspec-expectations (3.5.0)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.5.0)
+    rspec-mocks (3.5.0)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.5.0)
+    rspec-support (3.5.0)
 
 PLATFORMS
   ruby
@@ -30,11 +31,10 @@ PLATFORMS
   x86-mingw32
 
 DEPENDENCIES
-  openstudio-aws (~> 0.4.0.pre1)
-  openstudio-standards (= 0.1.8)
-  rake (= 0.9.6)
-  rdoc (= 4.0.0)
-  test-unit (= 2.0.0.0)
+  minitest (~> 5.10.1)
+  openstudio-standards (= 0.1.10)
+  openstudio-workflow!
+  rspec (~> 3.5.0)
 
 BUNDLED WITH
-   1.10.1
+   1.14.2

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -204,7 +204,7 @@ void UtilityBillsInspectorView::createWidgets()
     yd = m_model.getUniqueModelObject<model::YearDescription>();
   }
   OS_ASSERT(yd);
-  connect(yd->getImpl<model::detail::YearDescription_Impl>().get(), &model::detail::YearDescription_Impl::onChange, this, &UtilityBillsInspectorView::updateRunPeriodDates);
+  yd->getImpl<model::detail::YearDescription_Impl>().get()->onChange.connect<UtilityBillsInspectorView, &UtilityBillsInspectorView::updateRunPeriodDates>(this);
 
   // Regular inspector body
 
@@ -896,8 +896,7 @@ void BillingPeriodWidget::attach(openstudio::model::BillingPeriod & billingPerio
   }
 
   model::ModelObject modelObject = m_billingPeriod->getObject<openstudio::model::ModelObject>();
-  connect(modelObject.getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &model::detail::ModelObject_Impl::onChange,
-    this, &BillingPeriodWidget::modelObjectChanged);
+  modelObject.getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onChange.connect<BillingPeriodWidget, &BillingPeriodWidget::modelObjectChanged>(this);
 
   if(m_startDateEdit){
     m_startDateEdit->setEnabled(true);

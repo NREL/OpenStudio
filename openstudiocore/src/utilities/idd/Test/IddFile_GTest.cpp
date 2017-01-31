@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -45,7 +45,7 @@
 #include <resources.hxx>
 
 #include <boost/algorithm/string.hpp>
-#include <boost/filesystem/fstream.hpp>
+
 
 #include <utilities/idd/IddEnums.hxx>
 
@@ -70,7 +70,7 @@ TEST_F(IddFixture, EpIddFile)
 
   // from file
   path iddPath = resourcesPath()/toPath("energyplus/ProposedEnergy+.idd");
-  boost::filesystem::ifstream inFile(iddPath); ASSERT_TRUE(inFile?true:false);
+  openstudio::filesystem::ifstream inFile(iddPath); ASSERT_TRUE(inFile?true:false);
   OptionalIddFile loadedIddFile = IddFile::load(inFile);
   ASSERT_TRUE(loadedIddFile); inFile.close();
 
@@ -147,7 +147,7 @@ TEST_F(IddFixture, OSIddFile)
 
   // from file
   path iddPath = resourcesPath() / toPath("model/OpenStudio.idd");
-  boost::filesystem::ifstream inFile(iddPath); ASSERT_TRUE(inFile ? true : false);
+  openstudio::filesystem::ifstream inFile(iddPath); ASSERT_TRUE(inFile ? true : false);
   OptionalIddFile loadedIddFile = IddFile::load(inFile);
   ASSERT_TRUE(loadedIddFile); inFile.close();
 

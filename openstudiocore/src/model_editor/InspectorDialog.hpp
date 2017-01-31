@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -38,6 +38,8 @@
 #include "../utilities/core/UUID.hpp"
 #include "../utilities/core/Enum.hpp"
 
+#include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
+
 #include <QWidget>
 #include <QMainWindow>
 
@@ -66,9 +68,9 @@ OPENSTUDIO_ENUM( InspectorDialogClient,
 #endif
 
 
-class MODELEDITOR_API InspectorDialog : public QMainWindow
+class MODELEDITOR_API InspectorDialog : public QMainWindow, public Nano::Observer
 {
-  Q_OBJECT
+  Q_OBJECT;
 
 public:
 
@@ -157,10 +159,10 @@ private slots:
   //void onCheckBox(bool checked);
   void onListWidgetSelectionChanged();
   void onTableWidgetSelectionChanged();
-  void onAddWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl);
+  void onAddWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& type, const openstudio::UUID& uuid);
   void onWorkspaceChange();
   void onTimeout();
-  void onRemoveWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl);
+  void onRemoveWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& type, const openstudio::UUID& uuid);
 
 private:
 

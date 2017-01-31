@@ -24,7 +24,7 @@ import openstudiogbxml as gbxml
 
 import openstudioosversion as osversion
 
-import openstudioruleset as ruleset
+import openstudiomeasure as measure
 import openstudiorunmanager as runmanager
 import openstudioproject as project
 import openstudioanalysisdriver as analysisdriver
