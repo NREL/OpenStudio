@@ -123,4 +123,22 @@ TEST_F(ModelFixture, FuelCellWaterSupply4) {
   EXPECT_EQ("MainsWaterTemperature", watersupply.waterTemperatureModelingMode());
   ASSERT_FALSE(watersupply.waterTemperatureSchedule());
   EXPECT_TRUE(model.getOptionalUniqueModelObject<SiteWaterMainsTemperature>());
+  EXPECT_EQ(9.69,model.getUniqueModelObject<SiteWaterMainsTemperature>().annualAverageOutdoorAirTemperature());
+}
+
+TEST_F(ModelFixture, FuelCellWaterSupply5) {
+  Model model;
+  SiteWaterMainsTemperature wmt = model.getUniqueModelObject<SiteWaterMainsTemperature>();
+  wmt.setAnnualAverageOutdoorAirTemperature(10);
+  wmt.setMaximumDifferenceInMonthlyAverageOutdoorAirTemperatures(11);
+  CurveQuadratic curveQuadratic(model);
+  CurveCubic curveCubic(model);
+  Node node(model);
+  GeneratorFuelCellWaterSupply watersupply(model, "MainsWaterTemperature");
+  EXPECT_EQ("MainsWaterTemperature", watersupply.waterTemperatureModelingMode());
+  ASSERT_FALSE(watersupply.waterTemperatureSchedule());
+  EXPECT_TRUE(model.getOptionalUniqueModelObject<SiteWaterMainsTemperature>());
+  EXPECT_EQ(10.0, model.getUniqueModelObject<SiteWaterMainsTemperature>().annualAverageOutdoorAirTemperature());
+  EXPECT_EQ(11.0, model.getUniqueModelObject<SiteWaterMainsTemperature>().maximumDifferenceInMonthlyAverageOutdoorAirTemperatures());
+  
 }

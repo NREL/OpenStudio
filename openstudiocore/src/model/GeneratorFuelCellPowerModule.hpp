@@ -73,6 +73,8 @@ class MODEL_API GeneratorFuelCellPowerModule : public ModelObject {
   explicit GeneratorFuelCellPowerModule(const Model& model,
                                         const CurveQuadratic& efficiencyCurve);
 
+  explicit GeneratorFuelCellPowerModule(const Model& model);
+
   virtual ~GeneratorFuelCellPowerModule() {}
 
   //@}

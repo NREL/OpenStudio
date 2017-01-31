@@ -898,6 +898,58 @@ GeneratorFuelCellPowerModule::GeneratorFuelCellPowerModule(const Model& model, c
   setMaximumOperatingPoint(3728);
 }
 
+GeneratorFuelCellPowerModule::GeneratorFuelCellPowerModule(const Model& model)
+  : ModelObject(GeneratorFuelCellPowerModule::iddObjectType(), model) {
+  OS_ASSERT(getImpl<detail::GeneratorFuelCellPowerModule_Impl>());
+  setEfficiencyCurveMode("Annex42");
+  //create default curve
+  CurveQuadratic curveQuadratic(model);
+  curveQuadratic.setCoefficient1Constant(1);
+  curveQuadratic.setCoefficient2x(0);
+  curveQuadratic.setCoefficient3xPOW2(0);
+  curveQuadratic.setMinimumValueofx(0);
+  curveQuadratic.setMaximumValueofx(1);
+
+  bool ok = setEfficiencyCurve(curveQuadratic);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s efficiencyCurve to "
+      << curveQuadratic.briefDescription() << ".");
+  }
+  setNominalEfficiency(1.0);
+  setNominalElectricalPower(3400);
+  setNumberofStopsatStartofSimulation(0);
+  setCyclingPerformanceDegradationCoefficient(0.0);
+  setNumberofRunHoursatBeginningofSimulation(0);
+  setAccumulatedRunTimeDegradationCoefficient(0.0);
+  setRunTimeDegradationInitiationTimeThreshold(10000);
+  setPowerUpTransientLimit(1.4);
+  setPowerDownTransientLimit(0.2);
+  setStartUpTime(0.0);
+  setStartUpFuel(0.2);
+  setStartUpElectricityConsumption(0);
+  setStartUpElectricityProduced(0.0);
+  setShutDownTime(0.0);
+  setShutDownFuel(0.2);
+  setShutDownElectricityConsumption(0);
+  setAncillaryElectricityConstantTerm(0.0);
+  setAncillaryElectricityLinearTerm(0.0);
+  //TODO
+  //setZone();
+  setSkinLossCalculationMode("ConstantRate");
+  setSkinLossRadiativeFraction(0.6392);
+  setConstantSkinLossRate(729);
+  setSkinLossUFactorTimesAreaTerm(0.0);
+
+  setDilutionAirFlowRate(0.006156);
+  setStackHeatlosstoDilutionAir(2307);
+  //TODO
+  //setDilutionInletAirNode();
+  //setDilutionOutletAirNode();
+  setMinimumOperatingPoint(3010);
+  setMaximumOperatingPoint(3728);
+}
+
 IddObjectType GeneratorFuelCellPowerModule::iddObjectType() {
   return IddObjectType(IddObjectType::OS_Generator_FuelCell_PowerModule);
 }

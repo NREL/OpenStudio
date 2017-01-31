@@ -97,3 +97,32 @@ TEST_F(ModelFixture, FuelCell)
 
 }
 
+TEST_F(ModelFixture, FuelCell2) {
+  Model model;
+
+  Building building = model.getUniqueModelObject<Building>();
+
+  ThermalZone zone1(model);
+  ThermalZone zone2(model);
+
+  GeneratorFuelCellAirSupply airSupply(model);
+  GeneratorFuelCellAuxiliaryHeater auxHeater(model);
+  GeneratorFuelCellElectricalStorage elecStorage(model);
+  GeneratorFuelCellExhaustGasToWaterHeatExchanger exhaustHX(model);
+  GeneratorFuelCellInverter inverter(model);
+  GeneratorFuelCellPowerModule powerModule(model);
+  GeneratorFuelCellStackCooler stackCooler(model);
+  GeneratorFuelCellWaterSupply waterSupply(model);
+  GeneratorFuelSupply fuelSupply(model);
+  // create default fuelcell
+
+  GeneratorFuelCell fuelcell(model, powerModule, airSupply, waterSupply, auxHeater, exhaustHX, elecStorage, inverter, fuelSupply);
+  EXPECT_EQ(powerModule, fuelcell.powerModule());
+  EXPECT_EQ(airSupply, fuelcell.airSupply());
+  EXPECT_EQ(waterSupply, fuelcell.waterSupply());
+  EXPECT_EQ(auxHeater, fuelcell.auxiliaryHeater());
+  EXPECT_EQ(exhaustHX, fuelcell.heatExchanger());
+  EXPECT_EQ(elecStorage, fuelcell.electricalStorage());
+  EXPECT_EQ(inverter, fuelcell.inverter());
+  EXPECT_EQ(fuelSupply, fuelcell.fuelSupply());
+}
