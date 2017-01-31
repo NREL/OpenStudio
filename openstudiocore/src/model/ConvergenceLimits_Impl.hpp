@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -38,14 +38,14 @@ namespace detail {
 
   /** ConvergenceLimits_Impl is a ModelObject_Impl that is the implementation class for ConvergenceLimits.*/
   class MODEL_API ConvergenceLimits_Impl : public ModelObject_Impl {
-    Q_OBJECT;
-    Q_PROPERTY(boost::optional<int> minimumSystemTimestep READ minimumSystemTimestep WRITE setMinimumSystemTimestep RESET resetMinimumSystemTimestep);
-    Q_PROPERTY(int maximumHVACIterations READ maximumHVACIterations WRITE setMaximumHVACIterations RESET resetMaximumHVACIterations);
-    Q_PROPERTY(bool isMaximumHVACIterationsDefaulted READ isMaximumHVACIterationsDefaulted);
-    Q_PROPERTY(int minimumPlantIterations READ minimumPlantIterations WRITE setMinimumPlantIterations RESET resetMinimumPlantIterations);
-    Q_PROPERTY(bool isMinimumPlantIterationsDefaulted READ isMinimumPlantIterationsDefaulted);
-    Q_PROPERTY(int maximumPlantIterations READ maximumPlantIterations WRITE setMaximumPlantIterations RESET resetMaximumPlantIterations);
-    Q_PROPERTY(bool isMaximumPlantIterationsDefaulted READ isMaximumPlantIterationsDefaulted);
+    
+    
+    
+    
+    
+    
+    
+    
    public:
     /** @name Constructors and Destructors */
     //@{

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -41,17 +41,17 @@ namespace detail {
 
   /** HotWaterEquipmentDefinition_Impl is a SpaceLoadDefinition_Impl that is the implementation class for HotWaterEquipmentDefinition.*/
   class MODEL_API HotWaterEquipmentDefinition_Impl : public SpaceLoadDefinition_Impl {
-    Q_OBJECT;
-    Q_PROPERTY(std::string designLevelCalculationMethod READ designLevelCalculationMethod);
-    Q_PROPERTY(boost::optional<double> designLevel READ designLevel WRITE setDesignLevel);
-    Q_PROPERTY(boost::optional<double> wattsperSpaceFloorArea READ wattsperSpaceFloorArea WRITE setWattsperSpaceFloorArea);
-    Q_PROPERTY(boost::optional<double> wattsperPerson READ wattsperPerson WRITE setWattsperPerson);
-    Q_PROPERTY(double fractionLatent READ fractionLatent WRITE setFractionLatent RESET resetFractionLatent);
-    Q_PROPERTY(bool isFractionLatentDefaulted READ isFractionLatentDefaulted);
-    Q_PROPERTY(double fractionRadiant READ fractionRadiant WRITE setFractionRadiant RESET resetFractionRadiant);
-    Q_PROPERTY(bool isFractionRadiantDefaulted READ isFractionRadiantDefaulted);
-    Q_PROPERTY(double fractionLost READ fractionLost WRITE setFractionLost RESET resetFractionLost);
-    Q_PROPERTY(bool isFractionLostDefaulted READ isFractionLostDefaulted);
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
    public:
     /** @name Constructors and Destructors */
     //@{

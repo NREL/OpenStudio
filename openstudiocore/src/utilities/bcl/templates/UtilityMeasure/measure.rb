@@ -2,7 +2,7 @@
 # http://nrel.github.io/OpenStudio-user-documentation/reference/measure_writing_guide/
 
 #start the measure
-class UtilityMeasure < OpenStudio::Ruleset::UtilityUserScript
+class UtilityMeasureName < OpenStudio::Ruleset::UtilityUserScript
 
   # human readable name
   def name
@@ -85,4 +85,4 @@ class UtilityMeasure < OpenStudio::Ruleset::UtilityUserScript
 end #end the measure
 
 # register the measure to be used by the application
-UtilityMeasure.new.registerWithApplication
+UtilityMeasureName.new.registerWithApplication

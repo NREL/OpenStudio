@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -38,13 +38,9 @@
 namespace openstudio {
 
 namespace measuretab {
-class VariableListController;
-class VariableItemDelegate;
-class VariableGroupListController;
-class VariableGroupItemDelegate;
-class MeasureListController;
-class VariableGroupItem;
-class VariableItem;
+
+class WorkflowController;
+class WorkflowSectionItemDelegate;
 }
 
 class ScriptsTabController : public MainTabController
@@ -61,13 +57,12 @@ class ScriptsTabController : public MainTabController
 
   QPointer<ScriptsTabView> scriptsTabView;
 
-
-
   private:
+
   REGISTER_LOGGER("openstudio.measuretab.MeasuresTabController");
 
-  QSharedPointer<measuretab::VariableGroupListController> m_variableGroupListController;
-  QSharedPointer<measuretab::VariableGroupItemDelegate> m_variableGroupItemDelegate;
+  QSharedPointer<measuretab::WorkflowController> m_workflowController;
+  QSharedPointer<measuretab::WorkflowSectionItemDelegate> m_workflowSectionItemDelegate;
 
 };
 

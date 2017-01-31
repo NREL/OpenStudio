@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -423,7 +423,7 @@ TEST_F(IdfFixture, WorkspaceObject_RestoreHandleInAddObjects)
   EXPECT_EQ(1u, ws1.objects().size());
   OptionalString h1String = w1->getString(0);
   ASSERT_TRUE(h1String);
-  Handle h1(toQString(*h1String));
+  Handle h1(toUUID(*h1String));
   EXPECT_FALSE(h1.isNull());
   EXPECT_EQ(h1, w1->handle());
 
@@ -433,7 +433,7 @@ TEST_F(IdfFixture, WorkspaceObject_RestoreHandleInAddObjects)
   WorkspaceObject w2 = ws2.objects()[0];
   OptionalString h2String = w2.getString(0);
   ASSERT_TRUE(h2String);
-  Handle h2(toQString(*h2String));
+  Handle h2(toUUID(*h2String));
   EXPECT_FALSE(h2.isNull());
   EXPECT_EQ(h2, w2.handle());
 }
@@ -447,7 +447,7 @@ TEST_F(IdfFixture, WorkspaceObject_RestoreHandleInAddObjects2)
   EXPECT_EQ(1u, ws1.objects().size());
   OptionalString h1String = w1->getString(0);
   ASSERT_TRUE(h1String);
-  Handle h1(toQString(*h1String));
+  Handle h1(toUUID(*h1String));
   EXPECT_FALSE(h1.isNull());
   EXPECT_EQ(h1, w1->handle());
 
@@ -456,7 +456,7 @@ TEST_F(IdfFixture, WorkspaceObject_RestoreHandleInAddObjects2)
   IdfObject i1 = idf1.objects()[0];
   OptionalString i1hString = i1.getString(0);
   ASSERT_TRUE(i1hString);
-  Handle ih(toQString(*i1hString));
+  Handle ih(toUUID(*i1hString));
   EXPECT_FALSE(ih.isNull());
   EXPECT_EQ(ih,i1.handle());
 
@@ -466,7 +466,7 @@ TEST_F(IdfFixture, WorkspaceObject_RestoreHandleInAddObjects2)
   WorkspaceObject w2 = ws2.objects()[0];
   OptionalString h2String = w2.getString(0);
   ASSERT_TRUE(h2String);
-  Handle h2(toQString(*h2String));
+  Handle h2(toUUID(*h2String));
   EXPECT_FALSE(h2.isNull());
   EXPECT_EQ(h2, w2.handle());
 }

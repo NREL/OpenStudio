@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -42,23 +42,23 @@ namespace detail {
 
   /** SpaceInfiltrationDesignFlowRate_Impl is a SpaceLoad_Impl that is the implementation class for SpaceInfiltrationDesignFlowRate.*/
   class MODEL_API SpaceInfiltrationDesignFlowRate_Impl : public SpaceLoad_Impl {
-    Q_OBJECT;
-    Q_PROPERTY(std::string designFlowRateCalculationMethod READ designFlowRateCalculationMethod);
-    Q_PROPERTY(boost::optional<double> designFlowRate READ designFlowRate WRITE setDesignFlowRate);
-    Q_PROPERTY(boost::optional<double> flowperSpaceFloorArea READ flowperSpaceFloorArea WRITE setFlowperSpaceFloorArea);
-    Q_PROPERTY(boost::optional<double> flowperExteriorSurfaceArea READ flowperExteriorSurfaceArea WRITE setFlowperExteriorSurfaceArea);
-    Q_PROPERTY(boost::optional<double> flowperExteriorWallArea READ flowperExteriorWallArea WRITE setFlowperExteriorWallArea);
-    Q_PROPERTY(boost::optional<double> airChangesperHour READ airChangesperHour WRITE setAirChangesperHour);
-    Q_PROPERTY(double constantTermCoefficient READ constantTermCoefficient WRITE setConstantTermCoefficient RESET resetConstantTermCoefficient);
-    Q_PROPERTY(bool isConstantTermCoefficientDefaulted READ isConstantTermCoefficientDefaulted);
-    Q_PROPERTY(double temperatureTermCoefficient READ temperatureTermCoefficient WRITE setTemperatureTermCoefficient RESET resetTemperatureTermCoefficient);
-    Q_PROPERTY(bool isTemperatureTermCoefficientDefaulted READ isTemperatureTermCoefficientDefaulted);
-    Q_PROPERTY(double velocityTermCoefficient READ velocityTermCoefficient WRITE setVelocityTermCoefficient RESET resetVelocityTermCoefficient);
-    Q_PROPERTY(bool isVelocityTermCoefficientDefaulted READ isVelocityTermCoefficientDefaulted);
-    Q_PROPERTY(double velocitySquaredTermCoefficient READ velocitySquaredTermCoefficient WRITE setVelocitySquaredTermCoefficient RESET resetVelocitySquaredTermCoefficient);
-    Q_PROPERTY(bool isVelocitySquaredTermCoefficientDefaulted READ isVelocitySquaredTermCoefficientDefaulted);
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> schedule READ scheduleAsModelObject WRITE setScheduleAsModelObject RESET resetSchedule);
+    
    public:
     /** @name Constructors and Destructors */
     //@{

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -43,17 +43,17 @@ namespace detail {
 
   /** HotWaterEquipment_Impl is a SpaceLoadInstance_Impl that is the implementation class for HotWaterEquipment.*/
   class MODEL_API HotWaterEquipment_Impl : public SpaceLoadInstance_Impl {
-    Q_OBJECT;
-    Q_PROPERTY(bool isScheduleDefaulted READ isScheduleDefaulted);
+    
+    
 
-    Q_PROPERTY(double multiplier READ multiplier WRITE setMultiplier RESET resetMultiplier);
-    Q_PROPERTY(bool isMultiplierDefaulted READ isMultiplierDefaulted);
+    
+    
 
-    Q_PROPERTY(std::string endUseSubcategory READ endUseSubcategory WRITE setEndUseSubcategory RESET resetEndUseSubcategory);
-    Q_PROPERTY(bool isEndUseSubcategoryDefaulted READ isEndUseSubcategoryDefaulted);
+    
+    
 
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> hotWaterEquipmentDefinition READ hotWaterEquipmentDefinitionAsModelObject WRITE setHotWaterEquipmentDefinitionAsModelObject);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> schedule READ scheduleAsModelObject WRITE setScheduleAsModelObject RESET resetSchedule);
+    
+    
    public:
     /** @name Constructors and Destructors */
     //@{

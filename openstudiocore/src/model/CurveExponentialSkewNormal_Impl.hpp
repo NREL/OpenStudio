@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -39,19 +39,19 @@ namespace detail {
 
   /** CurveExponentialSkewNormal_Impl is a Curve_Impl that is the implementation class for CurveExponentialSkewNormal.*/
   class MODEL_API CurveExponentialSkewNormal_Impl : public Curve_Impl {
-    Q_OBJECT;
-    Q_PROPERTY(double coefficient1C1 READ coefficient1C1 WRITE setCoefficient1C1);
-    Q_PROPERTY(double coefficient2C2 READ coefficient2C2 WRITE setCoefficient2C2);
-    Q_PROPERTY(double coefficient3C3 READ coefficient3C3 WRITE setCoefficient3C3);
-    Q_PROPERTY(double coefficient4C4 READ coefficient4C4 WRITE setCoefficient4C4);
-    Q_PROPERTY(double minimumValueofx READ minimumValueofx WRITE setMinimumValueofx);
-    Q_PROPERTY(double maximumValueofx READ maximumValueofx WRITE setMaximumValueofx);
-    Q_PROPERTY(boost::optional<double> minimumCurveOutput READ minimumCurveOutput WRITE setMinimumCurveOutput RESET resetMinimumCurveOutput);
-    Q_PROPERTY(boost::optional<double> maximumCurveOutput READ maximumCurveOutput WRITE setMaximumCurveOutput RESET resetMaximumCurveOutput);
-    Q_PROPERTY(std::string inputUnitTypeforx READ inputUnitTypeforx WRITE setInputUnitTypeforx RESET resetInputUnitTypeforx);
-    Q_PROPERTY(bool isInputUnitTypeforxDefaulted READ isInputUnitTypeforxDefaulted);
-    Q_PROPERTY(std::string outputUnitType READ outputUnitType WRITE setOutputUnitType RESET resetOutputUnitType);
-    Q_PROPERTY(bool isOutputUnitTypeDefaulted READ isOutputUnitTypeDefaulted);
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
    public:
 
     /** @name Constructors and Destructors */

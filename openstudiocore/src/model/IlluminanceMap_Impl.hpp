@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -45,24 +45,24 @@ namespace detail {
 
   /** IlluminanceMap_Impl is a SpaceItem_Impl that is the implementation class for IlluminanceMap.*/
   class MODEL_API IlluminanceMap_Impl : public SpaceItem_Impl {
-    Q_OBJECT;
-    Q_PROPERTY(double originXCoordinate READ originXCoordinate WRITE setOriginXCoordinate);
-    Q_PROPERTY(double originYCoordinate READ originYCoordinate WRITE setOriginYCoordinate);
-    Q_PROPERTY(double originZCoordinate READ originZCoordinate WRITE setOriginZCoordinate);
-    Q_PROPERTY(double psiRotationAroundXAxis READ psiRotationAroundXAxis WRITE setPsiRotationAroundXAxis RESET resetPsiRotationAroundXAxis);
-    Q_PROPERTY(bool isPsiRotationAroundXAxisDefaulted READ isPsiRotationAroundXAxisDefaulted);
-    Q_PROPERTY(double thetaRotationAroundYAxis READ thetaRotationAroundYAxis WRITE setThetaRotationAroundYAxis RESET resetThetaRotationAroundYAxis);
-    Q_PROPERTY(bool isThetaRotationAroundYAxisDefaulted READ isThetaRotationAroundYAxisDefaulted);
-    Q_PROPERTY(double phiRotationAroundZAxis READ phiRotationAroundZAxis WRITE setPhiRotationAroundZAxis RESET resetPhiRotationAroundZAxis);
-    Q_PROPERTY(bool isPhiRotationAroundZAxisDefaulted READ isPhiRotationAroundZAxisDefaulted);
-    Q_PROPERTY(double xLength READ xLength WRITE setXLength RESET resetXLength);
-    Q_PROPERTY(bool isXLengthDefaulted READ isXLengthDefaulted);
-    Q_PROPERTY(int numberofXGridPoints READ numberofXGridPoints WRITE setNumberofXGridPoints RESET resetNumberofXGridPoints);
-    Q_PROPERTY(bool isNumberofXGridPointsDefaulted READ isNumberofXGridPointsDefaulted);
-    Q_PROPERTY(double yLength READ yLength WRITE setYLength RESET resetYLength);
-    Q_PROPERTY(bool isYLengthDefaulted READ isYLengthDefaulted);
-    Q_PROPERTY(int numberofYGridPoints READ numberofYGridPoints WRITE setNumberofYGridPoints RESET resetNumberofYGridPoints);
-    Q_PROPERTY(bool isNumberofYGridPointsDefaulted READ isNumberofYGridPointsDefaulted);
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
    public:
     /** @name Constructors and Destructors */
     //@{

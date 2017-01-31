@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -45,10 +45,10 @@ namespace detail {
 
 /** WaterUseConnections_Impl is a StraightComponent_Impl that is the implementation class for WaterUseConnections.*/
 class MODEL_API WaterUseConnections_Impl : public StraightComponent_Impl {
-  Q_OBJECT;
+  
 
-  Q_PROPERTY(boost::optional<openstudio::model::ModelObject> hotWaterSupplyTemperatureSchedule READ hotWaterSupplyTemperatureScheduleAsModelObject WRITE setHotWaterSupplyTemperatureScheduleAsModelObject RESET resetHotWaterSupplyTemperatureSchedule);
-  Q_PROPERTY(boost::optional<openstudio::model::ModelObject> coldWaterSupplyTemperatureSchedule READ coldWaterSupplyTemperatureScheduleAsModelObject WRITE setColdWaterSupplyTemperatureScheduleAsModelObject RESET resetColdWaterSupplyTemperatureSchedule);
+  
+  
 
   public:
 

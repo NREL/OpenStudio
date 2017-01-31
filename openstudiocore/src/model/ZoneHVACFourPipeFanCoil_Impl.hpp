@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -45,71 +45,71 @@ namespace detail {
 
   /** ZoneHVACFourPipeFanCoil_Impl is a ZoneHVACComponent_Impl that is the implementation class for ZoneHVACFourPipeFanCoil.*/
   class MODEL_API ZoneHVACFourPipeFanCoil_Impl : public ZoneHVACComponent_Impl {
-    Q_OBJECT;
+    
 
-    Q_PROPERTY(std::string capacityControlMethod READ capacityControlMethod WRITE setCapacityControlMethod);
-    Q_PROPERTY(std::vector<std::string> capacityControlMethodValues READ capacityControlMethodValues);
+    
+    
 
-    Q_PROPERTY(boost::optional<double> maximumSupplyAirFlowRate READ maximumSupplyAirFlowRate WRITE setMaximumSupplyAirFlowRate);
-    Q_PROPERTY(openstudio::OSOptionalQuantity maximumSupplyAirFlowRate_SI READ maximumSupplyAirFlowRate_SI WRITE setMaximumSupplyAirFlowRate);
-    Q_PROPERTY(openstudio::OSOptionalQuantity maximumSupplyAirFlowRate_IP READ maximumSupplyAirFlowRate_IP WRITE setMaximumSupplyAirFlowRate);
-    Q_PROPERTY(bool isMaximumSupplyAirFlowRateAutosized READ isMaximumSupplyAirFlowRateAutosized);
+    
+    
+    
+    
 
-    Q_PROPERTY(double lowSpeedSupplyAirFlowRatio READ lowSpeedSupplyAirFlowRatio WRITE setLowSpeedSupplyAirFlowRatio RESET resetLowSpeedSupplyAirFlowRatio);
-    Q_PROPERTY(openstudio::Quantity lowSpeedSupplyAirFlowRatio_SI READ lowSpeedSupplyAirFlowRatio_SI WRITE setLowSpeedSupplyAirFlowRatio RESET resetLowSpeedSupplyAirFlowRatio);
-    Q_PROPERTY(openstudio::Quantity lowSpeedSupplyAirFlowRatio_IP READ lowSpeedSupplyAirFlowRatio_IP WRITE setLowSpeedSupplyAirFlowRatio RESET resetLowSpeedSupplyAirFlowRatio);
-    Q_PROPERTY(bool isLowSpeedSupplyAirFlowRatioDefaulted READ isLowSpeedSupplyAirFlowRatioDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double mediumSpeedSupplyAirFlowRatio READ mediumSpeedSupplyAirFlowRatio WRITE setMediumSpeedSupplyAirFlowRatio RESET resetMediumSpeedSupplyAirFlowRatio);
-    Q_PROPERTY(openstudio::Quantity mediumSpeedSupplyAirFlowRatio_SI READ mediumSpeedSupplyAirFlowRatio_SI WRITE setMediumSpeedSupplyAirFlowRatio RESET resetMediumSpeedSupplyAirFlowRatio);
-    Q_PROPERTY(openstudio::Quantity mediumSpeedSupplyAirFlowRatio_IP READ mediumSpeedSupplyAirFlowRatio_IP WRITE setMediumSpeedSupplyAirFlowRatio RESET resetMediumSpeedSupplyAirFlowRatio);
-    Q_PROPERTY(bool isMediumSpeedSupplyAirFlowRatioDefaulted READ isMediumSpeedSupplyAirFlowRatioDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<double> maximumOutdoorAirFlowRate READ maximumOutdoorAirFlowRate WRITE setMaximumOutdoorAirFlowRate);
-    Q_PROPERTY(openstudio::OSOptionalQuantity maximumOutdoorAirFlowRate_SI READ maximumOutdoorAirFlowRate_SI WRITE setMaximumOutdoorAirFlowRate);
-    Q_PROPERTY(openstudio::OSOptionalQuantity maximumOutdoorAirFlowRate_IP READ maximumOutdoorAirFlowRate_IP WRITE setMaximumOutdoorAirFlowRate);
-    Q_PROPERTY(bool isMaximumOutdoorAirFlowRateAutosized READ isMaximumOutdoorAirFlowRateAutosized);
+    
+    
+    
+    
 
-    Q_PROPERTY(std::string outdoorAirMixerObjectType READ outdoorAirMixerObjectType WRITE setOutdoorAirMixerObjectType);
-    Q_PROPERTY(std::vector<std::string> outdoorAirMixerObjectTypeValues READ outdoorAirMixerObjectTypeValues);
+    
+    
 
-    Q_PROPERTY(std::string outdoorAirMixerName READ outdoorAirMixerName WRITE setOutdoorAirMixerName);
+    
 
-    Q_PROPERTY(boost::optional<double> maximumColdWaterFlowRate READ maximumColdWaterFlowRate WRITE setMaximumColdWaterFlowRate);
-    Q_PROPERTY(openstudio::OSOptionalQuantity maximumColdWaterFlowRate_SI READ maximumColdWaterFlowRate_SI WRITE setMaximumColdWaterFlowRate);
-    Q_PROPERTY(openstudio::OSOptionalQuantity maximumColdWaterFlowRate_IP READ maximumColdWaterFlowRate_IP WRITE setMaximumColdWaterFlowRate);
-    Q_PROPERTY(bool isMaximumColdWaterFlowRateAutosized READ isMaximumColdWaterFlowRateAutosized);
+    
+    
+    
+    
 
-    Q_PROPERTY(double minimumColdWaterFlowRate READ minimumColdWaterFlowRate WRITE setMinimumColdWaterFlowRate RESET resetMinimumColdWaterFlowRate);
-    Q_PROPERTY(openstudio::Quantity minimumColdWaterFlowRate_SI READ minimumColdWaterFlowRate_SI WRITE setMinimumColdWaterFlowRate RESET resetMinimumColdWaterFlowRate);
-    Q_PROPERTY(openstudio::Quantity minimumColdWaterFlowRate_IP READ minimumColdWaterFlowRate_IP WRITE setMinimumColdWaterFlowRate RESET resetMinimumColdWaterFlowRate);
-    Q_PROPERTY(bool isMinimumColdWaterFlowRateDefaulted READ isMinimumColdWaterFlowRateDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double coolingConvergenceTolerance READ coolingConvergenceTolerance WRITE setCoolingConvergenceTolerance RESET resetCoolingConvergenceTolerance);
-    Q_PROPERTY(openstudio::Quantity coolingConvergenceTolerance_SI READ coolingConvergenceTolerance_SI WRITE setCoolingConvergenceTolerance RESET resetCoolingConvergenceTolerance);
-    Q_PROPERTY(openstudio::Quantity coolingConvergenceTolerance_IP READ coolingConvergenceTolerance_IP WRITE setCoolingConvergenceTolerance RESET resetCoolingConvergenceTolerance);
-    Q_PROPERTY(bool isCoolingConvergenceToleranceDefaulted READ isCoolingConvergenceToleranceDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<double> maximumHotWaterFlowRate READ maximumHotWaterFlowRate WRITE setMaximumHotWaterFlowRate);
-    Q_PROPERTY(openstudio::OSOptionalQuantity maximumHotWaterFlowRate_SI READ maximumHotWaterFlowRate_SI WRITE setMaximumHotWaterFlowRate);
-    Q_PROPERTY(openstudio::OSOptionalQuantity maximumHotWaterFlowRate_IP READ maximumHotWaterFlowRate_IP WRITE setMaximumHotWaterFlowRate);
-    Q_PROPERTY(bool isMaximumHotWaterFlowRateAutosized READ isMaximumHotWaterFlowRateAutosized);
+    
+    
+    
+    
 
-    Q_PROPERTY(double minimumHotWaterFlowRate READ minimumHotWaterFlowRate WRITE setMinimumHotWaterFlowRate RESET resetMinimumHotWaterFlowRate);
-    Q_PROPERTY(openstudio::Quantity minimumHotWaterFlowRate_SI READ minimumHotWaterFlowRate_SI WRITE setMinimumHotWaterFlowRate RESET resetMinimumHotWaterFlowRate);
-    Q_PROPERTY(openstudio::Quantity minimumHotWaterFlowRate_IP READ minimumHotWaterFlowRate_IP WRITE setMinimumHotWaterFlowRate RESET resetMinimumHotWaterFlowRate);
-    Q_PROPERTY(bool isMinimumHotWaterFlowRateDefaulted READ isMinimumHotWaterFlowRateDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double heatingConvergenceTolerance READ heatingConvergenceTolerance WRITE setHeatingConvergenceTolerance RESET resetHeatingConvergenceTolerance);
-    Q_PROPERTY(openstudio::Quantity heatingConvergenceTolerance_SI READ heatingConvergenceTolerance_SI WRITE setHeatingConvergenceTolerance RESET resetHeatingConvergenceTolerance);
-    Q_PROPERTY(openstudio::Quantity heatingConvergenceTolerance_IP READ heatingConvergenceTolerance_IP WRITE setHeatingConvergenceTolerance RESET resetHeatingConvergenceTolerance);
-    Q_PROPERTY(bool isHeatingConvergenceToleranceDefaulted READ isHeatingConvergenceToleranceDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> availabilitySchedule READ availabilityScheduleAsModelObject WRITE setAvailabilityScheduleAsModelObject);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> outdoorAirSchedule READ outdoorAirScheduleAsModelObject WRITE setOutdoorAirScheduleAsModelObject RESET resetOutdoorAirSchedule);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> supplyAirFan READ supplyAirFanAsModelObject WRITE setSupplyAirFanAsModelObject);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> coolingCoil READ coolingCoilAsModelObject WRITE setCoolingCoilAsModelObject);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> heatingCoil READ heatingCoilAsModelObject WRITE setHeatingCoilAsModelObject);
+    
+    
+    
+    
+    
    public:
     /** @name Constructors and Destructors */
     //@{

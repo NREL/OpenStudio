@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -37,10 +37,10 @@
 #include "../../idd/IddFile.hpp"
 #include "../../idf/Workspace.hpp"
 #include "../../time/DateTime.hpp"
+#include "../../core/FilesystemHelpers.hpp"
 
 #include <QDateTime>
 #include <QDir>
-#include <QFileInfo>
 
 #include <time.h>
 
@@ -248,7 +248,8 @@ TEST_F(BCLFixture, RemoteBCLTest2)
   for (const std::string& file : lastDownload->files()) {
     openstudio::path path = toPath(lastDownload->directory() + "/files/" + file);
     EXPECT_TRUE(QDir().exists(toQString(path)));
-    time_t time = QFileInfo(toQString(path)).lastModified().toTime_t();
+
+    const auto time = openstudio::filesystem::last_write_time_as_time_t(path);
     EXPECT_GT(time, startTime);
   }
 
@@ -261,7 +262,8 @@ TEST_F(BCLFixture, RemoteBCLTest2)
   for (const std::string& file : component->files()) {
     openstudio::path path = toPath(component->directory() + "/files/" + file);
     EXPECT_TRUE(QDir().exists(toQString(path)));
-    time_t time = QFileInfo(toQString(path)).lastModified().toTime_t();
+
+    const auto time = openstudio::filesystem::last_write_time_as_time_t(path);
     EXPECT_GT(time, startTime);
   }
 

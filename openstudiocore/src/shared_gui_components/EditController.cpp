@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -29,11 +29,7 @@
 #include "EditController.hpp"
 #include "EditView.hpp"
 #include "OSViewSwitcher.hpp"
-
-#include "../analysisdriver/SimpleProject.hpp"
-
-#include "../analysis/Analysis.hpp"
-#include "../analysis/DataPoint.hpp"
+#include "WorkflowController.hpp"
 
 #include "../utilities/bcl/BCLMeasure.hpp"
 #include "../utilities/core/Assert.hpp"
@@ -69,9 +65,9 @@ EditController::~EditController()
   if( editRubyMeasureView ) { delete editRubyMeasureView; }
 }
 
-void EditController::setMeasureItem(measuretab::MeasureItem * measureItem, BaseApp *t_app)
+void EditController::setMeasureStepItem(measuretab::MeasureStepItem * measureStepItem, BaseApp *t_app)
 {
-  m_measureItem = measureItem;
+  m_measureStepItem = measureStepItem;
 
   editRubyMeasureView->clear();
 
@@ -79,23 +75,23 @@ void EditController::setMeasureItem(measuretab::MeasureItem * measureItem, BaseA
 
   // Ruby Measure Name
 
-  editRubyMeasureView->nameLineEdit->setText(m_measureItem->displayName());
+  editRubyMeasureView->nameLineEdit->setText(m_measureStepItem->name());
 
-  connect(editRubyMeasureView->nameLineEdit, &QLineEdit::textEdited, m_measureItem.data(), &measuretab::MeasureItem::setDisplayName);
+  connect(editRubyMeasureView->nameLineEdit, &QLineEdit::textEdited, m_measureStepItem.data(), &measuretab::MeasureStepItem::setName);
 
   // Measure Description
 
-  editRubyMeasureView->descriptionTextEdit->setText(m_measureItem->description());
+  editRubyMeasureView->descriptionTextEdit->setText(m_measureStepItem->description());
 
   connect(editRubyMeasureView->descriptionTextEdit, &QTextEdit::textChanged, this, &EditController::updateDescription);
 
   // Measure Modeler Description
 
-  editRubyMeasureView->modelerDescriptionTextEdit->setText(m_measureItem->modelerDescription());
+  editRubyMeasureView->modelerDescriptionTextEdit->setText(m_measureStepItem->modelerDescription());
 
   // Inputs
 
-  std::vector<ruleset::OSArgument> arguments = m_measureItem->arguments();
+  std::vector<measure::OSArgument> arguments = m_measureStepItem->arguments();
 
   for( const auto & arg : arguments )
   {
@@ -107,20 +103,20 @@ void EditController::setMeasureItem(measuretab::MeasureItem * measureItem, BaseA
   }
 }
 
-measuretab::MeasureItem * EditController::measureItem() const
+measuretab::MeasureStepItem * EditController::measureStepItem() const
 {
-  return m_measureItem;
+  return m_measureStepItem;
 }
 
 void EditController::updateDescription()
 {
-  m_measureItem->setDescription(editRubyMeasureView->descriptionTextEdit->toPlainText());
+  m_measureStepItem->setDescription(editRubyMeasureView->descriptionTextEdit->toPlainText());
 }
 
 void EditController::reset()
 {
   // Evan note: It's bad to play with null pointers
-  if (!m_editNullView || !editView || !m_measureItem || !editRubyMeasureView) {
+  if (!m_editNullView || !editView || !m_measureStepItem || !editRubyMeasureView) {
     //return;
   }
 
@@ -128,7 +124,7 @@ void EditController::reset()
 
   m_inputControllers.clear();
 
-  m_measureItem = nullptr;
+  m_measureStepItem = nullptr;
 
   editRubyMeasureView->nameLineEdit->disconnect();
 
@@ -155,13 +151,13 @@ class EditMeasureMessageBox : public QMessageBox
   }
 };
 
-InputController::InputController(EditController * editController,const ruleset::OSArgument & argument, BaseApp *t_app)
+InputController::InputController(EditController * editController,const measure::OSArgument & argument, BaseApp *t_app)
   : QObject(),
     m_app(t_app),
     m_editController(editController),
     m_argument(argument)
 {
-  if( m_argument.type() == ruleset::OSArgumentType::Double )
+  if( m_argument.type() == measure::OSArgumentType::Double )
   {
     auto doubleInputView = new DoubleInputView();
 
@@ -180,7 +176,7 @@ InputController::InputController(EditController * editController,const ruleset::
 
     inputView = doubleInputView;
   }
-  else if( m_argument.type() == ruleset::OSArgumentType::Choice )
+  else if( m_argument.type() == measure::OSArgumentType::Choice )
   {
     auto choiceInputView = new ChoiceInputView();
 
@@ -239,7 +235,7 @@ InputController::InputController(EditController * editController,const ruleset::
 
     inputView = choiceInputView;
   }
-  else if( m_argument.type() == ruleset::OSArgumentType::Boolean )
+  else if( m_argument.type() == measure::OSArgumentType::Boolean )
   {
     auto boolInputView = new BoolInputView();
 
@@ -262,7 +258,7 @@ InputController::InputController(EditController * editController,const ruleset::
 
     inputView = boolInputView;
   }
-  else if( m_argument.type() == ruleset::OSArgumentType::Integer )
+  else if( m_argument.type() == measure::OSArgumentType::Integer )
   {
     auto integerInputView = new IntegerInputView();
 
@@ -281,7 +277,7 @@ InputController::InputController(EditController * editController,const ruleset::
 
     inputView = integerInputView;
   }
-  else if( m_argument.type() == ruleset::OSArgumentType::String )
+  else if( m_argument.type() == measure::OSArgumentType::String )
   {
     auto stringInputView = new StringInputView();
 
@@ -326,7 +322,8 @@ void InputController::setValue(const QString & text)
       m_argument.setValue(text.toStdString());
     }
 
-    m_editController->measureItem()->setArgument(m_argument);
+
+    m_editController->measureStepItem()->setArgument(m_argument);
 
     inputView->setIncomplete(isArgumentIncomplete());
   }
@@ -338,7 +335,7 @@ void InputController::setValue(bool value)
   {
     m_argument.setValue(value);
 
-    m_editController->measureItem()->setArgument(m_argument);
+    m_editController->measureStepItem()->setArgument(m_argument);
 
     inputView->setIncomplete(isArgumentIncomplete());
   }
@@ -359,7 +356,7 @@ void InputController::setValueForIndex(int index)
       m_argument.setValue(value.toStdString());
     }
 
-    m_editController->measureItem()->setArgument(m_argument);
+    m_editController->measureStepItem()->setArgument(m_argument);
 
     inputView->setIncomplete(isArgumentIncomplete());
   }
@@ -367,64 +364,12 @@ void InputController::setValueForIndex(int index)
 
 bool InputController::isArgumentIncomplete() const
 {
-  // Get the argument from the ruby perturbation by the same name as m_argument
-
-  std::vector<ruleset::OSArgument> argumentVector = m_editController->measureItem()->measure().arguments();
-
-  std::map<std::string,ruleset::OSArgument> argumentMap = convertOSArgumentVectorToMap(argumentVector);
-
-  auto it = argumentMap.find(m_argument.name());
-
-  if(it != argumentMap.end())
-  {
-    // Check the criteria for being incomplete
-
-    if (it->second.required() && !(it->second.hasValue() || it->second.hasDefaultValue()))
-    {
-      return true;
-    }
-  }
-
-  return false;
+  return m_editController->measureStepItem()->hasIncompleteArguments();
 }
 
 bool InputController::isItOKToClearResults()
 {
-  bool doOperation(true);
-
-  // Find out if there are results
-  boost::optional<analysisdriver::SimpleProject> project = m_app->project();
-
-  if( ! project ) { return false; }
-
-  if( ! project->analysis().completeDataPoints().empty() )
-  {
-    // Ask user if they are sure they want to edit
-    doOperation = EditMeasureMessageBox::warning(m_app);
-  }
-
-  if( ! doOperation )
-  {
-    // Reset user interface to argument's value
-
-    if( m_argument.hasValue() )
-    {
-      QString argumentValue = QString::fromStdString(m_argument.valueAsString());
-
-      inputView->setDisplayValue(argumentValue);
-    }
-    else if( m_argument.hasDefaultValue() )
-    {
-      inputView->setDisplayValue(QString::fromStdString(m_argument.defaultValueAsString()));
-    }
-    else
-    {
-      inputView->setDisplayValue("");
-    }
-
-    return false;
-  }
-
+  // DLM: todo warn user when results are out of date
   return true;
 }
 

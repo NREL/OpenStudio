@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -30,6 +30,7 @@
 
 #include "ModelObjectItem.hpp"
 #include "OSItemList.hpp"
+#include "OSAppBase.hpp"
 
 #include "../model/Model_Impl.hpp"
 #include "../model/ModelObject_Impl.hpp"
@@ -46,17 +47,12 @@ UtilityBillFuelTypeListController::UtilityBillFuelTypeListController(const model
   openstudio::FuelType fuelType)
   : m_iddObjectType(model::UtilityBill::iddObjectType()), m_fuelType(fuelType), m_model(model)
 {
-  connect(model.getImpl<model::detail::Model_Impl>().get(), 
-    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::addWorkspaceObject),
-    this,
-    &UtilityBillFuelTypeListController::objectAdded,
-    Qt::QueuedConnection);
+  //model.getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.connect<UtilityBillFuelTypeListController, &UtilityBillFuelTypeListController::objectAdded>(this);
+  connect(OSAppBase::instance(), &OSAppBase::workspaceObjectAddedPtr, this, &UtilityBillFuelTypeListController::objectAdded, Qt::QueuedConnection);
+
   
-  connect(model.getImpl<model::detail::Model_Impl>().get(), 
-    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::removeWorkspaceObject),
-    this,
-    &UtilityBillFuelTypeListController::objectRemoved,
-    Qt::QueuedConnection);
+  //model.getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.connect<UtilityBillFuelTypeListController, &UtilityBillFuelTypeListController::objectRemoved>(this);
+  connect(OSAppBase::instance(), &OSAppBase::workspaceObjectRemovedPtr, this, &UtilityBillFuelTypeListController::objectRemoved, Qt::QueuedConnection);
   
 }
 
@@ -82,7 +78,7 @@ void UtilityBillFuelTypeListController::objectAdded(std::shared_ptr<openstudio::
         emit itemIds(ids);
 
         for (const OSItemId& id : ids){
-          if (id.itemId() == impl->handle().toString()){
+          if (id.itemId() == toQString(impl->handle())){
             emit selectedItemId(id);
             break;
           }

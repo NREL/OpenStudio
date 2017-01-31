@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -63,6 +63,10 @@ namespace detail {
                                                    bool keepHandle)
     : ModelObject_Impl(other,model,keepHandle)
   {}
+
+  RadianceParameters_Impl::~RadianceParameters_Impl() {
+    // Empty implementation for debugging
+  }
 
   const std::vector<std::string>& RadianceParameters_Impl::outputVariableNames() const
   {
@@ -722,11 +726,13 @@ std::vector<std::string> RadianceParameters::skyDiscretizationResolutionValues()
 }
 
 std::string RadianceParameters::skyDiscretizationResolution() const {
-  return getImpl<detail::RadianceParameters_Impl>()->skyDiscretizationResolution();
+  auto impl = getImpl<detail::RadianceParameters_Impl>();
+  return impl->skyDiscretizationResolution();
 }
 
 bool RadianceParameters::setSkyDiscretizationResolution(std::string skyDiscretizationResolution) {
-  return getImpl<detail::RadianceParameters_Impl>()->setSkyDiscretizationResolution(skyDiscretizationResolution);
+  auto impl = getImpl<detail::RadianceParameters_Impl>();
+  return impl->setSkyDiscretizationResolution(skyDiscretizationResolution);
 }
 
 void RadianceParameters::resetSkyDiscretizationResolution() {

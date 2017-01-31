@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -43,15 +43,15 @@ namespace detail {
 
   // derive AirLoopHVACOutdoorAirSystem_Impl from ModelObject_Impl to override virtual methods
   class MODEL_API AirLoopHVACOutdoorAirSystem_Impl : public HVACComponent_Impl{
-    Q_OBJECT;
+    
 
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> controllerOutdoorAir READ controllerOutdoorAirAsModelObject WRITE setControllerOutdoorAirAsModelObject);
-    Q_PROPERTY(std::vector<openstudio::model::ModelObject> oaComponents READ oaComponentsAsModelObjects);
-    Q_PROPERTY(std::vector<openstudio::model::ModelObject> reliefComponents READ reliefComponentsAsModelObjects);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> outboardOANode READ outboardOANodeAsModelObject);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> outboardReliefNode READ outboardReliefNodeAsModelObject);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> airLoop READ airLoopAsModelObject);
-    Q_PROPERTY(std::vector<openstudio::model::ModelObject> components READ componentsAsModelObjects);
+    
+    
+    
+    
+    
+    
+    
    public:
 
     // constructor

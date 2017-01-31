@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -27,6 +27,7 @@
  **********************************************************************************************************************/
 
 #include "ZipFile.hpp"
+#include "FilesystemHelpers.hpp"
 
 #include <zlib/zconf.h>
 #include <zlib/zlib.h>
@@ -95,17 +96,11 @@ namespace openstudio {
 
   void ZipFile::addDirectory(const openstudio::path& localDir, const openstudio::path& destinationDir) {
     // following conventions in openstudio::copyDirectory
-    QDir srcDir(toQString(localDir));
 
-    for (const QFileInfo& info : srcDir.entryInfoList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot)) {
-      QString srcItemPath = toQString(localDir) + "/" + info.fileName();
-      QString dstItemPath = toQString(destinationDir) + "/" + info.fileName();
-      if (info.isDir()) {
-        addDirectory(toPath(srcItemPath),toPath(dstItemPath));
-      }
-      else if (info.isFile()) {
-        addFile(toPath(srcItemPath),toPath(dstItemPath));
-      }
+    for (const auto& file: openstudio::filesystem::recursive_directory_files(localDir)) {
+      const auto srcItemPath = localDir / file;
+      const auto dstItemPath = destinationDir / file;
+      addFile(srcItemPath, dstItemPath);
     }
   }
 

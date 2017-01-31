@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -68,7 +68,7 @@ MeasureDragData::MeasureDragData(const QByteArray & data)
   QDomElement idElement = measureDragDataElement.firstChildElement("ID");
   QString idString = idElement.text();
   
-  m_id = UUID(idString);
+  m_id = toUUID(idString);
 }
 
 MeasureDragData::MeasureDragData(const UUID & id)
@@ -114,7 +114,7 @@ QString MeasureDragData::toXml()
   QDomElement idElement = doc.createElement("ID");
   measureDragDataElement.appendChild(idElement);
 
-  QDomText idText = doc.createTextNode(m_id.toString());
+  QDomText idText = doc.createTextNode(toQString(m_id));
   idElement.appendChild(idText);
 
   return doc.toString();

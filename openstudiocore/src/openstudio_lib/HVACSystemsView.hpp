@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -47,7 +47,7 @@ class HVACToolbarView;
 class VentilationControlsView;
 class SingleZoneResetSPView;
 class OSViewSwitcher;
-class OSSwitch;
+class OSSwitch2;
 
 class HVACSystemsView : public QWidget
 {
@@ -96,7 +96,7 @@ class HVACToolbarView : public QWidget
 
   QPushButton * zoomOutButton;
 
-  OSComboBox * systemComboBox;
+  OSComboBox2 * systemComboBox;
 
   // Hide or show add, delete, zoom in, and zoom out buttons.
   // If control buttons are hidden only the systemComboBox and label are shown.
@@ -158,7 +158,7 @@ class HVACControlsView : public QScrollArea
 
   OSViewSwitcher * hvacOperationViewSwitcher;
 
-  OSComboBox * nightCycleComboBox;
+  OSComboBox2 * nightCycleComboBox;
 };
 
 class MechanicalVentilationView : public QWidget
@@ -175,7 +175,7 @@ class MechanicalVentilationView : public QWidget
 
   QComboBox * ventilationCalcMethodComboBox;
 
-  OSSwitch * dcvButton;
+  OSSwitch2 * dcvButton;
 };
 
 class NoMechanicalVentilationView : public QWidget
@@ -197,7 +197,7 @@ class SingleZoneReheatSPMView : public QWidget
 
   virtual ~SingleZoneReheatSPMView();
 
-  OSComboBox * controlZoneComboBox;
+  OSComboBox2 * controlZoneComboBox;
 };
 
 class ScheduledSPMView : public QWidget
@@ -237,7 +237,7 @@ class AirLoopHVACUnitaryHeatPumpAirToAirControlView : public QWidget
 
   virtual ~AirLoopHVACUnitaryHeatPumpAirToAirControlView();
 
-  OSComboBox * controlZoneComboBox;
+  OSComboBox2 * controlZoneComboBox;
 };
 
 class NoSupplyAirTempControlView : public QWidget

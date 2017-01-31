@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -42,18 +42,18 @@ class Schedule;
 namespace detail {
 
   class MODEL_API OutputVariable_Impl : public ModelObject_Impl {
-    Q_OBJECT;
+    
 
-    Q_PROPERTY(std::string keyValue READ keyValue WRITE setKeyValue RESET resetKeyValue);
-    Q_PROPERTY(bool isKeyValueDefaulted READ isKeyValueDefaulted);
+    
+    
 
-    Q_PROPERTY(std::string variableName READ variableName WRITE setVariableName);
+    
 
-    Q_PROPERTY(std::string reportingFrequency READ reportingFrequency WRITE setReportingFrequency RESET resetReportingFrequency);
-    Q_PROPERTY(bool isReportingFrequencyDefaulted READ isReportingFrequencyDefaulted);
-    Q_PROPERTY(std::vector<std::string> reportingFrequencyValues READ reportingFrequencyValues);
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> schedule READ scheduleAsModelObject WRITE setScheduleAsModelObject RESET resetSchedule);
+    
    public:
     /** @name Constructors and Destructors */
     //@{

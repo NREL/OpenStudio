@@ -4,7 +4,7 @@ require 'minitest/autorun'
 
 require_relative '../measure.rb'
 
-class EnergyPlusMeasure_Test < MiniTest::Unit::TestCase
+class EnergyPlusMeasureName_Test < MiniTest::Unit::TestCase
 
   # def setup
   # end
@@ -14,7 +14,7 @@ class EnergyPlusMeasure_Test < MiniTest::Unit::TestCase
   def test_number_of_arguments_and_argument_names
 
     # create an instance of the measure
-    measure = EnergyPlusMeasure.new
+    measure = EnergyPlusMeasureName.new
 
     # make an empty workspace
     workspace = OpenStudio::Workspace.new("Draft".to_StrictnessLevel, "EnergyPlus".to_IddFileType)
@@ -28,7 +28,7 @@ class EnergyPlusMeasure_Test < MiniTest::Unit::TestCase
   def test_bad_argument_values
 
     # create an instance of the measure
-    measure = EnergyPlusMeasure.new
+    measure = EnergyPlusMeasureName.new
 
     # create an instance of a runner
     runner = OpenStudio::Ruleset::OSRunner.new
@@ -60,7 +60,7 @@ class EnergyPlusMeasure_Test < MiniTest::Unit::TestCase
   def test_good_argument_values
 
     # create an instance of the measure
-    measure = EnergyPlusMeasure.new
+    measure = EnergyPlusMeasureName.new
 
     # create an instance of a runner
     runner = OpenStudio::Ruleset::OSRunner.new

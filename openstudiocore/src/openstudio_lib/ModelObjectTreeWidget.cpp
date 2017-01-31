@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -28,6 +28,7 @@
 
 #include "ModelObjectTreeWidget.hpp"
 #include "ModelObjectTreeItems.hpp"
+#include "OSAppBase.hpp"
 
 #include "../model/Model.hpp"
 #include "../model/Model_Impl.hpp"
@@ -45,7 +46,7 @@ namespace openstudio {
 
 ModelObjectTreeWidget::ModelObjectTreeWidget(const model::Model& model, QWidget* parent )
   : OSItemSelector(parent), m_model(model)
-{ 
+{
   m_vLayout = new QVBoxLayout();
   m_vLayout->setContentsMargins(0,7,0,0);
   m_vLayout->setSpacing(7);
@@ -54,20 +55,14 @@ ModelObjectTreeWidget::ModelObjectTreeWidget(const model::Model& model, QWidget*
   m_treeWidget = new QTreeWidget(parent);
   m_treeWidget->setStyleSheet("QTreeWidget { border: none; border-top: 1px solid black; }");
   m_treeWidget->setAttribute(Qt::WA_MacShowFocusRect,0);
-  
+
   m_vLayout->addWidget(m_treeWidget);
 
-  connect(model.getImpl<model::detail::Model_Impl>().get(), 
-    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::addWorkspaceObject),
-    this,
-    &ModelObjectTreeWidget::objectAdded,
-    Qt::QueuedConnection);
-  
-  connect(model.getImpl<model::detail::Model_Impl>().get(), 
-    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::removeWorkspaceObject),
-    this,
-    &ModelObjectTreeWidget::objectRemoved,
-    Qt::QueuedConnection);
+  // model.getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.connect<ModelObjectTreeWidget, &ModelObjectTreeWidget::objectAdded>(this);
+  connect(OSAppBase::instance(), &OSAppBase::workspaceObjectAddedPtr, this, &ModelObjectTreeWidget::objectAdded, Qt::QueuedConnection);
+
+  //model.getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.connect<ModelObjectTreeWidget, &ModelObjectTreeWidget::objectRemoved>(this);
+  connect(OSAppBase::instance(), &OSAppBase::workspaceObjectRemovedPtr, this, &ModelObjectTreeWidget::objectRemoved, Qt::QueuedConnection);
 }
 
 OSItem* ModelObjectTreeWidget::selectedItem() const

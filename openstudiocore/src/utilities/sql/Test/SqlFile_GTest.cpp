@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -188,9 +188,9 @@ TEST_F(SqlFileFixture, BadStatement)
 TEST_F(SqlFileFixture, CreateSqlFile)
 {
   openstudio::path outfile = openstudio::tempDir() / openstudio::toPath("OpenStudioSqlFileTest.sql");
-  if (boost::filesystem::exists(outfile))
+  if (openstudio::filesystem::exists(outfile))
   {
-    boost::filesystem::remove(outfile);
+    openstudio::filesystem::remove(outfile);
   }
 
   openstudio::Calendar c(2012);
@@ -207,7 +207,7 @@ TEST_F(SqlFileFixture, CreateSqlFile)
 
   {
     openstudio::SqlFile sql(outfile,
-        openstudio::EpwFile(resourcesPath() / toPath("runmanager/USA_CO_Golden-NREL.724666_TMY3.epw")),
+        openstudio::EpwFile(resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3.epw")),
         openstudio::DateTime::now(),
         c);
 
@@ -324,13 +324,13 @@ void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double
   openstudio::path fromPath = resourcesPath() / toPath("utilities/SqlFile") / toPath(name);
   openstudio::path path = toPath(name);
 
-  if (boost::filesystem::exists(path)){
-    boost::filesystem::remove(path);
+  if (openstudio::filesystem::exists(path)){
+    openstudio::filesystem::remove(path);
   }
-  ASSERT_FALSE(boost::filesystem::exists(path));
-  ASSERT_TRUE(boost::filesystem::exists(fromPath)) << toString(fromPath);
-  boost::filesystem::copy(fromPath, path);
-  ASSERT_TRUE(boost::filesystem::exists(path));
+  ASSERT_FALSE(openstudio::filesystem::exists(path));
+  ASSERT_TRUE(openstudio::filesystem::exists(fromPath)) << toString(fromPath);
+  openstudio::filesystem::copy(fromPath, path);
+  ASSERT_TRUE(openstudio::filesystem::exists(path));
 
   boost::optional<SqlFile> sqlFile;
   EXPECT_NO_THROW(sqlFile = SqlFile(path));

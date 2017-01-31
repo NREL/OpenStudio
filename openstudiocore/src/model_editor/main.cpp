@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -44,7 +44,9 @@ using openstudio::Application;
 
 int main(int argc, char *argv[])
 {     
+#ifndef SHARED_OS_LIBS
   Q_INIT_RESOURCE(application);
+#endif // SHARED_OS_LIBS
 
   QApplication app(argc, argv);
   app.setOrganizationName("NREL");

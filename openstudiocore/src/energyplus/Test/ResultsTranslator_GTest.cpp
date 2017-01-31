@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -63,7 +63,7 @@ TEST_F(EnergyPlusFixture,ResultsTranslator_5ZoneAirCooled_NoErrorsNoWarnings)
   openstudio::path epDir = resourcesPath() / openstudio::toPath("energyplus/5ZoneAirCooled/");
   openstudio::path origSqlPath = epDir / openstudio::toPath("eplusout.sql");
   openstudio::path testSqlPath = epDir / openstudio::toPath("eplusout_NoErrorsNoWarnings.sql");
-  boost::filesystem::copy_file(origSqlPath,testSqlPath,boost::filesystem::copy_option::overwrite_if_exists);
+  openstudio::filesystem::copy_file(origSqlPath,testSqlPath,openstudio::filesystem::copy_option::overwrite_if_exists);
   openstudio::path errorPath = resourcesPath() / openstudio::toPath("energyplus/ErrorFiles/NoErrorsNoWarnings.err");
 
   SqlFile sqlFile(testSqlPath);
@@ -94,7 +94,7 @@ TEST_F(EnergyPlusFixture,ResultsTranslator_5ZoneAirCooled_WarningsAndSevere)
   openstudio::path epDir = resourcesPath() / openstudio::toPath("energyplus/5ZoneAirCooled/");
   openstudio::path origSqlPath = epDir / openstudio::toPath("eplusout.sql");
   openstudio::path testSqlPath = epDir / openstudio::toPath("eplusout_WarningsAndSevere.sql");
-  boost::filesystem::copy_file(origSqlPath, testSqlPath, boost::filesystem::copy_option::overwrite_if_exists);
+  openstudio::filesystem::copy_file(origSqlPath, testSqlPath, openstudio::filesystem::copy_option::overwrite_if_exists);
   openstudio::path errorPath = resourcesPath() / openstudio::toPath("energyplus/ErrorFiles/WarningsAndSevere.err");
 
   SqlFile sqlFile(testSqlPath);
@@ -125,7 +125,7 @@ TEST_F(EnergyPlusFixture,ResultsTranslator_5ZoneAirCooled_WarningsAndCrash)
   openstudio::path epDir = resourcesPath() / openstudio::toPath("energyplus/5ZoneAirCooled/");
   openstudio::path origSqlPath = epDir / openstudio::toPath("eplusout.sql");
   openstudio::path testSqlPath = epDir / openstudio::toPath("eplusout_WarningsAndCrash.sql");
-  boost::filesystem::copy_file(origSqlPath,testSqlPath,boost::filesystem::copy_option::overwrite_if_exists);
+  openstudio::filesystem::copy_file(origSqlPath,testSqlPath,openstudio::filesystem::copy_option::overwrite_if_exists);
   openstudio::path errorPath = resourcesPath() / openstudio::toPath("energyplus/ErrorFiles/WarningsAndCrash.err");
 
   SqlFile sqlFile(testSqlPath);

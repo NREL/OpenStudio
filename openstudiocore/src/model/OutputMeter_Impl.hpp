@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -50,14 +50,7 @@ namespace detail {
 
   /** OutputMeter_Impl is a ModelObject_Impl that is the implementation class for OutputMeter.*/
   class MODEL_API OutputMeter_Impl : public ModelObject_Impl {
-    Q_OBJECT;
-    Q_PROPERTY(std::string name READ name WRITE setName);
-    Q_PROPERTY(std::string reportingFrequency READ reportingFrequency WRITE setReportingFrequency RESET resetReportingFrequency);
-    Q_PROPERTY(bool isReportingFrequencyDefaulted READ isReportingFrequencyDefaulted);
-    Q_PROPERTY(bool meterFileOnly READ meterFileOnly WRITE setMeterFileOnly RESET resetMeterFileOnly);
-    Q_PROPERTY(bool isMeterFileOnlyDefaulted READ isMeterFileOnlyDefaulted);
-    Q_PROPERTY(bool cumulative READ cumulative WRITE setCumulative RESET resetCumulative);
-    Q_PROPERTY(bool isCumulativeDefaulted READ isCumulativeDefaulted);
+
    public:
     /** @name Constructors and Destructors */
     //@{

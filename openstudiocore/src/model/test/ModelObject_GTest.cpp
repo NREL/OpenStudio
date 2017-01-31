@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -52,18 +52,19 @@ using namespace openstudio::model;
 
 TEST_F(ModelFixture, ModelObject_Attributes)
 {
-  Model model;
+  // Removed due to removal of attributes
+  // Model model;
 
-  OptionalWorkspaceObject oObject = model.addObject(IdfObject(IddObjectType::OS_Version));
-  ASSERT_TRUE(oObject);
-  ModelObject version = oObject->cast<ModelObject>();
-  StringVector versionAttributeNames = version.attributeNames();
-  ASSERT_EQ(static_cast<unsigned>(3),versionAttributeNames.size());
-  EXPECT_EQ("iddObjectType",versionAttributeNames[0]);
-  EXPECT_EQ("handle",versionAttributeNames[1]);
-  EXPECT_EQ("name",versionAttributeNames[2]);
+  // OptionalWorkspaceObject oObject = model.addObject(IdfObject(IddObjectType::OS_Version));
+  // ASSERT_TRUE(oObject);
+  // ModelObject version = oObject->cast<ModelObject>();
+  // StringVector versionAttributeNames = version.attributeNames();
+  // ASSERT_EQ(static_cast<unsigned>(3),versionAttributeNames.size());
+  // EXPECT_EQ("iddObjectType",versionAttributeNames[0]);
+  // EXPECT_EQ("handle",versionAttributeNames[1]);
+  // EXPECT_EQ("name",versionAttributeNames[2]);
 
-  EXPECT_FALSE(version.getAttribute("N a m e"));
+  // EXPECT_FALSE(version.getAttribute("N a m e"));
 }
 
 TEST_F(ModelFixture, ModelObject_Clone_SameModel) {

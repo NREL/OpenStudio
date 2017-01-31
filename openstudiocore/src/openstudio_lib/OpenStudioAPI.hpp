@@ -1,7 +1,7 @@
 #ifndef OPENSTUDIO_OPENSTUDIOAPI_HPP
 #define OPENSTUDIO_OPENSTUDIOAPI_HPP
 
-#if _WIN32 || _MSC_VER
+#if (_WIN32 || _MSC_VER) && SHARED_OS_LIBS
 
 #ifdef openstudio_lib_EXPORTS
 #define OPENSTUDIO_API __declspec(dllexport)

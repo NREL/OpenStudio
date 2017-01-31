@@ -1,5 +1,16 @@
+## OpenStudio v1.14.0
+###### 2016-12-09 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.13.4...v1.14.0 )
+
+- ![Fixed:][fixed] [#1519]( https://github.com/NREL/OpenStudio/issues/1519 ), People Def can have values for multiple unit types, other loads can't
+- ![Fixed:][fixed] [#2178]( https://github.com/NREL/OpenStudio/issues/2178 ), Plenum Space Type - space.spaceType.is_initialized not functioning as expected
+- ![Fixed:][fixed] [#2179]( https://github.com/NREL/OpenStudio/issues/2179 ), Plenum Space Type - Odd behavior when rename space type
+- ![Fixed:][fixed] [#2299]( https://github.com/NREL/OpenStudio/issues/2299 ), Issue with Zone Sensible Cooling and Heating when heating or cooling only system
+- ![Fixed:][fixed] [#2370]( https://github.com/NREL/OpenStudio/issues/2370 ), Error in intersectSurfaces
+- ![Fixed:][fixed] [#2372]( https://github.com/NREL/OpenStudio/issues/2372 ), Conversion issues from 1.12.0 to 1.13.0
+- ![Fixed:][fixed] [#2376]( https://github.com/NREL/OpenStudio/issues/2376 ), ScheduleRuleset.remove orphans winter and summer profiles
+
 ## OpenStudio v1.13.4
-###### 2016-11-10 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.13.3...v1.13.4 )
+###### 2016-12-01 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.13.3...v1.13.4 )
 
 - ![Fixed:][fixed] [#105]( https://github.com/NREL/OpenStudio/issues/105 ), Deleting Schedule Ruleset object leaves Schedule Day objects behind (Bugzilla #662)
 - ![Fixed:][fixed] [#1459]( https://github.com/NREL/OpenStudio/issues/1459 ), LowTemperatureRadiant system input 'Radiant Surface Type' translates unexpected surfaces to SurfaceGroup

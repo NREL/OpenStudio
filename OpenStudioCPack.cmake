@@ -21,7 +21,6 @@ endif()
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/copyright.txt")
 
 set(CPACK_PACKAGE_EXECUTABLES "OpenStudio" "OpenStudio"
-                              "Pat" "ParametricAnalysisTool"
                               "ResultsViewer" "ResultsViewer"
 )
 
@@ -39,8 +38,9 @@ set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${CMAKE_CURRENT_SOURCE_DIR}/CMake/debian
 
 if(APPLE)
   set(CPACK_OSX_PACKAGE_VERSION 10.9)
-  set(CPACK_PACKAGING_INSTALL_PREFIX "/Applications" CACHE PATH "Package install location")
-  set(CPACK_PACKAGING_INSTALL_PREFIX "${CPACK_PACKAGING_INSTALL_PREFIX}/OpenStudio ${OPENSTUDIO_VERSION}")
+  #set(CPACK_PACKAGING_INSTALL_PREFIX "/Applications" CACHE PATH "Package install location")
+  #set(CPACK_PACKAGING_INSTALL_PREFIX "${CPACK_PACKAGING_INSTALL_PREFIX}/OpenStudio ${OPENSTUDIO_VERSION}")
+  set(CPACK_PACKAGING_INSTALL_PREFIX "")
 
   configure_file("${CMAKE_SOURCE_DIR}/DarwinPostFlight.sh.in" "${CMAKE_BINARY_DIR}/DarwinPostFlight.sh")
   set(CPACK_POSTFLIGHT_SCRIPT "${CMAKE_BINARY_DIR}/DarwinPostFlight.sh")
@@ -57,16 +57,12 @@ else()
   # Registry keys
   set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS "
     WriteRegStr HKLM 'Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\App Paths\\\\OpenStudio.exe' '' '$INSTDIR\\\\bin\\\\OpenStudio.exe'
-    WriteRegStr HKLM 'Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\App Paths\\\\Pat.exe' '' '$INSTDIR\\\\bin\\\\Pat.exe'
 
     WriteRegStr HKCR 'Applications\\\\OpenStudio.exe\\\\shell\\\\open\\\\command' '' '$INSTDIR\\\\bin\\\\OpenStudio.exe \\\"%1\\\"'
-    WriteRegStr HKCR 'Applications\\\\Pat.exe\\\\shell\\\\open\\\\command' '' '$INSTDIR\\\\bin\\\\Pat.exe \\\"%1\\\"'
 
     WriteRegStr HKCR 'Applications\\\\OpenStudio.exe\\\\SupportedTypes' '.osm' ''
-    WriteRegStr HKCR 'Applications\\\\Pat.exe\\\\SupportedTypes' '.osp' ''
 
     WriteRegStr HKCR '.osm\\\\OpenWithList\\\\OpenStudio.exe' '' ''
-    WriteRegStr HKCR '.osp\\\\OpenWithList\\\\Pat.exe' '' ''
 
     WriteRegStr HKCR '.osc' '' 'OpenStudio.osc'
     WriteRegStr HKCR 'OpenStudio.osc' '' 'OpenStudio Component'
@@ -76,11 +72,6 @@ else()
     WriteRegStr HKCR 'OpenStudio.osm' '' 'OpenStudio Model'
     WriteRegStr HKCR 'OpenStudio.osm\\\\DefaultIcon' '' '$INSTDIR\\\\bin\\\\OpenStudio.exe,1'
     WriteRegStr HKCR 'OpenStudio.osm\\\\\\\\shell\\\\open\\\\command' '' '$INSTDIR\\\\bin\\\\OpenStudio.exe \\\"%1\\\"'
-
-    WriteRegStr HKCR '.osp' '' 'OpenStudio.osp'
-    WriteRegStr HKCR 'OpenStudio.osp' '' 'OpenStudio Project'
-    WriteRegStr HKCR 'OpenStudio.osp\\\\DefaultIcon' '' '$INSTDIR\\\\bin\\\\Pat.exe,1'
-    WriteRegStr HKCR 'OpenStudio.osp\\\\\\\\shell\\\\open\\\\command' '' '$INSTDIR\\\\bin\\\\Pat.exe \\\"%1\\\"'
 
     WriteRegStr HKCR '.ossr' '' 'OpenStudio.ossr'
     WriteRegStr HKCR 'OpenStudio.ossr' '' 'OpenStudio Standard Result'
@@ -93,15 +84,10 @@ else()
   ")
   set(CPACK_NSIS_EXTRA_UNINSTALL_COMMANDS "
     DeleteRegKey HKLM 'Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\App Paths\\\\OpenStudio.exe'
-    DeleteRegKey HKLM 'Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\App Paths\\\\Pat.exe'
     DeleteRegKey HKCR 'Applications\\\\OpenStudio.exe'
-    DeleteRegKey HKCR 'Applications\\\\Pat.exe'
     DeleteRegKey HKCR '.osm\\\\OpenWithList\\\\OpenStudio.exe'
-    DeleteRegKey HKCR '.osp\\\\OpenWithList\\\\Pat.exe'
     DeleteRegKey HKCR 'OpenStudio.osc'
     DeleteRegKey HKCR 'OpenStudio.osm'
-    DeleteRegKey HKCR 'OpenStudio.osp'
-    DeleteRegKey HKCR 'OpenStudio.osp-journal'
     DeleteRegKey HKCR 'OpenStudio.ossr'
   ")
 endif()

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -32,6 +32,7 @@
 #include <QWidget>
 
 #include "../utilities/bcl/BCLMeasure.hpp"
+#include "../utilities/filetypes/WorkflowJSON.hpp"
 
 class QPushButton;
 class QProgressBar;
@@ -45,18 +46,12 @@ class ComponentList;
 class CollapsibleComponentList;
 class MeasureManager;
 
-namespace analysisdriver {
-
-class SimpleProject;
-
-}
-
 class SyncMeasuresDialogCentralWidget : public QWidget
 {
   Q_OBJECT
 
 public:
-  SyncMeasuresDialogCentralWidget(analysisdriver::SimpleProject * project,
+  SyncMeasuresDialogCentralWidget(const WorkflowJSON& workflow,
     MeasureManager * measureManager,
     QWidget * parent = nullptr);
   virtual ~SyncMeasuresDialogCentralWidget() {}
@@ -77,7 +72,7 @@ private:
   ComponentList * m_componentList;
   int m_pageIdx;
   std::vector<BCLMeasure> m_measures;
-  analysisdriver::SimpleProject * m_project;
+  WorkflowJSON m_workflow;
   MeasureManager * m_measureManager;
 
 signals:
