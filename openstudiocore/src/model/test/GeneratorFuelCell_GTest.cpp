@@ -117,6 +117,7 @@ TEST_F(ModelFixture, FuelCell2) {
   // create default fuelcell
 
   GeneratorFuelCell fuelcell(model, powerModule, airSupply, waterSupply, auxHeater, exhaustHX, elecStorage, inverter, fuelSupply);
+
   EXPECT_EQ(powerModule, fuelcell.powerModule());
   EXPECT_EQ(airSupply, fuelcell.airSupply());
   EXPECT_EQ(waterSupply, fuelcell.waterSupply());
