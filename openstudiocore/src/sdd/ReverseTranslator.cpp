@@ -36,6 +36,8 @@
 #include "../model/HeatExchangerAirToAirSensibleAndLatent_Impl.hpp"
 #include "../model/Facility.hpp"
 #include "../model/Facility_Impl.hpp"
+#include "../model/FanZoneExhaust.hpp"
+#include "../model/FanZoneExhaust_Impl.hpp"
 #include "../model/Building.hpp"
 #include "../model/Building_Impl.hpp"
 #include "../model/ThermalZone.hpp"
@@ -1066,6 +1068,24 @@ namespace sdd {
       meter.setSpecificEndUse("NonReg Ltg");
       meter.setInstallLocationType(InstallLocationType::Facility);
       meter.setReportingFrequency("Hourly");
+
+      {
+        auto fanZoneExhausts = result->getModelObjects<model::FanZoneExhaust>();
+        std::vector<std::string> subCategories(fanZoneExhausts.size());
+        std::transform(fanZoneExhausts.begin(), fanZoneExhausts.end(), subCategories.begin(), [](const model::FanZoneExhaust & fan) {
+          return fan.endUseSubcategory();
+        });
+        subCategories.erase(std::unique(subCategories.begin(),subCategories.end()),subCategories.end());
+
+        for( const auto & subcat : subCategories ) {
+          meter = model::Meter(*result);
+          meter.setFuelType(FuelType::Electricity);
+          meter.setEndUseType(EndUseType::Fans);
+          meter.setSpecificEndUse(subcat);
+          meter.setInstallLocationType(InstallLocationType::Facility);
+          meter.setReportingFrequency("Hourly");
+        }
+      }
 
       // Output Variables
 
