@@ -88,13 +88,16 @@ namespace detail {
 
 } // detail
 
-ExternalInterfaceVariable::ExternalInterfaceVariable(const Model& model)
+ExternalInterfaceVariable::ExternalInterfaceVariable(const Model& model, const std::string& variableName, double initialValue)
   : ModelObject(ExternalInterfaceVariable::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::ExternalInterfaceVariable_Impl>());
-
-  // TODO: Appropriately handle the following required object-list fields.
-  // setInitialValue();
+  bool ok = getImpl<detail::ExternalInterfaceVariable_Impl>()->setName(variableName);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s Name to " << variableName << ".");
+  }
+  setInitialValue(initialValue);
 }
 
 IddObjectType ExternalInterfaceVariable::iddObjectType() {

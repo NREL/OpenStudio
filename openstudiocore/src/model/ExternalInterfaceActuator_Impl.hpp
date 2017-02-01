@@ -83,9 +83,9 @@ namespace detail {
 
     bool setActuatedComponentUnique(const ModelObject& allObjects);
 
-    void setActuatedComponentType(const std::string& actuatedComponentType);
+    bool setActuatedComponentType(const std::string& actuatedComponentType);
 
-    void setActuatedComponentControlType(const std::string& actuatedComponentControlType);
+    bool setActuatedComponentControlType(const std::string& actuatedComponentControlType);
 
     void setOptionalInitialValue(double optionalInitialValue);
 
@@ -99,8 +99,6 @@ namespace detail {
    protected:
    private:
     REGISTER_LOGGER("openstudio.model.ExternalInterfaceActuator");
-
-    boost::optional<ModelObject> optionalActuatedComponentUnique() const;
   };
 
 } // detail

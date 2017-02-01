@@ -50,6 +50,8 @@ class MODEL_API ExternalInterfaceActuator : public ModelObject {
 
   explicit ExternalInterfaceActuator(const ModelObject& modelObject);
 
+  explicit ExternalInterfaceActuator(const ModelObject& modelObject, const std::string actuatedComponentType, const std::string actuatedComponentControlType);
+
   virtual ~ExternalInterfaceActuator() {}
 
   //@}
@@ -73,9 +75,9 @@ class MODEL_API ExternalInterfaceActuator : public ModelObject {
 
   bool setActuatedComponentUnique(const ModelObject& modelObject);
 
-  void setActuatedComponentType(const std::string& actuatedComponentType);
+  bool setActuatedComponentType(const std::string& actuatedComponentType);
 
-  void setActuatedComponentControlType(const std::string& actuatedComponentControlType);
+  bool setActuatedComponentControlType(const std::string& actuatedComponentControlType);
 
   void setOptionalInitialValue(double optionalInitialValue);
 

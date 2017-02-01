@@ -35,7 +35,6 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class ScheduleTypeLimits;
 
 namespace detail {
@@ -72,7 +71,6 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    // TODO: Check return type. From object lists, some candidates are: ScheduleTypeLimits.
     boost::optional<ScheduleTypeLimits> scheduleTypeLimits() const;
 
     double initialValue() const;
@@ -81,7 +79,6 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: ScheduleTypeLimits.
     bool setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits);
 
     void resetScheduleTypeLimits();

@@ -27236,6 +27236,7 @@ OS:ExternalInterface:Variable,
        \memo external interface. During the warm-up period and the system sizing, its value
        \memo is set to the value specified by the field "initial value." This object can be used
        \memo to move data into Erl subroutines.
+       \min-fields 3
   A1, \field Handle
        \type handle
        \required-field

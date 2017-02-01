@@ -48,7 +48,7 @@ class MODEL_API ExternalInterfaceVariable : public ModelObject {
   /** @name Constructors and Destructors */
   //@{
 
-  explicit ExternalInterfaceVariable(const Model& model);
+  explicit ExternalInterfaceVariable(const Model& model, const std::string& variableName, double initialValue);
 
   virtual ~ExternalInterfaceVariable() {}
 

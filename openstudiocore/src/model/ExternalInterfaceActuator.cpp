@@ -79,23 +79,26 @@ namespace detail {
   }
 
   ModelObject ExternalInterfaceActuator_Impl::actuatedComponentUnique() const {
-    boost::optional<ModelObject> value = optionalActuatedComponentUnique();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Actuated Component Unique attached.");
-    }
-    return value.get();
+
+    return this->getTarget(OS_ExternalInterface_ActuatorFields::ActuatedComponentUniqueName)->cast<ModelObject>();
   }
 
   std::string ExternalInterfaceActuator_Impl::actuatedComponentType() const {
     boost::optional<std::string> value = getString(OS_ExternalInterface_ActuatorFields::ActuatedComponentType,true);
-    OS_ASSERT(value);
-    return value.get();
+    if (value) {
+      return value.get();
+    } else {
+      return "";
+    }
   }
 
   std::string ExternalInterfaceActuator_Impl::actuatedComponentControlType() const {
     boost::optional<std::string> value = getString(OS_ExternalInterface_ActuatorFields::ActuatedComponentControlType,true);
-    OS_ASSERT(value);
-    return value.get();
+    if (value) {
+      return value.get();
+    } else {
+      return "";
+    }
   }
 
   boost::optional<double> ExternalInterfaceActuator_Impl::optionalInitialValue() const {
@@ -107,14 +110,14 @@ namespace detail {
     return result;
   }
 
-  void ExternalInterfaceActuator_Impl::setActuatedComponentType(const std::string& actuatedComponentType) {
+  bool ExternalInterfaceActuator_Impl::setActuatedComponentType(const std::string& actuatedComponentType) {
     bool result = setString(OS_ExternalInterface_ActuatorFields::ActuatedComponentType, actuatedComponentType);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void ExternalInterfaceActuator_Impl::setActuatedComponentControlType(const std::string& actuatedComponentControlType) {
+  bool ExternalInterfaceActuator_Impl::setActuatedComponentControlType(const std::string& actuatedComponentControlType) {
     bool result = setString(OS_ExternalInterface_ActuatorFields::ActuatedComponentControlType, actuatedComponentControlType);
-    OS_ASSERT(result);
+    return result;
   }
 
   void ExternalInterfaceActuator_Impl::setOptionalInitialValue(double optionalInitialValue) {
@@ -127,22 +130,44 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  boost::optional<ModelObject> ExternalInterfaceActuator_Impl::optionalActuatedComponentUnique() const {
-    return getObject<ModelObject>().getModelObjectTarget<ModelObject>(OS_ExternalInterface_ActuatorFields::ActuatedComponentUniqueName);
-  }
-
 } // detail
+
+ExternalInterfaceActuator::ExternalInterfaceActuator(const ModelObject& modelObject, const std::string actuatedComponentType, const std::string actuatedComponentControlType)
+  : ModelObject(ExternalInterfaceActuator::iddObjectType(), modelObject.model()) {
+  OS_ASSERT(getImpl<detail::ExternalInterfaceActuator_Impl>());
+
+  bool ok = setActuatedComponentUnique(modelObject);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s setActuatedComponentUnique to "
+      << modelObject.briefDescription() << ".");
+  }
+  ok = setActuatedComponentType(actuatedComponentType);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s actuatedComponentType to "
+      << actuatedComponentType << ".");
+  }
+  ok = setActuatedComponentControlType(actuatedComponentControlType);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s actuatedComponentControlType to "
+      << actuatedComponentControlType << ".");
+  }
+}
 
 ExternalInterfaceActuator::ExternalInterfaceActuator(const ModelObject& modelObject)
   : ModelObject(ExternalInterfaceActuator::iddObjectType(), modelObject.model())
 {
   OS_ASSERT(getImpl<detail::ExternalInterfaceActuator_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_ExternalInterface_ActuatorFields::ActuatedComponentUniqueName
-  bool ok = true;
-  // ok = setActuatedComponentUnique();
-  OS_ASSERT(ok);
+  bool ok = setActuatedComponentUnique(modelObject);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s setActuatedComponentUnique to "
+      << modelObject.briefDescription() << ".");
+  }
+  //TODO set below to some appropriate default that depends on the modelObject::IddType
   // setActuatedComponentType();
   // setActuatedComponentControlType();
 }
@@ -171,12 +196,12 @@ bool ExternalInterfaceActuator::setActuatedComponentUnique(const ModelObject& mo
   return getImpl<detail::ExternalInterfaceActuator_Impl>()->setActuatedComponentUnique(modelObject);
 }
 
-void ExternalInterfaceActuator::setActuatedComponentType(const std::string& actuatedComponentType) {
-  getImpl<detail::ExternalInterfaceActuator_Impl>()->setActuatedComponentType(actuatedComponentType);
+bool ExternalInterfaceActuator::setActuatedComponentType(const std::string& actuatedComponentType) {
+  return getImpl<detail::ExternalInterfaceActuator_Impl>()->setActuatedComponentType(actuatedComponentType);
 }
 
-void ExternalInterfaceActuator::setActuatedComponentControlType(const std::string& actuatedComponentControlType) {
-  getImpl<detail::ExternalInterfaceActuator_Impl>()->setActuatedComponentControlType(actuatedComponentControlType);
+bool ExternalInterfaceActuator::setActuatedComponentControlType(const std::string& actuatedComponentControlType) {
+  return getImpl<detail::ExternalInterfaceActuator_Impl>()->setActuatedComponentControlType(actuatedComponentControlType);
 }
 
 void ExternalInterfaceActuator::setOptionalInitialValue(double optionalInitialValue) {

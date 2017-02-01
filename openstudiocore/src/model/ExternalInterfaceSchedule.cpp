@@ -29,7 +29,6 @@
 #include "ExternalInterfaceSchedule.hpp"
 #include "ExternalInterfaceSchedule_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeLimits_Impl.hpp"
 
