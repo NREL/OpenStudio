@@ -89,6 +89,8 @@ namespace detail {
 
     void resetFMULoggingOn();
 
+    void setFMUName(std::string fMUName);
+
     //@}
     /** @name Other */
     //@{

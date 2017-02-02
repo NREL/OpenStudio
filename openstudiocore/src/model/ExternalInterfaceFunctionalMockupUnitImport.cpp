@@ -115,9 +115,14 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  void ExternalInterfaceFunctionalMockupUnitImport_Impl::setFMUName(std::string fMUName) {
+    bool result = setString(OS_ExternalInterface_FunctionalMockupUnitImportFields::FMUFileName, fMUName);
+    OS_ASSERT(result);
+  }
+
 } // detail
 
-ExternalInterfaceFunctionalMockupUnitImport::ExternalInterfaceFunctionalMockupUnitImport(const Model& model)
+ExternalInterfaceFunctionalMockupUnitImport::ExternalInterfaceFunctionalMockupUnitImport(const Model& model, const std::string& fmuName)
   : ModelObject(ExternalInterfaceFunctionalMockupUnitImport::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::ExternalInterfaceFunctionalMockupUnitImport_Impl>());
@@ -159,6 +164,10 @@ void ExternalInterfaceFunctionalMockupUnitImport::setFMULoggingOn(int fMULogging
 
 void ExternalInterfaceFunctionalMockupUnitImport::resetFMULoggingOn() {
   getImpl<detail::ExternalInterfaceFunctionalMockupUnitImport_Impl>()->resetFMULoggingOn();
+}
+
+void ExternalInterfaceFunctionalMockupUnitImport::setFMUName(std::string fMUName) {
+  getImpl<detail::ExternalInterfaceFunctionalMockupUnitImport_Impl>()->setFMUName(fMUName);
 }
 
 /// @cond

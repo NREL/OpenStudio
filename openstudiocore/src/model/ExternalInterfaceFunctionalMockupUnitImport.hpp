@@ -48,7 +48,7 @@ class MODEL_API ExternalInterfaceFunctionalMockupUnitImport : public ModelObject
   /** @name Constructors and Destructors */
   //@{
 
-  explicit ExternalInterfaceFunctionalMockupUnitImport(const Model& model);
+   explicit ExternalInterfaceFunctionalMockupUnitImport(const Model& model, const std::string& fmuName);
 
   virtual ~ExternalInterfaceFunctionalMockupUnitImport() {}
 
@@ -78,6 +78,8 @@ class MODEL_API ExternalInterfaceFunctionalMockupUnitImport : public ModelObject
   void setFMULoggingOn(int fMULoggingOn);
 
   void resetFMULoggingOn();
+
+  void setFMUName(std::string fMUName);
 
   //@}
   /** @name Other */
