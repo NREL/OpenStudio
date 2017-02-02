@@ -29,6 +29,9 @@
 #include "ExternalInterfaceFunctionalMockupUnitImportToActuator.hpp"
 #include "ExternalInterfaceFunctionalMockupUnitImportToActuator_Impl.hpp"
 
+#include "ExternalInterfaceFunctionalMockupUnitImport.hpp"
+#include "ExternalInterfaceFunctionalMockupUnitImport_Impl.hpp"
+
 #include "Model.hpp"
 #include "Model_Impl.hpp"
 
@@ -98,8 +101,8 @@ namespace detail {
     return value.get();
   }
 
-  ModelObject ExternalInterfaceFunctionalMockupUnitImportToActuator_Impl::fMUFile() const {
-    boost::optional<ModelObject> value = optionalFMUFile();
+  ExternalInterfaceFunctionalMockupUnitImport ExternalInterfaceFunctionalMockupUnitImportToActuator_Impl::fMUFile() const {
+    boost::optional<ExternalInterfaceFunctionalMockupUnitImport> value = optionalFMUFile();
     if (!value) {
       LOG_AND_THROW(briefDescription() << " does not have an FMUFile attached.");
     }
@@ -139,8 +142,8 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool ExternalInterfaceFunctionalMockupUnitImportToActuator_Impl::setFMUFile(const ModelObject& modelObject) {
-    bool result = setPointer(OS_ExternalInterface_FunctionalMockupUnitImport_To_ActuatorFields::FMUFileName, modelObject.handle());
+  bool ExternalInterfaceFunctionalMockupUnitImportToActuator_Impl::setFMUFile(const ExternalInterfaceFunctionalMockupUnitImport& fMUFile) {
+    bool result = setPointer(OS_ExternalInterface_FunctionalMockupUnitImport_To_ActuatorFields::FMUFileName, fMUFile.handle());
     return result;
   }
 
@@ -163,30 +166,40 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<ModelObject>(OS_ExternalInterface_FunctionalMockupUnitImport_To_ActuatorFields::ActuatedComponentUniqueName);
   }
 
-  boost::optional<ModelObject> ExternalInterfaceFunctionalMockupUnitImportToActuator_Impl::optionalFMUFile() const {
-    return getObject<ModelObject>().getModelObjectTarget<ModelObject>(OS_ExternalInterface_FunctionalMockupUnitImport_To_ActuatorFields::FMUFileName);
+  boost::optional<ExternalInterfaceFunctionalMockupUnitImport> ExternalInterfaceFunctionalMockupUnitImportToActuator_Impl::optionalFMUFile() const {
+    return getObject<ExternalInterfaceFunctionalMockupUnitImport>().getModelObjectTarget<ExternalInterfaceFunctionalMockupUnitImport>(OS_ExternalInterface_FunctionalMockupUnitImport_To_ActuatorFields::FMUFileName);
   }
 
 } // detail
 
-ExternalInterfaceFunctionalMockupUnitImportToActuator::ExternalInterfaceFunctionalMockupUnitImportToActuator(const ModelObject& modelObject)
+ExternalInterfaceFunctionalMockupUnitImportToActuator::ExternalInterfaceFunctionalMockupUnitImportToActuator(const ModelObject& modelObject,
+                                                                                                             const std::string& actuatedComponentType,
+                                                                                                             const std::string& actuatedComponentControlType,
+                                                                                                             const ExternalInterfaceFunctionalMockupUnitImport& fMUFile,
+                                                                                                             const std::string& fMUInstanceName,
+                                                                                                             const std::string& fMUVariableName,
+                                                                                                             double initialValue)
   : ModelObject(ExternalInterfaceFunctionalMockupUnitImportToActuator::iddObjectType(), modelObject.model())
 {
   OS_ASSERT(getImpl<detail::ExternalInterfaceFunctionalMockupUnitImportToActuator_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_ExternalInterface_FunctionalMockupUnitImport_To_ActuatorFields::ActuatedComponentUniqueName
-  //     OS_ExternalInterface_FunctionalMockupUnitImport_To_ActuatorFields::FMUFileName
-  bool ok = true;
-  // ok = setActuatedComponentUnique();
-  OS_ASSERT(ok);
-  // setActuatedComponentType();
-  // setActuatedComponentControlType();
-  // ok = setFMUFile();
-  OS_ASSERT(ok);
-  // setFMUInstanceName();
-  // setFMUVariableName();
-  // setInitialValue();
+  bool ok = setActuatedComponentUnique(modelObject);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s ActuatedComponentUnique to "
+      << modelObject.nameString() << ".");
+  }
+  setActuatedComponentType(actuatedComponentType);
+  setActuatedComponentControlType(actuatedComponentControlType);
+  ok = setFMUFile(fMUFile);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s FMUFileName to "
+      << fMUFile.fMUFileName() << ".");
+  }
+  setFMUInstanceName(fMUInstanceName);
+  setFMUVariableName(fMUVariableName);
+  setInitialValue(initialValue);
 }
 
 IddObjectType ExternalInterfaceFunctionalMockupUnitImportToActuator::iddObjectType() {
@@ -205,7 +218,7 @@ std::string ExternalInterfaceFunctionalMockupUnitImportToActuator::actuatedCompo
   return getImpl<detail::ExternalInterfaceFunctionalMockupUnitImportToActuator_Impl>()->actuatedComponentControlType();
 }
 
-ModelObject ExternalInterfaceFunctionalMockupUnitImportToActuator::fMUFile() const {
+ExternalInterfaceFunctionalMockupUnitImport ExternalInterfaceFunctionalMockupUnitImportToActuator::fMUFile() const {
   return getImpl<detail::ExternalInterfaceFunctionalMockupUnitImportToActuator_Impl>()->fMUFile();
 }
 
@@ -233,8 +246,8 @@ void ExternalInterfaceFunctionalMockupUnitImportToActuator::setActuatedComponent
   getImpl<detail::ExternalInterfaceFunctionalMockupUnitImportToActuator_Impl>()->setActuatedComponentControlType(actuatedComponentControlType);
 }
 
-bool ExternalInterfaceFunctionalMockupUnitImportToActuator::setFMUFile(const ModelObject& modelObject) {
-  return getImpl<detail::ExternalInterfaceFunctionalMockupUnitImportToActuator_Impl>()->setFMUFile(modelObject);
+bool ExternalInterfaceFunctionalMockupUnitImportToActuator::setFMUFile(const ExternalInterfaceFunctionalMockupUnitImport& fMUFile) {
+  return getImpl<detail::ExternalInterfaceFunctionalMockupUnitImportToActuator_Impl>()->setFMUFile(fMUFile);
 }
 
 void ExternalInterfaceFunctionalMockupUnitImportToActuator::setFMUInstanceName(const std::string& fMUInstanceName) {

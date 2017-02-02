@@ -120,12 +120,9 @@ ExternalInterfaceSchedule::ExternalInterfaceSchedule(const Model& model, const S
     LOG_AND_THROW("Unable to set " << briefDescription() << "'s Name to " << schedule.nameString() << ".");
   }
   setInitialValue(initialValue);
+  //TODO move the Forward Translator
   if (schedule.scheduleTypeLimits()) {
     ok = setScheduleTypeLimits(schedule.scheduleTypeLimits().get());
-    if (!ok) {
-      remove();
-      LOG_AND_THROW("Unable to set " << briefDescription() << "'s ScheduleTypeLimits to " << schedule.scheduleTypeLimits().get().nameString() << ".");
-    }
   }
 }
 

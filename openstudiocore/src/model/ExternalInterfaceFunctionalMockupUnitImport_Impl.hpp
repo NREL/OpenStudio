@@ -77,6 +77,8 @@ namespace detail {
 
     bool isFMULoggingOnDefaulted() const;
 
+    std::string fMUFileName() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -89,7 +91,7 @@ namespace detail {
 
     void resetFMULoggingOn();
 
-    void setFMUName(std::string fMUName);
+    bool setFMUFileName(std::string fMUName);
 
     //@}
     /** @name Other */

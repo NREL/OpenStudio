@@ -67,6 +67,8 @@ class MODEL_API ExternalInterfaceFunctionalMockupUnitImport : public ModelObject
 
   bool isFMULoggingOnDefaulted() const;
 
+  std::string fMUFileName() const;
+
   //@}
   /** @name Setters */
   //@{
@@ -79,7 +81,7 @@ class MODEL_API ExternalInterfaceFunctionalMockupUnitImport : public ModelObject
 
   void resetFMULoggingOn();
 
-  void setFMUName(std::string fMUName);
+  bool setFMUFileName(std::string fMUName);
 
   //@}
   /** @name Other */

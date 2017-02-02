@@ -101,7 +101,7 @@ namespace detail {
   }
 
   void ExternalInterfaceFunctionalMockupUnitImport_Impl::resetFMUTimeout() {
-    bool result = setString(OS_ExternalInterface_FunctionalMockupUnitImportFields::FMUTimeout, "");
+    bool result = setDouble(OS_ExternalInterface_FunctionalMockupUnitImportFields::FMUTimeout, 0.0);
     OS_ASSERT(result);
   }
 
@@ -111,13 +111,19 @@ namespace detail {
   }
 
   void ExternalInterfaceFunctionalMockupUnitImport_Impl::resetFMULoggingOn() {
-    bool result = setString(OS_ExternalInterface_FunctionalMockupUnitImportFields::FMULoggingOn, "");
+    bool result = setInt(OS_ExternalInterface_FunctionalMockupUnitImportFields::FMULoggingOn, 0);
     OS_ASSERT(result);
   }
 
-  void ExternalInterfaceFunctionalMockupUnitImport_Impl::setFMUName(std::string fMUName) {
+  bool ExternalInterfaceFunctionalMockupUnitImport_Impl::setFMUFileName(std::string fMUName) {
     bool result = setString(OS_ExternalInterface_FunctionalMockupUnitImportFields::FMUFileName, fMUName);
-    OS_ASSERT(result);
+    return result;
+  }
+
+  std::string ExternalInterfaceFunctionalMockupUnitImport_Impl::fMUFileName() const {
+    boost::optional<std::string> value = getString(OS_ExternalInterface_FunctionalMockupUnitImportFields::FMUFileName);
+    OS_ASSERT(value);
+    return value.get();
   }
 
 } // detail
@@ -127,7 +133,12 @@ ExternalInterfaceFunctionalMockupUnitImport::ExternalInterfaceFunctionalMockupUn
 {
   OS_ASSERT(getImpl<detail::ExternalInterfaceFunctionalMockupUnitImport_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
+  bool ok = setFMUFileName(fmuName);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s FMUFileName to "
+      << fmuName << ".");
+  }
 }
 
 IddObjectType ExternalInterfaceFunctionalMockupUnitImport::iddObjectType() {
@@ -166,8 +177,12 @@ void ExternalInterfaceFunctionalMockupUnitImport::resetFMULoggingOn() {
   getImpl<detail::ExternalInterfaceFunctionalMockupUnitImport_Impl>()->resetFMULoggingOn();
 }
 
-void ExternalInterfaceFunctionalMockupUnitImport::setFMUName(std::string fMUName) {
-  getImpl<detail::ExternalInterfaceFunctionalMockupUnitImport_Impl>()->setFMUName(fMUName);
+bool ExternalInterfaceFunctionalMockupUnitImport::setFMUFileName(std::string fMUName) {
+  return getImpl<detail::ExternalInterfaceFunctionalMockupUnitImport_Impl>()->setFMUFileName(fMUName);
+}
+
+std::string ExternalInterfaceFunctionalMockupUnitImport::fMUFileName() const {
+  return getImpl<detail::ExternalInterfaceFunctionalMockupUnitImport_Impl>()->fMUFileName();
 }
 
 /// @cond

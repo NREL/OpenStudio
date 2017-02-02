@@ -29,10 +29,12 @@
 #include "ExternalInterfaceFunctionalMockupUnitImportToSchedule.hpp"
 #include "ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
+#include "ExternalInterfaceFunctionalMockupUnitImport.hpp"
+#include "ExternalInterfaceFunctionalMockupUnitImport_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeLimits_Impl.hpp"
-
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
 #include "Model.hpp"
 #include "Model_Impl.hpp"
 
@@ -82,12 +84,12 @@ namespace detail {
     return ExternalInterfaceFunctionalMockupUnitImportToSchedule::iddObjectType();
   }
 
-  boost::optional<ScheduleTypeLimits> ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl::scheduleTypeLimitss() const {
+  boost::optional<ScheduleTypeLimits> ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl::scheduleTypeLimits() const {
     return getObject<ModelObject>().getModelObjectTarget<ScheduleTypeLimits>(OS_ExternalInterface_FunctionalMockupUnitImport_To_ScheduleFields::ScheduleTypeLimitsNames);
   }
 
-  ModelObject ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl::fMUFile() const {
-    boost::optional<ModelObject> value = optionalFMUFile();
+  ExternalInterfaceFunctionalMockupUnitImport ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl::fMUFile() const {
+    boost::optional<ExternalInterfaceFunctionalMockupUnitImport> value = optionalFMUFile();
     if (!value) {
       LOG_AND_THROW(briefDescription() << " does not have an FMUFile attached.");
     }
@@ -112,18 +114,19 @@ namespace detail {
     return value.get();
   }
 
-  bool ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl::setScheduleTypeLimitss(const ScheduleTypeLimits& scheduleTypeLimits) {
+  bool ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl::setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits) {
     bool result = setPointer(OS_ExternalInterface_FunctionalMockupUnitImport_To_ScheduleFields::ScheduleTypeLimitsNames, scheduleTypeLimits.handle());
     return result;
   }
 
-  void ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl::resetScheduleTypeLimitss() {
+  void ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl::resetScheduleTypeLimits() {
     bool result = setString(OS_ExternalInterface_FunctionalMockupUnitImport_To_ScheduleFields::ScheduleTypeLimitsNames, "");
     OS_ASSERT(result);
   }
 
-  bool ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl::setFMUFile(const ModelObject& fMUFileName) {
-    bool result = setPointer(OS_ExternalInterface_FunctionalMockupUnitImport_To_ScheduleFields::FMUFileName, fMUFileName.handle());
+  bool ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl::setFMUFile(const ExternalInterfaceFunctionalMockupUnitImport& fMUFile) {
+    bool result = setPointer(OS_ExternalInterface_FunctionalMockupUnitImport_To_ScheduleFields::FMUFileName, fMUFile.handle());
+    //TODO in FT use .fMUFile();
     return result;
   }
 
@@ -142,36 +145,51 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  boost::optional<ModelObject> ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl::optionalFMUFile() const {
-    return getObject<ModelObject>().getModelObjectTarget<ModelObject>(OS_ExternalInterface_FunctionalMockupUnitImport_To_ScheduleFields::FMUFileName);
+  boost::optional<ExternalInterfaceFunctionalMockupUnitImport> ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl::optionalFMUFile() const {
+    return getObject<ExternalInterfaceFunctionalMockupUnitImport>().getModelObjectTarget<ExternalInterfaceFunctionalMockupUnitImport>(OS_ExternalInterface_FunctionalMockupUnitImport_To_ScheduleFields::FMUFileName);
   }
 
 } // detail
 
-ExternalInterfaceFunctionalMockupUnitImportToSchedule::ExternalInterfaceFunctionalMockupUnitImportToSchedule(const Model& model)
+ExternalInterfaceFunctionalMockupUnitImportToSchedule::ExternalInterfaceFunctionalMockupUnitImportToSchedule(const Model& model,
+                                                                                                             const Schedule& schedule,
+                                                                                                             const ExternalInterfaceFunctionalMockupUnitImport& fMUFile,
+                                                                                                             const std::string& fMUInstanceName,
+                                                                                                             const std::string& fMUVariableName,
+                                                                                                             double initialValue)
   : ModelObject(ExternalInterfaceFunctionalMockupUnitImportToSchedule::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_ExternalInterface_FunctionalMockupUnitImport_To_ScheduleFields::FMUFileName
-  bool ok = true;
-  // ok = setFMUFile();
-  OS_ASSERT(ok);
-  // setFMUInstanceName();
-  // setFMUVariableName();
-  // setInitialValue();
+  bool ok = getImpl<detail::ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl>()->setName(schedule.nameString());
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s Name to " << schedule.nameString() << ".");
+  }
+  ok = setFMUFile(fMUFile);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s FMUFileName to "
+      << fMUFile.fMUFileName() << ".");
+  }
+  setFMUInstanceName(fMUInstanceName);
+  setFMUVariableName(fMUVariableName);
+  setInitialValue(initialValue);
+  //TODO move the Forward Translator
+  if (schedule.scheduleTypeLimits()) {
+    ok = setScheduleTypeLimits(schedule.scheduleTypeLimits().get());
+  }
 }
 
 IddObjectType ExternalInterfaceFunctionalMockupUnitImportToSchedule::iddObjectType() {
   return IddObjectType(IddObjectType::OS_ExternalInterface_FunctionalMockupUnitImport_To_Schedule);
 }
 
-boost::optional<ScheduleTypeLimits> ExternalInterfaceFunctionalMockupUnitImportToSchedule::scheduleTypeLimitss() const {
-  return getImpl<detail::ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl>()->scheduleTypeLimitss();
+boost::optional<ScheduleTypeLimits> ExternalInterfaceFunctionalMockupUnitImportToSchedule::scheduleTypeLimits() const {
+  return getImpl<detail::ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl>()->scheduleTypeLimits();
 }
 
-ModelObject ExternalInterfaceFunctionalMockupUnitImportToSchedule::fMUFile() const {
+ExternalInterfaceFunctionalMockupUnitImport ExternalInterfaceFunctionalMockupUnitImportToSchedule::fMUFile() const {
   return getImpl<detail::ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl>()->fMUFile();
 }
 
@@ -187,16 +205,16 @@ double ExternalInterfaceFunctionalMockupUnitImportToSchedule::initialValue() con
   return getImpl<detail::ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl>()->initialValue();
 }
 
-bool ExternalInterfaceFunctionalMockupUnitImportToSchedule::setScheduleTypeLimitss(const ScheduleTypeLimits& scheduleTypeLimits) {
-  return getImpl<detail::ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl>()->setScheduleTypeLimitss(scheduleTypeLimits);
+bool ExternalInterfaceFunctionalMockupUnitImportToSchedule::setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits) {
+  return getImpl<detail::ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl>()->setScheduleTypeLimits(scheduleTypeLimits);
 }
 
-void ExternalInterfaceFunctionalMockupUnitImportToSchedule::resetScheduleTypeLimitss() {
-  getImpl<detail::ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl>()->resetScheduleTypeLimitss();
+void ExternalInterfaceFunctionalMockupUnitImportToSchedule::resetScheduleTypeLimits() {
+  getImpl<detail::ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl>()->resetScheduleTypeLimits();
 }
 
-bool ExternalInterfaceFunctionalMockupUnitImportToSchedule::setFMUFile(const ModelObject& fMUFileName) {
-  return getImpl<detail::ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl>()->setFMUFile(fMUFileName);
+bool ExternalInterfaceFunctionalMockupUnitImportToSchedule::setFMUFile(const ExternalInterfaceFunctionalMockupUnitImport& fMUFile) {
+  return getImpl<detail::ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl>()->setFMUFile(fMUFile);
 }
 
 void ExternalInterfaceFunctionalMockupUnitImportToSchedule::setFMUInstanceName(const std::string& fMUInstanceName) {

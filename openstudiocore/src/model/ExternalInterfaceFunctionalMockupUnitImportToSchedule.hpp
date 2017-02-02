@@ -32,11 +32,13 @@
 #include <model/ModelAPI.hpp>
 #include "ModelObject.hpp"
 
+#include "ExternalInterfaceFunctionalMockupUnitImport.hpp"
+#include "ExternalInterfaceFunctionalMockupUnitImport_Impl.hpp"
+
 namespace openstudio {
 
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class ScheduleTypeLimits;
 
 namespace detail {
@@ -51,7 +53,12 @@ class MODEL_API ExternalInterfaceFunctionalMockupUnitImportToSchedule : public M
   /** @name Constructors and Destructors */
   //@{
 
-  explicit ExternalInterfaceFunctionalMockupUnitImportToSchedule(const Model& model);
+  explicit ExternalInterfaceFunctionalMockupUnitImportToSchedule(const Model& model, 
+                                                                 const Schedule& schedule,
+                                                                 const ExternalInterfaceFunctionalMockupUnitImport& fMUFile,
+                                                                 const std::string& fMUInstanceName,
+                                                                 const std::string& fMUVariableName,
+                                                                 double initialValue);
 
   virtual ~ExternalInterfaceFunctionalMockupUnitImportToSchedule() {}
 
@@ -62,10 +69,9 @@ class MODEL_API ExternalInterfaceFunctionalMockupUnitImportToSchedule : public M
   /** @name Getters */
   //@{
 
-  // TODO: Check return type. From object lists, some candidates are: ScheduleTypeLimits.
-  boost::optional<ScheduleTypeLimits> scheduleTypeLimitss() const;
+  boost::optional<ScheduleTypeLimits> scheduleTypeLimits() const;
 
-  ModelObject fMUFile() const;
+  ExternalInterfaceFunctionalMockupUnitImport fMUFile() const;
 
   std::string fMUInstanceName() const;
 
@@ -77,12 +83,11 @@ class MODEL_API ExternalInterfaceFunctionalMockupUnitImportToSchedule : public M
   /** @name Setters */
   //@{
 
-  // TODO: Check argument type. From object lists, some candidates are: ScheduleTypeLimits.
-  bool setScheduleTypeLimitss(const ScheduleTypeLimits& scheduleTypeLimits);
+  bool setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits);
 
-  void resetScheduleTypeLimitss();
+  void resetScheduleTypeLimits();
 
-  bool setFMUFile(const ModelObject& fMUFileName);
+  bool setFMUFile(const ExternalInterfaceFunctionalMockupUnitImport& fMUFile);
 
   void setFMUInstanceName(const std::string& fMUInstanceName);
 

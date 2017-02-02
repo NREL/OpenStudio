@@ -31,6 +31,8 @@
 
 #include <model/ModelAPI.hpp>
 #include "ModelObject.hpp"
+#include "ExternalInterfaceFunctionalMockupUnitImport.hpp"
+#include "ExternalInterfaceFunctionalMockupUnitImport_Impl.hpp"
 
 namespace openstudio {
 namespace model {
@@ -47,7 +49,12 @@ class MODEL_API ExternalInterfaceFunctionalMockupUnitImportFromVariable : public
   /** @name Constructors and Destructors */
   //@{
 
-  explicit ExternalInterfaceFunctionalMockupUnitImportFromVariable(const Model& model);
+   explicit ExternalInterfaceFunctionalMockupUnitImportFromVariable(const Model& model, 
+                                                                    const std::string& outputVariableIndexKeyName,
+                                                                    const std::string& outputVariableName,
+                                                                    const ExternalInterfaceFunctionalMockupUnitImport& fMUFile,
+                                                                    const std::string& fMUInstanceName,
+                                                                    const std::string& fMUVariableName);
 
   virtual ~ExternalInterfaceFunctionalMockupUnitImportFromVariable() {}
 
@@ -62,7 +69,7 @@ class MODEL_API ExternalInterfaceFunctionalMockupUnitImportFromVariable : public
 
   std::string outputVariableName() const;
 
-  ModelObject fMUFile() const;
+  ExternalInterfaceFunctionalMockupUnitImport fMUFile() const;
 
   std::string fMUInstanceName() const;
 
@@ -76,7 +83,7 @@ class MODEL_API ExternalInterfaceFunctionalMockupUnitImportFromVariable : public
 
   bool setOutputVariableName(const std::string& outputVariableName);
 
-  bool setFMUFile(const ModelObject& modelObject);
+  bool setFMUFile(const ExternalInterfaceFunctionalMockupUnitImport& fMUFile);
 
   void setFMUInstanceName(const std::string& fMUInstanceName);
 

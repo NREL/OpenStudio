@@ -31,6 +31,8 @@
 
 #include "Model.hpp"
 #include "Model_Impl.hpp"
+#include "ExternalInterfaceFunctionalMockupUnitImport.hpp"
+#include "ExternalInterfaceFunctionalMockupUnitImport_Impl.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_ExternalInterface_FunctionalMockupUnitImport_From_Variable_FieldEnums.hxx>
@@ -88,8 +90,8 @@ namespace detail {
     return value.get();
   }
 
-  ModelObject ExternalInterfaceFunctionalMockupUnitImportFromVariable_Impl::fMUFile() const {
-    boost::optional<ModelObject> value = optionalFMUFile();
+  ExternalInterfaceFunctionalMockupUnitImport ExternalInterfaceFunctionalMockupUnitImportFromVariable_Impl::fMUFile() const {
+    boost::optional<ExternalInterfaceFunctionalMockupUnitImport> value = optionalFMUFile();
     if (!value) {
       LOG_AND_THROW(briefDescription() << " does not have an FMUFile attached.");
     }
@@ -118,8 +120,9 @@ namespace detail {
     return result;
   }
 
-  bool ExternalInterfaceFunctionalMockupUnitImportFromVariable_Impl::setFMUFile(const ModelObject& fMUFileName) {
-    bool result = setPointer(OS_ExternalInterface_FunctionalMockupUnitImport_From_VariableFields::FMUFileName, fMUFileName.handle());
+  bool ExternalInterfaceFunctionalMockupUnitImportFromVariable_Impl::setFMUFile(const ExternalInterfaceFunctionalMockupUnitImport& fMUFile) {
+    bool result = setPointer(OS_ExternalInterface_FunctionalMockupUnitImport_From_VariableFields::FMUFileName, fMUFile.handle());
+    //TODO in forward translator set the field to the .fMUFileName()
     return result;
   }
 
@@ -133,27 +136,37 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  boost::optional<ModelObject> ExternalInterfaceFunctionalMockupUnitImportFromVariable_Impl::optionalFMUFile() const {
-    return getObject<ModelObject>().getModelObjectTarget<ModelObject>(OS_ExternalInterface_FunctionalMockupUnitImport_From_VariableFields::FMUFileName);
+  boost::optional<ExternalInterfaceFunctionalMockupUnitImport> ExternalInterfaceFunctionalMockupUnitImportFromVariable_Impl::optionalFMUFile() const {
+    return getObject<ExternalInterfaceFunctionalMockupUnitImport>().getModelObjectTarget<ExternalInterfaceFunctionalMockupUnitImport>(OS_ExternalInterface_FunctionalMockupUnitImport_From_VariableFields::FMUFileName);
   }
 
 } // detail
 
-ExternalInterfaceFunctionalMockupUnitImportFromVariable::ExternalInterfaceFunctionalMockupUnitImportFromVariable(const Model& model)
+ExternalInterfaceFunctionalMockupUnitImportFromVariable::ExternalInterfaceFunctionalMockupUnitImportFromVariable(const Model& model,
+                                                                                                                 const std::string& outputVariableIndexKeyName,
+                                                                                                                 const std::string& outputVariableName,
+                                                                                                                 const ExternalInterfaceFunctionalMockupUnitImport& fMUFile,
+                                                                                                                 const std::string& fMUInstanceName,
+                                                                                                                 const std::string& fMUVariableName)
   : ModelObject(ExternalInterfaceFunctionalMockupUnitImportFromVariable::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::ExternalInterfaceFunctionalMockupUnitImportFromVariable_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_ExternalInterface_FunctionalMockupUnitImport_From_VariableFields::FMUFileName
-  // setOutputVariableIndexKeyName();
-  bool ok = true;
-  // ok = setOutputVariableName();
-  OS_ASSERT(ok);
-  // ok = setFMUFile();
-  OS_ASSERT(ok);
-  // setFMUInstanceName();
-  // setFMUVariableName();
+  setOutputVariableIndexKeyName(outputVariableIndexKeyName);
+  bool ok = setOutputVariableName(outputVariableName);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s OutputVariableName to "
+      << outputVariableName << ".");
+  }
+  ok = setFMUFile(fMUFile);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s FMUFileName to "
+      << fMUFile.fMUFileName() << ".");
+  }
+  setFMUInstanceName(fMUInstanceName);
+  setFMUVariableName(fMUVariableName);
 }
 
 IddObjectType ExternalInterfaceFunctionalMockupUnitImportFromVariable::iddObjectType() {
@@ -168,7 +181,7 @@ std::string ExternalInterfaceFunctionalMockupUnitImportFromVariable::outputVaria
   return getImpl<detail::ExternalInterfaceFunctionalMockupUnitImportFromVariable_Impl>()->outputVariableName();
 }
 
-ModelObject ExternalInterfaceFunctionalMockupUnitImportFromVariable::fMUFile() const {
+ExternalInterfaceFunctionalMockupUnitImport ExternalInterfaceFunctionalMockupUnitImportFromVariable::fMUFile() const {
   return getImpl<detail::ExternalInterfaceFunctionalMockupUnitImportFromVariable_Impl>()->fMUFile();
 }
 
@@ -188,8 +201,8 @@ bool ExternalInterfaceFunctionalMockupUnitImportFromVariable::setOutputVariableN
   return getImpl<detail::ExternalInterfaceFunctionalMockupUnitImportFromVariable_Impl>()->setOutputVariableName(outputVariableName);
 }
 
-bool ExternalInterfaceFunctionalMockupUnitImportFromVariable::setFMUFile(const ModelObject& fMUFileName) {
-  return getImpl<detail::ExternalInterfaceFunctionalMockupUnitImportFromVariable_Impl>()->setFMUFile(fMUFileName);
+bool ExternalInterfaceFunctionalMockupUnitImportFromVariable::setFMUFile(const ExternalInterfaceFunctionalMockupUnitImport& fMUFile) {
+  return getImpl<detail::ExternalInterfaceFunctionalMockupUnitImportFromVariable_Impl>()->setFMUFile(fMUFile);
 }
 
 void ExternalInterfaceFunctionalMockupUnitImportFromVariable::setFMUInstanceName(const std::string& fMUInstanceName) {

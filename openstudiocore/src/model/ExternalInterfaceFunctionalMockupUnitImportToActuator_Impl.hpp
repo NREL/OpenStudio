@@ -32,6 +32,9 @@
 #include <model/ModelAPI.hpp>
 #include "ModelObject_Impl.hpp"
 
+#include "ExternalInterfaceFunctionalMockupUnitImport.hpp"
+#include "ExternalInterfaceFunctionalMockupUnitImport_Impl.hpp"
+
 namespace openstudio {
 namespace model {
 
@@ -75,7 +78,7 @@ namespace detail {
 
     std::string actuatedComponentControlType() const;
 
-    ModelObject fMUFile() const;
+    ExternalInterfaceFunctionalMockupUnitImport fMUFile() const;
 
     std::string fMUInstanceName() const;
 
@@ -93,7 +96,7 @@ namespace detail {
 
     void setActuatedComponentControlType(const std::string& actuatedComponentControlType);
 
-    bool setFMUFile(const ModelObject& modelObject);
+    bool setFMUFile(const ExternalInterfaceFunctionalMockupUnitImport& fMUFile);
 
     void setFMUInstanceName(const std::string& fMUInstanceName);
 
@@ -111,7 +114,7 @@ namespace detail {
     REGISTER_LOGGER("openstudio.model.ExternalInterfaceFunctionalMockupUnitImportToActuator");
 
     boost::optional<ModelObject> optionalActuatedComponentUnique() const;
-    boost::optional<ModelObject> optionalFMUFile() const;
+    boost::optional<ExternalInterfaceFunctionalMockupUnitImport> optionalFMUFile() const;
   };
 
 } // detail

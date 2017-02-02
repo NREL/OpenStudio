@@ -32,6 +32,9 @@
 #include <model/ModelAPI.hpp>
 #include "ModelObject.hpp"
 
+#include "ExternalInterfaceFunctionalMockupUnitImport.hpp"
+#include "ExternalInterfaceFunctionalMockupUnitImport_Impl.hpp"
+
 namespace openstudio {
 
 namespace model {
@@ -48,7 +51,13 @@ class MODEL_API ExternalInterfaceFunctionalMockupUnitImportToActuator : public M
   /** @name Constructors and Destructors */
   //@{
 
-  explicit ExternalInterfaceFunctionalMockupUnitImportToActuator(const ModelObject& modelObject);
+  explicit ExternalInterfaceFunctionalMockupUnitImportToActuator(const ModelObject& modelObject,
+                                                                 const std::string& actuatedComponentType,
+                                                                 const std::string& actuatedComponentControlType,
+                                                                 const ExternalInterfaceFunctionalMockupUnitImport& fMUFile,
+                                                                 const std::string& fMUInstanceName,
+                                                                 const std::string& fMUVariableName,
+                                                                 double initialValue);
 
   virtual ~ExternalInterfaceFunctionalMockupUnitImportToActuator() {}
 
@@ -65,7 +74,7 @@ class MODEL_API ExternalInterfaceFunctionalMockupUnitImportToActuator : public M
 
   std::string actuatedComponentControlType() const;
 
-  ModelObject fMUFile() const;
+  ExternalInterfaceFunctionalMockupUnitImport fMUFile() const;
 
   std::string fMUInstanceName() const;
 
@@ -83,7 +92,7 @@ class MODEL_API ExternalInterfaceFunctionalMockupUnitImportToActuator : public M
 
   void setActuatedComponentControlType(const std::string& actuatedComponentControlType);
 
-  bool setFMUFile(const ModelObject& modelObject);
+  bool setFMUFile(const ExternalInterfaceFunctionalMockupUnitImport& fMUFile);
 
   void setFMUInstanceName(const std::string& fMUInstanceName);
 

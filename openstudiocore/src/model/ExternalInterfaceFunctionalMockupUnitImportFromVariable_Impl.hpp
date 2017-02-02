@@ -31,6 +31,8 @@
 
 #include <model/ModelAPI.hpp>
 #include "ModelObject_Impl.hpp"
+#include "ExternalInterfaceFunctionalMockupUnitImport.hpp"
+#include "ExternalInterfaceFunctionalMockupUnitImport_Impl.hpp"
 
 namespace openstudio {
 namespace model {
@@ -73,7 +75,7 @@ namespace detail {
 
     std::string outputVariableName() const;
 
-    ModelObject fMUFile() const;
+    ExternalInterfaceFunctionalMockupUnitImport fMUFile() const;
 
     std::string fMUInstanceName() const;
 
@@ -87,7 +89,7 @@ namespace detail {
 
     bool setOutputVariableName(const std::string& outputVariableName);
 
-    bool setFMUFile(const ModelObject& modelObject);
+    bool setFMUFile(const ExternalInterfaceFunctionalMockupUnitImport& fMUFile);
 
     void setFMUInstanceName(const std::string& fMUInstanceName);
 
@@ -102,7 +104,7 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.model.ExternalInterfaceFunctionalMockupUnitImportFromVariable");
 
-    boost::optional<ModelObject> optionalFMUFile() const;
+    boost::optional<ExternalInterfaceFunctionalMockupUnitImport> optionalFMUFile() const;
   };
 
 } // detail
