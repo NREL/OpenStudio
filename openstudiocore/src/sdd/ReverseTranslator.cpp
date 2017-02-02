@@ -1075,7 +1075,9 @@ namespace sdd {
         std::transform(fanZoneExhausts.begin(), fanZoneExhausts.end(), subCategories.begin(), [](const model::FanZoneExhaust & fan) {
           return fan.endUseSubcategory();
         });
-        subCategories.erase(std::unique(subCategories.begin(),subCategories.end()),subCategories.end());
+        std::sort(subCategories.begin(),subCategories.end());
+        auto last = std::unique(subCategories.begin(),subCategories.end());
+        subCategories.erase(last,subCategories.end());
 
         for( const auto & subcat : subCategories ) {
           meter = model::Meter(*result);
