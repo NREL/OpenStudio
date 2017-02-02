@@ -50,6 +50,8 @@ class MODEL_API ExternalInterfaceSchedule : public ModelObject {
   /** @name Constructors and Destructors */
   //@{
 
+  explicit ExternalInterfaceSchedule(const Model& model, const Schedule& schedule, double initialValue);
+
   explicit ExternalInterfaceSchedule(const Model& model);
 
   virtual ~ExternalInterfaceSchedule() {}

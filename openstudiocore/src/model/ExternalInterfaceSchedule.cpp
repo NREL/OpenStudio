@@ -29,6 +29,10 @@
 #include "ExternalInterfaceSchedule.hpp"
 #include "ExternalInterfaceSchedule_Impl.hpp"
 
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeLimits_Impl.hpp"
 
@@ -105,13 +109,37 @@ namespace detail {
 
 } // detail
 
-ExternalInterfaceSchedule::ExternalInterfaceSchedule(const Model& model)
+ExternalInterfaceSchedule::ExternalInterfaceSchedule(const Model& model, const Schedule& schedule, double initialValue)
   : ModelObject(ExternalInterfaceSchedule::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::ExternalInterfaceSchedule_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  // setInitialValue();
+  bool ok = getImpl<detail::ExternalInterfaceSchedule_Impl>()->setName(schedule.nameString());
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s Name to " << schedule.nameString() << ".");
+  }
+  setInitialValue(initialValue);
+  if (schedule.scheduleTypeLimits()) {
+    ok = setScheduleTypeLimits(schedule.scheduleTypeLimits().get());
+    if (!ok) {
+      remove();
+      LOG_AND_THROW("Unable to set " << briefDescription() << "'s ScheduleTypeLimits to " << schedule.scheduleTypeLimits().get().nameString() << ".");
+    }
+  }
+}
+
+ExternalInterfaceSchedule::ExternalInterfaceSchedule(const Model& model)
+  : ModelObject(ExternalInterfaceSchedule::iddObjectType(), model)
+{
+  OS_ASSERT(getImpl<detail::ExternalInterfaceSchedule_Impl>());
+
+  Schedule schedule = this->model().alwaysOnContinuousSchedule();
+  bool ok = getImpl<detail::ExternalInterfaceSchedule_Impl>()->setName(schedule.nameString());
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s Name to " << schedule.nameString() << ".");
+  }
 }
 
 IddObjectType ExternalInterfaceSchedule::iddObjectType() {
