@@ -255,17 +255,6 @@ if(UNIX)
   else()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
   endif()
-
-  # extra warnings - DLM: we should shoot for this
-  #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wextra")
-  # warn the user if a variable declaration shadows another with the same name in the same scope - DLM: we should shoot for this
-  #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wshadow")
-  # effective c++ - DLM: we should shoot for this
-  #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Weffc++")
-  # warn about non-portable code - DLM: we should shoot for this
-  #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pedantic")
-  # treat warnings as errors - DLM: we should shoot for this
-  #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
 endif()
 if(MINGW)
   # all warnings
@@ -939,15 +928,6 @@ list(APPEND QT_STATIC_INCLUDES "${QT_STATIC_INSTALL_DIR}/include/QtNetwork")
 list(APPEND QT_STATIC_INCLUDES "${QT_STATIC_INSTALL_DIR}/include/QtGui")
 list(APPEND QT_STATIC_INCLUDES "${QT_STATIC_INSTALL_DIR}/include/QtGui/5.6.1/QtGui")
 
-# Can't use the cmake finders because they are already used to find the shared stuff
-#find_library(Qt5CoreStatic NAMES QtCore Qt5Core PATHS "${QT_STATIC_INSTALL_DIR}/lib/" NO_DEFAULT_PATH)
-#find_library(Qt5WidgetsStatic NAMES QtWidgets Qt5Widgets PATHS "${QT_STATIC_INSTALL_DIR}/lib/" NO_DEFAULT_PATH)
-#find_library(Qt5XmlStatic NAMES QtXml Qt5Xml PATHS "${QT_STATIC_INSTALL_DIR}/lib/" NO_DEFAULT_PATH)
-#find_library(Qt5SqlStatic NAMES QtSql Qt5Sql PATHS "${QT_STATIC_INSTALL_DIR}/lib/" NO_DEFAULT_PATH)
-#find_library(Qt5NetworkStatic NAMES QtNetwork Qt5Network PATHS "${QT_STATIC_INSTALL_DIR}/lib/" NO_DEFAULT_PATH)
-#find_library(Qt5GuiStatic NAMES QtGui Qt5Gui PATHS "${QT_STATIC_INSTALL_DIR}/lib/" NO_DEFAULT_PATH)
-#find_library(Qt5PrintSupportStatic NAMES QtPrintSupport Qt5PrintSupport PATHS "${QT_STATIC_INSTALL_DIR}/lib/" NO_DEFAULT_PATH)
-
 FIND_QT_STATIC_LIB("QtCore;Qt5Core" "${QT_STATIC_INSTALL_DIR}/lib/")
 FIND_QT_STATIC_LIB("QtWidgets;Qt5Widgets" "${QT_STATIC_INSTALL_DIR}/lib/")
 FIND_QT_STATIC_LIB("QtXml;Qt5Xml" "${QT_STATIC_INSTALL_DIR}/lib/")
@@ -956,28 +936,12 @@ FIND_QT_STATIC_LIB("QtNetwork;Qt5Network" "${QT_STATIC_INSTALL_DIR}/lib/")
 FIND_QT_STATIC_LIB("Qt5Gui;Qt5Gui" "${QT_STATIC_INSTALL_DIR}/lib/")
 FIND_QT_STATIC_LIB("QtPrintSupport;Qt5PrintSupport" "${QT_STATIC_INSTALL_DIR}/lib/")
 
-#list(APPEND QT_STATIC_LIBS "${Qt5CoreStatic}")
-#list(APPEND QT_STATIC_LIBS "${Qt5WidgetsStatic}")
-#list(APPEND QT_STATIC_LIBS "${Qt5XmlStatic}")
-#list(APPEND QT_STATIC_LIBS "${Qt5SqlStatic}")
-#list(APPEND QT_STATIC_LIBS "${Qt5NetworkStatic}")
-#list(APPEND QT_STATIC_LIBS "${Qt5GuiStatic}")
-#list(APPEND QT_STATIC_LIBS "${Qt5PrintSupportStatic}")
-
 if( WIN32 )
-  #find_library(Qt5WinExtrasStatic NAMES Qt5WinExtras PATHS "${QT_STATIC_INSTALL_DIR}/lib/" NO_DEFAULT_PATH)
-  #find_library(qtmainStatic NAMES qtmain PATHS "${QT_STATIC_INSTALL_DIR}/lib/" NO_DEFAULT_PATH)
-  #list(APPEND QT_STATIC_LIBS "${qtmainStatic}")
-  #list(APPEND QT_STATIC_LIBS "${Qt5WinExtrasStatic}")
-  
   FIND_QT_STATIC_LIB("Qt5WinExtras" "${QT_STATIC_INSTALL_DIR}/lib/")
   FIND_QT_STATIC_LIB("qtmain" "${QT_STATIC_INSTALL_DIR}/lib/")
 endif()
 
 if( UNIX )
-  #find_library(Qt5DBusStatic NAMES QtDBus Qt5DBus PATHS "${QT_STATIC_INSTALL_DIR}/lib/" NO_DEFAULT_PATH)
-  #list(APPEND QT_STATIC_LIBS "${Qt5DBusStatic}")
-  
   FIND_QT_STATIC_LIB("QtDBus;Qt5DBus" "${QT_STATIC_INSTALL_DIR}/lib/")
   
   find_package(OpenGL REQUIRED)
@@ -994,16 +958,6 @@ if( UNIX AND NOT APPLE )
   
   FIND_QT_STATIC_LIB("qxcb" "${QT_STATIC_INSTALL_DIR}/plugins/platforms/")
   FIND_QT_STATIC_LIB("qsqlite" "${QT_STATIC_INSTALL_DIR}/plugins/sqldrivers/")
-
-  #list(APPEND QT_STATIC_LIBS "${QT_STATIC_INSTALL_DIR}/lib/libqtpcre.a")
-  #list(APPEND QT_STATIC_LIBS "${QT_STATIC_INSTALL_DIR}/lib/libqtharfbuzzng.a")
-  #list(APPEND QT_STATIC_LIBS "${QT_STATIC_INSTALL_DIR}/lib/libQt5XcbQpa.a")
-  #list(APPEND QT_STATIC_LIBS "${QT_STATIC_INSTALL_DIR}/lib/libQt5PlatformSupport.a")
-  #list(APPEND QT_STATIC_LIBS "${QT_STATIC_INSTALL_DIR}/lib/libQt5Sql.a")
-  #list(APPEND QT_STATIC_LIBS "${QT_STATIC_INSTALL_DIR}/lib/libQt5Gui.a")
-  #list(APPEND QT_STATIC_LIBS "${QT_STATIC_INSTALL_DIR}/lib/libQt5DBus.a")
-  #list(APPEND QT_STATIC_LIBS "${QT_STATIC_INSTALL_DIR}/lib/libQt5Core.a")
-  #list(APPEND QT_STATIC_LIBS "${QT_STATIC_INSTALL_DIR}/lib/libxcb-static.a")
   
   FIND_QT_STATIC_LIB("qtpcre" "${QT_STATIC_INSTALL_DIR}/lib/")
   FIND_QT_STATIC_LIB("qtharfbuzzng" "${QT_STATIC_INSTALL_DIR}/lib/")
@@ -1014,45 +968,15 @@ if( UNIX AND NOT APPLE )
   FIND_QT_STATIC_LIB("Qt5DBus" "${QT_STATIC_INSTALL_DIR}/lib/")
   FIND_QT_STATIC_LIB("Qt5Core" "${QT_STATIC_INSTALL_DIR}/lib/")
   FIND_QT_STATIC_LIB("xcb-static" "${QT_STATIC_INSTALL_DIR}/lib/")
-
-  #find_library(expat_lib libexpat.a)
-  #list(APPEND QT_STATIC_LIBS ${expat_lib}) 
   
   FIND_QT_STATIC_LIB("expat" "*")
     
-  # shared libraries
-  # DLM: would prefer to link these statically where possible
-  #find_library(png_lib png)
-  #list(APPEND QT_STATIC_LIBS ${png_lib})
-  #find_library(jpeg_lib NAMES libjpeg libjpeg.so.8)
-  #list(APPEND QT_STATIC_LIBS ${jpeg_lib})
-  #find_library(freetype_lib freetype)
-  #list(APPEND QT_STATIC_LIBS ${freetype_lib})
-  
   FIND_QT_STATIC_LIB("png" "*")
   FIND_QT_STATIC_LIB("libjpeg;libjpeg.so;libjpeg.so.8" "*")
   FIND_QT_STATIC_LIB("freetype" "*")
   
-  #find_library(dbus_lib libdbus-1.so)
-  #list(APPEND QT_STATIC_LIBS ${dbus_lib})
-  #find_library(dbus_glib_lib NAMES dbus-glib-1 libdbus-glib-1.so.2)
-  #list(APPEND QT_STATIC_LIBS ${dbus_glib_lib})
-  
   FIND_QT_STATIC_LIB("libdbus-1.so" "*")
   FIND_QT_STATIC_LIB("dbus-glib-1;libdbus-glib-1.so.2" "*")
-  
-  #find_library(glib_lib glib-2.0)
-  #list(APPEND QT_STATIC_LIBS ${glib_lib})
-  #find_library(x11_lib libX11.so)
-  #list(APPEND QT_STATIC_LIBS ${x11_lib})
-  #find_library(xcb_lib libxcb.so)
-  #list(APPEND QT_STATIC_LIBS ${xcb_lib}) 
-  #find_library(x11_xcb_lib libX11-xcb.so)
-  #list(APPEND QT_STATIC_LIBS ${x11_xcb_lib})
-  #find_library(Xext_lib libXext.so)
-  #list(APPEND QT_STATIC_LIBS ${Xext_lib})   
-  #find_library(crypto_lib crypto)
-  #list(APPEND QT_STATIC_LIBS ${crypto_lib})
   
   FIND_QT_STATIC_LIB("glib-2.0" "*")
   FIND_QT_STATIC_LIB("X11.so" "*")
@@ -1062,24 +986,8 @@ if( UNIX AND NOT APPLE )
   FIND_QT_STATIC_LIB("crypto.so" "*")
   
   if(EXISTS "/etc/redhat-release")
-    #find_library(rt_lib rt)
-    #list(APPEND QT_STATIC_LIBS ${rt_lib})
-    
     FIND_QT_STATIC_LIB("rt" "*")
   
-    #find_library(gthread_lib gthread-2.0)
-    #list(APPEND QT_STATIC_LIBS ${gthread_lib})
-    #find_library(dbus_glib_lib NAMES dbus-glib-1 libdbus-glib-1.so.2)
-    #list(APPEND QT_STATIC_LIBS ${dbus_glib_lib})
-    #find_library(gobject_lib gobject-2.0)
-    #list(APPEND QT_STATIC_LIBS ${gobject_lib})
-    #find_library(db_lib db)
-    #list(APPEND QT_STATIC_LIBS ${db_lib})
-    #find_library(icui18n_lib icui18n)
-    #list(APPEND QT_STATIC_LIBS ${icui18n_lib})
-    #find_library(icuuc_lib icuuc)
-    #list(APPEND QT_STATIC_LIBS ${icuuc_lib})
-    
     FIND_QT_STATIC_LIB("gthread-2.0" "*")
     FIND_QT_STATIC_LIB("dbus-glib-1;libdbus-glib-1.so.2" "*")
     FIND_QT_STATIC_LIB("gobject-2.0" "*")
@@ -1088,17 +996,6 @@ if( UNIX AND NOT APPLE )
     FIND_QT_STATIC_LIB("icuuc" "*")
     FIND_QT_STATIC_LIB("z.so" "*")    
   else()
-    #find_library(fontconfig_lib libfontconfig.so)
-    #list(APPEND QT_STATIC_LIBS ${fontconfig_lib}) 
-    #find_library(SM_lib libSM.so)
-    #list(APPEND QT_STATIC_LIBS ${SM_lib}) 
-    #find_library(ICE_lib libICE.so)
-    #list(APPEND QT_STATIC_LIBS ${ICE_lib})       
-    #find_library(Xi_lib libXi.so)
-    #list(APPEND QT_STATIC_LIBS ${Xi_lib})
-    #find_library(z_lib libz.so)
-    #list(APPEND QT_STATIC_LIBS ${z_lib}) 
-    
     FIND_QT_STATIC_LIB("fontconfig.so" "*")
     FIND_QT_STATIC_LIB("SM.so" "*")
     FIND_QT_STATIC_LIB("ICE.so" "*")
@@ -1110,27 +1007,6 @@ endif()
 if( APPLE )
   # DLM: the order of linking for static archives matter because symbols will only be included if they are needed by previous libraries
   # in some cases we may need to relink libraries a second time    
-  
-  #find_library(corefoundation_lib CoreFoundation)
-  #find_library(cfnetwork_lib CFNetwork)
-  #find_library(coregraphics_lib CoreGraphics)
-  #find_library(carbon_lib Carbon)
-  #find_library(appkit_lib AppKit)
-  #find_library(systemconfiguration_lib SystemConfiguration)
-  #find_library(security_lib Security)
-  #find_library(iokit IOKit)
-  #find_library(cocoa Cocoa)
-  #find_library(cups cups)
-
-  #list(APPEND QT_STATIC_LIBS ${corefoundation_lib})
-  #list(APPEND QT_STATIC_LIBS ${cfnetwork_lib})
-  #list(APPEND QT_STATIC_LIBS ${coregraphics_lib})
-  #list(APPEND QT_STATIC_LIBS ${carbon_lib})
-  #list(APPEND QT_STATIC_LIBS ${appkit_lib})
-  #list(APPEND QT_STATIC_LIBS ${systemconfiguration_lib})
-  #list(APPEND QT_STATIC_LIBS ${security_lib})
-  #list(APPEND QT_STATIC_LIBS ${io_graphics_lib})
-  #list(APPEND QT_STATIC_LIBS "${QT_STATIC_INSTALL_DIR}/lib/libqtpcre.a")
   
   FIND_QT_STATIC_LIB("CoreFoundation" "*")
   FIND_QT_STATIC_LIB("CFNetwork" "*")
@@ -1148,24 +1024,6 @@ if( APPLE )
   FIND_QT_STATIC_LIB("qtharfbuzzng" "${QT_STATIC_INSTALL_DIR}/lib/")
   FIND_QT_STATIC_LIB("Qt5PlatformSupport" "${QT_STATIC_INSTALL_DIR}/lib/")
   FIND_QT_STATIC_LIB("qtpcre" "${QT_STATIC_INSTALL_DIR}/lib/")
-
-  #list(APPEND QT_STATIC_LIBS "${QT_STATIC_INSTALL_DIR}/plugins/platforms/libqcocoa.a")
-  #list(APPEND QT_STATIC_LIBS "${QT_STATIC_INSTALL_DIR}/plugins/sqldrivers/libqsqlite.a")
-  #list(APPEND QT_STATIC_LIBS "${QT_STATIC_INSTALL_DIR}/lib/libqtfreetype.a")
-  #list(APPEND QT_STATIC_LIBS "${QT_STATIC_INSTALL_DIR}/lib/libpoly2tri.a")
-  #list(APPEND QT_STATIC_LIBS "${QT_STATIC_INSTALL_DIR}/lib/libqtharfbuzzng.a")
-  #list(APPEND QT_STATIC_LIBS "${QT_STATIC_INSTALL_DIR}/lib/libQt5PlatformSupport.a")
-  #list(APPEND QT_STATIC_LIBS "${QT_STATIC_INSTALL_DIR}/lib/libqtpcre.a")
-  #list(APPEND QT_STATIC_LIBS ${corefoundation_lib})
-  #list(APPEND QT_STATIC_LIBS ${cfnetwork_lib})
-  #list(APPEND QT_STATIC_LIBS ${coregraphics_lib})
-  #list(APPEND QT_STATIC_LIBS ${carbon_lib})
-  #list(APPEND QT_STATIC_LIBS ${appkit_lib})
-  #list(APPEND QT_STATIC_LIBS ${systemconfiguration_lib})
-  #list(APPEND QT_STATIC_LIBS ${security_lib})
-  #list(APPEND QT_STATIC_LIBS ${io_graphics_lib})
-  #list(APPEND QT_STATIC_LIBS "${iokit}")
-  #list(APPEND QT_STATIC_LIBS "${cups}")
   
   FIND_QT_STATIC_LIB("CoreFoundation" "*")
   FIND_QT_STATIC_LIB("CFNetwork" "*")
@@ -1179,43 +1037,12 @@ if( APPLE )
 endif()
 
 if( WIN32 )
-  #find_library(HARFBUZZ qtharfbuzzng PATHS "${QT_STATIC_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
-  #find_library(PCRE qtpcre PATHS "${QT_STATIC_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
-  #find_library(SQLITE qsqlite PATHS "${QT_STATIC_INSTALL_DIR}/plugins/sqldrivers/" NO_DEFAULT_PATH)
-  #find_library(WIN_PLATFORM qwindows PATHS "${QT_STATIC_INSTALL_DIR}/plugins/platforms/" NO_DEFAULT_PATH)
-  
-  #find_library(PLATFORM_SUPPORT Qt5PlatformSupport PATHS "${QT_STATIC_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
-  #find_library(FREETYPE qtfreetype PATHS "${QT_STATIC_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
-
-  #mark_as_advanced(PLATFORM_SUPPORT FREETYPE)
-
-  #list(APPEND QT_STATIC_LIBS ${PLATFORM_SUPPORT})
-  #list(APPEND QT_STATIC_LIBS ${FREETYPE})
-
-  #mark_as_advanced(HARFBUZZ PCRE SQLITE WIN_PLATFORM)
-
-  #list(APPEND QT_STATIC_LIBS ${HARFBUZZ})
-  #list(APPEND QT_STATIC_LIBS ${PCRE})
-  #list(APPEND QT_STATIC_LIBS ${SQLITE})
-  #list(APPEND QT_STATIC_LIBS ${WIN_PLATFORM})
-  
   FIND_QT_STATIC_LIB("Qt5PlatformSupport" "${QT_STATIC_INSTALL_DIR}/lib/")
   FIND_QT_STATIC_LIB("qtfreetype" "${QT_STATIC_INSTALL_DIR}/lib/")
   FIND_QT_STATIC_LIB("qtharfbuzzng" "${QT_STATIC_INSTALL_DIR}/lib/")
   FIND_QT_STATIC_LIB("qtpcre" "${QT_STATIC_INSTALL_DIR}/lib/")
   FIND_QT_STATIC_LIB("qsqlite" "${QT_STATIC_INSTALL_DIR}/plugins/sqldrivers/")
   FIND_QT_STATIC_LIB("qwindows" "${QT_STATIC_INSTALL_DIR}/plugins/platforms/")
-
-  #list(APPEND QT_STATIC_LIBS Crypt32)
-  #list(APPEND QT_STATIC_LIBS imm32)
-  #list(APPEND QT_STATIC_LIBS winmm)
-  #list(APPEND QT_STATIC_LIBS Gdi32)
-
-  #list(APPEND QT_STATIC_LIBS wsock32)
-  #list(APPEND QT_STATIC_LIBS ws2_32)
-  #list(APPEND QT_STATIC_LIBS iphlpapi)
-  #list(APPEND QT_STATIC_LIBS dbghelp)
-  #list(APPEND QT_STATIC_LIBS Shlwapi)
   
   FIND_QT_STATIC_LIB("Crypt32" "*")
   FIND_QT_STATIC_LIB("imm32" "*")
@@ -1228,18 +1055,10 @@ if( WIN32 )
   FIND_QT_STATIC_LIB("Shlwapi" "*")
 
   if(BUILD_WITH_OPENSSL)
-    #link_directories("${OPENSSL_ROOT_DIR}/lib/VC/static")
-    #list(APPEND QT_STATIC_LIBS ssleay32MT)
-    #list(APPEND QT_STATIC_LIBS libeay32MT)
-    
     FIND_QT_STATIC_LIB("ssleay32MT" "${OPENSSL_ROOT_DIR}/lib/VC/static")
     FIND_QT_STATIC_LIB("libeay32MT" "${OPENSSL_ROOT_DIR}/lib/VC/static")
   endif()
 endif()
-
-#message("QT_LIBS = ${QT_LIBS}")
-#message("QT_STATIC_LIBS = ${QT_STATIC_LIBS}")
-#message("QT_STATIC_LIBS_D = ${QT_STATIC_LIBS_D}")
 
 ###############################################################################
 ## jsoncpp
@@ -1286,14 +1105,10 @@ set(project_directories
   energyplus
   radiance
   gbxml
-  #bimserver
   airflow
   isomodel
   osversion
   measure
-  #resultsviewer
-  #model_editor
-  #openstudio_lib
   sdd
   cli
   model_editor
@@ -1304,11 +1119,7 @@ if(WIN32)
 endif()
 
 if(BUILD_OS_APP)
-  #list(APPEND project_directories "qwt")
-  #list(APPEND project_directories "gbxml")
   list(APPEND project_directories "bimserver")
-  #list(APPEND project_directories "resultsviewer")
-  #list(APPEND project_directories "model_editor")
   list(APPEND project_directories "openstudio_lib")
   list(APPEND project_directories "openstudio_app")
 endif()
@@ -1323,12 +1134,6 @@ add_subdirectory(sketchup_plugin)
 foreach(D ${project_directories})
   add_subdirectory(src/${D})
 endforeach()
-
-# Make sure resultsviewer has its resources built
-#add_dependencies(ResultsViewer ResultsViewer_resources)
-
-# ruby, after loading projects
-#add_subdirectory(ruby)
 
 # csharp, after loading projects
 if(BUILD_CSHARP_BINDINGS)
@@ -1502,18 +1307,14 @@ set(TARGETS_FILE ${CMAKE_BINARY_DIR}/OpenStudioTargets.cmake)
 set(all_lib_targets
   openstudio_osversion
   openstudio_model
-  #openstudio_modeleditor
   openstudio_utilities
   openstudio_energyplus
   openstudio_measure
   openstudio_radiance
   openstudio_gbxml
-  #openstudio_bimserver
   openstudio_isomodel
-  #openstudio_lib
   openstudio_sdd
   openstudio_airflow
-  #qwt
   miniziplib
   sqlite
   jsoncpp
@@ -1530,21 +1331,14 @@ if(BUILD_OS_APP)
   list(APPEND all_lib_targets "openstudio_lib")
 endif()
 
-#export(TARGETS
-#  ${all_lib_targets}
-#  FILE "${TARGETS_FILE}"
-#)
-
 set(all_exe_targets
   GenerateIddFactory
   #gbXMLToIdf
   openstudio
-  #ResultsViewer
 )
 
 if(BUILD_OS_APP)
   list(APPEND all_exe_targets "OpenStudioApp")
-  #list(APPEND all_exe_targets "ResultsViewer")
 endif()
 
 if(UNIX AND NOT APPLE)
@@ -1563,31 +1357,11 @@ else()
   set(examplesdir Examples)
 endif()
 
-# Used by some Ruby tests, remove eventually
-#install(FILES "${CMAKE_SOURCE_DIR}/resources/resultsviewer/SmallOffice/SmallOffice.idf"
-#        DESTINATION "${examplesdir}/resultsviewer/SmallOffice/")
-# Unnecessary files or just left out for size?
-#install(FILES ${CMAKE_BINARY_DIR}/resources/resultsviewer/SmallOffice/eplustbl.htm
-#        DESTINATION ${examplesdir}/resultsviewer/SmallOffice/)
-#install(FILES ${CMAKE_BINARY_DIR}/resources/resultsviewer/SmallOffice/eplusout.sql
-#        DESTINATION ${examplesdir}/resultsviewer/SmallOffice/)
-
 
 # Install additional Documents, such as release notes
 install(FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_2_0_0_20161216.pdf" DESTINATION .)
 
 ###############################################################################
-
-
-#if(UNIX AND NOT APPLE)
-#  # if we build on Linux and we built our own Qt, let's grab said Qt and install it
-#  if(CMAKE_PREFIX_PATH MATCHES ".*Qt-install.*")
-#    install(DIRECTORY "${CMAKE_BINARY_DIR}/../../../Qt-prefix/src/Qt-install/lib"
-#            DESTINATION .)
-#    install(DIRECTORY "${CMAKE_BINARY_DIR}/../../../Qt-prefix/src/Qt-install/share"
-#            DESTINATION .)
-#  endif()
-#endif()
 
 if(NOT UNIX)
   execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_SOURCE_DIR}/../dependencies/strawberry-perl-5.16.2.1-32bit-portable-reduced.tar.bz2"
@@ -1604,26 +1378,6 @@ if(NOT UNIX)
     install(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS} DESTINATION "CSharp/openstudio/" COMPONENT "CSharpAPI")
   endif()
 endif()
-
-## Package Radiance
-#set(RADIANCE_LOCATION "" CACHE PATH "Location of Radiance to Package")
-#if(APPLE)
-#  install(DIRECTORY "${RADIANCE_LOCATION}" DESTINATION "sharedresources" USE_SOURCE_PERMISSIONS)
-#elseif(MSVC)
-#  install(DIRECTORY "${RADIANCE_LOCATION}" DESTINATION "share/openstudio" USE_SOURCE_PERMISSIONS)
-#else()
-#  install(DIRECTORY "${RADIANCE_LOCATION}" DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}" USE_SOURCE_PERMISSIONS)
-#endif()
-#
-## Package EnergyPlus
-#get_filename_component(ENERGYPLUS_DIR "${ENERGYPLUS_EXE}" DIRECTORY)
-#if(APPLE)
-#  install(DIRECTORY "${ENERGYPLUS_DIR}" DESTINATION "sharedresources" USE_SOURCE_PERMISSIONS)
-#elseif(MSVC)
-#  install(DIRECTORY "${ENERGYPLUS_DIR}" DESTINATION "share/openstudio" USE_SOURCE_PERMISSIONS)
-#else()
-#  install(DIRECTORY "${ENERGYPLUS_DIR}" DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}" USE_SOURCE_PERMISSIONS)
-#endif()
 
 set(CPACK_PACKAGE_VERSION_MAJOR ${OpenStudio_VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${OpenStudio_VERSION_MINOR})
@@ -1642,15 +1396,6 @@ if(WIN32)
   set( CPACK_BINARY_NSIS OFF )
   set( CPACK_BINARY_IFW ON )
 endif()
-
-# expand E+ path if it is a link
-#get_filename_component(REAL_ENERGYPLUS_EXE "${ENERGYPLUS_EXE}" REALPATH)
-#install(PROGRAMS "${REAL_ENERGYPLUS_EXE}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus )
-#install(PROGRAMS "${ENERGYPLUS_EXE}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus )
-
-
-#libenergyplusapi.dylib
-#get_filename_component(REAL_ENERGYPLUS_EXE "${ENERGYPLUS_EXE}" REALPATH)
 
 get_filename_component(ENERGYPLUS_DIR "${ENERGYPLUS_EXE}" DIRECTORY)
 file(GLOB ENERGYPLUS_FILES "${ENERGYPLUS_DIR}/energyplus*")
@@ -1764,6 +1509,4 @@ if( BUILD_NUGET_PACKAGE )
     WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
   )
 endif()
-
-
 
