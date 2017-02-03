@@ -53,7 +53,7 @@ namespace detail {
   ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl::ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl(const IdfObject& idfObject,
                                                                                                                          Model_Impl* model,
                                                                                                                          bool keepHandle)
-    : ModelObject_Impl(idfObject,model,keepHandle)
+    : Schedule_Impl(idfObject,model,keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == ExternalInterfaceFunctionalMockupUnitImportToSchedule::iddObjectType());
   }
@@ -61,7 +61,7 @@ namespace detail {
   ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl::ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                                                                                                          Model_Impl* model,
                                                                                                                          bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : Schedule_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == ExternalInterfaceFunctionalMockupUnitImportToSchedule::iddObjectType());
   }
@@ -69,8 +69,19 @@ namespace detail {
   ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl::ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl(const ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl& other,
                                                                                                                          Model_Impl* model,
                                                                                                                          bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : Schedule_Impl(other,model,keepHandle)
   {}
+
+  // return the parent object in the hierarchy
+  boost::optional<ParentObject> ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl::parent() const {
+    return boost::optional<ParentObject>();
+  }
+
+  // return any children objects in the hierarchy
+  std::vector<ModelObject> ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl::children() const {
+    std::vector<ModelObject> result;
+    return result;
+  }
 
   const std::vector<std::string>& ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl::outputVariableNames() const
   {
@@ -85,7 +96,7 @@ namespace detail {
   }
 
   boost::optional<ScheduleTypeLimits> ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl::scheduleTypeLimits() const {
-    return getObject<ModelObject>().getModelObjectTarget<ScheduleTypeLimits>(OS_ExternalInterface_FunctionalMockupUnitImport_To_ScheduleFields::ScheduleTypeLimitsNames);
+    return getObject<ModelObject>().getModelObjectTarget<ScheduleTypeLimits>(OS_ExternalInterface_FunctionalMockupUnitImport_To_ScheduleFields::ScheduleTypeLimitsName);
   }
 
   ExternalInterfaceFunctionalMockupUnitImport ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl::fMUFile() const {
@@ -121,13 +132,20 @@ namespace detail {
   }
 
   bool ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl::setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits) {
-    bool result = setPointer(OS_ExternalInterface_FunctionalMockupUnitImport_To_ScheduleFields::ScheduleTypeLimitsNames, scheduleTypeLimits.handle());
-    return result;
+    if (scheduleTypeLimits.model() != model()) {
+      return false;
+    }
+    if (!candidateIsCompatibleWithCurrentUse(scheduleTypeLimits)) {
+      return false;
+    }
+    return setPointer(OS_ExternalInterface_FunctionalMockupUnitImport_To_ScheduleFields::ScheduleTypeLimitsName, scheduleTypeLimits.handle());
   }
 
-  void ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl::resetScheduleTypeLimits() {
-    bool result = setString(OS_ExternalInterface_FunctionalMockupUnitImport_To_ScheduleFields::ScheduleTypeLimitsNames, "");
-    OS_ASSERT(result);
+  bool ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl::resetScheduleTypeLimits() {
+    if (okToResetScheduleTypeLimits()) {
+      return setString(OS_ExternalInterface_FunctionalMockupUnitImport_To_ScheduleFields::ScheduleTypeLimitsName, "");
+    }
+    return false;
   }
 
   bool ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl::setFMUFile(const ExternalInterfaceFunctionalMockupUnitImport& fMUFile) {
@@ -162,7 +180,7 @@ ExternalInterfaceFunctionalMockupUnitImportToSchedule::ExternalInterfaceFunction
                                                                                                              const std::string& fMUInstanceName,
                                                                                                              const std::string& fMUVariableName,
                                                                                                              double initialValue)
-  : ModelObject(ExternalInterfaceFunctionalMockupUnitImportToSchedule::iddObjectType(),model)
+  : Schedule(ExternalInterfaceFunctionalMockupUnitImportToSchedule::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl>());
 
@@ -185,10 +203,6 @@ IddObjectType ExternalInterfaceFunctionalMockupUnitImportToSchedule::iddObjectTy
   return IddObjectType(IddObjectType::OS_ExternalInterface_FunctionalMockupUnitImport_To_Schedule);
 }
 
-boost::optional<ScheduleTypeLimits> ExternalInterfaceFunctionalMockupUnitImportToSchedule::scheduleTypeLimits() const {
-  return getImpl<detail::ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl>()->scheduleTypeLimits();
-}
-
 ExternalInterfaceFunctionalMockupUnitImport ExternalInterfaceFunctionalMockupUnitImportToSchedule::fMUFile() const {
   return getImpl<detail::ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl>()->fMUFile();
 }
@@ -203,14 +217,6 @@ std::string ExternalInterfaceFunctionalMockupUnitImportToSchedule::fMUVariableNa
 
 double ExternalInterfaceFunctionalMockupUnitImportToSchedule::initialValue() const {
   return getImpl<detail::ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl>()->initialValue();
-}
-
-bool ExternalInterfaceFunctionalMockupUnitImportToSchedule::setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits) {
-  return getImpl<detail::ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl>()->setScheduleTypeLimits(scheduleTypeLimits);
-}
-
-void ExternalInterfaceFunctionalMockupUnitImportToSchedule::resetScheduleTypeLimits() {
-  getImpl<detail::ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl>()->resetScheduleTypeLimits();
 }
 
 bool ExternalInterfaceFunctionalMockupUnitImportToSchedule::setFMUFile(const ExternalInterfaceFunctionalMockupUnitImport& fMUFile) {
@@ -231,7 +237,7 @@ void ExternalInterfaceFunctionalMockupUnitImportToSchedule::setInitialValue(doub
 
 /// @cond
 ExternalInterfaceFunctionalMockupUnitImportToSchedule::ExternalInterfaceFunctionalMockupUnitImportToSchedule(std::shared_ptr<detail::ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl> impl)
-  : ModelObject(impl)
+  : Schedule(impl)
 {}
 /// @endcond
 

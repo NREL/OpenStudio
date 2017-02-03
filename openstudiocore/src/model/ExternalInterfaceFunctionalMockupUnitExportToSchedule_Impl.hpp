@@ -30,17 +30,15 @@
 #define MODEL_EXTERNALINTERFACEFUNCTIONALMOCKUPUNITEXPORTTOSCHEDULE_IMPL_HPP
 
 #include <model/ModelAPI.hpp>
-#include "ModelObject_Impl.hpp"
+#include "Schedule_Impl.hpp"
 
 namespace openstudio {
 namespace model {
 
-class ScheduleTypeLimits;
-
 namespace detail {
 
   /** ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl is a ModelObject_Impl that is the implementation class for ExternalInterfaceFunctionalMockupUnitExportToSchedule.*/
-  class MODEL_API ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl : public ModelObject_Impl {
+  class MODEL_API ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl : public Schedule_Impl {
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -60,18 +58,21 @@ namespace detail {
     virtual ~ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl() {}
 
     //@}
-    /** @name Virtual Methods */
-    //@{
-
-    virtual const std::vector<std::string>& outputVariableNames() const;
-
-    virtual IddObjectType iddObjectType() const;
-
-    //@}
     /** @name Getters */
     //@{
 
-    boost::optional<ScheduleTypeLimits> scheduleTypeLimits() const;
+    // return the parent object in the hierarchy
+    virtual boost::optional<ParentObject> parent() const override;
+
+    // return any children objects in the hierarchy
+    virtual std::vector<ModelObject> children() const override;
+
+    // Get all output variable names that could be associated with this object.
+    virtual const std::vector<std::string>& outputVariableNames() const override;
+
+    virtual IddObjectType iddObjectType() const override;
+
+    virtual boost::optional<ScheduleTypeLimits> scheduleTypeLimits() const override;
 
     std::string fMUVariableName() const;
 
@@ -81,9 +82,9 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    bool setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits);
+    virtual bool setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits) override;
 
-    void resetScheduleTypeLimits();
+    virtual bool resetScheduleTypeLimits() override;
 
     void setFMUVariableName(const std::string& fMUVariableName);
 

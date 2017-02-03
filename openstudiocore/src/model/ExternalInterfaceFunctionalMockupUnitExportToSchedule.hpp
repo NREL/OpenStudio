@@ -30,13 +30,11 @@
 #define MODEL_EXTERNALINTERFACEFUNCTIONALMOCKUPUNITEXPORTTOSCHEDULE_HPP
 
 #include <model/ModelAPI.hpp>
-#include "ModelObject.hpp"
+#include "Schedule.hpp"
 
 namespace openstudio {
 
 namespace model {
-
-class ScheduleTypeLimits;
 
 namespace detail {
 
@@ -45,7 +43,7 @@ namespace detail {
 } // detail
 
 /** ExternalInterfaceFunctionalMockupUnitExportToSchedule is a ModelObject that wraps the OpenStudio IDD object 'OS:ExternalInterface:FunctionalMockupUnitExport:To:Schedule'. */
-class MODEL_API ExternalInterfaceFunctionalMockupUnitExportToSchedule : public ModelObject {
+class MODEL_API ExternalInterfaceFunctionalMockupUnitExportToSchedule : public Schedule {
  public:
   /** @name Constructors and Destructors */
   //@{
@@ -63,8 +61,6 @@ class MODEL_API ExternalInterfaceFunctionalMockupUnitExportToSchedule : public M
   /** @name Getters */
   //@{
 
-  boost::optional<ScheduleTypeLimits> scheduleTypeLimits() const;
-
   std::string fMUVariableName() const;
 
   double initialValue() const;
@@ -72,10 +68,6 @@ class MODEL_API ExternalInterfaceFunctionalMockupUnitExportToSchedule : public M
   //@}
   /** @name Setters */
   //@{
-
-  bool setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits);
-
-  void resetScheduleTypeLimits();
 
   void setFMUVariableName(const std::string& fMUVariableName);
 

@@ -27344,7 +27344,7 @@ OS:ExternalInterface:FunctionalMockupUnitImport:To:Schedule,
        \required-field
        \type alpha
        \reference ScheduleNames
-  A3 , \field Schedule Type Limits Names
+  A3 , \field Schedule Type Limits Name
        \type object-list
        \object-list ScheduleTypeLimitsNames
   A4 , \field FMU File Name
@@ -27471,7 +27471,7 @@ OS:ExternalInterface:FunctionalMockupUnitExport:To:Schedule,
        \required-field
        \type alpha
        \reference ScheduleNames
-  A3 , \field Schedule Type Limits Names
+  A3 , \field Schedule Type Limits Name
        \type object-list
        \object-list ScheduleTypeLimitsNames
   A4 , \field FMU Variable Name

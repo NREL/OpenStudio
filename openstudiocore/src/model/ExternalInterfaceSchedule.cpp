@@ -51,7 +51,7 @@ namespace detail {
   ExternalInterfaceSchedule_Impl::ExternalInterfaceSchedule_Impl(const IdfObject& idfObject,
                                                                  Model_Impl* model,
                                                                  bool keepHandle)
-    : ModelObject_Impl(idfObject,model,keepHandle)
+    : Schedule_Impl(idfObject,model,keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == ExternalInterfaceSchedule::iddObjectType());
   }
@@ -59,7 +59,7 @@ namespace detail {
   ExternalInterfaceSchedule_Impl::ExternalInterfaceSchedule_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                                                  Model_Impl* model,
                                                                  bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : Schedule_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == ExternalInterfaceSchedule::iddObjectType());
   }
@@ -67,8 +67,19 @@ namespace detail {
   ExternalInterfaceSchedule_Impl::ExternalInterfaceSchedule_Impl(const ExternalInterfaceSchedule_Impl& other,
                                                                  Model_Impl* model,
                                                                  bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : Schedule_Impl(other,model,keepHandle)
   {}
+
+  // return the parent object in the hierarchy
+  boost::optional<ParentObject> ExternalInterfaceSchedule_Impl::parent() const {
+    return boost::optional<ParentObject>();
+  }
+
+  // return any children objects in the hierarchy
+  std::vector<ModelObject> ExternalInterfaceSchedule_Impl::children() const {
+    std::vector<ModelObject> result;
+    return result;
+  }
 
   const std::vector<std::string>& ExternalInterfaceSchedule_Impl::outputVariableNames() const
   {
@@ -95,13 +106,20 @@ namespace detail {
   }
 
   bool ExternalInterfaceSchedule_Impl::setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits) {
-    bool result = setPointer(OS_ExternalInterface_ScheduleFields::ScheduleTypeLimitsName, scheduleTypeLimits.handle());
-    return result;
+    if (scheduleTypeLimits.model() != model()) {
+      return false;
+    }
+    if (!candidateIsCompatibleWithCurrentUse(scheduleTypeLimits)) {
+      return false;
+    }
+    return setPointer(OS_ExternalInterface_ScheduleFields::ScheduleTypeLimitsName, scheduleTypeLimits.handle());
   }
 
-  void ExternalInterfaceSchedule_Impl::resetScheduleTypeLimits() {
-    bool result = setString(OS_ExternalInterface_ScheduleFields::ScheduleTypeLimitsName, "");
-    OS_ASSERT(result);
+  bool ExternalInterfaceSchedule_Impl::resetScheduleTypeLimits() {
+    if (okToResetScheduleTypeLimits()) {
+      return setString(OS_ExternalInterface_ScheduleFields::ScheduleTypeLimitsName, "");
+    }
+    return false;
   }
 
   void ExternalInterfaceSchedule_Impl::setInitialValue(double initialValue) {
@@ -112,7 +130,7 @@ namespace detail {
 } // detail
 
 ExternalInterfaceSchedule::ExternalInterfaceSchedule(const Model& model, double initialValue)
-  : ModelObject(ExternalInterfaceSchedule::iddObjectType(),model)
+  : Schedule(ExternalInterfaceSchedule::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::ExternalInterfaceSchedule_Impl>());
 
@@ -124,7 +142,7 @@ ExternalInterfaceSchedule::ExternalInterfaceSchedule(const Model& model, double 
 }
 
 ExternalInterfaceSchedule::ExternalInterfaceSchedule(const Model& model)
-  : ModelObject(ExternalInterfaceSchedule::iddObjectType(), model)
+  : Schedule(ExternalInterfaceSchedule::iddObjectType(), model)
 {
   OS_ASSERT(getImpl<detail::ExternalInterfaceSchedule_Impl>());
 }
@@ -133,21 +151,10 @@ IddObjectType ExternalInterfaceSchedule::iddObjectType() {
   return IddObjectType(IddObjectType::OS_ExternalInterface_Schedule);
 }
 
-boost::optional<ScheduleTypeLimits> ExternalInterfaceSchedule::scheduleTypeLimits() const {
-  return getImpl<detail::ExternalInterfaceSchedule_Impl>()->scheduleTypeLimits();
-}
-
 double ExternalInterfaceSchedule::initialValue() const {
   return getImpl<detail::ExternalInterfaceSchedule_Impl>()->initialValue();
 }
 
-bool ExternalInterfaceSchedule::setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits) {
-  return getImpl<detail::ExternalInterfaceSchedule_Impl>()->setScheduleTypeLimits(scheduleTypeLimits);
-}
-
-void ExternalInterfaceSchedule::resetScheduleTypeLimits() {
-  getImpl<detail::ExternalInterfaceSchedule_Impl>()->resetScheduleTypeLimits();
-}
 
 void ExternalInterfaceSchedule::setInitialValue(double initialValue) {
   getImpl<detail::ExternalInterfaceSchedule_Impl>()->setInitialValue(initialValue);
@@ -155,7 +162,7 @@ void ExternalInterfaceSchedule::setInitialValue(double initialValue) {
 
 /// @cond
 ExternalInterfaceSchedule::ExternalInterfaceSchedule(std::shared_ptr<detail::ExternalInterfaceSchedule_Impl> impl)
-  : ModelObject(impl)
+  : Schedule(impl)
 {}
 /// @endcond
 

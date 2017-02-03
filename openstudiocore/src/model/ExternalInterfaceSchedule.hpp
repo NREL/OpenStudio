@@ -29,14 +29,12 @@
 #ifndef MODEL_EXTERNALINTERFACESCHEDULE_HPP
 #define MODEL_EXTERNALINTERFACESCHEDULE_HPP
 
-#include <model/ModelAPI.hpp>
-#include "ModelObject.hpp"
+#include "ModelAPI.hpp"
+#include "Schedule.hpp"
 
 namespace openstudio {
 
 namespace model {
-
-class ScheduleTypeLimits;
 
 namespace detail {
 
@@ -45,7 +43,7 @@ namespace detail {
 } // detail
 
 /** ExternalInterfaceSchedule is a ModelObject that wraps the OpenStudio IDD object 'OS:ExternalInterface:Schedule'. */
-class MODEL_API ExternalInterfaceSchedule : public ModelObject {
+class MODEL_API ExternalInterfaceSchedule : public Schedule {
  public:
   /** @name Constructors and Destructors */
   //@{
@@ -63,17 +61,11 @@ class MODEL_API ExternalInterfaceSchedule : public ModelObject {
   /** @name Getters */
   //@{
 
-  boost::optional<ScheduleTypeLimits> scheduleTypeLimits() const;
-
   double initialValue() const;
 
   //@}
   /** @name Setters */
   //@{
-
-  bool setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits);
-
-  void resetScheduleTypeLimits();
 
   void setInitialValue(double initialValue);
 

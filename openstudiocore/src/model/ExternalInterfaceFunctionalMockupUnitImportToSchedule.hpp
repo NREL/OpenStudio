@@ -30,7 +30,7 @@
 #define MODEL_EXTERNALINTERFACEFUNCTIONALMOCKUPUNITIMPORTTOSCHEDULE_HPP
 
 #include <model/ModelAPI.hpp>
-#include "ModelObject.hpp"
+#include "Schedule.hpp"
 
 #include "ExternalInterfaceFunctionalMockupUnitImport.hpp"
 #include "ExternalInterfaceFunctionalMockupUnitImport_Impl.hpp"
@@ -39,8 +39,6 @@ namespace openstudio {
 
 namespace model {
 
-class ScheduleTypeLimits;
-
 namespace detail {
 
   class ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl;
@@ -48,7 +46,7 @@ namespace detail {
 } // detail
 
 /** ExternalInterfaceFunctionalMockupUnitImportToSchedule is a ModelObject that wraps the OpenStudio IDD object 'OS:ExternalInterface:FunctionalMockupUnitImport:To:Schedule'. */
-class MODEL_API ExternalInterfaceFunctionalMockupUnitImportToSchedule : public ModelObject {
+class MODEL_API ExternalInterfaceFunctionalMockupUnitImportToSchedule : public Schedule {
  public:
   /** @name Constructors and Destructors */
   //@{
@@ -68,8 +66,6 @@ class MODEL_API ExternalInterfaceFunctionalMockupUnitImportToSchedule : public M
   /** @name Getters */
   //@{
 
-  boost::optional<ScheduleTypeLimits> scheduleTypeLimits() const;
-
   ExternalInterfaceFunctionalMockupUnitImport fMUFile() const;
 
   std::string fMUInstanceName() const;
@@ -81,10 +77,6 @@ class MODEL_API ExternalInterfaceFunctionalMockupUnitImportToSchedule : public M
   //@}
   /** @name Setters */
   //@{
-
-  bool setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits);
-
-  void resetScheduleTypeLimits();
 
   bool setFMUFile(const ExternalInterfaceFunctionalMockupUnitImport& fMUFile);
 
