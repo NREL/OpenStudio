@@ -82,6 +82,7 @@ TEST_F(ModelFixture, SurfacePropertyConvectionCoefficients) {
   ASSERT_TRUE(subsurface2);
   ASSERT_FALSE(internalmass2);
   ASSERT_EQ(*subsurface2, subSurface);
+  ASSERT_EQ(subsurface2->surfacePropertyConvectionCoefficients(), cc);
 
   InternalMassDefinition internalMassDefn(model);
   InternalMass internalMass(internalMassDefn);
