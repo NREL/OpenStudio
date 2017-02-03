@@ -123,18 +123,12 @@ namespace detail {
 } // detail
 
 ExternalInterfaceFunctionalMockupUnitExportToSchedule::ExternalInterfaceFunctionalMockupUnitExportToSchedule(const Model& model,
-                                                                                                             const Schedule& schedule,
                                                                                                              const std::string& fMUVariableName,
                                                                                                              double initialValue)
   : ModelObject(ExternalInterfaceFunctionalMockupUnitExportToSchedule::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl>());
 
-  bool ok = getImpl<detail::ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl>()->setName(schedule.nameString());
-  if (!ok) {
-    remove();
-    LOG_AND_THROW("Unable to set " << briefDescription() << "'s Name to " << schedule.nameString() << ".");
-  }
   setFMUVariableName(fMUVariableName);
   setInitialValue(initialValue);
 }

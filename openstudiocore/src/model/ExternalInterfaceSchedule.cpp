@@ -111,34 +111,22 @@ namespace detail {
 
 } // detail
 
-ExternalInterfaceSchedule::ExternalInterfaceSchedule(const Model& model, const Schedule& schedule, double initialValue)
+ExternalInterfaceSchedule::ExternalInterfaceSchedule(const Model& model, double initialValue)
   : ModelObject(ExternalInterfaceSchedule::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::ExternalInterfaceSchedule_Impl>());
 
-  bool ok = getImpl<detail::ExternalInterfaceSchedule_Impl>()->setName(schedule.nameString());
-  if (!ok) {
-    remove();
-    LOG_AND_THROW("Unable to set " << briefDescription() << "'s Name to " << schedule.nameString() << ".");
-  }
   setInitialValue(initialValue);
   //TODO move the Forward Translator
-  if (schedule.scheduleTypeLimits()) {
-    ok = setScheduleTypeLimits(schedule.scheduleTypeLimits().get());
-  }
+  //if (schedule.scheduleTypeLimits()) {
+  //  ok = setScheduleTypeLimits(schedule.scheduleTypeLimits().get());
+  //}
 }
 
 ExternalInterfaceSchedule::ExternalInterfaceSchedule(const Model& model)
   : ModelObject(ExternalInterfaceSchedule::iddObjectType(), model)
 {
   OS_ASSERT(getImpl<detail::ExternalInterfaceSchedule_Impl>());
-
-  Schedule schedule = this->model().alwaysOnContinuousSchedule();
-  bool ok = getImpl<detail::ExternalInterfaceSchedule_Impl>()->setName(schedule.nameString());
-  if (!ok) {
-    remove();
-    LOG_AND_THROW("Unable to set " << briefDescription() << "'s Name to " << schedule.nameString() << ".");
-  }
 }
 
 IddObjectType ExternalInterfaceSchedule::iddObjectType() {

@@ -27253,7 +27253,7 @@ OS:ExternalInterface:Variable,
 
 OS:ExternalInterface:Actuator,
        \memo Hardware portion of EMS used to set up actuators in the model
-       \min-fields 4
+       \min-fields 5
   A1, \field Handle
        \type handle
        \required-field
@@ -27282,11 +27282,14 @@ OS:ExternalInterface:Actuator,
 
 OS:ExternalInterface:FunctionalMockupUnitImport,
        \memo This object declares an FMU
-       \min-fields 3
+       \min-fields 5
   A1, \field Handle
        \type handle
        \required-field
-  A2 , \field FMU File Name
+  A2 , \field Name
+       \required-field
+       \type alpha
+  A3 , \field FMU File Name
        \required-field
        \type alpha
        \retaincase
@@ -27302,27 +27305,30 @@ OS:ExternalInterface:FunctionalMockupUnitImport,
 
 OS:ExternalInterface:FunctionalMockupUnitImport:From:Variable,
        \memo This object declares an FMU input variable
-       \min-fields 5
+       \min-fields 7
   A1, \field Handle
        \type handle
        \required-field
-  A2 , \field Output:Variable Index Key Name
+  A2 , \field Name
        \required-field
        \type alpha
-  A3 , \field Output:Variable Name
+  A3 , \field Output:Variable Index Key Name
+       \required-field
+       \type alpha
+  A4 , \field Output:Variable Name
        \required-field
        \type external-list
        \external-list autoRDDvariable
-  A4 , \field FMU File Name
+  A5 , \field FMU File Name
        \required-field
        \retaincase
        \type object-list
        \object-list FMUFileName
-  A5 , \field FMU Instance Name
+  A6 , \field FMU Instance Name
        \required-field
        \type alpha
        \retaincase
-  A6 ; \field FMU Variable Name
+  A7 ; \field FMU Variable Name
        \required-field
        \type alpha
        \retaincase
@@ -27362,7 +27368,7 @@ OS:ExternalInterface:FunctionalMockupUnitImport:To:Schedule,
 OS:ExternalInterface:FunctionalMockupUnitImport:To:Actuator,
        \memo Hardware portion of EMS used to set up actuators in the model
        \memo that are dynamically updated from the FMU.
-       \min-fields 8
+       \min-fields 9
   A1, \field Handle
        \type handle
        \required-field
@@ -27404,7 +27410,7 @@ OS:ExternalInterface:FunctionalMockupUnitImport:To:Actuator,
 OS:ExternalInterface:FunctionalMockupUnitImport:To:Variable,
        \memo Declares Erl variable as having global scope
        \memo No spaces allowed in names used for Erl variables
-       \min-fields 5
+       \min-fields 6
   A1, \field Handle
        \type handle
        \required-field
@@ -27434,18 +27440,21 @@ OS:ExternalInterface:FunctionalMockupUnitImport:To:Variable,
 
 OS:ExternalInterface:FunctionalMockupUnitExport:From:Variable,
        \memo This object declares an FMU input variable
-       \min-fields 3
+       \min-fields 5
   A1, \field Handle
        \type handle
        \required-field
-  A2 , \field Output:Variable Index Key Name
+  A2 , \field Name
        \required-field
        \type alpha
-  A3 , \field Output:Variable Name
+  A3 , \field Output:Variable Index Key Name
+       \required-field
+       \type alpha
+  A4 , \field Output:Variable Name
        \required-field
        \type external-list
        \external-list autoRDDvariable
-  A4 ; \field FMU Variable Name
+  A5 ; \field FMU Variable Name
        \required-field
        \type alpha
        \retaincase
@@ -27457,7 +27466,8 @@ OS:ExternalInterface:FunctionalMockupUnitExport:To:Schedule,
   A1, \field Handle
        \type handle
        \required-field
-  A2 , \field Schedule Name
+  A2 , \field Name
+       \memo used to be \field Schedule Name
        \required-field
        \type alpha
        \reference ScheduleNames
@@ -27476,7 +27486,7 @@ OS:ExternalInterface:FunctionalMockupUnitExport:To:Schedule,
 OS:ExternalInterface:FunctionalMockupUnitExport:To:Actuator,
        \memo Hardware portion of EMS used to set up actuators in the model
        \memo that are dynamically updated from the FMU.
-       \min-fields 6
+       \min-fields 7
   A1, \field Handle
        \type handle
        \required-field
@@ -27508,7 +27518,7 @@ OS:ExternalInterface:FunctionalMockupUnitExport:To:Actuator,
 OS:ExternalInterface:FunctionalMockupUnitExport:To:Variable,
        \memo Declares Erl variable as having global scope
        \memo No spaces allowed in names used for Erl variables
-       \min-fields 3
+       \min-fields 4
   A1, \field Handle
        \type handle
        \required-field

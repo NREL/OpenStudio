@@ -51,7 +51,6 @@ class MODEL_API ExternalInterfaceFunctionalMockupUnitExportToSchedule : public M
   //@{
 
   explicit ExternalInterfaceFunctionalMockupUnitExportToSchedule(const Model& model,
-                                                                 const Schedule& schedule,
                                                                  const std::string& fMUVariableName,
                                                                  double initialValue);
 

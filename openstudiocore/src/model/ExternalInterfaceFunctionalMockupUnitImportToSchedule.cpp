@@ -158,7 +158,6 @@ namespace detail {
 } // detail
 
 ExternalInterfaceFunctionalMockupUnitImportToSchedule::ExternalInterfaceFunctionalMockupUnitImportToSchedule(const Model& model,
-                                                                                                             const Schedule& schedule,
                                                                                                              const ExternalInterfaceFunctionalMockupUnitImport& fMUFile,
                                                                                                              const std::string& fMUInstanceName,
                                                                                                              const std::string& fMUVariableName,
@@ -167,12 +166,7 @@ ExternalInterfaceFunctionalMockupUnitImportToSchedule::ExternalInterfaceFunction
 {
   OS_ASSERT(getImpl<detail::ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl>());
 
-  bool ok = getImpl<detail::ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl>()->setName(schedule.nameString());
-  if (!ok) {
-    remove();
-    LOG_AND_THROW("Unable to set " << briefDescription() << "'s Name to " << schedule.nameString() << ".");
-  }
-  ok = setFMUFile(fMUFile);
+  bool ok = setFMUFile(fMUFile);
   if (!ok) {
     remove();
     LOG_AND_THROW("Unable to set " << briefDescription() << "'s FMUFileName to "
@@ -182,9 +176,9 @@ ExternalInterfaceFunctionalMockupUnitImportToSchedule::ExternalInterfaceFunction
   setFMUVariableName(fMUVariableName);
   setInitialValue(initialValue);
   //TODO move the Forward Translator
-  if (schedule.scheduleTypeLimits()) {
-    ok = setScheduleTypeLimits(schedule.scheduleTypeLimits().get());
-  }
+  //if (schedule.scheduleTypeLimits()) {
+  //  ok = setScheduleTypeLimits(schedule.scheduleTypeLimits().get());
+  //}
 }
 
 IddObjectType ExternalInterfaceFunctionalMockupUnitImportToSchedule::iddObjectType() {
