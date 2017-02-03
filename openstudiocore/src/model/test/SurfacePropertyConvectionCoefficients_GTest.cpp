@@ -70,6 +70,7 @@ TEST_F(ModelFixture, SurfacePropertyConvectionCoefficients) {
   ASSERT_FALSE(subsurface2);
   ASSERT_FALSE(internalmass2);
   ASSERT_EQ(*surface2, surface);
+  ASSERT_EQ(surface2->surfacePropertyConvectionCoefficients(), cc);
 
   SubSurface subSurface(vertices, model);
   ASSERT_TRUE(cc.setSurface(subSurface));

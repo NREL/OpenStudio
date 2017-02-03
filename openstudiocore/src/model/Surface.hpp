@@ -41,6 +41,7 @@ class ShadingSurfaceGroup;
 class ConstructionBase;
 class SurfacePropertyOtherSideCoefficients;
 class SurfacePropertyOtherSideConditionsModel;
+class SurfacePropertyConvectionCoefficients;
 
 namespace detail {
 
@@ -156,6 +157,9 @@ class MODEL_API Surface : public PlanarSurface {
 
   /** Resets the adjacent Surface. */
   void resetAdjacentSurface();
+
+  /** Returns the SurfacePropertyConvectionCoefficients, if it exists. */
+  boost::optional<SurfacePropertyConvectionCoefficients> surfacePropertyConvectionCoefficients() const;
 
   /** Returns the adjacent SurfaceSurfacePropertyOtherSideCoefficients, if it exists. */
   boost::optional<SurfacePropertyOtherSideCoefficients> surfacePropertyOtherSideCoefficients() const;
