@@ -36,7 +36,6 @@ namespace openstudio {
 
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class ScheduleTypeLimits;
 
 namespace detail {
@@ -51,7 +50,10 @@ class MODEL_API ExternalInterfaceFunctionalMockupUnitExportToSchedule : public M
   /** @name Constructors and Destructors */
   //@{
 
-  explicit ExternalInterfaceFunctionalMockupUnitExportToSchedule(const Model& model);
+  explicit ExternalInterfaceFunctionalMockupUnitExportToSchedule(const Model& model,
+                                                                 const Schedule& schedule,
+                                                                 const std::string& fMUVariableName,
+                                                                 double initialValue);
 
   virtual ~ExternalInterfaceFunctionalMockupUnitExportToSchedule() {}
 
@@ -62,8 +64,7 @@ class MODEL_API ExternalInterfaceFunctionalMockupUnitExportToSchedule : public M
   /** @name Getters */
   //@{
 
-  // TODO: Check return type. From object lists, some candidates are: ScheduleTypeLimits.
-  boost::optional<ScheduleTypeLimits> scheduleTypeLimitss() const;
+  boost::optional<ScheduleTypeLimits> scheduleTypeLimits() const;
 
   std::string fMUVariableName() const;
 
@@ -73,10 +74,9 @@ class MODEL_API ExternalInterfaceFunctionalMockupUnitExportToSchedule : public M
   /** @name Setters */
   //@{
 
-  // TODO: Check argument type. From object lists, some candidates are: ScheduleTypeLimits.
-  bool setScheduleTypeLimitss(const ScheduleTypeLimits& scheduleTypeLimits);
+  bool setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits);
 
-  void resetScheduleTypeLimitss();
+  void resetScheduleTypeLimits();
 
   void setFMUVariableName(const std::string& fMUVariableName);
 

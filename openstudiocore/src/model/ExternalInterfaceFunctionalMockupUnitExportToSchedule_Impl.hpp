@@ -35,7 +35,6 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class ScheduleTypeLimits;
 
 namespace detail {
@@ -72,8 +71,7 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    // TODO: Check return type. From object lists, some candidates are: ScheduleTypeLimits.
-    boost::optional<ScheduleTypeLimits> scheduleTypeLimitss() const;
+    boost::optional<ScheduleTypeLimits> scheduleTypeLimits() const;
 
     std::string fMUVariableName() const;
 
@@ -83,10 +81,9 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: ScheduleTypeLimits.
-    bool setScheduleTypeLimitss(const ScheduleTypeLimits& scheduleTypeLimits);
+    bool setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits);
 
-    void resetScheduleTypeLimitss();
+    void resetScheduleTypeLimits();
 
     void setFMUVariableName(const std::string& fMUVariableName);
 

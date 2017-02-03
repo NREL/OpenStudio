@@ -91,14 +91,18 @@ namespace detail {
 
   std::string ExternalInterfaceFunctionalMockupUnitImportToActuator_Impl::actuatedComponentType() const {
     boost::optional<std::string> value = getString(OS_ExternalInterface_FunctionalMockupUnitImport_To_ActuatorFields::ActuatedComponentType,true);
-    OS_ASSERT(value);
-    return value.get();
+    if (value) {
+      return value.get();
+    }
+    return "";
   }
 
   std::string ExternalInterfaceFunctionalMockupUnitImportToActuator_Impl::actuatedComponentControlType() const {
     boost::optional<std::string> value = getString(OS_ExternalInterface_FunctionalMockupUnitImport_To_ActuatorFields::ActuatedComponentControlType,true);
-    OS_ASSERT(value);
-    return value.get();
+    if (value) {
+      return value.get();
+    }
+    return "";
   }
 
   ExternalInterfaceFunctionalMockupUnitImport ExternalInterfaceFunctionalMockupUnitImportToActuator_Impl::fMUFile() const {
@@ -111,20 +115,26 @@ namespace detail {
 
   std::string ExternalInterfaceFunctionalMockupUnitImportToActuator_Impl::fMUInstanceName() const {
     boost::optional<std::string> value = getString(OS_ExternalInterface_FunctionalMockupUnitImport_To_ActuatorFields::FMUInstanceName,true);
-    OS_ASSERT(value);
-    return value.get();
+    if (value) {
+      return value.get();
+    }
+    return "";
   }
 
   std::string ExternalInterfaceFunctionalMockupUnitImportToActuator_Impl::fMUVariableName() const {
     boost::optional<std::string> value = getString(OS_ExternalInterface_FunctionalMockupUnitImport_To_ActuatorFields::FMUVariableName,true);
-    OS_ASSERT(value);
-    return value.get();
+    if (value) {
+      return value.get();
+    }
+    return "";
   }
 
   double ExternalInterfaceFunctionalMockupUnitImportToActuator_Impl::initialValue() const {
     boost::optional<double> value = getDouble(OS_ExternalInterface_FunctionalMockupUnitImport_To_ActuatorFields::InitialValue,true);
-    OS_ASSERT(value);
-    return value.get();
+    if (value) {
+      return value.get();
+    }
+    return -9999;
   }
 
   bool ExternalInterfaceFunctionalMockupUnitImportToActuator_Impl::setActuatedComponentUnique(const ModelObject& modelObject) {

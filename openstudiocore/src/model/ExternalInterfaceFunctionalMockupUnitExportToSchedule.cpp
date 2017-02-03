@@ -29,7 +29,8 @@
 #include "ExternalInterfaceFunctionalMockupUnitExportToSchedule.hpp"
 #include "ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeLimits_Impl.hpp"
 
@@ -79,28 +80,32 @@ namespace detail {
     return ExternalInterfaceFunctionalMockupUnitExportToSchedule::iddObjectType();
   }
 
-  boost::optional<ScheduleTypeLimits> ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl::scheduleTypeLimitss() const {
+  boost::optional<ScheduleTypeLimits> ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl::scheduleTypeLimits() const {
     return getObject<ModelObject>().getModelObjectTarget<ScheduleTypeLimits>(OS_ExternalInterface_FunctionalMockupUnitExport_To_ScheduleFields::ScheduleTypeLimitsNames);
   }
 
   std::string ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl::fMUVariableName() const {
     boost::optional<std::string> value = getString(OS_ExternalInterface_FunctionalMockupUnitExport_To_ScheduleFields::FMUVariableName,true);
-    OS_ASSERT(value);
-    return value.get();
+    if (value) {
+      return value.get();
+    }
+    return "";
   }
 
   double ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl::initialValue() const {
     boost::optional<double> value = getDouble(OS_ExternalInterface_FunctionalMockupUnitExport_To_ScheduleFields::InitialValue,true);
-    OS_ASSERT(value);
-    return value.get();
+    if (value) {
+      return value.get();
+    }
+    return -9999;
   }
 
-  bool ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl::setScheduleTypeLimitss(const ScheduleTypeLimits& scheduleTypeLimits) {
+  bool ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl::setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits) {
     bool result = setPointer(OS_ExternalInterface_FunctionalMockupUnitExport_To_ScheduleFields::ScheduleTypeLimitsNames, scheduleTypeLimits.handle());
     return result;
   }
 
-  void ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl::resetScheduleTypeLimitss() {
+  void ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl::resetScheduleTypeLimits() {
     bool result = setString(OS_ExternalInterface_FunctionalMockupUnitExport_To_ScheduleFields::ScheduleTypeLimitsNames, "");
     OS_ASSERT(result);
   }
@@ -117,22 +122,29 @@ namespace detail {
 
 } // detail
 
-ExternalInterfaceFunctionalMockupUnitExportToSchedule::ExternalInterfaceFunctionalMockupUnitExportToSchedule(const Model& model)
+ExternalInterfaceFunctionalMockupUnitExportToSchedule::ExternalInterfaceFunctionalMockupUnitExportToSchedule(const Model& model,
+                                                                                                             const Schedule& schedule,
+                                                                                                             const std::string& fMUVariableName,
+                                                                                                             double initialValue)
   : ModelObject(ExternalInterfaceFunctionalMockupUnitExportToSchedule::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  // setFMUVariableName();
-  // setInitialValue();
+  bool ok = getImpl<detail::ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl>()->setName(schedule.nameString());
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s Name to " << schedule.nameString() << ".");
+  }
+  setFMUVariableName(fMUVariableName);
+  setInitialValue(initialValue);
 }
 
 IddObjectType ExternalInterfaceFunctionalMockupUnitExportToSchedule::iddObjectType() {
   return IddObjectType(IddObjectType::OS_ExternalInterface_FunctionalMockupUnitExport_To_Schedule);
 }
 
-boost::optional<ScheduleTypeLimits> ExternalInterfaceFunctionalMockupUnitExportToSchedule::scheduleTypeLimitss() const {
-  return getImpl<detail::ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl>()->scheduleTypeLimitss();
+boost::optional<ScheduleTypeLimits> ExternalInterfaceFunctionalMockupUnitExportToSchedule::scheduleTypeLimits() const {
+  return getImpl<detail::ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl>()->scheduleTypeLimits();
 }
 
 std::string ExternalInterfaceFunctionalMockupUnitExportToSchedule::fMUVariableName() const {
@@ -143,12 +155,12 @@ double ExternalInterfaceFunctionalMockupUnitExportToSchedule::initialValue() con
   return getImpl<detail::ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl>()->initialValue();
 }
 
-bool ExternalInterfaceFunctionalMockupUnitExportToSchedule::setScheduleTypeLimitss(const ScheduleTypeLimits& scheduleTypeLimits) {
-  return getImpl<detail::ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl>()->setScheduleTypeLimitss(scheduleTypeLimits);
+bool ExternalInterfaceFunctionalMockupUnitExportToSchedule::setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits) {
+  return getImpl<detail::ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl>()->setScheduleTypeLimits(scheduleTypeLimits);
 }
 
-void ExternalInterfaceFunctionalMockupUnitExportToSchedule::resetScheduleTypeLimitss() {
-  getImpl<detail::ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl>()->resetScheduleTypeLimitss();
+void ExternalInterfaceFunctionalMockupUnitExportToSchedule::resetScheduleTypeLimits() {
+  getImpl<detail::ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl>()->resetScheduleTypeLimits();
 }
 
 void ExternalInterfaceFunctionalMockupUnitExportToSchedule::setFMUVariableName(const std::string& fMUVariableName) {

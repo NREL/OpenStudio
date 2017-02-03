@@ -77,8 +77,10 @@ namespace detail {
 
   double ExternalInterfaceFunctionalMockupUnitImport_Impl::fMUTimeout() const {
     boost::optional<double> value = getDouble(OS_ExternalInterface_FunctionalMockupUnitImportFields::FMUTimeout,true);
-    OS_ASSERT(value);
-    return value.get();
+    if (value) {
+      return value.get();
+    }
+    return -9999;
   }
 
   bool ExternalInterfaceFunctionalMockupUnitImport_Impl::isFMUTimeoutDefaulted() const {
@@ -87,8 +89,10 @@ namespace detail {
 
   int ExternalInterfaceFunctionalMockupUnitImport_Impl::fMULoggingOn() const {
     boost::optional<int> value = getInt(OS_ExternalInterface_FunctionalMockupUnitImportFields::FMULoggingOn,true);
-    OS_ASSERT(value);
-    return value.get();
+    if (value) {
+      return value.get();
+    }
+    return -9999;
   }
 
   bool ExternalInterfaceFunctionalMockupUnitImport_Impl::isFMULoggingOnDefaulted() const {
@@ -122,8 +126,10 @@ namespace detail {
 
   std::string ExternalInterfaceFunctionalMockupUnitImport_Impl::fMUFileName() const {
     boost::optional<std::string> value = getString(OS_ExternalInterface_FunctionalMockupUnitImportFields::FMUFileName);
-    OS_ASSERT(value);
-    return value.get();
+    if (value) {
+      return value.get();
+    }
+    return "";
   }
 
 } // detail

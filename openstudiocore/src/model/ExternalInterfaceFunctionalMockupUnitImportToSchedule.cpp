@@ -98,20 +98,26 @@ namespace detail {
 
   std::string ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl::fMUInstanceName() const {
     boost::optional<std::string> value = getString(OS_ExternalInterface_FunctionalMockupUnitImport_To_ScheduleFields::FMUInstanceName,true);
-    OS_ASSERT(value);
-    return value.get();
+    if (value) {
+      return value.get();
+    }
+    return "";
   }
 
   std::string ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl::fMUVariableName() const {
     boost::optional<std::string> value = getString(OS_ExternalInterface_FunctionalMockupUnitImport_To_ScheduleFields::FMUVariableName,true);
-    OS_ASSERT(value);
-    return value.get();
+    if (value) {
+      return value.get();
+    }
+    return "";
   }
 
   double ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl::initialValue() const {
     boost::optional<double> value = getDouble(OS_ExternalInterface_FunctionalMockupUnitImport_To_ScheduleFields::InitialValue,true);
-    OS_ASSERT(value);
-    return value.get();
+    if (value) {
+      return value.get();
+    }
+    return -9999;
   }
 
   bool ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl::setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits) {

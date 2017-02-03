@@ -77,8 +77,10 @@ namespace detail {
 
   double ExternalInterfaceVariable_Impl::initialValue() const {
     boost::optional<double> value = getDouble(OS_ExternalInterface_VariableFields::InitialValue,true);
-    OS_ASSERT(value);
-    return value.get();
+    if (value) {
+      return value.get();
+    }
+    return -9999;
   }
 
   void ExternalInterfaceVariable_Impl::setInitialValue(double initialValue) {

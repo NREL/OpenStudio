@@ -88,8 +88,10 @@ namespace detail {
 
   double ExternalInterfaceSchedule_Impl::initialValue() const {
     boost::optional<double> value = getDouble(OS_ExternalInterface_ScheduleFields::InitialValue,true);
-    OS_ASSERT(value);
-    return value.get();
+    if (value) {
+      return value.get();
+    }
+    return -9999;
   }
 
   bool ExternalInterfaceSchedule_Impl::setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits) {

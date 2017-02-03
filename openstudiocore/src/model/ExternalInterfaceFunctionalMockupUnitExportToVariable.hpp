@@ -48,7 +48,7 @@ class MODEL_API ExternalInterfaceFunctionalMockupUnitExportToVariable : public M
   /** @name Constructors and Destructors */
   //@{
 
-  explicit ExternalInterfaceFunctionalMockupUnitExportToVariable(const Model& model);
+  explicit ExternalInterfaceFunctionalMockupUnitExportToVariable(const Model& model, const std::string& fMUVariableName, double initialValue);
 
   virtual ~ExternalInterfaceFunctionalMockupUnitExportToVariable() {}
 

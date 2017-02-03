@@ -80,14 +80,18 @@ namespace detail {
 
   std::string ExternalInterfaceFunctionalMockupUnitImportFromVariable_Impl::outputVariableIndexKeyName() const {
     boost::optional<std::string> value = getString(OS_ExternalInterface_FunctionalMockupUnitImport_From_VariableFields::Output_VariableIndexKeyName,true);
-    OS_ASSERT(value);
-    return value.get();
+    if (value) {
+      return value.get();
+    }
+    return "";
   }
 
   std::string ExternalInterfaceFunctionalMockupUnitImportFromVariable_Impl::outputVariableName() const {
     boost::optional<std::string> value = getString(OS_ExternalInterface_FunctionalMockupUnitImport_From_VariableFields::Output_VariableName,true);
-    OS_ASSERT(value);
-    return value.get();
+    if (value) {
+      return value.get();
+    }
+    return "";
   }
 
   ExternalInterfaceFunctionalMockupUnitImport ExternalInterfaceFunctionalMockupUnitImportFromVariable_Impl::fMUFile() const {
@@ -100,14 +104,18 @@ namespace detail {
 
   std::string ExternalInterfaceFunctionalMockupUnitImportFromVariable_Impl::fMUInstanceName() const {
     boost::optional<std::string> value = getString(OS_ExternalInterface_FunctionalMockupUnitImport_From_VariableFields::FMUInstanceName,true);
-    OS_ASSERT(value);
-    return value.get();
+    if (value) {
+      return value.get();
+    }
+    return "";
   }
 
   std::string ExternalInterfaceFunctionalMockupUnitImportFromVariable_Impl::fMUVariableName() const {
     boost::optional<std::string> value = getString(OS_ExternalInterface_FunctionalMockupUnitImport_From_VariableFields::FMUVariableName,true);
-    OS_ASSERT(value);
-    return value.get();
+    if (value) {
+      return value.get();
+    }
+    return "";
   }
 
   void ExternalInterfaceFunctionalMockupUnitImportFromVariable_Impl::setOutputVariableIndexKeyName(const std::string& outputVariableIndexKeyName) {

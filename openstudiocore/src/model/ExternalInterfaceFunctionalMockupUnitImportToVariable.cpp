@@ -91,20 +91,26 @@ namespace detail {
 
   std::string ExternalInterfaceFunctionalMockupUnitImportToVariable_Impl::fMUInstanceName() const {
     boost::optional<std::string> value = getString(OS_ExternalInterface_FunctionalMockupUnitImport_To_VariableFields::FMUInstanceName,true);
-    OS_ASSERT(value);
-    return value.get();
+    if (value) {
+      return value.get();
+    }
+    return "";
   }
 
   std::string ExternalInterfaceFunctionalMockupUnitImportToVariable_Impl::fMUVariableName() const {
     boost::optional<std::string> value = getString(OS_ExternalInterface_FunctionalMockupUnitImport_To_VariableFields::FMUVariableName,true);
-    OS_ASSERT(value);
-    return value.get();
+    if (value) {
+      return value.get();
+    }
+    return "";
   }
 
   double ExternalInterfaceFunctionalMockupUnitImportToVariable_Impl::initialValue() const {
     boost::optional<double> value = getDouble(OS_ExternalInterface_FunctionalMockupUnitImport_To_VariableFields::InitialValue,true);
-    OS_ASSERT(value);
-    return value.get();
+    if (value) {
+      return value.get();
+    }
+    return -9999;
   }
 
   bool ExternalInterfaceFunctionalMockupUnitImportToVariable_Impl::setFMUFile(const ExternalInterfaceFunctionalMockupUnitImport& fMUFile) {

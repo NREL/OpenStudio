@@ -48,7 +48,11 @@ class MODEL_API ExternalInterfaceFunctionalMockupUnitExportToActuator : public M
   /** @name Constructors and Destructors */
   //@{
 
-  explicit ExternalInterfaceFunctionalMockupUnitExportToActuator(const ModelObject& modelObject);
+  explicit ExternalInterfaceFunctionalMockupUnitExportToActuator(const ModelObject& modelObject,
+                                                                 const std::string& actuatedComponentType,
+                                                                 const std::string& actuatedComponentControlType,
+                                                                 const std::string& fMUVariableName,
+                                                                 double initialValue);
 
   virtual ~ExternalInterfaceFunctionalMockupUnitExportToActuator() {}
 

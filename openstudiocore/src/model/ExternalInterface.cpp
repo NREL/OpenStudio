@@ -76,8 +76,10 @@ namespace detail {
 
   std::string ExternalInterface_Impl::nameofExternalInterface() const {
     boost::optional<std::string> value = getString(OS_ExternalInterfaceFields::NameofExternalInterface,true);
-    OS_ASSERT(value);
-    return value.get();
+    if (value) {
+      return value.get();
+    }
+    return "";
   }
 
   bool ExternalInterface_Impl::setNameofExternalInterface(const std::string& nameofExternalInterface) {

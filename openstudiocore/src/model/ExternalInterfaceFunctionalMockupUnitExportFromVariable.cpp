@@ -75,20 +75,26 @@ namespace detail {
 
   std::string ExternalInterfaceFunctionalMockupUnitExportFromVariable_Impl::outputVariableIndexKeyName() const {
     boost::optional<std::string> value = getString(OS_ExternalInterface_FunctionalMockupUnitExport_From_VariableFields::Output_VariableIndexKeyName,true);
-    OS_ASSERT(value);
-    return value.get();
+    if (value) {
+      return value.get();
+    }
+    return "";
   }
 
   std::string ExternalInterfaceFunctionalMockupUnitExportFromVariable_Impl::outputVariableName() const {
     boost::optional<std::string> value = getString(OS_ExternalInterface_FunctionalMockupUnitExport_From_VariableFields::Output_VariableName,true);
-    OS_ASSERT(value);
-    return value.get();
+    if (value) {
+      return value.get();
+    }
+    return "";
   }
 
   std::string ExternalInterfaceFunctionalMockupUnitExportFromVariable_Impl::fMUVariableName() const {
     boost::optional<std::string> value = getString(OS_ExternalInterface_FunctionalMockupUnitExport_From_VariableFields::FMUVariableName,true);
-    OS_ASSERT(value);
-    return value.get();
+    if (value) {
+      return value.get();
+    }
+    return "";
   }
 
   void ExternalInterfaceFunctionalMockupUnitExportFromVariable_Impl::setOutputVariableIndexKeyName(const std::string& outputVariableIndexKeyName) {
@@ -108,17 +114,22 @@ namespace detail {
 
 } // detail
 
-ExternalInterfaceFunctionalMockupUnitExportFromVariable::ExternalInterfaceFunctionalMockupUnitExportFromVariable(const Model& model)
+ExternalInterfaceFunctionalMockupUnitExportFromVariable::ExternalInterfaceFunctionalMockupUnitExportFromVariable(const Model& model,
+                                                                                                                 const std::string& outputVariableIndexKeyName,
+                                                                                                                 const std::string& outputVariableName,
+                                                                                                                 const std::string& fMUVariableName)
   : ModelObject(ExternalInterfaceFunctionalMockupUnitExportFromVariable::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::ExternalInterfaceFunctionalMockupUnitExportFromVariable_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  // setOutputVariableIndexKeyName();
-  bool ok = true;
-  // ok = setOutputVariableName();
-  OS_ASSERT(ok);
-  // setFMUVariableName();
+  setOutputVariableIndexKeyName(outputVariableIndexKeyName);
+  bool ok = setOutputVariableName(outputVariableName);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s OutputVariableName to "
+      << outputVariableName << ".");
+  }
+  setFMUVariableName(fMUVariableName);
 }
 
 IddObjectType ExternalInterfaceFunctionalMockupUnitExportFromVariable::iddObjectType() {
