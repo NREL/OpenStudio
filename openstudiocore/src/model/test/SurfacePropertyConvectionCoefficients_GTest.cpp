@@ -96,6 +96,7 @@ TEST_F(ModelFixture, SurfacePropertyConvectionCoefficients) {
   ASSERT_FALSE(subsurface2);
   ASSERT_TRUE(internalmass2);
   ASSERT_EQ(*internalmass2, internalMass);
+  ASSERT_EQ(internalmass2->surfacePropertyConvectionCoefficients(), cc);
 
   std::vector<std::string> locationValues1(cc.convectionCoefficient1LocationValues());
   ASSERT_EQ(locationValues1.size(), 2);
