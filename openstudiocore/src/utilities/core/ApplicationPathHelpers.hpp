@@ -62,11 +62,14 @@ namespace openstudio {
   /// \returns The packaged EnergyPlus installation if it exists.
   UTILITIES_API openstudio::path getEnergyPlusDirectory();
 
-  /// \returns The path to the packaged EnergyPlus executable if it exists.
+  /// \returns The path to the EnergyPlus executable if it exists.
   UTILITIES_API openstudio::path getEnergyPlusExecutable();
 
-  /// \returns The packaged Radiance installation if it exists.
-  UTILITIES_API boost::optional<openstudio::path> getRadianceDirectory();
+  /// \returns The path to the Radiance installation if it exists.
+  UTILITIES_API openstudio::path getRadianceDirectory();
+
+  /// \returns The path to the Perl executable if it exists.
+  UTILITIES_API openstudio::path getPerlExecutable();
 
 } // openstudio
 
