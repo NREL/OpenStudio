@@ -10,7 +10,7 @@ GEM
   specs:
     diff-lcs (1.2.5)
     minitest (5.10.1)
-    openstudio-standards (0.1.10)
+    openstudio-standards (0.1.11)
     rspec (3.5.0)
       rspec-core (~> 3.5.0)
       rspec-expectations (~> 3.5.0)
@@ -32,9 +32,9 @@ PLATFORMS
 
 DEPENDENCIES
   minitest (~> 5.10.1)
-  openstudio-standards (= 0.1.10)
+  openstudio-standards (= 0.1.11)
   openstudio-workflow!
   rspec (~> 3.5.0)
 
 BUNDLED WITH
-   1.14.2
+   1.14.3
