@@ -216,7 +216,16 @@ namespace detail {
   }
 
   boost::optional<SurfacePropertyConvectionCoefficients> InternalMass_Impl::surfacePropertyConvectionCoefficients() const {
-    std::vector<SurfacePropertyConvectionCoefficients> spccs(model().getConcreteModelObjects<SurfacePropertyConvectionCoefficients>());
+    std::vector<SurfacePropertyConvectionCoefficients> allspccs(model().getConcreteModelObjects<SurfacePropertyConvectionCoefficients>());
+    std::vector<SurfacePropertyConvectionCoefficients> spccs;
+    for (auto& spcc : allspccs) {
+      OptionalInternalMass surface = spcc.surfaceAsInternalMass();
+      if (surface) {
+        if (surface->handle() == handle()) {
+          spccs.push_back(spcc);
+        }
+      }
+    }
     if (spccs.empty()) {
       return boost::none;
     } else if (spccs.size() == 1) {

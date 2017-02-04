@@ -840,7 +840,16 @@ namespace detail {
   }
 
   boost::optional<SurfacePropertyConvectionCoefficients> Surface_Impl::surfacePropertyConvectionCoefficients() const {
-      std::vector<SurfacePropertyConvectionCoefficients> spccs(model().getConcreteModelObjects<SurfacePropertyConvectionCoefficients>());
+      std::vector<SurfacePropertyConvectionCoefficients> allspccs(model().getConcreteModelObjects<SurfacePropertyConvectionCoefficients>());
+      std::vector<SurfacePropertyConvectionCoefficients> spccs;
+      for (auto& spcc : allspccs) {
+          OptionalSurface surface = spcc.surfaceAsSurface();
+          if (surface) {
+              if (surface->handle() == handle()) {
+                spccs.push_back(spcc);
+              }
+          }
+      }
       if (spccs.empty()) {
           return boost::none;
       } else if (spccs.size() == 1) {

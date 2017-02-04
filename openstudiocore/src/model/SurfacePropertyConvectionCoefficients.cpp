@@ -88,6 +88,24 @@ namespace detail {
   }
 
   bool SurfacePropertyConvectionCoefficients_Impl::setSurface(const ModelObject &surface) {
+    boost::optional<SurfacePropertyConvectionCoefficients> currentCoef;
+    OptionalSurface surfaceSurface = surface.optionalCast<Surface>();
+    OptionalSubSurface surfaceSubSurface = surface.optionalCast<SubSurface>();
+    OptionalInternalMass surfaceInternalMass = surface.optionalCast<InternalMass>();
+    if (surfaceSurface) {
+      currentCoef = surfaceSurface->surfacePropertyConvectionCoefficients();
+    } else if (surfaceSubSurface) {
+      currentCoef = surfaceSubSurface->surfacePropertyConvectionCoefficients();
+    } else {
+      OS_ASSERT(surfaceInternalMass);
+      currentCoef = surfaceInternalMass->surfacePropertyConvectionCoefficients();
+    }
+    if (currentCoef) {
+      if (currentCoef->handle() == this->handle()) {
+        return true;
+      }
+      currentCoef->remove();
+    }
     return setPointer(OS_SurfaceProperty_ConvectionCoefficientsFields::SurfaceName, surface.handle());
   }
 
