@@ -214,4 +214,10 @@ TEST_F(ModelFixture, SurfacePropertyConvectionCoefficients) {
   cc.resetConvectionCoefficient2Schedule();
   optSched = cc.convectionCoefficient2Schedule();
   ASSERT_FALSE(optSched);
+
+  SurfacePropertyConvectionCoefficients cc2(surface);
+  boost::optional<SurfacePropertyConvectionCoefficients> cc3(surface.surfacePropertyConvectionCoefficients());
+  ASSERT_TRUE(cc3);
+  ASSERT_EQ(cc3.get().handle(), cc2.handle());
+
 }
