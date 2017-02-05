@@ -727,8 +727,13 @@ if(NOT EXISTS ${BOOST_INSTALL_DIR})
     set(BOOST_ZIP_FILENAME "boost_1_55_0_redhat.tar.gz")
     set(BOOST_ZIP_EXPECTED_MD5 "de952e0c36900a3ad000d74a1c41b7d2")
   else()
-	message("CMAKE_SYSTEM = ${CMAKE_SYSTEM}")
-	if(CMAKE_SYSTEM MATCHES "Linux-4.4.0-31-generic")
+    find_program(LSB_RELEASE lsb_release)
+    execute_process(COMMAND ${LSB_RELEASE} -r
+      OUTPUT_VARIABLE LSB_RELEASE_ID_SHORT
+      OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+	#message("LSB_RELEASE_ID_SHORT = ${LSB_RELEASE_ID_SHORT}")
+	if(LSB_RELEASE_ID_SHORT MATCHES "16.04")
 	  # ubuntu 16.04
       set(BOOST_ZIP_FILENAME "boost_1_55_0_xenial.tar.gz")
       set(BOOST_ZIP_EXPECTED_MD5 "45bf97fbdcde070aca3cc6181cd69362")	
