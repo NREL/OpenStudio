@@ -72,8 +72,6 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<double> values() const override;
-
     virtual boost::optional<ScheduleTypeLimits> scheduleTypeLimits() const override;
 
     double initialValue() const;

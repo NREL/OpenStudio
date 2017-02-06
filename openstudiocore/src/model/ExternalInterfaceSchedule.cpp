@@ -145,6 +145,7 @@ ExternalInterfaceSchedule::ExternalInterfaceSchedule(const Model& model)
   : Schedule(ExternalInterfaceSchedule::iddObjectType(), model)
 {
   OS_ASSERT(getImpl<detail::ExternalInterfaceSchedule_Impl>());
+  setInitialValue(0.0);
 }
 
 IddObjectType ExternalInterfaceSchedule::iddObjectType() {

@@ -33,6 +33,24 @@
 #include "../ExternalInterfaceSchedule.hpp"
 #include "../ExternalInterfaceSchedule_Impl.hpp"
 
+#include "../ScheduleTypeRegistry.hpp"
+
+#include "../../utilities/idf/ValidityReport.hpp"
+
 using namespace openstudio;
 using namespace openstudio::model;
+
+TEST_F(ModelFixture, ExternalInterfaceSchedule) {
+  Model model;
+  ExternalInterfaceSchedule schedule(model);
+  EXPECT_EQ(0.0,schedule.initialValue());
+  schedule.setInitialValue(-0.1);
+  EXPECT_EQ(-0.1, schedule.initialValue());
+  EXPECT_TRUE(checkOrAssignScheduleTypeLimits("Lights", "Lighting", schedule));
+  ValidityReport report = schedule.validityReport(StrictnessLevel(StrictnessLevel::Final));
+  ASSERT_EQ(0u, report.numErrors());
+  schedule.setInitialValue(0.5);
+  report = schedule.validityReport(StrictnessLevel(StrictnessLevel::Final));
+  EXPECT_EQ(0u, report.numErrors());
+}
 
