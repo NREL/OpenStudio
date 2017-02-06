@@ -96,6 +96,16 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<ScheduleTypeLimits>(OS_ExternalInterface_FunctionalMockupUnitExport_To_ScheduleFields::ScheduleTypeLimitsName);
   }
 
+  void ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl::ensureNoLeapDays() {
+    LOG(Warn, "Ensure no leap days is not yet implemented for schedule compact");
+  }
+
+  std::vector<double> ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl::values() const {
+    DoubleVector result;
+    result.push_back(initialValue());
+    return result;
+  }
+
   std::string ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl::fMUVariableName() const {
     boost::optional<std::string> value = getString(OS_ExternalInterface_FunctionalMockupUnitExport_To_ScheduleFields::FMUVariableName,true);
     if (value) {

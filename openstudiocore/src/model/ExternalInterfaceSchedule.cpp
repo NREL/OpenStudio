@@ -93,6 +93,16 @@ namespace detail {
     return ExternalInterfaceSchedule::iddObjectType();
   }
 
+  void ExternalInterfaceSchedule_Impl::ensureNoLeapDays() {
+    LOG(Warn, "Ensure no leap days is not yet implemented for schedule compact");
+  }
+
+  std::vector<double> ExternalInterfaceSchedule_Impl::values() const {
+    DoubleVector result;
+    result.push_back(initialValue());
+    return result;
+  }
+
   boost::optional<ScheduleTypeLimits> ExternalInterfaceSchedule_Impl::scheduleTypeLimits() const {
     return getObject<ModelObject>().getModelObjectTarget<ScheduleTypeLimits>(OS_ExternalInterface_ScheduleFields::ScheduleTypeLimitsName);
   }

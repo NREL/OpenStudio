@@ -74,6 +74,8 @@ namespace detail {
 
     virtual boost::optional<ScheduleTypeLimits> scheduleTypeLimits() const override;
 
+    virtual std::vector<double> values() const override;
+
     double initialValue() const;
 
     //@}
@@ -85,6 +87,9 @@ namespace detail {
     virtual bool resetScheduleTypeLimits() override;
 
     void setInitialValue(double initialValue);
+
+    // ensure that this object does not contain the date 2/29
+    virtual void ensureNoLeapDays() override;
 
     //@}
     /** @name Other */

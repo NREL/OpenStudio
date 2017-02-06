@@ -54,3 +54,17 @@ TEST_F(ModelFixture, ExternalInterfaceSchedule) {
   EXPECT_EQ(0u, report.numErrors());
 }
 
+TEST_F(ModelFixture, ExternalInterfaceSchedule2) {
+  Model model;
+  ExternalInterfaceSchedule schedule(model, 10);
+  EXPECT_EQ(10.0, schedule.initialValue());
+  EXPECT_EQ("External Interface Schedule 1", schedule.nameString());
+
+  ExternalInterfaceSchedule schedule2(model);
+  EXPECT_EQ("External Interface Schedule 2", schedule2.nameString());
+  boost::optional<std::string> test = schedule2.setName("External Interface Schedule 1");
+  //should be equal since the name setting should fail and return the original name
+  EXPECT_EQ(test.get(),schedule2.nameString());
+  schedule2.setName("External Interface Schedule 3");
+  EXPECT_EQ("External Interface Schedule 3", schedule2.nameString());
+}

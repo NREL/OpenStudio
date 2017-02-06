@@ -74,6 +74,8 @@ namespace detail {
 
     virtual boost::optional<ScheduleTypeLimits> scheduleTypeLimits() const override;
 
+    virtual std::vector<double> values() const override;
+
     std::string fMUVariableName() const;
 
     double initialValue() const;
@@ -89,6 +91,9 @@ namespace detail {
     void setFMUVariableName(const std::string& fMUVariableName);
 
     void setInitialValue(double initialValue);
+
+    // ensure that this object does not contain the date 2/29
+    virtual void ensureNoLeapDays() override;
 
     //@}
     /** @name Other */
