@@ -75,6 +75,20 @@ namespace detail {
     : ModelObject_Impl(other,model,keepHandle)
   {}
 
+  ModelObject SurfacePropertyConvectionCoefficients_Impl::clone(Model model) const
+  {
+    ModelObject result = ModelObject_Impl::clone(model);
+
+    Model m = this->model();
+    if (model == m) {
+      // cloned into same model, erase reference to parent
+      // this object is now invalid but having two objects point to same surface would also be invalid
+      result.setString(OS_SurfaceProperty_ConvectionCoefficientsFields::SurfaceName, "");
+    }
+
+    return result;
+  }
+
   const std::vector<std::string>& SurfacePropertyConvectionCoefficients_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;

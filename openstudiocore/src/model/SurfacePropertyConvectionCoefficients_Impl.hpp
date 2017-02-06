@@ -62,6 +62,8 @@ namespace detail {
     //@}
     /** @name Virtual Methods */
     //@{
+        
+    virtual ModelObject clone(Model model) const override;
 
     virtual const std::vector<std::string>& outputVariableNames() const override;
 
