@@ -34,6 +34,7 @@
 #include "../ExternalInterfaceSchedule_Impl.hpp"
 
 #include "../ScheduleTypeRegistry.hpp"
+#include "../ScheduleTypeLimits.hpp"
 
 #include "../../utilities/idf/ValidityReport.hpp"
 
@@ -67,4 +68,12 @@ TEST_F(ModelFixture, ExternalInterfaceSchedule2) {
   EXPECT_EQ(test.get(),schedule2.nameString());
   schedule2.setName("External Interface Schedule 3");
   EXPECT_EQ("External Interface Schedule 3", schedule2.nameString());
+
+
+  ScheduleTypeLimits stl(model);
+  EXPECT_TRUE(schedule.setScheduleTypeLimits(stl));
+  EXPECT_EQ(stl, schedule.scheduleTypeLimits());
+  EXPECT_TRUE(schedule.resetScheduleTypeLimits());
+  boost::optional<ScheduleTypeLimits> stl2 = schedule.scheduleTypeLimits();
+  EXPECT_TRUE(!stl2.is_initialized());
 }
