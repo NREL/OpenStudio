@@ -95,7 +95,7 @@ ExternalInterfaceVariable::ExternalInterfaceVariable(const Model& model, const s
 {
   OS_ASSERT(getImpl<detail::ExternalInterfaceVariable_Impl>());
   bool ok = getImpl<detail::ExternalInterfaceVariable_Impl>()->setName(variableName);
-  if (!ok) {
+  if ( (!ok) || (variableName != this->nameString() )) {
     remove();
     LOG_AND_THROW("Unable to set " << briefDescription() << "'s Name to " << variableName << ".");
   }

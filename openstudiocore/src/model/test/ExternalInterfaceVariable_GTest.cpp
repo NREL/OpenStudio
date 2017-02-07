@@ -36,3 +36,13 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
+TEST_F(ModelFixture, ExternalInterfaceVariable) {
+  Model model;
+  ExternalInterfaceVariable variable(model, "test name", 10);
+  EXPECT_EQ(10.0, variable.initialValue());
+  EXPECT_EQ("test name", variable.nameString());
+  variable.setInitialValue(1);
+  EXPECT_EQ(1.0, variable.initialValue());
+
+}
+
