@@ -101,7 +101,7 @@ namespace detail {
 
       boost::optional<openstudio::path> oswPath() const;
 
-      bool setOswPath(const openstudio::path& path);
+      bool setOswPath(const openstudio::path& path, bool emitChange);
 
       openstudio::path oswDir() const;
 
@@ -152,7 +152,7 @@ namespace detail {
 
       void resetWorkflowSteps();
 
-      std::vector<MeasureStep> getMeasureSteps(const MeasureType& measureType);
+      std::vector<MeasureStep> getMeasureSteps(const MeasureType& measureType) const;
 
       bool setMeasureSteps(const MeasureType& measureType, const std::vector<MeasureStep>& steps);
 
