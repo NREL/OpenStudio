@@ -4553,18 +4553,18 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
 
   // ThermalZoneVentilationSystem
   // Find out if ventSys is already a simsys or a priaircondgsys
-  bool translateVentSys = false;
+  bool translateVentSys = true;
   for( const auto & info : priAirCondInfo ) {
     if( info.SysRefElement == ventSysRefElement ) {
-      translateVentSys = true;
+      translateVentSys = false;
       break;
     }
   }
 
-  if( ! translateVentSys ) {
+  if( translateVentSys ) {
     for( const auto & info : simSysInfo ) {
       if( info.SysRefElement == ventSysRefElement ) {
-        translateVentSys = true;
+        translateVentSys = false;
         break;
       }
     }
