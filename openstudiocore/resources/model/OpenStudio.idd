@@ -27468,7 +27468,6 @@ OS:ExternalInterface:FunctionalMockupUnitExport:To:Schedule,
        \type handle
        \required-field
   A2 , \field Name
-       \memo used to be \field Schedule Name
        \required-field
        \type alpha
        \reference ScheduleNames
