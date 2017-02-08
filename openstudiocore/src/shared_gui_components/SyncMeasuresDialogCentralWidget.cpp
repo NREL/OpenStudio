@@ -216,6 +216,9 @@ void SyncMeasuresDialogCentralWidget::lowerPushButtonClicked()
   if(!newMeasures.empty()){
     bool showMessage = true;
     m_measureManager->updateMeasures(newMeasures,showMessage);
+
+    // clear the internal state of measure manager 
+    m_measureManager->reset();
   }
 
   emit closeDlg();

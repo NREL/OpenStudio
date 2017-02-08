@@ -813,6 +813,47 @@ void MeasureManager::updateMeasuresLists(bool updateUserMeasures)
 //  updateMeasures(t_project, toUpdate);
 //}
 
+bool MeasureManager::reset()
+{
+  waitForStarted();
+
+  if (!m_mutex.tryLock()){
+    return false;
+  }
+  
+  QUrl url(m_url);
+  url.setPath("/reset");
+
+  std::string url_s = m_url.toString().toStdString();
+
+  QString data = QString("{}");
+
+  QNetworkRequest request(url);
+  request.setHeader(QNetworkRequest::ContentTypeHeader, "json");
+
+  QNetworkAccessManager manager;
+
+  QNetworkReply* reply = manager.post(request, data.toUtf8());
+
+  while (reply->isRunning()){
+    Application::instance().processEvents();
+  }
+
+  QString replyString = reply->readAll();
+  std::string s = replyString.toStdString();
+
+  bool result = true;
+  if (reply->error() != QNetworkReply::NoError){
+    result = false;
+  }
+
+  delete reply;
+
+  m_mutex.unlock();
+
+  return result;
+}
+
 bool MeasureManager::checkForLocalBCLUpdates()
 {
   waitForStarted();
