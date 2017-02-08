@@ -27289,11 +27289,12 @@ OS:ExternalInterface:FunctionalMockupUnitImport,
   A2 , \field Name
        \required-field
        \type alpha
+       \retaincase
+       \reference FMUFileName
   A3 , \field FMU File Name
        \required-field
        \type alpha
        \retaincase
-       \reference FMUFileName
   N1 , \field FMU Timeout
        \note in milli-seconds
        \type real

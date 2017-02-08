@@ -61,4 +61,14 @@ TEST_F(ModelFixture, ExternalInterfaceFunctionalMockupUnitImport) {
   EXPECT_EQ("Test Name", eifmui.fMUFileName());
 }
 
+TEST_F(ModelFixture, ExternalInterfaceFunctionalMockupUnitImport2) {
+  Model model;
+
+  ExternalInterfaceFunctionalMockupUnitImport eifmui(model, "c:\\Program Files\\Test\\blah.fmu");
+  EXPECT_EQ("c:\\Program Files\\Test\\blah.fmu", eifmui.fMUFileName());
+  EXPECT_EQ("External Interface Functional Mockup Unit Import 1", eifmui.nameString());
+  EXPECT_TRUE(eifmui.setFMUFileName("c:/Program Files/Test/blah.fmu"));
+  EXPECT_EQ("c:/Program Files/Test/blah.fmu", eifmui.fMUFileName());
+}
+
 

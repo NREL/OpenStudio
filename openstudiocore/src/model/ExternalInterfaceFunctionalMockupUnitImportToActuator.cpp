@@ -155,6 +155,7 @@ namespace detail {
   bool ExternalInterfaceFunctionalMockupUnitImportToActuator_Impl::setFMUFile(const ExternalInterfaceFunctionalMockupUnitImport& fMUFile) {
     bool result = setPointer(OS_ExternalInterface_FunctionalMockupUnitImport_To_ActuatorFields::FMUFileName, fMUFile.handle());
     return result;
+    //TODO in forward translator set this to the file name
   }
 
   void ExternalInterfaceFunctionalMockupUnitImportToActuator_Impl::setFMUInstanceName(const std::string& fMUInstanceName) {

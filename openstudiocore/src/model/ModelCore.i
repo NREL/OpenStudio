@@ -237,7 +237,7 @@ SWIG_MODELOBJECT(EnergyManagementSystemProgramCallingManager, 1);
 SWIG_MODELOBJECT(EnergyManagementSystemOutputVariable, 1);
 SWIG_UNIQUEMODELOBJECT(OutputEnergyManagementSystem);
 SWIG_UNIQUEMODELOBJECT(ExternalInterface);
-SWIG_MODELOBJECT(ExternalInterfaceActuator);
+SWIG_MODELOBJECT(ExternalInterfaceActuator, 1);
 SWIG_MODELOBJECT(ExternalInterfaceFunctionalMockupUnitExportFromVariable, 1);
 SWIG_MODELOBJECT(ExternalInterfaceFunctionalMockupUnitExportToActuator, 1);
 SWIG_MODELOBJECT(ExternalInterfaceFunctionalMockupUnitExportToSchedule, 1);

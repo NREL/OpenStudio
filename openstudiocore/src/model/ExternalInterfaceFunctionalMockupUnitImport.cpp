@@ -138,7 +138,7 @@ ExternalInterfaceFunctionalMockupUnitImport::ExternalInterfaceFunctionalMockupUn
   : ModelObject(ExternalInterfaceFunctionalMockupUnitImport::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::ExternalInterfaceFunctionalMockupUnitImport_Impl>());
-
+  //bool ok1 = getImpl<detail::ExternalInterfaceFunctionalMockupUnitImport_Impl>()->setName(fmuName);
   bool ok = setFMUFileName(fmuName);
   if (!ok) {
     remove();
