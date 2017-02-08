@@ -103,7 +103,6 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.model.ExternalInterfaceFunctionalMockupUnitExportToActuator");
 
-    boost::optional<ModelObject> optionalActuatedComponentUnique() const;
   };
 
 } // detail

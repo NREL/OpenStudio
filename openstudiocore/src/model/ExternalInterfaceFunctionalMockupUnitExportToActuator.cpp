@@ -79,11 +79,7 @@ namespace detail {
   }
 
   ModelObject ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl::actuatedComponentUnique() const {
-    boost::optional<ModelObject> value = optionalActuatedComponentUnique();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Actuated Component Unique attached.");
-    }
-    return value.get();
+    return this->getTarget(OS_ExternalInterface_FunctionalMockupUnitExport_To_ActuatorFields::ActuatedComponentUniqueName)->cast<ModelObject>();
   }
 
   std::string ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl::actuatedComponentType() const {
@@ -141,10 +137,6 @@ namespace detail {
   void ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl::setInitialValue(double initialValue) {
     bool result = setDouble(OS_ExternalInterface_FunctionalMockupUnitExport_To_ActuatorFields::InitialValue, initialValue);
     OS_ASSERT(result);
-  }
-
-  boost::optional<ModelObject> ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl::optionalActuatedComponentUnique() const {
-    return getObject<ModelObject>().getModelObjectTarget<ModelObject>(OS_ExternalInterface_FunctionalMockupUnitExport_To_ActuatorFields::ActuatedComponentUniqueName);
   }
 
 } // detail
