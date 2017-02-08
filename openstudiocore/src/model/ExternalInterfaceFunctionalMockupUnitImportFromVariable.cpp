@@ -95,11 +95,7 @@ namespace detail {
   }
 
   ExternalInterfaceFunctionalMockupUnitImport ExternalInterfaceFunctionalMockupUnitImportFromVariable_Impl::fMUFile() const {
-    boost::optional<ExternalInterfaceFunctionalMockupUnitImport> value = optionalFMUFile();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an FMUFile attached.");
-    }
-    return value.get();
+    return this->getTarget(OS_ExternalInterface_FunctionalMockupUnitImport_From_VariableFields::FMUFileName)->cast<ExternalInterfaceFunctionalMockupUnitImport>();
   }
 
   std::string ExternalInterfaceFunctionalMockupUnitImportFromVariable_Impl::fMUInstanceName() const {
@@ -142,10 +138,6 @@ namespace detail {
   void ExternalInterfaceFunctionalMockupUnitImportFromVariable_Impl::setFMUVariableName(const std::string& fMUVariableName) {
     bool result = setString(OS_ExternalInterface_FunctionalMockupUnitImport_From_VariableFields::FMUVariableName, fMUVariableName);
     OS_ASSERT(result);
-  }
-
-  boost::optional<ExternalInterfaceFunctionalMockupUnitImport> ExternalInterfaceFunctionalMockupUnitImportFromVariable_Impl::optionalFMUFile() const {
-    return getObject<ExternalInterfaceFunctionalMockupUnitImport>().getModelObjectTarget<ExternalInterfaceFunctionalMockupUnitImport>(OS_ExternalInterface_FunctionalMockupUnitImport_From_VariableFields::FMUFileName);
   }
 
 } // detail

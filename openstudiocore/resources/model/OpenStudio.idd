@@ -27206,6 +27206,7 @@ OS:ExternalInterface,
         \note Name of External Interface
         \required-field
         \type choice
+        \default PtolemyServer
         \key PtolemyServer
         \key FunctionalMockupUnitImport
         \key FunctionalMockupUnitExport

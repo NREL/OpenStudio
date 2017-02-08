@@ -1541,11 +1541,14 @@ set(${target_name}_test_src
   test/EvaporativeCoolerIndirectResearchSpecial_GTest.cpp
   test/EvaporativeFluidCoolerSingleSpeed_GTest.cpp
   test/EvaporativeFluidCoolerTwoSpeed_GTest.cpp
+  test/ExternalInterface_GTest.cpp
   test/ExternalInterfaceActuator_GTest.cpp
+  test/ExternalInterfaceFunctionalMockupUnitExportFromVariable_GTest.cpp
   test/ExternalInterfaceFunctionalMockupUnitExportToActuator_GTest.cpp
   test/ExternalInterfaceFunctionalMockupUnitExportToSchedule_GTest.cpp
   test/ExternalInterfaceFunctionalMockupUnitExportToVariable_GTest.cpp
   test/ExternalInterfaceFunctionalMockupUnitImport_GTest.cpp
+  test/ExternalInterfaceFunctionalMockupUnitImportFromVariable_GTest.cpp
   test/ExternalInterfaceFunctionalMockupUnitImportToActuator_GTest.cpp
   test/ExternalInterfaceFunctionalMockupUnitImportToSchedule_GTest.cpp
   test/ExternalInterfaceFunctionalMockupUnitImportToVariable_GTest.cpp
