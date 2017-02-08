@@ -82,11 +82,7 @@ namespace detail {
   }
 
   ModelObject ExternalInterfaceFunctionalMockupUnitImportToActuator_Impl::actuatedComponentUnique() const {
-    boost::optional<ModelObject> value = optionalActuatedComponentUnique();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Actuated Component Unique attached.");
-    }
-    return value.get();
+    return this->getTarget(OS_ExternalInterface_FunctionalMockupUnitImport_To_ActuatorFields::ActuatedComponentUniqueName)->cast<ModelObject>();
   }
 
   std::string ExternalInterfaceFunctionalMockupUnitImportToActuator_Impl::actuatedComponentType() const {
@@ -106,11 +102,12 @@ namespace detail {
   }
 
   ExternalInterfaceFunctionalMockupUnitImport ExternalInterfaceFunctionalMockupUnitImportToActuator_Impl::fMUFile() const {
-    boost::optional<ExternalInterfaceFunctionalMockupUnitImport> value = optionalFMUFile();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an FMUFile attached.");
-    }
-    return value.get();
+    //boost::optional<ExternalInterfaceFunctionalMockupUnitImport> value = optionalFMUFile();
+    //if (!value) {
+    //  LOG_AND_THROW(briefDescription() << " does not have an FMUFile attached.");
+    //}
+    //return value.get();
+    return this->getTarget(OS_ExternalInterface_FunctionalMockupUnitImport_To_ActuatorFields::FMUFileName)->cast<ExternalInterfaceFunctionalMockupUnitImport>();
   }
 
   std::string ExternalInterfaceFunctionalMockupUnitImportToActuator_Impl::fMUInstanceName() const {
@@ -171,14 +168,6 @@ namespace detail {
   void ExternalInterfaceFunctionalMockupUnitImportToActuator_Impl::setInitialValue(double initialValue) {
     bool result = setDouble(OS_ExternalInterface_FunctionalMockupUnitImport_To_ActuatorFields::InitialValue, initialValue);
     OS_ASSERT(result);
-  }
-
-  boost::optional<ModelObject> ExternalInterfaceFunctionalMockupUnitImportToActuator_Impl::optionalActuatedComponentUnique() const {
-    return getObject<ModelObject>().getModelObjectTarget<ModelObject>(OS_ExternalInterface_FunctionalMockupUnitImport_To_ActuatorFields::ActuatedComponentUniqueName);
-  }
-
-  boost::optional<ExternalInterfaceFunctionalMockupUnitImport> ExternalInterfaceFunctionalMockupUnitImportToActuator_Impl::optionalFMUFile() const {
-    return getObject<ExternalInterfaceFunctionalMockupUnitImport>().getModelObjectTarget<ExternalInterfaceFunctionalMockupUnitImport>(OS_ExternalInterface_FunctionalMockupUnitImport_To_ActuatorFields::FMUFileName);
   }
 
 } // detail

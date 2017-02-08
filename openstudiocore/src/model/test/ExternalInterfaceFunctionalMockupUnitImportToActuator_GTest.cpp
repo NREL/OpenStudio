@@ -77,8 +77,13 @@ TEST_F(ModelFixture, ExternalInterfaceFunctionalMockupUnitImportToActuator) {
   EXPECT_EQ(ComponentType, fanActuator.actuatedComponentType());
   EXPECT_EQ("FMU", fanActuator.fMUInstanceName());
   EXPECT_EQ("Fan FMU name", fanActuator.fMUVariableName());
+  ExternalInterfaceFunctionalMockupUnitImport temp = fanActuator.fMUFile();
   EXPECT_EQ(eifmui, fanActuator.fMUFile());
   EXPECT_EQ(fan, fanActuator.actuatedComponentUnique());
+
+  ExternalInterfaceFunctionalMockupUnitImport eifmui2(model, "test name 2");
+  EXPECT_TRUE(fanActuator.setFMUFile(eifmui2));
+  EXPECT_EQ(eifmui2, fanActuator.fMUFile());
 
 
   std::string fanName = fan.name().get() + "Press Actuator";
