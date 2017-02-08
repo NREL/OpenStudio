@@ -77,6 +77,11 @@ TEST_F(ModelFixture, ExternalInterfaceFunctionalMockupUnitImportToActuator) {
   EXPECT_EQ(ComponentType, fanActuator.actuatedComponentType());
   EXPECT_EQ("FMU", fanActuator.fMUInstanceName());
   EXPECT_EQ("Fan FMU name", fanActuator.fMUVariableName());
+  fanActuator.setFMUInstanceName("test 1");
+  fanActuator.setFMUVariableName("test 2");
+  EXPECT_EQ("test 1", fanActuator.fMUInstanceName());
+  EXPECT_EQ("test 2", fanActuator.fMUVariableName());
+
   ExternalInterfaceFunctionalMockupUnitImport temp = fanActuator.fMUFile();
   EXPECT_EQ(eifmui, fanActuator.fMUFile());
   EXPECT_EQ(fan, fanActuator.actuatedComponentUnique());

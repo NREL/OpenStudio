@@ -102,11 +102,6 @@ namespace detail {
   }
 
   ExternalInterfaceFunctionalMockupUnitImport ExternalInterfaceFunctionalMockupUnitImportToActuator_Impl::fMUFile() const {
-    //boost::optional<ExternalInterfaceFunctionalMockupUnitImport> value = optionalFMUFile();
-    //if (!value) {
-    //  LOG_AND_THROW(briefDescription() << " does not have an FMUFile attached.");
-    //}
-    //return value.get();
     return this->getTarget(OS_ExternalInterface_FunctionalMockupUnitImport_To_ActuatorFields::FMUFileName)->cast<ExternalInterfaceFunctionalMockupUnitImport>();
   }
 

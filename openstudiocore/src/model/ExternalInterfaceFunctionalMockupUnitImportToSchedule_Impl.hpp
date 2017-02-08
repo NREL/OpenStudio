@@ -115,7 +115,6 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.model.ExternalInterfaceFunctionalMockupUnitImportToSchedule");
 
-    boost::optional<ExternalInterfaceFunctionalMockupUnitImport> optionalFMUFile() const;
   };
 
 } // detail
