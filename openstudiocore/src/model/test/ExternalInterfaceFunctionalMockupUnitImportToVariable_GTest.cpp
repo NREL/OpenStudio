@@ -55,5 +55,8 @@ TEST_F(ModelFixture, ExternalInterfaceFunctionalMockupUnitImportToVariable) {
   EXPECT_EQ("test 1", variable.fMUInstanceName());
   EXPECT_EQ("test 2", variable.fMUVariableName());
 
+  ExternalInterfaceFunctionalMockupUnitImport eifmui2(model, "test name 2");
+  EXPECT_TRUE(variable.setFMUFile(eifmui2));
+  EXPECT_EQ(eifmui2, variable.fMUFile());
 }
 
