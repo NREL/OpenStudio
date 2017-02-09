@@ -57,15 +57,21 @@ boost::optional<IdfObject> ForwardTranslator::translateExternalInterfaceActuator
   if (s) {
     idfObject.setName(*s);
   }
-  const ModelObject m = modelObject.actuatedComponentUnique();
-  idfObject.setString(ExternalInterface_ActuatorFields::ActuatedComponentUniqueName, m.nameString());
+
+  const boost::optional<ModelObject> m = modelObject.actuatedComponentUnique();
+  if (m.is_initialized()) {
+    idfObject.setString(ExternalInterface_ActuatorFields::ActuatedComponentUniqueName, m.get().nameString());
+  }
 
   s = modelObject.actuatedComponentType();
-  idfObject.setString(ExternalInterface_ActuatorFields::ActuatedComponentType, s.get());
-
+  if (s.is_initialized()) {
+    idfObject.setString(ExternalInterface_ActuatorFields::ActuatedComponentType, s.get());
+  }
  
   s = modelObject.actuatedComponentControlType();
-  idfObject.setString(ExternalInterface_ActuatorFields::ActuatedComponentControlType, s.get());
+  if (s.is_initialized()) {
+    idfObject.setString(ExternalInterface_ActuatorFields::ActuatedComponentControlType, s.get());
+  }
 
   d = modelObject.optionalInitialValue();
   if (d.is_initialized()) {

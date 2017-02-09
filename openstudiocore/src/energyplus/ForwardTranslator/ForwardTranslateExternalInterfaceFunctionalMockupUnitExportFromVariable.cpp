@@ -58,7 +58,17 @@ boost::optional<IdfObject> ForwardTranslator::translateExternalInterfaceFunction
   }
   
   s = modelObject.outputVariableIndexKeyName();
-  idfObject.setString(ExternalInterface_FunctionalMockupUnitExport_From_VariableFields::Output_VariableIndexKeyName, s.get());
+  if (s.is_initialized()) {
+    idfObject.setString(ExternalInterface_FunctionalMockupUnitExport_From_VariableFields::Output_VariableIndexKeyName, s.get());
+  }
+  s = modelObject.outputVariableName();
+  if (s.is_initialized()) {
+    idfObject.setString(ExternalInterface_FunctionalMockupUnitExport_From_VariableFields::Output_VariableName, s.get());
+  }
+  s = modelObject.fMUVariableName();
+  if (s.is_initialized()) {
+    idfObject.setString(ExternalInterface_FunctionalMockupUnitExport_From_VariableFields::FMUVariableName, s.get());
+  }
 
   return idfObject;
 }

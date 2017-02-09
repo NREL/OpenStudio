@@ -32,6 +32,7 @@
 #include "../../model/ModelObject.hpp"
 #include "../../model/ExternalInterfaceFunctionalMockupUnitImportFromVariable.hpp"
 #include "../../model/ExternalInterfaceFunctionalMockupUnitImportFromVariable_Impl.hpp"
+#include "../../model/ExternalInterfaceFunctionalMockupUnitImport.hpp"
 
 #include <utilities/idd/ExternalInterface_FunctionalMockupUnitImport_From_Variable_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
@@ -56,10 +57,31 @@ boost::optional<IdfObject> ForwardTranslator::translateExternalInterfaceFunction
   if (s) {
     idfObject.setName(*s);
   }
-  
-  s = modelObject.outputVariableIndexKeyName();
-  idfObject.setString(ExternalInterface_FunctionalMockupUnitImport_From_VariableFields::Output_VariableIndexKeyName, s.get());
 
+  s = modelObject.outputVariableIndexKeyName();
+  if (s.is_initialized()) {
+    idfObject.setString(ExternalInterface_FunctionalMockupUnitImport_From_VariableFields::Output_VariableIndexKeyName, s.get());
+  }
+
+  s = modelObject.outputVariableName();
+  if (s.is_initialized()) {
+    idfObject.setString(ExternalInterface_FunctionalMockupUnitImport_From_VariableFields::Output_VariableName, s.get());
+  }
+
+  boost::optional<ExternalInterfaceFunctionalMockupUnitImport> file = modelObject.fMUFile();
+  if (file.is_initialized()) {
+    idfObject.setString(ExternalInterface_FunctionalMockupUnitImport_From_VariableFields::FMUFileName, file.get().fMUFileName());
+  }
+
+  s = modelObject.fMUInstanceName();
+  if (s.is_initialized()) {
+    idfObject.setString(ExternalInterface_FunctionalMockupUnitImport_From_VariableFields::FMUInstanceName, s.get());
+  }
+
+  s = modelObject.fMUVariableName();
+  if (s.is_initialized()) {
+    idfObject.setString(ExternalInterface_FunctionalMockupUnitImport_From_VariableFields::FMUVariableName, s.get());
+  }
   return idfObject;
 }
 

@@ -48,6 +48,7 @@ namespace energyplus {
 boost::optional<IdfObject> ForwardTranslator::translateExternalInterfaceFunctionalMockupUnitExportToVariable(ExternalInterfaceFunctionalMockupUnitExportToVariable & modelObject)
 {
   boost::optional<std::string> s;
+  boost::optional<double> d;
 
   IdfObject idfObject(openstudio::IddObjectType::ExternalInterface_FunctionalMockupUnitExport_To_Variable);
   m_idfObjects.push_back(idfObject);
@@ -56,9 +57,16 @@ boost::optional<IdfObject> ForwardTranslator::translateExternalInterfaceFunction
   if (s) {
     idfObject.setName(*s);
   }
-  
+
   s = modelObject.fMUVariableName();
-  idfObject.setString(ExternalInterface_FunctionalMockupUnitExport_To_VariableFields::FMUVariableName, s.get());
+  if (s.is_initialized()) {
+    idfObject.setString(ExternalInterface_FunctionalMockupUnitExport_To_VariableFields::FMUVariableName, s.get());
+  }
+
+  d = modelObject.initialValue();
+  if (d.is_initialized()) {
+    idfObject.setDouble(ExternalInterface_FunctionalMockupUnitExport_To_VariableFields::InitialValue, d.get());
+  }
 
   return idfObject;
 }

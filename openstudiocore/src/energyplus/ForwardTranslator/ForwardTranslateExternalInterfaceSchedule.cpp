@@ -32,6 +32,8 @@
 #include "../../model/ModelObject.hpp"
 #include "../../model/ExternalInterfaceSchedule.hpp"
 #include "../../model/ExternalInterfaceSchedule_Impl.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../model/ScheduleTypeLimits.hpp"
 
 #include <utilities/idd/ExternalInterface_Schedule_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
@@ -57,10 +59,12 @@ boost::optional<IdfObject> ForwardTranslator::translateExternalInterfaceSchedule
   if (s) {
     idfObject.setName(*s);
   }
-  const ModelObject m = modelObject.scheduleTypeLimits();
-  idfObject.setString(ExternalInterface_ScheduleFields::ScheduleTypeLimitsName, m.nameString());
+  const boost::optional<ScheduleTypeLimits> schedule = modelObject.scheduleTypeLimits();
+  if (schedule.is_initialized()) {
+    idfObject.setString(ExternalInterface_ScheduleFields::ScheduleTypeLimitsName, schedule.get().nameString());
+  }
 
-  d = modelObject.InitialValue();
+  d = modelObject.initialValue();
   if (d.is_initialized()) {
     idfObject.setDouble(ExternalInterface_ScheduleFields::InitialValue, d.get());
   }
