@@ -26,46 +26,79 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
 
+#include <gtest/gtest.h>
+#include "EnergyPlusFixture.hpp"
+
+#include "../ErrorFile.hpp"
 #include "../ForwardTranslator.hpp"
+#include "../ReverseTranslator.hpp"
 
 #include "../../model/Model.hpp"
-#include "../../model/ModelObject.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../model/Schedule_Impl.hpp"
+#include "../../model/ScheduleTypeLimits.hpp"
+#include "../../model/ScheduleTypeLimits_Impl.hpp"
+
 #include "../../model/ExternalInterface.hpp"
 #include "../../model/ExternalInterface_Impl.hpp"
 
+
+#include "../../model/Version.hpp"
+#include "../../model/Version_Impl.hpp"
+
+#include "../../utilities/geometry/Point3d.hpp"
+
+#include "../../utilities/core/Optional.hpp"
+#include "../../utilities/core/Checksum.hpp"
+#include "../../utilities/core/UUID.hpp"
+#include "../../utilities/core/Logger.hpp"
+#include "../../utilities/sql/SqlFile.hpp"
+#include "../../utilities/idf/IdfFile.hpp"
+#include "../../utilities/idf/IdfObject.hpp"
+
+#include <utilities/idd/OS_ExternalInterface_FieldEnums.hxx>
 #include <utilities/idd/ExternalInterface_FieldEnums.hxx>
-#include "../../utilities/idd/IddEnums.hpp"
+
 #include <utilities/idd/IddEnums.hxx>
+#include <utilities/idd/IddFactory.hxx>
 
+#include <boost/algorithm/string/predicate.hpp>
+
+#include <QThread>
+
+#include <resources.hxx>
+
+#include <sstream>
+
+#include <vector>
+
+using namespace openstudio::energyplus;
 using namespace openstudio::model;
+using namespace openstudio;
 
-using namespace std;
+TEST_F(EnergyPlusFixture, ForwardTranslator_ExternalInterface) {
+  Model model;
 
-namespace openstudio {
+  ExternalInterface externalinterface = model.getUniqueModelObject<ExternalInterface>();
+  EXPECT_EQ("PtolemyServer", externalinterface.nameofExternalInterface());
+  EXPECT_FALSE(externalinterface.setNameofExternalInterface("bad value"));
+  EXPECT_TRUE(externalinterface.setNameofExternalInterface("FunctionalMockupUnitImport"));
+  EXPECT_EQ("FunctionalMockupUnitImport", externalinterface.nameofExternalInterface());
 
-namespace energyplus {
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
+  EXPECT_EQ(0u, forwardTranslator.errors().size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::ExternalInterface).size());
 
-boost::optional<IdfObject> ForwardTranslator::translateExternalInterface(ExternalInterface & modelObject)
-{
-  boost::optional<std::string> s;
+  WorkspaceObject object = workspace.getObjectsByType(IddObjectType::ExternalInterface)[0];
 
-  IdfObject idfObject(openstudio::IddObjectType::ExternalInterface);
-  m_idfObjects.push_back(idfObject);
-  //TODO check if this Name field exists in the unique object
-  s = modelObject.name();
-  if (s) {
-    idfObject.setName(*s);
-  }
-  
-  s = modelObject.nameofExternalInterface();
-  if (s.is_initialized()) {
-    idfObject.setString(ExternalInterfaceFields::NameofExternalInterface, s.get());
-  }
+  ASSERT_TRUE(object.getString(ExternalInterfaceFields::NameofExternalInterface, false));
+  EXPECT_EQ("FunctionalMockupUnitImport", object.getString(ExternalInterfaceFields::NameofExternalInterface, false).get());
 
-  return idfObject;
+  model.save(toPath("./ExternalInterface.osm"), true);
+  workspace.save(toPath("./ExternalInterface.idf"), true);
+
 }
 
-} // energyplus
 
-} // openstudio
 
