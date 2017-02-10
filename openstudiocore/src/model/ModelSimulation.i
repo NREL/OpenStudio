@@ -28,6 +28,17 @@
 
 #endif
 
+namespace openstudio {
+namespace model {
+
+  // forward declarations
+  class Surface;
+  class SubSurface;
+  class InternalMass;
+  class Schedule;
+}
+}
+
 UNIQUEMODELOBJECT_TEMPLATES(SimulationControl);
 UNIQUEMODELOBJECT_TEMPLATES(LightingSimulationControl);
 UNIQUEMODELOBJECT_TEMPLATES(SizingParameters);
@@ -45,7 +56,6 @@ UNIQUEMODELOBJECT_TEMPLATES(HeatBalanceAlgorithm);
 UNIQUEMODELOBJECT_TEMPLATES(InsideSurfaceConvectionAlgorithm);
 UNIQUEMODELOBJECT_TEMPLATES(OutputControlReportingTolerances);
 UNIQUEMODELOBJECT_TEMPLATES(OutsideSurfaceConvectionAlgorithm);
-MODELOBJECT_TEMPLATES(SurfacePropertyConvectionCoefficients);
 MODELOBJECT_TEMPLATES(SurfacePropertyConvectionCoefficientsMultipleSurface);
 UNIQUEMODELOBJECT_TEMPLATES(RunPeriod);
 UNIQUEMODELOBJECT_TEMPLATES(ShadowCalculation);
@@ -81,7 +91,6 @@ SWIG_UNIQUEMODELOBJECT(HeatBalanceAlgorithm);
 SWIG_UNIQUEMODELOBJECT(InsideSurfaceConvectionAlgorithm);
 SWIG_UNIQUEMODELOBJECT(OutputControlReportingTolerances);
 SWIG_UNIQUEMODELOBJECT(OutsideSurfaceConvectionAlgorithm);
-SWIG_MODELOBJECT(SurfacePropertyConvectionCoefficients, 1);
 SWIG_MODELOBJECT(SurfacePropertyConvectionCoefficientsMultipleSurface, 1);
 SWIG_UNIQUEMODELOBJECT(RunPeriod);
 SWIG_UNIQUEMODELOBJECT(ShadowCalculation);
