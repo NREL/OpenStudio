@@ -561,6 +561,7 @@ endif()
 add_library(${target_name}_static
   ${${target_name}_src}
 )
+add_dependencies("${target_name}_static" GenerateIddFactoryRun)
 
 target_link_libraries(${target_name}_static ${${target_name}_static_depends} GeographicLib_STATIC)
 
