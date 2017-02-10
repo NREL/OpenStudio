@@ -43,6 +43,7 @@ class SurfaceIntersection;
 class ConstructionBase;
 class SurfacePropertyOtherSideCoefficients;
 class SurfacePropertyOtherSideConditionsModel;
+class SurfacePropertyConfectionCoefficients;
 
 namespace detail {
 
@@ -214,7 +215,9 @@ namespace detail {
     bool setAdjacentSurface(Surface& surface);
 
     void resetAdjacentSurface();
-    
+
+    boost::optional<SurfacePropertyConvectionCoefficients> surfacePropertyConvectionCoefficients() const;
+
     boost::optional<SurfacePropertyOtherSideCoefficients> surfacePropertyOtherSideCoefficients() const;
 
     bool setSurfacePropertyOtherSideCoefficients(SurfacePropertyOtherSideCoefficients& otherSideCoefficients);

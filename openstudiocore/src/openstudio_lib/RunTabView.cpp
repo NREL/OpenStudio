@@ -147,13 +147,24 @@ RunView::RunView()
   m_runProcess = new QProcess(this);
   connect(m_runProcess, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &RunView::onRunProcessFinished);
 
+  QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+
   auto energyPlusExePath = getEnergyPlusExecutable();
   if (!energyPlusExePath.empty()){
-    //QProcessEnvironment env = m_runProcess->processEnvironment();
-    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
     env.insert("ENERGYPLUS_EXE_PATH", toQString(energyPlusExePath));
-    m_runProcess->setProcessEnvironment(env);
   }
+
+  auto radianceDirectory = getRadianceDirectory();
+  if (!radianceDirectory.empty()){
+    env.insert("OS_RAYPATH", toQString(radianceDirectory));
+  }
+
+  auto perlExecutablePath = getPerlExecutable();
+  if (!perlExecutablePath.empty()){
+    env.insert("PERL_EXE_PATH", toQString(perlExecutablePath));
+  }
+
+  m_runProcess->setProcessEnvironment(env);
 
   m_runTcpServer = new QTcpServer();
   m_runTcpServer->listen();
@@ -217,7 +228,10 @@ void RunView::playButtonClicked(bool t_checked)
     paths << QCoreApplication::applicationDirPath();
     auto openstudioExePath = QStandardPaths::findExecutable("openstudio", paths);
 
-    auto workflowPath = resourcePath(toPath(osdocument->savePath())) / "workflow.osw";
+    auto basePath = resourcePath(toPath(osdocument->savePath()));
+    auto workflowPath = basePath / "workflow.osw";
+    auto stdoutPath = basePath / "stdout";
+    auto stderrPath = basePath / "stderr";
     auto workflowJSONPath = QString::fromStdString(workflowPath.string());
     QStringList arguments;
     arguments << "run" << "-s" << QString::number(m_runTcpServer->serverPort()) << "-w" << workflowJSONPath;
@@ -227,8 +241,17 @@ void RunView::playButtonClicked(bool t_checked)
 
     osdocument->disableTabsDuringRun();
 
+    if (exists(stdoutPath)){
+      remove(stdoutPath);
+    }
+    if (exists(stderrPath)){
+      remove(stderrPath);
+    }
+
     m_progressBar->setValue(0);
     m_textInfo->clear();
+    m_runProcess->setStandardOutputFile( toQString(stdoutPath) );
+    m_runProcess->setStandardErrorFile( toQString(stderrPath) );
     m_runProcess->start(openstudioExePath, arguments);
   } else {
     // stop running

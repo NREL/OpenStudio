@@ -17,3 +17,5 @@ test_fails.txt
 *.sublime-workspace
 
 *.sublime-project
+cmake-build-debug
+

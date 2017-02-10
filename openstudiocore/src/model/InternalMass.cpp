@@ -34,6 +34,10 @@
 #include "Space.hpp"
 #include "Space_Impl.hpp"
 #include "LifeCycleCost.hpp"
+#include "SurfacePropertyConvectionCoefficients.hpp"
+#include "SurfacePropertyConvectionCoefficients_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 
 #include <utilities/idd/OS_InternalMass_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -211,6 +215,28 @@ namespace detail {
     return result;
   }
 
+  boost::optional<SurfacePropertyConvectionCoefficients> InternalMass_Impl::surfacePropertyConvectionCoefficients() const {
+    std::vector<SurfacePropertyConvectionCoefficients> allspccs(model().getConcreteModelObjects<SurfacePropertyConvectionCoefficients>());
+    std::vector<SurfacePropertyConvectionCoefficients> spccs;
+    for (auto& spcc : allspccs) {
+      OptionalInternalMass surface = spcc.surfaceAsInternalMass();
+      if (surface) {
+        if (surface->handle() == handle()) {
+          spccs.push_back(spcc);
+        }
+      }
+    }
+    if (spccs.empty()) {
+      return boost::none;
+    } else if (spccs.size() == 1) {
+      return spccs.at(0);
+    } else {
+      LOG(Error, "More than one SurfacePropertyConvectionCoefficients points to this InternalMass");
+      return boost::none;
+    }
+  }
+
+
   bool InternalMass_Impl::setInternalMassDefinitionAsModelObject(const boost::optional<ModelObject>& modelObject) {
     if (modelObject) {
       OptionalInternalMassDefinition intermediate = modelObject->optionalCast<InternalMassDefinition>();
@@ -274,6 +300,10 @@ double InternalMass::getSurfaceAreaPerFloorArea(double floorArea, double numPeop
 
 double InternalMass::getSurfaceAreaPerPerson(double floorArea, double numPeople) const {
   return getImpl<detail::InternalMass_Impl>()->getSurfaceAreaPerPerson(floorArea,numPeople);
+}
+
+boost::optional<SurfacePropertyConvectionCoefficients> InternalMass::surfacePropertyConvectionCoefficients() const {
+  return getImpl<detail::InternalMass_Impl>()->surfacePropertyConvectionCoefficients();
 }
 
 /// @cond

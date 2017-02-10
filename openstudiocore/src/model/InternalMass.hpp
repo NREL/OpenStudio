@@ -36,6 +36,7 @@ namespace openstudio {
 namespace model {
 
 class InternalMassDefinition;
+class SurfacePropertyConvectionCoefficients;
 
 namespace detail {
 
@@ -65,6 +66,9 @@ class MODEL_API InternalMass : public SpaceLoadInstance {
 
   /** Gets the InternalMassDefinition object. */
   InternalMassDefinition internalMassDefinition() const;
+
+  /** Returns the SurfacePropertyConvectionCoefficients, if it exists. */
+  boost::optional<SurfacePropertyConvectionCoefficients> surfacePropertyConvectionCoefficients() const;
 
   //@}
   /** @name Setters */

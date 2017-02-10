@@ -43,6 +43,7 @@ class DaylightingDeviceShelf;
 class WindowPropertyFrameAndDivider;
 class SurfacePropertyOtherSideCoefficients;
 class SurfacePropertyOtherSideConditionsModel;
+class SurfacePropertyConvectionCoefficients;
 
 namespace detail {
 
@@ -151,6 +152,9 @@ class MODEL_API SubSurface : public PlanarSurface {
 
   /// reset the adjacent subsurface, will clear references on both this and adjacent sub surface 
   void resetAdjacentSubSurface();
+
+  /** Returns the SurfacePropertyConvectionCoefficients, if it exists. */
+  boost::optional<SurfacePropertyConvectionCoefficients> surfacePropertyConvectionCoefficients() const;
 
   /** Returns the adjacent SurfaceSurfacePropertyOtherSideCoefficients, if it exists. */
   boost::optional<SurfacePropertyOtherSideCoefficients> surfacePropertyOtherSideCoefficients() const;

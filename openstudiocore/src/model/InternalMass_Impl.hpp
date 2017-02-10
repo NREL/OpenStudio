@@ -37,6 +37,7 @@ namespace model {
 
 class InternalMass;
 class InternalMassDefinition;
+class SurfacePropertyConvectionCoefficients;
 
 namespace detail {
 
@@ -87,6 +88,9 @@ namespace detail {
 
     /** Gets the InternalMassDefinition object. */
     InternalMassDefinition internalMassDefinition() const;
+
+    /** Returns the surface property convection coefficients */
+    boost::optional<SurfacePropertyConvectionCoefficients> surfacePropertyConvectionCoefficients() const;
 
     //@}
     /** @name Setters */

@@ -1,8 +1,12 @@
 require 'fileutils'
+require 'time'
 require 'rbconfig'
 
 install_dir = ARGV[0]
-expected_ruby_version = ARGV[1]
+tar_exe = ARGV[1]
+expected_ruby_version = ARGV[2]
+
+ENV['PATH'] = "#{ENV['PATH']}#{File::PATH_SEPARATOR}#{File.dirname(tar_exe)}"
 
 if RUBY_VERSION != expected_ruby_version
   raise "Incorrect Ruby version ${RUBY_VERSION} used, expecting #{expected_ruby_version}"
@@ -63,6 +67,15 @@ FileUtils.rm_rf("#{workflow_gem_dir}/.git")
 FileUtils.rm_rf("#{workflow_gem_dir}/spec")
 FileUtils.rm_rf("#{workflow_gem_dir}/test")
 
-# tar -zcvf openstudio-gems-YYYYMMDD.tar.gz openstudio-gems
+# copy Gemfile and Gemfile.lock
+FileUtils.cp('Gemfile', "#{install_dir}/.")
+FileUtils.cp('Gemfile.lock', "#{install_dir}/.")
+
+Dir.chdir("#{install_dir}/..")
+
+command = "\"#{tar_exe}\" -zcvf \"openstudio-gems-#{DateTime.now.strftime("%Y%m%d")}.tar.gz\" \"openstudio-gems\""
+puts command
+system(command)
+
 # md5sum openstudio-gems-YYYYMMDD.tar.gz
 # upload openstudio-gems-YYYYMMDD.tar.gz to s3, update openstudiocore/CMakeLists.txt
