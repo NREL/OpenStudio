@@ -43,9 +43,6 @@
 #include "../ElectricEquipmentDefinition.hpp"
 #include "../ElectricEquipmentDefinition_Impl.hpp"
 #include "../Schedule.hpp"
-#include "../EnergyManagementSystemActuator.hpp"
-#include "../OutputVariable.hpp"
-#include "../OutputVariable_Impl.hpp"
 #include "../Model_Impl.hpp"
 
 using namespace openstudio;
