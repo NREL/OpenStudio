@@ -218,6 +218,7 @@ void SyncMeasuresDialogCentralWidget::lowerPushButtonClicked()
     m_measureManager->updateMeasures(newMeasures,showMessage);
 
     // clear the internal state of measure manager 
+    // DLM: this could be more selective in the future
     m_measureManager->reset();
   }
 
