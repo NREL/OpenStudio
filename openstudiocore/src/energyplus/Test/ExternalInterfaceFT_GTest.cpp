@@ -379,3 +379,150 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ExternalInterfaceFunctionalMockupUni
   model.save(toPath("./ExternalInterfaceFunctionalMockupUnitExportToSchedule.osm"), true);
   workspace.save(toPath("./ExternalInterfaceFunctionalMockupUnitExportToSchedule.idf"), true);
 }
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_ExternalInterfaceFunctionalMockupUnitImportFromVariable) {
+  Model model;
+  // add FMU
+  ExternalInterfaceFunctionalMockupUnitImport eifmui(model, "test name");
+
+  std::string outputVariableIndexKeyName = "outputVariableIndexKeyName";
+  std::string outputVariableName = "outputVariableName";
+  std::string fMUVariableName = "fMUVariableName";
+  std::string fMUInstanceName = "fMUInstanceName";
+
+  ExternalInterfaceFunctionalMockupUnitImportFromVariable variable(model, outputVariableIndexKeyName, outputVariableName, eifmui, fMUInstanceName, fMUVariableName);
+ 
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
+  EXPECT_EQ(0u, forwardTranslator.errors().size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::ExternalInterface_FunctionalMockupUnitImport_From_Variable).size());
+  //EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::ScheduleTypeLimits).size());
+
+  WorkspaceObject object = workspace.getObjectsByType(IddObjectType::ExternalInterface_FunctionalMockupUnitImport_From_Variable)[0];
+  //WorkspaceObject object2 = workspace.getObjectsByType(IddObjectType::ScheduleTypeLimits)[0];
+
+  ASSERT_TRUE(object.getString(ExternalInterface_FunctionalMockupUnitImport_From_VariableFields::Output_VariableIndexKeyName, false));
+  EXPECT_EQ(outputVariableIndexKeyName, object.getString(ExternalInterface_FunctionalMockupUnitImport_From_VariableFields::Output_VariableIndexKeyName, false).get());
+  ASSERT_TRUE(object.getString(ExternalInterface_FunctionalMockupUnitImport_From_VariableFields::Output_VariableName, false));
+  EXPECT_EQ(outputVariableName, object.getString(ExternalInterface_FunctionalMockupUnitImport_From_VariableFields::Output_VariableName, false).get());
+  ASSERT_TRUE(object.getString(ExternalInterface_FunctionalMockupUnitImport_From_VariableFields::FMUFileName, false));
+  EXPECT_EQ(eifmui.fMUFileName(), object.getString(ExternalInterface_FunctionalMockupUnitImport_From_VariableFields::FMUFileName, false).get());
+  ASSERT_TRUE(object.getString(ExternalInterface_FunctionalMockupUnitImport_From_VariableFields::FMUInstanceName, false));
+  EXPECT_EQ(fMUInstanceName, object.getString(ExternalInterface_FunctionalMockupUnitImport_From_VariableFields::FMUInstanceName, false).get());
+  ASSERT_TRUE(object.getString(ExternalInterface_FunctionalMockupUnitImport_From_VariableFields::FMUVariableName, false));
+  EXPECT_EQ(fMUVariableName, object.getString(ExternalInterface_FunctionalMockupUnitImport_From_VariableFields::FMUVariableName, false).get());
+
+  model.save(toPath("./ExternalInterfaceFunctionalMockupUnitImportFromVariable.osm"), true);
+  workspace.save(toPath("./ExternalInterfaceFunctionalMockupUnitImportFromVariable.idf"), true);
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_ExternalInterfaceFunctionalMockupUnitImportToVariable) {
+  Model model;
+  // add FMU
+  ExternalInterfaceFunctionalMockupUnitImport eifmui(model, "test name");
+
+  std::string fMUVariableName = "fMUVariableName";
+  std::string fMUInstanceName = "fMUInstanceName";
+
+  ExternalInterfaceFunctionalMockupUnitImportToVariable variable(model, eifmui, fMUInstanceName, fMUVariableName, 10);
+
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
+  EXPECT_EQ(0u, forwardTranslator.errors().size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::ExternalInterface_FunctionalMockupUnitImport_To_Variable).size());
+  //EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::ScheduleTypeLimits).size());
+
+  WorkspaceObject object = workspace.getObjectsByType(IddObjectType::ExternalInterface_FunctionalMockupUnitImport_To_Variable)[0];
+  //WorkspaceObject object2 = workspace.getObjectsByType(IddObjectType::ScheduleTypeLimits)[0];
+
+  ASSERT_TRUE(object.getString(ExternalInterface_FunctionalMockupUnitImport_To_VariableFields::Name, false));
+  EXPECT_EQ("External Interface Functional Mockup Unit Import To Variable 1", object.getString(ExternalInterface_FunctionalMockupUnitImport_To_VariableFields::Name, false).get());
+  ASSERT_TRUE(object.getString(ExternalInterface_FunctionalMockupUnitImport_To_VariableFields::FMUFileName, false));
+  EXPECT_EQ(eifmui.fMUFileName(), object.getString(ExternalInterface_FunctionalMockupUnitImport_To_VariableFields::FMUFileName, false).get());
+  ASSERT_TRUE(object.getString(ExternalInterface_FunctionalMockupUnitImport_To_VariableFields::FMUInstanceName, false));
+  EXPECT_EQ(fMUInstanceName, object.getString(ExternalInterface_FunctionalMockupUnitImport_To_VariableFields::FMUInstanceName, false).get());
+  ASSERT_TRUE(object.getString(ExternalInterface_FunctionalMockupUnitImport_To_VariableFields::FMUVariableName, false));
+  EXPECT_EQ(fMUVariableName, object.getString(ExternalInterface_FunctionalMockupUnitImport_To_VariableFields::FMUVariableName, false).get());
+  ASSERT_TRUE(object.getDouble(ExternalInterface_FunctionalMockupUnitImport_To_VariableFields::InitialValue, false));
+  EXPECT_EQ(10.0, object.getDouble(ExternalInterface_FunctionalMockupUnitImport_To_VariableFields::InitialValue, false).get());
+
+  model.save(toPath("./ExternalInterfaceFunctionalMockupUnitImportToVariable.osm"), true);
+  workspace.save(toPath("./ExternalInterfaceFunctionalMockupUnitImportToVariable.idf"), true);
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_ExternalInterfaceFunctionalMockupUnitImportToSchedule) {
+
+  Model model;
+  
+  ExternalInterfaceFunctionalMockupUnitImport eifmui(model, "test name");
+
+  ExternalInterfaceFunctionalMockupUnitImportToSchedule schedule(model, eifmui, "FMU", "FMU name", 10);
+
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
+  EXPECT_EQ(0u, forwardTranslator.errors().size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::ExternalInterface_FunctionalMockupUnitImport_To_Schedule).size());
+  //EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::ScheduleTypeLimits).size());
+
+  WorkspaceObject object = workspace.getObjectsByType(IddObjectType::ExternalInterface_FunctionalMockupUnitImport_To_Schedule)[0];
+  //WorkspaceObject object2 = workspace.getObjectsByType(IddObjectType::ScheduleTypeLimits)[0];
+
+  ASSERT_TRUE(object.getString(ExternalInterface_FunctionalMockupUnitImport_To_ScheduleFields::Name, false));
+  EXPECT_EQ("External Interface Functional Mockup Unit Import To Schedule 1", object.getString(ExternalInterface_FunctionalMockupUnitImport_To_ScheduleFields::Name, false).get());
+  ASSERT_TRUE(object.getString(ExternalInterface_FunctionalMockupUnitImport_To_ScheduleFields::ScheduleTypeLimitsNames, false));
+  //EXPECT_EQ(object2.nameString(), object.getString(ExternalInterface_FunctionalMockupUnitImport_To_ScheduleFields::ScheduleTypeLimitsNames, false).get());
+  ASSERT_TRUE(object.getString(ExternalInterface_FunctionalMockupUnitImport_To_ScheduleFields::FMUFileName, false));
+  EXPECT_EQ(eifmui.fMUFileName(), object.getString(ExternalInterface_FunctionalMockupUnitImport_To_ScheduleFields::FMUFileName, false).get());
+  ASSERT_TRUE(object.getString(ExternalInterface_FunctionalMockupUnitImport_To_ScheduleFields::FMUInstanceName, false));
+  EXPECT_EQ("FMU", object.getString(ExternalInterface_FunctionalMockupUnitImport_To_ScheduleFields::FMUInstanceName, false).get());
+  ASSERT_TRUE(object.getString(ExternalInterface_FunctionalMockupUnitImport_To_ScheduleFields::FMUVariableName, false));
+  EXPECT_EQ("FMU name", object.getString(ExternalInterface_FunctionalMockupUnitImport_To_ScheduleFields::FMUVariableName, false).get());
+  ASSERT_TRUE(object.getDouble(ExternalInterface_FunctionalMockupUnitImport_To_ScheduleFields::InitialValue, false));
+  EXPECT_EQ(10.0, object.getDouble(ExternalInterface_FunctionalMockupUnitImport_To_ScheduleFields::InitialValue, false).get());
+
+  model.save(toPath("./ExternalInterfaceFunctionalMockupUnitImportToSchedule.osm"), true);
+  workspace.save(toPath("./ExternalInterfaceFunctionalMockupUnitImportToSchedule.idf"), true);
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_ExternalInterfaceFunctionalMockupUnitImportToActuator) {
+  Model model;
+
+  Building building = model.getUniqueModelObject<Building>();
+
+  // add fan
+  Schedule s = model.alwaysOnDiscreteSchedule();
+  FanConstantVolume fan(model, s);
+
+  // add FMU
+  ExternalInterfaceFunctionalMockupUnitImport eifmui(model, "test name");
+
+  // add actuator
+  std::string fanControlType = "Fan Pressure Rise";
+  std::string ComponentType = "Fan";
+  ExternalInterfaceFunctionalMockupUnitImportToActuator fanActuator(fan, ComponentType, fanControlType, eifmui, "FMU", "Fan FMU name", 10);
+
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
+  EXPECT_EQ(0u, forwardTranslator.errors().size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::ExternalInterface_FunctionalMockupUnitImport_To_Actuator).size());
+
+  WorkspaceObject object = workspace.getObjectsByType(IddObjectType::ExternalInterface_FunctionalMockupUnitImport_To_Actuator)[0];
+
+  ASSERT_TRUE(object.getString(ExternalInterface_FunctionalMockupUnitImport_To_ActuatorFields::Name, false));
+  EXPECT_EQ("External Interface Functional Mockup Unit Export To Actuator 1", object.getString(ExternalInterface_FunctionalMockupUnitImport_To_ActuatorFields::Name, false).get());
+  ASSERT_TRUE(object.getString(ExternalInterface_FunctionalMockupUnitImport_To_ActuatorFields::ActuatedComponentUniqueName, false));
+  EXPECT_EQ(fan.nameString(), object.getString(ExternalInterface_FunctionalMockupUnitImport_To_ActuatorFields::ActuatedComponentUniqueName, false).get());
+  ASSERT_TRUE(object.getString(ExternalInterface_FunctionalMockupUnitImport_To_ActuatorFields::ActuatedComponentType, false));
+  EXPECT_EQ(ComponentType, object.getString(ExternalInterface_FunctionalMockupUnitImport_To_ActuatorFields::ActuatedComponentType, false).get());
+  ASSERT_TRUE(object.getString(ExternalInterface_FunctionalMockupUnitImport_To_ActuatorFields::ActuatedComponentControlType, false));
+  EXPECT_EQ(fanControlType, object.getString(ExternalInterface_FunctionalMockupUnitImport_To_ActuatorFields::ActuatedComponentControlType, false).get());
+  ASSERT_TRUE(object.getString(ExternalInterface_FunctionalMockupUnitImport_To_ActuatorFields::FMUFileName, false));
+  EXPECT_EQ(eifmui.fMUFileName(), object.getString(ExternalInterface_FunctionalMockupUnitImport_To_ActuatorFields::FMUFileName, false).get());
+  ASSERT_TRUE(object.getString(ExternalInterface_FunctionalMockupUnitImport_To_ActuatorFields::FMUVariableName, false));
+  EXPECT_EQ("Fan FMU name", object.getString(ExternalInterface_FunctionalMockupUnitImport_To_ActuatorFields::FMUVariableName, false).get());
+  ASSERT_TRUE(object.getDouble(ExternalInterface_FunctionalMockupUnitImport_To_ActuatorFields::InitialValue, false));
+  EXPECT_EQ(10.0, object.getDouble(ExternalInterface_FunctionalMockupUnitImport_To_ActuatorFields::InitialValue, false).get());
+
+  model.save(toPath("./ExternalInterfaceFunctionalMockupUnitImportToActuator.osm"), true);
+  workspace.save(toPath("./ExternalInterfaceFunctionalMockupUnitImportToActuator.idf"), true);
+}
