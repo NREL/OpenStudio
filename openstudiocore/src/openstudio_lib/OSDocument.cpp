@@ -93,6 +93,23 @@
 #include "../model/HeatBalanceAlgorithm_Impl.hpp"
 #include "../model/RunPeriod.hpp"
 #include "../model/RunPeriod_Impl.hpp"
+#include "../model/ConstructionBase.hpp"
+#include "../model/ConstructionBase_Impl.hpp"
+#include "../model/Material.hpp"
+#include "../model/Material_Impl.hpp"
+#include "../model/BuildingStory.hpp"
+#include "../model/BuildingStory_Impl.hpp"
+#include "../model/LightingSimulationZone.hpp"
+#include "../model/LightingSimulationZone_Impl.hpp"
+#include "../model/SpaceType.hpp"
+#include "../model/SpaceType_Impl.hpp"
+#include "../model/ThermalZone.hpp"
+#include "../model/ThermalZone_Impl.hpp"
+#include "../model/BuildingUnit.hpp"
+#include "../model/BuildingUnit_Impl.hpp"
+#include "../model/RenderingColor.hpp"
+#include "../model/StandardsInformationConstruction.hpp"
+#include "../model/StandardsInformationMaterial.hpp"
 
 #include "../utilities/bcl/BCLComponent.hpp"
 #include "../utilities/bcl/LocalBCL.hpp"
@@ -306,8 +323,27 @@ namespace openstudio {
     //m_model.getUniqueModelObject<openstudio::model::ZoneCapacitanceMultiplierResearchSpecial>();
     m_model.getUniqueModelObject<openstudio::model::RunPeriod>();
 
-
     openstudio::model::LifeCycleCostParameters lifeCycleCostParameters = m_model.getUniqueModelObject<openstudio::model::LifeCycleCostParameters>();
+  
+    for (auto& object : m_model.objects()){
+      if (object.optionalCast<model::ConstructionBase>()){
+        object.cast<model::ConstructionBase>().standardsInformation();
+        object.cast<model::ConstructionBase>().renderingColor();
+      }else if (object.optionalCast<model::Material>()){
+        object.cast<model::Material>().standardsInformation();
+      }else if (object.optionalCast<model::BuildingStory>()){
+        object.cast<model::BuildingStory>().renderingColor();
+      }else if (object.optionalCast<model::LightingSimulationZone>()){
+        object.cast<model::LightingSimulationZone>().renderingColor();
+      }else if (object.optionalCast<model::SpaceType>()){
+        object.cast<model::SpaceType>().renderingColor();
+      }else if (object.optionalCast<model::ThermalZone>()){
+        object.cast<model::ThermalZone>().renderingColor();
+      }else if (object.optionalCast<model::BuildingUnit>()){
+        object.cast<model::BuildingUnit>().renderingColor();
+      }
+    }
+  
   }
 
   void OSDocument::inspectModelObject(model::OptionalModelObject & modelObject, bool readOnly)

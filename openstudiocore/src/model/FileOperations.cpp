@@ -405,10 +405,17 @@ namespace model {
   { 
     // set the workflow's path
     openstudio::path oswPath = modelTempDir / openstudio::toPath("resources/workflow.osw");
-    model.workflowJSON().setOswPath(oswPath);
+    boost::optional<openstudio::path> currentOswPath = model.workflowJSON().oswPath();
+    if (!currentOswPath || (oswPath != currentOswPath.get())){
+      model.workflowJSON().setOswPath(oswPath);
+    }
 
     // set the seed name
-    model.workflowJSON().setSeedFile(toPath("..") / osmPath.filename());
+    openstudio::path seedFile = toPath("..") / osmPath.filename();
+    boost::optional<openstudio::path> currentSeedFile = model.workflowJSON().seedFile();
+    if (!currentSeedFile || (seedFile != currentSeedFile.get())){
+      model.workflowJSON().setSeedFile(seedFile);
+    }
 
     // save the osw, do before temp dirs get copied
     model.workflowJSON().save();
