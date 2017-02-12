@@ -70,7 +70,7 @@ namespace detail {
 
 } // detail
 
-/** GeneratorFuelCell is a ModelObject that wraps the OpenStudio IDD object 'OS:Generator:FuelCell'. */
+/** GeneratorFuelCell is a Generator that wraps the OpenStudio IDD object 'OS:Generator:FuelCell'. */
 class MODEL_API GeneratorFuelCell : public Generator {
  public:
   /** @name Constructors and Destructors */
