@@ -50,6 +50,9 @@
 #include "CurveQuadratic.hpp"
 #include "CurveQuadratic_Impl.hpp"
 
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_Generator_FuelCell_FieldEnums.hxx>
 
@@ -63,7 +66,7 @@ namespace detail {
   GeneratorFuelCell_Impl::GeneratorFuelCell_Impl(const IdfObject& idfObject,
                                                  Model_Impl* model,
                                                  bool keepHandle)
-    : ModelObject_Impl(idfObject,model,keepHandle)
+    : Generator_Impl(idfObject,model,keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == GeneratorFuelCell::iddObjectType());
   }
@@ -71,7 +74,7 @@ namespace detail {
   GeneratorFuelCell_Impl::GeneratorFuelCell_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                                  Model_Impl* model,
                                                  bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : Generator_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == GeneratorFuelCell::iddObjectType());
   }
@@ -79,7 +82,7 @@ namespace detail {
   GeneratorFuelCell_Impl::GeneratorFuelCell_Impl(const GeneratorFuelCell_Impl& other,
                                                  Model_Impl* model,
                                                  bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : Generator_Impl(other,model,keepHandle)
   {}
 
   const std::vector<std::string>& GeneratorFuelCell_Impl::outputVariableNames() const
@@ -92,6 +95,32 @@ namespace detail {
 
   IddObjectType GeneratorFuelCell_Impl::iddObjectType() const {
     return GeneratorFuelCell::iddObjectType();
+  }
+
+  std::string GeneratorFuelCell_Impl::generatorObjectType() const {
+    // translated to ElectricLoadCenter:Generators 'Generator Object Type'
+    return "Generator:FuelCell";
+  }
+
+  std::vector<ScheduleTypeKey> GeneratorFuelCell_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
+    std::vector<ScheduleTypeKey> result;
+    return result;
+  }
+
+  // translated to ElectricLoadCenter:Generators 'Generator Rated Electric Power Output'
+  boost::optional<double> GeneratorFuelCell_Impl::ratedElectricPowerOutput() const {
+    return this->powerModule().nominalElectricalPower();
+  }
+
+  boost::optional<Schedule> GeneratorFuelCell_Impl::availabilitySchedule() const {
+    boost::optional<Schedule> schedule;
+    return schedule;
+  }
+
+  // Convenience method to go fetch the connected GeneratorMicroTurbineHeatRecovery's 'Rated Thermal to Electrical Power Ratio'
+  boost::optional<double> GeneratorFuelCell_Impl::ratedThermaltoElectricalPowerRatio() const {
+    boost::optional<double> temp;
+    return temp;
   }
 
   GeneratorFuelCellPowerModule GeneratorFuelCell_Impl::powerModule() const {
@@ -255,7 +284,7 @@ GeneratorFuelCell::GeneratorFuelCell(const Model& model,
                                      const GeneratorFuelCellElectricalStorage& fCES,
                                      const GeneratorFuelCellInverter& fCInverter,
                                      const GeneratorFuelSupply& fS)
-  : ModelObject(GeneratorFuelCell::iddObjectType(), model) {
+  : Generator(GeneratorFuelCell::iddObjectType(), model) {
   OS_ASSERT(getImpl<detail::GeneratorFuelCell_Impl>());
 
   bool ok = setPowerModule(fCPM);
@@ -309,7 +338,7 @@ GeneratorFuelCell::GeneratorFuelCell(const Model& model,
 }
 
 GeneratorFuelCell::GeneratorFuelCell(const Model& model)
-  : ModelObject(GeneratorFuelCell::iddObjectType(),model)
+  : Generator(GeneratorFuelCell::iddObjectType(), model)
 {
   OS_ASSERT(getImpl<detail::GeneratorFuelCell_Impl>());
 
@@ -460,7 +489,7 @@ void GeneratorFuelCell::resetStackCooler() {
 
 /// @cond
 GeneratorFuelCell::GeneratorFuelCell(std::shared_ptr<detail::GeneratorFuelCell_Impl> impl)
-  : ModelObject(impl)
+  : Generator(impl)
 {}
 /// @endcond
 

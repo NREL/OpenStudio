@@ -30,7 +30,7 @@
 #define MODEL_GENERATORFUELCELL_IMPL_HPP
 
 #include <model/ModelAPI.hpp>
-#include "ModelObject_Impl.hpp"
+#include "Generator_Impl.hpp"
 
 namespace openstudio {
 namespace model {
@@ -48,7 +48,7 @@ class GeneratorFuelCellStackCooler;
 namespace detail {
 
   /** GeneratorFuelCell_Impl is a ModelObject_Impl that is the implementation class for GeneratorFuelCell.*/
-  class MODEL_API GeneratorFuelCell_Impl : public ModelObject_Impl {
+  class MODEL_API GeneratorFuelCell_Impl : public Generator_Impl {
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -74,6 +74,16 @@ namespace detail {
     virtual const std::vector<std::string>& outputVariableNames() const;
 
     virtual IddObjectType iddObjectType() const;
+
+    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+
+    virtual std::string generatorObjectType() const;
+
+    virtual boost::optional<double> ratedElectricPowerOutput() const;
+
+    virtual boost::optional<Schedule> availabilitySchedule() const override;
+
+    virtual boost::optional<double> ratedThermaltoElectricalPowerRatio() const override;
 
     //@}
     /** @name Getters */

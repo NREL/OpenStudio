@@ -30,7 +30,7 @@
 #define MODEL_GENERATORFUELCELL_HPP
 
 #include <model/ModelAPI.hpp>
-#include "ModelObject.hpp"
+#include "Generator.hpp"
 
 #include "GeneratorFuelCellPowerModule.hpp"
 #include "GeneratorFuelCellPowerModule_Impl.hpp"
@@ -71,7 +71,7 @@ namespace detail {
 } // detail
 
 /** GeneratorFuelCell is a ModelObject that wraps the OpenStudio IDD object 'OS:Generator:FuelCell'. */
-class MODEL_API GeneratorFuelCell : public ModelObject {
+class MODEL_API GeneratorFuelCell : public Generator {
  public:
   /** @name Constructors and Destructors */
   //@{
