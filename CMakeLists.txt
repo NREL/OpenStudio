@@ -1,15 +1,10 @@
-if(CMAKE_HOST_WIN32)
-  # Necessary to do with FindOpenSSL on Windows
-  cmake_minimum_required(VERSION 3.2.3)
-else()
-  cmake_minimum_required(VERSION 2.8.11)
-endif()
+cmake_minimum_required(VERSION 3.7.0)
 
 project(OpenStudioMeta)
 
 set(CMAKE_VERSION_MAJOR 2)
 set(CMAKE_VERSION_MINOR 0)
-set(CMAKE_VERSION_PATCH 2)
+set(CMAKE_VERSION_PATCH 3)
 
 set(CMAKE_VERSION_BUILD "Unknown" CACHE STRING "Build number")
 find_package(Git)
@@ -349,11 +344,14 @@ if(BUILD_OPENSTUDIO_GEMS)
   # depends on system Ruby and Git, Ruby must be same version as OpenStudio 
   if (WIN32)
     file(GLOB POTENTIAL_RUBY_LOCATIONS "c:/ruby*2.2.*/bin")
+    get_filename_component(POTENTIAL_TAR_LOCATIONS ${GIT_EXECUTABLE} DIRECTORY )
+    list(APPEND POTENTIAL_TAR_LOCATIONS "${POTENTIAL_TAR_LOCATIONS}/../bin" "${POTENTIAL_TAR_LOCATIONS}/../usr/bin")
   endif()
   find_program(RUBY_EXE ruby HINTS ${POTENTIAL_RUBY_LOCATIONS})
+  find_program(TAR_EXE tar HINTS ${POTENTIAL_TAR_LOCATIONS})
   set(OPENSTUDIO_GEMS_DIR "${CMAKE_BINARY_DIR}/openstudio-gems")
   add_custom_target(openstudio-gems ALL 
-                    ${RUBY_EXE} "${CMAKE_SOURCE_DIR}/dependencies/ruby/build_openstudio_gems.rb" "${OPENSTUDIO_GEMS_DIR}" "2.2.4" 
+                    ${RUBY_EXE} "${CMAKE_SOURCE_DIR}/dependencies/ruby/build_openstudio_gems.rb" "${OPENSTUDIO_GEMS_DIR}" "${TAR_EXE}" "2.2.4" 
                     WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/dependencies/ruby/"
                     DEPENDS "${CMAKE_SOURCE_DIR}/dependencies/ruby/Gemfile" "${CMAKE_SOURCE_DIR}/dependencies/ruby/build_openstudio_gems.rb")
 endif()

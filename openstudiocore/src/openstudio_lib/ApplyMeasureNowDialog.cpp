@@ -379,6 +379,13 @@ void ApplyMeasureNowDialog::runMeasure()
 
 void ApplyMeasureNowDialog::displayResults()
 {
+  QString qstdout;
+  QString qstderr;
+  if (m_runProcess){
+    qstdout.append(m_runProcess->readAllStandardOutput());
+    qstderr.append(m_runProcess->readAllStandardError());
+  }
+
   delete m_runProcess;
   m_runProcess = nullptr;
 
@@ -411,19 +418,31 @@ void ApplyMeasureNowDialog::displayResults()
   m_advancedOutput.clear();
 
   try{
-    openstudio::path logPath =  m_workingDir / toPath("run/run.log");
 
     m_advancedOutput = "";
 
+    m_advancedOutput += "<b>Standard Output:</b>\n";
+    m_advancedOutput += qstdout;
+    m_advancedOutput += QString("\n");
+
+    m_advancedOutput += "<b>Standard Error:</b>\n";
+    m_advancedOutput += qstderr;
+    m_advancedOutput += QString("\n");
+     
+    openstudio::path logPath =  m_workingDir / toPath("run/run.log");
+    m_advancedOutput += "<b>run.log:</b>\n";
     QFile file(toQString(logPath));
     if (file.open(QFile::ReadOnly))
     {
       QTextStream docIn(&file);
-      m_advancedOutput = docIn.readAll();
+      m_advancedOutput += docIn.readAll();
       file.close();
     }
 
     m_advancedOutput += QString("\n");
+
+    m_advancedOutput.replace("\n", "<br>");
+   
   }catch(std::exception&){
   }
  

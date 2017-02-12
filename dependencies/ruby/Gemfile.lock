@@ -1,16 +1,11 @@
-GIT
-  remote: git://github.com/NREL/OpenStudio-workflow-gem.git
-  revision: c2ad7e012bc8a4b4de071a0cd752e84babdf1ee5
-  ref: c2ad7e012bc8a4b4de071a0cd752e84babdf1ee5
-  specs:
-    openstudio-workflow (1.0.0)
-
 GEM
   remote: http://rubygems.org/
   specs:
     diff-lcs (1.2.5)
-    minitest (5.10.1)
-    openstudio-standards (0.1.10)
+    minitest (4.7.5)
+    openstudio-standards (0.1.11)
+    openstudio-workflow (1.1.0)
+    parallel (1.10.0)
     rspec (3.5.0)
       rspec-core (~> 3.5.0)
       rspec-expectations (~> 3.5.0)
@@ -24,6 +19,8 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.5.0)
     rspec-support (3.5.0)
+    test-unit-minitest (0.9.1)
+      minitest (~> 4.7)
 
 PLATFORMS
   ruby
@@ -31,10 +28,12 @@ PLATFORMS
   x86-mingw32
 
 DEPENDENCIES
-  minitest (~> 5.10.1)
-  openstudio-standards (= 0.1.10)
-  openstudio-workflow!
+  minitest (~> 4.7)
+  openstudio-standards (= 0.1.11)
+  openstudio-workflow (= 1.1.0)
+  parallel (~> 1.10.0)
   rspec (~> 3.5.0)
+  test-unit-minitest (~> 0.9.1)
 
 BUNDLED WITH
-   1.14.2
+   1.14.3

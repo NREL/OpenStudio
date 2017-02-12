@@ -42,6 +42,10 @@ class MeasureManager
   end
   
   def force_encoding(object, encoding = 'utf-8')
+    if object.frozen?
+      return object
+    end
+    
     type = object.class
     if type == Hash
       object.keys.each do |key|

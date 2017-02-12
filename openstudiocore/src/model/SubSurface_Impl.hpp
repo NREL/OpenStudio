@@ -44,6 +44,7 @@ class DaylightingDeviceShelf;
 class WindowPropertyFrameAndDivider;
 class SurfacePropertyOtherSideCoefficients;
 class SurfacePropertyOtherSideConditionsModel;
+class SurfacePropertyConfectionCoefficients;
 
 namespace detail {
 
@@ -225,6 +226,9 @@ namespace detail {
 
     /// reset the adjacent subsurface, will clear references on both this and adjacent sub surface 
     void resetAdjacentSubSurface();
+
+    /** Returns the surface property convection coefficients */
+    boost::optional<SurfacePropertyConvectionCoefficients> surfacePropertyConvectionCoefficients() const;
 
     /** Returns the adjacent SurfaceSurfacePropertyOtherSideCoefficients, if it exists. */
     boost::optional<SurfacePropertyOtherSideCoefficients> surfacePropertyOtherSideCoefficients() const;
