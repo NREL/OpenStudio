@@ -52,6 +52,8 @@ class MODEL_API LoadProfilePlant : public StraightComponent {
 
   explicit LoadProfilePlant(const Model& model);
 
+  explicit LoadProfilePlant(const Model& model, Schedule& loadSchedule, Schedule& flowRateFractionSchedule);
+
   virtual ~LoadProfilePlant() {}
 
   //@}
