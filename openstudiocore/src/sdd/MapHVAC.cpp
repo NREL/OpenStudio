@@ -7107,17 +7107,18 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
 
     value = element.firstChildElement("CndsrPumpPwr").text().toDouble(&ok);
     if( ok ) {
-      coil.setCondenserWaterPumpPower(value * 1000);
+      coil.setCondenserWaterPumpPower(value);
     }
 
     value = element.firstChildElement("CrankcaseHtrCap").text().toDouble(&ok);
     if( ok ) {
-      coil.setCrankcaseHeaterCapacity(value * 1000);
+      coil.setCrankcaseHeaterCapacity(value);
     }
 
+    coil.setMaximumAmbientTemperatureforCrankcaseHeaterOperation(10);
     value = element.firstChildElement("CrankcaseHtrHiLimTemp").text().toDouble(&ok);
     if( ok ) {
-      coil.setMaximumAmbientTemperatureforCrankcaseHeaterOperation(unitToUnit(value,"F","C").get());
+      coil.setMaximumAmbientTemperatureforCrankcaseHeaterOperation(value);
     }
 
     coil.setRatedSensibleHeatRatio(0.85);
