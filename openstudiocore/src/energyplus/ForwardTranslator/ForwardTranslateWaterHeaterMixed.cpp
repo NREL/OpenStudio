@@ -257,11 +257,8 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterMixed( WaterHe
 
   if( boost::optional<ThermalZone> zone = modelObject.ambientTemperatureThermalZone() )
   {
-    boost::optional<IdfObject> _zone = translateAndMapModelObject(zone.get());
-
-    if( _zone )
-    {
-      idfObject.setString(WaterHeater_MixedFields::AmbientTemperatureZoneName,_zone->name().get());
+    if( zone ) {
+      idfObject.setString(WaterHeater_MixedFields::AmbientTemperatureZoneName,zone->name().get());
     }
   }
 
