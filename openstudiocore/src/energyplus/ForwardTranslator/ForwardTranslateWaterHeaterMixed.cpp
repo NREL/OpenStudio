@@ -240,16 +240,17 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterMixed( WaterHe
     {
       idfObject.setString(WaterHeater_MixedFields::AmbientTemperatureIndicator,s.get());
     }
-  }
 
-  // AmbientTemperatureScheduleName
+    if( istringEqual(s.get(),"Schedule") ) {
+      // AmbientTemperatureScheduleName
+      schedule = modelObject.ambientTemperatureSchedule();
+      if( schedule )
+      {
+        translateAndMapModelObject(schedule.get());
 
-  schedule = modelObject.ambientTemperatureSchedule();
-  if( schedule )
-  {
-    translateAndMapModelObject(schedule.get());
-
-    idfObject.setString(WaterHeater_MixedFields::AmbientTemperatureScheduleName,schedule->name().get());
+        idfObject.setString(WaterHeater_MixedFields::AmbientTemperatureScheduleName,schedule->name().get());
+      }
+    }
   }
 
   // AmbientTemperatureZoneName
@@ -435,6 +436,8 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterMixed( WaterHe
   {
     idfObject.setDouble(WaterHeater_MixedFields::IndirectWaterHeatingRecoveryTime,value.get());
   }
+
+  idfObject.setString(WaterHeater_MixedFields::SourceSideFlowControlMode,"IndirectHeatPrimarySetpoint");
 
   return boost::optional<IdfObject>(idfObject);
 }

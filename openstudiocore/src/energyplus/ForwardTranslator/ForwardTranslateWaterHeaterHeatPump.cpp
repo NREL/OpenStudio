@@ -92,28 +92,40 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterHeatPump(
   {
     auto value = modelObject.inletAirConfiguration();
     idfObject.setString(WaterHeater_HeatPump_PumpedCondenserFields::InletAirConfiguration,value);
+
+    if( istringEqual(value,"Schedule") ) {
+      if( auto mo = modelObject.inletAirTemperatureSchedule() ) {
+        idfObject.setString(WaterHeater_HeatPump_PumpedCondenserFields::InletAirTemperatureScheduleName,mo->name().get());
+      }
+
+      if( auto mo = modelObject.inletAirHumiditySchedule() ) {
+        idfObject.setString(WaterHeater_HeatPump_PumpedCondenserFields::InletAirHumidityScheduleName,mo->name().get());
+      }
+    }
+
+    if( istringEqual(value,"ZoneAndOutdoorAir") ) {
+      auto mo = modelObject.inletAirMixerSchedule();
+      idfObject.setString(WaterHeater_HeatPump_PumpedCondenserFields::InletAirMixerScheduleName,mo.name().get());
+    }
   }
 
-  if( auto mo = modelObject.inletAirTemperatureSchedule() ) {
-    idfObject.setString(WaterHeater_HeatPump_PumpedCondenserFields::InletAirTemperatureScheduleName,mo->name().get());
-  }
-
-  if( auto mo = modelObject.inletAirHumiditySchedule() ) {
-    idfObject.setString(WaterHeater_HeatPump_PumpedCondenserFields::InletAirHumidityScheduleName,mo->name().get());
-  }
 
   {
     auto value = modelObject.minimumInletAirTemperatureforCompressorOperation();
     idfObject.setDouble(WaterHeater_HeatPump_PumpedCondenserFields::MinimumInletAirTemperatureforCompressorOperation,value);
   }
 
+  idfObject.setDouble(WaterHeater_HeatPump_PumpedCondenserFields::MaximumInletAirTemperatureforCompressorOperation,94);
+
   {
     auto value = modelObject.compressorLocation();
     idfObject.setString(WaterHeater_HeatPump_PumpedCondenserFields::CompressorLocation,value);
-  }
 
-  if( auto mo = modelObject.compressorAmbientTemperatureSchedule() ) {
-    idfObject.setString(WaterHeater_HeatPump_PumpedCondenserFields::CompressorAmbientTemperatureScheduleName,mo->name().get());
+    if( istringEqual(value,"Schedule") ) {
+      if( auto mo = modelObject.compressorAmbientTemperatureSchedule() ) {
+        idfObject.setString(WaterHeater_HeatPump_PumpedCondenserFields::CompressorAmbientTemperatureScheduleName,mo->name().get());
+      }
+    }
   }
 
   {
@@ -134,11 +146,6 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterHeatPump(
   {
     auto value = modelObject.parasiticHeatRejectionLocation();
     idfObject.setString(WaterHeater_HeatPump_PumpedCondenserFields::ParasiticHeatRejectionLocation,value);
-  }
-
-  {
-    auto mo = modelObject.inletAirMixerSchedule();
-    idfObject.setString(WaterHeater_HeatPump_PumpedCondenserFields::InletAirMixerScheduleName,mo.name().get());
   }
 
   {

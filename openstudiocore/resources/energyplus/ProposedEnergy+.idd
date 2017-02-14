@@ -44370,7 +44370,7 @@ WaterHeater:HeatPump:PumpedCondenser,
   N5 , \field Maximum Inlet Air Temperature for Compressor Operation
        \type real
        \units C
-       \default 48.88888888889
+       \default 94
        \minimum 26
        \maximum 94
        \note Heat pump compressor will not operate when the inlet air dry-bulb temperature

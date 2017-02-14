@@ -7032,6 +7032,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
     text = element.firstChildElement("Name").text().toStdString();
     heatPump.setName(text);
     waterHeater.setName(text + " Storage Tank");
+    coil.setName(text + " Heating Coil");
+    fan.setName(text + " Fan");
 
     value = element.firstChildElement("StorCap").text().toDouble(&ok);
     if( ok ) {
@@ -7051,14 +7053,37 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
     text = element.firstChildElement("CprsrZn").text().toStdString();
     if( istringEqual(text,"Zone") ) {
       heatPump.setCompressorLocation("ZoneAirOnly");
+      heatPump.setParasiticHeatRejectionLocation("Zone");
     } else {
       heatPump.setCompressorLocation("OutdoorAirOnly");
+      heatPump.setParasiticHeatRejectionLocation("Outdoors");
     }
 
     // Might have to relocate after zones are available
     text = element.firstChildElement("CprsrZnRef").text().toStdString();
     if( auto zone = model.getModelObjectByName<model::ThermalZone>(text) ) {
       heatPump.addToThermalZone(zone.get());
+    }
+
+    value = element.firstChildElement("FanFlowCap").text().toDouble(&ok);
+    if( ok ) {
+      value = unitToUnit(value,"cfm","m^3/s").get();
+      heatPump.setEvaporatorAirFlowRate(value);
+    }
+
+    heatPump.setDeadBandTemperatureDifference(5.0);
+
+    heatPump.autosizeCondenserWaterFlowRate();
+
+    heatPump.setFanPlacement("DrawThrough");
+
+    heatPump.setOnCycleParasiticElectricLoad(0.0);
+
+    heatPump.setOffCycleParasiticElectricLoad(0.0);
+
+    {
+      auto schedule = model.alwaysOnDiscreteSchedule();
+      heatPump.setAvailabilitySchedule(schedule);
     }
 
     text = element.firstChildElement("StorZn").text().toStdString();
@@ -7073,6 +7098,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
       waterHeater.setAmbientTemperatureThermalZone(zone.get());
     }
 
+    heatPump.setMinimumInletAirTemperatureforCompressorOperation(5.0);
     value = element.firstChildElement("MinAirTemp").text().toDouble(&ok);
     if( ok ) {
       value = unitToUnit(value,"F","C").get();
@@ -7081,18 +7107,74 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
 
     value = element.firstChildElement("CndsrPumpPwr").text().toDouble(&ok);
     if( ok ) {
-      coil.setCondenserWaterPumpPower(unitToUnit(value,"Btu/h","W").get());
+      coil.setCondenserWaterPumpPower(value * 1000);
     }
 
     value = element.firstChildElement("CrankcaseHtrCap").text().toDouble(&ok);
     if( ok ) {
-      coil.setCrankcaseHeaterCapacity(unitToUnit(value,"Btu/h","W").get());
+      coil.setCrankcaseHeaterCapacity(value * 1000);
     }
 
     value = element.firstChildElement("CrankcaseHtrHiLimTemp").text().toDouble(&ok);
     if( ok ) {
       coil.setMaximumAmbientTemperatureforCrankcaseHeaterOperation(unitToUnit(value,"F","C").get());
     }
+
+    coil.setRatedSensibleHeatRatio(0.85);
+
+    coil.setRatedEvaporatorInletAirDryBulbTemperature(19.7);
+
+		coil.setRatedEvaporatorInletAirWetBulbTemperature(13.5);
+
+		coil.setRatedCondenserInletWaterTemperature(57.5);
+
+		coil.setEvaporatorFanPowerIncludedinRatedCOP(true);
+
+		coil.setCondenserPumpPowerIncludedinRatedCOP(true);
+
+		coil.setCondenserPumpHeatIncludedinRatedHeatingCapacityandRatedCOP(true);
+
+		coil.setFractionofCondenserPumpHeattoWater(0.2);
+
+		coil.setMaximumAmbientTemperatureforCrankcaseHeaterOperation(10.0);
+
+		coil.setEvaporatorAirTemperatureTypeforCurveObjects("DryBulbTemperature");
+
+  	auto setCurve = [&](const std::string & elementName, 
+  	    const std::function<bool(model::CoilWaterHeatingAirToWaterHeatPump &,const model::Curve &)> & osSetter,
+  	    const std::function<model::Curve(model::CoilWaterHeatingAirToWaterHeatPump &)> & osGetter) {
+
+  	  auto value = element.firstChildElement(QString::fromStdString(elementName)).text().toStdString();
+  	  auto newcurve = model.getModelObjectByName<model::Curve>(value);
+  	  if( newcurve ) {
+  	    auto oldcurve = osGetter(coil);
+  	    if( oldcurve != newcurve.get() ) {
+  	      oldcurve.remove();
+  	    }
+  	    osSetter(coil,newcurve.get());
+  	  }
+  	};
+
+		setCurve("Cap_fTempCrvRef",
+			&model::CoilWaterHeatingAirToWaterHeatPump::setHeatingCapacityFunctionofTemperatureCurve,
+			&model::CoilWaterHeatingAirToWaterHeatPump::heatingCapacityFunctionofTemperatureCurve
+		);
+
+		setCurve("COP_fTempCrvRef",
+			&model::CoilWaterHeatingAirToWaterHeatPump::setHeatingCOPFunctionofTemperatureCurve,
+			&model::CoilWaterHeatingAirToWaterHeatPump::heatingCOPFunctionofTemperatureCurve
+		);
+
+		// Override default
+  	{
+  	  auto curve = coil.partLoadFractionCorrelationCurve().cast<model::CurveQuadratic>();
+  	  curve.setCoefficient1Constant(1.0);
+  	  curve.setCoefficient2x(0.0);
+  	  curve.setCoefficient3xPOW2(0.0);
+  	  curve.setMinimumValueofx(0.0);
+  	  curve.setMaximumValueofx(1.0);
+  	  coil.setPartLoadFractionCorrelationCurve(curve);
+  	}
 
     text = element.firstChildElement("WtrHtrTempSetptSchRef").text().toStdString();
     if( auto schedule = model.getModelObjectByName<model::Schedule>(text) ) {
@@ -7106,8 +7188,88 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
 
     value = element.firstChildElement("FanFlowCap").text().toDouble(&ok);
     if( ok ) {
-      fan.setMaximumFlowRate(unitToUnit(value,"cfm","m^3/s").get());
+			value = unitToUnit(value,"cfm","m^3/s").get();
+      fan.setMaximumFlowRate(value);
+			coil.setRatedEvaporatorAirFlowRate(value);
     }
+
+		waterHeater.setDeadbandTemperatureDifference(0.0);
+		waterHeater.setHeaterControlType("Cycle");
+		waterHeater.setHeaterMaximumCapacity(0.0);
+		waterHeater.setHeaterMinimumCapacity(0.0);
+		waterHeater.setHeaterIgnitionMinimumFlowRate(0.0);
+		waterHeater.setHeaterIgnitionDelay(0.0);
+
+    text = element.firstChildElement("FuelSrc").text().toStdString();
+		waterHeater.setHeaterFuelType(text);
+
+		waterHeater.setHeaterThermalEfficiency(0.8);
+
+		{
+  	  auto curveRef = element.firstChildElement("HIR_fPLRCrvRef").text().toStdString();
+  	  auto newcurve = model.getModelObjectByName<model::Curve>(curveRef);
+  	  if( newcurve ) {
+  	    auto oldcurve = waterHeater.partLoadFactorCurve();
+  	    if( oldcurve && (oldcurve.get() != newcurve.get()) ) {
+  	      oldcurve->remove();
+  	    }
+				waterHeater.setPartLoadFactorCurve(newcurve->cast<model::CurveCubic>());
+  	  }
+		}
+
+    value = element.firstChildElement("OffCyclePrstcLoss").text().toDouble(&ok);
+    if( ok ) {
+			waterHeater.setOffCycleParasiticFuelConsumptionRate(value);
+		}
+
+    text = element.firstChildElement("OffCycleFuelSrc").text().toStdString();
+		waterHeater.setOffCycleParasiticFuelType(text);
+
+		waterHeater.setOffCycleParasiticHeatFractiontoTank(0.8);
+
+    value = element.firstChildElement("OnCyclePrstcLoss").text().toDouble(&ok);
+    if( ok ) {
+			waterHeater.setOnCycleParasiticFuelConsumptionRate(value);
+		}
+
+    text = element.firstChildElement("OnCycleFuelSrc").text().toStdString();
+		waterHeater.setOnCycleParasiticFuelType(text);
+
+		waterHeater.setOnCycleParasiticHeatFractiontoTank(0.0);
+
+    value = element.firstChildElement("TankOffCycleLossCoef").text().toDouble(&ok);
+    if( ok ) {
+      waterHeater.setOffCycleLossCoefficienttoAmbientTemperature(value * 0.5275);
+    }
+
+    waterHeater.setOffCycleLossFractiontoThermalZone(1.0);
+
+    text = element.firstChildElement("TankOnCycleLossCoef").text().toStdString();
+    if( ok ) {
+      waterHeater.setOnCycleLossCoefficienttoAmbientTemperature(value * 0.5275);
+    }
+
+    waterHeater.setOnCycleLossFractiontoThermalZone(1.0);
+    waterHeater.setUseSideEffectiveness(1.0);
+    waterHeater.setSourceSideEffectiveness(1.0);
+    waterHeater.setIndirectWaterHeatingRecoveryTime(1.5);
+
+    fan.setFanEfficiency(0.5);
+
+    value = element.firstChildElement("FanTotStaticPress").text().toDouble(&ok);
+    if( ok ) {
+      fan.setPressureRise(value * 249.0889);
+    }
+
+    value = element.firstChildElement("FanFlowCap").text().toDouble(&ok);
+    if( ok ) {
+      fan.setMaximumFlowRate(unitToUnit(value,"cfm","m^3/s").get()); 
+    }
+
+    fan.setMotorEfficiency(0.85);
+    fan.setMotorInAirstreamFraction(0.0);
+
+
 
     return waterHeater;
   } else {
