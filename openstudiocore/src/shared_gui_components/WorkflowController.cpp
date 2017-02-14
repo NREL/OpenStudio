@@ -373,15 +373,15 @@ QString MeasureStepItem::name() const
   return result;
 }
 
-QString MeasureStepItem::displayName() const
-{
-  // DLM: TODO, add display name
-  QString result;
-  if (boost::optional<std::string> name = m_step.name()){
-    return result = QString::fromStdString(*name);
-  }
-  return result;
-}
+//QString MeasureStepItem::displayName() const
+//{
+//  // DLM: TODO, add display name
+//  QString result;
+//  if (boost::optional<std::string> name = m_step.name()){
+//    return result = QString::fromStdString(*name);
+//  }
+//  return result;
+//}
 
 MeasureType MeasureStepItem::measureType() const
 {
@@ -517,12 +517,12 @@ void MeasureStepItem::setName(const QString & name)
   emit nameChanged(name);
 }
 
-void MeasureStepItem::setDisplayName(const QString & displayName)
-{
-  m_step.setName(displayName.toStdString());
-
-  emit displayNameChanged(displayName);
-}
+//void MeasureStepItem::setDisplayName(const QString & displayName)
+//{
+//  m_step.setName(displayName.toStdString());
+//
+//  emit displayNameChanged(displayName);
+//}
 
 void MeasureStepItem::setDescription(const QString & description)
 {
@@ -580,9 +580,9 @@ QWidget * MeasureStepItemDelegate::view(QSharedPointer<OSListItem> dataSource)
   if(QSharedPointer<MeasureStepItem> measureStepItem = dataSource.objectCast<MeasureStepItem>())
   {
     auto workflowStepView = new WorkflowStepView();
-    workflowStepView->workflowStepButton->nameLabel->setText(measureStepItem->displayName());
+    workflowStepView->workflowStepButton->nameLabel->setText(measureStepItem->name());
 
-    connect(measureStepItem.data(), &MeasureStepItem::displayNameChanged, workflowStepView->workflowStepButton->nameLabel, &QLabel::setText);
+    connect(measureStepItem.data(), &MeasureStepItem::nameChanged, workflowStepView->workflowStepButton->nameLabel, &QLabel::setText);
 
     // Remove
 
