@@ -7118,7 +7118,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
     coil.setMaximumAmbientTemperatureforCrankcaseHeaterOperation(10);
     value = element.firstChildElement("CrankcaseHtrHiLimTemp").text().toDouble(&ok);
     if( ok ) {
-      coil.setMaximumAmbientTemperatureforCrankcaseHeaterOperation(value);
+      coil.setMaximumAmbientTemperatureforCrankcaseHeaterOperation(unitToUnit(value,"F","C").get());
     }
 
     coil.setRatedSensibleHeatRatio(0.85);
