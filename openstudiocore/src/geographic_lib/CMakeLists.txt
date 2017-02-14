@@ -123,15 +123,15 @@ else ()
 endif ()
 
 # (4) Build which libraries?  Possible values are SHARED, STATIC, BOTH.
-if (MSVC)
-  set (GEOGRAPHICLIB_LIB_TYPE STATIC CACHE STRING
-    "Types of library generated: SHARED, STATIC (default), or BOTH")
-else ()
-  set (GEOGRAPHICLIB_LIB_TYPE SHARED CACHE STRING
-    "Types of library generated: SHARED (default), STATIC, or BOTH")
-endif ()
-set_property (CACHE GEOGRAPHICLIB_LIB_TYPE
-  PROPERTY STRINGS "SHARED" "STATIC" "BOTH")
+#if (MSVC)
+#  set (GEOGRAPHICLIB_LIB_TYPE STATIC CACHE STRING
+#    "Types of library generated: SHARED, STATIC (default), or BOTH")
+#else ()
+#  set (GEOGRAPHICLIB_LIB_TYPE SHARED CACHE STRING
+#    "Types of library generated: SHARED (default), STATIC, or BOTH")
+#endif ()
+#set_property (CACHE GEOGRAPHICLIB_LIB_TYPE
+#  PROPERTY STRINGS "SHARED" "STATIC" "BOTH")
 
 if (GEOGRAPHICLIB_LIB_TYPE STREQUAL "BOTH")
   set (GEOGRAPHICLIB_SHARED_LIB ON)
@@ -426,7 +426,7 @@ if (NOT WIN32 AND NOT APPLE)
   find_program (HAVE_POD2HTML pod2html)
   find_program (HAVE_COL col)
 endif ()
-if (HAVE_POD2MAN AND HAVE_POD2HTML AND HAVE_COL)
+if (HAVE_POD2MAN AND HAVE_POD2HTML AND HAVE_COL AND GEOGRAPHICLIB_DOCUMENTATION)
   set (MAINTAINER ON)
 else ()
   set (MAINTAINER OFF)
