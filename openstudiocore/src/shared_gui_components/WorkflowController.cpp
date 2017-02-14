@@ -32,6 +32,8 @@
 #include "MeasureManager.hpp"
 #include "EditController.hpp"
 #include "BaseApp.hpp"
+#include "../openstudio_lib/OSAppBase.hpp"
+#include "../openstudio_lib/OSDocument.hpp"
 #include "LocalLibraryController.hpp"
 #include "WorkflowTools.hpp"
 
@@ -243,6 +245,12 @@ void MeasureStepController::addItemForDroppedMeasure(QDropEvent *event)
 
   UUID id = measureDragData.id();
 
+  std::shared_ptr<OSDocument> document = nullptr;
+  if (dynamic_cast<OSAppBase*>(m_app)){
+    document = dynamic_cast<OSAppBase*>(m_app)->currentDocument();
+    document->disable();
+  }
+
   boost::optional<BCLMeasure> projectMeasure;
   try {
 
@@ -254,6 +262,10 @@ void MeasureStepController::addItemForDroppedMeasure(QDropEvent *event)
     QString errorMessage("Failed to add measure: \n\n");
     errorMessage += QString::fromStdString(e.what());
     QMessageBox::information(m_app->mainWidget(), QString("Failed to add measure"), errorMessage);
+  
+    if (document){
+      document->enable();
+    }
     return;
   }
   OS_ASSERT(projectMeasure);
@@ -261,6 +273,10 @@ void MeasureStepController::addItemForDroppedMeasure(QDropEvent *event)
   if (projectMeasure->measureType() != m_measureType){
     QString errorMessage("Failed to add measure at this workflow location.");
     QMessageBox::information(m_app->mainWidget(), QString("Failed to add measure"), errorMessage);
+
+    if (document){
+      document->enable();
+    }
     return;
   }
 
@@ -271,6 +287,10 @@ void MeasureStepController::addItemForDroppedMeasure(QDropEvent *event)
     QString errorMessage("Failed to compute arguments for measure: \n\n");
     errorMessage += QString::fromStdString(e.what());
     QMessageBox::information(m_app->mainWidget(), QString("Failed to add measure"), errorMessage);
+
+    if (document){
+      document->enable();
+    }
     return;
   }
 
@@ -295,6 +315,10 @@ void MeasureStepController::addItemForDroppedMeasure(QDropEvent *event)
   OS_ASSERT(test);
 
   //workflowJSON.save();
+
+  if (document){
+    document->enable();
+  }
 
   emit modelReset();
 }
