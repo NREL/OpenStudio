@@ -46,8 +46,8 @@
 #include "../../model/CoolingTowerVariableSpeed_Impl.hpp"
 #include "../../model/CoolingTowerTwoSpeed.hpp"
 #include "../../model/CoolingTowerTwoSpeed_Impl.hpp"
-#include "../../model/GeneratorMicroTurbineHeatRecovery.hpp"
-#include "../../model/GeneratorMicroTurbineHeatRecovery_Impl.hpp"
+#include "../../model/GeneratorFuelCellExhaustGasToWaterHeatExchanger.hpp"
+#include "../../model/GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl.hpp"
 #include "../../model/GroundHeatExchangerVertical.hpp"
 #include "../../model/GroundHeatExchangerVertical_Impl.hpp"
 #include "../../model/GroundHeatExchangerHorizontalTrench.hpp"
@@ -155,7 +155,7 @@ boost::optional<double> flowrate(const HVACComponent & component)
   switch(component.iddObject().type().value()) {
     case openstudio::IddObjectType::OS_Generator_FuelCell_ExhaustGasToWaterHeatExchanger :
     {
-      auto hr = component.cast<GeneratorMicroTurbineHeatRecovery>();
+      auto hr = component.cast<GeneratorFuelCellExhaustGasToWaterHeatExchanger>();
       result = hr.heatRecoveryWaterMaximumFlowRate();
       break;
     }
