@@ -202,6 +202,16 @@ LoadProfilePlant::LoadProfilePlant(const Model& model)
   OS_ASSERT(ok);
 }
 
+LoadProfilePlant::LoadProfilePlant(const Model& model, Schedule& loadSchedule, Schedule& flowRateFractionSchedule)
+  : StraightComponent(LoadProfilePlant::iddObjectType(),model)
+{
+  OS_ASSERT(getImpl<detail::LoadProfilePlant_Impl>());
+
+  setLoadSchedule( loadSchedule );
+  setPeakFlowRate( 0.0 );
+  setFlowRateFractionSchedule( flowRateFractionSchedule );
+}
+
 IddObjectType LoadProfilePlant::iddObjectType() {
   return IddObjectType(IddObjectType::OS_LoadProfile_Plant);
 }

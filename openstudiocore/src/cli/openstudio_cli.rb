@@ -858,7 +858,7 @@ class Update
     options[:keep] = false
 
     opts = OptionParser.new do |o|
-      o.banner = 'Usage: openstudio measure [options] PATH'
+      o.banner = 'Usage: openstudio update [options] PATH'
       o.separator ''
       o.separator 'Options:'
       o.separator ''

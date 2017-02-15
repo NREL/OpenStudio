@@ -195,7 +195,7 @@ class MeasureStepItem : public OSListItem
 
   QString name() const;
 
-  QString displayName() const;
+  //QString displayName() const;
 
   MeasureType measureType() const;
 
@@ -224,7 +224,7 @@ class MeasureStepItem : public OSListItem
 
   void setName(const QString & name);
 
-  void setDisplayName(const QString & displayName);
+  //void setDisplayName(const QString & displayName);
 
   void setDescription(const QString & description);
 
@@ -236,7 +236,7 @@ class MeasureStepItem : public OSListItem
 
   void nameChanged(const QString & name);
 
-  void displayNameChanged(const QString & displayName);
+  //void displayNameChanged(const QString & displayName);
 
   void descriptionChanged();
 
