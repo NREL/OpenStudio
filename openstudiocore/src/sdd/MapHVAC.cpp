@@ -7157,13 +7157,13 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
   	};
 
 		setCurve("Cap_fTempCrvRef",
-			&model::CoilWaterHeatingAirToWaterHeatPump::setHeatingCapacityFunctionofTemperatureCurve,
-			&model::CoilWaterHeatingAirToWaterHeatPump::heatingCapacityFunctionofTemperatureCurve
+			std::mem_fn(&model::CoilWaterHeatingAirToWaterHeatPump::setHeatingCapacityFunctionofTemperatureCurve),
+			std::mem_fn(&model::CoilWaterHeatingAirToWaterHeatPump::heatingCapacityFunctionofTemperatureCurve)
 		);
 
 		setCurve("COP_fTempCrvRef",
-			&model::CoilWaterHeatingAirToWaterHeatPump::setHeatingCOPFunctionofTemperatureCurve,
-			&model::CoilWaterHeatingAirToWaterHeatPump::heatingCOPFunctionofTemperatureCurve
+			std::mem_fn(&model::CoilWaterHeatingAirToWaterHeatPump::setHeatingCOPFunctionofTemperatureCurve),
+			std::mem_fn(&model::CoilWaterHeatingAirToWaterHeatPump::heatingCOPFunctionofTemperatureCurve)
 		);
 
 		// Override default
