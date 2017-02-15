@@ -72,19 +72,6 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellExhaustG
       pcm.setString(Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::HeatRecoveryWaterOutletNodeName, node->name().get());
     }
   }
-  /*
-  //HeatRecoveryWaterInletNodeName 
-  connection = modelObject.heatRecoveryWaterInletNode();
-  if (connection) {
-    pcm.setString(Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::HeatRecoveryWaterInletNodeName, connection.get().nameString());
-  }
-
-  //HeatRecoveryWaterOutletNodeName 
-  connection = modelObject.heatRecoveryWaterOutletNode();
-  if (connection) {
-    pcm.setString(Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::HeatRecoveryWaterOutletNodeName, connection.get().nameString());
-  }
-  */
 
   //HeatRecoveryWaterMaximumFlowRate
   d = modelObject.heatRecoveryWaterMaximumFlowRate();
@@ -96,6 +83,8 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellExhaustG
   node = modelObject.exhaustOutletAirNode();
   if (node) {
     pcm.setString(Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::ExhaustOutletAirNodeName, node.get().nameString());
+  } else {
+    pcm.setString(Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::ExhaustOutletAirNodeName, modelObject.nameString() + " Exhaust Outlet Air Node");
   }
 
   //HeatExchangerCalculationMethod

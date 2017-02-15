@@ -232,12 +232,23 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellPowerMod
   node = modelObject.dilutionInletAirNode();
   if (node) {
     pcm.setString(Generator_FuelCell_PowerModuleFields::DilutionInletAirNodeName, node.get().nameString());
+  //} else if( tz ) {
+  //  pcm.setString(Generator_FuelCell_PowerModuleFields::DilutionInletAirNodeName, tz->zoneAirNode().nameString());
+  } else {
+    auto name = modelObject.nameString() + " OA Node";
+    IdfObject oaNodeListIdf(openstudio::IddObjectType::OutdoorAir_NodeList);
+    oaNodeListIdf.setString(0, name);
+    m_idfObjects.push_back(oaNodeListIdf);
+
+    pcm.setString(Generator_FuelCell_PowerModuleFields::DilutionInletAirNodeName,name);
   }
 
   //DilutionOutletAirNodeName
   node = modelObject.dilutionOutletAirNode();
   if (node) {
     pcm.setString(Generator_FuelCell_PowerModuleFields::DilutionOutletAirNodeName, node.get().nameString());
+  } else {
+    pcm.setString(Generator_FuelCell_PowerModuleFields::DilutionOutletAirNodeName, modelObject.nameString() + " Dilution Outlet Air Node");
   }
 
   //MinimumOperatingPoint

@@ -82,7 +82,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellAirSuppl
   if (node) {
     pcm.setString(Generator_FuelCell_AirSupplyFields::AirInletNodeName, node.get().nameString());
   } else {
-    auto name = modelObject.name().get() + " OA Node";
+    auto name = modelObject.nameString() + " OA Node";
     IdfObject oaNodeListIdf(openstudio::IddObjectType::OutdoorAir_NodeList);
     oaNodeListIdf.setString(0, name);
     m_idfObjects.push_back(oaNodeListIdf);
