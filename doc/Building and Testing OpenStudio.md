@@ -90,7 +90,7 @@ In CMake type the following:
 In a command window:
 
 	make –j8 (8 indicates the number of cores used)
-	make package_deb
+	make package
 
 Copy .deb package from VM to Windows
 
