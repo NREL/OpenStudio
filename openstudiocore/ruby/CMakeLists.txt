@@ -1,4 +1,4 @@
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "^(Apple)?Clang$")
   # using Clang
   set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -undefined dynamic_lookup")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
