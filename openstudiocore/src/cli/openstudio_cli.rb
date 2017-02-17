@@ -164,56 +164,29 @@ end
 Gem::Specification.each do |spec|
   if spec.gem_dir.chars.first == ':'
     if spec.name == 'bundler'
-      puts 'activating bundler'
       spec.activate
     end
   end
 end
 
-# activate bundled gems
-# bundler will look in:
-# 1) ENV["BUNDLE_GEMFILE"]
-# 2) find_file("Gemfile", "gems.rb")
-puts 'requiring bundler'
+# require bundler
+# have to do some forward declaration and pre-require to get around autoload cycles
+module Bundler
+end
+require 'bundler/gem_helpers'
+require 'bundler/errors'
+require 'bundler/plugin'
+require 'bundler/source'
+require 'bundler/definition'
+require 'bundler/dsl'
+require 'bundler/dsl'
 require 'bundler'
-require "bundler/definition"
-require "bundler/dependency"
-require "bundler/dep_proxy"
-require "bundler/deprecate"
-require "bundler/dsl"
-require "bundler/endpoint_specification"
-require "bundler/env"
-require "bundler/fetcher"
-require "bundler/feature_flag"
-require "bundler/gem_helper"
-require "bundler/gem_helpers"
-require "bundler/gem_remote_fetcher"
-require "bundler/gem_version_promoter"
-require "bundler/graph"
-require "bundler/index"
-require "bundler/injector"
-require "bundler/installer"
-require "bundler/lazy_specification"
-require "bundler/lockfile_parser"
-require "bundler/match_platform"
-require "bundler/remote_specification"
-require "bundler/resolver"
-require "bundler/retry"
-require "bundler/ruby_dsl"
-require "bundler/rubygems_gem_installer"
-require "bundler/ruby_version"
-require "bundler/runtime"
-require "bundler/settings"
-require "bundler/shared_helpers"
-require "bundler/source"
-require "bundler/source_list"
-require "bundler/spec_set"
-require "bundler/stub_specification"
-require "bundler/ui"
-require "bundler/uri_credentials_filter"
-puts 'done loading bundler'
 
 begin
+  # activate bundled gems
+  # bundler will look in:
+  # 1) ENV["BUNDLE_GEMFILE"]
+  # 2) find_file("Gemfile", "gems.rb")
   Bundler.setup
   Bundler.require
 rescue Bundler::BundlerError => e
@@ -221,6 +194,10 @@ rescue Bundler::BundlerError => e
   #puts e.backtrace.join("\n") 
   if e.is_a?(Bundler::GemNotFound)
     puts "Run `bundle install` to install missing gems."
+  elsif e.is_a?(Bundler::ProductionError)
+
+  else
+
   end
   exit e.status_code
 end

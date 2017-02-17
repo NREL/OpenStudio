@@ -72,10 +72,11 @@ module Kernel
     
     # DLM: temporary hack to get around autoload
     s = s.gsub(/^\s*autoload\s*(:.*?),\s*(.*?)\s*$/, "current_module_ = Module.nesting[0].nil? ? Object : Module.nesting[0]
-$autoload_hash[current_module_.to_s.to_sym] = {} if $autoload_hash[current_module_.to_s.to_sym].nil?
-$autoload_hash[current_module_.to_s.to_sym][\\1] = [current_module_, \\2, false]")
+    $autoload_hash[current_module_.to_s.to_sym] = {} if $autoload_hash[current_module_.to_s.to_sym].nil?
+    $autoload_hash[current_module_.to_s.to_sym][\\1] = [current_module_, \\2]")
 
     result = eval(s,BINDING,path)
+    
     return result
   end
 
@@ -129,7 +130,6 @@ $autoload_hash[current_module_.to_s.to_sym][\\1] = [current_module_, \\2, false]
 end
 
 $autoload_hash = {}
-$autoloading = false
 
 class Module
   
@@ -137,37 +137,36 @@ class Module
   
   def const_missing(m)
     if caller_locations(1,1)[0].path.chars.first == ':'
-      puts 'Module.const_missing'
       sym = self.to_s.to_sym
-      puts sym
-      puts m
       
       lookup = $autoload_hash[sym]
       if lookup.nil?
+        # this seems to occur if a class and a module have the same name?
         if md = /\#\<Class\:(.*)\>/.match(self.to_s)
-          puts 'trying again'
-          new_sym = md[1].to_sym
-          lookup = $autoload_hash[new_sym]
+          sym = md[1].to_sym
+          lookup = $autoload_hash[sym]
+        end
+      end
+      
+      if lookup.nil?
+        # check parent modules
+        while md = /(.*)\:\:.*?/.match(sym.to_s)
+          sym = md[1].to_sym
+          lookup = $autoload_hash[sym]
+          break if lookup
         end
       end
       
       raise "Cannot find #{sym}" if lookup.nil?
-      puts "Found #{sym}!"
-      puts "Now look for #{m}"
       
       raise "Cannot find #{m} for #{self}" if lookup[m].nil?
       mod = lookup[m][0]
       path = lookup[m][1]
-      loaded = lookup[m][2]
 
-      puts "requiring #{path} for #{m}, #{mod}"
-      lookup[m][2] = true
       require path
-      puts "done require"
       
       result = mod.const_get(m)
-      puts "result = #{result}"
-      puts
+
       return result
     end
     
