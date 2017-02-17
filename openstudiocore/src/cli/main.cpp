@@ -404,6 +404,10 @@ int main(int argc, char *argv[])
   Init_openssl();
   rb_provide("openssl");
   rb_provide("openssl.so");
+#else
+  // DLM: temporarily fake out, no init
+  rb_provide("openssl");
+  rb_provide("openssl.so");
 #endif // Q_OS_LINUX
   
   Init_objspace();

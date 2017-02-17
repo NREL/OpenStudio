@@ -143,40 +143,113 @@ end
 
 Gem.paths.path << ':/ruby/2.2.0/gems/'
 Gem.paths.path << ':/ruby/2.2.0/bundler/gems/'
-    
+
+# find all the embedded gems
 EmbeddedScripting::allFileNamesAsString().split(';').each do |f|
-  if md = /\.gemspec$/.match(f)
+  if md = /specifications\/.*\.gemspec$/.match(f)
     begin
       spec = EmbeddedScripting::getFileAsString(f)
       s = eval(spec)
       s.loaded_from = f
       Gem::Specification.add_spec(s)
-    rescue
+    rescue LoadError => e
+      puts e.message
+    rescue => e
+      puts e.message
     end
   end 
 end
 
-embedded_gems = []
-user_gems = []
+# activate bundler
 Gem::Specification.each do |spec|
   if spec.gem_dir.chars.first == ':'
-    embedded_gems << spec
-  else
-    user_gems << spec
+    if spec.name == 'bundler'
+      puts 'activating bundler'
+      spec.activate
+    end
   end
 end
 
-embedded_gems.each do |spec|
-  if user_gems.index {|s| s.name == spec.name}
-    Gem::Specification.remove_spec(spec)
+# activate bundled gems
+# bundler will look in:
+# 1) ENV["BUNDLE_GEMFILE"]
+# 2) find_file("Gemfile", "gems.rb")
+puts 'requiring bundler'
+require 'bundler'
+require "bundler/definition"
+require "bundler/dependency"
+require "bundler/dep_proxy"
+require "bundler/deprecate"
+require "bundler/dsl"
+require "bundler/endpoint_specification"
+require "bundler/env"
+require "bundler/fetcher"
+require "bundler/feature_flag"
+require "bundler/gem_helper"
+require "bundler/gem_helpers"
+require "bundler/gem_remote_fetcher"
+require "bundler/gem_version_promoter"
+require "bundler/graph"
+require "bundler/index"
+require "bundler/injector"
+require "bundler/installer"
+require "bundler/lazy_specification"
+require "bundler/lockfile_parser"
+require "bundler/match_platform"
+require "bundler/remote_specification"
+require "bundler/resolver"
+require "bundler/retry"
+require "bundler/ruby_dsl"
+require "bundler/rubygems_gem_installer"
+require "bundler/ruby_version"
+require "bundler/runtime"
+require "bundler/settings"
+require "bundler/shared_helpers"
+require "bundler/source"
+require "bundler/source_list"
+require "bundler/spec_set"
+require "bundler/stub_specification"
+require "bundler/ui"
+require "bundler/uri_credentials_filter"
+puts 'done loading bundler'
+
+begin
+  Bundler.setup
+  Bundler.require
+rescue Bundler::BundlerError => e
+  puts "#{e.message}"
+  #puts e.backtrace.join("\n") 
+  if e.is_a?(Bundler::GemNotFound)
+    puts "Run `bundle install` to install missing gems."
   end
+  exit e.status_code
 end
 
-Gem::Specification.each do |spec|
-  if spec.gem_dir.chars.first == ':'
-    spec.activate
-  end
-end
+
+#embedded_gems = []
+#user_gems = []
+#Gem::Specification.each do |spec|
+#  if spec.gem_dir.chars.first == ':'
+#    embedded_gems << spec
+#  else
+#    user_gems << spec
+#  end
+#end
+
+# remove any embedded gems that are also found on disk
+#embedded_gems.each do |spec|
+#  if user_gems.index {|s| s.name == spec.name}
+#    Gem::Specification.remove_spec(spec)
+#  end
+#end
+
+# activate embedded gems
+#Gem::Specification.each do |spec|
+#  if spec.gem_dir.chars.first == ':'
+#    spec.activate
+#  end
+#end
+
 
 # This is the code chunk to allow for an embedded IRB shell. From Jason Roelofs, found on StackOverflow
 module IRB # :nodoc:

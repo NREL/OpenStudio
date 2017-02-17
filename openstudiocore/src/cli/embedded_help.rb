@@ -68,7 +68,14 @@ module Kernel
 
   def require_embedded_absolute path
     $LOADED << path
-    result = eval(EmbeddedScripting::getFileAsString(path),BINDING,path)
+    s = EmbeddedScripting::getFileAsString(path)
+    
+    # DLM: temporary hack to get around autoload
+    s = s.gsub(/^\s*autoload\s*(:.*?),\s*(.*?)\s*$/, "current_module_ = Module.nesting[0].nil? ? Object : Module.nesting[0]
+$autoload_hash[current_module_.to_s.to_sym] = {} if $autoload_hash[current_module_.to_s.to_sym].nil?
+$autoload_hash[current_module_.to_s.to_sym][\\1] = [current_module_, \\2, false]")
+
+    result = eval(s,BINDING,path)
     return result
   end
 
@@ -121,3 +128,49 @@ module Kernel
   
 end
 
+$autoload_hash = {}
+$autoloading = false
+
+class Module
+  
+  alias :original_const_missing :const_missing
+  
+  def const_missing(m)
+    if caller_locations(1,1)[0].path.chars.first == ':'
+      puts 'Module.const_missing'
+      sym = self.to_s.to_sym
+      puts sym
+      puts m
+      
+      lookup = $autoload_hash[sym]
+      if lookup.nil?
+        if md = /\#\<Class\:(.*)\>/.match(self.to_s)
+          puts 'trying again'
+          new_sym = md[1].to_sym
+          lookup = $autoload_hash[new_sym]
+        end
+      end
+      
+      raise "Cannot find #{sym}" if lookup.nil?
+      puts "Found #{sym}!"
+      puts "Now look for #{m}"
+      
+      raise "Cannot find #{m} for #{self}" if lookup[m].nil?
+      mod = lookup[m][0]
+      path = lookup[m][1]
+      loaded = lookup[m][2]
+
+      puts "requiring #{path} for #{m}, #{mod}"
+      lookup[m][2] = true
+      require path
+      puts "done require"
+      
+      result = mod.const_get(m)
+      puts "result = #{result}"
+      puts
+      return result
+    end
+    
+    original_const_missing(m)
+  end
+end
