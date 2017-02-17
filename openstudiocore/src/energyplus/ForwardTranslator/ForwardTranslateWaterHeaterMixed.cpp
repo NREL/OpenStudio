@@ -251,6 +251,16 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterMixed( WaterHe
         idfObject.setString(WaterHeater_MixedFields::AmbientTemperatureScheduleName,schedule->name().get());
       }
     }
+
+    if( istringEqual(s.get(),"Outdoors") ) {
+      if( (! modelObject.ambientTemperatureOutdoorAirNodeName()) || modelObject.ambientTemperatureOutdoorAirNodeName()->empty() ) {
+        IdfObject oaNodeListIdf(openstudio::IddObjectType::OutdoorAir_NodeList);
+        auto name = modelObject.nameString() + " Outdoor Air Node";
+        oaNodeListIdf.setString(0,name);
+        m_idfObjects.push_back(oaNodeListIdf);
+        idfObject.setString(WaterHeater_MixedFields::AmbientTemperatureOutdoorAirNodeName,name);
+      }
+    }
   }
 
   // AmbientTemperatureZoneName
@@ -265,7 +275,7 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterMixed( WaterHe
   // AmbientTemperatureOutdoorAirNodeName
 
   s = modelObject.ambientTemperatureOutdoorAirNodeName();
-  if( s )
+  if( s && (! s->empty()) )
   {
     idfObject.setString(WaterHeater_MixedFields::AmbientTemperatureOutdoorAirNodeName,s.get());
   }

@@ -1623,6 +1623,67 @@ namespace sdd {
         }
       }
 
+      // SimVarsWtrHtrSys
+      auto simVarsWtrHtrSys = projectElement.firstChildElement("SimVarsWtrHtr");
+      if( simVarsWtrHtrSys.text().toInt() == 1 ) {
+        model::OutputVariable var("Water Heater Tank Temperature",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Water Heater Electric Energy",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Water Heater Electric Power",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Water Heater Heating Energy",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Water Heater Heating Rate",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Water Heater Mains Water Volume",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Water Heater Use Side Inlet Temperature",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Water Heater Use Side Outlet Temperature",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Water Heater Use Side Mass Flow Rate",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Water Heater Use Side Heat Transfer Rate",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Water Heater Source Side Inlet Temperature",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Water Heater Source Side Outlet Temperature",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Water Heater Source Side Mass Flow Rate",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Water Heater Source Side Heat Transfer Rate",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Water Heater Water Volume Flow Rate",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Water Heater Heat Pump Control Tank Final Temperature",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Water Heater Heat Pump Control Tank Temperature",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Water Heater Gas Rate",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Water Heater Gas Energy",*result);
+        var.setReportingFrequency(interval);
+      }
+
       model::OutputControlReportingTolerances rt = result->getUniqueModelObject<model::OutputControlReportingTolerances>();
       rt.setToleranceforTimeCoolingSetpointNotMet(0.56);
       rt.setToleranceforTimeHeatingSetpointNotMet(0.56);
