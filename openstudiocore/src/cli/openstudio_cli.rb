@@ -55,6 +55,7 @@ OpenStudio::Logger.instance.standardOutLogger.setLogLevel(OpenStudio::Error)
 
 # load embedded ruby gems
 require 'rubygems'
+require 'rubygems/version'
 
 module Gem
 class Specification < BasicSpecification
@@ -164,68 +165,81 @@ end
 Gem::Specification.each do |spec|
   if spec.gem_dir.chars.first == ':'
     if spec.name == 'bundler'
-      spec.activate
+      # DLM: for now remove this
+      #spec.activate
+      Gem::Specification.remove_spec(spec)
     end
   end
 end
 
 # require bundler
 # have to do some forward declaration and pre-require to get around autoload cycles
-module Bundler
-end
-require 'bundler/gem_helpers'
-require 'bundler/errors'
-require 'bundler/plugin'
-require 'bundler/source'
-require 'bundler/definition'
-require 'bundler/dsl'
-require 'bundler/dsl'
-require 'bundler'
+#module Bundler
+#end
+#require 'bundler/gem_helpers'
+#require 'bundler/errors'
+#require 'bundler/plugin'
+#require 'bundler/source'
+#require 'bundler/definition'
+#require 'bundler/dsl'
+#require 'bundler/dsl'
+#require 'bundler'
 
-begin
-  # activate bundled gems
-  # bundler will look in:
-  # 1) ENV["BUNDLE_GEMFILE"]
-  # 2) find_file("Gemfile", "gems.rb")
-  Bundler.setup
-  Bundler.require
-rescue Bundler::BundlerError => e
-  puts "#{e.message}"
-  #puts e.backtrace.join("\n") 
-  if e.is_a?(Bundler::GemNotFound)
-    puts "Run `bundle install` to install missing gems."
-  elsif e.is_a?(Bundler::ProductionError)
-
-  else
-
-  end
-  exit e.status_code
-end
-
-
-#embedded_gems = []
-#user_gems = []
-#Gem::Specification.each do |spec|
-#  if spec.gem_dir.chars.first == ':'
-#    embedded_gems << spec
+#begin
+#  # activate bundled gems
+#  # bundler will look in:
+#  # 1) ENV["BUNDLE_GEMFILE"]
+#  # 2) find_file("Gemfile", "gems.rb")
+#  Bundler.setup
+#  Bundler.require
+#rescue Bundler::BundlerError => e
+#  puts "#{e.message}"
+#  #puts e.backtrace.join("\n") 
+#  if e.is_a?(Bundler::GemNotFound)
+#    puts "Run `bundle install` to install missing gems."
+#  elsif e.is_a?(Bundler::ProductionError)
+#
 #  else
-#    user_gems << spec
+#
 #  end
+#  exit e.status_code
 #end
 
-# remove any embedded gems that are also found on disk
-#embedded_gems.each do |spec|
-#  if user_gems.index {|s| s.name == spec.name}
-#    Gem::Specification.remove_spec(spec)
-#  end
-#end
 
-# activate embedded gems
-#Gem::Specification.each do |spec|
-#  if spec.gem_dir.chars.first == ':'
-#    spec.activate
-#  end
-#end
+embedded_gems = []
+user_gems = []
+Gem::Specification.each do |spec|
+  if spec.gem_dir.chars.first == ':'
+    embedded_gems << spec
+  else
+    user_gems << spec
+  end
+end
+
+# remove any embedded gems that are also found on disk with equal or higher version but compatible major version
+embedded_gems.each do |spec|
+  remove = false
+  user_gems.each do |s| 
+    if s.name == spec.name
+      if s.version >= spec.version
+        if s.version.to_s.split('.')[0] == spec.version.to_s.split('.')[0]
+          $logger.debug "Loading system gem #{s.file_name}, overrides embdedded gem #{spec.file_name}"
+          remove = true
+          break
+        end
+      end
+    end
+  end
+ 
+ Gem::Specification.remove_spec(spec) if remove
+end
+
+# activate remaining embedded gems
+Gem::Specification.each do |spec|
+  if spec.gem_dir.chars.first == ':'
+    spec.activate
+  end
+end
 
 
 # This is the code chunk to allow for an embedded IRB shell. From Jason Roelofs, found on StackOverflow

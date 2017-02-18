@@ -157,9 +157,9 @@ class Module
         end
       end
       
-      raise "Cannot find #{sym}" if lookup.nil?
+      return nil if lookup.nil?
       
-      raise "Cannot find #{m} for #{self}" if lookup[m].nil?
+      return nil if lookup[m].nil?
       mod = lookup[m][0]
       path = lookup[m][1]
 
