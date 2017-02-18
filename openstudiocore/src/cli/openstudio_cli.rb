@@ -53,6 +53,52 @@ $logger.level = Logger::WARN
 #OpenStudio::Logger.instance.standardOutLogger.setLogLevel(OpenStudio::Warn)
 OpenStudio::Logger.instance.standardOutLogger.setLogLevel(OpenStudio::Error)
 
+# Set the logger level to DEBUG if the arguments include --verbose
+$argv = ARGV.dup
+if $argv.include? '--verbose'
+  $logger.level = Logger::DEBUG
+  OpenStudio::Logger.instance.standardOutLogger.setLogLevel(OpenStudio::Debug)
+  $argv.delete '--verbose'
+  $logger.debug 'Set Logger log level to DEBUG'
+end
+$logger.debug "Input ARGV is #{$argv}"
+
+# Operate on the include option to add to $LOAD_PATH
+$argv.each_index do |i|
+  remove_indices = []
+  if $argv[i] == '-I' || $argv[i] == '--include'
+    # remove from further processing
+    remove_indices << i 
+    remove_indices << i+1
+    
+    dir = $argv[i + 1]
+    
+    if dir.nil? 
+      safe_puts "#{$argv[i]} requires second argument DIR"
+      return 0
+    elsif !File.exists?(dir) || !File.directory?(dir)
+      $logger.warn "'#{dir}' passed to #{$argv[i]} is not a directory"
+    end
+    $LOAD_PATH << dir
+  end
+  
+  remove_indices.reverse_each {|i| $argv.delete_at(i)}
+end
+
+# Operate on the gem_path option to set the gem search path
+if $argv.include? '--gem_path'
+  $logger.info 'Setting gem path'
+  option_index = $argv.index '--gem_path'
+  path_index = option_index + 1
+  new_home = $argv[path_index]
+  $argv.slice! path_index
+  $argv.slice! $argv.index '--gem_path'
+  current_home = ENV['OPENSTUDIO_GEM_PATH']
+  $logger.warn "Overwriting previous OPENSTUDIO_GEM_PATH of #{current_home} to #{new_home} for this command" if current_home
+  $logger.info "No current gem path set in OPENSTUDIO_GEM_PATH, setting to #{new_home}" unless current_home
+  ENV['OPENSTUDIO_GEM_PATH'] = new_home
+end
+
 # load embedded ruby gems
 require 'rubygems'
 require 'rubygems/version'
@@ -1206,51 +1252,6 @@ class ListCommands
   end
 end
 
-# Set the logger level to DEBUG if the arguments include --verbose
-$argv = ARGV.dup
-if $argv.include? '--verbose'
-  $logger.level = Logger::DEBUG
-  OpenStudio::Logger.instance.standardOutLogger.setLogLevel(OpenStudio::Debug)
-  $argv.delete '--verbose'
-  $logger.debug 'Set Logger log level to DEBUG'
-end
-$logger.debug "Input ARGV is #{$argv}"
-
-# Operate on the include option to add to $LOAD_PATH
-$argv.each_index do |i|
-  remove_indices = []
-  if $argv[i] == '-I' || $argv[i] == '--include'
-    # remove from further processing
-    remove_indices << i 
-    remove_indices << i+1
-    
-    dir = $argv[i + 1]
-    
-    if dir.nil? 
-      safe_puts "#{$argv[i]} requires second argument DIR"
-      return 0
-    elsif !File.exists?(dir) || !File.directory?(dir)
-      $logger.warn "'#{dir}' passed to #{$argv[i]} is not a directory"
-    end
-    $LOAD_PATH << dir
-  end
-  
-  remove_indices.reverse_each {|i| $argv.delete_at(i)}
-end
-
-# Operate on the gem_path option to set the gem search path
-if $argv.include? '--gem_path'
-  $logger.info 'Setting gem path'
-  option_index = $argv.index '--gem_path'
-  path_index = option_index + 1
-  new_home = $argv[path_index]
-  $argv.slice! path_index
-  $argv.slice! $argv.index '--gem_path'
-  current_home = ENV['OPENSTUDIO_GEM_PATH']
-  $logger.warn "Overwriting previous OPENSTUDIO_GEM_PATH of #{current_home} to #{new_home} for this command" if current_home
-  $logger.info "No current gem path set in OPENSTUDIO_GEM_PATH, setting to #{new_home}" unless current_home
-  ENV['OPENSTUDIO_GEM_PATH'] = new_home
-end
 
 ### Configure Gems to load the correct Gem files
 ### @see http://rubygems.rubyforge.org/rubygems-update/Gem.html
