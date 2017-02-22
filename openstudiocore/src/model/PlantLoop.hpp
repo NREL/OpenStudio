@@ -39,6 +39,7 @@ class SizingPlant;
 class PlantEquipmentOperationScheme;
 class PlantEquipmentOperationHeatingLoad;
 class PlantEquipmentOperationCoolingLoad;
+class Schedule;
 
 /** PlantLoop is an interface to the EnergyPlus IDD object
  *  named "PlantLoop"
@@ -147,17 +148,48 @@ class MODEL_API PlantLoop : public Loop {
 
   void resetPlantEquipmentOperationHeatingLoad();
 
+  /** Set the hours of operation for which the PlantEquipmentOperationHeatingLoad, if any, applies. **/
+  bool setPlantEquipmentOperationHeatingLoadSchedule(Schedule &);
+
+  void resetPlantEquipmentOperationHeatingLoadSchedule();
+
+  boost::optional<Schedule> plantEquipmentOperationHeatingLoadSchedule() const;
+
   boost::optional<PlantEquipmentOperationCoolingLoad> plantEquipmentOperationCoolingLoad() const;
 
   bool setPlantEquipmentOperationCoolingLoad(const PlantEquipmentOperationCoolingLoad& plantOperation);
 
   void resetPlantEquipmentOperationCoolingLoad();
 
+  /** Set the hours of operation for which the PlantEquipmentOperationCoolingLoad, if any, applies. **/
+  bool setPlantEquipmentOperationCoolingLoadSchedule(Schedule &);
+
+  boost::optional<Schedule> plantEquipmentOperationCoolingLoadSchedule() const;
+
+  void resetPlantEquipmentOperationCoolingLoadSchedule();
+
   boost::optional<PlantEquipmentOperationScheme> primaryPlantEquipmentOperationScheme() const;
 
   bool setPrimaryPlantEquipmentOperationScheme(const PlantEquipmentOperationScheme& plantOperation);
 
   void resetPrimaryPlantEquipmentOperationScheme();
+
+  /** Set the hours of operation for which the PrimaryPlantEquipmentOperationScheme, if any, applies. **/
+  bool setPrimaryPlantEquipmentOperationSchemeSchedule(Schedule &);
+
+  void resetPrimaryPlantEquipmentOperationSchemeSchedule();
+
+  boost::optional<Schedule> primaryPlantEquipmentOperationSchemeSchedule() const;
+
+  /** Set the hours of operation for which the ComponentSetpointOperationScheme, if any, applies. 
+   *  The existance of ComponentSetpointOperationSchemes is controlled by the existance of 
+   *  setpoint managers on the plant component outlet nodes.
+  **/
+  bool setComponentSetpointOperationSchemeSchedule(Schedule &);
+
+  void resetComponentSetpointOperationSchemeSchedule();
+
+  boost::optional<Schedule> componentSetpointOperationSchemeSchedule() const;
 
   Node supplyInletNode() const override;
 

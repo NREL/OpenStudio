@@ -507,7 +507,11 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantEquipmentOperationSc
       IdfExtensibleGroup eg = operationSchemes.pushExtensibleGroup();
       eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType,setpointOperation.iddObject().name());
       eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName,setpointOperation.name().get());
-      eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName,_alwaysOn->name().get());
+      if( const auto & schedule = plantLoop.componentSetpointOperationSchemeSchedule() ) {
+        eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName,schedule->nameString());
+      } else {
+        eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName,_alwaysOn->name().get());
+      }
 
       for( auto setpointComponent : t_setpointComponents )
       {
@@ -555,7 +559,11 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantEquipmentOperationSc
     auto eg = operationSchemes.pushExtensibleGroup();
     eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType,_scheme->iddObject().name());
     eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName,_scheme->name().get());
-    eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName,_alwaysOn->name().get());
+    if( const auto & schedule = plantLoop.plantEquipmentOperationCoolingLoadSchedule() ) {
+      eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName,schedule->nameString());
+    } else {
+      eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName,_alwaysOn->name().get());
+    }
 
     applyDefault = false;
   } 
@@ -566,7 +574,11 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantEquipmentOperationSc
     auto eg = operationSchemes.pushExtensibleGroup();
     eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType,_scheme->iddObject().name());
     eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName,_scheme->name().get());
-    eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName,_alwaysOn->name().get());
+    if( const auto & schedule = plantLoop.plantEquipmentOperationHeatingLoadSchedule() ) {
+      eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName,schedule->nameString());
+    } else {
+      eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName,_alwaysOn->name().get());
+    }
 
     applyDefault = false;
   }
@@ -577,7 +589,11 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantEquipmentOperationSc
     auto eg = operationSchemes.pushExtensibleGroup();
     eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType,_scheme->iddObject().name());
     eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName,_scheme->name().get());
-    eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName,_alwaysOn->name().get());
+    if( const auto & schedule = plantLoop.primaryPlantEquipmentOperationSchemeSchedule() ) {
+      eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName,schedule->nameString());
+    } else {
+      eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName,_alwaysOn->name().get());
+    }
 
     createSetpointOperationScheme(plantLoop);
     applyDefault = false;

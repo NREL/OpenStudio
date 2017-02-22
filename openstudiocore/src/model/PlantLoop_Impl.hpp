@@ -118,6 +118,30 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
 
   void resetPrimaryPlantEquipmentOperationScheme();
 
+  bool setPlantEquipmentOperationHeatingLoadSchedule(Schedule &);
+
+  void resetPlantEquipmentOperationHeatingLoadSchedule();
+
+  boost::optional<Schedule> plantEquipmentOperationHeatingLoadSchedule() const;
+
+  bool setPlantEquipmentOperationCoolingLoadSchedule(Schedule &);
+
+  boost::optional<Schedule> plantEquipmentOperationCoolingLoadSchedule() const;
+
+  void resetPlantEquipmentOperationCoolingLoadSchedule();
+
+  bool setPrimaryPlantEquipmentOperationSchemeSchedule(Schedule &);
+
+  void resetPrimaryPlantEquipmentOperationSchemeSchedule();
+
+  boost::optional<Schedule> primaryPlantEquipmentOperationSchemeSchedule() const;
+
+  bool setComponentSetpointOperationSchemeSchedule(Schedule &);
+
+  boost::optional<Schedule> componentSetpointOperationSchemeSchedule() const;
+
+  void resetComponentSetpointOperationSchemeSchedule();
+
   virtual std::vector<openstudio::IdfObject> remove() override;
 
   virtual ModelObject clone(Model model) const override;

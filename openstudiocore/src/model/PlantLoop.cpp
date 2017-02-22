@@ -48,6 +48,9 @@
 #include "PlantEquipmentOperationHeatingLoad_Impl.hpp"
 #include "PlantEquipmentOperationCoolingLoad.hpp"
 #include "PlantEquipmentOperationCoolingLoad_Impl.hpp"
+#include "ScheduleTypeRegistry.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
 #include "../utilities/core/Assert.hpp"
 #include <utilities/idd/OS_PlantLoop_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -719,6 +722,70 @@ void PlantLoop_Impl::resetCommonPipeSimulation()
     OS_ASSERT(result);
   }
 
+  bool PlantLoop_Impl::setPlantEquipmentOperationHeatingLoadSchedule(Schedule & schedule) {
+    bool result = setSchedule(OS_PlantLoopFields::PlantEquipmentOperationHeatingLoadSchedule,
+                              "PlantLoop",
+                              "Plant Equipment Operation Heating Load Schedule",
+                              schedule);
+    return result;
+  }
+  
+  void PlantLoop_Impl::resetPlantEquipmentOperationHeatingLoadSchedule() {
+    setString(OS_PlantLoopFields::PlantEquipmentOperationHeatingLoadSchedule, "");
+  }
+  
+  boost::optional<Schedule> PlantLoop_Impl::plantEquipmentOperationHeatingLoadSchedule() const {
+    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_PlantLoopFields::PlantEquipmentOperationHeatingLoadSchedule);
+  }
+  
+  bool PlantLoop_Impl::setPlantEquipmentOperationCoolingLoadSchedule(Schedule & schedule) {
+    bool result = setSchedule(OS_PlantLoopFields::PlantEquipmentOperationCoolingLoadSchedule,
+                              "PlantLoop",
+                              "Plant Equipment Operation Cooling Load Schedule",
+                              schedule);
+    return result;
+  }
+  
+  boost::optional<Schedule> PlantLoop_Impl::plantEquipmentOperationCoolingLoadSchedule() const {
+    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_PlantLoopFields::PlantEquipmentOperationCoolingLoadSchedule);
+  }
+  
+  void PlantLoop_Impl::resetPlantEquipmentOperationCoolingLoadSchedule() {
+    setString(OS_PlantLoopFields::PlantEquipmentOperationCoolingLoadSchedule, "");
+  }
+  
+  bool PlantLoop_Impl::setPrimaryPlantEquipmentOperationSchemeSchedule(Schedule & schedule) {
+    bool result = setSchedule(OS_PlantLoopFields::PrimaryPlantEquipmentOperationSchemeSchedule,
+                              "PlantLoop",
+                              "Primary Plant Equipment Operation Scheme Schedule",
+                              schedule);
+    return result;
+  }
+  
+  void PlantLoop_Impl::resetPrimaryPlantEquipmentOperationSchemeSchedule() {
+    setString(OS_PlantLoopFields::PlantEquipmentOperationCoolingLoadSchedule, "");
+  }
+  
+  boost::optional<Schedule> PlantLoop_Impl::primaryPlantEquipmentOperationSchemeSchedule() const {
+    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_PlantLoopFields::PrimaryPlantEquipmentOperationSchemeSchedule);
+  }
+  
+  bool PlantLoop_Impl::setComponentSetpointOperationSchemeSchedule(Schedule & schedule) {
+    bool result = setSchedule(OS_PlantLoopFields::ComponentSetpointOperationSchemeSchedule,
+                              "PlantLoop",
+                              "Component Setpoint Operation Scheme Schedule",
+                              schedule);
+    return result;
+  }
+  
+  boost::optional<Schedule> PlantLoop_Impl::componentSetpointOperationSchemeSchedule() const {
+    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_PlantLoopFields::ComponentSetpointOperationSchemeSchedule);
+  }
+  
+  void PlantLoop_Impl::resetComponentSetpointOperationSchemeSchedule() {
+    setString(OS_PlantLoopFields::ComponentSetpointOperationSchemeSchedule, "");
+  }
+
 } // detail
 
 PlantLoop::PlantLoop(Model& model)
@@ -1071,6 +1138,54 @@ bool PlantLoop::setLoadDistributionScheme(std::string scheme)
 std::vector<std::string> PlantLoop::loadDistributionSchemeValues() {
   return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
                         OS_PlantLoopFields::LoadDistributionScheme);
+}
+
+bool PlantLoop::setPlantEquipmentOperationHeatingLoadSchedule(Schedule & schedule) {
+  return getImpl<detail::PlantLoop_Impl>()->setPlantEquipmentOperationHeatingLoadSchedule(schedule);
+}
+
+void PlantLoop::resetPlantEquipmentOperationHeatingLoadSchedule() {
+  getImpl<detail::PlantLoop_Impl>()->resetPlantEquipmentOperationHeatingLoadSchedule();
+}
+
+boost::optional<Schedule> PlantLoop::plantEquipmentOperationHeatingLoadSchedule() const {
+  return getImpl<detail::PlantLoop_Impl>()->plantEquipmentOperationHeatingLoadSchedule();
+}
+
+bool PlantLoop::setPlantEquipmentOperationCoolingLoadSchedule(Schedule & schedule) {
+  return getImpl<detail::PlantLoop_Impl>()->setPlantEquipmentOperationCoolingLoadSchedule(schedule);
+}
+
+boost::optional<Schedule> PlantLoop::plantEquipmentOperationCoolingLoadSchedule() const {
+  return getImpl<detail::PlantLoop_Impl>()->plantEquipmentOperationCoolingLoadSchedule();
+}
+
+void PlantLoop::resetPlantEquipmentOperationCoolingLoadSchedule() {
+  getImpl<detail::PlantLoop_Impl>()->resetPlantEquipmentOperationCoolingLoadSchedule();
+}
+
+bool PlantLoop::setPrimaryPlantEquipmentOperationSchemeSchedule(Schedule & schedule) {
+  return getImpl<detail::PlantLoop_Impl>()->setPrimaryPlantEquipmentOperationSchemeSchedule(schedule);
+}
+
+void PlantLoop::resetPrimaryPlantEquipmentOperationSchemeSchedule() {
+  getImpl<detail::PlantLoop_Impl>()->resetPrimaryPlantEquipmentOperationSchemeSchedule();
+}
+
+boost::optional<Schedule> PlantLoop::primaryPlantEquipmentOperationSchemeSchedule() const {
+  return getImpl<detail::PlantLoop_Impl>()->primaryPlantEquipmentOperationSchemeSchedule();
+}
+
+bool PlantLoop::setComponentSetpointOperationSchemeSchedule(Schedule & schedule) {
+  return getImpl<detail::PlantLoop_Impl>()->setComponentSetpointOperationSchemeSchedule(schedule);
+}
+
+boost::optional<Schedule> PlantLoop::componentSetpointOperationSchemeSchedule() const {
+  return getImpl<detail::PlantLoop_Impl>()->componentSetpointOperationSchemeSchedule();
+}
+
+void PlantLoop::resetComponentSetpointOperationSchemeSchedule() {
+  getImpl<detail::PlantLoop_Impl>()->resetComponentSetpointOperationSchemeSchedule();
 }
 
 } // model
