@@ -46,6 +46,7 @@ Run `developer/ruby/UpdateHVACLibrary.rb` (ruby -I E:\Git\OS1\build\OSCore-prefi
 
 Commit the updated files to develop.
 
+
 Updating EnergyPlus
 ===================
 
@@ -61,8 +62,22 @@ If a new version of EnergyPlus is to be incorporated into OpenStudio
 Note: use HashTab, or similar, to determine the MD5 hash value for each file referenced above.
 
 
-Builds
+Updating OpenStudio Server used by PAT
+======================================
+
+If there is a new server build, bump the server SHA (both for Mac and Windows) in manifest.json in the root folder of PAT.
+
+
+Updating PAT
+==========================
+
+Bump the PAT SHA in OpenStudio's openstudiocore/pat/CMakeLists.txt.
+
+
+OpenStudio 2 Builds
 ======
+
+Note: If the desire is to build OpenStudio 1.x, refer to the earlier version of this document dated 12/9/2016.
 
 Ubuntu
 ------
@@ -70,16 +85,22 @@ With Git, pull `iteration` branch.
 
 In a command window:
 
-    cd openstudio
-    mkdir build
-	cd build
-	ccmake ..
+    cd openstudio/build
+	ccmake ../openstudiocore
 
 In CMake check the following:
 
+- BUILD\_OS\_APP
 - BUILD\_PACKAGE
-- BUILD\_SWIG
 - CMAKE\_BUILD\_TYPE = Release
+
+In CMake **uncheck** the following:
+
+- CPACK_BINARY_FOO (uncheck all)
+- CPACK_SOURCE_FOO (uncheck all)
+
+In CMake **check** the following:
+
 - CPACK\_BINARY\_DEB
 
 In CMake type the following:
@@ -89,7 +110,7 @@ In CMake type the following:
 
 In a command window:
 
-	make –j8 (8 indicates the number of cores used)
+	make –j16 (16 indicates the number of cores used, the max number allowed by VMware 12)
 	make package
 
 Copy .deb package from VM to Windows
@@ -100,41 +121,16 @@ With Git, pull `iteration` branch.
 
 In CMake, select current 64-bit compiler
 
+Point CMake to the openstudiocore folder for source, and build folder for binaries
+
 In CMake check the following:
 
 - BUILD\_CSHARP\_BINDINGS
+- BUILD\_DOCUMENTATION
+- BUILD\_OS\_APP
 - BUILD\_PACKAGE
-- BUILD\_SWIG
+- BUILD\_PAT
 - BUILD\_TESTING
-
-Press `Configure` and `Generate` in CMake
-
-In Visual Studio:
-
-- Open OpenStudio.sln
-- Select Release Solution Configuration
-- Build OpenStudio until "configuring done", and "generating done"
-- Cancel the build (tip: set up [Kill Build Shortcut](https://github.com/NREL/OpenStudio/wiki/Suggested-Visual-Studio-2013-Configuration#kill-build-shortcut))
-- Open OpenStudioCore.sln
-- Select Release Solution Configuration
-- Build OpenStudioCore with IncrediBuild
-- Open OpenStudio.sln
-- Build PACKAGE
-
-OpenStudio 2 Windows 64-bit
---------------
-With Git, pull `os_2_0_develop` branch.
-
-In CMake, select current 64-bit compiler
-
-In CMake check the following:
-
-- BUILD\_PACKAGE
-- BUILD\_SWIG
-
-Press `Configure` and `Generate` in CMake
-
-Check advanced, check grouped
 
 In CMake **uncheck** the following:
 
@@ -150,39 +146,8 @@ Press `Configure` and `Generate` in CMake
 In Visual Studio:
 
 - Open OpenStudio.sln
-- Select Release Solution Configuration
-- Build OpenStudio until "configuring done", and "generating done"
-- Cancel the build (tip: set up [Kill Build Shortcut](https://github.com/NREL/OpenStudio/wiki/Suggested-Visual-Studio-2013-Configuration#kill-build-shortcut))
-- Open OpenStudioCore.sln
-- Select Release Solution Configuration
-- Build OpenStudioCore with IncrediBuild
-- Open OpenStudio.sln
-- Build PACKAGE
-
-Windows 32-bit
---------------
-With Git, pull iteration branch.
-
-In CMake, select current 32-bit compiler
-
-In CMake check the following:
-
-- BUILD\_CSHARP\_BINDINGS
-- BUILD\_PACKAGE
-- BUILD\_SWIG
-
-Press `Configure` and `Generate` in CMake
-
-In Visual Studio:
-
-- Open OpenStudio.sln
-- Select Release Solution Configuration
-- Build OpenStudio until "configuring done", and "generating done"
-- Cancel the build
-- Open OpenStudioCore.sln
-- Select Release Solution Configuration
-- Build OpenStudioCore with IncrediBuild
-- Open OpenStudio.sln
+- Select **Release** Solution Configuration
+- Build ALL_BUILD with IncrediBuild
 - Build PACKAGE
 
 Mac
@@ -191,14 +156,19 @@ With Git, pull `iteration` branch.
 
 In a command window:
 
-	cd openstudio
-    mkdir build
-    cd build
-	ccmake ..
+	cd openstudio/build
+	ccmake ../openstudiocore
 
 In CMake check the following:
 
+- BUILD\_OS\_APP
 - BUILD\_PACKAGE
+- BUILD\_PAT
+
+In CMake **uncheck** the following:
+
+- CPACK_BINARY_FOO (uncheck all)
+- CPACK_SOURCE_FOO (uncheck all)
 
 In CMake type the following:
 
@@ -210,7 +180,7 @@ In CMake **uncheck** the following:
 
 In CMake **check** the following:
 
-- CPACK\_BINARY\_PACKAGEMAKER
+- CPACK\_BINARY\_IFW
 
 
 In CMake **enter** the following for CMAKE\_BUILD\_TYPE:
@@ -226,13 +196,16 @@ In CMake type the following:
 In a command window:
 
 ```bash
-make package –j8
+make package –j16
 # When done:
 ⌘ + q (to quit a Mac app)
 ```
 
+Locate the package, right click and use Mac's compression algorithm.
+
 Copy build to VM's share folder
 
+**Note:** The package will appear to be an empty folder in the build directory, when in fact the package is in OpenStudio/build/_CPack_Packages/Darwin/IFW and it's file name will have no file type extension.
 
 OSVersion Testing
 =================
@@ -253,12 +226,6 @@ Sanity Testing Release Builds
 
 ### Mac
 - On a clean Mac VM, install the current version of SketchUp and OpenStudio
-- Open SketchUp, and make and save a model.  Ensure that plug-in loads with Extensions Policy = "Identified Extensions Only".
-- Open OpenStudio, and open the model above
-- Open PAT, make a project, and select the model above as your baseline model
-
-### 32-bit Windows
-- On a clean Windows VM, install the current 32-bit version of SketchUp and the current 32-bit version of OpenStudio
 - Open SketchUp, and make and save a model.  Ensure that plug-in loads with Extensions Policy = "Identified Extensions Only".
 - Open OpenStudio, and open the model above
 - Open PAT, make a project, and select the model above as your baseline model
@@ -315,17 +282,9 @@ On [OpenStudio.net](https://www.openstudio.net/):
 
 Documentation
 =============
-In CMake check the following:
-
-- BUILD\_DOCUMENTATION
-
-Press `Configure` and `Generate` in CMake
 
 In Visual Studio:
 
-- Open OpenStudio.sln
-- Build OpenStudio until "configuring done", and "generating done"
-- Cancel the build
 - Open OpenStudioCore.sln
 - **Without** IncrediBuild, build ALL\_DOXYGEN
 - **Without** IncrediBuild, build ALL\_RDOC
