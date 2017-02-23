@@ -115,6 +115,8 @@
 #include "../model/SetpointManagerOutdoorAirReset_Impl.hpp"
 #include "../model/ThermalZone.hpp"
 #include "../model/ThermalZone_Impl.hpp"
+#include "../model/ThermalStorageChilledWaterStratified.hpp"
+#include "../model/ThermalStorageChilledWaterStratified_Impl.hpp"
 #include "../model/AirTerminalSingleDuctConstantVolumeCooledBeam.hpp"
 #include "../model/AirTerminalSingleDuctUncontrolled.hpp"
 #include "../model/AirTerminalSingleDuctVAVReheat.hpp"
@@ -5470,6 +5472,19 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     }
   }
 
+  // ThrmlEngyStor
+  auto thrmlEngyStorElements = fluidSysElement.elementsByTagName("ThrmlEngyStor");
+  for(int i = 0; i < thrmlEngyStorElements.count(); i++) {
+    auto thrmlEngyStorElement = thrmlEngyStorElements.at(i).toElement();
+
+    if( auto mo = translateThrmlEngyStor(thrmlEngyStorElement,doc,model) ) {
+      auto tes = mo->cast<model::ThermalStorageChilledWaterStratified>();
+      plantLoop.addSupplyBranchForComponent(tes);
+      addBranchPump(tes.supplyInletModelObject(),thrmlEngyStorElement);
+      plantLoop.addDemandBranchForComponent(tes);
+    }
+  }
+
   // HtRej
   auto htRejElements = fluidSysElement.elementsByTagName("HtRej");
   for(int i = 0; i < htRejElements.count(); i++) {
@@ -6711,6 +6726,133 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHX(
   hx.setOperationMinimumTemperatureLimit(4.4);
 
   hx.setOperationMinimumTemperatureLimit(21.1);
+
+  return result;
+}
+boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateThrmlEngyStor(
+                                                  const QDomElement& tesElement, 
+                                                  const QDomDocument& doc,
+                                                  openstudio::model::Model& model )
+{
+  boost::optional<openstudio::model::ModelObject> result;
+
+  if( ! istringEqual(tesElement.tagName().toStdString(),"ThrmlEngyStor") ) {
+    return result;
+  }
+
+  double value;
+  std::string text;
+  bool ok;
+
+  auto name = tesElement.firstChildElement("Name").text().toStdString();
+
+  model::ThermalStorageChilledWaterStratified tes(model);
+  result = tes;
+
+  value = tesElement.firstChildElement("TStorCap").text().toDouble(&ok);
+  if( ok ) {
+   value = unitToUnit(value,"gal","m^3").get();
+   tes.setTankVolume(value);
+  }
+
+  value = tesElement.firstChildElement("TankHgt").text().toDouble(&ok);
+  if( ok ) {
+   value = unitToUnit(value,"ft","m").get();
+   tes.setTankHeight(value);
+   tes.setSourceSideOutletHeight(value);
+  }
+
+  text = tesElement.firstChildElement("TankShape").text().toStdString();
+  if( istringEqual("Rectangular",text) ) {
+    tes.setTankShape("Other");
+    value = tesElement.firstChildElement("TankPerim").text().toDouble(&ok);
+    if( ok ) {
+      value = unitToUnit(value,"ft","m").get();
+      tes.setTankPerimeter(value);
+    }
+  } else {
+    tes.setTankShape(text);
+    tes.resetTankPerimeter();
+  }
+
+  value = tesElement.firstChildElement("SetptTemp").text().toDouble(&ok);
+  if( ok ) {
+   value = unitToUnit(value,"F","C").get();
+
+   model::ScheduleRuleset schedule(model);
+   schedule.setName(name + " Setpoint Schedule");
+   schedule.defaultDaySchedule().addValue(Time(1.0),value);
+
+   tes.setSetpointTemperatureSchedule(schedule);
+  }
+
+  tes.setDeadbandTemperatureDifference(0.5);
+  tes.setTemperatureSensorHeight(0.0);
+  tes.setMinimumTemperatureLimit(1.0);
+
+  value = tesElement.firstChildElement("CapRtd").text().toDouble(&ok);
+  if( ok ) {
+    value = unitToUnit(value,"Btu/h","W").get();
+    tes.setNominalCoolingCapacity(value);
+  }
+
+  text = tesElement.firstChildElement("StorLoc").text().toStdString();
+  if( istringEqual("Zone",text) ) {
+    tes.setAmbientTemperatureIndicator("Zone");
+    text = tesElement.firstChildElement("StorZnRef").text().toStdString();
+    if( auto tz = model.getModelObjectByName<model::ThermalZone>(text) ) {
+      tes.setAmbientTemperatureThermalZone(tz.get());
+    }
+  } else {
+    tes.setAmbientTemperatureIndicator("Outdoors");
+  }
+
+  tes.resetAmbientTemperatureSchedule();
+
+  value = tesElement.firstChildElement("TankUFactor").text().toDouble(&ok);
+  if( ok ) {
+    tes.setUniformSkinLossCoefficientperUnitAreatoAmbientTemperature(value * 0.5275);
+  }
+
+  tes.setUseSideHeatTransferEffectiveness(1.0);
+
+  text = tesElement.firstChildElement("DischargeSchRef").text().toStdString();
+  if( auto schedule = model.getModelObjectByName<model::Schedule>(text) ) {
+    tes.setUseSideAvailabilitySchedule(schedule.get());
+  }
+
+  value = tesElement.firstChildElement("TankHgt").text().toDouble(&ok);
+  if( ok ) {
+    value = unitToUnit(value,"ft","m").get();
+    tes.setUseSideInletHeight(value);
+  }
+
+  tes.setUseSideOutletHeight(0.0);
+
+  value = tesElement.firstChildElement("FlowRtDsgn").text().toDouble(&ok);
+  if( ok ) {
+    value = unitToUnit(value,"gal/min","m^3/s").get();
+    tes.setUseSideDesignFlowRate(value);
+  }
+
+  tes.setSourceSideHeatTransferEffectiveness(1.0);
+
+  text = tesElement.firstChildElement("ChargeSchRef").text().toStdString();
+  if( auto schedule = model.getModelObjectByName<model::Schedule>(text) ) {
+    tes.setSourceSideAvailabilitySchedule(schedule.get());
+  }
+
+  tes.setSourceSideInletHeight(0.0);
+
+  value = tesElement.firstChildElement("FlowRtDsgn").text().toDouble(&ok);
+  if( ok ) {
+    value = unitToUnit(value,"gal/min","m^3/s").get();
+    tes.setSourceSideDesignFlowRate(value);
+  }
+
+  tes.setInletMode("Fixed");
+  tes.setNumberofNodes(10);
+  tes.setAdditionalDestratificationConductivity(0.0);
 
   return result;
 }
