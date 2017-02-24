@@ -101,11 +101,11 @@ class MODEL_API GeneratorFuelCellAirSupply : public ModelObject {
 
   std::string airSupplyRateCalculationMode() const;
 
-  double stoichiometricRatio() const;
+  boost::optional<double> stoichiometricRatio() const;
 
   boost::optional<CurveQuadratic> airRateFunctionofElectricPowerCurve() const;
 
-  double airRateAirTemperatureCoefficient() const;
+  boost::optional<double> airRateAirTemperatureCoefficient() const;
 
   boost::optional<CurveQuadratic> airRateFunctionofFuelRateCurve() const;
 
@@ -113,7 +113,7 @@ class MODEL_API GeneratorFuelCellAirSupply : public ModelObject {
 
   std::string airSupplyConstituentMode() const;
 
-  double numberofUserDefinedConstituents() const;
+  boost::optional<unsigned int> numberofUserDefinedConstituents() const;
 
   //@}
   /** @name Setters */
@@ -153,7 +153,7 @@ class MODEL_API GeneratorFuelCellAirSupply : public ModelObject {
 
   bool setAirSupplyConstituentMode(const std::string& airSupplyConstituentMode);
 
-  bool setNumberofUserDefinedConstituents(double numberofUserDefinedConstituents);
+  bool setNumberofUserDefinedConstituents(unsigned int numberofUserDefinedConstituents);
 
   void resetNumberofUserDefinedConstituents();
 

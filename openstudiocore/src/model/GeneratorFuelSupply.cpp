@@ -144,45 +144,35 @@ namespace detail {
     return value.get();
   }
 
-  double GeneratorFuelSupply_Impl::liquidGenericFuelLowerHeatingValue() const {
+  boost::optional<double> GeneratorFuelSupply_Impl::liquidGenericFuelLowerHeatingValue() const {
     boost::optional<double> value = getDouble(OS_Generator_FuelSupplyFields::LiquidGenericFuelLowerHeatingValue, true);
-    if (!value) {
-      LOG_AND_THROW(" does not have liquidGenericFuelLowerHeatingValue");
-    }
-    return value.get();
+    return value;
   }
 
-  double GeneratorFuelSupply_Impl::liquidGenericFuelHigherHeatingValue() const {
+  boost::optional<double> GeneratorFuelSupply_Impl::liquidGenericFuelHigherHeatingValue() const {
     boost::optional<double> value = getDouble(OS_Generator_FuelSupplyFields::LiquidGenericFuelHigherHeatingValue, true);
-    if (!value) {
-      LOG_AND_THROW(" does not have liquidGenericFuelHigherHeatingValue");
-    }
-    return value.get();
+    return value;
   }
 
-  double GeneratorFuelSupply_Impl::liquidGenericFuelMolecularWeight() const {
+  boost::optional<double> GeneratorFuelSupply_Impl::liquidGenericFuelMolecularWeight() const {
     boost::optional<double> value = getDouble(OS_Generator_FuelSupplyFields::LiquidGenericFuelMolecularWeight, true);
-    if (!value) {
-      LOG_AND_THROW(" does not have liquidGenericFuelMolecularWeight");
-    }
-    return value.get();
+    return value;
   }
 
-  double GeneratorFuelSupply_Impl::liquidGenericFuelCO2EmissionFactor() const {
+  boost::optional<double> GeneratorFuelSupply_Impl::liquidGenericFuelCO2EmissionFactor() const {
     boost::optional<double> value = getDouble(OS_Generator_FuelSupplyFields::LiquidGenericFuelCO2EmissionFactor, true);
-    if (!value) {
-      LOG_AND_THROW(" does not have liquidGenericFuelCO2EmissionFactor");
-    }
-    return value.get();
+    return value;
   }
 
-  double GeneratorFuelSupply_Impl::numberofConstituentsinGaseousConstituentFuelSupply() const {
-    boost::optional<double> value = getDouble(OS_Generator_FuelSupplyFields::NumberofConstituentsinGaseousConstituentFuelSupply, true);
-    if (!value) {
-      LOG(Info, " does not have numberofConstituentsinGaseousConstituentFuelSupply");
-      return 0;
+  boost::optional<unsigned int> GeneratorFuelSupply_Impl::numberofConstituentsinGaseousConstituentFuelSupply() const {
+    boost::optional<unsigned int> value;
+    boost::optional<int> temp = getInt(OS_Generator_FuelSupplyFields::NumberofConstituentsinGaseousConstituentFuelSupply, true);
+    if (temp) {
+      if (temp >= 0) {
+        value = temp;
+      }
     }
-    return value.get();
+    return value;
   }
 
   bool GeneratorFuelSupply_Impl::setFuelTemperatureModelingMode(const std::string& fuelTemperatureModelingMode) {
@@ -253,7 +243,7 @@ namespace detail {
   }
 
   void GeneratorFuelSupply_Impl::resetLiquidGenericFuelLowerHeatingValue() {
-    bool result = setDouble(OS_Generator_FuelSupplyFields::LiquidGenericFuelLowerHeatingValue, 0);
+    bool result = setString(OS_Generator_FuelSupplyFields::LiquidGenericFuelLowerHeatingValue, "");
     OS_ASSERT(result);
   }
 
@@ -263,7 +253,7 @@ namespace detail {
   }
 
   void GeneratorFuelSupply_Impl::resetLiquidGenericFuelHigherHeatingValue() {
-    bool result = setDouble(OS_Generator_FuelSupplyFields::LiquidGenericFuelHigherHeatingValue, 0);
+    bool result = setString(OS_Generator_FuelSupplyFields::LiquidGenericFuelHigherHeatingValue, "");
     OS_ASSERT(result);
   }
 
@@ -273,7 +263,7 @@ namespace detail {
   }
 
   void GeneratorFuelSupply_Impl::resetLiquidGenericFuelMolecularWeight() {
-    bool result = setDouble(OS_Generator_FuelSupplyFields::LiquidGenericFuelMolecularWeight, 0);
+    bool result = setString(OS_Generator_FuelSupplyFields::LiquidGenericFuelMolecularWeight, "");
     OS_ASSERT(result);
   }
 
@@ -283,17 +273,17 @@ namespace detail {
   }
 
   void GeneratorFuelSupply_Impl::resetLiquidGenericFuelCO2EmissionFactor() {
-    bool result = setDouble(OS_Generator_FuelSupplyFields::LiquidGenericFuelCO2EmissionFactor, 0);
+    bool result = setString(OS_Generator_FuelSupplyFields::LiquidGenericFuelCO2EmissionFactor, "");
     OS_ASSERT(result);
   }
 
-  bool GeneratorFuelSupply_Impl::setNumberofConstituentsinGaseousConstituentFuelSupply(double numberofConstituentsinGaseousConstituentFuelSupply) {
-    bool result = setDouble(OS_Generator_FuelSupplyFields::NumberofConstituentsinGaseousConstituentFuelSupply, numberofConstituentsinGaseousConstituentFuelSupply);
+  bool GeneratorFuelSupply_Impl::setNumberofConstituentsinGaseousConstituentFuelSupply(unsigned int numberofConstituentsinGaseousConstituentFuelSupply) {
+    bool result = setInt(OS_Generator_FuelSupplyFields::NumberofConstituentsinGaseousConstituentFuelSupply, numberofConstituentsinGaseousConstituentFuelSupply);
     return result;
   }
 
   void GeneratorFuelSupply_Impl::resetNumberofConstituentsinGaseousConstituentFuelSupply() {
-    bool result = setDouble(OS_Generator_FuelSupplyFields::NumberofConstituentsinGaseousConstituentFuelSupply, 0);
+    bool result = setInt(OS_Generator_FuelSupplyFields::NumberofConstituentsinGaseousConstituentFuelSupply, 0);
     OS_ASSERT(result);
   }
 
@@ -301,7 +291,12 @@ namespace detail {
     WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
     bool temp = false;
     bool ok = false;
-    double num = numberofConstituentsinGaseousConstituentFuelSupply();
+    unsigned int num;
+    if (numberofConstituentsinGaseousConstituentFuelSupply()) {
+      num = numberofConstituentsinGaseousConstituentFuelSupply().get();
+    } else {
+      num = 0;
+    }
     //max number of constituents is 12
     if (num < 12) {
       temp = eg.setString(OS_Generator_FuelSupplyExtensibleFields::ConstituentName, name);
@@ -315,15 +310,19 @@ namespace detail {
       }
     }
     return temp;
-
   }
 
   void GeneratorFuelSupply_Impl::removeConstituent(unsigned groupIndex) {
     unsigned numberofDataPairs = numExtensibleGroups();
     if (groupIndex < numberofDataPairs) {
+      unsigned int num;
       getObject<ModelObject>().eraseExtensibleGroup(groupIndex);
-      double num = numberofConstituentsinGaseousConstituentFuelSupply();
-      setNumberofConstituentsinGaseousConstituentFuelSupply(num - 1);
+      if (numberofConstituentsinGaseousConstituentFuelSupply()) {
+        num = numberofConstituentsinGaseousConstituentFuelSupply().get();
+        setNumberofConstituentsinGaseousConstituentFuelSupply(num - 1);
+      } else {
+        setNumberofConstituentsinGaseousConstituentFuelSupply(numExtensibleGroups());
+      }
     }
   }
 
@@ -460,23 +459,23 @@ std::string GeneratorFuelSupply::fuelType() const {
   return getImpl<detail::GeneratorFuelSupply_Impl>()->fuelType();
 }
 
-double GeneratorFuelSupply::liquidGenericFuelLowerHeatingValue() const {
+boost::optional<double> GeneratorFuelSupply::liquidGenericFuelLowerHeatingValue() const {
   return getImpl<detail::GeneratorFuelSupply_Impl>()->liquidGenericFuelLowerHeatingValue();
 }
 
-double GeneratorFuelSupply::liquidGenericFuelHigherHeatingValue() const {
+boost::optional<double> GeneratorFuelSupply::liquidGenericFuelHigherHeatingValue() const {
   return getImpl<detail::GeneratorFuelSupply_Impl>()->liquidGenericFuelHigherHeatingValue();
 }
 
-double GeneratorFuelSupply::liquidGenericFuelMolecularWeight() const {
+boost::optional<double> GeneratorFuelSupply::liquidGenericFuelMolecularWeight() const {
   return getImpl<detail::GeneratorFuelSupply_Impl>()->liquidGenericFuelMolecularWeight();
 }
 
-double GeneratorFuelSupply::liquidGenericFuelCO2EmissionFactor() const {
+boost::optional<double> GeneratorFuelSupply::liquidGenericFuelCO2EmissionFactor() const {
   return getImpl<detail::GeneratorFuelSupply_Impl>()->liquidGenericFuelCO2EmissionFactor();
 }
 
-double GeneratorFuelSupply::numberofConstituentsinGaseousConstituentFuelSupply() const {
+boost::optional<unsigned int> GeneratorFuelSupply::numberofConstituentsinGaseousConstituentFuelSupply() const {
   return getImpl<detail::GeneratorFuelSupply_Impl>()->numberofConstituentsinGaseousConstituentFuelSupply();
 }
 
@@ -556,7 +555,7 @@ void GeneratorFuelSupply::resetLiquidGenericFuelCO2EmissionFactor() {
   getImpl<detail::GeneratorFuelSupply_Impl>()->resetLiquidGenericFuelCO2EmissionFactor();
 }
 
-bool GeneratorFuelSupply::setNumberofConstituentsinGaseousConstituentFuelSupply(double numberofConstituentsinGaseousConstituentFuelSupply) {
+bool GeneratorFuelSupply::setNumberofConstituentsinGaseousConstituentFuelSupply(unsigned int numberofConstituentsinGaseousConstituentFuelSupply) {
   return getImpl<detail::GeneratorFuelSupply_Impl>()->setNumberofConstituentsinGaseousConstituentFuelSupply(numberofConstituentsinGaseousConstituentFuelSupply);
 }
 

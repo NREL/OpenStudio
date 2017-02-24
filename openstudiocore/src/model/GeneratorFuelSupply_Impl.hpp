@@ -97,15 +97,15 @@ namespace detail {
 
     std::string fuelType() const;
 
-    double liquidGenericFuelLowerHeatingValue() const;
+    boost::optional<double> liquidGenericFuelLowerHeatingValue() const;
 
-    double liquidGenericFuelHigherHeatingValue() const;
+    boost::optional<double> liquidGenericFuelHigherHeatingValue() const;
 
-    double liquidGenericFuelMolecularWeight() const;
+    boost::optional<double> liquidGenericFuelMolecularWeight() const;
 
-    double liquidGenericFuelCO2EmissionFactor() const;
+    boost::optional<double> liquidGenericFuelCO2EmissionFactor() const;
 
-    double numberofConstituentsinGaseousConstituentFuelSupply() const;
+    boost::optional<unsigned int> numberofConstituentsinGaseousConstituentFuelSupply() const;
 
     //@}
     /** @name Setters */
@@ -149,7 +149,7 @@ namespace detail {
 
     void resetLiquidGenericFuelCO2EmissionFactor();
 
-    bool setNumberofConstituentsinGaseousConstituentFuelSupply(double numberofConstituentsinGaseousConstituentFuelSupply);
+    bool setNumberofConstituentsinGaseousConstituentFuelSupply(unsigned int numberofConstituentsinGaseousConstituentFuelSupply);
 
     void resetNumberofConstituentsinGaseousConstituentFuelSupply();
 

@@ -107,24 +107,18 @@ namespace detail {
     return value.get();
   }
 
-  double GeneratorFuelCellAirSupply_Impl::stoichiometricRatio() const {
+  boost::optional<double> GeneratorFuelCellAirSupply_Impl::stoichiometricRatio() const {
     boost::optional<double> value = getDouble(OS_Generator_FuelCell_AirSupplyFields::StoichiometricRatio, true);
-    if (!value) {
-      LOG_AND_THROW(" does not have stoichiometricRatio.");
-    }
-    return value.get();
+    return value;
   }
 
   boost::optional<CurveQuadratic> GeneratorFuelCellAirSupply_Impl::airRateFunctionofElectricPowerCurve() const {
     return getObject<ModelObject>().getModelObjectTarget<CurveQuadratic>(OS_Generator_FuelCell_AirSupplyFields::AirRateFunctionofElectricPowerCurveName);
   }
 
-  double GeneratorFuelCellAirSupply_Impl::airRateAirTemperatureCoefficient() const {
+  boost::optional<double> GeneratorFuelCellAirSupply_Impl::airRateAirTemperatureCoefficient() const {
     boost::optional<double> value = getDouble(OS_Generator_FuelCell_AirSupplyFields::AirRateAirTemperatureCoefficient, true);
-    if (!value) {
-      LOG_AND_THROW(" does not have airRateAirTemperatureCoefficient.");
-    }
-    return value.get();
+    return value;
   }
 
   boost::optional<CurveQuadratic> GeneratorFuelCellAirSupply_Impl::airRateFunctionofFuelRateCurve() const {
@@ -143,12 +137,15 @@ namespace detail {
     return value.get();
   }
 
-  double GeneratorFuelCellAirSupply_Impl::numberofUserDefinedConstituents() const {
-    boost::optional<double> value = getDouble(OS_Generator_FuelCell_AirSupplyFields::NumberofUserDefinedConstituents, true);
-    if (!value) {
-      LOG_AND_THROW(" does not have numberofUserDefinedConstituents.");
+  boost::optional<unsigned int> GeneratorFuelCellAirSupply_Impl::numberofUserDefinedConstituents() const {
+    boost::optional<unsigned int> value;
+    boost::optional<int> temp = getInt(OS_Generator_FuelCell_AirSupplyFields::NumberofUserDefinedConstituents, true);
+    if (temp) {
+      if (temp >= 0) {
+        value = temp;
+      }
     }
-    return value.get();
+    return value;
   }
 
   bool GeneratorFuelCellAirSupply_Impl::setAirInletNode(const Node& connection) {
@@ -192,7 +189,7 @@ namespace detail {
   }
 
   void GeneratorFuelCellAirSupply_Impl::resetStoichiometricRatio() {
-    bool result = setDouble(OS_Generator_FuelCell_AirSupplyFields::StoichiometricRatio, 0);
+    bool result = setString(OS_Generator_FuelCell_AirSupplyFields::StoichiometricRatio, "");
     OS_ASSERT(result);
   }
 
@@ -236,13 +233,13 @@ namespace detail {
     return result;
   }
 
-  bool GeneratorFuelCellAirSupply_Impl::setNumberofUserDefinedConstituents(double numberofUserDefinedConstituents) {
-    bool result = setDouble(OS_Generator_FuelCell_AirSupplyFields::NumberofUserDefinedConstituents, numberofUserDefinedConstituents);
+  bool GeneratorFuelCellAirSupply_Impl::setNumberofUserDefinedConstituents(unsigned int numberofUserDefinedConstituents) {
+    bool result = setInt(OS_Generator_FuelCell_AirSupplyFields::NumberofUserDefinedConstituents, numberofUserDefinedConstituents);
     return result;
   }
 
   void GeneratorFuelCellAirSupply_Impl::resetNumberofUserDefinedConstituents() {
-    bool result = setDouble(OS_Generator_FuelCell_AirSupplyFields::NumberofUserDefinedConstituents, 0);
+    bool result = setInt(OS_Generator_FuelCell_AirSupplyFields::NumberofUserDefinedConstituents, 0);
     OS_ASSERT(result);
   }
 
@@ -250,7 +247,12 @@ namespace detail {
     WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
     bool temp = false;
     bool ok = false;
-    double num = numberofUserDefinedConstituents();
+    unsigned int num;
+    if (numberofUserDefinedConstituents()) {
+      num = numberofUserDefinedConstituents().get();
+    } else {
+      num = 0;
+    }
     //max number of constituents is 5
     if (num < 5) {
       temp = eg.setString(OS_Generator_FuelCell_AirSupplyExtensibleFields::ConstituentName, name);
@@ -267,9 +269,14 @@ namespace detail {
   void GeneratorFuelCellAirSupply_Impl::removeConstituent(unsigned groupIndex) {
     unsigned numberofDataPairs = numExtensibleGroups();
     if (groupIndex < numberofDataPairs) {
+      unsigned int num;
       getObject<ModelObject>().eraseExtensibleGroup(groupIndex);
-      double num = numberofUserDefinedConstituents();
-      setNumberofUserDefinedConstituents(num - 1);
+      if (numberofUserDefinedConstituents()) {
+        num = numberofUserDefinedConstituents().get();
+        setNumberofUserDefinedConstituents(num - 1);
+      } else {
+        setNumberofUserDefinedConstituents(numExtensibleGroups());
+      }
     }
   }
 
@@ -499,7 +506,7 @@ std::string GeneratorFuelCellAirSupply::airSupplyRateCalculationMode() const {
   return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->airSupplyRateCalculationMode();
 }
 
-double GeneratorFuelCellAirSupply::stoichiometricRatio() const {
+boost::optional<double> GeneratorFuelCellAirSupply::stoichiometricRatio() const {
   return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->stoichiometricRatio();
 }
 
@@ -507,7 +514,7 @@ boost::optional<CurveQuadratic> GeneratorFuelCellAirSupply::airRateFunctionofEle
   return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->airRateFunctionofElectricPowerCurve();
 }
 
-double GeneratorFuelCellAirSupply::airRateAirTemperatureCoefficient() const {
+boost::optional<double> GeneratorFuelCellAirSupply::airRateAirTemperatureCoefficient() const {
   return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->airRateAirTemperatureCoefficient();
 }
 
@@ -523,7 +530,7 @@ std::string GeneratorFuelCellAirSupply::airSupplyConstituentMode() const {
   return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->airSupplyConstituentMode();
 }
 
-double GeneratorFuelCellAirSupply::numberofUserDefinedConstituents() const {
+boost::optional<unsigned int> GeneratorFuelCellAirSupply::numberofUserDefinedConstituents() const {
   return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->numberofUserDefinedConstituents();
 }
 
@@ -595,7 +602,7 @@ bool GeneratorFuelCellAirSupply::setAirSupplyConstituentMode(const std::string& 
   return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->setAirSupplyConstituentMode(airSupplyConstituentMode);
 }
 
-bool GeneratorFuelCellAirSupply::setNumberofUserDefinedConstituents(double numberofUserDefinedConstituents) {
+bool GeneratorFuelCellAirSupply::setNumberofUserDefinedConstituents(unsigned int numberofUserDefinedConstituents) {
   return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->setNumberofUserDefinedConstituents(numberofUserDefinedConstituents);
 }
 

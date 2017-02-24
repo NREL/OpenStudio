@@ -58,40 +58,39 @@ TEST_F(ModelFixture, FuelCellAirSupply) {
   EXPECT_EQ(1.0e10, blowerCurve.get().maximumValueofx());
   EXPECT_EQ(1.0, airSupply.blowerHeatLossFactor());
   EXPECT_EQ("AirRatiobyStoics", airSupply.airSupplyRateCalculationMode());
-  EXPECT_EQ(1.0, airSupply.stoichiometricRatio());
-  EXPECT_EQ(0.00283, airSupply.airRateAirTemperatureCoefficient());
+  EXPECT_EQ(1.0, airSupply.stoichiometricRatio().get());
+  EXPECT_EQ(0.00283, airSupply.airRateAirTemperatureCoefficient().get());
   EXPECT_EQ("NoRecovery", airSupply.airIntakeHeatRecoveryMode());
   EXPECT_EQ("AmbientAir", airSupply.airSupplyConstituentMode());
-  EXPECT_EQ(0, airSupply.numberofUserDefinedConstituents());
   boost::optional<Node> airInletNode = airSupply.airInletNode();
   ASSERT_FALSE(airInletNode);
   boost::optional<CurveQuadratic> electricCurve = airSupply.airRateFunctionofElectricPowerCurve();
   ASSERT_FALSE(electricCurve);
   boost::optional<CurveQuadratic> fuelCurve = airSupply.airRateFunctionofFuelRateCurve();
   ASSERT_FALSE(fuelCurve);
-  EXPECT_EQ(0, airSupply.numberofUserDefinedConstituents());
+  EXPECT_EQ(0, airSupply.numberofUserDefinedConstituents().get());
   //should fail since name is wrong
   ASSERT_FALSE(airSupply.addConstituent("MadeUp", 0.0092));
-  EXPECT_EQ(0, airSupply.numberofUserDefinedConstituents());
+  EXPECT_EQ(0, airSupply.numberofUserDefinedConstituents().get());
   ASSERT_TRUE(airSupply.addConstituent("CarbonDioxide", 0.0003));
-  EXPECT_EQ(1, airSupply.numberofUserDefinedConstituents());
+  EXPECT_EQ(1, airSupply.numberofUserDefinedConstituents().get());
   ASSERT_TRUE(airSupply.addConstituent("Nitrogen", 0.7728));
-  EXPECT_EQ(2, airSupply.numberofUserDefinedConstituents());
+  EXPECT_EQ(2, airSupply.numberofUserDefinedConstituents().get());
   ASSERT_TRUE(airSupply.addConstituent("Oxygen", 0.2073));
-  EXPECT_EQ(3, airSupply.numberofUserDefinedConstituents());
+  EXPECT_EQ(3, airSupply.numberofUserDefinedConstituents().get());
   ASSERT_TRUE(airSupply.addConstituent("Water", 0.0104));
-  EXPECT_EQ(4, airSupply.numberofUserDefinedConstituents());
+  EXPECT_EQ(4, airSupply.numberofUserDefinedConstituents().get());
   ASSERT_TRUE(airSupply.addConstituent("Argon", 0.0092));
-  EXPECT_EQ(5, airSupply.numberofUserDefinedConstituents());
+  EXPECT_EQ(5, airSupply.numberofUserDefinedConstituents().get());
   //should fail since only 5 allowed
   ASSERT_FALSE(airSupply.addConstituent("Argon", 0.0092));
   airSupply.removeConstituent(3);
   ASSERT_TRUE(airSupply.addConstituent("Argon", 0.0092));
-  EXPECT_EQ(5, airSupply.numberofUserDefinedConstituents());
+  EXPECT_EQ(5, airSupply.numberofUserDefinedConstituents().get());
   airSupply.removeAllConstituents();
-  EXPECT_EQ(0, airSupply.numberofUserDefinedConstituents());
+  EXPECT_EQ(0, airSupply.numberofUserDefinedConstituents().get());
   airSupply.removeConstituent(0);
-  EXPECT_EQ(0, airSupply.numberofUserDefinedConstituents());
+  EXPECT_EQ(0, airSupply.numberofUserDefinedConstituents().get());
 }
 
 TEST_F(ModelFixture, FuelCellAirSupply2) {
