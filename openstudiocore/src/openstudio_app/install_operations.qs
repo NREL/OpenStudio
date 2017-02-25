@@ -9,11 +9,17 @@ function Component()
 
     var kernel = systemInfo.kernelType;
     if( kernel == "darwin" ) {
-      var epPath = installer.value("TargetDir") + "/EnergyPlus";
       var appPath = installer.value("TargetDir") + "/OpenStudioApp.app/Contents/";
+
+      var epPath = installer.value("TargetDir") + "/EnergyPlus";
       var mkPath = appPath + "EnergyPLus";
       component.addElevatedOperation("Mkdir", mkPath);
       component.addElevatedOperation("CopyDirectory", epPath, appPath);
+
+      var radPath = installer.value("TargetDir") + "/Radiance";
+      var mkRadPath = appPath + "Radiance";
+      component.addElevatedOperation("Mkdir", mkRadPath);
+      component.addElevatedOperation("CopyDirectory", radPath, appPath);
     }
 
     if( kernel == "winnt" ) {

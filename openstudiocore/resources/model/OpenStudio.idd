@@ -21245,6 +21245,7 @@ OS:ZoneVentilation:DesignFlowRate,
        \note pressure rise across the fan
        \type real
        \units Pa
+       \ip-units inH2O
        \minimum 0
        \required-field
   N6 , \field Fan Total Efficiency

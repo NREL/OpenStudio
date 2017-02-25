@@ -12,6 +12,11 @@ if RUBY_VERSION != expected_ruby_version
   raise "Incorrect Ruby version ${RUBY_VERSION} used, expecting #{expected_ruby_version}"
 end
 
+ruby_gem_dir = Gem.default_dir.split('/').last
+if ruby_gem_dir.nil?
+  fail "Cannot determine default gem dir"
+end
+
 if /win/.match(RUBY_PLATFORM) || /mingw/.match(RUBY_PLATFORM)
   ENV['PATH'] = "#{ENV['PATH']};C:\\Program Files\\Git\\cmd"
 end
@@ -27,20 +32,35 @@ if !File.exists?(bundle_exe)
   raise "Required bundle executable not found"
 end
 
+bundle_version = nil
+File.open('Gemfile', 'r') do |f|
+  while line = f.gets
+    if md = /gem 'bundler',(.*)/.match(line)
+      bundle_version = md[1].strip
+    end
+  end
+end
+if bundle_version.nil?
+  raise "Cannot determine bundle version"
+end
+
 system("#{bundle_exe} install --without=test --path='#{install_dir}'")
 
-FileUtils.rm_rf("#{install_dir}/ruby/2.2.0/cache")
+puts "Installing bundler #{bundle_version}"
+system("gem install bundler --version #{bundle_version} --install-dir='#{install_dir}/ruby/#{ruby_gem_dir}'")
+
+FileUtils.rm_rf("#{install_dir}/ruby/#{ruby_gem_dir}/cache")
 
 standards_gem_dir = nil
 workflow_gem_dir = nil
-Dir.glob("#{install_dir}/ruby/2.2.0/bundler/gems/*").each do |f|
+Dir.glob("#{install_dir}/ruby/#{ruby_gem_dir}/bundler/gems/*").each do |f|
   if /openstudio-standards/i.match(f)
     standards_gem_dir = f
   elsif /openstudio-workflow/i.match(f)
     workflow_gem_dir = f
   end
 end
-Dir.glob("#{install_dir}/ruby/2.2.0/gems/*").each do |f|
+Dir.glob("#{install_dir}/ruby/#{ruby_gem_dir}/gems/*").each do |f|
   if /openstudio-standards/i.match(f)
     standards_gem_dir = f
   elsif /openstudio-workflow/i.match(f)

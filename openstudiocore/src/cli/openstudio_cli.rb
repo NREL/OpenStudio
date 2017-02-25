@@ -53,8 +53,55 @@ $logger.level = Logger::WARN
 #OpenStudio::Logger.instance.standardOutLogger.setLogLevel(OpenStudio::Warn)
 OpenStudio::Logger.instance.standardOutLogger.setLogLevel(OpenStudio::Error)
 
+# Set the logger level to DEBUG if the arguments include --verbose
+$argv = ARGV.dup
+if $argv.include? '--verbose'
+  $logger.level = Logger::DEBUG
+  OpenStudio::Logger.instance.standardOutLogger.setLogLevel(OpenStudio::Debug)
+  $argv.delete '--verbose'
+  $logger.debug 'Set Logger log level to DEBUG'
+end
+$logger.debug "Input ARGV is #{$argv}"
+
+# Operate on the include option to add to $LOAD_PATH
+$argv.each_index do |i|
+  remove_indices = []
+  if $argv[i] == '-I' || $argv[i] == '--include'
+    # remove from further processing
+    remove_indices << i 
+    remove_indices << i+1
+    
+    dir = $argv[i + 1]
+    
+    if dir.nil? 
+      safe_puts "#{$argv[i]} requires second argument DIR"
+      return 0
+    elsif !File.exists?(dir) || !File.directory?(dir)
+      $logger.warn "'#{dir}' passed to #{$argv[i]} is not a directory"
+    end
+    $LOAD_PATH << dir
+  end
+  
+  remove_indices.reverse_each {|i| $argv.delete_at(i)}
+end
+
+# Operate on the gem_path option to set the gem search path
+if $argv.include? '--gem_path'
+  $logger.info 'Setting gem path'
+  option_index = $argv.index '--gem_path'
+  path_index = option_index + 1
+  new_home = $argv[path_index]
+  $argv.slice! path_index
+  $argv.slice! $argv.index '--gem_path'
+  current_home = ENV['OPENSTUDIO_GEM_PATH']
+  $logger.warn "Overwriting previous OPENSTUDIO_GEM_PATH of #{current_home} to #{new_home} for this command" if current_home
+  $logger.info "No current gem path set in OPENSTUDIO_GEM_PATH, setting to #{new_home}" unless current_home
+  ENV['OPENSTUDIO_GEM_PATH'] = new_home
+end
+
 # load embedded ruby gems
 require 'rubygems'
+require 'rubygems/version'
 
 module Gem
 class Specification < BasicSpecification
@@ -143,18 +190,67 @@ end
 
 Gem.paths.path << ':/ruby/2.2.0/gems/'
 Gem.paths.path << ':/ruby/2.2.0/bundler/gems/'
-    
+
+# find all the embedded gems
 EmbeddedScripting::allFileNamesAsString().split(';').each do |f|
-  if md = /\.gemspec$/.match(f)
+  if md = /specifications\/.*\.gemspec$/.match(f)
     begin
       spec = EmbeddedScripting::getFileAsString(f)
       s = eval(spec)
       s.loaded_from = f
       Gem::Specification.add_spec(s)
-    rescue
+    rescue LoadError => e
+      puts e.message
+    rescue => e
+      puts e.message
     end
   end 
 end
+
+# activate bundler
+Gem::Specification.each do |spec|
+  if spec.gem_dir.chars.first == ':'
+    if spec.name == 'bundler'
+      # DLM: for now remove this
+      #spec.activate
+      Gem::Specification.remove_spec(spec)
+    end
+  end
+end
+
+# require bundler
+# have to do some forward declaration and pre-require to get around autoload cycles
+#module Bundler
+#end
+#require 'bundler/gem_helpers'
+#require 'bundler/errors'
+#require 'bundler/plugin'
+#require 'bundler/source'
+#require 'bundler/definition'
+#require 'bundler/dsl'
+#require 'bundler/dsl'
+#require 'bundler'
+
+#begin
+#  # activate bundled gems
+#  # bundler will look in:
+#  # 1) ENV["BUNDLE_GEMFILE"]
+#  # 2) find_file("Gemfile", "gems.rb")
+#  Bundler.setup
+#  Bundler.require
+#rescue Bundler::BundlerError => e
+#  puts "#{e.message}"
+#  #puts e.backtrace.join("\n") 
+#  if e.is_a?(Bundler::GemNotFound)
+#    puts "Run `bundle install` to install missing gems."
+#  elsif e.is_a?(Bundler::ProductionError)
+#
+#  else
+#
+#  end
+#  exit e.status_code
+#end
+
 
 embedded_gems = []
 user_gems = []
@@ -166,17 +262,31 @@ Gem::Specification.each do |spec|
   end
 end
 
+# remove any embedded gems that are also found on disk with equal or higher version but compatible major version
 embedded_gems.each do |spec|
-  if user_gems.index {|s| s.name == spec.name}
-    Gem::Specification.remove_spec(spec)
+  remove = false
+  user_gems.each do |s| 
+    if s.name == spec.name
+      if s.version >= spec.version
+        if s.version.to_s.split('.')[0] == spec.version.to_s.split('.')[0]
+          $logger.debug "Loading system gem #{s.file_name}, overrides embdedded gem #{spec.file_name}"
+          remove = true
+          break
+        end
+      end
+    end
   end
+ 
+ Gem::Specification.remove_spec(spec) if remove
 end
 
+# activate remaining embedded gems
 Gem::Specification.each do |spec|
   if spec.gem_dir.chars.first == ':'
     spec.activate
   end
 end
+
 
 # This is the code chunk to allow for an embedded IRB shell. From Jason Roelofs, found on StackOverflow
 module IRB # :nodoc:
@@ -1142,51 +1252,6 @@ class ListCommands
   end
 end
 
-# Set the logger level to DEBUG if the arguments include --verbose
-$argv = ARGV.dup
-if $argv.include? '--verbose'
-  $logger.level = Logger::DEBUG
-  OpenStudio::Logger.instance.standardOutLogger.setLogLevel(OpenStudio::Debug)
-  $argv.delete '--verbose'
-  $logger.debug 'Set Logger log level to DEBUG'
-end
-$logger.debug "Input ARGV is #{$argv}"
-
-# Operate on the include option to add to $LOAD_PATH
-$argv.each_index do |i|
-  remove_indices = []
-  if $argv[i] == '-I' || $argv[i] == '--include'
-    # remove from further processing
-    remove_indices << i 
-    remove_indices << i+1
-    
-    dir = $argv[i + 1]
-    
-    if dir.nil? 
-      safe_puts "#{$argv[i]} requires second argument DIR"
-      return 0
-    elsif !File.exists?(dir) || !File.directory?(dir)
-      $logger.warn "'#{dir}' passed to #{$argv[i]} is not a directory"
-    end
-    $LOAD_PATH << dir
-  end
-  
-  remove_indices.reverse_each {|i| $argv.delete_at(i)}
-end
-
-# Operate on the gem_path option to set the gem search path
-if $argv.include? '--gem_path'
-  $logger.info 'Setting gem path'
-  option_index = $argv.index '--gem_path'
-  path_index = option_index + 1
-  new_home = $argv[path_index]
-  $argv.slice! path_index
-  $argv.slice! $argv.index '--gem_path'
-  current_home = ENV['OPENSTUDIO_GEM_PATH']
-  $logger.warn "Overwriting previous OPENSTUDIO_GEM_PATH of #{current_home} to #{new_home} for this command" if current_home
-  $logger.info "No current gem path set in OPENSTUDIO_GEM_PATH, setting to #{new_home}" unless current_home
-  ENV['OPENSTUDIO_GEM_PATH'] = new_home
-end
 
 ### Configure Gems to load the correct Gem files
 ### @see http://rubygems.rubyforge.org/rubygems-update/Gem.html

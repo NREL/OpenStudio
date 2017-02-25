@@ -190,10 +190,10 @@ endif()
 
 if( WIN32 )
   # DLM: do we really want to specify /OPT:REF /OPT:NOICF (the defaults seem correct for debug and release), also check link flags for modules and static libraries
-  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /OPT:REF /OPT:NOICF /MAXILKSIZE:2147483647")
-  set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} /MAXILKSIZE:2147483647")
-  set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} /MAXILKSIZE:2147483647")
-  set(CMAKE_STATIC_LINKER_FLAGS "${CMAKE_STATIC_LINKER_FLAGS} /MAXILKSIZE:2147483647")
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /OPT:REF /OPT:NOICF /MAXILKSIZE:0x7FFFFFFF")
+  set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} /MAXILKSIZE:0x7FFFFFFF")
+  set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} /MAXILKSIZE:0x7FFFFFFF")
+  set(CMAKE_STATIC_LINKER_FLAGS "${CMAKE_STATIC_LINKER_FLAGS} /MAXILKSIZE:0x7FFFFFFF")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zi")
 endif()
 
@@ -429,7 +429,7 @@ if(NOT UNIX)
     RESULT_VARIABLE rv)
   set(PERL_EXE "${CMAKE_BINARY_DIR}/strawberry-perl-5.16.2.1-32bit-portable-reduced/perl/bin/perl.exe")
 endif()
-  
+
 # Ruby
 
 set(RUBY_INSTALL_DIR "" CACHE PATH "Path to Ruby Install")
@@ -523,8 +523,8 @@ endif()
 
 # openstudio gems
 
-set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20170214.tar.gz")
-set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "7bb8a8a37f4ce3d63bc4ffe12d9c8aae")
+set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20170216.tar.gz")
+set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "5e51b6e20e4900cc66f323e95020f994")
 
 set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
 if(EXISTS "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}")
@@ -537,7 +537,7 @@ if( NOT OPENSTUDIO_GEMS_ZIP_MD5 STREQUAL OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5)
     INACTIVITY_TIMEOUT 120
     SHOW_PROGRESS
     EXPECTED_MD5 ${OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5})
-    
+
   file(REMOVE_RECURSE "${CMAKE_BINARY_DIR}/openstudio-gems")
   execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
 endif()
@@ -609,14 +609,14 @@ else()
   set(SWIG_EXPECTED_HASH "d8b5a9ce49c819cc1bfc1e797b85ba7a")
   if(EXISTS "${CMAKE_BINARY_DIR}/${SWIG_ZIP}")
     file(MD5 "${CMAKE_BINARY_DIR}/${SWIG_ZIP}" SWIG_HASH)
-  endif()  
+  endif()
   if(NOT EXISTS "${CMAKE_BINARY_DIR}/${SWIG_ZIP}" OR NOT EXISTS "${CMAKE_BINARY_DIR}/${SWIG_DIR}" OR NOT "${SWIG_HASH}" MATCHES "${SWIG_EXPECTED_HASH}")
     message(STATUS "Downloading SWIG)")
     file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${SWIG_ZIP}" "${CMAKE_BINARY_DIR}/${SWIG_ZIP}" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${SWIG_EXPECTED_HASH})
     execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${SWIG_DIR}")
     execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${SWIG_ZIP}" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
   endif()
-  
+
   set(SWIG_EXECUTABLE ${CMAKE_BINARY_DIR}/${SWIG_DIR}/swig.exe)
 endif()
 
@@ -693,16 +693,16 @@ if(BUILD_TESTING)
   # force gtest to build as a static library no matter what, otherwise we get error about undefined death test symbols when building shared libs
   set(TEMP_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS})
   set(BUILD_SHARED_LIBS OFF)
-  
+
   # Google test library
   set(gtest_force_shared_crt ON CACHE BOOL "gtest_force_shared_crt" FORCE) # in case we are linking with shared or static os libraries
   set(gtest_build_tests OFF CACHE BOOL "gtest_build_tests" FORCE)
   set(gtest_build_samples OFF CACHE BOOL "gtest_build_samples" FORCE)
   set(gtest_disable_pthreads OFF CACHE BOOL "gtest_disable_pthreads" FORCE)
-  add_definitions(-DGTEST_HAS_TR1_TUPLE=0) 
+  add_definitions(-DGTEST_HAS_TR1_TUPLE=0)
   include_directories(SYSTEM src/google_test/include)
   add_subdirectory(src/google_test)
-  
+
   # restore BUILD_SHARED_LIBS
   set(BUILD_SHARED_LIBS ${TEMP_BUILD_SHARED_LIBS})
 endif()
@@ -745,11 +745,11 @@ if(NOT EXISTS ${BOOST_INSTALL_DIR})
 	if(LSB_RELEASE_ID_SHORT MATCHES "16.04")
 	  # ubuntu 16.04
       set(BOOST_ZIP_FILENAME "boost_1_55_0_xenial.tar.gz")
-      set(BOOST_ZIP_EXPECTED_MD5 "45bf97fbdcde070aca3cc6181cd69362")	
+      set(BOOST_ZIP_EXPECTED_MD5 "45bf97fbdcde070aca3cc6181cd69362")
 	else()
 	  # ubuntu 14.04
       set(BOOST_ZIP_FILENAME "boost_1_55_0_linux.tar.gz")
-      set(BOOST_ZIP_EXPECTED_MD5 "6b206a76268cd1a98d00d4aafb897ac9")	
+      set(BOOST_ZIP_EXPECTED_MD5 "6b206a76268cd1a98d00d4aafb897ac9")
 	endif()
   endif()
 
@@ -860,19 +860,19 @@ if(BUILD_OS_APP)
   set_target_properties( ${QT_WEB_LIBS} PROPERTIES INTERFACE_LINK_LIBRARIES "" )
 
   if(NOT APPLE)
-    
+
     find_package(Qt5WebChannel 5.6.1 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
     list(APPEND QT_WEB_LIBS Qt5::WebChannel)
-    
+
     find_package(Qt5Quick 5.6.1 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
     list(APPEND QT_WEB_LIBS Qt5::Quick)
-    
+
     find_package(Qt5Qml 5.6.1 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
     list(APPEND QT_WEB_LIBS Qt5::Qml)
-    
+
     find_package(Qt5Positioning 5.6.1 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
     list(APPEND QT_WEB_LIBS Qt5::Positioning)
-        
+
     if(UNIX)
       find_package(Qt5DBus 5.6.1 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
       list(APPEND QT_WEB_LIBS Qt5::DBus)
@@ -895,7 +895,7 @@ list(APPEND QT_LIBS Qt5::Gui)
 if( WIN32 )
   find_package(Qt5WinExtras 5.6.1 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
   list(APPEND QT_LIBS Qt5::WinExtras)
-  
+
   find_library(QT_MAIN_LIB NAMES qtmain PATHS "${QT_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
   find_library(QT_MAIN_LIB_D NAMES qtmaind PATHS "${QT_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
 endif()
@@ -969,7 +969,7 @@ endif()
 
 if( UNIX )
   FIND_QT_STATIC_LIB("QtDBus;Qt5DBus" "${QT_STATIC_INSTALL_DIR}/lib/")
-  
+
   find_package(OpenGL REQUIRED)
   list(APPEND QT_STATIC_LIBS "${OPENGL_LIBRARIES}")
   list(APPEND QT_STATIC_LIBS_D "${OPENGL_LIBRARIES}")
@@ -978,13 +978,13 @@ endif()
 if( UNIX AND NOT APPLE )
   # http://doc.qt.io/qt-5/linux-requirements.html
   # DLM: the order of linking for static archives matter because symbols will only be included if they are needed by previous libraries
-  # in some cases we may need to relink libraries a second time    
+  # in some cases we may need to relink libraries a second time
   #list(APPEND QT_STATIC_LIBS "${QT_STATIC_INSTALL_DIR}/plugins/platforms/libqxcb.a")
-  #list(APPEND QT_STATIC_LIBS "${QT_STATIC_INSTALL_DIR}/plugins/sqldrivers/libqsqlite.a") 
-  
+  #list(APPEND QT_STATIC_LIBS "${QT_STATIC_INSTALL_DIR}/plugins/sqldrivers/libqsqlite.a")
+
   FIND_QT_STATIC_LIB("qxcb" "${QT_STATIC_INSTALL_DIR}/plugins/platforms/")
   FIND_QT_STATIC_LIB("qsqlite" "${QT_STATIC_INSTALL_DIR}/plugins/sqldrivers/")
-  
+
   FIND_QT_STATIC_LIB("qtpcre" "${QT_STATIC_INSTALL_DIR}/lib/")
   FIND_QT_STATIC_LIB("qtharfbuzzng" "${QT_STATIC_INSTALL_DIR}/lib/")
   FIND_QT_STATIC_LIB("Qt5XcbQpa" "${QT_STATIC_INSTALL_DIR}/lib/")
@@ -994,33 +994,33 @@ if( UNIX AND NOT APPLE )
   FIND_QT_STATIC_LIB("Qt5DBus" "${QT_STATIC_INSTALL_DIR}/lib/")
   FIND_QT_STATIC_LIB("Qt5Core" "${QT_STATIC_INSTALL_DIR}/lib/")
   FIND_QT_STATIC_LIB("xcb-static" "${QT_STATIC_INSTALL_DIR}/lib/")
-  
+
   FIND_QT_STATIC_LIB("expat" "*")
-    
+
   FIND_QT_STATIC_LIB("png" "*")
   FIND_QT_STATIC_LIB("libjpeg;libjpeg.so;libjpeg.so.8" "*")
   FIND_QT_STATIC_LIB("freetype" "*")
-  
+
   FIND_QT_STATIC_LIB("libdbus-1.so" "*")
   FIND_QT_STATIC_LIB("dbus-glib-1;libdbus-glib-1.so.2" "*")
-  
+
   FIND_QT_STATIC_LIB("glib-2.0" "*")
   FIND_QT_STATIC_LIB("X11.so" "*")
   FIND_QT_STATIC_LIB("xcb.so" "*")
   FIND_QT_STATIC_LIB("X11-xcb.so" "*")
   FIND_QT_STATIC_LIB("Xext.so" "*")
   FIND_QT_STATIC_LIB("crypto.so" "*")
-  
+
   if(EXISTS "/etc/redhat-release")
     FIND_QT_STATIC_LIB("rt" "*")
-  
+
     FIND_QT_STATIC_LIB("gthread-2.0" "*")
     FIND_QT_STATIC_LIB("dbus-glib-1;libdbus-glib-1.so.2" "*")
     FIND_QT_STATIC_LIB("gobject-2.0" "*")
     FIND_QT_STATIC_LIB("db" "*")
     FIND_QT_STATIC_LIB("icui18n" "*")
     FIND_QT_STATIC_LIB("icuuc" "*")
-    FIND_QT_STATIC_LIB("z.so" "*")    
+    FIND_QT_STATIC_LIB("z.so" "*")
   else()
     FIND_QT_STATIC_LIB("fontconfig.so" "*")
     FIND_QT_STATIC_LIB("SM.so" "*")
@@ -1032,8 +1032,8 @@ endif()
 
 if( APPLE )
   # DLM: the order of linking for static archives matter because symbols will only be included if they are needed by previous libraries
-  # in some cases we may need to relink libraries a second time    
-  
+  # in some cases we may need to relink libraries a second time
+
   FIND_QT_STATIC_LIB("CoreFoundation" "*")
   FIND_QT_STATIC_LIB("CFNetwork" "*")
   FIND_QT_STATIC_LIB("CoreGraphics" "*")
@@ -1041,7 +1041,7 @@ if( APPLE )
   FIND_QT_STATIC_LIB("AppKit" "*")
   FIND_QT_STATIC_LIB("SystemConfiguration" "*")
   FIND_QT_STATIC_LIB("Security" "*")
-  
+
   FIND_QT_STATIC_LIB("qtpcre" "${QT_STATIC_INSTALL_DIR}/lib/")
   FIND_QT_STATIC_LIB("qcocoa" "${QT_STATIC_INSTALL_DIR}/plugins/platforms/")
   FIND_QT_STATIC_LIB("qsqlite" "${QT_STATIC_INSTALL_DIR}/plugins/sqldrivers/")
@@ -1050,7 +1050,7 @@ if( APPLE )
   FIND_QT_STATIC_LIB("qtharfbuzzng" "${QT_STATIC_INSTALL_DIR}/lib/")
   FIND_QT_STATIC_LIB("Qt5PlatformSupport" "${QT_STATIC_INSTALL_DIR}/lib/")
   FIND_QT_STATIC_LIB("qtpcre" "${QT_STATIC_INSTALL_DIR}/lib/")
-  
+
   FIND_QT_STATIC_LIB("CoreFoundation" "*")
   FIND_QT_STATIC_LIB("CFNetwork" "*")
   FIND_QT_STATIC_LIB("CoreGraphics" "*")
@@ -1069,7 +1069,7 @@ if( WIN32 )
   FIND_QT_STATIC_LIB("qtpcre" "${QT_STATIC_INSTALL_DIR}/lib/")
   FIND_QT_STATIC_LIB("qsqlite" "${QT_STATIC_INSTALL_DIR}/plugins/sqldrivers/")
   FIND_QT_STATIC_LIB("qwindows" "${QT_STATIC_INSTALL_DIR}/plugins/platforms/")
-  
+
   FIND_QT_STATIC_LIB("Crypt32" "*")
   FIND_QT_STATIC_LIB("imm32" "*")
   FIND_QT_STATIC_LIB("winmm" "*")
@@ -1251,7 +1251,7 @@ if(BUILD_DOCUMENTATION)
     set(DOXY_EXCLUDE_DIR "")
     set(DOXY_TAGFILES "")
 
-    
+
     # Specific settings
     if(${D} STREQUAL "utilities/idd")
       # We want to build the idd documentation separately because of the generated files
@@ -1532,11 +1532,10 @@ cpack_ifw_configure_component(PAT
 
 if( BUILD_NUGET_PACKAGE )
   configure_file( OpenStudio.nuspec.in OpenStudio.nuspec )
-  
+
   add_custom_target(nuget_package
     COMMAND NuGet pack OpenStudio.nuspec -BasePath "${CMAKE_BINARY_DIR}/" -properties Configuration=$<CONFIGURATION>
     DEPENDS csharp_sdk
     WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
   )
 endif()
-
