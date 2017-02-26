@@ -78,13 +78,26 @@ class MODEL_API PlantEquipmentOperationRangeBasedScheme : public PlantEquipmentO
   /** Add an HVACComponent instance to an existing load range. */
   bool addEquipment(double upperLimit, const HVACComponent & equipment);
 
+  /** Replace HVACComponent instances assigned to an existing load range. 
+   *  This is useful for reording equipment.
+   *  */
+  bool replaceEquipment(double upperLimit, const std::vector<HVACComponent> & equipment);
+
   /** Add an HVACComponent instance to the highest load range.
     * This method is useful to add equipment to the single default load range
     * after a load operation scheme is default constructed. */
   bool addEquipment(const HVACComponent & equipment);
 
+  /** Replace HVACComponent instances assigned to the highest load range. 
+   *  This is useful for reording equipment.
+   * */
+  bool replaceEquipment(const std::vector<HVACComponent> & equipment);
+
   /** Remove an HVACComponent instance from an existing load range. */
   bool removeEquipment(double upperLimit, const HVACComponent & equipment);
+
+  /** Remove an HVACComponent instance from all load ranges for which it is a member. */
+  bool removeEquipment(const HVACComponent & equipment);
 
   /** Remove all load ranges except the default range. All equipment will be removed. */
   void clearLoadRanges();

@@ -56,7 +56,13 @@ namespace detail {
 
     bool addEquipment(const HVACComponent & equipment);
 
+    bool replaceEquipment(double upperLimit, const std::vector<HVACComponent> & equipment);
+
+    bool replaceEquipment(const std::vector<HVACComponent> & equipment);
+
     bool removeEquipment(double upperLimit, const HVACComponent & equipment);
+
+    bool removeEquipment(const HVACComponent & equipment);
 
     void clearLoadRanges();
 
