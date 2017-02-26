@@ -5455,7 +5455,48 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     }
   }
 
+  // ThrmlEngyStor
+  auto thrmlEngyStorElement = fluidSysElement.firstChildElement("ThrmlEngyStor");
+  boost::optional<model::ThermalStorageChilledWaterStratified> thermalStorage;
+  std::string thermalStorageDischargePriority;
+  double thermalStorageTankSetptTemp;
+  if( auto mo = translateThrmlEngyStor(thrmlEngyStorElement,doc,model) ) {
+    thermalStorage = mo->cast<model::ThermalStorageChilledWaterStratified>();
+    plantLoop.addSupplyBranchForComponent(thermalStorage.get());
+    addBranchPump(thermalStorage->supplyInletModelObject(),thrmlEngyStorElement);
+    plantLoop.addDemandBranchForComponent(thermalStorage.get());
+
+    thermalStorageDischargePriority = thrmlEngyStorElement.firstChildElement("DischargePriority").text().toStdString();
+    value = thrmlEngyStorElement.firstChildElement("TankSetptTemp").text().toDouble();
+    thermalStorageTankSetptTemp = unitToUnit(value,"F","C").get();
+
+    {
+      auto schRef = thrmlEngyStorElement.firstChildElement("ChillerOnlySchRef").text().toStdString();
+      if( auto sch = model.getModelObjectByName<model::Schedule>(schRef) ) {
+        plantLoop.setPlantEquipmentOperationCoolingLoadSchedule(sch.get());
+      }
+    }
+
+    {
+      auto schRef = thrmlEngyStorElement.firstChildElement("DischargeSchRef").text().toStdString();
+      if( auto sch = model.getModelObjectByName<model::Schedule>(schRef) ) {
+        plantLoop.setPrimaryPlantEquipmentOperationSchemeSchedule(sch.get());
+      }
+    }
+
+    {
+      auto schRef = thrmlEngyStorElement.firstChildElement("ChargeSchRef").text().toStdString();
+      if( auto sch = model.getModelObjectByName<model::Schedule>(schRef) ) {
+        plantLoop.setComponentSetpointOperationSchemeSchedule(sch.get());
+      }
+    }
+  }
+
   // Chillers
+
+  // Keep a map of chiller to a flag indicating if it should be used
+  // in thermal energy storage discharge
+  std::map<model::ModelObject,bool> enableOnThrmlEngyStorDischargeMap;
   auto chillerElements = fluidSysElement.elementsByTagName("Chlr");
   for (int i = 0; i < chillerElements.count(); i++) {
     auto chillerElement = chillerElements.at(i).toElement();
@@ -5469,19 +5510,14 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
       if( evapHasBypassElement.text() == "1" ) {
         bypass = true;
       }
-    }
-  }
 
-  // ThrmlEngyStor
-  auto thrmlEngyStorElements = fluidSysElement.elementsByTagName("ThrmlEngyStor");
-  for(int i = 0; i < thrmlEngyStorElements.count(); i++) {
-    auto thrmlEngyStorElement = thrmlEngyStorElements.at(i).toElement();
-
-    if( auto mo = translateThrmlEngyStor(thrmlEngyStorElement,doc,model) ) {
-      auto tes = mo->cast<model::ThermalStorageChilledWaterStratified>();
-      plantLoop.addSupplyBranchForComponent(tes);
-      addBranchPump(tes.supplyInletModelObject(),thrmlEngyStorElement);
-      plantLoop.addDemandBranchForComponent(tes);
+      if( thermalStorage ) {
+        if( chillerElement.firstChildElement("EnableOnThrmlEngyStorDischarge").text().toInt() == 1 ) {
+          enableOnThrmlEngyStorDischargeMap.insert(std::make_pair(chiller,true));
+        } else {
+          enableOnThrmlEngyStorDischargeMap.insert(std::make_pair(chiller,false));
+        }
+      }
     }
   }
 
@@ -5817,6 +5853,58 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
           scheme->addLoadRange(ldRngLim,equipment);
         }
       }
+    }
+  }
+
+  // Thermal Energy Storage needs special operation schemes
+  if( thermalStorage ) {
+    // The end result should be three operations schemes
+    // charging and standby, discharging, charging
+
+    // plantLoop.plantEquipmentOperationCoolingLoad would exist because of load range spec in the SDD file
+    // Or in other words standbyScheme would be the SDD controlled scheme, translated before this point
+    auto standbyScheme = plantLoop.plantEquipmentOperationCoolingLoad();
+    if( ! standbyScheme ) {
+      standbyScheme = model::PlantEquipmentOperationCoolingLoad(model);
+      standbyScheme->setName(plantLoop.nameString() + " TES Standby Scheme");
+      plantLoop.setPlantEquipmentOperationCoolingLoad(standbyScheme.get());
+      for( const auto & chillerItem : enableOnThrmlEngyStorDischargeMap ) {
+        standbyScheme->addEquipment(chillerItem.first.cast<model::HVACComponent>()); 
+      }
+    }
+
+    OS_ASSERT(standbyScheme);
+
+    auto dischargingScheme = standbyScheme->clone(model).cast<model::PlantEquipmentOperationCoolingLoad>();
+    plantLoop.setPrimaryPlantEquipmentOperationScheme(dischargingScheme);
+    dischargingScheme.setName(plantLoop.nameString() + " TES Discharging Scheme");
+    // Need to make sure that each chiller is allowed for discharge
+    // Remove it from the scheme if not enabled for discharge
+    for( const auto & chillerItem : enableOnThrmlEngyStorDischargeMap ) {
+      if( ! chillerItem.second ) {
+        dischargingScheme.removeEquipment(chillerItem.first.cast<model::HVACComponent>());
+      }
+    }
+
+    if( istringEqual(thermalStorageDischargePriority,"Chiller") ) {
+      dischargingScheme.addEquipment(thermalStorage.get());
+    } else {
+      auto upperLimit = dischargingScheme.loadRangeUpperLimits().front();
+      auto equipment = dischargingScheme.equipment(upperLimit);
+      equipment.insert(equipment.begin(),thermalStorage.get());
+      dischargingScheme.replaceEquipment(upperLimit,equipment);
+    }
+
+    // charging scheme, which is a component setpoint scheme so we add SPMs
+    model::ScheduleRuleset tesSchedule(model);
+    tesSchedule.setName(plantLoop.nameString() + "TES SPM Schedule");
+    tesSchedule.defaultDaySchedule().addValue(Time(1.0),thermalStorageTankSetptTemp);
+
+    auto chillers = subsetCastVector<model::ChillerElectricEIR>(plantLoop.supplyComponents(model::ChillerElectricEIR::iddObjectType()));
+    for( auto & chiller : chillers ) {
+      model::SetpointManagerScheduled spm(model,tesSchedule);
+      auto node = chiller.supplyOutletModelObject()->cast<model::Node>();
+      spm.addToNode(node);
     }
   }
 
@@ -6796,7 +6884,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateThrm
     tes.setNominalCoolingCapacity(value);
   }
 
-  text = tesElement.firstChildElement("StorLoc").text().toStdString();
+  text = tesElement.firstChildElement("StorLocSim").text().toStdString();
   if( istringEqual("Zone",text) ) {
     tes.setAmbientTemperatureIndicator("Zone");
     text = tesElement.firstChildElement("StorZnRef").text().toStdString();
@@ -6809,7 +6897,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateThrm
 
   tes.resetAmbientTemperatureSchedule();
 
-  value = tesElement.firstChildElement("TankUFactor").text().toDouble(&ok);
+  value = tesElement.firstChildElement("TankUFac").text().toDouble(&ok);
   if( ok ) {
     tes.setUniformSkinLossCoefficientperUnitAreatoAmbientTemperature(value * 0.5275);
   }
