@@ -29,6 +29,12 @@
 #include "GeneratorFuelCellAirSupply.hpp"
 #include "GeneratorFuelCellAirSupply_Impl.hpp"
 
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+
+#include "GeneratorFuelCell.hpp"
+#include "GeneratorFuelCell_Impl.hpp"
+
 #include "Node.hpp"
 #include "Node_Impl.hpp"
 #include "CurveCubic.hpp"
@@ -83,6 +89,63 @@ namespace detail {
 
   IddObjectType GeneratorFuelCellAirSupply_Impl::iddObjectType() const {
     return GeneratorFuelCellAirSupply::iddObjectType();
+  }
+
+  // This will clone both the GeneratorFuelCellExhaustGasToWaterHeatExchanger and its linked GeneratorFuelCell
+  // and will return a reference to the GeneratorMicroTurbineHeatRecovery
+  ModelObject GeneratorFuelCellAirSupply_Impl::clone(Model model) const {
+
+    // We call the parent generator's Clone method which will clone both the fuelCell and airSupply
+    GeneratorFuelCell fs = fuelCell();
+    GeneratorFuelCell fsClone = fs.clone(model).cast<GeneratorFuelCell>();
+
+    // We get the clone of the parent generator's MTHR so we can return that
+    GeneratorFuelCellAirSupply hxClone = fsClone.airSupply();
+
+
+    return hxClone;
+  }
+
+  std::vector<IddObjectType> GeneratorFuelCellAirSupply_Impl::allowableChildTypes() const {
+    std::vector<IddObjectType> result;
+    result.push_back(IddObjectType::OS_Curve_Cubic);
+    result.push_back(IddObjectType::OS_Curve_Quadratic);
+    return result;
+  }
+
+  // Returns the children object
+  std::vector<ModelObject> GeneratorFuelCellAirSupply_Impl::children() const {
+    std::vector<ModelObject> result;
+    boost::optional<CurveQuadratic> curveQ;
+    boost::optional<CurveCubic> curveC;
+
+    if (curveC = blowerPowerCurve()) {
+      result.push_back(curveC.get());
+    }
+    if (curveQ = airRateFunctionofElectricPowerCurve()) {
+      result.push_back(curveQ.get());
+    }
+    if (curveQ = airRateFunctionofFuelRateCurve()) {
+      result.push_back(curveQ.get());
+    }
+
+    return result;
+  }
+
+  // Get the parent GeneratorFuelCell
+  GeneratorFuelCell GeneratorFuelCellAirSupply_Impl::fuelCell() const {
+
+    boost::optional<GeneratorFuelCell> value;
+    for (const GeneratorFuelCell& fc : this->model().getConcreteModelObjects<GeneratorFuelCell>()) {
+      if (boost::optional<GeneratorFuelCellAirSupply> fcHX = fc.airSupply()) {
+        if (fcHX->handle() == this->handle()) {
+          value = fc;
+        }
+      }
+    }
+    OS_ASSERT(value);
+    return value.get();
+
   }
 
   boost::optional<Node> GeneratorFuelCellAirSupply_Impl::airInletNode() const {
@@ -608,6 +671,10 @@ bool GeneratorFuelCellAirSupply::setNumberofUserDefinedConstituents(unsigned int
 
 void GeneratorFuelCellAirSupply::resetNumberofUserDefinedConstituents() {
   getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->resetNumberofUserDefinedConstituents();
+}
+
+GeneratorFuelCell GeneratorFuelCellAirSupply::fuelCell() const {
+  return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->fuelCell();
 }
 
 /// @cond

@@ -38,6 +38,7 @@ namespace model {
 
 class Connection;
 class Node;
+class GeneratorFuelCell;
 
 namespace detail {
 
@@ -108,6 +109,9 @@ class MODEL_API GeneratorFuelCellExhaustGasToWaterHeatExchanger : public Straigh
   boost::optional<double> method4hxl2Coefficient() const;
 
   boost::optional<double> method4CondensationThreshold() const;
+
+  // Return optional parent generator
+  GeneratorFuelCell fuelCell() const;
 
   //@}
   /** @name Setters */

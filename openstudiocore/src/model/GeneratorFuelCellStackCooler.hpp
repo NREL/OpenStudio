@@ -37,6 +37,7 @@ namespace openstudio {
 namespace model {
 
 class Connection;
+class GeneratorFuelCell;
 
 namespace detail {
 
@@ -96,6 +97,9 @@ class MODEL_API GeneratorFuelCellStackCooler : public StraightComponent {
   double stackAirCoolerFanCoefficientf1() const;
 
   double stackAirCoolerFanCoefficientf2() const;
+
+  // Return optional parent generator
+  GeneratorFuelCell fuelCell() const;
 
   //@}
   /** @name Setters */

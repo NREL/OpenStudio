@@ -26,9 +26,11 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
 
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+
 #include "GeneratorFuelCell.hpp"
 #include "GeneratorFuelCell_Impl.hpp"
-
 #include "GeneratorFuelCellPowerModule.hpp"
 #include "GeneratorFuelCellPowerModule_Impl.hpp"
 #include "GeneratorFuelCellAirSupply.hpp"
@@ -100,6 +102,128 @@ namespace detail {
   std::string GeneratorFuelCell_Impl::generatorObjectType() const {
     // translated to ElectricLoadCenter:Generators 'Generator Object Type'
     return "Generator:FuelCell";
+  }
+
+  // This will clone the GeneratorFuelCell as well as the Accessories if there are any
+  // and will return a reference to the GeneratorFuelCell
+  ModelObject GeneratorFuelCell_Impl::clone(Model model) const {
+    GeneratorFuelCell newFC = ModelObject_Impl::clone(model).cast<GeneratorFuelCell>();
+
+    // If there's a GeneratorFuelCellPowerModule, clone it as well
+    if (boost::optional<GeneratorFuelCellPowerModule> pm = powerModule()) {
+      // Call the BaseClass (ModelObject) clone method to avoid circular references
+      GeneratorFuelCellPowerModule pmClone = pm->getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->ModelObject_Impl::clone(model).cast<GeneratorFuelCellPowerModule>();
+      newFC.getImpl<detail::GeneratorFuelCell_Impl>()->setPowerModule(pmClone);
+    }
+
+    // If there's a GeneratorFuelCellAirSupply, clone it as well
+    if (boost::optional<GeneratorFuelCellAirSupply> as = airSupply()) {
+      // Call the BaseClass (ModelObject) clone method to avoid circular references
+      GeneratorFuelCellAirSupply asClone = as->getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->ModelObject_Impl::clone(model).cast<GeneratorFuelCellAirSupply>();
+      newFC.getImpl<detail::GeneratorFuelCell_Impl>()->setAirSupply(asClone);
+    }
+    // If there's a GeneratorFuelCellWaterSupply, clone it as well
+    if (boost::optional<GeneratorFuelCellWaterSupply> ws = waterSupply()) {
+      // Call the BaseClass (ModelObject) clone method to avoid circular references
+      GeneratorFuelCellWaterSupply wsClone = ws->getImpl<detail::GeneratorFuelCellWaterSupply_Impl>()->ModelObject_Impl::clone(model).cast<GeneratorFuelCellWaterSupply>();
+      newFC.getImpl<detail::GeneratorFuelCell_Impl>()->setWaterSupply(wsClone);
+    }
+    // If there's a GeneratorFuelCellAuxiliaryHeater, clone it as well
+    if (boost::optional<GeneratorFuelCellAuxiliaryHeater> ht = auxiliaryHeater()) {
+      // Call the BaseClass (ModelObject) clone method to avoid circular references
+      GeneratorFuelCellAuxiliaryHeater htClone = ht->getImpl<detail::GeneratorFuelCellAuxiliaryHeater_Impl>()->ModelObject_Impl::clone(model).cast<GeneratorFuelCellAuxiliaryHeater>();
+      newFC.getImpl<detail::GeneratorFuelCell_Impl>()->setAuxiliaryHeater(htClone);
+    }
+    // If there's a GeneratorFuelCellExhaustGasToWaterHeatExchanger, clone it as well
+    if (boost::optional<GeneratorFuelCellExhaustGasToWaterHeatExchanger> hx = heatExchanger()) {
+      // Call the BaseClass (ModelObject) clone method to avoid circular references
+      GeneratorFuelCellExhaustGasToWaterHeatExchanger hxClone = hx->getImpl<detail::GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl>()->ModelObject_Impl::clone(model).cast<GeneratorFuelCellExhaustGasToWaterHeatExchanger>();
+      newFC.getImpl<detail::GeneratorFuelCell_Impl>()->setHeatExchanger(hxClone);
+    }
+    // If there's a GeneratorFuelCellElectricalStorage, clone it as well
+    if (boost::optional<GeneratorFuelCellElectricalStorage> es = electricalStorage()) {
+      // Call the BaseClass (ModelObject) clone method to avoid circular references
+      GeneratorFuelCellElectricalStorage esClone = es->getImpl<detail::GeneratorFuelCellElectricalStorage_Impl>()->ModelObject_Impl::clone(model).cast<GeneratorFuelCellElectricalStorage>();
+      newFC.getImpl<detail::GeneratorFuelCell_Impl>()->setElectricalStorage(esClone);
+    }
+    // If there's a GeneratorFuelCellInverter, clone it as well
+    if (boost::optional<GeneratorFuelCellInverter> in = inverter()) {
+      // Call the BaseClass (ModelObject) clone method to avoid circular references
+      GeneratorFuelCellInverter inClone = in->getImpl<detail::GeneratorFuelCellInverter_Impl>()->ModelObject_Impl::clone(model).cast<GeneratorFuelCellInverter>();
+      newFC.getImpl<detail::GeneratorFuelCell_Impl>()->setInverter(inClone);
+    }
+    // If there's a GeneratorFuelCellStackCooler, clone it as well
+    if (boost::optional<GeneratorFuelCellStackCooler> sc = stackCooler()) {
+      // Call the BaseClass (ModelObject) clone method to avoid circular references
+      GeneratorFuelCellStackCooler scClone = sc->getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->ModelObject_Impl::clone(model).cast<GeneratorFuelCellStackCooler>();
+      newFC.getImpl<detail::GeneratorFuelCell_Impl>()->setStackCooler(scClone);
+    }
+    // If there's a GeneratorFuelSupply, clone it as well
+    if (boost::optional<GeneratorFuelSupply> fs = fuelSupply()) {
+      // Call the BaseClass (ModelObject) clone method to avoid circular references
+      GeneratorFuelSupply fsClone = fs->getImpl<detail::GeneratorFuelSupply_Impl>()->ModelObject_Impl::clone(model).cast<GeneratorFuelSupply>();
+      newFC.getImpl<detail::GeneratorFuelCell_Impl>()->setFuelSupply(fsClone);
+    }
+
+    return newFC;
+  }
+
+  // Return allowable child types
+  std::vector<IddObjectType> GeneratorFuelCell_Impl::allowableChildTypes() const {
+    std::vector<IddObjectType> result;
+    result.push_back(IddObjectType::OS_Generator_FuelCell_PowerModule);
+    result.push_back(IddObjectType::OS_Generator_FuelCell_AirSupply);
+    result.push_back(IddObjectType::OS_Generator_FuelCell_WaterSupply);
+    result.push_back(IddObjectType::OS_Generator_FuelCell_AuxiliaryHeater);
+    result.push_back(IddObjectType::OS_Generator_FuelCell_ElectricalStorage);
+    result.push_back(IddObjectType::OS_Generator_FuelCell_Inverter);
+    result.push_back(IddObjectType::OS_Generator_FuelCell_StackCooler);
+    result.push_back(IddObjectType::OS_Generator_FuelSupply);
+    result.push_back(IddObjectType::OS_Curve_Biquadratic);
+    result.push_back(IddObjectType::OS_Curve_Cubic);
+    result.push_back(IddObjectType::OS_Curve_Quadratic);
+    result.push_back(IddObjectType::OS_ThermalZone);
+    return result;
+  }
+
+  // Returns the children objects if they exists
+  std::vector<ModelObject> GeneratorFuelCell_Impl::children() const {
+    std::vector<ModelObject> result;
+    boost::optional<Curve> oCurve;
+
+    if (boost::optional<GeneratorFuelCellPowerModule> pm = powerModule()) {
+      result.push_back(pm.get());
+    }
+
+    if (boost::optional<GeneratorFuelCellAirSupply> as = airSupply()) {
+      result.push_back(as.get());
+    }
+
+    if (boost::optional<GeneratorFuelCellWaterSupply> ws = waterSupply()) {
+      result.push_back(ws.get());
+    }
+
+    if (boost::optional<GeneratorFuelCellAuxiliaryHeater> ht = auxiliaryHeater()) {
+      result.push_back(ht.get());
+    }
+
+    if (boost::optional<GeneratorFuelCellElectricalStorage> es = electricalStorage()) {
+      result.push_back(es.get());
+    }
+
+    if (boost::optional<GeneratorFuelCellInverter> in = inverter()) {
+      result.push_back(in.get());
+    }
+
+    if (boost::optional<GeneratorFuelCellStackCooler> sc = stackCooler()) {
+      result.push_back(sc.get());
+    }
+
+    if (boost::optional<GeneratorFuelSupply> fs = fuelSupply()) {
+      result.push_back(fs.get());
+    }
+
+    return result;
   }
 
   std::vector<ScheduleTypeKey> GeneratorFuelCell_Impl::getScheduleTypeKeys(const Schedule& schedule) const {

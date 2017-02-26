@@ -135,6 +135,12 @@ namespace detail {
     /** @name Other */
     //@{
 
+    virtual ModelObject clone(Model model) const override;
+
+    virtual std::vector<IddObjectType> allowableChildTypes() const override;
+
+    virtual std::vector<ModelObject> children() const override;
+
     //@}
    protected:
    private:

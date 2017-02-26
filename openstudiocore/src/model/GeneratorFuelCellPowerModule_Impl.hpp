@@ -38,6 +38,7 @@ namespace model {
 class CurveQuadratic;
 class ThermalZone;
 class Node;
+class GeneratorFuelCell;
 
 namespace detail {
 
@@ -136,6 +137,9 @@ namespace detail {
     double minimumOperatingPoint() const;
 
     double maximumOperatingPoint() const;
+
+    // Return optional parent generator
+    GeneratorFuelCell fuelCell() const;
 
     //@}
     /** @name Setters */
@@ -270,7 +274,11 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
+    virtual ModelObject clone(Model model) const override;
 
+    virtual std::vector<IddObjectType> allowableChildTypes() const;
+
+    virtual std::vector<ModelObject> children() const;
     //@}
    protected:
    private:

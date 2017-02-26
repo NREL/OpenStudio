@@ -36,6 +36,7 @@ namespace openstudio {
 namespace model {
 
 class Connection;
+class GeneratorFuelCell;
 
 namespace detail {
 
@@ -106,6 +107,9 @@ namespace detail {
     double stackAirCoolerFanCoefficientf1() const;
 
     double stackAirCoolerFanCoefficientf2() const;
+
+    // Return optional parent generator
+    GeneratorFuelCell fuelCell() const;
 
     //@}
     /** @name Setters */
@@ -186,11 +190,17 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
-    unsigned inletPort() override;
+    virtual unsigned inletPort() override;
 
-    unsigned outletPort() override;
+    virtual unsigned outletPort() override;
 
     bool addToNode(Node & node) override;
+
+    virtual ModelObject clone(Model model) const override;
+
+    virtual std::vector<IddObjectType> allowableChildTypes() const override;
+
+    virtual std::vector<ModelObject> children() const override;
     //@}
    protected:
    private:

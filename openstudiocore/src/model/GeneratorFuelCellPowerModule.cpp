@@ -25,7 +25,11 @@
  *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 
+#include "GeneratorFuelCell.hpp"
+#include "GeneratorFuelCell_Impl.hpp"
 #include "GeneratorFuelCellPowerModule.hpp"
 #include "GeneratorFuelCellPowerModule_Impl.hpp"
 
@@ -81,6 +85,58 @@ namespace detail {
 
   IddObjectType GeneratorFuelCellPowerModule_Impl::iddObjectType() const {
     return GeneratorFuelCellPowerModule::iddObjectType();
+  }
+
+  // This will clone both the GeneratorFuelCellExhaustGasToWaterHeatExchanger and its linked GeneratorFuelCell
+  // and will return a reference to the GeneratorMicroTurbineHeatRecovery
+  ModelObject GeneratorFuelCellPowerModule_Impl::clone(Model model) const {
+
+    // We call the parent generator's Clone method which will clone both the fuelCell and fuelCellHX
+    GeneratorFuelCell fs = fuelCell();
+    GeneratorFuelCell fsClone = fs.clone(model).cast<GeneratorFuelCell>();
+
+    // We get the clone of the parent generator's MTHR so we can return that
+    GeneratorFuelCellPowerModule hxClone = fsClone.powerModule();
+
+
+    return hxClone;
+  }
+
+  std::vector<IddObjectType> GeneratorFuelCellPowerModule_Impl::allowableChildTypes() const {
+    std::vector<IddObjectType> result;
+    result.push_back(IddObjectType::OS_Curve_Quadratic);
+    return result;
+  }
+
+  // Returns the children object
+  std::vector<ModelObject> GeneratorFuelCellPowerModule_Impl::children() const {
+    std::vector<ModelObject> result;
+    boost::optional<CurveQuadratic> curveQ;
+
+    if (curveQ = efficiencyCurve()) {
+      result.push_back(curveQ.get());
+    }
+    if (curveQ = skinLossQuadraticCurve()) {
+      result.push_back(curveQ.get());
+    }
+
+    return result;
+  }
+
+  // Get the parent GeneratorFuelCell
+  GeneratorFuelCell GeneratorFuelCellPowerModule_Impl::fuelCell() const {
+
+    boost::optional<GeneratorFuelCell> value;
+    for (const GeneratorFuelCell& fc : this->model().getConcreteModelObjects<GeneratorFuelCell>()) {
+      if (boost::optional<GeneratorFuelCellPowerModule> fcHX = fc.powerModule()) {
+        if (fcHX->handle() == this->handle()) {
+          value = fc;
+        }
+      }
+    }
+    OS_ASSERT(value);
+    return value.get();
+
   }
 
   std::string GeneratorFuelCellPowerModule_Impl::efficiencyCurveMode() const {
@@ -1342,6 +1398,10 @@ void GeneratorFuelCellPowerModule::setMaximumOperatingPoint(double maximumOperat
 
 void GeneratorFuelCellPowerModule::resetMaximumOperatingPoint() {
   getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->resetMaximumOperatingPoint();
+}
+
+GeneratorFuelCell GeneratorFuelCellPowerModule::fuelCell() const {
+  return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->fuelCell();
 }
 
 /// @cond

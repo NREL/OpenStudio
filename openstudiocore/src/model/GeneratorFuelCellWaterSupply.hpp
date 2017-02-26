@@ -40,6 +40,7 @@ class CurveQuadratic;
 class CurveCubic;
 class Node;
 class Schedule;
+class GeneratorFuelCell;
 
 namespace detail {
 
@@ -90,6 +91,9 @@ class MODEL_API GeneratorFuelCellWaterSupply : public ModelObject {
   boost::optional<Node> waterTemperatureReferenceNode() const;
 
   boost::optional<Schedule> waterTemperatureSchedule() const;
+
+  // Return optional parent generator
+  GeneratorFuelCell fuelCell() const;
 
   //@}
   /** @name Setters */

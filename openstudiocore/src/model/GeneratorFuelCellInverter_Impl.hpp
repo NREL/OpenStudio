@@ -36,6 +36,7 @@ namespace openstudio {
 namespace model {
 
 class CurveQuadratic;
+class GeneratorFuelCell;
 
 namespace detail {
 
@@ -77,6 +78,9 @@ namespace detail {
 
     boost::optional<CurveQuadratic> efficiencyFunctionofDCPowerCurve() const;
 
+    // Return optional parent generator
+    GeneratorFuelCell fuelCell() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -96,6 +100,12 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
+
+    virtual ModelObject clone(Model model) const override;
+
+    virtual std::vector<IddObjectType> allowableChildTypes() const;
+
+    virtual std::vector<ModelObject> children() const;
 
     //@}
    protected:

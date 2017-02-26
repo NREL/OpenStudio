@@ -25,12 +25,14 @@
  *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 
+#include "GeneratorFuelCell.hpp"
+#include "GeneratorFuelCell_Impl.hpp"
 #include "GeneratorFuelCellWaterSupply.hpp"
 #include "GeneratorFuelCellWaterSupply_Impl.hpp"
 
-#include "Model.hpp"
-#include "Model_Impl.hpp"
 #include "CurveCubic.hpp"
 #include "CurveCubic_Impl.hpp"
 #include "CurveQuadratic.hpp"
@@ -94,6 +96,59 @@ namespace detail {
     return GeneratorFuelCellWaterSupply::iddObjectType();
   }
 
+  // This will clone both the GeneratorFuelCellExhaustGasToWaterHeatExchanger and its linked GeneratorFuelCell
+  // and will return a reference to the GeneratorMicroTurbineHeatRecovery
+  ModelObject GeneratorFuelCellWaterSupply_Impl::clone(Model model) const {
+
+    // We call the parent generator's Clone method which will clone both the fuelCell and fuelCellHX
+    GeneratorFuelCell fs = fuelCell();
+    GeneratorFuelCell fsClone = fs.clone(model).cast<GeneratorFuelCell>();
+
+    // We get the clone of the parent generator's MTHR so we can return that
+    GeneratorFuelCellWaterSupply hxClone = fsClone.waterSupply();
+
+
+    return hxClone;
+  }
+
+  std::vector<IddObjectType> GeneratorFuelCellWaterSupply_Impl::allowableChildTypes() const {
+    std::vector<IddObjectType> result;
+    result.push_back(IddObjectType::OS_Curve_Cubic);
+    result.push_back(IddObjectType::OS_Curve_Quadratic);
+    return result;
+  }
+
+  // Returns the children object
+  std::vector<ModelObject> GeneratorFuelCellWaterSupply_Impl::children() const {
+    std::vector<ModelObject> result;
+    boost::optional<CurveQuadratic> curveQ;
+    boost::optional<CurveCubic> curveC;
+
+    if (curveC = reformerWaterPumpPowerFunctionofFuelRateCurve()) {
+      result.push_back(curveC.get());
+    }
+    if (curveQ = reformerWaterFlowRateFunctionofFuelRateCurve()) {
+      result.push_back(curveQ.get());
+    }
+
+    return result;
+  }
+
+  // Get the parent GeneratorFuelCell
+  GeneratorFuelCell GeneratorFuelCellWaterSupply_Impl::fuelCell() const {
+
+    boost::optional<GeneratorFuelCell> value;
+    for (const GeneratorFuelCell& fc : this->model().getConcreteModelObjects<GeneratorFuelCell>()) {
+      if (boost::optional<GeneratorFuelCellWaterSupply> fcHX = fc.waterSupply()) {
+        if (fcHX->handle() == this->handle()) {
+          value = fc;
+        }
+      }
+    }
+    OS_ASSERT(value);
+    return value.get();
+
+  }
   std::vector<ScheduleTypeKey> GeneratorFuelCellWaterSupply_Impl::getScheduleTypeKeys(const Schedule& schedule) const
   {
     std::vector<ScheduleTypeKey> result;
@@ -420,6 +475,10 @@ bool GeneratorFuelCellWaterSupply::setWaterTemperatureSchedule(Schedule& schedul
 
 void GeneratorFuelCellWaterSupply::resetWaterTemperatureSchedule() {
   getImpl<detail::GeneratorFuelCellWaterSupply_Impl>()->resetWaterTemperatureSchedule();
+}
+
+GeneratorFuelCell GeneratorFuelCellWaterSupply::fuelCell() const {
+  return getImpl<detail::GeneratorFuelCellWaterSupply_Impl>()->fuelCell();
 }
 
 /// @cond

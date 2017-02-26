@@ -25,7 +25,11 @@
  *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 
+#include "GeneratorFuelCell.hpp"
+#include "GeneratorFuelCell_Impl.hpp"
 #include "GeneratorFuelCellAuxiliaryHeater.hpp"
 #include "GeneratorFuelCellAuxiliaryHeater_Impl.hpp"
 
@@ -77,6 +81,49 @@ namespace detail {
 
   IddObjectType GeneratorFuelCellAuxiliaryHeater_Impl::iddObjectType() const {
     return GeneratorFuelCellAuxiliaryHeater::iddObjectType();
+  }
+
+  // This will clone both the GeneratorFuelCellExhaustGasToWaterHeatExchanger and its linked GeneratorFuelCell
+  // and will return a reference to the GeneratorMicroTurbineHeatRecovery
+  ModelObject GeneratorFuelCellAuxiliaryHeater_Impl::clone(Model model) const {
+
+    // We call the parent generator's Clone method which will clone both the fuelCell and fuelCellHX
+    GeneratorFuelCell fs = fuelCell();
+    GeneratorFuelCell fsClone = fs.clone(model).cast<GeneratorFuelCell>();
+
+    // We get the clone of the parent generator's MTHR so we can return that
+    GeneratorFuelCellAuxiliaryHeater hxClone = fsClone.auxiliaryHeater();
+
+
+    return hxClone;
+  }
+
+  std::vector<IddObjectType> GeneratorFuelCellAuxiliaryHeater_Impl::allowableChildTypes() const {
+    std::vector<IddObjectType> result;
+    return result;
+  }
+
+  // Returns the children object
+  std::vector<ModelObject> GeneratorFuelCellAuxiliaryHeater_Impl::children() const {
+    std::vector<ModelObject> result;
+
+    return result;
+  }
+
+  // Get the parent GeneratorFuelCell
+  GeneratorFuelCell GeneratorFuelCellAuxiliaryHeater_Impl::fuelCell() const {
+
+    boost::optional<GeneratorFuelCell> value;
+    for (const GeneratorFuelCell& fc : this->model().getConcreteModelObjects<GeneratorFuelCell>()) {
+      if (boost::optional<GeneratorFuelCellAuxiliaryHeater> fcHX = fc.auxiliaryHeater()) {
+        if (fcHX->handle() == this->handle()) {
+          value = fc;
+        }
+      }
+    }
+    OS_ASSERT(value);
+    return value.get();
+
   }
 
   double GeneratorFuelCellAuxiliaryHeater_Impl::excessAirRatio() const {
@@ -445,6 +492,10 @@ void GeneratorFuelCellAuxiliaryHeater::setMinimumHeatingCapacityinKmolperSecond(
 
 void GeneratorFuelCellAuxiliaryHeater::resetMinimumHeatingCapacityinKmolperSecond() {
   getImpl<detail::GeneratorFuelCellAuxiliaryHeater_Impl>()->resetMinimumHeatingCapacityinKmolperSecond();
+}
+
+GeneratorFuelCell GeneratorFuelCellAuxiliaryHeater::fuelCell() const {
+  return getImpl<detail::GeneratorFuelCellAuxiliaryHeater_Impl>()->fuelCell();
 }
 
 /// @cond

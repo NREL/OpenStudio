@@ -25,7 +25,11 @@
  *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 
+#include "GeneratorFuelCell.hpp"
+#include "GeneratorFuelCell_Impl.hpp"
 #include "GeneratorFuelCellStackCooler.hpp"
 #include "GeneratorFuelCellStackCooler_Impl.hpp"
 
@@ -78,6 +82,48 @@ namespace detail {
 
   IddObjectType GeneratorFuelCellStackCooler_Impl::iddObjectType() const {
     return GeneratorFuelCellStackCooler::iddObjectType();
+  }
+
+  // This will clone both the GeneratorFuelCellExhaustGasToWaterHeatExchanger and its linked GeneratorFuelCell
+  // and will return a reference to the GeneratorMicroTurbineHeatRecovery
+  ModelObject GeneratorFuelCellStackCooler_Impl::clone(Model model) const {
+
+    // We call the parent generator's Clone method which will clone both the fuelCell and fuelCellHX
+    GeneratorFuelCell fs = fuelCell();
+    GeneratorFuelCell fsClone = fs.clone(model).cast<GeneratorFuelCell>();
+
+    // We get the clone of the parent generator's MTHR so we can return that
+    GeneratorFuelCellStackCooler hxClone = fsClone.stackCooler().get();
+
+    return hxClone;
+  }
+
+  std::vector<IddObjectType> GeneratorFuelCellStackCooler_Impl::allowableChildTypes() const {
+    std::vector<IddObjectType> result;
+    return result;
+  }
+
+  // Returns the children object
+  std::vector<ModelObject> GeneratorFuelCellStackCooler_Impl::children() const {
+    std::vector<ModelObject> result;
+
+    return result;
+  }
+
+  // Get the parent GeneratorFuelCell
+  GeneratorFuelCell GeneratorFuelCellStackCooler_Impl::fuelCell() const {
+
+    boost::optional<GeneratorFuelCell> value;
+    for (const GeneratorFuelCell& fc : this->model().getConcreteModelObjects<GeneratorFuelCell>()) {
+      if (boost::optional<GeneratorFuelCellStackCooler> fcHX = fc.stackCooler()) {
+        if (fcHX->handle() == this->handle()) {
+          value = fc;
+        }
+      }
+    }
+    OS_ASSERT(value);
+    return value.get();
+
   }
 
   double GeneratorFuelCellStackCooler_Impl::nominalStackTemperature() const {
@@ -665,6 +711,10 @@ void GeneratorFuelCellStackCooler::setStackAirCoolerFanCoefficientf2(double stac
 
 void GeneratorFuelCellStackCooler::resetStackAirCoolerFanCoefficientf2() {
   getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->resetStackAirCoolerFanCoefficientf2();
+}
+
+GeneratorFuelCell GeneratorFuelCellStackCooler::fuelCell() const {
+  return getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->fuelCell();
 }
 
 /// @cond

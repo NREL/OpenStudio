@@ -36,6 +36,7 @@ namespace openstudio {
 namespace model {
 
 class ThermalZone;
+class GeneratorFuelCell;
 
 namespace detail {
 
@@ -93,6 +94,9 @@ namespace detail {
 
     double minimumHeatingCapacityinKmolperSecond() const;
 
+    // Return optional parent generator
+    GeneratorFuelCell fuelCell() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -144,7 +148,11 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
+    virtual ModelObject clone(Model model) const;
 
+    virtual std::vector<IddObjectType> allowableChildTypes() const;
+
+    virtual std::vector<ModelObject> children() const;
     //@}
    protected:
    private:

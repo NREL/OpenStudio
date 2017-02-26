@@ -37,6 +37,7 @@ namespace openstudio {
 namespace model {
 
 class ThermalZone;
+class GeneratorFuelCell;
 
 namespace detail {
 
@@ -86,6 +87,9 @@ class MODEL_API GeneratorFuelCellAuxiliaryHeater : public ModelObject {
   double maximumHeatingCapacityinKmolperSecond() const;
 
   double minimumHeatingCapacityinKmolperSecond() const;
+
+  // Return optional parent generator
+  GeneratorFuelCell fuelCell() const;
 
   //@}
   /** @name Setters */

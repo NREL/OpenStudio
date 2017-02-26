@@ -26,8 +26,29 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
 
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+
+#include "GeneratorFuelCell.hpp"
+#include "GeneratorFuelCell_Impl.hpp"
+#include "GeneratorFuelCellPowerModule.hpp"
+#include "GeneratorFuelCellPowerModule_Impl.hpp"
+#include "GeneratorFuelCellAirSupply.hpp"
+#include "GeneratorFuelCellAirSupply_Impl.hpp"
+#include "GeneratorFuelCellWaterSupply.hpp"
+#include "GeneratorFuelCellWaterSupply_Impl.hpp"
+#include "GeneratorFuelCellAuxiliaryHeater.hpp"
+#include "GeneratorFuelCellAuxiliaryHeater_Impl.hpp"
 #include "GeneratorFuelCellExhaustGasToWaterHeatExchanger.hpp"
 #include "GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl.hpp"
+#include "GeneratorFuelCellElectricalStorage.hpp"
+#include "GeneratorFuelCellElectricalStorage_Impl.hpp"
+#include "GeneratorFuelCellInverter.hpp"
+#include "GeneratorFuelCellInverter_Impl.hpp"
+#include "GeneratorFuelCellStackCooler.hpp"
+#include "GeneratorFuelCellStackCooler_Impl.hpp"
+#include "GeneratorFuelSupply.hpp"
+#include "GeneratorFuelSupply_Impl.hpp"
 
 #include "Connection.hpp"
 #include "Connection_Impl.hpp"
@@ -79,6 +100,54 @@ namespace detail {
 
   IddObjectType GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::iddObjectType() const {
     return GeneratorFuelCellExhaustGasToWaterHeatExchanger::iddObjectType();
+  }
+
+  // This will clone both the GeneratorFuelCellExhaustGasToWaterHeatExchanger and its linked GeneratorFuelCell
+  // and will return a reference to the GeneratorMicroTurbineHeatRecovery
+  ModelObject GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::clone(Model model) const {
+
+    // We call the parent generator's Clone method which will clone both the fuelCell and fuelCellHX
+    GeneratorFuelCell fs = fuelCell();
+    GeneratorFuelCell fsClone = fs.clone(model).cast<GeneratorFuelCell>();
+
+    // We get the clone of the parent generator's MTHR so we can return that
+    GeneratorFuelCellExhaustGasToWaterHeatExchanger hxClone = fsClone.heatExchanger();
+
+
+    return hxClone;
+  }
+
+  std::vector<IddObjectType> GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::allowableChildTypes() const {
+    std::vector<IddObjectType> result;
+    result.push_back(IddObjectType::OS_Generator_FuelCell);
+    return result;
+  }
+
+  // Returns the children object
+  std::vector<ModelObject> GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::children() const {
+    std::vector<ModelObject> result;
+
+    if (boost::optional<GeneratorFuelCell> fc = fuelCell()) {
+      result.push_back(fc.get());
+    }
+
+    return result;
+  }
+
+  // Get the parent GeneratorFuelCell
+  GeneratorFuelCell GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::fuelCell() const {
+
+    boost::optional<GeneratorFuelCell> value;
+    for (const GeneratorFuelCell& fc : this->model().getConcreteModelObjects<GeneratorFuelCell>()) {
+      if (boost::optional<GeneratorFuelCellExhaustGasToWaterHeatExchanger> fcHX = fc.heatExchanger()) {
+        if (fcHX->handle() == this->handle()) {
+          value = fc;
+        }
+      }
+    }
+    OS_ASSERT(value);
+    return value.get();
+
   }
 
   double GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::heatRecoveryWaterMaximumFlowRate() const {
@@ -711,6 +780,10 @@ void GeneratorFuelCellExhaustGasToWaterHeatExchanger::setMethod4CondensationThre
 
 void GeneratorFuelCellExhaustGasToWaterHeatExchanger::resetMethod4CondensationThreshold() {
   getImpl<detail::GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl>()->resetMethod4CondensationThreshold();
+}
+
+GeneratorFuelCell GeneratorFuelCellExhaustGasToWaterHeatExchanger::fuelCell() const {
+  return getImpl<detail::GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl>()->fuelCell();
 }
 
 /// @cond

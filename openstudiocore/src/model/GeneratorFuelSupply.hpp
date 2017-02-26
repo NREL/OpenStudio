@@ -39,6 +39,7 @@ namespace model {
 class Node;
 class Schedule;
 class CurveCubic;
+class GeneratorFuelCell;
 
 namespace detail {
 
@@ -101,6 +102,8 @@ class MODEL_API GeneratorFuelSupply : public ModelObject {
 
   boost::optional<unsigned int> numberofConstituentsinGaseousConstituentFuelSupply() const;
 
+  // Return optional parent generator
+  GeneratorFuelCell fuelCell() const;
 
   //@}
   /** @name Setters */

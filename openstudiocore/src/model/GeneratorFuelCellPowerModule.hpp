@@ -31,6 +31,8 @@
 
 #include <model/ModelAPI.hpp>
 #include "ModelObject.hpp"
+#include "GeneratorFuelCell.hpp"
+#include "GeneratorFuelCell_Impl.hpp"
 
 namespace openstudio {
 
@@ -39,6 +41,7 @@ namespace model {
 class CurveQuadratic;
 class ThermalZone;
 class Node;
+class GeneratorFuelCell;
 
 namespace detail {
 
@@ -151,6 +154,9 @@ class MODEL_API GeneratorFuelCellPowerModule : public ModelObject {
   double minimumOperatingPoint() const;
 
   double maximumOperatingPoint() const;
+
+  // Return optional parent generator
+  GeneratorFuelCell fuelCell() const;
 
   //@}
   /** @name Setters */

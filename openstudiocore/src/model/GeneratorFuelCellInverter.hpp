@@ -37,6 +37,7 @@ namespace openstudio {
 namespace model {
 
 class CurveQuadratic;
+class GeneratorFuelCell;
 
 namespace detail {
 
@@ -71,6 +72,9 @@ class MODEL_API GeneratorFuelCellInverter : public ModelObject {
   double inverterEfficiency() const;
 
   boost::optional<CurveQuadratic> efficiencyFunctionofDCPowerCurve() const;
+
+  // Return optional parent generator
+  GeneratorFuelCell fuelCell() const;
 
   //@}
   /** @name Setters */

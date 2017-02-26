@@ -39,6 +39,7 @@ class CurveQuadratic;
 class CurveCubic;
 class Node;
 class Schedule;
+class GeneratorFuelCell;
 
 namespace detail {
 
@@ -88,6 +89,9 @@ namespace detail {
 
     boost::optional<Schedule> waterTemperatureSchedule() const;
 
+    // Return optional parent generator
+    GeneratorFuelCell fuelCell() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -115,7 +119,11 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
+    virtual ModelObject clone(Model model) const override;
 
+    virtual std::vector<IddObjectType> allowableChildTypes() const;
+
+    virtual std::vector<ModelObject> children() const;
     //@}
    protected:
    private:

@@ -37,6 +37,7 @@ namespace model {
 
 class Connection;
 class Node;
+class GeneratorFuelCell;
 
 namespace detail {
 
@@ -113,6 +114,9 @@ class MODEL_API GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl : public St
     boost::optional<double> method4hxl2Coefficient() const;
 
     boost::optional<double> method4CondensationThreshold() const;
+
+    // Return optional parent generator
+    GeneratorFuelCell fuelCell() const;
 
     //@}
     /** @name Setters */
@@ -206,11 +210,18 @@ class MODEL_API GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl : public St
     /** @name Other */
     //@{
 
-    unsigned inletPort() override;
+    virtual unsigned inletPort() override;
 
-    unsigned outletPort() override;
+    virtual unsigned outletPort() override;
 
     bool addToNode(Node & node) override;
+
+    virtual ModelObject clone(Model model) const override;
+
+    virtual std::vector<IddObjectType> allowableChildTypes() const override;
+
+    virtual std::vector<ModelObject> children() const override;
+
 
     //@}
    protected:
