@@ -210,7 +210,7 @@ Copy build to VM's share folder
 OSVersion Testing
 =================
 
-In folder `build\OSCore-prefix\src\OSCore-build\Products\Release`
+In folder `build\Products\Release`
 
 - Open cmd prompt
 - Drag and drop `openstudio_osversion_tests.exe` onto the prompt, then run
@@ -239,7 +239,7 @@ Sanity Testing Release Builds
 ### Tests to run
 - Test prior version of OpenStudio model
 - Test prior version of PAT project
-- Use SketchUp to make a model on Windows 32 bit, Windows 64 bit, and Mac
+- Use SketchUp to make a model on Windows 64 bit, and Mac
 - Test running PAT on the cloud on at least one platform
 - Test BCL downloads
 - Test user scripts in SketchUp
