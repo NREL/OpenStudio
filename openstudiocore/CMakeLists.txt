@@ -1390,7 +1390,7 @@ install(FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_
 ###############################################################################
 
 if(NOT UNIX)
-  install(DIRECTORY "${CMAKE_BINARY_DIR}/strawberry-perl-5.16.2.1-32bit-portable-reduced/perl" DESTINATION ./Perl/ COMPONENT Radiance )
+  install(DIRECTORY "${CMAKE_BINARY_DIR}/strawberry-perl-5.16.2.1-32bit-portable-reduced/perl" DESTINATION ./Perl/ COMPONENT Radiance USE_SOURCE_PERMISSIONS )
 
   #set(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP ON)
   include(InstallRequiredSystemLibraries)
@@ -1444,10 +1444,10 @@ else()
 endif()
 
 if ( WIN32 )
-  install(DIRECTORY "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}/" DESTINATION ./Radiance/ COMPONENT Radiance )
+  install(DIRECTORY "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}/" DESTINATION ./Radiance/ COMPONENT Radiance USE_SOURCE_PERMISSIONS )
 else()
   string(REPLACE "-Redhat" "-Linux" RADIANCE_PATH ${RADIANCE_PATH})
-  install(DIRECTORY "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}/usr/local/radiance/" DESTINATION ./Radiance/ COMPONENT Radiance )
+  install(DIRECTORY "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}/usr/local/radiance/" DESTINATION ./Radiance/ COMPONENT Radiance USE_SOURCE_PERMISSIONS )
 endif()
 
 if( BUILD_PAT AND APPLE )
