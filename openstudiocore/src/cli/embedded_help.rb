@@ -68,7 +68,15 @@ module Kernel
 
   def require_embedded_absolute path
     $LOADED << path
-    result = eval(EmbeddedScripting::getFileAsString(path),BINDING,path)
+    s = EmbeddedScripting::getFileAsString(path)
+    
+    # DLM: temporary hack to get around autoload
+    s = s.gsub(/^\s*autoload\s*(:.*?),\s*(.*?)\s*$/, "current_module_ = Module.nesting[0].nil? ? Object : Module.nesting[0]
+    $autoload_hash[current_module_.to_s.to_sym] = {} if $autoload_hash[current_module_.to_s.to_sym].nil?
+    $autoload_hash[current_module_.to_s.to_sym][\\1] = [current_module_, \\2]")
+
+    result = eval(s,BINDING,path)
+    
     return result
   end
 
@@ -121,3 +129,47 @@ module Kernel
   
 end
 
+$autoload_hash = {}
+
+class Module
+  
+  alias :original_const_missing :const_missing
+  
+  def const_missing(m)
+    if caller_locations(1,1)[0].path.chars.first == ':'
+      sym = self.to_s.to_sym
+      
+      lookup = $autoload_hash[sym]
+      if lookup.nil?
+        # this seems to occur if a class and a module have the same name?
+        if md = /\#\<Class\:(.*)\>/.match(self.to_s)
+          sym = md[1].to_sym
+          lookup = $autoload_hash[sym]
+        end
+      end
+      
+      if lookup.nil?
+        # check parent modules
+        while md = /(.*)\:\:.*?/.match(sym.to_s)
+          sym = md[1].to_sym
+          lookup = $autoload_hash[sym]
+          break if lookup
+        end
+      end
+      
+      return nil if lookup.nil?
+      
+      return nil if lookup[m].nil?
+      mod = lookup[m][0]
+      path = lookup[m][1]
+
+      require path
+      
+      result = mod.const_get(m)
+
+      return result
+    end
+    
+    original_const_missing(m)
+  end
+end

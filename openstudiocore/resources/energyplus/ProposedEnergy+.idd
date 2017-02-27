@@ -23359,7 +23359,7 @@ ZoneHVAC:UnitVentilator,
    A12, \field Supply Air Fan Name
         \required-field
         \type object-list
-        \object-list FansCVandVAV
+        \object-list FansCVandOnOffandVAV
    A13, \field Coil Option
         \required-field
         \type choice
@@ -57811,4 +57811,4 @@ Output:PreprocessorMessage,
         \retaincase
    A12; \field Message Line 10
         \retaincase
-
+        

@@ -28,12 +28,12 @@ PLATFORMS
   x86-mingw32
 
 DEPENDENCIES
-  minitest (~> 4.7)
+  bundler (= 1.14.4)
   openstudio-standards (= 0.1.11)
   openstudio-workflow (= 1.1.1)
-  parallel (~> 1.10.0)
-  rspec (~> 3.5.0)
-  test-unit-minitest (~> 0.9.1)
+  parallel (= 1.10.0)
+  rspec (= 3.5.0)
+  test-unit-minitest (= 0.9.1)
 
 BUNDLED WITH
-   1.14.3
+   1.14.4
