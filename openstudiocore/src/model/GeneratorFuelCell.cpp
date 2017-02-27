@@ -51,6 +51,8 @@
 #include "GeneratorFuelSupply_Impl.hpp"
 #include "CurveQuadratic.hpp"
 #include "CurveQuadratic_Impl.hpp"
+#include "CurveCubic.hpp"
+#include "CurveCubic_Impl.hpp"
 
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
@@ -189,18 +191,40 @@ namespace detail {
   // Returns the children objects if they exists
   std::vector<ModelObject> GeneratorFuelCell_Impl::children() const {
     std::vector<ModelObject> result;
-    boost::optional<Curve> oCurve;
+    boost::optional<CurveQuadratic> curveQ;
+    boost::optional<CurveCubic> curveC;
 
     if (boost::optional<GeneratorFuelCellPowerModule> pm = powerModule()) {
       result.push_back(pm.get());
+      if (curveQ = powerModule().efficiencyCurve()) {
+        result.push_back(curveQ.get());
+      }
+      if (curveQ = powerModule().skinLossQuadraticCurve()) {
+        result.push_back(curveQ.get());
+      }
     }
 
     if (boost::optional<GeneratorFuelCellAirSupply> as = airSupply()) {
       result.push_back(as.get());
+      if (curveC = airSupply().blowerPowerCurve()) {
+        result.push_back(curveC.get());
+      }
+      if (curveQ = airSupply().airRateFunctionofElectricPowerCurve()) {
+        result.push_back(curveQ.get());
+      }
+      if (curveQ = airSupply().airRateFunctionofFuelRateCurve()) {
+        result.push_back(curveQ.get());
+      }
     }
 
     if (boost::optional<GeneratorFuelCellWaterSupply> ws = waterSupply()) {
       result.push_back(ws.get());
+      if (curveC = waterSupply().reformerWaterPumpPowerFunctionofFuelRateCurve()) {
+        result.push_back(curveC.get());
+      }
+      if (curveQ = waterSupply().reformerWaterFlowRateFunctionofFuelRateCurve()) {
+        result.push_back(curveQ.get());
+      }
     }
 
     if (boost::optional<GeneratorFuelCellAuxiliaryHeater> ht = auxiliaryHeater()) {
@@ -213,6 +237,9 @@ namespace detail {
 
     if (boost::optional<GeneratorFuelCellInverter> in = inverter()) {
       result.push_back(in.get());
+      if (curveQ = inverter().efficiencyFunctionofDCPowerCurve()) {
+        result.push_back(curveQ.get());
+      }
     }
 
     if (boost::optional<GeneratorFuelCellStackCooler> sc = stackCooler()) {
@@ -221,6 +248,9 @@ namespace detail {
 
     if (boost::optional<GeneratorFuelSupply> fs = fuelSupply()) {
       result.push_back(fs.get());
+      if (curveC = fuelSupply().compressorPowerMultiplierFunctionofFuelRateCurve()) {
+        result.push_back(curveC.get());
+      }
     }
 
     return result;

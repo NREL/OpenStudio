@@ -960,12 +960,12 @@ GeneratorFuelCellPowerModule::GeneratorFuelCellPowerModule(const Model& model)
   setEfficiencyCurveMode("Annex42");
   //create default curve
   CurveQuadratic curveQuadratic(model);
-  curveQuadratic.setCoefficient1Constant(1);
-  curveQuadratic.setCoefficient2x(0);
-  curveQuadratic.setCoefficient3xPOW2(0);
+  curveQuadratic.setCoefficient1Constant(0.642388);
+  curveQuadratic.setCoefficient2x(-0.0001619);
+  curveQuadratic.setCoefficient3xPOW2(0.0000000226);
   curveQuadratic.setMinimumValueofx(0);
-  curveQuadratic.setMaximumValueofx(1);
-
+  curveQuadratic.setMaximumValueofx(10000);
+  curveQuadratic.setName("Power Module Efficiency Curve");
   bool ok = setEfficiencyCurve(curveQuadratic);
   if (!ok) {
     remove();
@@ -1004,6 +1004,15 @@ GeneratorFuelCellPowerModule::GeneratorFuelCellPowerModule(const Model& model)
   //setDilutionOutletAirNode();
   setMinimumOperatingPoint(3010);
   setMaximumOperatingPoint(3728);
+
+  CurveQuadratic curveQ2(model);
+  curveQ2.setCoefficient1Constant(0);
+  curveQ2.setCoefficient2x(0);
+  curveQ2.setCoefficient3xPOW2(0);
+  curveQ2.setMinimumValueofx(-1.0e10);
+  curveQ2.setMaximumValueofx(1.0e10);
+  curveQ2.setName("Skin Loss Curve");
+  setSkinLossQuadraticCurve(curveQ2);
 }
 
 IddObjectType GeneratorFuelCellPowerModule::iddObjectType() {

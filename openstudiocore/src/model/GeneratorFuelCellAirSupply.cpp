@@ -502,6 +502,7 @@ GeneratorFuelCellAirSupply::GeneratorFuelCellAirSupply(const Model& model)
   curveCubic.setCoefficient4xPOW3(0);
   curveCubic.setMinimumValueofx(-1.0e10);
   curveCubic.setMaximumValueofx(1.0e10);
+  curveCubic.setName("Blower Power Curve");
   bool ok = setBlowerPowerCurve(curveCubic);
   if (!ok) {
     remove();
@@ -516,6 +517,35 @@ GeneratorFuelCellAirSupply::GeneratorFuelCellAirSupply(const Model& model)
   setAirIntakeHeatRecoveryMode("NoRecovery");
   setAirSupplyConstituentMode("AmbientAir");
   setNumberofUserDefinedConstituents(0);
+
+  CurveQuadratic curveQ(model);
+  curveQ.setCoefficient1Constant(1.50976E-3);
+  curveQ.setCoefficient2x(-7.76656E-7);
+  curveQ.setCoefficient3xPOW2(1.30317E-10);
+  curveQ.setMinimumValueofx(-1.0e10);
+  curveQ.setMaximumValueofx(1.0e10);
+  curveQ.setName("Air Rate Function of Electric Power Curve");
+  ok = setAirRateFunctionofElectricPowerCurve(curveQ);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s setBlowerPowerCurve to "
+      << curveQ.briefDescription() << ".");
+  }
+
+  CurveQuadratic curveQ2(model);
+  curveQ2.setMinimumValueofx(-1.0e10);
+  curveQ2.setMaximumValueofx(1.0e10);
+  curveQ2.setCoefficient1Constant(0);
+  curveQ2.setCoefficient2x(0);
+  curveQ2.setCoefficient3xPOW2(0);
+  curveQ2.setName("Air Rate Function of Fuel Rate Curve");
+  ok = setAirRateFunctionofFuelRateCurve(curveQ2);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s setBlowerPowerCurve to "
+      << curveQ2.briefDescription() << ".");
+  }
+
 }
 
 IddObjectType GeneratorFuelCellAirSupply::iddObjectType() {

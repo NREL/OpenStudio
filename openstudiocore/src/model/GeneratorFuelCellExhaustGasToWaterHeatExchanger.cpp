@@ -518,7 +518,15 @@ GeneratorFuelCellExhaustGasToWaterHeatExchanger::GeneratorFuelCellExhaustGasToWa
   OS_ASSERT(getImpl<detail::GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl>());
 
   setHeatRecoveryWaterMaximumFlowRate(0.0004);
-  setHeatExchangerCalculationMethod("FixedEffectiveness");
+  setHeatExchangerCalculationMethod("Condensing");
+  setMethod2Parameterhxs0(83.1);
+  setMethod2Parameterhxs1(4798);
+  setMethod2Parameterhxs2(-138e3);
+  setMethod2Parameterhxs3(-353.8e3);
+  setMethod2Parameterhxs4(5.15e8);
+  setMethod4hxl1Coefficient(-0.000196);
+  setMethod4hxl1Coefficient(0.0031);
+  setMethod4CondensationThreshold(35.0);
 }
 
 IddObjectType GeneratorFuelCellExhaustGasToWaterHeatExchanger::iddObjectType() {

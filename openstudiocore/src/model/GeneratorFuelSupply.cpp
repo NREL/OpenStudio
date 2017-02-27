@@ -447,6 +447,7 @@ GeneratorFuelSupply::GeneratorFuelSupply(const Model& model)
   curveCubic.setCoefficient4xPOW3(0);
   curveCubic.setMinimumValueofx(-1.0e10);
   curveCubic.setMaximumValueofx(1.0e10);
+  curveCubic.setName("Compressor Power Multiplier Function of FuelRate Curve");
   setCompressorPowerMultiplierFunctionofFuelRateCurve(curveCubic);
   setCompressorHeatLossFactor(1);
   setFuelType("LiquidGeneric");

@@ -192,6 +192,15 @@ GeneratorFuelCellInverter::GeneratorFuelCellInverter(const Model& model)
 
   setInverterEfficiencyCalculationMode("Constant");
   setInverterEfficiency(1.0);
+
+  CurveQuadratic curveQ(model);
+  curveQ.setCoefficient1Constant(0.560717);
+  curveQ.setCoefficient2x(0.00012401);
+  curveQ.setCoefficient3xPOW2(-0.0000000201648);
+  curveQ.setMinimumValueofx(-1.0e10);
+  curveQ.setMaximumValueofx(1.0e10);
+  curveQ.setName("Efficiency Function of DC Power Curve");
+  setEfficiencyFunctionofDCPowerCurve(curveQ);
 }
 
 GeneratorFuelCellInverter::GeneratorFuelCellInverter(const Model& model,
