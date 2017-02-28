@@ -44,6 +44,8 @@
 #include "SubSurface_Impl.hpp"
 #include "GeneratorPhotovoltaic.hpp"
 #include "GeneratorPhotovoltaic_Impl.hpp"
+#include "SurfacePropertyConvectionCoefficients.hpp"
+#include "SurfacePropertyConvectionCoefficients_Impl.hpp"
 
 #include "../utilities/sql/SqlFile.hpp"
 
@@ -576,6 +578,11 @@ namespace model {
     {
       return getObject<ModelObject>().getModelObjectSources<GeneratorPhotovoltaic>();
     }
+
+    std::vector<SurfacePropertyConvectionCoefficients> PlanarSurface_Impl::surfacePropertyConvectionCoefficients() const
+    {
+      return getObject<ModelObject>().getModelObjectSources<SurfacePropertyConvectionCoefficients>();
+    }
     
     boost::optional<ModelObject> PlanarSurface_Impl::constructionAsModelObject() const
     {
@@ -811,6 +818,11 @@ std::vector<ModelObject> PlanarSurface::solarCollectors() const
 std::vector<GeneratorPhotovoltaic> PlanarSurface::generatorPhotovoltaics() const
 {
   return getImpl<detail::PlanarSurface_Impl>()->generatorPhotovoltaics();
+}
+
+std::vector<SurfacePropertyConvectionCoefficients> PlanarSurface::surfacePropertyConvectionCoefficients() const
+{
+  return getImpl<detail::PlanarSurface_Impl>()->surfacePropertyConvectionCoefficients();
 }
 
 std::vector<PlanarSurface> PlanarSurface::findPlanarSurfaces(const std::vector<PlanarSurface>& planarSurfaces,

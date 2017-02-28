@@ -2966,6 +2966,8 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_ShadingSurfaceGroup);
   result.push_back(IddObjectType::OS_ShadingSurface);
 
+  result.push_back(IddObjectType::OS_SurfaceProperty_ConvectionCoefficients);
+
   result.push_back(IddObjectType::OS_Daylighting_Control);
   result.push_back(IddObjectType::OS_DaylightingDevice_Shelf);
   result.push_back(IddObjectType::OS_IlluminanceMap);

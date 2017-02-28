@@ -41,8 +41,12 @@
 #include "../model/AvailabilityManagerOptimumStart_Impl.hpp"
 #include "../model/AvailabilityManagerNightCycle.hpp"
 #include "../model/AvailabilityManagerNightCycle_Impl.hpp"
+#include "../model/HeatExchangerAirToAirSensibleAndLatent.hpp"
+#include "../model/HeatExchangerAirToAirSensibleAndLatent_Impl.hpp"
 #include "../model/Facility.hpp"
 #include "../model/Facility_Impl.hpp"
+#include "../model/FanZoneExhaust.hpp"
+#include "../model/FanZoneExhaust_Impl.hpp"
 #include "../model/Building.hpp"
 #include "../model/Building_Impl.hpp"
 #include "../model/ThermalZone.hpp"
@@ -70,6 +74,8 @@
 #include "../model/YearDescription_Impl.hpp"
 #include "../model/OutputControlReportingTolerances.hpp"
 #include "../model/OutputControlReportingTolerances_Impl.hpp"
+#include "../model/SubSurface.hpp"
+#include "../model/SubSurface_Impl.hpp"
 #include "../model/ChillerElectricEIR.hpp"
 #include "../model/ChillerElectricEIR_Impl.hpp"
 #include "../model/CoolingTowerSingleSpeed.hpp"
@@ -86,6 +92,8 @@
 #include "../model/Splitter_Impl.hpp"
 #include "../model/Mixer.hpp"
 #include "../model/Mixer_Impl.hpp"
+#include "../model/OutputMeter.hpp"
+#include "../model/OutputMeter_Impl.hpp"
 #include "../model/WaterToWaterComponent.hpp"
 #include "../model/WaterToWaterComponent_Impl.hpp"
 #include "../model/WaterToAirComponent.hpp"
@@ -415,6 +423,24 @@ namespace sdd {
         boost::optional<model::ModelObject> curve = translateCrvLin(crvLinElement, doc, *result);
         if (!curve){
           LOG(Error, "Failed to translate 'CrvLin' element " << i);
+        }
+      }
+
+      auto crvMapSglVarElements = projectElement.elementsByTagName("CrvMapSglVar");
+      for (int i = 0; i < crvMapSglVarElements.count(); i++){
+        auto crvMapSglVarElement = crvMapSglVarElements.at(i).toElement();
+        auto curve = translateCrvMapSglVar(crvMapSglVarElement, doc, *result);
+        if (!curve){
+          LOG(Error, "Failed to translate 'CrvMapSglVar' element " << i);
+        }
+      }
+
+      auto crvMapDblVarElements = projectElement.elementsByTagName("CrvMapDblVar");
+      for (int i = 0; i < crvMapDblVarElements.count(); i++){
+        auto crvMapDblVarElement = crvMapDblVarElements.at(i).toElement();
+        auto curve = translateCrvMapDblVar(crvMapDblVarElement, doc, *result);
+        if (!curve){
+          LOG(Error, "Failed to translate 'CrvMapDblVar' element " << i);
         }
       }
 
@@ -824,13 +850,36 @@ namespace sdd {
               {
                 mixedAir->setName(comp->name().get() + " Mixed Air Node");
               }
-              if( boost::optional<model::Node> oaNode = comp->outboardOANode() )
-              {
+
+              auto oaNode = comp->outboardOANode();
+              auto reliefNode = comp->outboardReliefNode();
+              if( oaNode ) {
                 oaNode->setName(comp->name().get() + " OA Node");
               }
-              if( boost::optional<model::Node> reliefNode = comp->outboardReliefNode() )
-              {
+              if( reliefNode ) {
                 reliefNode->setName(comp->name().get() + " Relief Node");
+              }
+
+              {
+                auto oaNodes = subsetCastVector<model::Node>(comp->oaComponents());
+                for( auto & node : oaNodes ) {
+                  if( oaNode && (node != oaNode.get()) ) {
+                    if( const auto & outletComp = node.inletModelObject() ) {
+                      node.setName(outletComp->nameString() + " OA Stream Outlet Node");
+                    }
+                  }
+                }
+              }
+
+              {
+                auto reliefNodes = subsetCastVector<model::Node>(comp->reliefComponents());
+                for( auto & node : reliefNodes ) {
+                  if( reliefNode && (node != reliefNode.get()) ) {
+                    if( const auto & outletComp = node.inletModelObject() ) {
+                      node.setName(outletComp->nameString() + " Relief Stream Outlet Node");
+                    }
+                  }
+                }
               }
             }
             else if( boost::optional<model::Mixer> comp = it->optionalCast<model::Mixer>() )
@@ -1029,6 +1078,26 @@ namespace sdd {
       meter.setInstallLocationType(InstallLocationType::Facility);
       meter.setReportingFrequency("Hourly");
 
+      {
+        auto fanZoneExhausts = result->getModelObjects<model::FanZoneExhaust>();
+        std::vector<std::string> subCategories(fanZoneExhausts.size());
+        std::transform(fanZoneExhausts.begin(), fanZoneExhausts.end(), subCategories.begin(), [](const model::FanZoneExhaust & fan) {
+          return fan.endUseSubcategory();
+        });
+        std::sort(subCategories.begin(),subCategories.end());
+        auto last = std::unique(subCategories.begin(),subCategories.end());
+        subCategories.erase(last,subCategories.end());
+
+        for( const auto & subcat : subCategories ) {
+          meter = model::OutputMeter(*result);
+          meter.setFuelType(FuelType::Electricity);
+          meter.setEndUseType(EndUseType::Fans);
+          meter.setSpecificEndUse(subcat);
+          meter.setInstallLocationType(InstallLocationType::Facility);
+          meter.setReportingFrequency("Hourly");
+        }
+      }
+
       // Output Variables
 
       QDomElement simVarsIntervalElement = projectElement.firstChildElement("SimVarsInterval");
@@ -1049,6 +1118,9 @@ namespace sdd {
 
         var = model::OutputVariable("Site Direct Solar Radiation Rate per Area",*result);
         var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Site Diffuse Solar Radiation Rate per Area", *result);
+        var.setReportingFrequency(interval);
       }
 
       // SimVarsDayltg
@@ -1066,6 +1138,74 @@ namespace sdd {
 
         var = model::OutputVariable("Daylighting Lighting Power Multiplier",*result);
         var.setReportingFrequency(interval);
+      }
+
+      // SimVarsFen
+
+      QDomElement simVarsFenElement = projectElement.firstChildElement("SimVarsFen");
+
+      if ((simVarsFenElement.text().toInt() == 1))
+      {
+        for (const auto& subSurface : result->getConcreteModelObjects<model::SubSurface>())
+        {
+          std::string subSurfaceType = subSurface.subSurfaceType();
+
+          if (istringEqual(subSurfaceType, "FixedWindow") ||
+              istringEqual(subSurfaceType, "OperableWindow") ||
+              istringEqual(subSurfaceType, "GlassDoor") ||
+              istringEqual(subSurfaceType, "Skylight") ||
+              istringEqual(subSurfaceType, "TubularDaylightDome") ||
+              istringEqual(subSurfaceType, "TubularDaylightDiffuser"))
+          {
+            model::OutputVariable var("Surface Window Heat Gain Rate", *result);
+            var.setKeyValue(subSurface.name().get());
+            var.setReportingFrequency(interval);
+
+            var = model::OutputVariable("Surface Window Heat Loss Rate", *result);
+            var.setKeyValue(subSurface.name().get());
+            var.setReportingFrequency(interval);
+
+            var = model::OutputVariable("Surface Inside Face Adjacent Air Temperature", *result);
+            var.setKeyValue(subSurface.name().get());
+            var.setReportingFrequency(interval);
+
+            var = model::OutputVariable("Surface Outside Face Outdoor Air Drybulb Temperature", *result);
+            var.setKeyValue(subSurface.name().get());
+            var.setReportingFrequency(interval);
+          }
+        }
+      }
+
+      // SimVarsDr
+
+      QDomElement simVarsDrElement = projectElement.firstChildElement("SimVarsDr");
+
+      if ((simVarsDrElement.text().toInt() == 1))
+      {
+        for (const auto& subSurface : result->getConcreteModelObjects<model::SubSurface>())
+        {
+          std::string subSurfaceType = subSurface.subSurfaceType();
+
+          if (istringEqual(subSurfaceType, "Door") ||
+              istringEqual(subSurfaceType, "OverheadDoor"))
+          {
+            model::OutputVariable var("Surface Average Face Conduction Heat Gain Rate", *result);
+            var.setKeyValue(subSurface.name().get());
+            var.setReportingFrequency(interval);
+
+            var = model::OutputVariable("Surface Average Face Conduction Heat Loss Rate", *result);
+            var.setKeyValue(subSurface.name().get());
+            var.setReportingFrequency(interval);
+
+            var = model::OutputVariable("Surface Inside Face Adjacent Air Temperature", *result);
+            var.setKeyValue(subSurface.name().get());
+            var.setReportingFrequency(interval);
+
+            var = model::OutputVariable("Surface Outside Face Outdoor Air Drybulb Temperature", *result);
+            var.setKeyValue(subSurface.name().get());
+            var.setReportingFrequency(interval);
+          }
+        }
       }
 
       // SimVarsThrmlZn
@@ -1121,6 +1261,67 @@ namespace sdd {
             var.setKeyValue(exhIt->name().get());
           }
         }
+      }
+
+      // SimVarsVRFSys
+      QDomElement simVarsVRFSys = projectElement.firstChildElement("SimVarsVRFSys");
+      if( simVarsVRFSys.text().toInt() == 1 ) {
+        model::OutputVariable var("VRF Heat Pump Total Cooling Rate",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("VRF Heat Pump Total Heating Rate",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("VRF Heat Pump Cooling Electric Power",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("VRF Heat Pump Heating Electric Power",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("VRF Heat Pump Cooling COP",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("VRF Heat Pump Heating COP",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("VRF Heat Pump COP",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("VRF Heat Pump Defrost Electric Power",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("VRF Heat Pump Part Load Ratio",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("VRF Heat Pump Runtime Fraction",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("VRF Heat Pump Cycling Ratio",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("VRF Heat Pump Operating Mode",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("VRF Heat Pump Condenser Inlet Temperature",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("VRF Heat Pump Maximum Capacity Cooling Rate",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("VRF Heat Pump Maximum Capacity Heating Rate",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("VRF Heat Pump Crankcase Heater Electric Power",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("VRF Heat Pump Terminal Unit Cooling Load Rate",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("VRF Heat Pump Terminal Unit Heating Load Rate",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("VRF Heat Pump Heat Recovery Status Change Multiplier",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("Zone VRF Air Terminal Cooling Electric Power",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("Zone VRF Air Terminal Total Cooling Rate",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("Zone VRF Air Terminal Sensible Cooling Rate",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("Zone VRF Air Terminal Latent Cooling Rate",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("Zone VRF Air Terminal Heating Electric Power",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("Zone VRF Air Terminal Total Heating Rate",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("Zone VRF Air Terminal Sensible Heating Rate",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("Zone VRF Air Terminal Latent Heating Rate",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("Zone VRF Air Terminal Fan Availability Status",*result);
+        var.setReportingFrequency(interval);
       }
 
       // SimVarsHVACZn
@@ -1232,8 +1433,67 @@ namespace sdd {
         var = model::OutputVariable("Heating Coil Total Heating Rate",*result);
         var.setReportingFrequency(interval);
 
-        std::vector<model::AirLoopHVAC> airloops = result->getModelObjects<model::AirLoopHVAC>();
+        auto hxs = result->getModelObjects<model::HeatExchangerAirToAirSensibleAndLatent>();
+        for( auto & hx : hxs ) {
+          var = model::OutputVariable("Heat Exchanger Sensible Heating Rate",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(hx.nameString());
+          var = model::OutputVariable("Heat Exchanger Latent Gain Rate",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(hx.nameString());
+          var = model::OutputVariable("Heat Exchanger Total Heating Rate",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(hx.nameString());
+          var = model::OutputVariable("Heat Exchanger Sensible Cooling Rate",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(hx.nameString());
+          var = model::OutputVariable("Heat Exchanger Latent Cooling Rate",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(hx.nameString());
+          var = model::OutputVariable("Heat Exchanger Total Cooling Rate",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(hx.nameString());
+          var = model::OutputVariable("Heat Exchanger Electric Power",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(hx.nameString());
+          var = model::OutputVariable("Heat Exchanger Sensible Effectiveness",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(hx.nameString());
+          var = model::OutputVariable("Heat Exchanger Latent Effectiveness",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(hx.nameString());
+          var = model::OutputVariable("Heat Exchanger Supply Air Bypass Mass Flow Rate",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(hx.nameString());
+          var = model::OutputVariable("Heat Exchanger Exhaust Air Bypass Mass Flow Rate",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(hx.nameString());
+          var = model::OutputVariable("Heat Exchanger Defrost Time Fraction",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(hx.nameString());
 
+          if( auto node = hx.primaryAirOutletModelObject() ) {
+            var = model::OutputVariable("System Node Temperature",*result);
+            var.setReportingFrequency(interval);
+            var.setKeyValue(node->name().get());
+
+            var = model::OutputVariable("System Node Standard Density Volume Flow Rate",*result);
+            var.setReportingFrequency(interval);
+            var.setKeyValue(node->name().get());
+          }
+
+          if( auto node = hx.secondaryAirOutletModelObject() ) {
+            var = model::OutputVariable("System Node Temperature",*result);
+            var.setReportingFrequency(interval);
+            var.setKeyValue(node->name().get());
+
+            var = model::OutputVariable("System Node Standard Density Volume Flow Rate",*result);
+            var.setReportingFrequency(interval);
+            var.setKeyValue(node->name().get());
+          }
+        }
+
+        std::vector<model::AirLoopHVAC> airloops = result->getModelObjects<model::AirLoopHVAC>();
         for( auto & airloop : airloops)
         {
           var = model::OutputVariable("System Node Temperature",*result);
@@ -1370,6 +1630,67 @@ namespace sdd {
           var.setReportingFrequency(interval);
           var.setKeyValue(plant.demandOutletNode().name().get());
         }
+      }
+
+      // SimVarsWtrHtrSys
+      auto simVarsWtrHtrSys = projectElement.firstChildElement("SimVarsWtrHtr");
+      if( simVarsWtrHtrSys.text().toInt() == 1 ) {
+        model::OutputVariable var("Water Heater Tank Temperature",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Water Heater Electric Energy",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Water Heater Electric Power",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Water Heater Heating Energy",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Water Heater Heating Rate",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Water Heater Mains Water Volume",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Water Heater Use Side Inlet Temperature",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Water Heater Use Side Outlet Temperature",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Water Heater Use Side Mass Flow Rate",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Water Heater Use Side Heat Transfer Rate",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Water Heater Source Side Inlet Temperature",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Water Heater Source Side Outlet Temperature",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Water Heater Source Side Mass Flow Rate",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Water Heater Source Side Heat Transfer Rate",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Water Heater Water Volume Flow Rate",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Water Heater Heat Pump Control Tank Final Temperature",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Water Heater Heat Pump Control Tank Temperature",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Water Heater Gas Rate",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Water Heater Gas Energy",*result);
+        var.setReportingFrequency(interval);
       }
 
       model::OutputControlReportingTolerances rt = result->getUniqueModelObject<model::OutputControlReportingTolerances>();
