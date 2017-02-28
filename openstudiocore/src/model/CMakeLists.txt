@@ -1353,6 +1353,7 @@ set(${target_name}_qrc
 )
 
 # generate rules for building source files from the resources
+# DLM: TODO, replace with embed_files
 qt5_add_resources(${target_name}_qrcs ${${target_name}_qrc})
 
 

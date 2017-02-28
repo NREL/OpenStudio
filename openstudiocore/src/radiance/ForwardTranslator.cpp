@@ -123,6 +123,15 @@ using openstudio::model::OptionalSurface;
 
 typedef openstudio::filesystem::basic_ofstream<char> OFSTREAM;
 
+struct RadianceResourceInitializer{
+  RadianceResourceInitializer() 
+  {
+    Q_INIT_RESOURCE(radiance);
+  }
+};
+static RadianceResourceInitializer __radianceResourceInitializer__;
+
+
 namespace openstudio {
 namespace radiance {
 
