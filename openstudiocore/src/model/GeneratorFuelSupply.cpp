@@ -438,6 +438,7 @@ GeneratorFuelSupply::GeneratorFuelSupply(const Model& model)
   setFuelTemperatureModelingMode("Scheduled");
   ScheduleConstant schedule(model);
   schedule.setValue(20);
+  schedule.setName("Fuel Temperature");
   setFuelTemperatureSchedule(schedule);
 
   CurveCubic curveCubic(model);

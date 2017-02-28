@@ -402,6 +402,7 @@ GeneratorFuelCellWaterSupply::GeneratorFuelCellWaterSupply(const Model& model)
   setWaterTemperatureModelingMode("TemperatureFromSchedule");
   ScheduleConstant schedule(model);
   schedule.setValue(20);
+  schedule.setName("Water Temperature");
   setWaterTemperatureSchedule(schedule);
 
 }

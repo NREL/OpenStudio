@@ -496,15 +496,8 @@ GeneratorFuelCell::GeneratorFuelCell(const Model& model)
 {
   OS_ASSERT(getImpl<detail::GeneratorFuelCell_Impl>());
 
-  //create generic curve
-  CurveQuadratic curveQuadratic(model);
-  curveQuadratic.setCoefficient1Constant(1);
-  curveQuadratic.setCoefficient2x(0);
-  curveQuadratic.setCoefficient3xPOW2(0);
-  curveQuadratic.setMinimumValueofx(0.0);
-  curveQuadratic.setMaximumValueofx(1.0);
   //create generic FCPM
-  GeneratorFuelCellPowerModule fCPM(model, curveQuadratic);
+  GeneratorFuelCellPowerModule fCPM(model);
   bool ok = setPowerModule(fCPM);
   if (!ok) {
     remove();

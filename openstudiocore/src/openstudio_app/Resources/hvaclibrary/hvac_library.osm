@@ -1,7 +1,7 @@
 
 OS:Version,
   {3a164764-0b52-4472-89e5-49e6565a6f74}, !- Handle
-  2.0.3;                                  !- Version Identifier
+  2.0.4;                                  !- Version Identifier
 
 OS:Schedule:Constant,
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Handle
@@ -11073,20 +11073,11 @@ OS:Generator:FuelCell,
   {b405a85d-67e8-4d3e-bacb-9d888ea47ba7}, !- Electrical Storage Name
   {95c3175c-ed0d-4458-a1ba-fb5a114f52ae}; !- Inverter Name
 
-OS:Curve:Quadratic,
-  {f789dd66-30d2-4c90-a554-1c1f9d510bba}, !- Handle
-  Curve Quadratic 1,                      !- Name
-  1,                                      !- Coefficient1 Constant
-  0,                                      !- Coefficient2 x
-  0,                                      !- Coefficient3 x**2
-  0,                                      !- Minimum Value of x
-  1;                                      !- Maximum Value of x
-
 OS:Generator:FuelCell:PowerModule,
   {749f6f6f-440d-4884-bfca-92957ee723e8}, !- Handle
   Generator Fuel Cell Power Module 1,     !- Name
   Annex42,                                !- Efficiency Curve Mode
-  {f789dd66-30d2-4c90-a554-1c1f9d510bba}, !- Efficiency Curve Name
+  {faa57d50-d008-430e-bed1-8e67e4e55562}, !- Efficiency Curve Name
   1,                                      !- Nominal Efficiency
   3400,                                   !- Nominal Electrical Power {W}
   0,                                      !- Number of Stops at Start of Simulation
@@ -11110,7 +11101,7 @@ OS:Generator:FuelCell:PowerModule,
   0.6392,                                 !- Skin Loss Radiative Fraction
   729,                                    !- Constant Skin Loss Rate {W}
   0,                                      !- Skin Loss U-Factor Times Area Term {W/K}
-  ,                                       !- Skin Loss Quadratic Curve Name
+  {4aaf746d-812c-420e-ba92-089aa73d72bc}, !- Skin Loss Quadratic Curve Name
   0.006156,                               !- Dilution Air Flow Rate {kmol/s}
   2307,                                   !- Stack Heat loss to Dilution Air {W}
   ,                                       !- Dilution Inlet Air Node Name
@@ -11118,24 +11109,42 @@ OS:Generator:FuelCell:PowerModule,
   3010,                                   !- Minimum Operating Point {W}
   3728;                                   !- Maximum Operating Point {W}
 
+OS:Curve:Quadratic,
+  {faa57d50-d008-430e-bed1-8e67e4e55562}, !- Handle
+  Power Module Efficiency Curve,          !- Name
+  0.642388,                               !- Coefficient1 Constant
+  -0.0001619,                             !- Coefficient2 x
+  2.26e-008,                              !- Coefficient3 x**2
+  0,                                      !- Minimum Value of x
+  10000;                                  !- Maximum Value of x
+
+OS:Curve:Quadratic,
+  {4aaf746d-812c-420e-ba92-089aa73d72bc}, !- Handle
+  Skin Loss Curve,                        !- Name
+  0,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  -10000000000,                           !- Minimum Value of x
+  10000000000;                            !- Maximum Value of x
+
 OS:Generator:FuelCell:AirSupply,
   {44f4a297-e351-4cb1-9cc2-422456e93020}, !- Handle
   Generator Fuel Cell Air Supply 1,       !- Name
   ,                                       !- Air Inlet Node Name
-  {9ded53a7-c12f-4af8-a09a-daa88f8f88be}, !- Blower Power Curve Name
+  {ffcc11c3-2cd0-4d35-b07a-bcb55ed3efcc}, !- Blower Power Curve Name
   1,                                      !- Blower Heat Loss Factor
   AirRatiobyStoics,                       !- Air Supply Rate Calculation Mode
   1,                                      !- Stoichiometric Ratio
-  ,                                       !- Air Rate Function of Electric Power Curve Name
+  {2236bcc7-bb73-4ad6-93b3-425eb06ac90a}, !- Air Rate Function of Electric Power Curve Name
   0.00283,                                !- Air Rate Air Temperature Coefficient
-  ,                                       !- Air Rate Function of Fuel Rate Curve Name
+  {04b5fd70-709b-4538-8eb5-94a992fb4410}, !- Air Rate Function of Fuel Rate Curve Name
   NoRecovery,                             !- Air Intake Heat Recovery Mode
   AmbientAir,                             !- Air Supply Constituent Mode
   0;                                      !- Number of UserDefined Constituents
 
 OS:Curve:Cubic,
-  {9ded53a7-c12f-4af8-a09a-daa88f8f88be}, !- Handle
-  Curve Cubic 1,                          !- Name
+  {ffcc11c3-2cd0-4d35-b07a-bcb55ed3efcc}, !- Handle
+  Blower Power Curve,                     !- Name
   0,                                      !- Coefficient1 Constant
   0,                                      !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
@@ -11143,6 +11152,25 @@ OS:Curve:Cubic,
   -10000000000,                           !- Minimum Value of x
   10000000000;                            !- Maximum Value of x
 
+  
+OS:Curve:Quadratic,
+  {2236bcc7-bb73-4ad6-93b3-425eb06ac90a}, !- Handle
+  Air Rate Function of Electric Power Curve, !- Name
+  0.00150976,                             !- Coefficient1 Constant
+  -7.76656e-007,                          !- Coefficient2 x
+  1.30317e-010,                           !- Coefficient3 x**2
+  -10000000000,                           !- Minimum Value of x
+  10000000000;                            !- Maximum Value of x
+
+OS:Curve:Quadratic,
+  {04b5fd70-709b-4538-8eb5-94a992fb4410}, !- Handle
+  Air Rate Function of Fuel Rate Curve,   !- Name
+  0,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  -10000000000,                           !- Minimum Value of x
+  10000000000;                            !- Maximum Value of x
+  
 OS:Generator:FuelSupply,
   {a9cb7b8d-a10a-4cab-909b-3ec4ce27017b}, !- Handle
   Generator Fuel Supply 1,                !- Name
@@ -11160,7 +11188,7 @@ OS:Generator:FuelSupply,
 
 OS:Schedule:Constant,
   {0fb785ba-88c0-438a-9d31-1a88979dab95}, !- Handle
-  Schedule Constant 1,                    !- Name
+  Fuel Temperature,                    !- Name
   {dfe136f8-1a1a-4263-a38c-0055df8cb82e}, !- Schedule Type Limits Name
   20;                                     !- Value
 
@@ -11174,7 +11202,7 @@ OS:ScheduleTypeLimits,
 
 OS:Curve:Cubic,
   {197d60a6-b60d-4e87-a76b-392da18ab1bb}, !- Handle
-  Curve Cubic 2,                          !- Name
+  Compressor Power Multiplier Function of FuelRate Curve, !- Name
   0,                                      !- Coefficient1 Constant
   0,                                      !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
@@ -11194,7 +11222,7 @@ OS:Generator:FuelCell:WaterSupply,
 
 OS:Curve:Quadratic,
   {34b8e269-1f4d-4990-9443-ebc57696ad0a}, !- Handle
-  Curve Quadratic 2,                      !- Name
+  Reformer Water FlowRate Function of FuelRate Curve, !- Name
   0,                                      !- Coefficient1 Constant
   0,                                      !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
@@ -11203,7 +11231,7 @@ OS:Curve:Quadratic,
 
 OS:Curve:Cubic,
   {8e4e3b2d-1c02-4843-90cf-3143ee332bd4}, !- Handle
-  Curve Cubic 3,                          !- Name
+  Reformer Water Pump Power Function of FuelRate Curve, !- Name
   0,                                      !- Coefficient1 Constant
   0,                                      !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
@@ -11213,7 +11241,7 @@ OS:Curve:Cubic,
 
 OS:Schedule:Constant,
   {10fa45fd-66ba-4961-a111-0da8861b27cd}, !- Handle
-  Schedule Constant 2,                    !- Name
+  Water Temperature,                      !- Name
   {dfe136f8-1a1a-4263-a38c-0055df8cb82e}, !- Schedule Type Limits Name
   20;                                     !- Value
 
@@ -11237,23 +11265,23 @@ OS:Generator:FuelCell:ExhaustGasToWaterHeatExchanger,
   ,                                       !- Heat Recovery Water Outlet Node Name
   0.0004,                                 !- Heat Recovery Water Maximum Flow Rate {m3/s}
   ,                                       !- Exhaust Outlet Air Node Name
-  FixedEffectiveness,                     !- Heat Exchanger Calculation Method
-  1,                                      !- Method 1 Heat Exchanger Effectiveness
-  1,                                      !- Method 2 Parameter hxs0
-  0,                                      !- Method 2 Parameter hxs1
-  0,                                      !- Method 2 Parameter hxs2
-  0,                                      !- Method 2 Parameter hxs3
-  0,                                      !- Method 2 Parameter hxs4
-  1,                                      !- Method 3 h0Gas Coefficient
-  1,                                      !- Method 3 NdotGasRef Coefficient
-  1,                                      !- Method 3 n Coefficient
-  1,                                      !- Method 3 Gas Area {m2}
-  1,                                      !- Method 3 h0 Water Coefficient
-  1,                                      !- Method 3 N dot Water ref Coefficient
-  1,                                      !- Method 3 m Coefficient
-  1,                                      !- Method 3 Water Area {m2}
-  0,                                      !- Method 3 F Adjustment Factor
-  1,                                      !- Method 4 hxl1 Coefficient
+  Condensing,                             !- Heat Exchanger Calculation Method
+  ,                                       !- Method 1 Heat Exchanger Effectiveness
+  83.1,                                   !- Method 2 Parameter hxs0
+  4798,                                   !- Method 2 Parameter hxs1
+  -138000,                                !- Method 2 Parameter hxs2
+  -353800,                                !- Method 2 Parameter hxs3
+  515000000,                              !- Method 2 Parameter hxs4
+  ,                                       !- Method 3 h0Gas Coefficient
+  ,                                       !- Method 3 NdotGasRef Coefficient
+  ,                                       !- Method 3 n Coefficient
+  ,                                       !- Method 3 Gas Area {m2}
+  ,                                       !- Method 3 h0 Water Coefficient
+  ,                                       !- Method 3 N dot Water ref Coefficient
+  ,                                       !- Method 3 m Coefficient
+  ,                                       !- Method 3 Water Area {m2}
+  ,                                       !- Method 3 F Adjustment Factor
+  0.0031,                                 !- Method 4 hxl1 Coefficient
   1,                                      !- Method 4 hxl2 Coefficient
   35;                                     !- Method 4 Condensation Threshold {C}
 
@@ -11272,6 +11300,15 @@ OS:Generator:FuelCell:Inverter,
   {95c3175c-ed0d-4458-a1ba-fb5a114f52ae}, !- Handle
   Generator Fuel Cell Inverter 1,         !- Name
   Constant,                               !- Inverter Efficiency Calculation Mode
-  1;                                      !- Inverter Efficiency
+  1,                                      !- Inverter Efficiency
+  {30de34da-9cc0-47fc-8eec-90653a96a7f7}; !- Efficiency Function of DC Power Curve Name
 
+OS:Curve:Quadratic,
+  {30de34da-9cc0-47fc-8eec-90653a96a7f7}, !- Handle
+  Efficiency Function of DC Power Curve,  !- Name
+  0.560717,                               !- Coefficient1 Constant
+  0.00012401,                             !- Coefficient2 x
+  -2.01648e-008,                          !- Coefficient3 x**2
+  -10000000000,                           !- Minimum Value of x
+  10000000000;                            !- Maximum Value of x
   
