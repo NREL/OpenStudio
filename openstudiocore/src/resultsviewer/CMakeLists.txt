@@ -110,6 +110,11 @@ set(depends
 )
 
 target_link_libraries(${target_name} ${depends})
+
+if(MSVC)
+  target_link_libraries(${target_name} optimized ${QT_MAIN_LIB} debug ${QT_MAIN_LIB_D})
+endif()
+
 AddPCH(${target_name})
 
 #--------------------------------------------------------------------------------

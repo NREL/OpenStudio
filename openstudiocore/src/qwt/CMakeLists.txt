@@ -244,6 +244,10 @@ qt5_wrap_cpp_minimally(${target_name}_moc_src ${${target_name}_moc})
 #add_definitions(-DQT_DLL -DQWT_DLL -DQWT_MAKEDLL -DQWT_NO_SVG -DQWT_NO_OPENGL)
 add_definitions(-DQWT_NO_SVG -DQWT_NO_OPENGL)
 
+if(MSVC)
+  add_definitions(-DQT_DLL -DQWT_DLL -DQWT_MAKEDLL)
+endif()
+
 add_library(${target_name} SHARED
   ${${target_name}_src}
   ${${target_name}_moc_src}
@@ -251,11 +255,5 @@ add_library(${target_name} SHARED
 
 # DLM: need to install this
 
-target_link_libraries(${target_name}
-	${QT_WEB_LIBS}
-)
+target_link_libraries(${target_name} ${QT_LIBS} )
 target_include_directories(${target_name} PUBLIC ${QT_INCLUDES})
-target_compile_definitions(${target_name} PUBLIC ${QT_DEFS})
-
-message("QT_WEB_LIBS = ${QT_WEB_LIBS}")
-message("QT_STATIC_LIBS = ${QT_STATIC_LIBS}")
