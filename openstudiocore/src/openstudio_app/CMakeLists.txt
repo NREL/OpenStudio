@@ -193,8 +193,6 @@ set(depends
 
 target_link_libraries(${target_name} ${depends})
 
-target_link_libraries(${target_name} ${QT_SHARED_LIBS})
-
 # because the app calls the cli
 add_dependencies(${target_name} openstudio)
 
