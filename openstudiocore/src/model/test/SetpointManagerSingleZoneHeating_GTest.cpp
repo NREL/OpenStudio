@@ -26,92 +26,25 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
 
-#ifndef MODEL_SETPOINTMANAGERSINGLEZONECOOLING_HPP
-#define MODEL_SETPOINTMANAGERSINGLEZONECOOLING_HPP
+#include <gtest/gtest.h>
+#include <model/test/ModelFixture.hpp>
+#include "../SetpointManagerSingleZoneHeating.hpp"
+#include "../SetpointManagerSingleZoneHeating_Impl.hpp"
 
-#include <model/ModelAPI.hpp>
-#include "SetpointManager.hpp"
+using namespace openstudio;
+using namespace openstudio::model;
 
-namespace openstudio {
+TEST_F(ModelFixture, SetpointManagerSingleZoneHeating_DefaultConstructor)
+{
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-namespace model {
+  ASSERT_EXIT ( 
+  {  
+    Model m;
+    SetpointManagerSingleZoneHeating testObject(m);
 
-class ThermalZone;
-class Node;
-
-namespace detail {
-
-  class SetpointManagerSingleZoneCooling_Impl;
-
-} // detail
-
-/** SetpointManagerSingleZoneCooling is a SetpointManager that wraps the OpenStudio IDD object 'OS:SetpointManager:SingleZone:Cooling'. */
-class MODEL_API SetpointManagerSingleZoneCooling : public SetpointManager {
- public:
-  /** @name Constructors and Destructors */
-  //@{
-
-  explicit SetpointManagerSingleZoneCooling(const Model& model);
-
-  virtual ~SetpointManagerSingleZoneCooling() {}
-
-  //@}
-
-  static IddObjectType iddObjectType();
-
-  /** @name Getters */
-  //@{
-
-  std::string controlVariable() const;
-
-  double minimumSupplyAirTemperature() const;
-
-  double maximumSupplyAirTemperature() const;
-
-  boost::optional<ThermalZone> controlZone() const;
-
-  //@}
-  /** @name Setters */
-  //@{
-
-  bool setControlVariable(const std::string& controlVariable);
-
-  void setMinimumSupplyAirTemperature(double minimumSupplyAirTemperature);
-
-  void setMaximumSupplyAirTemperature(double maximumSupplyAirTemperature);
-
-  bool setControlZone(const ThermalZone& thermalZone);
-
-  void resetControlZone();
-
-  //@}
-  /** @name Other */
-  //@{
-
-  //@}
- protected:
-  /// @cond
-  typedef detail::SetpointManagerSingleZoneCooling_Impl ImplType;
-
-  explicit SetpointManagerSingleZoneCooling(std::shared_ptr<detail::SetpointManagerSingleZoneCooling_Impl> impl);
-
-  friend class detail::SetpointManagerSingleZoneCooling_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.SetpointManagerSingleZoneCooling");
-};
-
-/** \relates SetpointManagerSingleZoneCooling*/
-typedef boost::optional<SetpointManagerSingleZoneCooling> OptionalSetpointManagerSingleZoneCooling;
-
-/** \relates SetpointManagerSingleZoneCooling*/
-typedef std::vector<SetpointManagerSingleZoneCooling> SetpointManagerSingleZoneCoolingVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_SETPOINTMANAGERSINGLEZONECOOLING_HPP
+    exit(0); 
+  } ,
+    ::testing::ExitedWithCode(0), "" );
+}
 

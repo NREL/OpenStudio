@@ -1,7 +1,7 @@
 
 OS:Version,
-  {db059999-d1fc-4717-8278-0cfbf3cd8998}, !- Handle
-  1.13.2;                                 !- Version Identifier
+  {5bf6a875-8324-404f-bb13-fe1c7a962f6f}, !- Handle
+  2.0.4;                                  !- Version Identifier
 
 OS:Schedule:Constant,
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Handle
@@ -222,6 +222,24 @@ OS:SetpointManager:SingleZone:Reheat,
   99,                                     ! Maximum Supply Air Temperature {C}
   ,                                       ! Control Zone Name
   ;                                       ! Setpoint Node or NodeList Name
+
+OS:SetpointManager:SingleZone:Cooling,
+  {4ce287f0-a6d6-4e3f-abb9-1e8b773ca80a}, !- Handle
+  Setpoint Manager Single Zone Cooling, !- Name
+  Temperature,                            !- Control Variable
+  -99,                                    !- Minimum Supply Air Temperature {C}
+  99,                                     !- Maximum Supply Air Temperature {C}
+  ,                                       !- Control Zone Name
+  ;                                       !- Setpoint Node or NodeList Name
+
+OS:SetpointManager:SingleZone:Heating,
+  {a1707587-1ec9-4bed-8356-2ce5d42e9137}, !- Handle
+  Setpoint Manager Single Zone Heating, !- Name
+  Temperature,                            !- Control Variable
+  -99,                                    !- Minimum Supply Air Temperature {C}
+  99,                                     !- Maximum Supply Air Temperature {C}
+  ,                                       !- Control Zone Name
+  ;                                       !- Setpoint Node or NodeList Name
 
 OS:SetpointManager:Warmest,
   {4f12e925-01e9-4ce2-9f56-daa5d024ac5d}, !- Handle
@@ -2577,7 +2595,7 @@ OS:Curve:Cubic,
 
 OS:WaterHeater:Stratified,
   {488acc4e-9be5-426c-a365-587633e98f6c}, !- Handle
-  HPWH Stratified - Wrapped Cond,              !- Name
+  HPWH Stratified - Wrapped Cond,         !- Name
   General,                                !- End-Use Subcategory
   0.1893,                                 !- Tank Volume {m3}
   1.4,                                    !- Tank Height {m}
@@ -2644,13 +2662,13 @@ OS:WaterHeater:Stratified,
 
 OS:Schedule:Ruleset,
   {80bfe8ad-a507-4649-8f97-97aed8b7caa4}, !- Handle
-  HPWH Stratified - Wrapped Cond - Heater 1 Setpoint,                     !- Name
+  HPWH Stratified - Wrapped Cond - Heater 1 Setpoint, !- Name
   {f6fb7a5f-56a2-4e3e-8222-cbc569aa526a}, !- Schedule Type Limits Name
   {d8c17c03-c30b-47f4-91ed-c29a709c4e1e}; !- Default Day Schedule Name
 
 OS:Schedule:Day,
   {d8c17c03-c30b-47f4-91ed-c29a709c4e1e}, !- Handle
-  Schedule Day 1,                         !- Name
+  Schedule Day 16,                        !- Name
   {f6fb7a5f-56a2-4e3e-8222-cbc569aa526a}, !- Schedule Type Limits Name
   ,                                       !- Interpolate to Timestep
   24,                                     !- Hour 1
@@ -2659,7 +2677,7 @@ OS:Schedule:Day,
 
 OS:Schedule:Ruleset,
   {3b9c776c-cee2-4f98-9977-22243f981cfa}, !- Handle
-  HPWH Stratified - Wrapped Cond - Heater 2 Setpoint,                     !- Name
+  HPWH Stratified - Wrapped Cond - Heater 2 Setpoint, !- Name
   {f6fb7a5f-56a2-4e3e-8222-cbc569aa526a}, !- Schedule Type Limits Name
   {7e36eccf-f03e-4c51-b515-74437a59cd10}; !- Default Day Schedule Name
 
@@ -2674,7 +2692,7 @@ OS:Schedule:Day,
 
 OS:ScheduleTypeLimits,
   {f6fb7a5f-56a2-4e3e-8222-cbc569aa526a}, !- Handle
-  Temperature,                            !- Name
+  Temperature 4,                          !- Name
   ,                                       !- Lower Limit Value
   ,                                       !- Upper Limit Value
   Continuous,                             !- Numeric Type
@@ -2682,7 +2700,7 @@ OS:ScheduleTypeLimits,
 
 OS:Schedule:Ruleset,
   {7c5630fa-e173-447b-9f71-166f63b7aac6}, !- Handle
-  HPWH Stratified - Wrapped Cond - Amb Temp,                     !- Name
+  HPWH Stratified - Wrapped Cond - Amb Temp, !- Name
   {f6fb7a5f-56a2-4e3e-8222-cbc569aa526a}, !- Schedule Type Limits Name
   {194896f4-7cba-4cb0-9508-6819e4113467}; !- Default Day Schedule Name
 
@@ -2697,7 +2715,7 @@ OS:Schedule:Day,
 
 OS:Fan:OnOff,
   {3c032b65-9422-46d8-9b1e-658967e53026}, !- Handle
-  HPWH Stratified - Wrapped Cond - Fan,                           !- Name
+  HPWH Stratified - Wrapped Cond - Fan,   !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   0.6,                                    !- Fan Efficiency
   300,                                    !- Pressure Rise {Pa}
@@ -2712,7 +2730,7 @@ OS:Fan:OnOff,
 
 OS:Curve:Exponent,
   {e71719a6-fe94-459d-9d7f-77013dcf7741}, !- Handle
-  Fan On Off Power Curve,                 !- Name
+  Fan On Off Power Curve 22,              !- Name
   1,                                      !- Coefficient1 Constant
   0,                                      !- Coefficient2 Constant
   0,                                      !- Coefficient3 Constant
@@ -2725,7 +2743,7 @@ OS:Curve:Exponent,
 
 OS:Curve:Cubic,
   {4dd8623b-4dbb-40c5-8bd2-e751b7911f7e}, !- Handle
-  Fan On Off Efficiency Curve,            !- Name
+  Fan On Off Efficiency Curve 22,         !- Name
   1,                                      !- Coefficient1 Constant
   0,                                      !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
@@ -2735,13 +2753,13 @@ OS:Curve:Cubic,
 
 OS:Schedule:Ruleset,
   {a7ad7f6b-31b7-46d9-975d-8a1f58241fa7}, !- Handle
-  Water Heater Heat Pump Wrapped Condenser - Compress Setpoint,                     !- Name
+  Water Heater Heat Pump Wrapped Condenser - Compress Setpoint, !- Name
   {f6fb7a5f-56a2-4e3e-8222-cbc569aa526a}, !- Schedule Type Limits Name
   {b1756833-41db-47e2-98b9-49badd1391de}; !- Default Day Schedule Name
 
 OS:Schedule:Day,
   {b1756833-41db-47e2-98b9-49badd1391de}, !- Handle
-  Schedule Day 4,                         !- Name
+  Schedule Day 12,                        !- Name
   {f6fb7a5f-56a2-4e3e-8222-cbc569aa526a}, !- Schedule Type Limits Name
   ,                                       !- Interpolate to Timestep
   24,                                     !- Hour 1
@@ -2750,13 +2768,13 @@ OS:Schedule:Day,
 
 OS:Schedule:Ruleset,
   {09a396c2-240f-478f-aa0c-95bb9858e56f}, !- Handle
-  Water Heater Heat Pump Wrapped Condenser - Inlet Air Temp,                     !- Name
+  Water Heater Heat Pump Wrapped Condenser - Inlet Air Temp, !- Name
   {f6fb7a5f-56a2-4e3e-8222-cbc569aa526a}, !- Schedule Type Limits Name
   {b73b2900-410b-495b-a3de-56d24e5ee5bf}; !- Default Day Schedule Name
 
 OS:Schedule:Day,
   {b73b2900-410b-495b-a3de-56d24e5ee5bf}, !- Handle
-  Schedule Day 5,                         !- Name
+  Schedule Day 14,                        !- Name
   {f6fb7a5f-56a2-4e3e-8222-cbc569aa526a}, !- Schedule Type Limits Name
   ,                                       !- Interpolate to Timestep
   24,                                     !- Hour 1
@@ -2765,13 +2783,13 @@ OS:Schedule:Day,
 
 OS:Schedule:Ruleset,
   {d09920be-0d2a-4266-98e3-8676e8220393}, !- Handle
-  Water Heater Heat Pump Wrapped Condenser - Inlet Air Humidity Ratio,                     !- Name
+  Water Heater Heat Pump Wrapped Condenser - Inlet Air Humidity Ratio, !- Name
   {98e00186-0834-4ab2-b4bc-5cda5e9db16c}, !- Schedule Type Limits Name
   {a538628e-bfc2-49cd-9f34-54241265e5f2}; !- Default Day Schedule Name
 
 OS:Schedule:Day,
   {a538628e-bfc2-49cd-9f34-54241265e5f2}, !- Handle
-  Schedule Day 6,                         !- Name
+  Schedule Day 11,                        !- Name
   {98e00186-0834-4ab2-b4bc-5cda5e9db16c}, !- Schedule Type Limits Name
   ,                                       !- Interpolate to Timestep
   24,                                     !- Hour 1
@@ -2780,20 +2798,20 @@ OS:Schedule:Day,
 
 OS:ScheduleTypeLimits,
   {98e00186-0834-4ab2-b4bc-5cda5e9db16c}, !- Handle
-  Dimensionless,                          !- Name
+  Dimensionless 2,                        !- Name
   0,                                      !- Lower Limit Value
   ,                                       !- Upper Limit Value
   Continuous;                             !- Numeric Type
 
 OS:Schedule:Ruleset,
   {3c735789-c370-4072-afdf-ae442a11d501}, !- Handle
-  Water Heater Heat Pump Wrapped Condenser - Compress Ambient Temp,                     !- Name
+  Water Heater Heat Pump Wrapped Condenser - Compress Ambient Temp, !- Name
   {f6fb7a5f-56a2-4e3e-8222-cbc569aa526a}, !- Schedule Type Limits Name
   {f91e7c62-5717-4d64-91cf-8a829e06d1de}; !- Default Day Schedule Name
 
 OS:Schedule:Day,
   {f91e7c62-5717-4d64-91cf-8a829e06d1de}, !- Handle
-  Schedule Day 7,                         !- Name
+  Schedule Day 17,                        !- Name
   {f6fb7a5f-56a2-4e3e-8222-cbc569aa526a}, !- Schedule Type Limits Name
   ,                                       !- Interpolate to Timestep
   24,                                     !- Hour 1
@@ -2831,7 +2849,7 @@ OS:Schedule:Ruleset,
 
 OS:Schedule:Day,
   {b1ebec0b-6d61-4fe7-b099-81418aff1c0a}, !- Handle
-  Schedule Day 2,                         !- Name
+  Schedule Day 13,                        !- Name
   {81cbda09-5e78-433c-aa14-d07601131750}, !- Schedule Type Limits Name
   ,                                       !- Interpolate to Timestep
   24,                                     !- Hour 1
@@ -2898,7 +2916,7 @@ OS:Schedule:Ruleset,
 
 OS:Schedule:Day,
   {c77280c9-a1a3-4877-9bbf-d1cc0d16fe60}, !- Handle
-  Schedule Day 3,                         !- Name
+  Schedule Day 15,                        !- Name
   {81cbda09-5e78-433c-aa14-d07601131750}, !- Schedule Type Limits Name
   ,                                       !- Interpolate to Timestep
   24,                                     !- Hour 1

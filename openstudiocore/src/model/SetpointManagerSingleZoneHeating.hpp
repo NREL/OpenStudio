@@ -26,8 +26,8 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
 
-#ifndef MODEL_SETPOINTMANAGERSINGLEZONECOOLING_HPP
-#define MODEL_SETPOINTMANAGERSINGLEZONECOOLING_HPP
+#ifndef MODEL_SETPOINTMANAGERSINGLEZONEHEATING_HPP
+#define MODEL_SETPOINTMANAGERSINGLEZONEHEATING_HPP
 
 #include <model/ModelAPI.hpp>
 #include "SetpointManager.hpp"
@@ -41,19 +41,19 @@ class Node;
 
 namespace detail {
 
-  class SetpointManagerSingleZoneCooling_Impl;
+  class SetpointManagerSingleZoneHeating_Impl;
 
 } // detail
 
-/** SetpointManagerSingleZoneCooling is a SetpointManager that wraps the OpenStudio IDD object 'OS:SetpointManager:SingleZone:Cooling'. */
-class MODEL_API SetpointManagerSingleZoneCooling : public SetpointManager {
+/** SetpointManagerSingleZoneHeating is a SetpointManager that wraps the OpenStudio IDD object 'OS:SetpointManager:SingleZone:Heating'. */
+class MODEL_API SetpointManagerSingleZoneHeating : public SetpointManager {
  public:
   /** @name Constructors and Destructors */
   //@{
 
-  explicit SetpointManagerSingleZoneCooling(const Model& model);
+  explicit SetpointManagerSingleZoneHeating(const Model& model);
 
-  virtual ~SetpointManagerSingleZoneCooling() {}
+  virtual ~SetpointManagerSingleZoneHeating() {}
 
   //@}
 
@@ -91,27 +91,27 @@ class MODEL_API SetpointManagerSingleZoneCooling : public SetpointManager {
   //@}
  protected:
   /// @cond
-  typedef detail::SetpointManagerSingleZoneCooling_Impl ImplType;
+  typedef detail::SetpointManagerSingleZoneHeating_Impl ImplType;
 
-  explicit SetpointManagerSingleZoneCooling(std::shared_ptr<detail::SetpointManagerSingleZoneCooling_Impl> impl);
+  explicit SetpointManagerSingleZoneHeating(std::shared_ptr<detail::SetpointManagerSingleZoneHeating_Impl> impl);
 
-  friend class detail::SetpointManagerSingleZoneCooling_Impl;
+  friend class detail::SetpointManagerSingleZoneHeating_Impl;
   friend class Model;
   friend class IdfObject;
   friend class openstudio::detail::IdfObject_Impl;
   /// @endcond
  private:
-  REGISTER_LOGGER("openstudio.model.SetpointManagerSingleZoneCooling");
+  REGISTER_LOGGER("openstudio.model.SetpointManagerSingleZoneHeating");
 };
 
-/** \relates SetpointManagerSingleZoneCooling*/
-typedef boost::optional<SetpointManagerSingleZoneCooling> OptionalSetpointManagerSingleZoneCooling;
+/** \relates SetpointManagerSingleZoneHeating*/
+typedef boost::optional<SetpointManagerSingleZoneHeating> OptionalSetpointManagerSingleZoneHeating;
 
-/** \relates SetpointManagerSingleZoneCooling*/
-typedef std::vector<SetpointManagerSingleZoneCooling> SetpointManagerSingleZoneCoolingVector;
+/** \relates SetpointManagerSingleZoneHeating*/
+typedef std::vector<SetpointManagerSingleZoneHeating> SetpointManagerSingleZoneHeatingVector;
 
 } // model
 } // openstudio
 
-#endif // MODEL_SETPOINTMANAGERSINGLEZONECOOLING_HPP
+#endif // MODEL_SETPOINTMANAGERSINGLEZONEHEATING_HPP
 

@@ -96,6 +96,8 @@
 #include "SetpointManagerSingleZoneReheat_Impl.hpp"
 #include "SetpointManagerSingleZoneCooling.hpp"
 #include "SetpointManagerSingleZoneCooling_Impl.hpp"
+#include "SetpointManagerSingleZoneHeating.hpp"
+#include "SetpointManagerSingleZoneHeating_Impl.hpp"
 #include "ZoneMixing.hpp"
 #include "ZoneMixing_Impl.hpp"
 
@@ -1921,6 +1923,17 @@ namespace detail {
               std::vector<SetpointManagerSingleZoneCooling> setpointManagers = subsetCastVector<SetpointManagerSingleZoneCooling>(supplyNode.cast<Node>().setpointManagers());
               if( ! setpointManagers.empty() ) {
                 SetpointManagerSingleZoneCooling spm = setpointManagers.front();
+                if( ! spm.controlZone() )
+                {
+                  spm.setControlZone(thisobj);
+                }
+              }
+            }
+
+            {
+              std::vector<SetpointManagerSingleZoneHeating> setpointManagers = subsetCastVector<SetpointManagerSingleZoneHeating>(supplyNode.cast<Node>().setpointManagers());
+              if( ! setpointManagers.empty() ) {
+                SetpointManagerSingleZoneHeating spm = setpointManagers.front();
                 if( ! spm.controlZone() )
                 {
                   spm.setControlZone(thisobj);

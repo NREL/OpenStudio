@@ -94,6 +94,8 @@
 #include "../model/SetpointManagerSingleZoneOneStageCooling.hpp"
 #include "../model/SetpointManagerSingleZoneOneStageHeating.hpp"
 #include "../model/SetpointManagerSingleZoneReheat.hpp"
+#include "../model/SetpointManagerSingleZoneCooling.hpp"
+#include "../model/SetpointManagerSingleZoneHeating.hpp"
 #include "../model/SetpointManagerWarmest.hpp"
 #include "../model/SetpointManagerWarmestTemperatureFlow.hpp"
 #include "../model/RenderingColor.hpp"
@@ -2431,6 +2433,14 @@ void OneThreeNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
           {
             painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_singlezone.png"));
           }
+          else if( it->iddObjectType() == SetpointManagerSingleZoneCooling::iddObjectType() )
+          {
+            painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_singlezone.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerSingleZoneHeating::iddObjectType() )
+          {
+            painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_singlezone.png"));
+          }
           else if( it->iddObjectType() == SetpointManagerScheduled::iddObjectType() )
           {
             painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_scheduled.png"));
@@ -2665,6 +2675,14 @@ void TwoFourNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
           {
             painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_singlezone_right.png"));
           }
+          else if( it->iddObjectType() == SetpointManagerSingleZoneCooling::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_singlezone_right.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerSingleZoneHeating::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_singlezone_right.png"));
+          }
           else if( it->iddObjectType() == SetpointManagerScheduled::iddObjectType() )
           {
             painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_scheduled_right.png"));
@@ -2824,6 +2842,14 @@ void OAStraightNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem
             painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_mixed.png"));
           }
           else if( it->iddObjectType() == SetpointManagerSingleZoneReheat::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_singlezone.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerSingleZoneCooling::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_singlezone.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerSingleZoneHeating::iddObjectType() )
           {
             painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_singlezone.png"));
           }

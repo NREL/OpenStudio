@@ -165,7 +165,7 @@ SetpointManagerSingleZoneCooling::SetpointManagerSingleZoneCooling(const Model& 
 
   setMinimumSupplyAirTemperature(-99.0);
   setMaximumSupplyAirTemperature(99.0);
-  impl->setControlVariable("Temperature");
+  setControlVariable("Temperature");
 }
 
 IddObjectType SetpointManagerSingleZoneCooling::iddObjectType() {
@@ -198,6 +198,14 @@ bool SetpointManagerSingleZoneCooling::setControlZone(const ThermalZone& thermal
 
 void SetpointManagerSingleZoneCooling::resetControlZone() {
   getImpl<detail::SetpointManagerSingleZoneCooling_Impl>()->resetControlZone();
+}
+
+bool SetpointManagerSingleZoneCooling::setControlVariable( const std::string & value ) {
+  return getImpl<detail::SetpointManagerSingleZoneCooling_Impl>()->setControlVariable(value);
+}
+
+std::string SetpointManagerSingleZoneCooling::controlVariable() const {
+  return getImpl<detail::SetpointManagerSingleZoneCooling_Impl>()->controlVariable();
 }
 
 /// @cond

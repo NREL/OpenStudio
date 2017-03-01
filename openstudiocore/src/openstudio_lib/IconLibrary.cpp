@@ -378,6 +378,7 @@ IconLibrary::IconLibrary()
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_SetpointManager_SingleZone_OneStageHeating).value()] = new QPixmap(":images/mini_icons/setpoint_onestage_heating.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_SetpointManager_SingleZone_Reheat).value()] = new QPixmap(":images/mini_icons/setpoint_singlezone.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_SetpointManager_SingleZone_Cooling).value()] = new QPixmap(":images/mini_icons/setpoint_singlezone.png");
+  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_SetpointManager_SingleZone_Heating).value()] = new QPixmap(":images/mini_icons/setpoint_singlezone.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_SetpointManager_Warmest).value()] = new QPixmap(":images/mini_icons/setpoint_warmest.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_SetpointManager_WarmestTemperatureFlow).value()] = new QPixmap(":images/mini_icons/setpoint_warmest_tempflow.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlow).value()] = new QPixmap(":images/mini_icons/mini_vrf_unit.png");

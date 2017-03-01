@@ -1039,6 +1039,7 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
   libraryWidget->addModelObjectType(IddObjectType::OS_SetpointManager_Scheduled,"Setpoint Manager Scheduled");
   libraryWidget->addModelObjectType(IddObjectType::OS_SetpointManager_Scheduled_DualSetpoint,"Setpoint Manager Scheduled Dual Setpoint");
   libraryWidget->addModelObjectType(IddObjectType::OS_SetpointManager_SingleZone_Cooling,"Setpoint Manager Single Zone Cooling");
+  libraryWidget->addModelObjectType(IddObjectType::OS_SetpointManager_SingleZone_Heating,"Setpoint Manager Single Zone Heating");
   libraryWidget->addModelObjectType(IddObjectType::OS_SetpointManager_SingleZone_Humidity_Maximum,"Setpoint Manager Humidity Maximum");
   libraryWidget->addModelObjectType(IddObjectType::OS_SetpointManager_SingleZone_Humidity_Minimum,"Setpoint Manager Humidity Minimum");
   libraryWidget->addModelObjectType(IddObjectType::OS_SetpointManager_SingleZone_OneStageCooling,"Setpoint Manager One Stage Cooling");

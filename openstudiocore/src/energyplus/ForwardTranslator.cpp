@@ -2260,6 +2260,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateSetpointManagerSingleZoneCooling(spm);
       break;
     }
+  case  openstudio::IddObjectType::OS_SetpointManager_SingleZone_Heating :
+    {
+      model::SetpointManagerSingleZoneHeating spm = modelObject.cast<SetpointManagerSingleZoneHeating>();
+      retVal = translateSetpointManagerSingleZoneHeating(spm);
+      break;
+    }
   case  openstudio::IddObjectType::OS_SetpointManager_SingleZone_Humidity_Maximum :
     {
       model::SetpointManagerSingleZoneHumidityMaximum spm = modelObject.cast<SetpointManagerSingleZoneHumidityMaximum>();
