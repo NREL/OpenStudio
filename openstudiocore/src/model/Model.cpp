@@ -492,6 +492,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(SetpointManagerOutdoorAirReset);
     REGISTER_CONSTRUCTOR(SetpointManagerScheduled);
     REGISTER_CONSTRUCTOR(SetpointManagerScheduledDualSetpoint);
+    REGISTER_CONSTRUCTOR(SetpointManagerSingleZoneCooling);
     REGISTER_CONSTRUCTOR(SetpointManagerSingleZoneHumidityMaximum);
     REGISTER_CONSTRUCTOR(SetpointManagerSingleZoneHumidityMinimum);
     REGISTER_CONSTRUCTOR(SetpointManagerSingleZoneOneStageCooling);
@@ -920,6 +921,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(SetpointManagerOutdoorAirReset);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerScheduled);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerScheduledDualSetpoint);
+    REGISTER_COPYCONSTRUCTORS(SetpointManagerSingleZoneCooling);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerSingleZoneHumidityMaximum);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerSingleZoneHumidityMinimum);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerSingleZoneOneStageCooling);

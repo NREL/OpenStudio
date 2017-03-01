@@ -92,6 +92,7 @@ MODELOBJECT_TEMPLATES(SetpointManagerSingleZoneHumidityMaximum);
 MODELOBJECT_TEMPLATES(SetpointManagerSingleZoneHumidityMinimum);
 MODELOBJECT_TEMPLATES(SetpointManagerSingleZoneOneStageCooling);
 MODELOBJECT_TEMPLATES(SetpointManagerSingleZoneOneStageHeating);
+MODELOBJECT_TEMPLATES(SetpointManagerSingleZoneCooling);
 MODELOBJECT_TEMPLATES(SetpointManagerSingleZoneReheat);
 MODELOBJECT_TEMPLATES(SetpointManagerWarmest);
 MODELOBJECT_TEMPLATES(SetpointManagerWarmestTemperatureFlow);

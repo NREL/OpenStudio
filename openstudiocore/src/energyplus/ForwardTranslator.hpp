@@ -271,6 +271,7 @@ class SetpointManagerOutdoorAirPretreat;
 class SetpointManagerOutdoorAirReset;
 class SetpointManagerScheduled;
 class SetpointManagerScheduledDualSetpoint;
+class SetpointManagerSingleZoneCooling;
 class SetpointManagerSingleZoneHumidityMaximum;
 class SetpointManagerSingleZoneHumidityMinimum;
 class SetpointManagerSingleZoneOneStageCooling;
@@ -924,6 +925,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateSetpointManagerScheduled( model::SetpointManagerScheduled & modelObject );
 
   boost::optional<IdfObject> translateSetpointManagerScheduledDualSetpoint( model::SetpointManagerScheduledDualSetpoint & modelObject );
+
+  boost::optional<IdfObject> translateSetpointManagerSingleZoneCooling( model::SetpointManagerSingleZoneCooling & modelObject );
 
   boost::optional<IdfObject> translateSetpointManagerSingleZoneHumidityMaximum( model::SetpointManagerSingleZoneHumidityMaximum & modelObject );
 

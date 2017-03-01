@@ -251,6 +251,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateSetpointManagerOutdoorAirReset.cpp
   ForwardTranslator/ForwardTranslateSetpointManagerScheduled.cpp
   ForwardTranslator/ForwardTranslateSetpointManagerScheduledDualSetpoint.cpp
+  ForwardTranslator/ForwardTranslateSetpointManagerSingleZoneCooling.cpp
   ForwardTranslator/ForwardTranslateSetpointManagerSingleZoneHumidityMaximum.cpp
   ForwardTranslator/ForwardTranslateSetpointManagerSingleZoneHumidityMinimum.cpp
   ForwardTranslator/ForwardTranslateSetpointManagerSingleZoneOneStageCooling.cpp

@@ -86,6 +86,8 @@
 #include "ScheduleTypeRegistry.hpp"
 #include "SetpointManagerSingleZoneReheat.hpp"
 #include "SetpointManagerSingleZoneReheat_Impl.hpp"
+#include "SetpointManagerSingleZoneCooling.hpp"
+#include "SetpointManagerSingleZoneCooling_Impl.hpp"
 #include "../utilities/idd/IddEnums.hpp"
 
 #include <utilities/idd/OS_AirLoopHVAC_FieldEnums.hxx>
@@ -532,12 +534,25 @@ namespace detail {
       }
     }
 
-    std::vector<SetpointManagerSingleZoneReheat> setpointManagers = subsetCastVector<SetpointManagerSingleZoneReheat>(t_airLoopHVAC->supplyOutletNode().setpointManagers());
-    if( ! setpointManagers.empty() ) {
-      SetpointManagerSingleZoneReheat spm = setpointManagers.front();
-      if( spm.controlZone() == thermalZone )
-      {
-        spm.resetControlZone();
+    {
+      std::vector<SetpointManagerSingleZoneReheat> setpointManagers = subsetCastVector<SetpointManagerSingleZoneReheat>(t_airLoopHVAC->supplyOutletNode().setpointManagers());
+      if( ! setpointManagers.empty() ) {
+        SetpointManagerSingleZoneReheat spm = setpointManagers.front();
+        if( spm.controlZone() == thermalZone )
+        {
+          spm.resetControlZone();
+        }
+      }
+    }
+
+    {
+      std::vector<SetpointManagerSingleZoneCooling> setpointManagers = subsetCastVector<SetpointManagerSingleZoneCooling>(t_airLoopHVAC->supplyOutletNode().setpointManagers());
+      if( ! setpointManagers.empty() ) {
+        SetpointManagerSingleZoneCooling spm = setpointManagers.front();
+        if( spm.controlZone() == thermalZone )
+        {
+          spm.resetControlZone();
+        }
       }
     }
 

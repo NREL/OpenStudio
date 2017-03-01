@@ -978,6 +978,9 @@ set(${target_name}_src
   SetpointManagerScheduledDualSetpoint.hpp
   SetpointManagerScheduledDualSetpoint_Impl.hpp
   SetpointManagerScheduledDualSetpoint.cpp
+  SetpointManagerSingleZoneCooling.hpp
+  SetpointManagerSingleZoneCooling_Impl.hpp
+  SetpointManagerSingleZoneCooling.cpp
   SetpointManagerSingleZoneHumidityMaximum.hpp
   SetpointManagerSingleZoneHumidityMaximum_Impl.hpp
   SetpointManagerSingleZoneHumidityMaximum.cpp
@@ -1618,6 +1621,7 @@ set(${target_name}_test_src
   test/SetpointManagerSingleZoneOneStageCooling_GTest.cpp
   test/SetpointManagerSingleZoneOneStageHeating_GTest.cpp
   test/SetpointManagerSingleZoneReheat_GTest.cpp
+  test/SetpointManagerSingleZoneCooling_GTest.cpp
   test/SetpointManagerWarmest_GTest.cpp
   test/SetpointManagerWarmestTemperatureFlow_GTest.cpp
   test/ScheduleDay_GTest.cpp

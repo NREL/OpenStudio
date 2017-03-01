@@ -20451,6 +20451,62 @@ OS:SetpointManager:SingleZone:Humidity:Maximum,
        \type object-list
        \object-list Node
 
+OS:SetpointManager:SingleZone:Cooling,
+       \memo This setpoint manager detects the control zone load to meet the current cooling
+       \memo setpoint, zone inlet node flow rate, and zone node temperature, and calculates a
+       \memo setpoint temperature for the supply air that will satisfy the zone cooling load for
+       \memo the control zone.
+       \min-fields 7
+  A1 , \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+  A3 , \field Control Variable
+       \type choice
+       \required-field
+       \key Temperature
+  N1 , \field Minimum Supply Air Temperature
+       \units C
+       \required-field
+  N2 , \field Maximum Supply Air Temperature
+       \units C
+       \required-field
+  A4 , \field Control Zone Name
+       \type object-list
+       \object-list ThermalZoneNames
+  A5 ; \field Setpoint Node or NodeList Name
+       \type object-list
+       \object-list Node
+
+OS:SetpointManager:SingleZone:Heating,
+       \memo This setpoint manager detects the control zone load to meet the current heating
+       \memo setpoint, zone inlet node flow rate, and zone node temperature, and calculates a
+       \memo setpoint temperature for the supply air that will satisfy the zone heating load for
+       \memo the control zone.
+       \min-fields 7
+  A1 , \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+  A3 , \field Control Variable
+       \type choice
+       \required-field
+       \key Temperature
+  N1 , \field Minimum Supply Air Temperature
+       \units C
+       \required-field
+  N2 , \field Maximum Supply Air Temperature
+       \units C
+       \required-field
+  A4 , \field Control Zone Name
+       \type object-list
+       \object-list ThermalZoneNames
+  A5 ; \field Setpoint Node or NodeList Name
+       \type object-list
+       \object-list Node
+
 OS:Sizing:Plant,
   A1, \field Handle
        \type handle
