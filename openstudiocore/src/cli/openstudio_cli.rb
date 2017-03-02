@@ -844,6 +844,12 @@ class InstallGem
     rescue => e
       $logger.error "Error installing gem: #{e.message} in #{e.backtrace.join("\n")}"
       exit e.exit_code
+    rescue LoadError => e
+      # DLM: gem install tries to load a Windows dll to access network functionality in win32/resolv
+      # Ruby must be built with libffi to enable fiddle extension to enable win32 extension
+      $logger.error "gem_install command not yet implemented, requires fiddle extension"
+      #$logger.error "#{e.message} in #{e.backtrace.join("\n")}"
+      return 1
     end
 
     $logger.info 'The gem was successfully installed'
