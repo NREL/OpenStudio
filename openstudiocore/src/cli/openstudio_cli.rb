@@ -64,8 +64,10 @@ end
 $logger.debug "Input ARGV is #{$argv}"
 
 # Operate on the include option to add to $LOAD_PATH
+remove_indices = []
+new_path = []
 $argv.each_index do |i|
-  remove_indices = []
+  
   if $argv[i] == '-I' || $argv[i] == '--include'
     # remove from further processing
     remove_indices << i 
@@ -77,26 +79,70 @@ $argv.each_index do |i|
       safe_puts "#{$argv[i]} requires second argument DIR"
       return 0
     elsif !File.exists?(dir) || !File.directory?(dir)
-      $logger.warn "'#{dir}' passed to #{$argv[i]} is not a directory"
+      # DLM: Ruby doesn't warn for this
+      #$logger.warn "'#{dir}' passed to #{$argv[i]} is not a directory"
     end
-    $LOAD_PATH << dir
+    new_path << dir
   end
+end
+remove_indices.reverse_each {|i| $argv.delete_at(i)}
+
+if !new_path.empty?
   
-  remove_indices.reverse_each {|i| $argv.delete_at(i)}
+  new_path = new_path.concat($LOAD_PATH)
+  
+  $logger.info "Setting $LOAD_PATH to #{new_path}"
+  $LOAD_PATH.clear
+  
+  new_path.each {|p| $LOAD_PATH << p}
 end
 
-# Operate on the gem_path option to set the gem search path
-if $argv.include? '--gem_path'
-  $logger.info 'Setting gem path'
-  option_index = $argv.index '--gem_path'
+# Operate on the gem_path option to set GEM_PATH
+remove_indices = []
+new_path = []
+$argv.each_index do |i|
+
+  if $argv[i] == '--gem_path'
+    
+    # remove from further processing
+    remove_indices << i 
+    remove_indices << i+1
+    
+    dir = $argv[i + 1]
+    
+    if dir.nil? 
+      safe_puts "#{$argv[i]} requires second argument DIR"
+      return 0
+    elsif !File.exists?(dir) || !File.directory?(dir)
+      # DLM: Ruby doesn't warn for this
+      #$logger.warn "'#{dir}' passed to #{$argv[i]} is not a directory"
+    end
+    new_path << dir
+  end
+end
+remove_indices.reverse_each {|i| $argv.delete_at(i)}
+
+if !new_path.empty?
+  if ENV['GEM_PATH']
+    new_path << ENV['GEM_PATH'].to_s
+  end
+  
+  new_path = new_path.join(File::PATH_SEPARATOR)
+  
+  $logger.info "Setting GEM_PATH to #{new_path}"
+  ENV['GEM_PATH'] = new_path
+end
+
+# Operate on the gem_home option to set GEM_HOME
+if $argv.include? '--gem_home'
+  option_index = $argv.index '--gem_home'
   path_index = option_index + 1
   new_home = $argv[path_index]
   $argv.slice! path_index
-  $argv.slice! $argv.index '--gem_path'
-  current_home = ENV['OPENSTUDIO_GEM_PATH']
-  $logger.warn "Overwriting previous OPENSTUDIO_GEM_PATH of #{current_home} to #{new_home} for this command" if current_home
-  $logger.info "No current gem path set in OPENSTUDIO_GEM_PATH, setting to #{new_home}" unless current_home
-  ENV['OPENSTUDIO_GEM_PATH'] = new_home
+  $argv.slice! $argv.index '--gem_home'
+
+  $logger.info "Setting GEM_HOME to #{new_home}"
+  ENV['GEM_HOME'] = new_home
 end
 
 # load embedded ruby gems
@@ -491,8 +537,9 @@ class CLI
       o.separator ''
       o.on('-h', '--help', 'Print this help.')
       o.on('--verbose', 'Print the full log to STDOUT')
-      o.on('-I', '--include DIR', 'Add additional directory to Ruby $LOAD_PATH (may be used more than once)')
-      o.on('--gem_path PATH', 'Path to use for installing gems to and loading gems from')
+      o.on('-I', '--include DIR', 'Add additional directory to add to front of Ruby $LOAD_PATH (may be used more than once)')
+      o.on('--gem_path DIR', 'Add additional directory to add to front of GEM_PATH environment variable (may be used more than once)')
+      o.on('--gem_home DIR', 'Set GEM_HOME environment variable')
       o.separator ''
       o.separator 'Common commands:'
 
@@ -758,6 +805,8 @@ class InstallGem
   def execute(sub_argv)
     require 'rubygems'
     require 'rubygems/commands/install_command'
+    
+    $logger.info "sub_argv = #{sub_argv}"
 
     # Parse the options
     opts = OptionParser.new do |o|
@@ -788,7 +837,7 @@ class InstallGem
       ARGV << gem_version
     end
     
-    puts ENV['GEM_HOME']
+    $logger.info "Installing gem to #{ENV['GEM_HOME']}"
 
     begin
       cmd.execute

@@ -9,6 +9,16 @@ module OpenStudio
   def self.openstudio_path
     RbConfig.ruby
   end
+  
+  def self.preprocess_ruby_script(s)
+  
+    # DLM: temporary hack to get around autoload
+    s.gsub!(/^\s*autoload\s*(:.*?),\s*(.*?)\s*$/, "current_module_ = Module.nesting[0].nil? ? Object : Module.nesting[0]
+    $autoload_hash[current_module_.to_s.to_sym] = {} if $autoload_hash[current_module_.to_s.to_sym].nil?
+    $autoload_hash[current_module_.to_s.to_sym][\\1] = [current_module_, \\2]\n")
+    
+    return s
+  end
 end
 
 BINDING = Kernel::binding()
@@ -70,10 +80,7 @@ module Kernel
     $LOADED << path
     s = EmbeddedScripting::getFileAsString(path)
     
-    # DLM: temporary hack to get around autoload
-    s = s.gsub(/^\s*autoload\s*(:.*?),\s*(.*?)\s*$/, "current_module_ = Module.nesting[0].nil? ? Object : Module.nesting[0]
-    $autoload_hash[current_module_.to_s.to_sym] = {} if $autoload_hash[current_module_.to_s.to_sym].nil?
-    $autoload_hash[current_module_.to_s.to_sym][\\1] = [current_module_, \\2]")
+    s = OpenStudio::preprocess_ruby_script(s)
 
     result = eval(s,BINDING,path)
     
