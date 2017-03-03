@@ -877,6 +877,13 @@ class Measure
     options = {}
     options[:update] = false
     options[:compute_arguments] = nil
+    
+    directory = nil
+    unless (sub_argv[0] == 's' || sub_argv[0] == '--start_server')
+      directory = sub_argv.pop
+      $logger.debug("Directory to examine is #{directory}")
+      $logger.debug("Remaining args are #{sub_argv}")
+    end
 
     opts = OptionParser.new do |o|
       o.banner = 'Usage: openstudio measure [options] DIRECTORY'
@@ -904,20 +911,19 @@ class Measure
     argv = parse_options(opts, sub_argv)
     return 0 if argv == nil
     
-    directory = nil
     if !options[:start_server]
-      if argv == []
+      if directory.nil?
         $logger.error 'No directory provided' 
         return 1
       end
-      directory = File.expand_path(argv[0])
+      directory = File.expand_path(directory)
     end
 
     $logger.debug("Measure command: #{argv.inspect} #{options.inspect}")
     $logger.debug("Directory to examine is #{directory}")
 
     if options[:update_all]
-      measure_manager = MeasureManager.new
+      measure_manager = MeasureManager.new($logger)
       
       # loop over all directories
       result = []
@@ -935,7 +941,7 @@ class Measure
       puts JSON.generate(result)
       
     elsif options[:update]
-      measure_manager = MeasureManager.new
+      measure_manager = MeasureManager.new($logger)
       measure = measure_manager.get_measure(directory, true)
       if measure.nil?
         $logger.error("Cannot load measure from '#{directory}'")
@@ -946,32 +952,50 @@ class Measure
       puts JSON.generate(hash)
       
     elsif options[:compute_arguments]
-      measure_manager = MeasureManager.new
+      measure_manager = MeasureManager.new($logger)
       measure = measure_manager.get_measure(directory, true)
       if measure.nil?
         $logger.error("Cannot load measure from '#{directory}'")
         return 1
       end
-      
-      # todo - handle the case where compute_arguments_model is an IDF
-      osm_path = options[:compute_arguments_model]
+
+      model_path = options[:compute_arguments_model]
       
       model = OpenStudio::Model::OptionalModel.new()
       workspace = OpenStudio::OptionalWorkspace.new()
-      if osm_path
-        value = measure_manager.get_model(osm_path, true)
-        if value.nil?
-          $logger.error("Cannot load model from '#{osm_path}'")
-          return 1
+      if model_path
+        measure_type = measure.measureType.valueName
+        if measure_type == 'ModelMeasure'
+        
+          value = measure_manager.get_model(model_path, true)
+          if value.nil?
+            $logger.error("Cannot load model from '#{model_path}'")
+            return 1
+          else
+            model = value[0].clone(true).to_Model
+            workspace = value[1].clone(true)
+          end
+          
+        elsif measure_type == 'EnergyPlusMeasure'
+          value = measure_manager.get_idf(model_path, true)
+          
+          if value.nil?
+            $logger.error("Cannot load workspace from '#{model_path}'")
+            return 1
+          else
+            workspace = value.clone(true)
+          end
+          
         else
-          model = value[0].clone(true).to_Model
-          workspace = value[1].clone(true)
+          $logger.error("Measure type '#{measure_type}' does not take a model path")
+          return 1
         end
+
       else
-        osm_path = ""
+        model_path = ""
       end
       
-      measure_info = measure_manager.get_measure_info(directory, measure, osm_path, model, workspace)
+      measure_info = measure_manager.get_measure_info(directory, measure, model_path, model, workspace)
       
       hash = measure_manager.measure_hash(directory, measure, measure_info)
       puts JSON.generate(hash)
