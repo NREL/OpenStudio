@@ -1,4 +1,4 @@
-  Version,8.6;
+  Version,8.7;
 
   Building,
     Building 1,              !- Name
@@ -8266,10 +8266,14 @@
     Autosize,                !- Free Convection U-Factor Times Area Value {W/K}
     0.1,                     !- Free Convection U-Factor Times Area Value Sizing Factor
     UFactorTimesAreaAndDesignWaterFlowRate,  !- Performance Input Method
-    1.25,                    !- Heat Rejection Capacity and Nominal Capacity Sizing Ratio
+    ,                        !- Heat Rejection Capacity and Nominal Capacity Sizing Ratio
     ,                        !- Nominal Capacity {W}
-    0,                       !- Free Convection Capacity {W}
-    0.1,                     !- Free Convection Nominal Capacity Sizing Factor
+    ,                        !- Free Convection Capacity {W}
+    ,                        !- Free Convection Nominal Capacity Sizing Factor
+    1.25,                    !- Design Inlet Air Dry-Bulb Temperature {C}
+    ,                        !- Design Inlet Air Wet-Bulb Temperature {C}
+    0,                       !- Design Approach Temperature {deltaC}
+    0.1,                     !- Design Range Temperature {deltaC}
     0,                       !- Basin Heater Capacity {W/K}
     2,                       !- Basin Heater Setpoint Temperature {C}
     ,                        !- Basin Heater Operating Schedule Name
