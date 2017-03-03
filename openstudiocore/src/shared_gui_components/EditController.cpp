@@ -201,9 +201,19 @@ InputController::InputController(EditController * editController,const measure::
     {
       choiceInputView->comboBox->insertItem(0,"");
     }
-    else if( choiceInputView->comboBox->findText(QString::fromStdString(m_argument.defaultValueAsString())) == -1 )
+    else
     {
-      choiceInputView->comboBox->insertItem(0,"");
+      int index = choiceInputView->comboBox->findData(QString::fromStdString(m_argument.defaultValueAsString()));
+
+      if (index == -1){
+        index = choiceInputView->comboBox->findText(QString::fromStdString(m_argument.defaultValueAsString()));
+      }
+
+      if (index == -1)
+      {
+        // DLM: this is an error
+        choiceInputView->comboBox->insertItem(0, "");
+      }
     }
 
     // Set the initial value
@@ -211,11 +221,9 @@ InputController::InputController(EditController * editController,const measure::
     {
       int index = choiceInputView->comboBox->findData(QString::fromStdString(m_argument.valueAsString()));
 
-      choiceInputView->comboBox->setCurrentIndex(index);
-    }
-    else if( m_argument.hasDefaultValue() )
-    {
-      int index = choiceInputView->comboBox->findData(QString::fromStdString(m_argument.defaultValueAsString()));
+      if (index == -1){
+        index = choiceInputView->comboBox->findText(QString::fromStdString(m_argument.valueAsString()));
+      }
 
       if( index != -1 )
       {
@@ -223,6 +231,25 @@ InputController::InputController(EditController * editController,const measure::
       }
       else
       {
+        // DLM: this is an error
+        choiceInputView->comboBox->setCurrentIndex(0);
+      }
+    }
+    else if( m_argument.hasDefaultValue() )
+    {
+      int index = choiceInputView->comboBox->findData(QString::fromStdString(m_argument.defaultValueAsString()));
+
+      if (index == -1){
+        index = choiceInputView->comboBox->findText(QString::fromStdString(m_argument.defaultValueAsString()));
+      }
+
+      if( index != -1 )
+      {
+        choiceInputView->comboBox->setCurrentIndex(index);
+      }
+      else
+      {
+        // DLM: this is an error
         choiceInputView->comboBox->setCurrentIndex(0);
       }
     }
