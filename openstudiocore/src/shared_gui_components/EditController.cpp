@@ -364,7 +364,14 @@ void InputController::setValueForIndex(int index)
 
 bool InputController::isArgumentIncomplete() const
 {
-  return m_editController->measureStepItem()->hasIncompleteArguments();
+  bool result = false;
+  std::vector<measure::OSArgument> incompleteArguments = m_editController->measureStepItem()->incompleteArguments();
+  for (const auto& incompleteArgument : incompleteArguments){
+    if (incompleteArgument.name() == m_argument.name()){
+      result = true;
+    }
+  }
+  return result;
 }
 
 bool InputController::isItOKToClearResults()

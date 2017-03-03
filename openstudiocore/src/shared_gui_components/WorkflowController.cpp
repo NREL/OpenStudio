@@ -489,27 +489,25 @@ std::vector<measure::OSArgument> MeasureStepItem::arguments() const
 
 bool MeasureStepItem::hasIncompleteArguments() const
 {
-  std::vector<measure::OSArgument> arguments;
+  return (incompleteArguments().size() > 0);
+}
 
-  // get arguments from the BCL Measure (computed using the current model)
-  OptionalBCLMeasure bclMeasure = this->bclMeasure();
-  if (bclMeasure){
-    arguments = m_app->measureManager().getArguments(*bclMeasure);
-  }
+std::vector<measure::OSArgument> MeasureStepItem::incompleteArguments() const
+{
+  std::vector<measure::OSArgument> result;
 
   // find any required arguments without a value
-  for (const auto& argument : arguments){
+  for (const auto& argument : arguments()){
     if (argument.required() && !argument.hasDefaultValue()){
       boost::optional<Variant> variant = m_step.getArgument(argument.name());
       if (!variant){
-        return true;
+        result.push_back(argument);
       }
     }
   }
 
-  return false;
+  return result;
 }
-
 
 void MeasureStepItem::remove()
 {
