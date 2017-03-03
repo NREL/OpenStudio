@@ -879,7 +879,7 @@ class Measure
     options[:compute_arguments] = nil
     
     directory = nil
-    unless (sub_argv[0] == 's' || sub_argv[0] == '--start_server')
+    unless (sub_argv[0] == '-s' || sub_argv[0] == '--start_server')
       directory = sub_argv.pop
       $logger.debug("Directory to examine is #{directory}")
       $logger.debug("Remaining args are #{sub_argv}")
@@ -1020,7 +1020,7 @@ class Measure
       server.start
 
     else
-      $logger.error("Measure command missing command")
+      $logger.error("Unknown measure command")
       return 1
     end
 
