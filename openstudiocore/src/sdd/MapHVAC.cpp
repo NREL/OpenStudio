@@ -4526,7 +4526,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
   std::vector<SysInfo> simSysInfo;
 
   {
-    auto elements = thermalZoneElement.elementsByTagName("PriAirCondgSysRef");
+    auto elements = thermalZoneElement.elementsByTagName("AirCondgSysRef");
     for (int i = 0; i < elements.count(); i++)
     {
       const auto & element = elements.at(i).toElement();
@@ -4768,7 +4768,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
   };
 
   for( auto & sysInfo : priAirCondInfo ) {
-    setPriority(sysInfo, "PriAirCondgSysPriority");
+    setPriority(sysInfo, "AirCondgSysPriority");
   }
   for( auto & sysInfo : simSysInfo ) {
     setPriority(sysInfo, "VentSysPriority");
