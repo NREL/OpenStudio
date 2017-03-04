@@ -1566,6 +1566,17 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
         oaController.setTimeofDayEconomizerControlSchedule(schedule.get());
       }
 
+      value = airSystemOACtrlElement.firstChildElement("MinOAFlow").text().toDouble(&ok);
+			if( ok ) {
+      	value = unitToUnit(value,"cfm","m^3/s").get();
+				oaController.setMinimumOutdoorAirFlowRate(value);
+			}
+      value = airSystemOACtrlElement.firstChildElement("MaxOAFlow").text().toDouble(&ok);
+			if( ok ) {
+      	value = unitToUnit(value,"cfm","m^3/s").get();
+				oaController.setMaximumOutdoorAirFlowRate(value);
+			}
+
       // OASchMthd 
       QDomElement oaSchMthdElement = airSystemOACtrlElement.firstChildElement("OASchMthd");
       if( istringEqual(oaSchMthdElement.text().toStdString(),"Constant") )
