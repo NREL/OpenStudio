@@ -7252,8 +7252,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
   std::string text;
   double value;
 
-  text = element.firstChildElement("Type").text().toStdString();
-  if( istringEqual(text,"HPSplit") ) {
+  text = element.firstChildElement("TypeSim").text().toStdString();
+  if( istringEqual(text,"HeatPumpSplit") ) {
     model::WaterHeaterHeatPump heatPump(model);
     auto waterHeater = heatPump.tank().cast<model::WaterHeaterMixed>();
     auto coil = heatPump.dXCoil().cast<model::CoilWaterHeatingAirToWaterHeatPump>();
@@ -7297,7 +7297,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
     if( ok ) {
       value = unitToUnit(value,"cfm","m^3/s").get();
       heatPump.setEvaporatorAirFlowRate(value);
-    }
+    } else {
+			heatPump.autosizeEvaporatorAirFlowRate();	
+		}
 
     heatPump.setMinimumInletAirTemperatureforCompressorOperation(5.0);
     value = element.firstChildElement("MinAirTemp").text().toDouble(&ok);
@@ -7408,7 +7410,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
       waterHeater.setOnCycleLossCoefficienttoAmbientTemperature(value * 0.5275);
     }
 
-    value = element.firstChildElement("CapRtd").text().toDouble(&ok);
+    value = element.firstChildElement("CapRtdSim").text().toDouble(&ok);
     if( ok ) {
       coil.setRatedHeatingCapacity(unitToUnit(value,"Btu/h","W").get());
     }
@@ -7434,7 +7436,12 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
       coil.setMaximumAmbientTemperatureforCrankcaseHeaterOperation(unitToUnit(value,"F","C").get());
     }
 
-    coil.setRatedSensibleHeatRatio(0.736);
+		value = element.firstChildElement("RtdSensHtRat").text().toDouble(&ok);
+		if( ok ) {
+			coil.setRatedSensibleHeatRatio(value);
+		} else {
+    	coil.setRatedSensibleHeatRatio(0.85);
+		}
     coil.setRatedEvaporatorInletAirDryBulbTemperature(19.7);
 		coil.setRatedEvaporatorInletAirWetBulbTemperature(13.5);
 		coil.setRatedCondenserInletWaterTemperature(57.5);
@@ -7496,16 +7503,14 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
 			value = unitToUnit(value,"cfm","m^3/s").get();
       fan.setMaximumFlowRate(value);
 			coil.setRatedEvaporatorAirFlowRate(value);
-    }
+    } else {
+			coil.autosizeRatedEvaporatorAirFlowRate();
+			fan.autosizeMaximumFlowRate();
+		}
 
     value = element.firstChildElement("FanTotStaticPress").text().toDouble(&ok);
     if( ok ) {
       fan.setPressureRise(value * 249.0889);
-    }
-
-    value = element.firstChildElement("FanFlowCap").text().toDouble(&ok);
-    if( ok ) {
-      fan.setMaximumFlowRate(unitToUnit(value,"cfm","m^3/s").get()); 
     }
 
     return waterHeater;
@@ -7556,7 +7561,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
 
     // CapRtd
     
-    QDomElement wtrHtrMaxCapElement = element.firstChildElement("CapRtd");
+    QDomElement wtrHtrMaxCapElement = element.firstChildElement("CapRtdSim");
 
     double wtrHtrMaxCap = wtrHtrMaxCapElement.text().toDouble(&ok);
 
