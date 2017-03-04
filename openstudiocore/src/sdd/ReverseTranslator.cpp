@@ -1684,6 +1684,45 @@ namespace sdd {
         var.setReportingFrequency(interval);
       }
 
+      // SimVarsThrmlEngyStor
+      auto simVarsThrmlEngyStorElement = projectElement.firstChildElement("SimVarsThrmlEngyStor");
+
+      if( simVarsThrmlEngyStorElement.text().toInt() == 1 )
+      {
+        model::OutputVariable var("Chilled Water Thermal Storage Tank Temperature",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Chilled Water Thermal Storage Use Side Mass Flow Rate",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Chilled Water Thermal Storage Use Side Inlet Temperature",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Chilled Water Thermal Storage Use Side Outlet Temperature",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Chilled Water Thermal Storage Use Side Heat Transfer Rate",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Chilled Water Thermal Storage Use Side Heat Transfer Energy",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Chilled Water Thermal Storage Source Side Mass Flow Rate",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Chilled Water Thermal Storage Source Side Inlet Temperature",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Chilled Water Thermal Storage Source Side Outlet Temperature",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Chilled Water Thermal Storage Source Side Heat Transfer Rate",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Chilled Water Thermal Storage Source Side Heat Transfer Energy",*result);
+        var.setReportingFrequency(interval);
+      }
+
       model::OutputControlReportingTolerances rt = result->getUniqueModelObject<model::OutputControlReportingTolerances>();
       rt.setToleranceforTimeCoolingSetpointNotMet(0.56);
       rt.setToleranceforTimeHeatingSetpointNotMet(0.56);
