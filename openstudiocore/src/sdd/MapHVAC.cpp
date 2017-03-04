@@ -4701,23 +4701,58 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
   // Set priority
   auto setPriority = [&](const SysInfo & sysInfo, const QString & priorityElement) {
     if( sysInfo.ModelObject ) {
-      auto elements = thermalZoneElement.elementsByTagName(priorityElement);
-      for (int i = 0; i < elements.count(); i++)
-      {
-        const auto & element = elements.at(i).toElement();
-        bool ok = false;
-        auto index = element.attribute("index").toInt(&ok);
-        if( ok ) {
-          if( index == sysInfo.Index ) {
-            auto priority = element.text().toInt(&ok);
-            if( ok ) {
-              thermalZone.setCoolingPriority(sysInfo.ModelObject.get(),priority);  
-              thermalZone.setHeatingPriority(sysInfo.ModelObject.get(),priority);  
-            }
-            break;
-          }
-        }
-      }
+			// Clg and Htg
+    	auto elements = thermalZoneElement.elementsByTagName(priorityElement);
+    	for (int i = 0; i < elements.count(); i++)
+    	{
+    	  const auto & element = elements.at(i).toElement();
+    	  bool ok = false;
+    	  auto index = element.attribute("index").toInt(&ok);
+    	  if( ok ) {
+    	    if( index == sysInfo.Index ) {
+    	      auto priority = element.text().toInt(&ok);
+    	      if( ok ) {
+    	        thermalZone.setCoolingPriority(sysInfo.ModelObject.get(),priority);  
+    	        thermalZone.setHeatingPriority(sysInfo.ModelObject.get(),priority);  
+    	      }
+    	      break;
+    	    }
+    	  }
+    	}
+			// Clg
+    	elements = thermalZoneElement.elementsByTagName(priorityElement + "Clg");
+    	for (int i = 0; i < elements.count(); i++)
+    	{
+    	  const auto & element = elements.at(i).toElement();
+    	  bool ok = false;
+    	  auto index = element.attribute("index").toInt(&ok);
+    	  if( ok ) {
+    	    if( index == sysInfo.Index ) {
+    	      auto priority = element.text().toInt(&ok);
+    	      if( ok ) {
+    	        thermalZone.setCoolingPriority(sysInfo.ModelObject.get(),priority);  
+    	      }
+    	      break;
+    	    }
+    	  }
+    	}
+			// Htg
+    	elements = thermalZoneElement.elementsByTagName(priorityElement + "Htg");
+    	for (int i = 0; i < elements.count(); i++)
+    	{
+    	  const auto & element = elements.at(i).toElement();
+    	  bool ok = false;
+    	  auto index = element.attribute("index").toInt(&ok);
+    	  if( ok ) {
+    	    if( index == sysInfo.Index ) {
+    	      auto priority = element.text().toInt(&ok);
+    	      if( ok ) {
+    	        thermalZone.setHeatingPriority(sysInfo.ModelObject.get(),priority);  
+    	      }
+    	      break;
+    	    }
+    	  }
+    	}
     }
   };
 
@@ -4733,6 +4768,18 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
     value = ventSysPriorityElement.text().toInt(&ok);
     if( ok ) {
       thermalZone.setCoolingPriority(ventSysEquip.get(),value);  
+      thermalZone.setHeatingPriority(ventSysEquip.get(),value);  
+    }
+
+    ventSysPriorityElement = thermalZoneElement.firstChildElement("VentSysPriorityClg");
+    value = ventSysPriorityElement.text().toInt(&ok);
+    if( ok ) {
+      thermalZone.setCoolingPriority(ventSysEquip.get(),value);  
+    }
+
+    ventSysPriorityElement = thermalZoneElement.firstChildElement("VentSysPriorityHtg");
+    value = ventSysPriorityElement.text().toInt(&ok);
+    if( ok ) {
       thermalZone.setHeatingPriority(ventSysEquip.get(),value);  
     }
   }
