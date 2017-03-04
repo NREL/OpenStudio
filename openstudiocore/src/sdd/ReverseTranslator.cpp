@@ -1384,12 +1384,44 @@ namespace sdd {
           auto zonehvac = result->getModelObjects<model::ZoneHVACWaterToAirHeatPump>();
           for( const auto & comp : zonehvac ) {
             createOutputForZoneHVAC(comp);
+
+        		var = model::OutputVariable("Zone Water to Air Heat Pump Total Heating Rate",*result);
+        		var.setReportingFrequency(interval);
+          	var.setKeyValue(comp.nameString());
+
+        		var = model::OutputVariable("Zone Water to Air Heat Pump Total Cooling Rate",*result);
+        		var.setReportingFrequency(interval);
+          	var.setKeyValue(comp.nameString());
+
+        		var = model::OutputVariable("Zone Water to Air Heat Pump Total Cooling Rate",*result);
+        		var.setReportingFrequency(interval);
+          	var.setKeyValue(comp.nameString());
+
+        		var = model::OutputVariable("Zone Water to Air Heat Pump Sensible Cooling Rate",*result);
+        		var.setReportingFrequency(interval);
+          	var.setKeyValue(comp.nameString());
+
+        		var = model::OutputVariable("Zone Water to Air Heat Pump Electric Power",*result);
+        		var.setReportingFrequency(interval);
+          	var.setKeyValue(comp.nameString());
+
+        		var = model::OutputVariable("Zone Water to Air Heat Pump Compressor Part Load Ratio",*result);
+        		var.setReportingFrequency(interval);
+          	var.setKeyValue(comp.nameString());
           }
         }
         {
           auto zonehvac = result->getModelObjects<model::ZoneHVACFourPipeFanCoil>();
           for( const auto & comp : zonehvac ) {
             createOutputForZoneHVAC(comp);
+          }
+        }
+        {
+          auto zonehvac = result->getModelObjects<model::ZoneHVACBaseboardConvectiveElectric>();
+          for( const auto & comp : zonehvac ) {
+        		var = model::OutputVariable("Baseboard Electric Power",*result);
+        		var.setReportingFrequency(interval);
+          	var.setKeyValue(comp.nameString());
           }
         }
       }
@@ -1409,6 +1441,18 @@ namespace sdd {
         var = model::OutputVariable("Cooling Coil Total Cooling Rate",*result);
         var.setReportingFrequency(interval);
 
+        var = model::OutputVariable("Cooling Coil Sensible Cooling Rate",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Cooling Coil Electric Power",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Cooling Coil Part Load Ratio",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Cooling Coil Runtime Fraction",*result);
+        var.setReportingFrequency(interval);
+
         var = model::OutputVariable("Fan Electric Power",*result);
         var.setReportingFrequency(interval);
 
@@ -1418,10 +1462,22 @@ namespace sdd {
         var = model::OutputVariable("Heating Coil Electric Power",*result);
         var.setReportingFrequency(interval);
 
+        var = model::OutputVariable("Heating Coil Runtime Fraction",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Heating Coil Part Load Ratio",*result);
+        var.setReportingFrequency(interval);
+
         var = model::OutputVariable("Evaporative Cooler Electric Power",*result);
         var.setReportingFrequency(interval);
 
         var = model::OutputVariable("Heating Coil Total Heating Rate",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Air System Outdoor Air Heat Recovery Bypass Status",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Air System Outdoor Air Economizer Status",*result);
         var.setReportingFrequency(interval);
 
         auto hxs = result->getModelObjects<model::HeatExchangerAirToAirSensibleAndLatent>();
