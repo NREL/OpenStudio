@@ -5466,26 +5466,26 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     addBranchPump(thermalStorage->supplyInletModelObject(),thrmlEngyStorElement);
     plantLoop.addDemandBranchForComponent(thermalStorage.get());
 
-    thermalStorageDischargePriority = thrmlEngyStorElement.firstChildElement("DischargePriority").text().toStdString();
+    thermalStorageDischargePriority = thrmlEngyStorElement.firstChildElement("DischrgPriority").text().toStdString();
     value = thrmlEngyStorElement.firstChildElement("TankSetptTemp").text().toDouble();
     thermalStorageTankSetptTemp = unitToUnit(value,"F","C").get();
 
     {
-      auto schRef = thrmlEngyStorElement.firstChildElement("ChillerOnlySchRef").text().toStdString();
+      auto schRef = thrmlEngyStorElement.firstChildElement("ChlrOnlySchRef").text().toStdString();
       if( auto sch = model.getModelObjectByName<model::Schedule>(schRef) ) {
         plantLoop.setPlantEquipmentOperationCoolingLoadSchedule(sch.get());
       }
     }
 
     {
-      auto schRef = thrmlEngyStorElement.firstChildElement("DischargeSchRef").text().toStdString();
+      auto schRef = thrmlEngyStorElement.firstChildElement("DischrgSchRef").text().toStdString();
       if( auto sch = model.getModelObjectByName<model::Schedule>(schRef) ) {
         plantLoop.setPrimaryPlantEquipmentOperationSchemeSchedule(sch.get());
       }
     }
 
     {
-      auto schRef = thrmlEngyStorElement.firstChildElement("ChargeSchRef").text().toStdString();
+      auto schRef = thrmlEngyStorElement.firstChildElement("ChrgSchRef").text().toStdString();
       if( auto sch = model.getModelObjectByName<model::Schedule>(schRef) ) {
         plantLoop.setComponentSetpointOperationSchemeSchedule(sch.get());
       }
@@ -5512,7 +5512,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
       }
 
       if( thermalStorage ) {
-        if( chillerElement.firstChildElement("EnableOnThrmlEngyStorDischarge").text().toInt() == 1 ) {
+        if( chillerElement.firstChildElement("EnableOnThrmlEngyStorDischrg").text().toInt() == 1 ) {
           enableOnThrmlEngyStorDischargeMap.insert(std::make_pair(chiller,true));
         } else {
           enableOnThrmlEngyStorDischargeMap.insert(std::make_pair(chiller,false));
@@ -6884,7 +6884,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateThrm
     tes.setNominalCoolingCapacity(value);
   }
 
-  text = tesElement.firstChildElement("StorLocSim").text().toStdString();
+  text = tesElement.firstChildElement("StorLctnSim").text().toStdString();
   if( istringEqual("Zone",text) ) {
     tes.setAmbientTemperatureIndicator("Zone");
     text = tesElement.firstChildElement("StorZnRef").text().toStdString();
@@ -6904,7 +6904,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateThrm
 
   tes.setUseSideHeatTransferEffectiveness(1.0);
 
-  text = tesElement.firstChildElement("DischargeSchRef").text().toStdString();
+  text = tesElement.firstChildElement("DischrgSchRef").text().toStdString();
   if( auto schedule = model.getModelObjectByName<model::Schedule>(text) ) {
     tes.setUseSideAvailabilitySchedule(schedule.get());
   }
@@ -6925,7 +6925,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateThrm
 
   tes.setSourceSideHeatTransferEffectiveness(1.0);
 
-  text = tesElement.firstChildElement("ChargeSchRef").text().toStdString();
+  text = tesElement.firstChildElement("ChrgSchRef").text().toStdString();
   if( auto schedule = model.getModelObjectByName<model::Schedule>(text) ) {
     tes.setSourceSideAvailabilitySchedule(schedule.get());
   }
