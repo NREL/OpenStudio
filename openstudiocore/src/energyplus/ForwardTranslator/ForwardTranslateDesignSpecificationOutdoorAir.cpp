@@ -76,7 +76,7 @@ boost::optional<IdfObject> ForwardTranslator::translateDesignSpecificationOutdoo
 
   boost::optional<Schedule> schedule = modelObject.outdoorAirFlowRateFractionSchedule();
   if (schedule){
-    idfObject.setString(DesignSpecification_OutdoorAirFields::OutdoorAirFlowRateFractionScheduleName, schedule->name().get());
+    idfObject.setString(DesignSpecification_OutdoorAirFields::OutdoorAirScheduleName, schedule->name().get());
   }
 
   m_idfObjects.push_back(idfObject);

@@ -21417,28 +21417,29 @@ DesignSpecification:OutdoorAir,
       \default 0.00944
       \minimum 0
       \note 0.00944 m3/s is equivalent to 20 cfm per person
-      \note This input should be used if the field Outdoor Air Method is Flow/Person.
-      \note This input is used if the field Outdoor Air Method is Flow/Person, Sum, or Maximum
+      \note This input is only used if the field Outdoor Air Method is Flow/Person, Sum, or Maximum
+      \note For sizing, the design number of occupants is used. For outdoor air flow control, the use
+      \note of design occupants or current occupants depends on the component and DCV options.
+      \note AirTerminal:SingleDuct:VAV:NoReheat, AirTerminal:SingleDuct:VAV:Reheat use the DCV flag specified in Controller:MechanicalVentilation
+      \note AirTerminal:DualDuct:VAV:OutdoorAir and ZoneHVAC:IdealLoadsAirSystem have their own DCV control input.
+      \note ZoneHVAC:FourPipeFanCoil always uses current occupants.
   N2, \field Outdoor Air Flow per Zone Floor Area
       \units m3/s-m2
       \default 0.0
       \minimum 0
-      \note This input should be used if the field Outdoor Air Method is Flow/Area.
-      \note This input is used if the field Outdoor Air Method is Flow/Area, Sum, or Maximum
+      \note This input is only used if the field Outdoor Air Method is Flow/Area, Sum, or Maximum
   N3, \field Outdoor Air Flow per Zone
       \type real
       \units m3/s
       \default 0.0
       \minimum 0
-      \note This input should be used if the field Outdoor Air Method is Flow/Zone.
-      \note This input is used if the field Outdoor Air Method is Flow/Zone, Sum, or Maximum
+      \note This input is only used if the field Outdoor Air Method is Flow/Zone, Sum, or Maximum
   N4, \field Outdoor Air Flow Air Changes per Hour
       \units 1/hr
       \type real
       \default 0.0
       \minimum 0
-      \note This input should be used if the field Outdoor Air Method is AirChanges/Hour.
-      \note This input is used if the field Outdoor Air Method is AirChanges/Hour, Sum, or Maximum
+      \note This input is only used if the field Outdoor Air Method is AirChanges/Hour, Sum, or Maximum
   A3; \field Outdoor Air Schedule Name
       \type object-list
       \object-list ScheduleNames
@@ -38362,22 +38363,21 @@ Controller:WaterCoil,
   A6 , \field Actuator Node Name
        \required-field
        \type node
-  N1 , \field Minimum Outdoor Air Flow Rate
-       \note If there is a Mechanical Ventilation Controller (Controller:MechanicalVentilation), note
-       \note that this value times the Minimum Outdoor Air Schedule is a hard minimum that may
-       \note override DCV or other advanced OA controls.
+  N1 , \field Controller Convergence Tolerance
+       \units deltaC
        \type real
-       \required-field
-       \units m3/s
+       \default autosize
        \autosizable
   N2 , \field Maximum Actuated Flow
        \type real
        \units m3/s
+       \ip-units gal/min
        \autosizable
   N3 ; \field Minimum Actuated Flow
        \type real
        \default 0.0000001
        \units m3/s
+       \ip-units gal/min
 
 Controller:OutdoorAir,
        \memo Controller to set the outdoor air flow rate for an air loop. Control options include
