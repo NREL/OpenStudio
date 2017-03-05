@@ -148,6 +148,10 @@ struct UTILITIES_API IddFieldProperties{
    *  \\object-list markup. */
   std::vector<std::string> references;
 
+  /** This field specifies that the containing IdfObject belongs to the following reference-class-name lists. 
+  **/
+  std::vector<std::string> referenceClassNames;
+
   /** This field points to a name registered in another file (typically the RDD file). OpenStudio
    *  treats these fields as plain (unparsed) text. */
   std::vector<std::string> externalLists;

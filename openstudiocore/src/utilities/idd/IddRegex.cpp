@@ -349,6 +349,13 @@ namespace iddRegex{
     return result;
   }
 
+  /// Match a field reference-class-name property
+  /// matches[1], reference-class-name value 
+  const boost::regex & referenceClassNameProperty(){
+    const static boost::regex result("^[rR]eference-[cC]lass-[nN]name([^!]*)");
+    return result;
+  }
+
   /// Match begin extensible
   const boost::regex &beginExtensible(){
     const static boost::regex result("[\\\\][bB]egin-[eE]xtensible");
