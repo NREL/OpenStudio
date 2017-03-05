@@ -55803,7 +55803,7 @@ Matrix:TwoDimension,
        \begin-extensible
        \type real
 
-\ group Hybrid Model
+\group Hybrid Model
 
 HybridModel:Zone,
        \memo Zones with measured air temperature data and a range of dates.
