@@ -44,6 +44,8 @@ require 'optparse'
 #require 'irb'
 #include OpenStudio::Workflow::Util::IO
 
+$argv = ARGV.dup
+
 $logger = Logger.new(STDOUT)
 #$logger.level = Logger::ERROR
 $logger.level = Logger::WARN
@@ -53,8 +55,9 @@ $logger.level = Logger::WARN
 #OpenStudio::Logger.instance.standardOutLogger.setLogLevel(OpenStudio::Warn)
 OpenStudio::Logger.instance.standardOutLogger.setLogLevel(OpenStudio::Error)
 
+# DLM: TODO, we are parsing arguments before the command manually, we should do this with OptParse
+
 # Set the logger level to DEBUG if the arguments include --verbose
-$argv = ARGV.dup
 if $argv.include? '--verbose'
   $logger.level = Logger::DEBUG
   OpenStudio::Logger.instance.standardOutLogger.setLogLevel(OpenStudio::Debug)
@@ -77,7 +80,7 @@ $argv.each_index do |i|
     
     if dir.nil? 
       safe_puts "#{$argv[i]} requires second argument DIR"
-      return 0
+      exit(1)
     elsif !File.exists?(dir) || !File.directory?(dir)
       # DLM: Ruby doesn't warn for this
       #$logger.warn "'#{dir}' passed to #{$argv[i]} is not a directory"
@@ -112,7 +115,7 @@ $argv.each_index do |i|
     
     if dir.nil? 
       safe_puts "#{$argv[i]} requires second argument DIR"
-      return 0
+      exit(1)
     elsif !File.exists?(dir) || !File.directory?(dir)
       # DLM: Ruby doesn't warn for this
       #$logger.warn "'#{dir}' passed to #{$argv[i]} is not a directory"
@@ -333,7 +336,6 @@ Gem::Specification.each do |spec|
   end
 end
 
-
 # This is the code chunk to allow for an embedded IRB shell. From Jason Roelofs, found on StackOverflow
 module IRB # :nodoc:
   def self.start_session(binding)
@@ -377,6 +379,28 @@ def safe_puts(message=nil, opts=nil)
     return
   end
 end
+
+# Handle -e commands 
+remove_indices = []
+eval_cmds = []
+$argv.each_index do |i|
+  
+  if $argv[i] == '-e' || $argv[i] == '--execute'
+    # remove from further processing
+    remove_indices << i 
+    remove_indices << i+1
+    
+    cmd = $argv[i + 1]
+    
+    if cmd.nil? 
+      safe_puts "#{$argv[i]} requires second argument CMD"
+      exit(1)
+    end
+    
+    eval_cmds << cmd
+  end
+end
+remove_indices.reverse_each {|i| $argv.delete_at(i)}
 
 # This is a convenience method that properly handles duping the originally argv array so that it is not destroyed. This
 # method will also automatically detect "-h" and "--help" and print help. And if any invalid options are  detected, the
@@ -431,7 +455,7 @@ def split_main_and_subcommand(argv)
     if argv[i].start_with?('-') 
       next
     elsif argv[i].end_with?('.rb')
-      sub_command = 'e'
+      sub_command = 'execute_ruby_script'
       sub_args    = argv[i..-1]
       break
     else
@@ -452,6 +476,12 @@ def split_main_and_subcommand(argv)
   [main_args, sub_command, sub_args]
 end
 
+# parse the main args, those that come before the sub command
+def parse_main_args(main_args)
+
+end
+
+
 # This CLI class processes the input args and invokes the proper command class
 class CLI
 
@@ -464,8 +494,8 @@ class CLI
         gem_install: [ Proc.new { ::InstallGem }, {primary: false, working: true}],
         measure: [ Proc.new { ::Measure }, {primary: true, working: false}],
         update: [ Proc.new { ::Update }, {primary: true, working: false}],
-        e: [ Proc.new { ::ExecuteRubyScript }, {primary: false, working: true}],
-        i: [ Proc.new { ::InteractiveRubyShell }, {primary: false, working: true}],
+        execute_ruby_script: [ Proc.new { ::ExecuteRubyScript }, {primary: false, working: true}],
+        interactive_ruby: [ Proc.new { ::InteractiveRubyShell }, {primary: false, working: true}],
         openstudio_version: [ Proc.new { ::OpenStudioVersion }, {primary: true, working: true}],
         energyplus_version: [ Proc.new { ::EnergyPlusVersion }, {primary: true, working: true}],
         ruby_version: [ Proc.new { ::RubyVersion }, {primary: false, working: true}],
@@ -538,8 +568,9 @@ class CLI
       o.on('-h', '--help', 'Print this help.')
       o.on('--verbose', 'Print the full log to STDOUT')
       o.on('-I', '--include DIR', 'Add additional directory to add to front of Ruby $LOAD_PATH (may be used more than once)')
+      o.on('-e', '--execute CMD', 'Execute one line of script (may be used more than once). Returns after executing commands.')
       o.on('--gem_path DIR', 'Add additional directory to add to front of GEM_PATH environment variable (may be used more than once)')
-      o.on('--gem_home DIR', 'Set GEM_HOME environment variable')
+      o.on('--gem_home DIR', 'Set GEM_HOME environment variable') 
       o.separator ''
       o.separator 'Common commands:'
 
@@ -1112,7 +1143,7 @@ class ExecuteRubyScript
 
   # Executes an arbitrary ruby script
   #
-  # @param [Array] sub_argv Options passed to the e command from the user input
+  # @param [Array] sub_argv Options passed to the execute_ruby_script command from the user input
   # @return [Fixnum] Return status
   #
   def execute(sub_argv)
@@ -1121,22 +1152,23 @@ class ExecuteRubyScript
     options = {}
 
     opts = OptionParser.new do |o|
-      o.banner = 'Usage: openstudio e [file]'
+      o.banner = 'Usage: openstudio execute_ruby_script file [arguments}'
     end
 
     # Parse the options
-    argv = parse_options(opts, sub_argv)
-    return 0 if argv == nil
-    return 1 unless argv
-    $logger.debug("ExecuteRubyScript command: #{argv.inspect} #{options.inspect}")
-    file_path = argv.shift.to_s
+    return 0 if sub_argv == nil
+    return 1 unless sub_argv
+    $logger.debug("ExecuteRubyScript command: #{sub_argv.inspect}")
+    file_path = sub_argv.shift.to_s
     file_path = File.absolute_path(File.join(Dir.pwd, file_path)) unless Pathname.new(file_path).absolute?
     $logger.debug "Path for the file to run: #{file_path}"
     
     ARGV.clear
-    argv.each do |arg|
+    sub_argv.each do |arg|
       ARGV << arg
     end
+    
+    $logger.debug "ARGV: #{ARGV}"
 
     unless File.exists? file_path
       $logger.error "Unable to find the file #{file_path} on the filesystem"
@@ -1159,14 +1191,14 @@ class InteractiveRubyShell
 
   # Executes the commands to get into an IRB prompt
   #
-  # @param [Array] sub_argv Options passed to the i command from the user input
+  # @param [Array] sub_argv Options passed to the interactive_ruby command from the user input
   # @return [Fixnum] Return status
   #
   def execute(sub_argv)
     options = {}
 
     opts = OptionParser.new do |o|
-      o.banner = 'Usage: openstudio i'
+      o.banner = 'Usage: openstudio interactive_ruby'
     end
 
     # Parse the options
@@ -1343,5 +1375,17 @@ end
 ##$logger.debug 'Reset Gem paths; openstudio associated gems should load correctly'
 
 # Execute the CLI interface, and exit with the proper error code
-$logger.info "Executing argv: #{$argv}"
-CLI.new($argv).execute
+# do not run remaining commands if we are in -e command mode
+if eval_cmds.empty?
+  $logger.info "Executing argv: #{ARGV}"
+  CLI.new(ARGV).execute
+else
+  eval_cmds.each do |cmd| 
+    $logger.debug "Executing cmd: #{cmd}"
+    eval(cmd)
+  end
+  
+  if !$argv.empty?
+    $logger.warn "Ignoring remaining arguments: #{$argv}"
+  end
+end
