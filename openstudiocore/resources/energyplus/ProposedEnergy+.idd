@@ -27299,6 +27299,10 @@ Fan:VariableVolume,
        \reference FansCVandVAV
        \reference FansOnOffandVAV
        \reference FansCVandOnOffandVAV
+       \reference-class-name validBranchEquipmentTypes
+       \reference validBranchEquipmentNames
+       \reference-class-name validOASysEquipmentTypes
+       \reference validOASysEquipmentNames
   A2 , \field Availability Schedule Name
        \note Availability schedule name for this system. Schedule value > 0 means the system is available.
        \note If this field is blank, the system is always available.
@@ -38670,11 +38674,10 @@ AirLoopHVAC:OutdoorAirSystem:EquipmentList,
        \extensible:2
        \min-fields 3
        \max-fields 19
-   A1, \field Name
+  A1 , \field Name
        \required-field
        \type alpha
-       \reference-class-name validBranchEquipmentTypes
-       \reference validBranchEquipmentNames
+       \reference AirLoopOAEquipmentLists
   A2 , \field Component 1 Object Type
        \required-field
        \begin-extensible
@@ -38692,6 +38695,8 @@ AirLoopHVAC:OutdoorAirSystem,
    A1, \field Name
        \required-field
        \type alpha
+       \reference-class-name validBranchEquipmentTypes
+       \reference validBranchEquipmentNames
    A2, \field Controller List Name
        \note Enter the name of an AirLoopHVAC:ControllerList object.
        \required-field
