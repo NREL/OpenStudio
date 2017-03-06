@@ -41468,6 +41468,10 @@ Chiller:Absorption,
   A1 , \field Name
        \reference Chillers
        \required-field
+       \reference-class-name validPlantEquipmentTypes
+       \reference validPlantEquipmentNames
+       \reference-class-name validBranchEquipmentTypes
+       \reference validBranchEquipmentNames
   N1 , \field Nominal Capacity
        \type real
        \units W
