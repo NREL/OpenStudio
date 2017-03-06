@@ -38678,8 +38678,6 @@ AirLoopHVAC:OutdoorAirSystem:EquipmentList,
   A2 , \field Component 1 Object Type
        \required-field
        \begin-extensible
-       \type object-list
-       \object-list validOASysEquipmentTypes
   A3 ; \field Component 1 Name
        \required-field
        \type object-list
@@ -38885,8 +38883,6 @@ Branch,
    A3,  \field Component 1 Object Type
         \begin-extensible
         \required-field
-        \type object-list
-        \object-list validBranchEquipmentTypes
    A4,  \field Component 1 Name
         \required-field
         \type object-list
@@ -47666,8 +47662,6 @@ PlantEquipmentList,
         \reference PlantAndCondenserEquipmentLists
   A2 , \field Equipment 1 Object Type
        \begin-extensible
-       \type object-list
-       \object-list validPlantEquipmentTypes
   A3 ; \field Equipment 1 Name
        \type object-list
        \object-list validPlantEquipmentNames
@@ -47687,8 +47681,6 @@ CondenserEquipmentList,
         \reference CondenserEquipmentLists
   A2 , \field Equipment 1 Object Type
        \begin-extensible
-       \type object-list
-       \object-list validCondenserEquipmentTypes
   A3 ; \field Equipment 1 Name
        \type object-list
        \object-list validCondenserEquipmentNames
