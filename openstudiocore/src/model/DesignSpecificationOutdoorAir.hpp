@@ -94,6 +94,7 @@ class MODEL_API DesignSpecificationOutdoorAir : public ResourceObject {
 
   bool isOutdoorAirFlowAirChangesperHourDefaulted() const;
 
+  /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Outdoor Air Schedule Name" **/
   boost::optional<Schedule> outdoorAirFlowRateFractionSchedule() const;
 
   //@}
@@ -128,6 +129,7 @@ class MODEL_API DesignSpecificationOutdoorAir : public ResourceObject {
 
   void resetOutdoorAirFlowAirChangesperHour();
 
+  /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Outdoor Air Schedule Name" **/
   bool setOutdoorAirFlowRateFractionSchedule(Schedule& schedule);
 
   void resetOutdoorAirFlowRateFractionSchedule();

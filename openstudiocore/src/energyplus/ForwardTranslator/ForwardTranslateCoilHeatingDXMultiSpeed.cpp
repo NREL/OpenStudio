@@ -133,7 +133,11 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingDXMultiSpeed( 
 
   // FuelType
   if( (s = modelObject.fuelType()) ) {
-    idfObject.setString(Coil_Heating_DX_MultiSpeedFields::FuelType,s.get());
+    if( istringEqual(s.get(),"PropaneGas") ) {
+      idfObject.setString(Coil_Heating_DX_MultiSpeedFields::FuelType,"Propane");
+    } else {
+      idfObject.setString(Coil_Heating_DX_MultiSpeedFields::FuelType,s.get());
+    }
   }
 
   // RegionnumberforCalculatingHSPF

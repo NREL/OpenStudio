@@ -219,6 +219,10 @@ namespace iddRegex{
   /// matches[1], reference value 
   UTILITIES_API const boost::regex &referenceProperty();
 
+  /// Match a field reference-class-name property
+  /// matches[1], reference-class-name value 
+  UTILITIES_API const boost::regex &referenceClassNameProperty();
+
   /// Match begin extensible
   UTILITIES_API const boost::regex &beginExtensible();
 
