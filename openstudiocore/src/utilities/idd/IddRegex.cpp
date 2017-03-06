@@ -352,7 +352,7 @@ namespace iddRegex{
   /// Match a field reference-class-name property
   /// matches[1], reference-class-name value 
   const boost::regex & referenceClassNameProperty(){
-    const static boost::regex result("^[rR]eference-[cC]lass-[nN]name([^!]*)");
+    const static boost::regex result("^[rR]eference-[cC]lass-[nN]ame([^!]*)");
     return result;
   }
 

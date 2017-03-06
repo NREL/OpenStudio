@@ -583,20 +583,20 @@ namespace detail {
           m_properties.required = true;
           notHandled=false;
         }
-        else if (boost::algorithm::starts_with(lowerText, "reference"))
-        {
-          OS_ASSERT(boost::regex_search(text, matches, iddRegex::referenceProperty()));
-          std::string reference(matches[1].first, matches[1].second);
-          boost::trim(reference);
-          m_properties.references.push_back(reference);
-          notHandled=false;
-        }
         else if (boost::algorithm::starts_with(lowerText, "reference-class-name"))
         {
           OS_ASSERT(boost::regex_search(text, matches, iddRegex::referenceClassNameProperty()));
           std::string reference(matches[1].first, matches[1].second);
           boost::trim(reference);
           m_properties.referenceClassNames.push_back(reference);
+          notHandled=false;
+        }
+        else if (boost::algorithm::starts_with(lowerText, "reference"))
+        {
+          OS_ASSERT(boost::regex_search(text, matches, iddRegex::referenceProperty()));
+          std::string reference(matches[1].first, matches[1].second);
+          boost::trim(reference);
+          m_properties.references.push_back(reference);
           notHandled=false;
         }
         else if (boost::algorithm::starts_with(lowerText, "retaincase"))
