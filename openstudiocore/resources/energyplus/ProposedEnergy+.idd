@@ -48439,7 +48439,6 @@ EnergyManagementSystem:Actuator,
        \required-field
        \type alpha
        \note This name becomes a variable for use in Erl programs
-       \note no spaces or other special characters (-,+,/,\) allowed in name
   A2 , \field Actuated Component Unique Name
        \required-field
        \type alpha
