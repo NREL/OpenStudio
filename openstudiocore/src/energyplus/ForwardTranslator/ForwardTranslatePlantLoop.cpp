@@ -116,7 +116,8 @@ namespace energyplus {
 
 IdfObject ForwardTranslator::populateBranch( IdfObject & branchIdfObject, 
                           std::vector<ModelObject> & modelObjects,
-                          Loop & loop)
+                          Loop & loop,
+                          bool isSupplyBranch)
 {
   if(modelObjects.size() > 0)
   {
@@ -266,12 +267,12 @@ IdfObject ForwardTranslator::populateBranch( IdfObject & branchIdfObject,
       }
       else if( auto waterToWaterComponent = modelObject.optionalCast<WaterToWaterComponent>() )
       {
-        if( loop.supplyComponent(waterToWaterComponent->handle()) )
+        if( isSupplyBranch )
         {
           inletNode = waterToWaterComponent->supplyInletModelObject()->optionalCast<Node>();
           outletNode = waterToWaterComponent->supplyOutletModelObject()->optionalCast<Node>();
         }
-        else if( loop.demandComponent(waterToWaterComponent->handle()) )
+        else
         {
           if( auto tertiaryInletModelObject = waterToWaterComponent->tertiaryInletModelObject() ) {
             if( auto tertiaryInletNode = tertiaryInletModelObject->optionalCast<Node>() ) {
@@ -512,7 +513,8 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
   {
     populateBranch( _supplyInletBranch,
                     supplyInletModelObjects,
-                    plantLoop );
+                    plantLoop,
+                    true);
   }
   else
   {
@@ -572,7 +574,8 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
     {
       populateBranch( _equipmentBranch,
                       allComponents,
-                      plantLoop );
+                      plantLoop,
+                      true);
     }
     else
     {
@@ -618,7 +621,8 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
   {
     populateBranch( _supplyOutletBranch,
                     supplyOutletModelObjects,
-                    plantLoop );
+                    plantLoop,
+                    true);
   }
   else
   {
@@ -705,7 +709,8 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
   {
     populateBranch( _demandInletBranch,
                     demandInletModelObjects,
-                    plantLoop );
+                    plantLoop,
+                    false);
   }
   else
   {
@@ -765,7 +770,8 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
     {
       populateBranch( _equipmentBranch,
                       allComponents,
-                      plantLoop );
+                      plantLoop,
+                      false);
     }
     else
     {
@@ -847,7 +853,8 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
   {
     populateBranch( _demandOutletBranch,
                     demandOutletModelObjects,
-                    plantLoop );
+                    plantLoop,
+                    false);
   }
   else
   {

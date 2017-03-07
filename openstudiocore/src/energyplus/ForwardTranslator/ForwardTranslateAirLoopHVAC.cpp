@@ -437,7 +437,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
       IdfObject branch(openstudio::IddObjectType::Branch);
       m_idfObjects.push_back(branch);
       branch.setName( airLoopHVACName + " Main Branch");
-      populateBranch(branch,comps,airLoopHVAC);
+      populateBranch(branch,comps,airLoopHVAC,true);
 
       if( auto value = maximumFlowRate(comps) ) {
         branch.setDouble(BranchFields::MaximumFlowRate,value.get());
@@ -457,7 +457,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
       IdfObject branch(openstudio::IddObjectType::Branch);
       m_idfObjects.push_back(branch);
       branch.setName( airLoopHVACName + " Dual Duct Branch 1");
-      populateBranch(branch,comps,airLoopHVAC);
+      populateBranch(branch,comps,airLoopHVAC,true);
 
       if( auto value = maximumFlowRate(comps) ) {
         branch.setDouble(BranchFields::MaximumFlowRate,value.get());
@@ -477,7 +477,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
       IdfObject branch(openstudio::IddObjectType::Branch);
       m_idfObjects.push_back(branch);
       branch.setName( airLoopHVACName + " Dual Duct Branch 2");
-      populateBranch(branch,comps,airLoopHVAC);
+      populateBranch(branch,comps,airLoopHVAC,true);
 
       if( auto value = maximumFlowRate(comps) ) {
         branch.setDouble(BranchFields::MaximumFlowRate,value.get());
@@ -499,7 +499,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
     IdfObject branch(openstudio::IddObjectType::Branch);
     m_idfObjects.push_back(branch);
     branch.setName( airLoopHVACName + " Main Branch");
-    populateBranch(branch,comps,airLoopHVAC);
+    populateBranch(branch,comps,airLoopHVAC,true);
 
     if( auto value = maximumFlowRate(comps) ) {
       branch.setDouble(BranchFields::MaximumFlowRate,value.get());
