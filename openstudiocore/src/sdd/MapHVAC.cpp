@@ -5517,6 +5517,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
   auto thrmlEngyStorElement = fluidSysElement.firstChildElement("ThrmlEngyStor");
   boost::optional<model::ThermalStorageChilledWaterStratified> thermalStorage;
   std::string thermalStorageDischargePriority;
+  boost::optional<model::Schedule> tesSchedule;
   double thermalStorageTankSetptTemp;
   if( auto mo = translateThrmlEngyStor(thrmlEngyStorElement,doc,model) ) {
     thermalStorage = mo->cast<model::ThermalStorageChilledWaterStratified>();
@@ -5527,6 +5528,13 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     thermalStorageDischargePriority = thrmlEngyStorElement.firstChildElement("DischrgPriority").text().toStdString();
     value = thrmlEngyStorElement.firstChildElement("TankSetptTemp").text().toDouble();
     thermalStorageTankSetptTemp = unitToUnit(value,"F","C").get();
+
+    // charging scheme, which is a component setpoint scheme so we add SPMs
+    tesSchedule = model::ScheduleRuleset(model);
+    tesSchedule->setName(plantLoop.nameString() + "TES SPM Schedule");
+    tesSchedule->defaultDaySchedule().addValue(Time(1.0),thermalStorageTankSetptTemp);
+
+    thermalStorage.setSetpointTemperatureSchedule(tesSchedule.get());
 
     {
       auto schRef = thrmlEngyStorElement.firstChildElement("ChlrOnlySchRef").text().toStdString();
@@ -5953,16 +5961,13 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
       dischargingScheme.replaceEquipment(upperLimit,equipment);
     }
 
-    // charging scheme, which is a component setpoint scheme so we add SPMs
-    model::ScheduleRuleset tesSchedule(model);
-    tesSchedule.setName(plantLoop.nameString() + "TES SPM Schedule");
-    tesSchedule.defaultDaySchedule().addValue(Time(1.0),thermalStorageTankSetptTemp);
-
-    auto chillers = subsetCastVector<model::ChillerElectricEIR>(plantLoop.supplyComponents(model::ChillerElectricEIR::iddObjectType()));
-    for( auto & chiller : chillers ) {
-      model::SetpointManagerScheduled spm(model,tesSchedule);
-      auto node = chiller.supplyOutletModelObject()->cast<model::Node>();
-      spm.addToNode(node);
+    if( tesSchedule ) {
+      auto chillers = subsetCastVector<model::ChillerElectricEIR>(plantLoop.supplyComponents(model::ChillerElectricEIR::iddObjectType()));
+      for( auto & chiller : chillers ) {
+        model::SetpointManagerScheduled spm(model,tesSchedule.get());
+        auto node = chiller.supplyOutletModelObject()->cast<model::Node>();
+        spm.addToNode(node);
+      }
     }
   }
 
