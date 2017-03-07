@@ -70,46 +70,10 @@
 
 //#include "../analysis/Analysis.hpp"
 
-#include "../model/Building.hpp"
-#include "../model/Building_Impl.hpp"
 #include "../model/FileOperations.hpp"
 #include "../model/Component.hpp"
-#include "../model/Facility.hpp"
-#include "../model/Facility_Impl.hpp"
-#include "../model/LifeCycleCostParameters.hpp"
-#include "../model/LifeCycleCostParameters_Impl.hpp"
-#include "../model/Model_Impl.hpp"
 #include "../model/WeatherFile.hpp"
 #include "../model/WeatherFile_Impl.hpp"
-#include "../model/SimulationControl.hpp"
-#include "../model/SimulationControl_Impl.hpp"
-#include "../model/SizingParameters.hpp"
-#include "../model/SizingParameters_Impl.hpp"
-#include "../model/Timestep.hpp"
-#include "../model/Timestep_Impl.hpp"
-#include "../model/ShadowCalculation.hpp"
-#include "../model/ShadowCalculation_Impl.hpp"
-#include "../model/HeatBalanceAlgorithm.hpp"
-#include "../model/HeatBalanceAlgorithm_Impl.hpp"
-#include "../model/RunPeriod.hpp"
-#include "../model/RunPeriod_Impl.hpp"
-#include "../model/ConstructionBase.hpp"
-#include "../model/ConstructionBase_Impl.hpp"
-#include "../model/Material.hpp"
-#include "../model/Material_Impl.hpp"
-#include "../model/BuildingStory.hpp"
-#include "../model/BuildingStory_Impl.hpp"
-#include "../model/LightingSimulationZone.hpp"
-#include "../model/LightingSimulationZone_Impl.hpp"
-#include "../model/SpaceType.hpp"
-#include "../model/SpaceType_Impl.hpp"
-#include "../model/ThermalZone.hpp"
-#include "../model/ThermalZone_Impl.hpp"
-#include "../model/BuildingUnit.hpp"
-#include "../model/BuildingUnit_Impl.hpp"
-#include "../model/RenderingColor.hpp"
-#include "../model/StandardsInformationConstruction.hpp"
-#include "../model/StandardsInformationMaterial.hpp"
 
 #include "../utilities/bcl/BCLComponent.hpp"
 #include "../utilities/bcl/LocalBCL.hpp"
@@ -300,50 +264,7 @@ namespace openstudio {
 
   void OSDocument::initializeModel()
   {
-    // These objects used to be added to the model as you clicked through the App's tabs,
-    // resulting in a uncertain set of model changes.  With these changes, every model will
-    // always have the following objects after opening in the app.
-    openstudio::model::Building building = m_model.getUniqueModelObject<openstudio::model::Building>();
-    openstudio::model::Facility facility = m_model.getUniqueModelObject<openstudio::model::Facility>();
-
-    // from simulation tab
-    //m_model.getUniqueModelObject<openstudio::model::RadianceParameters>();
-    m_model.getUniqueModelObject<openstudio::model::SimulationControl>();
-    m_model.getUniqueModelObject<openstudio::model::SizingParameters>();
-    //m_model.getUniqueModelObject<openstudio::model::ProgramControl>();
-    m_model.getUniqueModelObject<openstudio::model::Timestep>();
-    //m_model.getUniqueModelObject<openstudio::model::ReportingTolerances>();
-    //m_model.getUniqueModelObject<openstudio::model::ConvergenceLimits>();
-    m_model.getUniqueModelObject<openstudio::model::ShadowCalculation>();
-    //m_model.getUniqueModelObject<openstudio::model::SurfaceConvectionAlgorithmInside>();
-    //m_model.getUniqueModelObject<openstudio::model::SurfaceConvectionAlgorithmOutside>();
-    m_model.getUniqueModelObject<openstudio::model::HeatBalanceAlgorithm>();
-    //m_model.getUniqueModelObject<openstudio::model::ZoneAirHeatBalanceAlgorithm>();
-    //m_model.getUniqueModelObject<openstudio::model::ZoneAirContaminantBalance>();
-    //m_model.getUniqueModelObject<openstudio::model::ZoneCapacitanceMultiplierResearchSpecial>();
-    m_model.getUniqueModelObject<openstudio::model::RunPeriod>();
-
-    openstudio::model::LifeCycleCostParameters lifeCycleCostParameters = m_model.getUniqueModelObject<openstudio::model::LifeCycleCostParameters>();
-  
-    for (auto& object : m_model.objects()){
-      if (object.optionalCast<model::ConstructionBase>()){
-        object.cast<model::ConstructionBase>().standardsInformation();
-        object.cast<model::ConstructionBase>().renderingColor();
-      }else if (object.optionalCast<model::Material>()){
-        object.cast<model::Material>().standardsInformation();
-      }else if (object.optionalCast<model::BuildingStory>()){
-        object.cast<model::BuildingStory>().renderingColor();
-      }else if (object.optionalCast<model::LightingSimulationZone>()){
-        object.cast<model::LightingSimulationZone>().renderingColor();
-      }else if (object.optionalCast<model::SpaceType>()){
-        object.cast<model::SpaceType>().renderingColor();
-      }else if (object.optionalCast<model::ThermalZone>()){
-        object.cast<model::ThermalZone>().renderingColor();
-      }else if (object.optionalCast<model::BuildingUnit>()){
-        object.cast<model::BuildingUnit>().renderingColor();
-      }
-    }
-  
+    model::initializeModelObjects(m_model);
   }
 
   void OSDocument::inspectModelObject(model::OptionalModelObject & modelObject, bool readOnly)
