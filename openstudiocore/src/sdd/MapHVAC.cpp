@@ -4771,7 +4771,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
     setPriority(sysInfo, "PriAirCondgSysPriority");
   }
   for( auto & sysInfo : simSysInfo ) {
-    setPriority(sysInfo, "VentSysPriority");
+    setPriority(sysInfo, "SimSysPriority");
   }
 
   if( ventSysEquip ) {
