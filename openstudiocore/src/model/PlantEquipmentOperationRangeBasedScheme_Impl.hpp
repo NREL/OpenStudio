@@ -79,6 +79,8 @@ namespace detail {
 
     virtual double minimumLowerLimit() const = 0;
 
+    ModelObject clone(Model model) const override;
+
    private:
 
     REGISTER_LOGGER("openstudio.model.PlantEquipmentOperationRangeBasedScheme");

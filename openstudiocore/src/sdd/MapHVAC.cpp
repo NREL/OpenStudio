@@ -1574,6 +1574,17 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
         oaController.setTimeofDayEconomizerControlSchedule(schedule.get());
       }
 
+      value = airSystemOACtrlElement.firstChildElement("MinOAFlow").text().toDouble(&ok);
+			if( ok ) {
+      	value = unitToUnit(value,"cfm","m^3/s").get();
+				oaController.setMinimumOutdoorAirFlowRate(value);
+			}
+      value = airSystemOACtrlElement.firstChildElement("MaxOAFlow").text().toDouble(&ok);
+			if( ok ) {
+      	value = unitToUnit(value,"cfm","m^3/s").get();
+				oaController.setMaximumOutdoorAirFlowRate(value);
+			}
+
       // OASchMthd 
       QDomElement oaSchMthdElement = airSystemOACtrlElement.firstChildElement("OASchMthd");
       if( istringEqual(oaSchMthdElement.text().toStdString(),"Constant") )
@@ -4709,23 +4720,58 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
   // Set priority
   auto setPriority = [&](const SysInfo & sysInfo, const QString & priorityElement) {
     if( sysInfo.ModelObject ) {
-      auto elements = thermalZoneElement.elementsByTagName(priorityElement);
-      for (int i = 0; i < elements.count(); i++)
-      {
-        const auto & element = elements.at(i).toElement();
-        bool ok = false;
-        auto index = element.attribute("index").toInt(&ok);
-        if( ok ) {
-          if( index == sysInfo.Index ) {
-            auto priority = element.text().toInt(&ok);
-            if( ok ) {
-              thermalZone.setCoolingPriority(sysInfo.ModelObject.get(),priority);  
-              thermalZone.setHeatingPriority(sysInfo.ModelObject.get(),priority);  
-            }
-            break;
-          }
-        }
-      }
+			// Clg and Htg
+    	auto elements = thermalZoneElement.elementsByTagName(priorityElement);
+    	for (int i = 0; i < elements.count(); i++)
+    	{
+    	  const auto & element = elements.at(i).toElement();
+    	  bool ok = false;
+    	  auto index = element.attribute("index").toInt(&ok);
+    	  if( ok ) {
+    	    if( index == sysInfo.Index ) {
+    	      auto priority = element.text().toInt(&ok);
+    	      if( ok ) {
+    	        thermalZone.setCoolingPriority(sysInfo.ModelObject.get(),priority);  
+    	        thermalZone.setHeatingPriority(sysInfo.ModelObject.get(),priority);  
+    	      }
+    	      break;
+    	    }
+    	  }
+    	}
+			// Clg
+    	elements = thermalZoneElement.elementsByTagName(priorityElement + "Clg");
+    	for (int i = 0; i < elements.count(); i++)
+    	{
+    	  const auto & element = elements.at(i).toElement();
+    	  bool ok = false;
+    	  auto index = element.attribute("index").toInt(&ok);
+    	  if( ok ) {
+    	    if( index == sysInfo.Index ) {
+    	      auto priority = element.text().toInt(&ok);
+    	      if( ok ) {
+    	        thermalZone.setCoolingPriority(sysInfo.ModelObject.get(),priority);  
+    	      }
+    	      break;
+    	    }
+    	  }
+    	}
+			// Htg
+    	elements = thermalZoneElement.elementsByTagName(priorityElement + "Htg");
+    	for (int i = 0; i < elements.count(); i++)
+    	{
+    	  const auto & element = elements.at(i).toElement();
+    	  bool ok = false;
+    	  auto index = element.attribute("index").toInt(&ok);
+    	  if( ok ) {
+    	    if( index == sysInfo.Index ) {
+    	      auto priority = element.text().toInt(&ok);
+    	      if( ok ) {
+    	        thermalZone.setHeatingPriority(sysInfo.ModelObject.get(),priority);  
+    	      }
+    	      break;
+    	    }
+    	  }
+    	}
     }
   };
 
@@ -4733,7 +4779,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
     setPriority(sysInfo, "PriAirCondgSysPriority");
   }
   for( auto & sysInfo : simSysInfo ) {
-    setPriority(sysInfo, "VentSysPriority");
+    setPriority(sysInfo, "SimSysPriority");
   }
 
   if( ventSysEquip ) {
@@ -4741,6 +4787,18 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
     value = ventSysPriorityElement.text().toInt(&ok);
     if( ok ) {
       thermalZone.setCoolingPriority(ventSysEquip.get(),value);  
+      thermalZone.setHeatingPriority(ventSysEquip.get(),value);  
+    }
+
+    ventSysPriorityElement = thermalZoneElement.firstChildElement("VentSysPriorityClg");
+    value = ventSysPriorityElement.text().toInt(&ok);
+    if( ok ) {
+      thermalZone.setCoolingPriority(ventSysEquip.get(),value);  
+    }
+
+    ventSysPriorityElement = thermalZoneElement.firstChildElement("VentSysPriorityHtg");
+    value = ventSysPriorityElement.text().toInt(&ok);
+    if( ok ) {
       thermalZone.setHeatingPriority(ventSysEquip.get(),value);  
     }
   }
@@ -5467,6 +5525,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
   auto thrmlEngyStorElement = fluidSysElement.firstChildElement("ThrmlEngyStor");
   boost::optional<model::ThermalStorageChilledWaterStratified> thermalStorage;
   std::string thermalStorageDischargePriority;
+  boost::optional<model::ScheduleRuleset> tesSchedule;
   double thermalStorageTankSetptTemp;
   if( auto mo = translateThrmlEngyStor(thrmlEngyStorElement,doc,model) ) {
     thermalStorage = mo->cast<model::ThermalStorageChilledWaterStratified>();
@@ -5474,26 +5533,33 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     addBranchPump(thermalStorage->supplyInletModelObject(),thrmlEngyStorElement);
     plantLoop.addDemandBranchForComponent(thermalStorage.get());
 
-    thermalStorageDischargePriority = thrmlEngyStorElement.firstChildElement("DischargePriority").text().toStdString();
+    thermalStorageDischargePriority = thrmlEngyStorElement.firstChildElement("DischrgPriority").text().toStdString();
     value = thrmlEngyStorElement.firstChildElement("TankSetptTemp").text().toDouble();
     thermalStorageTankSetptTemp = unitToUnit(value,"F","C").get();
 
+    // charging scheme, which is a component setpoint scheme so we add SPMs
+    tesSchedule = model::ScheduleRuleset(model);
+    tesSchedule->setName(plantLoop.nameString() + "TES SPM Schedule");
+    tesSchedule->defaultDaySchedule().addValue(Time(1.0),thermalStorageTankSetptTemp);
+
+    thermalStorage->setSetpointTemperatureSchedule(tesSchedule.get());
+
     {
-      auto schRef = thrmlEngyStorElement.firstChildElement("ChillerOnlySchRef").text().toStdString();
+      auto schRef = thrmlEngyStorElement.firstChildElement("ChlrOnlySchRef").text().toStdString();
       if( auto sch = model.getModelObjectByName<model::Schedule>(schRef) ) {
         plantLoop.setPlantEquipmentOperationCoolingLoadSchedule(sch.get());
       }
     }
 
     {
-      auto schRef = thrmlEngyStorElement.firstChildElement("DischargeSchRef").text().toStdString();
+      auto schRef = thrmlEngyStorElement.firstChildElement("DischrgSchRef").text().toStdString();
       if( auto sch = model.getModelObjectByName<model::Schedule>(schRef) ) {
         plantLoop.setPrimaryPlantEquipmentOperationSchemeSchedule(sch.get());
       }
     }
 
     {
-      auto schRef = thrmlEngyStorElement.firstChildElement("ChargeSchRef").text().toStdString();
+      auto schRef = thrmlEngyStorElement.firstChildElement("ChrgSchRef").text().toStdString();
       if( auto sch = model.getModelObjectByName<model::Schedule>(schRef) ) {
         plantLoop.setComponentSetpointOperationSchemeSchedule(sch.get());
       }
@@ -5520,7 +5586,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
       }
 
       if( thermalStorage ) {
-        if( chillerElement.firstChildElement("EnableOnThrmlEngyStorDischarge").text().toInt() == 1 ) {
+        if( chillerElement.firstChildElement("EnableOnThrmlEngyStorDischrg").text().toInt() == 1 ) {
           enableOnThrmlEngyStorDischargeMap.insert(std::make_pair(chiller,true));
         } else {
           enableOnThrmlEngyStorDischargeMap.insert(std::make_pair(chiller,false));
@@ -5897,22 +5963,19 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     if( istringEqual(thermalStorageDischargePriority,"Chiller") ) {
       dischargingScheme.addEquipment(thermalStorage.get());
     } else {
-      auto upperLimit = dischargingScheme.loadRangeUpperLimits().front();
+      auto upperLimit = dischargingScheme.maximumUpperLimit();
       auto equipment = dischargingScheme.equipment(upperLimit);
       equipment.insert(equipment.begin(),thermalStorage.get());
       dischargingScheme.replaceEquipment(upperLimit,equipment);
     }
 
-    // charging scheme, which is a component setpoint scheme so we add SPMs
-    model::ScheduleRuleset tesSchedule(model);
-    tesSchedule.setName(plantLoop.nameString() + "TES SPM Schedule");
-    tesSchedule.defaultDaySchedule().addValue(Time(1.0),thermalStorageTankSetptTemp);
-
-    auto chillers = subsetCastVector<model::ChillerElectricEIR>(plantLoop.supplyComponents(model::ChillerElectricEIR::iddObjectType()));
-    for( auto & chiller : chillers ) {
-      model::SetpointManagerScheduled spm(model,tesSchedule);
-      auto node = chiller.supplyOutletModelObject()->cast<model::Node>();
-      spm.addToNode(node);
+    if( tesSchedule ) {
+      auto chillers = subsetCastVector<model::ChillerElectricEIR>(plantLoop.supplyComponents(model::ChillerElectricEIR::iddObjectType()));
+      for( auto & chiller : chillers ) {
+        model::SetpointManagerScheduled spm(model,tesSchedule.get());
+        auto node = chiller.supplyOutletModelObject()->cast<model::Node>();
+        spm.addToNode(node);
+      }
     }
   }
 
@@ -6845,6 +6908,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateThrm
   model::ThermalStorageChilledWaterStratified tes(model);
   result = tes;
 
+  tes.setName(name);
+
   value = tesElement.firstChildElement("TStorCap").text().toDouble(&ok);
   if( ok ) {
    value = unitToUnit(value,"gal","m^3").get();
@@ -6871,17 +6936,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateThrm
     tes.resetTankPerimeter();
   }
 
-  value = tesElement.firstChildElement("SetptTemp").text().toDouble(&ok);
-  if( ok ) {
-   value = unitToUnit(value,"F","C").get();
-
-   model::ScheduleRuleset schedule(model);
-   schedule.setName(name + " Setpoint Schedule");
-   schedule.defaultDaySchedule().addValue(Time(1.0),value);
-
-   tes.setSetpointTemperatureSchedule(schedule);
-  }
-
   tes.setDeadbandTemperatureDifference(0.5);
   tes.setTemperatureSensorHeight(0.0);
   tes.setMinimumTemperatureLimit(1.0);
@@ -6892,7 +6946,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateThrm
     tes.setNominalCoolingCapacity(value);
   }
 
-  text = tesElement.firstChildElement("StorLocSim").text().toStdString();
+  text = tesElement.firstChildElement("StorLctnSim").text().toStdString();
   if( istringEqual("Zone",text) ) {
     tes.setAmbientTemperatureIndicator("Zone");
     text = tesElement.firstChildElement("StorZnRef").text().toStdString();
@@ -6912,7 +6966,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateThrm
 
   tes.setUseSideHeatTransferEffectiveness(1.0);
 
-  text = tesElement.firstChildElement("DischargeSchRef").text().toStdString();
+  text = tesElement.firstChildElement("DischrgSchRef").text().toStdString();
   if( auto schedule = model.getModelObjectByName<model::Schedule>(text) ) {
     tes.setUseSideAvailabilitySchedule(schedule.get());
   }
@@ -6933,7 +6987,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateThrm
 
   tes.setSourceSideHeatTransferEffectiveness(1.0);
 
-  text = tesElement.firstChildElement("ChargeSchRef").text().toStdString();
+  text = tesElement.firstChildElement("ChrgSchRef").text().toStdString();
   if( auto schedule = model.getModelObjectByName<model::Schedule>(text) ) {
     tes.setSourceSideAvailabilitySchedule(schedule.get());
   }
@@ -7260,8 +7314,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
   std::string text;
   double value;
 
-  text = element.firstChildElement("Type").text().toStdString();
-  if( istringEqual(text,"HPSplit") ) {
+  text = element.firstChildElement("TypeSim").text().toStdString();
+  if( istringEqual(text,"HeatPumpSplit") ) {
     model::WaterHeaterHeatPump heatPump(model);
     auto waterHeater = heatPump.tank().cast<model::WaterHeaterMixed>();
     auto coil = heatPump.dXCoil().cast<model::CoilWaterHeatingAirToWaterHeatPump>();
@@ -7305,7 +7359,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
     if( ok ) {
       value = unitToUnit(value,"cfm","m^3/s").get();
       heatPump.setEvaporatorAirFlowRate(value);
-    }
+    } else {
+			heatPump.autosizeEvaporatorAirFlowRate();	
+		}
 
     heatPump.setMinimumInletAirTemperatureforCompressorOperation(5.0);
     value = element.firstChildElement("MinAirTemp").text().toDouble(&ok);
@@ -7416,7 +7472,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
       waterHeater.setOnCycleLossCoefficienttoAmbientTemperature(value * 0.5275);
     }
 
-    value = element.firstChildElement("CapRtd").text().toDouble(&ok);
+    value = element.firstChildElement("CapRtdSim").text().toDouble(&ok);
     if( ok ) {
       coil.setRatedHeatingCapacity(unitToUnit(value,"Btu/h","W").get());
     }
@@ -7442,7 +7498,12 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
       coil.setMaximumAmbientTemperatureforCrankcaseHeaterOperation(unitToUnit(value,"F","C").get());
     }
 
-    coil.setRatedSensibleHeatRatio(0.736);
+		value = element.firstChildElement("RtdSensHtRat").text().toDouble(&ok);
+		if( ok ) {
+			coil.setRatedSensibleHeatRatio(value);
+		} else {
+    	coil.setRatedSensibleHeatRatio(0.85);
+		}
     coil.setRatedEvaporatorInletAirDryBulbTemperature(19.7);
 		coil.setRatedEvaporatorInletAirWetBulbTemperature(13.5);
 		coil.setRatedCondenserInletWaterTemperature(57.5);
@@ -7504,16 +7565,14 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
 			value = unitToUnit(value,"cfm","m^3/s").get();
       fan.setMaximumFlowRate(value);
 			coil.setRatedEvaporatorAirFlowRate(value);
-    }
+    } else {
+			coil.autosizeRatedEvaporatorAirFlowRate();
+			fan.autosizeMaximumFlowRate();
+		}
 
     value = element.firstChildElement("FanTotStaticPress").text().toDouble(&ok);
     if( ok ) {
       fan.setPressureRise(value * 249.0889);
-    }
-
-    value = element.firstChildElement("FanFlowCap").text().toDouble(&ok);
-    if( ok ) {
-      fan.setMaximumFlowRate(unitToUnit(value,"cfm","m^3/s").get()); 
     }
 
     return waterHeater;
@@ -7564,7 +7623,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
 
     // CapRtd
     
-    QDomElement wtrHtrMaxCapElement = element.firstChildElement("CapRtd");
+    QDomElement wtrHtrMaxCapElement = element.firstChildElement("CapRtdSim");
 
     double wtrHtrMaxCap = wtrHtrMaxCapElement.text().toDouble(&ok);
 
