@@ -5517,7 +5517,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
   auto thrmlEngyStorElement = fluidSysElement.firstChildElement("ThrmlEngyStor");
   boost::optional<model::ThermalStorageChilledWaterStratified> thermalStorage;
   std::string thermalStorageDischargePriority;
-  boost::optional<model::Schedule> tesSchedule;
+  boost::optional<model::ScheduleRuleset> tesSchedule;
   double thermalStorageTankSetptTemp;
   if( auto mo = translateThrmlEngyStor(thrmlEngyStorElement,doc,model) ) {
     thermalStorage = mo->cast<model::ThermalStorageChilledWaterStratified>();
@@ -5534,7 +5534,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     tesSchedule->setName(plantLoop.nameString() + "TES SPM Schedule");
     tesSchedule->defaultDaySchedule().addValue(Time(1.0),thermalStorageTankSetptTemp);
 
-    thermalStorage.setSetpointTemperatureSchedule(tesSchedule.get());
+    thermalStorage->setSetpointTemperatureSchedule(tesSchedule.get());
 
     {
       auto schRef = thrmlEngyStorElement.firstChildElement("ChlrOnlySchRef").text().toStdString();
@@ -5955,7 +5955,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     if( istringEqual(thermalStorageDischargePriority,"Chiller") ) {
       dischargingScheme.addEquipment(thermalStorage.get());
     } else {
-      auto upperLimit = dischargingScheme.loadRangeUpperLimits().front();
+      auto upperLimit = dischargingScheme.maximumUpperLimit();
       auto equipment = dischargingScheme.equipment(upperLimit);
       equipment.insert(equipment.begin(),thermalStorage.get());
       dischargingScheme.replaceEquipment(upperLimit,equipment);
@@ -6900,6 +6900,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateThrm
   model::ThermalStorageChilledWaterStratified tes(model);
   result = tes;
 
+  tes.setName(name);
+
   value = tesElement.firstChildElement("TStorCap").text().toDouble(&ok);
   if( ok ) {
    value = unitToUnit(value,"gal","m^3").get();
@@ -6924,17 +6926,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateThrm
   } else {
     tes.setTankShape(text);
     tes.resetTankPerimeter();
-  }
-
-  value = tesElement.firstChildElement("SetptTemp").text().toDouble(&ok);
-  if( ok ) {
-   value = unitToUnit(value,"F","C").get();
-
-   model::ScheduleRuleset schedule(model);
-   schedule.setName(name + " Setpoint Schedule");
-   schedule.defaultDaySchedule().addValue(Time(1.0),value);
-
-   tes.setSetpointTemperatureSchedule(schedule);
   }
 
   tes.setDeadbandTemperatureDifference(0.5);
