@@ -76,6 +76,11 @@ namespace model {
   MODEL_API openstudio::path initializeModel(openstudio::model::Model model);
   MODEL_API openstudio::path initializeModel(openstudio::model::Model model, const openstudio::path& savedPath);
 
+  /// Initialize model with objects that will be automatically created by the OpenStudio app
+  /// Prevents models from appearing changed on open
+  // DLM: Would call this in Model ctor but that messes up components
+  MODEL_API void initializeModelObjects(openstudio::model::Model model);
+
   // Saves the model temporary directory to a new directory alongside the osm file.
   //MODEL_API bool saveModelTempDir(const openstudio::path& modelTempDir, const openstudio::path& osmPath);
 

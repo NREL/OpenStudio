@@ -28,6 +28,8 @@
 #  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ########################################################################################################################
 
+require 'openstudio'
+
 OpenStudio::Application::instance().application(false)
 if (!OpenStudio::RemoteBCL::initializeSSL())
   puts "Unable to initialize OpenSSL: Verify that openstudio.exe can access the OpenSSL libraries"
@@ -41,8 +43,10 @@ end
 
 require 'logger'
 require 'optparse'
-#require 'irb'
+require 'irb'
 #include OpenStudio::Workflow::Util::IO
+
+$argv = ARGV.dup
 
 $logger = Logger.new(STDOUT)
 #$logger.level = Logger::ERROR
@@ -52,98 +56,6 @@ $logger.level = Logger::WARN
 #OpenStudio::Logger.instance.standardOutLogger.disable
 #OpenStudio::Logger.instance.standardOutLogger.setLogLevel(OpenStudio::Warn)
 OpenStudio::Logger.instance.standardOutLogger.setLogLevel(OpenStudio::Error)
-
-# Set the logger level to DEBUG if the arguments include --verbose
-$argv = ARGV.dup
-if $argv.include? '--verbose'
-  $logger.level = Logger::DEBUG
-  OpenStudio::Logger.instance.standardOutLogger.setLogLevel(OpenStudio::Debug)
-  $argv.delete '--verbose'
-  $logger.debug 'Set Logger log level to DEBUG'
-end
-$logger.debug "Input ARGV is #{$argv}"
-
-# Operate on the include option to add to $LOAD_PATH
-remove_indices = []
-new_path = []
-$argv.each_index do |i|
-  
-  if $argv[i] == '-I' || $argv[i] == '--include'
-    # remove from further processing
-    remove_indices << i 
-    remove_indices << i+1
-    
-    dir = $argv[i + 1]
-    
-    if dir.nil? 
-      safe_puts "#{$argv[i]} requires second argument DIR"
-      return 0
-    elsif !File.exists?(dir) || !File.directory?(dir)
-      # DLM: Ruby doesn't warn for this
-      #$logger.warn "'#{dir}' passed to #{$argv[i]} is not a directory"
-    end
-    new_path << dir
-  end
-end
-remove_indices.reverse_each {|i| $argv.delete_at(i)}
-
-if !new_path.empty?
-  
-  new_path = new_path.concat($LOAD_PATH)
-  
-  $logger.info "Setting $LOAD_PATH to #{new_path}"
-  $LOAD_PATH.clear
-  
-  new_path.each {|p| $LOAD_PATH << p}
-end
-
-# Operate on the gem_path option to set GEM_PATH
-remove_indices = []
-new_path = []
-$argv.each_index do |i|
-
-  if $argv[i] == '--gem_path'
-    
-    # remove from further processing
-    remove_indices << i 
-    remove_indices << i+1
-    
-    dir = $argv[i + 1]
-    
-    if dir.nil? 
-      safe_puts "#{$argv[i]} requires second argument DIR"
-      return 0
-    elsif !File.exists?(dir) || !File.directory?(dir)
-      # DLM: Ruby doesn't warn for this
-      #$logger.warn "'#{dir}' passed to #{$argv[i]} is not a directory"
-    end
-    new_path << dir
-  end
-end
-remove_indices.reverse_each {|i| $argv.delete_at(i)}
-
-if !new_path.empty?
-  if ENV['GEM_PATH']
-    new_path << ENV['GEM_PATH'].to_s
-  end
-  
-  new_path = new_path.join(File::PATH_SEPARATOR)
-  
-  $logger.info "Setting GEM_PATH to #{new_path}"
-  ENV['GEM_PATH'] = new_path
-end
-
-# Operate on the gem_home option to set GEM_HOME
-if $argv.include? '--gem_home'
-  option_index = $argv.index '--gem_home'
-  path_index = option_index + 1
-  new_home = $argv[path_index]
-  $argv.slice! path_index
-  $argv.slice! $argv.index '--gem_home'
-
-  $logger.info "Setting GEM_HOME to #{new_home}"
-  ENV['GEM_HOME'] = new_home
-end
 
 # load embedded ruby gems
 require 'rubygems'
@@ -234,105 +146,6 @@ class Specification < BasicSpecification
 end
 end
 
-Gem.paths.path << ':/ruby/2.2.0/gems/'
-Gem.paths.path << ':/ruby/2.2.0/bundler/gems/'
-
-# find all the embedded gems
-EmbeddedScripting::allFileNamesAsString().split(';').each do |f|
-  if md = /specifications\/.*\.gemspec$/.match(f)
-    begin
-      spec = EmbeddedScripting::getFileAsString(f)
-      s = eval(spec)
-      s.loaded_from = f
-      Gem::Specification.add_spec(s)
-    rescue LoadError => e
-      puts e.message
-    rescue => e
-      puts e.message
-    end
-  end 
-end
-
-# activate bundler
-Gem::Specification.each do |spec|
-  if spec.gem_dir.chars.first == ':'
-    if spec.name == 'bundler'
-      # DLM: for now remove this
-      #spec.activate
-      Gem::Specification.remove_spec(spec)
-    end
-  end
-end
-
-# require bundler
-# have to do some forward declaration and pre-require to get around autoload cycles
-#module Bundler
-#end
-#require 'bundler/gem_helpers'
-#require 'bundler/errors'
-#require 'bundler/plugin'
-#require 'bundler/source'
-#require 'bundler/definition'
-#require 'bundler/dsl'
-#require 'bundler/dsl'
-#require 'bundler'
-
-#begin
-#  # activate bundled gems
-#  # bundler will look in:
-#  # 1) ENV["BUNDLE_GEMFILE"]
-#  # 2) find_file("Gemfile", "gems.rb")
-#  Bundler.setup
-#  Bundler.require
-#rescue Bundler::BundlerError => e
-#  puts "#{e.message}"
-#  #puts e.backtrace.join("\n") 
-#  if e.is_a?(Bundler::GemNotFound)
-#    puts "Run `bundle install` to install missing gems."
-#  elsif e.is_a?(Bundler::ProductionError)
-#
-#  else
-#
-#  end
-#  exit e.status_code
-#end
-
-
-embedded_gems = []
-user_gems = []
-Gem::Specification.each do |spec|
-  if spec.gem_dir.chars.first == ':'
-    embedded_gems << spec
-  else
-    user_gems << spec
-  end
-end
-
-# remove any embedded gems that are also found on disk with equal or higher version but compatible major version
-embedded_gems.each do |spec|
-  remove = false
-  user_gems.each do |s| 
-    if s.name == spec.name
-      if s.version >= spec.version
-        if s.version.to_s.split('.')[0] == spec.version.to_s.split('.')[0]
-          $logger.debug "Loading system gem #{s.file_name}, overrides embdedded gem #{spec.file_name}"
-          remove = true
-          break
-        end
-      end
-    end
-  end
- 
- Gem::Specification.remove_spec(spec) if remove
-end
-
-# activate remaining embedded gems
-Gem::Specification.each do |spec|
-  if spec.gem_dir.chars.first == ':'
-    spec.activate
-  end
-end
-
 
 # This is the code chunk to allow for an embedded IRB shell. From Jason Roelofs, found on StackOverflow
 module IRB # :nodoc:
@@ -417,31 +230,30 @@ end
 # command, and the third are the commands given to the command
 #
 # @param [Array] argv The input to be split
+# @param [Array] command_list Hash of commands to look for
 # @return [Array] The split command as [main arguments, sub command, sub command arguments]
 #
-def split_main_and_subcommand(argv)
+def split_main_and_subcommand(argv, command_list)
   # Initialize return variables
   main_args   = nil
   sub_command = nil
   sub_args    = []
+  
+  commands = []
+  command_list.keys.each {|k| commands << k.to_s}
 
   # We split the arguments into two: One set containing any flags before a word, and then the rest. The rest are what
   # get actually sent on to the command
   argv.each_index do |i|
-    if argv[i].start_with?('-') 
-      next
-    elsif argv[i].end_with?('.rb')
-      sub_command = 'e'
-      sub_args    = argv[i..-1]
-      break
-    else
-      # We found the beginning of the sub command. Split the
-      # args up.
+    if commands.index(argv[i])
       main_args   = argv[0, i]
       sub_command = argv[i]
-      sub_args    = argv[i + 1, argv.length - i + 1]
-
-      # Break so we don't find the next non flag and shift our main args
+      sub_args    = argv[i+1..-1]
+      break
+    elsif argv[i].end_with?('.rb')
+      main_args   = argv[0, i]
+      sub_command = 'execute_ruby_script'
+      sub_args    = argv[i..-1]
       break
     end
   end
@@ -451,6 +263,226 @@ def split_main_and_subcommand(argv)
 
   [main_args, sub_command, sub_args]
 end
+
+# parse the main args, those that come before the sub command
+def parse_main_args(main_args)
+
+  $logger.debug "Parsing main_args #{main_args}"
+
+  # Operate on the include option to add to $LOAD_PATH
+  remove_indices = []
+  new_path = []
+  main_args.each_index do |i|
+    
+    if main_args[i] == '-I' || main_args[i] == '--include'
+      # remove from further processing
+      remove_indices << i 
+      remove_indices << i+1
+      
+      dir = main_args[i + 1]
+      
+      if dir.nil? 
+        $logger.error "#{main_args[i]} requires second argument DIR"
+        return false
+      elsif !File.exists?(dir) || !File.directory?(dir)
+        # DLM: Ruby doesn't warn for this
+        #$logger.warn "'#{dir}' passed to #{main_args[i]} is not a directory"
+      end
+      new_path << dir
+    end
+  end
+  remove_indices.reverse_each {|i| main_args.delete_at(i)}
+
+  if !new_path.empty?
+    
+    new_path = new_path.concat($LOAD_PATH)
+    
+    $logger.info "Setting $LOAD_PATH to #{new_path}"
+    $LOAD_PATH.clear
+    
+    new_path.each {|p| $LOAD_PATH << p}
+  end
+
+  # Operate on the gem_path option to set GEM_PATH
+  remove_indices = []
+  new_path = []
+  main_args.each_index do |i|
+
+    if main_args[i] == '--gem_path'
+      
+      # remove from further processing
+      remove_indices << i 
+      remove_indices << i+1
+      
+      dir = main_args[i + 1]
+      
+      if dir.nil? 
+        $logger.error "#{main_args[i]} requires second argument DIR"
+        return false
+      elsif !File.exists?(dir) || !File.directory?(dir)
+        # DLM: Ruby doesn't warn for this
+        #$logger.warn "'#{dir}' passed to #{main_args[i]} is not a directory"
+      end
+      new_path << dir
+    end
+  end
+  remove_indices.reverse_each {|i| main_args.delete_at(i)}
+
+  if !new_path.empty?
+    if ENV['GEM_PATH']
+      new_path << ENV['GEM_PATH'].to_s
+    end
+    
+    new_path = new_path.join(File::PATH_SEPARATOR)
+    
+    $logger.info "Setting GEM_PATH to #{new_path}"
+    ENV['GEM_PATH'] = new_path
+  end
+
+  # Operate on the gem_home option to set GEM_HOME
+  if main_args.include? '--gem_home'
+    option_index = main_args.index '--gem_home'
+    path_index = option_index + 1
+    new_home = main_args[path_index]
+    main_args.slice! path_index
+    main_args.slice! main_args.index '--gem_home'
+
+    $logger.info "Setting GEM_HOME to #{new_home}"
+    ENV['GEM_HOME'] = new_home
+  end
+  
+  Gem.paths.path << ':/ruby/2.2.0/gems/'
+  Gem.paths.path << ':/ruby/2.2.0/bundler/gems/'
+
+  # find all the embedded gems
+  begin
+    EmbeddedScripting::allFileNamesAsString().split(';').each do |f|
+      if md = /specifications\/.*\.gemspec$/.match(f)
+        begin
+          spec = EmbeddedScripting::getFileAsString(f)
+          s = eval(spec)
+          s.loaded_from = f
+          Gem::Specification.add_spec(s)
+        rescue LoadError => e
+          puts e.message
+        rescue => e
+          puts e.message
+        end
+      end 
+    end
+  rescue NameError => e
+    # EmbeddedScripting not available
+  end
+  
+  # activate bundler
+  Gem::Specification.each do |spec|
+    if spec.gem_dir.chars.first == ':'
+      if spec.name == 'bundler'
+        # DLM: for now remove this
+        #spec.activate
+        Gem::Specification.remove_spec(spec)
+      end
+    end
+  end
+
+  # require bundler
+  # have to do some forward declaration and pre-require to get around autoload cycles
+  #module Bundler
+  #end
+  #require 'bundler/gem_helpers'
+  #require 'bundler/errors'
+  #require 'bundler/plugin'
+  #require 'bundler/source'
+  #require 'bundler/definition'
+  #require 'bundler/dsl'
+  #require 'bundler/dsl'
+  #require 'bundler'
+
+  #begin
+  #  # activate bundled gems
+  #  # bundler will look in:
+  #  # 1) ENV["BUNDLE_GEMFILE"]
+  #  # 2) find_file("Gemfile", "gems.rb")
+  #  Bundler.setup
+  #  Bundler.require
+  #rescue Bundler::BundlerError => e
+  #  puts "#{e.message}"
+  #  #puts e.backtrace.join("\n") 
+  #  if e.is_a?(Bundler::GemNotFound)
+  #    puts "Run `bundle install` to install missing gems."
+  #  elsif e.is_a?(Bundler::ProductionError)
+  #
+  #  else
+  #
+  #  end
+  #  exit e.status_code
+  #end
+
+  embedded_gems = []
+  user_gems = []
+  Gem::Specification.each do |spec|
+    if spec.gem_dir.chars.first == ':'
+      embedded_gems << spec
+    else
+      user_gems << spec
+    end
+  end
+
+  # remove any embedded gems that are also found on disk with equal or higher version but compatible major version
+  embedded_gems.each do |spec|
+    remove = false
+    user_gems.each do |s| 
+      if s.name == spec.name
+        if s.version >= spec.version
+          if s.version.to_s.split('.')[0] == spec.version.to_s.split('.')[0]
+            $logger.debug "Loading system gem #{s.file_name}, overrides embdedded gem #{spec.file_name}"
+            remove = true
+            break
+          end
+        end
+      end
+    end
+   
+   Gem::Specification.remove_spec(spec) if remove
+  end
+
+  # activate remaining embedded gems
+  Gem::Specification.each do |spec|
+    if spec.gem_dir.chars.first == ':'
+      spec.activate
+    end
+  end
+
+  # Handle -e commands 
+  remove_indices = []
+  $eval_cmds = []
+  main_args.each_index do |i|
+    
+    if main_args[i] == '-e' || main_args[i] == '--execute'
+      # remove from further processing
+      remove_indices << i 
+      remove_indices << i+1
+      
+      cmd = main_args[i + 1]
+      
+      if cmd.nil? 
+        $logger.error "#{main_args[i]} requires second argument CMD"
+        return false
+      end
+      
+      $eval_cmds << cmd
+    end
+  end
+  remove_indices.reverse_each {|i| main_args.delete_at(i)}
+
+  if !main_args.empty?
+    $logger.error "Unknown arguments #{main_args} found"
+    return false
+  end
+  
+  return true
+end
+
 
 # This CLI class processes the input args and invokes the proper command class
 class CLI
@@ -464,8 +496,8 @@ class CLI
         gem_install: [ Proc.new { ::InstallGem }, {primary: false, working: true}],
         measure: [ Proc.new { ::Measure }, {primary: true, working: false}],
         update: [ Proc.new { ::Update }, {primary: true, working: false}],
-        e: [ Proc.new { ::ExecuteRubyScript }, {primary: false, working: true}],
-        i: [ Proc.new { ::InteractiveRubyShell }, {primary: false, working: true}],
+        execute_ruby_script: [ Proc.new { ::ExecuteRubyScript }, {primary: false, working: true}],
+        interactive_ruby: [ Proc.new { ::InteractiveRubyShell }, {primary: false, working: true}],
         openstudio_version: [ Proc.new { ::OpenStudioVersion }, {primary: true, working: true}],
         energyplus_version: [ Proc.new { ::EnergyPlusVersion }, {primary: true, working: true}],
         ruby_version: [ Proc.new { ::RubyVersion }, {primary: false, working: true}],
@@ -479,8 +511,13 @@ class CLI
   # @return [Object] An instance of the CLI class with initialized globals
   #
   def initialize(argv)
-    $main_args, $sub_command, $sub_args = split_main_and_subcommand(argv)
-
+    $main_args, $sub_command, $sub_args = split_main_and_subcommand(argv, command_list)
+    
+    if $main_args.include? '--verbose'
+      $logger.level = Logger::DEBUG
+      OpenStudio::Logger.instance.standardOutLogger.setLogLevel(OpenStudio::Debug)
+    end
+  
     $logger.info("CLI Parsed Inputs: #{$main_args.inspect} #{$sub_command.inspect} #{$sub_args.inspect}")
   end
 
@@ -493,6 +530,24 @@ class CLI
       # Help is next in short-circuiting everything. Print
       # the help and exit.
       help
+      return 0
+    end
+    
+    if !parse_main_args($main_args)
+      help
+      return 1
+    end
+    
+    # -e commands detected
+    if !$eval_cmds.empty?
+      $eval_cmds.each do |cmd| 
+        $logger.debug "Executing cmd: #{cmd}"
+        eval(cmd)
+      end
+      if $sub_command
+        $logger.warn "Evaluate mode detected, ignoring sub_command #{$sub_command}"
+        return 0
+      end
       return 0
     end
 
@@ -538,8 +593,9 @@ class CLI
       o.on('-h', '--help', 'Print this help.')
       o.on('--verbose', 'Print the full log to STDOUT')
       o.on('-I', '--include DIR', 'Add additional directory to add to front of Ruby $LOAD_PATH (may be used more than once)')
+      o.on('-e', '--execute CMD', 'Execute one line of script (may be used more than once). Returns after executing commands.')
       o.on('--gem_path DIR', 'Add additional directory to add to front of GEM_PATH environment variable (may be used more than once)')
-      o.on('--gem_home DIR', 'Set GEM_HOME environment variable')
+      o.on('--gem_home DIR', 'Set GEM_HOME environment variable') 
       o.separator ''
       o.separator 'Common commands:'
 
@@ -590,6 +646,8 @@ class Run
   # @return [Fixnum] Return status
   #
   def execute(sub_argv)
+  
+    $logger.info "Run, sub_argv = #{sub_argv}"
   
     # options are local to this method, run_methods are what get passed to workflow gem
     run_options = {}
@@ -750,6 +808,8 @@ class GemList
   #
   def execute(sub_argv)
     require 'rubygems'
+    
+    $logger.info "GemList, sub_argv = #{sub_argv}"
 
     # Parse the options
     opts = OptionParser.new do |o|
@@ -806,7 +866,7 @@ class InstallGem
     require 'rubygems'
     require 'rubygems/commands/install_command'
     
-    $logger.info "sub_argv = #{sub_argv}"
+    $logger.info "InstallGem, sub_argv = #{sub_argv}"
 
     # Parse the options
     opts = OptionParser.new do |o|
@@ -872,6 +932,9 @@ class Measure
   # @return [Fixnum] Return status
   #
   def execute(sub_argv)
+  
+    $logger.info "Measure, sub_argv = #{sub_argv}"
+    
     require_relative 'measure_manager'
     
     options = {}
@@ -1043,6 +1106,8 @@ class Update
   #
   def execute(sub_argv)
     
+    $logger.info "Update, sub_argv = #{sub_argv}"
+    
     options = {}
     options[:keep] = false
 
@@ -1112,31 +1177,35 @@ class ExecuteRubyScript
 
   # Executes an arbitrary ruby script
   #
-  # @param [Array] sub_argv Options passed to the e command from the user input
+  # @param [Array] sub_argv Options passed to the execute_ruby_script command from the user input
   # @return [Fixnum] Return status
   #
   def execute(sub_argv)
+  
+    $logger.info "ExecuteRubyScript, sub_argv = #{sub_argv}"
+    
     require 'pathname'
 
     options = {}
 
     opts = OptionParser.new do |o|
-      o.banner = 'Usage: openstudio e [file]'
+      o.banner = 'Usage: openstudio execute_ruby_script file [arguments}'
     end
 
     # Parse the options
-    argv = parse_options(opts, sub_argv)
-    return 0 if argv == nil
-    return 1 unless argv
-    $logger.debug("ExecuteRubyScript command: #{argv.inspect} #{options.inspect}")
-    file_path = argv.shift.to_s
+    return 0 if sub_argv == nil
+    return 1 unless sub_argv
+    $logger.debug("ExecuteRubyScript command: #{sub_argv.inspect}")
+    file_path = sub_argv.shift.to_s
     file_path = File.absolute_path(File.join(Dir.pwd, file_path)) unless Pathname.new(file_path).absolute?
     $logger.debug "Path for the file to run: #{file_path}"
     
     ARGV.clear
-    argv.each do |arg|
+    sub_argv.each do |arg|
       ARGV << arg
     end
+    
+    $logger.debug "ARGV: #{ARGV}"
 
     unless File.exists? file_path
       $logger.error "Unable to find the file #{file_path} on the filesystem"
@@ -1159,14 +1228,17 @@ class InteractiveRubyShell
 
   # Executes the commands to get into an IRB prompt
   #
-  # @param [Array] sub_argv Options passed to the i command from the user input
+  # @param [Array] sub_argv Options passed to the interactive_ruby command from the user input
   # @return [Fixnum] Return status
   #
   def execute(sub_argv)
+  
+    $logger.info "InteractiveRubyShell, sub_argv = #{sub_argv}"
+    
     options = {}
 
     opts = OptionParser.new do |o|
-      o.banner = 'Usage: openstudio i'
+      o.banner = 'Usage: openstudio interactive_ruby'
     end
 
     # Parse the options
@@ -1199,6 +1271,9 @@ class OpenStudioVersion
   # @return [Fixnum] Return status
   #
   def execute(sub_argv)
+    
+    $logger.info "OpenStudioVersion, sub_argv = #{sub_argv}"
+    
     options = {}
 
     opts = OptionParser.new do |o|
@@ -1235,6 +1310,9 @@ class EnergyPlusVersion
   # @return [Fixnum] Return status
   #
   def execute(sub_argv)
+    
+    $logger.info "EnergyPlusVersion, sub_argv = #{sub_argv}"
+    
     options = {}
 
     opts = OptionParser.new do |o|
@@ -1271,6 +1349,9 @@ class RubyVersion
   # @return [Fixnum] Return status
   #
   def execute(sub_argv)
+    
+    $logger.info "RubyVersion, sub_argv = #{sub_argv}"
+    
     options = {}
 
     opts = OptionParser.new do |o|
@@ -1308,6 +1389,9 @@ class ListCommands
   # @see #::CLI.help
   #
   def execute(sub_argv)
+    
+    $logger.info "ListCommands, sub_argv = #{sub_argv}"
+    
     options = {}
 
     opts = OptionParser.new do |o|
@@ -1343,5 +1427,5 @@ end
 ##$logger.debug 'Reset Gem paths; openstudio associated gems should load correctly'
 
 # Execute the CLI interface, and exit with the proper error code
-$logger.info "Executing argv: #{$argv}"
-CLI.new($argv).execute
+$logger.info "Executing argv: #{ARGV}"
+CLI.new(ARGV).execute

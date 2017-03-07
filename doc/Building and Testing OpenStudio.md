@@ -164,28 +164,16 @@ In CMake check the following:
 - BUILD\_OS\_APP
 - BUILD\_PACKAGE
 - BUILD\_PAT
+- CMAKE\_BUILD\_TYPE = Release
 
 In CMake **uncheck** the following:
 
 - CPACK_BINARY_FOO (uncheck all)
 - CPACK_SOURCE_FOO (uncheck all)
 
-In CMake type the following:
-
-	t
-
-In CMake **uncheck** the following:
-
-- CPACK\_BINARY\__FOO_ (uncheck all)
-
 In CMake **check** the following:
 
 - CPACK\_BINARY\_IFW
-
-
-In CMake **enter** the following for CMAKE\_BUILD\_TYPE:
-
-- `Release`
 
 
 In CMake type the following:
