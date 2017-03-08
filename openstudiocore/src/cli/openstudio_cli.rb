@@ -268,6 +268,9 @@ end
 def parse_main_args(main_args)
 
   $logger.debug "Parsing main_args #{main_args}"
+  
+  # verbose already handled
+  main_args.delete('--verbose')
 
   # Operate on the include option to add to $LOAD_PATH
   remove_indices = []
@@ -362,7 +365,21 @@ def parse_main_args(main_args)
           spec = EmbeddedScripting::getFileAsString(f)
           s = eval(spec)
           s.loaded_from = f
+          
+          init_count = 0
+          Gem::Specification.each {|x| init_count += 1}
+          
+          # if already have an equivalent spec this will be a no-op
           Gem::Specification.add_spec(s)
+          
+          post_count = 0
+          Gem::Specification.each {|x| post_count += 1}
+          
+          if post_count == init_count
+            $logger.debug "Found system gem #{s.name} #{s.version}, overrides embedded gem"
+            $logger.debug "Ignoring embdedded gem #{s.file_name}"
+          end
+          
         rescue LoadError => e
           puts e.message
         rescue => e
@@ -433,23 +450,45 @@ def parse_main_args(main_args)
     remove = false
     user_gems.each do |s| 
       if s.name == spec.name
-        if s.version >= spec.version
-          if s.version.to_s.split('.')[0] == spec.version.to_s.split('.')[0]
-            $logger.debug "Loading system gem #{s.file_name}, overrides embdedded gem #{spec.file_name}"
-            remove = true
-            break
-          end
+        if s.version > spec.version
+          $logger.debug "Found system gem #{s.name} #{s.version}, overrides embedded gem"
+          remove = true
+        elsif s.version == spec.version
+          $logger.debug "Found system gem #{s.name} #{s.version}, overrides embedded gem"
+          remove = true
+        else
+          $logger.debug "Found system gem #{s.name} #{s.version}, does not override embedded gem"
         end
       end
     end
    
-   Gem::Specification.remove_spec(spec) if remove
+    if remove
+      $logger.debug "Ignoring embdedded gem #{spec.file_name}"
+      Gem::Specification.remove_spec(spec)
+    end
   end
 
   # activate remaining embedded gems
   Gem::Specification.each do |spec|
     if spec.gem_dir.chars.first == ':'
-      spec.activate
+      
+      # check if gem can be loaded from RUBYLIB, this supports developer use case
+      do_activate = true
+      $:.each do |lp|
+        if File.exists?(File.join(lp, spec.name)) || File.exists?(File.join(lp, spec.name + '.rb')) || File.exists?(File.join(lp, spec.name + '.so')) 
+          $logger.debug "Found #{spec.name} in '#{lp}', overrides embdedded gem"
+          do_activate = false
+          break
+        end
+      end 
+    
+      if do_activate
+        $logger.debug "Activating embdedded gem #{spec.file_name}"
+        spec.activate
+      else
+        $logger.debug "Ignoring embdedded gem #{spec.file_name}"
+        Gem::Specification.remove_spec(spec)
+      end
     end
   end
 
@@ -493,7 +532,7 @@ class CLI
         run: [ Proc.new { ::Run }, {primary: true, working: true}],
         #apply_measure: [ Proc.new { ::ApplyMeasure }, {primary: true, working: false}],
         gem_list: [ Proc.new { ::GemList }, {primary: false, working: true}],
-        gem_install: [ Proc.new { ::InstallGem }, {primary: false, working: true}],
+        #gem_install: [ Proc.new { ::InstallGem }, {primary: false, working: false}],
         measure: [ Proc.new { ::Measure }, {primary: true, working: false}],
         update: [ Proc.new { ::Update }, {primary: true, working: false}],
         execute_ruby_script: [ Proc.new { ::ExecuteRubyScript }, {primary: false, working: true}],
