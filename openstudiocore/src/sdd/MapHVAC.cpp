@@ -5946,6 +5946,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     dischargingScheme.setName(plantLoop.nameString() + " TES Discharging Scheme");
     // Need to make sure that each chiller is allowed for discharge
     // Remove it from the scheme if not enabled for discharge
+    // (We will readd it after the storage)
     for( const auto & chillerItem : enableOnThrmlEngyStorDischargeMap ) {
       if( ! chillerItem.second ) {
         dischargingScheme.removeEquipment(chillerItem.first.cast<model::HVACComponent>());
@@ -5959,6 +5960,13 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
       auto equipment = dischargingScheme.equipment(upperLimit);
       equipment.insert(equipment.begin(),thermalStorage.get());
       dischargingScheme.replaceEquipment(upperLimit,equipment);
+    }
+
+    // Add / readd the disabled chillers after the storage
+    for( const auto & chillerItem : enableOnThrmlEngyStorDischargeMap ) {
+      if( ! chillerItem.second ) {
+        dischargingScheme.addEquipment(chillerItem.first.cast<model::HVACComponent>());
+      }
     }
 
     if( tesSchedule ) {
