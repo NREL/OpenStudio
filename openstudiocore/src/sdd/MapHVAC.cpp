@@ -6910,7 +6910,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateThrm
 
   tes.setName(name);
 
-  value = tesElement.firstChildElement("TStorCap").text().toDouble(&ok);
+  value = tesElement.firstChildElement("StorCap").text().toDouble(&ok);
   if( ok ) {
    value = unitToUnit(value,"gal","m^3").get();
    tes.setTankVolume(value);
