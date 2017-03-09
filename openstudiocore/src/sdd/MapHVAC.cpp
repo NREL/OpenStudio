@@ -6961,7 +6961,12 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateThrm
 
   value = tesElement.firstChildElement("TankUFac").text().toDouble(&ok);
   if( ok ) {
-    tes.setUniformSkinLossCoefficientperUnitAreatoAmbientTemperature(value * 0.5275);
+    // sdd units = Btu/(hr*ft^2*F), os units = W/(m^2*K) 
+    Quantity uaIP(value, BTUUnit(BTUExpnt(1,-2,-1,-1)));
+    auto uaSI = QuantityConverter::instance().convert(uaIP, UnitSystem(UnitSystem::Wh));
+    OS_ASSERT(uaSI);
+    OS_ASSERT(uaSI->units() == WhUnit(WhExpnt(1,0,-2,-1)));
+    tes.setUniformSkinLossCoefficientperUnitAreatoAmbientTemperature(uaSI->value());
   }
 
   tes.setUseSideHeatTransferEffectiveness(1.0);
