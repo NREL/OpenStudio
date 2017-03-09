@@ -7746,139 +7746,22 @@ Foundation:Kiva,
        \type real
        \minimum> 0.0
        \default 0.3
-  A8,  \field Custom Block 1 Material Name
+  A8,  \field Custom Block Material Name 1
        \begin-extensible
        \type object-list
        \object-list MaterialName
-  N10, \field Custom Block 1 Depth
+  N10, \field Custom Block Depth 1
        \note Top-to-bottom dimension of the block downward.
        \units m
        \type real
        \minimum> 0.0
-  N11, \field Custom Block 1 X Position
+  N11, \field Custom Block X Position 1
        \note Position outward (+) or inward (-) relative to the foundation wall
        \note interior
        \units m
        \type real
-  N12, \field Custom Block 1 Z Position
+  N12; \field Custom Block Z Position 1
        \note Position downward (+) relative to the foundation wall top
-       \units m
-       \type real
-  A9,  \field Custom Block 2 Material Name
-       \type object-list
-       \object-list MaterialName
-  N13, \field Custom Block 2 Depth
-       \units m
-       \type real
-       \minimum> 0.0
-  N14, \field Custom Block 2 X Position
-       \units m
-       \type real
-  N15, \field Custom Block 2 Z Position
-       \units m
-       \type real
-  A10, \field Custom Block 3 Material Name
-       \type object-list
-       \object-list MaterialName
-  N16, \field Custom Block 3 Depth
-       \units m
-       \type real
-       \minimum> 0.0
-  N17, \field Custom Block 3 X Position
-       \units m
-       \type real
-  N18, \field Custom Block 3 Z Position
-       \units m
-       \type real
-  A11, \field Custom Block 4 Material Name
-       \type object-list
-       \object-list MaterialName
-  N19, \field Custom Block 4 Depth
-       \units m
-       \type real
-       \minimum> 0.0
-  N20, \field Custom Block 4 X Position
-       \units m
-       \type real
-  N21, \field Custom Block 4 Z Position
-       \units m
-       \type real
-  A12, \field Custom Block 5 Material Name
-       \type object-list
-       \object-list MaterialName
-  N22, \field Custom Block 5 Depth
-       \units m
-       \type real
-       \minimum> 0.0
-  N23, \field Custom Block 5 X Position
-       \units m
-       \type real
-  N24, \field Custom Block 5 Z Position
-       \units m
-       \type real
-  A13, \field Custom Block 6 Material Name
-       \type object-list
-       \object-list MaterialName
-  N25, \field Custom Block 6 Depth
-       \units m
-       \type real
-       \minimum> 0.0
-  N26, \field Custom Block 6 X Position
-       \units m
-       \type real
-  N27, \field Custom Block 6 Z Position
-       \units m
-       \type real
-  A14, \field Custom Block 7 Material Name
-       \type object-list
-       \object-list MaterialName
-  N16, \field Custom Block 7 Depth
-       \units m
-       \type real
-       \minimum> 0.0
-  N29, \field Custom Block 7 X Position
-       \units m
-       \type real
-  N30, \field Custom Block 7 Z Position
-       \units m
-       \type real
-  A15, \field Custom Block 8 Material Name
-       \type object-list
-       \object-list MaterialName
-  N31, \field Custom Block 8 Depth
-       \units m
-       \type real
-       \minimum> 0.0
-  N32, \field Custom Block 8 X Position
-       \units m
-       \type real
-  N33, \field Custom Block 8 Z Position
-       \units m
-       \type real
-  A16, \field Custom Block 9 Material Name
-       \type object-list
-       \object-list MaterialName
-  N34, \field Custom Block 9 Depth
-       \units m
-       \type real
-       \minimum> 0.0
-  N35, \field Custom Block 9 X Position
-       \units m
-       \type real
-  N36, \field Custom Block 9 Z Position
-       \units m
-       \type real
-  A17, \field Custom Block 10 Material Name
-       \type object-list
-       \object-list MaterialName
-  N37, \field Custom Block 10 Depth
-       \units m
-       \type real
-  N38, \field Custom Block 10 X Position
-       \units m
-       \type real
-       \minimum> 0.0
-  N39; \field Custom Block 10 Z Position
        \units m
        \type real
 
@@ -7973,55 +7856,10 @@ SurfaceProperty:ExposedFoundationPerimeter,
        \minimum 0.0
        \maximum 1.0
        \default 1.0
-  A2 , \field Surface Segment 1 Exposed
+  A2 ; \field Surface Segment Exposed 1
        \note Surface Segment N is the perimeter between the Nth and (N+1)th
        \note vertices
        \begin-extensible
-       \type choice
-       \default Yes
-       \key Yes
-       \key No
-  A3 , \field Surface Segment 2 Exposed
-       \type choice
-       \default Yes
-       \key Yes
-       \key No
-  A4 , \field Surface Segment 3 Exposed
-       \type choice
-       \default Yes
-       \key Yes
-       \key No
-  A5 , \field Surface Segment 4 Exposed
-       \type choice
-       \default Yes
-       \key Yes
-       \key No
-  A6 , \field Surface Segment 5 Exposed
-       \type choice
-       \default Yes
-       \key Yes
-       \key No
-  A7 , \field Surface Segment 6 Exposed
-       \type choice
-       \default Yes
-       \key Yes
-       \key No
-  A8 , \field Surface Segment 7 Exposed
-       \type choice
-       \default Yes
-       \key Yes
-       \key No
-  A9 , \field Surface Segment 8 Exposed
-       \type choice
-       \default Yes
-       \key Yes
-       \key No
-  A10, \field Surface Segment 9 Exposed
-       \type choice
-       \default Yes
-       \key Yes
-       \key No
-  A11; \field Surface Segment 10 Exposed
        \type choice
        \default Yes
        \key Yes
@@ -14407,6 +14245,7 @@ AirflowNetwork:Distribution:Linkage,
 AirflowNetwork:Distribution:DuctViewFactors,
        \memo This object is used to allow user-defined view factors to be used for duct-surface radiation
        \memo calculations.
+       \extensible:2
   A1,  \field Linkage Name
        \required-field
        \type object-list
@@ -14421,144 +14260,11 @@ AirflowNetwork:Distribution:DuctViewFactors,
        \minimum 0.0
        \maximum 1.0
        \default 0.9
-  A2,  \field Surface 1 Name
+  A2,  \field Surface Name 1
        \begin-extensible
        \type object-list
        \object-list AllHeatTranSurfNames
-  N3,  \field Surface 1 View Factor
-       \type real
-       \minimum 0.0
-       \maximum 1.0
-  A3,  \field Surface 2 Name
-       \type object-list
-       \object-list AllHeatTranSurfNames
-  N4,  \field Surface 2 View Factor
-       \type real
-       \minimum 0.0
-       \maximum 1.0
-  A4,  \field Surface 3 Name
-       \type object-list
-       \object-list AllHeatTranSurfNames
-  N5,  \field Surface 3 View Factor
-       \type real
-       \minimum 0.0
-       \maximum 1.0
-  A5,  \field Surface 4 Name
-       \type object-list
-       \object-list AllHeatTranSurfNames
-  N6,  \field Surface 4 View Factor
-       \type real
-       \minimum 0.0
-       \maximum 1.0
-  A6,  \field Surface 5 Name
-       \type object-list
-       \object-list AllHeatTranSurfNames
-  N7,  \field Surface 5 View Factor
-       \type real
-       \minimum 0.0
-       \maximum 1.0
-  A7,  \field Surface 6 Name
-       \type object-list
-       \object-list AllHeatTranSurfNames
-  N8,  \field Surface 6 View Factor
-       \type real
-       \minimum 0.0
-       \maximum 1.0
-  A8,  \field Surface 7 Name
-       \type object-list
-       \object-list AllHeatTranSurfNames
-  N9,  \field Surface 7 View Factor
-       \type real
-       \minimum 0.0
-       \maximum 1.0
-  A9,  \field Surface 8 Name
-       \type object-list
-       \object-list AllHeatTranSurfNames
-  N10, \field Surface 8 View Factor
-       \type real
-       \minimum 0.0
-       \maximum 1.0
-  A10, \field Surface 9 Name
-       \type object-list
-       \object-list AllHeatTranSurfNames
-  N11, \field Surface 9 View Factor
-       \type real
-       \minimum 0.0
-       \maximum 1.0
-  A11, \field Surface 10 Name
-       \type object-list
-       \object-list AllHeatTranSurfNames
-  N12, \field Surface 10 View Factor
-       \type real
-       \minimum 0.0
-       \maximum 1.0
-  A12, \field Surface 11 Name
-       \type object-list
-       \object-list AllHeatTranSurfNames
-  N13, \field Surface 11 View Factor
-       \type real
-       \minimum 0.0
-       \maximum 1.0
-  A13, \field Surface 12 Name
-       \type object-list
-       \object-list AllHeatTranSurfNames
-  N14, \field Surface 12 View Factor
-       \type real
-       \minimum 0.0
-       \maximum 1.0
-  A14, \field Surface 13 Name
-       \type object-list
-       \object-list AllHeatTranSurfNames
-  N15, \field Surface 13 View Factor
-       \type real
-       \minimum 0.0
-       \maximum 1.0
-  A15, \field Surface 14 Name
-       \type object-list
-       \object-list AllHeatTranSurfNames
-  N16, \field Surface 14 View Factor
-       \type real
-       \minimum 0.0
-       \maximum 1.0
-  A16, \field Surface 15 Name
-       \type object-list
-       \object-list AllHeatTranSurfNames
-  N17, \field Surface 15 View Factor
-       \type real
-       \minimum 0.0
-       \maximum 1.0
-  A17, \field Surface 16 Name
-       \type object-list
-       \object-list AllHeatTranSurfNames
-  N18, \field Surface 16 View Factor
-       \type real
-       \minimum 0.0
-       \maximum 1.0
-  A18, \field Surface 17 Name
-       \type object-list
-       \object-list AllHeatTranSurfNames
-  N19, \field Surface 17 View Factor
-       \type real
-       \minimum 0.0
-       \maximum 1.0
-  A19, \field Surface 18 Name
-       \type object-list
-       \object-list AllHeatTranSurfNames
-  N20, \field Surface 18 View Factor
-       \type real
-       \minimum 0.0
-       \maximum 1.0
-  A20, \field Surface 19 Name
-       \type object-list
-       \object-list AllHeatTranSurfNames
-  N21, \field Surface 19 View Factor
-       \type real
-       \minimum 0.0
-       \maximum 1.0
-  A21, \field Surface 20 Name
-       \type object-list
-       \object-list AllHeatTranSurfNames
-  N22; \field Surface 20 View Factor
+  N3;  \field Surface View Factor 1
        \type real
        \minimum 0.0
        \maximum 1.0
