@@ -6984,10 +6984,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateThrm
 
   tes.setUseSideOutletHeight(0.0);
 
-  value = tesElement.firstChildElement("FlowRtDsgn").text().toDouble(&ok);
+  value = tesElement.firstChildElement("WtrFlowCap").text().toDouble(&ok);
   if( ok ) {
     value = unitToUnit(value,"gal/min","m^3/s").get();
     tes.setUseSideDesignFlowRate(value);
+    tes.setSourceSideDesignFlowRate(value);
   }
 
   tes.setSourceSideHeatTransferEffectiveness(1.0);
@@ -6998,12 +6999,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateThrm
   }
 
   tes.setSourceSideInletHeight(0.0);
-
-  value = tesElement.firstChildElement("FlowRtDsgn").text().toDouble(&ok);
-  if( ok ) {
-    value = unitToUnit(value,"gal/min","m^3/s").get();
-    tes.setSourceSideDesignFlowRate(value);
-  }
 
   tes.setInletMode("Fixed");
   tes.setNumberofNodes(10);
