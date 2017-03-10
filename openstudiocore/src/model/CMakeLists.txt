@@ -1008,6 +1008,12 @@ set(${target_name}_src
   SetpointManagerScheduledDualSetpoint.hpp
   SetpointManagerScheduledDualSetpoint_Impl.hpp
   SetpointManagerScheduledDualSetpoint.cpp
+  SetpointManagerSingleZoneCooling.hpp
+  SetpointManagerSingleZoneCooling_Impl.hpp
+  SetpointManagerSingleZoneCooling.cpp
+  SetpointManagerSingleZoneHeating.hpp
+  SetpointManagerSingleZoneHeating_Impl.hpp
+  SetpointManagerSingleZoneHeating.cpp
   SetpointManagerSingleZoneHumidityMaximum.hpp
   SetpointManagerSingleZoneHumidityMaximum_Impl.hpp
   SetpointManagerSingleZoneHumidityMaximum.cpp
@@ -1383,6 +1389,7 @@ set(${target_name}_qrc
 )
 
 # generate rules for building source files from the resources
+# DLM: TODO, replace with embed_files
 qt5_add_resources(${target_name}_qrcs ${${target_name}_qrc})
 
 
@@ -1657,6 +1664,8 @@ set(${target_name}_test_src
   test/SetpointManagerSingleZoneOneStageCooling_GTest.cpp
   test/SetpointManagerSingleZoneOneStageHeating_GTest.cpp
   test/SetpointManagerSingleZoneReheat_GTest.cpp
+  test/SetpointManagerSingleZoneCooling_GTest.cpp
+  test/SetpointManagerSingleZoneHeating_GTest.cpp
   test/SetpointManagerWarmest_GTest.cpp
   test/SetpointManagerWarmestTemperatureFlow_GTest.cpp
   test/ScheduleDay_GTest.cpp
@@ -1695,6 +1704,7 @@ set(${target_name}_test_src
   test/SteamEquipment_GTest.cpp
   test/SubSurface_GTest.cpp
   test/Surface_GTest.cpp
+  test/SurfacePropertyConvectionCoefficients_GTest.cpp
   test/SurfacePropertyConvectionCoefficientsMultipleSurface_GTest.cpp
   test/SurfacePropertyConvectionCoefficients_GTest.cpp
   test/TableMultiVariableLookup_GTest.cpp

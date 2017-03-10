@@ -430,7 +430,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
       IdfObject branch(openstudio::IddObjectType::Branch);
       m_idfObjects.push_back(branch);
       branch.setName( airLoopHVACName + " Main Branch");
-      populateBranch(branch,comps,airLoopHVAC);
+      populateBranch(branch,comps,airLoopHVAC,true);
 
       auto eg = branchList.pushExtensibleGroup();
       eg.setString(BranchListExtensibleFields::BranchName,branch.name().get());
@@ -444,7 +444,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
       IdfObject branch(openstudio::IddObjectType::Branch);
       m_idfObjects.push_back(branch);
       branch.setName( airLoopHVACName + " Dual Duct Branch 1");
-      populateBranch(branch,comps,airLoopHVAC);
+      populateBranch(branch,comps,airLoopHVAC,true);
 
       auto eg = branchList.pushExtensibleGroup();
       eg.setString(BranchListExtensibleFields::BranchName,branch.name().get());
@@ -458,7 +458,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
       IdfObject branch(openstudio::IddObjectType::Branch);
       m_idfObjects.push_back(branch);
       branch.setName( airLoopHVACName + " Dual Duct Branch 2");
-      populateBranch(branch,comps,airLoopHVAC);
+      populateBranch(branch,comps,airLoopHVAC,true);
 
       auto branchListEg = branchList.pushExtensibleGroup();
       branchListEg.setString(BranchListExtensibleFields::BranchName,branch.name().get());
@@ -474,7 +474,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
     IdfObject branch(openstudio::IddObjectType::Branch);
     m_idfObjects.push_back(branch);
     branch.setName( airLoopHVACName + " Main Branch");
-    populateBranch(branch,comps,airLoopHVAC);
+    populateBranch(branch,comps,airLoopHVAC,true);
 
     auto eg = branchList.pushExtensibleGroup();
     eg.setString(BranchListExtensibleFields::BranchName,branch.name().get());

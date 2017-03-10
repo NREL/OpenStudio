@@ -1,4 +1,4 @@
-!IDD_Version 2.0.4
+!IDD_Version 2.0.5
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -18992,12 +18992,24 @@ OS:PlantLoop,
        \key CommonPipe
        \key TwoWayCommonPipe
        \key None
-  A19; \field Pressure Simulation Type
+  A19, \field Pressure Simulation Type
        \type choice
        \default None
        \key PumpPowerCorrection
        \key LoopFlowCorrection
        \key None
+  A20, \field Plant Equipment Operation Heating Load Schedule
+       \type object-list
+       \object-list ScheduleNames
+  A21, \field Plant Equipment Operation Cooling Load Schedule
+       \type object-list
+       \object-list ScheduleNames
+  A22, \field Primary Plant Equipment Operation Scheme Schedule
+       \type object-list
+       \object-list ScheduleNames
+  A23; \field Component Setpoint Operation Scheme Schedule
+       \type object-list
+       \object-list ScheduleNames
 
 OS:PlantEquipmentOperation:CoolingLoad,
     \extensible:3
@@ -20439,6 +20451,62 @@ OS:SetpointManager:SingleZone:Humidity:Maximum,
        \type object-list
        \object-list Node
 
+OS:SetpointManager:SingleZone:Cooling,
+       \memo This setpoint manager detects the control zone load to meet the current cooling
+       \memo setpoint, zone inlet node flow rate, and zone node temperature, and calculates a
+       \memo setpoint temperature for the supply air that will satisfy the zone cooling load for
+       \memo the control zone.
+       \min-fields 7
+  A1 , \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+  A3 , \field Control Variable
+       \type choice
+       \required-field
+       \key Temperature
+  N1 , \field Minimum Supply Air Temperature
+       \units C
+       \required-field
+  N2 , \field Maximum Supply Air Temperature
+       \units C
+       \required-field
+  A4 , \field Control Zone Name
+       \type object-list
+       \object-list ThermalZoneNames
+  A5 ; \field Setpoint Node or NodeList Name
+       \type object-list
+       \object-list Node
+
+OS:SetpointManager:SingleZone:Heating,
+       \memo This setpoint manager detects the control zone load to meet the current heating
+       \memo setpoint, zone inlet node flow rate, and zone node temperature, and calculates a
+       \memo setpoint temperature for the supply air that will satisfy the zone heating load for
+       \memo the control zone.
+       \min-fields 7
+  A1 , \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+  A3 , \field Control Variable
+       \type choice
+       \required-field
+       \key Temperature
+  N1 , \field Minimum Supply Air Temperature
+       \units C
+       \required-field
+  N2 , \field Maximum Supply Air Temperature
+       \units C
+       \required-field
+  A4 , \field Control Zone Name
+       \type object-list
+       \object-list ThermalZoneNames
+  A5 ; \field Setpoint Node or NodeList Name
+       \type object-list
+       \object-list Node
+
 OS:Sizing:Plant,
   A1, \field Handle
        \type handle
@@ -21745,7 +21813,7 @@ OS:ZoneHVAC:FourPipeFanCoil,
         \required-field
         \type object-list
         \object-list HeatingCoilsWater
-        \object-list HeatingCoilsElectric
+        \object-list HeatingCoilName
    N8 , \field Maximum Hot Water Flow Rate
         \required-field
         \autosizable

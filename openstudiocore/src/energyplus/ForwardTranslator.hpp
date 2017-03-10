@@ -281,6 +281,8 @@ class SetpointManagerOutdoorAirPretreat;
 class SetpointManagerOutdoorAirReset;
 class SetpointManagerScheduled;
 class SetpointManagerScheduledDualSetpoint;
+class SetpointManagerSingleZoneCooling;
+class SetpointManagerSingleZoneHeating;
 class SetpointManagerSingleZoneHumidityMaximum;
 class SetpointManagerSingleZoneHumidityMinimum;
 class SetpointManagerSingleZoneOneStageCooling;
@@ -389,7 +391,7 @@ namespace detail
   struct ForwardTranslatorInitializer;
 };
 
-#define ENERGYPLUS_VERSION "8.6"
+#define ENERGYPLUS_VERSION "8.7"
 
 class ENERGYPLUS_API ForwardTranslator {
  public:
@@ -946,6 +948,10 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateSetpointManagerScheduledDualSetpoint( model::SetpointManagerScheduledDualSetpoint & modelObject );
 
+  boost::optional<IdfObject> translateSetpointManagerSingleZoneCooling( model::SetpointManagerSingleZoneCooling & modelObject );
+
+  boost::optional<IdfObject> translateSetpointManagerSingleZoneHeating( model::SetpointManagerSingleZoneHeating & modelObject );
+
   boost::optional<IdfObject> translateSetpointManagerSingleZoneHumidityMaximum( model::SetpointManagerSingleZoneHumidityMaximum & modelObject );
 
   boost::optional<IdfObject> translateSetpointManagerSingleZoneHumidityMinimum( model::SetpointManagerSingleZoneHumidityMinimum & modelObject );
@@ -1134,7 +1140,7 @@ class ENERGYPLUS_API ForwardTranslator {
   void reset();
 
   // helper method used by ForwardTranslatePlantLoop
-  IdfObject populateBranch( IdfObject & branchIdfObject, std::vector<model::ModelObject> & modelObjects, model::Loop & loop);
+  IdfObject populateBranch( IdfObject & branchIdfObject, std::vector<model::ModelObject> & modelObjects, model::Loop & loop, bool isSupplyBranch);
 
   // translate all constructions
   void translateConstructions(const model::Model & model);

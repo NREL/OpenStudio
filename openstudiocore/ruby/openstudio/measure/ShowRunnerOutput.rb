@@ -11,17 +11,17 @@ def show_output(result)
   end
  
   puts "**INITIAL CONDITION**"
-  if result.initialCondition.empty?
+  if result.stepInitialCondition.empty?
     #do nothing
   else
-    puts result.initialCondition.get
+    puts result.stepInitialCondition.get
   end  
       
   puts "**FINAL CONDITION**"
-  if result.finalCondition.empty?
+  if result.stepFinalCondition.empty?
     #do nothing
   else
-    puts result.finalCondition.get
+    puts result.stepFinalCondition.get
   end    
   
   puts "**INFO MESSAGES**"  

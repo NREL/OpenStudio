@@ -12,7 +12,7 @@ function Component()
       var appPath = installer.value("TargetDir") + "/OpenStudioApp.app/Contents/";
 
       var epPath = installer.value("TargetDir") + "/EnergyPlus";
-      var mkPath = appPath + "EnergyPLus";
+      var mkPath = appPath + "EnergyPlus";
       component.addElevatedOperation("Mkdir", mkPath);
       component.addElevatedOperation("CopyDirectory", epPath, appPath);
 

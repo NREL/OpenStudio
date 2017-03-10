@@ -296,6 +296,12 @@
   <POLICY IddObjectType="OS_SetpointManager_SingleZone_Reheat">
     <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_SetpointManager_SingleZone_Cooling">
+    <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_SetpointManager_SingleZone_Heating">
+    <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
+  </POLICY>
   <POLICY IddObjectType="OS_SetpointManager_Coldest">
     <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
   </POLICY>

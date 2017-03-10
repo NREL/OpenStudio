@@ -1,7 +1,7 @@
 
 OS:Version,
-  {3a164764-0b52-4472-89e5-49e6565a6f74}, !- Handle
-  2.0.4;                                  !- Version Identifier
+  {5bf6a875-8324-404f-bb13-fe1c7a962f6f}, !- Handle
+  2.0.5;                                  !- Version Identifier
 
 OS:Schedule:Constant,
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Handle
@@ -222,6 +222,24 @@ OS:SetpointManager:SingleZone:Reheat,
   99,                                     ! Maximum Supply Air Temperature {C}
   ,                                       ! Control Zone Name
   ;                                       ! Setpoint Node or NodeList Name
+
+OS:SetpointManager:SingleZone:Cooling,
+  {4ce287f0-a6d6-4e3f-abb9-1e8b773ca80a}, !- Handle
+  Setpoint Manager Single Zone Cooling, !- Name
+  Temperature,                            !- Control Variable
+  -99,                                    !- Minimum Supply Air Temperature {C}
+  99,                                     !- Maximum Supply Air Temperature {C}
+  ,                                       !- Control Zone Name
+  ;                                       !- Setpoint Node or NodeList Name
+
+OS:SetpointManager:SingleZone:Heating,
+  {a1707587-1ec9-4bed-8356-2ce5d42e9137}, !- Handle
+  Setpoint Manager Single Zone Heating, !- Name
+  Temperature,                            !- Control Variable
+  -99,                                    !- Minimum Supply Air Temperature {C}
+  99,                                     !- Maximum Supply Air Temperature {C}
+  ,                                       !- Control Zone Name
+  ;                                       !- Setpoint Node or NodeList Name
 
 OS:SetpointManager:Warmest,
   {4f12e925-01e9-4ce2-9f56-daa5d024ac5d}, !- Handle

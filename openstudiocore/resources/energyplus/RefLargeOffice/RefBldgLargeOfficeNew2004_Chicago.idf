@@ -68,7 +68,7 @@
 ! ***GENERAL SIMULATION PARAMETERS***
 ! Number of Zones: 19
 
-  Version,8.6;
+  Version,8.7;
 
   SimulationControl,
     YES,                     !- Do Zone Sizing Calculation
@@ -4947,7 +4947,7 @@
     AUTOSIZE,                !- Maximum Air Flow Rate {m3/s}
     Constant,                !- Zone Minimum Air Flow Input Method
     0.3,                     !- Constant Minimum Air Flow Fraction
-    ,                        !- Fixed Minimum Air Flow Rate {m3/s}
+    Autosize,                !- Fixed Minimum Air Flow Rate {m3/s}
     ,                        !- Minimum Air Flow Fraction Schedule Name
     Coil:Heating:Water,      !- Reheat Coil Object Type
     Basement VAV Box Reheat Coil,  !- Reheat Coil Name
@@ -4967,7 +4967,7 @@
     AUTOSIZE,                !- Maximum Air Flow Rate {m3/s}
     Constant,                !- Zone Minimum Air Flow Input Method
     0.3,                     !- Constant Minimum Air Flow Fraction
-    ,                        !- Fixed Minimum Air Flow Rate {m3/s}
+    Autosize,                !- Fixed Minimum Air Flow Rate {m3/s}
     ,                        !- Minimum Air Flow Fraction Schedule Name
     Coil:Heating:Water,      !- Reheat Coil Object Type
     Core_bottom VAV Box Reheat Coil,  !- Reheat Coil Name
@@ -4987,7 +4987,7 @@
     AUTOSIZE,                !- Maximum Air Flow Rate {m3/s}
     Constant,                !- Zone Minimum Air Flow Input Method
     0.3,                     !- Constant Minimum Air Flow Fraction
-    ,                        !- Fixed Minimum Air Flow Rate {m3/s}
+    Autosize,                !- Fixed Minimum Air Flow Rate {m3/s}
     ,                        !- Minimum Air Flow Fraction Schedule Name
     Coil:Heating:Water,      !- Reheat Coil Object Type
     Core_mid VAV Box Reheat Coil,  !- Reheat Coil Name
@@ -5007,7 +5007,7 @@
     AUTOSIZE,                !- Maximum Air Flow Rate {m3/s}
     Constant,                !- Zone Minimum Air Flow Input Method
     0.3,                     !- Constant Minimum Air Flow Fraction
-    ,                        !- Fixed Minimum Air Flow Rate {m3/s}
+    Autosize,                !- Fixed Minimum Air Flow Rate {m3/s}
     ,                        !- Minimum Air Flow Fraction Schedule Name
     Coil:Heating:Water,      !- Reheat Coil Object Type
     Core_top VAV Box Reheat Coil,  !- Reheat Coil Name
@@ -5027,7 +5027,7 @@
     AUTOSIZE,                !- Maximum Air Flow Rate {m3/s}
     Constant,                !- Zone Minimum Air Flow Input Method
     0.3,                     !- Constant Minimum Air Flow Fraction
-    ,                        !- Fixed Minimum Air Flow Rate {m3/s}
+    Autosize,                !- Fixed Minimum Air Flow Rate {m3/s}
     ,                        !- Minimum Air Flow Fraction Schedule Name
     Coil:Heating:Water,      !- Reheat Coil Object Type
     Perimeter_bot_ZN_1 VAV Box Reheat Coil,  !- Reheat Coil Name
@@ -5047,7 +5047,7 @@
     AUTOSIZE,                !- Maximum Air Flow Rate {m3/s}
     Constant,                !- Zone Minimum Air Flow Input Method
     0.3,                     !- Constant Minimum Air Flow Fraction
-    ,                        !- Fixed Minimum Air Flow Rate {m3/s}
+    Autosize,                !- Fixed Minimum Air Flow Rate {m3/s}
     ,                        !- Minimum Air Flow Fraction Schedule Name
     Coil:Heating:Water,      !- Reheat Coil Object Type
     Perimeter_bot_ZN_2 VAV Box Reheat Coil,  !- Reheat Coil Name
@@ -5067,7 +5067,7 @@
     AUTOSIZE,                !- Maximum Air Flow Rate {m3/s}
     Constant,                !- Zone Minimum Air Flow Input Method
     0.3,                     !- Constant Minimum Air Flow Fraction
-    ,                        !- Fixed Minimum Air Flow Rate {m3/s}
+    Autosize,                !- Fixed Minimum Air Flow Rate {m3/s}
     ,                        !- Minimum Air Flow Fraction Schedule Name
     Coil:Heating:Water,      !- Reheat Coil Object Type
     Perimeter_bot_ZN_3 VAV Box Reheat Coil,  !- Reheat Coil Name
@@ -5087,7 +5087,7 @@
     AUTOSIZE,                !- Maximum Air Flow Rate {m3/s}
     Constant,                !- Zone Minimum Air Flow Input Method
     0.3,                     !- Constant Minimum Air Flow Fraction
-    ,                        !- Fixed Minimum Air Flow Rate {m3/s}
+    Autosize,                !- Fixed Minimum Air Flow Rate {m3/s}
     ,                        !- Minimum Air Flow Fraction Schedule Name
     Coil:Heating:Water,      !- Reheat Coil Object Type
     Perimeter_bot_ZN_4 VAV Box Reheat Coil,  !- Reheat Coil Name
@@ -5107,7 +5107,7 @@
     AUTOSIZE,                !- Maximum Air Flow Rate {m3/s}
     Constant,                !- Zone Minimum Air Flow Input Method
     0.3,                     !- Constant Minimum Air Flow Fraction
-    ,                        !- Fixed Minimum Air Flow Rate {m3/s}
+    Autosize,                !- Fixed Minimum Air Flow Rate {m3/s}
     ,                        !- Minimum Air Flow Fraction Schedule Name
     Coil:Heating:Water,      !- Reheat Coil Object Type
     Perimeter_mid_ZN_1 VAV Box Reheat Coil,  !- Reheat Coil Name
@@ -5127,7 +5127,7 @@
     AUTOSIZE,                !- Maximum Air Flow Rate {m3/s}
     Constant,                !- Zone Minimum Air Flow Input Method
     0.3,                     !- Constant Minimum Air Flow Fraction
-    ,                        !- Fixed Minimum Air Flow Rate {m3/s}
+    Autosize,                !- Fixed Minimum Air Flow Rate {m3/s}
     ,                        !- Minimum Air Flow Fraction Schedule Name
     Coil:Heating:Water,      !- Reheat Coil Object Type
     Perimeter_mid_ZN_2 VAV Box Reheat Coil,  !- Reheat Coil Name
@@ -5147,7 +5147,7 @@
     AUTOSIZE,                !- Maximum Air Flow Rate {m3/s}
     Constant,                !- Zone Minimum Air Flow Input Method
     0.3,                     !- Constant Minimum Air Flow Fraction
-    ,                        !- Fixed Minimum Air Flow Rate {m3/s}
+    Autosize,                !- Fixed Minimum Air Flow Rate {m3/s}
     ,                        !- Minimum Air Flow Fraction Schedule Name
     Coil:Heating:Water,      !- Reheat Coil Object Type
     Perimeter_mid_ZN_3 VAV Box Reheat Coil,  !- Reheat Coil Name
@@ -5167,7 +5167,7 @@
     AUTOSIZE,                !- Maximum Air Flow Rate {m3/s}
     Constant,                !- Zone Minimum Air Flow Input Method
     0.3,                     !- Constant Minimum Air Flow Fraction
-    ,                        !- Fixed Minimum Air Flow Rate {m3/s}
+    Autosize,                !- Fixed Minimum Air Flow Rate {m3/s}
     ,                        !- Minimum Air Flow Fraction Schedule Name
     Coil:Heating:Water,      !- Reheat Coil Object Type
     Perimeter_mid_ZN_4 VAV Box Reheat Coil,  !- Reheat Coil Name
@@ -5187,7 +5187,7 @@
     AUTOSIZE,                !- Maximum Air Flow Rate {m3/s}
     Constant,                !- Zone Minimum Air Flow Input Method
     0.3,                     !- Constant Minimum Air Flow Fraction
-    ,                        !- Fixed Minimum Air Flow Rate {m3/s}
+    Autosize,                !- Fixed Minimum Air Flow Rate {m3/s}
     ,                        !- Minimum Air Flow Fraction Schedule Name
     Coil:Heating:Water,      !- Reheat Coil Object Type
     Perimeter_top_ZN_1 VAV Box Reheat Coil,  !- Reheat Coil Name
@@ -5207,7 +5207,7 @@
     AUTOSIZE,                !- Maximum Air Flow Rate {m3/s}
     Constant,                !- Zone Minimum Air Flow Input Method
     0.3,                     !- Constant Minimum Air Flow Fraction
-    ,                        !- Fixed Minimum Air Flow Rate {m3/s}
+    Autosize,                !- Fixed Minimum Air Flow Rate {m3/s}
     ,                        !- Minimum Air Flow Fraction Schedule Name
     Coil:Heating:Water,      !- Reheat Coil Object Type
     Perimeter_top_ZN_2 VAV Box Reheat Coil,  !- Reheat Coil Name
@@ -5227,7 +5227,7 @@
     AUTOSIZE,                !- Maximum Air Flow Rate {m3/s}
     Constant,                !- Zone Minimum Air Flow Input Method
     0.3,                     !- Constant Minimum Air Flow Fraction
-    ,                        !- Fixed Minimum Air Flow Rate {m3/s}
+    Autosize,                !- Fixed Minimum Air Flow Rate {m3/s}
     ,                        !- Minimum Air Flow Fraction Schedule Name
     Coil:Heating:Water,      !- Reheat Coil Object Type
     Perimeter_top_ZN_3 VAV Box Reheat Coil,  !- Reheat Coil Name
@@ -5247,7 +5247,7 @@
     AUTOSIZE,                !- Maximum Air Flow Rate {m3/s}
     Constant,                !- Zone Minimum Air Flow Input Method
     0.3,                     !- Constant Minimum Air Flow Fraction
-    ,                        !- Fixed Minimum Air Flow Rate {m3/s}
+    Autosize,                !- Fixed Minimum Air Flow Rate {m3/s}
     ,                        !- Minimum Air Flow Fraction Schedule Name
     Coil:Heating:Water,      !- Reheat Coil Object Type
     Perimeter_top_ZN_4 VAV Box Reheat Coil,  !- Reheat Coil Name
@@ -7393,10 +7393,14 @@
     autocalculate,           !- Free Convection U-Factor Times Area Value {W/K}
     0.1,                     !- Free Convection U-Factor Times Area Value Sizing Factor
     UFactorTimesAreaAndDesignWaterFlowRate,  !- Performance Input Method
-    1.25,                    !- Heat Rejection Capacity and Nominal Capacity Sizing Ratio
+    ,                        !- Heat Rejection Capacity and Nominal Capacity Sizing Ratio
     ,                        !- Nominal Capacity {W}
     ,                        !- Free Convection Capacity {W}
-    0.1,                     !- Free Convection Nominal Capacity Sizing Factor
+    ,                        !- Free Convection Nominal Capacity Sizing Factor
+    1.25,                    !- Design Inlet Air Dry-Bulb Temperature {C}
+    ,                        !- Design Inlet Air Wet-Bulb Temperature {C}
+    ,                        !- Design Approach Temperature {deltaC}
+    0.1,                     !- Design Range Temperature {deltaC}
     0.0,                     !- Basin Heater Capacity {W/K}
     2.0,                     !- Basin Heater Setpoint Temperature {C}
     ,                        !- Basin Heater Operating Schedule Name

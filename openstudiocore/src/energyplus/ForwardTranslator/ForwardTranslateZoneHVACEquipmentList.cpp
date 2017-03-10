@@ -93,8 +93,9 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACEquipmentList( Zo
     if (airChillers.size() > 0 && (airChiller = elem.optionalCast<RefrigerationAirChiller>()) ) {
       if (chillerSetCoolingPriority == 0) {
         chillerSetCoolingPriority = priority;
+      } else {
+        offset++;
       }
-      offset++;
     } else if( elem.optionalCast<ZoneVentilationDesignFlowRate>() ) {
       // ZoneVentilationDesignFlowRate is not ZoneHVAC from E+ perspective
       offset++;
@@ -113,8 +114,9 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACEquipmentList( Zo
     if (airChillers.size() > 0 && (airChiller= elem.optionalCast<RefrigerationAirChiller>()) ) {
       if (chillerSetHeatingPriority == 0) {
         chillerSetHeatingPriority = priority;
+      } else {
+        offset++;
       }
-      offset++;
     } else if( elem.optionalCast<ZoneVentilationDesignFlowRate>() ) {
       // ZoneVentilationDesignFlowRate is not ZoneHVAC from E+ perspective
       offset++;
