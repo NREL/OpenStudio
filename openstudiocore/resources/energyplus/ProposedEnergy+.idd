@@ -26905,37 +26905,13 @@ Fan:SystemModel,
        \note If set to 1, or omitted, and Speed Control Method is Discrete then constant fan speed is the design maximum.
        \type integer
        \default 1
-  N14, \field Speed 1 Flow Fraction
+  N14, \field Speed Flow Fraction 1
        \begin-extensible
        \type real
        \minimum 0.0
        \maximum 1.0
-  N15, \field Speed 1 Electric Power Fraction
+  N15; \field Speed Electric Power Fraction 1
        \note if left blank then use Electric Power Function of Flow Fraction Curve
-       \type real
-       \minimum 0.0
-       \maximum 1.0
-  N16, \field Speed 2 Flow Fraction
-       \type real
-       \minimum 0.0
-       \maximum 1.0
-  N17, \field Speed 2 Electric Power Fraction
-       \type real
-       \minimum 0.0
-       \maximum 1.0
-  N18, \field Speed 3 Flow Fraction
-       \type real
-       \minimum 0.0
-       \maximum 1.0
-  N19, \field Speed 3 Electric Power Fraction
-       \type real
-       \minimum 0.0
-       \maximum 1.0
-  N20, \field Speed n Flow Fraction
-       \type real
-       \minimum 0.0
-       \maximum 1.0
-  N21; \field Speed n Electric Power Fraction
        \type real
        \minimum 0.0
        \maximum 1.0
