@@ -79,7 +79,19 @@ namespace detail{
     bool parsingSuccessful = reader.parse(s, m_value);
     if (!parsingSuccessful){
       std::string errors = reader.getFormattedErrorMessages();
-      LOG_AND_THROW("WorkflowJSON cannot be processed, " << errors);
+
+      // see if this is a path
+      openstudio::path p = toPath(s);
+      if (boost::filesystem::exists(p) && boost::filesystem::is_regular_file(p)){
+        // open file
+        std::ifstream ifs(openstudio::toString(p));
+        m_value.clear();
+        parsingSuccessful = reader.parse(ifs, m_value);
+      }
+
+      if (!parsingSuccessful){
+        LOG_AND_THROW("WorkflowJSON cannot be processed, " << errors);
+      }
     }
 
     parseSteps();
@@ -210,6 +222,7 @@ namespace detail{
   bool WorkflowJSON_Impl::saveAs(const openstudio::path& p) 
   {
     if (setOswPath(p, true)) {
+      checkForUpdates();
       return save();
     }
     return false;
@@ -350,17 +363,15 @@ namespace detail{
 
   bool WorkflowJSON_Impl::setOswPath(const openstudio::path& path, bool emitChange)
   {
-    if (path.is_absolute()){
-      m_oswFilename = path.filename();
-      m_oswDir = path.parent_path();
-      setMeasureTypes(); 
-      if (emitChange){
-        onUpdate(); // onUpdate does not happen in setMeasureTypes
-      }
-      return true;
+    openstudio::path p = canonicalOrAbsolute(path);
+
+    m_oswFilename = p.filename();
+    m_oswDir = p.parent_path();
+    setMeasureTypes(); 
+    if (emitChange){
+      onUpdate(); // onUpdate does not happen in setMeasureTypes
     }
-    LOG(Warn, "Path " << toString(path) << " is not absolute, WorkflowJSON::setOswPath failed");
-    return false;
+    return true;
   }
 
   openstudio::path WorkflowJSON_Impl::oswDir() const
@@ -373,13 +384,10 @@ namespace detail{
 
   bool WorkflowJSON_Impl::setOswDir(const openstudio::path& path)
   {
-    if (path.is_absolute()){
-      m_oswDir = path;
-      setMeasureTypes(); 
-      onUpdate(); // onUpdate does not happen in setMeasureTypes
-      return true;
-    }
-    return false;
+    m_oswDir = canonicalOrAbsolute(path);
+    setMeasureTypes(); 
+    onUpdate(); // onUpdate does not happen in setMeasureTypes
+    return true;
   }
 
   openstudio::path WorkflowJSON_Impl::rootDir() const

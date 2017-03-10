@@ -214,6 +214,8 @@ class MeasureStepItem : public OSListItem
 
   bool hasIncompleteArguments() const;
 
+  std::vector<measure::OSArgument> incompleteArguments() const;
+
   public slots:
 
   void remove();

@@ -26,46 +26,92 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
 
-#include "../utilities/core/Application.hpp"
+#ifndef MODEL_SETPOINTMANAGERSINGLEZONEHEATING_HPP
+#define MODEL_SETPOINTMANAGERSINGLEZONEHEATING_HPP
 
-#include <QApplication>
+#include <model/ModelAPI.hpp>
+#include "SetpointManager.hpp"
 
-#include "../utilities/core/Path.hpp"
-#include "../utilities/idf/Workspace.hpp"
-#include "../model/Model.hpp"
-#include "../model/Building.hpp"
-#include <resources.hxx>
+namespace openstudio {
 
-#include "ModelEditor.hpp"
-#include <model_editor/treeitem.h>
-#include <model_editor/treemodel.h>
+namespace model {
 
-using openstudio::Application;
+class ThermalZone;
+class Node;
 
-int main(int argc, char *argv[])
-{     
-#ifndef SHARED_OS_LIBS
-  Q_INIT_RESOURCE(application);
-#endif // SHARED_OS_LIBS
+namespace detail {
 
-  QApplication app(argc, argv);
-  app.setOrganizationName("NREL");
-  QCoreApplication::setOrganizationDomain("nrel.gov");
-  app.setApplicationName("ModelEditor");
-  #ifdef Q_OS_MAC
-  //app.setQuitOnLastWindowClosed(false);
-  #endif
+  class SetpointManagerSingleZoneHeating_Impl;
 
-  ModelEditor modelEditor;
-  modelEditor.show();
+} // detail
 
-  QString shownName = QApplication::applicationDirPath();
-  shownName += "/untitled";
-  modelEditor.setWindowFilePath(shownName);
+/** SetpointManagerSingleZoneHeating is a SetpointManager that wraps the OpenStudio IDD object 'OS:SetpointManager:SingleZone:Heating'. */
+class MODEL_API SetpointManagerSingleZoneHeating : public SetpointManager {
+ public:
+  /** @name Constructors and Destructors */
+  //@{
 
-  QString style;
-  modelEditor.loadStyleSheet(style);
-  app.setStyleSheet(style);
+  explicit SetpointManagerSingleZoneHeating(const Model& model);
 
-  return app.exec();
-}
+  virtual ~SetpointManagerSingleZoneHeating() {}
+
+  //@}
+
+  static IddObjectType iddObjectType();
+
+  /** @name Getters */
+  //@{
+
+  std::string controlVariable() const;
+
+  double minimumSupplyAirTemperature() const;
+
+  double maximumSupplyAirTemperature() const;
+
+  boost::optional<ThermalZone> controlZone() const;
+
+  //@}
+  /** @name Setters */
+  //@{
+
+  bool setControlVariable(const std::string& controlVariable);
+
+  void setMinimumSupplyAirTemperature(double minimumSupplyAirTemperature);
+
+  void setMaximumSupplyAirTemperature(double maximumSupplyAirTemperature);
+
+  bool setControlZone(const ThermalZone& thermalZone);
+
+  void resetControlZone();
+
+  //@}
+  /** @name Other */
+  //@{
+
+  //@}
+ protected:
+  /// @cond
+  typedef detail::SetpointManagerSingleZoneHeating_Impl ImplType;
+
+  explicit SetpointManagerSingleZoneHeating(std::shared_ptr<detail::SetpointManagerSingleZoneHeating_Impl> impl);
+
+  friend class detail::SetpointManagerSingleZoneHeating_Impl;
+  friend class Model;
+  friend class IdfObject;
+  friend class openstudio::detail::IdfObject_Impl;
+  /// @endcond
+ private:
+  REGISTER_LOGGER("openstudio.model.SetpointManagerSingleZoneHeating");
+};
+
+/** \relates SetpointManagerSingleZoneHeating*/
+typedef boost::optional<SetpointManagerSingleZoneHeating> OptionalSetpointManagerSingleZoneHeating;
+
+/** \relates SetpointManagerSingleZoneHeating*/
+typedef std::vector<SetpointManagerSingleZoneHeating> SetpointManagerSingleZoneHeatingVector;
+
+} // model
+} // openstudio
+
+#endif // MODEL_SETPOINTMANAGERSINGLEZONEHEATING_HPP
+

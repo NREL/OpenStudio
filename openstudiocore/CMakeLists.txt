@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.7.0)
 cmake_policy(SET CMP0048 NEW)
 
-project(OpenStudio VERSION 2.0.4)
+project(OpenStudio VERSION 2.0.5)
 
 include(ExternalProject)
 include(CPackComponent)
@@ -58,11 +58,11 @@ set(OPENSTUDIO_LONG_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.$
 
 # EnergyPlus Idd version
 set(ENERGYPLUS_VERSION_MAJOR 8)
-set(ENERGYPLUS_VERSION_MINOR 6)
+set(ENERGYPLUS_VERSION_MINOR 7)
 set(ENERGYPLUS_VERSION_PATCH 0)
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
-set(ENERGYPLUS_BUILD_SHA "198c6a3cff")
+set(ENERGYPLUS_BUILD_SHA "ae053cab77")
 
 # Radiance
 set(RADIANCE_VERSION "5.0.a.12")
@@ -332,13 +332,13 @@ endif()
 # EnergyPlus
 if(UNIX)
   if(APPLE)
-    set(ENERGYPLUS_EXPECTED_HASH 38c71fcd69d8c2ccc7f8ac47e61ce9f4)
+    set(ENERGYPLUS_EXPECTED_HASH 26deeca1a061607345c9798ecdfed8d3)
     set(ENERGYPLUS_PLATFORM "Darwin-x86_64")
   elseif(EXISTS "/etc/redhat-release")
     set(ENERGYPLUS_EXPECTED_HASH cdda9c86e3fc2b7653a57d74fe2dbc7c)
     set(ENERGYPLUS_PLATFORM "Redhat-x86_64")
   else()
-    set(ENERGYPLUS_EXPECTED_HASH d917dc454e4036b4418f0190b266dba0)
+    set(ENERGYPLUS_EXPECTED_HASH fb395f350d23a1e3dd026dc2c458260d)
     set(ENERGYPLUS_PLATFORM "Linux-x86_64")
   endif()
   set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-${ENERGYPLUS_PLATFORM}")
@@ -356,7 +356,7 @@ elseif(WIN32)
   if(CMAKE_CL_64)
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-x86_64")
     set(ENERGYPLUS_ARCH 64)
-    set(ENERGYPLUS_EXPECTED_HASH 4f5605f67a0086522f92be04f38d282b)
+    set(ENERGYPLUS_EXPECTED_HASH 0644fd2352350166cd79393bca9aee95)
   else()
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-i386")
     set(ENERGYPLUS_ARCH 32)
@@ -378,7 +378,7 @@ find_package(EnergyPlus "${ENERGYPLUS_VERSION}" REQUIRED)
 # Radiance
 if(UNIX)
   if(APPLE)
-    set(RADIANCE_EXPECTED_HASH 0142878c79a1c4b244b81b2b872e6ed4)
+    set(RADIANCE_EXPECTED_HASH 115ef9052ad5011d3fc7cebc2991644f)
     set(RADIANCE_PLATFORM "Darwin")
   elseif(EXISTS "/etc/redhat-release")
     #message(FATAL_ERROR "Radiance ${RADIANCE_VERSION} redhat build missing")
@@ -523,8 +523,8 @@ endif()
 
 # openstudio gems
 
-set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20170216.tar.gz")
-set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "5e51b6e20e4900cc66f323e95020f994")
+set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20170308.tar.gz")
+set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "90f322de55c44b34db07a500c7381762")
 
 set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
 if(EXISTS "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}")
@@ -1394,7 +1394,7 @@ install(FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_
 ###############################################################################
 
 if(NOT UNIX)
-  install(DIRECTORY "${CMAKE_BINARY_DIR}/strawberry-perl-5.16.2.1-32bit-portable-reduced/perl" DESTINATION ./Perl/ COMPONENT Radiance )
+  install(DIRECTORY "${CMAKE_BINARY_DIR}/strawberry-perl-5.16.2.1-32bit-portable-reduced/perl" DESTINATION ./Perl/ COMPONENT Radiance USE_SOURCE_PERMISSIONS )
 
   #set(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP ON)
   include(InstallRequiredSystemLibraries)
@@ -1440,6 +1440,10 @@ if( APPLE )
   install(PROGRAMS "${ENERGYPLUS_DIR}/libgfortran.3.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus )
   install(PROGRAMS "${ENERGYPLUS_DIR}/libquadmath.0.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus )
 elseif( WIN32 )
+  file(GLOB ENERGYPLUS_MSVC_FILES "${ENERGYPLUS_DIR}/msvc*.dll")
+  foreach(msvc_file IN LISTS ENERGYPLUS_MSVC_FILES)
+    install(PROGRAMS "${msvc_file}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
+  endforeach()
   #install(PROGRAMS "${ENERGYPLUS_PATH}/libgfortran.3.dylib" DESTINATION ./EnergyPlus/)
   #install(PROGRAMS "${ENERGYPLUS_PATH}/libquadmath.0.dylib" DESTINATION ./EnergyPlus/)
 else()
@@ -1448,10 +1452,10 @@ else()
 endif()
 
 if ( WIN32 )
-  install(DIRECTORY "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}/" DESTINATION ./Radiance/ COMPONENT Radiance )
+  install(DIRECTORY "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}/" DESTINATION ./Radiance/ COMPONENT Radiance USE_SOURCE_PERMISSIONS )
 else()
   string(REPLACE "-Redhat" "-Linux" RADIANCE_PATH ${RADIANCE_PATH})
-  install(DIRECTORY "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}/usr/local/radiance/" DESTINATION ./Radiance/ COMPONENT Radiance )
+  install(DIRECTORY "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}/usr/local/radiance/" DESTINATION ./Radiance/ COMPONENT Radiance USE_SOURCE_PERMISSIONS )
 endif()
 
 if( BUILD_PAT AND APPLE )

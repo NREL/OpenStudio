@@ -26,27 +26,25 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
 
-#ifndef MODELEDITOR_MODELEDITOR_HPP
-#define MODELEDITOR_MODELEDITOR_HPP
+#include <gtest/gtest.h>
+#include <model/test/ModelFixture.hpp>
+#include "../SetpointManagerSingleZoneHeating.hpp"
+#include "../SetpointManagerSingleZoneHeating_Impl.hpp"
 
-#include "EditorFrame.hpp"
+using namespace openstudio;
+using namespace openstudio::model;
 
-class ModelEditor : public modeleditor::EditorFrame
+TEST_F(ModelFixture, SetpointManagerSingleZoneHeating_DefaultConstructor)
 {
-  Q_OBJECT
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-public:
-  ModelEditor(QWidget * parent = 0);
-  virtual ~ModelEditor();
+  ASSERT_EXIT ( 
+  {  
+    Model m;
+    SetpointManagerSingleZoneHeating testObject(m);
 
-protected:
+    exit(0); 
+  } ,
+    ::testing::ExitedWithCode(0), "" );
+}
 
-private:
-
-private slots:
-
-signals:
-
-};
-
-#endif // MODELEDITOR_MODELEDITOR_HPP

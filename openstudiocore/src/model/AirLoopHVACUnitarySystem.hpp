@@ -107,6 +107,7 @@ class MODEL_API AirLoopHVACUnitarySystem : public WaterToAirComponent {
 
   bool isUseDOASDXCoolingCoilDefaulted() const;
 
+  /** As of EnergyPlus version 8.7.0 this field maps to MinimumSupplyAirTemperature **/
   double dOASDXCoolingCoilLeavingMinimumAirTemperature() const;
 
   bool isDOASDXCoolingCoilLeavingMinimumAirTemperatureDefaulted() const;
@@ -270,6 +271,7 @@ class MODEL_API AirLoopHVACUnitarySystem : public WaterToAirComponent {
 
   void resetUseDOASDXCoolingCoil();
 
+  /** As of EnergyPlus version 8.7.0 this field maps to MinimumSupplyAirTemperature **/
   bool setDOASDXCoolingCoilLeavingMinimumAirTemperature(double dOASDXCoolingCoilLeavingMinimumAirTemperature);
 
   void resetDOASDXCoolingCoilLeavingMinimumAirTemperature();

@@ -2254,6 +2254,18 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateSetpointManagerScheduledDualSetpoint(spm);
       break;
     }
+  case  openstudio::IddObjectType::OS_SetpointManager_SingleZone_Cooling :
+    {
+      model::SetpointManagerSingleZoneCooling spm = modelObject.cast<SetpointManagerSingleZoneCooling>();
+      retVal = translateSetpointManagerSingleZoneCooling(spm);
+      break;
+    }
+  case  openstudio::IddObjectType::OS_SetpointManager_SingleZone_Heating :
+    {
+      model::SetpointManagerSingleZoneHeating spm = modelObject.cast<SetpointManagerSingleZoneHeating>();
+      retVal = translateSetpointManagerSingleZoneHeating(spm);
+      break;
+    }
   case  openstudio::IddObjectType::OS_SetpointManager_SingleZone_Humidity_Maximum :
     {
       model::SetpointManagerSingleZoneHumidityMaximum spm = modelObject.cast<SetpointManagerSingleZoneHumidityMaximum>();
@@ -2965,6 +2977,8 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_InteriorPartitionSurface);
   result.push_back(IddObjectType::OS_ShadingSurfaceGroup);
   result.push_back(IddObjectType::OS_ShadingSurface);
+
+  result.push_back(IddObjectType::OS_SurfaceProperty_ConvectionCoefficients);
 
   result.push_back(IddObjectType::OS_Daylighting_Control);
   result.push_back(IddObjectType::OS_DaylightingDevice_Shelf);

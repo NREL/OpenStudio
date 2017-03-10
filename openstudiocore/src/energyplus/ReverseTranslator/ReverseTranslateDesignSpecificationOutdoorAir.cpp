@@ -104,7 +104,7 @@ OptionalModelObject ReverseTranslator::translateDesignSpecificationOutdoorAir( c
     LOG(Error, "Unknown OutdoorAirMethod '" << *outdoorAirMethod << "' specified for DesignSpecification:OutdoorAir named '" << workspaceObject.name().get() << "'");
   }
 
-  OptionalWorkspaceObject target = workspaceObject.getTarget(DesignSpecification_OutdoorAirFields::OutdoorAirFlowRateFractionScheduleName);
+  OptionalWorkspaceObject target = workspaceObject.getTarget(DesignSpecification_OutdoorAirFields::OutdoorAirScheduleName);
   if (target){
     OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
     if (modelObject){

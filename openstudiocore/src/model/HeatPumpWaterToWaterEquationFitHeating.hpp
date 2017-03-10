@@ -56,12 +56,16 @@ class MODEL_API HeatPumpWaterToWaterEquationFitHeating : public WaterToWaterComp
 
   static IddObjectType iddObjectType();
 
+  /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Load Side Flow Rate" **/
   double ratedLoadSideFlowRate() const;
 
+  /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Source Side Flow Rate" **/
   double ratedSourceSideFlowRate() const;
 
+  /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Heating Capacity" **/
   double ratedHeatingCapacity() const;
 
+  /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Heating Power Consumption" **/
   double ratedHeatingPowerConsumption() const;
 
   double heatingCapacityCoefficient1() const;
@@ -88,12 +92,16 @@ class MODEL_API HeatPumpWaterToWaterEquationFitHeating : public WaterToWaterComp
   /** @name Setters */
   //@{
 
+  /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Load Side Flow Rate" **/
   bool setRatedLoadSideFlowRate(double ratedLoadSideFlowRate);
 
+  /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Source Side Flow Rate" **/
   bool setRatedSourceSideFlowRate(double ratedSourceSideFlowRate);
 
+  /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Heating Capacity" **/
   bool setRatedHeatingCapacity(double ratedHeatingCapacity);
 
+  /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Heating Power Consumption" **/
   bool setRatedHeatingPowerConsumption(double ratedHeatingPowerConsumption);
 
   void setHeatingCapacityCoefficient1(double heatingCapacityCoefficient1);

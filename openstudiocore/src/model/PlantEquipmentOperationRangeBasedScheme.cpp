@@ -237,8 +237,28 @@ bool PlantEquipmentOperationRangeBasedScheme_Impl::removeEquipment(double upperL
   return false;
 }
 
+bool PlantEquipmentOperationRangeBasedScheme_Impl::removeEquipment(const HVACComponent & equipment)
+{
+  bool result = false;
+  auto upperLimits = loadRangeUpperLimits();
+  for( const auto & limit : upperLimits ) {
+    if( removeEquipment(limit,equipment) ) {
+      result = true;
+    }
+  }
+
+  return result;
+}
+
 void PlantEquipmentOperationRangeBasedScheme_Impl::clearLoadRanges()
 {
+  clearExtensibleGroups();
+
+  auto eg = getObject<WorkspaceObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+  model::ModelObjectList modelObjectList(model());
+  eg.setPointer(LOADRANGEFIELDS_RANGEEQUIPMENTLISTNAME,modelObjectList.handle());
+  eg.setDouble(LOADRANGEFIELDS_LOWERLIMIT,minimumLowerLimit());
+  eg.setDouble(LOADRANGEFIELDS_UPPERLIMIT,maximumUpperLimit());
 }
 
 PlantEquipmentOperationRangeBasedScheme_Impl::PlantEquipmentOperationRangeBasedScheme_Impl(const PlantEquipmentOperationRangeBasedScheme_Impl& other, 
@@ -248,6 +268,70 @@ PlantEquipmentOperationRangeBasedScheme_Impl::PlantEquipmentOperationRangeBasedS
 {
 }
 
+bool PlantEquipmentOperationRangeBasedScheme_Impl::replaceEquipment(double upperLimit, const std::vector<HVACComponent> & equipment)
+{
+  if( upperLimit < minimumLowerLimit() ) {
+    return false;
+  }
+
+  unsigned i = 0;
+  for( auto & eg : extensibleGroups() ) {
+    const auto & t_upperLimit = eg.getDouble(LOADRANGEFIELDS_UPPERLIMIT);
+    OS_ASSERT(t_upperLimit);
+    if( equal(upperLimit,t_upperLimit.get()) ) {
+      auto m = model();
+
+      // Remove duplicates primitively so that the order is preserved
+      std::vector<HVACComponent> equipmentCopy;
+      for( const auto & mo : equipment ) {
+        if( std::find(equipmentCopy.begin(),equipmentCopy.end(),mo) == equipmentCopy.end() ) {
+          equipmentCopy.push_back(mo);
+        }
+      }
+
+      if( auto target = eg.cast<WorkspaceExtensibleGroup>().getTarget(LOADRANGEFIELDS_RANGEEQUIPMENTLISTNAME) ) {
+        auto modelObjectList = target->cast<model::ModelObjectList>();
+        modelObjectList.removeAllModelObjects();
+        for( const auto & mo : equipmentCopy ) {
+          modelObjectList.addModelObject(mo);
+        }
+      } else {
+         ModelObjectList modelObjectList(m);
+         for( const auto & mo : equipmentCopy ) {
+           modelObjectList.addModelObject(mo);
+         }
+         eg.cast<WorkspaceExtensibleGroup>().setPointer(LOADRANGEFIELDS_RANGEEQUIPMENTLISTNAME,modelObjectList.handle());
+      }
+      return true;
+    }
+    ++i;
+  }
+
+  return false;
+}
+
+bool PlantEquipmentOperationRangeBasedScheme_Impl::replaceEquipment(const std::vector<HVACComponent> & equipment)
+{
+  return replaceEquipment(loadRangeUpperLimits().front(),equipment);
+}
+
+ModelObject PlantEquipmentOperationRangeBasedScheme_Impl::clone(Model model) const
+{
+  auto clone = PlantEquipmentOperationScheme_Impl::clone(model).cast<model::PlantEquipmentOperationRangeBasedScheme>();
+
+  clone.clearLoadRanges();
+  for( const auto & limit : loadRangeUpperLimits() ) {
+    auto equip = equipment(limit); 
+    if( equal(limit,maximumUpperLimit()) ) {
+      clone.replaceEquipment(limit,equip);
+    } else {
+      clone.addLoadRange(limit,equip);
+    }
+  }
+
+  return clone;
+}
+
 } // detail
 
 PlantEquipmentOperationRangeBasedScheme::PlantEquipmentOperationRangeBasedScheme(IddObjectType type,const Model& model)
@@ -255,11 +339,7 @@ PlantEquipmentOperationRangeBasedScheme::PlantEquipmentOperationRangeBasedScheme
 {
   OS_ASSERT(getImpl<detail::PlantEquipmentOperationRangeBasedScheme_Impl>());
 
-  auto eg = pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
-  ModelObjectList modelObjectList(model);
-  eg.setPointer(LOADRANGEFIELDS_RANGEEQUIPMENTLISTNAME,modelObjectList.handle());
-  eg.setDouble(LOADRANGEFIELDS_LOWERLIMIT,getImpl<detail::PlantEquipmentOperationRangeBasedScheme_Impl>()->minimumLowerLimit());
-  eg.setDouble(LOADRANGEFIELDS_UPPERLIMIT,getImpl<detail::PlantEquipmentOperationRangeBasedScheme_Impl>()->maximumUpperLimit());
+  clearLoadRanges();
 }     
 
 PlantEquipmentOperationRangeBasedScheme::PlantEquipmentOperationRangeBasedScheme(std::shared_ptr<detail::PlantEquipmentOperationRangeBasedScheme_Impl> p)
@@ -301,6 +381,11 @@ bool PlantEquipmentOperationRangeBasedScheme::removeEquipment(double upperLimit,
   return getImpl<detail::PlantEquipmentOperationRangeBasedScheme_Impl>()->removeEquipment(upperLimit,equipment);
 }
 
+bool PlantEquipmentOperationRangeBasedScheme::removeEquipment(const HVACComponent & equipment)
+{
+  return getImpl<detail::PlantEquipmentOperationRangeBasedScheme_Impl>()->removeEquipment(equipment);
+}
+
 void PlantEquipmentOperationRangeBasedScheme::clearLoadRanges()
 {
   return getImpl<detail::PlantEquipmentOperationRangeBasedScheme_Impl>()->clearLoadRanges();
@@ -314,6 +399,16 @@ double PlantEquipmentOperationRangeBasedScheme::maximumUpperLimit() const
 double PlantEquipmentOperationRangeBasedScheme::minimumLowerLimit() const
 {
   return getImpl<detail::PlantEquipmentOperationRangeBasedScheme_Impl>()->minimumLowerLimit();
+}
+
+bool PlantEquipmentOperationRangeBasedScheme::replaceEquipment(double upperLimit, const std::vector<HVACComponent> & equipment)
+{
+  return getImpl<detail::PlantEquipmentOperationRangeBasedScheme_Impl>()->replaceEquipment(upperLimit,equipment);
+}
+
+bool PlantEquipmentOperationRangeBasedScheme::replaceEquipment(const std::vector<HVACComponent> & equipment)
+{
+  return getImpl<detail::PlantEquipmentOperationRangeBasedScheme_Impl>()->replaceEquipment(equipment);
 }
 
 } // model

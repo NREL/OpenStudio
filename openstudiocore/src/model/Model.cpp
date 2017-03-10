@@ -68,6 +68,14 @@ using openstudio::detail::WorkspaceObject_Impl;
 
 using std::dynamic_pointer_cast;
 
+struct ModelResourceInitializer{
+  ModelResourceInitializer() 
+  {
+    Q_INIT_RESOURCE(Model);
+  }
+};
+static ModelResourceInitializer __modelResourceInitializer__;
+
 namespace openstudio {
 namespace model {
 
@@ -484,6 +492,8 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(SetpointManagerOutdoorAirReset);
     REGISTER_CONSTRUCTOR(SetpointManagerScheduled);
     REGISTER_CONSTRUCTOR(SetpointManagerScheduledDualSetpoint);
+    REGISTER_CONSTRUCTOR(SetpointManagerSingleZoneCooling);
+    REGISTER_CONSTRUCTOR(SetpointManagerSingleZoneHeating);
     REGISTER_CONSTRUCTOR(SetpointManagerSingleZoneHumidityMaximum);
     REGISTER_CONSTRUCTOR(SetpointManagerSingleZoneHumidityMinimum);
     REGISTER_CONSTRUCTOR(SetpointManagerSingleZoneOneStageCooling);
@@ -912,6 +922,8 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(SetpointManagerOutdoorAirReset);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerScheduled);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerScheduledDualSetpoint);
+    REGISTER_COPYCONSTRUCTORS(SetpointManagerSingleZoneCooling);
+    REGISTER_COPYCONSTRUCTORS(SetpointManagerSingleZoneHeating);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerSingleZoneHumidityMaximum);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerSingleZoneHumidityMinimum);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerSingleZoneOneStageCooling);
