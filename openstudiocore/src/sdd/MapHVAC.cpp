@@ -6923,16 +6923,15 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateThrm
    tes.setSourceSideOutletHeight(value);
   }
 
-  text = tesElement.firstChildElement("TankShape").text().toStdString();
-  if( istringEqual("Rectangular",text) ) {
-    tes.setTankShape("Other");
+  text = tesElement.firstChildElement("TankShapeSim").text().toStdString();
+  tes.setTankShape(text);
+  if( istringEqual("Other",text) ) {
     value = tesElement.firstChildElement("TankPerim").text().toDouble(&ok);
     if( ok ) {
       value = unitToUnit(value,"ft","m").get();
       tes.setTankPerimeter(value);
     }
   } else {
-    tes.setTankShape(text);
     tes.resetTankPerimeter();
   }
 
