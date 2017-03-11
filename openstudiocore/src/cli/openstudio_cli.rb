@@ -43,7 +43,7 @@ end
 
 require 'logger'
 require 'optparse'
-require 'irb'
+
 #include OpenStudio::Workflow::Util::IO
 
 $argv = ARGV.dup
@@ -446,13 +446,20 @@ def parse_main_args(main_args)
   end
 
   # remove any embedded gems that are also found on disk with equal or higher version but compatible major version
+  user_gems_to_remove = []
   embedded_gems.each do |spec|
     remove = false
     user_gems.each do |s| 
       if s.name == spec.name
         if s.version > spec.version
-          $logger.debug "Found system gem #{s.name} #{s.version}, overrides embedded gem"
-          remove = true
+          # only allow higher versions with compatible major version
+          if s.version.to_s.split('.').first == spec.version.to_s.split('.').first
+            $logger.debug "Found system gem #{s.name} #{s.version}, overrides embedded gem"
+            remove = true
+          else
+            $logger.debug "Ignoring system gem #{s.name} #{s.version}, incompatible with embedded gem"
+            user_gems_to_remove << s
+          end
         elsif s.version == spec.version
           $logger.debug "Found system gem #{s.name} #{s.version}, overrides embedded gem"
           remove = true
@@ -467,6 +474,8 @@ def parse_main_args(main_args)
       Gem::Specification.remove_spec(spec)
     end
   end
+  
+  user_gems_to_remove.uniq.each {|s| Gem::Specification.remove_spec(s)}
 
   # activate remaining embedded gems
   Gem::Specification.each do |spec|
@@ -530,13 +539,13 @@ class CLI
   def command_list
     {
         run: [ Proc.new { ::Run }, {primary: true, working: true}],
-        #apply_measure: [ Proc.new { ::ApplyMeasure }, {primary: true, working: false}],
+        #apply_measure: [ Proc.new { ::ApplyMeasure }, {primary: true, working: false}], # DLM: remove, can do this with run
         gem_list: [ Proc.new { ::GemList }, {primary: false, working: true}],
-        #gem_install: [ Proc.new { ::InstallGem }, {primary: false, working: false}],
+        #gem_install: [ Proc.new { ::InstallGem }, {primary: false, working: false}], # DLM: needs Ruby built with FFI
         measure: [ Proc.new { ::Measure }, {primary: true, working: false}],
         update: [ Proc.new { ::Update }, {primary: true, working: false}],
         execute_ruby_script: [ Proc.new { ::ExecuteRubyScript }, {primary: false, working: true}],
-        interactive_ruby: [ Proc.new { ::InteractiveRubyShell }, {primary: false, working: true}],
+        #interactive_ruby: [ Proc.new { ::InteractiveRubyShell }, {primary: false, working: false}], # DLM: not working
         openstudio_version: [ Proc.new { ::OpenStudioVersion }, {primary: true, working: true}],
         energyplus_version: [ Proc.new { ::EnergyPlusVersion }, {primary: true, working: true}],
         ruby_version: [ Proc.new { ::RubyVersion }, {primary: false, working: true}],
@@ -723,12 +732,14 @@ class Run
     # Parse the options
     argv = parse_options(opts, sub_argv)
     return 0 if argv == nil
+    
+    $logger.debug("Run command: #{argv.inspect} #{options.inspect}")
+    
     unless argv == []
       $logger.error 'Extra arguments passed to the run command. Please refer to the help documentation.'
       return 1
     end
-    $logger.debug("Run command: #{argv.inspect} #{options.inspect}")
-
+    
     if options[:post_process] && options[:no_simulation]
       $logger.error 'Both the -m and -p flags were set, which is an invalid combination.'
       return 1
@@ -810,8 +821,11 @@ class ApplyMeasure
   # @abstract
   #
   def execute(sub_argv)
-    # options = {}
-    # options[:debug] = false
+  
+    $logger.info "ApplyMeasure, sub_argv = #{sub_argv}"
+  
+    options = {}
+    #options[:debug] = false
 
     # opts = OptionParser.new do |o|
     #   o.banner = 'Usage: openstudio apply_measure'
@@ -824,9 +838,12 @@ class ApplyMeasure
 
     # Parse the options
     argv = parse_options(opts, sub_argv)
+    return 0 if argv == nil
+    
+    $logger.debug("ApplyMeasure command: #{argv.inspect} #{options.inspect}")
+    
     return 1 unless argv
     require 'openstudio-workflow'
-    # $logger.debug("ApplyMeasure command: #{argv.inspect} #{options.inspect}")
 
     1
   end
@@ -849,12 +866,18 @@ class GemList
     require 'rubygems'
     
     $logger.info "GemList, sub_argv = #{sub_argv}"
+    
+    options = {}
 
     # Parse the options
     opts = OptionParser.new do |o|
       o.banner = 'Usage: openstudio gem_list'
     end
     argv = parse_options(opts, sub_argv)
+    return 0 if argv == nil
+    
+    $logger.debug("GemList command: #{argv.inspect} #{options.inspect}")
+    
     unless argv == []
       $logger.error 'Extra arguments passed to the gem_list command. Please refer to the help documentation.'
       return 1
@@ -906,6 +929,8 @@ class InstallGem
     require 'rubygems/commands/install_command'
     
     $logger.info "InstallGem, sub_argv = #{sub_argv}"
+    
+    options = {}
 
     # Parse the options
     opts = OptionParser.new do |o|
@@ -918,6 +943,8 @@ class InstallGem
     # Parse the options
     argv = parse_options(opts, sub_argv)
     return 0 if argv == nil
+    
+    $logger.debug("InstallGem command: #{argv.inspect} #{options.inspect}")
     
     if argv == []
       $logger.error 'No gem name provided' 
@@ -981,10 +1008,12 @@ class Measure
     options[:compute_arguments] = nil
     
     directory = nil
-    unless (sub_argv[0] == '-s' || sub_argv[0] == '--start_server')
-      directory = sub_argv.pop
-      $logger.debug("Directory to examine is #{directory}")
-      $logger.debug("Remaining args are #{sub_argv}")
+    if sub_argv.size > 1
+      unless (sub_argv[0] == '-s' || sub_argv[0] == '--start_server')
+        directory = sub_argv.pop
+        $logger.debug("Directory to examine is #{directory}")
+        $logger.debug("Remaining args are #{sub_argv}")
+      end
     end
 
     opts = OptionParser.new do |o|
@@ -1013,6 +1042,8 @@ class Measure
     argv = parse_options(opts, sub_argv)
     return 0 if argv == nil
     
+    $logger.debug("Measure command: #{argv.inspect} #{options.inspect}")
+    
     if !options[:start_server]
       if directory.nil?
         $logger.error 'No directory provided' 
@@ -1020,8 +1051,7 @@ class Measure
       end
       directory = File.expand_path(directory)
     end
-
-    $logger.debug("Measure command: #{argv.inspect} #{options.inspect}")
+    
     $logger.debug("Directory to examine is #{directory}")
 
     if options[:update_all]
@@ -1165,13 +1195,14 @@ class Update
     argv = parse_options(opts, sub_argv)
     return 0 if argv == nil
     
+    $logger.debug("Measure command: #{argv.inspect} #{options.inspect}")
+    
     if argv == []
       $logger.error 'No path provided' 
       return 1
     end
     path = File.expand_path(argv[0])
 
-    $logger.debug("Measure command: #{argv.inspect} #{options.inspect}")
     $logger.debug("Path to examine is #{path}")
     
     paths = []
@@ -1230,8 +1261,16 @@ class ExecuteRubyScript
     opts = OptionParser.new do |o|
       o.banner = 'Usage: openstudio execute_ruby_script file [arguments}'
     end
+    
+    if sub_argv.size == 1
+      if sub_argv[0] == '-h' || sub_argv[0] == '--help' 
+        safe_puts(opts.help)
+        return 0
+      end
+    end
 
     # Parse the options
+    # DLM: don't do argument parsing as in other commands since we want to pass the remaining arguments to the ruby script
     return 0 if sub_argv == nil
     return 1 unless sub_argv
     $logger.debug("ExecuteRubyScript command: #{sub_argv.inspect}")
@@ -1271,7 +1310,8 @@ class InteractiveRubyShell
   # @return [Fixnum] Return status
   #
   def execute(sub_argv)
-  
+    require 'irb'
+    
     $logger.info "InteractiveRubyShell, sub_argv = #{sub_argv}"
     
     options = {}
@@ -1282,8 +1322,9 @@ class InteractiveRubyShell
 
     # Parse the options
     argv = parse_options(opts, sub_argv)
-    $logger.debug("InteractiveRubyShell command: #{argv.inspect} #{options.inspect}")
     return 0 if argv == nil
+    
+    $logger.debug("InteractiveRubyShell command: #{argv.inspect} #{options.inspect}")
 
     unless argv == []
       $logger.error 'Extra arguments passed to the i command.'
@@ -1321,8 +1362,9 @@ class OpenStudioVersion
 
     # Parse the options
     argv = parse_options(opts, sub_argv)
-    $logger.debug("OpenStudioVersion command: #{argv.inspect} #{options.inspect}")
     return 0 if argv == nil
+    
+    $logger.debug("OpenStudioVersion command: #{argv.inspect} #{options.inspect}")
 
     unless argv == []
       $logger.error 'Extra arguments passed to the openstudio_version command.'
@@ -1360,8 +1402,9 @@ class EnergyPlusVersion
 
     # Parse the options
     argv = parse_options(opts, sub_argv)
-    $logger.debug("EnergyPlusVersion command: #{argv.inspect} #{options.inspect}")
     return 0 if argv == nil
+    
+    $logger.debug("EnergyPlusVersion command: #{argv.inspect} #{options.inspect}")
 
     unless argv == []
       $logger.error 'Arguments passed to the energyplus_version command.'
@@ -1399,8 +1442,9 @@ class RubyVersion
 
     # Parse the options
     argv = parse_options(opts, sub_argv)
-    $logger.debug("RubyVersion command: #{argv.inspect} #{options.inspect}")
     return 0 if argv == nil
+    
+    $logger.debug("RubyVersion command: #{argv.inspect} #{options.inspect}")
 
     unless argv == []
       $logger.error 'Arguments passed to the ruby_version command.'
@@ -1439,8 +1483,9 @@ class ListCommands
 
     # Parse the options
     argv = parse_options(opts, sub_argv)
-    $logger.debug("ListCommands command: #{argv.inspect} #{options.inspect}")
     return 0 if argv == nil
+    
+    $logger.debug("ListCommands command: #{argv.inspect} #{options.inspect}")
 
     unless argv == []
       $logger.error 'Arguments passed to the list_commands command.'
@@ -1467,4 +1512,8 @@ end
 
 # Execute the CLI interface, and exit with the proper error code
 $logger.info "Executing argv: #{ARGV}"
-CLI.new(ARGV).execute
+result = CLI.new(ARGV).execute
+
+if result != 0
+  exit(result)
+end
