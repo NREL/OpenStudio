@@ -589,7 +589,14 @@ namespace openstudio {
             // only people have activity schedules, so this effectively gives us only
             // the People objects while inserting blanks for those which are not people,
             // which is what we want
-            retval.push_back(boost::optional<model::ModelObject>(l.optionalCast<model::People>()));
+            if (l.optionalCast<model::People>())
+            {
+              retval.push_back(boost::optional<model::ModelObject>(std::move(l)));
+            }
+            else 
+            {
+              retval.emplace_back();
+            }
           }
           return retval;
         }
@@ -850,6 +857,7 @@ namespace openstudio {
           if (o)
           {
             o->resetMultiplier();
+            return;
           }
 
           // Should never get here
@@ -1072,7 +1080,7 @@ namespace openstudio {
 
           if (boost::optional<model::People> p = l->optionalCast<model::People>())
           {
-            return  p->isActivityLevelScheduleDefaulted();
+            return  p->isNumberofPeopleScheduleDefaulted();
           }
           else if (boost::optional<model::Lights> light = l->optionalCast<model::Lights>())
           {
