@@ -1521,6 +1521,10 @@ cpack_ifw_configure_component(OpenStudioApp
   SCRIPT src/openstudio_app/install_operations.qs
 )
 
+cpack_ifw_configure_component(ResultsViewer
+  SCRIPT src/resultsviewer/install_operations.qs
+)
+
 cpack_ifw_configure_component(CLI
   SCRIPT src/cli/install_operations.qs
 )

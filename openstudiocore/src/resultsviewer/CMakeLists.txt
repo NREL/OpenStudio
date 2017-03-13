@@ -130,97 +130,71 @@ if( APPLE )
     COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:Qt5::QCocoaIntegrationPlugin> $<TARGET_FILE_DIR:${target_name}>/platforms/ )
 endif()
 
-#--------------------------------------------------------------------------------
-# Now the installation stuff below
-#--------------------------------------------------------------------------------
-set(plugin_dest_dir bin)
-set(rvdoc_dest_dir doc)
-set(APPS "\${CMAKE_INSTALL_PREFIX}/bin/ResultsViewer")
+#------------------------------------------------------------------------------
+# Installation
+#------------------------------------------------------------------------------
 if(APPLE)
   set_target_properties(${target_name} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_BINARY_DIR}/Info.plist)
   set(plugin_dest_dir ResultsViewer.app/Contents/MacOS)
   set(APPS "\${CMAKE_INSTALL_PREFIX}/ResultsViewer.app")
-  set(rvdoc_dest_dir ResultsViewer.app/Contents/doc)
-endif()
-if(WIN32)
+elseif(WIN32)
+  set(plugin_dest_dir bin)
   set(APPS "\${CMAKE_INSTALL_PREFIX}/bin/ResultsViewer.exe")
+else()
+  set_target_properties(${target_name} PROPERTIES INSTALL_RPATH "$ORIGIN/.")
+  set(plugin_dest_dir bin)
+  set(APPS "\${CMAKE_INSTALL_PREFIX}/bin/ResultsViewer")
 endif()
 
-if(UNIX AND NOT APPLE)
-  set(rvdoc_dest_dir share/doc/openstudio/resultsviewer)
+if( APPLE )
+  install(TARGETS ${target_name}
+    DESTINATION .
+    COMPONENT "ResultsViewer"
+  )
+else()
+  install(TARGETS ${target_name}
+    DESTINATION bin
+    COMPONENT "ResultsViewer"
+  )
 endif()
-
-#--------------------------------------------------------------------------------
-# Install the QtTest application, on Apple, the bundle is at the root of the
-# install tree, and on other platforms it'll go into the bin directory.
-install(TARGETS ResultsViewer
-  BUNDLE DESTINATION .
-  RUNTIME DESTINATION bin
-)
-
-
-# Linux desktop integration
-if(UNIX AND NOT APPLE AND "${CMAKE_INSTALL_PREFIX}" STREQUAL "/usr/local")
-  # Install .desktop file
-  configure_file(ResultsViewer.desktop.in ${CMAKE_CURRENT_BINARY_DIR}/ResultsViewer.desktop)
-  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/ResultsViewer.desktop DESTINATION ../share/applications)
-
-  # Install icons
-  install(FILES ../../icons/rv_32.png DESTINATION ../share/pixmaps RENAME ResultsViewer.png)
-
-  install(FILES ../../icons/rv_16.png DESTINATION ../share/icons/hicolor/16x16/apps RENAME ResultsViewer.png)
-  install(FILES ../../icons/rv_32.png DESTINATION ../share/icons/hicolor/32x32/apps RENAME ResultsViewer.png)
-  install(FILES ../../icons/rv_48.png DESTINATION ../share/icons/hicolor/48x48/apps RENAME ResultsViewer.png)
-  install(FILES ../../icons/rv_128.png DESTINATION ../share/icons/hicolor/128x128/apps RENAME ResultsViewer.png)
-  install(FILES ../../icons/rv_256.png DESTINATION ../share/icons/hicolor/256x256/apps RENAME ResultsViewer.png)
-endif()
-
-#--------------------------------------------------------------------------------
-# Use BundleUtilities to get all other dependencies for the application to work.
-# It takes a bundle or executable along with possible plugins and inspects it
-# for dependencies.  If they are not system dependencies, they are copied.
 
 # directories to look for dependencies
-set(DIRS ${QT_LIBRARY_DIR} ${LIBRARY_SEARCH_DIRECTORY})
+# This is probably out of date
+set(DIRS "${CMAKE_BINARY_DIR}/Products" "${CMAKE_BINARY_DIR}/Products/Release" "${QT_INSTALL_DIR}/bin" "${QT_INSTALL_DIR}/lib" "${RUBY_INSTALL_DIR}/bin")
 
-if(APPLE OR WIN32)
-
+# since on apple the whole app bundle is installed (including these webkit components) we can exclude apple
+if( NOT APPLE )
+  #install(FILES ${icudtl} DESTINATION bin COMPONENT ResultsViewer )
   if(WIN32)
-    get_target_property(QPA_PLUGIN Qt5::QWindowsIntegrationPlugin LOCATION)
-    if(${Qt5Widgets_VERSION} VERSION_LESS "5.3.2")
-      # Qt does not populate the windows print plugin property on 5.3.1 and earlier, so we have to do this manually
-      get_filename_component(QPA_PATH ${QPA_PLUGIN} DIRECTORY)
-      set(PRINT_PLUGIN "${QPA_PATH}/../printsupport/windowsprintersupport.dll")
-    else()
-      get_target_property(PRINT_PLUGIN Qt5::QWindowsPrinterSupportPlugin LOCATION)
-    endif()
-  elseif(APPLE)
-    get_target_property(QPA_PLUGIN Qt5::QCocoaIntegrationPlugin LOCATION)
-    # Qt does not create a mac print module in CMake, so we have to do this manually
-    get_filename_component(QPA_PATH ${QPA_PLUGIN} DIRECTORY)
-    set(PRINT_PLUGIN "${QPA_PATH}/../printsupport/libcocoaprintersupport.dylib")
+    install(PROGRAMS $<TARGET_FILE:Qt5::QWindowsIntegrationPlugin> DESTINATION bin/platforms/ COMPONENT ResultsViewer)
+    install(PROGRAMS $<TARGET_FILE:Qt5::QSQLiteDriverPlugin> DESTINATION bin/sqldrivers/ COMPONENT ResultsViewer)
+  elseif(UNIX)
+    install(PROGRAMS $<TARGET_FILE_DIR:${target_name}>/platforms/$<TARGET_FILE_NAME:Qt5::QXcbIntegrationPlugin> DESTINATION bin/platforms/ COMPONENT ResultsViewer)
+    install(PROGRAMS $<TARGET_FILE_DIR:${target_name}>/xcbglintegrations/$<TARGET_FILE_NAME:Qt5::QXcbGlxIntegrationPlugin> DESTINATION bin/xcbglintegrations/ COMPONENT ResultsViewer)
+    install(PROGRAMS $<TARGET_FILE_DIR:${target_name}>/sqldrivers/$<TARGET_FILE_NAME:Qt5::QSQLiteDriverPlugin> DESTINATION bin/sqldrivers/ COMPONENT ResultsViewer)
+    install(PROGRAMS $<TARGET_FILE_DIR:${target_name}>/libQt5XcbQpa.so.5 DESTINATION bin/ COMPONENT ResultsViewer)
+    
+    foreach(LIB ${QT_LIBS})
+      install(PROGRAMS $<TARGET_FILE_DIR:${target_name}>/$<TARGET_SONAME_FILE_NAME:${LIB}> DESTINATION bin/ COMPONENT ResultsViewer)
+    endforeach()
+    
+    #foreach(LIB ${QT_WEB_LIBS})
+    #  install(PROGRAMS $<TARGET_FILE_DIR:${target_name}>/$<TARGET_SONAME_FILE_NAME:${LIB}> DESTINATION bin/ COMPONENT OpenStudioApp)
+    #endforeach()
   endif()
+endif()
 
-  install(PROGRAMS "${QPA_PLUGIN}"
-          DESTINATION "${plugin_dest_dir}/platforms/"
-  )
-  install(PROGRAMS "${PRINT_PLUGIN}"
-          DESTINATION "${plugin_dest_dir}/printsupport/"
-  )
-
-  get_filename_component(QPA_PLUGIN_NAME "${QPA_PLUGIN}" NAME)
-  get_filename_component(PRINT_PLUGIN_NAME "${PRINT_PLUGIN}" NAME)
-
-  list(APPEND QTPLUGINS
-    "\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/platforms/${QPA_PLUGIN_NAME}"
-    "\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/printsupport/${PRINT_PLUGIN_NAME}"
-  )
-
+if( APPLE )
+  list(APPEND QTPLUGINS "\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/platforms/libqcocoa.dylib")
+  list(APPEND QTPLUGINS "\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/sqldrivers/libqsqlite.dylib")
+  #install(PROGRAMS ${QtWebEngineProcess} DESTINATION ResultsViewer.app/Contents/MacOS/ COMPONENT ResultsViewer )
+  #list(APPEND QTPLUGINS "\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/QtWebEngineProcess")
 endif()
 
 if(WIN32 OR APPLE)
   install(CODE "
     include(BundleUtilities)
+    include(\"${CMAKE_SOURCE_DIR}/CMake/FixupBundleOverrides.cmake\")
     fixup_bundle(\"${APPS}\" \"${QTPLUGINS}\" \"${DIRS}\")
-  ")
+    " COMPONENT "ResultsViewer" )
 endif()
