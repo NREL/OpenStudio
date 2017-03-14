@@ -1526,54 +1526,54 @@ cpack_add_component(Resources
 cpack_ifw_configure_component(SketchUpPlugin
   DEPENDS Resources
   SCRIPT sketchup_plugin/install_operations.qs
-  RequiresAdminRights
+  REQUIRES_ADMIN_RIGHTS
 )
 
 cpack_ifw_configure_component(CLI
   SCRIPT src/cli/install_operations.qs
-  RequiresAdminRights
+  REQUIRES_ADMIN_RIGHTS
 )
 
 cpack_ifw_configure_component(RubyAPI
-  RequiresAdminRights
+  REQUIRES_ADMIN_RIGHTS
 )
 
 cpack_ifw_configure_component(CSharpAPI
-  RequiresAdminRights
+  REQUIRES_ADMIN_RIGHTS
 )
 
 cpack_ifw_configure_component(PAT
   DEPENDS CLI RubyAPI
   SCRIPT pat/install_operations.qs
-  RequiresAdminRights
+  REQUIRES_ADMIN_RIGHTS
 )
 
 cpack_ifw_configure_component(OpenStudioApp
   DEPENDS Resources CLI
   SCRIPT src/openstudio_app/install_operations.qs
-  RequiresAdminRights
+  REQUIRES_ADMIN_RIGHTS
 )
 
 cpack_ifw_configure_component(ResultsViewer
   SCRIPT src/resultsviewer/install_operations.qs
-  RequiresAdminRights
+  REQUIRES_ADMIN_RIGHTS
 )
 
 cpack_ifw_configure_component(EnergyPlus
-  RequiresAdminRights
+  REQUIRES_ADMIN_RIGHTS
 )
 
 cpack_ifw_configure_component(Radiance
-  RequiresAdminRights
+  REQUIRES_ADMIN_RIGHTS
 )
 
 cpack_ifw_configure_component(Resources
-  RequiresAdminRights
+  REQUIRES_ADMIN_RIGHTS
 )
 
 cpack_ifw_configure_component(Unspecified
   SCRIPT src/install_utility/install_operations.qs
-  RequiresAdminRights
+  REQUIRES_ADMIN_RIGHTS
 )
 
 if( BUILD_NUGET_PACKAGE )
