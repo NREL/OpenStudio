@@ -73,7 +73,7 @@ TEST_F(OpenStudioAppFixture, Resources_Templates)
 
     // uncomment this to save the version translated file to the original path
     // DO NOT leave this in the test execution when you commit!
-    model->save(path, true);
+    //model->save(path, true);
   }
 }
 
@@ -89,5 +89,5 @@ TEST_F(OpenStudioAppFixture, Resources_HVACLibrary)
 
   // uncomment this to save the version translated file to the original path
   // DO NOT leave this in the test execution when you commit!
-  model->save(hvacPath, true);
+  //model->save(hvacPath, true);
 }
