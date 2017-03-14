@@ -6997,10 +6997,15 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateThrm
     tes.setSourceSideAvailabilitySchedule(schedule.get());
   }
 
-  tes.setSourceSideInletHeight(0.0);
+  auto numberOfNodes = tesElement.firstChildElement("TankNodeCnt").text().toInt(&ok);
+  if( ok ) {
+    tes.setNumberofNodes(numberOfNodes);
+  } else {
+    tes.setNumberofNodes(5);
+  }
 
+  tes.setSourceSideInletHeight(0.0);
   tes.setInletMode("Fixed");
-  tes.setNumberofNodes(10);
   tes.setAdditionalDestratificationConductivity(0.0);
 
   return result;
