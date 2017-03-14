@@ -1503,6 +1503,11 @@ cpack_add_component(OpenStudioApp
   DESCRIPTION "OpenStudio Application"
 )
 
+cpack_add_component(ResultsViewer
+  DISPLAY_NAME "ResultsViewer"
+  DESCRIPTION "ResultsViewer"
+)
+
 cpack_add_component(EnergyPlus
   DISPLAY_NAME "EnergyPlus"
   DESCRIPTION "Minimal EnergyPlus installation"
@@ -1518,31 +1523,57 @@ cpack_add_component(Resources
   DESCRIPTION "Resource Files used by the OpenStudio Application and SketchUp Plugin"
 )
 
-cpack_ifw_configure_component(OpenStudioApp
-  DEPENDS Resources CLI
-  SCRIPT src/openstudio_app/install_operations.qs
-)
-
-cpack_ifw_configure_component(ResultsViewer
-  SCRIPT src/resultsviewer/install_operations.qs
+cpack_ifw_configure_component(SketchUpPlugin
+  DEPENDS Resources
+  SCRIPT sketchup_plugin/install_operations.qs
+  RequiresAdminRights
 )
 
 cpack_ifw_configure_component(CLI
   SCRIPT src/cli/install_operations.qs
+  RequiresAdminRights
 )
 
-cpack_ifw_configure_component(SketchUpPlugin
-  DEPENDS Resources
-  SCRIPT sketchup_plugin/install_operations.qs
+cpack_ifw_configure_component(RubyAPI
+  RequiresAdminRights
 )
 
-cpack_ifw_configure_component(Unspecified
-  SCRIPT src/install_utility/install_operations.qs
+cpack_ifw_configure_component(CSharpAPI
+  RequiresAdminRights
 )
 
 cpack_ifw_configure_component(PAT
   DEPENDS CLI RubyAPI
   SCRIPT pat/install_operations.qs
+  RequiresAdminRights
+)
+
+cpack_ifw_configure_component(OpenStudioApp
+  DEPENDS Resources CLI
+  SCRIPT src/openstudio_app/install_operations.qs
+  RequiresAdminRights
+)
+
+cpack_ifw_configure_component(ResultsViewer
+  SCRIPT src/resultsviewer/install_operations.qs
+  RequiresAdminRights
+)
+
+cpack_ifw_configure_component(EnergyPlus
+  RequiresAdminRights
+)
+
+cpack_ifw_configure_component(Radiance
+  RequiresAdminRights
+)
+
+cpack_ifw_configure_component(Resources
+  RequiresAdminRights
+)
+
+cpack_ifw_configure_component(Unspecified
+  SCRIPT src/install_utility/install_operations.qs
+  RequiresAdminRights
 )
 
 if( BUILD_NUGET_PACKAGE )
