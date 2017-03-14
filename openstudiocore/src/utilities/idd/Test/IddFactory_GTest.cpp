@@ -220,6 +220,7 @@ TEST_F(IddFixture,IddFactory_Units) {
   unsupported.push_back(boost::regex("hh:mm"));
   unsupported.push_back(boost::regex("percent"));
   unsupported.push_back(boost::regex("ppm"));
+  unsupported.push_back(boost::regex("W/\\(\\(m3/s\\)-Pa\\)"));
 
   IddObjectVector objects = IddFactory::instance().getObjects(IddFileType(IddFileType::WholeFactory));
   StringSet goodUnits;
@@ -253,7 +254,7 @@ TEST_F(IddFixture,IddFactory_Units) {
         }
 
         siUnit = field.getUnits(false);
-        EXPECT_TRUE(siUnit || field.unitsBasedOnOtherField()) << object.name() << " field: " << field.name();
+        EXPECT_TRUE(siUnit || field.unitsBasedOnOtherField()) << object.name() << ", field: " << field.name() << ", unit: " << *iddUnits;
         if (siUnit) {
           // could just return junk unit. if not junk, quantity will be convertible
           // to UnitSystem::SI.
