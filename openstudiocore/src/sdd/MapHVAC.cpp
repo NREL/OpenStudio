@@ -5954,6 +5954,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     dischargingScheme.setName(plantLoop.nameString() + " TES Discharging Scheme");
     // Need to make sure that each chiller is allowed for discharge
     // Remove it from the scheme if not enabled for discharge
+    // (We will readd it after the storage)
     for( const auto & chillerItem : enableOnThrmlEngyStorDischargeMap ) {
       if( ! chillerItem.second ) {
         dischargingScheme.removeEquipment(chillerItem.first.cast<model::HVACComponent>());
@@ -5967,6 +5968,13 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
       auto equipment = dischargingScheme.equipment(upperLimit);
       equipment.insert(equipment.begin(),thermalStorage.get());
       dischargingScheme.replaceEquipment(upperLimit,equipment);
+    }
+
+    // Add / readd the disabled chillers after the storage
+    for( const auto & chillerItem : enableOnThrmlEngyStorDischargeMap ) {
+      if( ! chillerItem.second ) {
+        dischargingScheme.addEquipment(chillerItem.first.cast<model::HVACComponent>());
+      }
     }
 
     if( tesSchedule ) {
@@ -6342,13 +6350,13 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translatePump
     totHd = value * 2989.067;
   }
 
-  QDomElement flowCapElement = pumpElement.firstChildElement("FlowCap");
+  QDomElement flowCapElement = pumpElement.firstChildElement("FlowCapSim");
   value = flowCapElement.text().toDouble(&ok);
   if( ok ) {
     flowCap = unitToUnit(value, "gal/min", "m^3/s").get();
   }
 
-  QDomElement pwrElement = pumpElement.firstChildElement("Pwr");
+  QDomElement pwrElement = pumpElement.firstChildElement("PwrSim");
   value = pwrElement.text().toDouble(&ok);
   if( ok ) {
     // kW to W
@@ -6419,7 +6427,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translatePump
     }
     else
     {
-      QDomElement flowMinElement = pumpElement.firstChildElement("FlowMin");
+      QDomElement flowMinElement = pumpElement.firstChildElement("FlowMinSim");
       value = flowMinElement.text().toDouble(&ok);
       if( ok ) {
         auto flowMin = unitToUnit(value, "gal/min", "m^3/s").get();
@@ -6550,7 +6558,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateBoil
 
   // ParasiticLd
   
-  QDomElement parasiticLdElement = boilerElement.firstChildElement("ParasiticLd");
+  QDomElement parasiticLdElement = boilerElement.firstChildElement("ParasiticLdSim");
 
   bool ok;
 
@@ -6565,7 +6573,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateBoil
   {
     // CapRtd
     boost::optional<double> capRtd;
-    QDomElement capRtdElement = boilerElement.firstChildElement("CapRtd");
+    QDomElement capRtdElement = boilerElement.firstChildElement("CapRtdSim");
     double value = capRtdElement.text().toDouble(&ok);
     if( ok )
     {
@@ -6679,7 +6687,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
 
     if( ! autosize() )
     {
-      QDomElement airFlowCapElement = htRejElement.firstChildElement("AirFlowCap");
+      QDomElement airFlowCapElement = htRejElement.firstChildElement("AirFlowCapSim");
 
       value = airFlowCapElement.text().toDouble(&ok);
       if( ok )
@@ -6687,7 +6695,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
         tower.setDesignAirFlowRate(unitToUnit(value,"cfm","m^3/s").get());
       }
       
-      QDomElement wtrFlowCapElement = htRejElement.firstChildElement("WtrFlowCap");
+      QDomElement wtrFlowCapElement = htRejElement.firstChildElement("WtrFlowCapSim");
 
       value = wtrFlowCapElement.text().toDouble(&ok);
       if( ok )
@@ -6695,7 +6703,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
         tower.setDesignWaterFlowRate(unitToUnit(value, "gal/min", "m^3/s").get());
       }
 
-      QDomElement totFanHPElement = htRejElement.firstChildElement("TotFanHP");
+      QDomElement totFanHPElement = htRejElement.firstChildElement("TotFanHPSim");
 
       value = totFanHPElement.text().toDouble(&ok);
       if( ok )
@@ -6764,7 +6772,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
       tower.resetUFactorTimesAreaValueatFreeConvectionAirFlowRate();
 
       // CapRtd
-      QDomElement capRtdElement = htRejElement.firstChildElement("CapRtd");
+      QDomElement capRtdElement = htRejElement.firstChildElement("CapRtdSim");
       value = capRtdElement.text().toDouble(&ok);
 
       if( ok )
@@ -6775,7 +6783,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
         tower.setNominalCapacity(cap);
       }
 
-      QDomElement airFlowCapElement = htRejElement.firstChildElement("AirFlowCap");
+      QDomElement airFlowCapElement = htRejElement.firstChildElement("AirFlowCapSim");
 
       value = airFlowCapElement.text().toDouble(&ok);
       if( ok )
@@ -6783,7 +6791,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
         tower.setDesignAirFlowRate(unitToUnit(value,"cfm","m^3/s").get());
       }
       
-      QDomElement wtrFlowCapElement = htRejElement.firstChildElement("WtrFlowCap");
+      QDomElement wtrFlowCapElement = htRejElement.firstChildElement("WtrFlowCapSim");
 
       value = wtrFlowCapElement.text().toDouble(&ok);
       if( ok )
@@ -6791,7 +6799,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
         tower.setDesignWaterFlowRate(unitToUnit(value,"gal","m^3").get());
       }
 
-      QDomElement totFanHPElement = htRejElement.firstChildElement("TotFanHP");
+      QDomElement totFanHPElement = htRejElement.firstChildElement("TotFanHPSim");
 
       value = totFanHPElement.text().toDouble(&ok);
       if( ok )
@@ -6853,7 +6861,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHX(
       hx.setLoopSupplySideDesignFlowRate(value);
     }
 
-    auto uAElement = hxElement.firstChildElement("UA");
+    auto uAElement = hxElement.firstChildElement("UASim");
     value = uAElement.text().toDouble(&ok);
     if( ok ) {
       // sdd units = Btu/(hr*ft^2*F), os units = W/(m^2*K) 
@@ -6910,7 +6918,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateThrm
 
   tes.setName(name);
 
-  value = tesElement.firstChildElement("TStorCap").text().toDouble(&ok);
+  value = tesElement.firstChildElement("StorCap").text().toDouble(&ok);
   if( ok ) {
    value = unitToUnit(value,"gal","m^3").get();
    tes.setTankVolume(value);
@@ -6923,16 +6931,15 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateThrm
    tes.setSourceSideOutletHeight(value);
   }
 
-  text = tesElement.firstChildElement("TankShape").text().toStdString();
-  if( istringEqual("Rectangular",text) ) {
-    tes.setTankShape("Other");
+  text = tesElement.firstChildElement("TankShapeSim").text().toStdString();
+  tes.setTankShape(text);
+  if( istringEqual("Other",text) ) {
     value = tesElement.firstChildElement("TankPerim").text().toDouble(&ok);
     if( ok ) {
       value = unitToUnit(value,"ft","m").get();
       tes.setTankPerimeter(value);
     }
   } else {
-    tes.setTankShape(text);
     tes.resetTankPerimeter();
   }
 
@@ -6961,7 +6968,12 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateThrm
 
   value = tesElement.firstChildElement("TankUFac").text().toDouble(&ok);
   if( ok ) {
-    tes.setUniformSkinLossCoefficientperUnitAreatoAmbientTemperature(value * 0.5275);
+    // sdd units = Btu/(hr*ft^2*F), os units = W/(m^2*K) 
+    Quantity uaIP(value, BTUUnit(BTUExpnt(1,-2,-1,-1)));
+    auto uaSI = QuantityConverter::instance().convert(uaIP, UnitSystem(UnitSystem::Wh));
+    OS_ASSERT(uaSI);
+    OS_ASSERT(uaSI->units() == WhUnit(WhExpnt(1,0,-2,-1)));
+    tes.setUniformSkinLossCoefficientperUnitAreatoAmbientTemperature(uaSI->value());
   }
 
   tes.setUseSideHeatTransferEffectiveness(1.0);
@@ -6979,10 +6991,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateThrm
 
   tes.setUseSideOutletHeight(0.0);
 
-  value = tesElement.firstChildElement("FlowRtDsgn").text().toDouble(&ok);
+  value = tesElement.firstChildElement("WtrFlowCap").text().toDouble(&ok);
   if( ok ) {
     value = unitToUnit(value,"gal/min","m^3/s").get();
     tes.setUseSideDesignFlowRate(value);
+    tes.setSourceSideDesignFlowRate(value);
   }
 
   tes.setSourceSideHeatTransferEffectiveness(1.0);
@@ -6992,16 +7005,15 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateThrm
     tes.setSourceSideAvailabilitySchedule(schedule.get());
   }
 
-  tes.setSourceSideInletHeight(0.0);
-
-  value = tesElement.firstChildElement("FlowRtDsgn").text().toDouble(&ok);
+  auto numberOfNodes = tesElement.firstChildElement("TankNodeCnt").text().toInt(&ok);
   if( ok ) {
-    value = unitToUnit(value,"gal/min","m^3/s").get();
-    tes.setSourceSideDesignFlowRate(value);
+    tes.setNumberofNodes(numberOfNodes);
+  } else {
+    tes.setNumberofNodes(5);
   }
 
+  tes.setSourceSideInletHeight(0.0);
   tes.setInletMode("Fixed");
-  tes.setNumberofNodes(10);
   tes.setAdditionalDestratificationConductivity(0.0);
 
   return result;
@@ -7044,28 +7056,28 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateChil
     }
 
     if( ! autosize() ) {
-      auto capRtdElement = chillerElement.firstChildElement("CapRtd");
+      auto capRtdElement = chillerElement.firstChildElement("CapRtdSim");
       value = capRtdElement.text().toDouble(&ok);
       if( ok ) {
         value = unitToUnit(value,"Btu/h","W").get();
         chiller.setNominalCapacity(value);
       }
 
-      auto auxPwrElement = chillerElement.firstChildElement("AuxPwr");
+      auto auxPwrElement = chillerElement.firstChildElement("AuxPwrSim");
       value = auxPwrElement.text().toDouble(&ok);
       if( ok ) {
         value = unitToUnit(value,"Btu/h","W").get();
         chiller.setNominalPumpingPower(value);
       }
 
-      auto wtrFlowCapElement = chillerElement.firstChildElement("WtrFlowCap");
+      auto wtrFlowCapElement = chillerElement.firstChildElement("WtrFlowCapSim");
       value = wtrFlowCapElement.text().toDouble(&ok);
       if( ok ) {
         value = unitToUnit(value,"gal/min","m^3/s").get();
         chiller.setDesignChilledWaterFlowRate(value);
       }
 
-      auto genFluidFlowCapElement = chillerElement.firstChildElement("GenFluidFlowCap");
+      auto genFluidFlowCapElement = chillerElement.firstChildElement("GenFluidFlowCapSim");
       value = genFluidFlowCapElement.text().toDouble(&ok);
       if( ok ) {
         value = unitToUnit(value,"gal/min","m^3/s").get();
@@ -7258,7 +7270,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateChil
     if( ! autosize() ) {
       // CapRtd
       boost::optional<double> capRtd;
-      QDomElement capRtdElement = chillerElement.firstChildElement("CapRtd");
+      QDomElement capRtdElement = chillerElement.firstChildElement("CapRtdSim");
       value = capRtdElement.text().toDouble(&ok);
       if( ok ) {
         capRtd = unitToUnit(value,"Btu/h","W");
@@ -7355,7 +7367,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
       heatPump.addToThermalZone(zone.get());
     }
 
-    value = element.firstChildElement("FanFlowCap").text().toDouble(&ok);
+    value = element.firstChildElement("FanFlowCapSim").text().toDouble(&ok);
     if( ok ) {
       value = unitToUnit(value,"cfm","m^3/s").get();
       heatPump.setEvaporatorAirFlowRate(value);
@@ -7382,7 +7394,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
     waterHeater.setSourceSideEffectiveness(1.0);
     waterHeater.setIndirectWaterHeatingRecoveryTime(1.5);
 
-    value = element.firstChildElement("StorCap").text().toDouble(&ok);
+    value = element.firstChildElement("StorCapSim").text().toDouble(&ok);
     if( ok ) {
       waterHeater.setTankVolume(unitToUnit(value,"gal","m^3").get());
     }
@@ -7440,7 +7452,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
   	  }
 		}
 
-    value = element.firstChildElement("OffCyclePrstcLoss").text().toDouble(&ok);
+    value = element.firstChildElement("OffCyclePrstcLossSim").text().toDouble(&ok);
     if( ok ) {
 			waterHeater.setOffCycleParasiticFuelConsumptionRate(value);
 		}
@@ -7450,7 +7462,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
 
 		waterHeater.setOffCycleParasiticHeatFractiontoTank(0.8);
 
-    value = element.firstChildElement("OnCyclePrstcLoss").text().toDouble(&ok);
+    value = element.firstChildElement("OnCyclePrstcLossSim").text().toDouble(&ok);
     if( ok ) {
 			waterHeater.setOnCycleParasiticFuelConsumptionRate(value);
 		}
@@ -7460,14 +7472,14 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
 
 		waterHeater.setOnCycleParasiticHeatFractiontoTank(0.0);
 
-    value = element.firstChildElement("TankOffCycleLossCoef").text().toDouble(&ok);
+    value = element.firstChildElement("TankOffCycleLossCoefSim").text().toDouble(&ok);
     if( ok ) {
       waterHeater.setOffCycleLossCoefficienttoAmbientTemperature(value * 0.5275);
     }
 
     waterHeater.setOffCycleLossFractiontoThermalZone(1.0);
 
-    text = element.firstChildElement("TankOnCycleLossCoef").text().toStdString();
+    text = element.firstChildElement("TankOnCycleLossCoefSim").text().toStdString();
     if( ok ) {
       waterHeater.setOnCycleLossCoefficienttoAmbientTemperature(value * 0.5275);
     }
@@ -7482,12 +7494,12 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
       coil.setRatedCOP(value);
     }
 
-    value = element.firstChildElement("CndsrPumpPwr").text().toDouble(&ok);
+    value = element.firstChildElement("CndsrPumpPwrSim").text().toDouble(&ok);
     if( ok ) {
       coil.setCondenserWaterPumpPower(value);
     }
 
-    value = element.firstChildElement("CrankcaseHtrCap").text().toDouble(&ok);
+    value = element.firstChildElement("CrankcaseHtrCapSim").text().toDouble(&ok);
     if( ok ) {
       coil.setCrankcaseHeaterCapacity(value);
     }
@@ -7555,12 +7567,12 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
     fan.setMotorInAirstreamFraction(1.0);
     fan.setEndUseSubcategory(" ");
 
-    value = element.firstChildElement("FanTotStaticPress").text().toDouble(&ok);
+    value = element.firstChildElement("FanTotStaticPressSim").text().toDouble(&ok);
     if( ok ) {
       fan.setPressureRise(value * 249.0889 );
     }
 
-    value = element.firstChildElement("FanFlowCap").text().toDouble(&ok);
+    value = element.firstChildElement("FanFlowCapSim").text().toDouble(&ok);
     if( ok ) {
 			value = unitToUnit(value,"cfm","m^3/s").get();
       fan.setMaximumFlowRate(value);
@@ -7569,11 +7581,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
 			coil.autosizeRatedEvaporatorAirFlowRate();
 			fan.autosizeMaximumFlowRate();
 		}
-
-    value = element.firstChildElement("FanTotStaticPress").text().toDouble(&ok);
-    if( ok ) {
-      fan.setPressureRise(value * 249.0889);
-    }
 
     return waterHeater;
   } else {
@@ -7612,7 +7619,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
 
     // StorCap
 
-    QDomElement wtrHtrStorCapElement = element.firstChildElement("StorCap");
+    QDomElement wtrHtrStorCapElement = element.firstChildElement("StorCapSim");
 
     double wtrHtrStorCap = wtrHtrStorCapElement.text().toDouble(&ok);
 
@@ -7645,7 +7652,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
 
     // OffCyclePrstcLoss
 
-    QDomElement offCyclePrstcLossElement = element.firstChildElement("OffCyclePrstcLoss");
+    QDomElement offCyclePrstcLossElement = element.firstChildElement("OffCyclePrstcLossSim");
 
     double offCyclePrstcLoss = offCyclePrstcLossElement.text().toDouble(&ok);
 
@@ -7656,7 +7663,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
 
     // OnCyclePrstcLoss
 
-    QDomElement onCyclePrstcLossElement = element.firstChildElement("OnCyclePrstcLoss");
+    QDomElement onCyclePrstcLossElement = element.firstChildElement("OnCyclePrstcLossSim");
 
     double onCyclePrstcLoss = onCyclePrstcLossElement.text().toDouble(&ok);
 
@@ -7667,7 +7674,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
 
     // TankOffCycleLossCoef
 
-    QDomElement tankOffCycleLossCoefElement = element.firstChildElement("TankOffCycleLossCoef");
+    QDomElement tankOffCycleLossCoefElement = element.firstChildElement("TankOffCycleLossCoefSim");
 
     double tankOffCycleLossCoef = tankOffCycleLossCoefElement.text().toDouble(&ok);
 
@@ -7679,7 +7686,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
 
     // TankOnCycleLossCoef
 
-    QDomElement tankOnCycleLossCoefElement = element.firstChildElement("TankOnCycleLossCoef");
+    QDomElement tankOnCycleLossCoefElement = element.firstChildElement("TankOnCycleLossCoefSim");
 
     double tankOnCycleLossCoef = tankOnCycleLossCoefElement.text().toDouble(&ok);
 

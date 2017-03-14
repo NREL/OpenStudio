@@ -531,6 +531,35 @@ namespace sdd {
       //  LOG(Error, "Could not translate WaterMainsTemperature");
       //}
 
+      // translate shadingSurfaces
+      QDomNodeList exteriorShadingElements = element.elementsByTagName("ExtShdgObj");
+      model::ShadingSurfaceGroup shadingSurfaceGroup(*result);
+      shadingSurfaceGroup.setName("Site ShadingGroup");
+      shadingSurfaceGroup.setShadingSurfaceType("Site");
+      for (int i = 0; i < exteriorShadingElements.count(); ++i){
+        if (exteriorShadingElements.at(i).parentNode() == projectElement){
+          boost::optional<model::ModelObject> exteriorShading = translateShadingSurface(exteriorShadingElements.at(i).toElement(), doc, shadingSurfaceGroup);
+          if (!exteriorShading){
+            LOG(Error, "Failed to translate 'ExtShdgObj' element " << i);
+          }
+        }
+      }
+
+      openstudio::model::Facility facility = result->getUniqueModelObject<openstudio::model::Facility>();
+
+      // translate the building
+      QDomElement buildingElement = projectElement.firstChildElement("Bldg");
+      if (buildingElement.isNull()){
+        LOG(Error, "Required 'Bldg' element is Null");
+      } else{
+        boost::optional<model::ModelObject> building = translateBuilding(buildingElement, doc, *result);
+        if (!building){
+          LOG(Error, "Failed to translate 'Bldg'");
+        }
+      }
+
+      result->setFastNaming(false);
+
       // FluidSys
       QDomNodeList fluidSysElements = projectElement.elementsByTagName("FluidSys");
       if (m_progressBar){
@@ -605,35 +634,6 @@ namespace sdd {
           m_progressBar->setValue(m_progressBar->value() + 1);
         }
       }
-
-      // translate shadingSurfaces
-      QDomNodeList exteriorShadingElements = element.elementsByTagName("ExtShdgObj");
-      model::ShadingSurfaceGroup shadingSurfaceGroup(*result);
-      shadingSurfaceGroup.setName("Site ShadingGroup");
-      shadingSurfaceGroup.setShadingSurfaceType("Site");
-      for (int i = 0; i < exteriorShadingElements.count(); ++i){
-        if (exteriorShadingElements.at(i).parentNode() == projectElement){
-          boost::optional<model::ModelObject> exteriorShading = translateShadingSurface(exteriorShadingElements.at(i).toElement(), doc, shadingSurfaceGroup);
-          if (!exteriorShading){
-            LOG(Error, "Failed to translate 'ExtShdgObj' element " << i);
-          }
-        }
-      }
-
-      openstudio::model::Facility facility = result->getUniqueModelObject<openstudio::model::Facility>();
-
-      // translate the building
-      QDomElement buildingElement = projectElement.firstChildElement("Bldg");
-      if (buildingElement.isNull()){
-        LOG(Error, "Required 'Bldg' element is Null");
-      } else{
-        boost::optional<model::ModelObject> building = translateBuilding(buildingElement, doc, *result);
-        if (!building){
-          LOG(Error, "Failed to translate 'Bldg'");
-        }
-      }
-
-      result->setFastNaming(false);
 
       // AirSystem
       QDomNodeList airSystemElements = buildingElement.elementsByTagName("AirSys");
