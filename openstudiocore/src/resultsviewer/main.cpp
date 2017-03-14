@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
     cont = false;
 
     // Make the run path the default plugin search location
-    QCoreApplication::addLibraryPath(openstudio::toQString(openstudio::getApplicationRunDirectory()));
+    QCoreApplication::addLibraryPath(openstudio::toQString(openstudio::getApplicationDirectory()));
 
     QApplication qApplication(argc,argv);
     openstudio::Application::instance().setApplication(&qApplication);

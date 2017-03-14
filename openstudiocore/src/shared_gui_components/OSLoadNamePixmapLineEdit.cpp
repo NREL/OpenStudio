@@ -50,6 +50,10 @@ OSLoadNamePixmapLineEdit::OSLoadNamePixmapLineEdit( QWidget * parent )
   createWidgets();
 }
 
+OSLoadNamePixmapLineEdit::~OSLoadNamePixmapLineEdit()
+{
+}
+
 void OSLoadNamePixmapLineEdit::createWidgets()
 {
   QPixmap m_pixmap(MINI_ICON_SIZE, MINI_ICON_SIZE);
@@ -138,7 +142,10 @@ void OSLoadNamePixmapLineEdit::unbind()
 
 void OSLoadNamePixmapLineEdit::onModelObjectChange()
 {
-  setIcon();
+  // DLM: this was causing a crash with people objects in the space type grid view
+  // somehow this was getting called in grid redraw, apparently the grid redraw is calling the setters
+  // the type would not change in this signal anyway
+  //setIcon();
 }
 
 void OSLoadNamePixmapLineEdit::enableClickFocus()

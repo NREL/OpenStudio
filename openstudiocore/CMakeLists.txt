@@ -901,10 +901,13 @@ if( WIN32 )
 endif()
 
 list(APPEND QT_INCLUDES ${Qt5Core_INCLUDE_DIRS})
+list(APPEND QT_INCLUDES ${Qt5Concurrent_INCLUDE_DIRS})
 list(APPEND QT_INCLUDES ${Qt5Widgets_INCLUDE_DIRS})
 list(APPEND QT_INCLUDES ${Qt5Xml_INCLUDE_DIRS})
 list(APPEND QT_INCLUDES ${Qt5Sql_INCLUDE_DIRS})
 list(APPEND QT_INCLUDES ${Qt5Network_INCLUDE_DIRS})
+list(APPEND QT_INCLUDES ${Qt5Gui_INCLUDE_DIRS})
+list(APPEND QT_INCLUDES ${Qt5PrintSupport_INCLUDE_DIRS})
 
 if( UNIX )
   list(APPEND QT_INCLUDES ${Qt5XcbQpa_INCLUDE_DIRS})
@@ -1148,6 +1151,8 @@ if(BUILD_OS_APP)
   list(APPEND project_directories "bimserver")
   list(APPEND project_directories "openstudio_lib")
   list(APPEND project_directories "openstudio_app")
+  list(APPEND project_directories "qwt")
+  list(APPEND project_directories "resultsviewer")
 endif()
 
 # Include the resources, should happen after find EnergyPlus
@@ -1408,7 +1413,9 @@ set(CPACK_PACKAGE_VERSION_PATCH ${OpenStudio_VERSION_PATCH})
 set(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${OPENSTUDIO_LONG_VERSION}-${CMAKE_SYSTEM_NAME}")
 set(CPACK_PACKAGE_CONTACT "openstudio@nrel.gov")
 
-if( UNIX )
+if( APPLE )
+  set( CPACK_IFW_TARGET_DIRECTORY /Applications/OpenStudio-${OpenStudio_VERSION}/ )
+elseif( UNIX )
   set( CPACK_IFW_TARGET_DIRECTORY /usr/local/openstudio-${OpenStudio_VERSION}/ )
 endif()
 
@@ -1514,6 +1521,10 @@ cpack_add_component(Resources
 cpack_ifw_configure_component(OpenStudioApp
   DEPENDS Resources CLI
   SCRIPT src/openstudio_app/install_operations.qs
+)
+
+cpack_ifw_configure_component(ResultsViewer
+  SCRIPT src/resultsviewer/install_operations.qs
 )
 
 cpack_ifw_configure_component(CLI
