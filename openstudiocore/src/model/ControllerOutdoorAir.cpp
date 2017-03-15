@@ -657,8 +657,8 @@ ControllerOutdoorAir::ControllerOutdoorAir(const Model& model)
 {
   OS_ASSERT(getImpl<detail::ControllerOutdoorAir_Impl>());
 
-  setString(OS_Controller_OutdoorAirFields::MinimumOutdoorAirFlowRate,"Autosize");
   setString(OS_Controller_OutdoorAirFields::MaximumOutdoorAirFlowRate,"Autosize");
+  setMinimumOutdoorAirFlowRate(0.0);
   setEconomizerControlType("NoEconomizer");
   setEconomizerControlActionType("ModulateFlow");
   setEconomizerMaximumLimitDryBulbTemperature(28.0);

@@ -85,7 +85,8 @@ boost::optional<IdfObject> ForwardTranslator::translateControllerOutdoorAir( Con
 
   ///////////////////////////////////////////////////////////////////////////
   // Field: Minimum Outdoor Air Flow Rate ///////////////////////////////////
-  if( modelObject.controllerMechanicalVentilation().demandControlledVentilation() )
+  if( modelObject.controllerMechanicalVentilation().demandControlledVentilation() && 
+      modelObject.isMinimumOutdoorAirFlowRateAutosized() )
   {
     idfObject.setDouble(openstudio::Controller_OutdoorAirFields::MinimumOutdoorAirFlowRate,0.0);
   }
