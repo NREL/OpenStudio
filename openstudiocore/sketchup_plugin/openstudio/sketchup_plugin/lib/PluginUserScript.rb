@@ -31,16 +31,6 @@ module Ruleset
 
 # extend/modify the existing OpenStudio classes.
 
-class UtilityUserScript
-  def registerWithSketchUp
-    Plugin.user_script_runner.add_user_script(self)
-  end
-  
-  def registerWithApplication
-    Plugin.user_script_runner.add_user_script(self)
-  end
-end
-
 class ModelUserScript
   def registerWithSketchUp
     Plugin.user_script_runner.add_user_script(self)
@@ -59,7 +49,7 @@ class WorkspaceUserScript
   end
 end
 
-class TranslationUserScript
+class ReportingUserScript
   def registerWithSketchUp
     Plugin.user_script_runner.add_user_script(self)
   end
