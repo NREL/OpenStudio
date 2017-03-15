@@ -43,9 +43,9 @@ namespace measure {
  *  common). 
  *
  *  \li UserScript
- *  \li UtilityUserScript - Base class for configuration scripts (do not operate on energy models)
  *  \li ModelUserScript - Base class for scripts that operate on OpenStudio Models
  *  \li WorkspaceUserScript - Base class for scripts that operate on EnergyPlus IDF
+ *  \li ReportingUserScript - Base class for scripts that operate on EnergyPlus results
  *
  *  \link UserScript UserScripts\endlink are folded into OpenStudio workflows using the classes:
  *  
