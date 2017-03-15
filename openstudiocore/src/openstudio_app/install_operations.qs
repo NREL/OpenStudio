@@ -23,7 +23,8 @@ function Component()
     }
 
     if( kernel == "winnt" ) {
-      component.addOperation("CreateShortcut", "@TargetDir@/bin/OpenStudioApp.exe", "@StartMenuDir@/OpenStudio.lnk");
+      component.addElevatedOperation("CreateShortcut", "@TargetDir@/bin/OpenStudioApp.exe", "@StartMenuDir@/OpenStudio.lnk");
+      component.addElevatedOperation("RegisterFileType", "osm", "@TargetDir@/bin/OpenStudioApp.exe %1", "OpenStudio Model File", "text/plain", "@TargetDir@/bin/OpenStudioApp.exe,1");
     }
   }
 }
