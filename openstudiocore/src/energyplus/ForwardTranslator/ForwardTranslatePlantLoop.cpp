@@ -97,6 +97,8 @@
 #include "../../model/ZoneHVACComponent.hpp"
 #include "../../model/ZoneHVACComponent_Impl.hpp"
 #include "../../model/SetpointManager.hpp"
+#include "../../model/SetpointManagerScheduledDualSetpoint.hpp"
+#include "../../model/SetpointManagerScheduledDualSetpoint_Impl.hpp"
 #include "../../model/LifeCycleCost.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include <utilities/idd/IddEnums.hxx>
@@ -443,6 +445,16 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
   {
     auto scheme = plantLoop.loadDistributionScheme();
     idfObject.setString(PlantLoopFields::LoadDistributionScheme,scheme);
+  }
+
+  //  PlantLoopDemandCalculationScheme
+  {
+    auto spms = plantLoop.supplyOutletNode().setpointManagers();
+    if( subsetCastVector<model::SetpointManagerScheduledDualSetpoint>(spms).empty() ) {
+      idfObject.setString(PlantLoopFields::PlantLoopDemandCalculationScheme,"SingleSetpoint");
+    } else {
+      idfObject.setString(PlantLoopFields::PlantLoopDemandCalculationScheme,"DualSetpointDeadband");
+    }
   }
 
   // Plant Loop Volume
