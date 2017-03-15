@@ -365,7 +365,7 @@ module OpenStudio
         arguments = user_script.arguments(model_interface.openstudio_model)
       end
       
-      if user_script.is_a?(OpenStudio::Ruleset::UtilityUserScript)
+      if user_script.is_a?(OpenStudio::Ruleset::ReportingUserScript)
         arguments = user_script.arguments()
       end
 
@@ -383,7 +383,7 @@ module OpenStudio
 
           if user_script.is_a?(OpenStudio::Ruleset::ModelUserScript)
             user_script.run(model_interface.openstudio_model, self, arguments)
-          elsif user_script.is_a?(OpenStudio::Ruleset::UtilityUserScript)
+          elsif user_script.is_a?(OpenStudio::Ruleset::ReportingUserScript)
             user_script.run(self, arguments)
           end
 

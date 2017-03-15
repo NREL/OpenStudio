@@ -27,7 +27,7 @@
 ########################################################################################################################
 
 # Each user script is implemented within a class that derives from OpenStudio::Ruleset::UserScript
-class SetupBCLKey < OpenStudio::Ruleset::UtilityUserScript
+class SetupBCLKey < OpenStudio::Ruleset::ModelUserScript
 
   # override name to return the name of your script
   def name
@@ -36,7 +36,7 @@ class SetupBCLKey < OpenStudio::Ruleset::UtilityUserScript
   
   # returns a vector of arguments, the runner will present these arguments to the user
   # then pass in the results on run
-  def arguments()
+  def arguments(model)
     result = OpenStudio::Ruleset::OSArgumentVector.new
     
     currentAuthKey = OpenStudio::LocalBCL::instance().prodAuthKey
@@ -50,10 +50,10 @@ class SetupBCLKey < OpenStudio::Ruleset::UtilityUserScript
   end
 
   # override run to implement the functionality of your script
-  def run(runner, user_arguments)
-    super(runner, user_arguments)
+  def run(model, runner, user_arguments)
+    super(model, runner, user_arguments)
     
-    if not runner.validateUserArguments(arguments,user_arguments)
+    if not runner.validateUserArguments(arguments(model),user_arguments)
       return false
     end
     
