@@ -116,7 +116,7 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("1.11.5")] = &VersionTranslator::update_1_11_4_to_1_11_5;
   m_updateMethods[VersionString("1.12.1")] = &VersionTranslator::update_1_12_0_to_1_12_1;
   m_updateMethods[VersionString("1.13.4")] = &VersionTranslator::update_1_12_3_to_1_12_4;
-  m_updateMethods[VersionString("2.0.2")] = &VersionTranslator::update_2_0_1_to_2_0_2;
+  m_updateMethods[VersionString("2.0.5")] = &VersionTranslator::update_2_0_4_to_2_0_5;
 
 
   // List of previous versions that may be updated to this one.
@@ -240,6 +240,9 @@ VersionTranslator::VersionTranslator()
   m_startVersions.push_back(VersionString("1.14.0"));
   m_startVersions.push_back(VersionString("2.0.0"));
   m_startVersions.push_back(VersionString("2.0.1"));
+  m_startVersions.push_back(VersionString("2.0.2"));
+  m_startVersions.push_back(VersionString("2.0.3"));
+  m_startVersions.push_back(VersionString("2.0.4"));
 }
 
 boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm, 
@@ -3386,18 +3389,18 @@ std::string VersionTranslator::update_1_12_3_to_1_12_4(const IdfFile& idf_1_12_3
   return ss.str();
 }
 
-std::string VersionTranslator::update_2_0_1_to_2_0_2(const IdfFile& idf_2_0_1, const IddFileAndFactoryWrapper& idd_2_0_2) {
+std::string VersionTranslator::update_2_0_4_to_2_0_5(const IdfFile& idf_2_0_4, const IddFileAndFactoryWrapper& idd_2_0_5) {
   std::stringstream ss;
 
-  ss << idf_2_0_1.header() << std::endl << std::endl;
-  IdfFile targetIdf(idd_2_0_2.iddFile());
+  ss << idf_2_0_4.header() << std::endl << std::endl;
+  IdfFile targetIdf(idd_2_0_5.iddFile());
   ss << targetIdf.versionObject().get();
 
-  for (const IdfObject& object : idf_2_0_1.objects()) {
+  for (const IdfObject& object : idf_2_0_4.objects()) {
     auto iddname = object.iddObject().name();
 
     if (iddname == "OS:WaterHeater:Stratified") {
-      auto iddObject = idd_2_0_2.getObject("OS:WaterHeater:Stratified");
+      auto iddObject = idd_2_0_5.getObject("OS:WaterHeater:Stratified");
       IdfObject newObject(iddObject.get());
 
       size_t oldi = 0;

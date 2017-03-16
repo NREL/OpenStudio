@@ -79,7 +79,19 @@ namespace detail{
     bool parsingSuccessful = reader.parse(s, m_value);
     if (!parsingSuccessful){
       std::string errors = reader.getFormattedErrorMessages();
-      LOG_AND_THROW("WorkflowJSON cannot be processed, " << errors);
+
+      // see if this is a path
+      openstudio::path p = toPath(s);
+      if (boost::filesystem::exists(p) && boost::filesystem::is_regular_file(p)){
+        // open file
+        std::ifstream ifs(openstudio::toString(p));
+        m_value.clear();
+        parsingSuccessful = reader.parse(ifs, m_value);
+      }
+
+      if (!parsingSuccessful){
+        LOG_AND_THROW("WorkflowJSON cannot be processed, " << errors);
+      }
     }
 
     parseSteps();
@@ -105,7 +117,7 @@ namespace detail{
     parseSteps();
     parseRunOptions();
 
-    setOswPath(p);
+    setOswPath(p, false);
   }
 
   WorkflowJSON WorkflowJSON_Impl::clone() const
@@ -174,7 +186,7 @@ namespace detail{
     bool result = (h1 != h2);
     if (result){
       onUpdate();
-      h2 = computeHash(); // recompute hash after updating timestamps
+      h2 = computeHash(); // recompute hash after updating timestamps in onUpdate
       m_value["hash"] = h2;
     }
     return result;
@@ -209,7 +221,8 @@ namespace detail{
 
   bool WorkflowJSON_Impl::saveAs(const openstudio::path& p) 
   {
-    if (setOswPath(p)) {
+    if (setOswPath(p, true)) {
+      checkForUpdates();
       return save();
     }
     return false;
@@ -337,6 +350,7 @@ namespace detail{
   void WorkflowJSON_Impl::setEplusoutErr(const std::string& eplusoutErr)
   {
     m_value["eplusout_err"] = eplusoutErr;
+    onUpdate();
   }
 
   boost::optional<openstudio::path> WorkflowJSON_Impl::oswPath() const
@@ -347,16 +361,17 @@ namespace detail{
     return m_oswDir / m_oswFilename;
   }
 
-  bool WorkflowJSON_Impl::setOswPath(const openstudio::path& path)
+  bool WorkflowJSON_Impl::setOswPath(const openstudio::path& path, bool emitChange)
   {
-    if (path.is_absolute()){
-      m_oswFilename = path.filename();
-      m_oswDir = path.parent_path();
-      setMeasureTypes();
-      return true;
+    openstudio::path p = canonicalOrAbsolute(path);
+
+    m_oswFilename = p.filename();
+    m_oswDir = p.parent_path();
+    setMeasureTypes(); 
+    if (emitChange){
+      onUpdate(); // onUpdate does not happen in setMeasureTypes
     }
-    LOG(Warn, "Path " << toString(path) << " is not absolute, WorkflowJSON::setOswPath failed");
-    return false;
+    return true;
   }
 
   openstudio::path WorkflowJSON_Impl::oswDir() const
@@ -369,13 +384,10 @@ namespace detail{
 
   bool WorkflowJSON_Impl::setOswDir(const openstudio::path& path)
   {
-    if (path.is_absolute()){
-      m_oswDir = path;
-      setMeasureTypes();
-      onUpdate();
-      return true;
-    }
-    return false;
+    m_oswDir = canonicalOrAbsolute(path);
+    setMeasureTypes(); 
+    onUpdate(); // onUpdate does not happen in setMeasureTypes
+    return true;
   }
 
   openstudio::path WorkflowJSON_Impl::rootDir() const
@@ -466,12 +478,14 @@ namespace detail{
       m_value["file_paths"] = Json::Value(Json::arrayValue);
     }
     m_value["file_paths"].append(toString(path));
+    onUpdate();
     return true;
   }
   
   void WorkflowJSON_Impl::resetFilePaths()
   {
     m_value["file_paths"] = Json::Value(Json::arrayValue);
+    onUpdate();
   }
 
   boost::optional<openstudio::path> WorkflowJSON_Impl::findFile(const openstudio::path& file) const
@@ -538,12 +552,14 @@ namespace detail{
       m_value["measure_paths"] = Json::Value(Json::arrayValue);
     }
     m_value["measure_paths"].append(toString(path));
+    onUpdate();
     return true;
   }
 
   void WorkflowJSON_Impl::resetMeasurePaths()
   {
     m_value["measure_paths"] = Json::Value(Json::arrayValue);
+    onUpdate();
   }
 
   boost::optional<openstudio::path> WorkflowJSON_Impl::findMeasure(const openstudio::path& measureDir) const
@@ -631,17 +647,17 @@ namespace detail{
     m_steps = workflowSteps;
     setMeasureTypes();
     connectSteps();
-    onUpdate();
+    onUpdate();  // onUpdate does not happen in setMeasureTypes
     return true;
   }
 
   void WorkflowJSON_Impl::resetWorkflowSteps()
   {
-    bool test = setWorkflowSteps(std::vector<WorkflowStep>());
+    bool test = setWorkflowSteps(std::vector<WorkflowStep>()); // will hit onUpdate in setWorkflowSteps
     OS_ASSERT(test);
   }
 
-  std::vector<MeasureStep> WorkflowJSON_Impl::getMeasureSteps(const MeasureType& measureType)
+  std::vector<MeasureStep> WorkflowJSON_Impl::getMeasureSteps(const MeasureType& measureType) const
   {
     std::vector<MeasureStep> result;
     size_t n = m_steps.size();
@@ -694,7 +710,7 @@ namespace detail{
       newSteps.insert(newSteps.end(), oldSteps.begin(), oldSteps.end());
     }
 
-    return setWorkflowSteps(newSteps);
+    return setWorkflowSteps(newSteps); // onUpdate in setWorkflowSteps
   }
 
   boost::optional<BCLMeasure> WorkflowJSON_Impl::getBCLMeasure(const MeasureStep& step) const
@@ -758,6 +774,8 @@ namespace detail{
       }
     }
 
+    onUpdate();
+
     return bclMeasure.clone(newMeasureDirName);
   }
 
@@ -771,12 +789,14 @@ namespace detail{
     disconnectRunOptions();
     m_runOptions = options;
     connectRunOptions();
+    onUpdate();
     return true;
   }
 
   void WorkflowJSON_Impl::resetRunOptions(){
     disconnectRunOptions();
     m_runOptions.reset();
+    onUpdate();
   }
 
   void WorkflowJSON_Impl::onUpdate()
@@ -1028,7 +1048,7 @@ boost::optional<openstudio::path> WorkflowJSON::oswPath() const
 
 bool WorkflowJSON::setOswPath(const openstudio::path& path)
 {
-  return getImpl<detail::WorkflowJSON_Impl>()->setOswPath(path);
+  return getImpl<detail::WorkflowJSON_Impl>()->setOswPath(path, true);
 }
 
 openstudio::path WorkflowJSON::oswDir() const
@@ -1176,7 +1196,7 @@ void WorkflowJSON::resetWorkflowSteps()
   getImpl<detail::WorkflowJSON_Impl>()->resetWorkflowSteps();
 }
 
-std::vector<MeasureStep> WorkflowJSON::getMeasureSteps(const MeasureType& measureType)
+std::vector<MeasureStep> WorkflowJSON::getMeasureSteps(const MeasureType& measureType) const
 {
   return getImpl<detail::WorkflowJSON_Impl>()->getMeasureSteps(measureType);
 }

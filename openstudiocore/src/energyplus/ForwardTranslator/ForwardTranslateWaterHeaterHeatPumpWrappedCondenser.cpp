@@ -382,7 +382,11 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterHeatPumpWrappe
 
   {
     auto value = modelObject.tankElementControlLogic();
-    idfObject.setString(WaterHeater_HeatPump_WrappedCondenserFields::TankElementControlLogic,value);
+    if( istringEqual(value,"MutuallyExlcusive") ) {
+      idfObject.setString(WaterHeater_HeatPump_WrappedCondenserFields::TankElementControlLogic,"MutuallyExclusive");
+    } else {
+      idfObject.setString(WaterHeater_HeatPump_WrappedCondenserFields::TankElementControlLogic,value);
+    }
   }
 
   return idfObject;

@@ -247,7 +247,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
   // DOAS DX Cooling Coil Leaving Minimum Air Temperature
   d = modelObject.dOASDXCoolingCoilLeavingMinimumAirTemperature();
   if (d) {
-    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::DOASDXCoolingCoilLeavingMinimumAirTemperature,d.get());
+    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::MinimumSupplyAirTemperature,d.get());
   }
 
   // Latent Load Control

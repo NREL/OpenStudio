@@ -219,7 +219,7 @@ public:
   void resetWorkflowSteps();
 
   /** Gets measure steps by measure type. */
-  std::vector<MeasureStep> getMeasureSteps(const MeasureType& measureType);
+  std::vector<MeasureStep> getMeasureSteps(const MeasureType& measureType) const;
 
   /** Sets measure steps of a given type. Does not change other measure steps. */
   bool setMeasureSteps(const MeasureType& measureType, const std::vector<MeasureStep>& steps);

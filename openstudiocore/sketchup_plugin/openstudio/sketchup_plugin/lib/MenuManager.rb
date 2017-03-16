@@ -567,8 +567,8 @@ module OpenStudio
             puts "start \"\" \"#{$OPENSTUDIO_APPLICATION_DIR}\\OpenStudioApp\" \"#{openstudio_path}\""
             system("start \"\" \"#{$OPENSTUDIO_APPLICATION_DIR}\\OpenStudioApp\" \"#{openstudio_path}\"")
           elsif Plugin.platform == Platform_Mac
-            puts "open -a \"#{$OPENSTUDIO_APPLICATION_DIR}/OpenStudioApp.app\" --args \"#{openstudio_path}\""
-            system("open -a \"#{$OPENSTUDIO_APPLICATION_DIR}/OpenStudioApp.app\" --args \"#{openstudio_path}\"")
+            puts "open -a \"#{$OPENSTUDIO_APPLICATION_DIR}/../OpenStudioApp.app\" --args \"#{openstudio_path}\""
+            system("open -a \"#{$OPENSTUDIO_APPLICATION_DIR}/../OpenStudioApp.app\" --args \"#{openstudio_path}\"")
           end
         end
       end

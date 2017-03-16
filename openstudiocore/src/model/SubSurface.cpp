@@ -49,10 +49,13 @@
 #include "DaylightingDeviceShelf_Impl.hpp"
 #include "WindowPropertyFrameAndDivider.hpp"
 #include "WindowPropertyFrameAndDivider_Impl.hpp"
+#include "SurfacePropertyConvectionCoefficients.hpp"
 #include "SurfacePropertyOtherSideCoefficients.hpp"
 #include "SurfacePropertyOtherSideCoefficients_Impl.hpp"
 #include "SurfacePropertyOtherSideConditionsModel.hpp"
 #include "SurfacePropertyOtherSideConditionsModel_Impl.hpp"
+#include "SurfacePropertyConvectionCoefficients.hpp"
+#include "SurfacePropertyConvectionCoefficients_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
@@ -735,6 +738,27 @@ namespace detail {
     }
   }
 
+  boost::optional<SurfacePropertyConvectionCoefficients> SubSurface_Impl::surfacePropertyConvectionCoefficients() const {
+    std::vector<SurfacePropertyConvectionCoefficients> allspccs(model().getConcreteModelObjects<SurfacePropertyConvectionCoefficients>());
+    std::vector<SurfacePropertyConvectionCoefficients> spccs;
+    for (auto& spcc : allspccs) {
+        OptionalSubSurface surface = spcc.surfaceAsSubSurface();
+        if (surface) {
+            if (surface->handle() == handle()) {
+                spccs.push_back(spcc);
+            }
+        }
+    }
+    if (spccs.empty()) {
+      return boost::none;
+    } else if (spccs.size() == 1) {
+      return spccs.at(0);
+    } else {
+      LOG(Error, "More than one SurfacePropertyConvectionCoefficients points to this SubSurface");
+      return boost::none;
+    }
+  }
+
   boost::optional<SurfacePropertyOtherSideCoefficients> SubSurface_Impl::surfacePropertyOtherSideCoefficients() const
   {
     return getObject<SubSurface>().getModelObjectTarget<SurfacePropertyOtherSideCoefficients>(OS_SubSurfaceFields::OutsideBoundaryConditionObject);
@@ -1226,6 +1250,10 @@ bool SubSurface::setAdjacentSubSurface(SubSurface& subSurface)
 void SubSurface::resetAdjacentSubSurface()
 {
   getImpl<detail::SubSurface_Impl>()->resetAdjacentSubSurface();
+}
+
+boost::optional<SurfacePropertyConvectionCoefficients> SubSurface::surfacePropertyConvectionCoefficients() const {
+  return getImpl<detail::SubSurface_Impl>()->surfacePropertyConvectionCoefficients();
 }
 
 boost::optional<SurfacePropertyOtherSideCoefficients> SubSurface::surfacePropertyOtherSideCoefficients() const {

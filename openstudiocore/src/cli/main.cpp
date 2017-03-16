@@ -132,6 +132,7 @@ extern "C" {
   void Init_md5();
   void Init_nkf();
   void Init_nonblock();
+  void Init_openssl();
   void Init_objspace();
   void Init_parser();
   void Init_pathname();
@@ -398,6 +399,16 @@ int main(int argc, char *argv[])
   Init_nonblock();
   rb_provide("nonblock");
   rb_provide("nonblock.so");
+
+#ifdef Q_OS_LINUX
+  Init_openssl();
+  rb_provide("openssl");
+  rb_provide("openssl.so");
+#else
+  // DLM: temporarily fake out, no init
+  rb_provide("openssl");
+  rb_provide("openssl.so");
+#endif // Q_OS_LINUX
   
   Init_objspace();
   rb_provide("objspace");

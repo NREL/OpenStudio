@@ -33,8 +33,10 @@ class MeasureManager
   
   attr_reader :osms, :measures, :measure_info
   
-  def initialize()
+  def initialize(logger=nil)
+    @logger = logger
     @osms = {} # osm_path => {:checksum, :model, :workspace}
+    @idfs = {} # idf_path => {:checksum, :workspace}
     @measures = {} # measure_dir => BCLMeasure
     @measure_info = {} # measure_dir => {osm_path => RubyUserScriptInfo}
     
@@ -42,6 +44,10 @@ class MeasureManager
   end
   
   def force_encoding(object, encoding = 'utf-8')
+    if object.frozen?
+      return object
+    end
+    
     type = object.class
     if type == Hash
       object.keys.each do |key|
@@ -59,11 +65,16 @@ class MeasureManager
   end
 
   def print_message(message)
-    puts message
+    if @logger
+      @logger.debug(message)
+    else
+      puts message
+    end
   end
   
   def reset
     @osms = {}
+    @idfs = {}
     @measures = {} 
     @measure_info = {}
   end
@@ -120,6 +131,65 @@ class MeasureManager
       end
       
       @measure_info.each_value {|value| value[osm_path] = nil} 
+    end
+    
+    return result
+  end
+
+  # returns nil or OpenStudio::Workspace
+  # force_reload forces the idf to be read from disk, should never be needed
+  def get_idf(idf_path, force_reload)
+
+    # check if model exists on disk
+    if !File.exist?(idf_path)
+      print_message("Idf '#{idf_path}' does not exist")
+      @idfs[idf_path] = nil
+      @measure_info.each_value {|value| value[idf_path] = nil} 
+      force_reload = true
+    end    
+    
+    current_checksum = OpenStudio::checksum(OpenStudio::toPath(idf_path))
+
+    result = nil
+    if !force_reload
+      # load from cache
+      temp = @osms[idf_path]
+      if temp
+        last_checksum = temp[:checksum]
+        if last_checksum && current_checksum == last_checksum
+          workspace = temp[:workspace]
+          if workspace
+            result = workspace
+            print_message("Using cached workspace '#{idf_path}'")
+          end
+        else
+          print_message("Checksum of cached workspace does not match current checksum for '#{idf_path}'")
+        end
+      end
+    end
+    
+    if !result
+      # load from disk
+      print_message("Attempting to load idf '#{idf_path}'")
+      workspace = OpenStudio::Workspace.load(idf_path, "EnergyPlus".to_IddFileType)
+        
+      if workspace.empty?
+        print_message("Failed to load idf '#{idf_path}'")
+        @idfs[idf_path] = nil
+      else
+        print_message("Successfully loaded idf '#{idf_path}'")
+        workspace = workspace.get
+        
+        if !workspace.isValid('Draft'.to_StrictnessLevel)
+          print_message("Workspace loaded from '#{idf_path}' is not valid")
+          @idfs[idf_path] = nil
+        else
+          @idfs[idf_path] = {:checksum => current_checksum, :workspace => workspace}
+          result = workspace
+        end
+      end
+      
+      @measure_info.each_value {|value| value[idf_path] = nil} 
     end
     
     return result

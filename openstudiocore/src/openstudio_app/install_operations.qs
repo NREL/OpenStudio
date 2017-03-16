@@ -9,15 +9,22 @@ function Component()
 
     var kernel = systemInfo.kernelType;
     if( kernel == "darwin" ) {
-      var epPath = installer.value("TargetDir") + "/EnergyPlus";
       var appPath = installer.value("TargetDir") + "/OpenStudioApp.app/Contents/";
-      var mkPath = appPath + "EnergyPLus";
+
+      var epPath = installer.value("TargetDir") + "/EnergyPlus";
+      var mkPath = appPath + "EnergyPlus";
       component.addElevatedOperation("Mkdir", mkPath);
       component.addElevatedOperation("CopyDirectory", epPath, appPath);
+
+      var radPath = installer.value("TargetDir") + "/Radiance";
+      var mkRadPath = appPath + "Radiance";
+      component.addElevatedOperation("Mkdir", mkRadPath);
+      component.addElevatedOperation("CopyDirectory", radPath, appPath);
     }
 
     if( kernel == "winnt" ) {
-      component.addOperation("CreateShortcut", "@TargetDir@/bin/OpenStudioApp.exe", "@StartMenuDir@/OpenStudio.lnk");
+      component.addElevatedOperation("CreateShortcut", "@TargetDir@/bin/OpenStudioApp.exe", "@StartMenuDir@/OpenStudio.lnk");
+      component.addElevatedOperation("RegisterFileType", "osm", "@TargetDir@/bin/OpenStudioApp.exe %1", "OpenStudio Model File", "text/plain", "@TargetDir@/bin/OpenStudioApp.exe,1");
     }
   }
 }

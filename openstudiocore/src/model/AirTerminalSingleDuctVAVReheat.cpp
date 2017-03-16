@@ -442,14 +442,7 @@ namespace detail{
 
   void AirTerminalSingleDuctVAVReheat_Impl::setDamperHeatingAction( std::string value )
   {
-    if( istringEqual(value,"Normal") )
-    {
-      this->setString(OS_AirTerminal_SingleDuct_VAV_ReheatFields::DamperHeatingAction,"Normal");
-    }
-    else if( istringEqual(value,"Reverse") )
-    {
-      this->setString(OS_AirTerminal_SingleDuct_VAV_ReheatFields::DamperHeatingAction,"Reverse");
-    }
+    setString(OS_AirTerminal_SingleDuct_VAV_ReheatFields::DamperHeatingAction,value);
   }
 
   boost::optional<double> AirTerminalSingleDuctVAVReheat_Impl::maximumFlowPerZoneFloorAreaDuringReheat()

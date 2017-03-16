@@ -46,10 +46,13 @@
 #include "ShadingSurface.hpp"
 #include "InteriorPartitionSurfaceGroup.hpp"
 #include "InteriorPartitionSurface.hpp"
+#include "SurfacePropertyConvectionCoefficients.hpp"
 #include "SurfacePropertyOtherSideCoefficients.hpp"
 #include "SurfacePropertyOtherSideCoefficients_Impl.hpp"
 #include "SurfacePropertyOtherSideConditionsModel.hpp"
 #include "SurfacePropertyOtherSideConditionsModel_Impl.hpp"
+#include "SurfacePropertyConvectionCoefficients.hpp"
+#include "SurfacePropertyConvectionCoefficients_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
@@ -835,6 +838,27 @@ namespace detail {
         subSurface.resetAdjacentSubSurface();
       }
     }
+  }
+
+  boost::optional<SurfacePropertyConvectionCoefficients> Surface_Impl::surfacePropertyConvectionCoefficients() const {
+      std::vector<SurfacePropertyConvectionCoefficients> allspccs(model().getConcreteModelObjects<SurfacePropertyConvectionCoefficients>());
+      std::vector<SurfacePropertyConvectionCoefficients> spccs;
+      for (auto& spcc : allspccs) {
+          OptionalSurface surface = spcc.surfaceAsSurface();
+          if (surface) {
+              if (surface->handle() == handle()) {
+                spccs.push_back(spcc);
+              }
+          }
+      }
+      if (spccs.empty()) {
+          return boost::none;
+      } else if (spccs.size() == 1) {
+          return spccs.at(0);
+      } else {
+          LOG(Error, "More than one SurfacePropertyConvectionCoefficients points to this Surface");
+          return boost::none;
+      }
   }
 
   boost::optional<SurfacePropertyOtherSideCoefficients> Surface_Impl::surfacePropertyOtherSideCoefficients() const
@@ -2197,6 +2221,10 @@ bool Surface::setAdjacentSurface(Surface& surface) {
 
 void Surface::resetAdjacentSurface() {
   return getImpl<detail::Surface_Impl>()->resetAdjacentSurface();
+}
+
+boost::optional<SurfacePropertyConvectionCoefficients> Surface::surfacePropertyConvectionCoefficients() const {
+    return getImpl<detail::Surface_Impl>()->surfacePropertyConvectionCoefficients();
 }
 
 boost::optional<SurfacePropertyOtherSideCoefficients> Surface::surfacePropertyOtherSideCoefficients() const {

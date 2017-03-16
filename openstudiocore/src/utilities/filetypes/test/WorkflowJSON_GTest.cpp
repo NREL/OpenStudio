@@ -242,6 +242,128 @@ TEST(Filetypes, WorkflowJSON_Min)
   } catch (const std::exception& e){
     EXPECT_TRUE(false) << e.what();
   }
+
+  // check if strings are really paths
+  std::string s = toString(p);
+  ASSERT_TRUE(WorkflowJSON::load(s));
+
+  s = "random string";
+  EXPECT_FALSE(WorkflowJSON::load(s));
+
+  s = "Definitely; Not a:\\Path?\n _ ./";
+  EXPECT_FALSE(WorkflowJSON::load(s));
+
+  // now try relative path
+  p2 = toPath("./min.out.osw");
+  try{
+    WorkflowJSON workflow(p);
+    EXPECT_TRUE(workflow.checkForUpdates());
+    ASSERT_TRUE(workflow.oswPath());
+    EXPECT_EQ(p, workflow.oswPath().get());
+    EXPECT_EQ(".", toString(workflow.rootDir()));
+    EXPECT_EQ(toString(p.parent_path()), toString(workflow.absoluteRootDir()));
+    EXPECT_FALSE(workflow.seedFile());
+    EXPECT_FALSE(workflow.weatherFile());
+
+    EXPECT_TRUE(workflow.saveAs(p2));
+
+    std::vector<WorkflowStep> workflowSteps = workflow.workflowSteps();
+    ASSERT_EQ(3u, workflowSteps.size());
+
+    ASSERT_TRUE(workflowSteps[0].optionalCast<MeasureStep>());
+    MeasureStep measureStep = workflowSteps[0].cast<MeasureStep>();
+    EXPECT_EQ("IncreaseWallRValue", measureStep.measureDirName());
+    ASSERT_TRUE(measureStep.getArgument("cost"));
+    ASSERT_EQ(VariantType::Double, measureStep.getArgument("cost")->variantType().value());
+    EXPECT_EQ(123.321, measureStep.getArgument("cost")->valueAsDouble());
+    ASSERT_TRUE(measureStep.getArgument("percent_increase"));
+    ASSERT_EQ(VariantType::Integer, measureStep.getArgument("percent_increase")->variantType().value());
+    EXPECT_EQ(5, measureStep.getArgument("percent_increase")->valueAsInteger());
+    ASSERT_TRUE(measureStep.getArgument("operating_expenses"));
+    ASSERT_EQ(VariantType::Integer, measureStep.getArgument("operating_expenses")->variantType().value());
+    EXPECT_EQ(0, measureStep.getArgument("operating_expenses")->valueAsInteger());
+
+    ASSERT_TRUE(workflowSteps[1].optionalCast<MeasureStep>());
+    measureStep = workflowSteps[1].cast<MeasureStep>();
+    EXPECT_EQ("IncreaseRoofRValue", measureStep.measureDirName());
+    ASSERT_TRUE(measureStep.getArgument("cost"));
+    ASSERT_EQ(VariantType::Double, measureStep.getArgument("cost")->variantType().value());
+    EXPECT_EQ(321.123, measureStep.getArgument("cost")->valueAsDouble());
+    ASSERT_TRUE(measureStep.getArgument("percent_increase"));
+    ASSERT_EQ(VariantType::Integer, measureStep.getArgument("percent_increase")->variantType().value());
+    EXPECT_EQ(15, measureStep.getArgument("percent_increase")->valueAsInteger());
+    ASSERT_TRUE(measureStep.getArgument("space_type"));
+    ASSERT_EQ(VariantType::String, measureStep.getArgument("space_type")->variantType().value());
+    EXPECT_EQ("*All*", measureStep.getArgument("space_type")->valueAsString());
+
+    ASSERT_TRUE(workflowSteps[2].optionalCast<MeasureStep>());
+    measureStep = workflowSteps[2].cast<MeasureStep>();
+    EXPECT_EQ("DecreaseThermalMass", measureStep.measureDirName());
+    ASSERT_TRUE(measureStep.getArgument("has_bool"));
+    ASSERT_EQ(VariantType::Boolean, measureStep.getArgument("has_bool")->variantType().value());
+    EXPECT_EQ(true, measureStep.getArgument("has_bool")->valueAsBoolean());
+    ASSERT_TRUE(measureStep.getArgument("percent_decrease"));
+    ASSERT_EQ(VariantType::Integer, measureStep.getArgument("percent_decrease")->variantType().value());
+    EXPECT_EQ(5, measureStep.getArgument("percent_decrease")->valueAsInteger());
+
+  } catch (const std::exception& e){
+    EXPECT_TRUE(false) << e.what();
+  }
+
+  ASSERT_TRUE(WorkflowJSON::load(p2));
+  try{
+    WorkflowJSON workflow(p2);
+    EXPECT_FALSE(workflow.checkForUpdates());
+
+    ASSERT_TRUE(workflow.oswPath());
+    EXPECT_EQ(p2.filename(), workflow.oswPath().get().filename());
+    EXPECT_EQ(".", toString(workflow.rootDir()));
+    EXPECT_EQ(toString(workflow.oswPath().get().parent_path()), toString(workflow.absoluteRootDir()));
+    EXPECT_FALSE(workflow.seedFile());
+    EXPECT_FALSE(workflow.weatherFile());
+
+    std::vector<WorkflowStep> workflowSteps = workflow.workflowSteps();
+    ASSERT_EQ(3u, workflowSteps.size());
+
+    ASSERT_TRUE(workflowSteps[0].optionalCast<MeasureStep>());
+    MeasureStep measureStep = workflowSteps[0].cast<MeasureStep>();
+    EXPECT_EQ("IncreaseWallRValue", measureStep.measureDirName());
+    ASSERT_TRUE(measureStep.getArgument("cost"));
+    ASSERT_EQ(VariantType::Double, measureStep.getArgument("cost")->variantType().value());
+    EXPECT_EQ(123.321, measureStep.getArgument("cost")->valueAsDouble());
+    ASSERT_TRUE(measureStep.getArgument("percent_increase"));
+    ASSERT_EQ(VariantType::Integer, measureStep.getArgument("percent_increase")->variantType().value());
+    EXPECT_EQ(5, measureStep.getArgument("percent_increase")->valueAsInteger());
+    ASSERT_TRUE(measureStep.getArgument("operating_expenses"));
+    ASSERT_EQ(VariantType::Integer, measureStep.getArgument("operating_expenses")->variantType().value());
+    EXPECT_EQ(0, measureStep.getArgument("operating_expenses")->valueAsInteger());
+
+    ASSERT_TRUE(workflowSteps[1].optionalCast<MeasureStep>());
+    measureStep = workflowSteps[1].cast<MeasureStep>();
+    EXPECT_EQ("IncreaseRoofRValue", measureStep.measureDirName());
+    ASSERT_TRUE(measureStep.getArgument("cost"));
+    ASSERT_EQ(VariantType::Double, measureStep.getArgument("cost")->variantType().value());
+    EXPECT_EQ(321.123, measureStep.getArgument("cost")->valueAsDouble());
+    ASSERT_TRUE(measureStep.getArgument("percent_increase"));
+    ASSERT_EQ(VariantType::Integer, measureStep.getArgument("percent_increase")->variantType().value());
+    EXPECT_EQ(15, measureStep.getArgument("percent_increase")->valueAsInteger());
+    ASSERT_TRUE(measureStep.getArgument("space_type"));
+    ASSERT_EQ(VariantType::String, measureStep.getArgument("space_type")->variantType().value());
+    EXPECT_EQ("*All*", measureStep.getArgument("space_type")->valueAsString());
+
+    ASSERT_TRUE(workflowSteps[2].optionalCast<MeasureStep>());
+    measureStep = workflowSteps[2].cast<MeasureStep>();
+    EXPECT_EQ("DecreaseThermalMass", measureStep.measureDirName());
+    ASSERT_TRUE(measureStep.getArgument("has_bool"));
+    ASSERT_EQ(VariantType::Boolean, measureStep.getArgument("has_bool")->variantType().value());
+    EXPECT_EQ(true, measureStep.getArgument("has_bool")->valueAsBoolean());
+    ASSERT_TRUE(measureStep.getArgument("percent_decrease"));
+    ASSERT_EQ(VariantType::Integer, measureStep.getArgument("percent_decrease")->variantType().value());
+    EXPECT_EQ(5, measureStep.getArgument("percent_decrease")->valueAsInteger());
+
+  } catch (const std::exception& e){
+    EXPECT_TRUE(false) << e.what();
+  }
 }
 
 TEST(Filetypes, WorkflowJSON_Full)

@@ -272,7 +272,7 @@ LocationView::LocationView(bool isIP,
   if (ashraeClimateZone.empty()){
     ashraeClimateZone = climateZones.appendClimateZone(model::ClimateZones::ashraeInstitutionName(), model::ClimateZones::ashraeDefaultYear(), "");
   }
-  ashraeClimateZone.setType(model::ClimateZones::ashraeInstitutionName(), model::ClimateZones::ashraeDocumentName(), model::ClimateZones::ashraeDefaultYear());
+  //ashraeClimateZone.setType(model::ClimateZones::ashraeInstitutionName(), model::ClimateZones::ashraeDocumentName(), model::ClimateZones::ashraeDefaultYear());
   
   std::string ashraeClimateZoneValue = ashraeClimateZone.value();
   auto idx = m_ashraeClimateZone->findText(toQString(ashraeClimateZoneValue));
@@ -300,7 +300,7 @@ LocationView::LocationView(bool isIP,
    if (cecClimateZone.empty()){
     cecClimateZone = climateZones.appendClimateZone(model::ClimateZones::cecInstitutionName(), model::ClimateZones::cecDefaultYear(), "");
   }
-  cecClimateZone.setType(model::ClimateZones::cecInstitutionName(), model::ClimateZones::cecDocumentName(), model::ClimateZones::cecDefaultYear());
+  //cecClimateZone.setType(model::ClimateZones::cecInstitutionName(), model::ClimateZones::cecDocumentName(), model::ClimateZones::cecDefaultYear());
 
   std::string cecClimateZoneValue = cecClimateZone.value();
   idx = m_cecClimateZone->findText(toQString(cecClimateZoneValue));
@@ -484,12 +484,6 @@ void LocationView::update()
     }
 
     if (fileExists) {
-      m_site->setName(weatherFile->city().c_str());
-      m_site->setLatitude(weatherFile->latitude());
-      m_site->setLongitude(weatherFile->longitude());
-      m_site->setElevation(weatherFile->elevation());
-      m_site->setTimeZone(weatherFile->timeZone());
-
       m_weatherFileBtn->setText(CHANGEWEATHERFILE);
       setSiteInfo();
     }
@@ -631,10 +625,17 @@ void LocationView::onWeatherFileBtnClicked()
       if (startDateActualYear){
         yearDescription.resetDayofWeekforStartDay();
         yearDescription.setCalendarYear(*startDateActualYear);
-      }else{
+      } else{
         yearDescription.resetCalendarYear();
         yearDescription.setDayofWeekforStartDay(epwFile.startDayOfWeek().valueName());
       }
+
+      // update site info
+      m_site->setName(weatherFile->city().c_str());
+      m_site->setLatitude(weatherFile->latitude());
+      m_site->setLongitude(weatherFile->longitude());
+      m_site->setElevation(weatherFile->elevation());
+      m_site->setTimeZone(weatherFile->timeZone());
 
       m_lastEpwPathOpened = QFileInfo(fileName).absoluteFilePath();
 

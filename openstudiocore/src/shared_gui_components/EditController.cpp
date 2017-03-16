@@ -201,9 +201,19 @@ InputController::InputController(EditController * editController,const measure::
     {
       choiceInputView->comboBox->insertItem(0,"");
     }
-    else if( choiceInputView->comboBox->findText(QString::fromStdString(m_argument.defaultValueAsString())) == -1 )
+    else
     {
-      choiceInputView->comboBox->insertItem(0,"");
+      int index = choiceInputView->comboBox->findData(QString::fromStdString(m_argument.defaultValueAsString()));
+
+      if (index == -1){
+        index = choiceInputView->comboBox->findText(QString::fromStdString(m_argument.defaultValueAsString()));
+      }
+
+      if (index == -1)
+      {
+        // DLM: this is an error
+        choiceInputView->comboBox->insertItem(0, "");
+      }
     }
 
     // Set the initial value
@@ -211,11 +221,9 @@ InputController::InputController(EditController * editController,const measure::
     {
       int index = choiceInputView->comboBox->findData(QString::fromStdString(m_argument.valueAsString()));
 
-      choiceInputView->comboBox->setCurrentIndex(index);
-    }
-    else if( m_argument.hasDefaultValue() )
-    {
-      int index = choiceInputView->comboBox->findData(QString::fromStdString(m_argument.defaultValueAsString()));
+      if (index == -1){
+        index = choiceInputView->comboBox->findText(QString::fromStdString(m_argument.valueAsString()));
+      }
 
       if( index != -1 )
       {
@@ -223,6 +231,25 @@ InputController::InputController(EditController * editController,const measure::
       }
       else
       {
+        // DLM: this is an error
+        choiceInputView->comboBox->setCurrentIndex(0);
+      }
+    }
+    else if( m_argument.hasDefaultValue() )
+    {
+      int index = choiceInputView->comboBox->findData(QString::fromStdString(m_argument.defaultValueAsString()));
+
+      if (index == -1){
+        index = choiceInputView->comboBox->findText(QString::fromStdString(m_argument.defaultValueAsString()));
+      }
+
+      if( index != -1 )
+      {
+        choiceInputView->comboBox->setCurrentIndex(index);
+      }
+      else
+      {
+        // DLM: this is an error
         choiceInputView->comboBox->setCurrentIndex(0);
       }
     }
@@ -364,7 +391,14 @@ void InputController::setValueForIndex(int index)
 
 bool InputController::isArgumentIncomplete() const
 {
-  return m_editController->measureStepItem()->hasIncompleteArguments();
+  bool result = false;
+  std::vector<measure::OSArgument> incompleteArguments = m_editController->measureStepItem()->incompleteArguments();
+  for (const auto& incompleteArgument : incompleteArguments){
+    if (incompleteArgument.name() == m_argument.name()){
+      result = true;
+    }
+  }
+  return result;
 }
 
 bool InputController::isItOKToClearResults()

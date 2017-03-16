@@ -135,3 +135,15 @@ TEST_F(ModelFixture, MapOfAllOutputVariables)
     ASSERT_TRUE(outputVariable);
   }
 }
+
+
+TEST_F(ModelFixture, BadVariableName)
+{
+  Model model;
+
+  OutputVariable goodVar("Good Name", model);
+  EXPECT_EQ("Good Name", goodVar.variableName());
+
+  OutputVariable badVar("Bad, !Name", model);
+  EXPECT_EQ("Bad, !Name", badVar.variableName());
+}

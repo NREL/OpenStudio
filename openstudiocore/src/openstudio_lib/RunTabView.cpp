@@ -147,13 +147,24 @@ RunView::RunView()
   m_runProcess = new QProcess(this);
   connect(m_runProcess, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &RunView::onRunProcessFinished);
 
+  QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+
   auto energyPlusExePath = getEnergyPlusExecutable();
   if (!energyPlusExePath.empty()){
-    //QProcessEnvironment env = m_runProcess->processEnvironment();
-    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
     env.insert("ENERGYPLUS_EXE_PATH", toQString(energyPlusExePath));
-    m_runProcess->setProcessEnvironment(env);
   }
+
+  auto radianceDirectory = getRadianceDirectory();
+  if (!radianceDirectory.empty()){
+    env.insert("OS_RAYPATH", toQString(radianceDirectory));
+  }
+
+  auto perlExecutablePath = getPerlExecutable();
+  if (!perlExecutablePath.empty()){
+    env.insert("PERL_EXE_PATH", toQString(perlExecutablePath));
+  }
+
+  m_runProcess->setProcessEnvironment(env);
 
   m_runTcpServer = new QTcpServer();
   m_runTcpServer->listen();
@@ -178,7 +189,9 @@ void RunView::onRunProcessFinished(int exitCode, QProcess::ExitStatus status)
   m_progressBar->setValue(NumberOfStates);
 
   std::shared_ptr<OSDocument> osdocument = OSAppBase::instance()->currentDocument();
+  osdocument->save();
   osdocument->enableTabsAfterRun();
+  m_openSimDirButton->setEnabled(true);
 
   if (m_runSocket){
     delete m_runSocket;
@@ -217,7 +230,18 @@ void RunView::playButtonClicked(bool t_checked)
     paths << QCoreApplication::applicationDirPath();
     auto openstudioExePath = QStandardPaths::findExecutable("openstudio", paths);
 
-    auto workflowPath = resourcePath(toPath(osdocument->savePath())) / "workflow.osw";
+    // run in save dir
+    //auto basePath = resourcePath(toPath(osdocument->savePath()));
+    
+    // run in temp dir
+    auto basePath = toPath(osdocument->modelTempDir()) / toPath("resources");
+    
+    auto workflowPath = basePath / "workflow.osw";
+    auto stdoutPath = basePath / "stdout";
+    auto stderrPath = basePath / "stderr";
+
+    OS_ASSERT(exists(workflowPath));
+
     auto workflowJSONPath = QString::fromStdString(workflowPath.string());
     QStringList arguments;
     arguments << "run" << "-s" << QString::number(m_runTcpServer->serverPort()) << "-w" << workflowJSONPath;
@@ -226,9 +250,19 @@ void RunView::playButtonClicked(bool t_checked)
     LOG(Debug, "run arguments" << arguments.join(";").toStdString());
 
     osdocument->disableTabsDuringRun();
+    m_openSimDirButton->setEnabled(false);
+
+    if (exists(stdoutPath)){
+      remove(stdoutPath);
+    }
+    if (exists(stderrPath)){
+      remove(stderrPath);
+    }
 
     m_progressBar->setValue(0);
     m_textInfo->clear();
+    m_runProcess->setStandardOutputFile( toQString(stdoutPath) );
+    m_runProcess->setStandardErrorFile( toQString(stderrPath) );
     m_runProcess->start(openstudioExePath, arguments);
   } else {
     // stop running

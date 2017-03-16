@@ -1,15 +1,10 @@
-if(CMAKE_HOST_WIN32)
-  # Necessary to do with FindOpenSSL on Windows
-  cmake_minimum_required(VERSION 3.2.3)
-else()
-  cmake_minimum_required(VERSION 2.8.11)
-endif()
+cmake_minimum_required(VERSION 3.7.0)
 
 project(OpenStudioMeta)
 
 set(CMAKE_VERSION_MAJOR 2)
 set(CMAKE_VERSION_MINOR 0)
-set(CMAKE_VERSION_PATCH 2)
+set(CMAKE_VERSION_PATCH 5)
 
 set(CMAKE_VERSION_BUILD "Unknown" CACHE STRING "Build number")
 find_package(Git)
@@ -285,7 +280,7 @@ if( BUILD_RUBY )
     ExternalProject_Add(ZLib
       URL_HASH SHA256=c3e5e9fdd5004dcb542feda5ee4f0ff0744628baf8ed2dd5d66f8ca1197cb1a1 
       URL http://zlib.net/zlib-1.2.11.tar.gz
-      BUILD_COMMAND "${CMAKE_COMMAND}" --build "${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-build" --config $(Release) --config $(Debug) --target INSTALL
+      BUILD_COMMAND "${CMAKE_COMMAND}" --build "${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-build" --config Release --config Debug --target INSTALL
       CMAKE_CACHE_ARGS
         -DINSTALL_BIN_DIR:STRING=${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/bin/
         -DINSTALL_INC_DIR:STRING=${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/include/
@@ -293,6 +288,20 @@ if( BUILD_RUBY )
         -DINSTALL_MAN_DIR:STRING=${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/share/man/
         -DINSTALL_PKGCONFIG_DIR:STRING=${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/share/pkgconfig/
     )
+
+    # https://github.com/LuaDist/libffi/ has a cmake project for ffi but I did not get it to compile
+    set(LIBFFI_PATH "libffi-3.0.9-Windows-x86")
+    set(LIBFFI_EXPECTED_HASH "d90fc37850bd86775889aaf712341980")
+    if(EXISTS "${CMAKE_BINARY_DIR}/libffi.zip")
+      file(MD5 "${CMAKE_BINARY_DIR}/libffi.zip" LIBFFI_HASH)
+    endif()
+    if(NOT EXISTS "${CMAKE_BINARY_DIR}/libffi.zip" OR NOT "${LIBFFI_HASH}" MATCHES "${LIBFFI_EXPECTED_HASH}")
+      message(STATUS "Downloading libffi")
+      file(DOWNLOAD "http://github.com/LuaDist/libffi/archive/3.0.9-Windows-x86.zip" "${CMAKE_BINARY_DIR}/libffi.zip" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${LIBFFI_EXPECTED_HASH})
+      execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${LIBFFI_PATH}")
+      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/libffi.zip" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+    endif()
+
   endif()
 
   if( UNIX )
@@ -349,11 +358,14 @@ if(BUILD_OPENSTUDIO_GEMS)
   # depends on system Ruby and Git, Ruby must be same version as OpenStudio 
   if (WIN32)
     file(GLOB POTENTIAL_RUBY_LOCATIONS "c:/ruby*2.2.*/bin")
+    get_filename_component(POTENTIAL_TAR_LOCATIONS ${GIT_EXECUTABLE} DIRECTORY )
+    list(APPEND POTENTIAL_TAR_LOCATIONS "${POTENTIAL_TAR_LOCATIONS}/../bin" "${POTENTIAL_TAR_LOCATIONS}/../usr/bin")
   endif()
   find_program(RUBY_EXE ruby HINTS ${POTENTIAL_RUBY_LOCATIONS})
+  find_program(TAR_EXE tar HINTS ${POTENTIAL_TAR_LOCATIONS})
   set(OPENSTUDIO_GEMS_DIR "${CMAKE_BINARY_DIR}/openstudio-gems")
   add_custom_target(openstudio-gems ALL 
-                    ${RUBY_EXE} "${CMAKE_SOURCE_DIR}/dependencies/ruby/build_openstudio_gems.rb" "${OPENSTUDIO_GEMS_DIR}" "2.2.4" 
+                    ${RUBY_EXE} "${CMAKE_SOURCE_DIR}/dependencies/ruby/build_openstudio_gems.rb" "${OPENSTUDIO_GEMS_DIR}" "${TAR_EXE}" "2.2.4" 
                     WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/dependencies/ruby/"
                     DEPENDS "${CMAKE_SOURCE_DIR}/dependencies/ruby/Gemfile" "${CMAKE_SOURCE_DIR}/dependencies/ruby/build_openstudio_gems.rb")
 endif()

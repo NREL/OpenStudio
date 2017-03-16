@@ -316,6 +316,11 @@ void OpenStudioApp::buildCompLibraries()
 {
   osversion::VersionTranslator versionTranslator;
   versionTranslator.setAllowNewerVersions(false);
+    
+  QWidget * parent = nullptr;
+  if( this->currentDocument() ){
+    parent = this->currentDocument()->mainWindow();
+  }
 
   path p = resourcesPath() / toPath("MinimalTemplate.osm");
   OS_ASSERT(exists(p));
@@ -325,6 +330,9 @@ void OpenStudioApp::buildCompLibraries()
     for (const auto& error : versionTranslator.errors()){
       LOG_FREE(Error, "OpenStudioApp", error.logMessage());
     }
+  }
+  if (!temp){
+    QMessageBox::critical(parent, QString("Failed to load MinimalTemplate"), QString("Failed to load MinimalTemplate, likely due to problem with VersionTranslator."));
   }
   OS_ASSERT(temp);
   m_compLibrary = temp.get();
@@ -337,6 +345,9 @@ void OpenStudioApp::buildCompLibraries()
     for (const auto& error : versionTranslator.errors()){
       LOG_FREE(Error, "OpenStudioApp", error.logMessage());
     }
+  }
+  if (!temp){
+    QMessageBox::critical(parent, QString("Failed to load hvaclibrary"), QString("Failed to load hvaclibrary, likely due to problem with VersionTranslator."));
   }
   OS_ASSERT(temp);
   m_hvacCompLibrary = temp.get();

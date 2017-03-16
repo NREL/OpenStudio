@@ -23,6 +23,7 @@ set(${target_name}_src
   WindowGroup.cpp
 )
 
+# DLM: TODO, replace with embed_files
 qt5_add_resources(${target_name}_qrc_src radiance.qrc)
 
 set(${target_name}_test_src

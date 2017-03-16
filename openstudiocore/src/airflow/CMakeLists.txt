@@ -32,6 +32,7 @@ set(${target_name}_src
 )
 
 # resource files
+# DLM: TODO, replace with embed_files
 set(${target_name}_qrc
   contam.qrc
 )

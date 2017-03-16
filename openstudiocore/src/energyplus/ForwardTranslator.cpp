@@ -2254,6 +2254,18 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateSetpointManagerScheduledDualSetpoint(spm);
       break;
     }
+  case  openstudio::IddObjectType::OS_SetpointManager_SingleZone_Cooling :
+    {
+      model::SetpointManagerSingleZoneCooling spm = modelObject.cast<SetpointManagerSingleZoneCooling>();
+      retVal = translateSetpointManagerSingleZoneCooling(spm);
+      break;
+    }
+  case  openstudio::IddObjectType::OS_SetpointManager_SingleZone_Heating :
+    {
+      model::SetpointManagerSingleZoneHeating spm = modelObject.cast<SetpointManagerSingleZoneHeating>();
+      retVal = translateSetpointManagerSingleZoneHeating(spm);
+      break;
+    }
   case  openstudio::IddObjectType::OS_SetpointManager_SingleZone_Humidity_Maximum :
     {
       model::SetpointManagerSingleZoneHumidityMaximum spm = modelObject.cast<SetpointManagerSingleZoneHumidityMaximum>();
@@ -2474,6 +2486,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateOutsideSurfaceConvectionAlgorithm(mo);
       break;
     }
+  case openstudio::IddObjectType::OS_SurfaceProperty_ConvectionCoefficients:
+  {
+    model::SurfacePropertyConvectionCoefficients obj = modelObject.cast<SurfacePropertyConvectionCoefficients>();
+    retVal = translateSurfacePropertyConvectionCoefficients(obj);
+    break;
+  }
   case openstudio::IddObjectType::OS_SurfaceProperty_ConvectionCoefficients_MultipleSurface:
   {
     model::SurfacePropertyConvectionCoefficientsMultipleSurface obj = modelObject.cast<SurfacePropertyConvectionCoefficientsMultipleSurface>();
@@ -2960,6 +2978,8 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_ShadingSurfaceGroup);
   result.push_back(IddObjectType::OS_ShadingSurface);
 
+  result.push_back(IddObjectType::OS_SurfaceProperty_ConvectionCoefficients);
+
   result.push_back(IddObjectType::OS_Daylighting_Control);
   result.push_back(IddObjectType::OS_DaylightingDevice_Shelf);
   result.push_back(IddObjectType::OS_IlluminanceMap);
@@ -3115,6 +3135,7 @@ void ForwardTranslator::translateConstructions(const model::Model & model)
 
   iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_OtherSideCoefficients);
   iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_OtherSideConditionsModel);
+  iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_ConvectionCoefficients);
 
   for (const IddObjectType& iddObjectType : iddObjectTypes){
 

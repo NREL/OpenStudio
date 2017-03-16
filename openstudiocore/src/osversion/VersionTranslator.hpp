@@ -217,7 +217,7 @@ class OSVERSION_API VersionTranslator {
   std::string update_1_11_4_to_1_11_5(const IdfFile& idf_1_11_4, const IddFileAndFactoryWrapper& idd_1_11_5);
   std::string update_1_12_0_to_1_12_1(const IdfFile& idf_1_12_0, const IddFileAndFactoryWrapper& idd_1_12_1);
   std::string update_1_12_3_to_1_12_4(const IdfFile& idf_1_12_3, const IddFileAndFactoryWrapper& idd_1_12_4);
-  std::string update_2_0_1_to_2_0_2(const IdfFile& idf_2_0_1, const IddFileAndFactoryWrapper& idd_2_0_2);
+  std::string update_2_0_4_to_2_0_5(const IdfFile& idf_2_0_4, const IddFileAndFactoryWrapper& idd_2_0_5);
 
   IdfObject updateUrlField_0_7_1_to_0_7_2(const IdfObject& object, unsigned index);
 

@@ -36,6 +36,7 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/case_conv.hpp>
 #include <iostream>
+#include <QtGlobal>
 
 #if defined _WIN32 
 #include <windows.h>
@@ -256,33 +257,89 @@ namespace openstudio {
     return openstudio::path();
   }
 
-  boost::optional<openstudio::path> getRadianceDirectory() {
-    openstudio::path cmakeRadianceDirectory = openstudio::toPath("${RADIANCE_LOCATION}");
-    openstudio::path radianceDirectoryName;
-    if (!cmakeRadianceDirectory.empty()){
-      radianceDirectoryName = cmakeRadianceDirectory.filename();
+  openstudio::path getRadianceDirectory() {
+    // handle developer case first
+    if (applicationIsRunningFromBuildDirectory()){
+      openstudio::path cmakeRadianceDirectory = openstudio::toPath("${RADIANCE_LOCATION}");
+      if( openstudio::filesystem::exists(cmakeRadianceDirectory) ){
+        return cmakeRadianceDirectory;
+      }
     }
 
-    openstudio::path result;
-
-    if (applicationIsRunningFromBuildDirectory())
-    {
-      result = cmakeRadianceDirectory;
-    } else {
-  #ifdef Q_OS_LINUX
-      result = getApplicationInstallDirectory() / openstudio::toPath("share/openstudio-" + openStudioVersion()) / radianceDirectoryName;
-  #elif defined(Q_OS_MAC)
-      result = getApplicationDirectory().parent_path().parent_path().parent_path() / openstudio::toPath("sharedresources") / radianceDirectoryName;
-  #else
-      result = getApplicationDirectory().parent_path() / openstudio::toPath("share/openstudio") / radianceDirectoryName;
-  #endif
+    // next check environment variable
+    auto envPathString = std::getenv("OS_RAYPATH");
+    if( envPathString ) {
+      openstudio::path envPath = openstudio::toPath(envPathString);
+      if( openstudio::filesystem::exists(envPath) ) {
+        return envPath;
+      }
     }
 
-    if (exists(result)){
-      return result;
-    }
+    // next check for installed energyplus
+    openstudio::path installPath = getApplicationDirectory() / toPath("/../Radiance");
+    if( openstudio::filesystem::exists(installPath) ) {
+      return installPath;
+    } 
 
-    return boost::none;
+    // next check default location
+    #ifdef Q_OS_LINUX
+      auto systemPath = openstudio::toPath("/usr/local/radiance");
+    #elif defined(Q_OS_MAC)
+      auto systemPath = openstudio::toPath("/usr/local/radiance");
+    #else
+      auto systemPath = openstudio::toPath("C:/Program Files/radiance");
+    #endif
+
+    if( openstudio::filesystem::exists(systemPath) ) {
+      return systemPath;
+    }
+    
+    return openstudio::path();
+  }
+
+  openstudio::path getPerlExecutable() {
+    #if defined (Q_OS_LINUX) || defined (Q_OS_MAC)
+      // check environment variable
+      auto envPathString = std::getenv("PERL_EXE_PATH");
+      if( envPathString ) {
+        openstudio::path envPath = openstudio::toPath(envPathString);
+        if( openstudio::filesystem::exists(envPath) ) {
+          return envPath;
+        }
+      }
+
+      // next check for system perl
+      openstudio::path systemPath = toPath("/usr/bin/perl");
+      if( openstudio::filesystem::exists(systemPath) ) {
+        return systemPath;
+      } 
+    #else
+      // handle developer case first
+      if (applicationIsRunningFromBuildDirectory()){
+        openstudio::path cmakePerlPath = openstudio::toPath("${PERL_EXE}");
+        if( openstudio::filesystem::exists(cmakePerlPath) ){
+          return cmakePerlPath;
+        }
+      }
+
+      // next check environment variable
+      auto envPathString = std::getenv("PERL_EXE_PATH");
+      if( envPathString ) {
+        openstudio::path envPath = openstudio::toPath(envPathString);
+        if( openstudio::filesystem::exists(envPath) ) {
+          return envPath;
+        }
+      }
+
+      // next check for installed perl
+      openstudio::path installPath = getApplicationDirectory() / toPath("/../Perl/bin/perl.exe");
+      if( openstudio::filesystem::exists(installPath) ) {
+        return installPath;
+      } 
+      
+    #endif
+
+    return openstudio::path();
   }
 
 } // openstudio

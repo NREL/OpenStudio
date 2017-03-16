@@ -251,6 +251,8 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateSetpointManagerOutdoorAirReset.cpp
   ForwardTranslator/ForwardTranslateSetpointManagerScheduled.cpp
   ForwardTranslator/ForwardTranslateSetpointManagerScheduledDualSetpoint.cpp
+  ForwardTranslator/ForwardTranslateSetpointManagerSingleZoneCooling.cpp
+  ForwardTranslator/ForwardTranslateSetpointManagerSingleZoneHeating.cpp
   ForwardTranslator/ForwardTranslateSetpointManagerSingleZoneHumidityMaximum.cpp
   ForwardTranslator/ForwardTranslateSetpointManagerSingleZoneHumidityMinimum.cpp
   ForwardTranslator/ForwardTranslateSetpointManagerSingleZoneOneStageCooling.cpp
@@ -292,6 +294,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateSteamEquipment.cpp
   ForwardTranslator/ForwardTranslateSubSurface.cpp
   ForwardTranslator/ForwardTranslateSurface.cpp
+  ForwardTranslator/ForwardTranslateSurfacePropertyConvectionCoefficients.cpp
   ForwardTranslator/ForwardTranslateSurfacePropertyConvectionCoefficientsMultipleSurface.cpp
   ForwardTranslator/ForwardTranslateSurfacePropertyOtherSideCoefficients.cpp
   ForwardTranslator/ForwardTranslateSurfacePropertyOtherSideConditionsModel.cpp
@@ -509,6 +512,7 @@ set(${target_name}_test_src
   Test/SpaceInfiltrationEffectiveLeakageArea_GTest.cpp
   Test/SubSurface_GTest.cpp
   Test/Surface_GTest.cpp
+  Test/SurfacePropertyConvectionCoefficients.cpp
   Test/TableMultiVariableLookup_GTest.cpp
   Test/ThermalZone_GTest.cpp
   Test/WindowPropertyFrameAndDivider_GTest.cpp

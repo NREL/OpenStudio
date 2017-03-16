@@ -100,7 +100,7 @@
 ! Environmental Emissions:        None
 ! Utility Tariffs:                None
 
-  Version,8.6;
+  Version,8.7;
 
   Building,
     Building,                !- Name
@@ -2286,7 +2286,7 @@
     autosize,                !- Maximum Air Flow Rate {m3/s}
     Constant,                !- Zone Minimum Air Flow Input Method
     0.3,                     !- Constant Minimum Air Flow Fraction
-    ,                        !- Fixed Minimum Air Flow Rate {m3/s}
+    Autosize,                !- Fixed Minimum Air Flow Rate {m3/s}
     ,                        !- Minimum Air Flow Fraction Schedule Name
     Coil:Heating:Water,      !- Reheat Coil Object Type
     SPACE1-1 Zone Coil,      !- Reheat Coil Name
@@ -2306,7 +2306,7 @@
     autosize,                !- Maximum Air Flow Rate {m3/s}
     Constant,                !- Zone Minimum Air Flow Input Method
     0.3,                     !- Constant Minimum Air Flow Fraction
-    ,                        !- Fixed Minimum Air Flow Rate {m3/s}
+    Autosize,                !- Fixed Minimum Air Flow Rate {m3/s}
     ,                        !- Minimum Air Flow Fraction Schedule Name
     Coil:Heating:Water,      !- Reheat Coil Object Type
     SPACE2-1 Zone Coil,      !- Reheat Coil Name
@@ -2326,7 +2326,7 @@
     autosize,                !- Maximum Air Flow Rate {m3/s}
     Constant,                !- Zone Minimum Air Flow Input Method
     0.3,                     !- Constant Minimum Air Flow Fraction
-    ,                        !- Fixed Minimum Air Flow Rate {m3/s}
+    Autosize,                !- Fixed Minimum Air Flow Rate {m3/s}
     ,                        !- Minimum Air Flow Fraction Schedule Name
     Coil:Heating:Water,      !- Reheat Coil Object Type
     SPACE3-1 Zone Coil,      !- Reheat Coil Name
@@ -2346,7 +2346,7 @@
     autosize,                !- Maximum Air Flow Rate {m3/s}
     Constant,                !- Zone Minimum Air Flow Input Method
     0.3,                     !- Constant Minimum Air Flow Fraction
-    ,                        !- Fixed Minimum Air Flow Rate {m3/s}
+    Autosize,                !- Fixed Minimum Air Flow Rate {m3/s}
     ,                        !- Minimum Air Flow Fraction Schedule Name
     Coil:Heating:Water,      !- Reheat Coil Object Type
     SPACE4-1 Zone Coil,      !- Reheat Coil Name
@@ -2366,7 +2366,7 @@
     autosize,                !- Maximum Air Flow Rate {m3/s}
     Constant,                !- Zone Minimum Air Flow Input Method
     0.3,                     !- Constant Minimum Air Flow Fraction
-    ,                        !- Fixed Minimum Air Flow Rate {m3/s}
+    Autosize,                !- Fixed Minimum Air Flow Rate {m3/s}
     ,                        !- Minimum Air Flow Fraction Schedule Name
     Coil:Heating:Water,      !- Reheat Coil Object Type
     SPACE5-1 Zone Coil,      !- Reheat Coil Name
