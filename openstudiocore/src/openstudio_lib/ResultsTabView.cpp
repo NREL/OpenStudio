@@ -63,7 +63,7 @@ ResultsTabView::ResultsTabView(const QString & tabLabel,
   TabType tabType,
   QWidget * parent)
   : MainTabView(tabLabel, tabType, parent),
-  m_resultsView(new ResultsView())
+  m_resultsView(new ResultsView(parent))
 {
   addTabWidget(m_resultsView);
   m_resultsView->setAutoFillBackground(false);
