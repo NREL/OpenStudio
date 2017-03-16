@@ -935,7 +935,11 @@ boost::optional<WorkflowStepResult> WorkflowStepResult::fromString(const std::st
 
     if (value.isMember("measure_version_modified")){
       Json::Value versionModified = value["measure_version_modified"];
-      result.setMeasureVersionModified(versionModified.asString());
+      std::string str = versionModified.asString();
+      boost::optional<DateTime> dateTime = DateTime::fromISO8601(versionModified.asString());
+      if (dateTime){
+        result.setMeasureVersionModified(dateTime.get());
+      }
     }
 
     if (value.isMember("measure_xml_checksum")){

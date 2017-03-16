@@ -79,6 +79,9 @@ namespace openstudio {
 
   double Variant::valueAsDouble() const
   {
+    if (m_type == VariantType::Integer){
+      return (double)valueAsInteger();
+    }
     return boost::get<double>(m_value);
   }
 
