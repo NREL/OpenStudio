@@ -27,15 +27,7 @@
  **********************************************************************************************************************/
 
 #include "ResultsTabView.hpp"
-#if QT_VERSION >= 0x050400
-#include "ResultsWebEngineView.hpp"
-#else
-#include "ResultsWebView.hpp"
-#include <QWebInspector>
-#endif
-
 #include "OSDocument.hpp"
-
 #include "OSAppBase.hpp"
 
 #include <QFile>
@@ -49,13 +41,7 @@
 #include <QPushButton>
 #include <QString>
 #include <QRegExp>
-
-//#include "../runmanager/lib/FileInfo.hpp"
-//#include "../runmanager/lib/JobStatusWidget.hpp"
-//#include "../runmanager/lib/RunManager.hpp"
-
 #include "../utilities/core/Assert.hpp"
-
 
 namespace openstudio {
 
@@ -110,27 +96,16 @@ ResultsView::ResultsView(QWidget *t_parent)
 
   hLayout->addWidget(m_openResultsViewerBtn, 0, Qt::AlignVCenter);
 
-  m_view = new ResultsWebView(this);
-  m_view->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-  mainLayout->addWidget(m_view, 0, Qt::AlignTop);
-
-  #if _DEBUG || (__GNUC__ && !NDEBUG)
-    #if QT_VERSION >= 0x050400
-      // QWebEngine debug stuff
-    #else
-      m_view->page()->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
-    #endif
-  #else
-    m_view->setContextMenuPolicy(Qt::NoContextMenu);
-  #endif
+  m_view = new QWebEngineView(this);
+  //m_view->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+  //mainLayout->addWidget(m_view, 10, Qt::AlignTop);
+  mainLayout->addWidget(m_view);
+  m_view->setContextMenuPolicy(Qt::NoContextMenu);
 }
 
 ResultsView::~ResultsView()
 {
   delete m_view;
-#if QT_VERSION < 0x050400
-  QWebSettings::clearMemoryCaches();
-#endif
 }
 
 void ResultsView::openResultsViewerClicked()
@@ -358,29 +333,6 @@ void ResultsView::comboBoxChanged(int index)
 {
   QString filename = m_comboBox->itemData(index).toString();
   m_view->load(QUrl(filename));
-}
-
-ResultsWebView::ResultsWebView(QWidget * parent) :
-#if QT_VERSION >= 0x050400
-  QWebEngineView(parent)
-#else
-  QWebView(parent)
-#endif
-{
-  #if QT_VERSION >= 0x050400
-      // QWebEngine local storage
-  #else
-    this->page()->settings()->setAttribute(QWebSettings::LocalStorageEnabled, true);
-  #endif
-}
-
-QSize ResultsWebView::sizeHint() const
-{
-  QDesktopWidget widget;
-  QRect mainScreenSize = widget.availableGeometry(widget.primaryScreen());
-  int w = mainScreenSize.width();
-  int h = mainScreenSize.height();
-  return QSize(w,h);
 }
 
 } // openstudio
