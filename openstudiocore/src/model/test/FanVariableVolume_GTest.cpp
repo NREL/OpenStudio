@@ -105,6 +105,6 @@ TEST_F(ModelFixture,FanVariableVolume_addToNode) {
   EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
 
   FanVariableVolume fan2(m,s);
-  EXPECT_FALSE(fan2.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
+  EXPECT_TRUE(fan2.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)7, airLoop.supplyComponents().size() );
 }
