@@ -160,6 +160,42 @@ namespace detail {
       value["completed_at"] = completedAt()->toISO8601();
     }
 
+    if (m_measureType){
+      value["measure_type"] = m_measureType->valueName();
+    }
+
+    if (m_measureName){
+      value["measure_name"] = m_measureName.get();
+    }
+
+    if (m_measureId){
+      value["measure_uid"] = m_measureId.get();
+    }
+
+    if (m_measureVersionId){
+      value["measure_version_id"] = m_measureVersionId.get();
+    }
+
+    if (m_measureVersionModified){
+      value["measure_version_modified"] = m_measureVersionModified.get();
+    }
+
+    if (m_measureXmlChecksum){
+      value["measure_xml_checksum"] = m_measureXmlChecksum.get();
+    }
+
+    if (m_measureClassName){
+      value["measure_class_name"] = m_measureClassName.get();
+    }
+
+    if (m_measureDisplayName){
+      value["measure_display_name"] = m_measureDisplayName.get();
+    }
+
+    if (m_measureTaxonomy){
+      value["measure_taxonomy"] = m_measureTaxonomy.get();
+    }
+
     if (complete){
       if (stepResult()){
         value["step_result"] = stepResult()->valueName();
@@ -244,6 +280,70 @@ namespace detail {
   boost::optional<DateTime> WorkflowStepResult_Impl::completedAt() const
   {
     return m_completedAt;
+  }
+
+  boost::optional<MeasureType> WorkflowStepResult_Impl::measureType() const
+  {
+    return m_measureType;
+  }
+
+  boost::optional<std::string> WorkflowStepResult_Impl::measureName() const
+  {
+    return m_measureName;
+  }
+
+  boost::optional<std::string> WorkflowStepResult_Impl::measureId() const
+  {
+    return m_measureId;
+  }
+
+  boost::optional<UUID> WorkflowStepResult_Impl::measureUUID() const
+  {
+    if (!m_measureId){
+      return boost::none;
+    }
+    return toUUID("{" + m_measureId.get() + "}");
+  }
+
+  boost::optional<std::string> WorkflowStepResult_Impl::measureVersionId() const
+  {
+    return m_measureVersionId;
+  }
+
+  boost::optional<UUID> WorkflowStepResult_Impl::measureVersionUUID() const
+  {
+    if (!m_measureVersionId){
+      return boost::none;
+    }
+    return toUUID("{" + m_measureVersionId.get() + "}");
+  }
+
+  boost::optional<DateTime> WorkflowStepResult_Impl::measureVersionModified() const
+  {
+    if (m_measureVersionModified){
+      return DateTime::fromISO8601(*m_measureVersionModified);
+    }
+    return boost::none;
+  }
+
+  boost::optional<std::string> WorkflowStepResult_Impl::measureXmlChecksum() const
+  {
+    return m_measureXmlChecksum;
+  }
+
+  boost::optional<std::string> WorkflowStepResult_Impl::measureClassName() const
+  {
+    return m_measureClassName;
+  }
+    
+  boost::optional<std::string> WorkflowStepResult_Impl::measureDisplayName() const
+  {
+    return m_measureDisplayName;
+  }
+
+  boost::optional<std::string> WorkflowStepResult_Impl::measureTaxonomy() const
+  {
+    return m_measureTaxonomy;
   }
 
   boost::optional<StepResult> WorkflowStepResult_Impl::stepResult() const
@@ -410,6 +510,127 @@ namespace detail {
   void WorkflowStepResult_Impl::resetCompletedAt()
   {
     m_completedAt.reset();
+  }
+    
+  bool WorkflowStepResult_Impl::setMeasureType(const MeasureType& measureType)
+  {
+    m_measureType = measureType;
+    return true;
+  }
+
+  void WorkflowStepResult_Impl::resetMeasureType()
+  {
+    m_measureType.reset();
+  }
+
+  bool WorkflowStepResult_Impl::setMeasureName(const std::string& name)
+  {
+    m_measureName = name;
+    return true;
+  }
+
+  void WorkflowStepResult_Impl::resetMeasureName()
+  {
+    m_measureName.reset();
+  }
+
+  bool WorkflowStepResult_Impl::setMeasureId(const std::string& id)
+  {
+    m_measureId = id;
+    return true;
+  }
+
+  void WorkflowStepResult_Impl::resetMeasureId()
+  {
+    m_measureId.reset();
+  }
+  
+  bool WorkflowStepResult_Impl::setMeasureUUID(const UUID& uuid)
+  {
+    m_measureId = removeBraces(uuid);
+    return true;
+  }
+
+  void WorkflowStepResult_Impl::resetMeasureUUID()
+  {
+    m_measureId.reset();
+  }
+
+  bool WorkflowStepResult_Impl::setMeasureVersionId(const std::string& id)
+  {
+    m_measureVersionId = id;
+    return true;
+  }
+
+  void WorkflowStepResult_Impl::resetMeasureVersionId()
+  {
+    m_measureVersionId.reset();
+  }
+  
+  bool WorkflowStepResult_Impl::setMeasureVersionUUID(const UUID& uuid)
+  {
+    m_measureVersionId = removeBraces(uuid);
+    return true;
+  }
+
+  void WorkflowStepResult_Impl::resetMeasureVersionUUID()
+  {
+    m_measureVersionId.reset();
+  }
+
+  bool WorkflowStepResult_Impl::setMeasureVersionModified(const DateTime& versionModified)
+  {
+    m_measureVersionModified = versionModified.toISO8601();
+    return true;
+  }
+
+  void WorkflowStepResult_Impl::resetMeasureVersionModified()
+  {
+    m_measureVersionModified.reset();
+  }
+
+  bool WorkflowStepResult_Impl::setMeasureXmlChecksum(const std::string& checksum)
+  {
+    m_measureXmlChecksum = checksum;
+    return true;
+  }
+
+  void WorkflowStepResult_Impl::resetMeasureXmlChecksum()
+  {
+    m_measureXmlChecksum.reset();
+  }
+
+  bool WorkflowStepResult_Impl::setMeasureClassName(const std::string& className)
+  {
+    m_measureClassName = className;
+    return true;
+  }
+
+  void WorkflowStepResult_Impl::resetMeasureClassName()
+  {
+    m_measureClassName.reset();
+  }
+
+  bool WorkflowStepResult_Impl::setMeasureDisplayName(const std::string& displayName)
+  {
+    m_measureDisplayName = displayName;
+    return true;
+  }
+
+  void WorkflowStepResult_Impl::resetMeasureDisplayName()
+  {
+    m_measureDisplayName.reset();
+  }
+
+  bool WorkflowStepResult_Impl::setMeasureTaxonomy(const std::string& taxonomy)
+  {
+    m_measureTaxonomy = taxonomy;
+    return true;
+  }
+
+  void WorkflowStepResult_Impl::resetMeasureTaxonomy()
+  {
+    m_measureTaxonomy.reset();
   }
 
   void WorkflowStepResult_Impl::setStepResult(const StepResult& result)
@@ -687,6 +908,55 @@ boost::optional<WorkflowStepResult> WorkflowStepResult::fromString(const std::st
         result.setCompletedAt(*dateTime);
       }
     }
+ 
+    if (value.isMember("measure_type")){
+      Json::Value measureType = value["measure_type"];
+      try{
+        result.setMeasureType(MeasureType(measureType.asString()));
+      } catch (const std::exception&){
+        LOG(Error, measureType.asString() << " is not a valid MeasureType.")
+      }
+    }
+
+    if (value.isMember("measure_name")){
+      Json::Value measureName = value["measure_name"];
+      result.setMeasureName(measureName.asString());
+    }
+
+    if (value.isMember("measure_uid")){
+      Json::Value measureId = value["measure_uid"];
+      result.setMeasureId(measureId.asString());
+    }
+
+    if (value.isMember("measure_version_id")){
+      Json::Value versionId = value["measure_version_id"];
+      result.setMeasureVersionId(versionId.asString());
+    }
+
+    if (value.isMember("measure_version_modified")){
+      Json::Value versionModified = value["measure_version_modified"];
+      result.setMeasureVersionModified(versionModified.asString());
+    }
+
+    if (value.isMember("measure_xml_checksum")){
+      Json::Value checksum = value["measure_xml_checksum"];
+      result.setMeasureXmlChecksum(checksum.asString());
+    }
+
+    if (value.isMember("measure_class_name")){
+      Json::Value className = value["measure_class_name"];
+      result.setMeasureClassName(className.asString());
+    }
+
+    if (value.isMember("measure_display_name")){
+      Json::Value displayName = value["measure_display_name"];
+      result.setMeasureDisplayName(displayName.asString());
+    }
+
+    if (value.isMember("measure_taxonomy")){
+      Json::Value taxonomy = value["measure_taxonomy"];
+      result.setMeasureTaxonomy(taxonomy.asString());
+    }
 
     if (value.isMember("step_result")){
       StepResult stepResult(value["step_result"].asString());
@@ -767,6 +1037,61 @@ boost::optional<DateTime> WorkflowStepResult::startedAt() const
 boost::optional<DateTime> WorkflowStepResult::completedAt() const
 {
   return getImpl<detail::WorkflowStepResult_Impl>()->completedAt();
+}
+
+boost::optional<MeasureType> WorkflowStepResult::measureType() const
+{
+  return getImpl<detail::WorkflowStepResult_Impl>()->measureType();
+}
+
+boost::optional<std::string> WorkflowStepResult::measureName() const
+{
+  return getImpl<detail::WorkflowStepResult_Impl>()->measureName();
+}
+
+boost::optional<std::string> WorkflowStepResult::measureId() const
+{
+  return getImpl<detail::WorkflowStepResult_Impl>()->measureId();
+}
+
+boost::optional<UUID> WorkflowStepResult::measureUUID() const
+{
+  return getImpl<detail::WorkflowStepResult_Impl>()->measureUUID();
+}
+
+boost::optional<std::string> WorkflowStepResult::measureVersionId() const
+{
+  return getImpl<detail::WorkflowStepResult_Impl>()->measureVersionId();
+}
+
+boost::optional<UUID> WorkflowStepResult::measureVersionUUID() const
+{
+  return getImpl<detail::WorkflowStepResult_Impl>()->measureVersionUUID();
+}
+
+boost::optional<DateTime> WorkflowStepResult::measureVersionModified() const
+{
+  return getImpl<detail::WorkflowStepResult_Impl>()->measureVersionModified();
+}
+
+boost::optional<std::string> WorkflowStepResult::measureXmlChecksum() const
+{
+  return getImpl<detail::WorkflowStepResult_Impl>()->measureXmlChecksum();
+}
+
+boost::optional<std::string> WorkflowStepResult::measureClassName() const
+{
+  return getImpl<detail::WorkflowStepResult_Impl>()->measureClassName();
+}
+
+boost::optional<std::string> WorkflowStepResult::measureDisplayName() const
+{
+  return getImpl<detail::WorkflowStepResult_Impl>()->measureDisplayName();
+}
+
+boost::optional<std::string> WorkflowStepResult::measureTaxonomy() const
+{
+  return getImpl<detail::WorkflowStepResult_Impl>()->measureTaxonomy();
 }
 
 boost::optional<StepResult> WorkflowStepResult::stepResult() const
@@ -872,6 +1197,116 @@ void WorkflowStepResult::setCompletedAt(const DateTime& dateTime)
 void WorkflowStepResult::resetCompletedAt()
 {
   getImpl<detail::WorkflowStepResult_Impl>()->resetCompletedAt();
+}
+
+bool WorkflowStepResult::setMeasureType(const MeasureType& measureType)
+{
+  return getImpl<detail::WorkflowStepResult_Impl>()->setMeasureType(measureType);
+}
+
+void WorkflowStepResult::resetMeasureType()
+{
+  getImpl<detail::WorkflowStepResult_Impl>()->resetMeasureType();
+}
+
+bool WorkflowStepResult::setMeasureName(const std::string& name)
+{
+  return getImpl<detail::WorkflowStepResult_Impl>()->setMeasureName(name);
+}
+
+void WorkflowStepResult::resetMeasureName()
+{
+  getImpl<detail::WorkflowStepResult_Impl>()->resetMeasureName();
+}
+
+bool WorkflowStepResult::setMeasureId(const std::string& id)
+{
+  return getImpl<detail::WorkflowStepResult_Impl>()->setMeasureId(id);
+}
+
+void WorkflowStepResult::resetMeasureId()
+{
+  getImpl<detail::WorkflowStepResult_Impl>()->resetMeasureId();
+}
+
+bool WorkflowStepResult::setMeasureUUID(const UUID& uuid)
+{
+  return getImpl<detail::WorkflowStepResult_Impl>()->setMeasureUUID(uuid);
+}
+
+void WorkflowStepResult::resetMeasureUUID()
+{
+  getImpl<detail::WorkflowStepResult_Impl>()->resetMeasureUUID();
+}
+
+bool WorkflowStepResult::setMeasureVersionId(const std::string& id)
+{
+  return getImpl<detail::WorkflowStepResult_Impl>()->setMeasureVersionId(id);
+}
+
+void WorkflowStepResult::resetMeasureVersionId()
+{
+  getImpl<detail::WorkflowStepResult_Impl>()->resetMeasureVersionId();
+}
+
+bool WorkflowStepResult::setMeasureVersionUUID(const UUID& uuid)
+{
+  return getImpl<detail::WorkflowStepResult_Impl>()->setMeasureVersionUUID(uuid);
+}
+
+void WorkflowStepResult::resetMeasureVersionUUID()
+{
+  getImpl<detail::WorkflowStepResult_Impl>()->resetMeasureVersionUUID();
+}
+
+bool WorkflowStepResult::setMeasureVersionModified(const DateTime& versionModified)
+{
+  return getImpl<detail::WorkflowStepResult_Impl>()->setMeasureVersionModified(versionModified);
+}
+
+void WorkflowStepResult::resetMeasureVersionModified()
+{
+  getImpl<detail::WorkflowStepResult_Impl>()->resetMeasureVersionModified();
+}
+
+bool WorkflowStepResult::setMeasureXmlChecksum(const std::string& checksum)
+{
+  return getImpl<detail::WorkflowStepResult_Impl>()->setMeasureXmlChecksum(checksum);
+}
+
+void WorkflowStepResult::resetMeasureXmlChecksum()
+{
+  getImpl<detail::WorkflowStepResult_Impl>()->resetMeasureXmlChecksum();
+}
+
+bool WorkflowStepResult::setMeasureClassName(const std::string& className)
+{
+  return getImpl<detail::WorkflowStepResult_Impl>()->setMeasureClassName(className);
+}
+
+void WorkflowStepResult::resetMeasureClassName()
+{
+  getImpl<detail::WorkflowStepResult_Impl>()->resetMeasureClassName();
+}
+
+bool WorkflowStepResult::setMeasureDisplayName(const std::string& displayName)
+{
+  return getImpl<detail::WorkflowStepResult_Impl>()->setMeasureDisplayName(displayName);
+}
+
+void WorkflowStepResult::resetMeasureDisplayName()
+{
+  getImpl<detail::WorkflowStepResult_Impl>()->resetMeasureDisplayName();
+}
+
+bool WorkflowStepResult::setMeasureTaxonomy(const std::string& taxonomy)
+{
+  return getImpl<detail::WorkflowStepResult_Impl>()->setMeasureTaxonomy(taxonomy);
+}
+
+void WorkflowStepResult::resetMeasureTaxonomy()
+{
+  getImpl<detail::WorkflowStepResult_Impl>()->resetMeasureTaxonomy();
 }
 
 void WorkflowStepResult::setStepResult(const StepResult& result)
