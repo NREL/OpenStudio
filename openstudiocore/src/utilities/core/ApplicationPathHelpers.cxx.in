@@ -162,7 +162,7 @@ namespace openstudio {
     #if defined _WIN32 
       cliPath = getOpenStudioModuleDirectory() / toPath("openstudio.exe");
     #else
-      cliPath = getOpenStudioModuleDirectory() / toPath("openstudio");
+      cliPath = getOpenStudioModuleDirectory() / toPath("../openstudio");
     #endif
 
     if( openstudio::filesystem::exists(cliPath) ){
