@@ -228,9 +228,9 @@ namespace openstudio {
 
     // next check for installed energyplus
 #ifdef _WIN32
-    openstudio::path installPath = getOpenStudioModule() / toPath("/../EnergyPlus/energyplus.exe");
+    openstudio::path installPath = getOpenStudioModuleDirectory() / toPath("/../EnergyPlus/energyplus.exe");
 #else
-    openstudio::path installPath = getOpenStudioModule() / toPath("/../EnergyPlus/energyplus");
+    openstudio::path installPath = getOpenStudioModuleDirectory() / toPath("/../EnergyPlus/energyplus");
 #endif
     if( openstudio::filesystem::exists(installPath) ) {
       return installPath;
@@ -299,7 +299,7 @@ namespace openstudio {
     }
 
     // next check for installed energyplus
-    openstudio::path installPath = getOpenStudioModule() / toPath("/../Radiance");
+    openstudio::path installPath = getOpenStudioModuleDirectory() / toPath("/../Radiance");
     if( openstudio::filesystem::exists(installPath) ) {
       return installPath;
     } 
@@ -355,13 +355,13 @@ namespace openstudio {
       }
 
       // next check for installed perl
-      openstudio::path installPath = getOpenStudioModule() / toPath("/../Perl/bin/perl.exe");
+      openstudio::path installPath = getOpenStudioModuleDirectory() / toPath("/../Perl/bin/perl.exe");
       if( openstudio::filesystem::exists(installPath) ) {
         return installPath;
       } 
 
       // alternate install location (to be removed)
-      installPath = getOpenStudioModule() / toPath("/../Perl/perl/bin/perl.exe");
+      installPath = getOpenStudioModuleDirectory() / toPath("/../Perl/perl/bin/perl.exe");
       if( openstudio::filesystem::exists(installPath) ) {
         return installPath;
       } 
