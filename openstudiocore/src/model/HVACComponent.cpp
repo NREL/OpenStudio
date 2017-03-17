@@ -160,28 +160,41 @@ namespace detail {
     else
     {
       std::vector<PlantLoop> plantLoops = this->model().getConcreteModelObjects<PlantLoop>();
+      auto const thisObject = getObject<HVACComponent>();
 
       for( auto & plantLoop : plantLoops )
       {
-        if( plantLoop.component(this->handle()) )
-        {
+        std::vector<ModelObject> components = plantLoop.supplyComponents(thisObject, plantLoop.supplyOutletNode());
+        if ( components.size() > 0 ) {
           m_plantLoop = plantLoop;
           return plantLoop;
         }
+        components = plantLoop.demandComponents(thisObject, plantLoop.demandOutletNode());
+        if ( components.size() > 0 ) {
+          m_plantLoop = plantLoop;
+          return plantLoop;
+        }
+        // if( supplyComp ) { return supplyComp; }
+        // return this->demandComponent(handle);
+        // if( plantLoop.component(this->handle()) )
+        // {
+        //   m_plantLoop = plantLoop;
+        //   return plantLoop;
+        // }
       }
     }
 
     return boost::none;
   }
 
-  bool HVACComponent_Impl::removeFromLoop( const HVACComponent & systemStartComponent, 
+  bool HVACComponent_Impl::removeFromLoop( const HVACComponent & systemStartComponent,
     const HVACComponent & systemEndComponent,
     unsigned componentInletPort,
     unsigned componentOutletPort )
   {
     auto _model = model();
     auto thisObject = getObject<HVACComponent>();
-    
+
     if( systemStartComponent.model() != _model ) return false;
     if( systemEndComponent.model() != _model ) return false;
 
@@ -211,17 +224,17 @@ namespace detail {
       }
     }
 
-    if( systemStartComponent.handle() == inletComponent->handle() 
+    if( systemStartComponent.handle() == inletComponent->handle()
         && systemEndComponent.handle() == outletComponent->handle() ) {
       // This component is between the systemStartComponent and the systemEndComponent
       // ie. the supply or demand inlet or outlet Nodes,
       // or the oa system end points on either the relief or inlet air streams.
-      _model.disconnect(thisObject,componentInletPort); 
-      _model.disconnect(thisObject,componentOutletPort); 
+      _model.disconnect(thisObject,componentInletPort);
+      _model.disconnect(thisObject,componentOutletPort);
 
-      _model.connect( inletComponent.get(), inletComponentOutletPort.get(), 
+      _model.connect( inletComponent.get(), inletComponentOutletPort.get(),
                        outletComponent.get(), outletComponentInletPort.get() );
-      
+
       return true;
     } else if( systemEndComponent.handle() == outletComponent->handle() ) {
       // Here the systemEndComponent is immediately downstream of this component,
@@ -240,15 +253,15 @@ namespace detail {
         newInletComponentOutletPort = inletComponentOutletPort;
       }
 
-      _model.disconnect(thisObject,componentInletPort); 
-      _model.disconnect(thisObject,componentOutletPort); 
+      _model.disconnect(thisObject,componentInletPort);
+      _model.disconnect(thisObject,componentOutletPort);
 
       // inletNode->remove() would have failed if we did it before the disconnect
       if( inletNode && outletNode ) {
         inletNode->remove();
       }
 
-      _model.connect( newInletComponent.get(), newInletComponentOutletPort.get(), 
+      _model.connect( newInletComponent.get(), newInletComponentOutletPort.get(),
                        outletComponent.get(), outletComponentInletPort.get() );
       return true;
     } else if( splitter && mixer ) {
@@ -264,8 +277,8 @@ namespace detail {
       splitter->removePortForBranch(i);
       mixer->removePortForBranch(i);
 
-      _model.disconnect(thisObject,componentInletPort); 
-      _model.disconnect(thisObject,componentOutletPort); 
+      _model.disconnect(thisObject,componentInletPort);
+      _model.disconnect(thisObject,componentOutletPort);
 
       inletNode->remove();
       outletNode->remove();
@@ -279,7 +292,7 @@ namespace detail {
 
       return true;
     } else {
-      boost::optional<ModelObject> newOutletComponent; 
+      boost::optional<ModelObject> newOutletComponent;
       boost::optional<unsigned> newOutletComponentInletPort;
 
       if( inletNode && outletNode ) {
@@ -290,15 +303,15 @@ namespace detail {
       if( ! newOutletComponent ) newOutletComponent = outletComponent;
       if( ! newOutletComponentInletPort ) newOutletComponentInletPort = outletComponentInletPort;
 
-      _model.disconnect(thisObject,componentInletPort); 
-      _model.disconnect(thisObject,componentOutletPort); 
+      _model.disconnect(thisObject,componentInletPort);
+      _model.disconnect(thisObject,componentOutletPort);
 
       // outletNode->remove() would have failed if we did it before the disconnect
       if( inletNode && outletNode ) {
         outletNode->remove();
       }
 
-      model().connect( inletComponent.get(), inletComponentOutletPort.get(), 
+      model().connect( inletComponent.get(), inletComponentOutletPort.get(),
                        newOutletComponent.get(), newOutletComponentInletPort.get() );
 
       return true;
@@ -307,8 +320,8 @@ namespace detail {
     return false;
   }
 
-  bool HVACComponent_Impl::addToNode(Node & node, 
-    const HVACComponent & systemStartComponent, 
+  bool HVACComponent_Impl::addToNode(Node & node,
+    const HVACComponent & systemStartComponent,
     const HVACComponent & systemEndComponent,
     unsigned componentInletPort,
     unsigned componentOutletPort)
@@ -374,7 +387,7 @@ namespace detail {
       _model.connect( oldSourceModelObject, oldOutletPort,
                       newNode, newNode.inletPort() );
       _model.connect( newNode, newNode.outletPort(),
-                      thisModelObject, componentInletPort );                        
+                      thisModelObject, componentInletPort );
       _model.connect( thisModelObject, componentOutletPort,
                       oldTargetModelObject, oldInletPort );
       return true;
@@ -383,7 +396,7 @@ namespace detail {
       unsigned oldInletPort = node.connectedObjectPort( node.outletPort() ).get();
       ModelObject oldSourceModelObject = node;
       ModelObject oldTargetModelObject = node.connectedObject( node.outletPort() ).get();
-    
+
       Node newNode( _model );
       _model.connect( oldSourceModelObject, oldOutletPort,
                       thisModelObject, componentInletPort );
@@ -443,7 +456,7 @@ namespace detail {
     else if( containingStraightComponent() )
     {
       return false;
-    }    
+    }
     else
     {
       return true;
@@ -502,7 +515,7 @@ namespace detail {
   {
     return boost::none;
   }
-  
+
   boost::optional<StraightComponent> HVACComponent_Impl::containingStraightComponent() const
   {
     return boost::none;
@@ -518,7 +531,7 @@ HVACComponent::HVACComponent(IddObjectType type,const Model& model)
   : ParentObject(type,model)
 {
   OS_ASSERT(getImpl<detail::HVACComponent_Impl>());
-}     
+}
 
 boost::optional<Loop> HVACComponent::loop() const
 {

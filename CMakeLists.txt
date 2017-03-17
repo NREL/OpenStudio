@@ -191,6 +191,9 @@ if(APPLE)
   elseif(CMAKE_OSX_SYSROOT MATCHES ".*10\\.11.*")
     set(OSX_SDK "10.11")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c11 -std=c++11 -stdlib=libc++")
+  elseif(CMAKE_OSX_SYSROOT MATCHES ".*10\\.12.*")
+    set(OSX_SDK "10.12")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c11 -std=c++11 -stdlib=libc++")
   else()
     message(FATAL_ERROR "OSX Sysroot must use the 10.9, 10.10, or 10.11 SDK")
   endif()
@@ -785,7 +788,7 @@ ExternalProject_Add(GeographicLib
   -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=ON
 )
 
-# Don't confuse "GEOGRAPHICLIB"_Dir as something that refers to the 
+# Don't confuse "GEOGRAPHICLIB"_Dir as something that refers to the
 # actual library compiled unit. This variable just refers to where the project is at.
 # We will use this to find the cmake config file provided by the project,
 # and that config file will tell us everything we need to know about the project's targets.

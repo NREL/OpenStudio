@@ -274,12 +274,12 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
   set(${NAME}_SWIG_Depends "${this_depends}" PARENT_SCOPE)
 
   #message(STATUS "${${NAME}_SWIG_Depends}")
-  
+
   set(RUBY_AUTODOC "")
   if(BUILD_DOCUMENTATION)
     set(RUBY_AUTODOC -features autodoc=1)
   endif()
-  
+
   add_custom_command(
     OUTPUT "${SWIG_WRAPPER}"
     COMMAND "${SWIG_EXECUTABLE}"
@@ -388,15 +388,15 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
       endif()
 
       foreach(PREREQ IN LISTS PREREQUISITES)
-      
-        if(APPLE AND PREREQ MATCHES \".*libruby.*\")  
+
+        if(APPLE AND PREREQ MATCHES \".*libruby.*\")
           # skip updating references to libruby, we do not install this with the bindings
-        else()   
+        else()
           gp_resolve_item(\"\" \${PREREQ} \"\" \"${Prereq_Dirs}\" resolved_item_var)
           execute_process(COMMAND \"${CMAKE_COMMAND}\" -E copy \"\${resolved_item_var}\" \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/\")
-  
+
           get_filename_component(PREREQNAME \${resolved_item_var} NAME)
-  
+
           if(APPLE)
             execute_process(COMMAND \"install_name_tool\" -change \"\${PREREQ}\" \"@loader_path/\${PREREQNAME}\" \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/${_NAME}\")
             foreach(PR IN LISTS PREREQUISITES)
@@ -414,7 +414,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
             if(NOT (\"\${MATCHVAR}\" STREQUAL \"\${PREREQNAME}\"))
               file(APPEND \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/thirdparty.rb\" \"DL::dlopen \\\"\\\#{File.dirname(__FILE__)}/\${PREREQNAME}\\\"\n\")
             endif()
-          endif()        
+          endif()
         endif()
 
       endforeach()
@@ -461,16 +461,16 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     # http://docs.python.org/2/library/imp.html
 
     set(MODULE ${LOWER_NAME})
-    
+
     set(PYTHON_AUTODOC "")
     if(BUILD_DOCUMENTATION)
       set(PYTHON_AUTODOC -features autodoc=1)
     endif()
-    
+
     add_custom_command(
       OUTPUT "python_${NAME}_wrap.cxx"
       COMMAND "${SWIG_EXECUTABLE}"
-               "-python" "-c++" ${PYTHON_AUTODOC}
+               "-python" "-modern" "-py3" "-c++" ${PYTHON_AUTODOC}
                -outdir ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/python "-I${CMAKE_SOURCE_DIR}/src" "-I${CMAKE_BINARY_DIR}/src"
                -module "${MODULE}"
                -o "${CMAKE_CURRENT_BINARY_DIR}/python_${NAME}_wrap.cxx"
@@ -547,7 +547,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
        endforeach(PREREQ IN LISTS PREREQUISITES)
 
        if(APPLE)
-         file(COPY \"${QT_LIBRARY_DIR}/QtGui.framework/Resources/qt_menu.nib\" 
+         file(COPY \"${QT_LIBRARY_DIR}/QtGui.framework/Resources/qt_menu.nib\"
               DESTINATION \"\${CMAKE_INSTALL_PREFIX}/Python/openstudio/Resources/\")
        endif()
       ")
@@ -556,7 +556,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     endif()
 
     install(FILES ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/python/${LOWER_NAME}.py DESTINATION Python/openstudio/)
-    
+
     # add this target to a "global" variable so python tests can require these
     list(APPEND ALL_PYTHON_BINDING_TARGETS "${swig_target}")
 
@@ -582,12 +582,12 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     set(CSHARP_OUTPUT_NAME "openstudio_${NAME}_csharp")
     set(CSHARP_GENERATED_SRC_DIR "${CMAKE_BINARY_DIR}/csharp_wrapper/generated_sources/${NAME}")
     file(MAKE_DIRECTORY ${CSHARP_GENERATED_SRC_DIR})
-    
+
     set(CSHARP_AUTODOC "")
     if(BUILD_DOCUMENTATION)
       set(CSHARP_AUTODOC -features autodoc=1)
     endif()
-    
+
     add_custom_command(
       OUTPUT ${SWIG_WRAPPER}
       COMMAND "${CMAKE_COMMAND}" -E remove_directory "${CSHARP_GENERATED_SRC_DIR}"
@@ -1031,7 +1031,7 @@ function(QT5_WRAP_CPP_MINIMALLY outfiles)
   foreach(it ${moc_files})
     get_filename_component(it ${it} ABSOLUTE)
     qt5_make_output_file(${it} moc_ cxx outfile)
-    qt5_create_moc_command(${it} ${outfile} "${moc_flags}" "${moc_options}" "${moc_target}")
+    qt5_create_moc_command(${it} ${outfile} "${moc_flags}" "${moc_options}" "${moc_target}" "")
     list(APPEND ${outfiles} ${outfile})
   endforeach()
   set(${outfiles} ${${outfiles}} PARENT_SCOPE)
