@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -49,73 +49,73 @@ namespace detail {
 
   /** HeatExchangerAirToAirSensibleAndLatent_Impl is a AirToAirComponent_Impl that is the implementation class for HeatExchangerAirToAirSensibleAndLatent.*/
   class MODEL_API HeatExchangerAirToAirSensibleAndLatent_Impl : public AirToAirComponent_Impl {
-    Q_OBJECT;
+    
 
-    Q_PROPERTY(boost::optional<double> nominalSupplyAirFlowRate READ nominalSupplyAirFlowRate WRITE setNominalSupplyAirFlowRate);
-    Q_PROPERTY(openstudio::OSOptionalQuantity nominalSupplyAirFlowRate_SI READ nominalSupplyAirFlowRate_SI WRITE setNominalSupplyAirFlowRate);
-    Q_PROPERTY(openstudio::OSOptionalQuantity nominalSupplyAirFlowRate_IP READ nominalSupplyAirFlowRate_IP WRITE setNominalSupplyAirFlowRate);
-    Q_PROPERTY(bool isNominalSupplyAirFlowRateAutosized READ isNominalSupplyAirFlowRateAutosized);
+    
+    
+    
+    
 
-    Q_PROPERTY(double sensibleEffectivenessat100HeatingAirFlow READ sensibleEffectivenessat100HeatingAirFlow WRITE setSensibleEffectivenessat100HeatingAirFlow);
-    Q_PROPERTY(openstudio::Quantity sensibleEffectivenessat100HeatingAirFlow_SI READ sensibleEffectivenessat100HeatingAirFlow_SI WRITE setSensibleEffectivenessat100HeatingAirFlow);
-    Q_PROPERTY(openstudio::Quantity sensibleEffectivenessat100HeatingAirFlow_IP READ sensibleEffectivenessat100HeatingAirFlow_IP WRITE setSensibleEffectivenessat100HeatingAirFlow);
+    
+    
+    
 
-    Q_PROPERTY(double latentEffectivenessat100HeatingAirFlow READ latentEffectivenessat100HeatingAirFlow WRITE setLatentEffectivenessat100HeatingAirFlow);
-    Q_PROPERTY(openstudio::Quantity latentEffectivenessat100HeatingAirFlow_SI READ latentEffectivenessat100HeatingAirFlow_SI WRITE setLatentEffectivenessat100HeatingAirFlow);
-    Q_PROPERTY(openstudio::Quantity latentEffectivenessat100HeatingAirFlow_IP READ latentEffectivenessat100HeatingAirFlow_IP WRITE setLatentEffectivenessat100HeatingAirFlow);
+    
+    
+    
 
-    Q_PROPERTY(double sensibleEffectivenessat75HeatingAirFlow READ sensibleEffectivenessat75HeatingAirFlow WRITE setSensibleEffectivenessat75HeatingAirFlow);
-    Q_PROPERTY(openstudio::Quantity sensibleEffectivenessat75HeatingAirFlow_SI READ sensibleEffectivenessat75HeatingAirFlow_SI WRITE setSensibleEffectivenessat75HeatingAirFlow);
-    Q_PROPERTY(openstudio::Quantity sensibleEffectivenessat75HeatingAirFlow_IP READ sensibleEffectivenessat75HeatingAirFlow_IP WRITE setSensibleEffectivenessat75HeatingAirFlow);
+    
+    
+    
 
-    Q_PROPERTY(double latentEffectivenessat75HeatingAirFlow READ latentEffectivenessat75HeatingAirFlow WRITE setLatentEffectivenessat75HeatingAirFlow);
-    Q_PROPERTY(openstudio::Quantity latentEffectivenessat75HeatingAirFlow_SI READ latentEffectivenessat75HeatingAirFlow_SI WRITE setLatentEffectivenessat75HeatingAirFlow);
-    Q_PROPERTY(openstudio::Quantity latentEffectivenessat75HeatingAirFlow_IP READ latentEffectivenessat75HeatingAirFlow_IP WRITE setLatentEffectivenessat75HeatingAirFlow);
+    
+    
+    
 
-    Q_PROPERTY(double sensibleEffectivenessat100CoolingAirFlow READ sensibleEffectivenessat100CoolingAirFlow WRITE setSensibleEffectivenessat100CoolingAirFlow);
-    Q_PROPERTY(openstudio::Quantity sensibleEffectivenessat100CoolingAirFlow_SI READ sensibleEffectivenessat100CoolingAirFlow_SI WRITE setSensibleEffectivenessat100CoolingAirFlow);
-    Q_PROPERTY(openstudio::Quantity sensibleEffectivenessat100CoolingAirFlow_IP READ sensibleEffectivenessat100CoolingAirFlow_IP WRITE setSensibleEffectivenessat100CoolingAirFlow);
+    
+    
+    
 
-    Q_PROPERTY(double latentEffectivenessat100CoolingAirFlow READ latentEffectivenessat100CoolingAirFlow WRITE setLatentEffectivenessat100CoolingAirFlow);
-    Q_PROPERTY(openstudio::Quantity latentEffectivenessat100CoolingAirFlow_SI READ latentEffectivenessat100CoolingAirFlow_SI WRITE setLatentEffectivenessat100CoolingAirFlow);
-    Q_PROPERTY(openstudio::Quantity latentEffectivenessat100CoolingAirFlow_IP READ latentEffectivenessat100CoolingAirFlow_IP WRITE setLatentEffectivenessat100CoolingAirFlow);
+    
+    
+    
 
-    Q_PROPERTY(double sensibleEffectivenessat75CoolingAirFlow READ sensibleEffectivenessat75CoolingAirFlow WRITE setSensibleEffectivenessat75CoolingAirFlow);
-    Q_PROPERTY(openstudio::Quantity sensibleEffectivenessat75CoolingAirFlow_SI READ sensibleEffectivenessat75CoolingAirFlow_SI WRITE setSensibleEffectivenessat75CoolingAirFlow);
-    Q_PROPERTY(openstudio::Quantity sensibleEffectivenessat75CoolingAirFlow_IP READ sensibleEffectivenessat75CoolingAirFlow_IP WRITE setSensibleEffectivenessat75CoolingAirFlow);
+    
+    
+    
 
-    Q_PROPERTY(double latentEffectivenessat75CoolingAirFlow READ latentEffectivenessat75CoolingAirFlow WRITE setLatentEffectivenessat75CoolingAirFlow);
-    Q_PROPERTY(openstudio::Quantity latentEffectivenessat75CoolingAirFlow_SI READ latentEffectivenessat75CoolingAirFlow_SI WRITE setLatentEffectivenessat75CoolingAirFlow);
-    Q_PROPERTY(openstudio::Quantity latentEffectivenessat75CoolingAirFlow_IP READ latentEffectivenessat75CoolingAirFlow_IP WRITE setLatentEffectivenessat75CoolingAirFlow);
+    
+    
+    
 
-    Q_PROPERTY(double nominalElectricPower READ nominalElectricPower WRITE setNominalElectricPower);
-    Q_PROPERTY(openstudio::Quantity nominalElectricPower_SI READ nominalElectricPower_SI WRITE setNominalElectricPower);
-    Q_PROPERTY(openstudio::Quantity nominalElectricPower_IP READ nominalElectricPower_IP WRITE setNominalElectricPower);
+    
+    
+    
 
-    Q_PROPERTY(bool supplyAirOutletTemperatureControl READ supplyAirOutletTemperatureControl WRITE setSupplyAirOutletTemperatureControl);
+    
 
-    Q_PROPERTY(std::string heatExchangerType READ heatExchangerType WRITE setHeatExchangerType);
-    Q_PROPERTY(std::vector<std::string> heatExchangerTypeValues READ heatExchangerTypeValues);
+    
+    
 
-    Q_PROPERTY(std::string frostControlType READ frostControlType WRITE setFrostControlType);
-    Q_PROPERTY(std::vector<std::string> frostControlTypeValues READ frostControlTypeValues);
+    
+    
 
-    Q_PROPERTY(double thresholdTemperature READ thresholdTemperature WRITE setThresholdTemperature RESET resetThresholdTemperature);
-    Q_PROPERTY(openstudio::Quantity thresholdTemperature_SI READ thresholdTemperature_SI WRITE setThresholdTemperature RESET resetThresholdTemperature);
-    Q_PROPERTY(openstudio::Quantity thresholdTemperature_IP READ thresholdTemperature_IP WRITE setThresholdTemperature RESET resetThresholdTemperature);
-    Q_PROPERTY(bool isThresholdTemperatureDefaulted READ isThresholdTemperatureDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<double> initialDefrostTimeFraction READ initialDefrostTimeFraction WRITE setInitialDefrostTimeFraction RESET resetInitialDefrostTimeFraction);
-    Q_PROPERTY(openstudio::OSOptionalQuantity initialDefrostTimeFraction_SI READ initialDefrostTimeFraction_SI WRITE setInitialDefrostTimeFraction RESET resetInitialDefrostTimeFraction);
-    Q_PROPERTY(openstudio::OSOptionalQuantity initialDefrostTimeFraction_IP READ initialDefrostTimeFraction_IP WRITE setInitialDefrostTimeFraction RESET resetInitialDefrostTimeFraction);
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<double> rateofDefrostTimeFractionIncrease READ rateofDefrostTimeFractionIncrease WRITE setRateofDefrostTimeFractionIncrease RESET resetRateofDefrostTimeFractionIncrease);
-    Q_PROPERTY(openstudio::OSOptionalQuantity rateofDefrostTimeFractionIncrease_SI READ rateofDefrostTimeFractionIncrease_SI WRITE setRateofDefrostTimeFractionIncrease RESET resetRateofDefrostTimeFractionIncrease);
-    Q_PROPERTY(openstudio::OSOptionalQuantity rateofDefrostTimeFractionIncrease_IP READ rateofDefrostTimeFractionIncrease_IP WRITE setRateofDefrostTimeFractionIncrease RESET resetRateofDefrostTimeFractionIncrease);
+    
+    
+    
 
-    Q_PROPERTY(bool economizerLockout READ economizerLockout WRITE setEconomizerLockout);
+    
 
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> availabilitySchedule READ availabilityScheduleAsModelObject WRITE setAvailabilityScheduleAsModelObject);
+    
 
    public:
 

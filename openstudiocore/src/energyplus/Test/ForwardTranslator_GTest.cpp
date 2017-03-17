@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -63,6 +63,8 @@
 #include "../../model/CoilCoolingDXSingleSpeed_Impl.hpp"
 #include "../../model/StandardOpaqueMaterial.hpp"
 #include "../../model/Construction.hpp"
+#include "../../model/OutputVariable.hpp"
+#include "../../model/OutputVariable_Impl.hpp"
 #include "../../model/Version.hpp"
 #include "../../model/Version_Impl.hpp"
 #include "../../model/ZoneCapacitanceMultiplierResearchSpecial.hpp"
@@ -78,6 +80,7 @@
 #include <utilities/idd/Lights_FieldEnums.hxx>
 #include <utilities/idd/OS_Schedule_Compact_FieldEnums.hxx>
 #include <utilities/idd/Schedule_Compact_FieldEnums.hxx>
+#include <utilities/idd/Output_Variable_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
@@ -163,7 +166,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorTest_TranslateAirLoopHVAC) {
   ASSERT_NE(unsigned(0),workspace.objects().size());
 
   openstudio::path outDir = resourcesPath() / openstudio::toPath("airLoopHVAC.idf");
-  boost::filesystem::ofstream ofs(outDir);
+  openstudio::filesystem::ofstream ofs(outDir);
   workspace.toIdfFile().print(ofs);
   ofs.close();
 }
@@ -244,7 +247,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorTest_TranslateCoolingCoil)
   EXPECT_EQ(3u,workspace.getObjectsByType(IddObjectType::Curve_Quadratic).size());
 
   path outDir = resourcesPath() / openstudio::toPath("CoolingCoilDXSingleSpeed.idf");
-  boost::filesystem::ofstream ofs(outDir);
+  openstudio::filesystem::ofstream ofs(outDir);
   workspace.toIdfFile().print(ofs);
   ofs.close();
 
@@ -680,4 +683,68 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorTest_TranslateZoneCapacitanceMultipli
   EXPECT_FLOAT_EQ(zcmidf.getDouble(0).get(), 2.0);
   EXPECT_FLOAT_EQ(zcmidf.getDouble(1).get(), 3.0);
   EXPECT_FLOAT_EQ(zcmidf.getDouble(2).get(), 4.0);
+}
+
+
+TEST_F(EnergyPlusFixture, BadVariableName)
+{
+  // this test checks that string values are properly escaped through translation
+
+  Model model;
+
+  OutputVariable goodVar("Good Name", model);
+  EXPECT_EQ("Good Name", goodVar.variableName());
+
+  OutputVariable badVar("Bad, !Name", model);
+  EXPECT_EQ("Bad, !Name", badVar.variableName());
+
+  {
+    std::stringstream ss;
+    ss << model;
+
+    boost::optional<IdfFile> idf = IdfFile::load(ss, IddFileType::OpenStudio);
+    ASSERT_TRUE(idf);
+
+    Model model2;
+    model2.addObjects(idf->objects());
+
+    ASSERT_EQ(2u, model2.getConcreteModelObjects<OutputVariable>().size());
+    for (auto outputVariable : model2.getConcreteModelObjects<OutputVariable>()){
+      std::string s = outputVariable.variableName();
+      EXPECT_TRUE(s == "Good Name" || s == "Bad, !Name") << s;
+    }
+  }
+
+  ForwardTranslator trans;
+  Workspace workspace = trans.translateModel(model);
+
+  ASSERT_EQ(2u, workspace.getObjectsByType(IddObjectType::Output_Variable).size());
+  for (auto object : workspace.getObjectsByType(IddObjectType::Output_Variable)){
+    ASSERT_TRUE(object.getString(Output_VariableFields::VariableName)) << object;
+    std::string s = object.getString(Output_VariableFields::VariableName).get();
+    EXPECT_TRUE(s == "Good Name" || s == "Bad, !Name") << s;
+  }
+
+  std::stringstream ss;
+  ss << workspace;
+
+  boost::optional<IdfFile> idf2 = IdfFile::load(ss, IddFileType::EnergyPlus);
+  ASSERT_TRUE(idf2);
+
+  Workspace workspace2(idf2.get());
+  ASSERT_EQ(2u, workspace2.getObjectsByType(IddObjectType::Output_Variable).size());
+  for (auto object : workspace2.getObjectsByType(IddObjectType::Output_Variable)){
+    ASSERT_TRUE(object.getString(Output_VariableFields::VariableName)) << object;
+    std::string s = object.getString(Output_VariableFields::VariableName).get();
+    EXPECT_TRUE(s == "Good Name" || s == "Bad, !Name") << s;
+  }
+
+  ReverseTranslator rt;
+  boost::optional<Model> model2 = rt.translateWorkspace(workspace2);
+  ASSERT_TRUE(model2);
+  ASSERT_EQ(2u, model2->getConcreteModelObjects<OutputVariable>().size());
+  for (auto outputVariable : model2->getConcreteModelObjects<OutputVariable>()){
+    std::string s = outputVariable.variableName();
+    EXPECT_TRUE(s == "Good Name" || s == "Bad, !Name") << s;
+  }
 }

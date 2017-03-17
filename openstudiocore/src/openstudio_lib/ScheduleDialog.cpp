@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -169,7 +169,7 @@ void ScheduleDialog::createLayout()
     for (const model::ScheduleType& scheduleType : scheduleTypes){
       QString name = toQString(model::ScheduleTypeRegistry::instance().getDefaultName(scheduleType));
       model::ScheduleTypeLimits tmp = model::ScheduleTypeRegistry::instance().getOrCreateScheduleTypeLimits(scheduleType, m_model);
-      m_scheduleTypeComboBox->addItem(name, tmp.handle().toString());
+      m_scheduleTypeComboBox->addItem(name, toQString(tmp.handle()));
     }
 
     hLayout->addWidget(m_scheduleTypeComboBox);
@@ -247,7 +247,7 @@ void ScheduleDialog::onCurrentIndexChanged(int index)
 {
   OS_ASSERT(index >= 0);
 
-  UUID handle = UUID(m_scheduleTypeComboBox->itemData(index).toString());
+  UUID handle = toUUID(m_scheduleTypeComboBox->itemData(index).toString());
   m_scheduleTypeLimits = m_model.getModelObject<model::ScheduleTypeLimits>(handle);
   OS_ASSERT(m_scheduleTypeLimits);
 

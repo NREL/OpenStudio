@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -94,6 +94,7 @@ class MODEL_API DesignSpecificationOutdoorAir : public ResourceObject {
 
   bool isOutdoorAirFlowAirChangesperHourDefaulted() const;
 
+  /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Outdoor Air Schedule Name" **/
   boost::optional<Schedule> outdoorAirFlowRateFractionSchedule() const;
 
   //@}
@@ -128,6 +129,7 @@ class MODEL_API DesignSpecificationOutdoorAir : public ResourceObject {
 
   void resetOutdoorAirFlowAirChangesperHour();
 
+  /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Outdoor Air Schedule Name" **/
   bool setOutdoorAirFlowRateFractionSchedule(Schedule& schedule);
 
   void resetOutdoorAirFlowRateFractionSchedule();

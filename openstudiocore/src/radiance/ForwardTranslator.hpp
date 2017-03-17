@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -188,6 +188,9 @@ namespace radiance {
   RADIANCE_API std::string formatString(double t_d, unsigned t_prec = 15);
 
   RADIANCE_API std::string cleanName(const std::string& name);
+
+  // simplify model for initial E+ run to calculate window parameters, new model is returned, input model is not changed
+  RADIANCE_API openstudio::model::Model modelToRadPreProcess(const openstudio::model::Model & model);
 
 } // radiance
 } // openstudio

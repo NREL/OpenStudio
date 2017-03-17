@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -1732,20 +1732,14 @@ namespace openstudio {
 
   void OSGridController::connectToModel()
   {
-    connect(m_model.getImpl<model::detail::Model_Impl>().get(),
-      static_cast<void (model::detail::Model_Impl::*)(const WorkspaceObject &, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::addWorkspaceObject),
-      this,
-      &OSGridController::onAddWorkspaceObject);
-
-    connect(m_model.getImpl<model::detail::Model_Impl>().get(),
-      static_cast<void (model::detail::Model_Impl::*)(const WorkspaceObject &, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::removeWorkspaceObject),
-      this,
-      &OSGridController::onRemoveWorkspaceObject);
+    m_model.getImpl<model::detail::Model_Impl>().get()->addWorkspaceObject.connect<OSGridController, &OSGridController::onAddWorkspaceObject>(this);
+    m_model.getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObject.connect<OSGridController, &OSGridController::onRemoveWorkspaceObject>(this);
   }
 
   void OSGridController::disconnectFromModel()
   {
-    disconnect(m_model.getImpl<openstudio::model::detail::Model_Impl>().get());
+    m_model.getImpl<model::detail::Model_Impl>().get()->addWorkspaceObject.disconnect<OSGridController, &OSGridController::onAddWorkspaceObject>(this);
+    m_model.getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObject.disconnect<OSGridController, &OSGridController::onRemoveWorkspaceObject>(this);
   }
 
   void OSGridController::onSelectionCleared()

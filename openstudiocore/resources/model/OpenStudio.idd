@@ -1,4 +1,4 @@
-!IDD_Version 2.0.0
+!IDD_Version 2.0.5
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -5412,6 +5412,148 @@ OS:WindowProperty:FrameAndDivider,
        \default 0.0
 
 \group OpenStudio Advanced Construction, Surface, Zone Concepts
+
+OS:SurfaceProperty:ConvectionCoefficients,
+      \memo Allow user settable interior and/or exterior convection coefficients.
+      \memo Note that some other factors may limit the lower bounds for these values, such as
+      \memo for windows, the interior convection coefficient must be >.28,
+      \memo for trombe wall algorithm selection (zone), the interior convection coefficient must be >.1
+      \memo for TARP interior convection, the lower limit is also .1
+      \memo Minimum and maximum limits are set in HeatBalanceAlgorithm object.
+      \memo Defaults in HeatBalanceAlgorithm object are [.1,1000].
+  A1, \field Handle
+      \type handle
+      \required-field
+  A2, \field Surface Name
+      \required-field
+      \type object-list
+      \object-list AllHeatTranSurfNames
+  A3, \field Convection Coefficient 1 Location
+      \required-field
+      \type choice
+      \key Outside
+      \key Inside
+  A4, \field Convection Coefficient 1 Type
+      \required-field
+      \type choice
+      \key Value
+      \key Schedule
+      \key UserCurve
+      \key Simple
+      \key SimpleCombined
+      \key TARP
+      \key DOE-2
+      \key MoWitt
+      \key AdaptiveConvectionAlgorithm
+      \key ASHRAEVerticalWall
+      \key WaltonUnstableHorizontalOrTilt
+      \key WaltonStableHorizontalOrTilt
+      \key FisherPedersenCeilingDiffuserWalls
+      \key FisherPedersenCeilingDiffuserCeiling
+      \key FisherPedersenCeilingDiffuserFloor
+      \key AlamdariHammondStableHorizontal
+      \key AlamdariHammondUnstableHorizontal
+      \key AlamdariHammondVerticalWall
+      \key KhalifaEq3WallAwayFromHeat
+      \key KhalifaEq4CeilingAwayFromHeat
+      \key KhalifaEq5WallNearHeat
+      \key KhalifaEq6NonHeatedWalls
+      \key KhalifaEq7Ceiling
+      \key AwbiHattonHeatedFloor
+      \key AwbiHattonHeatedWall
+      \key BeausoleilMorrisonMixedAssistedWall
+      \key BeausoleilMorrisonMixedOpposingWall
+      \key BeausoleilMorrisonMixedStableFloor
+      \key BeausoleilMorrisonMixedUnstableFloor
+      \key BeausoleilMorrisonMixedStableCeiling
+      \key BeausoleilMorrisonMixedUnstableCeiling
+      \key FohannoPolidoriVerticalWall
+      \key KaradagChilledCeiling
+      \key ISO15099Windows
+      \key GoldsteinNovoselacCeilingDiffuserWindow
+      \key GoldsteinNovoselacCeilingDiffuserWalls
+      \key GoldsteinNovoselacCeilingDiffuserFloor
+      \key NusseltJurges
+      \key McAdams
+      \key Mitchell
+      \key EmmelVertical
+      \key EmmelRoof
+      \key ClearRoof
+  N1, \field Convection Coefficient 1
+      \note used if Convection Type=Value, min and max limits are set in HeatBalanceAlgorithm object.
+      \note Default limits are Minimum >= 0.1 and Maximum <= 1000
+      \units W/m2-K
+  A5, \field Convection Coefficient 1 Schedule Name
+      \note used if Convection Type=Schedule,  min and max limits are set in HeatBalanceAlgorithm object.
+      \note Default limits are Minimum >= 0.1 and Maximum <= 1000
+      \type object-list
+      \object-list ScheduleNames
+  A6, \field Convection Coefficient 1 User Curve Name
+      \note used if Convection Type = UserCurve
+      \type object-list
+      \object-list UserConvectionModels
+  A7, \field Convection Coefficient 2 Location
+      \type choice
+      \key Outside
+      \key Inside
+  A8, \field Convection Coefficient 2 Type
+      \type choice
+      \key Value
+      \key Schedule
+      \key UserCurve
+      \key Simple
+      \key SimpleCombined
+      \key TARP
+      \key DOE-2
+      \key MoWitt
+      \key AdaptiveConvectionAlgorithm
+      \key ASHRAEVerticalWall
+      \key WaltonUnstableHorizontalOrTilt
+      \key WaltonStableHorizontalOrTilt
+      \key FisherPedersenCeilingDiffuserWalls
+      \key FisherPedersenCeilingDiffuserCeiling
+      \key FisherPedersenCeilingDiffuserFloor
+      \key AlamdariHammondStableHorizontal
+      \key AlamdariHammondUnstableHorizontal
+      \key AlamdariHammondVerticalWall
+      \key KhalifaEq3WallAwayFromHeat
+      \key KhalifaEq4CeilingAwayFromHeat
+      \key KhalifaEq5WallNearHeat
+      \key KhalifaEq6NonHeatedWalls
+      \key KhalifaEq7Ceiling
+      \key AwbiHattonHeatedFloor
+      \key AwbiHattonHeatedWall
+      \key BeausoleilMorrisonMixedAssistedWall
+      \key BeausoleilMorrisonMixedOpposingWall
+      \key BeausoleilMorrisonMixedStableFloor
+      \key BeausoleilMorrisonMixedUnstableFloor
+      \key BeausoleilMorrisonMixedStableCeiling
+      \key BeausoleilMorrisonMixedUnstableCeiling
+      \key FohannoPolidoriVerticalWall
+      \key KaradagChilledCeiling
+      \key ISO15099Windows
+      \key GoldsteinNovoselacCeilingDiffuserWindow
+      \key GoldsteinNovoselacCeilingDiffuserWalls
+      \key GoldsteinNovoselacCeilingDiffuserFloor
+      \key NusseltJurges
+      \key McAdams
+      \key Mitchell
+      \key EmmelVertical
+      \key EmmelRoof
+      \key ClearRoof
+  N2, \field Convection Coefficient 2
+      \note used if Convection Type=Value, min and max limits are set in HeatBalanceAlgorithm object.
+      \note Default limits are Minimum >= 0.1 and Maximum <= 1000
+      \units W/m2-K
+  A9, \field Convection Coefficient 2 Schedule Name
+      \note used if Convection Type=Schedule,  min and max limits are set in HeatBalanceAlgorithm object.
+      \note Default limits are Minimum >= 0.1 and Maximum <= 1000
+      \type object-list
+      \object-list ScheduleNames
+  A10; \field Convection Coefficient 2 User Curve Name
+      \note used if Convection Type = UserCurve
+      \type object-list
+      \object-list UserConvectionModels
 
 OS:SurfaceProperty:ConvectionCoefficients:MultipleSurface,
       \memo Allow user settable interior and/or exterior convection coefficients.
@@ -18868,6 +19010,7 @@ OS:PlantLoop,
        \key PumpPowerCorrection
        \key LoopFlowCorrection
        \key None
+<<<<<<< HEAD
   A20, \field Demand Mixer Name
        \type object-list
        \required-field
@@ -18884,6 +19027,20 @@ OS:PlantLoop,
        \type object-list
        \required-field
        \object-list ConnectionObject
+=======
+  A20, \field Plant Equipment Operation Heating Load Schedule
+       \type object-list
+       \object-list ScheduleNames
+  A21, \field Plant Equipment Operation Cooling Load Schedule
+       \type object-list
+       \object-list ScheduleNames
+  A22, \field Primary Plant Equipment Operation Scheme Schedule
+       \type object-list
+       \object-list ScheduleNames
+  A23; \field Component Setpoint Operation Scheme Schedule
+       \type object-list
+       \object-list ScheduleNames
+>>>>>>> develop
 
 OS:PlantEquipmentOperation:CoolingLoad,
     \extensible:3
@@ -20325,6 +20482,62 @@ OS:SetpointManager:SingleZone:Humidity:Maximum,
        \type object-list
        \object-list Node
 
+OS:SetpointManager:SingleZone:Cooling,
+       \memo This setpoint manager detects the control zone load to meet the current cooling
+       \memo setpoint, zone inlet node flow rate, and zone node temperature, and calculates a
+       \memo setpoint temperature for the supply air that will satisfy the zone cooling load for
+       \memo the control zone.
+       \min-fields 7
+  A1 , \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+  A3 , \field Control Variable
+       \type choice
+       \required-field
+       \key Temperature
+  N1 , \field Minimum Supply Air Temperature
+       \units C
+       \required-field
+  N2 , \field Maximum Supply Air Temperature
+       \units C
+       \required-field
+  A4 , \field Control Zone Name
+       \type object-list
+       \object-list ThermalZoneNames
+  A5 ; \field Setpoint Node or NodeList Name
+       \type object-list
+       \object-list Node
+
+OS:SetpointManager:SingleZone:Heating,
+       \memo This setpoint manager detects the control zone load to meet the current heating
+       \memo setpoint, zone inlet node flow rate, and zone node temperature, and calculates a
+       \memo setpoint temperature for the supply air that will satisfy the zone heating load for
+       \memo the control zone.
+       \min-fields 7
+  A1 , \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+  A3 , \field Control Variable
+       \type choice
+       \required-field
+       \key Temperature
+  N1 , \field Minimum Supply Air Temperature
+       \units C
+       \required-field
+  N2 , \field Maximum Supply Air Temperature
+       \units C
+       \required-field
+  A4 , \field Control Zone Name
+       \type object-list
+       \object-list ThermalZoneNames
+  A5 ; \field Setpoint Node or NodeList Name
+       \type object-list
+       \object-list Node
+
 OS:Sizing:Plant,
   A1, \field Handle
        \type handle
@@ -21131,6 +21344,7 @@ OS:ZoneVentilation:DesignFlowRate,
        \note pressure rise across the fan
        \type real
        \units Pa
+       \ip-units inH2O
        \minimum 0
        \required-field
   N6 , \field Fan Total Efficiency
@@ -21630,7 +21844,7 @@ OS:ZoneHVAC:FourPipeFanCoil,
         \required-field
         \type object-list
         \object-list HeatingCoilsWater
-        \object-list HeatingCoilsElectric
+        \object-list HeatingCoilName
    N8 , \field Maximum Hot Water Flow Rate
         \required-field
         \autosizable

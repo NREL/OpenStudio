@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -86,6 +86,10 @@
 #include "ScheduleTypeRegistry.hpp"
 #include "SetpointManagerSingleZoneReheat.hpp"
 #include "SetpointManagerSingleZoneReheat_Impl.hpp"
+#include "SetpointManagerSingleZoneCooling.hpp"
+#include "SetpointManagerSingleZoneCooling_Impl.hpp"
+#include "SetpointManagerSingleZoneHeating.hpp"
+#include "SetpointManagerSingleZoneHeating_Impl.hpp"
 #include "../utilities/idd/IddEnums.hpp"
 
 #include <utilities/idd/OS_AirLoopHVAC_FieldEnums.hxx>
@@ -532,12 +536,36 @@ namespace detail {
       }
     }
 
-    std::vector<SetpointManagerSingleZoneReheat> setpointManagers = subsetCastVector<SetpointManagerSingleZoneReheat>(t_airLoopHVAC->supplyOutletNode().setpointManagers());
-    if( ! setpointManagers.empty() ) {
-      SetpointManagerSingleZoneReheat spm = setpointManagers.front();
-      if( spm.controlZone() == thermalZone )
-      {
-        spm.resetControlZone();
+    {
+      std::vector<SetpointManagerSingleZoneReheat> setpointManagers = subsetCastVector<SetpointManagerSingleZoneReheat>(t_airLoopHVAC->supplyOutletNode().setpointManagers());
+      if( ! setpointManagers.empty() ) {
+        SetpointManagerSingleZoneReheat spm = setpointManagers.front();
+        if( spm.controlZone() == thermalZone )
+        {
+          spm.resetControlZone();
+        }
+      }
+    }
+
+    {
+      std::vector<SetpointManagerSingleZoneCooling> setpointManagers = subsetCastVector<SetpointManagerSingleZoneCooling>(t_airLoopHVAC->supplyOutletNode().setpointManagers());
+      if( ! setpointManagers.empty() ) {
+        SetpointManagerSingleZoneCooling spm = setpointManagers.front();
+        if( spm.controlZone() == thermalZone )
+        {
+          spm.resetControlZone();
+        }
+      }
+    }
+
+    {
+      std::vector<SetpointManagerSingleZoneHeating> setpointManagers = subsetCastVector<SetpointManagerSingleZoneHeating>(t_airLoopHVAC->supplyOutletNode().setpointManagers());
+      if( ! setpointManagers.empty() ) {
+        SetpointManagerSingleZoneHeating spm = setpointManagers.front();
+        if( spm.controlZone() == thermalZone )
+        {
+          spm.resetControlZone();
+        }
       }
     }
 

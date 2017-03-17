@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -44,27 +44,28 @@ class DaylightingDeviceShelf;
 class WindowPropertyFrameAndDivider;
 class SurfacePropertyOtherSideCoefficients;
 class SurfacePropertyOtherSideConditionsModel;
+class SurfacePropertyConfectionCoefficients;
 
 namespace detail {
 
   /** SubSurface_Impl is a PlanarSurface_Impl that is the implementation class for SubSurface.*/
   class MODEL_API SubSurface_Impl : public PlanarSurface_Impl {
-    Q_OBJECT;
-    Q_PROPERTY(std::string subSurfaceType READ subSurfaceType WRITE setSubSurfaceType);
-    Q_PROPERTY(std::vector<std::string> subSurfaceTypeValues READ subSurfaceTypeValues);
-    Q_PROPERTY(boost::optional<double> viewFactortoGround READ viewFactortoGround WRITE setViewFactortoGround RESET resetViewFactortoGround);
-    Q_PROPERTY(bool isViewFactortoGroundDefaulted READ isViewFactortoGroundDefaulted);
-    Q_PROPERTY(bool isViewFactortoGroundAutocalculated READ isViewFactortoGroundAutocalculated);
-    Q_PROPERTY(double multiplier READ multiplier WRITE setMultiplier RESET resetMultiplier);
-    Q_PROPERTY(bool isMultiplierDefaulted READ isMultiplierDefaulted);
-    Q_PROPERTY(boost::optional<double> numberofVertices READ numberofVertices WRITE setNumberofVertices RESET resetNumberofVertices);
-    Q_PROPERTY(bool isNumberofVerticesDefaulted READ isNumberofVerticesDefaulted);
-    Q_PROPERTY(bool isNumberofVerticesAutocalculated READ isNumberofVerticesAutocalculated);
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
-    Q_PROPERTY(std::string outsideBoundaryCondition READ outsideBoundaryCondition);
+    
 
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> surface READ surfaceAsModelObject WRITE setSurfaceAsModelObject);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> adjacentSubSurface READ adjacentSubSurfaceAsModelObject WRITE setAdjacentSubSurfaceAsModelObject RESET resetAdjacentSubSurface);
+    
+    
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -225,6 +226,9 @@ namespace detail {
 
     /// reset the adjacent subsurface, will clear references on both this and adjacent sub surface 
     void resetAdjacentSubSurface();
+
+    /** Returns the surface property convection coefficients */
+    boost::optional<SurfacePropertyConvectionCoefficients> surfacePropertyConvectionCoefficients() const;
 
     /** Returns the adjacent SurfaceSurfacePropertyOtherSideCoefficients, if it exists. */
     boost::optional<SurfacePropertyOtherSideCoefficients> surfacePropertyOtherSideCoefficients() const;

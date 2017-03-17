@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -40,12 +40,15 @@
 #include "../../model/CoilCoolingDXSingleSpeed_Impl.hpp"
 #include "../../model/CoilHeatingDXSingleSpeed.hpp"
 #include "../../model/CoilHeatingDXSingleSpeed_Impl.hpp"
+#include "../../model/AirLoopHVAC.hpp"
+#include "../../model/AirLoopHVAC_Impl.hpp"
 #include <utilities/idd/ZoneHVAC_PackagedTerminalHeatPump_FieldEnums.hxx>
 #include <utilities/idd/Fan_ConstantVolume_FieldEnums.hxx>
 #include <utilities/idd/Fan_OnOff_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_DX_SingleSpeed_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Fuel_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Electric_FieldEnums.hxx>
+#include <utilities/idd/Coil_Heating_Water_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_SingleSpeed_FieldEnums.hxx>
 #include <utilities/idd/OutdoorAir_Mixer_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
@@ -96,6 +99,8 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACPackagedTerminalH
     }
   }
 
+  auto t_airLoopHVAC = modelObject.airLoopHVAC();
+
   // AirInletNodeName
 
   boost::optional<std::string> airInletNodeName;
@@ -124,33 +129,35 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACPackagedTerminalH
     }
   }
 
-  // OutdoorAirMixerObjectType
-  idfObject.setString(ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirMixerObjectType,
-                      modelObject.outdoorAirMixerObjectType());
+  if( ! t_airLoopHVAC ) {
+    // OutdoorAirMixerObjectType
+    idfObject.setString(ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirMixerObjectType,
+                        modelObject.outdoorAirMixerObjectType());
 
-  // OutdoorAirMixerName
-  
-  std::string oaMixerName = modelObject.name().get() + " OA Mixer";  
+    // OutdoorAirMixerName
+    
+    std::string oaMixerName = modelObject.name().get() + " OA Mixer";  
 
-  idfObject.setString(ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirMixerName,oaMixerName);
+    idfObject.setString(ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirMixerName,oaMixerName);
 
-  IdfObject _outdoorAirMixer(IddObjectType::OutdoorAir_Mixer);
-  _outdoorAirMixer.setName(oaMixerName);
-  m_idfObjects.push_back(_outdoorAirMixer);
+    IdfObject _outdoorAirMixer(IddObjectType::OutdoorAir_Mixer);
+    _outdoorAirMixer.setName(oaMixerName);
+    m_idfObjects.push_back(_outdoorAirMixer);
 
-  _outdoorAirMixer.setString(OutdoorAir_MixerFields::MixedAirNodeName,mixedAirNodeName);
+    _outdoorAirMixer.setString(OutdoorAir_MixerFields::MixedAirNodeName,mixedAirNodeName);
 
-  _outdoorAirMixer.setString(OutdoorAir_MixerFields::OutdoorAirStreamNodeName,oaNodeName);
+    _outdoorAirMixer.setString(OutdoorAir_MixerFields::OutdoorAirStreamNodeName,oaNodeName);
 
-  IdfObject _oaNodeList(openstudio::IddObjectType::OutdoorAir_NodeList);
-  _oaNodeList.setString(0,oaNodeName);
-  m_idfObjects.push_back(_oaNodeList);
+    IdfObject _oaNodeList(openstudio::IddObjectType::OutdoorAir_NodeList);
+    _oaNodeList.setString(0,oaNodeName);
+    m_idfObjects.push_back(_oaNodeList);
 
-  _outdoorAirMixer.setString(OutdoorAir_MixerFields::ReliefAirStreamNodeName,reliefAirNodeName);
+    _outdoorAirMixer.setString(OutdoorAir_MixerFields::ReliefAirStreamNodeName,reliefAirNodeName);
 
-  if(airInletNodeName)
-  {
-    _outdoorAirMixer.setString(OutdoorAir_MixerFields::ReturnAirStreamNodeName,airInletNodeName.get());
+    if(airInletNodeName)
+    {
+      _outdoorAirMixer.setString(OutdoorAir_MixerFields::ReturnAirStreamNodeName,airInletNodeName.get());
+    }
   }
 
   // SupplyAirFlowRateDuringCoolingOperation
@@ -295,13 +302,18 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACPackagedTerminalH
 
   if( _coolingCoil )
   {
+    std::string coolingCoilInletNodeName = mixedAirNodeName;
+    if( t_airLoopHVAC && airInletNodeName ) {
+      coolingCoilInletNodeName = airInletNodeName.get();
+    }
+
     idfObject.setString(ZoneHVAC_PackagedTerminalHeatPumpFields::CoolingCoilObjectType,_coolingCoil->iddObject().name() );
 
     idfObject.setString(ZoneHVAC_PackagedTerminalHeatPumpFields::CoolingCoilName,_coolingCoil->name().get() );
 
     if( _coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_SingleSpeed )
     {
-      _coolingCoil->setString(Coil_Cooling_DX_SingleSpeedFields::AirInletNodeName,mixedAirNodeName);
+      _coolingCoil->setString(Coil_Cooling_DX_SingleSpeedFields::AirInletNodeName,coolingCoilInletNodeName);
 
       _coolingCoil->setString(Coil_Cooling_DX_SingleSpeedFields::AirOutletNodeName,coolingCoilOutletNodeName);
     }
@@ -337,6 +349,12 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACPackagedTerminalH
         _supplementalHeatingCoil->setString(Coil_Heating_ElectricFields::AirInletNodeName,fanOutletNodeName);
 
         _supplementalHeatingCoil->setString(Coil_Heating_ElectricFields::AirOutletNodeName,airOutletNodeName.get());
+      }
+      else if( _supplementalHeatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Water )
+      {
+        _supplementalHeatingCoil->setString(Coil_Heating_WaterFields::AirInletNodeName,fanOutletNodeName);
+
+        _supplementalHeatingCoil->setString(Coil_Heating_WaterFields::AirOutletNodeName,airOutletNodeName.get());
       }
     }
   }

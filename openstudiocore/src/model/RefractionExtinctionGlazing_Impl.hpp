@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -42,50 +42,50 @@ namespace detail {
 
   /** RefractionExtinctionGlazing_Impl is a Glazing_Impl that is the implementation class for RefractionExtinctionGlazing.*/
   class MODEL_API RefractionExtinctionGlazing_Impl : public Glazing_Impl {
-    Q_OBJECT;
+    
 
-    Q_PROPERTY(double thickness READ thickness WRITE setThickness);
-    Q_PROPERTY(openstudio::Quantity thickness_SI READ thickness_SI WRITE setThickness);
-    Q_PROPERTY(openstudio::Quantity thickness_IP READ thickness_IP WRITE setThickness);
+    
+    
+    
 
-    Q_PROPERTY(double solarIndexofRefraction READ solarIndexofRefraction WRITE setSolarIndexofRefraction);
-    Q_PROPERTY(openstudio::Quantity solarIndexofRefraction_SI READ solarIndexofRefraction_SI WRITE setSolarIndexofRefraction);
-    Q_PROPERTY(openstudio::Quantity solarIndexofRefraction_IP READ solarIndexofRefraction_IP WRITE setSolarIndexofRefraction);
+    
+    
+    
 
-    Q_PROPERTY(double solarExtinctionCoefficient READ solarExtinctionCoefficient WRITE setSolarExtinctionCoefficient);
-    Q_PROPERTY(openstudio::Quantity solarExtinctionCoefficient_SI READ solarExtinctionCoefficient_SI WRITE setSolarExtinctionCoefficient);
-    Q_PROPERTY(openstudio::Quantity solarExtinctionCoefficient_IP READ solarExtinctionCoefficient_IP WRITE setSolarExtinctionCoefficient);
+    
+    
+    
 
-    Q_PROPERTY(double visibleIndexofRefraction READ visibleIndexofRefraction WRITE setVisibleIndexofRefraction);
-    Q_PROPERTY(openstudio::Quantity visibleIndexofRefraction_SI READ visibleIndexofRefraction_SI WRITE setVisibleIndexofRefraction);
-    Q_PROPERTY(openstudio::Quantity visibleIndexofRefraction_IP READ visibleIndexofRefraction_IP WRITE setVisibleIndexofRefraction);
+    
+    
+    
 
-    Q_PROPERTY(double visibleExtinctionCoefficient READ visibleExtinctionCoefficient WRITE setVisibleExtinctionCoefficient);
-    Q_PROPERTY(openstudio::Quantity visibleExtinctionCoefficient_SI READ visibleExtinctionCoefficient_SI WRITE setVisibleExtinctionCoefficient);
-    Q_PROPERTY(openstudio::Quantity visibleExtinctionCoefficient_IP READ visibleExtinctionCoefficient_IP WRITE setVisibleExtinctionCoefficient);
+    
+    
+    
 
-    Q_PROPERTY(double infraredTransmittanceatNormalIncidence READ infraredTransmittanceatNormalIncidence WRITE setInfraredTransmittanceatNormalIncidence RESET resetInfraredTransmittanceatNormalIncidence);
-    Q_PROPERTY(openstudio::Quantity infraredTransmittanceatNormalIncidence_SI READ infraredTransmittanceatNormalIncidence_SI WRITE setInfraredTransmittanceatNormalIncidence RESET resetInfraredTransmittanceatNormalIncidence);
-    Q_PROPERTY(openstudio::Quantity infraredTransmittanceatNormalIncidence_IP READ infraredTransmittanceatNormalIncidence_IP WRITE setInfraredTransmittanceatNormalIncidence RESET resetInfraredTransmittanceatNormalIncidence);
-    Q_PROPERTY(bool isInfraredTransmittanceatNormalIncidenceDefaulted READ isInfraredTransmittanceatNormalIncidenceDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double infraredHemisphericalEmissivity READ infraredHemisphericalEmissivity WRITE setInfraredHemisphericalEmissivity RESET resetInfraredHemisphericalEmissivity);
-    Q_PROPERTY(openstudio::Quantity infraredHemisphericalEmissivity_SI READ infraredHemisphericalEmissivity_SI WRITE setInfraredHemisphericalEmissivity RESET resetInfraredHemisphericalEmissivity);
-    Q_PROPERTY(openstudio::Quantity infraredHemisphericalEmissivity_IP READ infraredHemisphericalEmissivity_IP WRITE setInfraredHemisphericalEmissivity RESET resetInfraredHemisphericalEmissivity);
-    Q_PROPERTY(bool isInfraredHemisphericalEmissivityDefaulted READ isInfraredHemisphericalEmissivityDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double conductivity READ conductivity WRITE setConductivity RESET resetConductivity);
-    Q_PROPERTY(openstudio::Quantity conductivity_SI READ conductivity_SI WRITE setConductivity RESET resetConductivity);
-    Q_PROPERTY(openstudio::Quantity conductivity_IP READ conductivity_IP WRITE setConductivity RESET resetConductivity);
-    Q_PROPERTY(bool isConductivityDefaulted READ isConductivityDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double dirtCorrectionFactorforSolarandVisibleTransmittance READ dirtCorrectionFactorforSolarandVisibleTransmittance WRITE setDirtCorrectionFactorforSolarandVisibleTransmittance RESET resetDirtCorrectionFactorforSolarandVisibleTransmittance);
-    Q_PROPERTY(openstudio::Quantity dirtCorrectionFactorforSolarandVisibleTransmittance_SI READ dirtCorrectionFactorforSolarandVisibleTransmittance_SI WRITE setDirtCorrectionFactorforSolarandVisibleTransmittance RESET resetDirtCorrectionFactorforSolarandVisibleTransmittance);
-    Q_PROPERTY(openstudio::Quantity dirtCorrectionFactorforSolarandVisibleTransmittance_IP READ dirtCorrectionFactorforSolarandVisibleTransmittance_IP WRITE setDirtCorrectionFactorforSolarandVisibleTransmittance RESET resetDirtCorrectionFactorforSolarandVisibleTransmittance);
-    Q_PROPERTY(bool isDirtCorrectionFactorforSolarandVisibleTransmittanceDefaulted READ isDirtCorrectionFactorforSolarandVisibleTransmittanceDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(bool solarDiffusing READ solarDiffusing WRITE setSolarDiffusing RESET resetSolarDiffusing);
-    Q_PROPERTY(bool isSolarDiffusingDefaulted READ isSolarDiffusingDefaulted);
+    
+    
 
     // TODO: Add relationships for objects related to this one, but not pointed to by the underlying data.
     //       Such relationships can be generated by the GenerateRelationships.rb script.

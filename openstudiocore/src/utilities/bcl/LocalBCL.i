@@ -6,6 +6,7 @@
   #include <utilities/bcl/BCLComponent.hpp>
   #include <utilities/bcl/BCLFileReference.hpp>
   #include <utilities/bcl/BCLMeasureArgument.hpp>
+  #include <utilities/bcl/BCLMeasureOutput.hpp>
   #include <utilities/bcl/BCLMeasure.hpp>
   #include <utilities/bcl/LocalBCL.hpp>
   #include <utilities/bcl/RemoteBCL.hpp>
@@ -65,6 +66,11 @@
 %template(OptionalBCLMeasureArgument) boost::optional<openstudio::BCLMeasureArgument>;
 %template(BCLMeasureArgumentVector) std::vector<openstudio::BCLMeasureArgument>;
 
+%ignore std::vector<openstudio::BCLMeasureOutput>::vector(size_type);
+%ignore std::vector<openstudio::BCLMeasureOutput>::resize(size_type);
+%template(OptionalBCLMeasureOutput)boost::optional<openstudio::BCLMeasureOutput>;
+%template(BCLMeasureOutputVector)std::vector<openstudio::BCLMeasureOutput>;
+
 %ignore std::vector<openstudio::BCLMeasure>::vector(size_type);
 %ignore std::vector<openstudio::BCLMeasure>::resize(size_type);
 %template(OptionalBCLMeasure) boost::optional<openstudio::BCLMeasure>;
@@ -74,6 +80,7 @@
 %include <utilities/bcl/BCLXML.hpp>
 %include <utilities/bcl/BCLComponent.hpp>
 %include <utilities/bcl/BCLMeasureArgument.hpp>
+%include <utilities/bcl/BCLMeasureOutput.hpp>
 %include <utilities/bcl/BCLMeasure.hpp>
 %include <utilities/bcl/BCL.hpp>
 %include <utilities/bcl/RemoteBCL.hpp>

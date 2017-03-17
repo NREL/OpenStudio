@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -126,6 +126,30 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
   bool setPrimaryPlantEquipmentOperationScheme(const boost::optional<PlantEquipmentOperationScheme>& plantOperation);
 
   void resetPrimaryPlantEquipmentOperationScheme();
+
+  bool setPlantEquipmentOperationHeatingLoadSchedule(Schedule &);
+
+  void resetPlantEquipmentOperationHeatingLoadSchedule();
+
+  boost::optional<Schedule> plantEquipmentOperationHeatingLoadSchedule() const;
+
+  bool setPlantEquipmentOperationCoolingLoadSchedule(Schedule &);
+
+  boost::optional<Schedule> plantEquipmentOperationCoolingLoadSchedule() const;
+
+  void resetPlantEquipmentOperationCoolingLoadSchedule();
+
+  bool setPrimaryPlantEquipmentOperationSchemeSchedule(Schedule &);
+
+  void resetPrimaryPlantEquipmentOperationSchemeSchedule();
+
+  boost::optional<Schedule> primaryPlantEquipmentOperationSchemeSchedule() const;
+
+  bool setComponentSetpointOperationSchemeSchedule(Schedule &);
+
+  boost::optional<Schedule> componentSetpointOperationSchemeSchedule() const;
+
+  void resetComponentSetpointOperationSchemeSchedule();
 
   virtual std::vector<openstudio::IdfObject> remove() override;
 

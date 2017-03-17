@@ -1,0 +1,54 @@
+REM Install http://gnuwin32.sourceforge.net/packages/bison.htm and http://gnuwin32.sourceforge.net/packages/sed.htm to a location with no spaces in the path and add to path
+
+call C:\Devkit\devkitvars.bat
+
+REM delete the previous build
+IF EXIST ..\Ruby-install rd /s ..\Ruby-install
+IF EXIST ..\Ruby-release rd /s ..\Ruby-release
+IF EXIST ..\Ruby-debug rd /s ..\Ruby-debug
+
+REM The build process litters the source tree with the extension binaries
+REM so we make a copy of the clean source tree. One for release and one for debug
+XCOPY /e /i /Y /Q . ..\Ruby-release
+XCOPY /e /i /Y /Q . ..\Ruby-debug
+
+# DLM: this is lame but cannot figure out a configuration option that works, e.g. --with-fiddle-dir=${CMAKE_BINARY_DIR}/${LIBFFI_PATH}/ or CFLAGS = -I${CMAKE_BINARY_DIR}\${LIBFFI_PATH}\include
+XCOPY /e /i /Y /Q "${CMAKE_BINARY_DIR}\${LIBFFI_PATH}\include\*" ..\Ruby-release\include
+XCOPY /e /i /Y /Q "${CMAKE_BINARY_DIR}\${LIBFFI_PATH}\include\*" ..\Ruby-debug\include
+copy "${CMAKE_BINARY_DIR}\${LIBFFI_PATH}\lib\libffi.dll.a" "${CMAKE_BINARY_DIR}\${LIBFFI_PATH}\lib\ffi.lib"
+
+cd ..\Ruby-release
+set CFLAGS = MD -Zi -W2 -wd4996 -we4028 -we4142 -O2sy-  -Zm600 
+call .\win32\configure.bat --with-static-linked-ext --with-zlib-dir="${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/" --with-openssl-dir="${CMAKE_BINARY_DIR}/OpenSSL-Win64/" --disable-install-doc --prefix="${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/release" --target=x64-mswin64
+set EXTLIBS=${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/lib/zlibstatic.lib ${CMAKE_BINARY_DIR}\${LIBFFI_PATH}\lib\ffi.lib
+nmake libenc
+nmake libtrans
+nmake
+nmake install
+"${CMAKE_COMMAND}" -E copy_if_different "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-release/enc/encinit.c" "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/release/include/"
+"${CMAKE_COMMAND}" -E make_directory "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/release/lib/ext/"
+for /R "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-release/ext/" %%f in (*.lib) do (
+  "${CMAKE_COMMAND}" -E copy_if_different %%f "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/release/lib/ext/"
+)
+"${CMAKE_COMMAND}" -E make_directory "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/release/lib/enc/"
+for /R "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-release/enc/" %%f in (*.lib) do (
+  "${CMAKE_COMMAND}" -E copy_if_different %%f "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/release/lib/enc/"
+)
+
+cd ..\Ruby-debug
+set CFLAGS = MDd -Zi -W2 -wd4996 -we4028 -we4142 -O2sy-  -Zm600
+call .\win32\configure.bat --with-static-linked-ext --with-zlib-dir="${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/" --with-win32 --without-win32ole --disable-install-doc --prefix="${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/debug" --target=x64-mswin64
+set EXTLIBS="${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/lib/zlibstaticd.lib"
+nmake libenc
+nmake libtrans
+nmake
+nmake install
+"${CMAKE_COMMAND}" -E copy_if_different "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-debug/enc/encinit.c" "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/debug/include/"
+"${CMAKE_COMMAND}" -E make_directory "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/debug/lib/ext/"
+for /R "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-debug/ext/" %%f in (*.lib) do (
+  "${CMAKE_COMMAND}" -E copy_if_different %%f "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/debug/lib/ext/"
+)
+"${CMAKE_COMMAND}" -E make_directory "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/debug/lib/enc/"
+for /R "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-debug/enc/" %%f in (*.lib) do (
+  "${CMAKE_COMMAND}" -E copy_if_different %%f "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/debug/lib/enc/"
+)

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -44,6 +44,8 @@
 #include "SubSurface_Impl.hpp"
 #include "GeneratorPhotovoltaic.hpp"
 #include "GeneratorPhotovoltaic_Impl.hpp"
+#include "SurfacePropertyConvectionCoefficients.hpp"
+#include "SurfacePropertyConvectionCoefficients_Impl.hpp"
 
 #include "../utilities/sql/SqlFile.hpp"
 
@@ -79,7 +81,7 @@ namespace model {
       : ParentObject_Impl(type, model)
     {
       // connect signals
-      connect(this, &PlanarSurface_Impl::onChange, this, &PlanarSurface_Impl::clearCachedVariables);
+      this->PlanarSurface_Impl::onChange.connect<PlanarSurface_Impl, &PlanarSurface_Impl::clearCachedVariables>(this);
     }
 
     // constructor
@@ -89,7 +91,7 @@ namespace model {
       : ParentObject_Impl(idfObject, model, keepHandle)
     {
       // connect signals
-      connect(this, &PlanarSurface_Impl::onChange, this, &PlanarSurface_Impl::clearCachedVariables);
+      this->PlanarSurface_Impl::onChange.connect<PlanarSurface_Impl, &PlanarSurface_Impl::clearCachedVariables>(this);
     }
 
     PlanarSurface_Impl::PlanarSurface_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -98,7 +100,7 @@ namespace model {
       : ParentObject_Impl(other,model,keepHandle)
     {
       // connect signals
-      connect(this, &PlanarSurface_Impl::onChange, this, &PlanarSurface_Impl::clearCachedVariables);
+      this->PlanarSurface_Impl::onChange.connect<PlanarSurface_Impl, &PlanarSurface_Impl::clearCachedVariables>(this);
     }
 
     PlanarSurface_Impl::PlanarSurface_Impl(const PlanarSurface_Impl& other,
@@ -107,9 +109,9 @@ namespace model {
       : ParentObject_Impl(other,model,keepHandle)
     {
       // connect signals
-      connect(this, &PlanarSurface_Impl::onChange, this, &PlanarSurface_Impl::clearCachedVariables);
+      this->PlanarSurface_Impl::onChange.connect<PlanarSurface_Impl, &PlanarSurface_Impl::clearCachedVariables>(this);
     }
-
+    
     boost::optional<ConstructionBase> PlanarSurface_Impl::construction() const
     {
       boost::optional<std::pair<ConstructionBase, int> > result = this->constructionWithSearchDistance();
@@ -576,6 +578,11 @@ namespace model {
     {
       return getObject<ModelObject>().getModelObjectSources<GeneratorPhotovoltaic>();
     }
+
+    std::vector<SurfacePropertyConvectionCoefficients> PlanarSurface_Impl::surfacePropertyConvectionCoefficients() const
+    {
+      return getObject<ModelObject>().getModelObjectSources<SurfacePropertyConvectionCoefficients>();
+    }
     
     boost::optional<ModelObject> PlanarSurface_Impl::constructionAsModelObject() const
     {
@@ -811,6 +818,11 @@ std::vector<ModelObject> PlanarSurface::solarCollectors() const
 std::vector<GeneratorPhotovoltaic> PlanarSurface::generatorPhotovoltaics() const
 {
   return getImpl<detail::PlanarSurface_Impl>()->generatorPhotovoltaics();
+}
+
+std::vector<SurfacePropertyConvectionCoefficients> PlanarSurface::surfacePropertyConvectionCoefficients() const
+{
+  return getImpl<detail::PlanarSurface_Impl>()->surfacePropertyConvectionCoefficients();
 }
 
 std::vector<PlanarSurface> PlanarSurface::findPlanarSurfaces(const std::vector<PlanarSurface>& planarSurfaces,

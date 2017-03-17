@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -42,26 +42,26 @@ namespace detail {
 
   // derive CoilCoolingDXSingleSpeed_Impl from ModelObject_Impl to override virtual methods
   class MODEL_API CoilCoolingDXSingleSpeed_Impl : public StraightComponent_Impl {
-    Q_OBJECT;
+    
 
-    Q_PROPERTY(boost::optional<double> ratedCOP READ ratedCOP WRITE setRatedCOP);
-    Q_PROPERTY(boost::optional<double> ratedEvaporatorFanPowerPerVolumeFlowRate READ ratedEvaporatorFanPowerPerVolumeFlowRate WRITE setRatedEvaporatorFanPowerPerVolumeFlowRate);
-    Q_PROPERTY(boost::optional<double> nominalTimeForCondensateRemovalToBegin READ nominalTimeForCondensateRemovalToBegin WRITE setNominalTimeForCondensateRemovalToBegin);
-    Q_PROPERTY(boost::optional<double> ratioOfInitialMoistureEvaporationRateAndSteadyStateLatentCapacity READ ratioOfInitialMoistureEvaporationRateAndSteadyStateLatentCapacity WRITE setRatioOfInitialMoistureEvaporationRateAndSteadyStateLatentCapacity);
-    Q_PROPERTY(boost::optional<double> maximumCyclingRate READ maximumCyclingRate WRITE setMaximumCyclingRate);
-    Q_PROPERTY(boost::optional<double> latentCapacityTimeConstant READ latentCapacityTimeConstant WRITE setLatentCapacityTimeConstant);
-    Q_PROPERTY(boost::optional<std::string> condenserAirInletNodeName READ condenserAirInletNodeName WRITE setCondenserAirInletNodeName);
-    Q_PROPERTY(std::string condenserType READ condenserType WRITE setCondenserType);
-    Q_PROPERTY(boost::optional<double> evaporativeCondenserEffectiveness READ evaporativeCondenserEffectiveness WRITE setEvaporativeCondenserEffectiveness);
-    Q_PROPERTY(boost::optional<double> evaporativeCondenserAirFlowRate READ evaporativeCondenserAirFlowRate WRITE setEvaporativeCondenserAirFlowRate);
-    Q_PROPERTY(boost::optional<double> evaporativeCondenserPumpRatedPowerConsumption READ evaporativeCondenserPumpRatedPowerConsumption WRITE setEvaporativeCondenserPumpRatedPowerConsumption);
-    Q_PROPERTY(boost::optional<double> crankcaseHeaterCapacity READ crankcaseHeaterCapacity WRITE setCrankcaseHeaterCapacity);
-    Q_PROPERTY(boost::optional<double> maximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation READ maximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation WRITE setMaximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation);
-    Q_PROPERTY(boost::optional<double> basinHeaterCapacity READ basinHeaterCapacity WRITE setBasinHeaterCapacity);
-    Q_PROPERTY(boost::optional<double> basinHeaterSetpointTemperature READ basinHeaterSetpointTemperature WRITE setBasinHeaterSetpointTemperature);
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> availabilitySchedule READ availabilityScheduleAsModelObject WRITE setAvailabilityScheduleAsModelObject);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> basinHeaterOperatingSchedule READ basinHeaterOperatingScheduleAsModelObject WRITE setBasinHeaterOperatingScheduleAsModelObject RESET resetBasinHeaterOperatingSchedule);
+    
+    
    public:
     /** @name Constructors and Destructors */
     //@{

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -30,13 +30,13 @@
 #define OPENSTUDIO_CONSTRUCTIONINSPECTORVIEW_HPP
 
 #include "ModelObjectInspectorView.hpp"
+#include "../model/Construction.hpp"
 
 class QComboBox;
 
 namespace openstudio {
 
 namespace model {
- class Construction;
  class ConstructionBase;
 }
 
@@ -44,7 +44,7 @@ class ConstructionObjectVectorController;
 
 class OSDropZone;
 
-class OSLineEdit;
+class OSLineEdit2;
 
 class OSComboBox2;
 
@@ -78,13 +78,15 @@ class ConstructionInspectorView : public ModelObjectInspectorView
 
     bool m_isIP;
 
-    OSLineEdit * m_nameEdit;
+    OSLineEdit2 * m_nameEdit;
 
     StandardsInformationConstructionWidget * m_standardsInformationWidget;
 
     OSDropZone * m_constructionDZ;
 
     ConstructionObjectVectorController * m_constructionVC;
+
+    boost::optional<model::Construction> m_construction;
 };
 
 } // openstudio

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -147,6 +147,10 @@ struct UTILITIES_API IddFieldProperties{
    *  This information can be used by other objects to point to (reference) this object using 
    *  \\object-list markup. */
   std::vector<std::string> references;
+
+  /** This field specifies that the containing IdfObject belongs to the following reference-class-name lists. 
+  **/
+  std::vector<std::string> referenceClassNames;
 
   /** This field points to a name registered in another file (typically the RDD file). OpenStudio
    *  treats these fields as plain (unparsed) text. */

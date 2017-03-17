@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -42,7 +42,6 @@
 #include "OSItem.hpp"
 #include "OSItemList.hpp"
 #include "SchedulesTabController.hpp"
-#include "ScriptFolderListView.hpp"
 #include "SpaceTypeInspectorView.hpp"
 #include "ThermalZonesView.hpp"
 
@@ -75,7 +74,6 @@ MainRightColumnController::MainRightColumnController(const model::Model & model,
 {
   m_measureLibraryController->localLibraryView->setStyleSheet("QStackedWidget { border-top: 0px; }");
   OSAppBase::instance()->measureManager().setLibraryController(m_measureLibraryController);
-  OSAppBase::instance()->measureManager().updateMeasuresLists();
   m_horizontalTabWidget = new HorizontalTabWidget();
   addQObject(m_horizontalTabWidget);
 
@@ -1040,6 +1038,8 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
   libraryWidget->addModelObjectType(IddObjectType::OS_SetpointManager_OutdoorAirReset,"Setpoint Manager Outdoor Air Reset");
   libraryWidget->addModelObjectType(IddObjectType::OS_SetpointManager_Scheduled,"Setpoint Manager Scheduled");
   libraryWidget->addModelObjectType(IddObjectType::OS_SetpointManager_Scheduled_DualSetpoint,"Setpoint Manager Scheduled Dual Setpoint");
+  libraryWidget->addModelObjectType(IddObjectType::OS_SetpointManager_SingleZone_Cooling,"Setpoint Manager Single Zone Cooling");
+  libraryWidget->addModelObjectType(IddObjectType::OS_SetpointManager_SingleZone_Heating,"Setpoint Manager Single Zone Heating");
   libraryWidget->addModelObjectType(IddObjectType::OS_SetpointManager_SingleZone_Humidity_Maximum,"Setpoint Manager Humidity Maximum");
   libraryWidget->addModelObjectType(IddObjectType::OS_SetpointManager_SingleZone_Humidity_Minimum,"Setpoint Manager Humidity Minimum");
   libraryWidget->addModelObjectType(IddObjectType::OS_SetpointManager_SingleZone_OneStageCooling,"Setpoint Manager One Stage Cooling");

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -30,20 +30,15 @@
 #define OPENSTUDIO_WINDOWMATERIALGASINSPECTORVIEW_HPP
 
 #include "ModelObjectInspectorView.hpp"
+#include "../model/Gas.hpp"
 
 namespace openstudio {
 
-namespace model {
+class OSComboBox2;
 
-  class Gas;
+class OSLineEdit2;
 
-}
-
-class OSComboBox;
-
-class OSLineEdit;
-
-class OSQuantityEdit;
+class OSQuantityEdit2;
 
 class StandardsInformationMaterialWidget;
 
@@ -77,25 +72,27 @@ class WindowMaterialGasInspectorView : public ModelObjectInspectorView
 
     bool m_isIP;
 
-    OSLineEdit * m_nameEdit = nullptr;
+    boost::optional<model::Gas> m_gas;
 
-    OSComboBox * m_gasType = nullptr;
+    OSLineEdit2 * m_nameEdit = nullptr;
 
-    OSQuantityEdit * m_thickness = nullptr;
+    OSComboBox2 * m_gasType = nullptr;
 
-    OSQuantityEdit * m_conductivityCoefficientA = nullptr;
+    OSQuantityEdit2 * m_thickness = nullptr;
 
-    OSQuantityEdit * m_conductivityCoefficientB = nullptr;
+    OSQuantityEdit2 * m_conductivityCoefficientA = nullptr;
 
-    OSQuantityEdit * m_viscosityCoefficientA = nullptr;
+    OSQuantityEdit2 * m_conductivityCoefficientB = nullptr;
 
-    OSQuantityEdit * m_viscosityCoefficientB = nullptr;
+    OSQuantityEdit2 * m_viscosityCoefficientA = nullptr;
 
-    OSQuantityEdit * m_specificHeatCoefficientA = nullptr;
+    OSQuantityEdit2 * m_viscosityCoefficientB = nullptr;
 
-    OSQuantityEdit * m_specificHeatCoefficientB = nullptr;
+    OSQuantityEdit2 * m_specificHeatCoefficientA = nullptr;
 
-    OSQuantityEdit * m_molecularWeight = nullptr;
+    OSQuantityEdit2 * m_specificHeatCoefficientB = nullptr;
+
+    OSQuantityEdit2 * m_molecularWeight = nullptr;
 
     StandardsInformationMaterialWidget * m_standardsInformationWidget = nullptr;
 

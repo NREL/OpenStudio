@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -48,6 +48,10 @@ OSLoadNamePixmapLineEdit::OSLoadNamePixmapLineEdit( QWidget * parent )
   : QWidget(parent)
 {
   createWidgets();
+}
+
+OSLoadNamePixmapLineEdit::~OSLoadNamePixmapLineEdit()
+{
 }
 
 void OSLoadNamePixmapLineEdit::createWidgets()
@@ -128,11 +132,7 @@ void OSLoadNamePixmapLineEdit::completeBind() {
 
   setIcon();
 
-  bool isConnected = false;
-
-  isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onChange()),
-                         this,SLOT(onModelObjectChange()) );
-  OS_ASSERT(isConnected);
+  m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onChange.connect<OSLoadNamePixmapLineEdit, &OSLoadNamePixmapLineEdit::onModelObjectChange>(this);
 }
 
 void OSLoadNamePixmapLineEdit::unbind()
@@ -142,7 +142,10 @@ void OSLoadNamePixmapLineEdit::unbind()
 
 void OSLoadNamePixmapLineEdit::onModelObjectChange()
 {
-  setIcon();
+  // DLM: this was causing a crash with people objects in the space type grid view
+  // somehow this was getting called in grid redraw, apparently the grid redraw is calling the setters
+  // the type would not change in this signal anyway
+  //setIcon();
 }
 
 void OSLoadNamePixmapLineEdit::enableClickFocus()

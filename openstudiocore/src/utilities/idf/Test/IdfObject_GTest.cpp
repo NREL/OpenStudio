@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -48,7 +48,7 @@
 
 #include <QVariant>
 
-#include <boost/filesystem/fstream.hpp>
+
 #include <boost/lexical_cast.hpp>
 
 #include <sstream>
@@ -78,7 +78,7 @@ TEST_F(IdfFixture, IdfObject_ConstructDefaultsFromIddObjectType) {
 
   // loop through each IddObject, create a default object, and print to a file.
   // examine, then partition into "good" and candidate for refactor (us or E+)
-  boost::filesystem::ofstream outFile("defaultObjects.idf");
+  openstudio::filesystem::ofstream outFile("defaultObjects.idf");
   ASSERT_TRUE(outFile?true:false);
 
   IddObjectVector iddObjects = IddFactory::instance().objects();
@@ -720,7 +720,7 @@ TEST_F(IdfFixture, Handle_QVariant)
 {
   Handle handle = createUUID();
   QVariant variant = QVariant::fromValue(handle);
-  EXPECT_EQ("QUuid", std::string(variant.typeName()));
+  EXPECT_EQ("openstudio::UUID", std::string(variant.typeName()));
   ASSERT_TRUE(variant.canConvert<Handle>());
   Handle handle2 = variant.value<Handle>();
   EXPECT_TRUE(handle == handle2);
@@ -741,10 +741,5 @@ TEST_F(IdfFixture, DoubleDisplayedAsString) {
   EXPECT_EQ("0.05",ss.str());
   ss >> roundTripValue;
   EXPECT_DOUBLE_EQ(value,roundTripValue);
-
-  // QVariant
-  QVariant qvar(value);
-  EXPECT_EQ("0.05",qvar.toString().toStdString());
-  EXPECT_DOUBLE_EQ(value,qvar.toDouble());
 }
 

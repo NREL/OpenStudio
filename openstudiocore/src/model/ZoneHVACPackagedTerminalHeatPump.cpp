@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -573,21 +573,7 @@ namespace detail {
 
   void ZoneHVACPackagedTerminalHeatPump_Impl::setSupplementalHeatingCoil( HVACComponent & hvacComponent )
   {
-    bool isAllowedType = false;
-
-    if( hvacComponent.iddObjectType() == IddObjectType::OS_Coil_Heating_Gas )
-    {
-      isAllowedType = true;
-    }
-    else if( hvacComponent.iddObjectType() == IddObjectType::OS_Coil_Heating_Electric )
-    {
-      isAllowedType = true;
-    }
-
-    if( isAllowedType )
-    {
-      setPointer(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplementalHeatingCoilName,hvacComponent.handle());
-    }
+    setPointer(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplementalHeatingCoilName,hvacComponent.handle());
   }
 
   void ZoneHVACPackagedTerminalHeatPump_Impl::setMaximumSupplyAirTemperaturefromSupplementalHeater(boost::optional<double> maximumSupplyAirTemperaturefromSupplementalHeater) {

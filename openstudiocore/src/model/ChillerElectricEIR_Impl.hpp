@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -43,35 +43,35 @@ namespace detail {
 
 class MODEL_API ChillerElectricEIR_Impl : public WaterToWaterComponent_Impl
 {
-  Q_OBJECT;
+  
 
-  Q_PROPERTY(boost::optional<double> referenceCapacity READ referenceCapacity WRITE setReferenceCapacity);
-  Q_PROPERTY(double referenceCOP READ referenceCOP WRITE setReferenceCOP);
-  Q_PROPERTY(double referenceLeavingChilledWaterTemperature READ referenceLeavingChilledWaterTemperature WRITE setReferenceLeavingChilledWaterTemperature RESET resetReferenceLeavingChilledWaterTemperature);
-  Q_PROPERTY(double referenceEnteringCondenserFluidTemperature READ referenceEnteringCondenserFluidTemperature WRITE setReferenceEnteringCondenserFluidTemperature RESET resetReferenceEnteringCondenserFluidTemperature);
-  Q_PROPERTY(boost::optional<double> referenceChilledWaterFlowRate READ referenceChilledWaterFlowRate WRITE setReferenceChilledWaterFlowRate RESET resetReferenceChilledWaterFlowRate);
-  Q_PROPERTY(boost::optional<double> referenceCondenserFluidFlowRate READ referenceCondenserFluidFlowRate WRITE setReferenceCondenserFluidFlowRate RESET resetReferenceCondenserFluidFlowRate);
-  Q_PROPERTY(double minimumPartLoadRatio READ minimumPartLoadRatio WRITE setMinimumPartLoadRatio RESET resetMinimumPartLoadRatio);
-  Q_PROPERTY(double maximumPartLoadRatio READ maximumPartLoadRatio WRITE setMaximumPartLoadRatio RESET resetMaximumPartLoadRatio);
-  Q_PROPERTY(double optimumPartLoadRatio READ optimumPartLoadRatio WRITE setOptimumPartLoadRatio RESET resetOptimumPartLoadRatio);
-  Q_PROPERTY(double minimumUnloadingRatio READ minimumUnloadingRatio WRITE setMinimumUnloadingRatio RESET resetMinimumUnloadingRatio);
-  Q_PROPERTY(std::string chilledWaterInletNodeName READ chilledWaterInletNodeName WRITE setChilledWaterInletNodeName);
-  Q_PROPERTY(std::string chilledWaterOutletNodeName READ chilledWaterOutletNodeName WRITE setChilledWaterOutletNodeName);
-  Q_PROPERTY(boost::optional<std::string> condenserInletNodeName READ condenserInletNodeName WRITE setCondenserInletNodeName RESET resetCondenserInletNodeName);
-  Q_PROPERTY(boost::optional<std::string> condenserOutletNodeName READ condenserOutletNodeName WRITE setCondenserOutletNodeName RESET resetCondenserOutletNodeName);
-  Q_PROPERTY(std::string condenserType READ condenserType WRITE setCondenserType RESET resetCondenserType);
-  Q_PROPERTY(double condenserFanPowerRatio READ condenserFanPowerRatio WRITE setCondenserFanPowerRatio RESET resetCondenserFanPowerRatio);
-  Q_PROPERTY(double compressorMotorEfficiency READ compressorMotorEfficiency WRITE setCompressorMotorEfficiency RESET resetCompressorMotorEfficiency);
-  Q_PROPERTY(double leavingChilledWaterLowerTemperatureLimit READ leavingChilledWaterLowerTemperatureLimit WRITE setLeavingChilledWaterLowerTemperatureLimit RESET resetLeavingChilledWaterLowerTemperatureLimit);
-  Q_PROPERTY(std::string chillerFlowMode READ chillerFlowMode WRITE setChillerFlowMode RESET resetChillerFlowMode);
-  Q_PROPERTY(double designHeatRecoveryWaterFlowRate READ designHeatRecoveryWaterFlowRate WRITE setDesignHeatRecoveryWaterFlowRate RESET resetDesignHeatRecoveryWaterFlowRate);
-  Q_PROPERTY(boost::optional<std::string> heatRecoveryInletNodeName READ heatRecoveryInletNodeName WRITE setHeatRecoveryInletNodeName RESET resetHeatRecoveryInletNodeName);
-  Q_PROPERTY(boost::optional<std::string> heatRecoveryOutletNodeName READ heatRecoveryOutletNodeName WRITE setHeatRecoveryOutletNodeName RESET resetHeatRecoveryOutletNodeName);
-  Q_PROPERTY(double sizingFactor READ sizingFactor WRITE setSizingFactor RESET resetSizingFactor);
-  Q_PROPERTY(double basinHeaterCapacity READ basinHeaterCapacity WRITE setBasinHeaterCapacity RESET resetBasinHeaterCapacity);
-  Q_PROPERTY(double basinHeaterSetpointTemperature READ basinHeaterSetpointTemperature WRITE setBasinHeaterSetpointTemperature RESET resetBasinHeaterSetpointTemperature);
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 
-  Q_PROPERTY(boost::optional<openstudio::model::ModelObject> basinHeaterSchedule READ basinHeaterScheduleAsModelObject WRITE setBasinHeaterScheduleAsModelObject RESET resetBasinHeaterSchedule);
+  
  public:
 
 

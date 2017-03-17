@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -76,70 +76,70 @@ namespace detail {
 
   /** Space_Impl is a PlanarSurfaceGroup_Impl that is the implementation class for Space.*/
   class MODEL_API Space_Impl : public PlanarSurfaceGroup_Impl {
-    Q_OBJECT;
+    
 
-    Q_PROPERTY(double directionofRelativeNorth READ directionofRelativeNorth WRITE setDirectionofRelativeNorth RESET resetDirectionofRelativeNorth);
-    Q_PROPERTY(openstudio::Quantity directionofRelativeNorth_SI READ directionofRelativeNorth_SI WRITE setDirectionofRelativeNorth RESET resetDirectionofRelativeNorth);
-    Q_PROPERTY(openstudio::Quantity directionofRelativeNorth_IP READ directionofRelativeNorth_IP WRITE setDirectionofRelativeNorth RESET resetDirectionofRelativeNorth);
-    Q_PROPERTY(bool isDirectionofRelativeNorthDefaulted READ isDirectionofRelativeNorthDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double xOrigin READ xOrigin WRITE setXOrigin RESET resetXOrigin);
-    Q_PROPERTY(openstudio::Quantity xOrigin_SI READ xOrigin_SI WRITE setXOrigin RESET resetXOrigin);
-    Q_PROPERTY(openstudio::Quantity xOrigin_IP READ xOrigin_IP WRITE setXOrigin RESET resetXOrigin);
-    Q_PROPERTY(bool isXOriginDefaulted READ isXOriginDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double yOrigin READ yOrigin WRITE setYOrigin RESET resetYOrigin);
-    Q_PROPERTY(openstudio::Quantity yOrigin_SI READ yOrigin_SI WRITE setYOrigin RESET resetYOrigin);
-    Q_PROPERTY(openstudio::Quantity yOrigin_IP READ yOrigin_IP WRITE setYOrigin RESET resetYOrigin);
-    Q_PROPERTY(bool isYOriginDefaulted READ isYOriginDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double zOrigin READ zOrigin WRITE setZOrigin RESET resetZOrigin);
-    Q_PROPERTY(openstudio::Quantity zOrigin_SI READ xOrigin_SI WRITE setZOrigin RESET resetZOrigin);
-    Q_PROPERTY(openstudio::Quantity zOrigin_IP READ xOrigin_IP WRITE setZOrigin RESET resetZOrigin);
-    Q_PROPERTY(bool isZOriginDefaulted READ isZOriginDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(bool partofTotalFloorArea READ partofTotalFloorArea WRITE setPartofTotalFloorArea RESET resetPartofTotalFloorArea);
-    Q_PROPERTY(bool isPartofTotalFloorAreaDefaulted READ isPartofTotalFloorAreaDefaulted);
+    
+    
 
-    Q_PROPERTY(double floorArea READ floorArea);
-    Q_PROPERTY(double exteriorArea READ exteriorArea);
-    Q_PROPERTY(double exteriorWallArea READ exteriorWallArea);
-    Q_PROPERTY(double volume READ volume);
-    Q_PROPERTY(double numberOfPeople READ numberOfPeople WRITE setNumberOfPeople);
-    Q_PROPERTY(double peoplePerFloorArea READ peoplePerFloorArea WRITE setPeoplePerFloorArea);
-    Q_PROPERTY(double floorAreaPerPerson READ floorAreaPerPerson WRITE setFloorAreaPerPerson);
-    Q_PROPERTY(double lightingPower READ lightingPower WRITE setLightingPower);
-    Q_PROPERTY(double lightingPowerPerFloorArea READ lightingPowerPerFloorArea WRITE setLightingPowerPerFloorArea);
-    Q_PROPERTY(double lightingPowerPerPerson READ lightingPowerPerPerson WRITE setLightingPowerPerPerson);
-    Q_PROPERTY(double electricEquipmentPower READ electricEquipmentPower WRITE setElectricEquipmentPower);
-    Q_PROPERTY(double electricEquipmentPowerPerFloorArea READ electricEquipmentPowerPerFloorArea WRITE setElectricEquipmentPowerPerFloorArea);
-    Q_PROPERTY(double electricEquipmentPowerPerPerson READ electricEquipmentPowerPerPerson WRITE setElectricEquipmentPowerPerPerson);
-    Q_PROPERTY(double gasEquipmentPower READ gasEquipmentPower WRITE setGasEquipmentPower);
-    Q_PROPERTY(double gasEquipmentPowerPerFloorArea READ gasEquipmentPowerPerFloorArea WRITE setGasEquipmentPowerPerFloorArea);
-    Q_PROPERTY(double gasEquipmentPowerPerPerson READ gasEquipmentPowerPerPerson WRITE setGasEquipmentPowerPerPerson);
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> spaceType READ spaceTypeAsModelObject WRITE setSpaceTypeAsModelObject RESET resetSpaceType);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> defaultConstructionSet READ defaultConstructionSetAsModelObject WRITE setDefaultConstructionSetAsModelObject RESET resetDefaultConstructionSet);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> defaultScheduleSet READ defaultScheduleSetAsModelObject WRITE setDefaultScheduleSetAsModelObject RESET resetDefaultScheduleSet);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> thermalZone READ thermalZoneAsModelObject WRITE setThermalZoneAsModelObject);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> buildingStory READ buildingStoryAsModelObject WRITE setBuildingStoryAsModelObject);
+    
+    
+    
+    
+    
 
-    Q_PROPERTY(std::vector<openstudio::model::ModelObject> shadingSurfaceGroups READ shadingSurfaceGroupsAsModelObjects);
-    Q_PROPERTY(std::vector<openstudio::model::ModelObject> interiorPartitionSurfaceGroups READ interiorPartitionSurfaceGroupsAsModelObjects);
-    Q_PROPERTY(std::vector<openstudio::model::ModelObject> surfaces READ surfacesAsModelObjects);
-    Q_PROPERTY(std::vector<openstudio::model::ModelObject> internalMass READ internalMassAsModelObjects);
-    Q_PROPERTY(std::vector<openstudio::model::ModelObject> people READ peopleAsModelObjects);
-    Q_PROPERTY(std::vector<openstudio::model::ModelObject> lights READ lightsAsModelObjects);
-    Q_PROPERTY(std::vector<openstudio::model::ModelObject> luminaires READ luminairesAsModelObjects);
-    Q_PROPERTY(std::vector<openstudio::model::ModelObject> electricEquipment READ electricEquipmentAsModelObjects);
-    Q_PROPERTY(std::vector<openstudio::model::ModelObject> gasEquipment READ gasEquipmentAsModelObjects);
-    Q_PROPERTY(std::vector<openstudio::model::ModelObject> hotWaterEquipment READ hotWaterEquipmentAsModelObjects);
-    Q_PROPERTY(std::vector<openstudio::model::ModelObject> steamEquipment READ steamEquipmentAsModelObjects);
-    Q_PROPERTY(std::vector<openstudio::model::ModelObject> otherEquipment READ otherEquipmentAsModelObjects);
-    Q_PROPERTY(std::vector<openstudio::model::ModelObject> daylightingControls READ daylightingControlsAsModelObjects);
-    Q_PROPERTY(std::vector<openstudio::model::ModelObject> illuminanceMaps READ illuminanceMapsAsModelObjects);
-    Q_PROPERTY(std::vector<openstudio::model::ModelObject> spaceInfiltrationDesignFlowRates READ spaceInfiltrationDesignFlowRatesAsModelObjects);
-    Q_PROPERTY(std::vector<openstudio::model::ModelObject> spaceInfiltrationEffectiveLeakageAreas READ spaceInfiltrationEffectiveLeakageAreasAsModelObjects);
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
   public:
     /** @name Constructors and Destructors */
     //@{

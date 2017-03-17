@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -39,9 +39,16 @@
 #include "../../model/ScheduleRuleset_Impl.hpp"
 #include "../../model/ScheduleRule.hpp"
 #include "../../model/ScheduleRule_Impl.hpp"
+#include "../../model/ScheduleWeek.hpp"
+#include "../../model/ScheduleWeek_Impl.hpp"
+#include "../../model/ScheduleYear.hpp"
+#include "../../model/ScheduleYear_Impl.hpp"
+#include "../../model/YearDescription.hpp"
+#include "../../model/YearDescription_Impl.hpp"
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include <utilities/idd/Schedule_Year_FieldEnums.hxx>
+#include <utilities/idd/Schedule_Week_Compact_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 #include <sstream>
@@ -228,3 +235,36 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleRuleset_Bug804)
 }
 
 
+TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleWeek_Bug2322)
+{
+  Model model;
+  model::YearDescription yd = model.getUniqueModelObject<model::YearDescription>();
+  EXPECT_TRUE(yd.setDayofWeekforStartDay("Tuesday"));
+
+  ScheduleWeek weeklySchd(model);
+  weeklySchd.setName("TestWeek");
+
+  // DLM: this date will not work since it is not consistent with the YearDescription
+  Date endDate(MonthOfYear(12), 31);
+
+  // DLM: this date will work since it is consistent with the YearDescription
+  endDate = yd.makeDate(MonthOfYear(12), 31);
+
+  ScheduleYear yearSchd(model);
+  yearSchd.setName("TestSched");
+  EXPECT_TRUE(yearSchd.addScheduleWeek(endDate, weeklySchd));
+
+  ForwardTranslator ft;
+  Workspace workspace = ft.translateModel(model);
+
+  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::Schedule_Year).size());
+  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::Schedule_Week_Daily).size());
+  EXPECT_EQ("TestWeek", workspace.getObjectsByType(IddObjectType::Schedule_Week_Daily)[0].nameString());
+  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::Schedule_Year)[0].extensibleGroups().size());
+  ASSERT_TRUE(workspace.getObjectsByType(IddObjectType::Schedule_Year)[0].extensibleGroups()[0].getString(Schedule_YearExtensibleFields::Schedule_WeekName));
+  EXPECT_EQ("TestWeek", workspace.getObjectsByType(IddObjectType::Schedule_Year)[0].extensibleGroups()[0].getString(Schedule_YearExtensibleFields::Schedule_WeekName).get());
+
+  //std::stringstream ss;
+  //ss << workspace;
+  //std::string s = ss.str();
+}

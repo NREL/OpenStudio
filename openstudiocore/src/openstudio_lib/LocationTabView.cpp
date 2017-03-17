@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -60,7 +60,7 @@
 
 #include "../energyplus/ReverseTranslator.hpp"
 
-#include "../runmanager/lib/ConfigOptions.hpp"
+//#include "../runmanager/lib/ConfigOptions.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/filetypes/EpwFile.hpp"
@@ -272,7 +272,7 @@ LocationView::LocationView(bool isIP,
   if (ashraeClimateZone.empty()){
     ashraeClimateZone = climateZones.appendClimateZone(model::ClimateZones::ashraeInstitutionName(), model::ClimateZones::ashraeDefaultYear(), "");
   }
-  ashraeClimateZone.setType(model::ClimateZones::ashraeInstitutionName(), model::ClimateZones::ashraeDocumentName(), model::ClimateZones::ashraeDefaultYear());
+  //ashraeClimateZone.setType(model::ClimateZones::ashraeInstitutionName(), model::ClimateZones::ashraeDocumentName(), model::ClimateZones::ashraeDefaultYear());
   
   std::string ashraeClimateZoneValue = ashraeClimateZone.value();
   auto idx = m_ashraeClimateZone->findText(toQString(ashraeClimateZoneValue));
@@ -300,7 +300,7 @@ LocationView::LocationView(bool isIP,
    if (cecClimateZone.empty()){
     cecClimateZone = climateZones.appendClimateZone(model::ClimateZones::cecInstitutionName(), model::ClimateZones::cecDefaultYear(), "");
   }
-  cecClimateZone.setType(model::ClimateZones::cecInstitutionName(), model::ClimateZones::cecDocumentName(), model::ClimateZones::cecDefaultYear());
+  //cecClimateZone.setType(model::ClimateZones::cecInstitutionName(), model::ClimateZones::cecDocumentName(), model::ClimateZones::cecDefaultYear());
 
   std::string cecClimateZoneValue = cecClimateZone.value();
   idx = m_cecClimateZone->findText(toQString(cecClimateZoneValue));
@@ -484,12 +484,6 @@ void LocationView::update()
     }
 
     if (fileExists) {
-      m_site->setName(weatherFile->city().c_str());
-      m_site->setLatitude(weatherFile->latitude());
-      m_site->setLongitude(weatherFile->longitude());
-      m_site->setElevation(weatherFile->elevation());
-      m_site->setTimeZone(weatherFile->timeZone());
-
       m_weatherFileBtn->setText(CHANGEWEATHERFILE);
       setSiteInfo();
     }
@@ -558,8 +552,8 @@ void LocationView::onWeatherFileBtnClicked()
 
   QString lastPath = m_lastEpwPathOpened;
   if (lastPath.isEmpty() && m_lastDdyPathOpened.isEmpty()){
-    openstudio::runmanager::ConfigOptions co(true);
-    lastPath = toQString(co.getDefaultEPWLocation().native());
+    //openstudio::runmanager::ConfigOptions co(true);
+    //lastPath = toQString(co.getDefaultEPWLocation().native());
   } else if (lastPath.isEmpty()) {
     QString path = m_lastDdyPathOpened;
     lastPath = path.replace(".ddy", ".epw");
@@ -593,7 +587,7 @@ void LocationView::onWeatherFileBtnClicked()
       
       // duplicate code in OSDocument::fixWeatherFilePath
 
-      boost::filesystem::copy_file(epwPath, newPath, boost::filesystem::copy_option::overwrite_if_exists);
+      openstudio::filesystem::copy_file(epwPath, newPath, openstudio::filesystem::copy_option::overwrite_if_exists);
       
       // this can throw
       EpwFile epwFile(newPath);
@@ -606,12 +600,14 @@ void LocationView::onWeatherFileBtnClicked()
 
       weatherFile = openstudio::model::WeatherFile::setWeatherFile(m_model, epwFile);
       OS_ASSERT(weatherFile);
-      weatherFile->makeUrlRelative(toPath(m_modelTempDir) / toPath("resources"));
+      weatherFile->makeUrlRelative(toPath(m_modelTempDir) / toPath("resources/files"));
+
+      m_model.workflowJSON().setWeatherFile(newPath.filename());
 
       if (!previousEPWPath.empty()){
         if (previousEPWPath.filename() != newPath.filename()){
-          if (boost::filesystem::exists(previousEPWPath)){
-            boost::filesystem::remove_all(previousEPWPath);
+          if (openstudio::filesystem::exists(previousEPWPath)){
+            openstudio::filesystem::remove_all(previousEPWPath);
           }
         }
       }
@@ -629,10 +625,17 @@ void LocationView::onWeatherFileBtnClicked()
       if (startDateActualYear){
         yearDescription.resetDayofWeekforStartDay();
         yearDescription.setCalendarYear(*startDateActualYear);
-      }else{
+      } else{
         yearDescription.resetCalendarYear();
         yearDescription.setDayofWeekforStartDay(epwFile.startDayOfWeek().valueName());
       }
+
+      // update site info
+      m_site->setName(weatherFile->city().c_str());
+      m_site->setLatitude(weatherFile->latitude());
+      m_site->setLongitude(weatherFile->longitude());
+      m_site->setElevation(weatherFile->elevation());
+      m_site->setTimeZone(weatherFile->timeZone());
 
       m_lastEpwPathOpened = QFileInfo(fileName).absoluteFilePath();
 
@@ -640,7 +643,7 @@ void LocationView::onWeatherFileBtnClicked()
 
     }catch(...){
 
-      boost::filesystem::remove_all(newPath);
+      openstudio::filesystem::remove_all(newPath);
 
       QMessageBox box(QMessageBox::Warning, "Failed To Set Weather File", QString("Failed To Set Weather File To ") + fileName, QMessageBox::Ok);
       box.setDetailedText(toQString(ss.string())); 
@@ -653,7 +656,7 @@ void LocationView::onWeatherFileBtnClicked()
           if (!previousEPWPath.empty()){
             if (previousEPWPath.filename() != weatherFilePath->filename()){
               weatherFile->remove();
-            }else if (!boost::filesystem::exists(previousEPWPath)){
+            }else if (!openstudio::filesystem::exists(previousEPWPath)){
               weatherFile->remove();
             }
           }
@@ -671,8 +674,8 @@ void LocationView::onDesignDayBtnClicked()
 
   QString lastPath = m_lastDdyPathOpened;
   if (lastPath.isEmpty() && m_lastEpwPathOpened.isEmpty()){
-    openstudio::runmanager::ConfigOptions co(true);
-    lastPath = toQString(co.getDefaultEPWLocation().native());
+    //openstudio::runmanager::ConfigOptions co(true);
+    //lastPath = toQString(co.getDefaultEPWLocation().native());
   } else if (lastPath.isEmpty()) {
     QString path = m_lastEpwPathOpened;
     lastPath = path.replace(".epw", ".ddy");

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -30,18 +30,13 @@
 #define OPENSTUDIO_LIGHTSINSPECTORVIEW_HPP
 
 #include "ModelObjectInspectorView.hpp"
+#include "../model/LightsDefinition.hpp"
 
 namespace openstudio {
 
-namespace model {
+class OSLineEdit2;
 
-class LightsDefinition;
-
-}
-
-class OSLineEdit;
-
-class OSQuantityEdit;
+class OSQuantityEdit2;
 
 class OSDropZone;
 
@@ -71,21 +66,23 @@ class LightsDefinitionInspectorView : public ModelObjectInspectorView
 
     void refresh();
 
-    OSLineEdit* m_nameEdit;
+    OSLineEdit2* m_nameEdit;
 
-    OSQuantityEdit * m_lightingLevelEdit;
+    OSQuantityEdit2 * m_lightingLevelEdit;
 
-    OSQuantityEdit * m_wattsPerSpaceFloorAreaEdit;
+    OSQuantityEdit2 * m_wattsPerSpaceFloorAreaEdit;
 
-    OSQuantityEdit * m_wattsPerPersonEdit;
+    OSQuantityEdit2 * m_wattsPerPersonEdit;
 
-    OSQuantityEdit * m_fractionRadiantEdit;
+    OSQuantityEdit2 * m_fractionRadiantEdit;
 
-    OSQuantityEdit * m_fractionVisibleEdit;
+    OSQuantityEdit2 * m_fractionVisibleEdit;
 
-    OSQuantityEdit * m_returnAirFractionEdit;
+    OSQuantityEdit2 * m_returnAirFractionEdit;
 
     bool m_isIP;
+
+    boost::optional<model::LightsDefinition> m_lightsDefinition;
 
   public slots:
 

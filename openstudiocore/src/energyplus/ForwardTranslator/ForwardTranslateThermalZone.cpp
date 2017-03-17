@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -61,6 +61,8 @@
 #include "../../model/DesignSpecificationOutdoorAir_Impl.hpp"
 #include "../../model/SizingPeriod.hpp"
 #include "../../model/SizingPeriod_Impl.hpp"
+#include "../../model/ModelObject.hpp"
+#include "../../model/ModelObject_Impl.hpp"
 
 #include "../../model/Space.hpp"
 #include "../../model/Space_Impl.hpp"
@@ -146,6 +148,7 @@
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 #include "../../utilities/geometry/Geometry.hpp"
+#include <algorithm>
 
 using namespace openstudio::model;
 
@@ -587,8 +590,11 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
   auto isZoneVentilationDesignFlowRate = [](const ModelObject & mo) {
     return (mo.iddObjectType() == ZoneVentilationDesignFlowRate::iddObjectType());
   };
+
+  std::vector<model::ModelObject> zoneVentilationObjects;
+  std::copy_if(zoneEquipment.begin(),zoneEquipment.end(),std::back_inserter(zoneVentilationObjects),isZoneVentilationDesignFlowRate);
+
   auto zoneVentilationBegin = std::remove_if(zoneEquipment.begin(),zoneEquipment.end(),isZoneVentilationDesignFlowRate);
-  std::vector<model::ModelObject> zoneVentilationObjects(zoneVentilationBegin,zoneEquipment.end());
   zoneEquipment.erase(zoneVentilationBegin,zoneEquipment.end());
 
   // translate thermostat and/or humidistat

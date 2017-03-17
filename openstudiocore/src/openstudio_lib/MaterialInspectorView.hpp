@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -30,22 +30,17 @@
 #define OPENSTUDIO_MATERIALINSPECTORVIEW_HPP
 
 #include "ModelObjectInspectorView.hpp"
+#include "../model/StandardOpaqueMaterial.hpp"
 
 class QComboBox;
 
 namespace openstudio {
 
-namespace model {
+class OSComboBox2;
 
-  class Material;
+class OSLineEdit2;
 
-}
-
-class OSComboBox;
-
-class OSLineEdit;
-
-class OSQuantityEdit;
+class OSQuantityEdit2;
 
 class StandardsInformationMaterialWidget;
 
@@ -71,31 +66,33 @@ class MaterialInspectorView : public ModelObjectInspectorView
 
     void createLayout();
 
-    void attach(openstudio::model::Material & material);
+    void attach(openstudio::model::StandardOpaqueMaterial & material);
 
     void detach();
 
     void refresh();
-    
+
     bool m_isIP;
 
-    OSLineEdit * m_nameEdit = nullptr;
+    boost::optional<model::StandardOpaqueMaterial> m_standardOpaqueMaterial;
 
-    OSComboBox * m_roughness = nullptr;
-    
-    OSQuantityEdit * m_thickness = nullptr;
+    OSLineEdit2 * m_nameEdit = nullptr;
 
-    OSQuantityEdit * m_conductivity = nullptr;
+    OSComboBox2 * m_roughness = nullptr;
 
-    OSQuantityEdit * m_density = nullptr;
+    OSQuantityEdit2 * m_thickness = nullptr;
 
-    OSQuantityEdit * m_specificHeat = nullptr;
+    OSQuantityEdit2 * m_conductivity = nullptr;
 
-    OSQuantityEdit * m_thermalAbsorptance = nullptr;
+    OSQuantityEdit2 * m_density = nullptr;
 
-    OSQuantityEdit * m_solarAbsorptance = nullptr;
+    OSQuantityEdit2 * m_specificHeat = nullptr;
 
-    OSQuantityEdit * m_visibleAbsorptance = nullptr;
+    OSQuantityEdit2 * m_thermalAbsorptance = nullptr;
+
+    OSQuantityEdit2 * m_solarAbsorptance = nullptr;
+
+    OSQuantityEdit2 * m_visibleAbsorptance = nullptr;
 
     StandardsInformationMaterialWidget * m_standardsInformationWidget = nullptr;
 

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -77,22 +77,22 @@ boost::optional<IdfObject> ForwardTranslator::translateHeatPumpWaterToWaterEquat
 
   {
     auto value = modelObject.ratedLoadSideFlowRate();
-    idfObject.setDouble(HeatPump_WaterToWater_EquationFit_CoolingFields::RatedLoadSideFlowRate,value);
+    idfObject.setDouble(HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceLoadSideFlowRate,value);
   }
 
   {
     auto value = modelObject.ratedSourceSideFlowRate();
-    idfObject.setDouble(HeatPump_WaterToWater_EquationFit_CoolingFields::RatedSourceSideFlowRate,value);
+    idfObject.setDouble(HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceSourceSideFlowRate,value);
   }
 
   {
     auto value = modelObject.ratedCoolingCapacity();
-    idfObject.setDouble(HeatPump_WaterToWater_EquationFit_CoolingFields::RatedCoolingCapacity,value);
+    idfObject.setDouble(HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceCoolingCapacity,value);
   }
 
   {
     auto value = modelObject.ratedCoolingPowerConsumption();
-    idfObject.setDouble(HeatPump_WaterToWater_EquationFit_CoolingFields::RatedCoolingPowerConsumption,value);
+    idfObject.setDouble(HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceCoolingPowerConsumption,value);
   }
 
   {

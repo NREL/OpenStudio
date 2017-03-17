@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -30,20 +30,15 @@
 #define OPENSTUDIO_MATERIALNOMASSINSPECTORVIEW_HPP
 
 #include "ModelObjectInspectorView.hpp"
+#include "../model/MasslessOpaqueMaterial.hpp"
 
 namespace openstudio {
 
-namespace model {
+class OSComboBox2;
 
-  class MasslessOpaqueMaterial;
+class OSLineEdit2;
 
-}
-
-class OSComboBox;
-
-class OSLineEdit;
-
-class OSQuantityEdit;
+class OSQuantityEdit2;
 
 class StandardsInformationMaterialWidget;
 
@@ -77,17 +72,19 @@ class MaterialNoMassInspectorView : public ModelObjectInspectorView
 
     bool m_isIP;
 
-    OSLineEdit * m_nameEdit = nullptr;  
+    boost::optional<model::MasslessOpaqueMaterial> m_masslessOpaqueMaterial;
 
-    OSComboBox * m_roughness = nullptr;
-        
-    OSQuantityEdit * m_thermalResistance = nullptr;
+    OSLineEdit2 * m_nameEdit = nullptr;
 
-    OSQuantityEdit * m_thermalAbsorptance = nullptr;
+    OSComboBox2 * m_roughness = nullptr;
 
-    OSQuantityEdit * m_solarAbsorptance = nullptr;
+    OSQuantityEdit2 * m_thermalResistance = nullptr;
 
-    OSQuantityEdit * m_visibleAbsorptance = nullptr;
+    OSQuantityEdit2 * m_thermalAbsorptance = nullptr;
+
+    OSQuantityEdit2 * m_solarAbsorptance = nullptr;
+
+    OSQuantityEdit2 * m_visibleAbsorptance = nullptr;
 
     StandardsInformationMaterialWidget * m_standardsInformationWidget = nullptr;
 

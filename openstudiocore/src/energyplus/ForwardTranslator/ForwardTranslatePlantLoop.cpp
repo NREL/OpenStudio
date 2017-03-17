@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -97,6 +97,8 @@
 #include "../../model/ZoneHVACComponent.hpp"
 #include "../../model/ZoneHVACComponent_Impl.hpp"
 #include "../../model/SetpointManager.hpp"
+#include "../../model/SetpointManagerScheduledDualSetpoint.hpp"
+#include "../../model/SetpointManagerScheduledDualSetpoint_Impl.hpp"
 #include "../../model/LifeCycleCost.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include <utilities/idd/IddEnums.hxx>
@@ -129,7 +131,8 @@ namespace energyplus {
 
 IdfObject ForwardTranslator::populateBranch( IdfObject & branchIdfObject, 
                           std::vector<ModelObject> & modelObjects,
-                          Loop & loop)
+                          Loop & loop,
+                          bool isSupplyBranch)
 {
   if(modelObjects.size() > 0)
   {
@@ -297,12 +300,12 @@ IdfObject ForwardTranslator::populateBranch( IdfObject & branchIdfObject,
       }
       else if( auto waterToWaterComponent = modelObject.optionalCast<WaterToWaterComponent>() )
       {
-        if( loop.supplyComponent(waterToWaterComponent->handle()) )
+        if( isSupplyBranch )
         {
           inletNode = waterToWaterComponent->supplyInletModelObject()->optionalCast<Node>();
           outletNode = waterToWaterComponent->supplyOutletModelObject()->optionalCast<Node>();
         }
-        else if( loop.demandComponent(waterToWaterComponent->handle()) )
+        else
         {
           if( auto tertiaryInletModelObject = waterToWaterComponent->tertiaryInletModelObject() ) {
             if( auto tertiaryInletNode = tertiaryInletModelObject->optionalCast<Node>() ) {
@@ -444,6 +447,16 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
     idfObject.setString(PlantLoopFields::LoadDistributionScheme,scheme);
   }
 
+  //  PlantLoopDemandCalculationScheme
+  {
+    auto spms = plantLoop.supplyOutletNode().setpointManagers();
+    if( subsetCastVector<model::SetpointManagerScheduledDualSetpoint>(spms).empty() ) {
+      idfObject.setString(PlantLoopFields::PlantLoopDemandCalculationScheme,"SingleSetpoint");
+    } else {
+      idfObject.setString(PlantLoopFields::PlantLoopDemandCalculationScheme,"DualSetpointDeadband");
+    }
+  }
+
   // Plant Loop Volume
 
   if( plantLoop.isPlantLoopVolumeAutocalculated() )
@@ -542,7 +555,8 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
   {
     populateBranch( _supplyInletBranch,
                     supplyInletModelObjects,
-                    plantLoop );
+                    plantLoop,
+                    true);
   }
   else
   {
@@ -601,7 +615,8 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
     {
       populateBranch( _equipmentBranch,
                       allComponents,
-                      plantLoop );
+                      plantLoop,
+                      true);
     }
     else
     {
@@ -646,7 +661,8 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
   {
     populateBranch( _supplyOutletBranch,
                     supplyOutletModelObjects,
-                    plantLoop );
+                    plantLoop,
+                    true);
   }
   else
   {
@@ -732,7 +748,8 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
   {
     populateBranch( _demandInletBranch,
                     demandInletModelObjects,
-                    plantLoop );
+                    plantLoop,
+                    false);
   }
   else
   {
@@ -791,7 +808,8 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
     {
       populateBranch( _equipmentBranch,
                       allComponents,
-                      plantLoop );
+                      plantLoop,
+                      false);
     }
     else
     {
@@ -871,7 +889,8 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
   {
     populateBranch( _demandOutletBranch,
                     demandOutletModelObjects,
-                    plantLoop );
+                    plantLoop,
+                    false);
   }
   else
   {

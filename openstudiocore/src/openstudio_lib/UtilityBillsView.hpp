@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -29,6 +29,7 @@
 #ifndef OPENSTUDIO_UTILITYBILLSVIEW_HPP
 #define OPENSTUDIO_UTILITYBILLSVIEW_HPP
 
+#include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
 #include "ModelObjectInspectorView.hpp"
 #include "ModelSubTabView.hpp"
 
@@ -195,7 +196,7 @@ private slots:
 
 };
 
-class BillingPeriodWidget : public QWidget
+class BillingPeriodWidget : public QWidget, public Nano::Observer
 {
 
   Q_OBJECT

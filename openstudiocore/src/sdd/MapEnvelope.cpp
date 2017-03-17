@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -64,7 +64,6 @@
 #include "../utilities/units/WhUnit.hpp"
 #include "../utilities/core/Assert.hpp"
 
-#include <QFile>
 #include <QDomDocument>
 #include <QDomElement>
 
@@ -89,8 +88,7 @@ namespace sdd {
       return boost::none;
     }
 
-    if (specificationElement.text() == "Layers" ||
-        specificationElement.text() == "UFactor" ){ // temp code
+    if (specificationElement.text() == "Layers"){
 
       openstudio::model::Construction construction(model);
       construction.setName(name);
@@ -286,13 +284,13 @@ namespace sdd {
     UnitSystem whSys(UnitSystem::Wh);
 
     QDomElement nameElement = element.firstChildElement("Name");
-    QDomElement uFactorElement = element.firstChildElement("UFactor"); // Btu/h-ft2-F
+    QDomElement uFactorElement = element.firstChildElement("UFactorSim"); // Btu/h-ft2-F
 
     if (nameElement.isNull()){
       LOG(Error, "DrCons element 'Name' is empty.  Construction will not be created.");
     }
     if (uFactorElement.isNull()){
-      LOG(Error, "DrCons element 'UFactor' is empty.  Construction will not be created.");
+      LOG(Error, "DrCons element 'UFactorSim' is empty.  Construction will not be created.");
     }
 
     if (!nameElement.isNull() && !uFactorElement.isNull()){
@@ -305,6 +303,13 @@ namespace sdd {
 
       // m^2-K/W
       double rValueSI = 1.0 / uFactorWh->value();
+
+      // 5.6783 hr-ft2-F/Btu = 1 m^2-K/W
+      const double intFilmRValueSI = 0.170/5.6783; // 0.170 hr-ft2-F/Btu
+      const double extFilmRValueSI = 0.680/5.6783; // 0.680 hr-ft2-F/Btu
+
+      // if total rvalue is less than sum of interior and exterior film rvalue, surface coefficients will be added to door separately
+      rValueSI = std::max(rValueSI - intFilmRValueSI - extFilmRValueSI, 0.001);
 
       std::string name = escapeName(nameElement.text());
 
@@ -338,7 +343,7 @@ namespace sdd {
 
     QDomElement nameElement = element.firstChildElement("Name");
     QDomElement shgcElement = element.firstChildElement("SHGC"); // unitless
-    QDomElement uFactorElement = element.firstChildElement("UFactor"); // Btu/h-ft2-F
+    QDomElement uFactorElement = element.firstChildElement("UFactorSim"); // Btu/h-ft2-F
     QDomElement vtElement = element.firstChildElement("VT"); // unitless
 
     if (nameElement.isNull()){
@@ -348,7 +353,7 @@ namespace sdd {
       LOG(Error, "FenCons element 'SHGC' is empty.  Construction will not be created.");
     }
     if (uFactorElement.isNull()){
-      LOG(Error, "FenCons element 'UFactor' is empty.  Construction will not be created.");
+      LOG(Error, "FenCons element 'UFactorSim' is empty.  Construction will not be created.");
     }
     if (vtElement.isNull()){
       LOG(Error, "FenCons element 'VT' is empty.  Construction will not be created.");

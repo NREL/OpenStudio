@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -94,6 +94,10 @@
 #include "LifeCycleCost_Impl.hpp"
 #include "SetpointManagerSingleZoneReheat.hpp"
 #include "SetpointManagerSingleZoneReheat_Impl.hpp"
+#include "SetpointManagerSingleZoneCooling.hpp"
+#include "SetpointManagerSingleZoneCooling_Impl.hpp"
+#include "SetpointManagerSingleZoneHeating.hpp"
+#include "SetpointManagerSingleZoneHeating_Impl.hpp"
 #include "ZoneMixing.hpp"
 #include "ZoneMixing_Impl.hpp"
 
@@ -1499,11 +1503,11 @@ namespace detail {
 
   std::vector<IdfObject> ThermalZone_Impl::remove()
   {
-    this->blockSignals(true);
+    // this->blockSignals(true);
 
     Model m = model();
 
-    m.getImpl<QObject>()->blockSignals(true);
+    // m.getImpl<QObject>()->blockSignals(true);
 
     ThermalZone thermalZone = this->getObject<ThermalZone>();
 
@@ -1545,9 +1549,9 @@ namespace detail {
     }
 
     //turn the object back on and proceed
-    this->blockSignals(false);
+    // this->blockSignals(false);
 
-    m.getImpl<QObject>()->blockSignals(false);
+    // m.getImpl<QObject>()->blockSignals(false);
 
     return HVACComponent_Impl::remove();
   }
@@ -1904,12 +1908,36 @@ namespace detail {
 
           for( const auto & supplyNode : supplyNodes )
           {
-            std::vector<SetpointManagerSingleZoneReheat> setpointManagers = subsetCastVector<SetpointManagerSingleZoneReheat>(supplyNode.cast<Node>().setpointManagers());
-            if( ! setpointManagers.empty() ) {
-              SetpointManagerSingleZoneReheat spm = setpointManagers.front();
-              if( ! spm.controlZone() )
-              {
-                spm.setControlZone(thisobj);
+            {
+              std::vector<SetpointManagerSingleZoneReheat> setpointManagers = subsetCastVector<SetpointManagerSingleZoneReheat>(supplyNode.cast<Node>().setpointManagers());
+              if( ! setpointManagers.empty() ) {
+                SetpointManagerSingleZoneReheat spm = setpointManagers.front();
+                if( ! spm.controlZone() )
+                {
+                  spm.setControlZone(thisobj);
+                }
+              }
+            }
+
+            {
+              std::vector<SetpointManagerSingleZoneCooling> setpointManagers = subsetCastVector<SetpointManagerSingleZoneCooling>(supplyNode.cast<Node>().setpointManagers());
+              if( ! setpointManagers.empty() ) {
+                SetpointManagerSingleZoneCooling spm = setpointManagers.front();
+                if( ! spm.controlZone() )
+                {
+                  spm.setControlZone(thisobj);
+                }
+              }
+            }
+
+            {
+              std::vector<SetpointManagerSingleZoneHeating> setpointManagers = subsetCastVector<SetpointManagerSingleZoneHeating>(supplyNode.cast<Node>().setpointManagers());
+              if( ! setpointManagers.empty() ) {
+                SetpointManagerSingleZoneHeating spm = setpointManagers.front();
+                if( ! spm.controlZone() )
+                {
+                  spm.setControlZone(thisobj);
+                }
               }
             }
           }

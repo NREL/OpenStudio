@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -44,6 +44,7 @@ class PlanarSurfaceGroup;
 class Space;
 class ConstructionBase;
 class GeneratorPhotovoltaic;
+class SurfacePropertyConvectionCoefficients;
 
 namespace detail {
   class PlanarSurface_Impl;
@@ -167,12 +168,12 @@ class MODEL_API PlanarSurface : public ParentObject {
   /// Throws openstudio::Exception if cannot compute outward normal for this surface.
   double azimuth() const;
 
-  /** Returns the u-factor of this surface. Includes film coefficients.
+  /** Returns the u-factor of this surface. Includes standard film coefficients, does not consider any custom SurfacePropertyConvectionCoefficients.
   *   Attribute name: uFactor */
   boost::optional<double> uFactor() const;
 
   /** Sets the u-factor of this surface in W/m^2*K, if possible. Value should already include appropriate
-   *  film coefficients. By default, assumes still air indoors and 15 mph outdoor air speed.
+   *  standard film coefficients, assuming still air indoors and 15 mph outdoor air speed. Does not consider any custom SurfacePropertyConvectionCoefficients
    *  Attribute name: uFactor */
   bool setUFactor(double value);
 
@@ -231,6 +232,9 @@ class MODEL_API PlanarSurface : public ParentObject {
   /// Returns any generator photovoltaics associated with this surface.
   std::vector<GeneratorPhotovoltaic> generatorPhotovoltaics() const;
 
+  /// Returns any SurfacePropertyConvectionCoefficients associated with this surface, does not return SurfacePropertyConvectionCoefficientsMultipleSurface.
+  std::vector<SurfacePropertyConvectionCoefficients> surfacePropertyConvectionCoefficients() const;
+
  protected:
 
   /** @name Constructors and Destructors */
@@ -248,6 +252,7 @@ class MODEL_API PlanarSurface : public ParentObject {
 
   friend class Model;
   friend class openstudio::IdfObject;
+  friend class openstudio::detail::IdfObject_Impl;
 
   // constructor
   explicit PlanarSurface(std::shared_ptr<detail::PlanarSurface_Impl> impl);

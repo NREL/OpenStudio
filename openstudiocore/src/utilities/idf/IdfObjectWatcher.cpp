@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -28,7 +28,6 @@
 
 #include "IdfObjectWatcher.hpp"
 #include "IdfObject_Impl.hpp"
-#include "../core/Application.hpp"
 #include "../core/Assert.hpp"
 
 namespace openstudio {
@@ -36,13 +35,10 @@ namespace openstudio {
 IdfObjectWatcher::IdfObjectWatcher(const IdfObject& idfObject)
   : m_enabled(true), m_dirty(false), m_dataChanged(false), m_nameChanged(false)
 {
-  // make sure a QApplication exists
-  openstudio::Application::instance().application(false);
-  
   detail::IdfObject_ImplPtr objectImpl = idfObject.getImpl<detail::IdfObject_Impl>();
-  connect(objectImpl.get(), &detail::IdfObject_Impl::onChange, this, &IdfObjectWatcher::change);
-  connect(objectImpl.get(), &detail::IdfObject_Impl::onDataChange, this, &IdfObjectWatcher::dataChange);
-  connect(objectImpl.get(), &detail::IdfObject_Impl::onNameChange, this, &IdfObjectWatcher::nameChange);
+  objectImpl.get()->detail::IdfObject_Impl::onChange.connect<IdfObjectWatcher, &IdfObjectWatcher::change>(this);
+  objectImpl.get()->detail::IdfObject_Impl::onDataChange.connect<IdfObjectWatcher, &IdfObjectWatcher::dataChange>(this);
+  objectImpl.get()->detail::IdfObject_Impl::onNameChange.connect<IdfObjectWatcher, &IdfObjectWatcher::nameChange>(this);
 }
 
 IdfObjectWatcher::~IdfObjectWatcher()

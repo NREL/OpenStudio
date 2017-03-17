@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -68,9 +68,9 @@ class MODEL_API ConstructionBase : public ResourceObject {
    *  the net area of each adjacent surface will be included in the net area for their respective constructions.*/
   double getNetArea() const;
 
-  /** Set the u-factor of this surface in W/m^2*K, if possible. value should already include
-   *  appropriate film coefficients. By default, assumes still air indoors and 15 mph outdoor air
-   *  speed. */
+  /** Set the u-factor of this surface in W/m^2*K, if possible. Value should already include
+   *  appropriate standard film coefficients, assuming still air indoors and 15 mph outdoor air speed. 
+   *  Does not consider any custom SurfacePropertyConvectionCoefficients. */
   bool setUFactor(double value);
 
   /** Set the u-factor of this surface in W/m^2*K, if possible. filmResistance (m^2*K/W) may be
@@ -97,7 +97,7 @@ class MODEL_API ConstructionBase : public ResourceObject {
   /** Returns true if the construction has RoofVegetation as the outer layer. */
   bool isGreenRoof() const;
 
-  /** Get the u-factor of this construction (W/m^2*K). Includes film coefficients. */
+  /** Get the u-factor of this construction (W/m^2*K). Includes standard film coefficients, does not consider any custom SurfacePropertyConvectionCoefficients. */
   boost::optional<double> uFactor() const;
 
   /** Get the u-factor of this construction (W/m^2*K). Includes filmResistance. */

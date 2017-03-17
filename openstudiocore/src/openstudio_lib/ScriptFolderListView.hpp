@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -31,7 +31,8 @@
 
 #include "OSCollapsibleItemList.hpp"
 
-#include "../ruleset/OSArgument.hpp"
+#include "../measure/OSArgument.hpp"
+#include "../measure/OSMeasureInfoGetter.hpp"
 
 #include "../model/Model.hpp"
 #include "../model/ModelObject.hpp"
@@ -80,7 +81,7 @@ class ScriptFolderListView : public OSCollapsibleItemList {
 
   void saveOSArguments();
 
-  std::vector<ruleset::UserScriptInfo> folderUserScripts(const openstudio::path& folder) const;
+  std::vector<measure::OSMeasureInfo> folderUserScripts(const openstudio::path& folder) const;
 
   std::shared_ptr<QFileSystemWatcher> fsWatcher() const;
 

@@ -4,7 +4,7 @@
 require 'erb'
 
 #start the measure
-class ReportingMeasure < OpenStudio::Ruleset::ReportingUserScript
+class ReportingMeasureName < OpenStudio::Ruleset::ReportingUserScript
 
   # human readable name
   def name
@@ -148,4 +148,4 @@ class ReportingMeasure < OpenStudio::Ruleset::ReportingUserScript
 end
 
 # register the measure to be used by the application
-ReportingMeasure.new.registerWithApplication
+ReportingMeasureName.new.registerWithApplication

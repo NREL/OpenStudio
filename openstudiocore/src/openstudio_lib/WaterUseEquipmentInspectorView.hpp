@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -31,18 +31,13 @@
 
 #include "ModelObjectInspectorView.hpp"
 #include "ModelObjectVectorController.hpp"
+#include "../model/WaterUseEquipmentDefinition.hpp"
 
 namespace openstudio {
 
-namespace model {
+class OSLineEdit2;
 
-class WaterUseEquipmentDefinition;
-
-}
-
-class OSLineEdit;
-
-class OSQuantityEdit;
+class OSQuantityEdit2;
 
 class OSDropZone;
 
@@ -129,11 +124,11 @@ class WaterUseEquipmentDefinitionInspectorView : public ModelObjectInspectorView
 
     void refresh();
 
-    OSLineEdit * m_nameEdit;
+    OSLineEdit2 * m_nameEdit;
 
-    OSLineEdit * m_endUseSubcategoryEdit;
+    OSLineEdit2 * m_endUseSubcategoryEdit;
 
-    OSQuantityEdit * m_peakFlowRateEdit;
+    OSQuantityEdit2 * m_peakFlowRateEdit;
 
     TargetTemperatureScheduleVC * m_targetTemperatureScheduleVC;
     SensibleFractionScheduleVC * m_sensibleFractionScheduleVC;
@@ -144,6 +139,8 @@ class WaterUseEquipmentDefinitionInspectorView : public ModelObjectInspectorView
     OSDropZone * m_latentFractionScheduleDZ;
 
     bool m_isIP;
+
+    boost::optional<model::WaterUseEquipmentDefinition> m_waterUseEquipmentDefinition;
 
   public slots:
 

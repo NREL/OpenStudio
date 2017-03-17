@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -40,17 +40,17 @@ namespace detail {
 
   class MODEL_API ConstructionWithInternalSource_Impl : public LayeredConstruction_Impl 
   {
-    Q_OBJECT;
-
-    Q_PROPERTY(int sourcePresentAfterLayerNumber READ sourcePresentAfterLayerNumber WRITE setSourcePresentAfterLayerNumber);
-
-    Q_PROPERTY(int dimensionsForTheCTFCalculation READ dimensionsForTheCTFCalculation WRITE setDimensionsForTheCTFCalculation);
     
-    Q_PROPERTY(int temperatureCalculationRequestedAfterLayerNumber READ temperatureCalculationRequestedAfterLayerNumber WRITE setTemperatureCalculationRequestedAfterLayerNumber);
 
-    Q_PROPERTY(double tubeSpacing READ tubeSpacing WRITE setTubeSpacing);
-    Q_PROPERTY(openstudio::Quantity tubeSpacing_SI READ tubeSpacing_SI WRITE setTubeSpacing);
-    Q_PROPERTY(openstudio::Quantity tubeSpacing_IP READ tubeSpacing_IP WRITE setTubeSpacing);    
+    
+
+    
+    
+    
+
+    
+    
+        
 
   public:
 

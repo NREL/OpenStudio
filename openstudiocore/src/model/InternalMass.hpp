@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -36,6 +36,7 @@ namespace openstudio {
 namespace model {
 
 class InternalMassDefinition;
+class SurfacePropertyConvectionCoefficients;
 
 namespace detail {
 
@@ -65,6 +66,9 @@ class MODEL_API InternalMass : public SpaceLoadInstance {
 
   /** Gets the InternalMassDefinition object. */
   InternalMassDefinition internalMassDefinition() const;
+
+  /** Returns the SurfacePropertyConvectionCoefficients, if it exists. */
+  boost::optional<SurfacePropertyConvectionCoefficients> surfacePropertyConvectionCoefficients() const;
 
   //@}
   /** @name Setters */

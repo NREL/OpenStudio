@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -30,20 +30,15 @@
 #define OPENSTUDIO_MATERIALROOFVEGETATIONINSPECTORVIEW_HPP
 
 #include "ModelObjectInspectorView.hpp"
+#include "../model/RoofVegetation.hpp"
 
 namespace openstudio {
 
-namespace model {
+class OSComboBox2;
 
-  class RoofVegetation;
+class OSLineEdit2;
 
-}
-
-class OSComboBox;
-
-class OSLineEdit;
-
-class OSQuantityEdit;
+class OSQuantityEdit2;
 
 class StandardsInformationMaterialWidget;
 
@@ -77,43 +72,45 @@ class MaterialRoofVegetationInspectorView : public ModelObjectInspectorView
 
     bool m_isIP;
 
-    OSLineEdit * m_nameEdit = nullptr;
+    boost::optional<model::RoofVegetation> m_roofVegetation;
 
-    OSComboBox * m_roughness = nullptr;
+    OSLineEdit2 * m_nameEdit = nullptr;
 
-    OSLineEdit * m_soilLayerName = nullptr;
+    OSComboBox2 * m_roughness = nullptr;
 
-    OSLineEdit * m_moistureDiffusionCalculationMethod = nullptr;
+    OSLineEdit2 * m_soilLayerName = nullptr;
 
-    OSQuantityEdit * m_heightOfPlants = nullptr;
+    OSLineEdit2 * m_moistureDiffusionCalculationMethod = nullptr;
 
-    OSQuantityEdit * m_leafAreaIndex = nullptr;
+    OSQuantityEdit2 * m_heightOfPlants = nullptr;
 
-    OSQuantityEdit * m_leafReflectivity = nullptr;
+    OSQuantityEdit2 * m_leafAreaIndex = nullptr;
 
-    OSQuantityEdit * m_leafEmissivity = nullptr;
+    OSQuantityEdit2 * m_leafReflectivity = nullptr;
 
-    OSQuantityEdit * m_minimumStomatalResistance = nullptr;
+    OSQuantityEdit2 * m_leafEmissivity = nullptr;
 
-    OSQuantityEdit * m_thickness = nullptr;
+    OSQuantityEdit2 * m_minimumStomatalResistance = nullptr;
 
-    OSQuantityEdit * m_conductivityOfDrySoil = nullptr;
+    OSQuantityEdit2 * m_thickness = nullptr;
 
-    OSQuantityEdit * m_densityOfDrySoil = nullptr;
+    OSQuantityEdit2 * m_conductivityOfDrySoil = nullptr;
 
-    OSQuantityEdit * m_specificHeatOfDrySoil = nullptr;
+    OSQuantityEdit2 * m_densityOfDrySoil = nullptr;
 
-    OSQuantityEdit * m_thermalAbsorptance = nullptr;
+    OSQuantityEdit2 * m_specificHeatOfDrySoil = nullptr;
 
-    OSQuantityEdit * m_visibleAbsorptance = nullptr;
+    OSQuantityEdit2 * m_thermalAbsorptance = nullptr;
 
-    OSQuantityEdit * m_saturationVolumetricMoistureContentOfTheSoilLayer = nullptr;
+    OSQuantityEdit2 * m_visibleAbsorptance = nullptr;
 
-    OSQuantityEdit * m_residualVolumetricMoistureContentOfTheSoilLayer = nullptr;
+    OSQuantityEdit2 * m_saturationVolumetricMoistureContentOfTheSoilLayer = nullptr;
 
-    OSQuantityEdit * m_initialVolumetricMoistureContentOfTheSoilLayer = nullptr;
+    OSQuantityEdit2 * m_residualVolumetricMoistureContentOfTheSoilLayer = nullptr;
 
-    OSQuantityEdit * m_solarAbsorptance = nullptr;
+    OSQuantityEdit2 * m_initialVolumetricMoistureContentOfTheSoilLayer = nullptr;
+
+    OSQuantityEdit2 * m_solarAbsorptance = nullptr;
 
     StandardsInformationMaterialWidget * m_standardsInformationWidget = nullptr;
 

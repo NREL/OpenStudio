@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -36,10 +36,13 @@
 #include "YearDescription.hpp"
 #include "WeatherFile.hpp"
 
+#include "../nano/nano_signal_slot.hpp" // Signal-Slot replacement
+
 #include "../utilities/idf/Workspace.hpp"
 #include "../utilities/idf/Workspace_Impl.hpp"
 #include "../utilities/idf/WorkspaceObject.hpp"
 #include "../utilities/idf/WorkspaceObject_Impl.hpp"
+#include "../utilities/filetypes/WorkflowJSON.hpp"
 
 #include <boost/optional.hpp>
 
@@ -72,7 +75,7 @@ namespace detail {
 
   /** Container for the OpenStudio Building Model hierarchy. */
   class MODEL_API Model_Impl : public openstudio::detail::Workspace_Impl {
-    Q_OBJECT;
+    
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -125,6 +128,9 @@ namespace detail {
     /** @name Getters */
     //@{
 
+    /// Get the WorkflowJSON
+    WorkflowJSON workflowJSON() const;
+
     /// Get the sql file
     boost::optional<openstudio::SqlFile> sqlFile() const;
 
@@ -143,6 +149,25 @@ namespace detail {
     /** Get the YearDescription object if there is one, this implementation uses a cached reference to the YearDescription
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<YearDescription>(). */
     boost::optional<YearDescription> yearDescription() const;
+      
+    /** Get or create the YearDescription object if there is one, then call method from YearDescription. */
+    // DLM: this is due to issues exporting the model::YearDescription object because of name conflict with utilities::YearDescription.
+    boost::optional<int> calendarYear() const;
+    std::string dayofWeekforStartDay() const;
+    bool isDayofWeekforStartDayDefaulted() const;
+    bool isLeapYear() const;
+    bool isIsLeapYearDefaulted() const;
+    void setCalendarYear(int calendarYear);
+    void resetCalendarYear();
+    bool setDayofWeekforStartDay(std::string dayofWeekforStartDay);
+    void resetDayofWeekforStartDay();
+    bool setIsLeapYear(bool isLeapYear);
+    void resetIsLeapYear();
+    int assumedYear();
+    openstudio::Date makeDate(openstudio::MonthOfYear monthOfYear, unsigned dayOfMonth);
+    openstudio::Date makeDate(unsigned monthOfYear, unsigned dayOfMonth);
+    openstudio::Date makeDate(openstudio::NthDayOfWeekInMonth n, openstudio::DayOfWeek dayOfWeek, openstudio::MonthOfYear monthOfYear);
+    openstudio::Date makeDate(unsigned dayOfYear);
 
     /** Get the WeatherFile object if there is one, this implementation uses a cached reference to the WeatherFile
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<WeatherFile>(). */
@@ -173,6 +198,11 @@ namespace detail {
     virtual std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> createObject(
         const std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>& originalObjectImplPtr,
         bool keepHandle) override;
+
+    /// Set the WorkflowJSON
+    bool setWorkflowJSON(const WorkflowJSON& workflowJSON);
+
+    void resetWorkflowJSON();
 
     /// set the sql file
     virtual bool setSqlFile(const openstudio::SqlFile& sqlFile);
@@ -206,17 +236,23 @@ namespace detail {
 
     void disconnect(ModelObject object, unsigned port);
 
-   public slots :
+    //@}
+    /** @name Nano Signals */
+    //@{
+
+    Nano::Signal<void(openstudio::model::detail::ModelObject_Impl *, IddObjectType, openstudio::UUID)> initialModelObject;
+
+    Nano::Signal<void()> initialReportComplete;
+
+   //@}
+
+   // public slots :
 
     virtual void obsoleteComponentWatcher(const ComponentWatcher& watcher);
 
     virtual void reportInitialModelObjects();
 
-   signals:
-
-    void initialModelObject(openstudio::model::detail::ModelObject_Impl* modelObject, IddObjectType iddObjectType, const openstudio::UUID& handle);
-
-    void initialReportComplete();
+   
 
    private:
     // explicitly unimplemented copy constructor
@@ -237,6 +273,8 @@ namespace detail {
 
     void mf_createComponentWatcher(ComponentData& componentData);
 
+    WorkflowJSON m_workflowJSON;
+
   private:
 
     mutable boost::optional<Building> m_cachedBuilding;
@@ -245,13 +283,13 @@ namespace detail {
     mutable boost::optional<YearDescription> m_cachedYearDescription;
     mutable boost::optional<WeatherFile> m_cachedWeatherFile;
 
-  private slots:
-
-    void clearCachedBuilding();
-    void clearCachedLifeCycleCostParameters();
-    void clearCachedRunPeriod();
-    void clearCachedYearDescription();
-    void clearCachedWeatherFile();
+  // private slots:
+    void clearCachedData();
+    void clearCachedBuilding(const Handle& handle);
+    void clearCachedLifeCycleCostParameters(const Handle& handle);
+    void clearCachedRunPeriod(const Handle& handle);
+    void clearCachedYearDescription(const Handle& handle);
+    void clearCachedWeatherFile(const Handle& handle);
 
   };
 

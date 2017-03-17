@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -76,6 +76,8 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACEquipmentList( Zo
   {
     if (boost::optional<RefrigerationAirChiller> airChiller = elem.optionalCast<RefrigerationAirChiller>()) {
       airChillers.push_back(airChiller.get());
+    } else if( elem.optionalCast<ZoneVentilationDesignFlowRate>() ) {
+      continue;
     } else {
       stdEquipment.push_back(elem);
     }
@@ -85,18 +87,20 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACEquipmentList( Zo
   std::map<ModelObject, unsigned> coolingMap;
   unsigned chillerSetCoolingPriority = 0;
   unsigned priority = 1;
-  int airChillerOffset = -1;
+  int offset = 0;
   for( const auto & elem : coolingVector )
   {
-    if (airChillers.size() > 0 && (airChiller = elem.optionalCast<RefrigerationAirChiller>()) )
-    {
+    if (airChillers.size() > 0 && (airChiller = elem.optionalCast<RefrigerationAirChiller>()) ) {
       if (chillerSetCoolingPriority == 0) {
         chillerSetCoolingPriority = priority;
+      } else {
+        offset++;
       }
-      airChillerOffset++;
-    }
-    else {
-      coolingMap.insert ( std::pair<ModelObject,unsigned>(elem, ((airChillerOffset > 0) ? (priority - airChillerOffset) : priority) ) );
+    } else if( elem.optionalCast<ZoneVentilationDesignFlowRate>() ) {
+      // ZoneVentilationDesignFlowRate is not ZoneHVAC from E+ perspective
+      offset++;
+    } else {
+      coolingMap.insert ( std::pair<ModelObject,unsigned>(elem, priority - offset) );
     }
     priority++;
   }
@@ -104,18 +108,20 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACEquipmentList( Zo
   std::map<ModelObject, unsigned> heatingMap;
   unsigned chillerSetHeatingPriority = 0;
   priority = 1;
-  airChillerOffset = -1;
+  offset = 0;
   for( const auto & elem : heatingVector )
   {
-    if (airChillers.size() > 0 && (airChiller= elem.optionalCast<RefrigerationAirChiller>()) )
-    {
+    if (airChillers.size() > 0 && (airChiller= elem.optionalCast<RefrigerationAirChiller>()) ) {
       if (chillerSetHeatingPriority == 0) {
         chillerSetHeatingPriority = priority;
+      } else {
+        offset++;
       }
-      airChillerOffset++;
-    }
-    else {
-      heatingMap.insert ( std::pair<ModelObject,unsigned>(elem, ((airChillerOffset > 0) ? (priority - airChillerOffset) : priority) ) );
+    } else if( elem.optionalCast<ZoneVentilationDesignFlowRate>() ) {
+      // ZoneVentilationDesignFlowRate is not ZoneHVAC from E+ perspective
+      offset++;
+    } else {
+      heatingMap.insert ( std::pair<ModelObject,unsigned>(elem,priority - offset) );
     }
     priority++;
   }
@@ -138,15 +144,12 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACEquipmentList( Zo
 
     boost::optional<IdfObject> _equipment;
 
-    // We will take care of ZoneVentilationDesignFlowRate elsewher since it doesn't belong on equipment list
-    if( ! elem.optionalCast<ZoneVentilationDesignFlowRate>() ) {
-      if( auto _equipment = translateAndMapModelObject(elem) ) {
-        IdfExtensibleGroup eg = idfObject.pushExtensibleGroup();
-        eg.setString(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentObjectType,_equipment->iddObject().name()); 
-        eg.setString(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentName,_equipment->name().get()); 
-        eg.setUnsigned(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentCoolingSequence,coolingPriority); 
-        eg.setUnsigned(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentHeatingorNoLoadSequence,heatingPriority); 
-      }
+    if( auto _equipment = translateAndMapModelObject(elem) ) {
+      IdfExtensibleGroup eg = idfObject.pushExtensibleGroup();
+      eg.setString(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentObjectType,_equipment->iddObject().name()); 
+      eg.setString(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentName,_equipment->name().get()); 
+      eg.setUnsigned(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentCoolingSequence,coolingPriority); 
+      eg.setUnsigned(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentHeatingorNoLoadSequence,heatingPriority); 
     }
   }
 

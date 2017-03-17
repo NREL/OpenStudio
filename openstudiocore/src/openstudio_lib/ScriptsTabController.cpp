@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -29,11 +29,12 @@
 #include "ScriptsTabController.hpp"
 
 #include "OSAppBase.hpp"
-#include "ScriptFolderListView.hpp"
+#include "OSDocument.hpp"
 #include "ScriptsTabView.hpp"
 
-#include "../shared_gui_components/VariableList.hpp"
-#include "../shared_gui_components/VariableView.hpp"
+#include "../shared_gui_components/MeasureManager.hpp"
+#include "../shared_gui_components/WorkflowController.hpp"
+#include "../shared_gui_components/WorkflowView.hpp"
 
 #include "../model/Model.hpp"
 
@@ -42,25 +43,23 @@ namespace openstudio {
 ScriptsTabController::ScriptsTabController()
   : MainTabController(new ScriptsTabView(nullptr)), scriptsTabView(dynamic_cast<ScriptsTabView *>(mainContentWidget()))
 {
+  auto app = OSAppBase::instance();
+  boost::optional<path> tempDir = app->tempDir();
+  OS_ASSERT(tempDir);
 
-  m_variableGroupListController = QSharedPointer<openstudio::measuretab::VariableGroupListController>(new openstudio::measuretab::VariableGroupListController(false, OSAppBase::instance()));
-  m_variableGroupItemDelegate = QSharedPointer<openstudio::measuretab::VariableGroupItemDelegate>(new openstudio::measuretab::VariableGroupItemDelegate(true));
+  // save the current osm to a temp location
+  app->measureManager().saveTempModel(*tempDir);
 
-  //m_groups[MeasureType::ModelMeasure] = QString("OpenStudio Measures");
-  ////m_groups[MeasureType::EnergyPlusMeasure] = QString("EnergyPlus Measures");
+  // update measures
+  app->currentDocument()->disable();
+  app->measureManager().updateMeasuresLists();
+  app->currentDocument()->enable();
 
-  //for( std::map<MeasureType,QString>::const_iterator it = m_groups.begin();
-  //     it != m_groups.end();
-  //     it++ )
-  //{
-  //  QSharedPointer<VariableGroupItem> variableGroupItem;
-  //  variableGroupItem = QSharedPointer<VariableGroupItem>(new VariableGroupItem(it->first,it->second));
-  //  m_variableGroupListController->addItem(variableGroupItem);
-  //}
+  m_workflowController = QSharedPointer<openstudio::measuretab::WorkflowController>(new openstudio::measuretab::WorkflowController(OSAppBase::instance()));
+  m_workflowSectionItemDelegate = QSharedPointer<openstudio::measuretab::WorkflowSectionItemDelegate>(new openstudio::measuretab::WorkflowSectionItemDelegate());
 
-  scriptsTabView->variableGroupListView->setListController(m_variableGroupListController);
-  scriptsTabView->variableGroupListView->setDelegate(m_variableGroupItemDelegate);
-
+  scriptsTabView->workflowView->setListController(m_workflowController);
+  scriptsTabView->workflowView->setDelegate(m_workflowSectionItemDelegate);
 }
 
 ScriptsTabController::~ScriptsTabController()

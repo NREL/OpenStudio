@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -94,6 +94,8 @@
 #include "../model/SetpointManagerSingleZoneOneStageCooling.hpp"
 #include "../model/SetpointManagerSingleZoneOneStageHeating.hpp"
 #include "../model/SetpointManagerSingleZoneReheat.hpp"
+#include "../model/SetpointManagerSingleZoneCooling.hpp"
+#include "../model/SetpointManagerSingleZoneHeating.hpp"
 #include "../model/SetpointManagerWarmest.hpp"
 #include "../model/SetpointManagerWarmestTemperatureFlow.hpp"
 #include "../model/RenderingColor.hpp"
@@ -245,8 +247,7 @@ void ModelObjectGraphicsItem::setModelObject( model::OptionalModelObject modelOb
 
   if( m_modelObject )
   {
-    connect(m_modelObject->getImpl<detail::IdfObject_Impl>().get(), &detail::IdfObject_Impl::onNameChange,
-            this, &ModelObjectGraphicsItem::onNameChange);
+    m_modelObject->getImpl<detail::IdfObject_Impl>().get()->detail::IdfObject_Impl::onNameChange.connect<ModelObjectGraphicsItem, &ModelObjectGraphicsItem::onNameChange>(this);
 
     setFlag(QGraphicsItem::ItemIsSelectable);
 
@@ -2432,6 +2433,14 @@ void OneThreeNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
           {
             painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_singlezone.png"));
           }
+          else if( it->iddObjectType() == SetpointManagerSingleZoneCooling::iddObjectType() )
+          {
+            painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_singlezone.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerSingleZoneHeating::iddObjectType() )
+          {
+            painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_singlezone.png"));
+          }
           else if( it->iddObjectType() == SetpointManagerScheduled::iddObjectType() )
           {
             painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_scheduled.png"));
@@ -2666,6 +2675,14 @@ void TwoFourNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
           {
             painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_singlezone_right.png"));
           }
+          else if( it->iddObjectType() == SetpointManagerSingleZoneCooling::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_singlezone_right.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerSingleZoneHeating::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_singlezone_right.png"));
+          }
           else if( it->iddObjectType() == SetpointManagerScheduled::iddObjectType() )
           {
             painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_scheduled_right.png"));
@@ -2825,6 +2842,14 @@ void OAStraightNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem
             painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_mixed.png"));
           }
           else if( it->iddObjectType() == SetpointManagerSingleZoneReheat::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_singlezone.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerSingleZoneCooling::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_singlezone.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerSingleZoneHeating::iddObjectType() )
           {
             painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_singlezone.png"));
           }

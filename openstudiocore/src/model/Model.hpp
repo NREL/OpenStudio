@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -33,6 +33,7 @@
 #include "ModelObject.hpp"
 
 #include "../utilities/idf/Workspace.hpp"
+#include "../utilities/filetypes/WorkflowJSON.hpp"
 #include "../utilities/core/Assert.hpp"
 
 #include <vector>
@@ -40,6 +41,10 @@
 namespace openstudio {
 
 class SqlFile;
+class Date;
+class MonthOfYear;
+class DayOfWeek;
+class NthDayOfWeekInMonth;
 
 namespace model {
 
@@ -96,6 +101,9 @@ class MODEL_API Model : public openstudio::Workspace {
   /** @name Getters */
   //@{
 
+  /// Get the WorkflowJSON
+  WorkflowJSON workflowJSON() const;
+
   /** Returns the EnergyPlus output SqlFile if set. */
   boost::optional<SqlFile> sqlFile() const;
 
@@ -114,6 +122,25 @@ class MODEL_API Model : public openstudio::Workspace {
   /** Get the YearDescription object if there is one, this implementation uses a cached reference to the YearDescription
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<YearDescription>(). */
   boost::optional<YearDescription> yearDescription() const;
+  
+  /** Get or create the YearDescription object if there is one, then call method from YearDescription. */
+  // DLM: this is due to issues exporting the model::YearDescription object because of name conflict with utilities::YearDescription.
+  boost::optional<int> calendarYear() const;
+  std::string dayofWeekforStartDay() const;
+  bool isDayofWeekforStartDayDefaulted() const;
+  bool isLeapYear() const;
+  bool isIsLeapYearDefaulted() const;
+  void setCalendarYear(int calendarYear);
+  void resetCalendarYear();
+  bool setDayofWeekforStartDay(std::string dayofWeekforStartDay);
+  void resetDayofWeekforStartDay();
+  bool setIsLeapYear(bool isLeapYear);
+  void resetIsLeapYear();
+  int assumedYear();
+  openstudio::Date makeDate(openstudio::MonthOfYear monthOfYear, unsigned dayOfMonth);
+  openstudio::Date makeDate(unsigned monthOfYear, unsigned dayOfMonth);
+  openstudio::Date makeDate(openstudio::NthDayOfWeekInMonth n, openstudio::DayOfWeek dayOfWeek, openstudio::MonthOfYear monthOfYear);
+  openstudio::Date makeDate(unsigned dayOfYear);
 
   /** Get the WeatherFile object if there is one, this implementation uses a cached reference to the WeatherFile
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<WeatherFile>(). */
@@ -138,6 +165,12 @@ class MODEL_API Model : public openstudio::Workspace {
   //@}
   /** @name Setters */
   //@{
+
+  /**  Set the WorkflowJSON. */
+  bool setWorkflowJSON(const WorkflowJSON& workflowJSON);
+
+  /** Reset the WorkflowJSON. */
+  void resetWorkflowJSON();
 
   /** Sets the EnergyPlus output SqlFile.  SqlFile must correspond to EnergyPlus
    *  simulation of this Model. */
@@ -339,8 +372,11 @@ class MODEL_API Model : public openstudio::Workspace {
 
   //@}
 
-  /** Load Model from file. */
-  static boost::optional<Model> load(const path& p);
+  /** Load Model from file, attempts to load WorkflowJSON from standard path. */
+  static boost::optional<Model> load(const path& osmPath);
+
+  /** Load Model and WorkflowJSON from files, fails if either osm or workflowJSON cannot be loaded. */
+  static boost::optional<Model> load(const path& osmPath, const path& workflowJSONPath);
 
   /// Equality test, tests if this Model shares the same implementation object with other.
   bool operator==(const Model& other) const;

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -53,8 +53,8 @@ void OSVersionFixture::SetUpTestCase() {
 
   // create and popluate resource folder
   openstudio::path thisVersionPath = versionResourcesPath(openstudio::VersionString(openStudioVersion()));
-  if (!boost::filesystem::exists(thisVersionPath)) {
-    boost::filesystem::create_directory(thisVersionPath);
+  if (!openstudio::filesystem::exists(thisVersionPath)) {
+    openstudio::filesystem::create_directory(thisVersionPath);
   }
 
   // ETH@20120514 Eventually this cpp file should be configured by CMake so OpenStudio.idd can be 

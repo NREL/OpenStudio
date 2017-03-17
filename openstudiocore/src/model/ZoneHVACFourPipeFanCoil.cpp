@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -673,19 +673,7 @@ namespace detail {
 
   bool ZoneHVACFourPipeFanCoil_Impl::setHeatingCoil( HVACComponent & heatingCoil )
   {
-    bool isAllowedType = false;
-
-    if( heatingCoil.iddObjectType() == IddObjectType::OS_Coil_Heating_Water )
-    {
-      isAllowedType = true;
-    }
-
-    if( isAllowedType )
-    {
-      return setPointer(OS_ZoneHVAC_FourPipeFanCoilFields::HeatingCoilName,heatingCoil.handle());
-    }
-
-    return false;
+    return setPointer(OS_ZoneHVAC_FourPipeFanCoilFields::HeatingCoilName,heatingCoil.handle());
   }
 
   void ZoneHVACFourPipeFanCoil_Impl::setMaximumHotWaterFlowRate(boost::optional<double> maximumHotWaterFlowRate) {

@@ -15,9 +15,7 @@
 %import <utilities/core/CommonImport.i>
 %import <utilities/Utilities.i>
 %import <model/Model.i>
-%import <runmanager/lib/RunManager.i>
 %import <osversion/OSVersion.i>
-%import <analysisdriver/AnalysisDriver.i>
 
 %import(module="openstudiomodel") <model/Model.hpp>
 %import(module="openstudiomodel") <model/ModelObject.hpp>
@@ -27,13 +25,7 @@
   #include <model/Model.hpp>
   #include <model/ModelObject.hpp>
   #include <model/Component.hpp>
-  #include <analysis/Measure.hpp>
-  #include <analysis/NullMeasure.hpp>
-  #include <analysis/RubyMeasure.hpp>
-  #include <runmanager/lib/RunManager.hpp>
-  #include <runmanager/lib/WorkItem.hpp>
   #include <openstudio_lib/FileOperations.hpp>
-  #include <openstudio_lib/OSDocument.hpp>
   
   using namespace openstudio;
   
@@ -55,10 +47,6 @@
     class RemoteBCL;
     class WorkspaceObjectWatcher;
     class WorkspaceWatcher;
-    
-    namespace runmanager{
-      class JobStatusWidget;
-    }
   }
 %}
 
@@ -78,12 +66,10 @@
 %ignore openstudio::IdfObjectWatcher;
 %ignore openstudio::RemoteBCL;
 %ignore openstudio::WorkspaceWatcher;
-%ignore openstudio::runmanager::JobStatusWidget;
 
 // ignore base class of OSDocument
 %ignore OSQObjectController;
 
 %include <openstudio_lib/FileOperations.hpp>
-%include <openstudio_lib/OSDocument.hpp>
 
 #endif //OPENSTUDIOLIB_I 

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -59,12 +59,16 @@ class MODEL_API HeatPumpWaterToWaterEquationFitCooling : public WaterToWaterComp
   /** @name Getters */
   //@{
 
+  /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Load Side Flow Rate" **/
   double ratedLoadSideFlowRate() const;
 
+  /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Source Side Flow Rate" **/
   double ratedSourceSideFlowRate() const;
 
+  /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Cooling Capacity" **/
   double ratedCoolingCapacity() const;
 
+  /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Cooling Power Consumption" **/
   double ratedCoolingPowerConsumption() const;
 
   double coolingCapacityCoefficient1() const;
@@ -91,12 +95,16 @@ class MODEL_API HeatPumpWaterToWaterEquationFitCooling : public WaterToWaterComp
   /** @name Setters */
   //@{
 
+  /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Load Side Flow Rate" **/
   bool setRatedLoadSideFlowRate(double ratedLoadSideFlowRate);
 
+  /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Source Side Flow Rate" **/
   bool setRatedSourceSideFlowRate(double ratedSourceSideFlowRate);
 
+  /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Cooling Capacity" **/
   bool setRatedCoolingCapacity(double ratedCoolingCapacity);
 
+  /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Cooling Power Consumption" **/
   bool setRatedCoolingPowerConsumption(double ratedCoolingPowerConsumption);
 
   void setCoolingCapacityCoefficient1(double coolingCapacityCoefficient1);

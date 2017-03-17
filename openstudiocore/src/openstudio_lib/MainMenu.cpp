@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -28,7 +28,6 @@
 
 #include "MainMenu.hpp"
 
-#include "FileOperations.hpp"
 #include "OSAppBase.hpp"
 #include "OSDocument.hpp"
 
@@ -155,17 +154,17 @@ MainMenu::MainMenu(bool isIP, bool isPlugin, QWidget *parent) :
   m_preferencesMenu->addAction(action);
   connect(action, &QAction::triggered, this, &MainMenu::changeMyMeasuresDir);
 
-  action = new QAction(tr("&Scan for Tools"),this);
-  m_preferencesMenu->addAction(action);
-  connect(action, &QAction::triggered, this, &MainMenu::scanForToolsClicked);
-
-  action = new QAction(tr("Show &Tools"),this);
-  m_preferencesMenu->addAction(action);
-  connect(action, &QAction::triggered, this, &MainMenu::showRunManagerPreferencesClicked);
-
-  action = new QAction(tr("Change BCL Login Information"),this);
+  //action = new QAction(tr("&Scan for Tools"),this);
   //m_preferencesMenu->addAction(action);
-  connect(action, &QAction::triggered, this, &MainMenu::changeBclLogin);
+  //connect(action, &QAction::triggered, this, &MainMenu::scanForToolsClicked);
+
+  //action = new QAction(tr("Show &Tools"),this);
+  //m_preferencesMenu->addAction(action);
+  //connect(action, &QAction::triggered, this, &MainMenu::showRunManagerPreferencesClicked);
+
+  //action = new QAction(tr("Change BCL Login Information"),this);
+  //m_preferencesMenu->addAction(action);
+  //connect(action, &QAction::triggered, this, &MainMenu::changeBclLogin);
 
   action = new QAction(tr("&Configure Internet Proxy"),this);
   m_preferencesMenu->addAction(action);

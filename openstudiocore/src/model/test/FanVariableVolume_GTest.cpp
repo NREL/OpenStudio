@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -105,6 +105,6 @@ TEST_F(ModelFixture,FanVariableVolume_addToNode) {
   EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
 
   FanVariableVolume fan2(m,s);
-  EXPECT_FALSE(fan2.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
+  EXPECT_TRUE(fan2.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)7, airLoop.supplyComponents().size() );
 }

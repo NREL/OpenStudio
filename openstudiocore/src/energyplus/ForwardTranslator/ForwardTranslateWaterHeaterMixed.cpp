@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -249,27 +249,35 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterMixed( WaterHe
     {
       idfObject.setString(WaterHeater_MixedFields::AmbientTemperatureIndicator,s.get());
     }
-  }
 
-  // AmbientTemperatureScheduleName
+    if( istringEqual(s.get(),"Schedule") ) {
+      // AmbientTemperatureScheduleName
+      schedule = modelObject.ambientTemperatureSchedule();
+      if( schedule )
+      {
+        translateAndMapModelObject(schedule.get());
 
-  schedule = modelObject.ambientTemperatureSchedule();
-  if( schedule )
-  {
-    translateAndMapModelObject(schedule.get());
+        idfObject.setString(WaterHeater_MixedFields::AmbientTemperatureScheduleName,schedule->name().get());
+      }
+    }
 
-    idfObject.setString(WaterHeater_MixedFields::AmbientTemperatureScheduleName,schedule->name().get());
+    if( istringEqual(s.get(),"Outdoors") ) {
+      if( (! modelObject.ambientTemperatureOutdoorAirNodeName()) || modelObject.ambientTemperatureOutdoorAirNodeName()->empty() ) {
+        IdfObject oaNodeListIdf(openstudio::IddObjectType::OutdoorAir_NodeList);
+        auto name = modelObject.nameString() + " Outdoor Air Node";
+        oaNodeListIdf.setString(0,name);
+        m_idfObjects.push_back(oaNodeListIdf);
+        idfObject.setString(WaterHeater_MixedFields::AmbientTemperatureOutdoorAirNodeName,name);
+      }
+    }
   }
 
   // AmbientTemperatureZoneName
 
   if( boost::optional<ThermalZone> zone = modelObject.ambientTemperatureThermalZone() )
   {
-    boost::optional<IdfObject> _zone = translateAndMapModelObject(zone.get());
-
-    if( _zone )
-    {
-      idfObject.setString(WaterHeater_MixedFields::AmbientTemperatureZoneName,_zone->name().get());
+    if( zone ) {
+      idfObject.setString(WaterHeater_MixedFields::AmbientTemperatureZoneName,zone->name().get());
     }
   }
 
@@ -455,6 +463,8 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterMixed( WaterHe
   {
     idfObject.setDouble(WaterHeater_MixedFields::IndirectWaterHeatingRecoveryTime,value.get());
   }
+
+  idfObject.setString(WaterHeater_MixedFields::SourceSideFlowControlMode,"IndirectHeatPrimarySetpoint");
 
   return boost::optional<IdfObject>(idfObject);
 }

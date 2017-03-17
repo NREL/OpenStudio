@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -41,6 +41,7 @@ class ShadingSurfaceGroup;
 class ConstructionBase;
 class SurfacePropertyOtherSideCoefficients;
 class SurfacePropertyOtherSideConditionsModel;
+class SurfacePropertyConvectionCoefficients;
 
 namespace detail {
 
@@ -157,6 +158,9 @@ class MODEL_API Surface : public PlanarSurface {
   /** Resets the adjacent Surface. */
   void resetAdjacentSurface();
 
+  /** Returns the SurfacePropertyConvectionCoefficients, if it exists. */
+  boost::optional<SurfacePropertyConvectionCoefficients> surfacePropertyConvectionCoefficients() const;
+
   /** Returns the adjacent SurfaceSurfacePropertyOtherSideCoefficients, if it exists. */
   boost::optional<SurfacePropertyOtherSideCoefficients> surfacePropertyOtherSideCoefficients() const;
 
@@ -204,7 +208,7 @@ class MODEL_API Surface : public PlanarSurface {
   void assignDefaultWindExposure();
 
   /** Returns the default film thermal resistance (m^2*K/W) for this surface. Assumes still indoor
-   *  air, and 15 mph wind outside. */
+   *  air, and 15 mph wind outside. Does not consider any custom SurfacePropertyConvectionCoefficients. */
   double filmResistance() const;
 
   /** Get the window to wall ratio for this surface. Calculated as 
