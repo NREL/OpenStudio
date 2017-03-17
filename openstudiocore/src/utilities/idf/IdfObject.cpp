@@ -55,11 +55,6 @@
 #include "../units/OSOptionalQuantity.hpp"
 #include "../units/QuantityConverter.hpp"
 
-<<<<<<< HEAD
-#include <boost/filesystem/fstream.hpp>
-=======
- 
->>>>>>> develop
 #include <boost/lexical_cast.hpp>
 #include <boost/numeric/conversion/cast.hpp>
 
@@ -343,7 +338,7 @@ namespace detail {
         }
       }
     }
-    return result; 
+    return result;
   }
 
   boost::optional<QUrl> IdfObject_Impl::getURL(unsigned index,

@@ -122,36 +122,10 @@ endif()
 
 # Apple Sanity Check
 if(APPLE)
-<<<<<<< HEAD
-  if(NOT CMAKE_OSX_DEPLOYMENT_TARGET)
-    message(FATAL_ERROR "OSX Deployment Target Must Be Set")
-  endif()
-
-  set(CMAKE_OSX_ARCHITECTURES "x86_64" CACHE STRING "Arch" FORCE)
-
-  if(NOT CMAKE_OSX_SYSROOT)
-    message(FATAL_ERROR "OSX Sysroot must be set")
-  elseif(CMAKE_OSX_SYSROOT MATCHES ".*10\\.9.*")
-    set(OSX_SDK "10.9")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c11 -std=c++11 -stdlib=libc++")
-  elseif(CMAKE_OSX_SYSROOT MATCHES ".*10\\.10.*")
-    set(OSX_SDK "10.10")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c11 -std=c++11 -stdlib=libc++")
-  elseif(CMAKE_OSX_SYSROOT MATCHES ".*10\\.11.*")
-    set(OSX_SDK "10.11")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c11 -std=c++11 -stdlib=libc++")
-  elseif(CMAKE_OSX_SYSROOT MATCHES ".*10\\.12.*")
-    set(OSX_SDK "10.12")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c11 -std=c++11 -stdlib=libc++")
-  else()
-    message(FATAL_ERROR "OSX Sysroot must use the 10.9, 10.10, or 10.11 SDK")
-  endif()
-=======
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c11 -std=c++11 -stdlib=libc++")
   #if(NOT CMAKE_OSX_DEPLOYMENT_TARGET)
   #  message(FATAL_ERROR "OSX Deployment Target Must Be Set")
   #endif()
->>>>>>> develop
 
   #set(CMAKE_OSX_ARCHITECTURES "x86_64" CACHE STRING "Arch" FORCE)
 
@@ -304,7 +278,7 @@ if( BUILD_RUBY )
   if( NOT UNIX )
 
     ExternalProject_Add(ZLib
-      URL_HASH SHA256=c3e5e9fdd5004dcb542feda5ee4f0ff0744628baf8ed2dd5d66f8ca1197cb1a1 
+      URL_HASH SHA256=c3e5e9fdd5004dcb542feda5ee4f0ff0744628baf8ed2dd5d66f8ca1197cb1a1
       URL http://zlib.net/zlib-1.2.11.tar.gz
       BUILD_COMMAND "${CMAKE_COMMAND}" --build "${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-build" --config Release --config Debug --target INSTALL
       CMAKE_CACHE_ARGS
@@ -338,14 +312,14 @@ if( BUILD_RUBY )
       # sudo apt-get -y install build-essential libssl-dev libreadline-dev zlib1g-dev
       set(RUBY_EXT_CONFIG "--with-openssl-dir=/usr --with-readline-dir=/usr --with-zlib-dir=/usr")
     endif()
-    
+
     # KSB: For Mac, you may need to install some things...
     # brew install homebrew/dupes/zlib
     # brew link --overwrite --force homebrew/dupes/zlib
     # brew install autoconf automake libtool
     # brew link autoconf automake libtool
     ExternalProject_Add(Ruby
-      URL https://codeload.github.com/ruby/ruby/tar.gz/v2_2_4 
+      URL https://codeload.github.com/ruby/ruby/tar.gz/v2_2_4
       URL_MD5 3f0d280116092dc5278b6cff31948aad
       BUILD_IN_SOURCE 1
       PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/ruby/Ruby.patch
@@ -381,7 +355,7 @@ endif()
 
 option(BUILD_OPENSTUDIO_GEMS "Build OpenStudio Gems" OFF)
 if(BUILD_OPENSTUDIO_GEMS)
-  # depends on system Ruby and Git, Ruby must be same version as OpenStudio 
+  # depends on system Ruby and Git, Ruby must be same version as OpenStudio
   if (WIN32)
     file(GLOB POTENTIAL_RUBY_LOCATIONS "c:/ruby*2.2.*/bin")
     get_filename_component(POTENTIAL_TAR_LOCATIONS ${GIT_EXECUTABLE} DIRECTORY )
@@ -390,8 +364,8 @@ if(BUILD_OPENSTUDIO_GEMS)
   find_program(RUBY_EXE ruby HINTS ${POTENTIAL_RUBY_LOCATIONS})
   find_program(TAR_EXE tar HINTS ${POTENTIAL_TAR_LOCATIONS})
   set(OPENSTUDIO_GEMS_DIR "${CMAKE_BINARY_DIR}/openstudio-gems")
-  add_custom_target(openstudio-gems ALL 
-                    ${RUBY_EXE} "${CMAKE_SOURCE_DIR}/dependencies/ruby/build_openstudio_gems.rb" "${OPENSTUDIO_GEMS_DIR}" "${TAR_EXE}" "2.2.4" 
+  add_custom_target(openstudio-gems ALL
+                    ${RUBY_EXE} "${CMAKE_SOURCE_DIR}/dependencies/ruby/build_openstudio_gems.rb" "${OPENSTUDIO_GEMS_DIR}" "${TAR_EXE}" "2.2.4"
                     WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/dependencies/ruby/"
                     DEPENDS "${CMAKE_SOURCE_DIR}/dependencies/ruby/Gemfile" "${CMAKE_SOURCE_DIR}/dependencies/ruby/build_openstudio_gems.rb")
 endif()
@@ -455,58 +429,11 @@ if(BUILD_BOOST)
   endif()
 endif()
 
-<<<<<<< HEAD
-ExternalProject_Add(GoogleTest
-  URL http://openstudio-resources.s3.amazonaws.com/dependencies/gtest-1.7.0.tar.gz
-  URL_MD5 bad74f626d18f724cad4c9fe2e6ef27d
-  PATCH_COMMAND "${CMAKE_COMMAND}" -E copy_directory ${CMAKE_SOURCE_DIR}/dependencies/GoogleTest ${CMAKE_BINARY_DIR}/GoogleTest-prefix/src/GoogleTest
-  INSTALL_COMMAND ""
-  CMAKE_CACHE_ARGS
-  -DCMAKE_OSX_ARCHITECTURES:STRING=${CMAKE_OSX_ARCHITECTURES}
-  -DCMAKE_OSX_DEPLOYMENT_TARGET:STRING=${CMAKE_OSX_DEPLOYMENT_TARGET}
-  -DCMAKE_OSX_SYSROOT:STRING=${CMAKE_OSX_SYSROOT}
-  -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
-  -DCMAKE_CXX_COMPILER:STRING=${CMAKE_CXX_COMPILER}
-  -DCMAKE_CXX_FLAGS:STRING=${CMAKE_CXX_FLAGS}
-  -DCMAKE_EXE_LINKER_FLAGS:STRING=${CMAKE_EXE_LINKER_FLAGS}
-  -DCMAKE_MODULE_LINKER_FLAGS:STRING=${CMAKE_MODULE_LINKER_FLAGS}
-  -DCMAKE_SHARED_LINKER_FLAGS:STRING=${CMAKE_SHARED_LINKER_FLAGS}
-)
-
-set(GTEST_INCLUDE_DIR ${CMAKE_BINARY_DIR}/GoogleTest-prefix/src/GoogleTest/include)
-set(GTEST_LIB_DIR ${CMAKE_BINARY_DIR}/GoogleTest-prefix/src/GoogleTest-build)
-
-ExternalProject_Add(GeographicLib
-  URL http://openstudio-resources.s3.amazonaws.com/dependencies/GeographicLib-1.45.zip
-  URL_MD5 c3c8f989d700fc88c8ce4584cb298cee
-  #PATCH_COMMAND "${CMAKE_COMMAND}" -E copy_directory ${CMAKE_SOURCE_DIR}/dependencies/GeographicLib ${CMAKE_BINARY_DIR}/GeographicLib-prefix/src/GeographicLib
-  INSTALL_COMMAND ""
-  CMAKE_CACHE_ARGS
-  -DCMAKE_OSX_ARCHITECTURES:STRING=${CMAKE_OSX_ARCHITECTURES}
-  -DCMAKE_OSX_DEPLOYMENT_TARGET:STRING=${CMAKE_OSX_DEPLOYMENT_TARGET}
-  -DCMAKE_OSX_SYSROOT:STRING=${CMAKE_OSX_SYSROOT}
-  -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
-  -DCMAKE_CXX_COMPILER:STRING=${CMAKE_CXX_COMPILER}
-  -DCMAKE_CXX_FLAGS:STRING=${CMAKE_CXX_FLAGS}
-  -DCMAKE_EXE_LINKER_FLAGS:STRING=${CMAKE_EXE_LINKER_FLAGS}
-  -DCMAKE_MODULE_LINKER_FLAGS:STRING=${CMAKE_MODULE_LINKER_FLAGS}
-  -DCMAKE_SHARED_LINKER_FLAGS:STRING=${CMAKE_SHARED_LINKER_FLAGS}
-  -DGEOGRAPHICLIB_LIB_TYPE:STRING=STATIC
-  -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=ON
-)
-
-# Don't confuse "GEOGRAPHICLIB"_Dir as something that refers to the
-# actual library compiled unit. This variable just refers to where the project is at.
-# We will use this to find the cmake config file provided by the project,
-# and that config file will tell us everything we need to know about the project's targets.
-set(GeographicLib_DIR ${CMAKE_BINARY_DIR}/GeographicLib-prefix/src/GeographicLib-build/)
-=======
 option(BUILD_QT "Build Qt" OFF)
 option(Qt5Static "Build Static Qt" OFF)
->>>>>>> develop
 
 if(BUILD_QT)
-  
+
   if(APPLE)
     execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install")
     if( Qt5Static )
@@ -525,7 +452,7 @@ if(BUILD_QT)
       BUILD_IN_SOURCE 1
     )
     set(QT_INSTALL_DIR "${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/")
-    
+
   elseif( UNIX )
     # install deps according to here http://doc.qt.io/qt-5/linux-requirements.html
     # also reference https://wiki.qt.io/Building_Qt_5_from_Git
@@ -546,7 +473,7 @@ if(BUILD_QT)
       BUILD_IN_SOURCE 1
     )
     set(QT_INSTALL_DIR "${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/")
-    
+
   else()
     # to initialize command prompt run: "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" amd64
     configure_file("${CMAKE_SOURCE_DIR}/dependencies/qt/build_static_qt.bat.in" "${CMAKE_BINARY_DIR}/build_static_qt.bat")
@@ -567,7 +494,7 @@ if(BUILD_QT)
     )
     set(QT_INSTALL_DIR "${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/")
   endif()
-  
+
 else()
   set(QT_INSTALL_DIR "")
 endif()

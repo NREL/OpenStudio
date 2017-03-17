@@ -19010,24 +19010,6 @@ OS:PlantLoop,
        \key PumpPowerCorrection
        \key LoopFlowCorrection
        \key None
-<<<<<<< HEAD
-  A20, \field Demand Mixer Name
-       \type object-list
-       \required-field
-       \object-list ConnectionObject
-  A21, \field Demand Splitter Name
-       \type object-list
-       \required-field
-       \object-list ConnectionObject
-  A22, \field Supply Mixer Name
-       \type object-list
-       \required-field
-       \object-list ConnectionObject
-  A23; \field Supply Splitter Name
-       \type object-list
-       \required-field
-       \object-list ConnectionObject
-=======
   A20, \field Plant Equipment Operation Heating Load Schedule
        \type object-list
        \object-list ScheduleNames
@@ -19037,10 +19019,25 @@ OS:PlantLoop,
   A22, \field Primary Plant Equipment Operation Scheme Schedule
        \type object-list
        \object-list ScheduleNames
-  A23; \field Component Setpoint Operation Scheme Schedule
+  A23, \field Component Setpoint Operation Scheme Schedule
        \type object-list
        \object-list ScheduleNames
->>>>>>> develop
+  A24, \field Demand Mixer Name
+       \type object-list
+       \required-field
+       \object-list ConnectionObject
+  A25, \field Demand Splitter Name
+       \type object-list
+       \required-field
+       \object-list ConnectionObject
+  A26, \field Supply Mixer Name
+       \type object-list
+       \required-field
+       \object-list ConnectionObject
+  A27; \field Supply Splitter Name
+       \type object-list
+       \required-field
+       \object-list ConnectionObject
 
 OS:PlantEquipmentOperation:CoolingLoad,
     \extensible:3
