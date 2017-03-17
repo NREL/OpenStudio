@@ -44,6 +44,8 @@ namespace detail{
 }
 class DateTime;
 class Variant;
+class MeasureType;
+class UUID;
 
 // Attribute is deprecated
 class Attribute;
@@ -148,6 +150,7 @@ class UTILITIES_API WorkflowStepValue {
    std::shared_ptr<detail::WorkflowStepValue_Impl> m_impl;
 };
 
+
 /** Class for documenting the outcome of running a UserScript or a Ruleset. There is an overall
  *  result flag (available from value()), and a number of message types. */
 class UTILITIES_API WorkflowStepResult {
@@ -174,6 +177,28 @@ class UTILITIES_API WorkflowStepResult {
   boost::optional<DateTime> startedAt() const;
 
   boost::optional<DateTime> completedAt() const;
+
+  boost::optional<MeasureType> measureType() const;
+
+  boost::optional<std::string> measureName() const;
+
+  boost::optional<std::string> measureId() const;
+
+  boost::optional<UUID> measureUUID() const;
+
+  boost::optional<std::string> measureVersionId() const;
+
+  boost::optional<UUID> measureVersionUUID() const;
+
+  boost::optional<DateTime> measureVersionModified() const;
+
+  boost::optional<std::string> measureXmlChecksum() const;
+
+  boost::optional<std::string> measureClassName() const;
+
+  boost::optional<std::string> measureDisplayName() const;
+
+  boost::optional<std::string> measureTaxonomy() const;
 
   boost::optional<StepResult> stepResult() const;
 
@@ -226,6 +251,39 @@ class UTILITIES_API WorkflowStepResult {
 
   void setCompletedAt(const DateTime& dateTime);
   void resetCompletedAt();
+
+  bool setMeasureType(const MeasureType& measureType);
+  void resetMeasureType();
+
+  bool setMeasureName(const std::string& name);
+  void resetMeasureName();
+
+  bool setMeasureId(const std::string& id);
+  void resetMeasureId();
+
+  bool setMeasureUUID(const UUID& uuid);
+  void resetMeasureUUID();
+
+  bool setMeasureVersionId(const std::string& id);
+  void resetMeasureVersionId();
+
+  bool setMeasureVersionUUID(const UUID& uuid);
+  void resetMeasureVersionUUID();
+
+  bool setMeasureVersionModified(const DateTime& modified);
+  void resetMeasureVersionModified();
+
+  bool setMeasureXmlChecksum(const std::string& checksum);
+  void resetMeasureXmlChecksum();
+  
+  bool setMeasureClassName(const std::string& className);
+  void resetMeasureClassName();
+    
+  bool setMeasureDisplayName(const std::string& displayName);
+  void resetMeasureDisplayName();
+
+  bool setMeasureTaxonomy(const std::string& taxonomy);
+  void resetMeasureTaxonomy();
 
   void setStepResult(const StepResult& result);
   void resetStepResult();
