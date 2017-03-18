@@ -367,13 +367,13 @@ void ResultsView::comboBoxChanged(int index)
 {
   QString filename = m_comboBox->itemData(index).toString();
 
-
   QFile file(filename);
+  QString content;
   if(file.open(QIODevice::ReadOnly)) {
-    QString content = file.readAll();
-    m_view->setHtml(content);
+    content = file.readAll();
     file.close();
   }
+  m_view->setHtml(content);
 
   //m_view->load(QUrl(filename));
 }
