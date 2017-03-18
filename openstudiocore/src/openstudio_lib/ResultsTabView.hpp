@@ -37,11 +37,8 @@
 //#include "../runmanager/lib/RunManager.hpp"
 
 #include <QWidget>
-#if QT_VERSION >= 0x050400
 #include <QWebEngineView>
-#else
-#include <QWebView>
-#endif
+
 
 class QComboBox;
 class QPushButton;
@@ -57,7 +54,7 @@ namespace openstudio {
     public:
       ResultsView(QWidget *t_parent = nullptr);
       virtual ~ResultsView();
-      void searchForExistingResults(const openstudio::path &t_runDir);
+      void searchForExistingResults(const openstudio::path &t_runDir, const openstudio::path &t_reportsDir);
 
     public slots:
       void resultsGenerated(const openstudio::path &t_sqlFile, const openstudio::path &t_radianceResultsPath);
@@ -65,6 +62,7 @@ namespace openstudio {
       void treeChanged(const openstudio::UUID &t_uuid);
 
     private slots:
+      void refreshClicked();
       void openResultsViewerClicked();
       void comboBoxChanged(int index);
 
@@ -77,16 +75,13 @@ namespace openstudio {
 
       // utility bill results
       QLabel * m_reportLabel;
+      QPushButton * m_refreshBtn;
       QPushButton * m_openResultsViewerBtn;
       
       openstudio::path m_sqlFilePath;
       openstudio::path m_radianceResultsPath;
 
-#if QT_VERSION >= 0x050400
       QWebEngineView * m_view;
-#else
-      QWebView * m_view;
-#endif
       QComboBox * m_comboBox;
   };
 
