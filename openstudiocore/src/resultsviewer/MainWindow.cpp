@@ -1395,11 +1395,12 @@ namespace resultsviewer{
     {
       for (QString file : fileList)
       {
-        file = QString::fromStdString(openstudio::filesystem::canonical(toPath(file)).string());
         if (!QFile::exists(file)) {
           QMessageBox::information(this, tr("File Open"), tr("File not found:\n" + file.toUtf8()));
           continue;
         }
+
+        file = QString::fromStdString(openstudio::filesystem::canonical(toPath(file)).string());
 
         if (t_makeTempCopies)
         {
