@@ -104,7 +104,7 @@ void ConstructionCfactorUndergroundWallInspectorView::createLayout()
 
   ++row;
 
-  m_cfactorEdit = new OSQuantityEdit2("W/m2*K","W/m2*K","Btu/ft2*h*R", m_isIP);
+  m_cfactorEdit = new OSQuantityEdit2("W/m^2*K","W/m^2*K","Btu/ft^2*h*R", m_isIP);
   connect(this, &ConstructionCfactorUndergroundWallInspectorView::toggleUnitsClicked, m_cfactorEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_cfactorEdit, row, 0);
 

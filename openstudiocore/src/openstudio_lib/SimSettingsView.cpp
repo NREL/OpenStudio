@@ -497,7 +497,7 @@ QWidget * SimSettingsView::createSimulationControlWidget()
   gridLayout->addItem(spacerItem,row++,0);
   col = 0;
 
-  addField(gridLayout,row,col,"Temperature Convergence Tolerance Value","deltaC","deltaC","deltaF",m_temperatureConvergenceToleranceValue);
+  addField(gridLayout,row,col,"Temperature Convergence Tolerance Value","K","K","R",m_temperatureConvergenceToleranceValue);
   col = col + 2;
   addField(gridLayout,row,col,"Solar Distribution",m_solarDistribution);
   
@@ -608,11 +608,11 @@ QWidget * SimSettingsView::createOutputControlReportingTolerancesWidget()
   int col = 0;
   QSpacerItem * spacerItem = nullptr;
 
-  addField(gridLayout,row,col,"Tolerance For Time Heating Setpoint Not Met","deltaC","deltaC","deltaF",m_toleranceForTimeHeatingSetpointNotMet);
+  addField(gridLayout,row,col,"Tolerance For Time Heating Setpoint Not Met","K","K","R",m_toleranceForTimeHeatingSetpointNotMet);
   col++;
   spacerItem = new QSpacerItem(SPACERITEM_WIDTH,1,QSizePolicy::Fixed,QSizePolicy::Fixed);
   gridLayout->addItem(spacerItem,row,col++);
-  addField(gridLayout,row,col,"Tolerance For Time Cooling Setpoint Not Met","deltaC","deltaC","deltaF",m_toleranceForTimeCoolingSetpointNotMet);
+  addField(gridLayout,row,col,"Tolerance For Time Cooling Setpoint Not Met","K","K","R",m_toleranceForTimeCoolingSetpointNotMet);
 
   auto widget = new QWidget();
   widget->setLayout(gridLayout);
@@ -744,14 +744,14 @@ QWidget * SimSettingsView::createHeatBalanceAlgorithmWidget()
   col++;
   spacerItem = new QSpacerItem(SPACERITEM_WIDTH,1,QSizePolicy::Fixed,QSizePolicy::Fixed);
   gridLayout->addItem(spacerItem,row,col++);
-  addField(gridLayout,row,col,"Minimum Surface Convection Heat Transfer Coefficient Value","W/m2-K","W/m2-K","Btu/ft2-h-R",m_minimumSurfaceConvectionHeatTransferCoefficientValue);
+  addField(gridLayout,row,col,"Minimum Surface Convection Heat Transfer Coefficient Value","W/m^2*K","W/m^2*K","Btu/ft^2*h*R",m_minimumSurfaceConvectionHeatTransferCoefficientValue);
   
   row = row + 2;
   spacerItem = new QSpacerItem(1,SPACERITEM_HEIGHT,QSizePolicy::Fixed,QSizePolicy::Fixed);
   gridLayout->addItem(spacerItem,row++,0);
   col = 0;
 
-  addField(gridLayout,row,col,"Maximum Surface Convection Heat Transfer Coefficient Value","W/m2-K","W/m2-K","Btu/ft2-h-R",m_maximumSurfaceConvectionHeatTransferCoefficientValue);
+  addField(gridLayout,row,col,"Maximum Surface Convection Heat Transfer Coefficient Value","W/m^2*K","W/m^2*K","Btu/ft^2*h*R",m_maximumSurfaceConvectionHeatTransferCoefficientValue);
   col = col + 2;
   addField(gridLayout,row,col,"Algorithm",m_algorithmHeatBalance);
 

@@ -120,7 +120,7 @@ void WindowMaterialGasInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_conductivityCoefficientA = new OSQuantityEdit2("W/m*K","W/m*K","Btu*in/hr*ft2*R", m_isIP);
+  m_conductivityCoefficientA = new OSQuantityEdit2("W/m*K", "W/m*K", "Btu*in/hr*ft^2*R", m_isIP);
   connect(this, &WindowMaterialGasInspectorView::toggleUnitsClicked, m_conductivityCoefficientA, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_conductivityCoefficientA,row++,0,1,3);
 
@@ -130,7 +130,7 @@ void WindowMaterialGasInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_conductivityCoefficientB = new OSQuantityEdit2("W/m*K2","W/m*K2","Btu*in/hr*ft2*R2", m_isIP);
+  m_conductivityCoefficientB = new OSQuantityEdit2("W/m*K^2", "W/m*K^2", "Btu*in/hr*ft^2*R^2", m_isIP);
   connect(this, &WindowMaterialGasInspectorView::toggleUnitsClicked, m_conductivityCoefficientB, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_conductivityCoefficientB,row++,0,1,3);
 
@@ -170,7 +170,7 @@ void WindowMaterialGasInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_specificHeatCoefficientB = new OSQuantityEdit2("J/kg*K2","J/kg*K2","Btu/lb*R2", m_isIP);
+  m_specificHeatCoefficientB = new OSQuantityEdit2("J/kg*K^2","J/kg*K^2","Btu/lb*R^2", m_isIP);
   connect(this, &WindowMaterialGasInspectorView::toggleUnitsClicked, m_specificHeatCoefficientB, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_specificHeatCoefficientB,row++,0,1,3);
 

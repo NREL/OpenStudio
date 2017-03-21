@@ -80,7 +80,7 @@ SteamEquipmentDefinitionInspectorView::SteamEquipmentDefinitionInspectorView(boo
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,2,1);
 
-  m_wattsPerSpaceFloorAreaEdit = new OSQuantityEdit2("W/m2","W/m2","Btu/ft2", m_isIP);
+  m_wattsPerSpaceFloorAreaEdit = new OSQuantityEdit2("W/m^2","W/m^2","Btu/hr*ft^2", m_isIP);
   connect(this, &SteamEquipmentDefinitionInspectorView::toggleUnitsClicked, m_wattsPerSpaceFloorAreaEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_wattsPerSpaceFloorAreaEdit,3,1);
 
@@ -90,7 +90,7 @@ SteamEquipmentDefinitionInspectorView::SteamEquipmentDefinitionInspectorView(boo
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,2,2);
 
-  m_wattsPerPersonEdit = new OSQuantityEdit2("W/Person","W/Person","Btu/Person", m_isIP);
+  m_wattsPerPersonEdit = new OSQuantityEdit2("W/person","W/person","Btu/hr*person", m_isIP);
   connect(this, &SteamEquipmentDefinitionInspectorView::toggleUnitsClicked, m_wattsPerPersonEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_wattsPerPersonEdit,3,2);
 

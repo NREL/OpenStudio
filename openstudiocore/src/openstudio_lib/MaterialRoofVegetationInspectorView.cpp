@@ -179,7 +179,7 @@ void MaterialRoofVegetationInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_conductivityOfDrySoil = new OSQuantityEdit2("W/m*K","W/m*K","Btu*in/hr*ft2*R", m_isIP);
+  m_conductivityOfDrySoil = new OSQuantityEdit2("W/m*K", "W/m*K", "Btu*in/hr*ft^2*R", m_isIP);
   connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_conductivityOfDrySoil, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_conductivityOfDrySoil,row++,0,1,3);
 

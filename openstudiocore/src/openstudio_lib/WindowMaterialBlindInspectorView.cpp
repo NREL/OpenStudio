@@ -147,7 +147,7 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_slatConductivity = new OSQuantityEdit2("W/m*K","W/m*K","Btu*in/hr*ft2*R", m_isIP);
+  m_slatConductivity = new OSQuantityEdit2("W/m*K", "W/m*K", "Btu*in/hr*ft^2*R", m_isIP);
   connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_slatConductivity, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_slatConductivity,row++,0,1,3);
 

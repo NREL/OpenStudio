@@ -80,7 +80,7 @@ LightsDefinitionInspectorView::LightsDefinitionInspectorView(bool isIP, const op
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,2,1);
 
-  m_wattsPerSpaceFloorAreaEdit = new OSQuantityEdit2("W/m2","W/m2","W/ft2", m_isIP);
+  m_wattsPerSpaceFloorAreaEdit = new OSQuantityEdit2("W/m^2","W/m^2","W/ft^2", m_isIP);
   connect(this, &LightsDefinitionInspectorView::toggleUnitsClicked, m_wattsPerSpaceFloorAreaEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_wattsPerSpaceFloorAreaEdit,3,1);
 

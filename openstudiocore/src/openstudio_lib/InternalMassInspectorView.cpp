@@ -77,7 +77,7 @@ InternalMassDefinitionInspectorView::InternalMassDefinitionInspectorView(bool is
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,2,0);
 
-  m_surfaceAreaEdit = new OSQuantityEdit2("m2","m2","ft2", m_isIP);
+  m_surfaceAreaEdit = new OSQuantityEdit2("m^2","m^2","ft^2", m_isIP);
   connect(this, &InternalMassDefinitionInspectorView::toggleUnitsClicked, m_surfaceAreaEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_surfaceAreaEdit,3,0);
 
@@ -97,7 +97,7 @@ InternalMassDefinitionInspectorView::InternalMassDefinitionInspectorView(bool is
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,2,2);
 
-  m_surfaceAreaPerPersonEdit = new OSQuantityEdit2("m2/person","m2/person","ft2/person", m_isIP);
+  m_surfaceAreaPerPersonEdit = new OSQuantityEdit2("m^2/person","m^2/person","ft^2/person", m_isIP);
   connect(this, &InternalMassDefinitionInspectorView::toggleUnitsClicked, m_surfaceAreaPerPersonEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_surfaceAreaPerPersonEdit,3,2);
 
