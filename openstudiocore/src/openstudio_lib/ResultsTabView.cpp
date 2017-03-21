@@ -232,13 +232,15 @@ void ResultsView::searchForExistingResults(const openstudio::path &t_runDir, con
 
   LOG(Debug, "Looking for existing results in: " << openstudio::toString(t_reportsDir));
 
-  for ( openstudio::filesystem::directory_iterator end, dir(t_reportsDir); 
-        dir != end; 
-        ++dir ) 
-  {
-    openstudio::path p = *dir;
-    if (openstudio::toString(p.extension()) == ".html" || openstudio::toString(p.extension()) == ".htm") {
-      reports.push_back(p);
+  if( openstudio::filesystem::exists(t_reportsDir) ) {
+    for ( openstudio::filesystem::directory_iterator end, dir(t_reportsDir); 
+          dir != end; 
+          ++dir ) 
+    {
+      openstudio::path p = *dir;
+      if (openstudio::toString(p.extension()) == ".html" || openstudio::toString(p.extension()) == ".htm") {
+        reports.push_back(p);
+      }
     }
   }
 
