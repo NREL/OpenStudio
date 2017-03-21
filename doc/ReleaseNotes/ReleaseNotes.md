@@ -32,33 +32,12 @@ Measures
 * Reporting measures do not have access to offline JavaScript libraries included with the OpenStudio installation.  Measure writers can include offline JavaScript libraries in the resources directory of their measure.
 
 OpenStudioApp
-[REMOVE] * The apply measure now dialog does not correctly report advanced output.
 * The app may appear to freeze on return from BCL measure dialog on Mac, a workaround is to select File -> Quit and when prompted to save the Model, select cancel to abort the quit operation or press the escape key.
-[REMOVE] * The user is not prompted to save their model before running.
-[REMOVE] * Simulation results are deleted when saving an OSM on Mac.
-[REMOVE] * There is a crash if user turns on output variables then switch away from and back to the output variable tab.
 
 PAT 2.0
-[REMOVE] * Ability to access or start remote OpenStudio Server instances is not yet available
-[REMOVE] * Algorithmic sampling and optimization capabilities are not yet available
-* Cannot re-run a subset of the design alternatives
-* OpenStudio Measures with errors can be added to the project without warning 
-* Scatter Plot report does not work
-* “Duplicate Measure & Option” button on analysis page not functioning
 * “Create One Design Alternative with Each Measure Option” duplicates options that already exist
-* Measure option descriptions are not populated with the measure description by default.
 * Cannot enter user defined string for Measure Choice arguments
-* Project paths cannot contain whitespace or be on network drives
-* Columns do not correct size to data
-* User is not prompted to replace or rename seed model if one with same name is imported
-* Help text is not implemented 
-* Simulation information is not properly formatted on the run tab
-* User is not prompted with correct Save, Don't Save and Cancel options when closing project
 * Display name is not shown  when browsing measures
-* Copying a measure without renaming it causes an error
-* “New Measure” button is missing from BCL dialog
 * Measures associated with seed model are not imported
-* Cannot create and run a single design alternative 
-* Report name dropdown on run tab is not working correctly
 
 
