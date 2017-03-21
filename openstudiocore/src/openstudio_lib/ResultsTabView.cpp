@@ -75,6 +75,7 @@ void ResultsTabView::onUnitSystemChange(bool t_isIP)
 ResultsView::ResultsView(QWidget *t_parent)
   : QWidget(t_parent),
     m_isIP(true),
+    m_progressBar(new QProgressBar()),
     m_refreshBtn(new QPushButton("Refresh")),
     m_openResultsViewerBtn(new QPushButton("Open ResultsViewer\nfor Detailed Reports"))
 {
@@ -100,14 +101,25 @@ ResultsView::ResultsView(QWidget *t_parent)
 
   hLayout->addStretch();
 
+  hLayout->addWidget(m_progressBar, 0, Qt::AlignVCenter);
+  m_progressBar->setMinimum(0);
+  m_progressBar->setMaximum(100);
+  m_progressBar->setValue(0);
+  m_progressBar->setVisible(false); // make visible when load first page
+
   hLayout->addWidget(m_refreshBtn, 0, Qt::AlignVCenter);
-  m_refreshBtn->setVisible(false);
+  m_refreshBtn->setVisible(true);
 
   hLayout->addWidget(m_openResultsViewerBtn, 0, Qt::AlignVCenter);
 
   m_view = new QWebEngineView(this);
   m_view->settings()->setAttribute(QWebEngineSettings::WebAttribute::LocalContentCanAccessRemoteUrls, true);
   m_view->settings()->setAttribute(QWebEngineSettings::WebAttribute::SpatialNavigationEnabled, true);
+
+  connect(m_view, &QWebEngineView::loadFinished, this, &ResultsView::onLoadFinished);
+  connect(m_view, &QWebEngineView::loadProgress, this, &ResultsView::onLoadProgress);
+  connect(m_view, &QWebEngineView::loadStarted, this, &ResultsView::onLoadStarted);
+  connect(m_view, &QWebEngineView::renderProcessTerminated, this, &ResultsView::onRenderProcessTerminated);
   
   // Qt 5.8 and higher
   //m_view->setAttribute(QWebEngineSettings::WebAttribute::AllowRunningInsecureContent, true);
@@ -325,7 +337,7 @@ void ResultsView::populateComboBox(std::vector<openstudio::path> reports)
 
     fullPathString = toQString(report.string());
     QFile file(fullPathString);
-    //fullPathString.prepend("file:///");
+    fullPathString.prepend("file:///");
 
     if (openstudio::toString(report.filename()) == "eplustbl.html" || openstudio::toString(report.filename()) == "eplustbl.htm"){
       
@@ -369,17 +381,63 @@ void ResultsView::comboBoxChanged(int index)
 {
   QString filename = m_comboBox->itemData(index).toString();
 
-  m_view->setHtml("");
+  // DLM: setting html here causes a flicker, wish there was a better way to clear the current page
+  //m_view->setHtml("");
 
-  QFile file(filename);
-  QString content;
-  if(file.open(QIODevice::ReadOnly)) {
-    content = file.readAll();
-    file.close();
-  }
-  m_view->setHtml(content);
+  // DLM: there is a 2MB limit on content set in setHtml
+  //QFile file(filename);
+  //QString content;
+  //if(file.open(QIODevice::ReadOnly)) {
+  //  QTextStream in(&file);
+  //  in.setCodec("UTF-8");
+  //  content = in.readAll();
+  //  file.close();
+  //}
+  //m_view->setHtml(content);
 
-  //m_view->load(QUrl(filename));
+  m_progressBar->setVisible(true);
+  m_progressBar->setStyleSheet("");
+  m_progressBar->setFormat("");
+  m_progressBar->setTextVisible(false);
+
+  m_view->load(QUrl(filename));
 }
+
+void 	ResultsView::onLoadFinished(bool ok)
+{
+  QString title = m_view->title();
+  if (ok){
+    m_progressBar->setStyleSheet("");
+    m_progressBar->setFormat("");
+    m_progressBar->setTextVisible(false);
+  } else{
+    m_progressBar->setStyleSheet("QProgressBar::chunk {background-color: #FF0000;}");
+    m_progressBar->setFormat("Error");
+    m_progressBar->setTextVisible(true);
+  }
+}
+
+void 	ResultsView::onLoadProgress(int progress)
+{
+  m_progressBar->setStyleSheet("");
+  m_progressBar->setFormat("");
+  m_progressBar->setTextVisible(false);
+  m_progressBar->setValue(progress);
+}
+
+void 	ResultsView::onLoadStarted()
+{
+  m_progressBar->setStyleSheet("");
+  m_progressBar->setFormat("");
+  m_progressBar->setTextVisible(false);
+}
+
+void 	ResultsView::onRenderProcessTerminated(QWebEnginePage::RenderProcessTerminationStatus terminationStatus, int exitCode)
+{
+  m_progressBar->setStyleSheet("QProgressBar::chunk {background-color: #FF0000;}");
+  m_progressBar->setFormat("Error");
+  m_progressBar->setTextVisible(true);
+}
+
 
 } // openstudio

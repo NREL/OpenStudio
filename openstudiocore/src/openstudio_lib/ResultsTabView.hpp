@@ -38,7 +38,7 @@
 
 #include <QWidget>
 #include <QWebEngineView>
-
+#include <QProgressBar>
 
 class QComboBox;
 class QPushButton;
@@ -66,6 +66,12 @@ namespace openstudio {
       void openResultsViewerClicked();
       void comboBoxChanged(int index);
 
+      // DLM: for debugging
+      void 	onLoadFinished(bool ok);
+      void 	onLoadProgress(int progress);
+      void 	onLoadStarted();
+      void 	onRenderProcessTerminated(QWebEnginePage::RenderProcessTerminationStatus terminationStatus, int exitCode);
+
     private:
       REGISTER_LOGGER("openstudio::ResultsView");
       //openstudio::runmanager::RunManager runManager();
@@ -75,6 +81,8 @@ namespace openstudio {
 
       // utility bill results
       QLabel * m_reportLabel;
+
+      QProgressBar * m_progressBar;
       QPushButton * m_refreshBtn;
       QPushButton * m_openResultsViewerBtn;
       
