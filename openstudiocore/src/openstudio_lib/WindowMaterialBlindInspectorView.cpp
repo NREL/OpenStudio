@@ -107,7 +107,7 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_slatWidth = new OSQuantityEdit2("","","", m_isIP);
+  m_slatWidth = new OSQuantityEdit2("m","m","in", m_isIP);
   connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_slatWidth, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_slatWidth,row++,0,1,3);
 
@@ -117,7 +117,7 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_slatSeparation = new OSQuantityEdit2("","","", m_isIP);
+  m_slatSeparation = new OSQuantityEdit2("m","m","in", m_isIP);
   connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_slatSeparation, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_slatSeparation,row++,0,1,3);
 
@@ -127,7 +127,7 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_slatThickness = new OSQuantityEdit2("","","", m_isIP);
+  m_slatThickness = new OSQuantityEdit2("m","m","in", m_isIP);
   connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_slatThickness, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_slatThickness,row++,0,1,3);
 
@@ -137,7 +137,7 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_slatAngle = new OSQuantityEdit2("","","", m_isIP);
+  m_slatAngle = new OSQuantityEdit2("deg","deg","deg", m_isIP);
   connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_slatAngle, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_slatAngle,row++,0,1,3);
 
@@ -147,7 +147,7 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_slatConductivity = new OSQuantityEdit2("","","", m_isIP);
+  m_slatConductivity = new OSQuantityEdit2("W/m*K","W/m*K","Btu*in/hr*ft2*R", m_isIP);
   connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_slatConductivity, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_slatConductivity,row++,0,1,3);
 
@@ -307,7 +307,7 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_blindToGlassDistance = new OSQuantityEdit2("","","", m_isIP);
+  m_blindToGlassDistance = new OSQuantityEdit2("m","m","in", m_isIP);
   connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_blindToGlassDistance, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_blindToGlassDistance,row++,0,1,3);
 
@@ -357,7 +357,7 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_minimumSlatAngle = new OSQuantityEdit2("","","", m_isIP);
+  m_minimumSlatAngle = new OSQuantityEdit2("deg","deg","deg", m_isIP);
   connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_minimumSlatAngle, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_minimumSlatAngle,row++,0,1,3);
 
@@ -367,7 +367,7 @@ void WindowMaterialBlindInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_maximumSlatAngle = new OSQuantityEdit2("","","", m_isIP);
+  m_maximumSlatAngle = new OSQuantityEdit2("deg","deg","deg", m_isIP);
   connect(this, &WindowMaterialBlindInspectorView::toggleUnitsClicked, m_maximumSlatAngle, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_maximumSlatAngle,row++,0,1,3);
 

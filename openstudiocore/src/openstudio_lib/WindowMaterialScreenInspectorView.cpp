@@ -138,7 +138,7 @@ void WindowMaterialScreenInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_conductivity = new OSQuantityEdit2("","","", m_isIP);
+  m_conductivity = new OSQuantityEdit2("W/m*K","W/m*K","Btu*in/hr*ft2*R", m_isIP);
   connect(this, &WindowMaterialScreenInspectorView::toggleUnitsClicked, m_conductivity, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_conductivity,row++,0,1,3);
 
@@ -148,7 +148,7 @@ void WindowMaterialScreenInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_screenMaterialSpacing = new OSQuantityEdit2("","","", m_isIP);
+  m_screenMaterialSpacing = new OSQuantityEdit2("m","m","in", m_isIP);
   connect(this, &WindowMaterialScreenInspectorView::toggleUnitsClicked, m_screenMaterialSpacing, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_screenMaterialSpacing,row++,0,1,3);
 
@@ -158,7 +158,7 @@ void WindowMaterialScreenInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_screenMaterialDiameter = new OSQuantityEdit2("","","", m_isIP);
+  m_screenMaterialDiameter = new OSQuantityEdit2("m","m","in", m_isIP);
   connect(this, &WindowMaterialScreenInspectorView::toggleUnitsClicked, m_screenMaterialDiameter, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_screenMaterialDiameter,row++,0,1,3);
 
@@ -168,7 +168,7 @@ void WindowMaterialScreenInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_screenToGlassDistance = new OSQuantityEdit2("","","", m_isIP);
+  m_screenToGlassDistance = new OSQuantityEdit2("m","m","in", m_isIP);
   connect(this, &WindowMaterialScreenInspectorView::toggleUnitsClicked, m_screenToGlassDistance, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_screenToGlassDistance,row++,0,1,3);
 

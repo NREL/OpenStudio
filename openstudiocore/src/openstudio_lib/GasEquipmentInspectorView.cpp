@@ -70,7 +70,7 @@ GasEquipmentDefinitionInspectorView::GasEquipmentDefinitionInspectorView(bool is
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,2,0);
 
-  m_designLevelEdit = new OSQuantityEdit2("","","", m_isIP);
+  m_designLevelEdit = new OSQuantityEdit2("W","W","W", m_isIP);
   connect(this, &GasEquipmentDefinitionInspectorView::toggleUnitsClicked, m_designLevelEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_designLevelEdit,3,0);
 
@@ -80,7 +80,7 @@ GasEquipmentDefinitionInspectorView::GasEquipmentDefinitionInspectorView(bool is
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,2,1);
 
-  m_wattsPerSpaceFloorAreaEdit = new OSQuantityEdit2("","","", m_isIP);
+  m_wattsPerSpaceFloorAreaEdit = new OSQuantityEdit2("W/m2","W/m2","W/m2", m_isIP);
   connect(this, &GasEquipmentDefinitionInspectorView::toggleUnitsClicked, m_wattsPerSpaceFloorAreaEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_wattsPerSpaceFloorAreaEdit,3,1);
 
@@ -90,7 +90,7 @@ GasEquipmentDefinitionInspectorView::GasEquipmentDefinitionInspectorView(bool is
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,2,2);
 
-  m_wattsPerPersonEdit = new OSQuantityEdit2("","","", m_isIP);
+  m_wattsPerPersonEdit = new OSQuantityEdit2("W/Person","W/Person","W/Person", m_isIP);
   connect(this, &GasEquipmentDefinitionInspectorView::toggleUnitsClicked, m_wattsPerPersonEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_wattsPerPersonEdit,3,2);
 
@@ -130,7 +130,7 @@ GasEquipmentDefinitionInspectorView::GasEquipmentDefinitionInspectorView(bool is
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,8,0);
 
-  m_carbonDioxideGenerationRateEdit = new OSQuantityEdit2("","","", m_isIP);
+  m_carbonDioxideGenerationRateEdit = new OSQuantityEdit2("m3/s*W","m3/s*W","ft3/min*W", m_isIP);
   connect(this, &GasEquipmentDefinitionInspectorView::toggleUnitsClicked, m_carbonDioxideGenerationRateEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_carbonDioxideGenerationRateEdit,9,0);
 

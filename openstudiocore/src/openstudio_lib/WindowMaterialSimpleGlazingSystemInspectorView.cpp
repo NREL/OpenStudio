@@ -95,7 +95,7 @@ void WindowMaterialSimpleGlazingSystemInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_uFactor = new OSQuantityEdit2("","","", m_isIP);
+  m_uFactor = new OSQuantityEdit2("W/m2*K","W/m2*K","Btu/hr*ft2*R", m_isIP);
   connect(this, &WindowMaterialSimpleGlazingSystemInspectorView::toggleUnitsClicked, m_uFactor, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_uFactor,row++,0,1,3);
 

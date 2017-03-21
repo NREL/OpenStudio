@@ -490,14 +490,14 @@ QWidget * SimSettingsView::createSimulationControlWidget()
 
   addField(gridLayout,row,col,"Minimum Number Of Warmup Days",m_minimumNumberofWarmupDays);
   col = col + 2;
-  addField(gridLayout,row,col,"Loads Convergence Tolerance Value",m_loadsConvergenceToleranceValue);
+  addField(gridLayout,row,col,"Loads Convergence Tolerance Value","","","",m_loadsConvergenceToleranceValue);
 
   row = row + 2;
   spacerItem = new QSpacerItem(1,SPACERITEM_HEIGHT,QSizePolicy::Fixed,QSizePolicy::Fixed);
   gridLayout->addItem(spacerItem,row++,0);
   col = 0;
 
-  addField(gridLayout,row,col,"Temperature Convergence Tolerance Value",m_temperatureConvergenceToleranceValue);
+  addField(gridLayout,row,col,"Temperature Convergence Tolerance Value","deltaC","deltaC","deltaF",m_temperatureConvergenceToleranceValue);
   col = col + 2;
   addField(gridLayout,row,col,"Solar Distribution",m_solarDistribution);
   
@@ -537,9 +537,9 @@ QWidget * SimSettingsView::createSizingParametersWidget()
   int row = 0;
   int col = 0;
 
-  addField(gridLayout,row,col,"Heating Sizing Factor",m_heatingSizingFactor);
+  addField(gridLayout,row,col,"Heating Sizing Factor","","","",m_heatingSizingFactor);
   row = row + 2;
-  addField(gridLayout,row,col,"Cooling Sizing Factor",m_coolingSizingFactor);
+  addField(gridLayout,row,col,"Cooling Sizing Factor","","","",m_coolingSizingFactor);
   row = row + 2;
   addField(gridLayout,row,col,"Timesteps In Averaging Window",m_timestepsinAveragingWindow);
 
@@ -608,11 +608,11 @@ QWidget * SimSettingsView::createOutputControlReportingTolerancesWidget()
   int col = 0;
   QSpacerItem * spacerItem = nullptr;
 
-  addField(gridLayout,row,col,"Tolerance For Time Heating Setpoint Not Met",m_toleranceForTimeHeatingSetpointNotMet);
+  addField(gridLayout,row,col,"Tolerance For Time Heating Setpoint Not Met","deltaC","deltaC","deltaF",m_toleranceForTimeHeatingSetpointNotMet);
   col++;
   spacerItem = new QSpacerItem(SPACERITEM_WIDTH,1,QSizePolicy::Fixed,QSizePolicy::Fixed);
   gridLayout->addItem(spacerItem,row,col++);
-  addField(gridLayout,row,col,"Tolerance For Time Cooling Setpoint Not Met",m_toleranceForTimeCoolingSetpointNotMet);
+  addField(gridLayout,row,col,"Tolerance For Time Cooling Setpoint Not Met","deltaC","deltaC","deltaF",m_toleranceForTimeCoolingSetpointNotMet);
 
   auto widget = new QWidget();
   widget->setLayout(gridLayout);
@@ -740,18 +740,18 @@ QWidget * SimSettingsView::createHeatBalanceAlgorithmWidget()
   int col = 0;
   QSpacerItem * spacerItem = nullptr;
 
-  addField(gridLayout,row,col,"Surface Temperature Upper Limit",m_surfaceTemperatureUpperLimit);
+  addField(gridLayout,row,col,"Surface Temperature Upper Limit","C","C","F",m_surfaceTemperatureUpperLimit);
   col++;
   spacerItem = new QSpacerItem(SPACERITEM_WIDTH,1,QSizePolicy::Fixed,QSizePolicy::Fixed);
   gridLayout->addItem(spacerItem,row,col++);
-  addField(gridLayout,row,col,"Minimum Surface Convection Heat Transfer Coefficient Value",m_minimumSurfaceConvectionHeatTransferCoefficientValue);
+  addField(gridLayout,row,col,"Minimum Surface Convection Heat Transfer Coefficient Value","W/m2-K","W/m2-K","Btu/ft2-h-R",m_minimumSurfaceConvectionHeatTransferCoefficientValue);
   
   row = row + 2;
   spacerItem = new QSpacerItem(1,SPACERITEM_HEIGHT,QSizePolicy::Fixed,QSizePolicy::Fixed);
   gridLayout->addItem(spacerItem,row++,0);
   col = 0;
 
-  addField(gridLayout,row,col,"Maximum Surface Convection Heat Transfer Coefficient Value",m_maximumSurfaceConvectionHeatTransferCoefficientValue);
+  addField(gridLayout,row,col,"Maximum Surface Convection Heat Transfer Coefficient Value","W/m2-K","W/m2-K","Btu/ft2-h-R",m_maximumSurfaceConvectionHeatTransferCoefficientValue);
   col = col + 2;
   addField(gridLayout,row,col,"Algorithm",m_algorithmHeatBalance);
 
@@ -821,18 +821,18 @@ QWidget * SimSettingsView::createZoneCapacitanceMultipleResearchSpecialWidget()
   int col = 0;
   QSpacerItem * spacerItem = nullptr;
 
-  addField(gridLayout,row,col,"Temperature Capacity Multiplier",m_temperatureCapacityMultiplier);
+  addField(gridLayout,row,col,"Temperature Capacity Multiplier","","","",m_temperatureCapacityMultiplier);
   col++;
   spacerItem = new QSpacerItem(SPACERITEM_WIDTH,1,QSizePolicy::Fixed,QSizePolicy::Fixed);
   gridLayout->addItem(spacerItem,row,col++);
-  addField(gridLayout,row,col,"Humidity Capacity Multiplier",m_humidityCapacityMultiplier);
+  addField(gridLayout,row,col,"Humidity Capacity Multiplier","","","",m_humidityCapacityMultiplier);
 
   row = row + 2;
   spacerItem = new QSpacerItem(1,SPACERITEM_HEIGHT,QSizePolicy::Fixed,QSizePolicy::Fixed);
   gridLayout->addItem(spacerItem,row++,0);
   col = 0;
 
-  addField(gridLayout,row,col,"Carbon Dioxide Capacity Multiplier",m_carbonDioxideCapacityMultiplier);
+  addField(gridLayout,row,col,"Carbon Dioxide Capacity Multiplier","","","",m_carbonDioxideCapacityMultiplier);
 
   auto widget = new QWidget();
   widget->setLayout(gridLayout);
@@ -877,23 +877,23 @@ QWidget * SimSettingsView::createRadianceParametersWidget()
   col++;
   spacerItem = new QSpacerItem(SPACERITEM_WIDTH,1,QSizePolicy::Fixed,QSizePolicy::Fixed);
   gridLayout->addItem(spacerItem,row,col++);
-  addField(gridLayout,row,col,m_directThresholdLbl,"Direct Threshold: ",m_directThreshold);
+  addField(gridLayout,row,col,m_directThresholdLbl,"Direct Threshold: ","","","",m_directThreshold);
 
   row = row + 2;
   spacerItem = new QSpacerItem(1,SPACERITEM_HEIGHT,QSizePolicy::Fixed,QSizePolicy::Fixed);
   gridLayout->addItem(spacerItem,row++,0);
   col = 0;
 
-  addField(gridLayout,row,col,m_directCertaintyLbl,"Direct Certainty: ",m_directCertainty);
+  addField(gridLayout,row,col,m_directCertaintyLbl,"Direct Certainty: ","","","",m_directCertainty);
   col = col + 2;
-  addField(gridLayout,row,col,m_directJitterLbl,"Direct Jitter: ",m_directJitter);
+  addField(gridLayout,row,col,m_directJitterLbl,"Direct Jitter: ","","","",m_directJitter);
   
   row = row + 2;
   spacerItem = new QSpacerItem(1,SPACERITEM_HEIGHT,QSizePolicy::Fixed,QSizePolicy::Fixed);
   gridLayout->addItem(spacerItem,row++,0);
   col = 0;
 
-  addField(gridLayout,row,col,m_directPretestLbl,"Direct Pretest: ",m_directPretest);
+  addField(gridLayout,row,col,m_directPretestLbl,"Direct Pretest: ","","","",m_directPretest);
   col = col + 2;
   addField(gridLayout,row,col,m_ambientBouncesVMXLbl,"Ambient Bounces VMX: ",m_ambientBouncesVMX);
   
@@ -920,9 +920,9 @@ QWidget * SimSettingsView::createRadianceParametersWidget()
   gridLayout->addItem(spacerItem,row++,0);
   col = 0;
   
-  addField(gridLayout,row,col,m_limitWeightVMXLbl,"Limit Weight VMX: ",m_limitWeightVMX);
+  addField(gridLayout,row,col,m_limitWeightVMXLbl,"Limit Weight VMX: ","","","",m_limitWeightVMX);
   col = col + 2;
-  addField(gridLayout,row,col,m_limitWeightDMXLbl,"Limit Weight DMX: ",m_limitWeightDMX);
+  addField(gridLayout,row,col,m_limitWeightDMXLbl,"Limit Weight DMX: ","","","",m_limitWeightDMX);
   
   row = row + 2;
   spacerItem = new QSpacerItem(1,SPACERITEM_HEIGHT,QSizePolicy::Fixed,QSizePolicy::Fixed);
@@ -1085,6 +1085,9 @@ void SimSettingsView::addField(QGridLayout * gridLayout,
                                int row,
                                int column,
                                QString text,
+                               const std::string& modelUnits, 
+                               const std::string& siUnits, 
+                               const std::string& ipUnits, 
                                OSQuantityEdit2 * & quantityEdit)
 {
   auto label = new QLabel(text,this);
@@ -1092,7 +1095,7 @@ void SimSettingsView::addField(QGridLayout * gridLayout,
   label->setObjectName("H2");
   gridLayout->addWidget(label,row++,column);
 
-  quantityEdit = new OSQuantityEdit2("","","",m_isIP,this);
+  quantityEdit = new OSQuantityEdit2(modelUnits,siUnits,ipUnits,m_isIP,this);
   connect(this, &SimSettingsView::toggleUnitsClicked, quantityEdit, &OSQuantityEdit2::onUnitSystemChange);
 
   gridLayout->addWidget(quantityEdit,row,column);
@@ -1103,6 +1106,9 @@ void SimSettingsView::addField(QGridLayout * gridLayout,
                                int column,
                                QLabel * & label,
                                QString text,
+                               const std::string& modelUnits, 
+                               const std::string& siUnits, 
+                               const std::string& ipUnits, 
                                OSQuantityEdit2 * & quantityEdit)
 {
   label = new QLabel(text,this);
@@ -1110,7 +1116,7 @@ void SimSettingsView::addField(QGridLayout * gridLayout,
   label->setObjectName("H2");
   gridLayout->addWidget(label,row++,column);
 
-  quantityEdit = new OSQuantityEdit2("","","",m_isIP,this);
+  quantityEdit = new OSQuantityEdit2(modelUnits,siUnits,ipUnits,m_isIP,this);
   connect(this, &SimSettingsView::toggleUnitsClicked, quantityEdit, &OSQuantityEdit2::onUnitSystemChange);
 
   gridLayout->addWidget(quantityEdit,row,column);
