@@ -185,7 +185,7 @@ void ConstructionInternalSourceInspectorView::createLayout()
 
   ++row;
 
-  m_tubeSpacingEdit = new OSQuantityEdit2("","","", m_isIP);
+  m_tubeSpacingEdit = new OSQuantityEdit2("m","m","ft", m_isIP);
   connect(this, &ConstructionInternalSourceInspectorView::toggleUnitsClicked, m_tubeSpacingEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_tubeSpacingEdit, row, 0);
 

@@ -70,7 +70,7 @@ ElectricEquipmentDefinitionInspectorView::ElectricEquipmentDefinitionInspectorVi
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,2,0);
 
-  m_designLevelEdit = new OSQuantityEdit2("","","", m_isIP);
+  m_designLevelEdit = new OSQuantityEdit2("W","W","W", m_isIP);
   connect(this, &ElectricEquipmentDefinitionInspectorView::toggleUnitsClicked, m_designLevelEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_designLevelEdit,3,0);
 
@@ -80,7 +80,7 @@ ElectricEquipmentDefinitionInspectorView::ElectricEquipmentDefinitionInspectorVi
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,2,1);
 
-  m_wattsPerSpaceFloorAreaEdit = new OSQuantityEdit2("","","", m_isIP);
+  m_wattsPerSpaceFloorAreaEdit = new OSQuantityEdit2("W/m^2","W/m^2","W/ft^2", m_isIP);
   connect(this, &ElectricEquipmentDefinitionInspectorView::toggleUnitsClicked, m_wattsPerSpaceFloorAreaEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_wattsPerSpaceFloorAreaEdit,3,1);
 
@@ -90,7 +90,7 @@ ElectricEquipmentDefinitionInspectorView::ElectricEquipmentDefinitionInspectorVi
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,2,2);
 
-  m_wattsPerPersonEdit = new OSQuantityEdit2("","","", m_isIP);
+  m_wattsPerPersonEdit = new OSQuantityEdit2("W/person","W/person","W/person", m_isIP);
   connect(this, &ElectricEquipmentDefinitionInspectorView::toggleUnitsClicked, m_wattsPerPersonEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_wattsPerPersonEdit,3,2);
 
