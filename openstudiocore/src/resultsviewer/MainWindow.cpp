@@ -32,6 +32,7 @@
 
 #include "../utilities/core/String.hpp"
 #include "../utilities/core/TemporaryDirectory.hpp"
+#include "../utilities/core/Filesystem.hpp"
 #include "../utilities/sql/SqlFileEnums.hpp"
 
 #include <QComboBox>
@@ -1394,6 +1395,7 @@ namespace resultsviewer{
     {
       for (QString file : fileList)
       {
+        file = QString::fromStdString(openstudio::filesystem::canonical(toPath(file)).string());
         if (!QFile::exists(file)) {
           QMessageBox::information(this, tr("File Open"), tr("File not found:\n" + file.toUtf8()));
           continue;
@@ -1404,17 +1406,18 @@ namespace resultsviewer{
           openstudio::path basename = openstudio::toPath(QFileInfo(file).baseName());
           openstudio::path fullpath = openstudio::toPath(file);
           std::shared_ptr<openstudio::TemporaryDirectory> temporaryDirectory(new openstudio::TemporaryDirectory());
-          openstudio::path newpath = temporaryDirectory->path() / basename;
+          m_temporaryDirectories.push_back(temporaryDirectory);
+          openstudio::path temporaryPath = openstudio::filesystem::canonical(temporaryDirectory->path());
+          openstudio::path newpath = temporaryPath / basename;
           QFile::copy(openstudio::toQString(fullpath), openstudio::toQString(newpath));
 
           openstudio::path eplustbl = fullpath.parent_path() / openstudio::toPath("eplustbl.htm");
           if (QFile::exists(toQString(eplustbl)))
           {
-            QFile::copy(openstudio::toQString(eplustbl), openstudio::toQString(temporaryDirectory->path() / openstudio::toPath("eplustbl.htm")));
+            QFile::copy(openstudio::toQString(eplustbl), openstudio::toQString(temporaryPath / openstudio::toPath("eplustbl.htm")));
           }
 
           file = openstudio::toQString(newpath);
-          m_temporaryDirectories.push_back(temporaryDirectory);
         }
 
         QFileInfo info(file); // handles windows links and "\"
