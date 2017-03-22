@@ -74,9 +74,9 @@ GasEquipmentDefinitionInspectorView::GasEquipmentDefinitionInspectorView(bool is
   connect(this, &GasEquipmentDefinitionInspectorView::toggleUnitsClicked, m_designLevelEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_designLevelEdit,3,0);
 
-  // Energy Per Space Floor Area
+  // Power Per Space Floor Area
 
-  label = new QLabel("Energy Per Space Floor Area: ");
+  label = new QLabel("Power Per Space Floor Area: ");
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,2,1);
 
@@ -84,9 +84,9 @@ GasEquipmentDefinitionInspectorView::GasEquipmentDefinitionInspectorView(bool is
   connect(this, &GasEquipmentDefinitionInspectorView::toggleUnitsClicked, m_wattsPerSpaceFloorAreaEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_wattsPerSpaceFloorAreaEdit,3,1);
 
-  // Energy Per Person
+  // Power Per Person
 
-  label = new QLabel("Energy Per Person: ");
+  label = new QLabel("Power Per Person: ");
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,2,2);
 
@@ -130,7 +130,7 @@ GasEquipmentDefinitionInspectorView::GasEquipmentDefinitionInspectorView(bool is
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,8,0);
 
-  m_carbonDioxideGenerationRateEdit = new OSQuantityEdit2("m^3/s*W","m^3/s*W","ft^3/min*W", m_isIP);
+  m_carbonDioxideGenerationRateEdit = new OSQuantityEdit2("m^3/s*W", "L/s*W", "ft^3*hr/min*Btu", m_isIP);
   connect(this, &GasEquipmentDefinitionInspectorView::toggleUnitsClicked, m_carbonDioxideGenerationRateEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_carbonDioxideGenerationRateEdit,9,0);
 

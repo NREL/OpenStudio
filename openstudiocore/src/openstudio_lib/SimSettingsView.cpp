@@ -744,14 +744,14 @@ QWidget * SimSettingsView::createHeatBalanceAlgorithmWidget()
   col++;
   spacerItem = new QSpacerItem(SPACERITEM_WIDTH,1,QSizePolicy::Fixed,QSizePolicy::Fixed);
   gridLayout->addItem(spacerItem,row,col++);
-  addField(gridLayout,row,col,"Minimum Surface Convection Heat Transfer Coefficient Value","W/m^2*K","W/m^2*K","Btu/ft^2*h*R",m_minimumSurfaceConvectionHeatTransferCoefficientValue);
+  addField(gridLayout,row,col,"Minimum Surface Convection Heat Transfer Coefficient Value","W/m^2*K","W/m^2*K","Btu/ft^2*hr*R",m_minimumSurfaceConvectionHeatTransferCoefficientValue);
   
   row = row + 2;
   spacerItem = new QSpacerItem(1,SPACERITEM_HEIGHT,QSizePolicy::Fixed,QSizePolicy::Fixed);
   gridLayout->addItem(spacerItem,row++,0);
   col = 0;
 
-  addField(gridLayout,row,col,"Maximum Surface Convection Heat Transfer Coefficient Value","W/m^2*K","W/m^2*K","Btu/ft^2*h*R",m_maximumSurfaceConvectionHeatTransferCoefficientValue);
+  addField(gridLayout,row,col,"Maximum Surface Convection Heat Transfer Coefficient Value","W/m^2*K","W/m^2*K","Btu/ft^2*hr*R",m_maximumSurfaceConvectionHeatTransferCoefficientValue);
   col = col + 2;
   addField(gridLayout,row,col,"Algorithm",m_algorithmHeatBalance);
 

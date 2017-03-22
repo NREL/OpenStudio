@@ -74,9 +74,9 @@ ElectricEquipmentDefinitionInspectorView::ElectricEquipmentDefinitionInspectorVi
   connect(this, &ElectricEquipmentDefinitionInspectorView::toggleUnitsClicked, m_designLevelEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_designLevelEdit,3,0);
 
-  // Energy Per Space Floor Area
+  // Watts Per Space Floor Area
 
-  label = new QLabel("Energy Per Space Floor Area: ");
+  label = new QLabel("Watts Per Space Floor Area: ");
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,2,1);
 
@@ -84,9 +84,9 @@ ElectricEquipmentDefinitionInspectorView::ElectricEquipmentDefinitionInspectorVi
   connect(this, &ElectricEquipmentDefinitionInspectorView::toggleUnitsClicked, m_wattsPerSpaceFloorAreaEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_wattsPerSpaceFloorAreaEdit,3,1);
 
-  // Energy Per Person
+  // Watts Per Person
 
-  label = new QLabel("Energy Per Person: ");
+  label = new QLabel("Watts Per Person: ");
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,2,2);
 
