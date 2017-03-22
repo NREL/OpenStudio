@@ -104,7 +104,7 @@ void ConstructionFfactorGroundFloorInspectorView::createLayout()
 
   ++row;
 
-  m_ffactorEdit = new OSQuantityEdit2("W/m*K", "W/m*K", "Btu*in/hr*ft^2*R", m_isIP);
+  m_ffactorEdit = new OSQuantityEdit2("W/m*K", "W/m*K", "Btu/hr*ft*R", m_isIP);
   connect(this, &ConstructionFfactorGroundFloorInspectorView::toggleUnitsClicked, m_ffactorEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_ffactorEdit, row, 0);
 

@@ -189,7 +189,7 @@ void MaterialRoofVegetationInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_densityOfDrySoil = new OSQuantityEdit2("kg/m3","kg/m3","kg/m3", m_isIP);
+  m_densityOfDrySoil = new OSQuantityEdit2("kg/m^3","kg/m^3","lb/ft^3", m_isIP);
   connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_densityOfDrySoil, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_densityOfDrySoil,row++,0,1,3);
 
