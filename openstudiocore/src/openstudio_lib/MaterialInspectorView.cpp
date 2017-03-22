@@ -147,7 +147,7 @@ void MaterialInspectorView::createLayout()
   label->setObjectName("H2");
   vLayout->addWidget(label);
 
-  m_density = new OSQuantityEdit2("kg/m^3","kg/m^3","lbm/ft^3", m_isIP);
+  m_density = new OSQuantityEdit2("kg/m^3","kg/m^3","lb/ft^3", m_isIP);
   connect(this, &MaterialInspectorView::toggleUnitsClicked, m_density, &OSQuantityEdit2::onUnitSystemChange);
   vLayout->addWidget(m_density);
 
