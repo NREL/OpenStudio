@@ -88,30 +88,6 @@ namespace detail {
     std::string measureDirName() const;
     bool setMeasureDirName(const std::string& measureDirName);
 
-    boost::optional<std::string> measureId() const;
-    bool setMeasureId(const std::string& id);
-    void resetMeasureId();
-
-    boost::optional<UUID> measureUUID() const;
-    bool setMeasureUUID(const UUID& uuid);
-    void resetMeasureUUID();
-
-    boost::optional<std::string> versionId() const;
-    bool setVersionId(const std::string& id);
-    void resetVersionId();
-
-    boost::optional<UUID> versionUUID() const;
-    bool setVersionUUID(const UUID& uuid);
-    void resetVersionUUID();
-
-    boost::optional<std::string> taxonomy() const;
-    bool setTaxonomy(const std::string& taxonomy);
-    void resetTaxonomy();
-
-    boost::optional<MeasureType> measureType() const;
-    bool setMeasureType(const MeasureType& measureType);
-    void resetMeasureType();
-
     boost::optional<std::string> name() const;
     bool setName(const std::string& name);
     void resetName();
@@ -143,10 +119,6 @@ namespace detail {
     REGISTER_LOGGER("openstudio.MeasureStep");
 
     std::string m_measureDirName;
-    boost::optional<std::string> m_measureId;
-    boost::optional<std::string> m_versionId;
-    boost::optional<std::string> m_taxonomy;
-    boost::optional<MeasureType> m_measureType;
     boost::optional<std::string> m_name;
     boost::optional<std::string> m_description;
     boost::optional<std::string> m_modelerDescription;

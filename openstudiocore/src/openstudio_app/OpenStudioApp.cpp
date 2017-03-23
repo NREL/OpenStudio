@@ -39,6 +39,7 @@
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/ApplicationPathHelpers.hpp"
+#include "../utilities/core/Filesystem.hpp"
 
 #include "../utilities/idf/IdfFile.hpp"
 #include "../utilities/idf/IdfObject.hpp"
@@ -121,6 +122,8 @@
 
 #include <OpenStudio.hxx>
 #include <utilities/idd/IddEnums.hxx>
+#include <sstream>
+#include <cstdlib>
 
 using namespace openstudio::model;
 
@@ -152,6 +155,13 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv)
   }
 
   #ifdef Q_OS_MAC
+    std::stringstream webenginePath;
+    webenginePath << QCoreApplication::applicationDirPath().toStdString();
+    webenginePath << "/../Frameworks/QtWebEngineCore.framework/Versions/5/Helpers/QtWebEngineProcess.app/Contents/MacOS/QtWebEngineProcess";
+    if( filesystem::exists(filesystem::path(webenginePath.str())) ) { 
+      setenv("QTWEBENGINEPROCESS_PATH",webenginePath.str().c_str(),true);
+    }
+
     setQuitOnLastWindowClosed( false );
 
     m_startupMenu = std::shared_ptr<StartupMenu>(new StartupMenu());

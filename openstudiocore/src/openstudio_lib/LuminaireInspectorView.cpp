@@ -70,7 +70,7 @@ LuminaireDefinitionInspectorView::LuminaireDefinitionInspectorView(bool isIP, co
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,2,0);
 
-  m_lightingPowerEdit = new OSQuantityEdit2("","","", m_isIP);
+  m_lightingPowerEdit = new OSQuantityEdit2("W","W","W", m_isIP);
   connect(this, &LuminaireDefinitionInspectorView::toggleUnitsClicked, m_lightingPowerEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_lightingPowerEdit,3,0);
 

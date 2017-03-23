@@ -36,6 +36,7 @@
 #include "../utilities/core/Path.hpp"
 #include "../utilities/data/Variant.hpp"
 #include "../utilities/time/DateTime.hpp"
+#include "../utilities/bcl/BCLMeasure.hpp"
 
 namespace openstudio {
 namespace detail {
@@ -104,6 +105,28 @@ class UTILITIES_API WorkflowStepResult_Impl {
 
   boost::optional<DateTime> completedAt() const;
 
+  boost::optional<MeasureType> measureType() const;
+
+  boost::optional<std::string> measureName() const;
+
+  boost::optional<std::string> measureId() const;
+
+  boost::optional<UUID> measureUUID() const;
+
+  boost::optional<std::string> measureVersionId() const;
+
+  boost::optional<UUID> measureVersionUUID() const;
+
+  boost::optional<DateTime> measureVersionModified() const;
+
+  boost::optional<std::string> measureXmlChecksum() const;
+
+  boost::optional<std::string> measureClassName() const;
+
+  boost::optional<std::string> measureDisplayName() const;
+
+  boost::optional<std::string> measureTaxonomy() const;
+
   boost::optional<StepResult> stepResult() const;
 
   boost::optional<std::string> stepInitialCondition() const;
@@ -138,6 +161,39 @@ class UTILITIES_API WorkflowStepResult_Impl {
 
   void setCompletedAt(const DateTime& dateTime);
   void resetCompletedAt();
+
+  bool setMeasureType(const MeasureType& measureType);
+  void resetMeasureType();
+
+  bool setMeasureName(const std::string& name);
+  void resetMeasureName();
+
+  bool setMeasureId(const std::string& id);
+  void resetMeasureId();
+
+  bool setMeasureUUID(const UUID& uuid);
+  void resetMeasureUUID();
+
+  bool setMeasureVersionId(const std::string& id);
+  void resetMeasureVersionId();
+
+  bool setMeasureVersionUUID(const UUID& uuid);
+  void resetMeasureVersionUUID();
+
+  bool setMeasureVersionModified(const DateTime& modified);
+  void resetMeasureVersionModified();
+
+  bool setMeasureXmlChecksum(const std::string& checksum);
+  void resetMeasureXmlChecksum();
+  
+  bool setMeasureClassName(const std::string& className);
+  void resetMeasureClassName();
+    
+  bool setMeasureDisplayName(const std::string& displayName);
+  void resetMeasureDisplayName();
+
+  bool setMeasureTaxonomy(const std::string& taxonomy);
+  void resetMeasureTaxonomy();
 
   void setStepResult(const StepResult& result);
   void resetStepResult();
@@ -174,6 +230,15 @@ class UTILITIES_API WorkflowStepResult_Impl {
 
    boost::optional<DateTime> m_startedAt;
    boost::optional<DateTime> m_completedAt;
+   boost::optional<MeasureType> m_measureType;
+   boost::optional<std::string> m_measureName;
+   boost::optional<std::string> m_measureId;
+   boost::optional<std::string> m_measureVersionId;
+   boost::optional<std::string> m_measureVersionModified;
+   boost::optional<std::string> m_measureXmlChecksum;
+   boost::optional<std::string> m_measureClassName;
+   boost::optional<std::string> m_measureDisplayName;
+   boost::optional<std::string> m_measureTaxonomy;
    boost::optional<StepResult> m_stepResult;
    boost::optional<std::string> m_stepInitialCondition;
    boost::optional<std::string> m_stepFinalCondition;

@@ -3,29 +3,24 @@
   "weather_file": "./USA_CO_Golden-NREL.724666_TMY3.epw",
   "seed_file": "1_9_0/example.osm",
   "file_paths": ["./utilities/Filetypes", "osversion"],
-  "measure_paths": ["./utilities/BCL/Measures/v2"],
+  "measure_paths": ["./utilities/BCL/Measures/v2", "./utilities/BCL/Measures/v3"],
   "steps": [
     {
       "measure_dir_name": "IncreaseWallRValue",
       "arguments": {
-        "cost": 123.321,
-        "percent_increase": 5,
-        "operating_expenses": 0
+        "r_value": 30.1
       }
     },
     {
       "measure_dir_name": "IncreaseRoofRValue",
       "arguments": {
-        "cost": 321.123,
-        "percent_increase": 15,
-        "space_type": "*All*"
+        "r_value": 30
       }
     },
     {
-      "measure_dir_name": "DecreaseThermalMass",
+      "measure_dir_name": "SetEplusInfiltration",
       "arguments": {
-        "has_bool": true,
-        "percent_decrease": 5
+        "flowPerZoneFloorArea": 10.76
       }
     }
   ],

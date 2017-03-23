@@ -174,7 +174,11 @@ elseif( WIN32 )
   
   add_custom_command(TARGET ${target_name}
     POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${icudtl} $<TARGET_FILE_DIR:${target_name}>/ )
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${icudtl} $<TARGET_FILE_DIR:${target_name}>/ 
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${qweb_resources} $<TARGET_FILE_DIR:${target_name}>/ 
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${qweb_resources_100} $<TARGET_FILE_DIR:${target_name}>/ 
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${qweb_resources_200} $<TARGET_FILE_DIR:${target_name}>/ )
+
 endif()
 
 set(depends
@@ -192,8 +196,6 @@ set(depends
 )
 
 target_link_libraries(${target_name} ${depends})
-
-target_link_libraries(${target_name} ${QT_SHARED_LIBS})
 
 # because the app calls the cli
 add_dependencies(${target_name} openstudio)
@@ -252,6 +254,9 @@ endif()
 # since on apple the whole app bundle is installed (including these webkit components) we can exclude apple
 if( NOT APPLE )
   install(FILES ${icudtl} DESTINATION bin COMPONENT OpenStudioApp )
+  install(FILES ${qweb_resources} DESTINATION bin COMPONENT OpenStudioApp )
+  install(FILES ${qweb_resources_100} DESTINATION bin COMPONENT OpenStudioApp )
+  install(FILES ${qweb_resources_200} DESTINATION bin COMPONENT OpenStudioApp )
   if(WIN32)
     install(PROGRAMS ${QtWebEngineProcess} DESTINATION bin COMPONENT OpenStudioApp )
     install(PROGRAMS $<TARGET_FILE:Qt5::QWindowsIntegrationPlugin> DESTINATION bin/platforms/ COMPONENT OpenStudioApp)
@@ -276,8 +281,8 @@ endif()
 if( APPLE )
   list(APPEND QTPLUGINS "\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/platforms/libqcocoa.dylib")
   list(APPEND QTPLUGINS "\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/sqldrivers/libqsqlite.dylib")
-  install(PROGRAMS ${QtWebEngineProcess} DESTINATION OpenStudioApp.app/Contents/MacOS/ COMPONENT OpenStudioApp )
-  list(APPEND QTPLUGINS "\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/QtWebEngineProcess")
+  install(DIRECTORY ${QtWebEngineProcess} DESTINATION "OpenStudioApp.app/Contents/Frameworks/QtWebEngineCore.framework/Versions/5/Helpers/" COMPONENT OpenStudioApp USE_SOURCE_PERMISSIONS)
+  list(APPEND QTPLUGINS "\${CMAKE_INSTALL_PREFIX}/OpenStudioApp.app/Contents/Frameworks/QtWebEngineCore.framework/Versions/5/Helpers/QtWebEngineProcess.app/Contents/MacOS/QtWebEngineProcess")
 endif()
 
 if(WIN32 OR APPLE)
@@ -292,6 +297,7 @@ set(${target_name}_test_src
   test/OpenStudioAppFixture.hpp
   test/OpenStudioAppFixture.cpp
   test/Resources_GTest.cpp
+  test/Units_GTest.cpp
 )
 
 set(${target_name}_test_depends

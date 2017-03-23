@@ -155,7 +155,7 @@ void WindowMaterialShadeInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_thickness = new OSQuantityEdit2("","","", m_isIP);
+  m_thickness = new OSQuantityEdit2("m","m","in", m_isIP);
   connect(this, &WindowMaterialShadeInspectorView::toggleUnitsClicked, m_thickness, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_thickness,row++,0,1,3);
 
@@ -165,7 +165,7 @@ void WindowMaterialShadeInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_conductivity = new OSQuantityEdit2("","","", m_isIP);
+  m_conductivity = new OSQuantityEdit2("W/m*K", "W/m*K", "Btu*in/hr*ft^2*R", m_isIP);
   connect(this, &WindowMaterialShadeInspectorView::toggleUnitsClicked, m_conductivity, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_conductivity,row++,0,1,3);
 
@@ -175,7 +175,7 @@ void WindowMaterialShadeInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_shadeToGlassDistance = new OSQuantityEdit2("","","", m_isIP);
+  m_shadeToGlassDistance = new OSQuantityEdit2("m","m","in", m_isIP);
   connect(this, &WindowMaterialShadeInspectorView::toggleUnitsClicked, m_shadeToGlassDistance, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_shadeToGlassDistance,row++,0,1,3);
 

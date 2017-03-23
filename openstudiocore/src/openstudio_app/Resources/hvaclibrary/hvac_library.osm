@@ -225,7 +225,7 @@ OS:SetpointManager:SingleZone:Reheat,
 
 OS:SetpointManager:SingleZone:Cooling,
   {4ce287f0-a6d6-4e3f-abb9-1e8b773ca80a}, !- Handle
-  Setpoint Manager Single Zone Cooling, !- Name
+  Setpoint Manager Single Zone Cooling,   !- Name
   Temperature,                            !- Control Variable
   -99,                                    !- Minimum Supply Air Temperature {C}
   99,                                     !- Maximum Supply Air Temperature {C}
@@ -234,7 +234,7 @@ OS:SetpointManager:SingleZone:Cooling,
 
 OS:SetpointManager:SingleZone:Heating,
   {a1707587-1ec9-4bed-8356-2ce5d42e9137}, !- Handle
-  Setpoint Manager Single Zone Heating, !- Name
+  Setpoint Manager Single Zone Heating,   !- Name
   Temperature,                            !- Control Variable
   -99,                                    !- Minimum Supply Air Temperature {C}
   99,                                     !- Maximum Supply Air Temperature {C}

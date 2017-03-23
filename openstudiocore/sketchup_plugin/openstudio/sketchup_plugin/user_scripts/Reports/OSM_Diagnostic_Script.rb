@@ -27,7 +27,7 @@
 ########################################################################################################################
 
 # Each user script is implemented within a class that derives from OpenStudio::Ruleset::UserScript
-class DiagnosticScript < OpenStudio::Ruleset::UtilityUserScript
+class DiagnosticScript < OpenStudio::Ruleset::ModelUserScript
 
   # override name to return the name of your script
   def name
@@ -36,7 +36,7 @@ class DiagnosticScript < OpenStudio::Ruleset::UtilityUserScript
 
   # returns a vector of arguments, the runner will present these arguments to the user
   # then pass in the results on run
-  def arguments()
+  def arguments(model)
     result = OpenStudio::Ruleset::OSArgumentVector.new
 
     open_path = OpenStudio::Ruleset::OSArgument::makePathArgument("open_path", true, "osm")
@@ -63,10 +63,10 @@ class DiagnosticScript < OpenStudio::Ruleset::UtilityUserScript
 
   # override run to implement the functionality of your script
   # model is an OpenStudio::Model::Model, runner is a OpenStudio::Ruleset::UserScriptRunner
-  def run(runner, user_arguments)
-    super(runner, user_arguments)
+  def run(model, runner, user_arguments)
+    super(model, runner, user_arguments)
     
-    if not runner.validateUserArguments(arguments,user_arguments)
+    if not runner.validateUserArguments(arguments(model),user_arguments)  
       return false
     end
     
@@ -182,7 +182,7 @@ class DiagnosticScript < OpenStudio::Ruleset::UtilityUserScript
     sub_surfaces = model.getSubSurfaces
     # Find base sub-surfaces with less than three vertices
     puts ""
-    puts "Surfaces with less than three vertices"
+    puts "SubSurfaces with less than three vertices"
     switch = 0
     sub_surfaces.each do |sub_surface|
       vertices = sub_surface.vertices

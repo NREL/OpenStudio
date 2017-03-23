@@ -523,8 +523,8 @@ endif()
 
 # openstudio gems
 
-set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20170308.tar.gz")
-set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "90f322de55c44b34db07a500c7381762")
+set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20170317.tar.gz")
+set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "c8a66d5cb4d0c39dbdd32c67084562fb")
 
 set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
 if(EXISTS "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}")
@@ -849,9 +849,16 @@ if(BUILD_OS_APP)
   find_package(Qt5WebEngine 5.6.1 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
   find_package(Qt5WebEngineWidgets 5.6.1 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
 
-  find_program(QtWebEngineProcess NAMES QtWebEngineProcess PATHS "${QT_INSTALL_DIR}/bin/" "${QT_INSTALL_DIR}/libexec/" "${QT_INSTALL_DIR}/lib/QtWebEngineCore.framework/Helpers" NO_DEFAULT_PATH)
+  if( APPLE )
+    set(QtWebEngineProcess "${QT_INSTALL_DIR}/lib/QtWebEngineCore.framework/Helpers/QtWebEngineProcess.app" CACHE PATH "Path to the QtWebEngineProcess")
+  else()
+    find_program(QtWebEngineProcess NAMES QtWebEngineProcess PATHS "${QT_INSTALL_DIR}/bin/" "${QT_INSTALL_DIR}/libexec/" "${QT_INSTALL_DIR}/lib/QtWebEngineCore.framework/Helpers" NO_DEFAULT_PATH)
+  endif()
   find_file(icudtl NAMES icudtl.dat PATHS "${QT_INSTALL_DIR}/resources/" "${QT_INSTALL_DIR}/lib/QtWebEngineCore.framework/Resources" NO_DEFAULT_PATH)
-
+  find_file(qweb_resources NAMES qtwebengine_resources.pak PATHS "${QT_INSTALL_DIR}/resources/" "${QT_INSTALL_DIR}/lib/QtWebEngineCore.framework/Resources" NO_DEFAULT_PATH)
+  find_file(qweb_resources_100 NAMES qtwebengine_resources_100p.pak PATHS "${QT_INSTALL_DIR}/resources/" "${QT_INSTALL_DIR}/lib/QtWebEngineCore.framework/Resources" NO_DEFAULT_PATH)
+  find_file(qweb_resources_200 NAMES qtwebengine_resources_200p.pak PATHS "${QT_INSTALL_DIR}/resources/" "${QT_INSTALL_DIR}/lib/QtWebEngineCore.framework/Resources" NO_DEFAULT_PATH)
+  
   list(APPEND QT_WEB_LIBS Qt5::Core)
   list(APPEND QT_WEB_LIBS Qt5::Gui)
   list(APPEND QT_WEB_LIBS Qt5::WebEngine)
@@ -901,10 +908,13 @@ if( WIN32 )
 endif()
 
 list(APPEND QT_INCLUDES ${Qt5Core_INCLUDE_DIRS})
+list(APPEND QT_INCLUDES ${Qt5Concurrent_INCLUDE_DIRS})
 list(APPEND QT_INCLUDES ${Qt5Widgets_INCLUDE_DIRS})
 list(APPEND QT_INCLUDES ${Qt5Xml_INCLUDE_DIRS})
 list(APPEND QT_INCLUDES ${Qt5Sql_INCLUDE_DIRS})
 list(APPEND QT_INCLUDES ${Qt5Network_INCLUDE_DIRS})
+list(APPEND QT_INCLUDES ${Qt5Gui_INCLUDE_DIRS})
+list(APPEND QT_INCLUDES ${Qt5PrintSupport_INCLUDE_DIRS})
 
 if( UNIX )
   list(APPEND QT_INCLUDES ${Qt5XcbQpa_INCLUDE_DIRS})
@@ -1148,6 +1158,8 @@ if(BUILD_OS_APP)
   list(APPEND project_directories "bimserver")
   list(APPEND project_directories "openstudio_lib")
   list(APPEND project_directories "openstudio_app")
+  list(APPEND project_directories "qwt")
+  list(APPEND project_directories "resultsviewer")
 endif()
 
 # Include the resources, should happen after find EnergyPlus
@@ -1408,7 +1420,9 @@ set(CPACK_PACKAGE_VERSION_PATCH ${OpenStudio_VERSION_PATCH})
 set(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${OPENSTUDIO_LONG_VERSION}-${CMAKE_SYSTEM_NAME}")
 set(CPACK_PACKAGE_CONTACT "openstudio@nrel.gov")
 
-if( UNIX )
+if( APPLE )
+  set( CPACK_IFW_TARGET_DIRECTORY /Applications/OpenStudio-${OpenStudio_VERSION}/ )
+elseif( UNIX )
   set( CPACK_IFW_TARGET_DIRECTORY /usr/local/openstudio-${OpenStudio_VERSION}/ )
 endif()
 
@@ -1440,6 +1454,10 @@ elseif( WIN32 )
   foreach(msvc_file IN LISTS ENERGYPLUS_MSVC_FILES)
     install(PROGRAMS "${msvc_file}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
   endforeach()
+  file(GLOB ENERGYPLUS_VCRUNTIME_FILES "${ENERGYPLUS_DIR}/VCRUNTIME*.dll")
+  foreach(vcruntime_file IN LISTS ENERGYPLUS_VCRUNTIME_FILES)
+    install(PROGRAMS "${vcruntime_file}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
+  endforeach()
   #install(PROGRAMS "${ENERGYPLUS_PATH}/libgfortran.3.dylib" DESTINATION ./EnergyPlus/)
   #install(PROGRAMS "${ENERGYPLUS_PATH}/libquadmath.0.dylib" DESTINATION ./EnergyPlus/)
 else()
@@ -1461,6 +1479,7 @@ if( BUILD_PAT AND APPLE )
   install(PROGRAMS "${EXPAND_OBJECTS}" DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/EnergyPlus/ COMPONENT PAT )
   install(PROGRAMS "${ENERGYPLUS_DIR}/libgfortran.3.dylib" DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/EnergyPlus/ COMPONENT PAT )
   install(PROGRAMS "${ENERGYPLUS_DIR}/libquadmath.0.dylib" DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/EnergyPlus/ COMPONENT PAT )
+  install(DIRECTORY "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}/usr/local/radiance/" DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/Radiance/ COMPONENT PAT USE_SOURCE_PERMISSIONS )
 endif()
 
 include(CPack)
@@ -1496,6 +1515,11 @@ cpack_add_component(OpenStudioApp
   DESCRIPTION "OpenStudio Application"
 )
 
+cpack_add_component(ResultsViewer
+  DISPLAY_NAME "ResultsViewer"
+  DESCRIPTION "ResultsViewer"
+)
+
 cpack_add_component(EnergyPlus
   DISPLAY_NAME "EnergyPlus"
   DESCRIPTION "Minimal EnergyPlus installation"
@@ -1511,27 +1535,57 @@ cpack_add_component(Resources
   DESCRIPTION "Resource Files used by the OpenStudio Application and SketchUp Plugin"
 )
 
-cpack_ifw_configure_component(OpenStudioApp
-  DEPENDS Resources CLI
-  SCRIPT src/openstudio_app/install_operations.qs
+cpack_ifw_configure_component(SketchUpPlugin
+  DEPENDS Resources
+  SCRIPT sketchup_plugin/install_operations.qs
+  REQUIRES_ADMIN_RIGHTS
 )
 
 cpack_ifw_configure_component(CLI
   SCRIPT src/cli/install_operations.qs
+  REQUIRES_ADMIN_RIGHTS
 )
 
-cpack_ifw_configure_component(SketchUpPlugin
-  DEPENDS Resources
-  SCRIPT sketchup_plugin/install_operations.qs
+cpack_ifw_configure_component(RubyAPI
+  REQUIRES_ADMIN_RIGHTS
 )
 
-cpack_ifw_configure_component(Unspecified
-  SCRIPT src/install_utility/install_operations.qs
+cpack_ifw_configure_component(CSharpAPI
+  REQUIRES_ADMIN_RIGHTS
 )
 
 cpack_ifw_configure_component(PAT
   DEPENDS CLI RubyAPI
   SCRIPT pat/install_operations.qs
+  REQUIRES_ADMIN_RIGHTS
+)
+
+cpack_ifw_configure_component(OpenStudioApp
+  DEPENDS Resources CLI
+  SCRIPT src/openstudio_app/install_operations.qs
+  REQUIRES_ADMIN_RIGHTS
+)
+
+cpack_ifw_configure_component(ResultsViewer
+  SCRIPT src/resultsviewer/install_operations.qs
+  REQUIRES_ADMIN_RIGHTS
+)
+
+cpack_ifw_configure_component(EnergyPlus
+  REQUIRES_ADMIN_RIGHTS
+)
+
+cpack_ifw_configure_component(Radiance
+  REQUIRES_ADMIN_RIGHTS
+)
+
+cpack_ifw_configure_component(Resources
+  REQUIRES_ADMIN_RIGHTS
+)
+
+cpack_ifw_configure_component(Unspecified
+  SCRIPT src/install_utility/install_operations.qs
+  REQUIRES_ADMIN_RIGHTS
 )
 
 if( BUILD_NUGET_PACKAGE )

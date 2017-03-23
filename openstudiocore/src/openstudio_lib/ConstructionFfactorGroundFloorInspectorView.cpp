@@ -104,7 +104,7 @@ void ConstructionFfactorGroundFloorInspectorView::createLayout()
 
   ++row;
 
-  m_ffactorEdit = new OSQuantityEdit2("","","", m_isIP);
+  m_ffactorEdit = new OSQuantityEdit2("W/m*K", "W/m*K", "Btu/hr*ft*R", m_isIP);
   connect(this, &ConstructionFfactorGroundFloorInspectorView::toggleUnitsClicked, m_ffactorEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_ffactorEdit, row, 0);
 
@@ -118,7 +118,7 @@ void ConstructionFfactorGroundFloorInspectorView::createLayout()
 
   ++row;
 
-  m_areaEdit = new OSQuantityEdit2("","","", m_isIP);
+  m_areaEdit = new OSQuantityEdit2("m^2","m^2","ft^2", m_isIP);
   connect(this, &ConstructionFfactorGroundFloorInspectorView::toggleUnitsClicked, m_areaEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_areaEdit, row, 0);
 
@@ -132,7 +132,7 @@ void ConstructionFfactorGroundFloorInspectorView::createLayout()
 
   ++row;
 
-  m_perimeterExposedEdit = new OSQuantityEdit2("","","", m_isIP);
+  m_perimeterExposedEdit = new OSQuantityEdit2("m","m","ft", m_isIP);
   connect(this, &ConstructionFfactorGroundFloorInspectorView::toggleUnitsClicked, m_perimeterExposedEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_perimeterExposedEdit, row, 0);
 

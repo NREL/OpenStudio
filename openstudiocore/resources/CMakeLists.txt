@@ -26,6 +26,12 @@ set(utilities_resources_src
   utilities/BCL/Measures/v2/TestFlagAsNotApplicable/measure.xml
   utilities/BCL/Measures/v2/TestMissingARequiredArgWithNoDefault/measure.rb
   utilities/BCL/Measures/v2/TestMissingARequiredArgWithNoDefault/measure.xml
+  utilities/BCL/Measures/v3/IncreaseRoofRValue/measure.xml
+  utilities/BCL/Measures/v3/IncreaseRoofRValue/measure.rb
+  utilities/BCL/Measures/v3/IncreaseWallRValue/measure.xml
+  utilities/BCL/Measures/v3/IncreaseWallRValue/measure.rb
+  utilities/BCL/Measures/v3/SetEplusInfiltration/measure.xml
+  utilities/BCL/Measures/v3/SetEplusInfiltration/measure.rb
   utilities/Checksum/Checksum.txt
   utilities/Checksum/Checksum2.txt
   utilities/Filetypes/CHN_Guangdong.Shaoguan.590820_CSWD.epw
@@ -194,7 +200,7 @@ set(energyplus_resources_src
   energyplus/ErrorFiles/WarningsAndCrash.err
   energyplus/ErrorFiles/WarningsAndSevere.err
   energyplus/ErrorFiles/RepeatingWarnings.err
-  #energyplus/Office_With_Many_HVAC_Types/in.idf
+  energyplus/Office_With_Many_HVAC_Types/in.idf
   energyplus/SimpleSurfaces/SimpleSurfaces_Reference.idf
   energyplus/SimpleSurfaces/SimpleSurfaces_Relative.idf
   energyplus/SimpleSurfaces/4ZoneWithShading_Simple_2.idf
@@ -210,7 +216,7 @@ UPDATE_RESOURCES("${energyplus_resources_src}")
 RUN_ENERGYPLUS("in.idf" "energyplus/5ZoneAirCooled" "USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw")
 RUN_ENERGYPLUS("in.idf" "energyplus/Daylighting_Office" "USA_CO_Golden-NREL.724666_TMY3.epw")
 RUN_ENERGYPLUS("in.idf" "energyplus/Daylighting_School" "USA_CO_Golden-NREL.724666_TMY3.epw")
-#RUN_ENERGYPLUS("in.idf" "energyplus/Office_With_Many_HVAC_Types" "USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw")
+RUN_ENERGYPLUS("in.idf" "energyplus/Office_With_Many_HVAC_Types" "USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw")
 
 # add target
 add_custom_target(openstudio_energyplus_resources
