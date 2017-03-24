@@ -6910,13 +6910,13 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateThrm
 
   tes.setName(name);
 
-  value = tesElement.firstChildElement("StorCap").text().toDouble(&ok);
+  value = tesElement.firstChildElement("StorCapSim").text().toDouble(&ok);
   if( ok ) {
    value = unitToUnit(value,"gal","m^3").get();
    tes.setTankVolume(value);
   }
 
-  value = tesElement.firstChildElement("TankHgt").text().toDouble(&ok);
+  value = tesElement.firstChildElement("TankHgtSim").text().toDouble(&ok);
   if( ok ) {
    value = unitToUnit(value,"ft","m").get();
    tes.setTankHeight(value);
@@ -6926,7 +6926,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateThrm
   text = tesElement.firstChildElement("TankShapeSim").text().toStdString();
   tes.setTankShape(text);
   if( istringEqual("Other",text) ) {
-    value = tesElement.firstChildElement("TankPerim").text().toDouble(&ok);
+    value = tesElement.firstChildElement("TankPerimSim").text().toDouble(&ok);
     if( ok ) {
       value = unitToUnit(value,"ft","m").get();
       tes.setTankPerimeter(value);
@@ -6939,7 +6939,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateThrm
   tes.setTemperatureSensorHeight(0.0);
   tes.setMinimumTemperatureLimit(1.0);
 
-  value = tesElement.firstChildElement("CapRtd").text().toDouble(&ok);
+  value = tesElement.firstChildElement("CapRtdSim").text().toDouble(&ok);
   if( ok ) {
     value = unitToUnit(value,"Btu/h","W").get();
     tes.setNominalCoolingCapacity(value);
@@ -6983,7 +6983,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateThrm
 
   tes.setUseSideOutletHeight(0.0);
 
-  value = tesElement.firstChildElement("WtrFlowCap").text().toDouble(&ok);
+  value = tesElement.firstChildElement("WtrFlowCapSim").text().toDouble(&ok);
   if( ok ) {
     value = unitToUnit(value,"gal/min","m^3/s").get();
     tes.setUseSideDesignFlowRate(value);
@@ -7076,7 +7076,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateChil
         chiller.setDesignGeneratorFluidFlowRate(value);
       }
 
-      auto cndsrFlowCapElement = chillerElement.firstChildElement("CndsrFlowCap");
+      auto cndsrFlowCapElement = chillerElement.firstChildElement("CndsrFlowCapSim");
       value = cndsrFlowCapElement.text().toDouble(&ok);
       if( ok ) {
         value = unitToUnit(value,"gal/min","m^3/s").get();
@@ -7290,7 +7290,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateChil
         chiller.setReferenceChilledWaterFlowRate(flow);
       }
 
-      auto cndsrFlowCapElement = chillerElement.firstChildElement("CndsrFlowCap");
+      auto cndsrFlowCapElement = chillerElement.firstChildElement("CndsrFlowCapSim");
       value = cndsrFlowCapElement.text().toDouble(&ok);
       if( ok ) {
         value = unitToUnit(value,"gal/min","m^3/s").get();
