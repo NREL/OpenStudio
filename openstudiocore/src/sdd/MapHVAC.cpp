@@ -6921,6 +6921,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateThrm
    value = unitToUnit(value,"ft","m").get();
    tes.setTankHeight(value);
    tes.setSourceSideOutletHeight(value);
+   tes.setUseSideInletHeight(value);
   }
 
   text = tesElement.firstChildElement("TankShapeSim").text().toStdString();
@@ -6973,12 +6974,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateThrm
   text = tesElement.firstChildElement("DischrgSchRef").text().toStdString();
   if( auto schedule = model.getModelObjectByName<model::Schedule>(text) ) {
     tes.setUseSideAvailabilitySchedule(schedule.get());
-  }
-
-  value = tesElement.firstChildElement("TankHgt").text().toDouble(&ok);
-  if( ok ) {
-    value = unitToUnit(value,"ft","m").get();
-    tes.setUseSideInletHeight(value);
   }
 
   tes.setUseSideOutletHeight(0.0);
