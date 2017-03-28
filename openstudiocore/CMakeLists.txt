@@ -1397,7 +1397,7 @@ endif()
 
 
 # Install additional Documents, such as release notes
-install(FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_2_0_0_20161216.pdf" DESTINATION .)
+install(FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_2_1_0_20170331.pdf" DESTINATION .)
 
 ###############################################################################
 
