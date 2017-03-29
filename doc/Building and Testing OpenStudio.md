@@ -27,22 +27,11 @@ If this is a major release, release notes must be written.
 - Generate a markdown document from the word doc.
 
 
-Initial Steps
-=============
-If internal to NREL, connect to developer VPN (avoids certificate warnings, increases speed of uploads).
-
-- With Git, merge `develop` into `iteration`.
-
-If this is a major release
-
-- With Git, merge `develop` into `master`.
-
-
 Updating HVAC lib
 =================
 If this is a major release, the HVAC library must be updated.
 
-Run `developer/ruby/UpdateHVACLibrary.rb` (ruby -I E:\Git\OS1\build\OSCore-prefix\src\OSCore-build\ruby\Release UpdateHVACLibrary.rb)
+Run `developer/ruby/UpdateHVACLibrary.rb` (ruby -I E:\Git\OS1\build\Products\ruby\Release UpdateHVACLibrary.rb)
 
 Commit the updated files to develop.
 
@@ -51,13 +40,13 @@ Updating EnergyPlus
 ===================
 
 If a new version of EnergyPlus is to be incorporated into OpenStudio
-- Upload the 4 versions (Windows 64, Windows 32, Ubuntu, and Linux) to S3's folder `openstudio-resources/dependencies`
-- In the top level of your OpenStudio folder, update `CMakeLists.txt` following
+- Upload the 3 versions (Windows 64, Ubuntu, and Linux) to S3's folder `openstudio-resources/dependencies`
+- In the ./openstudiocore folder, update `CMakeLists.txt` following
 	- ENERGYPLUS_VERSION_MAJOR
 	- ENERGYPLUS_VERSION_MINOR
 	- ENERGYPLUS_VERSION_PATCH
 	- ENERGYPLUS_BUILD_SHA
-	- ENERGYPLUS_EXPECTED_HASH (In 4, perhaps 5 places: Win 32, Win 64, Darwin, Linux, and maybe Redhat)
+	- ENERGYPLUS_EXPECTED_HASH (In 3 places: Win 32, Win 64, Darwin, and Linux)
 
 Note: use HashTab, or similar, to determine the MD5 hash value for each file referenced above.
 
@@ -72,6 +61,17 @@ Updating PAT
 ==========================
 
 Bump the PAT SHA in OpenStudio's openstudiocore/pat/CMakeLists.txt.
+
+
+Initial Steps
+=============
+If internal to NREL, connect to developer VPN (avoids certificate warnings, increases speed of uploads).
+
+- With Git, merge `develop` into `iteration`.
+
+If this is a major release
+
+- With Git, merge `develop` into `master`.
 
 
 OpenStudio 2 Builds
@@ -356,13 +356,13 @@ With Git, commit above files (Commit Message = `Updating version to X.Y.Z+1`) to
 SketchUp Extension Signature
 =========
 Check if either file below has been updated:
-- `openstudiocore/ruby/openstudio/sketchup_plugin/OpenStudio.rb`
-- `openstudiocore/ruby/openstudio/sketchup_plugin/Startup.rb` 
+- `openstudiocore/ruby/openstudio/sketchup_plugin/OpenStudio.rb` (Note: not valid in OS2.x)
+- `openstudiocore/sketchup_plugin/plugin/OpenStudio/Startup.rb` 
 
 If either file was updated, the SketchUp Extension Signature must be updated in
-- `openstudiocore/ruby/openstudio/sketchup_plugin/OpenStudio.hash`
+- `openstudiocore/sketchup_plugin/plugin/OpenStudio/OpenStudio.hash`
  
-To do this:
+To do this: (Note: not valid in OS2.x)
 - Build an OpenStudio package
 - Zip the contents (OpenStudio.rb and OpenStudio folder) in `build\_CPack_Packages\win64\NSIS\OpenStudio-x.y.z.sha-Win64\Ruby\Plugins`
 - Change the extension of the zip file from .zip to .rbz
