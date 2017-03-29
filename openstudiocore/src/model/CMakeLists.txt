@@ -37,6 +37,12 @@ set(${target_name}_src
   AirConditionerVariableRefrigerantFlow.hpp
   AirConditionerVariableRefrigerantFlow_Impl.hpp
   AirConditionerVariableRefrigerantFlow.cpp
+  AirflowNetworkCrack.hpp
+  AirflowNetworkCrack_Impl.hpp
+  AirflowNetworkCrack.cpp
+  AirflowNetworkReferenceCrackConditions.hpp
+  AirflowNetworkReferenceCrackConditions_Impl.hpp
+  AirflowNetworkReferenceCrackConditions.cpp
   AirGap.hpp
   AirGap_Impl.hpp
   AirGap.cpp
