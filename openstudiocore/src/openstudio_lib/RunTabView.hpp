@@ -96,7 +96,7 @@ namespace openstudio {
     //QFileSystemWatcher * m_simDirWatcher;
     //QFileSystemWatcher * m_eperrWatcher;
 
-    enum State { stopped, initialization, os_measures, translator, ep_measures, preprocess, simulation };
+    enum State { stopped = 0, initialization = 1, os_measures = 2, translator = 3, ep_measures = 4, preprocess = 5, simulation = 6, reporting_measures = 7, postprocess = 8, complete = 9 };
     State m_state = State::stopped;
   };
 

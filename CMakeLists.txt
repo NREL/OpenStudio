@@ -3,8 +3,8 @@ cmake_minimum_required(VERSION 3.7.0)
 project(OpenStudioMeta)
 
 set(CMAKE_VERSION_MAJOR 2)
-set(CMAKE_VERSION_MINOR 0)
-set(CMAKE_VERSION_PATCH 5)
+set(CMAKE_VERSION_MINOR 1)
+set(CMAKE_VERSION_PATCH 0)
 
 set(CMAKE_VERSION_BUILD "Unknown" CACHE STRING "Build number")
 find_package(Git)
