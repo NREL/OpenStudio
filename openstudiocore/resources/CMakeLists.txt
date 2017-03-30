@@ -26,6 +26,12 @@ set(utilities_resources_src
   utilities/BCL/Measures/v2/TestFlagAsNotApplicable/measure.xml
   utilities/BCL/Measures/v2/TestMissingARequiredArgWithNoDefault/measure.rb
   utilities/BCL/Measures/v2/TestMissingARequiredArgWithNoDefault/measure.xml
+  utilities/BCL/Measures/v3/IncreaseRoofRValue/measure.xml
+  utilities/BCL/Measures/v3/IncreaseRoofRValue/measure.rb
+  utilities/BCL/Measures/v3/IncreaseWallRValue/measure.xml
+  utilities/BCL/Measures/v3/IncreaseWallRValue/measure.rb
+  utilities/BCL/Measures/v3/SetEplusInfiltration/measure.xml
+  utilities/BCL/Measures/v3/SetEplusInfiltration/measure.rb
   utilities/Checksum/Checksum.txt
   utilities/Checksum/Checksum2.txt
   utilities/Filetypes/CHN_Guangdong.Shaoguan.590820_CSWD.epw

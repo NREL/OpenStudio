@@ -1335,12 +1335,13 @@ namespace openstudio {
           OS_ASSERT(srm);
 
           MeasureStep srmStep(result.second);
-          srmStep.setMeasureId(srm->uid());
-          srmStep.setVersionId(srm->versionId());
-          std::vector<std::string> tags = srm->tags();
-          if (!tags.empty()){
-            srmStep.setTaxonomy(tags[0]);
-          }
+          // DLM: moved to WorkflowStepResult
+          //srmStep.setMeasureId(srm->uid());
+          //srmStep.setVersionId(srm->versionId());
+          //std::vector<std::string> tags = srm->tags();
+          //if (!tags.empty()){
+          //  srmStep.setTaxonomy(tags[0]);
+          //}
           srmStep.setName(srm->displayName());
           srmStep.setDescription(srm->description());
           srmStep.setModelerDescription(srm->modelerDescription());

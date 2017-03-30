@@ -95,7 +95,7 @@ void MaterialRoofVegetationInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_heightOfPlants = new OSQuantityEdit2("","","", m_isIP);
+  m_heightOfPlants = new OSQuantityEdit2("m","m","in", m_isIP);
   connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_heightOfPlants, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_heightOfPlants,row++,0,1,3);
 
@@ -135,7 +135,7 @@ void MaterialRoofVegetationInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_minimumStomatalResistance = new OSQuantityEdit2("","","", m_isIP);
+  m_minimumStomatalResistance = new OSQuantityEdit2("s/m","s/m","s/in", m_isIP);
   connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_minimumStomatalResistance, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_minimumStomatalResistance,row++,0,1,3);
 
@@ -169,7 +169,7 @@ void MaterialRoofVegetationInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_thickness = new OSQuantityEdit2("","","", m_isIP);
+  m_thickness = new OSQuantityEdit2("m","m","in", m_isIP);
   connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_thickness, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_thickness,row++,0,1,3);
 
@@ -179,7 +179,7 @@ void MaterialRoofVegetationInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_conductivityOfDrySoil = new OSQuantityEdit2("","","", m_isIP);
+  m_conductivityOfDrySoil = new OSQuantityEdit2("W/m*K", "W/m*K", "Btu*in/hr*ft^2*R", m_isIP);
   connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_conductivityOfDrySoil, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_conductivityOfDrySoil,row++,0,1,3);
 
@@ -189,7 +189,7 @@ void MaterialRoofVegetationInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_densityOfDrySoil = new OSQuantityEdit2("","","", m_isIP);
+  m_densityOfDrySoil = new OSQuantityEdit2("kg/m^3","kg/m^3","lb/ft^3", m_isIP);
   connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_densityOfDrySoil, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_densityOfDrySoil,row++,0,1,3);
 
@@ -199,7 +199,7 @@ void MaterialRoofVegetationInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_specificHeatOfDrySoil = new OSQuantityEdit2("","","", m_isIP);
+  m_specificHeatOfDrySoil = new OSQuantityEdit2("J/kg*K","J/kg*K","Btu/lb*R", m_isIP);
   connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_specificHeatOfDrySoil, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_specificHeatOfDrySoil,row++,0,1,3);
 

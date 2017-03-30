@@ -809,48 +809,56 @@ namespace openstudio {
           if (im)
           {
             im->resetMultiplier();
+            return;
           }
 
           boost::optional<model::People> p = t_modelObject->optionalCast<model::People>();
           if (p)
           {
             p->resetMultiplier();
+            return;
           }
 
           boost::optional<model::Lights> light = t_modelObject->optionalCast<model::Lights>();
           if (light)
           {
             light->resetMultiplier();
+            return;
           }
 
           boost::optional<model::Luminaire> lum = t_modelObject->optionalCast<model::Luminaire>();
           if (lum)
           {
             lum->resetMultiplier();
+            return;
           }
 
           boost::optional<model::ElectricEquipment> e = t_modelObject->optionalCast<model::ElectricEquipment>();
           if (e)
           {
             e->resetMultiplier();
+            return;
           }
 
           boost::optional<model::GasEquipment> g = t_modelObject->optionalCast<model::GasEquipment>();
           if (g)
           {
             g->resetMultiplier();
+            return;
           }
 
           boost::optional<model::HotWaterEquipment> h = t_modelObject->optionalCast<model::HotWaterEquipment>();
           if (h)
           {
             h->resetMultiplier();
+            return;
           }
 
           boost::optional<model::SteamEquipment> se = t_modelObject->optionalCast<model::SteamEquipment>();
           if (se)
           {
             se->resetMultiplier();
+            return;
           }
 
           boost::optional<model::OtherEquipment> o = t_modelObject->optionalCast<model::OtherEquipment>();
