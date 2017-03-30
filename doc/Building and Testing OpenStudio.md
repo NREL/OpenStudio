@@ -130,7 +130,6 @@ In CMake check the following:
 - BUILD\_OS\_APP
 - BUILD\_PACKAGE
 - BUILD\_PAT
-- BUILD\_TESTING
 
 In CMake **uncheck** the following:
 
@@ -206,8 +205,8 @@ Sanity Testing Release Builds
 
 ### Ubuntu
 - On a clean Ubuntu VM, install the current version of OpenStudio
-- Open OpenStudio, and make a model
-- Open PAT, make a project, and select the model above as your baseline model
+- Locate OpenStudioApp with "which OpenStudioApp", and navigate to its folder
+- ./OpenStudioApp, and make a model
 
 ### Mac
 - On a clean Mac VM, install the current version of SketchUp and OpenStudio
