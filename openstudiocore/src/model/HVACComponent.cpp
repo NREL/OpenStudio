@@ -174,13 +174,6 @@ namespace detail {
           m_plantLoop = plantLoop;
           return plantLoop;
         }
-        // if( supplyComp ) { return supplyComp; }
-        // return this->demandComponent(handle);
-        // if( plantLoop.component(this->handle()) )
-        // {
-        //   m_plantLoop = plantLoop;
-        //   return plantLoop;
-        // }
       }
     }
 

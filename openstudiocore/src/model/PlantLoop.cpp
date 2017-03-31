@@ -462,7 +462,6 @@ Mixer PlantLoop_Impl::supplyMixer()
   auto result = getObject<ModelObject>().getModelObjectTarget<Mixer>(OS_PlantLoopFields::SupplyMixerName);
   OS_ASSERT(result);
   return result.get();
-  // return supplyComponents( IddObjectType::OS_Connector_Mixer ).front().cast<Mixer>();
 }
 
 void PlantLoop_Impl::setSupplyMixer(Mixer const & mixer)
@@ -476,7 +475,6 @@ Splitter PlantLoop_Impl::supplySplitter()
   auto result = getObject<ModelObject>().getModelObjectTarget<Splitter>(OS_PlantLoopFields::SupplySplitterName);
   OS_ASSERT(result);
   return result.get();
-  // return supplyComponents( IddObjectType::OS_Connector_Splitter ).front().cast<Splitter>();
 }
 
 void PlantLoop_Impl::setSupplySplitter(Splitter const & splitter)
@@ -490,7 +488,6 @@ Mixer PlantLoop_Impl::demandMixer()
   auto result = getObject<ModelObject>().getModelObjectTarget<Mixer>(OS_PlantLoopFields::DemandMixerName);
   OS_ASSERT(result);
   return result.get();
-  // return demandComponents( IddObjectType::OS_Connector_Mixer ).front().cast<ConnectorMixer>();
 }
 
 void PlantLoop_Impl::setDemandMixer(Mixer const & mixer)
@@ -774,15 +771,15 @@ void PlantLoop_Impl::resetCommonPipeSimulation()
                               schedule);
     return result;
   }
-  
+
   void PlantLoop_Impl::resetPlantEquipmentOperationHeatingLoadSchedule() {
     setString(OS_PlantLoopFields::PlantEquipmentOperationHeatingLoadSchedule, "");
   }
-  
+
   boost::optional<Schedule> PlantLoop_Impl::plantEquipmentOperationHeatingLoadSchedule() const {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_PlantLoopFields::PlantEquipmentOperationHeatingLoadSchedule);
   }
-  
+
   bool PlantLoop_Impl::setPlantEquipmentOperationCoolingLoadSchedule(Schedule & schedule) {
     bool result = setSchedule(OS_PlantLoopFields::PlantEquipmentOperationCoolingLoadSchedule,
                               "PlantLoop",
@@ -790,15 +787,15 @@ void PlantLoop_Impl::resetCommonPipeSimulation()
                               schedule);
     return result;
   }
-  
+
   boost::optional<Schedule> PlantLoop_Impl::plantEquipmentOperationCoolingLoadSchedule() const {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_PlantLoopFields::PlantEquipmentOperationCoolingLoadSchedule);
   }
-  
+
   void PlantLoop_Impl::resetPlantEquipmentOperationCoolingLoadSchedule() {
     setString(OS_PlantLoopFields::PlantEquipmentOperationCoolingLoadSchedule, "");
   }
-  
+
   bool PlantLoop_Impl::setPrimaryPlantEquipmentOperationSchemeSchedule(Schedule & schedule) {
     bool result = setSchedule(OS_PlantLoopFields::PrimaryPlantEquipmentOperationSchemeSchedule,
                               "PlantLoop",
@@ -806,15 +803,15 @@ void PlantLoop_Impl::resetCommonPipeSimulation()
                               schedule);
     return result;
   }
-  
+
   void PlantLoop_Impl::resetPrimaryPlantEquipmentOperationSchemeSchedule() {
     setString(OS_PlantLoopFields::PlantEquipmentOperationCoolingLoadSchedule, "");
   }
-  
+
   boost::optional<Schedule> PlantLoop_Impl::primaryPlantEquipmentOperationSchemeSchedule() const {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_PlantLoopFields::PrimaryPlantEquipmentOperationSchemeSchedule);
   }
-  
+
   bool PlantLoop_Impl::setComponentSetpointOperationSchemeSchedule(Schedule & schedule) {
     bool result = setSchedule(OS_PlantLoopFields::ComponentSetpointOperationSchemeSchedule,
                               "PlantLoop",
@@ -822,11 +819,11 @@ void PlantLoop_Impl::resetCommonPipeSimulation()
                               schedule);
     return result;
   }
-  
+
   boost::optional<Schedule> PlantLoop_Impl::componentSetpointOperationSchemeSchedule() const {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_PlantLoopFields::ComponentSetpointOperationSchemeSchedule);
   }
-  
+
   void PlantLoop_Impl::resetComponentSetpointOperationSchemeSchedule() {
     setString(OS_PlantLoopFields::ComponentSetpointOperationSchemeSchedule, "");
   }
