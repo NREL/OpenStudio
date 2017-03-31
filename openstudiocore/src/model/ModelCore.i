@@ -186,6 +186,7 @@ MODELOBJECT_TEMPLATES(EnergyManagementSystemOutputVariable);
 UNIQUEMODELOBJECT_TEMPLATES(OutputEnergyManagementSystem);
 MODELOBJECT_TEMPLATES(AirflowNetworkCrack);
 MODELOBJECT_TEMPLATES(AirflowNetworkReferenceCrackConditions);
+UNIQUEMODELOBJECT_TEMPLATES(AirflowNetworkSimulationControl);
 
 SWIG_MODELOBJECT(ModelObject, 0);
 SWIG_MODELEXTENSIBLEGROUP(ModelExtensibleGroup);
@@ -227,5 +228,6 @@ SWIG_MODELOBJECT(EnergyManagementSystemOutputVariable, 1);
 SWIG_UNIQUEMODELOBJECT(OutputEnergyManagementSystem);
 SWIG_MODELOBJECT(AirflowNetworkCrack, 1);
 SWIG_MODELOBJECT(AirflowNetworkReferenceCrackConditions, 1);
+SWIG_UNIQUEMODELOBJECT(AirflowNetworkSimulationControl);
 
 #endif //MODEL_CORE_I 

@@ -43,6 +43,9 @@ set(${target_name}_src
   AirflowNetworkReferenceCrackConditions.hpp
   AirflowNetworkReferenceCrackConditions_Impl.hpp
   AirflowNetworkReferenceCrackConditions.cpp
+  AirflowNetworkSimulationControl.hpp
+  AirflowNetworkSimulationControl_Impl.hpp
+  AirflowNetworkSimulationControl.cpp
   AirGap.hpp
   AirGap_Impl.hpp
   AirGap.cpp
@@ -1403,6 +1406,7 @@ endif()
 set(${target_name}_test_src
   test/AirConditionerVariableRefrigerantFlow_GTest.cpp
   test/AirflowNetworkCrack_GTest.cpp
+  test/AirflowNetworkSimulationControl_GTest.cpp
   test/AirGap_GTest.cpp
   test/AirLoopHVACOutdoorAirSystem_GTest.cpp
   test/AirLoopHVACUnitaryHeatPumpAirToAir_GTest.cpp

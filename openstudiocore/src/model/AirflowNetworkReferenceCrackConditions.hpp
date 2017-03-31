@@ -59,33 +59,33 @@ class MODEL_API AirflowNetworkReferenceCrackConditions : public ModelObject {
   /** @name Getters */
   //@{
   /** Returns the reference temperature in degrees C. */
-  double referenceTemperature() const;
+  double temperature() const;
   /** Returns true if the reference temperature is defaulted. */
-  bool isReferenceTemperatureDefaulted() const;
+  bool isTemperatureDefaulted() const;
   /** Returns the reference barometric pressure in Pa. */
-  double referenceBarometricPressure() const;
+  double barometricPressure() const;
   /** Returns true if the reference barometric pressure is defaulted. */
-  bool isReferenceBarometricPressureDefaulted() const;
+  bool isBarometricPressureDefaulted() const;
   /** Returns the reference humidity ratio in kgWater/kgDryAir. */
-  double referenceHumidityRatio() const;
+  double humidityRatio() const;
   /** Returns true if the reference humidity ratio is defaulted. */
-  bool isReferenceHumidityRatioDefaulted() const;
+  bool isHumidityRatioDefaulted() const;
 
   //@}
   /** @name Setters */
   //@{
   /** Sets the reference temperature in degrees C. */
-  void setReferenceTemperature(double referenceTemperature);
+  void setTemperature(double referenceTemperature);
   /** Resets the reference temperature to the default. */
-  void resetReferenceTemperature();
+  void resetTemperature();
   /** Sets the the reference barometric pressure in Pa. */
-  bool setReferenceBarometricPressure(double referenceBarometricPressure);
+  bool setBarometricPressure(double referenceBarometricPressure);
   /** Resets the reference barometric pressure to the default. */
-  void resetReferenceBarometricPressure();
+  void resetBarometricPressure();
   /** Sets the reference humidity ratio in kgWater/kgDryAir. */
-  void setReferenceHumidityRatio(double referenceHumidityRatio);
+  void setHumidityRatio(double referenceHumidityRatio);
   /** Resets the reference humidity ratio to the default. */
-  void resetReferenceHumidityRatio();
+  void resetHumidityRatio();
 
   //@}
   /** @name Other */
