@@ -130,6 +130,7 @@ In CMake check the following:
 - BUILD\_OS\_APP
 - BUILD\_PACKAGE
 - BUILD\_PAT
+- BUILD\_TESTING (NOTE: not currently possible with e+ 8.7 issue)
 
 In CMake **uncheck** the following:
 
@@ -193,6 +194,7 @@ Copy build to VM's share folder
 
 OSVersion Testing
 =================
+NOTE: not available while build testing is deprecated 
 
 In folder `build\Products\Release`
 
