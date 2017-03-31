@@ -139,7 +139,7 @@ namespace detail {
   }
 
   bool ModelObjectList_Impl::addModelObject(const ModelObject& modelObject ) {
-  
+
     // DLM: should this class prevent duplicates in the list?
 
     WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
@@ -212,7 +212,7 @@ namespace detail {
 } // detail
 
 ModelObjectList::ModelObjectList(const Model& model)
-  : ModelObject(ModelObjectList::iddObjectType(),model)
+  : ModelObject(ModelObjectList::iddObjectType(),model,true)
 {
   OS_ASSERT(getImpl<detail::ModelObjectList_Impl>());
 }
