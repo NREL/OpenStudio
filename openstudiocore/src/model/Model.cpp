@@ -208,7 +208,9 @@ if (_className::iddObjectType() == typeToCreate) { \
 
     REGISTER_CONSTRUCTOR(AirConditionerVariableRefrigerantFlow);
     REGISTER_CONSTRUCTOR(AirflowNetworkCrack);
+    REGISTER_CONSTRUCTOR(AirflowNetworkEffectiveLeakageArea);
     REGISTER_CONSTRUCTOR(AirflowNetworkReferenceCrackConditions);
+    REGISTER_CONSTRUCTOR(AirflowNetworkSimpleOpening);
     REGISTER_CONSTRUCTOR(AirflowNetworkSimulationControl);
     REGISTER_CONSTRUCTOR(AirGap);
     REGISTER_CONSTRUCTOR(AirLoopHVAC);

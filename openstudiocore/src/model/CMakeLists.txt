@@ -40,9 +40,15 @@ set(${target_name}_src
   AirflowNetworkCrack.hpp
   AirflowNetworkCrack_Impl.hpp
   AirflowNetworkCrack.cpp
+  AirflowNetworkEffectiveLeakageArea.hpp
+  AirflowNetworkEffectiveLeakageArea_Impl.hpp
+  AirflowNetworkEffectiveLeakageArea.cpp
   AirflowNetworkReferenceCrackConditions.hpp
   AirflowNetworkReferenceCrackConditions_Impl.hpp
   AirflowNetworkReferenceCrackConditions.cpp
+  AirflowNetworkSimpleOpening.hpp
+  AirflowNetworkSimpleOpening_Impl.hpp
+  AirflowNetworkSimpleOpening.cpp
   AirflowNetworkSimulationControl.hpp
   AirflowNetworkSimulationControl_Impl.hpp
   AirflowNetworkSimulationControl.cpp
