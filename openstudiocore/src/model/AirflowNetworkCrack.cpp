@@ -137,9 +137,8 @@ AirflowNetworkCrack::AirflowNetworkCrack(const Model& model, double massFlowCoef
 {
   OS_ASSERT(getImpl<detail::AirflowNetworkCrack_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  // OS_ASSERT(setHandle());
-  OS_ASSERT(setAirMassFlowCoefficient(massFlowCoefficient));
+  bool ok = setAirMassFlowCoefficient(massFlowCoefficient);
+  OS_ASSERT(ok);
 }
 
 AirflowNetworkCrack::AirflowNetworkCrack(const Model& model, double massFlowCoefficient,
@@ -148,10 +147,10 @@ AirflowNetworkCrack::AirflowNetworkCrack(const Model& model, double massFlowCoef
 {
   OS_ASSERT(getImpl<detail::AirflowNetworkCrack_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  // OS_ASSERT(setHandle());
-  OS_ASSERT(setAirMassFlowCoefficient(massFlowCoefficient));
-  OS_ASSERT(setAirMassFlowExponent(massFlowExponent));
+  bool ok = setAirMassFlowCoefficient(massFlowCoefficient);
+  OS_ASSERT(ok);
+  ok = setAirMassFlowExponent(massFlowExponent);
+  OS_ASSERT(ok);
 }
 
 AirflowNetworkCrack::AirflowNetworkCrack(const Model& model, double massFlowCoefficient,
@@ -160,11 +159,12 @@ AirflowNetworkCrack::AirflowNetworkCrack(const Model& model, double massFlowCoef
 {
   OS_ASSERT(getImpl<detail::AirflowNetworkCrack_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  // OS_ASSERT(setHandle());
-  OS_ASSERT(setAirMassFlowCoefficient(massFlowCoefficient));
-  OS_ASSERT(setAirMassFlowExponent(massFlowExponent));
-  setReferenceCrackConditions(referenceCrackConditions);
+  bool ok = setAirMassFlowCoefficient(massFlowCoefficient);
+  OS_ASSERT(ok);
+  ok = setAirMassFlowExponent(massFlowExponent);
+  OS_ASSERT(ok);
+  ok = setReferenceCrackConditions(referenceCrackConditions);
+  OS_ASSERT(ok);
 }
 
 IddObjectType AirflowNetworkCrack::iddObjectType()

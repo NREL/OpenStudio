@@ -207,8 +207,10 @@ if (_className::iddObjectType() == typeToCreate) { \
 }
 
     REGISTER_CONSTRUCTOR(AirConditionerVariableRefrigerantFlow);
+    REGISTER_CONSTRUCTOR(AirflowNetworkConstantPressureDrop);
     REGISTER_CONSTRUCTOR(AirflowNetworkCrack);
     REGISTER_CONSTRUCTOR(AirflowNetworkEffectiveLeakageArea);
+    REGISTER_CONSTRUCTOR(AirflowNetworkHorizontalOpening);
     REGISTER_CONSTRUCTOR(AirflowNetworkReferenceCrackConditions);
     REGISTER_CONSTRUCTOR(AirflowNetworkSimpleOpening);
     REGISTER_CONSTRUCTOR(AirflowNetworkSimulationControl);
@@ -642,8 +644,12 @@ if (_className::iddObjectType() == typeToCreate) { \
 }
 
     REGISTER_COPYCONSTRUCTORS(AirConditionerVariableRefrigerantFlow);
+    REGISTER_COPYCONSTRUCTORS(AirflowNetworkConstantPressureDrop);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkCrack);
+    REGISTER_COPYCONSTRUCTORS(AirflowNetworkEffectiveLeakageArea);
+    REGISTER_COPYCONSTRUCTORS(AirflowNetworkHorizontalOpening);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkReferenceCrackConditions);
+    REGISTER_COPYCONSTRUCTORS(AirflowNetworkSimpleOpening);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkSimulationControl);
     REGISTER_COPYCONSTRUCTORS(AirGap);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVAC);

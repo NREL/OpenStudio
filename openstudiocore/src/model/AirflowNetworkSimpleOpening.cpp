@@ -144,11 +144,12 @@ AirflowNetworkSimpleOpening::AirflowNetworkSimpleOpening(const Model& model,
 {
   OS_ASSERT(getImpl<detail::AirflowNetworkSimpleOpening_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  //OS_ASSERT(setHandle());
-  OS_ASSERT(setAirMassFlowCoefficientWhenOpeningisClosed(massFlowCoefficientWhenOpeningisClosed));
-  OS_ASSERT(setMinimumDensityDifferenceforTwoWayFlow(minimumDensityDifferenceforTwoWayFlow));
-  OS_ASSERT(setDischargeCoefficient(dischargeCoefficient));
+  bool ok = setAirMassFlowCoefficientWhenOpeningisClosed(massFlowCoefficientWhenOpeningisClosed);
+  OS_ASSERT(ok);
+  ok = setMinimumDensityDifferenceforTwoWayFlow(minimumDensityDifferenceforTwoWayFlow);
+  OS_ASSERT(ok);
+  ok = setDischargeCoefficient(dischargeCoefficient);
+  OS_ASSERT(ok);
 }
 
 AirflowNetworkSimpleOpening::AirflowNetworkSimpleOpening(const Model& model,
@@ -160,12 +161,14 @@ AirflowNetworkSimpleOpening::AirflowNetworkSimpleOpening(const Model& model,
 {
   OS_ASSERT(getImpl<detail::AirflowNetworkSimpleOpening_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  //OS_ASSERT(setHandle());
-  OS_ASSERT(setAirMassFlowCoefficientWhenOpeningisClosed(massFlowCoefficientWhenOpeningisClosed));
-  OS_ASSERT(setAirMassFlowExponentWhenOpeningisClosed(massFlowExponentWhenOpeningisClosed));
-  OS_ASSERT(setMinimumDensityDifferenceforTwoWayFlow(minimumDensityDifferenceforTwoWayFlow));
-  OS_ASSERT(setDischargeCoefficient(dischargeCoefficient));
+  bool ok = setAirMassFlowCoefficientWhenOpeningisClosed(massFlowCoefficientWhenOpeningisClosed);
+  OS_ASSERT(ok);
+  ok = setAirMassFlowExponentWhenOpeningisClosed(massFlowExponentWhenOpeningisClosed);
+  OS_ASSERT(ok);
+  ok = setMinimumDensityDifferenceforTwoWayFlow(minimumDensityDifferenceforTwoWayFlow);
+  OS_ASSERT(ok);
+  ok = setDischargeCoefficient(dischargeCoefficient);
+  OS_ASSERT(ok);
 }
 
 

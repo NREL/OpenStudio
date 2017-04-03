@@ -169,9 +169,8 @@ AirflowNetworkEffectiveLeakageArea::AirflowNetworkEffectiveLeakageArea(const Mod
 {
   OS_ASSERT(getImpl<detail::AirflowNetworkEffectiveLeakageArea_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  // OS_ASSERT(setHandle());
-  OS_ASSERT(setEffectiveLeakageArea(effectiveLeakageArea));
+  bool ok = setEffectiveLeakageArea(effectiveLeakageArea);
+  OS_ASSERT(ok);
 }
 
 AirflowNetworkEffectiveLeakageArea::AirflowNetworkEffectiveLeakageArea(const Model& model,
@@ -180,12 +179,14 @@ AirflowNetworkEffectiveLeakageArea::AirflowNetworkEffectiveLeakageArea(const Mod
 {
   OS_ASSERT(getImpl<detail::AirflowNetworkEffectiveLeakageArea_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  // OS_ASSERT(setHandle());
-  OS_ASSERT(setEffectiveLeakageArea(effectiveLeakageArea));
-  OS_ASSERT(setDischargeCoefficient(dischargeCoefficient));
-  OS_ASSERT(setReferencePressureDifference(referencePressureDifference));
-  OS_ASSERT(setAirMassFlowExponent(massFlowExponent));
+  bool ok = setEffectiveLeakageArea(effectiveLeakageArea);
+  OS_ASSERT(ok);
+  ok = setDischargeCoefficient(dischargeCoefficient);
+  OS_ASSERT(ok);
+  ok = setReferencePressureDifference(referencePressureDifference);
+  OS_ASSERT(ok);
+  ok = setAirMassFlowExponent(massFlowExponent);
+  OS_ASSERT(ok);
 }
 
 IddObjectType AirflowNetworkEffectiveLeakageArea::iddObjectType()

@@ -430,7 +430,8 @@ AirflowNetworkSimulationControl::AirflowNetworkSimulationControl(std::shared_ptr
 : ParentObject(impl)
 {}
 
-IddObjectType AirflowNetworkSimulationControl::iddObjectType() {
+IddObjectType AirflowNetworkSimulationControl::iddObjectType()
+{
   return IddObjectType(IddObjectType::OS_AirflowNetworkSimulationControl);
 }
 

@@ -145,6 +145,17 @@ AirflowNetworkReferenceCrackConditions::AirflowNetworkReferenceCrackConditions(c
   // TODO: Appropriately handle the following required object-list fields.
 }
 
+AirflowNetworkReferenceCrackConditions::AirflowNetworkReferenceCrackConditions(const Model& model,
+  double temperature, double barometricPressure, double humidityRatio)
+  : ModelObject(AirflowNetworkReferenceCrackConditions::iddObjectType(), model)
+{
+  OS_ASSERT(getImpl<detail::AirflowNetworkReferenceCrackConditions_Impl>());
+
+  setTemperature(temperature);
+  setBarometricPressure(barometricPressure);
+  setHumidityRatio(humidityRatio);
+}
+
 IddObjectType AirflowNetworkReferenceCrackConditions::iddObjectType() {
   return IddObjectType(IddObjectType::OS_AirflowNetworkReferenceCrackConditions);
 }
