@@ -46,6 +46,9 @@ set(${target_name}_src
   AirflowNetworkEffectiveLeakageArea.hpp
   AirflowNetworkEffectiveLeakageArea_Impl.hpp
   AirflowNetworkEffectiveLeakageArea.cpp
+  AirflowNetworkEquivalentDuct.hpp
+  AirflowNetworkEquivalentDuct_Impl.hpp
+  AirflowNetworkEquivalentDuct.cpp
   AirflowNetworkHorizontalOpening.hpp
   AirflowNetworkHorizontalOpening_Impl.hpp
   AirflowNetworkHorizontalOpening.cpp

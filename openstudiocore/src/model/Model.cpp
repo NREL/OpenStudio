@@ -210,6 +210,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(AirflowNetworkConstantPressureDrop);
     REGISTER_CONSTRUCTOR(AirflowNetworkCrack);
     REGISTER_CONSTRUCTOR(AirflowNetworkEffectiveLeakageArea);
+    REGISTER_CONSTRUCTOR(AirflowNetworkEquivalentDuct);
     REGISTER_CONSTRUCTOR(AirflowNetworkHorizontalOpening);
     REGISTER_CONSTRUCTOR(AirflowNetworkReferenceCrackConditions);
     REGISTER_CONSTRUCTOR(AirflowNetworkSimpleOpening);
@@ -647,6 +648,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkConstantPressureDrop);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkCrack);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkEffectiveLeakageArea);
+    REGISTER_COPYCONSTRUCTORS(AirflowNetworkEquivalentDuct);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkHorizontalOpening);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkReferenceCrackConditions);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkSimpleOpening);
