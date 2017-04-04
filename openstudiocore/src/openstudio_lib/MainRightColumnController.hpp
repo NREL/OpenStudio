@@ -95,6 +95,8 @@ class MainRightColumnController : public OSQObjectController
 
   void configureForConstructionsSubTab(int subTabID);
 
+  void configureForGeometrySubTab(int subTabID);
+
   void configureForLoadsSubTab(int subTabID);
 
   void configureForSpaceTypesSubTab(int subTabID);

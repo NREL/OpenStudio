@@ -70,6 +70,7 @@
     <file>images/disabled_building_tab.png</file>
     <file>images/disabled_constructions_tab.png</file>
     <file>images/disabled_hvac_tab.png</file>
+    <file>images/disabled_geometry_tab.png</file>
     <file>images/disabled_loads_tab.png</file>
     <file>images/disabled_location_tab.png</file>
     <file>images/disabled_results_tab.png</file>
@@ -147,6 +148,7 @@
     <file>images/off_building_tab.png</file>
     <file>images/off_constructions_tab.png</file>
     <file>images/off_hvac_tab.png</file>
+    <file>images/off_geometry_tab.png</file>
     <file>images/off_loads_tab.png</file>
     <file>images/off_location_tab.png</file>
     <file>images/off_results_tab.png</file>
@@ -162,6 +164,7 @@
     <file>images/on_building_tab.png</file>
     <file>images/on_constructions_tab.png</file>
     <file>images/on_hvac_tab.png</file>
+    <file>images/on_geometry_tab.png</file>
     <file>images/on_loads_tab.png</file>
     <file>images/on_location_tab.png</file>
     <file>images/on_results_tab.png</file>
@@ -537,6 +540,7 @@
 
 
     <file>library/tid_api.xml</file>
+    <file>library/geometry_editor.html</file>
 
     <file alias="shared_gui_components/images/add_script_icon.png">../shared_gui_components/images/add_script_icon.png</file>
     <file alias="shared_gui_components/images/add_script_icon_over.png">../shared_gui_components/images/add_script_icon_over.png</file>
