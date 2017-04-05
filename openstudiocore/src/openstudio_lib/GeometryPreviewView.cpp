@@ -102,11 +102,25 @@ PreviewView::PreviewView(QWidget *t_parent)
 
   Qt3DRender::QSceneParserPlugin* qspp = qobject_cast<Qt3DRender::QSceneParserPlugin*>(plugin);
   Qt3DRender::QAbstractSceneParser* asp = qspp->create(QString(), QStringList());
-  //asp->setSource(QUrl("file:///E:/test/box.gltf"));
-  asp->setSource(QUrl("file:///E:/test/cube_UTF16LE.dae"));
+  asp->setSource(QUrl("qrc:///library/cube_UTF16LE.dae"));
 
   QStringList errors = asp->errors();
+
+  Qt3DCore::QEntity* boxLib = asp->node("box-lib");
+  Qt3DCore::QEntity* box = asp->node("box");
+
   Qt3DCore::QEntity* scene = asp->scene();
+  OS_ASSERT(scene);
+
+  std::stringstream ss;
+  ss << "'" << scene->objectName().toStdString() << "'" << std::endl;
+  for (const auto child : scene->children()){
+    ss << "  '" << child->objectName().toStdString() << "'" << std::endl;
+    for (const auto child2 : child->children()){
+      ss << "    '" << child2->objectName().toStdString() << "'" << std::endl;
+    }
+  }
+  std::string report = ss.str();
 
   auto mainLayout = new QVBoxLayout;
   setLayout(mainLayout);
@@ -121,61 +135,18 @@ PreviewView::PreviewView(QWidget *t_parent)
   // Root entity
   Qt3DCore::QEntity *rootEntity = new Qt3DCore::QEntity();
   
-  scene->setParent(rootEntity);
+  //scene->setParent(rootEntity);
 
   // Camera
   Qt3DCore::QCamera *cameraEntity = m_view->defaultCamera();
-
-  cameraEntity->lens()->setPerspectiveProjection(45.0f, 16.0f/9.0f, 0.1f, 1000.0f);
-  cameraEntity->setPosition(QVector3D(0, 0, -40.0f));
+  cameraEntity->lens()->setPerspectiveProjection(37.8501f, 1.0f, 0.1f, 1000.0f);
+  cameraEntity->setPosition(QVector3D(-4.27749f, 3.33855f, 6.55017f));
   cameraEntity->setUpVector(QVector3D(0, 1, 0));
   cameraEntity->setViewCenter(QVector3D(0, 0, 0));
   input->setCamera(cameraEntity);
 
-  // Material
-  Qt3DRender::QMaterial *material = new Qt3DRender::QPhongMaterial(rootEntity);
-
-  // Torus
-  Qt3DCore::QEntity *torusEntity = new Qt3DCore::QEntity(rootEntity);
-  Qt3DRender::QTorusMesh *torusMesh = new Qt3DRender::QTorusMesh;
-  torusMesh->setRadius(5);
-  torusMesh->setMinorRadius(1);
-  torusMesh->setRings(100);
-  torusMesh->setSlices(20);
-
-  Qt3DCore::QTransform *torusTransform = new Qt3DCore::QTransform;
-  torusTransform->setScale3D(QVector3D(1.5, 1, 0.5));
-  torusTransform->setRotation(QQuaternion::fromAxisAndAngle(QVector3D(1, 0, 0), 45.0f));
-
-  torusEntity->addComponent(torusMesh);
-  torusEntity->addComponent(torusTransform);
-  torusEntity->addComponent(material);
-
-  // Sphere
-  Qt3DCore::QEntity *sphereEntity = new Qt3DCore::QEntity(rootEntity);
-  Qt3DRender::QSphereMesh *sphereMesh = new Qt3DRender::QSphereMesh;
-  sphereMesh->setRadius(3);
-
-  Qt3DCore::QTransform *sphereTransform = new Qt3DCore::QTransform;
-  //OrbitTransformController *controller = new OrbitTransformController(sphereTransform);
-  //controller->setTarget(sphereTransform);
-  //controller->setRadius(20.0f);
-
-  QPropertyAnimation *sphereRotateTransformAnimation = new QPropertyAnimation(sphereTransform);
-  //sphereRotateTransformAnimation->setTargetObject(controller);
-  sphereRotateTransformAnimation->setTargetObject(sphereEntity);
-  sphereRotateTransformAnimation->setPropertyName("angle");
-  sphereRotateTransformAnimation->setStartValue(QVariant::fromValue(0));
-  sphereRotateTransformAnimation->setEndValue(QVariant::fromValue(360));
-  sphereRotateTransformAnimation->setDuration(10000);
-  sphereRotateTransformAnimation->setLoopCount(-1);
-  sphereRotateTransformAnimation->start();
-
-  sphereEntity->addComponent(sphereMesh);
-  sphereEntity->addComponent(sphereTransform);
-  sphereEntity->addComponent(material);
-
-  m_view->setRootEntity(rootEntity);
+  //m_view->setRootEntity(rootEntity);
+  m_view->setRootEntity(scene);
   m_view->show();
 }
 
