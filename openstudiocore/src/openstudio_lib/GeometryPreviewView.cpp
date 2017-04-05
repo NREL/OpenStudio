@@ -86,14 +86,28 @@ PreviewView::PreviewView(QWidget *t_parent)
 {
   QString pluginName;
 
+  bool gltf = false;
+
   #ifdef QT_DEBUG
     #ifdef Q_OS_WIN32
-      pluginName = "sceneparsers/assimpsceneparserd";
+      if (gltf){
+        pluginName = "sceneparsers/gltfsceneparserd";
+      } else{
+        pluginName = "sceneparsers/assimpsceneparserd";
+      }
     #else
-      pluginName = "sceneparsers/assimpsceneparser"
+      if (gltf){
+        pluginName = "sceneparsers/gltfsceneparser";
+      } else{
+        pluginName = "sceneparsers/assimpsceneparser";
+      }
     #endif
   #else
-    pluginName = "sceneparsers/assimpsceneparser"
+    if (gltf){
+      pluginName = "sceneparsers/gltfsceneparser";
+    } else{
+      pluginName = "sceneparsers/assimpsceneparser";
+    }
   #endif
 
   QPluginLoader pluginLoader(pluginName);
@@ -102,12 +116,17 @@ PreviewView::PreviewView(QWidget *t_parent)
 
   Qt3DRender::QSceneParserPlugin* qspp = qobject_cast<Qt3DRender::QSceneParserPlugin*>(plugin);
   Qt3DRender::QAbstractSceneParser* asp = qspp->create(QString(), QStringList());
-  asp->setSource(QUrl("qrc:///library/cube_UTF16LE.dae"));
+
+  if (gltf){
+    asp->setSource(QUrl("qrc:///library/box.gltf"));
+  } else {
+    asp->setSource(QUrl("qrc:///library/cube_UTF16LE.dae"));
+  }
 
   QStringList errors = asp->errors();
 
-  Qt3DCore::QEntity* boxLib = asp->node("box-lib");
-  Qt3DCore::QEntity* box = asp->node("box");
+  Qt3DCore::QEntity* boxLib = asp->node("Geometry-mesh002Node");
+  Qt3DCore::QEntity* box = asp->node("Mesh");
 
   Qt3DCore::QEntity* scene = asp->scene();
   OS_ASSERT(scene);
