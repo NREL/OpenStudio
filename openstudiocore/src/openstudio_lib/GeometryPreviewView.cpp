@@ -54,8 +54,13 @@
 #include <Qt3DRender/QSphereMesh>
 #include <Qt3DRender/QTorusMesh>
 #include <Qt3DRender/QWindow>
+#include <Qt3DRender/QSceneParserPlugin>
+#include <Qt3DRender/QAbstractSceneParser>
 
 #include <QPropertyAnimation>
+
+#include <QCoreApplication>
+#include <QPluginLoader>
 
 namespace openstudio {
 
@@ -79,6 +84,30 @@ PreviewView::PreviewView(QWidget *t_parent)
   : QWidget(t_parent),
     m_isIP(true)
 {
+  QString pluginName;
+
+  #ifdef QT_DEBUG
+    #ifdef Q_OS_WIN32
+      pluginName = "sceneparsers/assimpsceneparserd";
+    #else
+      pluginName = "sceneparsers/assimpsceneparser"
+    #endif
+  #else
+    pluginName = "sceneparsers/assimpsceneparser"
+  #endif
+
+  QPluginLoader pluginLoader(pluginName);
+  QObject* plugin = pluginLoader.instance();
+  OS_ASSERT(pluginLoader.isLoaded());
+
+  Qt3DRender::QSceneParserPlugin* qspp = qobject_cast<Qt3DRender::QSceneParserPlugin*>(plugin);
+  Qt3DRender::QAbstractSceneParser* asp = qspp->create(QString(), QStringList());
+  //asp->setSource(QUrl("file:///E:/test/box.gltf"));
+  asp->setSource(QUrl("file:///E:/test/cube_UTF16LE.dae"));
+
+  QStringList errors = asp->errors();
+  Qt3DCore::QEntity* scene = asp->scene();
+
   auto mainLayout = new QVBoxLayout;
   setLayout(mainLayout);
 
@@ -91,6 +120,8 @@ PreviewView::PreviewView(QWidget *t_parent)
 
   // Root entity
   Qt3DCore::QEntity *rootEntity = new Qt3DCore::QEntity();
+  
+  scene->setParent(rootEntity);
 
   // Camera
   Qt3DCore::QCamera *cameraEntity = m_view->defaultCamera();
