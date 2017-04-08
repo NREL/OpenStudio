@@ -27882,7 +27882,7 @@ OS:AirflowNetworkDetailedOpening,
       \note Enter the exponent used in the following equation:
       \note Mass Flow Rate = Air Mass Flow Coefficient * (dP)^Air Mass Flow Exponent.
       \note Used only when opening (window or door) is closed.
-  A3, \field Type of Rectangular Large Vertical Opening (LVO)
+  A3, \field Type of Rectangular Large Vertical Opening
       \type choice
       \key NonPivoted
       \key HorizontallyPivoted
@@ -28327,23 +28327,17 @@ OS:AirflowNetworkDuct,
       \minimum> 0.0
 
 OS:AirflowNetworkFan,
-      \min-fields 3
+      \min-fields 2
       \memo This object defines the name of the supply air fan used in an air loop.
   A1, \field Handle
       \type handle
       \required-field
-  A2, \field Fan Name
+  A2; \field Fan Name
       \required-field
       \type object-list
       \object-list FansCVandOnOffandVAV
       \reference AirflowNetworkComponentNames
       \note Enter the name of the fan in the primary air loop.
-  A3; \field Supply Fan Object Type
-      \type choice
-      \key Fan:OnOff
-      \key Fan:ConstantVolume
-      \key Fan:VariableVolume
-      \default Fan:ConstantVolume
 
 OS:AirflowNetworkEquivalentDuct,
       \min-fields 4

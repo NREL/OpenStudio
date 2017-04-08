@@ -186,12 +186,18 @@ MODELOBJECT_TEMPLATES(EnergyManagementSystemOutputVariable);
 UNIQUEMODELOBJECT_TEMPLATES(OutputEnergyManagementSystem);
 MODELOBJECT_TEMPLATES(AirflowNetworkConstantPressureDrop);
 MODELOBJECT_TEMPLATES(AirflowNetworkCrack);
+MODELOBJECT_TEMPLATES(AirflowNetworkDetailedOpening);
+MODELOBJECT_TEMPLATES(AirflowNetworkDuct);
 MODELOBJECT_TEMPLATES(AirflowNetworkEffectiveLeakageArea);
 MODELOBJECT_TEMPLATES(AirflowNetworkEquivalentDuct);
+MODELOBJECT_TEMPLATES(AirflowNetworkFan);
 MODELOBJECT_TEMPLATES(AirflowNetworkHorizontalOpening);
+MODELOBJECT_TEMPLATES(AirflowNetworkLeakageRatio);
 MODELOBJECT_TEMPLATES(AirflowNetworkReferenceCrackConditions);
 MODELOBJECT_TEMPLATES(AirflowNetworkSimpleOpening);
+MODELOBJECT_TEMPLATES(AirflowNetworkSurface);
 UNIQUEMODELOBJECT_TEMPLATES(AirflowNetworkSimulationControl);
+MODELOBJECT_TEMPLATES(AirflowNetworkZoneExhaustFan);
 
 SWIG_MODELOBJECT(ModelObject, 0);
 SWIG_MODELEXTENSIBLEGROUP(ModelExtensibleGroup);
@@ -233,11 +239,17 @@ SWIG_MODELOBJECT(EnergyManagementSystemOutputVariable, 1);
 SWIG_UNIQUEMODELOBJECT(OutputEnergyManagementSystem);
 SWIG_MODELOBJECT(AirflowNetworkConstantPressureDrop, 1);
 SWIG_MODELOBJECT(AirflowNetworkCrack, 1);
+SWIG_MODELOBJECT(AirflowNetworkDetailedOpening, 1);
+SWIG_MODELOBJECT(AirflowNetworkDuct, 1);
 SWIG_MODELOBJECT(AirflowNetworkEffectiveLeakageArea, 1);
 SWIG_MODELOBJECT(AirflowNetworkEquivalentDuct, 1);
+SWIG_MODELOBJECT(AirflowNetworkFan, 1);
 SWIG_MODELOBJECT(AirflowNetworkHorizontalOpening, 1);
+SWIG_MODELOBJECT(AirflowNetworkLeakageRatio, 1);
 SWIG_MODELOBJECT(AirflowNetworkReferenceCrackConditions, 1);
 SWIG_MODELOBJECT(AirflowNetworkSimpleOpening, 1);
+SWIG_MODELOBJECT(AirflowNetworkSurface, 1);
 SWIG_UNIQUEMODELOBJECT(AirflowNetworkSimulationControl);
+SWIG_MODELOBJECT(AirflowNetworkZoneExhaustFan, 1);
 
 #endif //MODEL_CORE_I 

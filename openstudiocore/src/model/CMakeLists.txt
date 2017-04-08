@@ -43,15 +43,27 @@ set(${target_name}_src
   AirflowNetworkCrack.hpp
   AirflowNetworkCrack_Impl.hpp
   AirflowNetworkCrack.cpp
+  AirflowNetworkDetailedOpening.hpp
+  AirflowNetworkDetailedOpening_Impl.hpp
+  AirflowNetworkDetailedOpening.cpp
+  AirflowNetworkDuct.hpp
+  AirflowNetworkDuct_Impl.hpp
+  AirflowNetworkDuct.cpp
   AirflowNetworkEffectiveLeakageArea.hpp
   AirflowNetworkEffectiveLeakageArea_Impl.hpp
   AirflowNetworkEffectiveLeakageArea.cpp
   AirflowNetworkEquivalentDuct.hpp
   AirflowNetworkEquivalentDuct_Impl.hpp
   AirflowNetworkEquivalentDuct.cpp
+  AirflowNetworkFan.hpp
+  AirflowNetworkFan_Impl.hpp
+  AirflowNetworkFan.cpp
   AirflowNetworkHorizontalOpening.hpp
   AirflowNetworkHorizontalOpening_Impl.hpp
   AirflowNetworkHorizontalOpening.cpp
+  AirflowNetworkLeakageRatio.hpp
+  AirflowNetworkLeakageRatio_Impl.hpp
+  AirflowNetworkLeakageRatio.cpp
   AirflowNetworkReferenceCrackConditions.hpp
   AirflowNetworkReferenceCrackConditions_Impl.hpp
   AirflowNetworkReferenceCrackConditions.cpp
@@ -61,6 +73,12 @@ set(${target_name}_src
   AirflowNetworkSimulationControl.hpp
   AirflowNetworkSimulationControl_Impl.hpp
   AirflowNetworkSimulationControl.cpp
+  AirflowNetworkSurface.hpp
+  AirflowNetworkSurface_Impl.hpp
+  AirflowNetworkSurface.cpp
+  AirflowNetworkZoneExhaustFan.hpp
+  AirflowNetworkZoneExhaustFan_Impl.hpp
+  AirflowNetworkZoneExhaustFan.cpp
   AirGap.hpp
   AirGap_Impl.hpp
   AirGap.cpp

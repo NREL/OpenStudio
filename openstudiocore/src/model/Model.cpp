@@ -209,12 +209,18 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(AirConditionerVariableRefrigerantFlow);
     REGISTER_CONSTRUCTOR(AirflowNetworkConstantPressureDrop);
     REGISTER_CONSTRUCTOR(AirflowNetworkCrack);
+    REGISTER_CONSTRUCTOR(AirflowNetworkDetailedOpening)
+    REGISTER_CONSTRUCTOR(AirflowNetworkDuct);
     REGISTER_CONSTRUCTOR(AirflowNetworkEffectiveLeakageArea);
     REGISTER_CONSTRUCTOR(AirflowNetworkEquivalentDuct);
+    REGISTER_CONSTRUCTOR(AirflowNetworkFan);
     REGISTER_CONSTRUCTOR(AirflowNetworkHorizontalOpening);
+    REGISTER_CONSTRUCTOR(AirflowNetworkLeakageRatio);
     REGISTER_CONSTRUCTOR(AirflowNetworkReferenceCrackConditions);
     REGISTER_CONSTRUCTOR(AirflowNetworkSimpleOpening);
     REGISTER_CONSTRUCTOR(AirflowNetworkSimulationControl);
+    REGISTER_CONSTRUCTOR(AirflowNetworkSurface);
+    REGISTER_CONSTRUCTOR(AirflowNetworkZoneExhaustFan);
     REGISTER_CONSTRUCTOR(AirGap);
     REGISTER_CONSTRUCTOR(AirLoopHVAC);
     REGISTER_CONSTRUCTOR(AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass);
@@ -647,12 +653,18 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(AirConditionerVariableRefrigerantFlow);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkConstantPressureDrop);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkCrack);
+    REGISTER_COPYCONSTRUCTORS(AirflowNetworkDetailedOpening);
+    REGISTER_COPYCONSTRUCTORS(AirflowNetworkDuct);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkEffectiveLeakageArea);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkEquivalentDuct);
+    REGISTER_COPYCONSTRUCTORS(AirflowNetworkFan);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkHorizontalOpening);
+    REGISTER_COPYCONSTRUCTORS(AirflowNetworkLeakageRatio);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkReferenceCrackConditions);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkSimpleOpening);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkSimulationControl);
+    REGISTER_COPYCONSTRUCTORS(AirflowNetworkSurface);
+    REGISTER_COPYCONSTRUCTORS(AirflowNetworkZoneExhaustFan);
     REGISTER_COPYCONSTRUCTORS(AirGap);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVAC);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass);
