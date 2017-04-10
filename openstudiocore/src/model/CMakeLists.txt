@@ -32,6 +32,8 @@ set(${target_name}_src
   ModelObjectList.cpp
   FileOperations.hpp
   FileOperations.cpp
+  ThreeJS.hpp
+  ThreeJS.cpp
   
   ConcreteModelObjects.hpp
   AirConditionerVariableRefrigerantFlow.hpp

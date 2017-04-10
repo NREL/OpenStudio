@@ -102,6 +102,7 @@
 %include <model/Component.hpp>
 // %include <model/Relationship.hpp>
 %include <model/FileOperations.hpp>
+%include <model/ThreeJS.hpp>
 
 namespace openstudio {
 namespace model {

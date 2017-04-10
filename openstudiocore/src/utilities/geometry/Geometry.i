@@ -13,6 +13,7 @@
   #include <utilities/geometry/Transformation.hpp>
   #include <utilities/geometry/BoundingBox.hpp>
   #include <utilities/geometry/Intersection.hpp>
+  #include <utilities/geometry/ThreeJS.hpp>
   
   #include <utilities/units/Quantity.hpp>
   #include <utilities/units/Unit.hpp>
