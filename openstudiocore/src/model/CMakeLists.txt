@@ -55,6 +55,9 @@ set(${target_name}_src
   AirflowNetworkEquivalentDuct.hpp
   AirflowNetworkEquivalentDuct_Impl.hpp
   AirflowNetworkEquivalentDuct.cpp
+  AirflowNetworkExternalNode.hpp
+  AirflowNetworkExternalNode_Impl.hpp
+  AirflowNetworkExternalNode.cpp
   AirflowNetworkFan.hpp
   AirflowNetworkFan_Impl.hpp
   AirflowNetworkFan.cpp

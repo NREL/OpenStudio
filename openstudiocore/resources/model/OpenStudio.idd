@@ -28088,10 +28088,10 @@ OS:AirflowNetworkExternalNode,
   A3, \field Wind Pressure Coefficient Curve Name
       \required-field
       \type object-list
-      \object-list WPCValueNames
       \object-list UniVariateCurves
       \object-list UniVariateTables
       \note The name of the AirflowNetwork:MultiZone:WindPressureCoefficientValues, curve, or table object specifying the wind pressure coefficient.
+      \note object-list WPCValueNames is not supported
   A4, \field Symmetric Wind Pressure Coefficient Curve
       \type choice
       \key Yes
@@ -28149,7 +28149,7 @@ OS:AirflowNetworkPressureController,
       \type object-list
       \object-list ScheduleNames
 
-OS:AirflowNetworkNode,
+OS:AirflowNetworkDistributionNode,
       \min-fields 4
       \memo This object represents an air distribution node in the AirflowNetwork model.
   A1, \field Handle

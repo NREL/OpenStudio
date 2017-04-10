@@ -213,6 +213,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(AirflowNetworkDuct);
     REGISTER_CONSTRUCTOR(AirflowNetworkEffectiveLeakageArea);
     REGISTER_CONSTRUCTOR(AirflowNetworkEquivalentDuct);
+    REGISTER_CONSTRUCTOR(AirflowNetworkExternalNode);
     REGISTER_CONSTRUCTOR(AirflowNetworkFan);
     REGISTER_CONSTRUCTOR(AirflowNetworkHorizontalOpening);
     REGISTER_CONSTRUCTOR(AirflowNetworkLeakageRatio);
@@ -657,6 +658,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkDuct);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkEffectiveLeakageArea);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkEquivalentDuct);
+    REGISTER_COPYCONSTRUCTORS(AirflowNetworkExternalNode);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkFan);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkHorizontalOpening);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkLeakageRatio);
