@@ -27,22 +27,11 @@ If this is a major release, release notes must be written.
 - Generate a markdown document from the word doc.
 
 
-Initial Steps
-=============
-If internal to NREL, connect to developer VPN (avoids certificate warnings, increases speed of uploads).
-
-- With Git, merge `develop` into `iteration`.
-
-If this is a major release
-
-- With Git, merge `develop` into `master`.
-
-
 Updating HVAC lib
 =================
 If this is a major release, the HVAC library must be updated.
 
-Run `developer/ruby/UpdateHVACLibrary.rb` (ruby -I E:\Git\OS1\build\OSCore-prefix\src\OSCore-build\ruby\Release UpdateHVACLibrary.rb)
+Run `developer/ruby/UpdateHVACLibrary.rb` (ruby -I E:\Git\OS1\build\Products\ruby\Release UpdateHVACLibrary.rb)
 
 Commit the updated files to develop.
 
@@ -51,13 +40,13 @@ Updating EnergyPlus
 ===================
 
 If a new version of EnergyPlus is to be incorporated into OpenStudio
-- Upload the 4 versions (Windows 64, Windows 32, Ubuntu, and Linux) to S3's folder `openstudio-resources/dependencies`
-- In the top level of your OpenStudio folder, update `CMakeLists.txt` following
+- Upload the 3 versions (Windows 64, Ubuntu, and Linux) to S3's folder `openstudio-resources/dependencies`
+- In the ./openstudiocore folder, update `CMakeLists.txt` following
 	- ENERGYPLUS_VERSION_MAJOR
 	- ENERGYPLUS_VERSION_MINOR
 	- ENERGYPLUS_VERSION_PATCH
 	- ENERGYPLUS_BUILD_SHA
-	- ENERGYPLUS_EXPECTED_HASH (In 4, perhaps 5 places: Win 32, Win 64, Darwin, Linux, and maybe Redhat)
+	- ENERGYPLUS_EXPECTED_HASH (In 3 places: Win 32, Win 64, Darwin, and Linux)
 
 Note: use HashTab, or similar, to determine the MD5 hash value for each file referenced above.
 
@@ -72,6 +61,17 @@ Updating PAT
 ==========================
 
 Bump the PAT SHA in OpenStudio's openstudiocore/pat/CMakeLists.txt.
+
+
+Initial Steps
+=============
+If internal to NREL, connect to developer VPN (avoids certificate warnings, increases speed of uploads).
+
+- With Git, merge `develop` into `iteration`.
+
+If this is a major release
+
+- With Git, merge `develop` into `master`.
 
 
 OpenStudio 2 Builds
@@ -130,7 +130,7 @@ In CMake check the following:
 - BUILD\_OS\_APP
 - BUILD\_PACKAGE
 - BUILD\_PAT
-- BUILD\_TESTING
+- BUILD\_TESTING (NOTE: not currently possible with e+ 8.7 issue)
 
 In CMake **uncheck** the following:
 
@@ -194,6 +194,7 @@ Copy build to VM's share folder
 
 OSVersion Testing
 =================
+NOTE: not available while build testing is deprecated 
 
 In folder `build\Products\Release`
 
@@ -206,8 +207,8 @@ Sanity Testing Release Builds
 
 ### Ubuntu
 - On a clean Ubuntu VM, install the current version of OpenStudio
-- Open OpenStudio, and make a model
-- Open PAT, make a project, and select the model above as your baseline model
+- Locate OpenStudioApp with "which OpenStudioApp", and navigate to its folder
+- ./OpenStudioApp, and make a model
 
 ### Mac
 - On a clean Mac VM, install the current version of SketchUp and OpenStudio
@@ -341,10 +342,10 @@ Version Update
 
 The current version (X.Y.Z) being built, and the updated version (X.Y.Z+1) for the upcoming iteration need to be correctly incorporated into their respective documents.
 
-- Copy file `openstudiocore\resources\model\OpenStudio.idd` to `openstudiocore\src\utilities\idd\versions\x_Y_Z+1` (new folder)
 - In the top level of your OpenStudio folder, update `CMakeLists.txt` version to X.Y.Z+1 (3 lines), e.g. `set(CMAKE_VERSION_MAJOR 2)`, `set(CMAKE_VERSION_MINOR 0)`, `set(CMAKE_VERSION_PATCH 1)`
 - In the openstudiocore level of your OpenStudio folder, update `CMakeLists.txt` version to X.Y.Z+1 (1 line), e.g. `project(OpenStudio VERSION 2.0.1)`
 - In `openstudiocore\resources\model` update `OpenStudio.idd` version to X.Y.Z+1 (1 line)
+- Copy file `openstudiocore\resources\model\OpenStudio.idd` to `openstudiocore\src\utilities\idd\versions\x_Y_Z+1` (new folder)
 - In `openstudiocore\src\osversion` update `VersionTranslator.cpp` version to X.Y.Z+1 in first location, and X.Y.Z in second location
 
 At https://github.com/NREL/OpenStudio/blob/develop/openstudiocore/src/osversion/VersionTranslator.cpp
@@ -356,13 +357,13 @@ With Git, commit above files (Commit Message = `Updating version to X.Y.Z+1`) to
 SketchUp Extension Signature
 =========
 Check if either file below has been updated:
-- `openstudiocore/ruby/openstudio/sketchup_plugin/OpenStudio.rb`
-- `openstudiocore/ruby/openstudio/sketchup_plugin/Startup.rb` 
+- `openstudiocore/ruby/openstudio/sketchup_plugin/OpenStudio.rb` (Note: not valid in OS2.x)
+- `openstudiocore/sketchup_plugin/plugin/OpenStudio/Startup.rb` 
 
 If either file was updated, the SketchUp Extension Signature must be updated in
-- `openstudiocore/ruby/openstudio/sketchup_plugin/OpenStudio.hash`
+- `openstudiocore/sketchup_plugin/plugin/OpenStudio/OpenStudio.hash`
  
-To do this:
+To do this: (Note: not valid in OS2.x)
 - Build an OpenStudio package
 - Zip the contents (OpenStudio.rb and OpenStudio folder) in `build\_CPack_Packages\win64\NSIS\OpenStudio-x.y.z.sha-Win64\Ruby\Plugins`
 - Change the extension of the zip file from .zip to .rbz

@@ -293,8 +293,6 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterHeatPumpWrappe
       idfObject.setString(WaterHeater_HeatPump_WrappedCondenserFields::TankName,idf->name().get());
       idfObject.setString(WaterHeater_HeatPump_WrappedCondenserFields::TankObjectType,idf->iddObject().name());
       if( mo.iddObjectType() == model::WaterHeaterMixed::iddObjectType() ) {
-        idf->setString(WaterHeater_MixedFields::SourceSideOutletNodeName,tankOutletCondInletNodeName);
-        idf->setString(WaterHeater_MixedFields::SourceSideInletNodeName,condOutletTankInletNodeName);
         auto waterHeaterMixed = mo.cast<model::WaterHeaterMixed>();
         if( auto node = waterHeaterMixed.supplyInletModelObject() ) {
           idfObject.setString(WaterHeater_HeatPump_WrappedCondenserFields::TankUseSideInletNodeName,node->name().get());
@@ -303,8 +301,6 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterHeatPumpWrappe
           idfObject.setString(WaterHeater_HeatPump_WrappedCondenserFields::TankUseSideOutletNodeName,node->name().get());
         }
       } else if( mo.iddObjectType() == model::WaterHeaterStratified::iddObjectType() ) {
-        idf->setString(WaterHeater_StratifiedFields::SourceSideOutletNodeName,tankOutletCondInletNodeName);
-        idf->setString(WaterHeater_StratifiedFields::SourceSideInletNodeName,condOutletTankInletNodeName);
         auto waterHeaterStratified = mo.cast<model::WaterHeaterStratified>();
         if( auto node = waterHeaterStratified.supplyInletModelObject() ) {
           idfObject.setString(WaterHeater_HeatPump_WrappedCondenserFields::TankUseSideInletNodeName,node->name().get());
