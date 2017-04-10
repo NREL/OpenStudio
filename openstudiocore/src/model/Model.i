@@ -24,6 +24,7 @@
 %import <model/ModelResources.i>
 %import <model/ModelGeometry.i>
 %import <model/ModelHVAC.i>
+%import <model/ModelAirflow.i>
 %import <model/ModelRefrigeration.i>
 %import <model/ModelGenerators.i>
 
