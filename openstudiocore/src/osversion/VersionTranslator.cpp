@@ -116,7 +116,7 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("1.11.5")] = &VersionTranslator::update_1_11_4_to_1_11_5;
   m_updateMethods[VersionString("1.12.1")] = &VersionTranslator::update_1_12_0_to_1_12_1;
   m_updateMethods[VersionString("1.13.4")] = &VersionTranslator::update_1_12_3_to_1_12_4;
-  m_updateMethods[VersionString("2.1.1")] = &VersionTranslator::defaultUpdate;
+  m_updateMethods[VersionString("2.1.1")] = &VersionTranslator::update_2_1_0_to_2_1_1;
 
 
   // List of previous versions that may be updated to this one.
@@ -3377,6 +3377,42 @@ std::string VersionTranslator::update_1_12_3_to_1_12_4(const IdfFile& idf_1_12_3
           } else {
             newObject.setString(i,s.get());
           }
+        }
+      }
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
+    } else {
+      ss << object;
+    }
+  }
+
+  return ss.str();
+}
+
+std::string VersionTranslator::update_2_1_0_to_2_1_1(const IdfFile& idf_2_1_0, const IddFileAndFactoryWrapper& idd_2_1_1) {
+  std::stringstream ss;
+
+  ss << idf_2_1_0.header() << std::endl << std::endl;
+  IdfFile targetIdf(idd_2_1_1.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  for (const IdfObject& object : idf_2_1_0.objects()) {
+    auto iddname = object.iddObject().name();
+
+    if (iddname == "OS:WaterHeater:Stratified") {
+      auto iddObject = idd_2_1_1.getObject("OS:WaterHeater:Stratified");
+      IdfObject newObject(iddObject.get());
+
+      size_t oldi = 0;
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        if( (i == 64u) || (i == 65u) ) {
+          newObject.setDouble(i,0.0);
+        } else {
+          if ( auto s = object.getString(oldi) ) {
+            newObject.setString(i,s.get());
+          }
+          oldi++;
         }
       }
 
