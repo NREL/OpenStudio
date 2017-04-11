@@ -157,12 +157,35 @@ namespace openstudio {
     return getOpenStudioModule().parent_path();
   }
 
+  bool moduleIsRunningFromBuildDirectory()
+  {
+#ifdef _WIN32
+    openstudio::path buildDir = openstudio::toPath(boost::algorithm::to_upper_copy(openstudio::toString(getApplicationBuildDirectory())));
+    openstudio::path runDir = openstudio::toPath(boost::algorithm::to_upper_copy(openstudio::toString(getOpenStudioModuleDirectory())));
+#else
+    openstudio::path buildDir = getApplicationBuildDirectory();
+    openstudio::path runDir = getOpenStudioModuleDirectory();
+#endif
+
+    return pathBeginsWith(buildDir, runDir);
+  }
+
   openstudio::path getOpenStudioCLI(){
     openstudio::path cliPath;
     #if defined _WIN32 
       cliPath = getOpenStudioModuleDirectory() / toPath("openstudio.exe");
+      if (!openstudio::filesystem::exists(cliPath)){
+        #if _DEBUG
+          cliPath = getOpenStudioModuleDirectory() / toPath("../../Debug/openstudio.exe");
+        #else
+          cliPath = getOpenStudioModuleDirectory() / toPath("../../Release/openstudio.exe");
+        #endif
+      }
     #else
       cliPath = getOpenStudioModuleDirectory() / toPath("openstudio");
+      if (!openstudio::filesystem::exists(cliPath)){
+        cliPath = getOpenStudioModuleDirectory() / toPath("../openstudio");
+      }
     #endif
 
     if( openstudio::filesystem::exists(cliPath) ){
@@ -188,7 +211,7 @@ namespace openstudio {
     openstudio::path cmakeEnergyPlusDirectory = cmakeEnergyPlusPath.parent_path();
 
     // handle developer case first
-    if (applicationIsRunningFromBuildDirectory()){
+    if (moduleIsRunningFromBuildDirectory()){
       if( openstudio::filesystem::exists(cmakeEnergyPlusPath) ){
         return cmakeEnergyPlusPath;
       }
@@ -205,9 +228,9 @@ namespace openstudio {
 
     // next check for installed energyplus
 #ifdef _WIN32
-    openstudio::path installPath = getApplicationDirectory() / toPath("/../EnergyPlus/energyplus.exe");
+    openstudio::path installPath = getOpenStudioModuleDirectory() / toPath("/../EnergyPlus/energyplus.exe");
 #else
-    openstudio::path installPath = getApplicationDirectory() / toPath("/../EnergyPlus/energyplus");
+    openstudio::path installPath = getOpenStudioModuleDirectory() / toPath("/../EnergyPlus/energyplus");
 #endif
     if( openstudio::filesystem::exists(installPath) ) {
       return installPath;
@@ -259,7 +282,7 @@ namespace openstudio {
 
   openstudio::path getRadianceDirectory() {
     // handle developer case first
-    if (applicationIsRunningFromBuildDirectory()){
+    if (moduleIsRunningFromBuildDirectory()){
       openstudio::path cmakeRadianceDirectory = openstudio::toPath("${RADIANCE_LOCATION}");
       if( openstudio::filesystem::exists(cmakeRadianceDirectory) ){
         return cmakeRadianceDirectory;
@@ -276,7 +299,7 @@ namespace openstudio {
     }
 
     // next check for installed energyplus
-    openstudio::path installPath = getApplicationDirectory() / toPath("/../Radiance");
+    openstudio::path installPath = getOpenStudioModuleDirectory() / toPath("/../Radiance");
     if( openstudio::filesystem::exists(installPath) ) {
       return installPath;
     } 
@@ -315,7 +338,7 @@ namespace openstudio {
       } 
     #else
       // handle developer case first
-      if (applicationIsRunningFromBuildDirectory()){
+      if (moduleIsRunningFromBuildDirectory()){
         openstudio::path cmakePerlPath = openstudio::toPath("${PERL_EXE}");
         if( openstudio::filesystem::exists(cmakePerlPath) ){
           return cmakePerlPath;
@@ -332,11 +355,16 @@ namespace openstudio {
       }
 
       // next check for installed perl
-      openstudio::path installPath = getApplicationDirectory() / toPath("/../Perl/bin/perl.exe");
+      openstudio::path installPath = getOpenStudioModuleDirectory() / toPath("/../Perl/bin/perl.exe");
       if( openstudio::filesystem::exists(installPath) ) {
         return installPath;
       } 
-      
+
+      // alternate install location (to be removed)
+      installPath = getOpenStudioModuleDirectory() / toPath("/../Perl/perl/bin/perl.exe");
+      if( openstudio::filesystem::exists(installPath) ) {
+        return installPath;
+      } 
     #endif
 
     return openstudio::path();

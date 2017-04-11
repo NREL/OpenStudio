@@ -90,8 +90,6 @@
 
 namespace openstudio {
 
-const unsigned NumberOfStates = 6;
-
 RunTabView::RunTabView(const model::Model & model,
   QWidget * parent)
   : MainTabView("Run Simulation", MainTabView::MAIN_TAB, parent),
@@ -127,7 +125,7 @@ RunView::RunView()
   
   // Progress bar area
   m_progressBar = new QProgressBar();
-  m_progressBar->setMaximum(NumberOfStates);
+  m_progressBar->setMaximum(State::complete);
   
   auto progressbarlayout = new QVBoxLayout();
   progressbarlayout->addWidget(m_progressBar);
@@ -186,7 +184,7 @@ void RunView::onRunProcessFinished(int exitCode, QProcess::ExitStatus status)
   LOG(Debug, "run finished");
   m_playButton->setChecked(false);
   m_state = State::stopped;
-  m_progressBar->setValue(NumberOfStates);
+  m_progressBar->setValue(State::complete);
 
   std::shared_ptr<OSDocument> osdocument = OSAppBase::instance()->currentDocument();
   osdocument->save();
@@ -260,6 +258,7 @@ void RunView::playButtonClicked(bool t_checked)
     }
 
     m_progressBar->setValue(0);
+    m_state = State::stopped;
     m_textInfo->clear();
     m_runProcess->setStandardOutputFile( toQString(stdoutPath) );
     m_runProcess->setStandardErrorFile( toQString(stderrPath) );
@@ -281,7 +280,7 @@ void RunView::onRunDataReady()
 {
   auto appendErrorText = [&](const QString & text) {
     m_textInfo->setTextColor(Qt::red);
-    m_textInfo->setFontPointSize(15);
+    m_textInfo->setFontPointSize(18);
     m_textInfo->append(text);
   };
 
@@ -304,54 +303,77 @@ void RunView::onRunDataReady()
   };
 
   QString data = m_runSocket->readAll();
+  QStringList lines = data.split("\n");
 
-  //std::cout << data.toStdString() << std::endl;
+  for (const auto& line: lines){
+    //std::cout << data.toStdString() << std::endl;
 
-  if( data.contains("Failure") ) {
-    appendErrorText("Failure");
-    return;
-  }
+    QString trimmedLine = line.trimmed();
 
-  // If we are in the simulation state then just 
-  // echo the E+ standard output
-  if( m_state == State::simulation ) {
-    appendNormalText(data.trimmed());
-    return;
-  } 
-
-  if( m_state == State::os_measures ) {
-    if( data.contains("Applying ") ) {
-      appendH2Text(data.trimmed());
-      return;
+    // DLM: coordinate with openstudio-workflow-gem\lib\openstudio\workflow\adapters\output\socket.rb
+    if (trimmedLine.isEmpty()){
+      continue;
+    } else if (QString::compare(trimmedLine, "Starting state initialization", Qt::CaseInsensitive) == 0) {
+      appendH1Text("Initializing workflow.");
+      m_state = State::initialization;
+      m_progressBar->setValue(m_state);
+    } else if (QString::compare(trimmedLine, "Started", Qt::CaseInsensitive) == 0) {
+      // no-op
+    } else if (QString::compare(trimmedLine, "Returned from state initialization", Qt::CaseInsensitive) == 0) {
+      // no-op
+    } else if (QString::compare(trimmedLine, "Starting state os_measures", Qt::CaseInsensitive) == 0) {
+      appendH1Text("Processing OpenStudio Measures.");
+      m_state = State::os_measures;
+      m_progressBar->setValue(m_state);
+    } else if (QString::compare(trimmedLine, "Returned from state os_measures", Qt::CaseInsensitive) == 0) {
+      // no-op
+    } else if (QString::compare(trimmedLine, "Starting state translator", Qt::CaseInsensitive) == 0) {
+      appendH1Text("Translating the OpenStudio Model to EnergyPlus.");
+      m_state = State::translator;
+      m_progressBar->setValue(m_state);
+    } else if (QString::compare(trimmedLine, "Returned from state translator", Qt::CaseInsensitive) == 0) {
+      // no-op
+    } else if (QString::compare(trimmedLine, "Starting state ep_measures", Qt::CaseInsensitive) == 0) {
+      appendH1Text("Processing EnergyPlus Measures.");
+      m_state = State::ep_measures;
+      m_progressBar->setValue(m_state);
+    } else if (QString::compare(trimmedLine, "Returned from state ep_measures", Qt::CaseInsensitive) == 0) {
+      // no-op
+    } else if (QString::compare(trimmedLine, "Starting state preprocess", Qt::CaseInsensitive) == 0) {
+      // ignore this state
+      m_state = State::preprocess;
+      m_progressBar->setValue(m_state);
+    } else if (QString::compare(trimmedLine, "Returned from state preprocess", Qt::CaseInsensitive) == 0) {
+      // ignore this state
+    } else if (QString::compare(trimmedLine, "Starting state simulation", Qt::CaseInsensitive) == 0) {
+      appendH1Text("Starting Simulation.");
+      m_state = State::simulation;
+      m_progressBar->setValue(m_state);
+    } else if (QString::compare(trimmedLine, "Returned from state simulation", Qt::CaseInsensitive) == 0) {
+      // no-op
+    } else if (QString::compare(trimmedLine, "Starting state reporting_measures", Qt::CaseInsensitive) == 0) {
+      appendH1Text("Processing Reporting Measures.");
+      m_state = State::reporting_measures;
+      m_progressBar->setValue(m_state);
+    } else if (QString::compare(trimmedLine, "Returned from state reporting_measures", Qt::CaseInsensitive) == 0) {
+      // no-op
+    } else if (QString::compare(trimmedLine, "Starting state postprocess", Qt::CaseInsensitive) == 0) {
+      appendH1Text("Gathering Reports.");
+      m_state = State::postprocess;
+      m_progressBar->setValue(m_state);
+    } else if (QString::compare(trimmedLine, "Returned from state postprocess", Qt::CaseInsensitive) == 0) {
+      // no-op
+    } else if (QString::compare(trimmedLine, "Failure", Qt::CaseInsensitive) == 0) {
+      appendErrorText("Failed.");
+    } else if (QString::compare(trimmedLine, "Complete", Qt::CaseInsensitive) == 0) {
+      appendH1Text("Completed.");
+    } else if (trimmedLine.startsWith("Applying", Qt::CaseInsensitive)) {
+      appendH2Text(line);
+    } else if (trimmedLine.startsWith("Applied", Qt::CaseInsensitive)) {
+      // no-op
+    } else{
+      appendNormalText(line);
     }
-  }
-
-  if( m_state == State::ep_measures ) {
-    if( data.contains("Applying ") ) {
-      appendH2Text(data.trimmed());
-      return;
-    }
-  }
-
-  if( data.contains("Starting state initialization") ) {
-    appendH1Text("Initializing workflow.");
-    m_state = State::initialization;
-    m_progressBar->setValue(1);
-  } else if( data.contains("Starting state os_measures") ) {
-    appendH1Text("Processing OpenStudio Measures.");
-    m_state = State::os_measures;
-    m_progressBar->setValue(2);
-  } else if( data.contains("Starting state translator") ) {
-    appendH1Text("Translating the OpenStudio Model to EnergyPlus.");
-    m_state = State::translator;
-    m_progressBar->setValue(3);
-  } else if( data.contains("Starting state ep_measures") ) {
-    appendH1Text("Processing EnergyPlus Measures.");
-    m_state = State::ep_measures;
-    m_progressBar->setValue(4);
-  } else if( data.contains("Starting state simulation") ) {
-    m_state = State::simulation;
-    m_progressBar->setValue(5);
   }
 }
 

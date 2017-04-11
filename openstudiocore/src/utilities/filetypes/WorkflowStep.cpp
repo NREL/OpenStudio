@@ -121,22 +121,6 @@ namespace detail{
     Json::Value result;
     result["measure_dir_name"] = m_measureDirName;
 
-    if (m_measureId){
-      result["measure_id"] = m_measureId.get();
-    }
-
-    if (m_versionId){
-      result["version_id"] = m_versionId.get();
-    }
-
-    if (m_taxonomy){
-      result["taxonomy"] = m_taxonomy.get();
-    }
-
-    if (m_measureType){
-      result["measure_type"] = m_measureType->valueName();
-    }
-
     if (m_name){
       result["name"] = m_name.get();
     }
@@ -191,108 +175,6 @@ namespace detail{
   {
     m_measureDirName = measureDirName;
     return true;
-  }
-
-  boost::optional<std::string> MeasureStep_Impl::measureId() const
-  {
-    return m_measureId;
-  }
-
-  bool MeasureStep_Impl::setMeasureId(const std::string& id)
-  {
-    m_measureId = id;
-    return true;
-  }
-
-  void MeasureStep_Impl::resetMeasureId()
-  {
-    m_measureId.reset();
-  }
-
-  boost::optional<UUID> MeasureStep_Impl::measureUUID() const
-  {
-    if (!m_measureId){
-      return boost::none;
-    }
-    return toUUID("{" + m_measureId.get() + "}");
-  }
-
-  bool MeasureStep_Impl::setMeasureUUID(const UUID& uuid)
-  {
-    m_measureId = removeBraces(uuid);
-    return true;
-  }
-
-  void MeasureStep_Impl::resetMeasureUUID()
-  {
-    m_measureId.reset();
-  }
-
-  boost::optional<std::string> MeasureStep_Impl::versionId() const
-  {
-    return m_versionId;
-  }
-
-  bool MeasureStep_Impl::setVersionId(const std::string& id)
-  {
-    m_versionId = id;
-    return true;
-  }
-
-  void MeasureStep_Impl::resetVersionId()
-  {
-    m_versionId.reset();
-  }
-
-  boost::optional<UUID> MeasureStep_Impl::versionUUID() const
-  {
-    if (!m_versionId){
-      return boost::none;
-    }
-    return toUUID("{" + m_versionId.get() + "}");
-  }
-
-  bool MeasureStep_Impl::setVersionUUID(const UUID& uuid)
-  {
-    m_versionId = removeBraces(uuid);
-    return true;
-  }
-
-  void MeasureStep_Impl::resetVersionUUID()
-  {
-    m_versionId.reset();
-  }
-
-  boost::optional<std::string> MeasureStep_Impl::taxonomy() const
-  {
-    return m_taxonomy;
-  }
-
-  bool MeasureStep_Impl::setTaxonomy(const std::string& taxonomy)
-  {
-    m_taxonomy = taxonomy;
-    return true;
-  }
-
-  void MeasureStep_Impl::resetTaxonomy()
-  {
-    m_taxonomy.reset();
-  }
-
-  boost::optional<MeasureType> MeasureStep_Impl::measureType() const
-  {
-    return m_measureType;
-  }
-
-  bool MeasureStep_Impl::setMeasureType(const MeasureType& measureType)
-  {
-    m_measureType = measureType;
-    return true;
-  }
-
-  void MeasureStep_Impl::resetMeasureType()
-  {
-    m_measureType.reset();
   }
 
   boost::optional<std::string> MeasureStep_Impl::name() const
@@ -429,30 +311,6 @@ boost::optional<WorkflowStep> WorkflowStep::fromString(const std::string& s)
     MeasureStep measureStep(measureDirName.asString());
     result = measureStep;
 
-    if (value.isMember("measure_id")){
-      Json::Value measureId = value["measure_id"];
-      measureStep.setMeasureId(measureId.asString());
-    }
-
-    if (value.isMember("version_id")){
-      Json::Value versionId = value["version_id"];
-      measureStep.setVersionId(versionId.asString());
-    }
-
-    if (value.isMember("taxonomy")){
-      Json::Value taxonomy = value["taxonomy"];
-      measureStep.setTaxonomy(taxonomy.asString());
-    }
- 
-    if (value.isMember("measure_type")){
-      Json::Value measureType = value["measure_type"];
-      try{
-        measureStep.setMeasureType(MeasureType(measureType.asString()));
-      } catch (const std::exception&){
-        LOG(Error, measureType.asString() << " is not a valid MeasureType.")
-      }
-    }
-
     if (value.isMember("name")){
       Json::Value name = value["name"];
       measureStep.setName(name.asString());
@@ -542,96 +400,6 @@ std::string MeasureStep::measureDirName() const
 bool MeasureStep::setMeasureDirName(const std::string& measureDirName)
 {
   return getImpl<detail::MeasureStep_Impl>()->setMeasureDirName(measureDirName);
-}
-
-boost::optional<std::string> MeasureStep::measureId() const
-{
-  return getImpl<detail::MeasureStep_Impl>()->measureId();
-}
-
-bool MeasureStep::setMeasureId(const std::string& id)
-{
-  return getImpl<detail::MeasureStep_Impl>()->setMeasureId(id);
-}
-
-void MeasureStep::resetMeasureId()
-{
-  getImpl<detail::MeasureStep_Impl>()->resetMeasureId();
-}
-
-boost::optional<UUID> MeasureStep::measureUUID() const
-{
-  return getImpl<detail::MeasureStep_Impl>()->measureUUID();
-}
-
-bool MeasureStep::setMeasureUUID(const UUID& uuid)
-{
-  return getImpl<detail::MeasureStep_Impl>()->setMeasureUUID(uuid);
-}
-
-void MeasureStep::resetMeasureUUID()
-{
-  getImpl<detail::MeasureStep_Impl>()->resetMeasureUUID();
-}
-
-boost::optional<std::string> MeasureStep::versionId() const
-{
-  return getImpl<detail::MeasureStep_Impl>()->versionId();
-}
-
-bool MeasureStep::setVersionId(const std::string& id)
-{
-  return getImpl<detail::MeasureStep_Impl>()->setVersionId(id);
-}
-
-void MeasureStep::resetVersionId()
-{
-  getImpl<detail::MeasureStep_Impl>()->resetVersionId();
-}
-
-boost::optional<UUID> MeasureStep::versionUUID() const
-{
-  return getImpl<detail::MeasureStep_Impl>()->versionUUID();
-}
-
-bool MeasureStep::setVersionUUID(const UUID& uuid)
-{
-  return getImpl<detail::MeasureStep_Impl>()->setVersionUUID(uuid);
-}
-
-void MeasureStep::resetVersionUUID()
-{
-  getImpl<detail::MeasureStep_Impl>()->resetVersionUUID();
-}
-
-boost::optional<std::string> MeasureStep::taxonomy() const
-{
-  return getImpl<detail::MeasureStep_Impl>()->measureId();
-}
-
-bool MeasureStep::setTaxonomy(const std::string& taxonomy)
-{
-  return getImpl<detail::MeasureStep_Impl>()->setTaxonomy(taxonomy);
-}
-
-void MeasureStep::resetTaxonomy()
-{
-  getImpl<detail::MeasureStep_Impl>()->resetTaxonomy();
-}
-
-boost::optional<MeasureType> MeasureStep::measureType() const
-{
-  return getImpl<detail::MeasureStep_Impl>()->measureType();
-}
-
-bool MeasureStep::setMeasureType(const MeasureType& measureType)
-{
-  return getImpl<detail::MeasureStep_Impl>()->setMeasureType(measureType);
-}
-
-void MeasureStep::resetMeasureType()
-{
-  getImpl<detail::MeasureStep_Impl>()->resetMeasureType();
 }
 
 boost::optional<std::string> MeasureStep::name() const

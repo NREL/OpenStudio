@@ -20,6 +20,9 @@ function Component()
       var mkRadPath = appPath + "Radiance";
       component.addElevatedOperation("Mkdir", mkRadPath);
       component.addElevatedOperation("CopyDirectory", radPath, appPath);
+      var linktarget = appPath + "/Frameworks/QtWebEngineCore.framework/Versions/5/Helpers/QtWebEngineProcess.app/Contents/Frameworks";
+      var linksource = "../../../../../../../Frameworks";
+      component.addElevatedOperation("Execute", "ln", "-s", linksource, linktarget );
     }
 
     if( kernel == "winnt" ) {

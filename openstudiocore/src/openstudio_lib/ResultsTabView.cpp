@@ -27,15 +27,7 @@
  **********************************************************************************************************************/
 
 #include "ResultsTabView.hpp"
-#if QT_VERSION >= 0x050400
-#include "ResultsWebEngineView.hpp"
-#else
-#include "ResultsWebView.hpp"
-#include <QWebInspector>
-#endif
-
 #include "OSDocument.hpp"
-
 #include "OSAppBase.hpp"
 
 #include <QFile>
@@ -49,13 +41,9 @@
 #include <QPushButton>
 #include <QString>
 #include <QRegExp>
-
-//#include "../runmanager/lib/FileInfo.hpp"
-//#include "../runmanager/lib/JobStatusWidget.hpp"
-//#include "../runmanager/lib/RunManager.hpp"
-
+#include <QWebEnginePage>
+#include <QWebEngineSettings>
 #include "../utilities/core/Assert.hpp"
-
 
 namespace openstudio {
 
@@ -63,15 +51,16 @@ ResultsTabView::ResultsTabView(const QString & tabLabel,
   TabType tabType,
   QWidget * parent)
   : MainTabView(tabLabel, tabType, parent),
-  m_resultsView(new ResultsView())
+  m_resultsView(new ResultsView(parent))
 {
   addTabWidget(m_resultsView);
   m_resultsView->setAutoFillBackground(false);
 
   auto savePath = OSAppBase::instance()->currentDocument()->savePath();
   if( ! savePath.isEmpty() ) {
-    openstudio::path searchPath = toPath(savePath).parent_path() / toPath(savePath).stem() / openstudio::toPath("run");
-    m_resultsView->searchForExistingResults(searchPath);
+    openstudio::path runPath = toPath(savePath).parent_path() / toPath(savePath).stem() / openstudio::toPath("run");
+    openstudio::path reportsPath = toPath(savePath).parent_path() / toPath(savePath).stem() / openstudio::toPath("reports");
+    m_resultsView->searchForExistingResults(runPath, reportsPath);
   }
 }
 
@@ -86,11 +75,15 @@ void ResultsTabView::onUnitSystemChange(bool t_isIP)
 ResultsView::ResultsView(QWidget *t_parent)
   : QWidget(t_parent),
     m_isIP(true),
+    m_progressBar(new QProgressBar()),
+    m_refreshBtn(new QPushButton("Refresh")),
     m_openResultsViewerBtn(new QPushButton("Open ResultsViewer\nfor Detailed Reports"))
 {
 
   auto mainLayout = new QVBoxLayout;
   setLayout(mainLayout);
+
+  connect(m_refreshBtn, &QPushButton::clicked, this, &ResultsView::refreshClicked);
 
   connect(m_openResultsViewerBtn, &QPushButton::clicked, this, &ResultsView::openResultsViewerClicked);
   
@@ -108,29 +101,45 @@ ResultsView::ResultsView(QWidget *t_parent)
 
   hLayout->addStretch();
 
+  hLayout->addWidget(m_progressBar, 0, Qt::AlignVCenter);
+  m_progressBar->setMinimum(0);
+  m_progressBar->setMaximum(100);
+  m_progressBar->setValue(0);
+  m_progressBar->setVisible(false); // make visible when load first page
+
+  hLayout->addWidget(m_refreshBtn, 0, Qt::AlignVCenter);
+  m_refreshBtn->setVisible(true);
+
   hLayout->addWidget(m_openResultsViewerBtn, 0, Qt::AlignVCenter);
 
-  m_view = new ResultsWebView(this);
-  m_view->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-  mainLayout->addWidget(m_view, 0, Qt::AlignTop);
+  m_view = new QWebEngineView(this);
+  m_view->settings()->setAttribute(QWebEngineSettings::WebAttribute::LocalContentCanAccessRemoteUrls, true);
+  m_view->settings()->setAttribute(QWebEngineSettings::WebAttribute::SpatialNavigationEnabled, true);
 
-  #if _DEBUG || (__GNUC__ && !NDEBUG)
-    #if QT_VERSION >= 0x050400
-      // QWebEngine debug stuff
-    #else
-      m_view->page()->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
-    #endif
-  #else
-    m_view->setContextMenuPolicy(Qt::NoContextMenu);
-  #endif
+  connect(m_view, &QWebEngineView::loadFinished, this, &ResultsView::onLoadFinished);
+  connect(m_view, &QWebEngineView::loadProgress, this, &ResultsView::onLoadProgress);
+  connect(m_view, &QWebEngineView::loadStarted, this, &ResultsView::onLoadStarted);
+  connect(m_view, &QWebEngineView::renderProcessTerminated, this, &ResultsView::onRenderProcessTerminated);
+  
+  // Qt 5.8 and higher
+  //m_view->setAttribute(QWebEngineSettings::WebAttribute::AllowRunningInsecureContent, true);
+
+  //m_view->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+  m_view->setContextMenuPolicy(Qt::NoContextMenu);
+
+  //mainLayout->addWidget(m_view, 10, Qt::AlignTop);
+  mainLayout->addWidget(m_view);
+  
 }
 
 ResultsView::~ResultsView()
 {
   delete m_view;
-#if QT_VERSION < 0x050400
-  QWebSettings::clearMemoryCaches();
-#endif
+}
+
+void ResultsView::refreshClicked()
+{
+  m_view->triggerPageAction(QWebEnginePage::ReloadAndBypassCache);
 }
 
 void ResultsView::openResultsViewerClicked()
@@ -209,7 +218,7 @@ struct ResultsPathSorter
   }
 };
 
-void ResultsView::searchForExistingResults(const openstudio::path &t_runDir)
+void ResultsView::searchForExistingResults(const openstudio::path &t_runDir, const openstudio::path &t_reportsDir)
 {
   LOG(Debug, "Looking for existing results in: " << openstudio::toString(t_runDir));
 
@@ -227,9 +236,23 @@ void ResultsView::searchForExistingResults(const openstudio::path &t_runDir)
     } else if (openstudio::toString(p.filename()) == "radout.sql") {
       radout.push_back(p);
     } else if (openstudio::toString(p.filename()) == "report.html") {
-      reports.push_back(p);
+      //reports.push_back(p);
     } else if (openstudio::toString(p.filename()) == "eplustbl.htm") {
-      reports.push_back(p);
+      //reports.push_back(p);
+    }
+  }
+
+  LOG(Debug, "Looking for existing results in: " << openstudio::toString(t_reportsDir));
+
+  if( openstudio::filesystem::exists(t_reportsDir) ) {
+    for ( openstudio::filesystem::directory_iterator end, dir(t_reportsDir); 
+          dir != end; 
+          ++dir ) 
+    {
+      openstudio::path p = *dir;
+      if (openstudio::toString(p.extension()) == ".html" || openstudio::toString(p.extension()) == ".htm") {
+        reports.push_back(p);
+      }
     }
   }
 
@@ -316,7 +339,7 @@ void ResultsView::populateComboBox(std::vector<openstudio::path> reports)
     QFile file(fullPathString);
     fullPathString.prepend("file:///");
 
-    if (openstudio::toString(report.filename()) == "eplustbl.htm"){
+    if (openstudio::toString(report.filename()) == "eplustbl.html" || openstudio::toString(report.filename()) == "eplustbl.htm"){
       
       m_comboBox->addItem("EnergyPlus Results",fullPathString);
 
@@ -357,30 +380,64 @@ void ResultsView::populateComboBox(std::vector<openstudio::path> reports)
 void ResultsView::comboBoxChanged(int index)
 {
   QString filename = m_comboBox->itemData(index).toString();
+
+  // DLM: setting html here causes a flicker, wish there was a better way to clear the current page
+  //m_view->setHtml("");
+
+  // DLM: there is a 2MB limit on content set in setHtml
+  //QFile file(filename);
+  //QString content;
+  //if(file.open(QIODevice::ReadOnly)) {
+  //  QTextStream in(&file);
+  //  in.setCodec("UTF-8");
+  //  content = in.readAll();
+  //  file.close();
+  //}
+  //m_view->setHtml(content);
+
+  m_progressBar->setVisible(true);
+  m_progressBar->setStyleSheet("");
+  m_progressBar->setFormat("");
+  m_progressBar->setTextVisible(false);
+
   m_view->load(QUrl(filename));
 }
 
-ResultsWebView::ResultsWebView(QWidget * parent) :
-#if QT_VERSION >= 0x050400
-  QWebEngineView(parent)
-#else
-  QWebView(parent)
-#endif
+void 	ResultsView::onLoadFinished(bool ok)
 {
-  #if QT_VERSION >= 0x050400
-      // QWebEngine local storage
-  #else
-    this->page()->settings()->setAttribute(QWebSettings::LocalStorageEnabled, true);
-  #endif
+  QString title = m_view->title();
+  if (ok){
+    m_progressBar->setStyleSheet("");
+    m_progressBar->setFormat("");
+    m_progressBar->setTextVisible(false);
+  } else{
+    m_progressBar->setStyleSheet("QProgressBar::chunk {background-color: #FF0000;}");
+    m_progressBar->setFormat("Error");
+    m_progressBar->setTextVisible(true);
+  }
 }
 
-QSize ResultsWebView::sizeHint() const
+void 	ResultsView::onLoadProgress(int progress)
 {
-  QDesktopWidget widget;
-  QRect mainScreenSize = widget.availableGeometry(widget.primaryScreen());
-  int w = mainScreenSize.width();
-  int h = mainScreenSize.height();
-  return QSize(w,h);
+  m_progressBar->setStyleSheet("");
+  m_progressBar->setFormat("");
+  m_progressBar->setTextVisible(false);
+  m_progressBar->setValue(progress);
 }
+
+void 	ResultsView::onLoadStarted()
+{
+  m_progressBar->setStyleSheet("");
+  m_progressBar->setFormat("");
+  m_progressBar->setTextVisible(false);
+}
+
+void 	ResultsView::onRenderProcessTerminated(QWebEnginePage::RenderProcessTerminationStatus terminationStatus, int exitCode)
+{
+  m_progressBar->setStyleSheet("QProgressBar::chunk {background-color: #FF0000;}");
+  m_progressBar->setFormat("Error");
+  m_progressBar->setTextVisible(true);
+}
+
 
 } // openstudio

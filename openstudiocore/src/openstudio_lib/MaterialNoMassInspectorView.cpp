@@ -111,7 +111,7 @@ void MaterialNoMassInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_thermalResistance = new OSQuantityEdit2("","","", m_isIP);
+  m_thermalResistance = new OSQuantityEdit2("m^2*K/W","m^2*K/W","ft^2*h*R/Btu", m_isIP);
   connect(this, &MaterialNoMassInspectorView::toggleUnitsClicked, m_thermalResistance, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_thermalResistance,row++,0,1,3);
 

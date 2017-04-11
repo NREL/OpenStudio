@@ -1515,5 +1515,6 @@ $logger.info "Executing argv: #{ARGV}"
 result = CLI.new(ARGV).execute
 
 if result != 0
-  exit(result)
+  # DLM: exit without a call stack but with a non-zero exit code
+  exit!(false)
 end

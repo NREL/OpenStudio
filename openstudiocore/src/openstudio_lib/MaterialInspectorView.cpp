@@ -121,7 +121,7 @@ void MaterialInspectorView::createLayout()
   label->setObjectName("H2");
   vLayout->addWidget(label);
 
-  m_thickness = new OSQuantityEdit2("","","", m_isIP);
+  m_thickness = new OSQuantityEdit2("m","m","in", m_isIP);
   connect(this, &MaterialInspectorView::toggleUnitsClicked, m_thickness, &OSQuantityEdit2::onUnitSystemChange);
   vLayout->addWidget(m_thickness);
 
@@ -134,7 +134,7 @@ void MaterialInspectorView::createLayout()
   label->setObjectName("H2");
   vLayout->addWidget(label);
 
-  m_conductivity = new OSQuantityEdit2("","","", m_isIP);
+  m_conductivity = new OSQuantityEdit2("W/m*K","W/m*K","Btu*in/hr*ft^2*R", m_isIP);
   connect(this, &MaterialInspectorView::toggleUnitsClicked, m_conductivity, &OSQuantityEdit2::onUnitSystemChange);
   vLayout->addWidget(m_conductivity);
 
@@ -147,7 +147,7 @@ void MaterialInspectorView::createLayout()
   label->setObjectName("H2");
   vLayout->addWidget(label);
 
-  m_density = new OSQuantityEdit2("","","", m_isIP);
+  m_density = new OSQuantityEdit2("kg/m^3","kg/m^3","lb/ft^3", m_isIP);
   connect(this, &MaterialInspectorView::toggleUnitsClicked, m_density, &OSQuantityEdit2::onUnitSystemChange);
   vLayout->addWidget(m_density);
 
@@ -160,7 +160,7 @@ void MaterialInspectorView::createLayout()
   label->setObjectName("H2");
   vLayout->addWidget(label);
 
-  m_specificHeat = new OSQuantityEdit2("","","", m_isIP);
+  m_specificHeat = new OSQuantityEdit2("J/kg*K","J/kg*K","Btu/lb*R", m_isIP);
   connect(this, &MaterialInspectorView::toggleUnitsClicked, m_specificHeat, &OSQuantityEdit2::onUnitSystemChange);
   vLayout->addWidget(m_specificHeat);
 

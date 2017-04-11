@@ -97,7 +97,7 @@ void WindowMaterialGasMixtureInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_thickness = new OSQuantityEdit2("","","", m_isIP);
+  m_thickness = new OSQuantityEdit2("m","m","in", m_isIP);
   connect(this, &WindowMaterialGasMixtureInspectorView::toggleUnitsClicked, m_thickness, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_thickness,row++,0,1,3);
 
