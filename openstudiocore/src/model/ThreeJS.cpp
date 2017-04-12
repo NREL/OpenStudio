@@ -39,8 +39,23 @@
 #include "BuildingStory_Impl.hpp"
 #include "BuildingUnit.hpp"
 #include "BuildingUnit_Impl.hpp"
+#include "Surface.hpp"
+#include "Surface_Impl.hpp"
+#include "SubSurface.hpp"
+#include "SubSurface_Impl.hpp"
+#include "ShadingSurface.hpp"
+#include "ShadingSurface_Impl.hpp"
+#include "InteriorPartitionSurface.hpp"
+#include "InteriorPartitionSurface_Impl.hpp"
+#include "Space.hpp"
+#include "ShadingSurfaceGroup.hpp"
+#include "InteriorPartitionSurfaceGroup.hpp"
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/geometry/Point3d.hpp"
+#include "../utilities/geometry/Transformation.hpp"
+#include "../utilities/geometry/Geometry.hpp"
 
 namespace openstudio
 {
@@ -54,83 +69,98 @@ namespace openstudio
         transparent = true;
       }
 
-      ThreeMaterial result(threeUUID(toString(openstudio::createUUID())), name, type,
-        color, color, threeColor(0, 0, 0), color, shininess, opacity, transparent, false, side);
+      ThreeMaterial result(toThreeUUID(toString(openstudio::createUUID())), name, type,
+        color, color, toThreeColor(0, 0, 0), color, shininess, opacity, transparent, false, side);
 
       return result;
     }
 
-    void addMaterial(std::vector<ThreeMaterial>& materials, std::map<std::string, std::size_t>& materialMap, const ThreeMaterial& material)
+    void addMaterial(std::vector<ThreeMaterial>& materials, std::map<std::string, std::string>& materialMap, const ThreeMaterial& material)
     {
-      materialMap[material.name()] = materials.size();
+      materialMap[material.name()] = material.uuid();
       materials.push_back(material);
     }
 
-    void buildMaterials(Model model, std::vector<ThreeMaterial>& materials, std::map<std::string, std::size_t>& materialMap)
+    std::string getMaterialId(const std::string& materialName, std::map<std::string, std::string>& materialMap)
+    {
+      std::map<std::string, std::string>::const_iterator it = materialMap.find(materialName);
+      if (it != materialMap.end()){
+        return it->second;
+      }
+
+      it = materialMap.find("Undefined");
+      if (it != materialMap.end()){
+        return it->second;
+      }
+      OS_ASSERT(false);
+      return "";
+    }
+
+    void buildMaterials(Model model, std::vector<ThreeMaterial>& materials, std::map<std::string, std::string>& materialMap)
     {
       // materials from 'openstudio\openstudiocore\ruby\openstudio\sketchup_plugin\lib\interfaces\MaterialsInterface.rb' 
 
-      addMaterial(materials, materialMap, makeMaterial("Undefined", threeColor(255, 255, 255), 1, ThreeSide::DoubleSide, 50, "MeshBasicMaterial"));
+      addMaterial(materials, materialMap, makeMaterial("Undefined", toThreeColor(255, 255, 255), 1, ThreeSide::DoubleSide, 50, "MeshBasicMaterial"));
 
-      addMaterial(materials, materialMap, makeMaterial("NormalMaterial", threeColor(255, 255, 255), 1, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("NormalMaterial_Ext", threeColor(255, 255, 255), 1, ThreeSide::FrontSide, 50, "MeshBasicMaterial"));
-      addMaterial(materials, materialMap, makeMaterial("NormalMaterial_Int", threeColor(255, 0, 0), 1, ThreeSide::BackSide));
+      addMaterial(materials, materialMap, makeMaterial("NormalMaterial", toThreeColor(255, 255, 255), 1, ThreeSide::DoubleSide));
+      addMaterial(materials, materialMap, makeMaterial("NormalMaterial_Ext", toThreeColor(255, 255, 255), 1, ThreeSide::FrontSide, 50, "MeshBasicMaterial"));
+      addMaterial(materials, materialMap, makeMaterial("NormalMaterial_Int", toThreeColor(255, 0, 0), 1, ThreeSide::BackSide));
 
-      addMaterial(materials, materialMap, makeMaterial("Floor", threeColor(128, 128, 128), 1, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("Floor_Ext", threeColor(128, 128, 128), 1, ThreeSide::FrontSide));
-      addMaterial(materials, materialMap, makeMaterial("Floor_Int", threeColor(191, 191, 191), 1, ThreeSide::BackSide));
+      addMaterial(materials, materialMap, makeMaterial("Floor", toThreeColor(128, 128, 128), 1, ThreeSide::DoubleSide));
+      addMaterial(materials, materialMap, makeMaterial("Floor_Ext", toThreeColor(128, 128, 128), 1, ThreeSide::FrontSide));
+      addMaterial(materials, materialMap, makeMaterial("Floor_Int", toThreeColor(191, 191, 191), 1, ThreeSide::BackSide));
 
-      addMaterial(materials, materialMap, makeMaterial("Wall", threeColor(204, 178, 102), 1, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("Wall_Ext", threeColor(204, 178, 102), 1, ThreeSide::FrontSide));
-      addMaterial(materials, materialMap, makeMaterial("Wall_Int", threeColor(235, 226, 197), 1, ThreeSide::BackSide));
+      addMaterial(materials, materialMap, makeMaterial("Wall", toThreeColor(204, 178, 102), 1, ThreeSide::DoubleSide));
+      addMaterial(materials, materialMap, makeMaterial("Wall_Ext", toThreeColor(204, 178, 102), 1, ThreeSide::FrontSide));
+      addMaterial(materials, materialMap, makeMaterial("Wall_Int", toThreeColor(235, 226, 197), 1, ThreeSide::BackSide));
 
-      addMaterial(materials, materialMap, makeMaterial("RoofCeiling", threeColor(153, 76, 76), 1, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("RoofCeiling_Ext", threeColor(153, 76, 76), 1, ThreeSide::FrontSide));
-      addMaterial(materials, materialMap, makeMaterial("RoofCeiling_Int", threeColor(202, 149, 149), 1, ThreeSide::BackSide));
+      addMaterial(materials, materialMap, makeMaterial("RoofCeiling", toThreeColor(153, 76, 76), 1, ThreeSide::DoubleSide));
+      addMaterial(materials, materialMap, makeMaterial("RoofCeiling_Ext", toThreeColor(153, 76, 76), 1, ThreeSide::FrontSide));
+      addMaterial(materials, materialMap, makeMaterial("RoofCeiling_Int", toThreeColor(202, 149, 149), 1, ThreeSide::BackSide));
 
-      addMaterial(materials, materialMap, makeMaterial("Window", threeColor(102, 178, 204), 0.6, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("Window_Ext", threeColor(102, 178, 204), 0.6, ThreeSide::FrontSide));
-      addMaterial(materials, materialMap, makeMaterial("Window_Int", threeColor(192, 226, 235), 0.6, ThreeSide::BackSide));
+      addMaterial(materials, materialMap, makeMaterial("Window", toThreeColor(102, 178, 204), 0.6, ThreeSide::DoubleSide));
+      addMaterial(materials, materialMap, makeMaterial("Window_Ext", toThreeColor(102, 178, 204), 0.6, ThreeSide::FrontSide));
+      addMaterial(materials, materialMap, makeMaterial("Window_Int", toThreeColor(192, 226, 235), 0.6, ThreeSide::BackSide));
 
-      addMaterial(materials, materialMap, makeMaterial("Door", threeColor(153, 133, 76), 1, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("Door_Ext", threeColor(153, 133, 76), 1, ThreeSide::FrontSide));
-      addMaterial(materials, materialMap, makeMaterial("Door_Int", threeColor(202, 188, 149), 1, ThreeSide::BackSide));
+      addMaterial(materials, materialMap, makeMaterial("Door", toThreeColor(153, 133, 76), 1, ThreeSide::DoubleSide));
+      addMaterial(materials, materialMap, makeMaterial("Door_Ext", toThreeColor(153, 133, 76), 1, ThreeSide::FrontSide));
+      addMaterial(materials, materialMap, makeMaterial("Door_Int", toThreeColor(202, 188, 149), 1, ThreeSide::BackSide));
 
-      addMaterial(materials, materialMap, makeMaterial("SiteShading", threeColor(75, 124, 149), 1, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("SiteShading_Ext", threeColor(75, 124, 149), 1, ThreeSide::FrontSide));
-      addMaterial(materials, materialMap, makeMaterial("SiteShading_Int", threeColor(187, 209, 220), 1, ThreeSide::BackSide));
+      addMaterial(materials, materialMap, makeMaterial("SiteShading", toThreeColor(75, 124, 149), 1, ThreeSide::DoubleSide));
+      addMaterial(materials, materialMap, makeMaterial("SiteShading_Ext", toThreeColor(75, 124, 149), 1, ThreeSide::FrontSide));
+      addMaterial(materials, materialMap, makeMaterial("SiteShading_Int", toThreeColor(187, 209, 220), 1, ThreeSide::BackSide));
 
-      addMaterial(materials, materialMap, makeMaterial("BuildingShading", threeColor(113, 76, 153), 1, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("BuildingShading_Ext", threeColor(113, 76, 153), 1, ThreeSide::FrontSide));
-      addMaterial(materials, materialMap, makeMaterial("BuildingShading_Int", threeColor(216, 203, 229), 1, ThreeSide::BackSide));
+      addMaterial(materials, materialMap, makeMaterial("BuildingShading", toThreeColor(113, 76, 153), 1, ThreeSide::DoubleSide));
+      addMaterial(materials, materialMap, makeMaterial("BuildingShading_Ext", toThreeColor(113, 76, 153), 1, ThreeSide::FrontSide));
+      addMaterial(materials, materialMap, makeMaterial("BuildingShading_Int", toThreeColor(216, 203, 229), 1, ThreeSide::BackSide));
 
-      addMaterial(materials, materialMap, makeMaterial("SpaceShading", threeColor(76, 110, 178), 1, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("SpaceShading_Ext", threeColor(76, 110, 178), 1, ThreeSide::FrontSide));
-      addMaterial(materials, materialMap, makeMaterial("SpaceShading_Int", threeColor(183, 197, 224), 1, ThreeSide::BackSide));
+      addMaterial(materials, materialMap, makeMaterial("SpaceShading", toThreeColor(76, 110, 178), 1, ThreeSide::DoubleSide));
+      addMaterial(materials, materialMap, makeMaterial("SpaceShading_Ext", toThreeColor(76, 110, 178), 1, ThreeSide::FrontSide));
+      addMaterial(materials, materialMap, makeMaterial("SpaceShading_Int", toThreeColor(183, 197, 224), 1, ThreeSide::BackSide));
       
-      addMaterial(materials, materialMap, makeMaterial("InteriorPartitionSurface", threeColor(158, 188, 143), 1, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("InteriorPartitionSurface_Ext", threeColor(158, 188, 143), 1, ThreeSide::FrontSide));
-      addMaterial(materials, materialMap, makeMaterial("InteriorPartitionSurface_Int", threeColor(213, 226, 207), 1, ThreeSide::BackSide));
+      addMaterial(materials, materialMap, makeMaterial("InteriorPartitionSurface", toThreeColor(158, 188, 143), 1, ThreeSide::DoubleSide));
+      addMaterial(materials, materialMap, makeMaterial("InteriorPartitionSurface_Ext", toThreeColor(158, 188, 143), 1, ThreeSide::FrontSide));
+      addMaterial(materials, materialMap, makeMaterial("InteriorPartitionSurface_Int", toThreeColor(213, 226, 207), 1, ThreeSide::BackSide));
 
       // start textures for boundary conditions
-      addMaterial(materials, materialMap, makeMaterial("Boundary_Surface", threeColor(0, 153, 0), 1, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("Boundary_Adiabatic", threeColor(255, 0, 0), 1, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("Boundary_Space", threeColor(255, 0, 0), 1, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("Boundary_Outdoors", threeColor(163, 204, 204), 1, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("Boundary_Outdoors_Sun", threeColor(40, 204, 204), 1, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("Boundary_Outdoors_Wind", threeColor(9, 159, 162), 1, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("Boundary_Outdoors_SunWind", threeColor(68, 119, 161), 1, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("Boundary_Ground", threeColor(204, 183, 122), 1, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("Boundary_Groundfcfactormethod", threeColor(153, 122, 30), 1, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("Boundary_Groundslabpreprocessoraverage", threeColor(255, 191, 0), 1, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("Boundary_Groundslabpreprocessorcore", threeColor(255, 182, 50), 1, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("Boundary_Groundslabpreprocessorperimeter", threeColor(255, 178, 101), 1, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("Boundary_Groundbasementpreprocessoraveragewall", threeColor(204, 51, 0), 1, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("Boundary_Groundbasementpreprocessoraveragefloor", threeColor(204, 81, 40), 1, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("Boundary_Groundbasementpreprocessorupperwall", threeColor(204, 112, 81), 1, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("Boundary_Groundbasementpreprocessorlowerwall", threeColor(204, 173, 163), 1, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("Boundary_Othersidecoefficients", threeColor(63, 63, 63), 1, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("Boundary_Othersideconditionsmodel", threeColor(153, 0, 76), 1, ThreeSide::DoubleSide));
+      addMaterial(materials, materialMap, makeMaterial("Boundary_Surface", toThreeColor(0, 153, 0), 1, ThreeSide::DoubleSide));
+      addMaterial(materials, materialMap, makeMaterial("Boundary_Adiabatic", toThreeColor(255, 0, 0), 1, ThreeSide::DoubleSide));
+      addMaterial(materials, materialMap, makeMaterial("Boundary_Space", toThreeColor(255, 0, 0), 1, ThreeSide::DoubleSide));
+      addMaterial(materials, materialMap, makeMaterial("Boundary_Outdoors", toThreeColor(163, 204, 204), 1, ThreeSide::DoubleSide));
+      addMaterial(materials, materialMap, makeMaterial("Boundary_Outdoors_Sun", toThreeColor(40, 204, 204), 1, ThreeSide::DoubleSide));
+      addMaterial(materials, materialMap, makeMaterial("Boundary_Outdoors_Wind", toThreeColor(9, 159, 162), 1, ThreeSide::DoubleSide));
+      addMaterial(materials, materialMap, makeMaterial("Boundary_Outdoors_SunWind", toThreeColor(68, 119, 161), 1, ThreeSide::DoubleSide));
+      addMaterial(materials, materialMap, makeMaterial("Boundary_Ground", toThreeColor(204, 183, 122), 1, ThreeSide::DoubleSide));
+      addMaterial(materials, materialMap, makeMaterial("Boundary_Groundfcfactormethod", toThreeColor(153, 122, 30), 1, ThreeSide::DoubleSide));
+      addMaterial(materials, materialMap, makeMaterial("Boundary_Groundslabpreprocessoraverage", toThreeColor(255, 191, 0), 1, ThreeSide::DoubleSide));
+      addMaterial(materials, materialMap, makeMaterial("Boundary_Groundslabpreprocessorcore", toThreeColor(255, 182, 50), 1, ThreeSide::DoubleSide));
+      addMaterial(materials, materialMap, makeMaterial("Boundary_Groundslabpreprocessorperimeter", toThreeColor(255, 178, 101), 1, ThreeSide::DoubleSide));
+      addMaterial(materials, materialMap, makeMaterial("Boundary_Groundbasementpreprocessoraveragewall", toThreeColor(204, 51, 0), 1, ThreeSide::DoubleSide));
+      addMaterial(materials, materialMap, makeMaterial("Boundary_Groundbasementpreprocessoraveragefloor", toThreeColor(204, 81, 40), 1, ThreeSide::DoubleSide));
+      addMaterial(materials, materialMap, makeMaterial("Boundary_Groundbasementpreprocessorupperwall", toThreeColor(204, 112, 81), 1, ThreeSide::DoubleSide));
+      addMaterial(materials, materialMap, makeMaterial("Boundary_Groundbasementpreprocessorlowerwall", toThreeColor(204, 173, 163), 1, ThreeSide::DoubleSide));
+      addMaterial(materials, materialMap, makeMaterial("Boundary_Othersidecoefficients", toThreeColor(63, 63, 63), 1, ThreeSide::DoubleSide));
+      addMaterial(materials, materialMap, makeMaterial("Boundary_Othersideconditionsmodel", toThreeColor(153, 0, 76), 1, ThreeSide::DoubleSide));
       
       // make construction materials
       for (auto& construction : model.getModelObjects<ConstructionBase>()){
@@ -140,7 +170,7 @@ namespace openstudio
           construction.setRenderingColor(*color);
         }
         std::string name = "Construction_" + construction.nameString();
-        addMaterial(materials, materialMap, makeMaterial(name, threeColor(color->renderingRedValue(), color->renderingBlueValue(), color->renderingGreenValue()), 1, ThreeSide::DoubleSide));
+        addMaterial(materials, materialMap, makeMaterial(name, toThreeColor(color->renderingRedValue(), color->renderingBlueValue(), color->renderingGreenValue()), 1, ThreeSide::DoubleSide));
       }
       
       // make thermal zone materials
@@ -151,7 +181,7 @@ namespace openstudio
           thermalZone.setRenderingColor(*color);
         }
         std::string name = "ThermalZone_" + thermalZone.nameString();
-        addMaterial(materials, materialMap, makeMaterial(name, threeColor(color->renderingRedValue(), color->renderingBlueValue(), color->renderingGreenValue()), 1, ThreeSide::DoubleSide));
+        addMaterial(materials, materialMap, makeMaterial(name, toThreeColor(color->renderingRedValue(), color->renderingBlueValue(), color->renderingGreenValue()), 1, ThreeSide::DoubleSide));
       }
 
       // make space type materials
@@ -162,7 +192,7 @@ namespace openstudio
           spaceType.setRenderingColor(*color);
         }
         std::string name = "SpaceType_" + spaceType.nameString();
-        addMaterial(materials, materialMap, makeMaterial(name, threeColor(color->renderingRedValue(), color->renderingBlueValue(), color->renderingGreenValue()), 1, ThreeSide::DoubleSide));
+        addMaterial(materials, materialMap, makeMaterial(name, toThreeColor(color->renderingRedValue(), color->renderingBlueValue(), color->renderingGreenValue()), 1, ThreeSide::DoubleSide));
       }
       
       // make building story materials
@@ -173,7 +203,7 @@ namespace openstudio
           buildingStory.setRenderingColor(*color);
         }
         std::string name = "BuildingStory_" + buildingStory.nameString();
-        addMaterial(materials, materialMap, makeMaterial(name, threeColor(color->renderingRedValue(), color->renderingBlueValue(), color->renderingGreenValue()), 1, ThreeSide::DoubleSide));
+        addMaterial(materials, materialMap, makeMaterial(name, toThreeColor(color->renderingRedValue(), color->renderingBlueValue(), color->renderingGreenValue()), 1, ThreeSide::DoubleSide));
       }
 
       // make building unit materials
@@ -184,166 +214,298 @@ namespace openstudio
           buildingUnit.setRenderingColor(*color);
         }
         std::string name = "BuildingUnit_" + buildingUnit.nameString();
-        addMaterial(materials, materialMap, makeMaterial(name, threeColor(color->renderingRedValue(), color->renderingBlueValue(), color->renderingGreenValue()), 1, ThreeSide::DoubleSide));
+        addMaterial(materials, materialMap, makeMaterial(name, toThreeColor(color->renderingRedValue(), color->renderingBlueValue(), color->renderingGreenValue()), 1, ThreeSide::DoubleSide));
       }
     
     }
 
-    /*
-    std::pair<std::vector<ThreeGeometry>, std::vector<ThreeUserData> > makeGeometries(const PlanarSurface& surface)
+    size_t getVertexIndex(const Point3d& point3d, std::vector<Point3d>& allPoints, double tol = 0.001)
     {
-      std::pair<std::vector<ThreeGeometry>, std::vector<ThreeUserData> > result;
-
-      return result;
+      size_t n = allPoints.size();
+      for (size_t i = 0; i < n; ++i){
+        if (std::sqrt(std::pow(point3d.x()-allPoints[i].x(), 2) + std::pow(point3d.y()-allPoints[i].y(), 2) + std::pow(point3d.z()-allPoints[i].z(), 2)) < tol){
+          return i;
+        }
+      }
+      allPoints.push_back(point3d);
+      return (allPoints.size() - 1);
     }
-    */
 
-    ThreeScene modelToThreeJS(Model model, bool triangulateSurfaces)
+    void updateUserData(ThreeUserData& userData, const PlanarSurface& planarSurface)
+    {
+      std::string name = planarSurface.nameString();
+      boost::optional<Surface> surface = planarSurface.optionalCast<Surface>();
+      boost::optional<ShadingSurface> shadingSurface = planarSurface.optionalCast<ShadingSurface>();
+      boost::optional<InteriorPartitionSurface> interiorPartitionSurface = planarSurface.optionalCast<InteriorPartitionSurface>();
+      boost::optional<SubSurface> subSurface = planarSurface.optionalCast<SubSurface>();
+      boost::optional<PlanarSurfaceGroup> planarSurfaceGroup = planarSurface.planarSurfaceGroup();
+      boost::optional<Space> space = planarSurface.space();
+      boost::optional<ConstructionBase> construction = planarSurface.construction();
+
+      userData.setHandle(toThreeUUID(toString(planarSurface.handle())));
+      userData.setName(name);
+      userData.setCoincidentWithOutsideObject(false);
+
+      if (surface)
+      {
+        userData.setSurfaceType(surface->surfaceType());
+        userData.setSurfaceTypeMaterialName(surface->surfaceType());
+        userData.setSunExposure(surface->sunExposure());
+        userData.setWindExposure(surface->windExposure());
+        userData.setOutsideBoundaryCondition(surface->outsideBoundaryCondition());
+
+        boost::optional<Surface> adjacentSurface = surface->adjacentSurface();
+        if (adjacentSurface){
+          userData.setOutsideBoundaryConditionObjectName(adjacentSurface->nameString());
+          userData.setOutsideBoundaryConditionObjectHandle(toThreeUUID(toString(adjacentSurface->handle())));
+        }
+
+        if (userData.outsideBoundaryCondition() == "Outdoors"){
+          if ((userData.sunExposure() == "SunExposed") && (userData.windExposure() == "WindExposed")){
+            userData.setBoundaryMaterialName("Boundary_Outdoors_SunWind");
+          } else if (userData.sunExposure() == "SunExposed") {
+            userData.setBoundaryMaterialName("Boundary_Outdoors_Sun");
+          } else if (userData.windExposure() == "WindExposed") {
+            userData.setBoundaryMaterialName("Boundary_Outdoors_Wind");
+          } else{
+            userData.setBoundaryMaterialName("Boundary_Outdoors");
+          }
+        } else{
+          userData.setBoundaryMaterialName("Boundary_" + userData.outsideBoundaryCondition());
+        }
+      }
+
+      if (shadingSurface)
+      {
+        std::string shadingSurfaceType = "Building";
+        if (shadingSurface->shadingSurfaceGroup()){
+          shadingSurfaceType = shadingSurface->shadingSurfaceGroup()->shadingSurfaceType();
+        }
+        userData.setSurfaceType(shadingSurfaceType + "Shading");
+        userData.setSurfaceTypeMaterialName(shadingSurfaceType + "Shading");
+        userData.setSunExposure("SunExposed");
+        userData.setWindExposure("WindExposed");
+        userData.setOutsideBoundaryCondition("");
+        userData.setOutsideBoundaryConditionObjectName("");
+        userData.setOutsideBoundaryConditionObjectHandle("");
+        userData.setBoundaryMaterialName("");
+      }
+
+      if (interiorPartitionSurface)
+      {
+        userData.setSurfaceType("InteriorPartitionSurface");
+        userData.setSurfaceTypeMaterialName("InteriorPartitionSurface");
+        userData.setSunExposure("NoSun");
+        userData.setWindExposure("NoWind");
+        userData.setOutsideBoundaryCondition("");
+        userData.setOutsideBoundaryConditionObjectName("");
+        userData.setOutsideBoundaryConditionObjectHandle("");
+        userData.setBoundaryMaterialName("");
+      }
+
+      if (subSurface)
+      {
+        std::string subSurfaceType = subSurface->subSurfaceType();
+        std::string subSurfaceTypeMaterialName;
+        if (istringEqual(subSurfaceType, "FixedWindow") ||
+            istringEqual(subSurfaceType, "OperableWindow") ||
+            istringEqual(subSurfaceType, "GlassDoor") || 
+            istringEqual(subSurfaceType, "Skylight") ||
+            istringEqual(subSurfaceType, "TubularDaylightDome") ||
+            istringEqual(subSurfaceType, "TubularDaylightDiffuser"))
+        {
+          subSurfaceTypeMaterialName = "Window";
+        } else if (istringEqual(subSurfaceType, "Door") || 
+                  istringEqual(subSurfaceType, "OverheadDoor"))
+        {
+          subSurfaceTypeMaterialName = "Door";
+        }
+
+        userData.setSurfaceType(subSurfaceType);
+        userData.setSurfaceTypeMaterialName(subSurfaceTypeMaterialName);
+
+        boost::optional<Surface> parentSurface = subSurface->surface();
+        std::string boundaryMaterialName;
+        if (surface){
+          boundaryMaterialName = "Boundary_" + surface->surfaceType();
+          userData.setOutsideBoundaryCondition(surface->outsideBoundaryCondition());
+          userData.setSunExposure(parentSurface->sunExposure());
+          userData.setWindExposure(parentSurface->windExposure());
+        }
+
+        boost::optional<SubSurface> adjacentSubSurface = subSurface->adjacentSubSurface();
+        if (adjacentSubSurface){
+          userData.setOutsideBoundaryConditionObjectName(adjacentSubSurface->nameString());
+          userData.setOutsideBoundaryConditionObjectHandle(toThreeUUID(toString(adjacentSubSurface->handle())));
+          userData.setBoundaryMaterialName("Boundary_Surface");
+        } else{
+          if (boundaryMaterialName == "Boundary_Surface"){
+            userData.setBoundaryMaterialName("");
+          } else{
+            userData.setBoundaryMaterialName(boundaryMaterialName);
+          }
+        }
+      }
+
+      if (construction)
+      {
+        userData.setConstructionName(construction->nameString());
+        userData.setConstructionMaterialName("Construction_" + construction->nameString());
+      }
+    
+      if (space)
+      {
+        userData.setSpaceName(space->nameString());
+
+        boost::optional<ThermalZone> thermalZone = space->thermalZone();
+        if (thermalZone){
+          userData.setThermalZoneName(thermalZone->nameString());
+          userData.setThermalZoneMaterialName("ThermalZone_" + thermalZone->nameString());
+        }
+
+        boost::optional<SpaceType> spaceType = space->spaceType();
+        if (spaceType){
+          userData.setSpaceTypeName(spaceType->nameString());
+          userData.setSpaceTypeMaterialName("SpaceType_" + spaceType->nameString());
+        }
+
+        boost::optional<BuildingStory> buildingStory = space->buildingStory();
+        if (buildingStory){
+          userData.setBuildingStoryName(buildingStory->nameString());
+          userData.setBuildingStoryMaterialName("BuildingStory_" + buildingStory->nameString());
+        }
+
+        boost::optional<BuildingUnit> buildingUnit = space->buildingUnit();
+        if (buildingUnit){
+          userData.setBuildingUnitName(buildingUnit->nameString());
+          userData.setBuildingUnitMaterialName("BuildingUnit_" + buildingUnit->nameString());
+        }
+      }
+    }
+
+    void makeGeometries(const PlanarSurface& planarSurface, std::vector<ThreeGeometry>& geometries, std::vector<ThreeUserData>& userDatas)
+    {
+      std::string name = planarSurface.nameString();
+      boost::optional<Surface> surface = planarSurface.optionalCast<Surface>();
+      boost::optional<PlanarSurfaceGroup> planarSurfaceGroup = planarSurface.planarSurfaceGroup();
+
+      // get the transformation to site coordinates
+      Transformation siteTransformation;
+      if (planarSurfaceGroup){
+        siteTransformation = planarSurfaceGroup->siteTransformation();
+      }
+
+      // get the vertices
+      Point3dVector vertices = planarSurface.vertices();
+      Transformation t = Transformation::alignFace(vertices);
+      //Transformation r = t.rotationMatrix();
+      Transformation tInv = t.inverse();
+      Point3dVector faceVertices = reverse(tInv*vertices);
+
+      // get vertices of all sub surfaces
+      Point3dVectorVector faceSubVertices;
+      if (surface){
+        for (const auto& subSurface : surface->subSurfaces()){
+          faceSubVertices.push_back(reverse(tInv*subSurface.vertices()));
+        }
+      }
+
+      // triangulate surface
+      Point3dVectorVector finalFaceVertices = computeTriangulation(faceVertices, faceSubVertices);
+      if (finalFaceVertices.empty()){
+        LOG_FREE(Error, "modelToThreeJS", "Failed to triangulate surface " << name << " with " << faceSubVertices.size() << " sub surfaces");
+        return;
+      }
+
+      Point3dVector allVertices;
+      std::vector<size_t> faceIndices;
+      for (const auto& finalFaceTriangle : finalFaceVertices) {
+        Point3dVector finalTriangle = siteTransformation*t*finalFaceTriangle;
+        //normal = siteTransformation.rotationMatrix*r*z
+
+        // https://github.com/mrdoob/three.js/wiki/JSON-Model-format-3
+        // 0 indicates triangle
+        // 16 indicates triangle with normals
+        faceIndices.push_back(0);
+
+        Point3dVector::reverse_iterator it = finalTriangle.rbegin();
+        Point3dVector::reverse_iterator itend = finalTriangle.rend();
+        for (; it != itend; ++it){
+          faceIndices.push_back(getVertexIndex(*it, allVertices));
+        }
+
+        // convert to 1 based indices
+        //face_indices.each_index {|i| face_indices[i] = face_indices[i] + 1}
+      }
+
+      ThreeGeometryData geometryData(toThreeVector(allVertices), faceIndices);
+    
+      ThreeGeometry geometry(toThreeUUID(toString(planarSurface.handle())), "Geometry", geometryData);
+      geometries.push_back(geometry);
+
+      ThreeUserData userData;
+      updateUserData(userData, planarSurface);
+
+      // check if the adjacent surface is truly adjacent
+      // this controls display only, not energy model
+      if (!userData.outsideBoundaryConditionObjectHandle().empty()){
+
+        UUID adjacentHandle = toUUID(fromThreeUUID(userData.outsideBoundaryConditionObjectHandle()));
+        boost::optional<PlanarSurface> adjacentPlanarSurface = planarSurface.model().getModelObject<PlanarSurface>(adjacentHandle);
+        OS_ASSERT(adjacentPlanarSurface);
+
+        Transformation otherSiteTransformation;
+        if (adjacentPlanarSurface->planarSurfaceGroup()){
+          otherSiteTransformation = adjacentPlanarSurface->planarSurfaceGroup()->siteTransformation();
+        }
+
+        Point3dVector otherVertices = otherSiteTransformation*adjacentPlanarSurface->vertices();
+        if (circularEqual(siteTransformation*vertices, reverse(otherVertices))){
+          userData.setCoincidentWithOutsideObject(true); 
+        } else{
+          userData.setCoincidentWithOutsideObject(false); 
+        }
+      }
+
+      userDatas.push_back(userData);
+    }
+
+    ThreeScene modelToThreeJS(Model model)
     {
       std::vector<ThreeMaterial> materials;
-      std::map<std::string, std::size_t> materialMap;
+      std::map<std::string, std::string> materialMap;
       buildMaterials(model, materials, materialMap);
 
-     /*
-    object = Hash.new
-    object[:uuid] = format_uuid(OpenStudio::createUUID)
-    object[:type] = 'Scene'
-    object[:matrix] = identity_matrix
-    object[:children] = []
-    
-    floor_material = materials.find {|m| m[:name] == 'Floor'}
-    wall_material = materials.find {|m| m[:name] == 'Wall'}
-    roof_material = materials.find {|m| m[:name] == 'RoofCeiling'}
-    window_material = materials.find {|m| m[:name] == 'Window'}
-    door_material = materials.find {|m| m[:name] == 'Door'}
-    site_shading_material = materials.find {|m| m[:name] == 'SiteShading'}
-    building_shading_material = materials.find {|m| m[:name] == 'BuildingShading'}
-    space_shading_material = materials.find {|m| m[:name] == 'SpaceShading'}
-    interior_partition_surface_material = materials.find {|m| m[:name] == 'InteriorPartitionSurface'}
-    
-    # loop over all surfaces
-    all_geometries = []
-    model.getSurfaces.each do |surface|
+      std::vector<ThreeSceneChild> sceneChildren;
+      std::vector<ThreeGeometry> allGeometries;
 
-      material = nil
-      surfaceType = surface.surfaceType.upcase
-      if surfaceType == 'FLOOR'
-        material = floor_material
-      elsif surfaceType == 'WALL'
-        material = wall_material
-      elsif surfaceType == 'ROOFCEILING'
-        material = roof_material  
-      end
-  
-      geometries, user_datas = make_geometries(surface)
-      if geometries
-        geometries.each_index do |i| 
-          geometry = geometries[i]
-          user_data = user_datas[i]
-          
-          all_geometries << geometry
+      // loop over all surfaces
+      for (const auto& planarSurface : model.getModelObjects<PlanarSurface>())
+      {
+        std::vector<ThreeGeometry> geometries;
+        std::vector<ThreeUserData> userDatas;
+        makeGeometries(planarSurface, geometries, userDatas);
+        OS_ASSERT(geometries.size() == userDatas.size());
 
-          scene_child = SceneChild.new
-          scene_child.uuid = format_uuid(OpenStudio::createUUID) 
-          scene_child.name = user_data[:name]
-          scene_child.type = "Mesh"
-          scene_child.geometry = geometry[:uuid]
+        size_t n = geometries.size();
+        for (size_t i = 0; i < n; ++i){
 
-          if i == 0
-            # first geometry is base surface
-            scene_child.material = material[:uuid]
-          else
-            # sub surface
-            if /Window/.match(user_data[:surfaceType]) || /Glass/.match(user_data[:surfaceType]) 
-              scene_child.material =  window_material[:uuid]
-            else
-              scene_child.material =  door_material[:uuid]
-            end
-          end
-          
-          scene_child.matrix = identity_matrix
-          scene_child.userData = user_data
-          object[:children] << scene_child.to_h
-        end
-      end
-    end
-    
-    # loop over all shading surfaces
-    model.getShadingSurfaces.each do |surface|
-  
-      geometries, user_datas = make_shade_geometries(surface)
-      if geometries
-        geometries.each_index do |i| 
-          geometry = geometries[i]
-          user_data = user_datas[i]
-          
-          material = nil
-          if /Site/.match(user_data[:surfaceType])
-            material = site_shading_material
-          elsif /Building/.match(user_data[:surfaceType]) 
-            material = building_shading_material
-          elsif /Space/.match(user_data[:surfaceType]) 
-            material = space_shading_material
-          end
-          
-          all_geometries << geometry
+         allGeometries.push_back(geometries[i]);
 
-          scene_child = SceneChild.new
-          scene_child.uuid = format_uuid(OpenStudio::createUUID) 
-          scene_child.name = user_data[:name]
-          scene_child.type = 'Mesh'
-          scene_child.geometry = geometry[:uuid]
-          scene_child.material = material[:uuid]
-          scene_child.matrix = identity_matrix
-          scene_child.userData = user_data
-          object[:children] << scene_child.to_h
-        end
-      end
-    end    
-    
-    # loop over all interior partition surfaces
-    model.getInteriorPartitionSurfaces.each do |surface|
-  
-      geometries, user_datas = make_interior_partition_geometries(surface)
-      geometries.each_index do |i| 
-        geometry = geometries[i]
-        user_data = user_datas[i]
-        
-        material = interior_partition_surface_material
+         std::string thisUUID(toThreeUUID(toString(createUUID())));
+         std::string thisName(userDatas[i].name());
+         std::string thisMaterialId = getMaterialId(userDatas[i].surfaceTypeMaterialName(), materialMap);
 
-        all_geometries << geometry
+         ThreeSceneChild sceneChild(thisUUID, thisName, "Mesh", geometries[i].uuid(), thisMaterialId, userDatas[i]);
+           sceneChildren.push_back(sceneChild);
+        }
+      }
 
-        scene_child = SceneChild.new
-        scene_child.uuid = format_uuid(OpenStudio::createUUID) 
-        scene_child.name = user_data[:name]
-        scene_child.type = 'Mesh'
-        scene_child.geometry = geometry[:uuid]
-        scene_child.material = material[:uuid]
-        scene_child.matrix = identity_matrix
-        scene_child.userData = user_data
-        object[:children] << scene_child.to_h
-      end
-      
-    end    
-    
-    #light = AmbientLight.new
-    #light.uuid = "#{format_uuid(OpenStudio::createUUID)}"
-    #light.type = "AmbientLight"
-    #light.color = "0xFFFFFF".hex
-    #light.matrix = identity_matrix
-    #object[:children] << light.to_h
-      
-    scene = Scene.new
-    scene.geometries = all_geometries
-    scene.materials = materials
-    scene.object = object
+      ThreeSceneObject sceneObject(toThreeUUID(toString(openstudio::createUUID())), sceneChildren);
 
-    return scene
-    */
+      ThreeScene scene(allGeometries, materials, sceneObject);
 
-      std::vector<ThreeGeometry> geometries;
-      ThreeSceneObject sceneObject("");
-      return ThreeScene(geometries, materials, sceneObject);
+      return scene;
     }
     
     boost::optional<Model> modelFromThreeJS(const ThreeScene& scene)

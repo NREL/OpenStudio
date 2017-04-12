@@ -31,30 +31,72 @@
 
 #include "../UtilitiesAPI.hpp"
 
+#include "Point3d.hpp"
+#include "Transformation.hpp"
+
 #include <vector>
 #include <boost/optional.hpp>
 
 namespace openstudio{
 
+  /// enum for materials
   enum ThreeSide{FrontSide = 0, BackSide = 1, DoubleSide = 2};
 
-  UTILITIES_API unsigned threeColor(unsigned r, unsigned g, unsigned b);
+  /// convert RGB to unsigned
+  UTILITIES_API unsigned toThreeColor(unsigned r, unsigned g, unsigned b);
 
-  UTILITIES_API std::string threeUUID(const std::string& uuid);
+  /// format a UUID, to limit dependencies UUIDs must be generated outside of this code
+  UTILITIES_API std::string toThreeUUID(const std::string& uuid);
 
+  UTILITIES_API std::string fromThreeUUID(const std::string& uuid);
+
+  /// format a list of vertices
+  UTILITIES_API std::vector<double> toThreeVector(const Point3dVector& vertices);
+
+  /// format a Transformation matrix
+  UTILITIES_API std::vector<double> toThreeMatrix(const Transformation& matrix);
+
+  /// ThreeGeometryData holds the geometry data for an object
+  class UTILITIES_API ThreeGeometryData{
+  public: 
+    ThreeGeometryData(const std::vector<double>& vertices, const std::vector<size_t>& faces);
+    std::vector<double> vertices() const;
+    std::vector<size_t> normals() const;
+    std::vector<size_t> uvs() const;
+    std::vector<size_t> faces() const;
+    double scale() const;
+    bool visible() const;
+    bool castShadow() const;
+    bool receiveShadow() const;
+    bool doubleSided() const;
+
+  private:
+    std::vector<double> m_vertices;
+    std::vector<size_t> m_normals;
+    std::vector<size_t> m_uvs;
+    std::vector<size_t> m_faces;
+    double m_scale;
+    bool m_visible;
+    bool m_castShadow;
+    bool m_receiveShadow;
+    bool m_doubleSided;
+  };
+
+  /// ThreeGeometry holds the geometry for an object
   class UTILITIES_API ThreeGeometry{
   public: 
-    ThreeGeometry(const std::string& uuid, const::std::string& type);
+    ThreeGeometry(const std::string& uuid, const::std::string& type, const ThreeGeometryData& data);
     std::string uuid() const;
     std::string type() const;
+    ThreeGeometryData data() const;
 
   private:
     std::string m_uuid;
     std::string m_type;
+    ThreeGeometryData m_data;
   };
-  //Geometry = Struct.new(:uuid, :type, :data)
-  //GeometryData = Struct.new(:vertices, :normals, :uvs, :faces, :scale, :visible, :castShadow, :receiveShadow, :doubleSided)
-
+ 
+  /// ThreeMaterial defines a rendering material
   class UTILITIES_API ThreeMaterial{
   public:
     ThreeMaterial(const std::string& uuid, const std::string& name, const::std::string& type,
@@ -88,39 +130,123 @@ namespace openstudio{
     unsigned m_side; 
   };
 
+  /// ThreeUserData decorates a ThreeSceneChild with additional information
+  class UTILITIES_API ThreeUserData{
+  public: 
+    ThreeUserData();
+    std::string handle() const;
+    std::string name() const;
+    std::string surfaceType() const;
+    std::string surfaceTypeMaterialName() const;
+    std::string constructionName() const;
+    std::string constructionMaterialName() const;
+    std::string spaceName() const;
+    std::string thermalZoneName() const;
+    std::string thermalZoneMaterialName() const;
+    std::string spaceTypeName() const;
+    std::string spaceTypeMaterialName() const;
+    std::string buildingStoryName() const;
+    std::string buildingStoryMaterialName() const;
+    std::string buildingUnitName() const;
+    std::string buildingUnitMaterialName() const;
+    std::string outsideBoundaryCondition() const;
+    std::string outsideBoundaryConditionObjectName() const;
+    std::string outsideBoundaryConditionObjectHandle() const;
+    std::string boundaryMaterialName() const;
+    bool coincidentWithOutsideObject() const;
+    std::string sunExposure() const;
+    std::string windExposure() const;
+
+    void setHandle(const std::string& s);
+    void setName(const std::string& s);
+    void setSurfaceType(const std::string& s);
+    void setSurfaceTypeMaterialName(const std::string& s);
+    void setConstructionName(const std::string& s);
+    void setConstructionMaterialName(const std::string& s);
+    void setSpaceName(const std::string& s);
+    void setThermalZoneName(const std::string& s);
+    void setThermalZoneMaterialName(const std::string& s);
+    void setSpaceTypeName(const std::string& s);
+    void setSpaceTypeMaterialName(const std::string& s);
+    void setBuildingStoryName(const std::string& s);
+    void setBuildingStoryMaterialName(const std::string& s);
+    void setBuildingUnitName(const std::string& s);
+    void setBuildingUnitMaterialName(const std::string& s);
+    void setOutsideBoundaryCondition(const std::string& s);
+    void setOutsideBoundaryConditionObjectName(const std::string& s);
+    void setOutsideBoundaryConditionObjectHandle(const std::string& s);
+    void setBoundaryMaterialName(const std::string& s);
+    void setCoincidentWithOutsideObject(bool b);
+    void setSunExposure(const std::string& s);
+    void setWindExposure(const std::string& s);
+
+  private:
+    std::string m_handle;
+    std::string m_name;
+    std::string m_surfaceType;
+    std::string m_surfaceTypeMaterialName;
+    std::string m_constructionName;
+    std::string m_constructionMaterialName;
+    std::string m_spaceName;
+    std::string m_thermalZoneName;
+    std::string m_thermalZoneMaterialName;
+    std::string m_spaceTypeName;
+    std::string m_spaceTypeMaterialName;
+    std::string m_buildingStoryName;
+    std::string m_buildingStoryMaterialName;
+    std::string m_buildingUnitName;
+    std::string m_buildingUnitMaterialName;
+    std::string m_outsideBoundaryCondition;
+    std::string m_outsideBoundaryConditionObjectName;
+    std::string m_outsideBoundaryConditionObjectHandle;
+    std::string m_boundaryMaterialName;
+    bool m_coincidentWithOutsideObject;
+    std::string m_sunExposure;
+    std::string m_windExposure;
+
+  };
+
+  
+  /// ThreeSceneChild is a child object of a ThreeSceneObject
+  class UTILITIES_API ThreeSceneChild{
+  public: 
+    ThreeSceneChild(const std::string& uuid, const std::string& name, const std::string& type,
+                    const std::string& geometryId, const std::string& materialId, const ThreeUserData& userData);
+    std::string uuid() const;
+    std::string name() const;
+    std::string type() const;
+    std::string geometry() const;
+    std::string material() const;
+    Transformation matrix() const;
+    ThreeUserData userData() const;
+
+  private:
+    std::string m_uuid;
+    std::string m_name;
+    std::string m_type;
+    std::string m_geometryId;
+    std::string m_materialId;
+    Transformation m_matrix;
+    ThreeUserData m_userData;
+  };
+
+  /// ThreeSceneObject is the root object in a ThreeScene
   class UTILITIES_API ThreeSceneObject{
   public: 
-    ThreeSceneObject(const std::string& uuid);
+    ThreeSceneObject(const std::string& uuid, const std::vector<ThreeSceneChild>& children);
     std::string uuid() const;
     std::string type() const;
+    Transformation matrix() const;
+    std::vector<ThreeSceneChild> children() const;
 
   private:
     std::string m_uuid;
     std::string m_type;
-  };
-  //SceneObject = Struct.new(:uuid, :type, :matrix, :children)
-  //SceneChild = Struct.new(:uuid, :name, :type, :geometry, :material, :matrix, :userData)
-  //UserData = Struct.new(:handle, :name, :surfaceType, :constructionName, :spaceName, :thermalZoneName, :spaceTypeName, :buildingStoryName, 
-     //                   :outsideBoundaryCondition, :outsideBoundaryConditionObjectName, 
-     //                   :outsideBoundaryConditionObjectHandle, :coincidentWithOutsideObject,
-     //                   :sunExposure, :windExposure, #:vertices, 
-     //                   :surfaceTypeMaterialName, :boundaryMaterialName, :constructionMaterialName,  :thermalZoneMaterialName, 
-     //                   :spaceTypeMaterialName, :buildingStoryMaterialName) 
-
-  class UTILITIES_API ThreeAmbientLight{
-  public: 
-    ThreeAmbientLight(const std::string& uuid, const::std::string& type, unsigned color);
-    std::string uuid() const;
-    std::string type() const;
-    unsigned color() const;
-
-  private:
-    std::string m_uuid;
-    std::string m_type;
-    unsigned m_color;
+    Transformation m_matrix;
+    std::vector<ThreeSceneChild> m_children;
   };
 
-  /** ThreeJs class is an adapter for the three.js geometry format, defined at:
+  /** ThreeScene is an adapter for a scene in the three.js geometry format, defined at:
   *   https://github.com/mrdoob/three.js/wiki/JSON-Object-Scene-format-4
   *
   *  The class is not impl-ized in hopes that it can be ported to JavaScript via emscripten

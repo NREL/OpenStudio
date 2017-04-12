@@ -39,7 +39,7 @@ namespace openstudio
 {
   namespace model
   {
-    MODEL_API ThreeScene modelToThreeJS(Model model, bool triangulateSurfaces);
+    MODEL_API ThreeScene modelToThreeJS(Model model);
     
     MODEL_API boost::optional<Model> modelFromThreeJS(const ThreeScene& scene);
 
