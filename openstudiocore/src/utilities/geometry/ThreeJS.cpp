@@ -37,8 +37,7 @@ namespace openstudio{
   
   unsigned toThreeColor(unsigned r, unsigned g, unsigned b)
   {
-    //return "0x#{r.to_s(16).rjust(2,'0')}#{g.to_s(16).rjust(2,'0')}#{b.to_s(16).rjust(2,'0')}"
-    return 0;
+    return 65536 * r + 256 * g + b;
   }
 
   std::string toThreeUUID(const std::string& uuid)
@@ -64,17 +63,14 @@ namespace openstudio{
 
   std::vector<double> toThreeVector(const Point3dVector& vertices)
   {
-        //result = []
-    //vertices.each do |vertex|
-     // #result << vertex.x
-     // #result << vertex.y
-     // #result << vertex.z
-     // 
-     // result << vertex.x.round(3)
-     // result << vertex.z.round(3)
-     // result << -vertex.y.round(3)
-   // end
-    return std::vector<double>();
+    std::vector<double> result;
+    result.reserve(vertices.size() * 3);
+    for (const auto& vertex : vertices){
+      result.push_back(vertex.x());
+      result.push_back(vertex.z());
+      result.push_back(-vertex.y());
+    }
+    return result;
   }
 
   std::vector<double> toThreeMatrix(const Transformation& matrix)
@@ -104,7 +100,6 @@ namespace openstudio{
 
     // metadata
     Json::Value metadata(Json::objectValue);
-    scene["metadata"] = metadata;
 
     Json::Value boundingBox(Json::objectValue);
     boundingBox["minX"] = m_metadata.boundingBox().minX();
@@ -128,6 +123,7 @@ namespace openstudio{
     metadata["generator"] = m_metadata.generator();
     metadata["buildingStoryNames"] = buildingStoryNames;
     metadata["boundingBox"] = boundingBox;
+    scene["metadata"] = metadata;
 
     // geometries
     Json::Value geometries(Json::arrayValue);
@@ -153,8 +149,8 @@ namespace openstudio{
 
       Json::Value data(Json::objectValue);
       data["vertices"] = vertices;
-      data["vertices"] = normals;
-      data["vertices"] = uvs;
+      data["normals"] = normals;
+      data["uvs"] = uvs;
       data["faces"] = faces;
       data["scale"] = d.scale();
       data["visible"] = d.visible();
@@ -193,9 +189,64 @@ namespace openstudio{
 
     // object
     Json::Value object(Json::objectValue);
+
+
+    Json::Value sceneChildren(Json::arrayValue);
+    for (const auto& c : m_sceneObject.children()){
+      ThreeUserData ud = c.userData();
+      Json::Value userData(Json::objectValue);
+      userData["handle"] = ud.handle();
+      userData["name"] = ud.name();
+      userData["surfaceType"] = ud.surfaceType();
+      userData["surfaceTypeMaterialName"] = ud.surfaceTypeMaterialName();
+      userData["constructionName"] = ud.constructionName();
+      userData["constructionMaterialName"] = ud.constructionMaterialName();
+      userData["spaceName"] = ud.spaceName();
+      userData["thermalZoneName"] = ud.thermalZoneName();
+      userData["thermalZoneMaterialName"] = ud.thermalZoneMaterialName();
+      userData["spaceTypeName"] = ud.spaceTypeName();
+      userData["spaceTypeMaterialName"] = ud.spaceTypeMaterialName();
+      userData["buildingStoryName"] = ud.buildingStoryName();
+      userData["buildingStoryMaterialName"] = ud.buildingStoryMaterialName();
+      userData["buildingUnitName"] = ud.buildingUnitName();
+      userData["buildingUnitMaterialName"] = ud.buildingUnitMaterialName();
+      userData["boundaryMaterialName"] = ud.boundaryMaterialName();
+      userData["outsideBoundaryCondition"] = ud.outsideBoundaryCondition();
+      userData["outsideBoundaryConditionObjectName"] = ud.outsideBoundaryConditionObjectName();
+      userData["outsideBoundaryConditionObjectHandle"] = ud.outsideBoundaryConditionObjectHandle();
+      userData["coincidentWithOutsideObject"] = ud.coincidentWithOutsideObject();
+      userData["sunExposure"] = ud.sunExposure();
+      userData["windExposure"] = ud.windExposure();
+
+      Json::Value childMatrix(Json::arrayValue);
+      for (const auto& d : c.matrix()){
+        childMatrix.append(d);
+      }
+
+      Json::Value sceneChild(Json::objectValue);
+      sceneChild["uuid"] = c.uuid();
+      sceneChild["name"] = c.name();
+      sceneChild["type"] = c.type();
+      sceneChild["geometry"] = c.geometry();
+      sceneChild["material"] = c.geometry();
+      sceneChild["matrix"] = childMatrix;
+      sceneChild["userData"] = userData;
+
+      sceneChildren.append(sceneChild);
+    }
+
+    Json::Value sceneMatrix(Json::arrayValue);
+    for (const auto& d : m_sceneObject.matrix()){
+      sceneMatrix.append(d);
+    }
+
+    object["uuid"] = m_sceneObject.uuid();
+    object["type"] = m_sceneObject.type();
+    object["matrix"] = sceneMatrix;
+    object["children"] = sceneChildren;
     scene["object"] = object;
 
-
+    // write to string
     std::string result;
     if (prettyPrint){
       Json::StyledWriter writer;
@@ -589,7 +640,7 @@ namespace openstudio{
 
   ThreeSceneChild::ThreeSceneChild(const std::string& uuid, const std::string& name, const std::string& type,
                     const std::string& geometryId, const std::string& materialId, const ThreeUserData& userData)
-    : m_uuid(uuid), m_name(name), m_type(type), m_geometryId(geometryId), m_materialId(materialId), m_matrix(), m_userData(userData)
+                    : m_uuid(uuid), m_name(name), m_type(type), m_geometryId(geometryId), m_materialId(materialId), m_matrix({1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1}), m_userData(userData)
   {}
 
   std::string ThreeSceneChild::uuid() const
@@ -617,7 +668,7 @@ namespace openstudio{
     return m_materialId;
   }
 
-  Transformation ThreeSceneChild::matrix() const
+  std::vector<double> ThreeSceneChild::matrix() const
   {
     return m_matrix;
   }
@@ -628,7 +679,7 @@ namespace openstudio{
   }
 
   ThreeSceneObject::ThreeSceneObject(const std::string& uuid, const std::vector<ThreeSceneChild>& children)
-    : m_uuid(uuid), m_type("Scene"), m_matrix(), m_children(children)
+    : m_uuid(uuid), m_type("Scene"), m_matrix({1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1}), m_children(children)
   {}
 
   std::string ThreeSceneObject::uuid() const
@@ -641,7 +692,7 @@ namespace openstudio{
     return m_type;
   }
 
-  Transformation ThreeSceneObject::matrix() const
+  std::vector<double> ThreeSceneObject::matrix() const
   {
     return m_matrix;
   }

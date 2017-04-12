@@ -217,7 +217,7 @@ namespace openstudio{
     std::string type() const;
     std::string geometry() const;
     std::string material() const;
-    Transformation matrix() const;
+    std::vector<double> matrix() const;
     ThreeUserData userData() const;
 
   private:
@@ -226,7 +226,7 @@ namespace openstudio{
     std::string m_type;
     std::string m_geometryId;
     std::string m_materialId;
-    Transformation m_matrix;
+    std::vector<double> m_matrix;
     ThreeUserData m_userData;
   };
 
@@ -236,13 +236,13 @@ namespace openstudio{
     ThreeSceneObject(const std::string& uuid, const std::vector<ThreeSceneChild>& children);
     std::string uuid() const;
     std::string type() const;
-    Transformation matrix() const;
+    std::vector<double> matrix() const;
     std::vector<ThreeSceneChild> children() const;
 
   private:
     std::string m_uuid;
     std::string m_type;
-    Transformation m_matrix;
+    std::vector<double> m_matrix;
     std::vector<ThreeSceneChild> m_children;
   };
 
