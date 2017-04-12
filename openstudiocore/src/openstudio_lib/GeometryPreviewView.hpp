@@ -66,7 +66,7 @@ class PreviewWebView : public QWidget
   Q_OBJECT;
 
   public:
-    PreviewWebView(QWidget *t_parent = nullptr);
+    PreviewWebView(const openstudio::model::Model& model, QWidget *t_parent = nullptr);
     virtual ~PreviewWebView();
 
   public slots:
@@ -84,6 +84,7 @@ class PreviewWebView : public QWidget
     REGISTER_LOGGER("openstudio::PreviewWebView");
 
     bool m_isIP;
+    model::Model m_model;
 
     QProgressBar * m_progressBar;
     QPushButton * m_refreshBtn;

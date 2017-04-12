@@ -38,8 +38,14 @@ using namespace openstudio::model;
 
 TEST_F(ModelFixture,ThreeJS_ExampleModel) {
   Model model = exampleModel();
-  ThreeScene scene = modelToThreeJS(model);
+
+  // triangulated, for display
+  ThreeScene scene = modelToThreeJS(model, true);
   std::string json = scene.toJSON();
+
+  // triangulated, for model transport/translation
+  scene = modelToThreeJS(model, false);
+  json = scene.toJSON();
 
   boost::optional<Model> model2 = modelFromThreeJS(scene);
 }

@@ -49,8 +49,11 @@
 
 
 %{
+  #include <model/ThreeJS.hpp>
+
   #include <utilities/data/TimeSeries.hpp>
   #include <utilities/sql/SqlFile.hpp>
+  #include <utilities/geometry/ThreeJS.hpp>
 
   #include <utilities/units/Quantity.hpp>
   #include <utilities/units/Unit.hpp>

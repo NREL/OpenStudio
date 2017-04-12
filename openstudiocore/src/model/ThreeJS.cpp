@@ -390,7 +390,7 @@ namespace openstudio
       }
     }
 
-    void makeGeometries(const PlanarSurface& planarSurface, std::vector<ThreeGeometry>& geometries, std::vector<ThreeUserData>& userDatas)
+    void makeGeometries(const PlanarSurface& planarSurface, std::vector<ThreeGeometry>& geometries, std::vector<ThreeUserData>& userDatas, bool triangulateSurfaces)
     {
       std::string name = planarSurface.nameString();
       boost::optional<Surface> surface = planarSurface.optionalCast<Surface>();
@@ -417,26 +417,40 @@ namespace openstudio
         }
       }
 
-      // triangulate surface
-      Point3dVectorVector finalFaceVertices = computeTriangulation(faceVertices, faceSubVertices);
-      if (finalFaceVertices.empty()){
-        LOG_FREE(Error, "modelToThreeJS", "Failed to triangulate surface " << name << " with " << faceSubVertices.size() << " sub surfaces");
-        return;
+      Point3dVectorVector finalFaceVertices;
+      if (triangulateSurfaces){
+        finalFaceVertices = computeTriangulation(faceVertices, faceSubVertices);
+        if (finalFaceVertices.empty()){
+          LOG_FREE(Error, "modelToThreeJS", "Failed to triangulate surface " << name << " with " << faceSubVertices.size() << " sub surfaces");
+          return;
+        }
+      } else{
+        finalFaceVertices.push_back(faceVertices);
       }
 
       Point3dVector allVertices;
       std::vector<size_t> faceIndices;
-      for (const auto& finalFaceTriangle : finalFaceVertices) {
-        Point3dVector finalTriangle = siteTransformation*t*finalFaceTriangle;
+      for (const auto& finalFaceVerts : finalFaceVertices) {
+        Point3dVector finalVerts = siteTransformation*t*finalFaceVerts;
         //normal = siteTransformation.rotationMatrix*r*z
 
         // https://github.com/mrdoob/three.js/wiki/JSON-Model-format-3
         // 0 indicates triangle
-        // 16 indicates triangle with normals
-        faceIndices.push_back(0);
+        // 1 indicates quad
+        // 2 indicates triangle with material
+        // 3 indicates quad with material
+        // ....
+        // 255 quad with everything
+        // 1024 - OpenStudio format, all vertices belong to single face
 
-        Point3dVector::reverse_iterator it = finalTriangle.rbegin();
-        Point3dVector::reverse_iterator itend = finalTriangle.rend();
+        if (triangulateSurfaces){
+          faceIndices.push_back(0);
+        } else{
+          faceIndices.push_back(1024);
+        }
+
+        Point3dVector::reverse_iterator it = finalVerts.rbegin();
+        Point3dVector::reverse_iterator itend = finalVerts.rend();
         for (; it != itend; ++it){
           faceIndices.push_back(getVertexIndex(*it, allVertices));
         }
@@ -477,7 +491,7 @@ namespace openstudio
       userDatas.push_back(userData);
     }
 
-    ThreeScene modelToThreeJS(Model model)
+    ThreeScene modelToThreeJS(Model model, bool triangulateSurfaces)
     {
       std::vector<ThreeMaterial> materials;
       std::map<std::string, std::string> materialMap;
@@ -491,7 +505,7 @@ namespace openstudio
       {
         std::vector<ThreeGeometry> geometries;
         std::vector<ThreeUserData> userDatas;
-        makeGeometries(planarSurface, geometries, userDatas);
+        makeGeometries(planarSurface, geometries, userDatas, triangulateSurfaces);
         OS_ASSERT(geometries.size() == userDatas.size());
 
         size_t n = geometries.size();

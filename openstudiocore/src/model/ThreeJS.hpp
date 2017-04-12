@@ -39,7 +39,10 @@ namespace openstudio
 {
   namespace model
   {
-    MODEL_API ThreeScene modelToThreeJS(Model model);
+    /// Convert an OpenStudio Model to ThreeJS format
+    /// Triangulate surfaces if the ThreeJS representation will be used for display
+    /// Do not triangulate surfaces if the ThreeJs representation will be translated back to a model
+    MODEL_API ThreeScene modelToThreeJS(Model model, bool triangulateSurfaces);
     
     MODEL_API boost::optional<Model> modelFromThreeJS(const ThreeScene& scene);
 

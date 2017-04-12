@@ -29,6 +29,7 @@
 #include "GeometryPreviewView.hpp"
 
 #include "../model/Model_Impl.hpp"
+#include "../model/ThreeJS.hpp"
 
 #include "../utilities/core/Assert.hpp"
 
@@ -55,7 +56,7 @@ GeometryPreviewView::GeometryPreviewView(bool isIP,
 
   QVBoxLayout *layout = new QVBoxLayout;
 
-  PreviewWebView* webView = new PreviewWebView(this);
+  PreviewWebView* webView = new PreviewWebView(model, this);
   layout->addWidget(webView);
 
   setLayout(layout);
@@ -66,8 +67,9 @@ GeometryPreviewView::~GeometryPreviewView()
 
 }
 
-PreviewWebView::PreviewWebView(QWidget *t_parent)
+PreviewWebView::PreviewWebView(const model::Model& model, QWidget *t_parent)
   : QWidget(t_parent),
+    m_model(model),
     m_isIP(true),
     m_progressBar(new QProgressBar()),
     m_refreshBtn(new QPushButton("Refresh"))
@@ -147,16 +149,11 @@ void PreviewWebView::onLoadFinished(bool ok)
     m_progressBar->setTextVisible(true);
   }
   
-  // call init and animate
-  QString jsonFile;
-	QFile inFile(QString(":/library/example_geometry.json"));
-	if (inFile.open(QFile::ReadOnly)){
-		QTextStream docIn(&inFile);
-		jsonFile = docIn.readAll();
-		inFile.close();
-	}
+  ThreeScene scene = modelToThreeJS(m_model, true);
+  std::string json = scene.toJSON(false);
 
-  QString javascript = QString("init(") + jsonFile + QString(");\n animate();\n initDatGui();");
+  // call init and animate
+  QString javascript = QString("init(") + QString::fromStdString(json) + QString(");\n animate();\n initDatGui();");
   m_view->page()->runJavaScript(javascript);
 
   //javascript = QString("os_data.metadata.version");

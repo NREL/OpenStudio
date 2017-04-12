@@ -542,7 +542,6 @@
     <file>library/tid_api.xml</file>
     <file>library/geometry_editor.html</file>
     <file>library/geometry_preview.html</file>
-    <file>library/example_geometry.json</file>
     
     
     <file alias="shared_gui_components/images/add_script_icon.png">../shared_gui_components/images/add_script_icon.png</file>

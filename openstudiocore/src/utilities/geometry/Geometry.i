@@ -61,6 +61,7 @@
 %include <utilities/geometry/Transformation.hpp>
 %include <utilities/geometry/BoundingBox.hpp>
 %include <utilities/geometry/Intersection.hpp>
+%include <utilities/geometry/ThreeJS.hpp>
 
 %extend openstudio::Vector3d{
   std::string __str__() const {
