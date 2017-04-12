@@ -37,6 +37,9 @@ set(${target_name}_src
   AirConditionerVariableRefrigerantFlow.hpp
   AirConditionerVariableRefrigerantFlow_Impl.hpp
   AirConditionerVariableRefrigerantFlow.cpp
+  AirflowNetworkComponent.hpp
+  AirflowNetworkComponent_Impl.hpp
+  AirflowNetworkComponent.cpp
   AirflowNetworkConstantPressureDrop.hpp
   AirflowNetworkConstantPressureDrop_Impl.hpp
   AirflowNetworkConstantPressureDrop.cpp
@@ -67,6 +70,12 @@ set(${target_name}_src
   AirflowNetworkLeakageRatio.hpp
   AirflowNetworkLeakageRatio_Impl.hpp
   AirflowNetworkLeakageRatio.cpp
+  AirflowNetworkLinkage.hpp
+  AirflowNetworkLinkage_Impl.hpp
+  AirflowNetworkLinkage.cpp
+  AirflowNetworkNode.hpp
+  AirflowNetworkNode_Impl.hpp
+  AirflowNetworkNode.cpp
   AirflowNetworkReferenceCrackConditions.hpp
   AirflowNetworkReferenceCrackConditions_Impl.hpp
   AirflowNetworkReferenceCrackConditions.cpp
