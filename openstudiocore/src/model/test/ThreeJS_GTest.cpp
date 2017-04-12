@@ -39,6 +39,7 @@ using namespace openstudio::model;
 TEST_F(ModelFixture,ThreeJS_ExampleModel) {
   Model model = exampleModel();
   ThreeScene scene = modelToThreeJS(model);
+  scene.toJSON();
 
   boost::optional<Model> model2 = modelFromThreeJS(scene);
 }

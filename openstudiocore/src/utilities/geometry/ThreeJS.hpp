@@ -246,6 +246,54 @@ namespace openstudio{
     std::vector<ThreeSceneChild> m_children;
   };
 
+  /// ThreeBoundingBox includes information about a bounding box 
+  class UTILITIES_API ThreeBoundingBox{
+  public: 
+    ThreeBoundingBox(double minX, double minY, double minZ, double maxX, double maxY, double maxZ, 
+                     double lookAtX, double lookAtY, double lookAtZ, double lookAtR);
+    double minX() const;
+    double minY() const;
+    double minZ() const;
+    double maxX() const;
+    double maxY() const;
+    double maxZ() const;
+    double lookAtX() const;
+    double lookAtY() const;
+    double lookAtZ() const;
+    double lookAtR() const;
+
+  private:
+    double m_minX;
+    double m_minY;
+    double m_minZ;
+    double m_maxX;
+    double m_maxY;
+    double m_maxZ;
+    double m_lookAtX;
+    double m_lookAtY;
+    double m_lookAtZ;
+    double m_lookAtR;
+
+  };
+
+  /// ThreeSceneMetadata includes metadata about the scene
+  class UTILITIES_API ThreeSceneMetadata{
+  public: 
+    ThreeSceneMetadata(const std::vector<std::string>& buildingStoryNames, const ThreeBoundingBox& boundingBox);
+    std::string version() const;
+    std::string type() const;
+    std::string generator() const;
+    std::vector<std::string> buildingStoryNames() const;
+    ThreeBoundingBox boundingBox() const;
+
+  private:
+    std::string m_version;
+    std::string m_type;
+    std::string m_generator;
+    std::vector<std::string> m_buildingStoryNames;
+    ThreeBoundingBox m_boundingBox;
+  };
+
   /** ThreeScene is an adapter for a scene in the three.js geometry format, defined at:
   *   https://github.com/mrdoob/three.js/wiki/JSON-Object-Scene-format-4
   *
@@ -255,7 +303,7 @@ namespace openstudio{
   public:
 
     /// constructor 
-    ThreeScene(const std::vector<ThreeGeometry>& geometries, const std::vector<ThreeMaterial>& materials, const ThreeSceneObject& sceneObject);
+    ThreeScene(const ThreeSceneMetadata& metadata, const std::vector<ThreeGeometry>& geometries, const std::vector<ThreeMaterial>& materials, const ThreeSceneObject& sceneObject);
 
     /// constructor from JSON formatted string, will throw if error
     ThreeScene(const std::string& json);
@@ -266,8 +314,13 @@ namespace openstudio{
     /// print to JSON
     std::string toJSON(bool prettyPrint = false) const;
   
-  private:
+    ThreeSceneMetadata metadata() const;
+    std::vector<ThreeGeometry> geometries() const;
+    std::vector<ThreeMaterial> materials() const;
+    ThreeSceneObject object() const;
 
+  private:
+    ThreeSceneMetadata m_metadata;
     std::vector<ThreeGeometry> m_geometries;
     std::vector<ThreeMaterial> m_materials;
     ThreeSceneObject m_sceneObject;

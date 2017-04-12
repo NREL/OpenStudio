@@ -47,6 +47,8 @@
 #include "ShadingSurface_Impl.hpp"
 #include "InteriorPartitionSurface.hpp"
 #include "InteriorPartitionSurface_Impl.hpp"
+#include "PlanarSurfaceGroup.hpp"
+#include "PlanarSurfaceGroup_Impl.hpp"
 #include "Space.hpp"
 #include "ShadingSurfaceGroup.hpp"
 #include "InteriorPartitionSurfaceGroup.hpp"
@@ -54,8 +56,11 @@
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/geometry/Point3d.hpp"
+#include "../utilities/geometry/BoundingBox.hpp"
 #include "../utilities/geometry/Transformation.hpp"
 #include "../utilities/geometry/Geometry.hpp"
+
+#include <cmath>
 
 namespace openstudio
 {
@@ -503,7 +508,38 @@ namespace openstudio
 
       ThreeSceneObject sceneObject(toThreeUUID(toString(openstudio::createUUID())), sceneChildren);
 
-      ThreeScene scene(allGeometries, materials, sceneObject);
+      BoundingBox boundingBox;
+      boundingBox.addPoint(Point3d(0, 0, 0));
+      boundingBox.addPoint(Point3d(1, 1, 1));
+      for (const auto& group : model.getModelObjects<PlanarSurfaceGroup>()){
+        boundingBox.add(group.transformation()*group.boundingBox());
+      }
+
+      double lookAtX = 0; // (boundingBox.minX().get() + boundingBox.maxX().get()) / 2.0
+      double lookAtY = 0; // (boundingBox.minY().get() + boundingBox.maxY().get()) / 2.0
+      double lookAtZ = 0; // (boundingBox.minZ().get() + boundingBox.maxZ().get()) / 2.0
+      double lookAtR =            sqrt(std::pow(boundingBox.maxX().get() / 2.0, 2) + std::pow(boundingBox.maxY().get() / 2.0, 2) + std::pow(boundingBox.maxZ().get() / 2.0, 2));
+      lookAtR = std::max(lookAtR, sqrt(std::pow(boundingBox.minX().get() / 2.0, 2) + std::pow(boundingBox.maxY().get() / 2.0, 2) + std::pow(boundingBox.maxZ().get() / 2.0, 2)));
+      lookAtR = std::max(lookAtR, sqrt(std::pow(boundingBox.maxX().get() / 2.0, 2) + std::pow(boundingBox.minY().get() / 2.0, 2) + std::pow(boundingBox.maxZ().get() / 2.0, 2)));
+      lookAtR = std::max(lookAtR, sqrt(std::pow(boundingBox.maxX().get() / 2.0, 2) + std::pow(boundingBox.maxY().get() / 2.0, 2) + std::pow(boundingBox.minZ().get() / 2.0, 2)));
+      lookAtR = std::max(lookAtR, sqrt(std::pow(boundingBox.minX().get() / 2.0, 2) + std::pow(boundingBox.minY().get() / 2.0, 2) + std::pow(boundingBox.maxZ().get() / 2.0, 2)));
+      lookAtR = std::max(lookAtR, sqrt(std::pow(boundingBox.minX().get() / 2.0, 2) + std::pow(boundingBox.maxY().get() / 2.0, 2) + std::pow(boundingBox.minZ().get() / 2.0, 2)));
+      lookAtR = std::max(lookAtR, sqrt(std::pow(boundingBox.maxX().get() / 2.0, 2) + std::pow(boundingBox.minY().get() / 2.0, 2) + std::pow(boundingBox.minZ().get() / 2.0, 2)));
+      lookAtR = std::max(lookAtR, sqrt(std::pow(boundingBox.minX().get() / 2.0, 2) + std::pow(boundingBox.minY().get() / 2.0, 2) + std::pow(boundingBox.minZ().get() / 2.0, 2)));
+
+      ThreeBoundingBox threeBoundingBox(boundingBox.minX().get(), boundingBox.minY().get(), boundingBox.minZ().get(),
+                                        boundingBox.maxX().get(), boundingBox.maxY().get(), boundingBox.maxZ().get(),
+                                        lookAtX, lookAtY, lookAtZ, lookAtR);
+     
+      std::vector<std::string> buildingStoryNames;
+      for (const auto& buildingStory : model.getConcreteModelObjects<BuildingStory>()){
+        buildingStoryNames.push_back(buildingStory.nameString());
+      }
+      // buildingStoryNames.sort! {|x,y| x.upcase <=> y.upcase} # case insensitive sort
+  
+      ThreeSceneMetadata metadata(buildingStoryNames, threeBoundingBox);
+  
+      ThreeScene scene(metadata, allGeometries, materials, sceneObject);
 
       return scene;
     }

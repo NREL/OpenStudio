@@ -30,6 +30,7 @@
 
 #include "../core/Assert.hpp"
 
+#include <jsoncpp/json.h>
 
 namespace openstudio{
 
@@ -81,13 +82,13 @@ namespace openstudio{
     return std::vector<double>();
   }
 
-  ThreeScene::ThreeScene(const std::vector<ThreeGeometry>& geometries, const std::vector<ThreeMaterial>& materials, const ThreeSceneObject& sceneObject)
-    : m_geometries(geometries), m_materials(materials), m_sceneObject(sceneObject)
+  ThreeScene::ThreeScene(const ThreeSceneMetadata& metadata, const std::vector<ThreeGeometry>& geometries, const std::vector<ThreeMaterial>& materials, const ThreeSceneObject& sceneObject)
+    : m_metadata(metadata), m_geometries(geometries), m_materials(materials), m_sceneObject(sceneObject)
   {
   }
     
   ThreeScene::ThreeScene(const std::string& json)
-    : m_sceneObject(ThreeSceneObject("", std::vector<ThreeSceneChild>()))
+    : m_metadata(std::vector<std::string>(), ThreeBoundingBox(0,0,0,0,0,0,0,0,0,0)), m_sceneObject(ThreeSceneObject("", std::vector<ThreeSceneChild>()))
   {
     throw std::runtime_error("No implemented");
   }
@@ -99,7 +100,132 @@ namespace openstudio{
 
   std::string ThreeScene::toJSON(bool prettyPrint) const
   {
-    return "";
+    Json::Value scene(Json::objectValue);
+
+    // metadata
+    Json::Value metadata(Json::objectValue);
+    scene["metadata"] = metadata;
+
+    Json::Value boundingBox(Json::objectValue);
+    boundingBox["minX"] = m_metadata.boundingBox().minX();
+    boundingBox["minY"] = m_metadata.boundingBox().minY();
+    boundingBox["minZ"] = m_metadata.boundingBox().minZ();
+    boundingBox["maxX"] = m_metadata.boundingBox().maxX();
+    boundingBox["maxY"] = m_metadata.boundingBox().maxY();
+    boundingBox["maxZ"] = m_metadata.boundingBox().maxZ();
+    boundingBox["lookAtX"] = m_metadata.boundingBox().lookAtX();
+    boundingBox["lookAtY"] = m_metadata.boundingBox().lookAtY();
+    boundingBox["lookAtZ"] = m_metadata.boundingBox().lookAtZ();
+    boundingBox["lookAtR"] = m_metadata.boundingBox().lookAtR();
+
+    Json::Value buildingStoryNames(Json::arrayValue);
+    for (const auto& buildingStoryName : m_metadata.buildingStoryNames()){
+      buildingStoryNames.append(buildingStoryName);
+    }
+
+    metadata["version"] = m_metadata.version();
+    metadata["type"] = m_metadata.type();
+    metadata["generator"] = m_metadata.generator();
+    metadata["buildingStoryNames"] = buildingStoryNames;
+    metadata["boundingBox"] = boundingBox;
+
+    // geometries
+    Json::Value geometries(Json::arrayValue);
+    for (const auto& g : m_geometries)
+    {
+      ThreeGeometryData d = g.data();
+
+      Json::Value geometry(Json::objectValue);
+      
+      Json::Value vertices(Json::arrayValue);
+      for (const auto& v : d.vertices()){
+        vertices.append(v);
+      }
+
+      Json::Value normals(Json::arrayValue);
+
+      Json::Value uvs(Json::arrayValue);
+
+      Json::Value faces(Json::arrayValue);
+      for (const auto& f : d.faces()){
+        faces.append(f);
+      }
+
+      Json::Value data(Json::objectValue);
+      data["vertices"] = vertices;
+      data["vertices"] = normals;
+      data["vertices"] = uvs;
+      data["faces"] = faces;
+      data["scale"] = d.scale();
+      data["visible"] = d.visible();
+      data["castShadow"] = d.castShadow();
+      data["receiveShadow"] = d.receiveShadow();
+      data["doubleSided"] = d.doubleSided();
+
+      geometry["uuid"] = g.uuid();
+      geometry["type"] = g.type();
+      geometry["data"] = data;
+      geometries.append(geometry);
+    }
+    scene["geometries"] = geometries;
+
+    // materials
+    Json::Value materials(Json::arrayValue);
+    for (const auto& m : m_materials)
+    {
+      Json::Value material(Json::objectValue);
+      material["uuid"] = m.uuid();
+      material["name"] = m.name();
+      material["type"] = m.type();
+      material["color"] = m.color();
+      material["ambient"] = m.ambient();
+      material["emissive"] = m.emissive();
+      material["specular"] = m.specular();
+      material["shininess"] = m.shininess();
+      material["opacity"] = m.opacity();
+      material["transparent"] = m.transparent();
+      material["wireframe"] = m.wireframe();
+      material["side"] = m.side();
+
+      materials.append(material);
+    }
+    scene["materials"] = materials;
+
+    // object
+    Json::Value object(Json::objectValue);
+    scene["object"] = object;
+
+
+    std::string result;
+    if (prettyPrint){
+      Json::StyledWriter writer;
+      result = writer.write(scene);
+    } else{
+      Json::FastWriter writer;
+      result = writer.write(scene);
+    }
+
+    return result;
+  }
+
+  ThreeSceneMetadata ThreeScene::metadata() const
+  {
+    return m_metadata;
+  }
+
+  std::vector<ThreeGeometry> ThreeScene::geometries() const
+  {
+    return m_geometries;
+  }
+
+  std::vector<ThreeMaterial> ThreeScene::materials() const
+  {
+    return m_materials;
+  }
+
+  ThreeSceneObject ThreeScene::object() const
+  {
+    return m_sceneObject;
   }
 
   ThreeGeometryData::ThreeGeometryData(const std::vector<double>& vertices, const std::vector<size_t>& faces)
@@ -523,6 +649,91 @@ namespace openstudio{
   std::vector<ThreeSceneChild> ThreeSceneObject::children() const
   {
     return m_children;
+  }
+
+  ThreeBoundingBox::ThreeBoundingBox(double minX, double minY, double minZ, double maxX, double maxY, double maxZ,
+                                     double lookAtX, double lookAtY, double lookAtZ, double lookAtR)
+    : m_minX(minX), m_minY(minY), m_minZ(minZ), m_maxX(maxX), m_maxY(maxY), m_maxZ(maxZ),
+      m_lookAtX(lookAtX), m_lookAtY(lookAtY), m_lookAtZ(lookAtZ), m_lookAtR(lookAtR)
+  {}
+
+  double ThreeBoundingBox::minX() const
+  {
+    return m_minX;
+  }
+
+  double ThreeBoundingBox::minY() const
+  {
+    return m_minY;
+  }
+
+  double ThreeBoundingBox::minZ() const
+  {
+    return m_minZ;
+  }
+
+  double ThreeBoundingBox::maxX() const
+  {
+    return m_maxX;
+  }
+
+  double ThreeBoundingBox::maxY() const
+  {
+    return m_maxY;
+  }
+
+  double ThreeBoundingBox::maxZ() const
+  {
+    return m_maxZ;
+  }
+
+  double ThreeBoundingBox::lookAtX() const
+  {
+    return m_lookAtX;
+  }
+
+  double ThreeBoundingBox::lookAtY() const
+  {
+    return m_lookAtY;
+  }
+
+  double ThreeBoundingBox::lookAtZ() const
+  {
+    return m_lookAtZ;
+  }
+
+  double ThreeBoundingBox::lookAtR() const
+  {
+    return m_lookAtR;
+  }
+
+  ThreeSceneMetadata::ThreeSceneMetadata(const std::vector<std::string>& buildingStoryNames, const ThreeBoundingBox& boundingBox)
+    : m_version("4.3"), m_type("Object"), m_generator("OpenStudio"), m_buildingStoryNames(buildingStoryNames), m_boundingBox(boundingBox)
+  {}
+
+  std::string ThreeSceneMetadata::version() const
+  {
+    return m_version;
+  }
+
+  std::string ThreeSceneMetadata::type() const
+  {
+    return m_type;
+  }
+
+  std::string ThreeSceneMetadata::generator() const
+  {
+    return m_generator;
+  }
+
+  std::vector<std::string> ThreeSceneMetadata::buildingStoryNames() const
+  {
+    return m_buildingStoryNames;
+  }
+  
+  ThreeBoundingBox ThreeSceneMetadata::boundingBox() const
+  {
+    return m_boundingBox;
   }
 
 } // openstudio
