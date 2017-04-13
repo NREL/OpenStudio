@@ -27530,11 +27530,11 @@ OS:AirflowNetworkZone,
   A1, \field Handle
       \type handle
       \required-field
-  A2, \field Zone Name
+  A2, \field Thermal Zone Name
       \required-field
       \reference AirFlowNetworkMultizoneZones
       \type object-list
-      \object-list ZoneNames
+      \object-list ThermalZoneNames
       \note Enter the zone name where ventilation control is required.
   A3, \field Ventilation Control Mode
       \type choice
@@ -28570,7 +28570,7 @@ OS:AirflowNetworkOccupantVentilationControl,
       \note function of outdoor dry-bulb temperature. Up to two curves are allowed if the
       \note performance cannot be represented by a single curve.
       \note If a single performance curve is used, leave this field blank.
-  N4, \field Maximum Threshold for Persons Dissatisfied PPD
+  N4, \field Maximum Predicted Percentage of Dissatisfied Threshold
       \type real
       \units percent
       \minimum 0

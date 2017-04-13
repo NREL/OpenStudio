@@ -219,11 +219,13 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(AirflowNetworkFan);
     REGISTER_CONSTRUCTOR(AirflowNetworkHorizontalOpening);
     REGISTER_CONSTRUCTOR(AirflowNetworkLeakageRatio);
-    REGISTER_CONSTRUCTOR(AirflowNetworkDistribtutionLinkage);
+    REGISTER_CONSTRUCTOR(AirflowNetworkOccupantVentilationControl);
+    REGISTER_CONSTRUCTOR(AirflowNetworkDistributionLinkage);
     REGISTER_CONSTRUCTOR(AirflowNetworkReferenceCrackConditions);
     REGISTER_CONSTRUCTOR(AirflowNetworkSimpleOpening);
     REGISTER_CONSTRUCTOR(AirflowNetworkSimulationControl);
     REGISTER_CONSTRUCTOR(AirflowNetworkSurface);
+    REGISTER_CONSTRUCTOR(AirflowNetworkZone);
     REGISTER_CONSTRUCTOR(AirflowNetworkZoneExhaustFan);
     REGISTER_CONSTRUCTOR(AirGap);
     REGISTER_CONSTRUCTOR(AirLoopHVAC);
@@ -666,11 +668,13 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkFan);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkHorizontalOpening);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkLeakageRatio);
+    REGISTER_COPYCONSTRUCTORS(AirflowNetworkOccupantVentilationControl);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkDistributionLinkage);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkReferenceCrackConditions);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkSimpleOpening);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkSimulationControl);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkSurface);
+    REGISTER_COPYCONSTRUCTORS(AirflowNetworkZone);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkZoneExhaustFan);
     REGISTER_COPYCONSTRUCTORS(AirGap);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVAC);
