@@ -13,16 +13,21 @@
 %import <model/ModelGeometry.i>
 %import <model/ModelHVAC.i>
 
-//%{
-//  #include <model/HVACTemplates.hpp>
-//%}
-
 #if defined SWIGCSHARP
 
   #undef _csharp_module_name
   #define _csharp_module_name OpenStudioModelAirflow
   
 #endif
+
+// May be able to remove these includes once they are included by concrete classes
+%{
+  #include <model/AirflowNetworkComponent.hpp>
+  #include <model/AirflowNetworkComponent_Impl.hpp>
+  #include <model/AirflowNetworkNode.hpp>
+  #include <model/AirflowNetworkNode_Impl.hpp>
+%}
+
 
 // Base classes
 MODELOBJECT_TEMPLATES(AirflowNetworkComponent);
