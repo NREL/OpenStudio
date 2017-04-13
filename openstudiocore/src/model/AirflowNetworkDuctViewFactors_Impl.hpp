@@ -26,8 +26,8 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
 
-#ifndef MODEL_AIRFLOWNETWORKDISTRIBUTIONLINKAGE_IMPL_HPP
-#define MODEL_AIRFLOWNETWORKDISTRIBUTIONLINKAGE_IMPL_HPP
+#ifndef MODEL_AIRFLOWNETWORKDUCTVIEWFACTORS_IMPL_HPP
+#define MODEL_AIRFLOWNETWORKDUCTVIEWFACTORS_IMPL_HPP
 
 #include <model/ModelAPI.hpp>
 #include "ModelObject_Impl.hpp"
@@ -36,31 +36,29 @@ namespace openstudio {
 namespace model {
 
 // TODO: Check the following class names against object getters and setters.
-class AirflowNetworkNode;
 class AirflowNetworkComponent;
-class ThermalZone;
 
 namespace detail {
 
-  /** AirflowNetworkDistributionLinkage_Impl is a ModelObject_Impl that is the implementation class for AirflowNetworkDistributionLinkage.*/
-  class MODEL_API AirflowNetworkDistributionLinkage_Impl : public ModelObject_Impl {
+  /** AirflowNetworkDuctViewFactors_Impl is a ModelObject_Impl that is the implementation class for AirflowNetworkDuctViewFactors.*/
+  class MODEL_API AirflowNetworkDuctViewFactors_Impl : public ModelObject_Impl {
    public:
     /** @name Constructors and Destructors */
     //@{
 
-    AirflowNetworkDistributionLinkage_Impl(const IdfObject& idfObject,
-                               Model_Impl* model,
-                               bool keepHandle);
+    AirflowNetworkDuctViewFactors_Impl(const IdfObject& idfObject,
+                                       Model_Impl* model,
+                                       bool keepHandle);
 
-    AirflowNetworkDistributionLinkage_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                               Model_Impl* model,
-                               bool keepHandle);
+    AirflowNetworkDuctViewFactors_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                       Model_Impl* model,
+                                       bool keepHandle);
 
-    AirflowNetworkDistributionLinkage_Impl(const AirflowNetworkDistributionLinkage_Impl& other,
-                               Model_Impl* model,
-                               bool keepHandle);
+    AirflowNetworkDuctViewFactors_Impl(const AirflowNetworkDuctViewFactors_Impl& other,
+                                       Model_Impl* model,
+                                       bool keepHandle);
 
-    virtual ~AirflowNetworkDistributionLinkage_Impl() {}
+    virtual ~AirflowNetworkDuctViewFactors_Impl() {}
 
     //@}
     /** @name Virtual Methods */
@@ -74,35 +72,35 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    // TODO: Check return type. From object lists, some candidates are: AirflowNetworkNodeAndZone.
-    AirflowNetworkNode node1() const;
-
-    // TODO: Check return type. From object lists, some candidates are: AirflowNetworkNodeAndZone.
-    AirflowNetworkNode node2() const;
-
     // TODO: Check return type. From object lists, some candidates are: AirflowNetworkComponent.
-    AirflowNetworkComponent component() const;
+    AirflowNetworkComponent linkage() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Zone.
-    boost::optional<ThermalZone> thermalZone() const;
+    double ductSurfaceExposureFraction() const;
+
+    bool isDuctSurfaceExposureFractionDefaulted() const;
+
+    double ductSurfaceEmittance() const;
+
+    bool isDuctSurfaceEmittanceDefaulted() const;
+
+    // TODO: Handle this object's extensible fields.
 
     //@}
     /** @name Setters */
     //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: AirflowNetworkNodeAndZone.
-    bool setNode1(const AirflowNetworkNode& airflowNetworkNodeAndZone);
-
-    // TODO: Check argument type. From object lists, some candidates are: AirflowNetworkNodeAndZone.
-    bool setNode2(const AirflowNetworkNode& airflowNetworkNodeAndZone);
-
     // TODO: Check argument type. From object lists, some candidates are: AirflowNetworkComponent.
-    bool setComponent(const AirflowNetworkComponent& airflowNetworkComponent);
+    bool setLinkage(const AirflowNetworkComponent& airflowNetworkComponent);
 
-    // TODO: Check argument type. From object lists, some candidates are: Zone.
-    bool setThermalZone(const ThermalZone& zone);
+    bool setDuctSurfaceExposureFraction(double ductSurfaceExposureFraction);
 
-    void resetThermalZone();
+    void resetDuctSurfaceExposureFraction();
+
+    bool setDuctSurfaceEmittance(double ductSurfaceEmittance);
+
+    void resetDuctSurfaceEmittance();
+
+    // TODO: Handle this object's extensible fields.
 
     //@}
     /** @name Other */
@@ -111,15 +109,13 @@ namespace detail {
     //@}
    protected:
    private:
-    REGISTER_LOGGER("openstudio.model.AirflowNetworkDistributionLinkage");
+    REGISTER_LOGGER("openstudio.model.AirflowNetworkDuctViewFactors");
 
     // TODO: Check the return types of these methods.
     // Optional getters for use by methods like children() so can remove() if the constructor fails.
     // There are other ways for the public versions of these getters to fail--perhaps all required
     // objects should be returned as boost::optionals
-    boost::optional<AirflowNetworkNode> optionalNode1() const;
-    boost::optional<AirflowNetworkNode> optionalNode2() const;
-    boost::optional<AirflowNetworkComponent> optionalComponent() const;
+    boost::optional<AirflowNetworkComponent> optionalLinkage() const;
   };
 
 } // detail
@@ -127,5 +123,5 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_AIRFLOWNETWORKDISTRIBUTIONLINKAGE_IMPL_HPP
+#endif // MODEL_AIRFLOWNETWORKDUCTVIEWFACTORS_IMPL_HPP
 

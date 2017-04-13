@@ -28460,7 +28460,7 @@ OS:AirflowNetworkReliefAirFlow,
       \note Select a AirflowNetwork:MultiZone:ReferenceCrackConditions name associated with
       \note the air mass flow coefficient entered above.
 
-OS:AirflowNetworkLinkage,
+OS:AirflowNetworkDistributionLinkage,
       \min-fields 5
       \memo This object defines the connection between two nodes and a component.
   A1, \field Handle

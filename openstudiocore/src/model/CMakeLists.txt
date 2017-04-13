@@ -49,9 +49,15 @@ set(${target_name}_src
   AirflowNetworkDetailedOpening.hpp
   AirflowNetworkDetailedOpening_Impl.hpp
   AirflowNetworkDetailedOpening.cpp
+  AirflowNetworkDistributionNode.hpp
+  AirflowNetworkDistributionNode_Impl.hpp
+  AirflowNetworkDistributionNode.cpp
   AirflowNetworkDuct.hpp
   AirflowNetworkDuct_Impl.hpp
   AirflowNetworkDuct.cpp
+  AirflowNetworkDuctViewFactors.hpp
+  AirflowNetworkDuctViewFactors_Impl.hpp
+  AirflowNetworkDuctViewFactors.cpp
   AirflowNetworkEffectiveLeakageArea.hpp
   AirflowNetworkEffectiveLeakageArea_Impl.hpp
   AirflowNetworkEffectiveLeakageArea.cpp
@@ -70,9 +76,9 @@ set(${target_name}_src
   AirflowNetworkLeakageRatio.hpp
   AirflowNetworkLeakageRatio_Impl.hpp
   AirflowNetworkLeakageRatio.cpp
-  AirflowNetworkLinkage.hpp
-  AirflowNetworkLinkage_Impl.hpp
-  AirflowNetworkLinkage.cpp
+  AirflowNetworkDistributionLinkage.hpp
+  AirflowNetworkDistributionLinkage_Impl.hpp
+  AirflowNetworkDistributionLinkage.cpp
   AirflowNetworkNode.hpp
   AirflowNetworkNode_Impl.hpp
   AirflowNetworkNode.cpp

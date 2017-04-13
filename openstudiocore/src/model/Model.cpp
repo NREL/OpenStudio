@@ -209,15 +209,17 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(AirConditionerVariableRefrigerantFlow);
     REGISTER_CONSTRUCTOR(AirflowNetworkConstantPressureDrop);
     REGISTER_CONSTRUCTOR(AirflowNetworkCrack);
-    REGISTER_CONSTRUCTOR(AirflowNetworkDetailedOpening)
+    REGISTER_CONSTRUCTOR(AirflowNetworkDetailedOpening);
+    REGISTER_CONSTRUCTOR(AirflowNetworkDistributionNode);
     REGISTER_CONSTRUCTOR(AirflowNetworkDuct);
+    REGISTER_CONSTRUCTOR(AirflowNetworkDuctViewFactors);
     REGISTER_CONSTRUCTOR(AirflowNetworkEffectiveLeakageArea);
     REGISTER_CONSTRUCTOR(AirflowNetworkEquivalentDuct);
     REGISTER_CONSTRUCTOR(AirflowNetworkExternalNode);
     REGISTER_CONSTRUCTOR(AirflowNetworkFan);
     REGISTER_CONSTRUCTOR(AirflowNetworkHorizontalOpening);
     REGISTER_CONSTRUCTOR(AirflowNetworkLeakageRatio);
-    REGISTER_CONSTRUCTOR(AirflowNetworkLinkage);
+    REGISTER_CONSTRUCTOR(AirflowNetworkDistribtutionLinkage);
     REGISTER_CONSTRUCTOR(AirflowNetworkReferenceCrackConditions);
     REGISTER_CONSTRUCTOR(AirflowNetworkSimpleOpening);
     REGISTER_CONSTRUCTOR(AirflowNetworkSimulationControl);
@@ -657,13 +659,14 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkCrack);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkDetailedOpening);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkDuct);
+    REGISTER_COPYCONSTRUCTORS(AirflowNetworkDuctViewFactors);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkEffectiveLeakageArea);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkEquivalentDuct);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkExternalNode);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkFan);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkHorizontalOpening);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkLeakageRatio);
-    REGISTER_COPYCONSTRUCTORS(AirflowNetworkLinkage);
+    REGISTER_COPYCONSTRUCTORS(AirflowNetworkDistributionLinkage);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkReferenceCrackConditions);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkSimpleOpening);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkSimulationControl);

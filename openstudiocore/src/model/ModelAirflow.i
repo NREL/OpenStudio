@@ -24,24 +24,26 @@
 #endif
 
 // Base classes
-MODELOBJECT_TEMPLATES(AirflowNetworkComponent);
-MODELOBJECT_TEMPLATES(AirflowNetworkNode);
+//MODELOBJECT_TEMPLATES(AirflowNetworkComponent);
+//MODELOBJECT_TEMPLATES(AirflowNetworkNode);
 
-SWIG_MODELOBJECT(AirflowNetworkComponent, 1);
-SWIG_MODELOBJECT(AirflowNetworkNode, 1);
+//SWIG_MODELOBJECT(AirflowNetworkComponent, 1);
+//SWIG_MODELOBJECT(AirflowNetworkNode, 1);
 
 // The rest
 MODELOBJECT_TEMPLATES(AirflowNetworkConstantPressureDrop);
 MODELOBJECT_TEMPLATES(AirflowNetworkCrack);
 MODELOBJECT_TEMPLATES(AirflowNetworkDetailedOpening);
+MODELOBJECT_TEMPLATES(AirflowNetworkDistributionNode);
 MODELOBJECT_TEMPLATES(AirflowNetworkDuct);
+//MODELOBJECT_TEMPLATES(AirflowNetworkDuctViewFactors);
 MODELOBJECT_TEMPLATES(AirflowNetworkEffectiveLeakageArea);
 MODELOBJECT_TEMPLATES(AirflowNetworkEquivalentDuct);
 MODELOBJECT_TEMPLATES(AirflowNetworkExternalNode);
 MODELOBJECT_TEMPLATES(AirflowNetworkFan);
 MODELOBJECT_TEMPLATES(AirflowNetworkHorizontalOpening);
 MODELOBJECT_TEMPLATES(AirflowNetworkLeakageRatio);
-MODELOBJECT_TEMPLATES(AirflowNetworkLinkage);
+//MODELOBJECT_TEMPLATES(AirflowNetworkDistributionLinkage);
 MODELOBJECT_TEMPLATES(AirflowNetworkReferenceCrackConditions);
 MODELOBJECT_TEMPLATES(AirflowNetworkSimpleOpening);
 UNIQUEMODELOBJECT_TEMPLATES(AirflowNetworkSimulationControl);
@@ -51,14 +53,16 @@ MODELOBJECT_TEMPLATES(AirflowNetworkZoneExhaustFan);
 SWIG_MODELOBJECT(AirflowNetworkConstantPressureDrop, 1);
 SWIG_MODELOBJECT(AirflowNetworkCrack, 1);
 SWIG_MODELOBJECT(AirflowNetworkDetailedOpening, 1);
+SWIG_MODELOBJECT(AirflowNetworkDistributionNode, 1);
 SWIG_MODELOBJECT(AirflowNetworkDuct, 1);
+//SWIG_MODELOBJECT(AirflowNetworkDuctViewFactors, 1);
 SWIG_MODELOBJECT(AirflowNetworkEffectiveLeakageArea, 1);
 SWIG_MODELOBJECT(AirflowNetworkEquivalentDuct, 1);
 SWIG_MODELOBJECT(AirflowNetworkExternalNode, 1);
 SWIG_MODELOBJECT(AirflowNetworkFan, 1);
 SWIG_MODELOBJECT(AirflowNetworkHorizontalOpening, 1);
 SWIG_MODELOBJECT(AirflowNetworkLeakageRatio, 1);
-SWIG_MODELOBJECT(AirflowNetworkLinkage, 1);
+//SWIG_MODELOBJECT(AirflowNetworkDistributionLinkage, 1);
 SWIG_MODELOBJECT(AirflowNetworkReferenceCrackConditions, 1);
 SWIG_MODELOBJECT(AirflowNetworkSimpleOpening, 1);
 SWIG_UNIQUEMODELOBJECT(AirflowNetworkSimulationControl);

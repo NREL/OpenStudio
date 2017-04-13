@@ -26,35 +26,34 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
 
-#ifndef MODEL_AIRFLOWNETWORKDISTRIBUTIONLINKAGE_HPP
-#define MODEL_AIRFLOWNETWORKDISTRIBUTIONLINKAGE_HPP
+#ifndef MODEL_AIRFLOWNETWORKDUCTVIEWFACTORS_HPP
+#define MODEL_AIRFLOWNETWORKDUCTVIEWFACTORS_HPP
 
 #include <model/ModelAPI.hpp>
 #include "ModelObject.hpp"
 
 namespace openstudio {
+
 namespace model {
 
 // TODO: Check the following class names against object getters and setters.
-class AirflowNetworkNode;
 class AirflowNetworkComponent;
-class ThermalZone;
 
 namespace detail {
 
-  class AirflowNetworkDistributionLinkage_Impl;
+  class AirflowNetworkDuctViewFactors_Impl;
 
 } // detail
 
-/** AirflowNetworkDistributionLinkage is a ModelObject that wraps the OpenStudio IDD object 'OS:AirflowNetworkDistributionLinkage'. */
-class MODEL_API AirflowNetworkDistributionLinkage : public ModelObject {
+/** AirflowNetworkDuctViewFactors is a ModelObject that wraps the OpenStudio IDD object 'OS:AirflowNetworkDuctViewFactors'. */
+class MODEL_API AirflowNetworkDuctViewFactors : public ModelObject {
  public:
   /** @name Constructors and Destructors */
   //@{
 
-  explicit AirflowNetworkDistributionLinkage(const Model& model);
+  explicit AirflowNetworkDuctViewFactors(const Model& model);
 
-  virtual ~AirflowNetworkDistributionLinkage() {}
+  virtual ~AirflowNetworkDuctViewFactors() {}
 
   //@}
 
@@ -63,35 +62,35 @@ class MODEL_API AirflowNetworkDistributionLinkage : public ModelObject {
   /** @name Getters */
   //@{
 
-  // TODO: Check return type. From object lists, some candidates are: AirflowNetworkNodeAndZone.
-  AirflowNetworkNode node1() const;
-
-  // TODO: Check return type. From object lists, some candidates are: AirflowNetworkNodeAndZone.
-  AirflowNetworkNode node2() const;
-
   // TODO: Check return type. From object lists, some candidates are: AirflowNetworkComponent.
-  AirflowNetworkComponent component() const;
+  AirflowNetworkComponent linkage() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Zone.
-  boost::optional<ThermalZone> thermalZone() const;
+  double ductSurfaceExposureFraction() const;
+
+  bool isDuctSurfaceExposureFractionDefaulted() const;
+
+  double ductSurfaceEmittance() const;
+
+  bool isDuctSurfaceEmittanceDefaulted() const;
+
+  // TODO: Handle this object's extensible fields.
 
   //@}
   /** @name Setters */
   //@{
 
-  // TODO: Check argument type. From object lists, some candidates are: AirflowNetworkNodeAndZone.
-  bool setNode1(const AirflowNetworkNode& airflowNetworkNodeAndZone);
-
-  // TODO: Check argument type. From object lists, some candidates are: AirflowNetworkNodeAndZone.
-  bool setNode2(const AirflowNetworkNode& airflowNetworkNodeAndZone);
-
   // TODO: Check argument type. From object lists, some candidates are: AirflowNetworkComponent.
-  bool setComponent(const AirflowNetworkComponent& airflowNetworkComponent);
+  bool setLinkage(const AirflowNetworkComponent& airflowNetworkComponent);
 
-  // TODO: Check argument type. From object lists, some candidates are: Zone.
-  bool setThermalZone(const ThermalZone& zone);
+  bool setDuctSurfaceExposureFraction(double ductSurfaceExposureFraction);
 
-  void resetThermalZone();
+  void resetDuctSurfaceExposureFraction();
+
+  bool setDuctSurfaceEmittance(double ductSurfaceEmittance);
+
+  void resetDuctSurfaceEmittance();
+
+  // TODO: Handle this object's extensible fields.
 
   //@}
   /** @name Other */
@@ -100,27 +99,27 @@ class MODEL_API AirflowNetworkDistributionLinkage : public ModelObject {
   //@}
  protected:
   /// @cond
-  typedef detail::AirflowNetworkDistributionLinkage_Impl ImplType;
+  typedef detail::AirflowNetworkDuctViewFactors_Impl ImplType;
 
-  explicit AirflowNetworkDistributionLinkage(std::shared_ptr<detail::AirflowNetworkDistributionLinkage_Impl> impl);
+  explicit AirflowNetworkDuctViewFactors(std::shared_ptr<detail::AirflowNetworkDuctViewFactors_Impl> impl);
 
-  friend class detail::AirflowNetworkDistributionLinkage_Impl;
+  friend class detail::AirflowNetworkDuctViewFactors_Impl;
   friend class Model;
   friend class IdfObject;
   friend class openstudio::detail::IdfObject_Impl;
   /// @endcond
  private:
-  REGISTER_LOGGER("openstudio.model.AirflowNetworkDistributionLinkage");
+  REGISTER_LOGGER("openstudio.model.AirflowNetworkDuctViewFactors");
 };
 
-/** \relates AirflowNetworkDistributionLinkage*/
-typedef boost::optional<AirflowNetworkDistributionLinkage> OptionalAirflowNetworkDistributionLinkage;
+/** \relates AirflowNetworkDuctViewFactors*/
+typedef boost::optional<AirflowNetworkDuctViewFactors> OptionalAirflowNetworkDuctViewFactors;
 
-/** \relates AirflowNetworkDistributionLinkage*/
-typedef std::vector<AirflowNetworkDistributionLinkage> AirflowNetworkDistributionLinkageVector;
+/** \relates AirflowNetworkDuctViewFactors*/
+typedef std::vector<AirflowNetworkDuctViewFactors> AirflowNetworkDuctViewFactorsVector;
 
 } // model
 } // openstudio
 
-#endif // MODEL_AIRFLOWNETWORKDISTRIBUTIONLINKAGE_HPP
+#endif // MODEL_AIRFLOWNETWORKDUCTVIEWFACTORS_HPP
 
