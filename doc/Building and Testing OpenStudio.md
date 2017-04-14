@@ -266,6 +266,13 @@ On [OpenStudio.net](https://www.openstudio.net/):
 - Update `Current Release Version` or `Develop Release Version` (depending on whether a major or iteration build is being done)
 - Replace the S3 build URLs with those generated above
 
+
+Verification of Posted Software
+===============================
+
+Download all posted software from both GitHub and S3. Verify that each downloaded files' MD5 hash matches their respective MD5 hash of the original, tested files from the build machines.
+
+
 Documentation
 =============
 
