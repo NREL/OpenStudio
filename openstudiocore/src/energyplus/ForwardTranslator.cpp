@@ -406,6 +406,14 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
     globalGeometryRules.setString(openstudio::GlobalGeometryRulesFields::RectangularSurfaceCoordinateSystem, "Relative");
     m_idfObjects.push_back(globalGeometryRules);
 
+    {
+      auto zoneAirContaminantBalances = model.getConcreteModelObjects<ZoneAirContaminantBalance>();
+      for( auto & balance : zoneAirContaminantBalances ) {
+        // We should only have one of these, but the ModelObject is not unique, so there could be multiple
+        translateAndMapModelObject(balance);
+      }
+    }
+
     // create meters for utility bill objects
     std::vector<UtilityBill> utilityBills = model.getConcreteModelObjects<UtilityBill>();
     for (UtilityBill utilityBill : utilityBills){
