@@ -3,7 +3,7 @@
 # gems listed here must be able to read resource files from the embedded files location
 # need to adjust hard coded paths in embedded_help.rb
 
-gem 'openstudio-workflow', '= 1.2.1' 
+gem 'openstudio-workflow', '= 1.2.2' 
 #gem 'openstudio-workflow', :github => 'NREL/OpenStudio-workflow-gem', :ref => 'c2ad7e012bc8a4b4de071a0cd752e84babdf1ee5'
 
 gem 'openstudio-standards', '= 0.1.13' 
