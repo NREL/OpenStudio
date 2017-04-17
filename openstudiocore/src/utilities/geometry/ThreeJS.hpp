@@ -34,10 +34,18 @@
 #include "Point3d.hpp"
 #include "Transformation.hpp"
 
+#include "../core/Logger.hpp"
+
 #include <vector>
 #include <boost/optional.hpp>
 
+namespace Json{
+  class Value;
+}
+
 namespace openstudio{
+
+  class ThreeScene;
 
   /// enum for materials
   enum ThreeSide{FrontSide = 0, BackSide = 1, DoubleSide = 2};
@@ -71,6 +79,10 @@ namespace openstudio{
     bool doubleSided() const;
 
   private:
+    friend class ThreeGeometry;
+    ThreeGeometryData(const Json::Value& json);
+    Json::Value toJsonValue() const;
+
     std::vector<double> m_vertices;
     std::vector<size_t> m_normals;
     std::vector<size_t> m_uvs;
@@ -91,6 +103,10 @@ namespace openstudio{
     ThreeGeometryData data() const;
 
   private:
+    friend class ThreeScene;
+    ThreeGeometry(const Json::Value& json);
+    Json::Value toJsonValue() const;
+
     std::string m_uuid;
     std::string m_type;
     ThreeGeometryData m_data;
@@ -116,6 +132,10 @@ namespace openstudio{
     unsigned side() const;   
 
   private:
+    friend class ThreeScene;
+    ThreeMaterial(const Json::Value& json);
+    Json::Value toJsonValue() const;
+
     std::string m_uuid;
     std::string m_name;
     std::string m_type;
@@ -181,6 +201,10 @@ namespace openstudio{
     void setWindExposure(const std::string& s);
 
   private:
+    friend class ThreeSceneChild;
+    ThreeUserData(const Json::Value& json);
+    Json::Value toJsonValue() const;
+
     std::string m_handle;
     std::string m_name;
     std::string m_surfaceType;
@@ -203,7 +227,6 @@ namespace openstudio{
     bool m_coincidentWithOutsideObject;
     std::string m_sunExposure;
     std::string m_windExposure;
-
   };
 
   
@@ -221,6 +244,10 @@ namespace openstudio{
     ThreeUserData userData() const;
 
   private:
+    friend class ThreeSceneObject;
+    ThreeSceneChild(const Json::Value& json);
+    Json::Value toJsonValue() const;
+
     std::string m_uuid;
     std::string m_name;
     std::string m_type;
@@ -240,6 +267,10 @@ namespace openstudio{
     std::vector<ThreeSceneChild> children() const;
 
   private:
+    friend class ThreeScene;
+    ThreeSceneObject(const Json::Value& json);
+    Json::Value toJsonValue() const;
+
     std::string m_uuid;
     std::string m_type;
     std::vector<double> m_matrix;
@@ -263,6 +294,10 @@ namespace openstudio{
     double lookAtR() const;
 
   private:
+    friend class ThreeSceneMetadata;
+    ThreeBoundingBox(const Json::Value& json);
+    Json::Value toJsonValue() const;
+
     double m_minX;
     double m_minY;
     double m_minZ;
@@ -273,7 +308,6 @@ namespace openstudio{
     double m_lookAtY;
     double m_lookAtZ;
     double m_lookAtR;
-
   };
 
   /// ThreeSceneMetadata includes metadata about the scene
@@ -287,6 +321,10 @@ namespace openstudio{
     ThreeBoundingBox boundingBox() const;
 
   private:
+    friend class ThreeScene;
+    ThreeSceneMetadata(const Json::Value& json);
+    Json::Value toJsonValue() const;
+
     std::string m_version;
     std::string m_type;
     std::string m_generator;
@@ -320,6 +358,8 @@ namespace openstudio{
     ThreeSceneObject object() const;
 
   private:
+    REGISTER_LOGGER("ThreeScene");
+
     ThreeSceneMetadata m_metadata;
     std::vector<ThreeGeometry> m_geometries;
     std::vector<ThreeMaterial> m_materials;

@@ -149,8 +149,9 @@ void PreviewWebView::onLoadFinished(bool ok)
     m_progressBar->setTextVisible(true);
   }
   
-  ThreeScene scene = modelToThreeJS(m_model, true);
-  std::string json = scene.toJSON(false);
+  ThreeScene scene = modelToThreeJS(m_model, true); // triangulated
+  //ThreeScene scene = modelToThreeJS(m_model, false); // non-triangulated
+  std::string json = scene.toJSON(false); // no pretty print
 
   // call init and animate
   QString javascript = QString("init(") + QString::fromStdString(json) + QString(");\n animate();\n initDatGui();");

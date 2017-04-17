@@ -29,11 +29,39 @@
 #include "ThreeJS.hpp"
 
 #include "../core/Assert.hpp"
+#include "../core/Path.hpp"
 
 #include <jsoncpp/json.h>
 
+#include <iostream>
+#include <string>
+
 namespace openstudio{
 
+  // assert key is present
+  void assertKey(const Json::Value& value, const std::string& key)
+  {
+    if (!value.isMember(key)){
+      throw openstudio::Exception(std::string("Cannot find key '" + key + "'"));
+    }
+  }
+
+  // assert type is correct if key is present
+  void assertType(const Json::Value& value, const std::string& key, const Json::ValueType& valueType)
+  {
+    if (value.isMember(key)){
+      if (!value[key].isConvertibleTo(valueType)){
+        throw openstudio::Exception(std::string("Key '" + key + "' is of wrong type"));
+      }
+    }
+  }
+
+  // assert key is present and type is correct
+  void assertKeyAndType(const Json::Value& value, const std::string& key, const Json::ValueType& valueType)
+  {
+    assertKey(value, key);
+    assertType(value, key, valueType);
+  }
   
   unsigned toThreeColor(unsigned r, unsigned g, unsigned b)
   {
@@ -83,14 +111,58 @@ namespace openstudio{
   {
   }
     
-  ThreeScene::ThreeScene(const std::string& json)
+  ThreeScene::ThreeScene(const std::string& s)
     : m_metadata(std::vector<std::string>(), ThreeBoundingBox(0,0,0,0,0,0,0,0,0,0)), m_sceneObject(ThreeSceneObject("", std::vector<ThreeSceneChild>()))
   {
-    throw std::runtime_error("No implemented");
+    Json::Value root;
+    Json::Reader reader;
+    bool parsingSuccessful = reader.parse(s, root);
+
+    if (!parsingSuccessful){
+      std::string errors = reader.getFormattedErrorMessages();
+
+      // see if this is a path
+      openstudio::path p = toPath(s);
+      if (boost::filesystem::exists(p) && boost::filesystem::is_regular_file(p)){
+        // open file
+        std::ifstream ifs(openstudio::toString(p));
+        root.clear();
+        parsingSuccessful = reader.parse(ifs, root);
+      }
+
+      if (!parsingSuccessful){
+        LOG_AND_THROW("ThreeJS JSON cannot be processed, " << errors);
+      }
+    }
+
+    assertKeyAndType(root, "metadata", Json::objectValue);
+    assertKeyAndType(root, "geometries", Json::arrayValue);
+    assertKeyAndType(root, "materials", Json::arrayValue);
+    assertKeyAndType(root, "object", Json::objectValue);
+
+    m_metadata = ThreeSceneMetadata(root.get("metadata", Json::objectValue));
+
+    Json::Value geometries = root.get("geometries", Json::arrayValue);
+    for (const auto& g : geometries) {
+      m_geometries.push_back(ThreeGeometry(g));
+    }
+
+    Json::Value materials = root.get("materials", Json::arrayValue);
+    for (const auto& m : materials) {
+      m_materials.push_back(ThreeMaterial(m));
+    }
+
+    m_sceneObject = ThreeSceneObject(root.get("object", Json::objectValue));
   }
     
   boost::optional<ThreeScene> ThreeScene::load(const std::string& json)
-  {
+  {  
+    try {
+      ThreeScene scene(json);
+      return scene;
+    } catch (...) {
+      LOG(Error, "Could not parse JSON input");
+    }
     return boost::none;
   }
 
@@ -99,152 +171,24 @@ namespace openstudio{
     Json::Value scene(Json::objectValue);
 
     // metadata
-    Json::Value metadata(Json::objectValue);
-
-    Json::Value boundingBox(Json::objectValue);
-    boundingBox["minX"] = m_metadata.boundingBox().minX();
-    boundingBox["minY"] = m_metadata.boundingBox().minY();
-    boundingBox["minZ"] = m_metadata.boundingBox().minZ();
-    boundingBox["maxX"] = m_metadata.boundingBox().maxX();
-    boundingBox["maxY"] = m_metadata.boundingBox().maxY();
-    boundingBox["maxZ"] = m_metadata.boundingBox().maxZ();
-    boundingBox["lookAtX"] = m_metadata.boundingBox().lookAtX();
-    boundingBox["lookAtY"] = m_metadata.boundingBox().lookAtY();
-    boundingBox["lookAtZ"] = m_metadata.boundingBox().lookAtZ();
-    boundingBox["lookAtR"] = m_metadata.boundingBox().lookAtR();
-
-    Json::Value buildingStoryNames(Json::arrayValue);
-    for (const auto& buildingStoryName : m_metadata.buildingStoryNames()){
-      buildingStoryNames.append(buildingStoryName);
-    }
-
-    metadata["version"] = m_metadata.version();
-    metadata["type"] = m_metadata.type();
-    metadata["generator"] = m_metadata.generator();
-    metadata["buildingStoryNames"] = buildingStoryNames;
-    metadata["boundingBox"] = boundingBox;
-    scene["metadata"] = metadata;
+    scene["metadata"] = m_metadata.toJsonValue();
 
     // geometries
     Json::Value geometries(Json::arrayValue);
-    for (const auto& g : m_geometries)
-    {
-      ThreeGeometryData d = g.data();
-
-      Json::Value geometry(Json::objectValue);
-      
-      Json::Value vertices(Json::arrayValue);
-      for (const auto& v : d.vertices()){
-        vertices.append(v);
-      }
-
-      Json::Value normals(Json::arrayValue);
-
-      Json::Value uvs(Json::arrayValue);
-
-      Json::Value faces(Json::arrayValue);
-      for (const auto& f : d.faces()){
-        faces.append(f);
-      }
-
-      Json::Value data(Json::objectValue);
-      data["vertices"] = vertices;
-      data["normals"] = normals;
-      data["uvs"] = uvs;
-      data["faces"] = faces;
-      data["scale"] = d.scale();
-      data["visible"] = d.visible();
-      data["castShadow"] = d.castShadow();
-      data["receiveShadow"] = d.receiveShadow();
-      data["doubleSided"] = d.doubleSided();
-
-      geometry["uuid"] = g.uuid();
-      geometry["type"] = g.type();
-      geometry["data"] = data;
-      geometries.append(geometry);
+    for (const auto& g : m_geometries) {
+      geometries.append(g.toJsonValue());
     }
     scene["geometries"] = geometries;
 
     // materials
     Json::Value materials(Json::arrayValue);
-    for (const auto& m : m_materials)
-    {
-      Json::Value material(Json::objectValue);
-      material["uuid"] = m.uuid();
-      material["name"] = m.name();
-      material["type"] = m.type();
-      material["color"] = m.color();
-      material["ambient"] = m.ambient();
-      material["emissive"] = m.emissive();
-      material["specular"] = m.specular();
-      material["shininess"] = m.shininess();
-      material["opacity"] = m.opacity();
-      material["transparent"] = m.transparent();
-      material["wireframe"] = m.wireframe();
-      material["side"] = m.side();
-
-      materials.append(material);
+    for (const auto& m : m_materials){
+      materials.append(m.toJsonValue());
     }
     scene["materials"] = materials;
 
     // object
-    Json::Value object(Json::objectValue);
-
-
-    Json::Value sceneChildren(Json::arrayValue);
-    for (const auto& c : m_sceneObject.children()){
-      ThreeUserData ud = c.userData();
-      Json::Value userData(Json::objectValue);
-      userData["handle"] = ud.handle();
-      userData["name"] = ud.name();
-      userData["surfaceType"] = ud.surfaceType();
-      userData["surfaceTypeMaterialName"] = ud.surfaceTypeMaterialName();
-      userData["constructionName"] = ud.constructionName();
-      userData["constructionMaterialName"] = ud.constructionMaterialName();
-      userData["spaceName"] = ud.spaceName();
-      userData["thermalZoneName"] = ud.thermalZoneName();
-      userData["thermalZoneMaterialName"] = ud.thermalZoneMaterialName();
-      userData["spaceTypeName"] = ud.spaceTypeName();
-      userData["spaceTypeMaterialName"] = ud.spaceTypeMaterialName();
-      userData["buildingStoryName"] = ud.buildingStoryName();
-      userData["buildingStoryMaterialName"] = ud.buildingStoryMaterialName();
-      userData["buildingUnitName"] = ud.buildingUnitName();
-      userData["buildingUnitMaterialName"] = ud.buildingUnitMaterialName();
-      userData["boundaryMaterialName"] = ud.boundaryMaterialName();
-      userData["outsideBoundaryCondition"] = ud.outsideBoundaryCondition();
-      userData["outsideBoundaryConditionObjectName"] = ud.outsideBoundaryConditionObjectName();
-      userData["outsideBoundaryConditionObjectHandle"] = ud.outsideBoundaryConditionObjectHandle();
-      userData["coincidentWithOutsideObject"] = ud.coincidentWithOutsideObject();
-      userData["sunExposure"] = ud.sunExposure();
-      userData["windExposure"] = ud.windExposure();
-
-      Json::Value childMatrix(Json::arrayValue);
-      for (const auto& d : c.matrix()){
-        childMatrix.append(d);
-      }
-
-      Json::Value sceneChild(Json::objectValue);
-      sceneChild["uuid"] = c.uuid();
-      sceneChild["name"] = c.name();
-      sceneChild["type"] = c.type();
-      sceneChild["geometry"] = c.geometry();
-      sceneChild["material"] = c.geometry();
-      sceneChild["matrix"] = childMatrix;
-      sceneChild["userData"] = userData;
-
-      sceneChildren.append(sceneChild);
-    }
-
-    Json::Value sceneMatrix(Json::arrayValue);
-    for (const auto& d : m_sceneObject.matrix()){
-      sceneMatrix.append(d);
-    }
-
-    object["uuid"] = m_sceneObject.uuid();
-    object["type"] = m_sceneObject.type();
-    object["matrix"] = sceneMatrix;
-    object["children"] = sceneChildren;
-    scene["object"] = object;
+    scene["object"] = m_sceneObject.toJsonValue();
 
     // write to string
     std::string result;
@@ -282,6 +226,88 @@ namespace openstudio{
   ThreeGeometryData::ThreeGeometryData(const std::vector<double>& vertices, const std::vector<size_t>& faces)
     : m_vertices(vertices), m_normals(), m_uvs(), m_faces(faces), m_scale(1.0), m_visible(true), m_castShadow(true), m_receiveShadow(true), m_doubleSided(true)
   {}
+
+
+  ThreeGeometryData::ThreeGeometryData(const Json::Value& value)
+  {
+    assertKeyAndType(value, "vertices", Json::arrayValue);
+    assertKeyAndType(value, "normals", Json::arrayValue);
+    assertKeyAndType(value, "uvs", Json::arrayValue);
+    assertKeyAndType(value, "faces", Json::arrayValue);
+    assertKeyAndType(value, "scale", Json::realValue);
+    assertKeyAndType(value, "visible", Json::booleanValue);
+    assertKeyAndType(value, "castShadow", Json::booleanValue);
+    assertKeyAndType(value, "receiveShadow", Json::booleanValue);
+    assertKeyAndType(value, "doubleSided", Json::booleanValue);
+
+    Json::Value scale = value.get("scale", 1.0);
+    if (scale.isConvertibleTo(Json::realValue)){
+      m_scale = scale.asDouble();
+    } else{
+      m_scale = 1.0;
+    }
+    m_visible = value.get("visible", true).asBool();
+    m_castShadow = value.get("castShadow", true).asBool();
+    m_receiveShadow = value.get("receiveShadow", true).asBool();
+    m_doubleSided = value.get("doubleSided", true).asBool();
+
+    Json::Value vertices = value.get("vertices", Json::arrayValue);
+    Json::ArrayIndex n = vertices.size();
+    for (Json::ArrayIndex i = 0; i < n; ++i){
+      m_vertices.push_back(vertices[i].asDouble());
+    }
+
+    Json::Value normals = value.get("normals", Json::arrayValue);
+    n = normals.size();
+    for (Json::ArrayIndex i = 0; i < n; ++i){
+      m_normals.push_back(normals[i].asDouble());
+    }
+
+    Json::Value uvs = value.get("uvs", Json::arrayValue);
+    n = uvs.size();
+    for (Json::ArrayIndex i = 0; i < n; ++i){
+      m_uvs.push_back(uvs[i].asDouble());
+    }
+
+    Json::Value faces = value.get("faces", Json::arrayValue);
+    n = faces.size();
+    for (Json::ArrayIndex i = 0; i < n; ++i){
+      m_faces.push_back(faces[i].asDouble());
+    }
+
+  }
+
+  Json::Value ThreeGeometryData::toJsonValue() const
+  {
+    Json::Value result;
+
+    Json::Value vertices(Json::arrayValue);
+    for (const auto& v : m_vertices){
+      vertices.append(v);
+    }
+
+    Json::Value normals(Json::arrayValue);
+
+    Json::Value uvs(Json::arrayValue);
+
+    Json::Value faces(Json::arrayValue);
+    for (const auto& f : m_faces){
+      faces.append(f);
+    }
+
+    result["vertices"] = vertices;
+    result["normals"] = normals;
+    result["uvs"] = uvs;
+    result["faces"] = faces;
+    result["scale"] = m_scale;
+    result["visible"] = m_visible;
+    result["castShadow"] = m_castShadow;
+    result["receiveShadow"] = m_receiveShadow;
+    result["doubleSided"] = m_doubleSided;
+
+    return result;
+  }
+
 
   std::vector<double> ThreeGeometryData::vertices() const
   {
@@ -332,6 +358,26 @@ namespace openstudio{
     : m_uuid(uuid), m_type(type), m_data(data)
    {}
 
+  ThreeGeometry::ThreeGeometry(const Json::Value& value)
+    : m_data(value.get("data", Json::objectValue))
+  {
+    assertKeyAndType(value, "data", Json::objectValue);
+    assertKeyAndType(value, "uuid", Json::stringValue);
+    assertKeyAndType(value, "type", Json::stringValue);
+    m_uuid = value.get("uuid", "").asString();
+    m_type = value.get("type", "").asString();
+  }
+
+  Json::Value ThreeGeometry::toJsonValue() const
+  {
+    Json::Value result(Json::objectValue);
+    result["uuid"] = m_uuid;
+    result["type"] = m_type;
+    result["data"] = m_data.toJsonValue();
+
+    return result;
+  }
+
    std::string ThreeGeometry::uuid() const
    {
      return m_uuid;
@@ -354,6 +400,56 @@ namespace openstudio{
       m_specular(specular), m_shininess(shininess), m_opacity(opacity), m_transparent(transparent),
       m_wireframe(wireframe), m_side(side)
   {}
+
+  ThreeMaterial::ThreeMaterial(const Json::Value& value)
+  {
+    assertKeyAndType(value, "uuid", Json::stringValue);
+    assertKeyAndType(value, "name", Json::stringValue);
+    assertKeyAndType(value, "type", Json::stringValue);
+    assertKeyAndType(value, "color", Json::uintValue);
+    assertType(value, "ambient", Json::uintValue);
+    assertType(value, "emissive", Json::uintValue);
+    assertType(value, "specular", Json::uintValue);
+    assertType(value, "shininess", Json::uintValue);
+    assertType(value, "opacity", Json::realValue);
+    assertType(value, "transparent", Json::booleanValue);
+    assertType(value, "wireframe", Json::booleanValue);
+    assertKeyAndType(value, "side", Json::uintValue);
+
+    m_uuid = value.get("uuid", "").asString();
+    m_name = value.get("name", "").asString();
+    m_type = value.get("type", "").asString();
+    m_color = value.get("color", 0).asUInt();
+    m_ambient = value.get("ambient", m_color).asUInt();
+    m_emissive = value.get("emissive", m_color).asUInt();
+    m_specular = value.get("specular", m_color).asUInt();
+    m_shininess = value.get("shininess", 50).asUInt();
+    m_opacity = value.get("opacity", 1).asDouble();
+    m_transparent = value.get("transparent", false).asBool();
+    m_wireframe = value.get("wireframe", false).asBool();
+    m_side = value.get("side", 0).asUInt();
+  }
+
+  Json::Value ThreeMaterial::toJsonValue() const
+  {
+    Json::Value result(Json::objectValue);
+
+    result["uuid"] = m_uuid;
+    result["name"] = m_name;
+    result["type"] = m_type;
+    result["color"] = m_color;
+    result["ambient"] = m_ambient;
+    result["emissive"] = m_emissive;
+    result["specular"] = m_specular;
+    result["shininess"] = m_shininess;
+    result["opacity"] = m_opacity;
+    result["transparent"] = m_transparent;
+    result["wireframe"] = m_wireframe;
+    result["side"] = m_side;
+
+    return result;
+  }
+
 
   std::string ThreeMaterial::uuid() const
   {
@@ -417,6 +513,85 @@ namespace openstudio{
 
   ThreeUserData::ThreeUserData()
   {}
+
+  ThreeUserData::ThreeUserData(const Json::Value& value)
+  {
+    assertType(value, "handle", Json::stringValue);
+    assertType(value, "name", Json::stringValue);
+    assertType(value, "surfaceType", Json::stringValue);
+    assertType(value, "surfaceTypeMaterialName", Json::stringValue);
+    assertType(value, "constructionName", Json::stringValue);
+    assertType(value, "constructionMaterialName", Json::stringValue);
+    assertType(value, "spaceName", Json::stringValue);
+    assertType(value, "thermalZoneName", Json::stringValue);
+    assertType(value, "thermalZoneMaterialName", Json::stringValue);
+    assertType(value, "spaceTypeName", Json::stringValue);
+    assertType(value, "spaceTypeMaterialName", Json::stringValue);
+    assertType(value, "buildingStoryName", Json::stringValue);
+    assertType(value, "buildingStoryMaterialName", Json::stringValue);
+    assertType(value, "buildingUnitName", Json::stringValue);
+    assertType(value, "buildingUnitMaterialName", Json::stringValue);
+    assertType(value, "boundaryMaterialName", Json::stringValue);
+    assertType(value, "outsideBoundaryCondition", Json::stringValue);
+    assertType(value, "outsideBoundaryConditionObjectName", Json::stringValue);
+    assertType(value, "outsideBoundaryConditionObjectHandle", Json::stringValue);
+    assertType(value, "coincidentWithOutsideObject", Json::stringValue);
+    assertType(value, "sunExposure", Json::stringValue);
+    assertType(value, "windExposure", Json::stringValue);
+
+    m_handle = value.get("handle", "").asString();
+    m_name = value.get("name", "").asString();
+    m_surfaceType = value.get("surfaceType", "").asString();
+    m_surfaceTypeMaterialName = value.get("surfaceTypeMaterialName", "").asString();
+    m_constructionName = value.get("constructionName", "").asString();
+    m_constructionMaterialName = value.get("constructionMaterialName", "").asString();
+    m_spaceName = value.get("spaceName", "").asString();
+    m_thermalZoneName = value.get("thermalZoneName", "").asString();
+    m_thermalZoneMaterialName = value.get("thermalZoneMaterialName", "").asString();
+    m_spaceTypeName = value.get("spaceTypeName", "").asString();
+    m_spaceTypeMaterialName = value.get("spaceTypeMaterialName", "").asString();
+    m_buildingStoryName = value.get("buildingStoryName", "").asString();
+    m_buildingStoryMaterialName = value.get("buildingStoryMaterialName", "").asString();
+    m_buildingUnitName = value.get("buildingUnitName", "").asString();
+    m_buildingUnitMaterialName = value.get("buildingUnitMaterialName", "").asString();
+    m_boundaryMaterialName = value.get("boundaryMaterialName", "").asString();
+    m_outsideBoundaryCondition = value.get("outsideBoundaryCondition", "").asString();
+    m_outsideBoundaryConditionObjectName = value.get("outsideBoundaryConditionObjectName", "").asString();
+    m_outsideBoundaryConditionObjectHandle = value.get("outsideBoundaryConditionObjectHandle", "").asString();
+    m_coincidentWithOutsideObject = value.get("coincidentWithOutsideObject", false).asBool();
+    m_sunExposure = value.get("sunExposure", "").asString();
+    m_windExposure = value.get("windExposure", "").asString();
+  }
+
+  Json::Value ThreeUserData::toJsonValue() const
+  {
+    Json::Value result(Json::objectValue);
+
+    result["handle"] = m_handle;
+    result["name"] = m_name;
+    result["surfaceType"] = m_surfaceType;
+    result["surfaceTypeMaterialName"] = m_surfaceTypeMaterialName;
+    result["constructionName"] = m_constructionName;
+    result["constructionMaterialName"] = m_constructionMaterialName;
+    result["spaceName"] = m_spaceName;
+    result["thermalZoneName"] = m_thermalZoneName;
+    result["thermalZoneMaterialName"] = m_thermalZoneMaterialName;
+    result["spaceTypeName"] = m_spaceTypeName;
+    result["spaceTypeMaterialName"] = m_spaceTypeMaterialName;
+    result["buildingStoryName"] = m_buildingStoryName;
+    result["buildingStoryMaterialName"] = m_buildingStoryMaterialName;
+    result["buildingUnitName"] = m_buildingUnitName;
+    result["buildingUnitMaterialName"] = m_buildingUnitMaterialName;
+    result["boundaryMaterialName"] = m_boundaryMaterialName;
+    result["outsideBoundaryCondition"] = m_outsideBoundaryCondition;
+    result["outsideBoundaryConditionObjectName"] = m_outsideBoundaryConditionObjectName;
+    result["outsideBoundaryConditionObjectHandle"] = m_outsideBoundaryConditionObjectHandle;
+    result["coincidentWithOutsideObject"] = m_coincidentWithOutsideObject;
+    result["sunExposure"] = m_sunExposure;
+    result["windExposure"] = m_windExposure;
+
+    return result;
+  }
 
   std::string ThreeUserData::handle() const
   {
@@ -643,6 +818,51 @@ namespace openstudio{
                     : m_uuid(uuid), m_name(name), m_type(type), m_geometryId(geometryId), m_materialId(materialId), m_matrix({1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1}), m_userData(userData)
   {}
 
+  ThreeSceneChild::ThreeSceneChild(const Json::Value& value)
+  {
+    assertKeyAndType(value, "uuid", Json::stringValue);
+    assertKeyAndType(value, "name", Json::stringValue);
+    assertKeyAndType(value, "type", Json::stringValue);
+    assertKeyAndType(value, "geometry", Json::stringValue);
+    assertKeyAndType(value, "material", Json::stringValue);
+    assertKeyAndType(value, "matrix", Json::arrayValue);
+    assertKeyAndType(value, "userData", Json::objectValue);
+
+    m_uuid = value.get("uuid", "").asString();
+    m_name = value.get("name", "").asString();
+    m_type = value.get("type", "").asString();
+    m_geometryId = value.get("geometry", "").asString();
+    m_materialId = value.get("material", "").asString();
+
+    Json::Value matrix = value.get("matrix", Json::arrayValue);
+    Json::ArrayIndex n = matrix.size();
+    for (Json::ArrayIndex i = 0; i < n; ++i){
+      m_matrix.push_back(matrix[i].asDouble());
+    }
+
+    m_userData = ThreeUserData(value.get("userData", Json::objectValue));
+  }
+
+  Json::Value ThreeSceneChild::toJsonValue() const
+  {
+    Json::Value result(Json::objectValue);
+
+    Json::Value childMatrix(Json::arrayValue);
+    for (const auto& d : m_matrix){
+      childMatrix.append(d);
+    }
+
+    result["uuid"] = m_uuid;
+    result["name"] = m_name;
+    result["type"] = m_type;
+    result["geometry"] = m_geometryId;
+    result["material"] = m_materialId;
+    result["matrix"] = childMatrix;
+    result["userData"] = m_userData.toJsonValue();
+
+    return result;
+  }
+
   std::string ThreeSceneChild::uuid() const
   {
     return m_uuid;
@@ -682,6 +902,51 @@ namespace openstudio{
     : m_uuid(uuid), m_type("Scene"), m_matrix({1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1}), m_children(children)
   {}
 
+  ThreeSceneObject::ThreeSceneObject(const Json::Value& value)
+  {
+    assertKeyAndType(value, "uuid", Json::stringValue);
+    assertKeyAndType(value, "type", Json::stringValue);
+    assertKeyAndType(value, "children", Json::arrayValue);
+    assertKeyAndType(value, "matrix", Json::arrayValue);
+
+    m_uuid = value.get("uuid", "").asString();
+    m_type = value.get("type", "").asString();
+
+    Json::Value children = value.get("children", Json::arrayValue);
+    Json::ArrayIndex n = children.size();
+    for (Json::ArrayIndex i = 0; i < n; ++i){
+      m_children.push_back(ThreeSceneChild(children[i]));
+    }
+
+    Json::Value matrix = value.get("matrix", Json::arrayValue);
+    n = matrix.size();
+    for (Json::ArrayIndex i = 0; i < n; ++i){
+      m_matrix.push_back(matrix[i].asDouble());
+    }
+  }
+
+  Json::Value ThreeSceneObject::toJsonValue() const
+  {
+    Json::Value result;
+
+    Json::Value sceneChildren(Json::arrayValue);
+    for (const auto& c : m_children){
+      sceneChildren.append(c.toJsonValue());
+    }
+
+    Json::Value sceneMatrix(Json::arrayValue);
+    for (const auto& d : m_matrix){
+      sceneMatrix.append(d);
+    }
+
+    result["uuid"] = m_uuid;
+    result["type"] = m_type;
+    result["matrix"] = sceneMatrix;
+    result["children"] = sceneChildren;
+
+    return result;
+  }
+
   std::string ThreeSceneObject::uuid() const
   {
     return m_uuid;
@@ -707,6 +972,28 @@ namespace openstudio{
     : m_minX(minX), m_minY(minY), m_minZ(minZ), m_maxX(maxX), m_maxY(maxY), m_maxZ(maxZ),
       m_lookAtX(lookAtX), m_lookAtY(lookAtY), m_lookAtZ(lookAtZ), m_lookAtR(lookAtR)
   {}
+
+  ThreeBoundingBox::ThreeBoundingBox(const Json::Value& value)
+  {
+
+  }
+
+  Json::Value ThreeBoundingBox::toJsonValue() const
+  {
+    Json::Value result(Json::objectValue);
+    result["minX"] = m_minX;
+    result["minY"] = m_minY;
+    result["minZ"] = m_minZ;
+    result["maxX"] = m_maxX;
+    result["maxY"] = m_maxY;
+    result["maxZ"] = m_maxZ;
+    result["lookAtX"] = m_lookAtX;
+    result["lookAtY"] = m_lookAtY;
+    result["lookAtZ"] = m_lookAtZ;
+    result["lookAtR"] = m_lookAtR;
+
+    return result;
+  }
 
   double ThreeBoundingBox::minX() const
   {
@@ -761,6 +1048,47 @@ namespace openstudio{
   ThreeSceneMetadata::ThreeSceneMetadata(const std::vector<std::string>& buildingStoryNames, const ThreeBoundingBox& boundingBox)
     : m_version("4.3"), m_type("Object"), m_generator("OpenStudio"), m_buildingStoryNames(buildingStoryNames), m_boundingBox(boundingBox)
   {}
+
+  ThreeSceneMetadata::ThreeSceneMetadata(const Json::Value& value)
+    : m_boundingBox(value.get("boundingBox", Json::objectValue))
+  {
+    assertKeyAndType(value, "version", Json::stringValue);
+    assertKeyAndType(value, "type", Json::stringValue);
+    assertKeyAndType(value, "generator", Json::stringValue);
+    assertKeyAndType(value, "buildingStoryNames", Json::arrayValue);
+    assertKeyAndType(value, "boundingBox", Json::objectValue);
+
+    Json::Value version = value.get("version", "");
+    if (version.isConvertibleTo(Json::stringValue)){
+      m_version = version.asString();
+    }
+    m_type = value.get("type", "").asString();
+    m_generator = value.get("generator", "").asString();
+
+    Json::Value buildingStoryNames = value.get("buildingStoryNames", Json::arrayValue);
+    Json::ArrayIndex n = buildingStoryNames.size();
+    for (Json::ArrayIndex i = 0; i < n; ++i){
+      m_buildingStoryNames.push_back(buildingStoryNames[i].asString());
+    }
+  }
+
+  Json::Value ThreeSceneMetadata::toJsonValue() const
+  {
+    Json::Value result;
+
+    Json::Value buildingStoryNames(Json::arrayValue);
+    for (const auto& buildingStoryName : m_buildingStoryNames){
+      buildingStoryNames.append(buildingStoryName);
+    }
+
+    result["version"] = m_version;
+    result["type"] = m_type;
+    result["generator"] = m_generator;
+    result["buildingStoryNames"] = buildingStoryNames;
+    result["boundingBox"] = m_boundingBox.toJsonValue();
+
+    return result;
+  }
 
   std::string ThreeSceneMetadata::version() const
   {

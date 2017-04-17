@@ -42,11 +42,14 @@ TEST_F(ModelFixture,ThreeJS_ExampleModel) {
   // triangulated, for display
   ThreeScene scene = modelToThreeJS(model, true);
   std::string json = scene.toJSON();
+  EXPECT_TRUE(ThreeScene::load(json));
 
-  // triangulated, for model transport/translation
+  // not triangulated, for model transport/translation
   scene = modelToThreeJS(model, false);
   json = scene.toJSON();
+  EXPECT_TRUE(ThreeScene::load(json));
 
   boost::optional<Model> model2 = modelFromThreeJS(scene);
+  EXPECT_TRUE(model2);
 }
 

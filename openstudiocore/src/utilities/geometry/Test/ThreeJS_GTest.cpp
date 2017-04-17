@@ -40,14 +40,22 @@ TEST_F(GeometryFixture, ThreeJS)
   openstudio::path p = resourcesPath() / toPath("utilities/Geometry/threejs.json");
   ASSERT_TRUE(exists(p));
 
-  std::string contents;
   std::ifstream ifs(toString(p));
-  ASSERT_TRUE(ifs.is_open());
-  ifs >> contents;
-  ifs.close();
+  EXPECT_TRUE(ifs.is_open());
 
+  std::istreambuf_iterator<char> eos;
+  std::string contents(std::istreambuf_iterator<char>(ifs), eos);
+  ifs.close();
   EXPECT_FALSE(contents.empty());
 
   boost::optional<ThreeScene> scene = ThreeScene::load(contents);
+  ASSERT_TRUE(scene);
+
+  scene = ThreeScene::load(toString(p));
+  ASSERT_TRUE(scene);
+
+  std::string json = scene->toJSON();
+
+  scene = ThreeScene::load(toString(p));
   ASSERT_TRUE(scene);
 }
