@@ -73,7 +73,12 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingGas( CoilHeati
   ///////////////////////////////////////////////////////////////////////////
   // Field: Fuel Type
   ///////////////////////////////////////////////////////////////////////////
-  idfObject.setString(openstudio::Coil_Heating_FuelFields::FuelType, modelObject.fuelType());
+  if (modelObject.fuelType() == "PropaneGas") {
+    idfObject.setString(openstudio::Coil_Heating_FuelFields::FuelType, "Propane");
+  } else {
+    idfObject.setString(openstudio::Coil_Heating_FuelFields::FuelType, modelObject.fuelType());
+  }
+  
   ///////////////////////////////////////////////////////////////////////////
 
   ///////////////////////////////////////////////////////////////////////////

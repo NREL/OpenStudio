@@ -14740,6 +14740,7 @@ OS:Coil:Heating:Gas,
   A8;  \field Fuel Type
        \type choice
        \key NaturalGas
+       \key Propane
        \key PropaneGas
        \key Diesel
        \key Gasoline
