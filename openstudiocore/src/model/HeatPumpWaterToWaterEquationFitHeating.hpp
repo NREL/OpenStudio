@@ -36,6 +36,8 @@ namespace openstudio {
 
 namespace model {
 
+class HeatPumpWaterToWaterEquationFitCooling;
+
 namespace detail {
 
   class HeatPumpWaterToWaterEquationFitHeating_Impl;
@@ -57,16 +59,24 @@ class MODEL_API HeatPumpWaterToWaterEquationFitHeating : public WaterToWaterComp
   static IddObjectType iddObjectType();
 
   /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Load Side Flow Rate" **/
-  double ratedLoadSideFlowRate() const;
+  boost::optional<double> ratedLoadSideFlowRate() const;
+
+  bool isRatedLoadSideFlowRateAutosized() const;
 
   /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Source Side Flow Rate" **/
-  double ratedSourceSideFlowRate() const;
+  boost::optional<double> ratedSourceSideFlowRate() const;
+
+  bool isRatedSourceSideFlowRateAutosized() const;
 
   /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Heating Capacity" **/
-  double ratedHeatingCapacity() const;
+  boost::optional<double> ratedHeatingCapacity() const;
+
+  bool isRatedHeatingCapacityAutosized() const;
 
   /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Heating Power Consumption" **/
-  double ratedHeatingPowerConsumption() const;
+  boost::optional<double> ratedHeatingPowerConsumption() const;
+
+  bool isRatedHeatingPowerConsumptionAutosized() const;
 
   double heatingCapacityCoefficient1() const;
 
@@ -88,6 +98,12 @@ class MODEL_API HeatPumpWaterToWaterEquationFitHeating : public WaterToWaterComp
 
   double heatingCompressorPowerCoefficient5() const;
 
+  double referenceCoefficientofPerformance() const;
+
+  double sizingFactor() const;
+
+  boost::optional<HeatPumpWaterToWaterEquationFitCooling> companionCoolingHeatPump() const;
+
   //@}
   /** @name Setters */
   //@{
@@ -95,14 +111,22 @@ class MODEL_API HeatPumpWaterToWaterEquationFitHeating : public WaterToWaterComp
   /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Load Side Flow Rate" **/
   bool setRatedLoadSideFlowRate(double ratedLoadSideFlowRate);
 
+  void autosizeRatedLoadSideFlowRate();
+
   /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Source Side Flow Rate" **/
   bool setRatedSourceSideFlowRate(double ratedSourceSideFlowRate);
+
+  void autosizeRatedSourceSideFlowRate();
 
   /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Heating Capacity" **/
   bool setRatedHeatingCapacity(double ratedHeatingCapacity);
 
+  void autosizeRatedHeatingCapacity();
+
   /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Heating Power Consumption" **/
   bool setRatedHeatingPowerConsumption(double ratedHeatingPowerConsumption);
+
+  void autosizeRatedHeatingPowerConsumption();
 
   void setHeatingCapacityCoefficient1(double heatingCapacityCoefficient1);
 
@@ -123,6 +147,12 @@ class MODEL_API HeatPumpWaterToWaterEquationFitHeating : public WaterToWaterComp
   void setHeatingCompressorPowerCoefficient4(double heatingCompressorPowerCoefficient4);
 
   void setHeatingCompressorPowerCoefficient5(double heatingCompressorPowerCoefficient5);
+
+  void setReferenceCoefficientofPerformance(double referenceCoefficientofPerformance);
+
+  void setSizingFactor(double sizingFactor);
+
+  bool setCompanionCoolingHeatPump(const HeatPumpWaterToWaterEquationFitCooling& companionHP);
 
   //@}
   /** @name Other */

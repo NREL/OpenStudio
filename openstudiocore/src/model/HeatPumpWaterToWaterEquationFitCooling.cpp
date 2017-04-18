@@ -28,10 +28,13 @@
 
 #include "HeatPumpWaterToWaterEquationFitCooling.hpp"
 #include "HeatPumpWaterToWaterEquationFitCooling_Impl.hpp"
+#include "Model.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_HeatPump_WaterToWater_EquationFit_Cooling_FieldEnums.hxx>
 #include "../utilities/units/Unit.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "HeatPumpWaterToWaterEquationFitHeating.hpp"
+#include "HeatPumpWaterToWaterEquationFitHeating_Impl.hpp"
 
 namespace openstudio {
 namespace model {
@@ -72,28 +75,56 @@ namespace detail {
     return HeatPumpWaterToWaterEquationFitCooling::iddObjectType();
   }
 
-  double HeatPumpWaterToWaterEquationFitCooling_Impl::ratedLoadSideFlowRate() const {
-    boost::optional<double> value = getDouble(OS_HeatPump_WaterToWater_EquationFit_CoolingFields::RatedLoadSideFlowRate,true);
-    OS_ASSERT(value);
-    return value.get();
+  boost::optional<double> HeatPumpWaterToWaterEquationFitCooling_Impl::ratedLoadSideFlowRate() const {
+    return getDouble(OS_HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceLoadSideFlowRate,true);
   }
 
-  double HeatPumpWaterToWaterEquationFitCooling_Impl::ratedSourceSideFlowRate() const {
-    boost::optional<double> value = getDouble(OS_HeatPump_WaterToWater_EquationFit_CoolingFields::RatedSourceSideFlowRate,true);
-    OS_ASSERT(value);
-    return value.get();
+  bool HeatPumpWaterToWaterEquationFitCooling_Impl::isRatedLoadSideFlowRateAutosized() const {
+    bool result = false;
+    boost::optional<std::string> value = getString(OS_HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceLoadSideFlowRate, true);
+    if (value) {
+      result = openstudio::istringEqual(value.get(), "Autosize");
+    }
+    return result;
   }
 
-  double HeatPumpWaterToWaterEquationFitCooling_Impl::ratedCoolingCapacity() const {
-    boost::optional<double> value = getDouble(OS_HeatPump_WaterToWater_EquationFit_CoolingFields::RatedCoolingCapacity,true);
-    OS_ASSERT(value);
-    return value.get();
+  boost::optional<double> HeatPumpWaterToWaterEquationFitCooling_Impl::ratedSourceSideFlowRate() const {
+    return getDouble(OS_HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceSourceSideFlowRate, true);
   }
 
-  double HeatPumpWaterToWaterEquationFitCooling_Impl::ratedCoolingPowerConsumption() const {
-    boost::optional<double> value = getDouble(OS_HeatPump_WaterToWater_EquationFit_CoolingFields::RatedCoolingPowerConsumption,true);
-    OS_ASSERT(value);
-    return value.get();
+  bool HeatPumpWaterToWaterEquationFitCooling_Impl::isRatedSourceSideFlowRateAutosized() const {
+    bool result = false;
+    boost::optional<std::string> value = getString(OS_HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceSourceSideFlowRate, true);
+    if (value) {
+      result = openstudio::istringEqual(value.get(), "Autosize");
+    }
+    return result;
+  }
+
+  boost::optional<double> HeatPumpWaterToWaterEquationFitCooling_Impl::ratedCoolingCapacity() const {
+    return getDouble(OS_HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceCoolingCapacity, true);
+  }
+
+  bool HeatPumpWaterToWaterEquationFitCooling_Impl::isRatedCoolingCapacityAutosized() const {
+    bool result = false;
+    boost::optional<std::string> value = getString(OS_HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceCoolingCapacity, true);
+    if (value) {
+      result = openstudio::istringEqual(value.get(), "Autosize");
+    }
+    return result;
+  }
+
+  boost::optional<double> HeatPumpWaterToWaterEquationFitCooling_Impl::ratedCoolingPowerConsumption() const {
+    return getDouble(OS_HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceCoolingPowerConsumption, true);
+  }
+
+  bool HeatPumpWaterToWaterEquationFitCooling_Impl::isRatedCoolingPowerConsumptionAutosized() const {
+    bool result = false;
+    boost::optional<std::string> value = getString(OS_HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceCoolingPowerConsumption, true);
+    if (value) {
+      result = openstudio::istringEqual(value.get(), "Autosize");
+    }
+    return result;
   }
 
   double HeatPumpWaterToWaterEquationFitCooling_Impl::coolingCapacityCoefficient1() const {
@@ -156,24 +187,60 @@ namespace detail {
     return value.get();
   }
 
+  double HeatPumpWaterToWaterEquationFitCooling_Impl::referenceCoefficientofPerformance() const {
+    boost::optional<double> value = getDouble(OS_HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceCoefficientofPerformance, true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  double HeatPumpWaterToWaterEquationFitCooling_Impl::sizingFactor() const {
+    boost::optional<double> value = getDouble(OS_HeatPump_WaterToWater_EquationFit_CoolingFields::SizingFactor, true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  boost::optional<HeatPumpWaterToWaterEquationFitHeating> HeatPumpWaterToWaterEquationFitCooling_Impl::companionHeatingHeatPump() const {
+    return getObject<ModelObject>().getModelObjectTarget<HeatPumpWaterToWaterEquationFitHeating>(OS_HeatPump_WaterToWater_EquationFit_CoolingFields::CompanionHeatingHeatPumpName);
+  }
+
   bool HeatPumpWaterToWaterEquationFitCooling_Impl::setRatedLoadSideFlowRate(double ratedLoadSideFlowRate) {
-    bool result = setDouble(OS_HeatPump_WaterToWater_EquationFit_CoolingFields::RatedLoadSideFlowRate, ratedLoadSideFlowRate);
+    bool result = setDouble(OS_HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceLoadSideFlowRate, ratedLoadSideFlowRate);
     return result;
+  }
+
+  void HeatPumpWaterToWaterEquationFitCooling_Impl::autosizeRatedLoadSideFlowRate() {
+    bool result = setString(OS_HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceLoadSideFlowRate, "Autosize");
+    OS_ASSERT(result);
   }
 
   bool HeatPumpWaterToWaterEquationFitCooling_Impl::setRatedSourceSideFlowRate(double ratedSourceSideFlowRate) {
-    bool result = setDouble(OS_HeatPump_WaterToWater_EquationFit_CoolingFields::RatedSourceSideFlowRate, ratedSourceSideFlowRate);
+    bool result = setDouble(OS_HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceSourceSideFlowRate, ratedSourceSideFlowRate);
     return result;
+  }
+
+  void HeatPumpWaterToWaterEquationFitCooling_Impl::autosizeRatedSourceSideFlowRate() {
+    bool result = setString(OS_HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceSourceSideFlowRate, "Autosize");
+    OS_ASSERT(result);
   }
 
   bool HeatPumpWaterToWaterEquationFitCooling_Impl::setRatedCoolingCapacity(double ratedCoolingCapacity) {
-    bool result = setDouble(OS_HeatPump_WaterToWater_EquationFit_CoolingFields::RatedCoolingCapacity, ratedCoolingCapacity);
+    bool result = setDouble(OS_HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceCoolingCapacity, ratedCoolingCapacity);
     return result;
   }
 
+  void HeatPumpWaterToWaterEquationFitCooling_Impl::autosizeRatedCoolingCapacity() {
+    bool result = setString(OS_HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceCoolingCapacity, "Autosize");
+    OS_ASSERT(result);
+  }
+
   bool HeatPumpWaterToWaterEquationFitCooling_Impl::setRatedCoolingPowerConsumption(double ratedCoolingPowerConsumption) {
-    bool result = setDouble(OS_HeatPump_WaterToWater_EquationFit_CoolingFields::RatedCoolingPowerConsumption, ratedCoolingPowerConsumption);
+    bool result = setDouble(OS_HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceCoolingPowerConsumption, ratedCoolingPowerConsumption);
     return result;
+  }
+
+  void HeatPumpWaterToWaterEquationFitCooling_Impl::autosizeRatedCoolingPowerConsumption() {
+    bool result = setString(OS_HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceCoolingPowerConsumption, "Autosize");
+    OS_ASSERT(result);
   }
 
   void HeatPumpWaterToWaterEquationFitCooling_Impl::setCoolingCapacityCoefficient1(double coolingCapacityCoefficient1) {
@@ -226,6 +293,21 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  void HeatPumpWaterToWaterEquationFitCooling_Impl::setReferenceCoefficientofPerformance(double referenceCoefficientofPerformance) {
+    bool result = setDouble(OS_HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceCoefficientofPerformance, referenceCoefficientofPerformance);
+    OS_ASSERT(result);
+  }
+
+  void HeatPumpWaterToWaterEquationFitCooling_Impl::setSizingFactor(double sizingFactor) {
+    bool result = setDouble(OS_HeatPump_WaterToWater_EquationFit_CoolingFields::SizingFactor, sizingFactor);
+    OS_ASSERT(result);
+  }
+
+  bool HeatPumpWaterToWaterEquationFitCooling_Impl::setCompanionHeatingHeatPump(const HeatPumpWaterToWaterEquationFitHeating& companionHP)
+  {
+    return this->setPointer(OS_HeatPump_WaterToWater_EquationFit_CoolingFields::CompanionHeatingHeatPumpName, companionHP.handle());
+  }
+
   unsigned HeatPumpWaterToWaterEquationFitCooling_Impl::supplyInletPort()
   {
     return OS_HeatPump_WaterToWater_EquationFit_CoolingFields::SourceSideInletNodeName;
@@ -253,10 +335,10 @@ HeatPumpWaterToWaterEquationFitCooling::HeatPumpWaterToWaterEquationFitCooling(c
 {
   OS_ASSERT(getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>());
 
-  setRatedLoadSideFlowRate(1.89E-03);
-  setRatedSourceSideFlowRate(1.89E-03);
-  setRatedCoolingCapacity(39890.91);
-  setRatedCoolingPowerConsumption(4790.00);
+  autosizeRatedLoadSideFlowRate();
+  autosizeRatedSourceSideFlowRate();
+  autosizeRatedCoolingCapacity();
+  autosizeRatedCoolingPowerConsumption();
   setCoolingCapacityCoefficient1(-1.52030596);
   setCoolingCapacityCoefficient2(3.46625667);
   setCoolingCapacityCoefficient3(-1.32267797);
@@ -273,20 +355,36 @@ IddObjectType HeatPumpWaterToWaterEquationFitCooling::iddObjectType() {
   return IddObjectType(IddObjectType::OS_HeatPump_WaterToWater_EquationFit_Cooling);
 }
 
-double HeatPumpWaterToWaterEquationFitCooling::ratedLoadSideFlowRate() const {
+boost::optional<double> HeatPumpWaterToWaterEquationFitCooling::ratedLoadSideFlowRate() const {
   return getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->ratedLoadSideFlowRate();
 }
 
-double HeatPumpWaterToWaterEquationFitCooling::ratedSourceSideFlowRate() const {
+bool HeatPumpWaterToWaterEquationFitCooling::isRatedLoadSideFlowRateAutosized() const {
+  return getImpl<detail::HeatPumpWaterToWaterEquationFitHeating_Impl>()->isRatedLoadSideFlowRateAutosized();
+}
+
+boost::optional<double> HeatPumpWaterToWaterEquationFitCooling::ratedSourceSideFlowRate() const {
   return getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->ratedSourceSideFlowRate();
 }
 
-double HeatPumpWaterToWaterEquationFitCooling::ratedCoolingCapacity() const {
+bool HeatPumpWaterToWaterEquationFitCooling::isRatedSourceSideFlowRateAutosized() const {
+  return getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->isRatedSourceSideFlowRateAutosized();
+}
+
+boost::optional<double> HeatPumpWaterToWaterEquationFitCooling::ratedCoolingCapacity() const {
   return getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->ratedCoolingCapacity();
 }
 
-double HeatPumpWaterToWaterEquationFitCooling::ratedCoolingPowerConsumption() const {
+bool HeatPumpWaterToWaterEquationFitCooling::isRatedCoolingCapacityAutosized() const {
+  return getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->isRatedCoolingCapacityAutosized();
+}
+
+boost::optional<double> HeatPumpWaterToWaterEquationFitCooling::ratedCoolingPowerConsumption() const {
   return getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->ratedCoolingPowerConsumption();
+}
+
+bool HeatPumpWaterToWaterEquationFitCooling::isRatedCoolingPowerConsumptionAutosized() const {
+  return getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->isRatedCoolingPowerConsumptionAutosized();
 }
 
 double HeatPumpWaterToWaterEquationFitCooling::coolingCapacityCoefficient1() const {
@@ -329,20 +427,48 @@ double HeatPumpWaterToWaterEquationFitCooling::coolingCompressorPowerCoefficient
   return getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->coolingCompressorPowerCoefficient5();
 }
 
+double HeatPumpWaterToWaterEquationFitCooling::referenceCoefficientofPerformance() const {
+  return getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->referenceCoefficientofPerformance();
+}
+
+double HeatPumpWaterToWaterEquationFitCooling::sizingFactor() const {
+  return getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->sizingFactor();
+}
+
+boost::optional<HeatPumpWaterToWaterEquationFitHeating> HeatPumpWaterToWaterEquationFitCooling::companionHeatingHeatPump() const {
+  return getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->companionHeatingHeatPump();
+}
+
 bool HeatPumpWaterToWaterEquationFitCooling::setRatedLoadSideFlowRate(double ratedLoadSideFlowRate) {
   return getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->setRatedLoadSideFlowRate(ratedLoadSideFlowRate);
+}
+
+void HeatPumpWaterToWaterEquationFitCooling::autosizeRatedLoadSideFlowRate() {
+  return getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->autosizeRatedLoadSideFlowRate();
 }
 
 bool HeatPumpWaterToWaterEquationFitCooling::setRatedSourceSideFlowRate(double ratedSourceSideFlowRate) {
   return getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->setRatedSourceSideFlowRate(ratedSourceSideFlowRate);
 }
 
+void HeatPumpWaterToWaterEquationFitCooling::autosizeRatedSourceSideFlowRate() {
+  return getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->autosizeRatedSourceSideFlowRate();
+}
+
 bool HeatPumpWaterToWaterEquationFitCooling::setRatedCoolingCapacity(double ratedCoolingCapacity) {
   return getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->setRatedCoolingCapacity(ratedCoolingCapacity);
 }
 
+void HeatPumpWaterToWaterEquationFitCooling::autosizeRatedCoolingCapacity() {
+  return getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->autosizeRatedCoolingCapacity();
+}
+
 bool HeatPumpWaterToWaterEquationFitCooling::setRatedCoolingPowerConsumption(double ratedCoolingPowerConsumption) {
   return getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->setRatedCoolingPowerConsumption(ratedCoolingPowerConsumption);
+}
+
+void HeatPumpWaterToWaterEquationFitCooling::autosizeRatedCoolingPowerConsumption() {
+  return getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->autosizeRatedCoolingPowerConsumption();
 }
 
 void HeatPumpWaterToWaterEquationFitCooling::setCoolingCapacityCoefficient1(double coolingCapacityCoefficient1) {
@@ -383,6 +509,18 @@ void HeatPumpWaterToWaterEquationFitCooling::setCoolingCompressorPowerCoefficien
 
 void HeatPumpWaterToWaterEquationFitCooling::setCoolingCompressorPowerCoefficient5(double coolingCompressorPowerCoefficient5) {
   getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->setCoolingCompressorPowerCoefficient5(coolingCompressorPowerCoefficient5);
+}
+
+void HeatPumpWaterToWaterEquationFitCooling::setReferenceCoefficientofPerformance(double referenceCoefficientofPerformance) {
+  getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->setReferenceCoefficientofPerformance(referenceCoefficientofPerformance);
+}
+
+void HeatPumpWaterToWaterEquationFitCooling::setSizingFactor(double sizingFactor) {
+  getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->setSizingFactor(sizingFactor);
+}
+
+bool HeatPumpWaterToWaterEquationFitCooling::setCompanionHeatingHeatPump(const HeatPumpWaterToWaterEquationFitHeating& companionHP) {
+  return getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->setCompanionHeatingHeatPump(companionHP);
 }
 
 /// @cond

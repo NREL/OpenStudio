@@ -35,6 +35,8 @@
 namespace openstudio {
 namespace model {
 
+class HeatPumpWaterToWaterEquationFitHeating;
+
 namespace detail {
 
   /** HeatPumpWaterToWaterEquationFitCooling_Impl is a WaterToWaterComponent_Impl that is the implementation class for HeatPumpWaterToWaterEquationFitCooling.*/
@@ -69,13 +71,21 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    double ratedLoadSideFlowRate() const;
+    boost::optional<double> ratedLoadSideFlowRate() const;
 
-    double ratedSourceSideFlowRate() const;
+    bool isRatedLoadSideFlowRateAutosized() const;
 
-    double ratedCoolingCapacity() const;
+    boost::optional<double> ratedSourceSideFlowRate() const;
 
-    double ratedCoolingPowerConsumption() const;
+    bool isRatedSourceSideFlowRateAutosized() const;
+
+    boost::optional<double> ratedCoolingCapacity() const;
+
+    bool isRatedCoolingCapacityAutosized() const;
+
+    boost::optional<double> ratedCoolingPowerConsumption() const;
+
+    bool isRatedCoolingPowerConsumptionAutosized() const;
 
     double coolingCapacityCoefficient1() const;
 
@@ -97,17 +107,31 @@ namespace detail {
 
     double coolingCompressorPowerCoefficient5() const;
 
+    double referenceCoefficientofPerformance() const;
+
+    double sizingFactor() const;
+
+    boost::optional<HeatPumpWaterToWaterEquationFitHeating> companionHeatingHeatPump() const;
+
     //@}
     /** @name Setters */
     //@{
 
     bool setRatedLoadSideFlowRate(double ratedLoadSideFlowRate);
 
+    void autosizeRatedLoadSideFlowRate();
+
     bool setRatedSourceSideFlowRate(double ratedSourceSideFlowRate);
+
+    void autosizeRatedSourceSideFlowRate();
 
     bool setRatedCoolingCapacity(double ratedCoolingCapacity);
 
+    void autosizeRatedCoolingCapacity();
+
     bool setRatedCoolingPowerConsumption(double ratedCoolingPowerConsumption);
+
+    void autosizeRatedCoolingPowerConsumption();
 
     void setCoolingCapacityCoefficient1(double coolingCapacityCoefficient1);
 
@@ -128,6 +152,12 @@ namespace detail {
     void setCoolingCompressorPowerCoefficient4(double coolingCompressorPowerCoefficient4);
 
     void setCoolingCompressorPowerCoefficient5(double coolingCompressorPowerCoefficient5);
+
+    void setReferenceCoefficientofPerformance(double referenceCoefficientofPerformance);
+
+    void setSizingFactor(double sizingFactor);
+
+    bool setCompanionHeatingHeatPump(const HeatPumpWaterToWaterEquationFitHeating& companionHP);
 
     //@}
     /** @name Other */
