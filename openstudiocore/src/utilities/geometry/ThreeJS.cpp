@@ -30,6 +30,7 @@
 
 #include "../core/Assert.hpp"
 #include "../core/Path.hpp"
+#include "../core/Json.hpp"
 
 #include <jsoncpp/json.h>
 
@@ -37,31 +38,6 @@
 #include <string>
 
 namespace openstudio{
-
-  // assert key is present
-  void assertKey(const Json::Value& value, const std::string& key)
-  {
-    if (!value.isMember(key)){
-      throw openstudio::Exception(std::string("Cannot find key '" + key + "'"));
-    }
-  }
-
-  // assert type is correct if key is present
-  void assertType(const Json::Value& value, const std::string& key, const Json::ValueType& valueType)
-  {
-    if (value.isMember(key)){
-      if (!value[key].isConvertibleTo(valueType)){
-        throw openstudio::Exception(std::string("Key '" + key + "' is of wrong type"));
-      }
-    }
-  }
-
-  // assert key is present and type is correct
-  void assertKeyAndType(const Json::Value& value, const std::string& key, const Json::ValueType& valueType)
-  {
-    assertKey(value, key);
-    assertType(value, key, valueType);
-  }
   
   unsigned toThreeColor(unsigned r, unsigned g, unsigned b)
   {
