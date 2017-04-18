@@ -32,6 +32,11 @@
 
 #include "../ThreeJS.hpp"
 #include "../Model.hpp"
+#include "../Space.hpp"
+#include "../Space_Impl.hpp"
+#include "../Surface.hpp"
+#include "../Surface_Impl.hpp"
+
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -50,6 +55,11 @@ TEST_F(ModelFixture,ThreeJS_ExampleModel) {
   EXPECT_TRUE(ThreeScene::load(json));
 
   boost::optional<Model> model2 = modelFromThreeJS(scene);
-  EXPECT_TRUE(model2);
+  ASSERT_TRUE(model2);
+
+  model2->save(resourcesPath() / toPath("model/ThreeJS_ExampleModel.osm"), true);
+
+  EXPECT_EQ(model.getConcreteModelObjects<Space>().size(), model2->getConcreteModelObjects<Space>().size());
+  EXPECT_EQ(model.getConcreteModelObjects<Surface>().size(), model2->getConcreteModelObjects<Surface>().size());
 }
 

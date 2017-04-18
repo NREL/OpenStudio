@@ -101,9 +101,24 @@ namespace openstudio{
     return result;
   }
 
+  Point3dVector fromThreeVector(const std::vector<double>& vertices)
+  {
+    Point3dVector result;
+    size_t n = vertices.size();
+    for (size_t i = 0; i + 2 < n; i+=3){
+      result.push_back(Point3d(vertices[i], -vertices[i + 2], vertices[i + 1]));
+    }
+    return result;
+  }
+
   std::vector<double> toThreeMatrix(const Transformation& matrix)
   {
     return std::vector<double>();
+  }
+
+  Transformation toThreeMatrix(const std::vector<double>& matrix)
+  {
+    return Transformation();
   }
 
   ThreeScene::ThreeScene(const ThreeSceneMetadata& metadata, const std::vector<ThreeGeometry>& geometries, const std::vector<ThreeMaterial>& materials, const ThreeSceneObject& sceneObject)
@@ -212,12 +227,32 @@ namespace openstudio{
   {
     return m_geometries;
   }
+  
+  boost::optional<ThreeGeometry> ThreeScene::getGeometry(const std::string& geometryId) const
+  {
+    for (const auto& geometry : m_geometries){
+      if (geometry.uuid() == geometryId){
+        return geometry;
+      }
+    }
+    return boost::none;
+  }
 
   std::vector<ThreeMaterial> ThreeScene::materials() const
   {
     return m_materials;
   }
 
+  boost::optional<ThreeMaterial> ThreeScene::getMaterial(const std::string& materialId) const
+  {
+    for (const auto& material : m_materials){
+      if (material.uuid() == materialId){
+        return material;
+      }
+    }
+    return boost::none;
+  }
+  
   ThreeSceneObject ThreeScene::object() const
   {
     return m_sceneObject;

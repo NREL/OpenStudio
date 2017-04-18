@@ -50,6 +50,7 @@
 #include "PlanarSurfaceGroup.hpp"
 #include "PlanarSurfaceGroup_Impl.hpp"
 #include "Space.hpp"
+#include "Space_Impl.hpp"
 #include "ShadingSurfaceGroup.hpp"
 #include "InteriorPartitionSurfaceGroup.hpp"
 
@@ -66,6 +67,11 @@ namespace openstudio
 {
   namespace model
   {
+
+    unsigned openstudioFaceFormatId()
+    {
+      return 1024;
+    }
     
     ThreeMaterial makeMaterial(const std::string& name, unsigned color, double opacity, unsigned side, unsigned shininess = 50, const std::string type = "MeshPhongMaterial")
     {
@@ -446,7 +452,7 @@ namespace openstudio
         if (triangulateSurfaces){
           faceIndices.push_back(0);
         } else{
-          faceIndices.push_back(1024);
+          faceIndices.push_back(openstudioFaceFormatId());
         }
 
         Point3dVector::reverse_iterator it = finalVerts.rbegin();
@@ -559,10 +565,83 @@ namespace openstudio
 
       return scene;
     }
+
+    Point3dVectorVector getFaces(const ThreeGeometryData& data)
+    {
+      Point3dVectorVector result;
+
+      const Point3dVector vertices = fromThreeVector(data.vertices());
+      const std::vector<size_t> faces = data.faces();
+      const size_t n = faces.size();
+
+      if (n < 1){
+        return result;
+      }
+
+
+      if (faces[0] == openstudioFaceFormatId()){
+        // openstudio, all vertices belong to one face
+        Point3dVector face;
+        for (size_t i = 1; i < n; ++i){
+          face.push_back(vertices[faces[i]]);
+        }
+        result.push_back(face);
+      }
+
+      return result;
+    }
     
     boost::optional<Model> modelFromThreeJS(const ThreeScene& scene)
     {
-      return boost::none;
+
+      Model model;
+
+      ThreeSceneObject sceneObject = scene.object();
+      for (const auto& child : sceneObject.children()){
+        boost::optional<ThreeGeometry> geometry = scene.getGeometry(child.geometry());
+        if (!geometry){
+          continue;
+        }
+
+        Point3dVectorVector faces = getFaces(geometry->data());
+
+        boost::optional<ThreeMaterial> material = scene.getMaterial(child.material());
+
+        ThreeUserData userData = child.userData();
+        
+        const std::string handle = userData.handle();
+        const std::string name = userData.name();
+        const std::string surfaceType = userData.surfaceType();
+        const std::string constructionName = userData.constructionName();
+        const std::string spaceName = userData.spaceName();
+        const std::string thermalZoneName = userData.thermalZoneName();
+        const std::string spaceTypeName = userData.spaceTypeName();
+        const std::string buildingStoryName = userData.buildingStoryName();
+        const std::string buildingUnitName = userData.buildingUnitName();
+        const std::string outsideBoundaryCondition = userData.outsideBoundaryCondition();
+        const std::string outsideBoundaryConditionObjectName = userData.outsideBoundaryConditionObjectName();
+        const std::string outsideBoundaryConditionObjectHandle = userData.outsideBoundaryConditionObjectHandle();
+        
+        // to set handles we may have to create and add idf objects
+
+        if (istringEqual(surfaceType, "Wall") || istringEqual(surfaceType, "Floor") || istringEqual(surfaceType, "RoofCeiling")){
+
+          boost::optional<Space> space = model.getConcreteModelObjectByName<Space>(spaceName);
+          if (!space){
+            space = Space(model);
+            space->setName(spaceName);
+          }
+          OS_ASSERT(space);
+
+          for (const auto& face : faces){
+            Surface surface(face, model);
+            surface.setName(name);
+            surface.setSpace(*space);
+          }
+        }
+      }
+
+      return model;
     }
     
   }//model

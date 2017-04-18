@@ -61,8 +61,12 @@ namespace openstudio{
   /// format a list of vertices
   UTILITIES_API std::vector<double> toThreeVector(const Point3dVector& vertices);
 
+  UTILITIES_API Point3dVector fromThreeVector(const std::vector<double>& vertices);
+
   /// format a Transformation matrix
   UTILITIES_API std::vector<double> toThreeMatrix(const Transformation& matrix);
+
+  UTILITIES_API Transformation toThreeMatrix(const std::vector<double>& matrix);
 
   /// ThreeGeometryData holds the geometry data for an object
   class UTILITIES_API ThreeGeometryData{
@@ -354,7 +358,9 @@ namespace openstudio{
   
     ThreeSceneMetadata metadata() const;
     std::vector<ThreeGeometry> geometries() const;
+    boost::optional<ThreeGeometry> getGeometry(const std::string& geometryId) const;
     std::vector<ThreeMaterial> materials() const;
+    boost::optional<ThreeMaterial> getMaterial(const std::string& materialId) const;
     ThreeSceneObject object() const;
 
   private:
