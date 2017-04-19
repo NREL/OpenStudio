@@ -1439,12 +1439,12 @@ void SimSettingsView::attachShadowCalculation()
   // m_maximumFiguresInShadowOverlapCalculations->bind(*m_shadowCalculation, "maximumFiguresInShadowOverlapCalculations");
   m_maximumFiguresInShadowOverlapCalculations->bind(
     *m_shadowCalculation,
-    IntGetter(std::bind(&model::ShadowCalculation::calculationFrequency, m_shadowCalculation.get_ptr())),
-    boost::optional<IntSetter>(std::bind(&model::ShadowCalculation::setCalculationFrequency, m_shadowCalculation.get_ptr(), std::placeholders::_1)),
-    boost::optional<NoFailAction>(std::bind(&model::ShadowCalculation::resetCalculationFrequency, m_shadowCalculation.get_ptr())),
+    IntGetter(std::bind(&model::ShadowCalculation::maximumFiguresInShadowOverlapCalculations, m_shadowCalculation.get_ptr())),
+    boost::optional<IntSetter>(std::bind(&model::ShadowCalculation::setMaximumFiguresInShadowOverlapCalculations, m_shadowCalculation.get_ptr(), std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::ShadowCalculation::resetMaximumFiguresInShadowOverlapCalculations, m_shadowCalculation.get_ptr())),
     boost::none,
     boost::none,
-    boost::optional<BasicQuery>(std::bind(&model::ShadowCalculation::isCalculationFrequencyDefaulted, m_shadowCalculation.get_ptr()))
+    boost::optional<BasicQuery>(std::bind(&model::ShadowCalculation::isMaximumFiguresInShadowOverlapCalculationsDefaulted, m_shadowCalculation.get_ptr()))
   );
 
   m_polygonClippingAlgorithm->bind<std::string>(
