@@ -32,6 +32,10 @@
 // TODO: Check the following class names against object getters and setters.
 #include "PlanarSurface.hpp"
 #include "PlanarSurface_Impl.hpp"
+#include "Surface.hpp"
+#include "Surface_Impl.hpp"
+#include "SubSurface.hpp"
+#include "SubSurface_Impl.hpp"
 #include "AirflowNetworkComponent.hpp"
 #include "AirflowNetworkComponent_Impl.hpp"
 #include "AirflowNetworkExternalNode.hpp"
@@ -388,7 +392,7 @@ bool AirflowNetworkSurface_Impl::setParent(ParentObject& surfAndSubSurf)
 
 } // detail
 
-AirflowNetworkSurface::AirflowNetworkSurface(const Model& model, const PlanarSurface &surface)
+AirflowNetworkSurface::AirflowNetworkSurface(const Model& model, const Surface &surface)
   : AirflowNetworkLinkage(AirflowNetworkSurface::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::AirflowNetworkSurface_Impl>());
@@ -397,7 +401,28 @@ AirflowNetworkSurface::AirflowNetworkSurface(const Model& model, const PlanarSur
   OS_ASSERT(ok);
 }
 
-AirflowNetworkSurface::AirflowNetworkSurface(const Model& model, const PlanarSurface &surface,
+AirflowNetworkSurface::AirflowNetworkSurface(const Model& model, const SubSurface &surface)
+  : AirflowNetworkLinkage(AirflowNetworkSurface::iddObjectType(), model)
+{
+  OS_ASSERT(getImpl<detail::AirflowNetworkSurface_Impl>());
+  bool ok;
+  ok = getImpl<detail::AirflowNetworkSurface_Impl>()->setSurface(surface);
+  OS_ASSERT(ok);
+}
+
+AirflowNetworkSurface::AirflowNetworkSurface(const Model& model, const Surface &surface,
+  const AirflowNetworkComponent& component)
+  : AirflowNetworkLinkage(AirflowNetworkSurface::iddObjectType(), model)
+{
+  OS_ASSERT(getImpl<detail::AirflowNetworkSurface_Impl>());
+  bool ok;
+  ok = getImpl<detail::AirflowNetworkSurface_Impl>()->setSurface(surface);
+  OS_ASSERT(ok);
+  ok = setLeakageComponent(component);
+  OS_ASSERT(ok);
+}
+
+AirflowNetworkSurface::AirflowNetworkSurface(const Model& model, const SubSurface &surface,
   const AirflowNetworkComponent& component)
   : AirflowNetworkLinkage(AirflowNetworkSurface::iddObjectType(), model)
 {
@@ -520,7 +545,12 @@ boost::optional<AirflowNetworkOccupantVentilationControl> AirflowNetworkSurface:
   return getImpl<detail::AirflowNetworkSurface_Impl>()->occupantVentilationControl();
 }
 
-bool AirflowNetworkSurface::setSurface(const PlanarSurface& surfAndSubSurf)
+bool AirflowNetworkSurface::setSurface(const Surface& surfAndSubSurf)
+{
+  return getImpl<detail::AirflowNetworkSurface_Impl>()->setSurface(surfAndSubSurf);
+}
+
+bool AirflowNetworkSurface::setSurface(const SubSurface& surfAndSubSurf)
 {
   return getImpl<detail::AirflowNetworkSurface_Impl>()->setSurface(surfAndSubSurf);
 }

@@ -38,6 +38,8 @@ namespace model {
 
 // TODO: Check the following class names against object getters and setters.
 class PlanarSurface;
+class Surface;
+class SubSurface;
 class AirflowNetworkComponent;
 class AirflowNetworkExternalNode;
 class Schedule;
@@ -57,9 +59,13 @@ public:
   //@{
 
   /** Construct a surface with a model surface to be linked to. */
-  AirflowNetworkSurface(const Model& model, const PlanarSurface &surface);
+  AirflowNetworkSurface(const Model& model, const Surface &surface);
+  /** Construct a surface with a model subsurface to be linked to. */
+  AirflowNetworkSurface(const Model& model, const SubSurface &surface);
   /** Construct a surface with a model surface to be linked to and a leakage component. */
-  AirflowNetworkSurface(const Model& model, const PlanarSurface &surface, const AirflowNetworkComponent &component);
+  AirflowNetworkSurface(const Model& model, const Surface &surface, const AirflowNetworkComponent &component);
+  /** Construct a surface with a model subsurface to be linked to and a leakage component. */
+  AirflowNetworkSurface(const Model& model, const SubSurface &surface, const AirflowNetworkComponent &component);
 
   virtual ~AirflowNetworkSurface() {}
 
@@ -123,7 +129,9 @@ public:
   //@{
 
   /** Set the model surface associated with this pressure network linkage surface. */
-  bool setSurface(const PlanarSurface& surface);
+  bool setSurface(const Surface& surface);
+  /** Set the model subsurface associated with this pressure network linkage surface. */
+  bool setSurface(const SubSurface& surface);
 
   /** Set the component associated with this surface. */
   bool setLeakageComponent(const AirflowNetworkComponent& surfaceAirflowLeakage);

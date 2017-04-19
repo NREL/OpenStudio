@@ -152,16 +152,6 @@ TEST_F(ModelFixture, AirflowNetwork_Surface_SetVertices)
 TEST_F(ModelFixture, AirflowNetwork_Surface_Clone) {
   Model model;
 
-  // construct Construction
-  StandardOpaqueMaterial material(model);
-  Construction construction(model);
-  StringVector values;
-  values.push_back(material.name().get());
-  IdfExtensibleGroup eg = construction.pushExtensibleGroup(values);
-  EXPECT_FALSE(eg.empty());
-  ASSERT_TRUE(construction.getModelObjectTargets<StandardOpaqueMaterial>().size() == 1u);
-  EXPECT_TRUE(construction.getModelObjectTargets<StandardOpaqueMaterial>()[0] == material);
-
   // construct Surface
   std::vector<Point3d> vertices;
   vertices.push_back(Point3d(0,0,1));
@@ -169,21 +159,30 @@ TEST_F(ModelFixture, AirflowNetwork_Surface_Clone) {
   vertices.push_back(Point3d(1,0,0));
   vertices.push_back(Point3d(1,0,1));
   Surface surface(vertices, model);
-  EXPECT_TRUE(surface.setConstruction(construction));
-  ASSERT_TRUE(surface.construction());
-  EXPECT_TRUE(surface.construction().get() == construction);
+
+  // construct AFN Surface
+  AirflowNetworkSurface afnsurf(model, surface);
+  EXPECT_EQ(surface, afnsurf.surface());
+  boost::optional<AirflowNetworkSurface> optsurf = surface.airflowNetworkSurface();
+  ASSERT_TRUE(optsurf);
+  EXPECT_EQ(afnsurf, optsurf.get());
+  AirflowNetworkCrack crack(model, 1.0, 0.5);
+  ASSERT_FALSE(afnsurf.leakageComponent());
+  ASSERT_TRUE(afnsurf.setLeakageComponent(crack));
+  ASSERT_TRUE(afnsurf.leakageComponent());
+  EXPECT_EQ(crack, afnsurf.leakageComponent().get());
 
   // clone should maintain connection to Construction
   Surface clone1 = surface.clone().cast<Surface>();
-  ASSERT_TRUE(clone1.model() == surface.model());
-  ASSERT_TRUE(clone1.construction());
-  EXPECT_TRUE(clone1.construction().get() == construction);
+  //ASSERT_TRUE(clone1.model() == surface.model());
+  //ASSERT_TRUE(clone1.construction());
+  //EXPECT_TRUE(clone1.construction().get() == construction);
 
   // even if through ModelObject
   Surface clone2 = surface.cast<ModelObject>().clone().cast<Surface>();
-  ASSERT_TRUE(clone2.model() == surface.model());
-  ASSERT_TRUE(clone2.construction());
-  EXPECT_TRUE(clone2.construction().get() == construction);
+  //ASSERT_TRUE(clone2.model() == surface.model());
+  //ASSERT_TRUE(clone2.construction());
+  //EXPECT_TRUE(clone2.construction().get() == construction);
 
   EXPECT_TRUE(false);
 }
@@ -260,6 +259,75 @@ TEST_F(ModelFixture, AirflowNetwork_AdjacentSurface)
   EXPECT_EQ("Outdoors", wall2.outsideBoundaryCondition());
   EXPECT_EQ("SunExposed", wall2.sunExposure());
   EXPECT_EQ("WindExposed", wall2.windExposure());
+
+  EXPECT_TRUE(false);
+}
+
+TEST_F(ModelFixture, AirflowNetwork_AdjacentSubSurface)
+{
+  Model model;
+
+  std::vector<Point3d> vertices;
+  vertices.push_back(Point3d(0, 0, 3));
+  vertices.push_back(Point3d(0, 0, 0));
+  vertices.push_back(Point3d(3, 0, 0));
+  vertices.push_back(Point3d(3, 0, 3));
+
+  Space space1(model);
+  Surface wall1(vertices, model);
+  wall1.setSpace(space1);
+  EXPECT_FALSE(wall1.adjacentSurface());
+
+  std::reverse(vertices.begin(), vertices.end());
+
+  Space space2(model);
+  Surface wall2(vertices, model);
+  wall2.setSpace(space2);
+  EXPECT_FALSE(wall2.adjacentSurface());
+
+  vertices.clear();
+  vertices.push_back(Point3d(1, 0, 2));
+  vertices.push_back(Point3d(1, 0, 1));
+  vertices.push_back(Point3d(2, 0, 1));
+  vertices.push_back(Point3d(2, 0, 2));
+
+  SubSurface window1(vertices, model);
+  EXPECT_FALSE(window1.adjacentSubSurface());
+
+  std::reverse(vertices.begin(), vertices.end());
+
+  SubSurface window2(vertices, model);
+  EXPECT_FALSE(window2.adjacentSubSurface());
+
+  EXPECT_FALSE(window1.setAdjacentSubSurface(window2));
+
+  EXPECT_TRUE(wall1.setAdjacentSurface(wall2));
+  EXPECT_TRUE(wall1.setAdjacentSurface(wall2));
+  EXPECT_TRUE(wall2.setAdjacentSurface(wall1));
+  EXPECT_TRUE(wall2.setAdjacentSurface(wall1));
+
+  EXPECT_FALSE(window1.adjacentSubSurface());
+
+  EXPECT_FALSE(window1.setAdjacentSubSurface(window2));
+
+  window1.setSurface(wall1);
+  window2.setSurface(wall2);
+
+  EXPECT_TRUE(window1.setAdjacentSubSurface(window2));
+  EXPECT_TRUE(window1.setAdjacentSubSurface(window2));
+  EXPECT_TRUE(window2.setAdjacentSubSurface(window1));
+  EXPECT_TRUE(window2.setAdjacentSubSurface(window1));
+
+  ASSERT_TRUE(window1.adjacentSubSurface());
+  EXPECT_EQ(window2.handle(), window1.adjacentSubSurface()->handle());
+  ASSERT_TRUE(window2.adjacentSubSurface());
+  EXPECT_EQ(window1.handle(), window2.adjacentSubSurface()->handle());
+
+  wall1.resetAdjacentSurface();
+  EXPECT_FALSE(wall1.adjacentSurface());
+  EXPECT_FALSE(wall2.adjacentSurface());
+  EXPECT_FALSE(window1.adjacentSubSurface());
+  EXPECT_FALSE(window2.adjacentSubSurface());
 
   EXPECT_TRUE(false);
 }
