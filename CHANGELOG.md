@@ -13,6 +13,16 @@
 ## OpenStudio v2.1.0
 ###### 2017-03-31 — [Diff]( https://github.com/NREL/OpenStudio/compare/v2.0.5...v2.1.0 )
 
+- ![Fixed:][fixed] [#2432]( https://github.com/NREL/OpenStudio/issues/2432 ), HVAC library empty in OpenStudioApp 2.0.0 on mac
+- ![Fixed:][fixed] [#2436]( https://github.com/NREL/OpenStudio/issues/2436 ), OS 2.0 on mac shows up a second, bouncing, icon when on Results tab
+- ![Fixed:][fixed] [#2438]( https://github.com/NREL/OpenStudio/issues/2438 ), HTML report formatting messed up in OS App 2.0.0
+- ![Fixed:][fixed] [#2441]( https://github.com/NREL/OpenStudio/issues/2441 ), OS2.0 can't add BCL key
+- ![Fixed:][fixed] [#2515]( https://github.com/NREL/OpenStudio/issues/2515 ), update standards os_lib_schedules
+- ![Fixed:][fixed] [#2519]( https://github.com/NREL/OpenStudio/issues/2519 ), Server Plots Not Working
+- ![Fixed:][fixed] [#2525]( https://github.com/NREL/OpenStudio/issues/2525 ), ResultsViewer button in App starts RV but doesn't load data
+- ![Fixed:][fixed] [#2530]( https://github.com/NREL/OpenStudio/issues/2530 ), Crash on go to results after saving new model
+- ![Fixed:][fixed] [#2536]( https://github.com/NREL/OpenStudio/issues/2536 ), Can't view OpenStudio Results or some other Reporting measures in OS App
+- ![Fixed:][fixed] [#2537]( https://github.com/NREL/OpenStudio/issues/2537 ), I may have missed 8.6 to 8.7 changes for tariff reporting
 
 ## OpenStudio v2.0.5
 ###### 2017-03-17 — [Diff]( https://github.com/NREL/OpenStudio/compare/v2.0.4...v2.0.5 )
