@@ -58,9 +58,21 @@ TEST_F(GeometryFixture, FloorplanJS)
   ThreeScene scene = floorplan->toThreeScene(true);
   std::string json = scene.toJSON(false);
   openstudio::path out = resourcesPath() / toPath("utilities/Geometry/floorplan_threejs_triangulated.json");
-  
+  {
+    openstudio::filesystem::ofstream file(out);
+    ASSERT_TRUE(file.is_open());
+    file << json;
+    file.close();
+  }
+
   scene = floorplan->toThreeScene(false);
   json = scene.toJSON(false);
   out = resourcesPath() / toPath("utilities/Geometry/floorplan_threejs_nontriangulated.json");
+  {
+    openstudio::filesystem::ofstream file(out);
+    ASSERT_TRUE(file.is_open());
+    file << json;
+    file.close();
+  }
 
 }
