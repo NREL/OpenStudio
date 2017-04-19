@@ -30,7 +30,8 @@
 #define MODEL_AIRFLOWNETWORKZONE_IMPL_HPP
 
 #include <model/ModelAPI.hpp>
-#include "ModelObject_Impl.hpp"
+
+#include "AirflowNetworkNode_Impl.hpp"
 
 namespace openstudio {
 namespace model {
@@ -42,8 +43,8 @@ class AirflowNetworkOccupantVentilationControl;
 
 namespace detail {
 
-  /** AirflowNetworkZone_Impl is a ModelObject_Impl that is the implementation class for AirflowNetworkZone.*/
-  class MODEL_API AirflowNetworkZone_Impl : public ModelObject_Impl
+  /** AirflowNetworkZone_Impl is a AirflowNetworkNode_Impl that is the implementation class for AirflowNetworkZone.*/
+  class MODEL_API AirflowNetworkZone_Impl : public AirflowNetworkNode_Impl
   {
    public:
     /** @name Constructors and Destructors */

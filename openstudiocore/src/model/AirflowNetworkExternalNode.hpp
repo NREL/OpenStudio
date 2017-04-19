@@ -30,7 +30,8 @@
 #define MODEL_AIRFLOWNETWORKEXTERNALNODE_HPP
 
 #include <model/ModelAPI.hpp>
-#include "ModelObject.hpp"
+
+#include "AirflowNetworkNode.hpp"
 
 namespace openstudio {
 
@@ -45,12 +46,14 @@ namespace detail {
 } // detail
 
 /** AirflowNetworkExternalNode is a ModelObject that wraps the OpenStudio IDD object 'OS:AirflowNetworkExternalNode'. */
-class MODEL_API AirflowNetworkExternalNode : public ModelObject {
+class MODEL_API AirflowNetworkExternalNode : public AirflowNetworkNode {
  public:
   /** @name Constructors and Destructors */
   //@{
-
+  /** Construct an external node with defaulted values. */
   explicit AirflowNetworkExternalNode(const Model& model);
+  /** Construct an external node with a specified wind pressure curve. */
+  explicit AirflowNetworkExternalNode(const Model& model, const Curve& curve);
 
   virtual ~AirflowNetworkExternalNode() {}
 
@@ -62,38 +65,38 @@ class MODEL_API AirflowNetworkExternalNode : public ModelObject {
 
   /** @name Getters */
   //@{
-
+  /** Returns the external node height. */
   double externalNodeHeight() const;
-
+  /** Returns true if the external node height is defaulted. */
   bool isExternalNodeHeightDefaulted() const;
-
+  /** Returns the wind pressure coefficient curve for this external node. */
   Curve windPressureCoefficientCurve() const;
-
+  /** Returns true if the wind pressure curve is to be treated as symmetric. */
   bool symmetricWindPressureCoefficientCurve() const;
-
+  /** Returns true if the wind pressure curve symmetry is defaulted. */
   bool isSymmetricWindPressureCoefficientCurveDefaulted() const;
-
+  /** Returns the wind angle type, "Absolute" or "Relative". */
   std::string windAngleType() const;
-
+  /** Returns true if the wind angle type is defaulted ("Absolute). */
   bool isWindAngleTypeDefaulted() const;
 
   //@}
   /** @name Setters */
   //@{
-
+  /** Sets the external node height. */
   void setExternalNodeHeight(double externalNodeHeight);
-
+  /** Resets the external node height. */
   void resetExternalNodeHeight();
 
-  // TODO: Check argument type. From object lists, some candidates are: WPCValue, UniVariateCurves, UniVariateTables.
+  /** Sets the wind pressure coefficient curve. */
   bool setWindPressureCoefficientCurve(const Curve& wPCValue);
-
+  /** Sets the wind pressure curve symmetry. */
   void setSymmetricWindPressureCoefficientCurve(bool symmetricWindPressureCoefficientCurve);
-
+  /** Resets the wind pressure curve symmetry. */
   void resetSymmetricWindPressureCoefficientCurve();
-
+  /** Sets the wind angle type. */
   bool setWindAngleType(const std::string& windAngleType);
-
+  /** Resets the wind angle type. */
   void resetWindAngleType();
 
   //@}

@@ -53,6 +53,8 @@
 #include "SurfacePropertyOtherSideConditionsModel_Impl.hpp"
 #include "SurfacePropertyConvectionCoefficients.hpp"
 #include "SurfacePropertyConvectionCoefficients_Impl.hpp"
+#include "AirflowNetworkSurface.hpp"
+#include "AirflowNetworkSurface_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
@@ -126,6 +128,10 @@ namespace detail {
    SubSurfaceVector subSurfaces = this->subSurfaces();
    result.insert(result.end(), subSurfaces.begin(), subSurfaces.end());
 
+   boost::optional<AirflowNetworkSurface> afns = airflowNetworkSurface();
+   if (afns) {
+     result.push_back(afns.get());
+   }
    return result;
  }
 
@@ -2054,6 +2060,17 @@ namespace detail {
     return result;
   }
 
+  boost::optional<AirflowNetworkSurface> Surface_Impl::airflowNetworkSurface() const
+  {
+    std::vector<AirflowNetworkSurface> myAFNSurfs = getObject<ModelObject>().getModelObjectSources<AirflowNetworkSurface>(AirflowNetworkSurface::iddObjectType());
+    auto count = myAFNSurfs.size();
+    if (count == 1) {
+      return boost::optional<AirflowNetworkSurface>(myAFNSurfs[0]);
+    } else if (count > 1) {
+      LOG_AND_THROW(briefDescription() << " has more than one AirflowNetwork Surface attached.");
+    }
+    return boost::none;
+  }
 
 } // detail
 
@@ -2400,6 +2417,11 @@ std::ostream& operator<<(std::ostream& os, const SurfaceIntersection& surfaceInt
   os << "]";
 
   return os;
+}
+
+boost::optional<AirflowNetworkSurface> Surface::airflowNetworkSurface() const
+{
+  return getImpl<detail::Surface_Impl>()->airflowNetworkSurface();
 }
 
 

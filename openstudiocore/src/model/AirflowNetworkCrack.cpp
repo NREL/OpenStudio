@@ -48,7 +48,7 @@ namespace detail {
 AirflowNetworkCrack_Impl::AirflowNetworkCrack_Impl(const IdfObject& idfObject,
   Model_Impl* model,
   bool keepHandle)
-  : ModelObject_Impl(idfObject, model, keepHandle)
+  : AirflowNetworkComponent_Impl(idfObject, model, keepHandle)
 {
   OS_ASSERT(idfObject.iddObject().type() == AirflowNetworkCrack::iddObjectType());
 }
@@ -56,7 +56,7 @@ AirflowNetworkCrack_Impl::AirflowNetworkCrack_Impl(const IdfObject& idfObject,
 AirflowNetworkCrack_Impl::AirflowNetworkCrack_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
   Model_Impl* model,
   bool keepHandle)
-  : ModelObject_Impl(other, model, keepHandle)
+  : AirflowNetworkComponent_Impl(other, model, keepHandle)
 {
   OS_ASSERT(other.iddObject().type() == AirflowNetworkCrack::iddObjectType());
 }
@@ -64,7 +64,7 @@ AirflowNetworkCrack_Impl::AirflowNetworkCrack_Impl(const openstudio::detail::Wor
 AirflowNetworkCrack_Impl::AirflowNetworkCrack_Impl(const AirflowNetworkCrack_Impl& other,
   Model_Impl* model,
   bool keepHandle)
-  : ModelObject_Impl(other, model, keepHandle)
+  : AirflowNetworkComponent_Impl(other, model, keepHandle)
 {}
 
 const std::vector<std::string>& AirflowNetworkCrack_Impl::outputVariableNames() const
@@ -133,7 +133,7 @@ void AirflowNetworkCrack_Impl::resetReferenceCrackConditions() {
 } // detail
 
 AirflowNetworkCrack::AirflowNetworkCrack(const Model& model, double massFlowCoefficient)
-  : ModelObject(AirflowNetworkCrack::iddObjectType(),model)
+  : AirflowNetworkComponent(AirflowNetworkCrack::iddObjectType(), model)
 {
   OS_ASSERT(getImpl<detail::AirflowNetworkCrack_Impl>());
 
@@ -143,7 +143,7 @@ AirflowNetworkCrack::AirflowNetworkCrack(const Model& model, double massFlowCoef
 
 AirflowNetworkCrack::AirflowNetworkCrack(const Model& model, double massFlowCoefficient,
   double massFlowExponent)
-  : ModelObject(AirflowNetworkCrack::iddObjectType(), model)
+  : AirflowNetworkComponent(AirflowNetworkCrack::iddObjectType(), model)
 {
   OS_ASSERT(getImpl<detail::AirflowNetworkCrack_Impl>());
 
@@ -155,7 +155,7 @@ AirflowNetworkCrack::AirflowNetworkCrack(const Model& model, double massFlowCoef
 
 AirflowNetworkCrack::AirflowNetworkCrack(const Model& model, double massFlowCoefficient,
 	double massFlowExponent, const AirflowNetworkReferenceCrackConditions &referenceCrackConditions)
-  : ModelObject(AirflowNetworkCrack::iddObjectType(), model)
+  : AirflowNetworkComponent(AirflowNetworkCrack::iddObjectType(), model)
 {
   OS_ASSERT(getImpl<detail::AirflowNetworkCrack_Impl>());
 
@@ -218,7 +218,7 @@ void AirflowNetworkCrack::resetReferenceCrackConditions()
 
 /// @cond
 AirflowNetworkCrack::AirflowNetworkCrack(std::shared_ptr<detail::AirflowNetworkCrack_Impl> impl)
-  : ModelObject(impl)
+  : AirflowNetworkComponent(impl)
 {}
 /// @endcond
 

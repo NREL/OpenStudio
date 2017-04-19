@@ -83,14 +83,12 @@ namespace detail {
 
     bool isMinimumClosingTimeDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Curve, QuadraticCurves, UniVariateTables.
-    boost::optional<Curve> thermalComfortLowTemperatureCurve() const;
+    Curve thermalComfortLowTemperatureCurve() const;
 
     double thermalComfortTemperatureBoundaryPoint() const;
 
     bool isThermalComfortTemperatureBoundaryPointDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Curve, QuadraticCurves, UniVariateTables.
     boost::optional<Curve> thermalComfortHighTemperatureCurve() const;
 
     double maximumPredictedPercentageofDissatisfiedThreshold() const;
@@ -101,10 +99,8 @@ namespace detail {
 
     bool isOccupancyCheckDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> openingProbabilitySchedule() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> closingProbabilitySchedule() const;
 
     //@}
@@ -119,16 +115,14 @@ namespace detail {
 
     void resetMinimumClosingTime();
 
-    // TODO: Check argument type. From object lists, some candidates are: Curve, QuadraticCurves, UniVariateTables.
     bool setThermalComfortLowTemperatureCurve(const Curve& curve);
 
-    void resetThermalComfortLowTemperatureCurve();
+    //void resetThermalComfortLowTemperatureCurve();
 
     bool setThermalComfortTemperatureBoundaryPoint(double thermalComfortTemperatureBoundaryPoint);
 
     void resetThermalComfortTemperatureBoundaryPoint();
 
-    // TODO: Check argument type. From object lists, some candidates are: Curve, QuadraticCurves, UniVariateTables.
     bool setThermalComfortHighTemperatureCurve(const Curve& curve);
 
     void resetThermalComfortHighTemperatureCurve();
@@ -141,14 +135,10 @@ namespace detail {
 
     void resetOccupancyCheck();
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
-  // Note Schedules are passed by reference, not const reference.
     bool setOpeningProbabilitySchedule(Schedule& schedule);
 
     void resetOpeningProbabilitySchedule();
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
-  // Note Schedules are passed by reference, not const reference.
     bool setClosingProbabilitySchedule(Schedule& schedule);
 
     void resetClosingProbabilitySchedule();

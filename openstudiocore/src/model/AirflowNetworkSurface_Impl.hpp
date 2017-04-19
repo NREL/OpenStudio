@@ -30,22 +30,21 @@
 #define MODEL_AIRFLOWNETWORKSURFACE_IMPL_HPP
 
 #include <model/ModelAPI.hpp>
-#include "ModelObject_Impl.hpp"
+#include "AirflowNetworkLinkage_Impl.hpp"
 
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class PlanarSurface;
-//class SurfaceAirflowLeakage;
-//class ExternalNode;
+class AirflowNetworkComponent;
+class AirflowNetworkExternalNode;
 class Schedule;
-//class AirflowNetworkOccupantVentilationControl;
+class AirflowNetworkOccupantVentilationControl;
 
 namespace detail {
 
-  /** AirflowNetworkSurface_Impl is a ModelObject_Impl that is the implementation class for AirflowNetworkSurface.*/
-  class MODEL_API AirflowNetworkSurface_Impl : public ModelObject_Impl {
+  /** AirflowNetworkSurface_Impl is a AirflowNetworkLinkage_Impl that is the implementation class for AirflowNetworkSurface.*/
+  class MODEL_API AirflowNetworkSurface_Impl : public AirflowNetworkLinkage_Impl {
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -78,14 +77,11 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    // TODO: Check return type. From object lists, some candidates are: SurfAndSubSurf.
-    boost::optional<PlanarSurface> surface() const;
+    PlanarSurface surface() const;
 
-    // TODO: Check return type. From object lists, some candidates are: SurfaceAirflowLeakage.
-    //SurfaceAirflowLeakage leakageComponent() const;
+    boost::optional<AirflowNetworkComponent> leakageComponent() const;
 
-    // TODO: Check return type. From object lists, some candidates are: ExternalNode.
-    //boost::optional<ExternalNode> externalNode() const;
+    boost::optional<AirflowNetworkExternalNode> externalNode() const;
 
     double windowDoorOpeningFactorOrCrackFactor() const;
 
@@ -95,7 +91,6 @@ namespace detail {
 
     bool isVentilationControlModeDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> ventilationControlZoneTemperatureSetpointSchedule() const;
 
     double minimumVentingOpenFactor() const;
@@ -118,26 +113,21 @@ namespace detail {
 
     bool isIndoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactorDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> ventingAvailabilitySchedule() const;
 
-    // TODO: Check return type. From object lists, some candidates are: AirflowNetworkOccupantVentilationControl.
-    //boost::optional<AirflowNetworkOccupantVentilationControl> occupantVentilationControl() const;
+    boost::optional<AirflowNetworkOccupantVentilationControl> occupantVentilationControl() const;
 
     //@}
     /** @name Setters */
     //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: SurfAndSubSurf.
     bool setSurface(const PlanarSurface& surfAndSubSurf);
 
-    // TODO: Check argument type. From object lists, some candidates are: SurfaceAirflowLeakage.
-    //bool setLeakageComponent(const SurfaceAirflowLeakage& surfaceAirflowLeakage);
+    bool setLeakageComponent(const AirflowNetworkComponent& surfaceAirflowLeakage);
 
-    // TODO: Check argument type. From object lists, some candidates are: ExternalNode.
-    //bool setExternalNode(const boost::optional<ExternalNode>& externalNode);
+    bool setExternalNode(const AirflowNetworkExternalNode& externalNode);
 
-    //void resetExternalNode();
+    void resetExternalNode();
 
     bool setWindowDoorOpeningFactorOrCrackFactor(double windowDoorOpeningFactorOrCrackFactor);
 
@@ -147,7 +137,6 @@ namespace detail {
 
     void resetVentilationControlMode();
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setVentilationControlZoneTemperatureSetpointSchedule(Schedule& schedule);
 
     void resetVentilationControlZoneTemperatureSetpointSchedule();
@@ -172,31 +161,26 @@ namespace detail {
 
     void resetIndoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor();
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setVentingAvailabilitySchedule(Schedule& schedule);
 
     void resetVentingAvailabilitySchedule();
 
-    // TODO: Check argument type. From object lists, some candidates are: AirflowNetworkOccupantVentilationControl.
-    //bool setOccupantVentilationControl(const boost::optional<AirflowNetworkOccupantVentilationControl>& airflowNetworkOccupantVentilationControl);
+    bool setOccupantVentilationControl(const AirflowNetworkOccupantVentilationControl& airflowNetworkOccupantVentilationControl);
 
-    //void resetOccupantVentilationControl();
+    void resetOccupantVentilationControl();
 
     //@}
     /** @name Other */
     //@{
+
+    bool setParent(ParentObject& surfAndSubSurf);
 
     //@}
    protected:
    private:
     REGISTER_LOGGER("openstudio.model.AirflowNetworkSurface");
 
-    // TODO: Check the return types of these methods.
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
     boost::optional<PlanarSurface> optionalSurface() const;
-    //boost::optional<SurfaceAirflowLeakage> optionalLeakageComponent() const;
   };
 
 } // detail

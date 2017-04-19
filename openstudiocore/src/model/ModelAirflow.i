@@ -26,15 +26,19 @@
   #include <model/AirflowNetworkComponent_Impl.hpp>
   #include <model/AirflowNetworkNode.hpp>
   #include <model/AirflowNetworkNode_Impl.hpp>
+  #include <model/AirflowNetworkLinkage.hpp>
+  #include <model/AirflowNetworkLinkage_Impl.hpp>
 %}
 
 
 // Base classes
 MODELOBJECT_TEMPLATES(AirflowNetworkComponent);
 MODELOBJECT_TEMPLATES(AirflowNetworkNode);
+MODELOBJECT_TEMPLATES(AirflowNetworkLinkage);
 
 SWIG_MODELOBJECT(AirflowNetworkComponent, 0);
 SWIG_MODELOBJECT(AirflowNetworkNode, 0);
+SWIG_MODELOBJECT(AirflowNetworkLinkage, 0);
 
 // Concrete classes
 MODELOBJECT_TEMPLATES(AirflowNetworkConstantPressureDrop);
@@ -50,7 +54,7 @@ MODELOBJECT_TEMPLATES(AirflowNetworkFan);
 MODELOBJECT_TEMPLATES(AirflowNetworkHorizontalOpening);
 MODELOBJECT_TEMPLATES(AirflowNetworkLeakageRatio);
 MODELOBJECT_TEMPLATES(AirflowNetworkOccupantVentilationControl);
-//MODELOBJECT_TEMPLATES(AirflowNetworkDistributionLinkage);
+MODELOBJECT_TEMPLATES(AirflowNetworkDistributionLinkage);
 MODELOBJECT_TEMPLATES(AirflowNetworkReferenceCrackConditions);
 MODELOBJECT_TEMPLATES(AirflowNetworkSimpleOpening);
 UNIQUEMODELOBJECT_TEMPLATES(AirflowNetworkSimulationControl);
@@ -71,7 +75,7 @@ SWIG_MODELOBJECT(AirflowNetworkFan, 1);
 SWIG_MODELOBJECT(AirflowNetworkHorizontalOpening, 1);
 SWIG_MODELOBJECT(AirflowNetworkLeakageRatio, 1);
 SWIG_MODELOBJECT(AirflowNetworkOccupantVentilationControl, 1);
-//SWIG_MODELOBJECT(AirflowNetworkDistributionLinkage, 1);
+SWIG_MODELOBJECT(AirflowNetworkDistributionLinkage, 1);
 SWIG_MODELOBJECT(AirflowNetworkReferenceCrackConditions, 1);
 SWIG_MODELOBJECT(AirflowNetworkSimpleOpening, 1);
 SWIG_UNIQUEMODELOBJECT(AirflowNetworkSimulationControl);

@@ -30,7 +30,8 @@
 #define MODEL_AIRFLOWNETWORKDISTRIBUTIONNODE_HPP
 
 #include <model/ModelAPI.hpp>
-#include "ModelObject.hpp"
+
+#include "AirflowNetworkNode.hpp"
 
 namespace openstudio {
 
@@ -42,8 +43,8 @@ namespace detail {
 
 } // detail
 
-/** AirflowNetworkDistributionNode is a ModelObject that wraps the OpenStudio IDD object 'OS:AirflowNetworkDistributionNode'. */
-class MODEL_API AirflowNetworkDistributionNode : public ModelObject {
+/** AirflowNetworkDistributionNode is a AirflowNetworkNode that wraps the OpenStudio IDD object 'OS:AirflowNetworkDistributionNode'. */
+class MODEL_API AirflowNetworkDistributionNode : public AirflowNetworkNode {
  public:
   /** @name Constructors and Destructors */
   //@{

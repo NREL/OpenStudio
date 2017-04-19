@@ -56,6 +56,8 @@
 #include "SurfacePropertyOtherSideConditionsModel_Impl.hpp"
 #include "SurfacePropertyConvectionCoefficients.hpp"
 #include "SurfacePropertyConvectionCoefficients_Impl.hpp"
+#include "AirflowNetworkSurface.hpp"
+#include "AirflowNetworkSurface_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
@@ -121,6 +123,10 @@ namespace detail {
     boost::optional<DaylightingDeviceShelf> daylightingDeviceShelf = this->daylightingDeviceShelf();
     if (daylightingDeviceShelf){
       result.push_back(*daylightingDeviceShelf);
+    }
+    boost::optional<AirflowNetworkSurface> afns = airflowNetworkSurface();
+    if (afns) {
+      result.push_back(afns.get());
     }
     return result;
   }
@@ -1092,6 +1098,18 @@ namespace detail {
     return true;
   }
 
+  boost::optional<AirflowNetworkSurface> SubSurface_Impl::airflowNetworkSurface() const
+  {
+    std::vector<AirflowNetworkSurface> myAFNSurfs = getObject<ModelObject>().getModelObjectSources<AirflowNetworkSurface>(AirflowNetworkSurface::iddObjectType());
+    auto count = myAFNSurfs.size();
+    if (count == 1) {
+      return boost::optional<AirflowNetworkSurface>(myAFNSurfs[0]);
+    } else if (count > 1) {
+      LOG_AND_THROW(briefDescription() << " has more than one AirflowNetwork Surface attached.");
+    }
+    return boost::none;
+  }
+
 } // detail
 
 SubSurface::SubSurface(const std::vector<Point3d>& vertices, const Model& model)
@@ -1367,6 +1385,10 @@ std::vector<SubSurface> applySkylightPattern(const std::vector<std::vector<Point
   return result;
 }
 
+boost::optional<AirflowNetworkSurface> SubSurface::airflowNetworkSurface() const
+{
+  return getImpl<detail::SubSurface_Impl>()->airflowNetworkSurface();
+}
 
 } // model
 } // openstudio

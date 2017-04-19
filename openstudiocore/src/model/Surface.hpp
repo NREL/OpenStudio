@@ -42,6 +42,7 @@ class ConstructionBase;
 class SurfacePropertyOtherSideCoefficients;
 class SurfacePropertyOtherSideConditionsModel;
 class SurfacePropertyConvectionCoefficients;
+class AirflowNetworkSurface;
 
 namespace detail {
 
@@ -108,6 +109,8 @@ class MODEL_API Surface : public PlanarSurface {
   bool isNumberofVerticesDefaulted() const;
 
   bool isNumberofVerticesAutocalculated() const;
+
+  boost::optional<AirflowNetworkSurface> airflowNetworkSurface() const;
 
   //@}
   /** @name Setters */

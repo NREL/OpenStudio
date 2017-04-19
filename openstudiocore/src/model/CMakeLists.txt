@@ -49,6 +49,9 @@ set(${target_name}_src
   AirflowNetworkDetailedOpening.hpp
   AirflowNetworkDetailedOpening_Impl.hpp
   AirflowNetworkDetailedOpening.cpp
+  AirflowNetworkDistributionLinkage.hpp
+  AirflowNetworkDistributionLinkage_Impl.hpp
+  AirflowNetworkDistributionLinkage.cpp
   AirflowNetworkDistributionNode.hpp
   AirflowNetworkDistributionNode_Impl.hpp
   AirflowNetworkDistributionNode.cpp
@@ -76,9 +79,9 @@ set(${target_name}_src
   AirflowNetworkLeakageRatio.hpp
   AirflowNetworkLeakageRatio_Impl.hpp
   AirflowNetworkLeakageRatio.cpp
-  AirflowNetworkDistributionLinkage.hpp
-  AirflowNetworkDistributionLinkage_Impl.hpp
-  AirflowNetworkDistributionLinkage.cpp
+  AirflowNetworkLinkage.hpp
+  AirflowNetworkLinkage_Impl.hpp
+  AirflowNetworkLinkage.cpp
   AirflowNetworkNode.hpp
   AirflowNetworkNode_Impl.hpp
   AirflowNetworkNode.cpp
@@ -1464,7 +1467,10 @@ endif()
 set(${target_name}_test_src
   test/AirConditionerVariableRefrigerantFlow_GTest.cpp
   test/AirflowNetworkCrack_GTest.cpp
+  test/AirflowNetworkExternalNode_GTest.cpp
+  test/AirflowNetworkOccupantVentilationControl_GTest.cpp
   test/AirflowNetworkSimulationControl_GTest.cpp
+  test/AirflowNetworkSurface_GTest.cpp
   test/AirGap_GTest.cpp
   test/AirLoopHVACOutdoorAirSystem_GTest.cpp
   test/AirLoopHVACUnitaryHeatPumpAirToAir_GTest.cpp

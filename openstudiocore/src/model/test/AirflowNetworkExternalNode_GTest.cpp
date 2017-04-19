@@ -26,84 +26,52 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
 
-#ifndef MODEL_AIRFLOWNETWORKCRACK_IMPL_HPP
-#define MODEL_AIRFLOWNETWORKCRACK_IMPL_HPP
+#include <gtest/gtest.h>
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject_Impl.hpp>
+#include <model/test/ModelFixture.hpp>
 
-#include "AirflowNetworkComponent_Impl.hpp"
+#include "../AirflowNetworkExternalNode.hpp"
+#include "../AirflowNetworkExternalNode_Impl.hpp"
+#include "../Curve.hpp"
+#include "../Curve_Impl.hpp"
+#include "../CurveLinear.hpp"
+#include "../CurveLinear_Impl.hpp"
 
-namespace openstudio {
-namespace model {
 
-namespace detail {
+using namespace openstudio;
+using namespace openstudio::model;
 
-/** AirflowNetworkCrack_Impl is a ModelObject_Impl that is the implementation class for AirflowNetworkCrack.*/
-class MODEL_API AirflowNetworkCrack_Impl : public AirflowNetworkComponent_Impl
+TEST_F(ModelFixture, AirflowNetwork_ExternalNode)
 {
-public:
-  /** @name Constructors and Destructors */
-  //@{
+  Model model;
 
-  AirflowNetworkCrack_Impl(const IdfObject& idfObject,
-    Model_Impl* model,
-    bool keepHandle);
+  AirflowNetworkExternalNode extnode0(model);
+  Curve curve0 = extnode0.windPressureCoefficientCurve();
+  CurveLinear *cpt = static_cast<CurveLinear*>(&curve0);
+  //CurveLinear *cpt = dynamic_cast<CurveLinear*>(&curve0);
+  //ASSERT_NE(nullptr, cpt);
+  EXPECT_EQ(1.0, cpt->coefficient1Constant());
+  EXPECT_EQ(0.0, cpt->coefficient2x());
 
-  AirflowNetworkCrack_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-    Model_Impl* model,
-    bool keepHandle);
+  EXPECT_TRUE(extnode0.isExternalNodeHeightDefaulted());
+  EXPECT_TRUE(extnode0.isSymmetricWindPressureCoefficientCurveDefaulted());
+  EXPECT_EQ("Absolute", extnode0.windAngleType());
+  EXPECT_TRUE(extnode0.isWindAngleTypeDefaulted());
+  EXPECT_TRUE(extnode0.setWindAngleType("Relative"));
+  EXPECT_EQ("Relative", extnode0.windAngleType());
+  EXPECT_FALSE(extnode0.isWindAngleTypeDefaulted());
 
-  AirflowNetworkCrack_Impl(const AirflowNetworkCrack_Impl& other,
-    Model_Impl* model,
-    bool keepHandle);
+  CurveLinear curve1(model);
+  curve1.setCoefficient1Constant(0.5);
+  curve1.setCoefficient2x(0.0);
+  curve1.setMinimumValueofx(0.0);
+  curve1.setMaximumValueofx(360.0);
 
-  virtual ~AirflowNetworkCrack_Impl() {}
+  extnode0.setWindPressureCoefficientCurve(curve1);
+  EXPECT_EQ(curve1, extnode0.windPressureCoefficientCurve());
 
-  //@}
-  /** @name Virtual Methods */
-  //@{
+  AirflowNetworkExternalNode extnode1(model, curve1);
+  EXPECT_EQ(curve1, extnode1.windPressureCoefficientCurve());
 
-  virtual const std::vector<std::string>& outputVariableNames() const;
-
-  virtual IddObjectType iddObjectType() const;
-
-  //@}
-  /** @name Getters */
-  //@{
-
-  double airMassFlowCoefficient() const;
-
-  double airMassFlowExponent() const;
-
-  bool isAirMassFlowExponentDefaulted() const;
-
-  boost::optional<AirflowNetworkReferenceCrackConditions> referenceCrackConditions() const;
-
-  //@}
-  /** @name Setters */
-  //@{
-
-  bool setAirMassFlowCoefficient(double airMassFlowCoefficientatReferenceConditions);
-
-  bool setAirMassFlowExponent(double airMassFlowExponent);
-
-  void resetAirMassFlowExponent();
-
-  bool setReferenceCrackConditions(const AirflowNetworkReferenceCrackConditions& referenceCrackConditions);
-
-  void resetReferenceCrackConditions();
-
-  //@}
-protected:
-private:
-  REGISTER_LOGGER("openstudio.model.AirflowNetworkCrack");
-};
-
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_AIRFLOWNETWORKCRACK_IMPL_HPP
+}
 

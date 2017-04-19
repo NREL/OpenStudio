@@ -30,15 +30,16 @@
 #define MODEL_AIRFLOWNETWORKDISTRIBUTIONNODE_IMPL_HPP
 
 #include <model/ModelAPI.hpp>
-#include "ModelObject_Impl.hpp"
+
+#include "AirflowNetworkNode_Impl.hpp"
 
 namespace openstudio {
 namespace model {
 
 namespace detail {
 
-  /** AirflowNetworkDistributionNode_Impl is a ModelObject_Impl that is the implementation class for AirflowNetworkDistributionNode.*/
-  class MODEL_API AirflowNetworkDistributionNode_Impl : public ModelObject_Impl
+  /** AirflowNetworkDistributionNode_Impl is a AirflowNetworkNode_Impl that is the implementation class for AirflowNetworkDistributionNode.*/
+  class MODEL_API AirflowNetworkDistributionNode_Impl : public AirflowNetworkNode_Impl
   {
    public:
     /** @name Constructors and Destructors */

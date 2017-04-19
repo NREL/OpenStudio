@@ -51,8 +51,10 @@ class MODEL_API AirflowNetworkOccupantVentilationControl : public ModelObject {
  public:
   /** @name Constructors and Destructors */
   //@{
-
-  explicit AirflowNetworkOccupantVentilationControl(const Model& model);
+  // Remove this ctor unless a suitable default curve can be found
+  // explicit AirflowNetworkOccupantVentilationControl(const Model& model);
+  /** Construct an occupant ventilation control object with a low temperature curve. */
+  AirflowNetworkOccupantVentilationControl(const Model& model, const Curve& curve);
 
   virtual ~AirflowNetworkOccupantVentilationControl() {}
 
@@ -62,83 +64,81 @@ class MODEL_API AirflowNetworkOccupantVentilationControl : public ModelObject {
 
   /** @name Getters */
   //@{
-
+  /** Returns the minimum opening time. */
   double minimumOpeningTime() const;
-
+  /** Returns true if the minimum opening time is defaulted. */
   bool isMinimumOpeningTimeDefaulted() const;
-
+  /** Returns the minimum closing time. */
   double minimumClosingTime() const;
-
+  /** Returns true if the minimum closing time is defaulted. */
   bool isMinimumClosingTimeDefaulted() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Curve, QuadraticCurves, UniVariateTables.
-  boost::optional<Curve> thermalComfortLowTemperatureCurve() const;
-
+  /** Returns the low temperature thermal comfort curve. */
+  Curve thermalComfortLowTemperatureCurve() const;
+  /** Returns the boundary temperature between the low and high temperature thermal comfort curves. */
   double thermalComfortTemperatureBoundaryPoint() const;
-
+  /** Returns true if the boundary temperature is defaulted. */
   bool isThermalComfortTemperatureBoundaryPointDefaulted() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Curve, QuadraticCurves, UniVariateTables.
+  /** Returns the high temperature thermal comfort curve. */
   boost::optional<Curve> thermalComfortHighTemperatureCurve() const;
-
+  /** Returns the maximum PPD threshold. */
   double maximumPredictedPercentageofDissatisfiedThreshold() const;
-
+  /** Returns true if the maximum PPD threshold is defaulted. */
   bool isMaximumPredictedPercentageofDissatisfiedThresholdDefaulted() const;
-
+  /** Returns true if an occupancy check is to be performed as part of the opening probability check. */
   bool occupancyCheck() const;
-
+  /** Returns true if the occupancy check is defaulted. */
   bool isOccupancyCheckDefaulted() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
+  /** Returns the opening probability schedule, if any. */
   boost::optional<Schedule> openingProbabilitySchedule() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
+  /** Returns the closing probability schedule, if any. */
   boost::optional<Schedule> closingProbabilitySchedule() const;
 
   //@}
   /** @name Setters */
   //@{
-
+  /** Sets the minimum opening time. */
   bool setMinimumOpeningTime(double minimumOpeningTime);
-
+  /** Resets the minimum opening time. */
   void resetMinimumOpeningTime();
-
+  /** Sets the minimum closing time. */
   bool setMinimumClosingTime(double minimumClosingTime);
-
+  /** Resets the minimum closing time. */
   void resetMinimumClosingTime();
 
-  // TODO: Check argument type. From object lists, some candidates are: Curve, QuadraticCurves, UniVariateTables.
+  /** Sets the low temperature thermal comfort curve. */
   bool setThermalComfortLowTemperatureCurve(const Curve& curve);
 
-  void resetThermalComfortLowTemperatureCurve();
-
+  //void resetThermalComfortLowTemperatureCurve();
+  /** Sets the temperature boundary point. */
   bool setThermalComfortTemperatureBoundaryPoint(double thermalComfortTemperatureBoundaryPoint);
-
+  /** Resets the temperature boundary point. */
   void resetThermalComfortTemperatureBoundaryPoint();
 
-  // TODO: Check argument type. From object lists, some candidates are: Curve, QuadraticCurves, UniVariateTables.
+  /** Sets the high temperature thermal comfort curve. */
   bool setThermalComfortHighTemperatureCurve(const Curve& curve);
-
+  /** Resets the high temperature thermal comfort curve. */
   void resetThermalComfortHighTemperatureCurve();
-
+  /** Sets the maximum PPD threshold. */
   bool setMaximumPredictedPercentageofDissatisfiedThreshold(double maximumPredictedPercentageofDissatisfiedThreshold);
-
+  /** Resets the maximum PPD threshold. */
   void resetMaximumPredictedPercentageofDissatisfiedThreshold();
-
+  /** Sets the occupancy check. */
   void setOccupancyCheck(bool occupancyCheck);
-
+  /** Resets the occupancy check. */
   void resetOccupancyCheck();
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
-  // Note Schedules are passed by reference, not const reference.
+  /** Sets the opening probability schedule. */
   bool setOpeningProbabilitySchedule(Schedule& schedule);
-
+  /** Resets the opening probability schedule. */
   void resetOpeningProbabilitySchedule();
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
-  // Note Schedules are passed by reference, not const reference.
+  /** Sets the closing probability schedule. */
   bool setClosingProbabilitySchedule(Schedule& schedule);
-
+  /** Resets the closing probability schedule. */
   void resetClosingProbabilitySchedule();
 
   //@}

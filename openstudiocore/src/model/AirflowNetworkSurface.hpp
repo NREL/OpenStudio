@@ -30,20 +30,18 @@
 #define MODEL_AIRFLOWNETWORKSURFACE_HPP
 
 #include <model/ModelAPI.hpp>
-#include "ModelObject.hpp"
+#include "AirflowNetworkLinkage.hpp"
 
 namespace openstudio {
 
 namespace model {
 
 // TODO: Check the following class names against object getters and setters.
-//class SurfAndSubSurf;
 class PlanarSurface;
-//class SurfaceAirflowLeakage;
-//class ExternalNode;
+class AirflowNetworkComponent;
+class AirflowNetworkExternalNode;
 class Schedule;
-//class Schedule;
-//class AirflowNetworkOccupantVentilationControl;
+class AirflowNetworkOccupantVentilationControl;
 
 namespace detail {
 
@@ -51,13 +49,17 @@ class AirflowNetworkSurface_Impl;
 
 } // detail
 
-/** AirflowNetworkSurface is a ModelObject that wraps the OpenStudio IDD object 'OS:AirflowNetwork:Surface'. */
-class MODEL_API AirflowNetworkSurface : public ModelObject {
+/** AirflowNetworkSurface is a AirflowNetworkLinkage that wraps the OpenStudio IDD object 'OS:AirflowNetwork:Surface'. */
+class MODEL_API AirflowNetworkSurface : public AirflowNetworkLinkage
+{
 public:
   /** @name Constructors and Destructors */
   //@{
 
+  /** Construct a surface with a model surface to be linked to. */
   AirflowNetworkSurface(const Model& model, const PlanarSurface &surface);
+  /** Construct a surface with a model surface to be linked to and a leakage component. */
+  AirflowNetworkSurface(const Model& model, const PlanarSurface &surface, const AirflowNetworkComponent &component);
 
   virtual ~AirflowNetworkSurface() {}
 
@@ -71,13 +73,13 @@ public:
   //@{
 
   /** Returns the planar surface associated with this object. */
-  boost::optional<PlanarSurface> surface() const;
+  PlanarSurface surface() const;
 
-  // TODO: Check return type. From object lists, some candidates are: SurfaceAirflowLeakage.
-  //SurfaceAirflowLeakage leakageComponent() const;
+  /** Returns the leakage component associated with the surface, if any. */
+  boost::optional<AirflowNetworkComponent> leakageComponent() const;
 
-  // TODO: Check return type. From object lists, some candidates are: ExternalNode.
-  //boost::optional<ExternalNode> externalNode() const;
+  /** Returns the external node associated with this surface, if any. */
+  boost::optional<AirflowNetworkExternalNode> externalNode() const;
   /** Returns the window opening, door opening, or crack factor for this object. */
   double windowDoorOpeningFactorOrCrackFactor() const;
   /** Returns true if the window opening, door opening, or crack factor for this object is defaulted. */
@@ -93,86 +95,89 @@ public:
   double minimumVentingOpenFactor() const;
   /** Returns true if the minimum venting open factor for this object is defaulted. */
   bool isMinimumVentingOpenFactorDefaulted() const;
-
+  /** Returns the lower limit indoor/outdoor temperature difference. */
   double indoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor() const;
-
+  /** Returns true if the lower limit indoor/outdoor temperature difference is defaulted. */
   bool isIndoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactorDefaulted() const;
-
+  /** Returns the upper limit indoor/outdoor temperature difference. */
   double indoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactor() const;
-
+  /** Returns true if the upper limit indoor/outdoor temperature difference is defaulted. */
   bool isIndoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactorDefaulted() const;
-
+  /** Returns the lower limit indoor/outdoor enthalpy difference. */
   double indoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor() const;
-
+  /** Returns true if the lower limit indoor/outdoor enthalpy difference is defaulted. */
   bool isIndoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactorDefaulted() const;
-
+  /** Returns the upper limit indoor/outdoor enthalpy difference. */
   double indoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor() const;
-
+  /** Returns true if the upper limit indoor/outdoor enthalpy difference is defaulted. */
   bool isIndoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactorDefaulted() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
+  /** Returns the venting availability for this surface, if any. */
   boost::optional<Schedule> ventingAvailabilitySchedule() const;
 
-  // TODO: Check return type. From object lists, some candidates are: AirflowNetworkOccupantVentilationControl.
-  //boost::optional<AirflowNetworkOccupantVentilationControl> occupantVentilationControl() const;
+  /** Returns the ventilation control object associated with this surface, if any.*/
+  boost::optional<AirflowNetworkOccupantVentilationControl> occupantVentilationControl() const;
 
   //@}
   /** @name Setters */
   //@{
 
-  // TODO: Check argument type. From object lists, some candidates are: SurfAndSubSurf.
+  /** Set the model surface associated with this pressure network linkage surface. */
   bool setSurface(const PlanarSurface& surface);
 
-  // TODO: Check argument type. From object lists, some candidates are: SurfaceAirflowLeakage.
-  //bool setLeakageComponent(const SurfaceAirflowLeakage& surfaceAirflowLeakage);
+  /** Set the component associated with this surface. */
+  bool setLeakageComponent(const AirflowNetworkComponent& surfaceAirflowLeakage);
 
-  // TODO: Check argument type. From object lists, some candidates are: ExternalNode.
-  //bool setExternalNode(const ExternalNode& externalNode);
+  /** Set the external node associated with this surface. */
+  bool setExternalNode(const AirflowNetworkExternalNode& externalNode);
 
-  //void resetExternalNode();
-
+  /** Remove the external node currently associated with this surface. */
+  void resetExternalNode();
+  /** Sets the opening factor/crack factor. */
   bool setWindowDoorOpeningFactorOrCrackFactor(double windowDoorOpeningFactorOrCrackFactor);
-
+  /** Resets the opening factor/crack factor. */
   void resetWindowDoorOpeningFactorOrCrackFactor();
-
+  /** Sets the ventilation control mode. */
   bool setVentilationControlMode(std::string ventilationControlMode);
-
+  /** Resets the ventilation control mode. */
   void resetVentilationControlMode();
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
+  /** Sets the control setpoint schedule. */
   bool setVentilationControlZoneTemperatureSetpointSchedule(Schedule& schedule);
-
+  /** Resets the control setpoint schedule. */
   void resetVentilationControlZoneTemperatureSetpointSchedule();
-
+  /** Sets the minimum venting open schedule. */
   bool setMinimumVentingOpenFactor(double minimumVentingOpenFactor);
-
+  /** Reets the minimum venting open schedule. */
   void resetMinimumVentingOpenFactor();
-
+  /** Sets the lower limit indoor/outdoor temperature difference. */
   bool setIndoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor(double indoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor);
-
+  /** Resets the lower limit indoor/outdoor temperature difference. */
   void resetIndoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor();
-
+  /** Sets the upper limit indoor/outdoor temperature difference. */
   bool setIndoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactor(double indoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactor);
-
+  /** Resets the upper limit indoor/outdoor temperature difference. */
   void resetIndoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactor();
-
+  /** Sets the lower limit indoor/outdoor enthalpy difference. */
   bool setIndoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor(double indoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor);
-
+  /** Resets the upper limit indoor/outdoor temperature difference. */
   void resetIndoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor();
-
+  /** Sets the upper limit indoor/outdoor enthalpy difference. */
   bool setIndoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor(double indoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor);
-
+  /** Resets the upper limit indoor/outdoor enthalpy difference. */
   void resetIndoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor();
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
+  /** Sets the venting availabilty schedule. */
   bool setVentingAvailabilitySchedule(Schedule& schedule);
 
+  /** Resets the venting availabilty schedule. */
   void resetVentingAvailabilitySchedule();
 
-  // TODO: Check argument type. From object lists, some candidates are: AirflowNetworkOccupantVentilationControl.
-  //bool setOccupantVentilationControl(const AirflowNetworkOccupantVentilationControl& airflowNetworkOccupantVentilationControl);
+  /** Set the occupant ventilation control object for this surface. */
+  bool setOccupantVentilationControl(const AirflowNetworkOccupantVentilationControl& airflowNetworkOccupantVentilationControl);
 
-  //void resetOccupantVentilationControl();
+  /** Reset the occupant ventilation control object. */
+  void resetOccupantVentilationControl();
 
   //@}
   /** @name Other */

@@ -175,6 +175,8 @@ namespace detail {
 
     bool isNumberofVerticesAutocalculated() const;
 
+    boost::optional<AirflowNetworkSurface> airflowNetworkSurface() const;
+
     //@}
     /** @name Setters */
     //@{

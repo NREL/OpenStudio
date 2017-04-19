@@ -44,7 +44,7 @@ namespace detail {
 AirflowNetworkEffectiveLeakageArea_Impl::AirflowNetworkEffectiveLeakageArea_Impl(const IdfObject& idfObject,
   Model_Impl* model,
   bool keepHandle)
-  : ModelObject_Impl(idfObject, model, keepHandle)
+  : AirflowNetworkComponent_Impl(idfObject, model, keepHandle)
 {
   OS_ASSERT(idfObject.iddObject().type() == AirflowNetworkEffectiveLeakageArea::iddObjectType());
 }
@@ -52,7 +52,7 @@ AirflowNetworkEffectiveLeakageArea_Impl::AirflowNetworkEffectiveLeakageArea_Impl
 AirflowNetworkEffectiveLeakageArea_Impl::AirflowNetworkEffectiveLeakageArea_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
   Model_Impl* model,
   bool keepHandle)
-  : ModelObject_Impl(other, model, keepHandle)
+  : AirflowNetworkComponent_Impl(other, model, keepHandle)
 {
   OS_ASSERT(other.iddObject().type() == AirflowNetworkEffectiveLeakageArea::iddObjectType());
 }
@@ -60,7 +60,7 @@ AirflowNetworkEffectiveLeakageArea_Impl::AirflowNetworkEffectiveLeakageArea_Impl
 AirflowNetworkEffectiveLeakageArea_Impl::AirflowNetworkEffectiveLeakageArea_Impl(const AirflowNetworkEffectiveLeakageArea_Impl& other,
   Model_Impl* model,
   bool keepHandle)
-  : ModelObject_Impl(other, model, keepHandle)
+  : AirflowNetworkComponent_Impl(other, model, keepHandle)
 {}
 
 const std::vector<std::string>& AirflowNetworkEffectiveLeakageArea_Impl::outputVariableNames() const
@@ -165,7 +165,7 @@ void AirflowNetworkEffectiveLeakageArea_Impl::resetAirMassFlowExponent()
 
 AirflowNetworkEffectiveLeakageArea::AirflowNetworkEffectiveLeakageArea(const Model& model,
   double effectiveLeakageArea)
-  : ModelObject(AirflowNetworkEffectiveLeakageArea::iddObjectType(), model)
+  : AirflowNetworkComponent(AirflowNetworkEffectiveLeakageArea::iddObjectType(), model)
 {
   OS_ASSERT(getImpl<detail::AirflowNetworkEffectiveLeakageArea_Impl>());
 
@@ -175,7 +175,7 @@ AirflowNetworkEffectiveLeakageArea::AirflowNetworkEffectiveLeakageArea(const Mod
 
 AirflowNetworkEffectiveLeakageArea::AirflowNetworkEffectiveLeakageArea(const Model& model,
   double effectiveLeakageArea, double dischargeCoefficient, double referencePressureDifference, double massFlowExponent)
-  : ModelObject(AirflowNetworkEffectiveLeakageArea::iddObjectType(), model)
+  : AirflowNetworkComponent(AirflowNetworkEffectiveLeakageArea::iddObjectType(), model)
 {
   OS_ASSERT(getImpl<detail::AirflowNetworkEffectiveLeakageArea_Impl>());
 
@@ -266,7 +266,7 @@ void AirflowNetworkEffectiveLeakageArea::resetAirMassFlowExponent()
 
 /// @cond
 AirflowNetworkEffectiveLeakageArea::AirflowNetworkEffectiveLeakageArea(std::shared_ptr<detail::AirflowNetworkEffectiveLeakageArea_Impl> impl)
-  : ModelObject(impl)
+  : AirflowNetworkComponent(impl)
 {}
 /// @endcond
 

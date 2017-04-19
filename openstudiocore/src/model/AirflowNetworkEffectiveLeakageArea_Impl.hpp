@@ -30,7 +30,7 @@
 #define MODEL_AIRFLOWNETWORKEFFECTIVELEAKAGEAREA_IMPL_HPP
 
 #include <model/ModelAPI.hpp>
-#include <model/ModelObject_Impl.hpp>
+#include "AirflowNetworkComponent_Impl.hpp"
 
 namespace openstudio {
 namespace model {
@@ -38,7 +38,7 @@ namespace model {
 namespace detail {
 
 /** AirflowNetworkEffectiveLeakageArea_Impl is a ModelObject_Impl that is the implementation class for AirflowNetworkEffectiveLeakageArea.*/
-class MODEL_API AirflowNetworkEffectiveLeakageArea_Impl : public ModelObject_Impl
+class MODEL_API AirflowNetworkEffectiveLeakageArea_Impl : public AirflowNetworkComponent_Impl
 {
 public:
   /** @name Constructors and Destructors */

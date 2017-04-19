@@ -57,7 +57,7 @@ namespace detail {
   AirflowNetworkZone_Impl::AirflowNetworkZone_Impl(const IdfObject& idfObject,
                                                    Model_Impl* model,
                                                    bool keepHandle)
-    : ModelObject_Impl(idfObject,model,keepHandle)
+    : AirflowNetworkNode_Impl(idfObject,model,keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == AirflowNetworkZone::iddObjectType());
   }
@@ -65,7 +65,7 @@ namespace detail {
   AirflowNetworkZone_Impl::AirflowNetworkZone_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                                    Model_Impl* model,
                                                    bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : AirflowNetworkNode_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == AirflowNetworkZone::iddObjectType());
   }
@@ -73,7 +73,7 @@ namespace detail {
   AirflowNetworkZone_Impl::AirflowNetworkZone_Impl(const AirflowNetworkZone_Impl& other,
                                                    Model_Impl* model,
                                                    bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : AirflowNetworkNode_Impl(other,model,keepHandle)
   {}
 
   const std::vector<std::string>& AirflowNetworkZone_Impl::outputVariableNames() const
@@ -333,7 +333,7 @@ namespace detail {
 } // detail
 
 AirflowNetworkZone::AirflowNetworkZone(const Model& model)
-  : ModelObject(AirflowNetworkZone::iddObjectType(),model)
+  : AirflowNetworkNode(AirflowNetworkZone::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::AirflowNetworkZone_Impl>());
 
@@ -532,7 +532,7 @@ void AirflowNetworkZone::resetOccupantVentilationControl() {
 
 /// @cond
 AirflowNetworkZone::AirflowNetworkZone(std::shared_ptr<detail::AirflowNetworkZone_Impl> impl)
-  : ModelObject(impl)
+  : AirflowNetworkNode(impl)
 {}
 /// @endcond
 

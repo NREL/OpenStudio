@@ -30,7 +30,8 @@
 #define MODEL_AIRFLOWNETWORKEXTERNALNODE_IMPL_HPP
 
 #include <model/ModelAPI.hpp>
-#include "ModelObject_Impl.hpp"
+
+#include "AirflowNetworkNode_Impl.hpp"
 
 namespace openstudio {
 namespace model {
@@ -40,7 +41,7 @@ class Curve;
 namespace detail {
 
   /** AirflowNetworkExternalNode_Impl is a ModelObject_Impl that is the implementation class for AirflowNetworkExternalNode.*/
-  class MODEL_API AirflowNetworkExternalNode_Impl : public ModelObject_Impl {
+  class MODEL_API AirflowNetworkExternalNode_Impl : public AirflowNetworkNode_Impl {
    public:
     /** @name Constructors and Destructors */
     //@{

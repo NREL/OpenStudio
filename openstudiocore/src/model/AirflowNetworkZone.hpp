@@ -30,7 +30,8 @@
 #define MODEL_AIRFLOWNETWORKZONE_HPP
 
 #include <model/ModelAPI.hpp>
-#include "ModelObject.hpp"
+
+#include "AirflowNetworkNode.hpp"
 
 namespace openstudio {
 
@@ -48,8 +49,8 @@ namespace detail {
 
 } // detail
 
-/** AirflowNetworkZone is a ModelObject that wraps the OpenStudio IDD object 'OS:AirflowNetworkZone'. */
-class MODEL_API AirflowNetworkZone : public ModelObject {
+/** AirflowNetworkZone is a AirflowNetworkNode that wraps the OpenStudio IDD object 'OS:AirflowNetworkZone'. */
+class MODEL_API AirflowNetworkZone : public AirflowNetworkNode {
  public:
   /** @name Constructors and Destructors */
   //@{

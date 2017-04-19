@@ -30,7 +30,8 @@
 #define MODEL_AIRFLOWNETWORKSIMPLEOPENING_HPP
 
 #include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+
+#include "AirflowNetworkComponent.hpp"
 
 namespace openstudio {
 
@@ -42,8 +43,8 @@ class AirflowNetworkSimpleOpening_Impl;
 
 } // detail
 
-/** AirflowNetworkSimpleOpening is a ModelObject that wraps the OpenStudio IDD object 'OS:AirflowNetworkSimpleOpening'. */
-class MODEL_API AirflowNetworkSimpleOpening : public ModelObject
+/** AirflowNetworkSimpleOpening is a AirflowNetworkComponent that wraps the OpenStudio IDD object 'OS:AirflowNetworkSimpleOpening'. */
+class MODEL_API AirflowNetworkSimpleOpening : public AirflowNetworkComponent
 {
 public:
   /** @name Constructors and Destructors */

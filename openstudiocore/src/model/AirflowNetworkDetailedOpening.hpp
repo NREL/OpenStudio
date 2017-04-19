@@ -21,7 +21,8 @@
 #define MODEL_AIRFLOWNETWORKDETAILEDOPENING_HPP
 
 #include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+
+#include "AirflowNetworkComponent.hpp"
 
 namespace openstudio {
 
@@ -89,7 +90,7 @@ class AirflowNetworkDetailedOpening_Impl;
 } // detail
 
 /** AirflowNetworkDetailedOpening is a ModelObject that wraps the OpenStudio IDD object 'OS:AirflowNetworkDetailedOpening'. */
-class MODEL_API AirflowNetworkDetailedOpening : public ModelObject
+class MODEL_API AirflowNetworkDetailedOpening : public AirflowNetworkComponent
 {
 public:
   /** @name Constructors and Destructors */

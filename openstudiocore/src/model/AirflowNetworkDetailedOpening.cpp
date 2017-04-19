@@ -121,7 +121,7 @@ namespace detail {
 AirflowNetworkDetailedOpening_Impl::AirflowNetworkDetailedOpening_Impl(const IdfObject& idfObject,
   Model_Impl* model,
   bool keepHandle)
-  : ModelObject_Impl(idfObject, model, keepHandle)
+  : AirflowNetworkComponent_Impl(idfObject, model, keepHandle)
 {
   OS_ASSERT(idfObject.iddObject().type() == AirflowNetworkDetailedOpening::iddObjectType());
 }
@@ -129,7 +129,7 @@ AirflowNetworkDetailedOpening_Impl::AirflowNetworkDetailedOpening_Impl(const Idf
 AirflowNetworkDetailedOpening_Impl::AirflowNetworkDetailedOpening_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
   Model_Impl* model,
   bool keepHandle)
-  : ModelObject_Impl(other, model, keepHandle)
+  : AirflowNetworkComponent_Impl(other, model, keepHandle)
 {
   OS_ASSERT(other.iddObject().type() == AirflowNetworkDetailedOpening::iddObjectType());
 }
@@ -137,7 +137,7 @@ AirflowNetworkDetailedOpening_Impl::AirflowNetworkDetailedOpening_Impl(const ope
 AirflowNetworkDetailedOpening_Impl::AirflowNetworkDetailedOpening_Impl(const AirflowNetworkDetailedOpening_Impl& other,
   Model_Impl* model,
   bool keepHandle)
-  : ModelObject_Impl(other, model, keepHandle)
+  : AirflowNetworkComponent_Impl(other, model, keepHandle)
 {}
 
 const std::vector<std::string>& AirflowNetworkDetailedOpening_Impl::outputVariableNames() const
@@ -297,7 +297,7 @@ AirflowNetworkDetailedOpening::AirflowNetworkDetailedOpening(const Model& model,
   std::string typeofRectangularLargeVerticalOpening,
   double extraCrackLengthorHeightofPivotingAxis,
   std::vector<DetailedOpeningFactorData>& openingFactors)
-  : ModelObject(AirflowNetworkDetailedOpening::iddObjectType(), model)
+  : AirflowNetworkComponent(AirflowNetworkDetailedOpening::iddObjectType(), model)
 {
   OS_ASSERT(getImpl<detail::AirflowNetworkDetailedOpening_Impl>());
 
@@ -401,7 +401,7 @@ bool AirflowNetworkDetailedOpening::setOpeningFactors(std::vector<DetailedOpenin
 
 /// @cond
 AirflowNetworkDetailedOpening::AirflowNetworkDetailedOpening(std::shared_ptr<detail::AirflowNetworkDetailedOpening_Impl> impl)
-  : ModelObject(impl)
+  : AirflowNetworkComponent(impl)
 {}
 /// @endcond
 

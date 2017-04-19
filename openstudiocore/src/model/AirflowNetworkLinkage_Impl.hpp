@@ -26,84 +26,61 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
 
-#ifndef MODEL_AIRFLOWNETWORKCRACK_IMPL_HPP
-#define MODEL_AIRFLOWNETWORKCRACK_IMPL_HPP
+#ifndef MODEL_AIRFLOWNETWORKLINKAGE_IMPL_HPP
+#define MODEL_AIRFLOWNETWORKLINKAGE_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject_Impl.hpp>
-
-#include "AirflowNetworkComponent_Impl.hpp"
+#include "ModelObject_Impl.hpp"
 
 namespace openstudio {
 namespace model {
 
 namespace detail {
 
-/** AirflowNetworkCrack_Impl is a ModelObject_Impl that is the implementation class for AirflowNetworkCrack.*/
-class MODEL_API AirflowNetworkCrack_Impl : public AirflowNetworkComponent_Impl
-{
-public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API AirflowNetworkLinkage_Impl : public ModelObject_Impl {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  AirflowNetworkCrack_Impl(const IdfObject& idfObject,
-    Model_Impl* model,
-    bool keepHandle);
+    AirflowNetworkLinkage_Impl(IddObjectType type, Model_Impl* model);
 
-  AirflowNetworkCrack_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-    Model_Impl* model,
-    bool keepHandle);
+    AirflowNetworkLinkage_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-  AirflowNetworkCrack_Impl(const AirflowNetworkCrack_Impl& other,
-    Model_Impl* model,
-    bool keepHandle);
+    AirflowNetworkLinkage_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                           Model_Impl* model,
+                           bool keepHandle);
 
-  virtual ~AirflowNetworkCrack_Impl() {}
+    AirflowNetworkLinkage_Impl(const AirflowNetworkLinkage_Impl& other, Model_Impl* model, bool keepHandles);
 
-  //@}
-  /** @name Virtual Methods */
-  //@{
+    virtual ~AirflowNetworkLinkage_Impl() {}
 
-  virtual const std::vector<std::string>& outputVariableNames() const;
+    //@}
+    /** @name Virtual Methods */
+    //@{
 
-  virtual IddObjectType iddObjectType() const;
 
-  //@}
-  /** @name Getters */
-  //@{
+    //@}
+    /** @name Getters */
+    //@{
 
-  double airMassFlowCoefficient() const;
 
-  double airMassFlowExponent() const;
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool isAirMassFlowExponentDefaulted() const;
 
-  boost::optional<AirflowNetworkReferenceCrackConditions> referenceCrackConditions() const;
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+   private:
 
-  bool setAirMassFlowCoefficient(double airMassFlowCoefficientatReferenceConditions);
-
-  bool setAirMassFlowExponent(double airMassFlowExponent);
-
-  void resetAirMassFlowExponent();
-
-  bool setReferenceCrackConditions(const AirflowNetworkReferenceCrackConditions& referenceCrackConditions);
-
-  void resetReferenceCrackConditions();
-
-  //@}
-protected:
-private:
-  REGISTER_LOGGER("openstudio.model.AirflowNetworkCrack");
-};
+    REGISTER_LOGGER("openstudio.model.AirflowNetworkLinkage");
+  };
 
 } // detail
 
 } // model
 } // openstudio
 
-#endif // MODEL_AIRFLOWNETWORKCRACK_IMPL_HPP
-
+#endif // MODEL_AIRFLOWNETWORKLINKAGE_IMPL_HPP

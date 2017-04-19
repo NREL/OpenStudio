@@ -30,7 +30,8 @@
 #define MODEL_AIRFLOWNETWORKCRACK_HPP
 
 #include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+
+#include "AirflowNetworkComponent.hpp"
 
 namespace openstudio {
 
@@ -45,7 +46,7 @@ class AirflowNetworkCrack_Impl;
 } // detail
 
 /** AirflowNetworkCrack is a ModelObject that wraps the OpenStudio IDD object 'OS:AirflowNetworkCrack'. */
-class MODEL_API AirflowNetworkCrack : public ModelObject
+class MODEL_API AirflowNetworkCrack : public AirflowNetworkComponent
 {
 public:
   /** @name Constructors and Destructors */

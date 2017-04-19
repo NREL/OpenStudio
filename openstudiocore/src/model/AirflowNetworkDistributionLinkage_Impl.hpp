@@ -30,7 +30,8 @@
 #define MODEL_AIRFLOWNETWORKDISTRIBUTIONLINKAGE_IMPL_HPP
 
 #include <model/ModelAPI.hpp>
-#include "ModelObject_Impl.hpp"
+
+#include "AirflowNetworkLinkage_Impl.hpp"
 
 namespace openstudio {
 namespace model {
@@ -42,8 +43,8 @@ class ThermalZone;
 
 namespace detail {
 
-  /** AirflowNetworkDistributionLinkage_Impl is a ModelObject_Impl that is the implementation class for AirflowNetworkDistributionLinkage.*/
-  class MODEL_API AirflowNetworkDistributionLinkage_Impl : public ModelObject_Impl {
+  /** AirflowNetworkDistributionLinkage_Impl is a AirflowNetworkLinkage_Impl that is the implementation class for AirflowNetworkDistributionLinkage.*/
+  class MODEL_API AirflowNetworkDistributionLinkage_Impl : public AirflowNetworkLinkage_Impl {
    public:
     /** @name Constructors and Destructors */
     //@{

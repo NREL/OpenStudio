@@ -30,7 +30,8 @@
 #define MODEL_AIRFLOWNETWORKEFFECTIVELEAKAGEAREA_HPP
 
 #include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+
+#include "AirflowNetworkComponent.hpp"
 
 namespace openstudio {
 
@@ -43,7 +44,8 @@ class AirflowNetworkEffectiveLeakageArea_Impl;
 } // detail
 
 /** AirflowNetworkEffectiveLeakageArea is a ModelObject that wraps the OpenStudio IDD object 'OS:AirflowNetworkEffectiveLeakageArea'. */
-class MODEL_API AirflowNetworkEffectiveLeakageArea : public ModelObject {
+class MODEL_API AirflowNetworkEffectiveLeakageArea : public AirflowNetworkComponent
+{
 public:
   /** @name Constructors and Destructors */
   //@{

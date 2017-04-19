@@ -44,21 +44,21 @@ namespace detail {
   AirflowNetworkSimpleOpening_Impl::AirflowNetworkSimpleOpening_Impl(const IdfObject& idfObject,
                                                                      Model_Impl* model,
                                                                      bool keepHandle)
-    : ModelObject_Impl(idfObject,model,keepHandle)
+    : AirflowNetworkComponent_Impl(idfObject,model,keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == AirflowNetworkSimpleOpening::iddObjectType());
   }
 
   AirflowNetworkSimpleOpening_Impl::AirflowNetworkSimpleOpening_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                                                      Model_Impl* model, bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : AirflowNetworkComponent_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == AirflowNetworkSimpleOpening::iddObjectType());
   }
 
   AirflowNetworkSimpleOpening_Impl::AirflowNetworkSimpleOpening_Impl(const AirflowNetworkSimpleOpening_Impl& other,
                                                                      Model_Impl* model, bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : AirflowNetworkComponent_Impl(other,model,keepHandle)
   {}
 
   const std::vector<std::string>& AirflowNetworkSimpleOpening_Impl::outputVariableNames() const
@@ -140,7 +140,7 @@ AirflowNetworkSimpleOpening::AirflowNetworkSimpleOpening(const Model& model,
   double massFlowCoefficientWhenOpeningisClosed,
   double minimumDensityDifferenceforTwoWayFlow,
   double dischargeCoefficient)
-  : ModelObject(AirflowNetworkSimpleOpening::iddObjectType(),model)
+  : AirflowNetworkComponent(AirflowNetworkSimpleOpening::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::AirflowNetworkSimpleOpening_Impl>());
 
@@ -157,7 +157,7 @@ AirflowNetworkSimpleOpening::AirflowNetworkSimpleOpening(const Model& model,
   double massFlowExponentWhenOpeningisClosed,
   double minimumDensityDifferenceforTwoWayFlow,
   double dischargeCoefficient)
-  : ModelObject(AirflowNetworkSimpleOpening::iddObjectType(), model)
+  : AirflowNetworkComponent(AirflowNetworkSimpleOpening::iddObjectType(), model)
 {
   OS_ASSERT(getImpl<detail::AirflowNetworkSimpleOpening_Impl>());
 
@@ -228,7 +228,7 @@ bool AirflowNetworkSimpleOpening::setDischargeCoefficient(double dischargeCoeffi
 
 /// @cond
 AirflowNetworkSimpleOpening::AirflowNetworkSimpleOpening(std::shared_ptr<detail::AirflowNetworkSimpleOpening_Impl> impl)
-  : ModelObject(impl)
+  : AirflowNetworkComponent(impl)
 {}
 /// @endcond
 

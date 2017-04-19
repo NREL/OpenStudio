@@ -32,6 +32,8 @@
 // TODO: Check the following class names against object getters and setters.
 #include "Curve.hpp"
 #include "Curve_Impl.hpp"
+#include "CurveLinear.hpp"
+#include "CurveLinear_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -49,7 +51,7 @@ namespace detail {
   AirflowNetworkExternalNode_Impl::AirflowNetworkExternalNode_Impl(const IdfObject& idfObject,
                                                                    Model_Impl* model,
                                                                    bool keepHandle)
-    : ModelObject_Impl(idfObject,model,keepHandle)
+    : AirflowNetworkNode_Impl(idfObject,model,keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == AirflowNetworkExternalNode::iddObjectType());
   }
@@ -57,7 +59,7 @@ namespace detail {
   AirflowNetworkExternalNode_Impl::AirflowNetworkExternalNode_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                                                    Model_Impl* model,
                                                                    bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : AirflowNetworkNode_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == AirflowNetworkExternalNode::iddObjectType());
   }
@@ -65,7 +67,7 @@ namespace detail {
   AirflowNetworkExternalNode_Impl::AirflowNetworkExternalNode_Impl(const AirflowNetworkExternalNode_Impl& other,
                                                                    Model_Impl* model,
                                                                    bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : AirflowNetworkNode_Impl(other,model,keepHandle)
   {}
 
   const std::vector<std::string>& AirflowNetworkExternalNode_Impl::outputVariableNames() const
@@ -165,14 +167,24 @@ namespace detail {
 } // detail
 
 AirflowNetworkExternalNode::AirflowNetworkExternalNode(const Model& model)
-  : ModelObject(AirflowNetworkExternalNode::iddObjectType(),model)
+  : AirflowNetworkNode(AirflowNetworkExternalNode::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::AirflowNetworkExternalNode_Impl>());
+  // Set up a default unity-valued curve
+  CurveLinear curve(model);
+  curve.setCoefficient1Constant(1.0);
+  curve.setCoefficient2x(0.0);
+  curve.setMinimumValueofx(0.0);
+  curve.setMaximumValueofx(360.0);
+  bool ok = setWindPressureCoefficientCurve(curve);
+  OS_ASSERT(ok);
+}
 
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_AirflowNetworkExternalNodeFields::WindPressureCoefficientCurveName
-  bool ok = true;
-  // ok = setWindPressureCoefficientCurve();
+AirflowNetworkExternalNode::AirflowNetworkExternalNode(const Model& model, const Curve &curve)
+  : AirflowNetworkNode(AirflowNetworkExternalNode::iddObjectType(), model)
+{
+  OS_ASSERT(getImpl<detail::AirflowNetworkExternalNode_Impl>());
+  bool ok = setWindPressureCoefficientCurve(curve);
   OS_ASSERT(ok);
 }
 
@@ -243,7 +255,7 @@ void AirflowNetworkExternalNode::resetWindAngleType() {
 
 /// @cond
 AirflowNetworkExternalNode::AirflowNetworkExternalNode(std::shared_ptr<detail::AirflowNetworkExternalNode_Impl> impl)
-  : ModelObject(impl)
+  : AirflowNetworkNode(impl)
 {}
 /// @endcond
 

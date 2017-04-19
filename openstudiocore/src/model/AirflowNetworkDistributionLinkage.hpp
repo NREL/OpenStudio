@@ -30,7 +30,8 @@
 #define MODEL_AIRFLOWNETWORKDISTRIBUTIONLINKAGE_HPP
 
 #include <model/ModelAPI.hpp>
-#include "ModelObject.hpp"
+
+#include "AirflowNetworkLinkage.hpp"
 
 namespace openstudio {
 namespace model {
@@ -46,8 +47,8 @@ namespace detail {
 
 } // detail
 
-/** AirflowNetworkDistributionLinkage is a ModelObject that wraps the OpenStudio IDD object 'OS:AirflowNetworkDistributionLinkage'. */
-class MODEL_API AirflowNetworkDistributionLinkage : public ModelObject {
+/** AirflowNetworkDistributionLinkage is a AirflowNetworkLinkage that wraps the OpenStudio IDD object 'OS:AirflowNetworkDistributionLinkage'. */
+class MODEL_API AirflowNetworkDistributionLinkage : public AirflowNetworkLinkage {
  public:
   /** @name Constructors and Destructors */
   //@{

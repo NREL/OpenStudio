@@ -32,16 +32,16 @@
 // TODO: Check the following class names against object getters and setters.
 #include "PlanarSurface.hpp"
 #include "PlanarSurface_Impl.hpp"
-//#include "SurfaceAirflowLeakage.hpp"
-//#include "SurfaceAirflowLeakage_Impl.hpp"
-//#include "ExternalNode.hpp"
-//#include "ExternalNode_Impl.hpp"
+#include "AirflowNetworkComponent.hpp"
+#include "AirflowNetworkComponent_Impl.hpp"
+#include "AirflowNetworkExternalNode.hpp"
+#include "AirflowNetworkExternalNode_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
-//#include "AirflowNetworkOccupantVentilationControl.hpp"
-//#include "AirflowNetworkOccupantVentilationControl_Impl.hpp"
+#include "AirflowNetworkOccupantVentilationControl.hpp"
+#include "AirflowNetworkOccupantVentilationControl_Impl.hpp"
 #include "../../model/ScheduleTypeLimits.hpp"
 #include "../../model/ScheduleTypeRegistry.hpp"
 
@@ -61,7 +61,7 @@ namespace detail {
   AirflowNetworkSurface_Impl::AirflowNetworkSurface_Impl(const IdfObject& idfObject,
                                                          Model_Impl* model,
                                                          bool keepHandle)
-    : ModelObject_Impl(idfObject,model,keepHandle)
+    : AirflowNetworkLinkage_Impl(idfObject,model,keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == AirflowNetworkSurface::iddObjectType());
   }
@@ -69,7 +69,7 @@ namespace detail {
   AirflowNetworkSurface_Impl::AirflowNetworkSurface_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                                          Model_Impl* model,
                                                          bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : AirflowNetworkLinkage_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == AirflowNetworkSurface::iddObjectType());
   }
@@ -77,7 +77,7 @@ namespace detail {
   AirflowNetworkSurface_Impl::AirflowNetworkSurface_Impl(const AirflowNetworkSurface_Impl& other,
                                                          Model_Impl* model,
                                                          bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : AirflowNetworkLinkage_Impl(other,model,keepHandle)
   {}
 
   const std::vector<std::string>& AirflowNetworkSurface_Impl::outputVariableNames() const
@@ -88,7 +88,8 @@ namespace detail {
     return result;
   }
 
-  IddObjectType AirflowNetworkSurface_Impl::iddObjectType() const {
+  IddObjectType AirflowNetworkSurface_Impl::iddObjectType() const
+  {
     return AirflowNetworkSurface::iddObjectType();
   }
 
@@ -109,157 +110,172 @@ std::vector<ScheduleTypeKey> AirflowNetworkSurface_Impl::getScheduleTypeKeys(con
   return result;
 }
 
-boost::optional<PlanarSurface> AirflowNetworkSurface_Impl::surface() const {
-  return getObject<ModelObject>().getModelObjectTarget<PlanarSurface>(OS_AirflowNetworkSurfaceFields::SurfaceName);
-  //boost::optional<PlanarSurface> value = optionalSurface();
-  //if (!value) {
-  //  LOG_AND_THROW(briefDescription() << " does not have an Surface attached.");
-  //}
-  //return value.get();
+PlanarSurface AirflowNetworkSurface_Impl::surface() const
+{
+  boost::optional<PlanarSurface> value = optionalSurface();
+  if (!value) {
+    LOG_AND_THROW(briefDescription() << " does not have an Surface attached.");
+  }
+  return value.get();
 }
 
-//SurfaceAirflowLeakage AirflowNetworkSurface_Impl::leakageComponent() const {
-//  boost::optional<SurfaceAirflowLeakage> value = optionalLeakageComponent();
-//  if (!value) {
-//    LOG_AND_THROW(briefDescription() << " does not have an Leakage Component attached.");
-//  }
-//  return value.get();
-//}
+boost::optional<AirflowNetworkComponent> AirflowNetworkSurface_Impl::leakageComponent() const
+{
+  return getObject<ModelObject>().getModelObjectTarget<AirflowNetworkComponent>(OS_AirflowNetworkSurfaceFields::LeakageComponentName);
+}
 
-//boost::optional<ExternalNode> AirflowNetworkSurface_Impl::externalNode() const {
-//  return getObject<ModelObject>().getModelObjectTarget<ExternalNode>(OS_AirflowNetworkSurfaceFields::ExternalNodeName);
-//}
 
-double AirflowNetworkSurface_Impl::windowDoorOpeningFactorOrCrackFactor() const {
+boost::optional<AirflowNetworkExternalNode> AirflowNetworkSurface_Impl::externalNode() const
+{
+  return getObject<ModelObject>().getModelObjectTarget<AirflowNetworkExternalNode>(OS_AirflowNetworkSurfaceFields::ExternalNodeName);
+}
+
+double AirflowNetworkSurface_Impl::windowDoorOpeningFactorOrCrackFactor() const
+{
   boost::optional<double> value = getDouble(OS_AirflowNetworkSurfaceFields::Window_DoorOpeningFactororCrackFactor,true);
   OS_ASSERT(value);
   return value.get();
 }
 
-bool AirflowNetworkSurface_Impl::isWindowDoorOpeningFactorOrCrackFactorDefaulted() const {
+bool AirflowNetworkSurface_Impl::isWindowDoorOpeningFactorOrCrackFactorDefaulted() const
+{
   return isEmpty(OS_AirflowNetworkSurfaceFields::Window_DoorOpeningFactororCrackFactor);
 }
 
-std::string AirflowNetworkSurface_Impl::ventilationControlMode() const {
+std::string AirflowNetworkSurface_Impl::ventilationControlMode() const
+{
   boost::optional<std::string> value = getString(OS_AirflowNetworkSurfaceFields::VentilationControlMode,true);
   OS_ASSERT(value);
   return value.get();
 }
 
-bool AirflowNetworkSurface_Impl::isVentilationControlModeDefaulted() const {
+bool AirflowNetworkSurface_Impl::isVentilationControlModeDefaulted() const
+{
   return isEmpty(OS_AirflowNetworkSurfaceFields::VentilationControlMode);
 }
 
-boost::optional<Schedule> AirflowNetworkSurface_Impl::ventilationControlZoneTemperatureSetpointSchedule() const {
+boost::optional<Schedule> AirflowNetworkSurface_Impl::ventilationControlZoneTemperatureSetpointSchedule() const
+{
   return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_AirflowNetworkSurfaceFields::VentilationControlZoneTemperatureSetpointScheduleName);
 }
 
-double AirflowNetworkSurface_Impl::minimumVentingOpenFactor() const {
+double AirflowNetworkSurface_Impl::minimumVentingOpenFactor() const
+{
   boost::optional<double> value = getDouble(OS_AirflowNetworkSurfaceFields::MinimumVentingOpenFactor,true);
   OS_ASSERT(value);
   return value.get();
 }
 
-bool AirflowNetworkSurface_Impl::isMinimumVentingOpenFactorDefaulted() const {
+bool AirflowNetworkSurface_Impl::isMinimumVentingOpenFactorDefaulted() const
+{
   return isEmpty(OS_AirflowNetworkSurfaceFields::MinimumVentingOpenFactor);
 }
 
-double AirflowNetworkSurface_Impl::indoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor() const {
+double AirflowNetworkSurface_Impl::indoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor() const
+{
   boost::optional<double> value = getDouble(OS_AirflowNetworkSurfaceFields::IndoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor,true);
   OS_ASSERT(value);
   return value.get();
 }
 
-bool AirflowNetworkSurface_Impl::isIndoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactorDefaulted() const {
+bool AirflowNetworkSurface_Impl::isIndoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactorDefaulted() const
+{
   return isEmpty(OS_AirflowNetworkSurfaceFields::IndoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor);
 }
 
-double AirflowNetworkSurface_Impl::indoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactor() const {
+double AirflowNetworkSurface_Impl::indoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactor() const
+{
   boost::optional<double> value = getDouble(OS_AirflowNetworkSurfaceFields::IndoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactor,true);
   OS_ASSERT(value);
   return value.get();
 }
 
-bool AirflowNetworkSurface_Impl::isIndoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactorDefaulted() const {
+bool AirflowNetworkSurface_Impl::isIndoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactorDefaulted() const
+{
   return isEmpty(OS_AirflowNetworkSurfaceFields::IndoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactor);
 }
 
-double AirflowNetworkSurface_Impl::indoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor() const {
+double AirflowNetworkSurface_Impl::indoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor() const
+{
   boost::optional<double> value = getDouble(OS_AirflowNetworkSurfaceFields::IndoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor,true);
   OS_ASSERT(value);
   return value.get();
 }
 
-bool AirflowNetworkSurface_Impl::isIndoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactorDefaulted() const {
+bool AirflowNetworkSurface_Impl::isIndoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactorDefaulted() const
+{
   return isEmpty(OS_AirflowNetworkSurfaceFields::IndoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor);
 }
 
-double AirflowNetworkSurface_Impl::indoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor() const {
+double AirflowNetworkSurface_Impl::indoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor() const
+{
   boost::optional<double> value = getDouble(OS_AirflowNetworkSurfaceFields::IndoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor,true);
   OS_ASSERT(value);
   return value.get();
 }
 
-bool AirflowNetworkSurface_Impl::isIndoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactorDefaulted() const {
+bool AirflowNetworkSurface_Impl::isIndoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactorDefaulted() const
+{
   return isEmpty(OS_AirflowNetworkSurfaceFields::IndoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor);
 }
 
-boost::optional<Schedule> AirflowNetworkSurface_Impl::ventingAvailabilitySchedule() const {
+boost::optional<Schedule> AirflowNetworkSurface_Impl::ventingAvailabilitySchedule() const
+{
   return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_AirflowNetworkSurfaceFields::VentingAvailabilityScheduleName);
 }
 
-//boost::optional<AirflowNetworkOccupantVentilationControl> AirflowNetworkSurface_Impl::occupantVentilationControl() const {
-//  return getObject<ModelObject>().getModelObjectTarget<AirflowNetworkOccupantVentilationControl>(OS_AirflowNetworkSurfaceFields::OccupantVentilationControlName);
-//}
+boost::optional<AirflowNetworkOccupantVentilationControl> AirflowNetworkSurface_Impl::occupantVentilationControl() const
+{
+  return getObject<ModelObject>().getModelObjectTarget<AirflowNetworkOccupantVentilationControl>(OS_AirflowNetworkSurfaceFields::OccupantVentilationControlName);
+}
 
 bool AirflowNetworkSurface_Impl::setSurface(const PlanarSurface& surfAndSubSurf) {
   bool result = setPointer(OS_AirflowNetworkSurfaceFields::SurfaceName, surfAndSubSurf.handle());
   return result;
 }
 
-//bool AirflowNetworkSurface_Impl::setLeakageComponent(const SurfaceAirflowLeakage& surfaceAirflowLeakage) {
-//  bool result = setPointer(OS_AirflowNetworkSurfaceFields::LeakageComponentName, surfaceAirflowLeakage.handle());
-//  return result;
-//}
+bool AirflowNetworkSurface_Impl::setLeakageComponent(const AirflowNetworkComponent& surfaceAirflowLeakage)
+{
+  return setPointer(OS_AirflowNetworkSurfaceFields::LeakageComponentName, surfaceAirflowLeakage.handle());
+}
 
-//bool AirflowNetworkSurface_Impl::setExternalNode(const boost::optional<ExternalNode>& externalNode) {
-//  bool result(false);
-//  if (externalNode) {
-//    result = setPointer(OS_AirflowNetworkSurfaceFields::ExternalNodeName, externalNode.get().handle());
-//  }
-//  else {
-//    resetExternalNode();
-//    result = true;
-//  }
-//  return result;
-//}
+bool AirflowNetworkSurface_Impl::setExternalNode(const AirflowNetworkExternalNode& externalNode) 
+{
+  return setPointer(OS_AirflowNetworkSurfaceFields::ExternalNodeName, externalNode.handle());
+}
 
-//void AirflowNetworkSurface_Impl::resetExternalNode() {
-//  bool result = setString(OS_AirflowNetworkSurfaceFields::ExternalNodeName, "");
-//  OS_ASSERT(result);
-//}
+void AirflowNetworkSurface_Impl::resetExternalNode()
+{
+  bool result = setString(OS_AirflowNetworkSurfaceFields::ExternalNodeName, "");
+  OS_ASSERT(result);
+}
 
-bool AirflowNetworkSurface_Impl::setWindowDoorOpeningFactorOrCrackFactor(double windowDoorOpeningFactorOrCrackFactor) {
+bool AirflowNetworkSurface_Impl::setWindowDoorOpeningFactorOrCrackFactor(double windowDoorOpeningFactorOrCrackFactor)
+{
   bool result = setDouble(OS_AirflowNetworkSurfaceFields::Window_DoorOpeningFactororCrackFactor, windowDoorOpeningFactorOrCrackFactor);
   return result;
 }
 
-void AirflowNetworkSurface_Impl::resetWindowDoorOpeningFactorOrCrackFactor() {
+void AirflowNetworkSurface_Impl::resetWindowDoorOpeningFactorOrCrackFactor()
+{
   bool result = setString(OS_AirflowNetworkSurfaceFields::Window_DoorOpeningFactororCrackFactor, "");
   OS_ASSERT(result);
 }
 
-bool AirflowNetworkSurface_Impl::setVentilationControlMode(std::string ventilationControlMode) {
+bool AirflowNetworkSurface_Impl::setVentilationControlMode(std::string ventilationControlMode)
+{
   bool result = setString(OS_AirflowNetworkSurfaceFields::VentilationControlMode, ventilationControlMode);
   return result;
 }
 
-void AirflowNetworkSurface_Impl::resetVentilationControlMode() {
+void AirflowNetworkSurface_Impl::resetVentilationControlMode()
+{
   bool result = setString(OS_AirflowNetworkSurfaceFields::VentilationControlMode, "");
   OS_ASSERT(result);
 }
 
-bool AirflowNetworkSurface_Impl::setVentilationControlZoneTemperatureSetpointSchedule(Schedule& schedule) {
+bool AirflowNetworkSurface_Impl::setVentilationControlZoneTemperatureSetpointSchedule(Schedule& schedule)
+{
   bool result = setSchedule(OS_AirflowNetworkSurfaceFields::VentilationControlZoneTemperatureSetpointScheduleName,
                             "AirflowNetworkSurface",
                             "Ventilation Control Zone Temperature Setpoint",
@@ -267,62 +283,74 @@ bool AirflowNetworkSurface_Impl::setVentilationControlZoneTemperatureSetpointSch
   return result;
 }
 
-void AirflowNetworkSurface_Impl::resetVentilationControlZoneTemperatureSetpointSchedule() {
+void AirflowNetworkSurface_Impl::resetVentilationControlZoneTemperatureSetpointSchedule()
+{
   bool result = setString(OS_AirflowNetworkSurfaceFields::VentilationControlZoneTemperatureSetpointScheduleName, "");
   OS_ASSERT(result);
 }
 
-bool AirflowNetworkSurface_Impl::setMinimumVentingOpenFactor(double minimumVentingOpenFactor) {
+bool AirflowNetworkSurface_Impl::setMinimumVentingOpenFactor(double minimumVentingOpenFactor)
+{
   bool result = setDouble(OS_AirflowNetworkSurfaceFields::MinimumVentingOpenFactor, minimumVentingOpenFactor);
   return result;
 }
 
-void AirflowNetworkSurface_Impl::resetMinimumVentingOpenFactor() {
+void AirflowNetworkSurface_Impl::resetMinimumVentingOpenFactor()
+{
   bool result = setString(OS_AirflowNetworkSurfaceFields::MinimumVentingOpenFactor, "");
   OS_ASSERT(result);
 }
 
-bool AirflowNetworkSurface_Impl::setIndoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor(double indoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor) {
+bool AirflowNetworkSurface_Impl::setIndoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor(double indoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor)
+{
   bool result = setDouble(OS_AirflowNetworkSurfaceFields::IndoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor, indoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor);
   return result;
 }
 
-void AirflowNetworkSurface_Impl::resetIndoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor() {
+void AirflowNetworkSurface_Impl::resetIndoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor()
+{
   bool result = setString(OS_AirflowNetworkSurfaceFields::IndoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor, "");
   OS_ASSERT(result);
 }
 
-bool AirflowNetworkSurface_Impl::setIndoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactor(double indoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactor) {
+bool AirflowNetworkSurface_Impl::setIndoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactor(double indoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactor)
+{
   bool result = setDouble(OS_AirflowNetworkSurfaceFields::IndoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactor, indoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactor);
   return result;
 }
 
-void AirflowNetworkSurface_Impl::resetIndoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactor() {
+void AirflowNetworkSurface_Impl::resetIndoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactor()
+{
   bool result = setString(OS_AirflowNetworkSurfaceFields::IndoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactor, "");
   OS_ASSERT(result);
 }
 
-bool AirflowNetworkSurface_Impl::setIndoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor(double indoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor) {
+bool AirflowNetworkSurface_Impl::setIndoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor(double indoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor)
+{
   bool result = setDouble(OS_AirflowNetworkSurfaceFields::IndoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor, indoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor);
   return result;
 }
 
-void AirflowNetworkSurface_Impl::resetIndoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor() {
+void AirflowNetworkSurface_Impl::resetIndoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor()
+{
   bool result = setString(OS_AirflowNetworkSurfaceFields::IndoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor, "");
   OS_ASSERT(result);
 }
 
-bool AirflowNetworkSurface_Impl::setIndoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor(double indoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor) {
+bool AirflowNetworkSurface_Impl::setIndoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor(double indoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor)
+{
   bool result = setDouble(OS_AirflowNetworkSurfaceFields::IndoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor, indoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor);
   return result;
 }
 
-void AirflowNetworkSurface_Impl::resetIndoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor() {
+void AirflowNetworkSurface_Impl::resetIndoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor()
+{
   bool result = setString(OS_AirflowNetworkSurfaceFields::IndoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor, "");
   OS_ASSERT(result);
 }
 
-bool AirflowNetworkSurface_Impl::setVentingAvailabilitySchedule(Schedule& schedule) {
+bool AirflowNetworkSurface_Impl::setVentingAvailabilitySchedule(Schedule& schedule)
+{
   bool result = setSchedule(OS_AirflowNetworkSurfaceFields::VentingAvailabilityScheduleName,
                             "AirflowNetworkSurface",
                             "Venting Availability",
@@ -330,243 +358,291 @@ bool AirflowNetworkSurface_Impl::setVentingAvailabilitySchedule(Schedule& schedu
   return result;
 }
 
-void AirflowNetworkSurface_Impl::resetVentingAvailabilitySchedule() {
+void AirflowNetworkSurface_Impl::resetVentingAvailabilitySchedule()
+{
   bool result = setString(OS_AirflowNetworkSurfaceFields::VentingAvailabilityScheduleName, "");
   OS_ASSERT(result);
 }
 
-//bool AirflowNetworkSurface_Impl::setOccupantVentilationControl(const boost::optional<AirflowNetworkOccupantVentilationControl>& airflowNetworkOccupantVentilationControl) {
-//  bool result(false);
-//  if (airflowNetworkOccupantVentilationControl) {
-//    result = setPointer(OS_AirflowNetworkSurfaceFields::OccupantVentilationControlName, airflowNetworkOccupantVentilationControl.get().handle());
-//  }
-//  else {
-//    resetOccupantVentilationControl();
-//    result = true;
-//  }
-//  return result;
-//}
+bool AirflowNetworkSurface_Impl::setOccupantVentilationControl(const AirflowNetworkOccupantVentilationControl& airflowNetworkOccupantVentilationControl)
+{
+  return setPointer(OS_AirflowNetworkSurfaceFields::OccupantVentilationControlName, airflowNetworkOccupantVentilationControl.handle());
+}
 
-//void AirflowNetworkSurface_Impl::resetOccupantVentilationControl() {
-//  bool result = setString(OS_AirflowNetworkSurfaceFields::OccupantVentilationControlName, "");
-//  OS_ASSERT(result);
-//}
+void AirflowNetworkSurface_Impl::resetOccupantVentilationControl()
+{
+  bool result = setString(OS_AirflowNetworkSurfaceFields::OccupantVentilationControlName, "");
+  OS_ASSERT(result);
+}
 
-//boost::optional<PlanarSurface> AirflowNetworkSurface_Impl::optionalSurface() const {
-//  return getObject<ModelObject>().getModelObjectTarget<PlanarSurface>(OS_AirflowNetworkSurfaceFields::SurfaceName);
-//}
+boost::optional<PlanarSurface> AirflowNetworkSurface_Impl::optionalSurface() const
+{
+  return getObject<ModelObject>().getModelObjectTarget<PlanarSurface>(OS_AirflowNetworkSurfaceFields::SurfaceName);
+}
 
-//boost::optional<SurfaceAirflowLeakage> AirflowNetworkSurface_Impl::optionalLeakageComponent() const {
-//  return getObject<ModelObject>().getModelObjectTarget<SurfaceAirflowLeakage>(OS_AirflowNetworkSurfaceFields::LeakageComponentName);
-//}
+bool AirflowNetworkSurface_Impl::setParent(ParentObject& surfAndSubSurf)
+{
+  bool result = setPointer(OS_AirflowNetworkSurfaceFields::SurfaceName, surfAndSubSurf.handle());
+  return result;
+}
 
 } // detail
 
 AirflowNetworkSurface::AirflowNetworkSurface(const Model& model, const PlanarSurface &surface)
-  : ModelObject(AirflowNetworkSurface::iddObjectType(),model)
+  : AirflowNetworkLinkage(AirflowNetworkSurface::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::AirflowNetworkSurface_Impl>());
-
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_AirflowNetworkSurfaceFields::SurfaceName
-  //     OS_AirflowNetworkSurfaceFields::LeakageComponentName
-  bool ok = true;
-  // ok = setHandle();
-  OS_ASSERT(ok);
+  bool ok;
   ok = getImpl<detail::AirflowNetworkSurface_Impl>()->setSurface(surface);
-  OS_ASSERT(ok);
-  // ok = setLeakageComponent();
   OS_ASSERT(ok);
 }
 
-IddObjectType AirflowNetworkSurface::iddObjectType() {
+AirflowNetworkSurface::AirflowNetworkSurface(const Model& model, const PlanarSurface &surface,
+  const AirflowNetworkComponent& component)
+  : AirflowNetworkLinkage(AirflowNetworkSurface::iddObjectType(), model)
+{
+  OS_ASSERT(getImpl<detail::AirflowNetworkSurface_Impl>());
+  bool ok;
+  ok = getImpl<detail::AirflowNetworkSurface_Impl>()->setSurface(surface);
+  OS_ASSERT(ok);
+  ok = setLeakageComponent(component);
+  OS_ASSERT(ok);
+}
+
+IddObjectType AirflowNetworkSurface::iddObjectType()
+{
   return IddObjectType(IddObjectType::OS_AirflowNetworkSurface);
 }
 
-std::vector<std::string> AirflowNetworkSurface::ventilationControlModeValues() {
+std::vector<std::string> AirflowNetworkSurface::ventilationControlModeValues()
+{
   return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
                         OS_AirflowNetworkSurfaceFields::VentilationControlMode);
 }
 
-boost::optional<PlanarSurface> AirflowNetworkSurface::surface() const {
+PlanarSurface AirflowNetworkSurface::surface() const
+{
   return getImpl<detail::AirflowNetworkSurface_Impl>()->surface();
 }
 
-//SurfaceAirflowLeakage AirflowNetworkSurface::leakageComponent() const {
-//  return getImpl<detail::AirflowNetworkSurface_Impl>()->leakageComponent();
-//}
+boost::optional<AirflowNetworkComponent> AirflowNetworkSurface::leakageComponent() const
+{
+  return getImpl<detail::AirflowNetworkSurface_Impl>()->leakageComponent();
+}
 
-//boost::optional<ExternalNode> AirflowNetworkSurface::externalNode() const {
-//  return getImpl<detail::AirflowNetworkSurface_Impl>()->externalNode();
-//}
+boost::optional<AirflowNetworkExternalNode> AirflowNetworkSurface::externalNode() const
+{
+  return getImpl<detail::AirflowNetworkSurface_Impl>()->externalNode();
+}
 
-double AirflowNetworkSurface::windowDoorOpeningFactorOrCrackFactor() const {
+double AirflowNetworkSurface::windowDoorOpeningFactorOrCrackFactor() const
+{
   return getImpl<detail::AirflowNetworkSurface_Impl>()->windowDoorOpeningFactorOrCrackFactor();
 }
 
-bool AirflowNetworkSurface::isWindowDoorOpeningFactorOrCrackFactorDefaulted() const {
+bool AirflowNetworkSurface::isWindowDoorOpeningFactorOrCrackFactorDefaulted() const
+{
   return getImpl<detail::AirflowNetworkSurface_Impl>()->isWindowDoorOpeningFactorOrCrackFactorDefaulted();
 }
 
-std::string AirflowNetworkSurface::ventilationControlMode() const {
+std::string AirflowNetworkSurface::ventilationControlMode() const
+{
   return getImpl<detail::AirflowNetworkSurface_Impl>()->ventilationControlMode();
 }
 
-bool AirflowNetworkSurface::isVentilationControlModeDefaulted() const {
+bool AirflowNetworkSurface::isVentilationControlModeDefaulted() const
+{
   return getImpl<detail::AirflowNetworkSurface_Impl>()->isVentilationControlModeDefaulted();
 }
 
-boost::optional<Schedule> AirflowNetworkSurface::ventilationControlZoneTemperatureSetpointSchedule() const {
+boost::optional<Schedule> AirflowNetworkSurface::ventilationControlZoneTemperatureSetpointSchedule() const
+{
   return getImpl<detail::AirflowNetworkSurface_Impl>()->ventilationControlZoneTemperatureSetpointSchedule();
 }
 
-double AirflowNetworkSurface::minimumVentingOpenFactor() const {
+double AirflowNetworkSurface::minimumVentingOpenFactor() const
+{
   return getImpl<detail::AirflowNetworkSurface_Impl>()->minimumVentingOpenFactor();
 }
 
-bool AirflowNetworkSurface::isMinimumVentingOpenFactorDefaulted() const {
+bool AirflowNetworkSurface::isMinimumVentingOpenFactorDefaulted() const
+{
   return getImpl<detail::AirflowNetworkSurface_Impl>()->isMinimumVentingOpenFactorDefaulted();
 }
 
-double AirflowNetworkSurface::indoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor() const {
+double AirflowNetworkSurface::indoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor() const
+{
   return getImpl<detail::AirflowNetworkSurface_Impl>()->indoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor();
 }
 
-bool AirflowNetworkSurface::isIndoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactorDefaulted() const {
+bool AirflowNetworkSurface::isIndoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactorDefaulted() const
+{
   return getImpl<detail::AirflowNetworkSurface_Impl>()->isIndoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactorDefaulted();
 }
 
-double AirflowNetworkSurface::indoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactor() const {
+double AirflowNetworkSurface::indoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactor() const
+{
   return getImpl<detail::AirflowNetworkSurface_Impl>()->indoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactor();
 }
 
-bool AirflowNetworkSurface::isIndoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactorDefaulted() const {
+bool AirflowNetworkSurface::isIndoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactorDefaulted() const
+{
   return getImpl<detail::AirflowNetworkSurface_Impl>()->isIndoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactorDefaulted();
 }
 
-double AirflowNetworkSurface::indoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor() const {
+double AirflowNetworkSurface::indoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor() const
+{
   return getImpl<detail::AirflowNetworkSurface_Impl>()->indoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor();
 }
 
-bool AirflowNetworkSurface::isIndoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactorDefaulted() const {
+bool AirflowNetworkSurface::isIndoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactorDefaulted() const
+{
   return getImpl<detail::AirflowNetworkSurface_Impl>()->isIndoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactorDefaulted();
 }
 
-double AirflowNetworkSurface::indoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor() const {
+double AirflowNetworkSurface::indoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor() const
+{
   return getImpl<detail::AirflowNetworkSurface_Impl>()->indoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor();
 }
 
-bool AirflowNetworkSurface::isIndoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactorDefaulted() const {
+bool AirflowNetworkSurface::isIndoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactorDefaulted() const
+{
   return getImpl<detail::AirflowNetworkSurface_Impl>()->isIndoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactorDefaulted();
 }
 
-boost::optional<Schedule> AirflowNetworkSurface::ventingAvailabilitySchedule() const {
+boost::optional<Schedule> AirflowNetworkSurface::ventingAvailabilitySchedule() const
+{
   return getImpl<detail::AirflowNetworkSurface_Impl>()->ventingAvailabilitySchedule();
 }
 
-//boost::optional<AirflowNetworkOccupantVentilationControl> AirflowNetworkSurface::occupantVentilationControl() const {
-//  return getImpl<detail::AirflowNetworkSurface_Impl>()->occupantVentilationControl();
-//}
+boost::optional<AirflowNetworkOccupantVentilationControl> AirflowNetworkSurface::occupantVentilationControl() const
+{
+  return getImpl<detail::AirflowNetworkSurface_Impl>()->occupantVentilationControl();
+}
 
-bool AirflowNetworkSurface::setSurface(const PlanarSurface& surfAndSubSurf) {
+bool AirflowNetworkSurface::setSurface(const PlanarSurface& surfAndSubSurf)
+{
   return getImpl<detail::AirflowNetworkSurface_Impl>()->setSurface(surfAndSubSurf);
 }
 
-//bool AirflowNetworkSurface::setLeakageComponent(const SurfaceAirflowLeakage& surfaceAirflowLeakage) {
-//  return getImpl<detail::AirflowNetworkSurface_Impl>()->setLeakageComponent(surfaceAirflowLeakage);
-//}
+bool AirflowNetworkSurface::setLeakageComponent(const AirflowNetworkComponent& surfaceAirflowLeakage)
+{
+  return getImpl<detail::AirflowNetworkSurface_Impl>()->setLeakageComponent(surfaceAirflowLeakage);
+}
 
-//bool AirflowNetworkSurface::setExternalNode(const ExternalNode& externalNode) {
-//  return getImpl<detail::AirflowNetworkSurface_Impl>()->setExternalNode(externalNode);
-//}
+bool AirflowNetworkSurface::setExternalNode(const AirflowNetworkExternalNode& externalNode)
+{
+  return getImpl<detail::AirflowNetworkSurface_Impl>()->setExternalNode(externalNode);
+}
 
-//void AirflowNetworkSurface::resetExternalNode() {
-//  getImpl<detail::AirflowNetworkSurface_Impl>()->resetExternalNode();
-//}
+void AirflowNetworkSurface::resetExternalNode()
+{
+  getImpl<detail::AirflowNetworkSurface_Impl>()->resetExternalNode();
+}
 
-bool AirflowNetworkSurface::setWindowDoorOpeningFactorOrCrackFactor(double windowDoorOpeningFactorOrCrackFactor) {
+bool AirflowNetworkSurface::setWindowDoorOpeningFactorOrCrackFactor(double windowDoorOpeningFactorOrCrackFactor)
+{
   return getImpl<detail::AirflowNetworkSurface_Impl>()->setWindowDoorOpeningFactorOrCrackFactor(windowDoorOpeningFactorOrCrackFactor);
 }
 
-void AirflowNetworkSurface::resetWindowDoorOpeningFactorOrCrackFactor() {
+void AirflowNetworkSurface::resetWindowDoorOpeningFactorOrCrackFactor()
+{
   getImpl<detail::AirflowNetworkSurface_Impl>()->resetWindowDoorOpeningFactorOrCrackFactor();
 }
 
-bool AirflowNetworkSurface::setVentilationControlMode(std::string ventilationControlMode) {
+bool AirflowNetworkSurface::setVentilationControlMode(std::string ventilationControlMode)
+{
   return getImpl<detail::AirflowNetworkSurface_Impl>()->setVentilationControlMode(ventilationControlMode);
 }
 
-void AirflowNetworkSurface::resetVentilationControlMode() {
+void AirflowNetworkSurface::resetVentilationControlMode()
+{
   getImpl<detail::AirflowNetworkSurface_Impl>()->resetVentilationControlMode();
 }
 
-bool AirflowNetworkSurface::setVentilationControlZoneTemperatureSetpointSchedule(Schedule& schedule) {
+bool AirflowNetworkSurface::setVentilationControlZoneTemperatureSetpointSchedule(Schedule& schedule)
+{
   return getImpl<detail::AirflowNetworkSurface_Impl>()->setVentilationControlZoneTemperatureSetpointSchedule(schedule);
 }
 
-void AirflowNetworkSurface::resetVentilationControlZoneTemperatureSetpointSchedule() {
+void AirflowNetworkSurface::resetVentilationControlZoneTemperatureSetpointSchedule()
+{
   getImpl<detail::AirflowNetworkSurface_Impl>()->resetVentilationControlZoneTemperatureSetpointSchedule();
 }
 
-bool AirflowNetworkSurface::setMinimumVentingOpenFactor(double minimumVentingOpenFactor) {
+bool AirflowNetworkSurface::setMinimumVentingOpenFactor(double minimumVentingOpenFactor)
+{
   return getImpl<detail::AirflowNetworkSurface_Impl>()->setMinimumVentingOpenFactor(minimumVentingOpenFactor);
 }
 
-void AirflowNetworkSurface::resetMinimumVentingOpenFactor() {
+void AirflowNetworkSurface::resetMinimumVentingOpenFactor()
+{
   getImpl<detail::AirflowNetworkSurface_Impl>()->resetMinimumVentingOpenFactor();
 }
 
-bool AirflowNetworkSurface::setIndoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor(double indoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor) {
+bool AirflowNetworkSurface::setIndoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor(double indoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor)
+{
   return getImpl<detail::AirflowNetworkSurface_Impl>()->setIndoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor(indoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor);
 }
 
-void AirflowNetworkSurface::resetIndoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor() {
+void AirflowNetworkSurface::resetIndoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor()
+{
   getImpl<detail::AirflowNetworkSurface_Impl>()->resetIndoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor();
 }
 
-bool AirflowNetworkSurface::setIndoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactor(double indoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactor) {
+bool AirflowNetworkSurface::setIndoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactor(double indoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactor)
+{
   return getImpl<detail::AirflowNetworkSurface_Impl>()->setIndoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactor(indoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactor);
 }
 
-void AirflowNetworkSurface::resetIndoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactor() {
+void AirflowNetworkSurface::resetIndoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactor()
+{
   getImpl<detail::AirflowNetworkSurface_Impl>()->resetIndoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactor();
 }
 
-bool AirflowNetworkSurface::setIndoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor(double indoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor) {
+bool AirflowNetworkSurface::setIndoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor(double indoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor)
+{
   return getImpl<detail::AirflowNetworkSurface_Impl>()->setIndoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor(indoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor);
 }
 
-void AirflowNetworkSurface::resetIndoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor() {
+void AirflowNetworkSurface::resetIndoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor()
+{
   getImpl<detail::AirflowNetworkSurface_Impl>()->resetIndoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor();
 }
 
-bool AirflowNetworkSurface::setIndoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor(double indoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor) {
+bool AirflowNetworkSurface::setIndoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor(double indoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor)
+{
   return getImpl<detail::AirflowNetworkSurface_Impl>()->setIndoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor(indoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor);
 }
 
-void AirflowNetworkSurface::resetIndoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor() {
+void AirflowNetworkSurface::resetIndoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor()
+{
   getImpl<detail::AirflowNetworkSurface_Impl>()->resetIndoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor();
 }
 
-bool AirflowNetworkSurface::setVentingAvailabilitySchedule(Schedule& schedule) {
+bool AirflowNetworkSurface::setVentingAvailabilitySchedule(Schedule& schedule)
+{
   return getImpl<detail::AirflowNetworkSurface_Impl>()->setVentingAvailabilitySchedule(schedule);
 }
 
-void AirflowNetworkSurface::resetVentingAvailabilitySchedule() {
+void AirflowNetworkSurface::resetVentingAvailabilitySchedule()
+{
   getImpl<detail::AirflowNetworkSurface_Impl>()->resetVentingAvailabilitySchedule();
 }
 
-//bool AirflowNetworkSurface::setOccupantVentilationControl(const AirflowNetworkOccupantVentilationControl& airflowNetworkOccupantVentilationControl) {
-//  return getImpl<detail::AirflowNetworkSurface_Impl>()->setOccupantVentilationControl(airflowNetworkOccupantVentilationControl);
-//}
+bool AirflowNetworkSurface::setOccupantVentilationControl(const AirflowNetworkOccupantVentilationControl& airflowNetworkOccupantVentilationControl)
+{
+  return getImpl<detail::AirflowNetworkSurface_Impl>()->setOccupantVentilationControl(airflowNetworkOccupantVentilationControl);
+}
 
-//void AirflowNetworkSurface::resetOccupantVentilationControl() {
-//  getImpl<detail::AirflowNetworkSurface_Impl>()->resetOccupantVentilationControl();
-//}
+void AirflowNetworkSurface::resetOccupantVentilationControl()
+{
+  getImpl<detail::AirflowNetworkSurface_Impl>()->resetOccupantVentilationControl();
+}
 
 /// @cond
 AirflowNetworkSurface::AirflowNetworkSurface(std::shared_ptr<detail::AirflowNetworkSurface_Impl> impl)
-  : ModelObject(impl)
+  : AirflowNetworkLinkage(impl)
 {}
 /// @endcond
 

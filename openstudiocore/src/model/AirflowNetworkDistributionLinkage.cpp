@@ -50,7 +50,7 @@ namespace detail {
   AirflowNetworkDistributionLinkage_Impl::AirflowNetworkDistributionLinkage_Impl(const IdfObject& idfObject,
                                                          Model_Impl* model,
                                                          bool keepHandle)
-    : ModelObject_Impl(idfObject,model,keepHandle)
+    : AirflowNetworkLinkage_Impl(idfObject,model,keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == AirflowNetworkDistributionLinkage::iddObjectType());
   }
@@ -58,7 +58,7 @@ namespace detail {
   AirflowNetworkDistributionLinkage_Impl::AirflowNetworkDistributionLinkage_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                                          Model_Impl* model,
                                                          bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : AirflowNetworkLinkage_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == AirflowNetworkDistributionLinkage::iddObjectType());
   }
@@ -66,7 +66,7 @@ namespace detail {
   AirflowNetworkDistributionLinkage_Impl::AirflowNetworkDistributionLinkage_Impl(const AirflowNetworkDistributionLinkage_Impl& other,
                                                          Model_Impl* model,
                                                          bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : AirflowNetworkLinkage_Impl(other,model,keepHandle)
   {}
 
   const std::vector<std::string>& AirflowNetworkDistributionLinkage_Impl::outputVariableNames() const
@@ -162,7 +162,7 @@ namespace detail {
 } // detail
 
 AirflowNetworkDistributionLinkage::AirflowNetworkDistributionLinkage(const Model& model)
-  : ModelObject(AirflowNetworkDistributionLinkage::iddObjectType(),model)
+  : AirflowNetworkLinkage(AirflowNetworkDistributionLinkage::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::AirflowNetworkDistributionLinkage_Impl>());
 
@@ -231,7 +231,7 @@ void AirflowNetworkDistributionLinkage::resetThermalZone()
 
 /// @cond
 AirflowNetworkDistributionLinkage::AirflowNetworkDistributionLinkage(std::shared_ptr<detail::AirflowNetworkDistributionLinkage_Impl> impl)
-  : ModelObject(impl)
+  : AirflowNetworkLinkage(impl)
 {}
 /// @endcond
 
