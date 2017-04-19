@@ -66,7 +66,7 @@ class EditorWebView : public QWidget
   Q_OBJECT;
 
   public:
-    EditorWebView(QWidget *t_parent = nullptr);
+    EditorWebView(const openstudio::model::Model& model, QWidget *t_parent = nullptr);
     virtual ~EditorWebView();
 
   public slots:
@@ -74,6 +74,11 @@ class EditorWebView : public QWidget
 
   private slots:
     void refreshClicked();
+    void previewClicked();
+    void mergeClicked();
+    void handleExport();
+    void previewExport();
+    void mergeExport();
 
     // DLM: for debugging
     void 	onLoadFinished(bool ok);
@@ -85,9 +90,15 @@ class EditorWebView : public QWidget
     REGISTER_LOGGER("openstudio::EditorWebView");
 
     bool m_isIP;
+    model::Model m_model;
+    QVariant m_export;
+    model::Model m_exportModel;
+
+    QPushButton * m_previewBtn;
 
     QProgressBar * m_progressBar;
     QPushButton * m_refreshBtn;
+    QPushButton * m_mergeBtn;
 
     QWebEngineView * m_view;
 };

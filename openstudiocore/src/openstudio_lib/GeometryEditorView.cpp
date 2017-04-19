@@ -27,13 +27,19 @@
  **********************************************************************************************************************/
 
 #include "GeometryEditorView.hpp"
+#include "GeometryPreviewView.hpp"
 
+#include "../model/Model.hpp"
 #include "../model/Model_Impl.hpp"
+#include "../model/PlanarSurfaceGroup.hpp"
+#include "../model/PlanarSurfaceGroup_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 
+#include <QDialog>
+#include <QTimer>
 #include <QStackedWidget>
 #include <QVBoxLayout>
 #include <QLabel>
@@ -53,7 +59,7 @@ GeometryEditorView::GeometryEditorView(bool isIP,
 
   QVBoxLayout *layout = new QVBoxLayout;
   
-  EditorWebView* webView = new EditorWebView(this);
+  EditorWebView* webView = new EditorWebView(model, this);
   layout->addWidget(webView);
 
   setLayout(layout);
@@ -64,17 +70,22 @@ GeometryEditorView::~GeometryEditorView()
 
 }
 
-EditorWebView::EditorWebView(QWidget *t_parent)
+EditorWebView::EditorWebView(const openstudio::model::Model& model, QWidget *t_parent)
   : QWidget(t_parent),
+    m_model(model),
     m_isIP(true),
+    m_previewBtn(new QPushButton("Preview")),
     m_progressBar(new QProgressBar()),
-    m_refreshBtn(new QPushButton("Refresh"))
+    m_refreshBtn(new QPushButton("Refresh")),
+    m_mergeBtn(new QPushButton("Merge"))
 {
 
   auto mainLayout = new QVBoxLayout;
   setLayout(mainLayout);
 
   connect(m_refreshBtn, &QPushButton::clicked, this, &EditorWebView::refreshClicked);
+  connect(m_previewBtn, &QPushButton::clicked, this, &EditorWebView::previewClicked);
+  connect(m_mergeBtn, &QPushButton::clicked, this, &EditorWebView::mergeClicked);
 
   auto hLayout = new QHBoxLayout(this);
   mainLayout->addLayout(hLayout);
@@ -89,6 +100,12 @@ EditorWebView::EditorWebView(QWidget *t_parent)
 
   hLayout->addWidget(m_refreshBtn, 0, Qt::AlignVCenter);
   m_refreshBtn->setVisible(true);
+
+  hLayout->addWidget(m_previewBtn, 0, Qt::AlignVCenter);
+  m_previewBtn->setVisible(true);
+
+  hLayout->addWidget(m_mergeBtn, 0, Qt::AlignVCenter);
+  m_mergeBtn->setVisible(true);
 
   m_view = new QWebEngineView(this);
   m_view->settings()->setAttribute(QWebEngineSettings::WebAttribute::LocalContentCanAccessRemoteUrls, true);
@@ -119,6 +136,62 @@ EditorWebView::~EditorWebView()
 void EditorWebView::refreshClicked()
 {
   m_view->triggerPageAction(QWebEnginePage::ReloadAndBypassCache);
+}
+
+void EditorWebView::previewClicked()
+{
+  m_previewBtn->setEnabled(false);
+
+  QString javascript = QString("JSON.stringify(api.doExport());");
+  m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_export = v; QTimer::singleShot(0, this, &EditorWebView::previewExport);});
+}
+
+void EditorWebView::mergeClicked()
+{
+  m_mergeBtn->setEnabled(false);
+
+  QString javascript = QString("JSON.stringify(api.doExport());");
+  m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_export = v; QTimer::singleShot(0, this, &EditorWebView::mergeExport);});
+}
+
+void EditorWebView::handleExport()
+{
+  std::string json = m_export.value<QString>().toStdString();
+
+  // DLM: todo convert json to ThreeScene, convert to OSM
+  m_exportModel = model::exampleModel();
+}
+
+void EditorWebView::previewExport()
+{
+  handleExport();
+
+  PreviewWebView* webView = new PreviewWebView(m_exportModel);
+  QLayout* layout = new QVBoxLayout();
+  layout->addWidget(webView);
+
+  QDialog* dialog = new QDialog(this, Qt::Dialog | Qt::WindowTitleHint | Qt::WindowCloseButtonHint);
+  dialog->setModal(true);
+  dialog->setWindowTitle("Geometry Preview");
+  dialog->setLayout(layout);
+  dialog->open();
+
+  m_previewBtn->setEnabled(true);
+}
+
+void EditorWebView::mergeExport()
+{
+  handleExport();
+
+  // mega lame merge
+  for (auto& surfaceGroup : m_model.getModelObjects<model::PlanarSurfaceGroup>()){
+    surfaceGroup.remove();
+  }
+  for (auto& surfaceGroup : m_exportModel.getModelObjects<model::PlanarSurfaceGroup>()){
+    surfaceGroup.clone(m_model);
+  }
+
+  m_mergeBtn->setEnabled(true);
 }
 
 void EditorWebView::onUnitSystemChange(bool t_isIP) 

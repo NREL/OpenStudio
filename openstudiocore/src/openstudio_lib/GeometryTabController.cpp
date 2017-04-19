@@ -46,6 +46,8 @@ GeometryTabController::GeometryTabController(bool isIP, const model::Model& mode
   m_isIP(isIP)
 {
   this->mainContentWidget()->addSubTab("Preview", PREVIEW);
+
+  // DLM: comment this out to hide the editor
   this->mainContentWidget()->addSubTab("Editor", EDITOR);
 
   connect(this->mainContentWidget(), &MainTabView::tabSelected, this, &GeometryTabController::setSubTab);

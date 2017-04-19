@@ -30,7 +30,7 @@
 #include "GeometryFixture.hpp"
 
 #include "../FloorplanJS.hpp"
-#include "../ThreeScene.hpp"
+#include "../ThreeJS.hpp"
 
 #include <resources.hxx>
 
