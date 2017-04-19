@@ -14738,6 +14738,7 @@ OS:Coil:Heating:Gas,
        \type real
        \units W
   A8;  \field Fuel Type
+       \note PropaneGas is deprecated in favor of Propane
        \type choice
        \key NaturalGas
        \key Propane
