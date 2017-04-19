@@ -1,3 +1,19 @@
+## OpenStudio v2.1.1
+###### 2017-04-19 — [Diff]( https://github.com/NREL/OpenStudio/compare/v2.1.0...v2.1.1 )
+
+- ![Fixed:][fixed] [#2414]( https://github.com/NREL/OpenStudio/issues/2414 ), HPWH wrapped condenser - don't set source nodes on tank
+- ![Fixed:][fixed] [#2493]( https://github.com/NREL/OpenStudio/issues/2493 ), Internal NREL user specific Analysis Error related to Faraday
+- ![Fixed:][fixed] [#2531]( https://github.com/NREL/OpenStudio/issues/2531 ), 2.0.5 03/20 pat results tab not working, not finding results measure
+- ![Fixed:][fixed] [#2544]( https://github.com/NREL/OpenStudio/issues/2544 ), PAT arg default value is missing
+- ![Fixed:][fixed] [#2546]( https://github.com/NREL/OpenStudio/issues/2546 ), Output Variable Table in Output Tab is Empty in PAT 2.1.0
+- ![Fixed:][fixed] [#2549]( https://github.com/NREL/OpenStudio/issues/2549 ), Duplicate Measure and Option can create invalid workflow
+- ![Fixed:][fixed] [#2556]( https://github.com/NREL/OpenStudio/issues/2556 ), Links to older SDK documentation
+- ![Improved:][improved] [#2564]( https://github.com/NREL/OpenStudio/issues/2564 ), PAT 2.1.0 integer_sequence distribution for pivot variable
+
+## OpenStudio v2.1.0
+###### 2017-03-31 — [Diff]( https://github.com/NREL/OpenStudio/compare/v2.0.5...v2.1.0 )
+
+
 ## OpenStudio v2.0.5
 ###### 2017-03-17 — [Diff]( https://github.com/NREL/OpenStudio/compare/v2.0.4...v2.0.5 )
 
