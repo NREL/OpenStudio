@@ -313,7 +313,7 @@
 				{
 					"id": "28",
 					"color": "#004749",
-					"name": "Space 1",
+					"name": "Space 3",
 					"handle": null,
 					"face_id": "37",
 					"daylighting_controls": [],
@@ -325,7 +325,7 @@
 				}, {
 					"id": "38",
 					"color": "#009196",
-					"name": "Space 2",
+					"name": "Space 4",
 					"handle": null,
 					"face_id": "47",
 					"daylighting_controls": [],

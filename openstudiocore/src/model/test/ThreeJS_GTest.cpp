@@ -37,12 +37,15 @@
 #include "../Surface.hpp"
 #include "../Surface_Impl.hpp"
 
+#include "../../utilities/geometry/ThreeJS.hpp"
+#include "../../utilities/geometry/FloorplanJS.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
 
 TEST_F(ModelFixture,ThreeJS_ExampleModel) {
   Model model = exampleModel();
+  model.save(resourcesPath() / toPath("model/exampleModel.osm"), true);
 
   // triangulated, for display
   ThreeScene scene = modelToThreeJS(model, true);
@@ -63,3 +66,32 @@ TEST_F(ModelFixture,ThreeJS_ExampleModel) {
   EXPECT_EQ(model.getConcreteModelObjects<Surface>().size(), model2->getConcreteModelObjects<Surface>().size());
 }
 
+TEST_F(ModelFixture,ThreeJS_FloorplanJS) {
+  openstudio::path p = resourcesPath() / toPath("utilities/Geometry/floorplan.json");
+  ASSERT_TRUE(exists(p));
+
+  boost::optional<FloorplanJS> floorPlan = FloorplanJS::load(toString(p));
+  ASSERT_TRUE(floorPlan);
+
+  // triangulated, for display
+  ThreeScene scene = floorPlan->toThreeScene(false);
+  std::string json = scene.toJSON();
+  EXPECT_TRUE(ThreeScene::load(json));
+
+  // not triangulated, for model transport/translation
+  scene = floorPlan->toThreeScene(true);
+  json = scene.toJSON();
+  EXPECT_TRUE(ThreeScene::load(json));
+
+  boost::optional<Model> model = modelFromThreeJS(scene);
+  ASSERT_TRUE(model);
+
+  model->save(resourcesPath() / toPath("model/ThreeJS_FloorplanJS.osm"), true);
+
+  openstudio::path out = resourcesPath() / toPath("model/ThreeJS_FloorplanJS.json");
+  json = scene.toJSON(true);
+  openstudio::filesystem::ofstream file(out);
+  ASSERT_TRUE(file.is_open());
+  file << json;
+  file.close();
+}

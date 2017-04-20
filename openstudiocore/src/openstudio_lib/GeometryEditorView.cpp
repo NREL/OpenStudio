@@ -28,6 +28,8 @@
 
 #include "GeometryEditorView.hpp"
 #include "GeometryPreviewView.hpp"
+#include "OSAppBase.hpp"
+#include "OSDocument.hpp"
 
 #include "../model/Model.hpp"
 #include "../model/Model_Impl.hpp"
@@ -157,7 +159,7 @@ void EditorWebView::mergeClicked()
   m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_export = v; QTimer::singleShot(0, this, &EditorWebView::mergeExport);});
 }
 
-void EditorWebView::handleExport()
+void EditorWebView::translateExport()
 {
   std::string json = m_export.value<QString>().toStdString();
 
@@ -177,9 +179,26 @@ void EditorWebView::handleExport()
   
 }
 
+void EditorWebView::saveExport()
+{
+  if (!m_export.isNull()){
+    openstudio::OSAppBase * app = OSAppBase::instance();
+    if (app && app->currentDocument()) {
+      openstudio::path out = toPath(app->currentDocument()->modelTempDir()) / toPath("resources/floorplan.json");
+      openstudio::filesystem::ofstream file(out);
+      OS_ASSERT(file.is_open());
+      file << m_export.value<QString>().toStdString();;
+      file.close();
+
+      app->currentDocument()->markAsModified();
+    }
+  }
+}
+
 void EditorWebView::previewExport()
 {
-  handleExport();
+  saveExport();
+  translateExport();
 
   PreviewWebView* webView = new PreviewWebView(m_exportModel);
   QLayout* layout = new QVBoxLayout();
@@ -196,7 +215,8 @@ void EditorWebView::previewExport()
 
 void EditorWebView::mergeExport()
 {
-  handleExport();
+  saveExport();
+  translateExport();
 
   // mega lame merge
   for (auto& surfaceGroup : m_model.getModelObjects<model::PlanarSurfaceGroup>()){

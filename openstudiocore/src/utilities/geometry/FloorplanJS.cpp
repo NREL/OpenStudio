@@ -28,6 +28,8 @@
 
 #include "FloorplanJS.hpp"
 #include "ThreeJS.hpp"
+#include "Vector3d.hpp"
+#include "Geometry.hpp"
 
 #include "../core/Assert.hpp"
 #include "../core/Path.hpp"
@@ -103,115 +105,259 @@ namespace openstudio{
     return boost::none;
   }
 
-  void makeGeometries(const Json::Value& vertices, const Json::Value& edges, const Json::Value& faces, const std::string& faceId,
-                     std::vector<ThreeGeometry>& geometries, std::vector<ThreeSceneChild>& sceneChildren)
+  void makeSurface(const Json::Value& story, const Json::Value& space, const std::string& spaceNamePostFix,
+    const std::string& surfaceType, const Point3dVector& vertices, size_t faceFormat, 
+    std::vector<ThreeGeometry>& geometries, std::vector<ThreeSceneChild>& sceneChildren)
   {
-    std::vector<Point3d> floorVertices;
-    std::vector<size_t> floorFaces;
+    std::string geometryId = std::string("Geometry ") + std::to_string(geometries.size());
+    std::string faceId = std::string("Face ") + std::to_string(geometries.size());
 
-    // openstudio format
-    floorFaces.push_back(1024u);
+    size_t n = vertices.size();
 
-    boost::optional<Json::Value> face = getById(faces, faceId);
-    if (face){
-      Json::Value edgeIds = face->get("edge_ids", Json::arrayValue);
-      Json::Value edgeOrders = face->get("edge_order", Json::arrayValue);
-      Json::ArrayIndex edgeN = edgeIds.size();
-      OS_ASSERT(edgeN == edgeOrders.size());
+    std::vector<size_t> faces;
+    faces.push_back(faceFormat);
+    for (size_t i = 0; i < n; ++i){
+      faces.push_back(i);
+    }
 
-      for (Json::ArrayIndex edgeIdx = 0; edgeIdx < edgeN; ++edgeIdx){
-        std::string edgeId = edgeIds[edgeIdx].asString();
-        unsigned edgeOrder = edgeOrders[edgeIdx].asUInt();
-
-        boost::optional<Json::Value> edge = getById(edges, edgeId);
-        if (edge){
-          Json::Value vertexIds = edge->get("vertex_ids", Json::arrayValue);
-          OS_ASSERT(2u == vertexIds.size());
-
-          boost::optional<Json::Value> vertex1 = getById(vertices, vertexIds[0].asString());
-          boost::optional<Json::Value> vertex2 = getById(vertices, vertexIds[1].asString());
-          OS_ASSERT(vertex1);
-          OS_ASSERT(vertex2);
-
-          if (edgeOrder == 0){
-            boost::optional<Json::Value> vertex3 = vertex1;
-            vertex1 = vertex2;
-            vertex2 = vertex3;
-          }
-
-          assertKeyAndType(*vertex1, "x", Json::realValue);
-          assertKeyAndType(*vertex1, "y", Json::realValue);
-          floorVertices.push_back(Point3d(vertex1->get("x", 0.0).asDouble(), vertex1->get("y", 0.0).asDouble(), 0.0));
-          floorFaces.push_back(edgeIdx);
-        }
-      }
+    {
+      std::string uuid = geometryId;
+      std::string type = "Geometry";
+      ThreeGeometryData data(toThreeVector(vertices), faces);
+      ThreeGeometry geometry(uuid, type, data);
+      geometries.push_back(geometry);
     }
 
     {
       std::string uuid = faceId;
+      std::string name = faceId;
       std::string type = "Mesh";
-      ThreeGeometryData data(toThreeVector(floorVertices), floorFaces);
-      ThreeGeometry geometry(uuid, type, data);
-      geometries.push_back(geometry);
-    }
-    {
-      std::string uuid = "1";
-      std::string name = "Unknown";
-      std::string type = "Mesh";
-      std::string geometryId = faceId;
       std::string materialId;
-      const ThreeUserData userData;
+
+      ThreeUserData userData;
+
+      assertKeyAndType(space, "name", Json::stringValue);
+      std::string s = space.get("name", "").asString();
+      userData.setSpaceName(s);
+
+      assertKeyAndType(story, "name", Json::stringValue);
+      s = story.get("name", "").asString();
+      userData.setBuildingStoryName(s);
+
+      if (checkKeyAndType(space, "building_unit_id", Json::stringValue)){
+        s = space.get("building_unit_id", "").asString();
+        userData.setBuildingUnitName(s);
+      }
+
+      if (checkKeyAndType(space, "thermal_zone_id", Json::stringValue)){
+        s = space.get("thermal_zone_id", "").asString();
+        userData.setThermalZoneName(s);
+      }
+
+      if (checkKeyAndType(space, "space_type_id", Json::stringValue)){
+        s = space.get("space_type_id", "").asString();
+        userData.setSpaceTypeName(s);
+      }
+
+      if (checkKeyAndType(space, "construction_set_id", Json::stringValue)){
+        s = space.get("construction_set_id", "").asString();
+        //userData.setConstructionSetName(s);
+      }
+
+      userData.setSurfaceType(surfaceType);
 
       ThreeSceneChild sceneChild(uuid, name, type, geometryId, materialId, userData);
       sceneChildren.push_back(sceneChild);
     }
   }
 
-  ThreeScene FloorplanJS::toThreeScene(bool breakSurfaces) const
+  void makeGeometries(const Json::Value& story, const Json::Value& space, const std::string& spaceNamePostFix, double minZ, double maxZ,
+    const Json::Value& vertices, const Json::Value& edges, const Json::Value& faces, const std::string& faceId,
+    bool openstudioFormat, std::vector<ThreeGeometry>& geometries, std::vector<ThreeSceneChild>& sceneChildren)
+  {
+    std::vector<Point3d> faceVertices;
+
+    // get the face
+    boost::optional<Json::Value> face = getById(faces, faceId);
+    if (face){
+
+      // get the edges
+      Json::Value edgeIds = face->get("edge_ids", Json::arrayValue);
+      Json::Value edgeOrders = face->get("edge_order", Json::arrayValue);
+      Json::ArrayIndex edgeN = edgeIds.size();
+      OS_ASSERT(edgeN == edgeOrders.size());
+
+      // loop over edges
+      for (Json::ArrayIndex edgeIdx = 0; edgeIdx < edgeN; ++edgeIdx){
+        std::string edgeId = edgeIds[edgeIdx].asString();
+        unsigned edgeOrder = edgeOrders[edgeIdx].asUInt();
+
+        // get the edge
+        boost::optional<Json::Value> edge = getById(edges, edgeId);
+        if (edge){
+          Json::Value vertexIds = edge->get("vertex_ids", Json::arrayValue);
+          OS_ASSERT(2u == vertexIds.size());
+
+          // get the vertices
+          boost::optional<Json::Value> vertex1 = getById(vertices, vertexIds[0].asString());
+          boost::optional<Json::Value> vertex2 = getById(vertices, vertexIds[1].asString());
+
+          if (edgeOrder == 1){
+            vertex1 = getById(vertices, vertexIds[0].asString());
+            vertex2 = getById(vertices, vertexIds[1].asString());
+          }else{
+            vertex1 = getById(vertices, vertexIds[1].asString());
+            vertex2 = getById(vertices, vertexIds[0].asString());
+          }
+          OS_ASSERT(vertex1);
+          OS_ASSERT(vertex2);
+
+          assertKeyAndType(*vertex1, "x", Json::realValue);
+          assertKeyAndType(*vertex1, "y", Json::realValue);
+          faceVertices.push_back(Point3d(vertex1->get("x", 0.0).asDouble(), vertex1->get("y", 0.0).asDouble(), 0.0));
+        }
+      }
+    }
+
+    // correct the floor vertices
+
+    unsigned numPoints = faceVertices.size();
+    if (numPoints < 3){
+      //LOG(Error, "Cannot create a space for floorPrint of size " << faceVertices.size() << ".");
+      return;
+    }
+
+    boost::optional<Vector3d> outwardNormal = getOutwardNormal(faceVertices);
+    if (!outwardNormal){
+      //LOG(Error, "Cannot compute outwardNormal for floorPrint.");
+      return;
+    }
+
+    if (outwardNormal->z() > 0){
+      faceVertices = reverse(faceVertices);
+    }
+
+    Point3dVectorVector allFinalFaceVertices;
+    unsigned roofCeilingFaceFormat = 1024; 
+    unsigned wallFaceFormat = 1024;
+    if (openstudioFormat){
+      allFinalFaceVertices.push_back(faceVertices);
+    }else{
+      roofCeilingFaceFormat = 0; // triangle
+      wallFaceFormat = 1; // quad
+      allFinalFaceVertices = computeTriangulation(faceVertices, Point3dVectorVector());
+    }
+
+    // create floor and ceiling
+    for (const auto& finalFaceVertices : allFinalFaceVertices){
+      Point3dVector finalfloorVertices;
+      Point3dVector finalRoofCeilingVertices;
+
+      for (auto& v : finalFaceVertices){
+        finalfloorVertices.push_back(Point3d(v.x(), v.y(), minZ));
+        finalRoofCeilingVertices.push_back(Point3d(v.x(), v.y(), maxZ));
+      }
+
+      makeSurface(story, space, spaceNamePostFix, "Floor", finalfloorVertices, roofCeilingFaceFormat, geometries, sceneChildren);
+      makeSurface(story, space, spaceNamePostFix, "RoofCeiling", reverse(finalRoofCeilingVertices), roofCeilingFaceFormat, geometries, sceneChildren);
+    }
+
+
+    // create each wall
+    for (unsigned i = 1; i <= numPoints; ++i){
+      Point3dVector finalWallVertices;
+      finalWallVertices.push_back(Point3d(faceVertices[i % numPoints].x(), faceVertices[i % numPoints].y(), maxZ));
+      finalWallVertices.push_back(Point3d(faceVertices[i % numPoints].x(), faceVertices[i % numPoints].y(), minZ));
+      finalWallVertices.push_back(Point3d(faceVertices[i - 1].x(), faceVertices[i - 1].y(), minZ));
+      finalWallVertices.push_back(Point3d(faceVertices[i - 1].x(), faceVertices[i - 1].y(), maxZ));
+
+      makeSurface(story, space, spaceNamePostFix, "Wall", finalWallVertices, wallFaceFormat, geometries, sceneChildren);
+    }
+    
+  }
+
+  ThreeScene FloorplanJS::toThreeScene(bool openstudioFormat) const
   {
     std::vector<ThreeGeometry> geometries;
     std::vector<ThreeMaterial> materials;
     std::vector<ThreeSceneChild> children;
     std::vector<std::string> buildingStoryNames;
 
-    double zHeight = 0;
+    double currentZ = 0;
 
+    // loop over stories
     Json::Value stories = m_value.get("stories", Json::arrayValue);
     Json::ArrayIndex storyN = stories.size();
     for (Json::ArrayIndex storyIdx = 0; storyIdx < storyN; ++storyIdx){
 
+      // get story properties
       assertKeyAndType(stories[storyIdx], "name", Json::stringValue);
       std::string storyName = stories[storyIdx].get("name", "").asString();
+      buildingStoryNames.push_back(storyName);
 
+      double belowFloorPlenumHeight = 0;
+      if (checkKeyAndType(stories[storyIdx], "below_floor_plenum_height", Json::realValue)){
+        belowFloorPlenumHeight = stories[storyIdx].get("below_floor_plenum_height", belowFloorPlenumHeight).asDouble();
+      }
+       
+      double floorToCeilingHeight = 3;
+      if (checkKeyAndType(stories[storyIdx], "floor_to_ceiling_height", Json::realValue)){
+        floorToCeilingHeight = stories[storyIdx].get("floor_to_ceiling_height", floorToCeilingHeight).asDouble();
+      }
+      // DLM: temp code
+      if (floorToCeilingHeight < 0.1){
+        floorToCeilingHeight = 3;
+      }
+
+      double aboveCeilingPlenumHeight = 0;
+      if (checkKeyAndType(stories[storyIdx], "above_ceiling_plenum_height", Json::realValue)){
+        aboveCeilingPlenumHeight = stories[storyIdx].get("above_ceiling_plenum_height", aboveCeilingPlenumHeight).asDouble();
+      }
+
+      // get the geometry
       assertKeyAndType(stories[storyIdx], "geometry", Json::objectValue);
       Json::Value geometry = stories[storyIdx].get("geometry", Json::arrayValue);
       Json::Value vertices = geometry.get("vertices", Json::arrayValue);
       Json::Value edges = geometry.get("edges", Json::arrayValue);
       Json::Value faces = geometry.get("faces", Json::arrayValue);
 
+      // loop over spaces
       Json::Value spaces = stories[storyIdx].get("spaces", Json::arrayValue);
       Json::ArrayIndex spaceN = spaces.size();
       for (Json::ArrayIndex spaceIdx = 0; spaceIdx < spaceN; ++spaceIdx){
 
+        // each space should have one face
         if (checkKeyAndType(spaces[spaceIdx], "face_id", Json::stringValue)){
           std::string faceId = spaces[spaceIdx].get("face_id", "").asString(); 
 
-          std::vector<ThreeGeometry> g;
-          std::vector<ThreeSceneChild> c;
-          makeGeometries(vertices, edges, faces, faceId, g, c);
+          double minZ = currentZ;
+          double maxZ = currentZ + belowFloorPlenumHeight;
+          if (belowFloorPlenumHeight > 0){
+            makeGeometries(stories[storyIdx], spaces[spaceIdx], " Floor Plenum", minZ, maxZ, vertices, edges, faces, faceId, openstudioFormat, geometries, children);
+          }
 
-          geometries.insert(geometries.end(), g.begin(), g.end());
-          children.insert(children.end(), c.begin(), c.end());
-        }
+          minZ = maxZ;
+          maxZ += floorToCeilingHeight;
+          if (floorToCeilingHeight > 0){
+            makeGeometries(stories[storyIdx], spaces[spaceIdx], "", minZ, maxZ, vertices, edges, faces, faceId, openstudioFormat, geometries, children);
+          }
 
-      }
+          minZ = maxZ;
+          maxZ += aboveCeilingPlenumHeight;
+          if (aboveCeilingPlenumHeight > 0){
+            makeGeometries(stories[storyIdx], spaces[spaceIdx], " Plenum", minZ, maxZ, vertices, edges, faces, faceId, openstudioFormat, geometries, children);
+          }
+        } 
 
-    }
+      } // spaces
 
-    
+      // increment height for next story
+      currentZ += belowFloorPlenumHeight + floorToCeilingHeight + aboveCeilingPlenumHeight;
+
+    } // stories
+
     ThreeBoundingBox boundingBox(0,0,0,0,0,0,0,0,0,0);
     ThreeSceneMetadata metadata(buildingStoryNames, boundingBox);
-
 
     ThreeSceneObject sceneObject("", children);
 

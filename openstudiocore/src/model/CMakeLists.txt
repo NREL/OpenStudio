@@ -1718,6 +1718,7 @@ if(BUILD_TESTING)
 
   add_dependencies("${target_name}_tests"
     openstudio_model_resources
+    openstudio_utilities_resources
   )
 
   # Compiler and system specific options

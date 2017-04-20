@@ -39,6 +39,8 @@
 %template(OptionalEulerAngles) boost::optional<openstudio::EulerAngles>;
 %template(OptionalBoundingBox) boost::optional<openstudio::BoundingBox>;
 %template(OptionalIntersectionResult) boost::optional<openstudio::IntersectionResult>;
+%template(OptionalThreeScene) boost::optional<openstudio::ThreeScene>;
+%template(OptionalFloorplanJS) boost::optional<openstudio::FloorplanJS>;
 
 // create an instantiation of the vector classes
 %template(Point3dVector) std::vector<openstudio::Point3d>;

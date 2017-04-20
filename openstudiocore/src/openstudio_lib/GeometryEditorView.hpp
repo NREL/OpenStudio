@@ -76,7 +76,8 @@ class EditorWebView : public QWidget
     void refreshClicked();
     void previewClicked();
     void mergeClicked();
-    void handleExport();
+    void saveExport();
+    void translateExport();
     void previewExport();
     void mergeExport();
 
