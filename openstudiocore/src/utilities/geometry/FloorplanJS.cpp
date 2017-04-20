@@ -89,38 +89,86 @@ namespace openstudio{
     return result;
   }
 
-  std::vector<ThreeGeometry> getGeometries(const Json::Value& story, const Json::Value& space, const std::string& faceId)
+  boost::optional<Json::Value> getById(const Json::Value& objects, const std::string& id)
   {
-    const std::string uuid;
-    const std::string type;
-    std::vector<double> vertices;
-    const std::vector<size_t> faces;
-    ThreeGeometryData data(vertices, faces);
-    ThreeGeometry geometry(uuid, type, data);
-
-    std::vector<ThreeGeometry> result;
-    return result;
+    boost::optional<Json::Value> result;
+    Json::ArrayIndex n = objects.size();
+    for (Json::ArrayIndex i = 0; i < n; ++i){
+      if (checkKeyAndType(objects[i], "id", Json::stringValue)){
+        if (id == objects[i].get("id", "").asString()){
+          return objects[i];
+        }
+      }
+    }
+    return boost::none;
   }
 
-  std::vector<ThreeSceneChild> getSceneChildren(const Json::Value& story, const Json::Value& space, const std::string& faceId)
+  void makeGeometries(const Json::Value& vertices, const Json::Value& edges, const Json::Value& faces, const std::string& faceId,
+                     std::vector<ThreeGeometry>& geometries, std::vector<ThreeSceneChild>& sceneChildren)
   {
-    const std::string uuid;
-    const std::string name; 
-    const std::string type;
-    const std::string geometryId;
-    const std::string materialId;
-    const ThreeUserData userData;
+    std::vector<Point3d> floorVertices;
+    std::vector<size_t> floorFaces;
 
-    ThreeSceneChild sceneChild(uuid, name, type, geometryId, materialId, userData);
+    // openstudio format
+    floorFaces.push_back(1024u);
 
-    std::vector<ThreeSceneChild> result;
-    return result;
+    boost::optional<Json::Value> face = getById(faces, faceId);
+    if (face){
+      Json::Value edgeIds = face->get("edge_ids", Json::arrayValue);
+      Json::Value edgeOrders = face->get("edge_order", Json::arrayValue);
+      Json::ArrayIndex edgeN = edgeIds.size();
+      OS_ASSERT(edgeN == edgeOrders.size());
+
+      for (Json::ArrayIndex edgeIdx = 0; edgeIdx < edgeN; ++edgeIdx){
+        std::string edgeId = edgeIds[edgeIdx].asString();
+        unsigned edgeOrder = edgeOrders[edgeIdx].asUInt();
+
+        boost::optional<Json::Value> edge = getById(edges, edgeId);
+        if (edge){
+          Json::Value vertexIds = edge->get("vertex_ids", Json::arrayValue);
+          OS_ASSERT(2u == vertexIds.size());
+
+          boost::optional<Json::Value> vertex1 = getById(vertices, vertexIds[0].asString());
+          boost::optional<Json::Value> vertex2 = getById(vertices, vertexIds[1].asString());
+          OS_ASSERT(vertex1);
+          OS_ASSERT(vertex2);
+
+          if (edgeOrder == 0){
+            boost::optional<Json::Value> vertex3 = vertex1;
+            vertex1 = vertex2;
+            vertex2 = vertex3;
+          }
+
+          assertKeyAndType(*vertex1, "x", Json::realValue);
+          assertKeyAndType(*vertex1, "y", Json::realValue);
+          floorVertices.push_back(Point3d(vertex1->get("x", 0.0).asDouble(), vertex1->get("y", 0.0).asDouble(), 0.0));
+          floorFaces.push_back(edgeIdx);
+        }
+      }
+    }
+
+    {
+      std::string uuid = faceId;
+      std::string type = "Mesh";
+      ThreeGeometryData data(toThreeVector(floorVertices), floorFaces);
+      ThreeGeometry geometry(uuid, type, data);
+      geometries.push_back(geometry);
+    }
+    {
+      std::string uuid = "1";
+      std::string name = "Unknown";
+      std::string type = "Mesh";
+      std::string geometryId = faceId;
+      std::string materialId;
+      const ThreeUserData userData;
+
+      ThreeSceneChild sceneChild(uuid, name, type, geometryId, materialId, userData);
+      sceneChildren.push_back(sceneChild);
+    }
   }
 
-  ThreeScene FloorplanJS::toThreeScene(bool triangulateSurfaces) const
+  ThreeScene FloorplanJS::toThreeScene(bool breakSurfaces) const
   {
-    assertKeyAndType(m_value, "stories", Json::arrayValue);
-
     std::vector<ThreeGeometry> geometries;
     std::vector<ThreeMaterial> materials;
     std::vector<ThreeSceneChild> children;
@@ -131,9 +179,15 @@ namespace openstudio{
     Json::Value stories = m_value.get("stories", Json::arrayValue);
     Json::ArrayIndex storyN = stories.size();
     for (Json::ArrayIndex storyIdx = 0; storyIdx < storyN; ++storyIdx){
-      assertKeyAndType(stories[storyIdx], "spaces", Json::stringValue);
 
+      assertKeyAndType(stories[storyIdx], "name", Json::stringValue);
       std::string storyName = stories[storyIdx].get("name", "").asString();
+
+      assertKeyAndType(stories[storyIdx], "geometry", Json::objectValue);
+      Json::Value geometry = stories[storyIdx].get("geometry", Json::arrayValue);
+      Json::Value vertices = geometry.get("vertices", Json::arrayValue);
+      Json::Value edges = geometry.get("edges", Json::arrayValue);
+      Json::Value faces = geometry.get("faces", Json::arrayValue);
 
       Json::Value spaces = stories[storyIdx].get("spaces", Json::arrayValue);
       Json::ArrayIndex spaceN = spaces.size();
@@ -142,12 +196,12 @@ namespace openstudio{
         if (checkKeyAndType(spaces[spaceIdx], "face_id", Json::stringValue)){
           std::string faceId = spaces[spaceIdx].get("face_id", "").asString(); 
 
-          std::vector<ThreeGeometry> g = getGeometries(stories[storyIdx], spaces[spaceIdx], faceId);
+          std::vector<ThreeGeometry> g;
+          std::vector<ThreeSceneChild> c;
+          makeGeometries(vertices, edges, faces, faceId, g, c);
 
-          std::vector<ThreeSceneChild> c = getSceneChildren(stories[storyIdx], spaces[spaceIdx], faceId);
-
-          geometries.insert(g.begin(), g.end(), geometries.end());
-          children.insert(c.begin(), c.end(), children.end());
+          geometries.insert(geometries.end(), g.begin(), g.end());
+          children.insert(children.end(), c.begin(), c.end());
         }
 
       }

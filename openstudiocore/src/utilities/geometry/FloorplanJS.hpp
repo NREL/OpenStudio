@@ -62,7 +62,7 @@ namespace openstudio{
     std::string toJSON(bool prettyPrint = false) const;
 
     /// convert to ThreeJS, will throw if error
-    ThreeScene toThreeScene(bool triangulateSurfaces) const;
+    ThreeScene toThreeScene(bool breakSurfaces) const;
 
   private:
     REGISTER_LOGGER("FloorplanJS");

@@ -31,10 +31,13 @@
 
 #include "../model/Model.hpp"
 #include "../model/Model_Impl.hpp"
+#include "../model/ThreeJS.hpp"
 #include "../model/PlanarSurfaceGroup.hpp"
 #include "../model/PlanarSurfaceGroup_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/geometry/FloorplanJS.hpp"
+#include "../utilities/geometry/ThreeJS.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 
@@ -158,8 +161,20 @@ void EditorWebView::handleExport()
 {
   std::string json = m_export.value<QString>().toStdString();
 
-  // DLM: todo convert json to ThreeScene, convert to OSM
-  m_exportModel = model::exampleModel();
+  boost::optional<model::Model> model;
+  boost::optional<FloorplanJS> floorplan = FloorplanJS::load(json);
+  if (floorplan){
+    ThreeScene scene = floorplan->toThreeScene(false);
+    model = model::modelFromThreeJS(scene);
+  }
+  
+  if (model){
+    m_exportModel = *model;
+  } else{
+    //m_exportModel = model::Model();
+    m_exportModel = model::exampleModel();
+  }
+  
 }
 
 void EditorWebView::previewExport()
