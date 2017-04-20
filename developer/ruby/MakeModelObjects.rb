@@ -96,7 +96,18 @@ objects = []
 #objects << ["OS:EnergyManagementSystem:InternalVariable", "EnergyManagementSystemInternalVariable", "ModelObject"]
 #objects << ["OS:EnergyManagementSystem:CurveOrTableIndexVariable", "EnergyManagementSystemCurveOrTableIndexVariable", "ModelObject"]
 #objects << ["OS:EnergyManagementSystem:ConstructionIndexVariable", "EnergyManagementSystemConstructionIndexVariable", "ModelObject"]
-objects << ["OS:Output:EnergyManagementSystem", "OutputEnergyManagementSystem", "ModelObject"]
+objects << ["OS:Generator:FuelCell", "GeneratorFuelCell", "ModelObject"]
+objects << ["OS:Generator:FuelCell:PowerModule", "GeneratorFuelCellPowerModule", "ModelObject"]
+objects << ["OS:Generator:FuelCell:AirSupply", "GeneratorFuelCellAirSupply", "ModelObject"]
+objects << ["OS:Generator:FuelCell:WaterSupply", "GeneratorFuelCellWaterSupply", "ModelObject"]
+objects << ["OS:Generator:FuelCell:AuxiliaryHeater", "GeneratorFuelCellAuxiliaryHeater", "ModelObject"]
+objects << ["OS:Generator:FuelCell:ExhaustGasToWaterHeatExchanger", "GeneratorFuelCellExhaustGasToWaterHeatExchanger", "ModelObject"]
+objects << ["OS:Generator:FuelCell:ElectricalStorage", "GeneratorFuelCellElectricalStorage", "ModelObject"]
+objects << ["OS:Generator:FuelCell:Inverter", "GeneratorFuelCellInverter", "ModelObject"]
+objects << ["OS:Generator:FuelCell:StackCooler", "GeneratorFuelCellStackCooler", "ModelObject"]
+objects << ["OS:Generator:FuelSupply", "GeneratorFuelSupply", "ModelObject"]
+#objects << ["OS:Output:EnergyManagementSystem", "OutputEnergyManagementSystem", "ModelObject"]
+
 
 includePath = nil
 if /mswin/.match(RUBY_PLATFORM) || /mingw/.match(RUBY_PLATFORM)

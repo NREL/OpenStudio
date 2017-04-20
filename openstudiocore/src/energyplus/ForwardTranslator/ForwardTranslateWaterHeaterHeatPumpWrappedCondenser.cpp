@@ -269,12 +269,6 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterHeatPumpWrappe
   idfObject.setString(WaterHeater_HeatPump_WrappedCondenserFields::InletAirMixerNodeName,inletAirMixerNodeName);
   idfObject.setString(WaterHeater_HeatPump_WrappedCondenserFields::OutletAirSplitterNodeName,outletAirSplitterNodeName);
 
-  std::string condOutletTankInletNodeName =
-    modelObject.name().get() + " Condenser Outlet - Tank Inlet";
-
-  std::string tankOutletCondInletNodeName = 
-    modelObject.name().get() + " Tank Outlet - Condenser Inlet";
-
   if( auto schedule = modelObject.inletAirTemperatureSchedule() ) {
     if( auto _schedule = translateAndMapModelObject(schedule.get()) ) {
       idfObject.setString(WaterHeater_HeatPump_WrappedCondenserFields::InletAirTemperatureScheduleName,_schedule->nameString());

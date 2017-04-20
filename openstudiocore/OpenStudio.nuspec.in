@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>OpenStudio</id>
-    <version>@OPENSTUDIO_VERSION@-rc4</version>
+    <version>@OPENSTUDIO_VERSION@</version>
     <authors>NREL</authors>
     <owners>NREL</owners>
     <licenseUrl>http://github.com/NREL/OpenStudio/blob/develop/LICENSE.md</licenseUrl>

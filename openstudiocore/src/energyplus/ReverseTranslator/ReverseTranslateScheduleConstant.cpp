@@ -52,6 +52,11 @@ OptionalModelObject ReverseTranslator::translateScheduleConstant( const Workspac
 
   ScheduleConstant scheduleConstant(m_model);
 
+  if (OptionalString os = workspaceObject.name()) {
+    scheduleConstant.setName(*os);
+  }
+
+  
   boost::optional<WorkspaceObject> target = workspaceObject.getTarget(Schedule_ConstantFields::ScheduleTypeLimitsName);
   if (target){
     OptionalModelObject scheduleTypeLimits = translateAndMapWorkspaceObject(*target);
