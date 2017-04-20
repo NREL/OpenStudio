@@ -609,29 +609,82 @@ namespace openstudio
 
         ThreeUserData userData = child.userData();
         
-        const std::string handle = userData.handle();
-        const std::string name = userData.name();
-        const std::string surfaceType = userData.surfaceType();
-        const std::string constructionName = userData.constructionName();
-        const std::string spaceName = userData.spaceName();
-        const std::string thermalZoneName = userData.thermalZoneName();
-        const std::string spaceTypeName = userData.spaceTypeName();
-        const std::string buildingStoryName = userData.buildingStoryName();
-        const std::string buildingUnitName = userData.buildingUnitName();
-        const std::string outsideBoundaryCondition = userData.outsideBoundaryCondition();
-        const std::string outsideBoundaryConditionObjectName = userData.outsideBoundaryConditionObjectName();
-        const std::string outsideBoundaryConditionObjectHandle = userData.outsideBoundaryConditionObjectHandle();
-        
+        std::string handle = userData.handle();
+        std::string name = userData.name();
+        std::string surfaceType = userData.surfaceType();
+        std::string constructionName = userData.constructionName();
+        std::string spaceName = userData.spaceName();
+        std::string thermalZoneName = userData.thermalZoneName();
+        std::string spaceTypeName = userData.spaceTypeName();
+        std::string buildingStoryName = userData.buildingStoryName();
+        std::string buildingUnitName = userData.buildingUnitName();
+        std::string outsideBoundaryCondition = userData.outsideBoundaryCondition();
+        std::string outsideBoundaryConditionObjectName = userData.outsideBoundaryConditionObjectName();
+        std::string outsideBoundaryConditionObjectHandle = userData.outsideBoundaryConditionObjectHandle();
+
+        if (spaceName.empty()){
+          spaceName = "Default Space";
+        }
+
+        boost::optional<Space> space = model.getConcreteModelObjectByName<Space>(spaceName);
+        if (!space){
+          space = Space(model);
+          space->setName(spaceName);
+        }
+
+        boost::optional<ThermalZone> thermalZone = model.getConcreteModelObjectByName<ThermalZone>(thermalZoneName);
+        if (!thermalZone && !thermalZoneName.empty()){
+          thermalZone = ThermalZone(model);
+          thermalZone->setName(thermalZoneName);
+        }
+
+        boost::optional<SpaceType> spaceType = model.getConcreteModelObjectByName<SpaceType>(spaceTypeName);
+        if (!spaceType && !spaceTypeName.empty()){
+          spaceType = SpaceType(model);
+          spaceType->setName(spaceTypeName);
+        }
+
+        boost::optional<BuildingStory> buildingStory = model.getConcreteModelObjectByName<BuildingStory>(buildingStoryName);
+        if (!buildingStory && !buildingStoryName.empty()){
+          buildingStory = BuildingStory(model);
+          buildingStory->setName(buildingStoryName);
+        }
+
+        boost::optional<BuildingUnit> buildingUnit = model.getConcreteModelObjectByName<BuildingUnit>(buildingUnitName);
+        if (!buildingUnit && !buildingUnitName.empty()){
+          buildingUnit = BuildingUnit(model);
+          buildingUnit->setName(buildingUnitName);
+        }
+
         // to set handles we may have to create and add idf objects
 
         if (istringEqual(surfaceType, "Wall") || istringEqual(surfaceType, "Floor") || istringEqual(surfaceType, "RoofCeiling")){
 
-          boost::optional<Space> space = model.getConcreteModelObjectByName<Space>(spaceName);
-          if (!space){
-            space = Space(model);
-            space->setName(spaceName);
-          }
           OS_ASSERT(space);
+
+          if (thermalZone){
+            if (!space->thermalZone()){
+              space->setThermalZone(*thermalZone);
+            }
+          }
+
+          if (spaceType){
+            if (!space->spaceType()){
+              space->setSpaceType(*spaceType);
+            }
+          }
+
+          if (buildingStory){
+            if (!space->buildingStory()){
+              space->setBuildingStory(*buildingStory);
+            }
+          }
+
+          if (buildingUnit){
+            if (!space->buildingUnit()){
+              space->setBuildingUnit(*buildingUnit);
+            }
+          }
 
           for (const auto& face : faces){
             Surface surface(face, model);

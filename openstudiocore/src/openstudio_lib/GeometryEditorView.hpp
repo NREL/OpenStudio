@@ -90,7 +90,10 @@ class EditorWebView : public QWidget
   private:
     REGISTER_LOGGER("openstudio::EditorWebView");
 
+    openstudio::path floorplanPath() const;
+
     bool m_isIP;
+    std::string m_floorplan;
     model::Model m_model;
     QVariant m_export;
     model::Model m_exportModel;

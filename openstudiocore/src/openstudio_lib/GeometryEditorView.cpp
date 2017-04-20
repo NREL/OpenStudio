@@ -38,6 +38,7 @@
 #include "../model/PlanarSurfaceGroup_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Checksum.hpp"
 #include "../utilities/geometry/FloorplanJS.hpp"
 #include "../utilities/geometry/ThreeJS.hpp"
 
@@ -130,11 +131,20 @@ EditorWebView::EditorWebView(const openstudio::model::Model& model, QWidget *t_p
   //mainLayout->addWidget(m_view, 10, Qt::AlignTop);
   mainLayout->addWidget(m_view);
 
+  openstudio::path p = floorplanPath();
+  if (exists(p)){
+    openstudio::filesystem::ifstream ifs(p);
+    OS_ASSERT(ifs.is_open());
+    m_floorplan = std::string( (std::istreambuf_iterator<char>(ifs) ), (std::istreambuf_iterator<char>() ) );
+    ifs.close();
+  }
+
   m_view->load(QUrl("qrc:///library/geometry_editor.html"));
 }
 
 EditorWebView::~EditorWebView()
 {
+  saveExport();
   delete m_view;
 }
 
@@ -166,7 +176,7 @@ void EditorWebView::translateExport()
   boost::optional<model::Model> model;
   boost::optional<FloorplanJS> floorplan = FloorplanJS::load(json);
   if (floorplan){
-    ThreeScene scene = floorplan->toThreeScene(false);
+    ThreeScene scene = floorplan->toThreeScene(true);
     model = model::modelFromThreeJS(scene);
   }
   
@@ -182,15 +192,23 @@ void EditorWebView::translateExport()
 void EditorWebView::saveExport()
 {
   if (!m_export.isNull()){
-    openstudio::OSAppBase * app = OSAppBase::instance();
-    if (app && app->currentDocument()) {
-      openstudio::path out = toPath(app->currentDocument()->modelTempDir()) / toPath("resources/floorplan.json");
-      openstudio::filesystem::ofstream file(out);
-      OS_ASSERT(file.is_open());
-      file << m_export.value<QString>().toStdString();;
-      file.close();
 
-      app->currentDocument()->markAsModified();
+    m_floorplan = m_export.value<QString>().toStdString();
+
+    // DLM: should we compare checksums and only 
+    openstudio::path out = floorplanPath();
+    if (!out.empty()){
+      if (checksum(m_floorplan) != checksum(out)){
+        openstudio::filesystem::ofstream file(out);
+        OS_ASSERT(file.is_open());
+        file << m_export.value<QString>().toStdString();
+        file.close();
+
+        openstudio::OSAppBase * app = OSAppBase::instance();
+        if (app && app->currentDocument()) {
+          app->currentDocument()->markAsModified();
+        }
+      }
     }
   }
 }
@@ -199,6 +217,10 @@ void EditorWebView::previewExport()
 {
   saveExport();
   translateExport();
+
+  std::stringstream ss;
+  ss << m_exportModel;
+  std::string s = ss.str();
 
   PreviewWebView* webView = new PreviewWebView(m_exportModel);
   QLayout* layout = new QVBoxLayout();
@@ -237,6 +259,11 @@ void EditorWebView::onUnitSystemChange(bool t_isIP)
 
 void EditorWebView::onLoadFinished(bool ok)
 {
+  if (!m_floorplan.empty()){
+    QString javascript = QString("api.doImport(") + QString::fromStdString(m_floorplan) + QString(");");
+    m_view->page()->runJavaScript(javascript);
+  }
+
   QString title = m_view->title();
   if (ok){
     m_progressBar->setStyleSheet("");
@@ -271,5 +298,13 @@ void EditorWebView::onRenderProcessTerminated(QWebEnginePage::RenderProcessTermi
   m_progressBar->setTextVisible(true);
 }
 
+openstudio::path EditorWebView::floorplanPath() const
+{
+  openstudio::OSAppBase * app = OSAppBase::instance();
+  if (app && app->currentDocument()) {
+    return toPath(app->currentDocument()->modelTempDir()) / toPath("resources/floorplan.json");
+  }
+  return path();
+}
 
 } // openstudio

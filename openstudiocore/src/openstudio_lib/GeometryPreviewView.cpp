@@ -153,6 +153,10 @@ void PreviewWebView::onLoadFinished(bool ok)
   //ThreeScene scene = modelToThreeJS(m_model, false); // non-triangulated
   std::string json = scene.toJSON(false); // no pretty print
 
+  std::stringstream ss;
+  ss << m_model;
+  std::string s = ss.str();
+
   // call init and animate
   QString javascript = QString("init(") + QString::fromStdString(json) + QString(");\n animate();\n initDatGui();");
   m_view->page()->runJavaScript(javascript);
