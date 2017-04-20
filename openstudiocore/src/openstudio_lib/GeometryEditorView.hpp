@@ -34,6 +34,8 @@
 
 #include "../model/Model.hpp"
 
+#include "../utilities/geometry/FloorplanJS.hpp"
+
 #include <QWidget>
 #include <QWebEngineView>
 #include <QProgressBar>
@@ -93,7 +95,7 @@ class EditorWebView : public QWidget
     openstudio::path floorplanPath() const;
 
     bool m_isIP;
-    std::string m_floorplan;
+    boost::optional<FloorplanJS> m_floorplan;
     model::Model m_model;
     QVariant m_export;
     model::Model m_exportModel;

@@ -135,8 +135,9 @@ EditorWebView::EditorWebView(const openstudio::model::Model& model, QWidget *t_p
   if (exists(p)){
     openstudio::filesystem::ifstream ifs(p);
     OS_ASSERT(ifs.is_open());
-    m_floorplan = std::string( (std::istreambuf_iterator<char>(ifs) ), (std::istreambuf_iterator<char>() ) );
+    std::string contents( (std::istreambuf_iterator<char>(ifs) ), (std::istreambuf_iterator<char>() ) );
     ifs.close();
+    m_floorplan = FloorplanJS::load(contents);
   }
 
   m_view->load(QUrl("qrc:///library/geometry_editor.html"));
@@ -193,15 +194,18 @@ void EditorWebView::saveExport()
 {
   if (!m_export.isNull()){
 
-    m_floorplan = m_export.value<QString>().toStdString();
+    std::string contents = m_export.value<QString>().toStdString();
 
     // DLM: should we compare checksums and only 
     openstudio::path out = floorplanPath();
     if (!out.empty()){
-      if (checksum(m_floorplan) != checksum(out)){
+      if (checksum(contents) != checksum(out)){
+
+        m_floorplan = FloorplanJS::load(contents);
+
         openstudio::filesystem::ofstream file(out);
         OS_ASSERT(file.is_open());
-        file << m_export.value<QString>().toStdString();
+        file << contents;
         file.close();
 
         openstudio::OSAppBase * app = OSAppBase::instance();
@@ -259,8 +263,9 @@ void EditorWebView::onUnitSystemChange(bool t_isIP)
 
 void EditorWebView::onLoadFinished(bool ok)
 {
-  if (!m_floorplan.empty()){
-    QString javascript = QString("api.doImport(") + QString::fromStdString(m_floorplan) + QString(");");
+  if (m_floorplan){
+    std::string json = m_floorplan->toJSON(false);
+    QString javascript = QString("api.doImport(JSON.stringify(") + QString::fromStdString(json) + QString("));");
     m_view->page()->runJavaScript(javascript);
   }
 

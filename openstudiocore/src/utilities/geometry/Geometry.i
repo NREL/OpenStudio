@@ -40,6 +40,8 @@
 %template(OptionalBoundingBox) boost::optional<openstudio::BoundingBox>;
 %template(OptionalIntersectionResult) boost::optional<openstudio::IntersectionResult>;
 %template(OptionalThreeScene) boost::optional<openstudio::ThreeScene>;
+%template(OptionalThreeMaterial) boost::optional<openstudio::ThreeMaterial>;
+%template(OptionalThreeGeometry) boost::optional<openstudio::ThreeGeometry>;
 %template(OptionalFloorplanJS) boost::optional<openstudio::FloorplanJS>;
 
 // create an instantiation of the vector classes
@@ -52,6 +54,9 @@
 %template(PlaneVector) std::vector<openstudio::Plane>;
 %template(EulerAnglesVector) std::vector<openstudio::EulerAngles>;
 %template(BoundingBoxVector) std::vector<openstudio::BoundingBox>;
+%template(ThreeSceneChildVector) std::vector<openstudio::ThreeSceneChild>;
+%template(ThreeGeometryVector) std::vector<openstudio::ThreeGeometry>;
+%template(ThreeMaterialVector) std::vector<openstudio::ThreeMaterial>;
 
 %ignore openstudio::operator<<;
 
