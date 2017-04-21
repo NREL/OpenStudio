@@ -302,8 +302,8 @@ namespace openstudio{
     Json::Value uvs(Json::arrayValue);
 
     Json::Value faces(Json::arrayValue);
-    for (const auto& f : m_faces){
-      faces.append(f);
+    for (const size_t& f : m_faces){
+      faces.append(static_cast<unsigned>(f));
     }
 
     result["vertices"] = vertices;
