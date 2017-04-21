@@ -38,6 +38,9 @@
 
 #include "../utilities/core/Assert.hpp"
 
+// DLM: remove once editor is always enabled
+#include <QProcessEnvironment>
+
 namespace openstudio {
 
 GeometryTabController::GeometryTabController(bool isIP, const model::Model& model)
@@ -47,8 +50,10 @@ GeometryTabController::GeometryTabController(bool isIP, const model::Model& mode
 {
   this->mainContentWidget()->addSubTab("Preview", PREVIEW);
 
-  // DLM: comment this out to hide the editor
-  this->mainContentWidget()->addSubTab("Editor", EDITOR);
+  // DLM: remove once editor is always enabled
+  if (QProcessEnvironment::systemEnvironment().value("OPENSTUDIO_GEOMETRY_EDITOR") == QString("1")){
+    this->mainContentWidget()->addSubTab("Editor", EDITOR);
+  }
 
   connect(this->mainContentWidget(), &MainTabView::tabSelected, this, &GeometryTabController::setSubTab);
 }
