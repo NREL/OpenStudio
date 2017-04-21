@@ -26,76 +26,52 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
 
-#ifndef UTILITIES_GEOMETRY_POINT3D_HPP
-#define UTILITIES_GEOMETRY_POINT3D_HPP
+#ifndef UTILITIES_GEOMETRY_FLOORPLANJS_HPP
+#define UTILITIES_GEOMETRY_FLOORPLANJS_HPP
 
 #include "../UtilitiesAPI.hpp"
-#include "../data/Vector.hpp"
+
+#include "Point3d.hpp"
+#include "Transformation.hpp"
+
 #include "../core/Logger.hpp"
+
+#include <jsoncpp/json.h>
 
 #include <vector>
 #include <boost/optional.hpp>
 
 namespace openstudio{
 
-  // forward declaration
-  class Vector3d;
+  class ThreeScene;
 
-  class UTILITIES_API Point3d{
+  /** FloorplanJS is an adapter for the Geometry Editor JSON format
+  *
+  *  The class is not impl-ized in hopes that it can be ported to JavaScript via emscripten
+  */
+  class UTILITIES_API FloorplanJS{
   public:
 
-    /// default constructor creates point at 0, 0, 0
-    Point3d();
+    /// constructor from JSON formatted string, will throw if error
+    FloorplanJS(const std::string& json);
 
-    /// constructor with x, y, z
-    Point3d(double x, double y, double z);
+    /// load from string
+    static boost::optional<FloorplanJS> load(const std::string& json);
 
-    /// copy constructor
-    Point3d(const Point3d& other);
+    /// print to JSON
+    std::string toJSON(bool prettyPrint = false) const;
 
-    /// get x
-    double x() const;
-
-    /// get y
-    double y() const;
-
-    /// get z
-    double z() const;
-
-    /// point plus a vector is a new point
-    Point3d operator+(const Vector3d& vec) const;
-
-    /// point plus a vector is a new point
-    Point3d& operator+=(const Vector3d& vec);
-
-    /// point minus another point is a vector
-    Vector3d operator-(const Point3d& other) const;
-
-    /// check equality
-    bool operator==(const Point3d& other) const;
+    /// convert to ThreeJS, will throw if error
+    ThreeScene toThreeScene(bool breakSurfaces) const;
 
   private:
+    REGISTER_LOGGER("FloorplanJS");
 
-    REGISTER_LOGGER("utilities.Point3d");
-    Vector m_storage;
+    FloorplanJS(const Json::Value& value);
 
+    Json::Value m_value;
   };
-
-  /// ostream operator
-  UTILITIES_API std::ostream& operator<<(std::ostream& os, const Point3d& point);
-
-  /// ostream operator
-  UTILITIES_API std::ostream& operator<<(std::ostream& os, const std::vector<Point3d>& pointVector);
-
-  // optional Point3d
-  typedef boost::optional<Point3d> OptionalPoint3d;
-
-  // vector of Point3d
-  typedef std::vector<Point3d> Point3dVector;
-
-  // vector of Point3dVector
-  typedef std::vector<Point3dVector> Point3dVectorVector;
 
 } // openstudio
 
-#endif //UTILITIES_GEOMETRY_POINT3D_HPP
+#endif //UTILITIES_GEOMETRY_FLOORPLANJS_HPP

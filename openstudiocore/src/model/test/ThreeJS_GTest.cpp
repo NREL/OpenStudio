@@ -26,76 +26,72 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
 
-#ifndef UTILITIES_GEOMETRY_POINT3D_HPP
-#define UTILITIES_GEOMETRY_POINT3D_HPP
+#include <gtest/gtest.h>
 
-#include "../UtilitiesAPI.hpp"
-#include "../data/Vector.hpp"
-#include "../core/Logger.hpp"
+#include "ModelFixture.hpp"
 
-#include <vector>
-#include <boost/optional.hpp>
+#include "../ThreeJS.hpp"
+#include "../Model.hpp"
+#include "../Space.hpp"
+#include "../Space_Impl.hpp"
+#include "../Surface.hpp"
+#include "../Surface_Impl.hpp"
 
-namespace openstudio{
+#include "../../utilities/geometry/ThreeJS.hpp"
+#include "../../utilities/geometry/FloorplanJS.hpp"
 
-  // forward declaration
-  class Vector3d;
+using namespace openstudio;
+using namespace openstudio::model;
 
-  class UTILITIES_API Point3d{
-  public:
+TEST_F(ModelFixture,ThreeJS_ExampleModel) {
+  Model model = exampleModel();
+  model.save(resourcesPath() / toPath("model/exampleModel.osm"), true);
 
-    /// default constructor creates point at 0, 0, 0
-    Point3d();
+  // triangulated, for display
+  ThreeScene scene = modelToThreeJS(model, true);
+  std::string json = scene.toJSON();
+  EXPECT_TRUE(ThreeScene::load(json));
 
-    /// constructor with x, y, z
-    Point3d(double x, double y, double z);
+  // not triangulated, for model transport/translation
+  scene = modelToThreeJS(model, false);
+  json = scene.toJSON();
+  EXPECT_TRUE(ThreeScene::load(json));
 
-    /// copy constructor
-    Point3d(const Point3d& other);
+  boost::optional<Model> model2 = modelFromThreeJS(scene);
+  ASSERT_TRUE(model2);
 
-    /// get x
-    double x() const;
+  model2->save(resourcesPath() / toPath("model/ThreeJS_ExampleModel.osm"), true);
 
-    /// get y
-    double y() const;
+  EXPECT_EQ(model.getConcreteModelObjects<Space>().size(), model2->getConcreteModelObjects<Space>().size());
+  EXPECT_EQ(model.getConcreteModelObjects<Surface>().size(), model2->getConcreteModelObjects<Surface>().size());
+}
 
-    /// get z
-    double z() const;
+TEST_F(ModelFixture,ThreeJS_FloorplanJS) {
+  openstudio::path p = resourcesPath() / toPath("utilities/Geometry/floorplan.json");
+  ASSERT_TRUE(exists(p));
 
-    /// point plus a vector is a new point
-    Point3d operator+(const Vector3d& vec) const;
+  boost::optional<FloorplanJS> floorPlan = FloorplanJS::load(toString(p));
+  ASSERT_TRUE(floorPlan);
 
-    /// point plus a vector is a new point
-    Point3d& operator+=(const Vector3d& vec);
+  // triangulated, for display
+  ThreeScene scene = floorPlan->toThreeScene(false);
+  std::string json = scene.toJSON();
+  EXPECT_TRUE(ThreeScene::load(json));
 
-    /// point minus another point is a vector
-    Vector3d operator-(const Point3d& other) const;
+  // not triangulated, for model transport/translation
+  scene = floorPlan->toThreeScene(true);
+  json = scene.toJSON();
+  EXPECT_TRUE(ThreeScene::load(json));
 
-    /// check equality
-    bool operator==(const Point3d& other) const;
+  boost::optional<Model> model = modelFromThreeJS(scene);
+  ASSERT_TRUE(model);
 
-  private:
+  model->save(resourcesPath() / toPath("model/ThreeJS_FloorplanJS.osm"), true);
 
-    REGISTER_LOGGER("utilities.Point3d");
-    Vector m_storage;
-
-  };
-
-  /// ostream operator
-  UTILITIES_API std::ostream& operator<<(std::ostream& os, const Point3d& point);
-
-  /// ostream operator
-  UTILITIES_API std::ostream& operator<<(std::ostream& os, const std::vector<Point3d>& pointVector);
-
-  // optional Point3d
-  typedef boost::optional<Point3d> OptionalPoint3d;
-
-  // vector of Point3d
-  typedef std::vector<Point3d> Point3dVector;
-
-  // vector of Point3dVector
-  typedef std::vector<Point3dVector> Point3dVectorVector;
-
-} // openstudio
-
-#endif //UTILITIES_GEOMETRY_POINT3D_HPP
+  openstudio::path out = resourcesPath() / toPath("model/ThreeJS_FloorplanJS.json");
+  json = scene.toJSON(true);
+  openstudio::filesystem::ofstream file(out);
+  ASSERT_TRUE(file.is_open());
+  file << json;
+  file.close();
+}

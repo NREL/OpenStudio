@@ -26,76 +26,48 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
 
-#ifndef UTILITIES_GEOMETRY_POINT3D_HPP
-#define UTILITIES_GEOMETRY_POINT3D_HPP
+#ifndef OPENSTUDIO_GEOMETRYTABCONTROLLER_HPP
+#define OPENSTUDIO_GEOMETRYTABCONTROLLER_HPP
 
-#include "../UtilitiesAPI.hpp"
-#include "../data/Vector.hpp"
-#include "../core/Logger.hpp"
+#include "MainTabController.hpp"
 
-#include <vector>
-#include <boost/optional.hpp>
+namespace openstudio {
 
-namespace openstudio{
+class GeometryPreviewController;
+class GeometryEditorController;
 
-  // forward declaration
-  class Vector3d;
+class GeometryTabController : public MainTabController
+{
+  Q_OBJECT
 
-  class UTILITIES_API Point3d{
   public:
 
-    /// default constructor creates point at 0, 0, 0
-    Point3d();
+    GeometryTabController(bool isIP, const openstudio::model::Model& model);
 
-    /// constructor with x, y, z
-    Point3d(double x, double y, double z);
+    virtual ~GeometryTabController();
 
-    /// copy constructor
-    Point3d(const Point3d& other);
-
-    /// get x
-    double x() const;
-
-    /// get y
-    double y() const;
-
-    /// get z
-    double z() const;
-
-    /// point plus a vector is a new point
-    Point3d operator+(const Vector3d& vec) const;
-
-    /// point plus a vector is a new point
-    Point3d& operator+=(const Vector3d& vec);
-
-    /// point minus another point is a vector
-    Vector3d operator-(const Point3d& other) const;
-
-    /// check equality
-    bool operator==(const Point3d& other) const;
+    enum TabID
+    {
+      PREVIEW,
+      EDITOR
+    };
 
   private:
 
-    REGISTER_LOGGER("utilities.Point3d");
-    Vector m_storage;
+    model::Model m_model;
 
-  };
+    bool m_isIP;
 
-  /// ostream operator
-  UTILITIES_API std::ostream& operator<<(std::ostream& os, const Point3d& point);
+    QObject * m_currentController = nullptr;
 
-  /// ostream operator
-  UTILITIES_API std::ostream& operator<<(std::ostream& os, const std::vector<Point3d>& pointVector);
+    int m_currentIndex = -1;
 
-  // optional Point3d
-  typedef boost::optional<Point3d> OptionalPoint3d;
+  public slots:
 
-  // vector of Point3d
-  typedef std::vector<Point3d> Point3dVector;
+    virtual void setSubTab(int index) override;
 
-  // vector of Point3dVector
-  typedef std::vector<Point3dVector> Point3dVectorVector;
+};
 
 } // openstudio
 
-#endif //UTILITIES_GEOMETRY_POINT3D_HPP
+#endif // OPENSTUDIO_GEOMETRYTABCONTROLLER_HPP

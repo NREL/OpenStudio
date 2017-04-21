@@ -26,76 +26,36 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
 
-#ifndef UTILITIES_GEOMETRY_POINT3D_HPP
-#define UTILITIES_GEOMETRY_POINT3D_HPP
+#include <gtest/gtest.h>
+#include "GeometryFixture.hpp"
 
-#include "../UtilitiesAPI.hpp"
-#include "../data/Vector.hpp"
-#include "../core/Logger.hpp"
+#include "../ThreeJS.hpp"
 
-#include <vector>
-#include <boost/optional.hpp>
+#include <resources.hxx>
 
-namespace openstudio{
+using namespace openstudio;
 
-  // forward declaration
-  class Vector3d;
+TEST_F(GeometryFixture, ThreeJS)
+{
+  openstudio::path p = resourcesPath() / toPath("utilities/Geometry/threejs.json");
+  ASSERT_TRUE(exists(p));
 
-  class UTILITIES_API Point3d{
-  public:
+  std::ifstream ifs(toString(p));
+  EXPECT_TRUE(ifs.is_open());
 
-    /// default constructor creates point at 0, 0, 0
-    Point3d();
+  std::istreambuf_iterator<char> eos;
+  std::string contents(std::istreambuf_iterator<char>(ifs), eos);
+  ifs.close();
+  EXPECT_FALSE(contents.empty());
 
-    /// constructor with x, y, z
-    Point3d(double x, double y, double z);
+  boost::optional<ThreeScene> scene = ThreeScene::load(contents);
+  ASSERT_TRUE(scene);
 
-    /// copy constructor
-    Point3d(const Point3d& other);
+  scene = ThreeScene::load(toString(p));
+  ASSERT_TRUE(scene);
 
-    /// get x
-    double x() const;
+  std::string json = scene->toJSON();
 
-    /// get y
-    double y() const;
-
-    /// get z
-    double z() const;
-
-    /// point plus a vector is a new point
-    Point3d operator+(const Vector3d& vec) const;
-
-    /// point plus a vector is a new point
-    Point3d& operator+=(const Vector3d& vec);
-
-    /// point minus another point is a vector
-    Vector3d operator-(const Point3d& other) const;
-
-    /// check equality
-    bool operator==(const Point3d& other) const;
-
-  private:
-
-    REGISTER_LOGGER("utilities.Point3d");
-    Vector m_storage;
-
-  };
-
-  /// ostream operator
-  UTILITIES_API std::ostream& operator<<(std::ostream& os, const Point3d& point);
-
-  /// ostream operator
-  UTILITIES_API std::ostream& operator<<(std::ostream& os, const std::vector<Point3d>& pointVector);
-
-  // optional Point3d
-  typedef boost::optional<Point3d> OptionalPoint3d;
-
-  // vector of Point3d
-  typedef std::vector<Point3d> Point3dVector;
-
-  // vector of Point3dVector
-  typedef std::vector<Point3dVector> Point3dVectorVector;
-
-} // openstudio
-
-#endif //UTILITIES_GEOMETRY_POINT3D_HPP
+  scene = ThreeScene::load(toString(p));
+  ASSERT_TRUE(scene);
+}

@@ -32,6 +32,8 @@ set(${target_name}_src
   ModelObjectList.cpp
   FileOperations.hpp
   FileOperations.cpp
+  ThreeJS.hpp
+  ThreeJS.cpp
   
   ConcreteModelObjects.hpp
   AirConditionerVariableRefrigerantFlow.hpp
@@ -1712,6 +1714,7 @@ set(${target_name}_test_src
   test/ThermalStorageIceDetailed_GTest.cpp
   test/ThermalStorageChilledWaterStratified_GTest.cpp
   test/TemperingValve_GTest.cpp
+  test/ThreeJS_GTest.cpp
   test/UtilityBill_GTest.cpp
   test/WaterHeaterMixed_GTest.cpp
   test/WaterHeaterHeatPump_GTest.cpp
@@ -1755,6 +1758,7 @@ if(BUILD_TESTING)
 
   add_dependencies("${target_name}_tests"
     openstudio_model_resources
+    openstudio_utilities_resources
   )
 
   # Compiler and system specific options

@@ -43,6 +43,8 @@ set(utilities_resources_src
   utilities/Filetypes/TUN_Tunis.607150_IWEC.epw
   utilities/Filetypes/min.osw
   utilities/Filetypes/full.osw
+  utilities/Geometry/floorplan.json
+  utilities/Geometry/threejs.json
   utilities/Idf/CommentTest.idf
   utilities/Idf/DosLineEndingTest.idf
   utilities/Idf/UnixLineEndingTest.idf

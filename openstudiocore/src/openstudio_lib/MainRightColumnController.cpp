@@ -29,6 +29,7 @@
 #include "MainRightColumnController.hpp"
 
 #include "ConstructionsTabController.hpp"
+#include "GeometryTabController.hpp"
 #include "HorizontalTabWidget.hpp"
 #include "InspectorController.hpp"
 #include "InspectorView.hpp"
@@ -519,6 +520,32 @@ void MainRightColumnController::configureForConstructionsSubTab(int subTabID)
       setLibraryView(myLibraryList);
 
       doc->openSidebar();
+      break;
+    }
+    default:
+      break;
+  }
+}
+
+
+void MainRightColumnController::configureForGeometrySubTab(int subTabID)
+{
+  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+
+  setLibraryView(nullptr);
+  setMyModelView(nullptr);
+  setEditView(nullptr);
+
+  switch( subTabID )
+  {
+    case GeometryTabController::PREVIEW:
+    {
+      doc->closeSidebar();
+      break;
+    }
+    case GeometryTabController::EDITOR:
+    {
+      doc->closeSidebar();
       break;
     }
     default:

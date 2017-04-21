@@ -26,76 +26,72 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
 
-#ifndef UTILITIES_GEOMETRY_POINT3D_HPP
-#define UTILITIES_GEOMETRY_POINT3D_HPP
+#ifndef OPENSTUDIO_GEOMETRYPREVIEWVIEW_HPP
+#define OPENSTUDIO_GEOMETRYPREVIEWVIEW_HPP
 
-#include "../UtilitiesAPI.hpp"
-#include "../data/Vector.hpp"
-#include "../core/Logger.hpp"
+#include "ModelObjectInspectorView.hpp"
+#include "ModelSubTabView.hpp"
 
-#include <vector>
-#include <boost/optional.hpp>
+#include "../model/Model.hpp"
 
-namespace openstudio{
+#include <QWidget>
+#include <QWebEngineView>
+#include <QProgressBar>
 
-  // forward declaration
-  class Vector3d;
+class QComboBox;
+class QPushButton;
 
-  class UTILITIES_API Point3d{
+namespace openstudio {
+
+class GeometryPreviewView : public QWidget
+{
+  Q_OBJECT
+
   public:
 
-    /// default constructor creates point at 0, 0, 0
-    Point3d();
+    GeometryPreviewView(bool isIP,
+                      const openstudio::model::Model& model,
+                      QWidget * parent = nullptr);
 
-    /// constructor with x, y, z
-    Point3d(double x, double y, double z);
-
-    /// copy constructor
-    Point3d(const Point3d& other);
-
-    /// get x
-    double x() const;
-
-    /// get y
-    double y() const;
-
-    /// get z
-    double z() const;
-
-    /// point plus a vector is a new point
-    Point3d operator+(const Vector3d& vec) const;
-
-    /// point plus a vector is a new point
-    Point3d& operator+=(const Vector3d& vec);
-
-    /// point minus another point is a vector
-    Vector3d operator-(const Point3d& other) const;
-
-    /// check equality
-    bool operator==(const Point3d& other) const;
+    virtual ~GeometryPreviewView();
 
   private:
 
-    REGISTER_LOGGER("utilities.Point3d");
-    Vector m_storage;
+};
 
-  };
+// main widget
 
-  /// ostream operator
-  UTILITIES_API std::ostream& operator<<(std::ostream& os, const Point3d& point);
+class PreviewWebView : public QWidget
+{
+  Q_OBJECT;
 
-  /// ostream operator
-  UTILITIES_API std::ostream& operator<<(std::ostream& os, const std::vector<Point3d>& pointVector);
+  public:
+    PreviewWebView(const openstudio::model::Model& model, QWidget *t_parent = nullptr);
+    virtual ~PreviewWebView();
 
-  // optional Point3d
-  typedef boost::optional<Point3d> OptionalPoint3d;
+  public slots:
+    void onUnitSystemChange(bool t_isIP);
 
-  // vector of Point3d
-  typedef std::vector<Point3d> Point3dVector;
+  private slots:
+    void refreshClicked();
 
-  // vector of Point3dVector
-  typedef std::vector<Point3dVector> Point3dVectorVector;
+    // DLM: for debugging
+    void 	onLoadFinished(bool ok);
+    void 	onLoadProgress(int progress);
+    void 	onLoadStarted();
+    void 	onRenderProcessTerminated(QWebEnginePage::RenderProcessTerminationStatus terminationStatus, int exitCode);
+  private:
+    REGISTER_LOGGER("openstudio::PreviewWebView");
+
+    bool m_isIP;
+    model::Model m_model;
+
+    QProgressBar * m_progressBar;
+    QPushButton * m_refreshBtn;
+
+    QWebEngineView * m_view;
+};
 
 } // openstudio
 
-#endif //UTILITIES_GEOMETRY_POINT3D_HPP
+#endif // OPENSTUDIO_GEOMETRYPREVIEWVIEW_HPP

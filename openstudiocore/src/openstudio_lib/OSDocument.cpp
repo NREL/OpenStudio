@@ -30,6 +30,7 @@
 
 #include "ApplyMeasureNowDialog.hpp"
 #include "ConstructionsTabController.hpp"
+#include "GeometryTabController.hpp"
 #include "FacilityTabController.hpp"
 #include "HorizontalTabWidget.hpp"
 #include "HVACSystemsTabController.hpp"
@@ -182,7 +183,7 @@ namespace openstudio {
     bool isConnected;
 
     m_verticalId = 0;
-    m_subTabIds = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+    m_subTabIds = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
     // Make sure that the vector is the same size as the number of tabs
     OS_ASSERT(m_subTabIds.size() == static_cast<unsigned>(RESULTS_SUMMARY + 1));
 
@@ -391,6 +392,13 @@ namespace openstudio {
       ":images/off_constructions_tab.png",
       ":images/disabled_constructions_tab.png");
 
+    // Geometry
+    m_mainWindow->addVerticalTabButton(GEOMETRY,
+      "Geometry",
+      ":images/on_geometry_tab.png",
+      ":images/off_geometry_tab.png",
+      ":images/disabled_geometry_tab.png");
+
     // Loads
     m_mainWindow->addVerticalTabButton(LOADS,
       "Loads",
@@ -537,6 +545,24 @@ namespace openstudio {
       connect(m_mainTabController.get(), &ConstructionsTabController::openLibDlgClicked, this, &OSDocument::openLibDlgClicked);
 
       connect(m_mainTabController->mainContentWidget(), &MainTabView::tabSelected, m_mainRightColumnController.get(), &MainRightColumnController::configureForConstructionsSubTab);
+
+      connect(m_mainTabController->mainContentWidget(), &MainTabView::tabSelected, this, &OSDocument::updateSubTabSelected);
+
+      break;
+
+    case GEOMETRY:
+      // Geometry
+
+      m_mainTabController = std::shared_ptr<MainTabController>(new GeometryTabController(isIP, m_model));
+      m_mainWindow->setView(m_mainTabController->mainContentWidget(), GEOMETRY);
+
+      connect(this, &OSDocument::toggleUnitsClicked, m_mainTabController.get(), &GeometryTabController::toggleUnitsClicked);
+
+      connect(m_mainTabController.get(), &GeometryTabController::downloadComponentsClicked, this, &OSDocument::downloadComponentsClicked);
+
+      connect(m_mainTabController.get(), &GeometryTabController::openLibDlgClicked, this, &OSDocument::openLibDlgClicked);
+
+      connect(m_mainTabController->mainContentWidget(), &MainTabView::tabSelected, m_mainRightColumnController.get(), &MainRightColumnController::configureForGeometrySubTab);
 
       connect(m_mainTabController->mainContentWidget(), &MainTabView::tabSelected, this, &OSDocument::updateSubTabSelected);
 

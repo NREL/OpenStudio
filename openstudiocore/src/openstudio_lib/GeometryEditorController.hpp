@@ -26,76 +26,34 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
 
-#ifndef UTILITIES_GEOMETRY_POINT3D_HPP
-#define UTILITIES_GEOMETRY_POINT3D_HPP
+#ifndef OPENSTUDIO_GEOMETRYEDITORCONTROLLER_HPP
+#define OPENSTUDIO_GEOMETRYEDITORCONTROLLER_HPP
 
-#include "../UtilitiesAPI.hpp"
-#include "../data/Vector.hpp"
-#include "../core/Logger.hpp"
+#include "../shared_gui_components/OSQObjectController.hpp"
 
-#include <vector>
-#include <boost/optional.hpp>
+namespace openstudio {
+namespace model{
+  class Model;
+}
 
-namespace openstudio{
+class GeometryEditorController : public OSQObjectController
+{
+  Q_OBJECT
 
-  // forward declaration
-  class Vector3d;
-
-  class UTILITIES_API Point3d{
   public:
 
-    /// default constructor creates point at 0, 0, 0
-    Point3d();
+    GeometryEditorController(bool isIP, const model::Model & model);
 
-    /// constructor with x, y, z
-    Point3d(double x, double y, double z);
+    virtual ~GeometryEditorController();
 
-    /// copy constructor
-    Point3d(const Point3d& other);
+    QWidget* view() const;
 
-    /// get x
-    double x() const;
+  protected:
 
-    /// get y
-    double y() const;
+    QWidget* m_view;
 
-    /// get z
-    double z() const;
-
-    /// point plus a vector is a new point
-    Point3d operator+(const Vector3d& vec) const;
-
-    /// point plus a vector is a new point
-    Point3d& operator+=(const Vector3d& vec);
-
-    /// point minus another point is a vector
-    Vector3d operator-(const Point3d& other) const;
-
-    /// check equality
-    bool operator==(const Point3d& other) const;
-
-  private:
-
-    REGISTER_LOGGER("utilities.Point3d");
-    Vector m_storage;
-
-  };
-
-  /// ostream operator
-  UTILITIES_API std::ostream& operator<<(std::ostream& os, const Point3d& point);
-
-  /// ostream operator
-  UTILITIES_API std::ostream& operator<<(std::ostream& os, const std::vector<Point3d>& pointVector);
-
-  // optional Point3d
-  typedef boost::optional<Point3d> OptionalPoint3d;
-
-  // vector of Point3d
-  typedef std::vector<Point3d> Point3dVector;
-
-  // vector of Point3dVector
-  typedef std::vector<Point3dVector> Point3dVectorVector;
+};
 
 } // openstudio
 
-#endif //UTILITIES_GEOMETRY_POINT3D_HPP
+#endif // OPENSTUDIO_GEOMETRYEDITORCONTROLLER_HPP
