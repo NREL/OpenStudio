@@ -34,6 +34,8 @@
 #include "Path.hpp"
 #include "Compare.hpp"
 
+#include <jsoncpp/json.h>
+
 #include <QVariant>
 
 #include <string>
@@ -41,7 +43,6 @@
 
 namespace Json{
   class Value;
-  enum ValueType;
 }
 
 namespace openstudio {
