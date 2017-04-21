@@ -54,8 +54,14 @@
 %template(PlaneVector) std::vector<openstudio::Plane>;
 %template(EulerAnglesVector) std::vector<openstudio::EulerAngles>;
 %template(BoundingBoxVector) std::vector<openstudio::BoundingBox>;
+%ignore std::vector<openstudio::ThreeSceneChild>::vector(size_type);
+%ignore std::vector<openstudio::ThreeSceneChild>::resize(size_type);
 %template(ThreeSceneChildVector) std::vector<openstudio::ThreeSceneChild>;
+%ignore std::vector<openstudio::ThreeGeometry>::vector(size_type);
+%ignore std::vector<openstudio::ThreeGeometry>::resize(size_type);
 %template(ThreeGeometryVector) std::vector<openstudio::ThreeGeometry>;
+%ignore std::vector<openstudio::ThreeMaterial>::vector(size_type);
+%ignore std::vector<openstudio::ThreeMaterial>::resize(size_type);
 %template(ThreeMaterialVector) std::vector<openstudio::ThreeMaterial>;
 
 %ignore openstudio::operator<<;
