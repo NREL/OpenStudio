@@ -202,6 +202,52 @@ Model ReverseTranslator::translateWorkspace(const Workspace & workspace, Progres
   return m_model;
 }
 
+
+Model ReverseTranslator::translateDdyWorkspace(const Workspace & workspace, ProgressBar* progressBar) {
+  // check input
+  if (workspace.iddFileType() != IddFileType::EnergyPlus) {
+    LOG(Error, "Cannot translate Workspace with IddFileType = '" << workspace.iddFileType().valueName() << "'");
+    return Model();
+  }
+
+  m_model = Model();
+  m_model.setFastNaming(true);
+
+  m_workspace = workspace.clone();
+
+  m_workspaceToModelMap.clear();
+
+  m_untranslatedIdfObjects.clear();
+
+  m_logSink.resetStringStream();
+
+  m_logSink.setChannelRegex(boost::regex("openstudio\\.energyplus\\.ReverseTranslator"));
+
+  m_progressBar = progressBar;
+  if (m_progressBar){
+    m_progressBar->setMinimum(0);
+    m_progressBar->setMaximum(workspace.numObjects());
+  }
+
+  // look for site object in workspace and translate if found
+  LOG(Trace, "Translating Site:Location object.");
+  vector<WorkspaceObject> site = m_workspace.getObjectsByType(IddObjectType::Site_Location);
+  for (auto & elem : site) {
+    translateAndMapWorkspaceObject(elem);
+  }
+
+  // look for design day object in workspace and translate if found
+  LOG(Trace, "Translating SizingPeriod:DesignDay object.");
+  vector<WorkspaceObject> sizing = m_workspace.getObjectsByType(IddObjectType::SizingPeriod_DesignDay);
+  for (auto & elem : sizing) {
+    translateAndMapWorkspaceObject(elem);
+  }
+  
+  LOG(Trace, "Ddy file translation nominally complete.");
+  m_model.setFastNaming(false);
+  return m_model;
+}
+
 std::vector<LogMessage> ReverseTranslator::warnings() const
 {
   std::vector<LogMessage> result;
@@ -1007,6 +1053,16 @@ boost::optional<openstudio::model::Model> loadAndTranslateIdf(const openstudio::
   if (workspace){
     ReverseTranslator rt;
     result = rt.translateWorkspace(*workspace);
+  }
+  return result;
+}
+
+boost::optional<openstudio::model::Model> loadAndTranslateDdy(const openstudio::path& path) {
+  boost::optional<openstudio::model::Model> result;
+  boost::optional<openstudio::Workspace> workspace = openstudio::Workspace::load(path);
+  if (workspace) {
+    ReverseTranslator rt;
+    result = rt.translateDdyWorkspace(*workspace);
   }
   return result;
 }
