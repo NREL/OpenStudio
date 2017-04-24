@@ -52,67 +52,13 @@ class SizingZone;
 class PortList;
 class ZoneMixing;
 class ZoneHVACEquipmentList;
+class AirflowNetworkZone;
 
 namespace detail {
 
   /** ThermalZone_Impl is a HVACComponent_Impl that is the implementation class for ThermalZone.*/
   class MODEL_API ThermalZone_Impl : public HVACComponent_Impl {
-    
 
-    
-    
-    
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-        
-    
-    
-    
-    
-        
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -198,6 +144,8 @@ namespace detail {
     Quantity getFractionofZoneControlledbySecondaryDaylightingControl(bool returnIP=false) const;
 
     bool isFractionofZoneControlledbySecondaryDaylightingControlDefaulted() const;
+
+    boost::optional<AirflowNetworkZone> airflowNetworkZone() const;
 
     //@}
     /** @name Setters */

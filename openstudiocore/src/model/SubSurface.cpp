@@ -1103,7 +1103,7 @@ namespace detail {
     std::vector<AirflowNetworkSurface> myAFNSurfs = getObject<ModelObject>().getModelObjectSources<AirflowNetworkSurface>(AirflowNetworkSurface::iddObjectType());
     auto count = myAFNSurfs.size();
     if (count == 1) {
-      return boost::optional<AirflowNetworkSurface>(myAFNSurfs[0]);
+      return myAFNSurfs[0];
     } else if (count > 1) {
       LOG(Warn, briefDescription() << " has more than one AirflowNetwork Surface attached, returning first.");
       return myAFNSurfs[0];

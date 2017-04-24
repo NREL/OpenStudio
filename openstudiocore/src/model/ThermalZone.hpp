@@ -50,6 +50,7 @@ class ZoneControlHumidistat;
 class SizingZone;
 class PortList;
 class ZoneMixing;
+class AirflowNetworkZone;
 
 namespace detail {
 
@@ -125,6 +126,8 @@ class MODEL_API ThermalZone : public HVACComponent {
   bool isFractionofZoneControlledbySecondaryDaylightingControlDefaulted() const;
 
   SizingZone sizingZone() const;
+
+  boost::optional<AirflowNetworkZone> airflowNetworkZone() const;
 
   //@}
   /** @name Setters */

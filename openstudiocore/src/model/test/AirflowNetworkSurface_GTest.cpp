@@ -172,19 +172,20 @@ TEST_F(ModelFixture, AirflowNetwork_Surface_Clone) {
   ASSERT_TRUE(afnsurf.leakageComponent());
   EXPECT_EQ(crack, afnsurf.leakageComponent().get());
 
-  // clone should maintain connection to Construction
+  // clone should copy the AFN surface
   Surface clone1 = surface.clone().cast<Surface>();
-  //ASSERT_TRUE(clone1.model() == surface.model());
-  //ASSERT_TRUE(clone1.construction());
-  //EXPECT_TRUE(clone1.construction().get() == construction);
+  boost::optional<AirflowNetworkSurface> optsurf1 = clone1.airflowNetworkSurface();
+  ASSERT_TRUE(optsurf1);
+  ASSERT_TRUE(optsurf1.get().leakageComponent());
+  EXPECT_EQ(crack, optsurf1.get().leakageComponent().get());
 
   // even if through ModelObject
   Surface clone2 = surface.cast<ModelObject>().clone().cast<Surface>();
-  //ASSERT_TRUE(clone2.model() == surface.model());
-  //ASSERT_TRUE(clone2.construction());
-  //EXPECT_TRUE(clone2.construction().get() == construction);
+  boost::optional<AirflowNetworkSurface> optsurf2 = clone2.airflowNetworkSurface();
+  ASSERT_TRUE(optsurf2);
+  ASSERT_TRUE(optsurf2.get().leakageComponent());
+  EXPECT_EQ(crack, optsurf2.get().leakageComponent().get());
 
-  EXPECT_TRUE(false);
 }
 
 TEST_F(ModelFixture, AirflowNetwork_AdjacentSurface)

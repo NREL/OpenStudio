@@ -332,15 +332,12 @@ namespace detail {
 
 } // detail
 
-AirflowNetworkZone::AirflowNetworkZone(const Model& model)
+AirflowNetworkZone::AirflowNetworkZone(const Model& model, const ThermalZone& thermalZone)
   : AirflowNetworkNode(AirflowNetworkZone::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::AirflowNetworkZone_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_AirflowNetworkZoneFields::ThermalZoneName
-  bool ok = true;
-  // ok = setThermalZone();
+  bool ok = setThermalZone(thermalZone);
   OS_ASSERT(ok);
 }
 

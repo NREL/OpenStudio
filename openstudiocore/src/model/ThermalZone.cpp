@@ -100,6 +100,8 @@
 #include "SetpointManagerSingleZoneHeating_Impl.hpp"
 #include "ZoneMixing.hpp"
 #include "ZoneMixing_Impl.hpp"
+#include "AirflowNetworkZone.hpp"
+#include "AirflowNetworkZone_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
@@ -163,6 +165,11 @@ namespace detail {
     // remove once we have gridview for these
     for (const auto& mixing : supplyZoneMixing()){
       result.push_back(mixing);
+    }
+
+    boost::optional<AirflowNetworkZone> afnz = airflowNetworkZone();
+    if (afnz) {
+      result.push_back(afnz.get());
     }
 
     return result;
@@ -2448,6 +2455,19 @@ namespace detail {
     }
   }
 
+  boost::optional<AirflowNetworkZone> ThermalZone_Impl::airflowNetworkZone() const
+  {
+    std::vector<AirflowNetworkZone> myAFNZones = getObject<ModelObject>().getModelObjectSources<AirflowNetworkZone>(AirflowNetworkZone::iddObjectType());
+    auto count = myAFNZones.size();
+    if (count == 1) {
+      return myAFNZones[0];
+    } else if (count > 1) {
+      LOG(Warn, briefDescription() << " has more than one AirflowNetwork Zone attached, returning first.");
+      return myAFNZones[0];
+    }
+    return boost::none;
+  }
+
 } // detail
 
 ThermalZone::ThermalZone(const Model& model)
@@ -3037,6 +3057,11 @@ bool ThermalZone::setZoneControlContaminantController(const ZoneControlContamina
 void ThermalZone::resetZoneControlContaminantController()
 {
   getImpl<detail::ThermalZone_Impl>()->resetZoneControlContaminantController();
+}
+
+boost::optional<AirflowNetworkZone> ThermalZone::airflowNetworkZone() const
+{
+  return getImpl<detail::ThermalZone_Impl>()->airflowNetworkZone();
 }
 
 /// @cond

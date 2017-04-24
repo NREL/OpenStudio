@@ -54,8 +54,8 @@ class MODEL_API AirflowNetworkZone : public AirflowNetworkNode {
  public:
   /** @name Constructors and Destructors */
   //@{
-
-  explicit AirflowNetworkZone(const Model& model);
+  /** Construct an airflow zone attached to a model thermal zone. */
+  AirflowNetworkZone(const Model& model, const ThermalZone& thermalZone);
 
   virtual ~AirflowNetworkZone() {}
 
@@ -70,104 +70,102 @@ class MODEL_API AirflowNetworkZone : public AirflowNetworkNode {
   /** @name Getters */
   //@{
 
-  // TODO: Check return type. From object lists, some candidates are: ThermalZone.
+  /** Returns the associated thermal zone. */
   ThermalZone thermalZone() const;
-
+  /** Returns the ventilation control mode. */
   std::string ventilationControlMode() const;
-
+  /** Returns true if the ventilation control mode is defaulted. */
   bool isVentilationControlModeDefaulted() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
+  /** Returns the ventilation control zone temperature setpoint schedule, if any. */
   boost::optional<Schedule> ventilationControlZoneTemperatureSetpointSchedule() const;
-
+  /** Returns the minimum venting open factor. */
   double minimumVentingOpenFactor() const;
-
+  /** Returns true if the minimum venting open factor is defaulted. */
   bool isMinimumVentingOpenFactorDefaulted() const;
-
+  /** Returns the temperature difference lower limit for maximum venting factor. */
   double indoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor() const;
-
+  /** Returns true if the temperature difference lower limit for maximum venting factor is defaulted. */
   bool isIndoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactorDefaulted() const;
-
+  /** Returns the temperature difference upper limit for minimum venting factor. */
   double indoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactor() const;
-
+  /** Returns true if the temperature difference upper limit for minimum venting factor is defaulted. */
   bool isIndoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactorDefaulted() const;
-
+  /** Returns the enthalpy difference lower limit for maximum venting factor. */
   double indoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor() const;
-
+  /** Returns true if the enthalpy difference lower limit for maximum venting factor is defaulted. */
   bool isIndoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactorDefaulted() const;
-
+  /** Returns the enthalpy difference upper limit for minimum venting factor. */
   double indoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor() const;
-
+  /** Returns true if the enthalpy difference upper limit for minimum venting factor is defaulted. */
   bool isIndoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactorDefaulted() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
+  /** Returns the venting availability schedule, if any. */
   boost::optional<Schedule> ventingAvailabilitySchedule() const;
-
+  /** Returns the single sided wind pressure algorithm. */
   std::string singleSidedWindPressureCoefficientAlgorithm() const;
-
+  /** Returns true if the single sided wind pressure algorithm is defaulted. */
   bool isSingleSidedWindPressureCoefficientAlgorithmDefaulted() const;
-
+  /** Returns the single sided wind pressure algorithm facade width. */
   double facadeWidth() const;
-
+  /** Returns true if the single sided wind pressure algorithm facade width is defaulted. */
   bool isFacadeWidthDefaulted() const;
 
-  // TODO: Check return type. From object lists, some candidates are: AirflowNetworkOccupantVentilationControl.
+  /** Returns the occupant ventilation control object for this zone, if any. */
   boost::optional<AirflowNetworkOccupantVentilationControl> occupantVentilationControl() const;
 
   //@}
   /** @name Setters */
   //@{
 
-  // TODO: Check argument type. From object lists, some candidates are: ThermalZone.
+  /** Sets the thermal zone. */
   bool setThermalZone(const ThermalZone& thermalZone);
-
+  /** Sets the ventilation control mode. */
   bool setVentilationControlMode(const std::string& ventilationControlMode);
-
+  /** Resets the ventilation control mode. */
   void resetVentilationControlMode();
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
-  // Note Schedules are passed by reference, not const reference.
+  /** Sets the ventilation control zone temperature setpoint schedule. */
   bool setVentilationControlZoneTemperatureSetpointSchedule(Schedule& schedule);
-
+  /** Resets the ventilation control zone temperature setpoint schedule. */
   void resetVentilationControlZoneTemperatureSetpointSchedule();
-
+  /** Sets the minimum venting open factor. */
   bool setMinimumVentingOpenFactor(double minimumVentingOpenFactor);
-
+  /** Resets the minimum venting open factor. */
   void resetMinimumVentingOpenFactor();
-
+  /** Sets the temperature difference lower limit for maximum venting factor. */
   bool setIndoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor(double indoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor);
-
+  /** Resets the temperature difference lower limit for maximum venting factor. */
   void resetIndoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor();
-
+  /** Sets the temperature difference upper limit for minimum venting factor. */
   bool setIndoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactor(double indoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactor);
-
+  /** Resets the temperature difference upper limit for minimum venting factor. */
   void resetIndoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactor();
-
+  /** Sets the enthalpy difference lower limit for maximum venting factor. */
   bool setIndoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor(double indoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor);
-
+  /** Resets the enthalpy difference lower limit for maximum venting factor. */
   void resetIndoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor();
-
+  /** Sets the enthalphy difference upper limit for minimum venting factor. */
   bool setIndoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor(double indoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor);
-
+  /** Resets the enthalphy difference upper limit for minimum venting factor. */
   void resetIndoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor();
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
-  // Note Schedules are passed by reference, not const reference.
+  /** Sets the venting availability schedule. */
   bool setVentingAvailabilitySchedule(Schedule& schedule);
-
+  /** Resets the venting availability schedule. */
   void resetVentingAvailabilitySchedule();
-
+  /** Sets the single sided wind pressure algorithm. */
   bool setSingleSidedWindPressureCoefficientAlgorithm(const std::string& singleSidedWindPressureCoefficientAlgorithm);
-
+  /** Resets the single sided wind pressure algorithm. */
   void resetSingleSidedWindPressureCoefficientAlgorithm();
-
+  /** Sets the single sided wind pressure algorithm facade width. */
   bool setFacadeWidth(double facadeWidth);
-
+  /** Resets the single sided wind pressure algorithm facade width. */
   void resetFacadeWidth();
 
-  // TODO: Check argument type. From object lists, some candidates are: AirflowNetworkOccupantVentilationControl.
+  /** Sets the occupant ventilation control object for this zone. */
   bool setOccupantVentilationControl(const AirflowNetworkOccupantVentilationControl& airflowNetworkOccupantVentilationControl);
-
+  /** Resets the occupant ventilation control object. */
   void resetOccupantVentilationControl();
 
   //@}
