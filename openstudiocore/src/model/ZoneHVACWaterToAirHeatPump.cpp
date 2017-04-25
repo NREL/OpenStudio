@@ -431,6 +431,10 @@ namespace detail {
     }
     return result;
   }
+  bool ZoneHVACWaterToAirHeatPump_Impl::setSupplyAirFlowRateDuringCoolingOperation(double supplyAirFlowRateDuringCoolingOperation)   {
+    return setDouble(OS_ZoneHVAC_WaterToAirHeatPumpFields::SupplyAirFlowRateDuringCoolingOperation, supplyAirFlowRateDuringCoolingOperation);
+  }
+
 
   void ZoneHVACWaterToAirHeatPump_Impl::resetSupplyAirFlowRateDuringCoolingOperation() {
     bool result = setString(OS_ZoneHVAC_WaterToAirHeatPumpFields::SupplyAirFlowRateDuringCoolingOperation, "");
@@ -449,6 +453,10 @@ namespace detail {
     }
     return result;
   }
+  bool ZoneHVACWaterToAirHeatPump_Impl::setSupplyAirFlowRateDuringHeatingOperation(double supplyAirFlowRateDuringHeatingOperation)   {
+    return setDouble(OS_ZoneHVAC_WaterToAirHeatPumpFields::SupplyAirFlowRateDuringHeatingOperation, supplyAirFlowRateDuringHeatingOperation);
+  }
+
  
   void ZoneHVACWaterToAirHeatPump_Impl::resetSupplyAirFlowRateDuringHeatingOperation() {
     bool result = setString(OS_ZoneHVAC_WaterToAirHeatPumpFields::SupplyAirFlowRateDuringHeatingOperation, "");
@@ -471,6 +479,10 @@ namespace detail {
     }
     return result;
   }
+  bool ZoneHVACWaterToAirHeatPump_Impl::setSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded(double supplyAirFlowRateWhenNoCoolingorHeatingisNeeded)   {
+    return setDouble(OS_ZoneHVAC_WaterToAirHeatPumpFields::SupplyAirFlowRateWhenNoCoolingorHeatingisNeeded, supplyAirFlowRateWhenNoCoolingorHeatingisNeeded);
+  }
+
 
   void ZoneHVACWaterToAirHeatPump_Impl::resetSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded() {
     bool result = setString(OS_ZoneHVAC_WaterToAirHeatPumpFields::SupplyAirFlowRateWhenNoCoolingorHeatingisNeeded, "");
@@ -489,6 +501,10 @@ namespace detail {
     }
     return result;
   }
+  bool ZoneHVACWaterToAirHeatPump_Impl::setOutdoorAirFlowRateDuringCoolingOperation(double outdoorAirFlowRateDuringCoolingOperation) {
+    return setDouble(OS_ZoneHVAC_WaterToAirHeatPumpFields::OutdoorAirFlowRateDuringCoolingOperation, outdoorAirFlowRateDuringCoolingOperation);
+  }
+
 
   void ZoneHVACWaterToAirHeatPump_Impl::resetOutdoorAirFlowRateDuringCoolingOperation() {
     bool result = setString(OS_ZoneHVAC_WaterToAirHeatPumpFields::OutdoorAirFlowRateDuringCoolingOperation, "");
@@ -507,6 +523,10 @@ namespace detail {
     }
     return result;
   }
+  bool ZoneHVACWaterToAirHeatPump_Impl::setOutdoorAirFlowRateDuringHeatingOperation(double outdoorAirFlowRateDuringHeatingOperation) {
+    return setDouble(OS_ZoneHVAC_WaterToAirHeatPumpFields::OutdoorAirFlowRateDuringHeatingOperation, outdoorAirFlowRateDuringHeatingOperation);
+  }
+
 
   void ZoneHVACWaterToAirHeatPump_Impl::resetOutdoorAirFlowRateDuringHeatingOperation() {
     bool result = setString(OS_ZoneHVAC_WaterToAirHeatPumpFields::OutdoorAirFlowRateDuringHeatingOperation, "");
@@ -529,6 +549,10 @@ namespace detail {
     }
     return result;
   }
+  bool ZoneHVACWaterToAirHeatPump_Impl::setOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded(double outdoorAirFlowRateWhenNoCoolingorHeatingisNeeded)  {
+    result = setDouble(OS_ZoneHVAC_WaterToAirHeatPumpFields::OutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded, outdoorAirFlowRateWhenNoCoolingorHeatingisNeeded);
+  }
+
  
  void ZoneHVACWaterToAirHeatPump_Impl::resetOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() {
     bool result = setString(OS_ZoneHVAC_WaterToAirHeatPumpFields::OutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded, "");
@@ -557,6 +581,11 @@ namespace detail {
     bool result = setDouble(OS_ZoneHVAC_WaterToAirHeatPumpFields::MaximumCyclingRate, maximumCyclingRate.get());
     return result;
   }
+  bool ZoneHVACWaterToAirHeatPump_Impl::setMaximumCyclingRate(double maximumCyclingRate) {
+    bool result = setDouble(OS_ZoneHVAC_WaterToAirHeatPumpFields::MaximumCyclingRate, maximumCyclingRate);
+    return result;
+  }
+
 
   void ZoneHVACWaterToAirHeatPump_Impl::resetMaximumCyclingRate() {
     bool result = setString(OS_ZoneHVAC_WaterToAirHeatPumpFields::MaximumCyclingRate, "");
@@ -565,6 +594,10 @@ namespace detail {
 
   bool ZoneHVACWaterToAirHeatPump_Impl::setHeatPumpTimeConstant(boost::optional<double> heatPumpTimeConstant) {
     bool result = setDouble(OS_ZoneHVAC_WaterToAirHeatPumpFields::HeatPumpTimeConstant, heatPumpTimeConstant.get());
+    return result;
+  }
+  bool ZoneHVACWaterToAirHeatPump_Impl::setHeatPumpTimeConstant(double heatPumpTimeConstant) {
+    bool result = setDouble(OS_ZoneHVAC_WaterToAirHeatPumpFields::HeatPumpTimeConstant, heatPumpTimeConstant);
     return result;
   }
 
@@ -577,6 +610,11 @@ namespace detail {
     bool result = setDouble(OS_ZoneHVAC_WaterToAirHeatPumpFields::FractionofOnCyclePowerUse, fractionofOnCyclePowerUse.get());
     return result;
   }
+  bool ZoneHVACWaterToAirHeatPump_Impl::setFractionofOnCyclePowerUse(double fractionofOnCyclePowerUse) {
+    bool result = setDouble(OS_ZoneHVAC_WaterToAirHeatPumpFields::FractionofOnCyclePowerUse, fractionofOnCyclePowerUse);
+    return result;
+  }
+
 
   void ZoneHVACWaterToAirHeatPump_Impl::resetFractionofOnCyclePowerUse() {
     bool result = setString(OS_ZoneHVAC_WaterToAirHeatPumpFields::FractionofOnCyclePowerUse, "");
@@ -587,6 +625,11 @@ namespace detail {
     bool result = setDouble(OS_ZoneHVAC_WaterToAirHeatPumpFields::HeatPumpFanDelayTime, heatPumpFanDelayTime.get());
     return result;
   }
+  bool ZoneHVACWaterToAirHeatPump_Impl::setHeatPumpFanDelayTime(double heatPumpFanDelayTime) {
+    bool result = setDouble(OS_ZoneHVAC_WaterToAirHeatPumpFields::HeatPumpFanDelayTime, heatPumpFanDelayTime);
+    return result;
+  }
+
 
   void ZoneHVACWaterToAirHeatPump_Impl::resetHeatPumpFanDelayTime() {
     bool result = setString(OS_ZoneHVAC_WaterToAirHeatPumpFields::HeatPumpFanDelayTime, "");
@@ -605,6 +648,10 @@ namespace detail {
     }
     return result;
   }
+  bool ZoneHVACWaterToAirHeatPump_Impl::setMaximumSupplyAirTemperaturefromSupplementalHeater(double maximumSupplyAirTemperaturefromSupplementalHeater) {
+    return setDouble(OS_ZoneHVAC_WaterToAirHeatPumpFields::MaximumSupplyAirTemperaturefromSupplementalHeater, maximumSupplyAirTemperaturefromSupplementalHeater);
+  }
+
 
   void ZoneHVACWaterToAirHeatPump_Impl::resetMaximumSupplyAirTemperaturefromSupplementalHeater() {
     bool result = setString(OS_ZoneHVAC_WaterToAirHeatPumpFields::MaximumSupplyAirTemperaturefromSupplementalHeater,"");
@@ -620,6 +667,11 @@ namespace detail {
     bool result = setDouble(OS_ZoneHVAC_WaterToAirHeatPumpFields::MaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation, maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation.get());
     return result;
   }
+  bool ZoneHVACWaterToAirHeatPump_Impl::setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation) {
+    bool result = setDouble(OS_ZoneHVAC_WaterToAirHeatPumpFields::MaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation, maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation);
+    return result;
+  }
+
 
   void ZoneHVACWaterToAirHeatPump_Impl::resetMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation() {
     bool result = setString(OS_ZoneHVAC_WaterToAirHeatPumpFields::MaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation, "");
@@ -959,6 +1011,10 @@ bool ZoneHVACWaterToAirHeatPump::setAvailabilitySchedule(Schedule& schedule) {
 bool ZoneHVACWaterToAirHeatPump::setSupplyAirFlowRateDuringCoolingOperation(boost::optional<double> supplyAirFlowRateDuringCoolingOperation) {
   return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->setSupplyAirFlowRateDuringCoolingOperation(supplyAirFlowRateDuringCoolingOperation);
 }
+bool ZoneHVACWaterToAirHeatPump::setSupplyAirFlowRateDuringCoolingOperation(double supplyAirFlowRateDuringCoolingOperation) {
+  return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->setSupplyAirFlowRateDuringCoolingOperation(supplyAirFlowRateDuringCoolingOperation);
+}
+
 
 void ZoneHVACWaterToAirHeatPump::resetSupplyAirFlowRateDuringCoolingOperation() {
   getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->resetSupplyAirFlowRateDuringCoolingOperation();
@@ -971,6 +1027,10 @@ void ZoneHVACWaterToAirHeatPump::autosizeSupplyAirFlowRateDuringCoolingOperation
 bool ZoneHVACWaterToAirHeatPump::setSupplyAirFlowRateDuringHeatingOperation(boost::optional<double> supplyAirFlowRateDuringHeatingOperation) {
   return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->setSupplyAirFlowRateDuringHeatingOperation(supplyAirFlowRateDuringHeatingOperation);
 }
+bool ZoneHVACWaterToAirHeatPump::setSupplyAirFlowRateDuringHeatingOperation(double supplyAirFlowRateDuringHeatingOperation) {
+  return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->setSupplyAirFlowRateDuringHeatingOperation(supplyAirFlowRateDuringHeatingOperation);
+}
+
 
 void ZoneHVACWaterToAirHeatPump::resetSupplyAirFlowRateDuringHeatingOperation() {
   getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->resetSupplyAirFlowRateDuringHeatingOperation();
@@ -984,6 +1044,10 @@ void ZoneHVACWaterToAirHeatPump::autosizeSupplyAirFlowRateDuringHeatingOperation
 bool ZoneHVACWaterToAirHeatPump::setSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded(boost::optional<double> supplyAirFlowRateWhenNoCoolingorHeatingisNeeded) {
   return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->setSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded(supplyAirFlowRateWhenNoCoolingorHeatingisNeeded);
 }
+bool ZoneHVACWaterToAirHeatPump::setSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded(double supplyAirFlowRateWhenNoCoolingorHeatingisNeeded) {
+  return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->setSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded(supplyAirFlowRateWhenNoCoolingorHeatingisNeeded);
+}
+
 
 void ZoneHVACWaterToAirHeatPump::resetSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded() {
   getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->resetSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
@@ -996,6 +1060,10 @@ void ZoneHVACWaterToAirHeatPump::autosizeSupplyAirFlowRateWhenNoCoolingorHeating
 bool ZoneHVACWaterToAirHeatPump::setOutdoorAirFlowRateDuringCoolingOperation(boost::optional<double> outdoorAirFlowRateDuringCoolingOperation) {
   return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->setOutdoorAirFlowRateDuringCoolingOperation(outdoorAirFlowRateDuringCoolingOperation);
 }
+bool ZoneHVACWaterToAirHeatPump::setOutdoorAirFlowRateDuringCoolingOperation(double outdoorAirFlowRateDuringCoolingOperation) {
+  return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->setOutdoorAirFlowRateDuringCoolingOperation(outdoorAirFlowRateDuringCoolingOperation);
+}
+
 
 void ZoneHVACWaterToAirHeatPump::resetOutdoorAirFlowRateDuringCoolingOperation() {
   getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->resetOutdoorAirFlowRateDuringCoolingOperation();
@@ -1008,6 +1076,10 @@ void ZoneHVACWaterToAirHeatPump::autosizeOutdoorAirFlowRateDuringCoolingOperatio
 bool ZoneHVACWaterToAirHeatPump::setOutdoorAirFlowRateDuringHeatingOperation(boost::optional<double> outdoorAirFlowRateDuringHeatingOperation) {
   return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->setOutdoorAirFlowRateDuringHeatingOperation(outdoorAirFlowRateDuringHeatingOperation);
 }
+bool ZoneHVACWaterToAirHeatPump::setOutdoorAirFlowRateDuringHeatingOperation(double outdoorAirFlowRateDuringHeatingOperation) {
+  return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->setOutdoorAirFlowRateDuringHeatingOperation(outdoorAirFlowRateDuringHeatingOperation);
+}
+
 
 void ZoneHVACWaterToAirHeatPump::resetOutdoorAirFlowRateDuringHeatingOperation() {
   getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->resetOutdoorAirFlowRateDuringHeatingOperation();
@@ -1020,6 +1092,10 @@ void ZoneHVACWaterToAirHeatPump::autosizeOutdoorAirFlowRateDuringHeatingOperatio
 bool ZoneHVACWaterToAirHeatPump::setOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded(boost::optional<double> outdoorAirFlowRateWhenNoCoolingorHeatingisNeeded) {
   return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->setOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded(outdoorAirFlowRateWhenNoCoolingorHeatingisNeeded);
 }
+bool ZoneHVACWaterToAirHeatPump::setOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded(double outdoorAirFlowRateWhenNoCoolingorHeatingisNeeded) {
+  return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->setOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded(outdoorAirFlowRateWhenNoCoolingorHeatingisNeeded);
+}
+
 
 void ZoneHVACWaterToAirHeatPump::resetOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() {
   getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->resetOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
@@ -1044,6 +1120,10 @@ bool ZoneHVACWaterToAirHeatPump::setCoolingCoil(HVACComponent& coolingCoilsWater
 bool ZoneHVACWaterToAirHeatPump::setMaximumCyclingRate(boost::optional<double> maximumCyclingRate) {
   return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->setMaximumCyclingRate(maximumCyclingRate);
 }
+bool ZoneHVACWaterToAirHeatPump::setMaximumCyclingRate(double maximumCyclingRate) {
+  return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->setMaximumCyclingRate(maximumCyclingRate);
+}
+
 
 void ZoneHVACWaterToAirHeatPump::resetMaximumCyclingRate() {
   getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->resetMaximumCyclingRate();
@@ -1052,6 +1132,10 @@ void ZoneHVACWaterToAirHeatPump::resetMaximumCyclingRate() {
 bool ZoneHVACWaterToAirHeatPump::setHeatPumpTimeConstant(boost::optional<double> heatPumpTimeConstant) {
   return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->setHeatPumpTimeConstant(heatPumpTimeConstant);
 }
+bool ZoneHVACWaterToAirHeatPump::setHeatPumpTimeConstant(double heatPumpTimeConstant) {
+  return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->setHeatPumpTimeConstant(heatPumpTimeConstant);
+}
+
 
 void ZoneHVACWaterToAirHeatPump::resetHeatPumpTimeConstant() {
   getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->resetHeatPumpTimeConstant();
@@ -1060,6 +1144,10 @@ void ZoneHVACWaterToAirHeatPump::resetHeatPumpTimeConstant() {
 bool ZoneHVACWaterToAirHeatPump::setFractionofOnCyclePowerUse(boost::optional<double> fractionofOnCyclePowerUse) {
   return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->setFractionofOnCyclePowerUse(fractionofOnCyclePowerUse);
 }
+bool ZoneHVACWaterToAirHeatPump::setFractionofOnCyclePowerUse(double fractionofOnCyclePowerUse) {
+  return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->setFractionofOnCyclePowerUse(fractionofOnCyclePowerUse);
+}
+
 
 void ZoneHVACWaterToAirHeatPump::resetFractionofOnCyclePowerUse() {
   getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->resetFractionofOnCyclePowerUse();
@@ -1068,6 +1156,10 @@ void ZoneHVACWaterToAirHeatPump::resetFractionofOnCyclePowerUse() {
 bool ZoneHVACWaterToAirHeatPump::setHeatPumpFanDelayTime(boost::optional<double> heatPumpFanDelayTime) {
   return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->setHeatPumpFanDelayTime(heatPumpFanDelayTime);
 }
+bool ZoneHVACWaterToAirHeatPump::setHeatPumpFanDelayTime(double heatPumpFanDelayTime) {
+  return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->setHeatPumpFanDelayTime(heatPumpFanDelayTime);
+}
+
 
 void ZoneHVACWaterToAirHeatPump::resetHeatPumpFanDelayTime() {
   getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->resetHeatPumpFanDelayTime();
@@ -1080,6 +1172,9 @@ bool ZoneHVACWaterToAirHeatPump::setSupplementalHeatingCoil(HVACComponent& heati
 bool ZoneHVACWaterToAirHeatPump::setMaximumSupplyAirTemperaturefromSupplementalHeater(boost::optional<double> maximumSupplyAirTemperaturefromSupplementalHeater) {
   return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->setMaximumSupplyAirTemperaturefromSupplementalHeater(maximumSupplyAirTemperaturefromSupplementalHeater);
 }
+bool ZoneHVACWaterToAirHeatPump::setMaximumSupplyAirTemperaturefromSupplementalHeater(double maximumSupplyAirTemperaturefromSupplementalHeater) {
+  return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->setMaximumSupplyAirTemperaturefromSupplementalHeater(maximumSupplyAirTemperaturefromSupplementalHeater);
+}
 
 void ZoneHVACWaterToAirHeatPump::resetMaximumSupplyAirTemperaturefromSupplementalHeater() {
   getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->resetMaximumSupplyAirTemperaturefromSupplementalHeater();
@@ -1090,6 +1185,9 @@ void ZoneHVACWaterToAirHeatPump::autosizeMaximumSupplyAirTemperaturefromSuppleme
 }
 
 bool ZoneHVACWaterToAirHeatPump::setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(boost::optional<double> maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation) {
+  return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation);
+}
+bool ZoneHVACWaterToAirHeatPump::setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation) {
   return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation);
 }
 
