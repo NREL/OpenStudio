@@ -161,7 +161,11 @@ namespace detail {
 
     void setRatedCOP( boost::optional<double> value );
 
+    void setRatedCOP( double value );
+
     void setRatedEvaporatorFanPowerPerVolumeFlowRate( boost::optional<double> value );
+
+    void setRatedEvaporatorFanPowerPerVolumeFlowRate( double value );
 
     void setTotalCoolingCapacityFunctionOfTemperatureCurve(const Curve& curve );
 
@@ -175,11 +179,19 @@ namespace detail {
 
     void setNominalTimeForCondensateRemovalToBegin( boost::optional<double> value );
 
+    void setNominalTimeForCondensateRemovalToBegin( double value );
+
     void setRatioOfInitialMoistureEvaporationRateAndSteadyStateLatentCapacity( boost::optional<double> value );
+
+    void setRatioOfInitialMoistureEvaporationRateAndSteadyStateLatentCapacity( double value );
 
     void setMaximumCyclingRate( boost::optional<double> value );
 
+    void setMaximumCyclingRate( double value );
+
     void setLatentCapacityTimeConstant( boost::optional<double> value );
+
+    void setLatentCapacityTimeConstant( double value );
 
     void setCondenserAirInletNodeName( const boost::optional<std::string>& value );
 
@@ -187,17 +199,31 @@ namespace detail {
 
     void setEvaporativeCondenserEffectiveness( boost::optional<double> value );
 
+    void setEvaporativeCondenserEffectiveness( double value );
+
     void setEvaporativeCondenserAirFlowRate( boost::optional<double> value );
+
+    void setEvaporativeCondenserAirFlowRate( double value );
 
     void setEvaporativeCondenserPumpRatedPowerConsumption( boost::optional<double> value );
 
+    void setEvaporativeCondenserPumpRatedPowerConsumption( double value );
+
     void setCrankcaseHeaterCapacity( boost::optional<double> value );
+
+    void setCrankcaseHeaterCapacity( double value );
 
     void setMaximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation( boost::optional<double> value );
 
+    void setMaximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation( double value );
+
     void setBasinHeaterCapacity( boost::optional<double> value );
 
+    void setBasinHeaterCapacity( double value );
+
     void setBasinHeaterSetpointTemperature( boost::optional<double> value );
+
+    void setBasinHeaterSetpointTemperature( double value );
 
     bool setBasinHeaterOperatingSchedule(Schedule& schedule );
 
