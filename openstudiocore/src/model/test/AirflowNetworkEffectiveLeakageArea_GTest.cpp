@@ -30,34 +30,33 @@
 
 #include <model/test/ModelFixture.hpp>
 
-#include "../AirflowNetworkDuctViewFactors.hpp"
-#include "../AirflowNetworkDuctViewFactors_Impl.hpp"
-#include "../Surface.hpp"
-#include "../Surface_Impl.hpp"
+#include "../AirflowNetworkEffectiveLeakageArea.hpp"
+#include "../AirflowNetworkEffectiveLeakageArea_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, AirflowNetwork_DuctViewFactors_Basic)
-{
-  openstudio::Logger::instance().standardOutLogger().enable();
-  openstudio::Logger::instance().standardOutLogger().setLogLevel(Info);
+TEST_F(ModelFixture, AirflowNetwork_EffectiveLeakageArea) {
   Model model;
-  Point3dVector points;
 
-  // square with unit area
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(1, 1, 0));
-  Surface surface(points, model);
-  EXPECT_EQ("RoofCeiling", surface.surfaceType());
-  EXPECT_EQ("Outdoors", surface.outsideBoundaryCondition());
+  AirflowNetworkEffectiveLeakageArea ela0(model, 10.0);
+  AirflowNetworkEffectiveLeakageArea ela1(model, 10.0, 0.5, 50.0, 0.5);
 
-  AirflowNetworkDuctViewFactors dvf(model);
+  EXPECT_EQ(10.0, ela0.effectiveLeakageArea());
+  EXPECT_EQ(1.0, ela0.dischargeCoefficient());
+  EXPECT_TRUE(ela0.isDischargeCoefficientDefaulted());
+  EXPECT_EQ(4.0, ela0.referencePressureDifference());
+  EXPECT_TRUE(ela0.isReferencePressureDifferenceDefaulted());
+  EXPECT_EQ(0.65, ela0.airMassFlowExponent());
+  EXPECT_TRUE(ela0.isAirMassFlowExponentDefaulted());
 
-  dvf.setViewFactor(surface, 1.0);
-
-  dvf.setViewFactor(surface, 1.0);
+  EXPECT_EQ(10.0, ela1.effectiveLeakageArea());
+  EXPECT_EQ(0.5, ela1.dischargeCoefficient());
+  EXPECT_FALSE(ela1.isDischargeCoefficientDefaulted());
+  EXPECT_EQ(50.0, ela1.referencePressureDifference());
+  EXPECT_FALSE(ela1.isReferencePressureDifferenceDefaulted());
+  EXPECT_EQ(0.5, ela1.airMassFlowExponent());
+  EXPECT_FALSE(ela1.isAirMassFlowExponentDefaulted());
 
 }
+

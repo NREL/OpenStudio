@@ -301,11 +301,29 @@ AirflowNetworkDetailedOpening::AirflowNetworkDetailedOpening(const Model& model,
 {
   OS_ASSERT(getImpl<detail::AirflowNetworkDetailedOpening_Impl>());
 
-  // OS_ASSERT(setHandle());
-  OS_ASSERT(setAirMassFlowCoefficientWhenOpeningisClosed(massFlowCoefficientWhenOpeningisClosed));
-  OS_ASSERT(setAirMassFlowExponentWhenOpeningisClosed(massFlowExponentWhenOpeningisClosed));
-  OS_ASSERT(setTypeofRectangularLargeVerticalOpening(typeofRectangularLargeVerticalOpening));
-  OS_ASSERT(setOpeningFactors(openingFactors));
+  bool ok = setAirMassFlowCoefficientWhenOpeningisClosed(massFlowCoefficientWhenOpeningisClosed);
+  OS_ASSERT(ok);
+  ok = setAirMassFlowExponentWhenOpeningisClosed(massFlowExponentWhenOpeningisClosed);
+  OS_ASSERT(ok);
+  ok = setTypeofRectangularLargeVerticalOpening(typeofRectangularLargeVerticalOpening);
+  OS_ASSERT(ok);
+  ok = setExtraCrackLengthorHeightofPivotingAxis(extraCrackLengthorHeightofPivotingAxis);
+  OS_ASSERT(ok);
+  ok = setOpeningFactors(openingFactors);
+  OS_ASSERT(ok);
+}
+
+AirflowNetworkDetailedOpening::AirflowNetworkDetailedOpening(const Model& model,
+  double massFlowCoefficientWhenOpeningisClosed,
+  std::vector<DetailedOpeningFactorData>& openingFactors)
+  : AirflowNetworkComponent(AirflowNetworkDetailedOpening::iddObjectType(), model)
+{
+  OS_ASSERT(getImpl<detail::AirflowNetworkDetailedOpening_Impl>());
+
+  bool ok = setAirMassFlowCoefficientWhenOpeningisClosed(massFlowCoefficientWhenOpeningisClosed);
+  OS_ASSERT(ok);
+  ok = setOpeningFactors(openingFactors);
+  OS_ASSERT(ok);
 }
 
 IddObjectType AirflowNetworkDetailedOpening::iddObjectType()

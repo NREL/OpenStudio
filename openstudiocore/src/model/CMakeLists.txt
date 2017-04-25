@@ -1467,10 +1467,15 @@ endif()
 set(${target_name}_test_src
   test/AirConditionerVariableRefrigerantFlow_GTest.cpp
   test/AirflowNetworkCrack_GTest.cpp
+  test/AirflowNetworkDetailedOpening_GTest.cpp
   test/AirflowNetworkDistributionNode_GTest.cpp
   test/AirflowNetworkDuctViewFactors_GTest.cpp
+  test/AirflowNetworkEffectiveLeakageArea_GTest.cpp
+  test/AirflowNetworkEquivalentDuct_GTest.cpp
   test/AirflowNetworkExternalNode_GTest.cpp
+  test/AirflowNetworkHorizontalOpening_GTest.cpp
   test/AirflowNetworkOccupantVentilationControl_GTest.cpp
+  test/AirflowNetworkSimpleOpening_GTest.cpp
   test/AirflowNetworkSimulationControl_GTest.cpp
   test/AirflowNetworkSurface_GTest.cpp
   test/AirflowNetworkZone_GTest.cpp

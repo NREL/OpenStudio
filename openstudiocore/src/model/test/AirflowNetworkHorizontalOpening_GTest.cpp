@@ -30,34 +30,22 @@
 
 #include <model/test/ModelFixture.hpp>
 
-#include "../AirflowNetworkDuctViewFactors.hpp"
-#include "../AirflowNetworkDuctViewFactors_Impl.hpp"
-#include "../Surface.hpp"
-#include "../Surface_Impl.hpp"
+#include "../AirflowNetworkHorizontalOpening.hpp"
+#include "../AirflowNetworkHorizontalOpening_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, AirflowNetwork_DuctViewFactors_Basic)
-{
-  openstudio::Logger::instance().standardOutLogger().enable();
-  openstudio::Logger::instance().standardOutLogger().setLogLevel(Info);
+TEST_F(ModelFixture, AirflowNetwork_HorizontalOpening) {
   Model model;
-  Point3dVector points;
+/*
+  AirflowNetworkSimpleOpening simple0(model, 1.0, 0.5, 0.5);
+  AirflowNetworkSimpleOpening simple1(model, 1.0, 0.5, 0.5, 0.5);
 
-  // square with unit area
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(1, 1, 0));
-  Surface surface(points, model);
-  EXPECT_EQ("RoofCeiling", surface.surfaceType());
-  EXPECT_EQ("Outdoors", surface.outsideBoundaryCondition());
+  EXPECT_EQ(1, simple0.airMassFlowCoefficientWhenOpeningisClosed());
+  EXPECT_EQ(0.65, simple0.airMassFlowExponentWhenOpeningisClosed());
 
-  AirflowNetworkDuctViewFactors dvf(model);
-
-  dvf.setViewFactor(surface, 1.0);
-
-  dvf.setViewFactor(surface, 1.0);
-
+  EXPECT_EQ(1, simple1.airMassFlowCoefficientWhenOpeningisClosed());
+  EXPECT_EQ(0.5, simple1.airMassFlowExponentWhenOpeningisClosed());
+*/
 }

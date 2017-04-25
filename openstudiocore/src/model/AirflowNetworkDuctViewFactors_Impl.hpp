@@ -83,7 +83,7 @@ namespace detail {
 
     bool isDuctSurfaceEmittanceDefaulted() const;
 
-    // TODO: Handle this object's extensible fields.
+    boost::optional<double> getViewFactor(const PlanarSurface &surf) const;
 
     //@}
     /** @name Setters */
@@ -100,7 +100,9 @@ namespace detail {
 
     void resetDuctSurfaceEmittance();
 
-    // TODO: Handle this object's extensible fields.
+    bool setViewFactor(const PlanarSurface &surf, double F);
+    bool removeViewFactor(const PlanarSurface &surf);
+    void resetViewFactors();
 
     //@}
     /** @name Other */

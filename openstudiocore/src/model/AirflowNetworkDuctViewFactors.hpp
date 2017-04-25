@@ -36,7 +36,7 @@ namespace openstudio {
 
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
+class PlanarSurface;
 class AirflowNetworkComponent;
 
 namespace detail {
@@ -73,7 +73,7 @@ class MODEL_API AirflowNetworkDuctViewFactors : public ModelObject {
 
   bool isDuctSurfaceEmittanceDefaulted() const;
 
-  // TODO: Handle this object's extensible fields.
+  boost::optional<double> getViewFactor(const PlanarSurface &surf) const;
 
   //@}
   /** @name Setters */
@@ -90,7 +90,9 @@ class MODEL_API AirflowNetworkDuctViewFactors : public ModelObject {
 
   void resetDuctSurfaceEmittance();
 
-  // TODO: Handle this object's extensible fields.
+  bool setViewFactor(const PlanarSurface &surf, double F);
+  bool removeViewFactor(const PlanarSurface &surf);
+  void resetViewFactors();
 
   //@}
   /** @name Other */

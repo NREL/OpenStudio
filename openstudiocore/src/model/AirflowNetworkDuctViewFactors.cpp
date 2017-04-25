@@ -29,6 +29,10 @@
 #include "AirflowNetworkDuctViewFactors.hpp"
 #include "AirflowNetworkDuctViewFactors_Impl.hpp"
 
+#include "ModelExtensibleGroup.hpp"
+#include "PlanarSurface.hpp"
+#include "PlanarSurface_Impl.hpp"
+
 // TODO: Check the following class names against object getters and setters.
 #include "AirflowNetworkComponent.hpp"
 #include "AirflowNetworkComponent_Impl.hpp"
@@ -148,6 +152,64 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<AirflowNetworkComponent>(OS_AirflowNetworkDuctViewFactorsFields::LinkageName);
   }
 
+  boost::optional<double> AirflowNetworkDuctViewFactors_Impl::getViewFactor(const PlanarSurface &surf) const
+  {
+    for (const ModelExtensibleGroup& group : castVector<ModelExtensibleGroup>(extensibleGroups())) {
+      OptionalString name = group.getString(0);
+      if (name) {
+        if (name.get() == surf.name()) {
+          OptionalDouble value = group.getDouble(1);
+          if (value) {
+            return value;
+          } else {
+            LOG(Error, "Could not read surface view factor " << group.groupIndex() << " in " << briefDescription() << ".");
+            return boost::none;
+          }
+        }
+      } else {
+        LOG(Error, "Could not read surface name " << group.groupIndex() << " in " << briefDescription() << ".");
+      }
+    }
+    return boost::none;
+  }
+
+  bool AirflowNetworkDuctViewFactors_Impl::setViewFactor(const PlanarSurface &surf, double F)
+  {
+    //std::vector<unsigned> ids = castVector<WorkspaceExtensibleGroup>(extensibleGroups()).getSourceFieldIndices(surf.handle());
+    std::vector<unsigned> ids = getSourceIndices(surf.handle());
+    if (ids.empty()) {
+      LOG(Info, "Did not find the surface!");
+      // Didn't find the surface
+      std::vector<std::string> values = { toString(surf.handle()), toString(F) };
+      ModelExtensibleGroup group = pushExtensibleGroup(values, false).cast<ModelExtensibleGroup>();
+      OS_ASSERT(!group.empty());
+    } else {
+      LOG(Info, "Found the surface!");
+      // Found the surface
+
+    }
+    return false;
+  }
+
+  bool AirflowNetworkDuctViewFactors_Impl::removeViewFactor(const PlanarSurface &surf)
+  {
+    std::vector<unsigned> ids = getSourceIndices(surf.handle());
+    if (ids.empty()) {
+      LOG(Info, "Did not find the surface!");
+      // Didn't find the surface
+      return false;
+    }
+    LOG(Info, "Found the surface!");
+    // Found the surface, maybe need to check if there is more than one?
+    return !eraseExtensibleGroup(ids[0]).empty();
+  }
+
+  void AirflowNetworkDuctViewFactors_Impl::resetViewFactors()
+  {
+    auto results = clearExtensibleGroups(false);
+    OS_ASSERT(!results.empty());
+  }
+
 } // detail
 
 AirflowNetworkDuctViewFactors::AirflowNetworkDuctViewFactors(const Model& model)
@@ -215,6 +277,26 @@ bool AirflowNetworkDuctViewFactors::setDuctSurfaceEmittance(double ductSurfaceEm
 void AirflowNetworkDuctViewFactors::resetDuctSurfaceEmittance()
 {
   getImpl<detail::AirflowNetworkDuctViewFactors_Impl>()->resetDuctSurfaceEmittance();
+}
+
+boost::optional<double> AirflowNetworkDuctViewFactors::getViewFactor(const PlanarSurface &surf) const
+{
+  return getImpl<detail::AirflowNetworkDuctViewFactors_Impl>()->getViewFactor(surf);
+}
+
+bool AirflowNetworkDuctViewFactors::setViewFactor(const PlanarSurface &surf, double F)
+{
+  return getImpl<detail::AirflowNetworkDuctViewFactors_Impl>()->setViewFactor(surf, F);
+}
+
+bool AirflowNetworkDuctViewFactors::removeViewFactor(const PlanarSurface &surf)
+{
+  return getImpl<detail::AirflowNetworkDuctViewFactors_Impl>()->removeViewFactor(surf);
+}
+
+void AirflowNetworkDuctViewFactors::resetViewFactors()
+{
+  getImpl<detail::AirflowNetworkDuctViewFactors_Impl>()->resetViewFactors();
 }
 
 /// @cond

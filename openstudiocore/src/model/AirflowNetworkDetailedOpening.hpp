@@ -95,12 +95,16 @@ class MODEL_API AirflowNetworkDetailedOpening : public AirflowNetworkComponent
 public:
   /** @name Constructors and Destructors */
   //@{
-
+  /** Construct a detailed opening object. */
   AirflowNetworkDetailedOpening(const Model& model,
     double massFlowCoefficientWhenOpeningisClosed,
     double massFlowExponentWhenOpeningisClosed,
     std::string typeofRectangularLargeVerticalOpening,
     double extraCrackLengthorHeightofPivotingAxis,
+    std::vector<DetailedOpeningFactorData>& openingFactors);
+  /** Construct a detailed opening object with defaulted values. */
+  AirflowNetworkDetailedOpening(const Model& model,
+    double massFlowCoefficientWhenOpeningisClosed,
     std::vector<DetailedOpeningFactorData>& openingFactors);
 
   virtual ~AirflowNetworkDetailedOpening() {}
@@ -113,41 +117,41 @@ public:
 
   /** @name Getters */
   //@{
-
+  /** Returns the air mass flow coefficient when the opening is closed. */
   double airMassFlowCoefficientWhenOpeningisClosed() const;
-
+  /** Returns the air mass flow exponent when the opening is closed. */
   double airMassFlowExponentWhenOpeningisClosed() const;
-
+  /** Returns true if the air mass flow exponent when the opening is closed is defaulted. */
   bool isAirMassFlowExponentWhenOpeningisClosedDefaulted() const;
-
+  /** Returns the LVO type. */
   std::string typeofRectangularLargeVerticalOpening() const;
-
+  /** Returns true if the LVO type is defaulted. */
   bool isTypeofRectangularLargeVerticalOpeningDefaulted() const;
-
+  /** Returns the extra crack length or height of pivoting axis. */
   double extraCrackLengthorHeightofPivotingAxis() const;
-
+  /** Returns true if the extra crack length or height of pivoting axis is defaulted. */
   bool isExtraCrackLengthorHeightofPivotingAxisDefaulted() const;
-
+  /** Returns the opening factor data. */
   std::vector<DetailedOpeningFactorData> openingFactors() const;
 
   //@}
   /** @name Setters */
   //@{
-
+  /** Sets the air mass flow coefficient when the opening is closed. */
   bool setAirMassFlowCoefficientWhenOpeningisClosed(double airMassFlowCoefficientWhenOpeningisClosed);
-
+  /** Sets the air mass flow exponent when the opening is closed. */
   bool setAirMassFlowExponentWhenOpeningisClosed(double airMassFlowExponentWhenOpeningisClosed);
-
+  /** Resets the air mass flow exponent when the opening is closed. */
   void resetAirMassFlowExponentWhenOpeningisClosed();
-
+  /** Sets the LVO type. */
   bool setTypeofRectangularLargeVerticalOpening(std::string typeofRectangularLargeVerticalOpening);
-
+  /** Resets the LVO type. */
   void resetTypeofRectangularLargeVerticalOpening();
-
+  /** Sets the extra crack length or height of pivoting axis. */
   bool setExtraCrackLengthorHeightofPivotingAxis(double extraCrackLengthorHeightofPivotingAxis);
-
+  /** Resets the extra crack length or height of pivoting axis. */
   void resetExtraCrackLengthorHeightofPivotingAxis();
-
+  /** Sets the opening factor data. */
   bool setOpeningFactors(std::vector<DetailedOpeningFactorData>& factors);
 
   //@}
