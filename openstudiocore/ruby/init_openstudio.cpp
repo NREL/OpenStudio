@@ -51,6 +51,7 @@ extern "C" {
   void Init_openstudioutilitiesfiletypes(void);
   void Init_openstudioutilitiesunits(void);
   void Init_openstudiomodelhvac(void);
+  void Init_openstudiomodelairflow(void);
   void Init_openstudioutilities(void);
   void Init_openstudioutilitiesgeometry(void);
   void Init_openstudiomeasure(void);
@@ -122,6 +123,9 @@ void init_openstudio_internal() {
   Init_openstudiomodelhvac();
   rb_provide("openstudiomodelhvac");
   rb_provide("openstudiomodelhvac.so");
+  Init_openstudiomodelairflow();
+  rb_provide("openstudiomodelairflow");
+  rb_provide("openstudiomodelairflow.so");
   Init_openstudiomodelrefrigeration();
   rb_provide("openstudiomodelrefrigeration");
   rb_provide("openstudiomodelrefrigeration.so");

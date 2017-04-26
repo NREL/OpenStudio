@@ -10,9 +10,9 @@
     from openstudiomodelresources import *
     from openstudiomodelgeometry import *
     from openstudiomodelhvac import *
+    from openstudiomodelairflow import *
     from openstudiomodelrefrigeration import *
     from openstudiomodelgenerators import *
-	from openstudiomodelairflow import *
   %}
 
 #endif
@@ -28,6 +28,5 @@
 %import <model/ModelAirflow.i>
 %import <model/ModelRefrigeration.i>
 %import <model/ModelGenerators.i>
-%import <model/ModelAirflow.i>
 
 #endif //MODEL_I 
