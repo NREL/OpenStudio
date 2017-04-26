@@ -175,7 +175,7 @@ namespace detail {
 
   bool AirflowNetworkDuctViewFactors_Impl::setViewFactor(const PlanarSurface &surf, double F)
   {
-    //std::vector<unsigned> ids = castVector<WorkspaceExtensibleGroup>(extensibleGroups()).getSourceFieldIndices(surf.handle());
+    //std::vector<unsigned> ids = castVector<WorkspaceExtensibleGroup>(extensibleGroups())  getSourceFieldIndices(surf.handle());
     std::vector<unsigned> ids = getSourceIndices(surf.handle());
     if (ids.empty()) {
       LOG(Info, "Did not find the surface!");
