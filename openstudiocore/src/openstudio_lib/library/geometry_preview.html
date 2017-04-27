@@ -1722,7 +1722,7 @@ var dragXStart, dragYStart;
 var raycaster;
 var mouse;
 var headsUp;
-var intersected, selected_material, selected_material_back;
+var intersected, selected_material, unknown_material;
 
 var getStringFromLocalStorage = function (key, defaultValue) {
   try {
@@ -2250,6 +2250,16 @@ function init(os_data_in) {
     side: THREE.DoubleSide
   });
   
+  unknown_material = new THREE.MeshPhongMaterial({
+    name: 'Unknown',
+    color: 0xffffff,
+    ambient: 0xffffff,
+    specular: 0xffffff,
+    emissive: 0xffffff,
+    shininess: 50,
+    side: THREE.DoubleSide
+  });
+  
   materials = parseMaterials(os_data.materials);
 
   renderer.domElement.addEventListener('mousedown', onDocumentMouseDown, false);
@@ -2679,6 +2689,10 @@ var update = function (value) {
         break;
     }
     
+    if (!material) {
+      material = unknown_material;
+    }
+    
     if (intersected) {
       updateBalloon(intersected);
       updateColorBarSelection(intersected.userData.variableValue);
@@ -2686,7 +2700,7 @@ var update = function (value) {
     
     object.material = material;
     object.material_double_sided = material_double_sided;
-    if ( material !== null){
+    if (object.material){
       object.material.needsUpdate = true;
     }
 
@@ -2700,7 +2714,7 @@ var update = function (value) {
     back_object = back_objects[object.uuid];
     if (back_object){
       back_object.material = material_back;
-      if ( material_back !== null){
+      if (back_object.material){
         back_object.visible = object.visible;
         back_object.material.needsUpdate = true;
       }else{
