@@ -116,6 +116,9 @@ bool IddFieldProperties::operator==(const IddFieldProperties& other) const
   if (references != other.references) {
     return false;
   }
+  if (referenceClassNames != other.referenceClassNames) {
+    return false;
+  }
 
   return true;
 }
@@ -204,6 +207,11 @@ std::ostream& IddFieldProperties::print(std::ostream& os) const
   if (!references.empty()){
     for (const std::string& reference : references){
       os << "       \\reference " << reference << std::endl;
+    }
+  }
+  if (!references.empty()){
+    for (const std::string& reference : referenceClassNames){
+      os << "       \\reference-class-name " << reference << std::endl;
     }
   }
   if (!externalLists.empty()) {

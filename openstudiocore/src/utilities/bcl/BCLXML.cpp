@@ -937,11 +937,10 @@ namespace openstudio{
     //ss << toJSONWithoutMetadata(m_attributes); // don't use this because it may change
 
     // tags are edited in the xml
-    // DLM: taxonomy tag is the only tag and is now in the ruby file
-    //ss << "Tags: " << std::endl;
-    //for (const std::string& tag : m_tags){
-    //  ss << "  " << tag << std::endl;
-    //}
+    ss << "Tags: " << std::endl;
+    for (const std::string& tag : m_tags){
+      ss << "  " << tag << std::endl;
+    }
 
     //std::cout << "Checksum computed on:" << std::endl;
     //std::cout << ss.str() << std::endl;

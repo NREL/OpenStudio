@@ -266,7 +266,7 @@ WaterUseEquipmentDefinitionInspectorView::WaterUseEquipmentDefinitionInspectorVi
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,4,0);
 
-  m_peakFlowRateEdit = new OSQuantityEdit2("","","", m_isIP);
+  m_peakFlowRateEdit = new OSQuantityEdit2("m^3/s","m^3/s","gal/min", m_isIP);
   connect(this, &WaterUseEquipmentDefinitionInspectorView::toggleUnitsClicked, m_peakFlowRateEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_peakFlowRateEdit,5,0,1,3);
 

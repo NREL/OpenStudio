@@ -32,6 +32,8 @@ set(${target_name}_src
   ModelObjectList.cpp
   FileOperations.hpp
   FileOperations.cpp
+  ThreeJS.hpp
+  ThreeJS.cpp
   
   ConcreteModelObjects.hpp
   AirConditionerVariableRefrigerantFlow.hpp
@@ -601,6 +603,36 @@ set(${target_name}_src
   Generator.hpp
   Generator_Impl.hpp
   Generator.cpp
+  GeneratorFuelCell.hpp
+  GeneratorFuelCell_Impl.hpp
+  GeneratorFuelCell.cpp
+  GeneratorFuelCellAirSupply.hpp
+  GeneratorFuelCellAirSupply_Impl.hpp
+  GeneratorFuelCellAirSupply.cpp
+  GeneratorFuelCellAuxiliaryHeater.hpp
+  GeneratorFuelCellAuxiliaryHeater_Impl.hpp
+  GeneratorFuelCellAuxiliaryHeater.cpp
+  GeneratorFuelCellElectricalStorage.hpp
+  GeneratorFuelCellElectricalStorage_Impl.hpp
+  GeneratorFuelCellElectricalStorage.cpp
+  GeneratorFuelCellExhaustGasToWaterHeatExchanger.hpp
+  GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl.hpp
+  GeneratorFuelCellExhaustGasToWaterHeatExchanger.cpp
+  GeneratorFuelCellInverter.hpp
+  GeneratorFuelCellInverter_Impl.hpp
+  GeneratorFuelCellInverter.cpp
+  GeneratorFuelCellPowerModule.hpp
+  GeneratorFuelCellPowerModule_Impl.hpp
+  GeneratorFuelCellPowerModule.cpp
+  GeneratorFuelCellStackCooler.hpp
+  GeneratorFuelCellStackCooler_Impl.hpp
+  GeneratorFuelCellStackCooler.cpp
+  GeneratorFuelCellWaterSupply.hpp
+  GeneratorFuelCellWaterSupply_Impl.hpp
+  GeneratorFuelCellWaterSupply.cpp
+  GeneratorFuelSupply.hpp
+  GeneratorFuelSupply_Impl.hpp
+  GeneratorFuelSupply.cpp
   GeneratorMicroTurbine.hpp
   GeneratorMicroTurbine_Impl.hpp
   GeneratorMicroTurbine.cpp
@@ -1017,6 +1049,12 @@ set(${target_name}_src
   SetpointManagerScheduledDualSetpoint.hpp
   SetpointManagerScheduledDualSetpoint_Impl.hpp
   SetpointManagerScheduledDualSetpoint.cpp
+  SetpointManagerSingleZoneCooling.hpp
+  SetpointManagerSingleZoneCooling_Impl.hpp
+  SetpointManagerSingleZoneCooling.cpp
+  SetpointManagerSingleZoneHeating.hpp
+  SetpointManagerSingleZoneHeating_Impl.hpp
+  SetpointManagerSingleZoneHeating.cpp
   SetpointManagerSingleZoneHumidityMaximum.hpp
   SetpointManagerSingleZoneHumidityMaximum_Impl.hpp
   SetpointManagerSingleZoneHumidityMaximum.cpp
@@ -1392,6 +1430,7 @@ set(${target_name}_qrc
 )
 
 # generate rules for building source files from the resources
+# DLM: TODO, replace with embed_files
 qt5_add_resources(${target_name}_qrcs ${${target_name}_qrc})
 
 
@@ -1568,6 +1607,16 @@ set(${target_name}_test_src
   test/GasEquipment_GTest.cpp
   test/GasMixture_GTest.cpp
   test/Gas_GTest.cpp
+  test/GeneratorFuelCell_GTest.cpp
+  test/GeneratorFuelCellAirSupply_GTest.cpp
+  test/GeneratorFuelCellAuxiliaryHeater_GTest.cpp
+  test/GeneratorFuelCellElectricalStorage_GTest.cpp
+  test/GeneratorFuelCellExhaustGasToWaterHeatExchanger_GTest.cpp
+  test/GeneratorFuelCellInverter_GTest.cpp
+  test/GeneratorFuelCellPowerModule_GTest.cpp
+  test/GeneratorFuelCellStackCooler_GTest.cpp
+  test/GeneratorFuelCellWaterSupply_GTest.cpp
+  test/GeneratorFuelSupply_GTest.cpp
   test/GeneratorPhotovoltaic_GTest.cpp
   test/GeneratorMicroTurbine_GTest.cpp
   test/GlareSensor_GTest.cpp
@@ -1669,6 +1718,8 @@ set(${target_name}_test_src
   test/SetpointManagerSingleZoneOneStageCooling_GTest.cpp
   test/SetpointManagerSingleZoneOneStageHeating_GTest.cpp
   test/SetpointManagerSingleZoneReheat_GTest.cpp
+  test/SetpointManagerSingleZoneCooling_GTest.cpp
+  test/SetpointManagerSingleZoneHeating_GTest.cpp
   test/SetpointManagerWarmest_GTest.cpp
   test/SetpointManagerWarmestTemperatureFlow_GTest.cpp
   test/ScheduleDay_GTest.cpp
@@ -1707,6 +1758,7 @@ set(${target_name}_test_src
   test/SteamEquipment_GTest.cpp
   test/SubSurface_GTest.cpp
   test/Surface_GTest.cpp
+  test/SurfacePropertyConvectionCoefficients_GTest.cpp
   test/SurfacePropertyConvectionCoefficientsMultipleSurface_GTest.cpp
   test/SurfacePropertyConvectionCoefficients_GTest.cpp
   test/TableMultiVariableLookup_GTest.cpp
@@ -1714,6 +1766,7 @@ set(${target_name}_test_src
   test/ThermalStorageIceDetailed_GTest.cpp
   test/ThermalStorageChilledWaterStratified_GTest.cpp
   test/TemperingValve_GTest.cpp
+  test/ThreeJS_GTest.cpp
   test/UtilityBill_GTest.cpp
   test/WaterHeaterMixed_GTest.cpp
   test/WaterHeaterHeatPump_GTest.cpp
@@ -1757,6 +1810,7 @@ if(BUILD_TESTING)
 
   add_dependencies("${target_name}_tests"
     openstudio_model_resources
+    openstudio_utilities_resources
   )
 
   # Compiler and system specific options

@@ -158,6 +158,7 @@ void init_openstudio_internal() {
   //rb_provide("openstudiomodeleditor.so");
 
   // "typedefs" for backwards compatibility
+  // keep synchronized with \openstudiocore\src\utilities\core\RubyInterpreter.hpp
   std::string ruby_typedef_script = R"END(
 module OpenStudio
 module Ruleset
@@ -307,6 +308,12 @@ module Ruleset
   def self.getInfo(measure, model, workspace)
     OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "Ruleset is deprecated, use OpenStudio::Measure::getInfo instead.")
     return OpenStudio::Measure.getInfo(measure, model, workspace)
+  end
+  
+  # support for name deprecated as of 2.0.0
+  def self.makeChoiceArgumentOfWorkspaceObjects(name, iddObjectType, workspace, required=true)
+    OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "Ruleset is deprecated, use OpenStudio::Measure::makeChoiceArgumentOfWorkspaceObjects instead.")
+    return OpenStudio::Measure.makeChoiceArgumentOfWorkspaceObjects(name, iddObjectType, workspace, required)
   end
   
 end # module Ruleset

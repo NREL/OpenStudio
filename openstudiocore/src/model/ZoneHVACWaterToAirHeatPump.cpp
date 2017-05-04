@@ -540,18 +540,8 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool ZoneHVACWaterToAirHeatPump_Impl::setSupplyAirFan(HVACComponent& fansOnOff) {
-    bool isAllowedType = false;
-    if( fansOnOff.iddObjectType() == IddObjectType::OS_Fan_OnOff)
-    {
-      isAllowedType = true;
-    }
-
-    if( isAllowedType )
-    {
-      return setPointer(OS_ZoneHVAC_WaterToAirHeatPumpFields::SupplyAirFanName,fansOnOff.handle());
-    }
-    return false;
+  bool ZoneHVACWaterToAirHeatPump_Impl::setSupplyAirFan(HVACComponent& fan) {
+    return setPointer(OS_ZoneHVAC_WaterToAirHeatPumpFields::SupplyAirFanName,fan.handle());
   }
 
   bool ZoneHVACWaterToAirHeatPump_Impl::setHeatingCoil(HVACComponent& heatingCoilsWaterToAirHP) 

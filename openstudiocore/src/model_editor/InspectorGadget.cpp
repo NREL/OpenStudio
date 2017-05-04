@@ -83,6 +83,14 @@ using std::vector;
 const char* InspectorGadget::s_indexSlotName="indexSlot";
 //const char* FIELDS_MATCH = "fields match";
 
+struct ModelEditorLibResourceInitializer{
+  ModelEditorLibResourceInitializer() 
+  {
+    Q_INIT_RESOURCE(modeleditorlib);
+  }
+};
+static ModelEditorLibResourceInitializer __modelEditorLibResourceInitializer__;
+
 IGWidget::IGWidget(QWidget* parent):
   QWidget(parent)
 {

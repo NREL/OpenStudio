@@ -195,6 +195,16 @@ class Gas;
 class GasEquipment;
 class GasMixture;
 class GeneratorMicroTurbine;
+class GeneratorFuelCell;
+class GeneratorFuelCellAirSupply;
+class GeneratorFuelCellAuxiliaryHeater;
+class GeneratorFuelCellElectricalStorage;
+class GeneratorFuelCellExhaustGasToWaterHeatExchanger;
+class GeneratorFuelCellInverter;
+class GeneratorFuelCellPowerModule;
+class GeneratorFuelCellStackCooler;
+class GeneratorFuelCellWaterSupply;
+class GeneratorFuelSupply;
 class GeneratorPhotovoltaic;
 class GroundHeatExchangerHorizontalTrench;
 class GroundHeatExchangerVertical;
@@ -284,6 +294,8 @@ class SetpointManagerOutdoorAirPretreat;
 class SetpointManagerOutdoorAirReset;
 class SetpointManagerScheduled;
 class SetpointManagerScheduledDualSetpoint;
+class SetpointManagerSingleZoneCooling;
+class SetpointManagerSingleZoneHeating;
 class SetpointManagerSingleZoneHumidityMaximum;
 class SetpointManagerSingleZoneHumidityMinimum;
 class SetpointManagerSingleZoneOneStageCooling;
@@ -392,7 +404,7 @@ namespace detail
   struct ForwardTranslatorInitializer;
 };
 
-#define ENERGYPLUS_VERSION "8.6"
+#define ENERGYPLUS_VERSION "8.7"
 
 class ENERGYPLUS_API ForwardTranslator {
  public:
@@ -765,6 +777,17 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateGasMixture( model::GasMixture & modelObject );
 
   boost::optional<IdfObject> translateGeneratorMicroTurbine( model::GeneratorMicroTurbine & modelObject );
+
+  boost::optional<IdfObject> translateGeneratorFuelCell(model::GeneratorFuelCell & modelObject);
+  boost::optional<IdfObject> translateGeneratorFuelCellAirSupply(model::GeneratorFuelCellAirSupply & modelObject);
+  boost::optional<IdfObject> translateGeneratorFuelCellAuxiliaryHeater(model::GeneratorFuelCellAuxiliaryHeater & modelObject);
+  boost::optional<IdfObject> translateGeneratorFuelCellElectricalStorage(model::GeneratorFuelCellElectricalStorage & modelObject);
+  boost::optional<IdfObject> translateGeneratorFuelCellExhaustGasToWaterHeatExchanger(model::GeneratorFuelCellExhaustGasToWaterHeatExchanger & modelObject);
+  boost::optional<IdfObject> translateGeneratorFuelCellInverter(model::GeneratorFuelCellInverter & modelObject);
+  boost::optional<IdfObject> translateGeneratorFuelCellPowerModule(model::GeneratorFuelCellPowerModule & modelObject);
+  boost::optional<IdfObject> translateGeneratorFuelCellStackCooler(model::GeneratorFuelCellStackCooler & modelObject);
+  boost::optional<IdfObject> translateGeneratorFuelCellWaterSupply(model::GeneratorFuelCellWaterSupply & modelObject);
+  boost::optional<IdfObject> translateGeneratorFuelSupply(model::GeneratorFuelSupply & modelObject);
   
   boost::optional<IdfObject> translateGeneratorPhotovoltaic( model::GeneratorPhotovoltaic & modelObject );
 
@@ -964,6 +987,10 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateSetpointManagerScheduledDualSetpoint( model::SetpointManagerScheduledDualSetpoint & modelObject );
 
+  boost::optional<IdfObject> translateSetpointManagerSingleZoneCooling( model::SetpointManagerSingleZoneCooling & modelObject );
+
+  boost::optional<IdfObject> translateSetpointManagerSingleZoneHeating( model::SetpointManagerSingleZoneHeating & modelObject );
+
   boost::optional<IdfObject> translateSetpointManagerSingleZoneHumidityMaximum( model::SetpointManagerSingleZoneHumidityMaximum & modelObject );
 
   boost::optional<IdfObject> translateSetpointManagerSingleZoneHumidityMinimum( model::SetpointManagerSingleZoneHumidityMinimum & modelObject );
@@ -1152,7 +1179,7 @@ class ENERGYPLUS_API ForwardTranslator {
   void reset();
 
   // helper method used by ForwardTranslatePlantLoop
-  IdfObject populateBranch( IdfObject & branchIdfObject, std::vector<model::ModelObject> & modelObjects, model::Loop & loop);
+  IdfObject populateBranch( IdfObject & branchIdfObject, std::vector<model::ModelObject> & modelObjects, model::Loop & loop, bool isSupplyBranch);
 
   // translate all constructions
   void translateConstructions(const model::Model & model);

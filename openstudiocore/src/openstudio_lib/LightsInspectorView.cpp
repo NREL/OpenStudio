@@ -70,27 +70,27 @@ LightsDefinitionInspectorView::LightsDefinitionInspectorView(bool isIP, const op
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,2,0);
 
-  m_lightingLevelEdit = new OSQuantityEdit2("","","", m_isIP);
+  m_lightingLevelEdit = new OSQuantityEdit2("W","W","W", m_isIP);
   connect(this, &LightsDefinitionInspectorView::toggleUnitsClicked, m_lightingLevelEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_lightingLevelEdit,3,0);
 
-  // Energy Per Space Floor Area
+  // Watts Per Space Floor Area
 
-  label = new QLabel("Energy Per Space Floor Area: ");
+  label = new QLabel("Watts Per Space Floor Area: ");
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,2,1);
 
-  m_wattsPerSpaceFloorAreaEdit = new OSQuantityEdit2("","","", m_isIP);
+  m_wattsPerSpaceFloorAreaEdit = new OSQuantityEdit2("W/m^2","W/m^2","W/ft^2", m_isIP);
   connect(this, &LightsDefinitionInspectorView::toggleUnitsClicked, m_wattsPerSpaceFloorAreaEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_wattsPerSpaceFloorAreaEdit,3,1);
 
-  // Energy Per Person
+  // Watts Per Person
 
-  label = new QLabel("Energy Per Person: ");
+  label = new QLabel("Watts Per Person: ");
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,2,2);
 
-  m_wattsPerPersonEdit = new OSQuantityEdit2("","","", m_isIP);
+  m_wattsPerPersonEdit = new OSQuantityEdit2("W/person","W/person","W/person", m_isIP);
   connect(this, &LightsDefinitionInspectorView::toggleUnitsClicked, m_wattsPerPersonEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_wattsPerPersonEdit,3,2);
 

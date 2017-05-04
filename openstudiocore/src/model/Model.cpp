@@ -68,6 +68,14 @@ using openstudio::detail::WorkspaceObject_Impl;
 
 using std::dynamic_pointer_cast;
 
+struct ModelResourceInitializer{
+  ModelResourceInitializer() 
+  {
+    Q_INIT_RESOURCE(Model);
+  }
+};
+static ModelResourceInitializer __modelResourceInitializer__;
+
 namespace openstudio {
 namespace model {
 
@@ -379,6 +387,16 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(GasEquipment);
     REGISTER_CONSTRUCTOR(GasEquipmentDefinition);
     REGISTER_CONSTRUCTOR(GasMixture);
+    REGISTER_CONSTRUCTOR(GeneratorFuelCell);
+    REGISTER_CONSTRUCTOR(GeneratorFuelCellAirSupply);
+    REGISTER_CONSTRUCTOR(GeneratorFuelCellAuxiliaryHeater);
+    REGISTER_CONSTRUCTOR(GeneratorFuelCellElectricalStorage);
+    REGISTER_CONSTRUCTOR(GeneratorFuelCellExhaustGasToWaterHeatExchanger);
+    REGISTER_CONSTRUCTOR(GeneratorFuelCellInverter);
+    REGISTER_CONSTRUCTOR(GeneratorFuelCellPowerModule);
+    REGISTER_CONSTRUCTOR(GeneratorFuelCellStackCooler);
+    REGISTER_CONSTRUCTOR(GeneratorFuelCellWaterSupply);
+    REGISTER_CONSTRUCTOR(GeneratorFuelSupply);
     REGISTER_CONSTRUCTOR(GeneratorMicroTurbine);
     REGISTER_CONSTRUCTOR(GeneratorMicroTurbineHeatRecovery);
     REGISTER_CONSTRUCTOR(GeneratorPhotovoltaic);
@@ -497,6 +515,8 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(SetpointManagerOutdoorAirReset);
     REGISTER_CONSTRUCTOR(SetpointManagerScheduled);
     REGISTER_CONSTRUCTOR(SetpointManagerScheduledDualSetpoint);
+    REGISTER_CONSTRUCTOR(SetpointManagerSingleZoneCooling);
+    REGISTER_CONSTRUCTOR(SetpointManagerSingleZoneHeating);
     REGISTER_CONSTRUCTOR(SetpointManagerSingleZoneHumidityMaximum);
     REGISTER_CONSTRUCTOR(SetpointManagerSingleZoneHumidityMinimum);
     REGISTER_CONSTRUCTOR(SetpointManagerSingleZoneOneStageCooling);
@@ -820,6 +840,16 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(GasEquipment);
     REGISTER_COPYCONSTRUCTORS(GasEquipmentDefinition);
     REGISTER_COPYCONSTRUCTORS(GasMixture);
+    REGISTER_COPYCONSTRUCTORS(GeneratorFuelCell);
+    REGISTER_COPYCONSTRUCTORS(GeneratorFuelCellAirSupply);
+    REGISTER_COPYCONSTRUCTORS(GeneratorFuelCellAuxiliaryHeater);
+    REGISTER_COPYCONSTRUCTORS(GeneratorFuelCellElectricalStorage);
+    REGISTER_COPYCONSTRUCTORS(GeneratorFuelCellExhaustGasToWaterHeatExchanger);
+    REGISTER_COPYCONSTRUCTORS(GeneratorFuelCellInverter);
+    REGISTER_COPYCONSTRUCTORS(GeneratorFuelCellPowerModule);
+    REGISTER_COPYCONSTRUCTORS(GeneratorFuelCellStackCooler);
+    REGISTER_COPYCONSTRUCTORS(GeneratorFuelCellWaterSupply);
+    REGISTER_COPYCONSTRUCTORS(GeneratorFuelSupply);
     REGISTER_COPYCONSTRUCTORS(GeneratorMicroTurbine);
     REGISTER_COPYCONSTRUCTORS(GeneratorMicroTurbineHeatRecovery);
     REGISTER_COPYCONSTRUCTORS(GeneratorPhotovoltaic);
@@ -938,6 +968,8 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(SetpointManagerOutdoorAirReset);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerScheduled);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerScheduledDualSetpoint);
+    REGISTER_COPYCONSTRUCTORS(SetpointManagerSingleZoneCooling);
+    REGISTER_COPYCONSTRUCTORS(SetpointManagerSingleZoneHeating);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerSingleZoneHumidityMaximum);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerSingleZoneHumidityMinimum);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerSingleZoneOneStageCooling);
@@ -1139,6 +1171,150 @@ if (_className::iddObjectType() == typeToCreate) { \
     }
 
     return m_cachedYearDescription;
+  }
+
+  boost::optional<int> Model_Impl::calendarYear() const
+  {
+    if (!m_cachedYearDescription){
+      m_cachedYearDescription = this->model().getUniqueModelObject<YearDescription>();
+    }
+    OS_ASSERT(m_cachedYearDescription);
+    return m_cachedYearDescription->calendarYear();
+  }
+
+  std::string Model_Impl::dayofWeekforStartDay() const
+  {
+    if (!m_cachedYearDescription){
+      m_cachedYearDescription = this->model().getUniqueModelObject<YearDescription>();
+    }
+    OS_ASSERT(m_cachedYearDescription);
+    return m_cachedYearDescription->dayofWeekforStartDay();
+  }
+
+  bool Model_Impl::isDayofWeekforStartDayDefaulted() const
+  {
+    if (!m_cachedYearDescription){
+      m_cachedYearDescription = this->model().getUniqueModelObject<YearDescription>();
+    }
+    OS_ASSERT(m_cachedYearDescription);
+    return m_cachedYearDescription->isDayofWeekforStartDayDefaulted();
+  }
+
+  bool Model_Impl::isLeapYear() const
+  {
+    if (!m_cachedYearDescription){
+      m_cachedYearDescription = this->model().getUniqueModelObject<YearDescription>();
+    }
+    OS_ASSERT(m_cachedYearDescription);
+    return m_cachedYearDescription->isLeapYear();
+  }
+
+  bool Model_Impl::isIsLeapYearDefaulted() const
+  {
+    if (!m_cachedYearDescription){
+      m_cachedYearDescription = this->model().getUniqueModelObject<YearDescription>();
+    }
+    OS_ASSERT(m_cachedYearDescription);
+    return m_cachedYearDescription->isIsLeapYearDefaulted();
+  }
+
+  void Model_Impl::setCalendarYear(int calendarYear)
+  {
+    if (!m_cachedYearDescription){
+      m_cachedYearDescription = this->model().getUniqueModelObject<YearDescription>();
+    }
+    OS_ASSERT(m_cachedYearDescription);
+    m_cachedYearDescription->setCalendarYear(calendarYear);
+  }
+
+  void Model_Impl::resetCalendarYear()
+  {
+    if (!m_cachedYearDescription){
+      m_cachedYearDescription = this->model().getUniqueModelObject<YearDescription>();
+    }
+    OS_ASSERT(m_cachedYearDescription);
+    m_cachedYearDescription->resetCalendarYear();
+  }
+
+  bool Model_Impl::setDayofWeekforStartDay(std::string dayofWeekforStartDay)
+  {
+    if (!m_cachedYearDescription){
+      m_cachedYearDescription = this->model().getUniqueModelObject<YearDescription>();
+    }
+    OS_ASSERT(m_cachedYearDescription);
+    return m_cachedYearDescription->setDayofWeekforStartDay(dayofWeekforStartDay);
+  }
+
+  void Model_Impl::resetDayofWeekforStartDay()
+  {
+    if (!m_cachedYearDescription){
+      m_cachedYearDescription = this->model().getUniqueModelObject<YearDescription>();
+    }
+    OS_ASSERT(m_cachedYearDescription);
+    m_cachedYearDescription->resetDayofWeekforStartDay();
+  }
+
+  bool Model_Impl::setIsLeapYear(bool isLeapYear)
+  {
+    if (!m_cachedYearDescription){
+      m_cachedYearDescription = this->model().getUniqueModelObject<YearDescription>();
+    }
+    OS_ASSERT(m_cachedYearDescription);
+    return m_cachedYearDescription->setIsLeapYear(isLeapYear);
+  }
+
+  void Model_Impl::resetIsLeapYear()
+  {
+    if (!m_cachedYearDescription){
+      m_cachedYearDescription = this->model().getUniqueModelObject<YearDescription>();
+    }
+    OS_ASSERT(m_cachedYearDescription);
+    m_cachedYearDescription->resetIsLeapYear();
+  }
+
+  int Model_Impl::assumedYear()
+  {
+    if (!m_cachedYearDescription){
+      m_cachedYearDescription = this->model().getUniqueModelObject<YearDescription>();
+    }
+    OS_ASSERT(m_cachedYearDescription);
+    return m_cachedYearDescription->assumedYear();
+  }
+
+  openstudio::Date Model_Impl::makeDate(openstudio::MonthOfYear monthOfYear, unsigned dayOfMonth)
+  {
+    if (!m_cachedYearDescription){
+      m_cachedYearDescription = this->model().getUniqueModelObject<YearDescription>();
+    }
+    OS_ASSERT(m_cachedYearDescription);
+    return m_cachedYearDescription->makeDate(monthOfYear, dayOfMonth);
+  }
+
+  openstudio::Date Model_Impl::makeDate(unsigned monthOfYear, unsigned dayOfMonth)
+  {
+    if (!m_cachedYearDescription){
+      m_cachedYearDescription = this->model().getUniqueModelObject<YearDescription>();
+    }
+    OS_ASSERT(m_cachedYearDescription);
+    return m_cachedYearDescription->makeDate(monthOfYear, dayOfMonth);
+  }
+
+  openstudio::Date Model_Impl::makeDate(openstudio::NthDayOfWeekInMonth n, openstudio::DayOfWeek dayOfWeek, openstudio::MonthOfYear monthOfYear)
+  {
+    if (!m_cachedYearDescription){
+      m_cachedYearDescription = this->model().getUniqueModelObject<YearDescription>();
+    }
+    OS_ASSERT(m_cachedYearDescription);
+    return m_cachedYearDescription->makeDate(n, dayOfWeek, monthOfYear);
+  }
+
+  openstudio::Date Model_Impl::makeDate(unsigned dayOfYear)
+  {
+    if (!m_cachedYearDescription){
+      m_cachedYearDescription = this->model().getUniqueModelObject<YearDescription>();
+    }
+    OS_ASSERT(m_cachedYearDescription);
+    return m_cachedYearDescription->makeDate(dayOfYear);
   }
 
   boost::optional<WeatherFile> Model_Impl::weatherFile() const
@@ -1737,6 +1913,86 @@ boost::optional<RunPeriod> Model::runPeriod() const
 boost::optional<YearDescription> Model::yearDescription() const
 {
   return getImpl<detail::Model_Impl>()->yearDescription();
+}
+
+boost::optional<int> Model::calendarYear() const
+{
+  return getImpl<detail::Model_Impl>()->calendarYear();
+}
+
+std::string Model::dayofWeekforStartDay() const
+{
+  return getImpl<detail::Model_Impl>()->dayofWeekforStartDay();
+}
+
+bool Model::isDayofWeekforStartDayDefaulted() const
+{
+  return getImpl<detail::Model_Impl>()->isDayofWeekforStartDayDefaulted();
+}
+
+bool Model::isLeapYear() const
+{
+  return getImpl<detail::Model_Impl>()->isLeapYear();
+}
+
+bool Model::isIsLeapYearDefaulted() const
+{
+  return getImpl<detail::Model_Impl>()->isIsLeapYearDefaulted();
+}
+
+void Model::setCalendarYear(int calendarYear)
+{
+  getImpl<detail::Model_Impl>()->setCalendarYear(calendarYear);
+}
+
+void Model::resetCalendarYear()
+{
+  getImpl<detail::Model_Impl>()->resetCalendarYear();
+}
+
+bool Model::setDayofWeekforStartDay(std::string dayofWeekforStartDay)
+{
+  return getImpl<detail::Model_Impl>()->setDayofWeekforStartDay(dayofWeekforStartDay);
+}
+
+void Model::resetDayofWeekforStartDay()
+{
+  getImpl<detail::Model_Impl>()->resetDayofWeekforStartDay();
+}
+
+bool Model::setIsLeapYear(bool isLeapYear)
+{
+  return getImpl<detail::Model_Impl>()->setIsLeapYear(isLeapYear);
+}
+
+void Model::resetIsLeapYear()
+{
+  getImpl<detail::Model_Impl>()->resetIsLeapYear();
+}
+
+int Model::assumedYear()
+{
+  return getImpl<detail::Model_Impl>()->assumedYear();
+}
+
+openstudio::Date Model::makeDate(openstudio::MonthOfYear monthOfYear, unsigned dayOfMonth)
+{
+  return getImpl<detail::Model_Impl>()->makeDate(monthOfYear, dayOfMonth);
+}
+
+openstudio::Date Model::makeDate(unsigned monthOfYear, unsigned dayOfMonth)
+{
+  return getImpl<detail::Model_Impl>()->makeDate(monthOfYear, dayOfMonth);
+}
+
+openstudio::Date Model::makeDate(openstudio::NthDayOfWeekInMonth n, openstudio::DayOfWeek dayOfWeek, openstudio::MonthOfYear monthOfYear)
+{
+  return getImpl<detail::Model_Impl>()->makeDate(n, dayOfWeek, monthOfYear);
+}
+
+openstudio::Date Model::makeDate(unsigned dayOfYear)
+{
+  return getImpl<detail::Model_Impl>()->makeDate(dayOfYear);
 }
 
 boost::optional<WeatherFile> Model::weatherFile() const

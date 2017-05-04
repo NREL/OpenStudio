@@ -29,7 +29,7 @@
 #ifndef MODEL_SURFACEPROPERTYCONVECTIONCOEFFICIENTSMULTIPLESURFACE_HPP
 #define MODEL_SURFACEPROPERTYCONVECTIONCOEFFICIENTSMULTIPLESURFACE_HPP
 
-#include "ModelAPI.hpp"
+#include <model/ModelAPI.hpp>
 #include "ModelObject.hpp"
 
 namespace openstudio {

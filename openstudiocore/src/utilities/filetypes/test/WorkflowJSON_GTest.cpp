@@ -45,6 +45,150 @@
 using namespace openstudio;
 
 
+WorkflowStepResult getWorkflowStepResult(const WorkflowStep& step, const boost::optional<BCLMeasure>& measure)
+{
+  std::string stepName;
+  if (step.optionalCast<MeasureStep>()){
+    stepName = step.cast<MeasureStep>().measureDirName();
+  }
+
+  WorkflowStepResult workflowStepResult;
+  workflowStepResult.setStartedAt(DateTime::nowUTC());
+  workflowStepResult.setCompletedAt(DateTime::nowUTC());
+
+  if (measure){
+    workflowStepResult.setMeasureType(measure->measureType());
+    workflowStepResult.setMeasureName(measure->name());
+    workflowStepResult.setMeasureId(measure->uid());
+    workflowStepResult.setMeasureVersionId(measure->versionId());
+    boost::optional<DateTime> versionModified = measure->versionModified();
+    if (versionModified){
+      workflowStepResult.setMeasureVersionModified(versionModified.get());
+    }
+    workflowStepResult.setMeasureXmlChecksum(measure->xmlChecksum());
+    workflowStepResult.setMeasureClassName(measure->className());
+    workflowStepResult.setMeasureDisplayName(measure->displayName());
+  }
+
+  workflowStepResult.setStepResult(StepResult::Success);
+  workflowStepResult.setStepInitialCondition(stepName + " Initial Condition");
+  workflowStepResult.setStepFinalCondition(stepName + " Final Condition");
+  workflowStepResult.addStepError(stepName + " Error 1");
+  workflowStepResult.addStepError(stepName + " Error 2");
+  workflowStepResult.addStepError(stepName + " Error 3");
+  workflowStepResult.addStepWarning(stepName + " Warning 1");
+  workflowStepResult.addStepWarning(stepName + " Warning 2");
+  workflowStepResult.addStepWarning(stepName + " Warning 3");
+  workflowStepResult.addStepInfo(stepName + " Info 1");
+  workflowStepResult.addStepInfo(stepName + " Info 2");
+  workflowStepResult.addStepInfo(stepName + " Info 3");
+  workflowStepResult.addStepValue(WorkflowStepValue(stepName + " String Value", "String"));
+  workflowStepResult.addStepValue(WorkflowStepValue(stepName + " Double Value", 1.1));
+  workflowStepResult.addStepValue(WorkflowStepValue(stepName + " Int Value", 1));
+  workflowStepResult.addStepValue(WorkflowStepValue(stepName + " Bool Value", true));
+  workflowStepResult.addStepFile(stepName + " File.1");
+  workflowStepResult.addStepFile(stepName + " File.2");
+  workflowStepResult.setStdOut(stepName + " StdOut");
+  workflowStepResult.setStdErr(stepName + " StdErr");
+  return workflowStepResult;
+}
+
+void checkWorkflowStepResult(const WorkflowStep& step, const boost::optional<BCLMeasure>& measure)
+{
+  std::string stepName;
+  if (step.optionalCast<MeasureStep>()){
+    stepName = step.cast<MeasureStep>().measureDirName();
+  }
+
+  if (!step.result()){
+    bool t = false;
+  }
+
+  ASSERT_TRUE(step.result());
+  WorkflowStepResult workflowStepResult = step.result().get();
+
+  ASSERT_TRUE(workflowStepResult.startedAt());
+  EXPECT_TRUE(workflowStepResult.startedAt().get() <= DateTime::nowUTC());
+
+  ASSERT_TRUE(workflowStepResult.completedAt());
+  EXPECT_TRUE(workflowStepResult.startedAt().get() <= workflowStepResult.completedAt().get());
+  EXPECT_TRUE(workflowStepResult.completedAt().get() <= DateTime::nowUTC());
+
+  if (measure){
+    ASSERT_TRUE(workflowStepResult.measureType());
+    EXPECT_EQ(measure->measureType(), workflowStepResult.measureType().get());
+
+    ASSERT_TRUE(workflowStepResult.measureName());
+    EXPECT_EQ(measure->name(), workflowStepResult.measureName().get());
+
+    ASSERT_TRUE(workflowStepResult.measureId());
+    ASSERT_TRUE(workflowStepResult.measureUUID());
+    EXPECT_EQ(measure->uid(), workflowStepResult.measureId().get());
+
+    ASSERT_TRUE(workflowStepResult.measureVersionId());
+    ASSERT_TRUE(workflowStepResult.measureVersionUUID());
+    EXPECT_EQ(measure->versionId(), workflowStepResult.measureVersionId().get());
+
+    ASSERT_TRUE(measure->versionModified());
+    ASSERT_TRUE(workflowStepResult.measureVersionModified());
+    EXPECT_TRUE(measure->versionModified().get() == workflowStepResult.measureVersionModified().get());
+
+    ASSERT_TRUE(workflowStepResult.measureXmlChecksum());
+    EXPECT_EQ(measure->xmlChecksum(), workflowStepResult.measureXmlChecksum().get());
+
+    ASSERT_TRUE(workflowStepResult.measureClassName());
+    EXPECT_EQ(measure->className(), workflowStepResult.measureClassName().get());
+
+    ASSERT_TRUE(workflowStepResult.measureDisplayName());
+    EXPECT_EQ(measure->displayName(), workflowStepResult.measureDisplayName().get());
+  }
+
+  ASSERT_TRUE(workflowStepResult.stepResult ());
+  EXPECT_EQ(StepResult::Success, workflowStepResult.stepResult().get().value());
+
+  ASSERT_TRUE(workflowStepResult.stepInitialCondition());
+  EXPECT_EQ(stepName + " Initial Condition", workflowStepResult.stepInitialCondition());
+
+  ASSERT_TRUE(workflowStepResult.stepFinalCondition());
+  EXPECT_EQ(stepName + " Final Condition", workflowStepResult.stepFinalCondition());
+
+  ASSERT_EQ(3u, workflowStepResult.stepErrors().size());
+  EXPECT_EQ(stepName + " Error 1", workflowStepResult.stepErrors()[0]);
+  EXPECT_EQ(stepName + " Error 2", workflowStepResult.stepErrors()[1]);
+  EXPECT_EQ(stepName + " Error 3", workflowStepResult.stepErrors()[2]);
+
+  ASSERT_EQ(3u, workflowStepResult.stepWarnings().size());
+  EXPECT_EQ(stepName + " Warning 1", workflowStepResult.stepWarnings()[0]);
+  EXPECT_EQ(stepName + " Warning 2", workflowStepResult.stepWarnings()[1]);
+  EXPECT_EQ(stepName + " Warning 3", workflowStepResult.stepWarnings()[2]);
+
+  ASSERT_EQ(3u, workflowStepResult.stepInfo().size());
+  EXPECT_EQ(stepName + " Info 1", workflowStepResult.stepInfo()[0]);
+  EXPECT_EQ(stepName + " Info 2", workflowStepResult.stepInfo()[1]);
+  EXPECT_EQ(stepName + " Info 3", workflowStepResult.stepInfo()[2]);
+
+  ASSERT_EQ(4u, workflowStepResult.stepValues().size());
+  EXPECT_EQ(stepName + " String Value", workflowStepResult.stepValues()[0].name());
+  EXPECT_EQ(VariantType::String, workflowStepResult.stepValues()[0].variantType().value());
+  EXPECT_EQ(stepName + " Double Value", workflowStepResult.stepValues()[1].name());
+  EXPECT_EQ(VariantType::Double, workflowStepResult.stepValues()[1].variantType().value());
+  EXPECT_EQ(stepName + " Int Value", workflowStepResult.stepValues()[2].name());
+  EXPECT_EQ(VariantType::Integer, workflowStepResult.stepValues()[2].variantType().value());
+  EXPECT_EQ(stepName + " Bool Value", workflowStepResult.stepValues()[3].name());
+  EXPECT_EQ(VariantType::Boolean, workflowStepResult.stepValues()[3].variantType().value());
+
+  ASSERT_EQ(2u, workflowStepResult.stepFiles().size());
+  EXPECT_EQ(stepName + " File.1", toString(workflowStepResult.stepFiles()[0]));
+  EXPECT_EQ(stepName + " File.2", toString(workflowStepResult.stepFiles()[1]));
+
+  ASSERT_TRUE(workflowStepResult.stdOut());
+  EXPECT_EQ(stepName + " StdOut", workflowStepResult.stdOut().get());
+
+  ASSERT_TRUE(workflowStepResult.stdErr());
+  EXPECT_EQ(stepName + " StdErr", workflowStepResult.stdErr().get());
+
+}
+
 class WorkflowJSONListener
 {
 public:
@@ -242,54 +386,29 @@ TEST(Filetypes, WorkflowJSON_Min)
   } catch (const std::exception& e){
     EXPECT_TRUE(false) << e.what();
   }
-}
 
-TEST(Filetypes, WorkflowJSON_Full)
-{
-  path p = resourcesPath() / toPath("utilities/Filetypes/full.osw");
-  path p2 = resourcesPath() / toPath("utilities/Filetypes/full.out.osw");
-  EXPECT_TRUE(WorkflowJSON::load(p));
+  // check if strings are really paths
+  std::string s = toString(p);
+  ASSERT_TRUE(WorkflowJSON::load(s));
 
+  s = "random string";
+  EXPECT_FALSE(WorkflowJSON::load(s));
+
+  s = "Definitely; Not a:\\Path?\n _ ./";
+  EXPECT_FALSE(WorkflowJSON::load(s));
+
+  // now try relative path
+  p2 = toPath("./min.out.osw");
   try{
     WorkflowJSON workflow(p);
     EXPECT_TRUE(workflow.checkForUpdates());
     ASSERT_TRUE(workflow.oswPath());
     EXPECT_EQ(p, workflow.oswPath().get());
-    EXPECT_EQ("../../", toString(workflow.rootDir()));
-    EXPECT_EQ(toString(resourcesPath()), toString(workflow.absoluteRootDir()));
+    EXPECT_EQ(".", toString(workflow.rootDir()));
+    EXPECT_EQ(toString(p.parent_path()), toString(workflow.absoluteRootDir()));
+    EXPECT_FALSE(workflow.seedFile());
+    EXPECT_FALSE(workflow.weatherFile());
 
-    ASSERT_TRUE(workflow.seedFile());
-    EXPECT_EQ("1_9_0/example.osm", workflow.seedFile().get());
-   
-    // DLM: version resources went away, so make a file for ourselves
-    openstudio::path expectedSeedPath = resourcesPath() / toPath("osversion/1_9_0/example.osm");
-    if (!boost::filesystem::exists(expectedSeedPath)){
-      boost::filesystem::create_directories(expectedSeedPath.parent_path());
-      std::ofstream outFile(openstudio::toString(expectedSeedPath));
-      if (outFile) {
-        outFile << "OS:Version,\n\
-                    {8b3ac8ca-71e7-486e-ac28-74f6e601c3f2}, !- Handle\n\
-                    1.12.0;                                 !- Version Identifier\n";
-        outFile.close();
-      }
-    }
-
-    boost::optional<path> test = workflow.findFile(workflow.seedFile().get());
-    ASSERT_TRUE(test);
-    EXPECT_EQ(toString(expectedSeedPath), toString(*test));
-
-    ASSERT_TRUE(workflow.weatherFile());
-    EXPECT_EQ("./USA_CO_Golden-NREL.724666_TMY3.epw", workflow.weatherFile().get());
-
-    test = workflow.findFile(workflow.weatherFile().get());
-    ASSERT_TRUE(test);
-    EXPECT_EQ(toString(resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3.epw")), toString(*test));
-
-    test = workflow.findMeasure(toPath("SetWindowToWallRatioByFacade"));
-    ASSERT_TRUE(test);
-    EXPECT_EQ(toString(resourcesPath() / toPath("utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade")), toString(*test));
-
-    EXPECT_FALSE(workflow.checkForUpdates());
     EXPECT_TRUE(workflow.saveAs(p2));
 
     std::vector<WorkflowStep> workflowSteps = workflow.workflowSteps();
@@ -339,23 +458,13 @@ TEST(Filetypes, WorkflowJSON_Full)
   try{
     WorkflowJSON workflow(p2);
     EXPECT_FALSE(workflow.checkForUpdates());
+
     ASSERT_TRUE(workflow.oswPath());
-    EXPECT_EQ(p2, workflow.oswPath().get());
-    EXPECT_EQ("../../", toString(workflow.rootDir()));
-    EXPECT_EQ(toString(resourcesPath()), toString(workflow.absoluteRootDir()));
-    ASSERT_TRUE(workflow.seedFile());
-    EXPECT_EQ("1_9_0/example.osm", workflow.seedFile().get());
-    boost::optional<path> test = workflow.findFile(workflow.seedFile().get());
-    ASSERT_TRUE(test);
-    EXPECT_EQ(toString(resourcesPath() / toPath("osversion/1_9_0/example.osm")), toString(*test));
-    ASSERT_TRUE(workflow.weatherFile());
-    EXPECT_EQ("./USA_CO_Golden-NREL.724666_TMY3.epw", workflow.weatherFile().get());
-    test = workflow.findFile(workflow.weatherFile().get());
-    ASSERT_TRUE(test);
-    EXPECT_EQ(toString(resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3.epw")), toString(*test));
-    test = workflow.findMeasure(toPath("SetWindowToWallRatioByFacade"));
-    ASSERT_TRUE(test);
-    EXPECT_EQ(toString(resourcesPath() / toPath("utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade")), toString(*test));
+    EXPECT_EQ(p2.filename(), workflow.oswPath().get().filename());
+    EXPECT_EQ(".", toString(workflow.rootDir()));
+    EXPECT_EQ(toString(workflow.oswPath().get().parent_path()), toString(workflow.absoluteRootDir()));
+    EXPECT_FALSE(workflow.seedFile());
+    EXPECT_FALSE(workflow.weatherFile());
 
     std::vector<WorkflowStep> workflowSteps = workflow.workflowSteps();
     ASSERT_EQ(3u, workflowSteps.size());
@@ -401,100 +510,168 @@ TEST(Filetypes, WorkflowJSON_Full)
   }
 }
 
-WorkflowStepResult getWorkflowStepResult(const WorkflowStep& step)
+TEST(Filetypes, WorkflowJSON_Full)
 {
-  std::string stepName;
-  if (step.optionalCast<MeasureStep>()){
-    stepName = step.cast<MeasureStep>().measureDirName();
+  path p = resourcesPath() / toPath("utilities/Filetypes/full.osw");
+  path p2 = resourcesPath() / toPath("utilities/Filetypes/full.out.osw");
+  EXPECT_TRUE(WorkflowJSON::load(p));
+
+  try{
+    WorkflowJSON workflow(p);
+    EXPECT_TRUE(workflow.checkForUpdates());
+    ASSERT_TRUE(workflow.oswPath());
+    EXPECT_EQ(p, workflow.oswPath().get());
+    EXPECT_EQ("../../", toString(workflow.rootDir()));
+    EXPECT_EQ(toString(resourcesPath()), toString(workflow.absoluteRootDir()));
+
+    ASSERT_TRUE(workflow.seedFile());
+    EXPECT_EQ("1_9_0/example.osm", workflow.seedFile().get());
+   
+    // DLM: version resources went away, so make a file for ourselves
+    openstudio::path expectedSeedPath = resourcesPath() / toPath("osversion/1_9_0/example.osm");
+    if (!boost::filesystem::exists(expectedSeedPath)){
+      boost::filesystem::create_directories(expectedSeedPath.parent_path());
+      std::ofstream outFile(openstudio::toString(expectedSeedPath));
+      if (outFile) {
+        outFile << "OS:Version,\n\
+                    {8b3ac8ca-71e7-486e-ac28-74f6e601c3f2}, !- Handle\n\
+                    1.12.0;                                 !- Version Identifier\n";
+        outFile.close();
+      }
+    }
+
+    boost::optional<path> test = workflow.findFile(workflow.seedFile().get());
+    ASSERT_TRUE(test);
+    EXPECT_EQ(toString(expectedSeedPath), toString(*test));
+
+    ASSERT_TRUE(workflow.weatherFile());
+    EXPECT_EQ("./USA_CO_Golden-NREL.724666_TMY3.epw", workflow.weatherFile().get());
+
+    test = workflow.findFile(workflow.weatherFile().get());
+    ASSERT_TRUE(test);
+    EXPECT_EQ(toString(resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3.epw")), toString(*test));
+
+    test = workflow.findMeasure(toPath("SetWindowToWallRatioByFacade"));
+    ASSERT_TRUE(test);
+    EXPECT_EQ(toString(resourcesPath() / toPath("utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade")), toString(*test));
+
+    EXPECT_FALSE(workflow.checkForUpdates());
+
+    std::vector<WorkflowStep> workflowSteps = workflow.workflowSteps();
+    ASSERT_EQ(3u, workflowSteps.size());
+
+    std::vector<BCLMeasure> measures;
+    boost::optional<BCLMeasure> measure;
+
+    ASSERT_TRUE(workflowSteps[0].optionalCast<MeasureStep>());
+    MeasureStep measureStep = workflowSteps[0].cast<MeasureStep>();
+    measure = workflow.getBCLMeasure(measureStep);
+    ASSERT_TRUE(measure);
+    measures.push_back(measure.get());
+    EXPECT_EQ("IncreaseWallRValue", measureStep.measureDirName());
+    ASSERT_TRUE(measureStep.getArgument("r_value"));
+    ASSERT_EQ(VariantType::Double, measureStep.getArgument("r_value")->variantType().value());
+    EXPECT_EQ(30.1, measureStep.getArgument("r_value")->valueAsDouble());
+
+    ASSERT_TRUE(workflowSteps[1].optionalCast<MeasureStep>());
+    measureStep = workflowSteps[1].cast<MeasureStep>();
+    measure = workflow.getBCLMeasure(measureStep);
+    ASSERT_TRUE(measure);
+    measures.push_back(measure.get());
+    EXPECT_EQ("IncreaseRoofRValue", measureStep.measureDirName());
+    ASSERT_TRUE(measureStep.getArgument("r_value"));
+    //ASSERT_EQ(VariantType::Double, measureStep.getArgument("r_value")->variantType().value());
+    ASSERT_EQ(VariantType::Integer, measureStep.getArgument("r_value")->variantType().value());
+    EXPECT_EQ(30, measureStep.getArgument("r_value")->valueAsInteger());
+    EXPECT_EQ(30.0, measureStep.getArgument("r_value")->valueAsDouble());
+
+    ASSERT_TRUE(workflowSteps[2].optionalCast<MeasureStep>());
+    measureStep = workflowSteps[2].cast<MeasureStep>();
+    measure = workflow.getBCLMeasure(measureStep);
+    ASSERT_TRUE(measure);
+    measures.push_back(measure.get());
+    EXPECT_EQ("SetEplusInfiltration", measureStep.measureDirName());
+    ASSERT_TRUE(measureStep.getArgument("flowPerZoneFloorArea"));
+    ASSERT_EQ(VariantType::Double, measureStep.getArgument("flowPerZoneFloorArea")->variantType().value());
+    EXPECT_EQ(10.76, measureStep.getArgument("flowPerZoneFloorArea")->valueAsDouble());
+        
+    EXPECT_FALSE(workflow.checkForUpdates());
+    workflowSteps[0].setResult(getWorkflowStepResult(workflowSteps[0], measures[0]));
+    workflowSteps[1].setResult(getWorkflowStepResult(workflowSteps[1], measures[1]));
+    workflowSteps[2].setResult(getWorkflowStepResult(workflowSteps[2], measures[2]));
+    EXPECT_TRUE(workflow.checkForUpdates());
+
+    EXPECT_TRUE(workflow.saveAs(p2));
+
+  } catch (const std::exception& e){
+    EXPECT_TRUE(false) << e.what();
   }
 
-  WorkflowStepResult workflowStepResult;
-  workflowStepResult.setStartedAt(DateTime::nowUTC());
-  workflowStepResult.setCompletedAt(DateTime::nowUTC());
-  workflowStepResult.setStepResult(StepResult::Success);
-  workflowStepResult.setStepInitialCondition(stepName + " Initial Condition");
-  workflowStepResult.setStepFinalCondition(stepName + " Final Condition");
-  workflowStepResult.addStepError(stepName + " Error 1");
-  workflowStepResult.addStepError(stepName + " Error 2");
-  workflowStepResult.addStepError(stepName + " Error 3");
-  workflowStepResult.addStepWarning(stepName + " Warning 1");
-  workflowStepResult.addStepWarning(stepName + " Warning 2");
-  workflowStepResult.addStepWarning(stepName + " Warning 3");
-  workflowStepResult.addStepInfo(stepName + " Info 1");
-  workflowStepResult.addStepInfo(stepName + " Info 2");
-  workflowStepResult.addStepInfo(stepName + " Info 3");
-  workflowStepResult.addStepValue(WorkflowStepValue(stepName + " String Value", "String"));
-  workflowStepResult.addStepValue(WorkflowStepValue(stepName + " Double Value", 1.1));
-  workflowStepResult.addStepValue(WorkflowStepValue(stepName + " Int Value", 1));
-  workflowStepResult.addStepValue(WorkflowStepValue(stepName + " Bool Value", true));
-  workflowStepResult.addStepFile(stepName + " File.1");
-  workflowStepResult.addStepFile(stepName + " File.2");
-  workflowStepResult.setStdOut(stepName + " StdOut");
-  workflowStepResult.setStdErr(stepName + " StdErr");
-  return workflowStepResult;
-}
+  ASSERT_TRUE(WorkflowJSON::load(p2));
+  try{
+    WorkflowJSON workflow(p2);
+    //EXPECT_FALSE(workflow.checkForUpdates());
+    ASSERT_TRUE(workflow.oswPath());
+    EXPECT_EQ(p2, workflow.oswPath().get());
+    EXPECT_EQ("../../", toString(workflow.rootDir()));
+    EXPECT_EQ(toString(resourcesPath()), toString(workflow.absoluteRootDir()));
+    ASSERT_TRUE(workflow.seedFile());
+    EXPECT_EQ("1_9_0/example.osm", workflow.seedFile().get());
+    boost::optional<path> test = workflow.findFile(workflow.seedFile().get());
+    ASSERT_TRUE(test);
+    EXPECT_EQ(toString(resourcesPath() / toPath("osversion/1_9_0/example.osm")), toString(*test));
+    ASSERT_TRUE(workflow.weatherFile());
+    EXPECT_EQ("./USA_CO_Golden-NREL.724666_TMY3.epw", workflow.weatherFile().get());
+    test = workflow.findFile(workflow.weatherFile().get());
+    ASSERT_TRUE(test);
+    EXPECT_EQ(toString(resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3.epw")), toString(*test));
+    test = workflow.findMeasure(toPath("SetWindowToWallRatioByFacade"));
+    ASSERT_TRUE(test);
+    EXPECT_EQ(toString(resourcesPath() / toPath("utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade")), toString(*test));
 
-void checkWorkflowStepResult(const WorkflowStep& step)
-{
-  std::string stepName;
-  if (step.optionalCast<MeasureStep>()){
-    stepName = step.cast<MeasureStep>().measureDirName();
+    std::vector<WorkflowStep> workflowSteps = workflow.workflowSteps();
+    ASSERT_EQ(3u, workflowSteps.size());
+
+    std::vector<BCLMeasure> measures;
+    boost::optional<BCLMeasure> measure;
+
+    ASSERT_TRUE(workflowSteps[0].optionalCast<MeasureStep>());
+    MeasureStep measureStep = workflowSteps[0].cast<MeasureStep>();    
+    measure = workflow.getBCLMeasure(measureStep);
+    ASSERT_TRUE(measure);
+    measures.push_back(measure.get());
+    EXPECT_EQ("IncreaseWallRValue", measureStep.measureDirName());
+    ASSERT_TRUE(measureStep.getArgument("r_value"));
+    ASSERT_EQ(VariantType::Double, measureStep.getArgument("r_value")->variantType().value());
+    EXPECT_EQ(30.1, measureStep.getArgument("r_value")->valueAsDouble());
+    checkWorkflowStepResult(workflowSteps[0], measures[0]);
+
+    ASSERT_TRUE(workflowSteps[1].optionalCast<MeasureStep>());
+    measureStep = workflowSteps[1].cast<MeasureStep>();    
+    measure = workflow.getBCLMeasure(measureStep);
+    ASSERT_TRUE(measure);
+    measures.push_back(measure.get());
+    EXPECT_EQ("IncreaseRoofRValue", measureStep.measureDirName());
+    ASSERT_TRUE(measureStep.getArgument("r_value"));
+    //ASSERT_EQ(VariantType::Double, measureStep.getArgument("r_value")->variantType().value());
+    ASSERT_EQ(VariantType::Integer, measureStep.getArgument("r_value")->variantType().value());
+    EXPECT_EQ(30.0, measureStep.getArgument("r_value")->valueAsDouble());
+    checkWorkflowStepResult(workflowSteps[1], measures[1]);
+
+    ASSERT_TRUE(workflowSteps[2].optionalCast<MeasureStep>());
+    measureStep = workflowSteps[2].cast<MeasureStep>();    
+    measure = workflow.getBCLMeasure(measureStep);
+    ASSERT_TRUE(measure);
+    measures.push_back(measure.get());
+    EXPECT_EQ("SetEplusInfiltration", measureStep.measureDirName());
+    ASSERT_TRUE(measureStep.getArgument("flowPerZoneFloorArea"));
+    ASSERT_EQ(VariantType::Double, measureStep.getArgument("flowPerZoneFloorArea")->variantType().value());
+    EXPECT_EQ(10.76, measureStep.getArgument("flowPerZoneFloorArea")->valueAsDouble());
+    checkWorkflowStepResult(workflowSteps[2], measures[2]);
+
+  } catch (const std::exception& e){
+    EXPECT_TRUE(false) << e.what();
   }
-
-  ASSERT_TRUE(step.result());
-  WorkflowStepResult workflowStepResult = step.result().get();
-
-  ASSERT_TRUE(workflowStepResult.startedAt());
-  EXPECT_TRUE(workflowStepResult.startedAt().get() <= DateTime::nowUTC());
-
-  ASSERT_TRUE(workflowStepResult.completedAt());
-  EXPECT_TRUE(workflowStepResult.startedAt().get() <= workflowStepResult.completedAt().get());
-  EXPECT_TRUE(workflowStepResult.completedAt().get() <= DateTime::nowUTC());
-
-  ASSERT_TRUE(workflowStepResult.stepResult ());
-  EXPECT_EQ(StepResult::Success, workflowStepResult.stepResult().get().value());
-
-  ASSERT_TRUE(workflowStepResult.stepInitialCondition());
-  EXPECT_EQ(stepName + " Initial Condition", workflowStepResult.stepInitialCondition());
-
-  ASSERT_TRUE(workflowStepResult.stepFinalCondition());
-  EXPECT_EQ(stepName + " Final Condition", workflowStepResult.stepFinalCondition());
-
-  ASSERT_EQ(3u, workflowStepResult.stepErrors().size());
-  EXPECT_EQ(stepName + " Error 1", workflowStepResult.stepErrors()[0]);
-  EXPECT_EQ(stepName + " Error 2", workflowStepResult.stepErrors()[1]);
-  EXPECT_EQ(stepName + " Error 3", workflowStepResult.stepErrors()[2]);
-
-  ASSERT_EQ(3u, workflowStepResult.stepWarnings().size());
-  EXPECT_EQ(stepName + " Warning 1", workflowStepResult.stepWarnings()[0]);
-  EXPECT_EQ(stepName + " Warning 2", workflowStepResult.stepWarnings()[1]);
-  EXPECT_EQ(stepName + " Warning 3", workflowStepResult.stepWarnings()[2]);
-
-  ASSERT_EQ(3u, workflowStepResult.stepInfo().size());
-  EXPECT_EQ(stepName + " Info 1", workflowStepResult.stepInfo()[0]);
-  EXPECT_EQ(stepName + " Info 2", workflowStepResult.stepInfo()[1]);
-  EXPECT_EQ(stepName + " Info 3", workflowStepResult.stepInfo()[2]);
-
-  ASSERT_EQ(4u, workflowStepResult.stepValues().size());
-  EXPECT_EQ(stepName + " String Value", workflowStepResult.stepValues()[0].name());
-  EXPECT_EQ(VariantType::String, workflowStepResult.stepValues()[0].variantType().value());
-  EXPECT_EQ(stepName + " Double Value", workflowStepResult.stepValues()[1].name());
-  EXPECT_EQ(VariantType::Double, workflowStepResult.stepValues()[1].variantType().value());
-  EXPECT_EQ(stepName + " Int Value", workflowStepResult.stepValues()[2].name());
-  EXPECT_EQ(VariantType::Integer, workflowStepResult.stepValues()[2].variantType().value());
-  EXPECT_EQ(stepName + " Bool Value", workflowStepResult.stepValues()[3].name());
-  EXPECT_EQ(VariantType::Boolean, workflowStepResult.stepValues()[3].variantType().value());
-
-  ASSERT_EQ(2u, workflowStepResult.stepFiles().size());
-  EXPECT_EQ(stepName + " File.1", toString(workflowStepResult.stepFiles()[0]));
-  EXPECT_EQ(stepName + " File.2", toString(workflowStepResult.stepFiles()[1]));
-
-  ASSERT_TRUE(workflowStepResult.stdOut());
-  EXPECT_EQ(stepName + " StdOut", workflowStepResult.stdOut().get());
-
-  ASSERT_TRUE(workflowStepResult.stdErr());
-  EXPECT_EQ(stepName + " StdErr", workflowStepResult.stdErr().get());
-
 }
 
 TEST(Filetypes, WorkflowJSON_Min_Results)
@@ -553,9 +730,9 @@ TEST(Filetypes, WorkflowJSON_Min_Results)
     EXPECT_EQ(5, measureStep.getArgument("percent_decrease")->valueAsInteger());
     
     EXPECT_FALSE(workflow.checkForUpdates());
-    workflowSteps[0].setResult(getWorkflowStepResult(workflowSteps[0]));
-    workflowSteps[1].setResult(getWorkflowStepResult(workflowSteps[1]));
-    workflowSteps[2].setResult(getWorkflowStepResult(workflowSteps[2]));
+    workflowSteps[0].setResult(getWorkflowStepResult(workflowSteps[0], boost::none));
+    workflowSteps[1].setResult(getWorkflowStepResult(workflowSteps[1], boost::none));
+    workflowSteps[2].setResult(getWorkflowStepResult(workflowSteps[2], boost::none));
     EXPECT_TRUE(workflow.checkForUpdates());
 
     EXPECT_TRUE(workflow.saveAs(p2));
@@ -590,7 +767,7 @@ TEST(Filetypes, WorkflowJSON_Min_Results)
     ASSERT_TRUE(measureStep.getArgument("operating_expenses"));
     ASSERT_EQ(VariantType::Integer, measureStep.getArgument("operating_expenses")->variantType().value());
     EXPECT_EQ(0, measureStep.getArgument("operating_expenses")->valueAsInteger());
-    checkWorkflowStepResult(workflowSteps[0]);
+    checkWorkflowStepResult(workflowSteps[0], boost::none);
 
     ASSERT_TRUE(workflowSteps[1].optionalCast<MeasureStep>());
     measureStep = workflowSteps[1].cast<MeasureStep>();
@@ -604,7 +781,7 @@ TEST(Filetypes, WorkflowJSON_Min_Results)
     ASSERT_TRUE(measureStep.getArgument("space_type"));
     ASSERT_EQ(VariantType::String, measureStep.getArgument("space_type")->variantType().value());
     EXPECT_EQ("*All*", measureStep.getArgument("space_type")->valueAsString());
-    checkWorkflowStepResult(workflowSteps[1]);
+    checkWorkflowStepResult(workflowSteps[1], boost::none);
 
     ASSERT_TRUE(workflowSteps[2].optionalCast<MeasureStep>());
     measureStep = workflowSteps[2].cast<MeasureStep>();
@@ -615,7 +792,7 @@ TEST(Filetypes, WorkflowJSON_Min_Results)
     ASSERT_TRUE(measureStep.getArgument("percent_decrease"));
     ASSERT_EQ(VariantType::Integer, measureStep.getArgument("percent_decrease")->variantType().value());
     EXPECT_EQ(5, measureStep.getArgument("percent_decrease")->valueAsInteger());
-    checkWorkflowStepResult(workflowSteps[2]);
+    checkWorkflowStepResult(workflowSteps[2], boost::none);
 
   } catch (const std::exception& e){
     EXPECT_TRUE(false) << e.what();

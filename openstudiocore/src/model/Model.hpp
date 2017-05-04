@@ -41,6 +41,10 @@
 namespace openstudio {
 
 class SqlFile;
+class Date;
+class MonthOfYear;
+class DayOfWeek;
+class NthDayOfWeekInMonth;
 
 namespace model {
 
@@ -118,6 +122,25 @@ class MODEL_API Model : public openstudio::Workspace {
   /** Get the YearDescription object if there is one, this implementation uses a cached reference to the YearDescription
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<YearDescription>(). */
   boost::optional<YearDescription> yearDescription() const;
+  
+  /** Get or create the YearDescription object if there is one, then call method from YearDescription. */
+  // DLM: this is due to issues exporting the model::YearDescription object because of name conflict with utilities::YearDescription.
+  boost::optional<int> calendarYear() const;
+  std::string dayofWeekforStartDay() const;
+  bool isDayofWeekforStartDayDefaulted() const;
+  bool isLeapYear() const;
+  bool isIsLeapYearDefaulted() const;
+  void setCalendarYear(int calendarYear);
+  void resetCalendarYear();
+  bool setDayofWeekforStartDay(std::string dayofWeekforStartDay);
+  void resetDayofWeekforStartDay();
+  bool setIsLeapYear(bool isLeapYear);
+  void resetIsLeapYear();
+  int assumedYear();
+  openstudio::Date makeDate(openstudio::MonthOfYear monthOfYear, unsigned dayOfMonth);
+  openstudio::Date makeDate(unsigned monthOfYear, unsigned dayOfMonth);
+  openstudio::Date makeDate(openstudio::NthDayOfWeekInMonth n, openstudio::DayOfWeek dayOfWeek, openstudio::MonthOfYear monthOfYear);
+  openstudio::Date makeDate(unsigned dayOfYear);
 
   /** Get the WeatherFile object if there is one, this implementation uses a cached reference to the WeatherFile
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<WeatherFile>(). */

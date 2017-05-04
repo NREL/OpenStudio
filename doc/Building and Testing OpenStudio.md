@@ -27,6 +27,42 @@ If this is a major release, release notes must be written.
 - Generate a markdown document from the word doc.
 
 
+Updating HVAC lib
+=================
+If this is a major release, the HVAC library must be updated.
+
+Run `developer/ruby/UpdateHVACLibrary.rb` (ruby -I E:\Git\OS1\build\Products\ruby\Release UpdateHVACLibrary.rb)
+
+Commit the updated files to develop.
+
+
+Updating EnergyPlus
+===================
+
+If a new version of EnergyPlus is to be incorporated into OpenStudio
+- Upload the 3 versions (Windows 64, Ubuntu, and Linux) to S3's folder `openstudio-resources/dependencies`
+- In the ./openstudiocore folder, update `CMakeLists.txt` following
+	- ENERGYPLUS_VERSION_MAJOR
+	- ENERGYPLUS_VERSION_MINOR
+	- ENERGYPLUS_VERSION_PATCH
+	- ENERGYPLUS_BUILD_SHA
+	- ENERGYPLUS_EXPECTED_HASH (In 3 places: Win 32, Win 64, Darwin, and Linux)
+
+Note: use HashTab, or similar, to determine the MD5 hash value for each file referenced above.
+
+
+Updating OpenStudio Server used by PAT
+======================================
+
+If there is a new server build, bump the server SHA (both for Mac and Windows) in manifest.json in the root folder of PAT.
+
+
+Updating PAT
+==========================
+
+Bump the PAT SHA in OpenStudio's openstudiocore/pat/CMakeLists.txt.
+
+
 Initial Steps
 =============
 If internal to NREL, connect to developer VPN (avoids certificate warnings, increases speed of uploads).
@@ -38,31 +74,10 @@ If this is a major release
 - With Git, merge `develop` into `master`.
 
 
-Updating HVAC lib
-=================
-If this is a major release, the HVAC library must be updated.
-
-Run `developer/ruby/UpdateHVACLibrary.rb` (ruby -I E:\Git\OS1\build\OSCore-prefix\src\OSCore-build\ruby\Release UpdateHVACLibrary.rb)
-
-Commit the updated files to develop.
-
-Updating EnergyPlus
-===================
-
-If a new version of EnergyPlus is to be incorporated into OpenStudio
-- Upload the 4 versions (Windows 64, Windows 32, Ubuntu, and Linux) to S3's folder `openstudio-resources/dependencies`
-- In the top level of your OpenStudio folder, update `CMakeLists.txt` following
-	- ENERGYPLUS_VERSION_MAJOR
-	- ENERGYPLUS_VERSION_MINOR
-	- ENERGYPLUS_VERSION_PATCH
-	- ENERGYPLUS_BUILD_SHA
-	- ENERGYPLUS_EXPECTED_HASH (In 4, perhaps 5 places: Win 32, Win 64, Darwin, Linux, and maybe Redhat)
-
-Note: use HashTab, or similar, to determine the MD5 hash value for each file referenced above.
-
-
-Builds
+OpenStudio 2 Builds
 ======
+
+Note: If the desire is to build OpenStudio 1.x, refer to the earlier version of this document dated 12/9/2016.
 
 Ubuntu
 ------
@@ -70,16 +85,22 @@ With Git, pull `iteration` branch.
 
 In a command window:
 
-    cd openstudio
-    mkdir build
-	cd build
-	ccmake ..
+    cd openstudio/build
+	ccmake ../openstudiocore
 
 In CMake check the following:
 
+- BUILD\_OS\_APP
 - BUILD\_PACKAGE
-- BUILD\_SWIG
 - CMAKE\_BUILD\_TYPE = Release
+
+In CMake **uncheck** the following:
+
+- CPACK_BINARY_FOO (uncheck all)
+- CPACK_SOURCE_FOO (uncheck all)
+
+In CMake **check** the following:
+
 - CPACK\_BINARY\_DEB
 
 In CMake type the following:
@@ -89,8 +110,8 @@ In CMake type the following:
 
 In a command window:
 
-	make –j8 (8 indicates the number of cores used)
-	make package_deb
+	make –j16 (16 indicates the number of cores used, the max number allowed by VMware 12)
+	make package
 
 Copy .deb package from VM to Windows
 
@@ -100,89 +121,30 @@ With Git, pull `iteration` branch.
 
 In CMake, select current 64-bit compiler
 
+Point CMake to the openstudiocore folder for source, and build folder for binaries
+
 In CMake check the following:
 
 - BUILD\_CSHARP\_BINDINGS
+- BUILD\_DOCUMENTATION
+- BUILD\_OS\_APP
 - BUILD\_PACKAGE
-- BUILD\_SWIG
-- BUILD\_TESTING
-
-Press `Configure` and `Generate` in CMake
-
-In Visual Studio:
-
-- Open OpenStudio.sln
-- Select Release Solution Configuration
-- Build OpenStudio until "configuring done", and "generating done"
-- Cancel the build (tip: set up [Kill Build Shortcut](https://github.com/NREL/OpenStudio/wiki/Suggested-Visual-Studio-2013-Configuration#kill-build-shortcut))
-- Open OpenStudioCore.sln
-- Select Release Solution Configuration
-- Build OpenStudioCore with IncrediBuild
-- Open OpenStudio.sln
-- Build PACKAGE
-
-OpenStudio 2 Windows 64-bit
---------------
-With Git, pull `os_2_0_develop` branch.
-
-In CMake, select current 64-bit compiler
-
-In CMake check the following:
-
-- BUILD\_PACKAGE
-- BUILD\_SWIG
-
-Press `Configure` and `Generate` in CMake
-
-Check advanced, check grouped
+- BUILD\_PAT
+- BUILD\_TESTING (NOTE: not currently possible with e+ 8.7 issue)
 
 In CMake **uncheck** the following:
 
 - CPACK_BINARY_FOO (uncheck all)
 - CPACK_SOURCE_FOO (uncheck all)
 
-In CMake **check** the following:
-
-- CPACK_BINARY_ZIP
 
 Press `Configure` and `Generate` in CMake
 
 In Visual Studio:
 
 - Open OpenStudio.sln
-- Select Release Solution Configuration
-- Build OpenStudio until "configuring done", and "generating done"
-- Cancel the build (tip: set up [Kill Build Shortcut](https://github.com/NREL/OpenStudio/wiki/Suggested-Visual-Studio-2013-Configuration#kill-build-shortcut))
-- Open OpenStudioCore.sln
-- Select Release Solution Configuration
-- Build OpenStudioCore with IncrediBuild
-- Open OpenStudio.sln
-- Build PACKAGE
-
-Windows 32-bit
---------------
-With Git, pull iteration branch.
-
-In CMake, select current 32-bit compiler
-
-In CMake check the following:
-
-- BUILD\_CSHARP\_BINDINGS
-- BUILD\_PACKAGE
-- BUILD\_SWIG
-
-Press `Configure` and `Generate` in CMake
-
-In Visual Studio:
-
-- Open OpenStudio.sln
-- Select Release Solution Configuration
-- Build OpenStudio until "configuring done", and "generating done"
-- Cancel the build
-- Open OpenStudioCore.sln
-- Select Release Solution Configuration
-- Build OpenStudioCore with IncrediBuild
-- Open OpenStudio.sln
+- Select **Release** Solution Configuration
+- Build ALL_BUILD with IncrediBuild
 - Build PACKAGE
 
 Mac
@@ -191,31 +153,24 @@ With Git, pull `iteration` branch.
 
 In a command window:
 
-	cd openstudio
-    mkdir build
-    cd build
-	ccmake ..
+	cd openstudio/build
+	ccmake ../openstudiocore
 
 In CMake check the following:
 
+- BUILD\_OS\_APP
 - BUILD\_PACKAGE
-
-In CMake type the following:
-
-	t
+- BUILD\_PAT
+- CMAKE\_BUILD\_TYPE = Release
 
 In CMake **uncheck** the following:
 
-- CPACK\_BINARY\__FOO_ (uncheck all)
+- CPACK_BINARY_FOO (uncheck all)
+- CPACK_SOURCE_FOO (uncheck all)
 
 In CMake **check** the following:
 
-- CPACK\_BINARY\_PACKAGEMAKER
-
-
-In CMake **enter** the following for CMAKE\_BUILD\_TYPE:
-
-- `Release`
+- CPACK\_BINARY\_IFW
 
 
 In CMake type the following:
@@ -226,18 +181,22 @@ In CMake type the following:
 In a command window:
 
 ```bash
-make package –j8
+make package –j16
 # When done:
 ⌘ + q (to quit a Mac app)
 ```
 
+Locate the package, right click and use Mac's compression algorithm.
+
 Copy build to VM's share folder
 
+**Note:** The package will appear to be an empty folder in the build directory, when in fact the package is in OpenStudio/build/_CPack_Packages/Darwin/IFW and it's file name will have no file type extension.
 
 OSVersion Testing
 =================
+NOTE: not available while build testing is deprecated 
 
-In folder `build\OSCore-prefix\src\OSCore-build\Products\Release`
+In folder `build\Products\Release`
 
 - Open cmd prompt
 - Drag and drop `openstudio_osversion_tests.exe` onto the prompt, then run
@@ -248,17 +207,11 @@ Sanity Testing Release Builds
 
 ### Ubuntu
 - On a clean Ubuntu VM, install the current version of OpenStudio
-- Open OpenStudio, and make a model
-- Open PAT, make a project, and select the model above as your baseline model
+- Locate OpenStudioApp with "which OpenStudioApp", and navigate to its folder
+- ./OpenStudioApp, and make a model
 
 ### Mac
 - On a clean Mac VM, install the current version of SketchUp and OpenStudio
-- Open SketchUp, and make and save a model.  Ensure that plug-in loads with Extensions Policy = "Identified Extensions Only".
-- Open OpenStudio, and open the model above
-- Open PAT, make a project, and select the model above as your baseline model
-
-### 32-bit Windows
-- On a clean Windows VM, install the current 32-bit version of SketchUp and the current 32-bit version of OpenStudio
 - Open SketchUp, and make and save a model.  Ensure that plug-in loads with Extensions Policy = "Identified Extensions Only".
 - Open OpenStudio, and open the model above
 - Open PAT, make a project, and select the model above as your baseline model
@@ -272,7 +225,7 @@ Sanity Testing Release Builds
 ### Tests to run
 - Test prior version of OpenStudio model
 - Test prior version of PAT project
-- Use SketchUp to make a model on Windows 32 bit, Windows 64 bit, and Mac
+- Use SketchUp to make a model on Windows 64 bit, and Mac
 - Test running PAT on the cloud on at least one platform
 - Test BCL downloads
 - Test user scripts in SketchUp
@@ -313,19 +266,18 @@ On [OpenStudio.net](https://www.openstudio.net/):
 - Update `Current Release Version` or `Develop Release Version` (depending on whether a major or iteration build is being done)
 - Replace the S3 build URLs with those generated above
 
+
+Verification of Posted Software
+===============================
+
+Download all posted software from both GitHub and S3. Verify that each downloaded files' MD5 hash matches their respective MD5 hash of the original, tested files from the build machines.
+
+
 Documentation
 =============
-In CMake check the following:
-
-- BUILD\_DOCUMENTATION
-
-Press `Configure` and `Generate` in CMake
 
 In Visual Studio:
 
-- Open OpenStudio.sln
-- Build OpenStudio until "configuring done", and "generating done"
-- Cancel the build
 - Open OpenStudioCore.sln
 - **Without** IncrediBuild, build ALL\_DOXYGEN
 - **Without** IncrediBuild, build ALL\_RDOC
@@ -397,9 +349,9 @@ Version Update
 
 The current version (X.Y.Z) being built, and the updated version (X.Y.Z+1) for the upcoming iteration need to be correctly incorporated into their respective documents.
 
-- Copy file `openstudiocore\resources\model\OpenStudio.idd` to `openstudiocore\src\utilities\idd\versions\x_Y_Z+1` (new folder)
 - In the top level of your OpenStudio folder, update `CMakeLists.txt` version to X.Y.Z+1 (3 lines), e.g. `set(CMAKE_VERSION_MAJOR 2)`, `set(CMAKE_VERSION_MINOR 0)`, `set(CMAKE_VERSION_PATCH 1)`
 - In the openstudiocore level of your OpenStudio folder, update `CMakeLists.txt` version to X.Y.Z+1 (1 line), e.g. `project(OpenStudio VERSION 2.0.1)`
+- Copy file `openstudiocore\resources\model\OpenStudio.idd` to `openstudiocore\src\utilities\idd\versions\x_Y_Z` (new folder)
 - In `openstudiocore\resources\model` update `OpenStudio.idd` version to X.Y.Z+1 (1 line)
 - In `openstudiocore\src\osversion` update `VersionTranslator.cpp` version to X.Y.Z+1 in first location, and X.Y.Z in second location
 
@@ -407,18 +359,18 @@ At https://github.com/NREL/OpenStudio/blob/develop/openstudiocore/src/osversion/
 
 - Select "History", see edits if needed (usually use `defaultUpdate` in first location, 1 line for each of 2 locations)
 
-With Git, commit above files (Commit Message = `Updating version to X.Y.Z+1`) to the develop branch
+With Git, commit above files (Commit Message = `Update version to X.Y.Z+1`) to the develop branch
 
 SketchUp Extension Signature
 =========
 Check if either file below has been updated:
-- `openstudiocore/ruby/openstudio/sketchup_plugin/OpenStudio.rb`
-- `openstudiocore/ruby/openstudio/sketchup_plugin/Startup.rb` 
+- `openstudiocore/ruby/openstudio/sketchup_plugin/OpenStudio.rb` (Note: not valid in OS2.x)
+- `openstudiocore/sketchup_plugin/plugin/OpenStudio/Startup.rb` 
 
 If either file was updated, the SketchUp Extension Signature must be updated in
-- `openstudiocore/ruby/openstudio/sketchup_plugin/OpenStudio.hash`
+- `openstudiocore/sketchup_plugin/plugin/OpenStudio/OpenStudio.hash`
  
-To do this:
+To do this: (Note: not valid in OS2.x)
 - Build an OpenStudio package
 - Zip the contents (OpenStudio.rb and OpenStudio folder) in `build\_CPack_Packages\win64\NSIS\OpenStudio-x.y.z.sha-Win64\Ruby\Plugins`
 - Change the extension of the zip file from .zip to .rbz

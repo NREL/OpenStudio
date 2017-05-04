@@ -31,6 +31,7 @@
 %ignore openstudio::getApplicationSourceDirectory();
 %ignore openstudio::getApplicationBuildDirectory();
 %ignore openstudio::applicationIsRunningFromBuildDirectory();
+%ignore openstudio::moduleIsRunningFromBuildDirectory();
 
 %include <utilities/core/Qt.i>
 %include <utilities/core/Enum.i>

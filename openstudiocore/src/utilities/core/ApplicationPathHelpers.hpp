@@ -56,6 +56,9 @@ namespace openstudio {
   /// \returns Will return dir containing the binary containing OpenStudio Utilities, could be openstudio.exe, openstudio.so, etc.
   UTILITIES_API openstudio::path getOpenStudioModuleDirectory();
 
+  /// \returns True if the OpenStudio Module is running from the build directory
+  UTILITIES_API bool moduleIsRunningFromBuildDirectory();
+
   /// \returns The path to the OpenStudio Command Line Interface  if it exists.
   UTILITIES_API openstudio::path getOpenStudioCLI();
 

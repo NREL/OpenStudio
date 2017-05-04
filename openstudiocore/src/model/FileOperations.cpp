@@ -30,6 +30,47 @@
 
 #include "Model.hpp"
 
+#include "Building.hpp"
+#include "Building_Impl.hpp"
+#include "FileOperations.hpp"
+#include "Component.hpp"
+#include "Facility.hpp"
+#include "Facility_Impl.hpp"
+#include "LifeCycleCostParameters.hpp"
+#include "LifeCycleCostParameters_Impl.hpp"
+#include "Model_Impl.hpp"
+#include "WeatherFile.hpp"
+#include "WeatherFile_Impl.hpp"
+#include "SimulationControl.hpp"
+#include "SimulationControl_Impl.hpp"
+#include "SizingParameters.hpp"
+#include "SizingParameters_Impl.hpp"
+#include "Timestep.hpp"
+#include "Timestep_Impl.hpp"
+#include "ShadowCalculation.hpp"
+#include "ShadowCalculation_Impl.hpp"
+#include "HeatBalanceAlgorithm.hpp"
+#include "HeatBalanceAlgorithm_Impl.hpp"
+#include "RunPeriod.hpp"
+#include "RunPeriod_Impl.hpp"
+#include "ConstructionBase.hpp"
+#include "ConstructionBase_Impl.hpp"
+#include "Material.hpp"
+#include "Material_Impl.hpp"
+#include "BuildingStory.hpp"
+#include "BuildingStory_Impl.hpp"
+#include "LightingSimulationZone.hpp"
+#include "LightingSimulationZone_Impl.hpp"
+#include "SpaceType.hpp"
+#include "SpaceType_Impl.hpp"
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
+#include "BuildingUnit.hpp"
+#include "BuildingUnit_Impl.hpp"
+#include "RenderingColor.hpp"
+#include "StandardsInformationConstruction.hpp"
+#include "StandardsInformationMaterial.hpp"
+
 #include "../utilities/filetypes/EpwFile.hpp"
 #include "../utilities/bcl/BCLMeasure.hpp"
 #include "../utilities/plot/ProgressBar.hpp"
@@ -363,6 +404,53 @@ namespace model {
     return modelTempDir;
   }
 
+  void initializeModelObjects(openstudio::model::Model model)
+  {
+    // These objects used to be added to the model as you clicked through the App's tabs,
+    // resulting in a uncertain set of model changes.  With these changes, every model will
+    // always have the following objects after opening in the app.
+    openstudio::model::Building building = model.getUniqueModelObject<openstudio::model::Building>();
+    openstudio::model::Facility facility = model.getUniqueModelObject<openstudio::model::Facility>();
+
+    // from simulation tab
+    //model.getUniqueModelObject<openstudio::model::RadianceParameters>();
+    model.getUniqueModelObject<openstudio::model::SimulationControl>();
+    model.getUniqueModelObject<openstudio::model::SizingParameters>();
+    //model.getUniqueModelObject<openstudio::model::ProgramControl>();
+    model.getUniqueModelObject<openstudio::model::Timestep>();
+    //model.getUniqueModelObject<openstudio::model::ReportingTolerances>();
+    //model.getUniqueModelObject<openstudio::model::ConvergenceLimits>();
+    model.getUniqueModelObject<openstudio::model::ShadowCalculation>();
+    //model.getUniqueModelObject<openstudio::model::SurfaceConvectionAlgorithmInside>();
+    //model.getUniqueModelObject<openstudio::model::SurfaceConvectionAlgorithmOutside>();
+    model.getUniqueModelObject<openstudio::model::HeatBalanceAlgorithm>();
+    //model.getUniqueModelObject<openstudio::model::ZoneAirHeatBalanceAlgorithm>();
+    //model.getUniqueModelObject<openstudio::model::ZoneAirContaminantBalance>();
+    //model.getUniqueModelObject<openstudio::model::ZoneCapacitanceMultiplierResearchSpecial>();
+    model.getUniqueModelObject<openstudio::model::RunPeriod>();
+
+    openstudio::model::LifeCycleCostParameters lifeCycleCostParameters = model.getUniqueModelObject<openstudio::model::LifeCycleCostParameters>();
+  
+    for (auto& object : model.objects()){
+      if (object.optionalCast<model::ConstructionBase>()){
+        object.cast<model::ConstructionBase>().standardsInformation();
+        object.cast<model::ConstructionBase>().renderingColor();
+      }else if (object.optionalCast<model::Material>()){
+        object.cast<model::Material>().standardsInformation();
+      }else if (object.optionalCast<model::BuildingStory>()){
+        object.cast<model::BuildingStory>().renderingColor();
+      }else if (object.optionalCast<model::LightingSimulationZone>()){
+        object.cast<model::LightingSimulationZone>().renderingColor();
+      }else if (object.optionalCast<model::SpaceType>()){
+        object.cast<model::SpaceType>().renderingColor();
+      }else if (object.optionalCast<model::ThermalZone>()){
+        object.cast<model::ThermalZone>().renderingColor();
+      }else if (object.optionalCast<model::BuildingUnit>()){
+        object.cast<model::BuildingUnit>().renderingColor();
+      }
+    }
+  }
+
   bool saveModelTempDir(const openstudio::path& modelTempDir, const openstudio::path& osmPath)
   {
     bool test = true;
@@ -405,10 +493,17 @@ namespace model {
   { 
     // set the workflow's path
     openstudio::path oswPath = modelTempDir / openstudio::toPath("resources/workflow.osw");
-    model.workflowJSON().setOswPath(oswPath);
+    boost::optional<openstudio::path> currentOswPath = model.workflowJSON().oswPath();
+    if (!currentOswPath || (oswPath != currentOswPath.get())){
+      model.workflowJSON().setOswPath(oswPath);
+    }
 
     // set the seed name
-    model.workflowJSON().setSeedFile(toPath("..") / osmPath.filename());
+    openstudio::path seedFile = toPath("..") / osmPath.filename();
+    boost::optional<openstudio::path> currentSeedFile = model.workflowJSON().seedFile();
+    if (!currentSeedFile || (seedFile != currentSeedFile.get())){
+      model.workflowJSON().setSeedFile(seedFile);
+    }
 
     // save the osw, do before temp dirs get copied
     model.workflowJSON().save();

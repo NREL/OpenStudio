@@ -49,7 +49,7 @@ class OSLoadNamePixmapLineEdit : public QWidget {
 
   OSLoadNamePixmapLineEdit(QWidget * parent = nullptr);
 
-  virtual ~OSLoadNamePixmapLineEdit() {}
+  virtual ~OSLoadNamePixmapLineEdit();
 
   void enableClickFocus();
 

@@ -327,8 +327,9 @@ void ApplyMeasureNowDialog::displayMeasure()
     bool hasIncompleteArguments = m_currentMeasureStepItem->hasIncompleteArguments();
     disableOkButton(hasIncompleteArguments);
 
-    m_currentMeasureStepItem->setName(m_bclMeasure->name().c_str());
-    m_currentMeasureStepItem->setDisplayName(m_bclMeasure->displayName().c_str());
+    //m_currentMeasureStepItem->setName(m_bclMeasure->name().c_str());
+    m_currentMeasureStepItem->setName(m_bclMeasure->displayName().c_str());
+    //m_currentMeasureStepItem->setDisplayName(m_bclMeasure->displayName().c_str());
     m_currentMeasureStepItem->setDescription(m_bclMeasure->description().c_str());
 
     m_editController->setMeasureStepItem(m_currentMeasureStepItem.data(), app);

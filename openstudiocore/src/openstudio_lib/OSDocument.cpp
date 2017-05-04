@@ -30,6 +30,7 @@
 
 #include "ApplyMeasureNowDialog.hpp"
 #include "ConstructionsTabController.hpp"
+#include "GeometryTabController.hpp"
 #include "FacilityTabController.hpp"
 #include "HorizontalTabWidget.hpp"
 #include "HVACSystemsTabController.hpp"
@@ -70,29 +71,10 @@
 
 //#include "../analysis/Analysis.hpp"
 
-#include "../model/Building.hpp"
-#include "../model/Building_Impl.hpp"
 #include "../model/FileOperations.hpp"
 #include "../model/Component.hpp"
-#include "../model/Facility.hpp"
-#include "../model/Facility_Impl.hpp"
-#include "../model/LifeCycleCostParameters.hpp"
-#include "../model/LifeCycleCostParameters_Impl.hpp"
-#include "../model/Model_Impl.hpp"
 #include "../model/WeatherFile.hpp"
 #include "../model/WeatherFile_Impl.hpp"
-#include "../model/SimulationControl.hpp"
-#include "../model/SimulationControl_Impl.hpp"
-#include "../model/SizingParameters.hpp"
-#include "../model/SizingParameters_Impl.hpp"
-#include "../model/Timestep.hpp"
-#include "../model/Timestep_Impl.hpp"
-#include "../model/ShadowCalculation.hpp"
-#include "../model/ShadowCalculation_Impl.hpp"
-#include "../model/HeatBalanceAlgorithm.hpp"
-#include "../model/HeatBalanceAlgorithm_Impl.hpp"
-#include "../model/RunPeriod.hpp"
-#include "../model/RunPeriod_Impl.hpp"
 
 #include "../utilities/bcl/BCLComponent.hpp"
 #include "../utilities/bcl/LocalBCL.hpp"
@@ -201,7 +183,7 @@ namespace openstudio {
     bool isConnected;
 
     m_verticalId = 0;
-    m_subTabIds = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+    m_subTabIds = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
     // Make sure that the vector is the same size as the number of tabs
     OS_ASSERT(m_subTabIds.size() == static_cast<unsigned>(RESULTS_SUMMARY + 1));
 
@@ -283,31 +265,7 @@ namespace openstudio {
 
   void OSDocument::initializeModel()
   {
-    // These objects used to be added to the model as you clicked through the App's tabs,
-    // resulting in a uncertain set of model changes.  With these changes, every model will
-    // always have the following objects after opening in the app.
-    openstudio::model::Building building = m_model.getUniqueModelObject<openstudio::model::Building>();
-    openstudio::model::Facility facility = m_model.getUniqueModelObject<openstudio::model::Facility>();
-
-    // from simulation tab
-    //m_model.getUniqueModelObject<openstudio::model::RadianceParameters>();
-    m_model.getUniqueModelObject<openstudio::model::SimulationControl>();
-    m_model.getUniqueModelObject<openstudio::model::SizingParameters>();
-    //m_model.getUniqueModelObject<openstudio::model::ProgramControl>();
-    m_model.getUniqueModelObject<openstudio::model::Timestep>();
-    //m_model.getUniqueModelObject<openstudio::model::ReportingTolerances>();
-    //m_model.getUniqueModelObject<openstudio::model::ConvergenceLimits>();
-    m_model.getUniqueModelObject<openstudio::model::ShadowCalculation>();
-    //m_model.getUniqueModelObject<openstudio::model::SurfaceConvectionAlgorithmInside>();
-    //m_model.getUniqueModelObject<openstudio::model::SurfaceConvectionAlgorithmOutside>();
-    m_model.getUniqueModelObject<openstudio::model::HeatBalanceAlgorithm>();
-    //m_model.getUniqueModelObject<openstudio::model::ZoneAirHeatBalanceAlgorithm>();
-    //m_model.getUniqueModelObject<openstudio::model::ZoneAirContaminantBalance>();
-    //m_model.getUniqueModelObject<openstudio::model::ZoneCapacitanceMultiplierResearchSpecial>();
-    m_model.getUniqueModelObject<openstudio::model::RunPeriod>();
-
-
-    openstudio::model::LifeCycleCostParameters lifeCycleCostParameters = m_model.getUniqueModelObject<openstudio::model::LifeCycleCostParameters>();
+    model::initializeModelObjects(m_model);
   }
 
   void OSDocument::inspectModelObject(model::OptionalModelObject & modelObject, bool readOnly)
@@ -433,6 +391,13 @@ namespace openstudio {
       ":images/on_constructions_tab.png",
       ":images/off_constructions_tab.png",
       ":images/disabled_constructions_tab.png");
+
+    // Geometry
+    m_mainWindow->addVerticalTabButton(GEOMETRY,
+      "Geometry",
+      ":images/on_geometry_tab.png",
+      ":images/off_geometry_tab.png",
+      ":images/disabled_geometry_tab.png");
 
     // Loads
     m_mainWindow->addVerticalTabButton(LOADS,
@@ -580,6 +545,24 @@ namespace openstudio {
       connect(m_mainTabController.get(), &ConstructionsTabController::openLibDlgClicked, this, &OSDocument::openLibDlgClicked);
 
       connect(m_mainTabController->mainContentWidget(), &MainTabView::tabSelected, m_mainRightColumnController.get(), &MainRightColumnController::configureForConstructionsSubTab);
+
+      connect(m_mainTabController->mainContentWidget(), &MainTabView::tabSelected, this, &OSDocument::updateSubTabSelected);
+
+      break;
+
+    case GEOMETRY:
+      // Geometry
+
+      m_mainTabController = std::shared_ptr<MainTabController>(new GeometryTabController(isIP, m_model));
+      m_mainWindow->setView(m_mainTabController->mainContentWidget(), GEOMETRY);
+
+      connect(this, &OSDocument::toggleUnitsClicked, m_mainTabController.get(), &GeometryTabController::toggleUnitsClicked);
+
+      connect(m_mainTabController.get(), &GeometryTabController::downloadComponentsClicked, this, &OSDocument::downloadComponentsClicked);
+
+      connect(m_mainTabController.get(), &GeometryTabController::openLibDlgClicked, this, &OSDocument::openLibDlgClicked);
+
+      connect(m_mainTabController->mainContentWidget(), &MainTabView::tabSelected, m_mainRightColumnController.get(), &MainRightColumnController::configureForGeometrySubTab);
 
       connect(m_mainTabController->mainContentWidget(), &MainTabView::tabSelected, this, &OSDocument::updateSubTabSelected);
 
@@ -1378,12 +1361,13 @@ namespace openstudio {
           OS_ASSERT(srm);
 
           MeasureStep srmStep(result.second);
-          srmStep.setMeasureId(srm->uid());
-          srmStep.setVersionId(srm->versionId());
-          std::vector<std::string> tags = srm->tags();
-          if (!tags.empty()){
-            srmStep.setTaxonomy(tags[0]);
-          }
+          // DLM: moved to WorkflowStepResult
+          //srmStep.setMeasureId(srm->uid());
+          //srmStep.setVersionId(srm->versionId());
+          //std::vector<std::string> tags = srm->tags();
+          //if (!tags.empty()){
+          //  srmStep.setTaxonomy(tags[0]);
+          //}
           srmStep.setName(srm->displayName());
           srmStep.setDescription(srm->description());
           srmStep.setModelerDescription(srm->modelerDescription());

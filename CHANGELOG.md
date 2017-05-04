@@ -1,3 +1,115 @@
+## OpenStudio v2.1.1
+###### 2017-04-19 — [Diff]( https://github.com/NREL/OpenStudio/compare/v2.1.0...v2.1.1 )
+
+- ![Fixed:][fixed] [#2414]( https://github.com/NREL/OpenStudio/issues/2414 ), HPWH wrapped condenser - don't set source nodes on tank
+- ![Fixed:][fixed] [#2493]( https://github.com/NREL/OpenStudio/issues/2493 ), Internal NREL user specific Analysis Error related to Faraday
+- ![Fixed:][fixed] [#2531]( https://github.com/NREL/OpenStudio/issues/2531 ), 2.0.5 03/20 pat results tab not working, not finding results measure
+- ![Fixed:][fixed] [#2544]( https://github.com/NREL/OpenStudio/issues/2544 ), PAT arg default value is missing
+- ![Fixed:][fixed] [#2546]( https://github.com/NREL/OpenStudio/issues/2546 ), Output Variable Table in Output Tab is Empty in PAT 2.1.0
+- ![Fixed:][fixed] [#2549]( https://github.com/NREL/OpenStudio/issues/2549 ), Duplicate Measure and Option can create invalid workflow
+- ![Fixed:][fixed] [#2556]( https://github.com/NREL/OpenStudio/issues/2556 ), Links to older SDK documentation
+- ![Improved:][improved] [#2564]( https://github.com/NREL/OpenStudio/issues/2564 ), PAT 2.1.0 integer_sequence distribution for pivot variable
+
+## OpenStudio v2.1.0
+###### 2017-03-31 — [Diff]( https://github.com/NREL/OpenStudio/compare/v2.0.5...v2.1.0 )
+
+- ![Fixed:][fixed] [#2432]( https://github.com/NREL/OpenStudio/issues/2432 ), HVAC library empty in OpenStudioApp 2.0.0 on mac
+- ![Fixed:][fixed] [#2436]( https://github.com/NREL/OpenStudio/issues/2436 ), OS 2.0 on mac shows up a second, bouncing, icon when on Results tab
+- ![Fixed:][fixed] [#2438]( https://github.com/NREL/OpenStudio/issues/2438 ), HTML report formatting messed up in OS App 2.0.0
+- ![Fixed:][fixed] [#2441]( https://github.com/NREL/OpenStudio/issues/2441 ), OS2.0 can't add BCL key
+- ![Fixed:][fixed] [#2515]( https://github.com/NREL/OpenStudio/issues/2515 ), update standards os_lib_schedules
+- ![Fixed:][fixed] [#2519]( https://github.com/NREL/OpenStudio/issues/2519 ), Server Plots Not Working
+- ![Fixed:][fixed] [#2525]( https://github.com/NREL/OpenStudio/issues/2525 ), ResultsViewer button in App starts RV but doesn't load data
+- ![Fixed:][fixed] [#2530]( https://github.com/NREL/OpenStudio/issues/2530 ), Crash on go to results after saving new model
+- ![Fixed:][fixed] [#2536]( https://github.com/NREL/OpenStudio/issues/2536 ), Can't view OpenStudio Results or some other Reporting measures in OS App
+- ![Fixed:][fixed] [#2537]( https://github.com/NREL/OpenStudio/issues/2537 ), I may have missed 8.6 to 8.7 changes for tariff reporting
+
+## OpenStudio v2.0.5
+###### 2017-03-17 — [Diff]( https://github.com/NREL/OpenStudio/compare/v2.0.4...v2.0.5 )
+
+- ![Fixed:][fixed] [#1684]( https://github.com/NREL/OpenStudio/issues/1684 ), Crash when editing string argument value after running a successful simulation.
+- ![Fixed:][fixed] [#1915]( https://github.com/NREL/OpenStudio/issues/1915 ), OpenStudio App loses weather file
+- ![Fixed:][fixed] [#1916]( https://github.com/NREL/OpenStudio/issues/1916 ), Open Studio does not provide an error message when running VRF systems without cooling or heating schedules.
+- ![Fixed:][fixed] [#2001]( https://github.com/NREL/OpenStudio/issues/2001 ), Copying a measure produces invalid measure if "ended" is in description string (probably also issue in name and modeler description)
+- ![Fixed:][fixed] [#2005]( https://github.com/NREL/OpenStudio/issues/2005 ), Run Simulation Tab Says "Hello World" When Using Apply Measure Now
+- ![Fixed:][fixed] [#2007]( https://github.com/NREL/OpenStudio/issues/2007 ), alphabetize HVAC Systems list
+- ![Fixed:][fixed] [#2034]( https://github.com/NREL/OpenStudio/issues/2034 ), App closes when Air Loop availability schedule is set to blank and the 'Control' button clicked.
+- ![Fixed:][fixed] [#2037]( https://github.com/NREL/OpenStudio/issues/2037 ), HeatExchanger:FluidToFluid problems
+- ![Fixed:][fixed] [#2043]( https://github.com/NREL/OpenStudio/issues/2043 ), CoilHeatingWaterToAirHeatPump:EquationFit forward translator sets hard sized rated water flow rate as air flow rate
+- ![Fixed:][fixed] [#2046]( https://github.com/NREL/OpenStudio/issues/2046 ), HVAC templates should have a water cooled chiller and an air cooled chiller.
+- ![Fixed:][fixed] [#2055]( https://github.com/NREL/OpenStudio/issues/2055 ), PAT datapoints with comma's in name fail to run
+- ![Fixed:][fixed] [#2061]( https://github.com/NREL/OpenStudio/issues/2061 ), PAT 1.10.0 stops working if user changes User Defined Measure category
+- ![Fixed:][fixed] [#2070]( https://github.com/NREL/OpenStudio/issues/2070 ), SetpointManager:Coldest translates to two identical energyplus objects
+- ![Fixed:][fixed] [#2080]( https://github.com/NREL/OpenStudio/issues/2080 ), Deleting AirTerminal with reheat does not delete HW coil
+- ![Fixed:][fixed] [#2081]( https://github.com/NREL/OpenStudio/issues/2081 ), Dropping Schedule
+- ![Fixed:][fixed] [#2086]( https://github.com/NREL/OpenStudio/issues/2086 ), Mismatch between OpenStudio and EnergyPlus idd choice for PlantLoop Load Distribution Scheme
+- ![Fixed:][fixed] [#2094]( https://github.com/NREL/OpenStudio/issues/2094 ), PAT Cloud not working in 1.10.0
+- ![Fixed:][fixed] [#2097]( https://github.com/NREL/OpenStudio/issues/2097 ), Update OS to E+ 8.5
+- ![Fixed:][fixed] [#2098]( https://github.com/NREL/OpenStudio/issues/2098 ), air loop diagram
+- ![Fixed:][fixed] [#2149]( https://github.com/NREL/OpenStudio/issues/2149 ), Fix Date/Time Of Peak query in EnergyPlus 8.5
+- ![Fixed:][fixed] [#2153]( https://github.com/NREL/OpenStudio/issues/2153 ), Fails to import IDF when CondenserLoop is part of IDF
+- ![Fixed:][fixed] [#2155]( https://github.com/NREL/OpenStudio/issues/2155 ), 1.10.5 closes after apply measure now
+
+## OpenStudio v2.0.4
+###### 2017-03-06 — [Diff]( https://github.com/NREL/OpenStudio/compare/v2.0.3...v2.0.4 )
+
+- ![Fixed:][fixed] [#643]( https://github.com/NREL/OpenStudio/issues/643 ), Radiance Forward Translator Bugs
+- ![Fixed:][fixed] [#775]( https://github.com/NREL/OpenStudio/issues/775 ), Crash on delete air loop (on second loop I delete)
+- ![Fixed:][fixed] [#1349]( https://github.com/NREL/OpenStudio/issues/1349 ), Measure Groups Rename on Reorder
+- ![Fixed:][fixed] [#1473]( https://github.com/NREL/OpenStudio/issues/1473 ), Add Import / Load Library Feature for MEP Schedules
+- ![Fixed:][fixed] [#1589]( https://github.com/NREL/OpenStudio/issues/1589 ), Launch OS button doesn't work for OSM files on network drives
+- ![Fixed:][fixed] [#1730]( https://github.com/NREL/OpenStudio/issues/1730 ), ModelObjects not translated to E+
+- ![Fixed:][fixed] [#1870]( https://github.com/NREL/OpenStudio/issues/1870 ), PAT 1.8.0 - An unhandled exception has occured - AnalysisDriver.cpp - Invalid Results
+- ![Fixed:][fixed] [#1901]( https://github.com/NREL/OpenStudio/issues/1901 ), Fix Radiance translator's reporting behavior
+- ![Fixed:][fixed] [#1969]( https://github.com/NREL/OpenStudio/issues/1969 ), Using "x2" in app on thermal zone removes thermostat from other zones that used it.
+- ![Fixed:][fixed] [#2024]( https://github.com/NREL/OpenStudio/issues/2024 ), .osm files disappear from computer, possibly caused by uninstalling and reinstalling OpenStudio and Sketchup applications
+- ![Fixed:][fixed] [#2030]( https://github.com/NREL/OpenStudio/issues/2030 ), PAT 1.10.0 run time depends on number of External File User Defined Measures
+- ![Fixed:][fixed] [#2045]( https://github.com/NREL/OpenStudio/issues/2045 ), draw dual ducts
+- ![Fixed:][fixed] [#2051]( https://github.com/NREL/OpenStudio/issues/2051 ), Mac packages fail at runtime due to geo lib
+- ![Fixed:][fixed] [#2060]( https://github.com/NREL/OpenStudio/issues/2060 ), PAT 1.10.0 Run tab breaks if run cancelled
+- ![Fixed:][fixed] [#2078]( https://github.com/NREL/OpenStudio/issues/2078 ), Fix ShadingControl solar setpoint and units handling
+- ![Fixed:][fixed] [#2088]( https://github.com/NREL/OpenStudio/issues/2088 ), PAT XML export is not exporting user-defined names
+- ![Fixed:][fixed] [#2089]( https://github.com/NREL/OpenStudio/issues/2089 ), Radiance measure blows up real good on large models
+- ![Fixed:][fixed] [#2090]( https://github.com/NREL/OpenStudio/issues/2090 ), OS 1.10.0 Win 64 App does preserve inherited relatonships for constructions assigned to surfaces and sub surfaces
+- ![Fixed:][fixed] [#2092]( https://github.com/NREL/OpenStudio/issues/2092 ), PAT deletes all datapoints after closing and reopening
+- ![Fixed:][fixed] [#2101]( https://github.com/NREL/OpenStudio/issues/2101 ), Unit problem for “Add Daylight Sensor at the Center of Space” measure
+- ![Fixed:][fixed] [#2113]( https://github.com/NREL/OpenStudio/issues/2113 ), Air wall construction missing
+- ![Improved:][improved] [#1123]( https://github.com/NREL/OpenStudio/issues/1123 ), Better Radiance Preflight Testing
+
+## OpenStudio v2.0.3
+###### 2017-02-21 — [Diff]( https://github.com/NREL/OpenStudio/compare/v2.0.2...v2.0.3 )
+
+- ![Fixed:][fixed] [#123]( https://github.com/NREL/OpenStudio/issues/123 ), Address changes made to shared thermostats with make unique (Bugzilla #722)
+- ![Fixed:][fixed] [#1897]( https://github.com/NREL/OpenStudio/issues/1897 ), Biquadratic curve min/max value edits not retained
+- ![Fixed:][fixed] [#1929]( https://github.com/NREL/OpenStudio/issues/1929 ), Radiance Measure flails when initial E+ run fails.
+- ![Fixed:][fixed] [#1930]( https://github.com/NREL/OpenStudio/issues/1930 ), Support switchable glazing in Radiance Measure
+- ![Fixed:][fixed] [#2012]( https://github.com/NREL/OpenStudio/issues/2012 ), Fix Glare Sensor Support
+- ![Fixed:][fixed] [#2042]( https://github.com/NREL/OpenStudio/issues/2042 ), Assign thermostat to zones problem
+- ![Fixed:][fixed] [#2049]( https://github.com/NREL/OpenStudio/issues/2049 ), fix ownership issues with zone controllers
+- ![Fixed:][fixed] [#2056]( https://github.com/NREL/OpenStudio/issues/2056 ), Radiance Path Order
+- ![Fixed:][fixed] [#2064]( https://github.com/NREL/OpenStudio/issues/2064 ), CBECC generated files fail to open in current OS (1.10.2)
+- ![Fixed:][fixed] [#2065]( https://github.com/NREL/OpenStudio/issues/2065 ), Tariff Selection Time And Date Dependent measure has wrong season for winter demand charge
+- ![Fixed:][fixed] [#2069]( https://github.com/NREL/OpenStudio/issues/2069 ), Fix delta temperature in design day table
+- ![Fixed:][fixed] [#2071]( https://github.com/NREL/OpenStudio/issues/2071 ), Missing Object Types in Sketchup Plugin Inspector
+- ![Fixed:][fixed] [#2072]( https://github.com/NREL/OpenStudio/issues/2072 ), Cannot create thermostats in Sketchup 2016 with OS 1.10
+- ![Fixed:][fixed] [#2074]( https://github.com/NREL/OpenStudio/issues/2074 ), Deleting space orphans lifecycle cost objects that had been associated with the space
+- ![Fixed:][fixed] [#2082]( https://github.com/NREL/OpenStudio/issues/2082 ), Autosize water heater ends in IDF without WaterHeater:Sizing object
+- ![Fixed:][fixed] [#2083]( https://github.com/NREL/OpenStudio/issues/2083 ), Fix Radiance version sniff
+- ![Improved:][improved] [#713]( https://github.com/NREL/OpenStudio/issues/713 ), Support multiple glare sensors per space
+- ![Improved:][improved] [#1968]( https://github.com/NREL/OpenStudio/issues/1968 ), Add new oa method to ControllerMechanicalVentilation
+
+## OpenStudio v2.0.2
+###### 2017-01-25 — [Diff]( https://github.com/NREL/OpenStudio/compare/v2.0.1...v2.0.2 )
+
+
+## OpenStudio v2.0.1
+###### 2017-01-25 — [Diff]( https://github.com/NREL/OpenStudio/compare/v2.0.0...v2.0.1 )
+
+
+## OpenStudio v2.0.0
+###### 2016-12-21 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.14.0...v2.0.0 )
+
+
 ## OpenStudio v1.14.0
 ###### 2016-12-09 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.13.4...v1.14.0 )
 

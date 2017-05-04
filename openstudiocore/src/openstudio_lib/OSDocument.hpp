@@ -157,6 +157,7 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
     SITE,
     SCHEDULES,
     CONSTRUCTIONS,
+    GEOMETRY,
     LOADS,
     SPACE_TYPES,
     FACILITY,

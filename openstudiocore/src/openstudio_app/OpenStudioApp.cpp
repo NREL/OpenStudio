@@ -39,6 +39,7 @@
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/ApplicationPathHelpers.hpp"
+#include "../utilities/core/Filesystem.hpp"
 
 #include "../utilities/idf/IdfFile.hpp"
 #include "../utilities/idf/IdfObject.hpp"
@@ -76,6 +77,7 @@
 #include "../model/FanOnOff.hpp"
 #include "../model/FanVariableVolume.hpp"
 #include "../model/FanZoneExhaust.hpp"
+#include "../model/GeneratorFuelCellExhaustGasToWaterHeatExchanger.hpp"
 // TODO: Not sure if I need to include GeneratorMicroTurbine.hpp, GeneratorMicroTurbineHeatRecovery.hpp or both
 #include "../model/GeneratorMicroTurbineHeatRecovery.hpp"
 #include "../model/Model.hpp"
@@ -120,6 +122,8 @@
 
 #include <OpenStudio.hxx>
 #include <utilities/idd/IddEnums.hxx>
+#include <sstream>
+#include <cstdlib>
 
 using namespace openstudio::model;
 
@@ -151,6 +155,13 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv)
   }
 
   #ifdef Q_OS_MAC
+    std::stringstream webenginePath;
+    webenginePath << QCoreApplication::applicationDirPath().toStdString();
+    webenginePath << "/../Frameworks/QtWebEngineCore.framework/Versions/5/Helpers/QtWebEngineProcess.app/Contents/MacOS/QtWebEngineProcess";
+    if( filesystem::exists(filesystem::path(webenginePath.str())) ) { 
+      setenv("QTWEBENGINEPROCESS_PATH",webenginePath.str().c_str(),true);
+    }
+
     setQuitOnLastWindowClosed( false );
 
     m_startupMenu = std::shared_ptr<StartupMenu>(new StartupMenu());
@@ -316,6 +327,11 @@ void OpenStudioApp::buildCompLibraries()
 {
   osversion::VersionTranslator versionTranslator;
   versionTranslator.setAllowNewerVersions(false);
+    
+  QWidget * parent = nullptr;
+  if( this->currentDocument() ){
+    parent = this->currentDocument()->mainWindow();
+  }
 
   path p = resourcesPath() / toPath("MinimalTemplate.osm");
   OS_ASSERT(exists(p));
@@ -325,6 +341,9 @@ void OpenStudioApp::buildCompLibraries()
     for (const auto& error : versionTranslator.errors()){
       LOG_FREE(Error, "OpenStudioApp", error.logMessage());
     }
+  }
+  if (!temp){
+    QMessageBox::critical(parent, QString("Failed to load MinimalTemplate"), QString("Failed to load MinimalTemplate, likely due to problem with VersionTranslator."));
   }
   OS_ASSERT(temp);
   m_compLibrary = temp.get();
@@ -337,6 +356,9 @@ void OpenStudioApp::buildCompLibraries()
     for (const auto& error : versionTranslator.errors()){
       LOG_FREE(Error, "OpenStudioApp", error.logMessage());
     }
+  }
+  if (!temp){
+    QMessageBox::critical(parent, QString("Failed to load hvaclibrary"), QString("Failed to load hvaclibrary, likely due to problem with VersionTranslator."));
   }
   OS_ASSERT(temp);
   m_hvacCompLibrary = temp.get();

@@ -509,7 +509,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ExternalInterfaceFunctionalMockupUni
   WorkspaceObject object = workspace.getObjectsByType(IddObjectType::ExternalInterface_FunctionalMockupUnitImport_To_Actuator)[0];
 
   ASSERT_TRUE(object.getString(ExternalInterface_FunctionalMockupUnitImport_To_ActuatorFields::Name, false));
-  EXPECT_EQ("External Interface Functional Mockup Unit Export To Actuator 1", object.getString(ExternalInterface_FunctionalMockupUnitImport_To_ActuatorFields::Name, false).get());
+  EXPECT_EQ("External Interface Functional Mockup Unit Import To Actuator 1", object.getString(ExternalInterface_FunctionalMockupUnitImport_To_ActuatorFields::Name, false).get());
   ASSERT_TRUE(object.getString(ExternalInterface_FunctionalMockupUnitImport_To_ActuatorFields::ActuatedComponentUniqueName, false));
   EXPECT_EQ(fan.nameString(), object.getString(ExternalInterface_FunctionalMockupUnitImport_To_ActuatorFields::ActuatedComponentUniqueName, false).get());
   ASSERT_TRUE(object.getString(ExternalInterface_FunctionalMockupUnitImport_To_ActuatorFields::ActuatedComponentType, false));

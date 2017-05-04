@@ -41,6 +41,7 @@
 #include "../../model/WindowPropertyFrameAndDivider_Impl.hpp"
 #include "../../model/SurfacePropertyOtherSideCoefficients.hpp"
 #include "../../model/SurfacePropertyOtherSideConditionsModel.hpp"
+#include "../../model/SurfacePropertyConvectionCoefficients.hpp"
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 

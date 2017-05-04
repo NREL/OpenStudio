@@ -433,7 +433,7 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
   label->setStyleSheet("QLabel { font: bold; }");
   vLayout->addWidget(label);
 
-  m_northAxisEdit = new OSQuantityEdit2("","","", m_isIP);
+  m_northAxisEdit = new OSQuantityEdit2("deg","deg","deg", m_isIP);
   connect(this, &BuildingInspectorView::toggleUnitsClicked, m_northAxisEdit, &OSQuantityEdit2::onUnitSystemChange);
 
   vLayout->addWidget(m_northAxisEdit);

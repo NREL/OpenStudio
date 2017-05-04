@@ -141,6 +141,7 @@ IconLibrary::IconLibrary()
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Humidifier_Steam_Electric).value()] = new QPixmap(":images/electric_humidifier.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_EvaporativeFluidCooler_SingleSpeed).value()] = new QPixmap(":images/evap_fluid_cooler.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_EvaporativeFluidCooler_TwoSpeed).value()] = new QPixmap(":images/evap_fluid_cooler_two_speed.png");
+  m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Generator_FuelCell_ExhaustGasToWaterHeatExchanger).value()] = new QPixmap(":images/generator_fuelcell_exhaustgastowaterheatexchanger.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Generator_MicroTurbine_HeatRecovery).value()] = new QPixmap(":images/generator_microturbine_heatrecovery.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_LoadProfile_Plant).value()] = new QPixmap(":images/plant_profile.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Pipe_Adiabatic).value()] = new QPixmap(":images/pipe.png");
@@ -213,6 +214,7 @@ IconLibrary::IconLibrary()
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_FluidCooler_TwoSpeed).value()] = new QPixmap(":images/mini_icons/mini_fluid_cooler_two.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_GasEquipment).value()] = new QPixmap(":images/mini_icons/gas_equipment.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_GasEquipment_Definition).value()] = new QPixmap(":images/mini_icons/gas_equipment_definition.png");
+  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Generator_FuelCell_ExhaustGasToWaterHeatExchanger).value()] = new QPixmap(":images/mini_icons/generator_fuelcell_exhaustgastowaterheatexchanger.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Generator_MicroTurbine_HeatRecovery).value()] = new QPixmap(":images/mini_icons/generator_microturbine_heatrecovery.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_GroundHeatExchanger_HorizontalTrench).value()] = new QPixmap(":images/mini_icons/mini_ground_heat_exchanger_horizontal.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_GroundHeatExchanger_Vertical).value()] = new QPixmap(":images/mini_icons/ground_heat_exchanger_vertical.png");
@@ -377,6 +379,8 @@ IconLibrary::IconLibrary()
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_SetpointManager_SingleZone_OneStageCooling).value()] = new QPixmap(":images/mini_icons/setpoint_onestage_cooling.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_SetpointManager_SingleZone_OneStageHeating).value()] = new QPixmap(":images/mini_icons/setpoint_onestage_heating.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_SetpointManager_SingleZone_Reheat).value()] = new QPixmap(":images/mini_icons/setpoint_singlezone.png");
+  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_SetpointManager_SingleZone_Cooling).value()] = new QPixmap(":images/mini_icons/setpoint_singlezone.png");
+  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_SetpointManager_SingleZone_Heating).value()] = new QPixmap(":images/mini_icons/setpoint_singlezone.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_SetpointManager_Warmest).value()] = new QPixmap(":images/mini_icons/setpoint_warmest.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_SetpointManager_WarmestTemperatureFlow).value()] = new QPixmap(":images/mini_icons/setpoint_warmest_tempflow.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlow).value()] = new QPixmap(":images/mini_icons/mini_vrf_unit.png");
