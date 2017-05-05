@@ -59,11 +59,15 @@ class MODEL_API SetpointManagerFollowGroundTemperature : public SetpointManager 
   static IddObjectType iddObjectType();
 
   static std::vector<std::string> controlVariableValues();
+    
+  static std::vector<std::string> referenceGroundTemperatureObjectTypeValues();
 
   /** @name Getters */
   //@{
 
   std::string controlVariable() const;
+
+  std::string referenceGroundTemperatureObjectType() const;
 
   double offsetTemperatureDifference() const;
 
@@ -78,6 +82,8 @@ class MODEL_API SetpointManagerFollowGroundTemperature : public SetpointManager 
   //@{
 
   bool setControlVariable(const std::string& controlVariable);
+  
+  bool setReferenceGroundTemperatureObjectType(const std::string& groundTemperatureObjType);
 
   void setOffsetTemperatureDifference(double offsetTemperatureDifference);
 
