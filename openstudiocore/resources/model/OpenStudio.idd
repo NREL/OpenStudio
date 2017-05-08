@@ -9621,7 +9621,7 @@ OS:AirLoopHVAC:UnitarySystem,
        \type object-list
        \object-list ConnectionNames
        \note Enter the name of the heat recovery water outlet node if plant water loop connections are present.
-  A23; \field Design Specification Multispeed Heat Pump Object Name
+  A23; \field Design Specification Multispeed Object Name
        \type object-list
        \object-list UnitarySystemPerformaceNames
        \note Enter the name of the performance specification object used to describe the multispeed coil.
