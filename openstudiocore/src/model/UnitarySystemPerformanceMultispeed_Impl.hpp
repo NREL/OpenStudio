@@ -65,10 +65,14 @@ namespace detail {
     //@}
     /** @name Getters */
     //@{
+    bool singleModeOperation() const;
 
     //@}
     /** @name Setters */
     //@{
+    bool setSingleModeOperation(bool singleMode);
+
+    void resetSingleModeOperation();
 
     //@}
 

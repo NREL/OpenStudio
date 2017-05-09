@@ -25,72 +25,48 @@
  *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
- 
-#ifndef MODEL_UNITARYSYSTEMPERFORMANCEMULTISPEED_HPP
-#define MODEL_UNITARYSYSTEMPERFORMANCEMULTISPEED_HPP
 
-#include "ModelAPI.hpp"
-#include "ModelObject.hpp"
+#include <gtest/gtest.h>
 
-namespace openstudio {
-namespace model {
+#include "ModelFixture.hpp"
 
-namespace detail {
-  class UnitarySystemPerformanceMultispeed_Impl;
-} // detail
+#include "../AirLoopHVACUnitarySystem.hpp"
+#include "../AirLoopHVACUnitarySystem_Impl.hpp"
+#include "../UnitarySystemPerformanceMultispeed.hpp"
+#include "../UnitarySystemPerformanceMultispeed_Impl.hpp"
 
-/** UnitarySystemPerformanceMultispeed is a WaterToAirComponent that wraps the OpenStudio IDD object 'OS:UnitarySystemPerformance:Multispeed'. */
-class MODEL_API UnitarySystemPerformanceMultispeed : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
-  explicit UnitarySystemPerformanceMultispeed(const Model& model);
-  
-  virtual ~UnitarySystemPerformanceMultispeed() {}
-  //@}
-  
-  static IddObjectType iddObjectType();
-  
-  /** @name Getters */
-  //@{
+using namespace openstudio;
+using namespace openstudio::model;
 
-  bool singleModeOperation() const;
-  
-  //@}
-  
-  //** @name Setters */
+TEST_F(ModelFixture, UnitarySystemPerformanceMultispeed_DefaultConstructors)
+{
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  bool setSingleModeOperation(bool singleMode);
+  ASSERT_EXIT ( 
+  {  
+    Model m;
+    UnitarySystemPerformanceMultispeed testObject = UnitarySystemPerformanceMultispeed(m);
 
-  void resetSingleModeOperation();
+    exit(0); 
+  } ,
+    ::testing::ExitedWithCode(0), "" );
+}
 
-  //@{
-  
-  //@}
+TEST_F(ModelFixture, UnitarySystemPerformanceMultispeed_GetterSetters)
+{
+  Model m;
+  UnitarySystemPerformanceMultispeed testObject = UnitarySystemPerformanceMultispeed(m);
 
- protected:
-  /// @cond
-  typedef detail::UnitarySystemPerformanceMultispeed_Impl ImplType;
-  
-  explicit UnitarySystemPerformanceMultispeed(std::shared_ptr<detail::UnitarySystemPerformanceMultispeed_Impl> impl);
-  
-  friend class detail::UnitarySystemPerformanceMultispeed_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
+  // Single Mode
+  EXPECT_FALSE(testObject.singleModeOperation());
+  EXPECT_TRUE(testObject.setSingleModeOperation(true));
+  EXPECT_TRUE(testObject.singleModeOperation());
+  EXPECT_TRUE(testObject.setSingleModeOperation(false));
+  EXPECT_FALSE(testObject.singleModeOperation());
+  EXPECT_TRUE(testObject.setSingleModeOperation(true));
+  testObject.resetSingleModeOperation();
+  EXPECT_FALSE(testObject.singleModeOperation());
 
- private:
-  REGISTER_LOGGER("openstudio.model.UnitarySystemPerformanceMultispeed");
-};
 
-/** \relates UnitarySystemPerformanceMultispeed */
-typedef boost::optional<UnitarySystemPerformanceMultispeed> OptionalUnitarySystemPerformanceMultispeed;
+}
 
-/** \relates UnitarySystemPerformanceMultispeed */
-typedef std::vector<UnitarySystemPerformanceMultispeed> UnitarySystemPerformanceMultispeedVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_UNITARYSYSTEMPERFORMANCEMULTISPEED_HPP

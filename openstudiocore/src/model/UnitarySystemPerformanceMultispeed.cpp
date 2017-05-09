@@ -74,7 +74,24 @@ namespace detail {
   {
     return UnitarySystemPerformanceMultispeed::iddObjectType();
   }
-  
+
+  bool UnitarySystemPerformanceMultispeed_Impl::singleModeOperation() const
+  {
+    boost::optional<std::string> value = getString(OS_UnitarySystemPerformance_MultispeedFields::SingleModeOperation, true);
+    OS_ASSERT(value);
+    return openstudio::istringEqual("Yes", value.get());
+  }
+
+  bool UnitarySystemPerformanceMultispeed_Impl::setSingleModeOperation(bool singleMode)
+  {
+    return setString(OS_UnitarySystemPerformance_MultispeedFields::SingleModeOperation, singleMode ? "Yes" : "No");
+  }
+
+  void UnitarySystemPerformanceMultispeed_Impl::resetSingleModeOperation()
+  {
+    OS_ASSERT(setString(OS_UnitarySystemPerformance_MultispeedFields::SingleModeOperation, ""));
+  }
+
 } //detail
 
 UnitarySystemPerformanceMultispeed::UnitarySystemPerformanceMultispeed(const Model& model)
@@ -85,6 +102,18 @@ UnitarySystemPerformanceMultispeed::UnitarySystemPerformanceMultispeed(const Mod
 
 IddObjectType UnitarySystemPerformanceMultispeed::iddObjectType() {
   return IddObjectType(IddObjectType::OS_UnitarySystemPerformance_Multispeed);
+}
+
+bool UnitarySystemPerformanceMultispeed::singleModeOperation() const {
+  return getImpl<detail::UnitarySystemPerformanceMultispeed_Impl>()->singleModeOperation();
+}
+
+bool UnitarySystemPerformanceMultispeed::setSingleModeOperation(bool singleMode) {
+  return getImpl<detail::UnitarySystemPerformanceMultispeed_Impl>()->setSingleModeOperation(singleMode);
+}
+
+void UnitarySystemPerformanceMultispeed::resetSingleModeOperation() {
+  getImpl<detail::UnitarySystemPerformanceMultispeed_Impl>()->resetSingleModeOperation();
 }
 
 /// @cond
