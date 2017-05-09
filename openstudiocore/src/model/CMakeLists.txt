@@ -1220,6 +1220,9 @@ set(${target_name}_src
   Version.hpp
   Version_Impl.hpp
   Version.cpp
+  UnitarySystemPerformanceMultispeed.hpp
+  UnitarySystemPerformanceMultispeed_Impl.hpp
+  UnitarySystemPerformanceMultispeed.cpp
   UtilityBill.hpp
   UtilityBill_Impl.hpp
   UtilityBill.cpp
