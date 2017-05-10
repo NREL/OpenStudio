@@ -377,6 +377,8 @@ HeatPumpWaterToWaterEquationFitHeating::HeatPumpWaterToWaterEquationFitHeating(c
   setHeatingCompressorPowerCoefficient5(0.033862378);
   setReferenceCoefficientofPerformance(7.5);
   setSizingFactor(1.0);
+  // Trick to make IG not do weird things
+  setString(22,"");
 }
 
 IddObjectType HeatPumpWaterToWaterEquationFitHeating::iddObjectType() {
