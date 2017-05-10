@@ -10980,6 +10980,7 @@ OS:HeatPump:WaterToWater:EquationFit:Heating,
        \required-field
    A2,  \field Name
         \type alpha
+        \reference WWHPHeatingNames
         \required-field
         \reference ConnectionObject
    A3,  \field Source Side Inlet Node Name
@@ -10998,26 +10999,32 @@ OS:HeatPump:WaterToWater:EquationFit:Heating,
        \type object-list
        \required-field
        \object-list ConnectionNames
-   N1,  \field Rated Load Side Flow Rate
+   N1,  \field Reference Load Side Flow Rate
         \required-field
         \type real
         \minimum> 0.0
         \units m3/s
-   N2,  \field Rated Source Side Flow Rate
+        \ip-units gal/min
+        \autosizable
+   N2,  \field Reference Source Side Flow Rate
         \required-field
         \type real
         \minimum> 0.0
         \units m3/s
-   N3,  \field Rated Heating Capacity
+        \ip-units gal/min
+        \autosizable
+   N3,  \field Reference Heating Capacity
         \required-field
         \type real
         \minimum> 0.0
         \units W
-   N4,  \field Rated Heating Power Consumption
+        \autosizable
+   N4,  \field Reference Heating Power Consumption
         \required-field
         \type real
         \minimum> 0.0
         \units W
+        \autosizable
    N5,  \field Heating Capacity Coefficient 1
         \required-field
         \type real
@@ -11045,9 +11052,23 @@ OS:HeatPump:WaterToWater:EquationFit:Heating,
    N13, \field Heating Compressor Power Coefficient 4
         \required-field
         \type real
-   N14; \field Heating Compressor Power Coefficient 5
+   N14, \field Heating Compressor Power Coefficient 5
         \required-field
         \type real
+   N15, \field Reference Coefficient of Performance
+        \note This optional field is used to autosize Reference Heating Power Consumption
+        \note COP = Reference Heating Capacity / Reference Heating Power Consumption
+        \type real
+        \minimum> 0.0
+        \required-field
+   N16, \field Sizing Factor
+        \note Multiplies the autosized capacity and flow rates
+        \type real
+        \minimum> 0.0
+        \required-field
+   A7 ; \field Companion Cooling Heat Pump Name
+        \type object-list
+        \object-list WWHPCoolingNames
 
 OS:HeatPump:WaterToWater:EquationFit:Cooling,
    A1, \field Handle
@@ -11055,6 +11076,7 @@ OS:HeatPump:WaterToWater:EquationFit:Cooling,
        \required-field
    A2,  \field Name
         \type alpha
+        \reference WWHPCoolingNames
         \required-field
         \reference ConnectionObject
    A3,  \field Source Side Inlet Node Name
@@ -11073,26 +11095,32 @@ OS:HeatPump:WaterToWater:EquationFit:Cooling,
        \type object-list
        \required-field
        \object-list ConnectionNames
-   N1,  \field Rated Load Side Flow Rate
+   N1,  \field Reference Load Side Flow Rate
         \required-field
         \type real
         \minimum> 0.0
         \units m3/s
-   N2,  \field Rated Source Side Flow Rate
+        \ip-units gal/min
+        \autosizable
+   N2,  \field Reference Source Side Flow Rate
         \required-field
         \type real
         \minimum> 0.0
         \units m3/s
-   N3,  \field Rated Cooling Capacity
+        \ip-units gal/min
+        \autosizable
+   N3,  \field Reference Cooling Capacity
         \required-field
         \type real
         \minimum> 0.0
         \units W
-   N4,  \field Rated Cooling Power Consumption
+        \autosizable
+   N4,  \field Reference Cooling Power Consumption
         \required-field
         \type real
         \minimum> 0.0
         \units W
+        \autosizable
    N5,  \field Cooling Capacity Coefficient 1
         \required-field
         \type real
@@ -11120,9 +11148,24 @@ OS:HeatPump:WaterToWater:EquationFit:Cooling,
    N13, \field Cooling Compressor Power Coefficient 4
         \required-field
         \type real
-   N14; \field Cooling Compressor Power Coefficient 5
+   N14, \field Cooling Compressor Power Coefficient 5
         \required-field
         \type real
+   N15, \field Reference Coefficient of Performance
+        \note This optional field is used to autosize Reference Cooling Power Consumption
+        \note COP = Rated Cooling Capacity / Rated Cooling Power Consumption
+        \type real
+        \minimum> 0.0
+        \default 8.0
+   N16, \field Sizing Factor
+        \note Multiplies the autosized capacity and flow rates
+        \type real
+        \minimum> 0.0
+        \default 1.0
+   A7 ; \field Companion Heating Heat Pump Name
+        \type object-list
+        \object-list WWHPHeatingNames
+        \note This optional field is used to coordinate sizing calculations between heating and cooling modes.
 
 OS:Chiller:Electric:EIR,
        \memo This chiller model is the empirical model from the DOE-2 building Energy
