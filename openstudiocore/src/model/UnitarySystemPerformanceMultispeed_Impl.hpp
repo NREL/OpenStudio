@@ -67,6 +67,8 @@ namespace detail {
     //@{
     bool singleModeOperation() const;
 
+    std::vector<SupplyAirflowRatioField> supplyAirflowRatioFields();
+
     //@}
     /** @name Setters */
     //@{
@@ -74,11 +76,20 @@ namespace detail {
 
     void resetSingleModeOperation();
 
+    bool setSupplyAirflowRatioFields(const std::vector<SupplyAirflowRatioField>& airflowRatioFields);
+
+    bool addSupplyAirflowRatioField(const SupplyAirflowRatioField& airflowRatio);
+
+    bool addSupplyAirflowRatioField(double heatingRatio, double coolingRatio);
+
+    void resetSupplyAirflowRatioFields();
+
     //@}
 
    protected:
    private:
     REGISTER_LOGGER("openstudio.model.UnitarySystemPerformanceMultispeed");
+    boost::optional<double> readDoubleFieldOrAutosize(unsigned fieldNum, const ModelExtensibleGroup& group);
   };
 
 } //detail

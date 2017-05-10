@@ -67,6 +67,54 @@ TEST_F(ModelFixture, UnitarySystemPerformanceMultispeed_GetterSetters)
   testObject.resetSingleModeOperation();
   EXPECT_FALSE(testObject.singleModeOperation());
 
+  // Supply Airflow Ratios
+  EXPECT_TRUE(testObject.addSupplyAirflowRatioField(1.0, 2.0));
+  EXPECT_TRUE(testObject.addSupplyAirflowRatioField(SupplyAirflowRatioField::fromCoolingRatio(3.0)));
+  EXPECT_TRUE(testObject.addSupplyAirflowRatioField(SupplyAirflowRatioField()));
+  std::vector<SupplyAirflowRatioField> airflowRatioFields = testObject.supplyAirflowRatioFields();
+  EXPECT_EQ(airflowRatioFields.size(), 3);
+  EXPECT_DOUBLE_EQ(airflowRatioFields[0].coolingRatio().get(), 2.0);
+  EXPECT_TRUE(airflowRatioFields[1].isHeatingRatioAutosized());
+  EXPECT_TRUE(airflowRatioFields[2].isCoolingRatioAutosized());
+  testObject.resetSupplyAirflowRatioFields();
+  EXPECT_EQ(testObject.supplyAirflowRatioFields().size(), 0);
+  airflowRatioFields.pop_back();
+  EXPECT_TRUE(testObject.setSupplyAirflowRatioFields(airflowRatioFields));
+  EXPECT_EQ(testObject.supplyAirflowRatioFields().size(), 2);
 
 }
 
+void testDblOptionalEq(boost::optional<double> op, double value) {
+  EXPECT_TRUE(op);
+  if (op) {
+    EXPECT_DOUBLE_EQ(value, *op);
+  }
+}
+
+TEST_F(ModelFixture, UnitarySystemPerformanceMultispeed_SupplyAirflowRatioField)
+{
+  SupplyAirflowRatioField a;
+  EXPECT_TRUE(a.isCoolingRatioAutosized());
+  EXPECT_TRUE(a.isHeatingRatioAutosized());
+  EXPECT_FALSE(a.heatingRatio());
+  EXPECT_FALSE(a.coolingRatio());
+
+  SupplyAirflowRatioField b(1.0, 2.0);
+  EXPECT_FALSE(b.isHeatingRatioAutosized());
+  EXPECT_FALSE(b.isCoolingRatioAutosized());
+  testDblOptionalEq(b.coolingRatio(), 2.0);
+  testDblOptionalEq(b.heatingRatio(), 1.0);
+
+  SupplyAirflowRatioField c = SupplyAirflowRatioField::fromCoolingRatio(3.0);
+  EXPECT_FALSE(c.isCoolingRatioAutosized());
+  EXPECT_TRUE(c.isHeatingRatioAutosized());
+  EXPECT_FALSE(c.heatingRatio());
+  testDblOptionalEq(c.coolingRatio(), 3.0);
+
+  SupplyAirflowRatioField d = SupplyAirflowRatioField::fromHeatingRatio(4.0);
+  EXPECT_FALSE(d.isHeatingRatioAutosized());
+  EXPECT_TRUE(d.isCoolingRatioAutosized());
+  EXPECT_FALSE(d.coolingRatio());
+  testDblOptionalEq(d.heatingRatio(), 4.0);
+
+}

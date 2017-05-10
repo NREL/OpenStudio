@@ -39,6 +39,41 @@ namespace detail {
   class UnitarySystemPerformanceMultispeed_Impl;
 } // detail
 
+
+class MODEL_API SupplyAirflowRatioField {
+ public:
+
+  /// Default Constructor. Autosizes both heating and cooling.
+  SupplyAirflowRatioField();
+
+  /// Constructor that sets values for both heating and cooling.
+  SupplyAirflowRatioField(double heatingRatio, double coolingRatio);
+
+  /// "Constructor" that autosizes cooling ratio and sets heating ratio.
+  static SupplyAirflowRatioField fromHeatingRatio(double heatingRatio);
+
+  /// "Constructor" that autosizes heating ration and sets cooling ratio.
+  static SupplyAirflowRatioField fromCoolingRatio(double coolingRatio);
+
+  /** @name Getters */
+  //@{
+  boost::optional<double> heatingRatio();
+  boost::optional<double> coolingRatio();
+  bool isHeatingRatioAutosized();
+  bool isCoolingRatioAutosized();
+  //@}
+
+ protected:
+  std::vector<std::string> getHeatingCoolingRatiosAsStrings() const;
+
+  friend class detail::UnitarySystemPerformanceMultispeed_Impl;
+
+ private:
+  SupplyAirflowRatioField(bool isHeating, double value);
+  boost::optional<double> m_heatingRatio; // implementation detail, boost::none if autosized, otherwise the value
+  boost::optional<double> m_coolingRatio;
+};
+
 /** UnitarySystemPerformanceMultispeed is a WaterToAirComponent that wraps the OpenStudio IDD object 'OS:UnitarySystemPerformance:Multispeed'. */
 class MODEL_API UnitarySystemPerformanceMultispeed : public ModelObject {
  public:
@@ -55,6 +90,8 @@ class MODEL_API UnitarySystemPerformanceMultispeed : public ModelObject {
   //@{
 
   bool singleModeOperation() const;
+
+  std::vector<SupplyAirflowRatioField> supplyAirflowRatioFields();
   
   //@}
   
@@ -64,6 +101,14 @@ class MODEL_API UnitarySystemPerformanceMultispeed : public ModelObject {
 
   void resetSingleModeOperation();
 
+  bool setSupplyAirflowRatioFields(const std::vector<SupplyAirflowRatioField>& airflowRatioFields);
+
+  bool addSupplyAirflowRatioField(const SupplyAirflowRatioField& airflowRatio);
+
+  bool addSupplyAirflowRatioField(double heatingRatio, double coolingRatio);
+
+  void resetSupplyAirflowRatioFields();
+  
   //@{
   
   //@}
