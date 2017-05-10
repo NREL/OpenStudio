@@ -11060,12 +11060,12 @@ OS:HeatPump:WaterToWater:EquationFit:Heating,
         \note COP = Reference Heating Capacity / Reference Heating Power Consumption
         \type real
         \minimum> 0.0
-        \default 7.5
+        \required-field
    N16, \field Sizing Factor
         \note Multiplies the autosized capacity and flow rates
         \type real
         \minimum> 0.0
-        \default 1.0
+        \required-field
    A7 ; \field Companion Cooling Heat Pump Name
         \type object-list
         \object-list WWHPCoolingNames

@@ -61,15 +61,19 @@ class MODEL_API HeatPumpWaterToWaterEquationFitCooling : public WaterToWaterComp
   /** @name Getters */
   //@{
 
-  /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Load Side Flow Rate" **/
-  boost::optional<double> ratedLoadSideFlowRate() const;
+  boost::optional<double> referenceLoadSideFlowRate() const;
 
-  bool isRatedLoadSideFlowRateAutosized() const;
+  /** Prior to EnergyPlus 8.7.0 this field was not autosizeable. To preserve backwards compatibility this method will return -999.0 in autosized models.**/
+  double ratedLoadSideFlowRate() const;
 
-  /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Source Side Flow Rate" **/
-  boost::optional<double> ratedSourceSideFlowRate() const;
+  bool isReferenceLoadSideFlowRateAutosized() const;
 
-  bool isRatedSourceSideFlowRateAutosized() const;
+  boost::optional<double> referenceSourceSideFlowRate() const;
+
+  /** Prior to EnergyPlus 8.7.0 this field was not autosizeable. To preserve backwards compatibility this method will return -999.0 in autosized models.**/
+  double ratedSourceSideFlowRate() const;
+
+  bool isReferenceSourceSideFlowRateAutosized() const;
 
   /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Cooling Capacity" **/
   boost::optional<double> ratedCoolingCapacity() const;
@@ -111,15 +115,19 @@ class MODEL_API HeatPumpWaterToWaterEquationFitCooling : public WaterToWaterComp
   /** @name Setters */
   //@{
 
-  /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Load Side Flow Rate" **/
+  bool setReferenceLoadSideFlowRate(double referenceLoadSideFlowRate);
+
+  /** Synonym of setReferenceLoadSideFlowRate for backwards compatibility **/
   bool setRatedLoadSideFlowRate(double ratedLoadSideFlowRate);
 
-  void autosizeRatedLoadSideFlowRate();
+  void autosizeReferenceLoadSideFlowRate();
 
-  /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Source Side Flow Rate" **/
+  bool setReferenceSourceSideFlowRate(double referenceSourceSideFlowRate);
+
+  /** Synonym of setReferenceLoadSideFlowRate for backwards compatibility **/
   bool setRatedSourceSideFlowRate(double ratedSourceSideFlowRate);
 
-  void autosizeRatedSourceSideFlowRate();
+  void autosizeReferenceSourceSideFlowRate();
 
   /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Cooling Capacity" **/
   bool setRatedCoolingCapacity(double ratedCoolingCapacity);

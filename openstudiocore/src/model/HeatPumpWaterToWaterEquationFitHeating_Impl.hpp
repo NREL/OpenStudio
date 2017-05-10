@@ -71,13 +71,17 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    boost::optional<double> ratedLoadSideFlowRate() const;
+    boost::optional<double> referenceLoadSideFlowRate() const;
 
-    bool isRatedLoadSideFlowRateAutosized() const;
+    double ratedLoadSideFlowRate() const;
 
-    boost::optional<double> ratedSourceSideFlowRate() const;
+    bool isReferenceLoadSideFlowRateAutosized() const;
 
-    bool isRatedSourceSideFlowRateAutosized() const;
+    boost::optional<double> referenceSourceSideFlowRate() const;
+
+    double ratedSourceSideFlowRate() const;
+
+    bool isReferenceSourceSideFlowRateAutosized() const;
 
     boost::optional<double> ratedHeatingCapacity() const;
 
@@ -117,13 +121,17 @@ namespace detail {
     /** @name Setters */
     //@{
 
+    bool setReferenceLoadSideFlowRate(double referenceLoadSideFlowRate);
+
     bool setRatedLoadSideFlowRate(double ratedLoadSideFlowRate);
 
-    void autosizeRatedLoadSideFlowRate();
+    void autosizeReferenceLoadSideFlowRate();
 
-    bool setRatedSourceSideFlowRate(double ratedSourceSideFlowRate);
+    bool setReferenceSourceSideFlowRate(double referenceSourceSideFlowRate);
 
-    void autosizeRatedSourceSideFlowRate();
+    bool setRatedSourceSideFlowRate(double ratedLoadSideFlowRate);
+
+    void autosizeReferenceSourceSideFlowRate();
 
     bool setRatedHeatingCapacity(double ratedHeatingCapacity);
 

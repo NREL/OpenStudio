@@ -78,20 +78,20 @@ boost::optional<IdfObject> ForwardTranslator::translateHeatPumpWaterToWaterEquat
     idfObject.setString(HeatPump_WaterToWater_EquationFit_HeatingFields::SourceSideInletNodeName,value->name().get());
   }
 
-  if (modelObject.isRatedLoadSideFlowRateAutosized())
+  if (modelObject.isReferenceLoadSideFlowRateAutosized())
   {
     idfObject.setString(HeatPump_WaterToWater_EquationFit_HeatingFields::ReferenceLoadSideFlowRate, "Autosize");
   }
-  else if ((optvalue = modelObject.ratedLoadSideFlowRate()))
+  else if ((optvalue = modelObject.referenceLoadSideFlowRate()))
   {
     idfObject.setDouble(HeatPump_WaterToWater_EquationFit_HeatingFields::ReferenceLoadSideFlowRate, optvalue.get());
   }
 
-  if (modelObject.isRatedSourceSideFlowRateAutosized())
+  if (modelObject.isReferenceSourceSideFlowRateAutosized())
   {
     idfObject.setString(HeatPump_WaterToWater_EquationFit_HeatingFields::ReferenceSourceSideFlowRate, "Autosize");
   }
-  else if ((optvalue = modelObject.ratedSourceSideFlowRate()))
+  else if ((optvalue = modelObject.referenceSourceSideFlowRate()))
   {
     idfObject.setDouble(HeatPump_WaterToWater_EquationFit_HeatingFields::ReferenceSourceSideFlowRate, optvalue.get());
   }
