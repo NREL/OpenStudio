@@ -29,27 +29,8 @@
 #include "AirflowNetworkEquivalentDuct.hpp"
 #include "AirflowNetworkEquivalentDuct_Impl.hpp"
 
-//AFNCoilNames
-#include "CoilCoolingDXSingleSpeed.hpp"
-#include "CoilCoolingDXSingleSpeed_Impl.hpp"
-#include "CoilCoolingDXTwoStageWithHumidityControlMode.hpp"
-#include "CoilCoolingDXTwoStageWithHumidityControlMode_Impl.hpp"
-#include "CoilCoolingDXMultiSpeed.hpp"
-#include "CoilCoolingDXMultiSpeed_Impl.hpp"
-#include "CoilCoolingWater.hpp"
-#include "CoilCoolingWater_Impl.hpp"
-#include "CoilHeatingDXSingleSpeed.hpp"
-#include "CoilHeatingDXSingleSpeed_Impl.hpp"
-#include "CoilHeatingElectric.hpp"
-#include "CoilHeatingElectric_Impl.hpp"
-#include "CoilHeatingGas.hpp"
-#include "CoilHeatingGas_Impl.hpp"
-#include "CoilHeatingDesuperheater.hpp"
-#include "CoilHeatingDesuperheater_Impl.hpp"
-#include "CoilHeatingWater.hpp"
-#include "CoilHeatingWater_Impl.hpp"
-#include "CoilHeatingDXMultiSpeed.hpp"
-#include "CoilHeatingDXMultiSpeed_Impl.hpp"
+#include "StraightComponent.hpp"
+#include "StraightComponent_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -94,35 +75,46 @@ namespace detail {
     return result;
   }
 
-  IddObjectType AirflowNetworkEquivalentDuct_Impl::iddObjectType() const {
+  IddObjectType AirflowNetworkEquivalentDuct_Impl::iddObjectType() const
+  {
     return AirflowNetworkEquivalentDuct::iddObjectType();
   }
 
-  double AirflowNetworkEquivalentDuct_Impl::airPathLength() const {
+  boost::optional<StraightComponent> AirflowNetworkEquivalentDuct_Impl::component() const
+  {
+    return getObject<ModelObject>().getModelObjectTarget<StraightComponent>(OS_AirflowNetworkEquivalentDuctFields::ComponentName);
+  }
+
+  double AirflowNetworkEquivalentDuct_Impl::airPathLength() const
+  {
     boost::optional<double> value = getDouble(OS_AirflowNetworkEquivalentDuctFields::AirPathLength,true);
     OS_ASSERT(value);
     return value.get();
   }
 
-  double AirflowNetworkEquivalentDuct_Impl::airPathHydraulicDiameter() const {
+  double AirflowNetworkEquivalentDuct_Impl::airPathHydraulicDiameter() const
+  {
     boost::optional<double> value = getDouble(OS_AirflowNetworkEquivalentDuctFields::AirPathHydraulicDiameter,true);
     OS_ASSERT(value);
     return value.get();
   }
 
-  bool AirflowNetworkEquivalentDuct_Impl::setAirPathLength(double airPathLength) {
+  bool AirflowNetworkEquivalentDuct_Impl::setAirPathLength(double airPathLength)
+  {
     bool result = setDouble(OS_AirflowNetworkEquivalentDuctFields::AirPathLength, airPathLength);
     return result;
   }
 
-  bool AirflowNetworkEquivalentDuct_Impl::setAirPathHydraulicDiameter(double airPathHydraulicDiameter) {
+  bool AirflowNetworkEquivalentDuct_Impl::setAirPathHydraulicDiameter(double airPathHydraulicDiameter)
+  {
     bool result = setDouble(OS_AirflowNetworkEquivalentDuctFields::AirPathHydraulicDiameter, airPathHydraulicDiameter);
     return result;
   }
 
-//  boost::optional<AFNTerminalUnit> AirflowNetworkEquivalentDuct_Impl::optionalTerminalUnit() const {
-//    return getObject<ModelObject>().getModelObjectTarget<AFNTerminalUnit>(OS_AirflowNetworkEquivalentDuctFields::TerminalUnitName);
-//  }
+  bool AirflowNetworkEquivalentDuct_Impl::setComponent(const StraightComponent &component)
+  {
+    return setPointer(OS_AirflowNetworkEquivalentDuctFields::ComponentName, component.handle());
+  }
 
 } // detail
 
@@ -149,13 +141,10 @@ IddObjectType AirflowNetworkEquivalentDuct::iddObjectType()
   return IddObjectType(IddObjectType::OS_AirflowNetworkEquivalentDuct);
 }
 
-//AFNTerminalUnit AirflowNetworkEquivalentDuct::terminalUnit() const {
-//  return getImpl<detail::AirflowNetworkEquivalentDuct_Impl>()->terminalUnit();
-//}
-
-//std::string AirflowNetworkEquivalentDuct::terminalUnitObjectType() const {
-//  return getImpl<detail::AirflowNetworkEquivalentDuct_Impl>()->terminalUnitObjectType();
-//}
+boost::optional<StraightComponent> AirflowNetworkEquivalentDuct::component() const
+{
+  return getImpl<detail::AirflowNetworkEquivalentDuct_Impl>()->component();
+}
 
 double AirflowNetworkEquivalentDuct::airPathLength() const
 {
@@ -167,16 +156,6 @@ double AirflowNetworkEquivalentDuct::airPathHydraulicDiameter() const
   return getImpl<detail::AirflowNetworkEquivalentDuct_Impl>()->airPathHydraulicDiameter();
 }
 
-bool AirflowNetworkEquivalentDuct::setCoilCoolingDXSingleSpeed(CoilCoolingDXSingleSpeed &component)
-{
-  return getImpl<detail::AirflowNetworkEquivalentDuct_Impl>()->setComponent<CoilCoolingDXSingleSpeed>(component);
-}
-
-bool AirflowNetworkEquivalentDuct::setCoilCoolingDXTwoStageWithHumidityControlMode(CoilCoolingDXTwoStageWithHumidityControlMode &component)
-{
-  return getImpl<detail::AirflowNetworkEquivalentDuct_Impl>()->setComponent<CoilCoolingDXTwoStageWithHumidityControlMode>(component);
-}
-
 bool AirflowNetworkEquivalentDuct::setAirPathLength(double airPathLength)
 {
   return getImpl<detail::AirflowNetworkEquivalentDuct_Impl>()->setAirPathLength(airPathLength);
@@ -185,6 +164,11 @@ bool AirflowNetworkEquivalentDuct::setAirPathLength(double airPathLength)
 bool AirflowNetworkEquivalentDuct::setAirPathHydraulicDiameter(double airPathHydraulicDiameter)
 {
   return getImpl<detail::AirflowNetworkEquivalentDuct_Impl>()->setAirPathHydraulicDiameter(airPathHydraulicDiameter);
+}
+
+bool AirflowNetworkEquivalentDuct::setComponent(const StraightComponent &component)
+{
+  return getImpl<detail::AirflowNetworkEquivalentDuct_Impl>()->setComponent(component);
 }
 
 /// @cond

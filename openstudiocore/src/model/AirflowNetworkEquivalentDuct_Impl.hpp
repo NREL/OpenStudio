@@ -35,17 +35,7 @@
 namespace openstudio {
 namespace model {
 
-// AFNCoilNames
-class CoilCoolingDXSingleSpeed;
-class CoilCoolingDXTwoStageWithHumidityControlMode;
-class CoilCoolingDXMultiSpeed;
-class CoilCoolingWater;
-class CoilHeatingDXSingleSpeed;
-class CoilHeatingElectric;
-class CoilHeatingGas;
-class CoilHeatingDesuperheater;
-class CoilHeatingWater;
-class CoilHeatingDXMultiSpeed;
+class StraightComponent;
 
 namespace detail {
 
@@ -81,22 +71,7 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    // TODO: Check return type. From object lists, some candidates are: AFNTerminalUnit.
-    template <typename T> typename std::enable_if<
-                                        std::is_same<CoilCoolingDXSingleSpeed, T>::value ||
-                                        std::is_same<CoilCoolingDXTwoStageWithHumidityControlMode, T>::value ||
-                                        std::is_same<CoilCoolingDXMultiSpeed, T>::value ||
-                                        std::is_same<CoilCoolingWater, T>::value ||
-                                        std::is_same<CoilHeatingDXSingleSpeed, T>::value ||
-                                        std::is_same<CoilHeatingElectric, T>::value ||
-                                        std::is_same<CoilHeatingGas, T>::value ||
-                                        std::is_same<CoilHeatingDesuperheater, T>::value ||
-                                        std::is_same<CoilHeatingWater, T>::value ||
-                                        std::is_same<CoilHeatingDXMultiSpeed, T>::value, T>::type
-    getComponent() const
-    {
-      return getObject<ModelObject>().getModelObjectTarget<T>(OS_AirflowNetworkEquivalentDuctFields::ComponentName);
-    }
+    boost::optional<StraightComponent> component() const;
 
     double airPathLength() const;
 
@@ -106,22 +81,7 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    template <typename T> bool setComponent(typename std::enable_if<
-                                            std::is_same<CoilCoolingDXSingleSpeed, T>::value ||
-                                            std::is_same<CoilCoolingDXTwoStageWithHumidityControlMode, T>::value ||
-                                            std::is_same<CoilCoolingDXMultiSpeed, T>::value ||
-                                            std::is_same<CoilCoolingWater, T>::value ||
-                                            std::is_same<CoilHeatingDXSingleSpeed, T>::value ||
-                                            std::is_same<CoilHeatingElectric, T>::value ||
-                                            std::is_same<CoilHeatingGas, T>::value ||
-                                            std::is_same<CoilHeatingDesuperheater, T>::value ||
-                                            std::is_same<CoilHeatingWater, T>::value ||
-                                            std::is_same<CoilHeatingDXMultiSpeed, T>::value, T>::type
-                                            &component)
-    {
-      // Set parent or something here?
-      return setPointer(OS_AirflowNetworkEquivalentDuctFields::ComponentName, component.handle());
-    }
+    bool setComponent(const StraightComponent &component);
 
     bool setAirPathLength(double airPathLength);
 

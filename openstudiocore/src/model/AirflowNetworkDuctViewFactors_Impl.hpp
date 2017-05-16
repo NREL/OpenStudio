@@ -35,8 +35,7 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
-class AirflowNetworkComponent;
+class AirflowNetworkLinkage;
 
 namespace detail {
 
@@ -72,8 +71,7 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    // TODO: Check return type. From object lists, some candidates are: AirflowNetworkComponent.
-    AirflowNetworkComponent linkage() const;
+    AirflowNetworkLinkage linkage() const;
 
     double ductSurfaceExposureFraction() const;
 
@@ -90,7 +88,7 @@ namespace detail {
     //@{
 
     // TODO: Check argument type. From object lists, some candidates are: AirflowNetworkComponent.
-    bool setLinkage(const AirflowNetworkComponent& airflowNetworkComponent);
+    bool setLinkage(const AirflowNetworkLinkage& linkage);
 
     bool setDuctSurfaceExposureFraction(double ductSurfaceExposureFraction);
 
@@ -117,7 +115,7 @@ namespace detail {
     // Optional getters for use by methods like children() so can remove() if the constructor fails.
     // There are other ways for the public versions of these getters to fail--perhaps all required
     // objects should be returned as boost::optionals
-    boost::optional<AirflowNetworkComponent> optionalLinkage() const;
+    boost::optional<AirflowNetworkLinkage> optionalLinkage() const;
   };
 
 } // detail

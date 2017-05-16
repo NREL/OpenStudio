@@ -41,6 +41,8 @@ class CoilHeatingDesuperheater;
 class CoilHeatingWater;
 class CoilHeatingDXMultiSpeed;
 
+class StraightComponent;
+
 namespace detail {
 
   class AirflowNetworkEquivalentDuct_Impl;
@@ -61,15 +63,10 @@ class MODEL_API AirflowNetworkEquivalentDuct : public ModelObject {
 
   static IddObjectType iddObjectType();
 
-  //static std::vector<std::string> terminalUnitObjectTypeValues();
-
   /** @name Getters */
   //@{
 
-  // TODO: Check return type. From object lists, some candidates are: AFNTerminalUnit.
-  //AFNTerminalUnit terminalUnit() const;
-
-  //std::string terminalUnitObjectType() const;
+  boost::optional<StraightComponent> component() const;
 
   double airPathLength() const;
 
@@ -79,12 +76,7 @@ class MODEL_API AirflowNetworkEquivalentDuct : public ModelObject {
   /** @name Setters */
   //@{
 
-  // TODO: Check argument type. From object lists, some candidates are: AFNTerminalUnit.
-  //bool setTerminalUnit(const AFNTerminalUnit& aFNTerminalUnit);
-
-  //bool setTerminalUnitObjectType(const std::string& terminalUnitObjectType);
-  bool setCoilCoolingDXSingleSpeed(CoilCoolingDXSingleSpeed &component);
-  bool setCoilCoolingDXTwoStageWithHumidityControlMode(CoilCoolingDXTwoStageWithHumidityControlMode &component);
+  bool setComponent(const StraightComponent &component);
 
   bool setAirPathLength(double airPathLength);
 

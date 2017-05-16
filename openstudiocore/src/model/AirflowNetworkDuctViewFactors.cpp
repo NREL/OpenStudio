@@ -33,9 +33,8 @@
 #include "PlanarSurface.hpp"
 #include "PlanarSurface_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
-#include "AirflowNetworkComponent.hpp"
-#include "AirflowNetworkComponent_Impl.hpp"
+#include "AirflowNetworkLinkage.hpp"
+#include "AirflowNetworkLinkage_Impl.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_AirflowNetworkDuctViewFactors_FieldEnums.hxx>
@@ -84,9 +83,9 @@ namespace detail {
     return AirflowNetworkDuctViewFactors::iddObjectType();
   }
 
-  AirflowNetworkComponent AirflowNetworkDuctViewFactors_Impl::linkage() const
+  AirflowNetworkLinkage AirflowNetworkDuctViewFactors_Impl::linkage() const
   {
-    boost::optional<AirflowNetworkComponent> value = optionalLinkage();
+    boost::optional<AirflowNetworkLinkage> value = optionalLinkage();
     if (!value) {
       LOG_AND_THROW(briefDescription() << " does not have an Linkage attached.");
     }
@@ -117,9 +116,9 @@ namespace detail {
     return isEmpty(OS_AirflowNetworkDuctViewFactorsFields::DuctSurfaceEmittance);
   }
 
-  bool AirflowNetworkDuctViewFactors_Impl::setLinkage(const AirflowNetworkComponent& airflowNetworkComponent)
+  bool AirflowNetworkDuctViewFactors_Impl::setLinkage(const AirflowNetworkLinkage& linkage)
   {
-    bool result = setPointer(OS_AirflowNetworkDuctViewFactorsFields::LinkageName, airflowNetworkComponent.handle());
+    bool result = setPointer(OS_AirflowNetworkDuctViewFactorsFields::LinkageName, linkage.handle());
     return result;
   }
 
@@ -147,9 +146,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  boost::optional<AirflowNetworkComponent> AirflowNetworkDuctViewFactors_Impl::optionalLinkage() const
+  boost::optional<AirflowNetworkLinkage> AirflowNetworkDuctViewFactors_Impl::optionalLinkage() const
   {
-    return getObject<ModelObject>().getModelObjectTarget<AirflowNetworkComponent>(OS_AirflowNetworkDuctViewFactorsFields::LinkageName);
+    return getObject<ModelObject>().getModelObjectTarget<AirflowNetworkLinkage>(OS_AirflowNetworkDuctViewFactorsFields::LinkageName);
   }
 
   boost::optional<double> AirflowNetworkDuctViewFactors_Impl::getViewFactor(const PlanarSurface &surf) const
@@ -229,7 +228,7 @@ IddObjectType AirflowNetworkDuctViewFactors::iddObjectType()
   return IddObjectType(IddObjectType::OS_AirflowNetworkDuctViewFactors);
 }
 
-AirflowNetworkComponent AirflowNetworkDuctViewFactors::linkage() const
+AirflowNetworkLinkage AirflowNetworkDuctViewFactors::linkage() const
 {
   return getImpl<detail::AirflowNetworkDuctViewFactors_Impl>()->linkage();
 }
@@ -254,9 +253,9 @@ bool AirflowNetworkDuctViewFactors::isDuctSurfaceEmittanceDefaulted() const
   return getImpl<detail::AirflowNetworkDuctViewFactors_Impl>()->isDuctSurfaceEmittanceDefaulted();
 }
 
-bool AirflowNetworkDuctViewFactors::setLinkage(const AirflowNetworkComponent& airflowNetworkComponent)
+bool AirflowNetworkDuctViewFactors::setLinkage(const AirflowNetworkLinkage& linkage)
 {
-  return getImpl<detail::AirflowNetworkDuctViewFactors_Impl>()->setLinkage(airflowNetworkComponent);
+  return getImpl<detail::AirflowNetworkDuctViewFactors_Impl>()->setLinkage(linkage);
 }
 
 bool AirflowNetworkDuctViewFactors::setDuctSurfaceExposureFraction(double ductSurfaceExposureFraction)

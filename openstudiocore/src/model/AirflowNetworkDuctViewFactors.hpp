@@ -37,7 +37,7 @@ namespace openstudio {
 namespace model {
 
 class PlanarSurface;
-class AirflowNetworkComponent;
+class AirflowNetworkLinkage;
 
 namespace detail {
 
@@ -63,7 +63,7 @@ class MODEL_API AirflowNetworkDuctViewFactors : public ModelObject {
   //@{
 
   // TODO: Check return type. From object lists, some candidates are: AirflowNetworkComponent.
-  AirflowNetworkComponent linkage() const;
+  AirflowNetworkLinkage linkage() const;
 
   double ductSurfaceExposureFraction() const;
 
@@ -79,8 +79,7 @@ class MODEL_API AirflowNetworkDuctViewFactors : public ModelObject {
   /** @name Setters */
   //@{
 
-  // TODO: Check argument type. From object lists, some candidates are: AirflowNetworkComponent.
-  bool setLinkage(const AirflowNetworkComponent& airflowNetworkComponent);
+  bool setLinkage(const AirflowNetworkLinkage& linkage);
 
   bool setDuctSurfaceExposureFraction(double ductSurfaceExposureFraction);
 
