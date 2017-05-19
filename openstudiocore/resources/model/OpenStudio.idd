@@ -20250,9 +20250,16 @@ OS:SetpointManager:FollowGroundTemperature,
        \required-field
        \units C
        \type real
-  A4 ; \field Setpoint Node or NodeList Name
+  A4 , \field Setpoint Node or NodeList Name
        \type object-list
        \object-list Node
+  A5 ; \field Reference Ground Temperature Object Type
+       \type choice
+       \key Site:GroundTemperature:BuildingSurface
+       \key Site:GroundTemperature:Shallow
+       \key Site:GroundTemperature:Deep
+       \key Site:GroundTemperature:FCfactorMethod
+       \default Site:GroundTemperature:BuildingSurface
 
 OS:SetpointManager:FollowSystemNodeTemperature,
        \memo This setpoint manager is used to place a temperature setpoint on a
