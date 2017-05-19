@@ -78,6 +78,10 @@ namespace detail {
 
     double initialValue() const;
 
+    bool exportToBCVTB() const;
+
+    bool isExportToBCVTBDefaulted() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -87,6 +91,10 @@ namespace detail {
     virtual bool resetScheduleTypeLimits() override;
 
     void setInitialValue(double initialValue);
+
+    void setExportToBCVTB(bool exportToBCVTB);
+
+    void resetExportToBCVTB();
 
     // ensure that this object does not contain the date 2/29
     virtual void ensureNoLeapDays() override;

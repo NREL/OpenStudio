@@ -95,6 +95,13 @@ TEST_F(ModelFixture, EMSOutputVariable_EMSOutputVariable)
   //setname
   outvar.setName("outputVar");
   EXPECT_EQ("outputVar", outvar.nameString());
+  //check BCVTB
+  EXPECT_FALSE(outvar.exportToBCVTB());
+  EXPECT_TRUE(outvar.isExportToBCVTBDefaulted());
+  outvar.setExportToBCVTB(true);
+  EXPECT_TRUE(outvar.exportToBCVTB());
+  outvar.resetExportToBCVTB();
+  EXPECT_FALSE(outvar.exportToBCVTB());
 
   //variable name
   bool varset = outvar.setEMSVariableName("badVariable");

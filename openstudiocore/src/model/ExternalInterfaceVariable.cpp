@@ -88,6 +88,31 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  bool ExternalInterfaceVariable_Impl::exportToBCVTB() const {
+    boost::optional<std::string> value = getString(OS_ExternalInterface_VariableFields::ExportToBCVTB, true);
+    OS_ASSERT(value);
+    return openstudio::istringEqual(value.get(), "True");
+  }
+
+  bool ExternalInterfaceVariable_Impl::isExportToBCVTBDefaulted() const {
+    return isEmpty(OS_ExternalInterface_VariableFields::ExportToBCVTB);
+  }
+
+  void ExternalInterfaceVariable_Impl::setExportToBCVTB(bool exportToBCVTB) {
+    bool result = false;
+    if (exportToBCVTB) {
+      result = setString(OS_ExternalInterface_VariableFields::ExportToBCVTB, "True");
+    } else {
+      result = setString(OS_ExternalInterface_VariableFields::ExportToBCVTB, "False");
+    }
+    OS_ASSERT(result);
+  }
+
+  void ExternalInterfaceVariable_Impl::resetExportToBCVTB() {
+    bool result = setString(OS_ExternalInterface_VariableFields::ExportToBCVTB, "");
+    OS_ASSERT(result);
+  }
+
 } // detail
 
 ExternalInterfaceVariable::ExternalInterfaceVariable(const Model& model, const std::string& variableName, double initialValue)
@@ -112,6 +137,22 @@ double ExternalInterfaceVariable::initialValue() const {
 
 void ExternalInterfaceVariable::setInitialValue(double initialValue) {
   getImpl<detail::ExternalInterfaceVariable_Impl>()->setInitialValue(initialValue);
+}
+
+bool ExternalInterfaceVariable::exportToBCVTB() const {
+  return getImpl<detail::ExternalInterfaceVariable_Impl>()->exportToBCVTB();
+}
+
+bool ExternalInterfaceVariable::isExportToBCVTBDefaulted() const {
+  return getImpl<detail::ExternalInterfaceVariable_Impl>()->isExportToBCVTBDefaulted();
+}
+
+void ExternalInterfaceVariable::setExportToBCVTB(bool exportToBCVTB) {
+  getImpl<detail::ExternalInterfaceVariable_Impl>()->setExportToBCVTB(exportToBCVTB);
+}
+
+void ExternalInterfaceVariable::resetExportToBCVTB() {
+  getImpl<detail::ExternalInterfaceVariable_Impl>()->resetExportToBCVTB();
 }
 
 /// @cond

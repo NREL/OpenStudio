@@ -43,6 +43,13 @@ TEST_F(ModelFixture, ExternalInterfaceVariable) {
   EXPECT_EQ("test name", variable.nameString());
   variable.setInitialValue(1);
   EXPECT_EQ(1.0, variable.initialValue());
+  //Check BCVTB
+  EXPECT_TRUE(variable.exportToBCVTB());
+  EXPECT_TRUE(variable.isExportToBCVTBDefaulted());
+  variable.setExportToBCVTB(false);
+  EXPECT_FALSE(variable.exportToBCVTB());
+  variable.resetExportToBCVTB();
+  EXPECT_TRUE(variable.exportToBCVTB());
 
 }
 

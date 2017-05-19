@@ -97,6 +97,13 @@ TEST_F(ModelFixture, ExternalInterfaceActuator) {
   ExternalInterfaceActuator equipActuator(electricEquipment, ComponentType, equipControlType);
   EXPECT_EQ(equipControlType, equipActuator.actuatedComponentControlType());
   EXPECT_EQ(ComponentType, equipActuator.actuatedComponentType());
+  //Check BCVTB
+  EXPECT_TRUE(equipActuator.exportToBCVTB());
+  EXPECT_TRUE(equipActuator.isExportToBCVTBDefaulted());
+  equipActuator.setExportToBCVTB(false);
+  EXPECT_FALSE(equipActuator.exportToBCVTB());
+  equipActuator.resetExportToBCVTB();
+  EXPECT_TRUE(equipActuator.exportToBCVTB());
 
   std::string equipName = electricEquipment.name().get() + "power level Actuator";
   equipActuator.setName(equipName);

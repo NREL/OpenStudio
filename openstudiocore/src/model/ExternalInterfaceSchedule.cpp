@@ -137,6 +137,31 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  bool ExternalInterfaceSchedule_Impl::exportToBCVTB() const {
+    boost::optional<std::string> value = getString(OS_ExternalInterface_ScheduleFields::ExportToBCVTB, true);
+    OS_ASSERT(value);
+    return openstudio::istringEqual(value.get(), "True");
+  }
+
+  bool ExternalInterfaceSchedule_Impl::isExportToBCVTBDefaulted() const {
+    return isEmpty(OS_ExternalInterface_ScheduleFields::ExportToBCVTB);
+  }
+
+  void ExternalInterfaceSchedule_Impl::setExportToBCVTB(bool exportToBCVTB) {
+    bool result = false;
+    if (exportToBCVTB) {
+      result = setString(OS_ExternalInterface_ScheduleFields::ExportToBCVTB, "True");
+    } else {
+      result = setString(OS_ExternalInterface_ScheduleFields::ExportToBCVTB, "False");
+    }
+    OS_ASSERT(result);
+  }
+
+  void ExternalInterfaceSchedule_Impl::resetExportToBCVTB() {
+    bool result = setString(OS_ExternalInterface_ScheduleFields::ExportToBCVTB, "");
+    OS_ASSERT(result);
+  }
+
 } // detail
 
 ExternalInterfaceSchedule::ExternalInterfaceSchedule(const Model& model, double initialValue)
@@ -169,6 +194,22 @@ double ExternalInterfaceSchedule::initialValue() const {
 
 void ExternalInterfaceSchedule::setInitialValue(double initialValue) {
   getImpl<detail::ExternalInterfaceSchedule_Impl>()->setInitialValue(initialValue);
+}
+
+bool ExternalInterfaceSchedule::exportToBCVTB() const {
+  return getImpl<detail::ExternalInterfaceSchedule_Impl>()->exportToBCVTB();
+}
+
+bool ExternalInterfaceSchedule::isExportToBCVTBDefaulted() const {
+  return getImpl<detail::ExternalInterfaceSchedule_Impl>()->isExportToBCVTBDefaulted();
+}
+
+void ExternalInterfaceSchedule::setExportToBCVTB(bool exportToBCVTB) {
+  getImpl<detail::ExternalInterfaceSchedule_Impl>()->setExportToBCVTB(exportToBCVTB);
+}
+
+void ExternalInterfaceSchedule::resetExportToBCVTB() {
+  getImpl<detail::ExternalInterfaceSchedule_Impl>()->resetExportToBCVTB();
 }
 
 /// @cond

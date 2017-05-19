@@ -61,11 +61,19 @@ class MODEL_API ExternalInterfaceVariable : public ModelObject {
 
   double initialValue() const;
 
+  bool exportToBCVTB() const;
+
+  bool isExportToBCVTBDefaulted() const;
+
   //@}
   /** @name Setters */
   //@{
 
   void setInitialValue(double initialValue);
+
+  void setExportToBCVTB(bool exportToBCVTB);
+
+  void resetExportToBCVTB();
 
   //@}
   /** @name Other */

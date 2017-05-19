@@ -27478,9 +27478,14 @@ OS:Output:Variable,
        \key RunPeriod
        \key Environment
        \key Annual
-  A6; \field Schedule Name
+  A6, \field Schedule Name
        \type object-list
        \object-list ScheduleNames
+  A7; \field Export To BCVTB
+       \type choice
+       \default False
+       \key True
+       \key False
 
 OS:Meter:Custom,
    \extensible:2
@@ -27734,10 +27739,15 @@ OS:EnergyManagementSystem:OutputVariable,
        \type object-list
        \object-list ErlProgramSubroutineNames
        \note optional for global scope variables, required for local scope variables
-  A7; \field Units
+  A7, \field Units
        \note optional but will result in dimensionless units for blank
        \note EnergyPlus units are standard SI units
        \type alpha
+  A8; \field Export To BCVTB
+       \type choice
+       \default False
+       \key True
+       \key False       
 
 OS:EnergyManagementSystem:MeteredOutputVariable,
        \memo This object sets up an EnergyPlus output variable from an Erl variable
@@ -27941,10 +27951,15 @@ OS:ExternalInterface:Schedule,
   A3 , \field Schedule Type Limits Name
        \type object-list
        \object-list ScheduleTypeLimitsNames
-  N1 ; \field Initial Value
+  N1,  \field Initial Value
        \type real
        \required-field
        \note Used during warm-up and system sizing.
+  A4; \field Export To BCVTB
+       \type choice
+       \default True
+       \key True
+       \key False     
 
 OS:ExternalInterface:Variable,
        \memo This input object is similar to EnergyManagementSystem:GlobalVariable. However, at
@@ -27953,19 +27968,24 @@ OS:ExternalInterface:Variable,
        \memo is set to the value specified by the field "initial value." This object can be used
        \memo to move data into Erl subroutines.
        \min-fields 3
-  A1, \field Handle
+  A1,  \field Handle
        \type handle
        \required-field
-  A2 , \field Name
+  A2,  \field Name
        \required-field
        \type alpha
        \reference ErlVariableNames
        \note This name becomes a variable for use in Erl programs
        \note no spaces allowed in name
-  N1 ; \field Initial Value
+  N1, \field Initial Value
        \type real
        \required-field
        \note Used during warm-up and system sizing.
+  A3; \field Export To BCVTB
+       \type choice
+       \default True
+       \key True
+       \key False     
 
 OS:ExternalInterface:Actuator,
        \memo Hardware portion of EMS used to set up actuators in the model
@@ -27990,11 +28010,16 @@ OS:ExternalInterface:Actuator,
   A5 , \field Actuated Component Control Type
        \required-field
        \type alpha
-  N1 ; \field Optional Initial Value
+  N1,  \field Optional Initial Value
        \type real
        \note If specified, it is used during warm-up and system sizing.
        \note If not specified, then the actuator only overwrites the
        \note actuated component after the warm-up and system sizing.
+  A6; \field Export To BCVTB
+       \type choice
+       \default True
+       \key True
+       \key False       
 
 OS:ExternalInterface:FunctionalMockupUnitImport,
        \memo This object declares an FMU

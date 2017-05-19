@@ -130,6 +130,31 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  bool ExternalInterfaceActuator_Impl::exportToBCVTB() const {
+    boost::optional<std::string> value = getString(OS_ExternalInterface_ActuatorFields::ExportToBCVTB, true);
+    OS_ASSERT(value);
+    return openstudio::istringEqual(value.get(), "True");
+  }
+
+  bool ExternalInterfaceActuator_Impl::isExportToBCVTBDefaulted() const {
+    return isEmpty(OS_ExternalInterface_ActuatorFields::ExportToBCVTB);
+  }
+
+  void ExternalInterfaceActuator_Impl::setExportToBCVTB(bool exportToBCVTB) {
+    bool result = false;
+    if (exportToBCVTB) {
+      result = setString(OS_ExternalInterface_ActuatorFields::ExportToBCVTB, "True");
+    } else {
+      result = setString(OS_ExternalInterface_ActuatorFields::ExportToBCVTB, "False");
+    }
+    OS_ASSERT(result);
+  }
+
+  void ExternalInterfaceActuator_Impl::resetExportToBCVTB() {
+    bool result = setString(OS_ExternalInterface_ActuatorFields::ExportToBCVTB, "");
+    OS_ASSERT(result);
+  }
+
 } // detail
 
 ExternalInterfaceActuator::ExternalInterfaceActuator(const ModelObject& modelObject, const std::string actuatedComponentType, const std::string actuatedComponentControlType)
@@ -210,6 +235,22 @@ void ExternalInterfaceActuator::setOptionalInitialValue(double optionalInitialVa
 
 void ExternalInterfaceActuator::resetOptionalInitialValue() {
   getImpl<detail::ExternalInterfaceActuator_Impl>()->resetOptionalInitialValue();
+}
+
+bool ExternalInterfaceActuator::exportToBCVTB() const {
+  return getImpl<detail::ExternalInterfaceActuator_Impl>()->exportToBCVTB();
+}
+
+bool ExternalInterfaceActuator::isExportToBCVTBDefaulted() const {
+  return getImpl<detail::ExternalInterfaceActuator_Impl>()->isExportToBCVTBDefaulted();
+}
+
+void ExternalInterfaceActuator::setExportToBCVTB(bool exportToBCVTB) {
+  getImpl<detail::ExternalInterfaceActuator_Impl>()->setExportToBCVTB(exportToBCVTB);
+}
+
+void ExternalInterfaceActuator::resetExportToBCVTB() {
+  getImpl<detail::ExternalInterfaceActuator_Impl>()->resetExportToBCVTB();
 }
 
 /// @cond

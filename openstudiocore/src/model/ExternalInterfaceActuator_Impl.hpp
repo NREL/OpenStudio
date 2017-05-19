@@ -77,6 +77,10 @@ namespace detail {
 
     boost::optional<double> optionalInitialValue() const;
 
+    bool exportToBCVTB() const;
+
+    bool isExportToBCVTBDefaulted() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -90,6 +94,10 @@ namespace detail {
     void setOptionalInitialValue(double optionalInitialValue);
 
     void resetOptionalInitialValue();
+
+    void setExportToBCVTB(bool exportToBCVTB);
+
+    void resetExportToBCVTB();
 
     //@}
     /** @name Other */

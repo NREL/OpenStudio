@@ -44,6 +44,14 @@ using namespace openstudio::model;
 TEST_F(ModelFixture, ExternalInterfaceSchedule) {
   Model model;
   ExternalInterfaceSchedule schedule(model);
+  //Check BCVTB
+  EXPECT_TRUE(schedule.exportToBCVTB());
+  EXPECT_TRUE(schedule.isExportToBCVTBDefaulted());
+  schedule.setExportToBCVTB(false);
+  EXPECT_FALSE(schedule.exportToBCVTB());
+  schedule.resetExportToBCVTB();
+  EXPECT_TRUE(schedule.exportToBCVTB());
+
   EXPECT_EQ(0.0,schedule.initialValue());
   schedule.setInitialValue(-0.1);
   EXPECT_EQ(-0.1, schedule.initialValue());

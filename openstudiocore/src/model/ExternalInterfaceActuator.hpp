@@ -69,6 +69,10 @@ class MODEL_API ExternalInterfaceActuator : public ModelObject {
 
   boost::optional<double> optionalInitialValue() const;
 
+  bool exportToBCVTB() const;
+
+  bool isExportToBCVTBDefaulted() const;
+
   //@}
   /** @name Setters */
   //@{
@@ -82,6 +86,10 @@ class MODEL_API ExternalInterfaceActuator : public ModelObject {
   void setOptionalInitialValue(double optionalInitialValue);
 
   void resetOptionalInitialValue();
+
+  void setExportToBCVTB(bool exportToBCVTB);
+
+  void resetExportToBCVTB();
 
   //@}
   /** @name Other */
