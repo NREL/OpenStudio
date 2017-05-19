@@ -247,7 +247,7 @@ namespace detail{
       setString(OS_Coil_Cooling_DX_TwoSpeedFields::RatedHighSpeedAirFlowRate,"Autosize");
     }
   }
-  void CoilCoolingDXTwoSpeed_Impl::setRatedHighSpeedAirFlowRate( OptionalDouble value )
+  void CoilCoolingDXTwoSpeed_Impl::setRatedHighSpeedAirFlowRate( double value )
   {
     setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::RatedHighSpeedAirFlowRate,value);
   }
@@ -635,7 +635,7 @@ namespace detail{
     else
       setString(OS_Coil_Cooling_DX_TwoSpeedFields::LowSpeedEvaporativeCondenserPumpRatedPowerConsumption,"Autosize");
   }
-  void CoilCoolingDXTwoSpeed_Impl::setLowSpeedEvaporativeCondenserPumpRatedPowerConsumption( OptionalDouble value )
+  void CoilCoolingDXTwoSpeed_Impl::setLowSpeedEvaporativeCondenserPumpRatedPowerConsumption( double value )
   {
     setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::LowSpeedEvaporativeCondenserPumpRatedPowerConsumption,value);
   }
