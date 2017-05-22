@@ -231,8 +231,12 @@ class MODEL_API CoilCoolingDXSingleSpeed : public StraightComponent {
   /** Sets the value of the RatedCOP field. **/
   void setRatedCOP( boost::optional<double> value );
 
+  void setRatedCOP( double value );
+
   /** Sets the value of the RatedEvaporatorFanPowerPerVolumeFlowRate field. **/
   void setRatedEvaporatorFanPowerPerVolumeFlowRate( boost::optional<double> value );
+
+  void setRatedEvaporatorFanPowerPerVolumeFlowRate( double value );
 
   /** Sets the CurveBiquadratic referred to by the TotalCoolingCapacityFunctionOfTemperatureCurveName field. **/
   void setTotalCoolingCapacityFunctionOfTemperatureCurve( const Curve& curve );
@@ -252,14 +256,22 @@ class MODEL_API CoilCoolingDXSingleSpeed : public StraightComponent {
   /** Sets the value of the NominalTimeForCondensateRemovalToBegin field. **/
   void setNominalTimeForCondensateRemovalToBegin( boost::optional<double> value );
 
+  void setNominalTimeForCondensateRemovalToBegin( double value );
+
   /** Sets the value of the RatioOfInitialMoistureEvaporationRateAndSteadyStateLatentCapacity field. **/
   void setRatioOfInitialMoistureEvaporationRateAndSteadyStateLatentCapacity( boost::optional<double> value );
+
+  void setRatioOfInitialMoistureEvaporationRateAndSteadyStateLatentCapacity( double value );
 
   /** Sets the value of the MaximumCyclingRate field. **/
   void setMaximumCyclingRate( boost::optional<double> value );  
 
+  void setMaximumCyclingRate( double value );
+
   /** Sets the value of the latentCapacityTimeConstant field. **/
   void setLatentCapacityTimeConstant( boost::optional<double> value );
+
+  void setLatentCapacityTimeConstant( double value );
 
   void setCondenserAirInletNodeName(const boost::optional<std::string>&);
 
@@ -271,21 +283,31 @@ class MODEL_API CoilCoolingDXSingleSpeed : public StraightComponent {
   /** Sets the value of the EvaporativeCondenserEffectiveness field. **/
   void setEvaporativeCondenserEffectiveness( boost::optional<double> value );
 
+  void setEvaporativeCondenserEffectiveness( double value );
+
   /** Sets the value of the EvaporativeCondenserAirFlowRate field.
       if value==false then set field to "autosize"
   **/
   void setEvaporativeCondenserAirFlowRate( boost::optional<double> value );
+
+  void setEvaporativeCondenserAirFlowRate( double value );
 
   /** Sets the value of the EvaporativeCondenserPumpRatedPowerConsumption field.
       if value==false then set field to "autosize"
   **/
   void setEvaporativeCondenserPumpRatedPowerConsumption( boost::optional<double> value );
 
+  void setEvaporativeCondenserPumpRatedPowerConsumption( double value );
+
   /** Sets the value of the crankcaseHeaterCapacity field. **/
   void setCrankcaseHeaterCapacity( boost::optional<double> value );  
 
+  void setCrankcaseHeaterCapacity( double value );
+
   /** Sets the value of the MaximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation field. **/
   void setMaximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation( boost::optional<double> value );
+
+  void setMaximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation( double value );
 
   //getSupplyWaterStorageTankName
   //setSupplyWaterStorageTankName
@@ -296,8 +318,12 @@ class MODEL_API CoilCoolingDXSingleSpeed : public StraightComponent {
   /** Sets the value of the BasinHeaterCapacity field. **/
   void setBasinHeaterCapacity( boost::optional<double> value );
 
+  void setBasinHeaterCapacity( double value );
+
   /** Sets the value of the BasinHeaterSetpointTemperature field. **/
   void setBasinHeaterSetpointTemperature( boost::optional<double> value );
+
+  void setBasinHeaterSetpointTemperature( double value );
 
   /** Sets the Schedule referred to by the BasinHeaterOperatingSchedule field. **/
   bool setBasinHeaterOperatingSchedule(Schedule& schedule );

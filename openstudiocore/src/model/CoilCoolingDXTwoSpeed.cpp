@@ -192,6 +192,12 @@ namespace detail{
     }
   }
 
+  void CoilCoolingDXTwoSpeed_Impl::setRatedHighSpeedTotalCoolingCapacity( double value )
+  {
+      setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::RatedHighSpeedTotalCoolingCapacity,value); 
+  }
+
+
   // N2 , \field Rated High Speed Sensible Heat Ratio
   OptionalDouble CoilCoolingDXTwoSpeed_Impl::ratedHighSpeedSensibleHeatRatio() const
   {
@@ -208,6 +214,12 @@ namespace detail{
       setString(OS_Coil_Cooling_DX_TwoSpeedFields::RatedHighSpeedSensibleHeatRatio,"Autosize");
     }
   }
+
+  void CoilCoolingDXTwoSpeed_Impl::setRatedHighSpeedSensibleHeatRatio( double value )
+  {
+    setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::RatedHighSpeedSensibleHeatRatio,value);
+  }
+
 
   // N3 , \field Rated High Speed COP
   OptionalDouble CoilCoolingDXTwoSpeed_Impl::ratedHighSpeedCOP() const
@@ -235,6 +247,11 @@ namespace detail{
       setString(OS_Coil_Cooling_DX_TwoSpeedFields::RatedHighSpeedAirFlowRate,"Autosize");
     }
   }
+  void CoilCoolingDXTwoSpeed_Impl::setRatedHighSpeedAirFlowRate( double value )
+  {
+    setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::RatedHighSpeedAirFlowRate,value);
+  }
+
 
   // A5 , \field Total Cooling Capacity Function of Temperature Curve Name
   //\object-list BiquadraticCurves
@@ -398,6 +415,11 @@ namespace detail{
       setString(OS_Coil_Cooling_DX_TwoSpeedFields::RatedLowSpeedTotalCoolingCapacity,"Autosize");
     }
   }
+  void CoilCoolingDXTwoSpeed_Impl::setRatedLowSpeedTotalCoolingCapacity( double value )
+  {
+    setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::RatedLowSpeedTotalCoolingCapacity,value);
+  }
+
 
   // N6 , \field Rated Low Speed Sensible Heat Ratio
   OptionalDouble CoilCoolingDXTwoSpeed_Impl::ratedLowSpeedSensibleHeatRatio() const
@@ -415,6 +437,11 @@ namespace detail{
       setString(OS_Coil_Cooling_DX_TwoSpeedFields::RatedLowSpeedSensibleHeatRatio,"Autosize");
     }
   }
+  void CoilCoolingDXTwoSpeed_Impl::setRatedLowSpeedSensibleHeatRatio( double value )
+  {
+    setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::RatedLowSpeedSensibleHeatRatio,value);
+  }
+
 
   // N7 , \field Rated Low Speed COP
   OptionalDouble CoilCoolingDXTwoSpeed_Impl::ratedLowSpeedCOP() const
@@ -442,6 +469,11 @@ namespace detail{
       setString(OS_Coil_Cooling_DX_TwoSpeedFields::RatedLowSpeedAirFlowRate,"Autosize");
     }
   }
+  void CoilCoolingDXTwoSpeed_Impl::setRatedLowSpeedAirFlowRate( double value )
+  {
+    setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::RatedLowSpeedAirFlowRate,value);
+  }
+
 
   // A10, \field Low Speed Total Cooling Capacity Function of Temperature Curve Name
   //\object-list BiquadraticCurves
@@ -539,6 +571,11 @@ namespace detail{
     else
       setString(OS_Coil_Cooling_DX_TwoSpeedFields::HighSpeedEvaporativeCondenserAirFlowRate,"Autosize");
   }
+  void CoilCoolingDXTwoSpeed_Impl::setHighSpeedEvaporativeCondenserAirFlowRate( double value )
+  {
+    setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::HighSpeedEvaporativeCondenserAirFlowRate,value);
+  }
+
 
   // N11, \field High Speed Evaporative Condenser Pump Rated Power Consumption
   OptionalDouble CoilCoolingDXTwoSpeed_Impl::highSpeedEvaporativeCondenserPumpRatedPowerConsumption()const
@@ -552,6 +589,11 @@ namespace detail{
     else
       setString(OS_Coil_Cooling_DX_TwoSpeedFields::HighSpeedEvaporativeCondenserPumpRatedPowerConsumption,"Autosize");
   }
+  void CoilCoolingDXTwoSpeed_Impl::setHighSpeedEvaporativeCondenserPumpRatedPowerConsumption( double value )
+  {
+    setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::HighSpeedEvaporativeCondenserPumpRatedPowerConsumption,value);
+  }
+
 
   // N12, \field Low Speed Evaporative Condenser Effectiveness
   OptionalDouble CoilCoolingDXTwoSpeed_Impl::lowSpeedEvaporativeCondenserEffectiveness()const
@@ -575,6 +617,11 @@ namespace detail{
     else
       setString(OS_Coil_Cooling_DX_TwoSpeedFields::LowSpeedEvaporativeCondenserAirFlowRate,"Autosize");
   }
+  void CoilCoolingDXTwoSpeed_Impl::setLowSpeedEvaporativeCondenserAirFlowRate( double value )
+  {
+    setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::LowSpeedEvaporativeCondenserAirFlowRate,value);
+  }
+
 
   // N14, \field Low Speed Evaporative Condenser Pump Rated Power Consumption
   OptionalDouble CoilCoolingDXTwoSpeed_Impl::lowSpeedEvaporativeCondenserPumpRatedPowerConsumption()const
@@ -588,6 +635,11 @@ namespace detail{
     else
       setString(OS_Coil_Cooling_DX_TwoSpeedFields::LowSpeedEvaporativeCondenserPumpRatedPowerConsumption,"Autosize");
   }
+  void CoilCoolingDXTwoSpeed_Impl::setLowSpeedEvaporativeCondenserPumpRatedPowerConsumption( double value )
+  {
+    setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::LowSpeedEvaporativeCondenserPumpRatedPowerConsumption,value);
+  }
+
 
   //TODO
   // A14, \field Supply Water Storage Tank Name
@@ -986,6 +1038,10 @@ void CoilCoolingDXTwoSpeed::setRatedHighSpeedTotalCoolingCapacity( OptionalDoubl
 {
   getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setRatedHighSpeedTotalCoolingCapacity( value );
 }
+void CoilCoolingDXTwoSpeed::setRatedHighSpeedTotalCoolingCapacity( double value )
+{
+  getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setRatedHighSpeedTotalCoolingCapacity( value );
+}
 
 //  N2 , \field Rated High Speed Sensible Heat Ratio
 OptionalDouble CoilCoolingDXTwoSpeed::ratedHighSpeedSensibleHeatRatio() const
@@ -1000,6 +1056,11 @@ void CoilCoolingDXTwoSpeed::setRatedHighSpeedSensibleHeatRatio( OptionalDouble v
 {
   getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setRatedHighSpeedSensibleHeatRatio( value );
 }
+void CoilCoolingDXTwoSpeed::setRatedHighSpeedSensibleHeatRatio( double value )
+{
+  getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setRatedHighSpeedSensibleHeatRatio( value );
+}
+
 
 //  N3 , \field Rated High Speed COP
 OptionalDouble CoilCoolingDXTwoSpeed::ratedHighSpeedCOP() const
@@ -1028,6 +1089,11 @@ void CoilCoolingDXTwoSpeed::setRatedHighSpeedAirFlowRate( OptionalDouble value )
 {
   getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setRatedHighSpeedAirFlowRate( value );
 }
+void CoilCoolingDXTwoSpeed::setRatedHighSpeedAirFlowRate( double value )
+{
+  getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setRatedHighSpeedAirFlowRate( value );
+}
+
 
 //  A5 , \field Total Cooling Capacity Function of Temperature Curve Name
 Curve CoilCoolingDXTwoSpeed::totalCoolingCapacityFunctionOfTemperatureCurve()const
@@ -1112,6 +1178,11 @@ void CoilCoolingDXTwoSpeed::setRatedLowSpeedTotalCoolingCapacity( OptionalDouble
 {
   getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setRatedLowSpeedTotalCoolingCapacity( value );
 }
+void CoilCoolingDXTwoSpeed::setRatedLowSpeedTotalCoolingCapacity( double value )
+{
+  getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setRatedLowSpeedTotalCoolingCapacity( value );
+}
+
 
 //  N6 , \field Rated Low Speed Sensible Heat Ratio
 OptionalDouble CoilCoolingDXTwoSpeed::ratedLowSpeedSensibleHeatRatio() const
@@ -1126,6 +1197,11 @@ void CoilCoolingDXTwoSpeed::setRatedLowSpeedSensibleHeatRatio( OptionalDouble va
 {
   getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setRatedLowSpeedSensibleHeatRatio( value );
 }
+void CoilCoolingDXTwoSpeed::setRatedLowSpeedSensibleHeatRatio( double value )
+{
+  getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setRatedLowSpeedSensibleHeatRatio( value );
+}
+
 
 //  N7 , \field Rated Low Speed COP
 OptionalDouble CoilCoolingDXTwoSpeed::ratedLowSpeedCOP() const
@@ -1154,6 +1230,11 @@ void CoilCoolingDXTwoSpeed::setRatedLowSpeedAirFlowRate( OptionalDouble value )
 {
   getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setRatedLowSpeedAirFlowRate( value );
 }
+void CoilCoolingDXTwoSpeed::setRatedLowSpeedAirFlowRate( double value )
+{
+  getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setRatedLowSpeedAirFlowRate( value );
+}
+
 
 //  A10, \field Low Speed Total Cooling Capacity Function of Temperature Curve Name
 Curve CoilCoolingDXTwoSpeed::lowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve()const
@@ -1238,6 +1319,11 @@ void CoilCoolingDXTwoSpeed::setHighSpeedEvaporativeCondenserAirFlowRate( Optiona
 {
   getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setHighSpeedEvaporativeCondenserAirFlowRate( value );
 }
+void CoilCoolingDXTwoSpeed::setHighSpeedEvaporativeCondenserAirFlowRate( double value )
+{
+  getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setHighSpeedEvaporativeCondenserAirFlowRate( value );
+}
+
 
 //  N11, \field High Speed Evaporative Condenser Pump Rated Power Consumption
 OptionalDouble CoilCoolingDXTwoSpeed::highSpeedEvaporativeCondenserPumpRatedPowerConsumption()const
@@ -1252,6 +1338,11 @@ void CoilCoolingDXTwoSpeed::setHighSpeedEvaporativeCondenserPumpRatedPowerConsum
 {
   getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setHighSpeedEvaporativeCondenserPumpRatedPowerConsumption( value );
 }
+void CoilCoolingDXTwoSpeed::setHighSpeedEvaporativeCondenserPumpRatedPowerConsumption( double value )
+{
+  getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setHighSpeedEvaporativeCondenserPumpRatedPowerConsumption( value );
+}
+
 
 //  N12, \field Low Speed Evaporative Condenser Effectiveness
 OptionalDouble CoilCoolingDXTwoSpeed::lowSpeedEvaporativeCondenserEffectiveness()const
@@ -1280,6 +1371,11 @@ void CoilCoolingDXTwoSpeed::setLowSpeedEvaporativeCondenserAirFlowRate( Optional
 {
   getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setLowSpeedEvaporativeCondenserAirFlowRate( value );
 }
+void CoilCoolingDXTwoSpeed::setLowSpeedEvaporativeCondenserAirFlowRate( double value )
+{
+  getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setLowSpeedEvaporativeCondenserAirFlowRate( value );
+}
+
 
 //  N14, \field Low Speed Evaporative Condenser Pump Rated Power Consumption
 OptionalDouble CoilCoolingDXTwoSpeed::lowSpeedEvaporativeCondenserPumpRatedPowerConsumption()const
@@ -1294,6 +1390,11 @@ void CoilCoolingDXTwoSpeed::setLowSpeedEvaporativeCondenserPumpRatedPowerConsump
 {
   getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setLowSpeedEvaporativeCondenserPumpRatedPowerConsumption( value );
 }
+void CoilCoolingDXTwoSpeed::setLowSpeedEvaporativeCondenserPumpRatedPowerConsumption( double value )
+{
+  getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setLowSpeedEvaporativeCondenserPumpRatedPowerConsumption( value );
+}
+
 
 //  A14, \field Supply Water Storage Tank Name
   //getSupplyWaterStorageTankName
