@@ -77,8 +77,10 @@ class PreviewWebView : public QWidget
 
     // DLM: for debugging
     void 	onLoadFinished(bool ok);
-    void 	onLoadProgress(int progress);
-    void 	onLoadStarted();
+    //void 	onLoadProgress(int progress);
+    //void 	onLoadStarted();
+    void 	onTranslateProgress(double percentage);
+    void 	onJavaScriptFinished(const QVariant &v);
     void 	onRenderProcessTerminated(QWebEnginePage::RenderProcessTerminationStatus terminationStatus, int exitCode);
   private:
     REGISTER_LOGGER("openstudio::PreviewWebView");
@@ -90,6 +92,8 @@ class PreviewWebView : public QWidget
     QPushButton * m_refreshBtn;
 
     QWebEngineView * m_view;
+
+    QString m_json;
 };
 
 } // openstudio

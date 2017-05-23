@@ -497,8 +497,16 @@ namespace openstudio
       userDatas.push_back(userData);
     }
 
+
     ThreeScene modelToThreeJS(Model model, bool triangulateSurfaces)
     {
+      return modelToThreeJS(model, triangulateSurfaces, [](double percentage) {});
+    }
+
+    ThreeScene modelToThreeJS(Model model, bool triangulateSurfaces, std::function<void(double)> updatePercentage)
+    {
+      updatePercentage(0.0);
+
       std::vector<ThreeMaterial> materials;
       std::map<std::string, std::string> materialMap;
       buildMaterials(model, materials, materialMap);
@@ -506,8 +514,15 @@ namespace openstudio
       std::vector<ThreeSceneChild> sceneChildren;
       std::vector<ThreeGeometry> allGeometries;
 
+      // get number of things to translate
+      std::vector<PlanarSurface> planarSurfaces = model.getModelObjects<PlanarSurface>();
+      std::vector<PlanarSurfaceGroup> planarSurfaceGroups = model.getModelObjects<PlanarSurfaceGroup>();
+      std::vector<BuildingStory> buildingStories = model.getConcreteModelObjects<BuildingStory>();
+      double n = 0;
+      double N = planarSurfaces.size() + planarSurfaceGroups.size() + buildingStories.size() + 1;
+
       // loop over all surfaces
-      for (const auto& planarSurface : model.getModelObjects<PlanarSurface>())
+      for (const auto& planarSurface : planarSurfaces)
       {
         std::vector<ThreeGeometry> geometries;
         std::vector<ThreeUserData> userDatas;
@@ -526,6 +541,9 @@ namespace openstudio
          ThreeSceneChild sceneChild(thisUUID, thisName, "Mesh", geometries[i].uuid(), thisMaterialId, userDatas[i]);
            sceneChildren.push_back(sceneChild);
         }
+
+        n += 1;
+        updatePercentage(100.0*n / N);
       }
 
       ThreeSceneObject sceneObject(toThreeUUID(toString(openstudio::createUUID())), sceneChildren);
@@ -533,8 +551,11 @@ namespace openstudio
       BoundingBox boundingBox;
       boundingBox.addPoint(Point3d(0, 0, 0));
       boundingBox.addPoint(Point3d(1, 1, 1));
-      for (const auto& group : model.getModelObjects<PlanarSurfaceGroup>()){
+      for (const auto& group : planarSurfaceGroups){
         boundingBox.add(group.transformation()*group.boundingBox());
+
+        n += 1;
+        updatePercentage(100.0*n / N);
       }
 
       double lookAtX = 0; // (boundingBox.minX().get() + boundingBox.maxX().get()) / 2.0
@@ -554,14 +575,19 @@ namespace openstudio
                                         lookAtX, lookAtY, lookAtZ, lookAtR);
      
       std::vector<std::string> buildingStoryNames;
-      for (const auto& buildingStory : model.getConcreteModelObjects<BuildingStory>()){
+      for (const auto& buildingStory : buildingStories){
         buildingStoryNames.push_back(buildingStory.nameString());
+
+        n += 1;
+        updatePercentage(100.0*n / N);
       }
       // buildingStoryNames.sort! {|x,y| x.upcase <=> y.upcase} # case insensitive sort
   
       ThreeSceneMetadata metadata(buildingStoryNames, threeBoundingBox);
   
       ThreeScene scene(metadata, allGeometries, materials, sceneObject);
+
+      updatePercentage(100.0);
 
       return scene;
     }
