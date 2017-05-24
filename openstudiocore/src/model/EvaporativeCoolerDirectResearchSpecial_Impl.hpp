@@ -134,18 +134,18 @@ namespace detail {
 
     boost::optional<double> evaporativeOperationMinimumDrybulbTemperature() const;
     bool isEvaporativeOperationMinimumDrybulbTemperatureDefaulted() const;
-    void setEvaporativeOperationMinimumDrybulbTemperature(double evaporativeOperationMinimumDrybulbTemperature);
+    bool setEvaporativeOperationMinimumDrybulbTemperature(double evaporativeOperationMinimumDrybulbTemperature);
     void resetEvaporativeOperationMinimumDrybulbTemperature();
 
     boost::optional<double> evaporativeOperationMaximumLimitWetbulbTemperature() const;
     bool isEvaporativeOperationMaximumLimitWetbulbTemperatureDefaulted() const;
-    void setEvaporativeOperationMaximumLimitWetbulbTemperature(double evaporativeOperationMaximumLimitWetbulbTemperature);
+    bool setEvaporativeOperationMaximumLimitWetbulbTemperature(double evaporativeOperationMaximumLimitWetbulbTemperature);
     void resetEvaporativeOperationMaximumLimitWetbulbTemperature();
 
-    boost::optional<double> evaporativeOperationMaximumLimitDryBulbTemperature() const;
-    bool isEvaporativeOperationMaximumLimitDryBulbTemperatureDefaulted() const;
-    void setEvaporativeOperationMaximumLimitDryBulbTemperature(double evaporativeOperationMaximumLimitDryBulbTemperature);
-    void resetEvaporativeOperationMaximumLimitDryBulbTemperature();
+    boost::optional<double> evaporativeOperationMaximumLimitDrybulbTemperature() const;
+    bool isEvaporativeOperationMaximumLimitDrybulbTemperatureDefaulted() const;
+    bool setEvaporativeOperationMaximumLimitDrybulbTemperature(double evaporativeOperationMaximumLimitDrybulbTemperature);
+    void resetEvaporativeOperationMaximumLimitDrybulbTemperature();
 
     boost::optional<double> autosizedRecirculatingWaterPumpPowerConsumption() const ;
 
