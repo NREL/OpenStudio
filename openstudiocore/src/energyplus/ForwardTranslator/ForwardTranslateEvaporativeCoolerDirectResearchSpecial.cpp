@@ -148,21 +148,21 @@ boost::optional<IdfObject> ForwardTranslator::translateEvaporativeCoolerDirectRe
   }
 
   // Evaporative Operation Minimum Drybulb Temperature (Optional Double)
-  if( OptD = modelObject.evaporativeOperationMinimumDrybulbTemperature() )
+  if( (OptD = modelObject.evaporativeOperationMinimumDrybulbTemperature()) )
   {
     idfObject.setDouble(EvaporativeCooler_Direct_ResearchSpecialFields::EvaporativeOperationMinimumDrybulbTemperature,OptD.get());
   }
 
   // Evaporative Operation Maximum Limit Wetbulb Temperature (Optional Double)
-  if( OptD = modelObject.evaporativeOperationMaximumLimitWetbulbTemperature() )
+  if( (OptD = modelObject.evaporativeOperationMaximumLimitWetbulbTemperature()) )
   {
     idfObject.setDouble(EvaporativeCooler_Direct_ResearchSpecialFields::EvaporativeOperationMaximumLimitWetbulbTemperature,OptD.get());
   }
  
   // Evaporative Operation Maximum Limit Drybulb Temperature (Optional Double)
-  if( OptD = modelObject.evaporativeOperationMaximumLimitDryBulbTemperature() )
+  if( (OptD = modelObject.evaporativeOperationMaximumLimitDrybulbTemperature()) )
   {
-    idfObject.setDouble(EvaporativeCooler_Direct_ResearchSpecialFields::EvaporativeOperationMaximumLimitDryBulbTemperature,OptD.get());
+    idfObject.setDouble(EvaporativeCooler_Direct_ResearchSpecialFields::EvaporativeOperationMaximumLimitDrybulbTemperature,OptD.get());
   } 
 
   return boost::optional<IdfObject>(idfObject);
