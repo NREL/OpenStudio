@@ -3420,6 +3420,36 @@ std::string VersionTranslator::update_2_1_0_to_2_1_1(const IdfFile& idf_2_1_0, c
 
       m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
       ss << newObject;
+    } else if (iddname == "OS:HeatPump:WaterToWater:EquationFit:Heating") {
+      auto iddObject = idd_2_1_1.getObject("OS:HeatPump:WaterToWater:EquationFit:Heating");
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        if ( auto s = object.getString(i) ) {
+          newObject.setString(i,s.get());
+        }
+      }
+      newObject.setDouble(20,7.5);
+      newObject.setDouble(21,1.0);
+      newObject.setString(22,"");
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
+    } else if (iddname == "OS:HeatPump:WaterToWater:EquationFit:Cooling") {
+      auto iddObject = idd_2_1_1.getObject("OS:HeatPump:WaterToWater:EquationFit:Cooling");
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        if ( auto s = object.getString(i) ) {
+          newObject.setString(i,s.get());
+        }
+      }
+      newObject.setDouble(20,8.0);
+      newObject.setDouble(21,1.0);
+      newObject.setString(22,"");
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
     } else {
       ss << object;
     }

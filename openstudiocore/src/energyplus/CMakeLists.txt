@@ -519,6 +519,7 @@ set(${target_name}_test_src
   Test/RunPeriodControlDaylightSavingTime_GTest.cpp
   Test/ScheduleInterval_GTest.cpp
   Test/ScheduleRuleset_GTest.cpp
+  Test/SetpointManagerFollowGroundTemperature_GTest.cpp
   Test/ShadingSurface_GTest.cpp
   Test/Space_GTest.cpp
   Test/SpaceInfiltrationDesignFlowRate_GTest.cpp

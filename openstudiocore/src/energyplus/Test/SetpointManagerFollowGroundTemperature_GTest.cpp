@@ -26,74 +26,58 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
 
+#include <gtest/gtest.h>
+#include "EnergyPlusFixture.hpp"
+
 #include "../ForwardTranslator.hpp"
+#include "../ReverseTranslator.hpp"
+
+#include "../../model/Model.hpp"
 #include "../../model/SetpointManagerFollowGroundTemperature.hpp"
+#include "../../model/SetpointManagerFollowGroundTemperature_Impl.hpp"
 #include "../../model/Node.hpp"
-#include <utilities/idd/SetpointManager_FollowGroundTemperature_FieldEnums.hxx>
-#include "../../utilities/idd/IddEnums.hpp"
+#include "../../model/AirLoopHVAC.hpp"
+#include "../../model/PlantLoop.hpp"
+
 #include <utilities/idd/IddEnums.hxx>
+#include <utilities/idd/SetpointManager_FollowGroundTemperature_FieldEnums.hxx>
 
+#include <resources.hxx>
+
+#include <sstream>
+
+using namespace openstudio::energyplus;
 using namespace openstudio::model;
+using namespace openstudio;
 
-namespace openstudio {
-
-namespace energyplus {
-
-boost::optional<IdfObject> ForwardTranslator::translateSetpointManagerFollowGroundTemperature( 
-                              SetpointManagerFollowGroundTemperature & modelObject )
+TEST_F(EnergyPlusFixture, ForwardTranslator_SetpointManagerFollowGroundTemperature)
 {
-  boost::optional<Node> node;
-  boost::optional<std::string> s;
-  boost::optional<double> d;
-
-  // Name
-  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SetpointManager_FollowGroundTemperature, modelObject);
-
-  // ControlVariable
-  s = modelObject.controlVariable();
-  if( s )
-  {
-    idfObject.setString(SetpointManager_FollowGroundTemperatureFields::ControlVariable,s.get());
-  }
-
-  // ReferenceGroundTemperatureObjectType
-  s = modelObject.referenceGroundTemperatureObjectType();
-  if ( s ) {
-    idfObject.setString(SetpointManager_FollowGroundTemperatureFields::ReferenceGroundTemperatureObjectType,s.get());
-  }
-
-  // OffsetTemperatureDifference
-  d = modelObject.offsetTemperatureDifference();
-  if( d )
-  {
-    idfObject.setDouble(SetpointManager_FollowGroundTemperatureFields::OffsetTemperatureDifference,d.get());
-  }
-
-  // MaximumSetpointTemperature
-  d = modelObject.maximumSetpointTemperature();
-  if( d )
-  {
-    idfObject.setDouble(SetpointManager_FollowGroundTemperatureFields::MaximumSetpointTemperature,d.get());
-  }
+  Model m;
+  AirLoopHVAC airloop(m);
+  Node outletNode = airloop.supplyOutletNode();
   
-  // MinimumSetpointTemperature
-  d = modelObject.minimumSetpointTemperature();
-  if( d )
-  {
-    idfObject.setDouble(SetpointManager_FollowGroundTemperatureFields::MinimumSetpointTemperature,d.get());
-  }
+  SetpointManagerFollowGroundTemperature testObject(m);
+  testObject.setControlVariable("MinimumTemperature");
+  testObject.setReferenceGroundTemperatureObjectType("Site:GroundTemperature:Shallow");
+  testObject.addToNode(outletNode);
+  testObject.setOffsetTemperatureDifference(999.9);
+  testObject.setMaximumSetpointTemperature(999.9);
+  testObject.setMinimumSetpointTemperature(999.9);
 
-  // SetpointNodeorNodeListName
-  node = modelObject.setpointNode();
-  if( node )
-  {
-    idfObject.setString(SetpointManager_FollowGroundTemperatureFields::SetpointNodeorNodeListName,node->name().get());
-  }
-
-  return idfObject;
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(m);
+  EXPECT_EQ(0u, forwardTranslator.errors().size());
+  
+  WorkspaceObjectVector spmIdfs = workspace.getObjectsByType(IddObjectType::SetpointManager_FollowGroundTemperature);
+  ASSERT_EQ(1u, spmIdfs.size());
+  WorkspaceObject &spmIdf(spmIdfs[0]);
+  
+  EXPECT_EQ("MinimumTemperature", spmIdf.getString(SetpointManager_FollowGroundTemperatureFields::ControlVariable, true).get());
+  EXPECT_EQ("Site:GroundTemperature:Shallow", spmIdf.getString(SetpointManager_FollowGroundTemperatureFields::ReferenceGroundTemperatureObjectType, true).get());
+  EXPECT_DOUBLE_EQ(999.9, spmIdf.getDouble(SetpointManager_FollowGroundTemperatureFields::OffsetTemperatureDifference, true).get());
+  EXPECT_DOUBLE_EQ(999.9, spmIdf.getDouble(SetpointManager_FollowGroundTemperatureFields::MaximumSetpointTemperature, true).get());
+  EXPECT_DOUBLE_EQ(999.9, spmIdf.getDouble(SetpointManager_FollowGroundTemperatureFields::MinimumSetpointTemperature, true).get());
+  
 }
 
-} // energyplus
-
-} // openstudio
 

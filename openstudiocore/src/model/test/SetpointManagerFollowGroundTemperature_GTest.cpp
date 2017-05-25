@@ -174,3 +174,15 @@ TEST_F(ModelFixture, SetpointManagerFollowGroundTemperature_customDataClone)
   EXPECT_DOUBLE_EQ(999.9, testObjectClone.minimumSetpointTemperature());
 }
 
+TEST_F (ModelFixture, SetpointManagerFollowGroundTemperature_referenceObjectType) {
+  Model m;
+  AirLoopHVAC airloop(m);
+  Node outletNode = airloop.supplyOutletNode();
+  
+  SetpointManagerFollowGroundTemperature testObject(m);
+  EXPECT_EQ(testObject.referenceGroundTemperatureObjectType(), "Site:GroundTemperature:BuildingSurface");
+  EXPECT_TRUE(testObject.setReferenceGroundTemperatureObjectType("Site:GroundTemperature:Deep"));
+  EXPECT_EQ(testObject.referenceGroundTemperatureObjectType(), "Site:GroundTemperature:Deep");
+  EXPECT_FALSE(testObject.setReferenceGroundTemperatureObjectType("bogus"));
+  EXPECT_EQ(testObject.referenceGroundTemperatureObjectType(), "Site:GroundTemperature:Deep");
+}

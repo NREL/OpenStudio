@@ -34,6 +34,8 @@
 #include "../../model/Node_Impl.hpp"
 #include "../../model/HeatPumpWaterToWaterEquationFitCooling.hpp"
 #include "../../model/HeatPumpWaterToWaterEquationFitCooling_Impl.hpp"
+#include "../../model/HeatPumpWaterToWaterEquationFitHeating.hpp"
+#include "../../model/HeatPumpWaterToWaterEquationFitHeating_Impl.hpp"
 #include "../../utilities/core/Logger.hpp"
 #include "../../utilities/core/Assert.hpp"
 #include <utilities/idd/HeatPump_WaterToWater_EquationFit_Cooling_FieldEnums.hxx>
@@ -52,6 +54,7 @@ namespace energyplus {
 boost::optional<IdfObject> ForwardTranslator::translateHeatPumpWaterToWaterEquationFitCooling( HeatPumpWaterToWaterEquationFitCooling & modelObject )
 {
   IdfObject idfObject(IddObjectType::HeatPump_WaterToWater_EquationFit_Cooling);
+  boost::optional<double> optvalue;
 
   m_idfObjects.push_back(idfObject);
 
@@ -75,24 +78,40 @@ boost::optional<IdfObject> ForwardTranslator::translateHeatPumpWaterToWaterEquat
     idfObject.setString(HeatPump_WaterToWater_EquationFit_CoolingFields::SourceSideInletNodeName,value->name().get());
   }
 
+  if (modelObject.isReferenceLoadSideFlowRateAutosized())
   {
-    auto value = modelObject.ratedLoadSideFlowRate();
-    idfObject.setDouble(HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceLoadSideFlowRate,value);
+    idfObject.setString(HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceLoadSideFlowRate, "Autosize");
+  }
+  else if ((optvalue = modelObject.referenceLoadSideFlowRate()))
+  {
+    idfObject.setDouble(HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceLoadSideFlowRate, optvalue.get());
   }
 
+  if (modelObject.isReferenceSourceSideFlowRateAutosized())
   {
-    auto value = modelObject.ratedSourceSideFlowRate();
-    idfObject.setDouble(HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceSourceSideFlowRate,value);
+    idfObject.setString(HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceSourceSideFlowRate, "Autosize");
+  }
+  else if ((optvalue = modelObject.referenceSourceSideFlowRate()))
+  {
+    idfObject.setDouble(HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceSourceSideFlowRate, optvalue.get());
   }
 
+  if (modelObject.isRatedCoolingCapacityAutosized())
   {
-    auto value = modelObject.ratedCoolingCapacity();
-    idfObject.setDouble(HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceCoolingCapacity,value);
+    idfObject.setString(HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceCoolingCapacity, "Autosize");
+  }
+  else if ((optvalue = modelObject.ratedCoolingCapacity()))
+  {
+    idfObject.setDouble(HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceCoolingCapacity, optvalue.get());
   }
 
+  if (modelObject.isRatedCoolingPowerConsumptionAutosized())
   {
-    auto value = modelObject.ratedCoolingPowerConsumption();
-    idfObject.setDouble(HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceCoolingPowerConsumption,value);
+    idfObject.setString(HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceCoolingPowerConsumption, "Autosize");
+  }
+  else if ((optvalue = modelObject.ratedCoolingPowerConsumption()))
+  {
+    idfObject.setDouble(HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceCoolingPowerConsumption, optvalue.get());
   }
 
   {
@@ -143,6 +162,27 @@ boost::optional<IdfObject> ForwardTranslator::translateHeatPumpWaterToWaterEquat
   {
     auto value = modelObject.coolingCompressorPowerCoefficient5();
     idfObject.setDouble(HeatPump_WaterToWater_EquationFit_CoolingFields::CoolingCompressorPowerCoefficient5,value);
+  }
+
+  {
+    auto value = modelObject.referenceCoefficientofPerformance();
+    idfObject.setDouble(HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceCoefficientofPerformance, value);
+  }
+
+  {
+    auto value = modelObject.sizingFactor();
+    idfObject.setDouble(HeatPump_WaterToWater_EquationFit_CoolingFields::SizingFactor, value);
+  }
+
+  boost::optional<HeatPumpWaterToWaterEquationFitHeating> companion = modelObject.companionHeatingHeatPump();
+
+  if (companion)
+  {
+    boost::optional<IdfObject> _companion = translateAndMapModelObject(companion.get());
+    if (_companion)
+    {
+      idfObject.setString(HeatPump_WaterToWater_EquationFit_CoolingFields::CompanionHeatingHeatPumpName, _companion->name().get());
+    }
   }
 
   return idfObject;

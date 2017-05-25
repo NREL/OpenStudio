@@ -280,9 +280,13 @@ class MODEL_API CoilCoolingDXTwoSpeed : public StraightComponent {
   **/
   void setRatedHighSpeedTotalCoolingCapacity( boost::optional<double> value );
 
+  void setRatedHighSpeedTotalCoolingCapacity( double value );
+
   /** Sets the value of the RatedHighSpeedSensibleHeatRatio field.
    *   If optional is false, field is set to autocalculate */
   void setRatedHighSpeedSensibleHeatRatio( boost::optional<double> value );
+
+  void setRatedHighSpeedSensibleHeatRatio( double value );
 
   /** Sets the value of the RatedHighSpeedCOP field. **/
   void setRatedHighSpeedCOP( double value );
@@ -290,6 +294,8 @@ class MODEL_API CoilCoolingDXTwoSpeed : public StraightComponent {
   /** Sets the value of the RatedHighSpeedAirFlowRate field.
    *  If optional is false, field is set to autocalculate */
   void setRatedHighSpeedAirFlowRate( boost::optional<double> value );
+
+  void setRatedHighSpeedAirFlowRate( double value );
 
   /** Sets the Curve referred to by the
    *  TotalCoolingCapacityFunctionOfTemperatureCurveName field. **/
@@ -311,10 +317,14 @@ class MODEL_API CoilCoolingDXTwoSpeed : public StraightComponent {
    *  If optional is false, field is set to autocalculate */
   void setRatedLowSpeedTotalCoolingCapacity( boost::optional<double> value );
 
+  void setRatedLowSpeedTotalCoolingCapacity( double value );
+
   /** Sets the value of the RatedLowSpeedSensibleHeatRatio field.
       If optional is false, field is set to autocalculate
   **/
   void setRatedLowSpeedSensibleHeatRatio( boost::optional<double> value );
+
+  void setRatedLowSpeedSensibleHeatRatio( double value );
 
   /** Sets the value of the RatedLowSpeedCOP field. **/
   void setRatedLowSpeedCOP( double value );
@@ -322,6 +332,8 @@ class MODEL_API CoilCoolingDXTwoSpeed : public StraightComponent {
   /** Sets the value of the RatedLowSpeedAirFlowRate field.
    *  If optional is false, field is set to autocalculate */
   void setRatedLowSpeedAirFlowRate( boost::optional<double> value );
+
+  void setRatedLowSpeedAirFlowRate( double value );
 
   /** Sets the Curve referred to by the LowSpeedTotalCoolingCapacityFunctionOfTemperatureCurveName field. */
   bool setLowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve( const Curve& curve );
@@ -342,9 +354,13 @@ class MODEL_API CoilCoolingDXTwoSpeed : public StraightComponent {
    *  if value==false then set field to "autosize" */
   void setHighSpeedEvaporativeCondenserAirFlowRate( boost::optional<double> value );
 
+  void setHighSpeedEvaporativeCondenserAirFlowRate( double value );
+
   /** Sets the value of the HighSpeedEvaporativeCondenserPumpRatedPowerConsumption field.
    *  if value==false then set field to "autosize" */
   void setHighSpeedEvaporativeCondenserPumpRatedPowerConsumption( boost::optional<double> value );
+
+  void setHighSpeedEvaporativeCondenserPumpRatedPowerConsumption( double value );
 
   /** Sets the value of the LowSpeedEvaporativeCondenserEffectiveness field. */
   void setLowSpeedEvaporativeCondenserEffectiveness( double value );
@@ -353,9 +369,13 @@ class MODEL_API CoilCoolingDXTwoSpeed : public StraightComponent {
    *  if value==false then set field to "autosize" */
   void setLowSpeedEvaporativeCondenserAirFlowRate( boost::optional<double> value );
 
+  void setLowSpeedEvaporativeCondenserAirFlowRate( double value );
+
   /** Sets the value of the LowSpeedEvaporativeCondenserPumpRatedPowerConsumption field.
    *  if value==false then set field to "autosize" */
   void setLowSpeedEvaporativeCondenserPumpRatedPowerConsumption( boost::optional<double> value );
+
+  void setLowSpeedEvaporativeCondenserPumpRatedPowerConsumption( double value );
 
   //supplyWaterStorageTankName
   //setSupplyWaterStorageTankName
