@@ -33,6 +33,11 @@
 #include "ModelObject.hpp"
 
 namespace openstudio {
+
+namespace energyplus {
+  class ForwardTranslator;
+}
+  
 namespace model {
 
 namespace detail {
@@ -67,6 +72,7 @@ class MODEL_API SupplyAirflowRatioField {
   std::vector<std::string> getHeatingCoolingRatiosAsStrings() const;
 
   friend class detail::UnitarySystemPerformanceMultispeed_Impl;
+  friend class openstudio::energyplus::ForwardTranslator;
 
  private:
   SupplyAirflowRatioField(bool isHeating, double value);

@@ -9637,20 +9637,6 @@ OS:UnitarySystemPerformance:Multispeed,
   A2 , \field Name
        \required-field
        \reference UnitarySystemPerformaceNames
-  N1 , \field Number of Speeds for Heating
-       \required-field
-       \type integer
-       \minimum 0
-       \maximum 10
-       \note Used only for Multi speed coils
-       \note Enter the number of the following sets of data for air flow rates.
-  N2 , \field Number of Speeds for Cooling
-       \required-field
-       \type integer
-       \minimum 0
-       \maximum 10
-       \note Used only for Multi speed coils
-       \note Enter the number of the following sets of data for air flow rates.
   A3 , \field Single Mode Operation
        \type choice
        \key Yes
@@ -9660,7 +9646,7 @@ OS:UnitarySystemPerformance:Multispeed,
        \note This choice does not apply to speed 1 operation.
        \note Yes = operate at the highest speed possible without exceeding the current load.
        \note No = allow operation at the average of two adjacent speeds to match the current load.
-  N3 , \field Heating Speed 1 Supply Air Flow Ratio
+  N1 , \field Heating Speed 1 Supply Air Flow Ratio
        \required-field
        \type real
        \autosizable
@@ -9670,7 +9656,7 @@ OS:UnitarySystemPerformance:Multispeed,
        \note Enter the lowest operating supply air flow ratio during heating
        \note operation or specify autosize. This value is the ratio of air flow
        \note at this speed to the maximum air flow rate.
-  N4 ; \field Cooling Speed 1 Supply Air Flow Ratio
+  N2 ; \field Cooling Speed 1 Supply Air Flow Ratio
        \required-field
        \type real
        \autosizable

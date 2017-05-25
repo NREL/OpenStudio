@@ -118,3 +118,17 @@ TEST_F(ModelFixture, UnitarySystemPerformanceMultispeed_SupplyAirflowRatioField)
   testDblOptionalEq(d.heatingRatio(), 4.0);
 
 }
+
+TEST_F(ModelFixture, UnitarySystemPerformanceMultispeed_addToAirLoopHVACUnitarySystem)
+{
+  Model m;
+  UnitarySystemPerformanceMultispeed perf = UnitarySystemPerformanceMultispeed(m);
+  AirLoopHVACUnitarySystem airloopsys = AirLoopHVACUnitarySystem(m);
+
+  EXPECT_TRUE(airloopsys.setDesignSpecificationMultispeedObject(perf));
+  ASSERT_TRUE(airloopsys.designSpecificationMultispeedObject());
+  EXPECT_EQ(airloopsys.designSpecificationMultispeedObject().get().handle(), perf.handle());
+  airloopsys.resetDesignSpecificationMultispeedObject();
+  ASSERT_FALSE(airloopsys.designSpecificationMultispeedObject());
+
+}

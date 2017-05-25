@@ -2627,6 +2627,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateTimestep(timestep);
       break;
     }
+  case openstudio::IddObjectType::OS_UnitarySystemPerformance_Multispeed :
+    {
+      model::UnitarySystemPerformanceMultispeed sysPerfMultispeed = modelObject.cast<UnitarySystemPerformanceMultispeed>();
+      retVal = translateUnitarySystemPerformanceMultispeed(sysPerfMultispeed);
+      break;
+    }
   case openstudio::IddObjectType::OS_UtilityBill:
     {
       // no-op

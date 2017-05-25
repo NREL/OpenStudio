@@ -315,6 +315,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateThermalZone.cpp
   ForwardTranslator/ForwardTranslateThermostatSetpointDualSetpoint.cpp
   ForwardTranslator/ForwardTranslateTimestep.cpp
+  ForwardTranslator/ForwardTranslateUnitarySystemPerformanceMultispeed.cpp
   ForwardTranslator/ForwardTranslateVersion.cpp
   ForwardTranslator/ForwardTranslateWaterHeaterMixed.cpp
   ForwardTranslator/ForwardTranslateWaterHeaterHeatPump.cpp
