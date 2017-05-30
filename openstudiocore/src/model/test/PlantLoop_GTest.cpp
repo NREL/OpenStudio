@@ -451,7 +451,4 @@ TEST_F(ModelFixture, PlantLoop_AvailabilityManager) {
   EXPECT_TRUE(plant2.availabilityManager());
   plant.resetAvailabilityManager();
   EXPECT_FALSE(plant.availabilityManager());
-
-
 }
-
