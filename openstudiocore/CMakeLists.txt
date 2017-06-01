@@ -676,6 +676,7 @@ endif()
 
 if(BUILD_PYTHON_BINDINGS)
   # need python
+  # TODO: add support for 3.x
   find_package(PythonInterp 2.7 REQUIRED)
   find_package(PythonLibs 2.7 REQUIRED)
   include_directories(SYSTEM ${PYTHON_INCLUDE_DIRS})
