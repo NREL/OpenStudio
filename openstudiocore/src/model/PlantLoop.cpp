@@ -596,7 +596,7 @@ std::string PlantLoop_Impl::fluidType()
 
 bool PlantLoop_Impl::setFluidType( const std::string & value )
 {
-  if ((value != "PropyleneGlycol") && (value != "EthyleneGlycol")) {
+  if (!(istringEqual(value,"PropyleneGlycol") || istringEqual(value,"EthyleneGlycol"))) {
     this->resetGlycolConcentration();
   }
   return setString(OS_PlantLoopFields::FluidType,value);
@@ -608,7 +608,7 @@ boost::optional<int> PlantLoop_Impl::glycolConcentration() const {
 
 bool PlantLoop_Impl::setGlycolConcentration(int glycolConcentration) {
   std::string currentFluidType = this->fluidType();
-  if ((currentFluidType == "PropyleneGlycol") || (currentFluidType == "EthyleneGlycol")) {
+  if (istringEqual(currentFluidType,"PropyleneGlycol") || istringEqual(currentFluidType,"EthyleneGlycol")) {
     return setInt(OS_PlantLoopFields::GlycolConcentration, glycolConcentration);
   } else {
     LOG(Error, "Plant Loop Fluid Type must be PropyleneGlycol or EthyleneGlycol, not " + currentFluidType + ", to set a glycol concentration.");
