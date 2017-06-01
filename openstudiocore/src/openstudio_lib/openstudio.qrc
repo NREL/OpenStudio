@@ -70,6 +70,7 @@
     <file>images/disabled_building_tab.png</file>
     <file>images/disabled_constructions_tab.png</file>
     <file>images/disabled_hvac_tab.png</file>
+    <file>images/disabled_geometry_tab.png</file>
     <file>images/disabled_loads_tab.png</file>
     <file>images/disabled_location_tab.png</file>
     <file>images/disabled_results_tab.png</file>
@@ -116,6 +117,7 @@
     <file>images/furnace_multi_stage.png</file>
     <file>images/ground_heat_exchanger_horizontal.png</file>
     <file>images/ground_heat_exchanger_vertical.png</file>
+    <file>images/generator_fuelcell_exhaustgastowaterheatexchanger.png</file>
     <file>images/generator_microturbine_heatrecovery.png</file>
     <file>images/header-backgnd-1px-wide.png</file>
     <file>images/headered_pumps_constant.png</file>
@@ -147,6 +149,7 @@
     <file>images/off_building_tab.png</file>
     <file>images/off_constructions_tab.png</file>
     <file>images/off_hvac_tab.png</file>
+    <file>images/off_geometry_tab.png</file>
     <file>images/off_loads_tab.png</file>
     <file>images/off_location_tab.png</file>
     <file>images/off_results_tab.png</file>
@@ -162,6 +165,7 @@
     <file>images/on_building_tab.png</file>
     <file>images/on_constructions_tab.png</file>
     <file>images/on_hvac_tab.png</file>
+    <file>images/on_geometry_tab.png</file>
     <file>images/on_loads_tab.png</file>
     <file>images/on_location_tab.png</file>
     <file>images/on_results_tab.png</file>
@@ -382,6 +386,7 @@
     <file>images/mini_icons/furnace.png</file>
     <file>images/mini_icons/gas_equipment.png</file>
     <file>images/mini_icons/gas_equipment_definition.png</file>
+    <file>images/mini_icons/generator_fuelcell_exhaustgastowaterheatexchanger.png</file>
     <file>images/mini_icons/generator_microturbine_heatrecovery.png</file>
     <file>images/mini_icons/glare_sensor.png</file>
     <file>images/mini_icons/grassanddirt.png</file>
@@ -537,7 +542,10 @@
 
 
     <file>library/tid_api.xml</file>
-
+    <file>library/geometry_editor.html</file>
+    <file>library/geometry_preview.html</file>
+    
+    
     <file alias="shared_gui_components/images/add_script_icon.png">../shared_gui_components/images/add_script_icon.png</file>
     <file alias="shared_gui_components/images/add_script_icon_over.png">../shared_gui_components/images/add_script_icon_over.png</file>
     <file alias="shared_gui_components/images/add_script_icon_press.png">../shared_gui_components/images/add_script_icon_press.png</file>

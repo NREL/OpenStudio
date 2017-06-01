@@ -36,6 +36,8 @@ namespace openstudio {
 
 namespace model {
 
+class HeatPumpWaterToWaterEquationFitHeating;
+
 namespace detail {
 
   class HeatPumpWaterToWaterEquationFitCooling_Impl;
@@ -59,17 +61,29 @@ class MODEL_API HeatPumpWaterToWaterEquationFitCooling : public WaterToWaterComp
   /** @name Getters */
   //@{
 
-  /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Load Side Flow Rate" **/
+  boost::optional<double> referenceLoadSideFlowRate() const;
+
+  /** Prior to EnergyPlus 8.7.0 this field was not autosizeable. To preserve backwards compatibility this method will return -999.0 in autosized models.**/
   double ratedLoadSideFlowRate() const;
 
-  /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Source Side Flow Rate" **/
+  bool isReferenceLoadSideFlowRateAutosized() const;
+
+  boost::optional<double> referenceSourceSideFlowRate() const;
+
+  /** Prior to EnergyPlus 8.7.0 this field was not autosizeable. To preserve backwards compatibility this method will return -999.0 in autosized models.**/
   double ratedSourceSideFlowRate() const;
 
+  bool isReferenceSourceSideFlowRateAutosized() const;
+
   /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Cooling Capacity" **/
-  double ratedCoolingCapacity() const;
+  boost::optional<double> ratedCoolingCapacity() const;
+
+  bool isRatedCoolingCapacityAutosized() const;
 
   /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Cooling Power Consumption" **/
-  double ratedCoolingPowerConsumption() const;
+  boost::optional<double> ratedCoolingPowerConsumption() const;
+
+  bool isRatedCoolingPowerConsumptionAutosized() const;
 
   double coolingCapacityCoefficient1() const;
 
@@ -91,21 +105,39 @@ class MODEL_API HeatPumpWaterToWaterEquationFitCooling : public WaterToWaterComp
 
   double coolingCompressorPowerCoefficient5() const;
 
+  double referenceCoefficientofPerformance() const;
+
+  double sizingFactor() const;
+
+  boost::optional<HeatPumpWaterToWaterEquationFitHeating> companionHeatingHeatPump() const;
+
   //@}
   /** @name Setters */
   //@{
 
-  /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Load Side Flow Rate" **/
+  bool setReferenceLoadSideFlowRate(double referenceLoadSideFlowRate);
+
+  /** Synonym of setReferenceLoadSideFlowRate for backwards compatibility **/
   bool setRatedLoadSideFlowRate(double ratedLoadSideFlowRate);
 
-  /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Source Side Flow Rate" **/
+  void autosizeReferenceLoadSideFlowRate();
+
+  bool setReferenceSourceSideFlowRate(double referenceSourceSideFlowRate);
+
+  /** Synonym of setReferenceLoadSideFlowRate for backwards compatibility **/
   bool setRatedSourceSideFlowRate(double ratedSourceSideFlowRate);
+
+  void autosizeReferenceSourceSideFlowRate();
 
   /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Cooling Capacity" **/
   bool setRatedCoolingCapacity(double ratedCoolingCapacity);
 
+  void autosizeRatedCoolingCapacity();
+
   /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Cooling Power Consumption" **/
   bool setRatedCoolingPowerConsumption(double ratedCoolingPowerConsumption);
+
+  void autosizeRatedCoolingPowerConsumption();
 
   void setCoolingCapacityCoefficient1(double coolingCapacityCoefficient1);
 
@@ -126,6 +158,12 @@ class MODEL_API HeatPumpWaterToWaterEquationFitCooling : public WaterToWaterComp
   void setCoolingCompressorPowerCoefficient4(double coolingCompressorPowerCoefficient4);
 
   void setCoolingCompressorPowerCoefficient5(double coolingCompressorPowerCoefficient5);
+
+  void setReferenceCoefficientofPerformance(double referenceCoefficientofPerformance);
+
+  void setSizingFactor(double sizingFactor);
+
+  bool setCompanionHeatingHeatPump(const HeatPumpWaterToWaterEquationFitHeating& companionHP);
 
   //@}
   /** @name Other */

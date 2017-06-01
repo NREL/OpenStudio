@@ -77,6 +77,7 @@
 #include "../model/FanOnOff.hpp"
 #include "../model/FanVariableVolume.hpp"
 #include "../model/FanZoneExhaust.hpp"
+#include "../model/GeneratorFuelCellExhaustGasToWaterHeatExchanger.hpp"
 // TODO: Not sure if I need to include GeneratorMicroTurbine.hpp, GeneratorMicroTurbineHeatRecovery.hpp or both
 #include "../model/GeneratorMicroTurbineHeatRecovery.hpp"
 #include "../model/Model.hpp"

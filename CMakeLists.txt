@@ -4,7 +4,7 @@ project(OpenStudioMeta)
 
 set(CMAKE_VERSION_MAJOR 2)
 set(CMAKE_VERSION_MINOR 1)
-set(CMAKE_VERSION_PATCH 0)
+set(CMAKE_VERSION_PATCH 2)
 
 set(CMAKE_VERSION_BUILD "Unknown" CACHE STRING "Build number")
 find_package(Git)
@@ -288,20 +288,6 @@ if( BUILD_RUBY )
         -DINSTALL_MAN_DIR:STRING=${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/share/man/
         -DINSTALL_PKGCONFIG_DIR:STRING=${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/share/pkgconfig/
     )
-
-    # https://github.com/LuaDist/libffi/ has a cmake project for ffi but I did not get it to compile
-    set(LIBFFI_PATH "libffi-3.0.9-Windows-x86")
-    set(LIBFFI_EXPECTED_HASH "d90fc37850bd86775889aaf712341980")
-    if(EXISTS "${CMAKE_BINARY_DIR}/libffi.zip")
-      file(MD5 "${CMAKE_BINARY_DIR}/libffi.zip" LIBFFI_HASH)
-    endif()
-    if(NOT EXISTS "${CMAKE_BINARY_DIR}/libffi.zip" OR NOT "${LIBFFI_HASH}" MATCHES "${LIBFFI_EXPECTED_HASH}")
-      message(STATUS "Downloading libffi")
-      file(DOWNLOAD "http://github.com/LuaDist/libffi/archive/3.0.9-Windows-x86.zip" "${CMAKE_BINARY_DIR}/libffi.zip" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${LIBFFI_EXPECTED_HASH})
-      execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${LIBFFI_PATH}")
-      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/libffi.zip" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
-    endif()
-
   endif()
 
   if( UNIX )

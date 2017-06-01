@@ -48,6 +48,10 @@ OptionalModelObject result,temp;
 
   ThermostatSetpointDualSetpoint tsds(m_model);
 
+  if (OptionalString os = workspaceObject.name()) {
+    tsds.setName(*os);
+  }
+
   OptionalWorkspaceObject owo = workspaceObject.getTarget(ThermostatSetpoint_DualSetpointFields::HeatingSetpointTemperatureScheduleName);
   if(!owo)
   {

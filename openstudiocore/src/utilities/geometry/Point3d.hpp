@@ -93,6 +93,9 @@ namespace openstudio{
   // vector of Point3d
   typedef std::vector<Point3d> Point3dVector;
 
+  // vector of Point3dVector
+  typedef std::vector<Point3dVector> Point3dVectorVector;
+
 } // openstudio
 
 #endif //UTILITIES_GEOMETRY_POINT3D_HPP

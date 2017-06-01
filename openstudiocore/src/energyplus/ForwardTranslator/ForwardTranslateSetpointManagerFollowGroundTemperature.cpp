@@ -57,7 +57,10 @@ boost::optional<IdfObject> ForwardTranslator::translateSetpointManagerFollowGrou
   }
 
   // ReferenceGroundTemperatureObjectType
-  idfObject.setString(SetpointManager_FollowGroundTemperatureFields::ReferenceGroundTemperatureObjectType,"Site:GroundTemperature:BuildingSurface");
+  s = modelObject.referenceGroundTemperatureObjectType();
+  if ( s ) {
+    idfObject.setString(SetpointManager_FollowGroundTemperatureFields::ReferenceGroundTemperatureObjectType,s.get());
+  }
 
   // OffsetTemperatureDifference
   d = modelObject.offsetTemperatureDifference();

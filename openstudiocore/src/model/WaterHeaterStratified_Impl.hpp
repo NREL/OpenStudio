@@ -212,6 +212,10 @@ namespace detail {
 
     double node10AdditionalLossCoefficient() const;
 
+    double node11AdditionalLossCoefficient() const;
+
+    double node12AdditionalLossCoefficient() const;
+
     std::string sourceSideFlowControlMode() const;
 
     boost::optional<Schedule> indirectAlternateSetpointTemperatureSchedule() const;
@@ -367,6 +371,10 @@ namespace detail {
     void setNode9AdditionalLossCoefficient(double node9AdditionalLossCoefficient);
 
     void setNode10AdditionalLossCoefficient(double node10AdditionalLossCoefficient);
+    
+    void setNode11AdditionalLossCoefficient(double node11AdditionalLossCoefficient);
+
+    void setNode12AdditionalLossCoefficient(double node12AdditionalLossCoefficient);
 
     bool setSourceSideFlowControlMode(std::string sourceSideFlowControlMode);
 

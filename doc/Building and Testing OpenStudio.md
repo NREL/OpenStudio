@@ -130,6 +130,7 @@ In CMake check the following:
 - BUILD\_OS\_APP
 - BUILD\_PACKAGE
 - BUILD\_PAT
+- BUILD\_TESTING (NOTE: not currently possible with e+ 8.7 issue)
 
 In CMake **uncheck** the following:
 
@@ -193,6 +194,7 @@ Copy build to VM's share folder
 
 OSVersion Testing
 =================
+NOTE: not available while build testing is deprecated 
 
 In folder `build\Products\Release`
 
@@ -263,6 +265,13 @@ On [OpenStudio.net](https://www.openstudio.net/):
 - Select `Edit OpenStudio Release Links`
 - Update `Current Release Version` or `Develop Release Version` (depending on whether a major or iteration build is being done)
 - Replace the S3 build URLs with those generated above
+
+
+Verification of Posted Software
+===============================
+
+Download all posted software from both GitHub and S3. Verify that each downloaded files' MD5 hash matches their respective MD5 hash of the original, tested files from the build machines.
+
 
 Documentation
 =============
@@ -342,15 +351,15 @@ The current version (X.Y.Z) being built, and the updated version (X.Y.Z+1) for t
 
 - In the top level of your OpenStudio folder, update `CMakeLists.txt` version to X.Y.Z+1 (3 lines), e.g. `set(CMAKE_VERSION_MAJOR 2)`, `set(CMAKE_VERSION_MINOR 0)`, `set(CMAKE_VERSION_PATCH 1)`
 - In the openstudiocore level of your OpenStudio folder, update `CMakeLists.txt` version to X.Y.Z+1 (1 line), e.g. `project(OpenStudio VERSION 2.0.1)`
+- Copy file `openstudiocore\resources\model\OpenStudio.idd` to `openstudiocore\src\utilities\idd\versions\x_Y_Z` (new folder)
 - In `openstudiocore\resources\model` update `OpenStudio.idd` version to X.Y.Z+1 (1 line)
-- Copy file `openstudiocore\resources\model\OpenStudio.idd` to `openstudiocore\src\utilities\idd\versions\x_Y_Z+1` (new folder)
 - In `openstudiocore\src\osversion` update `VersionTranslator.cpp` version to X.Y.Z+1 in first location, and X.Y.Z in second location
 
 At https://github.com/NREL/OpenStudio/blob/develop/openstudiocore/src/osversion/VersionTranslator.cpp
 
 - Select "History", see edits if needed (usually use `defaultUpdate` in first location, 1 line for each of 2 locations)
 
-With Git, commit above files (Commit Message = `Updating version to X.Y.Z+1`) to the develop branch
+With Git, commit above files (Commit Message = `Update version to X.Y.Z+1`) to the develop branch
 
 SketchUp Extension Signature
 =========

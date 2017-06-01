@@ -74,6 +74,8 @@ namespace detail {
     //@{
 
     virtual std::string controlVariable() const override;
+    
+    std::string referenceGroundTemperatureObjectType() const;
 
     double offsetTemperatureDifference() const;
 
@@ -88,6 +90,8 @@ namespace detail {
     //@{
 
     virtual bool setControlVariable(const std::string& controlVariable) override;
+    
+    bool setReferenceGroundTemperatureObjectType(const std::string& groundTemperatureObjType);
 
     void setOffsetTemperatureDifference(double offsetTemperatureDifference);
 

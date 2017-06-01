@@ -46,6 +46,8 @@
 #include "../../model/CoolingTowerVariableSpeed_Impl.hpp"
 #include "../../model/CoolingTowerTwoSpeed.hpp"
 #include "../../model/CoolingTowerTwoSpeed_Impl.hpp"
+#include "../../model/GeneratorFuelCellExhaustGasToWaterHeatExchanger.hpp"
+#include "../../model/GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl.hpp"
 #include "../../model/GroundHeatExchangerVertical.hpp"
 #include "../../model/GroundHeatExchangerVertical_Impl.hpp"
 #include "../../model/GroundHeatExchangerHorizontalTrench.hpp"
@@ -151,6 +153,12 @@ boost::optional<double> flowrate(const HVACComponent & component)
 {
   boost::optional<double> result;
   switch(component.iddObject().type().value()) {
+    case openstudio::IddObjectType::OS_Generator_FuelCell_ExhaustGasToWaterHeatExchanger :
+    {
+      auto hr = component.cast<GeneratorFuelCellExhaustGasToWaterHeatExchanger>();
+      result = hr.heatRecoveryWaterMaximumFlowRate();
+      break;
+    }
     case openstudio::IddObjectType::OS_Boiler_HotWater :
     {
       auto boiler = component.cast<BoilerHotWater>();
@@ -304,6 +312,10 @@ ComponentType componentType(const HVACComponent & component)
 {
   switch(component.iddObject().type().value())
   {
+    case openstudio::IddObjectType::OS_Generator_FuelCell_ExhaustGasToWaterHeatExchanger :
+    {
+      return ComponentType::HEATING;
+    }
     case openstudio::IddObjectType::OS_Boiler_HotWater :
     {
       return ComponentType::HEATING;

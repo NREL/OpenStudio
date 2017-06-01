@@ -150,6 +150,9 @@ namespace detail{
 
   bool CoilHeatingGas_Impl::setFuelType(const std::string &fuelType)
   {
+    if (fuelType == "PropaneGas") {
+        LOG(Warn, "'PropaneGas' is deprecated for Coil_Heating_GasFields:FuelType, use 'Propane' instead");
+    }
     return this->setString(OS_Coil_Heating_GasFields::FuelType, fuelType);
   }
 

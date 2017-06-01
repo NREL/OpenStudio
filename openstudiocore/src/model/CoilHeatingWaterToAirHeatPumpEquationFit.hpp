@@ -111,17 +111,23 @@ class MODEL_API CoilHeatingWaterToAirHeatPumpEquationFit : public WaterToAirComp
  
   bool setRatedAirFlowRate(boost::optional<double> ratedAirFlowRate);
 
+  bool setRatedAirFlowRate(double ratedAirFlowRate);
+
   void resetRatedAirFlowRate();
 
   void autosizeRatedAirFlowRate();
 
   bool setRatedWaterFlowRate(boost::optional<double> ratedWaterFlowRate);
 
+  bool setRatedWaterFlowRate(double ratedWaterFlowRate);
+
   void resetRatedWaterFlowRate();
 
   void autosizeRatedWaterFlowRate();
 
   bool setRatedHeatingCapacity(boost::optional<double> ratedHeatingCapacity);
+
+  bool setRatedHeatingCapacity(double ratedHeatingCapacity);
 
   void resetRatedHeatingCapacity();
 

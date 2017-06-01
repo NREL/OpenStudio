@@ -1608,4 +1608,8 @@
     <rule IddField="Heat Recovery Water Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Heat Recovery Water Outlet Node Name" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_Generator_FuelCell_ExhaustGasToWaterHeatExchanger">
+    <rule IddField="Heat Recovery Water Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Heat Recovery Water Outlet Node Name" Access="HIDDEN"/>
+  </POLICY>
 </ROOT>

@@ -1,4 +1,4 @@
-!IDD_Version 2.1.0
+!IDD_Version 2.1.2
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -10992,6 +10992,7 @@ OS:HeatPump:WaterToWater:EquationFit:Heating,
        \required-field
    A2,  \field Name
         \type alpha
+        \reference WWHPHeatingNames
         \required-field
         \reference ConnectionObject
    A3,  \field Source Side Inlet Node Name
@@ -11010,26 +11011,32 @@ OS:HeatPump:WaterToWater:EquationFit:Heating,
        \type object-list
        \required-field
        \object-list ConnectionNames
-   N1,  \field Rated Load Side Flow Rate
+   N1,  \field Reference Load Side Flow Rate
         \required-field
         \type real
         \minimum> 0.0
         \units m3/s
-   N2,  \field Rated Source Side Flow Rate
+        \ip-units gal/min
+        \autosizable
+   N2,  \field Reference Source Side Flow Rate
         \required-field
         \type real
         \minimum> 0.0
         \units m3/s
-   N3,  \field Rated Heating Capacity
+        \ip-units gal/min
+        \autosizable
+   N3,  \field Reference Heating Capacity
         \required-field
         \type real
         \minimum> 0.0
         \units W
-   N4,  \field Rated Heating Power Consumption
+        \autosizable
+   N4,  \field Reference Heating Power Consumption
         \required-field
         \type real
         \minimum> 0.0
         \units W
+        \autosizable
    N5,  \field Heating Capacity Coefficient 1
         \required-field
         \type real
@@ -11057,9 +11064,23 @@ OS:HeatPump:WaterToWater:EquationFit:Heating,
    N13, \field Heating Compressor Power Coefficient 4
         \required-field
         \type real
-   N14; \field Heating Compressor Power Coefficient 5
+   N14, \field Heating Compressor Power Coefficient 5
         \required-field
         \type real
+   N15, \field Reference Coefficient of Performance
+        \note This optional field is used to autosize Reference Heating Power Consumption
+        \note COP = Reference Heating Capacity / Reference Heating Power Consumption
+        \type real
+        \minimum> 0.0
+        \required-field
+   N16, \field Sizing Factor
+        \note Multiplies the autosized capacity and flow rates
+        \type real
+        \minimum> 0.0
+        \required-field
+   A7 ; \field Companion Cooling Heat Pump Name
+        \type object-list
+        \object-list WWHPCoolingNames
 
 OS:HeatPump:WaterToWater:EquationFit:Cooling,
    A1, \field Handle
@@ -11067,6 +11088,7 @@ OS:HeatPump:WaterToWater:EquationFit:Cooling,
        \required-field
    A2,  \field Name
         \type alpha
+        \reference WWHPCoolingNames
         \required-field
         \reference ConnectionObject
    A3,  \field Source Side Inlet Node Name
@@ -11085,26 +11107,32 @@ OS:HeatPump:WaterToWater:EquationFit:Cooling,
        \type object-list
        \required-field
        \object-list ConnectionNames
-   N1,  \field Rated Load Side Flow Rate
+   N1,  \field Reference Load Side Flow Rate
         \required-field
         \type real
         \minimum> 0.0
         \units m3/s
-   N2,  \field Rated Source Side Flow Rate
+        \ip-units gal/min
+        \autosizable
+   N2,  \field Reference Source Side Flow Rate
         \required-field
         \type real
         \minimum> 0.0
         \units m3/s
-   N3,  \field Rated Cooling Capacity
+        \ip-units gal/min
+        \autosizable
+   N3,  \field Reference Cooling Capacity
         \required-field
         \type real
         \minimum> 0.0
         \units W
-   N4,  \field Rated Cooling Power Consumption
+        \autosizable
+   N4,  \field Reference Cooling Power Consumption
         \required-field
         \type real
         \minimum> 0.0
         \units W
+        \autosizable
    N5,  \field Cooling Capacity Coefficient 1
         \required-field
         \type real
@@ -11132,9 +11160,24 @@ OS:HeatPump:WaterToWater:EquationFit:Cooling,
    N13, \field Cooling Compressor Power Coefficient 4
         \required-field
         \type real
-   N14; \field Cooling Compressor Power Coefficient 5
+   N14, \field Cooling Compressor Power Coefficient 5
         \required-field
         \type real
+   N15, \field Reference Coefficient of Performance
+        \note This optional field is used to autosize Reference Cooling Power Consumption
+        \note COP = Rated Cooling Capacity / Rated Cooling Power Consumption
+        \type real
+        \minimum> 0.0
+        \default 8.0
+   N16, \field Sizing Factor
+        \note Multiplies the autosized capacity and flow rates
+        \type real
+        \minimum> 0.0
+        \default 1.0
+   A7 ; \field Companion Heating Heat Pump Name
+        \type object-list
+        \object-list WWHPHeatingNames
+        \note This optional field is used to coordinate sizing calculations between heating and cooling modes.
 
 OS:Chiller:Electric:EIR,
        \memo This chiller model is the empirical model from the DOE-2 building Energy
@@ -14750,8 +14793,10 @@ OS:Coil:Heating:Gas,
        \type real
        \units W
   A8;  \field Fuel Type
+       \note PropaneGas is deprecated in favor of Propane
        \type choice
        \key NaturalGas
+       \key Propane
        \key PropaneGas
        \key Diesel
        \key Gasoline
@@ -20233,9 +20278,16 @@ OS:SetpointManager:FollowGroundTemperature,
        \required-field
        \units C
        \type real
-  A4 ; \field Setpoint Node or NodeList Name
+  A4 , \field Setpoint Node or NodeList Name
        \type object-list
        \object-list Node
+  A5 ; \field Reference Ground Temperature Object Type
+       \type choice
+       \key Site:GroundTemperature:BuildingSurface
+       \key Site:GroundTemperature:Shallow
+       \key Site:GroundTemperature:Deep
+       \key Site:GroundTemperature:FCfactorMethod
+       \default Site:GroundTemperature:BuildingSurface
 
 OS:SetpointManager:FollowSystemNodeTemperature,
        \memo This setpoint manager is used to place a temperature setpoint on a
@@ -24367,7 +24419,7 @@ OS:WaterHeater:Stratified,
        \required-field
        \type integer
        \minimum 1
-       \maximum 10
+       \maximum 12
   N33, \field Additional Destratification Conductivity
        \required-field
        \type real
@@ -24410,6 +24462,14 @@ OS:WaterHeater:Stratified,
        \type real
        \units W/m2-K
   N43, \field Node 10 Additional Loss Coefficient
+       \required-field
+       \type real
+       \units W/m2-K
+  N43, \field Node 11 Additional Loss Coefficient
+       \required-field
+       \type real
+       \units W/m2-K
+  N43, \field Node 12 Additional Loss Coefficient
        \required-field
        \type real
        \units W/m2-K
@@ -25943,6 +26003,500 @@ OS:PhotovoltaicPerformance:EquivalentOne-Diode,
         \type real
         \units J/m2-K
         \minimum 0.0
+
+OS:Generator:FuelCell,
+       \memo This generator model is the FC model from IEA Annex 42
+  A1, \field Handle
+       \type handle
+       \required-field     
+  A2, \field Name
+      \required-field
+      \reference GeneratorNames
+  A3, \field Power Module Name
+      \note Enter the name of a Generator:FuelCell:PowerModule object.
+      \required-field
+      \type object-list
+      \object-list FCPMNames
+  A4, \field Air Supply Name
+      \note Enter then name of a Generator:FuelCell:AirSupply object.
+      \required-field
+      \type object-list
+      \object-list FCAirSupNames
+  A5, \field Fuel Supply Name
+      \note Enter the name of a Generator:FuelSupply object.
+      \required-field
+      \type object-list
+      \object-list GenFuelSupNames
+  A6, \field Water Supply Name
+      \note Enter the name of a Generator:FuelCell:WaterSupply object.
+      \required-field
+      \type object-list
+      \object-list FCWaterSupNames
+  A7, \field Auxiliary Heater Name
+      \note Enter the name of a Generator:FuelCell:AuxiliaryHeater object.
+      \required-field
+      \type object-list
+      \object-list FCAuxHeatNames
+  A8, \field Heat Exchanger Name
+      \note Enter the name of a Generator:FuelCell:ExhaustGasToWaterHeatExchanger object.
+      \required-field
+      \type object-list
+      \object-list FCExhaustHXNames
+  A9, \field Electrical Storage Name
+      \note Enter the name of a Generator:FuelCell:ElectricalStorage object.
+      \required-field
+      \type object-list
+      \object-list FCStorageNames
+  A10, \field Inverter Name
+      \note Enter the name of a Generator:FuelCell:Inverter object.
+      \required-field
+      \type object-list
+      \object-list FCInverterNames
+  A11; \field Stack Cooler Name
+      \note Enter the name of a Generator:FuelCell:StackCooler object.
+      \note optional, used for PEMFC
+      \type object-list
+      \object-list FCStackCoolerNames
+
+OS:Generator:FuelCell:PowerModule,
+      \memo Describe the core power module subsystem of a fuel cell power generator. This includes
+      \memo the fuel cell stack, fuel reformer, and whatever ancillary devices are included inside.
+      \memo If the model has multiple FC generators that are of the exact same type, then only one
+      \memo of these objects is needed and all the Generator:FuelCell objects can reference it.
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2, \field Name
+      \required-field
+      \reference FCPMNames
+      \reference ConnectionObject
+  A3, \field Efficiency Curve Mode
+      \type choice
+      \key Annex42
+      \key Normalized
+  A4, \field Efficiency Curve Name
+      \type object-list
+      \object-list QuadraticCurves
+      \object-list UniVariateTables
+      \required-field
+  N1, \field Nominal Efficiency
+      \note This field is not used.
+  N2, \field Nominal Electrical Power
+      \note This field is not used
+      \units W
+  N3, \field Number of Stops at Start of Simulation
+      \note this is Nstops in SOFC model specification
+  N4, \field Cycling Performance Degradation Coefficient
+      \note this is D in SOFC model specification
+  N5, \field Number of Run Hours at Beginning of Simulation
+      \units hr
+  N6, \field Accumulated Run Time Degradation Coefficient
+      \note this is L in SOFC model specification
+  N7, \field Run Time Degradation Initiation Time Threshold
+      \units hr
+  N8, \field Power Up Transient Limit
+      \units W/s
+      \note Maximum rate of change in electrical output [power increasing]
+  N9, \field Power Down Transient Limit
+      \units W/s
+      \note Maximum rate of change in electrical output [power decreasing]
+      \note Enter positive value for rate of change
+  N10,\field Start Up Time
+      \units s
+      \note Time from start up to normal operation
+  N11,\field Start Up Fuel
+      \units kmol
+  N12,\field Start Up Electricity Consumption
+      \units J
+  N13,\field Start Up Electricity Produced
+      \units J
+  N14,\field Shut Down Time
+      \units s
+  N15,\field Shut Down Fuel
+      \units kmol
+  N16,\field Shut Down Electricity Consumption
+      \units J
+  N17,\field Ancillary Electricity Constant Term
+  N18,\field Ancillary Electricity Linear Term
+  A5, \field Skin Loss Calculation Mode
+      \type choice
+      \key ConstantRate
+      \key UAForProcessGasTemperature
+      \key QuadraticFunctionOfFuelRate
+  A6, \field Zone Name
+      \type object-list
+      \object-list ThermalZoneNames
+  N19,\field Skin Loss Radiative Fraction
+      \minimum 0.0
+      \maximum 1.0
+  N20,\field Constant Skin Loss Rate
+      \units W
+  N21,\field Skin Loss U-Factor Times Area Term
+      \units W/K
+  A7, \field Skin Loss Quadratic Curve Name
+      \type object-list
+      \object-list QuadraticCurves
+      \object-list UniVariateTables
+      \note curve is function of fuel use rate
+  N22,\field Dilution Air Flow Rate
+      \units kmol/s
+  N23,\field Stack Heat loss to Dilution Air
+      \units W
+  A8, \field Dilution Inlet Air Node Name
+      \type object-list
+      \object-list Node
+  A9 ,\field Dilution Outlet Air Node Name
+      \type object-list
+      \object-list Node
+  N24, \field Minimum Operating Point
+       \units W
+  N25; \field Maximum Operating Point
+       \units W
+
+OS:Generator:FuelCell:AirSupply,
+      \memo Used to define details of the air supply subsystem for a fuel cell power generator.
+      \extensible:2
+  A1, \field Handle
+       \type handle
+       \required-field    
+  A2, \field Name
+      \required-field
+      \reference FCAirSupNames
+      \reference ConnectionObject
+  A3, \field Air Inlet Node Name
+      \type object-list
+      \object-list Node
+  A4, \field Blower Power Curve Name
+      \type object-list
+      \object-list CubicCurves
+      \object-list UniVariateTables
+  N1, \field Blower Heat Loss Factor
+      \minimum 0.0
+      \maximum 1.0
+  A5, \field Air Supply Rate Calculation Mode
+      \required-field
+      \type choice
+      \key AirRatiobyStoics
+      \key QuadraticFunctionofElectricPower
+      \key QuadraticFunctionofFuelRate
+  N2, \field Stoichiometric Ratio
+      \note This is the excess air "stoics"
+      \note the value entered is incremented by 1 in the model.
+  A6, \field Air Rate Function of Electric Power Curve Name
+      \type object-list
+      \object-list QuadraticCurves
+      \object-list UniVariateTables
+  N3, \field Air Rate Air Temperature Coefficient
+  A7, \field Air Rate Function of Fuel Rate Curve Name
+      \type object-list
+      \object-list QuadraticCurves
+      \object-list UniVariateTables
+  A8, \field Air Intake Heat Recovery Mode
+      \required-field
+      \type choice
+      \key NoRecovery
+      \key RecoverBurnerInverterStorage
+      \key RecoverAuxiliaryBurner
+      \key RecoverInverterandStorage
+      \key RecoverInverter
+      \key RecoverElectricalStorage
+  A9, \field Air Supply Constituent Mode
+      \required-field
+      \type choice
+      \key AmbientAir
+      \key UserDefinedConstituents
+  N4, \field Number of UserDefined Constituents
+      \maximum 5
+  A10, \field Constituent 1 Name
+      \begin-extensible
+      \type choice
+      \key CarbonDioxide
+      \key Nitrogen
+      \key Oxygen
+      \key Water
+      \key Argon
+  N5; \field Molar Fraction 1
+      \minimum 0.0
+      \maximum 1.0
+
+OS:Generator:FuelCell:WaterSupply,
+      \memo Used to provide details of the water supply subsystem for a fuel cell power generator.
+      \memo This water is used for steam reforming of the fuel and is not the same
+      \memo as the water used for thermal heat recovery.
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2, \field Name
+      \required-field
+      \reference FCWaterSupNames
+      \reference ConnectionObject
+  A3, \field Reformer Water Flow Rate Function of Fuel Rate Curve Name
+      \type object-list
+      \object-list QuadraticCurves
+      \object-list UniVariateTables
+      \required-field
+  A4, \field Reformer Water Pump Power Function of Fuel Rate Curve Name
+      \type object-list
+      \object-list CubicCurves
+      \object-list UniVariateTables
+      \required-field
+  N1, \field Pump Heat Loss Factor
+  A5, \field Water Temperature Modeling Mode
+      \type choice
+      \key TemperatureFromAirNode
+      \key TemperatureFromWaterNode
+      \key TemperatureFromSchedule
+      \key MainsWaterTemperature
+  A6, \field Water Temperature Reference Node Name
+      \type object-list
+      \object-list Node
+  A7; \field Water Temperature Schedule Name
+      \type object-list
+      \object-list ScheduleNames
+
+OS:Generator:FuelCell:AuxiliaryHeater,
+      \memo Intended for modeling an auxiliary heater for a fuel cell power generator, however this
+      \memo portion of the model is not yet available. The program still requires one of these
+      \memo objects be included even though the data are not yet used (so that internal data
+      \memo structures can be allocated).
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2, \field Name
+      \required-field
+      \reference FCAuxHeatNames
+  N1, \field Excess Air Ratio
+  N2, \field Ancillary Power Constant Term
+  N3, \field Ancillary Power Linear Term
+  N4, \field Skin Loss U-Factor Times Area Value
+      \units W/K
+  A3, \field Skin Loss Destination
+      \type choice
+      \key SurroundingZone
+      \key AirInletForFuelCell
+  A4, \field Zone Name to Receive Skin Losses
+      \type object-list
+      \object-list ThermalZoneNames
+  A5, \field Heating Capacity Units
+      \type choice
+      \key Watts
+      \key kmol/s
+  N5, \field Maximum Heating Capacity in Watts
+      \units W
+  N6, \field Minimum Heating Capacity in Watts
+      \units W
+  N7, \field Maximum Heating Capacity in Kmol per Second
+      \units kmol/s
+  N8; \field Minimum Heating Capacity in Kmol per Second
+      \units kmol/s
+
+OS:Generator:FuelCell:ExhaustGasToWaterHeatExchanger,
+      \memo Describes the exhaust gas heat exchanger subsystem of a fuel cell power generator
+      \memo used to recovery thermal energy
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2, \field Name
+      \required-field
+      \reference FCExhaustHXNames
+      \reference ConnectionObject
+  A3, \field Heat Recovery Water Inlet Node Name
+      \type object-list
+      \object-list ConnectionNames
+  A4, \field Heat Recovery Water Outlet Node Name
+      \type object-list
+      \object-list ConnectionNames
+  N1, \field Heat Recovery Water Maximum Flow Rate
+      \units m3/s
+      \ip-units gal/min
+  A5, \field Exhaust Outlet Air Node Name
+      \type object-list
+      \object-list Node
+  A6, \field Heat Exchanger Calculation Method
+      \type choice
+      \key FixedEffectiveness
+      \key EmpiricalUAeff
+      \key FundementalUAeff
+      \key Condensing
+  N2, \field Method 1 Heat Exchanger Effectiveness
+  N3, \field Method 2 Parameter hxs0
+  N4, \field Method 2 Parameter hxs1
+  N5, \field Method 2 Parameter hxs2
+  N6, \field Method 2 Parameter hxs3
+  N7, \field Method 2 Parameter hxs4
+  N8, \field Method 3 h0Gas Coefficient
+  N9, \field Method 3 NdotGasRef Coefficient
+  N10, \field Method 3 n Coefficient
+  N11, \field Method 3 Gas Area
+       \units m2
+  N12, \field Method 3 h0 Water Coefficient
+  N13, \field Method 3 N dot Water ref Coefficient
+  N14, \field Method 3 m Coefficient
+  N15, \field Method 3 Water Area
+       \units m2
+  N16, \field Method 3 F Adjustment Factor
+  N17, \field Method 4 hxl1 Coefficient
+  N18, \field Method 4 hxl2 Coefficient
+  N19; \field Method 4 Condensation Threshold
+       \units C
+
+OS:Generator:FuelCell:ElectricalStorage,
+      \memo Used to describe the electrical storage subsystem for a fuel cell power generator.
+      \memo The electrical storage model is a very simple "constrained bucket" model.
+      \memo Note that this electrical storage is embedded within the FC device.
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2, \field Name
+      \required-field
+      \reference FCStorageNames
+  A3, \field Choice of Model
+      \type choice
+      \key SimpleEfficiencyWithConstraints
+  N1, \field Nominal Charging Energetic Efficiency
+      \maximum 1.0
+      \minimum 0.0
+  N2, \field Nominal Discharging Energetic Efficiency
+      \maximum 1.0
+      \minimum 0.0
+  N3, \field Simple Maximum Capacity
+      \units J
+  N4, \field Simple Maximum Power Draw
+      \units W
+  N5, \field Simple Maximum Power Store
+      \units W
+  N6; \field Initial Charge State
+      \units J
+
+OS:Generator:FuelCell:Inverter,
+      \memo Used to describe the power condition unit subsystem of a fuel cell power generator.
+      \memo This object models an inverter system contained within a fuel cell system that
+      \memo converts from direct current (DC) to alternating current (AC).
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2, \field Name
+      \required-field
+      \reference FCInverterNames
+  A3, \field Inverter Efficiency Calculation Mode
+      \type choice
+      \key Quadratic
+      \key Constant
+  N1, \field Inverter Efficiency
+      \minimum 0.0
+      \maximum 1.0
+  A4; \field Efficiency Function of DC Power Curve Name
+      \type object-list
+      \object-list QuadraticCurves
+      \object-list UniVariateTables
+
+ OS:Generator:FuelCell:StackCooler,
+      \memo This object is optional and is used to define details needed to model the stack cooler
+      \memo on PEMFC.
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2, \field Name
+      \required-field
+      \type alpha
+      \reference FCStackCoolerNames
+      \reference ConnectionObject
+  A3, \field Heat Recovery Water Inlet Node Name
+      \type object-list
+      \object-list ConnectionNames
+  A4, \field Heat Recovery Water Outlet Node Name
+      \type object-list
+      \object-list ConnectionNames
+  N1,  \field Nominal Stack Temperature
+       \units C
+  N2,  \field Actual Stack Temperature
+       \units C
+  N3,  \field Coefficient r0
+  N4,  \field Coefficient r1
+  N5,  \field Coefficient r2
+  N6,  \field Coefficient r3
+  N7,  \field Stack Coolant Flow Rate
+       \units kg/s
+  N8,  \field Stack Cooler U-Factor Times Area Value
+       \units W/K
+  N9,  \field Fs-cogen Adjustment Factor
+  N10, \field Stack Cogeneration Exchanger Area
+       \units m2
+  N11, \field Stack Cogeneration Exchanger Nominal Flow Rate
+       \units kg/s
+  N12, \field Stack Cogeneration Exchanger Nominal Heat Transfer Coefficient
+       \units W/m2-K
+  N13, \field Stack Cogeneration Exchanger Nominal Heat Transfer Coefficient Exponent
+  N14, \field Stack Cooler Pump Power
+       \units W
+  N15, \field Stack Cooler Pump Heat Loss Fraction
+       \minimum 0.0
+       \maximum 1.0
+  N16, \field Stack Air Cooler Fan Coefficient f0
+  N17, \field Stack Air Cooler Fan Coefficient f1
+  N18; \field Stack Air Cooler Fan Coefficient f2
+
+OS:Generator:FuelSupply,
+      \extensible:2
+      \max-fields 38
+      \memo Used only with Generator:FuelCell and Generator:MicroCHP
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2, \field Name
+      \required-field
+      \reference GenFuelSupNames
+  A3, \field Fuel Temperature Modeling Mode
+      \type choice
+      \key TemperatureFromAirNode
+      \key Scheduled
+  A4, \field Fuel Temperature Reference Node Name
+      \type object-list
+      \object-list Node
+  A5, \field Fuel Temperature Schedule Name
+      \type object-list
+      \object-list ScheduleNames
+  A6, \field Compressor Power Multiplier Function of Fuel Rate Curve Name
+      \type object-list
+      \object-list CubicCurves
+      \object-list UniVariateTables
+  N1, \field Compressor Heat Loss Factor
+      \minimum 0.0
+      \maximum 1.0
+  A7, \field Fuel Type
+      \type choice
+      \key GaseousConstituents
+      \key LiquidGeneric
+  N2, \field Liquid Generic Fuel Lower Heating Value
+      \units kJ/kg
+  N3, \field Liquid Generic Fuel Higher Heating Value
+      \units kJ/kg
+  N4, \field Liquid Generic Fuel Molecular Weight
+      \units g/mol
+  N5, \field Liquid Generic Fuel CO2 Emission Factor
+  N6, \field Number of Constituents in Gaseous Constituent Fuel Supply
+      \minimum 0.0
+      \maximum 12.0
+  A8, \field Constituent 1 Name
+      \type choice
+      \key CarbonDioxide
+      \key Nitrogen
+      \key Oxygen
+      \key Water
+      \key Argon
+      \key Hydrogen
+      \key Methane
+      \key Ethane
+      \key Propane
+      \key Butane
+      \key Pentane
+      \key Hexane
+      \key Methanol
+      \key Ethanol
+      \begin-extensible
+  N7; \field Constituent 1 Molar Fraction
+      \minimum 0.0
+      \maximum 1.0
 
 OS:ElectricLoadCenter:Inverter:Simple,
         \memo Electric power inverter to convert from direct current (DC) to alternating current
