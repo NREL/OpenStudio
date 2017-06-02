@@ -49,6 +49,7 @@ class PlantEquipmentOperationScheme;
 class PlantEquipmentOperationHeatingLoad;
 class PlantEquipmentOperationCoolingLoad;
 class Schedule;
+class AvailabilityManager;
 
 /** PlantLoop is an interface to the EnergyPlus IDD object
  *  named "PlantLoop"
@@ -90,6 +91,12 @@ class MODEL_API PlantLoop : public Loop {
   std::string loadDistributionScheme();
 
   bool setLoadDistributionScheme(std::string scheme);
+
+  boost::optional<AvailabilityManager> availabilityManager() const;
+
+  bool setAvailabilityManager(const AvailabilityManager& availabilityManager);
+
+  void resetAvailabilityManager();
 
   std::string fluidType();
 
