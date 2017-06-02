@@ -48,7 +48,8 @@ namespace measure {
 
 OSRunner::OSRunner(const WorkflowJSON& workflow)
   : m_workflow(workflow), m_startedStep(false), m_streamsCaptured(false), 
-    m_unitsPreference("IP"), m_languagePreference("en"), m_originalStdOut(nullptr), m_originalStdErr(nullptr)
+    m_unitsPreference("IP"), m_languagePreference("en"), m_halted(false),
+    m_originalStdOut(nullptr), m_originalStdErr(nullptr)
 {
 }
 
@@ -75,6 +76,10 @@ std::string OSRunner::languagePreference() const
 
 WorkflowStepResult OSRunner::result() const {
   return m_result;
+}
+
+bool OSRunner::halted() const {
+  return m_halted;
 }
 
 boost::optional<openstudio::model::Model> OSRunner::lastOpenStudioModel() const
@@ -159,6 +164,8 @@ void OSRunner::reset()
   //m_unitsPreference // do not reset
   //m_languagePreference; // do not reset
 
+  m_halted = false;
+
   m_result = WorkflowStepResult();
 
   m_lastOpenStudioModel.reset();
@@ -176,6 +183,11 @@ void OSRunner::reset()
 
 bool OSRunner::incrementStep()
 {
+  // DLM: increment step is called when halted, just skips the steps
+  //if (m_halted){
+  //  LOG(Error, "Wokflow halted, cannot increment step");
+  //  return false;
+  //}
   if (!m_startedStep){
     LOG(Error, "Not prepared for step");
     return false;
@@ -247,7 +259,10 @@ bool OSRunner::incrementStep()
 //}
 
 void OSRunner::prepareForMeasureRun(const OSMeasure& measure) {
-  
+  if (m_halted){
+    LOG(Error, "Wokflow halted, cannot prepate for measure run");
+    return;
+  }
   if (m_startedStep){
     LOG(Error, "Step already started");
     return;
@@ -398,6 +413,12 @@ void OSRunner::registerValue(const std::string& name,
   WorkflowStepValue stepValue(cleanValueName(name),value);
   stepValue.setDisplayName(displayName);
   m_result.addStepValue(stepValue);
+}
+
+void OSRunner::haltWorkflow(const std::string& completedStatus)
+{
+  m_halted = true;
+  m_workflow.setCompletedStatus(completedStatus);
 }
 
 void OSRunner::createProgressBar(const std::string& text) const {
