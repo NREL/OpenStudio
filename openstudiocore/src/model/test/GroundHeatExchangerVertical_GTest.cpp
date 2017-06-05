@@ -189,7 +189,7 @@ TEST_F(ModelFixture, GroundHeatExchangerVertical_GFunctions)
   Model model;
   GroundHeatExchangerVertical testObject(model);
 
-  std::vector< std::pair<double,double> > gFunctions = testObject.gFunctions();
+  std::vector< GFunction > gFunctions = testObject.gFunctions();
   EXPECT_EQ(35, gFunctions.size());
 
   testObject.removeAllGFunctions();
@@ -207,8 +207,8 @@ TEST_F(ModelFixture, GroundHeatExchangerVertical_GFunctions)
   gFunctions = testObject.gFunctions();
   EXPECT_EQ(1, gFunctions.size());
 
-  EXPECT_DOUBLE_EQ(2.0, gFunctions[0].first);
-  EXPECT_DOUBLE_EQ(2.5, gFunctions[0].second);
+  EXPECT_DOUBLE_EQ(2.0, gFunctions[0].lnValue());
+  EXPECT_DOUBLE_EQ(2.5, gFunctions[0].gValue());
 
   testObject.removeAllGFunctions();
   for (int i=0; i<100; i++) {

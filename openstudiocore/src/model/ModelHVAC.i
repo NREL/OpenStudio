@@ -11,6 +11,7 @@
 %import <model/ModelSimulation.i>
 %import <model/ModelResources.i>
 %import <model/ModelGeometry.i>
+#include <model/GroundHeatExchangerVertical.hpp>
 
 %{
   #include <model/HVACTemplates.hpp>
@@ -429,6 +430,7 @@ SWIG_MODELOBJECT(HeatExchangerFluidToFluid,1);
 SWIG_MODELOBJECT(HeatPumpWaterToWaterEquationFitCooling,1);
 SWIG_MODELOBJECT(HeatPumpWaterToWaterEquationFitHeating,1);
 SWIG_MODELOBJECT(HumidifierSteamElectric,1);
+%template(GFunctionVector) std::vector<openstudio::model::GFunction>;
 SWIG_MODELOBJECT(GroundHeatExchangerVertical, 1);
 SWIG_MODELOBJECT(GroundHeatExchangerHorizontalTrench, 1);
 SWIG_MODELOBJECT(ThermalStorageChilledWaterStratified, 1);
