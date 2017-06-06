@@ -11,7 +11,6 @@
 %import <model/ModelSimulation.i>
 %import <model/ModelResources.i>
 %import <model/ModelGeometry.i>
-#include <model/GroundHeatExchangerVertical.hpp>
 
 %{
   #include <model/HVACTemplates.hpp>
