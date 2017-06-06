@@ -116,7 +116,7 @@ void WindowMaterialGlazingRefractionExtinctionMethodInspectorView::createLayout(
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_solarExtinctionCoefficient = new OSQuantityEdit2("1/m","1/m","1/in", m_isIP);
+  m_solarExtinctionCoefficient = new OSQuantityEdit2("1/m","1/m","1/ft", m_isIP);
   connect(this, &WindowMaterialGlazingRefractionExtinctionMethodInspectorView::toggleUnitsClicked, m_solarExtinctionCoefficient, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_solarExtinctionCoefficient,row++,0,1,3);
 
@@ -136,7 +136,7 @@ void WindowMaterialGlazingRefractionExtinctionMethodInspectorView::createLayout(
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_visibleExtinctionCoefficient = new OSQuantityEdit2("","","", m_isIP);
+  m_visibleExtinctionCoefficient = new OSQuantityEdit2("1/m","1/m","1/ft", m_isIP);
   connect(this, &WindowMaterialGlazingRefractionExtinctionMethodInspectorView::toggleUnitsClicked, m_visibleExtinctionCoefficient, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_visibleExtinctionCoefficient,row++,0,1,3);
 
