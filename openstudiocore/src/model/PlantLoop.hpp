@@ -102,11 +102,9 @@ class MODEL_API PlantLoop : public Loop {
 
   bool setFluidType( const std::string & value );
 
-  bool setGlycolConcentration(int glycolConcentration);
+  void setGlycolConcentration(int glycolConcentration);
 
-  void resetGlycolConcentration();
-
-  boost::optional<int> glycolConcentration() const;
+  int glycolConcentration() const;
 
   Node loopTemperatureSetpointNode();
 

@@ -632,29 +632,15 @@ std::string PlantLoop_Impl::fluidType()
 
 bool PlantLoop_Impl::setFluidType( const std::string & value )
 {
-  if (!(istringEqual(value,"PropyleneGlycol") || istringEqual(value,"EthyleneGlycol"))) {
-    this->resetGlycolConcentration();
-  }
   return setString(OS_PlantLoopFields::FluidType,value);
 }
 
-boost::optional<int> PlantLoop_Impl::glycolConcentration() const {
-  return getInt(OS_PlantLoopFields::GlycolConcentration,true);
+int PlantLoop_Impl::glycolConcentration() const {
+  return getInt(OS_PlantLoopFields::GlycolConcentration,true).get();
 }
 
-bool PlantLoop_Impl::setGlycolConcentration(int glycolConcentration) {
-  std::string currentFluidType = this->fluidType();
-  if (istringEqual(currentFluidType,"PropyleneGlycol") || istringEqual(currentFluidType,"EthyleneGlycol")) {
-    return setInt(OS_PlantLoopFields::GlycolConcentration, glycolConcentration);
-  } else {
-    LOG(Error, "Plant Loop Fluid Type must be PropyleneGlycol or EthyleneGlycol, not " + currentFluidType + ", to set a glycol concentration.");
-    return false;
-  }
-}
-
-void PlantLoop_Impl::resetGlycolConcentration() {
-  bool result = setString(OS_PlantLoopFields::GlycolConcentration, "");
-  OS_ASSERT(result);
+void PlantLoop_Impl::setGlycolConcentration(int glycolConcentration) {
+  setInt(OS_PlantLoopFields::GlycolConcentration, glycolConcentration);
 }
 
 Node PlantLoop_Impl::loopTemperatureSetpointNode()
@@ -1146,16 +1132,12 @@ std::vector<std::string> PlantLoop::fluidTypeValues() {
 
 }
 
-boost::optional<int> PlantLoop::glycolConcentration() const {
+int PlantLoop::glycolConcentration() const {
   return getImpl<detail::PlantLoop_Impl>()->glycolConcentration();
 }
 
-bool PlantLoop::setGlycolConcentration(int glycolConcentration) {
-  return getImpl<detail::PlantLoop_Impl>()->setGlycolConcentration(glycolConcentration);
-}
-
-void PlantLoop::resetGlycolConcentration() {
-  getImpl<detail::PlantLoop_Impl>()->resetGlycolConcentration();
+void PlantLoop::setGlycolConcentration(int glycolConcentration) {
+  getImpl<detail::PlantLoop_Impl>()->setGlycolConcentration(glycolConcentration);
 }
 
 Node PlantLoop::loopTemperatureSetpointNode()

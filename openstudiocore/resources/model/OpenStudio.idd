@@ -18937,6 +18937,11 @@ OS:PlantLoop,
        \key Steam
        \key PropyleneGlycol
        \key EthyleneGlycol
+  N1,  \field Glycol Concentration
+       \type integer
+       \minimum 0
+       \maximum 100
+       \note Only used with either "PropyleneGlycol" or "EthyleneGlycol"
   A4, \field User Defined Fluid Type
        \note This field is not used.
        \type alpha
@@ -18953,27 +18958,27 @@ OS:PlantLoop,
        \type object-list
        \required-field
        \object-list Node
-  N1, \field Maximum Loop Temperature
+  N2, \field Maximum Loop Temperature
        \type real
        \units C
        \default 100.0
-  N2, \field Minimum Loop Temperature
+  N3, \field Minimum Loop Temperature
        \type real
        \units C
        \default 0.0
-  N3, \field Maximum Loop Flow Rate
+  N4, \field Maximum Loop Flow Rate
        \type real
        \autosizable
        \units m3/s
        \ip-units gal/min
        \minimum 0
        \default autosize
-  N4, \field Minimum Loop Flow Rate
+  N5, \field Minimum Loop Flow Rate
        \type real
        \units m3/s
        \ip-units gal/min
        \default 0.0
-  N5, \field Plant Loop Volume
+  N6, \field Plant Loop Volume
        \type real
        \autocalculatable
        \units m3
@@ -19052,14 +19057,9 @@ OS:PlantLoop,
   A22, \field Primary Plant Equipment Operation Scheme Schedule
        \type object-list
        \object-list ScheduleNames
-  A23, \field Component Setpoint Operation Scheme Schedule
+  A23; \field Component Setpoint Operation Scheme Schedule
        \type object-list
        \object-list ScheduleNames
-  N6;  \field Glycol Concentration
-       \type integer
-       \minimum 0
-       \maximum 100
-       \note Only used with either "PropyleneGlycol" or "EthyleneGlycol"
 
 OS:PlantEquipmentOperation:CoolingLoad,
     \extensible:3

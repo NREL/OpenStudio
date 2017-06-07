@@ -778,6 +778,7 @@
     <rule IddField="Availability Manager List Name" Access="HIDDEN"/>
     <rule IddField="Plant Loop Demand Calculation Scheme" Access="HIDDEN"/>
     <rule IddField="Pressure Simulation Type" Access="HIDDEN"/>
+    <rule IddField="User Defined Fluid Type" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_InternalMass">
     <rule IddField="Space or SpaceType Name" Access="HIDDEN"/>
