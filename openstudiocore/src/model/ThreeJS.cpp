@@ -57,6 +57,7 @@
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/geometry/Point3d.hpp"
+#include "../utilities/geometry/Plane.hpp"
 #include "../utilities/geometry/BoundingBox.hpp"
 #include "../utilities/geometry/Transformation.hpp"
 #include "../utilities/geometry/Geometry.hpp"
@@ -608,9 +609,25 @@ namespace openstudio
       if (faces[0] == openstudioFaceFormatId()){
         // openstudio, all vertices belong to one face
         Point3dVector face;
+
+        // faces[0] is format
         for (size_t i = 1; i < n; ++i){
           face.push_back(vertices[faces[i]]);
         }
+
+//        try{
+//          Plane p(face);
+//        } catch (const std::exception&)
+//        {
+//          std::cout << "Vertices: " << vertices << std::endl;
+//          std::cout << "faces: " << std::endl;
+//          for (const auto& f : faces){
+//            std::cout << "  " << f << std::endl;
+//          }
+//          bool t = false;
+//        }
+
+
         result.push_back(face);
       }
 
@@ -713,9 +730,16 @@ namespace openstudio
           }
 
           for (const auto& face : faces){
-            Surface surface(face, model);
-            surface.setName(name);
-            surface.setSpace(*space);
+            try{
+              // ensure we can create a plane
+              Plane plane(face);
+
+              Surface surface(face, model);
+              surface.setName(name);
+              surface.setSpace(*space);
+            } catch (const std::exception& ){
+              LOG_FREE(Warn, "modelFromThreeJS", "Could not create surface for vertices " << face);
+            }
           }
         }
       }
