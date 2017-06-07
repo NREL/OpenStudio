@@ -23,6 +23,10 @@
   
 #endif
 
+%ignore std::vector<openstudio::model::SupplyAirflowRatioField>::vector(size_type);
+%ignore std::vector<openstudio::model::SupplyAirflowRatioField>::resize(size_type);
+%template(SupplyAirflowRatioFieldVector) std::vector<openstudio::model::SupplyAirflowRatioField>;
+
 MODELOBJECT_TEMPLATES(PortList);
 MODELOBJECT_TEMPLATES(Loop);
 MODELOBJECT_TEMPLATES(HVACComponent);
