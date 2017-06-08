@@ -48,7 +48,8 @@ namespace openstudio {
 // MaterialRoofVegetationInspectorView
 
 MaterialRoofVegetationInspectorView::MaterialRoofVegetationInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent)
-  : ModelObjectInspectorView(model, true, parent)
+  : ModelObjectInspectorView(model, true, parent),
+  m_isIP(isIP)
 {
   createLayout();
 }

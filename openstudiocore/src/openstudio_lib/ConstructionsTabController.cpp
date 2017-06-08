@@ -50,6 +50,8 @@ ConstructionsTabController::ConstructionsTabController(bool isIP, const model::M
   this->mainContentWidget()->addSubTab("Materials", MATERIALS);
 
   connect(this->mainContentWidget(), &MainTabView::tabSelected, this, &ConstructionsTabController::setSubTab);
+  connect(this, &ConstructionsTabController::toggleUnitsClicked, this, &ConstructionsTabController::toggleUnits);
+
 }
 
 ConstructionsTabController::~ConstructionsTabController()
@@ -74,7 +76,7 @@ void ConstructionsTabController::setSubTab(int index)
   else if (qobject_cast<ConstructionsController *>(m_currentController)) {
     disconnect(this, &ConstructionsTabController::toggleUnitsClicked, static_cast<ModelSubTabView*>((qobject_cast<ConstructionsController *>(m_currentController))->subTabView()), &ModelSubTabView::toggleUnitsClicked);
   }
-  else if (qobject_cast<MaterialsController *>(m_currentController)) {
+   else if (qobject_cast<MaterialsController *>(m_currentController)) {
     disconnect(this, &ConstructionsTabController::toggleUnitsClicked, static_cast<ModelSubTabView*>((qobject_cast<MaterialsController *>(m_currentController))->subTabView()), &ModelSubTabView::toggleUnitsClicked);
   }
   else if (m_currentController) {
@@ -115,6 +117,12 @@ void ConstructionsTabController::setSubTab(int index)
     OS_ASSERT(false);
     break;
   }
+}
+
+/****************** SLOTS ******************/
+
+void ConstructionsTabController::toggleUnits(bool displayIP) {
+  m_isIP = displayIP;
 }
 
 } // openstudio

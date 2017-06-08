@@ -68,6 +68,8 @@ class ConstructionsTabController : public MainTabController
 
     virtual void setSubTab(int index) override;
 
+    void toggleUnits(bool displayIP);
+
 };
 
 } // openstudio
