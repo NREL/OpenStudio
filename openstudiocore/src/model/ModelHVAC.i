@@ -23,6 +23,10 @@
   
 #endif
 
+%ignore std::vector<openstudio::model::GFunction>::vector(size_type);
+%ignore std::vector<openstudio::model::GFunction>::resize(size_type);
+%template(GFunctionVector) std::vector<openstudio::model::GFunction>;
+
 MODELOBJECT_TEMPLATES(PortList);
 MODELOBJECT_TEMPLATES(Loop);
 MODELOBJECT_TEMPLATES(HVACComponent);
