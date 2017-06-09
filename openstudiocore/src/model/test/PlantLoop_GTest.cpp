@@ -435,6 +435,21 @@ TEST_F(ModelFixture, PlantLoop_OperationSchemes)
   
 }
 
+TEST_F(ModelFixture, PlantLoop_GlycolConcentration) {
+  Model m;
+  PlantLoop plant(m);
+
+  EXPECT_FALSE(plant.setGlycolConcentration(5));
+  EXPECT_TRUE(plant.setFluidType("PropyleneGlycol"));
+  EXPECT_EQ(plant.fluidType(), "PropyleneGlycol");
+  EXPECT_TRUE(plant.setGlycolConcentration(50));
+  boost::optional<int> glycolConcentration = plant.glycolConcentration();
+  EXPECT_TRUE(glycolConcentration);
+  if (glycolConcentration) {
+    EXPECT_EQ(glycolConcentration.get(), 50);
+  }
+}
+
 TEST_F(ModelFixture, PlantLoop_AvailabilityManager) {
   Model m;
   PlantLoop plant(m);

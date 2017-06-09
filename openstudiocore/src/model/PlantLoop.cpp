@@ -630,9 +630,17 @@ std::string PlantLoop_Impl::fluidType()
   return getString(OS_PlantLoopFields::FluidType,true).get();
 }
 
-void PlantLoop_Impl::setFluidType( const std::string & value )
+bool PlantLoop_Impl::setFluidType( const std::string & value )
 {
-  setString(OS_PlantLoopFields::FluidType,value);
+  return setString(OS_PlantLoopFields::FluidType,value);
+}
+
+int PlantLoop_Impl::glycolConcentration() const {
+  return getInt(OS_PlantLoopFields::GlycolConcentration,true).get();
+}
+
+void PlantLoop_Impl::setGlycolConcentration(int glycolConcentration) {
+  setInt(OS_PlantLoopFields::GlycolConcentration, glycolConcentration);
 }
 
 Node PlantLoop_Impl::loopTemperatureSetpointNode()
@@ -1113,9 +1121,23 @@ std::string PlantLoop::fluidType()
   return getImpl<detail::PlantLoop_Impl>()->fluidType();
 }
 
-void PlantLoop::setFluidType( const std::string & value )
+bool PlantLoop::setFluidType( const std::string & value )
 {
-  getImpl<detail::PlantLoop_Impl>()->setFluidType( value );
+  return getImpl<detail::PlantLoop_Impl>()->setFluidType( value );
+}
+
+std::vector<std::string> PlantLoop::fluidTypeValues() {
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                        OS_PlantLoopFields::FluidType);
+
+}
+
+int PlantLoop::glycolConcentration() const {
+  return getImpl<detail::PlantLoop_Impl>()->glycolConcentration();
+}
+
+void PlantLoop::setGlycolConcentration(int glycolConcentration) {
+  getImpl<detail::PlantLoop_Impl>()->setGlycolConcentration(glycolConcentration);
 }
 
 Node PlantLoop::loopTemperatureSetpointNode()
