@@ -217,6 +217,7 @@
     <rule IddField="Design Specification Multispeed Heat Pump Object Name" Access="HIDDEN"/>
     <rule IddField="Control Type" Access="HIDDEN"/>
     <rule IddField="Outdoor Dry-Bulb Temperature Sensor Node Name" Access="HIDDEN"/>
+    <rule IddField="Design Specification Multispeed Object Name" Access="LOCKED"/>
   </POLICY>
   <POLICY IddObjectType="OS_Pipe_Adiabatic">
     <rule IddField="Inlet Node Name" Access="HIDDEN"/>

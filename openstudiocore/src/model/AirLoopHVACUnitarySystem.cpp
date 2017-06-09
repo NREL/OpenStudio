@@ -126,6 +126,9 @@ namespace detail {
     if( boost::optional<HVACComponent> supplementalHeatingCoil = this->supplementalHeatingCoil()) {
       modelObjectClone.setSupplementalHeatingCoil(supplementalHeatingCoil->clone(model).cast<HVACComponent>());
     }
+    if( auto designSpec = designSpecificationMultispeedObject() ) {
+      modelObjectClone.setDesignSpecificationMultispeedObject(designSpec->clone(model).cast<UnitarySystemPerformanceMultispeed>());
+    }
 
     return modelObjectClone;
   }
@@ -145,6 +148,9 @@ namespace detail {
     }
     if( boost::optional<HVACComponent> supplementalHeatingCoil = this->supplementalHeatingCoil()) {
       result.push_back( *supplementalHeatingCoil );
+    }
+    if( auto designSpec = designSpecificationMultispeedObject() ) {
+      result.push_back( *designSpec );
     }
 
     return result;
@@ -184,6 +190,11 @@ namespace detail {
       }
       std::vector<IdfObject> removedSuppHeatingCoils = _supplementalHeatingCoil->remove();
       result.insert(result.end(), removedSuppHeatingCoils.begin(), removedSuppHeatingCoils.end());
+    }
+
+    if( auto designSpec = designSpecificationMultispeedObject() ) {
+      auto removed = designSpec->remove(); 
+      result.insert(result.end(), removed.begin(), removed.end());
     }
 
     std::vector<IdfObject> removedUnitarySystem = WaterToAirComponent_Impl::remove();
