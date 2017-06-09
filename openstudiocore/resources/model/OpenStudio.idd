@@ -9621,10 +9621,50 @@ OS:AirLoopHVAC:UnitarySystem,
        \type object-list
        \object-list ConnectionNames
        \note Enter the name of the heat recovery water outlet node if plant water loop connections are present.
-  A23; \field Design Specification Multispeed Heat Pump Object Name
+  A23; \field Design Specification Multispeed Object Name
        \type object-list
        \object-list UnitarySystemPerformaceNames
        \note Enter the name of the performance specification object used to describe the multispeed coil.
+
+OS:UnitarySystemPerformance:Multispeed,
+       \memo The UnitarySystemPerformance object is used to specify the air flow ratio at each
+       \memo operating speed. This object is primarily used for multispeed DX and water coils to allow
+       \memo operation at alternate flow rates different from those specified in the coil object.
+       \extensible:2 - repeat last two fields, remembering to remove ; from "inner" fields.
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \reference UnitarySystemPerformaceNames
+  A3 , \field Single Mode Operation
+       \type choice
+       \key Yes
+       \key No
+       \default No
+       \note Controls coil operation during each HVAC timestep. 
+       \note This choice does not apply to speed 1 operation.
+       \note Yes = operate at the highest speed possible without exceeding the current load.
+       \note No = allow operation at the average of two adjacent speeds to match the current load.
+  N1 , \field Heating Speed 1 Supply Air Flow Ratio
+       \required-field
+       \type real
+       \autosizable
+       \minimum> 0
+       \begin-extensible
+       \note Used only for Multi speed coils
+       \note Enter the lowest operating supply air flow ratio during heating
+       \note operation or specify autosize. This value is the ratio of air flow
+       \note at this speed to the maximum air flow rate.
+  N2 ; \field Cooling Speed 1 Supply Air Flow Ratio
+       \required-field
+       \type real
+       \autosizable
+       \minimum> 0
+       \note Used only for Multi speed coils
+       \note Enter the lowest operating supply air flow ratio during cooling
+       \note operation or specify autosize. This value is the ratio of air flow
+       \note at this speed to the maximum air flow rate.
 
 OS:AirLoopHVAC:ZoneMixer,
        \memo Mix N inlet air streams into one (currently 50 per air loop, but extensible).  Node names cannot
