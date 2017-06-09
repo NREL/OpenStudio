@@ -19055,9 +19055,9 @@ OS:PlantLoop,
         \key UniformLoad
         \key UniformPLR
         \key SequentialUniformPLR
-  A16, \field Availability Manager List Name
+  A16, \field Availability Manager Name
        \type object-list
-       \object-list SystemAvailabilityManagerLists
+       \object-list SystemAvailabilityManagers
   A17, \field Plant Loop Demand Calculation Scheme
        \type choice
        \default SingleSetpoint
