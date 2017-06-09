@@ -19073,26 +19073,22 @@ OS:PlantLoop,
   A23, \field Primary Plant Equipment Operation Scheme Schedule
        \type object-list
        \object-list ScheduleNames
-<<<<<<< HEAD
-  A23, \field Component Setpoint Operation Scheme Schedule
-=======
-  A24; \field Component Setpoint Operation Scheme Schedule
->>>>>>> develop
+  A24, \field Component Setpoint Operation Scheme Schedule
        \type object-list
        \object-list ScheduleNames
-  A24, \field Demand Mixer Name
+  A25, \field Demand Mixer Name
        \type object-list
        \required-field
        \object-list ConnectionObject
-  A25, \field Demand Splitter Name
+  A26, \field Demand Splitter Name
        \type object-list
        \required-field
        \object-list ConnectionObject
-  A26, \field Supply Mixer Name
+  A27, \field Supply Mixer Name
        \type object-list
        \required-field
        \object-list ConnectionObject
-  A27; \field Supply Splitter Name
+  A28; \field Supply Splitter Name
        \type object-list
        \required-field
        \object-list ConnectionObject
