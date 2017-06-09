@@ -43,6 +43,8 @@ class SizingPlant;
 class PlantEquipmentOperationScheme;
 class PlantEquipmentOperationHeatingLoad;
 class PlantEquipmentOperationCoolingLoad;
+class AvailabilityManager;
+
 
 namespace detail {
 
@@ -67,9 +69,19 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
 
   bool setLoadDistributionScheme(std::string scheme);
 
+  boost::optional<AvailabilityManager> availabilityManager() const;
+
+  bool setAvailabilityManager(const AvailabilityManager & availabilityManager);
+
+  void resetAvailabilityManager();
+
   std::string fluidType();
 
-  void setFluidType( const std::string & value );
+  bool setFluidType( const std::string & value );
+
+  void setGlycolConcentration(int glycolConcentration);
+
+  int glycolConcentration() const;
 
   double maximumLoopTemperature();
 

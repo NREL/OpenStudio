@@ -60,10 +60,13 @@
 #include "ScheduleTypeRegistry.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
+#include "AvailabilityManager.hpp"
+#include "AvailabilityManager_Impl.hpp"
 #include "../utilities/core/Assert.hpp"
 #include <utilities/idd/OS_PlantLoop_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
+#include <utilities/idd/OS_AvailabilityManagerAssignmentList_FieldEnums.hxx>
 
 namespace openstudio {
 
@@ -98,6 +101,10 @@ std::vector<openstudio::IdfObject> PlantLoop_Impl::remove()
 
   ModelObjectVector modelObjects;
   ModelObjectVector::iterator it;
+
+  if( auto t_availabilityManager = availabilityManager() ) {
+    t_availabilityManager->remove();
+  }
 
   modelObjects = supplyComponents();
   for(it = modelObjects.begin();
@@ -161,7 +168,15 @@ IddObjectType PlantLoop_Impl::iddObjectType() const {
 
 ModelObject PlantLoop_Impl::clone(Model model) const
 {
-  return Loop_Impl::clone(model);
+  PlantLoop plantLoopClone = Loop_Impl::clone(model).cast<PlantLoop>();
+  if( auto mo = availabilityManager() ) {
+    auto clone = mo->clone(model).cast<AvailabilityManager>();
+    plantLoopClone.setAvailabilityManager(clone);
+  } else {
+    plantLoopClone.setString(OS_PlantLoopFields::AvailabilityManagerName,"");
+  }
+
+  return plantLoopClone;
 }
 
 unsigned PlantLoop_Impl::supplyInletPort() const
@@ -526,6 +541,27 @@ bool PlantLoop_Impl::setLoadDistributionScheme(std::string scheme)
   return setString(OS_PlantLoopFields::LoadDistributionScheme,scheme);
 }
 
+boost::optional<AvailabilityManager> PlantLoop_Impl::availabilityManager() const {
+  return getObject<ModelObject>().getModelObjectTarget<AvailabilityManager>(OS_PlantLoopFields::AvailabilityManagerName);
+}
+
+bool PlantLoop_Impl::setAvailabilityManager(const AvailabilityManager & availabilityManager) {
+  auto type = availabilityManager.iddObjectType();
+  if( type == IddObjectType::OS_AvailabilityManager_NightCycle ||
+      type == IddObjectType::OS_AvailabilityManager_HybridVentilation ||
+      type == IddObjectType::OS_AvailabilityManager_NightVentilation ||
+      type == IddObjectType::OS_AvailabilityManager_OptimumStart ||
+      type == IddObjectType::OS_AvailabilityManager_DifferentialThermostat) {
+    return setPointer(OS_PlantLoopFields::AvailabilityManagerName, availabilityManager.handle());
+  }
+  return false;
+}
+
+void PlantLoop_Impl::resetAvailabilityManager() {
+  bool result = setString(OS_PlantLoopFields::AvailabilityManagerName, "");
+  OS_ASSERT(result);
+}
+
 double PlantLoop_Impl::maximumLoopTemperature()
 {
   return getDouble(OS_PlantLoopFields::MaximumLoopTemperature,true).get();
@@ -626,9 +662,17 @@ std::string PlantLoop_Impl::fluidType()
   return getString(OS_PlantLoopFields::FluidType,true).get();
 }
 
-void PlantLoop_Impl::setFluidType( const std::string & value )
+bool PlantLoop_Impl::setFluidType( const std::string & value )
 {
-  setString(OS_PlantLoopFields::FluidType,value);
+  return setString(OS_PlantLoopFields::FluidType,value);
+}
+
+int PlantLoop_Impl::glycolConcentration() const {
+  return getInt(OS_PlantLoopFields::GlycolConcentration,true).get();
+}
+
+void PlantLoop_Impl::setGlycolConcentration(int glycolConcentration) {
+  setInt(OS_PlantLoopFields::GlycolConcentration, glycolConcentration);
 }
 
 Node PlantLoop_Impl::loopTemperatureSetpointNode()
@@ -899,7 +943,6 @@ PlantLoop::PlantLoop(Model& model)
   setLoopTemperatureSetpointNode(supplyOutletNode);
 
   setString(OS_PlantLoopFields::DemandSideConnectorListName,"");
-  setString(OS_PlantLoopFields::AvailabilityManagerListName,"");
   setString(OS_PlantLoopFields::PlantLoopDemandCalculationScheme,"");
   setString(OS_PlantLoopFields::CommonPipeSimulation,"");
   setString(OS_PlantLoopFields::PressureSimulationType,"");
@@ -908,6 +951,21 @@ PlantLoop::PlantLoop(Model& model)
 PlantLoop::PlantLoop(std::shared_ptr<detail::PlantLoop_Impl> impl)
   : Loop(impl)
 {}
+
+boost::optional<AvailabilityManager> PlantLoop::availabilityManager() const
+{
+  return getImpl<detail::PlantLoop_Impl>()->availabilityManager();
+}
+
+bool PlantLoop::setAvailabilityManager(const AvailabilityManager& availabilityManager)
+{
+  return getImpl<detail::PlantLoop_Impl>()->setAvailabilityManager(availabilityManager);
+}
+
+void PlantLoop::resetAvailabilityManager()
+{
+  return getImpl<detail::PlantLoop_Impl>()->resetAvailabilityManager();
+}
 
 std::vector<IdfObject> PlantLoop::remove()
 {
@@ -1099,9 +1157,23 @@ std::string PlantLoop::fluidType()
   return getImpl<detail::PlantLoop_Impl>()->fluidType();
 }
 
-void PlantLoop::setFluidType( const std::string & value )
+bool PlantLoop::setFluidType( const std::string & value )
 {
-  getImpl<detail::PlantLoop_Impl>()->setFluidType( value );
+  return getImpl<detail::PlantLoop_Impl>()->setFluidType( value );
+}
+
+std::vector<std::string> PlantLoop::fluidTypeValues() {
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                        OS_PlantLoopFields::FluidType);
+
+}
+
+int PlantLoop::glycolConcentration() const {
+  return getImpl<detail::PlantLoop_Impl>()->glycolConcentration();
+}
+
+void PlantLoop::setGlycolConcentration(int glycolConcentration) {
+  getImpl<detail::PlantLoop_Impl>()->setGlycolConcentration(glycolConcentration);
 }
 
 Node PlantLoop::loopTemperatureSetpointNode()
