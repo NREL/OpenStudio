@@ -159,7 +159,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGroundHeatExchangerVertic
     idfObject.setDouble(GroundHeatExchanger_VerticalFields::GFunctionReferenceRatio,value.get());
   }
 
-  std::vector< std::pair<double,double> > gFunctions = modelObject.gFunctions();
+  std::vector< GFunction > gFunctions = modelObject.gFunctions();
 
   // Number of Data Pairs of the G Function
   idfObject.setInt(GroundHeatExchanger_VerticalFields::NumberofDataPairsoftheGFunction,gFunctions.size());
@@ -170,8 +170,8 @@ boost::optional<IdfObject> ForwardTranslator::translateGroundHeatExchangerVertic
     {
       IdfExtensibleGroup eg = idfObject.pushExtensibleGroup();
 
-      eg.setDouble(GroundHeatExchanger_VerticalExtensibleFields::GFunctionLn_T_Ts_Value,gFunction.first); 
-      eg.setDouble(GroundHeatExchanger_VerticalExtensibleFields::GFunctionGValue,gFunction.second); 
+      eg.setDouble(GroundHeatExchanger_VerticalExtensibleFields::GFunctionLn_T_Ts_Value,gFunction.lnValue());
+      eg.setDouble(GroundHeatExchanger_VerticalExtensibleFields::GFunctionGValue,gFunction.gValue());
     }
   }
   else {

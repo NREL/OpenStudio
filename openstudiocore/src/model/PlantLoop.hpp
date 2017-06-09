@@ -70,6 +70,8 @@ class MODEL_API PlantLoop : public Loop {
 
   static std::vector<std::string> loadDistributionSchemeValues();
 
+  static std::vector<std::string> fluidTypeValues();
+
   /** Prior to OS 1.11.0 the options where
       Optimal, Sequential, and Uniform.
       E+ changed the available options to.
@@ -98,7 +100,11 @@ class MODEL_API PlantLoop : public Loop {
 
   std::string fluidType();
 
-  void setFluidType( const std::string & value );
+  bool setFluidType( const std::string & value );
+
+  void setGlycolConcentration(int glycolConcentration);
+
+  int glycolConcentration() const;
 
   Node loopTemperatureSetpointNode();
 

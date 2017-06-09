@@ -115,9 +115,9 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("1.11.4")] = &VersionTranslator::update_1_11_3_to_1_11_4;
   m_updateMethods[VersionString("1.11.5")] = &VersionTranslator::update_1_11_4_to_1_11_5;
   m_updateMethods[VersionString("1.12.1")] = &VersionTranslator::update_1_12_0_to_1_12_1;
-  m_updateMethods[VersionString("1.13.4")] = &VersionTranslator::update_1_12_3_to_1_12_4;
+  m_updateMethods[VersionString("1.12.4")] = &VersionTranslator::update_1_12_3_to_1_12_4;
   m_updateMethods[VersionString("2.1.1")] = &VersionTranslator::update_2_1_0_to_2_1_1;
-  m_updateMethods[VersionString("2.1.2")] = &VersionTranslator::defaultUpdate;
+  m_updateMethods[VersionString("2.1.2")] = &VersionTranslator::update_2_1_1_to_2_1_2;
 
 
   // List of previous versions that may be updated to this one.
@@ -3447,6 +3447,43 @@ std::string VersionTranslator::update_2_1_0_to_2_1_1(const IdfFile& idf_2_1_0, c
       newObject.setDouble(20,8.0);
       newObject.setDouble(21,1.0);
       newObject.setString(22,"");
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
+    } else {
+      ss << object;
+    }
+  }
+
+  return ss.str();
+}
+
+std::string VersionTranslator::update_2_1_1_to_2_1_2(const IdfFile& idf_2_1_1, const IddFileAndFactoryWrapper& idd_2_1_2) {
+  std::stringstream ss;
+
+  ss << idf_2_1_1.header() << std::endl << std::endl;
+  IdfFile targetIdf(idd_2_1_2.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  for (const IdfObject& object : idf_2_1_1.objects()) {
+    auto iddname = object.iddObject().name();
+
+    if (iddname == "OS:PlantLoop") {
+      auto iddObject = idd_2_1_2.getObject("OS:PlantLoop");
+      IdfObject newObject(iddObject.get());
+
+      size_t newi = 0;
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        if( i == 3u ) {
+          newObject.setDouble(newi,50.0);
+          ++newi;
+        } else {
+          if( auto s = object.getString(i) ) {
+            newObject.setString(newi,s.get());
+          }
+        }
+        ++newi;
+      }
 
       m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
       ss << newObject;
