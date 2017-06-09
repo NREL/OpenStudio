@@ -39,6 +39,7 @@ namespace model {
 class ThermalZone;
 class Schedule;
 class HVACComponent;
+class UnitarySystemPerformanceMultispeed;
 
 namespace detail {
 
@@ -221,7 +222,7 @@ class MODEL_API AirLoopHVACUnitarySystem : public WaterToAirComponent {
 
   // bool isMaximumTemperatureforHeatRecoveryDefaulted() const;
 
-  // boost::optional<UnitarySystemPerformace> designSpecificationMultispeedHeatPumpObject() const;
+  boost::optional<UnitarySystemPerformanceMultispeed> designSpecificationMultispeedObject() const;
 
   //@}
   /** @name Setters */
@@ -404,9 +405,9 @@ class MODEL_API AirLoopHVACUnitarySystem : public WaterToAirComponent {
 
   // void resetMaximumTemperatureforHeatRecovery();
 
-  // bool setDesignSpecificationMultispeedHeatPumpObject(const UnitarySystemPerformace& unitarySystemPerformace);
+  bool setDesignSpecificationMultispeedObject(const UnitarySystemPerformanceMultispeed& unitarySystemPerformace);
 
-  // void resetDesignSpecificationMultispeedHeatPumpObject();
+  void resetDesignSpecificationMultispeedObject();
 
   //@}
   /** @name Other */

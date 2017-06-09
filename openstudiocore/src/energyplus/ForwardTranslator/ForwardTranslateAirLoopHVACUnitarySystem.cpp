@@ -60,6 +60,8 @@
 #include "../../model/CoilHeatingGasMultiStage_Impl.hpp"
 #include "../../model/CoilHeatingGasMultiStageStageData.hpp"
 #include "../../model/CoilHeatingGasMultiStageStageData_Impl.hpp"
+#include "../../model/UnitarySystemPerformanceMultispeed.hpp"
+#include "../../model/UnitarySystemPerformanceMultispeed_Impl.hpp"
 #include <utilities/idd/AirLoopHVAC_UnitarySystem_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_SingleSpeed_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_TwoSpeed_FieldEnums.hxx>
@@ -469,28 +471,22 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
   //   }
   // }
 
-  // Not Implemented
-  // Design Specification Multispeed Heat Pump Object Type
-  // Design Specification Multispeed Heat Pump Object Name
-  // if( boost::optional<HVACComponent> designSpecificationMultispeedHeatPumpObject = modelObject.designSpecificationMultispeedHeatPumpObject() )
-  // {
-  //   boost::optional<IdfObject> _designSpecificationMultispeedHeatPumpObject = translateAndMapModelObject(designSpecificationMultispeedHeatPumpObject.get());
+  // Design Specification Multispeed Object Name
+   if( boost::optional<UnitarySystemPerformanceMultispeed> designSpecificationMultispeedObject = modelObject.designSpecificationMultispeedObject() )
+   {
+     boost::optional<IdfObject> _unitarySystemPerformance = translateAndMapModelObject(designSpecificationMultispeedObject.get());
 
-  //   if( _designSpecificationMultispeedHeatPumpObject && _designSpecificationMultispeedHeatPumpObject->name() )
-  //   {
-  //     unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedHeatPumpObjectType,_designSpecificationMultispeedHeatPumpObject->iddObject().name());
-  //     unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedHeatPumpObjectName,_designSpecificationMultispeedHeatPumpObject->name().get());
-  //   }
-  // }
-
-  // If not user specified, then generate the UnitarySystemPerformance:Multispeed used for multi speed coils
-  // Note it will never be user specified at this time, because OS does not have the UnitarySystemPerformanceMultispeed object
-  // The plan as of this writting is to eventually support UnitarySystemPerformanceMultispeed and if user specified, then
-  // don't do this automatic generation
-  
-  if( (coolingCoil && (coolingCoil->iddObjectType() == model::CoilCoolingDXMultiSpeed::iddObjectType())) || 
+     if( _unitarySystemPerformance && _unitarySystemPerformance->name() )
+     {
+       unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectType,_unitarySystemPerformance->iddObject().name());
+       unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectName,_unitarySystemPerformance->name().get());
+     }
+   } else if( (coolingCoil && (coolingCoil->iddObjectType() == model::CoilCoolingDXMultiSpeed::iddObjectType())) ||
       (heatingCoil && (heatingCoil->iddObjectType() == model::CoilHeatingDXMultiSpeed::iddObjectType())) ||
-      (heatingCoil && (heatingCoil->iddObjectType() == model::CoilHeatingGasMultiStage::iddObjectType())) ) {
+      (heatingCoil && (heatingCoil->iddObjectType() == model::CoilHeatingGasMultiStage::iddObjectType())) )
+   {
+
+    // If not user specified, then generate the UnitarySystemPerformance:Multispeed used for multi speed coils
 
     IdfObject _unitarySystemPerformance(openstudio::IddObjectType::UnitarySystemPerformance_Multispeed);
     m_idfObjects.push_back(_unitarySystemPerformance);
