@@ -175,11 +175,11 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
 
   virtual Node demandOutletNode() const override;
 
-  Mixer supplyMixer();
+  Mixer supplyMixer() const;
 
   void setSupplyMixer(Mixer const & mixer);
 
-  Splitter supplySplitter();
+  Splitter supplySplitter() const;
 
   void setSupplySplitter(Splitter const & splitter);
 

@@ -8682,11 +8682,15 @@ OS:AirLoopHVAC,
        \type object-list
        \required-field
        \object-list ConnectionObject
-  A16, \field Demand Splitter Name
+  A16, \field Demand Splitter A Name
        \type object-list
        \required-field
        \object-list ConnectionObject
-  A17; \field Supply Splitter Name
+  A17, \field Demand Splitter B Name
+       \type object-list
+       \required-field
+       \object-list ConnectionObject
+  A18; \field Supply Splitter Name
        \type object-list
        \required-field
        \object-list ConnectionObject
@@ -26008,7 +26012,7 @@ OS:Generator:FuelCell,
        \memo This generator model is the FC model from IEA Annex 42
   A1, \field Handle
        \type handle
-       \required-field     
+       \required-field
   A2, \field Name
       \required-field
       \reference GeneratorNames
@@ -26158,7 +26162,7 @@ OS:Generator:FuelCell:AirSupply,
       \extensible:2
   A1, \field Handle
        \type handle
-       \required-field    
+       \required-field
   A2, \field Name
       \required-field
       \reference FCAirSupNames

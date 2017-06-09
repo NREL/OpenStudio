@@ -457,11 +457,11 @@ bool PlantLoop_Impl::isDemandBranchEmpty()
   }
 }
 
-Mixer PlantLoop_Impl::supplyMixer()
+Mixer PlantLoop_Impl::supplyMixer() const
 {
   auto result = getObject<ModelObject>().getModelObjectTarget<Mixer>(OS_PlantLoopFields::SupplyMixerName);
-  OS_ASSERT(result);
-  return result.get();
+  if (result) return result.get();
+  return supplyComponents( IddObjectType::OS_Connector_Mixer ).front().cast<Mixer>();
 }
 
 void PlantLoop_Impl::setSupplyMixer(Mixer const & mixer)
@@ -470,11 +470,11 @@ void PlantLoop_Impl::setSupplyMixer(Mixer const & mixer)
   OS_ASSERT(result);
 }
 
-Splitter PlantLoop_Impl::supplySplitter()
+Splitter PlantLoop_Impl::supplySplitter() const
 {
   auto result = getObject<ModelObject>().getModelObjectTarget<Splitter>(OS_PlantLoopFields::SupplySplitterName);
-  OS_ASSERT(result);
-  return result.get();
+  if (result) return result.get();
+  return supplyComponents( IddObjectType::OS_Connector_Splitter ).front().cast<Splitter>();
 }
 
 void PlantLoop_Impl::setSupplySplitter(Splitter const & splitter)
@@ -486,8 +486,8 @@ void PlantLoop_Impl::setSupplySplitter(Splitter const & splitter)
 Mixer PlantLoop_Impl::demandMixer()
 {
   auto result = getObject<ModelObject>().getModelObjectTarget<Mixer>(OS_PlantLoopFields::DemandMixerName);
-  OS_ASSERT(result);
-  return result.get();
+  if (result) return result.get();
+  return demandComponents( IddObjectType::OS_Connector_Mixer ).front().cast<Mixer>();
 }
 
 void PlantLoop_Impl::setDemandMixer(Mixer const & mixer)
@@ -499,9 +499,8 @@ void PlantLoop_Impl::setDemandMixer(Mixer const & mixer)
 Splitter PlantLoop_Impl::demandSplitter()
 {
   auto result = getObject<ModelObject>().getModelObjectTarget<Splitter>(OS_PlantLoopFields::DemandSplitterName);
-  OS_ASSERT(result);
-  return result.get();
-  // return demandComponents( IddObjectType::OS_Connector_Splitter ).front().cast<ConnectorSplitter>();
+  if (result) return result.get();
+  return demandComponents( IddObjectType::OS_Connector_Splitter ).front().cast<Splitter>();
 }
 
 void PlantLoop_Impl::setDemandSplitter(Splitter const & splitter)
@@ -990,12 +989,12 @@ bool PlantLoop::removeDemandBranchWithComponent( HVACComponent component )
   return getImpl<detail::PlantLoop_Impl>()->removeDemandBranchWithComponent( component );
 }
 
-Mixer PlantLoop::supplyMixer()
+Mixer PlantLoop::supplyMixer() const
 {
   return getImpl<detail::PlantLoop_Impl>()->supplyMixer();
 }
 
-Splitter PlantLoop::supplySplitter()
+Splitter PlantLoop::supplySplitter() const
 {
   return getImpl<detail::PlantLoop_Impl>()->supplySplitter();
 }
