@@ -3491,6 +3491,8 @@ std::string VersionTranslator::update_2_1_1_to_2_1_2(const IdfFile& idf_2_1_1, c
       ss << object;
     }
   }
+
+  return ss.str();
 }
 
 

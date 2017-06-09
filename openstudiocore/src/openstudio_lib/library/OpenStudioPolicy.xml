@@ -768,6 +768,9 @@
   </POLICY>
   <POLICY IddObjectType="OS_PlantLoop">
     <rule IddField="Plant Equipment Operation Scheme Name" Access="HIDDEN"/>
+    <rule IddField="Plant Equipment Operation Heating Load" Access="HIDDEN"/>
+    <rule IddField="Plant Equipment Operation Cooling Load" Access="HIDDEN"/>
+    <rule IddField="Primary Plant Equipment Operation Scheme" Access="HIDDEN"/>
     <rule IddField="Plant Side Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Plant Side Outlet Node Name" Access="HIDDEN"/>
     <rule IddField="Plant Side Branch List Name" Access="HIDDEN"/>
