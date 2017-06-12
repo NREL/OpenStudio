@@ -103,7 +103,6 @@
     <rule IddField="Supply Air Fan Name" Access="HIDDEN"/>
     <rule IddField="Heating Coil Name" Access="HIDDEN"/>
     <rule IddField="Cooling Coil Name" Access="HIDDEN"/>
-    <rule IddField="Fan Placement" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_ZoneHVAC_WaterToAirHeatPump">
     <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
