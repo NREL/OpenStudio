@@ -1136,7 +1136,7 @@ namespace detail {
   }
 
   bool IdfObject_Impl::isValid(StrictnessLevel level) const {
-    return isValid(level,false);
+    return isValid(level,true);
   }
 
   bool IdfObject_Impl::isValid(StrictnessLevel level,bool checkNames) const {

@@ -160,17 +160,11 @@ namespace detail {
     else
     {
       std::vector<PlantLoop> plantLoops = this->model().getConcreteModelObjects<PlantLoop>();
-      auto const thisObject = getObject<HVACComponent>();
 
       for( auto & plantLoop : plantLoops )
       {
-        std::vector<ModelObject> components = plantLoop.supplyComponents(thisObject, plantLoop.supplyOutletNode());
-        if ( components.size() > 0 ) {
-          m_plantLoop = plantLoop;
-          return plantLoop;
-        }
-        components = plantLoop.demandComponents(thisObject, plantLoop.demandOutletNode());
-        if ( components.size() > 0 ) {
+        if( plantLoop.component(this->handle()) )
+        {
           m_plantLoop = plantLoop;
           return plantLoop;
         }
