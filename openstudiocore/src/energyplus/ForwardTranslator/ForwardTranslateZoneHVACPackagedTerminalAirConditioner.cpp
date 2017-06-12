@@ -50,6 +50,7 @@
 #include <utilities/idd/Coil_Cooling_DX_SingleSpeed_FieldEnums.hxx>
 #include <utilities/idd/OutdoorAir_Mixer_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
+#include "../../utilities/math/FloatCompare.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
@@ -95,7 +96,28 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACPackagedTerminalA
     }
   }
 
-  auto t_airLoopHVAC = modelObject.airLoopHVAC();
+  auto translateMixer = [&]() {
+    auto t_airLoopHVAC = modelObject.airLoopHVAC();
+    if( t_airLoopHVAC ) {
+      return false;
+    }
+
+    bool zeroOA = false;
+    if( (value = modelObject.outdoorAirFlowRateDuringCoolingOperation()) ) {
+      zeroOA = equal(value.get(),0.0);
+    }
+    if( (value = modelObject.outdoorAirFlowRateDuringHeatingOperation()) ) {
+      zeroOA = (zeroOA && equal(value.get(),0.0));
+    }
+    if( (value = modelObject.outdoorAirFlowRateWhenNoCoolingorHeatingisNeeded()) ) {
+      zeroOA = (zeroOA && equal(value.get(),0.0));
+    }
+
+    if( zeroOA ) return false;
+
+    return true;
+  };
+
 
   // AirInletNodeName
 
@@ -125,7 +147,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACPackagedTerminalA
     }
   }
 
-  if( ! t_airLoopHVAC ) {
+  if( translateMixer() ) {
     // OutdoorAirMixerObjectType
     idfObject.setString(ZoneHVAC_PackagedTerminalAirConditionerFields::OutdoorAirMixerObjectType,
                         modelObject.outdoorAirMixerObjectType());
@@ -296,8 +318,11 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACPackagedTerminalA
 
   if( _coolingCoil )
   {
-    std::string coolingCoilInletNodeName = mixedAirNodeName;
-    if( t_airLoopHVAC && airInletNodeName ) {
+    std::string coolingCoilInletNodeName;
+
+    if( translateMixer() ) {
+      coolingCoilInletNodeName = mixedAirNodeName;
+    } else if( airInletNodeName ) {
       coolingCoilInletNodeName = airInletNodeName.get();
     }
 

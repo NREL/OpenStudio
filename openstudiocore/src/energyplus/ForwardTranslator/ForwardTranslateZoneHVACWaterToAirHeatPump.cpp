@@ -60,8 +60,8 @@
 #include <utilities/idd/Coil_Heating_Fuel_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Electric_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Water_FieldEnums.hxx>
-
 #include "../../utilities/idd/IddEnums.hpp"
+#include "../../utilities/math/FloatCompare.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
@@ -98,6 +98,28 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACWaterToAirHeatPum
 
   std::string oaNodeName = baseName + " OA Node";
 
+  auto translateMixer = [&]() {
+    auto t_airLoopHVAC = modelObject.airLoopHVAC();
+    if( t_airLoopHVAC ) {
+      return false;
+    }
+
+    bool zeroOA = false;
+    if( (value = modelObject.outdoorAirFlowRateDuringCoolingOperation()) ) {
+      zeroOA = equal(value.get(),0.0);
+    }
+    if( (value = modelObject.outdoorAirFlowRateDuringHeatingOperation()) ) {
+      zeroOA = (zeroOA && equal(value.get(),0.0));
+    }
+    if( (value = modelObject.outdoorAirFlowRateWhenNoCoolingorHeatingisNeeded()) ) {
+      zeroOA = (zeroOA && equal(value.get(),0.0));
+    }
+
+    if( zeroOA ) return false;
+
+    return true;
+  };
+
   // AvailabilityScheduleName
   if( boost::optional<Schedule> schedule = modelObject.availabilitySchedule() )
   {
@@ -106,8 +128,6 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACWaterToAirHeatPum
       idfObject.setString(ZoneHVAC_WaterToAirHeatPumpFields::AvailabilityScheduleName,_schedule->name().get());
     }
   }
-
-  auto t_airLoopHVAC = modelObject.airLoopHVAC();
 
   // AirInletNodeName
   boost::optional<std::string> airInletNodeName;
@@ -136,7 +156,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACWaterToAirHeatPum
   }
 
   // Outdoor Air Mixer
-  if( ! t_airLoopHVAC ) {
+  if( translateMixer() ) {
     std::string oaMixerName = baseName + " OA Mixer";  
 
     IdfObject _outdoorAirMixer(IddObjectType::OutdoorAir_Mixer);
@@ -231,9 +251,12 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACWaterToAirHeatPum
 
   if( boost::optional<IdfObject> _supplyAirFan = translateAndMapModelObject(supplyAirFan) )
   {
-    std::string fanInletNodeName = mixedAirNodeName;
-    if( t_airLoopHVAC && airInletNodeName ) {
-     fanInletNodeName = airInletNodeName.get();
+    std::string fanInletNodeName;
+
+    if( translateMixer() ) {
+      fanInletNodeName = mixedAirNodeName;
+    } else if( airInletNodeName ) {
+      fanInletNodeName = airInletNodeName.get();
     }
 
     idfObject.setString(ZoneHVAC_WaterToAirHeatPumpFields::SupplyAirFanObjectType,_supplyAirFan->iddObject().name() );
