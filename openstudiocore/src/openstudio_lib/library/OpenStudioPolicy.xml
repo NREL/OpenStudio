@@ -112,7 +112,6 @@
     <rule IddField="Heating Coil Name" Access="HIDDEN"/>
     <rule IddField="Cooling Coil Name" Access="HIDDEN"/>
     <rule IddField="Supplemental Heating Coil Name" Access="HIDDEN"/>
-    <rule IddField="Fan Placement" Access="HIDDEN"/>
     <rule IddField="Outdoor Dry-Bulb Temperature Sensor Node Name" Access="HIDDEN"/>
     <rule IddField="Availability Manager List Name" Access="HIDDEN"/>
   </POLICY>
