@@ -93,7 +93,6 @@
     <rule IddField="Heating Coil Name" Access="HIDDEN"/>
     <rule IddField="Cooling Coil Name" Access="HIDDEN"/>
     <rule IddField="Supplemental Heating Coil Name" Access="HIDDEN"/>
-    <rule IddField="Fan Placement" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_ZoneHVAC_PackagedTerminalAirConditioner">
     <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
