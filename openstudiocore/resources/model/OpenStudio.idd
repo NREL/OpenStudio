@@ -9621,10 +9621,50 @@ OS:AirLoopHVAC:UnitarySystem,
        \type object-list
        \object-list ConnectionNames
        \note Enter the name of the heat recovery water outlet node if plant water loop connections are present.
-  A23; \field Design Specification Multispeed Heat Pump Object Name
+  A23; \field Design Specification Multispeed Object Name
        \type object-list
        \object-list UnitarySystemPerformaceNames
        \note Enter the name of the performance specification object used to describe the multispeed coil.
+
+OS:UnitarySystemPerformance:Multispeed,
+       \memo The UnitarySystemPerformance object is used to specify the air flow ratio at each
+       \memo operating speed. This object is primarily used for multispeed DX and water coils to allow
+       \memo operation at alternate flow rates different from those specified in the coil object.
+       \extensible:2 - repeat last two fields, remembering to remove ; from "inner" fields.
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \reference UnitarySystemPerformaceNames
+  A3 , \field Single Mode Operation
+       \type choice
+       \key Yes
+       \key No
+       \default No
+       \note Controls coil operation during each HVAC timestep. 
+       \note This choice does not apply to speed 1 operation.
+       \note Yes = operate at the highest speed possible without exceeding the current load.
+       \note No = allow operation at the average of two adjacent speeds to match the current load.
+  N1 , \field Heating Speed 1 Supply Air Flow Ratio
+       \required-field
+       \type real
+       \autosizable
+       \minimum> 0
+       \begin-extensible
+       \note Used only for Multi speed coils
+       \note Enter the lowest operating supply air flow ratio during heating
+       \note operation or specify autosize. This value is the ratio of air flow
+       \note at this speed to the maximum air flow rate.
+  N2 ; \field Cooling Speed 1 Supply Air Flow Ratio
+       \required-field
+       \type real
+       \autosizable
+       \minimum> 0
+       \note Used only for Multi speed coils
+       \note Enter the lowest operating supply air flow ratio during cooling
+       \note operation or specify autosize. This value is the ratio of air flow
+       \note at this speed to the maximum air flow rate.
 
 OS:AirLoopHVAC:ZoneMixer,
        \memo Mix N inlet air streams into one (currently 50 per air loop, but extensible).  Node names cannot
@@ -18935,11 +18975,16 @@ OS:PlantLoop,
        \default Water
        \key Water
        \key Steam
-       \key UserDefinedFluidType
+       \key PropyleneGlycol
+       \key EthyleneGlycol
+  N1,  \field Glycol Concentration
+       \type integer
+       \minimum 0
+       \maximum 100
+       \note Only used with either "PropyleneGlycol" or "EthyleneGlycol"
   A4, \field User Defined Fluid Type
-       \note This field is only required when Fluid Type is UserDefinedFluidType
-       \type object-list
-       \object-list FluidAndGlycolNames
+       \note This field is not used.
+       \type alpha
   A5, \field Plant Equipment Operation Heating Load
        \type object-list
        \object-list ControlSchemeList
@@ -18953,61 +18998,61 @@ OS:PlantLoop,
        \type object-list
        \required-field
        \object-list Node
-  N1, \field Maximum Loop Temperature
+  N2, \field Maximum Loop Temperature
        \type real
        \units C
        \default 100.0
-  N2, \field Minimum Loop Temperature
+  N3, \field Minimum Loop Temperature
        \type real
        \units C
        \default 0.0
-  N3, \field Maximum Loop Flow Rate
+  N4, \field Maximum Loop Flow Rate
        \type real
        \autosizable
        \units m3/s
        \ip-units gal/min
        \minimum 0
        \default autosize
-  N4, \field Minimum Loop Flow Rate
+  N5, \field Minimum Loop Flow Rate
        \type real
        \units m3/s
        \ip-units gal/min
        \default 0.0
-  N5, \field Plant Loop Volume
+  N6, \field Plant Loop Volume
        \type real
        \autocalculatable
        \units m3
        \ip-units gal
        \minimum 0
        \default autocalculate
-  A8, \field Plant Side Inlet Node Name
+  A9, \field Plant Side Inlet Node Name
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A9, \field Plant Side Outlet Node Name
+  A10, \field Plant Side Outlet Node Name
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A10, \field Plant Side Branch List Name
+  A11, \field Plant Side Branch List Name
        \type object-list
        \required-field
        \object-list BranchLists
-  A11, \field Demand Side Inlet Node Name
+  A12, \field Demand Side Inlet Node Name
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A12, \field Demand Side Outlet Node Name
+  A13, \field Demand Side Outlet Node Name
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A13, \field Demand Side Branch List Name
+  A14, \field Demand Side Branch List Name
        \type object-list
        \required-field
        \object-list BranchLists
-  A14, \field Demand Side Connector List Name
+  A15, \field Demand Side Connector List Name
        \type object-list
        \object-list ConnectorLists
-  A15, \field Load Distribution Scheme
+  A16, \field Load Distribution Scheme
        \type choice
        \required-field
         \key Optimal
@@ -19015,15 +19060,15 @@ OS:PlantLoop,
         \key UniformLoad
         \key UniformPLR
         \key SequentialUniformPLR
-  A16, \field Availability Manager Name
+  A17, \field Availability Manager Name
        \type object-list
        \object-list SystemAvailabilityManagers
-  A17, \field Plant Loop Demand Calculation Scheme
+  A18, \field Plant Loop Demand Calculation Scheme
        \type choice
        \default SingleSetpoint
        \key SingleSetpoint
        \key DualSetpointDeadband
-  A18, \field Common Pipe Simulation
+  A19, \field Common Pipe Simulation
        \note Specifies a primary-secondary loop configuration. The plant side is the
        \note primary loop, and the demand side is the secondary loop.
        \note A secondary supply pump is required on the demand side.
@@ -19037,22 +19082,22 @@ OS:PlantLoop,
        \key CommonPipe
        \key TwoWayCommonPipe
        \key None
-  A19, \field Pressure Simulation Type
+  A20, \field Pressure Simulation Type
        \type choice
        \default None
        \key PumpPowerCorrection
        \key LoopFlowCorrection
        \key None
-  A20, \field Plant Equipment Operation Heating Load Schedule
+  A21, \field Plant Equipment Operation Heating Load Schedule
        \type object-list
        \object-list ScheduleNames
-  A21, \field Plant Equipment Operation Cooling Load Schedule
+  A22, \field Plant Equipment Operation Cooling Load Schedule
        \type object-list
        \object-list ScheduleNames
-  A22, \field Primary Plant Equipment Operation Scheme Schedule
+  A23, \field Primary Plant Equipment Operation Scheme Schedule
        \type object-list
        \object-list ScheduleNames
-  A23; \field Component Setpoint Operation Scheme Schedule
+  A24; \field Component Setpoint Operation Scheme Schedule
        \type object-list
        \object-list ScheduleNames
 

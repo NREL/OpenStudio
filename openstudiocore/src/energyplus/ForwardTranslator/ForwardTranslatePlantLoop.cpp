@@ -121,6 +121,7 @@
 #include <utilities/idd/Sizing_Plant_FieldEnums.hxx>
 #include <utilities/idd/AirTerminal_SingleDuct_ConstantVolume_CooledBeam_FieldEnums.hxx>
 #include <utilities/idd/ZoneHVAC_AirDistributionUnit_FieldEnums.hxx>
+#include <utilities/idd/FluidProperties_Name_FieldEnums.hxx>
 #include <utilities/idd/AvailabilityManagerAssignmentList_FieldEnums.hxx>
 #include "../../utilities/core/Assert.hpp"
 
@@ -398,7 +399,22 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
 
   if( (s = plantLoop.fluidType()) )
   {
-    idfObject.setString(PlantLoopFields::FluidType,s.get());
+    if (istringEqual(s.get(),"PropyleneGlycol") or istringEqual(s.get(),"EthyleneGlycol")) {
+      idfObject.setString(PlantLoopFields::FluidType,"UserDefinedFluidType");
+      boost::optional<int> gc = plantLoop.glycolConcentration();
+      if ( gc ) {
+        boost::optional<IdfObject> fluidProperties = createFluidProperties(s.get(), gc.get());
+        if (fluidProperties) {
+          boost::optional<std::string> fluidPropertiesName = fluidProperties->getString(FluidProperties_NameFields::FluidName,true);
+          if (fluidPropertiesName) {
+            idfObject.setString(PlantLoopFields::UserDefinedFluidType,fluidPropertiesName.get());
+          }
+        }
+      }
+
+    } else {
+      idfObject.setString(PlantLoopFields::FluidType,s.get());
+    }
   }
 
   // Loop Temperature Setpoint Node Name

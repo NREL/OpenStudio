@@ -77,7 +77,11 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
 
   std::string fluidType();
 
-  void setFluidType( const std::string & value );
+  bool setFluidType( const std::string & value );
+
+  void setGlycolConcentration(int glycolConcentration);
+
+  int glycolConcentration() const;
 
   double maximumLoopTemperature();
 
