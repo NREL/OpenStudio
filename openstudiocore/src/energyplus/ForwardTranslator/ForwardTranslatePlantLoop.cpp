@@ -399,7 +399,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
 
   if( (s = plantLoop.fluidType()) )
   {
-    if (istringEqual(s.get(),"PropyleneGlycol") or istringEqual(s.get(),"EthyleneGlycol")) {
+    if (istringEqual(s.get(),"PropyleneGlycol") || istringEqual(s.get(),"EthyleneGlycol")) {
       idfObject.setString(PlantLoopFields::FluidType,"UserDefinedFluidType");
       boost::optional<int> gc = plantLoop.glycolConcentration();
       if ( gc ) {
