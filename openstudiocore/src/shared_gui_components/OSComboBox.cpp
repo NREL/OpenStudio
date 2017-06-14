@@ -180,6 +180,7 @@ OSComboBox2::OSComboBox2( QWidget * parent, bool editable )
 
 OSComboBox2::~OSComboBox2()
 {
+  unbind();
 }
 
 bool OSComboBox2::event( QEvent * e )
