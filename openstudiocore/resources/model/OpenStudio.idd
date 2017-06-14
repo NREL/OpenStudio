@@ -21827,7 +21827,7 @@ OS:ZoneHVAC:IdealLoadsAirSystem,
        \default 0.65
        
 OS:ZoneHVAC:FourPipeFanCoil,
-        \min-fields 24
+        \min-fields 25
    A1 , \field Handle
         \type handle
         \required-field
@@ -21846,6 +21846,8 @@ OS:ZoneHVAC:FourPipeFanCoil,
         \key CyclingFan
         \key VariableFanVariableFlow
         \key VariableFanConstantFlow
+        \key MultiSpeedFan
+        \key ASHRAE90VariableFan
    N1 , \field Maximum Supply Air Flow Rate
         \required-field
         \autosizable
@@ -21920,10 +21922,29 @@ OS:ZoneHVAC:FourPipeFanCoil,
         \default 0.0
         \units m3/s
         \ip-units gal/min
-   N10; \field Heating Convergence Tolerance
+   N10, \field Heating Convergence Tolerance
         \type real
         \minimum> 0.0
         \default 0.001       
+   A13, \field Supply Air Fan Operating Mode Schedule Name
+        \type object-list
+        \object-list ScheduleNames
+   N11, \field Minimum Supply Air Temperature in Cooling Mode
+        \note For Capacity Control Method = ASHRAE90VariableFan, enter the minimum air temperature in cooling mode.
+        \note Leave this field blank or enter 0 to control to the zone load per ASHRAE 90.1. In this case, a zone sizing simulation is required.
+        \type real
+        \units C
+        \minimum 0.0
+        \autosizable
+        \required-field
+   N12; \field Maximum Supply Air Temperature in Heating Mode
+        \note For Capacity Control Method = ASHRAE90VariableFan, enter the maximum air temperature in heating mode.
+        \note Leave this field blank or enter 0 to control to the zone load per ASHRAE 90.1. In this case, a zone sizing simulation is required.
+        \type real
+        \units C
+        \minimum 0.0
+        \autosizable
+        \required-field
 
 OS:ZoneHVAC:LowTemperatureRadiant:ConstantFlow,
         \min-fields 15

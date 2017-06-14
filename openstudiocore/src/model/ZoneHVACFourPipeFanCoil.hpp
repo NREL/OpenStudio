@@ -158,6 +158,16 @@ class MODEL_API ZoneHVACFourPipeFanCoil : public ZoneHVACComponent
 
   bool isHeatingConvergenceToleranceDefaulted() const;
 
+  boost::optional<Schedule> supplyAirFanOperatingModeSchedule() const;
+
+  bool isMinimumSupplyAirTemperatureInCoolingModeAutosized() const;
+
+  boost::optional<double> minimumSupplyAirTemperatureInCoolingMode() const;
+  
+  bool isMaximumSupplyAirTemperatureInHeatingModeAutosized() const;
+
+  boost::optional<double> maximumSupplyAirTemperatureInHeatingMode() const;
+
   //@}
   /** @name Setters */
   //@{
@@ -239,6 +249,21 @@ class MODEL_API ZoneHVACFourPipeFanCoil : public ZoneHVACComponent
   bool setHeatingConvergenceTolerance(const Quantity& heatingConvergenceTolerance);
 
   void resetHeatingConvergenceTolerance();
+
+  /** Sets the supply air fan operating mode schedule. Values of zero indicate that the fan 
+   *  cycles on and off with the active (heating or cooling) coil. Other values operate the 
+   *  fan continuously. */
+  bool setSupplyAirFanOperatingModeSchedule(Schedule& schedule);
+
+  void resetSupplyAirFanOperatingModeSchedule();
+
+  void autosizeMinimumSupplyAirTemperatureInCoolingMode();
+
+  bool setMinimumSupplyAirTemperatureInCoolingMode(double minimumSupplyAirTemperatureInCoolingMode);
+
+  void autosizeMaximumSupplyAirTemperatureInHeatingMode();
+
+  bool setMaximumSupplyAirTemperatureInHeatingMode(double maximumSupplyAirTemperatureInHeatingMode);
 
   //@}
   /** @name Other */
