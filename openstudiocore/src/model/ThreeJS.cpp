@@ -665,16 +665,6 @@ namespace openstudio
         std::string outsideBoundaryConditionObjectName = userData.outsideBoundaryConditionObjectName();
         std::string outsideBoundaryConditionObjectHandle = userData.outsideBoundaryConditionObjectHandle();
 
-        if (spaceName.empty()){
-          spaceName = "Default Space";
-        }
-
-        boost::optional<Space> space = model.getConcreteModelObjectByName<Space>(spaceName);
-        if (!space){
-          space = Space(model);
-          space->setName(spaceName);
-        }
-
         boost::optional<ThermalZone> thermalZone = model.getConcreteModelObjectByName<ThermalZone>(thermalZoneName);
         if (!thermalZone && !thermalZoneName.empty()){
           thermalZone = ThermalZone(model);
@@ -702,6 +692,16 @@ namespace openstudio
         // to set handles we may have to create and add idf objects
 
         if (istringEqual(surfaceType, "Wall") || istringEqual(surfaceType, "Floor") || istringEqual(surfaceType, "RoofCeiling")){
+
+          if (spaceName.empty()){
+            spaceName = "Default Space";
+          }
+
+          boost::optional<Space> space = model.getConcreteModelObjectByName<Space>(spaceName);
+          if (!space){
+            space = Space(model);
+            space->setName(spaceName);
+          }
 
           OS_ASSERT(space);
 
