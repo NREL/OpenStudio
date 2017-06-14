@@ -127,9 +127,9 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorFuelCell) {
   // check default power module curve values
   Curve curve = fCPM.efficiencyCurve();
   CurveQuadratic curveQ = curve.cast<CurveQuadratic>();
-  EXPECT_EQ(1, curveQ.coefficient1Constant());
-  EXPECT_EQ(0, curveQ.coefficient2x());
-  EXPECT_EQ(0, curveQ.coefficient3xPOW2());
+  EXPECT_EQ(0.642388, curveQ.coefficient1Constant());
+  EXPECT_EQ(-0.0001619, curveQ.coefficient2x());
+  EXPECT_EQ(2.26e-008, curveQ.coefficient3xPOW2());
   EXPECT_EQ("Annex42", fCPM.efficiencyCurveMode());
 
 
