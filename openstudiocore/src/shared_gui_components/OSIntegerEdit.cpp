@@ -56,6 +56,7 @@ OSIntegerEdit2::OSIntegerEdit2( QWidget * parent )
 
 OSIntegerEdit2::~OSIntegerEdit2()
 {
+  unbind();
 }
 
 void OSIntegerEdit2::bind(model::ModelObject& modelObject,

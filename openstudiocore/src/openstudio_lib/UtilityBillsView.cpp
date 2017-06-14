@@ -136,6 +136,7 @@ UtilityBillsInspectorView::UtilityBillsInspectorView(const model::Model & model,
 
 UtilityBillsInspectorView::~UtilityBillsInspectorView()
 {
+  detach();
 }
 
 boost::optional<QString> UtilityBillsInspectorView::runPeriodDates()
