@@ -80,6 +80,7 @@
 #include <utilities/idd/Lights_FieldEnums.hxx>
 #include <utilities/idd/OS_Schedule_Compact_FieldEnums.hxx>
 #include <utilities/idd/Schedule_Compact_FieldEnums.hxx>
+#include <utilities/idd/ZoneCapacitanceMultiplier_ResearchSpecial_FieldEnums.hxx>
 #include <utilities/idd/Output_Variable_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
@@ -680,9 +681,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorTest_TranslateZoneCapacitanceMultipli
   ASSERT_EQ(1u, workspace.numObjectsOfType(IddObjectType::ZoneCapacitanceMultiplier_ResearchSpecial));
 
   IdfObject zcmidf = workspace.getObjectsByType(IddObjectType::ZoneCapacitanceMultiplier_ResearchSpecial)[0];
-  EXPECT_FLOAT_EQ(zcmidf.getDouble(0).get(), 2.0);
-  EXPECT_FLOAT_EQ(zcmidf.getDouble(1).get(), 3.0);
-  EXPECT_FLOAT_EQ(zcmidf.getDouble(2).get(), 4.0);
+  EXPECT_FLOAT_EQ(zcmidf.getDouble(ZoneCapacitanceMultiplier_ResearchSpecialFields::TemperatureCapacityMultiplier).get(), 2.0);
+  EXPECT_FLOAT_EQ(zcmidf.getDouble(ZoneCapacitanceMultiplier_ResearchSpecialFields::HumidityCapacityMultiplier).get(), 3.0);
+  EXPECT_FLOAT_EQ(zcmidf.getDouble(ZoneCapacitanceMultiplier_ResearchSpecialFields::CarbonDioxideCapacityMultiplier).get(), 4.0);
 }
 
 
