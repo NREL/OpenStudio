@@ -187,13 +187,21 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
 
   virtual Node demandOutletNode() const override;
 
-  Mixer supplyMixer();
+  Mixer supplyMixer() const;
 
-  Splitter supplySplitter();
+  void setSupplyMixer(Mixer const & mixer);
+
+  Splitter supplySplitter() const;
+
+  void setSupplySplitter(Splitter const & splitter);
 
   Mixer demandMixer() override;
 
+  void setDemandMixer(Mixer const & mixer);
+
   Splitter demandSplitter() override;
+
+  void setDemandSplitter(Splitter const & splitter);
 
   bool addSupplyBranchForComponent( HVACComponent component );
 

@@ -42,20 +42,20 @@ TEST_F(ModelFixture,BoilerHotWater_BoilerHotWater)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
-     Model m; 
-     BoilerHotWater boiler(m); 
+  ASSERT_EXIT (
+  {
+     Model m;
+     BoilerHotWater boiler(m);
 
-     exit(0); 
+     exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
 
 TEST_F(ModelFixture,BoilerHotWater_connections)
 {
-  Model m; 
-  BoilerHotWater boiler(m); 
+  Model m;
+  BoilerHotWater boiler(m);
 
   Node inletNode(m);
   Node outletNode(m);
@@ -65,7 +65,7 @@ TEST_F(ModelFixture,BoilerHotWater_connections)
 
   ASSERT_TRUE( boiler.inletModelObject() );
   ASSERT_TRUE( boiler.outletModelObject() );
- 
+
   EXPECT_EQ( inletNode.handle(), boiler.inletModelObject()->handle() );
   EXPECT_EQ( outletNode.handle(), boiler.outletModelObject()->handle() );
 }

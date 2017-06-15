@@ -248,8 +248,8 @@ VersionTranslator::VersionTranslator()
   m_startVersions.push_back(VersionString("2.1.1"));
 }
 
-boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm, 
-                                                           ProgressBar* progressBar) 
+boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm,
+                                                           ProgressBar* progressBar)
 {
   LOG(Trace,"Loading model from " << toString(pathToOldOsm) << ".");
   if (getFileExtension(pathToOldOsm) != modelFileExtension()) {
@@ -258,7 +258,7 @@ boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::pat
         componentFileExtension() << "'s use loadComponent.");
     return boost::none;
   }
-  
+
   path wp = completePathToFile(pathToOldOsm,path(),modelFileExtension(),false);
   openstudio::filesystem::ifstream inFile(wp);
   if (inFile) {
@@ -280,13 +280,13 @@ boost::optional<model::Model> VersionTranslator::loadModelFromString(const std::
   return updateVersion(ss, false, progressBar);
 }
 
-boost::optional<model::Component> VersionTranslator::loadComponent(const openstudio::path& pathToOldOsc, 
-                                                                   ProgressBar* progressBar) 
+boost::optional<model::Component> VersionTranslator::loadComponent(const openstudio::path& pathToOldOsc,
+                                                                   ProgressBar* progressBar)
 {
   LOG(Trace,"Loading component from " << toString(pathToOldOsc) << ".");
   if (getFileExtension(pathToOldOsc) != componentFileExtension()) {
     LOG(Error,"Cannot loadComponent for path'" << toString(pathToOldOsc)
-        << "'. Extension must be '" << componentFileExtension() 
+        << "'. Extension must be '" << componentFileExtension()
         << "'. For '" << modelFileExtension() << "'s use loadModel.");
     return boost::none;
   }
@@ -359,7 +359,7 @@ void VersionTranslator::setAllowNewerVersions(bool allowNewerVersions)
   m_allowNewerVersions = allowNewerVersions;
 }
 
-boost::optional<model::Model> VersionTranslator::updateVersion(std::istream& is, 
+boost::optional<model::Model> VersionTranslator::updateVersion(std::istream& is,
                                                                bool isComponent,
                                                                ProgressBar* progressBar) {
   m_originalVersion = VersionString("0.0.0");
@@ -472,7 +472,7 @@ void VersionTranslator::initializeMap(std::istream& is) {
   }
   if (currentVersion > VersionString(openStudioVersion())) {
     if (m_allowNewerVersions){
-      // if currentVersion is just one ahead, may be a developer using the cloud. 
+      // if currentVersion is just one ahead, may be a developer using the cloud.
       // let it pass as if currentVersion == openStudioVersion(), with a warning
       if (VersionString(openStudioVersion()).isNextVersion(currentVersion)) {
         LOG(Warn,"Version extracted from file '" << currentVersion.str() << "' is one "
@@ -1547,12 +1547,12 @@ std::string VersionTranslator::update_0_9_5_to_0_9_6(const IdfFile& idf_0_9_5, c
   // if multiple OS:RunPeriod objects remove them all
   bool skipRunPeriods = false;
   unsigned numRunPeriods = 0;
-  for (const IdfObject& object : idf_0_9_5.objects()) 
+  for (const IdfObject& object : idf_0_9_5.objects())
   {
     if( object.iddObject().name() == "OS:RunPeriod" )
     {
       ++numRunPeriods;
-    
+
       if (numRunPeriods > 1)
       {
         LOG(Warn, "Multiple OS:RunPeriod objects are no longer supported, these have been removed");
@@ -1658,7 +1658,7 @@ std::stringstream ss;
       ss << object;
     }
   }
-    
+
   return ss.str();
 }
 
@@ -1747,7 +1747,7 @@ std::string VersionTranslator::update_0_11_0_to_0_11_1(const IdfFile& idf_0_11_0
 
 std::string VersionTranslator::update_0_11_1_to_0_11_2(const IdfFile& idf_0_11_1, const IddFileAndFactoryWrapper& idd_0_11_2)
 {
-  // This version update has two things to do.  
+  // This version update has two things to do.
   // Make updates for new control related objects.
   // Make updates for component costs.
 
@@ -1848,7 +1848,7 @@ std::string VersionTranslator::update_0_11_1_to_0_11_2(const IdfFile& idf_0_11_1
       newMechVentController.setString(2,alwaysOnSchedule->getString(0).get());
 
       newOAController.setString(20,newMechVentController.getString(0).get());
-      
+
 
       ss << newOAController;
 
@@ -2147,9 +2147,9 @@ std::string VersionTranslator::update_0_11_5_to_0_11_6(const IdfFile& idf_0_11_5
             if( (inletPortListString && object2Handle.get() == inletPortListString.get())
                 ||
                 (exhaustPortListString && object2Handle.get() == exhaustPortListString.get()) ) {
-              
+
               // Make the required change to OS:PortList
-              
+
               IdfObject newPortList(idd_0_11_6.getObject("OS:PortList").get());
 
               boost::optional<std::string> s;
@@ -2161,7 +2161,7 @@ std::string VersionTranslator::update_0_11_5_to_0_11_6(const IdfFile& idf_0_11_5
               if( (s = object2.getString(1)) ) {
                 newPortList.setString(1,s.get());
               }
-              
+
               if( (s = object.getString(0)) ) {
                 newPortList.setString(2,s.get());
               }
@@ -2178,7 +2178,7 @@ std::string VersionTranslator::update_0_11_5_to_0_11_6(const IdfFile& idf_0_11_5
 
               ss << newPortList;
 
-            } 
+            }
 
           }
 
@@ -2298,7 +2298,7 @@ std::string VersionTranslator::update_1_0_2_to_1_0_3(const IdfFile& idf_1_0_2, c
       ss << object;
     }
   }
-    
+
   return ss.str();
 }
 
@@ -2375,7 +2375,7 @@ std::string VersionTranslator::update_1_2_2_to_1_2_3(const IdfFile& idf_1_2_2, c
       bool test = newBuildingObject.setString(1, *s);
       OS_ASSERT(test);
     }
-    
+
     // Building Sector Type
     s = buildingObject->getString(2);
     if (s){
@@ -2756,7 +2756,7 @@ std::string VersionTranslator::update_1_8_3_to_1_8_4(const IdfFile& idf_1_8_3, c
         ss << object;
       } else {
         m_deprecated.push_back(object);
-      } 
+      }
     } else {
       ss << object;
     }
@@ -2890,7 +2890,7 @@ std::string VersionTranslator::update_1_9_2_to_1_9_3(const IdfFile& idf_1_9_2, c
       }
       ss << newObject;
       m_refactored.push_back(std::pair<IdfObject, IdfObject>(object, newObject));
-    
+
     }else if (iddname == "OS:ZoneAirMassFlowConservation") {
       auto iddObject = idd_1_9_3.getObject("OS:ZoneAirMassFlowConservation");
       OS_ASSERT(iddObject);
@@ -2982,7 +2982,7 @@ std::string VersionTranslator::update_1_9_4_to_1_9_5(const IdfFile& idf_1_9_4, c
 
       // Figure out value of new field j = 2
       // This is the handle of the associated water coil
-      // Past versions made this connection by matching the controller actuator node 
+      // Past versions made this connection by matching the controller actuator node
       // to the coil water inlet node.
       // To do this version translation we have to track down that node
       if( auto actuatorNodeHandle = object.getString(6) ) {
@@ -3123,7 +3123,7 @@ std::string VersionTranslator::update_1_10_1_to_1_10_2(const IdfFile& idf_1_10_1
           ss << newThermostat;
           m_new.push_back(newThermostat);
           auto newHandle = newThermostat.getString(0).get();
-          referencingZone.setString(19,newHandle); 
+          referencingZone.setString(19,newHandle);
         }
       }
       ss << object;
@@ -3168,7 +3168,7 @@ std::string VersionTranslator::update_1_10_1_to_1_10_2(const IdfFile& idf_1_10_1
     }
   }
 
-  // Reintroduce m_cbeccSizingObjects 
+  // Reintroduce m_cbeccSizingObjects
   for( auto const & sizingObject : m_cbeccSizingObjects ) {
     auto iddObject = idd_1_10_2.getObject("OS:Sizing:Zone");
     OS_ASSERT(iddObject);
@@ -3221,7 +3221,7 @@ std::string VersionTranslator::update_1_10_5_to_1_10_6(const IdfFile& idf_1_10_5
              newObject.setString(i,s.get());
            }
         } else {
-           
+
         }
       }
 
@@ -3295,7 +3295,7 @@ std::string VersionTranslator::update_1_11_4_to_1_11_5(const IdfFile& idf_1_11_4
 
       size_t newi = 0;
       for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
-        
+
         if( i == 6 ) {
           newObject.setDouble(i,773.3);
           newi = i + 1;
