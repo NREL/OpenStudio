@@ -3487,6 +3487,22 @@ std::string VersionTranslator::update_2_1_1_to_2_1_2(const IdfFile& idf_2_1_1, c
 
       m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
       ss << newObject;
+    } else if (iddname == "OS:ZoneHVAC:FourPipeFanCoil") {
+      auto iddObject = idd_2_1_2.getObject("OS:ZoneHVAC:FourPipeFanCoil");
+      IdfObject newObject(iddObject.get());
+
+      size_t newi = 0;
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        if( auto s = object.getString(i) ) {
+          newObject.setString(newi,s.get());
+        }
+        ++newi;
+      }
+      newObject.setString(23,"Autosize");
+      newObject.setString(24,"Autosize");
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
     } else {
       ss << object;
     }

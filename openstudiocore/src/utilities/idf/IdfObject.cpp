@@ -693,8 +693,9 @@ namespace detail {
   {
     unsigned groupSize = m_iddObject.properties().numExtensible;
     unsigned n = numFields();
-    IdfObject_ImplPtr p;
+    IdfObject_ImplPtr p = nullptr;
     IdfExtensibleGroup result(p,n);
+
     if (!values.empty() && (values.size() != groupSize)) { return result; }
 
     StringVector wValues = values; // copy so can resize empty vector

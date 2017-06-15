@@ -85,6 +85,9 @@ class MEASURE_API OSRunner {
    *  run method.) */
   WorkflowStepResult result() const;
 
+  /** Returns true if the simulation has been halted. */
+  bool halted() const;
+
   /** Returns a copy of the last Model generated in the workflow if available. */
   boost::optional<openstudio::model::Model> lastOpenStudioModel() const;
 
@@ -184,6 +187,10 @@ class MEASURE_API OSRunner {
   virtual void registerValue(const std::string& name,
                              const std::string& displayName,
                              const std::string& value);
+
+  /** Halts the simulation with the provided completed status, "Success", "Fail", "Invalid", or "Cancel". 
+   *  Does not set the current measure's step result. */
+  virtual void haltWorkflow(const std::string& completedStatus = "Cancel");
 
   /** Creates a progress bar with the text label. Base class implementation does nothing. */
   virtual void createProgressBar(const std::string& text) const;
@@ -321,6 +328,8 @@ class MEASURE_API OSRunner {
   bool m_streamsCaptured;
   std::string m_unitsPreference;
   std::string m_languagePreference;
+
+  bool m_halted;
 
   // current data
   WorkflowStepResult m_result;

@@ -142,9 +142,9 @@ TEST_F(ModelFixture, FuelCellStackCooler_addToNode) {
   EXPECT_TRUE(testObject.addToNode(demandOutletNode));
   EXPECT_EQ((unsigned)7, plantLoop2.demandComponents().size());
 
-  GeneratorFuelCellStackCooler testObjectClone = testObject.clone(m).cast<GeneratorFuelCellStackCooler>();
-  supplyOutletNode = plantLoop.supplyOutletNode();
+  //GeneratorFuelCellStackCooler testObjectClone = testObject.clone(m).cast<GeneratorFuelCellStackCooler>();
+  //supplyOutletNode = plantLoop.supplyOutletNode();
 
-  EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
-  EXPECT_EQ((unsigned)7, plantLoop.supplyComponents().size());
+  //EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
+  //EXPECT_EQ((unsigned)7, plantLoop.supplyComponents().size());
 }
