@@ -119,7 +119,7 @@
 #include <QWidget>
 #include <QProcess>
 #include <QTcpServer>
-#include <QTConcurrent>
+#include <QtConcurrent>
 
 #include <OpenStudio.hxx>
 #include <utilities/idd/IddEnums.hxx>
