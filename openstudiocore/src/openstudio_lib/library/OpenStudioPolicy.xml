@@ -921,6 +921,7 @@
     <rule IddField="Tank" Access="LOCKED"/>
     <rule IddField="DX Coil" Access="LOCKED"/>
     <rule IddField="Fan" Access="LOCKED"/>
+  </POLICY>
   <POLICY IddObjectType="OS_WaterHeater_HeatPump_WrappedCondenser">
     <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
@@ -1548,7 +1549,7 @@
     <rule IddField="Minute" Access="LOCKED"/>
     <rule IddField="Value Until Time" Access="LOCKED"/>
   </POLICY>
-    <POLICY IddObjectType="OS_Schedule_Week">
+  <POLICY IddObjectType="OS_Schedule_Week">
     <rule IddField="Name" Access="LOCKED"/>
     <rule IddField="Schedule Rendering Name" Access="LOCKED"/>
     <rule IddField="Sunday Schedule:Day Name" Access="LOCKED"/>
@@ -1564,7 +1565,7 @@
     <rule IddField="CustomDay1 Schedule:Day Name" Access="LOCKED"/>
     <rule IddField="CustomDay2 Schedule:Day Name" Access="LOCKED"/>
   </POLICY>
-    <POLICY IddObjectType="OS_Schedule_Year">
+  <POLICY IddObjectType="OS_Schedule_Year">
     <rule IddField="Name" Access="LOCKED"/>
     <rule IddField="Schedule Type Limits Name" Access="LOCKED"/>
     <rule IddField="Month" Access="LOCKED"/>
