@@ -30,7 +30,7 @@
 #include "UnitarySystemPerformanceMultispeed_Impl.hpp"
 #include "ModelExtensibleGroup.hpp"
 
-#include <utilities/idd/iddFactory.hxx>
+#include <utilities/idd/IddFactory.hxx>
 
 #include <utilities/idd/OS_UnitarySystemPerformance_Multispeed_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
