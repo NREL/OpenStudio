@@ -182,8 +182,6 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv)
 
 void OpenStudioApp::onMeasureManagerAndLibraryReady() {
   if( m_buildCompLibWatcher.isFinished() && m_waitForMeasureManagerWatcher.isFinished() ) {
-    waitDialog()->hide();
-
     bool openedCommandLine = false;
 
     QStringList args = QApplication::arguments();
