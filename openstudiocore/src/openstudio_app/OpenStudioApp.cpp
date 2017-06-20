@@ -167,6 +167,10 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv)
   #endif
 
   waitDialog()->show();
+  // We are using the wait dialog to lock out the app so 
+  // use processEvents to make sure the dialog is up before we
+  // proceed to startMeasureManagerProcess
+  processEvents();
 
   // Non blocking
   startMeasureManagerProcess();
