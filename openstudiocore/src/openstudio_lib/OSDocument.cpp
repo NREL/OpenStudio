@@ -392,13 +392,6 @@ namespace openstudio {
       ":images/off_constructions_tab.png",
       ":images/disabled_constructions_tab.png");
 
-    // Geometry
-    m_mainWindow->addVerticalTabButton(GEOMETRY,
-      "Geometry",
-      ":images/on_geometry_tab.png",
-      ":images/off_geometry_tab.png",
-      ":images/disabled_geometry_tab.png");
-
     // Loads
     m_mainWindow->addVerticalTabButton(LOADS,
       "Loads",
@@ -412,6 +405,13 @@ namespace openstudio {
       ":images/on_space_types_tab.png",
       ":images/off_space_types_tab.png",
       ":images/disabled_space_types_tab.png");
+        
+    // Geometry
+    m_mainWindow->addVerticalTabButton(GEOMETRY,
+      "Geometry",
+      ":images/on_geometry_tab.png",
+      ":images/off_geometry_tab.png",
+      ":images/disabled_geometry_tab.png");
 
     // Facility
     m_mainWindow->addVerticalTabButton(FACILITY,
