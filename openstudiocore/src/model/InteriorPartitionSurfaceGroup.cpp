@@ -120,7 +120,7 @@ namespace detail {
   {
     Transformation transformation;
     if (this->space()){
-      transformation = this->space()->buildingTransformation() * this->transformation();
+      transformation = this->space()->transformation() * this->transformation();
     }else{
       transformation = this->transformation();
     }

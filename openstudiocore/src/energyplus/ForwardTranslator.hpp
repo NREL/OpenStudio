@@ -345,6 +345,7 @@ class ThermalStorageIceDetailed;
 class ThermalStorageChilledWaterStratified;
 class ThermostatSetpointDualSetpoint;
 class Timestep;
+class UnitarySystemPerformanceMultispeed;
 class Version;
 class WaterHeaterMixed;
 class WaterHeaterHeatPump;
@@ -1055,6 +1056,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateThermostatSetpointDualSetpoint( model::ThermostatSetpointDualSetpoint& tsds );
 
   boost::optional<IdfObject> translateTimestep( model::Timestep & modelObject );
+
+  boost::optional<IdfObject> translateUnitarySystemPerformanceMultispeed( model::UnitarySystemPerformanceMultispeed & modelObject );
 
   boost::optional<IdfObject> translateVersion( model::Version & modelObject );
 

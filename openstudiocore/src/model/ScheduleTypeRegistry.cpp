@@ -382,6 +382,7 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"ZoneHVACIdealLoadsAirSystem","Cooling Availability","coolingAvailabilitySchedule",false,"Availability",0.0,1.0},
     {"ZoneHVACFourPipeFanCoil","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"ZoneHVACFourPipeFanCoil","Outdoor Air","outdoorAirSchedule",true,"",0.0,1.0},
+    {"ZoneHVACFourPipeFanCoil","Supply Air Fan Operating Mode","supplyAirFanOperatingModeSchedule",false,"ControlMode",0.0,1.0},
     {"ZoneHVACLowTemperatureRadiantElectric","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"ZoneHVACLowTemperatureRadiantElectric","Heating Setpoint Temperature","heatingSetpointTemperature",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"ZoneHVACLowTempRadiantConstFlow","Availability","availabilitySchedule",false,"Availability",0.0,1.0},

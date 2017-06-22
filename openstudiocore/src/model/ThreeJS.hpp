@@ -43,6 +43,7 @@ namespace openstudio
     /// Triangulate surfaces if the ThreeJS representation will be used for display
     /// Do not triangulate surfaces if the ThreeJs representation will be translated back to a model
     MODEL_API ThreeScene modelToThreeJS(Model model, bool triangulateSurfaces);
+    MODEL_API ThreeScene modelToThreeJS(Model model, bool triangulateSurfaces, std::function<void(double)> updatePercentage);
     
     MODEL_API boost::optional<Model> modelFromThreeJS(const ThreeScene& scene);
 

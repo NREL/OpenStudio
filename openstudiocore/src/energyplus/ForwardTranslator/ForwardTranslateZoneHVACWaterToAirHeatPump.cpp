@@ -53,6 +53,7 @@
 #include <utilities/idd/ZoneHVAC_WaterToAirHeatPump_FieldEnums.hxx>
 #include <utilities/idd/OutdoorAir_Mixer_FieldEnums.hxx>
 #include <utilities/idd/Fan_OnOff_FieldEnums.hxx>
+#include <utilities/idd/Fan_ConstantVolume_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_WaterToAirHeatPump_EquationFit_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_WaterToAirHeatPump_EquationFit_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFit_FieldEnums.hxx>
@@ -60,8 +61,8 @@
 #include <utilities/idd/Coil_Heating_Fuel_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Electric_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Water_FieldEnums.hxx>
-
 #include "../../utilities/idd/IddEnums.hpp"
+#include "../../utilities/math/FloatCompare.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
@@ -98,6 +99,38 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACWaterToAirHeatPum
 
   std::string oaNodeName = baseName + " OA Node";
 
+  std::string airInletNodeName;
+  if( auto node = modelObject.inletNode() ) {
+    airInletNodeName = node->nameString();
+  }
+
+  std::string airOutletNodeName;
+  if( auto node = modelObject.outletNode() ) {
+    airOutletNodeName = node->nameString();
+  }
+
+  auto translateMixer = [&]() {
+    auto t_airLoopHVAC = modelObject.airLoopHVAC();
+    if( t_airLoopHVAC ) {
+      return false;
+    }
+
+    bool zeroOA = false;
+    if( (value = modelObject.outdoorAirFlowRateDuringCoolingOperation()) ) {
+      zeroOA = equal(value.get(),0.0);
+    }
+    if( (value = modelObject.outdoorAirFlowRateDuringHeatingOperation()) ) {
+      zeroOA = (zeroOA && equal(value.get(),0.0));
+    }
+    if( (value = modelObject.outdoorAirFlowRateWhenNoCoolingorHeatingisNeeded()) ) {
+      zeroOA = (zeroOA && equal(value.get(),0.0));
+    }
+
+    if( zeroOA ) return false;
+
+    return true;
+  };
+
   // AvailabilityScheduleName
   if( boost::optional<Schedule> schedule = modelObject.availabilitySchedule() )
   {
@@ -107,36 +140,14 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACWaterToAirHeatPum
     }
   }
 
-  auto t_airLoopHVAC = modelObject.airLoopHVAC();
-
   // AirInletNodeName
-  boost::optional<std::string> airInletNodeName;
-
-  if( boost::optional<Node> node = modelObject.inletNode() )
-  {
-    if( (s = node->name()) )
-    {
-      airInletNodeName = s;
-
-      idfObject.setString(ZoneHVAC_WaterToAirHeatPumpFields::AirInletNodeName,s.get());
-    }
-  }
+  idfObject.setString(ZoneHVAC_WaterToAirHeatPumpFields::AirInletNodeName,airInletNodeName);
 
   // AirOutletNodeName
-  boost::optional<std::string> airOutletNodeName;
-
-  if( boost::optional<Node> node = modelObject.outletNode() )
-  {
-    if( (s = node->name()) )
-    {
-      airOutletNodeName = s;
-
-      idfObject.setString(ZoneHVAC_WaterToAirHeatPumpFields::AirOutletNodeName,s.get());
-    }
-  }
+  idfObject.setString(ZoneHVAC_WaterToAirHeatPumpFields::AirOutletNodeName,airOutletNodeName);
 
   // Outdoor Air Mixer
-  if( ! t_airLoopHVAC ) {
+  if( translateMixer() ) {
     std::string oaMixerName = baseName + " OA Mixer";  
 
     IdfObject _outdoorAirMixer(IddObjectType::OutdoorAir_Mixer);
@@ -153,10 +164,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACWaterToAirHeatPum
 
     _outdoorAirMixer.setString(OutdoorAir_MixerFields::ReliefAirStreamNodeName,reliefAirNodeName);
 
-    if(airInletNodeName)
-    {
-      _outdoorAirMixer.setString(OutdoorAir_MixerFields::ReturnAirStreamNodeName,airInletNodeName.get());
-    }
+    _outdoorAirMixer.setString(OutdoorAir_MixerFields::ReturnAirStreamNodeName,airInletNodeName);
 
     // OutdoorAirMixerObjectType
     idfObject.setString(ZoneHVAC_WaterToAirHeatPumpFields::OutdoorAirMixerObjectType,
@@ -231,20 +239,45 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACWaterToAirHeatPum
 
   if( boost::optional<IdfObject> _supplyAirFan = translateAndMapModelObject(supplyAirFan) )
   {
-    std::string fanInletNodeName = mixedAirNodeName;
-    if( t_airLoopHVAC && airInletNodeName ) {
-     fanInletNodeName = airInletNodeName.get();
-    }
-
     idfObject.setString(ZoneHVAC_WaterToAirHeatPumpFields::SupplyAirFanObjectType,_supplyAirFan->iddObject().name() );
 
     idfObject.setString(ZoneHVAC_WaterToAirHeatPumpFields::SupplyAirFanName,_supplyAirFan->name().get());
 
-    if( _supplyAirFan->iddObject().type() == IddObjectType::Fan_OnOff )
-    {
-      _supplyAirFan->setString(Fan_OnOffFields::AirInletNodeName,fanInletNodeName);
-
-      _supplyAirFan->setString(Fan_OnOffFields::AirOutletNodeName,fanOutletNodeName);
+    if( istringEqual(modelObject.fanPlacement(),"BlowThrough") ) {
+      if( translateMixer() ) {
+        if( _supplyAirFan->iddObject().type() == IddObjectType::Fan_ConstantVolume )
+        {
+          _supplyAirFan->setString(Fan_ConstantVolumeFields::AirInletNodeName,mixedAirNodeName);
+          _supplyAirFan->setString(Fan_ConstantVolumeFields::AirOutletNodeName,fanOutletNodeName);
+        }
+        else if( _supplyAirFan->iddObject().type() == IddObjectType::Fan_OnOff )
+        {
+          _supplyAirFan->setString(Fan_OnOffFields::AirInletNodeName,mixedAirNodeName);
+          _supplyAirFan->setString(Fan_OnOffFields::AirOutletNodeName,fanOutletNodeName);
+        }
+      } else {
+        if( _supplyAirFan->iddObject().type() == IddObjectType::Fan_ConstantVolume )
+        {
+          _supplyAirFan->setString(Fan_ConstantVolumeFields::AirInletNodeName,airInletNodeName);
+          _supplyAirFan->setString(Fan_ConstantVolumeFields::AirOutletNodeName,fanOutletNodeName);
+        }
+        else if( _supplyAirFan->iddObject().type() == IddObjectType::Fan_OnOff )
+        {
+          _supplyAirFan->setString(Fan_OnOffFields::AirInletNodeName,airInletNodeName);
+          _supplyAirFan->setString(Fan_OnOffFields::AirOutletNodeName,fanOutletNodeName);
+        }
+      }
+    } else {
+      if( _supplyAirFan->iddObject().type() == IddObjectType::Fan_ConstantVolume )
+      {
+        _supplyAirFan->setString(Fan_ConstantVolumeFields::AirInletNodeName,heatingCoilOutletNodeName);
+        _supplyAirFan->setString(Fan_ConstantVolumeFields::AirOutletNodeName,fanOutletNodeName);
+      }
+      else if( _supplyAirFan->iddObject().type() == IddObjectType::Fan_OnOff )
+      {
+        _supplyAirFan->setString(Fan_OnOffFields::AirInletNodeName,heatingCoilOutletNodeName);
+        _supplyAirFan->setString(Fan_OnOffFields::AirOutletNodeName,fanOutletNodeName);
+      }
     }
   }
 
@@ -271,15 +304,27 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACWaterToAirHeatPum
 
   if( boost::optional<IdfObject> _coolingCoil = translateAndMapModelObject(coolingCoil) )
   {
+    std::string coolingCoilInletNodeName;
+
+    if( istringEqual(modelObject.fanPlacement(),"BlowThrough") ) {
+      coolingCoilInletNodeName = fanOutletNodeName;
+    } else {
+      if( translateMixer() ) {
+        coolingCoilInletNodeName = mixedAirNodeName;
+      } else {
+        coolingCoilInletNodeName = airInletNodeName;
+      }
+    }
+
     idfObject.setString(ZoneHVAC_WaterToAirHeatPumpFields::CoolingCoilObjectType,_coolingCoil->iddObject().name() );
 
     idfObject.setString(ZoneHVAC_WaterToAirHeatPumpFields::CoolingCoilName,_coolingCoil->name().get() );
 
     if( _coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_WaterToAirHeatPump_EquationFit) {
-      _coolingCoil->setString(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::AirInletNodeName,fanOutletNodeName);
+      _coolingCoil->setString(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::AirInletNodeName,coolingCoilInletNodeName);
       _coolingCoil->setString(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::AirOutletNodeName,coolingCoilOutletNodeName);
     } else if( _coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFit ) {
-      _coolingCoil->setString(Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFitFields::IndoorAirInletNodeName,fanOutletNodeName);
+      _coolingCoil->setString(Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFitFields::IndoorAirInletNodeName,coolingCoilInletNodeName);
       _coolingCoil->setString(Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFitFields::IndoorAirOutletNodeName,coolingCoilOutletNodeName);
     }
   }
@@ -317,25 +362,43 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACWaterToAirHeatPum
 
     idfObject.setString(ZoneHVAC_WaterToAirHeatPumpFields::SupplementalHeatingCoilName,_supplementalHeatingCoil->name().get() );
 
-    if( airOutletNodeName )
-    {
+    if( istringEqual(modelObject.fanPlacement(),"BlowThrough")  ) {
       if( _supplementalHeatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Fuel )
       {
         _supplementalHeatingCoil->setString(Coil_Heating_FuelFields::AirInletNodeName,heatingCoilOutletNodeName);
 
-        _supplementalHeatingCoil->setString(Coil_Heating_FuelFields::AirOutletNodeName,airOutletNodeName.get());
+        _supplementalHeatingCoil->setString(Coil_Heating_FuelFields::AirOutletNodeName,airOutletNodeName);
       }
       else if( _supplementalHeatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Electric )
       {
         _supplementalHeatingCoil->setString(Coil_Heating_ElectricFields::AirInletNodeName,heatingCoilOutletNodeName);
 
-        _supplementalHeatingCoil->setString(Coil_Heating_ElectricFields::AirOutletNodeName,airOutletNodeName.get());
+        _supplementalHeatingCoil->setString(Coil_Heating_ElectricFields::AirOutletNodeName,airOutletNodeName);
       }
       else if( _supplementalHeatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Water )
       {
         _supplementalHeatingCoil->setString(Coil_Heating_WaterFields::AirInletNodeName,heatingCoilOutletNodeName);
 
-        _supplementalHeatingCoil->setString(Coil_Heating_WaterFields::AirOutletNodeName,airOutletNodeName.get());
+        _supplementalHeatingCoil->setString(Coil_Heating_WaterFields::AirOutletNodeName,airOutletNodeName);
+      }
+    } else {
+      if( _supplementalHeatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Fuel )
+      {
+        _supplementalHeatingCoil->setString(Coil_Heating_FuelFields::AirInletNodeName,fanOutletNodeName);
+
+        _supplementalHeatingCoil->setString(Coil_Heating_FuelFields::AirOutletNodeName,airOutletNodeName);
+      }
+      else if( _supplementalHeatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Electric )
+      {
+        _supplementalHeatingCoil->setString(Coil_Heating_ElectricFields::AirInletNodeName,fanOutletNodeName);
+
+        _supplementalHeatingCoil->setString(Coil_Heating_ElectricFields::AirOutletNodeName,airOutletNodeName);
+      }
+      else if( _supplementalHeatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Water )
+      {
+        _supplementalHeatingCoil->setString(Coil_Heating_WaterFields::AirInletNodeName,fanOutletNodeName);
+
+        _supplementalHeatingCoil->setString(Coil_Heating_WaterFields::AirOutletNodeName,airOutletNodeName);
       }
     }
   }

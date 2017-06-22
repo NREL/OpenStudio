@@ -45,8 +45,8 @@ TEST_F(ModelFixture, FuelCellExhaustGasToWaterHeatExchanger) {
 
   GeneratorFuelCellExhaustGasToWaterHeatExchanger exhaustHX(model);
   EXPECT_EQ(0.0004, exhaustHX.heatRecoveryWaterMaximumFlowRate());
-  EXPECT_EQ("FixedEffectiveness", exhaustHX.heatExchangerCalculationMethod());
-  EXPECT_EQ(1.0, exhaustHX.method1HeatExchangerEffectiveness());
+  EXPECT_EQ("Condensing", exhaustHX.heatExchangerCalculationMethod());
+  //EXPECT_EQ(1.0, exhaustHX.method1HeatExchangerEffectiveness());
   ASSERT_FALSE(exhaustHX.exhaustOutletAirNode());
   //check set node
   Node airNode(model);

@@ -109,10 +109,10 @@ public:
   /** Increments current step, returns true if there is another step. */
   bool incrementStep();
 
-  /** Returns the completion status, "Success" or "Fail". */
+  /** Returns the completion status, "Success", "Fail", "Invalid", or "Cancel". */
   boost::optional<std::string> completedStatus() const;
 
-  /** Sets the completion status, "Success" or "Fail". */
+  /** Sets the completion status, "Success", "Fail", "Invalid", or "Cancel". */
   void setCompletedStatus(const std::string& status);
 
   /** Returns the time this WorkflowJSON was created at. */

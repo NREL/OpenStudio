@@ -49,7 +49,7 @@ TEST_F(ModelFixture, FuelCellInverter) {
   EXPECT_EQ("Constant",inverter.inverterEfficiencyCalculationMode());
   EXPECT_EQ(1.0,inverter.inverterEfficiency());
   boost::optional<CurveQuadratic> electricCurve = inverter.efficiencyFunctionofDCPowerCurve();
-  ASSERT_FALSE(electricCurve);
+  ASSERT_TRUE(electricCurve);
   inverter.setInverterEfficiency(0.5);
   EXPECT_EQ(0.5, inverter.inverterEfficiency());
   inverter.resetInverterEfficiency();

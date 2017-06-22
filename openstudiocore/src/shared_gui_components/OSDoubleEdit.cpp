@@ -56,6 +56,7 @@ OSDoubleEdit2::OSDoubleEdit2( QWidget * parent )
 
 OSDoubleEdit2::~OSDoubleEdit2()
 {
+  unbind();
 }
 
 void OSDoubleEdit2::bind(model::ModelObject& modelObject,

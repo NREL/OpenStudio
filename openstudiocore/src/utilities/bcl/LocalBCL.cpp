@@ -33,6 +33,7 @@
 #include "../core/Application.hpp"
 #include "../core/Assert.hpp"
 #include "../data/Attribute.hpp"
+#include "../time/DateTime.hpp"
 #include "../core/Path.hpp"
 #include "../core/PathHelpers.hpp"
 #include "../core/System.hpp"
@@ -322,15 +323,30 @@ namespace openstudio{
     QSqlQuery query(database);
     if (versionId.empty())
     {
+
+      boost::optional<DateTime> mostRecentModified;
+      boost::optional<BCLMeasure> mostRecentMeasure;
       query.exec(QString("SELECT version_id FROM Measures WHERE uid='%1'").arg(escape(uid)));
-      if (query.next())
+      while (query.next())
       {
         try{
-          return boost::optional<BCLMeasure>(toPath(m_libraryPath) / toPath(uid) / toPath(toString(query.value(0).toString())));
+          BCLMeasure measure(toPath(m_libraryPath) / toPath(uid) / toPath(toString(query.value(0).toString())));
+
+          boost::optional<DateTime> versionModified = measure.versionModified();
+          if (mostRecentModified){
+            if (versionModified && versionModified.get() > mostRecentModified.get()){
+              mostRecentModified = versionModified;
+              mostRecentMeasure = measure;
+            }
+          } else {
+            mostRecentModified = versionModified;
+            mostRecentMeasure = measure;
+          }
         }catch(const std::exception&){
         }
       }
-      return boost::none;
+
+      return mostRecentMeasure;
     }
     query.exec(QString("SELECT version_id FROM Measures WHERE uid='%1' AND version_id='%2'").arg(escape(uid), escape(versionId)));
     if (query.next())

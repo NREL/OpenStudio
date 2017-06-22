@@ -57,6 +57,7 @@
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/geometry/Point3d.hpp"
+#include "../utilities/geometry/Plane.hpp"
 #include "../utilities/geometry/BoundingBox.hpp"
 #include "../utilities/geometry/Transformation.hpp"
 #include "../utilities/geometry/Geometry.hpp"
@@ -497,8 +498,16 @@ namespace openstudio
       userDatas.push_back(userData);
     }
 
+
     ThreeScene modelToThreeJS(Model model, bool triangulateSurfaces)
     {
+      return modelToThreeJS(model, triangulateSurfaces, [](double percentage) {});
+    }
+
+    ThreeScene modelToThreeJS(Model model, bool triangulateSurfaces, std::function<void(double)> updatePercentage)
+    {
+      updatePercentage(0.0);
+
       std::vector<ThreeMaterial> materials;
       std::map<std::string, std::string> materialMap;
       buildMaterials(model, materials, materialMap);
@@ -506,8 +515,15 @@ namespace openstudio
       std::vector<ThreeSceneChild> sceneChildren;
       std::vector<ThreeGeometry> allGeometries;
 
+      // get number of things to translate
+      std::vector<PlanarSurface> planarSurfaces = model.getModelObjects<PlanarSurface>();
+      std::vector<PlanarSurfaceGroup> planarSurfaceGroups = model.getModelObjects<PlanarSurfaceGroup>();
+      std::vector<BuildingStory> buildingStories = model.getConcreteModelObjects<BuildingStory>();
+      double n = 0;
+      double N = planarSurfaces.size() + planarSurfaceGroups.size() + buildingStories.size() + 1;
+
       // loop over all surfaces
-      for (const auto& planarSurface : model.getModelObjects<PlanarSurface>())
+      for (const auto& planarSurface : planarSurfaces)
       {
         std::vector<ThreeGeometry> geometries;
         std::vector<ThreeUserData> userDatas;
@@ -526,6 +542,9 @@ namespace openstudio
          ThreeSceneChild sceneChild(thisUUID, thisName, "Mesh", geometries[i].uuid(), thisMaterialId, userDatas[i]);
            sceneChildren.push_back(sceneChild);
         }
+
+        n += 1;
+        updatePercentage(100.0*n / N);
       }
 
       ThreeSceneObject sceneObject(toThreeUUID(toString(openstudio::createUUID())), sceneChildren);
@@ -533,8 +552,11 @@ namespace openstudio
       BoundingBox boundingBox;
       boundingBox.addPoint(Point3d(0, 0, 0));
       boundingBox.addPoint(Point3d(1, 1, 1));
-      for (const auto& group : model.getModelObjects<PlanarSurfaceGroup>()){
+      for (const auto& group : planarSurfaceGroups){
         boundingBox.add(group.transformation()*group.boundingBox());
+
+        n += 1;
+        updatePercentage(100.0*n / N);
       }
 
       double lookAtX = 0; // (boundingBox.minX().get() + boundingBox.maxX().get()) / 2.0
@@ -554,14 +576,19 @@ namespace openstudio
                                         lookAtX, lookAtY, lookAtZ, lookAtR);
      
       std::vector<std::string> buildingStoryNames;
-      for (const auto& buildingStory : model.getConcreteModelObjects<BuildingStory>()){
+      for (const auto& buildingStory : buildingStories){
         buildingStoryNames.push_back(buildingStory.nameString());
+
+        n += 1;
+        updatePercentage(100.0*n / N);
       }
       // buildingStoryNames.sort! {|x,y| x.upcase <=> y.upcase} # case insensitive sort
   
       ThreeSceneMetadata metadata(buildingStoryNames, threeBoundingBox);
   
       ThreeScene scene(metadata, allGeometries, materials, sceneObject);
+
+      updatePercentage(100.0);
 
       return scene;
     }
@@ -582,9 +609,25 @@ namespace openstudio
       if (faces[0] == openstudioFaceFormatId()){
         // openstudio, all vertices belong to one face
         Point3dVector face;
+
+        // faces[0] is format
         for (size_t i = 1; i < n; ++i){
           face.push_back(vertices[faces[i]]);
         }
+
+//        try{
+//          Plane p(face);
+//        } catch (const std::exception&)
+//        {
+//          std::cout << "Vertices: " << vertices << std::endl;
+//          std::cout << "faces: " << std::endl;
+//          for (const auto& f : faces){
+//            std::cout << "  " << f << std::endl;
+//          }
+//          bool t = false;
+//        }
+
+
         result.push_back(face);
       }
 
@@ -622,16 +665,6 @@ namespace openstudio
         std::string outsideBoundaryConditionObjectName = userData.outsideBoundaryConditionObjectName();
         std::string outsideBoundaryConditionObjectHandle = userData.outsideBoundaryConditionObjectHandle();
 
-        if (spaceName.empty()){
-          spaceName = "Default Space";
-        }
-
-        boost::optional<Space> space = model.getConcreteModelObjectByName<Space>(spaceName);
-        if (!space){
-          space = Space(model);
-          space->setName(spaceName);
-        }
-
         boost::optional<ThermalZone> thermalZone = model.getConcreteModelObjectByName<ThermalZone>(thermalZoneName);
         if (!thermalZone && !thermalZoneName.empty()){
           thermalZone = ThermalZone(model);
@@ -660,6 +693,16 @@ namespace openstudio
 
         if (istringEqual(surfaceType, "Wall") || istringEqual(surfaceType, "Floor") || istringEqual(surfaceType, "RoofCeiling")){
 
+          if (spaceName.empty()){
+            spaceName = "Default Space";
+          }
+
+          boost::optional<Space> space = model.getConcreteModelObjectByName<Space>(spaceName);
+          if (!space){
+            space = Space(model);
+            space->setName(spaceName);
+          }
+
           OS_ASSERT(space);
 
           if (thermalZone){
@@ -687,9 +730,16 @@ namespace openstudio
           }
 
           for (const auto& face : faces){
-            Surface surface(face, model);
-            surface.setName(name);
-            surface.setSpace(*space);
+            try{
+              // ensure we can create a plane
+              Plane plane(face);
+
+              Surface surface(face, model);
+              surface.setName(name);
+              surface.setSpace(*space);
+            } catch (const std::exception& ){
+              LOG_FREE(Warn, "modelFromThreeJS", "Could not create surface for vertices " << face);
+            }
           }
         }
       }

@@ -61,9 +61,9 @@ TEST_F(ModelFixture, FuelCell)
   // check default power module curve values
   Curve curve = fCPM.efficiencyCurve();
   CurveQuadratic curveQ = curve.cast<CurveQuadratic>();
-  EXPECT_EQ(1, curveQ.coefficient1Constant());
-  EXPECT_EQ(0, curveQ.coefficient2x());
-  EXPECT_EQ(0, curveQ.coefficient3xPOW2());
+  EXPECT_EQ(0.642388, curveQ.coefficient1Constant());
+  EXPECT_EQ(-0.0001619, curveQ.coefficient2x());
+  EXPECT_EQ(2.26e-008, curveQ.coefficient3xPOW2());
   EXPECT_EQ("Annex42", fCPM.efficiencyCurveMode());
 
 
@@ -126,4 +126,30 @@ TEST_F(ModelFixture, FuelCell2) {
   EXPECT_EQ(elecStorage, fuelcell.electricalStorage());
   EXPECT_EQ(inverter, fuelcell.inverter());
   EXPECT_EQ(fuelSupply, fuelcell.fuelSupply());
+}
+
+TEST_F(ModelFixture, FuelCell3) {
+  Model model;
+
+  Building building = model.getUniqueModelObject<Building>();
+
+  ThermalZone zone1(model);
+  ThermalZone zone2(model);
+
+  GeneratorFuelCellAirSupply airSupply(model);
+  GeneratorFuelCellAuxiliaryHeater auxHeater(model);
+  GeneratorFuelCellElectricalStorage elecStorage(model);
+  GeneratorFuelCellExhaustGasToWaterHeatExchanger exhaustHX(model);
+  GeneratorFuelCellInverter inverter(model);
+  GeneratorFuelCellPowerModule powerModule(model);
+  GeneratorFuelCellStackCooler stackCooler(model);
+  GeneratorFuelCellWaterSupply waterSupply(model);
+  GeneratorFuelSupply fuelSupply(model);
+  // create default fuelcell
+
+  GeneratorFuelCell fuelcell(model, powerModule, airSupply, waterSupply, auxHeater, exhaustHX, elecStorage, inverter, fuelSupply);
+
+  GeneratorFuelCell fuelcellClone = fuelcell.clone(model).cast<GeneratorFuelCell>();
+
+  EXPECT_EQ(fuelcell.children().size(), fuelcellClone.children().size());
 }

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.7.0)
 cmake_policy(SET CMP0048 NEW)
 
-project(OpenStudio VERSION 2.1.2)
+project(OpenStudio VERSION 2.2.0)
 
 include(ExternalProject)
 include(CPackComponent)
@@ -535,8 +535,8 @@ endif()
 
 # openstudio gems
 
-set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20170417.tar.gz")
-set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "62127c64cb6366daebcf01ea1427c64a")
+set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20170615.tar.gz")
+set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "55b37e2e650220aecea99587e486fb6f")
 
 set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
 if(EXISTS "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}")

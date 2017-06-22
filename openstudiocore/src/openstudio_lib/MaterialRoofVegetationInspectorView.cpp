@@ -48,7 +48,8 @@ namespace openstudio {
 // MaterialRoofVegetationInspectorView
 
 MaterialRoofVegetationInspectorView::MaterialRoofVegetationInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent)
-  : ModelObjectInspectorView(model, true, parent)
+  : ModelObjectInspectorView(model, true, parent),
+  m_isIP(isIP)
 {
   createLayout();
 }
@@ -135,7 +136,7 @@ void MaterialRoofVegetationInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_minimumStomatalResistance = new OSQuantityEdit2("s/m","s/m","s/in", m_isIP);
+  m_minimumStomatalResistance = new OSQuantityEdit2("s/m","s/m","min/ft", m_isIP);
   connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_minimumStomatalResistance, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_minimumStomatalResistance,row++,0,1,3);
 
