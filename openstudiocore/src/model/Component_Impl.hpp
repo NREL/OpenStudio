@@ -98,7 +98,7 @@ namespace detail {
     virtual boost::optional<WorkspaceObject> insertObject(const IdfObject& idfObject) override;
 
     /** Override to return empty vector. */
-    virtual std::vector<WorkspaceObject> addObjects(const std::vector<IdfObject>& idfObjects) override;
+    virtual std::vector<WorkspaceObject> addObjects(const std::vector<IdfObject>& idfObjects, bool checkNames) override;
 
     /** Override to return empty vector. */
     virtual std::vector<WorkspaceObject> insertObjects(const std::vector<IdfObject>& idfObjects) override;
@@ -108,7 +108,7 @@ namespace detail {
                                                              const std::vector<IdfObject>& objectsToInsert) override;
 
     /** Override to return empty vector. */
-    virtual std::vector<WorkspaceObject> addObjects(const std::vector<WorkspaceObject>& objects) override;
+    virtual std::vector<WorkspaceObject> addObjects(const std::vector<WorkspaceObject>& objects, bool checkNames) override;
 
     /** Override to return empty vector. */
     virtual std::vector<WorkspaceObject> insertObjects(const std::vector<WorkspaceObject>& objects) override;
