@@ -942,6 +942,7 @@ PlantLoop::PlantLoop(Model& model)
 
   setLoopTemperatureSetpointNode(supplyOutletNode);
 
+  setGlycolConcentration(0);
   setString(OS_PlantLoopFields::DemandSideConnectorListName,"");
   setString(OS_PlantLoopFields::PlantLoopDemandCalculationScheme,"");
   setString(OS_PlantLoopFields::CommonPipeSimulation,"");

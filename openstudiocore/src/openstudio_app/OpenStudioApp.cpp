@@ -164,6 +164,17 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv)
     }
 
     setQuitOnLastWindowClosed( false );
+    
+    m_startupMenu = std::shared_ptr<StartupMenu>(new StartupMenu());
+    connect(m_startupMenu.get(), &StartupMenu::exitClicked, this, &OpenStudioApp::quit);
+    connect(m_startupMenu.get(), &StartupMenu::importClicked, this, &OpenStudioApp::importIdf);
+    connect(m_startupMenu.get(), &StartupMenu::importgbXMLClicked, this, &OpenStudioApp::importgbXML);
+    connect(m_startupMenu.get(), &StartupMenu::importSDDClicked, this, &OpenStudioApp::importSDD);
+    connect(m_startupMenu.get(), &StartupMenu::importIFCClicked, this, &OpenStudioApp::importIFC);
+    connect(m_startupMenu.get(), &StartupMenu::loadFileClicked, this, &OpenStudioApp::open);
+    connect(m_startupMenu.get(), &StartupMenu::newClicked, this, &OpenStudioApp::newModel);
+    connect(m_startupMenu.get(), &StartupMenu::helpClicked, this, &OpenStudioApp::showHelp);
+    connect(m_startupMenu.get(), &StartupMenu::aboutClicked, this, &OpenStudioApp::showAbout);
   #endif
 
   waitDialog()->show();

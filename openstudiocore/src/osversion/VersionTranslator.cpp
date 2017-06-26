@@ -3476,7 +3476,7 @@ std::string VersionTranslator::update_2_1_1_to_2_1_2(const IdfFile& idf_2_1_1, c
       size_t newi = 0;
       for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
         if( i == 3u ) {
-          newObject.setDouble(newi,50.0);
+          newObject.setInt(newi,0);
           ++newi;
         } else {
           if( auto s = object.getString(i) ) {

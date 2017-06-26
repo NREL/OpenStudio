@@ -204,6 +204,8 @@ class OpenStudioApp : public OSAppBase
 
   QString m_lastPath;
 
+  std::shared_ptr<StartupMenu> m_startupMenu;
+
   QFutureWatcher<void> m_buildCompLibWatcher;
   QFutureWatcher<void> m_waitForMeasureManagerWatcher;
 };
