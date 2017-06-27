@@ -51,7 +51,7 @@ namespace model {
 namespace detail {
 
   ExteriorLights_Impl::ExteriorLights_Impl(const IdfObject& idfObject,
-                                           Model_Impl* model, 
+                                           Model_Impl* model,
                                            bool keepHandle)
     : ModelObject_Impl(idfObject,model,keepHandle)
   {
@@ -82,7 +82,7 @@ namespace detail {
     if (result.empty()){
     }
     return result;
-  }  
+  }
 
   IddObjectType ExteriorLights_Impl::iddObjectType() const {
     return ExteriorLights::iddObjectType();
@@ -360,7 +360,7 @@ Facility ExteriorLights::facility() const {
 
 /// @cond
 ExteriorLights::ExteriorLights(std::shared_ptr<detail::ExteriorLights_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

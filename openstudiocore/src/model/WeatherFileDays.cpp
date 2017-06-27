@@ -108,7 +108,7 @@ WeatherFileDays::WeatherFileDays(const Model& model)
 
 // constructor
 WeatherFileDays::WeatherFileDays(std::shared_ptr<detail::WeatherFileDays_Impl> impl)
-  : SizingPeriod(impl)
+  : SizingPeriod(std::move(impl))
 {}
 
 IddObjectType WeatherFileDays::iddObjectType() {

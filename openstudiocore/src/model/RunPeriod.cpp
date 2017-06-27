@@ -317,7 +317,7 @@ RunPeriod::RunPeriod(const Model& model)
 
 // constructor
 RunPeriod::RunPeriod(std::shared_ptr<detail::RunPeriod_Impl> impl)
-  : ParentObject(impl)
+  : ParentObject(std::move(impl))
 {}
 
 int RunPeriod::getBeginMonth() const

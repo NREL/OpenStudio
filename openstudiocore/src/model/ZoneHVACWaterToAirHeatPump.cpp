@@ -232,7 +232,7 @@ namespace detail {
       const_cast<ZoneHVACWaterToAirHeatPump_Impl*>(this)->setAvailabilitySchedule(*value);
       value = optionalAvailabilitySchedule();
     }
-    OS_ASSERT(value);    
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -457,7 +457,7 @@ namespace detail {
     return setDouble(OS_ZoneHVAC_WaterToAirHeatPumpFields::SupplyAirFlowRateDuringHeatingOperation, supplyAirFlowRateDuringHeatingOperation);
   }
 
- 
+
   void ZoneHVACWaterToAirHeatPump_Impl::resetSupplyAirFlowRateDuringHeatingOperation() {
     bool result = setString(OS_ZoneHVAC_WaterToAirHeatPumpFields::SupplyAirFlowRateDuringHeatingOperation, "");
     OS_ASSERT(result);
@@ -553,7 +553,7 @@ namespace detail {
     return setDouble(OS_ZoneHVAC_WaterToAirHeatPumpFields::OutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded, outdoorAirFlowRateWhenNoCoolingorHeatingisNeeded);
   }
 
- 
+
  void ZoneHVACWaterToAirHeatPump_Impl::resetOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() {
     bool result = setString(OS_ZoneHVAC_WaterToAirHeatPumpFields::OutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded, "");
     OS_ASSERT(result);
@@ -568,7 +568,7 @@ namespace detail {
     return setPointer(OS_ZoneHVAC_WaterToAirHeatPumpFields::SupplyAirFanName,fan.handle());
   }
 
-  bool ZoneHVACWaterToAirHeatPump_Impl::setHeatingCoil(HVACComponent& heatingCoilsWaterToAirHP) 
+  bool ZoneHVACWaterToAirHeatPump_Impl::setHeatingCoil(HVACComponent& heatingCoilsWaterToAirHP)
   {
     return setPointer(OS_ZoneHVAC_WaterToAirHeatPumpFields::HeatingCoilName,heatingCoilsWaterToAirHP.handle());
   }
@@ -655,7 +655,7 @@ namespace detail {
 
   void ZoneHVACWaterToAirHeatPump_Impl::resetMaximumSupplyAirTemperaturefromSupplementalHeater() {
     bool result = setString(OS_ZoneHVAC_WaterToAirHeatPumpFields::MaximumSupplyAirTemperaturefromSupplementalHeater,"");
-    OS_ASSERT(result); 
+    OS_ASSERT(result);
   }
 
   void ZoneHVACWaterToAirHeatPump_Impl::autosizeMaximumSupplyAirTemperaturefromSupplementalHeater() {
@@ -828,7 +828,7 @@ namespace detail {
     return true;
   }
 
- 
+
 } // detail
 
 ZoneHVACWaterToAirHeatPump::ZoneHVACWaterToAirHeatPump(const Model& model,
@@ -1213,7 +1213,7 @@ void ZoneHVACWaterToAirHeatPump::resetSupplyAirFanOperatingModeSchedule() {
 
 /// @cond
 ZoneHVACWaterToAirHeatPump::ZoneHVACWaterToAirHeatPump(std::shared_ptr<detail::ZoneHVACWaterToAirHeatPump_Impl> impl)
-  : ZoneHVACComponent(impl)
+  : ZoneHVACComponent(std::move(impl))
 {}
 /// @endcond
 

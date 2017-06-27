@@ -53,8 +53,8 @@ namespace model {
 namespace detail {
 
   ZoneHVACPackagedTerminalAirConditioner_Impl::ZoneHVACPackagedTerminalAirConditioner_Impl(
-      const IdfObject& idfObject, 
-      Model_Impl* model, 
+      const IdfObject& idfObject,
+      Model_Impl* model,
       bool keepHandle)
     : ZoneHVACComponent_Impl(idfObject,model,keepHandle)
   {
@@ -812,7 +812,7 @@ void ZoneHVACPackagedTerminalAirConditioner::resetFanPlacement() {
 }
 
 ZoneHVACPackagedTerminalAirConditioner::ZoneHVACPackagedTerminalAirConditioner(std::shared_ptr<detail::ZoneHVACPackagedTerminalAirConditioner_Impl> impl)
-  : ZoneHVACComponent(impl)
+  : ZoneHVACComponent(std::move(impl))
 {}
 
 boost::optional<Schedule> ZoneHVACPackagedTerminalAirConditioner::supplyAirFanOperatingModeSchedule() const

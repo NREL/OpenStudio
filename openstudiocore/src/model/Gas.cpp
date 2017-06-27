@@ -1256,7 +1256,7 @@ void Gas::resetSpecificHeatRatio() {
 
 /// @cond
 Gas::Gas(std::shared_ptr<detail::Gas_Impl> impl)
-  : GasLayer(impl)
+  : GasLayer(std::move(impl))
 {}
 /// @endcond
 

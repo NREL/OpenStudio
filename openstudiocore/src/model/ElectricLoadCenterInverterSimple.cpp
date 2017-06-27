@@ -222,7 +222,7 @@ void ElectricLoadCenterInverterSimple::resetInverterEfficiency() {
 
 /// @cond
 ElectricLoadCenterInverterSimple::ElectricLoadCenterInverterSimple(std::shared_ptr<detail::ElectricLoadCenterInverterSimple_Impl> impl)
-  : Inverter(impl)
+  : Inverter(std::move(impl))
 {}
 /// @endcond
 

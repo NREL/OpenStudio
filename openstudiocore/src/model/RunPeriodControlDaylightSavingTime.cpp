@@ -163,10 +163,10 @@ namespace detail {
       default:
         OS_ASSERT(false);
     }
-    
+
     return setString(OS_RunPeriodControl_DaylightSavingTimeFields::StartDate, ss.str());
   }
-  
+
   bool RunPeriodControlDaylightSavingTime_Impl::setEndDate(const std::string& endDate)
   {
     bool result = false;
@@ -178,7 +178,7 @@ namespace detail {
     return result;
   }
 
-  bool RunPeriodControlDaylightSavingTime_Impl::setEndDate(const openstudio::MonthOfYear& monthOfYear, unsigned day)  
+  bool RunPeriodControlDaylightSavingTime_Impl::setEndDate(const openstudio::MonthOfYear& monthOfYear, unsigned day)
   {
     std::stringstream ss;
     ss << monthOfYear.value() << "/" << day;
@@ -207,7 +207,7 @@ namespace detail {
       default:
         OS_ASSERT(false);
     }
-    
+
     return setString(OS_RunPeriodControl_DaylightSavingTimeFields::EndDate, ss.str());
   }
 
@@ -244,7 +244,7 @@ namespace detail {
       result = yd.makeDate(monthOfYear, dayOfMonth);
       return result;
     }else if (boost::regex_search(text, matches, boost::regex("(\\d+)\\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec|January|February|March|April|May|June|July|August|September|October|November|December)", boost::regex::icase))){
-             
+
       std::string dayOfMonthString(matches[1].first, matches[1].second);
       unsigned dayOfMonth = boost::lexical_cast<unsigned>(dayOfMonthString);
       std::string monthString(matches[2].first, matches[2].second);
@@ -252,7 +252,7 @@ namespace detail {
       result = yd.makeDate(monthOfYear(monthString), dayOfMonth);
       return result;
     }else if (boost::regex_search(text, matches, boost::regex("(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec|January|February|March|April|May|June|July|August|September|October|November|December)\\s+(\\d+)", boost::regex::icase))){
-          
+
       std::string monthString(matches[1].first, matches[1].second);
       std::string dayOfMonthString(matches[2].first, matches[2].second);
       unsigned dayOfMonth = boost::lexical_cast<unsigned>(dayOfMonthString);
@@ -260,7 +260,7 @@ namespace detail {
       result = yd.makeDate(monthOfYear(monthString), dayOfMonth);
       return result;
     }else if (boost::regex_search(text, matches, boost::regex("(1|2|3|4|5|1st|2nd|3rd|4th|5th|Last)\\s+(Sun|Mon|Tue|Wed|Thu|Fri|Sat|Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday)\\s+in\\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec|January|February|March|April|May|June|July|August|September|October|November|December)", boost::regex::icase))){
-               
+
       std::string nthString(matches[1].first, matches[1].second);
       std::string dayOfWeekString(matches[2].first, matches[2].second);
       std::string monthString(matches[3].first, matches[3].second);
@@ -338,7 +338,7 @@ void RunPeriodControlDaylightSavingTime::ensureNoLeapDays()
 
 /// @cond
 RunPeriodControlDaylightSavingTime::RunPeriodControlDaylightSavingTime(std::shared_ptr<detail::RunPeriodControlDaylightSavingTime_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 
 RunPeriodControlDaylightSavingTime::RunPeriodControlDaylightSavingTime(Model& model)

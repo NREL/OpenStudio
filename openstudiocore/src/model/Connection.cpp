@@ -49,16 +49,16 @@ namespace detail {
     OS_ASSERT(idfObject.iddObject().type() == Connection::iddObjectType());
   }
 
-  Connection_Impl::Connection_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
-                                   Model_Impl* model, 
+  Connection_Impl::Connection_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                   Model_Impl* model,
                                    bool keepHandle)
     : ModelObject_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == Connection::iddObjectType());
   }
 
-  Connection_Impl::Connection_Impl(const Connection_Impl& other, 
-                                   Model_Impl* model, 
+  Connection_Impl::Connection_Impl(const Connection_Impl& other,
+                                   Model_Impl* model,
                                    bool keepHandle)
     : ModelObject_Impl(other,model,keepHandle)
   {}
@@ -68,8 +68,8 @@ namespace detail {
 
 
   // Get all output variable names that could be associated with this object.
-  const std::vector<std::string>& Connection_Impl::outputVariableNames() const 
-  { 
+  const std::vector<std::string>& Connection_Impl::outputVariableNames() const
+  {
     static StringVector result;
     if (result.empty()) {
     }
@@ -82,7 +82,7 @@ namespace detail {
 
   boost::optional<ModelObject>  Connection_Impl::sourceObject()
   {
-    if ( boost::optional<WorkspaceObject> oCandidate = getTarget(openstudio::OS_ConnectionFields::SourceObject) ) 
+    if ( boost::optional<WorkspaceObject> oCandidate = getTarget(openstudio::OS_ConnectionFields::SourceObject) )
       { return oCandidate->optionalCast<ModelObject>(); }
     return boost::none;
   }
@@ -94,7 +94,7 @@ namespace detail {
 
   boost::optional<ModelObject> Connection_Impl::targetObject()
   {
-    if ( boost::optional<WorkspaceObject> oCandidate = getTarget(openstudio::OS_ConnectionFields::TargetObject) ) 
+    if ( boost::optional<WorkspaceObject> oCandidate = getTarget(openstudio::OS_ConnectionFields::TargetObject) )
       { return oCandidate->optionalCast<ModelObject>(); }
     return boost::none;
   }
@@ -133,7 +133,7 @@ Connection::Connection(const Model& model)
 }
 
 Connection::Connection(std::shared_ptr<detail::Connection_Impl> p)
-  : ModelObject(p)
+  : ModelObject(std::move(p))
 {}
 
 OptionalModelObject Connection::sourceObject()

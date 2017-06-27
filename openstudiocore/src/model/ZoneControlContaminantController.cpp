@@ -289,7 +289,7 @@ boost::optional<ThermalZone> ZoneControlContaminantController::controlledZone() 
 
 /// @cond
 ZoneControlContaminantController::ZoneControlContaminantController(std::shared_ptr<detail::ZoneControlContaminantController_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

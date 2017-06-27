@@ -125,7 +125,7 @@ void ProgramControl::resetNumberofThreadsAllowed() {
 
 /// @cond
 ProgramControl::ProgramControl(std::shared_ptr<detail::ProgramControl_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

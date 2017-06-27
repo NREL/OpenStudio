@@ -117,7 +117,7 @@ unsigned PipeAdiabatic::outletPort()
 }
 
 PipeAdiabatic::PipeAdiabatic(std::shared_ptr<detail::PipeAdiabatic_Impl> p)
-  : StraightComponent(p)
+  : StraightComponent(std::move(p))
 {}
 
 IddObjectType PipeAdiabatic::iddObjectType() {

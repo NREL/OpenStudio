@@ -399,7 +399,7 @@ void ControllerWaterCoil::setActuatorNode( Node & node )
 
 /// @cond
 ControllerWaterCoil::ControllerWaterCoil(std::shared_ptr<detail::ControllerWaterCoil_Impl> impl)
-  : HVACComponent(impl)
+  : HVACComponent(std::move(impl))
 {}
 /// @endcond
 

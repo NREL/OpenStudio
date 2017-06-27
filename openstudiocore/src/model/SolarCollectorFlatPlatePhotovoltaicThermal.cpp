@@ -178,7 +178,7 @@ namespace detail {
       LOG_AND_THROW(briefDescription() << " does not have an Solar Collector Performance attached.");
     }
     return value.get();
-  
+
   }
 
   boost::optional<PlanarSurface> SolarCollectorFlatPlatePhotovoltaicThermal_Impl::surface() const {
@@ -357,7 +357,7 @@ void SolarCollectorFlatPlatePhotovoltaicThermal::autosizeDesignFlowRate() {
 
 /// @cond
 SolarCollectorFlatPlatePhotovoltaicThermal::SolarCollectorFlatPlatePhotovoltaicThermal(std::shared_ptr<detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

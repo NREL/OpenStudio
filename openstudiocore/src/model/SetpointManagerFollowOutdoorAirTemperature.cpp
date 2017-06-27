@@ -60,7 +60,7 @@ namespace detail{
   }
 
   SetpointManagerFollowOutdoorAirTemperature_Impl::SetpointManagerFollowOutdoorAirTemperature_Impl(
-      const SetpointManagerFollowOutdoorAirTemperature_Impl& other, 
+      const SetpointManagerFollowOutdoorAirTemperature_Impl& other,
       Model_Impl* model,
       bool keepHandles)
     : SetpointManager_Impl(other,model,keepHandles)
@@ -180,9 +180,9 @@ namespace detail{
   }
 
 } // detail
-  
+
 SetpointManagerFollowOutdoorAirTemperature::SetpointManagerFollowOutdoorAirTemperature(const Model& model)
-  : SetpointManager(SetpointManagerFollowOutdoorAirTemperature::iddObjectType(),model) 
+  : SetpointManager(SetpointManagerFollowOutdoorAirTemperature::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::SetpointManagerFollowOutdoorAirTemperature_Impl>());
 
@@ -194,7 +194,7 @@ SetpointManagerFollowOutdoorAirTemperature::SetpointManagerFollowOutdoorAirTempe
 }
 
 SetpointManagerFollowOutdoorAirTemperature::SetpointManagerFollowOutdoorAirTemperature(std::shared_ptr<detail::SetpointManagerFollowOutdoorAirTemperature_Impl> p)
-  : SetpointManager(p)
+  : SetpointManager(std::move(p))
 {
 }
 

@@ -40,13 +40,13 @@ namespace detail {
     : Material_Impl(idfObject, model, keepHandle)
   {}
 
-  OpaqueMaterial_Impl::OpaqueMaterial_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
-                                           Model_Impl* model, 
+  OpaqueMaterial_Impl::OpaqueMaterial_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                           Model_Impl* model,
                                            bool keepHandle)
     : Material_Impl(other, model, keepHandle)
   {}
-  
-  OpaqueMaterial_Impl::OpaqueMaterial_Impl(const OpaqueMaterial_Impl& other, 
+
+  OpaqueMaterial_Impl::OpaqueMaterial_Impl(const OpaqueMaterial_Impl& other,
                                            Model_Impl* model,
                                            bool keepHandle)
     : Material_Impl(other, model, keepHandle)
@@ -67,7 +67,7 @@ namespace detail {
 } // detail
 
 OpaqueMaterial::OpaqueMaterial(IddObjectType type,const Model& model)
-  : Material(type,model) 
+  : Material(type,model)
 {
   OS_ASSERT(getImpl<detail::OpaqueMaterial_Impl>());
 }
@@ -158,7 +158,7 @@ boost::optional<double> OpaqueMaterial::heatCapacity() const {
 
 /// @cond
 OpaqueMaterial::OpaqueMaterial(std::shared_ptr<detail::OpaqueMaterial_Impl> impl)
-  : Material(impl)
+  : Material(std::move(impl))
 {}
 /// @endcond
 

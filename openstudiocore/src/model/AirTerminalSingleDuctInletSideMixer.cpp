@@ -125,7 +125,7 @@ namespace detail {
                               sourcePort.get(),
                               inletNode,
                               inletNode.inletPort() );
-              
+
               _model.connect( inletNode,
                               inletNode.outletPort(),
                               this->getObject<ModelObject>(),
@@ -142,7 +142,7 @@ namespace detail {
                 thermalZone->addEquipment(mo);
               }
 
-              return true; 
+              return true;
             }
           }
         }
@@ -160,7 +160,7 @@ namespace detail {
     boost::optional<ZoneHVACComponent> t_zoneComp;
 
     if( boost::optional<AirLoopHVAC> t_airLoopHVAC = airLoopHVAC() ) {
-      std::vector<ZoneHVACComponent> zoneComps = 
+      std::vector<ZoneHVACComponent> zoneComps =
         subsetCastVector<ZoneHVACComponent>(t_airLoopHVAC->demandComponents(thisObject,t_airLoopHVAC->demandOutletNode()));
       if( ! zoneComps.empty() ) {
         t_zoneComp = zoneComps.front();
@@ -171,7 +171,7 @@ namespace detail {
 
     boost::optional<ModelObject> sourceModelObject = this->inletModelObject();
     boost::optional<unsigned> sourcePort = this->connectedObjectPort(this->inletPort());
-    
+
     boost::optional<ModelObject> targetModelObject = this->outletModelObject();
     boost::optional<unsigned> targetPort = this->connectedObjectPort(this->outletPort());
 
@@ -230,7 +230,7 @@ namespace detail {
   {
     return OS_AirTerminal_SingleDuct_InletSideMixerFields::TerminalUnitSecondaryAirInlet;
   }
-  
+
   boost::optional<Node> AirTerminalSingleDuctInletSideMixer_Impl::secondaryAirInletNode() const
   {
     boost::optional<Node> result;
@@ -264,7 +264,7 @@ boost::optional<Node> AirTerminalSingleDuctInletSideMixer::secondaryAirInletNode
 
 /// @cond
 AirTerminalSingleDuctInletSideMixer::AirTerminalSingleDuctInletSideMixer(std::shared_ptr<detail::AirTerminalSingleDuctInletSideMixer_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

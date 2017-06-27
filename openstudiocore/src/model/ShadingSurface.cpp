@@ -59,7 +59,7 @@ namespace model {
 namespace detail {
 
   ShadingSurface_Impl::ShadingSurface_Impl(const IdfObject& idfObject,
-                                           Model_Impl* model, 
+                                           Model_Impl* model,
                                            bool keepHandle)
     : PlanarSurface_Impl(idfObject,model,keepHandle)
   {
@@ -206,7 +206,7 @@ namespace detail {
   }
 
   boost::optional<Space> ShadingSurface_Impl::space() const
-  { 
+  {
     boost::optional<Space> result;
     boost::optional<ShadingSurfaceGroup> shadingSurfaceGroup = this->shadingSurfaceGroup();
     if (shadingSurfaceGroup){
@@ -442,7 +442,7 @@ boost::optional<DaylightingDeviceShelf> ShadingSurface::daylightingDeviceShelf()
 
 /// @cond
 ShadingSurface::ShadingSurface(std::shared_ptr<detail::ShadingSurface_Impl> impl)
-  : PlanarSurface(impl)
+  : PlanarSurface(std::move(impl))
 {}
 /// @endcond
 

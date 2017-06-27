@@ -102,7 +102,7 @@ namespace detail {
     bool result = setDouble(OS_BuildingStoryFields::NominalZCoordinate, nominalZCoordinate);
     OS_ASSERT(result);
   }
-  
+
   void BuildingStory_Impl::resetNominalZCoordinate() {
     bool result = setString(OS_BuildingStoryFields::NominalZCoordinate, "");
     OS_ASSERT(result);
@@ -157,7 +157,7 @@ namespace detail {
   {
     setString(OS_BuildingStoryFields::DefaultScheduleSetName, "");
   }
- 
+
   boost::optional<RenderingColor> BuildingStory_Impl::renderingColor() const
   {
     return getObject<ModelObject>().getModelObjectTarget<RenderingColor>(OS_BuildingStoryFields::GroupRenderingName);
@@ -178,7 +178,7 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectSources<Space>(
         Space::iddObjectType());
   }
-  
+
   boost::optional<ModelObject> BuildingStory_Impl::defaultConstructionSetAsModelObject() const {
     OptionalModelObject result;
     OptionalDefaultConstructionSet object = defaultConstructionSet();
@@ -354,7 +354,7 @@ std::vector<Space> BuildingStory::spaces() const
 
 /// @cond
 BuildingStory::BuildingStory(std::shared_ptr<detail::BuildingStory_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

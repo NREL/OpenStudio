@@ -1158,7 +1158,7 @@ void ThermalStorageChilledWaterStratified::setNode10AdditionalLossCoefficient(do
 
 /// @cond
 ThermalStorageChilledWaterStratified::ThermalStorageChilledWaterStratified(std::shared_ptr<detail::ThermalStorageChilledWaterStratified_Impl> impl)
-  : WaterToWaterComponent(impl)
+  : WaterToWaterComponent(std::move(impl))
 {}
 /// @endcond
 

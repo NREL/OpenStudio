@@ -132,7 +132,7 @@ bool EnergyManagementSystemCurveOrTableIndexVariable::setCurveOrTableObject(cons
 
 /// @cond
 EnergyManagementSystemCurveOrTableIndexVariable::EnergyManagementSystemCurveOrTableIndexVariable(std::shared_ptr<detail::EnergyManagementSystemCurveOrTableIndexVariable_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

@@ -360,7 +360,7 @@ EnergyManagementSystemMeteredOutputVariable::EnergyManagementSystemMeteredOutput
   bool ok = setEMSVariableName(object);
   if (!ok) {
     remove();
-    LOG_AND_THROW("Unable to set " << briefDescription() << "'s eMSVariableName to " 
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s eMSVariableName to "
       << object.briefDescription() << ".");
   }
   setUpdateFrequency("SystemTimestep");
@@ -645,7 +645,7 @@ bool EnergyManagementSystemMeteredOutputVariable::setEMSVariableName(const Energ
 
 /// @cond
 EnergyManagementSystemMeteredOutputVariable::EnergyManagementSystemMeteredOutputVariable(std::shared_ptr<detail::EnergyManagementSystemMeteredOutputVariable_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

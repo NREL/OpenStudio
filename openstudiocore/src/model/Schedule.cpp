@@ -107,7 +107,7 @@ Schedule::Schedule(IddObjectType type,const Model& model)
 
 // constructor from impl
 Schedule::Schedule(std::shared_ptr<detail::Schedule_Impl> impl)
-  : ScheduleBase(impl)
+  : ScheduleBase(std::move(impl))
 {
   OS_ASSERT(getImpl<detail::Schedule_Impl>());
 }

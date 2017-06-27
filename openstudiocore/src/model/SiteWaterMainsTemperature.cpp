@@ -357,7 +357,7 @@ void SiteWaterMainsTemperature::resetMaximumDifferenceInMonthlyAverageOutdoorAir
 
 /// @cond
 SiteWaterMainsTemperature::SiteWaterMainsTemperature(std::shared_ptr<detail::SiteWaterMainsTemperature_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

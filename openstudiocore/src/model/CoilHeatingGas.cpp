@@ -494,7 +494,7 @@ CoilHeatingGas::CoilHeatingGas(const Model& model)
 }
 
 CoilHeatingGas::CoilHeatingGas(std::shared_ptr<detail::CoilHeatingGas_Impl> p)
-  : StraightComponent(p)
+  : StraightComponent(std::move(p))
 {}
 
 Schedule CoilHeatingGas::availabilitySchedule() const

@@ -153,7 +153,7 @@ namespace detail {
     }
     return result;
   }
-  
+
   boost::optional<OutputMeter> Facility_Impl::getMeterByFuelType(
     const FuelType& fuelType,
     const std::string& reportingFrequency,
@@ -165,8 +165,8 @@ namespace detail {
       if (meter.fuelType() && (meter.fuelType() == fuelType)) {
         if (istringEqual(meter.reportingFrequency(),reportingFrequency)) {
           OptionalEndUseType meterEndUseType = meter.endUseType();
-          if ((!endUseType && !meterEndUseType) || 
-              (endUseType && meterEndUseType && (*meterEndUseType == *endUseType))) 
+          if ((!endUseType && !meterEndUseType) ||
+              (endUseType && meterEndUseType && (*meterEndUseType == *endUseType)))
           {
             OptionalString meterSpecificEndUse = meter.specificEndUse();
             if ((!specificEndUse && !meterSpecificEndUse) ||
@@ -1310,7 +1310,7 @@ namespace detail {
     }
     return OptionalDouble();
   }
-  
+
   OptionalDouble Facility_Impl::hoursCoolingSetpointNotMet() const
   {
     OptionalSqlFile mySqlFile = model().sqlFile();
@@ -1343,7 +1343,7 @@ namespace detail {
 
   boost::optional<CalibrationResult> Facility_Impl::calibrationResult() const
   {
-    boost::optional<CalibrationResult> result; 
+    boost::optional<CalibrationResult> result;
 
     OptionalSqlFile mySqlFile = model().sqlFile();
     if (mySqlFile && mySqlFile->connectionOpen())
@@ -1351,7 +1351,7 @@ namespace detail {
       result = CalibrationResult();
       for (const model::UtilityBill& utilityBill : this->model().getConcreteModelObjects<model::UtilityBill>()){
         CalibrationUtilityBill calibrationUtilityBill(utilityBill.name().get(), utilityBill.fuelType(),
-          utilityBill.meterInstallLocation(), utilityBill.meterSpecificInstallLocation(), 
+          utilityBill.meterInstallLocation(), utilityBill.meterSpecificInstallLocation(),
           utilityBill.meterEndUseCategory(), utilityBill.meterSpecificEndUse(), utilityBill.consumptionUnit(),
           utilityBill.consumptionUnitConversionFactor(), utilityBill.peakDemandUnit(), utilityBill.peakDemandUnitConversionFactor(),
           utilityBill.timestepsInPeakDemandWindow(), utilityBill.minutesInPeakDemandWindow(), utilityBill.numberBillingPeriodsInCalculations(),
@@ -1403,7 +1403,7 @@ namespace detail {
 }// detail
 
 Facility::Facility(std::shared_ptr<detail::Facility_Impl> impl)
-  : ParentObject(impl)
+  : ParentObject(std::move(impl))
 {}
 
 Facility::Facility(Model& model)

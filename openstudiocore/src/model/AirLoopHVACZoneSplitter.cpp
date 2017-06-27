@@ -177,7 +177,7 @@ AirLoopHVACZoneSplitter::AirLoopHVACZoneSplitter(const Model& model)
 }
 
 AirLoopHVACZoneSplitter::AirLoopHVACZoneSplitter(std::shared_ptr<detail::AirLoopHVACZoneSplitter_Impl> p)
-  : Splitter(p)
+  : Splitter(std::move(p))
 {}
 
 std::vector<openstudio::IdfObject> AirLoopHVACZoneSplitter::remove()

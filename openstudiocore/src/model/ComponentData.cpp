@@ -215,7 +215,7 @@ ComponentData::ComponentData(const Model& model)
 }
 
 ComponentData::ComponentData(std::shared_ptr<detail::ComponentData_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

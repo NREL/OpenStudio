@@ -357,7 +357,7 @@ void LuminaireDefinition::resetReturnAirFractionFunctionofPlenumTemperatureCoeff
 
 /// @cond
 LuminaireDefinition::LuminaireDefinition(std::shared_ptr<detail::LuminaireDefinition_Impl> impl)
-  : SpaceLoadDefinition(impl)
+  : SpaceLoadDefinition(std::move(impl))
 {}
 /// @endcond
 

@@ -218,7 +218,7 @@ RefrigerationCondenserCascade::RefrigerationCondenserCascade(const Model& model)
   //  20000.,                  !- Rated Effective Total Heat Rejection Rate {W}
   setRatedEffectiveTotalHeatRejectionRate(20000.0);
 
-  //  Fixed;                   !- Condensing Temperature Control Type  
+  //  Fixed;                   !- Condensing Temperature Control Type
   setCondensingTemperatureControlType("Fixed");
 }
 
@@ -317,7 +317,7 @@ void RefrigerationCondenserCascade::resetCondensatePipingRefrigerantInventory() 
 
 /// @cond
 RefrigerationCondenserCascade::RefrigerationCondenserCascade(std::shared_ptr<detail::RefrigerationCondenserCascade_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

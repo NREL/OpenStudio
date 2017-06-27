@@ -736,7 +736,7 @@ GasMixture::GasMixture(const Model& model,
   : GasLayer(GasMixture::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::GasMixture_Impl>());
-  
+
   // TODO: Appropriately handle the following required object-list fields.
   bool ok = true;
   // ok = setHandle();
@@ -1011,7 +1011,7 @@ void GasMixture::resetGas4Fraction() {
 
 /// @cond
 GasMixture::GasMixture(std::shared_ptr<detail::GasMixture_Impl> impl)
-  : GasLayer(impl)
+  : GasLayer(std::move(impl))
 {}
 /// @endcond
 

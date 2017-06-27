@@ -111,7 +111,7 @@ namespace detail {
     return result;
   }
 
- 
+
   std::vector<ModelObject> GeneratorPhotovoltaic_Impl::children() const
   {
     std::vector<ModelObject> result;
@@ -139,7 +139,7 @@ namespace detail {
     result.resetSurface();
     return result;
   }
-  
+
   std::string GeneratorPhotovoltaic_Impl::generatorObjectType() const
   {
     return "Generator:Photovoltaic";
@@ -395,7 +395,7 @@ void GeneratorPhotovoltaic::resetAvailabilitySchedule() {
 
 /// @cond
 GeneratorPhotovoltaic::GeneratorPhotovoltaic(std::shared_ptr<detail::GeneratorPhotovoltaic_Impl> impl)
-  : Generator(impl)
+  : Generator(std::move(impl))
 {}
 /// @endcond
 

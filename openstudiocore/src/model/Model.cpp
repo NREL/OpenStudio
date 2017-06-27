@@ -69,7 +69,7 @@ using openstudio::detail::WorkspaceObject_Impl;
 using std::dynamic_pointer_cast;
 
 struct ModelResourceInitializer{
-  ModelResourceInitializer() 
+  ModelResourceInitializer()
   {
     Q_INIT_RESOURCE(Model);
   }
@@ -1868,7 +1868,7 @@ boost::optional<Model> Model::load(const path& osmPath, const path& workflowJSON
 
 
 Model::Model(std::shared_ptr<detail::Model_Impl> p)
-  : Workspace(p)
+  : Workspace(std::move(p))
 {}
 
 boost::optional<Building> Model::building() const

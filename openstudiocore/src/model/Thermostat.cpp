@@ -83,7 +83,7 @@ namespace detail {
 } // detail
 
 Thermostat::Thermostat(std::shared_ptr<detail::Thermostat_Impl> p)
-  : ModelObject(p)
+  : ModelObject(std::move(p))
 {}
 
 Thermostat::Thermostat(IddObjectType type,const Model& model)

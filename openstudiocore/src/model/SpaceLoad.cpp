@@ -131,7 +131,7 @@ SpaceLoad::SpaceLoad(IddObjectType type,const Model& model)
 }
 
 SpaceLoad::SpaceLoad(std::shared_ptr<detail::SpaceLoad_Impl> impl)
-  : SpaceItem(impl)
+  : SpaceItem(std::move(impl))
 {}
 
 boost::optional<SpaceType> SpaceLoad::spaceType() const
@@ -151,12 +151,12 @@ void SpaceLoad::resetSpaceType() {
 bool SpaceLoad::hardSize()
 {
   return getImpl<detail::SpaceLoad_Impl>()->hardSize();
-}    
+}
 
 bool SpaceLoad::hardApplySchedules()
 {
   return getImpl<detail::SpaceLoad_Impl>()->hardApplySchedules();
-}    
+}
 
 bool SpaceLoad::isAbsolute() const
 {

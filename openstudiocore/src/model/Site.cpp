@@ -532,7 +532,7 @@ bool Site::setActiveClimateZoneInstitution(const std::string& institution) {
 */
 /// @cond
 Site::Site(std::shared_ptr<detail::Site_Impl> impl)
-  : ParentObject(impl)
+  : ParentObject(std::move(impl))
 {}
 
 Site::Site(Model& model)

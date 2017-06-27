@@ -113,7 +113,7 @@ namespace detail {
   {
     return OS_DistrictCoolingFields::ChilledWaterOutletNodeName;
   }
-  
+
   bool DistrictCooling_Impl::addToNode(Node & node)
   {
     if( boost::optional<PlantLoop> plant = node.plantLoop() )
@@ -162,7 +162,7 @@ void DistrictCooling::autosizeNominalCapacity() {
 /// @cond
 
 DistrictCooling::DistrictCooling(std::shared_ptr<detail::DistrictCooling_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

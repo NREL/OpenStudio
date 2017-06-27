@@ -62,8 +62,8 @@ namespace detail{
     OS_ASSERT(idfObject.iddObject().type() == Node::iddObjectType());
   }
 
-  Node_Impl::Node_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
-                       Model_Impl* model, 
+  Node_Impl::Node_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                       Model_Impl* model,
                        bool keepHandle)
     : StraightComponent_Impl(other,model,keepHandle)
   {
@@ -305,12 +305,12 @@ namespace detail{
   {
     return false;
   }
-  
+
   ModelObject Node_Impl::clone(Model model) const
   {
     return StraightComponent_Impl::clone( model );
   }
-  
+
   bool Node_Impl::isRemovable() const
   {
     if( this->loop() )
@@ -379,7 +379,7 @@ Node::Node(const Model& model)
 }
 
 Node::Node(std::shared_ptr<detail::Node_Impl> p)
-  : StraightComponent(p)
+  : StraightComponent(std::move(p))
 {}
 
 std::vector<SetpointManager> Node::setpointManagers() const

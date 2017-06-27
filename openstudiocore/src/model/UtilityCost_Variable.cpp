@@ -248,7 +248,7 @@ UtilityCost_Variable::UtilityCost_Variable(const Model& model)
 
 // constructor
 UtilityCost_Variable::UtilityCost_Variable(std::shared_ptr<detail::UtilityCost_Variable_Impl> impl)
-  : ParentObject(impl)
+  : ParentObject(std::move(impl))
 {}
 
 OptionalDouble UtilityCost_Variable::januaryValue() const

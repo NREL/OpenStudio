@@ -191,7 +191,7 @@ bool CentralHeatPumpSystemModule::setNumberofChillerHeaterModules(int numberofCh
 
 /// @cond
 CentralHeatPumpSystemModule::CentralHeatPumpSystemModule(std::shared_ptr<detail::CentralHeatPumpSystemModule_Impl> impl)
-  : ParentObject(impl)
+  : ParentObject(std::move(impl))
 {}
 /// @endcond
 

@@ -525,7 +525,7 @@ void SiteGroundReflectance::resetDecemberGroundReflectance() {
 
 /// @cond
 SiteGroundReflectance::SiteGroundReflectance(std::shared_ptr<detail::SiteGroundReflectance_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 SiteGroundReflectance::SiteGroundReflectance(Model& model)
   : ModelObject(SiteGroundReflectance::iddObjectType(),model)

@@ -458,7 +458,7 @@ void CoilCoolingLowTempRadiantVarFlow::resetCondensationControlDewpointOffset()
 
 /// @cond
 CoilCoolingLowTempRadiantVarFlow::CoilCoolingLowTempRadiantVarFlow(std::shared_ptr<detail::CoilCoolingLowTempRadiantVarFlow_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

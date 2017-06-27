@@ -89,7 +89,7 @@ AvailabilityManager::AvailabilityManager(IddObjectType type,const Model& model)
 }
 
 AvailabilityManager::AvailabilityManager(std::shared_ptr<detail::AvailabilityManager_Impl> p)
-  : ModelObject(p)
+  : ModelObject(std::move(p))
 {}
 
 boost::optional<Loop> AvailabilityManager::loop() const {
