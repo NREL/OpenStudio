@@ -259,10 +259,10 @@ bool OSRunner::incrementStep()
 //}
 
 void OSRunner::prepareForMeasureRun(const OSMeasure& measure) {
-  if (m_halted){
-    LOG(Error, "Wokflow halted, cannot prepate for measure run");
-    return;
-  }
+  //if (m_halted){
+  //  LOG(Error, "Wokflow halted, cannot prepate for measure run");
+  //  return;
+  //}
   if (m_startedStep){
     LOG(Error, "Step already started");
     return;
