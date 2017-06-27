@@ -95,7 +95,7 @@ IddObjectType PlantEquipmentOperationOutdoorDryBulb::iddObjectType() {
 
 /// @cond
 PlantEquipmentOperationOutdoorDryBulb::PlantEquipmentOperationOutdoorDryBulb(std::shared_ptr<detail::PlantEquipmentOperationOutdoorDryBulb_Impl> impl)
-  : PlantEquipmentOperationRangeBasedScheme(impl)
+  : PlantEquipmentOperationRangeBasedScheme(std::move(impl))
 {}
 /// @endcond
 

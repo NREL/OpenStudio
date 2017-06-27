@@ -962,7 +962,7 @@ bool ChillerHeaterPerformanceElectricEIR::setSizingFactor(double sizingFactor) {
 
 /// @cond
 ChillerHeaterPerformanceElectricEIR::ChillerHeaterPerformanceElectricEIR(std::shared_ptr<detail::ChillerHeaterPerformanceElectricEIR_Impl> impl)
-  : ParentObject(impl)
+  : ParentObject(std::move(impl))
 {}
 /// @endcond
 

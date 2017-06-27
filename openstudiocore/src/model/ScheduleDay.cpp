@@ -151,12 +151,12 @@ namespace detail {
     return !getObject<ScheduleDay>().getModelObjectTarget<ScheduleTypeLimits>(OS_Schedule_DayFields::ScheduleTypeLimitsName);
   }
 
-  bool ScheduleDay_Impl::interpolatetoTimestep() const 
+  bool ScheduleDay_Impl::interpolatetoTimestep() const
   {
     return getBooleanFieldValue(OS_Schedule_DayFields::InterpolatetoTimestep);
   }
 
-  bool ScheduleDay_Impl::isInterpolatetoTimestepDefaulted() const 
+  bool ScheduleDay_Impl::isInterpolatetoTimestepDefaulted() const
   {
     return isEmpty(OS_Schedule_DayFields::InterpolatetoTimestep);
   }
@@ -272,12 +272,12 @@ namespace detail {
     return false;
   }
 
-  void ScheduleDay_Impl::setInterpolatetoTimestep(bool interpolatetoTimestep) 
+  void ScheduleDay_Impl::setInterpolatetoTimestep(bool interpolatetoTimestep)
   {
     setBooleanFieldValue(OS_Schedule_DayFields::InterpolatetoTimestep,interpolatetoTimestep);
   }
 
-  void ScheduleDay_Impl::resetInterpolatetoTimestep() 
+  void ScheduleDay_Impl::resetInterpolatetoTimestep()
   {
     bool result = setString(OS_Schedule_DayFields::InterpolatetoTimestep, "");
     OS_ASSERT(result);
@@ -337,7 +337,7 @@ namespace detail {
 
 
   boost::optional<double> ScheduleDay_Impl::removeValue(const openstudio::Time& time){
-    
+
     boost::optional<unsigned> timeIndex;
 
     std::vector<openstudio::Time> times = this->times();
@@ -349,7 +349,7 @@ namespace detail {
     }
 
     if (!timeIndex){
-      return boost::none; 
+      return boost::none;
     }
 
     boost::optional<double> result;
@@ -505,7 +505,7 @@ void ScheduleDay::clearValues()
 
 /// @cond
 ScheduleDay::ScheduleDay(std::shared_ptr<detail::ScheduleDay_Impl> impl)
-  : ScheduleBase(impl)
+  : ScheduleBase(std::move(impl))
 {}
 /// @endcond
 

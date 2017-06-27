@@ -128,7 +128,7 @@ OutsideSurfaceConvectionAlgorithm::OutsideSurfaceConvectionAlgorithm(const Model
 // constructor
 OutsideSurfaceConvectionAlgorithm::OutsideSurfaceConvectionAlgorithm(
     std::shared_ptr<detail::OutsideSurfaceConvectionAlgorithm_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 
 IddObjectType OutsideSurfaceConvectionAlgorithm::iddObjectType() {

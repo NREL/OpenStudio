@@ -2060,7 +2060,7 @@ IdfObject::IdfObject(const IddObject& iddObject, bool fastName)
 }
 
 IdfObject::IdfObject(std::shared_ptr<detail::IdfObject_Impl> impl):
-  m_impl(impl)
+  m_impl(std::move(impl))
 {
   OS_ASSERT(m_impl);
 }

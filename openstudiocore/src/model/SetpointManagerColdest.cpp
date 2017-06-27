@@ -199,7 +199,7 @@ bool SetpointManagerColdest::setStrategy(const std::string& strategy) {
 
 /// @cond
 SetpointManagerColdest::SetpointManagerColdest(std::shared_ptr<detail::SetpointManagerColdest_Impl> impl)
-  : SetpointManager(impl)
+  : SetpointManager(std::move(impl))
 {}
 /// @endcond
 

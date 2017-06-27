@@ -165,7 +165,7 @@ std::vector<std::string> LifeCycleCost_Impl::validCostUnitsValues() const
   }else{
     result.push_back("CostPerEach");
   }
-  
+
   return result;
 }
 
@@ -331,18 +331,18 @@ bool LifeCycleCost_Impl::convertToCostPerEach()
   }
 
   double totalCost = this->totalCost();
-  
+
   if (!this->setCostUnits("CostPerEach")){
     return false;
   }
-  
+
   bool test = this->setCost(totalCost);
   OS_ASSERT(test);
   return true;
 }
 
 boost::optional<int> LifeCycleCost_Impl::costedQuantity() const
-{ 
+{
   boost::optional<int> result;
 
   std::string costUnits = this->costUnits();
@@ -397,7 +397,7 @@ boost::optional<double> LifeCycleCost_Impl::costedArea() const
   ModelObject modelObject = item();
 
   if (modelObject.optionalCast<ConstructionBase>()){
-    result = modelObject.cast<ConstructionBase>().getNetArea(); 
+    result = modelObject.cast<ConstructionBase>().getNetArea();
 
   }else if (modelObject.optionalCast<Building>()){
     result = modelObject.cast<Building>().floorArea();
@@ -430,7 +430,7 @@ boost::optional<double> LifeCycleCost_Impl::costedArea() const
 }
 
 boost::optional<int>  LifeCycleCost_Impl::costedThermalZones() const
-{ 
+{
   boost::optional<int> result;
 
   std::string costUnits = this->costUnits();
@@ -554,10 +554,10 @@ LifeCycleCost::LifeCycleCost(const ModelObject& modelObject)
 
 // constructor
 LifeCycleCost::LifeCycleCost(std::shared_ptr<detail::LifeCycleCost_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 
-IddObjectType LifeCycleCost::iddObjectType() 
+IddObjectType LifeCycleCost::iddObjectType()
 {
   IddObjectType result(IddObjectType::OS_LifeCycleCost);
   return result;
@@ -568,7 +568,7 @@ std::vector<std::string> LifeCycleCost::validCategoryValues()
   return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_LifeCycleCostFields::Category);
 }
 
-std::vector<std::string> LifeCycleCost::validItemTypeValues() 
+std::vector<std::string> LifeCycleCost::validItemTypeValues()
 {
   return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_LifeCycleCostFields::ItemType);
 }
@@ -625,7 +625,7 @@ std::vector<std::string> LifeCycleCost::validCostUnitsValues() const
   return getImpl<detail::LifeCycleCost_Impl>()->validCostUnitsValues();
 }
 
-std::string LifeCycleCost::costUnits() const 
+std::string LifeCycleCost::costUnits() const
 {
   return getImpl<detail::LifeCycleCost_Impl>()->costUnits();
 }
@@ -727,7 +727,7 @@ double LifeCycleCost::totalCost() const
   return getImpl<detail::LifeCycleCost_Impl>()->totalCost();
 }
 
-bool LifeCycleCost::convertToCostPerEach() 
+bool LifeCycleCost::convertToCostPerEach()
 {
   return getImpl<detail::LifeCycleCost_Impl>()->convertToCostPerEach();
 }

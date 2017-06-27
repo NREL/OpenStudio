@@ -331,7 +331,7 @@ RefrigerationCompressor::RefrigerationCompressor(const Model& model)
   : ParentObject(RefrigerationCompressor::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::RefrigerationCompressor_Impl>());
-  
+
   CurveBicubic powerCurve = CurveBicubic(model);
   powerCurve.setName("Refrigeration Compressor Power Curve");
   powerCurve.setCoefficient1Constant(4451.46);
@@ -374,7 +374,7 @@ RefrigerationCompressor::RefrigerationCompressor(const Model& model)
   capacityCurve.setInputUnitTypeforX("Temperature");
   capacityCurve.setInputUnitTypeforY("Temperature");
   capacityCurve.setOutputUnitType("Capacity");
-  
+
   ok = setRefrigerationCompressorCapacityCurve(capacityCurve);
   OS_ASSERT(ok);
 
@@ -513,7 +513,7 @@ void RefrigerationCompressor::resetTranscriticalCompressorCapacityCurve() {
 
 /// @cond
 RefrigerationCompressor::RefrigerationCompressor(std::shared_ptr<detail::RefrigerationCompressor_Impl> impl)
-  : ParentObject(impl)
+  : ParentObject(std::move(impl))
 {}
 /// @endcond
 

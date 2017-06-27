@@ -676,7 +676,7 @@ void FluidCoolerTwoSpeed::resetOutdoorAirInletNode() {
 
 /// @cond
 FluidCoolerTwoSpeed::FluidCoolerTwoSpeed(std::shared_ptr<detail::FluidCoolerTwoSpeed_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

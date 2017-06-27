@@ -95,7 +95,7 @@ IddObjectType PlantEquipmentOperationOutdoorDewpoint::iddObjectType() {
 
 /// @cond
 PlantEquipmentOperationOutdoorDewpoint::PlantEquipmentOperationOutdoorDewpoint(std::shared_ptr<detail::PlantEquipmentOperationOutdoorDewpoint_Impl> impl)
-  : PlantEquipmentOperationRangeBasedScheme(impl)
+  : PlantEquipmentOperationRangeBasedScheme(std::move(impl))
 {}
 /// @endcond
 

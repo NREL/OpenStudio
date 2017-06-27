@@ -270,7 +270,7 @@ bool Component::save(const openstudio::path& p, bool overwrite) {
 
 /// @cond
 Component::Component(std::shared_ptr<detail::Component_Impl> impl)
-  : Model(impl)
+  : Model(std::move(impl))
 {}
 /// @endcond
 

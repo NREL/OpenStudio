@@ -209,7 +209,7 @@ bool SetpointManagerMultiZoneHumidityMinimum::setControlVariable(const std::stri
 
 /// @cond
 SetpointManagerMultiZoneHumidityMinimum::SetpointManagerMultiZoneHumidityMinimum(std::shared_ptr<detail::SetpointManagerMultiZoneHumidityMinimum_Impl> impl)
-  : SetpointManager(impl)
+  : SetpointManager(std::move(impl))
 {}
 /// @endcond
 

@@ -199,7 +199,7 @@ EnergyManagementSystemTrendVariable::EnergyManagementSystemTrendVariable(const M
   bool ok = setEMSVariableName(object);
   if (!ok) {
     remove();
-    LOG_AND_THROW("Unable to set " << briefDescription() << "'s eMSVariableName to " 
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s eMSVariableName to "
       << object.briefDescription() << ".");
   }
   setNumberOfTimestepsToBeLogged(1);
@@ -362,7 +362,7 @@ bool EnergyManagementSystemTrendVariable::setNumberOfTimestepsToBeLogged(int num
 
 /// @cond
 EnergyManagementSystemTrendVariable::EnergyManagementSystemTrendVariable(std::shared_ptr<detail::EnergyManagementSystemTrendVariable_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

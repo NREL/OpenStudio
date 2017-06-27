@@ -111,7 +111,7 @@ namespace model {
     // We call the parent generator's Clone method which will clone both the mchp and mchpHR
     GeneratorMicroTurbine mchp = generatorMicroTurbine();
     GeneratorMicroTurbine mchpClone = mchp.clone(model).cast<GeneratorMicroTurbine>();
-    
+
     // We get the clone of the parent generator's MTHR so we can return that
     GeneratorMicroTurbineHeatRecovery mchpHRClone = mchpClone.generatorMicroTurbineHeatRecovery().get();
 
@@ -134,7 +134,7 @@ namespace model {
   {
     std::vector<ModelObject> result;
     boost::optional<Curve> oCurve;
-    
+
     // Curves should be included
     if (oCurve = thermalEfficiencyFunctionofTemperatureandElevationCurve()) {
       result.push_back(oCurve.get());
@@ -176,7 +176,7 @@ namespace model {
 
     return false;
   }
-  
+
 
   //boost::optional<Connection> GeneratorMicroTurbineHeatRecovery_Impl::heatRecoveryWaterInletNode() const {
   //  return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_Generator_MicroTurbine_HeatRecoveryFields::HeatRecoveryWaterInletNodeName);
@@ -261,7 +261,7 @@ namespace model {
   boost::optional<double> GeneratorMicroTurbineHeatRecovery_Impl::maximumHeatRecoveryWaterTemperature() const {
     return getDouble(OS_Generator_MicroTurbine_HeatRecoveryFields::MaximumHeatRecoveryWaterTemperature,true);
   }
-  
+
   // Get the parent generatorMicroTurbine
   GeneratorMicroTurbine GeneratorMicroTurbineHeatRecovery_Impl::generatorMicroTurbine() const {
 
@@ -280,11 +280,11 @@ namespace model {
     return value.get();
 
   }
-  
-  
-  
-  
-  
+
+
+
+
+
   // If defaulted, return generatorMicroTurbineHeatRecovery 'Reference Thermal Efficiency Using Lower Heat Value' divided by its generatorMicroTurbine 'Reference Electrical Efficiency Using Lower Heating Value'
   double GeneratorMicroTurbineHeatRecovery_Impl::ratedThermaltoElectricalPowerRatio() const {
     boost::optional<double> optRatedThermaltoElectricalPowerRatio = getDouble(OS_Generator_MicroTurbine_HeatRecoveryFields::RatedThermaltoElectricalPowerRatio, true);
@@ -312,7 +312,7 @@ namespace model {
     return isEmpty(OS_Generator_MicroTurbine_HeatRecoveryFields::RatedThermaltoElectricalPowerRatio);
   }
 
-  
+
   /*bool GeneratorMicroTurbineHeatRecovery_Impl::setHeatRecoveryWaterInletNode(const boost::optional<Connection>& connection) {
     bool result(false);
     if (connection) {
@@ -456,7 +456,7 @@ namespace model {
     bool result = setString(OS_Generator_MicroTurbine_HeatRecoveryFields::MaximumHeatRecoveryWaterTemperature, "");
     OS_ASSERT(result);
   }
-  
+
   bool GeneratorMicroTurbineHeatRecovery_Impl::setRatedThermaltoElectricalPowerRatio(double ratedThermaltoElectricalPowerRatio) {
     bool result = setDouble(OS_Generator_MicroTurbine_HeatRecoveryFields::RatedThermaltoElectricalPowerRatio, ratedThermaltoElectricalPowerRatio);
     return result;
@@ -466,7 +466,7 @@ namespace model {
     bool result = setString(OS_Generator_MicroTurbine_HeatRecoveryFields::RatedThermaltoElectricalPowerRatio, "");
     OS_ASSERT(result);
   }
-  
+
 
 } // detail
 
@@ -484,7 +484,7 @@ GeneratorMicroTurbineHeatRecovery::GeneratorMicroTurbineHeatRecovery( const Mode
   if (OptionalString parentName = mchp.name()) {
     setName( (*parentName) + " Heat Recovery");
   }
-  
+
   // Reference Thermal Efficiency Using Lower Heat Value has a default of 0 in E+ idd which isn't smart in this case
   // TODO Should I set it here, or change the .idd??
   // 0.4975 would be better
@@ -719,7 +719,7 @@ void GeneratorMicroTurbineHeatRecovery::resetRatedThermaltoElectricalPowerRatio(
 
 /// @cond
 GeneratorMicroTurbineHeatRecovery::GeneratorMicroTurbineHeatRecovery(std::shared_ptr<detail::GeneratorMicroTurbineHeatRecovery_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

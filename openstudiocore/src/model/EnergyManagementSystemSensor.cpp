@@ -140,7 +140,7 @@ namespace detail {
 
   boost::optional<OutputVariable> EnergyManagementSystemSensor_Impl::optionalOutputVariable() const {
     //Note: Cant do /object-list implementation since Auto Naming of Objects causes issues.
-    //      Instead, doing an /alpha getString implementation 
+    //      Instead, doing an /alpha getString implementation
     //return getObject<ModelObject>().getModelObjectTarget<OutputVariable>(OS_EnergyManagementSystem_SensorFields::OutputVariableorOutputMeterName);
     boost::optional<std::string> handle = getString(OS_EnergyManagementSystem_SensorFields::OutputVariableorOutputMeterName);
     const Model m = this->model();
@@ -158,7 +158,7 @@ namespace detail {
 
   boost::optional<OutputMeter> EnergyManagementSystemSensor_Impl::optionalOutputMeter() const {
     //Note: Cant do /object-list implementation since Auto Naming of Objects causes issues.
-    //      Instead, doing an /alpha getString implementation 
+    //      Instead, doing an /alpha getString implementation
     //return getObject<ModelObject>().getModelObjectTarget<OutputMeter>(OS_EnergyManagementSystem_SensorFields::OutputVariableorOutputMeterName);
     boost::optional<std::string> handle = getString(OS_EnergyManagementSystem_SensorFields::OutputVariableorOutputMeterName);
     const Model m = this->model();
@@ -254,7 +254,7 @@ bool EnergyManagementSystemSensor::setOutputVariableOrMeterName(const std::strin
 
 /// @cond
 EnergyManagementSystemSensor::EnergyManagementSystemSensor(std::shared_ptr<detail::EnergyManagementSystemSensor_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

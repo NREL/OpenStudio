@@ -847,7 +847,7 @@ GeneratorFuelCellPowerModule::GeneratorFuelCellPowerModule(const Model& model,
   setMaximumOperatingPoint(3728);
 }
 
-GeneratorFuelCellPowerModule::GeneratorFuelCellPowerModule(const Model& model, 
+GeneratorFuelCellPowerModule::GeneratorFuelCellPowerModule(const Model& model,
                                                            const CurveQuadratic& efficiencyCurve,
                                                            const ThermalZone& heatlossZone,
                                                            const Node& dilutionInletAirNode,
@@ -1415,7 +1415,7 @@ GeneratorFuelCell GeneratorFuelCellPowerModule::fuelCell() const {
 
 /// @cond
 GeneratorFuelCellPowerModule::GeneratorFuelCellPowerModule(std::shared_ptr<detail::GeneratorFuelCellPowerModule_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

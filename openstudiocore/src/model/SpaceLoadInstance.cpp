@@ -123,7 +123,7 @@ SpaceLoadInstance::SpaceLoadInstance(IddObjectType type,const SpaceLoadDefinitio
 }
 
 SpaceLoadInstance::SpaceLoadInstance(std::shared_ptr<detail::SpaceLoadInstance_Impl> impl)
-  : SpaceLoad(impl)
+  : SpaceLoad(std::move(impl))
 {}
 
 SpaceLoadDefinition SpaceLoadInstance::definition() const

@@ -162,7 +162,7 @@ void LightingSimulationControl::resetRunSimulationforWeatherFileRunPeriods() {
 
 /// @cond
 LightingSimulationControl::LightingSimulationControl(std::shared_ptr<detail::LightingSimulationControl_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 LightingSimulationControl::LightingSimulationControl(Model& model)
   : ModelObject(LightingSimulationControl::iddObjectType(),model)

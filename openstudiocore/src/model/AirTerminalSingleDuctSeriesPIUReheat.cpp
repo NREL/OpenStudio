@@ -298,12 +298,12 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_AirTerminal_SingleDuct_SeriesPIU_ReheatFields::ReheatCoilName);
   }
 
-  unsigned AirTerminalSingleDuctSeriesPIUReheat_Impl::inletPort() 
+  unsigned AirTerminalSingleDuctSeriesPIUReheat_Impl::inletPort()
   {
     return OS_AirTerminal_SingleDuct_SeriesPIU_ReheatFields::SupplyAirInletNode;
   }
 
-  unsigned AirTerminalSingleDuctSeriesPIUReheat_Impl::outletPort() 
+  unsigned AirTerminalSingleDuctSeriesPIUReheat_Impl::outletPort()
   {
     return OS_AirTerminal_SingleDuct_SeriesPIU_ReheatFields::OutletNode;
   }
@@ -360,7 +360,7 @@ namespace detail {
                               sourcePort.get(),
                               inletNode,
                               inletNode.inletPort() );
-              
+
               _model.connect( inletNode,
                               inletNode.outletPort(),
                               thisObject,
@@ -397,7 +397,7 @@ namespace detail {
                 setFanAvailabilitySchedule(schedule);
               }
 
-              return true; 
+              return true;
             }
           }
         }
@@ -422,14 +422,14 @@ namespace detail {
   {
     AirTerminalSingleDuctSeriesPIUReheat modelObjectClone = StraightComponent_Impl::clone(model).cast<AirTerminalSingleDuctSeriesPIUReheat>();
 
-    modelObjectClone.setString(modelObjectClone.secondaryAirInletPort(),""); 
+    modelObjectClone.setString(modelObjectClone.secondaryAirInletPort(),"");
 
     // clone coil
 
     HVACComponent coil = this->reheatCoil();
 
     HVACComponent coilClone = coil.clone(model).cast<HVACComponent>();
-    
+
     modelObjectClone.setReheatCoil(coilClone);
 
     // clone fan
@@ -503,7 +503,7 @@ namespace detail {
 
     boost::optional<ModelObject> sourceModelObject = this->inletModelObject();
     boost::optional<unsigned> sourcePort = this->connectedObjectPort(this->inletPort());
-    
+
     boost::optional<ModelObject> targetModelObject = this->outletModelObject();
     boost::optional<unsigned> targetPort = this->connectedObjectPort(this->outletPort());
 
@@ -568,7 +568,7 @@ namespace detail {
 } // detail
 
 AirTerminalSingleDuctSeriesPIUReheat::AirTerminalSingleDuctSeriesPIUReheat(const Model& model,
-                                                                           HVACComponent & fan, 
+                                                                           HVACComponent & fan,
                                                                            HVACComponent & reheatCoil)
   : StraightComponent(AirTerminalSingleDuctSeriesPIUReheat::iddObjectType(),model)
 {
@@ -713,7 +713,7 @@ boost::optional<Node> AirTerminalSingleDuctSeriesPIUReheat::secondaryAirInletNod
 
 /// @cond
 AirTerminalSingleDuctSeriesPIUReheat::AirTerminalSingleDuctSeriesPIUReheat(std::shared_ptr<detail::AirTerminalSingleDuctSeriesPIUReheat_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

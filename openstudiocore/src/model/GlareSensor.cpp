@@ -239,7 +239,7 @@ namespace detail {
     return result;
   }
 
-  bool GlareSensor_Impl::setTransformation(const openstudio::Transformation& transformation) 
+  bool GlareSensor_Impl::setTransformation(const openstudio::Transformation& transformation)
   {
     Vector3d translation = transformation.translation();
     this->setPositionXCoordinate(translation.x());
@@ -250,8 +250,8 @@ namespace detail {
     setPsiRotationAroundXAxis(radToDeg(eulerAngles.psi()));
     setThetaRotationAroundYAxis(radToDeg(eulerAngles.theta()));
     setPhiRotationAroundZAxis(radToDeg(eulerAngles.phi()));
-    
-    return true;  
+
+    return true;
   }
 
   bool GlareSensor_Impl::aimAt(const Point3d& target)
@@ -447,7 +447,7 @@ bool GlareSensor::aimAt(const Point3d& target)
 
 /// @cond
 GlareSensor::GlareSensor(std::shared_ptr<detail::GlareSensor_Impl> impl)
-  : SpaceItem(impl)
+  : SpaceItem(std::move(impl))
 {}
 /// @endcond
 

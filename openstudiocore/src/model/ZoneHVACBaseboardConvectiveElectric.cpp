@@ -235,7 +235,7 @@ namespace detail {
   {
     return 0; // this object has no inlet or outlet node
   }
-  
+
   boost::optional<ThermalZone> ZoneHVACBaseboardConvectiveElectric_Impl::thermalZone()
   {
     ModelObject thisObject = this->getObject<ModelObject>();
@@ -251,7 +251,7 @@ namespace detail {
     }
     return boost::none;
   }
-  
+
   bool ZoneHVACBaseboardConvectiveElectric_Impl::addToThermalZone(ThermalZone & thermalZone)
   {
     Model m = this->model();
@@ -274,7 +274,7 @@ namespace detail {
 
     return true;
   }
-  
+
   void ZoneHVACBaseboardConvectiveElectric_Impl::removeFromThermalZone()
   {
     if ( boost::optional<ThermalZone> thermalZone = this->thermalZone() ) {
@@ -357,7 +357,7 @@ bool ZoneHVACBaseboardConvectiveElectric::setEfficiency(const Quantity& efficien
 void ZoneHVACBaseboardConvectiveElectric::resetEfficiency() {
   getImpl<detail::ZoneHVACBaseboardConvectiveElectric_Impl>()->resetEfficiency();
 }
-  
+
 boost::optional<ThermalZone> ZoneHVACBaseboardConvectiveElectric::thermalZone()
 {
   return getImpl<detail::ZoneHVACBaseboardConvectiveElectric_Impl>()->thermalZone();
@@ -375,7 +375,7 @@ void ZoneHVACBaseboardConvectiveElectric::removeFromThermalZone()
 
 /// @cond
 ZoneHVACBaseboardConvectiveElectric::ZoneHVACBaseboardConvectiveElectric(std::shared_ptr<detail::ZoneHVACBaseboardConvectiveElectric_Impl> impl)
-  : ZoneHVACComponent(impl)
+  : ZoneHVACComponent(std::move(impl))
 {}
 /// @endcond
 

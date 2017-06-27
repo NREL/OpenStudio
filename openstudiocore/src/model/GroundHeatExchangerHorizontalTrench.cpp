@@ -532,7 +532,7 @@ bool GroundHeatExchangerHorizontalTrench::setEvapotranspirationGroundCoverParame
 
 /// @cond
 GroundHeatExchangerHorizontalTrench::GroundHeatExchangerHorizontalTrench(std::shared_ptr<detail::GroundHeatExchangerHorizontalTrench_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

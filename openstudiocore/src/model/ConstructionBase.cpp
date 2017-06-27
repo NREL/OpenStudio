@@ -332,7 +332,7 @@ ConstructionBase::ConstructionBase(IddObjectType type,const Model& model)
 }
 
 ConstructionBase::ConstructionBase(std::shared_ptr<detail::ConstructionBase_Impl> impl)
-  : ResourceObject(impl)
+  : ResourceObject(std::move(impl))
 {}
 /// @endcond
 

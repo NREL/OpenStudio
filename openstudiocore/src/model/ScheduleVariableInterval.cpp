@@ -256,7 +256,7 @@ namespace detail {
       ModelExtensibleGroup group = pushExtensibleGroup(temp, false).cast<ModelExtensibleGroup>();
       OS_ASSERT(!group.empty());
     }
-    
+
     this->emitChangeSignals();
 
     return true;
@@ -325,7 +325,7 @@ void ScheduleVariableInterval::resetOutOfRangeValue() {
 
 /// @cond
 ScheduleVariableInterval::ScheduleVariableInterval(std::shared_ptr<detail::ScheduleVariableInterval_Impl> impl)
-  : ScheduleInterval(impl)
+  : ScheduleInterval(std::move(impl))
 {}
 /// @endcond
 

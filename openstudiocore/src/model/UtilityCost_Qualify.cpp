@@ -178,7 +178,7 @@ UtilityCost_Qualify::UtilityCost_Qualify(const Model& model)
 
 // constructor
 UtilityCost_Qualify::UtilityCost_Qualify(std::shared_ptr<detail::UtilityCost_Qualify_Impl> impl)
-  : ParentObject(impl)
+  : ParentObject(std::move(impl))
 {}
 
 OptionalInt UtilityCost_Qualify::numberOfMonths() const

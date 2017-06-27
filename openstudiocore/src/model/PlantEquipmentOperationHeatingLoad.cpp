@@ -95,7 +95,7 @@ IddObjectType PlantEquipmentOperationHeatingLoad::iddObjectType() {
 
 /// @cond
 PlantEquipmentOperationHeatingLoad::PlantEquipmentOperationHeatingLoad(std::shared_ptr<detail::PlantEquipmentOperationHeatingLoad_Impl> impl)
-  : PlantEquipmentOperationRangeBasedScheme(impl)
+  : PlantEquipmentOperationRangeBasedScheme(std::move(impl))
 {}
 /// @endcond
 

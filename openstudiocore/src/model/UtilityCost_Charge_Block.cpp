@@ -211,7 +211,7 @@ UtilityCost_Charge_Block::UtilityCost_Charge_Block(const Model& model)
 
 // constructor
 UtilityCost_Charge_Block::UtilityCost_Charge_Block(std::shared_ptr<detail::UtilityCost_Charge_Block_Impl> impl)
-  : ParentObject(impl)
+  : ParentObject(std::move(impl))
 {}
 
 OptionalString UtilityCost_Charge_Block::tariffName() const
@@ -271,7 +271,7 @@ boost::optional<std::string> UtilityCost_Charge_Block::blockSizeValueOrVariableN
 }
 
 bool UtilityCost_Charge_Block::setBlockSizeValueOrVariableName(
-    unsigned index, const std::string& str) 
+    unsigned index, const std::string& str)
 {
   return getImpl<detail::UtilityCost_Charge_Block_Impl>()->setBlockSizeValueOrVariableName(index,str);
 }

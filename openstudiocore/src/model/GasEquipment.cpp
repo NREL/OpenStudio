@@ -418,7 +418,7 @@ double GasEquipment::getPowerPerPerson(double floorArea, double numPeople) const
 
 /// @cond
 GasEquipment::GasEquipment(std::shared_ptr<detail::GasEquipment_Impl> impl)
-  : SpaceLoadInstance(impl)
+  : SpaceLoadInstance(std::move(impl))
 {}
 /// @endcond
 

@@ -477,7 +477,7 @@ bool ZoneHVACDehumidifierDX::setOffCycleParasiticElectricLoad(double offCyclePar
 
 /// @cond
 ZoneHVACDehumidifierDX::ZoneHVACDehumidifierDX(std::shared_ptr<detail::ZoneHVACDehumidifierDX_Impl> impl)
-  : ZoneHVACComponent(impl)
+  : ZoneHVACComponent(std::move(impl))
 {}
 /// @endcond
 

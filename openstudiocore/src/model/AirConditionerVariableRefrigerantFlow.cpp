@@ -1410,49 +1410,49 @@ namespace detail {
     {
       result.push_back(curve.get());
     }
-    
+
     curve = coolingEnergyInputRatioModifierFunctionofHighTemperatureCurve();
     if( curve )
     {
       result.push_back(curve.get());
     }
-    
-    curve = coolingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve(); 
+
+    curve = coolingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve();
     if( curve )
     {
       result.push_back(curve.get());
     }
-    
+
     curve = coolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve();
     if( curve )
     {
       result.push_back(curve.get());
     }
-    
+
     curve = coolingCombinationRatioCorrectionFactorCurve();
     if( curve )
     {
       result.push_back(curve.get());
     }
-    
+
     curve = coolingPartLoadFractionCorrelationCurve();
     if( curve )
     {
       result.push_back(curve.get());
     }
-    
-    curve = heatingCapacityRatioModifierFunctionofLowTemperatureCurve();      
+
+    curve = heatingCapacityRatioModifierFunctionofLowTemperatureCurve();
     if( curve )
     {
       result.push_back(curve.get());
     }
-    
+
     curve = heatingCapacityRatioBoundaryCurve();
     if( curve )
     {
       result.push_back(curve.get());
     }
-    
+
     curve = heatingCapacityRatioModifierFunctionofHighTemperatureCurve();
     if( curve )
     {
@@ -1464,43 +1464,43 @@ namespace detail {
     {
       result.push_back(curve.get());
     }
-    
+
     curve = heatingEnergyInputRatioBoundaryCurve();
     if( curve )
     {
       result.push_back(curve.get());
     }
-    
+
     curve = heatingEnergyInputRatioModifierFunctionofHighTemperatureCurve();
     if( curve )
     {
       result.push_back(curve.get());
     }
-    
+
     curve = heatingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve();
     if( curve )
     {
       result.push_back(curve.get());
     }
-    
+
     curve = heatingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve();
     if( curve )
     {
       result.push_back(curve.get());
     }
-    
-    curve = heatingCombinationRatioCorrectionFactorCurve(); 
+
+    curve = heatingCombinationRatioCorrectionFactorCurve();
     if( curve )
     {
       result.push_back(curve.get());
     }
-    
+
     curve = heatingPartLoadFractionCorrelationCurve();
     if( curve )
     {
       result.push_back(curve.get());
     }
-    
+
     curve = pipingCorrectionFactorforLengthinCoolingModeCurve();
     if( curve )
     {
@@ -1512,25 +1512,25 @@ namespace detail {
     {
       result.push_back(curve.get());
     }
-    
+
     curve = heatRecoveryCoolingCapacityModifierCurve();
     if( curve )
     {
       result.push_back(curve.get());
     }
-    
+
     curve = heatRecoveryCoolingEnergyModifierCurve();
     if( curve )
     {
       result.push_back(curve.get());
     }
-    
+
     curve = heatRecoveryHeatingCapacityModifierCurve();
     if( curve )
     {
       result.push_back(curve.get());
     }
-    
+
     curve = heatRecoveryHeatingEnergyModifierCurve();
     if( curve )
     {
@@ -1569,19 +1569,19 @@ namespace detail {
 
     if( auto curve = coolingEnergyInputRatioBoundaryCurve() ) {
       auto clone = curve->clone(model).cast<Curve>();
-      airConditionerClone.setCoolingEnergyInputRatioBoundaryCurve(clone); 
+      airConditionerClone.setCoolingEnergyInputRatioBoundaryCurve(clone);
     }
 
     if( auto curve = coolingEnergyInputRatioModifierFunctionofHighTemperatureCurve() ) {
       auto clone = curve->clone(model).cast<Curve>();
       airConditionerClone.setCoolingEnergyInputRatioModifierFunctionofHighTemperatureCurve(clone);
     }
-    
+
     if( auto curve = coolingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve() ) {
       auto clone = curve->clone(model).cast<Curve>();
       airConditionerClone.setCoolingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve(clone);
     }
-    
+
     if( auto curve = coolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve() ) {
       auto clone = curve->clone(model).cast<Curve>();
       airConditionerClone.setCoolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve(clone);
@@ -1655,7 +1655,7 @@ namespace detail {
     if( auto curve = pipingCorrectionFactorforLengthinHeatingModeCurve() ) {
       auto clone = curve->clone(model).cast<Curve>();
       airConditionerClone.setPipingCorrectionFactorforLengthinHeatingModeCurve(clone);
-    }    
+    }
 
     if( auto curve = heatRecoveryCoolingCapacityModifierCurve() ) {
       auto clone = curve->clone(model).cast<Curve>();
@@ -1715,49 +1715,49 @@ namespace detail {
     {
       curve->remove();
     }
-    
+
     curve = coolingEnergyInputRatioModifierFunctionofHighTemperatureCurve();
     if( curve )
     {
       curve->remove();
     }
-    
-    curve = coolingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve(); 
+
+    curve = coolingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve();
     if( curve )
     {
       curve->remove();
     }
-    
+
     curve = coolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve();
     if( curve )
     {
       curve->remove();
     }
-    
+
     curve = coolingCombinationRatioCorrectionFactorCurve();
     if( curve )
     {
       curve->remove();
     }
-    
+
     curve = coolingPartLoadFractionCorrelationCurve();
     if( curve )
     {
       curve->remove();
     }
-    
-    curve = heatingCapacityRatioModifierFunctionofLowTemperatureCurve();      
+
+    curve = heatingCapacityRatioModifierFunctionofLowTemperatureCurve();
     if( curve )
     {
       curve->remove();
     }
-    
+
     curve = heatingCapacityRatioBoundaryCurve();
     if( curve )
     {
       curve->remove();
     }
-    
+
     curve = heatingCapacityRatioModifierFunctionofHighTemperatureCurve();
     if( curve )
     {
@@ -1769,73 +1769,73 @@ namespace detail {
     {
       curve->remove();
     }
-    
+
     curve = heatingEnergyInputRatioBoundaryCurve();
     if( curve )
     {
       curve->remove();
     }
-    
+
     curve = heatingEnergyInputRatioModifierFunctionofHighTemperatureCurve();
     if( curve )
     {
       curve->remove();
     }
-    
+
     curve = heatingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve();
     if( curve )
     {
       curve->remove();
     }
-    
+
     curve = heatingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve();
     if( curve )
     {
       curve->remove();
     }
-    
-    curve = heatingCombinationRatioCorrectionFactorCurve(); 
+
+    curve = heatingCombinationRatioCorrectionFactorCurve();
     if( curve )
     {
       curve->remove();
     }
-    
+
     curve = heatingPartLoadFractionCorrelationCurve();
     if( curve )
     {
       curve->remove();
     }
-    
+
     curve = pipingCorrectionFactorforLengthinCoolingModeCurve();
     if( curve )
     {
       curve->remove();
     }
-    
+
     curve = pipingCorrectionFactorforLengthinCoolingModeCurve();
     if( curve )
     {
       curve->remove();
     }
-    
+
     curve = heatRecoveryCoolingCapacityModifierCurve();
     if( curve )
     {
       curve->remove();
     }
-    
+
     curve = heatRecoveryCoolingEnergyModifierCurve();
     if( curve )
     {
       curve->remove();
     }
-    
+
     curve = heatRecoveryHeatingCapacityModifierCurve();
     if( curve )
     {
       curve->remove();
     }
-    
+
     curve = heatRecoveryHeatingEnergyModifierCurve();
     if( curve )
     {
@@ -1920,7 +1920,7 @@ AirConditionerVariableRefrigerantFlow::AirConditionerVariableRefrigerantFlow(con
   autosizeWaterCondenserVolumeFlowRate();
 
   setEvaporativeCondenserEffectiveness(0.9);
-  
+
   autosizeEvaporativeCondenserAirFlowRate();
 
   autosizeEvaporativeCondenserPumpRatedPowerConsumption();
@@ -1940,7 +1940,7 @@ AirConditionerVariableRefrigerantFlow::AirConditionerVariableRefrigerantFlow(con
   setHeatRecoveryCoolingCapacityTimeConstant(0.083);
 
   setInitialHeatRecoveryCoolingEnergyFraction(1.0);
-  
+
   setHeatRecoveryCoolingEnergyTimeConstant(0.0);
 
   setInitialHeatRecoveryHeatingCapacityFraction(0.5);
@@ -2026,7 +2026,7 @@ AirConditionerVariableRefrigerantFlow::AirConditionerVariableRefrigerantFlow(con
   vrfCoolEIRFTHi.setMinimumValueofy(16.8);
   vrfCoolEIRFTHi.setMaximumValueofy(43.3);
   setCoolingEnergyInputRatioModifierFunctionofHighTemperatureCurve(vrfCoolEIRFTHi);
-  
+
   CurveCubic coolingEIRLowPLR(model);
   coolingEIRLowPLR.setName(name().get() + " CoolingEIRLowPLR");
   coolingEIRLowPLR.setCoefficient1Constant(0.4541226192);
@@ -2045,7 +2045,7 @@ AirConditionerVariableRefrigerantFlow::AirConditionerVariableRefrigerantFlow(con
   coolingEIRHiPLR.setCoefficient4xPOW3(0.0);
   coolingEIRHiPLR.setMinimumValueofx(1.0);
   coolingEIRHiPLR.setMaximumValueofx(1.5);
-  setCoolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve(coolingEIRHiPLR); 
+  setCoolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve(coolingEIRHiPLR);
 
   CurveCubic coolingCombRatio(model);
   coolingCombRatio.setName(name().get() + " CoolingCombRatio");
@@ -2066,7 +2066,7 @@ AirConditionerVariableRefrigerantFlow::AirConditionerVariableRefrigerantFlow(con
   vrfCPLFFPLR.setMinimumValueofx(0.0);
   vrfCPLFFPLR.setMinimumValueofx(1.0);
   setCoolingPartLoadFractionCorrelationCurve(vrfCPLFFPLR);
-  
+
   CurveBiquadratic vrfHeatCapFT(model);
   vrfHeatCapFT.setName(name().get() + " VRFHeatCapFT");
   vrfHeatCapFT.setCoefficient1Constant(1.012090154);
@@ -3010,7 +3010,7 @@ std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> AirConditionerVariableR
 
 /// @cond
 AirConditionerVariableRefrigerantFlow::AirConditionerVariableRefrigerantFlow(std::shared_ptr<detail::AirConditionerVariableRefrigerantFlow_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

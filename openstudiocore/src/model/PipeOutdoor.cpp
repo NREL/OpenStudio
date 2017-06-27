@@ -224,7 +224,7 @@ bool PipeOutdoor::setPipeLength(double pipeLength) {
 
 /// @cond
 PipeOutdoor::PipeOutdoor(std::shared_ptr<detail::PipeOutdoor_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

@@ -188,7 +188,7 @@ namespace detail {
 
   double UtilityBill_Impl::consumptionUnitConversionFactor() const {
     boost::optional<double> value = getDouble(OS_UtilityBillFields::ConsumptionUnitConversionFactor,true);
-    
+
     // if value not set, use a smart default
     if (!value){
       FuelType fuelType = this->fuelType();
@@ -198,7 +198,7 @@ namespace detail {
       // Thermal Energy Conversions, Technical Reference, July 2013
       // Portfolio Manager uses these to convert to kBtu
       //
-      // Original source: 
+      // Original source:
       // TABLE C-1 TO SUBPART C OF PART 98-DEFAULT CO2 EMISSION FACTORS AND HIGH HEAT VALUES FOR VARIOUS TYPES OF FUEL
       boost::optional<double> unitToKBtu;
       boost::optional<double> unitToM3;
@@ -225,7 +225,7 @@ namespace detail {
         }
       }else if (consumptionUnit == "tons"){
         //switch (fuelType.value()){
-          //case FuelType::Coal: 
+          //case FuelType::Coal:
           //  //unitToKBtu = 25090.0; // anthracite
           //  unitToKBtu = 24930.0; // bituminous
           //  break;
@@ -234,7 +234,7 @@ namespace detail {
         //}
       }else if (consumptionUnit == "lbs"){
         switch (fuelType.value()){
-          //case FuelType::Coal: 
+          //case FuelType::Coal:
           //  //unitToKBtu = 12.545; // anthracite
           //  unitToKBtu = 12.465; // bituminous
           //  break;
@@ -246,7 +246,7 @@ namespace detail {
         }
       }else if (consumptionUnit == "kLbs"){
         switch (fuelType.value()){
-          //case FuelType::Coal: 
+          //case FuelType::Coal:
           //  //unitToKBtu = 12545; // anthracite
           //  unitToKBtu = 12465; // bituminous
           //  break;
@@ -258,7 +258,7 @@ namespace detail {
         }
       }else if (consumptionUnit == "MLbs"){
         switch (fuelType.value()){
-          //case FuelType::Coal: 
+          //case FuelType::Coal:
           //  //unitToKBtu = 12545000; // anthracite
           //  unitToKBtu = 12465000; // bituminous
           //  break;
@@ -997,7 +997,7 @@ bool BillingPeriod::setEndDate(const Date& endDate)
   Date currentEndDate = this->endDate();
 
   unsigned currentNumberOfDays = this->numberOfDays();
-  
+
   /* If endDate is after startDate then startDate is retained.
      If endDate is before startDate then numberOfDays is retained. */
 
@@ -1316,7 +1316,7 @@ boost::optional<double> BillingPeriod::modelPeakDemand() const
       result = std::max(power, *result);
     }
 
-    
+
   }
 
   return result;
@@ -1555,7 +1555,7 @@ boost::optional<double> UtilityBill::NMBE() const{
 
 /// @cond
 UtilityBill::UtilityBill(std::shared_ptr<detail::UtilityBill_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

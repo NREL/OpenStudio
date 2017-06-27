@@ -127,7 +127,7 @@ SpaceItem::SpaceItem(IddObjectType type,const Model& model)
 }
 
 SpaceItem::SpaceItem(std::shared_ptr<detail::SpaceItem_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 
 boost::optional<Space> SpaceItem::space() const

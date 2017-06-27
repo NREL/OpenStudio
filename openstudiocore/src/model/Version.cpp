@@ -112,7 +112,7 @@ Version::Version(const Model& model)
 
 // constructor
 Version::Version(std::shared_ptr<detail::Version_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 
 std::string Version::versionIdentifier() const {

@@ -194,7 +194,7 @@ namespace detail{
 
   void CoilCoolingDXTwoSpeed_Impl::setRatedHighSpeedTotalCoolingCapacity( double value )
   {
-      setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::RatedHighSpeedTotalCoolingCapacity,value); 
+      setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::RatedHighSpeedTotalCoolingCapacity,value);
   }
 
 
@@ -862,7 +862,7 @@ CoilCoolingDXTwoSpeed::CoilCoolingDXTwoSpeed(const Model& model,
   //  A7 , \field Energy Input Ratio Function of Temperature Curve Name
   setEnergyInputRatioFunctionOfTemperatureCurve(energyInputRatioFofTemp);
   //  A8 , \field Energy Input Ratio Function of Flow Fraction Curve Name
-  setEnergyInputRatioFunctionOfFlowFractionCurve(energyInputRatioFofFlow); 
+  setEnergyInputRatioFunctionOfFlowFractionCurve(energyInputRatioFofFlow);
   //  A9 , \field Part Load Fraction Correlation Curve Name
   setPartLoadFractionCorrelationCurve(partLoadFraction);
   //  N5 , \field Rated Low Speed Total Cooling Capacity
@@ -876,7 +876,7 @@ CoilCoolingDXTwoSpeed::CoilCoolingDXTwoSpeed(const Model& model,
   //  A10, \field Low Speed Total Cooling Capacity Function of Temperature Curve Name
   setLowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve(lowSpeedCoolingCurveFofTemp);
   //  A11, \field Low Speed Energy Input Ratio Function of Temperature Curve Name
-  setLowSpeedEnergyInputRatioFunctionOfTemperatureCurve(lowSpeedEnergyInputRatioFofTemp);  
+  setLowSpeedEnergyInputRatioFunctionOfTemperatureCurve(lowSpeedEnergyInputRatioFofTemp);
   //  A13, \field Condenser Type
   setCondenserType("AirCooled");
   //   N9, \field High Speed Evaporative Condenser Effectiveness
@@ -987,14 +987,14 @@ CoilCoolingDXTwoSpeed::CoilCoolingDXTwoSpeed(const Model& model)
   setTotalCoolingCapacityFunctionOfTemperatureCurve(coolingCurveFofTemp);
   setTotalCoolingCapacityFunctionOfFlowFractionCurve(coolingCurveFofFlow);
   setEnergyInputRatioFunctionOfTemperatureCurve(energyInputRatioFofTemp);
-  setEnergyInputRatioFunctionOfFlowFractionCurve(energyInputRatioFofFlow); 
+  setEnergyInputRatioFunctionOfFlowFractionCurve(energyInputRatioFofFlow);
   setPartLoadFractionCorrelationCurve(partLoadFraction);
   setRatedLowSpeedTotalCoolingCapacity(OptionalDouble());//autosize
   setRatedLowSpeedSensibleHeatRatio(0.69);//autosize
   setRatedLowSpeedCOP(3.0);
   setRatedHighSpeedAirFlowRate(OptionalDouble());//autosize
   setLowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve(coolingLowSpdCurveFofTemp);
-  setLowSpeedEnergyInputRatioFunctionOfTemperatureCurve(energyLowSpdInputRatioFofTemp);  
+  setLowSpeedEnergyInputRatioFunctionOfTemperatureCurve(energyLowSpdInputRatioFofTemp);
   setCondenserType("AirCooled");
   setHighSpeedEvaporativeCondenserEffectiveness(0.0);
   setHighSpeedEvaporativeCondenserAirFlowRate(boost::none);//autosize
@@ -1008,7 +1008,7 @@ CoilCoolingDXTwoSpeed::CoilCoolingDXTwoSpeed(const Model& model)
 }
 
 CoilCoolingDXTwoSpeed::CoilCoolingDXTwoSpeed(std::shared_ptr<detail::CoilCoolingDXTwoSpeed_Impl> p)
-  : StraightComponent(p)
+  : StraightComponent(std::move(p))
 {}
 
 //  A2 , \field Availability Schedule Name

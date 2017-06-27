@@ -604,7 +604,7 @@ void RefrigerationGasCoolerAirCooled::resetGasCoolerOutletPipingRefrigerantInven
 
 /// @cond
 RefrigerationGasCoolerAirCooled::RefrigerationGasCoolerAirCooled(std::shared_ptr<detail::RefrigerationGasCoolerAirCooled_Impl> impl)
-  : ParentObject(impl)
+  : ParentObject(std::move(impl))
 {}
 /// @endcond
 

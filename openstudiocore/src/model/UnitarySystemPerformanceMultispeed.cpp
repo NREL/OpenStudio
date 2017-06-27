@@ -25,7 +25,7 @@
  *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
- 
+
 #include "UnitarySystemPerformanceMultispeed.hpp"
 #include "UnitarySystemPerformanceMultispeed_Impl.hpp"
 #include "ModelExtensibleGroup.hpp"
@@ -48,7 +48,7 @@ namespace detail {
   {
     OS_ASSERT(idfObject.iddObject().type() == UnitarySystemPerformanceMultispeed::iddObjectType());
   }
-  
+
   UnitarySystemPerformanceMultispeed_Impl::UnitarySystemPerformanceMultispeed_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                                                                    Model_Impl* model,
                                                                                    bool keepHandle)
@@ -56,7 +56,7 @@ namespace detail {
   {
     OS_ASSERT(other.iddObject().type() == UnitarySystemPerformanceMultispeed::iddObjectType());
   }
-  
+
   UnitarySystemPerformanceMultispeed_Impl::UnitarySystemPerformanceMultispeed_Impl(const UnitarySystemPerformanceMultispeed_Impl& other,
                                                                                    Model_Impl* model,
                                                                                    bool keepHandle)
@@ -272,7 +272,7 @@ void UnitarySystemPerformanceMultispeed::resetSupplyAirflowRatioFields() {
 
 /// @cond
 UnitarySystemPerformanceMultispeed::UnitarySystemPerformanceMultispeed(std::shared_ptr<detail::UnitarySystemPerformanceMultispeed_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

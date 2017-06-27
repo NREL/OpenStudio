@@ -151,8 +151,8 @@ namespace detail {
     }
   }
 
-  std::vector<Surface> ZoneHVACBaseboardRadiantConvectiveWater_Impl::surfaces() const {    
-    
+  std::vector<Surface> ZoneHVACBaseboardRadiantConvectiveWater_Impl::surfaces() const {
+
     //vector to hold all of the surfaces that this radiant system is attached to
     std::vector<Surface> surfaces;
 
@@ -161,12 +161,12 @@ namespace detail {
 
       //loop through all the spaces in this zone
       for (auto const & space : thermalZone->spaces()){
-    
+
         //loop through all the surfaces in this space
         for (auto const & surface : space.surfaces()){
           surfaces.push_back(surface);
         }
-      }    
+      }
     }
 
     return surfaces;
@@ -192,7 +192,7 @@ namespace detail {
 
     if( model == this->model() ) {
       if( auto plant = t_heatingCoil.plantLoop() ) {
-        plant->addDemandBranchForComponent(heatingCoilClone); 
+        plant->addDemandBranchForComponent(heatingCoilClone);
       }
     }
 
@@ -338,7 +338,7 @@ void ZoneHVACBaseboardRadiantConvectiveWater::removeFromThermalZone() {
 
 /// @cond
 ZoneHVACBaseboardRadiantConvectiveWater::ZoneHVACBaseboardRadiantConvectiveWater(std::shared_ptr<detail::ZoneHVACBaseboardRadiantConvectiveWater_Impl> impl)
-  : ZoneHVACComponent(impl)
+  : ZoneHVACComponent(std::move(impl))
 {}
 /// @endcond
 

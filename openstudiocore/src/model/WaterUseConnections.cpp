@@ -191,7 +191,7 @@ namespace detail {
   {
     return OS_WaterUse_ConnectionsFields::InletNodeName;
   }
-  
+
   unsigned WaterUseConnections_Impl::outletPort()
   {
     return OS_WaterUse_ConnectionsFields::OutletNodeName;
@@ -208,7 +208,7 @@ namespace detail {
       WorkspaceExtensibleGroup group = elem.cast<WorkspaceExtensibleGroup>();
 
       boost::optional<WorkspaceObject> wo = group.getTarget(OS_WaterUse_ConnectionsExtensibleFields::WaterUseEquipmentName);
-       
+
       if( wo )
       {
         WaterUseEquipment equipment = wo->cast<WaterUseEquipment>();
@@ -219,11 +219,11 @@ namespace detail {
 
     return result;
   }
-  
+
   bool WaterUseConnections_Impl::addWaterUseEquipment(const WaterUseEquipment & waterUseEquipment)
   {
     bool result = false;
-  
+
     if( waterUseEquipment.model() == model() )
     {
       WorkspaceExtensibleGroup group = getObject<WaterUseConnections>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
@@ -235,7 +235,7 @@ namespace detail {
 
     return result;
   }
-  
+
   bool WaterUseConnections_Impl::removeWaterUseEquipment(WaterUseEquipment & _waterUseEquipment)
   {
     std::vector<WaterUseEquipment> equipment = waterUseEquipment();
@@ -334,7 +334,7 @@ bool WaterUseConnections::removeWaterUseEquipment(WaterUseEquipment & waterUseEq
 
 /// @cond
 WaterUseConnections::WaterUseConnections(std::shared_ptr<detail::WaterUseConnections_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

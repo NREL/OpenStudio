@@ -174,7 +174,7 @@ bool SetpointManagerMultiZoneCoolingAverage::setMaximumSetpointTemperature(doubl
 
 /// @cond
 SetpointManagerMultiZoneCoolingAverage::SetpointManagerMultiZoneCoolingAverage(std::shared_ptr<detail::SetpointManagerMultiZoneCoolingAverage_Impl> impl)
-  : SetpointManager(impl)
+  : SetpointManager(std::move(impl))
 {}
 /// @endcond
 

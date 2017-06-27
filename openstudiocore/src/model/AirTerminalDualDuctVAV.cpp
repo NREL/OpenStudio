@@ -323,7 +323,7 @@ void AirTerminalDualDuctVAV::resetDesignSpecificationOutdoorAirObject() {
 
 /// @cond
 AirTerminalDualDuctVAV::AirTerminalDualDuctVAV(std::shared_ptr<detail::AirTerminalDualDuctVAV_Impl> impl)
-  : Mixer(impl)
+  : Mixer(std::move(impl))
 {}
 /// @endcond
 

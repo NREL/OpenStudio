@@ -103,11 +103,11 @@ namespace detail {
     }
     return result;
   }
-  
+
   //@}
   /** @name Getters */
   //@{
-  
+
   // Included in parent class
   // boost::optional<ElectricLoadCenterDistribution> ElectricLoadCenterStorageSimple_Impl::electricLoadCenterDistribution() const
   // {
@@ -124,8 +124,8 @@ namespace detail {
     // }
     // return boost::none;
   // }
-  
-  
+
+
   //boost::optional<ElectricLoadCenterDistribution> ElectricLoadCenterStorageSimple_Impl::electricLoadCenterDistribution const {
 
   //  boost::optional<ElectricLoadCenterDistribution> value;
@@ -146,7 +146,7 @@ namespace detail {
   boost::optional<Schedule> ElectricLoadCenterStorageSimple_Impl::optionalAvailabilitySchedule() const {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ElectricLoadCenter_Storage_SimpleFields::AvailabilityScheduleName);
   }
-  
+
   Schedule ElectricLoadCenterStorageSimple_Impl::availabilitySchedule() const {
     boost::optional<Schedule> value = optionalAvailabilitySchedule();
     if (!value) {
@@ -160,8 +160,8 @@ namespace detail {
   bool ElectricLoadCenterStorageSimple_Impl::isAvailabilityScheduleDefaulted() const {
     return isEmpty(OS_ElectricLoadCenter_Storage_SimpleFields::AvailabilityScheduleName);
   }
-  
-  // Optional thermal Zone for heat gains  
+
+  // Optional thermal Zone for heat gains
   boost::optional<ThermalZone> ElectricLoadCenterStorageSimple_Impl::thermalZone() const {
     return getObject<ModelObject>().getModelObjectTarget<ThermalZone>(OS_ElectricLoadCenter_Storage_SimpleFields::ZoneName);
   }
@@ -198,14 +198,14 @@ namespace detail {
   bool ElectricLoadCenterStorageSimple_Impl::isNominalDischargingEnergeticEfficiencyDefaulted() const {
     return isEmpty(OS_ElectricLoadCenter_Storage_SimpleFields::NominalDischargingEnergeticEfficiency);
   }
-  
+
   // Maximum Storage Capacity, required, no default
   double ElectricLoadCenterStorageSimple_Impl::maximumStorageCapacity() const {
     boost::optional<double> value = getDouble(OS_ElectricLoadCenter_Storage_SimpleFields::MaximumStorageCapacity,true);
     OS_ASSERT(value);
     return value.get();
   }
-  
+
   // Maximum Rate of Discharge, required, no default
   double ElectricLoadCenterStorageSimple_Impl::maximumPowerforDischarging() const {
     boost::optional<double> value = getDouble(OS_ElectricLoadCenter_Storage_SimpleFields::MaximumPowerforDischarging,true);
@@ -227,16 +227,16 @@ namespace detail {
     if (optIniStateCharge) {
       // Get it and return
       return optIniStateCharge.get();
-    } 
+    }
     // We Default it to half the maximum capacity
     double maxCap = maximumStorageCapacity();
     return maxCap / 2.0;
   }
-  
+
   bool ElectricLoadCenterStorageSimple_Impl::isInitialStateofChargeDefaulted() const {
     return isEmpty(OS_ElectricLoadCenter_Storage_SimpleFields::InitialStateofCharge);
   }
-  
+
   //@}
   /** @name Setters */
   //@{
@@ -259,13 +259,13 @@ namespace detail {
     bool result = setPointer(OS_ElectricLoadCenter_Storage_SimpleFields::ZoneName, thermalZone.handle());
     return result;
   }
-  
+
   // Reset the zone (leave blank)
   void ElectricLoadCenterStorageSimple_Impl::resetThermalZone() {
     bool result = setString(OS_ElectricLoadCenter_Storage_SimpleFields::ZoneName, "");
     OS_ASSERT(result);
   }
-  
+
 
   bool ElectricLoadCenterStorageSimple_Impl::setRadiativeFractionforZoneHeatGains(double radiativeFractionforZoneHeatGains) {
     bool result = setDouble(OS_ElectricLoadCenter_Storage_SimpleFields::RadiativeFractionforZoneHeatGains, radiativeFractionforZoneHeatGains);
@@ -337,13 +337,13 @@ ElectricLoadCenterStorageSimple::ElectricLoadCenterStorageSimple(const Model& mo
   // already defaults to alwaysOn
   //Schedule schedule = model.alwaysOnDiscreteSchedule();
   //setAvailabilitySchedule(schedule);
-  
+
   setNominalEnergeticEfficiencyforCharging(0.8);
   setNominalDischargingEnergeticEfficiency(0.8);
   setMaximumStorageCapacity(1.0E13);
   setMaximumPowerforDischarging(1.0E6);
   setMaximumPowerforCharging(1.0E6);
-  
+
 }
 
 IddObjectType ElectricLoadCenterStorageSimple::iddObjectType() {
@@ -477,7 +477,7 @@ void ElectricLoadCenterStorageSimple::resetInitialStateofCharge() {
 
 /// @cond
 ElectricLoadCenterStorageSimple::ElectricLoadCenterStorageSimple(std::shared_ptr<detail::ElectricLoadCenterStorageSimple_Impl> impl)
-  : ElectricalStorage(impl)
+  : ElectricalStorage(std::move(impl))
 {}
 /// @endcond
 

@@ -95,7 +95,7 @@ IddObjectType PlantEquipmentOperationCoolingLoad::iddObjectType() {
 
 /// @cond
 PlantEquipmentOperationCoolingLoad::PlantEquipmentOperationCoolingLoad(std::shared_ptr<detail::PlantEquipmentOperationCoolingLoad_Impl> impl)
-  : PlantEquipmentOperationRangeBasedScheme(impl)
+  : PlantEquipmentOperationRangeBasedScheme(std::move(impl))
 {}
 /// @endcond
 

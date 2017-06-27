@@ -105,14 +105,14 @@ namespace detail {
       result.push_back("Generator Gas HHV Basis Rate");
       result.push_back("Generator Gas HHV Basis Energy");
       result.push_back("Generator Gas Mass Flow Rate");
-      
+
       result.push_back("Generator Propane HHV Basis Rate");
       result.push_back("Generator Propane HHV Basis Energy");
       result.push_back("Generator Propane Mass Flow Rate");
       // </FuelType>
       result.push_back("Generator Fuel HHV Basis Rate");
       result.push_back("Generator Fuel HHV Basis Energy");
-      
+
       // These are part of Generator:MicroTurbine:HeatRecovery
       // result.push_back("Generator Produced Thermal Rate");
       // result.push_back("Generator Produced Thermal Energy");
@@ -139,7 +139,7 @@ namespace detail {
     // translated to ElectricLoadCenter:Generators 'Generator Object Type'
     return "Generator:MicroTurbine";
   }
-  
+
   // This will clone the GeneratorMicroTurbine as well as the GeneratorMicroTurbineHeatRecovery if there is one
   // and will return a reference to the GeneratorMicroTurbine
   ModelObject GeneratorMicroTurbine_Impl::clone(Model model) const
@@ -159,7 +159,7 @@ namespace detail {
 
     return newCHP;
   }
-  
+
   // Return allowable child types: curves and Generator:MicroTurbine
   std::vector<IddObjectType> GeneratorMicroTurbine_Impl::allowableChildTypes() const
   {
@@ -170,7 +170,7 @@ namespace detail {
     result.push_back(IddObjectType::OS_Curve_Quadratic);
     return result;
   }
-  
+
   // Returns the children object: max of 7 curves and a the GeneratorMicroTurbineHeatRecovery if it exists
   std::vector<ModelObject> GeneratorMicroTurbine_Impl::children() const
   {
@@ -205,12 +205,12 @@ namespace detail {
     if (oCurve = exhaustAirTemperatureFunctionofPartLoadRatioCurve()) {
       result.push_back(oCurve.get());
     }
-    
+
 
 
     return result;
   }
-  
+
   std::vector<ScheduleTypeKey> GeneratorMicroTurbine_Impl::getScheduleTypeKeys(const Schedule& schedule) const
   {
     // TODO: Check schedule display names.
@@ -242,7 +242,7 @@ namespace detail {
     // TODO: Use the GeneratorMicroTurbineHeatRecovery method
     boost::optional<GeneratorMicroTurbineHeatRecovery> mchpHR = this->generatorMicroTurbineHeatRecovery();
     boost::optional<double> value;
-    
+
     if (mchpHR) {
         value = mchpHR->ratedThermaltoElectricalPowerRatio();
     }
@@ -274,17 +274,17 @@ namespace detail {
       // Get it and return
       return maximumFullLoadElectricalPowerOutput.get();
     }
-    else { 
+    else {
       boost::optional<double> referenceElectricalPowerOutput = getDouble(OS_Generator_MicroTurbineFields::ReferenceElectricalPowerOutput,true);
       OS_ASSERT(referenceElectricalPowerOutput);
       return referenceElectricalPowerOutput.get();
     }
   }
-  
+
   bool GeneratorMicroTurbine_Impl::isMaximumFullLoadElectricalPowerOutputDefaulted() const {
     return isEmpty(OS_Generator_MicroTurbineFields::MaximumFullLoadElectricalPowerOutput);
   }
-  
+
 
   double GeneratorMicroTurbine_Impl::referenceElectricalEfficiencyUsingLowerHeatingValue() const {
     boost::optional<double> value = getDouble(OS_Generator_MicroTurbineFields::ReferenceElectricalEfficiencyUsingLowerHeatingValue,true);
@@ -346,7 +346,7 @@ namespace detail {
     }
     return value.get();
   }*/
-  
+
 
   std::string GeneratorMicroTurbine_Impl::fuelType() const {
     boost::optional<std::string> value = getString(OS_Generator_MicroTurbineFields::FuelType,true);
@@ -438,8 +438,8 @@ namespace detail {
   boost::optional<Curve> GeneratorMicroTurbine_Impl::exhaustAirTemperatureFunctionofPartLoadRatioCurve() const {
     return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Generator_MicroTurbineFields::ExhaustAirTemperatureFunctionofPartLoadRatioCurveName);
   }
-  
-  
+
+
   bool GeneratorMicroTurbine_Impl::setAvailabilitySchedule(Schedule& schedule) {
     bool result = setSchedule(OS_Generator_MicroTurbineFields::AvailabilityScheduleName,
                               "GeneratorMicroTurbine",
@@ -447,7 +447,7 @@ namespace detail {
                               schedule);
     return result;
   }
-  
+
   void GeneratorMicroTurbine_Impl::resetAvailabilitySchedule() {
     bool result = setString(OS_Generator_MicroTurbineFields::AvailabilityScheduleName, "");
     OS_ASSERT(result);
@@ -512,7 +512,7 @@ namespace detail {
     bool result = setString(OS_Generator_MicroTurbineFields::ReferenceElevation, "");
     OS_ASSERT(result);
   }
-  
+
   bool GeneratorMicroTurbine_Impl::setElectricalPowerFunctionofTemperatureandElevationCurve(const Curve& curve)
   {
     if(model() != curve.model())
@@ -604,14 +604,14 @@ namespace detail {
     bool result = setString(OS_Generator_MicroTurbineFields::AncillaryPowerFunctionofFuelInputCurveName, "");
     OS_ASSERT(result);
   }
-  
-  
+
+
   // Private: Generator:MicroTurbine:HeatRecovery
   bool GeneratorMicroTurbine_Impl::setGeneratorMicroTurbineHeatRecovery(const GeneratorMicroTurbineHeatRecovery& generatorMicroTurbineHeatRecovery) {
     bool result = setPointer(OS_Generator_MicroTurbineFields::GeneratorMicroTurbineHeatRecoveryName, generatorMicroTurbineHeatRecovery.handle());
     return result;
   }
-  
+
   /*
   void GeneratorMicroTurbine_Impl::resetGeneratorMicroTurbineHeatRecovery() {
     bool result = setString(OS_Generator_MicroTurbineFields::GeneratorMicroTurbineHeatRecoveryName, "");
@@ -1149,7 +1149,7 @@ void GeneratorMicroTurbine::resetExhaustAirTemperatureFunctionofPartLoadRatioCur
 
 /// @cond
 GeneratorMicroTurbine::GeneratorMicroTurbine(std::shared_ptr<detail::GeneratorMicroTurbine_Impl> impl)
-  : Generator(impl)
+  : Generator(std::move(impl))
 {}
 /// @endcond
 

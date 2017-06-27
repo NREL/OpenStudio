@@ -228,7 +228,7 @@ void SetpointManagerSingleZoneOneStageCooling::resetControlZone() {
 
 /// @cond
 SetpointManagerSingleZoneOneStageCooling::SetpointManagerSingleZoneOneStageCooling(std::shared_ptr<detail::SetpointManagerSingleZoneOneStageCooling_Impl> impl)
-  : SetpointManager(impl)
+  : SetpointManager(std::move(impl))
 {}
 /// @endcond
 

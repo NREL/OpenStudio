@@ -86,13 +86,13 @@ namespace detail {
     }
     return result;
   }
-  
+
   IddObjectType ShadingControl_Impl::iddObjectType() const
   {
     return ShadingControl::iddObjectType();
   }
 
-  boost::optional<Construction> ShadingControl_Impl::construction() const 
+  boost::optional<Construction> ShadingControl_Impl::construction() const
   {
     return getObject<ShadingControl>().getModelObjectTarget<Construction>(OS_ShadingControlFields::ConstructionwithShadingName);
   }
@@ -108,7 +108,7 @@ namespace detail {
     OS_ASSERT(result);
     return result.get();
   }
-  
+
   std::string ShadingControl_Impl::shadingControlType() const
   {
     boost::optional<std::string> result = getString(OS_ShadingControlFields::ShadingControlType, true);
@@ -125,7 +125,7 @@ namespace detail {
   {
     return getObject<ShadingControl>().getModelObjectTarget<Schedule>(OS_ShadingControlFields::ScheduleName);
   }
- 
+
   boost::optional<double> ShadingControl_Impl::setpoint() const
   {
     boost::optional<double> result = getDouble(OS_ShadingControlFields::Setpoint);
@@ -146,7 +146,7 @@ namespace detail {
   {
     return setString(OS_ShadingControlFields::ShadingType, shadingType);
   }
-  
+
   bool ShadingControl_Impl::setShadingControlType(const std::string& shadingControlType)
   {
     std::string oldControlType = this->shadingControlType();
@@ -173,14 +173,14 @@ namespace detail {
 
   bool ShadingControl_Impl::setSchedule(const Schedule& schedule)
   {
-    bool result = setPointer(OS_ShadingControlFields::ScheduleName, schedule.handle()); 
+    bool result = setPointer(OS_ShadingControlFields::ScheduleName, schedule.handle());
     if (result){
       bool test = setString(OS_ShadingControlFields::ShadingControlIsScheduled, "Yes");
       OS_ASSERT(test);
     }
     return result;
   }
-  
+
   void ShadingControl_Impl::resetSchedule()
   {
     bool test = setString(OS_ShadingControlFields::ScheduleName, "");
@@ -334,7 +334,7 @@ bool ShadingControl::isShadingControlTypeDefaulted() const {
 
 boost::optional<Schedule> ShadingControl::schedule() const {
   return getImpl<detail::ShadingControl_Impl>()->schedule();
-} 
+}
 
 boost::optional<double> ShadingControl::setpoint() const {
   return getImpl<detail::ShadingControl_Impl>()->setpoint();
@@ -346,11 +346,11 @@ bool ShadingControl::isSetpointDefaulted() const{
 
 bool ShadingControl::setShadingType(const std::string& shadingType){
   return getImpl<detail::ShadingControl_Impl>()->setShadingType(shadingType);
-} 
+}
 
 bool ShadingControl::setShadingControlType(const std::string& shadingControlType){
   return getImpl<detail::ShadingControl_Impl>()->setShadingControlType(shadingControlType);
-} 
+}
 
 void ShadingControl::resetShadingControlType(){
   return getImpl<detail::ShadingControl_Impl>()->resetShadingControlType();
@@ -358,11 +358,11 @@ void ShadingControl::resetShadingControlType(){
 
 bool ShadingControl::setSchedule(const Schedule& schedule){
   return getImpl<detail::ShadingControl_Impl>()->setSchedule(schedule);
-} 
+}
 
 void ShadingControl::resetSchedule(){
   getImpl<detail::ShadingControl_Impl>()->resetSchedule();
-} 
+}
 
 bool ShadingControl::setSetpoint(double setpoint){
   return getImpl<detail::ShadingControl_Impl>()->setSetpoint(setpoint);
@@ -374,7 +374,7 @@ void ShadingControl::resetSetpoint(){
 
 /// @cond
 ShadingControl::ShadingControl(std::shared_ptr<detail::ShadingControl_Impl> impl)
-  : ResourceObject(impl)
+  : ResourceObject(std::move(impl))
 {}
 /// @endcond
 

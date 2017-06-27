@@ -1176,7 +1176,7 @@ ModelObject::ModelObject(IddObjectType type, const Model& model, bool fastName)
 }
 
 ModelObject::ModelObject(std::shared_ptr<detail::ModelObject_Impl> p)
-  : WorkspaceObject(p)
+  : WorkspaceObject(std::move(p))
 {}
 
 } // model

@@ -486,7 +486,7 @@ void ElectricLoadCenterInverterLookUpTable::resetEfficiencyAt100PowerAndNominalV
 
 /// @cond
 ElectricLoadCenterInverterLookUpTable::ElectricLoadCenterInverterLookUpTable(std::shared_ptr<detail::ElectricLoadCenterInverterLookUpTable_Impl> impl)
-  : Inverter(impl)
+  : Inverter(std::move(impl))
 {}
 /// @endcond
 

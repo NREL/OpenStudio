@@ -123,7 +123,7 @@ Timestep::Timestep(const Model& model)
 
 // constructor
 Timestep::Timestep(std::shared_ptr<detail::Timestep_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 
 IddObjectType Timestep::iddObjectType() {

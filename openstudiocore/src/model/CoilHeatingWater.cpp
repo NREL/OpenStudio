@@ -95,7 +95,7 @@ namespace detail{
   bool CoilHeatingWater_Impl::addToNode(Node & node)
   {
     bool success =  WaterToAirComponent_Impl::addToNode( node );
-    
+
     if( success && (! containingHVACComponent()) && (! containingZoneHVACComponent()) ) {
       if( boost::optional<ModelObject> _waterInletModelObject = waterInletModelObject() ) {
         if( auto oldController = controllerWaterCoil() ) {
@@ -557,13 +557,13 @@ CoilHeatingWater::CoilHeatingWater(const Model& model)
   : WaterToAirComponent(CoilHeatingWater::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::CoilHeatingWater_Impl>());
-  
+
   auto availableSchedule = model.alwaysOnDiscreteSchedule();
   setAvailableSchedule(availableSchedule);
 }
 
 CoilHeatingWater::CoilHeatingWater(std::shared_ptr<detail::CoilHeatingWater_Impl> p)
-  : WaterToAirComponent(p)
+  : WaterToAirComponent(std::move(p))
 {}
 
 Schedule CoilHeatingWater::availabilitySchedule() const
