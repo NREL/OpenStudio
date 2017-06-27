@@ -323,7 +323,7 @@ class UTILITIES_API IdfObject {
   bool isValid(StrictnessLevel level) const;
 
   /** Returns a ValidityReport for this IdfObject containing all errors at or below level. */
-  ValidityReport validityReport(StrictnessLevel level, bool checkNames=true) const;
+  ValidityReport validityReport(StrictnessLevel level, bool checkNames=false) const;
 
   /** Checks for equality of data (non-managedObjectList) fields. Prerequisite: iddObject()s
    *  must be equal. For objects with handle fields, checks for equality of handle OR equality

@@ -227,10 +227,15 @@ namespace detail {
 
     virtual std::vector<WorkspaceObject> addObjects(
         std::vector< std::shared_ptr<WorkspaceObject_Impl> >& objectImplPtrs,
+        bool checkNames);
+
+    virtual std::vector<WorkspaceObject> addObjects(
+        std::vector< std::shared_ptr<WorkspaceObject_Impl> >& objectImplPtrs,
         const std::vector<UHPointer>& pointersIntoWorkspace=UHPointerVector(),
         const std::vector<HUPointer>& pointersFromWorkspace=HUPointerVector(),
         bool driverMethod=true,
-        bool expectToLosePointers=false);
+        bool expectToLosePointers=false,
+        bool checkNames = true);
 
     /** Adds objectImplPtrs to the Workspace. As clones, the pointer handles may be incorrect. This
      *  is fixed by applying oldNewHandleMap to the pointer data. If this is a wholeCollectionClone,
@@ -256,7 +261,7 @@ namespace detail {
      *  to avoid losing pointer (name reference) information. If successful, returned vector is of
      *  the same size, and is in the same order, as idfObjects. Otherwise, return value will be
      *  .empty(). */
-    virtual std::vector<WorkspaceObject> addObjects(const std::vector<IdfObject>& idfObjects);
+    virtual std::vector<WorkspaceObject> addObjects(const std::vector<IdfObject>& idfObjects, bool checkNames = true);
 
     /** Insert idfObjects into Workspace, if possible. Looks for equivalent objects first, then
      *  adds if necessary. If successful, new and equivalent objects will be returned in same order
@@ -280,7 +285,7 @@ namespace detail {
      *  \li objects[i] -> external object becomes NULL or result[i] -> external object depending on
      *      whether objects[0].workspace() == *this.
      *  \li external object -> objects[i] is not in any way duplicated in result */
-    virtual std::vector<WorkspaceObject> addObjects(const std::vector<WorkspaceObject>& objects);
+    virtual std::vector<WorkspaceObject> addObjects(const std::vector<WorkspaceObject>& objects, bool checkNames = true);
 
     /** Insert objects into this Workspace, if possible. All objects are assumed to be from the same
      *  workspace, possibly this one. Data is only cloned if no equivalent object is located in this
