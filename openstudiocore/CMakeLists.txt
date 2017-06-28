@@ -535,8 +535,8 @@ endif()
 
 # openstudio gems
 
-set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20170615.tar.gz")
-set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "55b37e2e650220aecea99587e486fb6f")
+set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20170627.tar.gz")
+set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "537c1e958a24ac55f4e2ed5e1d943553")
 
 set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
 if(EXISTS "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}")
@@ -1426,7 +1426,7 @@ endif()
 
 
 # Install additional Documents, such as release notes
-install(FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_2_1_0_20170331.pdf" DESTINATION .)
+install(FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_2_2_0_20170630.pdf" DESTINATION .)
 
 ###############################################################################
 
