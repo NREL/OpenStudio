@@ -39,6 +39,8 @@
 #include <utilities/idd/IddFileAndFactoryWrapper.hpp>
 #include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
 
+#include <boost/functional/hash.hpp>
+
 #include <utilities/core/Logger.hpp>
 
 #include <string>
@@ -46,6 +48,7 @@
 #include <vector>
 #include <set>
 #include <map>
+#include <unordered_map>
 
 namespace openstudio {
 
@@ -509,7 +512,7 @@ namespace detail {
     IddFileAndFactoryWrapper m_iddFileAndFactoryWrapper; // IDD file to be used for validity checking
     bool m_fastNaming;
 
-    typedef std::map<Handle, std::shared_ptr<WorkspaceObject_Impl> > WorkspaceObjectMap;
+    typedef std::unordered_map<Handle, std::shared_ptr<WorkspaceObject_Impl>, boost::hash<boost::uuids::uuid> > WorkspaceObjectMap;
     WorkspaceObjectMap m_workspaceObjectMap;
 
     // object for ordering objects in the collection.
@@ -520,7 +523,7 @@ namespace detail {
     IddObjectTypeMap m_iddObjectTypeMap;
 
     // map of reference to set of objects identified by UUID
-    typedef std::map<std::string, WorkspaceObjectMap> IdfReferencesMap; // , IstringCompare
+    typedef std::unordered_map<std::string, WorkspaceObjectMap> IdfReferencesMap; // , IstringCompare
     IdfReferencesMap m_idfReferencesMap;
 
     // data object for undos

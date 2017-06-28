@@ -70,7 +70,10 @@ namespace detail {
       m_fastNaming(false),
       m_workspaceObjectOrder(std::shared_ptr<WorkspaceObjectOrder_Impl>(new
           WorkspaceObjectOrder_Impl(HandleVector(),std::bind(&Workspace_Impl::getObject,this,std::placeholders::_1))))
-  {}
+  {
+    m_workspaceObjectMap.reserve(1<<15);
+    m_idfReferencesMap.reserve(1<<15);
+  }
 
   Workspace_Impl::Workspace_Impl(const IdfFile& idfFile,
                                  StrictnessLevel level) :
@@ -80,7 +83,10 @@ namespace detail {
       m_fastNaming(false),
       m_workspaceObjectOrder(std::shared_ptr<WorkspaceObjectOrder_Impl>(new
           WorkspaceObjectOrder_Impl(HandleVector(),std::bind(&Workspace_Impl::getObject,this,std::placeholders::_1))))
-  {}
+  {
+    m_workspaceObjectMap.reserve(1<<15);
+    m_idfReferencesMap.reserve(1<<15);
+  }
 
   Workspace_Impl::Workspace_Impl(const Workspace_Impl& other,bool keepHandles) :
     m_strictnessLevel(other.m_strictnessLevel),
@@ -99,6 +105,8 @@ namespace detail {
     if (directOrderVector) {
       m_workspaceObjectOrder.setDirectOrder(*directOrderVector);
     }
+    m_workspaceObjectMap.reserve(1<<15);
+    m_idfReferencesMap.reserve(1<<15);
   }
 
   Workspace_Impl::Workspace_Impl(const Workspace_Impl& other,
@@ -126,6 +134,8 @@ namespace detail {
       }
       m_workspaceObjectOrder.setDirectOrder(subsetOrder);
     }
+    m_workspaceObjectMap.reserve(1<<15);
+    m_idfReferencesMap.reserve(1<<15);
   }
 
   Workspace Workspace_Impl::clone(bool keepHandles) const {
