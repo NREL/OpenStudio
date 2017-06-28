@@ -237,7 +237,11 @@ namespace detail {
 
   boost::optional<WorkspaceObject> Workspace_Impl::getObject(const Handle& handle) const {
     auto womIt = m_workspaceObjectMap.find(handle);
-    if (womIt != m_workspaceObjectMap.end()) { return WorkspaceObject(womIt->second); }
+    if (womIt != m_workspaceObjectMap.end()) {
+      OS_ASSERT(womIt->second->initialized());
+      WorkspaceObject wo(womIt->second);
+      return wo;
+    }
     return boost::none;
   }
 
@@ -2817,9 +2821,7 @@ boost::optional<std::string> Workspace::name(const Handle& handle) const {
 }
 
 boost::optional<WorkspaceObject> Workspace::getObject(Handle handle) const {
-  boost::optional<WorkspaceObject> result = m_impl->getObject(handle);
-  if (result) { OS_ASSERT(result->initialized()); }
-  return result;
+  return m_impl->getObject(handle);
 }
 
 std::vector<WorkspaceObject> Workspace::objects(bool sorted) const {
