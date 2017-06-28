@@ -780,6 +780,14 @@
     <rule IddField="Plant Loop Demand Calculation Scheme" Access="HIDDEN"/>
     <rule IddField="Pressure Simulation Type" Access="HIDDEN"/>
     <rule IddField="User Defined Fluid Type" Access="HIDDEN"/>
+    <rule IddField="Plant Equipment Operation Heating Load Schedule" Access="HIDDEN"/>
+    <rule IddField="Plant Equipment Operation Cooling Load Schedule" Access="HIDDEN"/>
+    <rule IddField="Primary Plant Equipment Operation Scheme Schedule" Access="HIDDEN"/>
+    <rule IddField="Component Setpoint Operation Scheme Schedule" Access="HIDDEN"/>
+    <rule IddField="Demand Mixer Name" Access="HIDDEN"/>
+    <rule IddField="Demand Splitter Name" Access="HIDDEN"/>
+    <rule IddField="Supply Mixer Name" Access="HIDDEN"/>
+    <rule IddField="Supply Splitter Name" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_InternalMass">
     <rule IddField="Space or SpaceType Name" Access="HIDDEN"/>
