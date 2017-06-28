@@ -464,7 +464,7 @@ class UTILITIES_API Workspace {
     if (!impl){
       throw(std::bad_cast());
     }
-    return T(impl);
+    return T(std::move(impl));
   }
 
   /** Cast to boost::optional<T>. Returns boost::none on failure of cast. */
@@ -473,7 +473,7 @@ class UTILITIES_API Workspace {
     boost::optional<T> result;
     std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
     if (impl) {
-      result = T(impl);
+      result = T(std::move(impl));
     }
     return result;
   }
