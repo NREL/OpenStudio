@@ -142,6 +142,6 @@ TEST_F(ModelFixture,BoilerHotWater_remove) {
   EXPECT_EQ(plant.supplyComponents(b2, plant.supplyOutletNode()).size(), 0u);
   EXPECT_EQ(plant.supplyComponents(Node::iddObjectType()).size(), 3u);
 
-  EXPECT_TRUE(n1.handle().isNull());
+  EXPECT_FALSE(n1.handle().isNull());
   EXPECT_TRUE(n2.handle().isNull());
 }
