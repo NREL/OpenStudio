@@ -38,6 +38,10 @@
 #include "../../model/CoilHeatingDXMultiSpeedStageData_Impl.hpp"
 #include "../../model/CoilHeatingGas.hpp"
 #include "../../model/CoilHeatingGas_Impl.hpp"
+#include "../../model/CoilHeatingGasMultiStage.hpp"
+#include "../../model/CoilHeatingGasMultiStage_Impl.hpp"
+#include "../../model/CoilHeatingGasMultiStageStageData.hpp"
+#include "../../model/CoilHeatingGasMultiStageStageData_Impl.hpp"
 #include "../../model/CoilCoolingDXMultiSpeed.hpp"
 #include "../../model/CoilCoolingDXMultiSpeed_Impl.hpp"
 #include "../../model/CoilCoolingDXMultiSpeedStageData.hpp"
@@ -74,12 +78,14 @@ boost::optional<IdfObject> ForwardTranslator::translateUnitarySystemPerformanceM
     if (heatingCoil->iddObjectType() == openstudio::IddObjectType::OS_Coil_Heating_DX_MultiSpeed ) {
       CoilHeatingDXMultiSpeed heatingCoilDXMultispeed = heatingCoil->cast<CoilHeatingDXMultiSpeed>();
       sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating, heatingCoilDXMultispeed.stages().size());
-    } else if (heatingCoil->iddObjectType() == openstudio::IddObjectType::OS_Coil_Heating_Gas) {
-      sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating, 1);
+    } else if (heatingCoil->iddObjectType() == openstudio::IddObjectType::OS_Coil_Heating_Gas_MultiStage) {
+      CoilHeatingGasMultiStage heatingCoilGasMultiStage = heatingCoil->cast<CoilHeatingGasMultiStage>();
+      sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating, heatingCoilGasMultiStage.stages().size());
     } else {
-      LOG(Error, "UnitarySystemPerformance:Multispeed cannot be used with this heating coil type.");
-      return boost::none;
+      sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating, 1);
     }
+  } else {
+    sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating, 0);
   }
 
   // Number of speeds for cooling
@@ -89,9 +95,10 @@ boost::optional<IdfObject> ForwardTranslator::translateUnitarySystemPerformanceM
       CoilCoolingDXMultiSpeed coolingCoilDXMultispeed = coolingCoil->cast<CoilCoolingDXMultiSpeed>();
       sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling, coolingCoilDXMultispeed.stages().size());
     } else {
-      LOG(Error, "UnitarySystemPerformance:Multispeed cannot be used with this cooling coil type.");
-      return boost::none;
+      sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling, 1);
     }
+  } else {
+    sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling, 0);
   }
 
   // Single mode operation

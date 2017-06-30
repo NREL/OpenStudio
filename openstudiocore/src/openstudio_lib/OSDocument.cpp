@@ -820,6 +820,7 @@ namespace openstudio {
     m_mainWindow->verticalTabWidget()->enableTabButton(CONSTRUCTIONS, m_enableTabsAfterRun);
     m_mainWindow->verticalTabWidget()->enableTabButton(LOADS, m_enableTabsAfterRun);
     m_mainWindow->verticalTabWidget()->enableTabButton(SPACE_TYPES, m_enableTabsAfterRun);
+    m_mainWindow->verticalTabWidget()->enableTabButton(GEOMETRY, m_enableTabsAfterRun);
     m_mainWindow->verticalTabWidget()->enableTabButton(FACILITY, m_enableTabsAfterRun);
     m_mainWindow->verticalTabWidget()->enableTabButton(SPACES, m_enableTabsAfterRun);
     m_mainWindow->verticalTabWidget()->enableTabButton(THERMAL_ZONES, m_enableTabsAfterRun);
@@ -849,6 +850,7 @@ namespace openstudio {
     m_mainWindow->verticalTabWidget()->enableTabButton(CONSTRUCTIONS, m_enableTabsAfterRun);
     m_mainWindow->verticalTabWidget()->enableTabButton(LOADS, m_enableTabsAfterRun);
     m_mainWindow->verticalTabWidget()->enableTabButton(SPACE_TYPES, m_enableTabsAfterRun);
+    m_mainWindow->verticalTabWidget()->enableTabButton(GEOMETRY, m_enableTabsAfterRun);
     m_mainWindow->verticalTabWidget()->enableTabButton(FACILITY, m_enableTabsAfterRun);
     m_mainWindow->verticalTabWidget()->enableTabButton(SPACES, m_enableTabsAfterRun);
     m_mainWindow->verticalTabWidget()->enableTabButton(THERMAL_ZONES, m_enableTabsAfterRun);
@@ -872,6 +874,7 @@ namespace openstudio {
     m_mainWindow->verticalTabWidget()->enableTabButton(CONSTRUCTIONS, false);
     m_mainWindow->verticalTabWidget()->enableTabButton(LOADS, false);
     m_mainWindow->verticalTabWidget()->enableTabButton(SPACE_TYPES, false);
+    m_mainWindow->verticalTabWidget()->enableTabButton(GEOMETRY, false);
     m_mainWindow->verticalTabWidget()->enableTabButton(FACILITY, false);
     m_mainWindow->verticalTabWidget()->enableTabButton(SPACES, false);
     m_mainWindow->verticalTabWidget()->enableTabButton(THERMAL_ZONES, false);
@@ -895,6 +898,7 @@ namespace openstudio {
     m_mainWindow->verticalTabWidget()->enableTabButton(CONSTRUCTIONS, true);
     m_mainWindow->verticalTabWidget()->enableTabButton(LOADS, true);
     m_mainWindow->verticalTabWidget()->enableTabButton(SPACE_TYPES, true);
+    m_mainWindow->verticalTabWidget()->enableTabButton(GEOMETRY, true);
     m_mainWindow->verticalTabWidget()->enableTabButton(FACILITY, true);
     m_mainWindow->verticalTabWidget()->enableTabButton(SPACES, true);
     m_mainWindow->verticalTabWidget()->enableTabButton(THERMAL_ZONES, true);
@@ -1174,6 +1178,9 @@ namespace openstudio {
       break;
     case SPACE_TYPES:
       m_mainRightColumnController->configureForSpaceTypesSubTab(m_subTabId);
+      break;
+    case GEOMETRY:
+      m_mainRightColumnController->configureForGeometrySubTab(m_subTabId);
       break;
     case FACILITY:
       m_mainRightColumnController->configureForFacilitySubTab(m_subTabId);
