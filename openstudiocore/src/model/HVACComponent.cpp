@@ -106,11 +106,17 @@ namespace detail {
     else
     {
       AirLoopHVACVector airLoops = this->model().getConcreteModelObjects<AirLoopHVAC>();
+      auto const thisObject = getObject<HVACComponent>();
 
       for( auto & airLoop : airLoops)
       {
-        if( airLoop.component(this->handle()) )
-        {
+        std::vector<ModelObject> components = airLoop.supplyComponents(thisObject, airLoop.supplyOutletNode());
+        if ( components.size() > 0 ) {
+          m_airLoopHVAC = airLoop;
+          return airLoop;
+        }
+        components = airLoop.demandComponents(thisObject, airLoop.demandOutletNode());
+        if ( components.size() > 0 ) {
           m_airLoopHVAC = airLoop;
           return airLoop;
         }
@@ -160,11 +166,19 @@ namespace detail {
     else
     {
       std::vector<PlantLoop> plantLoops = this->model().getConcreteModelObjects<PlantLoop>();
+      auto const thisObject = getObject<HVACComponent>();
 
       for( auto & plantLoop : plantLoops )
       {
-        if( plantLoop.component(this->handle()) )
-        {
+        // if( plantLoop.component(this->handle()) )
+        // {
+        std::vector<ModelObject> components = plantLoop.supplyComponents(thisObject, plantLoop.supplyOutletNode());
+        if ( components.size() > 0 ) {
+          m_plantLoop = plantLoop;
+          return plantLoop;
+        }
+        components = plantLoop.demandComponents(thisObject, plantLoop.demandOutletNode());
+        if ( components.size() > 0 ) {
           m_plantLoop = plantLoop;
           return plantLoop;
         }
