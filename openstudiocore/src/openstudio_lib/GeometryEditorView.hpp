@@ -75,7 +75,10 @@ class EditorWebView : public QWidget
     void onUnitSystemChange(bool t_isIP);
 
   private slots:
+    void geometrySourceChanged(const QString& text);
+    void newImportClicked();
     void refreshClicked();
+    void saveClickedBlocking(const openstudio::path&);
     void previewClicked();
     void mergeClicked();
     void saveExport();
@@ -95,15 +98,19 @@ class EditorWebView : public QWidget
     openstudio::path floorplanPath() const;
 
     bool m_isIP;
+    bool m_geometryEditorStarted;
+    bool m_geometryEditorLoaded;
+    bool m_javascriptRunning;
     boost::optional<FloorplanJS> m_floorplan;
     model::Model m_model;
     QVariant m_export;
     model::Model m_exportModel;
 
-    QPushButton * m_previewBtn;
-
+    QComboBox * m_geometrySourceComboBox;
+    QPushButton * m_newImportGeometry;
     QProgressBar * m_progressBar;
     QPushButton * m_refreshBtn;
+    QPushButton * m_previewBtn;
     QPushButton * m_mergeBtn;
 
     QWebEngineView * m_view;

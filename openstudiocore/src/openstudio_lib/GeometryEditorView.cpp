@@ -36,6 +36,10 @@
 #include "../model/ThreeJS.hpp"
 #include "../model/PlanarSurfaceGroup.hpp"
 #include "../model/PlanarSurfaceGroup_Impl.hpp"
+#include "../model/Space.hpp"
+#include "../model/Space_Impl.hpp"
+#include "../model/ShadingSurfaceGroup.hpp"
+#include "../model/ShadingSurfaceGroup_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Checksum.hpp"
@@ -45,6 +49,7 @@
 #include <utilities/idd/IddEnums.hxx>
 
 #include <QDialog>
+#include <QComboBox>
 #include <QTimer>
 #include <QStackedWidget>
 #include <QVBoxLayout>
@@ -80,6 +85,11 @@ EditorWebView::EditorWebView(const openstudio::model::Model& model, QWidget *t_p
   : QWidget(t_parent),
     m_model(model),
     m_isIP(true),
+    m_geometryEditorStarted(false),
+    m_geometryEditorLoaded(false),
+    m_javascriptRunning(false),
+    m_geometrySourceComboBox(new QComboBox()),
+    m_newImportGeometry(new QPushButton("New")),
     m_previewBtn(new QPushButton("Preview")),
     m_progressBar(new QProgressBar()),
     m_refreshBtn(new QPushButton("Refresh")),
@@ -89,12 +99,20 @@ EditorWebView::EditorWebView(const openstudio::model::Model& model, QWidget *t_p
   auto mainLayout = new QVBoxLayout;
   setLayout(mainLayout);
 
+  connect(m_geometrySourceComboBox, &QComboBox::currentTextChanged, this, &EditorWebView::geometrySourceChanged);
+  connect(m_newImportGeometry, &QPushButton::clicked, this, &EditorWebView::newImportClicked);
   connect(m_refreshBtn, &QPushButton::clicked, this, &EditorWebView::refreshClicked);
   connect(m_previewBtn, &QPushButton::clicked, this, &EditorWebView::previewClicked);
   connect(m_mergeBtn, &QPushButton::clicked, this, &EditorWebView::mergeClicked);
 
   auto hLayout = new QHBoxLayout(this);
   mainLayout->addLayout(hLayout);
+
+  m_geometrySourceComboBox->addItem("Floorplan");
+  m_geometrySourceComboBox->setCurrentIndex(0);
+  hLayout->addWidget(m_geometrySourceComboBox);
+
+  hLayout->addWidget(m_newImportGeometry);
 
   hLayout->addStretch();
 
@@ -131,6 +149,11 @@ EditorWebView::EditorWebView(const openstudio::model::Model& model, QWidget *t_p
   //mainLayout->addWidget(m_view, 10, Qt::AlignTop);
   mainLayout->addWidget(m_view);
 
+  openstudio::OSAppBase * app = OSAppBase::instance();
+  if (app && app->currentDocument()) {
+    connect(app->currentDocument().get(), &OSDocument::modelSaving, this, &EditorWebView::saveClickedBlocking);
+  }
+
   openstudio::path p = floorplanPath();
   if (exists(p)){
     openstudio::filesystem::ifstream ifs(p);
@@ -138,36 +161,93 @@ EditorWebView::EditorWebView(const openstudio::model::Model& model, QWidget *t_p
     std::string contents( (std::istreambuf_iterator<char>(ifs) ), (std::istreambuf_iterator<char>() ) );
     ifs.close();
     m_floorplan = FloorplanJS::load(contents);
-  }
 
-  m_view->load(QUrl("qrc:///library/geometry_editor.html"));
+    m_newImportGeometry->setEnabled(false);
+
+    m_geometryEditorStarted = true;
+    m_geometryEditorLoaded = false;
+
+    m_view->load(QUrl("qrc:///library/geometry_editor.html"));
+
+  } else {
+    if ((model.getConcreteModelObjects<model::Space>().size() > 0) || (model.getConcreteModelObjects<model::ShadingSurfaceGroup>().size() > 0)){
+      m_newImportGeometry->setEnabled(false);
+      m_view->setHtml(QString("Model has existing geometry, floorplan editor disabled."));
+    } else{
+      m_view->setHtml(QString("Create new floorplan to begin."));
+    }
+    
+  }
 }
 
 EditorWebView::~EditorWebView()
 {
-  saveExport();
+  saveClickedBlocking("");
   delete m_view;
 }
+
+void EditorWebView::geometrySourceChanged(const QString& text)
+{
+  if (text == "Floorplan"){
+    m_newImportGeometry->setText("New");
+  }
+}
+
+void EditorWebView::newImportClicked()
+{
+  if (m_geometrySourceComboBox->currentText() == "Floorplan"){
+    m_newImportGeometry->setEnabled(false);
+
+    m_geometryEditorStarted = true;
+    m_geometryEditorLoaded = false;
+
+    m_view->load(QUrl("qrc:///library/geometry_editor.html"));
+
+    openstudio::OSAppBase * app = OSAppBase::instance();
+    if (app && app->currentDocument()) {
+      app->currentDocument()->markAsModified();
+    }
+  }
+}
+
 
 void EditorWebView::refreshClicked()
 {
   m_view->triggerPageAction(QWebEnginePage::ReloadAndBypassCache);
 }
 
+void EditorWebView::saveClickedBlocking(const openstudio::path&)
+{
+  if (m_geometryEditorLoaded && !m_javascriptRunning){
+    m_javascriptRunning = true;
+    QString javascript = QString("JSON.stringify(api.doExport());");
+    m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_export = v; this->saveExport(); m_javascriptRunning = false; });
+    while (m_javascriptRunning){
+      OSAppBase::instance()->processEvents();
+    }
+  }
+}
+
 void EditorWebView::previewClicked()
 {
-  m_previewBtn->setEnabled(false);
+  if (m_geometryEditorLoaded && !m_javascriptRunning){
+    m_previewBtn->setEnabled(false);
 
-  QString javascript = QString("JSON.stringify(api.doExport());");
-  m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_export = v; QTimer::singleShot(0, this, &EditorWebView::previewExport);});
+    m_javascriptRunning = true;
+    QString javascript = QString("JSON.stringify(api.doExport());");
+    m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_export = v; QTimer::singleShot(0, this, &EditorWebView::previewExport); m_javascriptRunning = false; });
+  }
 }
 
 void EditorWebView::mergeClicked()
 {
-  m_mergeBtn->setEnabled(false);
+  if (m_geometryEditorLoaded && !m_javascriptRunning){
+    m_mergeBtn->setEnabled(false);
 
-  QString javascript = QString("JSON.stringify(api.doExport());");
-  m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_export = v; QTimer::singleShot(0, this, &EditorWebView::mergeExport);});
+    m_javascriptRunning = true;
+    QString javascript = QString("JSON.stringify(api.doExport());");
+    m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_export = v; QTimer::singleShot(0, this, &EditorWebView::mergeExport); m_javascriptRunning = false; });
+  }
 }
 
 void EditorWebView::translateExport()
@@ -271,6 +351,10 @@ void EditorWebView::onLoadFinished(bool ok)
 
   QString title = m_view->title();
   if (ok){
+    if (m_geometryEditorStarted){
+      m_geometryEditorLoaded = true;
+    }
+
     m_progressBar->setStyleSheet("");
     m_progressBar->setFormat("");
     m_progressBar->setTextVisible(false);

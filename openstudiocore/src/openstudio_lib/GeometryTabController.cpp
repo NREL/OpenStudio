@@ -72,18 +72,9 @@ void GeometryTabController::setSubTab(int index)
     m_currentIndex = index;
   }
 
-  if (qobject_cast<GeometryPreviewController *>(m_currentController)) {
-    // TODO: DLM revist signals
-    //disconnect(this, &ConstructionsTabController::toggleUnitsClicked, static_cast<ModelSubTabView*>((qobject_cast<DefaultConstructionSetsController *>(m_currentController))->subTabView()), &ModelSubTabView::toggleUnitsClicked);
-    //disconnect(qobject_cast<DefaultConstructionSetsController *>(m_currentController), &DefaultConstructionSetsController::downloadComponentsClicked, this, &ConstructionsTabController::downloadComponentsClicked);
-    //disconnect(qobject_cast<DefaultConstructionSetsController *>(m_currentController), &DefaultConstructionSetsController::openLibDlgClicked, this, &ConstructionsTabController::openLibDlgClicked);
-  }
-  else if (qobject_cast<GeometryEditorController *>(m_currentController)) {
-    //disconnect(this, &ConstructionsTabController::toggleUnitsClicked, static_cast<ModelSubTabView*>((qobject_cast<ConstructionsController *>(m_currentController))->subTabView()), &ModelSubTabView::toggleUnitsClicked);
-  }
-  else if (m_currentController) {
-    // Oops! Should never get here
-    OS_ASSERT(false);
+  if (m_currentController) {
+    m_currentController->disconnect();
+    delete m_currentController;
   }
 
   switch (index){

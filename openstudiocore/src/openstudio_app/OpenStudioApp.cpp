@@ -195,6 +195,15 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv)
   connect(&m_buildCompLibWatcher, &QFutureWatcher<void>::finished, this, &OpenStudioApp::onMeasureManagerAndLibraryReady);
 }
 
+OpenStudioApp::~OpenStudioApp()
+{
+  if (m_measureManagerProcess){
+    m_measureManagerProcess->disconnect();
+    delete m_measureManagerProcess;
+    m_measureManagerProcess = nullptr;
+  }
+}
+
 void OpenStudioApp::onMeasureManagerAndLibraryReady() {
   if( m_buildCompLibWatcher.isFinished() && m_waitForMeasureManagerWatcher.isFinished() ) {
     bool openedCommandLine = false;
