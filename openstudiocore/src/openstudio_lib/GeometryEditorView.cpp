@@ -90,9 +90,9 @@ EditorWebView::EditorWebView(const openstudio::model::Model& model, QWidget *t_p
     m_javascriptRunning(false),
     m_geometrySourceComboBox(new QComboBox()),
     m_newImportGeometry(new QPushButton("New")),
-    m_previewBtn(new QPushButton("Preview")),
     m_progressBar(new QProgressBar()),
     m_refreshBtn(new QPushButton("Refresh")),
+    m_previewBtn(new QPushButton("Preview")),
     m_mergeBtn(new QPushButton("Merge"))
 {
 
@@ -124,12 +124,15 @@ EditorWebView::EditorWebView(const openstudio::model::Model& model, QWidget *t_p
 
   hLayout->addWidget(m_refreshBtn, 0, Qt::AlignVCenter);
   m_refreshBtn->setVisible(true);
+  m_refreshBtn->setEnabled(false);
 
   hLayout->addWidget(m_previewBtn, 0, Qt::AlignVCenter);
   m_previewBtn->setVisible(true);
+  m_previewBtn->setEnabled(false);
 
   hLayout->addWidget(m_mergeBtn, 0, Qt::AlignVCenter);
   m_mergeBtn->setVisible(true);
+  m_mergeBtn->setEnabled(false);
 
   m_view = new QWebEngineView(this);
   m_view->settings()->setAttribute(QWebEngineSettings::WebAttribute::LocalContentCanAccessRemoteUrls, true);
@@ -270,6 +273,20 @@ void EditorWebView::translateExport()
   
 }
 
+void EditorWebView::importFloorplan()
+{
+  if (m_floorplan && !m_javascriptRunning){
+    m_javascriptRunning = true;
+
+    std::string json = m_floorplan->toJSON(false);
+    QString javascript = QString("api.doImport(JSON.stringify(") + QString::fromStdString(json) + QString("));");
+    m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_javascriptRunning = false; });
+    while (m_javascriptRunning){
+      OSAppBase::instance()->processEvents();
+    }
+  }
+}
+
 void EditorWebView::saveExport()
 {
   if (!m_export.isNull()){
@@ -281,6 +298,7 @@ void EditorWebView::saveExport()
     if (!out.empty()){
       if (checksum(contents) != checksum(out)){
 
+        // DLM: what if this fails?
         m_floorplan = FloorplanJS::load(contents);
 
         openstudio::filesystem::ofstream file(out);
@@ -343,24 +361,29 @@ void EditorWebView::onUnitSystemChange(bool t_isIP)
 
 void EditorWebView::onLoadFinished(bool ok)
 {
-  if (m_floorplan){
-    std::string json = m_floorplan->toJSON(false);
-    QString javascript = QString("api.doImport(JSON.stringify(") + QString::fromStdString(json) + QString("));");
-    m_view->page()->runJavaScript(javascript);
-  }
+  OS_ASSERT(!m_javascriptRunning);
 
   QString title = m_view->title();
   if (ok){
     if (m_geometryEditorStarted){
+
+      // can't call javascript now, page is still loading
+      QTimer::singleShot(0, this, &EditorWebView::importFloorplan);
+
       m_geometryEditorLoaded = true;
+      m_refreshBtn->setEnabled(true);
+      m_previewBtn->setEnabled(true);
+      m_mergeBtn->setEnabled(true);
     }
 
     m_progressBar->setStyleSheet("");
     m_progressBar->setFormat("");
+    m_progressBar->setVisible(false);
     m_progressBar->setTextVisible(false);
   } else{
     m_progressBar->setStyleSheet("QProgressBar::chunk {background-color: #FF0000;}");
     m_progressBar->setFormat("Error");
+    m_progressBar->setVisible(true);
     m_progressBar->setTextVisible(true);
   }
 }
@@ -377,6 +400,7 @@ void EditorWebView::onLoadStarted()
 {
   m_progressBar->setStyleSheet("");
   m_progressBar->setFormat("");
+  m_progressBar->setVisible(true);
   m_progressBar->setTextVisible(false);
 }
 

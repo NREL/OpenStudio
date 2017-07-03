@@ -197,6 +197,7 @@ void PreviewWebView::onTranslateProgress(double percentage)
 void PreviewWebView::onJavaScriptFinished(const QVariant &v)
 {
   m_progressBar->setValue(100);
+  m_progressBar->setVisible(false);
 }
 
 void PreviewWebView::onRenderProcessTerminated(QWebEnginePage::RenderProcessTerminationStatus terminationStatus, int exitCode)

@@ -81,6 +81,7 @@ class EditorWebView : public QWidget
     void saveClickedBlocking(const openstudio::path&);
     void previewClicked();
     void mergeClicked();
+    void importFloorplan();
     void saveExport();
     void translateExport();
     void previewExport();
