@@ -157,6 +157,9 @@ EditorWebView::EditorWebView(const openstudio::model::Model& model, QWidget *t_p
     connect(app->currentDocument().get(), &OSDocument::modelSaving, this, &EditorWebView::saveClickedBlocking);
   }
 
+  m_checkForUpdateTimer = new QTimer(this);
+  connect(m_checkForUpdateTimer, SIGNAL(timeout()), this, SLOT(checkForUpdate()));
+
   openstudio::path p = floorplanPath();
   if (exists(p)){
     openstudio::filesystem::ifstream ifs(p);
@@ -170,7 +173,7 @@ EditorWebView::EditorWebView(const openstudio::model::Model& model, QWidget *t_p
     m_geometryEditorStarted = true;
     m_geometryEditorLoaded = false;
 
-    m_view->load(QUrl("qrc:///library/geometry_editor.html"));
+    m_view->load(QUrl("qrc:///library/embeddable_geometry_editor.html"));
 
   } else {
     if ((model.getConcreteModelObjects<model::Space>().size() > 0) || (model.getConcreteModelObjects<model::ShadingSurfaceGroup>().size() > 0)){
@@ -204,12 +207,9 @@ void EditorWebView::newImportClicked()
     m_geometryEditorStarted = true;
     m_geometryEditorLoaded = false;
 
-    m_view->load(QUrl("qrc:///library/geometry_editor.html"));
+    m_view->load(QUrl("qrc:///library/embeddable_geometry_editor.html"));
 
-    openstudio::OSAppBase * app = OSAppBase::instance();
-    if (app && app->currentDocument()) {
-      app->currentDocument()->markAsModified();
-    }
+    onChanged();
   }
 }
 
@@ -273,18 +273,58 @@ void EditorWebView::translateExport()
   
 }
 
-void EditorWebView::importFloorplan()
+void EditorWebView::startEditor()
 {
-  if (m_floorplan && !m_javascriptRunning){
+  // register on update function
+
+  // set config
+  if (!m_javascriptRunning){
     m_javascriptRunning = true;
 
-    std::string json = m_floorplan->toJSON(false);
-    QString javascript = QString("api.doImport(JSON.stringify(") + QString::fromStdString(json) + QString("));");
+    std::string json = "{";
+    if (m_floorplan){
+      json += "showMapDialogOnStart: false";
+    } else{
+      json +=  "showMapDialogOnStart: true";
+    }
+    json += "}";
+
+    QString javascript = QString("window.api.setConfig(") + QString::fromStdString(json) + QString(");");
     m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_javascriptRunning = false; });
     while (m_javascriptRunning){
       OSAppBase::instance()->processEvents();
     }
   }
+
+  // start the app
+  if (!m_javascriptRunning){
+    m_javascriptRunning = true;
+
+    QString javascript = QString("window.api.init();");
+    m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_javascriptRunning = false; });
+    while (m_javascriptRunning){
+      OSAppBase::instance()->processEvents();
+    }
+  }
+
+  // create library from current model
+
+  // import library or merge library with floorplan
+
+  // import the current floorplan
+  if (m_floorplan && !m_javascriptRunning){
+    m_javascriptRunning = true;
+
+    std::string json = m_floorplan->toJSON(false);
+    QString javascript = QString("window.api.doImport(JSON.stringify(") + QString::fromStdString(json) + QString("));");
+    m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_javascriptRunning = false; });
+    while (m_javascriptRunning){
+      OSAppBase::instance()->processEvents();
+    }
+  }
+
+  m_versionNumber = 0;
+  m_checkForUpdateTimer->start(1000);
 }
 
 void EditorWebView::saveExport()
@@ -306,10 +346,7 @@ void EditorWebView::saveExport()
         file << contents;
         file.close();
 
-        openstudio::OSAppBase * app = OSAppBase::instance();
-        if (app && app->currentDocument()) {
-          app->currentDocument()->markAsModified();
-        }
+        onChanged();
       }
     }
   }
@@ -353,6 +390,33 @@ void EditorWebView::mergeExport()
   m_mergeBtn->setEnabled(true);
 }
 
+void EditorWebView::checkForUpdate()
+{
+  if (!m_javascriptRunning){
+    m_javascriptRunning = true;
+
+    unsigned currentVersionNumber = m_versionNumber;
+
+    QString javascript = QString("window.versionNumber;");
+    m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_versionNumber = v.toUInt();  m_javascriptRunning = false; });
+    while (m_javascriptRunning){
+      OSAppBase::instance()->processEvents();
+    }
+
+    if (currentVersionNumber != m_versionNumber){
+      onChanged();
+    }
+  }
+}
+
+void EditorWebView::onChanged()
+{
+  openstudio::OSAppBase * app = OSAppBase::instance();
+  if (app && app->currentDocument()) {
+    app->currentDocument()->markAsModified();
+  }
+}
+
 void EditorWebView::onUnitSystemChange(bool t_isIP) 
 {
   LOG(Debug, "onUnitSystemChange " << t_isIP << " reloading results");
@@ -368,7 +432,7 @@ void EditorWebView::onLoadFinished(bool ok)
     if (m_geometryEditorStarted){
 
       // can't call javascript now, page is still loading
-      QTimer::singleShot(0, this, &EditorWebView::importFloorplan);
+      QTimer::singleShot(0, this, &EditorWebView::startEditor);
 
       m_geometryEditorLoaded = true;
       m_refreshBtn->setEnabled(true);

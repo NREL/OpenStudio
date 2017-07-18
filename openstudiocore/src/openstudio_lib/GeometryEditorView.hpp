@@ -42,6 +42,7 @@
 
 class QComboBox;
 class QPushButton;
+class QTimer;
 
 namespace openstudio {
 
@@ -81,13 +82,14 @@ class EditorWebView : public QWidget
     void saveClickedBlocking(const openstudio::path&);
     void previewClicked();
     void mergeClicked();
-    void importFloorplan();
+    void startEditor();
     void saveExport();
     void translateExport();
     void previewExport();
     void mergeExport();
+    void checkForUpdate();
+    void onChanged();
 
-    // DLM: for debugging
     void 	onLoadFinished(bool ok);
     void 	onLoadProgress(int progress);
     void 	onLoadStarted();
@@ -105,7 +107,9 @@ class EditorWebView : public QWidget
     boost::optional<FloorplanJS> m_floorplan;
     model::Model m_model;
     QVariant m_export;
+    unsigned m_versionNumber;
     model::Model m_exportModel;
+    QTimer* m_checkForUpdateTimer;
 
     QComboBox * m_geometrySourceComboBox;
     QPushButton * m_newImportGeometry;
