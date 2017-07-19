@@ -34,6 +34,7 @@
 #include "Model.hpp"
 
 #include "../utilities/geometry/ThreeJS.hpp"
+#include "../utilities/geometry/FloorplanJS.hpp"
 
 namespace openstudio
 {
@@ -42,10 +43,14 @@ namespace openstudio
     /// Convert an OpenStudio Model to ThreeJS format
     /// Triangulate surfaces if the ThreeJS representation will be used for display
     /// Do not triangulate surfaces if the ThreeJs representation will be translated back to a model
-    MODEL_API ThreeScene modelToThreeJS(Model model, bool triangulateSurfaces);
-    MODEL_API ThreeScene modelToThreeJS(Model model, bool triangulateSurfaces, std::function<void(double)> updatePercentage);
+    MODEL_API ThreeScene modelToThreeJS(const Model& model, bool triangulateSurfaces);
+    MODEL_API ThreeScene modelToThreeJS(const Model& model, bool triangulateSurfaces, std::function<void(double)> updatePercentage);
     
+    /// Convert a ThreeJs Scene to OpenStudio Model format, scene must be in OpenStudio format
     MODEL_API boost::optional<Model> modelFromThreeJS(const ThreeScene& scene);
+
+    /// Update library resources in FloorplanJS format to match those in OpenStudio Model
+    MODEL_API FloorplanJS updateFloorplanJSResources(const FloorplanJS& floorplan, const Model& model);
 
   }
 }

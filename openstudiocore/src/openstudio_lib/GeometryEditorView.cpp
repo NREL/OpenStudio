@@ -34,6 +34,8 @@
 #include "../model/Model.hpp"
 #include "../model/Model_Impl.hpp"
 #include "../model/ThreeJS.hpp"
+#include "../model/BuildingStory.hpp"
+#include "../model/BuildingStory_Impl.hpp"
 #include "../model/PlanarSurfaceGroup.hpp"
 #include "../model/PlanarSurfaceGroup_Impl.hpp"
 #include "../model/Space.hpp"
@@ -50,6 +52,7 @@
 
 #include <QDialog>
 #include <QComboBox>
+#include <QMessageBox>
 #include <QTimer>
 #include <QStackedWidget>
 #include <QVBoxLayout>
@@ -164,19 +167,29 @@ EditorWebView::EditorWebView(const openstudio::model::Model& model, QWidget *t_p
   if (exists(p)){
     openstudio::filesystem::ifstream ifs(p);
     OS_ASSERT(ifs.is_open());
-    std::string contents( (std::istreambuf_iterator<char>(ifs) ), (std::istreambuf_iterator<char>() ) );
+    std::string contents((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
     ifs.close();
     m_floorplan = FloorplanJS::load(contents);
 
-    m_newImportGeometry->setEnabled(false);
+    if (m_floorplan)
+    {
+      // floorplan loaded correctly
 
-    m_geometryEditorStarted = true;
-    m_geometryEditorLoaded = false;
-
-    m_view->load(QUrl("qrc:///library/embeddable_geometry_editor.html"));
+      // update with current model content
+      m_floorplan = updateFloorplanJSResources(*m_floorplan, m_model);
+      
+      // start the editor
+      m_newImportGeometry->setEnabled(false);
+      m_geometryEditorStarted = true;
+      m_geometryEditorLoaded = false;
+      m_view->load(QUrl("qrc:///library/embeddable_geometry_editor.html"));
+    } else {
+      m_newImportGeometry->setEnabled(false);
+      m_view->setHtml(QString("Failed to open existing floorplan."));
+    }
 
   } else {
-    if ((model.getConcreteModelObjects<model::Space>().size() > 0) || (model.getConcreteModelObjects<model::ShadingSurfaceGroup>().size() > 0)){
+    if ((model.getConcreteModelObjects<model::Space>().size() > 0) || (model.getConcreteModelObjects<model::ShadingSurfaceGroup>().size() > 0) || (model.getConcreteModelObjects<model::BuildingStory>().size() > 0)){
       m_newImportGeometry->setEnabled(false);
       m_view->setHtml(QString("Model has existing geometry, floorplan editor disabled."));
     } else{
@@ -262,13 +275,15 @@ void EditorWebView::translateExport()
   if (floorplan){
     ThreeScene scene = floorplan->toThreeScene(true);
     model = model::modelFromThreeJS(scene);
+  } else{
+    // DLM: this is an error, the editor produced a JSON we can't read
   }
   
   if (model){
     m_exportModel = *model;
   } else{
-    //m_exportModel = model::Model();
-    m_exportModel = model::exampleModel();
+    // DLM: this is an error, either floorplan was empty or could not be translated
+    m_exportModel = model::Model();
   }
   
 }
@@ -278,14 +293,16 @@ void EditorWebView::startEditor()
   // register on update function
 
   // set config
-  if (!m_javascriptRunning){
+  {
+    OS_ASSERT(!m_javascriptRunning);
+
     m_javascriptRunning = true;
 
     std::string json = "{";
     if (m_floorplan){
       json += "showMapDialogOnStart: false";
     } else{
-      json +=  "showMapDialogOnStart: true";
+      json += "showMapDialogOnStart: true";
     }
     json += "}";
 
@@ -297,7 +314,9 @@ void EditorWebView::startEditor()
   }
 
   // start the app
-  if (!m_javascriptRunning){
+  {
+    OS_ASSERT(!m_javascriptRunning);
+
     m_javascriptRunning = true;
 
     QString javascript = QString("window.api.init();");
@@ -308,18 +327,37 @@ void EditorWebView::startEditor()
   }
 
   // create library from current model
+  {
+    OS_ASSERT(!m_javascriptRunning);
 
-  // import library or merge library with floorplan
+    if (m_floorplan){
 
-  // import the current floorplan
-  if (m_floorplan && !m_javascriptRunning){
-    m_javascriptRunning = true;
+      // import the current floorplan
+      m_javascriptRunning = true;
 
-    std::string json = m_floorplan->toJSON(false);
-    QString javascript = QString("window.api.doImport(JSON.stringify(") + QString::fromStdString(json) + QString("));");
-    m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_javascriptRunning = false; });
-    while (m_javascriptRunning){
-      OSAppBase::instance()->processEvents();
+      std::string json = m_floorplan->toJSON(false);
+
+      QString javascript = QString("window.api.doImport(JSON.stringify(") + QString::fromStdString(json) + QString("));");
+      m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_javascriptRunning = false; });
+      while (m_javascriptRunning){
+        OSAppBase::instance()->processEvents();
+      }
+
+    } else{
+
+      // import current model content as library
+      FloorplanJS floorplan;
+      floorplan = updateFloorplanJSResources(floorplan, m_model);
+
+      m_javascriptRunning = true;
+
+      std::string json = floorplan.toJSON(false);
+
+      QString javascript = QString("window.api.importLibrary(JSON.stringify(") + QString::fromStdString(json) + QString("));");
+      m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_javascriptRunning = false; });
+      while (m_javascriptRunning){
+        OSAppBase::instance()->processEvents();
+      }
     }
   }
 

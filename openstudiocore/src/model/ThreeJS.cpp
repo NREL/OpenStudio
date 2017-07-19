@@ -51,6 +51,8 @@
 #include "PlanarSurfaceGroup_Impl.hpp"
 #include "Space.hpp"
 #include "Space_Impl.hpp"
+#include "DefaultConstructionSet.hpp"
+#include "DefaultConstructionSet_Impl.hpp"
 #include "ShadingSurfaceGroup.hpp"
 #include "InteriorPartitionSurfaceGroup.hpp"
 
@@ -499,12 +501,12 @@ namespace openstudio
     }
 
 
-    ThreeScene modelToThreeJS(Model model, bool triangulateSurfaces)
+    ThreeScene modelToThreeJS(const Model& model, bool triangulateSurfaces)
     {
       return modelToThreeJS(model, triangulateSurfaces, [](double percentage) {});
     }
 
-    ThreeScene modelToThreeJS(Model model, bool triangulateSurfaces, std::function<void(double)> updatePercentage)
+    ThreeScene modelToThreeJS(const Model& model, bool triangulateSurfaces, std::function<void(double)> updatePercentage)
     {
       updatePercentage(0.0);
 
@@ -745,6 +747,57 @@ namespace openstudio
       }
 
       return model;
+    }
+
+    FloorplanJS updateFloorplanJSResources(const FloorplanJS& floorplan, const Model& model)
+    {
+      FloorplanJS result(floorplan.toJSON());
+
+      // first have to update all the names
+
+      //std::vector<FloorplanObjectId> storyObjectIds;
+      //for (const auto& story : model.getConcreteModelObjects<BuildingStory>())
+      //{
+       // storyObjectIds.push_back(FloorplanObjectId("", story.nameString(), story.handle());
+      //}
+      //result.updateStories(storyObjectIds);
+
+      for (const auto& space : model.getConcreteModelObjects<Space>())
+      {
+        // DLM: TODO
+      }
+
+      std::vector<FloorplanObjectId> unitObjectIds;
+      for (const auto& unit : model.getConcreteModelObjects<BuildingUnit>())
+      {
+        unitObjectIds.push_back(FloorplanObjectId("", unit.nameString(), unit.handle()));
+      }
+      result.updateBuildingUnits(unitObjectIds);
+
+      std::vector<FloorplanObjectId> zoneObjectIds;
+      for (const auto& zone : model.getConcreteModelObjects<ThermalZone>())
+      {
+        zoneObjectIds.push_back(FloorplanObjectId("", zone.nameString(), zone.handle()));
+      }
+      result.updateThermalZones(zoneObjectIds);
+
+      std::vector<FloorplanObjectId> spaceTypeObjectIds;
+      for (const auto& spaceType : model.getConcreteModelObjects<SpaceType>())
+      {
+        spaceTypeObjectIds.push_back(FloorplanObjectId("", spaceType.nameString(), spaceType.handle()));
+      }
+      result.updateSpaceTypes(spaceTypeObjectIds);
+
+      std::vector<FloorplanObjectId> setObjectIds;
+      for (const auto& set : model.getConcreteModelObjects<DefaultConstructionSet>())
+      {
+        setObjectIds.push_back(FloorplanObjectId("", set.nameString(), set.handle()));
+      }
+      result.updateConstructionSets(setObjectIds);
+
+      // second update all the properties
+
+      return result;
     }
     
   }//model

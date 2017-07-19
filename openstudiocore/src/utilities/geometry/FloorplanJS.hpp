@@ -35,6 +35,7 @@
 #include "Transformation.hpp"
 
 #include "../core/Logger.hpp"
+#include "../core/UUID.hpp"
 
 #include <jsoncpp/json.h>
 
@@ -45,12 +46,33 @@ namespace openstudio{
 
   class ThreeScene;
 
+  class UTILITIES_API FloorplanObjectId{
+  public:
+
+    // pass empty string for any null values
+    FloorplanObjectId(const std::string& id, const std::string& name, const UUID& handle);
+
+    std::string id() const;
+    std::string name() const;
+    UUID handle() const;
+    std::string handleString() const;
+
+  private:
+    std::string m_id;
+    std::string m_name;
+    UUID m_handle;
+    std::string m_handleString;
+  };
+
   /** FloorplanJS is an adapter for the Geometry Editor JSON format
   *
   *  The class is not impl-ized in hopes that it can be ported to JavaScript via emscripten
   */
   class UTILITIES_API FloorplanJS{
   public:
+
+    /// default constructor 
+    FloorplanJS();
 
     /// constructor from JSON formatted string, will throw if error
     FloorplanJS(const std::string& json);
@@ -64,10 +86,30 @@ namespace openstudio{
     /// convert to ThreeJS, will throw if error
     ThreeScene toThreeScene(bool breakSurfaces) const;
 
+    /// update object names in Floorplan with external data
+    /// if object with same handle exists, name will be updated
+    /// else if object with same name exists, handle will be assigned
+    /// else new object will be added
+    void updateStories(const std::vector<FloorplanObjectId>& objects);
+    void updateBuildingUnits(const std::vector<FloorplanObjectId>& objects);
+    void updateThermalZones(const std::vector<FloorplanObjectId>& objects);
+    void updateSpaceTypes(const std::vector<FloorplanObjectId>& objects);
+    void updateConstructionSets(const std::vector<FloorplanObjectId>& objects);
+
   private:
     REGISTER_LOGGER("FloorplanJS");
 
     FloorplanJS(const Json::Value& value);
+
+    std::string getHandleString(const Json::Value& value);
+    std::string getName(const Json::Value& value);
+
+    Json::Value* findByHandleString(const Json::Value& value, const std::string& key, const std::string& handleString);
+    Json::Value* findByNameOnly(const Json::Value& value, const std::string& key, const std::string& name);
+
+    Json::Value* removeMisingHandles(const Json::Value& value, const std::string& key, const std::vector<UUID>& handle);
+    
+    void updateObjects(Json::Value& value, const std::string& key, const std::vector<FloorplanObjectId>& objects);
 
     Json::Value m_value;
   };

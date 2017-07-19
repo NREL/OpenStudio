@@ -41,7 +41,37 @@
 #include <string>
 
 namespace openstudio{
-    
+
+  
+  FloorplanObjectId::FloorplanObjectId(const std::string& id, const std::string& name, const UUID& handle)
+    : m_id(id), m_name(name), m_handle(handle), m_handleString(toString(handle))
+  {}
+
+  std::string FloorplanObjectId::id() const
+  {
+    return m_id;
+  }
+
+  std::string FloorplanObjectId::name() const
+  {
+    return m_name;
+  }
+
+  UUID FloorplanObjectId::handle() const
+  {
+    return m_handle;
+  }
+
+  std::string FloorplanObjectId::handleString() const
+  {
+    return m_handleString;
+  }
+
+  FloorplanJS::FloorplanJS()
+  {
+    m_value = Json::Value(Json::objectValue);
+  }
+
   FloorplanJS::FloorplanJS(const std::string& s)
   {
     Json::Reader reader;
@@ -366,5 +396,132 @@ namespace openstudio{
     return result;
   }
 
+  void FloorplanJS::updateStories(const std::vector<FloorplanObjectId>& objectIds)
+  {
+    updateObjects(m_value, "stories", objectIds);
+  }
+
+  void FloorplanJS::updateBuildingUnits(const std::vector<FloorplanObjectId>& objectIds)
+  {
+    updateObjects(m_value, "building_units", objectIds);
+  }
+
+  void FloorplanJS::updateThermalZones(const std::vector<FloorplanObjectId>& objectIds)
+  {
+    updateObjects(m_value, "thermal_zones", objectIds);
+  }
+
+  void FloorplanJS::updateSpaceTypes(const std::vector<FloorplanObjectId>& objectIds)
+  {
+    updateObjects(m_value, "space_types", objectIds);
+  }
+
+  void FloorplanJS::updateConstructionSets(const std::vector<FloorplanObjectId>& objectIds)
+  {
+    updateObjects(m_value, "construction_sets", objectIds);
+  }
+
+  std::string FloorplanJS::getHandleString(const Json::Value& value)
+  {
+    return value.get("handle", "").asString();
+  }
+
+  std::string FloorplanJS::getName(const Json::Value& value)
+  {
+    return value.get("name", "").asString();
+  }
+
+  Json::Value* FloorplanJS::findByHandleString(const Json::Value& value, const std::string& key, const std::string& handleString)
+  {
+    Json::Value values = value.get(key, Json::arrayValue);
+    Json::ArrayIndex n = values.size();
+    for (Json::ArrayIndex i = 0; i < n; ++i){
+      if (getHandleString(values[i]) == handleString){
+        return &values[i];
+      }
+    }
+
+    return nullptr;
+  }
+
+  Json::Value* FloorplanJS::findByNameOnly(const Json::Value& value, const std::string& key, const std::string& name)
+  {
+    if (name.empty()){
+      return nullptr;
+    }
+
+    Json::Value values = value.get(key, Json::arrayValue);
+    Json::ArrayIndex n = values.size();
+    for (Json::ArrayIndex i = 0; i < n; ++i){
+      if (getName(values[i]) == name){
+        if (getHandleString(values[i]).empty()){
+          return &values[i];
+        }
+      }
+    }
+
+    return nullptr;
+  }
+
+
+  void FloorplanJS::updateObjects(Json::Value& value, const std::string& key, const std::vector<FloorplanObjectId>& objectIds)
+  { 
+    // ensure key exists
+    if (!value.isMember(key)){
+      value[key] = Json::Value(Json::arrayValue);
+    }
+
+    // remove all objects that aren't found by handle or name
+    {
+      std::set<std::string> names;
+      std::set<std::string> handleStrings;
+      for (const auto& objectId : objectIds){
+        names.insert(objectId.name());
+        handleStrings.insert(objectId.handleString());
+      }
+
+      std::vector<Json::ArrayIndex> indicesToRemove;
+      Json::Value& values = value[key];
+      Json::ArrayIndex n = values.size();
+      for (Json::ArrayIndex i = 0; i < n; ++i){
+        if (handleStrings.find(getHandleString(values[i])) == handleStrings.end()){
+          if (names.find(getName(values[i])) == names.end()){
+            indicesToRemove.push_back(i);
+          }
+        }
+      }
+      std::reverse(indicesToRemove.begin(), indicesToRemove.end());
+
+      for (const auto& i : indicesToRemove){
+        Json::Value removed;
+        values.removeIndex(i, &removed);
+      }
+    }
+
+    // now update names
+    for (const auto& objectId : objectIds){
+
+      Json::Value* object = findByHandleString(value, key, objectId.handleString());
+      if (object){
+        // ensure name is the same
+        (*object)["name"] = objectId.name();
+      } else {
+        // find object by name only if handle is empty
+        object = findByNameOnly(value, key, objectId.name());
+
+        if (object){
+          // set handle
+          (*object)["handle"] = objectId.handleString();
+        } else{
+          // create new object
+          Json::Value newObject(Json::objectValue);
+          newObject["id"] = ""; // might have to provide a get next id method?
+          newObject["name"] = objectId.name();
+          newObject["handle"] = objectId.handleString();
+          value[key].append(newObject);
+        }
+      }
+    }
+  }
 
 } // openstudio
