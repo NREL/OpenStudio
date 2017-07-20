@@ -431,9 +431,9 @@ namespace openstudio{
     return value.get("name", "").asString();
   }
 
-  Json::Value* FloorplanJS::findByHandleString(const Json::Value& value, const std::string& key, const std::string& handleString)
+  Json::Value* FloorplanJS::findByHandleString(Json::Value& value, const std::string& key, const std::string& handleString)
   {
-    Json::Value values = value.get(key, Json::arrayValue);
+    Json::Value& values = value[key];
     Json::ArrayIndex n = values.size();
     for (Json::ArrayIndex i = 0; i < n; ++i){
       if (getHandleString(values[i]) == handleString){
@@ -444,13 +444,13 @@ namespace openstudio{
     return nullptr;
   }
 
-  Json::Value* FloorplanJS::findByNameOnly(const Json::Value& value, const std::string& key, const std::string& name)
+  Json::Value* FloorplanJS::findByNameOnly(Json::Value& value, const std::string& key, const std::string& name)
   {
     if (name.empty()){
       return nullptr;
     }
 
-    Json::Value values = value.get(key, Json::arrayValue);
+    Json::Value& values = value[key];
     Json::ArrayIndex n = values.size();
     for (Json::ArrayIndex i = 0; i < n; ++i){
       if (getName(values[i]) == name){

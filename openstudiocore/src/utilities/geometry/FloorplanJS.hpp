@@ -104,11 +104,9 @@ namespace openstudio{
     std::string getHandleString(const Json::Value& value);
     std::string getName(const Json::Value& value);
 
-    Json::Value* findByHandleString(const Json::Value& value, const std::string& key, const std::string& handleString);
-    Json::Value* findByNameOnly(const Json::Value& value, const std::string& key, const std::string& name);
+    Json::Value* findByHandleString(Json::Value& value, const std::string& key, const std::string& handleString);
+    Json::Value* findByNameOnly(Json::Value& value, const std::string& key, const std::string& name);
 
-    Json::Value* removeMisingHandles(const Json::Value& value, const std::string& key, const std::vector<UUID>& handle);
-    
     void updateObjects(Json::Value& value, const std::string& key, const std::vector<FloorplanObjectId>& objects);
 
     Json::Value m_value;
