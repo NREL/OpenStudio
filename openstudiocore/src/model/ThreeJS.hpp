@@ -52,6 +52,9 @@ namespace openstudio
     /// Update library resources in FloorplanJS format to match those in OpenStudio Model
     MODEL_API FloorplanJS updateFloorplanJSResources(const FloorplanJS& floorplan, const Model& model);
 
+    /// Updates model stories, spaces, space types, thermal zones, building units, and construction sets from another model (e.g. a floorplan model)
+    MODEL_API void mergeModelGeometry(Model& currentModel, const Model& newModel);
+
   }
 }
 #endif //MODEL_THREEJS_HPP

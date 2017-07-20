@@ -395,11 +395,11 @@ void EditorWebView::previewExport()
   saveExport();
   translateExport();
 
-  std::stringstream ss;
-  ss << m_exportModel;
-  std::string s = ss.str();
+  // merge export model into clone of m_model
+  Model temp = m_model.clone();
+  mergeModelGeometry(temp, m_exportModel);
 
-  PreviewWebView* webView = new PreviewWebView(m_exportModel);
+  PreviewWebView* webView = new PreviewWebView(temp);
   QLayout* layout = new QVBoxLayout();
   layout->addWidget(webView);
 
@@ -417,13 +417,10 @@ void EditorWebView::mergeExport()
   saveExport();
   translateExport();
 
-  // mega lame merge
-  for (auto& surfaceGroup : m_model.getModelObjects<model::PlanarSurfaceGroup>()){
-    surfaceGroup.remove();
-  }
-  for (auto& surfaceGroup : m_exportModel.getModelObjects<model::PlanarSurfaceGroup>()){
-    surfaceGroup.clone(m_model);
-  }
+  // merge export model into m_model
+  mergeModelGeometry(m_model, m_exportModel);
+
+  // DLM: TODO make sure handles get updated in floorplan
 
   m_mergeBtn->setEnabled(true);
 }

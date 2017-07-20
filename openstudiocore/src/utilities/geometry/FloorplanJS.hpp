@@ -45,6 +45,7 @@
 namespace openstudio{
 
   class ThreeScene;
+  class FloorplanObjectId;
 
   class UTILITIES_API FloorplanObjectId{
   public:
@@ -57,11 +58,17 @@ namespace openstudio{
     UUID handle() const;
     std::string handleString() const;
 
+    boost::optional<std::string> parentHandleString() const;
+    void setParentHandleString(const std::string& parentHandleString);
+    void resetParentHandleString();
+
   private:
     std::string m_id;
     std::string m_name;
     UUID m_handle;
     std::string m_handleString;
+
+    boost::optional<std::string> m_parentHandleString;
   };
 
   /** FloorplanJS is an adapter for the Geometry Editor JSON format
@@ -91,6 +98,7 @@ namespace openstudio{
     /// else if object with same name exists, handle will be assigned
     /// else new object will be added
     void updateStories(const std::vector<FloorplanObjectId>& objects);
+    void updateSpaces(const std::vector<FloorplanObjectId>& objects);
     void updateBuildingUnits(const std::vector<FloorplanObjectId>& objects);
     void updateThermalZones(const std::vector<FloorplanObjectId>& objects);
     void updateSpaceTypes(const std::vector<FloorplanObjectId>& objects);

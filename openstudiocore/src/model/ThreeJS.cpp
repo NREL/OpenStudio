@@ -755,17 +755,23 @@ namespace openstudio
 
       // first have to update all the names
 
-      //std::vector<FloorplanObjectId> storyObjectIds;
-      //for (const auto& story : model.getConcreteModelObjects<BuildingStory>())
-      //{
-       // storyObjectIds.push_back(FloorplanObjectId("", story.nameString(), story.handle());
-      //}
-      //result.updateStories(storyObjectIds);
+      std::vector<FloorplanObjectId> storyObjectIds;
+      for (const auto& story : model.getConcreteModelObjects<BuildingStory>())
+      {
+        storyObjectIds.push_back(FloorplanObjectId("", story.nameString(), story.handle()));
+      }
+      result.updateStories(storyObjectIds);
 
+      std::vector<FloorplanObjectId> spaceObjectIds;
       for (const auto& space : model.getConcreteModelObjects<Space>())
       {
-        // DLM: TODO
+        FloorplanObjectId spaceObjectId("", space.nameString(), space.handle());
+        if (boost::optional<BuildingStory> story = space.buildingStory()){
+          spaceObjectId.setParentHandleString(toString(story->handle()));
+        }
+        spaceObjectIds.push_back(spaceObjectId);
       }
+      result.updateStories(spaceObjectIds);
 
       std::vector<FloorplanObjectId> unitObjectIds;
       for (const auto& unit : model.getConcreteModelObjects<BuildingUnit>())
@@ -798,6 +804,12 @@ namespace openstudio
       // second update all the properties
 
       return result;
+    }
+
+    void mergeModelGeometry(Model& currentModel, const Model& newModel)
+    {
+
+
     }
     
   }//model

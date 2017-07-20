@@ -67,6 +67,21 @@ namespace openstudio{
     return m_handleString;
   }
 
+  boost::optional<std::string> FloorplanObjectId::parentHandleString() const
+  {
+    return m_parentHandleString;
+  }
+
+  void FloorplanObjectId::setParentHandleString(const std::string& parentHandleString)
+  {
+    m_parentHandleString = parentHandleString;
+  }
+
+  void FloorplanObjectId::resetParentHandleString()
+  {
+    m_parentHandleString.reset();
+  }
+
   FloorplanJS::FloorplanJS()
   {
     m_value = Json::Value(Json::objectValue);
@@ -399,6 +414,32 @@ namespace openstudio{
   void FloorplanJS::updateStories(const std::vector<FloorplanObjectId>& objectIds)
   {
     updateObjects(m_value, "stories", objectIds);
+  }
+
+  void FloorplanJS::updateSpaces(const std::vector<FloorplanObjectId>& objectIds)
+  {
+    std::map<std::string, std::vector<FloorplanObjectId> > storyHandleToSpaceObejctIds;
+
+    for (const auto& objectId : objectIds){
+      boost::optional<std::string> parentHandleString = objectId.parentHandleString();
+
+      if (!parentHandleString){
+        continue;
+      }
+
+      if (storyHandleToSpaceObejctIds.find(*parentHandleString) == storyHandleToSpaceObejctIds.end()){
+        storyHandleToSpaceObejctIds[*parentHandleString] = std::vector<FloorplanObjectId>();
+      }
+      storyHandleToSpaceObejctIds[*parentHandleString].push_back(objectId);
+    }
+
+    for (const auto& keyValue: storyHandleToSpaceObejctIds){
+      // no need to check by name, assume stories have been updated
+      Json::Value* story = findByHandleString(m_value, "stories", keyValue.first);
+      if (story){
+        updateObjects(*story, "spaces", keyValue.second);
+      }
+    }
   }
 
   void FloorplanJS::updateBuildingUnits(const std::vector<FloorplanObjectId>& objectIds)
