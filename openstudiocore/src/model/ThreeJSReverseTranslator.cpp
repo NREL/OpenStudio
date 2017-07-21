@@ -542,6 +542,11 @@ namespace openstudio
     ThreeJSReverseTranslator::ThreeJSReverseTranslator()
     {}
 
+    std::map<UUID, UUID> ThreeJSReverseTranslator::handleMapping() const
+    {
+      return m_handleMapping;
+    }
+
     
     boost::optional<Model> ThreeJSReverseTranslator::modelFromThreeJS(const ThreeScene& scene)
     {

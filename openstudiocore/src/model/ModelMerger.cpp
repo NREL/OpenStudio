@@ -75,7 +75,7 @@ namespace openstudio
     {
     }
 
-    void mergeModelGeometry(Model& currentModel, const Model& newModel)
+    void ModelMerger::mergeModelGeometry(Model& currentModel, const Model& newModel, const std::map<UUID, UUID>& handleMapping)
     {
 
 
