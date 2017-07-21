@@ -45,7 +45,10 @@
 namespace openstudio{
 
   class ThreeScene;
+  class ThreeSceneChild;
+  class ThreeGeometry;
   class FloorplanObjectId;
+  class Point3d;
 
   class UTILITIES_API FloorplanObjectId{
   public:
@@ -109,11 +112,23 @@ namespace openstudio{
 
     FloorplanJS(const Json::Value& value);
 
-    std::string getHandleString(const Json::Value& value);
-    std::string getName(const Json::Value& value);
+    void makeGeometries(const Json::Value& story, const Json::Value& space, const std::string& spaceNamePostFix, double minZ, double maxZ,
+      const Json::Value& vertices, const Json::Value& edges, const Json::Value& faces, const std::string& faceId,
+      bool openstudioFormat, std::vector<ThreeGeometry>& geometries, std::vector<ThreeSceneChild>& sceneChildren) const;
+    
+    void makeSurface(const Json::Value& story, const Json::Value& space, const std::string& spaceNamePostFix,
+      const std::string& surfaceType, const Point3dVector& vertices, size_t faceFormat,
+      std::vector<ThreeGeometry>& geometries, std::vector<ThreeSceneChild>& sceneChildren) const;
+
+    std::string getHandleString(const Json::Value& value) const;
+    std::string getName(const Json::Value& value) const;
+    std::string getId(const Json::Value& value) const;
 
     Json::Value* findByHandleString(Json::Value& value, const std::string& key, const std::string& handleString);
-    Json::Value* findByNameOnly(Json::Value& value, const std::string& key, const std::string& name);
+    Json::Value* findByName(Json::Value& value, const std::string& key, const std::string& name, bool requireEmptyHandle);
+    Json::Value* findById(Json::Value& value, const std::string& key, const std::string& id);
+
+    const Json::Value* findById(const Json::Value& values, const std::string& id) const;
 
     void updateObjects(Json::Value& value, const std::string& key, const std::vector<FloorplanObjectId>& objects);
 

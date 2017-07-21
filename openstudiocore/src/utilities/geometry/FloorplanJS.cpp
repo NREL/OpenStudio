@@ -136,23 +136,9 @@ namespace openstudio{
     return result;
   }
 
-  boost::optional<Json::Value> getById(const Json::Value& objects, const std::string& id)
-  {
-    boost::optional<Json::Value> result;
-    Json::ArrayIndex n = objects.size();
-    for (Json::ArrayIndex i = 0; i < n; ++i){
-      if (checkKeyAndType(objects[i], "id", Json::stringValue)){
-        if (id == objects[i].get("id", "").asString()){
-          return objects[i];
-        }
-      }
-    }
-    return boost::none;
-  }
-
-  void makeSurface(const Json::Value& story, const Json::Value& space, const std::string& spaceNamePostFix,
+  void FloorplanJS::makeSurface(const Json::Value& story, const Json::Value& space, const std::string& spaceNamePostFix,
     const std::string& surfaceType, const Point3dVector& vertices, size_t faceFormat, 
-    std::vector<ThreeGeometry>& geometries, std::vector<ThreeSceneChild>& sceneChildren)
+    std::vector<ThreeGeometry>& geometries, std::vector<ThreeSceneChild>& sceneChildren) const
   {
     std::string geometryId = std::string("Geometry ") + std::to_string(geometries.size());
     std::string faceId = std::string("Face ") + std::to_string(geometries.size());
@@ -181,32 +167,99 @@ namespace openstudio{
 
       ThreeUserData userData;
 
-      assertKeyAndType(space, "name", Json::stringValue);
-      std::string s = space.get("name", "").asString();
-      userData.setSpaceName(s);
+      std::string s;
+      std::string id;
 
+      // story
       assertKeyAndType(story, "name", Json::stringValue);
       s = story.get("name", "").asString();
       userData.setBuildingStoryName(s);
 
+      if (checkKeyAndType(story, "handle", Json::stringValue)){
+        s = story.get("handle", "").asString();
+        userData.setBuildingStoryHandle(s);
+      }
+
+      // space
+      assertKeyAndType(space, "name", Json::stringValue);
+      s = space.get("name", "").asString();
+      userData.setSpaceName(s);
+
+      if (checkKeyAndType(space, "handle", Json::stringValue)){
+        s = space.get("handle", "").asString();
+        userData.setSpaceHandle(s);
+      }
+
+      // building unit
       if (checkKeyAndType(space, "building_unit_id", Json::stringValue)){
-        s = space.get("building_unit_id", "").asString();
-        userData.setBuildingUnitName(s);
+        id = space.get("building_unit_id", "").asString();
+        if (const Json::Value* buildingUnit = findById(m_value["building_units"], id)){
+          if (checkKeyAndType(*buildingUnit, "name", Json::stringValue)){
+            s = buildingUnit->get("name", "").asString();
+            userData.setBuildingStoryName(s);
+          }
+
+          if (checkKeyAndType(*buildingUnit, "handle", Json::stringValue)){
+            s = buildingUnit->get("handle", "").asString();
+            userData.setBuildingStoryHandle(s);
+          }
+        } else{
+          userData.setBuildingUnitName(id);
+        }
       }
 
+      // thermal zone
       if (checkKeyAndType(space, "thermal_zone_id", Json::stringValue)){
-        s = space.get("thermal_zone_id", "").asString();
-        userData.setThermalZoneName(s);
-      }
+        id = space.get("thermal_zone_id", "").asString();
+        if (const Json::Value* thermalZone = findById(m_value["thermal_zones"], id)){
+          if (checkKeyAndType(*thermalZone, "name", Json::stringValue)){
+            s = thermalZone->get("name", "").asString();
+            userData.setThermalZoneName(s);
+          }
 
+          if (checkKeyAndType(*thermalZone, "handle", Json::stringValue)){
+            s = thermalZone->get("handle", "").asString();
+            userData.setThermalZoneHandle(s);
+          }
+        } else{
+          userData.setThermalZoneName(id);
+        }
+      }
+      
+      // space type
       if (checkKeyAndType(space, "space_type_id", Json::stringValue)){
-        s = space.get("space_type_id", "").asString();
-        userData.setSpaceTypeName(s);
+        id = space.get("space_type_id", "").asString();
+        if (const Json::Value* spaceType = findById(m_value["space_types"], id)){
+          if (checkKeyAndType(*spaceType, "name", Json::stringValue)){
+            s = spaceType->get("name", "").asString();
+            userData.setSpaceTypeName(s);
+          }
+
+          if (checkKeyAndType(*spaceType, "handle", Json::stringValue)){
+            s = spaceType->get("handle", "").asString();
+            userData.setSpaceTypeHandle(s);
+          }
+        } else{
+          userData.setSpaceTypeName(id);
+        }
       }
 
+      // construction set
       if (checkKeyAndType(space, "construction_set_id", Json::stringValue)){
-        s = space.get("construction_set_id", "").asString();
-        //userData.setConstructionSetName(s);
+        id = space.get("construction_set_id", "").asString();
+        if (const Json::Value* constructionSet = findById(m_value["construction_sets"], id)){
+          if (checkKeyAndType(*constructionSet, "name", Json::stringValue)){
+            s = constructionSet->get("name", "").asString();
+            userData.setConstructionSetName(s);
+          }
+
+          if (checkKeyAndType(*constructionSet, "handle", Json::stringValue)){
+            s = constructionSet->get("handle", "").asString();
+            userData.setConstructionSetHandle(s);
+          }
+        } else{
+          userData.setConstructionSetName(id);
+        }
       }
 
       userData.setSurfaceType(surfaceType);
@@ -216,14 +269,14 @@ namespace openstudio{
     }
   }
 
-  void makeGeometries(const Json::Value& story, const Json::Value& space, const std::string& spaceNamePostFix, double minZ, double maxZ,
+  void FloorplanJS::makeGeometries(const Json::Value& story, const Json::Value& space, const std::string& spaceNamePostFix, double minZ, double maxZ,
     const Json::Value& vertices, const Json::Value& edges, const Json::Value& faces, const std::string& faceId,
-    bool openstudioFormat, std::vector<ThreeGeometry>& geometries, std::vector<ThreeSceneChild>& sceneChildren)
+    bool openstudioFormat, std::vector<ThreeGeometry>& geometries, std::vector<ThreeSceneChild>& sceneChildren) const
   {
     std::vector<Point3d> faceVertices;
 
     // get the face
-    boost::optional<Json::Value> face = getById(faces, faceId);
+    const Json::Value* face = findById(faces, faceId);
     if (face){
 
       // get the edges
@@ -238,21 +291,21 @@ namespace openstudio{
         unsigned edgeOrder = edgeOrders[edgeIdx].asUInt();
 
         // get the edge
-        boost::optional<Json::Value> edge = getById(edges, edgeId);
+        const Json::Value* edge = findById(edges, edgeId);
         if (edge){
           Json::Value vertexIds = edge->get("vertex_ids", Json::arrayValue);
           OS_ASSERT(2u == vertexIds.size());
 
           // get the vertices
-          boost::optional<Json::Value> vertex1 = getById(vertices, vertexIds[0].asString());
-          boost::optional<Json::Value> vertex2 = getById(vertices, vertexIds[1].asString());
+          const Json::Value* vertex1 = findById(vertices, vertexIds[0].asString());
+          const Json::Value* vertex2 = findById(vertices, vertexIds[1].asString());
 
           if (edgeOrder == 1){
-            vertex1 = getById(vertices, vertexIds[0].asString());
-            vertex2 = getById(vertices, vertexIds[1].asString());
+            vertex1 = findById(vertices, vertexIds[0].asString());
+            vertex2 = findById(vertices, vertexIds[1].asString());
           }else{
-            vertex1 = getById(vertices, vertexIds[1].asString());
-            vertex2 = getById(vertices, vertexIds[0].asString());
+            vertex1 = findById(vertices, vertexIds[1].asString());
+            vertex2 = findById(vertices, vertexIds[0].asString());
           }
           OS_ASSERT(vertex1);
           OS_ASSERT(vertex2);
@@ -462,18 +515,27 @@ namespace openstudio{
     updateObjects(m_value, "construction_sets", objectIds);
   }
 
-  std::string FloorplanJS::getHandleString(const Json::Value& value)
+  std::string FloorplanJS::getHandleString(const Json::Value& value) const
   {
     return value.get("handle", "").asString();
   }
 
-  std::string FloorplanJS::getName(const Json::Value& value)
+  std::string FloorplanJS::getName(const Json::Value& value) const
   {
     return value.get("name", "").asString();
   }
 
+  std::string FloorplanJS::getId(const Json::Value& value) const
+  {
+    return value.get("id", "").asString();
+  }
+
   Json::Value* FloorplanJS::findByHandleString(Json::Value& value, const std::string& key, const std::string& handleString)
   {
+    if (handleString.empty()){
+      return nullptr;
+    }
+
     Json::Value& values = value[key];
     Json::ArrayIndex n = values.size();
     for (Json::ArrayIndex i = 0; i < n; ++i){
@@ -485,7 +547,7 @@ namespace openstudio{
     return nullptr;
   }
 
-  Json::Value* FloorplanJS::findByNameOnly(Json::Value& value, const std::string& key, const std::string& name)
+  Json::Value* FloorplanJS::findByName(Json::Value& value, const std::string& key, const std::string& name, bool requireEmptyHandle)
   {
     if (name.empty()){
       return nullptr;
@@ -495,7 +557,9 @@ namespace openstudio{
     Json::ArrayIndex n = values.size();
     for (Json::ArrayIndex i = 0; i < n; ++i){
       if (getName(values[i]) == name){
-        if (getHandleString(values[i]).empty()){
+        if (requireEmptyHandle && getHandleString(values[i]).empty()){
+          return &values[i];
+        } else{
           return &values[i];
         }
       }
@@ -504,6 +568,38 @@ namespace openstudio{
     return nullptr;
   }
 
+  Json::Value* FloorplanJS::findById(Json::Value& value, const std::string& key, const std::string& id)
+  {
+    if (id.empty()){
+      return nullptr;
+    }
+
+    Json::Value& values = value[key];
+    Json::ArrayIndex n = values.size();
+    for (Json::ArrayIndex i = 0; i < n; ++i){
+      if (getId(values[i]) == id){
+        return &values[i];
+      }
+    }
+
+    return nullptr;
+  }
+
+  const Json::Value* FloorplanJS::findById(const Json::Value& values, const std::string& id) const
+  {
+    if (id.empty()){
+      return nullptr;
+    }
+
+    Json::ArrayIndex n = values.size();
+    for (Json::ArrayIndex i = 0; i < n; ++i){
+      if (getId(values[i]) == id){
+        return &values[i];
+      }
+    }
+
+    return nullptr;
+  }
 
   void FloorplanJS::updateObjects(Json::Value& value, const std::string& key, const std::vector<FloorplanObjectId>& objectIds)
   { 
@@ -514,9 +610,11 @@ namespace openstudio{
 
     // remove all objects that aren't found by handle or name
     {
+      std::set<std::string> ids;
       std::set<std::string> names;
       std::set<std::string> handleStrings;
       for (const auto& objectId : objectIds){
+        ids.insert(objectId.id());
         names.insert(objectId.name());
         handleStrings.insert(objectId.handleString());
       }
@@ -548,7 +646,7 @@ namespace openstudio{
         (*object)["name"] = objectId.name();
       } else {
         // find object by name only if handle is empty
-        object = findByNameOnly(value, key, objectId.name());
+        object = findByName(value, key, objectId.name(), true);
 
         if (object){
           // set handle

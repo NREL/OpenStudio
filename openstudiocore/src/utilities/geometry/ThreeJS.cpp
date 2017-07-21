@@ -532,16 +532,25 @@ namespace openstudio{
     assertType(value, "surfaceType", Json::stringValue);
     assertType(value, "surfaceTypeMaterialName", Json::stringValue);
     assertType(value, "constructionName", Json::stringValue);
+    assertType(value, "constructionHandle", Json::stringValue);
     assertType(value, "constructionMaterialName", Json::stringValue);
     assertType(value, "spaceName", Json::stringValue);
+    assertType(value, "spaceHandle", Json::stringValue);
     assertType(value, "thermalZoneName", Json::stringValue);
+    assertType(value, "thermalZoneHandle", Json::stringValue);
     assertType(value, "thermalZoneMaterialName", Json::stringValue);
     assertType(value, "spaceTypeName", Json::stringValue);
+    assertType(value, "spaceTypeHandle", Json::stringValue);
     assertType(value, "spaceTypeMaterialName", Json::stringValue);
     assertType(value, "buildingStoryName", Json::stringValue);
+    assertType(value, "buildingStoryHandle", Json::stringValue);
     assertType(value, "buildingStoryMaterialName", Json::stringValue);
     assertType(value, "buildingUnitName", Json::stringValue);
+    assertType(value, "buildingUnitHandle", Json::stringValue);
     assertType(value, "buildingUnitMaterialName", Json::stringValue);
+    assertType(value, "constructionSetName", Json::stringValue);
+    assertType(value, "constructionSetHandle", Json::stringValue);
+    assertType(value, "constructionSetMaterialName", Json::stringValue);
     assertType(value, "boundaryMaterialName", Json::stringValue);
     assertType(value, "outsideBoundaryCondition", Json::stringValue);
     assertType(value, "outsideBoundaryConditionObjectName", Json::stringValue);
@@ -555,16 +564,25 @@ namespace openstudio{
     m_surfaceType = value.get("surfaceType", "").asString();
     m_surfaceTypeMaterialName = value.get("surfaceTypeMaterialName", "").asString();
     m_constructionName = value.get("constructionName", "").asString();
+    m_constructionHandle = value.get("constructionHandle", "").asString();
     m_constructionMaterialName = value.get("constructionMaterialName", "").asString();
     m_spaceName = value.get("spaceName", "").asString();
+    m_spaceHandle = value.get("spaceHandle", "").asString();
     m_thermalZoneName = value.get("thermalZoneName", "").asString();
+    m_thermalZoneHandle = value.get("thermalZoneHandle", "").asString();
     m_thermalZoneMaterialName = value.get("thermalZoneMaterialName", "").asString();
     m_spaceTypeName = value.get("spaceTypeName", "").asString();
+    m_spaceTypeHandle = value.get("spaceTypeHandle", "").asString();
     m_spaceTypeMaterialName = value.get("spaceTypeMaterialName", "").asString();
     m_buildingStoryName = value.get("buildingStoryName", "").asString();
+    m_buildingStoryHandle = value.get("buildingStoryHandle", "").asString();
     m_buildingStoryMaterialName = value.get("buildingStoryMaterialName", "").asString();
     m_buildingUnitName = value.get("buildingUnitName", "").asString();
+    m_buildingUnitHandle = value.get("buildingUnitHandle", "").asString();
     m_buildingUnitMaterialName = value.get("buildingUnitMaterialName", "").asString();
+    m_constructionSetName = value.get("constructionSetName", "").asString();
+    m_constructionSetHandle = value.get("constructionSetHandle", "").asString();
+    m_constructionSetMaterialName = value.get("constructionSetMaterialName", "").asString();
     m_boundaryMaterialName = value.get("boundaryMaterialName", "").asString();
     m_outsideBoundaryCondition = value.get("outsideBoundaryCondition", "").asString();
     m_outsideBoundaryConditionObjectName = value.get("outsideBoundaryConditionObjectName", "").asString();
@@ -583,16 +601,25 @@ namespace openstudio{
     result["surfaceType"] = m_surfaceType;
     result["surfaceTypeMaterialName"] = m_surfaceTypeMaterialName;
     result["constructionName"] = m_constructionName;
+    result["constructionName"] = m_constructionName;
     result["constructionMaterialName"] = m_constructionMaterialName;
     result["spaceName"] = m_spaceName;
+    result["spaceHandle"] = m_spaceHandle;
     result["thermalZoneName"] = m_thermalZoneName;
+    result["thermalZoneHandle"] = m_thermalZoneHandle;
     result["thermalZoneMaterialName"] = m_thermalZoneMaterialName;
     result["spaceTypeName"] = m_spaceTypeName;
+    result["spaceTypeHandle"] = m_spaceTypeHandle;
     result["spaceTypeMaterialName"] = m_spaceTypeMaterialName;
     result["buildingStoryName"] = m_buildingStoryName;
+    result["buildingStoryHandle"] = m_buildingStoryHandle;
     result["buildingStoryMaterialName"] = m_buildingStoryMaterialName;
     result["buildingUnitName"] = m_buildingUnitName;
+    result["buildingUnitHandle"] = m_buildingUnitHandle;
     result["buildingUnitMaterialName"] = m_buildingUnitMaterialName;
+    result["constructionSetName"] = m_constructionSetName;
+    result["constructionSetHandle"] = m_constructionSetHandle;
+    result["constructionSetMaterialName"] = m_constructionSetMaterialName;
     result["boundaryMaterialName"] = m_boundaryMaterialName;
     result["outsideBoundaryCondition"] = m_outsideBoundaryCondition;
     result["outsideBoundaryConditionObjectName"] = m_outsideBoundaryConditionObjectName;
@@ -629,6 +656,11 @@ namespace openstudio{
     return m_constructionName;
   }
 
+  std::string ThreeUserData::constructionHandle() const
+  {
+    return m_constructionHandle;
+  }
+
   std::string ThreeUserData::constructionMaterialName() const
   {
     return m_constructionMaterialName;
@@ -639,9 +671,19 @@ namespace openstudio{
     return m_spaceName;
   }
 
+  std::string ThreeUserData::spaceHandle() const
+  {
+    return m_spaceHandle;
+  }
+
   std::string ThreeUserData::thermalZoneName() const
   {
     return m_thermalZoneName;
+  }
+
+  std::string ThreeUserData::thermalZoneHandle() const
+  {
+    return m_thermalZoneHandle;
   }
 
   std::string ThreeUserData::thermalZoneMaterialName() const
@@ -654,6 +696,11 @@ namespace openstudio{
     return m_spaceTypeName;
   }
 
+  std::string ThreeUserData::spaceTypeHandle() const
+  {
+    return m_spaceTypeHandle;
+  }
+
   std::string ThreeUserData::spaceTypeMaterialName() const
   {
     return m_spaceTypeMaterialName;
@@ -662,6 +709,11 @@ namespace openstudio{
   std::string ThreeUserData::buildingStoryName() const
   {
     return m_buildingStoryName;
+  }
+
+  std::string ThreeUserData::buildingStoryHandle() const
+  {
+    return m_buildingStoryHandle;
   }
 
   std::string ThreeUserData::buildingStoryMaterialName() const
@@ -674,9 +726,29 @@ namespace openstudio{
     return m_buildingUnitName;
   }
 
+    std::string ThreeUserData::buildingUnitHandle() const
+  {
+    return m_buildingUnitHandle;
+  }
+
   std::string ThreeUserData::buildingUnitMaterialName() const
   {
     return m_buildingUnitMaterialName;
+  }
+
+  std::string ThreeUserData::constructionSetName() const
+  {
+    return m_constructionSetName;
+  }
+
+    std::string ThreeUserData::constructionSetHandle() const
+  {
+    return m_constructionSetHandle;
+  }
+
+  std::string ThreeUserData::constructionSetMaterialName() const
+  {
+    return m_constructionSetMaterialName;
   }
 
   std::string ThreeUserData::outsideBoundaryCondition() const
@@ -739,6 +811,11 @@ namespace openstudio{
     m_constructionName = s;
   }
 
+  void ThreeUserData::setConstructionHandle(const std::string& s)
+  {
+    m_constructionHandle = s;
+  }
+
   void ThreeUserData::setConstructionMaterialName(const std::string& s)
   {
     m_constructionMaterialName = s;
@@ -749,9 +826,19 @@ namespace openstudio{
     m_spaceName = s;
   }
 
+  void ThreeUserData::setSpaceHandle(const std::string& s)
+  {
+    m_spaceHandle = s;
+  }
+
   void ThreeUserData::setThermalZoneName(const std::string& s)
   {
     m_thermalZoneName = s;
+  }
+
+  void ThreeUserData::setThermalZoneHandle(const std::string& s)
+  {
+    m_thermalZoneHandle = s;
   }
 
   void ThreeUserData::setThermalZoneMaterialName(const std::string& s)
@@ -763,6 +850,11 @@ namespace openstudio{
   {
     m_spaceTypeName = s;
   }
+    
+  void ThreeUserData::setSpaceTypeHandle(const std::string& s)
+  {
+    m_spaceTypeHandle = s;
+  }
 
   void ThreeUserData::setSpaceTypeMaterialName(const std::string& s)
   {
@@ -772,6 +864,11 @@ namespace openstudio{
   void ThreeUserData::setBuildingStoryName(const std::string& s)
   {
     m_buildingStoryName = s;
+  }
+    
+  void ThreeUserData::setBuildingStoryHandle(const std::string& s)
+  {
+    m_buildingStoryHandle = s;
   }
 
   void ThreeUserData::setBuildingStoryMaterialName(const std::string& s)
@@ -783,10 +880,30 @@ namespace openstudio{
   {
     m_buildingUnitName = s;
   }
+    
+  void ThreeUserData::setBuildingUnitHandle(const std::string& s)
+  {
+    m_buildingUnitHandle = s;
+  }
 
   void ThreeUserData::setBuildingUnitMaterialName(const std::string& s)
   {
     m_buildingUnitMaterialName = s;
+  }
+
+  void ThreeUserData::setConstructionSetName(const std::string& s)
+  {
+    m_constructionSetName = s;
+  }
+    
+  void ThreeUserData::setConstructionSetHandle(const std::string& s)
+  {
+    m_constructionSetHandle = s;
+  }
+
+  void ThreeUserData::setConstructionSetMaterialName(const std::string& s)
+  {
+    m_constructionSetMaterialName = s;
   }
 
   void ThreeUserData::setOutsideBoundaryCondition(const std::string& s)
