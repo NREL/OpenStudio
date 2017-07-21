@@ -75,17 +75,115 @@ namespace openstudio
     {
     }
 
-    void ModelMerger::mergeModelGeometry(Model& currentModel, const Model& newModel, const std::map<UUID, UUID>& handleMapping)
+    boost::optional<UUID> ModelMerger::getNewModelHandle(const UUID& currentHandle)
     {
-      
-      // mega lame merge
-      for (auto& surfaceGroup : currentModel.getModelObjects<model::PlanarSurfaceGroup>()){
-        surfaceGroup.remove();
+      auto it = m_currentToNewHandleMapping.find(currentHandle);
+      if (it != m_currentToNewHandleMapping.end()){
+        return it->second;
       }
-      for (auto& surfaceGroup : newModel.getModelObjects<model::PlanarSurfaceGroup>()){
-        surfaceGroup.clone(currentModel);
+      return boost::none;
+    }
+    
+    boost::optional<UUID> ModelMerger::getCurrentModelHandle(const UUID& newHandle)
+    {
+      auto it = m_newToCurrentHandleMapping.find(newHandle);
+      if (it != m_newToCurrentHandleMapping.end()){
+        return it->second;
+      }
+      return boost::none;
+    }
+
+    void ModelMerger::mergeSpace(Space& currentSpace, const Space& newSpace)
+    {
+      // remove current surfaces
+      for (auto& currentSurface : currentSpace.surfaces()){
+        currentSurface.remove();
       }
 
+      // add new surfaces
+      for (const auto& newSurface : newSpace.surfaces()){
+        Surface clone = newSurface.clone(m_currentModel).cast<Surface>();
+        clone.setSpace(currentSpace);
+      }
+
+      // thermal zone
+      if (boost::optional<ThermalZone> newThermalZone = newSpace.thermalZone()){
+        boost::optional<UUID> currentHandle = getCurrentModelHandle(newThermalZone->handle());
+        boost::optional<ThermalZone> currentThermalZone;
+        if (currentHandle){
+          currentThermalZone = m_newModel.getModelObject<ThermalZone>(*currentHandle);
+        }
+        if (currentThermalZone){
+
+        } else{
+          newThermalZone->clone(m_currentModel);
+        }
+      }
+/*
+    std::string surfaceTypeMaterialName() const;
+    std::string constructionName() const;
+    std::string constructionHandle() const;
+    std::string constructionMaterialName() const;
+    std::string spaceName() const;
+    std::string spaceHandle() const;
+    std::string thermalZoneName() const;
+    std::string thermalZoneHandle() const;
+    std::string thermalZoneMaterialName() const;
+    std::string spaceTypeName() const;
+    std::string spaceTypeHandle() const;
+    std::string spaceTypeMaterialName() const;
+    std::string buildingStoryName() const;
+    std::string buildingStoryHandle() const;
+    std::string buildingStoryMaterialName() const;
+    std::string buildingUnitName() const;
+    std::string buildingUnitHandle() const;
+    std::string buildingUnitMaterialName() const;
+    std::string constructionSetName() const;
+    std::string constructionSetHandle() const;
+    std::string constructionSetMaterialName() const;
+    std::string outsideBoundaryCondition() const;
+    std::string outsideBoundaryConditionObjectName() const;
+    std::string outsideBoundaryConditionObjectHandle() const;
+    std::string boundaryMaterialName() const;
+*/
+
+    }
+    
+    void ModelMerger::mergeModels(Model& currentModel, const Model& newModel, const std::map<UUID, UUID>& handleMapping)
+    {
+      m_currentModel = currentModel;
+      m_newModel = newModel;
+
+      m_currentToNewHandleMapping = handleMapping;
+      m_newToCurrentHandleMapping.clear();
+      for (const auto& it : handleMapping){
+        m_newToCurrentHandleMapping[it.second] = it.first;
+      }
+
+      //** MERGE SPACES **//
+      
+      // remove objects in current model that are not in new model
+      for (auto& currentSpace : currentModel.getConcreteModelObjects<model::Space>()){
+        if (!getNewModelHandle(currentSpace.handle())){
+          currentSpace.remove();
+        }
+      }
+      
+      // merge spaces from new model into current model
+      for (auto& newSpace : newModel.getConcreteModelObjects<model::Space>()){
+        boost::optional<UUID> currentHandle = getCurrentModelHandle(newSpace.handle());
+        boost::optional<Space> currentSpace;
+        if (currentHandle){
+          currentSpace = currentModel.getModelObject<model::Space>(*currentHandle);
+        }
+
+        if (currentSpace){
+          // this object has a counterpart in the current model
+          mergeSpace(*currentSpace, newSpace);
+        } else {
+          newSpace.clone(currentModel);
+        }
+      }
 
     }
     

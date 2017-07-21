@@ -56,6 +56,8 @@ namespace openstudio
 
     private:
 
+      Point3dVectorVector getFaces(const ThreeGeometryData& data) const;
+
       std::map<UUID, UUID> m_handleMapping;
 
     };

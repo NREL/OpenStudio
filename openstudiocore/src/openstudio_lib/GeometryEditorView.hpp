@@ -109,6 +109,7 @@ class EditorWebView : public QWidget
     QVariant m_export;
     unsigned m_versionNumber;
     model::Model m_exportModel;
+    std::map<UUID, UUID> m_exportModelHandleMapping;
     QTimer* m_checkForUpdateTimer;
 
     QComboBox * m_geometrySourceComboBox;

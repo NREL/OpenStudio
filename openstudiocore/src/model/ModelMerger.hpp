@@ -40,16 +40,28 @@ namespace openstudio
   namespace model
   {
     
+    class Space;
+
     MODEL_API class ModelMerger
     {
     public:
       ModelMerger();
 
-      /// Updates model stories, spaces, space types, thermal zones, building units, and construction sets from another model (e.g. a floorplan model)
+      /// Merges changes from newModel into currentModel
       /// Handle mapping is mapping of handles in currentModel (keys) to handles in newModel (values)
-      void mergeModelGeometry(Model& currentModel, const Model& newModel, const std::map<UUID, UUID>& handleMapping);
+      void mergeModels(Model& currentModel, const Model& newModel, const std::map<UUID, UUID>& handleMapping);
 
     private:
+
+      void mergeSpace(Space& currentSpace, const Space& newSpace);
+
+      boost::optional<UUID> getNewModelHandle(const UUID& currentHandle);
+      boost::optional<UUID> getCurrentModelHandle(const UUID& newHandle);
+
+      Model m_currentModel;
+      Model m_newModel;
+      std::map<UUID, UUID> m_currentToNewHandleMapping;
+      std::map<UUID, UUID> m_newToCurrentHandleMapping;
     };
 
   }

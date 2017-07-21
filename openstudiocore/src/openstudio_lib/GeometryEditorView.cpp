@@ -273,12 +273,11 @@ void EditorWebView::translateExport()
 {
   std::string json = m_export.value<QString>().toStdString();
 
+  model::ThreeJSReverseTranslator rt;
   boost::optional<model::Model> model;
   boost::optional<FloorplanJS> floorplan = FloorplanJS::load(json);
   if (floorplan){
     ThreeScene scene = floorplan->toThreeScene(true);
-
-    model::ThreeJSReverseTranslator rt;
     model = rt.modelFromThreeJS(scene);
   } else{
     // DLM: this is an error, the editor produced a JSON we can't read
@@ -286,9 +285,11 @@ void EditorWebView::translateExport()
   
   if (model){
     m_exportModel = *model;
+    m_exportModelHandleMapping = rt.handleMapping();
   } else{
     // DLM: this is an error, either floorplan was empty or could not be translated
     m_exportModel = model::Model();
+    m_exportModelHandleMapping.clear();
   }
   
 }
@@ -402,9 +403,10 @@ void EditorWebView::previewExport()
   translateExport();
 
   // merge export model into clone of m_model
-  model::Model temp = m_model.clone().cast<model::Model>();
+  bool keepHandles = true;
+  model::Model temp = m_model.clone(keepHandles).cast<model::Model>();
   model::ModelMerger mm;
-  mm.mergeModelGeometry(temp, m_exportModel, std::map<UUID, UUID>());
+  mm.mergeModels(temp, m_exportModel, m_exportModelHandleMapping);
 
   PreviewWebView* webView = new PreviewWebView(temp);
   QLayout* layout = new QVBoxLayout();
@@ -426,7 +428,7 @@ void EditorWebView::mergeExport()
 
   // merge export model into m_model
   model::ModelMerger mm;
-  mm.mergeModelGeometry(m_model, m_exportModel, std::map<UUID, UUID>());
+  mm.mergeModels(m_model, m_exportModel, m_exportModelHandleMapping);
 
   // DLM: TODO make sure handles get updated in floorplan
 
