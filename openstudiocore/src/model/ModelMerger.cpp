@@ -77,6 +77,14 @@ namespace openstudio
 
     void ModelMerger::mergeModelGeometry(Model& currentModel, const Model& newModel, const std::map<UUID, UUID>& handleMapping)
     {
+      
+      // mega lame merge
+      for (auto& surfaceGroup : currentModel.getModelObjects<model::PlanarSurfaceGroup>()){
+        surfaceGroup.remove();
+      }
+      for (auto& surfaceGroup : newModel.getModelObjects<model::PlanarSurfaceGroup>()){
+        surfaceGroup.clone(currentModel);
+      }
 
 
     }
