@@ -29,7 +29,7 @@
 #include "GeometryPreviewView.hpp"
 
 #include "../model/Model_Impl.hpp"
-#include "../model/ThreeJS.hpp"
+#include "../model/ThreeJSForwardTranslator.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Application.hpp"
@@ -164,7 +164,9 @@ void PreviewWebView::onLoadFinished(bool ok)
   if (m_json.isEmpty()){
     std::function<void(double)> updatePercentage = std::bind(&PreviewWebView::onTranslateProgress, this, _1);
     //ThreeScene scene = modelToThreeJS(m_model.clone(true).cast<model::Model>(), true, updatePercentage); // triangulated
-    ThreeScene scene = modelToThreeJS(m_model, true, updatePercentage); // triangulated
+
+    model::ThreeJSForwardTranslator ft;
+    ThreeScene scene = ft.modelToThreeJS(m_model, true, updatePercentage); // triangulated
     std::string json = scene.toJSON(false); // no pretty print
     m_json = QString::fromStdString(json);
   } else {

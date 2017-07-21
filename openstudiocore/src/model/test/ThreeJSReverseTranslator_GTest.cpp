@@ -30,7 +30,7 @@
 
 #include "ModelFixture.hpp"
 
-#include "../ThreeJS.hpp"
+#include "../ThreeJSReverseTranslator.hpp"
 #include "../Model.hpp"
 #include "../Space.hpp"
 #include "../Space_Impl.hpp"
@@ -43,30 +43,11 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,ThreeJS_ExampleModel) {
-  Model model = exampleModel();
-  model.save(resourcesPath() / toPath("model/exampleModel.osm"), true);
 
-  // triangulated, for display
-  ThreeScene scene = modelToThreeJS(model, true);
-  std::string json = scene.toJSON();
-  EXPECT_TRUE(ThreeScene::load(json));
+TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS) {
 
-  // not triangulated, for model transport/translation
-  scene = modelToThreeJS(model, false);
-  json = scene.toJSON();
-  EXPECT_TRUE(ThreeScene::load(json));
+  ThreeJSReverseTranslator rt;
 
-  boost::optional<Model> model2 = modelFromThreeJS(scene);
-  ASSERT_TRUE(model2);
-
-  model2->save(resourcesPath() / toPath("model/ThreeJS_ExampleModel.osm"), true);
-
-  EXPECT_EQ(model.getConcreteModelObjects<Space>().size(), model2->getConcreteModelObjects<Space>().size());
-  EXPECT_EQ(model.getConcreteModelObjects<Surface>().size(), model2->getConcreteModelObjects<Surface>().size());
-}
-
-TEST_F(ModelFixture,ThreeJS_FloorplanJS) {
   openstudio::path p = resourcesPath() / toPath("utilities/Geometry/floorplan.json");
   ASSERT_TRUE(exists(p));
 
@@ -83,7 +64,7 @@ TEST_F(ModelFixture,ThreeJS_FloorplanJS) {
   json = scene.toJSON();
   EXPECT_TRUE(ThreeScene::load(json));
 
-  boost::optional<Model> model = modelFromThreeJS(scene);
+  boost::optional<Model> model = rt.modelFromThreeJS(scene);
   ASSERT_TRUE(model);
 
   model->save(resourcesPath() / toPath("model/ThreeJS_FloorplanJS.osm"), true);

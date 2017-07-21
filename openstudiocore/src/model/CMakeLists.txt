@@ -32,8 +32,15 @@ set(${target_name}_src
   ModelObjectList.cpp
   FileOperations.hpp
   FileOperations.cpp
-  ThreeJS.hpp
-  ThreeJS.cpp
+  
+  FloorplanJSForwardTranslator.hpp
+  FloorplanJSForwardTranslator.cpp
+  ThreeJSForwardTranslator.hpp
+  ThreeJSForwardTranslator.cpp
+  ThreeJSReverseTranslator.hpp
+  ThreeJSReverseTranslator.cpp
+  ModelMerger.hpp
+  ModelMerger.cpp
   
   ConcreteModelObjects.hpp
   AirConditionerVariableRefrigerantFlow.hpp
@@ -1553,6 +1560,7 @@ set(${target_name}_test_src
   test/FanZoneExhaust_GTest.cpp
   test/FanOnOff_GTest.cpp
   test/FenestrationMaterial_GTest.cpp
+  test/FloorplanJSForwardTranslator_GTest.cpp
   test/FluidCoolerSingleSpeed_GTest.cpp
   test/FluidCoolerTwoSpeed_GTest.cpp
   test/GasEquipment_GTest.cpp
@@ -1602,6 +1610,7 @@ set(${target_name}_test_src
   test/ModelObject_GTest.cpp
   test/ModelPartitionMaterial_GTest.cpp
   test/Model_GTest.cpp
+  test/ModelMerger_GTest.cpp
   test/Node_GTest.cpp
   test/PortList_GTest.cpp
   test/OpaqueMaterial_GTest.cpp
@@ -1717,7 +1726,8 @@ set(${target_name}_test_src
   test/ThermalStorageIceDetailed_GTest.cpp
   test/ThermalStorageChilledWaterStratified_GTest.cpp
   test/TemperingValve_GTest.cpp
-  test/ThreeJS_GTest.cpp
+  test/ThreeJSForwardTranslator_GTest.cpp
+  test/ThreeJSReverseTranslator_GTest.cpp
   test/UnitarySystemPerformanceMultispeed_GTest.cpp
   test/UtilityBill_GTest.cpp
   test/WaterHeaterMixed_GTest.cpp

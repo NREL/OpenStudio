@@ -26,7 +26,7 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
 
-#include "ThreeJS.hpp"
+#include "ThreeJSForwardTranslator.hpp"
 
 #include "RenderingColor.hpp"
 #include "ConstructionBase.hpp"
@@ -71,7 +71,7 @@ namespace openstudio
   namespace model
   {
 
-    unsigned openstudioFaceFormatId()
+    unsigned ThreeJSForwardTranslator::openstudioFaceFormatId()
     {
       return 1024;
     }
@@ -455,7 +455,7 @@ namespace openstudio
         if (triangulateSurfaces){
           faceIndices.push_back(0);
         } else{
-          faceIndices.push_back(openstudioFaceFormatId());
+          faceIndices.push_back(ThreeJSForwardTranslator::openstudioFaceFormatId());
         }
 
         Point3dVector::reverse_iterator it = finalVerts.rbegin();
@@ -501,12 +501,15 @@ namespace openstudio
     }
 
 
-    ThreeScene modelToThreeJS(const Model& model, bool triangulateSurfaces)
+    ThreeJSForwardTranslator::ThreeJSForwardTranslator()
+    {}
+
+    ThreeScene ThreeJSForwardTranslator::modelToThreeJS(const Model& model, bool triangulateSurfaces)
     {
       return modelToThreeJS(model, triangulateSurfaces, [](double percentage) {});
     }
 
-    ThreeScene modelToThreeJS(const Model& model, bool triangulateSurfaces, std::function<void(double)> updatePercentage)
+    ThreeScene ThreeJSForwardTranslator::modelToThreeJS(const Model& model, bool triangulateSurfaces, std::function<void(double)> updatePercentage)
     {
       updatePercentage(0.0);
 
@@ -593,223 +596,6 @@ namespace openstudio
       updatePercentage(100.0);
 
       return scene;
-    }
-
-    Point3dVectorVector getFaces(const ThreeGeometryData& data)
-    {
-      Point3dVectorVector result;
-
-      const Point3dVector vertices = fromThreeVector(data.vertices());
-      const std::vector<size_t> faces = data.faces();
-      const size_t n = faces.size();
-
-      if (n < 1){
-        return result;
-      }
-
-
-      if (faces[0] == openstudioFaceFormatId()){
-        // openstudio, all vertices belong to one face
-        Point3dVector face;
-
-        // faces[0] is format
-        for (size_t i = 1; i < n; ++i){
-          face.push_back(vertices[faces[i]]);
-        }
-
-//        try{
-//          Plane p(face);
-//        } catch (const std::exception&)
-//        {
-//          std::cout << "Vertices: " << vertices << std::endl;
-//          std::cout << "faces: " << std::endl;
-//          for (const auto& f : faces){
-//            std::cout << "  " << f << std::endl;
-//          }
-//          bool t = false;
-//        }
-
-
-        result.push_back(face);
-      }
-
-      return result;
-    }
-    
-    boost::optional<Model> modelFromThreeJS(const ThreeScene& scene)
-    {
-
-      Model model;
-
-      ThreeSceneObject sceneObject = scene.object();
-      for (const auto& child : sceneObject.children()){
-        boost::optional<ThreeGeometry> geometry = scene.getGeometry(child.geometry());
-        if (!geometry){
-          continue;
-        }
-
-        Point3dVectorVector faces = getFaces(geometry->data());
-
-        boost::optional<ThreeMaterial> material = scene.getMaterial(child.material());
-
-        ThreeUserData userData = child.userData();
-        
-        std::string handle = userData.handle();
-        std::string name = userData.name();
-        std::string surfaceType = userData.surfaceType();
-        std::string constructionName = userData.constructionName();
-        std::string spaceName = userData.spaceName();
-        std::string thermalZoneName = userData.thermalZoneName();
-        std::string spaceTypeName = userData.spaceTypeName();
-        std::string buildingStoryName = userData.buildingStoryName();
-        std::string buildingUnitName = userData.buildingUnitName();
-        std::string outsideBoundaryCondition = userData.outsideBoundaryCondition();
-        std::string outsideBoundaryConditionObjectName = userData.outsideBoundaryConditionObjectName();
-        std::string outsideBoundaryConditionObjectHandle = userData.outsideBoundaryConditionObjectHandle();
-
-        boost::optional<ThermalZone> thermalZone = model.getConcreteModelObjectByName<ThermalZone>(thermalZoneName);
-        if (!thermalZone && !thermalZoneName.empty()){
-          thermalZone = ThermalZone(model);
-          thermalZone->setName(thermalZoneName);
-        }
-
-        boost::optional<SpaceType> spaceType = model.getConcreteModelObjectByName<SpaceType>(spaceTypeName);
-        if (!spaceType && !spaceTypeName.empty()){
-          spaceType = SpaceType(model);
-          spaceType->setName(spaceTypeName);
-        }
-
-        boost::optional<BuildingStory> buildingStory = model.getConcreteModelObjectByName<BuildingStory>(buildingStoryName);
-        if (!buildingStory && !buildingStoryName.empty()){
-          buildingStory = BuildingStory(model);
-          buildingStory->setName(buildingStoryName);
-        }
-
-        boost::optional<BuildingUnit> buildingUnit = model.getConcreteModelObjectByName<BuildingUnit>(buildingUnitName);
-        if (!buildingUnit && !buildingUnitName.empty()){
-          buildingUnit = BuildingUnit(model);
-          buildingUnit->setName(buildingUnitName);
-        }
-
-        // to set handles we may have to create and add idf objects
-
-        if (istringEqual(surfaceType, "Wall") || istringEqual(surfaceType, "Floor") || istringEqual(surfaceType, "RoofCeiling")){
-
-          if (spaceName.empty()){
-            spaceName = "Default Space";
-          }
-
-          boost::optional<Space> space = model.getConcreteModelObjectByName<Space>(spaceName);
-          if (!space){
-            space = Space(model);
-            space->setName(spaceName);
-          }
-
-          OS_ASSERT(space);
-
-          if (thermalZone){
-            if (!space->thermalZone()){
-              space->setThermalZone(*thermalZone);
-            }
-          }
-
-          if (spaceType){
-            if (!space->spaceType()){
-              space->setSpaceType(*spaceType);
-            }
-          }
-
-          if (buildingStory){
-            if (!space->buildingStory()){
-              space->setBuildingStory(*buildingStory);
-            }
-          }
-
-          if (buildingUnit){
-            if (!space->buildingUnit()){
-              space->setBuildingUnit(*buildingUnit);
-            }
-          }
-
-          for (const auto& face : faces){
-            try{
-              // ensure we can create a plane
-              Plane plane(face);
-
-              Surface surface(face, model);
-              surface.setName(name);
-              surface.setSpace(*space);
-            } catch (const std::exception& ){
-              LOG_FREE(Warn, "modelFromThreeJS", "Could not create surface for vertices " << face);
-            }
-          }
-        }
-      }
-
-      return model;
-    }
-
-    FloorplanJS updateFloorplanJSResources(const FloorplanJS& floorplan, const Model& model)
-    {
-      FloorplanJS result(floorplan.toJSON());
-
-      // first have to update all the names
-
-      std::vector<FloorplanObjectId> storyObjectIds;
-      for (const auto& story : model.getConcreteModelObjects<BuildingStory>())
-      {
-        storyObjectIds.push_back(FloorplanObjectId("", story.nameString(), story.handle()));
-      }
-      result.updateStories(storyObjectIds);
-
-      std::vector<FloorplanObjectId> spaceObjectIds;
-      for (const auto& space : model.getConcreteModelObjects<Space>())
-      {
-        FloorplanObjectId spaceObjectId("", space.nameString(), space.handle());
-        if (boost::optional<BuildingStory> story = space.buildingStory()){
-          spaceObjectId.setParentHandleString(toString(story->handle()));
-        }
-        spaceObjectIds.push_back(spaceObjectId);
-      }
-      result.updateStories(spaceObjectIds);
-
-      std::vector<FloorplanObjectId> unitObjectIds;
-      for (const auto& unit : model.getConcreteModelObjects<BuildingUnit>())
-      {
-        unitObjectIds.push_back(FloorplanObjectId("", unit.nameString(), unit.handle()));
-      }
-      result.updateBuildingUnits(unitObjectIds);
-
-      std::vector<FloorplanObjectId> zoneObjectIds;
-      for (const auto& zone : model.getConcreteModelObjects<ThermalZone>())
-      {
-        zoneObjectIds.push_back(FloorplanObjectId("", zone.nameString(), zone.handle()));
-      }
-      result.updateThermalZones(zoneObjectIds);
-
-      std::vector<FloorplanObjectId> spaceTypeObjectIds;
-      for (const auto& spaceType : model.getConcreteModelObjects<SpaceType>())
-      {
-        spaceTypeObjectIds.push_back(FloorplanObjectId("", spaceType.nameString(), spaceType.handle()));
-      }
-      result.updateSpaceTypes(spaceTypeObjectIds);
-
-      std::vector<FloorplanObjectId> setObjectIds;
-      for (const auto& set : model.getConcreteModelObjects<DefaultConstructionSet>())
-      {
-        setObjectIds.push_back(FloorplanObjectId("", set.nameString(), set.handle()));
-      }
-      result.updateConstructionSets(setObjectIds);
-
-      // second update all the properties
-
-      return result;
-    }
-
-    void mergeModelGeometry(Model& currentModel, const Model& newModel)
-    {
-
-
     }
     
   }//model

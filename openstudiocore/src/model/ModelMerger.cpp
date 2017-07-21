@@ -26,35 +26,60 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
 
-#ifndef MODEL_THREEJS_HPP
-#define MODEL_THREEJS_HPP
+#include "ModelMerger.hpp"
 
-#include "ModelAPI.hpp"
+#include "RenderingColor.hpp"
+#include "ConstructionBase.hpp"
+#include "ConstructionBase_Impl.hpp"
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
+#include "SpaceType.hpp"
+#include "SpaceType_Impl.hpp"
+#include "BuildingStory.hpp"
+#include "BuildingStory_Impl.hpp"
+#include "BuildingUnit.hpp"
+#include "BuildingUnit_Impl.hpp"
+#include "Surface.hpp"
+#include "Surface_Impl.hpp"
+#include "SubSurface.hpp"
+#include "SubSurface_Impl.hpp"
+#include "ShadingSurface.hpp"
+#include "ShadingSurface_Impl.hpp"
+#include "InteriorPartitionSurface.hpp"
+#include "InteriorPartitionSurface_Impl.hpp"
+#include "PlanarSurfaceGroup.hpp"
+#include "PlanarSurfaceGroup_Impl.hpp"
+#include "Space.hpp"
+#include "Space_Impl.hpp"
+#include "DefaultConstructionSet.hpp"
+#include "DefaultConstructionSet_Impl.hpp"
+#include "ShadingSurfaceGroup.hpp"
+#include "InteriorPartitionSurfaceGroup.hpp"
 
-#include "Model.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/geometry/Point3d.hpp"
+#include "../utilities/geometry/Plane.hpp"
+#include "../utilities/geometry/BoundingBox.hpp"
+#include "../utilities/geometry/Transformation.hpp"
+#include "../utilities/geometry/Geometry.hpp"
 
-#include "../utilities/geometry/ThreeJS.hpp"
-#include "../utilities/geometry/FloorplanJS.hpp"
+#include <cmath>
 
 namespace openstudio
 {
   namespace model
   {
-    /// Convert an OpenStudio Model to ThreeJS format
-    /// Triangulate surfaces if the ThreeJS representation will be used for display
-    /// Do not triangulate surfaces if the ThreeJs representation will be translated back to a model
-    MODEL_API ThreeScene modelToThreeJS(const Model& model, bool triangulateSurfaces);
-    MODEL_API ThreeScene modelToThreeJS(const Model& model, bool triangulateSurfaces, std::function<void(double)> updatePercentage);
+
+    ModelMerger::ModelMerger()
+    {
+    }
+
+    void mergeModelGeometry(Model& currentModel, const Model& newModel)
+    {
+
+
+    }
     
-    /// Convert a ThreeJs Scene to OpenStudio Model format, scene must be in OpenStudio format
-    MODEL_API boost::optional<Model> modelFromThreeJS(const ThreeScene& scene);
-
-    /// Update library resources in FloorplanJS format to match those in OpenStudio Model
-    MODEL_API FloorplanJS updateFloorplanJSResources(const FloorplanJS& floorplan, const Model& model);
-
-    /// Updates model stories, spaces, space types, thermal zones, building units, and construction sets from another model (e.g. a floorplan model)
-    MODEL_API void mergeModelGeometry(Model& currentModel, const Model& newModel);
-
-  }
-}
-#endif //MODEL_THREEJS_HPP
+  }//model
+}//openstudio

@@ -33,7 +33,9 @@
 
 #include "../model/Model.hpp"
 #include "../model/Model_Impl.hpp"
-#include "../model/ThreeJS.hpp"
+#include "../model/ModelMerger.hpp"
+#include "../model/ThreeJSReverseTranslator.hpp"
+#include "../model/FloorplanJSForwardTranslator.hpp"
 #include "../model/BuildingStory.hpp"
 #include "../model/BuildingStory_Impl.hpp"
 #include "../model/PlanarSurfaceGroup.hpp"
@@ -176,7 +178,8 @@ EditorWebView::EditorWebView(const openstudio::model::Model& model, QWidget *t_p
       // floorplan loaded correctly
 
       // update with current model content
-      m_floorplan = updateFloorplanJSResources(*m_floorplan, m_model);
+      model::FloorplanJSForwardTranslator ft;
+      m_floorplan = ft.updateFloorplanJSResources(*m_floorplan, m_model);
       
       // start the editor
       m_newImportGeometry->setEnabled(false);
@@ -274,7 +277,9 @@ void EditorWebView::translateExport()
   boost::optional<FloorplanJS> floorplan = FloorplanJS::load(json);
   if (floorplan){
     ThreeScene scene = floorplan->toThreeScene(true);
-    model = model::modelFromThreeJS(scene);
+
+    model::ThreeJSReverseTranslator rt;
+    model = rt.modelFromThreeJS(scene);
   } else{
     // DLM: this is an error, the editor produced a JSON we can't read
   }
@@ -347,7 +352,8 @@ void EditorWebView::startEditor()
 
       // import current model content as library
       FloorplanJS floorplan;
-      floorplan = updateFloorplanJSResources(floorplan, m_model);
+      model::FloorplanJSForwardTranslator ft;
+      floorplan = ft.updateFloorplanJSResources(floorplan, m_model);
 
       m_javascriptRunning = true;
 
@@ -396,8 +402,9 @@ void EditorWebView::previewExport()
   translateExport();
 
   // merge export model into clone of m_model
-  Model temp = m_model.clone();
-  mergeModelGeometry(temp, m_exportModel);
+  model::Model temp = m_model.clone().cast<model::Model>();
+  model::ModelMerger mm;
+  mm.mergeModelGeometry(temp, m_exportModel, std::map<UUID, UUID>());
 
   PreviewWebView* webView = new PreviewWebView(temp);
   QLayout* layout = new QVBoxLayout();
@@ -418,7 +425,8 @@ void EditorWebView::mergeExport()
   translateExport();
 
   // merge export model into m_model
-  mergeModelGeometry(m_model, m_exportModel);
+  model::ModelMerger mm;
+  mm.mergeModelGeometry(m_model, m_exportModel, std::map<UUID, UUID>());
 
   // DLM: TODO make sure handles get updated in floorplan
 
