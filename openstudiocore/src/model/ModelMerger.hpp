@@ -41,6 +41,7 @@ namespace openstudio
   {
     
     class Space;
+    class ThermalZone;
 
     MODEL_API class ModelMerger
     {
@@ -54,12 +55,14 @@ namespace openstudio
     private:
 
       void mergeSpace(Space& currentSpace, const Space& newSpace);
+      void mergeThermalZone(ThermalZone& currentThermalZone, const ThermalZone& newThermalZone);
 
       boost::optional<UUID> getNewModelHandle(const UUID& currentHandle);
       boost::optional<UUID> getCurrentModelHandle(const UUID& newHandle);
 
       Model m_currentModel;
       Model m_newModel;
+      std::set<UUID> m_newMergedHandles;
       std::map<UUID, UUID> m_currentToNewHandleMapping;
       std::map<UUID, UUID> m_newToCurrentHandleMapping;
     };

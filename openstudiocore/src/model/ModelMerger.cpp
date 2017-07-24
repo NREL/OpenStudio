@@ -95,6 +95,14 @@ namespace openstudio
 
     void ModelMerger::mergeSpace(Space& currentSpace, const Space& newSpace)
     {
+      if (m_newMergedHandles.find(newSpace.handle()) != m_newMergedHandles.end()){
+        // already merged
+        return;
+      }
+      m_newMergedHandles.insert(newSpace.handle());
+
+      currentSpace.setName(newSpace.nameString());
+
       // remove current surfaces
       for (auto& currentSurface : currentSpace.surfaces()){
         currentSurface.remove();
@@ -113,11 +121,18 @@ namespace openstudio
         if (currentHandle){
           currentThermalZone = m_newModel.getModelObject<ThermalZone>(*currentHandle);
         }
-        if (currentThermalZone){
-
-        } else{
-          newThermalZone->clone(m_currentModel);
+        if (!currentThermalZone){
+          currentThermalZone = model::ThermalZone(m_currentModel);
+          m_currentToNewHandleMapping[currentThermalZone->handle()] = newThermalZone->handle();
+          m_newToCurrentHandleMapping[newThermalZone->handle()] = currentThermalZone->handle();
         }
+        OS_ASSERT(currentThermalZone);
+
+        mergeThermalZone(*currentThermalZone, *newThermalZone);
+
+        currentSpace.setThermalZone(*currentThermalZone);
+      } else{
+        currentSpace.resetThermalZone();
       }
 /*
     std::string surfaceTypeMaterialName() const;
@@ -148,43 +163,81 @@ namespace openstudio
 */
 
     }
+
+    void ModelMerger::mergeThermalZone(ThermalZone& currentThermalZone, const ThermalZone& newThermalZone)
+    {
+      if (m_newMergedHandles.find(newThermalZone.handle()) != m_newMergedHandles.end()){
+        // already merged
+        return;
+      }
+      m_newMergedHandles.insert(newThermalZone.handle());
+
+      currentThermalZone.setName(newThermalZone.nameString());
+    }
     
     void ModelMerger::mergeModels(Model& currentModel, const Model& newModel, const std::map<UUID, UUID>& handleMapping)
     {
       m_currentModel = currentModel;
       m_newModel = newModel;
 
+      m_newMergedHandles.clear();
       m_currentToNewHandleMapping = handleMapping;
       m_newToCurrentHandleMapping.clear();
       for (const auto& it : handleMapping){
         m_newToCurrentHandleMapping[it.second] = it.first;
       }
 
-      //** MERGE SPACES **//
+      //** Remove objects from current model that are not in new model **//
       
-      // remove objects in current model that are not in new model
+      // Remove spaces
       for (auto& currentSpace : currentModel.getConcreteModelObjects<model::Space>()){
-        if (!getNewModelHandle(currentSpace.handle())){
+        if (m_currentToNewHandleMapping.find(currentSpace.handle()) == m_currentToNewHandleMapping.end()){
           currentSpace.remove();
         }
       }
-      
-      // merge spaces from new model into current model
+
+      // Remove thermal zones
+      for (auto& currentThermalZone : currentModel.getConcreteModelObjects<model::ThermalZone>()){
+        if (m_currentToNewHandleMapping.find(currentThermalZone.handle()) == m_currentToNewHandleMapping.end()){
+          currentThermalZone.remove();
+        }
+      }
+
+      //** Merge objects from new model into curret model **//
+
+      // merge spaces 
       for (auto& newSpace : newModel.getConcreteModelObjects<model::Space>()){
         boost::optional<UUID> currentHandle = getCurrentModelHandle(newSpace.handle());
         boost::optional<Space> currentSpace;
         if (currentHandle){
           currentSpace = currentModel.getModelObject<model::Space>(*currentHandle);
         }
-
-        if (currentSpace){
-          // this object has a counterpart in the current model
-          mergeSpace(*currentSpace, newSpace);
-        } else {
-          newSpace.clone(currentModel);
+        if (!currentSpace){
+          currentSpace = model::Space(currentModel);
+          m_currentToNewHandleMapping[currentSpace->handle()] = newSpace.handle();
+          m_newToCurrentHandleMapping[newSpace.handle()] = currentSpace->handle();
         }
+        OS_ASSERT(currentSpace);
+
+        mergeSpace(*currentSpace, newSpace);
       }
 
+      // merge thermal zones 
+      for (auto& newThermalZone : newModel.getConcreteModelObjects<model::ThermalZone>()){
+        boost::optional<UUID> currentHandle = getCurrentModelHandle(newThermalZone.handle());
+        boost::optional<ThermalZone> currentThermalZone;
+        if (currentHandle){
+          currentThermalZone = currentModel.getModelObject<model::ThermalZone>(*currentHandle);
+        }
+        if (!currentThermalZone){
+          currentThermalZone = model::ThermalZone(currentModel);
+          m_currentToNewHandleMapping[currentThermalZone->handle()] = newThermalZone.handle();
+          m_newToCurrentHandleMapping[newThermalZone.handle()] = currentThermalZone->handle();
+        }
+        OS_ASSERT(currentThermalZone);
+
+        mergeThermalZone(*currentThermalZone, newThermalZone);
+      }
     }
     
   }//model

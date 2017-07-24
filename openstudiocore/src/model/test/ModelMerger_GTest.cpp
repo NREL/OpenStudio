@@ -36,10 +36,121 @@
 #include "../Space_Impl.hpp"
 #include "../Surface.hpp"
 #include "../Surface_Impl.hpp"
+#include "../SubSurface.hpp"
+#include "../SubSurface_Impl.hpp"
+#include "../ThermalZone.hpp"
+#include "../ThermalZone_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, ModelMerger) {
- 
+unsigned setWWR(Space& space, double wwr){
+  unsigned windowsAdded = 0;
+  for (Surface& surface : space.surfaces()){
+    if (istringEqual(surface.surfaceType(), "Wall")){
+      boost::optional<SubSurface> subSurface = surface.setWindowToWallRatio(wwr);
+      if (subSurface) {
+        windowsAdded += 1;
+      }
+    }
+  }
+  return windowsAdded;
+}
+
+TEST_F(ModelFixture, ModelMerger_Initial) {
+
+  Model model1;
+  Model model2;
+  std::map<UUID, UUID> handleMapping;
+
+
+
+  // first model is empty
+
+  // second model has spaces
+  
+  // object#_model#
+  std::vector<Point3d> floorprint1_2;
+  floorprint1_2.push_back(Point3d(0, 10, 0));
+  floorprint1_2.push_back(Point3d(10, 10, 0));
+  floorprint1_2.push_back(Point3d(10, 0, 0));
+  floorprint1_2.push_back(Point3d(0, 0, 0));
+
+  std::vector<Point3d> floorprint2_2;
+  floorprint2_2.push_back(Point3d(0, 5, 0));
+  floorprint2_2.push_back(Point3d(5, 5, 0));
+  floorprint2_2.push_back(Point3d(5, 0, 0));
+  floorprint2_2.push_back(Point3d(0, 0, 0));
+
+  boost::optional<Space> space1_2 = Space::fromFloorPrint(floorprint1_2, 3, model2);
+  ASSERT_TRUE(space1_2);
+  space1_2->setName("Space 1 - Model 2");
+  EXPECT_EQ(6u, space1_2->surfaces().size());
+  EXPECT_EQ(4u, setWWR(*space1_2, 0.3));
+
+  boost::optional<Space> space2_2 = Space::fromFloorPrint(floorprint2_2, 3, model2);
+  ASSERT_TRUE(space2_2);
+  space2_2->setName("Space 2 - Model 2");
+  EXPECT_EQ(6u, space2_2->surfaces().size());
+  EXPECT_EQ(4u, setWWR(*space2_2, 0.3));
+
+  ThermalZone zone1_2(model2);
+  zone1_2.setName("Zone 1 - Model 2");
+  space1_2->setThermalZone(zone1_2);
+
+  ThermalZone zone2_2(model2);
+  zone2_2.setName("Zone 2 - Model 2");
+  space2_2->setThermalZone(zone2_2);
+
+  // pre merge tests
+  EXPECT_EQ(0u, model1.getConcreteModelObjects<Space>().size());
+  EXPECT_EQ(0u, model1.getConcreteModelObjects<Surface>().size());
+  EXPECT_EQ(0u, model1.getConcreteModelObjects<SubSurface>().size());
+  EXPECT_EQ(0u, model1.getConcreteModelObjects<ThermalZone>().size());
+
+  EXPECT_EQ(2u, model2.getConcreteModelObjects<Space>().size());
+  EXPECT_EQ(12u, model2.getConcreteModelObjects<Surface>().size());
+  EXPECT_EQ(8u, model2.getConcreteModelObjects<SubSurface>().size());
+  EXPECT_EQ(2u, model2.getConcreteModelObjects<ThermalZone>().size());
+
+  // do merge
+  ModelMerger merger;
+  merger.mergeModels(model1, model2, handleMapping);
+
+  // post merge tests
+  EXPECT_EQ(2u, model1.getConcreteModelObjects<Space>().size());
+  EXPECT_EQ(12u, model1.getConcreteModelObjects<Surface>().size());
+  EXPECT_EQ(8u, model1.getConcreteModelObjects<SubSurface>().size());
+  EXPECT_EQ(2u, model1.getConcreteModelObjects<ThermalZone>().size());
+
+  EXPECT_EQ(2u, model2.getConcreteModelObjects<Space>().size());
+  EXPECT_EQ(12u, model2.getConcreteModelObjects<Surface>().size());
+  EXPECT_EQ(8u, model2.getConcreteModelObjects<SubSurface>().size());
+  EXPECT_EQ(2u, model2.getConcreteModelObjects<ThermalZone>().size());
+
+  boost::optional<Space> testSpace = model1.getConcreteModelObjectByName<Space>("Space 1 - Model 2");
+  ASSERT_TRUE(testSpace);
+  EXPECT_EQ(6u, testSpace->surfaces().size());
+  for (const auto& surface : testSpace->surfaces()){
+    if (istringEqual(surface.surfaceType(), "Wall")){
+      EXPECT_EQ(1u, surface.subSurfaces().size());
+    } else{
+      EXPECT_EQ(0u, surface.subSurfaces().size());
+    }
+  }
+  ASSERT_TRUE(testSpace->thermalZone());
+  EXPECT_EQ("Zone 1 - Model 2", testSpace->thermalZone()->nameString());
+
+  testSpace = model1.getConcreteModelObjectByName<Space>("Space 2 - Model 2");
+  ASSERT_TRUE(testSpace);
+  EXPECT_EQ(6u, testSpace->surfaces().size());
+  for (const auto& surface : testSpace->surfaces()){
+    if (istringEqual(surface.surfaceType(), "Wall")){
+      EXPECT_EQ(1u, surface.subSurfaces().size());
+    } else{
+      EXPECT_EQ(0u, surface.subSurfaces().size());
+    }
+  }
+  ASSERT_TRUE(testSpace->thermalZone());
+  EXPECT_EQ("Zone 2 - Model 2", testSpace->thermalZone()->nameString());
 }
