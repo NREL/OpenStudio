@@ -119,7 +119,7 @@ namespace openstudio
         boost::optional<UUID> currentHandle = getCurrentModelHandle(newThermalZone->handle());
         boost::optional<ThermalZone> currentThermalZone;
         if (currentHandle){
-          currentThermalZone = m_newModel.getModelObject<ThermalZone>(*currentHandle);
+          currentThermalZone = m_currentModel.getModelObject<ThermalZone>(*currentHandle);
         }
         if (!currentThermalZone){
           currentThermalZone = model::ThermalZone(m_currentModel);
