@@ -36,6 +36,7 @@
 #include "../model/ModelMerger.hpp"
 #include "../model/ThreeJSReverseTranslator.hpp"
 #include "../model/FloorplanJSForwardTranslator.hpp"
+#include "../model/FloorplanJSForwardTranslator.hpp"
 #include "../model/BuildingStory.hpp"
 #include "../model/BuildingStory_Impl.hpp"
 #include "../model/PlanarSurfaceGroup.hpp"
@@ -399,7 +400,7 @@ void EditorWebView::saveExport()
 
 void EditorWebView::previewExport()
 {
-  saveExport();
+  // translate the exported floorplan
   translateExport();
 
   // merge export model into clone of m_model
@@ -407,6 +408,11 @@ void EditorWebView::previewExport()
   model::Model temp = m_model.clone(keepHandles).cast<model::Model>();
   model::ModelMerger mm;
   mm.mergeModels(temp, m_exportModel, m_exportModelHandleMapping);
+
+  // do not update floorplan since this is not a real merge
+
+  // save the exported floorplan
+  saveExport();
 
   PreviewWebView* webView = new PreviewWebView(temp);
   QLayout* layout = new QVBoxLayout();
@@ -423,14 +429,20 @@ void EditorWebView::previewExport()
 
 void EditorWebView::mergeExport()
 {
-  saveExport();
+  // translate the exported floorplan
   translateExport();
 
   // merge export model into m_model
   model::ModelMerger mm;
   mm.mergeModels(m_model, m_exportModel, m_exportModelHandleMapping);
 
-  // DLM: TODO make sure handles get updated in floorplan
+  // make sure handles get updated in floorplan and the exported string
+  model::FloorplanJSForwardTranslator ft;
+  m_floorplan = ft.updateFloorplanJSResources(*m_floorplan, m_model);
+  m_export = QString::fromStdString(m_floorplan->toJSON());
+
+  // save the exported floorplan
+  saveExport();
 
   m_mergeBtn->setEnabled(true);
 }
