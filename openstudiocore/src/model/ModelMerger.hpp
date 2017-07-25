@@ -30,8 +30,9 @@
 #define MODEL_MODELMERGER_HPP
 
 #include "ModelAPI.hpp"
-
 #include "Model.hpp"
+
+#include "../utilities/core/Logger.hpp"
 
 #include <map>
 
@@ -42,6 +43,10 @@ namespace openstudio
     
     class Space;
     class ThermalZone;
+    class SpaceType;
+    class BuildingStory;
+    class BuildingUnit;
+    class DefaultConstructionSet;
 
     MODEL_API class ModelMerger
     {
@@ -54,8 +59,14 @@ namespace openstudio
 
     private:
 
+       REGISTER_LOGGER("openstudio.model.ModelMerger");
+
       void mergeSpace(Space& currentSpace, const Space& newSpace);
       void mergeThermalZone(ThermalZone& currentThermalZone, const ThermalZone& newThermalZone);
+      void mergeSpaceType(SpaceType& currentSpaceType, const SpaceType& newSpaceType);
+      void mergeBuildingStory(BuildingStory& currentBuildingStory, const BuildingStory& newBuildingStory);
+      void mergeBuildingUnit(BuildingUnit& currentBuildingUnit, const BuildingUnit& newBuildingUnit);
+      void mergeDefaultConstructionSet(DefaultConstructionSet& currentDefaultConstructionSet, const DefaultConstructionSet& newDefaultConstructionSet);
 
       boost::optional<UUID> getNewModelHandle(const UUID& currentHandle);
       boost::optional<UUID> getCurrentModelHandle(const UUID& newHandle);

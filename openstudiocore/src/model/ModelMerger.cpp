@@ -64,6 +64,8 @@
 #include "../utilities/geometry/Transformation.hpp"
 #include "../utilities/geometry/Geometry.hpp"
 
+#include <utilities/idd/IddFactory.hxx>
+
 #include <cmath>
 
 namespace openstudio
@@ -174,7 +176,51 @@ namespace openstudio
 
       currentThermalZone.setName(newThermalZone.nameString());
     }
-    
+  
+    void ModelMerger::mergeSpaceType(SpaceType& currentSpaceType, const SpaceType& newSpaceType)
+    {
+      if (m_newMergedHandles.find(newSpaceType.handle()) != m_newMergedHandles.end()){
+        // already merged
+        return;
+      }
+      m_newMergedHandles.insert(newSpaceType.handle());
+
+      currentSpaceType.setName(newSpaceType.nameString());
+    }
+
+    void ModelMerger::mergeBuildingStory(BuildingStory& currentBuildingStory, const BuildingStory& newBuildingStory)
+    {
+      if (m_newMergedHandles.find(newBuildingStory.handle()) != m_newMergedHandles.end()){
+        // already merged
+        return;
+      }
+      m_newMergedHandles.insert(newBuildingStory.handle());
+
+      currentBuildingStory.setName(newBuildingStory.nameString());
+    }
+
+    void ModelMerger::mergeBuildingUnit(BuildingUnit& currentBuildingUnit, const BuildingUnit& newBuildingUnit)
+    {
+      if (m_newMergedHandles.find(newBuildingUnit.handle()) != m_newMergedHandles.end()){
+        // already merged
+        return;
+      }
+      m_newMergedHandles.insert(newBuildingUnit.handle());
+
+      currentBuildingUnit.setName(newBuildingUnit.nameString());
+    }
+
+    void ModelMerger::mergeDefaultConstructionSet(DefaultConstructionSet& currentDefaultConstructionSet, const DefaultConstructionSet& newDefaultConstructionSet)
+    {
+      if (m_newMergedHandles.find(newDefaultConstructionSet.handle()) != m_newMergedHandles.end()){
+        // already merged
+        return;
+      }
+      m_newMergedHandles.insert(newDefaultConstructionSet.handle());
+
+      currentDefaultConstructionSet.setName(newDefaultConstructionSet.nameString());
+    }
+
     void ModelMerger::mergeModels(Model& currentModel, const Model& newModel, const std::map<UUID, UUID>& handleMapping)
     {
       m_currentModel = currentModel;
@@ -187,56 +233,94 @@ namespace openstudio
         m_newToCurrentHandleMapping[it.second] = it.first;
       }
 
-      //** Remove objects from current model that are not in new model **//
-      
-      // Remove spaces
-      for (auto& currentSpace : currentModel.getConcreteModelObjects<model::Space>()){
-        if (m_currentToNewHandleMapping.find(currentSpace.handle()) == m_currentToNewHandleMapping.end()){
-          currentSpace.remove();
-        }
-      }
+      // DLM: TODO expose this to user to give more control over merging?
+      std::vector<IddObjectType> iddObjectTypesToMerge;
+      iddObjectTypesToMerge.push_back(IddObjectType::OS_Space);
+      iddObjectTypesToMerge.push_back(IddObjectType::OS_ThermalZone);
+      iddObjectTypesToMerge.push_back(IddObjectType::OS_SpaceType);
+      iddObjectTypesToMerge.push_back(IddObjectType::OS_BuildingStory);
+      iddObjectTypesToMerge.push_back(IddObjectType::OS_BuildingUnit);
+      iddObjectTypesToMerge.push_back(IddObjectType::OS_DefaultConstructionSet);
 
-      // Remove thermal zones
-      for (auto& currentThermalZone : currentModel.getConcreteModelObjects<model::ThermalZone>()){
-        if (m_currentToNewHandleMapping.find(currentThermalZone.handle()) == m_currentToNewHandleMapping.end()){
-          currentThermalZone.remove();
+      //** Remove objects from current model that are not in new model **//
+      for (const auto& iddObjectType : iddObjectTypesToMerge){
+        for (auto& currenObject : currentModel.getObjectsByType(iddObjectType)){
+          if (m_currentToNewHandleMapping.find(currenObject.handle()) == m_currentToNewHandleMapping.end()){
+            currenObject.remove();
+          }
         }
       }
 
       //** Merge objects from new model into curret model **//
+      for (const auto& iddObjectType : iddObjectTypesToMerge){
 
-      // merge spaces 
-      for (auto& newSpace : newModel.getConcreteModelObjects<model::Space>()){
-        boost::optional<UUID> currentHandle = getCurrentModelHandle(newSpace.handle());
-        boost::optional<Space> currentSpace;
-        if (currentHandle){
-          currentSpace = currentModel.getModelObject<model::Space>(*currentHandle);
-        }
-        if (!currentSpace){
-          currentSpace = model::Space(currentModel);
-          m_currentToNewHandleMapping[currentSpace->handle()] = newSpace.handle();
-          m_newToCurrentHandleMapping[newSpace.handle()] = currentSpace->handle();
-        }
-        OS_ASSERT(currentSpace);
+        for (auto& newObject : newModel.getObjectsByType(iddObjectType)){
+         
+          // find object in current model
+          boost::optional<UUID> currentHandle = getCurrentModelHandle(newObject.handle());
+          boost::optional<WorkspaceObject> currentObject;
+          if (currentHandle){
+            currentObject = currentModel.getObject(*currentHandle);
+            if (!currentObject){
+              LOG(Error, "Could not find object in current model for handle " << *currentHandle);
+            }
+          }
 
-        mergeSpace(*currentSpace, newSpace);
-      }
-
-      // merge thermal zones 
-      for (auto& newThermalZone : newModel.getConcreteModelObjects<model::ThermalZone>()){
-        boost::optional<UUID> currentHandle = getCurrentModelHandle(newThermalZone.handle());
-        boost::optional<ThermalZone> currentThermalZone;
-        if (currentHandle){
-          currentThermalZone = currentModel.getModelObject<model::ThermalZone>(*currentHandle);
+          // create object in current model if needed
+          if (!currentObject){
+            switch (iddObjectType.value()){
+            case IddObjectType::OS_Space:
+              currentObject = model::Space(currentModel);
+              break;
+            case IddObjectType::OS_ThermalZone:
+              currentObject = model::ThermalZone(currentModel);
+              break;
+            case IddObjectType::OS_SpaceType:
+              currentObject = model::SpaceType(currentModel);
+              break;
+            case IddObjectType::OS_BuildingStory:
+              currentObject = model::BuildingStory(currentModel);
+              break;
+            case IddObjectType::OS_BuildingUnit:
+              currentObject = model::BuildingUnit(currentModel);
+              break;
+            case IddObjectType::OS_DefaultConstructionSet:
+              currentObject = model::DefaultConstructionSet(currentModel);
+              break;
+            default:
+              LOG(Error, "No constructor registered for IddObjectType " << iddObjectType.valueName());
+            }
+            
+            OS_ASSERT(currentObject);
+            m_currentToNewHandleMapping[currentObject->handle()] = newObject.handle();
+            m_newToCurrentHandleMapping[newObject.handle()] = currentObject->handle();
+          }
+          
+          // merge objects
+          switch (iddObjectType.value()){
+          case IddObjectType::OS_Space:
+            mergeSpace(currentObject->cast<Space>(), newObject.cast<Space>());
+            break;
+          case IddObjectType::OS_ThermalZone:
+            mergeThermalZone(currentObject->cast<ThermalZone>(), newObject.cast<ThermalZone>());
+            break;
+          case IddObjectType::OS_SpaceType:
+            mergeSpaceType(currentObject->cast<SpaceType>(), newObject.cast<SpaceType>());
+            break;
+          case IddObjectType::OS_BuildingStory:
+            mergeBuildingStory(currentObject->cast<BuildingStory>(), newObject.cast<BuildingStory>());
+            break;
+          case IddObjectType::OS_BuildingUnit:
+            mergeBuildingUnit(currentObject->cast<BuildingUnit>(), newObject.cast<BuildingUnit>());
+            break;
+          case IddObjectType::OS_DefaultConstructionSet:
+            mergeDefaultConstructionSet(currentObject->cast<DefaultConstructionSet>(), newObject.cast<DefaultConstructionSet>());
+            break;
+          default:
+            LOG(Error, "No merge function registered for IddObjectType " << iddObjectType.valueName());
+          }
+          
         }
-        if (!currentThermalZone){
-          currentThermalZone = model::ThermalZone(currentModel);
-          m_currentToNewHandleMapping[currentThermalZone->handle()] = newThermalZone.handle();
-          m_newToCurrentHandleMapping[newThermalZone.handle()] = currentThermalZone->handle();
-        }
-        OS_ASSERT(currentThermalZone);
-
-        mergeThermalZone(*currentThermalZone, newThermalZone);
       }
     }
     
