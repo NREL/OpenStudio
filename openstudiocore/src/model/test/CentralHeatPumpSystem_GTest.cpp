@@ -144,3 +144,58 @@ TEST(ChillerHeaterPerformanceElectricEIR,ChillerHeaterPerformanceElectricEIR_Set
   ASSERT_EQ( (unsigned)0, central_hp.modules().size() );
 
 }
+
+TEST(ChillerHeaterPerformanceElectricEIR,ChillerHeaterPerformanceElectricEIR_PlantLoopConnections)
+{
+    Model m;
+    CentralHeatPumpSystem central_hp(m);
+
+    // CoolingLoop: on the supply side
+    {
+      PlantLoop coolingPlant(m);
+      auto node = coolingPlant.supplyOutletNode();
+      EXPECT_TRUE(central_hp.addToNode(node));
+      auto plant = central_hp.plantLoop();
+      EXPECT_TRUE(plant);
+      if( plant ) {
+        EXPECT_EQ(coolingPlant.handle(),plant->handle());
+      }
+      // TODO: Change that number?
+      // PlantLoop has 5 components on the supply side by default (3 Nodes, One splitter, One mixer)
+      EXPECT_EQ(7u,coolingPlant.supplyComponents().size());
+    }
+
+    // SourceLoop: on the demand side
+    {
+      PlantLoop sourcePlant(m);
+      auto node = sourcePlant.demandInletNode();
+      EXPECT_TRUE(central_hp.addToNode(node));
+      auto plant = central_hp.secondaryPlantLoop();
+      EXPECT_TRUE(plant);
+      if( plant ) {
+        EXPECT_EQ(sourcePlant.handle(),plant->handle());
+      }
+      // TODO: Change that number?
+      EXPECT_EQ(7u,sourcePlant.demandComponents().size());
+    }
+
+    // HeatingLoop: on the supply side
+    {
+      PlantLoop heatingPlant(m);
+      auto node = heatingPlant.supplyOutletNode();
+      EXPECT_TRUE(central_hp.addToTertiaryNode(node));
+      auto plant = central_hp.tertiaryPlantLoop();
+      EXPECT_TRUE(plant);
+      if( plant ) {
+        EXPECT_EQ(heatingPlant.handle(),plant->handle());
+      }
+      // TODO: Change that number?
+      EXPECT_EQ(7u,heatingPlant.supplyComponents().size());
+
+      EXPECT_TRUE( central_hp.removeFromTertiaryPlantLoop() );
+      plant = central_hp.tertiaryPlantLoop();
+      EXPECT_FALSE(plant);
+      EXPECT_EQ(5u,heatingPlant.demandComponents().size());
+    }
+  }
+
