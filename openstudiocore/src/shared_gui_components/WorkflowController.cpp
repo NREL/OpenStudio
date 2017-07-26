@@ -384,8 +384,9 @@ void MeasureStepController::moveDown(MeasureStep step)
 MeasureStepItem::MeasureStepItem(MeasureType measureType, MeasureStep step, openstudio::BaseApp *t_app)
   : OSListItem(),
     m_measureType(measureType),
-    m_app(t_app),
-    m_step(step)
+    m_step(step),
+    m_app(t_app)
+
 {
 }
 

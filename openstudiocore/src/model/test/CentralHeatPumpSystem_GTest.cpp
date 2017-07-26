@@ -65,7 +65,7 @@ TEST(CentralHeatPumpSystem,CentralHeatPumpSystem_CentralHeatPumpSystem)
 }
 
 // Test the various setters and getters
-TEST(ChillerHeaterPerformanceElectricEIR,ChillerHeaterPerformanceElectricEIR_SettersGetters)
+TEST(CentralHeatPumpSystem,CentralHeatPumpSystem_SettersGetters)
 {
   Model model;
 
@@ -144,7 +144,7 @@ TEST(ChillerHeaterPerformanceElectricEIR,ChillerHeaterPerformanceElectricEIR_Set
 
 }
 
-TEST(ChillerHeaterPerformanceElectricEIR,ChillerHeaterPerformanceElectricEIR_PlantLoopConnections)
+TEST(CentralHeatPumpSystem,CentralHeatPumpSystem_PlantLoopConnections)
 {
     Model model;
     CentralHeatPumpSystem central_hp(model);
