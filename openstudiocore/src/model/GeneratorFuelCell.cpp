@@ -196,33 +196,33 @@ namespace detail {
 
     if (boost::optional<GeneratorFuelCellPowerModule> pm = powerModule()) {
       result.push_back(pm.get());
-      if (curveQ = powerModule().efficiencyCurve()) {
+      if ( (curveQ = powerModule().efficiencyCurve()) ) {
         result.push_back(curveQ.get());
       }
-      if (curveQ = powerModule().skinLossQuadraticCurve()) {
+      if ( (curveQ = powerModule().skinLossQuadraticCurve()) ) {
         result.push_back(curveQ.get());
       }
     }
 
     if (boost::optional<GeneratorFuelCellAirSupply> as = airSupply()) {
       result.push_back(as.get());
-      if (curveC = airSupply().blowerPowerCurve()) {
+      if ( (curveC = airSupply().blowerPowerCurve()) ) {
         result.push_back(curveC.get());
       }
-      if (curveQ = airSupply().airRateFunctionofElectricPowerCurve()) {
+      if ( (curveQ = airSupply().airRateFunctionofElectricPowerCurve()) ) {
         result.push_back(curveQ.get());
       }
-      if (curveQ = airSupply().airRateFunctionofFuelRateCurve()) {
+      if ( (curveQ = airSupply().airRateFunctionofFuelRateCurve()) ) {
         result.push_back(curveQ.get());
       }
     }
 
     if (boost::optional<GeneratorFuelCellWaterSupply> ws = waterSupply()) {
       result.push_back(ws.get());
-      if (curveC = waterSupply().reformerWaterPumpPowerFunctionofFuelRateCurve()) {
+      if ( (curveC = waterSupply().reformerWaterPumpPowerFunctionofFuelRateCurve()) ) {
         result.push_back(curveC.get());
       }
-      if (curveQ = waterSupply().reformerWaterFlowRateFunctionofFuelRateCurve()) {
+      if ( (curveQ = waterSupply().reformerWaterFlowRateFunctionofFuelRateCurve()) ) {
         result.push_back(curveQ.get());
       }
     }
@@ -237,7 +237,7 @@ namespace detail {
 
     if (boost::optional<GeneratorFuelCellInverter> in = inverter()) {
       result.push_back(in.get());
-      if (curveQ = inverter().efficiencyFunctionofDCPowerCurve()) {
+      if ( (curveQ = inverter().efficiencyFunctionofDCPowerCurve()) ) {
         result.push_back(curveQ.get());
       }
     }
@@ -248,7 +248,7 @@ namespace detail {
 
     if (boost::optional<GeneratorFuelSupply> fs = fuelSupply()) {
       result.push_back(fs.get());
-      if (curveC = fuelSupply().compressorPowerMultiplierFunctionofFuelRateCurve()) {
+      if ( (curveC = fuelSupply().compressorPowerMultiplierFunctionofFuelRateCurve()) ) {
         result.push_back(curveC.get());
       }
     }

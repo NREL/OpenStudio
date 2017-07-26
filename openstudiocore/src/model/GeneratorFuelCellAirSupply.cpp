@@ -119,13 +119,13 @@ namespace detail {
     boost::optional<CurveQuadratic> curveQ;
     boost::optional<CurveCubic> curveC;
 
-    if (curveC = blowerPowerCurve()) {
+    if ( (curveC = blowerPowerCurve()) ) {
       result.push_back(curveC.get());
     }
-    if (curveQ = airRateFunctionofElectricPowerCurve()) {
+    if ( (curveQ = airRateFunctionofElectricPowerCurve()) ) {
       result.push_back(curveQ.get());
     }
-    if (curveQ = airRateFunctionofFuelRateCurve()) {
+    if ( (curveQ = airRateFunctionofFuelRateCurve()) ) {
       result.push_back(curveQ.get());
     }
 
@@ -402,7 +402,7 @@ GeneratorFuelCellAirSupply::GeneratorFuelCellAirSupply(const Model& model,
   setNumberofUserDefinedConstituents(0);
 }
 
-GeneratorFuelCellAirSupply::GeneratorFuelCellAirSupply(const Model& model, 
+GeneratorFuelCellAirSupply::GeneratorFuelCellAirSupply(const Model& model,
                                                        const Node& airInletNode,
                                                        const CurveQuadratic& electricPowerCurve,
                                                        const CurveQuadratic& fuelRateCurve)
@@ -493,7 +493,7 @@ GeneratorFuelCellAirSupply::GeneratorFuelCellAirSupply(const Model& model,
 GeneratorFuelCellAirSupply::GeneratorFuelCellAirSupply(const Model& model)
   : ModelObject(GeneratorFuelCellAirSupply::iddObjectType(),model)
 {
-  OS_ASSERT(getImpl<detail::GeneratorFuelCellAirSupply_Impl>()); 
+  OS_ASSERT(getImpl<detail::GeneratorFuelCellAirSupply_Impl>());
   //setAirInletNode();  //A new OA node is created on Forward Translation if one is not set, so this method can be left blank
   CurveCubic curveCubic(model);
   curveCubic.setCoefficient1Constant(0);

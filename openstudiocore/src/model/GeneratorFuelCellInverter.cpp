@@ -109,7 +109,7 @@ namespace detail {
     std::vector<ModelObject> result;
     boost::optional<CurveQuadratic> curveQ;
 
-    if (curveQ = efficiencyFunctionofDCPowerCurve()) {
+    if ( (curveQ = efficiencyFunctionofDCPowerCurve()) ) {
       result.push_back(curveQ.get());
     }
 

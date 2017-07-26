@@ -124,10 +124,10 @@ namespace detail {
     boost::optional<CurveQuadratic> curveQ;
     boost::optional<CurveCubic> curveC;
 
-    if (curveC = reformerWaterPumpPowerFunctionofFuelRateCurve()) {
+    if ( (curveC = reformerWaterPumpPowerFunctionofFuelRateCurve()) ) {
       result.push_back(curveC.get());
     }
-    if (curveQ = reformerWaterFlowRateFunctionofFuelRateCurve()) {
+    if ( (curveQ = reformerWaterFlowRateFunctionofFuelRateCurve()) ) {
       result.push_back(curveQ.get());
     }
 

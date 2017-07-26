@@ -113,10 +113,10 @@ namespace detail {
     std::vector<ModelObject> result;
     boost::optional<CurveQuadratic> curveQ;
 
-    if (curveQ = efficiencyCurve()) {
+    if ( (curveQ = efficiencyCurve()) ) {
       result.push_back(curveQ.get());
     }
-    if (curveQ = skinLossQuadraticCurve()) {
+    if ( (curveQ = skinLossQuadraticCurve()) ) {
       result.push_back(curveQ.get());
     }
 
@@ -847,7 +847,7 @@ GeneratorFuelCellPowerModule::GeneratorFuelCellPowerModule(const Model& model,
   setMaximumOperatingPoint(3728);
 }
 
-GeneratorFuelCellPowerModule::GeneratorFuelCellPowerModule(const Model& model, 
+GeneratorFuelCellPowerModule::GeneratorFuelCellPowerModule(const Model& model,
                                                            const CurveQuadratic& efficiencyCurve,
                                                            const ThermalZone& heatlossZone,
                                                            const Node& dilutionInletAirNode,

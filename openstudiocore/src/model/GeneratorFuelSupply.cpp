@@ -120,7 +120,7 @@ namespace detail {
     std::vector<ModelObject> result;
     boost::optional<CurveCubic> curveC;
 
-    if (curveC = compressorPowerMultiplierFunctionofFuelRateCurve()) {
+    if ( (curveC = compressorPowerMultiplierFunctionofFuelRateCurve()) ) {
       result.push_back(curveC.get());
     }
 
