@@ -273,8 +273,7 @@ boost::optional<IdfObject> ForwardTranslator::translateElectricLoadCenterDistrib
       }
 
       // Storage Control Utility Demand Target
-      if ( (optD = modelObject.storageControlUtilityDemandTarget()) :w
-          ) {
+      if ( (optD = modelObject.storageControlUtilityDemandTarget()) ) {
         idfObject.setDouble(ElectricLoadCenter_DistributionFields::StorageControlUtilityDemandTarget, optD.get());
       } else {
         LOG(Error, modelObject.briefDescription() << ": You set the Storage Operation Scheme to " << storageOperationScheme
