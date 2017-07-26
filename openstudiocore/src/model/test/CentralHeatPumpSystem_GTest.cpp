@@ -72,7 +72,7 @@ TEST(ChillerHeaterPerformanceElectricEIR,ChillerHeaterPerformanceElectricEIR_Set
 
   // std::vector<CentralHeatPumpSystemModule> modules()
   ASSERT_EQ( (unsigned)1, central_hp.modules().size() );
-  model::CentralHeatPumpSystemModule central_hp_module = central_hp.modules()[0]
+  model::CentralHeatPumpSystemModule central_hp_module = central_hp.modules()[0];
 
   // Return type: bool
   // Only "SmartMixing" is valid
