@@ -94,15 +94,15 @@ namespace detail {
     /** @name Other */
     //@{
 
-    // CoolingLoop
-    unsigned supplyInletPort() override;
-    unsigned supplyOutletPort() override;
-    // SourceLoop
-    unsigned demandInletPort() override;
-    unsigned demandOutletPort() override;
-    // HeatingLoop
-    unsigned tertiaryInletPort() const override;
-    unsigned tertiaryOutletPort() const override;
+    //// CoolingLoop
+    //unsigned supplyInletPort();
+    //unsigned supplyOutletPort();
+    //// SourceLoop
+    //unsigned demandInletPort();
+    //unsigned demandOutletPort();
+    //// HeatingLoop
+    //unsigned tertiaryInletPort() const;
+    //unsigned tertiaryOutletPort() const;
 
     //@}
    protected:
