@@ -88,22 +88,22 @@ TEST(ChillerHeaterPerformanceElectricEIR,ChillerHeaterPerformanceElectricEIR_Set
   // Return type: void
   ch_heater.setReferenceCoolingModeLeavingChilledWaterTemperature(7.1);
   EXPECT_TRUE(ch_heater.referenceCoolingModeLeavingChilledWaterTemperature());
-  ASSERT_EQ(7.1, ch_heater.referenceCoolingModeLeavingChilledWaterTemperature);
+  ASSERT_EQ(7.1, ch_heater.referenceCoolingModeLeavingChilledWaterTemperature());
 
   // Return type: void
   ch_heater.setReferenceCoolingModeEnteringCondenserFluidTemperature(28.87);
   EXPECT_TRUE(ch_heater.referenceCoolingModeEnteringCondenserFluidTemperature());
-  ASSERT_EQ(28.87, ch_heater.referenceCoolingModeEnteringCondenserFluidTemperature);
+  ASSERT_EQ(28.87, ch_heater.referenceCoolingModeEnteringCondenserFluidTemperature());
 
   // Return type: void
   ch_heater.setReferenceCoolingModeLeavingCondenserWaterTemperature(35.2);
   EXPECT_TRUE(ch_heater.referenceCoolingModeLeavingCondenserWaterTemperature());
-  ASSERT_EQ(35.2, ch_heater.referenceCoolingModeLeavingCondenserWaterTemperature);
+  ASSERT_EQ(35.2, ch_heater.referenceCoolingModeLeavingCondenserWaterTemperature());
 
   // Return type: void
   ch_heater.setReferenceHeatingModeCoolingCapacityRatio(0.71);
   EXPECT_TRUE(ch_heater.referenceHeatingModeCoolingCapacityRatio());
-  ASSERT_EQ(0.71, ch_heater.referenceHeatingModeCoolingCapacityRatio);
+  ASSERT_EQ(0.71, ch_heater.referenceHeatingModeCoolingCapacityRatio());
 
   // Return type: bool
   ASSERT_TRUE(ch_heater.setReferenceHeatingModeCoolingPowerInputRatio(1.32));
@@ -113,22 +113,22 @@ TEST(ChillerHeaterPerformanceElectricEIR,ChillerHeaterPerformanceElectricEIR_Set
   // Return type: void
   ch_heater.setReferenceHeatingModeLeavingChilledWaterTemperature(7.1);
   EXPECT_TRUE(ch_heater.referenceHeatingModeLeavingChilledWaterTemperature());
-  ASSERT_EQ(7.1, ch_heater.referenceHeatingModeLeavingChilledWaterTemperature);
+  ASSERT_EQ(7.1, ch_heater.referenceHeatingModeLeavingChilledWaterTemperature());
 
   // Return type: void
   ch_heater.setReferenceHeatingModeLeavingCondenserWaterTemperature(59.9);
   EXPECT_TRUE(ch_heater.referenceHeatingModeLeavingCondenserWaterTemperature());
-  ASSERT_EQ(59.9, ch_heater.referenceHeatingModeLeavingCondenserWaterTemperature);
+  ASSERT_EQ(59.9, ch_heater.referenceHeatingModeLeavingCondenserWaterTemperature());
 
   // Return type: void
   ch_heater.setReferenceHeatingModeEnteringCondenserFluidTemperature(28.82);
   EXPECT_TRUE(ch_heater.referenceHeatingModeEnteringCondenserFluidTemperature());
-  ASSERT_EQ(28.82, ch_heater.referenceHeatingModeEnteringCondenserFluidTemperature);
+  ASSERT_EQ(28.82, ch_heater.referenceHeatingModeEnteringCondenserFluidTemperature());
 
   // Return type: void
   ch_heater.setHeatingModeEnteringChilledWaterTemperatureLowLimit(5.03);
   EXPECT_TRUE(ch_heater.heatingModeEnteringChilledWaterTemperatureLowLimit());
-  ASSERT_EQ(5.03, ch_heater.heatingModeEnteringChilledWaterTemperatureLowLimit);
+  ASSERT_EQ(5.03, ch_heater.heatingModeEnteringChilledWaterTemperatureLowLimit());
 
   // Return type: bool
   ASSERT_TRUE(ch_heater.setChilledWaterFlowModeType("ConstantFlow"));
@@ -169,76 +169,64 @@ TEST(ChillerHeaterPerformanceElectricEIR,ChillerHeaterPerformanceElectricEIR_Set
   // Return type: bool
   // WaterCooled is the only valid type
   ASSERT_TRUE(ch_heater.setCondenserType("WaterCooled"));
-  EXPECT_TRUE(ch_heater.condenserType());
   ASSERT_EQ("WaterCooled", ch_heater.condenserType());
 
   // Return type: bool
   // "LeavingCondenser" or "EnteringCondenser"
   ASSERT_TRUE(ch_heater.setCoolingModeTemperatureCurveCondenserWaterIndependentVariable("LeavingCondenser"));
-  EXPECT_TRUE(ch_heater.coolingModeTemperatureCurveCondenserWaterIndependentVariable());
   ASSERT_EQ("LeavingCondenser", ch_heater.coolingModeTemperatureCurveCondenserWaterIndependentVariable());
 
   // Return type: bool
   // biquadratic
   CurveBiquadratic coolmode_ccFT(model);
   ASSERT_TRUE(ch_heater.setCoolingModeCoolingCapacityFunctionofTemperatureCurve(coolmode_ccFT));
-  EXPECT_TRUE(ch_heater.coolingModeCoolingCapacityFunctionofTemperatureCurve());
   ASSERT_EQ(coolmode_ccFT, ch_heater.coolingModeCoolingCapacityFunctionofTemperatureCurve());
 
   // Return type: bool
   // biquadratic
   CurveBiquadratic coolmode_eicoFT(model);
   ASSERT_TRUE(ch_heater.setCoolingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve(coolmode_eicoFT));
-  EXPECT_TRUE(ch_heater.coolingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve());
   ASSERT_EQ(coolmode_eicoFT, ch_heater.coolingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve());
 
   // Return type: bool
   // Bicubic or quadratic
   CurveCubic coolmode_eicoFPLR(model);
   ASSERT_TRUE(ch_heater.setCoolingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve(coolmode_eicoFPLR));
-  EXPECT_TRUE(ch_heater.coolingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve());
   ASSERT_EQ(coolmode_eicoFPLR, ch_heater.coolingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve());
 
   // Return type: bool
   ASSERT_TRUE(ch_heater.setCoolingModeCoolingCapacityOptimumPartLoadRatio(0.87));
-  EXPECT_TRUE(ch_heater.coolingModeCoolingCapacityOptimumPartLoadRatio());
   ASSERT_EQ(0.87, ch_heater.coolingModeCoolingCapacityOptimumPartLoadRatio());
 
   // Return type: bool
   // "LeavingCondenser" or "EnteringCondenser"
   ASSERT_TRUE(ch_heater.setHeatingModeTemperatureCurveCondenserWaterIndependentVariable("EnteringCondenser"));
-  EXPECT_TRUE(ch_heater.heatingModeTemperatureCurveCondenserWaterIndependentVariable());
   ASSERT_EQ("EnteringCondenser", ch_heater.heatingModeTemperatureCurveCondenserWaterIndependentVariable());
 
   // Return type: bool
   // biquadratic
   CurveBiquadratic heatmode_ccFT(model);
   ASSERT_TRUE(ch_heater.setHeatingModeCoolingCapacityFunctionofTemperatureCurve(heatmode_ccFT));
-  EXPECT_TRUE(ch_heater.heatingModeCoolingCapacityFunctionofTemperatureCurve());
   ASSERT_EQ(heatmode_ccFT, ch_heater.heatingModeCoolingCapacityFunctionofTemperatureCurve());
 
   // Return type: bool
   // biquadratic
   CurveBiquadratic heatmode_eicoFT(model);
   ASSERT_TRUE(ch_heater.setHeatingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve(heatmode_eicoFT));
-  EXPECT_TRUE(ch_heater.heatingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve());
   ASSERT_EQ(heatmode_eicoFT, ch_heater.heatingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve());
 
   // Return type: bool
   // Bicubic or quadratic
   CurveCubic heatmode_eicoFPLR(model);
   ASSERT_TRUE(ch_heater.setHeatingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve(heatmode_eicoFPLR));
-  EXPECT_TRUE(ch_heater.heatingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve());
   ASSERT_EQ(heatmode_eicoFPLR, ch_heater.heatingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve());
 
   // Return type: bool
   ASSERT_TRUE(ch_heater.setHeatingModeCoolingCapacityOptimumPartLoadRatio(0.91));
-  EXPECT_TRUE(ch_heater.heatingModeCoolingCapacityOptimumPartLoadRatio());
   ASSERT_EQ(0.91, ch_heater.heatingModeCoolingCapacityOptimumPartLoadRatio());
 
   // Return type: bool
   ASSERT_TRUE(ch_heater.setSizingFactor(1.05));
-  EXPECT_TRUE(ch_heater.sizingFactor());
   ASSERT_EQ(1.05, ch_heater.sizingFactor());
 
 }
