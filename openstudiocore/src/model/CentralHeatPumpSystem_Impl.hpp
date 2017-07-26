@@ -65,19 +65,11 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
-
-    virtual unsigned supplyInletPort() override;
-
-    virtual unsigned supplyOutletPort() override;
-
-    virtual unsigned demandInletPort() override;
-
-    virtual unsigned demandOutletPort() override;
+    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
     //@}
     /** @name Getters */
@@ -118,6 +110,26 @@ namespace detail {
     bool setChillerHeaterModuleList(const boost::optional<ModelObjectList>& modelObjectList);
 
     void resetChillerHeaterModuleList();
+
+    // TODO: Should this be virtual instead?
+    // CoolingLoop
+    unsigned supplyInletPort() override;
+    unsigned supplyOutletPort() override;
+    // SourceLoop
+    unsigned demandInletPort() override;
+    unsigned demandOutletPort() override;
+    // HeatingLoop
+    unsigned tertiaryInletPort() const override;
+    unsigned tertiaryOutletPort() const override;
+
+    /** Convenience Function to return the Cooling Loop **/
+    boost::optional<PlantLoop> coolingPlantLoop() const;
+
+    /** Convenience Function to return the Source Loop **/
+    boost::optional<PlantLoop> sourcePlantLoop() const;
+
+    /** Convenience Function to return the Heating Loop **/
+    boost::optional<PlantLoop> heatingPlantLoop() const;
 
     //@}
    protected:

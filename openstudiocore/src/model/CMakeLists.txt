@@ -1463,7 +1463,7 @@ set(${target_name}_test_src
   test/BuildingUnit_GTest.cpp
   test/Building_GTest.cpp
   test/CentralHeatPumpSystem_GTest.cpp
-  test/CentralHeatPumpSystemModule_GTest.cpp
+  # test/CentralHeatPumpSystemModule_GTest.cpp => Included in the above
   test/ChillerAbsorption_GTest.cpp
   test/ChillerAbsorptionIndirect_GTest.cpp
   test/ChillerElectricEIR_GTest.cpp

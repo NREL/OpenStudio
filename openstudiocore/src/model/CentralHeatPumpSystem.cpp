@@ -38,6 +38,9 @@
 #include "../../model/ScheduleTypeLimits.hpp"
 #include "../../model/ScheduleTypeRegistry.hpp"
 
+#include "PlantLoop.hpp"
+#include "PlantLoop_Impl.hpp"
+
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_CentralHeatPumpSystem_FieldEnums.hxx>
@@ -179,6 +182,22 @@ namespace detail {
     return result;
   }
 
+  /** Convenience Function to return the Cooling Loop **/
+  boost::optional<PlantLoop> CentralHeatPumpSystem_Impl::coolingPlantLoop() const {
+    return WaterToWaterComponent_Impl::plantLoop();
+  }
+
+  /** Convenience Function to return the Source Loop **/
+  boost::optional<PlantLoop> CentralHeatPumpSystem_Impl::sourcePlantLoop() const {
+    return WaterToWaterComponent_Impl::secondaryPlantLoop();
+  }
+
+  /** Convenience Function to return the Heating Loop **/
+  boost::optional<PlantLoop> CentralHeatPumpSystem_Impl::heatingPlantLoop() const {
+    return WaterToWaterComponent_Impl::tertiaryPlantLoop();
+  }
+
+
   bool CentralHeatPumpSystem_Impl::setChillerHeaterModuleList(const boost::optional<ModelObjectList>& modelObjectList) {
     bool result(false);
     if (modelObjectList) {
@@ -306,6 +325,19 @@ void CentralHeatPumpSystem::removeAllModules() {
 
 std::vector<CentralHeatPumpSystemModule> CentralHeatPumpSystem::modules() const {
   return getImpl<detail::CentralHeatPumpSystem_Impl>()->modules();
+}
+
+// Convenience functions
+std::vector<CentralHeatPumpSystemModule> CentralHeatPumpSystem::coolingPlantLoop() const {
+  return getImpl<detail::CentralHeatPumpSystem_Impl>()->coolingPlantLoop();
+}
+
+std::vector<CentralHeatPumpSystemModule> CentralHeatPumpSystem::sourcePlantLoop() const {
+  return getImpl<detail::CentralHeatPumpSystem_Impl>()->sourcePlantLoop();
+}
+
+std::vector<CentralHeatPumpSystemModule> CentralHeatPumpSystem::heatingPlantLoop() const {
+  return getImpl<detail::CentralHeatPumpSystem_Impl>()->heatingPlantLoop();
 }
 
 /// @cond

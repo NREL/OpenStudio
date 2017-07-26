@@ -163,6 +163,14 @@ TEST(ChillerHeaterPerformanceElectricEIR,ChillerHeaterPerformanceElectricEIR_Pla
       // TODO: Change that number?
       // PlantLoop has 5 components on the supply side by default (3 Nodes, One splitter, One mixer)
       EXPECT_EQ(7u,coolingPlant.supplyComponents().size());
+
+      // test the convenience function
+      auto plant = central_hp.coolingPlantLoop();
+      EXPECT_TRUE(plant);
+      if( plant ) {
+        EXPECT_EQ(coolingPlant.handle(),plant->handle());
+      }
+
     }
 
     // SourceLoop: on the demand side
@@ -177,6 +185,13 @@ TEST(ChillerHeaterPerformanceElectricEIR,ChillerHeaterPerformanceElectricEIR_Pla
       }
       // TODO: Change that number?
       EXPECT_EQ(7u,sourcePlant.demandComponents().size());
+
+      // test the convenience function
+      auto plant = central_hp.sourcePlantLoop();
+      EXPECT_TRUE(plant);
+      if( plant ) {
+        EXPECT_EQ(sourcePlant.handle(),plant->handle());
+      }
     }
 
     // HeatingLoop: on the supply side
@@ -189,6 +204,13 @@ TEST(ChillerHeaterPerformanceElectricEIR,ChillerHeaterPerformanceElectricEIR_Pla
       if( plant ) {
         EXPECT_EQ(heatingPlant.handle(),plant->handle());
       }
+      // test the convenience function
+      auto plant = central_hp.heatingPlantLoop();
+      EXPECT_TRUE(plant);
+      if( plant ) {
+        EXPECT_EQ(heatingPlant.handle(),plant->handle());
+      }
+
       // TODO: Change that number?
       EXPECT_EQ(7u,heatingPlant.supplyComponents().size());
 
