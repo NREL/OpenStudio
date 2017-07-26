@@ -125,7 +125,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingDXSingleSpeedW
   }
 
   // RatedCOP
-  
+
   if( (value = modelObject.ratedCOP()) )
   {
     idfObject.setDouble(Coil_Heating_DX_SingleSpeedFields::GrossRatedHeatingCOP,value.get());
@@ -144,10 +144,10 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingDXSingleSpeedW
 
   // Rated Supply Fan Power Per Volume Flow Rate
 
-  if( value = modelObject.ratedSupplyFanPowerPerVolumeFlowRate() ) {
+  if( (value = modelObject.ratedSupplyFanPowerPerVolumeFlowRate()) ) {
     idfObject.setDouble(Coil_Heating_DX_SingleSpeedFields::RatedSupplyFanPowerPerVolumeFlowRate,value.get());
   }
-  
+
   // TotalHeatingCapacityFunctionofTemperatureCurveName
 
   ModelObject curve = modelObject.totalHeatingCapacityFunctionofTemperatureCurve();
@@ -176,7 +176,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingDXSingleSpeedW
   }
 
   // EnergyInputRatioFunctionofFlowFractionCurveName
-  
+
   curve = modelObject.energyInputRatioFunctionofFlowFractionCurve();
 
   if( boost::optional<IdfObject> _curve = translateAndMapModelObject(curve) )
@@ -218,14 +218,14 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingDXSingleSpeedW
   }
 
   // CrankcaseHeaterCapacity
-  
+
   if( (value = modelObject.crankcaseHeaterCapacity()) )
   {
     idfObject.setDouble(Coil_Heating_DX_SingleSpeedFields::CrankcaseHeaterCapacity,value.get());
   }
 
   // MaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation
-  
+
   if( (value = modelObject.maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation()) )
   {
     idfObject.setDouble(Coil_Heating_DX_SingleSpeedFields::MaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation,value.get());
@@ -239,7 +239,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingDXSingleSpeedW
   }
 
   // DefrostControl
-  
+
   if( (s = modelObject.defrostControl()) )
   {
     idfObject.setString(Coil_Heating_DX_SingleSpeedFields::DefrostControl,s.get());
@@ -269,7 +269,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingDXSingleSpeedW
 boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingDXSingleSpeed( CoilHeatingDXSingleSpeed & modelObject )
 {
   IdfObject _coilSystemHeatingDX(IddObjectType::CoilSystem_Heating_DX);
-    
+
   m_idfObjects.push_back(_coilSystemHeatingDX);
 
   boost::optional<IdfObject> _coilHeatingDXSingleSpeed = translateCoilHeatingDXSingleSpeedWithoutUnitary(modelObject);
