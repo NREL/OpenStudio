@@ -1,16 +1,21 @@
+# make sure that correct version of openstudio is loaded before running this, run from cli like:
+#
+# openstudio.exe UpdateHVACLibrary.rb
+
 require 'openstudio'
 
-# Specify the .osm to open, assuming you run the script from the directory of hvac_library.osm
-Dir.glob('./**/*.osm') do |model_path|
-  if /sketchup_plugin/.match(model_path)
-    next
-  elsif /openstudio_app/.match(model_path)
-    next
+path = File.join(File.dirname(__FILE__), '../../openstudiocore/**/*.osm')
+
+Dir.glob(path) do |model_path|
+
+  if /sketchup_plugin\/resources\/templates/.match(model_path)
+    # do this 
+  elsif /openstudio_app\/Resources/.match(model_path)
+    # do this 
   else
-    puts model_path
     next
   end
-  
+    
   model_path = OpenStudio::Path.new(model_path)
   #model_path = OpenStudio::Path.new('hvac_library.osm')
 

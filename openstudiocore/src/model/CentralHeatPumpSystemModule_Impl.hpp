@@ -94,7 +94,6 @@ namespace detail {
     /** @name Other */
     //@{
 
-
     //@}
    protected:
    private:
