@@ -49,12 +49,12 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateBoilerHotWater.cpp
   ForwardTranslator/ForwardTranslateBoilerSteam.cpp
   ForwardTranslator/ForwardTranslateBuilding.cpp
-##  ForwardTranslator/ForwardTranslateCentralHeatPumpSystem.cpp
+  ForwardTranslator/ForwardTranslateCentralHeatPumpSystem.cpp
   ForwardTranslator/ForwardTranslateCFactorUndergroundWallConstruction.cpp
   ForwardTranslator/ForwardTranslateChillerAbsorption.cpp
   ForwardTranslator/ForwardTranslateChillerAbsorptionIndirect.cpp
   ForwardTranslator/ForwardTranslateChillerElectricEIR.cpp
-##  ForwardTranslator/ForwardTranslateChillerHeaterPerformanceElectricEIR.cpp
+  ForwardTranslator/ForwardTranslateChillerHeaterPerformanceElectricEIR.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingDXMultiSpeed.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingDXSingleSpeed.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingDXTwoSpeed.cpp
