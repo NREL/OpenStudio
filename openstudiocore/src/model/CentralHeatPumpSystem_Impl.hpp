@@ -81,10 +81,6 @@ namespace detail {
     virtual unsigned tertiaryInletPort() const override;
     virtual unsigned tertiaryOutletPort() const override;
 
-    virtual unsigned tertiaryInletPort() const override;
-
-    virtual unsigned tertiaryOutletPort() const override;
-
     //@}
     /** @name Getters */
     //@{

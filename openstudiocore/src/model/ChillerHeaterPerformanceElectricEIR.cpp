@@ -32,7 +32,8 @@
 #include "Curve.hpp"
 #include "Curve_Impl.hpp"
 #include "CurveBiquadratic.hpp"
-#include "CurveCubic.hpp"
+//#include "CurveCubic.hpp"
+#include "CurveBicubic.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -555,6 +556,7 @@ ChillerHeaterPerformanceElectricEIR::ChillerHeaterPerformanceElectricEIR(const M
   chillerHeaterHtgEIRFT.setInputUnitTypeforY("Temperature");
   chillerHeaterHtgEIRFT.setOutputUnitType("Dimensionless");
 
+  // TODO: @mark_adams: this needs to be a Bicubic or a quadratic per the IDD
   CurveCubic chillerHeaterClgEIRFPLR(model);
   chillerHeaterClgEIRFPLR.setCoefficient1Constant(0.0);
   chillerHeaterClgEIRFPLR.setCoefficient2x(1.22895);
@@ -563,6 +565,27 @@ ChillerHeaterPerformanceElectricEIR::ChillerHeaterPerformanceElectricEIR(const M
   chillerHeaterClgEIRFPLR.setMinimumValueofx(0.2);
   chillerHeaterClgEIRFPLR.setMaximumValueofx(1);
 
+
+  // Bicubic
+  // CurveBicubic chillerHeaterClgEIRFPLR(model);
+  // chillerHeaterClgEIRFPLR.setCoefficient1Constant,
+  // chillerHeaterClgEIRFPLR.setCoefficient2x,
+  // chillerHeaterClgEIRFPLR.setCoefficient3xPOW2,
+  // chillerHeaterClgEIRFPLR.setCoefficient4y,
+  // chillerHeaterClgEIRFPLR.setCoefficient5yPOW2,
+  // chillerHeaterClgEIRFPLR.setCoefficient6xTIMESY,
+  // chillerHeaterClgEIRFPLR.setCoefficient7xPOW3,
+  // chillerHeaterClgEIRFPLR.setCoefficient8yPOW3,
+  // chillerHeaterClgEIRFPLR.setCoefficient9xPOW2TIMESY,
+  // chillerHeaterClgEIRFPLR.setCoefficient10xTIMESYPOW2,
+  //
+  // Quadratic
+  // CurveQuadratuc chillerHeaterClgEIRFPLR(model);
+  // chillerHeaterClgEIRFPLR.setCoefficient1Constant();
+  // chillerHeaterClgEIRFPLR.setCoefficient2x():
+  // chillerHeaterClgEIRFPLR.setCoefficient3xPOW2();
+
+  // TODO: @mark_adams: this needs to be a Bicubic or a quadratic per the IDD
   CurveCubic chillerHeaterHtgEIRFPLR(model);
   chillerHeaterHtgEIRFPLR.setCoefficient1Constant(0.0);
   chillerHeaterHtgEIRFPLR.setCoefficient2x(1.12853);
