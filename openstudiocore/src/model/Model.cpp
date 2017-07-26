@@ -69,7 +69,7 @@ using openstudio::detail::WorkspaceObject_Impl;
 using std::dynamic_pointer_cast;
 
 struct ModelResourceInitializer{
-  ModelResourceInitializer() 
+  ModelResourceInitializer()
   {
     Q_INIT_RESOURCE(Model);
   }
@@ -242,13 +242,13 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(Building);
     REGISTER_CONSTRUCTOR(BuildingStory);
     REGISTER_CONSTRUCTOR(BuildingUnit);
-    // REGISTER_CONSTRUCTOR(CentralHeatPumpSystem);
-    // REGISTER_CONSTRUCTOR(CentralHeatPumpSystemModule);
+    REGISTER_CONSTRUCTOR(CentralHeatPumpSystem);
+    REGISTER_CONSTRUCTOR(CentralHeatPumpSystemModule);
     REGISTER_CONSTRUCTOR(CFactorUndergroundWallConstruction);
     REGISTER_CONSTRUCTOR(ChillerAbsorption);
     REGISTER_CONSTRUCTOR(ChillerAbsorptionIndirect);
     REGISTER_CONSTRUCTOR(ChillerElectricEIR);
-    // REGISTER_CONSTRUCTOR(ChillerHeaterPerformanceElectricEIR);
+    REGISTER_CONSTRUCTOR(ChillerHeaterPerformanceElectricEIR);
     REGISTER_CONSTRUCTOR(ClimateZones);
     REGISTER_CONSTRUCTOR(CoilCoolingCooledBeam);
     REGISTER_CONSTRUCTOR(CoilCoolingDXMultiSpeed);
@@ -683,14 +683,14 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(Building);
     REGISTER_COPYCONSTRUCTORS(BuildingStory);
     REGISTER_COPYCONSTRUCTORS(BuildingUnit);
-    // REGISTER_COPYCONSTRUCTORS(CentralHeatPumpSystem);
-    // REGISTER_COPYCONSTRUCTORS(CentralHeatPumpSystemModule);
+    REGISTER_COPYCONSTRUCTORS(CentralHeatPumpSystem);
+    REGISTER_COPYCONSTRUCTORS(CentralHeatPumpSystemModule);
     REGISTER_COPYCONSTRUCTORS(CFactorUndergroundWallConstruction);
     REGISTER_COPYCONSTRUCTORS(ClimateZones);
     REGISTER_COPYCONSTRUCTORS(ChillerAbsorption);
     REGISTER_COPYCONSTRUCTORS(ChillerAbsorptionIndirect);
     REGISTER_COPYCONSTRUCTORS(ChillerElectricEIR);
-    // REGISTER_COPYCONSTRUCTORS(ChillerHeaterPerformanceElectricEIR);
+    REGISTER_COPYCONSTRUCTORS(ChillerHeaterPerformanceElectricEIR);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingCooledBeam);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingDXMultiSpeed);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingDXMultiSpeedStageData);

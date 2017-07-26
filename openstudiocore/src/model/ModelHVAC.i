@@ -20,7 +20,7 @@
 
   #undef _csharp_module_name
   #define _csharp_module_name OpenStudioModelHVAC
-  
+
 #endif
 
 %ignore std::vector<openstudio::model::SupplyAirflowRatioField>::vector(size_type);
@@ -123,9 +123,9 @@ MODELOBJECT_TEMPLATES(AirTerminalSingleDuctVAVHeatAndCoolNoReheat);
 MODELOBJECT_TEMPLATES(AirTerminalSingleDuctVAVHeatAndCoolReheat);
 MODELOBJECT_TEMPLATES(BoilerHotWater);
 MODELOBJECT_TEMPLATES(BoilerSteam);
-//MODELOBJECT_TEMPLATES(CentralHeatPumpSystem);
-//MODELOBJECT_TEMPLATES(CentralHeatPumpSystemModule);
-//MODELOBJECT_TEMPLATES(ChillerHeaterPerformanceElectricEIR);
+MODELOBJECT_TEMPLATES(CentralHeatPumpSystem);
+MODELOBJECT_TEMPLATES(CentralHeatPumpSystemModule);
+MODELOBJECT_TEMPLATES(ChillerHeaterPerformanceElectricEIR);
 MODELOBJECT_TEMPLATES(ChillerElectricEIR);
 MODELOBJECT_TEMPLATES(CoilCoolingCooledBeam);
 MODELOBJECT_TEMPLATES(CoilCoolingDXMultiSpeed);
@@ -336,9 +336,9 @@ SWIG_MODELOBJECT(AirTerminalSingleDuctVAVHeatAndCoolNoReheat, 1);
 SWIG_MODELOBJECT(AirTerminalSingleDuctVAVHeatAndCoolReheat, 1);
 SWIG_MODELOBJECT(BoilerHotWater, 1);
 SWIG_MODELOBJECT(BoilerSteam, 1);
-//SWIG_MODELOBJECT(CentralHeatPumpSystem, 1);
-//SWIG_MODELOBJECT(CentralHeatPumpSystemModule, 1);
-//SWIG_MODELOBJECT(ChillerHeaterPerformanceElectricEIR, 1);
+SWIG_MODELOBJECT(CentralHeatPumpSystem, 1);
+SWIG_MODELOBJECT(CentralHeatPumpSystemModule, 1);
+SWIG_MODELOBJECT(ChillerHeaterPerformanceElectricEIR, 1);
 SWIG_MODELOBJECT(ChillerElectricEIR, 1);
 SWIG_MODELOBJECT(CoilCoolingCooledBeam, 1);
 SWIG_MODELOBJECT(CoilCoolingDXMultiSpeed, 1);
