@@ -79,12 +79,12 @@ class Blind;
 class Building;
 class BoilerHotWater;
 class BoilerSteam;
-// class CentralHeatPumpSystem;
+class CentralHeatPumpSystem;
 class CFactorUndergroundWallConstruction;
 class ChillerAbsorption;
 class ChillerAbsorptionIndirect;
 class ChillerElectricEIR;
-// class ChillerHeaterPerformanceElectricEIR;
+class ChillerHeaterPerformanceElectricEIR;
 class CoilCoolingDXMultiSpeed;
 class CoilCoolingDXSingleSpeed;
 class CoilCoolingDXTwoSpeed;
@@ -522,7 +522,7 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateBuilding( model::Building & modelObject );
 
-  // boost::optional<IdfObject> translateCentralHeatPumpSystem( model::CentralHeatPumpSystem & modelObject  );
+  boost::optional<IdfObject> translateCentralHeatPumpSystem( model::CentralHeatPumpSystem & modelObject  );
 
   boost::optional<IdfObject> translateCFactorUndergroundWallConstruction( model::CFactorUndergroundWallConstruction & modelObject );
 
@@ -532,7 +532,7 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateChillerElectricEIR( model::ChillerElectricEIR & modelObject );
 
-  // boost::optional<IdfObject> translateChillerHeaterPerformanceElectricEIR( model::ChillerHeaterPerformanceElectricEIR & modelObject  );
+  boost::optional<IdfObject> translateChillerHeaterPerformanceElectricEIR( model::ChillerHeaterPerformanceElectricEIR & modelObject  );
 
   boost::optional<IdfObject> translateCoilCoolingDXSingleSpeed( model::CoilCoolingDXSingleSpeed & modelObject );
 
@@ -679,9 +679,9 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateElectricLoadCenterInverterLookUpTable( model::ElectricLoadCenterInverterLookUpTable & modelObject );
 
   boost::optional<IdfObject> translateElectricLoadCenterInverterSimple( model::ElectricLoadCenterInverterSimple & modelObject );
-  
+
   boost::optional<IdfObject> translateElectricLoadCenterStorageSimple( model::ElectricLoadCenterStorageSimple & modelObject );
-  
+
   boost::optional<IdfObject> translateElectricLoadCenterStorageConverter( model::ElectricLoadCenterStorageConverter & modelObject );
 
   boost::optional<IdfObject> translateEnergyManagementSystemActuator(model::EnergyManagementSystemActuator & modelObject);
@@ -750,7 +750,7 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateGeneratorFuelCellStackCooler(model::GeneratorFuelCellStackCooler & modelObject);
   boost::optional<IdfObject> translateGeneratorFuelCellWaterSupply(model::GeneratorFuelCellWaterSupply & modelObject);
   boost::optional<IdfObject> translateGeneratorFuelSupply(model::GeneratorFuelSupply & modelObject);
-  
+
   boost::optional<IdfObject> translateGeneratorPhotovoltaic( model::GeneratorPhotovoltaic & modelObject );
 
   boost::optional<IdfObject> translateGroundHeatExchangerHorizontalTrench( model::GroundHeatExchangerHorizontalTrench & modelObject );
@@ -800,9 +800,9 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateMaterialPropertyGlazingSpectralData( model::MaterialPropertyGlazingSpectralData & modelObject );
 
   boost::optional<IdfObject> translateMasslessOpaqueMaterial( model::MasslessOpaqueMaterial & modelObject );
-  
+
   boost::optional<IdfObject> translateMeterCustom( model::MeterCustom & modelObject );
-  
+
   boost::optional<IdfObject> translateMeterCustomDecrement( model::MeterCustomDecrement & modelObject );
 
   boost::optional<IdfObject> translateNode( model::Node & modelObject );

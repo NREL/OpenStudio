@@ -34,7 +34,7 @@ set(${target_name}_src
   FileOperations.cpp
   ThreeJS.hpp
   ThreeJS.cpp
-  
+
   ConcreteModelObjects.hpp
   AirConditionerVariableRefrigerantFlow.hpp
   AirConditionerVariableRefrigerantFlow_Impl.hpp
@@ -150,12 +150,12 @@ set(${target_name}_src
   BuildingUnit.hpp
   BuildingUnit_Impl.hpp
   BuildingUnit.cpp
-##  CentralHeatPumpSystem.hpp
-##  CentralHeatPumpSystem_Impl.hpp
-##  CentralHeatPumpSystem.cpp
-##  CentralHeatPumpSystemModule.hpp
-##  CentralHeatPumpSystemModule_Impl.hpp
-##  CentralHeatPumpSystemModule.cpp
+  CentralHeatPumpSystem.hpp
+  CentralHeatPumpSystem_Impl.hpp
+  CentralHeatPumpSystem.cpp
+  CentralHeatPumpSystemModule.hpp
+  CentralHeatPumpSystemModule_Impl.hpp
+  CentralHeatPumpSystemModule.cpp
   CFactorUndergroundWallConstruction.hpp
   CFactorUndergroundWallConstruction_Impl.hpp
   CFactorUndergroundWallConstruction.cpp
@@ -168,9 +168,9 @@ set(${target_name}_src
   ChillerElectricEIR.hpp
   ChillerElectricEIR_Impl.hpp
   ChillerElectricEIR.cpp
-##  ChillerHeaterPerformanceElectricEIR.hpp
-##  ChillerHeaterPerformanceElectricEIR_Impl.hpp
-##  ChillerHeaterPerformanceElectricEIR.cpp
+  ChillerHeaterPerformanceElectricEIR.hpp
+  ChillerHeaterPerformanceElectricEIR_Impl.hpp
+  ChillerHeaterPerformanceElectricEIR.cpp
   ClimateZones.hpp
   ClimateZones_Impl.hpp
   ClimateZones.cpp
@@ -1462,12 +1462,12 @@ set(${target_name}_test_src
   test/BuildingStory_GTest.cpp
   test/BuildingUnit_GTest.cpp
   test/Building_GTest.cpp
-##  test/CentralHeatPumpSystem_GTest.cpp
-##  test/CentralHeatPumpSystemModule_GTest.cpp
+  test/CentralHeatPumpSystem_GTest.cpp
+  test/CentralHeatPumpSystemModule_GTest.cpp
   test/ChillerAbsorption_GTest.cpp
   test/ChillerAbsorptionIndirect_GTest.cpp
   test/ChillerElectricEIR_GTest.cpp
-##  test/ChillerHeaterPerformanceElectricEIR_GTest.cpp
+  test/ChillerHeaterPerformanceElectricEIR_GTest.cpp
   test/ClimateZones_GTest.cpp
   test/CoilCoolingCooledBeam_GTest.cpp
   test/CoilCoolingDXSingleSpeed_GTest.cpp
