@@ -64,7 +64,7 @@ GeometryEditorView::GeometryEditorView(bool isIP,
   //connect(this, &GeometryEditorView::toggleUnitsClicked, modelObjectInspectorView(), &ModelObjectInspectorView::toggleUnitsClicked);
 
   QVBoxLayout *layout = new QVBoxLayout;
-  
+
   EditorWebView* webView = new EditorWebView(model, this);
   layout->addWidget(webView);
 
@@ -78,8 +78,8 @@ GeometryEditorView::~GeometryEditorView()
 
 EditorWebView::EditorWebView(const openstudio::model::Model& model, QWidget *t_parent)
   : QWidget(t_parent),
-    m_model(model),
     m_isIP(true),
+    m_model(model),
     m_previewBtn(new QPushButton("Preview")),
     m_progressBar(new QProgressBar()),
     m_refreshBtn(new QPushButton("Refresh")),
@@ -121,7 +121,7 @@ EditorWebView::EditorWebView(const openstudio::model::Model& model, QWidget *t_p
   connect(m_view, &QWebEngineView::loadProgress, this, &EditorWebView::onLoadProgress);
   connect(m_view, &QWebEngineView::loadStarted, this, &EditorWebView::onLoadStarted);
   connect(m_view, &QWebEngineView::renderProcessTerminated, this, &EditorWebView::onRenderProcessTerminated);
-  
+
   // Qt 5.8 and higher
   //m_view->setAttribute(QWebEngineSettings::WebAttribute::AllowRunningInsecureContent, true);
 
@@ -180,14 +180,14 @@ void EditorWebView::translateExport()
     ThreeScene scene = floorplan->toThreeScene(true);
     model = model::modelFromThreeJS(scene);
   }
-  
+
   if (model){
     m_exportModel = *model;
   } else{
     //m_exportModel = model::Model();
     m_exportModel = model::exampleModel();
   }
-  
+
 }
 
 void EditorWebView::saveExport()
@@ -196,7 +196,7 @@ void EditorWebView::saveExport()
 
     std::string contents = m_export.value<QString>().toStdString();
 
-    // DLM: should we compare checksums and only 
+    // DLM: should we compare checksums and only
     openstudio::path out = floorplanPath();
     if (!out.empty()){
       if (checksum(contents) != checksum(out)){
@@ -255,7 +255,7 @@ void EditorWebView::mergeExport()
   m_mergeBtn->setEnabled(true);
 }
 
-void EditorWebView::onUnitSystemChange(bool t_isIP) 
+void EditorWebView::onUnitSystemChange(bool t_isIP)
 {
   LOG(Debug, "onUnitSystemChange " << t_isIP << " reloading results");
   m_isIP = t_isIP;

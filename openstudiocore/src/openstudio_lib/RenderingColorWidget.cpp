@@ -73,7 +73,7 @@ namespace openstudio {
   {
     m_get = get;
     m_set = set;
-    m_modelObject = modelObject;    
+    m_modelObject = modelObject;
 
     setRenderingColor();
   }
@@ -120,7 +120,6 @@ namespace openstudio {
 
   void RenderingColorWidget2::getRenderingColor()
   {
-    bool isConnected = false;
 
     if (m_modelObject) {
       if (boost::optional<model::BuildingStory> bs = m_modelObject->optionalCast<model::BuildingStory>())
@@ -291,7 +290,7 @@ RenderingColorWidget::RenderingColorWidget(QWidget * parent )
   hLayout->addWidget(m_renderColorWidget);
 
   m_renderColorButton = new QPushButton();
-  m_renderColorButton->setFlat(true); 
+  m_renderColorButton->setFlat(true);
   m_renderColorButton->setText("Select Color");
   m_renderColorButton->setObjectName("StandardGrayButton");
   hLayout->addWidget(m_renderColorButton);
@@ -352,7 +351,7 @@ void RenderingColorWidget::renderColorButtonClicked()
     int b = m_renderingColor->renderingBlueValue();
     int a = m_renderingColor->renderingAlphaValue();
     QColor initialColor = QColor(r, g, b, a);
-  
+
     QColor color = QColorDialog::getColor(initialColor, this, "Choose Rendering Color", QColorDialog::ShowAlphaChannel);
 
     if (color.isValid()){
