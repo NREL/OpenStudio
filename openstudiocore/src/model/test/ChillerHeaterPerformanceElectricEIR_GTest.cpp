@@ -30,6 +30,8 @@
 
 #include "ModelFixture.hpp"
 
+#include "../Model.hpp"
+
 #include "../ChillerHeaterPerformanceElectricEIR.hpp"
 #include "../ChillerHeaterPerformanceElectricEIR_Impl.hpp"
 
@@ -51,9 +53,9 @@ TEST(ChillerHeaterPerformanceElectricEIR,ChillerHeaterPerformanceElectricEIR_Chi
 
   ASSERT_EXIT (
   {
-     model::Model model;
+     Model model;
 
-     model::ChillerHeaterPerformanceElectricEIR ch_heater(model);
+     ChillerHeaterPerformanceElectricEIR ch_heater(model);
 
      exit(0);
   } ,
@@ -63,9 +65,9 @@ TEST(ChillerHeaterPerformanceElectricEIR,ChillerHeaterPerformanceElectricEIR_Chi
 // Test the various setters and getters
 TEST(ChillerHeaterPerformanceElectricEIR,ChillerHeaterPerformanceElectricEIR_SettersGetters)
 {
-  model::Model model;
+  Model model;
 
-  model::ChillerHeaterPerformanceElectricEIR ch_heater(model);
+  ChillerHeaterPerformanceElectricEIR ch_heater(model);
 
   ASSERT_TRUE(ch_heater.isReferenceCoolingModeEvaporatorCapacityAutosized());
 
