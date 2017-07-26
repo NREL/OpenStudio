@@ -72,7 +72,9 @@ TEST(CentralHeatPumpSystem,CentralHeatPumpSystem_SettersGetters)
   CentralHeatPumpSystem central_hp(model);
 
   // std::vector<CentralHeatPumpSystemModule> modules()
-  ASSERT_EQ( (unsigned)1, central_hp.modules().size() );
+  ASSERT_EQ( (unsigned)0, central_hp.modules().size() );
+  CentralHeatPumpSystemModule central_hp_module(model);
+
   model::CentralHeatPumpSystemModule central_hp_module = central_hp.modules()[0];
 
   // Return type: bool
