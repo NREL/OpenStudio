@@ -328,15 +328,15 @@ std::vector<CentralHeatPumpSystemModule> CentralHeatPumpSystem::modules() const 
 }
 
 // Convenience functions
-std::vector<CentralHeatPumpSystemModule> CentralHeatPumpSystem::coolingPlantLoop() const {
+boost::optional<PlantLoop> CentralHeatPumpSystem::coolingPlantLoop() const {
   return getImpl<detail::CentralHeatPumpSystem_Impl>()->coolingPlantLoop();
 }
 
-std::vector<CentralHeatPumpSystemModule> CentralHeatPumpSystem::sourcePlantLoop() const {
+boost::optional<PlantLoop> CentralHeatPumpSystem::sourcePlantLoop() const {
   return getImpl<detail::CentralHeatPumpSystem_Impl>()->sourcePlantLoop();
 }
 
-std::vector<CentralHeatPumpSystemModule> CentralHeatPumpSystem::heatingPlantLoop() const {
+boost::optional<PlantLoop> CentralHeatPumpSystem::heatingPlantLoop() const {
   return getImpl<detail::CentralHeatPumpSystem_Impl>()->heatingPlantLoop();
 }
 
