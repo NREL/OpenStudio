@@ -64,11 +64,11 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
+    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
     //@}
     /** @name Getters */
@@ -200,9 +200,9 @@ namespace detail {
     /** @name Other */
     //@{
 
-    virtual unsigned inletPort() const;
+    virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() const;
+    virtual unsigned outletPort() const override;
 
     std::vector<ModelObject> children() const override;
     ModelObject clone(Model model) const override;

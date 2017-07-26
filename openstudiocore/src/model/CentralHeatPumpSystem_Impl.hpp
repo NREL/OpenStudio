@@ -71,6 +71,16 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
+    // CoolingLoop
+    virtual unsigned supplyInletPort() override;
+    virtual unsigned supplyOutletPort() override;
+    // SourceLoop
+    virtual unsigned demandInletPort() override;
+    virtual unsigned demandOutletPort() override;
+    // HeatingLoop
+    virtual unsigned tertiaryInletPort() const override;
+    virtual unsigned tertiaryOutletPort() const override;
+
     //@}
     /** @name Getters */
     //@{
@@ -110,17 +120,6 @@ namespace detail {
     bool setChillerHeaterModuleList(const boost::optional<ModelObjectList>& modelObjectList);
 
     void resetChillerHeaterModuleList();
-
-    // TODO: Should this be virtual instead?
-    // CoolingLoop
-    unsigned supplyInletPort() override;
-    unsigned supplyOutletPort() override;
-    // SourceLoop
-    unsigned demandInletPort() override;
-    unsigned demandOutletPort() override;
-    // HeatingLoop
-    unsigned tertiaryInletPort() const override;
-    unsigned tertiaryOutletPort() const override;
 
     /** Convenience Function to return the Cooling Loop **/
     boost::optional<PlantLoop> coolingPlantLoop() const;

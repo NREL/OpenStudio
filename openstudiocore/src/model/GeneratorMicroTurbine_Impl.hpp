@@ -71,15 +71,15 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
-    
+    virtual IddObjectType iddObjectType() const override;
+
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual std::string generatorObjectType() const;
+    virtual std::string generatorObjectType() const override;
 
-    virtual boost::optional<double> ratedElectricPowerOutput() const;
+    virtual boost::optional<double> ratedElectricPowerOutput() const override;
 
     virtual boost::optional<Schedule> availabilitySchedule() const override;
 
@@ -99,10 +99,10 @@ namespace detail {
     bool isMaximumFullLoadElectricalPowerOutputDefaulted() const;
 
     double referenceElectricalEfficiencyUsingLowerHeatingValue() const;
-    
+
     double referenceCombustionAirInletTemperature() const;
     bool isReferenceCombustionAirInletTemperatureDefaulted() const;
-    
+
     double referenceCombustionAirInletHumidityRatio() const;
     bool isReferenceCombustionAirInletHumidityRatioDefaulted() const;
 
@@ -167,7 +167,7 @@ namespace detail {
 
     bool setAvailabilitySchedule(Schedule& schedule);
     void resetAvailabilitySchedule();
-    
+
     bool setReferenceElectricalPowerOutput(double referenceElectricalPowerOutput);
 
     bool setMinimumFullLoadElectricalPowerOutput(double minimumFullLoadElectricalPowerOutput);
@@ -252,7 +252,7 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
-      
+
     ModelObject clone(Model model) const override;
 
     std::vector<IddObjectType> allowableChildTypes() const override;

@@ -114,8 +114,8 @@ namespace detail {
   // copy constructor, used for clone
   Model_Impl::Model_Impl(const Model_Impl& other, bool keepHandles)
     : Workspace_Impl(other, keepHandles),
-      m_workflowJSON(WorkflowJSON(other.m_workflowJSON)),
-      m_sqlFile((other.m_sqlFile)?(std::shared_ptr<SqlFile>(new SqlFile(*other.m_sqlFile))):(other.m_sqlFile))
+      m_sqlFile((other.m_sqlFile)?(std::shared_ptr<SqlFile>(new SqlFile(*other.m_sqlFile))):(other.m_sqlFile)),
+      m_workflowJSON(WorkflowJSON(other.m_workflowJSON))
   {
     // notice we are cloning the workflow and sqlfile too, if necessary
     // careful not to call anything that calls shared_from_this here, this is not yet constructed
@@ -127,8 +127,8 @@ namespace detail {
                          bool keepHandles,
                          StrictnessLevel level)
     : Workspace_Impl(other,hs,keepHandles,level),
-      m_workflowJSON(WorkflowJSON(other.m_workflowJSON)),
-      m_sqlFile((other.m_sqlFile)?(std::shared_ptr<SqlFile>(new SqlFile(*other.m_sqlFile))):(other.m_sqlFile))
+      m_sqlFile((other.m_sqlFile)?(std::shared_ptr<SqlFile>(new SqlFile(*other.m_sqlFile))):(other.m_sqlFile)),
+      m_workflowJSON(WorkflowJSON(other.m_workflowJSON))
   {
     // notice we are cloning the workflow and sqlfile too, if necessary
   }
