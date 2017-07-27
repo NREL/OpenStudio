@@ -41,6 +41,8 @@
 #include "../CurveBiquadratic_Impl.hpp"
 #include "../CurveCubic.hpp"
 #include "../CurveCubic_Impl.hpp"
+#include "../CurveBicubic.hpp"
+#include "../CurveBicubic_Impl.hpp"
 #include "../CurveQuadratic.hpp"
 #include "../CurveQuadratic_Impl.hpp"
 
@@ -190,7 +192,7 @@ TEST(ChillerHeaterPerformanceElectricEIR,ChillerHeaterPerformanceElectricEIR_Set
 
   // Return type: bool
   // Bicubic or quadratic
-  CurveCubic coolmode_eicoFPLR(model);
+  CurveBicubic coolmode_eicoFPLR(model);
   ASSERT_TRUE(ch_heater.setCoolingModeElectricInputToCoolingOutputRatioFunctionOfPartLoadRatioCurve(coolmode_eicoFPLR));
   ASSERT_EQ(coolmode_eicoFPLR, ch_heater.coolingModeElectricInputToCoolingOutputRatioFunctionOfPartLoadRatioCurve());
 
@@ -217,7 +219,7 @@ TEST(ChillerHeaterPerformanceElectricEIR,ChillerHeaterPerformanceElectricEIR_Set
 
   // Return type: bool
   // Bicubic or quadratic
-  CurveCubic heatmode_eicoFPLR(model);
+  CurveBicubic heatmode_eicoFPLR(model);
   ASSERT_TRUE(ch_heater.setHeatingModeElectricInputToCoolingOutputRatioFunctionOfPartLoadRatioCurve(heatmode_eicoFPLR));
   ASSERT_EQ(heatmode_eicoFPLR, ch_heater.heatingModeElectricInputToCoolingOutputRatioFunctionOfPartLoadRatioCurve());
 
