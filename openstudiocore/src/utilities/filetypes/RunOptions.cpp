@@ -68,7 +68,7 @@ namespace detail{
       Json::Reader reader;
       Json::Value options;
 
-      bool parsingSuccessful = reader.parse(m_runOptions->string(), options);
+      bool parsingSuccessful = reader.parse(m_customOutputAdapter->options(), options);
       if (parsingSuccessful){
         outputAdapter["options"] = options;
       }

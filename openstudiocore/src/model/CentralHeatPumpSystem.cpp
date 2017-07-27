@@ -138,11 +138,12 @@ namespace detail {
   }
 
   bool CentralHeatPumpSystem_Impl::addModule( const CentralHeatPumpSystemModule & centralHeatPumpSystemModule) {
+    bool result = false;
     auto modelObjectList = chillerHeaterModuleList();
     if( modelObjectList ) {
-      modelObjectList->addModelObject(centralHeatPumpSystemModule);
+      result = modelObjectList->addModelObject(centralHeatPumpSystemModule);
     }
-    return false;
+    return result;
   }
 
   void CentralHeatPumpSystem_Impl::removeModule( const CentralHeatPumpSystemModule & centralHeatPumpSystemModule) {

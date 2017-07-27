@@ -115,8 +115,7 @@ TEST(CentralHeatPumpSystem,CentralHeatPumpSystem_SettersGetters)
   EXPECT_EQ(1, central_hp_module_2.numberofChillerHeaterModules());
   // Return type: bool
   ASSERT_TRUE(central_hp_module_2.setNumberofChillerHeaterModules(2));
-  EXPECT_TRUE(central_hp_module_2.numberofChillerHeaterModules());
-  ASSERT_EQ(2, central_hp_module.numberofChillerHeaterModules());
+  ASSERT_EQ(2, central_hp_module_2.numberofChillerHeaterModules());
 
 
   // ChillerHeaterModulesPerformanceComponent
