@@ -71,7 +71,7 @@ OptionalModelObject ReverseTranslator::translateElectricLoadCenterStorageConvert
   // AvailabilityScheduleName
   if( (owo = workspaceObject.getTarget(ElectricLoadCenter_Storage_ConverterFields::AvailabilityScheduleName)) )
   {
-    if ( (omo = translateAndMapWorkspaceObject(*owo))
+    if ( (omo = translateAndMapWorkspaceObject(*owo)) )
     {
       if (boost::optional<Schedule> schedule = omo->optionalCast<Schedule>())
       {

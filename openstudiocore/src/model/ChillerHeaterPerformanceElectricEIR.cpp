@@ -32,7 +32,8 @@
 #include "Curve.hpp"
 #include "Curve_Impl.hpp"
 #include "CurveBiquadratic.hpp"
-//#include "CurveCubic.hpp"
+// TODO: Fix here, if you end up using Bicubic
+#include "CurveCubic.hpp"
 #include "CurveBicubic.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
