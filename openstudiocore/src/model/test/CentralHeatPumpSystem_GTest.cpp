@@ -74,8 +74,8 @@ TEST(CentralHeatPumpSystem,CentralHeatPumpSystem_SettersGetters)
   // std::vector<CentralHeatPumpSystemModule> modules()
   ASSERT_EQ( (unsigned)0, central_hp.modules().size() );
   CentralHeatPumpSystemModule central_hp_module(model);
-
-  model::CentralHeatPumpSystemModule central_hp_module = central_hp.modules()[0];
+  central_hp.addModule(central_hp_module);
+  ASSERT_EQ( (unsigned)1, central_hp.modules().size() );
 
   // Return type: bool
   // Only "SmartMixing" is valid
