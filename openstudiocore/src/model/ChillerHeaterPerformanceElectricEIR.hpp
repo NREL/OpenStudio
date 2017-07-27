@@ -121,21 +121,21 @@ class MODEL_API ChillerHeaterPerformanceElectricEIR : public ParentObject {
 
   std::string coolingModeTemperatureCurveCondenserWaterIndependentVariable() const;
 
-  Curve coolingModeCoolingCapacityFunctionofTemperatureCurve() const;
+  Curve coolingModeCoolingCapacityFunctionOfTemperatureCurve() const;
 
-  Curve coolingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve() const;
+  Curve coolingModeElectricInputToCoolingOutputRatioFunctionOfTemperatureCurve() const;
 
-  Curve coolingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve() const;
+  Curve coolingModeElectricInputToCoolingOutputRatioFunctionOfPartLoadRatioCurve() const;
 
   double coolingModeCoolingCapacityOptimumPartLoadRatio() const;
 
   std::string heatingModeTemperatureCurveCondenserWaterIndependentVariable() const;
 
-  Curve heatingModeCoolingCapacityFunctionofTemperatureCurve() const;
+  Curve heatingModeCoolingCapacityFunctionOfTemperatureCurve() const;
 
-  Curve heatingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve() const;
+  Curve heatingModeElectricInputToCoolingOutputRatioFunctionOfTemperatureCurve() const;
 
-  Curve heatingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve() const;
+  Curve heatingModeElectricInputToCoolingOutputRatioFunctionOfPartLoadRatioCurve() const;
 
   double heatingModeCoolingCapacityOptimumPartLoadRatio() const;
 
@@ -169,7 +169,7 @@ class MODEL_API ChillerHeaterPerformanceElectricEIR : public ParentObject {
 
   void setHeatingModeEnteringChilledWaterTemperatureLowLimit(double heatingModeEnteringChilledWaterTemperatureLowLimit);
 
-  bool setChilledWaterFlowModeType(std::string chilledWaterFlowModeType);
+  bool setChilledWaterFlowModeType(const std::string& chilledWaterFlowModeType);
 
   bool setDesignChilledWaterFlowRate(double designChilledWaterFlowRate);
 
@@ -187,25 +187,25 @@ class MODEL_API ChillerHeaterPerformanceElectricEIR : public ParentObject {
 
   bool setCompressorMotorEfficiency(double compressorMotorEfficiency);
 
-  bool setCondenserType(std::string condenserType);
+  bool setCondenserType(const std::string& condenserType);
 
-  bool setCoolingModeTemperatureCurveCondenserWaterIndependentVariable(std::string coolingModeTemperatureCurveCondenserWaterIndependentVariable);
+  bool setCoolingModeTemperatureCurveCondenserWaterIndependentVariable(const std::string& coolingModeTemperatureCurveCondenserWaterIndependentVariable);
 
-  bool setCoolingModeCoolingCapacityFunctionofTemperatureCurve(const Curve& curve);
+  bool setCoolingModeCoolingCapacityFunctionOfTemperatureCurve(const Curve& curve);
 
-  bool setCoolingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve(const Curve& curve);
+  bool setCoolingModeElectricInputToCoolingOutputRatioFunctionOfTemperatureCurve(const Curve& curve);
 
-  bool setCoolingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve(const Curve& curve);
+  bool setCoolingModeElectricInputToCoolingOutputRatioFunctionOfPartLoadRatioCurve(const Curve& curve);
 
   bool setCoolingModeCoolingCapacityOptimumPartLoadRatio(double coolingModeCoolingCapacityOptimumPartLoadRatio);
 
-  bool setHeatingModeTemperatureCurveCondenserWaterIndependentVariable(std::string heatingModeTemperatureCurveCondenserWaterIndependentVariable);
+  bool setHeatingModeTemperatureCurveCondenserWaterIndependentVariable(const std::string& heatingModeTemperatureCurveCondenserWaterIndependentVariable);
 
-  bool setHeatingModeCoolingCapacityFunctionofTemperatureCurve(const Curve& curve);
+  bool setHeatingModeCoolingCapacityFunctionOfTemperatureCurve(const Curve& curve);
 
-  bool setHeatingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve(const Curve& curve);
+  bool setHeatingModeElectricInputToCoolingOutputRatioFunctionOfTemperatureCurve(const Curve& curve);
 
-  bool setHeatingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve(const Curve& curve);
+  bool setHeatingModeElectricInputToCoolingOutputRatioFunctionOfPartLoadRatioCurve(const Curve& curve);
 
   bool setHeatingModeCoolingCapacityOptimumPartLoadRatio(double heatingModeCoolingCapacityOptimumPartLoadRatio);
 

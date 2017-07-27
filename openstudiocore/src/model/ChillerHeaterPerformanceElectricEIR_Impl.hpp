@@ -113,21 +113,21 @@ namespace detail {
 
     std::string coolingModeTemperatureCurveCondenserWaterIndependentVariable() const;
 
-    Curve coolingModeCoolingCapacityFunctionofTemperatureCurve() const;
+    Curve coolingModeCoolingCapacityFunctionOfTemperatureCurve() const;
 
-    Curve coolingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve() const;
+    Curve coolingModeElectricInputToCoolingOutputRatioFunctionOfTemperatureCurve() const;
 
-    Curve coolingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve() const;
+    Curve coolingModeElectricInputToCoolingOutputRatioFunctionOfPartLoadRatioCurve() const;
 
     double coolingModeCoolingCapacityOptimumPartLoadRatio() const;
 
     std::string heatingModeTemperatureCurveCondenserWaterIndependentVariable() const;
 
-    Curve heatingModeCoolingCapacityFunctionofTemperatureCurve() const;
+    Curve heatingModeCoolingCapacityFunctionOfTemperatureCurve() const;
 
-    Curve heatingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve() const;
+    Curve heatingModeElectricInputToCoolingOutputRatioFunctionOfTemperatureCurve() const;
 
-    Curve heatingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve() const;
+    Curve heatingModeElectricInputToCoolingOutputRatioFunctionOfPartLoadRatioCurve() const;
 
     double heatingModeCoolingCapacityOptimumPartLoadRatio() const;
 
@@ -161,7 +161,7 @@ namespace detail {
 
     void setHeatingModeEnteringChilledWaterTemperatureLowLimit(double heatingModeEnteringChilledWaterTemperatureLowLimit);
 
-    bool setChilledWaterFlowModeType(std::string chilledWaterFlowModeType);
+    bool setChilledWaterFlowModeType(const std::string& chilledWaterFlowModeType);
 
     bool setDesignChilledWaterFlowRate(boost::optional<double> designChilledWaterFlowRate);
 
@@ -179,25 +179,25 @@ namespace detail {
 
     bool setCompressorMotorEfficiency(double compressorMotorEfficiency);
 
-    bool setCondenserType(std::string condenserType);
+    bool setCondenserType(const std::string& condenserType);
 
-    bool setCoolingModeTemperatureCurveCondenserWaterIndependentVariable(std::string coolingModeTemperatureCurveCondenserWaterIndependentVariable);
+    bool setCoolingModeTemperatureCurveCondenserWaterIndependentVariable(const std::string& coolingModeTemperatureCurveCondenserWaterIndependentVariable);
 
-    bool setCoolingModeCoolingCapacityFunctionofTemperatureCurve(const Curve& curve);
+    bool setCoolingModeCoolingCapacityFunctionOfTemperatureCurve(const Curve& curve);
 
-    bool setCoolingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve(const Curve& curve);
+    bool setCoolingModeElectricInputToCoolingOutputRatioFunctionOfTemperatureCurve(const Curve& curve);
 
-    bool setCoolingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve(const Curve& curve);
+    bool setCoolingModeElectricInputToCoolingOutputRatioFunctionOfPartLoadRatioCurve(const Curve& curve);
 
     bool setCoolingModeCoolingCapacityOptimumPartLoadRatio(double coolingModeCoolingCapacityOptimumPartLoadRatio);
 
-    bool setHeatingModeTemperatureCurveCondenserWaterIndependentVariable(std::string heatingModeTemperatureCurveCondenserWaterIndependentVariable);
+    bool setHeatingModeTemperatureCurveCondenserWaterIndependentVariable(const std::string& heatingModeTemperatureCurveCondenserWaterIndependentVariable);
 
-    bool setHeatingModeCoolingCapacityFunctionofTemperatureCurve(const Curve& curve);
+    bool setHeatingModeCoolingCapacityFunctionOfTemperatureCurve(const Curve& curve);
 
-    bool setHeatingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve(const Curve& curve);
+    bool setHeatingModeElectricInputToCoolingOutputRatioFunctionOfTemperatureCurve(const Curve& curve);
 
-    bool setHeatingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve(const Curve& curve);
+    bool setHeatingModeElectricInputToCoolingOutputRatioFunctionOfPartLoadRatioCurve(const Curve& curve);
 
     bool setHeatingModeCoolingCapacityOptimumPartLoadRatio(double heatingModeCoolingCapacityOptimumPartLoadRatio);
 
@@ -215,12 +215,12 @@ namespace detail {
     // Optional getters for use by methods like children() so can remove() if the constructor fails.
     // There are other ways for the public versions of these getters to fail--perhaps all required
     // objects should be returned as boost::optionals
-    boost::optional<Curve> optionalCoolingModeCoolingCapacityFunctionofTemperatureCurve() const;
-    boost::optional<Curve> optionalCoolingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve() const;
-    boost::optional<Curve> optionalCoolingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve() const;
-    boost::optional<Curve> optionalHeatingModeCoolingCapacityFunctionofTemperatureCurve() const;
-    boost::optional<Curve> optionalHeatingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve() const;
-    boost::optional<Curve> optionalHeatingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve() const;
+    boost::optional<Curve> optionalCoolingModeCoolingCapacityFunctionOfTemperatureCurve() const;
+    boost::optional<Curve> optionalCoolingModeElectricInputToCoolingOutputRatioFunctionOfTemperatureCurve() const;
+    boost::optional<Curve> optionalCoolingModeElectricInputToCoolingOutputRatioFunctionOfPartLoadRatioCurve() const;
+    boost::optional<Curve> optionalHeatingModeCoolingCapacityFunctionOfTemperatureCurve() const;
+    boost::optional<Curve> optionalHeatingModeElectricInputToCoolingOutputRatioFunctionOfTemperatureCurve() const;
+    boost::optional<Curve> optionalHeatingModeElectricInputToCoolingOutputRatioFunctionOfPartLoadRatioCurve() const;
   };
 
 } // detail
