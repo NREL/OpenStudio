@@ -120,6 +120,7 @@ class EditorWebView : public QWidget
     QPushButton * m_mergeBtn;
 
     QWebEngineView * m_view;
+    std::shared_ptr<OSDocument> m_document;
 };
 
 } // openstudio

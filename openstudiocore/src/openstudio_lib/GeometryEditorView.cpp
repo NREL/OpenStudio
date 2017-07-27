@@ -101,6 +101,10 @@ EditorWebView::EditorWebView(const openstudio::model::Model& model, QWidget *t_p
     m_previewBtn(new QPushButton("Preview")),
     m_mergeBtn(new QPushButton("Merge"))
 {
+  openstudio::OSAppBase * app = OSAppBase::instance();
+  OS_ASSERT(app);
+  m_document = app->currentDocument();
+  OS_ASSERT(m_document);
 
   auto mainLayout = new QVBoxLayout;
   setLayout(mainLayout);
@@ -158,10 +162,7 @@ EditorWebView::EditorWebView(const openstudio::model::Model& model, QWidget *t_p
   //mainLayout->addWidget(m_view, 10, Qt::AlignTop);
   mainLayout->addWidget(m_view);
 
-  openstudio::OSAppBase * app = OSAppBase::instance();
-  if (app && app->currentDocument()) {
-    connect(app->currentDocument().get(), &OSDocument::modelSaving, this, &EditorWebView::saveClickedBlocking);
-  }
+  connect(m_document.get(), &OSDocument::modelSaving, this, &EditorWebView::saveClickedBlocking);
 
   m_checkForUpdateTimer = new QTimer(this);
   connect(m_checkForUpdateTimer, SIGNAL(timeout()), this, SLOT(checkForUpdate()));
@@ -240,11 +241,13 @@ void EditorWebView::saveClickedBlocking(const openstudio::path&)
 {
   if (m_geometryEditorLoaded && !m_javascriptRunning){
     m_javascriptRunning = true;
+    m_document->disable();
     QString javascript = QString("JSON.stringify(api.doExport());");
     m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_export = v; this->saveExport(); m_javascriptRunning = false; });
     while (m_javascriptRunning){
       OSAppBase::instance()->processEvents();
     }
+    m_document->enable();
   }
 }
 
@@ -254,8 +257,11 @@ void EditorWebView::previewClicked()
     m_previewBtn->setEnabled(false);
 
     m_javascriptRunning = true;
+    m_document->disable();
     QString javascript = QString("JSON.stringify(api.doExport());");
     m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_export = v; QTimer::singleShot(0, this, &EditorWebView::previewExport); m_javascriptRunning = false; });
+
+    // re-enable document in previewExport
   }
 }
 
@@ -265,8 +271,11 @@ void EditorWebView::mergeClicked()
     m_mergeBtn->setEnabled(false);
 
     m_javascriptRunning = true;
+    m_document->disable();
     QString javascript = QString("JSON.stringify(api.doExport());");
     m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_export = v; QTimer::singleShot(0, this, &EditorWebView::mergeExport); m_javascriptRunning = false; });
+
+     // re-enable document in mergeExport
   }
 }
 
@@ -297,7 +306,7 @@ void EditorWebView::translateExport()
 
 void EditorWebView::startEditor()
 {
-  // register on update function
+   m_document->disable();
 
   // set config
   {
@@ -369,8 +378,11 @@ void EditorWebView::startEditor()
     }
   }
 
+  // start checking for updates
   m_versionNumber = 0;
   m_checkForUpdateTimer->start(1000);
+
+  m_document->enable();
 }
 
 void EditorWebView::saveExport()
@@ -424,6 +436,7 @@ void EditorWebView::previewExport()
   dialog->setLayout(layout);
   dialog->open();
 
+  m_document->enable();
   m_previewBtn->setEnabled(true);
 }
 
@@ -444,6 +457,7 @@ void EditorWebView::mergeExport()
   // save the exported floorplan
   saveExport();
 
+  m_document->enable();
   m_mergeBtn->setEnabled(true);
 }
 
@@ -451,14 +465,20 @@ void EditorWebView::checkForUpdate()
 {
   if (!m_javascriptRunning){
     m_javascriptRunning = true;
+    
+    // DLM: don't disable and enable the tabs, too distracting
+    //m_document->disable();
 
     unsigned currentVersionNumber = m_versionNumber;
 
     QString javascript = QString("window.versionNumber;");
     m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_versionNumber = v.toUInt();  m_javascriptRunning = false; });
     while (m_javascriptRunning){
-      OSAppBase::instance()->processEvents();
+      // DLM: instead ignore user events
+      OSAppBase::instance()->processEvents(QEventLoop::ExcludeUserInputEvents);
     }
+
+    //m_document->enable();
 
     if (currentVersionNumber != m_versionNumber){
       onChanged();
@@ -468,10 +488,7 @@ void EditorWebView::checkForUpdate()
 
 void EditorWebView::onChanged()
 {
-  openstudio::OSAppBase * app = OSAppBase::instance();
-  if (app && app->currentDocument()) {
-    app->currentDocument()->markAsModified();
-  }
+  m_document->markAsModified();
 }
 
 void EditorWebView::onUnitSystemChange(bool t_isIP) 
@@ -534,11 +551,7 @@ void EditorWebView::onRenderProcessTerminated(QWebEnginePage::RenderProcessTermi
 
 openstudio::path EditorWebView::floorplanPath() const
 {
-  openstudio::OSAppBase * app = OSAppBase::instance();
-  if (app && app->currentDocument()) {
-    return toPath(app->currentDocument()->modelTempDir()) / toPath("resources/floorplan.json");
-  }
-  return path();
+  return toPath(m_document->modelTempDir()) / toPath("resources/floorplan.json");
 }
 
 } // openstudio

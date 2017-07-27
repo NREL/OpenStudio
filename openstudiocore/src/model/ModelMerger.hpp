@@ -71,9 +71,12 @@ namespace openstudio
       boost::optional<UUID> getNewModelHandle(const UUID& currentHandle);
       boost::optional<UUID> getCurrentModelHandle(const UUID& newHandle);
 
+      boost::optional<WorkspaceObject> getCurrentModelObject(const WorkspaceObject& newObject);
+
       Model m_currentModel;
       Model m_newModel;
       std::set<UUID> m_newMergedHandles;
+      std::vector<IddObjectType> m_iddObjectTypesToMerge;
       std::map<UUID, UUID> m_currentToNewHandleMapping;
       std::map<UUID, UUID> m_newToCurrentHandleMapping;
     };

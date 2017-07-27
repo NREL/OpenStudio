@@ -27,6 +27,8 @@
  **********************************************************************************************************************/
 
 #include "GeometryPreviewView.hpp"
+#include "OSAppBase.hpp"
+#include "OSDocument.hpp"
 
 #include "../model/Model_Impl.hpp"
 #include "../model/ThreeJSForwardTranslator.hpp"
@@ -78,6 +80,14 @@ PreviewWebView::PreviewWebView(const model::Model& model, QWidget *t_parent)
     m_progressBar(new QProgressBar()),
     m_refreshBtn(new QPushButton("Refresh"))
 {
+
+  openstudio::OSAppBase * app = OSAppBase::instance();
+  OS_ASSERT(app);
+  m_document = app->currentDocument();
+  OS_ASSERT(m_document);
+
+  std::shared_ptr<OSDocument> m_document;
+
   auto mainLayout = new QVBoxLayout;
   setLayout(mainLayout);
 
@@ -173,6 +183,9 @@ void PreviewWebView::onLoadFinished(bool ok)
     m_progressBar->setValue(90);
   }
 
+  // disable doc
+  m_document->disable();
+
   // call init and animate
   QString javascript = QString("init(") + m_json + QString(");\n animate();\n initDatGui();");
   m_view->page()->runJavaScript(javascript, [this](const QVariant &v) { onJavaScriptFinished(v); });
@@ -198,6 +211,7 @@ void PreviewWebView::onTranslateProgress(double percentage)
 
 void PreviewWebView::onJavaScriptFinished(const QVariant &v)
 {
+  m_document->enable();
   m_progressBar->setValue(100);
   m_progressBar->setVisible(false);
 }

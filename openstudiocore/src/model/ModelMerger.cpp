@@ -116,53 +116,68 @@ namespace openstudio
         clone.setSpace(currentSpace);
       }
 
+      // DLM: TODO shadingSurfaceGroups
+      // DLM: TODO interiorPartitionSurfaceGroups
+
       // thermal zone
       if (boost::optional<ThermalZone> newThermalZone = newSpace.thermalZone()){
-        boost::optional<UUID> currentHandle = getCurrentModelHandle(newThermalZone->handle());
-        boost::optional<ThermalZone> currentThermalZone;
-        if (currentHandle){
-          currentThermalZone = m_currentModel.getModelObject<ThermalZone>(*currentHandle);
+        boost::optional<WorkspaceObject> currentThermalZone = getCurrentModelObject(*newThermalZone);
+        if (currentThermalZone){
+          currentSpace.setThermalZone(currentThermalZone->cast<ThermalZone>());
+        } else{
+          currentSpace.resetThermalZone();
         }
-        if (!currentThermalZone){
-          currentThermalZone = model::ThermalZone(m_currentModel);
-          m_currentToNewHandleMapping[currentThermalZone->handle()] = newThermalZone->handle();
-          m_newToCurrentHandleMapping[newThermalZone->handle()] = currentThermalZone->handle();
-        }
-        OS_ASSERT(currentThermalZone);
-
-        mergeThermalZone(*currentThermalZone, *newThermalZone);
-
-        currentSpace.setThermalZone(*currentThermalZone);
       } else{
         currentSpace.resetThermalZone();
       }
-/*
-    std::string surfaceTypeMaterialName() const;
-    std::string constructionName() const;
-    std::string constructionHandle() const;
-    std::string constructionMaterialName() const;
-    std::string spaceName() const;
-    std::string spaceHandle() const;
-    std::string thermalZoneName() const;
-    std::string thermalZoneHandle() const;
-    std::string thermalZoneMaterialName() const;
-    std::string spaceTypeName() const;
-    std::string spaceTypeHandle() const;
-    std::string spaceTypeMaterialName() const;
-    std::string buildingStoryName() const;
-    std::string buildingStoryHandle() const;
-    std::string buildingStoryMaterialName() const;
-    std::string buildingUnitName() const;
-    std::string buildingUnitHandle() const;
-    std::string buildingUnitMaterialName() const;
-    std::string constructionSetName() const;
-    std::string constructionSetHandle() const;
-    std::string constructionSetMaterialName() const;
-    std::string outsideBoundaryCondition() const;
-    std::string outsideBoundaryConditionObjectName() const;
-    std::string outsideBoundaryConditionObjectHandle() const;
-    std::string boundaryMaterialName() const;
-*/
+
+      // space type
+      if (boost::optional<SpaceType> newSpaceType = newSpace.spaceType()){
+        boost::optional<WorkspaceObject> currentSpaceType = getCurrentModelObject(*newSpaceType);
+        if (currentSpaceType){
+          currentSpace.setSpaceType(currentSpaceType->cast<SpaceType>());
+        } else{
+          currentSpace.resetSpaceType();
+        }
+      } else{
+        currentSpace.resetSpaceType();
+      }
+
+      // building story
+      if (boost::optional<BuildingStory> newBuildingStory = newSpace.buildingStory()){
+        boost::optional<WorkspaceObject> currentBuildingStory = getCurrentModelObject(*newBuildingStory);
+        if (currentBuildingStory){
+          currentSpace.setBuildingStory(currentBuildingStory->cast<BuildingStory>());
+        } else{
+          currentSpace.resetBuildingStory();
+        }
+      } else{
+        currentSpace.resetBuildingStory();
+      }
+
+      // building unit
+      if (boost::optional<BuildingUnit> newBuildingUnit = newSpace.buildingUnit()){
+        boost::optional<WorkspaceObject> currentBuildingUnit = getCurrentModelObject(*newBuildingUnit);
+        if (currentBuildingUnit){
+          currentSpace.setBuildingUnit(currentBuildingUnit->cast<BuildingUnit>());
+        } else{
+          currentSpace.resetBuildingUnit();
+        }
+      } else{
+        currentSpace.resetBuildingUnit();
+      }
+
+      // default construction set
+      if (boost::optional<DefaultConstructionSet> newDefaultConstructionSet = newSpace.defaultConstructionSet()){
+        boost::optional<WorkspaceObject> currentDefaultConstructionSet = getCurrentModelObject(*newDefaultConstructionSet);
+        if (currentDefaultConstructionSet){
+          currentSpace.setDefaultConstructionSet(currentDefaultConstructionSet->cast<DefaultConstructionSet>());
+        } else{
+          currentSpace.resetDefaultConstructionSet();
+        }
+      } else{
+        currentSpace.resetDefaultConstructionSet();
+      }
 
     }
 
@@ -175,6 +190,17 @@ namespace openstudio
       m_newMergedHandles.insert(newThermalZone.handle());
 
       currentThermalZone.setName(newThermalZone.nameString());
+
+      // DLM: TODO multiplier
+      // DLM: TODO ceilingHeight
+      // DLM: TODO volume
+      // DLM: TODO zoneInsideConvectionAlgorithm
+      // DLM: TODO zoneOutsideConvectionAlgorithm
+      // DLM: TODO zoneConditioningEquipmentListName ?
+      // DLM: TODO thermostat
+      // DLM: TODO zoneControlHumidistat
+      // DLM: TODO zoneControlContaminantController
+      // DLM: TODO sizingZone
     }
   
     void ModelMerger::mergeSpaceType(SpaceType& currentSpaceType, const SpaceType& newSpaceType)
@@ -186,6 +212,32 @@ namespace openstudio
       m_newMergedHandles.insert(newSpaceType.handle());
 
       currentSpaceType.setName(newSpaceType.nameString());
+
+      //default construction set.
+      if (boost::optional<DefaultConstructionSet> newDefaultConstructionSet = newSpaceType.defaultConstructionSet()){
+        boost::optional<WorkspaceObject> currentDefaultConstructionSet = getCurrentModelObject(*newDefaultConstructionSet);
+        if (currentDefaultConstructionSet){
+          currentSpaceType.setDefaultConstructionSet(currentDefaultConstructionSet->cast<DefaultConstructionSet>());
+        } else{
+          currentSpaceType.resetDefaultConstructionSet();
+        }
+      } else{
+        currentSpaceType.resetDefaultConstructionSet();
+      }
+        
+      // DLM: TODO default schedule set
+
+      // DLM: TODO rendering color
+
+      // DLM: TODO standardsBuildingType
+
+      // DLM: TODO standardsSpaceType
+
+      // bring over child loads
+      for (const auto& newChild : newSpaceType.children()){
+        ModelObject currentChild = newChild.clone(m_currentModel).cast<ModelObject>();
+        currentChild.setParent(currentSpaceType);
+      }
     }
 
     void ModelMerger::mergeBuildingStory(BuildingStory& currentBuildingStory, const BuildingStory& newBuildingStory)
@@ -197,6 +249,21 @@ namespace openstudio
       m_newMergedHandles.insert(newBuildingStory.handle());
 
       currentBuildingStory.setName(newBuildingStory.nameString());
+
+      // DLM: TODO nominalZCoordinate() const;
+
+      // DLM: TODO nominalFloortoFloorHeight() const;
+
+      // DLM: TODO nominalFloortoCeilingHeight() const;
+
+      // DLM: TODO spaces() const;
+
+      // DLM: TODO defaultConstructionSet() const;
+
+      // DLM: TODO defaultScheduleSet() const;
+
+      // DLM: TODO renderingColor() const;
+
     }
 
     void ModelMerger::mergeBuildingUnit(BuildingUnit& currentBuildingUnit, const BuildingUnit& newBuildingUnit)
@@ -208,6 +275,14 @@ namespace openstudio
       m_newMergedHandles.insert(newBuildingUnit.handle());
 
       currentBuildingUnit.setName(newBuildingUnit.nameString());
+
+      // DLM: TODO renderingColor() const;
+
+      // DLM: TODO buildingUnitType() const;
+
+      // DLM: TODO spaces() const;
+
+      // DLM: TODO featureNames() const;
     }
 
     void ModelMerger::mergeDefaultConstructionSet(DefaultConstructionSet& currentDefaultConstructionSet, const DefaultConstructionSet& newDefaultConstructionSet)
@@ -219,6 +294,96 @@ namespace openstudio
       m_newMergedHandles.insert(newDefaultConstructionSet.handle());
 
       currentDefaultConstructionSet.setName(newDefaultConstructionSet.nameString());
+
+      // DLM: TODO defaultExteriorSurfaceConstructions() const;
+
+      // DLM: TODO defaultInteriorSurfaceConstructions() const;
+
+      // DLM: TODO defaultGroundContactSurfaceConstructions() const;
+
+      // DLM: TODO defaultExteriorSubSurfaceConstructions() const;
+
+      // DLM: TODO defaultInteriorSubSurfaceConstructions() const;
+
+      // DLM: TODO interiorPartitionConstruction() const;
+
+      // DLM: TODO spaceShadingConstruction() const;
+
+      // DLM: TODO buildingShadingConstruction() const;
+
+      // DLM: TODO siteShadingConstruction() const;
+    }
+
+    boost::optional<WorkspaceObject> ModelMerger::getCurrentModelObject(const WorkspaceObject& newObject)
+    {
+      // find object in current model
+      IddObjectType iddObjectType = newObject.iddObject().type();
+      boost::optional<UUID> currentHandle = getCurrentModelHandle(newObject.handle());
+      boost::optional<WorkspaceObject> currentObject;
+      if (currentHandle){
+        currentObject = m_currentModel.getObject(*currentHandle);
+        if (!currentObject){
+          LOG(Error, "Could not find object in current model for handle " << *currentHandle);
+        }
+      }
+
+      // create object in current model if needed
+      if (!currentObject){
+        switch (iddObjectType.value()){
+        case IddObjectType::OS_Space:
+          currentObject = model::Space(m_currentModel);
+          break;
+        case IddObjectType::OS_ThermalZone:
+          currentObject = model::ThermalZone(m_currentModel);
+          break;
+        case IddObjectType::OS_SpaceType:
+          currentObject = model::SpaceType(m_currentModel);
+          break;
+        case IddObjectType::OS_BuildingStory:
+          currentObject = model::BuildingStory(m_currentModel);
+          break;
+        case IddObjectType::OS_BuildingUnit:
+          currentObject = model::BuildingUnit(m_currentModel);
+          break;
+        case IddObjectType::OS_DefaultConstructionSet:
+          currentObject = model::DefaultConstructionSet(m_currentModel);
+          break;
+        default:
+          LOG(Error, "No constructor registered for IddObjectType " << iddObjectType.valueName());
+        }
+            
+        OS_ASSERT(currentObject);
+        m_currentToNewHandleMapping[currentObject->handle()] = newObject.handle();
+        m_newToCurrentHandleMapping[newObject.handle()] = currentObject->handle();
+      }
+          
+      // merge objects
+      switch (iddObjectType.value()){
+      case IddObjectType::OS_Space:
+        mergeSpace(currentObject->cast<Space>(), newObject.cast<Space>());
+        break;
+      case IddObjectType::OS_ThermalZone:
+        mergeThermalZone(currentObject->cast<ThermalZone>(), newObject.cast<ThermalZone>());
+        break;
+      case IddObjectType::OS_SpaceType:
+        mergeSpaceType(currentObject->cast<SpaceType>(), newObject.cast<SpaceType>());
+        break;
+      case IddObjectType::OS_BuildingStory:
+        mergeBuildingStory(currentObject->cast<BuildingStory>(), newObject.cast<BuildingStory>());
+        break;
+      case IddObjectType::OS_BuildingUnit:
+        mergeBuildingUnit(currentObject->cast<BuildingUnit>(), newObject.cast<BuildingUnit>());
+        break;
+      case IddObjectType::OS_DefaultConstructionSet:
+        mergeDefaultConstructionSet(currentObject->cast<DefaultConstructionSet>(), newObject.cast<DefaultConstructionSet>());
+        break;
+      default:
+        LOG(Error, "No merge function registered for IddObjectType " << iddObjectType.valueName());
+      }
+
+      OS_ASSERT(currentObject);
+      OS_ASSERT(!currentObject->handle().isNull());
+      return *currentObject;
     }
 
     void ModelMerger::mergeModels(Model& currentModel, const Model& newModel, const std::map<UUID, UUID>& handleMapping)
@@ -234,16 +399,15 @@ namespace openstudio
       }
 
       // DLM: TODO expose this to user to give more control over merging?
-      std::vector<IddObjectType> iddObjectTypesToMerge;
-      iddObjectTypesToMerge.push_back(IddObjectType::OS_Space);
-      iddObjectTypesToMerge.push_back(IddObjectType::OS_ThermalZone);
-      iddObjectTypesToMerge.push_back(IddObjectType::OS_SpaceType);
-      iddObjectTypesToMerge.push_back(IddObjectType::OS_BuildingStory);
-      iddObjectTypesToMerge.push_back(IddObjectType::OS_BuildingUnit);
-      iddObjectTypesToMerge.push_back(IddObjectType::OS_DefaultConstructionSet);
+      m_iddObjectTypesToMerge.push_back(IddObjectType::OS_Space);
+      m_iddObjectTypesToMerge.push_back(IddObjectType::OS_ThermalZone);
+      m_iddObjectTypesToMerge.push_back(IddObjectType::OS_SpaceType);
+      m_iddObjectTypesToMerge.push_back(IddObjectType::OS_BuildingStory);
+      m_iddObjectTypesToMerge.push_back(IddObjectType::OS_BuildingUnit);
+      m_iddObjectTypesToMerge.push_back(IddObjectType::OS_DefaultConstructionSet);
 
       //** Remove objects from current model that are not in new model **//
-      for (const auto& iddObjectType : iddObjectTypesToMerge){
+      for (const auto& iddObjectType : m_iddObjectTypesToMerge){
         for (auto& currenObject : currentModel.getObjectsByType(iddObjectType)){
           if (m_currentToNewHandleMapping.find(currenObject.handle()) == m_currentToNewHandleMapping.end()){
             currenObject.remove();
@@ -252,74 +416,9 @@ namespace openstudio
       }
 
       //** Merge objects from new model into curret model **//
-      for (const auto& iddObjectType : iddObjectTypesToMerge){
-
+      for (const auto& iddObjectType : m_iddObjectTypesToMerge){
         for (auto& newObject : newModel.getObjectsByType(iddObjectType)){
-         
-          // find object in current model
-          boost::optional<UUID> currentHandle = getCurrentModelHandle(newObject.handle());
-          boost::optional<WorkspaceObject> currentObject;
-          if (currentHandle){
-            currentObject = currentModel.getObject(*currentHandle);
-            if (!currentObject){
-              LOG(Error, "Could not find object in current model for handle " << *currentHandle);
-            }
-          }
-
-          // create object in current model if needed
-          if (!currentObject){
-            switch (iddObjectType.value()){
-            case IddObjectType::OS_Space:
-              currentObject = model::Space(currentModel);
-              break;
-            case IddObjectType::OS_ThermalZone:
-              currentObject = model::ThermalZone(currentModel);
-              break;
-            case IddObjectType::OS_SpaceType:
-              currentObject = model::SpaceType(currentModel);
-              break;
-            case IddObjectType::OS_BuildingStory:
-              currentObject = model::BuildingStory(currentModel);
-              break;
-            case IddObjectType::OS_BuildingUnit:
-              currentObject = model::BuildingUnit(currentModel);
-              break;
-            case IddObjectType::OS_DefaultConstructionSet:
-              currentObject = model::DefaultConstructionSet(currentModel);
-              break;
-            default:
-              LOG(Error, "No constructor registered for IddObjectType " << iddObjectType.valueName());
-            }
-            
-            OS_ASSERT(currentObject);
-            m_currentToNewHandleMapping[currentObject->handle()] = newObject.handle();
-            m_newToCurrentHandleMapping[newObject.handle()] = currentObject->handle();
-          }
-          
-          // merge objects
-          switch (iddObjectType.value()){
-          case IddObjectType::OS_Space:
-            mergeSpace(currentObject->cast<Space>(), newObject.cast<Space>());
-            break;
-          case IddObjectType::OS_ThermalZone:
-            mergeThermalZone(currentObject->cast<ThermalZone>(), newObject.cast<ThermalZone>());
-            break;
-          case IddObjectType::OS_SpaceType:
-            mergeSpaceType(currentObject->cast<SpaceType>(), newObject.cast<SpaceType>());
-            break;
-          case IddObjectType::OS_BuildingStory:
-            mergeBuildingStory(currentObject->cast<BuildingStory>(), newObject.cast<BuildingStory>());
-            break;
-          case IddObjectType::OS_BuildingUnit:
-            mergeBuildingUnit(currentObject->cast<BuildingUnit>(), newObject.cast<BuildingUnit>());
-            break;
-          case IddObjectType::OS_DefaultConstructionSet:
-            mergeDefaultConstructionSet(currentObject->cast<DefaultConstructionSet>(), newObject.cast<DefaultConstructionSet>());
-            break;
-          default:
-            LOG(Error, "No merge function registered for IddObjectType " << iddObjectType.valueName());
-          }
-          
+          getCurrentModelObject(newObject);
         }
       }
     }
