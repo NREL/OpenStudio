@@ -1,5 +1,5 @@
 # Requiring my custom build of OS
-require '/Users/julien/Software/Others/OpenStudio/build/Products/ruby/openstudio'
+require '/Users/julien/Software/Others/OS-build/Products/ruby/openstudio'
 require 'minitest/autorun'
 
 class CentralHeatPump_Test < MiniTest::Unit::TestCase
