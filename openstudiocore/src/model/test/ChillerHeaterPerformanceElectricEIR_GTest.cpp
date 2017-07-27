@@ -179,20 +179,20 @@ TEST(ChillerHeaterPerformanceElectricEIR,ChillerHeaterPerformanceElectricEIR_Set
   // Return type: bool
   // biquadratic
   CurveBiquadratic coolmode_ccFT(model);
-  ASSERT_TRUE(ch_heater.setCoolingModeCoolingCapacityFunctionofTemperatureCurve(coolmode_ccFT));
-  ASSERT_EQ(coolmode_ccFT, ch_heater.coolingModeCoolingCapacityFunctionofTemperatureCurve());
+  ASSERT_TRUE(ch_heater.setCoolingModeCoolingCapacityFunctionOfTemperatureCurve(coolmode_ccFT));
+  ASSERT_EQ(coolmode_ccFT, ch_heater.coolingModeCoolingCapacityFunctionOfTemperatureCurve());
 
   // Return type: bool
   // biquadratic
   CurveBiquadratic coolmode_eicoFT(model);
-  ASSERT_TRUE(ch_heater.setCoolingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve(coolmode_eicoFT));
-  ASSERT_EQ(coolmode_eicoFT, ch_heater.coolingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve());
+  ASSERT_TRUE(ch_heater.setCoolingModeElectricInputToCoolingOutputRatioFunctionOfTemperatureCurve(coolmode_eicoFT));
+  ASSERT_EQ(coolmode_eicoFT, ch_heater.coolingModeElectricInputToCoolingOutputRatioFunctionOfTemperatureCurve());
 
   // Return type: bool
   // Bicubic or quadratic
   CurveCubic coolmode_eicoFPLR(model);
-  ASSERT_TRUE(ch_heater.setCoolingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve(coolmode_eicoFPLR));
-  ASSERT_EQ(coolmode_eicoFPLR, ch_heater.coolingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve());
+  ASSERT_TRUE(ch_heater.setCoolingModeElectricInputToCoolingOutputRatioFunctionOfPartLoadRatioCurve(coolmode_eicoFPLR));
+  ASSERT_EQ(coolmode_eicoFPLR, ch_heater.coolingModeElectricInputToCoolingOutputRatioFunctionOfPartLoadRatioCurve());
 
   // Return type: bool
   ASSERT_TRUE(ch_heater.setCoolingModeCoolingCapacityOptimumPartLoadRatio(0.87));
@@ -206,20 +206,20 @@ TEST(ChillerHeaterPerformanceElectricEIR,ChillerHeaterPerformanceElectricEIR_Set
   // Return type: bool
   // biquadratic
   CurveBiquadratic heatmode_ccFT(model);
-  ASSERT_TRUE(ch_heater.setHeatingModeCoolingCapacityFunctionofTemperatureCurve(heatmode_ccFT));
-  ASSERT_EQ(heatmode_ccFT, ch_heater.heatingModeCoolingCapacityFunctionofTemperatureCurve());
+  ASSERT_TRUE(ch_heater.setHeatingModeCoolingCapacityFunctionOfTemperatureCurve(heatmode_ccFT));
+  ASSERT_EQ(heatmode_ccFT, ch_heater.heatingModeCoolingCapacityFunctionOfTemperatureCurve());
 
   // Return type: bool
   // biquadratic
   CurveBiquadratic heatmode_eicoFT(model);
-  ASSERT_TRUE(ch_heater.setHeatingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve(heatmode_eicoFT));
-  ASSERT_EQ(heatmode_eicoFT, ch_heater.heatingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve());
+  ASSERT_TRUE(ch_heater.setHeatingModeElectricInputToCoolingOutputRatioFunctionOfTemperatureCurve(heatmode_eicoFT));
+  ASSERT_EQ(heatmode_eicoFT, ch_heater.heatingModeElectricInputToCoolingOutputRatioFunctionOfTemperatureCurve());
 
   // Return type: bool
   // Bicubic or quadratic
   CurveCubic heatmode_eicoFPLR(model);
-  ASSERT_TRUE(ch_heater.setHeatingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve(heatmode_eicoFPLR));
-  ASSERT_EQ(heatmode_eicoFPLR, ch_heater.heatingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve());
+  ASSERT_TRUE(ch_heater.setHeatingModeElectricInputToCoolingOutputRatioFunctionOfPartLoadRatioCurve(heatmode_eicoFPLR));
+  ASSERT_EQ(heatmode_eicoFPLR, ch_heater.heatingModeElectricInputToCoolingOutputRatioFunctionOfPartLoadRatioCurve());
 
   // Return type: bool
   ASSERT_TRUE(ch_heater.setHeatingModeCoolingCapacityOptimumPartLoadRatio(0.91));
