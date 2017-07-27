@@ -63,9 +63,9 @@ ConstructionInternalSourceInspectorView::ConstructionInternalSourceInspectorView
     m_constructionDZ(nullptr),
     m_sourcePresentAfterLayerNumberEdit(nullptr),
     m_temperatureCalculationRequestedAfterLayerNumberEdit(nullptr),
+    m_constructionVC(nullptr),
     m_dimensionsForTheCTFCalculationEdit(nullptr),
-    m_tubeSpacingEdit(nullptr),
-    m_constructionVC(nullptr)
+    m_tubeSpacingEdit(nullptr)
 {
   createLayout();
 }
@@ -256,7 +256,7 @@ void ConstructionInternalSourceInspectorView::attach(openstudio::model::Construc
 
   m_constructionVC->attach(m_constructionWithInternalSource.get());
   m_constructionVC->reportItems();
-  
+
   m_standardsInformationWidget->attach(m_constructionWithInternalSource.get());
 }
 

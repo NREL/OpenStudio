@@ -46,7 +46,7 @@
 #include <QWebEngineScriptCollection>
 #include <QtConcurrent>
 
-using namespace std::placeholders; 
+using namespace std::placeholders;
 
 namespace openstudio {
 
@@ -73,8 +73,8 @@ GeometryPreviewView::~GeometryPreviewView()
 
 PreviewWebView::PreviewWebView(const model::Model& model, QWidget *t_parent)
   : QWidget(t_parent),
-    m_model(model),
     m_isIP(true),
+    m_model(model),
     m_progressBar(new QProgressBar()),
     m_refreshBtn(new QPushButton("Refresh"))
 {
@@ -94,7 +94,7 @@ PreviewWebView::PreviewWebView(const model::Model& model, QWidget *t_parent)
   m_progressBar->setMinimum(0);
   m_progressBar->setMaximum(100);
   m_progressBar->setValue(0);
-  m_progressBar->setVisible(true); 
+  m_progressBar->setVisible(true);
   m_progressBar->setStyleSheet("");
   m_progressBar->setFormat("");
   m_progressBar->setTextVisible(false);
@@ -110,7 +110,7 @@ PreviewWebView::PreviewWebView(const model::Model& model, QWidget *t_parent)
   //connect(m_view, &QWebEngineView::loadProgress, this, &PreviewWebView::onLoadProgress);
   //connect(m_view, &QWebEngineView::loadStarted, this, &PreviewWebView::onLoadStarted);
   connect(m_view, &QWebEngineView::renderProcessTerminated, this, &PreviewWebView::onRenderProcessTerminated);
-  
+
   // Qt 5.8 and higher
   //m_view->setAttribute(QWebEngineSettings::WebAttribute::AllowRunningInsecureContent, true);
 
@@ -137,7 +137,7 @@ void PreviewWebView::refreshClicked()
   m_view->triggerPageAction(QWebEnginePage::ReloadAndBypassCache);
 }
 
-void PreviewWebView::onUnitSystemChange(bool t_isIP) 
+void PreviewWebView::onUnitSystemChange(bool t_isIP)
 {
   LOG(Debug, "onUnitSystemChange " << t_isIP << " reloading results");
   m_isIP = t_isIP;
