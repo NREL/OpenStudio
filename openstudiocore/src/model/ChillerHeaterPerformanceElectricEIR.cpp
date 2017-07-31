@@ -29,6 +29,12 @@
 #include "ChillerHeaterPerformanceElectricEIR.hpp"
 #include "ChillerHeaterPerformanceElectricEIR_Impl.hpp"
 
+// Needed for the convenience functions to return parents
+#include "CentralHeatPumpSystem.hpp"
+#include "CentralHeatPumpSystem_Impl.hpp"
+#include "CentralHeatPumpSystemModule.hpp"
+#include "CentralHeatPumpSystemModule_Impl.hpp"
+
 #include "Curve.hpp"
 #include "Curve_Impl.hpp"
 #include "CurveBiquadratic.hpp"
@@ -73,6 +79,9 @@ namespace detail {
   {
     static std::vector<std::string> result;
     if (result.empty()){
+      // TODO: Implement? Problem is that the output for this is extremely weird/unusual
+      // You actually have to go to the CentralHeatPumpSystem to find the Number of Chiller Heater Modules XXX
+      // result.push_back("Chiller Heater Operation Mode Unit <x>");
     }
     return result;
   }
@@ -486,6 +495,50 @@ namespace detail {
 
   boost::optional<Curve> ChillerHeaterPerformanceElectricEIR_Impl::optionalHeatingModeElectricInputToCoolingOutputRatioFunctionOfPartLoadRatioCurve() const {
     return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_ChillerHeaterPerformance_Electric_EIRFields::HeatingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurveName);
+  }
+
+  // Convenience functions to return parent CentralHeatPumpSystem and CentralHeatPumpSystemModule
+  boost::optional<CentralHeatPumpSystemModule> ChillerHeaterPerformanceElectricEIR_Impl::centralHeatPumpSystemModule() const {
+
+    boost::optional<CentralHeatPumpSystemModule> result;
+    for ( const CentralHeatPumpSystemModule& central_hp_module : this->model().getConcreteModelObjects<CentralHeatPumpSystemModule>() )
+    {
+      ChillerHeaterPerformanceElectricEIR chiller = central_hp_module.chillerHeaterModulesPerformanceComponent();
+        if (chiller.handle() == this->handle())
+        {
+          result = central_hp_module;
+        }
+    }
+    return result;
+  }
+
+  boost::optional<CentralHeatPumpSystem> ChillerHeaterPerformanceElectricEIR_Impl::centralHeatPumpSystem() const {
+
+    boost::optional<CentralHeatPumpSystem> result;
+
+    // Check if this chiller has a CentralHeatPumpSystemModule
+    if ( boost::optional<CentralHeatPumpSystemModule> this_central_hp_module = this->centralHeatPumpSystemModule() )
+    {
+      // TODO: use the CentralHeatPumpSystemModule::centralHeatPumpSystem() method instead
+      if ( boost::optional<CentralHeatPumpSystem> central_hp = this_central_hp_module->centralHeatPumpSystem() )
+      {
+        result = central_hp.get();
+      }
+
+      // loop on all CentralHeatPumpSystems in the model
+      //for ( const CentralHeatPumpSystem& central_hp : this->model().getConcreteModelObjects<CentralHeatPumpSystem>() )
+      //{
+        //// Loop on each CentralHeatPumpSystemModules
+        //for (const CentralHeatPumpSystemModule& central_hp_module : central_hp.modules() )
+        //{
+          //if ( central_hp_module.handle() == this_central_hp_module->handle() )
+          //{
+              //result = central_hp;
+          //}
+        //}
+      //}
+    }
+    return result;
   }
 
 } // detail
@@ -958,6 +1011,14 @@ bool ChillerHeaterPerformanceElectricEIR::setHeatingModeCoolingCapacityOptimumPa
 
 bool ChillerHeaterPerformanceElectricEIR::setSizingFactor(double sizingFactor) {
   return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->setSizingFactor(sizingFactor);
+}
+
+boost::optional<CentralHeatPumpSystemModule> ChillerHeaterPerformanceElectricEIR::centralHeatPumpSystemModule() const {
+  return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->centralHeatPumpSystemModule();
+}
+
+boost::optional<CentralHeatPumpSystemModule> ChillerHeaterPerformanceElectricEIR::centralHeatPumpSystem() const {
+  return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->centralHeatPumpSystem();
 }
 
 /// @cond

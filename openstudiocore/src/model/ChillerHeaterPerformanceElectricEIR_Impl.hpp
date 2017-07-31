@@ -36,6 +36,8 @@ namespace openstudio {
 namespace model {
 
 class Curve;
+class CentralHeatPumpSystem;
+class CentralHeatPumpSystemModule;
 
 namespace detail {
 
@@ -206,6 +208,11 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
+
+    // Convenience functions to return parent CentralHeatPumpSystem and CentralHeatPumpSystemModule
+    boost::optional<CentralHeatPumpSystemModule> centralHeatPumpSystemModule() const;
+    boost::optional<CentralHeatPumpSystem> centralHeatPumpSystem() const;
+
 
     //@}
    protected:
