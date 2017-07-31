@@ -70,7 +70,8 @@ namespace detail {
 
   const std::vector<std::string>& CoolingTowerSingleSpeed_Impl::outputVariableNames() const
   {
-    std::vector<std::string> result;
+    // Until this changes, static
+    static std::vector<std::string> result;
 
     // Common Variables
     result.push_back("Cooling Tower Fan Electric Power");
@@ -106,10 +107,11 @@ namespace detail {
     //result.push_back("Cooling Tower Water Blowdown Volume");
 
     // if specified
-    if (this->basinHeaterCapacity() > 0) {
+    // TODO: @DLM: the return type of this method needs to change to std::vector<std::string> in ModelObject
+    // if (this->basinHeaterCapacity() > 0) {
       result.push_back("Cooling Tower Basin Heater Electric Power");
       result.push_back("Cooling Tower Basin Heater Electric Energy");
-    }
+    // }
 
     return result;
   }
