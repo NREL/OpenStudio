@@ -69,7 +69,14 @@ namespace detail {
   const std::vector<std::string>& DistrictCooling_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("District Cooling Chilled Water Rate");
+      result.push_back("District Cooling Chilled Water Energy");
+      result.push_back("District Cooling Rate");
+      result.push_back("District Cooling Inlet Temperature");
+      result.push_back("District Cooling Outlet Temperature");
+      result.push_back("District Cooling Mass Flow Rate");
     }
     return result;
   }
@@ -113,7 +120,7 @@ namespace detail {
   {
     return OS_DistrictCoolingFields::ChilledWaterOutletNodeName;
   }
-  
+
   bool DistrictCooling_Impl::addToNode(Node & node)
   {
     if( boost::optional<PlantLoop> plant = node.plantLoop() )

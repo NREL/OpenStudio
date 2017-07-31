@@ -53,8 +53,8 @@ namespace model {
 namespace detail {
 
   ZoneHVACPackagedTerminalAirConditioner_Impl::ZoneHVACPackagedTerminalAirConditioner_Impl(
-      const IdfObject& idfObject, 
-      Model_Impl* model, 
+      const IdfObject& idfObject,
+      Model_Impl* model,
       bool keepHandle)
     : ZoneHVACComponent_Impl(idfObject,model,keepHandle)
   {
@@ -126,7 +126,25 @@ namespace detail {
   const std::vector<std::string>& ZoneHVACPackagedTerminalAirConditioner_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Zone Packaged Terminal Air Conditioner Total Heating Rate");
+      result.push_back("Zone Packaged Terminal Air Conditioner Total Heating Energy");
+      result.push_back("Zone Packaged Terminal Air Conditioner Total Cooling Rate");
+      result.push_back("Zone Packaged Terminal Air Conditioner Total Cooling Energy");
+      result.push_back("Zone Packaged Terminal Air Conditioner Sensible Heating Rate");
+      result.push_back("Zone Packaged Terminal Air Conditioner Sensible Heating Energy");
+      result.push_back("Zone Packaged Terminal Air Conditioner Sensible Cooling Rate");
+      result.push_back("Zone Packaged Terminal Air Conditioner Sensible Cooling Energy");
+      result.push_back("Zone Packaged Terminal Air Conditioner Latent Heating Rate");
+      result.push_back("Zone Packaged Terminal Air Conditioner Latent Heating Energy");
+      result.push_back("Zone Packaged Terminal Air Conditioner Latent Cooling Rate");
+      result.push_back("Zone Packaged Terminal Air Conditioner Latent Cooling Energy");
+      result.push_back("Zone Packaged Terminal Air Conditioner Electric Power");
+      result.push_back("Zone Packaged Terminal Air Conditioner Electric Energy");
+      result.push_back("Zone Packaged Terminal Air Conditioner Fan Part Load Ratio");
+      result.push_back("Zone Packaged Terminal Air Conditioner Compressor Part Load Ratio");
+      result.push_back("Zone Packaged Terminal Air Conditioner Fan Availability Status");
     }
     return result;
   }
