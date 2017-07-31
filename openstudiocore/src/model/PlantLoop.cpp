@@ -92,8 +92,40 @@ PlantLoop_Impl::PlantLoop_Impl(const PlantLoop_Impl& other,
                                    Model_Impl* model,
                                    bool keepHandle)
   : Loop_Impl(other,model,keepHandle)
-{
-}
+{}
+
+  const std::vector<std::string>& PlantLoop_Impl::outputVariableNames() const
+  {
+    static std::vector<std::string> result;
+    if (result.empty())
+    {
+      result.push_back("Plant Supply Side Cooling Demand Rate");
+      result.push_back("Plant Supply Side Heating Demand Rate");
+      result.push_back("Plant Supply Side Inlet Mass Flow Rate");
+      result.push_back("Plant Supply Side Inlet Temperature");
+      result.push_back("Plant Supply Side Outlet Temperature");
+      result.push_back("Plant Supply Side Not Distributed Demand Rate");
+      result.push_back("Plant Supply Side Unmet Demand Rate");
+      result.push_back("Plant Solver Sub Iteration Count");
+      result.push_back("Plant Solver Half Loop Calls Count");
+      result.push_back("Debug Plant Loop Bypass Fraction");
+      result.push_back("Debug Plant Last Simulated Loop Side");
+      result.push_back("Plant Common Pipe Mass Flow Rate");
+      result.push_back("Plant Common Pipe Temperature");
+      result.push_back("Plant Common Pipe Flow Direction Status");
+      result.push_back("Plant Common Pipe Primary Mass Flow Rate");
+      result.push_back("Plant Common Pipe Secondary Mass Flow Rate");
+      result.push_back("Primary Side Common Pipe Flow Direction");
+      result.push_back("Secondary Side Common Pipe Flow Direction");
+      result.push_back("Plant Common Pipe Primary to Secondary Mass Flow Rate");
+      result.push_back("Plant Common Pipe Secondary to Primary Mass Flow Rate");
+      result.push_back("Plant System Cycle On Off Status");
+      result.push_back("Plant Demand Side Loop Pressure Difference");
+      result.push_back("Plant Supply Side Loop Pressure Difference");
+      result.push_back("Plant Loop Pressure Difference");
+    }
+    return result;
+  }
 
 std::vector<openstudio::IdfObject> PlantLoop_Impl::remove()
 {

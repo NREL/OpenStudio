@@ -75,9 +75,48 @@ namespace detail {
 
   const std::vector<std::string>& CoolingTowerVariableSpeed_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty()){
+    std::vector<std::string> result;
+
+    // Common Variables
+    result.push_back("Cooling Tower Fan Electric Power");
+    result.push_back("Cooling Tower Fan Electric Energy");
+    result.push_back("Cooling Tower Heat Transfer Rate");
+    result.push_back("Cooling Tower Inlet Temperature");
+    result.push_back("Cooling Tower Outlet Temperature");
+    result.push_back("Cooling Tower Mass Flow Rate");
+    result.push_back("Cooling Tower Fan Part Load Ratio");
+    result.push_back("Cooling Tower Air Flow Rate Ratio");
+    result.push_back("Cooling Tower Operating Cells Count");
+
+
+    // When Mains Water is used
+    result.push_back("Cooling Tower Make Up Water Volume Flow Rate");
+    result.push_back("Cooling Tower Make Up Water Volume");
+    result.push_back("Cooling Tower Make Up Mains Water Volume");
+
+    // When storage tank water is used:
+    // Supply Water Storage Tank Name isn't implemented in OpenStudio
+    // TODO: Revisit if need be
+    //result.push_back("Cooling Tower Make Up Water Volume Flow Rate");
+    //result.push_back("Cooling Tower Make Up Water Volume");
+    //result.push_back("Cooling Tower Storage Tank Water Volume Flow Rate");
+    //result.push_back("Cooling Tower Storage Tank Water Volume");
+    //result.push_back("Cooling Tower Starved Storage Tank Water Volume Flow Rate");
+    //result.push_back("Cooling Tower Starved Storage Tank Water Volume");
+    //result.push_back("Cooling Tower Make Up Mains Water Volume");
+    //result.push_back("Cooling Tower Water Evaporation Volume Flow Rate");
+    //result.push_back("Cooling Tower Water Evaporation Volume");
+    //result.push_back("Cooling Tower Water Drift Volume Flow Rate");
+    //result.push_back("Cooling Tower Water Drift Volume");
+    //result.push_back("Cooling Tower Water Blowdown Volume Flow Rate");
+    //result.push_back("Cooling Tower Water Blowdown Volume");
+
+    // if specified
+    if (this->basinHeaterCapacity() > 0) {
+      result.push_back("Cooling Tower Basin Heater Electric Power");
+      result.push_back("Cooling Tower Basin Heater Electric Energy");
     }
+
     return result;
   }
 

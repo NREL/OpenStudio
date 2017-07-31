@@ -63,7 +63,15 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
 
   virtual ~PlantLoop_Impl() {}
 
+  //@}
+  /** @name Virtual Methods */
+  //@{
+
+  virtual const std::vector<std::string>& outputVariableNames() const override;
+
   virtual IddObjectType iddObjectType() const override;
+
+
 
   std::string loadDistributionScheme();
 

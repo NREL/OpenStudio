@@ -78,6 +78,7 @@ namespace detail{
   {
     static std::vector<std::string> result;
     if (result.empty()){
+      // No variables available
     }
     return result;
   }

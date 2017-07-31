@@ -69,9 +69,53 @@ namespace detail {
 
   const std::vector<std::string>& BoilerHotWater_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty()){
+    std::vector<std::string> result;
+
+    // Common variables
+    result.push_back("Boiler Heating Rate");
+    result.push_back("Boiler Heating Energy");
+    result.push_back("Boiler Inlet Temperature");
+    result.push_back("Boiler Outlet Temperature");
+    result.push_back("Boiler Mass Flow Rate");
+    result.push_back("Boiler Parasitic Electric Power");
+    result.push_back("Boiler Ancillary Electric Energy");
+    result.push_back("Boiler Part Load Ratio");
+
+
+    // Fuel type specific
+    std::string fuelType = this->fuelType();
+    if (fuelType == "Electricity") {
+      result.push_back("Boiler Electric Power");
+      result.push_back("Boiler Electric Energy");
+    } else if (fuelType == "NaturalGas") {
+      result.push_back("Boiler Gas Rate");
+      result.push_back("Boiler Gas Energy");
+    } else if (fuelType == "PropaneGas") {
+      result.push_back("Boiler Propane Rate");
+      result.push_back("Boiler Propane Energy");
+    } else if (fuelType == "FuelOil#1") {
+      result.push_back("Boiler FuelOil#1 Rate");
+      result.push_back("Boiler FuelOil#1 Energy");
+    } else if (fuelType == "FuelOil#2") {
+      result.push_back("Boiler FuelOil#2 Rate");
+      result.push_back("Boiler FuelOil#2 Energy");
+    } else if (fuelType == "Coal") {
+      result.push_back("Boiler Coal Rate");
+      result.push_back("Boiler Coal Energy");
+    } else if (fuelType == "Diesel") {
+      result.push_back("Boiler Diesel Rate");
+      result.push_back("Boiler Diesel Energy");
+    } else if (fuelType == "Gasoline") {
+      result.push_back("Boiler Gasoline Rate");
+      result.push_back("Boiler Gasoline Energy");
+    } else if (fuelType == "OtherFuel1") {
+      result.push_back("Boiler OtherFuel1 Rate");
+      result.push_back("Boiler OtherFuel1 Energy");
+    } else if (fuelType == "OtherFuel2") {
+      result.push_back("Boiler OtherFuel2 Rate");
+      result.push_back("Boiler OtherFuel2 Energy");
     }
+
     return result;
   }
 
@@ -467,7 +511,7 @@ std::vector<std::string> BoilerHotWater::validFuelTypeValues() {
                         OS_Boiler_HotWaterFields::FuelType);
 }
 
-std::vector<std::string> BoilerHotWater::validEfficiencyCurveTemperatureEvaluationVariableValues() 
+std::vector<std::string> BoilerHotWater::validEfficiencyCurveTemperatureEvaluationVariableValues()
 {
   return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
                         OS_Boiler_HotWaterFields::EfficiencyCurveTemperatureEvaluationVariable);

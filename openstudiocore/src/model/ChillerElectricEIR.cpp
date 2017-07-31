@@ -70,6 +70,29 @@ namespace detail {
     : WaterToWaterComponent_Impl(other,model,keepHandle)
   {}
 
+  const std::vector<std::string> & ChillerElectricEIR_Impl::outputVariableNames() const
+  {
+    static std::vector<std::string> result;
+    if (result.empty())
+    {
+      result.push_back("Chiller Electric Power");
+      result.push_back("Chiller Electric Energy");
+      result.push_back("Chiller Evaporator Cooling Rate");
+      result.push_back("Chiller Evaporator Cooling Energy");
+      result.push_back("Chiller Evaporator Inlet Temperature");
+      result.push_back("Chiller Evaporator Outlet Temperature");
+      result.push_back("Chiller Evaporator Mass Flow Rate");
+      result.push_back("Chiller COP");
+      result.push_back("Chiller Condenser Heat Transfer Rate");
+      result.push_back("Chiller Condenser Heat Transfer Energy");
+      result.push_back("Chiller Part Load Ratio");
+      result.push_back("Chiller Cycling Ratio");
+      result.push_back("Chiller False Load Heat Transfer Rate");
+      result.push_back("Chiller False Load Heat Transfer Energy");
+    }
+    return result;
+  }
+
   IddObjectType ChillerElectricEIR_Impl::iddObjectType() const {
     return ChillerElectricEIR::iddObjectType();
   }
@@ -661,13 +684,6 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  const std::vector<std::string> & ChillerElectricEIR_Impl::outputVariableNames() const
-  {
-    static std::vector<std::string> result;
-
-    return result; 
-  }
-
   unsigned ChillerElectricEIR_Impl::supplyInletPort()
   {
     return OS_Chiller_Electric_EIRFields::ChilledWaterInletNodeName;
@@ -712,13 +728,13 @@ namespace detail {
                               schedule);
     return result;
   }
-  
+
   void ChillerElectricEIR_Impl::resetBasinHeaterSchedule()
   {
     bool result = setString(OS_Chiller_Electric_EIRFields::BasinHeaterOperatingScheduleName, "");
     OS_ASSERT(result);
   }
-  
+
   boost::optional<Schedule> ChillerElectricEIR_Impl::basinHeaterSchedule() const
   {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Chiller_Electric_EIRFields::BasinHeaterOperatingScheduleName);
