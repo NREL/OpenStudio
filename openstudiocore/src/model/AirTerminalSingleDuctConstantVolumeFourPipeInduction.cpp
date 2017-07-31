@@ -85,7 +85,9 @@ namespace detail {
   const std::vector<std::string>& AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      // No Specific output for this object
     }
     return result;
   }
@@ -148,7 +150,7 @@ namespace detail {
                               sourcePort.get(),
                               inletNode,
                               inletNode.inletPort() );
-              
+
               _model.connect( inletNode,
                               inletNode.outletPort(),
                               thisObject,
@@ -180,7 +182,7 @@ namespace detail {
                 thermalZone->addEquipment(mo);
               }
 
-              return true; 
+              return true;
             }
           }
         }
@@ -202,7 +204,7 @@ namespace detail {
 
     boost::optional<ModelObject> sourceModelObject = this->inletModelObject();
     boost::optional<unsigned> sourcePort = this->connectedObjectPort(this->inletPort());
-    
+
     boost::optional<ModelObject> targetModelObject = this->outletModelObject();
     boost::optional<unsigned> targetPort = this->connectedObjectPort(this->outletPort());
 

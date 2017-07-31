@@ -79,7 +79,12 @@ namespace detail{
   const std::vector<std::string>& AirTerminalSingleDuctUncontrolled_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Zone Air Terminal Sensible Heating Energy");
+      result.push_back("Zone Air Terminal Sensible Cooling Energy");
+      result.push_back("Zone Air Terminal Sensible Heating Rate");
+      result.push_back("Zone Air Terminal Sensible Cooling Rate")
     }
     return result;
   }
@@ -143,7 +148,7 @@ namespace detail{
 
       if( boost::optional<PortList> portList = outlet->optionalCast<PortList>() )
       {
-        thermalZone = portList->thermalZone(); 
+        thermalZone = portList->thermalZone();
       }
 
       if( thermalZone || (outlet->optionalCast<Mixer>() && node.airLoopHVAC()) )
@@ -303,7 +308,7 @@ namespace detail{
 
 AirTerminalSingleDuctUncontrolled::AirTerminalSingleDuctUncontrolled(const Model& model,
                                                                      Schedule & availabilitySchedule)
-  : StraightComponent(AirTerminalSingleDuctUncontrolled::iddObjectType(),model) 
+  : StraightComponent(AirTerminalSingleDuctUncontrolled::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::AirTerminalSingleDuctUncontrolled_Impl>());
 

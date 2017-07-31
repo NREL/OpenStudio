@@ -62,8 +62,8 @@ namespace model {
 namespace detail {
 
   AirTerminalSingleDuctParallelPIUReheat_Impl::AirTerminalSingleDuctParallelPIUReheat_Impl(
-      const IdfObject& idfObject, 
-      Model_Impl* model, 
+      const IdfObject& idfObject,
+      Model_Impl* model,
       bool keepHandle)
     : StraightComponent_Impl(idfObject,model,keepHandle)
   {
@@ -87,7 +87,12 @@ namespace detail {
   const std::vector<std::string>& AirTerminalSingleDuctParallelPIUReheat_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Zone Air Terminal Heating Rate");
+      result.push_back("Zone Air Terminal Heating Energy");
+      result.push_back("Zone Air Terminal Sensible Cooling Rate");
+      result.push_back("Zone Air Terminal Sensible Cooling Energy");
     }
     return result;
   }
@@ -293,16 +298,16 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  unsigned AirTerminalSingleDuctParallelPIUReheat_Impl::inletPort() 
+  unsigned AirTerminalSingleDuctParallelPIUReheat_Impl::inletPort()
   {
     return OS_AirTerminal_SingleDuct_ParallelPIU_ReheatFields::SupplyAirInletNodeName;
   }
 
-  unsigned AirTerminalSingleDuctParallelPIUReheat_Impl::outletPort() 
+  unsigned AirTerminalSingleDuctParallelPIUReheat_Impl::outletPort()
   {
     return OS_AirTerminal_SingleDuct_ParallelPIU_ReheatFields::OutletNodeName;
   }
-    
+
   HVACComponent AirTerminalSingleDuctParallelPIUReheat_Impl::reheatCoil() const
   {
     boost::optional<HVACComponent> hvacComponent = optionalReheatCoil();
@@ -393,14 +398,14 @@ namespace detail {
   {
     AirTerminalSingleDuctParallelPIUReheat modelObjectClone = StraightComponent_Impl::clone(model).cast<AirTerminalSingleDuctParallelPIUReheat>();
 
-    modelObjectClone.setString(modelObjectClone.secondaryAirInletPort(),""); 
+    modelObjectClone.setString(modelObjectClone.secondaryAirInletPort(),"");
 
     // clone coil
 
     HVACComponent coil = this->reheatCoil();
 
     HVACComponent coilClone = coil.clone(model).cast<HVACComponent>();
-    
+
     modelObjectClone.setReheatCoil(coilClone);
 
     // clone fan
@@ -447,7 +452,7 @@ namespace detail {
                               sourcePort.get(),
                               inletNode,
                               inletNode.inletPort() );
-              
+
               _model.connect( inletNode,
                               inletNode.outletPort(),
                               thisObject,
@@ -484,7 +489,7 @@ namespace detail {
                 setFanAvailabilitySchedule(schedule);
               }
 
-              return true; 
+              return true;
             }
           }
         }
@@ -503,7 +508,7 @@ namespace detail {
 
     boost::optional<ModelObject> sourceModelObject = this->inletModelObject();
     boost::optional<unsigned> sourcePort = this->connectedObjectPort(this->inletPort());
-    
+
     boost::optional<ModelObject> targetModelObject = this->outletModelObject();
     boost::optional<unsigned> targetPort = this->connectedObjectPort(this->outletPort());
 
@@ -818,7 +823,7 @@ bool AirTerminalSingleDuctParallelPIUReheat::setConvergenceTolerance(double conv
 void AirTerminalSingleDuctParallelPIUReheat::resetConvergenceTolerance() {
   getImpl<detail::AirTerminalSingleDuctParallelPIUReheat_Impl>()->resetConvergenceTolerance();
 }
-  
+
 HVACComponent AirTerminalSingleDuctParallelPIUReheat::reheatCoil() const
 {
   return getImpl<detail::AirTerminalSingleDuctParallelPIUReheat_Impl>()->reheatCoil();

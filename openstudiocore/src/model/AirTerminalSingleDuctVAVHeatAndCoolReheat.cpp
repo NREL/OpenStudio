@@ -79,7 +79,9 @@ namespace detail {
   const std::vector<std::string>& AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Zone Air Terminal VAV Damper Position");
     }
     return result;
   }
@@ -235,12 +237,12 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_AirTerminal_SingleDuct_VAV_HeatAndCool_ReheatFields::ReheatCoil);
   }
 
-  unsigned AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl::inletPort() 
+  unsigned AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl::inletPort()
   {
     return OS_AirTerminal_SingleDuct_VAV_HeatAndCool_ReheatFields::AirInlet;
   }
 
-  unsigned AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl::outletPort() 
+  unsigned AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl::outletPort()
   {
     return OS_AirTerminal_SingleDuct_VAV_HeatAndCool_ReheatFields::AirOutlet;
   }
@@ -275,7 +277,7 @@ namespace detail {
                               sourcePort.get(),
                               inletNode,
                               inletNode.inletPort() );
-              
+
               _model.connect( inletNode,
                               inletNode.outletPort(),
                               this->getObject<ModelObject>(),
@@ -293,7 +295,7 @@ namespace detail {
                 thermalZone->addEquipment(mo);
               }
 
-              return true; 
+              return true;
             }
           }
         }
@@ -312,7 +314,7 @@ namespace detail {
 
     boost::optional<ModelObject> sourceModelObject = this->inletModelObject();
     boost::optional<unsigned> sourcePort = this->connectedObjectPort(this->inletPort());
-    
+
     boost::optional<ModelObject> targetModelObject = this->outletModelObject();
     boost::optional<unsigned> targetPort = this->connectedObjectPort(this->outletPort());
 
@@ -389,7 +391,7 @@ namespace detail {
     HVACComponent coil = this->reheatCoil();
 
     HVACComponent coilClone = coil.clone(model).cast<HVACComponent>();
-    
+
     modelObjectClone.setReheatCoil(coilClone);
 
     return modelObjectClone;

@@ -89,7 +89,10 @@ namespace detail {
   const std::vector<std::string>& AirTerminalSingleDuctVAVNoReheat_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Zone Air Terminal VAV Damper Position");
+      result.push_back("Zone Air Terminal Outdoor Air Volume Flow Rate");
     }
     return result;
   }
@@ -336,7 +339,7 @@ bool AirTerminalSingleDuctVAVNoReheat_Impl::addToNode(Node & node)
                               sourcePort.get(),
                               inletNode,
                               inletNode.inletPort() );
-              
+
               _model.connect( inletNode,
                               inletNode.outletPort(),
                               this->getObject<ModelObject>(),
@@ -354,7 +357,7 @@ bool AirTerminalSingleDuctVAVNoReheat_Impl::addToNode(Node & node)
                 thermalZone->addEquipment(mo);
               }
 
-              return true; 
+              return true;
             }
           }
         }
@@ -371,7 +374,7 @@ bool AirTerminalSingleDuctVAVNoReheat_Impl::addToNode(Node & node)
 
     boost::optional<ModelObject> sourceModelObject = this->inletModelObject();
     boost::optional<unsigned> sourcePort = this->connectedObjectPort(this->inletPort());
-    
+
     boost::optional<ModelObject> targetModelObject = this->outletModelObject();
     boost::optional<unsigned> targetPort = this->connectedObjectPort(this->outletPort());
 
@@ -443,7 +446,7 @@ bool AirTerminalSingleDuctVAVNoReheat_Impl::addToNode(Node & node)
   {
     return getBooleanFieldValue(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::ControlForOutdoorAir);
   }
-  
+
   void AirTerminalSingleDuctVAVNoReheat_Impl::setControlForOutdoorAir(bool controlForOutdoorAir)
   {
     setBooleanFieldValue(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::ControlForOutdoorAir,controlForOutdoorAir);
