@@ -265,20 +265,18 @@ namespace model {
   // Get the parent generatorMicroTurbine
   GeneratorMicroTurbine GeneratorMicroTurbineHeatRecovery_Impl::generatorMicroTurbine() const {
 
-    boost::optional<GeneratorMicroTurbine> value;
+    boost::optional<GeneratorMicroTurbine> result;
     for ( const GeneratorMicroTurbine& mchp : this->model().getConcreteModelObjects<GeneratorMicroTurbine>() )
     {
       if ( boost::optional<GeneratorMicroTurbineHeatRecovery> mchpHR = mchp.generatorMicroTurbineHeatRecovery() )
       {
         if (mchpHR->handle() == this->handle())
         {
-          value = mchp;
+          result = mchp;
         }
       }
     }
-    OS_ASSERT(value);
-    return value.get();
-
+    return result;
   }
 
 

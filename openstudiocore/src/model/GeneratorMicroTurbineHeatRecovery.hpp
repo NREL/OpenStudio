@@ -51,11 +51,11 @@ class MODEL_API GeneratorMicroTurbineHeatRecovery : public StraightComponent {
  public:
   /** @name Constructors and Destructors */
   //@{
-    
+
  // Constructs a new GeneratorMicroTurbineHeatRecovery object in the model, given a GeneratorMicroTurbine
-  explicit GeneratorMicroTurbineHeatRecovery( const Model& model, 
+  explicit GeneratorMicroTurbineHeatRecovery( const Model& model,
                                               GeneratorMicroTurbine & mchp );
-  
+
   virtual ~GeneratorMicroTurbineHeatRecovery() {}
 
   //@}
@@ -66,7 +66,7 @@ class MODEL_API GeneratorMicroTurbineHeatRecovery : public StraightComponent {
 
   /** @name Getters */
   //@{
-      
+
   // TODO: Check return type. From object lists, some candidates are: Connection.
   // boost::optional<Connection> heatRecoveryWaterInletNode() const;
 
@@ -105,11 +105,11 @@ class MODEL_API GeneratorMicroTurbineHeatRecovery : public StraightComponent {
   bool isMaximumHeatRecoveryWaterFlowRateDefaulted() const;
 
   boost::optional<double> maximumHeatRecoveryWaterTemperature() const;
-  
+
   double ratedThermaltoElectricalPowerRatio() const;
   bool isRatedThermaltoElectricalPowerRatioDefaulted() const;
-  
-  // Return optional parent generator
+
+  // Return parent generator
   GeneratorMicroTurbine generatorMicroTurbine() const;
 
   //@}
