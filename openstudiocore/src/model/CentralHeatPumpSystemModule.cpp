@@ -162,8 +162,7 @@ namespace detail {
         }
       }
     }
-    OS_ASSERT(result);
-    return result.get();
+    return result;
   }
 
 

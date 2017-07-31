@@ -511,8 +511,7 @@ namespace detail {
           result = central_hp_module;
         }
     }
-    OS_ASSERT(result);
-    return result.get();
+    return result;
   }
 
   boost::optional<CentralHeatPumpSystem> ChillerHeaterPerformanceElectricEIR_Impl::centralHeatPumpSystem() const {
@@ -541,8 +540,7 @@ namespace detail {
         //}
       //}
     }
-    OS_ASSERT(result);
-    return result.get();
+    return result;
   }
 
 } // detail

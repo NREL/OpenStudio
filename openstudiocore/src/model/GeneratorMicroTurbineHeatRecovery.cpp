@@ -276,6 +276,7 @@ namespace model {
         }
       }
     }
+    // This doesn't return an optional
     OS_ASSERT(result);
     return result.get();
   }
