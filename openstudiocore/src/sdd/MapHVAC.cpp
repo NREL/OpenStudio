@@ -4958,6 +4958,14 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
     zoneVent.setMaximumIndoorTemperature(100);
     zoneVent.setDeltaTemperature(-100);
 
+    // OperableWinOAFlow
+    auto operableWinOAFlow = thermalZoneElement.firstChildElement("OperableWinOAFlow").text().toDouble(&ok);
+    if( ok ) {
+      zoneVent.setDesignFlowRateCalculationMethod("Flow/Zone");
+      operableWinOAFlow = unitToUnit(operableWinOAFlow,"cfm","m^3/s").get();
+      zoneVent.setDesignFlowRate(operableWinOAFlow);
+    }
+
     auto operableWinOALimLo = thermalZoneElement.firstChildElement("OperableWinOALimLo").text().toDouble(&ok);
     if( ok ) {
       operableWinOALimLo = unitToUnit(operableWinOALimLo,"F","C").get();
