@@ -184,6 +184,7 @@ namespace detail {
 
     bool setGeneratorHeatInputCorrectionFunctionofChilledWaterTemperatureCurve(const Curve& curve);
 
+    // TODO: This needs to be set automatically based on plant loop connected to it
     bool setGeneratorHeatSourceType(std::string generatorHeatSourceType);
 
     void setDesignGeneratorFluidFlowRate(boost::optional<double> designGeneratorFluidFlowRate);

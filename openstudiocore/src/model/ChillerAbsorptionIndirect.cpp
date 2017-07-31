@@ -72,6 +72,40 @@ namespace detail {
   {
     static std::vector<std::string> result;
     if (result.empty()){
+      // Common variables
+      result.push_back("Chiller Electric Power");
+      result.push_back("Chiller Electric Energy");
+      result.push_back("Chiller Evaporator Cooling Rate");
+      result.push_back("Chiller Evaporator Cooling Energy");
+      result.push_back("Chiller Evaporator Inlet Temperature");
+      result.push_back("Chiller Evaporator Outlet Temperature");
+      result.push_back("Chiller Evaporator Mass Flow Rate");
+      result.push_back("Chiller Condenser Heat Transfer Rate");
+      result.push_back("Chiller Condenser Heat Transfer Energy");
+      result.push_back("Chiller Condenser Inlet Temperature");
+      result.push_back("Chiller Condenser Outlet Temperature");
+      result.push_back("Chiller Condenser Mass Flow Rate");
+      result.push_back("Chiller COP");
+      result.push_back("Chiller Part-Load Ratio");
+      result.push_back("Chiller Cycling Ratio");
+
+      // Generator = Hot Water
+      if (this->generatorHeatSourceType() == "HotWater")
+      {
+        result.push_back("Chiller Source Hot Water Rate");
+        result.push_back("Chiller Source Hot Water Energy");
+        result.push_back("Chiller Hot Water Mass Flow Rate");
+      }
+      //
+      // Generator = Steam
+      // generatorHeatSourceType == 'Steam'
+      if (this->generatorHeatSourceType() == "Steam")
+      {
+        result.push_back("Chiller Source Steam Rate");
+        result.push_back("Chiller Source Steam Energy");
+        result.push_back("Chiller Steam Mass Flow Rate");
+        result.push_back("Chiller Steam Heat Loss Rate");
+      }
     }
     return result;
   }

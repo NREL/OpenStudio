@@ -79,7 +79,27 @@ namespace detail {
   const std::vector<std::string>& CentralHeatPumpSystem_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Chiller Heater System Cooling Electric Power");
+      result.push_back("Chiller Heater System Cooling Electric Energy");
+      result.push_back("Chiller Heater System Heating Electric Power");
+      result.push_back("Chiller Heater System Heating Electric Energy");
+      result.push_back("Chiller Heater System Cooling Rate");
+      result.push_back("Chiller Heater System Cooling Energy");
+      result.push_back("Chiller Heater System Heating Rate");
+      result.push_back("Chiller Heater System Heating Energy");
+      result.push_back("Chiller Heater System Source Heat Transfer Rate");
+      result.push_back("Chiller Heater System Source Heat Transfer Energy");
+      result.push_back("Chiller Heater System Cooling Inlet Temperature");
+      result.push_back("Chiller Heater System Cooling Outlet Temperature");
+      result.push_back("Chiller Heater System Cooling Mass Flow Rate");
+      result.push_back("Chiller Heater System Heating Inlet Temperature");
+      result.push_back("Chiller Heater System Heating Outlet Temperature");
+      result.push_back("Chiller Heater System Heating Mass Flow Rate");
+      result.push_back("Chiller Heater System Source Inlet Temperature");
+      result.push_back("Chiller Heater System Source Outlet Temperature");
+      result.push_back("Chiller Heater System Source Mass Flow Rate");
     }
     return result;
   }
