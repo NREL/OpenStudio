@@ -162,7 +162,8 @@ namespace detail {
         }
       }
     }
-    return result;
+    OS_ASSERT(result);
+    return result.get();
   }
 
 
@@ -213,7 +214,7 @@ bool CentralHeatPumpSystemModule::setNumberofChillerHeaterModules(int numberofCh
   return getImpl<detail::CentralHeatPumpSystemModule_Impl>()->setNumberofChillerHeaterModules(numberofChillerHeaterModules);
 }
 
-boost::optional<CentralHeatPumpSystemModule> CentralHeatPumpSystemModule::centralHeatPumpSystem() const {
+boost::optional<CentralHeatPumpSystem> CentralHeatPumpSystemModule::centralHeatPumpSystem() const {
   return getImpl<detail::CentralHeatPumpSystemModule_Impl>()->centralHeatPumpSystem();
 }
 

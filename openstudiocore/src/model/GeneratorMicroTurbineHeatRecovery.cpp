@@ -276,7 +276,8 @@ namespace model {
         }
       }
     }
-    return result;
+    OS_ASSERT(result);
+    return result.get();
   }
 
 

@@ -34,6 +34,8 @@
 #include "CentralHeatPumpSystem_Impl.hpp"
 #include "CentralHeatPumpSystemModule.hpp"
 #include "CentralHeatPumpSystemModule_Impl.hpp"
+#include "Model.hpp"
+//#include "Model_Impl.hpp"
 
 #include "Curve.hpp"
 #include "Curve_Impl.hpp"
@@ -509,7 +511,8 @@ namespace detail {
           result = central_hp_module;
         }
     }
-    return result;
+    OS_ASSERT(result);
+    return result.get();
   }
 
   boost::optional<CentralHeatPumpSystem> ChillerHeaterPerformanceElectricEIR_Impl::centralHeatPumpSystem() const {
@@ -538,7 +541,8 @@ namespace detail {
         //}
       //}
     }
-    return result;
+    OS_ASSERT(result);
+    return result.get();
   }
 
 } // detail
@@ -1017,7 +1021,7 @@ boost::optional<CentralHeatPumpSystemModule> ChillerHeaterPerformanceElectricEIR
   return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->centralHeatPumpSystemModule();
 }
 
-boost::optional<CentralHeatPumpSystemModule> ChillerHeaterPerformanceElectricEIR::centralHeatPumpSystem() const {
+boost::optional<CentralHeatPumpSystem> ChillerHeaterPerformanceElectricEIR::centralHeatPumpSystem() const {
   return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->centralHeatPumpSystem();
 }
 
