@@ -36,6 +36,7 @@ namespace openstudio {
 namespace model {
 
 class ChillerHeaterPerformanceElectricEIR;
+class CentralHeatPumpSystem;
 class Schedule;
 
 namespace detail {
@@ -93,6 +94,9 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
+
+    // Convenience function to return parent CentralHeatPumpSystem
+    boost::optional<CentralHeatPumpSystem> centralHeatPumpSystem() const;
 
     //@}
    protected:

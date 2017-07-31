@@ -31,6 +31,9 @@
 
 #include "ChillerHeaterPerformanceElectricEIR.hpp"
 #include "ChillerHeaterPerformanceElectricEIR_Impl.hpp"
+#include "CentralHeatPumpSystem.hpp"
+#include "CentralHeatPumpSystem_Impl.hpp"
+
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
 #include "Model.hpp"
@@ -72,7 +75,7 @@ namespace detail {
   const std::vector<std::string>& CentralHeatPumpSystemModule_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty()) {
     }
     return result;
   }
@@ -142,6 +145,27 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_CentralHeatPumpSystem_ModuleFields::ChillerHeaterModulesControlScheduleName);
   }
 
+  // Convenience function to return parent CentralHeatPumpSystem
+  boost::optional<CentralHeatPumpSystem> CentralHeatPumpSystemModule_Impl::centralHeatPumpSystem() const {
+
+    boost::optional<CentralHeatPumpSystem> result;
+
+    // loop on all CentralHeatPumpSystems in the model
+    for ( const CentralHeatPumpSystem& central_hp : this->model().getConcreteModelObjects<CentralHeatPumpSystem>() )
+    {
+      // Loop on each CentralHeatPumpSystemModules
+      for (const CentralHeatPumpSystemModule& central_hp_module : central_hp.modules() )
+      {
+        if ( central_hp_module.handle() == this->handle() )
+        {
+          result = central_hp;
+        }
+      }
+    }
+    return result;
+  }
+
+
 } // detail
 
 CentralHeatPumpSystemModule::CentralHeatPumpSystemModule(const Model& model)
@@ -187,6 +211,10 @@ bool CentralHeatPumpSystemModule::setChillerHeaterModulesControlSchedule(Schedul
 
 bool CentralHeatPumpSystemModule::setNumberofChillerHeaterModules(int numberofChillerHeaterModules) {
   return getImpl<detail::CentralHeatPumpSystemModule_Impl>()->setNumberofChillerHeaterModules(numberofChillerHeaterModules);
+}
+
+boost::optional<CentralHeatPumpSystemModule> CentralHeatPumpSystemModule::centralHeatPumpSystem() const {
+  return getImpl<detail::CentralHeatPumpSystemModule_Impl>()->centralHeatPumpSystem();
 }
 
 /// @cond
