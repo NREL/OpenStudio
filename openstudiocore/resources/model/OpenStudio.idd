@@ -9658,7 +9658,7 @@ OS:UnitarySystemPerformance:Multispeed,
        \key Yes
        \key No
        \default No
-       \note Controls coil operation during each HVAC timestep. 
+       \note Controls coil operation during each HVAC timestep.
        \note This choice does not apply to speed 1 operation.
        \note Yes = operate at the highest speed possible without exceeding the current load.
        \note No = allow operation at the average of two adjacent speeds to match the current load.
@@ -11559,7 +11559,7 @@ OS:ChillerHeaterPerformance:Electric:EIR,
   N14, \field Design Hot Water Flow Rate
        \required-field
        \type real
-       \units m3/s
+       \units m2/s
        \minimum 0.0
        \ip-units gal/min
   N15, \field Compressor Motor Efficiency
@@ -11594,6 +11594,8 @@ OS:ChillerHeaterPerformance:Electric:EIR,
        \object-list QuadraticCurves
        \object-list UniVariateTables
        \object-list BiVariateTables
+       \object-list UniVariateCurves
+       ! TODO: temp per https://github.com/NREL/EnergyPlus/issues/6224
   N16, \field Cooling Mode Cooling Capacity Optimum Part Load Ratio
        \required-field
        \type real
@@ -11620,6 +11622,8 @@ OS:ChillerHeaterPerformance:Electric:EIR,
        \object-list QuadraticCurves
        \object-list UniVariateTables
        \object-list BiVariateTables
+       \object-list UniVariateCurves
+       ! TODO: temp per https://github.com/NREL/EnergyPlus/issues/6224
   N17, \field Heating Mode Cooling Capacity Optimum Part Load Ratio
        \required-field
        \type real
@@ -21957,7 +21961,7 @@ OS:ZoneHVAC:FourPipeFanCoil,
    N10, \field Heating Convergence Tolerance
         \type real
         \minimum> 0.0
-        \default 0.001       
+        \default 0.001
    A13, \field Supply Air Fan Operating Mode Schedule Name
         \type object-list
         \object-list ScheduleNames
