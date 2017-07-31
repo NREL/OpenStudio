@@ -84,7 +84,7 @@ namespace detail{
       result.push_back("Zone Air Terminal Sensible Heating Energy");
       result.push_back("Zone Air Terminal Sensible Cooling Energy");
       result.push_back("Zone Air Terminal Sensible Heating Rate");
-      result.push_back("Zone Air Terminal Sensible Cooling Rate")
+      result.push_back("Zone Air Terminal Sensible Cooling Rate");
     }
     return result;
   }
