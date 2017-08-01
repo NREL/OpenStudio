@@ -489,6 +489,16 @@ namespace detail {
       result.push_back("Zone Mechanical Ventilation Current Density Volume Flow Rate");
       result.push_back("Zone Mechanical Ventilation Current Density Volume");
       result.push_back("Zone Mechanical Ventilation Air Changes per Hour");
+
+
+      // ZoneContaminantAirBalance
+      // The following output variables are available when Carbon Dioxide Concentration = Yes.
+      result.push_back("Zone Air CO2 Internal Gain Volume Flow Rate");
+      result.push_back("Zone Air CO2 Concentration");
+      // The following output variable is available when Generic Contaminant Concentration = Yes.
+      result.push_back("Zone Generic Air Contaminant Generation Volume Flow Rate");
+      result.push_back("Zone Air Generic Air Contaminant Concentration");
+
     }
     return result;
   }
