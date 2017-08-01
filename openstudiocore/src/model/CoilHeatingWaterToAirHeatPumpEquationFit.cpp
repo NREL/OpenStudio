@@ -74,7 +74,25 @@ namespace detail {
   const std::vector<std::string>& CoilHeatingWaterToAirHeatPumpEquationFit_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Heating Coil Electric Power");
+      result.push_back("Heating Coil Heating Rate");
+      result.push_back("Heating Coil Sensible Heating Rate");
+      result.push_back("Heating Coil Source Side Heat Transfer Rate");
+      result.push_back("Heating Coil Part Load Ratio");
+      result.push_back("Heating Coil Runtime Fraction");
+      result.push_back("Heating Coil Air Mass Flow Rate");
+      result.push_back("Heating Coil Air Inlet Temperature");
+      result.push_back("Heating Coil Air Inlet Humidity Ratio");
+      result.push_back("Heating Coil Air Outlet Temperature");
+      result.push_back("Heating Coil Air Outlet Humidity Ratio");
+      result.push_back("Heating Coil Source Side Mass Flow Rate");
+      result.push_back("Heating Coil Source Side Inlet Temperature");
+      result.push_back("Heating Coil Source Side Outlet Temperature");
+      result.push_back("Heating Coil Electric Energy");
+      result.push_back("Heating Coil Heating Energy");
+      result.push_back("Heating Coil Source Side Heat Transfer Energy");
     }
     return result;
   }
@@ -82,7 +100,7 @@ namespace detail {
   IddObjectType CoilHeatingWaterToAirHeatPumpEquationFit_Impl::iddObjectType() const {
     return CoilHeatingWaterToAirHeatPumpEquationFit::iddObjectType();
   }
-  
+
   unsigned CoilHeatingWaterToAirHeatPumpEquationFit_Impl::airInletPort()
   {
     return OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::AirInletNodeName;
@@ -92,7 +110,7 @@ namespace detail {
   {
     return OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::AirOutletNodeName;
   }
-  
+
   unsigned CoilHeatingWaterToAirHeatPumpEquationFit_Impl::waterInletPort()
   {
     return OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::WaterInletNodeName;
@@ -103,7 +121,7 @@ namespace detail {
     return OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::WaterOutletNodeName;
   }
 
- 
+
   boost::optional<double> CoilHeatingWaterToAirHeatPumpEquationFit_Impl::ratedAirFlowRate() const {
     return getDouble(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatedAirFlowRate,true);
   }
@@ -326,7 +344,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
- 
+
   void CoilHeatingWaterToAirHeatPumpEquationFit_Impl::setHeatingCapacityCoefficient3(double heatingCapacityCoefficient3) {
     bool result = setDouble(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingCapacityCoefficient3, heatingCapacityCoefficient3);
     OS_ASSERT(result);

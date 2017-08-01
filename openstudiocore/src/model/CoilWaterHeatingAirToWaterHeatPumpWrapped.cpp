@@ -70,7 +70,23 @@ namespace detail {
   const std::vector<std::string>& CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      // TODO: make sure this is right (cooling, not heating)
+      // Taken directly from the I/O for E+ 8.7
+      result.push_back("Cooling Coil Total Cooling Rate");
+      result.push_back("Cooling Coil Total Cooling Energy");
+      result.push_back("Cooling Coil Sensible Cooling Rate");
+      result.push_back("Cooling Coil Sensible Cooling Energy");
+      result.push_back("Cooling Coil Latent Cooling Rate");
+      result.push_back("Cooling Coil Latent Cooling Energy");
+      result.push_back("Cooling Coil Runtime Fraction");
+      result.push_back("DX Cooling Coil Crankcase Heater Electric Power");
+      result.push_back("Cooling Coil Crankcase Heater Electric Energy");
+      result.push_back("Cooling Coil Total Water Heating Rate");
+      result.push_back("Cooling Coil Total Water Heating Energy");
+      result.push_back("Cooling Coil Water Heating Electric Power");
+      result.push_back("Cooling Coil Water Heating Electric Energy");
     }
     return result;
   }
