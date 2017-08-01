@@ -800,6 +800,7 @@ IddObjectType GeneratorMicroTurbine::iddObjectType() {
   return IddObjectType(IddObjectType::OS_Generator_MicroTurbine);
 }
 
+// TODO: standardize on either fooValues or validFooValues
 std::vector<std::string> GeneratorMicroTurbine::validFuelTypeValues() {
   return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
                         OS_Generator_MicroTurbineFields::FuelType);

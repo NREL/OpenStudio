@@ -144,11 +144,13 @@ namespace detail {
   }
 
   // HeatingLoop
-  unsigned CentralHeatPumpSystem_Impl::tertiaryInletPort() const {
+  unsigned CentralHeatPumpSystem_Impl::tertiaryInletPort() const
+  {
     return OS_CentralHeatPumpSystemFields::HeatingLoopInletNodeName;
   }
 
-  unsigned CentralHeatPumpSystem_Impl::tertiaryOutletPort() const {
+  unsigned CentralHeatPumpSystem_Impl::tertiaryOutletPort() const
+  {
     return OS_CentralHeatPumpSystemFields::HeatingLoopOutletNodeName;
   }
 

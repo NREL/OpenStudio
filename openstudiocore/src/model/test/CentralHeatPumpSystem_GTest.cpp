@@ -50,22 +50,22 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST(CentralHeatPumpSystem,CentralHeatPumpSystem_CentralHeatPumpSystem)
+TEST_F(ModelFixture, CentralHeatPumpSystem_CentralHeatPumpSystem)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
   ASSERT_EXIT (
   {
-     Model model;
-     CentralHeatPumpSystem central_hp(model);
+    Model model;
+    CentralHeatPumpSystem central_hp(model);
 
-     exit(0);
+    exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
 
 // Test the various setters and getters
-TEST(CentralHeatPumpSystem,CentralHeatPumpSystem_SettersGetters)
+TEST_F(ModelFixture, CentralHeatPumpSystem_SettersGetters)
 {
   Model model;
 
@@ -145,54 +145,54 @@ TEST(CentralHeatPumpSystem,CentralHeatPumpSystem_SettersGetters)
 
 }
 
-TEST(CentralHeatPumpSystem,CentralHeatPumpSystem_PlantLoopConnections)
+TEST_F(ModelFixture, CentralHeatPumpSystem_PlantLoopConnections)
 {
-    Model model;
-    CentralHeatPumpSystem central_hp(model);
+  Model model;
+  CentralHeatPumpSystem central_hp(model);
 
-    // CoolingLoop: on the supply side
-    {
-      PlantLoop coolingPlant(model);
-      auto node = coolingPlant.supplyOutletNode();
-      EXPECT_TRUE(central_hp.addToNode(node));
-      auto plant = central_hp.plantLoop();
-      EXPECT_TRUE(plant);
-      if( plant ) {
-        EXPECT_EQ(coolingPlant.handle(),plant->handle());
-      }
-      // TODO: Change that number?
-      // PlantLoop has 5 components on the supply side by default (3 Nodes, One splitter, One mixer)
-      EXPECT_EQ(7u,coolingPlant.supplyComponents().size());
+  // CoolingLoop: on the supply side
+  {
+    PlantLoop coolingPlant(model);
+    auto node = coolingPlant.supplyOutletNode();
+    EXPECT_TRUE(central_hp.addToNode(node));
+    auto plant = central_hp.plantLoop();
+    EXPECT_TRUE(plant);
+    if( plant ) {
+      EXPECT_EQ(coolingPlant.handle(),plant->handle());
+    }
+    // TODO: Change that number?
+    // PlantLoop has 5 components on the supply side by default (3 Nodes, One splitter, One mixer)
+    EXPECT_EQ(7u,coolingPlant.supplyComponents().size());
 
-      // test the convenience function
-      auto plant_bis = central_hp.coolingPlantLoop();
-      EXPECT_TRUE(plant_bis);
-      if( plant ) {
-        EXPECT_EQ(coolingPlant.handle(),plant_bis->handle());
-      }
-
+    // test the convenience function
+    auto plant_bis = central_hp.coolingPlantLoop();
+    EXPECT_TRUE(plant_bis);
+    if( plant ) {
+      EXPECT_EQ(coolingPlant.handle(),plant_bis->handle());
     }
 
-    // SourceLoop: on the demand side
-    {
-      PlantLoop sourcePlant(model);
-      auto node = sourcePlant.demandInletNode();
-      EXPECT_TRUE(central_hp.addToNode(node));
-      auto plant = central_hp.secondaryPlantLoop();
-      EXPECT_TRUE(plant);
-      if( plant ) {
-        EXPECT_EQ(sourcePlant.handle(),plant->handle());
-      }
-      // TODO: Change that number?
-      EXPECT_EQ(7u,sourcePlant.demandComponents().size());
+  }
 
-      // test the convenience function
-      auto plant_bis = central_hp.sourcePlantLoop();
-      EXPECT_TRUE(plant_bis);
-      if( plant ) {
-        EXPECT_EQ(sourcePlant.handle(),plant_bis->handle());
-      }
+  // SourceLoop: on the demand side
+  {
+    PlantLoop sourcePlant(model);
+    auto node = sourcePlant.demandInletNode();
+    EXPECT_TRUE(central_hp.addToNode(node));
+    auto plant = central_hp.secondaryPlantLoop();
+    EXPECT_TRUE(plant);
+    if( plant ) {
+      EXPECT_EQ(sourcePlant.handle(),plant->handle());
     }
+    // TODO: Change that number?
+    EXPECT_EQ(7u,sourcePlant.demandComponents().size());
+
+    // test the convenience function
+    auto plant_bis = central_hp.sourcePlantLoop();
+    EXPECT_TRUE(plant_bis);
+    if( plant ) {
+      EXPECT_EQ(sourcePlant.handle(),plant_bis->handle());
+    }
+  }
 
     // HeatingLoop: on the supply side
     {
@@ -221,3 +221,48 @@ TEST(CentralHeatPumpSystem,CentralHeatPumpSystem_PlantLoopConnections)
     }
   }
 
+// Test cloning the CentralHeatPump system, make sure the modules are cloned too
+// Will test cloning the CentralHeatPumpSystemModule too, see if the ChillerHeater is cloned too
+TEST_F(ModelFixture, CentralHeatPumpSystem_Clone)
+{
+  Model model;
+  CentralHeatPumpSystem central_hp(model);
+
+  //Clone into the same model
+  CentralHeatPumpSystem  central_hpClone = central_hp.clone(model).cast<CentralHeatPumpSystem>();
+
+  //ASSERT_EQ(1,mchpClone.electricalPowerFunctionofTemperatureandElevationCurve().cast<CurveBiquadratic>().coefficient1Constant());
+  //ASSERT_EQ(2,mchpClone.electricalEfficiencyFunctionofTemperatureCurve().cast<CurveCubic>().coefficient1Constant());
+  //ASSERT_EQ(3,mchpClone.electricalEfficiencyFunctionofPartLoadRatioCurve().cast<CurveCubic>().coefficient1Constant());
+
+  // Add a CentralHeatPumpSystemModule and clone again
+  // Clear the modules first
+  central_hp.removeAllModules();
+  CentralHeatPumpSystemModule central_hp_module(model);
+  central_hp.addModule(central_hp_module);
+
+  // Clone in same model and verify that the CentralHeatPumpSystemModule is also cloned
+  CentralHeatPumpSystem  central_hpClone1 = central_hp.clone(model).cast<CentralHeatPumpSystem>();
+  // ASSERT_TRUE(central_hpClone2.generatorMicroTurbineHeatRecovery());
+  ASSERT_EQ(1, central_hpClone1.modules().size());
+  // Make sure it's not just pointing to the same one
+  CentralHeatPumpSystemModule central_hp_moduleClone1 = central_hpClone1.modules()[0];
+  EXPECT_NE(central_hp_module.handle(), central_hp_moduleClone1.handle());
+
+
+  //Clone into another model
+  Model model2;
+  CentralHeatPumpSystem  central_hpClone2 = central_hp.clone(model2).cast<CentralHeatPumpSystem>();
+
+
+  // Check that curves have been carried with it
+  //ASSERT_EQ(1,mchpClone2.electricalPowerFunctionofTemperatureandElevationCurve().cast<CurveBiquadratic>().coefficient1Constant());
+  //ASSERT_EQ(2,mchpClone2.electricalEfficiencyFunctionofTemperatureCurve().cast<CurveCubic>().coefficient1Constant());
+  //ASSERT_EQ(3,mchpClone2.electricalEfficiencyFunctionofPartLoadRatioCurve().cast<CurveCubic>().coefficient1Constant());
+
+  ASSERT_EQ(1, central_hpClone2.modules().size());
+  // Make sure it's not just pointing to the same one
+  CentralHeatPumpSystemModule central_hp_moduleClone2 = central_hpClone2.modules()[0];
+  EXPECT_NE(central_hp_module.handle(), central_hp_moduleClone2.handle());
+
+}

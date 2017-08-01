@@ -130,6 +130,14 @@ namespace detail {
     /** Convenience Function to return the Heating Loop **/
     boost::optional<PlantLoop> heatingPlantLoop() const;
 
+
+    // TODO: Need to override the clone, allowableChildTypes and children methods
+    // ModelObject clone(Model model) const override;
+
+    // std::vector<IddObjectType> allowableChildTypes() const override;
+
+    // std::vector<ModelObject> children() const override;
+
     //@}
    protected:
    private:

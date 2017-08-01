@@ -11419,7 +11419,7 @@ OS:CentralHeatPumpSystem,
        \required-field
   A2,  \field Name
        \type alpha
-       \reference ConnectionObjecta
+       \reference ConnectionObject
        \required-field
   A3,  \field Control Method
        \required-field
