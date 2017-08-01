@@ -88,7 +88,17 @@ namespace detail {
   const std::vector<std::string>& CoilHeatingDXSingleSpeed_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Heating Coil Total Heating Rate");
+      result.push_back("Heating Coil Total Heating Energy");
+      result.push_back("Heating Coil Electric Power");
+      result.push_back("Heating Coil Electric Energy");
+      result.push_back("Heating Coil Defrost Electric Power");
+      result.push_back("Heating Coil Defrost Electric Energy");
+      result.push_back("Heating Coil Crankcase Heater Electric Power");
+      result.push_back("Heating Coil Crankcase Heater Electric Energy");
+      result.push_back("Heating Coil Runtime Fraction");
     }
     return result;
   }
@@ -760,7 +770,7 @@ namespace detail {
 } // detail
 
 CoilHeatingDXSingleSpeed::CoilHeatingDXSingleSpeed( const Model& model,
-                                                    Schedule & availabilitySchedule, 
+                                                    Schedule & availabilitySchedule,
                                                     Curve& totalHeatingCapacityFunctionofTemperatureCurve,
                                                     Curve& totalHeatingCapacityFunctionofFlowFractionCurve,
                                                     Curve& energyInputRatioFunctionofTemperatureCurve,

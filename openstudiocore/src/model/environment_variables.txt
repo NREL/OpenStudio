@@ -1,5 +1,6 @@
 /* These are all the variables for Key="Environment"
  * Available by default in E+
+ * https://github.com/NREL/EnergyPlus/blob/d48fea0080e1d2befc982570c33eabc81e69335f/src/EnergyPlus/WeatherManager.cc#L715
  */
 const std::vector<std::string>& Environment_Impl::outputVariableNames() const
   {
