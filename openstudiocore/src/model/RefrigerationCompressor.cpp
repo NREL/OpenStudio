@@ -73,7 +73,21 @@ namespace detail {
   const std::vector<std::string>& RefrigerationCompressor_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      // TODO: Implement checks
+      // THE FOLLOWING OUTPUTS ARE AVAILABLE FOR SYSTEMS THAT SERVE CASES AND/OR WALKINS:
+      result.push_back("Refrigeration Compressor Electric Power");
+      result.push_back("Refrigeration Compressor Electric Energy");
+      result.push_back("Refrigeration Compressor Heat Transfer Rate");
+      result.push_back("Refrigeration Compressor Heat Transfer Energy");
+      result.push_back("Refrigeration Compressor Run Time Fraction");
+      // THE FOLLOWING OUTPUTS ARE AVAILABLE FOR SYSTEMS THAT SERVE AIR CHILLERS:
+      result.push_back("Refrigeration Air Chiller System Compressor Electric Power");
+      result.push_back("Refrigeration Air Chiller System Compressor Electric Energy");
+      result.push_back("Refrigeration Air Chiller System Compressor Heat Transfer Rate");
+      result.push_back("Refrigeration Air Chiller System Compressor Heat Transfer Energy");
+      result.push_back("Refrigeration Chiller Compressor Run TimeFraction");
     }
     return result;
   }
@@ -331,7 +345,7 @@ RefrigerationCompressor::RefrigerationCompressor(const Model& model)
   : ParentObject(RefrigerationCompressor::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::RefrigerationCompressor_Impl>());
-  
+
   CurveBicubic powerCurve = CurveBicubic(model);
   powerCurve.setName("Refrigeration Compressor Power Curve");
   powerCurve.setCoefficient1Constant(4451.46);
@@ -374,7 +388,7 @@ RefrigerationCompressor::RefrigerationCompressor(const Model& model)
   capacityCurve.setInputUnitTypeforX("Temperature");
   capacityCurve.setInputUnitTypeforY("Temperature");
   capacityCurve.setOutputUnitType("Capacity");
-  
+
   ok = setRefrigerationCompressorCapacityCurve(capacityCurve);
   OS_ASSERT(ok);
 

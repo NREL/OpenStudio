@@ -83,7 +83,34 @@ namespace detail {
   const std::vector<std::string>& RefrigerationSecondarySystem_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      // TODO: implement checks
+      // FOR SECONDARY SYSTEMS SERVING CASES AND/OR WALKINS:
+      result.push_back("Refrigeration Secondary Loop Pump Electric Power");
+      result.push_back("Refrigeration Secondary Loop Pump Electric Energy");
+      result.push_back("Refrigeration Secondary Loop Load Heat Transfer Rate");
+      result.push_back("Refrigeration Secondary Loop Load Heat Transfer Energy");
+      result.push_back("Refrigeration Secondary Loop Total Heat Transfer Rate");
+      result.push_back("Refrigeration Secondary Loop Total Heat Transfer Energy");
+      result.push_back("Refrigeration Secondary Loop Estimated Refrigerant Inventory Mass");
+      result.push_back("Refrigeration Secondary Loop Pipe Heat Gain Rate");
+      result.push_back("Refrigeration Secondary Loop Pipe Heat Gain Energy");
+      result.push_back("Refrigeration Secondary Loop Receiver Heat Gain Rate");
+      result.push_back("Refrigeration Secondary Loop Receiver Heat Gain Energy");
+      // FOR SECONDARY SYSTEMS SERVING AIR CHILLERS:
+      result.push_back("Refrigeration Air Chiller Secondary Loop Pump Electric Power");
+      result.push_back("Refrigeration Air Chiller Secondary Loop Pump Electric Energy");
+      result.push_back("Refrigeration Air Chiller Secondary Loop Load Heat Transfer Rate");
+      result.push_back("Refrigeration Air Chiller Secondary Loop Load Heat Transfer Energy");
+      result.push_back("Refrigeration Air Chiller Secondary Loop Total Heat Transfer Rate");
+      result.push_back("Refrigeration Air Chiller Secondary Loop Total Heat Transfer Energy");
+      result.push_back("Refrigeration Air Chiller Secondary Loop Estimated Refrigerant Inventory Mass");
+      result.push_back("Refrigeration Air Chiller Secondary Loop Volume Flow Rate");
+      result.push_back("Refrigeration Air Chiller Secondary Loop Pipe Heat Gain Rate");
+      result.push_back("Refrigeration Air Chiller Secondary Loop Pipe Heat Gain Energy");
+      result.push_back("Refrigeration Air Chiller Secondary Loop Receiver Heat Gain Rate");
+      result.push_back("Refrigeration Air Chiller Secondary Loop Receiver Heat Gain Energy");
     }
     return result;
   }
@@ -321,14 +348,14 @@ namespace detail {
             modelObjectList->removeModelObject(elem);
           }
       }
-    }  
+    }
   }
 
   template <class T>
   void RefrigerationSecondarySystem_Impl::removeTemplate( const T & modelObject, boost::optional<ModelObjectList>& modelObjectList ) {
     if( modelObjectList ) {
       modelObjectList->removeModelObject(modelObject);
-    }  
+    }
   }
 
   template <class T>

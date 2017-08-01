@@ -499,6 +499,29 @@ namespace detail {
       result.push_back("Zone Generic Air Contaminant Generation Volume Flow Rate");
       result.push_back("Zone Air Generic Air Contaminant Concentration");
 
+      // Refrigeration:AirChiller
+      // TODO: implement test to see if AirChiller.
+      result.push_back("Refrigeration Zone Air Chiller Sensible Cooling Rate");
+      result.push_back("Refrigeration Zone Air Chiller Sensible Cooling Energy");
+      result.push_back("Refrigeration Zone Air Chiller Heating Rate");
+      result.push_back("Refrigeration Zone Air Chiller Heating Energy");
+      result.push_back("Refrigeration Zone Air Chiller Latent Cooling Rate");
+      result.push_back("Refrigeration Zone Air Chiller Latent Cooling Energy");
+      result.push_back("Refrigeration Zone Air Chiller Total Cooling Rate");
+      result.push_back("Refrigeration Zone Air Chiller Total Cooling Energy");
+      result.push_back("Refrigeration Zone Air Chiller Water Removed Mass Flow Rate");
+
+      // RefrigerationWalkin
+      // TODO: test
+      result.push_back("Refrigeration Walk In Zone Sensible Cooling Rate");
+      result.push_back("Refrigeration Walk In Zone Sensible Cooling Energy");
+      result.push_back("Refrigeration Walk In Zone Sensible Heating Rate");
+      result.push_back("Refrigeration Walk In Zone Sensible Heating Energy");
+      result.push_back("Refrigeration Walk In Zone Latent Rate");
+      result.push_back("Refrigeration Walk In Zone Latent Energy");
+
+
+
     }
     return result;
   }
