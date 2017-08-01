@@ -152,7 +152,9 @@ namespace detail {
   const std::vector<std::string>& ScheduleRuleset_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Schedule Value");
     }
     return result;
   }
@@ -285,7 +287,7 @@ namespace detail {
     }
     return result;
   }
-  
+
   void ScheduleRuleset_Impl::resetSummerDesignDaySchedule()
   {
     if (!this->isSummerDesignDayScheduleDefaulted()){
@@ -322,7 +324,7 @@ namespace detail {
     }
     return result;
   }
-  
+
   void ScheduleRuleset_Impl::resetWinterDesignDaySchedule()
   {
     if (!this->isWinterDesignDayScheduleDefaulted()){
@@ -357,7 +359,7 @@ namespace detail {
         indexFound = i;
 
         if (indexFound == index){
-          if(scheduleRule.ruleIndex() == (int)index){          
+          if(scheduleRule.ruleIndex() == (int)index){
             return true;
           }
         }
@@ -584,7 +586,7 @@ std::vector<ScheduleDay> ScheduleRuleset::getDaySchedules(const openstudio::Date
 {
   return getImpl<detail::ScheduleRuleset_Impl>()->getDaySchedules(startDate, endDate);
 }
-  
+
 bool ScheduleRuleset::moveToEnd(ScheduleRule& scheduleRule)
 {
   return getImpl<detail::ScheduleRuleset_Impl>()->moveToEnd(scheduleRule);

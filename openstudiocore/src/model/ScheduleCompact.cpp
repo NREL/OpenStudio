@@ -91,7 +91,9 @@ namespace detail {
   const std::vector<std::string>& ScheduleCompact_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Schedule Value");
     }
     return result;
   }
@@ -227,7 +229,7 @@ ScheduleCompact::ScheduleCompact(const Model& model,const Quantity& constantValu
 {
   OS_ASSERT(getImpl<detail::ScheduleCompact_Impl>());
   setToConstantValue(constantValue);
-}  
+}
 
 // constructor
 ScheduleCompact::ScheduleCompact(std::shared_ptr<detail::ScheduleCompact_Impl> impl)
