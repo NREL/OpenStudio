@@ -51,7 +51,7 @@ namespace model {
 namespace detail {
 
   ExteriorLights_Impl::ExteriorLights_Impl(const IdfObject& idfObject,
-                                           Model_Impl* model, 
+                                           Model_Impl* model,
                                            bool keepHandle)
     : ModelObject_Impl(idfObject,model,keepHandle)
   {
@@ -79,10 +79,13 @@ namespace detail {
   const std::vector<std::string>& ExteriorLights_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Exterior Lights Electric Power");
+      result.push_back("Exterior Lights Electric Energy");
     }
     return result;
-  }  
+  }
 
   IddObjectType ExteriorLights_Impl::iddObjectType() const {
     return ExteriorLights::iddObjectType();
