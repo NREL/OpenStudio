@@ -69,7 +69,10 @@ namespace detail {
   const std::vector<std::string>& CurveExponentialSkewNormal_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Performance Curve Output Value");
+      result.push_back("Performance Curve Input Variable 1 Value");
     }
     return result;
   }
@@ -85,7 +88,7 @@ namespace detail {
   double CurveExponentialSkewNormal_Impl::evaluate(const std::vector<double>& x) const {
     OS_ASSERT(x.size() == 1u);
     double z1 = (x[0] - coefficient1C1()) / coefficient2C2();
-    double z2 = (exp(coefficient3C3() * x[0]) * coefficient4C4() * x[0] - coefficient1C1()) / 
+    double z2 = (exp(coefficient3C3() * x[0]) * coefficient4C4() * x[0] - coefficient1C1()) /
                 coefficient2C2();
     double z3 = -coefficient1C1()/coefficient4C4();
     double numerator = 1.0 + (z2/abs(z2)) * boost::math::erf<double>(abs(z2)/sqrt(2.0));

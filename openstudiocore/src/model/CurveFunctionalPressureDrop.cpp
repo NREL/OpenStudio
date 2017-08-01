@@ -66,7 +66,19 @@ namespace detail {
   const std::vector<std::string>& CurveFunctionalPressureDrop_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      // Curve Input 1: MassFlow
+      result.push_back("Performance Curve Input Variable 1 Value");
+
+      // Curve Input 2: Density
+      result.push_back("Performance Curve Input Variable 2 Value");
+
+      // Curve Input 3: Velocity
+      result.push_back("Performance Curve Input Variable 3 Value");
+
+      // Curve Output: the resultant value
+      result.push_back("Performance Curve Output Value");
     }
     return result;
   }
@@ -77,13 +89,13 @@ namespace detail {
 
   int CurveFunctionalPressureDrop_Impl::numVariables() const {
     LOG_AND_THROW("CurveFunctionalPressureDrop must be evaluated by EnergyPlus, in the context of "
-        << "plant pressure simulations. Therefore, numVariables and evaluate are not applicable " 
+        << "plant pressure simulations. Therefore, numVariables and evaluate are not applicable "
         << "for this curve type.");
   }
 
   double CurveFunctionalPressureDrop_Impl::evaluate(const std::vector<double>& x) const {
     LOG_AND_THROW("CurveFunctionalPressureDrop must be evaluated by EnergyPlus, in the context of "
-        << "plant pressure simulations. Therefore, numVariables and evaluate are not applicable " 
+        << "plant pressure simulations. Therefore, numVariables and evaluate are not applicable "
         << "for this curve type.");
   }
 

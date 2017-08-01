@@ -66,7 +66,11 @@ namespace detail {
   const std::vector<std::string>& CurveFanPressureRise_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Performance Curve Output Value");
+      result.push_back("Performance Curve Input Variable 1 Value");
+      result.push_back("Performance Curve Input Variable 2 Value");
     }
     return result;
   }
