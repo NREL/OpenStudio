@@ -132,7 +132,7 @@ namespace detail {
 
 
     // TODO: Need to override the clone, allowableChildTypes and children methods
-    // ModelObject clone(Model model) const override;
+    ModelObject clone(Model model) const override;
 
     // std::vector<IddObjectType> allowableChildTypes() const override;
 

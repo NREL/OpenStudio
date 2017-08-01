@@ -76,6 +76,9 @@ TEST_F(ModelFixture, CentralHeatPumpSystem_SettersGetters)
   CentralHeatPumpSystemModule central_hp_module(model);
   central_hp.addModule(central_hp_module);
   ASSERT_EQ( (unsigned)1, central_hp.modules().size() );
+  // Test the parent method
+  ASSERT_TRUE(central_hp_module.centralHeatPumpSystem() );
+  ASSERT_EQ( central_hp.handle(), central_hp_module.centralHeatPumpSystem()->handle() );
 
   // Return type: bool
   // Only "SmartMixing" is valid

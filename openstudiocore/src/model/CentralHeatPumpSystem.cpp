@@ -41,6 +41,10 @@
 #include "PlantLoop.hpp"
 #include "PlantLoop_Impl.hpp"
 
+// Need for clone override
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_CentralHeatPumpSystem_FieldEnums.hxx>
@@ -120,6 +124,27 @@ namespace detail {
     }
     return result;
   }
+
+
+  // This will clone the CentralHeatPumpSystem as well as the CentralHeatPumpSystemModules if there are some
+  // and will return a reference to the new CentralHeatPumpSystem
+  ModelObject CentralHeatPumpSystem_Impl::clone(Model model) const
+  {
+    CentralHeatPumpSystem newCentralHP = ModelObject_Impl::clone(model).cast<CentralHeatPumpSystem>();
+
+    // Loop on the modules
+    for(const CentralHeatPumpSystemModule & centralHPMod: modules()) {
+
+      // Call the BaseClass (ModelObject) clone method to avoid circular references
+      CentralHeatPumpSystemModule centralHPModClone = centralHPMod.getImpl<detail::CentralHeatPumpSystemModule_Impl>()->ModelObject_Impl::clone(model).cast<CentralHeatPumpSystemModule>();
+      //newCentralHP.getImpl<detail::CentralHeatPumpSystem_Impl>()->addModule(centralHPModClone);
+      newCentralHP.addModule(centralHPModClone);
+
+    }
+
+    return newCentralHP;
+  }
+
 
   // CoolingLoop
   unsigned CentralHeatPumpSystem_Impl::supplyInletPort()
