@@ -81,10 +81,13 @@ namespace detail {
     : SpaceLoadDefinition_Impl(other,model,keepHandle)
   {}
 
+  // TODO: remove
   const std::vector<std::string>& LightsDefinition_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      // Not appropriate: output is listed in Lights instead
     }
     return result;
   }
@@ -337,7 +340,7 @@ namespace detail {
     return 0.0;
   }
 
-  double LightsDefinition_Impl::getPowerPerFloorArea(double floorArea, double numPeople) const 
+  double LightsDefinition_Impl::getPowerPerFloorArea(double floorArea, double numPeople) const
   {
     std::string method = designLevelCalculationMethod();
 
@@ -385,7 +388,7 @@ namespace detail {
   }
 
   bool LightsDefinition_Impl::setDesignLevelCalculationMethod(const std::string& method,
-                                                              double floorArea, 
+                                                              double floorArea,
                                                               double numPeople)
   {
     std::string wmethod(method);
@@ -400,7 +403,7 @@ namespace detail {
     else if (wmethod == "watts/person") {
       return setWattsperPerson(getPowerPerPerson(floorArea,numPeople));
     }
-    
+
     return false;
   }
 
@@ -559,8 +562,8 @@ double LightsDefinition::getPowerPerPerson(double floorArea, double numPeople) c
   return getImpl<detail::LightsDefinition_Impl>()->getPowerPerPerson(floorArea,numPeople);
 }
 
-bool LightsDefinition::setDesignLevelCalculationMethod(const std::string& method, 
-                                     double floorArea, 
+bool LightsDefinition::setDesignLevelCalculationMethod(const std::string& method,
+                                     double floorArea,
                                      double numPeople)
 {
   return getImpl<detail::LightsDefinition_Impl>()->setDesignLevelCalculationMethod(method,floorArea,numPeople);

@@ -72,7 +72,9 @@ namespace detail {
   const std::vector<std::string>& InternalMass_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      // Not sure
     }
     return result;
   }
@@ -109,7 +111,7 @@ namespace detail {
     if (surfaceAreaperPerson){
       return internalMassDefinition.setSurfaceArea(*surfaceAreaperPerson * space->numberOfPeople());
     }
-  
+
     return false;
   }
 

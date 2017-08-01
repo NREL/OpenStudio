@@ -73,7 +73,24 @@ namespace detail {
   const std::vector<std::string>& ZoneVentilationDesignFlowRate_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      // Not appropriate: all variables reported at the zone level
+      //result.push_back("Zone Ventilation Sensible Heat Loss Energy");
+      //result.push_back("Zone Ventilation Sensible Heat Gain Energy");
+      //result.push_back("Zone Ventilation Latent Heat Loss Energy");
+      //result.push_back("Zone Ventilation Latent Heat Gain Energy");
+      //result.push_back("Zone Ventilation Total Heat Loss Energy");
+      //result.push_back("Zone Ventilation Total Heat Gain Energy");
+      //result.push_back("Zone Ventilation Current Density Volume Flow Rate");
+      //result.push_back("Zone Ventilation Standard Density Volume Flow Rate");
+      //result.push_back("Zone Ventilation Current Density Volume");
+      //result.push_back("Zone Ventilation Standard Density Volume");
+      //result.push_back("Zone Ventilation Mass");
+      //result.push_back("Zone Ventilation Mass Flow Rate");
+      //result.push_back("Zone Ventilation Air Change Rate");
+      //result.push_back("Zone Ventilation Fan Electric Energy");
+      //result.push_back("Zone Ventilation Air Inlet Temperature");
     }
     return result;
   }
@@ -426,7 +443,7 @@ namespace detail {
   {
     return 0; // this object has no inlet or outlet node
   }
-  
+
   boost::optional<ThermalZone> ZoneVentilationDesignFlowRate_Impl::thermalZone()
   {
     ModelObject thisObject = this->getObject<ModelObject>();
@@ -442,7 +459,7 @@ namespace detail {
     }
     return boost::none;
   }
-  
+
   bool ZoneVentilationDesignFlowRate_Impl::addToThermalZone(ThermalZone & thermalZone)
   {
     Model m = this->model();
@@ -463,7 +480,7 @@ namespace detail {
 
     return true;
   }
-  
+
   void ZoneVentilationDesignFlowRate_Impl::removeFromThermalZone()
   {
     if ( boost::optional<ThermalZone> thermalZone = this->thermalZone() ) {

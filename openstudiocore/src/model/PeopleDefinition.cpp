@@ -64,10 +64,13 @@ namespace detail {
     : SpaceLoadDefinition_Impl(other,model,keepHandle)
   {}
 
+  // TODO: remove
   const std::vector<std::string>& PeopleDefinition_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      // Not appropriate: output is listed in People instead
     }
     return result;
   }
@@ -92,12 +95,12 @@ namespace detail {
 
   boost::optional<double> PeopleDefinition_Impl::peopleperSpaceFloorArea() const {
     OptionalDouble value = getDouble(OS_People_DefinitionFields::PeopleperSpaceFloorArea,true);
-    if (istringEqual("People/Area", this->numberofPeopleCalculationMethod())) {    
+    if (istringEqual("People/Area", this->numberofPeopleCalculationMethod())) {
       OS_ASSERT(value);
     }
     return value;
   }
-  
+
   boost::optional<double> PeopleDefinition_Impl::spaceFloorAreaperPerson() const {
     OptionalDouble value = getDouble(OS_People_DefinitionFields::SpaceFloorAreaperPerson,true);
     if (istringEqual("Area/Person", this->numberofPeopleCalculationMethod())) {
@@ -105,7 +108,7 @@ namespace detail {
     }
     return value;
   }
-  
+
   double PeopleDefinition_Impl::fractionRadiant() const {
     OptionalDouble value = getDouble(OS_People_DefinitionFields::FractionRadiant,true);
     OS_ASSERT(value);
@@ -184,12 +187,12 @@ namespace detail {
         result = setString(OS_People_DefinitionFields::PeopleperSpaceFloorArea, "");
         OS_ASSERT(result);
         result = setString(OS_People_DefinitionFields::SpaceFloorAreaperPerson, "");
-        OS_ASSERT(result);                
+        OS_ASSERT(result);
       }
     } else {
       if (istringEqual("People", this->numberofPeopleCalculationMethod())){
         result = setDouble(OS_People_DefinitionFields::NumberofPeople, 0.0);
-      }      
+      }
     }
     return result;
   }
@@ -204,8 +207,8 @@ namespace detail {
         result = setString(OS_People_DefinitionFields::NumberofPeople, "");
         OS_ASSERT(result);
         result = setString(OS_People_DefinitionFields::SpaceFloorAreaperPerson, "");
-        OS_ASSERT(result);                
-      }      
+        OS_ASSERT(result);
+      }
     } else {
       if (istringEqual("People/Area", this->numberofPeopleCalculationMethod())){
         result = setDouble(OS_People_DefinitionFields::PeopleperSpaceFloorArea, 0.0);
@@ -213,7 +216,7 @@ namespace detail {
     }
     return result;
   }
-  
+
   bool PeopleDefinition_Impl::setSpaceFloorAreaperPerson(boost::optional<double> spaceFloorAreaperPerson) {
     bool result(false);
     if (spaceFloorAreaperPerson) {
@@ -224,7 +227,7 @@ namespace detail {
         result = setString(OS_People_DefinitionFields::NumberofPeople, "");
         OS_ASSERT(result);
         result = setString(OS_People_DefinitionFields::PeopleperSpaceFloorArea, "");
-        OS_ASSERT(result);      
+        OS_ASSERT(result);
       }
     } else {
       if (istringEqual("Area/Person", this->numberofPeopleCalculationMethod())){
@@ -233,7 +236,7 @@ namespace detail {
     }
     return result;
   }
-  
+
   bool PeopleDefinition_Impl::setFractionRadiant(double fractionRadiant) {
     return setDouble(OS_People_DefinitionFields::FractionRadiant,fractionRadiant);
   }
@@ -400,7 +403,7 @@ namespace detail {
 
     return false;
   }
-  
+
   std::vector<std::string> PeopleDefinition_Impl::numberofPeopleCalculationMethodValues() const {
     return PeopleDefinition::numberofPeopleCalculationMethodValues();
   }

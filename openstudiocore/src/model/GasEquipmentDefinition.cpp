@@ -84,10 +84,13 @@ namespace detail {
     : SpaceLoadDefinition_Impl(other,model,keepHandle)
   {}
 
+  // TODO: remove
   const std::vector<std::string>& GasEquipmentDefinition_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      // Not appropriate: output is listed in GasEquipment instead
     }
     return result;
   }
@@ -296,7 +299,7 @@ namespace detail {
     return 0.0;
   }
 
-  double GasEquipmentDefinition_Impl::getPowerPerFloorArea(double floorArea, 
+  double GasEquipmentDefinition_Impl::getPowerPerFloorArea(double floorArea,
                                                                      double numPeople) const
   {
     std::string method = designLevelCalculationMethod();
@@ -321,7 +324,7 @@ namespace detail {
     return 0.0;
   }
 
-  double GasEquipmentDefinition_Impl::getPowerPerPerson(double floorArea, 
+  double GasEquipmentDefinition_Impl::getPowerPerPerson(double floorArea,
                                                         double numPeople) const
   {
     std::string method = designLevelCalculationMethod();
@@ -345,9 +348,9 @@ namespace detail {
     OS_ASSERT(false);
     return 0.0;
   }
- 
+
   bool GasEquipmentDefinition_Impl::setDesignLevelCalculationMethod(const std::string& method,
-                                                                         double floorArea, 
+                                                                         double floorArea,
                                                                          double numPeople)
   {
     std::string wmethod(method);
@@ -362,7 +365,7 @@ namespace detail {
     else if (wmethod == "watts/person") {
       return setWattsperPerson(getPowerPerPerson(floorArea,numPeople));
     }
-    
+
     return false;
   }
 
@@ -490,8 +493,8 @@ double GasEquipmentDefinition::getPowerPerPerson(double floorArea, double numPeo
   return getImpl<detail::GasEquipmentDefinition_Impl>()->getPowerPerPerson(floorArea,numPeople);
 }
 
-bool GasEquipmentDefinition::setDesignLevelCalculationMethod(const std::string& method, 
-                                     double floorArea, 
+bool GasEquipmentDefinition::setDesignLevelCalculationMethod(const std::string& method,
+                                     double floorArea,
                                      double numPeople)
 {
   return getImpl<detail::GasEquipmentDefinition_Impl>()->setDesignLevelCalculationMethod(method,floorArea,numPeople);

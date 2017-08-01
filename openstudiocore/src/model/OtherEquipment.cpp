@@ -75,7 +75,32 @@ namespace detail {
   const std::vector<std::string>& OtherEquipment_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Other Equipment Fuel Rate");
+      result.push_back("Other Equipment Fuel Energy");
+      result.push_back("Other Equipment Radiant Heating Energy");
+      result.push_back("Other Equipment Radiant Heating Rate");
+      result.push_back("Other Equipment Convective Heating Energy");
+      result.push_back("Other Equipment Convective Heating Rate");
+      result.push_back("Other Equipment Latent Gain Energy");
+      result.push_back("Other Equipment Latent Gain Rate");
+      result.push_back("Other Equipment Lost Heat Energy");
+      result.push_back("Other Equipment Lost Heat Rate");
+      result.push_back("Other Equipment Total Heating Energy");
+      result.push_back("Other Equipment Total Heating Rate");
+
+      // Reported in ThermalZone
+      //result.push_back("Zone Other Equipment Radiant Heating Energy");
+      //result.push_back("Zone Other Equipment Radiant Heating Rate");
+      //result.push_back("Zone Other Equipment Convective Heating Energy");
+      //result.push_back("Zone Other Equipment Convective Heating Rate");
+      //result.push_back("Zone Other Equipment Latent Gain Energy");
+      //result.push_back("Zone Other Equipment Latent Gain Rate");
+      //result.push_back("Zone Other Equipment Lost Heat Energy");
+      //result.push_back("Zone Other Equipment Lost Heat Rate");
+      //result.push_back("Zone Other Equipment Total Heating Energy");
+      //result.push_back("Zone Other Equipment Total Heating Rate");
     }
     return result;
   }
@@ -98,7 +123,7 @@ namespace detail {
 
   bool OtherEquipment_Impl::hardSize() {
     OptionalSpace space = this->space();
-    if (!space) { 
+    if (!space) {
       return false;
     }
 

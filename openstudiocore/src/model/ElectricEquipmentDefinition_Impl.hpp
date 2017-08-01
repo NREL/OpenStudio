@@ -42,59 +42,53 @@ namespace detail {
 
   /** ElectricEquipmentDefinition_Impl is a SpaceLoadDefinition_Impl that is the implementation class for ElectricEquipmentDefinition.*/
   class MODEL_API ElectricEquipmentDefinition_Impl : public SpaceLoadDefinition_Impl {
-    
 
-    
 
-    
-    Q_PROPERTY(openstudio::OSOptionalQuantity designLevel_SI 
-               READ designLevel_SI 
+    Q_PROPERTY(openstudio::OSOptionalQuantity designLevel_SI
+               READ designLevel_SI
                WRITE setDesignLevel);
-    Q_PROPERTY(openstudio::OSOptionalQuantity designLevel_IP 
-               READ designLevel_IP 
+    Q_PROPERTY(openstudio::OSOptionalQuantity designLevel_IP
+               READ designLevel_IP
                WRITE setDesignLevel);
 
-    
-    Q_PROPERTY(openstudio::OSOptionalQuantity wattsperSpaceFloorArea_SI 
-               READ wattsperSpaceFloorArea_SI 
+
+    Q_PROPERTY(openstudio::OSOptionalQuantity wattsperSpaceFloorArea_SI
+               READ wattsperSpaceFloorArea_SI
                WRITE setWattsperSpaceFloorArea);
-    Q_PROPERTY(openstudio::OSOptionalQuantity wattsperSpaceFloorArea_IP 
-               READ wattsperSpaceFloorArea_IP 
+    Q_PROPERTY(openstudio::OSOptionalQuantity wattsperSpaceFloorArea_IP
+               READ wattsperSpaceFloorArea_IP
                WRITE setWattsperSpaceFloorArea);
 
-    
-    Q_PROPERTY(openstudio::OSOptionalQuantity wattsperPerson_SI 
-               READ wattsperPerson_SI 
+
+    Q_PROPERTY(openstudio::OSOptionalQuantity wattsperPerson_SI
+               READ wattsperPerson_SI
                WRITE setWattsperPerson);
-    Q_PROPERTY(openstudio::OSOptionalQuantity wattsperPerson_IP 
-               READ wattsperPerson_IP 
+    Q_PROPERTY(openstudio::OSOptionalQuantity wattsperPerson_IP
+               READ wattsperPerson_IP
                WRITE setWattsperPerson);
 
-    
-    
-    Q_PROPERTY(openstudio::Quantity fractionRadiant_SI 
-               READ fractionRadiant_SI 
+
+    Q_PROPERTY(openstudio::Quantity fractionRadiant_SI
+               READ fractionRadiant_SI
                WRITE setFractionRadiant);
-    Q_PROPERTY(openstudio::Quantity fractionRadiant_IP 
-               READ fractionRadiant_IP 
+    Q_PROPERTY(openstudio::Quantity fractionRadiant_IP
+               READ fractionRadiant_IP
                WRITE setFractionRadiant);
 
-    
-    
-    Q_PROPERTY(openstudio::Quantity fractionLatent_SI 
-               READ fractionLatent_SI 
+
+    Q_PROPERTY(openstudio::Quantity fractionLatent_SI
+               READ fractionLatent_SI
                WRITE setFractionLatent);
-    Q_PROPERTY(openstudio::Quantity fractionLatent_IP 
-               READ fractionLatent_IP 
+    Q_PROPERTY(openstudio::Quantity fractionLatent_IP
+               READ fractionLatent_IP
                WRITE setFractionLatent);
 
-    
-    
-    Q_PROPERTY(openstudio::Quantity fractionLost_SI 
-               READ fractionLost_SI 
+
+    Q_PROPERTY(openstudio::Quantity fractionLost_SI
+               READ fractionLost_SI
                WRITE setFractionLost);
-    Q_PROPERTY(openstudio::Quantity fractionLost_IP 
-               READ fractionLost_IP 
+    Q_PROPERTY(openstudio::Quantity fractionLost_IP
+               READ fractionLost_IP
                WRITE setFractionLost);
    public:
     /** @name Constructors and Destructors */
@@ -114,8 +108,9 @@ namespace detail {
 
     //@}
 
+    // TODO: Remove
     virtual const std::vector<std::string>& outputVariableNames() const override;
-    
+
     virtual IddObjectType iddObjectType() const override;
 
     // Attributes
@@ -176,23 +171,23 @@ namespace detail {
     /** @name Other */
     //@{
 
-    /** Returns the design level represented by this definition, assuming floorArea (m^2) and 
+    /** Returns the design level represented by this definition, assuming floorArea (m^2) and
      *  numPeople. */
     double getDesignLevel(double floorArea, double numPeople) const;
 
-    /** Returns the watts/m^2 represented by this definition, assuming floorArea (m^2) and 
+    /** Returns the watts/m^2 represented by this definition, assuming floorArea (m^2) and
      *  numPeople. */
     double getPowerPerFloorArea(double floorArea, double numPeople) const;
 
-    /** Returns the watts/person represented by this definition, assuming floorArea (m^2) and 
+    /** Returns the watts/person represented by this definition, assuming floorArea (m^2) and
      *  numPeople. */
     double getPowerPerPerson(double floorArea, double numPeople) const;
-   
-    /** If method is a \link validDesignLevelCalculationMethodValues valid design level 
-     *  calculation method \endlink, changes this definition to an equivalent power level, under 
+
+    /** If method is a \link validDesignLevelCalculationMethodValues valid design level
+     *  calculation method \endlink, changes this definition to an equivalent power level, under
      *  the assumptions of floorArea (m^2) and numPeople. */
-    bool setDesignLevelCalculationMethod(const std::string& method, 
-                                         double floorArea, 
+    bool setDesignLevelCalculationMethod(const std::string& method,
+                                         double floorArea,
                                          double numPeople);
 
     //@}
