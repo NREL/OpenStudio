@@ -39,9 +39,9 @@ class Schedule;
 namespace detail {
 
   class MODEL_API CoilCoolingWater_Impl : public WaterToAirComponent_Impl {
-    
 
-    
+
+
   public:
     /** @name Constructors and Destructors */
     //@{
@@ -69,6 +69,8 @@ namespace detail {
     virtual ModelObject clone(Model model) const override;
 
     virtual IddObjectType iddObjectType() const override;
+
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
@@ -154,7 +156,7 @@ namespace detail {
 
     void setHeatExchangerConfiguration( std::string value );
 
-  private:    
+  private:
     REGISTER_LOGGER("openstudio.model.CoilCoolingWater");
 
     boost::optional<ModelObject> availabilityScheduleAsModelObject() const;

@@ -74,6 +74,23 @@ namespace detail {
 
   CoilCoolingWater_Impl::~CoilCoolingWater_Impl(){}
 
+  const std::vector<std::string>& CoilCoolingWater_Impl::outputVariableNames() const
+  {
+    static std::vector<std::string> result;
+    if (result.empty())
+    {
+      result.push_back("Cooling Coil Total Cooling Energy");
+      result.push_back("Cooling Coil Sensible Cooling Energy");
+      result.push_back("Cooling Coil Total Cooling Rate");
+      result.push_back("Cooling Coil Sensible Cooling Rate");
+      result.push_back("Cooling Coil Wetted Area Fraction");
+      result.push_back("Cooling Coil Condensate Volume Flow Rate");
+      result.push_back("Cooling Coil Source Side Heat Transfer Energy");
+      result.push_back("Cooling Coil Condensate Volume");
+    }
+    return result;
+  }
+
   IddObjectType CoilCoolingWater_Impl::iddObjectType() const {
     return CoilCoolingWater::iddObjectType();
   }
@@ -307,14 +324,14 @@ namespace detail {
   {
     setString( openstudio::OS_Coil_Cooling_WaterFields::HeatExchangerConfiguration, value );
   }
-  
+
   bool CoilCoolingWater_Impl::addToNode(Node & node)
   {
     bool success;
-    
+
     success =  WaterToAirComponent_Impl::addToNode( node );
     auto t_containingZoneHVACComponent = containingZoneHVACComponent();
-    
+
     if( success && (! t_containingZoneHVACComponent) ) {
       if( auto t_waterInletModelObject = waterInletModelObject() ) {
         if( auto oldController = controllerWaterCoil() ) {
@@ -327,7 +344,7 @@ namespace detail {
         controller.setAction("Reverse");
       }
     }
-    
+
     return success;
   }
 

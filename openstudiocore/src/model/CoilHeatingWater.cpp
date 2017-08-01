@@ -92,10 +92,23 @@ namespace detail{
 
   CoilHeatingWater_Impl::~CoilHeatingWater_Impl(){}
 
+  const std::vector<std::string>& CoilHeatingWater_Impl::outputVariableNames() const
+  {
+    static std::vector<std::string> result;
+    if (result.empty())
+    {
+      result.push_back("Heating Coil Heating Energy");
+      result.push_back("Heating Coil Source Side Heat Transfer Energy");
+      result.push_back("Heating Coil Heating Rate");
+      result.push_back("Heating Coil U Factor Times Area Value");
+    }
+    return result;
+  }
+
   bool CoilHeatingWater_Impl::addToNode(Node & node)
   {
     bool success =  WaterToAirComponent_Impl::addToNode( node );
-    
+
     if( success && (! containingHVACComponent()) && (! containingZoneHVACComponent()) ) {
       if( boost::optional<ModelObject> _waterInletModelObject = waterInletModelObject() ) {
         if( auto oldController = controllerWaterCoil() ) {
@@ -557,7 +570,7 @@ CoilHeatingWater::CoilHeatingWater(const Model& model)
   : WaterToAirComponent(CoilHeatingWater::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::CoilHeatingWater_Impl>());
-  
+
   auto availableSchedule = model.alwaysOnDiscreteSchedule();
   setAvailableSchedule(availableSchedule);
 }

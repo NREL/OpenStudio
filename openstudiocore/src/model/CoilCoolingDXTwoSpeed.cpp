@@ -123,8 +123,44 @@ namespace detail{
 
   const std::vector<std::string>& CoilCoolingDXTwoSpeed_Impl::outputVariableNames() const
   {
+    // TODO: static for now
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Cooling Coil Total Cooling Rate");
+      result.push_back("Cooling Coil Total Cooling Energy");
+      result.push_back("Cooling Coil Sensible Cooling Rate");
+      result.push_back("Cooling Coil Sensible Cooling Energy");
+      result.push_back("Cooling Coil Latent Cooling Rate");
+      result.push_back("Cooling Coil Latent Cooling Energy");
+      result.push_back("Cooling Coil Electric Power");
+      result.push_back("Cooling Coil Electric Energy");
+      result.push_back("Cooling Coil Runtime Fraction");
+
+      // condenserType = [AirCooled, EvaporativelyCooled]
+      // if (this->condenserType() == "EvaporativelyCooled") {
+        result.push_back("Cooling Coil Condenser Inlet Temperature");
+        result.push_back("Cooling Coil Evaporative Condenser Water Volume");
+        result.push_back("Cooling Coil Evaporative Condenser Pump Electric Power");
+        result.push_back("Cooling Coil Evaporative Condenser Pump Electric Energy");
+        result.push_back("Cooling Coil Basin Heater Electric Power");
+        result.push_back("Cooling Coil Basin Heater Electric Energy");
+        result.push_back("Cooling Coil Evaporative Condenser Mains Supply Water Volume");
+      // }
+
+      // Storage tank isn't implemented
+      // if has storage tank:
+      // result.push_back("Cooling Coil Condensate Volume Flow Rate");
+      // result.push_back("Cooling Coil Condensate Volume");
+      //
+
+      // If not part of AirLoopHVAC:UnitaryHeatPump:AirToAir
+      // (if part of a heat pump, crankcase heater is reported only for the heating coil):
+      // if ( !this->containingHVACComponent().empty() ) {
+      // result.push_back("Cooling Coil Crankcase Heater Electric Power");
+      // result.push_back("Cooling Coil Crankcase Heater Electric Energy");
+      // }
+
     }
     return result;
   }
@@ -194,7 +230,7 @@ namespace detail{
 
   void CoilCoolingDXTwoSpeed_Impl::setRatedHighSpeedTotalCoolingCapacity( double value )
   {
-      setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::RatedHighSpeedTotalCoolingCapacity,value); 
+      setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::RatedHighSpeedTotalCoolingCapacity,value);
   }
 
 
@@ -862,7 +898,7 @@ CoilCoolingDXTwoSpeed::CoilCoolingDXTwoSpeed(const Model& model,
   //  A7 , \field Energy Input Ratio Function of Temperature Curve Name
   setEnergyInputRatioFunctionOfTemperatureCurve(energyInputRatioFofTemp);
   //  A8 , \field Energy Input Ratio Function of Flow Fraction Curve Name
-  setEnergyInputRatioFunctionOfFlowFractionCurve(energyInputRatioFofFlow); 
+  setEnergyInputRatioFunctionOfFlowFractionCurve(energyInputRatioFofFlow);
   //  A9 , \field Part Load Fraction Correlation Curve Name
   setPartLoadFractionCorrelationCurve(partLoadFraction);
   //  N5 , \field Rated Low Speed Total Cooling Capacity
@@ -876,7 +912,7 @@ CoilCoolingDXTwoSpeed::CoilCoolingDXTwoSpeed(const Model& model,
   //  A10, \field Low Speed Total Cooling Capacity Function of Temperature Curve Name
   setLowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve(lowSpeedCoolingCurveFofTemp);
   //  A11, \field Low Speed Energy Input Ratio Function of Temperature Curve Name
-  setLowSpeedEnergyInputRatioFunctionOfTemperatureCurve(lowSpeedEnergyInputRatioFofTemp);  
+  setLowSpeedEnergyInputRatioFunctionOfTemperatureCurve(lowSpeedEnergyInputRatioFofTemp);
   //  A13, \field Condenser Type
   setCondenserType("AirCooled");
   //   N9, \field High Speed Evaporative Condenser Effectiveness
@@ -987,14 +1023,14 @@ CoilCoolingDXTwoSpeed::CoilCoolingDXTwoSpeed(const Model& model)
   setTotalCoolingCapacityFunctionOfTemperatureCurve(coolingCurveFofTemp);
   setTotalCoolingCapacityFunctionOfFlowFractionCurve(coolingCurveFofFlow);
   setEnergyInputRatioFunctionOfTemperatureCurve(energyInputRatioFofTemp);
-  setEnergyInputRatioFunctionOfFlowFractionCurve(energyInputRatioFofFlow); 
+  setEnergyInputRatioFunctionOfFlowFractionCurve(energyInputRatioFofFlow);
   setPartLoadFractionCorrelationCurve(partLoadFraction);
   setRatedLowSpeedTotalCoolingCapacity(OptionalDouble());//autosize
   setRatedLowSpeedSensibleHeatRatio(0.69);//autosize
   setRatedLowSpeedCOP(3.0);
   setRatedHighSpeedAirFlowRate(OptionalDouble());//autosize
   setLowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve(coolingLowSpdCurveFofTemp);
-  setLowSpeedEnergyInputRatioFunctionOfTemperatureCurve(energyLowSpdInputRatioFofTemp);  
+  setLowSpeedEnergyInputRatioFunctionOfTemperatureCurve(energyLowSpdInputRatioFofTemp);
   setCondenserType("AirCooled");
   setHighSpeedEvaporativeCondenserEffectiveness(0.0);
   setHighSpeedEvaporativeCondenserAirFlowRate(boost::none);//autosize

@@ -77,8 +77,20 @@ namespace detail {
 
   const std::vector<std::string>& CoilCoolingDXVariableRefrigerantFlow_Impl::outputVariableNames() const
   {
+    // static for now, need to change if storage tank is implemented
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Cooling Coil Total Cooling Rate");
+      result.push_back("Cooling Coil Total Cooling Energy");
+      result.push_back("Cooling Coil Sensible Cooling Rate");
+      result.push_back("Cooling Coil Sensible Cooling Energy");
+      result.push_back("Cooling Coil Latent Cooling Rate");
+      result.push_back("Cooling Coil Latent Cooling Energy");
+      result.push_back("Cooling Coil Runtime Fraction");
+      // Storage tank isn't implemented
+      // result.push_back("Cooling Coil Condensate Volume Flow Rate");
+      // result.push_back("Cooling Coil Condensate Volume");
     }
     return result;
   }
@@ -230,7 +242,7 @@ namespace detail {
   boost::optional<Curve> CoilCoolingDXVariableRefrigerantFlow_Impl::optionalCoolingCapacityModifierCurveFunctionofFlowFraction() const {
     return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Cooling_DX_VariableRefrigerantFlowFields::CoolingCapacityModifierCurveFunctionofFlowFraction);
   }
-    
+
   ModelObject CoilCoolingDXVariableRefrigerantFlow_Impl::clone(Model model) const
   {
     CoilCoolingDXVariableRefrigerantFlow objectClone = HVACComponent_Impl::clone(model).cast<CoilCoolingDXVariableRefrigerantFlow>();
