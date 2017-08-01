@@ -55,6 +55,8 @@
 #include "AirLoopHVACUnitarySystem.hpp"
 #include "AirLoopHVACUnitarySystem_Impl.hpp"
 #include "Model.hpp"
+
+#include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Coil_Cooling_DX_SingleSpeed_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/core/Compare.hpp"
@@ -1450,8 +1452,7 @@ IddObjectType CoilCoolingDXSingleSpeed::iddObjectType() {
   return result;
 }
 
-std::vector<std::string> CoilCoolingDXSingleSpeed::condenserTypeValues()
-{
+std::vector<std::string> CoilCoolingDXSingleSpeed::condenserTypeValues() const {
   return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
                         OS_Coil_Cooling_DX_SingleSpeedFields::CondenserType);
 }
