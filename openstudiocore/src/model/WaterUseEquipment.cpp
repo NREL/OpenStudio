@@ -73,7 +73,36 @@ namespace detail {
   const std::vector<std::string>& WaterUseEquipment_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Water Use Equipment Hot Water Mass Flow Rate");
+      result.push_back("Water Use Equipment Cold Water Mass Flow Rate");
+      result.push_back("Water Use Equipment Total Mass Flow Rate");
+      result.push_back("Water Use Equipment Hot Water Volume Flow Rate");
+      result.push_back("Water Use Equipment Cold Water Volume Flow Rate");
+      result.push_back("Water Use Equipment Total Volume Flow Rate");
+      result.push_back("Water Use Equipment Hot Water Volume");
+      result.push_back("Water Use Equipment Cold Water Volume");
+      result.push_back("Water Use Equipment Total Volume");
+      result.push_back("Water Use Equipment Mains Water Volume");
+      result.push_back("Water Use Equipment Hot Water Temperature");
+      result.push_back("Water Use Equipment Cold Water Temperature");
+      result.push_back("Water Use Equipment Target Water Temperature");
+      result.push_back("Water Use Equipment Mixed Water Temperature");
+      result.push_back("Water Use Equipment Drain Water Temperature");
+      result.push_back("Water Use Equipment Heating Rate");
+      result.push_back("Water Use Equipment Heating Energy");
+
+      // The Key is the name of the Water Use Equipment, not the zone,
+      // so it's appropriate to report it here rather than the ThermalZone
+      // cf EnergyPlus/WaterUse.cc
+      result.push_back("Water Use Equipment Zone Sensible Heat Gain Rate");
+      result.push_back("Water Use Equipment Zone Sensible Heat Gain Energy");
+      result.push_back("Water Use Equipment Zone Latent Gain Rate");
+      result.push_back("Water Use Equipment Zone Latent Gain Energy");
+      result.push_back("Water Use Equipment Zone Moisture Gain Mass Flow Rate");
+      result.push_back("Water Use Equipment Zone Moisture Gain Mass");
+
     }
     return result;
   }
@@ -165,14 +194,14 @@ namespace detail {
       c->removeWaterUseEquipment(e);
     }
 
-    return ModelObject_Impl::remove();    
+    return ModelObject_Impl::remove();
   }
 
   WaterUseEquipmentDefinition WaterUseEquipment_Impl::waterUseEquipmentDefinition() const
   {
     return definition().cast<WaterUseEquipmentDefinition>();
   }
-  
+
   bool WaterUseEquipment_Impl::setWaterUseEquipmentDefinition(const WaterUseEquipmentDefinition & definition)
   {
     return setPointer(OS_WaterUse_EquipmentFields::WaterUseEquipmentDefinitionName, definition.handle());
