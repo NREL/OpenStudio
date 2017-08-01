@@ -85,7 +85,12 @@ namespace detail {
   const std::vector<std::string>& GeneratorFuelSupply_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      // Key actually used is the FuelCell itself
+      //result.push_back("Generator Fuel Compressor Electric Power");
+      //result.push_back("Generator Fuel Compressor Electric Energy");
+      //result.push_back("Generator Fuel Compressor Skin Heat Loss Rate");
     }
     return result;
   }
