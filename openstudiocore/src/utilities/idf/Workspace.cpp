@@ -1941,7 +1941,7 @@ namespace detail {
       found = found2;
       spacer = "_";
     }
-    
+
     if ( found != string::npos ) {
       std::string strSuffix = objectName.substr(found+1);
       const char *p = strSuffix.c_str();
@@ -1958,7 +1958,7 @@ namespace detail {
   }
 
   std::string Workspace_Impl::getBaseName(const std::string& objectName) const {
- 
+
     std::size_t found1 = objectName.find_last_of(' ');
     std::size_t found2 = objectName.find_last_of('_');
     std::size_t found = string::npos;
@@ -1969,7 +1969,7 @@ namespace detail {
     } else if (found2 != string::npos) {
       found = found2;
     }
-    
+
     if ( found != string::npos ) {
       std::string strSuffix = objectName.substr(found+1);
       const char *p = strSuffix.c_str();
@@ -2463,7 +2463,7 @@ namespace detail {
             {
               origpath = toPath(url->toLocalFile());
             } else {
-              // DLM: When using QUrl constructor from a string as in getURL, QUrl will assume the 
+              // DLM: When using QUrl constructor from a string as in getURL, QUrl will assume the
               // drive letter in any file path is a scheme and automatically convert the scheme to lower case
               boost::optional<std::string> rawString = workspaceObject.getString(i);
               if (rawString && istringEqual(*rawString, url->toString().toStdString())){
@@ -2766,6 +2766,8 @@ Workspace Workspace::cloneSubset(const std::vector<Handle>& handles,
 }
 
 void Workspace::swap(Workspace& other) {
+  // TODO: warning: expression with side effects will be evaluated despite being used
+  // as an operand to ‘typeid’ [-Wpotentially-evaluated-expression]
   if (typeid(*(m_impl.get())) != typeid(*(other.m_impl.get()))) {
     LOG_AND_THROW("Workspaces can only be swapped if they are both of the same type "
                   << "(both Workspaces, both Models, or both Components).");
@@ -3035,7 +3037,7 @@ bool Workspace::connectProgressBar(openstudio::ProgressBar& progressBar)
 // disconnect a progress bar
 bool Workspace::disconnectProgressBar(openstudio::ProgressBar& progressBar)
 {
-  
+
   m_impl.get()->progressRange.disconnect<ProgressBar, &ProgressBar::setRange>(&progressBar);
   m_impl.get()->progressValue.disconnect<ProgressBar, &ProgressBar::setValue>(&progressBar);
   m_impl.get()->progressCaption.disconnect<ProgressBar, &ProgressBar::setWindowTitle>(&progressBar);

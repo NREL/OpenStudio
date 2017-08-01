@@ -294,7 +294,6 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_DefaultsSettersGetters) {
 
 }
 
-// TODO: Do I need to test the Generator:icroTurbine:HeatRecovery here or in its own file?
 TEST_F(ModelFixture, GeneratorMicroTurbine_HeatRecovery) {
 
   //create a model to use in testing this code.

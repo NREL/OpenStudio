@@ -70,7 +70,8 @@ namespace detail {
 
   const std::vector<std::string>& ChillerAbsorptionIndirect_Impl::outputVariableNames() const
   {
-    std::vector<std::string> result;
+    // static until ModelObject return type is changed for outputvariableNames
+    static std::vector<std::string> result;
 
     // Common variables
     result.push_back("Chiller Electric Power");
@@ -89,24 +90,25 @@ namespace detail {
     result.push_back("Chiller Part-Load Ratio");
     result.push_back("Chiller Cycling Ratio");
 
+    // TODO: add proper tests once the ModelObject return type is changed.
     // Generator = Hot Water
-    if (this->generatorHeatSourceType() == "HotWater")
-    {
+    //if (this->generatorHeatSourceType() == "HotWater")
+    //{
       result.push_back("Chiller Source Hot Water Rate");
       result.push_back("Chiller Source Hot Water Energy");
       result.push_back("Chiller Hot Water Mass Flow Rate");
-    }
+    //}
     //
     // Generator = Steam
     // generatorHeatSourceType == 'Steam'
-    if (this->generatorHeatSourceType() == "Steam")
-    {
+    //if (this->generatorHeatSourceType() == "Steam")
+    //{
       result.push_back("Chiller Source Steam Rate");
       result.push_back("Chiller Source Steam Energy");
       result.push_back("Chiller Steam Mass Flow Rate");
       result.push_back("Chiller Steam Heat Loss Rate");
 
-    }
+    //}
     return result;
   }
 
