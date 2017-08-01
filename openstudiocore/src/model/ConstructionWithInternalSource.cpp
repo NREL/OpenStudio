@@ -66,7 +66,10 @@ namespace detail {
   const std::vector<std::string>& ConstructionWithInternalSource_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Surface Internal Source Location Temperature");
+      result.push_back("Surface Internal User Specified Location Temperature");
     }
     return result;
   }
@@ -134,7 +137,7 @@ namespace detail {
   bool ConstructionWithInternalSource_Impl::setTemperatureCalculationRequestedAfterLayerNumber(int temperatureCalculationRequestedAfterLayerNumber) {
     if (temperatureCalculationRequestedAfterLayerNumber < 1 || temperatureCalculationRequestedAfterLayerNumber > (int)this->numLayers()){
       return false;
-    }    
+    }
     bool result = setInt(OS_Construction_InternalSourceFields::TemperatureCalculationRequestedAfterLayerNumber,temperatureCalculationRequestedAfterLayerNumber);
     return result;
   }
@@ -201,7 +204,7 @@ namespace detail {
 
     Model model = this->model();
     for (const ConstructionWithInternalSource& other : model.getConcreteModelObjects<ConstructionWithInternalSource>()) {
-      
+
       if (other.sourcePresentAfterLayerNumber() != reverseSourcePresentAfterLayerNumber){
         continue;
       }

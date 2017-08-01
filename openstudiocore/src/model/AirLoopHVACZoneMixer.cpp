@@ -71,7 +71,7 @@ namespace detail {
   {
     static std::vector<std::string> result;
     if (result.empty()){
-      // No variables available
+      // Not Appropriate: No variables available
     }
     return result;
   }
