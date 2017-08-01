@@ -77,7 +77,16 @@ namespace detail {
   const std::vector<std::string>& PipeIndoor_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Pipe Fluid Heat Transfer Rate");
+      result.push_back("Pipe Ambient Heat Transfer Rate");
+      result.push_back("Pipe Fluid Heat Transfer Energy");
+      result.push_back("Pipe Ambient Heat Transfer Energy");
+      result.push_back("Pipe Mass Flow Rate");
+      result.push_back("Pipe Inlet Temperature");
+      result.push_back("Pipe Outlet Temperature");
+      result.push_back("Pipe Volume Flow Rate");
     }
     return result;
   }
