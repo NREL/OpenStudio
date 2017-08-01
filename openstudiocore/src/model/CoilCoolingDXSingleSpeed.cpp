@@ -129,11 +129,48 @@ namespace detail{
   // Get all output variable names that could be associated with this object.
   const std::vector<std::string>& CoilCoolingDXSingleSpeed_Impl::outputVariableNames() const
   {
+    // TODO: static for now
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Cooling Coil Total Cooling Rate");
+      result.push_back("Cooling Coil Total Cooling Energy");
+      result.push_back("Cooling Coil Sensible Cooling Rate");
+      result.push_back("Cooling Coil Sensible Cooling Energy");
+      result.push_back("Cooling Coil Latent Cooling Rate");
+      result.push_back("Cooling Coil Latent Cooling Energy");
+      result.push_back("Cooling Coil Electric Power");
+      result.push_back("Cooling Coil Electric Energy");
+      result.push_back("Cooling Coil Runtime Fraction");
+
+      // condenserType = [AirCooled, EvaporativelyCooled]
+      // if (this->condenserType() == "EvaporativelyCooled") {
+        result.push_back("Cooling Coil Condenser Inlet Temperature");
+        result.push_back("Cooling Coil Evaporative Condenser Water Volume");
+        result.push_back("Cooling Coil Evaporative Condenser Pump Electric Power");
+        result.push_back("Cooling Coil Evaporative Condenser Pump Electric Energy");
+        result.push_back("Cooling Coil Basin Heater Electric Power");
+        result.push_back("Cooling Coil Basin Heater Electric Energy");
+        result.push_back("Cooling Coil Evaporative Condenser Mains Supply Water Volume");
+      // }
+
+      // Storage tank isn't implemented
+      // if has storage tank:
+      // result.push_back("Cooling Coil Condensate Volume Flow Rate");
+      // result.push_back("Cooling Coil Condensate Volume");
+      //
+
+      // If not part of AirLoopHVAC:UnitaryHeatPump:AirToAir
+      // (if part of a heat pump, crankcase heater is reported only for the heating coil):
+      // if ( !this->containingHVACComponent().empty() ) {
+      // result.push_back("Cooling Coil Crankcase Heater Electric Power");
+      // result.push_back("Cooling Coil Crankcase Heater Electric Energy");
+      // }
+
     }
     return result;
   }
+
 
   IddObjectType CoilCoolingDXSingleSpeed_Impl::iddObjectType() const {
     return CoilCoolingDXSingleSpeed::iddObjectType();
@@ -547,7 +584,7 @@ namespace detail{
   {
     setDouble(OS_Coil_Cooling_DX_SingleSpeedFields::BasinHeaterCapacity,value.get());
   }
-  
+
   void CoilCoolingDXSingleSpeed_Impl::setBasinHeaterCapacity( double value )
   {
     setDouble(OS_Coil_Cooling_DX_SingleSpeedFields::BasinHeaterCapacity,value);
@@ -1411,6 +1448,12 @@ void CoilCoolingDXSingleSpeed::resetBasinHeaterOperatingSchedule() {
 IddObjectType CoilCoolingDXSingleSpeed::iddObjectType() {
   IddObjectType result(IddObjectType::OS_Coil_Cooling_DX_SingleSpeed);
   return result;
+}
+
+std::vector<std::string> CoilCoolingDXSingleSpeed::condenserTypeValues()
+{
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                        OS_Coil_Cooling_DX_SingleSpeedFields::CondenserType);
 }
 
 boost::optional<double> CoilCoolingDXSingleSpeed::ratedTotalCoolingCapacity() const {
