@@ -238,11 +238,17 @@ TEST_F(ModelFixture, CentralHeatPumpSystem_Clone)
   //ASSERT_EQ(2,mchpClone.electricalEfficiencyFunctionofTemperatureCurve().cast<CurveCubic>().coefficient1Constant());
   //ASSERT_EQ(3,mchpClone.electricalEfficiencyFunctionofPartLoadRatioCurve().cast<CurveCubic>().coefficient1Constant());
 
+  CentralHeatPumpSystem  central_hpClone1 = central_hp.clone(model).cast<CentralHeatPumpSystem>();
+
   // Add a CentralHeatPumpSystemModule and clone again
-  // Clear the modules first
+  // Clear the modules first, just in case
   central_hp.removeAllModules();
   CentralHeatPumpSystemModule central_hp_module(model);
   central_hp.addModule(central_hp_module);
+  ASSERT_EQ(1, central_hp.modules().size());
+  // This fails!
+  ASSERT_EQ(0, central_hpClone1.modules().size());
+
 
   // Clone in same model and verify that the CentralHeatPumpSystemModule is also cloned
   CentralHeatPumpSystem  central_hpClone1 = central_hp.clone(model).cast<CentralHeatPumpSystem>();
