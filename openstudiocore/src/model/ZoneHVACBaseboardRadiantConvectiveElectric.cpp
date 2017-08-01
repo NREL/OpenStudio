@@ -75,7 +75,12 @@ namespace detail {
   const std::vector<std::string>& ZoneHVACBaseboardRadiantConvectiveElectric_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Baseboard Total Heating Rate");
+      result.push_back("Baseboard Total Heating Energy");
+      result.push_back("Baseboard Electric Energy");
+      result.push_back("Baseboard Electric Power");
     }
     return result;
   }
@@ -147,8 +152,8 @@ namespace detail {
     }
   }
 
-  std::vector<Surface> ZoneHVACBaseboardRadiantConvectiveElectric_Impl::surfaces() const {    
-    
+  std::vector<Surface> ZoneHVACBaseboardRadiantConvectiveElectric_Impl::surfaces() const {
+
     //vector to hold all of the surfaces that this radiant system is attached to
     std::vector<Surface> surfaces;
 
@@ -157,12 +162,12 @@ namespace detail {
 
       //loop through all the spaces in this zone
       for (auto const & space : thermalZone->spaces()){
-    
+
         //loop through all the surfaces in this space
         for (auto const & surface : space.surfaces()){
           surfaces.push_back(surface);
         }
-      }    
+      }
     }
 
     return surfaces;

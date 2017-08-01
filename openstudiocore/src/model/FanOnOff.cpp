@@ -99,6 +99,10 @@ namespace detail {
     static std::vector<std::string> result;
     if (result.empty())
     {
+      result.push_back("Fan Electric Power");
+      result.push_back("Fan Rise in Air Temperature");
+      result.push_back("Fan Electric Energy");
+      result.push_back("Fan Runtime Fraction");
     }
     return result;
   }

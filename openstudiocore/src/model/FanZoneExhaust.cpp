@@ -81,7 +81,13 @@ namespace detail {
   const std::vector<std::string>& FanZoneExhaust_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Fan Electric Power");
+      result.push_back("Fan Rise in Air Temperature");
+      result.push_back("Fan Electric Energy");
+      result.push_back("Fan Unbalanced Air Mass Flow Rate");
+      result.push_back("Fan Balanced Air Mass Flow Rate");
     }
     return result;
   }
@@ -113,7 +119,7 @@ namespace detail {
     }
     return result;
   }
-  
+
   boost::optional<ThermalZone> FanZoneExhaust_Impl::thermalZone()
   {
     boost::optional<ThermalZone> result;
@@ -136,8 +142,8 @@ namespace detail {
     }
 
     return result;
-  }  
-  
+  }
+
   bool FanZoneExhaust_Impl::addToThermalZone(ThermalZone & thermalZone)
   {
     Model m = this->model();
@@ -165,7 +171,7 @@ namespace detail {
 
     m.connect(exhaustNode,exhaustNode.outletPort(),mo,this->inletPort());
 
-    // Node (Exhaust Fan Outlet Node) 
+    // Node (Exhaust Fan Outlet Node)
 
     Node exhaustFanOutletNode(m);
 
@@ -205,7 +211,7 @@ namespace detail {
   {
     return OS_Fan_ZoneExhaustFields::AirOutletNodeName;
   }
-  
+
   std::string FanZoneExhaust_Impl::endUseSubcategory() const {
     boost::optional<std::string> value = getString(OS_Fan_ZoneExhaustFields::EndUseSubcategory,true);
     OS_ASSERT(value);

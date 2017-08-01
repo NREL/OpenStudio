@@ -119,6 +119,8 @@ namespace detail {
 
     bool isPrimaryDesignAirFlowRateAutosized() const;
 
+    // TODO: Water Supply Storage Tank Name
+
     //@}
     /** @name Setters */
     //@{

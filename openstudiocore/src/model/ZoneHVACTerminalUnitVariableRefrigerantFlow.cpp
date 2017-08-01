@@ -81,7 +81,25 @@ namespace detail {
   const std::vector<std::string>& ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Zone VRF Air Terminal Total Cooling Rate");
+      result.push_back("Zone VRF Air Terminal Total Cooling Energy");
+      result.push_back("Zone VRF Air Terminal Sensible Cooling Rate");
+      result.push_back("Zone VRF Air Terminal Sensible Cooling Energy");
+      result.push_back("Zone VRF Air Terminal Latent Cooling Rate");
+      result.push_back("Zone VRF Air Terminal Latent Cooling Energy");
+      result.push_back("Zone VRF Air Terminal Total Heating Rate");
+      result.push_back("Zone VRF Air Terminal Total Heating Energy");
+      result.push_back("Zone VRF Air Terminal Sensible Heating Rate");
+      result.push_back("Zone VRF Air Terminal Sensible Heating Energy");
+      result.push_back("Zone VRF Air Terminal Latent Heating Rate");
+      result.push_back("Zone VRF Air Terminal Latent Heating Energy");
+      result.push_back("Zone VRF Air Terminal Cooling Electric Power");
+      result.push_back("Zone VRF Air Terminal Cooling Electric Energy");
+      result.push_back("Zone VRF Air Terminal Heating Electric Power");
+      result.push_back("Zone VRF Air Terminal Heating Electric Energy");
+      result.push_back("Zone VRF Air Terminal Fan Availability Status");
     }
     return result;
   }
@@ -494,7 +512,7 @@ ZoneHVACTerminalUnitVariableRefrigerantFlow::ZoneHVACTerminalUnitVariableRefrige
   getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setSupplyAirFan(fan);
 }
 
-ZoneHVACTerminalUnitVariableRefrigerantFlow::ZoneHVACTerminalUnitVariableRefrigerantFlow(const Model& model, 
+ZoneHVACTerminalUnitVariableRefrigerantFlow::ZoneHVACTerminalUnitVariableRefrigerantFlow(const Model& model,
   const CoilCoolingDXVariableRefrigerantFlow & coolingCoil,
   const CoilHeatingDXVariableRefrigerantFlow & heatingCoil,
   const HVACComponent & fan)

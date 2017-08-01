@@ -141,7 +141,26 @@ namespace detail {
   const std::vector<std::string>& ZoneHVACLowTempRadiantConstFlow_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Zone Radiant HVAC Heating Rate");
+      result.push_back("Zone Radiant HVAC Heating Energy");
+      result.push_back("Zone Radiant HVAC Cooling Rate");
+      result.push_back("Zone Radiant HVAC Cooling Energy");
+      result.push_back("Zone Radiant HVAC Mass Flow Rate");
+      result.push_back("Zone Radiant HVAC Injection Mass Flow Rate");
+      result.push_back("Zone Radiant HVAC Recirculation Mass Flow Rate");
+      result.push_back("Zone Radiant HVAC Inlet Temperature");
+      result.push_back("Zone Radiant HVAC Outlet Temperature");
+      result.push_back("Zone Radiant HVAC Pump Inlet Temperature");
+      result.push_back("Zone Radiant HVAC Pump Electric Power");
+      result.push_back("Zone Radiant HVAC Pump Electric Energy");
+      result.push_back("Zone Radiant HVAC Pump Mass Flow Rate");
+      result.push_back("Zone Radiant HVAC Pump Fluid Heat Gain Rate");
+      result.push_back("Zone Radiant HVAC Pump Fluid Heat Gain Energy");
+      result.push_back("Zone Radiant HVAC Moisture Condensation Time");
+      result.push_back("Zone Radiant HVAC Cooling Fluid Heat Transfer Energy");
+      result.push_back("Zone Radiant HVAC Heating Fluid Heat Transfer Energy");
     }
     return result;
   }
@@ -207,8 +226,8 @@ namespace detail {
     return getString(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::RadiantSurfaceType,true);
   }
 
-  std::vector<Surface> ZoneHVACLowTempRadiantConstFlow_Impl::surfaces() const {    
-    
+  std::vector<Surface> ZoneHVACLowTempRadiantConstFlow_Impl::surfaces() const {
+
     //vector to hold all of the surfaces that this radiant system is attached to
     std::vector<Surface> surfaces;
 
@@ -217,13 +236,13 @@ namespace detail {
 
       //loop through all the spaces in this zone
       for (const Space& space : thermalZone->spaces()){
-    
+
         //loop through all the surfaces in this space
         for (const Surface& surface : space.surfaces()){
 
           //skip surfaces whose construction is not internal source
           if(boost::optional<ConstructionWithInternalSource> construction = surface.construction()->optionalCast<ConstructionWithInternalSource>()){
-        
+
             //TODO change this to not optional when idd change is made
             //get the strings for requested surface types and current surface type
             std::string surfGrpName = this->radiantSurfaceType().get();
@@ -244,7 +263,7 @@ namespace detail {
             }
           }
         }
-      }    
+      }
     }
 
     return surfaces;
@@ -333,7 +352,7 @@ namespace detail {
   std::string ZoneHVACLowTempRadiantConstFlow_Impl::numberofCircuits() const {
     boost::optional<std::string> value = getString(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::NumberofCircuits,true);
     OS_ASSERT(value);
-    return value.get();    
+    return value.get();
   }
 
   double ZoneHVACLowTempRadiantConstFlow_Impl::circuitLength() const {
@@ -568,7 +587,7 @@ namespace detail {
   }
 } // detail
 
-ZoneHVACLowTempRadiantConstFlow::ZoneHVACLowTempRadiantConstFlow(const Model& model, 
+ZoneHVACLowTempRadiantConstFlow::ZoneHVACLowTempRadiantConstFlow(const Model& model,
                                                                  Schedule& availabilitySchedule,
                                                                  HVACComponent& heatingCoil,
                                                                  HVACComponent& coolingCoil,

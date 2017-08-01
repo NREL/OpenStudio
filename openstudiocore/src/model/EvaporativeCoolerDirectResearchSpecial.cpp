@@ -70,7 +70,20 @@ namespace detail{
   const std::vector<std::string>& EvaporativeCoolerDirectResearchSpecial_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Evaporative Cooler Electric Power");
+      result.push_back("Evaporative Cooler Stage Effectiveness");
+      result.push_back("Evaporative Cooler Electric Energy");
+      result.push_back("Evaporative Cooler Water Volume");
+      result.push_back("Evaporative Cooler Mains Water Volume");
+
+      // Doc doesn't specify, but 95% sure this is only
+      // If Supply Water Storage Tank Name is specified:
+      // TODO: if storage tank gets implemented
+      //result.push_back("Evaporative Cooler Storage Tank Water Volume");
+      //result.push_back("Evaporative Cooler Starved Water Volume");
+      //result.push_back("Evaporative Cooler Starved Mains Water Volume");
     }
     return result;
   }
@@ -91,12 +104,12 @@ namespace detail{
     return result;
   }
 
-  unsigned EvaporativeCoolerDirectResearchSpecial_Impl::inletPort() 
+  unsigned EvaporativeCoolerDirectResearchSpecial_Impl::inletPort()
   {
     return OS_EvaporativeCooler_Direct_ResearchSpecialFields::AirInletNodeName;
   }
 
-  unsigned EvaporativeCoolerDirectResearchSpecial_Impl::outletPort() 
+  unsigned EvaporativeCoolerDirectResearchSpecial_Impl::outletPort()
   {
     return OS_EvaporativeCooler_Direct_ResearchSpecialFields::AirOutletNodeName;
   }
@@ -140,7 +153,7 @@ namespace detail{
     OS_ASSERT(value);
     return value.get();
   }
-  
+
   bool EvaporativeCoolerDirectResearchSpecial_Impl::setAvailabilitySchedule(Schedule& schedule) {
     bool result = setSchedule(OS_EvaporativeCooler_Direct_ResearchSpecialFields::AvailabilityScheduleName,
                               "EvaporativeCoolerDirectResearchSpecial",
@@ -148,22 +161,22 @@ namespace detail{
                               schedule);
     return result;
   }
-  
+
   double EvaporativeCoolerDirectResearchSpecial_Impl::coolerEffectiveness() const
   {
     return this->getDouble(OS_EvaporativeCooler_Direct_ResearchSpecialFields::CoolerEffectiveness).get();
   }
-  
+
   void EvaporativeCoolerDirectResearchSpecial_Impl::setCoolerEffectiveness( double value )
   {
     this->setDouble(OS_EvaporativeCooler_Direct_ResearchSpecialFields::CoolerEffectiveness,value);
   }
-  
+
   boost::optional<double> EvaporativeCoolerDirectResearchSpecial_Impl::recirculatingWaterPumpPowerConsumption() const
   {
     return this->getDouble(OS_EvaporativeCooler_Direct_ResearchSpecialFields::RecirculatingWaterPumpPowerConsumption);
   }
-  
+
   void EvaporativeCoolerDirectResearchSpecial_Impl::setRecirculatingWaterPumpPowerConsumption( double value )
   {
     this->setDouble(OS_EvaporativeCooler_Direct_ResearchSpecialFields::RecirculatingWaterPumpPowerConsumption,value);
@@ -188,7 +201,7 @@ namespace detail{
   {
     return this->getDouble(OS_EvaporativeCooler_Direct_ResearchSpecialFields::PrimaryAirDesignFlowRate);
   }
-  
+
   void EvaporativeCoolerDirectResearchSpecial_Impl::setPrimaryAirDesignFlowRate( double value )
   {
     this->setDouble(OS_EvaporativeCooler_Direct_ResearchSpecialFields::PrimaryAirDesignFlowRate,value);
@@ -208,41 +221,41 @@ namespace detail{
     }
     return result;
   }
-  
+
   boost::optional<Node> EvaporativeCoolerDirectResearchSpecial_Impl::sensorNode() const
   {
     boost::optional<WorkspaceObject> wo = this->getTarget(OS_EvaporativeCooler_Direct_ResearchSpecialFields::SensorNodeName);
 
     if( wo )
     {
-      return wo->optionalCast<Node>();      
+      return wo->optionalCast<Node>();
     }
     else
     {
       return boost::optional<Node>();
     }
   }
-  
+
   void EvaporativeCoolerDirectResearchSpecial_Impl::setSensorNode( const Node & node )
   {
     this->setPointer(OS_EvaporativeCooler_Direct_ResearchSpecialFields::SensorNodeName,node.handle());
   }
-  
+
   double EvaporativeCoolerDirectResearchSpecial_Impl::driftLossFraction() const
   {
     return this->getDouble(OS_EvaporativeCooler_Direct_ResearchSpecialFields::DriftLossFraction).get();
   }
-  
+
   void EvaporativeCoolerDirectResearchSpecial_Impl::setDriftLossFraction( double value )
   {
     this->setDouble(OS_EvaporativeCooler_Direct_ResearchSpecialFields::DriftLossFraction,value);
   }
-  
+
   double EvaporativeCoolerDirectResearchSpecial_Impl::blowdownConcentrationRatio() const
   {
     return this->getDouble(OS_EvaporativeCooler_Direct_ResearchSpecialFields::BlowdownConcentrationRatio).get();
   }
-  
+
   void EvaporativeCoolerDirectResearchSpecial_Impl::setBlowdownConcentrationRatio( double value )
   {
     this->setDouble(OS_EvaporativeCooler_Direct_ResearchSpecialFields::BlowdownConcentrationRatio,value);
@@ -305,7 +318,7 @@ namespace detail{
 
 // create a new EvaporativeCoolerDirectResearchSpecial object in the model's workspace
 EvaporativeCoolerDirectResearchSpecial::EvaporativeCoolerDirectResearchSpecial(const Model& model,Schedule & schedule)
-  : StraightComponent(EvaporativeCoolerDirectResearchSpecial::iddObjectType(),model) 
+  : StraightComponent(EvaporativeCoolerDirectResearchSpecial::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::EvaporativeCoolerDirectResearchSpecial_Impl>());
 

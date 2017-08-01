@@ -95,7 +95,11 @@ namespace detail {
   const std::vector<std::string>& FanConstantVolume_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Fan Electric Power");
+      result.push_back("Fan Rise in Air Temperature");
+      result.push_back("Fan Electric Energy");
     }
     return result;
   }
@@ -217,7 +221,7 @@ namespace detail {
           fanCount += subsetCastVector<FanVariableVolume>(oaSystem->components()).size();
         }
 
-        if( StraightComponent_Impl::addToNode(node) ) 
+        if( StraightComponent_Impl::addToNode(node) )
         {
           SetpointManagerMixedAir::updateFanInletOutletNodes(airLoop.get());
           return true;

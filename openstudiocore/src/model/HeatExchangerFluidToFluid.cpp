@@ -79,7 +79,18 @@ namespace detail {
   const std::vector<std::string>& HeatExchangerFluidToFluid_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Fluid Heat Exchanger Heat Transfer Rate");
+      result.push_back("Fluid Heat Exchanger Heat Transfer Energy");
+      result.push_back("Fluid Heat Exchanger Loop Supply Side Mass Flow Rate");
+      result.push_back("Fluid Heat Exchanger Loop Supply Side Inlet Temperature");
+      result.push_back("Fluid Heat Exchanger Loop Supply Side Outlet Temperature");
+      result.push_back("Fluid Heat Exchanger Loop Demand Side Mass Flow Rate");
+      result.push_back("Fluid Heat Exchanger Loop Demand Side Inlet Temperature");
+      result.push_back("Fluid Heat Exchanger Loop Demand Side Outlet Temperature");
+      result.push_back("Fluid Heat Exchanger Operation Status");
+      result.push_back("Fluid Heat Exchanger Effectiveness");
     }
     return result;
   }

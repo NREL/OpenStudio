@@ -70,7 +70,12 @@ namespace detail {
   const std::vector<std::string>& ZoneHVACBaseboardConvectiveElectric_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Baseboard Total Heating Rate");
+      result.push_back("Baseboard Total Heating Energy");
+      result.push_back("Baseboard Electric Energy");
+      result.push_back("Baseboard Electric Power");
     }
     return result;
   }
@@ -235,7 +240,7 @@ namespace detail {
   {
     return 0; // this object has no inlet or outlet node
   }
-  
+
   boost::optional<ThermalZone> ZoneHVACBaseboardConvectiveElectric_Impl::thermalZone()
   {
     ModelObject thisObject = this->getObject<ModelObject>();
@@ -251,7 +256,7 @@ namespace detail {
     }
     return boost::none;
   }
-  
+
   bool ZoneHVACBaseboardConvectiveElectric_Impl::addToThermalZone(ThermalZone & thermalZone)
   {
     Model m = this->model();
@@ -274,7 +279,7 @@ namespace detail {
 
     return true;
   }
-  
+
   void ZoneHVACBaseboardConvectiveElectric_Impl::removeFromThermalZone()
   {
     if ( boost::optional<ThermalZone> thermalZone = this->thermalZone() ) {
@@ -357,7 +362,7 @@ bool ZoneHVACBaseboardConvectiveElectric::setEfficiency(const Quantity& efficien
 void ZoneHVACBaseboardConvectiveElectric::resetEfficiency() {
   getImpl<detail::ZoneHVACBaseboardConvectiveElectric_Impl>()->resetEfficiency();
 }
-  
+
 boost::optional<ThermalZone> ZoneHVACBaseboardConvectiveElectric::thermalZone()
 {
   return getImpl<detail::ZoneHVACBaseboardConvectiveElectric_Impl>()->thermalZone();

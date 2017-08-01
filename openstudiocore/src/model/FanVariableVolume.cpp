@@ -80,7 +80,11 @@ namespace detail {
   const std::vector<std::string>& FanVariableVolume_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Fan Electric Power");
+      result.push_back("Fan Rise in Air Temperature");
+      result.push_back("Fan Electric Energy");
     }
     return result;
   }
@@ -215,7 +219,7 @@ namespace detail {
 
   bool FanVariableVolume_Impl::isMotorEfficiencyDefaulted() const {
     return isEmpty(OS_Fan_VariableVolumeFields::MotorEfficiency);
-  }  
+  }
 
   double FanVariableVolume_Impl::motorInAirstreamFraction() const {
     boost::optional<double> value = getDouble(OS_Fan_VariableVolumeFields::MotorInAirstreamFraction,true);
@@ -666,7 +670,7 @@ namespace detail {
           fanCount += subsetCastVector<FanVariableVolume>(oaSystem->components()).size();
         }
 
-        if( StraightComponent_Impl::addToNode(node) ) 
+        if( StraightComponent_Impl::addToNode(node) )
         {
           SetpointManagerMixedAir::updateFanInletOutletNodes(airLoop.get());
           return true;
