@@ -87,7 +87,9 @@ namespace detail {
   const std::vector<std::string>& LifeCycleCostParameters_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      // Not appropriate: no specific variables available
     }
     return result;
   }
@@ -129,7 +131,7 @@ namespace detail {
   bool LifeCycleCostParameters_Impl::isConstantDollarAnalysis() const{
     return ("ConstantDollar" == this->inflationApproach());
   }
-  
+
   boost::optional<double> LifeCycleCostParameters_Impl::realDiscountRate() const {
     boost::optional<double> result;
     if (this->isConstantDollarAnalysis()){
@@ -219,7 +221,7 @@ namespace detail {
   bool LifeCycleCostParameters_Impl::isLengthOfStudyPeriodInYearsDefaulted() const{
     return isEmpty(OS_LifeCycleCost_ParametersFields::LengthofStudyPeriodinYears);
   }
-  
+
   boost::optional<double> LifeCycleCostParameters_Impl::taxRate() const {
     return getDouble(OS_LifeCycleCost_ParametersFields::TaxRate,true);
   }
@@ -229,21 +231,21 @@ namespace detail {
     OS_ASSERT(os); OS_ASSERT(!os->empty());
     return *os;
   }
-    
+
   bool LifeCycleCostParameters_Impl::isDepreciationMethodDefaulted() const{
     return isEmpty(OS_LifeCycleCost_ParametersFields::DepreciationMethod);
   }
-  
+
   bool LifeCycleCostParameters_Impl::useNISTFuelEscalationRates() const {
     OptionalString os = getString(OS_LifeCycleCost_ParametersFields::UseNISTFuelEscalationRates, true);
     OS_ASSERT(os); OS_ASSERT(!os->empty());
     return ("Yes" == *os);
   }
-    
+
   bool LifeCycleCostParameters_Impl::isUseNISTFuelEscalationRatesDefaulted() const{
     return isEmpty(OS_LifeCycleCost_ParametersFields::UseNISTFuelEscalationRates);
   }
-  
+
   boost::optional<std::string> LifeCycleCostParameters_Impl::nistRegion() const
   {
     boost::optional<std::string> result;
@@ -262,7 +264,7 @@ namespace detail {
   bool LifeCycleCostParameters_Impl::isNISTRegionDefaulted() const{
     return isEmpty(OS_LifeCycleCost_ParametersFields::NISTRegion);
   }
-  
+
   boost::optional<std::string> LifeCycleCostParameters_Impl::nistSector() const
   {
     boost::optional<std::string> result;
@@ -281,7 +283,7 @@ namespace detail {
   bool LifeCycleCostParameters_Impl::isNISTSectorDefaulted() const{
     return isEmpty(OS_LifeCycleCost_ParametersFields::NISTSector);
   }
- 
+
   boost::optional<double> LifeCycleCostParameters_Impl::electricityInflation() const
   {
     boost::optional<double> result;
@@ -405,14 +407,14 @@ namespace detail {
     if (result && changed){
       if (isFEMPAnalysis()){
         if (isConstantDollarAnalysis()){
-          // DLM: this call has logic that prevents it from working if isFEMPAnalysis 
+          // DLM: this call has logic that prevents it from working if isFEMPAnalysis
           // DLM: don't emit change signals until end
           //setRealDiscountRate(LifeCycleCostParameters::fempRealDiscountRate());
           setDouble(OS_LifeCycleCost_ParametersFields::RealDiscountRate,LifeCycleCostParameters::fempRealDiscountRate(), false);
           setString(OS_LifeCycleCost_ParametersFields::NominalDiscountRate, "", false);
           setString(OS_LifeCycleCost_ParametersFields::Inflation, "", false);
-        }else{  
-          // DLM: this call has logic that prevents it from working if isFEMPAnalysis 
+        }else{
+          // DLM: this call has logic that prevents it from working if isFEMPAnalysis
           // DLM: don't emit change signals until end
           //setNominalDiscountRate(LifeCycleCostParameters::fempNominalDiscountRate());
           //setInflation(LifeCycleCostParameters::fempInflation());
@@ -450,7 +452,7 @@ namespace detail {
     bool test = setString(OS_LifeCycleCost_ParametersFields::DiscountingConvention,"");
     OS_ASSERT(test);
   }
-   
+
   bool LifeCycleCostParameters_Impl::setInflationApproach(const std::string& inflationApproach)
   {
     bool changed = (this->inflationApproach() != inflationApproach);
@@ -461,7 +463,7 @@ namespace detail {
         setRealDiscountRate(LifeCycleCostParameters::fempRealDiscountRate());
         setString(OS_LifeCycleCost_ParametersFields::NominalDiscountRate, "");
         setString(OS_LifeCycleCost_ParametersFields::Inflation, "");
-      }else{  
+      }else{
         setString(OS_LifeCycleCost_ParametersFields::RealDiscountRate, "");
         setNominalDiscountRate(LifeCycleCostParameters::fempNominalDiscountRate());
         setInflation(LifeCycleCostParameters::fempInflation());
@@ -528,7 +530,7 @@ namespace detail {
     return setInt(OS_LifeCycleCost_ParametersFields::BaseDateYear,baseDateYear);
   }
 
-  void LifeCycleCostParameters_Impl::resetBaseDateYear()  
+  void LifeCycleCostParameters_Impl::resetBaseDateYear()
   {
     bool test = setString(OS_LifeCycleCost_ParametersFields::BaseDateYear,"");
     OS_ASSERT(test);
@@ -913,7 +915,7 @@ boost::optional<double> LifeCycleCostParameters::nominalDiscountRate() const {
 boost::optional<double> LifeCycleCostParameters::inflation() const {
   return getImpl<detail::LifeCycleCostParameters_Impl>()->inflation();
 }
-  
+
 MonthOfYear LifeCycleCostParameters::baseDateMonth() const {
   return getImpl<detail::LifeCycleCostParameters_Impl>()->baseDateMonth();
 }
@@ -953,7 +955,7 @@ int LifeCycleCostParameters::lengthOfStudyPeriodInYears() const {
 bool LifeCycleCostParameters::isLengthOfStudyPeriodInYearsDefaulted() const {
   return getImpl<detail::LifeCycleCostParameters_Impl>()->isLengthOfStudyPeriodInYearsDefaulted();
 }
-  
+
 boost::optional<double> LifeCycleCostParameters::taxRate() const {
   return getImpl<detail::LifeCycleCostParameters_Impl>()->taxRate();
 }
@@ -1055,7 +1057,7 @@ bool LifeCycleCostParameters::setDiscountingConvention(const std::string& discou
 void LifeCycleCostParameters::resetDiscountingConvention(){
   getImpl<detail::LifeCycleCostParameters_Impl>()->resetDiscountingConvention();
 }
-  
+
 bool LifeCycleCostParameters::setInflationApproach(const std::string& inflationApproach) {
   return getImpl<detail::LifeCycleCostParameters_Impl>()->setInflationApproach(inflationApproach);
 }
@@ -1075,7 +1077,7 @@ bool LifeCycleCostParameters::setNominalDiscountRate(double nominalDiscountRate)
 bool LifeCycleCostParameters::setInflation(double inflation) {
   return getImpl<detail::LifeCycleCostParameters_Impl>()->setInflation(inflation);
 }
-  
+
 bool LifeCycleCostParameters::setBaseDateMonth(const MonthOfYear& baseDateMonth) {
   return getImpl<detail::LifeCycleCostParameters_Impl>()->setBaseDateMonth(baseDateMonth);
 }
@@ -1107,7 +1109,7 @@ bool LifeCycleCostParameters::setServiceDateYear(int serviceDateYear) {
 void LifeCycleCostParameters::resetServiceDateYear() {
   getImpl<detail::LifeCycleCostParameters_Impl>()->resetServiceDateYear();
 }
-  
+
 bool LifeCycleCostParameters::setLengthOfStudyPeriodInYears(int lengthOfStudyPeriodInYears) {
   return getImpl<detail::LifeCycleCostParameters_Impl>()->setLengthOfStudyPeriodInYears(lengthOfStudyPeriodInYears);
 }
@@ -1138,7 +1140,7 @@ bool LifeCycleCostParameters::setUseNISTFuelEscalationRates(bool useNISTFuelEsca
 
 void LifeCycleCostParameters::resetUseNISTFuelEscalationRates() {
   getImpl<detail::LifeCycleCostParameters_Impl>()->resetUseNISTFuelEscalationRates();
-} 
+}
 
 bool LifeCycleCostParameters::setNISTRegion(const std::string& nistRegion) {
   return getImpl<detail::LifeCycleCostParameters_Impl>()->setNISTRegion(nistRegion);
@@ -1146,7 +1148,7 @@ bool LifeCycleCostParameters::setNISTRegion(const std::string& nistRegion) {
 
 void LifeCycleCostParameters::resetNISTRegion() {
   getImpl<detail::LifeCycleCostParameters_Impl>()->resetNISTRegion();
-} 
+}
 
 bool LifeCycleCostParameters::setNISTSector(const std::string& nistSector) {
   return getImpl<detail::LifeCycleCostParameters_Impl>()->setNISTSector(nistSector);
@@ -1154,7 +1156,7 @@ bool LifeCycleCostParameters::setNISTSector(const std::string& nistSector) {
 
 void LifeCycleCostParameters::resetNISTSector() {
   getImpl<detail::LifeCycleCostParameters_Impl>()->resetNISTSector();
-} 
+}
 
 bool LifeCycleCostParameters::setElectricityInflation(double electricityInflation) {
   return getImpl<detail::LifeCycleCostParameters_Impl>()->setElectricityInflation(electricityInflation);
@@ -1162,7 +1164,7 @@ bool LifeCycleCostParameters::setElectricityInflation(double electricityInflatio
 
 void LifeCycleCostParameters::resetElectricityInflation() {
   getImpl<detail::LifeCycleCostParameters_Impl>()->resetElectricityInflation();
-} 
+}
 
 bool LifeCycleCostParameters::setNaturalGasInflation(double naturalGasInflation) {
   return getImpl<detail::LifeCycleCostParameters_Impl>()->setNaturalGasInflation(naturalGasInflation);
@@ -1170,7 +1172,7 @@ bool LifeCycleCostParameters::setNaturalGasInflation(double naturalGasInflation)
 
 void LifeCycleCostParameters::resetNaturalGasInflation() {
   getImpl<detail::LifeCycleCostParameters_Impl>()->resetNaturalGasInflation();
-} 
+}
 
 bool LifeCycleCostParameters::setSteamInflation(double steamInflation) {
   return getImpl<detail::LifeCycleCostParameters_Impl>()->setSteamInflation(steamInflation);
@@ -1178,7 +1180,7 @@ bool LifeCycleCostParameters::setSteamInflation(double steamInflation) {
 
 void LifeCycleCostParameters::resetSteamInflation() {
   getImpl<detail::LifeCycleCostParameters_Impl>()->resetSteamInflation();
-} 
+}
 
 bool LifeCycleCostParameters::setGasolineInflation(double gasolineInflation) {
   return getImpl<detail::LifeCycleCostParameters_Impl>()->setGasolineInflation(gasolineInflation);
@@ -1186,7 +1188,7 @@ bool LifeCycleCostParameters::setGasolineInflation(double gasolineInflation) {
 
 void LifeCycleCostParameters::resetGasolineInflation() {
   getImpl<detail::LifeCycleCostParameters_Impl>()->resetGasolineInflation();
-} 
+}
 
 bool LifeCycleCostParameters::setDieselInflation(double dieselInflation) {
   return getImpl<detail::LifeCycleCostParameters_Impl>()->setDieselInflation(dieselInflation);
@@ -1194,7 +1196,7 @@ bool LifeCycleCostParameters::setDieselInflation(double dieselInflation) {
 
 void LifeCycleCostParameters::resetDieselInflation() {
   getImpl<detail::LifeCycleCostParameters_Impl>()->resetDieselInflation();
-} 
+}
 
 bool LifeCycleCostParameters::setCoalInflation(double coalInflation) {
   return getImpl<detail::LifeCycleCostParameters_Impl>()->setCoalInflation(coalInflation);
@@ -1202,7 +1204,7 @@ bool LifeCycleCostParameters::setCoalInflation(double coalInflation) {
 
 void LifeCycleCostParameters::resetCoalInflation() {
   getImpl<detail::LifeCycleCostParameters_Impl>()->resetCoalInflation();
-} 
+}
 
 bool LifeCycleCostParameters::setFuelOil1Inflation(double fuelOil1Inflation) {
   return getImpl<detail::LifeCycleCostParameters_Impl>()->setFuelOil1Inflation(fuelOil1Inflation);
@@ -1210,7 +1212,7 @@ bool LifeCycleCostParameters::setFuelOil1Inflation(double fuelOil1Inflation) {
 
 void LifeCycleCostParameters::resetFuelOil1Inflation() {
   getImpl<detail::LifeCycleCostParameters_Impl>()->resetFuelOil1Inflation();
-} 
+}
 
 bool LifeCycleCostParameters::setFuelOil2Inflation(double fuelOil2Inflation) {
   return getImpl<detail::LifeCycleCostParameters_Impl>()->setFuelOil2Inflation(fuelOil2Inflation);
@@ -1218,7 +1220,7 @@ bool LifeCycleCostParameters::setFuelOil2Inflation(double fuelOil2Inflation) {
 
 void LifeCycleCostParameters::resetFuelOil2Inflation() {
   getImpl<detail::LifeCycleCostParameters_Impl>()->resetFuelOil2Inflation();
-} 
+}
 
 bool LifeCycleCostParameters::setPropaneInflation(double propaneInflation) {
   return getImpl<detail::LifeCycleCostParameters_Impl>()->setPropaneInflation(propaneInflation);
@@ -1226,7 +1228,7 @@ bool LifeCycleCostParameters::setPropaneInflation(double propaneInflation) {
 
 void LifeCycleCostParameters::resetPropaneInflation() {
   getImpl<detail::LifeCycleCostParameters_Impl>()->resetPropaneInflation();
-} 
+}
 
 bool LifeCycleCostParameters::setWaterInflation(double waterInflation) {
   return getImpl<detail::LifeCycleCostParameters_Impl>()->setWaterInflation(waterInflation);
@@ -1234,7 +1236,7 @@ bool LifeCycleCostParameters::setWaterInflation(double waterInflation) {
 
 void LifeCycleCostParameters::resetWaterInflation() {
   getImpl<detail::LifeCycleCostParameters_Impl>()->resetWaterInflation();
-} 
+}
 
 std::vector<std::string> LifeCycleCostParameters::validAnalysisTypeValues() {
   return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),

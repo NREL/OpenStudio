@@ -74,7 +74,9 @@ namespace detail {
   const std::vector<std::string>& TemperingValve_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      // Not appropriate: no specific output variables
     }
     return result;
   }
@@ -187,7 +189,7 @@ namespace detail {
 
     auto mixer = plant->supplyMixer();
 
-    if( ! stream2SourceNode() ) { 
+    if( ! stream2SourceNode() ) {
       TemperingValve thisObject = getObject<TemperingValve>();
       auto inletObjects = mixer.inletModelObjects();
       for( auto & inletObject : inletObjects ) {
