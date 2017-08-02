@@ -199,32 +199,67 @@ TEST_F(ModelFixture, CentralHeatPumpSystem_PlantLoopConnections)
     }
   }
 
-    // HeatingLoop: on the supply side
-    {
-      PlantLoop heatingPlant(model);
-      auto node = heatingPlant.supplyOutletNode();
-      EXPECT_TRUE(central_hp.addToTertiaryNode(node));
-      auto plant = central_hp.tertiaryPlantLoop();
-      EXPECT_TRUE(plant);
-      if( plant ) {
-        EXPECT_EQ(heatingPlant.handle(),plant->handle());
-      }
-      // test the convenience function
-      auto plant_bis = central_hp.heatingPlantLoop();
-      EXPECT_TRUE(plant_bis);
-      if( plant ) {
-        EXPECT_EQ(heatingPlant.handle(),plant_bis->handle());
-      }
-
-      // TODO: Change that number?
-      EXPECT_EQ(7u,heatingPlant.supplyComponents().size());
-
-      EXPECT_TRUE( central_hp.removeFromTertiaryPlantLoop() );
-      plant = central_hp.tertiaryPlantLoop();
-      EXPECT_FALSE(plant);
-      EXPECT_EQ(5u,heatingPlant.demandComponents().size());
+  // HeatingLoop: on the supply side
+  {
+    PlantLoop heatingPlant(model);
+    auto node = heatingPlant.supplyOutletNode();
+    EXPECT_TRUE(central_hp.addToTertiaryNode(node));
+    auto plant = central_hp.tertiaryPlantLoop();
+    EXPECT_TRUE(plant);
+    if( plant ) {
+      EXPECT_EQ(heatingPlant.handle(),plant->handle());
     }
+    // test the convenience function
+    auto plant_bis = central_hp.heatingPlantLoop();
+    EXPECT_TRUE(plant_bis);
+    if( plant ) {
+      EXPECT_EQ(heatingPlant.handle(),plant_bis->handle());
+    }
+
+    // TODO: Change that number?
+    EXPECT_EQ(7u,heatingPlant.supplyComponents().size());
+
+    EXPECT_TRUE( central_hp.removeFromTertiaryPlantLoop() );
+    plant = central_hp.tertiaryPlantLoop();
+    EXPECT_FALSE(plant);
+    EXPECT_EQ(5u,heatingPlant.demandComponents().size());
   }
+}
+
+
+TEST_F(ModelFixture, CentralHeatPumpSystem_Clone_PlantLoops)
+{
+  Model model;
+  CentralHeatPumpSystem central_hp(model);
+
+  // Connect it to some plant loops
+  PlantLoop coolingPlant(model);
+  auto node1 = coolingPlant.supplyOutletNode();
+  ASSERT_TRUE(central_hp.addToNode(node1));
+  PlantLoop sourcePlant(model);
+  auto node2 = sourcePlant.demandInletNode();
+  ASSERT_TRUE(central_hp.addToNode(node2));
+  PlantLoop heatingPlant(model);
+  auto node3 = heatingPlant.supplyOutletNode();
+  ASSERT_TRUE(central_hp.addToTertiaryNode(node3));
+
+  //Clone into the same model
+  CentralHeatPumpSystem  central_hpClone = central_hp.clone(model).cast<CentralHeatPumpSystem>();
+  // Make sure it isn't connected to the same plant loop
+  ASSERT_FALSE(central_hpClone.coolingPlantLoop());
+  ASSERT_FALSE(central_hpClone.sourcePlantLoop());
+  ASSERT_FALSE(central_hpClone.heatingPlantLoop());
+
+
+  //Clone into another model
+  Model model2;
+  CentralHeatPumpSystem  central_hpClone2 = central_hp.clone(model2).cast<CentralHeatPumpSystem>();
+  // Make sure it isn't connected to any plant loops
+  ASSERT_FALSE(central_hpClone2.coolingPlantLoop());
+  ASSERT_FALSE(central_hpClone2.sourcePlantLoop());
+  ASSERT_FALSE(central_hpClone2.heatingPlantLoop());
+
+}
 
 // Test cloning the CentralHeatPump system, make sure the modules are cloned too
 // Will test cloning the CentralHeatPumpSystemModule too, see if the ChillerHeater is cloned too
