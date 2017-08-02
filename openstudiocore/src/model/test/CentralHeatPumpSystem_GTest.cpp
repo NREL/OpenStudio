@@ -285,10 +285,10 @@ TEST_F(ModelFixture, CentralHeatPumpSystem_Clone)
   ASSERT_EQ(1u, model.getModelObjects<CentralHeatPumpSystemModule>().size());
   ASSERT_EQ(1u, model.getModelObjects<ChillerHeaterPerformanceElectricEIR>().size());
 
-
-  central_hp.addModule(central_hp_module);
+  ASSERT_TRUE(central_hp.addModule(central_hp_module));
   ASSERT_EQ(1u, central_hp.modules().size());
-  // This fails!
+  // Make sure it didn't touch the previous clone
+  // (modules should be a new instance of ModelObjectList, not the same)
   ASSERT_EQ(0u, central_hpClone.modules().size());
 
 
@@ -296,14 +296,21 @@ TEST_F(ModelFixture, CentralHeatPumpSystem_Clone)
   CentralHeatPumpSystem  central_hpClone1 = central_hp.clone(model).cast<CentralHeatPumpSystem>();
   // There should now be 3 CentralHeatPumpSystems
   ASSERT_EQ(3u, model.getModelObjects<CentralHeatPumpSystem>().size());
-  // The CentralHeatPumpModule and ChillerHeaterPerformanceElectricEIR should have been cloned too
+  // The CentralHeatPumpModule should have been cloned
   ASSERT_EQ(2u, model.getModelObjects<CentralHeatPumpSystemModule>().size());
-  ASSERT_EQ(2u, model.getModelObjects<ChillerHeaterPerformanceElectricEIR>().size());
+  // The chillerHeater shouldn't have, it should point to the same
+  // TODO: This fails
+  ASSERT_EQ(1u, model.getModelObjects<ChillerHeaterPerformanceElectricEIR>().size());
 
   ASSERT_EQ(1u, central_hpClone1.modules().size());
   // Make sure it's not just pointing to the same one
   CentralHeatPumpSystemModule central_hp_moduleClone1 = central_hpClone1.modules()[0];
   EXPECT_NE(central_hp_module.handle(), central_hp_moduleClone1.handle());
+
+  // Check that they still use the same ChillerHeaterPerformanceElectricEIR object
+  ChillerHeaterPerformanceElectricEIR ch_heater = central_hp_module.chillerHeaterModulesPerformanceComponent();
+  ChillerHeaterPerformanceElectricEIR ch_heaterClone1 = central_hp_moduleClone1.chillerHeaterModulesPerformanceComponent();
+  ASSERT_EQ(ch_heater.handle(), ch_heaterClone1.handle());
 
 
   //Clone into another model
@@ -317,5 +324,22 @@ TEST_F(ModelFixture, CentralHeatPumpSystem_Clone)
 
   CentralHeatPumpSystemModule central_hp_moduleClone2 = central_hpClone2.modules()[0];
   EXPECT_NE(central_hp_module.handle(), central_hp_moduleClone2.handle());
+
+}
+
+TEST_F(ModelFixture, CentralHeatPumpSystemModule_ReverseLookup)
+{
+  Model model;
+  CentralHeatPumpSystem central_hp(model);
+
+  CentralHeatPumpSystemModule central_hp_module(model);
+  // Should be empty for now
+  ASSERT_TRUE(central_hp_module.CentralHeatPumpSystem());
+
+  ASSERT_TRUE(central_hp.addModule(central_hp_module));
+
+  // Test that you can get the CentralHeatPumpSystem from the Module
+  ASSERT_TRUE(central_hp_module.CentralHeatPumpSystem());
+  ASSERT_EQ(central_hp.handle(), central_hp_module.CentralHeatPumpSystem()->handle());
 
 }
