@@ -74,8 +74,7 @@ namespace detail {
       result.push_back("Refrigeration System Liquid Suction Subcooler Heat Transfer Energy");
       // FOR SUBCOOLERS ON SYSTEMS SERVING AIR CHILLERS:
       result.push_back("Refrigeration Air Chiller System Liquid Suction Subcooler Heat Transfer Rate");
-      result.push_back("Refrigeration Air Chiller System Liquid Suction Subcooler Heat Transfer Energy")
-
+      result.push_back("Refrigeration Air Chiller System Liquid Suction Subcooler Heat Transfer Energy");
     }
     return result;
   }
