@@ -54,6 +54,10 @@ class CentralHeatPump_Test < MiniTest::Unit::TestCase
 
     # Blah, I should write this, but already did it in GTest and it's too long
     # and repetive
+    #
+
+    ch_heaterClone = ch_heater.clone(model)
+    ch_heaterClone = ch_heaterClone.to_ChillerHeaterPerformanceElectricEIR.get
 
   end
 
@@ -176,8 +180,13 @@ class CentralHeatPump_Test < MiniTest::Unit::TestCase
     # TODO: This throws warnings for curve objects having multiple parents
     # https://github.com/NREL/OpenStudio/blob/72e4961a2d6547dcb40be48f722345b5691e3a74/openstudiocore/src/model/Curve.cpp#L59
     central_hpClone1 = central_hp.clone(model2)
+    central_hpClone1 = central_hpClone1.to_CentralHeatPumpSystem.get
+
     assert_equal(1, model2.getCentralHeatPumpSystems.size)
+
     assert_equal(1, model2.getCentralHeatPumpSystemModules.size)
+    assert_equal(1, central_hpClone1.modules.size)
+
     assert_equal(1, model2.getChillerHeaterPerformanceElectricEIRs.size)
 
   end
