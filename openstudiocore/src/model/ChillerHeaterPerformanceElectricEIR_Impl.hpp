@@ -213,7 +213,6 @@ namespace detail {
     boost::optional<CentralHeatPumpSystemModule> centralHeatPumpSystemModule() const;
     boost::optional<CentralHeatPumpSystem> centralHeatPumpSystem() const;
 
-
     //@}
    protected:
    private:

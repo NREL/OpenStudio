@@ -98,6 +98,13 @@ namespace detail {
     // Convenience function to return parent CentralHeatPumpSystem
     boost::optional<CentralHeatPumpSystem> centralHeatPumpSystem() const;
 
+    // Override the clone method to clone the ChillerHeaterPerformanceElectricEIR as well
+    ModelObject clone(Model model) const override;
+
+    // std::vector<IddObjectType> allowableChildTypes() const override;
+
+    // std::vector<ModelObject> children() const override;
+
     //@}
    protected:
    private:

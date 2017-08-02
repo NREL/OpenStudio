@@ -130,14 +130,29 @@ namespace detail {
   // and will return a reference to the new CentralHeatPumpSystem
   ModelObject CentralHeatPumpSystem_Impl::clone(Model model) const
   {
+
+    // Call the base class (ModelObject) clone method, for a clean one
     CentralHeatPumpSystem newCentralHP = ModelObject_Impl::clone(model).cast<CentralHeatPumpSystem>();
 
-    // Loop on the modules
-    for(const CentralHeatPumpSystemModule & centralHPMod: modules()) {
+    // In the CentralHeatPumpSystem Implementation, the actual important object is the chillerHeaterModuleList
+    // Create a new (blank) ModelObjectList, and set it
+    auto newChillerHeaterModuleList = ModelObjectList(model);
+    newChillerHeaterModuleList.setName(newCentralHP.name().get() + " Chiller Heater Module List");
+    bool ok = true;
+    ok = newCentralHP.getImpl<detail::CentralHeatPumpSystem_Impl>()->setChillerHeaterModuleList(newChillerHeaterModuleList);
+    OS_ASSERT(ok);
+
+    // Now, the matter is to repopulate it.
+    for(const CentralHeatPumpSystemModule & centralHPMod: this->modules()) {
 
       // Call the BaseClass (ModelObject) clone method to avoid circular references
-      CentralHeatPumpSystemModule centralHPModClone = centralHPMod.getImpl<detail::CentralHeatPumpSystemModule_Impl>()->ModelObject_Impl::clone(model).cast<CentralHeatPumpSystemModule>();
+      // CentralHeatPumpSystemModule centralHPModClone = centralHPMod.getImpl<detail::CentralHeatPumpSystemModule_Impl>()->ModelObject_Impl::clone(model).cast<CentralHeatPumpSystemModule>();
+
       //newCentralHP.getImpl<detail::CentralHeatPumpSystem_Impl>()->addModule(centralHPModClone);
+      // The CentralHeatPumpSystemModule_Impl::clone method will clone the ChillerHeaterPerformanceElectricEIR as well
+      CentralHeatPumpSystemModule centralHPModClone = centralHPMod.clone(model).cast<CentralHeatPumpSystemModule>();
+
+      // Add that to the new object
       newCentralHP.addModule(centralHPModClone);
 
     }

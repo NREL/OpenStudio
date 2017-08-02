@@ -97,6 +97,22 @@ namespace detail {
     return result;
   }
 
+  // This will clone the CentralHeatPumpSystemModule and the attached ChillerHeaterPerformanceElectricEIR object
+  // and will return a reference to the new CentralHeatPumpSystem
+  ModelObject CentralHeatPumpSystemModule_Impl::clone(Model model) const
+  {
+    CentralHeatPumpSystemModule newCentralHPMod = ModelObject_Impl::clone(model).cast<CentralHeatPumpSystemModule>();
+
+    // Clone the ChillerHeaterPerformanceElectricEIR
+    ChillerHeaterPerformanceElectricEIR newChillerHeater = this->chillerHeaterModulesPerformanceComponent().clone(model).cast<ChillerHeaterPerformanceElectricEIR>();
+
+    bool ok = true;
+    ok = newCentralHPMod.setChillerHeaterModulesPerformanceComponent( newChillerHeater );
+    OS_ASSERT(ok);
+
+    return newCentralHPMod;
+  }
+
   ChillerHeaterPerformanceElectricEIR CentralHeatPumpSystemModule_Impl::chillerHeaterModulesPerformanceComponent() const {
     boost::optional<ChillerHeaterPerformanceElectricEIR> value = optionalChillerHeaterModulesPerformanceComponent();
     if (!value) {
