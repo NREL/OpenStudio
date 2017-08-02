@@ -500,46 +500,113 @@ namespace detail {
   }
 
   // Convenience functions to return parent CentralHeatPumpSystem and CentralHeatPumpSystemModule
-  boost::optional<CentralHeatPumpSystemModule> ChillerHeaterPerformanceElectricEIR_Impl::centralHeatPumpSystemModule() const {
+/*
+ *  boost::optional<CentralHeatPumpSystemModule> ChillerHeaterPerformanceElectricEIR_Impl::centralHeatPumpSystemModule() const {
+ *
+ *    boost::optional<CentralHeatPumpSystemModule> result;
+ *    for ( const CentralHeatPumpSystemModule& central_hp_module : this->model().getConcreteModelObjects<CentralHeatPumpSystemModule>() )
+ *    {
+ *      ChillerHeaterPerformanceElectricEIR chiller = central_hp_module.chillerHeaterModulesPerformanceComponent();
+ *        if (chiller.handle() == this->handle())
+ *        {
+ *          result = central_hp_module;
+ *        }
+ *    }
+ *    return result;
+ *  }
+ */
 
-    boost::optional<CentralHeatPumpSystemModule> result;
+/*
+ *  boost::optional<CentralHeatPumpSystem> ChillerHeaterPerformanceElectricEIR_Impl::centralHeatPumpSystem() const {
+ *
+ *    boost::optional<CentralHeatPumpSystem> result;
+ *
+ *    // Check if this chiller has a CentralHeatPumpSystemModule
+ *    if ( boost::optional<CentralHeatPumpSystemModule> this_central_hp_module = this->centralHeatPumpSystemModule() )
+ *    {
+ *      // TODO: use the CentralHeatPumpSystemModule::centralHeatPumpSystem() method instead
+ *      if ( boost::optional<CentralHeatPumpSystem> central_hp = this_central_hp_module->centralHeatPumpSystem() )
+ *      {
+ *        result = central_hp.get();
+ *      }
+ *
+ *      // loop on all CentralHeatPumpSystems in the model
+ *      //for ( const CentralHeatPumpSystem& central_hp : this->model().getConcreteModelObjects<CentralHeatPumpSystem>() )
+ *      //{
+ *        //// Loop on each CentralHeatPumpSystemModules
+ *        //for (const CentralHeatPumpSystemModule& central_hp_module : central_hp.modules() )
+ *        //{
+ *          //if ( central_hp_module.handle() == this_central_hp_module->handle() )
+ *          //{
+ *              //result = central_hp;
+ *          //}
+ *        //}
+ *      //}
+ *    }
+ *    return result;
+ *  }
+ */
+
+
+  // Convenience functions to return a vector of parent CentralHeatPumpSystemModules
+  std::vector<CentralHeatPumpSystemModule> ChillerHeaterPerformanceElectricEIR_Impl::centralHeatPumpSystemModules() const {
+
+    std::vector<CentralHeatPumpSystemModule> result;
+    // Loop on all CentralHeatPumpSystemModules
     for ( const CentralHeatPumpSystemModule& central_hp_module : this->model().getConcreteModelObjects<CentralHeatPumpSystemModule>() )
     {
-      ChillerHeaterPerformanceElectricEIR chiller = central_hp_module.chillerHeaterModulesPerformanceComponent();
+        // If the ChillerHeaterPerformanceElectricEIR is the same as this one, add it to the result
+        ChillerHeaterPerformanceElectricEIR chiller = central_hp_module.chillerHeaterModulesPerformanceComponent();
         if (chiller.handle() == this->handle())
         {
-          result = central_hp_module;
+          result.push_back(central_hp_module);
         }
     }
     return result;
   }
 
-  boost::optional<CentralHeatPumpSystem> ChillerHeaterPerformanceElectricEIR_Impl::centralHeatPumpSystem() const {
 
-    boost::optional<CentralHeatPumpSystem> result;
+  std::vector<CentralHeatPumpSystem> ChillerHeaterPerformanceElectricEIR_Impl::centralHeatPumpSystems() const {
 
-    // Check if this chiller has a CentralHeatPumpSystemModule
-    if ( boost::optional<CentralHeatPumpSystemModule> this_central_hp_module = this->centralHeatPumpSystemModule() )
+    std::vector<CentralHeatPumpSystem> result;
+
+    //EITHER
+    //
+    // Loop on all parent CentralHeatPumpSystemModules
+    /*
+     *for (const CentralHeatPumpSystemModule& mod : this->centralHeatPumpSystemModules() )
+     *{
+     *  // Use the CentralHeatPumpSystemModule::centralHeatPumpSystem() method instead
+     *  // If there's one, add that to result vector
+     *  if ( boost::optional<CentralHeatPumpSystem> central_hp = mod.centralHeatPumpSystem() )
+     *  {
+     *    result.push_back(central_hp.get()):
+     *  }
+     *}
+     */
+
+    // OR
+    //
+    // loop on all CentralHeatPumpSystems in the model
+    for ( const CentralHeatPumpSystem& central_hp : this->model().getConcreteModelObjects<CentralHeatPumpSystem>() )
     {
-      // TODO: use the CentralHeatPumpSystemModule::centralHeatPumpSystem() method instead
-      if ( boost::optional<CentralHeatPumpSystem> central_hp = this_central_hp_module->centralHeatPumpSystem() )
-      {
-        result = central_hp.get();
-      }
+      // flag to avoid pushing it several times (a CentralHP can have multiple Mods that reference this chillerPerf)
+      bool is_added = false;
 
-      // loop on all CentralHeatPumpSystems in the model
-      //for ( const CentralHeatPumpSystem& central_hp : this->model().getConcreteModelObjects<CentralHeatPumpSystem>() )
-      //{
-        //// Loop on each CentralHeatPumpSystemModules
-        //for (const CentralHeatPumpSystemModule& central_hp_module : central_hp.modules() )
-        //{
-          //if ( central_hp_module.handle() == this_central_hp_module->handle() )
-          //{
-              //result = central_hp;
-          //}
-        //}
-      //}
+      if (!is_added) {
+        // Loop on each CentralHeatPumpSystemModules
+        for (const CentralHeatPumpSystemModule& central_hp_module : central_hp.modules() )
+        {
+          ChillerHeaterPerformanceElectricEIR chiller = central_hp_module.chillerHeaterModulesPerformanceComponent();
+
+          if ( chiller.handle() == this->handle() ) {
+            result.push_back(central_hp);
+            is_added = true;
+          }
+        }
+      }
     }
+
     return result;
   }
 
@@ -1015,11 +1082,11 @@ bool ChillerHeaterPerformanceElectricEIR::setSizingFactor(double sizingFactor) {
   return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->setSizingFactor(sizingFactor);
 }
 
-boost::optional<CentralHeatPumpSystemModule> ChillerHeaterPerformanceElectricEIR::centralHeatPumpSystemModule() const {
+boost::optional<CentralHeatPumpSystemModule> ChillerHeaterPerformanceElectricEIR::centralHeatPumpSystemModules() const {
   return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->centralHeatPumpSystemModule();
 }
 
-boost::optional<CentralHeatPumpSystem> ChillerHeaterPerformanceElectricEIR::centralHeatPumpSystem() const {
+boost::optional<CentralHeatPumpSystem> ChillerHeaterPerformanceElectricEIR::centralHeatPumpSystems() const {
   return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->centralHeatPumpSystem();
 }
 

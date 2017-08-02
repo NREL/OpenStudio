@@ -217,9 +217,16 @@ class MODEL_API ChillerHeaterPerformanceElectricEIR : public ParentObject {
   /** @name Other */
   //@{
 
-    // Convenience functions to return parent CentralHeatPumpSystem and CentralHeatPumpSystemModule
-    boost::optional<CentralHeatPumpSystemModule> centralHeatPumpSystemModule() const;
-    boost::optional<CentralHeatPumpSystem> centralHeatPumpSystem() const;
+  // Reverse lookups
+  // Convenience functions to return parent CentralHeatPumpSystem and CentralHeatPumpSystemModule
+  // I've decided that multiple CentralHeatPumpSystemModules can reference the same ChillerHeaterPerformanceElectricEIR
+
+  /* Returns an Array of CentralHeatPumpSystemModule that reference this object as chillerHeaterModulesPerformanceComponent */
+  std::vector<CentralHeatPumpSystemModule>  centralHeatPumpSystemModules() const;
+
+  /* Returns an Array of CentralHeatPumpSystem that have a CentralHeatPumpSystemModume that reference this object
+   * as chillerHeaterModulesPerformanceComponent */
+  std::vector<CentralHeatPumpSystem>  centralHeatPumpSystems() const;
 
   //@}
  protected:
