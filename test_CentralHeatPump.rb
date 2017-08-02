@@ -61,6 +61,28 @@ class CentralHeatPump_Test < MiniTest::Unit::TestCase
 
   end
 
+  def test_ChillerHeaterPerformanceElectricEIR_Clone
+
+    model = OpenStudio::Model::Model.new
+
+    mod = OpenStudio::Model::CentralHeatPumpSystemModule.new(model)
+    auto_ch_heater = mod.chillerHeaterModulesPerformanceComponent
+    assert_equal(1, model.getCentralHeatPumpSystemModules.size)
+    assert_equal(1, model.getChillerHeaterPerformanceElectricEIRs.size)
+
+    ch_heater = OpenStudio::Model::ChillerHeaterPerformanceElectricEIR.new(model)
+    assert_equal(2, model.getChillerHeaterPerformanceElectricEIRs.size)
+
+    assert(mod.setChillerHeaterModulesPerformanceComponent(ch_heater))
+    refute_equal(mod.chillerHeaterModulesPerformanceComponent, auto_ch_heater)
+    assert_equal(mod.chillerHeaterModulesPerformanceComponent, ch_heater)
+
+    # Should the auto_ch_heater be dropped automatically from the model?
+    assert_equal(2, model.getChillerHeaterPerformanceElectricEIRs.size)
+
+  end
+
+
 
   def test_CentralHeatPumpySystemModule_AddRemove
     model = OpenStudio::Model::Model.new
