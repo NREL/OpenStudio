@@ -37,6 +37,8 @@
 
 #include "../CentralHeatPumpSystemModule.hpp"
 #include "../CentralHeatPumpSystemModule_Impl.hpp"
+#include "../CentralHeatPumpSystem.hpp"
+#include "../CentralHeatPumpSystem_Impl.hpp"
 
 // Curves
 #include "../Curve.hpp"

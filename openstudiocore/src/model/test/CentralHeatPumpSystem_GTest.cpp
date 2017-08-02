@@ -334,12 +334,12 @@ TEST_F(ModelFixture, CentralHeatPumpSystemModule_ReverseLookup)
 
   CentralHeatPumpSystemModule central_hp_module(model);
   // Should be empty for now
-  ASSERT_TRUE(central_hp_module.CentralHeatPumpSystem());
+  ASSERT_TRUE(central_hp_module.centralHeatPumpSystem());
 
   ASSERT_TRUE(central_hp.addModule(central_hp_module));
 
   // Test that you can get the CentralHeatPumpSystem from the Module
-  ASSERT_TRUE(central_hp_module.CentralHeatPumpSystem());
-  ASSERT_EQ(central_hp.handle(), central_hp_module.CentralHeatPumpSystem()->handle());
+  ASSERT_TRUE(central_hp_module.centralHeatPumpSystem());
+  ASSERT_EQ(central_hp.handle(), central_hp_module.centralHeatPumpSystem()->handle());
 
 }

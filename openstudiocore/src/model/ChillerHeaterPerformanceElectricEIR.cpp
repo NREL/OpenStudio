@@ -1084,11 +1084,11 @@ bool ChillerHeaterPerformanceElectricEIR::setSizingFactor(double sizingFactor) {
 
 // Reverse lookups
 std::vector<CentralHeatPumpSystemModule> ChillerHeaterPerformanceElectricEIR::centralHeatPumpSystemModules() const {
-  return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->centralHeatPumpSystemModule();
+  return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->centralHeatPumpSystemModules();
 }
 
 std::vector<CentralHeatPumpSystem> ChillerHeaterPerformanceElectricEIR::centralHeatPumpSystems() const {
-  return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->centralHeatPumpSystem();
+  return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->centralHeatPumpSystems();
 }
 
 /// @cond
