@@ -145,11 +145,8 @@ namespace detail {
     // Now, the matter is to repopulate it.
     for(const CentralHeatPumpSystemModule & centralHPMod: this->modules()) {
 
-      // Call the BaseClass (ModelObject) clone method to avoid circular references
-      // CentralHeatPumpSystemModule centralHPModClone = centralHPMod.getImpl<detail::CentralHeatPumpSystemModule_Impl>()->ModelObject_Impl::clone(model).cast<CentralHeatPumpSystemModule>();
-
-      //newCentralHP.getImpl<detail::CentralHeatPumpSystem_Impl>()->addModule(centralHPModClone);
-      // The CentralHeatPumpSystemModule_Impl::clone method will clone the ChillerHeaterPerformanceElectricEIR as well
+      // The CentralHeatPumpSystemModule_Impl::clone method will set the reference to the same
+      // ChillerHeaterPerformanceElectricEIR because it is defined as children
       CentralHeatPumpSystemModule centralHPModClone = centralHPMod.clone(model).cast<CentralHeatPumpSystemModule>();
 
       // Add that to the new object

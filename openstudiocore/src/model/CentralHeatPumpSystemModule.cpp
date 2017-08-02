@@ -97,21 +97,46 @@ namespace detail {
     return result;
   }
 
-  // This will clone the CentralHeatPumpSystemModule and the attached ChillerHeaterPerformanceElectricEIR object
-  // and will return a reference to the new CentralHeatPumpSystem
-  ModelObject CentralHeatPumpSystemModule_Impl::clone(Model model) const
+  // Instead I'm actually treating the ChillerHeaterPerformanceElectricEIR as a resource by defining it as a child
+/*
+ *  ModelObject CentralHeatPumpSystemModule_Impl::clone(Model model) const
+ *  {
+ *    CentralHeatPumpSystemModule newCentralHPMod = ModelObject_Impl::clone(model).cast<CentralHeatPumpSystemModule>();
+ *
+ *    // Clone the ChillerHeaterPerformanceElectricEIR
+ *    ChillerHeaterPerformanceElectricEIR newChillerHeater = this->chillerHeaterModulesPerformanceComponent().clone(model).cast<ChillerHeaterPerformanceElectricEIR>();
+ *    //
+ *
+ *    bool ok = true;
+ *    ok = newCentralHPMod.setChillerHeaterModulesPerformanceComponent( newChillerHeater );
+ *    OS_ASSERT(ok);
+ *
+ *    return newCentralHPMod;
+ *  }
+ */
+
+    // Return allowable child types: ChillerHeaterPerformanceElectricEIR
+  std::vector<IddObjectType> CentralHeatPumpSystemModule_Impl::allowableChildTypes() const
   {
-    CentralHeatPumpSystemModule newCentralHPMod = ModelObject_Impl::clone(model).cast<CentralHeatPumpSystemModule>();
-
-    // Clone the ChillerHeaterPerformanceElectricEIR
-    ChillerHeaterPerformanceElectricEIR newChillerHeater = this->chillerHeaterModulesPerformanceComponent().clone(model).cast<ChillerHeaterPerformanceElectricEIR>();
-
-    bool ok = true;
-    ok = newCentralHPMod.setChillerHeaterModulesPerformanceComponent( newChillerHeater );
-    OS_ASSERT(ok);
-
-    return newCentralHPMod;
+    std::vector<IddObjectType> result;
+    result.push_back(IddObjectType::OS_ChillerHeaterPerformance_Electric_EIR);
+    return result;
   }
+
+  // Returns the single child object: the ChillerHeaterPerformanceElectricEIR
+  std::vector<ModelObject> CentralHeatPumpSystemModule_Impl::children() const
+  {
+    std::vector<ModelObject> result;
+
+    ChillerHeaterPerformanceElectricEIR ch_heater = chillerHeaterModulesPerformanceComponent();
+    result.push_back(ch_heater);
+
+    // The chillerHeaterModulesControlSchedule, being a schedule, is already a resource so no need here
+
+    return result;
+  }
+
+
 
   ChillerHeaterPerformanceElectricEIR CentralHeatPumpSystemModule_Impl::chillerHeaterModulesPerformanceComponent() const {
     boost::optional<ChillerHeaterPerformanceElectricEIR> value = optionalChillerHeaterModulesPerformanceComponent();
