@@ -254,10 +254,10 @@ TEST_F(ModelFixture,ChillerHeaterPerformanceElectricEIR_CloneWithoutModule)
 
   // Clone into another model
   Model model2;
-  ChillerHeaterPerformanceElectricEIR  ch_heaterClone2 = ch_heater.clone(model).cast<ChillerHeaterPerformanceElectricEIR>();
+  ChillerHeaterPerformanceElectricEIR  ch_heaterClone2 = ch_heater.clone(model2).cast<ChillerHeaterPerformanceElectricEIR>();
   ASSERT_EQ(1u, model2.getModelObjects<ChillerHeaterPerformanceElectricEIR>().size());
   Curve c2 = ch_heaterClone2.coolingModeCoolingCapacityFunctionOfTemperatureCurve();
-  ASSERT_EQ(c.handle(), c2.handle());
+  ASSERT_EQ(c.name(), c2.name());
 
 }
 
@@ -284,12 +284,101 @@ TEST_F(ModelFixture,ChillerHeaterPerformanceElectricEIR_CloneWithModule)
 
   // Clone into another model
   Model model2;
-  ChillerHeaterPerformanceElectricEIR  ch_heaterClone2 = ch_heater.clone(model).cast<ChillerHeaterPerformanceElectricEIR>();
+  ChillerHeaterPerformanceElectricEIR  ch_heaterClone2 = ch_heater.clone(model2).cast<ChillerHeaterPerformanceElectricEIR>();
   ASSERT_EQ(1u, model2.getModelObjects<ChillerHeaterPerformanceElectricEIR>().size());
   Curve c2 = ch_heaterClone2.coolingModeCoolingCapacityFunctionOfTemperatureCurve();
-  ASSERT_EQ(c.handle(), c2.handle());
+  ASSERT_EQ(c.name(), c2.name());
   // Check that it didn't clone the parent Module...Should be zero
   ASSERT_EQ(0u, model2.getModelObjects<CentralHeatPumpSystemModule>().size());
+
+
+}
+
+
+TEST_F(ModelFixture, ChillerHeaterPerformanceElectricEIR_ReverseLookups)
+{
+  // Nothing set
+  {
+    Model model;
+    ChillerHeaterPerformanceElectricEIR ch_heater(model);
+    ASSERT_EQ(0u, ch_heater.centralHeatPumpSystemModules().size());
+    ASSERT_EQ(0u, ch_heater.centralHeatPumpSystems().size());
+  }
+
+  // A module, no centralHP
+  {
+    Model model;
+
+    // Create a CentralHeatPumpSystemModule and get its ChillerHeater (from constructor)
+    CentralHeatPumpSystemModule mod(model);
+    ChillerHeaterPerformanceElectricEIR ch_heater = mod.chillerHeaterModulesPerformanceComponent();
+
+    ASSERT_EQ(1u, ch_heater.centralHeatPumpSystemModules().size());
+    ASSERT_EQ(mod.handle(), ch_heater.centralHeatPumpSystemModules()[0].handle());
+
+    ASSERT_EQ(0u, ch_heater.centralHeatPumpSystems().size());
+
+  }
+
+
+  // A module and a centralHP
+  {
+    Model model;
+
+    // Create a CentralHeatPumpSystemModule and get its ChillerHeater (from constructor)
+    CentralHeatPumpSystem central_hp(model);
+    CentralHeatPumpSystemModule mod(model);
+    ChillerHeaterPerformanceElectricEIR ch_heater = mod.chillerHeaterModulesPerformanceComponent();
+    ASSERT_TRUE(central_hp.addModule(mod));
+
+    ASSERT_EQ(1u, ch_heater.centralHeatPumpSystemModules().size());
+    ASSERT_EQ(mod.handle(), ch_heater.centralHeatPumpSystemModules()[0].handle());
+
+    ASSERT_EQ(1u, ch_heater.centralHeatPumpSystems().size());
+    ASSERT_EQ(central_hp.handle(), ch_heater.centralHeatPumpSystems()[0].handle());
+
+  }
+
+  // Two parent modules in two different centralHP
+  {
+    Model model;
+
+    // Create a CentralHeatPumpSystemModule and get its ChillerHeater (from constructor)
+    CentralHeatPumpSystem central_hp(model);
+    CentralHeatPumpSystemModule mod(model);
+    ChillerHeaterPerformanceElectricEIR ch_heater = mod.chillerHeaterModulesPerformanceComponent();
+    ASSERT_TRUE(central_hp.addModule(mod));
+
+    CentralHeatPumpSystem central_hp2(model);
+    CentralHeatPumpSystemModule mod2(model);
+    ASSERT_TRUE(central_hp2.addModule(mod2));
+    mod2.setChillerHeaterModulesPerformanceComponent(ch_heater);
+
+    ASSERT_EQ(2u, ch_heater.centralHeatPumpSystemModules().size());
+
+    ASSERT_EQ(2u, ch_heater.centralHeatPumpSystems().size());
+
+  }
+
+  // Two parent modules in the same centralHP
+  {
+    Model model;
+
+    // Create a CentralHeatPumpSystemModule and get its ChillerHeater (from constructor)
+    CentralHeatPumpSystem central_hp(model);
+    CentralHeatPumpSystemModule mod(model);
+    ChillerHeaterPerformanceElectricEIR ch_heater = mod.chillerHeaterModulesPerformanceComponent();
+    ASSERT_TRUE(central_hp.addModule(mod));
+
+    CentralHeatPumpSystemModule mod2(model);
+    ASSERT_TRUE(central_hp.addModule(mod2));
+    mod2.setChillerHeaterModulesPerformanceComponent(ch_heater);
+
+    ASSERT_EQ(2u, ch_heater.centralHeatPumpSystemModules().size());
+
+    ASSERT_EQ(1u, ch_heater.centralHeatPumpSystems().size());
+
+  }
 
 
 }
