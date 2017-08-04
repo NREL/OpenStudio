@@ -464,12 +464,12 @@ namespace openstudio{
     return result;
   }
 
-  void FloorplanJS::updateStories(const std::vector<FloorplanObjectId>& objectIds)
+  void FloorplanJS::updateStories(const std::vector<FloorplanObjectId>& objectIds, bool removeMissingObjects)
   {
-    updateObjects(m_value, "stories", objectIds);
+    updateObjects(m_value, "stories", objectIds, removeMissingObjects);
   }
 
-  void FloorplanJS::updateSpaces(const std::vector<FloorplanObjectId>& objectIds)
+  void FloorplanJS::updateSpaces(const std::vector<FloorplanObjectId>& objectIds, bool removeMissingObjects)
   {
     std::map<std::string, std::vector<FloorplanObjectId> > storyHandleToSpaceObejctIds;
 
@@ -490,29 +490,29 @@ namespace openstudio{
       // no need to check by name, assume stories have been updated
       Json::Value* story = findByHandleString(m_value, "stories", keyValue.first);
       if (story){
-        updateObjects(*story, "spaces", keyValue.second);
+        updateObjects(*story, "spaces", keyValue.second, removeMissingObjects);
       }
     }
   }
 
-  void FloorplanJS::updateBuildingUnits(const std::vector<FloorplanObjectId>& objectIds)
+  void FloorplanJS::updateBuildingUnits(const std::vector<FloorplanObjectId>& objectIds, bool removeMissingObjects)
   {
-    updateObjects(m_value, "building_units", objectIds);
+    updateObjects(m_value, "building_units", objectIds, removeMissingObjects);
   }
 
-  void FloorplanJS::updateThermalZones(const std::vector<FloorplanObjectId>& objectIds)
+  void FloorplanJS::updateThermalZones(const std::vector<FloorplanObjectId>& objectIds, bool removeMissingObjects)
   {
-    updateObjects(m_value, "thermal_zones", objectIds);
+    updateObjects(m_value, "thermal_zones", objectIds, removeMissingObjects);
   }
 
-  void FloorplanJS::updateSpaceTypes(const std::vector<FloorplanObjectId>& objectIds)
+  void FloorplanJS::updateSpaceTypes(const std::vector<FloorplanObjectId>& objectIds, bool removeMissingObjects)
   {
-    updateObjects(m_value, "space_types", objectIds);
+    updateObjects(m_value, "space_types", objectIds, removeMissingObjects);
   }
 
-  void FloorplanJS::updateConstructionSets(const std::vector<FloorplanObjectId>& objectIds)
+  void FloorplanJS::updateConstructionSets(const std::vector<FloorplanObjectId>& objectIds, bool removeMissingObjects)
   {
-    updateObjects(m_value, "construction_sets", objectIds);
+    updateObjects(m_value, "construction_sets", objectIds, removeMissingObjects);
   }
 
   std::string FloorplanJS::getHandleString(const Json::Value& value) const
@@ -601,7 +601,7 @@ namespace openstudio{
     return nullptr;
   }
 
-  void FloorplanJS::updateObjects(Json::Value& value, const std::string& key, const std::vector<FloorplanObjectId>& objectIds)
+  void FloorplanJS::updateObjects(Json::Value& value, const std::string& key, const std::vector<FloorplanObjectId>& objectIds, bool removeMissingObjects)
   { 
     // ensure key exists
     if (!value.isMember(key)){
@@ -609,6 +609,7 @@ namespace openstudio{
     }
 
     // remove all objects that aren't found by handle or name
+    if (removeMissingObjects)
     {
       std::set<std::string> ids;
       std::set<std::string> names;

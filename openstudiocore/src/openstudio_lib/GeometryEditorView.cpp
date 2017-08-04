@@ -239,16 +239,8 @@ void EditorWebView::refreshClicked()
 
 void EditorWebView::saveClickedBlocking(const openstudio::path&)
 {
-  if (m_geometryEditorLoaded && !m_javascriptRunning){
-    m_javascriptRunning = true;
-    m_document->disable();
-    QString javascript = QString("JSON.stringify(api.doExport());");
-    m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_export = v; this->saveExport(); m_javascriptRunning = false; });
-    while (m_javascriptRunning){
-      OSAppBase::instance()->processEvents();
-    }
-    m_document->enable();
-  }
+  doExport();
+  saveExport();
 }
 
 void EditorWebView::previewClicked()
@@ -325,7 +317,7 @@ void EditorWebView::startEditor()
     QString javascript = QString("window.api.setConfig(") + QString::fromStdString(json) + QString(");");
     m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_javascriptRunning = false; });
     while (m_javascriptRunning){
-      OSAppBase::instance()->processEvents();
+      OSAppBase::instance()->processEvents(QEventLoop::ExcludeUserInputEvents);
     }
   }
 
@@ -338,7 +330,7 @@ void EditorWebView::startEditor()
     QString javascript = QString("window.api.init();");
     m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_javascriptRunning = false; });
     while (m_javascriptRunning){
-      OSAppBase::instance()->processEvents();
+      OSAppBase::instance()->processEvents(QEventLoop::ExcludeUserInputEvents);
     }
   }
 
@@ -356,7 +348,7 @@ void EditorWebView::startEditor()
       QString javascript = QString("window.api.doImport(JSON.stringify(") + QString::fromStdString(json) + QString("));");
       m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_javascriptRunning = false; });
       while (m_javascriptRunning){
-        OSAppBase::instance()->processEvents();
+        OSAppBase::instance()->processEvents(QEventLoop::ExcludeUserInputEvents);
       }
 
     } else{
@@ -373,7 +365,7 @@ void EditorWebView::startEditor()
       QString javascript = QString("window.api.importLibrary(JSON.stringify(") + QString::fromStdString(json) + QString("));");
       m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_javascriptRunning = false; });
       while (m_javascriptRunning){
-        OSAppBase::instance()->processEvents();
+        OSAppBase::instance()->processEvents(QEventLoop::ExcludeUserInputEvents);
       }
     }
   }
@@ -383,6 +375,20 @@ void EditorWebView::startEditor()
   m_checkForUpdateTimer->start(1000);
 
   m_document->enable();
+}
+
+void EditorWebView::doExport()
+{
+  if (m_geometryEditorLoaded && !m_javascriptRunning){
+    m_javascriptRunning = true;
+    m_document->disable();
+    QString javascript = QString("JSON.stringify(api.doExport());");
+    m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_export = v; m_javascriptRunning = false; });
+    while (m_javascriptRunning){
+      OSAppBase::instance()->processEvents(QEventLoop::ExcludeUserInputEvents);
+    }
+    m_document->enable();
+  }
 }
 
 void EditorWebView::saveExport()
@@ -412,6 +418,9 @@ void EditorWebView::saveExport()
 
 void EditorWebView::previewExport()
 {
+  // do the export 
+  doExport();
+
   // translate the exported floorplan
   translateExport();
 
@@ -442,6 +451,9 @@ void EditorWebView::previewExport()
 
 void EditorWebView::mergeExport()
 {
+  // do the export 
+  doExport();
+
   // translate the exported floorplan
   translateExport();
 

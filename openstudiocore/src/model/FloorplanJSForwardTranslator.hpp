@@ -46,6 +46,9 @@ namespace openstudio
 
       FloorplanJSForwardTranslator();
 
+      /// Update FloorplanJS to match OpenStudio Model
+      FloorplanJS updateFloorplanJS(const FloorplanJS& floorplan, const Model& model);
+
       /// Update library resources in FloorplanJS format to match those in OpenStudio Model
       FloorplanJS updateFloorplanJSResources(const FloorplanJS& floorplan, const Model& model);
 

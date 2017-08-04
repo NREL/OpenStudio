@@ -74,7 +74,7 @@ namespace openstudio
     FloorplanJSForwardTranslator::FloorplanJSForwardTranslator()
     {}
 
-    FloorplanJS FloorplanJSForwardTranslator::updateFloorplanJSResources(const FloorplanJS& floorplan, const Model& model)
+    FloorplanJS FloorplanJSForwardTranslator::updateFloorplanJS(const FloorplanJS& floorplan, const Model& model)
     {
       FloorplanJS result(floorplan.toJSON());
 
@@ -85,7 +85,7 @@ namespace openstudio
       {
         storyObjectIds.push_back(FloorplanObjectId("", story.nameString(), story.handle()));
       }
-      result.updateStories(storyObjectIds);
+      result.updateStories(storyObjectIds, true);
 
       std::vector<FloorplanObjectId> spaceObjectIds;
       for (const auto& space : model.getConcreteModelObjects<Space>())
@@ -96,41 +96,78 @@ namespace openstudio
         }
         spaceObjectIds.push_back(spaceObjectId);
       }
-      result.updateStories(spaceObjectIds);
+      result.updateStories(spaceObjectIds, true);
 
       std::vector<FloorplanObjectId> unitObjectIds;
       for (const auto& unit : model.getConcreteModelObjects<BuildingUnit>())
       {
         unitObjectIds.push_back(FloorplanObjectId("", unit.nameString(), unit.handle()));
       }
-      result.updateBuildingUnits(unitObjectIds);
+      result.updateBuildingUnits(unitObjectIds, true);
 
       std::vector<FloorplanObjectId> zoneObjectIds;
       for (const auto& zone : model.getConcreteModelObjects<ThermalZone>())
       {
         zoneObjectIds.push_back(FloorplanObjectId("", zone.nameString(), zone.handle()));
       }
-      result.updateThermalZones(zoneObjectIds);
+      result.updateThermalZones(zoneObjectIds, true);
 
       std::vector<FloorplanObjectId> spaceTypeObjectIds;
       for (const auto& spaceType : model.getConcreteModelObjects<SpaceType>())
       {
         spaceTypeObjectIds.push_back(FloorplanObjectId("", spaceType.nameString(), spaceType.handle()));
       }
-      result.updateSpaceTypes(spaceTypeObjectIds);
+      result.updateSpaceTypes(spaceTypeObjectIds, true);
 
       std::vector<FloorplanObjectId> setObjectIds;
       for (const auto& set : model.getConcreteModelObjects<DefaultConstructionSet>())
       {
         setObjectIds.push_back(FloorplanObjectId("", set.nameString(), set.handle()));
       }
-      result.updateConstructionSets(setObjectIds);
+      result.updateConstructionSets(setObjectIds, true);
 
       // second update all the properties
 
       return result;
     }
 
+    FloorplanJS FloorplanJSForwardTranslator::updateFloorplanJSResources(const FloorplanJS& floorplan, const Model& model)
+    {
+      FloorplanJS result(floorplan.toJSON());
+
+      // first have to update all the names
+      std::vector<FloorplanObjectId> unitObjectIds;
+      for (const auto& unit : model.getConcreteModelObjects<BuildingUnit>())
+      {
+        unitObjectIds.push_back(FloorplanObjectId("", unit.nameString(), unit.handle()));
+      }
+      result.updateBuildingUnits(unitObjectIds, false);
+
+      std::vector<FloorplanObjectId> zoneObjectIds;
+      for (const auto& zone : model.getConcreteModelObjects<ThermalZone>())
+      {
+        zoneObjectIds.push_back(FloorplanObjectId("", zone.nameString(), zone.handle()));
+      }
+      result.updateThermalZones(zoneObjectIds, false);
+
+      std::vector<FloorplanObjectId> spaceTypeObjectIds;
+      for (const auto& spaceType : model.getConcreteModelObjects<SpaceType>())
+      {
+        spaceTypeObjectIds.push_back(FloorplanObjectId("", spaceType.nameString(), spaceType.handle()));
+      }
+      result.updateSpaceTypes(spaceTypeObjectIds, false);
+
+      std::vector<FloorplanObjectId> setObjectIds;
+      for (const auto& set : model.getConcreteModelObjects<DefaultConstructionSet>())
+      {
+        setObjectIds.push_back(FloorplanObjectId("", set.nameString(), set.handle()));
+      }
+      result.updateConstructionSets(setObjectIds, false);
+
+      // second update all the properties
+
+      return result;
+    }
     
   }//model
 }//openstudio

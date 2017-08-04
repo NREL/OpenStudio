@@ -100,12 +100,12 @@ namespace openstudio{
     /// if object with same handle exists, name will be updated
     /// else if object with same name exists, handle will be assigned
     /// else new object will be added
-    void updateStories(const std::vector<FloorplanObjectId>& objects);
-    void updateSpaces(const std::vector<FloorplanObjectId>& objects);
-    void updateBuildingUnits(const std::vector<FloorplanObjectId>& objects);
-    void updateThermalZones(const std::vector<FloorplanObjectId>& objects);
-    void updateSpaceTypes(const std::vector<FloorplanObjectId>& objects);
-    void updateConstructionSets(const std::vector<FloorplanObjectId>& objects);
+    void updateStories(const std::vector<FloorplanObjectId>& objects, bool removeMissingObjects);
+    void updateSpaces(const std::vector<FloorplanObjectId>& objects, bool removeMissingObjects);
+    void updateBuildingUnits(const std::vector<FloorplanObjectId>& objects, bool removeMissingObjects);
+    void updateThermalZones(const std::vector<FloorplanObjectId>& objects, bool removeMissingObjects);
+    void updateSpaceTypes(const std::vector<FloorplanObjectId>& objects, bool removeMissingObjects);
+    void updateConstructionSets(const std::vector<FloorplanObjectId>& objects, bool removeMissingObjects);
 
   private:
     REGISTER_LOGGER("FloorplanJS");
@@ -130,7 +130,7 @@ namespace openstudio{
 
     const Json::Value* findById(const Json::Value& values, const std::string& id) const;
 
-    void updateObjects(Json::Value& value, const std::string& key, const std::vector<FloorplanObjectId>& objects);
+    void updateObjects(Json::Value& value, const std::string& key, const std::vector<FloorplanObjectId>& objects, bool removeMissingObjects);
 
     Json::Value m_value;
   };
