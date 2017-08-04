@@ -74,100 +74,119 @@ namespace openstudio
     FloorplanJSForwardTranslator::FloorplanJSForwardTranslator()
     {}
 
-    FloorplanJS FloorplanJSForwardTranslator::updateFloorplanJS(const FloorplanJS& floorplan, const Model& model)
+    
+
+    FloorplanJS FloorplanJSForwardTranslator::updateFloorplanJS(const FloorplanJS& floorplan, const Model& model, bool removeMissingObjects)
     {
       FloorplanJS result(floorplan.toJSON());
 
       // first have to update all the names
 
-      std::vector<FloorplanObjectId> storyObjectIds;
+      // update resources first since these will have references to them
+      std::vector<FloorplanObject> unitObjects;
+      for (const auto& unit : model.getConcreteModelObjects<BuildingUnit>())
+      {
+        FloorplanObject unitObject("", unit.nameString(), unit.handle());
+        unitObjects.push_back(unitObject);
+      }
+      result.updateBuildingUnits(unitObjects, removeMissingObjects);
+
+      std::vector<FloorplanObject> zoneObjects;
+      for (const auto& zone : model.getConcreteModelObjects<ThermalZone>())
+      {
+        FloorplanObject zoneObject("", zone.nameString(), zone.handle());
+
+        boost::optional<RenderingColor> color = zone.renderingColor();
+        if (color){
+          zoneObject.setDataString("color", color->colorString());
+        }
+
+        zoneObjects.push_back(zoneObject);
+      }
+      result.updateThermalZones(zoneObjects, removeMissingObjects);
+
+      std::vector<FloorplanObject> spaceTypeObjects;
+      for (const auto& spaceType : model.getConcreteModelObjects<SpaceType>())
+      {
+        FloorplanObject spaceTypeObject("", spaceType.nameString(), spaceType.handle());
+
+        boost::optional<RenderingColor> color = spaceType.renderingColor();
+        if (color){
+          spaceTypeObject.setDataString("color", color->colorString());
+        }
+
+        spaceTypeObjects.push_back(spaceTypeObject);
+      }
+      result.updateSpaceTypes(spaceTypeObjects, removeMissingObjects);
+
+      std::vector<FloorplanObject> setObjects;
+      for (const auto& set : model.getConcreteModelObjects<DefaultConstructionSet>())
+      {
+        FloorplanObject setObject("", set.nameString(), set.handle());
+        
+        //boost::optional<RenderingColor> color = set.renderingColor();
+        //if (color){
+        // setObject.setDataString("color", color->colorString());
+        //}
+
+        setObjects.push_back(setObject);
+      }
+      result.updateConstructionSets(setObjects, removeMissingObjects);
+
+      // do stories and spaces after resources 
+      std::vector<FloorplanObject> storyObjects;
       for (const auto& story : model.getConcreteModelObjects<BuildingStory>())
       {
-        storyObjectIds.push_back(FloorplanObjectId("", story.nameString(), story.handle()));
-      }
-      result.updateStories(storyObjectIds, true);
+        FloorplanObject storyObject("", story.nameString(), story.handle());
+        
+        boost::optional<RenderingColor> color = story.renderingColor();
+        if (color){
+          storyObject.setDataString("color", color->colorString());
+        }
 
-      std::vector<FloorplanObjectId> spaceObjectIds;
+        // DLM: TODO "below_floor_plenum_height","floor_to_ceiling_height","above_ceiling_plenum_height","multiplier"
+
+        storyObjects.push_back(storyObject);
+      }
+      result.updateStories(storyObjects, removeMissingObjects);
+
+      std::vector<FloorplanObject> spaceObjects;
       for (const auto& space : model.getConcreteModelObjects<Space>())
       {
-        FloorplanObjectId spaceObjectId("", space.nameString(), space.handle());
-        if (boost::optional<BuildingStory> story = space.buildingStory()){
-          spaceObjectId.setParentHandleString(toString(story->handle()));
+        FloorplanObject spaceObject("", space.nameString(), space.handle());
+
+        // DLM: Should we even continue if the story is empty?
+        boost::optional<BuildingStory> story = space.buildingStory();
+        if (story){
+          spaceObject.setParentHandleString(toString(story->handle()));
         }
-        spaceObjectIds.push_back(spaceObjectId);
-      }
-      result.updateStories(spaceObjectIds, true);
 
-      std::vector<FloorplanObjectId> unitObjectIds;
-      for (const auto& unit : model.getConcreteModelObjects<BuildingUnit>())
-      {
-        unitObjectIds.push_back(FloorplanObjectId("", unit.nameString(), unit.handle()));
-      }
-      result.updateBuildingUnits(unitObjectIds, true);
+        boost::optional<BuildingUnit> unit = space.buildingUnit();
+        if (unit){
+          spaceObject.setDataReference("building_unit_id", FloorplanObject("", unit->nameString(), unit->handle()));
+        }
 
-      std::vector<FloorplanObjectId> zoneObjectIds;
-      for (const auto& zone : model.getConcreteModelObjects<ThermalZone>())
-      {
-        zoneObjectIds.push_back(FloorplanObjectId("", zone.nameString(), zone.handle()));
-      }
-      result.updateThermalZones(zoneObjectIds, true);
+        boost::optional<ThermalZone> zone = space.thermalZone();
+        if (zone){
+          spaceObject.setDataReference("thermal_zone_id", FloorplanObject("", zone->nameString(), zone->handle()));
+        }
 
-      std::vector<FloorplanObjectId> spaceTypeObjectIds;
-      for (const auto& spaceType : model.getConcreteModelObjects<SpaceType>())
-      {
-        spaceTypeObjectIds.push_back(FloorplanObjectId("", spaceType.nameString(), spaceType.handle()));
-      }
-      result.updateSpaceTypes(spaceTypeObjectIds, true);
+        boost::optional<SpaceType> spaceType = space.spaceType();
+        if (spaceType){
+          spaceObject.setDataReference("space_type_id", FloorplanObject("", spaceType->nameString(), spaceType->handle()));
+        }
 
-      std::vector<FloorplanObjectId> setObjectIds;
-      for (const auto& set : model.getConcreteModelObjects<DefaultConstructionSet>())
-      {
-        setObjectIds.push_back(FloorplanObjectId("", set.nameString(), set.handle()));
-      }
-      result.updateConstructionSets(setObjectIds, true);
+        boost::optional<DefaultConstructionSet> set = space.defaultConstructionSet();
+        if (set){
+          spaceObject.setDataReference("construction_set_id", FloorplanObject("", set->nameString(), set->handle()));
+        }
 
-      // second update all the properties
+        spaceObjects.push_back(spaceObject);
+      }
+      result.updateSpaces(spaceObjects, removeMissingObjects);
 
       return result;
     }
 
-    FloorplanJS FloorplanJSForwardTranslator::updateFloorplanJSResources(const FloorplanJS& floorplan, const Model& model)
-    {
-      FloorplanJS result(floorplan.toJSON());
-
-      // first have to update all the names
-      std::vector<FloorplanObjectId> unitObjectIds;
-      for (const auto& unit : model.getConcreteModelObjects<BuildingUnit>())
-      {
-        unitObjectIds.push_back(FloorplanObjectId("", unit.nameString(), unit.handle()));
-      }
-      result.updateBuildingUnits(unitObjectIds, false);
-
-      std::vector<FloorplanObjectId> zoneObjectIds;
-      for (const auto& zone : model.getConcreteModelObjects<ThermalZone>())
-      {
-        zoneObjectIds.push_back(FloorplanObjectId("", zone.nameString(), zone.handle()));
-      }
-      result.updateThermalZones(zoneObjectIds, false);
-
-      std::vector<FloorplanObjectId> spaceTypeObjectIds;
-      for (const auto& spaceType : model.getConcreteModelObjects<SpaceType>())
-      {
-        spaceTypeObjectIds.push_back(FloorplanObjectId("", spaceType.nameString(), spaceType.handle()));
-      }
-      result.updateSpaceTypes(spaceTypeObjectIds, false);
-
-      std::vector<FloorplanObjectId> setObjectIds;
-      for (const auto& set : model.getConcreteModelObjects<DefaultConstructionSet>())
-      {
-        setObjectIds.push_back(FloorplanObjectId("", set.nameString(), set.handle()));
-      }
-      result.updateConstructionSets(setObjectIds, false);
-
-      // second update all the properties
-
-      return result;
-    }
-    
   }//model
 }//openstudio

@@ -42,52 +42,181 @@
 
 namespace openstudio{
 
+  FloorplanObject::FloorplanObject(const std::string& id, const std::string& name, const std::string& handleString)
+    : m_id(id), m_name(name), m_handle(toUUID(handleString)), m_handleString(handleString)
+  {}
   
-  FloorplanObjectId::FloorplanObjectId(const std::string& id, const std::string& name, const UUID& handle)
+  FloorplanObject::FloorplanObject(const std::string& id, const std::string& name, const UUID& handle)
     : m_id(id), m_name(name), m_handle(handle), m_handleString(toString(handle))
   {}
 
-  std::string FloorplanObjectId::id() const
+  FloorplanObject::FloorplanObject(const Json::Value& value)
+    : m_data(value)
+  {
+    m_id = m_data.get("id", "").asString();
+    m_data.removeMember("id");
+
+    m_name = m_data.get("name", "").asString();
+    m_data.removeMember("name");
+
+    m_handleString = m_data.get("handle", "").asString();
+    m_handle = toUUID(m_handleString);
+    m_data.removeMember("handle");
+
+    // look for different references
+    std::string building_unit_id = m_data.get("building_unit_id", "").asString();
+    if (!building_unit_id.empty()){
+      m_objectReferenceMap.insert(std::make_pair("building_unit_id", FloorplanObject(building_unit_id, "", "")));
+    }
+    m_data.removeMember("building_unit_id");
+
+    std::string thermal_zone_id = m_data.get("thermal_zone_id", "").asString();
+    if (!thermal_zone_id.empty()){
+      m_objectReferenceMap.insert(std::make_pair("thermal_zone_id", FloorplanObject(thermal_zone_id, "", "")));
+    }
+    m_data.removeMember("thermal_zone_id");
+
+    std::string space_type_id = m_data.get("space_type_id", "").asString();
+    if (!space_type_id.empty()){
+      m_objectReferenceMap.insert(std::make_pair("space_type_id", FloorplanObject(space_type_id, "", "")));
+    }
+    m_data.removeMember("space_type_id");
+
+    std::string construction_set_id = m_data.get("construction_set_id", "").asString();
+    if (!construction_set_id.empty()){
+      m_objectReferenceMap.insert(std::make_pair("construction_set_id", FloorplanObject(construction_set_id, "", "")));
+    }
+    m_data.removeMember("construction_set_id");
+
+    //window_id
+   
+    //daylighting_control_id
+
+  }
+
+  std::string FloorplanObject::id() const
   {
     return m_id;
   }
 
-  std::string FloorplanObjectId::name() const
+  std::string FloorplanObject::name() const
   {
     return m_name;
   }
 
-  UUID FloorplanObjectId::handle() const
+  UUID FloorplanObject::handle() const
   {
     return m_handle;
   }
 
-  std::string FloorplanObjectId::handleString() const
+  std::string FloorplanObject::handleString() const
   {
     return m_handleString;
   }
 
-  boost::optional<std::string> FloorplanObjectId::parentHandleString() const
+  boost::optional<std::string> FloorplanObject::parentHandleString() const
   {
     return m_parentHandleString;
   }
 
-  void FloorplanObjectId::setParentHandleString(const std::string& parentHandleString)
+  void FloorplanObject::setParentHandleString(const std::string& parentHandleString)
   {
     m_parentHandleString = parentHandleString;
   }
 
-  void FloorplanObjectId::resetParentHandleString()
+  void FloorplanObject::resetParentHandleString()
   {
     m_parentHandleString.reset();
   }
 
+  boost::optional<double> FloorplanObject::getDataDouble(const std::string& key) const
+  {
+    Json::Value value = m_data.get(key, Json::nullValue);
+    if (!value.isNull() && value.isNumeric()){
+      return value.asDouble();
+    }
+    return boost::none;
+  }
+
+  boost::optional<int> FloorplanObject::getDataInt(const std::string& key) const
+  {
+    Json::Value value = m_data.get(key, Json::nullValue);
+    if (!value.isNull() && value.isNumeric()){
+      return value.asInt();
+    }
+    return boost::none;
+  }
+
+  boost::optional<bool> FloorplanObject::getDataBool(const std::string& key) const
+  {
+    Json::Value value = m_data.get(key, Json::nullValue);
+    if (!value.isNull() && value.isBool()){
+      return value.asBool();
+    }
+    return boost::none;
+  }
+ 
+  boost::optional<std::string> FloorplanObject::getDataString(const std::string& key) const
+  {
+    Json::Value value = m_data.get(key, Json::nullValue);
+    if (!value.isNull() && value.isString()){
+      return value.asString();
+    }
+    return boost::none;
+  }
+
+  boost::optional<FloorplanObject> FloorplanObject::getDataReference(const std::string& key) const
+  {
+    const auto& it = m_objectReferenceMap.find(key);
+    if (it != m_objectReferenceMap.end()){
+      return it->second;
+    }
+    return boost::none;
+  }
+
+  void FloorplanObject::setDataDouble(const std::string& key, double value)
+  {
+    m_data[key] = value;
+  }
+  
+  void FloorplanObject::setDataInt(const std::string& key, int value)
+  {
+    m_data[key] = value;
+  }
+
+  void FloorplanObject::setDataBool(const std::string& key, bool value)
+  {
+    m_data[key] = value;
+  }
+
+  void FloorplanObject::setDataString(const std::string& key, const std::string& value)
+  {
+    m_data[key] = value;
+  }
+
+  void FloorplanObject::setDataReference(const std::string& key, const FloorplanObject& value)
+  {
+    m_objectReferenceMap.insert(std::make_pair(key, value));
+  }
+
+  Json::Value FloorplanObject::data() const
+  {
+    return m_data;
+  }
+
+  std::map<std::string, FloorplanObject> FloorplanObject::objectReferenceMap() const
+  {
+    return m_objectReferenceMap;
+  }
+
   FloorplanJS::FloorplanJS()
+    : m_lastId(0)
   {
     m_value = Json::Value(Json::objectValue);
   }
 
   FloorplanJS::FloorplanJS(const std::string& s)
+    : m_lastId(0)
   {
     Json::Reader reader;
     bool parsingSuccessful = reader.parse(s, m_value);
@@ -108,6 +237,14 @@ namespace openstudio{
         LOG_AND_THROW("ThreeJS JSON cannot be processed, " << errors);
       }
     }
+
+    setLastId(m_value);
+  }
+
+  FloorplanJS::FloorplanJS(const Json::Value& value)
+    : m_value(value),  m_lastId(0)
+  {
+    setLastId(m_value);
   }
     
   boost::optional<FloorplanJS> FloorplanJS::load(const std::string& json)
@@ -464,26 +601,26 @@ namespace openstudio{
     return result;
   }
 
-  void FloorplanJS::updateStories(const std::vector<FloorplanObjectId>& objectIds, bool removeMissingObjects)
+  void FloorplanJS::updateStories(const std::vector<FloorplanObject>& objects, bool removeMissingObjects)
   {
-    updateObjects(m_value, "stories", objectIds, removeMissingObjects);
+    updateObjects(m_value, "stories", objects, removeMissingObjects);
   }
 
-  void FloorplanJS::updateSpaces(const std::vector<FloorplanObjectId>& objectIds, bool removeMissingObjects)
+  void FloorplanJS::updateSpaces(const std::vector<FloorplanObject>& objects, bool removeMissingObjects)
   {
-    std::map<std::string, std::vector<FloorplanObjectId> > storyHandleToSpaceObejctIds;
+    std::map<std::string, std::vector<FloorplanObject> > storyHandleToSpaceObejctIds;
 
-    for (const auto& objectId : objectIds){
-      boost::optional<std::string> parentHandleString = objectId.parentHandleString();
+    for (const auto& object : objects){
+      boost::optional<std::string> parentHandleString = object.parentHandleString();
 
       if (!parentHandleString){
         continue;
       }
 
       if (storyHandleToSpaceObejctIds.find(*parentHandleString) == storyHandleToSpaceObejctIds.end()){
-        storyHandleToSpaceObejctIds[*parentHandleString] = std::vector<FloorplanObjectId>();
+        storyHandleToSpaceObejctIds[*parentHandleString] = std::vector<FloorplanObject>();
       }
-      storyHandleToSpaceObejctIds[*parentHandleString].push_back(objectId);
+      storyHandleToSpaceObejctIds[*parentHandleString].push_back(object);
     }
 
     for (const auto& keyValue: storyHandleToSpaceObejctIds){
@@ -495,24 +632,24 @@ namespace openstudio{
     }
   }
 
-  void FloorplanJS::updateBuildingUnits(const std::vector<FloorplanObjectId>& objectIds, bool removeMissingObjects)
+  void FloorplanJS::updateBuildingUnits(const std::vector<FloorplanObject>& objects, bool removeMissingObjects)
   {
-    updateObjects(m_value, "building_units", objectIds, removeMissingObjects);
+    updateObjects(m_value, "building_units", objects, removeMissingObjects);
   }
 
-  void FloorplanJS::updateThermalZones(const std::vector<FloorplanObjectId>& objectIds, bool removeMissingObjects)
+  void FloorplanJS::updateThermalZones(const std::vector<FloorplanObject>& objects, bool removeMissingObjects)
   {
-    updateObjects(m_value, "thermal_zones", objectIds, removeMissingObjects);
+    updateObjects(m_value, "thermal_zones", objects, removeMissingObjects);
   }
 
-  void FloorplanJS::updateSpaceTypes(const std::vector<FloorplanObjectId>& objectIds, bool removeMissingObjects)
+  void FloorplanJS::updateSpaceTypes(const std::vector<FloorplanObject>& objects, bool removeMissingObjects)
   {
-    updateObjects(m_value, "space_types", objectIds, removeMissingObjects);
+    updateObjects(m_value, "space_types", objects, removeMissingObjects);
   }
 
-  void FloorplanJS::updateConstructionSets(const std::vector<FloorplanObjectId>& objectIds, bool removeMissingObjects)
+  void FloorplanJS::updateConstructionSets(const std::vector<FloorplanObject>& objects, bool removeMissingObjects)
   {
-    updateObjects(m_value, "construction_sets", objectIds, removeMissingObjects);
+    updateObjects(m_value, "construction_sets", objects, removeMissingObjects);
   }
 
   std::string FloorplanJS::getHandleString(const Json::Value& value) const
@@ -528,6 +665,44 @@ namespace openstudio{
   std::string FloorplanJS::getId(const Json::Value& value) const
   {
     return value.get("id", "").asString();
+  }
+
+  std::string FloorplanJS::getNextId()
+  {
+    ++m_lastId;
+    return std::to_string(m_lastId);
+  }
+
+  void FloorplanJS::setLastId(const Json::Value& value)
+  {
+    if (value.isObject()){
+      for (const auto& key : value.getMemberNames()){
+        const auto& value2 = value[key];
+        if (value2.isArray()){
+          Json::ArrayIndex n = value2.size();
+          for (Json::ArrayIndex i = 0; i < n; ++i){
+            setLastId(value2[i]);
+          }
+        } else if (value2.isObject()){
+          setLastId(value2);
+        } else if (key == "id"){
+          if (value2.isString()){
+            std::string s = value2.asString();
+            unsigned id = strtoul(s.c_str(), nullptr, 0);
+            if (id > 100){
+              bool test= false;
+            }
+            m_lastId = std::max(m_lastId, id);
+          } else if (value2.isConvertibleTo(Json::ValueType::uintValue)){
+            unsigned id = value2.asUInt();
+            if (id > 100){
+              bool test = false;
+            }
+            m_lastId = std::max(m_lastId, value2.asUInt());
+          }
+        }
+      }
+    }
   }
 
   Json::Value* FloorplanJS::findByHandleString(Json::Value& value, const std::string& key, const std::string& handleString)
@@ -601,7 +776,7 @@ namespace openstudio{
     return nullptr;
   }
 
-  void FloorplanJS::updateObjects(Json::Value& value, const std::string& key, const std::vector<FloorplanObjectId>& objectIds, bool removeMissingObjects)
+  void FloorplanJS::updateObjects(Json::Value& value, const std::string& key, const std::vector<FloorplanObject>& objects, bool removeMissingObjects)
   { 
     // ensure key exists
     if (!value.isMember(key)){
@@ -614,10 +789,10 @@ namespace openstudio{
       std::set<std::string> ids;
       std::set<std::string> names;
       std::set<std::string> handleStrings;
-      for (const auto& objectId : objectIds){
-        ids.insert(objectId.id());
-        names.insert(objectId.name());
-        handleStrings.insert(objectId.handleString());
+      for (const auto& object : objects){
+        ids.insert(object.id());
+        names.insert(object.name());
+        handleStrings.insert(object.handleString());
       }
 
       std::vector<Json::ArrayIndex> indicesToRemove;
@@ -638,30 +813,82 @@ namespace openstudio{
       }
     }
 
-    // now update names
-    for (const auto& objectId : objectIds){
+    // now update names and data
+    for (const auto& object : objects){
 
-      Json::Value* object = findByHandleString(value, key, objectId.handleString());
-      if (object){
+      Json::Value* v = findByHandleString(value, key, object.handleString());
+      if (v){
         // ensure name is the same
-        (*object)["name"] = objectId.name();
+        (*v)["name"] = object.name();
       } else {
         // find object by name only if handle is empty
-        object = findByName(value, key, objectId.name(), true);
+        v = findByName(value, key, object.name(), true);
 
-        if (object){
+        if (v){
           // set handle
-          (*object)["handle"] = objectId.handleString();
+          (*v)["handle"] = object.handleString();
         } else{
           // create new object
           Json::Value newObject(Json::objectValue);
-          newObject["id"] = ""; // might have to provide a get next id method?
-          newObject["name"] = objectId.name();
-          newObject["handle"] = objectId.handleString();
-          value[key].append(newObject);
+          newObject["id"] = getNextId();
+          newObject["name"] = object.name();
+          newObject["handle"] = object.handleString();
+          v = &(value[key].append(newObject));
+        }
+      }
+     
+      if (v){
+        // update properties
+        Json::Value data = object.data();
+        for (const auto& key : data.getMemberNames()){
+          (*v)[key] = data[key];
+        }
+
+        // update references
+        for (const auto& p : object.objectReferenceMap()){
+          updateObjectReference(*v, p.first, p.second, removeMissingObjects);
         }
       }
     }
+  }
+
+  void FloorplanJS::updateObjectReference(Json::Value& value, const std::string& key, const FloorplanObject& objectReference, bool removeMissingObjects)
+  {
+    std::string searchKey;
+    if (key == "thermal_zone_id"){
+      searchKey = "thermal_zones";
+    }else if (key == "space_type_id"){
+      searchKey = "space_types";
+    }else if (key == "building_unit_id"){
+      searchKey = "building_units";
+    } else if (key == "construction_set_id"){
+      searchKey = "construction_sets";
+    }
+
+    if (searchKey.empty()){
+      LOG(Error, "Could not find objects to search for key '" << key << "'");
+      return;
+    }
+
+    Json::Value* v = findByHandleString(m_value, searchKey, objectReference.handleString());
+    if (v){
+      value[key] = v->get("id", "").asString();
+      return;
+    } 
+
+    v = findById(m_value, searchKey, objectReference.id());
+    if (v){
+      value[key] = v->get("id", "").asString();
+      return;
+    } 
+
+    v = findByName(m_value, searchKey, objectReference.name(), true);
+    if (v){
+      value[key] = v->get("id", "").asString();
+      return;
+    } 
+
+    value[key] = "";
   }
 
 } // openstudio

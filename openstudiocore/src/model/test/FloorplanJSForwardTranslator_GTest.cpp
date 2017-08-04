@@ -31,12 +31,23 @@
 #include "ModelFixture.hpp"
 
 #include "../FloorplanJSForwardTranslator.hpp"
+#include "../ThreeJSReverseTranslator.hpp"
+
 #include "../Model.hpp"
 #include "../Space.hpp"
 #include "../Space_Impl.hpp"
+#include "../BuildingStory.hpp"
+#include "../BuildingStory_Impl.hpp"
 #include "../Surface.hpp"
 #include "../Surface_Impl.hpp"
 #include "../SpaceType.hpp"
+#include "../SpaceType_Impl.hpp"
+#include "../ThermalZone.hpp"
+#include "../ThermalZone_Impl.hpp"
+#include "../BuildingUnit.hpp"
+#include "../BuildingUnit_Impl.hpp"
+#include "../DefaultConstructionSet.hpp"
+#include "../DefaultConstructionSet_Impl.hpp"
 
 #include "../../utilities/geometry/FloorplanJS.hpp"
 #include "../../utilities/geometry/ThreeJS.hpp"
@@ -70,27 +81,83 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator) {
   ASSERT_TRUE(value["space_types"].isArray());
   EXPECT_EQ(0u, value["space_types"].size());
   
+  ASSERT_TRUE(value.isMember("thermal_zones"));
+  ASSERT_TRUE(value["thermal_zones"].isArray());
+  EXPECT_EQ(0u, value["thermal_zones"].size());
 
-  ThreeScene threeScene = floorplan->toThreeScene(false);
-  std::string j = threeScene.toJSON(false);
+  ASSERT_TRUE(value.isMember("building_units"));
+  ASSERT_TRUE(value["building_units"].isArray());
+  EXPECT_EQ(0u, value["building_units"].size());
+  
+  ASSERT_TRUE(value.isMember("construction_sets"));
+  ASSERT_TRUE(value["construction_sets"].isArray());
+  EXPECT_EQ(0u, value["construction_sets"].size());
 
-  bool found = false;
-  for (const auto& child : threeScene.object().children()){
-    if (child.userData().spaceName() == "Space 1 - 1"){
-      found = true;
-      EXPECT_EQ("Story 1", child.userData().buildingStoryName());
+  // translate the floorplan to a model
+  boost::optional<Model> model;
+  {
+    ThreeScene threeScene = floorplan->toThreeScene(false);
+    std::string j = threeScene.toJSON(false);
+
+    bool found = false;
+    for (const auto& child : threeScene.object().children()){
+      if (child.userData().spaceName() == "Space 1 - 1"){
+        found = true;
+        EXPECT_EQ("", child.userData().spaceHandle());
+        EXPECT_EQ("Story 1", child.userData().buildingStoryName());
+        EXPECT_EQ("", child.userData().buildingStoryHandle());
+        EXPECT_EQ("", child.userData().spaceTypeName());
+        EXPECT_EQ("", child.userData().spaceTypeHandle());
+        EXPECT_EQ("", child.userData().thermalZoneName());
+        EXPECT_EQ("", child.userData().thermalZoneHandle());
+        EXPECT_EQ("", child.userData().buildingUnitName());
+        EXPECT_EQ("", child.userData().buildingUnitHandle());
+        EXPECT_EQ("", child.userData().constructionSetName());
+        EXPECT_EQ("", child.userData().constructionSetHandle());
+      }
     }
+    EXPECT_TRUE(found);
+
+    ThreeJSReverseTranslator rt;
+    model = rt.modelFromThreeJS(threeScene);
   }
-  EXPECT_TRUE(found);
+  ASSERT_TRUE(model);
 
-  // create model with a space type
-  Model model;
+  // check the model
+  ASSERT_EQ(1u, model->getConcreteModelObjects<Space>().size());
+  Space space = model->getConcreteModelObjects<Space>()[0];
+  EXPECT_EQ("Space 1 - 1", space.nameString());
 
-  SpaceType spaceType(model);
+  ASSERT_EQ(1u, model->getConcreteModelObjects<BuildingStory>().size());
+  BuildingStory buildingStory = model->getConcreteModelObjects<BuildingStory>()[0];
+  EXPECT_EQ("Story 1", buildingStory.nameString());
+
+  EXPECT_EQ(0u, model->getConcreteModelObjects<SpaceType>().size());
+  EXPECT_EQ(0u, model->getConcreteModelObjects<ThermalZone>().size());
+  EXPECT_EQ(0u, model->getConcreteModelObjects<BuildingUnit>().size());
+  EXPECT_EQ(0u, model->getConcreteModelObjects<DefaultConstructionSet>().size());
+
+  SpaceType spaceType(*model);
   EXPECT_TRUE(spaceType.setName("SpaceType 1"));
 
+  ThermalZone thermalZone(*model);
+  EXPECT_TRUE(thermalZone.setName("ThermalZone 1"));
+
+  BuildingUnit buildingUnit(*model);
+  EXPECT_TRUE(buildingUnit.setName("BuildingUnit 1"));
+
+  DefaultConstructionSet defaultConstructionSet(*model);
+  EXPECT_TRUE(defaultConstructionSet.setName("DefaultConstructionSet 1"));
+
+  EXPECT_EQ(1u, model->getConcreteModelObjects<SpaceType>().size());
+  EXPECT_EQ(1u, model->getConcreteModelObjects<ThermalZone>().size());
+  EXPECT_EQ(1u, model->getConcreteModelObjects<BuildingUnit>().size());
+  EXPECT_EQ(1u, model->getConcreteModelObjects<DefaultConstructionSet>().size());
+
+  // update the floorplan with objects from the model
+  // should match up the space and story, add the other new objects
   model::FloorplanJSForwardTranslator ft;
-  FloorplanJS floorplan2 = ft.updateFloorplanJSResources(*floorplan, model);
+  FloorplanJS floorplan2 = ft.updateFloorplanJS(*floorplan, *model, false);
 
   ASSERT_TRUE(reader.parse(floorplan2.toJSON(), value));
   ASSERT_TRUE(value.isMember("stories"));
@@ -107,4 +174,147 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator) {
   ASSERT_TRUE(value["space_types"].isArray());
   ASSERT_EQ(1u, value["space_types"].size());
   EXPECT_EQ("SpaceType 1", value["space_types"][0].get("name", "").asString());
+
+  ASSERT_TRUE(value.isMember("thermal_zones"));
+  ASSERT_TRUE(value["thermal_zones"].isArray());
+  ASSERT_EQ(1u, value["thermal_zones"].size());
+  EXPECT_EQ("ThermalZone 1", value["thermal_zones"][0].get("name", "").asString());
+
+  ASSERT_TRUE(value.isMember("building_units"));
+  ASSERT_TRUE(value["building_units"].isArray());
+  ASSERT_EQ(1u, value["building_units"].size());
+  EXPECT_EQ("BuildingUnit 1", value["building_units"][0].get("name", "").asString());
+  
+  ASSERT_TRUE(value.isMember("construction_sets"));
+  ASSERT_TRUE(value["construction_sets"].isArray());
+  ASSERT_EQ(1u, value["construction_sets"].size());
+  EXPECT_EQ("DefaultConstructionSet 1", value["construction_sets"][0].get("name", "").asString());
+
+  {
+    std::string f = floorplan2.toJSON();
+
+    ThreeScene threeScene = floorplan2.toThreeScene(false);
+    std::string j = threeScene.toJSON(false);
+
+    // the space is not hooked up to this stuff
+    bool found = false;
+    for (const auto& child : threeScene.object().children()){
+      if (child.userData().spaceName() == "Space 1 - 1"){
+        found = true;
+        EXPECT_EQ(toString(space.handle()), child.userData().spaceHandle());
+        EXPECT_EQ("Story 1", child.userData().buildingStoryName());
+        EXPECT_EQ(toString(buildingStory.handle()), child.userData().buildingStoryHandle());
+        EXPECT_EQ("", child.userData().spaceTypeName());
+        EXPECT_EQ("", child.userData().spaceTypeHandle());
+        EXPECT_EQ("", child.userData().thermalZoneName());
+        EXPECT_EQ("", child.userData().thermalZoneHandle());
+        EXPECT_EQ("", child.userData().buildingUnitName());
+        EXPECT_EQ("", child.userData().buildingUnitHandle());
+        EXPECT_EQ("", child.userData().constructionSetName());
+        EXPECT_EQ("", child.userData().constructionSetHandle());
+      }
+    }
+    EXPECT_TRUE(found);
+  }
+
+  // hoook space up to other objects
+  space.setSpaceType(spaceType);
+  space.setThermalZone(thermalZone);
+  space.setBuildingUnit(buildingUnit);
+  space.setDefaultConstructionSet(defaultConstructionSet);
+
+  FloorplanJS floorplan3 = ft.updateFloorplanJS(floorplan2, *model, false);
+
+  ASSERT_TRUE(reader.parse(floorplan3.toJSON(), value));
+  ASSERT_TRUE(value.isMember("stories"));
+  ASSERT_TRUE(value["stories"].isArray());
+  ASSERT_EQ(1u, value["stories"].size());
+  EXPECT_EQ("Story 1", value["stories"][0].get("name", "").asString());
+
+  ASSERT_TRUE(value["stories"][0].isMember("spaces"));
+  ASSERT_TRUE(value["stories"][0]["spaces"].isArray());
+  ASSERT_EQ(1u, value["stories"][0]["spaces"].size());
+  EXPECT_EQ("Space 1 - 1", value["stories"][0]["spaces"][0].get("name", "").asString());
+
+  ASSERT_TRUE(value.isMember("space_types"));
+  ASSERT_TRUE(value["space_types"].isArray());
+  ASSERT_EQ(1u, value["space_types"].size());
+  EXPECT_EQ("SpaceType 1", value["space_types"][0].get("name", "").asString());
+
+  ASSERT_TRUE(value.isMember("thermal_zones"));
+  ASSERT_TRUE(value["thermal_zones"].isArray());
+  ASSERT_EQ(1u, value["thermal_zones"].size());
+  EXPECT_EQ("ThermalZone 1", value["thermal_zones"][0].get("name", "").asString());
+
+  ASSERT_TRUE(value.isMember("building_units"));
+  ASSERT_TRUE(value["building_units"].isArray());
+  ASSERT_EQ(1u, value["building_units"].size());
+  EXPECT_EQ("BuildingUnit 1", value["building_units"][0].get("name", "").asString());
+  
+  ASSERT_TRUE(value.isMember("construction_sets"));
+  ASSERT_TRUE(value["construction_sets"].isArray());
+  ASSERT_EQ(1u, value["construction_sets"].size());
+  EXPECT_EQ("DefaultConstructionSet 1", value["construction_sets"][0].get("name", "").asString());
+
+{
+    std::string f = floorplan3.toJSON();
+
+    ThreeScene threeScene = floorplan3.toThreeScene(false);
+    std::string j = threeScene.toJSON(false);
+
+    // the space is now hooked up to this stuff
+    bool found = false;
+    for (const auto& child : threeScene.object().children()){
+      if (child.userData().spaceName() == "Space 1 - 1"){
+        found = true;
+        EXPECT_EQ(toString(space.handle()), child.userData().spaceHandle());
+        EXPECT_EQ("Story 1", child.userData().buildingStoryName());
+        EXPECT_EQ(toString(buildingStory.handle()), child.userData().buildingStoryHandle());
+        EXPECT_EQ(spaceType.nameString(), child.userData().spaceTypeName());
+        EXPECT_EQ(toString(spaceType.handle()), child.userData().spaceTypeHandle());
+        EXPECT_EQ(thermalZone.nameString(), child.userData().thermalZoneName());
+        EXPECT_EQ(toString(thermalZone.handle()), child.userData().thermalZoneHandle());
+        EXPECT_EQ(buildingUnit.nameString(), child.userData().buildingUnitName());
+        EXPECT_EQ(toString(buildingUnit.handle()), child.userData().buildingUnitHandle());
+        EXPECT_EQ(defaultConstructionSet.nameString(), child.userData().constructionSetName());
+        EXPECT_EQ(toString(defaultConstructionSet.handle()), child.userData().constructionSetHandle());
+      }
+    }
+    EXPECT_TRUE(found);
+  }
+
+  // remove some resource objects
+  spaceType.remove();
+  thermalZone.remove();
+  buildingUnit.remove();
+  defaultConstructionSet.remove();
+
+  FloorplanJS floorplan4 = ft.updateFloorplanJS(floorplan3, *model, true);
+
+  ASSERT_TRUE(reader.parse(floorplan4.toJSON(), value));
+  ASSERT_TRUE(value.isMember("stories"));
+  ASSERT_TRUE(value["stories"].isArray());
+  ASSERT_EQ(1u, value["stories"].size());
+  EXPECT_EQ("Story 1", value["stories"][0].get("name", "").asString());
+
+  ASSERT_TRUE(value["stories"][0].isMember("spaces"));
+  ASSERT_TRUE(value["stories"][0]["spaces"].isArray());
+  ASSERT_EQ(1u, value["stories"][0]["spaces"].size());
+  EXPECT_EQ("Space 1 - 1", value["stories"][0]["spaces"][0].get("name", "").asString());
+
+  ASSERT_TRUE(value.isMember("space_types"));
+  ASSERT_TRUE(value["space_types"].isArray());
+  EXPECT_EQ(0u, value["space_types"].size());
+  
+  ASSERT_TRUE(value.isMember("thermal_zones"));
+  ASSERT_TRUE(value["thermal_zones"].isArray());
+  EXPECT_EQ(0u, value["thermal_zones"].size());
+
+  ASSERT_TRUE(value.isMember("building_units"));
+  ASSERT_TRUE(value["building_units"].isArray());
+  EXPECT_EQ(0u, value["building_units"].size());
+  
+  ASSERT_TRUE(value.isMember("construction_sets"));
+  ASSERT_TRUE(value["construction_sets"].isArray());
+  EXPECT_EQ(0u, value["construction_sets"].size());
 }

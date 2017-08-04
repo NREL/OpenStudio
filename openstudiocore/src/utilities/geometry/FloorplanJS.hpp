@@ -49,12 +49,14 @@ namespace openstudio{
   class ThreeGeometry;
   class FloorplanObjectId;
   class Point3d;
+  class FloorplanJS;
 
-  class UTILITIES_API FloorplanObjectId{
+  class UTILITIES_API FloorplanObject{
   public:
 
     // pass empty string for any null values
-    FloorplanObjectId(const std::string& id, const std::string& name, const UUID& handle);
+    FloorplanObject(const std::string& id, const std::string& name, const std::string& handleString);
+    FloorplanObject(const std::string& id, const std::string& name, const UUID& handle);
 
     std::string id() const;
     std::string name() const;
@@ -65,13 +67,36 @@ namespace openstudio{
     void setParentHandleString(const std::string& parentHandleString);
     void resetParentHandleString();
 
+    boost::optional<double> getDataDouble(const std::string& key) const;
+    boost::optional<int> getDataInt(const std::string& key) const;
+    boost::optional<bool> getDataBool(const std::string& key) const; // DLM: warning, optional bool!
+    boost::optional<std::string> getDataString(const std::string& key) const;
+    boost::optional<FloorplanObject> getDataReference(const std::string& key) const;
+
+    void setDataDouble(const std::string& key, double value);
+    void setDataInt(const std::string& key, int value);
+    void setDataBool(const std::string& key, bool value);
+    void setDataString(const std::string& key, const std::string& value);
+    void setDataReference(const std::string& key, const FloorplanObject& value);
+
   private:
+    friend class FloorplanJS;
+
+    FloorplanObject(const Json::Value& value);
+
+    Json::Value data() const;
+
+    std::map<std::string, FloorplanObject> objectReferenceMap() const;
+
     std::string m_id;
     std::string m_name;
     UUID m_handle;
     std::string m_handleString;
-
     boost::optional<std::string> m_parentHandleString;
+
+    Json::Value m_data;
+
+    std::map<std::string, FloorplanObject> m_objectReferenceMap;
   };
 
   /** FloorplanJS is an adapter for the Geometry Editor JSON format
@@ -100,12 +125,12 @@ namespace openstudio{
     /// if object with same handle exists, name will be updated
     /// else if object with same name exists, handle will be assigned
     /// else new object will be added
-    void updateStories(const std::vector<FloorplanObjectId>& objects, bool removeMissingObjects);
-    void updateSpaces(const std::vector<FloorplanObjectId>& objects, bool removeMissingObjects);
-    void updateBuildingUnits(const std::vector<FloorplanObjectId>& objects, bool removeMissingObjects);
-    void updateThermalZones(const std::vector<FloorplanObjectId>& objects, bool removeMissingObjects);
-    void updateSpaceTypes(const std::vector<FloorplanObjectId>& objects, bool removeMissingObjects);
-    void updateConstructionSets(const std::vector<FloorplanObjectId>& objects, bool removeMissingObjects);
+    void updateStories(const std::vector<FloorplanObject>& objects, bool removeMissingObjects);
+    void updateSpaces(const std::vector<FloorplanObject>& objects, bool removeMissingObjects);
+    void updateBuildingUnits(const std::vector<FloorplanObject>& objects, bool removeMissingObjects);
+    void updateThermalZones(const std::vector<FloorplanObject>& objects, bool removeMissingObjects);
+    void updateSpaceTypes(const std::vector<FloorplanObject>& objects, bool removeMissingObjects);
+    void updateConstructionSets(const std::vector<FloorplanObject>& objects, bool removeMissingObjects);
 
   private:
     REGISTER_LOGGER("FloorplanJS");
@@ -124,15 +149,21 @@ namespace openstudio{
     std::string getName(const Json::Value& value) const;
     std::string getId(const Json::Value& value) const;
 
+    std::string getNextId();
+    void setLastId(const Json::Value& value);
+
     Json::Value* findByHandleString(Json::Value& value, const std::string& key, const std::string& handleString);
     Json::Value* findByName(Json::Value& value, const std::string& key, const std::string& name, bool requireEmptyHandle);
     Json::Value* findById(Json::Value& value, const std::string& key, const std::string& id);
 
     const Json::Value* findById(const Json::Value& values, const std::string& id) const;
 
-    void updateObjects(Json::Value& value, const std::string& key, const std::vector<FloorplanObjectId>& objects, bool removeMissingObjects);
+    void updateObjects(Json::Value& value, const std::string& key, const std::vector<FloorplanObject>& objects, bool removeMissingObjects);
+    void updateObjectReference(Json::Value& value, const std::string& key, const FloorplanObject& objectReference, bool removeMissingObjects);
 
     Json::Value m_value;
+
+    unsigned m_lastId;
   };
 
 } // openstudio

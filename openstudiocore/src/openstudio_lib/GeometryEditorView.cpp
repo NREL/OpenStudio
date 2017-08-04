@@ -181,7 +181,7 @@ EditorWebView::EditorWebView(const openstudio::model::Model& model, QWidget *t_p
 
       // update with current model content
       model::FloorplanJSForwardTranslator ft;
-      m_floorplan = ft.updateFloorplanJSResources(*m_floorplan, m_model);
+      m_floorplan = ft.updateFloorplanJS(*m_floorplan, m_model, true);
       
       // start the editor
       m_newImportGeometry->setEnabled(false);
@@ -356,7 +356,7 @@ void EditorWebView::startEditor()
       // import current model content as library
       FloorplanJS floorplan;
       model::FloorplanJSForwardTranslator ft;
-      floorplan = ft.updateFloorplanJSResources(floorplan, m_model);
+      floorplan = ft.updateFloorplanJS(floorplan, m_model, false);
 
       m_javascriptRunning = true;
 
@@ -463,7 +463,7 @@ void EditorWebView::mergeExport()
 
   // make sure handles get updated in floorplan and the exported string
   model::FloorplanJSForwardTranslator ft;
-  m_floorplan = ft.updateFloorplanJSResources(*m_floorplan, m_model);
+  m_floorplan = ft.updateFloorplanJS(*m_floorplan, m_model, false);
   m_export = QString::fromStdString(m_floorplan->toJSON());
 
   // save the exported floorplan
