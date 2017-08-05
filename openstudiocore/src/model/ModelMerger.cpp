@@ -121,9 +121,10 @@ namespace openstudio
 
       // thermal zone
       if (boost::optional<ThermalZone> newThermalZone = newSpace.thermalZone()){
-        boost::optional<WorkspaceObject> currentThermalZone = getCurrentModelObject(*newThermalZone);
-        if (currentThermalZone){
-          currentSpace.setThermalZone(currentThermalZone->cast<ThermalZone>());
+        boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(*newThermalZone);
+        if (currentObject){
+          ThermalZone currentThermalZone = currentObject->cast<ThermalZone>();
+          currentSpace.setThermalZone(currentThermalZone);
         } else{
           currentSpace.resetThermalZone();
         }
@@ -133,9 +134,10 @@ namespace openstudio
 
       // space type
       if (boost::optional<SpaceType> newSpaceType = newSpace.spaceType()){
-        boost::optional<WorkspaceObject> currentSpaceType = getCurrentModelObject(*newSpaceType);
-        if (currentSpaceType){
-          currentSpace.setSpaceType(currentSpaceType->cast<SpaceType>());
+        boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(*newSpaceType);
+        if (currentObject){
+          SpaceType currentSpaceType = currentObject->cast<SpaceType>();
+          currentSpace.setSpaceType(currentSpaceType);
         } else{
           currentSpace.resetSpaceType();
         }
@@ -145,9 +147,10 @@ namespace openstudio
 
       // building story
       if (boost::optional<BuildingStory> newBuildingStory = newSpace.buildingStory()){
-        boost::optional<WorkspaceObject> currentBuildingStory = getCurrentModelObject(*newBuildingStory);
-        if (currentBuildingStory){
-          currentSpace.setBuildingStory(currentBuildingStory->cast<BuildingStory>());
+        boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(*newBuildingStory);
+        if (currentObject){
+          BuildingStory currentBuildingStory = currentObject->cast<BuildingStory>();
+          currentSpace.setBuildingStory(currentBuildingStory);
         } else{
           currentSpace.resetBuildingStory();
         }
@@ -157,9 +160,10 @@ namespace openstudio
 
       // building unit
       if (boost::optional<BuildingUnit> newBuildingUnit = newSpace.buildingUnit()){
-        boost::optional<WorkspaceObject> currentBuildingUnit = getCurrentModelObject(*newBuildingUnit);
-        if (currentBuildingUnit){
-          currentSpace.setBuildingUnit(currentBuildingUnit->cast<BuildingUnit>());
+        boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(*newBuildingUnit);
+        if (currentObject){
+          BuildingUnit currentBuildingUnit = currentObject->cast<BuildingUnit>();
+          currentSpace.setBuildingUnit(currentBuildingUnit);
         } else{
           currentSpace.resetBuildingUnit();
         }
@@ -169,9 +173,10 @@ namespace openstudio
 
       // default construction set
       if (boost::optional<DefaultConstructionSet> newDefaultConstructionSet = newSpace.defaultConstructionSet()){
-        boost::optional<WorkspaceObject> currentDefaultConstructionSet = getCurrentModelObject(*newDefaultConstructionSet);
-        if (currentDefaultConstructionSet){
-          currentSpace.setDefaultConstructionSet(currentDefaultConstructionSet->cast<DefaultConstructionSet>());
+        boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(*newDefaultConstructionSet);
+        if (currentObject){
+          DefaultConstructionSet currentDefaultConstructionSet = currentObject->cast<DefaultConstructionSet>();
+          currentSpace.setDefaultConstructionSet(currentDefaultConstructionSet);
         } else{
           currentSpace.resetDefaultConstructionSet();
         }
@@ -215,9 +220,10 @@ namespace openstudio
 
       //default construction set.
       if (boost::optional<DefaultConstructionSet> newDefaultConstructionSet = newSpaceType.defaultConstructionSet()){
-        boost::optional<WorkspaceObject> currentDefaultConstructionSet = getCurrentModelObject(*newDefaultConstructionSet);
-        if (currentDefaultConstructionSet){
-          currentSpaceType.setDefaultConstructionSet(currentDefaultConstructionSet->cast<DefaultConstructionSet>());
+        boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(*newDefaultConstructionSet);
+        if (currentObject){
+          DefaultConstructionSet currentDefaultConstructionSet = currentObject->cast<DefaultConstructionSet>();
+          currentSpaceType.setDefaultConstructionSet(currentDefaultConstructionSet);
         } else{
           currentSpaceType.resetDefaultConstructionSet();
         }
@@ -360,22 +366,46 @@ namespace openstudio
       // merge objects
       switch (iddObjectType.value()){
       case IddObjectType::OS_Space:
-        mergeSpace(currentObject->cast<Space>(), newObject.cast<Space>());
+      {
+        Space currentSpace = currentObject->cast<Space>();
+        Space newSpace = newObject.cast<Space>();
+        mergeSpace(currentSpace, newSpace);
+      }
         break;
       case IddObjectType::OS_ThermalZone:
-        mergeThermalZone(currentObject->cast<ThermalZone>(), newObject.cast<ThermalZone>());
+      {
+        ThermalZone currentThermalZone = currentObject->cast<ThermalZone>();
+        ThermalZone newThermalZone = newObject.cast<ThermalZone>();
+        mergeThermalZone(currentThermalZone, newThermalZone);
+      }
         break;
       case IddObjectType::OS_SpaceType:
-        mergeSpaceType(currentObject->cast<SpaceType>(), newObject.cast<SpaceType>());
+      {
+        SpaceType currentSpaceType = currentObject->cast<SpaceType>();
+        SpaceType newSpaceType = newObject.cast<SpaceType>();
+        mergeSpaceType(currentSpaceType, newSpaceType);
+      }
         break;
       case IddObjectType::OS_BuildingStory:
-        mergeBuildingStory(currentObject->cast<BuildingStory>(), newObject.cast<BuildingStory>());
+      {
+        BuildingStory currentBuildingStory = currentObject->cast<BuildingStory>();
+        BuildingStory newBuildingStory = newObject.cast<BuildingStory>();
+        mergeBuildingStory(currentBuildingStory, newBuildingStory);
+      }
         break;
       case IddObjectType::OS_BuildingUnit:
-        mergeBuildingUnit(currentObject->cast<BuildingUnit>(), newObject.cast<BuildingUnit>());
+      {
+        BuildingUnit currentBuildingUnit = currentObject->cast<BuildingUnit>();
+        BuildingUnit newBuildingUnit = newObject.cast<BuildingUnit>();
+        mergeBuildingUnit(currentBuildingUnit, newBuildingUnit);
+      }
         break;
       case IddObjectType::OS_DefaultConstructionSet:
-        mergeDefaultConstructionSet(currentObject->cast<DefaultConstructionSet>(), newObject.cast<DefaultConstructionSet>());
+      {
+        DefaultConstructionSet currentDefaultConstructionSet = currentObject->cast<DefaultConstructionSet>();
+        DefaultConstructionSet newDefaultConstructionSet = newObject.cast<DefaultConstructionSet>();
+        mergeDefaultConstructionSet(currentDefaultConstructionSet, newDefaultConstructionSet);
+      }
         break;
       default:
         LOG(Error, "No merge function registered for IddObjectType " << iddObjectType.valueName());
