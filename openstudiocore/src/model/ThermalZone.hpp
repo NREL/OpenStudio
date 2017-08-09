@@ -127,8 +127,6 @@ class MODEL_API ThermalZone : public HVACComponent {
 
   SizingZone sizingZone() const;
 
-  boost::optional<AirflowNetworkZone> airflowNetworkZone() const;
-
   //@}
   /** @name Setters */
   //@{
@@ -448,6 +446,15 @@ class MODEL_API ThermalZone : public HVACComponent {
 
   /** Returns all ZoneMixing objects which exhaust air from this zone */
   std::vector<ZoneMixing> exhaustZoneMixing() const;
+
+  /** Returns the attached AirflowNetworkZone if there is one, otherwise a new object is created and returned */
+  AirflowNetworkZone airflowNetworkZone();
+
+  /** Returns the attached AirflowNetworkZone if there is one */
+  boost::optional<AirflowNetworkZone> getAirflowNetworkZone() const;
+
+  /** Removes the currently attached AirflowNetworkZone if there is one */
+  //void removeAirflowNetworkZone();
 
   //@}
  protected:

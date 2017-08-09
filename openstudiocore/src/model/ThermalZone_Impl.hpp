@@ -145,8 +145,6 @@ namespace detail {
 
     bool isFractionofZoneControlledbySecondaryDaylightingControlDefaulted() const;
 
-    boost::optional<AirflowNetworkZone> airflowNetworkZone() const;
-
     //@}
     /** @name Setters */
     //@{
@@ -408,6 +406,10 @@ namespace detail {
     std::vector<ZoneMixing> exhaustZoneMixing() const;
 
     boost::optional<HVACComponent> airLoopHVACTerminal() const;
+
+    AirflowNetworkZone airflowNetworkZone();
+    boost::optional<AirflowNetworkZone> getAirflowNetworkZone() const;
+    //void removeAirflowNetworkZone();
 
    protected:
 

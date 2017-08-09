@@ -167,7 +167,7 @@ namespace detail {
       result.push_back(mixing);
     }
 
-    boost::optional<AirflowNetworkZone> afnz = airflowNetworkZone();
+    boost::optional<AirflowNetworkZone> afnz = getAirflowNetworkZone();
     if (afnz) {
       result.push_back(afnz.get());
     }
@@ -2455,7 +2455,7 @@ namespace detail {
     }
   }
 
-  boost::optional<AirflowNetworkZone> ThermalZone_Impl::airflowNetworkZone() const
+  boost::optional<AirflowNetworkZone> ThermalZone_Impl::getAirflowNetworkZone() const
   {
     std::vector<AirflowNetworkZone> myAFNZones = getObject<ModelObject>().getModelObjectSources<AirflowNetworkZone>(AirflowNetworkZone::iddObjectType());
     auto count = myAFNZones.size();
@@ -2466,6 +2466,15 @@ namespace detail {
       return myAFNZones[0];
     }
     return boost::none;
+  }
+
+  AirflowNetworkZone ThermalZone_Impl::airflowNetworkZone()
+  {
+    boost::optional<AirflowNetworkZone> opt = getAirflowNetworkZone();
+    if (opt) {
+      return opt.get();
+    }
+    return AirflowNetworkZone(model(), handle());
   }
 
 } // detail
@@ -3059,9 +3068,14 @@ void ThermalZone::resetZoneControlContaminantController()
   getImpl<detail::ThermalZone_Impl>()->resetZoneControlContaminantController();
 }
 
-boost::optional<AirflowNetworkZone> ThermalZone::airflowNetworkZone() const
+AirflowNetworkZone ThermalZone::airflowNetworkZone()
 {
   return getImpl<detail::ThermalZone_Impl>()->airflowNetworkZone();
+}
+
+boost::optional<AirflowNetworkZone> ThermalZone::getAirflowNetworkZone() const
+{
+  return getImpl<detail::ThermalZone_Impl>()->getAirflowNetworkZone();
 }
 
 /// @cond

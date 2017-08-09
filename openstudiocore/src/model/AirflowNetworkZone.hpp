@@ -45,6 +45,7 @@ class AirflowNetworkOccupantVentilationControl;
 
 namespace detail {
 
+  class ThermalZone_Impl;
   class AirflowNetworkZone_Impl;
 
 } // detail
@@ -118,8 +119,6 @@ class MODEL_API AirflowNetworkZone : public AirflowNetworkNode {
   /** @name Setters */
   //@{
 
-  /** Sets the thermal zone. */
-  bool setThermalZone(const ThermalZone& thermalZone);
   /** Sets the ventilation control mode. */
   bool setVentilationControlMode(const std::string& ventilationControlMode);
   /** Resets the ventilation control mode. */
@@ -179,10 +178,18 @@ class MODEL_API AirflowNetworkZone : public AirflowNetworkNode {
 
   explicit AirflowNetworkZone(std::shared_ptr<detail::AirflowNetworkZone_Impl> impl);
 
+  bool setThermalZone(const ThermalZone& thermalZone);
+
+ public:
+  AirflowNetworkZone(const Model& model, const Handle& handle);
+
+ protected:
+  friend class ThermalZone_Impl;
   friend class detail::AirflowNetworkZone_Impl;
   friend class Model;
   friend class IdfObject;
   friend class openstudio::detail::IdfObject_Impl;
+
   /// @endcond
  private:
   REGISTER_LOGGER("openstudio.model.AirflowNetworkZone");
