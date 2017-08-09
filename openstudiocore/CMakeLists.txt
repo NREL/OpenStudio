@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.7.0)
 cmake_policy(SET CMP0048 NEW)
 
-project(OpenStudio VERSION 2.2.0)
+project(OpenStudio VERSION 2.2.1)
 
 include(ExternalProject)
 include(CPackComponent)
