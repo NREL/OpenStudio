@@ -192,7 +192,7 @@ Copy build to VM's share folder
 
 **Note:** The package will appear to be an empty folder in the build directory, when in fact the package is in OpenStudio/build/_CPack_Packages/Darwin/IFW and it's file name will have no file type extension.
 
-**Note:** Making a build while on NREL's network (even the Dev VPN) and using a VMWare Mac VM will often fail when cmake attempts to download from GitHub the PAT SHA-specific zip file, meaning the developer will need to do this step manually.
+**Note:** Making a build while on NREL's network (even the Dev VPN) and using a VMWare Mac VM will often fail when cmake attempts to download from GitHub the PAT SHA-specific zip file, meaning the developer will need to do this step manually. Example: https://github.com/NREL/OpenStudio-PAT/archive/f942affb1897678c4dc17a137fcf338e00da2cfb.zip. The contents off the above zip file's parent directory will need to be deleted prior to attempting again to build the package.
 
 OSVersion Testing
 =================
