@@ -85,51 +85,49 @@ SWIG_MODELOBJECT(AirflowNetworkSurface, 1);
 SWIG_MODELOBJECT(AirflowNetworkZone, 1);
 SWIG_MODELOBJECT(AirflowNetworkZoneExhaustFan, 1);
 
-//#if defined(SWIGCSHARP) || defined(SWIGJAVA)
-//  %inline {
-//    namespace openstudio {
-//      namespace model {
-//        std::vector<openstudio::model::ThermalZone> getThermalZones(const openstudio::model::Building& building){
-//          return building.thermalZones();
-//        }
-//        boost::optional<openstudio::model::ThermalZone> getThermalZone(const openstudio::model::Space& space){
-//          return space.thermalZone();
-//        }
-//        bool setThermalZone(openstudio::model::Space space, openstudio::model::ThermalZone thermalZone){
-//          return space.setThermalZone(thermalZone);
-//        }
-//      }
-//    }
-//  }
-//#endif
+#if defined(SWIGCSHARP) || defined(SWIGJAVA)
+  %inline {
+    namespace openstudio {
+      namespace model {
+        openstudio::model::AirflowNetworkZone demandAirflowNetworkZone(const openstudio::model::ThermalZone& zone){
+          return zone.airflowNetworkZone();
+        }
+        boost::optional<openstudio::model::AirflowNetworkZone> optionalAirflowNetworkZone(const openstudio::model::ThermalZone& zone){
+          return zone.optionalAirflowNetworkZone();
+        }
+        //void removeAirflowNetworkZone(openstudio::model::AirflowNetworkZone zone){
+        //  boost::optional<openstudio::model::AirflowNetworkZone> afz = zone.optionalAirflowNetworkZone();
+        //  if (afz){
+        //    afz->remove();
+        //  }
+        //}
+      }
+    }
+  }
+#endif
 
-//#if defined(SWIGCSHARP)
-//  //%pragma(csharp) imclassimports=%{
-//  %pragma(csharp) moduleimports=%{
-//  
-//    using System;
-//    using System.Runtime.InteropServices;
-//        
-//    public partial class Building : ParentObject {
-//      public ThermalZoneVector thermalZones()
-//      {
-//        return OpenStudio.OpenStudioModelHVAC.getThermalZones(this);
-//      }
-//    }  
-    
-//    public partial class Space : PlanarSurfaceGroup {
-//      public OptionalThermalZone thermalZone()
-//      {
-//        return OpenStudio.OpenStudioModelHVAC.getThermalZone(this);
-//      }
-//      public bool setThermalZone(OpenStudio.ThermalZone thermalZone)
-//      {
-//        return OpenStudio.OpenStudioModelHVAC.setThermalZone(this, thermalZone);
-//      }
-//    }  
-//  %}
-//#endif
-
-//%include <model/HVACTemplates.hpp>
+#if defined(SWIGCSHARP)
+  //%pragma(csharp) imclassimports=%{
+  %pragma(csharp) moduleimports=%{
+  
+    using System;
+    using System.Runtime.InteropServices;
+        
+    public partial class ThermalZone : HVACComponent {
+      public AirflowNetworkZone airflowNetworkZone()
+      {
+        return OpenStudio.OpenStudioModelAirflow.demandAirflowNetworkZone(this);
+      }
+      public OptionalAirflowNetworkZone optionalAirflowNetworkZone()
+      {
+        return OpenStudio.OpenStudioModelAirflow.optionalAirflowNetworkZone(this);
+      }
+      //public void removeAirflowNetworkZone(OpenStudio.ThermalZone thermalZone)
+      //{
+      //  return OpenStudio.OpenStudioModelAirflow.removeAirflowNetworkZone(this);
+      //}
+    }  
+  %}
+#endif
 
 #endif 
