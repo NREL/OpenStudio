@@ -177,14 +177,12 @@ class MODEL_API AirflowNetworkZone : public AirflowNetworkNode {
   typedef detail::AirflowNetworkZone_Impl ImplType;
 
   explicit AirflowNetworkZone(std::shared_ptr<detail::AirflowNetworkZone_Impl> impl);
-
-  bool setThermalZone(const ThermalZone& thermalZone);
-
- public:
   AirflowNetworkZone(const Model& model, const Handle& handle);
 
- protected:
-  friend class ThermalZone_Impl;
+  bool setThermalZone(const ThermalZone& thermalZone);
+  void resetThermalZone();
+
+  friend class detail::ThermalZone_Impl;
   friend class detail::AirflowNetworkZone_Impl;
   friend class Model;
   friend class IdfObject;

@@ -59,7 +59,7 @@ MODELOBJECT_TEMPLATES(AirflowNetworkReferenceCrackConditions);
 MODELOBJECT_TEMPLATES(AirflowNetworkSimpleOpening);
 UNIQUEMODELOBJECT_TEMPLATES(AirflowNetworkSimulationControl);
 MODELOBJECT_TEMPLATES(AirflowNetworkSurface);
-MODELOBJECT_TEMPLATES(AirflowNetworkZoneExhaustFan);
+MODELOBJECT_TEMPLATES(AirflowNetworkEquipmentLinkage);
 MODELOBJECT_TEMPLATES(AirflowNetworkZone);
 
 SWIG_MODELOBJECT(AirflowNetworkConstantPressureDrop, 1);
@@ -80,7 +80,7 @@ SWIG_MODELOBJECT(AirflowNetworkReferenceCrackConditions, 1);
 SWIG_MODELOBJECT(AirflowNetworkSimpleOpening, 1);
 SWIG_UNIQUEMODELOBJECT(AirflowNetworkSimulationControl);
 SWIG_MODELOBJECT(AirflowNetworkSurface, 1);
-SWIG_MODELOBJECT(AirflowNetworkZoneExhaustFan, 1);
+SWIG_MODELOBJECT(AirflowNetworkEquipmentLinkage, 1);
 SWIG_MODELOBJECT(AirflowNetworkZone, 1);
 
 //#if defined(SWIGCSHARP) || defined(SWIGJAVA)

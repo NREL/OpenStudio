@@ -46,6 +46,7 @@ class CurveQuadratic;
 class ScheduleCompact;
 class ControllerMechanicalVentilation;
 class AirLoopHVACOutdoorAirSystem;
+class AirflowNetworkEquipmentLinkage;
 
 class MODEL_API ControllerOutdoorAir : public ParentObject {
  public:
@@ -140,6 +141,10 @@ class MODEL_API ControllerOutdoorAir : public ParentObject {
   void setHeatRecoveryBypassControlType(const std::string& v);
 
   boost::optional<AirLoopHVACOutdoorAirSystem> airLoopHVACOutdoorAirSystem() const;
+
+  AirflowNetworkEquipmentLinkage airflowNetworkEquipmentLinkage();
+  boost::optional<AirflowNetworkEquipmentLinkage> optionalAirflowNetworkEquipmentLinkage();
+  void removeAirflowNetworkEquipmentLinkage();
 
   virtual std::vector<openstudio::IdfObject> remove();
 

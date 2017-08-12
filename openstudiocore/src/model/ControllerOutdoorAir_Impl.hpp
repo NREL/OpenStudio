@@ -38,6 +38,7 @@ class CurveQuadratic;
 class ScheduleCompact;
 class AirLoopHVACOutdoorAirSystem;
 class ControllerMechanicalVentilation;
+class AirflowNetworkEquipmentLinkage;
 
 namespace detail {
 
@@ -178,6 +179,10 @@ class MODEL_API ControllerOutdoorAir_Impl : public ParentObject_Impl {
   void resetTimeofDayEconomizerControlSchedule();
 
   std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+
+  AirflowNetworkEquipmentLinkage airflowNetworkEquipmentLinkage();
+  boost::optional<AirflowNetworkEquipmentLinkage> optionalAirflowNetworkEquipmentLinkage();
+  void removeAirflowNetworkEquipmentLinkage();
 
  private:
 

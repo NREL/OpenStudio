@@ -50,22 +50,7 @@ namespace detail {
 
   /** SubSurface_Impl is a PlanarSurface_Impl that is the implementation class for SubSurface.*/
   class MODEL_API SubSurface_Impl : public PlanarSurface_Impl {
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 
-    
-
-    
-    
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -175,8 +160,6 @@ namespace detail {
 
     bool isNumberofVerticesAutocalculated() const;
 
-    boost::optional<AirflowNetworkSurface> airflowNetworkSurface() const;
-
     //@}
     /** @name Setters */
     //@{
@@ -278,6 +261,10 @@ namespace detail {
     /** Add a daylighting light shelf associated with this sub surface.  Only succeeds if this is a fixed window, 
      * operable window, or glass door. Will return existing daylighting light shelf if there already is one. */
     boost::optional<DaylightingDeviceShelf> addDaylightingDeviceShelf() const;
+
+    AirflowNetworkSurface airflowNetworkSurface();
+    boost::optional<AirflowNetworkSurface> optionalAirflowNetworkSurface() const;
+    void removeAirflowNetworkSurface();
 
    protected:
 

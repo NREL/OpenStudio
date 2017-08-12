@@ -35,6 +35,7 @@ namespace openstudio {
 namespace model {
 
 class AirLoopHVAC;
+class AirflowNetworkEquivalentDuct;
 
 namespace detail {
 
@@ -96,6 +97,10 @@ namespace detail {
     bool removeFromLoop();
 
     void disconnect() override;
+
+    AirflowNetworkEquivalentDuct airflowNetworkEquivalentDuct();
+    boost::optional<AirflowNetworkEquivalentDuct> getAirflowNetworkEquivalentDuct() const;
+    void removeAirflowNetworkEquivalentDuct();
 
     //@}
    private:

@@ -451,10 +451,10 @@ class MODEL_API ThermalZone : public HVACComponent {
   AirflowNetworkZone airflowNetworkZone();
 
   /** Returns the attached AirflowNetworkZone if there is one */
-  boost::optional<AirflowNetworkZone> getAirflowNetworkZone() const;
+  boost::optional<AirflowNetworkZone> optionalAirflowNetworkZone() const;
 
   /** Removes the currently attached AirflowNetworkZone if there is one */
-  //void removeAirflowNetworkZone();
+  void removeAirflowNetworkZone();
 
   //@}
  protected:

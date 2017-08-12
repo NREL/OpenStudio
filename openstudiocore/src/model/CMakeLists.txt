@@ -103,9 +103,9 @@ set(${target_name}_src
   AirflowNetworkZone.hpp
   AirflowNetworkZone_Impl.hpp
   AirflowNetworkZone.cpp
-  AirflowNetworkZoneExhaustFan.hpp
-  AirflowNetworkZoneExhaustFan_Impl.hpp
-  AirflowNetworkZoneExhaustFan.cpp
+  AirflowNetworkEquipmentLinkage.hpp
+  AirflowNetworkEquipmentLinkage_Impl.hpp
+  AirflowNetworkEquipmentLinkage.cpp
   AirGap.hpp
   AirGap_Impl.hpp
   AirGap.cpp

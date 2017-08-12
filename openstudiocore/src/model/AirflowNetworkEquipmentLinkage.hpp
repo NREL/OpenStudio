@@ -26,67 +26,56 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
 
-#ifndef MODEL_AIRFLOWNETWORKDISTRIBUTIONNODE_HPP
-#define MODEL_AIRFLOWNETWORKDISTRIBUTIONNODE_HPP
+#ifndef MODEL_AIRFLOWNETWORKEQUIPMENTLINKAGE_HPP
+#define MODEL_AIRFLOWNETWORKEQUIPMENTLINKAGE_HPP
 
 #include <model/ModelAPI.hpp>
-
-#include "AirflowNetworkNode.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {
 
 namespace model {
 
-class AirLoopHVACZoneMixer;
-class AirLoopHVACZoneSplitter;
-class AirLoopHVACOutdoorAirSystem;
-//OAMixerOutdoorAirStreamNode
-//OutdoorAir : NodeList
-//OutdoorAir : Node
-class Node;
+class FanZoneExhaust;
+class ControllerOutdoorAir;
+class AirflowNetworkCrack;
 
 namespace detail {
 
-  class AirflowNetworkDistributionNode_Impl;
+class AirflowNetworkEquipmentLinkage_Impl;
+class FanZoneExhaust_Impl;
+class ControllerOutdoorAir_Impl;
 
 } // detail
 
-/** AirflowNetworkDistributionNode is a AirflowNetworkNode that wraps the OpenStudio IDD object 'OS:AirflowNetworkDistributionNode'. */
-class MODEL_API AirflowNetworkDistributionNode : public AirflowNetworkNode {
+/** AirflowNetworkZoneExhaustFan is a ModelObject that wraps the OpenStudio IDD object 'OS:AirflowNetworkEquipmentLinkage'. */
+class MODEL_API AirflowNetworkEquipmentLinkage : public ModelObject {
  public:
   /** @name Constructors and Destructors */
   //@{
 
-  virtual ~AirflowNetworkDistributionNode() {}
+  virtual ~AirflowNetworkEquipmentLinkage() {}
 
   //@}
 
   static IddObjectType iddObjectType();
 
-  //static std::vector<std::string> componentObjectTypeorNodeTypeValues();
-
   /** @name Getters */
   //@{
-
-  boost::optional<AirLoopHVACZoneMixer> airLoopHVACZoneMixer() const;
-  boost::optional<AirLoopHVACZoneSplitter> airLoopHVACZoneSplitter() const;
-  boost::optional<AirLoopHVACOutdoorAirSystem> airLoopHVACOutdoorAirSystem() const;
-  //OAMixerOutdoorAirStreamNode
-  //OutdoorAir : NodeList
-  //OutdoorAir : Node
-  boost::optional<Node> node() const;
-
-  double nodeHeight() const;
-
-  bool isNodeHeightDefaulted() const;
+  /** Returns the FanZoneExhaust object associated with this object, if any */
+  boost::optional<FanZoneExhaust> fanZoneExhaust() const;
+  /** Returns the ControllerOutdoorAir object associated with this object, if any */
+  boost::optional<ControllerOutdoorAir> controllerOutdoorAir() const;
+  /** Returns the AirflowNetworkCrack object associated with this object, if any */
+  boost::optional<AirflowNetworkCrack> crack() const;
 
   //@}
   /** @name Setters */
   //@{
-
-  void setNodeHeight(double nodeHeight);
-
-  void resetNodeHeight();
+  /** Sets the AirflowNetworkCrack object associated with this object. */
+  bool setCrack(const AirflowNetworkCrack& crack);
+  /** Resets the AirflowNetworkCrack object for this object. */
+  void resetCrack();
 
   //@}
   /** @name Other */
@@ -95,31 +84,33 @@ class MODEL_API AirflowNetworkDistributionNode : public AirflowNetworkNode {
   //@}
  protected:
   /// @cond
-  typedef detail::AirflowNetworkDistributionNode_Impl ImplType;
+  typedef detail::AirflowNetworkEquipmentLinkage_Impl ImplType;
 
-  explicit AirflowNetworkDistributionNode(std::shared_ptr<detail::AirflowNetworkDistributionNode_Impl> impl);
+  explicit AirflowNetworkEquipmentLinkage(std::shared_ptr<detail::AirflowNetworkEquipmentLinkage_Impl> impl);
 
-  AirflowNetworkDistributionNode(const Model& model, const Handle &handle);
+  AirflowNetworkEquipmentLinkage(const Model &model, const Handle &handle);
 
-  void resetComponent();
+  void resetEquipment();
 
-  friend class detail::AirflowNetworkDistributionNode_Impl;
+  friend class detail::FanZoneExhaust_Impl;
+  friend class detail::ControllerOutdoorAir_Impl;
+  friend class detail::AirflowNetworkEquipmentLinkage_Impl;
   friend class Model;
   friend class IdfObject;
   friend class openstudio::detail::IdfObject_Impl;
   /// @endcond
  private:
-  REGISTER_LOGGER("openstudio.model.AirflowNetworkDistributionNode");
+  REGISTER_LOGGER("openstudio.model.AirflowNetworkEquipmentLinkage");
 };
 
-/** \relates AirflowNetworkDistributionNode*/
-typedef boost::optional<AirflowNetworkDistributionNode> OptionalAirflowNetworkDistributionNode;
+/** \relates AirflowNetworkZoneExhaustFan*/
+typedef boost::optional<AirflowNetworkEquipmentLinkage> OptionalAirflowNetworkEquipmentLinkage;
 
-/** \relates AirflowNetworkDistributionNode*/
-typedef std::vector<AirflowNetworkDistributionNode> AirflowNetworkDistributionNodeVector;
+/** \relates AirflowNetworkZoneExhaustFan*/
+typedef std::vector<AirflowNetworkEquipmentLinkage> AirflowNetworkEquipmentLinkageVector;
 
 } // model
 } // openstudio
 
-#endif // MODEL_AIRFLOWNETWORKDISTRIBUTIONNODE_HPP
+#endif // MODEL_AIRFLOWNETWORKEQUIPMENTLINKAGE_HPP
 

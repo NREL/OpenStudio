@@ -28,6 +28,14 @@
 
 #include "AirflowNetworkDistributionNode.hpp"
 #include "AirflowNetworkDistributionNode_Impl.hpp"
+#include "AirLoopHVACZoneMixer.hpp"
+#include "AirLoopHVACZoneMixer_Impl.hpp"
+#include "AirLoopHVACZoneSplitter.hpp"
+#include "AirLoopHVACZoneSplitter_Impl.hpp"
+#include "AirLoopHVACOutdoorAirSystem.hpp"
+#include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -76,20 +84,6 @@ namespace detail {
     return AirflowNetworkDistributionNode::iddObjectType();
   }
 
-  boost::optional<std::string> AirflowNetworkDistributionNode_Impl::componentNameorNodeName() const {
-    return getString(OS_AirflowNetworkDistributionNodeFields::ComponentNameorNodeName,true);
-  }
-
-  std::string AirflowNetworkDistributionNode_Impl::componentObjectTypeorNodeType() const {
-    boost::optional<std::string> value = getString(OS_AirflowNetworkDistributionNodeFields::ComponentObjectTypeorNodeType,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool AirflowNetworkDistributionNode_Impl::isComponentObjectTypeorNodeTypeDefaulted() const {
-    return isEmpty(OS_AirflowNetworkDistributionNodeFields::ComponentObjectTypeorNodeType);
-  }
-
   double AirflowNetworkDistributionNode_Impl::nodeHeight() const {
     boost::optional<double> value = getDouble(OS_AirflowNetworkDistributionNodeFields::NodeHeight,true);
     OS_ASSERT(value);
@@ -98,26 +92,6 @@ namespace detail {
 
   bool AirflowNetworkDistributionNode_Impl::isNodeHeightDefaulted() const {
     return isEmpty(OS_AirflowNetworkDistributionNodeFields::NodeHeight);
-  }
-
-  void AirflowNetworkDistributionNode_Impl::setComponentNameorNodeName(const std::string& componentNameorNodeName) {
-    bool result = setString(OS_AirflowNetworkDistributionNodeFields::ComponentNameorNodeName, componentNameorNodeName);
-    OS_ASSERT(result);
-  }
-
-  void AirflowNetworkDistributionNode_Impl::resetComponentNameorNodeName() {
-    bool result = setString(OS_AirflowNetworkDistributionNodeFields::ComponentNameorNodeName, "");
-    OS_ASSERT(result);
-  }
-
-  bool AirflowNetworkDistributionNode_Impl::setComponentObjectTypeorNodeType(const std::string& componentObjectTypeorNodeType) {
-    bool result = setString(OS_AirflowNetworkDistributionNodeFields::ComponentObjectTypeorNodeType, componentObjectTypeorNodeType);
-    return result;
-  }
-
-  void AirflowNetworkDistributionNode_Impl::resetComponentObjectTypeorNodeType() {
-    bool result = setString(OS_AirflowNetworkDistributionNodeFields::ComponentObjectTypeorNodeType, "");
-    OS_ASSERT(result);
   }
 
   void AirflowNetworkDistributionNode_Impl::setNodeHeight(double nodeHeight) {
@@ -130,35 +104,47 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  void AirflowNetworkDistributionNode_Impl::resetComponent() {
+    bool result = setString(OS_AirflowNetworkDistributionNodeFields::ComponentNameorNodeName, "");
+    OS_ASSERT(result);
+  }
+
 } // detail
 
-AirflowNetworkDistributionNode::AirflowNetworkDistributionNode(const Model& model)
+AirflowNetworkDistributionNode::AirflowNetworkDistributionNode(const Model& model, const Handle &handle)
   : AirflowNetworkNode(AirflowNetworkDistributionNode::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::AirflowNetworkDistributionNode_Impl>());
-
-  // TODO: Appropriately handle the following required object-list fields.
+  bool ok = getImpl<detail::AirflowNetworkDistributionNode_Impl>()->setPointer(OS_AirflowNetworkDistributionNodeFields::ComponentNameorNodeName, handle);
+  OS_ASSERT(ok);
 }
 
 IddObjectType AirflowNetworkDistributionNode::iddObjectType() {
   return IddObjectType(IddObjectType::OS_AirflowNetworkDistributionNode);
 }
 
-std::vector<std::string> AirflowNetworkDistributionNode::componentObjectTypeorNodeTypeValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_AirflowNetworkDistributionNodeFields::ComponentObjectTypeorNodeType);
+boost::optional<AirLoopHVACZoneMixer> AirflowNetworkDistributionNode::airLoopHVACZoneMixer() const
+{
+  return getImpl<detail::AirflowNetworkDistributionNode_Impl>()->component<AirLoopHVACZoneMixer>();
 }
 
-boost::optional<std::string> AirflowNetworkDistributionNode::componentNameorNodeName() const {
-  return getImpl<detail::AirflowNetworkDistributionNode_Impl>()->componentNameorNodeName();
+boost::optional<AirLoopHVACZoneSplitter> AirflowNetworkDistributionNode::airLoopHVACZoneSplitter() const
+{
+  return getImpl<detail::AirflowNetworkDistributionNode_Impl>()->component<AirLoopHVACZoneSplitter>();
 }
 
-std::string AirflowNetworkDistributionNode::componentObjectTypeorNodeType() const {
-  return getImpl<detail::AirflowNetworkDistributionNode_Impl>()->componentObjectTypeorNodeType();
+boost::optional<AirLoopHVACOutdoorAirSystem> AirflowNetworkDistributionNode::airLoopHVACOutdoorAirSystem() const
+{
+  return getImpl<detail::AirflowNetworkDistributionNode_Impl>()->component<AirLoopHVACOutdoorAirSystem>();
 }
 
-bool AirflowNetworkDistributionNode::isComponentObjectTypeorNodeTypeDefaulted() const {
-  return getImpl<detail::AirflowNetworkDistributionNode_Impl>()->isComponentObjectTypeorNodeTypeDefaulted();
+//OAMixerOutdoorAirStreamNode
+//OutdoorAir : NodeList
+//OutdoorAir : Node
+
+boost::optional<Node> AirflowNetworkDistributionNode::node() const
+{
+  return getImpl<detail::AirflowNetworkDistributionNode_Impl>()->component<Node>();
 }
 
 double AirflowNetworkDistributionNode::nodeHeight() const {
@@ -169,28 +155,16 @@ bool AirflowNetworkDistributionNode::isNodeHeightDefaulted() const {
   return getImpl<detail::AirflowNetworkDistributionNode_Impl>()->isNodeHeightDefaulted();
 }
 
-void AirflowNetworkDistributionNode::setComponentNameorNodeName(const std::string& componentNameorNodeName) {
-  getImpl<detail::AirflowNetworkDistributionNode_Impl>()->setComponentNameorNodeName(componentNameorNodeName);
-}
-
-void AirflowNetworkDistributionNode::resetComponentNameorNodeName() {
-  getImpl<detail::AirflowNetworkDistributionNode_Impl>()->resetComponentNameorNodeName();
-}
-
-bool AirflowNetworkDistributionNode::setComponentObjectTypeorNodeType(const std::string& componentObjectTypeorNodeType) {
-  return getImpl<detail::AirflowNetworkDistributionNode_Impl>()->setComponentObjectTypeorNodeType(componentObjectTypeorNodeType);
-}
-
-void AirflowNetworkDistributionNode::resetComponentObjectTypeorNodeType() {
-  getImpl<detail::AirflowNetworkDistributionNode_Impl>()->resetComponentObjectTypeorNodeType();
-}
-
 void AirflowNetworkDistributionNode::setNodeHeight(double nodeHeight) {
   getImpl<detail::AirflowNetworkDistributionNode_Impl>()->setNodeHeight(nodeHeight);
 }
 
 void AirflowNetworkDistributionNode::resetNodeHeight() {
   getImpl<detail::AirflowNetworkDistributionNode_Impl>()->resetNodeHeight();
+}
+
+void AirflowNetworkDistributionNode::resetComponent() {
+  getImpl<detail::AirflowNetworkDistributionNode_Impl>()->resetComponent();
 }
 
 /// @cond

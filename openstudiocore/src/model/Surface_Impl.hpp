@@ -168,8 +168,6 @@ namespace detail {
 
     bool isNumberofVerticesAutocalculated() const;
 
-    boost::optional<AirflowNetworkSurface> airflowNetworkSurface() const;
-
     //@}
     /** @name Setters */
     //@{
@@ -274,6 +272,12 @@ namespace detail {
     std::vector<Surface> splitSurfaceForSubSurfaces();
 
     std::vector<SubSurface> createSubSurfaces(const std::vector<std::vector<Point3d> >& faces, double inset, const boost::optional<ConstructionBase>& construction);
+
+    AirflowNetworkSurface airflowNetworkSurface();
+
+    boost::optional<AirflowNetworkSurface> optionalAirflowNetworkSurface() const;
+
+    void removeAirflowNetworkSurface();
 
    protected:
    private:

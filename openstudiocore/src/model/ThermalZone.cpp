@@ -167,7 +167,7 @@ namespace detail {
       result.push_back(mixing);
     }
 
-    boost::optional<AirflowNetworkZone> afnz = getAirflowNetworkZone();
+    boost::optional<AirflowNetworkZone> afnz = optionalAirflowNetworkZone();
     if (afnz) {
       result.push_back(afnz.get());
     }
@@ -2455,7 +2455,7 @@ namespace detail {
     }
   }
 
-  boost::optional<AirflowNetworkZone> ThermalZone_Impl::getAirflowNetworkZone() const
+  boost::optional<AirflowNetworkZone> ThermalZone_Impl::optionalAirflowNetworkZone() const
   {
     std::vector<AirflowNetworkZone> myAFNZones = getObject<ModelObject>().getModelObjectSources<AirflowNetworkZone>(AirflowNetworkZone::iddObjectType());
     auto count = myAFNZones.size();
@@ -2470,11 +2470,19 @@ namespace detail {
 
   AirflowNetworkZone ThermalZone_Impl::airflowNetworkZone()
   {
-    boost::optional<AirflowNetworkZone> opt = getAirflowNetworkZone();
+    boost::optional<AirflowNetworkZone> opt = optionalAirflowNetworkZone();
     if (opt) {
       return opt.get();
     }
     return AirflowNetworkZone(model(), handle());
+  }
+
+  void ThermalZone_Impl::removeAirflowNetworkZone()
+  {
+    std::vector<AirflowNetworkZone> myAFN = getObject<ModelObject>().getModelObjectSources<AirflowNetworkZone>(AirflowNetworkZone::iddObjectType());
+    for (auto afn : myAFN) {
+      afn.resetThermalZone();
+    }
   }
 
 } // detail
@@ -3073,9 +3081,14 @@ AirflowNetworkZone ThermalZone::airflowNetworkZone()
   return getImpl<detail::ThermalZone_Impl>()->airflowNetworkZone();
 }
 
-boost::optional<AirflowNetworkZone> ThermalZone::getAirflowNetworkZone() const
+boost::optional<AirflowNetworkZone> ThermalZone::optionalAirflowNetworkZone() const
 {
-  return getImpl<detail::ThermalZone_Impl>()->getAirflowNetworkZone();
+  return getImpl<detail::ThermalZone_Impl>()->optionalAirflowNetworkZone();
+}
+
+void ThermalZone::removeAirflowNetworkZone()
+{
+  getImpl<detail::ThermalZone_Impl>()->removeAirflowNetworkZone();
 }
 
 /// @cond

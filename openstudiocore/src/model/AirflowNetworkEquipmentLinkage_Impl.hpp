@@ -26,8 +26,8 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
 
-#ifndef MODEL_AIRFLOWNETWORKEQUIVALENTDUCT_IMPL_HPP
-#define MODEL_AIRFLOWNETWORKEQUIVALENTDUCT_IMPL_HPP
+#ifndef MODEL_AIRFLOWNETWORKEQUIPMENTLINKAGE_IMPL_HPP
+#define MODEL_AIRFLOWNETWORKEQUIPMENTLINKAGE_IMPL_HPP
 
 #include <model/ModelAPI.hpp>
 #include "ModelObject_Impl.hpp"
@@ -35,80 +35,71 @@
 namespace openstudio {
 namespace model {
 
-class StraightComponent;
+class FanZoneExhaust;
+class ControllerOutdoorAir;
+class AirflowNetworkCrack;
 
 namespace detail {
 
-  /** AirflowNetworkEquivalentDuct_Impl is a ModelObject_Impl that is the implementation class for AirflowNetworkEquivalentDuct.*/
-  class MODEL_API AirflowNetworkEquivalentDuct_Impl : public ModelObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+/** AirflowNetworkZoneExhaustFan_Impl is a ModelObject_Impl that is the implementation class for AirflowNetworkZoneExhaustFan.*/
+class MODEL_API AirflowNetworkEquipmentLinkage_Impl : public ModelObject_Impl {
+public:
+  /** @name Constructors and Destructors */
+  //@{
 
-    AirflowNetworkEquivalentDuct_Impl(const IdfObject& idfObject,
-                                      Model_Impl* model,
-                                      bool keepHandle);
+  AirflowNetworkEquipmentLinkage_Impl(const IdfObject& idfObject,
+    Model_Impl* model,
+    bool keepHandle);
 
-    AirflowNetworkEquivalentDuct_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                      Model_Impl* model,
-                                      bool keepHandle);
+  AirflowNetworkEquipmentLinkage_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+    Model_Impl* model,
+    bool keepHandle);
 
-    AirflowNetworkEquivalentDuct_Impl(const AirflowNetworkEquivalentDuct_Impl& other,
-                                      Model_Impl* model,
-                                      bool keepHandle);
+  AirflowNetworkEquipmentLinkage_Impl(const AirflowNetworkEquipmentLinkage_Impl& other,
+    Model_Impl* model,
+    bool keepHandle);
 
-    virtual ~AirflowNetworkEquivalentDuct_Impl() {}
+  virtual ~AirflowNetworkEquipmentLinkage_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+  //@}
+  /** @name Virtual Methods */
+  //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+  virtual const std::vector<std::string>& outputVariableNames() const;
 
-    virtual IddObjectType iddObjectType() const;
+  virtual IddObjectType iddObjectType() const;
 
-    //@}
-    /** @name Getters */
-    //@{
+  //@}
+  /** @name Getters */
+  //@{
 
-    boost::optional<StraightComponent> component() const;
+  boost::optional<FanZoneExhaust> fanZoneExhaust() const;
+  boost::optional<ControllerOutdoorAir> controllerOutdoorAir() const;
+  boost::optional<AirflowNetworkCrack> crack() const;
 
-    double airPathLength() const;
+  //@}
+  /** @name Setters */
+  //@{
 
-    double airPathHydraulicDiameter() const;
+  bool setCrack(const AirflowNetworkCrack& crack);
+  void resetCrack();
 
-    //@}
-    /** @name Setters */
-    //@{
+  //@}
+  /** @name Other */
+  //@{
+  void resetEquipment();
 
-    bool setComponent(const StraightComponent &component);
+  //@}
+protected:
+private:
+  REGISTER_LOGGER("openstudio.model.AirflowNetworkEquipmentLinkage");
 
-    void resetComponent();
-
-    bool setAirPathLength(double airPathLength);
-
-    bool setAirPathHydraulicDiameter(double airPathHydraulicDiameter);
-
-    //@}
-    /** @name Other */
-    //@{
-
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.AirflowNetworkEquivalentDuct");
-
-    // TODO: Check the return types of these methods.
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
-    //boost::optional<AFNTerminalUnit> optionalTerminalUnit() const;
-  };
+};
 
 } // detail
 
 } // model
 } // openstudio
 
-#endif // MODEL_AIRFLOWNETWORKEQUIVALENTDUCT_IMPL_HPP
+#endif // MODEL_AIRFLOWNETWORKEQUIPMENTLINKAGE_IMPL_HPP
 

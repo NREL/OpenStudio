@@ -37,6 +37,7 @@ namespace openstudio {
 namespace model {
 
 class AirLoopHVAC;
+class AirflowNetworkEquivalentDuct;
 
 namespace detail{
   class StraightComponent_Impl;
@@ -81,6 +82,10 @@ class MODEL_API StraightComponent : public HVACComponent {
   ModelObject clone(Model model) const;
 
   void disconnect();
+
+  AirflowNetworkEquivalentDuct airflowNetworkEquivalentDuct();
+  boost::optional<AirflowNetworkEquivalentDuct> getAirflowNetworkEquivalentDuct() const;
+  void removeAirflowNetworkEquivalentDuct();
 
   protected:
 

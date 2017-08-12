@@ -116,23 +116,23 @@ namespace detail {
     return setPointer(OS_AirflowNetworkEquivalentDuctFields::ComponentName, component.handle());
   }
 
+  void AirflowNetworkEquivalentDuct_Impl::resetComponent()
+  {
+    bool result = setString(OS_AirflowNetworkEquivalentDuctFields::ComponentName, "");
+    OS_ASSERT(result);
+  }
+
 } // detail
 
-AirflowNetworkEquivalentDuct::AirflowNetworkEquivalentDuct(const Model& model)
+AirflowNetworkEquivalentDuct::AirflowNetworkEquivalentDuct(const Model& model, const Handle &handle)
   : ModelObject(AirflowNetworkEquivalentDuct::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::AirflowNetworkEquivalentDuct_Impl>());
-
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_AirflowNetworkEquivalentDuctFields::TerminalUnitName
-  bool ok = true;
-  // ok = setTerminalUnit();
+  bool ok = getImpl<detail::AirflowNetworkEquivalentDuct_Impl>()->setPointer(OS_AirflowNetworkEquivalentDuctFields::ComponentName, handle);
   OS_ASSERT(ok);
-  // ok = setTerminalUnitObjectType();
+  ok = setAirPathLength(1.0);
   OS_ASSERT(ok);
-  // ok = setAirPathLength();
-  OS_ASSERT(ok);
-  // ok = setAirPathHydraulicDiameter();
+  ok = setAirPathHydraulicDiameter(1.0);
   OS_ASSERT(ok);
 }
 
@@ -169,6 +169,11 @@ bool AirflowNetworkEquivalentDuct::setAirPathHydraulicDiameter(double airPathHyd
 bool AirflowNetworkEquivalentDuct::setComponent(const StraightComponent &component)
 {
   return getImpl<detail::AirflowNetworkEquivalentDuct_Impl>()->setComponent(component);
+}
+
+void AirflowNetworkEquivalentDuct::resetComponent()
+{
+  return getImpl<detail::AirflowNetworkEquivalentDuct_Impl>()->resetComponent();
 }
 
 /// @cond

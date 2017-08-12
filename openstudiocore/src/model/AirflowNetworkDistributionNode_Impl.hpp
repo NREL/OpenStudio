@@ -71,11 +71,16 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    boost::optional<std::string> componentNameorNodeName() const;
-
-    std::string componentObjectTypeorNodeType() const;
-
-    bool isComponentObjectTypeorNodeTypeDefaulted() const;
+    template <typename T> boost::optional<typename std::enable_if<std::is_same<AirLoopHVACZoneMixer, T>::value ||
+      std::is_same<AirLoopHVACZoneSplitter, T>::value ||
+      std::is_same<AirLoopHVACOutdoorAirSystem, T>::value || //::type> component() const
+      //OAMixerOutdoorAirStreamNode
+      //OutdoorAir : NodeList
+      //OutdoorAir : Node
+      std::is_same<Node, T>::value, T>::type> component() const
+    {
+      return getObject<ModelObject>().getModelObjectTarget<T>(OS_AirflowNetworkDistributionNodeFields::ComponentNameorNodeName);
+    }
 
     double nodeHeight() const;
 
@@ -87,11 +92,7 @@ namespace detail {
 
     void setComponentNameorNodeName(const std::string& componentNameorNodeName);
 
-    void resetComponentNameorNodeName();
-
-    bool setComponentObjectTypeorNodeType(const std::string& componentObjectTypeorNodeType);
-
-    void resetComponentObjectTypeorNodeType();
+    void resetComponent();
 
     void setNodeHeight(double nodeHeight);
 

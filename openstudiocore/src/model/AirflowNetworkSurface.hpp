@@ -47,6 +47,8 @@ class AirflowNetworkOccupantVentilationControl;
 
 namespace detail {
 
+class Surface_Impl;
+class SubSurface_Impl;
 class AirflowNetworkSurface_Impl;
 
 } // detail
@@ -59,13 +61,13 @@ public:
   //@{
 
   /** Construct a surface with a model surface to be linked to. */
-  AirflowNetworkSurface(const Model& model, const Surface &surface);
+  ///AirflowNetworkSurface(const Model& model, const Surface &surface);
   /** Construct a surface with a model subsurface to be linked to. */
-  AirflowNetworkSurface(const Model& model, const SubSurface &surface);
+  //AirflowNetworkSurface(const Model& model, const SubSurface &surface);
   /** Construct a surface with a model surface to be linked to and a leakage component. */
-  AirflowNetworkSurface(const Model& model, const Surface &surface, const AirflowNetworkComponent &component);
+  //AirflowNetworkSurface(const Model& model, const Surface &surface, const AirflowNetworkComponent &component);
   /** Construct a surface with a model subsurface to be linked to and a leakage component. */
-  AirflowNetworkSurface(const Model& model, const SubSurface &surface, const AirflowNetworkComponent &component);
+  //AirflowNetworkSurface(const Model& model, const SubSurface &surface, const AirflowNetworkComponent &component);
 
   virtual ~AirflowNetworkSurface() {}
 
@@ -127,11 +129,6 @@ public:
   //@}
   /** @name Setters */
   //@{
-
-  /** Set the model surface associated with this pressure network linkage surface. */
-  bool setSurface(const Surface& surface);
-  /** Set the model subsurface associated with this pressure network linkage surface. */
-  bool setSurface(const SubSurface& surface);
 
   /** Set the component associated with this surface. */
   bool setLeakageComponent(const AirflowNetworkComponent& surfaceAirflowLeakage);
@@ -198,6 +195,14 @@ protected:
 
   explicit AirflowNetworkSurface(std::shared_ptr<detail::AirflowNetworkSurface_Impl> impl);
 
+  AirflowNetworkSurface(const Model& model, const Handle& handle);
+
+  bool setSurface(const Surface& surface);
+  bool setSurface(const SubSurface& surface);
+  void resetSurface();
+
+  friend class detail::Surface_Impl;
+  friend class detail::SubSurface_Impl;
   friend class detail::AirflowNetworkSurface_Impl;
   friend class Model;
   friend class IdfObject;

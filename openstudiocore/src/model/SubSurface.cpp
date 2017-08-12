@@ -124,10 +124,9 @@ namespace detail {
     if (daylightingDeviceShelf){
       result.push_back(*daylightingDeviceShelf);
     }
-    boost::optional<AirflowNetworkSurface> afns = airflowNetworkSurface();
-    if (afns) {
-      result.push_back(afns.get());
-    }
+    std::vector<AirflowNetworkSurface> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkSurface>(AirflowNetworkSurface::iddObjectType());
+    result.insert(result.end(), myAFNItems.begin(), myAFNItems.end());
+
     return result;
   }
 
@@ -1098,9 +1097,14 @@ namespace detail {
     return true;
   }
 
-  boost::optional<AirflowNetworkSurface> SubSurface_Impl::airflowNetworkSurface() const
+  boost::optional<AirflowNetworkSurface> SubSurface_Impl::optionalAirflowNetworkSurface() const
   {
     std::vector<AirflowNetworkSurface> myAFNSurfs = getObject<ModelObject>().getModelObjectSources<AirflowNetworkSurface>(AirflowNetworkSurface::iddObjectType());
+    boost::optional<SubSurface> other = adjacentSubSurface();
+    if (other) {
+      std::vector<AirflowNetworkSurface> adjAFNSurfs = other.get().getImpl<detail::Surface_Impl>()->getObject<ModelObject>().getModelObjectSources<AirflowNetworkSurface>(AirflowNetworkSurface::iddObjectType());
+      myAFNSurfs.insert(myAFNSurfs.end(), adjAFNSurfs.begin(), adjAFNSurfs.end());
+    }
     auto count = myAFNSurfs.size();
     if (count == 1) {
       return myAFNSurfs[0];
@@ -1109,6 +1113,23 @@ namespace detail {
       return myAFNSurfs[0];
     }
     return boost::none;
+  }
+
+  AirflowNetworkSurface SubSurface_Impl::airflowNetworkSurface()
+  {
+    boost::optional<AirflowNetworkSurface> opt = optionalAirflowNetworkSurface();
+    if (opt) {
+      return opt.get();
+    }
+    return AirflowNetworkSurface(model(), handle());
+  }
+
+  void SubSurface_Impl::removeAirflowNetworkSurface()
+  {
+    std::vector<AirflowNetworkSurface> myAFNZones = getObject<ModelObject>().getModelObjectSources<AirflowNetworkSurface>(AirflowNetworkSurface::iddObjectType());
+    for (auto afnzone : myAFNZones) {
+      afnzone.resetSurface();
+    }
   }
 
 } // detail
@@ -1386,9 +1407,19 @@ std::vector<SubSurface> applySkylightPattern(const std::vector<std::vector<Point
   return result;
 }
 
-boost::optional<AirflowNetworkSurface> SubSurface::airflowNetworkSurface() const
+AirflowNetworkSurface SubSurface::airflowNetworkSurface()
 {
   return getImpl<detail::SubSurface_Impl>()->airflowNetworkSurface();
+}
+
+boost::optional<AirflowNetworkSurface> SubSurface::optionalAirflowNetworkSurface() const
+{
+  return getImpl<detail::SubSurface_Impl>()->optionalAirflowNetworkSurface();
+}
+
+void SubSurface::removeAirflowNetworkSurface()
+{
+  getImpl<detail::SubSurface_Impl>()->removeAirflowNetworkSurface();
 }
 
 } // model

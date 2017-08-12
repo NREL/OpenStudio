@@ -123,6 +123,8 @@ namespace detail {
 
     bool setSurface(const PlanarSurface& surfAndSubSurf);
 
+    void resetSurface();
+
     bool setLeakageComponent(const AirflowNetworkComponent& surfaceAirflowLeakage);
 
     bool setExternalNode(const AirflowNetworkExternalNode& externalNode);

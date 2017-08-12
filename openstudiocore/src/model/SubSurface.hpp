@@ -100,8 +100,6 @@ class MODEL_API SubSurface : public PlanarSurface {
 
   bool isNumberofVerticesAutocalculated() const;
 
-  boost::optional<AirflowNetworkSurface> airflowNetworkSurface() const;
-
   //@}
   /** @name Setters */
   //@{
@@ -206,6 +204,10 @@ class MODEL_API SubSurface : public PlanarSurface {
   /** Add a daylighting light shelf associated with this sub surface.  Only succeeds if this is a fixed window, 
    * operable window, or glass door. Will return existing daylighting light shelf if there already is one. */
   boost::optional<DaylightingDeviceShelf> addDaylightingDeviceShelf() const;
+
+  AirflowNetworkSurface airflowNetworkSurface();
+  boost::optional<AirflowNetworkSurface> optionalAirflowNetworkSurface() const;
+  void removeAirflowNetworkSurface();
 
   // DLM: todo add methods to create light shelves by projection factor
 

@@ -226,7 +226,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(AirflowNetworkSimulationControl);
     REGISTER_CONSTRUCTOR(AirflowNetworkSurface);
     REGISTER_CONSTRUCTOR(AirflowNetworkZone);
-    REGISTER_CONSTRUCTOR(AirflowNetworkZoneExhaustFan);
+    REGISTER_CONSTRUCTOR(AirflowNetworkEquipmentLinkage);
     REGISTER_CONSTRUCTOR(AirGap);
     REGISTER_CONSTRUCTOR(AirLoopHVAC);
     REGISTER_CONSTRUCTOR(AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass);
@@ -676,7 +676,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkSimulationControl);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkSurface);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkZone);
-    REGISTER_COPYCONSTRUCTORS(AirflowNetworkZoneExhaustFan);
+    REGISTER_COPYCONSTRUCTORS(AirflowNetworkEquipmentLinkage);
     REGISTER_COPYCONSTRUCTORS(AirGap);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVAC);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass);

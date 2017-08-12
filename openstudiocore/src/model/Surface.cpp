@@ -128,10 +128,11 @@ namespace detail {
    SubSurfaceVector subSurfaces = this->subSurfaces();
    result.insert(result.end(), subSurfaces.begin(), subSurfaces.end());
 
-   boost::optional<AirflowNetworkSurface> afns = airflowNetworkSurface();
+   boost::optional<AirflowNetworkSurface> afns = optionalAirflowNetworkSurface();
    if (afns) {
      result.push_back(afns.get());
    }
+
    return result;
  }
 
@@ -2060,9 +2061,14 @@ namespace detail {
     return result;
   }
 
-  boost::optional<AirflowNetworkSurface> Surface_Impl::airflowNetworkSurface() const
+  boost::optional<AirflowNetworkSurface> Surface_Impl::optionalAirflowNetworkSurface() const
   {
     std::vector<AirflowNetworkSurface> myAFNSurfs = getObject<ModelObject>().getModelObjectSources<AirflowNetworkSurface>(AirflowNetworkSurface::iddObjectType());
+    boost::optional<Surface> other = adjacentSurface();
+    if (other) {
+      std::vector<AirflowNetworkSurface> adjAFNSurfs = other.get().getImpl<detail::Surface_Impl>()->getObject<ModelObject>().getModelObjectSources<AirflowNetworkSurface>(AirflowNetworkSurface::iddObjectType());
+      myAFNSurfs.insert(myAFNSurfs.end(), adjAFNSurfs.begin(), adjAFNSurfs.end());
+    }
     auto count = myAFNSurfs.size();
     if (count == 1) {
       return myAFNSurfs[0];
@@ -2071,6 +2077,23 @@ namespace detail {
       return myAFNSurfs[0];
     }
     return boost::none;
+  }
+
+  AirflowNetworkSurface Surface_Impl::airflowNetworkSurface()
+  {
+    boost::optional<AirflowNetworkSurface> opt = optionalAirflowNetworkSurface();
+    if (opt) {
+      return opt.get();
+    }
+    return AirflowNetworkSurface(model(), handle());
+  }
+
+  void Surface_Impl::removeAirflowNetworkSurface()
+  {
+    std::vector<AirflowNetworkSurface> myAFNZones = getObject<ModelObject>().getModelObjectSources<AirflowNetworkSurface>(AirflowNetworkSurface::iddObjectType());
+    for (auto afnzone : myAFNZones) {
+      afnzone.resetSurface();
+    }
   }
 
 } // detail
@@ -2420,11 +2443,20 @@ std::ostream& operator<<(std::ostream& os, const SurfaceIntersection& surfaceInt
   return os;
 }
 
-boost::optional<AirflowNetworkSurface> Surface::airflowNetworkSurface() const
+AirflowNetworkSurface Surface::airflowNetworkSurface()
 {
   return getImpl<detail::Surface_Impl>()->airflowNetworkSurface();
 }
 
+boost::optional<AirflowNetworkSurface> Surface::optionalAirflowNetworkSurface() const
+{
+  return getImpl<detail::Surface_Impl>()->optionalAirflowNetworkSurface();
+}
+
+void Surface::removeAirflowNetworkSurface()
+{
+  getImpl<detail::Surface_Impl>()->removeAirflowNetworkSurface();
+}
 
 } // model
 } // openstudio

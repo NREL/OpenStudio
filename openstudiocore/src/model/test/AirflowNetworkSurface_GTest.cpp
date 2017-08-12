@@ -123,9 +123,10 @@ TEST_F(ModelFixture, AirflowNetwork_Surface_SetVertices)
   points.push_back(Point3d(1, 1, 0));
   Surface surface(points, model);
   EXPECT_EQ("RoofCeiling", surface.surfaceType());
+  EXPECT_TRUE(!surface.optionalAirflowNetworkSurface());
   EXPECT_EQ("Outdoors", surface.outsideBoundaryCondition());
 
-  AirflowNetworkSurface afnsurf(model, surface);
+  AirflowNetworkSurface afnsurf = surface.airflowNetworkSurface();
   EXPECT_EQ(surface, afnsurf.surface());
   boost::optional<AirflowNetworkSurface> optsurf = surface.airflowNetworkSurface();
   ASSERT_TRUE(optsurf);
@@ -161,7 +162,7 @@ TEST_F(ModelFixture, AirflowNetwork_Surface_Clone) {
   Surface surface(vertices, model);
 
   // construct AFN Surface
-  AirflowNetworkSurface afnsurf(model, surface);
+  AirflowNetworkSurface afnsurf = surface.airflowNetworkSurface();
   EXPECT_EQ(surface, afnsurf.surface());
   boost::optional<AirflowNetworkSurface> optsurf = surface.airflowNetworkSurface();
   ASSERT_TRUE(optsurf);

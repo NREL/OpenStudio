@@ -233,9 +233,16 @@ boost::optional<AirflowNetworkOccupantVentilationControl> AirflowNetworkSurface_
   return getObject<ModelObject>().getModelObjectTarget<AirflowNetworkOccupantVentilationControl>(OS_AirflowNetworkSurfaceFields::OccupantVentilationControlName);
 }
 
-bool AirflowNetworkSurface_Impl::setSurface(const PlanarSurface& surfAndSubSurf) {
+bool AirflowNetworkSurface_Impl::setSurface(const PlanarSurface& surfAndSubSurf)
+{
   bool result = setPointer(OS_AirflowNetworkSurfaceFields::SurfaceName, surfAndSubSurf.handle());
   return result;
+}
+
+void AirflowNetworkSurface_Impl::resetSurface()
+{
+  bool result = setString(OS_AirflowNetworkSurfaceFields::SurfaceName, "");
+  OS_ASSERT(result);
 }
 
 bool AirflowNetworkSurface_Impl::setLeakageComponent(const AirflowNetworkComponent& surfaceAirflowLeakage)
@@ -392,6 +399,16 @@ bool AirflowNetworkSurface_Impl::setParent(ParentObject& surfAndSubSurf)
 
 } // detail
 
+AirflowNetworkSurface::AirflowNetworkSurface(const Model& model, const Handle &handle)
+  : AirflowNetworkLinkage(AirflowNetworkSurface::iddObjectType(), model)
+{
+  OS_ASSERT(getImpl<detail::AirflowNetworkSurface_Impl>());
+  bool ok = getImpl<detail::AirflowNetworkSurface_Impl>()->setPointer(OS_AirflowNetworkSurfaceFields::SurfaceName, handle);
+  OS_ASSERT(ok);
+}
+
+
+/*
 AirflowNetworkSurface::AirflowNetworkSurface(const Model& model, const Surface &surface)
   : AirflowNetworkLinkage(AirflowNetworkSurface::iddObjectType(),model)
 {
@@ -433,6 +450,7 @@ AirflowNetworkSurface::AirflowNetworkSurface(const Model& model, const SubSurfac
   ok = setLeakageComponent(component);
   OS_ASSERT(ok);
 }
+*/
 
 IddObjectType AirflowNetworkSurface::iddObjectType()
 {
@@ -553,6 +571,11 @@ bool AirflowNetworkSurface::setSurface(const Surface& surfAndSubSurf)
 bool AirflowNetworkSurface::setSurface(const SubSurface& surfAndSubSurf)
 {
   return getImpl<detail::AirflowNetworkSurface_Impl>()->setSurface(surfAndSubSurf);
+}
+
+void AirflowNetworkSurface::resetSurface()
+{
+  return getImpl<detail::AirflowNetworkSurface_Impl>()->resetSurface();
 }
 
 bool AirflowNetworkSurface::setLeakageComponent(const AirflowNetworkComponent& surfaceAirflowLeakage)

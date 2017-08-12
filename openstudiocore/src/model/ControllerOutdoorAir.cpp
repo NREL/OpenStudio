@@ -36,6 +36,8 @@
 #include "ScheduleCompact_Impl.hpp"
 #include "CurveQuadratic.hpp"
 #include "CurveQuadratic_Impl.hpp"
+#include "AirflowNetworkEquipmentLinkage.hpp"
+#include "AirflowNetworkEquipmentLinkage_Impl.hpp"
 
 #include "Model.hpp"
 #include "Model_Impl.hpp"
@@ -112,6 +114,8 @@ namespace detail {
     //result.push_back(this->getMinimumFractionOfOutdoorAirSchedule());
     //result.push_back(this->getMaximumFractionOfOutdoorAirSchedule());
     //result.push_back(this->getTimeOfDayEconomizerControlSchedule());
+    std::vector<AirflowNetworkEquipmentLinkage> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquipmentLinkage>(AirflowNetworkEquipmentLinkage::iddObjectType());
+    result.insert(result.end(), myAFNItems.begin(), myAFNItems.end());
     return result;
   }
 
@@ -658,6 +662,36 @@ namespace detail {
     return result;
   }
 
+  AirflowNetworkEquipmentLinkage ControllerOutdoorAir_Impl::airflowNetworkEquipmentLinkage()
+  {
+    boost::optional<AirflowNetworkEquipmentLinkage> opt = optionalAirflowNetworkEquipmentLinkage();
+    if (opt) {
+      return opt.get();
+    }
+    return AirflowNetworkEquipmentLinkage(model(), handle());
+  }
+
+  boost::optional<AirflowNetworkEquipmentLinkage> ControllerOutdoorAir_Impl::optionalAirflowNetworkEquipmentLinkage()
+  {
+    std::vector<AirflowNetworkEquipmentLinkage> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquipmentLinkage>(AirflowNetworkEquipmentLinkage::iddObjectType());
+    auto count = myAFNItems.size();
+    if (count == 1) {
+      return myAFNItems[0];
+    } else if (count > 1) {
+      LOG(Warn, briefDescription() << " has more than one AirflowNetwork EquipmentLinkage attached, returning first.");
+      return myAFNItems[0];
+    }
+    return boost::none;
+  }
+
+  void ControllerOutdoorAir_Impl::removeAirflowNetworkEquipmentLinkage()
+  {
+    std::vector<AirflowNetworkEquipmentLinkage> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquipmentLinkage>(AirflowNetworkEquipmentLinkage::iddObjectType());
+    for (auto item : myAFNItems) {
+      item.resetEquipment();
+    }
+  }
+
 } // detail
 
 // create a new ControllerOutdoorAir object in the model's workspace
@@ -993,6 +1027,20 @@ bool ControllerOutdoorAir::setTimeofDayEconomizerControlSchedule(Schedule& sched
 void ControllerOutdoorAir::resetTimeofDayEconomizerControlSchedule()
 {
   getImpl<detail::ControllerOutdoorAir_Impl>()->resetTimeofDayEconomizerControlSchedule();
+}
+
+AirflowNetworkEquipmentLinkage ControllerOutdoorAir::airflowNetworkEquipmentLinkage()
+{
+  return getImpl<detail::ControllerOutdoorAir_Impl>()->airflowNetworkEquipmentLinkage();
+}
+
+boost::optional<AirflowNetworkEquipmentLinkage> ControllerOutdoorAir::optionalAirflowNetworkEquipmentLinkage()
+{
+  return getImpl<detail::ControllerOutdoorAir_Impl>()->optionalAirflowNetworkEquipmentLinkage();
+}
+void ControllerOutdoorAir::removeAirflowNetworkEquipmentLinkage()
+{
+  getImpl<detail::ControllerOutdoorAir_Impl>()->removeAirflowNetworkEquipmentLinkage();
 }
 
 } // model

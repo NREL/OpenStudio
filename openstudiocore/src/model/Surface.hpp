@@ -110,8 +110,6 @@ class MODEL_API Surface : public PlanarSurface {
 
   bool isNumberofVerticesAutocalculated() const;
 
-  boost::optional<AirflowNetworkSurface> airflowNetworkSurface() const;
-
   //@}
   /** @name Setters */
   //@{
@@ -280,6 +278,11 @@ class MODEL_API Surface : public PlanarSurface {
    *  Returns all new sub surfaces created, sub surface types are defaulted.  Optional construction is applied.
    *  Returns false is this surface has any current sub surfaces or if there is an adjacent surface.*/
   std::vector<SubSurface> createSubSurfaces(const std::vector<std::vector<Point3d> >& faces, double inset, const boost::optional<ConstructionBase>& construction);
+
+
+  AirflowNetworkSurface airflowNetworkSurface();
+  boost::optional<AirflowNetworkSurface> optionalAirflowNetworkSurface() const;
+  void removeAirflowNetworkSurface();
 
  protected:
   /// @cond

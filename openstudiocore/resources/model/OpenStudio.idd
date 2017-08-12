@@ -27791,6 +27791,7 @@ OS:AirflowNetworkCrack,
   A2, \field Name
       \required-field
       \type alpha
+      \reference CrackNames
       \reference SurfaceAirflowLeakageNames
       \note Enter a unique name for this object.
   N1, \field Air Mass Flow Coefficient at Reference Conditions
@@ -28029,10 +28030,11 @@ OS:AirflowNetworkHorizontalOpening,
       \note The Discharge Coefficient indicates the fractional effectiveness
       \note for air flow through the opening at that Opening Factor.
 
-OS:AirflowNetworkZoneExhaustFan,
-      \min-fields 4
-      \memo This object specifies the additional properties for a zone exhaust fan
-      \memo to perform multizone airflow calculations.
+OS:AirflowNetworkEquipmentLinkage,
+      \min-fields 3
+      \memo This object specifies the additional crack properties for a piece of equipment
+      \memo to perform multizone airflow calculations. The crack is typically applied
+      \memo only when the component is off
   A1, \field Handle
       \type handle
       \required-field
@@ -28040,33 +28042,14 @@ OS:AirflowNetworkZoneExhaustFan,
       \required-field
       \type object-list
       \object-list FansZoneExhaust
+      \object-list OutdoorAirController
       \reference SurfaceAirflowLeakageNames
-      \note Enter the name of a Fan:ZoneExhaust object.
-  N1, \field Air Mass Flow Coefficient When the Zone Exhaust Fan is Off at Reference Conditions
+      \note Enter the name of a Fan:ZoneExhaust or Controller:OutdoorAir object.
+  A3; \field Crack Name
       \required-field
-      \type real
-      \units kg/s
-      \minimum> 0
-      \note Enter the air mass flow coefficient at the conditions defined
-      \note in the Reference Crack Conditions object.
-      \note Defined at 1 Pa pressure difference. Enter the coefficient used in the following
-      \note equation:
-      \note Mass Flow Rate = Air Mass Flow Coefficient * (dP)^Air Mass Flow Exponent.
-      \note Used only when the fan is off.
-  N2, \field Air Mass Flow Exponent When the Zone Exhaust Fan is Off
-      \units dimensionless
-      \type real
-      \minimum 0.5
-      \maximum 1.0
-      \default 0.65
-      \note Enter the exponent used in the following equation:
-      \note Mass Flow Rate = Air Mass Flow Coefficient * (dP)^Air Mass Flow Exponent.
-      \note Used only when the fan is off.
-  A3; \field Reference Crack Conditions
       \type object-list
-      \object-list ReferenceCrackConditions
-      \note Select a AirflowNetwork:MultiZone:ReferenceCrackConditions name associated with
-      \note the air mass flow coefficient entered above.
+      \object-list CrackNames
+      \note Enter the name of the crack object to applied under appropriate conditions
 
 OS:AirflowNetworkExternalNode,
       \min-fields 4
@@ -28386,43 +28369,6 @@ OS:AirflowNetworkConstantPressureDrop,
       \type real
       \minimum> 0.0
       \note Enter the pressure drop across this component.
-
-OS:AirflowNetworkOutdoorAirFlow,
-      \min-fields 4
-      \memo This object includes the outdoor air flow rate set by the Controller:OutdoorAir
-      \memo object in the airflow network.
-      \unique-object
-  A1, \field Handle
-      \type handle
-      \required-field
-  A2, \field Name
-      \required-field
-      \reference AFNOutdoorAirFlowNames
-  N1, \field Air Mass Flow Coefficient When No Outdoor Air Flow at Reference Conditions
-      \required-field
-      \type real
-      \units kg/s
-      \minimum> 0
-      \note Enter the air mass flow coefficient at the conditions defined
-      \note in the Reference Crack Conditions object.
-      \note Defined at 1 Pa pressure difference. Enter the coefficient used in the following
-      \note equation:
-      \note Mass Flow Rate = Air Mass Flow Coefficient * (dP)^Air Mass Flow Exponent.
-      \note Used only when no outdoor air flow rate.
-  N2, \field Air Mass Flow Exponent When No Outdoor Air Flow
-      \units dimensionless
-      \type real
-      \minimum 0.5
-      \maximum 1.0
-      \default 0.65
-      \note Enter the exponent used in the following equation:
-      \note Mass Flow Rate = Air Mass Flow Coefficient * (dP)^Air Mass Flow Exponent.
-      \note Used only when no outdoor air flow rate.
-  A3; \field Reference Crack Conditions
-      \type object-list
-      \object-list ReferenceCrackConditions
-      \note Select a AirflowNetwork:MultiZone:ReferenceCrackConditions name associated with
-      \note the air mass flow coefficient entered above.
 
 OS:AirflowNetworkReliefAirFlow,
       \min-fields 4

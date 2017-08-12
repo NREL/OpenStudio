@@ -129,6 +129,8 @@ namespace detail {
     // TODO: Check argument type. From object lists, some candidates are: ThermalZone.
     bool setThermalZone(const ThermalZone& thermalZone);
 
+    void resetThermalZone();
+
     bool setVentilationControlMode(const std::string& ventilationControlMode);
 
     void resetVentilationControlMode();

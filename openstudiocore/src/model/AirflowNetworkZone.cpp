@@ -210,6 +210,11 @@ namespace detail {
     return result;
   }
 
+  void AirflowNetworkZone_Impl::resetThermalZone() {
+    bool result = setString(OS_AirflowNetworkZoneFields::ThermalZoneName, "");
+    OS_ASSERT(result);
+  }
+
   bool AirflowNetworkZone_Impl::setVentilationControlMode(const std::string& ventilationControlMode) {
     bool result = setString(OS_AirflowNetworkZoneFields::VentilationControlMode, ventilationControlMode);
     return result;
@@ -445,6 +450,10 @@ boost::optional<AirflowNetworkOccupantVentilationControl> AirflowNetworkZone::oc
 
 bool AirflowNetworkZone::setThermalZone(const ThermalZone& thermalZone) {
   return getImpl<detail::AirflowNetworkZone_Impl>()->setThermalZone(thermalZone);
+}
+
+void AirflowNetworkZone::resetThermalZone() {
+  getImpl<detail::AirflowNetworkZone_Impl>()->resetThermalZone();
 }
 
 bool AirflowNetworkZone::setVentilationControlMode(const std::string& ventilationControlMode) {

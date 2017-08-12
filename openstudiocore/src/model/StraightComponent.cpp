@@ -42,6 +42,8 @@
 #include "Splitter_Impl.hpp"
 #include "Mixer.hpp"
 #include "Mixer_Impl.hpp"
+#include "AirflowNetworkEquivalentDuct.hpp"
+#include "AirflowNetworkEquivalentDuct_Impl.hpp"
 #include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
@@ -214,6 +216,36 @@ ModelObject StraightComponent_Impl::clone(Model model) const
   return mo;
 }
 
+boost::optional<AirflowNetworkEquivalentDuct> StraightComponent_Impl::getAirflowNetworkEquivalentDuct() const
+{
+  std::vector<AirflowNetworkEquivalentDuct> myAFN = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquivalentDuct>(AirflowNetworkEquivalentDuct::iddObjectType());
+  auto count = myAFN.size();
+  if (count == 1) {
+    return myAFN[0];
+  } else if (count > 1) {
+    LOG(Warn, briefDescription() << " has more than one AirflowNetwork EquivalentDuct attached, returning first.");
+    return myAFN[0];
+  }
+  return boost::none;
+}
+
+AirflowNetworkEquivalentDuct StraightComponent_Impl::airflowNetworkEquivalentDuct()
+{
+  boost::optional<AirflowNetworkEquivalentDuct> opt = getAirflowNetworkEquivalentDuct();
+  if (opt) {
+    return opt.get();
+  }
+  return AirflowNetworkEquivalentDuct(model(), handle());
+}
+
+void StraightComponent_Impl::removeAirflowNetworkEquivalentDuct()
+{
+  std::vector<AirflowNetworkEquivalentDuct> myAFN = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquivalentDuct>(AirflowNetworkEquivalentDuct::iddObjectType());
+  for (auto afn : myAFN) {
+    afn.resetComponent();
+  }
+}
+
 } // detail
 
 StraightComponent::StraightComponent(IddObjectType type,const Model& model)
@@ -274,6 +306,21 @@ ModelObject StraightComponent::clone(Model model) const
 void StraightComponent::disconnect()
 {
   getImpl<detail::StraightComponent_Impl>()->disconnect();
+}
+
+AirflowNetworkEquivalentDuct StraightComponent::airflowNetworkEquivalentDuct()
+{
+  return getImpl<detail::StraightComponent_Impl>()->airflowNetworkEquivalentDuct();
+}
+
+boost::optional<AirflowNetworkEquivalentDuct> StraightComponent::getAirflowNetworkEquivalentDuct() const
+{
+  return getImpl<detail::StraightComponent_Impl>()->getAirflowNetworkEquivalentDuct();
+}
+
+void StraightComponent::removeAirflowNetworkEquivalentDuct()
+{
+  getImpl<detail::StraightComponent_Impl>()->removeAirflowNetworkEquivalentDuct();
 }
 
 } // model

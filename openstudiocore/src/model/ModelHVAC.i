@@ -23,6 +23,21 @@
   
 #endif
 
+namespace openstudio {
+namespace model {
+
+// forward declarations
+%feature("valuewrapper") AirflowNetworkZone;
+%feature("valuewrapper") AirflowNetworkEquivalentDuct;
+%feature("valuewrapper") AirflowNetworkEquipmentLinkage;
+class AirflowNetworkZone;
+class AirflowNetworkEquivalentDuct;
+class AirflowNetworkEquipmentLinkage;
+
+}
+}
+
+
 MODELOBJECT_TEMPLATES(PortList);
 MODELOBJECT_TEMPLATES(Loop);
 MODELOBJECT_TEMPLATES(HVACComponent);

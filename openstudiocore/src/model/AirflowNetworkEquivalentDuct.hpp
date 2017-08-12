@@ -45,6 +45,7 @@ class StraightComponent;
 
 namespace detail {
 
+  class StraightComponent_Impl;
   class AirflowNetworkEquivalentDuct_Impl;
 
 } // detail
@@ -54,8 +55,6 @@ class MODEL_API AirflowNetworkEquivalentDuct : public ModelObject {
  public:
   /** @name Constructors and Destructors */
   //@{
-
-  explicit AirflowNetworkEquivalentDuct(const Model& model);
 
   virtual ~AirflowNetworkEquivalentDuct() {}
 
@@ -76,8 +75,6 @@ class MODEL_API AirflowNetworkEquivalentDuct : public ModelObject {
   /** @name Setters */
   //@{
 
-  bool setComponent(const StraightComponent &component);
-
   bool setAirPathLength(double airPathLength);
 
   bool setAirPathHydraulicDiameter(double airPathHydraulicDiameter);
@@ -93,6 +90,12 @@ class MODEL_API AirflowNetworkEquivalentDuct : public ModelObject {
 
   explicit AirflowNetworkEquivalentDuct(std::shared_ptr<detail::AirflowNetworkEquivalentDuct_Impl> impl);
 
+  AirflowNetworkEquivalentDuct(const Model& model, const Handle &handle);
+
+  bool setComponent(const StraightComponent &component);
+  void resetComponent();
+
+  friend class detail::StraightComponent_Impl;
   friend class detail::AirflowNetworkEquivalentDuct_Impl;
   friend class Model;
   friend class IdfObject;

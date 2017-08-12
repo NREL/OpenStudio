@@ -35,6 +35,8 @@
 #include "Node_Impl.hpp"
 #include "PortList.hpp"
 #include "PortList_Impl.hpp"
+#include "AirflowNetworkEquipmentLinkage.hpp"
+#include "AirflowNetworkEquipmentLinkage_Impl.hpp"
 
 #include "Model.hpp"
 #include "Model_Impl.hpp"
@@ -88,6 +90,14 @@ namespace detail {
 
   IddObjectType FanZoneExhaust_Impl::iddObjectType() const {
     return FanZoneExhaust::iddObjectType();
+  }
+
+  std::vector<ModelObject> FanZoneExhaust_Impl::children() const
+  {
+    std::vector<ModelObject> result;
+    std::vector<AirflowNetworkEquipmentLinkage> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquipmentLinkage>(AirflowNetworkEquipmentLinkage::iddObjectType());
+    result.insert(result.end(), myAFNItems.begin(), myAFNItems.end());
+    return result;
   }
 
   std::vector<ScheduleTypeKey> FanZoneExhaust_Impl::getScheduleTypeKeys(const Schedule& schedule) const
@@ -319,6 +329,37 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  AirflowNetworkEquipmentLinkage FanZoneExhaust_Impl::airflowNetworkEquipmentLinkage()
+  {
+    boost::optional<AirflowNetworkEquipmentLinkage> opt = optionalAirflowNetworkEquipmentLinkage();
+    if (opt) {
+      return opt.get();
+    }
+    return AirflowNetworkEquipmentLinkage(model(), handle());
+  }
+
+  boost::optional<AirflowNetworkEquipmentLinkage> FanZoneExhaust_Impl::optionalAirflowNetworkEquipmentLinkage()
+  {
+    std::vector<AirflowNetworkEquipmentLinkage> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquipmentLinkage>(AirflowNetworkEquipmentLinkage::iddObjectType());
+    auto count = myAFNItems.size();
+    if (count == 1) {
+      return myAFNItems[0];
+    } else if (count > 1) {
+      LOG(Warn, briefDescription() << " has more than one AirflowNetwork EquipmentLinkage attached, returning first.");
+      return myAFNItems[0];
+    }
+    return boost::none;
+  }
+
+  void FanZoneExhaust_Impl::removeAirflowNetworkEquipmentLinkage()
+  {
+    std::vector<AirflowNetworkEquipmentLinkage> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquipmentLinkage>(AirflowNetworkEquipmentLinkage::iddObjectType());
+    for (auto item : myAFNItems) {
+      item.resetEquipment();
+      item.remove();
+    }
+  }
+
 } // detail
 
 FanZoneExhaust::FanZoneExhaust(const Model& model)
@@ -431,6 +472,21 @@ bool FanZoneExhaust::setBalancedExhaustFractionSchedule(Schedule& schedule) {
 
 void FanZoneExhaust::resetBalancedExhaustFractionSchedule() {
   getImpl<detail::FanZoneExhaust_Impl>()->resetBalancedExhaustFractionSchedule();
+}
+
+
+AirflowNetworkEquipmentLinkage FanZoneExhaust::airflowNetworkEquipmentLinkage()
+{
+  return getImpl<detail::FanZoneExhaust_Impl>()->airflowNetworkEquipmentLinkage();
+}
+
+boost::optional<AirflowNetworkEquipmentLinkage> FanZoneExhaust::optionalAirflowNetworkEquipmentLinkage()
+{
+  return getImpl<detail::FanZoneExhaust_Impl>()->optionalAirflowNetworkEquipmentLinkage();
+}
+void FanZoneExhaust::removeAirflowNetworkEquipmentLinkage()
+{
+  getImpl<detail::FanZoneExhaust_Impl>()->removeAirflowNetworkEquipmentLinkage();
 }
 
 /// @cond

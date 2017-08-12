@@ -51,7 +51,7 @@ TEST_F(ModelFixture, AirflowNetwork_Zone_Basic)
   Space space1(model);
   Space space2(model);
 
-  EXPECT_FALSE(thermalZone.getAirflowNetworkZone());
+  EXPECT_FALSE(thermalZone.optionalAirflowNetworkZone());
   EXPECT_FALSE(space1.thermalZone());
   EXPECT_FALSE(space2.thermalZone());
   EXPECT_EQ(0u, thermalZone.spaces().size());
@@ -70,7 +70,7 @@ TEST_F(ModelFixture, AirflowNetwork_Zone_Basic)
   EXPECT_EQ(2u, thermalZone.spaces().size());
 
   AirflowNetworkZone zone = thermalZone.airflowNetworkZone();
-  boost::optional<AirflowNetworkZone> optzone = thermalZone.getAirflowNetworkZone();
+  boost::optional<AirflowNetworkZone> optzone = thermalZone.optionalAirflowNetworkZone();
   ASSERT_TRUE(optzone);
   EXPECT_EQ(zone, optzone.get());
 
