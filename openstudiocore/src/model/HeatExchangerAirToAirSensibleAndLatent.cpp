@@ -34,6 +34,8 @@
 #include "Model_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
+#include "AirflowNetworkEquivalentDuct.hpp"
+#include "AirflowNetworkEquivalentDuct_Impl.hpp"
 #include <utilities/idd/IddFactory.hxx>
 
 #include <utilities/idd/OS_HeatExchanger_AirToAir_SensibleAndLatent_FieldEnums.hxx>
@@ -79,6 +81,14 @@ namespace detail {
 
   IddObjectType HeatExchangerAirToAirSensibleAndLatent_Impl::iddObjectType() const {
     return HeatExchangerAirToAirSensibleAndLatent::iddObjectType();
+  }
+
+  std::vector<ModelObject> HeatExchangerAirToAirSensibleAndLatent_Impl::children() const
+  {
+    std::vector<ModelObject> result;
+    std::vector<AirflowNetworkEquivalentDuct> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquivalentDuct>(AirflowNetworkEquivalentDuct::iddObjectType());
+    result.insert(result.end(), myAFNItems.begin(), myAFNItems.end());
+    return result;
   }
 
   std::vector<ScheduleTypeKey> HeatExchangerAirToAirSensibleAndLatent_Impl::getScheduleTypeKeys(const Schedule& schedule) const
@@ -701,6 +711,24 @@ namespace detail {
     return OS_HeatExchanger_AirToAir_SensibleAndLatentFields::ExhaustAirOutletNode;
   }
 
+  AirflowNetworkEquivalentDuct HeatExchangerAirToAirSensibleAndLatent_Impl::createAirflowNetworkEquivalentDuct(double length, double diameter)
+  {
+    return AirflowNetworkEquivalentDuct(model(), length, diameter, handle());
+  }
+
+  boost::optional<AirflowNetworkEquivalentDuct> HeatExchangerAirToAirSensibleAndLatent_Impl::optionalAirflowNetworkEquivalentDuct() const
+  {
+    std::vector<AirflowNetworkEquivalentDuct> myAFN = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquivalentDuct>(AirflowNetworkEquivalentDuct::iddObjectType());
+    auto count = myAFN.size();
+    if (count == 1) {
+      return myAFN[0];
+    } else if (count > 1) {
+      LOG(Warn, briefDescription() << " has more than one AirflowNetwork EquivalentDuct attached, returning first.");
+      return myAFN[0];
+    }
+    return boost::none;
+  }
+
 } // detail
 
 HeatExchangerAirToAirSensibleAndLatent::HeatExchangerAirToAirSensibleAndLatent(const Model& model)
@@ -1026,6 +1054,16 @@ void HeatExchangerAirToAirSensibleAndLatent::resetRateofDefrostTimeFractionIncre
 
 void HeatExchangerAirToAirSensibleAndLatent::setEconomizerLockout(bool economizerLockout) {
   getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->setEconomizerLockout(economizerLockout);
+}
+
+AirflowNetworkEquivalentDuct HeatExchangerAirToAirSensibleAndLatent::createAirflowNetworkEquivalentDuct(double length, double diameter)
+{
+  return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->createAirflowNetworkEquivalentDuct(length, diameter);
+}
+
+boost::optional<AirflowNetworkEquivalentDuct> HeatExchangerAirToAirSensibleAndLatent::optionalAirflowNetworkEquivalentDuct() const
+{
+  return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->optionalAirflowNetworkEquivalentDuct();
 }
 
 /// @cond

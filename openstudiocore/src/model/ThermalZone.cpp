@@ -2477,13 +2477,6 @@ namespace detail {
     return AirflowNetworkZone(model(), handle());
   }
 
-  void ThermalZone_Impl::removeAirflowNetworkZone()
-  {
-    std::vector<AirflowNetworkZone> myAFN = getObject<ModelObject>().getModelObjectSources<AirflowNetworkZone>(AirflowNetworkZone::iddObjectType());
-    for (auto afn : myAFN) {
-      afn.resetThermalZone();
-    }
-  }
 
 } // detail
 
@@ -3084,11 +3077,6 @@ AirflowNetworkZone ThermalZone::airflowNetworkZone()
 boost::optional<AirflowNetworkZone> ThermalZone::optionalAirflowNetworkZone() const
 {
   return getImpl<detail::ThermalZone_Impl>()->optionalAirflowNetworkZone();
-}
-
-void ThermalZone::removeAirflowNetworkZone()
-{
-  getImpl<detail::ThermalZone_Impl>()->removeAirflowNetworkZone();
 }
 
 /// @cond

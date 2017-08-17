@@ -30,9 +30,11 @@ namespace model {
 %feature("valuewrapper") AirflowNetworkZone;
 %feature("valuewrapper") AirflowNetworkEquivalentDuct;
 %feature("valuewrapper") AirflowNetworkEquipmentLinkage;
+%feature("valuewrapper") AirflowNetworkFan;
 class AirflowNetworkZone;
 class AirflowNetworkEquivalentDuct;
 class AirflowNetworkEquipmentLinkage;
+class AirflowNetworkFan;
 
 }
 }

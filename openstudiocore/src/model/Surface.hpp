@@ -282,7 +282,6 @@ class MODEL_API Surface : public PlanarSurface {
 
   AirflowNetworkSurface airflowNetworkSurface();
   boost::optional<AirflowNetworkSurface> optionalAirflowNetworkSurface() const;
-  void removeAirflowNetworkSurface();
 
  protected:
   /// @cond

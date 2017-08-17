@@ -39,6 +39,7 @@ namespace model {
 class Schedule;
 class Curve;
 class CoilHeatingDXMultiSpeedStageData;
+class AirflowNetworkEquivalentDuct;
 
 namespace detail {
 
@@ -154,6 +155,12 @@ class MODEL_API CoilHeatingDXMultiSpeed : public StraightComponent {
 
   /** Remove all stages **/
   void removeAllStages();
+
+  /** Creates a new equivalent duct object. */
+  AirflowNetworkEquivalentDuct createAirflowNetworkEquivalentDuct(double length, double diameter);
+  /** Returns the attached equivalent duct object, if any. */
+  boost::optional<AirflowNetworkEquivalentDuct> optionalAirflowNetworkEquivalentDuct() const;
+
 
   //@}
  protected:

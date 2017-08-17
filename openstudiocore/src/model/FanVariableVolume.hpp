@@ -39,6 +39,7 @@ class OSOptionalQuantity;
 namespace model {
 
 class Schedule;
+class AirflowNetworkFan;
 
 namespace detail {
 
@@ -224,6 +225,9 @@ class MODEL_API FanVariableVolume : public StraightComponent {
   void setEndUseSubcategory(std::string endUseSubcategory);
 
   void resetEndUseSubcategory();
+
+  AirflowNetworkFan airflowNetworkFan();
+  boost::optional<AirflowNetworkFan> optionalAirflowNetworkFan() const;
 
   //@}
  protected:

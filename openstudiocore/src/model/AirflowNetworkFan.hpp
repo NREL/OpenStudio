@@ -36,13 +36,14 @@ namespace openstudio {
 namespace model {
 
 class StraightComponent;
-class FanConstantVolume;
-class FanVariableVolume;
-class FanOnOff;
+
 
 namespace detail {
 
   class AirflowNetworkFan_Impl;
+  class FanConstantVolume_Impl;
+  class FanVariableVolume_Impl;
+  class FanOnOff_Impl;
 
 } // detail
 
@@ -52,8 +53,6 @@ class MODEL_API AirflowNetworkFan : public ModelObject
  public:
   /** @name Constructors and Destructors */
   //@{
-
-  explicit AirflowNetworkFan(const Model& model);
 
   virtual ~AirflowNetworkFan() {}
 
@@ -70,11 +69,6 @@ class MODEL_API AirflowNetworkFan : public ModelObject
   /** @name Setters */
   //@{
 
-  bool setFan(const FanConstantVolume& fan);
-  bool setFan(const FanVariableVolume& fan);
-  bool setFan(const FanOnOff& fan);
-  bool setFan(const StraightComponent& fan);
-
   //@}
   /** @name Other */
   //@{
@@ -85,6 +79,14 @@ class MODEL_API AirflowNetworkFan : public ModelObject
   typedef detail::AirflowNetworkFan_Impl ImplType;
 
   explicit AirflowNetworkFan(std::shared_ptr<detail::AirflowNetworkFan_Impl> impl);
+
+  AirflowNetworkFan(const Model& model, const Handle &handle);
+
+  friend class detail::FanConstantVolume_Impl;
+  friend class detail::FanVariableVolume_Impl;
+  friend class detail::FanOnOff_Impl;
+
+  void resetComponent();
 
   friend class detail::AirflowNetworkFan_Impl;
   friend class Model;

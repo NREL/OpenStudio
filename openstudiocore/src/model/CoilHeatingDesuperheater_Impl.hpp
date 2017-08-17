@@ -72,6 +72,8 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const override;
 
+    virtual std::vector<ModelObject> children() const override;
+
     virtual ModelObject clone(Model model) const override;
 
     virtual bool addToNode(Node & node) override;
@@ -117,6 +119,9 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
+
+    AirflowNetworkEquivalentDuct createAirflowNetworkEquivalentDuct(double length, double diameter);
+    boost::optional<AirflowNetworkEquivalentDuct> optionalAirflowNetworkEquivalentDuct() const;
 
     //@}
    protected:

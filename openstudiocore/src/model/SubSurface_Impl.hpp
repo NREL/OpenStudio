@@ -264,7 +264,6 @@ namespace detail {
 
     AirflowNetworkSurface airflowNetworkSurface();
     boost::optional<AirflowNetworkSurface> optionalAirflowNetworkSurface() const;
-    void removeAirflowNetworkSurface();
 
    protected:
 

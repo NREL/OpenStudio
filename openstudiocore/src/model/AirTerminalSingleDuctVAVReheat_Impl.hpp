@@ -165,6 +165,9 @@ namespace detail {
 
     void setControlForOutdoorAir(bool controlForOutdoorAir);
 
+    AirflowNetworkEquivalentDuct createAirflowNetworkEquivalentDuct(double length, double diameter);
+    boost::optional<AirflowNetworkEquivalentDuct> optionalAirflowNetworkEquivalentDuct() const;
+
    private:
 
     REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctVAVReheat");

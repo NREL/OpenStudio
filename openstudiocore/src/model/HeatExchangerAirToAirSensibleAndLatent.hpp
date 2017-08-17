@@ -40,6 +40,7 @@ class OSOptionalQuantity;
 namespace model {
 
 class Schedule;
+class AirflowNetworkEquivalentDuct;
 
 namespace detail {
 
@@ -197,6 +198,9 @@ class MODEL_API HeatExchangerAirToAirSensibleAndLatent : public AirToAirComponen
   bool economizerLockout() const;
 
   void setEconomizerLockout(bool economizerLockout);
+
+  AirflowNetworkEquivalentDuct createAirflowNetworkEquivalentDuct(double length, double diameter);
+  boost::optional<AirflowNetworkEquivalentDuct> optionalAirflowNetworkEquivalentDuct() const;
 
  protected:
 

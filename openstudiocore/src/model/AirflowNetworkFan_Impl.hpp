@@ -90,6 +90,7 @@ namespace detail {
       // Set parent or something here?
       return setPointer(OS_AirflowNetworkFanFields::FanName, fan.handle());
     }
+    void resetComponent();
 
     //@}
     /** @name Other */

@@ -139,7 +139,6 @@ namespace detail {
 
     AirflowNetworkEquipmentLinkage airflowNetworkEquipmentLinkage();
     boost::optional<AirflowNetworkEquipmentLinkage> optionalAirflowNetworkEquipmentLinkage();
-    void removeAirflowNetworkEquipmentLinkage();
 
     //@}
    protected:

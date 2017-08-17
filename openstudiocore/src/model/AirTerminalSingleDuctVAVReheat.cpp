@@ -45,6 +45,8 @@
 #include "Model.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
+#include "AirflowNetworkEquivalentDuct.hpp"
+#include "AirflowNetworkEquivalentDuct_Impl.hpp"
 #include <utilities/idd/OS_AirTerminal_SingleDuct_VAV_Reheat_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/core/Compare.hpp"
@@ -273,6 +275,8 @@ namespace detail{
     if (OptionalHVACComponent intermediate = optionalReheatCoil()) {
       result.push_back(*intermediate);
     }
+    std::vector<AirflowNetworkEquivalentDuct> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquivalentDuct>(AirflowNetworkEquivalentDuct::iddObjectType());
+    result.insert(result.end(), myAFNItems.begin(), myAFNItems.end());
     return result;
   }
 
@@ -639,6 +643,24 @@ namespace detail{
     setBooleanFieldValue(OS_AirTerminal_SingleDuct_VAV_ReheatFields::ControlForOutdoorAir,controlForOutdoorAir);
   }
 
+  AirflowNetworkEquivalentDuct AirTerminalSingleDuctVAVReheat_Impl::createAirflowNetworkEquivalentDuct(double length, double diameter)
+  {
+    return AirflowNetworkEquivalentDuct(model(), length, diameter, handle());
+  }
+
+  boost::optional<AirflowNetworkEquivalentDuct> AirTerminalSingleDuctVAVReheat_Impl::optionalAirflowNetworkEquivalentDuct() const
+  {
+    std::vector<AirflowNetworkEquivalentDuct> myAFN = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquivalentDuct>(AirflowNetworkEquivalentDuct::iddObjectType());
+    auto count = myAFN.size();
+    if (count == 1) {
+      return myAFN[0];
+    } else if (count > 1) {
+      LOG(Warn, briefDescription() << " has more than one AirflowNetwork EquivalentDuct attached, returning first.");
+      return myAFN[0];
+    }
+    return boost::none;
+  }
+
 } // detail
 
 AirTerminalSingleDuctVAVReheat::AirTerminalSingleDuctVAVReheat( const Model& model, 
@@ -894,6 +916,16 @@ bool AirTerminalSingleDuctVAVReheat::controlForOutdoorAir() const
 void AirTerminalSingleDuctVAVReheat::setControlForOutdoorAir(bool controlForOutdoorAir)
 {
   getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->setControlForOutdoorAir(controlForOutdoorAir);
+}
+
+AirflowNetworkEquivalentDuct AirTerminalSingleDuctVAVReheat::createAirflowNetworkEquivalentDuct(double length, double diameter)
+{
+  return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->createAirflowNetworkEquivalentDuct(length, diameter);
+}
+
+boost::optional<AirflowNetworkEquivalentDuct> AirTerminalSingleDuctVAVReheat::optionalAirflowNetworkEquivalentDuct() const
+{
+  return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->optionalAirflowNetworkEquivalentDuct();
 }
 
 } // model

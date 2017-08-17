@@ -62,6 +62,8 @@
 #include "AirLoopHVACUnitarySystem_Impl.hpp"
 #include "AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.hpp"
 #include "AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl.hpp"
+#include "AirflowNetworkFan.hpp"
+#include "AirflowNetworkFan_Impl.hpp"
 #include <utilities/idd/OS_Fan_OnOff_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/units/Unit.hpp"
@@ -501,6 +503,28 @@ namespace detail {
     return boost::none;
   }
 
+  AirflowNetworkFan FanOnOff_Impl::airflowNetworkFan()
+  {
+    auto opt = optionalAirflowNetworkFan();
+    if (opt) {
+      return opt.get();
+    }
+    return AirflowNetworkFan(model(), handle());
+  }
+
+  boost::optional<AirflowNetworkFan> FanOnOff_Impl::optionalAirflowNetworkFan() const
+  {
+    std::vector<AirflowNetworkFan> myAFNitems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkFan>(AirflowNetworkFan::iddObjectType());
+    auto count = myAFNitems.size();
+    if (count == 1) {
+      return myAFNitems[0];
+    } else if (count > 1) {
+      LOG(Warn, briefDescription() << " has more than one AirflowNetwork EquivalentDuct attached, returning first.");
+      return myAFNitems[0];
+    }
+    return boost::none;
+  }
+
 } // detail
 
 FanOnOff::FanOnOff(const Model& model)
@@ -761,6 +785,16 @@ void FanOnOff::setEndUseSubcategory(std::string endUseSubcategory)
 void FanOnOff::resetEndUseSubcategory()
 {
   getImpl<detail::FanOnOff_Impl>()->resetEndUseSubcategory();
+}
+
+AirflowNetworkFan FanOnOff::airflowNetworkFan()
+{
+  return getImpl<detail::FanOnOff_Impl>()->airflowNetworkFan();
+}
+
+boost::optional<AirflowNetworkFan> FanOnOff::optionalAirflowNetworkFan() const
+{
+  return getImpl<detail::FanOnOff_Impl>()->optionalAirflowNetworkFan();
 }
 
 /// @cond

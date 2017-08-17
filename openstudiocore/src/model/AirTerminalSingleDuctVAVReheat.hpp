@@ -185,6 +185,11 @@ class MODEL_API AirTerminalSingleDuctVAVReheat : public StraightComponent {
 
   void setControlForOutdoorAir(bool controlForOutdoorAir);
 
+  /** Creates a new equivalent duct object. */
+  AirflowNetworkEquivalentDuct createAirflowNetworkEquivalentDuct(double length, double diameter);
+  /** Returns the attached equivalent duct object, if any. */
+  boost::optional<AirflowNetworkEquivalentDuct> optionalAirflowNetworkEquivalentDuct() const;
+
  protected:
 
   friend class Model;

@@ -80,22 +80,19 @@ namespace detail {
     return AirflowNetworkFan::iddObjectType();
   }
 
-  //boost::optional<StraightComponent> AirflowNetworkFan_Impl::fan() const
-  //{
-  //  return getObject<ModelObject>().getModelObjectTarget<StraightComponent>(OS_AirflowNetworkFanFields::FanName);
-  //}
+  void AirflowNetworkFan_Impl::resetComponent()
+  {
+    bool result = setString(OS_AirflowNetworkFanFields::FanName, "");
+    OS_ASSERT(result);
+  }
 
 } // detail
 
-AirflowNetworkFan::AirflowNetworkFan(const Model& model)
-  : ModelObject(AirflowNetworkFan::iddObjectType(),model)
+AirflowNetworkFan::AirflowNetworkFan(const Model& model, const Handle &handle)
+  : ModelObject(AirflowNetworkFan::iddObjectType(), model)
 {
   OS_ASSERT(getImpl<detail::AirflowNetworkFan_Impl>());
-
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_AirflowNetworkFanFields::FanName
-  bool ok = true;
-  // ok = setFan();
+  bool ok = getImpl<detail::AirflowNetworkFan_Impl>()->setPointer(OS_AirflowNetworkFanFields::FanName, handle);
   OS_ASSERT(ok);
 }
 
@@ -104,29 +101,9 @@ IddObjectType AirflowNetworkFan::iddObjectType()
   return IddObjectType(IddObjectType::OS_AirflowNetworkFan);
 }
 
-//boost::optional<StraightComponent> AirflowNetworkFan::fan() const
-//{
-//  return getImpl<detail::AirflowNetworkFan_Impl>()->fan();
-//}
-
-bool AirflowNetworkFan::setFan(const FanConstantVolume& fan)
+void AirflowNetworkFan::resetComponent()
 {
-  return getImpl<detail::AirflowNetworkFan_Impl>()->setFan<FanConstantVolume>(fan);
-}
-
-bool AirflowNetworkFan::setFan(const FanVariableVolume& fan)
-{
-  return getImpl<detail::AirflowNetworkFan_Impl>()->setFan<FanVariableVolume>(fan);
-}
-
-bool AirflowNetworkFan::setFan(const FanOnOff& fan)
-{
-  return getImpl<detail::AirflowNetworkFan_Impl>()->setFan<FanOnOff>(fan);
-}
-
-bool AirflowNetworkFan::setFan(const StraightComponent& fan)
-{
-  return false; // getImpl<detail::AirflowNetworkFan_Impl>()->setFan<StraightComponent>(fan);
+  getImpl<detail::AirflowNetworkFan_Impl>()->resetComponent();
 }
 
 /// @cond

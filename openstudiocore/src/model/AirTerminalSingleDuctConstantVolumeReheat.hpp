@@ -130,6 +130,11 @@ class MODEL_API AirTerminalSingleDuctConstantVolumeReheat : public StraightCompo
   /** @name Other */
   //@{
 
+  /** Creates a new equivalent duct object. */
+  AirflowNetworkEquivalentDuct createAirflowNetworkEquivalentDuct(double length, double diameter);
+  /** Returns the attached equivalent duct object, if any. */
+  boost::optional<AirflowNetworkEquivalentDuct> optionalAirflowNetworkEquivalentDuct() const;
+
   //@}
  protected:
   /// @cond

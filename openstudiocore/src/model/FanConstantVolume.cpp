@@ -52,6 +52,8 @@
 #include "AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl.hpp"
 #include "AirLoopHVACUnitarySystem.hpp"
 #include "AirLoopHVACUnitarySystem_Impl.hpp"
+#include "AirflowNetworkFan.hpp"
+#include "AirflowNetworkFan_Impl.hpp"
 #include "SetpointManagerMixedAir.hpp"
 #include "Node.hpp"
 #include "Node_Impl.hpp"
@@ -455,6 +457,28 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  AirflowNetworkFan FanConstantVolume_Impl::airflowNetworkFan()
+  {
+    auto opt = optionalAirflowNetworkFan();
+    if (opt) {
+      return opt.get();
+    }
+    return AirflowNetworkFan(model(), handle());
+  }
+
+  boost::optional<AirflowNetworkFan> FanConstantVolume_Impl::optionalAirflowNetworkFan() const
+  {
+    std::vector<AirflowNetworkFan> myAFNitems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkFan>(AirflowNetworkFan::iddObjectType());
+    auto count = myAFNitems.size();
+    if (count == 1) {
+      return myAFNitems[0];
+    } else if (count > 1) {
+      LOG(Warn, briefDescription() << " has more than one AirflowNetwork EquivalentDuct attached, returning first.");
+      return myAFNitems[0];
+    }
+    return boost::none;
+  }
+
 } // detail
 
 // create a new FanConstantVolume object in the model's workspace
@@ -572,6 +596,16 @@ void FanConstantVolume::resetMaximumFlowRate() {
 
 void FanConstantVolume::autosizeMaximumFlowRate() {
   getImpl<detail::FanConstantVolume_Impl>()->autosizeMaximumFlowRate();
+}
+
+AirflowNetworkFan FanConstantVolume::airflowNetworkFan()
+{
+  return getImpl<detail::FanConstantVolume_Impl>()->airflowNetworkFan();
+}
+
+boost::optional<AirflowNetworkFan> FanConstantVolume::optionalAirflowNetworkFan() const
+{
+  return getImpl<detail::FanConstantVolume_Impl>()->optionalAirflowNetworkFan();
 }
 
 } // model

@@ -277,8 +277,6 @@ namespace detail {
 
     boost::optional<AirflowNetworkSurface> optionalAirflowNetworkSurface() const;
 
-    void removeAirflowNetworkSurface();
-
    protected:
    private:
     friend class openstudio::model::Surface;

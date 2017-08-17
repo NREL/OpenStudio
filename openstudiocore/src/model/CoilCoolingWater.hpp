@@ -37,7 +37,7 @@ namespace openstudio {
 namespace model {
 
 class Schedule;
-
+class AirflowNetworkEquivalentDuct;
 class ControllerWaterCoil;
 
 namespace detail {
@@ -194,6 +194,11 @@ class MODEL_API CoilCoolingWater : public WaterToAirComponent {
   /** Returns the optional ControllerWaterCoil associated with this coil.
    */
   boost::optional<ControllerWaterCoil> controllerWaterCoil();
+
+  /** Creates a new equivalent duct object. */
+  AirflowNetworkEquivalentDuct createAirflowNetworkEquivalentDuct(double length, double diameter);
+  /** Returns the attached equivalent duct object, if any. */
+  boost::optional<AirflowNetworkEquivalentDuct> optionalAirflowNetworkEquivalentDuct() const;
 
   //@}
  protected:

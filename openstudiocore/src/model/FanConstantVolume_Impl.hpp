@@ -39,14 +39,7 @@ class Schedule;
 namespace detail {
 
   class MODEL_API FanConstantVolume_Impl : public StraightComponent_Impl {
-    
 
-    
-    
-    
-    
-    
-    
     Q_PROPERTY( boost::optional<openstudio::model::ModelObject> availabilitySchedule
                 READ availabilityScheduleAsModelObject
                 WRITE setAvailibiltyScheduleAsModelObject);
@@ -141,6 +134,9 @@ namespace detail {
     void resetMaximumFlowRate();
 
     void autosizeMaximumFlowRate();
+
+    AirflowNetworkFan airflowNetworkFan();
+    boost::optional<AirflowNetworkFan> optionalAirflowNetworkFan() const;
 
     //@}
    private:

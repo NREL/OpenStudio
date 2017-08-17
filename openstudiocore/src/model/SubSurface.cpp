@@ -1124,14 +1124,6 @@ namespace detail {
     return AirflowNetworkSurface(model(), handle());
   }
 
-  void SubSurface_Impl::removeAirflowNetworkSurface()
-  {
-    std::vector<AirflowNetworkSurface> myAFNZones = getObject<ModelObject>().getModelObjectSources<AirflowNetworkSurface>(AirflowNetworkSurface::iddObjectType());
-    for (auto afnzone : myAFNZones) {
-      afnzone.resetSurface();
-    }
-  }
-
 } // detail
 
 SubSurface::SubSurface(const std::vector<Point3d>& vertices, const Model& model)
@@ -1415,11 +1407,6 @@ AirflowNetworkSurface SubSurface::airflowNetworkSurface()
 boost::optional<AirflowNetworkSurface> SubSurface::optionalAirflowNetworkSurface() const
 {
   return getImpl<detail::SubSurface_Impl>()->optionalAirflowNetworkSurface();
-}
-
-void SubSurface::removeAirflowNetworkSurface()
-{
-  getImpl<detail::SubSurface_Impl>()->removeAirflowNetworkSurface();
 }
 
 } // model

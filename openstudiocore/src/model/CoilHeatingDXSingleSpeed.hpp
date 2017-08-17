@@ -37,14 +37,8 @@ namespace openstudio {
 namespace model {
 
 class Schedule;
-
 class Curve;
-
-// class CurveBiquadratic;
-
-// class CurveCubic
-
-// class CurveQuadratic;
+class AirflowNetworkEquivalentDuct;
 
 namespace detail {
 
@@ -220,6 +214,12 @@ class MODEL_API CoilHeatingDXSingleSpeed : public StraightComponent {
   void resetDefrostEnergyInputRatioFunctionofTemperatureCurve();
 
   //@}
+
+  /** Creates a new equivalent duct object. */
+  AirflowNetworkEquivalentDuct createAirflowNetworkEquivalentDuct(double length, double diameter);
+  /** Returns the attached equivalent duct object, if any. */
+  boost::optional<AirflowNetworkEquivalentDuct> optionalAirflowNetworkEquivalentDuct() const;
+
  protected:
   /// @cond
   typedef detail::CoilHeatingDXSingleSpeed_Impl ImplType;

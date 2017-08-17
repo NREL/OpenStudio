@@ -71,7 +71,11 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    boost::optional<StraightComponent> component() const;
+    boost::optional<StraightComponent> straightComponent() const;
+    template <typename T> boost::optional<T> component() const
+    {
+      return getObject<ModelObject>().getModelObjectTarget<T>(OS_AirflowNetworkEquivalentDuctFields::ComponentName);
+    }
 
     double airPathLength() const;
 
@@ -80,8 +84,6 @@ namespace detail {
     //@}
     /** @name Setters */
     //@{
-
-    bool setComponent(const StraightComponent &component);
 
     void resetComponent();
 

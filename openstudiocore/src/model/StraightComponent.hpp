@@ -83,10 +83,6 @@ class MODEL_API StraightComponent : public HVACComponent {
 
   void disconnect();
 
-  AirflowNetworkEquivalentDuct airflowNetworkEquivalentDuct();
-  boost::optional<AirflowNetworkEquivalentDuct> getAirflowNetworkEquivalentDuct() const;
-  void removeAirflowNetworkEquivalentDuct();
-
   protected:
 
   friend class Model;

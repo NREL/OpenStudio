@@ -182,7 +182,6 @@ class MODEL_API ControllerOutdoorAir_Impl : public ParentObject_Impl {
 
   AirflowNetworkEquipmentLinkage airflowNetworkEquipmentLinkage();
   boost::optional<AirflowNetworkEquipmentLinkage> optionalAirflowNetworkEquipmentLinkage();
-  void removeAirflowNetworkEquipmentLinkage();
 
  private:
 

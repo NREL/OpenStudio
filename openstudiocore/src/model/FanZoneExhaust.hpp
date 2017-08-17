@@ -120,7 +120,6 @@ class MODEL_API FanZoneExhaust : public ZoneHVACComponent {
 
   AirflowNetworkEquipmentLinkage airflowNetworkEquipmentLinkage();
   boost::optional<AirflowNetworkEquipmentLinkage> optionalAirflowNetworkEquipmentLinkage();
-  void removeAirflowNetworkEquipmentLinkage();
 
   //@}
  protected:

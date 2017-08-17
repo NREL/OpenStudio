@@ -684,14 +684,6 @@ namespace detail {
     return boost::none;
   }
 
-  void ControllerOutdoorAir_Impl::removeAirflowNetworkEquipmentLinkage()
-  {
-    std::vector<AirflowNetworkEquipmentLinkage> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquipmentLinkage>(AirflowNetworkEquipmentLinkage::iddObjectType());
-    for (auto item : myAFNItems) {
-      item.resetEquipment();
-    }
-  }
-
 } // detail
 
 // create a new ControllerOutdoorAir object in the model's workspace
@@ -1037,10 +1029,6 @@ AirflowNetworkEquipmentLinkage ControllerOutdoorAir::airflowNetworkEquipmentLink
 boost::optional<AirflowNetworkEquipmentLinkage> ControllerOutdoorAir::optionalAirflowNetworkEquipmentLinkage()
 {
   return getImpl<detail::ControllerOutdoorAir_Impl>()->optionalAirflowNetworkEquipmentLinkage();
-}
-void ControllerOutdoorAir::removeAirflowNetworkEquipmentLinkage()
-{
-  getImpl<detail::ControllerOutdoorAir_Impl>()->removeAirflowNetworkEquipmentLinkage();
 }
 
 } // model

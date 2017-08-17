@@ -49,6 +49,8 @@
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
 #include "Model.hpp"
+#include "AirflowNetworkEquivalentDuct.hpp"
+#include "AirflowNetworkEquivalentDuct_Impl.hpp"
 
 #include <utilities/idd/OS_AirTerminal_SingleDuct_ConstantVolume_Reheat_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -269,6 +271,8 @@ namespace detail {
     if (OptionalHVACComponent intermediate = optionalReheatCoil()) {
       result.push_back(*intermediate);
     }
+    std::vector<AirflowNetworkEquivalentDuct> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquivalentDuct>(AirflowNetworkEquivalentDuct::iddObjectType());
+    result.insert(result.end(), myAFNItems.begin(), myAFNItems.end());
     return result;
   }
 
@@ -520,6 +524,24 @@ namespace detail {
     return true;
   }
 
+  AirflowNetworkEquivalentDuct AirTerminalSingleDuctConstantVolumeReheat_Impl::createAirflowNetworkEquivalentDuct(double length, double diameter)
+  {
+    return AirflowNetworkEquivalentDuct(model(), length, diameter, handle());
+  }
+
+  boost::optional<AirflowNetworkEquivalentDuct> AirTerminalSingleDuctConstantVolumeReheat_Impl::optionalAirflowNetworkEquivalentDuct() const
+  {
+    std::vector<AirflowNetworkEquivalentDuct> myAFN = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquivalentDuct>(AirflowNetworkEquivalentDuct::iddObjectType());
+    auto count = myAFN.size();
+    if (count == 1) {
+      return myAFN[0];
+    } else if (count > 1) {
+      LOG(Warn, briefDescription() << " has more than one AirflowNetwork EquivalentDuct attached, returning first.");
+      return myAFN[0];
+    }
+    return boost::none;
+  }
+
 } // detail
 
 AirTerminalSingleDuctConstantVolumeReheat::AirTerminalSingleDuctConstantVolumeReheat(const Model& model, 
@@ -659,6 +681,16 @@ bool AirTerminalSingleDuctConstantVolumeReheat::setMaximumReheatAirTemperature(d
 
 void AirTerminalSingleDuctConstantVolumeReheat::resetMaximumReheatAirTemperature() {
   getImpl<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl>()->resetMaximumReheatAirTemperature();
+}
+
+AirflowNetworkEquivalentDuct AirTerminalSingleDuctConstantVolumeReheat::createAirflowNetworkEquivalentDuct(double length, double diameter)
+{
+  return getImpl<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl>()->createAirflowNetworkEquivalentDuct(length, diameter);
+}
+
+boost::optional<AirflowNetworkEquivalentDuct> AirTerminalSingleDuctConstantVolumeReheat::optionalAirflowNetworkEquivalentDuct() const
+{
+  return getImpl<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl>()->optionalAirflowNetworkEquivalentDuct();
 }
 
 /// @cond

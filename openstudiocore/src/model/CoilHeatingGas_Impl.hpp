@@ -40,14 +40,6 @@ namespace detail {
 
   class MODEL_API CoilHeatingGas_Impl : public StraightComponent_Impl {
     
-
-    
-    
-    
-
-    
-
-    
   public:
     /** @name Constructors and Destructors */
     //2{
@@ -141,6 +133,9 @@ namespace detail {
     ModelObject clone(Model model) const override;
 
     bool addToNode(Node & node) override;
+
+    AirflowNetworkEquivalentDuct createAirflowNetworkEquivalentDuct(double length, double diameter);
+    boost::optional<AirflowNetworkEquivalentDuct> optionalAirflowNetworkEquivalentDuct() const;
 
     //@}
   private:

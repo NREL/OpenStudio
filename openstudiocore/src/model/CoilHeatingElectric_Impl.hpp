@@ -44,15 +44,7 @@ namespace detail {
   /** CoilHeatingElectric_Impl is a StraightComponent_Impl that is the
    *  implementation class for CoilHeatingElectric.*/
   class MODEL_API CoilHeatingElectric_Impl : public StraightComponent_Impl {
-    
 
-    
-    
-    
-    
-    
-
-    
   public:
     /** @name Constructors and Destructors */
     //@{
@@ -76,6 +68,8 @@ namespace detail {
     virtual const std::vector<std::string>& outputVariableNames() const override;
 
     virtual IddObjectType iddObjectType() const override;
+
+    virtual std::vector<ModelObject> children() const override;
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
@@ -128,6 +122,12 @@ namespace detail {
     void resetTemperatureSetpointNode();
 
     //@}
+
+    /** Creates a new equivalent duct object. */
+    AirflowNetworkEquivalentDuct createAirflowNetworkEquivalentDuct(double length, double diameter);
+    /** Returns the attached equivalent duct object, if any. */
+    boost::optional<AirflowNetworkEquivalentDuct> optionalAirflowNetworkEquivalentDuct() const;
+
   protected:
   private:
     REGISTER_LOGGER("openstudio.model.CoilHeatingElectric");

@@ -48,12 +48,6 @@ class ZoneHVACComponent;
 namespace detail {
 
 class MODEL_API HVACComponent_Impl : public ParentObject_Impl {
-  
-
-  
-  
-  
-  
 
  public:
 

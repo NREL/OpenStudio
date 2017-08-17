@@ -37,6 +37,7 @@ namespace model {
 
 class Schedule;
 class ControllerWaterCoil;
+class AirflowNetworkEquivalentDuct;
 
 namespace detail {
   class CoilHeatingWater_Impl;
@@ -163,6 +164,15 @@ class MODEL_API CoilHeatingWater : public WaterToAirComponent {
   /** Returns the optional ControllerWaterCoil associated with this coil.
    */
   boost::optional<ControllerWaterCoil> controllerWaterCoil();
+
+  //@}
+  /** @name Other */
+  //@{
+
+  /** Creates a new equivalent duct object. */
+  AirflowNetworkEquivalentDuct createAirflowNetworkEquivalentDuct(double length, double diameter);
+  /** Returns the attached equivalent duct object, if any. */
+  boost::optional<AirflowNetworkEquivalentDuct> optionalAirflowNetworkEquivalentDuct() const;
 
   //@}
  protected:

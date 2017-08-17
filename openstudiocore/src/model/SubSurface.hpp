@@ -207,7 +207,6 @@ class MODEL_API SubSurface : public PlanarSurface {
 
   AirflowNetworkSurface airflowNetworkSurface();
   boost::optional<AirflowNetworkSurface> optionalAirflowNetworkSurface() const;
-  void removeAirflowNetworkSurface();
 
   // DLM: todo add methods to create light shelves by projection factor
 

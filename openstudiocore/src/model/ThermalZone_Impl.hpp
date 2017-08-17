@@ -409,7 +409,6 @@ namespace detail {
 
     AirflowNetworkZone airflowNetworkZone();
     boost::optional<AirflowNetworkZone> optionalAirflowNetworkZone() const;
-    void removeAirflowNetworkZone();
 
    protected:
 

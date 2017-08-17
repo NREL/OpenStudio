@@ -351,15 +351,6 @@ namespace detail {
     return boost::none;
   }
 
-  void FanZoneExhaust_Impl::removeAirflowNetworkEquipmentLinkage()
-  {
-    std::vector<AirflowNetworkEquipmentLinkage> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquipmentLinkage>(AirflowNetworkEquipmentLinkage::iddObjectType());
-    for (auto item : myAFNItems) {
-      item.resetEquipment();
-      item.remove();
-    }
-  }
-
 } // detail
 
 FanZoneExhaust::FanZoneExhaust(const Model& model)
@@ -483,10 +474,6 @@ AirflowNetworkEquipmentLinkage FanZoneExhaust::airflowNetworkEquipmentLinkage()
 boost::optional<AirflowNetworkEquipmentLinkage> FanZoneExhaust::optionalAirflowNetworkEquipmentLinkage()
 {
   return getImpl<detail::FanZoneExhaust_Impl>()->optionalAirflowNetworkEquipmentLinkage();
-}
-void FanZoneExhaust::removeAirflowNetworkEquipmentLinkage()
-{
-  getImpl<detail::FanZoneExhaust_Impl>()->removeAirflowNetworkEquipmentLinkage();
 }
 
 /// @cond

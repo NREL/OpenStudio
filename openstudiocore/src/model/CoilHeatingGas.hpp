@@ -38,7 +38,7 @@ namespace openstudio {
 namespace model {
 
 class Curve;
-
+class AirflowNetworkEquivlentDuct;
 class Schedule;
 
 namespace detail {
@@ -141,6 +141,11 @@ class MODEL_API CoilHeatingGas : public StraightComponent {
   bool setPartLoadFractionCorrelationCurve( const Curve& curve );
 
   void resetPartLoadFractionCorrelationCurve();
+
+  /** Creates a new equivalent duct object. */
+  AirflowNetworkEquivalentDuct createAirflowNetworkEquivalentDuct(double length, double diameter);
+  /** Returns the attached equivalent duct object, if any. */
+  boost::optional<AirflowNetworkEquivalentDuct> optionalAirflowNetworkEquivalentDuct() const;
 
   //@}
  protected:

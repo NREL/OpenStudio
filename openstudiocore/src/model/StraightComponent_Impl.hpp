@@ -98,10 +98,6 @@ namespace detail {
 
     void disconnect() override;
 
-    AirflowNetworkEquivalentDuct airflowNetworkEquivalentDuct();
-    boost::optional<AirflowNetworkEquivalentDuct> getAirflowNetworkEquivalentDuct() const;
-    void removeAirflowNetworkEquivalentDuct();
-
     //@}
    private:
 

@@ -128,10 +128,8 @@ namespace detail {
    SubSurfaceVector subSurfaces = this->subSurfaces();
    result.insert(result.end(), subSurfaces.begin(), subSurfaces.end());
 
-   boost::optional<AirflowNetworkSurface> afns = optionalAirflowNetworkSurface();
-   if (afns) {
-     result.push_back(afns.get());
-   }
+   std::vector<AirflowNetworkSurface> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkSurface>(AirflowNetworkSurface::iddObjectType());
+   result.insert(result.end(), myAFNItems.begin(), myAFNItems.end());
 
    return result;
  }
@@ -2088,14 +2086,6 @@ namespace detail {
     return AirflowNetworkSurface(model(), handle());
   }
 
-  void Surface_Impl::removeAirflowNetworkSurface()
-  {
-    std::vector<AirflowNetworkSurface> myAFNZones = getObject<ModelObject>().getModelObjectSources<AirflowNetworkSurface>(AirflowNetworkSurface::iddObjectType());
-    for (auto afnzone : myAFNZones) {
-      afnzone.resetSurface();
-    }
-  }
-
 } // detail
 
 Surface::Surface(const std::vector<Point3d>& vertices, const Model& model)
@@ -2451,11 +2441,6 @@ AirflowNetworkSurface Surface::airflowNetworkSurface()
 boost::optional<AirflowNetworkSurface> Surface::optionalAirflowNetworkSurface() const
 {
   return getImpl<detail::Surface_Impl>()->optionalAirflowNetworkSurface();
-}
-
-void Surface::removeAirflowNetworkSurface()
-{
-  getImpl<detail::Surface_Impl>()->removeAirflowNetworkSurface();
 }
 
 } // model

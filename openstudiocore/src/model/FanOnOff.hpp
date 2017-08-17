@@ -39,6 +39,7 @@ namespace model {
 
 class Schedule;
 class Curve;
+class AirflowNetworkFan;
 
 namespace detail {
 
@@ -133,6 +134,9 @@ class MODEL_API FanOnOff : public StraightComponent {
   bool setFanEfficiencyRatioFunctionofSpeedRatioCurve( const Curve& curve );
   
   //@{
+
+  AirflowNetworkFan airflowNetworkFan();
+  boost::optional<AirflowNetworkFan> optionalAirflowNetworkFan() const;
 
   //@}
  protected:

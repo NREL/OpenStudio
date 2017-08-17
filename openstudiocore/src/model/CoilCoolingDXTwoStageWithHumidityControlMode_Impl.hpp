@@ -151,6 +151,9 @@ namespace detail {
     boost::optional<HVACComponent> containingHVACComponent() const override;
     bool addToNode(Node & node) override;
 
+    AirflowNetworkEquivalentDuct createAirflowNetworkEquivalentDuct(double length, double diameter);
+    boost::optional<AirflowNetworkEquivalentDuct> optionalAirflowNetworkEquivalentDuct() const;
+
     //@}
    protected:
    private:

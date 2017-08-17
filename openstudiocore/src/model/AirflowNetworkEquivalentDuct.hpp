@@ -27,25 +27,31 @@ namespace openstudio {
 
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
-//class AFNTerminalUnit;
-// AFNCoilNames
-class CoilCoolingDXSingleSpeed;
-class CoilCoolingDXTwoStageWithHumidityControlMode;
-class CoilCoolingDXMultiSpeed;
-class CoilCoolingWater;
-class CoilHeatingDXSingleSpeed;
-class CoilHeatingElectric;
-class CoilHeatingGas;
-class CoilHeatingDesuperheater;
-class CoilHeatingWater;
-class CoilHeatingDXMultiSpeed;
-
 class StraightComponent;
+
+// TODO: Check the following class names against object getters and setters.
+// AFNTerminalUnit;
+// AFNCoilNames
+// AFNHeatExchangerNames
+//   HeatExchanger:AirToAir:FlatPlate
+//   HeatExchanger:Desiccant:BalancedFlow
+
 
 namespace detail {
 
-  class StraightComponent_Impl;
+  class HeatExchangerAirToAirSensibleAndLatent_Impl;
+  class CoilHeatingDXMultiSpeed_Impl;
+  class CoilHeatingWater_Impl;
+  class CoilHeatingDesuperheater_Impl;
+  class CoilHeatingGas_Impl;
+  class CoilHeatingElectric_Impl;
+  class CoilHeatingDXSingleSpeed_Impl;
+  class CoilCoolingWater_Impl;
+  class CoilCoolingDXMultiSpeed_Impl;
+  class CoilCoolingDXTwoStageWithHumidityControlMode_Impl;
+  class CoilHeatingDXSingleSpeed_Impl;
+  class AirTerminalSingleDuctConstantVolumeReheat_Impl;
+  class AirTerminalSingleDuctVAVReheat_Impl;
   class AirflowNetworkEquivalentDuct_Impl;
 
 } // detail
@@ -65,7 +71,7 @@ class MODEL_API AirflowNetworkEquivalentDuct : public ModelObject {
   /** @name Getters */
   //@{
 
-  boost::optional<StraightComponent> component() const;
+  boost::optional<StraightComponent> straightComponent() const;
 
   double airPathLength() const;
 
@@ -90,12 +96,24 @@ class MODEL_API AirflowNetworkEquivalentDuct : public ModelObject {
 
   explicit AirflowNetworkEquivalentDuct(std::shared_ptr<detail::AirflowNetworkEquivalentDuct_Impl> impl);
 
-  AirflowNetworkEquivalentDuct(const Model& model, const Handle &handle);
+  AirflowNetworkEquivalentDuct(const Model& model, double length, double diameter, const Handle &handle);
 
-  bool setComponent(const StraightComponent &component);
   void resetComponent();
 
-  friend class detail::StraightComponent_Impl;
+  friend class detail::AirTerminalSingleDuctConstantVolumeReheat_Impl;
+  friend class detail::AirTerminalSingleDuctVAVReheat_Impl;
+  friend class detail::CoilHeatingDXSingleSpeed_Impl;
+  friend class detail::CoilCoolingDXTwoStageWithHumidityControlMode_Impl;
+  friend class detail::CoilCoolingDXMultiSpeed_Impl;
+  friend class detail::CoilCoolingWater_Impl;
+  friend class detail::CoilHeatingDXSingleSpeed_Impl;
+  friend class detail::CoilHeatingElectric_Impl;
+  friend class detail::CoilHeatingGas_Impl;
+  friend class detail::CoilHeatingDesuperheater_Impl;
+  friend class detail::CoilHeatingWater_Impl;
+  friend class detail::CoilHeatingDXMultiSpeed_Impl;
+  friend class detail::HeatExchangerAirToAirSensibleAndLatent_Impl;
+
   friend class detail::AirflowNetworkEquivalentDuct_Impl;
   friend class Model;
   friend class IdfObject;

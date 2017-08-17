@@ -144,7 +144,6 @@ class MODEL_API ControllerOutdoorAir : public ParentObject {
 
   AirflowNetworkEquipmentLinkage airflowNetworkEquipmentLinkage();
   boost::optional<AirflowNetworkEquipmentLinkage> optionalAirflowNetworkEquipmentLinkage();
-  void removeAirflowNetworkEquipmentLinkage();
 
   virtual std::vector<openstudio::IdfObject> remove();
 

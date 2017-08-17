@@ -38,6 +38,7 @@ namespace openstudio {
 namespace model {
 
 class Schedule;
+class AirflowNetworkFan;
 
 namespace detail {
   class FanConstantVolume_Impl;
@@ -118,6 +119,9 @@ class MODEL_API FanConstantVolume : public StraightComponent {
   void resetMaximumFlowRate();
 
   void autosizeMaximumFlowRate();
+
+  AirflowNetworkFan airflowNetworkFan();
+  boost::optional<AirflowNetworkFan> optionalAirflowNetworkFan() const;
 
  protected:
   friend class Model;
