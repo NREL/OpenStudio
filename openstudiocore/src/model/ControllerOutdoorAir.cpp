@@ -38,6 +38,8 @@
 #include "CurveQuadratic_Impl.hpp"
 #include "AirflowNetworkEquipmentLinkage.hpp"
 #include "AirflowNetworkEquipmentLinkage_Impl.hpp"
+#include "AirflowNetworkCrack.hpp"
+#include "AirflowNetworkCrack_Impl.hpp"
 
 #include "Model.hpp"
 #include "Model_Impl.hpp"
@@ -662,16 +664,16 @@ namespace detail {
     return result;
   }
 
-  AirflowNetworkEquipmentLinkage ControllerOutdoorAir_Impl::airflowNetworkEquipmentLinkage()
+  boost::optional<AirflowNetworkEquipmentLinkage> ControllerOutdoorAir_Impl::createAirflowNetworkEquipmentLinkage(const AirflowNetworkCrack& crack)
   {
-    boost::optional<AirflowNetworkEquipmentLinkage> opt = optionalAirflowNetworkEquipmentLinkage();
+    boost::optional<AirflowNetworkEquipmentLinkage> opt = airflowNetworkEquipmentLinkage();
     if (opt) {
-      return opt.get();
+      return boost::none;
     }
-    return AirflowNetworkEquipmentLinkage(model(), handle());
+    return AirflowNetworkEquipmentLinkage(model(), crack, handle());
   }
 
-  boost::optional<AirflowNetworkEquipmentLinkage> ControllerOutdoorAir_Impl::optionalAirflowNetworkEquipmentLinkage()
+  boost::optional<AirflowNetworkEquipmentLinkage> ControllerOutdoorAir_Impl::airflowNetworkEquipmentLinkage()
   {
     std::vector<AirflowNetworkEquipmentLinkage> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquipmentLinkage>(AirflowNetworkEquipmentLinkage::iddObjectType());
     auto count = myAFNItems.size();
@@ -1021,14 +1023,14 @@ void ControllerOutdoorAir::resetTimeofDayEconomizerControlSchedule()
   getImpl<detail::ControllerOutdoorAir_Impl>()->resetTimeofDayEconomizerControlSchedule();
 }
 
-AirflowNetworkEquipmentLinkage ControllerOutdoorAir::airflowNetworkEquipmentLinkage()
+boost::optional<AirflowNetworkEquipmentLinkage> ControllerOutdoorAir::createAirflowNetworkEquipmentLinkage(const AirflowNetworkCrack& crack)
 {
-  return getImpl<detail::ControllerOutdoorAir_Impl>()->airflowNetworkEquipmentLinkage();
+  return getImpl<detail::ControllerOutdoorAir_Impl>()->createAirflowNetworkEquipmentLinkage(crack);
 }
 
-boost::optional<AirflowNetworkEquipmentLinkage> ControllerOutdoorAir::optionalAirflowNetworkEquipmentLinkage()
+boost::optional<AirflowNetworkEquipmentLinkage> ControllerOutdoorAir::airflowNetworkEquipmentLinkage()
 {
-  return getImpl<detail::ControllerOutdoorAir_Impl>()->optionalAirflowNetworkEquipmentLinkage();
+  return getImpl<detail::ControllerOutdoorAir_Impl>()->airflowNetworkEquipmentLinkage();
 }
 
 } // model

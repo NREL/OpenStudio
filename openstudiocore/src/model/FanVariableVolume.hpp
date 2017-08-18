@@ -226,8 +226,8 @@ class MODEL_API FanVariableVolume : public StraightComponent {
 
   void resetEndUseSubcategory();
 
-  AirflowNetworkFan airflowNetworkFan();
-  boost::optional<AirflowNetworkFan> optionalAirflowNetworkFan() const;
+  boost::optional<AirflowNetworkFan> createAirflowNetworkFan();
+  boost::optional<AirflowNetworkFan> airflowNetworkFan() const;
 
   //@}
  protected:

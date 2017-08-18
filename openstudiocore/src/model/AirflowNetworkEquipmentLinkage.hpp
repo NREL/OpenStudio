@@ -88,7 +88,7 @@ class MODEL_API AirflowNetworkEquipmentLinkage : public ModelObject {
 
   explicit AirflowNetworkEquipmentLinkage(std::shared_ptr<detail::AirflowNetworkEquipmentLinkage_Impl> impl);
 
-  AirflowNetworkEquipmentLinkage(const Model &model, const Handle &handle);
+  AirflowNetworkEquipmentLinkage(const Model &model, const AirflowNetworkCrack& crack, const Handle &handle);
 
   void resetEquipment();
 

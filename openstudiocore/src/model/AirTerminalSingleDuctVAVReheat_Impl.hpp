@@ -165,8 +165,8 @@ namespace detail {
 
     void setControlForOutdoorAir(bool controlForOutdoorAir);
 
-    AirflowNetworkEquivalentDuct createAirflowNetworkEquivalentDuct(double length, double diameter);
-    boost::optional<AirflowNetworkEquivalentDuct> optionalAirflowNetworkEquivalentDuct() const;
+    boost::optional<AirflowNetworkEquivalentDuct> createAirflowNetworkEquivalentDuct(double length, double diameter);
+    boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
 
    private:
 

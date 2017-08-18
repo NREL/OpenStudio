@@ -154,8 +154,8 @@ namespace detail {
 
     void setHeatExchangerConfiguration( std::string value );
 
-    AirflowNetworkEquivalentDuct createAirflowNetworkEquivalentDuct(double length, double diameter);
-    boost::optional<AirflowNetworkEquivalentDuct> optionalAirflowNetworkEquivalentDuct() const;
+    boost::optional<AirflowNetworkEquivalentDuct> createAirflowNetworkEquivalentDuct(double length, double diameter);
+    boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
 
   private:
     REGISTER_LOGGER("openstudio.model.CoilCoolingWater");

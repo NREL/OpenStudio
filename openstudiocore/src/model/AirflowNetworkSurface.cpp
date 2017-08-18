@@ -399,11 +399,13 @@ bool AirflowNetworkSurface_Impl::setParent(ParentObject& surfAndSubSurf)
 
 } // detail
 
-AirflowNetworkSurface::AirflowNetworkSurface(const Model& model, const Handle &handle)
+AirflowNetworkSurface::AirflowNetworkSurface(const Model& model, const Handle& compHandle, const Handle& surfHandle)
   : AirflowNetworkLinkage(AirflowNetworkSurface::iddObjectType(), model)
 {
   OS_ASSERT(getImpl<detail::AirflowNetworkSurface_Impl>());
-  bool ok = getImpl<detail::AirflowNetworkSurface_Impl>()->setPointer(OS_AirflowNetworkSurfaceFields::SurfaceName, handle);
+  bool ok = getImpl<detail::AirflowNetworkSurface_Impl>()->setPointer(OS_AirflowNetworkSurfaceFields::LeakageComponentName, compHandle);
+  OS_ASSERT(ok);
+  ok = getImpl<detail::AirflowNetworkSurface_Impl>()->setPointer(OS_AirflowNetworkSurfaceFields::SurfaceName, surfHandle);
   OS_ASSERT(ok);
 }
 

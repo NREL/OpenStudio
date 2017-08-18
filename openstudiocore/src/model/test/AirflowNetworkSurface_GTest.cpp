@@ -123,24 +123,32 @@ TEST_F(ModelFixture, AirflowNetwork_Surface_SetVertices)
   points.push_back(Point3d(1, 1, 0));
   Surface surface(points, model);
   EXPECT_EQ("RoofCeiling", surface.surfaceType());
-  EXPECT_TRUE(!surface.optionalAirflowNetworkSurface());
+  EXPECT_TRUE(!surface.airflowNetworkSurface());
   EXPECT_EQ("Outdoors", surface.outsideBoundaryCondition());
-
-  AirflowNetworkSurface afnsurf = surface.airflowNetworkSurface();
-  EXPECT_EQ(surface, afnsurf.surface());
-  boost::optional<AirflowNetworkSurface> optsurf = surface.airflowNetworkSurface();
-  ASSERT_TRUE(optsurf);
-  EXPECT_EQ(afnsurf, optsurf.get());
 
   AirflowNetworkCrack crack0(model, 1.0, 0.5);
   EXPECT_EQ(1, crack0.airMassFlowCoefficient());
   EXPECT_EQ(0.5, crack0.airMassFlowExponent());
   EXPECT_FALSE(crack0.referenceCrackConditions());
 
-  ASSERT_FALSE(afnsurf.leakageComponent());
-  ASSERT_TRUE(afnsurf.setLeakageComponent(crack0));
+  AirflowNetworkCrack crack1(model, 1.0, 0.65);
+  EXPECT_EQ(1, crack1.airMassFlowCoefficient());
+  EXPECT_EQ(0.5, crack1.airMassFlowExponent());
+  EXPECT_FALSE(crack1.referenceCrackConditions());
+
+  boost::optional<AirflowNetworkSurface> optsurf = surface.createAirflowNetworkSurface(crack0);
+  ASSERT_TRUE(optsurf);
+  auto afnsurf = optsurf.get();
+  EXPECT_EQ(surface, afnsurf.surface());
+  optsurf = surface.airflowNetworkSurface();
+  ASSERT_TRUE(optsurf);
+  EXPECT_EQ(afnsurf, optsurf.get());
   ASSERT_TRUE(afnsurf.leakageComponent());
   EXPECT_EQ(crack0, afnsurf.leakageComponent().get());
+
+  ASSERT_TRUE(afnsurf.setLeakageComponent(crack1));
+  ASSERT_TRUE(afnsurf.leakageComponent());
+  EXPECT_EQ(crack1, afnsurf.leakageComponent().get());
 
   EXPECT_FALSE(afnsurf.externalNode());
 
@@ -161,31 +169,33 @@ TEST_F(ModelFixture, AirflowNetwork_Surface_Clone) {
   vertices.push_back(Point3d(1,0,1));
   Surface surface(vertices, model);
 
+  AirflowNetworkCrack crack0(model, 1.0, 0.5);
+  EXPECT_EQ(1, crack0.airMassFlowCoefficient());
+  EXPECT_EQ(0.5, crack0.airMassFlowExponent());
+  EXPECT_FALSE(crack0.referenceCrackConditions());
+
   // construct AFN Surface
-  AirflowNetworkSurface afnsurf = surface.airflowNetworkSurface();
-  EXPECT_EQ(surface, afnsurf.surface());
-  boost::optional<AirflowNetworkSurface> optsurf = surface.airflowNetworkSurface();
+  auto optsurf = surface.createAirflowNetworkSurface(crack0);
+  ASSERT_TRUE(optsurf);
+  auto afnsurf = optsurf.get();
+  ASSERT_EQ(surface, afnsurf.surface());
+  optsurf = surface.airflowNetworkSurface();
   ASSERT_TRUE(optsurf);
   EXPECT_EQ(afnsurf, optsurf.get());
-  AirflowNetworkCrack crack(model, 1.0, 0.5);
-  ASSERT_FALSE(afnsurf.leakageComponent());
-  ASSERT_TRUE(afnsurf.setLeakageComponent(crack));
-  ASSERT_TRUE(afnsurf.leakageComponent());
-  EXPECT_EQ(crack, afnsurf.leakageComponent().get());
 
   // clone should copy the AFN surface
   Surface clone1 = surface.clone().cast<Surface>();
   boost::optional<AirflowNetworkSurface> optsurf1 = clone1.airflowNetworkSurface();
   ASSERT_TRUE(optsurf1);
   ASSERT_TRUE(optsurf1.get().leakageComponent());
-  EXPECT_EQ(crack, optsurf1.get().leakageComponent().get());
+  EXPECT_EQ(crack0, optsurf1.get().leakageComponent().get());
 
   // even if through ModelObject
   Surface clone2 = surface.cast<ModelObject>().clone().cast<Surface>();
   boost::optional<AirflowNetworkSurface> optsurf2 = clone2.airflowNetworkSurface();
   ASSERT_TRUE(optsurf2);
   ASSERT_TRUE(optsurf2.get().leakageComponent());
-  EXPECT_EQ(crack, optsurf2.get().leakageComponent().get());
+  EXPECT_EQ(crack0, optsurf2.get().leakageComponent().get());
 
 }
 

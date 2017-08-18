@@ -243,12 +243,16 @@ namespace detail {
     return boost::none;
   }
 
-  AirflowNetworkEquivalentDuct CoilHeatingDesuperheater_Impl::createAirflowNetworkEquivalentDuct(double length, double diameter)
+  boost::optional<AirflowNetworkEquivalentDuct> CoilHeatingDesuperheater_Impl::createAirflowNetworkEquivalentDuct(double length, double diameter)
   {
+    boost::optional<AirflowNetworkEquivalentDuct> opt = airflowNetworkEquivalentDuct();
+    if (opt) {
+      return boost::none;
+    }
     return AirflowNetworkEquivalentDuct(model(), length, diameter, handle());
   }
 
-  boost::optional<AirflowNetworkEquivalentDuct> CoilHeatingDesuperheater_Impl::optionalAirflowNetworkEquivalentDuct() const
+  boost::optional<AirflowNetworkEquivalentDuct> CoilHeatingDesuperheater_Impl::airflowNetworkEquivalentDuct() const
   {
     std::vector<AirflowNetworkEquivalentDuct> myAFN = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquivalentDuct>
       (AirflowNetworkEquivalentDuct::iddObjectType());
@@ -335,14 +339,14 @@ void CoilHeatingDesuperheater::resetParasiticElectricLoad() {
   getImpl<detail::CoilHeatingDesuperheater_Impl>()->resetParasiticElectricLoad();
 }
 
-AirflowNetworkEquivalentDuct CoilHeatingDesuperheater::createAirflowNetworkEquivalentDuct(double length, double diameter)
+boost::optional<AirflowNetworkEquivalentDuct> CoilHeatingDesuperheater::createAirflowNetworkEquivalentDuct(double length, double diameter)
 {
   return getImpl<detail::CoilHeatingDesuperheater_Impl>()->createAirflowNetworkEquivalentDuct(length, diameter);
 }
 
-boost::optional<AirflowNetworkEquivalentDuct> CoilHeatingDesuperheater::optionalAirflowNetworkEquivalentDuct() const
+boost::optional<AirflowNetworkEquivalentDuct> CoilHeatingDesuperheater::airflowNetworkEquivalentDuct() const
 {
-  return getImpl<detail::CoilHeatingDesuperheater_Impl>()->optionalAirflowNetworkEquivalentDuct();
+  return getImpl<detail::CoilHeatingDesuperheater_Impl>()->airflowNetworkEquivalentDuct();
 }
 
 /// @cond

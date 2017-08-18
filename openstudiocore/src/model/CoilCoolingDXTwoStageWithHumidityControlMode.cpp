@@ -385,12 +385,16 @@ namespace detail {
     return result;
   }
 
-  AirflowNetworkEquivalentDuct CoilCoolingDXTwoStageWithHumidityControlMode_Impl::createAirflowNetworkEquivalentDuct(double length, double diameter)
+  boost::optional<AirflowNetworkEquivalentDuct> CoilCoolingDXTwoStageWithHumidityControlMode_Impl::createAirflowNetworkEquivalentDuct(double length, double diameter)
   {
+    boost::optional<AirflowNetworkEquivalentDuct> opt = airflowNetworkEquivalentDuct();
+    if (opt) {
+      return boost::none;
+    }
     return AirflowNetworkEquivalentDuct(model(), length, diameter, handle());
   }
 
-  boost::optional<AirflowNetworkEquivalentDuct> CoilCoolingDXTwoStageWithHumidityControlMode_Impl::optionalAirflowNetworkEquivalentDuct() const
+  boost::optional<AirflowNetworkEquivalentDuct> CoilCoolingDXTwoStageWithHumidityControlMode_Impl::airflowNetworkEquivalentDuct() const
   {
     std::vector<AirflowNetworkEquivalentDuct> myAFN = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquivalentDuct>
       (AirflowNetworkEquivalentDuct::iddObjectType());
@@ -792,14 +796,14 @@ void CoilCoolingDXTwoStageWithHumidityControlMode::resetBasinHeaterOperatingSche
   getImpl<detail::CoilCoolingDXTwoStageWithHumidityControlMode_Impl>()->resetBasinHeaterOperatingSchedule();
 }
 
-AirflowNetworkEquivalentDuct CoilCoolingDXTwoStageWithHumidityControlMode::createAirflowNetworkEquivalentDuct(double length, double diameter)
+boost::optional<AirflowNetworkEquivalentDuct> CoilCoolingDXTwoStageWithHumidityControlMode::createAirflowNetworkEquivalentDuct(double length, double diameter)
 {
   return getImpl<detail::CoilCoolingDXTwoStageWithHumidityControlMode_Impl>()->createAirflowNetworkEquivalentDuct(length, diameter);
 }
 
-boost::optional<AirflowNetworkEquivalentDuct> CoilCoolingDXTwoStageWithHumidityControlMode::optionalAirflowNetworkEquivalentDuct() const
+boost::optional<AirflowNetworkEquivalentDuct> CoilCoolingDXTwoStageWithHumidityControlMode::airflowNetworkEquivalentDuct() const
 {
-  return getImpl<detail::CoilCoolingDXTwoStageWithHumidityControlMode_Impl>()->optionalAirflowNetworkEquivalentDuct();
+  return getImpl<detail::CoilCoolingDXTwoStageWithHumidityControlMode_Impl>()->airflowNetworkEquivalentDuct();
 }
 
 /// @cond

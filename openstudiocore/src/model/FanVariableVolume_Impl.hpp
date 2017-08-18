@@ -237,8 +237,8 @@ namespace detail {
 
     void resetEndUseSubcategory();
 
-    AirflowNetworkFan airflowNetworkFan();
-    boost::optional<AirflowNetworkFan> optionalAirflowNetworkFan() const;
+    boost::optional<AirflowNetworkFan> createAirflowNetworkFan();
+    boost::optional<AirflowNetworkFan> airflowNetworkFan() const;
 
     //@}
   protected:

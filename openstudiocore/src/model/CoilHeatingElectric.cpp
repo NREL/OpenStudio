@@ -400,15 +400,18 @@ namespace detail {
     return false;
   }
 
-  AirflowNetworkEquivalentDuct CoilHeatingElectric_Impl::createAirflowNetworkEquivalentDuct(double length, double diameter)
+  boost::optional<AirflowNetworkEquivalentDuct> CoilHeatingElectric_Impl::createAirflowNetworkEquivalentDuct(double length, double diameter)
   {
+    boost::optional<AirflowNetworkEquivalentDuct> opt = airflowNetworkEquivalentDuct();
+    if (opt) {
+      return boost::none;
+    }
     return AirflowNetworkEquivalentDuct(model(), length, diameter, handle());
   }
 
-  boost::optional<AirflowNetworkEquivalentDuct> CoilHeatingElectric_Impl::optionalAirflowNetworkEquivalentDuct() const
+  boost::optional<AirflowNetworkEquivalentDuct> CoilHeatingElectric_Impl::airflowNetworkEquivalentDuct() const
   {
-    std::vector<AirflowNetworkEquivalentDuct> myAFN = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquivalentDuct>
-      (AirflowNetworkEquivalentDuct::iddObjectType());
+    std::vector<AirflowNetworkEquivalentDuct> myAFN = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquivalentDuct>(AirflowNetworkEquivalentDuct::iddObjectType());
     auto count = myAFN.size();
     if (count == 1) {
       return myAFN[0];
@@ -505,14 +508,14 @@ bool CoilHeatingElectric::setAvailabilitySchedule( Schedule & schedule )
   return getImpl<detail::CoilHeatingElectric_Impl>()->setAvailabilitySchedule(schedule);
 }
 
-AirflowNetworkEquivalentDuct CoilHeatingElectric::createAirflowNetworkEquivalentDuct(double length, double diameter)
+boost::optional<AirflowNetworkEquivalentDuct> CoilHeatingElectric::createAirflowNetworkEquivalentDuct(double length, double diameter)
 {
   return getImpl<detail::CoilHeatingElectric_Impl>()->createAirflowNetworkEquivalentDuct(length, diameter);
 }
 
-boost::optional<AirflowNetworkEquivalentDuct> CoilHeatingElectric::optionalAirflowNetworkEquivalentDuct() const
+boost::optional<AirflowNetworkEquivalentDuct> CoilHeatingElectric::airflowNetworkEquivalentDuct() const
 {
-  return getImpl<detail::CoilHeatingElectric_Impl>()->optionalAirflowNetworkEquivalentDuct();
+  return getImpl<detail::CoilHeatingElectric_Impl>()->airflowNetworkEquivalentDuct();
 }
 
 /// @cond

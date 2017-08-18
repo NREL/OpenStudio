@@ -37,6 +37,8 @@
 #include "PortList_Impl.hpp"
 #include "AirflowNetworkEquipmentLinkage.hpp"
 #include "AirflowNetworkEquipmentLinkage_Impl.hpp"
+#include "AirflowNetworkCrack.hpp"
+#include "AirflowNetworkCrack_Impl.hpp"
 
 #include "Model.hpp"
 #include "Model_Impl.hpp"
@@ -329,16 +331,16 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  AirflowNetworkEquipmentLinkage FanZoneExhaust_Impl::airflowNetworkEquipmentLinkage()
+  boost::optional<AirflowNetworkEquipmentLinkage> FanZoneExhaust_Impl::createAirflowNetworkEquipmentLinkage(const AirflowNetworkCrack& crack)
   {
-    boost::optional<AirflowNetworkEquipmentLinkage> opt = optionalAirflowNetworkEquipmentLinkage();
+    boost::optional<AirflowNetworkEquipmentLinkage> opt = airflowNetworkEquipmentLinkage();
     if (opt) {
-      return opt.get();
+      return boost::none;
     }
-    return AirflowNetworkEquipmentLinkage(model(), handle());
+    return AirflowNetworkEquipmentLinkage(model(), crack, handle());
   }
 
-  boost::optional<AirflowNetworkEquipmentLinkage> FanZoneExhaust_Impl::optionalAirflowNetworkEquipmentLinkage()
+  boost::optional<AirflowNetworkEquipmentLinkage> FanZoneExhaust_Impl::airflowNetworkEquipmentLinkage()
   {
     std::vector<AirflowNetworkEquipmentLinkage> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquipmentLinkage>(AirflowNetworkEquipmentLinkage::iddObjectType());
     auto count = myAFNItems.size();
@@ -466,14 +468,14 @@ void FanZoneExhaust::resetBalancedExhaustFractionSchedule() {
 }
 
 
-AirflowNetworkEquipmentLinkage FanZoneExhaust::airflowNetworkEquipmentLinkage()
+boost::optional<AirflowNetworkEquipmentLinkage> FanZoneExhaust::createAirflowNetworkEquipmentLinkage(const AirflowNetworkCrack& crack)
 {
-  return getImpl<detail::FanZoneExhaust_Impl>()->airflowNetworkEquipmentLinkage();
+  return getImpl<detail::FanZoneExhaust_Impl>()->createAirflowNetworkEquipmentLinkage(crack);
 }
 
-boost::optional<AirflowNetworkEquipmentLinkage> FanZoneExhaust::optionalAirflowNetworkEquipmentLinkage()
+boost::optional<AirflowNetworkEquipmentLinkage> FanZoneExhaust::airflowNetworkEquipmentLinkage()
 {
-  return getImpl<detail::FanZoneExhaust_Impl>()->optionalAirflowNetworkEquipmentLinkage();
+  return getImpl<detail::FanZoneExhaust_Impl>()->airflowNetworkEquipmentLinkage();
 }
 
 /// @cond

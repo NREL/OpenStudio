@@ -121,11 +121,13 @@ namespace detail {
 
 } // detail
 
-AirflowNetworkEquipmentLinkage::AirflowNetworkEquipmentLinkage(const Model& model, const Handle &handle)
+AirflowNetworkEquipmentLinkage::AirflowNetworkEquipmentLinkage(const Model& model, const AirflowNetworkCrack& crack, const Handle &handle)
   : ModelObject(AirflowNetworkEquipmentLinkage::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::AirflowNetworkEquipmentLinkage_Impl>());
-  bool ok = getImpl<detail::AirflowNetworkEquipmentLinkage_Impl>()->setPointer(OS_AirflowNetworkEquipmentLinkageFields::Name, handle);
+  bool ok = setCrack(crack);
+  OS_ASSERT(ok);
+  ok = getImpl<detail::AirflowNetworkEquipmentLinkage_Impl>()->setPointer(OS_AirflowNetworkEquipmentLinkageFields::Name, handle);
   OS_ASSERT(ok);
 }
 

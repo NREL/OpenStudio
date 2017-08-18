@@ -273,9 +273,16 @@ namespace detail {
 
     std::vector<SubSurface> createSubSurfaces(const std::vector<std::vector<Point3d> >& faces, double inset, const boost::optional<ConstructionBase>& construction);
 
-    AirflowNetworkSurface airflowNetworkSurface();
+    template<typename T> boost::optional<AirflowNetworkSurface> createAirflowNetworkSurface(const T &surfaceAirflowLeakage)
+    {
+      boost::optional<AirflowNetworkSurface> opt = airflowNetworkSurface();
+      if (opt) {
+        return boost::none;
+      }
+      return AirflowNetworkSurface(model(), surfaceAirflowLeakage.handle(), handle());
+    }
 
-    boost::optional<AirflowNetworkSurface> optionalAirflowNetworkSurface() const;
+    boost::optional<AirflowNetworkSurface> airflowNetworkSurface() const;
 
    protected:
    private:

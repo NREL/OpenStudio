@@ -137,8 +137,8 @@ namespace detail {
     /** @name Other */
     //@{
 
-    AirflowNetworkEquipmentLinkage airflowNetworkEquipmentLinkage();
-    boost::optional<AirflowNetworkEquipmentLinkage> optionalAirflowNetworkEquipmentLinkage();
+    boost::optional<AirflowNetworkEquipmentLinkage> createAirflowNetworkEquipmentLinkage(const AirflowNetworkCrack& crack);
+    boost::optional<AirflowNetworkEquipmentLinkage> airflowNetworkEquipmentLinkage();
 
     //@}
    protected:

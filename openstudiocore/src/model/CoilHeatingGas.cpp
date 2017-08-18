@@ -461,15 +461,18 @@ namespace detail{
     return false;
   }
 
-  AirflowNetworkEquivalentDuct CoilHeatingGas_Impl::createAirflowNetworkEquivalentDuct(double length, double diameter)
+  boost::optional<AirflowNetworkEquivalentDuct> CoilHeatingGas_Impl::createAirflowNetworkEquivalentDuct(double length, double diameter)
   {
+    boost::optional<AirflowNetworkEquivalentDuct> opt = airflowNetworkEquivalentDuct();
+    if (opt) {
+      return boost::none;
+    }
     return AirflowNetworkEquivalentDuct(model(), length, diameter, handle());
   }
 
-  boost::optional<AirflowNetworkEquivalentDuct> CoilHeatingGas_Impl::optionalAirflowNetworkEquivalentDuct() const
+  boost::optional<AirflowNetworkEquivalentDuct> CoilHeatingGas_Impl::airflowNetworkEquivalentDuct() const
   {
-    std::vector<AirflowNetworkEquivalentDuct> myAFN = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquivalentDuct>
-      (AirflowNetworkEquivalentDuct::iddObjectType());
+    std::vector<AirflowNetworkEquivalentDuct> myAFN = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquivalentDuct>(AirflowNetworkEquivalentDuct::iddObjectType());
     auto count = myAFN.size();
     if (count == 1) {
       return myAFN[0];
@@ -633,14 +636,14 @@ IddObjectType CoilHeatingGas::iddObjectType() {
   return result;
 }
 
-AirflowNetworkEquivalentDuct CoilHeatingGas::createAirflowNetworkEquivalentDuct(double length, double diameter)
+boost::optional<AirflowNetworkEquivalentDuct> CoilHeatingGas::createAirflowNetworkEquivalentDuct(double length, double diameter)
 {
   return getImpl<detail::CoilHeatingGas_Impl>()->createAirflowNetworkEquivalentDuct(length, diameter);
 }
 
-boost::optional<AirflowNetworkEquivalentDuct> CoilHeatingGas::optionalAirflowNetworkEquivalentDuct() const
+boost::optional<AirflowNetworkEquivalentDuct> CoilHeatingGas::airflowNetworkEquivalentDuct() const
 {
-  return getImpl<detail::CoilHeatingGas_Impl>()->optionalAirflowNetworkEquivalentDuct();
+  return getImpl<detail::CoilHeatingGas_Impl>()->airflowNetworkEquivalentDuct();
 }
 
 } // model

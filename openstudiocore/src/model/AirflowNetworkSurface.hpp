@@ -195,7 +195,7 @@ protected:
 
   explicit AirflowNetworkSurface(std::shared_ptr<detail::AirflowNetworkSurface_Impl> impl);
 
-  AirflowNetworkSurface(const Model& model, const Handle& handle);
+  AirflowNetworkSurface(const Model& model, const Handle& compHandle, const Handle& surfHandle);
 
   bool setSurface(const Surface& surface);
   bool setSurface(const SubSurface& surface);

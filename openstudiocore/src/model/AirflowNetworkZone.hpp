@@ -55,8 +55,6 @@ class MODEL_API AirflowNetworkZone : public AirflowNetworkNode {
  public:
   /** @name Constructors and Destructors */
   //@{
-  /** Construct an airflow zone attached to a model thermal zone. */
-  AirflowNetworkZone(const Model& model, const ThermalZone& thermalZone);
 
   virtual ~AirflowNetworkZone() {}
 

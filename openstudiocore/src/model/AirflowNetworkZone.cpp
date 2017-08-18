@@ -337,15 +337,6 @@ namespace detail {
 
 } // detail
 
-AirflowNetworkZone::AirflowNetworkZone(const Model& model, const ThermalZone& thermalZone)
-  : AirflowNetworkNode(AirflowNetworkZone::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::AirflowNetworkZone_Impl>());
-
-  bool ok = setThermalZone(thermalZone);
-  OS_ASSERT(ok);
-}
-
 AirflowNetworkZone::AirflowNetworkZone(const Model& model, const Handle& handle)
   : AirflowNetworkNode(AirflowNetworkZone::iddObjectType(), model)
 {

@@ -38,6 +38,7 @@ namespace model {
 
 class Schedule;
 class AirflowNetworkEquipmentLinkage;
+class AirflowNetworkCrack;
 
 namespace detail {
 
@@ -118,8 +119,8 @@ class MODEL_API FanZoneExhaust : public ZoneHVACComponent {
   /** @name Other */
   //@{
 
-  AirflowNetworkEquipmentLinkage airflowNetworkEquipmentLinkage();
-  boost::optional<AirflowNetworkEquipmentLinkage> optionalAirflowNetworkEquipmentLinkage();
+  boost::optional<AirflowNetworkEquipmentLinkage> createAirflowNetworkEquipmentLinkage(const AirflowNetworkCrack& crack);
+  boost::optional<AirflowNetworkEquipmentLinkage> airflowNetworkEquipmentLinkage();
 
   //@}
  protected:
