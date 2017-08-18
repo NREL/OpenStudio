@@ -121,7 +121,6 @@ namespace openstudio
     {
       return m_handleMapping;
     }
-
     
     boost::optional<Model> ThreeJSReverseTranslator::modelFromThreeJS(const ThreeScene& scene)
     {
@@ -130,6 +129,42 @@ namespace openstudio
 
       Model model;
 
+      // create all the objects we will need
+      ThreeSceneMetadata metadata = scene.metadata();
+      for (const auto& m : metadata.modelObjectMetadata()){
+        std::string iddObjectType = m.iddObjectType();
+        UUID handle = toUUID(m.handle());
+        std::string name = m.name();
+        
+        boost::optional<ModelObject> modelObject;
+
+        if (istringEqual(iddObjectType, "OS:ThermalZone")){
+          modelObject = ThermalZone(model);
+        }else if (istringEqual(iddObjectType, "OS:SpaceType")){
+          modelObject = SpaceType(model);
+        }else if (istringEqual(iddObjectType, "OS:BuildingStory")){
+          modelObject = BuildingStory(model);
+        } else if (istringEqual(iddObjectType, "OS:Space")){
+          modelObject = Space(model);
+        }else if (istringEqual(iddObjectType, "OS:BuildingUnit")){
+          modelObject = BuildingUnit(model);
+        } else if (istringEqual(iddObjectType, "OS:DefaultConstructionSet")){
+          modelObject = DefaultConstructionSet(model);
+        }else{
+          LOG(Error, "Unknown IddObjectType '" << iddObjectType << "'");
+        }
+
+        if (modelObject){
+          modelObject->setName(name);
+
+          if (!handle.isNull()){
+            m_handleMapping[handle] = modelObject->handle();
+          }
+        }
+
+      }
+
+      // now translate all the surfaces
       ThreeSceneObject sceneObject = scene.object();
       for (const auto& child : sceneObject.children()){
         boost::optional<ThreeGeometry> geometry = scene.getGeometry(child.geometry());
@@ -166,52 +201,27 @@ namespace openstudio
 
         boost::optional<ThermalZone> thermalZone = model.getConcreteModelObjectByName<ThermalZone>(thermalZoneName);
         if (!thermalZone && !thermalZoneName.empty()){
-          thermalZone = ThermalZone(model);
-          thermalZone->setName(thermalZoneName);
-
-          if (!thermalZoneHandle.isNull()){
-            m_handleMapping[thermalZoneHandle] = thermalZone->handle();
-          }
+          LOG(Error, "Could not find ThermalZone '" << thermalZoneName << "'");
         }
 
         boost::optional<SpaceType> spaceType = model.getConcreteModelObjectByName<SpaceType>(spaceTypeName);
         if (!spaceType && !spaceTypeName.empty()){
-          spaceType = SpaceType(model);
-          spaceType->setName(spaceTypeName);
-
-          if (!spaceTypeHandle.isNull()){
-            m_handleMapping[spaceTypeHandle] = spaceType->handle();
-          }
+          LOG(Error, "Could not find SpaceType '" << spaceTypeName << "'");
         }
 
         boost::optional<BuildingStory> buildingStory = model.getConcreteModelObjectByName<BuildingStory>(buildingStoryName);
         if (!buildingStory && !buildingStoryName.empty()){
-          buildingStory = BuildingStory(model);
-          buildingStory->setName(buildingStoryName);
-
-          if (!buildingStoryHandle.isNull()){
-            m_handleMapping[buildingStoryHandle] = buildingStory->handle();
-          }
+          LOG(Error, "Could not find BuildingStory '" << buildingStoryName << "'");
         }
 
         boost::optional<BuildingUnit> buildingUnit = model.getConcreteModelObjectByName<BuildingUnit>(buildingUnitName);
         if (!buildingUnit && !buildingUnitName.empty()){
-          buildingUnit = BuildingUnit(model);
-          buildingUnit->setName(buildingUnitName);
-
-          if (!buildingUnitHandle.isNull()){
-            m_handleMapping[buildingUnitHandle] = buildingUnit->handle();
-          }
+          LOG(Error, "Could not find BuildingUnit '" << buildingUnitName << "'");
         }
 
         boost::optional<DefaultConstructionSet> constructionSet = model.getConcreteModelObjectByName<DefaultConstructionSet>(constructionSetName);
         if (!constructionSet && !constructionSetName.empty()){
-          constructionSet = DefaultConstructionSet(model);
-          constructionSet->setName(constructionSetName);
-
-          if (!constructionSetHandle.isNull()){
-            m_handleMapping[constructionSetHandle] = constructionSet->handle();
-          }
+          LOG(Error, "Could not find DefaultConstructionSet '" << constructionSetName << "'");
         }
 
         // Check if creating a surface
@@ -223,12 +233,8 @@ namespace openstudio
 
           boost::optional<Space> space = model.getConcreteModelObjectByName<Space>(spaceName);
           if (!space){
-            space = Space(model);
-            space->setName(spaceName);
-          
-            if (!spaceHandle.isNull()){
-              m_handleMapping[spaceHandle] = space->handle();
-            }
+            LOG(Error, "Could not find Space '" << spaceName << "'");
+            continue;
           }
 
           OS_ASSERT(space);

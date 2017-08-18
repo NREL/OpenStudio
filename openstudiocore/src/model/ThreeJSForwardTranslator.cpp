@@ -519,13 +519,18 @@ namespace openstudio
 
       std::vector<ThreeSceneChild> sceneChildren;
       std::vector<ThreeGeometry> allGeometries;
+      std::vector<ThreeModelObjectMetadata> modelObjectMetadata;
 
       // get number of things to translate
       std::vector<PlanarSurface> planarSurfaces = model.getModelObjects<PlanarSurface>();
       std::vector<PlanarSurfaceGroup> planarSurfaceGroups = model.getModelObjects<PlanarSurfaceGroup>();
       std::vector<BuildingStory> buildingStories = model.getConcreteModelObjects<BuildingStory>();
+      std::vector<BuildingUnit> buildingUnits = model.getConcreteModelObjects<BuildingUnit>();
+      std::vector<ThermalZone> thermalZones = model.getConcreteModelObjects<ThermalZone>();
+      std::vector<SpaceType> spaceTypes = model.getConcreteModelObjects<SpaceType>();
+      std::vector<DefaultConstructionSet> defaultConstructionSets = model.getConcreteModelObjects<DefaultConstructionSet>();
       double n = 0;
-      double N = planarSurfaces.size() + planarSurfaceGroups.size() + buildingStories.size() + 1;
+      double N = planarSurfaces.size() + planarSurfaceGroups.size() + buildingStories.size() + buildingUnits.size() + thermalZones.size() + spaceTypes.size() + defaultConstructionSets.size() + 1;
 
       // loop over all surfaces
       for (const auto& planarSurface : planarSurfaces)
@@ -584,12 +589,46 @@ namespace openstudio
       for (const auto& buildingStory : buildingStories){
         buildingStoryNames.push_back(buildingStory.nameString());
 
+        modelObjectMetadata.push_back(ThreeModelObjectMetadata("OS:BuildingStory", toString(buildingStory.handle()), buildingStory.nameString()));
+
+        for (const auto& space : buildingStory.spaces()){
+          modelObjectMetadata.push_back(ThreeModelObjectMetadata("OS:Space", toString(space.handle()), space.nameString()));
+        }
+
         n += 1;
         updatePercentage(100.0*n / N);
       }
-      // buildingStoryNames.sort! {|x,y| x.upcase <=> y.upcase} # case insensitive sort
+      std::sort(buildingStoryNames.begin(), buildingStoryNames.end(), IstringCompare());
+
+      for (const auto& buildingUnit : buildingUnits){
+        modelObjectMetadata.push_back(ThreeModelObjectMetadata("OS:BuildingUnit", toString(buildingUnit.handle()), buildingUnit.nameString()));
+        
+        n += 1;
+        updatePercentage(100.0*n / N);
+      }
+
+      for (const auto& thermalZone : thermalZones){
+        modelObjectMetadata.push_back(ThreeModelObjectMetadata("OS:ThermalZone", toString(thermalZone.handle()), thermalZone.nameString()));
+        
+        n += 1;
+        updatePercentage(100.0*n / N);
+      }
+
+      for (const auto& spaceType : spaceTypes){
+        modelObjectMetadata.push_back(ThreeModelObjectMetadata("OS:SpaceType", toString(spaceType.handle()), spaceType.nameString()));
+        
+        n += 1;
+        updatePercentage(100.0*n / N);
+      }
+
+      for (const auto& defaultConstructionSet : defaultConstructionSets){
+        modelObjectMetadata.push_back(ThreeModelObjectMetadata("OS:DefaultConstructionSet", toString(defaultConstructionSet.handle()), defaultConstructionSet.nameString()));
+        
+        n += 1;
+        updatePercentage(100.0*n / N);
+      }
   
-      ThreeSceneMetadata metadata(buildingStoryNames, threeBoundingBox);
+      ThreeSceneMetadata metadata(buildingStoryNames, threeBoundingBox, modelObjectMetadata);
   
       ThreeScene scene(metadata, allGeometries, materials, sceneObject);
 

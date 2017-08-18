@@ -63,6 +63,9 @@
 %ignore std::vector<openstudio::ThreeMaterial>::vector(size_type);
 %ignore std::vector<openstudio::ThreeMaterial>::resize(size_type);
 %template(ThreeMaterialVector) std::vector<openstudio::ThreeMaterial>;
+%template(ThreeModelObjectMetadataVector) std::vector<openstudio::ThreeModelObjectMetadata>;
+%ignore std::vector<openstudio::ThreeModelObjectMetadata>::vector(size_type);
+%ignore std::vector<openstudio::ThreeModelObjectMetadata>::resize(size_type);
 
 %ignore openstudio::operator<<;
 

@@ -34,6 +34,7 @@
 #include "Model.hpp"
 
 #include "../utilities/geometry/ThreeJS.hpp"
+#include "../utilities/core/Logger.hpp"
 
 namespace openstudio
 {
@@ -55,7 +56,7 @@ namespace openstudio
       ThreeScene modelToThreeJS(const Model& model, bool triangulateSurfaces, std::function<void(double)> updatePercentage);
     
     private:
-
+      REGISTER_LOGGER("openstudio.model.ThreeJSForwardTranslator");
     };
 
   }

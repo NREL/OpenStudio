@@ -34,6 +34,7 @@
 #include "Model.hpp"
 
 #include "../utilities/geometry/FloorplanJS.hpp"
+#include "../utilities/core/Logger.hpp"
 
 namespace openstudio
 {
@@ -50,7 +51,7 @@ namespace openstudio
       FloorplanJS updateFloorplanJS(const FloorplanJS& floorplan, const Model& model, bool removeMissingObjects);
 
     private:
-
+      REGISTER_LOGGER("openstudio.model.FloorplanJSForwardTranslator");
     };
   
   }

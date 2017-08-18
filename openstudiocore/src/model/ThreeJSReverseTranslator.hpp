@@ -55,6 +55,7 @@ namespace openstudio
       std::map<UUID, UUID> handleMapping() const;
 
     private:
+      REGISTER_LOGGER("openstudio.model.ThreeJSReverseTranslator");
 
       Point3dVectorVector getFaces(const ThreeGeometryData& data) const;
 

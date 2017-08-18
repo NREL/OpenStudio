@@ -250,7 +250,7 @@ void EditorWebView::previewClicked()
 
     m_javascriptRunning = true;
     m_document->disable();
-    QString javascript = QString("JSON.stringify(api.doExport());");
+    QString javascript = QString("JSON.stringify(window.api.exportFloorplan());");
     m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_export = v; QTimer::singleShot(0, this, &EditorWebView::previewExport); m_javascriptRunning = false; });
 
     // re-enable document in previewExport
@@ -264,7 +264,7 @@ void EditorWebView::mergeClicked()
 
     m_javascriptRunning = true;
     m_document->disable();
-    QString javascript = QString("JSON.stringify(api.doExport());");
+    QString javascript = QString("JSON.stringify(window.api.exportFloorplan());");
     m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_export = v; QTimer::singleShot(0, this, &EditorWebView::mergeExport); m_javascriptRunning = false; });
 
      // re-enable document in mergeExport
@@ -273,13 +273,10 @@ void EditorWebView::mergeClicked()
 
 void EditorWebView::translateExport()
 {
-  std::string json = m_export.value<QString>().toStdString();
-
   model::ThreeJSReverseTranslator rt;
   boost::optional<model::Model> model;
-  boost::optional<FloorplanJS> floorplan = FloorplanJS::load(json);
-  if (floorplan){
-    ThreeScene scene = floorplan->toThreeScene(true);
+  if (m_floorplan){
+    ThreeScene scene = m_floorplan->toThreeScene(true);
     model = rt.modelFromThreeJS(scene);
   } else{
     // DLM: this is an error, the editor produced a JSON we can't read
@@ -345,7 +342,7 @@ void EditorWebView::startEditor()
 
       std::string json = m_floorplan->toJSON(false);
 
-      QString javascript = QString("window.api.doImport(JSON.stringify(") + QString::fromStdString(json) + QString("));");
+      QString javascript = QString("window.api.openFloorplan(JSON.stringify(") + QString::fromStdString(json) + QString("));");
       m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_javascriptRunning = false; });
       while (m_javascriptRunning){
         OSAppBase::instance()->processEvents(QEventLoop::ExcludeUserInputEvents);
@@ -361,6 +358,13 @@ void EditorWebView::startEditor()
       m_javascriptRunning = true;
 
       std::string json = floorplan.toJSON(false);
+      // DLM: temp
+      //Json::Value value;
+      //Json::Reader reader;
+      //bool parsingSuccessful = reader.parse(json, value);
+      //value.removeMember("stories");
+      //Json::FastWriter writer;
+      //json = writer.write(value);
 
       QString javascript = QString("window.api.importLibrary(JSON.stringify(") + QString::fromStdString(json) + QString("));");
       m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_javascriptRunning = false; });
@@ -382,12 +386,22 @@ void EditorWebView::doExport()
   if (m_geometryEditorLoaded && !m_javascriptRunning){
     m_javascriptRunning = true;
     m_document->disable();
-    QString javascript = QString("JSON.stringify(api.doExport());");
+    QString javascript = QString("JSON.stringify(window.api.exportFloorplan());");
     m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_export = v; m_javascriptRunning = false; });
     while (m_javascriptRunning){
       OSAppBase::instance()->processEvents(QEventLoop::ExcludeUserInputEvents);
     }
     m_document->enable();
+
+    // DLM: what if this fails?
+    std::string contents = m_export.value<QString>().toStdString();
+    m_floorplan = FloorplanJS::load(contents);
+
+    if (!m_floorplan){
+      // DLM: This is an error
+      bool t = false;
+    }
+
   }
 }
 
@@ -401,9 +415,6 @@ void EditorWebView::saveExport()
     openstudio::path out = floorplanPath();
     if (!out.empty()){
       if (checksum(contents) != checksum(out)){
-
-        // DLM: what if this fails?
-        m_floorplan = FloorplanJS::load(contents);
 
         openstudio::filesystem::ofstream file(out);
         OS_ASSERT(file.is_open());

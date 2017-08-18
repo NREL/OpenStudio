@@ -103,7 +103,7 @@ namespace openstudio{
   }
     
   ThreeScene::ThreeScene(const std::string& s)
-    : m_metadata(std::vector<std::string>(), ThreeBoundingBox(0,0,0,0,0,0,0,0,0,0)), m_sceneObject(ThreeSceneObject("", std::vector<ThreeSceneChild>()))
+    : m_metadata(std::vector<std::string>(), ThreeBoundingBox(0,0,0,0,0,0,0,0,0,0), std::vector<ThreeModelObjectMetadata>()), m_sceneObject(ThreeSceneObject("", std::vector<ThreeSceneChild>()))
   {
     Json::Value root;
     Json::Reader reader;
@@ -1173,18 +1173,61 @@ namespace openstudio{
     return m_lookAtR;
   }
 
-  ThreeSceneMetadata::ThreeSceneMetadata(const std::vector<std::string>& buildingStoryNames, const ThreeBoundingBox& boundingBox)
-    : m_version("4.3"), m_type("Object"), m_generator("OpenStudio"), m_buildingStoryNames(buildingStoryNames), m_boundingBox(boundingBox)
+  ThreeModelObjectMetadata::ThreeModelObjectMetadata(const std::string& iddObjectType, const std::string& handle, const std::string& name)
+    : m_iddObjectType(iddObjectType), m_handle(handle), m_name(name)
+  {}
+  
+  ThreeModelObjectMetadata::ThreeModelObjectMetadata(const Json::Value& value)
+  {
+    assertKeyAndType(value, "iddObjectType", Json::stringValue);
+    assertKeyAndType(value, "handle", Json::stringValue);
+    assertKeyAndType(value, "name", Json::stringValue);
+
+    m_iddObjectType = value.get("iddObjectType", "").asString();
+    m_handle = value.get("handle", "").asString();
+    m_name = value.get("name", "").asString();
+  }
+
+  std::string ThreeModelObjectMetadata::iddObjectType() const
+  {
+    return m_iddObjectType;
+  }
+
+  std::string ThreeModelObjectMetadata::handle() const
+  {
+    return m_handle;
+  }
+
+  std::string ThreeModelObjectMetadata::name() const
+  {
+    return m_name;
+  }
+
+  Json::Value ThreeModelObjectMetadata::toJsonValue() const
+  {
+    Json::Value result;
+
+    result["iddObjectType"] = m_iddObjectType;
+    result["handle"] = m_handle;
+    result["name"] = m_name;
+
+    return result;
+  }
+
+
+  ThreeSceneMetadata::ThreeSceneMetadata(const std::vector<std::string>& buildingStoryNames, const ThreeBoundingBox& boundingBox, const std::vector<ThreeModelObjectMetadata>& modelObjectMetadata)
+    : m_version("4.3"), m_type("Object"), m_generator("OpenStudio"), m_buildingStoryNames(buildingStoryNames), m_boundingBox(boundingBox), m_modelObjectMetadata(modelObjectMetadata)
   {}
 
   ThreeSceneMetadata::ThreeSceneMetadata(const Json::Value& value)
-    : m_boundingBox(value.get("boundingBox", Json::objectValue))
+    : m_boundingBox(value.get("boundinmgBox", Json::objectValue))
   {
     assertKeyAndType(value, "version", Json::stringValue);
     assertKeyAndType(value, "type", Json::stringValue);
     assertKeyAndType(value, "generator", Json::stringValue);
     assertKeyAndType(value, "buildingStoryNames", Json::arrayValue);
     assertKeyAndType(value, "boundingBox", Json::objectValue);
+    assertKeyAndType(value, "modelObjectMetadata", Json::arrayValue);
 
     Json::Value version = value.get("version", "");
     if (version.isConvertibleTo(Json::stringValue)){
@@ -1198,6 +1241,15 @@ namespace openstudio{
     for (Json::ArrayIndex i = 0; i < n; ++i){
       m_buildingStoryNames.push_back(buildingStoryNames[i].asString());
     }
+
+    // DLM: done in initializer
+    //boundingBox = ThreeBoundingBox(value.get("boundinmgBox", Json::objectValue));
+
+    Json::Value modelObjectMetadata = value.get("modelObjectMetadata", Json::arrayValue);
+    n = modelObjectMetadata.size();
+    for (Json::ArrayIndex i = 0; i < n; ++i){
+      m_modelObjectMetadata.push_back(ThreeModelObjectMetadata(modelObjectMetadata[i]));
+    }
   }
 
   Json::Value ThreeSceneMetadata::toJsonValue() const
@@ -1209,11 +1261,17 @@ namespace openstudio{
       buildingStoryNames.append(buildingStoryName);
     }
 
+    Json::Value modelObjectMetadata(Json::arrayValue);
+    for (const auto& m : m_modelObjectMetadata){
+      modelObjectMetadata.append(m.toJsonValue());
+    }
+
     result["version"] = m_version;
     result["type"] = m_type;
     result["generator"] = m_generator;
     result["buildingStoryNames"] = buildingStoryNames;
     result["boundingBox"] = m_boundingBox.toJsonValue();
+    result["modelObjectMetadata"] = modelObjectMetadata;
 
     return result;
   }
@@ -1241,6 +1299,11 @@ namespace openstudio{
   ThreeBoundingBox ThreeSceneMetadata::boundingBox() const
   {
     return m_boundingBox;
+  }
+
+  std::vector<ThreeModelObjectMetadata> ThreeSceneMetadata::modelObjectMetadata() const
+  {
+    return m_modelObjectMetadata;
   }
 
 } // openstudio

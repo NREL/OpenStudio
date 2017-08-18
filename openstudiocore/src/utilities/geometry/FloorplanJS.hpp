@@ -47,6 +47,7 @@ namespace openstudio{
   class ThreeScene;
   class ThreeSceneChild;
   class ThreeGeometry;
+  class ThreeModelObjectMetadata;
   class FloorplanObjectId;
   class Point3d;
   class FloorplanJS;
@@ -136,6 +137,8 @@ namespace openstudio{
     REGISTER_LOGGER("FloorplanJS");
 
     FloorplanJS(const Json::Value& value);
+
+    ThreeModelObjectMetadata makeModelObjectMetadata(const std::string& iddObjectType, const Json::Value& object) const;
 
     void makeGeometries(const Json::Value& story, const Json::Value& space, const std::string& spaceNamePostFix, double minZ, double maxZ,
       const Json::Value& vertices, const Json::Value& edges, const Json::Value& faces, const std::string& faceId,

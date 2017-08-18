@@ -341,15 +341,34 @@ namespace openstudio{
     double m_lookAtR;
   };
 
-  /// ThreeSceneMetadata includes metadata about the scene
+  /// ThreeModelObjectMetadata includes metadata about an OpenStudio ModelObject
+  class UTILITIES_API ThreeModelObjectMetadata{
+  public: 
+    ThreeModelObjectMetadata(const std::string& iddObjectType, const std::string& handle, const std::string& name);
+    std::string iddObjectType() const;
+    std::string handle() const;
+    std::string name() const;
+
+  private:
+    friend class ThreeSceneMetadata;
+    ThreeModelObjectMetadata(const Json::Value& json);
+    Json::Value toJsonValue() const;
+
+    std::string m_iddObjectType;
+    std::string m_handle;
+    std::string m_name;
+  };
+
+  /// ThreeSceneMetadata includes metadata about an OpenStudio Model Object
   class UTILITIES_API ThreeSceneMetadata{
   public: 
-    ThreeSceneMetadata(const std::vector<std::string>& buildingStoryNames, const ThreeBoundingBox& boundingBox);
+    ThreeSceneMetadata(const std::vector<std::string>& buildingStoryNames, const ThreeBoundingBox& boundingBox, const std::vector<ThreeModelObjectMetadata>& modelObjectMetadata);
     std::string version() const;
     std::string type() const;
     std::string generator() const;
     std::vector<std::string> buildingStoryNames() const;
     ThreeBoundingBox boundingBox() const;
+    std::vector<ThreeModelObjectMetadata> modelObjectMetadata() const;
 
   private:
     friend class ThreeScene;
@@ -361,6 +380,7 @@ namespace openstudio{
     std::string m_generator;
     std::vector<std::string> m_buildingStoryNames;
     ThreeBoundingBox m_boundingBox;
+    std::vector<ThreeModelObjectMetadata> m_modelObjectMetadata;
   };
 
   /** ThreeScene is an adapter for a scene in the three.js geometry format, defined at:

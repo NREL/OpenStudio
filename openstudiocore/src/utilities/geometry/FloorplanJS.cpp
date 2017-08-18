@@ -511,12 +511,28 @@ namespace openstudio{
     
   }
 
+  ThreeModelObjectMetadata FloorplanJS::makeModelObjectMetadata(const std::string& iddObjectType, const Json::Value& object) const
+  {
+    std::string handle;
+    if (checkKeyAndType(object, "handle", Json::stringValue)){
+      handle = object.get("handle", "").asString();
+    }
+
+    std::string name;
+    if (checkKeyAndType(object, "name", Json::stringValue)){
+      name = object.get("name", "").asString();
+    }
+
+    return ThreeModelObjectMetadata(iddObjectType, handle, name);
+  }
+
   ThreeScene FloorplanJS::toThreeScene(bool openstudioFormat) const
   {
     std::vector<ThreeGeometry> geometries;
     std::vector<ThreeMaterial> materials;
     std::vector<ThreeSceneChild> children;
     std::vector<std::string> buildingStoryNames;
+    std::vector<ThreeModelObjectMetadata> modelObjectMetadata;
 
     double currentZ = 0;
 
@@ -526,9 +542,12 @@ namespace openstudio{
     for (Json::ArrayIndex storyIdx = 0; storyIdx < storyN; ++storyIdx){
 
       // get story properties
-      assertKeyAndType(stories[storyIdx], "name", Json::stringValue);
-      std::string storyName = stories[storyIdx].get("name", "").asString();
-      buildingStoryNames.push_back(storyName);
+      modelObjectMetadata.push_back(makeModelObjectMetadata("OS:BuildingStory", stories[storyIdx]));
+
+      std::string storyName;
+      if (checkKeyAndType(stories[storyIdx], "name", Json::stringValue)){
+        buildingStoryNames.push_back(storyName);
+      }
 
       double belowFloorPlenumHeight = 0;
       if (checkKeyAndType(stories[storyIdx], "below_floor_plenum_height", Json::realValue)){
@@ -561,6 +580,8 @@ namespace openstudio{
       Json::ArrayIndex spaceN = spaces.size();
       for (Json::ArrayIndex spaceIdx = 0; spaceIdx < spaceN; ++spaceIdx){
 
+        modelObjectMetadata.push_back(makeModelObjectMetadata("OS:Space", spaces[spaceIdx]));
+
         // each space should have one face
         if (checkKeyAndType(spaces[spaceIdx], "face_id", Json::stringValue)){
           std::string faceId = spaces[spaceIdx].get("face_id", "").asString(); 
@@ -590,9 +611,38 @@ namespace openstudio{
       currentZ += belowFloorPlenumHeight + floorToCeilingHeight + aboveCeilingPlenumHeight;
 
     } // stories
+    
+    // loop over building_units
+    Json::Value buildingUnits = m_value.get("building_units", Json::arrayValue);
+    Json::ArrayIndex n = buildingUnits.size();
+    for (Json::ArrayIndex i = 0; i < n; ++i){
+      modelObjectMetadata.push_back(makeModelObjectMetadata("OS:BuildingUnit", buildingUnits[i]));
+    }
 
+    // loop over thermal_zones
+    Json::Value thermalZones = m_value.get("thermal_zones", Json::arrayValue);
+    n = thermalZones.size();
+    for (Json::ArrayIndex i = 0; i < n; ++i){
+      modelObjectMetadata.push_back(makeModelObjectMetadata("OS:ThermalZone", thermalZones[i]));
+    }
+
+    // loop over space_types
+    Json::Value spaceTypes = m_value.get("space_types", Json::arrayValue);
+    n = spaceTypes.size();
+    for (Json::ArrayIndex i = 0; i < n; ++i){
+      modelObjectMetadata.push_back(makeModelObjectMetadata("OS:SpaceType", spaceTypes[i]));
+    }
+
+    // loop over construction_sets
+    Json::Value constructionSets = m_value.get("construction_sets", Json::arrayValue);
+    n = constructionSets.size();
+    for (Json::ArrayIndex i = 0; i < n; ++i){
+      modelObjectMetadata.push_back(makeModelObjectMetadata("OS:DefaultConstructionSet", constructionSets[i]));
+    }
+
+    // DLM: TODO set correct bounding box
     ThreeBoundingBox boundingBox(0,0,0,0,0,0,0,0,0,0);
-    ThreeSceneMetadata metadata(buildingStoryNames, boundingBox);
+    ThreeSceneMetadata metadata(buildingStoryNames, boundingBox, modelObjectMetadata);
 
     ThreeSceneObject sceneObject("", children);
 
@@ -690,12 +740,14 @@ namespace openstudio{
             std::string s = value2.asString();
             unsigned id = strtoul(s.c_str(), nullptr, 0);
             if (id > 100){
+              // DLM: TODO test code, remove
               bool test= false;
             }
             m_lastId = std::max(m_lastId, id);
           } else if (value2.isConvertibleTo(Json::ValueType::uintValue)){
             unsigned id = value2.asUInt();
             if (id > 100){
+              // DLM: TODO test code, remove
               bool test = false;
             }
             m_lastId = std::max(m_lastId, value2.asUInt());
