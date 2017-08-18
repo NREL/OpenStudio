@@ -1176,6 +1176,9 @@ namespace openstudio{
   ThreeModelObjectMetadata::ThreeModelObjectMetadata(const std::string& iddObjectType, const std::string& handle, const std::string& name)
     : m_iddObjectType(iddObjectType), m_handle(handle), m_name(name)
   {}
+
+  ThreeModelObjectMetadata::ThreeModelObjectMetadata()
+  {}
   
   ThreeModelObjectMetadata::ThreeModelObjectMetadata(const Json::Value& value)
   {
