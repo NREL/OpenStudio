@@ -271,14 +271,54 @@ namespace openstudio
 
           for (const auto& face : faces){
             try{
-              // ensure we can create a plane
+              // ensure we can create a plane before calling Surface ctor that might mess up the model
               Plane plane(face);
 
               Surface surface(face, model);
               surface.setName(name);
               surface.setSpace(*space);
+
+              // DLM: can we use these to set adjacencies?
+        //std::string outsideBoundaryCondition = userData.outsideBoundaryCondition();
+        //std::string outsideBoundaryConditionObjectName = userData.outsideBoundaryConditionObjectName();
+        //std::string outsideBoundaryConditionObjectHandle = userData.outsideBoundaryConditionObjectHandle();
+
             } catch (const std::exception& ){
               LOG_FREE(Warn, "modelFromThreeJS", "Could not create surface for vertices " << face);
+            }
+          }
+        }
+      }
+
+      // do intersections and matching between stories
+      std::vector<BuildingStory> stories = model.getConcreteModelObjects<BuildingStory>();
+      unsigned storiesN = stories.size();
+      for (unsigned i = 0; i < storiesN; ++i){
+        for (unsigned j = i + 1; j < storiesN; ++j){
+
+          // DLM: TODO add a bounding box check to story
+
+          for (auto& spaceI : stories[i].spaces()){
+            for (auto& spaceJ : stories[j].spaces()){
+              if (spaceI.boundingBox().intersects(spaceJ.boundingBox())){
+                spaceI.intersectSurfaces(spaceJ);
+                spaceI.matchSurfaces(spaceJ);
+              }
+            }
+          }
+        }
+      }
+
+      // do surface matching for spaces on same story
+      for (const auto& story: stories){
+        std::vector<Space> spaces = story.spaces();
+        unsigned spacesN = spaces.size();
+        for (unsigned i = 0; i < spacesN; ++i){
+          for (unsigned j = i + 1; j < spacesN; ++j){
+            if (spaces[i].boundingBox().intersects(spaces[j].boundingBox())){
+              // DLM: should not need to intersect on same floor?
+              spaces[i].intersectSurfaces(spaces[j]);
+              spaces[i].matchSurfaces(spaces[j]);
             }
           }
         }
