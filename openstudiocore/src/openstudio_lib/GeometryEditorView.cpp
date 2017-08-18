@@ -196,9 +196,9 @@ EditorWebView::EditorWebView(const openstudio::model::Model& model, QWidget *t_p
   } else {
     if ((model.getConcreteModelObjects<model::Space>().size() > 0) || (model.getConcreteModelObjects<model::ShadingSurfaceGroup>().size() > 0) || (model.getConcreteModelObjects<model::BuildingStory>().size() > 0)){
       m_newImportGeometry->setEnabled(false);
-      m_view->setHtml(QString("Model has existing geometry, floorplan editor disabled."));
+      m_view->load(QUrl("qrc:///library/geometry_editor_start.html"));
     } else{
-      m_view->setHtml(QString("OpenStudio Geometry Editor is an experimental feature, use with caution.<br><br>Create new floorplan to begin."));
+      m_view->load(QUrl("qrc:///library/geometry_editor_start.html"));
     }
     
   }
