@@ -26,98 +26,61 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
 
-#ifndef MODEL_RENDERINGCOLOR_HPP
-#define MODEL_RENDERINGCOLOR_HPP
+#ifndef MODEL_MODELMERGER_HPP
+#define MODEL_MODELMERGER_HPP
 
 #include "ModelAPI.hpp"
-#include "ResourceObject.hpp"
+#include "Model.hpp"
 
-class QColor;
+#include "../utilities/core/Logger.hpp"
 
-namespace openstudio {
-namespace model {
+#include <map>
 
-namespace detail {
+namespace openstudio
+{
+  namespace model
+  {
+    
+    class Space;
+    class ThermalZone;
+    class SpaceType;
+    class BuildingStory;
+    class BuildingUnit;
+    class DefaultConstructionSet;
 
-  class RenderingColor_Impl;
+    MODEL_API class ModelMerger
+    {
+    public:
+      ModelMerger();
 
-} // detail
+      /// Merges changes from newModel into currentModel
+      /// Handle mapping is mapping of handles in currentModel (keys) to handles in newModel (values)
+      void mergeModels(Model& currentModel, const Model& newModel, const std::map<UUID, UUID>& handleMapping);
 
-/** RenderingColor is a ResourceObject that wraps the OpenStudio IDD object 'OS_Rendering_Color'. */
-class MODEL_API RenderingColor : public ResourceObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+    private:
 
-  explicit RenderingColor(const Model& model);
+       REGISTER_LOGGER("openstudio.model.ModelMerger");
 
-  virtual ~RenderingColor() {}
+      void mergeSpace(Space& currentSpace, const Space& newSpace);
+      void mergeThermalZone(ThermalZone& currentThermalZone, const ThermalZone& newThermalZone);
+      void mergeSpaceType(SpaceType& currentSpaceType, const SpaceType& newSpaceType);
+      void mergeBuildingStory(BuildingStory& currentBuildingStory, const BuildingStory& newBuildingStory);
+      void mergeBuildingUnit(BuildingUnit& currentBuildingUnit, const BuildingUnit& newBuildingUnit);
+      void mergeDefaultConstructionSet(DefaultConstructionSet& currentDefaultConstructionSet, const DefaultConstructionSet& newDefaultConstructionSet);
 
-  static boost::optional<RenderingColor> fromColorString(const std::string& s, const Model& model);
+      boost::optional<UUID> getNewModelHandle(const UUID& currentHandle);
+      boost::optional<UUID> getCurrentModelHandle(const UUID& newHandle);
 
-  //@}
-  /** @name Static Methods */
-  //@{
+      boost::optional<WorkspaceObject> getCurrentModelObject(const WorkspaceObject& newObject);
 
-  static QColor randomColor();
+      Model m_currentModel;
+      Model m_newModel;
+      std::set<UUID> m_newMergedHandles;
+      std::vector<IddObjectType> m_iddObjectTypesToMerge;
+      std::map<UUID, UUID> m_currentToNewHandleMapping;
+      std::map<UUID, UUID> m_newToCurrentHandleMapping;
+    };
 
-  static IddObjectType iddObjectType();
-
-  //@}
-  /** @name Getters */
-  //@{
-
-  int renderingRedValue() const;
-
-  int renderingGreenValue() const;
-
-  int renderingBlueValue() const;
-
-  int renderingAlphaValue() const;
-
-  bool isRenderingAlphaValueDefaulted() const;
-
-  //@}
-  /** @name Setters */
-  //@{
-
-  bool setRenderingRedValue(int renderingRedValue);
-
-  bool setRenderingGreenValue(int renderingGreenValue);
-
-  bool setRenderingBlueValue(int renderingBlueValue);
-
-  bool setRenderingAlphaValue(int renderingAlphaValue);
-
-  void resetRenderingAlphaValue();
-
-  //@}
-
-  std::string colorString() const;
-
- protected:
-  /// @cond
-  typedef detail::RenderingColor_Impl ImplType;
-
-  friend class Model;
-  friend class openstudio::IdfObject;
-
-  explicit RenderingColor(std::shared_ptr<detail::RenderingColor_Impl> impl);
-
-  /// @endcond
- private:
-
-  REGISTER_LOGGER("openstudio.model.RenderingColor");
-};
-
-/** \relates RenderingColor*/
-typedef boost::optional<RenderingColor> OptionalRenderingColor;
-
-/** \relates RenderingColor*/
-typedef std::vector<RenderingColor> RenderingColorVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_RENDERINGCOLOR_HPP
-
+  }
+}
+#endif //MODEL_MODELMERGER_HPP

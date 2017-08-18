@@ -26,98 +26,46 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
 
-#ifndef MODEL_RENDERINGCOLOR_HPP
-#define MODEL_RENDERINGCOLOR_HPP
+#include <gtest/gtest.h>
 
-#include "ModelAPI.hpp"
-#include "ResourceObject.hpp"
+#include "ModelFixture.hpp"
 
-class QColor;
+#include "../ThreeJSForwardTranslator.hpp"
+#include "../ThreeJSReverseTranslator.hpp"
+#include "../Model.hpp"
+#include "../Space.hpp"
+#include "../Space_Impl.hpp"
+#include "../Surface.hpp"
+#include "../Surface_Impl.hpp"
 
-namespace openstudio {
-namespace model {
+#include "../../utilities/geometry/ThreeJS.hpp"
 
-namespace detail {
+using namespace openstudio;
+using namespace openstudio::model;
 
-  class RenderingColor_Impl;
+TEST_F(ModelFixture,ThreeJSForwardTranslator_ExampleModel) {
 
-} // detail
+  ThreeJSForwardTranslator ft;
+  ThreeJSReverseTranslator rt;
 
-/** RenderingColor is a ResourceObject that wraps the OpenStudio IDD object 'OS_Rendering_Color'. */
-class MODEL_API RenderingColor : public ResourceObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  Model model = exampleModel();
+  model.save(resourcesPath() / toPath("model/exampleModel.osm"), true);
 
-  explicit RenderingColor(const Model& model);
+  // triangulated, for display
+  ThreeScene scene = ft.modelToThreeJS(model, true);
+  std::string json = scene.toJSON();
+  EXPECT_TRUE(ThreeScene::load(json));
 
-  virtual ~RenderingColor() {}
+  // not triangulated, for model transport/translation
+  scene = ft.modelToThreeJS(model, false);
+  json = scene.toJSON();
+  EXPECT_TRUE(ThreeScene::load(json));
 
-  static boost::optional<RenderingColor> fromColorString(const std::string& s, const Model& model);
+  boost::optional<Model> model2 = rt.modelFromThreeJS(scene);
+  ASSERT_TRUE(model2);
 
-  //@}
-  /** @name Static Methods */
-  //@{
+  model2->save(resourcesPath() / toPath("model/ThreeJS_ExampleModel.osm"), true);
 
-  static QColor randomColor();
-
-  static IddObjectType iddObjectType();
-
-  //@}
-  /** @name Getters */
-  //@{
-
-  int renderingRedValue() const;
-
-  int renderingGreenValue() const;
-
-  int renderingBlueValue() const;
-
-  int renderingAlphaValue() const;
-
-  bool isRenderingAlphaValueDefaulted() const;
-
-  //@}
-  /** @name Setters */
-  //@{
-
-  bool setRenderingRedValue(int renderingRedValue);
-
-  bool setRenderingGreenValue(int renderingGreenValue);
-
-  bool setRenderingBlueValue(int renderingBlueValue);
-
-  bool setRenderingAlphaValue(int renderingAlphaValue);
-
-  void resetRenderingAlphaValue();
-
-  //@}
-
-  std::string colorString() const;
-
- protected:
-  /// @cond
-  typedef detail::RenderingColor_Impl ImplType;
-
-  friend class Model;
-  friend class openstudio::IdfObject;
-
-  explicit RenderingColor(std::shared_ptr<detail::RenderingColor_Impl> impl);
-
-  /// @endcond
- private:
-
-  REGISTER_LOGGER("openstudio.model.RenderingColor");
-};
-
-/** \relates RenderingColor*/
-typedef boost::optional<RenderingColor> OptionalRenderingColor;
-
-/** \relates RenderingColor*/
-typedef std::vector<RenderingColor> RenderingColorVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_RENDERINGCOLOR_HPP
-
+  EXPECT_EQ(model.getConcreteModelObjects<Space>().size(), model2->getConcreteModelObjects<Space>().size());
+  EXPECT_EQ(model.getConcreteModelObjects<Surface>().size(), model2->getConcreteModelObjects<Surface>().size());
+}

@@ -26,72 +26,39 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
 
-#include <gtest/gtest.h>
+#ifndef MODEL_THREEJSFORWARDTRANSLATOR_HPP
+#define MODEL_THREEJSFORWARDTRANSLATOR_HPP
 
-#include "ModelFixture.hpp"
+#include "ModelAPI.hpp"
 
-#include "../ThreeJS.hpp"
-#include "../Model.hpp"
-#include "../Space.hpp"
-#include "../Space_Impl.hpp"
-#include "../Surface.hpp"
-#include "../Surface_Impl.hpp"
+#include "Model.hpp"
 
-#include "../../utilities/geometry/ThreeJS.hpp"
-#include "../../utilities/geometry/FloorplanJS.hpp"
+#include "../utilities/geometry/ThreeJS.hpp"
+#include "../utilities/core/Logger.hpp"
 
-using namespace openstudio;
-using namespace openstudio::model;
+namespace openstudio
+{
+  namespace model
+  {
 
-TEST_F(ModelFixture,ThreeJS_ExampleModel) {
-  Model model = exampleModel();
-  model.save(resourcesPath() / toPath("model/exampleModel.osm"), true);
+    MODEL_API class ThreeJSForwardTranslator
+    {
+    public:
+      ThreeJSForwardTranslator();
 
-  // triangulated, for display
-  ThreeScene scene = modelToThreeJS(model, true);
-  std::string json = scene.toJSON();
-  EXPECT_TRUE(ThreeScene::load(json));
+      /// identifies ThreeJS faces in OpenStudio format (e.g. unlimited number of vertices)
+      static unsigned openstudioFaceFormatId();
 
-  // not triangulated, for model transport/translation
-  scene = modelToThreeJS(model, false);
-  json = scene.toJSON();
-  EXPECT_TRUE(ThreeScene::load(json));
+      /// Convert an OpenStudio Model to ThreeJS format
+      /// Triangulate surfaces if the ThreeJS representation will be used for display
+      /// Do not triangulate surfaces if the ThreeJs representation will be translated back to a model
+      ThreeScene modelToThreeJS(const Model& model, bool triangulateSurfaces);
+      ThreeScene modelToThreeJS(const Model& model, bool triangulateSurfaces, std::function<void(double)> updatePercentage);
+    
+    private:
+      REGISTER_LOGGER("openstudio.model.ThreeJSForwardTranslator");
+    };
 
-  boost::optional<Model> model2 = modelFromThreeJS(scene);
-  ASSERT_TRUE(model2);
-
-  model2->save(resourcesPath() / toPath("model/ThreeJS_ExampleModel.osm"), true);
-
-  EXPECT_EQ(model.getConcreteModelObjects<Space>().size(), model2->getConcreteModelObjects<Space>().size());
-  EXPECT_EQ(model.getConcreteModelObjects<Surface>().size(), model2->getConcreteModelObjects<Surface>().size());
+  }
 }
-
-TEST_F(ModelFixture,ThreeJS_FloorplanJS) {
-  openstudio::path p = resourcesPath() / toPath("utilities/Geometry/floorplan.json");
-  ASSERT_TRUE(exists(p));
-
-  boost::optional<FloorplanJS> floorPlan = FloorplanJS::load(toString(p));
-  ASSERT_TRUE(floorPlan);
-
-  // triangulated, for display
-  ThreeScene scene = floorPlan->toThreeScene(false);
-  std::string json = scene.toJSON();
-  EXPECT_TRUE(ThreeScene::load(json));
-
-  // not triangulated, for model transport/translation
-  scene = floorPlan->toThreeScene(true);
-  json = scene.toJSON();
-  EXPECT_TRUE(ThreeScene::load(json));
-
-  boost::optional<Model> model = modelFromThreeJS(scene);
-  ASSERT_TRUE(model);
-
-  model->save(resourcesPath() / toPath("model/ThreeJS_FloorplanJS.osm"), true);
-
-  openstudio::path out = resourcesPath() / toPath("model/ThreeJS_FloorplanJS.json");
-  json = scene.toJSON(true);
-  openstudio::filesystem::ofstream file(out);
-  ASSERT_TRUE(file.is_open());
-  file << json;
-  file.close();
-}
+#endif //MODEL_THREEJSFORWARDTRANSLATOR_HPP

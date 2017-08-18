@@ -26,98 +26,34 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
 
-#ifndef MODEL_RENDERINGCOLOR_HPP
-#define MODEL_RENDERINGCOLOR_HPP
+#ifndef MODEL_FLOORPLANJSFORWARDTRANSLATOR_HPP
+#define MODEL_FLOORPLANJSFORWARDTRANSLATOR_HPP
 
 #include "ModelAPI.hpp"
-#include "ResourceObject.hpp"
 
-class QColor;
+#include "Model.hpp"
 
-namespace openstudio {
-namespace model {
+#include "../utilities/geometry/FloorplanJS.hpp"
+#include "../utilities/core/Logger.hpp"
 
-namespace detail {
+namespace openstudio
+{
+  namespace model
+  {
 
-  class RenderingColor_Impl;
+    MODEL_API class FloorplanJSForwardTranslator
+    {
+    public:
 
-} // detail
+      FloorplanJSForwardTranslator();
 
-/** RenderingColor is a ResourceObject that wraps the OpenStudio IDD object 'OS_Rendering_Color'. */
-class MODEL_API RenderingColor : public ResourceObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+      /// Update FloorplanJS to match OpenStudio Model
+      FloorplanJS updateFloorplanJS(const FloorplanJS& floorplan, const Model& model, bool removeMissingObjects);
 
-  explicit RenderingColor(const Model& model);
-
-  virtual ~RenderingColor() {}
-
-  static boost::optional<RenderingColor> fromColorString(const std::string& s, const Model& model);
-
-  //@}
-  /** @name Static Methods */
-  //@{
-
-  static QColor randomColor();
-
-  static IddObjectType iddObjectType();
-
-  //@}
-  /** @name Getters */
-  //@{
-
-  int renderingRedValue() const;
-
-  int renderingGreenValue() const;
-
-  int renderingBlueValue() const;
-
-  int renderingAlphaValue() const;
-
-  bool isRenderingAlphaValueDefaulted() const;
-
-  //@}
-  /** @name Setters */
-  //@{
-
-  bool setRenderingRedValue(int renderingRedValue);
-
-  bool setRenderingGreenValue(int renderingGreenValue);
-
-  bool setRenderingBlueValue(int renderingBlueValue);
-
-  bool setRenderingAlphaValue(int renderingAlphaValue);
-
-  void resetRenderingAlphaValue();
-
-  //@}
-
-  std::string colorString() const;
-
- protected:
-  /// @cond
-  typedef detail::RenderingColor_Impl ImplType;
-
-  friend class Model;
-  friend class openstudio::IdfObject;
-
-  explicit RenderingColor(std::shared_ptr<detail::RenderingColor_Impl> impl);
-
-  /// @endcond
- private:
-
-  REGISTER_LOGGER("openstudio.model.RenderingColor");
-};
-
-/** \relates RenderingColor*/
-typedef boost::optional<RenderingColor> OptionalRenderingColor;
-
-/** \relates RenderingColor*/
-typedef std::vector<RenderingColor> RenderingColorVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_RENDERINGCOLOR_HPP
-
+    private:
+      REGISTER_LOGGER("openstudio.model.FloorplanJSForwardTranslator");
+    };
+  
+  }
+}
+#endif //MODEL_FLOORPLANJSFORWARDTRANSLATOR_HPP

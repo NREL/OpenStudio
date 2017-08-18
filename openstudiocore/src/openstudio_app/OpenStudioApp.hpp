@@ -92,7 +92,7 @@ class OpenStudioApp : public OSAppBase
 
   OpenStudioApp( int & argc, char ** argv);
 
-  virtual ~OpenStudioApp() {}
+  virtual ~OpenStudioApp();
 
   virtual std::shared_ptr<OSDocument> currentDocument() const override;
 

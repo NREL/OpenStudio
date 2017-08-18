@@ -26,27 +26,53 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
 
-#ifndef MODEL_THREEJS_HPP
-#define MODEL_THREEJS_HPP
+#include <gtest/gtest.h>
 
-#include "ModelAPI.hpp"
+#include "ModelFixture.hpp"
 
-#include "Model.hpp"
+#include "../ThreeJSReverseTranslator.hpp"
+#include "../Model.hpp"
+#include "../Space.hpp"
+#include "../Space_Impl.hpp"
+#include "../Surface.hpp"
+#include "../Surface_Impl.hpp"
 
-#include "../utilities/geometry/ThreeJS.hpp"
+#include "../../utilities/geometry/ThreeJS.hpp"
+#include "../../utilities/geometry/FloorplanJS.hpp"
 
-namespace openstudio
-{
-  namespace model
-  {
-    /// Convert an OpenStudio Model to ThreeJS format
-    /// Triangulate surfaces if the ThreeJS representation will be used for display
-    /// Do not triangulate surfaces if the ThreeJs representation will be translated back to a model
-    MODEL_API ThreeScene modelToThreeJS(Model model, bool triangulateSurfaces);
-    MODEL_API ThreeScene modelToThreeJS(Model model, bool triangulateSurfaces, std::function<void(double)> updatePercentage);
-    
-    MODEL_API boost::optional<Model> modelFromThreeJS(const ThreeScene& scene);
+using namespace openstudio;
+using namespace openstudio::model;
 
-  }
+
+TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS) {
+
+  ThreeJSReverseTranslator rt;
+
+  openstudio::path p = resourcesPath() / toPath("utilities/Geometry/floorplan.json");
+  ASSERT_TRUE(exists(p));
+
+  boost::optional<FloorplanJS> floorPlan = FloorplanJS::load(toString(p));
+  ASSERT_TRUE(floorPlan);
+
+  // triangulated, for display
+  ThreeScene scene = floorPlan->toThreeScene(false);
+  std::string json = scene.toJSON();
+  EXPECT_TRUE(ThreeScene::load(json));
+
+  // not triangulated, for model transport/translation
+  scene = floorPlan->toThreeScene(true);
+  json = scene.toJSON();
+  EXPECT_TRUE(ThreeScene::load(json));
+
+  boost::optional<Model> model = rt.modelFromThreeJS(scene);
+  ASSERT_TRUE(model);
+
+  model->save(resourcesPath() / toPath("model/ThreeJS_FloorplanJS.osm"), true);
+
+  openstudio::path out = resourcesPath() / toPath("model/ThreeJS_FloorplanJS.json");
+  json = scene.toJSON(true);
+  openstudio::filesystem::ofstream file(out);
+  ASSERT_TRUE(file.is_open());
+  file << json;
+  file.close();
 }
-#endif //MODEL_THREEJS_HPP

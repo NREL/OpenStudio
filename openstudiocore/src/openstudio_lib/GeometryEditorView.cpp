@@ -33,9 +33,18 @@
 
 #include "../model/Model.hpp"
 #include "../model/Model_Impl.hpp"
-#include "../model/ThreeJS.hpp"
+#include "../model/ModelMerger.hpp"
+#include "../model/ThreeJSReverseTranslator.hpp"
+#include "../model/FloorplanJSForwardTranslator.hpp"
+#include "../model/FloorplanJSForwardTranslator.hpp"
+#include "../model/BuildingStory.hpp"
+#include "../model/BuildingStory_Impl.hpp"
 #include "../model/PlanarSurfaceGroup.hpp"
 #include "../model/PlanarSurfaceGroup_Impl.hpp"
+#include "../model/Space.hpp"
+#include "../model/Space_Impl.hpp"
+#include "../model/ShadingSurfaceGroup.hpp"
+#include "../model/ShadingSurfaceGroup_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Checksum.hpp"
@@ -45,6 +54,8 @@
 #include <utilities/idd/IddEnums.hxx>
 
 #include <QDialog>
+#include <QComboBox>
+#include <QMessageBox>
 #include <QTimer>
 #include <QStackedWidget>
 #include <QVBoxLayout>
@@ -80,21 +91,38 @@ EditorWebView::EditorWebView(const openstudio::model::Model& model, QWidget *t_p
   : QWidget(t_parent),
     m_model(model),
     m_isIP(true),
-    m_previewBtn(new QPushButton("Preview")),
+    m_geometryEditorStarted(false),
+    m_geometryEditorLoaded(false),
+    m_javascriptRunning(false),
+    m_geometrySourceComboBox(new QComboBox()),
+    m_newImportGeometry(new QPushButton("New")),
     m_progressBar(new QProgressBar()),
     m_refreshBtn(new QPushButton("Refresh")),
+    m_previewBtn(new QPushButton("Preview")),
     m_mergeBtn(new QPushButton("Merge"))
 {
+  openstudio::OSAppBase * app = OSAppBase::instance();
+  OS_ASSERT(app);
+  m_document = app->currentDocument();
+  OS_ASSERT(m_document);
 
   auto mainLayout = new QVBoxLayout;
   setLayout(mainLayout);
 
+  connect(m_geometrySourceComboBox, &QComboBox::currentTextChanged, this, &EditorWebView::geometrySourceChanged);
+  connect(m_newImportGeometry, &QPushButton::clicked, this, &EditorWebView::newImportClicked);
   connect(m_refreshBtn, &QPushButton::clicked, this, &EditorWebView::refreshClicked);
   connect(m_previewBtn, &QPushButton::clicked, this, &EditorWebView::previewClicked);
   connect(m_mergeBtn, &QPushButton::clicked, this, &EditorWebView::mergeClicked);
 
   auto hLayout = new QHBoxLayout(this);
   mainLayout->addLayout(hLayout);
+
+  m_geometrySourceComboBox->addItem("Floorplan");
+  m_geometrySourceComboBox->setCurrentIndex(0);
+  hLayout->addWidget(m_geometrySourceComboBox);
+
+  hLayout->addWidget(m_newImportGeometry);
 
   hLayout->addStretch();
 
@@ -106,12 +134,15 @@ EditorWebView::EditorWebView(const openstudio::model::Model& model, QWidget *t_p
 
   hLayout->addWidget(m_refreshBtn, 0, Qt::AlignVCenter);
   m_refreshBtn->setVisible(true);
+  m_refreshBtn->setEnabled(false);
 
   hLayout->addWidget(m_previewBtn, 0, Qt::AlignVCenter);
   m_previewBtn->setVisible(true);
+  m_previewBtn->setEnabled(false);
 
   hLayout->addWidget(m_mergeBtn, 0, Qt::AlignVCenter);
   m_mergeBtn->setVisible(true);
+  m_mergeBtn->setEnabled(false);
 
   m_view = new QWebEngineView(this);
   m_view->settings()->setAttribute(QWebEngineSettings::WebAttribute::LocalContentCanAccessRemoteUrls, true);
@@ -131,63 +162,247 @@ EditorWebView::EditorWebView(const openstudio::model::Model& model, QWidget *t_p
   //mainLayout->addWidget(m_view, 10, Qt::AlignTop);
   mainLayout->addWidget(m_view);
 
+  connect(m_document.get(), &OSDocument::modelSaving, this, &EditorWebView::saveClickedBlocking);
+
+  m_checkForUpdateTimer = new QTimer(this);
+  connect(m_checkForUpdateTimer, SIGNAL(timeout()), this, SLOT(checkForUpdate()));
+
   openstudio::path p = floorplanPath();
   if (exists(p)){
     openstudio::filesystem::ifstream ifs(p);
     OS_ASSERT(ifs.is_open());
-    std::string contents( (std::istreambuf_iterator<char>(ifs) ), (std::istreambuf_iterator<char>() ) );
+    std::string contents((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
     ifs.close();
     m_floorplan = FloorplanJS::load(contents);
-  }
 
-  m_view->load(QUrl("qrc:///library/geometry_editor.html"));
+    if (m_floorplan)
+    {
+      // floorplan loaded correctly
+
+      // update with current model content
+      model::FloorplanJSForwardTranslator ft;
+      m_floorplan = ft.updateFloorplanJS(*m_floorplan, m_model, true);
+      
+      // start the editor
+      m_newImportGeometry->setEnabled(false);
+      m_geometryEditorStarted = true;
+      m_geometryEditorLoaded = false;
+      m_view->load(QUrl("qrc:///library/embeddable_geometry_editor.html"));
+    } else {
+      m_newImportGeometry->setEnabled(false);
+      m_view->setHtml(QString("Failed to open existing floorplan."));
+    }
+
+  } else {
+    if ((model.getConcreteModelObjects<model::Space>().size() > 0) || (model.getConcreteModelObjects<model::ShadingSurfaceGroup>().size() > 0) || (model.getConcreteModelObjects<model::BuildingStory>().size() > 0)){
+      m_newImportGeometry->setEnabled(false);
+      m_view->load(QUrl("qrc:///library/geometry_editor_start.html"));
+    } else{
+      m_view->load(QUrl("qrc:///library/geometry_editor_start.html"));
+    }
+    
+  }
 }
 
 EditorWebView::~EditorWebView()
 {
-  saveExport();
+  saveClickedBlocking("");
   delete m_view;
 }
+
+void EditorWebView::geometrySourceChanged(const QString& text)
+{
+  if (text == "Floorplan"){
+    m_newImportGeometry->setText("New");
+  }
+}
+
+void EditorWebView::newImportClicked()
+{
+  if (m_geometrySourceComboBox->currentText() == "Floorplan"){
+    m_newImportGeometry->setEnabled(false);
+
+    m_geometryEditorStarted = true;
+    m_geometryEditorLoaded = false;
+
+    m_view->load(QUrl("qrc:///library/embeddable_geometry_editor.html"));
+
+    onChanged();
+  }
+}
+
 
 void EditorWebView::refreshClicked()
 {
   m_view->triggerPageAction(QWebEnginePage::ReloadAndBypassCache);
 }
 
+void EditorWebView::saveClickedBlocking(const openstudio::path&)
+{
+  doExport();
+  saveExport();
+}
+
 void EditorWebView::previewClicked()
 {
-  m_previewBtn->setEnabled(false);
+  if (m_geometryEditorLoaded && !m_javascriptRunning){
+    m_previewBtn->setEnabled(false);
 
-  QString javascript = QString("JSON.stringify(api.doExport());");
-  m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_export = v; QTimer::singleShot(0, this, &EditorWebView::previewExport);});
+    m_javascriptRunning = true;
+    m_document->disable();
+    QString javascript = QString("JSON.stringify(window.api.exportFloorplan());");
+    m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_export = v; QTimer::singleShot(0, this, &EditorWebView::previewExport); m_javascriptRunning = false; });
+
+    // re-enable document in previewExport
+  }
 }
 
 void EditorWebView::mergeClicked()
 {
-  m_mergeBtn->setEnabled(false);
+  if (m_geometryEditorLoaded && !m_javascriptRunning){
+    m_mergeBtn->setEnabled(false);
 
-  QString javascript = QString("JSON.stringify(api.doExport());");
-  m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_export = v; QTimer::singleShot(0, this, &EditorWebView::mergeExport);});
+    m_javascriptRunning = true;
+    m_document->disable();
+    QString javascript = QString("JSON.stringify(window.api.exportFloorplan());");
+    m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_export = v; QTimer::singleShot(0, this, &EditorWebView::mergeExport); m_javascriptRunning = false; });
+
+     // re-enable document in mergeExport
+  }
 }
 
 void EditorWebView::translateExport()
 {
-  std::string json = m_export.value<QString>().toStdString();
-
+  model::ThreeJSReverseTranslator rt;
   boost::optional<model::Model> model;
-  boost::optional<FloorplanJS> floorplan = FloorplanJS::load(json);
-  if (floorplan){
-    ThreeScene scene = floorplan->toThreeScene(true);
-    model = model::modelFromThreeJS(scene);
+  if (m_floorplan){
+    ThreeScene scene = m_floorplan->toThreeScene(true);
+    model = rt.modelFromThreeJS(scene);
+  } else{
+    // DLM: this is an error, the editor produced a JSON we can't read
   }
   
   if (model){
     m_exportModel = *model;
+    m_exportModelHandleMapping = rt.handleMapping();
   } else{
-    //m_exportModel = model::Model();
-    m_exportModel = model::exampleModel();
+    // DLM: this is an error, either floorplan was empty or could not be translated
+    m_exportModel = model::Model();
+    m_exportModelHandleMapping.clear();
   }
   
+}
+
+void EditorWebView::startEditor()
+{
+   m_document->disable();
+
+  // set config
+  {
+    OS_ASSERT(!m_javascriptRunning);
+
+    m_javascriptRunning = true;
+
+    std::string json = "{";
+    if (m_floorplan){
+      json += "showMapDialogOnStart: false";
+    } else{
+      json += "showMapDialogOnStart: true";
+    }
+    json += "}";
+
+    QString javascript = QString("window.api.setConfig(") + QString::fromStdString(json) + QString(");");
+    m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_javascriptRunning = false; });
+    while (m_javascriptRunning){
+      OSAppBase::instance()->processEvents(QEventLoop::ExcludeUserInputEvents);
+    }
+  }
+
+  // start the app
+  {
+    OS_ASSERT(!m_javascriptRunning);
+
+    m_javascriptRunning = true;
+
+    QString javascript = QString("window.api.init();");
+    m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_javascriptRunning = false; });
+    while (m_javascriptRunning){
+      OSAppBase::instance()->processEvents(QEventLoop::ExcludeUserInputEvents);
+    }
+  }
+
+  // create library from current model
+  {
+    OS_ASSERT(!m_javascriptRunning);
+
+    if (m_floorplan){
+
+      // import the current floorplan
+      m_javascriptRunning = true;
+
+      std::string json = m_floorplan->toJSON(false);
+
+      QString javascript = QString("window.api.openFloorplan(JSON.stringify(") + QString::fromStdString(json) + QString("));");
+      m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_javascriptRunning = false; });
+      while (m_javascriptRunning){
+        OSAppBase::instance()->processEvents(QEventLoop::ExcludeUserInputEvents);
+      }
+
+    } else{
+
+      // import current model content as library
+      FloorplanJS floorplan;
+      model::FloorplanJSForwardTranslator ft;
+      floorplan = ft.updateFloorplanJS(floorplan, m_model, false);
+
+      m_javascriptRunning = true;
+
+      std::string json = floorplan.toJSON(false);
+      // DLM: temp
+      //Json::Value value;
+      //Json::Reader reader;
+      //bool parsingSuccessful = reader.parse(json, value);
+      //value.removeMember("stories");
+      //Json::FastWriter writer;
+      //json = writer.write(value);
+
+      QString javascript = QString("window.api.importLibrary(JSON.stringify(") + QString::fromStdString(json) + QString("));");
+      m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_javascriptRunning = false; });
+      while (m_javascriptRunning){
+        OSAppBase::instance()->processEvents(QEventLoop::ExcludeUserInputEvents);
+      }
+    }
+  }
+
+  // start checking for updates
+  m_versionNumber = 0;
+  m_checkForUpdateTimer->start(1000);
+
+  m_document->enable();
+}
+
+void EditorWebView::doExport()
+{
+  if (m_geometryEditorLoaded && !m_javascriptRunning){
+    m_javascriptRunning = true;
+    m_document->disable();
+    QString javascript = QString("JSON.stringify(window.api.exportFloorplan());");
+    m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_export = v; m_javascriptRunning = false; });
+    while (m_javascriptRunning){
+      OSAppBase::instance()->processEvents(QEventLoop::ExcludeUserInputEvents);
+    }
+    m_document->enable();
+
+    // DLM: what if this fails?
+    std::string contents = m_export.value<QString>().toStdString();
+    m_floorplan = FloorplanJS::load(contents);
+
+    if (!m_floorplan){
+      // DLM: This is an error
+      bool t = false;
+    }
+
+  }
 }
 
 void EditorWebView::saveExport()
@@ -201,17 +416,12 @@ void EditorWebView::saveExport()
     if (!out.empty()){
       if (checksum(contents) != checksum(out)){
 
-        m_floorplan = FloorplanJS::load(contents);
-
         openstudio::filesystem::ofstream file(out);
         OS_ASSERT(file.is_open());
         file << contents;
         file.close();
 
-        openstudio::OSAppBase * app = OSAppBase::instance();
-        if (app && app->currentDocument()) {
-          app->currentDocument()->markAsModified();
-        }
+        onChanged();
       }
     }
   }
@@ -219,14 +429,24 @@ void EditorWebView::saveExport()
 
 void EditorWebView::previewExport()
 {
-  saveExport();
+  // do the export 
+  doExport();
+
+  // translate the exported floorplan
   translateExport();
 
-  std::stringstream ss;
-  ss << m_exportModel;
-  std::string s = ss.str();
+  // merge export model into clone of m_model
+  bool keepHandles = true;
+  model::Model temp = m_model.clone(keepHandles).cast<model::Model>();
+  model::ModelMerger mm;
+  mm.mergeModels(temp, m_exportModel, m_exportModelHandleMapping);
 
-  PreviewWebView* webView = new PreviewWebView(m_exportModel);
+  // do not update floorplan since this is not a real merge
+
+  // save the exported floorplan
+  saveExport();
+
+  PreviewWebView* webView = new PreviewWebView(temp);
   QLayout* layout = new QVBoxLayout();
   layout->addWidget(webView);
 
@@ -236,23 +456,62 @@ void EditorWebView::previewExport()
   dialog->setLayout(layout);
   dialog->open();
 
+  m_document->enable();
   m_previewBtn->setEnabled(true);
 }
 
 void EditorWebView::mergeExport()
 {
-  saveExport();
+  // do the export 
+  doExport();
+
+  // translate the exported floorplan
   translateExport();
 
-  // mega lame merge
-  for (auto& surfaceGroup : m_model.getModelObjects<model::PlanarSurfaceGroup>()){
-    surfaceGroup.remove();
-  }
-  for (auto& surfaceGroup : m_exportModel.getModelObjects<model::PlanarSurfaceGroup>()){
-    surfaceGroup.clone(m_model);
-  }
+  // merge export model into m_model
+  model::ModelMerger mm;
+  mm.mergeModels(m_model, m_exportModel, m_exportModelHandleMapping);
 
+  // make sure handles get updated in floorplan and the exported string
+  model::FloorplanJSForwardTranslator ft;
+  m_floorplan = ft.updateFloorplanJS(*m_floorplan, m_model, false);
+  m_export = QString::fromStdString(m_floorplan->toJSON());
+
+  // save the exported floorplan
+  saveExport();
+
+  m_document->enable();
   m_mergeBtn->setEnabled(true);
+}
+
+void EditorWebView::checkForUpdate()
+{
+  if (!m_javascriptRunning){
+    m_javascriptRunning = true;
+    
+    // DLM: don't disable and enable the tabs, too distracting
+    //m_document->disable();
+
+    unsigned currentVersionNumber = m_versionNumber;
+
+    QString javascript = QString("window.versionNumber;");
+    m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_versionNumber = v.toUInt();  m_javascriptRunning = false; });
+    while (m_javascriptRunning){
+      // DLM: instead ignore user events
+      OSAppBase::instance()->processEvents(QEventLoop::ExcludeUserInputEvents);
+    }
+
+    //m_document->enable();
+
+    if (currentVersionNumber != m_versionNumber){
+      onChanged();
+    }
+  }
+}
+
+void EditorWebView::onChanged()
+{
+  m_document->markAsModified();
 }
 
 void EditorWebView::onUnitSystemChange(bool t_isIP) 
@@ -263,20 +522,29 @@ void EditorWebView::onUnitSystemChange(bool t_isIP)
 
 void EditorWebView::onLoadFinished(bool ok)
 {
-  if (m_floorplan){
-    std::string json = m_floorplan->toJSON(false);
-    QString javascript = QString("api.doImport(JSON.stringify(") + QString::fromStdString(json) + QString("));");
-    m_view->page()->runJavaScript(javascript);
-  }
+  OS_ASSERT(!m_javascriptRunning);
 
   QString title = m_view->title();
   if (ok){
+    if (m_geometryEditorStarted){
+
+      // can't call javascript now, page is still loading
+      QTimer::singleShot(0, this, &EditorWebView::startEditor);
+
+      m_geometryEditorLoaded = true;
+      m_refreshBtn->setEnabled(true);
+      m_previewBtn->setEnabled(true);
+      m_mergeBtn->setEnabled(true);
+    }
+
     m_progressBar->setStyleSheet("");
     m_progressBar->setFormat("");
+    m_progressBar->setVisible(false);
     m_progressBar->setTextVisible(false);
   } else{
     m_progressBar->setStyleSheet("QProgressBar::chunk {background-color: #FF0000;}");
     m_progressBar->setFormat("Error");
+    m_progressBar->setVisible(true);
     m_progressBar->setTextVisible(true);
   }
 }
@@ -293,6 +561,7 @@ void EditorWebView::onLoadStarted()
 {
   m_progressBar->setStyleSheet("");
   m_progressBar->setFormat("");
+  m_progressBar->setVisible(true);
   m_progressBar->setTextVisible(false);
 }
 
@@ -305,11 +574,7 @@ void EditorWebView::onRenderProcessTerminated(QWebEnginePage::RenderProcessTermi
 
 openstudio::path EditorWebView::floorplanPath() const
 {
-  openstudio::OSAppBase * app = OSAppBase::instance();
-  if (app && app->currentDocument()) {
-    return toPath(app->currentDocument()->modelTempDir()) / toPath("resources/floorplan.json");
-  }
-  return path();
+  return toPath(m_document->modelTempDir()) / toPath("resources/floorplan.json");
 }
 
 } // openstudio

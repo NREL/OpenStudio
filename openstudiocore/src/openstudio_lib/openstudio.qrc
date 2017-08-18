@@ -542,7 +542,8 @@
 
 
     <file>library/tid_api.xml</file>
-    <file>library/geometry_editor.html</file>
+    <file>library/embeddable_geometry_editor.html</file>
+    <file>library/geometry_editor_start.html</file>
     <file>library/geometry_preview.html</file>
     
     

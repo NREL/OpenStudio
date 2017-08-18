@@ -27,9 +27,11 @@
  **********************************************************************************************************************/
 
 #include "GeometryPreviewView.hpp"
+#include "OSAppBase.hpp"
+#include "OSDocument.hpp"
 
 #include "../model/Model_Impl.hpp"
-#include "../model/ThreeJS.hpp"
+#include "../model/ThreeJSForwardTranslator.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Application.hpp"
@@ -78,6 +80,14 @@ PreviewWebView::PreviewWebView(const model::Model& model, QWidget *t_parent)
     m_progressBar(new QProgressBar()),
     m_refreshBtn(new QPushButton("Refresh"))
 {
+
+  openstudio::OSAppBase * app = OSAppBase::instance();
+  OS_ASSERT(app);
+  m_document = app->currentDocument();
+  OS_ASSERT(m_document);
+
+  std::shared_ptr<OSDocument> m_document;
+
   auto mainLayout = new QVBoxLayout;
   setLayout(mainLayout);
 
@@ -164,12 +174,17 @@ void PreviewWebView::onLoadFinished(bool ok)
   if (m_json.isEmpty()){
     std::function<void(double)> updatePercentage = std::bind(&PreviewWebView::onTranslateProgress, this, _1);
     //ThreeScene scene = modelToThreeJS(m_model.clone(true).cast<model::Model>(), true, updatePercentage); // triangulated
-    ThreeScene scene = modelToThreeJS(m_model, true, updatePercentage); // triangulated
+
+    model::ThreeJSForwardTranslator ft;
+    ThreeScene scene = ft.modelToThreeJS(m_model, true, updatePercentage); // triangulated
     std::string json = scene.toJSON(false); // no pretty print
     m_json = QString::fromStdString(json);
   } else {
     m_progressBar->setValue(90);
   }
+
+  // disable doc
+  m_document->disable();
 
   // call init and animate
   QString javascript = QString("init(") + m_json + QString(");\n animate();\n initDatGui();");
@@ -196,7 +211,9 @@ void PreviewWebView::onTranslateProgress(double percentage)
 
 void PreviewWebView::onJavaScriptFinished(const QVariant &v)
 {
+  m_document->enable();
   m_progressBar->setValue(100);
+  m_progressBar->setVisible(false);
 }
 
 void PreviewWebView::onRenderProcessTerminated(QWebEnginePage::RenderProcessTerminationStatus terminationStatus, int exitCode)

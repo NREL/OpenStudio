@@ -43,6 +43,8 @@ class QPushButton;
 
 namespace openstudio {
 
+class OSDocument;
+
 class GeometryPreviewView : public QWidget
 {
   Q_OBJECT
@@ -92,6 +94,7 @@ class PreviewWebView : public QWidget
     QPushButton * m_refreshBtn;
 
     QWebEngineView * m_view;
+    std::shared_ptr<OSDocument> m_document;
 
     QString m_json;
 };
