@@ -30,9 +30,172 @@
 
 #include "ModelFixture.hpp"
 
+#include "../Model.hpp"
+
 #include "../CentralHeatPumpSystem.hpp"
 #include "../CentralHeatPumpSystem_Impl.hpp"
 
+#include "../ChillerElectricEIR.hpp"
+#include "../CentralHeatPumpSystemModule.hpp"
+#include "../CentralHeatPumpSystemModule_Impl.hpp"
+
+#include "../Schedule.hpp"
+
+// TODO: Write the tests for the connections to the PlantLoops
+#include "../PlantLoop.hpp"
+#include "../Node.hpp"
+#include "../Node_Impl.hpp"
+
 using namespace openstudio;
 using namespace openstudio::model;
+
+TEST(CentralHeatPumpSystem,CentralHeatPumpSystem_CentralHeatPumpSystem)
+{
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+
+  ASSERT_EXIT (
+  {
+     Model m;
+     CentralHeatPumpSystem central_hp(m);
+
+     exit(0);
+  } ,
+    ::testing::ExitedWithCode(0), "" );
+}
+
+// Test the various setters and getters
+TEST(ChillerHeaterPerformanceElectricEIR,ChillerHeaterPerformanceElectricEIR_SettersGetters)
+{
+  Model m;
+
+  CentralHeatPumpSystem central_hp(m);
+
+  // std::vector<CentralHeatPumpSystemModule> modules()
+  ASSERT_EQ( (unsigned)1, central_hp.modules().size() );
+  model::CentralHeatPumpSystemModule central_hp_module = central_hp.modules()[0];
+
+  // Return type: bool
+  // Only "SmartMixing" is valid
+  EXPECT_EQ("SmartMixing", central_hp.controlMethod());
+  ASSERT_TRUE(central_hp.setControlMethod("SmartMixing"));
+  EXPECT_TRUE(central_hp.controlMethod());
+  ASSERT_EQ("SmartMixing", central_hp.controlMethod());
+
+  // Ancillary power
+  // Return type: bool
+  ASSERT_TRUE(central_hp.setAncillaryPower(0.7));
+  EXPECT_TRUE(central_hp.ancillaryPower());
+  ASSERT_EQ(0.7, central_hp.ancillaryPower());
+
+  // Test the ancillary Operation Schedule
+  // boost::optional<Schedule> ancillaryOperationSchedule() const;
+  EXPECT_FALSE(central_hp.ancillaryOperationSchedule());
+  Schedule schedule = model.alwaysOnDiscreteSchedule();
+  // Return type: bool
+  ASSERT_TRUE(central_hp.setAncillaryOperationSchedule(schedule));
+  EXPECT_TRUE(central_hp.ancillaryOperationSchedule());
+  ASSERT_EQ(schedule, central_hp.ancillaryOperationSchedule().get());
+  // Return type: void
+  central_hp.resetAncillaryOperationSchedule();
+  ASSERT_FALSE(central_hp.ancillaryOperationSchedule());
+
+
+
+  // Test the CentralHeatPumpSystemModule
+  // ChillerHeaterPerformanceElectricEIR chillerHeaterModulesPerformanceComponent() const;
+  // Schedule chillerHeaterModulesControlSchedule() const;
+  // int numberofChillerHeaterModules() const;
+
+  // Init a new one
+  CentralHeatPumpSystemModule central_hp_module_2(m);
+  // numberofChillerHeaterModules
+  EXPECT_EQ(1, central_hp_module_2.numberofChillerHeaterModules);
+  // Return type: bool
+  ASSERT_TRUE(central_hp_module2.setNumberofChillerHeaterModules(2));
+  EXPECT_TRUE(central_hp_module2.numberofChillerHeaterModules());
+  ASSERT_EQ(2, central_hp_module.numberofChillerHeaterModules());
+
+
+  // ChillerHeaterModulesPerformanceComponent
+  ChillerHeaterPerformanceElectricEIR ch_heater(m);
+  // Return type: bool
+  ASSERT_TRUE(central_hp_module.setChillerHeaterModulesPerformanceComponent(ch_heater));
+  EXPECT_TRUE(central_hp_module.chillerHeaterModulesPerformanceComponent());
+  ASSERT_EQ(ch_heater, central_hp_module.chillerHeaterModulesPerformanceComponent());
+
+  // chillerHeaterModulesControlSchedule
+  EXPECT_EQ(m.alwaysOnDiscreteSchedule(), central_hp_module2.chillerHeaterModulesControlSchedule());
+  Schedule schedule2(m);
+  ASSERT_TRUE(central_hp_module2.setChillerHeaterModulesControlSchedule(schedule2));
+  EXPECT_TRUE(central_hp_module2.chillerHeaterModulesControlSchedule());
+  ASSERT_EQ(schedule2, central_hp_module2.chillerHeaterModulesControlSchedule());
+
+
+  // Test adding/removing modules
+  // Return type: bool
+  ASSERT(central_hp.addModule(central_hp_module_2);)
+  ASSERT_EQ( (unsigned)2, central_hp.modules().size() );
+  // Return type: void
+  central_hp.removeModule(central_hp_module);
+  ASSERT_EQ( (unsigned)1, central_hp.modules().size() );
+  ASSERT_EQ( central_hp_module_2, central_hp.modules()[0]);
+  // Return type: void
+  central_hp.removeAllModules();
+  ASSERT_EQ( (unsigned)0, central_hp.modules().size() );
+
+}
+
+TEST(ChillerHeaterPerformanceElectricEIR,ChillerHeaterPerformanceElectricEIR_PlantLoopConnections)
+{
+    Model m;
+    CentralHeatPumpSystem central_hp(m);
+
+    // CoolingLoop: on the supply side
+    {
+      PlantLoop coolingPlant(m);
+      auto node = coolingPlant.supplyOutletNode();
+      EXPECT_TRUE(central_hp.addToNode(node));
+      auto plant = central_hp.plantLoop();
+      EXPECT_TRUE(plant);
+      if( plant ) {
+        EXPECT_EQ(coolingPlant.handle(),plant->handle());
+      }
+      // TODO: Change that number?
+      // PlantLoop has 5 components on the supply side by default (3 Nodes, One splitter, One mixer)
+      EXPECT_EQ(7u,coolingPlant.supplyComponents().size());
+    }
+
+    // SourceLoop: on the demand side
+    {
+      PlantLoop sourcePlant(m);
+      auto node = sourcePlant.demandInletNode();
+      EXPECT_TRUE(central_hp.addToNode(node));
+      auto plant = central_hp.secondaryPlantLoop();
+      EXPECT_TRUE(plant);
+      if( plant ) {
+        EXPECT_EQ(sourcePlant.handle(),plant->handle());
+      }
+      // TODO: Change that number?
+      EXPECT_EQ(7u,sourcePlant.demandComponents().size());
+    }
+
+    // HeatingLoop: on the supply side
+    {
+      PlantLoop heatingPlant(m);
+      auto node = heatingPlant.supplyOutletNode();
+      EXPECT_TRUE(central_hp.addToTertiaryNode(node));
+      auto plant = central_hp.tertiaryPlantLoop();
+      EXPECT_TRUE(plant);
+      if( plant ) {
+        EXPECT_EQ(heatingPlant.handle(),plant->handle());
+      }
+      // TODO: Change that number?
+      EXPECT_EQ(7u,heatingPlant.supplyComponents().size());
+
+      EXPECT_TRUE( central_hp.removeFromTertiaryPlantLoop() );
+      plant = central_hp.tertiaryPlantLoop();
+      EXPECT_FALSE(plant);
+      EXPECT_EQ(5u,heatingPlant.demandComponents().size());
+    }
+  }
 

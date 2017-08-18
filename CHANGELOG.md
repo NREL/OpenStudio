@@ -1,3 +1,20 @@
+## OpenStudio v2.2.0
+###### 2017-06-30 — [Diff]( https://github.com/NREL/OpenStudio/compare/v2.1.2...v2.2.0 )
+
+- ![Fixed:][fixed] [#2496]( https://github.com/NREL/OpenStudio/issues/2496 ), Chinese characters in Design Alternatives grid
+- ![Fixed:][fixed] [#2503]( https://github.com/NREL/OpenStudio/issues/2503 ), Skipping measures in datapoint throws measure messages out of sync
+- ![Fixed:][fixed] [#2512]( https://github.com/NREL/OpenStudio/issues/2512 ), Dropdown menu for "Select Cluster or Make New One" is not functioning correctly. PAT v2.0.4 (windows 7)
+- ![Fixed:][fixed] [#2541]( https://github.com/NREL/OpenStudio/issues/2541 ), Variable distribution plots appear on server as broken links
+- ![Fixed:][fixed] [#2630]( https://github.com/NREL/OpenStudio/issues/2630 ), OS Cloud Management Console pagination bugs
+- ![Fixed:][fixed] [#2634]( https://github.com/NREL/OpenStudio/issues/2634 ), Crash on Utility Bill page
+- ![Fixed:][fixed] [#2637]( https://github.com/NREL/OpenStudio/issues/2637 ), Rerunning old PAT project in 2.1.2 creates new data points instead of overwriting old ones
+- ![Fixed:][fixed] [#2640]( https://github.com/NREL/OpenStudio/issues/2640 ), PAT's Results Tab Goes Completely Blank w/ Large Algorithm Projects
+- ![Fixed:][fixed] [#2650]( https://github.com/NREL/OpenStudio/issues/2650 ), Solution exception:index out of range: 0 _ energyPlus
+- ![Fixed:][fixed] [#2665]( https://github.com/NREL/OpenStudio/issues/2665 ), App not shutting down correctly
+- ![Fixed:][fixed] [#2667]( https://github.com/NREL/OpenStudio/issues/2667 ), Closing App Window on Mac Destroys Menu Options
+- ![Fixed:][fixed] [#2674]( https://github.com/NREL/OpenStudio/issues/2674 ), PlantLoop GlycolConcentration is not initialized
+- ![Improved:][improved] [#2601]( https://github.com/NREL/OpenStudio/issues/2601 ), Ability to skip NA simulations
+
 ## OpenStudio v2.1.2
 ###### 2017-06-20 — [Diff]( https://github.com/NREL/OpenStudio/compare/v2.1.1...v2.1.2 )
 

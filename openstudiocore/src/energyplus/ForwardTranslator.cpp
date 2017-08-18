@@ -282,7 +282,7 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
       }
     }
   }
-  
+
   // remove orphan Generator:MicroTurbine
   for (auto& chp : model.getConcreteModelObjects<GeneratorMicroTurbine>()){
     if (!chp.electricLoadCenterDistribution()){
@@ -304,7 +304,7 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
       pv.remove();
     }
   }
-  
+
   // Remove orphan Storage
   for (auto& storage : model.getModelObjects<ElectricalStorage>()) {
     if (!storage.electricLoadCenterDistribution()){
@@ -312,7 +312,7 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
       storage.remove();
     }
   }
-  
+
   // Remove orphan Converters
   for (auto& converter : model.getConcreteModelObjects<ElectricLoadCenterStorageConverter>()){
     if (!converter.electricLoadCenterDistribution()){
@@ -724,17 +724,17 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       // no-op
       return retVal;
     }
-  // case openstudio::IddObjectType::OS_CentralHeatPumpSystem :
-  //   {
-  //     model::CentralHeatPumpSystem mo = modelObject.cast<CentralHeatPumpSystem>();
-  //     retVal = translateCentralHeatPumpSystem(mo);
-  //     break;
-  //   }
-  // case openstudio::IddObjectType::OS_CentralHeatPumpSystem_Module :
-  //   {
-  //     // no-op
-  //     return retVal;
-  //   }
+  case openstudio::IddObjectType::OS_CentralHeatPumpSystem :
+    {
+      model::CentralHeatPumpSystem mo = modelObject.cast<CentralHeatPumpSystem>();
+      retVal = translateCentralHeatPumpSystem(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_CentralHeatPumpSystem_Module :
+    {
+      // no-op
+      return retVal;
+    }
   case openstudio::IddObjectType::OS_Chiller_Absorption :
     {
       auto mo = modelObject.cast<ChillerAbsorption>();
@@ -753,12 +753,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateChillerElectricEIR(chiller);
       break;
     }
-  // case openstudio::IddObjectType::OS_ChillerHeaterPerformance_Electric_EIR :
-  //   {
-  //     model::ChillerHeaterPerformanceElectricEIR mo = modelObject.cast<ChillerHeaterPerformanceElectricEIR>();
-  //     retVal = translateChillerHeaterPerformanceElectricEIR(mo);
-  //     break;
-  //   }
+  case openstudio::IddObjectType::OS_ChillerHeaterPerformance_Electric_EIR :
+    {
+      model::ChillerHeaterPerformanceElectricEIR mo = modelObject.cast<ChillerHeaterPerformanceElectricEIR>();
+      retVal = translateChillerHeaterPerformanceElectricEIR(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_ClimateZones:
   {
     // no-op
