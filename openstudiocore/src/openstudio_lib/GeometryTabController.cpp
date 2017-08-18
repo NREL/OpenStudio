@@ -51,9 +51,9 @@ GeometryTabController::GeometryTabController(bool isIP, const model::Model& mode
   this->mainContentWidget()->addSubTab("Preview", PREVIEW);
 
   // DLM: remove once editor is always enabled
-  if (QProcessEnvironment::systemEnvironment().value("OPENSTUDIO_GEOMETRY_EDITOR") == QString("1")){
+  //if (QProcessEnvironment::systemEnvironment().value("OPENSTUDIO_GEOMETRY_EDITOR") == QString("1")){
     this->mainContentWidget()->addSubTab("Editor", EDITOR);
-  }
+  //}
 
   connect(this->mainContentWidget(), &MainTabView::tabSelected, this, &GeometryTabController::setSubTab);
 }

@@ -198,7 +198,7 @@ EditorWebView::EditorWebView(const openstudio::model::Model& model, QWidget *t_p
       m_newImportGeometry->setEnabled(false);
       m_view->setHtml(QString("Model has existing geometry, floorplan editor disabled."));
     } else{
-      m_view->setHtml(QString("Create new floorplan to begin."));
+      m_view->setHtml(QString("OpenStudio Geometry Editor is an experimental feature, use with caution.<br><br>Create new floorplan to begin."));
     }
     
   }
