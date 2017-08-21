@@ -64,6 +64,8 @@
 #include "../utilities/geometry/Transformation.hpp"
 #include "../utilities/geometry/Geometry.hpp"
 
+#include <QThread>
+
 #include <cmath>
 
 namespace openstudio
@@ -502,7 +504,37 @@ namespace openstudio
 
 
     ThreeJSForwardTranslator::ThreeJSForwardTranslator()
-    {}
+    {
+      m_logSink.setLogLevel(Warn);
+      //m_logSink.setChannelRegex(boost::regex("openstudio\\.model\\.ThreeJSForwardTranslator"));
+      m_logSink.setThreadId(QThread::currentThread());  
+    }
+
+    std::vector<LogMessage> ThreeJSForwardTranslator::warnings() const
+    {
+      std::vector<LogMessage> result;
+
+      for (LogMessage logMessage : m_logSink.logMessages()){
+        if (logMessage.logLevel() == Warn){
+          result.push_back(logMessage);
+        }
+      }
+
+      return result;
+    }
+
+    std::vector<LogMessage> ThreeJSForwardTranslator::errors() const
+    {
+      std::vector<LogMessage> result;
+
+      for (LogMessage logMessage : m_logSink.logMessages()){
+        if (logMessage.logLevel() > Warn){
+          result.push_back(logMessage);
+        }
+      }
+
+      return result;
+    }
 
     ThreeScene ThreeJSForwardTranslator::modelToThreeJS(const Model& model, bool triangulateSurfaces)
     {
@@ -511,6 +543,9 @@ namespace openstudio
 
     ThreeScene ThreeJSForwardTranslator::modelToThreeJS(const Model& model, bool triangulateSurfaces, std::function<void(double)> updatePercentage)
     {
+      m_logSink.setThreadId(QThread::currentThread());
+      m_logSink.resetStringStream();
+
       updatePercentage(0.0);
 
       std::vector<ThreeMaterial> materials;

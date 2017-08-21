@@ -66,6 +66,8 @@
 
 #include <utilities/idd/IddFactory.hxx>
 
+#include <QThread>
+
 #include <cmath>
 
 namespace openstudio
@@ -75,6 +77,35 @@ namespace openstudio
 
     ModelMerger::ModelMerger()
     {
+      m_logSink.setLogLevel(Warn);
+      //m_logSink.setChannelRegex(boost::regex("openstudio\\.model\\.ThreeJSReverseTranslator"));
+      m_logSink.setThreadId(QThread::currentThread());    
+    }
+
+    std::vector<LogMessage> ModelMerger::warnings() const
+    {
+      std::vector<LogMessage> result;
+
+      for (LogMessage logMessage : m_logSink.logMessages()){
+        if (logMessage.logLevel() == Warn){
+          result.push_back(logMessage);
+        }
+      }
+
+      return result;
+    }
+
+    std::vector<LogMessage> ModelMerger::errors() const
+    {
+      std::vector<LogMessage> result;
+
+      for (LogMessage logMessage : m_logSink.logMessages()){
+        if (logMessage.logLevel() > Warn){
+          result.push_back(logMessage);
+        }
+      }
+
+      return result;
     }
 
     boost::optional<UUID> ModelMerger::getNewModelHandle(const UUID& currentHandle)
@@ -418,6 +449,9 @@ namespace openstudio
 
     void ModelMerger::mergeModels(Model& currentModel, const Model& newModel, const std::map<UUID, UUID>& handleMapping)
     {
+      m_logSink.setThreadId(QThread::currentThread());
+      m_logSink.resetStringStream();
+
       m_currentModel = currentModel;
       m_newModel = newModel;
 

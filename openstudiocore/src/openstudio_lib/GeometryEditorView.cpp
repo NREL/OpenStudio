@@ -30,6 +30,7 @@
 #include "GeometryPreviewView.hpp"
 #include "OSAppBase.hpp"
 #include "OSDocument.hpp"
+#include "MainWindow.hpp"
 
 #include "../model/Model.hpp"
 #include "../model/Model_Impl.hpp"
@@ -54,6 +55,7 @@
 #include <utilities/idd/IddEnums.hxx>
 
 #include <QDialog>
+#include <QTcpServer>
 #include <QComboBox>
 #include <QMessageBox>
 #include <QTimer>
@@ -71,9 +73,6 @@ GeometryEditorView::GeometryEditorView(bool isIP,
                                      QWidget * parent)
 : QWidget(parent)
 {
-  // TODO: DLM impliment units switching
-  //connect(this, &GeometryEditorView::toggleUnitsClicked, modelObjectInspectorView(), &ModelObjectInspectorView::toggleUnitsClicked);
-
   QVBoxLayout *layout = new QVBoxLayout;
   
   EditorWebView* webView = new EditorWebView(model, this);
@@ -83,6 +82,30 @@ GeometryEditorView::GeometryEditorView(bool isIP,
 }
 
 GeometryEditorView::~GeometryEditorView()
+{
+
+}
+
+DebugWebView::DebugWebView(const QString& debugPort, QWidget * parent)
+  : QDialog(parent)
+{
+  auto mainLayout = new QVBoxLayout;
+  setLayout(mainLayout);
+  
+  QString newDebugPort(qgetenv("QTWEBENGINE_REMOTE_DEBUGGING"));
+
+  m_view = new QWebEngineView(this);
+  m_view->settings()->setAttribute(QWebEngineSettings::WebAttribute::LocalContentCanAccessRemoteUrls, true);
+  m_view->settings()->setAttribute(QWebEngineSettings::WebAttribute::SpatialNavigationEnabled, true);
+
+  //mainLayout->addWidget(m_view, 10, Qt::AlignTop);
+  mainLayout->addWidget(m_view);
+
+  QString urlString = "http://127.0.0.1:" + debugPort;
+  m_view->load(QUrl(urlString));
+}
+
+DebugWebView::~DebugWebView()
 {
 
 }
@@ -99,21 +122,35 @@ EditorWebView::EditorWebView(const openstudio::model::Model& model, QWidget *t_p
     m_progressBar(new QProgressBar()),
     m_refreshBtn(new QPushButton("Refresh")),
     m_previewBtn(new QPushButton("Preview")),
-    m_mergeBtn(new QPushButton("Merge"))
+    m_mergeBtn(new QPushButton("Merge")),
+    m_debugBtn(new QPushButton("Debug"))
 {
   openstudio::OSAppBase * app = OSAppBase::instance();
   OS_ASSERT(app);
   m_document = app->currentDocument();
   OS_ASSERT(m_document);
 
+  // find available port for debugging
+  m_debugPort = QString(qgetenv("QTWEBENGINE_REMOTE_DEBUGGING"));
+  if (m_debugPort.isEmpty()){
+    QTcpServer tcpServer;
+    tcpServer.listen(QHostAddress::LocalHost);
+    quint16 port = tcpServer.serverPort();
+    tcpServer.close();
+    m_debugPort = QString::number(port);
+    qputenv("QTWEBENGINE_REMOTE_DEBUGGING", m_debugPort.toLocal8Bit());
+  }
+
   auto mainLayout = new QVBoxLayout;
   setLayout(mainLayout);
 
+  connect(m_document.get(), &OSDocument::toggleUnitsClicked, this, &EditorWebView::onUnitSystemChange);
   connect(m_geometrySourceComboBox, &QComboBox::currentTextChanged, this, &EditorWebView::geometrySourceChanged);
   connect(m_newImportGeometry, &QPushButton::clicked, this, &EditorWebView::newImportClicked);
   connect(m_refreshBtn, &QPushButton::clicked, this, &EditorWebView::refreshClicked);
   connect(m_previewBtn, &QPushButton::clicked, this, &EditorWebView::previewClicked);
   connect(m_mergeBtn, &QPushButton::clicked, this, &EditorWebView::mergeClicked);
+  connect(m_debugBtn, &QPushButton::clicked, this, &EditorWebView::debugClicked);
 
   auto hLayout = new QHBoxLayout(this);
   mainLayout->addLayout(hLayout);
@@ -143,6 +180,10 @@ EditorWebView::EditorWebView(const openstudio::model::Model& model, QWidget *t_p
   hLayout->addWidget(m_mergeBtn, 0, Qt::AlignVCenter);
   m_mergeBtn->setVisible(true);
   m_mergeBtn->setEnabled(false);
+
+  hLayout->addWidget(m_debugBtn, 0, Qt::AlignVCenter);
+  m_debugBtn->setVisible(true);
+  m_debugBtn->setEnabled(true);
 
   m_view = new QWebEngineView(this);
   m_view->settings()->setAttribute(QWebEngineSettings::WebAttribute::LocalContentCanAccessRemoteUrls, true);
@@ -182,7 +223,18 @@ EditorWebView::EditorWebView(const openstudio::model::Model& model, QWidget *t_p
       // update with current model content
       model::FloorplanJSForwardTranslator ft;
       m_floorplan = ft.updateFloorplanJS(*m_floorplan, m_model, true);
-      
+
+      QString errorsAndWarnings;
+      for (const auto& error : ft.errors()){
+        errorsAndWarnings += QString::fromStdString(error.logMessage() + "\n");
+      }
+      for (const auto& warning : ft.warnings()){
+        errorsAndWarnings += QString::fromStdString(warning.logMessage() + "\n");
+      }
+      if (!errorsAndWarnings.isEmpty()){
+        QMessageBox::warning(this, "Updating Floorplan", errorsAndWarnings);
+      }
+
       // start the editor
       m_newImportGeometry->setEnabled(false);
       m_geometryEditorStarted = true;
@@ -271,6 +323,12 @@ void EditorWebView::mergeClicked()
   }
 }
 
+void EditorWebView::debugClicked()
+{
+  DebugWebView debugWebView(m_debugPort, m_document->mainWindow());
+  debugWebView.exec();
+}
+
 void EditorWebView::translateExport()
 {
   model::ThreeJSReverseTranslator rt;
@@ -280,6 +338,17 @@ void EditorWebView::translateExport()
     model = rt.modelFromThreeJS(scene);
   } else{
     // DLM: this is an error, the editor produced a JSON we can't read
+  }
+
+  QString errorsAndWarnings;
+  for (const auto& error : rt.errors()){
+    errorsAndWarnings += QString::fromStdString(error.logMessage() + "\n");
+  }
+  for (const auto& warning : rt.warnings()){
+    errorsAndWarnings += QString::fromStdString(warning.logMessage() + "\n");
+  }
+  if (!errorsAndWarnings.isEmpty()){
+    QMessageBox::warning(this, "Creating Model From Floorplan", errorsAndWarnings);
   }
   
   if (model){
@@ -305,10 +374,17 @@ void EditorWebView::startEditor()
 
     std::string json = "{";
     if (m_floorplan){
-      json += "showMapDialogOnStart: false";
+      json += "\"showMapDialogOnStart\": false,";
     } else{
-      json += "showMapDialogOnStart: true";
+      json += "\"showMapDialogOnStart\": true,";
     }
+
+    if (m_isIP){
+      json += "\"units\": \"ft\"";
+    }else{
+      json += "\"units\": \"m\"";
+    }
+
     json += "}";
 
     QString javascript = QString("window.api.setConfig(") + QString::fromStdString(json) + QString(");");
@@ -354,6 +430,17 @@ void EditorWebView::startEditor()
       FloorplanJS floorplan;
       model::FloorplanJSForwardTranslator ft;
       floorplan = ft.updateFloorplanJS(floorplan, m_model, false);
+
+      QString errorsAndWarnings;
+      for (const auto& error : ft.errors()){
+        errorsAndWarnings += QString::fromStdString(error.logMessage() + "\n");
+      }
+      for (const auto& warning : ft.warnings()){
+        errorsAndWarnings += QString::fromStdString(warning.logMessage() + "\n");
+      }
+      if (!errorsAndWarnings.isEmpty()){
+        QMessageBox::warning(this, "Updating Floorplan", errorsAndWarnings);
+      }
 
       m_javascriptRunning = true;
 
@@ -441,6 +528,17 @@ void EditorWebView::previewExport()
   model::ModelMerger mm;
   mm.mergeModels(temp, m_exportModel, m_exportModelHandleMapping);
 
+  QString errorsAndWarnings;
+  for (const auto& error : mm.errors()){
+    errorsAndWarnings += QString::fromStdString(error.logMessage() + "\n");
+  }
+  for (const auto& warning : mm.warnings()){
+    errorsAndWarnings += QString::fromStdString(warning.logMessage() + "\n");
+  }
+  if (!errorsAndWarnings.isEmpty()){
+    QMessageBox::warning(this, "Merging Models", errorsAndWarnings);
+  }
+
   // do not update floorplan since this is not a real merge
 
   // save the exported floorplan
@@ -472,10 +570,35 @@ void EditorWebView::mergeExport()
   model::ModelMerger mm;
   mm.mergeModels(m_model, m_exportModel, m_exportModelHandleMapping);
 
+  QString errorsAndWarnings;
+  for (const auto& error : mm.errors()){
+    errorsAndWarnings += QString::fromStdString(error.logMessage() + "\n");
+  }
+  for (const auto& warning : mm.warnings()){
+    errorsAndWarnings += QString::fromStdString(warning.logMessage() + "\n");
+  }
+  if (!errorsAndWarnings.isEmpty()){
+    QMessageBox::warning(this, "Merging Models", errorsAndWarnings);
+  } else{
+    // DLM: print out a better report
+    QMessageBox::information(this, "Merging Models", "Models Merged");
+  }
+
   // make sure handles get updated in floorplan and the exported string
   model::FloorplanJSForwardTranslator ft;
   m_floorplan = ft.updateFloorplanJS(*m_floorplan, m_model, false);
   m_export = QString::fromStdString(m_floorplan->toJSON());
+
+  errorsAndWarnings.clear();
+  for (const auto& error : ft.errors()){
+    errorsAndWarnings += QString::fromStdString(error.logMessage() + "\n");
+  }
+  for (const auto& warning : ft.warnings()){
+    errorsAndWarnings += QString::fromStdString(warning.logMessage() + "\n");
+  }
+  if (!errorsAndWarnings.isEmpty()){
+    QMessageBox::warning(this, "Updating Floorplan", errorsAndWarnings);
+  }
 
   // save the exported floorplan
   saveExport();
@@ -517,6 +640,7 @@ void EditorWebView::onChanged()
 void EditorWebView::onUnitSystemChange(bool t_isIP) 
 {
   LOG(Debug, "onUnitSystemChange " << t_isIP << " reloading results");
+  QMessageBox::warning(this, "Units Change", "Changing unit system for existing floorplan is not currently supported.");
   m_isIP = t_isIP;
 }
 
