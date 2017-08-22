@@ -84,7 +84,7 @@ class EditorWebView : public QWidget
   Q_OBJECT;
 
   public:
-    EditorWebView(const openstudio::model::Model& model, QWidget *t_parent = nullptr);
+    EditorWebView(bool isIP, const openstudio::model::Model& model, QWidget *t_parent = nullptr);
     virtual ~EditorWebView();
 
   public slots:

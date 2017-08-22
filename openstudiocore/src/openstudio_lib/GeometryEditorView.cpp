@@ -76,7 +76,7 @@ GeometryEditorView::GeometryEditorView(bool isIP,
 {
   QVBoxLayout *layout = new QVBoxLayout;
   
-  EditorWebView* webView = new EditorWebView(model, this);
+  EditorWebView* webView = new EditorWebView(isIP, model, this);
   layout->addWidget(webView);
 
   setLayout(layout);
@@ -109,10 +109,10 @@ DebugWebView::~DebugWebView()
 
 }
 
-EditorWebView::EditorWebView(const openstudio::model::Model& model, QWidget *t_parent)
+EditorWebView::EditorWebView(bool isIP, const openstudio::model::Model& model, QWidget *t_parent)
   : QWidget(t_parent),
     m_model(model),
-    m_isIP(true),
+    m_isIP(isIP),
     m_geometryEditorStarted(false),
     m_geometryEditorLoaded(false),
     m_javascriptRunning(false),
@@ -642,9 +642,11 @@ void EditorWebView::onChanged()
 
 void EditorWebView::onUnitSystemChange(bool t_isIP) 
 {
-  LOG(Debug, "onUnitSystemChange " << t_isIP << " reloading results");
-  QMessageBox::warning(this, "Units Change", "Changing unit system for existing floorplan is not currently supported.");
-  m_isIP = t_isIP;
+  if (m_geometryEditorStarted){
+    QMessageBox::warning(this, "Units Change", "Changing unit system for existing floorplan is not currently supported.  Reload tab to change units.");
+  }else{
+    m_isIP = t_isIP;
+  }
 }
 
 void EditorWebView::onLoadFinished(bool ok)
