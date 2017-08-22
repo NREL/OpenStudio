@@ -42,6 +42,10 @@
 
 namespace openstudio{
 
+  const std::string BELOWFLOORPLENUMPOSTFIX(" Floor Plenum");
+  const std::string ABOVECEILINGPLENUMPOSTFIX(" Plenum");
+  const std::string PLENUMSPACETYPENAME("Plenum Space Type"); // DLM: needs to be coordinated with name in Model_Impl::plenumSpaceType() 
+
   FloorplanObject::FloorplanObject(const std::string& id, const std::string& name, const std::string& handleString)
     : m_id(id), m_name(name), m_handle(toUUID(handleString)), m_handleString(handleString)
   {}
@@ -273,10 +277,20 @@ namespace openstudio{
     return result;
   }
 
-  void FloorplanJS::makeSurface(const Json::Value& story, const Json::Value& space, const std::string& spaceNamePostFix,
+  void FloorplanJS::makeSurface(const Json::Value& story, const Json::Value& space, bool belowFloorPlenum, bool aboveCeilingPlenum,
     const std::string& surfaceType, const Point3dVector& vertices, size_t faceFormat, 
     std::vector<ThreeGeometry>& geometries, std::vector<ThreeSceneChild>& sceneChildren) const
   {
+    bool plenum = false;
+    std::string spaceNamePostFix;
+    if (belowFloorPlenum){
+      plenum = true;
+      spaceNamePostFix = BELOWFLOORPLENUMPOSTFIX;
+    } else if (aboveCeilingPlenum){
+      plenum = true;
+      spaceNamePostFix = ABOVECEILINGPLENUMPOSTFIX;
+    }
+
     std::string geometryId = std::string("Geometry ") + std::to_string(geometries.size());
     std::string faceId = std::string("Face ") + std::to_string(geometries.size());
 
@@ -320,7 +334,7 @@ namespace openstudio{
       // space
       assertKeyAndType(space, "name", Json::stringValue);
       s = space.get("name", "").asString();
-      userData.setSpaceName(s);
+      userData.setSpaceName(s + spaceNamePostFix);
 
       if (checkKeyAndType(space, "handle", Json::stringValue)){
         s = space.get("handle", "").asString();
@@ -331,17 +345,16 @@ namespace openstudio{
       if (checkKeyAndType(space, "building_unit_id", Json::stringValue)){
         id = space.get("building_unit_id", "").asString();
         if (const Json::Value* buildingUnit = findById(m_value["building_units"], id)){
-          if (checkKeyAndType(*buildingUnit, "name", Json::stringValue)){
-            s = buildingUnit->get("name", "").asString();
-            userData.setBuildingStoryName(s);
-          }
+          assertKeyAndType(*buildingUnit, "name", Json::stringValue);
+          s = buildingUnit->get("name", "").asString();
+          userData.setBuildingStoryName(s);
 
           if (checkKeyAndType(*buildingUnit, "handle", Json::stringValue)){
             s = buildingUnit->get("handle", "").asString();
             userData.setBuildingStoryHandle(s);
           }
         } else{
-          userData.setBuildingUnitName(id);
+          LOG(Error, "Cannot find BuildingUnit '" << id << "'");
         }
       }
 
@@ -349,35 +362,43 @@ namespace openstudio{
       if (checkKeyAndType(space, "thermal_zone_id", Json::stringValue)){
         id = space.get("thermal_zone_id", "").asString();
         if (const Json::Value* thermalZone = findById(m_value["thermal_zones"], id)){
-          if (checkKeyAndType(*thermalZone, "name", Json::stringValue)){
-            s = thermalZone->get("name", "").asString();
-            userData.setThermalZoneName(s);
-          }
+          assertKeyAndType(*thermalZone, "name", Json::stringValue);
+          s = thermalZone->get("name", "").asString();
+          std::string thermalZoneName = s + spaceNamePostFix;
+          userData.setThermalZoneName(thermalZoneName);
 
-          if (checkKeyAndType(*thermalZone, "handle", Json::stringValue)){
-            s = thermalZone->get("handle", "").asString();
-            userData.setThermalZoneHandle(s);
+          if (plenum){
+            // DLM: we do not have this plenum thermal zone in the floorplan
+            m_plenumThermalZoneNames.insert(thermalZoneName);
+          }else{
+            if (checkKeyAndType(*thermalZone, "handle", Json::stringValue)){
+              s = thermalZone->get("handle", "").asString();
+              userData.setThermalZoneHandle(s);
+            }
           }
         } else{
-          userData.setThermalZoneName(id);
+          LOG(Error, "Cannot find ThermalZone '" << id << "'");
         }
       }
       
       // space type
-      if (checkKeyAndType(space, "space_type_id", Json::stringValue)){
-        id = space.get("space_type_id", "").asString();
-        if (const Json::Value* spaceType = findById(m_value["space_types"], id)){
-          if (checkKeyAndType(*spaceType, "name", Json::stringValue)){
+      if (plenum){
+        userData.setSpaceTypeName(PLENUMSPACETYPENAME);
+      } else {
+        if (checkKeyAndType(space, "space_type_id", Json::stringValue)){
+          id = space.get("space_type_id", "").asString();
+          if (const Json::Value* spaceType = findById(m_value["space_types"], id)){
+            assertKeyAndType(*spaceType, "name", Json::stringValue);
             s = spaceType->get("name", "").asString();
             userData.setSpaceTypeName(s);
+            
+            if (checkKeyAndType(*spaceType, "handle", Json::stringValue)){
+              s = spaceType->get("handle", "").asString();
+              userData.setSpaceTypeHandle(s);
+            }
+          } else{
+            LOG(Error, "Cannot find SpaceType '" << id << "'");
           }
-
-          if (checkKeyAndType(*spaceType, "handle", Json::stringValue)){
-            s = spaceType->get("handle", "").asString();
-            userData.setSpaceTypeHandle(s);
-          }
-        } else{
-          userData.setSpaceTypeName(id);
         }
       }
 
@@ -385,28 +406,29 @@ namespace openstudio{
       if (checkKeyAndType(space, "construction_set_id", Json::stringValue)){
         id = space.get("construction_set_id", "").asString();
         if (const Json::Value* constructionSet = findById(m_value["construction_sets"], id)){
-          if (checkKeyAndType(*constructionSet, "name", Json::stringValue)){
-            s = constructionSet->get("name", "").asString();
-            userData.setConstructionSetName(s);
-          }
+          assertKeyAndType(*constructionSet, "name", Json::stringValue);
+          s = constructionSet->get("name", "").asString();
+          userData.setConstructionSetName(s);
 
           if (checkKeyAndType(*constructionSet, "handle", Json::stringValue)){
             s = constructionSet->get("handle", "").asString();
             userData.setConstructionSetHandle(s);
           }
         } else{
-          userData.setConstructionSetName(id);
+          LOG(Error, "Cannot find ConstructionSet '" << id << "'");
         }
       }
 
       userData.setSurfaceType(surfaceType);
+      //userData.setAboveCeilingPlenum(aboveCeilingPlenum);
+      //userData.setBelowFloorPlenum(belowFloorPlenum);
 
       ThreeSceneChild sceneChild(uuid, name, type, geometryId, materialId, userData);
       sceneChildren.push_back(sceneChild);
     }
   }
 
-  void FloorplanJS::makeGeometries(const Json::Value& story, const Json::Value& space, const std::string& spaceNamePostFix, double minZ, double maxZ,
+  void FloorplanJS::makeGeometries(const Json::Value& story, const Json::Value& space, bool belowFloorPlenum, bool aboveCeilingPlenum, double lengthToMeters, double minZ, double maxZ,
     const Json::Value& vertices, const Json::Value& edges, const Json::Value& faces, const std::string& faceId,
     bool openstudioFormat, std::vector<ThreeGeometry>& geometries, std::vector<ThreeSceneChild>& sceneChildren) const
   {
@@ -449,7 +471,7 @@ namespace openstudio{
 
           assertKeyAndType(*vertex1, "x", Json::realValue);
           assertKeyAndType(*vertex1, "y", Json::realValue);
-          faceVertices.push_back(Point3d(vertex1->get("x", 0.0).asDouble(), vertex1->get("y", 0.0).asDouble(), 0.0));
+          faceVertices.push_back(Point3d(lengthToMeters * vertex1->get("x", 0.0).asDouble(), lengthToMeters * vertex1->get("y", 0.0).asDouble(), 0.0));
         }
       }
     }
@@ -493,8 +515,8 @@ namespace openstudio{
         finalRoofCeilingVertices.push_back(Point3d(v.x(), v.y(), maxZ));
       }
 
-      makeSurface(story, space, spaceNamePostFix, "Floor", finalfloorVertices, roofCeilingFaceFormat, geometries, sceneChildren);
-      makeSurface(story, space, spaceNamePostFix, "RoofCeiling", reverse(finalRoofCeilingVertices), roofCeilingFaceFormat, geometries, sceneChildren);
+      makeSurface(story, space, belowFloorPlenum, aboveCeilingPlenum, "Floor", finalfloorVertices, roofCeilingFaceFormat, geometries, sceneChildren);
+      makeSurface(story, space, belowFloorPlenum, aboveCeilingPlenum, "RoofCeiling", reverse(finalRoofCeilingVertices), roofCeilingFaceFormat, geometries, sceneChildren);
     }
 
 
@@ -506,7 +528,7 @@ namespace openstudio{
       finalWallVertices.push_back(Point3d(faceVertices[i - 1].x(), faceVertices[i - 1].y(), minZ));
       finalWallVertices.push_back(Point3d(faceVertices[i - 1].x(), faceVertices[i - 1].y(), maxZ));
 
-      makeSurface(story, space, spaceNamePostFix, "Wall", finalWallVertices, wallFaceFormat, geometries, sceneChildren);
+      makeSurface(story, space, belowFloorPlenum, aboveCeilingPlenum, "Wall", finalWallVertices, wallFaceFormat, geometries, sceneChildren);
     }
     
   }
@@ -528,6 +550,8 @@ namespace openstudio{
 
   ThreeScene FloorplanJS::toThreeScene(bool openstudioFormat) const
   {
+    m_plenumThermalZoneNames.clear();
+
     std::vector<ThreeGeometry> geometries;
     std::vector<ThreeMaterial> materials;
     std::vector<ThreeSceneChild> children;
@@ -535,6 +559,25 @@ namespace openstudio{
     std::vector<ThreeModelObjectMetadata> modelObjectMetadata;
 
     double currentZ = 0;
+
+    // read project config
+    std::string units = "ft";
+    Json::Value project = m_value.get("project", Json::objectValue);
+    if (!project.isNull()){
+      Json::Value config = project.get("config", Json::objectValue);
+      if (!config.isNull()){
+        units = config.get("units", units).asString();
+      }
+    }
+
+    // DLM: geometry in ThreeJS output is always in meters without north angle applied, north angle is applied directly to osm 
+
+    double lengthToMeters = 1;
+    if (istringEqual(units, "ft")){
+      lengthToMeters = 0.3048; // don't use openstudio convert to keep dependencies low
+    }
+
+    bool anyPlenums = false;
 
     // loop over stories
     Json::Value stories = m_value.get("stories", Json::arrayValue);
@@ -551,21 +594,24 @@ namespace openstudio{
 
       double belowFloorPlenumHeight = 0;
       if (checkKeyAndType(stories[storyIdx], "below_floor_plenum_height", Json::realValue)){
-        belowFloorPlenumHeight = stories[storyIdx].get("below_floor_plenum_height", belowFloorPlenumHeight).asDouble();
+        belowFloorPlenumHeight = lengthToMeters * stories[storyIdx].get("below_floor_plenum_height", belowFloorPlenumHeight).asDouble();
       }
        
       double floorToCeilingHeight = 3;
       if (checkKeyAndType(stories[storyIdx], "floor_to_ceiling_height", Json::realValue)){
-        floorToCeilingHeight = stories[storyIdx].get("floor_to_ceiling_height", floorToCeilingHeight).asDouble();
-      }
-      // DLM: temp code
-      if (floorToCeilingHeight < 0.1){
-        floorToCeilingHeight = 3;
+        floorToCeilingHeight = lengthToMeters * stories[storyIdx].get("floor_to_ceiling_height", floorToCeilingHeight).asDouble();
       }
 
       double aboveCeilingPlenumHeight = 0;
       if (checkKeyAndType(stories[storyIdx], "above_ceiling_plenum_height", Json::realValue)){
-        aboveCeilingPlenumHeight = stories[storyIdx].get("above_ceiling_plenum_height", aboveCeilingPlenumHeight).asDouble();
+        aboveCeilingPlenumHeight = lengthToMeters * stories[storyIdx].get("above_ceiling_plenum_height", aboveCeilingPlenumHeight).asDouble();
+      }
+
+      // DLM: temp code
+      if (floorToCeilingHeight < 0.1){
+        belowFloorPlenumHeight = 1;
+        floorToCeilingHeight = 3;
+        aboveCeilingPlenumHeight = 1;
       }
 
       // get the geometry
@@ -580,28 +626,34 @@ namespace openstudio{
       Json::ArrayIndex spaceN = spaces.size();
       for (Json::ArrayIndex spaceIdx = 0; spaceIdx < spaceN; ++spaceIdx){
 
-        modelObjectMetadata.push_back(makeModelObjectMetadata("OS:Space", spaces[spaceIdx]));
-
         // each space should have one face
         if (checkKeyAndType(spaces[spaceIdx], "face_id", Json::stringValue)){
           std::string faceId = spaces[spaceIdx].get("face_id", "").asString(); 
 
+          assertKeyAndType(spaces[spaceIdx], "name", Json::stringValue);
+          std::string spaceName = spaces[spaceIdx].get("name", "").asString();
+
           double minZ = currentZ;
           double maxZ = currentZ + belowFloorPlenumHeight;
           if (belowFloorPlenumHeight > 0){
-            makeGeometries(stories[storyIdx], spaces[spaceIdx], " Floor Plenum", minZ, maxZ, vertices, edges, faces, faceId, openstudioFormat, geometries, children);
+            anyPlenums = true;
+            modelObjectMetadata.push_back(ThreeModelObjectMetadata("OS:Space", "", spaceName + BELOWFLOORPLENUMPOSTFIX));
+            makeGeometries(stories[storyIdx], spaces[spaceIdx], true, false, lengthToMeters, minZ, maxZ, vertices, edges, faces, faceId, openstudioFormat, geometries, children);
           }
 
           minZ = maxZ;
           maxZ += floorToCeilingHeight;
           if (floorToCeilingHeight > 0){
-            makeGeometries(stories[storyIdx], spaces[spaceIdx], "", minZ, maxZ, vertices, edges, faces, faceId, openstudioFormat, geometries, children);
+            modelObjectMetadata.push_back(makeModelObjectMetadata("OS:Space", spaces[spaceIdx]));
+            makeGeometries(stories[storyIdx], spaces[spaceIdx], false, false, lengthToMeters, minZ, maxZ, vertices, edges, faces, faceId, openstudioFormat, geometries, children);
           }
 
           minZ = maxZ;
           maxZ += aboveCeilingPlenumHeight;
           if (aboveCeilingPlenumHeight > 0){
-            makeGeometries(stories[storyIdx], spaces[spaceIdx], " Plenum", minZ, maxZ, vertices, edges, faces, faceId, openstudioFormat, geometries, children);
+            anyPlenums = true;
+            modelObjectMetadata.push_back(ThreeModelObjectMetadata("OS:Space", "", spaceName + ABOVECEILINGPLENUMPOSTFIX));
+            makeGeometries(stories[storyIdx], spaces[spaceIdx], false, true, lengthToMeters, minZ, maxZ, vertices, edges, faces, faceId, openstudioFormat, geometries, children);
           }
         } 
 
@@ -625,12 +677,18 @@ namespace openstudio{
     for (Json::ArrayIndex i = 0; i < n; ++i){
       modelObjectMetadata.push_back(makeModelObjectMetadata("OS:ThermalZone", thermalZones[i]));
     }
+    for (const auto& thermalZoneName : m_plenumThermalZoneNames){
+      modelObjectMetadata.push_back(ThreeModelObjectMetadata("OS:ThermalZone", "", thermalZoneName));
+    }
 
     // loop over space_types
     Json::Value spaceTypes = m_value.get("space_types", Json::arrayValue);
     n = spaceTypes.size();
     for (Json::ArrayIndex i = 0; i < n; ++i){
       modelObjectMetadata.push_back(makeModelObjectMetadata("OS:SpaceType", spaceTypes[i]));
+    }
+    if (anyPlenums){
+      modelObjectMetadata.push_back(ThreeModelObjectMetadata("OS:SpaceType", "", PLENUMSPACETYPENAME));
     }
 
     // loop over construction_sets
@@ -648,6 +706,19 @@ namespace openstudio{
 
     ThreeScene result(metadata, geometries, materials, sceneObject);
 
+    return result;
+  }
+
+  double FloorplanJS::northAxis() const
+  {
+    double result = 0;
+    Json::Value project = m_value.get("project", Json::objectValue);
+    if (!project.isNull()){
+      Json::Value config = project.get("config", Json::objectValue);
+      if (!config.isNull()){
+        result = config.get("north_axis", result).asDouble();
+      }
+    }
     return result;
   }
 

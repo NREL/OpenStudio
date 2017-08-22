@@ -115,7 +115,7 @@ int main(int argc, char *argv[])
       new openstudio::measure::EmbeddedRubyMeasureInfoGetter<openstudio::detail::RubyInterpreter>(rubyInterpreter));
        */
 
-    // find available port for debugging
+    // find available port for debugging, have to do this before creating app
     QString debugPort(qgetenv("QTWEBENGINE_REMOTE_DEBUGGING"));
     if (debugPort.isEmpty()){
       QTcpServer tcpServer;
@@ -123,7 +123,7 @@ int main(int argc, char *argv[])
       quint16 port = tcpServer.serverPort();
       tcpServer.close();
       debugPort = QString::number(port);
-      qputenv("QTWEBENGINE_REMOTE_DEBUGGING", debugPort.toLocal8Bit());
+      qputenv("QTWEBENGINE_REMOTE_DEBUGGING", debugPort.toStdString().c_str());
     }
 
     openstudio::OpenStudioApp app(argc, argv);

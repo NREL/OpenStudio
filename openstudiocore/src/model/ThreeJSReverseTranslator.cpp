@@ -212,7 +212,7 @@ namespace openstudio
         boost::optional<ThreeMaterial> material = scene.getMaterial(child.material());
 
         ThreeUserData userData = child.userData();
-        
+
         std::string handle = userData.handle();
         std::string name = userData.name();
         std::string surfaceType = userData.surfaceType();
@@ -233,6 +233,9 @@ namespace openstudio
         std::string outsideBoundaryCondition = userData.outsideBoundaryCondition();
         std::string outsideBoundaryConditionObjectName = userData.outsideBoundaryConditionObjectName();
         std::string outsideBoundaryConditionObjectHandle = userData.outsideBoundaryConditionObjectHandle();
+        //bool plenum = userData.plenum();
+        //bool belowFloorPlenum = userData.belowFloorPlenum();
+        //bool aboveFloorPlenum = userData.aboveCeilingPlenum();
 
         boost::optional<ThermalZone> thermalZone = model.getConcreteModelObjectByName<ThermalZone>(thermalZoneName);
         if (!thermalZone && !thermalZoneName.empty()){

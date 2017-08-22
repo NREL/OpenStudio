@@ -189,6 +189,9 @@ namespace openstudio{
     bool coincidentWithOutsideObject() const;
     std::string sunExposure() const;
     std::string windExposure() const;
+    //bool plenum() const;
+    //bool belowFloorPlenum() const;
+    //bool aboveCeilingPlenum() const;
 
     void setHandle(const std::string& s);
     void setName(const std::string& s);
@@ -221,6 +224,8 @@ namespace openstudio{
     void setCoincidentWithOutsideObject(bool b);
     void setSunExposure(const std::string& s);
     void setWindExposure(const std::string& s);
+    //void setBelowFloorPlenum(bool v);
+    //void setAboveCeilingPlenum(bool v);
 
   private:
     friend class ThreeSceneChild;
@@ -258,6 +263,8 @@ namespace openstudio{
     bool m_coincidentWithOutsideObject;
     std::string m_sunExposure;
     std::string m_windExposure;
+    //bool m_belowFloorPlenum;
+    //bool m_aboveCeilingPlenum;
   };
 
   

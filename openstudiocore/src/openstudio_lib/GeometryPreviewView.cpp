@@ -62,7 +62,7 @@ GeometryPreviewView::GeometryPreviewView(bool isIP,
 
   QVBoxLayout *layout = new QVBoxLayout;
 
-  PreviewWebView* webView = new PreviewWebView(model, this);
+  PreviewWebView* webView = new PreviewWebView(isIP, model, this);
   layout->addWidget(webView);
 
   setLayout(layout);
@@ -73,10 +73,10 @@ GeometryPreviewView::~GeometryPreviewView()
 
 }
 
-PreviewWebView::PreviewWebView(const model::Model& model, QWidget *t_parent)
+PreviewWebView::PreviewWebView(bool isIP, const model::Model& model, QWidget *t_parent)
   : QWidget(t_parent),
     m_model(model),
-    m_isIP(true),
+    m_isIP(isIP),
     m_progressBar(new QProgressBar()),
     m_refreshBtn(new QPushButton("Refresh"))
 {
@@ -91,6 +91,7 @@ PreviewWebView::PreviewWebView(const model::Model& model, QWidget *t_parent)
   auto mainLayout = new QVBoxLayout;
   setLayout(mainLayout);
 
+  connect(m_document.get(), &OSDocument::toggleUnitsClicked, this, &PreviewWebView::onUnitSystemChange);
   connect(m_refreshBtn, &QPushButton::clicked, this, &PreviewWebView::refreshClicked);
 
   auto hLayout = new QHBoxLayout(this);

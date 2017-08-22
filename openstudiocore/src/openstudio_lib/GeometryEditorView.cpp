@@ -38,6 +38,8 @@
 #include "../model/ThreeJSReverseTranslator.hpp"
 #include "../model/FloorplanJSForwardTranslator.hpp"
 #include "../model/FloorplanJSForwardTranslator.hpp"
+#include "../model/Building.hpp"
+#include "../model/Building_Impl.hpp"
 #include "../model/BuildingStory.hpp"
 #include "../model/BuildingStory_Impl.hpp"
 #include "../model/PlanarSurfaceGroup.hpp"
@@ -332,6 +334,11 @@ void EditorWebView::translateExport()
   if (m_floorplan){
     ThreeScene scene = m_floorplan->toThreeScene(true);
     model = rt.modelFromThreeJS(scene);
+
+    if (model){
+      // set north axis
+      model->getUniqueModelObject<model::Building>().setNorthAxis(m_floorplan->northAxis());
+    }
   } else{
     // DLM: this is an error, the editor produced a JSON we can't read
   }
@@ -375,6 +382,7 @@ void EditorWebView::startEditor()
       json += "\"showMapDialogOnStart\": true, ";
     }
 
+    // DLM: need a better check here
     RemoteBCL remoteBCL;
     if (remoteBCL.isOnline()){
       json += "\"online\": true, ";
@@ -547,7 +555,7 @@ void EditorWebView::previewExport()
   // save the exported floorplan
   saveExport();
 
-  PreviewWebView* webView = new PreviewWebView(temp);
+  PreviewWebView* webView = new PreviewWebView(m_isIP, temp);
   QLayout* layout = new QVBoxLayout();
   layout->addWidget(webView);
 
