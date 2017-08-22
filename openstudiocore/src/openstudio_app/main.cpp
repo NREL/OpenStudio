@@ -47,6 +47,7 @@
 #include <QMessageBox>
 #include <QtPlugin>
 #include <QDir>
+#include <QTcpServer>
 #include <QtGlobal>
 
 #ifdef _WIN32
@@ -113,6 +114,17 @@ int main(int argc, char *argv[])
     QSharedPointer<openstudio::measure::OSMeasureInfoGetter> infoGetter(
       new openstudio::measure::EmbeddedRubyMeasureInfoGetter<openstudio::detail::RubyInterpreter>(rubyInterpreter));
        */
+
+    // find available port for debugging
+    QString debugPort(qgetenv("QTWEBENGINE_REMOTE_DEBUGGING"));
+    if (debugPort.isEmpty()){
+      QTcpServer tcpServer;
+      tcpServer.listen(QHostAddress::LocalHost);
+      quint16 port = tcpServer.serverPort();
+      tcpServer.close();
+      debugPort = QString::number(port);
+      qputenv("QTWEBENGINE_REMOTE_DEBUGGING", debugPort.toLocal8Bit());
+    }
 
     openstudio::OpenStudioApp app(argc, argv);
     openstudio::Application::instance().setApplication(&app);

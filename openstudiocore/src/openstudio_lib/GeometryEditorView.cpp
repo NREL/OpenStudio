@@ -49,6 +49,7 @@
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Checksum.hpp"
+#include "../utilities/bcl/RemoteBCL.hpp"
 #include "../utilities/geometry/FloorplanJS.hpp"
 #include "../utilities/geometry/ThreeJS.hpp"
 
@@ -91,8 +92,6 @@ DebugWebView::DebugWebView(const QString& debugPort, QWidget * parent)
 {
   auto mainLayout = new QVBoxLayout;
   setLayout(mainLayout);
-  
-  QString newDebugPort(qgetenv("QTWEBENGINE_REMOTE_DEBUGGING"));
 
   m_view = new QWebEngineView(this);
   m_view->settings()->setAttribute(QWebEngineSettings::WebAttribute::LocalContentCanAccessRemoteUrls, true);
@@ -132,14 +131,6 @@ EditorWebView::EditorWebView(const openstudio::model::Model& model, QWidget *t_p
 
   // find available port for debugging
   m_debugPort = QString(qgetenv("QTWEBENGINE_REMOTE_DEBUGGING"));
-  if (m_debugPort.isEmpty()){
-    QTcpServer tcpServer;
-    tcpServer.listen(QHostAddress::LocalHost);
-    quint16 port = tcpServer.serverPort();
-    tcpServer.close();
-    m_debugPort = QString::number(port);
-    qputenv("QTWEBENGINE_REMOTE_DEBUGGING", m_debugPort.toLocal8Bit());
-  }
 
   auto mainLayout = new QVBoxLayout;
   setLayout(mainLayout);
@@ -182,8 +173,13 @@ EditorWebView::EditorWebView(const openstudio::model::Model& model, QWidget *t_p
   m_mergeBtn->setEnabled(false);
 
   hLayout->addWidget(m_debugBtn, 0, Qt::AlignVCenter);
-  m_debugBtn->setVisible(true);
-  m_debugBtn->setEnabled(true);
+  if (m_debugPort.isEmpty()){
+    m_debugBtn->setVisible(false);
+    m_debugBtn->setEnabled(false);
+  } else{
+    m_debugBtn->setVisible(true);
+    m_debugBtn->setEnabled(true);
+  }
 
   m_view = new QWebEngineView(this);
   m_view->settings()->setAttribute(QWebEngineSettings::WebAttribute::LocalContentCanAccessRemoteUrls, true);
@@ -374,9 +370,16 @@ void EditorWebView::startEditor()
 
     std::string json = "{";
     if (m_floorplan){
-      json += "\"showMapDialogOnStart\": false,";
+      json += "\"showMapDialogOnStart\": false, ";
     } else{
-      json += "\"showMapDialogOnStart\": true,";
+      json += "\"showMapDialogOnStart\": true, ";
+    }
+
+    RemoteBCL remoteBCL;
+    if (remoteBCL.isOnline()){
+      json += "\"online\": true, ";
+    } else{
+      json += "\"online\": false, ";
     }
 
     if (m_isIP){
