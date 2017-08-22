@@ -347,11 +347,11 @@ namespace openstudio{
         if (const Json::Value* buildingUnit = findById(m_value["building_units"], id)){
           assertKeyAndType(*buildingUnit, "name", Json::stringValue);
           s = buildingUnit->get("name", "").asString();
-          userData.setBuildingStoryName(s);
+          userData.setBuildingUnitName(s);
 
           if (checkKeyAndType(*buildingUnit, "handle", Json::stringValue)){
             s = buildingUnit->get("handle", "").asString();
-            userData.setBuildingStoryHandle(s);
+            userData.setBuildingUnitHandle(s);
           }
         } else{
           LOG(Error, "Cannot find BuildingUnit '" << id << "'");
@@ -609,9 +609,9 @@ namespace openstudio{
 
       // DLM: temp code
       if (floorToCeilingHeight < 0.1){
-        belowFloorPlenumHeight = 1;
+        //belowFloorPlenumHeight = 1;
         floorToCeilingHeight = 3;
-        aboveCeilingPlenumHeight = 1;
+        //aboveCeilingPlenumHeight = 1;
       }
 
       // get the geometry
