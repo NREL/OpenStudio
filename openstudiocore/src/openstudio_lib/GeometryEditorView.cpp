@@ -48,6 +48,8 @@
 #include "../model/Space_Impl.hpp"
 #include "../model/ShadingSurfaceGroup.hpp"
 #include "../model/ShadingSurfaceGroup_Impl.hpp"
+#include "../model/Site.hpp"
+#include "../model/Site_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Checksum.hpp"
@@ -338,6 +340,8 @@ void EditorWebView::translateExport()
     if (model){
       // set north axis
       model->getUniqueModelObject<model::Building>().setNorthAxis(m_floorplan->northAxis());
+
+      // TODO: synchronize latitude and longitude
     }
   } else{
     // DLM: this is an error, the editor produced a JSON we can't read
@@ -399,11 +403,18 @@ void EditorWebView::startEditor()
       config["units"] = "m";
       config["initialGridSize"] = 1;
     }
-
-    Json::Value defaultLocation(Json::objectValue);
-    defaultLocation["latitude"] = 0;
-    defaultLocation["longitude"] = -104.9863;
-    config["defaultLocation"] = defaultLocation;
+    
+    boost::optional<model::Site> site = m_model.getOptionalUniqueModelObject<model::Site>();
+    if (site){
+      double latitude = site->latitude();
+      double longitude = site->longitude();
+      if ((latitude != 0) && (longitude != 0)){
+        Json::Value defaultLocation(Json::objectValue);
+        defaultLocation["latitude"] = latitude;
+        defaultLocation["longitude"] = longitude;
+        config["defaultLocation"] = defaultLocation;
+      }
+    }
 
     config["initialNorthAxis"] = m_model.getUniqueModelObject<model::Building>().northAxis();
 
