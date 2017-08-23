@@ -120,6 +120,7 @@
 #include <QProcess>
 #include <QTcpServer>
 #include <QtConcurrent>
+#include <QtGlobal>
 
 #include <OpenStudio.hxx>
 #include <utilities/idd/IddEnums.hxx>

@@ -66,6 +66,8 @@
 #include "../utilities/geometry/Transformation.hpp"
 #include "../utilities/geometry/Geometry.hpp"
 
+#include <QThread>
+
 #include <cmath>
 
 namespace openstudio
@@ -115,7 +117,37 @@ namespace openstudio
     }
 
     ThreeJSReverseTranslator::ThreeJSReverseTranslator()
-    {}
+    {
+      m_logSink.setLogLevel(Warn);
+      //m_logSink.setChannelRegex(boost::regex("openstudio\\.model\\.ThreeJSReverseTranslator"));
+      m_logSink.setThreadId(QThread::currentThread());    
+    }
+
+    std::vector<LogMessage> ThreeJSReverseTranslator::warnings() const
+    {
+      std::vector<LogMessage> result;
+
+      for (LogMessage logMessage : m_logSink.logMessages()){
+        if (logMessage.logLevel() == Warn){
+          result.push_back(logMessage);
+        }
+      }
+
+      return result;
+    }
+
+    std::vector<LogMessage> ThreeJSReverseTranslator::errors() const
+    {
+      std::vector<LogMessage> result;
+
+      for (LogMessage logMessage : m_logSink.logMessages()){
+        if (logMessage.logLevel() > Warn){
+          result.push_back(logMessage);
+        }
+      }
+
+      return result;
+    }
 
     std::map<UUID, UUID> ThreeJSReverseTranslator::handleMapping() const
     {
@@ -124,6 +156,9 @@ namespace openstudio
     
     boost::optional<Model> ThreeJSReverseTranslator::modelFromThreeJS(const ThreeScene& scene)
     {
+      m_logSink.setThreadId(QThread::currentThread());
+      m_logSink.resetStringStream();
+
       /// Mapping between handles referenced in ThreeScene (keys) and handles of objects in returned model (values) for last translation
       m_handleMapping.clear();
 
@@ -177,7 +212,7 @@ namespace openstudio
         boost::optional<ThreeMaterial> material = scene.getMaterial(child.material());
 
         ThreeUserData userData = child.userData();
-        
+
         std::string handle = userData.handle();
         std::string name = userData.name();
         std::string surfaceType = userData.surfaceType();
@@ -198,6 +233,9 @@ namespace openstudio
         std::string outsideBoundaryCondition = userData.outsideBoundaryCondition();
         std::string outsideBoundaryConditionObjectName = userData.outsideBoundaryConditionObjectName();
         std::string outsideBoundaryConditionObjectHandle = userData.outsideBoundaryConditionObjectHandle();
+        //bool plenum = userData.plenum();
+        //bool belowFloorPlenum = userData.belowFloorPlenum();
+        //bool aboveFloorPlenum = userData.aboveCeilingPlenum();
 
         boost::optional<ThermalZone> thermalZone = model.getConcreteModelObjectByName<ThermalZone>(thermalZoneName);
         if (!thermalZone && !thermalZoneName.empty()){

@@ -523,6 +523,9 @@ namespace openstudio{
   }
 
   ThreeUserData::ThreeUserData()
+    : m_coincidentWithOutsideObject(false)
+      //m_belowFloorPlenum(false),
+      //m_aboveCeilingPlenum(false)
   {}
 
   ThreeUserData::ThreeUserData(const Json::Value& value)
@@ -558,6 +561,8 @@ namespace openstudio{
     assertType(value, "coincidentWithOutsideObject", Json::stringValue);
     assertType(value, "sunExposure", Json::stringValue);
     assertType(value, "windExposure", Json::stringValue);
+    assertType(value, "belowFloorPlenum", Json::booleanValue);
+    assertType(value, "aboveCeilingPlenum", Json::booleanValue);
 
     m_handle = value.get("handle", "").asString();
     m_name = value.get("name", "").asString();
@@ -590,6 +595,8 @@ namespace openstudio{
     m_coincidentWithOutsideObject = value.get("coincidentWithOutsideObject", false).asBool();
     m_sunExposure = value.get("sunExposure", "").asString();
     m_windExposure = value.get("windExposure", "").asString();
+    //m_belowFloorPlenum = value.get("belowFloorPlenum", "").asBool();
+    //m_aboveCeilingPlenum = value.get("aboveCeilingPlenum", "").asBool();
   }
 
   Json::Value ThreeUserData::toJsonValue() const
@@ -627,6 +634,8 @@ namespace openstudio{
     result["coincidentWithOutsideObject"] = m_coincidentWithOutsideObject;
     result["sunExposure"] = m_sunExposure;
     result["windExposure"] = m_windExposure;
+    //result["belowFloorPlenum"] = m_belowFloorPlenum;
+    //result["aboveCeilingPlenum"] = m_aboveCeilingPlenum;
 
     return result;
   }
@@ -786,6 +795,21 @@ namespace openstudio{
     return m_windExposure;
   }
 
+  //bool ThreeUserData::plenum() const
+  //{
+  //  return (m_belowFloorPlenum || m_aboveCeilingPlenum);
+  //}
+
+  //bool ThreeUserData::belowFloorPlenum() const
+  //{
+  //  return m_belowFloorPlenum;
+  //}
+
+  //bool ThreeUserData::aboveCeilingPlenum() const
+  //{
+  //  return m_aboveCeilingPlenum;
+  //}
+
   void ThreeUserData::setHandle(const std::string& s)
   {
     m_handle = s;
@@ -940,6 +964,22 @@ namespace openstudio{
   {
     m_windExposure = s;
   }
+
+  //void ThreeUserData::setBelowFloorPlenum(bool v)
+  //{
+  //  m_belowFloorPlenum = v;
+  //  if (v){
+  //    m_aboveCeilingPlenum = false;
+  //  }
+  //}
+
+  //void ThreeUserData::setAboveCeilingPlenum(bool v)
+  //{
+  //  m_aboveCeilingPlenum = v;
+  //  if (v){
+  //    m_belowFloorPlenum = false;
+  //  }
+  //}
 
   ThreeSceneChild::ThreeSceneChild(const std::string& uuid, const std::string& name, const std::string& type,
                     const std::string& geometryId, const std::string& materialId, const ThreeUserData& userData)

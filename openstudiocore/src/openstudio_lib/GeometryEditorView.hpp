@@ -37,6 +37,7 @@
 #include "../utilities/geometry/FloorplanJS.hpp"
 
 #include <QWidget>
+#include <QDialog>
 #include <QWebEngineView>
 #include <QProgressBar>
 
@@ -62,6 +63,20 @@ class GeometryEditorView : public QWidget
 
 };
 
+// debug widget
+class DebugWebView : public QDialog
+{
+  Q_OBJECT;
+
+  public:
+    DebugWebView(const QString& debugPort, QWidget * parent = nullptr);
+    virtual ~DebugWebView();
+
+  private:
+
+    QWebEngineView * m_view;
+};
+
 // main widget
 
 class EditorWebView : public QWidget
@@ -69,7 +84,7 @@ class EditorWebView : public QWidget
   Q_OBJECT;
 
   public:
-    EditorWebView(const openstudio::model::Model& model, QWidget *t_parent = nullptr);
+    EditorWebView(bool isIP, const openstudio::model::Model& model, QWidget *t_parent = nullptr);
     virtual ~EditorWebView();
 
   public slots:
@@ -82,6 +97,7 @@ class EditorWebView : public QWidget
     void saveClickedBlocking(const openstudio::path&);
     void previewClicked();
     void mergeClicked();
+    void debugClicked();
     void startEditor();
     void doExport();
     void saveExport();
@@ -112,6 +128,7 @@ class EditorWebView : public QWidget
     model::Model m_exportModel;
     std::map<UUID, UUID> m_exportModelHandleMapping;
     QTimer* m_checkForUpdateTimer;
+    QString m_debugPort;
 
     QComboBox * m_geometrySourceComboBox;
     QPushButton * m_newImportGeometry;
@@ -119,6 +136,7 @@ class EditorWebView : public QWidget
     QPushButton * m_refreshBtn;
     QPushButton * m_previewBtn;
     QPushButton * m_mergeBtn;
+    QPushButton * m_debugBtn;
 
     QWebEngineView * m_view;
     std::shared_ptr<OSDocument> m_document;

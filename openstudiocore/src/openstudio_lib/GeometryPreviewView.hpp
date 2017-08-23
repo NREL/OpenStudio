@@ -68,7 +68,7 @@ class PreviewWebView : public QWidget
   Q_OBJECT;
 
   public:
-    PreviewWebView(const openstudio::model::Model& model, QWidget *t_parent = nullptr);
+    PreviewWebView(bool isIP, const openstudio::model::Model& model, QWidget *t_parent = nullptr);
     virtual ~PreviewWebView();
 
   public slots:
