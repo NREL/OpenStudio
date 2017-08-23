@@ -180,7 +180,7 @@ EditorWebView::EditorWebView(bool isIP, const openstudio::model::Model& model, Q
     m_debugBtn->setEnabled(false);
   } else{
     m_debugBtn->setVisible(true);
-    m_debugBtn->setEnabled(true);
+    m_debugBtn->setEnabled(false);
   }
 
   m_view = new QWebEngineView(this);
@@ -375,33 +375,45 @@ void EditorWebView::startEditor()
 
     m_javascriptRunning = true;
 
-    std::string json = "{";
+    Json::Value config(Json::objectValue);
+    config["showImportExport"] = false;
+
     if (m_floorplan){
-      json += "\"showMapDialogOnStart\": false, ";
+      config["showMapDialogOnStart"] = false;
     } else{
-      json += "\"showMapDialogOnStart\": true, ";
+      config["showMapDialogOnStart"] = true;
     }
 
     // DLM: need a better check here
     RemoteBCL remoteBCL;
     if (remoteBCL.isOnline()){
-      json += "\"online\": true, ";
+      config["online"] = true;
     } else{
-      json += "\"online\": false, ";
+      config["online"] = false;
     }
 
     if (m_isIP){
-      json += "\"units\": \"ft\"";
+      config["units"] = "ft";
+      config["initialGridSize"] = 4;
     }else{
-      json += "\"units\": \"m\"";
+      config["units"] = "m";
+      config["initialGridSize"] = 1;
     }
 
-    json += "}";
+    Json::Value defaultLocation(Json::objectValue);
+    defaultLocation["latitude"] = 0;
+    defaultLocation["longitude"] = -104.9863;
+    config["defaultLocation"] = defaultLocation;
+
+    config["initialNorthAxis"] = m_model.getUniqueModelObject<model::Building>().northAxis();
+
+    Json::FastWriter writer;
+    std::string json = writer.write(config);
 
     QString javascript = QString("window.api.setConfig(") + QString::fromStdString(json) + QString(");");
     m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_javascriptRunning = false; });
     while (m_javascriptRunning){
-      OSAppBase::instance()->processEvents(QEventLoop::ExcludeUserInputEvents);
+      OSAppBase::instance()->processEvents(QEventLoop::ExcludeUserInputEvents, 200);
     }
   }
 
@@ -414,7 +426,7 @@ void EditorWebView::startEditor()
     QString javascript = QString("window.api.init();");
     m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_javascriptRunning = false; });
     while (m_javascriptRunning){
-      OSAppBase::instance()->processEvents(QEventLoop::ExcludeUserInputEvents);
+      OSAppBase::instance()->processEvents(QEventLoop::ExcludeUserInputEvents, 200);
     }
   }
 
@@ -432,7 +444,7 @@ void EditorWebView::startEditor()
       QString javascript = QString("window.api.openFloorplan(JSON.stringify(") + QString::fromStdString(json) + QString("));");
       m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_javascriptRunning = false; });
       while (m_javascriptRunning){
-        OSAppBase::instance()->processEvents(QEventLoop::ExcludeUserInputEvents);
+        OSAppBase::instance()->processEvents(QEventLoop::ExcludeUserInputEvents, 200);
       }
 
     } else{
@@ -467,7 +479,7 @@ void EditorWebView::startEditor()
       QString javascript = QString("window.api.importLibrary(JSON.stringify(") + QString::fromStdString(json) + QString("));");
       m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_javascriptRunning = false; });
       while (m_javascriptRunning){
-        OSAppBase::instance()->processEvents(QEventLoop::ExcludeUserInputEvents);
+        OSAppBase::instance()->processEvents(QEventLoop::ExcludeUserInputEvents, 200);
       }
     }
   }
@@ -487,7 +499,7 @@ void EditorWebView::doExport()
     QString javascript = QString("JSON.stringify(window.api.exportFloorplan());");
     m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_export = v; m_javascriptRunning = false; });
     while (m_javascriptRunning){
-      OSAppBase::instance()->processEvents(QEventLoop::ExcludeUserInputEvents);
+      OSAppBase::instance()->processEvents(QEventLoop::ExcludeUserInputEvents, 200);
     }
     m_document->enable();
 
@@ -555,15 +567,22 @@ void EditorWebView::previewExport()
   // save the exported floorplan
   saveExport();
 
+  bool signalsBlocked = m_checkForUpdateTimer->blockSignals(true);
+
   PreviewWebView* webView = new PreviewWebView(m_isIP, temp);
   QLayout* layout = new QVBoxLayout();
   layout->addWidget(webView);
 
-  QDialog* dialog = new QDialog(this, Qt::Dialog | Qt::WindowTitleHint | Qt::WindowCloseButtonHint);
-  dialog->setModal(true);
-  dialog->setWindowTitle("Geometry Preview");
-  dialog->setLayout(layout);
-  dialog->open();
+  QDialog dialog(this, Qt::Dialog | Qt::WindowTitleHint | Qt::WindowCloseButtonHint);
+  dialog.setModal(true);
+  dialog.setWindowTitle("Geometry Preview");
+  dialog.setLayout(layout);
+  dialog.exec();
+
+  delete webView;
+  delete layout;
+
+  m_checkForUpdateTimer->blockSignals(signalsBlocked);
 
   m_document->enable();
   m_previewBtn->setEnabled(true);
@@ -632,7 +651,7 @@ void EditorWebView::checkForUpdate()
     m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_versionNumber = v.toUInt();  m_javascriptRunning = false; });
     while (m_javascriptRunning){
       // DLM: instead ignore user events
-      OSAppBase::instance()->processEvents(QEventLoop::ExcludeUserInputEvents);
+      OSAppBase::instance()->processEvents(QEventLoop::ExcludeUserInputEvents, 200);
     }
 
     //m_document->enable();
@@ -672,6 +691,7 @@ void EditorWebView::onLoadFinished(bool ok)
       m_refreshBtn->setEnabled(true);
       m_previewBtn->setEnabled(true);
       m_mergeBtn->setEnabled(true);
+      m_debugBtn->setEnabled(true);
     }
 
     m_progressBar->setStyleSheet("");

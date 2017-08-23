@@ -207,7 +207,7 @@ void PreviewWebView::onLoadFinished(bool ok)
 void PreviewWebView::onTranslateProgress(double percentage)
 {
   m_progressBar->setValue(10 + 0.8*percentage);
-  Application::instance().processEvents();
+  OSAppBase::instance()->processEvents(QEventLoop::ExcludeUserInputEvents, 200);
 }
 
 void PreviewWebView::onJavaScriptFinished(const QVariant &v)
