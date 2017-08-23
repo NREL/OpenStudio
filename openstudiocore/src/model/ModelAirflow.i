@@ -55,12 +55,13 @@ MODELOBJECT_TEMPLATES(AirflowNetworkFan);
 MODELOBJECT_TEMPLATES(AirflowNetworkHorizontalOpening);
 MODELOBJECT_TEMPLATES(AirflowNetworkLeakageRatio);
 MODELOBJECT_TEMPLATES(AirflowNetworkOccupantVentilationControl);
+MODELOBJECT_TEMPLATES(AirflowNetworkOutdoorAirflow);
 MODELOBJECT_TEMPLATES(AirflowNetworkReferenceCrackConditions);
 MODELOBJECT_TEMPLATES(AirflowNetworkSimpleOpening);
 UNIQUEMODELOBJECT_TEMPLATES(AirflowNetworkSimulationControl);
 MODELOBJECT_TEMPLATES(AirflowNetworkSurface);
-MODELOBJECT_TEMPLATES(AirflowNetworkEquipmentLinkage);
 MODELOBJECT_TEMPLATES(AirflowNetworkZone);
+MODELOBJECT_TEMPLATES(AirflowNetworkZoneExhaustFan);
 
 SWIG_MODELOBJECT(AirflowNetworkConstantPressureDrop, 1);
 SWIG_MODELOBJECT(AirflowNetworkCrack, 1);
@@ -76,12 +77,13 @@ SWIG_MODELOBJECT(AirflowNetworkFan, 1);
 SWIG_MODELOBJECT(AirflowNetworkHorizontalOpening, 1);
 SWIG_MODELOBJECT(AirflowNetworkLeakageRatio, 1);
 SWIG_MODELOBJECT(AirflowNetworkOccupantVentilationControl, 1);
+SWIG_MODELOBJECT(AirflowNetworkOutdoorAirflow, 1);
 SWIG_MODELOBJECT(AirflowNetworkReferenceCrackConditions, 1);
 SWIG_MODELOBJECT(AirflowNetworkSimpleOpening, 1);
 SWIG_UNIQUEMODELOBJECT(AirflowNetworkSimulationControl);
 SWIG_MODELOBJECT(AirflowNetworkSurface, 1);
-SWIG_MODELOBJECT(AirflowNetworkEquipmentLinkage, 1);
 SWIG_MODELOBJECT(AirflowNetworkZone, 1);
+SWIG_MODELOBJECT(AirflowNetworkZoneExhaustFan, 1);
 
 //#if defined(SWIGCSHARP) || defined(SWIGJAVA)
 //  %inline {

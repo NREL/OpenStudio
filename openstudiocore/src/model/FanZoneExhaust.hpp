@@ -37,12 +37,12 @@ namespace openstudio {
 namespace model {
 
 class Schedule;
-class AirflowNetworkEquipmentLinkage;
+class AirflowNetworkZoneExhaustFan;
 class AirflowNetworkCrack;
 
 namespace detail {
 
-  class FanZoneExhaust_Impl;
+class FanZoneExhaust_Impl;
 
 } // detail
 
@@ -119,8 +119,8 @@ class MODEL_API FanZoneExhaust : public ZoneHVACComponent {
   /** @name Other */
   //@{
 
-  boost::optional<AirflowNetworkEquipmentLinkage> createAirflowNetworkEquipmentLinkage(const AirflowNetworkCrack& crack);
-  boost::optional<AirflowNetworkEquipmentLinkage> airflowNetworkEquipmentLinkage();
+  boost::optional<AirflowNetworkZoneExhaustFan> createAirflowNetworkZoneExhaustFan(const AirflowNetworkCrack& crack);
+  boost::optional<AirflowNetworkZoneExhaustFan> airflowNetworkZoneExhaustFan();
 
   //@}
  protected:

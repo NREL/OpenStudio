@@ -26,80 +26,87 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
 
-#ifndef MODEL_AIRFLOWNETWORKEQUIPMENTLINKAGE_IMPL_HPP
-#define MODEL_AIRFLOWNETWORKEQUIPMENTLINKAGE_IMPL_HPP
+#ifndef MODEL_AIRFLOWNETWORKOUTDOORAIRFLOW_HPP
+#define MODEL_AIRFLOWNETWORKOUTDOORAIRFLOW_HPP
 
 #include <model/ModelAPI.hpp>
-#include "ModelObject_Impl.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {
 namespace model {
 
-class FanZoneExhaust;
 class ControllerOutdoorAir;
 class AirflowNetworkCrack;
 
 namespace detail {
 
-/** AirflowNetworkZoneExhaustFan_Impl is a ModelObject_Impl that is the implementation class for AirflowNetworkZoneExhaustFan.*/
-class MODEL_API AirflowNetworkEquipmentLinkage_Impl : public ModelObject_Impl {
-public:
+  class ControllerOutdoorAir_Impl;
+  class AirflowNetworkOutdoorAirflow_Impl;
+
+} // detail
+
+/** AirflowNetworkOutdoorAirflow is a ModelObject that wraps the OpenStudio IDD object 'OS:AirflowNetworkOutdoorAirflow'. */
+class MODEL_API AirflowNetworkOutdoorAirflow : public ModelObject {
+ public:
   /** @name Constructors and Destructors */
   //@{
 
-  AirflowNetworkEquipmentLinkage_Impl(const IdfObject& idfObject,
-    Model_Impl* model,
-    bool keepHandle);
-
-  AirflowNetworkEquipmentLinkage_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-    Model_Impl* model,
-    bool keepHandle);
-
-  AirflowNetworkEquipmentLinkage_Impl(const AirflowNetworkEquipmentLinkage_Impl& other,
-    Model_Impl* model,
-    bool keepHandle);
-
-  virtual ~AirflowNetworkEquipmentLinkage_Impl() {}
+  virtual ~AirflowNetworkOutdoorAirflow() {}
 
   //@}
-  /** @name Virtual Methods */
-  //@{
 
-  virtual const std::vector<std::string>& outputVariableNames() const;
+  static IddObjectType iddObjectType();
 
-  virtual IddObjectType iddObjectType() const;
-
-  //@}
   /** @name Getters */
   //@{
 
-  boost::optional<FanZoneExhaust> fanZoneExhaust() const;
+  /** Returns the ControllerOutdoorAir object associated with this object, if any */
   boost::optional<ControllerOutdoorAir> controllerOutdoorAir() const;
+  /** Returns the AirflowNetworkCrack object associated with this object, if any */
   boost::optional<AirflowNetworkCrack> crack() const;
 
   //@}
   /** @name Setters */
   //@{
 
+  /** Sets the AirflowNetworkCrack object associated with this object. */
   bool setCrack(const AirflowNetworkCrack& crack);
+  /** Resets the AirflowNetworkCrack object for this object. */
   void resetCrack();
 
   //@}
   /** @name Other */
   //@{
-  void resetEquipment();
 
   //@}
-protected:
-private:
-  REGISTER_LOGGER("openstudio.model.AirflowNetworkEquipmentLinkage");
+ protected:
+  /// @cond
+  typedef detail::AirflowNetworkOutdoorAirflow_Impl ImplType;
 
+  AirflowNetworkOutdoorAirflow(const Model& model, const AirflowNetworkCrack &crack, const Handle &handle);
+
+  explicit AirflowNetworkOutdoorAirflow(std::shared_ptr<detail::AirflowNetworkOutdoorAirflow_Impl> impl);
+
+  void resetControllerOutdoorAir();
+
+  friend class detail::ControllerOutdoorAir_Impl;
+  friend class detail::AirflowNetworkOutdoorAirflow_Impl;
+  friend class Model;
+  friend class IdfObject;
+  friend class openstudio::detail::IdfObject_Impl;
+  /// @endcond
+ private:
+  REGISTER_LOGGER("openstudio.model.AirflowNetworkOutdoorAirflow");
 };
 
-} // detail
+/** \relates AirflowNetworkOutdoorAirflow*/
+typedef boost::optional<AirflowNetworkOutdoorAirflow> OptionalAirflowNetworkOutdoorAirflow;
+
+/** \relates AirflowNetworkOutdoorAirflow*/
+typedef std::vector<AirflowNetworkOutdoorAirflow> AirflowNetworkOutdoorAirflowVector;
 
 } // model
 } // openstudio
 
-#endif // MODEL_AIRFLOWNETWORKEQUIPMENTLINKAGE_IMPL_HPP
+#endif // MODEL_AIRFLOWNETWORKOUTDOORAIRFLOW_HPP
 

@@ -26,63 +26,80 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
 
-#include <gtest/gtest.h>
+#ifndef MODEL_AIRFLOWNETWORKOUTDOORAIRFLOW_IMPL_HPP
+#define MODEL_AIRFLOWNETWORKOUTDOORAIRFLOW_IMPL_HPP
 
-#include "ModelFixture.hpp"
+#include <model/ModelAPI.hpp>
+#include "ModelObject_Impl.hpp"
 
-#include "../Model.hpp"
-#include "../ControllerOutdoorAir.hpp"
-#include "../AirflowNetworkOutdoorAirflow.hpp"
-#include "../AirflowNetworkOutdoorAirflow_Impl.hpp"
-#include "../AirflowNetworkCrack.hpp"
-#include "../AirflowNetworkCrack_Impl.hpp"
-#include "../AirflowNetworkReferenceCrackConditions.hpp"
-#include "../AirflowNetworkReferenceCrackConditions_Impl.hpp"
+namespace openstudio {
+namespace model {
 
-#include <utilities/idd/OS_Controller_OutdoorAir_FieldEnums.hxx>
-#include <utilities/idd/IddEnums.hxx>
+// TODO: Check the following class names against object getters and setters.
+class OutdoorAirController;
+class Crack;
 
-using namespace openstudio;
-using namespace openstudio::model;
+namespace detail {
 
-/*
-TEST_F(ModelFixture,ControllerOutdoorAir_IddKeys) {
-  Model myModel;
-  ControllerOutdoorAir controller(myModel);
-  IddObject obj = controller.iddObject();
-  OptionalIddField f = obj.getField(Controller_OutdoorAirFields::EconomizerControlType);
-  ASSERT_TRUE(f);
-  EXPECT_TRUE(f->properties().type == IddFieldType::ChoiceType);
-  IddKeyVector keys = f->keys();
-  EXPECT_EQ(static_cast<unsigned>(8),keys.size());
-  LOG(Info,"Keys for field " << Controller_OutdoorAirFields::EconomizerControlType
-      << ", " << f->name() << ", of IddObject " << obj.name() << ":");
-  unsigned i = 0;
-  for (IddKey& key : keys) {
-    LOG(Info,"  Key " << i << ": " << key.name());
-    ++i;
-  }
-}
-*/
+  /** AirflowNetworkOutdoorAirflow_Impl is a ModelObject_Impl that is the implementation class for AirflowNetworkOutdoorAirflow.*/
+  class MODEL_API AirflowNetworkOutdoorAirflow_Impl : public ModelObject_Impl {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-TEST_F(ModelFixture, FanZoneExhaust_AddAFNOutdoorAirflow)
-{
-  Model model;
-  ControllerOutdoorAir controller(model);
+    AirflowNetworkOutdoorAirflow_Impl(const IdfObject& idfObject,
+                                      Model_Impl* model,
+                                      bool keepHandle);
 
-  EXPECT_FALSE(controller.airflowNetworkOutdoorAirflow());
+    AirflowNetworkOutdoorAirflow_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                      Model_Impl* model,
+                                      bool keepHandle);
 
-  AirflowNetworkCrack crack(model, 1.0, 0.5);
-  EXPECT_EQ(1, crack.airMassFlowCoefficient());
-  EXPECT_EQ(0.5, crack.airMassFlowExponent());
-  EXPECT_FALSE(crack.referenceCrackConditions());
+    AirflowNetworkOutdoorAirflow_Impl(const AirflowNetworkOutdoorAirflow_Impl& other,
+                                      Model_Impl* model,
+                                      bool keepHandle);
 
-  auto optobject = controller.createAirflowNetworkOutdoorAirflow(crack);
+    virtual ~AirflowNetworkOutdoorAirflow_Impl() {}
 
-  ASSERT_TRUE(optobject);
+    //@}
+    /** @name Virtual Methods */
+    //@{
 
-  auto afnobject = optobject.get();
-  ASSERT_TRUE(afnobject.crack());
-  EXPECT_EQ(crack, afnobject.crack().get());
-}
+    virtual const std::vector<std::string>& outputVariableNames() const;
+
+    virtual IddObjectType iddObjectType() const;
+
+    //@}
+    /** @name Getters */
+    //@{
+
+    boost::optional<ControllerOutdoorAir> controllerOutdoorAir() const;
+    boost::optional<AirflowNetworkCrack> crack() const;
+
+    //@}
+    /** @name Setters */
+    //@{
+
+    bool setCrack(const AirflowNetworkCrack& crack);
+    void resetCrack();
+
+    //@}
+    /** @name Other */
+    //@{
+
+    void resetControllerOutdoorAir();
+
+    //@}
+   protected:
+   private:
+    REGISTER_LOGGER("openstudio.model.AirflowNetworkOutdoorAirflow");
+
+  };
+
+} // detail
+
+} // model
+} // openstudio
+
+#endif // MODEL_AIRFLOWNETWORKOUTDOORAIRFLOW_IMPL_HPP
 

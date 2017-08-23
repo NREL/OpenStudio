@@ -26,35 +26,32 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
 
-#ifndef MODEL_AIRFLOWNETWORKEQUIPMENTLINKAGE_HPP
-#define MODEL_AIRFLOWNETWORKEQUIPMENTLINKAGE_HPP
+#ifndef MODEL_AIRFLOWNETWORKZONEEXHAUSTFAN_HPP
+#define MODEL_AIRFLOWNETWORKZONEEXHAUSTFAN_HPP
 
 #include <model/ModelAPI.hpp>
 #include "ModelObject.hpp"
 
 namespace openstudio {
-
 namespace model {
 
 class FanZoneExhaust;
-class ControllerOutdoorAir;
 class AirflowNetworkCrack;
 
 namespace detail {
 
-class AirflowNetworkEquipmentLinkage_Impl;
-class FanZoneExhaust_Impl;
-class ControllerOutdoorAir_Impl;
+  class FanZoneExhaust_Impl;
+  class AirflowNetworkZoneExhaustFan_Impl;
 
 } // detail
 
-/** AirflowNetworkZoneExhaustFan is a ModelObject that wraps the OpenStudio IDD object 'OS:AirflowNetworkEquipmentLinkage'. */
-class MODEL_API AirflowNetworkEquipmentLinkage : public ModelObject {
+/** AirflowNetworkZoneExhaustFan is a ModelObject that wraps the OpenStudio IDD object 'OS:AirflowNetworkZoneExhaustFan'. */
+class MODEL_API AirflowNetworkZoneExhaustFan : public ModelObject {
  public:
   /** @name Constructors and Destructors */
   //@{
 
-  virtual ~AirflowNetworkEquipmentLinkage() {}
+  virtual ~AirflowNetworkZoneExhaustFan() {}
 
   //@}
 
@@ -62,16 +59,16 @@ class MODEL_API AirflowNetworkEquipmentLinkage : public ModelObject {
 
   /** @name Getters */
   //@{
+
   /** Returns the FanZoneExhaust object associated with this object, if any */
   boost::optional<FanZoneExhaust> fanZoneExhaust() const;
-  /** Returns the ControllerOutdoorAir object associated with this object, if any */
-  boost::optional<ControllerOutdoorAir> controllerOutdoorAir() const;
   /** Returns the AirflowNetworkCrack object associated with this object, if any */
   boost::optional<AirflowNetworkCrack> crack() const;
 
   //@}
   /** @name Setters */
   //@{
+
   /** Sets the AirflowNetworkCrack object associated with this object. */
   bool setCrack(const AirflowNetworkCrack& crack);
   /** Resets the AirflowNetworkCrack object for this object. */
@@ -84,33 +81,32 @@ class MODEL_API AirflowNetworkEquipmentLinkage : public ModelObject {
   //@}
  protected:
   /// @cond
-  typedef detail::AirflowNetworkEquipmentLinkage_Impl ImplType;
+  typedef detail::AirflowNetworkZoneExhaustFan_Impl ImplType;
 
-  explicit AirflowNetworkEquipmentLinkage(std::shared_ptr<detail::AirflowNetworkEquipmentLinkage_Impl> impl);
+  AirflowNetworkZoneExhaustFan(const Model& model, const AirflowNetworkCrack &crack, const Handle &handle);
 
-  AirflowNetworkEquipmentLinkage(const Model &model, const AirflowNetworkCrack& crack, const Handle &handle);
+  explicit AirflowNetworkZoneExhaustFan(std::shared_ptr<detail::AirflowNetworkZoneExhaustFan_Impl> impl);
 
-  void resetEquipment();
+  void resetFanZoneExhaust();
 
   friend class detail::FanZoneExhaust_Impl;
-  friend class detail::ControllerOutdoorAir_Impl;
-  friend class detail::AirflowNetworkEquipmentLinkage_Impl;
+  friend class detail::AirflowNetworkZoneExhaustFan_Impl;
   friend class Model;
   friend class IdfObject;
   friend class openstudio::detail::IdfObject_Impl;
   /// @endcond
  private:
-  REGISTER_LOGGER("openstudio.model.AirflowNetworkEquipmentLinkage");
+  REGISTER_LOGGER("openstudio.model.AirflowNetworkZoneExhaustFan");
 };
 
 /** \relates AirflowNetworkZoneExhaustFan*/
-typedef boost::optional<AirflowNetworkEquipmentLinkage> OptionalAirflowNetworkEquipmentLinkage;
+typedef boost::optional<AirflowNetworkZoneExhaustFan> OptionalAirflowNetworkZoneExhaustFan;
 
 /** \relates AirflowNetworkZoneExhaustFan*/
-typedef std::vector<AirflowNetworkEquipmentLinkage> AirflowNetworkEquipmentLinkageVector;
+typedef std::vector<AirflowNetworkZoneExhaustFan> AirflowNetworkZoneExhaustFanVector;
 
 } // model
 } // openstudio
 
-#endif // MODEL_AIRFLOWNETWORKEQUIPMENTLINKAGE_HPP
+#endif // MODEL_AIRFLOWNETWORKZONEEXHAUSTFAN_HPP
 

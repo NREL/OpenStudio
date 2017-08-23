@@ -36,8 +36,8 @@
 #include "ScheduleCompact_Impl.hpp"
 #include "CurveQuadratic.hpp"
 #include "CurveQuadratic_Impl.hpp"
-#include "AirflowNetworkEquipmentLinkage.hpp"
-#include "AirflowNetworkEquipmentLinkage_Impl.hpp"
+#include "AirflowNetworkOutdoorAirflow.hpp"
+#include "AirflowNetworkOutdoorAirflow_Impl.hpp"
 #include "AirflowNetworkCrack.hpp"
 #include "AirflowNetworkCrack_Impl.hpp"
 
@@ -116,7 +116,7 @@ namespace detail {
     //result.push_back(this->getMinimumFractionOfOutdoorAirSchedule());
     //result.push_back(this->getMaximumFractionOfOutdoorAirSchedule());
     //result.push_back(this->getTimeOfDayEconomizerControlSchedule());
-    std::vector<AirflowNetworkEquipmentLinkage> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquipmentLinkage>(AirflowNetworkEquipmentLinkage::iddObjectType());
+    std::vector<AirflowNetworkOutdoorAirflow> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkOutdoorAirflow>(AirflowNetworkOutdoorAirflow::iddObjectType());
     result.insert(result.end(), myAFNItems.begin(), myAFNItems.end());
     return result;
   }
@@ -354,13 +354,6 @@ namespace detail {
     return result;
   }
 
-
-
-
-
-
-
-
   //get needs to return a boost optional double since "" is a valid input
   boost::optional<double> ControllerOutdoorAir_Impl::getEconomizerMaximumLimitEnthalpy() const
   {
@@ -414,9 +407,6 @@ namespace detail {
     }
     return result;
   }
-
-
-
 
   std::string ControllerOutdoorAir_Impl::getLockoutType() const
   {
@@ -664,18 +654,18 @@ namespace detail {
     return result;
   }
 
-  boost::optional<AirflowNetworkEquipmentLinkage> ControllerOutdoorAir_Impl::createAirflowNetworkEquipmentLinkage(const AirflowNetworkCrack& crack)
+  boost::optional<AirflowNetworkOutdoorAirflow> ControllerOutdoorAir_Impl::createAirflowNetworkOutdoorAirflow(const AirflowNetworkCrack& crack)
   {
-    boost::optional<AirflowNetworkEquipmentLinkage> opt = airflowNetworkEquipmentLinkage();
+    boost::optional<AirflowNetworkOutdoorAirflow> opt = airflowNetworkOutdoorAirflow();
     if (opt) {
       return boost::none;
     }
-    return AirflowNetworkEquipmentLinkage(model(), crack, handle());
+    return AirflowNetworkOutdoorAirflow(model(), crack, handle());
   }
 
-  boost::optional<AirflowNetworkEquipmentLinkage> ControllerOutdoorAir_Impl::airflowNetworkEquipmentLinkage()
+  boost::optional<AirflowNetworkOutdoorAirflow> ControllerOutdoorAir_Impl::airflowNetworkOutdoorAirflow()
   {
-    std::vector<AirflowNetworkEquipmentLinkage> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquipmentLinkage>(AirflowNetworkEquipmentLinkage::iddObjectType());
+    std::vector<AirflowNetworkOutdoorAirflow> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkOutdoorAirflow>(AirflowNetworkOutdoorAirflow::iddObjectType());
     auto count = myAFNItems.size();
     if (count == 1) {
       return myAFNItems[0];
@@ -1023,14 +1013,14 @@ void ControllerOutdoorAir::resetTimeofDayEconomizerControlSchedule()
   getImpl<detail::ControllerOutdoorAir_Impl>()->resetTimeofDayEconomizerControlSchedule();
 }
 
-boost::optional<AirflowNetworkEquipmentLinkage> ControllerOutdoorAir::createAirflowNetworkEquipmentLinkage(const AirflowNetworkCrack& crack)
+boost::optional<AirflowNetworkOutdoorAirflow> ControllerOutdoorAir::createAirflowNetworkOutdoorAirflow(const AirflowNetworkCrack& crack)
 {
-  return getImpl<detail::ControllerOutdoorAir_Impl>()->createAirflowNetworkEquipmentLinkage(crack);
+  return getImpl<detail::ControllerOutdoorAir_Impl>()->createAirflowNetworkOutdoorAirflow(crack);
 }
 
-boost::optional<AirflowNetworkEquipmentLinkage> ControllerOutdoorAir::airflowNetworkEquipmentLinkage()
+boost::optional<AirflowNetworkOutdoorAirflow> ControllerOutdoorAir::airflowNetworkOutdoorAirflow()
 {
-  return getImpl<detail::ControllerOutdoorAir_Impl>()->airflowNetworkEquipmentLinkage();
+  return getImpl<detail::ControllerOutdoorAir_Impl>()->airflowNetworkOutdoorAirflow();
 }
 
 } // model

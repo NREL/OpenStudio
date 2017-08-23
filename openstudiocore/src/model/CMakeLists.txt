@@ -88,6 +88,9 @@ set(${target_name}_src
   AirflowNetworkOccupantVentilationControl.hpp
   AirflowNetworkOccupantVentilationControl_Impl.hpp
   AirflowNetworkOccupantVentilationControl.cpp
+  AirflowNetworkOutdoorAirflow.hpp
+  AirflowNetworkOutdoorAirflow_Impl.hpp
+  AirflowNetworkOutdoorAirflow.cpp
   AirflowNetworkReferenceCrackConditions.hpp
   AirflowNetworkReferenceCrackConditions_Impl.hpp
   AirflowNetworkReferenceCrackConditions.cpp
@@ -103,9 +106,9 @@ set(${target_name}_src
   AirflowNetworkZone.hpp
   AirflowNetworkZone_Impl.hpp
   AirflowNetworkZone.cpp
-  AirflowNetworkEquipmentLinkage.hpp
-  AirflowNetworkEquipmentLinkage_Impl.hpp
-  AirflowNetworkEquipmentLinkage.cpp
+  AirflowNetworkZoneExhaustFan.hpp
+  AirflowNetworkZoneExhaustFan_Impl.hpp
+  AirflowNetworkZoneExhaustFan.cpp
   AirGap.hpp
   AirGap_Impl.hpp
   AirGap.cpp
