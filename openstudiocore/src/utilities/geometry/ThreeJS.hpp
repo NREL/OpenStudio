@@ -351,6 +351,11 @@ namespace openstudio{
   /// ThreeModelObjectMetadata includes metadata about an OpenStudio ModelObject
   class UTILITIES_API ThreeModelObjectMetadata{
   public: 
+
+    // DLM: public default ctor seems to be only to make SWIG happy, normal tricks of ignoring vector resize did not work 
+    // additionally private default ctor with template<class _Ty> friend class std::allocator; also did not work
+    ThreeModelObjectMetadata();
+
     ThreeModelObjectMetadata(const std::string& iddObjectType, const std::string& handle, const std::string& name);
     std::string iddObjectType() const;
     std::string handle() const;
@@ -358,10 +363,6 @@ namespace openstudio{
 
   private:
     friend class ThreeSceneMetadata;
-
-    // DLM: friend std::allocator and private default ctor are only to make SWIG happy, normal tricks of ignoring vector resize did not work for some reason
-    template<class _Ty> friend class std::allocator;
-    ThreeModelObjectMetadata();
 
     ThreeModelObjectMetadata(const Json::Value& json);
     Json::Value toJsonValue() const;
