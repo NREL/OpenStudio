@@ -100,16 +100,9 @@ void LocationTabController::setSubTab(int index)
     m_currentIndex = index;
   }
 
-  if (qobject_cast<LocationView *>(m_currentView)) {
-    disconnect(this, &LocationTabController::toggleUnitsClicked, qobject_cast<LocationView *>(m_currentView), &LocationView::toggleUnitsClicked);
-  }
-  else if (qobject_cast<LifeCycleCostsView *>(m_currentView)) {
-  }
-  else if (qobject_cast<UtilityBillsInspectorView *>(m_currentView) || qobject_cast<QLabel *>(m_currentView)) {
-  }
-  else if (m_currentView) {
-    // Oops! Should never get here
-    OS_ASSERT(false);
+  if (m_currentView) {
+    m_currentView->disconnect();
+    delete m_currentView;
   }
 
   switch (index){

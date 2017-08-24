@@ -47,6 +47,7 @@
 #include <QMessageBox>
 #include <QtPlugin>
 #include <QDir>
+#include <QTcpServer>
 #include <QtGlobal>
 
 #ifdef _WIN32
@@ -66,6 +67,50 @@
 //  Q_IMPORT_PLUGIN(QXcbIntegrationPlugin);  
 //#endif
 
+void qDebugMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+{
+    QByteArray localMsg = msg.toLocal8Bit();
+    switch (type) {
+    case QtDebugMsg:
+        fprintf(stderr, "Debug: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
+        break;
+    case QtInfoMsg:
+        fprintf(stderr, "Info: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
+        break;
+    case QtWarningMsg:
+        fprintf(stderr, "Warning: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
+        break;
+    case QtCriticalMsg:
+        fprintf(stderr, "Critical: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
+        break;
+    case QtFatalMsg:
+        fprintf(stderr, "Fatal: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
+        abort();
+    }
+}
+
+void qMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+{
+    QByteArray localMsg = msg.toLocal8Bit();
+    switch (type) {
+    case QtDebugMsg:
+        //fprintf(stderr, "Debug: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
+        break;
+    case QtInfoMsg:
+        //fprintf(stderr, "Info: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
+        break;
+    case QtWarningMsg:
+        //fprintf(stderr, "Warning: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
+        break;
+    case QtCriticalMsg:
+        fprintf(stderr, "Critical: %s\n", localMsg.constData());
+        break;
+    case QtFatalMsg:
+        fprintf(stderr, "Fatal: %s\n", localMsg.constData());
+        abort();
+    }
+}
+
 int main(int argc, char *argv[])
 {
   /*
@@ -80,18 +125,21 @@ int main(int argc, char *argv[])
   Q_INIT_RESOURCE(openstudio);
 #endif // SHARED_OS_LIBS
 
+// DLM: on Windows run with 'OpenStudioApp.exe  > out.log 2>&1' to capture all debug output
+// DLM: set env var 'QT_FATAL_WARNINGS' to error on qt warnings for debugging
 #if _DEBUG || (__GNUC__ && !NDEBUG)
-#ifdef _WIN32
-  const char *logfilepath = "./openstudio.log";
+  bool debugging = true;
 #else
-  const char *logfilepath = "/var/log/openstudio.log";
+  bool debugging = (qEnvironmentVariableIsSet("OPENSTUDIO_APPLICATION_DEBUG") && !qEnvironmentVariableIsEmpty("OPENSTUDIO_APPLICATION_DEBUG"));
 #endif
-  openstudio::Logger::instance().standardOutLogger().setLogLevel(Debug);
-  openstudio::FileLogSink fileLog(openstudio::toPath(logfilepath));
-  fileLog.setLogLevel(Debug);
-#else
-  openstudio::Logger::instance().standardOutLogger().setLogLevel(Warn);
-#endif
+
+  if (debugging){
+    qInstallMessageHandler(qDebugMessageHandler);
+    openstudio::Logger::instance().standardOutLogger().setLogLevel(Debug);
+  }else{
+    qInstallMessageHandler(qMessageHandler);
+    openstudio::Logger::instance().standardOutLogger().setLogLevel(Warn);
+  }
 
   bool cont = true;
   while(cont) {
@@ -113,6 +161,17 @@ int main(int argc, char *argv[])
     QSharedPointer<openstudio::measure::OSMeasureInfoGetter> infoGetter(
       new openstudio::measure::EmbeddedRubyMeasureInfoGetter<openstudio::detail::RubyInterpreter>(rubyInterpreter));
        */
+
+    // find available port for debugging, have to do this before creating app
+    QString debugPort(qgetenv("QTWEBENGINE_REMOTE_DEBUGGING"));
+    if (debugPort.isEmpty()){
+      QTcpServer tcpServer;
+      tcpServer.listen(QHostAddress::LocalHost);
+      quint16 port = tcpServer.serverPort();
+      tcpServer.close();
+      debugPort = QString::number(port);
+      qputenv("QTWEBENGINE_REMOTE_DEBUGGING", debugPort.toStdString().c_str());
+    }
 
     openstudio::OpenStudioApp app(argc, argv);
     openstudio::Application::instance().setApplication(&app);

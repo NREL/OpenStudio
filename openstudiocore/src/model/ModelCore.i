@@ -51,6 +51,7 @@
 %{
   #include <utilities/data/TimeSeries.hpp>
   #include <utilities/sql/SqlFile.hpp>
+  #include <utilities/geometry/ThreeJS.hpp>
 
   #include <utilities/units/Quantity.hpp>
   #include <utilities/units/Unit.hpp>
@@ -102,6 +103,7 @@
 %include <model/Component.hpp>
 // %include <model/Relationship.hpp>
 %include <model/FileOperations.hpp>
+
 
 namespace openstudio {
 namespace model {

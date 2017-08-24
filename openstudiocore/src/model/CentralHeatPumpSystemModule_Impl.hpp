@@ -94,6 +94,16 @@ namespace detail {
     /** @name Other */
     //@{
 
+    //// CoolingLoop
+    //unsigned supplyInletPort();
+    //unsigned supplyOutletPort();
+    //// SourceLoop
+    //unsigned demandInletPort();
+    //unsigned demandOutletPort();
+    //// HeatingLoop
+    //unsigned tertiaryInletPort() const;
+    //unsigned tertiaryOutletPort() const;
+
     //@}
    protected:
    private:

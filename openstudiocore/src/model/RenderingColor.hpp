@@ -53,6 +53,8 @@ class MODEL_API RenderingColor : public ResourceObject {
 
   virtual ~RenderingColor() {}
 
+  static boost::optional<RenderingColor> fromColorString(const std::string& s, const Model& model);
+
   //@}
   /** @name Static Methods */
   //@{
@@ -90,6 +92,9 @@ class MODEL_API RenderingColor : public ResourceObject {
   void resetRenderingAlphaValue();
 
   //@}
+
+  std::string colorString() const;
+
  protected:
   /// @cond
   typedef detail::RenderingColor_Impl ImplType;

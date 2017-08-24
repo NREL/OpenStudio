@@ -69,7 +69,7 @@ using openstudio::detail::WorkspaceObject_Impl;
 using std::dynamic_pointer_cast;
 
 struct ModelResourceInitializer{
-  ModelResourceInitializer() 
+  ModelResourceInitializer()
   {
     Q_INIT_RESOURCE(Model);
   }
@@ -263,13 +263,13 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(Building);
     REGISTER_CONSTRUCTOR(BuildingStory);
     REGISTER_CONSTRUCTOR(BuildingUnit);
-    // REGISTER_CONSTRUCTOR(CentralHeatPumpSystem);
-    // REGISTER_CONSTRUCTOR(CentralHeatPumpSystemModule);
+    REGISTER_CONSTRUCTOR(CentralHeatPumpSystem);
+    REGISTER_CONSTRUCTOR(CentralHeatPumpSystemModule);
     REGISTER_CONSTRUCTOR(CFactorUndergroundWallConstruction);
     REGISTER_CONSTRUCTOR(ChillerAbsorption);
     REGISTER_CONSTRUCTOR(ChillerAbsorptionIndirect);
     REGISTER_CONSTRUCTOR(ChillerElectricEIR);
-    // REGISTER_CONSTRUCTOR(ChillerHeaterPerformanceElectricEIR);
+    REGISTER_CONSTRUCTOR(ChillerHeaterPerformanceElectricEIR);
     REGISTER_CONSTRUCTOR(ClimateZones);
     REGISTER_CONSTRUCTOR(CoilCoolingCooledBeam);
     REGISTER_CONSTRUCTOR(CoilCoolingDXMultiSpeed);
@@ -395,6 +395,16 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(GasEquipment);
     REGISTER_CONSTRUCTOR(GasEquipmentDefinition);
     REGISTER_CONSTRUCTOR(GasMixture);
+    REGISTER_CONSTRUCTOR(GeneratorFuelCell);
+    REGISTER_CONSTRUCTOR(GeneratorFuelCellAirSupply);
+    REGISTER_CONSTRUCTOR(GeneratorFuelCellAuxiliaryHeater);
+    REGISTER_CONSTRUCTOR(GeneratorFuelCellElectricalStorage);
+    REGISTER_CONSTRUCTOR(GeneratorFuelCellExhaustGasToWaterHeatExchanger);
+    REGISTER_CONSTRUCTOR(GeneratorFuelCellInverter);
+    REGISTER_CONSTRUCTOR(GeneratorFuelCellPowerModule);
+    REGISTER_CONSTRUCTOR(GeneratorFuelCellStackCooler);
+    REGISTER_CONSTRUCTOR(GeneratorFuelCellWaterSupply);
+    REGISTER_CONSTRUCTOR(GeneratorFuelSupply);
     REGISTER_CONSTRUCTOR(GeneratorMicroTurbine);
     REGISTER_CONSTRUCTOR(GeneratorMicroTurbineHeatRecovery);
     REGISTER_CONSTRUCTOR(GeneratorPhotovoltaic);
@@ -571,6 +581,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(ThermalStorageChilledWaterStratified);
     REGISTER_CONSTRUCTOR(ThermalStorageIceDetailed);
     REGISTER_CONSTRUCTOR(Timestep);
+    REGISTER_CONSTRUCTOR(UnitarySystemPerformanceMultispeed);
     REGISTER_CONSTRUCTOR(UtilityBill);
     REGISTER_CONSTRUCTOR(UtilityCost_Charge_Block);
     REGISTER_CONSTRUCTOR(UtilityCost_Charge_Simple);
@@ -714,14 +725,14 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(Building);
     REGISTER_COPYCONSTRUCTORS(BuildingStory);
     REGISTER_COPYCONSTRUCTORS(BuildingUnit);
-    // REGISTER_COPYCONSTRUCTORS(CentralHeatPumpSystem);
-    // REGISTER_COPYCONSTRUCTORS(CentralHeatPumpSystemModule);
+    REGISTER_COPYCONSTRUCTORS(CentralHeatPumpSystem);
+    REGISTER_COPYCONSTRUCTORS(CentralHeatPumpSystemModule);
     REGISTER_COPYCONSTRUCTORS(CFactorUndergroundWallConstruction);
     REGISTER_COPYCONSTRUCTORS(ClimateZones);
     REGISTER_COPYCONSTRUCTORS(ChillerAbsorption);
     REGISTER_COPYCONSTRUCTORS(ChillerAbsorptionIndirect);
     REGISTER_COPYCONSTRUCTORS(ChillerElectricEIR);
-    // REGISTER_COPYCONSTRUCTORS(ChillerHeaterPerformanceElectricEIR);
+    REGISTER_COPYCONSTRUCTORS(ChillerHeaterPerformanceElectricEIR);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingCooledBeam);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingDXMultiSpeed);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingDXMultiSpeedStageData);
@@ -846,6 +857,16 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(GasEquipment);
     REGISTER_COPYCONSTRUCTORS(GasEquipmentDefinition);
     REGISTER_COPYCONSTRUCTORS(GasMixture);
+    REGISTER_COPYCONSTRUCTORS(GeneratorFuelCell);
+    REGISTER_COPYCONSTRUCTORS(GeneratorFuelCellAirSupply);
+    REGISTER_COPYCONSTRUCTORS(GeneratorFuelCellAuxiliaryHeater);
+    REGISTER_COPYCONSTRUCTORS(GeneratorFuelCellElectricalStorage);
+    REGISTER_COPYCONSTRUCTORS(GeneratorFuelCellExhaustGasToWaterHeatExchanger);
+    REGISTER_COPYCONSTRUCTORS(GeneratorFuelCellInverter);
+    REGISTER_COPYCONSTRUCTORS(GeneratorFuelCellPowerModule);
+    REGISTER_COPYCONSTRUCTORS(GeneratorFuelCellStackCooler);
+    REGISTER_COPYCONSTRUCTORS(GeneratorFuelCellWaterSupply);
+    REGISTER_COPYCONSTRUCTORS(GeneratorFuelSupply);
     REGISTER_COPYCONSTRUCTORS(GeneratorMicroTurbine);
     REGISTER_COPYCONSTRUCTORS(GeneratorMicroTurbineHeatRecovery);
     REGISTER_COPYCONSTRUCTORS(GeneratorPhotovoltaic);
@@ -1022,6 +1043,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(ThermalStorageChilledWaterStratified);
     REGISTER_COPYCONSTRUCTORS(ThermalStorageIceDetailed);
     REGISTER_COPYCONSTRUCTORS(Timestep);
+    REGISTER_COPYCONSTRUCTORS(UnitarySystemPerformanceMultispeed);
     REGISTER_COPYCONSTRUCTORS(UtilityBill);
     REGISTER_COPYCONSTRUCTORS(UtilityCost_Charge_Block);
     REGISTER_COPYCONSTRUCTORS(UtilityCost_Charge_Simple);

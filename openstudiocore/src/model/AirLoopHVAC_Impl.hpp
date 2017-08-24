@@ -53,14 +53,6 @@ namespace detail {
 class Model_Impl;
 
 class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
-  
-
-  
-  
-  
-  
-  
-  
 
  public:
 
@@ -112,6 +104,10 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   boost::optional<Splitter> supplySplitter() const;
 
+  bool setSupplySplitter(Splitter const & splitter);
+
+  void resetSupplySplitter();
+
   bool removeSupplySplitter();
 
   bool removeSupplySplitter(HVACComponent & hvacComponent);
@@ -120,9 +116,15 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   std::vector<Node> supplySplitterOutletNodes() const;
 
-  AirLoopHVACZoneMixer zoneMixer();
+  AirLoopHVACZoneMixer zoneMixer() const;
+
+  bool setZoneMixer(Mixer const & mixer);
 
   AirLoopHVACZoneSplitter zoneSplitter() const;
+
+  bool setZoneSplitter(Splitter const & splitter, int path);
+
+  void resetZoneSplitter(int path);
 
   std::vector<AirLoopHVACZoneSplitter> zoneSplitters() const;
 
@@ -152,19 +154,19 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   bool addBranchForZone(ThermalZone & thermalZone, HVACComponent & airTerminal);
 
-  bool addBranchForZone(ThermalZone & thermalZone, 
+  bool addBranchForZone(ThermalZone & thermalZone,
                         Splitter & splitter,
                         Mixer & mixer,
                         HVACComponent & airTerminal);
 
-  bool addBranchForZone(ThermalZone & thermalZone, 
+  bool addBranchForZone(ThermalZone & thermalZone,
                         Splitter & splitter,
                         Mixer & mixer);
 
-  bool addBranchForZoneImpl(openstudio::model::ThermalZone & thermalZone, 
+  bool addBranchForZoneImpl(openstudio::model::ThermalZone & thermalZone,
                             boost::optional<StraightComponent> & optAirTerminal);
 
-  bool addBranchForZoneImpl(openstudio::model::ThermalZone & thermalZone, 
+  bool addBranchForZoneImpl(openstudio::model::ThermalZone & thermalZone,
                             boost::optional<HVACComponent> & optAirTerminal);
 
   bool moveBranchForZone(ThermalZone & thermalZone,
@@ -185,7 +187,7 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   void setAvailabilitySchedule(Schedule & schedule);
 
-  bool setNightCycleControlType(std::string nightCycle);
+  bool setNightCycleControlType(std::string const & nightCycle);
 
   std::string nightCycleControlType() const;
 
@@ -195,7 +197,7 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   // void resetReturnAirBypassFlowTemperatureSetpointSchedule();
 
-  static bool addBranchForZoneImpl(ThermalZone & thermalZone, 
+  static bool addBranchForZoneImpl(ThermalZone & thermalZone,
                                    AirLoopHVAC & airLoopHVAC,
                                    Splitter & splitter,
                                    Mixer & mixer,

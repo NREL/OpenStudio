@@ -32,6 +32,15 @@ set(${target_name}_src
   ModelObjectList.cpp
   FileOperations.hpp
   FileOperations.cpp
+
+  FloorplanJSForwardTranslator.hpp
+  FloorplanJSForwardTranslator.cpp
+  ThreeJSForwardTranslator.hpp
+  ThreeJSForwardTranslator.cpp
+  ThreeJSReverseTranslator.hpp
+  ThreeJSReverseTranslator.cpp
+  ModelMerger.hpp
+  ModelMerger.cpp
   
   ConcreteModelObjects.hpp
   AirConditionerVariableRefrigerantFlow.hpp
@@ -220,12 +229,12 @@ set(${target_name}_src
   BuildingUnit.hpp
   BuildingUnit_Impl.hpp
   BuildingUnit.cpp
-##  CentralHeatPumpSystem.hpp
-##  CentralHeatPumpSystem_Impl.hpp
-##  CentralHeatPumpSystem.cpp
-##  CentralHeatPumpSystemModule.hpp
-##  CentralHeatPumpSystemModule_Impl.hpp
-##  CentralHeatPumpSystemModule.cpp
+  CentralHeatPumpSystem.hpp
+  CentralHeatPumpSystem_Impl.hpp
+  CentralHeatPumpSystem.cpp
+  CentralHeatPumpSystemModule.hpp
+  CentralHeatPumpSystemModule_Impl.hpp
+  CentralHeatPumpSystemModule.cpp
   CFactorUndergroundWallConstruction.hpp
   CFactorUndergroundWallConstruction_Impl.hpp
   CFactorUndergroundWallConstruction.cpp
@@ -238,9 +247,9 @@ set(${target_name}_src
   ChillerElectricEIR.hpp
   ChillerElectricEIR_Impl.hpp
   ChillerElectricEIR.cpp
-##  ChillerHeaterPerformanceElectricEIR.hpp
-##  ChillerHeaterPerformanceElectricEIR_Impl.hpp
-##  ChillerHeaterPerformanceElectricEIR.cpp
+  ChillerHeaterPerformanceElectricEIR.hpp
+  ChillerHeaterPerformanceElectricEIR_Impl.hpp
+  ChillerHeaterPerformanceElectricEIR.cpp
   ClimateZones.hpp
   ClimateZones_Impl.hpp
   ClimateZones.cpp
@@ -634,6 +643,36 @@ set(${target_name}_src
   Generator.hpp
   Generator_Impl.hpp
   Generator.cpp
+  GeneratorFuelCell.hpp
+  GeneratorFuelCell_Impl.hpp
+  GeneratorFuelCell.cpp
+  GeneratorFuelCellAirSupply.hpp
+  GeneratorFuelCellAirSupply_Impl.hpp
+  GeneratorFuelCellAirSupply.cpp
+  GeneratorFuelCellAuxiliaryHeater.hpp
+  GeneratorFuelCellAuxiliaryHeater_Impl.hpp
+  GeneratorFuelCellAuxiliaryHeater.cpp
+  GeneratorFuelCellElectricalStorage.hpp
+  GeneratorFuelCellElectricalStorage_Impl.hpp
+  GeneratorFuelCellElectricalStorage.cpp
+  GeneratorFuelCellExhaustGasToWaterHeatExchanger.hpp
+  GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl.hpp
+  GeneratorFuelCellExhaustGasToWaterHeatExchanger.cpp
+  GeneratorFuelCellInverter.hpp
+  GeneratorFuelCellInverter_Impl.hpp
+  GeneratorFuelCellInverter.cpp
+  GeneratorFuelCellPowerModule.hpp
+  GeneratorFuelCellPowerModule_Impl.hpp
+  GeneratorFuelCellPowerModule.cpp
+  GeneratorFuelCellStackCooler.hpp
+  GeneratorFuelCellStackCooler_Impl.hpp
+  GeneratorFuelCellStackCooler.cpp
+  GeneratorFuelCellWaterSupply.hpp
+  GeneratorFuelCellWaterSupply_Impl.hpp
+  GeneratorFuelCellWaterSupply.cpp
+  GeneratorFuelSupply.hpp
+  GeneratorFuelSupply_Impl.hpp
+  GeneratorFuelSupply.cpp
   GeneratorMicroTurbine.hpp
   GeneratorMicroTurbine_Impl.hpp
   GeneratorMicroTurbine.cpp
@@ -1260,6 +1299,9 @@ set(${target_name}_src
   Version.hpp
   Version_Impl.hpp
   Version.cpp
+  UnitarySystemPerformanceMultispeed.hpp
+  UnitarySystemPerformanceMultispeed_Impl.hpp
+  UnitarySystemPerformanceMultispeed.cpp
   UtilityBill.hpp
   UtilityBill_Impl.hpp
   UtilityBill.cpp
@@ -1513,12 +1555,12 @@ set(${target_name}_test_src
   test/BuildingStory_GTest.cpp
   test/BuildingUnit_GTest.cpp
   test/Building_GTest.cpp
-##  test/CentralHeatPumpSystem_GTest.cpp
-##  test/CentralHeatPumpSystemModule_GTest.cpp
+  #test/CentralHeatPumpSystem_GTest.cpp
+  #test/CentralHeatPumpSystem_GTest.cpp
   test/ChillerAbsorption_GTest.cpp
   test/ChillerAbsorptionIndirect_GTest.cpp
   test/ChillerElectricEIR_GTest.cpp
-##  test/ChillerHeaterPerformanceElectricEIR_GTest.cpp
+  test/ChillerHeaterPerformanceElectricEIR_GTest.cpp
   test/ClimateZones_GTest.cpp
   test/CoilCoolingCooledBeam_GTest.cpp
   test/CoilCoolingDXSingleSpeed_GTest.cpp
@@ -1604,11 +1646,22 @@ set(${target_name}_test_src
   test/FanZoneExhaust_GTest.cpp
   test/FanOnOff_GTest.cpp
   test/FenestrationMaterial_GTest.cpp
+  test/FloorplanJSForwardTranslator_GTest.cpp
   test/FluidCoolerSingleSpeed_GTest.cpp
   test/FluidCoolerTwoSpeed_GTest.cpp
   test/GasEquipment_GTest.cpp
   test/GasMixture_GTest.cpp
   test/Gas_GTest.cpp
+  test/GeneratorFuelCell_GTest.cpp
+  test/GeneratorFuelCellAirSupply_GTest.cpp
+  test/GeneratorFuelCellAuxiliaryHeater_GTest.cpp
+  test/GeneratorFuelCellElectricalStorage_GTest.cpp
+  test/GeneratorFuelCellExhaustGasToWaterHeatExchanger_GTest.cpp
+  test/GeneratorFuelCellInverter_GTest.cpp
+  test/GeneratorFuelCellPowerModule_GTest.cpp
+  test/GeneratorFuelCellStackCooler_GTest.cpp
+  test/GeneratorFuelCellWaterSupply_GTest.cpp
+  test/GeneratorFuelSupply_GTest.cpp
   test/GeneratorPhotovoltaic_GTest.cpp
   test/GeneratorMicroTurbine_GTest.cpp
   test/GlareSensor_GTest.cpp
@@ -1643,6 +1696,7 @@ set(${target_name}_test_src
   test/ModelObject_GTest.cpp
   test/ModelPartitionMaterial_GTest.cpp
   test/Model_GTest.cpp
+  test/ModelMerger_GTest.cpp
   test/Node_GTest.cpp
   test/PortList_GTest.cpp
   test/OpaqueMaterial_GTest.cpp
@@ -1758,6 +1812,9 @@ set(${target_name}_test_src
   test/ThermalStorageIceDetailed_GTest.cpp
   test/ThermalStorageChilledWaterStratified_GTest.cpp
   test/TemperingValve_GTest.cpp
+  test/ThreeJSForwardTranslator_GTest.cpp
+  test/ThreeJSReverseTranslator_GTest.cpp
+  test/UnitarySystemPerformanceMultispeed_GTest.cpp
   test/UtilityBill_GTest.cpp
   test/WaterHeaterMixed_GTest.cpp
   test/WaterHeaterHeatPump_GTest.cpp
@@ -1801,6 +1858,7 @@ if(BUILD_TESTING)
 
   add_dependencies("${target_name}_tests"
     openstudio_model_resources
+    openstudio_utilities_resources
   )
 
   # Compiler and system specific options

@@ -594,6 +594,20 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterStratified( Wa
     idfObject.setDouble(WaterHeater_StratifiedFields::Node10AdditionalLossCoefficient,value.get());
   }
 
+  // Node 11 Additional Loss Coefficient
+  value = modelObject.node11AdditionalLossCoefficient();
+  if( value )
+  {
+    idfObject.setDouble(WaterHeater_StratifiedFields::Node11AdditionalLossCoefficient,value.get());
+  }
+
+  // Node 12 Additional Loss Coefficient
+  value = modelObject.node12AdditionalLossCoefficient();
+  if( value )
+  {
+    idfObject.setDouble(WaterHeater_StratifiedFields::Node12AdditionalLossCoefficient,value.get());
+  }
+
   // Source Side Flow Control Mode
   s = modelObject.sourceSideFlowControlMode();
   if( s )

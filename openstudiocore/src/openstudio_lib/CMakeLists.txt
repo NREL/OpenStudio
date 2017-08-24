@@ -63,6 +63,18 @@ set(${target_name}_SRC
   FacilityTabView.hpp
   GasEquipmentInspectorView.cpp
   GasEquipmentInspectorView.hpp
+  GeometryEditorController.cpp
+  GeometryEditorController.hpp
+  GeometryEditorView.cpp
+  GeometryEditorView.hpp
+  GeometryPreviewController.cpp
+  GeometryPreviewController.hpp
+  GeometryPreviewView.cpp
+  GeometryPreviewView.hpp
+  GeometryTabController.cpp
+  GeometryTabController.hpp
+  GeometryTabView.cpp
+  GeometryTabView.hpp
   GridItem.cpp
   GridItem.hpp
   GridScene.cpp
@@ -485,6 +497,12 @@ set(${target_name}_moc
   FacilityTabController.hpp
   FacilityTabView.hpp
   GasEquipmentInspectorView.hpp
+  GeometryEditorController.hpp
+  GeometryEditorView.hpp
+  GeometryPreviewController.hpp
+  GeometryPreviewView.hpp
+  GeometryTabController.hpp
+  GeometryTabView.hpp  
   GridItem.hpp
   GridScene.hpp
   GridViewSubTab.hpp
@@ -715,8 +733,6 @@ set(depends
 )
 
 target_link_libraries(${target_name} ${depends})
-
-target_link_libraries(${target_name} ${QT_SHARED_LIBS})
 
 AddPCH(${target_name})
 

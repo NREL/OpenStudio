@@ -161,12 +161,22 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  std::string RenderingColor_Impl::colorString() const
+  {
+    return "";
+  }
+
 } // detail
 
 RenderingColor::RenderingColor(const Model& model)
   : ResourceObject(RenderingColor::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::RenderingColor_Impl>());
+}
+
+boost::optional<RenderingColor> RenderingColor::fromColorString(const std::string& s, const Model& model)
+{
+  return boost::none;
 }
 
 IddObjectType RenderingColor::iddObjectType() {
@@ -212,6 +222,11 @@ bool RenderingColor::setRenderingAlphaValue(int renderingAlphaValue) {
 
 void RenderingColor::resetRenderingAlphaValue() {
   getImpl<detail::RenderingColor_Impl>()->resetRenderingAlphaValue();
+}
+
+std::string RenderingColor::colorString() const
+{
+  return getImpl<detail::RenderingColor_Impl>()->colorString();
 }
 
 /// @cond

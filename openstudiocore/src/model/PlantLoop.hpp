@@ -49,6 +49,7 @@ class PlantEquipmentOperationScheme;
 class PlantEquipmentOperationHeatingLoad;
 class PlantEquipmentOperationCoolingLoad;
 class Schedule;
+class AvailabilityManager;
 
 /** PlantLoop is an interface to the EnergyPlus IDD object
  *  named "PlantLoop"
@@ -69,11 +70,13 @@ class MODEL_API PlantLoop : public Loop {
 
   static std::vector<std::string> loadDistributionSchemeValues();
 
+  static std::vector<std::string> fluidTypeValues();
+
   /** Prior to OS 1.11.0 the options where
       Optimal, Sequential, and Uniform.
       E+ changed the available options to.
       Optimal, SequentialLoad, UniformLoad, UniformPLR, SequentialUniformPLR
-      in version 8.2.0. 
+      in version 8.2.0.
 
       OS did not catch up to the new options until 1.11.0. In 1.11.0 existing OS files will
       be upgraded to use the new options. Sequential will be version translated to
@@ -89,9 +92,19 @@ class MODEL_API PlantLoop : public Loop {
 
   bool setLoadDistributionScheme(std::string scheme);
 
+  boost::optional<AvailabilityManager> availabilityManager() const;
+
+  bool setAvailabilityManager(const AvailabilityManager& availabilityManager);
+
+  void resetAvailabilityManager();
+
   std::string fluidType();
 
-  void setFluidType( const std::string & value );
+  bool setFluidType( const std::string & value );
+
+  void setGlycolConcentration(int glycolConcentration);
+
+  int glycolConcentration() const;
 
   Node loopTemperatureSetpointNode();
 
@@ -136,17 +149,17 @@ class MODEL_API PlantLoop : public Loop {
   void resetCommonPipeSimulation();
 
   /** In OpenStudio there are three levels of "priority" for PlantEquipmentOperationScheme instances.
-    * Priority here means that if there are multiple operation schemes that list the same equipment, 
+    * Priority here means that if there are multiple operation schemes that list the same equipment,
     * the one with the highest priority will define operation for that equipment.
     * The operation scheme defined for primaryPlantEquipmentOperationScheme() is the highest priority,
     * followed by any component setpoint operation. Heating and cooling load operation,
     * defined by plantEquipmentOperationHeatingLoad() and plantEquipmentOperationCoolingLoad() has the lowest priority.
     *
     * No operation scheme is required for plant operation. OpenStudio will provide suitable defaults if none are provied.
-    * If any operation schemes, including primary, heating load, or cooling load, are defined then the default logic is 
+    * If any operation schemes, including primary, heating load, or cooling load, are defined then the default logic is
     * entirely disabled.
     *
-    * OpenStudio does not define a PlantEquipmentOperationComponentSetpoint, which is defined in EnergyPlus, 
+    * OpenStudio does not define a PlantEquipmentOperationComponentSetpoint, which is defined in EnergyPlus,
     * but the funcitonality is supported. In OpenStudio placing a setpoint manager on a component outlet
     * node will trigger OpenStudio to produce a component setpoint operation scheme on export to EnergyPlus.
     * This component setpoint behavior is in place even if there are other primary, heating load, or cooling load schemes defined.
@@ -190,8 +203,8 @@ class MODEL_API PlantLoop : public Loop {
 
   boost::optional<Schedule> primaryPlantEquipmentOperationSchemeSchedule() const;
 
-  /** Set the hours of operation for which the ComponentSetpointOperationScheme, if any, applies. 
-   *  The existance of ComponentSetpointOperationSchemes is controlled by the existance of 
+  /** Set the hours of operation for which the ComponentSetpointOperationScheme, if any, applies.
+   *  The existance of ComponentSetpointOperationSchemes is controlled by the existance of
    *  setpoint managers on the plant component outlet nodes.
   **/
   bool setComponentSetpointOperationSchemeSchedule(Schedule &);
@@ -213,10 +226,10 @@ class MODEL_API PlantLoop : public Loop {
   Node demandOutletNode() const override;
 
   /** Returns the supply side Mixer. **/
-  Mixer supplyMixer();
+  Mixer supplyMixer() const;
 
   /** Returns the supply side Splitter. **/
-  Splitter supplySplitter();
+  Splitter supplySplitter() const;
 
   /** Returns the demand side Mixer. **/
   Mixer demandMixer();
@@ -224,7 +237,7 @@ class MODEL_API PlantLoop : public Loop {
   /** Returns the demand side Splitter. **/
   Splitter demandSplitter();
 
-  /** Adds a new demand branch for component and returns a bool indicating success. 
+  /** Adds a new demand branch for component and returns a bool indicating success.
    */
   bool addSupplyBranchForComponent( HVACComponent hvacComponent );
 

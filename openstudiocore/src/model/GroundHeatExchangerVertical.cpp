@@ -480,6 +480,19 @@ namespace detail {
 
 } // detail
 
+GFunction::GFunction(double lnValue, double gValue)
+  : m_lnValue(lnValue), m_gValue(gValue)
+{}
+
+double GFunction::lnValue() const {
+  return m_lnValue;
+}
+
+double GFunction::gValue() const {
+  return m_gValue;
+}
+
+
 GroundHeatExchangerVertical::GroundHeatExchangerVertical(const Model& model)
   : StraightComponent(GroundHeatExchangerVertical::iddObjectType(),model)
 {
@@ -542,8 +555,12 @@ IddObjectType GroundHeatExchangerVertical::iddObjectType() {
   return IddObjectType(IddObjectType::OS_GroundHeatExchanger_Vertical);
 }
 
-bool GroundHeatExchangerVertical::addGFunction(double gFunctionLN, double gFunctionGValue){
+bool GroundHeatExchangerVertical::addGFunction(double gFunctionLN, double gFunctionGValue) {
   return getImpl<detail::GroundHeatExchangerVertical_Impl>()->addGFunction(gFunctionLN, gFunctionGValue);
+}
+
+bool GroundHeatExchangerVertical::addGFunction(GFunction gFunc) {
+  return addGFunction(gFunc.lnValue(), gFunc.gValue());
 }
 
 void GroundHeatExchangerVertical::removeGFunction(int groupIndex){
@@ -554,8 +571,13 @@ void GroundHeatExchangerVertical::removeAllGFunctions(){
   return getImpl<detail::GroundHeatExchangerVertical_Impl>()->removeAllGFunctions();
 }
 
-std::vector< std::pair<double,double> > GroundHeatExchangerVertical::gFunctions(){
-  return getImpl<detail::GroundHeatExchangerVertical_Impl>()->gFunctions();
+std::vector< GFunction > GroundHeatExchangerVertical::gFunctions(){
+  auto const gFunctionPairs(getImpl<detail::GroundHeatExchangerVertical_Impl>()->gFunctions());
+  std::vector< GFunction > gFuncs;
+  for (auto const& gFuncPair: gFunctionPairs) {
+    gFuncs.push_back(GFunction(gFuncPair.first, gFuncPair.second));
+  }
+  return gFuncs;
 }
 
 boost::optional<double> GroundHeatExchangerVertical::maximumFlowRate() const {

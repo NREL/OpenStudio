@@ -1,0 +1,591 @@
+{
+	"application": {
+		"currentSelections": {
+			"story": {
+				"id": "26",
+				"handle": null,
+				"name": "Story 2",
+				"geometry_id": "27",
+				"below_floor_plenum_height": 0,
+				"floor_to_ceiling_height": 0,
+				"multiplier": 0,
+				"imageVisible": false,
+				"spaces": [
+					{
+						"id": "28",
+						"color": "#004749",
+						"name": "Space 1",
+						"handle": null,
+						"face_id": "37",
+						"daylighting_controls": [],
+						"building_unit_id": "1003",
+						"thermal_zone_id": "1008",
+						"space_type_id": "1009",
+						"construction_set_id": "1013",
+						"type": "space"
+					}, {
+						"id": "38",
+						"color": "#009196",
+						"name": "Space 2",
+						"handle": null,
+						"face_id": "47",
+						"daylighting_controls": [],
+						"building_unit_id": "1003",
+						"thermal_zone_id": "51",
+						"space_type_id": "1010",
+						"construction_set_id": "1014",
+						"type": "space"
+					}
+				],
+				"windows": [],
+				"shading": [],
+				"image_ids": [],
+				"image_id": null
+			},
+			"space": {
+				"id": "38",
+				"color": "#009196",
+				"name": "Space 2",
+				"handle": null,
+				"face_id": "47",
+				"daylighting_controls": [],
+				"building_unit_id": "1003",
+				"thermal_zone_id": "51",
+				"space_type_id": "1010",
+				"construction_set_id": "1014",
+				"type": "space"
+			},
+			"shading": null,
+			"building_unit": null,
+			"thermal_zone": null,
+			"space_type": null,
+			"tool": "Select",
+			"mode": "spaces"
+		},
+		"modes": [
+			"spaces", "shading", "building_units", "thermal_zones", "space_types"
+		],
+		"tools": [
+			"Rectangle", "Polygon", "Eraser", "Select", "Place Component", "Apply Property", "3d", "Background"
+		],
+		"scale": {}
+	},
+	"project": {
+		"config": {
+			"units": "ft",
+			"language": "EN-US",
+			"north_axis": 0
+		},
+		"grid": {
+			"visible": true,
+			"x_spacing": 1,
+			"y_spacing": 1
+		},
+		"view": {
+			"min_x": 0,
+			"min_y": -0.016474464579901153,
+			"max_x": 10,
+			"max_y": 9.9835255354201,
+			"filmOffset": 0,
+			"fov": 75,
+			"zoom": 1
+		},
+		"map": {
+			"visible": false,
+			"latitude": 39.7653,
+			"longitude": -104.9863,
+			"zoom": 18,
+			"elevation": 0
+		}
+	},
+	"stories": [
+		{
+			"id": "1",
+			"handle": null,
+			"name": "Story 1",
+			"below_floor_plenum_height": 0,
+			"floor_to_ceiling_height": 0,
+			"multiplier": 0,
+			"imageVisible": false,
+			"spaces": [
+				{
+					"id": "3",
+					"color": "#007373",
+					"name": "Space 1",
+					"handle": null,
+					"face_id": "12",
+					"daylighting_controls": [],
+					"building_unit_id": "1003",
+					"thermal_zone_id": "1006",
+					"space_type_id": "1009",
+					"construction_set_id": "1013",
+					"type": "space"
+				}, {
+					"id": "13",
+					"color": "#000000",
+					"name": "Space 2",
+					"handle": null,
+					"face_id": "22",
+					"daylighting_controls": [],
+					"building_unit_id": "1003",
+					"thermal_zone_id": "1007",
+					"space_type_id": "1010",
+					"construction_set_id": "1014",
+					"type": "space"
+				}
+			],
+			"windows": [],
+			"shading": [],
+			"image_ids": [],
+			"geometry": {
+				"id": "2",
+				"vertices": [
+					{
+						"id": "4",
+						"x": 2,
+						"y": 2,
+						"edge_ids": [
+							"8", "11"
+						]
+					}, {
+						"id": "5",
+						"x": 5,
+						"y": 2,
+						"edge_ids": [
+							"8", "23"
+						]
+					}, {
+						"id": "6",
+						"x": 5,
+						"y": 8,
+						"edge_ids": [
+							"10", "25"
+						]
+					}, {
+						"id": "7",
+						"x": 2,
+						"y": 8,
+						"edge_ids": [
+							"10", "11"
+						]
+					}, {
+						"id": "14",
+						"x": 6,
+						"y": 3,
+						"edge_ids": [
+							"18", "21"
+						]
+					}, {
+						"id": "15",
+						"x": 5,
+						"y": 3,
+						"edge_ids": [
+							"18", "19", "23", "24"
+						]
+					}, {
+						"id": "16",
+						"x": 5,
+						"y": 7,
+						"edge_ids": [
+							"19", "20", "24", "25"
+						]
+					}, {
+						"id": "17",
+						"x": 6,
+						"y": 7,
+						"edge_ids": [
+							"20", "21"
+						]
+					}
+				],
+				"edges": [
+					{
+						"id": "8",
+						"vertex_ids": [
+							"4", "5"
+						],
+						"face_ids": [
+							"12"
+						]
+					}, {
+						"id": "10",
+						"vertex_ids": [
+							"6", "7"
+						],
+						"face_ids": [
+							"12"
+						]
+					}, {
+						"id": "11",
+						"vertex_ids": [
+							"7", "4"
+						],
+						"face_ids": [
+							"12"
+						]
+					}, {
+						"id": "18",
+						"vertex_ids": [
+							"14", "15"
+						],
+						"face_ids": [
+							"22"
+						]
+					}, {
+						"id": "19",
+						"vertex_ids": [
+							"15", "16"
+						],
+						"face_ids": [
+							"22"
+						]
+					}, {
+						"id": "20",
+						"vertex_ids": [
+							"16", "17"
+						],
+						"face_ids": [
+							"22"
+						]
+					}, {
+						"id": "21",
+						"vertex_ids": [
+							"17", "14"
+						],
+						"face_ids": [
+							"22"
+						]
+					}, {
+						"id": "23",
+						"vertex_ids": [
+							"5", "15"
+						],
+						"face_ids": [
+							"12"
+						]
+					}, {
+						"id": "24",
+						"vertex_ids": [
+							"15", "16"
+						],
+						"face_ids": [
+							"12"
+						]
+					}, {
+						"id": "25",
+						"vertex_ids": [
+							"16", "6"
+						],
+						"face_ids": [
+							"12"
+						]
+					}
+				],
+				"faces": [
+					{
+						"id": "12",
+						"edge_ids": [
+							"8", "23", "24", "25", "10", "11"
+						],
+						"edge_order": [
+							1, 1, 1, 1, 1, 1
+						]
+					}, {
+						"id": "22",
+						"edge_ids": [
+							"18", "19", "20", "21"
+						],
+						"edge_order": [
+							1, 1, 1, 1
+						]
+					}
+				]
+			}
+		}, {
+			"id": "26",
+			"handle": null,
+			"name": "Story 2",
+			"below_floor_plenum_height": 0,
+			"floor_to_ceiling_height": 0,
+			"multiplier": 0,
+			"imageVisible": false,
+			"spaces": [
+				{
+					"id": "28",
+					"color": "#004749",
+					"name": "Space 3",
+					"handle": null,
+					"face_id": "37",
+					"daylighting_controls": [],
+					"building_unit_id": "1003",
+					"thermal_zone_id": "1008",
+					"space_type_id": "1009",
+					"construction_set_id": "1013",
+					"type": "space"
+				}, {
+					"id": "38",
+					"color": "#009196",
+					"name": "Space 4",
+					"handle": null,
+					"face_id": "47",
+					"daylighting_controls": [],
+					"building_unit_id": "1003",
+					"thermal_zone_id": "51",
+					"space_type_id": "1010",
+					"construction_set_id": "1014",
+					"type": "space"
+				}
+			],
+			"windows": [],
+			"shading": [],
+			"image_ids": [],
+			"geometry": {
+				"id": "27",
+				"vertices": [
+					{
+						"id": "29",
+						"x": 2,
+						"y": 2,
+						"edge_ids": [
+							"33", "36"
+						]
+					}, {
+						"id": "30",
+						"x": 5,
+						"y": 2,
+						"edge_ids": [
+							"33", "48"
+						]
+					}, {
+						"id": "31",
+						"x": 5,
+						"y": 8,
+						"edge_ids": [
+							"35", "50"
+						]
+					}, {
+						"id": "32",
+						"x": 2,
+						"y": 8,
+						"edge_ids": [
+							"35", "36"
+						]
+					}, {
+						"id": "39",
+						"x": 6,
+						"y": 3,
+						"edge_ids": [
+							"43", "46"
+						]
+					}, {
+						"id": "40",
+						"x": 5,
+						"y": 3,
+						"edge_ids": [
+							"43", "44", "48", "49"
+						]
+					}, {
+						"id": "41",
+						"x": 5,
+						"y": 7,
+						"edge_ids": [
+							"44", "45", "49", "50"
+						]
+					}, {
+						"id": "42",
+						"x": 6,
+						"y": 7,
+						"edge_ids": [
+							"45", "46"
+						]
+					}
+				],
+				"edges": [
+					{
+						"id": "33",
+						"vertex_ids": [
+							"29", "30"
+						],
+						"face_ids": [
+							"37"
+						]
+					}, {
+						"id": "35",
+						"vertex_ids": [
+							"31", "32"
+						],
+						"face_ids": [
+							"37"
+						]
+					}, {
+						"id": "36",
+						"vertex_ids": [
+							"32", "29"
+						],
+						"face_ids": [
+							"37"
+						]
+					}, {
+						"id": "43",
+						"vertex_ids": [
+							"39", "40"
+						],
+						"face_ids": [
+							"47"
+						]
+					}, {
+						"id": "44",
+						"vertex_ids": [
+							"40", "41"
+						],
+						"face_ids": [
+							"47"
+						]
+					}, {
+						"id": "45",
+						"vertex_ids": [
+							"41", "42"
+						],
+						"face_ids": [
+							"47"
+						]
+					}, {
+						"id": "46",
+						"vertex_ids": [
+							"42", "39"
+						],
+						"face_ids": [
+							"47"
+						]
+					}, {
+						"id": "48",
+						"vertex_ids": [
+							"30", "40"
+						],
+						"face_ids": [
+							"37"
+						]
+					}, {
+						"id": "49",
+						"vertex_ids": [
+							"40", "41"
+						],
+						"face_ids": [
+							"37"
+						]
+					}, {
+						"id": "50",
+						"vertex_ids": [
+							"41", "31"
+						],
+						"face_ids": [
+							"37"
+						]
+					}
+				],
+				"faces": [
+					{
+						"id": "37",
+						"edge_ids": [
+							"33", "48", "49", "50", "35", "36"
+						],
+						"edge_order": [
+							1, 1, 1, 1, 1, 1
+						]
+					}, {
+						"id": "47",
+						"edge_ids": [
+							"43", "44", "45", "46"
+						],
+						"edge_order": [
+							1, 1, 1, 1
+						]
+					}
+				]
+			}
+		}
+	],
+	"images": [],
+	"building_units": [
+		{
+			"id": "1003",
+			"name": "Building Unit 1"
+		}, {
+			"id": "1004",
+			"name": "Building Unit 2"
+		}, {
+			"id": "1005",
+			"name": "Building Unit 3"
+		}
+	],
+	"thermal_zones": [
+		{
+			"id": "1006",
+			"name": "Thermal Zone 1"
+		}, {
+			"id": "1007",
+			"name": "Thermal Zone 2"
+		}, {
+			"id": "1008",
+			"name": "Thermal Zone 3"
+		}, {
+			"id": "51",
+			"color": "#007373",
+			"name": "Thermal Zone 4"
+		}
+	],
+	"space_types": [
+		{
+			"id": "1009",
+			"name": "Space Type 1"
+		}, {
+			"id": "1010",
+			"name": "Space Type 2"
+		}, {
+			"id": "1011",
+			"name": "Space Type 3"
+		}, {
+			"id": "1012",
+			"name": "Space Type 4"
+		}
+	],
+	"construction_sets": [
+		{
+			"id": "1013",
+			"name": "Construction Set 1"
+		}, {
+			"id": "1014",
+			"name": "Construction Set 2"
+		}
+	],
+	"constructions": [
+		{
+			"id": "1015",
+			"name": "Construction 1"
+		}
+	],
+	"windows": [
+		{
+			"id": "1016",
+			"name": "Window 1"
+		}, {
+			"id": "1017",
+			"name": "Window 2"
+		}, {
+			"id": "1021",
+			"name": "Window 3"
+		}
+	],
+	"daylighting_controls": [
+		{
+			"id": "1018",
+			"name": "Daylighting Control 1"
+		}, {
+			"id": "1019",
+			"name": "Daylighting Control 2"
+		}, {
+			"id": "1020",
+			"name": "Daylighting Control 3"
+		}
+	]
+}

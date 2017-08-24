@@ -34,12 +34,38 @@
 #include "Path.hpp"
 #include "Compare.hpp"
 
+#include <jsoncpp/json.h>
+
 #include <QVariant>
 
 #include <string>
 #include <vector>
 
+namespace Json{
+  class Value;
+}
+
 namespace openstudio {
+
+/// assert key is present, throws if key is not found
+UTILITIES_API void assertKey(const Json::Value& value, const std::string& key);
+
+/// assert type is correct if key is present, throws if type is not correct
+UTILITIES_API void assertType(const Json::Value& value, const std::string& key, const Json::ValueType& valueType);
+
+/// assert key is present and type is correct, throws if key not found or type is not correct
+UTILITIES_API void assertKeyAndType(const Json::Value& value, const std::string& key, const Json::ValueType& valueType);
+
+/// check key is present, return false if key is not found
+UTILITIES_API bool checkKey(const Json::Value& value, const std::string& key);
+
+/// check type is correct if key is present, return false if type is not correct
+UTILITIES_API bool checkType(const Json::Value& value, const std::string& key, const Json::ValueType& valueType);
+
+/// check key is present and type is correct, return false if key not found or type is not correct
+UTILITIES_API bool checkKeyAndType(const Json::Value& value, const std::string& key, const Json::ValueType& valueType);
+
+// DLM: need to start getting rid of all this Qt Json stuff
 
 /** Helper function to construct meta-data object containing openstudio_version for JSON files. */
 UTILITIES_API QVariant jsonMetadata();

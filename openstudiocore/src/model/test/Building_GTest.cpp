@@ -37,6 +37,8 @@
 #include "../ThermalZone_Impl.hpp"
 #include "../BuildingStory.hpp"
 #include "../BuildingStory_Impl.hpp"
+#include "../ShadingSurfaceGroup.hpp"
+#include "../ShadingSurfaceGroup_Impl.hpp"
 #include "../Space.hpp"
 #include "../Space_Impl.hpp"
 #include "../SpaceType.hpp"
@@ -58,6 +60,9 @@
 #include "../LifeCycleCost.hpp"
 
 #include "../../utilities/data/Attribute.hpp"
+#include "../../utilities/geometry/Geometry.hpp"
+
+#include <math.h>
 
 using namespace openstudio::model;
 using namespace openstudio;
@@ -397,3 +402,58 @@ TEST_F(ModelFixture, Building_Clone)
   }
 }
 
+TEST_F(ModelFixture, Building_Rotations)
+{
+  Model model;
+  Building building = model.getUniqueModelObject<Building>();
+  Space space(model);
+  ShadingSurfaceGroup siteGroup(model);
+  EXPECT_TRUE(siteGroup.setShadingSurfaceType("Site"));
+  ShadingSurfaceGroup buildingGroup(model);
+  EXPECT_TRUE(buildingGroup.setShadingSurfaceType("Building"));
+  ShadingSurfaceGroup spaceGroup(model);
+  EXPECT_TRUE(spaceGroup.setSpace(space));
+
+  double degrees = 0;
+  building.setNorthAxis(degrees);
+
+  EXPECT_NEAR(cos(degToRad(degrees)), building.transformation().matrix()(0, 0), 0.0001);
+
+  EXPECT_NEAR(1, space.transformation().matrix()(0, 0), 0.0001);
+  EXPECT_NEAR(1, space.buildingTransformation().matrix()(0, 0), 0.0001);
+  EXPECT_NEAR(cos(degToRad(degrees)), space.siteTransformation().matrix()(0, 0), 0.0001);
+
+  EXPECT_NEAR(1, siteGroup.transformation().matrix()(0, 0), 0.0001);
+  EXPECT_NEAR(cos(degToRad(-degrees)), siteGroup.buildingTransformation().matrix()(0, 0), 0.0001);
+  EXPECT_NEAR(1, siteGroup.siteTransformation().matrix()(0, 0), 0.0001);
+
+  EXPECT_NEAR(1, buildingGroup.transformation().matrix()(0, 0), 0.0001);
+  EXPECT_NEAR(1, buildingGroup.buildingTransformation().matrix()(0, 0), 0.0001);
+  EXPECT_NEAR(cos(degToRad(degrees)), buildingGroup.siteTransformation().matrix()(0, 0), 0.0001);
+
+  EXPECT_NEAR(1, spaceGroup.transformation().matrix()(0, 0), 0.0001);
+  EXPECT_NEAR(1, spaceGroup.buildingTransformation().matrix()(0, 0), 0.0001);
+  EXPECT_NEAR(cos(degToRad(degrees)), spaceGroup.siteTransformation().matrix()(0, 0), 0.0001);
+
+  degrees = 20;
+  building.setNorthAxis(degrees);
+
+  EXPECT_NEAR(cos(degToRad(degrees)), building.transformation().matrix()(0, 0), 0.0001);
+
+  EXPECT_NEAR(1, space.transformation().matrix()(0, 0), 0.0001);
+  EXPECT_NEAR(1, space.buildingTransformation().matrix()(0, 0), 0.0001);
+  EXPECT_NEAR(cos(degToRad(degrees)), space.siteTransformation().matrix()(0, 0), 0.0001);
+
+  EXPECT_NEAR(1, siteGroup.transformation().matrix()(0, 0), 0.0001);
+  EXPECT_NEAR(cos(degToRad(-degrees)), siteGroup.buildingTransformation().matrix()(0, 0), 0.0001);
+  EXPECT_NEAR(1, siteGroup.siteTransformation().matrix()(0, 0), 0.0001);
+
+  EXPECT_NEAR(1, buildingGroup.transformation().matrix()(0, 0), 0.0001);
+  EXPECT_NEAR(1, buildingGroup.buildingTransformation().matrix()(0, 0), 0.0001);
+  EXPECT_NEAR(cos(degToRad(degrees)), buildingGroup.siteTransformation().matrix()(0, 0), 0.0001);
+
+  EXPECT_NEAR(1, spaceGroup.transformation().matrix()(0, 0), 0.0001);
+  EXPECT_NEAR(1, spaceGroup.buildingTransformation().matrix()(0, 0), 0.0001);
+  EXPECT_NEAR(cos(degToRad(degrees)), spaceGroup.siteTransformation().matrix()(0, 0), 0.0001);
+
+}

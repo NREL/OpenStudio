@@ -40,6 +40,20 @@ namespace detail {
 
 } // detail
 
+
+class MODEL_API GFunction {
+
+public:
+  GFunction(double lnValue, double gValue);
+  double lnValue() const;
+  double gValue() const;
+
+private:
+  double m_lnValue;
+  double m_gValue;
+
+};
+
 /** GroundHeatExchangerVertical is a StraightComponent that wraps the OpenStudio IDD object 'OS:GroundHeatExchanger:Vertical'. */
 class MODEL_API GroundHeatExchangerVertical : public StraightComponent {
  public:
@@ -56,11 +70,13 @@ class MODEL_API GroundHeatExchangerVertical : public StraightComponent {
 
   bool addGFunction(double gFunctionLN, double gFunctionGValue);
 
+  bool addGFunction(GFunction gFunc);
+
   void removeGFunction(int groupIndex);
 
   void removeAllGFunctions();
 
-  std::vector< std::pair<double,double> > gFunctions();
+  std::vector< GFunction > gFunctions();
 
   /** @name Getters */
   //@{

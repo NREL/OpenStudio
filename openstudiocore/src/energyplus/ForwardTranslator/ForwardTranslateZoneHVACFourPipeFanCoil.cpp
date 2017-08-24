@@ -308,6 +308,35 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACFourPipeFanCoil(
     idfObject.setDouble(ZoneHVAC_FourPipeFanCoilFields::HeatingConvergenceTolerance,modelObject.heatingConvergenceTolerance() );
   }
 
+  // SupplyAirFanOperatingModeScheduleName
+  if( auto schedule = modelObject.supplyAirFanOperatingModeSchedule() )
+  {
+    if( auto _schedule = translateAndMapModelObject(schedule.get()) )
+    {
+      idfObject.setString(ZoneHVAC_FourPipeFanCoilFields::SupplyAirFanOperatingModeScheduleName,_schedule->name().get());
+    }
+  }
+
+  // MinimumSupplyAirTemperatureInCoolingMode
+  if( modelObject.isMinimumSupplyAirTemperatureInCoolingModeAutosized() )
+  {
+    idfObject.setString(ZoneHVAC_FourPipeFanCoilFields::MinimumSupplyAirTemperatureinCoolingMode,"Autosize");
+  }
+  else if( (value = modelObject.minimumSupplyAirTemperatureInCoolingMode()) )
+  {
+    idfObject.setDouble(ZoneHVAC_FourPipeFanCoilFields::MinimumSupplyAirTemperatureinCoolingMode,value.get());
+  }
+
+  // MaximumSupplyAirTemperatureInHeatingMode
+  if( modelObject.isMaximumSupplyAirTemperatureInHeatingModeAutosized() )
+  {
+    idfObject.setString(ZoneHVAC_FourPipeFanCoilFields::MaximumSupplyAirTemperatureinHeatingMode,"Autosize");
+  }
+  else if( (value = modelObject.maximumSupplyAirTemperatureInHeatingMode()) )
+  {
+    idfObject.setDouble(ZoneHVAC_FourPipeFanCoilFields::MaximumSupplyAirTemperatureinHeatingMode,value.get());
+  }
+
   return idfObject;
 }
 

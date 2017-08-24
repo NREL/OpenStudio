@@ -29,6 +29,7 @@
 #include <gtest/gtest.h>
 #include "ModelFixture.hpp"
 #include "../PlantLoop.hpp"
+#include "../PlantLoop_Impl.hpp"
 #include "../Node.hpp"
 #include "../Node_Impl.hpp"
 #include "../Loop.hpp"
@@ -56,6 +57,8 @@
 #include "../PlantEquipmentOperationHeatingLoad_Impl.hpp"
 #include "../PlantEquipmentOperationOutdoorDryBulb.hpp"
 #include "../PlantEquipmentOperationOutdoorDryBulb_Impl.hpp"
+#include "../AvailabilityManagerDifferentialThermostat.hpp"
+#include "../AvailabilityManagerDifferentialThermostat_Impl.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 
@@ -432,3 +435,30 @@ TEST_F(ModelFixture, PlantLoop_OperationSchemes)
   
 }
 
+TEST_F(ModelFixture, PlantLoop_GlycolConcentration) {
+  Model m;
+  PlantLoop plant(m);
+
+  EXPECT_TRUE(plant.setFluidType("PropyleneGlycol"));
+  EXPECT_EQ(plant.fluidType(), "PropyleneGlycol");
+  plant.setGlycolConcentration(50);
+  EXPECT_EQ(plant.glycolConcentration(), 50);
+}
+
+TEST_F(ModelFixture, PlantLoop_AvailabilityManager) {
+  Model m;
+  PlantLoop plant(m);
+  AvailabilityManagerDifferentialThermostat availMgr(m);
+
+  EXPECT_FALSE(plant.availabilityManager());
+  EXPECT_TRUE(plant.setAvailabilityManager(availMgr));
+  OptionalAvailabilityManager availMgr2 = plant.availabilityManager();
+  EXPECT_TRUE(availMgr2);
+  if (availMgr2) {
+    EXPECT_EQ(availMgr2.get(), availMgr);
+  }
+  PlantLoop plant2 = plant.clone(m).cast<PlantLoop>();
+  EXPECT_TRUE(plant2.availabilityManager());
+  plant.resetAvailabilityManager();
+  EXPECT_FALSE(plant.availabilityManager());
+}

@@ -1,7 +1,7 @@
 
 OS:Version,
-  {5bf6a875-8324-404f-bb13-fe1c7a962f6f}, !- Handle
-  2.0.5;                                  !- Version Identifier
+  {ca417a86-dded-4379-98a0-3b38b7604340}, !- Handle
+  2.2.0;                                  !- Version Identifier
 
 OS:Schedule:Constant,
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Handle
@@ -2435,6 +2435,8 @@ OS:WaterHeater:Stratified,
   0,                                      !- Node 8 Additional Loss Coefficient {W/m2-K}
   0,                                      !- Node 9 Additional Loss Coefficient {W/m2-K}
   0,                                      !- Node 10 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 11 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 12 Additional Loss Coefficient {W/m2-K}
   IndirectHeatPrimarySetpoint,            !- Source Side Flow Control Mode
   ;                                       !- Indirect Alternate Setpoint Temperature Schedule Name
 
@@ -2658,6 +2660,8 @@ OS:WaterHeater:Stratified,
   0,                                      !- Node 8 Additional Loss Coefficient {W/m2-K}
   0,                                      !- Node 9 Additional Loss Coefficient {W/m2-K}
   0,                                      !- Node 10 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 11 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 12 Additional Loss Coefficient {W/m2-K}
   IndirectHeatPrimarySetpoint;            !- Source Side Flow Control Mode
 
 OS:Schedule:Ruleset,
@@ -5451,7 +5455,7 @@ OS:AirLoopHVAC:UnitarySystem,
   80,                                     !- Maximum Temperature for Heat Recovery {C}
   ,                                       !- Heat Recovery Water Inlet Node Name
   ,                                       !- Heat Recovery Water Outlet Node Name
-  ;                                       !- Design Specification Multispeed Heat Pump Object Name
+  ;                                       !- Design Specification Multispeed Object Name
 
 OS:Fan:OnOff,
   {2e28adfb-474c-4f0c-84c5-88884963b30e}, !- Handle
@@ -5706,7 +5710,7 @@ OS:AirLoopHVAC:UnitarySystem,
   80,                                     !- Maximum Temperature for Heat Recovery {C}
   ,                                       !- Heat Recovery Water Inlet Node Name
   ,                                       !- Heat Recovery Water Outlet Node Name
-  ;                                       !- Design Specification Multispeed Heat Pump Object Name
+  ;                                       !- Design Specification Multispeed Object Name
 
 OS:Fan:OnOff,
   {9be5fc48-23e1-43f4-9f73-8b838bf3ab13}, !- Handle
@@ -5991,7 +5995,7 @@ OS:AirLoopHVAC:UnitarySystem,
   80,                                     !- Maximum Temperature for Heat Recovery {C}
   ,                                       !- Heat Recovery Water Inlet Node Name
   ,                                       !- Heat Recovery Water Outlet Node Name
-  ;                                       !- Design Specification Multispeed Heat Pump Object Name
+  ;                                       !- Design Specification Multispeed Object Name
 
 OS:Fan:OnOff,
   {92d46b63-bee9-4a68-9b87-0cf64c3c6db6}, !- Handle
@@ -6216,7 +6220,7 @@ OS:AirLoopHVAC:UnitarySystem,
   80,                                     !- Maximum Temperature for Heat Recovery {C}
   ,                                       !- Heat Recovery Water Inlet Node Name
   ,                                       !- Heat Recovery Water Outlet Node Name
-  ;                                       !- Design Specification Multispeed Heat Pump Object Name
+  ;                                       !- Design Specification Multispeed Object Name
 
 OS:Fan:OnOff,
   {d89faefb-347b-43f3-a961-af51209d1bda}, !- Handle
@@ -6437,7 +6441,7 @@ OS:AirLoopHVAC:UnitarySystem,
   80,                                     !- Maximum Temperature for Heat Recovery {C}
   ,                                       !- Heat Recovery Water Inlet Node Name
   ,                                       !- Heat Recovery Water Outlet Node Name
-  ;                                       !- Design Specification Multispeed Heat Pump Object Name
+  ;                                       !- Design Specification Multispeed Object Name
 
 OS:Fan:OnOff,
   {e803e540-d848-409c-9bad-0c0dc9c7b50a}, !- Handle
@@ -6628,7 +6632,7 @@ OS:AirLoopHVAC:UnitarySystem,
   80,                                     !- Maximum Temperature for Heat Recovery {C}
   ,                                       !- Heat Recovery Water Inlet Node Name
   ,                                       !- Heat Recovery Water Outlet Node Name
-  ;                                       !- Design Specification Multispeed Heat Pump Object Name
+  ;                                       !- Design Specification Multispeed Object Name
 
 OS:Fan:OnOff,
   {705d20c8-7569-40b3-b69d-0ea966344238}, !- Handle
@@ -6823,7 +6827,7 @@ OS:AirLoopHVAC:UnitarySystem,
   80,                                     !- Maximum Temperature for Heat Recovery {C}
   ,                                       !- Heat Recovery Water Inlet Node Name
   ,                                       !- Heat Recovery Water Outlet Node Name
-  ;                                       !- Design Specification Multispeed Heat Pump Object Name
+  ;                                       !- Design Specification Multispeed Object Name
 
 OS:Fan:VariableVolume,
   {057b7168-bdc2-418a-9961-3bfe683a200e}, !- Handle
@@ -6949,7 +6953,7 @@ OS:AirLoopHVAC:UnitarySystem,
   80,                                     !- Maximum Temperature for Heat Recovery {C}
   ,                                       !- Heat Recovery Water Inlet Node Name
   ,                                       !- Heat Recovery Water Outlet Node Name
-  ;                                       !- Design Specification Multispeed Heat Pump Object Name
+  ;                                       !- Design Specification Multispeed Object Name
 
 OS:Fan:ConstantVolume,
   {0c016d27-85cb-4254-8b85-9a16c4586de5}, !- Handle
@@ -7067,7 +7071,7 @@ OS:AirLoopHVAC:UnitarySystem,
   80,                                     !- Maximum Temperature for Heat Recovery {C}
   ,                                       !- Heat Recovery Water Inlet Node Name
   ,                                       !- Heat Recovery Water Outlet Node Name
-  ;                                       !- Design Specification Multispeed Heat Pump Object Name
+  ;                                       !- Design Specification Multispeed Object Name
 
 OS:Fan:OnOff,
   {499db098-1af5-4236-8115-51a38ac8163e}, !- Handle
@@ -7214,7 +7218,7 @@ OS:AirLoopHVAC:UnitarySystem,
   80,                                     !- Maximum Temperature for Heat Recovery {C}
   ,                                       !- Heat Recovery Water Inlet Node Name
   ,                                       !- Heat Recovery Water Outlet Node Name
-  ;                                       !- Design Specification Multispeed Heat Pump Object Name
+  ;                                       !- Design Specification Multispeed Object Name
 
 OS:Fan:OnOff,
   {1fb3620b-be0e-4bf3-bdab-3320a2807269}, !- Handle
@@ -7426,7 +7430,7 @@ OS:AirLoopHVAC:UnitarySystem,
   80,                                     !- Maximum Temperature for Heat Recovery {C}
   ,                                       !- Heat Recovery Water Inlet Node Name
   ,                                       !- Heat Recovery Water Outlet Node Name
-  ;                                       !- Design Specification Multispeed Heat Pump Object Name
+  ;                                       !- Design Specification Multispeed Object Name
 
 OS:Fan:OnOff,
   {69bcd821-df0e-4a8c-bced-33315e849e64}, !- Handle
@@ -7608,7 +7612,7 @@ OS:AirLoopHVAC:UnitarySystem,
   80,                                     !- Maximum Temperature for Heat Recovery {C}
   ,                                       !- Heat Recovery Water Inlet Node Name
   ,                                       !- Heat Recovery Water Outlet Node Name
-  ;                                       !- Design Specification Multispeed Heat Pump Object Name
+  ;                                       !- Design Specification Multispeed Object Name
 
 OS:Fan:OnOff,
   {37e35cd8-c016-4d24-80db-b070cc5a1999}, !- Handle
@@ -7702,7 +7706,7 @@ OS:AirLoopHVAC:UnitarySystem,
   80,                                     !- Maximum Temperature for Heat Recovery {C}
   ,                                       !- Heat Recovery Water Inlet Node Name
   ,                                       !- Heat Recovery Water Outlet Node Name
-  ;                                       !- Design Specification Multispeed Heat Pump Object Name
+  ;                                       !- Design Specification Multispeed Object Name
 
 OS:Fan:OnOff,
   {9be0b11b-c585-4514-aa5a-9cb276e583c5}, !- Handle
@@ -8233,7 +8237,10 @@ OS:ZoneHVAC:FourPipeFanCoil,
   {9b16c087-b0de-427f-b746-d411b7e8f182}, !- Heating Coil Name
   autosize,                               !- Maximum Hot Water Flow Rate {m3/s}
   ,                                       !- Minimum Hot Water Flow Rate {m3/s}
-  ;                                       !- Heating Convergence Tolerance
+  ,                                       !- Heating Convergence Tolerance
+  ,                                       !- Supply Air Fan Operating Mode Schedule Name
+  Autosize,                               !- Minimum Supply Air Temperature in Cooling Mode {C}
+  Autosize;                               !- Maximum Supply Air Temperature in Heating Mode {C}
 
 OS:Fan:OnOff,
   {d5c825bb-4747-40b1-a6cc-c85df16d7718}, !- Handle
@@ -8331,7 +8338,10 @@ OS:ZoneHVAC:FourPipeFanCoil,
   {6ebfa242-93b1-4d90-9ca4-eb5362303729}, !- Heating Coil Name
   autosize,                               !- Maximum Hot Water Flow Rate {m3/s}
   ,                                       !- Minimum Hot Water Flow Rate {m3/s}
-  ;                                       !- Heating Convergence Tolerance
+  ,                                       !- Heating Convergence Tolerance
+  ,                                       !- Supply Air Fan Operating Mode Schedule Name
+  Autosize,                               !- Minimum Supply Air Temperature in Cooling Mode {C}
+  Autosize;                               !- Maximum Supply Air Temperature in Heating Mode {C}
 
 OS:Fan:VariableVolume,
   {e0cfb885-12c5-4d01-b86f-6514d92205f9}, !- Handle
@@ -8412,7 +8422,10 @@ OS:ZoneHVAC:FourPipeFanCoil,
   {36deaf41-e00c-4a4e-a38d-d443cbea27dd}, !- Heating Coil Name
   autosize,                               !- Maximum Hot Water Flow Rate {m3/s}
   ,                                       !- Minimum Hot Water Flow Rate {m3/s}
-  ;                                       !- Heating Convergence Tolerance
+  ,                                       !- Heating Convergence Tolerance
+  ,                                       !- Supply Air Fan Operating Mode Schedule Name
+  Autosize,                               !- Minimum Supply Air Temperature in Cooling Mode {C}
+  Autosize;                               !- Maximum Supply Air Temperature in Heating Mode {C}
 
 OS:Fan:VariableVolume,
   {b5c75ce0-7c70-4dac-bacb-0c1a5a1a5dab}, !- Handle
@@ -8493,7 +8506,10 @@ OS:ZoneHVAC:FourPipeFanCoil,
   {9d8c2a17-eef1-44d6-a8dd-0e9b74726abe}, !- Heating Coil Name
   autosize,                               !- Maximum Hot Water Flow Rate {m3/s}
   ,                                       !- Minimum Hot Water Flow Rate {m3/s}
-  ;                                       !- Heating Convergence Tolerance
+  ,                                       !- Heating Convergence Tolerance
+  ,                                       !- Supply Air Fan Operating Mode Schedule Name
+  Autosize,                               !- Minimum Supply Air Temperature in Cooling Mode {C}
+  Autosize;                               !- Maximum Supply Air Temperature in Heating Mode {C}
 
 OS:Schedule:Ruleset,
   {655b4e90-c058-40c7-aa39-646c84ed55a9}, !- Handle
@@ -10774,10 +10790,10 @@ OS:HeatPump:WaterToWater:EquationFit:Cooling,
   ,                                       !- Source Side Outlet Node Name
   ,                                       !- Load Side Inlet Node Name
   ,                                       !- Load Side Outlet Node Name
-  0.00189,                                !- Rated Load Side Flow Rate {m3/s}
-  0.00189,                                !- Rated Source Side Flow Rate {m3/s}
-  39890.91,                               !- Rated Cooling Capacity {W}
-  4790,                                   !- Rated Cooling Power Consumption {W}
+  0.00189,                                !- Reference Load Side Flow Rate {m3/s}
+  0.00189,                                !- Reference Source Side Flow Rate {m3/s}
+  39890.91,                               !- Reference Cooling Capacity {W}
+  4790,                                   !- Reference Cooling Power Consumption {W}
   -1.52030596,                            !- Cooling Capacity Coefficient 1
   3.46625667,                             !- Cooling Capacity Coefficient 2
   -1.32267797,                            !- Cooling Capacity Coefficient 3
@@ -10796,10 +10812,10 @@ OS:HeatPump:WaterToWater:EquationFit:Heating,
   ,                                       !- Source Side Outlet Node Name
   ,                                       !- Load Side Inlet Node Name
   ,                                       !- Load Side Outlet Node Name
-  0.00189,                                !- Rated Load Side Flow Rate {m3/s}
-  0.00189,                                !- Rated Source Side Flow Rate {m3/s}
-  39040.92,                               !- Rated Heating Capacity {W}
-  5130,                                   !- Rated Heating Power Consumption {W}
+  0.00189,                                !- Reference Load Side Flow Rate {m3/s}
+  0.00189,                                !- Reference Source Side Flow Rate {m3/s}
+  39040.92,                               !- Reference Heating Capacity {W}
+  5130,                                   !- Reference Heating Power Consumption {W}
   -3.33491153,                            !- Heating Capacity Coefficient 1
   -0.51451946,                            !- Heating Capacity Coefficient 2
   4.51592706,                             !- Heating Capacity Coefficient 3
@@ -10809,7 +10825,9 @@ OS:HeatPump:WaterToWater:EquationFit:Heating,
   8.57035762,                             !- Heating Compressor Power Coefficient 2
   1.29660976,                             !- Heating Compressor Power Coefficient 3
   -0.21629222,                            !- Heating Compressor Power Coefficient 4
-  0.033862378;                            !- Heating Compressor Power Coefficient 5
+  0.033862378,                            !- Heating Compressor Power Coefficient 5
+  ,                                       !- Reference Coefficient of Performance
+  ;                                       !- Sizing Factor
 
 OS:Generator:MicroTurbine,
   {5f037e71-1ba0-4b22-9d0d-0ab372356d49}, !- Handle
@@ -10990,4 +11008,342 @@ OS:Curve:Cubic,
   0.4107131,                              !- Coefficient4 x**3
   0.03,                                   !- Minimum Value of x
   1;                                      !- Maximum Value of x
+
+OS:Site,
+  {54a213fc-e638-47e4-b9c7-684370e74122}, !- Handle
+  Site 1,                                 !- Name
+  ,                                       !- Latitude {deg}
+  ,                                       !- Longitude {deg}
+  ,                                       !- Time Zone {hr}
+  ,                                       !- Elevation {m}
+  ;                                       !- Terrain
+
+OS:YearDescription,
+  {5199437f-8c3e-4006-a295-abcc76194452}; !- Handle
+
+OS:ClimateZones,
+  {3a0639cd-6622-4ae1-a478-e123c2c89477}, !- Handle
+  ,                                       !- Active Institution
+  ,                                       !- Active Year
+  ASHRAE,                                 !- Climate Zone Institution Name 1
+  ANSI/ASHRAE Standard 169,               !- Climate Zone Document Name 1
+  2006,                                   !- Climate Zone Document Year 1
+  ,                                       !- Climate Zone Value 1
+  CEC,                                    !- Climate Zone Institution Name 2
+  California Climate Zone Descriptions,   !- Climate Zone Document Name 2
+  1995,                                   !- Climate Zone Document Year 2
+  ;                                       !- Climate Zone Value 2
+
+OS:Building,
+  {96010d35-3a48-443c-b980-90d35f88d618}, !- Handle
+  Building 1,                             !- Name
+  ,                                       !- Building Sector Type
+  ,                                       !- North Axis {deg}
+  ,                                       !- Nominal Floor to Floor Height {m}
+  ,                                       !- Space Type Name
+  ,                                       !- Default Construction Set Name
+  ;                                       !- Default Schedule Set Name
+
+OS:Facility,
+  {684c605f-552c-4511-9d60-9f06a9cc1013}; !- Handle
+
+OS:SimulationControl,
+  {3000fb01-12a5-4a2c-9c70-373aa7801ba5}; !- Handle
+
+OS:Sizing:Parameters,
+  {8a5f5dab-babf-4c1f-9080-63789067fe96}, !- Handle
+  1.25,                                   !- Heating Sizing Factor
+  1.15;                                   !- Cooling Sizing Factor
+
+OS:Timestep,
+  {b402730b-59c6-4ec1-aa84-8edcca516d89}, !- Handle
+  6;                                      !- Number of Timesteps per Hour
+
+OS:ShadowCalculation,
+  {c5d35f99-a723-49bf-a820-2b36f6320bef}, !- Handle
+  20,                                     !- Calculation Frequency
+  15000;                                  !- Maximum Figures in Shadow Overlap Calculations
+
+OS:HeatBalanceAlgorithm,
+  {367f9238-f07b-4231-a8cb-c976e4b20a9a}, !- Handle
+  ConductionTransferFunction,             !- Algorithm
+  200;                                    !- Surface Temperature Upper Limit {C}
+
+OS:RunPeriod,
+  {ee142eed-73a7-4814-9962-92b0a452399d}, !- Handle
+  Run Period 1,                           !- Name
+  1,                                      !- Begin Month
+  1,                                      !- Begin Day of Month
+  12,                                     !- End Month
+  31,                                     !- End Day of Month
+  ,                                       !- Use Weather File Holidays and Special Days
+  ,                                       !- Use Weather File Daylight Saving Period
+  ,                                       !- Apply Weekend Holiday Rule
+  ,                                       !- Use Weather File Rain Indicators
+  ,                                       !- Use Weather File Snow Indicators
+  ;                                       !- Number of Times Runperiod to be Repeated
+
+OS:LifeCycleCost:Parameters,
+  {e5203ecd-87ec-4286-96da-2f01f09ac409}, !- Handle
+  ,                                       !- Analysis Type
+  ,                                       !- Discounting Convention
+  ,                                       !- Inflation Approach
+  ,                                       !- Real Discount Rate
+  ,                                       !- Nominal Discount Rate
+  ,                                       !- Inflation
+  ,                                       !- Base Date Month
+  ,                                       !- Base Date Year
+  ,                                       !- Service Date Month
+  ,                                       !- Service Date Year
+  ;                                       !- Length of Study Period in Years
+
+OS:Generator:FuelCell,
+  {427ee723-5adc-4b64-a43e-72ecf07b7976}, !- Handle
+  Generator Fuel Cell 1,                  !- Name
+  {749f6f6f-440d-4884-bfca-92957ee723e8}, !- Power Module Name
+  {44f4a297-e351-4cb1-9cc2-422456e93020}, !- Air Supply Name
+  {a9cb7b8d-a10a-4cab-909b-3ec4ce27017b}, !- Fuel Supply Name
+  {4847a478-2328-4d16-8833-4ae67fb00f3f}, !- Water Supply Name
+  {e23fc238-c1a5-404f-b1db-70e1e801860d}, !- Auxiliary Heater Name
+  {e852bb3b-50c2-496f-85ba-0df2e99d2156}, !- Heat Exchanger Name
+  {b405a85d-67e8-4d3e-bacb-9d888ea47ba7}, !- Electrical Storage Name
+  {95c3175c-ed0d-4458-a1ba-fb5a114f52ae}; !- Inverter Name
+
+OS:Generator:FuelCell:PowerModule,
+  {749f6f6f-440d-4884-bfca-92957ee723e8}, !- Handle
+  Generator Fuel Cell Power Module 1,     !- Name
+  Annex42,                                !- Efficiency Curve Mode
+  {faa57d50-d008-430e-bed1-8e67e4e55562}, !- Efficiency Curve Name
+  1,                                      !- Nominal Efficiency
+  3400,                                   !- Nominal Electrical Power {W}
+  0,                                      !- Number of Stops at Start of Simulation
+  0,                                      !- Cycling Performance Degradation Coefficient
+  0,                                      !- Number of Run Hours at Beginning of Simulation {hr}
+  0,                                      !- Accumulated Run Time Degradation Coefficient
+  10000,                                  !- Run Time Degradation Initiation Time Threshold {hr}
+  1.4,                                    !- Power Up Transient Limit {W/s}
+  0.2,                                    !- Power Down Transient Limit {W/s}
+  0,                                      !- Start Up Time {s}
+  0.2,                                    !- Start Up Fuel {kmol}
+  0,                                      !- Start Up Electricity Consumption {J}
+  0,                                      !- Start Up Electricity Produced {J}
+  0,                                      !- Shut Down Time {s}
+  0.2,                                    !- Shut Down Fuel {kmol}
+  0,                                      !- Shut Down Electricity Consumption {J}
+  0,                                      !- Ancillary Electricity Constant Term
+  0,                                      !- Ancillary Electricity Linear Term
+  ConstantRate,                           !- Skin Loss Calculation Mode
+  ,                                       !- Zone Name
+  0.6392,                                 !- Skin Loss Radiative Fraction
+  729,                                    !- Constant Skin Loss Rate {W}
+  0,                                      !- Skin Loss U-Factor Times Area Term {W/K}
+  {4aaf746d-812c-420e-ba92-089aa73d72bc}, !- Skin Loss Quadratic Curve Name
+  0.006156,                               !- Dilution Air Flow Rate {kmol/s}
+  2307,                                   !- Stack Heat loss to Dilution Air {W}
+  ,                                       !- Dilution Inlet Air Node Name
+  ,                                       !- Dilution Outlet Air Node Name
+  3010,                                   !- Minimum Operating Point {W}
+  3728;                                   !- Maximum Operating Point {W}
+
+OS:Curve:Quadratic,
+  {faa57d50-d008-430e-bed1-8e67e4e55562}, !- Handle
+  Power Module Efficiency Curve,          !- Name
+  0.642388,                               !- Coefficient1 Constant
+  -0.0001619,                             !- Coefficient2 x
+  2.26e-008,                              !- Coefficient3 x**2
+  0,                                      !- Minimum Value of x
+  10000;                                  !- Maximum Value of x
+
+OS:Curve:Quadratic,
+  {4aaf746d-812c-420e-ba92-089aa73d72bc}, !- Handle
+  Skin Loss Curve,                        !- Name
+  0,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  -10000000000,                           !- Minimum Value of x
+  10000000000;                            !- Maximum Value of x
+
+OS:Generator:FuelCell:AirSupply,
+  {44f4a297-e351-4cb1-9cc2-422456e93020}, !- Handle
+  Generator Fuel Cell Air Supply 1,       !- Name
+  ,                                       !- Air Inlet Node Name
+  {ffcc11c3-2cd0-4d35-b07a-bcb55ed3efcc}, !- Blower Power Curve Name
+  1,                                      !- Blower Heat Loss Factor
+  AirRatiobyStoics,                       !- Air Supply Rate Calculation Mode
+  1,                                      !- Stoichiometric Ratio
+  {2236bcc7-bb73-4ad6-93b3-425eb06ac90a}, !- Air Rate Function of Electric Power Curve Name
+  0.00283,                                !- Air Rate Air Temperature Coefficient
+  {04b5fd70-709b-4538-8eb5-94a992fb4410}, !- Air Rate Function of Fuel Rate Curve Name
+  NoRecovery,                             !- Air Intake Heat Recovery Mode
+  AmbientAir,                             !- Air Supply Constituent Mode
+  0;                                      !- Number of UserDefined Constituents
+
+OS:Curve:Cubic,
+  {ffcc11c3-2cd0-4d35-b07a-bcb55ed3efcc}, !- Handle
+  Blower Power Curve,                     !- Name
+  0,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Coefficient4 x**3
+  -10000000000,                           !- Minimum Value of x
+  10000000000;                            !- Maximum Value of x
+
+OS:Curve:Quadratic,
+  {2236bcc7-bb73-4ad6-93b3-425eb06ac90a}, !- Handle
+  Air Rate Function of Electric Power Curve, !- Name
+  0.00150976,                             !- Coefficient1 Constant
+  -7.76656e-007,                          !- Coefficient2 x
+  1.30317e-010,                           !- Coefficient3 x**2
+  -10000000000,                           !- Minimum Value of x
+  10000000000;                            !- Maximum Value of x
+
+OS:Curve:Quadratic,
+  {04b5fd70-709b-4538-8eb5-94a992fb4410}, !- Handle
+  Air Rate Function of Fuel Rate Curve,   !- Name
+  0,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  -10000000000,                           !- Minimum Value of x
+  10000000000;                            !- Maximum Value of x
+
+OS:Generator:FuelSupply,
+  {a9cb7b8d-a10a-4cab-909b-3ec4ce27017b}, !- Handle
+  Generator Fuel Supply 1,                !- Name
+  Scheduled,                              !- Fuel Temperature Modeling Mode
+  ,                                       !- Fuel Temperature Reference Node Name
+  {0fb785ba-88c0-438a-9d31-1a88979dab95}, !- Fuel Temperature Schedule Name
+  {197d60a6-b60d-4e87-a76b-392da18ab1bb}, !- Compressor Power Multiplier Function of Fuel Rate Curve Name
+  1,                                      !- Compressor Heat Loss Factor
+  LiquidGeneric,                          !- Fuel Type
+  43100,                                  !- Liquid Generic Fuel Lower Heating Value {kJ/kg}
+  46200,                                  !- Liquid Generic Fuel Higher Heating Value {kJ/kg}
+  1,                                      !- Liquid Generic Fuel Molecular Weight {g/mol}
+  0,                                      !- Liquid Generic Fuel CO2 Emission Factor
+  0;                                      !- Number of Constituents in Gaseous Constituent Fuel Supply
+
+OS:Schedule:Constant,
+  {0fb785ba-88c0-438a-9d31-1a88979dab95}, !- Handle
+  Fuel Temperature,                       !- Name
+  {dfe136f8-1a1a-4263-a38c-0055df8cb82e}, !- Schedule Type Limits Name
+  20;                                     !- Value
+
+OS:ScheduleTypeLimits,
+  {dfe136f8-1a1a-4263-a38c-0055df8cb82e}, !- Handle
+  Temperature 5,                          !- Name
+  0,                                      !- Lower Limit Value
+  100,                                    !- Upper Limit Value
+  Continuous,                             !- Numeric Type
+  Temperature;                            !- Unit Type
+
+OS:Curve:Cubic,
+  {197d60a6-b60d-4e87-a76b-392da18ab1bb}, !- Handle
+  Compressor Power Multiplier Function of FuelRate Curve, !- Name
+  0,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Coefficient4 x**3
+  -10000000000,                           !- Minimum Value of x
+  10000000000;                            !- Maximum Value of x
+
+OS:Generator:FuelCell:WaterSupply,
+  {4847a478-2328-4d16-8833-4ae67fb00f3f}, !- Handle
+  Generator Fuel Cell Water Supply 1,     !- Name
+  {34b8e269-1f4d-4990-9443-ebc57696ad0a}, !- Reformer Water Flow Rate Function of Fuel Rate Curve Name
+  {8e4e3b2d-1c02-4843-90cf-3143ee332bd4}, !- Reformer Water Pump Power Function of Fuel Rate Curve Name
+  0,                                      !- Pump Heat Loss Factor
+  TemperatureFromSchedule,                !- Water Temperature Modeling Mode
+  ,                                       !- Water Temperature Reference Node Name
+  {10fa45fd-66ba-4961-a111-0da8861b27cd}; !- Water Temperature Schedule Name
+
+OS:Curve:Quadratic,
+  {34b8e269-1f4d-4990-9443-ebc57696ad0a}, !- Handle
+  Reformer Water FlowRate Function of FuelRate Curve, !- Name
+  0,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  -10000000000,                           !- Minimum Value of x
+  10000000000;                            !- Maximum Value of x
+
+OS:Curve:Cubic,
+  {8e4e3b2d-1c02-4843-90cf-3143ee332bd4}, !- Handle
+  Reformer Water Pump Power Function of FuelRate Curve, !- Name
+  0,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Coefficient4 x**3
+  -10000000000,                           !- Minimum Value of x
+  10000000000;                            !- Maximum Value of x
+
+OS:Schedule:Constant,
+  {10fa45fd-66ba-4961-a111-0da8861b27cd}, !- Handle
+  Water Temperature,                      !- Name
+  {dfe136f8-1a1a-4263-a38c-0055df8cb82e}, !- Schedule Type Limits Name
+  20;                                     !- Value
+
+OS:Generator:FuelCell:AuxiliaryHeater,
+  {e23fc238-c1a5-404f-b1db-70e1e801860d}, !- Handle
+  Generator Fuel Cell Auxiliary Heater 1, !- Name
+  0,                                      !- Excess Air Ratio
+  0,                                      !- Ancillary Power Constant Term
+  0,                                      !- Ancillary Power Linear Term
+  0.5,                                    !- Skin Loss U-Factor Times Area Value {W/K}
+  AirInletForFuelCell,                    !- Skin Loss Destination
+  ,                                       !- Zone Name to Receive Skin Losses
+  Watts,                                  !- Heating Capacity Units
+  0,                                      !- Maximum Heating Capacity in Watts {W}
+  0;                                      !- Minimum Heating Capacity in Watts {W}
+
+OS:Generator:FuelCell:ExhaustGasToWaterHeatExchanger,
+  {e852bb3b-50c2-496f-85ba-0df2e99d2156}, !- Handle
+  Generator Fuel Cell Exhaust Gas To Water Heat Exchanger 1, !- Name
+  ,                                       !- Heat Recovery Water Inlet Node Name
+  ,                                       !- Heat Recovery Water Outlet Node Name
+  0.0004,                                 !- Heat Recovery Water Maximum Flow Rate {m3/s}
+  ,                                       !- Exhaust Outlet Air Node Name
+  Condensing,                             !- Heat Exchanger Calculation Method
+  ,                                       !- Method 1 Heat Exchanger Effectiveness
+  83.1,                                   !- Method 2 Parameter hxs0
+  4798,                                   !- Method 2 Parameter hxs1
+  -138000,                                !- Method 2 Parameter hxs2
+  -353800,                                !- Method 2 Parameter hxs3
+  515000000,                              !- Method 2 Parameter hxs4
+  ,                                       !- Method 3 h0Gas Coefficient
+  ,                                       !- Method 3 NdotGasRef Coefficient
+  ,                                       !- Method 3 n Coefficient
+  ,                                       !- Method 3 Gas Area {m2}
+  ,                                       !- Method 3 h0 Water Coefficient
+  ,                                       !- Method 3 N dot Water ref Coefficient
+  ,                                       !- Method 3 m Coefficient
+  ,                                       !- Method 3 Water Area {m2}
+  ,                                       !- Method 3 F Adjustment Factor
+  0.0031,                                 !- Method 4 hxl1 Coefficient
+  1,                                      !- Method 4 hxl2 Coefficient
+  35;                                     !- Method 4 Condensation Threshold {C}
+
+OS:Generator:FuelCell:ElectricalStorage,
+  {b405a85d-67e8-4d3e-bacb-9d888ea47ba7}, !- Handle
+  Generator Fuel Cell Electrical Storage 1, !- Name
+  SimpleEfficiencyWithConstraints,        !- Choice of Model
+  1,                                      !- Nominal Charging Energetic Efficiency
+  1,                                      !- Nominal Discharging Energetic Efficiency
+  0,                                      !- Simple Maximum Capacity {J}
+  0,                                      !- Simple Maximum Power Draw {W}
+  0,                                      !- Simple Maximum Power Store {W}
+  0;                                      !- Initial Charge State {J}
+
+OS:Generator:FuelCell:Inverter,
+  {95c3175c-ed0d-4458-a1ba-fb5a114f52ae}, !- Handle
+  Generator Fuel Cell Inverter 1,         !- Name
+  Constant,                               !- Inverter Efficiency Calculation Mode
+  1,                                      !- Inverter Efficiency
+  {30de34da-9cc0-47fc-8eec-90653a96a7f7}; !- Efficiency Function of DC Power Curve Name
+
+OS:Curve:Quadratic,
+  {30de34da-9cc0-47fc-8eec-90653a96a7f7}, !- Handle
+  Efficiency Function of DC Power Curve,  !- Name
+  0.560717,                               !- Coefficient1 Constant
+  0.00012401,                             !- Coefficient2 x
+  -2.01648e-008,                          !- Coefficient3 x**2
+  -10000000000,                           !- Minimum Value of x
+  10000000000;                            !- Maximum Value of x
 

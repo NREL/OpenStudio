@@ -282,7 +282,7 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
       }
     }
   }
-  
+
   // remove orphan Generator:MicroTurbine
   for (auto& chp : model.getConcreteModelObjects<GeneratorMicroTurbine>()){
     if (!chp.electricLoadCenterDistribution()){
@@ -291,7 +291,6 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
       continue;
     }
   }
-  
 
   // remove orphan photovoltaics
   for (auto& pv : model.getConcreteModelObjects<GeneratorPhotovoltaic>()){
@@ -305,7 +304,7 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
       pv.remove();
     }
   }
-  
+
   // Remove orphan Storage
   for (auto& storage : model.getModelObjects<ElectricalStorage>()) {
     if (!storage.electricLoadCenterDistribution()){
@@ -313,7 +312,7 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
       storage.remove();
     }
   }
-  
+
   // Remove orphan Converters
   for (auto& converter : model.getConcreteModelObjects<ElectricLoadCenterStorageConverter>()){
     if (!converter.electricLoadCenterDistribution()){
@@ -725,17 +724,17 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       // no-op
       return retVal;
     }
-  // case openstudio::IddObjectType::OS_CentralHeatPumpSystem :
-  //   {
-  //     model::CentralHeatPumpSystem mo = modelObject.cast<CentralHeatPumpSystem>();
-  //     retVal = translateCentralHeatPumpSystem(mo);
-  //     break;
-  //   }
-  // case openstudio::IddObjectType::OS_CentralHeatPumpSystem_Module :
-  //   {
-  //     // no-op
-  //     return retVal;
-  //   }
+  case openstudio::IddObjectType::OS_CentralHeatPumpSystem :
+    {
+      model::CentralHeatPumpSystem mo = modelObject.cast<CentralHeatPumpSystem>();
+      retVal = translateCentralHeatPumpSystem(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_CentralHeatPumpSystem_Module :
+    {
+      // no-op
+      return retVal;
+    }
   case openstudio::IddObjectType::OS_Chiller_Absorption :
     {
       auto mo = modelObject.cast<ChillerAbsorption>();
@@ -754,12 +753,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateChillerElectricEIR(chiller);
       break;
     }
-  // case openstudio::IddObjectType::OS_ChillerHeaterPerformance_Electric_EIR :
-  //   {
-  //     model::ChillerHeaterPerformanceElectricEIR mo = modelObject.cast<ChillerHeaterPerformanceElectricEIR>();
-  //     retVal = translateChillerHeaterPerformanceElectricEIR(mo);
-  //     break;
-  //   }
+  case openstudio::IddObjectType::OS_ChillerHeaterPerformance_Electric_EIR :
+    {
+      model::ChillerHeaterPerformanceElectricEIR mo = modelObject.cast<ChillerHeaterPerformanceElectricEIR>();
+      retVal = translateChillerHeaterPerformanceElectricEIR(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_ClimateZones:
   {
     // no-op
@@ -1521,6 +1520,76 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     // Will also translate the Generator:MicroTurbine:HeatRecovery if there is one
     model::GeneratorMicroTurbine temp = modelObject.cast<GeneratorMicroTurbine>();
     retVal = translateGeneratorMicroTurbine(temp);
+    break;
+  }
+  case openstudio::IddObjectType::OS_Generator_FuelCell:
+  {
+    // Will also translate the Generator:FuelCell if there is one
+    model::GeneratorFuelCell temp = modelObject.cast<GeneratorFuelCell>();
+    retVal = translateGeneratorFuelCell(temp);
+    break;
+  }
+  case openstudio::IddObjectType::OS_Generator_FuelCell_AirSupply:
+  {
+    // Will also translate the Generator:FuelCell:AirSupply if there is one
+    model::GeneratorFuelCellAirSupply temp = modelObject.cast<GeneratorFuelCellAirSupply>();
+    retVal = translateGeneratorFuelCellAirSupply(temp);
+    break;
+  }
+  case openstudio::IddObjectType::OS_Generator_FuelCell_AuxiliaryHeater:
+  {
+    // Will also translate the Generator:FuelCell:AuxiliaryHeater if there is one
+    model::GeneratorFuelCellAuxiliaryHeater temp = modelObject.cast<GeneratorFuelCellAuxiliaryHeater>();
+    retVal = translateGeneratorFuelCellAuxiliaryHeater(temp);
+    break;
+  }
+  case openstudio::IddObjectType::OS_Generator_FuelCell_ElectricalStorage:
+  {
+    // Will also translate the Generator:FuelCell:ElectricalStorage if there is one
+    model::GeneratorFuelCellElectricalStorage temp = modelObject.cast<GeneratorFuelCellElectricalStorage>();
+    retVal = translateGeneratorFuelCellElectricalStorage(temp);
+    break;
+  }
+  case openstudio::IddObjectType::OS_Generator_FuelCell_ExhaustGasToWaterHeatExchanger:
+  {
+    // Will also translate the Generator:FuelCell:ExhaustGasToWaterHeatExchanger if there is one
+    model::GeneratorFuelCellExhaustGasToWaterHeatExchanger temp = modelObject.cast<GeneratorFuelCellExhaustGasToWaterHeatExchanger>();
+    retVal = translateGeneratorFuelCellExhaustGasToWaterHeatExchanger(temp);
+    break;
+  }
+  case openstudio::IddObjectType::OS_Generator_FuelCell_Inverter:
+  {
+    // Will also translate the Generator:FuelCell:Inverter if there is one
+    model::GeneratorFuelCellInverter temp = modelObject.cast<GeneratorFuelCellInverter>();
+    retVal = translateGeneratorFuelCellInverter(temp);
+    break;
+  }
+  case openstudio::IddObjectType::OS_Generator_FuelCell_PowerModule:
+  {
+    // Will also translate the Generator:FuelCell:PowerModule if there is one
+    model::GeneratorFuelCellPowerModule temp = modelObject.cast<GeneratorFuelCellPowerModule>();
+    retVal = translateGeneratorFuelCellPowerModule(temp);
+    break;
+  }
+  case openstudio::IddObjectType::OS_Generator_FuelCell_StackCooler:
+  {
+    // Will also translate the Generator:FuelCell:StackCooler if there is one
+    model::GeneratorFuelCellStackCooler temp = modelObject.cast<GeneratorFuelCellStackCooler>();
+    retVal = translateGeneratorFuelCellStackCooler(temp);
+    break;
+  }
+  case openstudio::IddObjectType::OS_Generator_FuelCell_WaterSupply:
+  {
+    // Will also translate the Generator:FuelCell:WaterSupply if there is one
+    model::GeneratorFuelCellWaterSupply temp = modelObject.cast<GeneratorFuelCellWaterSupply>();
+    retVal = translateGeneratorFuelCellWaterSupply(temp);
+    break;
+  }
+  case openstudio::IddObjectType::OS_Generator_FuelSupply:
+  {
+    // Will also translate the Generator:FuelSupply if there is one
+    model::GeneratorFuelSupply temp = modelObject.cast<GeneratorFuelSupply>();
+    retVal = translateGeneratorFuelSupply(temp);
     break;
   }
   case openstudio::IddObjectType::OS_Generator_Photovoltaic:
@@ -2558,6 +2627,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateTimestep(timestep);
       break;
     }
+  case openstudio::IddObjectType::OS_UnitarySystemPerformance_Multispeed :
+    {
+      model::UnitarySystemPerformanceMultispeed sysPerfMultispeed = modelObject.cast<UnitarySystemPerformanceMultispeed>();
+      retVal = translateUnitarySystemPerformanceMultispeed(sysPerfMultispeed);
+      break;
+    }
   case openstudio::IddObjectType::OS_UtilityBill:
     {
       // no-op
@@ -3064,6 +3139,16 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
 
   result.push_back(IddObjectType::OS_ElectricLoadCenter_Distribution);
   result.push_back(IddObjectType::OS_Generator_MicroTurbine);
+  result.push_back(IddObjectType::OS_Generator_FuelCell);
+  result.push_back(IddObjectType::OS_Generator_FuelCell_AirSupply);
+  result.push_back(IddObjectType::OS_Generator_FuelCell_AuxiliaryHeater);
+  result.push_back(IddObjectType::OS_Generator_FuelCell_ElectricalStorage);
+  result.push_back(IddObjectType::OS_Generator_FuelCell_ExhaustGasToWaterHeatExchanger);
+  result.push_back(IddObjectType::OS_Generator_FuelCell_Inverter);
+  result.push_back(IddObjectType::OS_Generator_FuelCell_PowerModule);
+  result.push_back(IddObjectType::OS_Generator_FuelCell_StackCooler);
+  result.push_back(IddObjectType::OS_Generator_FuelCell_WaterSupply);
+  result.push_back(IddObjectType::OS_Generator_FuelSupply);
   result.push_back(IddObjectType::OS_Generator_Photovoltaic);
   result.push_back(IddObjectType::OS_PhotovoltaicPerformance_EquivalentOneDiode);
   result.push_back(IddObjectType::OS_PhotovoltaicPerformance_Simple);

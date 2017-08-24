@@ -49,12 +49,12 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateBoilerHotWater.cpp
   ForwardTranslator/ForwardTranslateBoilerSteam.cpp
   ForwardTranslator/ForwardTranslateBuilding.cpp
-##  ForwardTranslator/ForwardTranslateCentralHeatPumpSystem.cpp
+  ForwardTranslator/ForwardTranslateCentralHeatPumpSystem.cpp
   ForwardTranslator/ForwardTranslateCFactorUndergroundWallConstruction.cpp
   ForwardTranslator/ForwardTranslateChillerAbsorption.cpp
   ForwardTranslator/ForwardTranslateChillerAbsorptionIndirect.cpp
   ForwardTranslator/ForwardTranslateChillerElectricEIR.cpp
-##  ForwardTranslator/ForwardTranslateChillerHeaterPerformanceElectricEIR.cpp
+  ForwardTranslator/ForwardTranslateChillerHeaterPerformanceElectricEIR.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingDXMultiSpeed.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingDXSingleSpeed.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingDXTwoSpeed.cpp
@@ -153,6 +153,16 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateGasMixture.cpp
   ForwardTranslator/ForwardTranslateGeneratorPhotovoltaic.cpp
   ForwardTranslator/ForwardTranslateGeneratorMicroTurbine.cpp
+  ForwardTranslator/ForwardTranslateGeneratorFuelCell.cpp
+  ForwardTranslator/ForwardTranslateGeneratorFuelCellAirSupply.cpp
+  ForwardTranslator/ForwardTranslateGeneratorFuelCellAuxiliaryHeater.cpp
+  ForwardTranslator/ForwardTranslateGeneratorFuelCellElectricalStorage.cpp
+  ForwardTranslator/ForwardTranslateGeneratorFuelCellExhaustGasToWaterHeatExchanger.cpp
+  ForwardTranslator/ForwardTranslateGeneratorFuelCellInverter.cpp
+  ForwardTranslator/ForwardTranslateGeneratorFuelCellPowerModule.cpp
+  ForwardTranslator/ForwardTranslateGeneratorFuelCellStackCooler.cpp
+  ForwardTranslator/ForwardTranslateGeneratorFuelCellWaterSupply.cpp
+  ForwardTranslator/ForwardTranslateGeneratorFuelSupply.cpp
   ForwardTranslator/ForwardTranslateGroundHeatExchangerHorizontalTrench.cpp
   ForwardTranslator/ForwardTranslateGroundHeatExchangerVertical.cpp
   ForwardTranslator/ForwardTranslateHeaderedPumpsConstantSpeed.cpp
@@ -305,6 +315,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateThermalZone.cpp
   ForwardTranslator/ForwardTranslateThermostatSetpointDualSetpoint.cpp
   ForwardTranslator/ForwardTranslateTimestep.cpp
+  ForwardTranslator/ForwardTranslateUnitarySystemPerformanceMultispeed.cpp
   ForwardTranslator/ForwardTranslateVersion.cpp
   ForwardTranslator/ForwardTranslateWaterHeaterMixed.cpp
   ForwardTranslator/ForwardTranslateWaterHeaterHeatPump.cpp
@@ -485,12 +496,14 @@ set(${target_name}_test_src
 
   Test/AirWallMaterial_GTest.cpp
   Test/Building_GTest.cpp
+  Test/CoilHeatingGas_GTest.cpp
   Test/Construction_GTest.cpp
   Test/DaylightingControl_GTest.cpp
   Test/DaylightingDeviceShelf_GTest.cpp
   Test/DesignSpecificationOutdoorAir_GTest.cpp
   Test/ElectricEquipment_GTest.cpp
   Test/EMS_GTest.cpp
+  Test/FuelCell_GTest.cpp
   Test/ExteriorLights_GTest.cpp
   Test/GasEquipment_GTest.cpp
   Test/HotWaterEquipment_GTest.cpp
@@ -506,6 +519,7 @@ set(${target_name}_test_src
   Test/RunPeriodControlDaylightSavingTime_GTest.cpp
   Test/ScheduleInterval_GTest.cpp
   Test/ScheduleRuleset_GTest.cpp
+  Test/SetpointManagerFollowGroundTemperature_GTest.cpp
   Test/ShadingSurface_GTest.cpp
   Test/Space_GTest.cpp
   Test/SpaceInfiltrationDesignFlowRate_GTest.cpp

@@ -145,11 +145,17 @@ namespace detail {
 
     void setRatedHighSpeedTotalCoolingCapacity( boost::optional<double> value );
 
+    void setRatedHighSpeedTotalCoolingCapacity( double value );
+
     void setRatedHighSpeedSensibleHeatRatio( boost::optional<double> value );
+
+    void setRatedHighSpeedSensibleHeatRatio( double value );
 
     void setRatedHighSpeedCOP( double value );
 
     void setRatedHighSpeedAirFlowRate( boost::optional<double> value );
+
+    void setRatedHighSpeedAirFlowRate( double value );
 
     bool setTotalCoolingCapacityFunctionOfTemperatureCurve(const Curve& curve );
 
@@ -163,11 +169,17 @@ namespace detail {
 
     void setRatedLowSpeedTotalCoolingCapacity( boost::optional<double> value );
 
+    void setRatedLowSpeedTotalCoolingCapacity( double value );
+
     void setRatedLowSpeedSensibleHeatRatio( boost::optional<double> value );
+
+    void setRatedLowSpeedSensibleHeatRatio( double value );
 
     void setRatedLowSpeedCOP( double value );
 
     void setRatedLowSpeedAirFlowRate( boost::optional<double> value );
+
+    void setRatedLowSpeedAirFlowRate( double value );
 
     bool setLowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve(const Curve& curve );
 
@@ -181,13 +193,21 @@ namespace detail {
 
     void setHighSpeedEvaporativeCondenserAirFlowRate( boost::optional<double> value );
 
+    void setHighSpeedEvaporativeCondenserAirFlowRate( double value );
+
     void setHighSpeedEvaporativeCondenserPumpRatedPowerConsumption( boost::optional<double> value );
+
+    void setHighSpeedEvaporativeCondenserPumpRatedPowerConsumption( double value );
 
     void setLowSpeedEvaporativeCondenserEffectiveness( double value );
 
     void setLowSpeedEvaporativeCondenserAirFlowRate( boost::optional<double> value );
 
+    void setLowSpeedEvaporativeCondenserAirFlowRate( double value );
+
     void setLowSpeedEvaporativeCondenserPumpRatedPowerConsumption( boost::optional<double> value );
+
+    void setLowSpeedEvaporativeCondenserPumpRatedPowerConsumption( double value );
 
     //TODO
     // A14, \field Supply Water Storage Tank Name

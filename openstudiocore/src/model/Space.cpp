@@ -285,14 +285,7 @@ namespace detail {
 
   Transformation Space_Impl::buildingTransformation() const
   {
-    Transformation transformation;
-    boost::optional<Building> building = this->model().building();
-    if (building){
-      transformation = building->transformation() * this->transformation();
-    }else{
-      transformation = this->transformation();
-    }
-    return transformation;
+    return this->transformation();
   }
 
   bool Space_Impl::changeTransformation(const openstudio::Transformation& transformation) {

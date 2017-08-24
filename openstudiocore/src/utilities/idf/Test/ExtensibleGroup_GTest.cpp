@@ -617,3 +617,17 @@ TEST_F(IdfFixture,ExtensibleGroup_Clone) {
   ASSERT_TRUE(oTarget);
   EXPECT_TRUE(*oTarget == wsObjects[1]);
 }
+
+TEST_F(IdfFixture, ExtensibleGroup_ErrorHandling) {
+  // IdfObject
+  IdfObject zone(IddObjectType::Zone);
+
+  StringVector values;
+  IdfExtensibleGroup group = zone.pushExtensibleGroup(values);
+  EXPECT_TRUE(group.empty());
+
+  values.clear();
+  values.push_back("Cool Stuff");
+  group = zone.pushExtensibleGroup(values);
+  EXPECT_TRUE(group.empty());
+}
