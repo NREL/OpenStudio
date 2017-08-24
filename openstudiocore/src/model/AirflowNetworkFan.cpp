@@ -80,7 +80,7 @@ namespace detail {
     return AirflowNetworkFan::iddObjectType();
   }
 
-  void AirflowNetworkFan_Impl::resetComponent()
+  void AirflowNetworkFan_Impl::resetFan()
   {
     bool result = setString(OS_AirflowNetworkFanFields::FanName, "");
     OS_ASSERT(result);
@@ -101,9 +101,9 @@ IddObjectType AirflowNetworkFan::iddObjectType()
   return IddObjectType(IddObjectType::OS_AirflowNetworkFan);
 }
 
-void AirflowNetworkFan::resetComponent()
+void AirflowNetworkFan::resetFan()
 {
-  getImpl<detail::AirflowNetworkFan_Impl>()->resetComponent();
+  getImpl<detail::AirflowNetworkFan_Impl>()->resetFan();
 }
 
 /// @cond

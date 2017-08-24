@@ -86,7 +86,7 @@ class MODEL_API AirflowNetworkFan : public ModelObject
   friend class detail::FanVariableVolume_Impl;
   friend class detail::FanOnOff_Impl;
 
-  void resetComponent();
+  void resetFan();
 
   friend class detail::AirflowNetworkFan_Impl;
   friend class Model;

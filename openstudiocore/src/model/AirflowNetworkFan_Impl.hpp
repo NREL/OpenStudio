@@ -87,10 +87,9 @@ namespace detail {
       std::is_same<FanOnOff, T>::value, T>::type
       &fan)
     {
-      // Set parent or something here?
       return setPointer(OS_AirflowNetworkFanFields::FanName, fan.handle());
     }
-    void resetComponent();
+    void resetFan();
 
     //@}
     /** @name Other */
