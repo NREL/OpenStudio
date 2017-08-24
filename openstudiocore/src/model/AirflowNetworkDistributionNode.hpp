@@ -47,6 +47,10 @@ class Node;
 
 namespace detail {
 
+  class Node_Impl;
+  class AirLoopHVACZoneMixer_Impl;
+  class AirLoopHVACZoneSplitter_Impl;
+  class AirLoopHVACOutdoorAirSystem_Impl;
   class AirflowNetworkDistributionNode_Impl;
 
 } // detail
@@ -103,6 +107,10 @@ class MODEL_API AirflowNetworkDistributionNode : public AirflowNetworkNode {
 
   void resetComponent();
 
+  friend class detail::Node_Impl;
+  friend class detail::AirLoopHVACZoneMixer_Impl;
+  friend class detail::AirLoopHVACZoneSplitter_Impl;
+  friend class detail::AirLoopHVACOutdoorAirSystem_Impl;
   friend class detail::AirflowNetworkDistributionNode_Impl;
   friend class Model;
   friend class IdfObject;

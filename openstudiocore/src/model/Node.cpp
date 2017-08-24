@@ -42,6 +42,8 @@
 #include "SetpointManagerFollowOutdoorAirTemperature_Impl.hpp"
 #include "SetpointManagerWarmest.hpp"
 #include "SetpointManagerWarmest_Impl.hpp"
+#include "AirflowNetworkDistributionNode.hpp"
+#include "AirflowNetworkDistributionNode_Impl.hpp"
 #include "ThermalZone.hpp"
 #include "PortList.hpp"
 #include "PortList_Impl.hpp"
@@ -298,6 +300,8 @@ namespace detail{
   std::vector<ModelObject> Node_Impl::children() const
   {
     std::vector<ModelObject> result = castVector<ModelObject>(this->setpointManagers());
+    std::vector<AirflowNetworkDistributionNode> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkDistributionNode>(AirflowNetworkDistributionNode::iddObjectType());
+    result.insert(result.end(), myAFNItems.begin(), myAFNItems.end());
     return result;
   }
 
@@ -367,6 +371,28 @@ namespace detail{
     }
 
     return false;
+  }
+
+  boost::optional<AirflowNetworkDistributionNode> Node_Impl::createAirflowNetworkDistributionNode()
+  {
+    boost::optional<AirflowNetworkDistributionNode> opt = airflowNetworkDistributionNode();
+    if (opt) {
+      return boost::none;
+    }
+    return AirflowNetworkDistributionNode(model(), handle());
+  }
+
+  boost::optional<AirflowNetworkDistributionNode> Node_Impl::airflowNetworkDistributionNode() const
+  {
+    std::vector<AirflowNetworkDistributionNode> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkDistributionNode>(AirflowNetworkDistributionNode::iddObjectType());
+    auto count = myAFNItems.size();
+    if (count == 1) {
+      return myAFNItems[0];
+    } else if (count > 1) {
+      LOG(Warn, briefDescription() << " has more than one AirflowNetwork DistributionNode attached, returning first.");
+      return myAFNItems[0];
+    }
+    return boost::none;
   }
 
 } // detail
@@ -500,6 +526,16 @@ ModelObject Node::clone(Model model) const
 IddObjectType Node::iddObjectType() {
   IddObjectType result(IddObjectType::OS_Node);
   return result;
+}
+
+boost::optional<AirflowNetworkDistributionNode> Node::createAirflowNetworkDistributionNode()
+{
+  return getImpl<detail::Node_Impl>()->createAirflowNetworkDistributionNode();
+}
+
+boost::optional<AirflowNetworkDistributionNode> Node::airflowNetworkDistributionNode() const
+{
+  return getImpl<detail::Node_Impl>()->airflowNetworkDistributionNode();
 }
 
 } // model

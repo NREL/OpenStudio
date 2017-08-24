@@ -38,20 +38,13 @@ class ModelObject;
 class AirLoopHVAC;
 class ControllerOutdoorAir;
 class Node;
+class AirflowNetworkDistributionNode;
 
 namespace detail {
 
   // derive AirLoopHVACOutdoorAirSystem_Impl from ModelObject_Impl to override virtual methods
   class MODEL_API AirLoopHVACOutdoorAirSystem_Impl : public HVACComponent_Impl{
-    
 
-    
-    
-    
-    
-    
-    
-    
    public:
 
     // constructor
@@ -115,6 +108,10 @@ namespace detail {
     boost::optional<ModelObject> component(openstudio::Handle handle);
     boost::optional<ModelObject> oaComponent(openstudio::Handle handle);
     boost::optional<ModelObject> reliefComponent(openstudio::Handle handle);
+
+    boost::optional<AirflowNetworkDistributionNode> createAirflowNetworkDistributionNode();
+
+    boost::optional<AirflowNetworkDistributionNode> airflowNetworkDistributionNode() const;
 
    private:
     REGISTER_LOGGER("openstudio.model.AirLoopHVACOutdoorAirSystem");

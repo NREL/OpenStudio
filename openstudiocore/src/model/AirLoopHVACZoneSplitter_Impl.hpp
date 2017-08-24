@@ -35,6 +35,7 @@ namespace openstudio {
 namespace model {
 
 class ThermalZone;
+class AirflowNetworkDistributionNode;
 
 namespace detail {
 
@@ -62,6 +63,8 @@ class MODEL_API AirLoopHVACZoneSplitter_Impl : public Splitter_Impl {
 
   virtual IddObjectType iddObjectType() const override;
 
+  virtual std::vector<ModelObject> children() const override;
+
   std::vector<openstudio::IdfObject> remove() override;
 
   unsigned inletPort() override;
@@ -75,6 +78,10 @@ class MODEL_API AirLoopHVACZoneSplitter_Impl : public Splitter_Impl {
   boost::optional<ModelObject> zoneEquipmentForBranch(int branchIndex);
 
   void disconnect() override;
+
+  boost::optional<AirflowNetworkDistributionNode> createAirflowNetworkDistributionNode();
+
+  boost::optional<AirflowNetworkDistributionNode> airflowNetworkDistributionNode() const;
 
   private:
 

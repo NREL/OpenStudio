@@ -30,6 +30,8 @@
 #include "AirLoopHVACZoneMixer_Impl.hpp"
 #include "AirLoopHVAC.hpp"
 #include "AirLoopHVAC_Impl.hpp"
+#include "AirflowNetworkDistributionNode.hpp"
+#include "AirflowNetworkDistributionNode_Impl.hpp"
 #include "Node.hpp"
 #include "AirTerminalSingleDuctUncontrolled.hpp"
 #include "Model.hpp"
@@ -77,6 +79,16 @@ namespace detail {
 
   IddObjectType AirLoopHVACZoneMixer_Impl::iddObjectType() const {
     return AirLoopHVACZoneMixer::iddObjectType();
+  }
+
+  std::vector<ModelObject> AirLoopHVACZoneMixer_Impl::children() const
+  {
+    std::vector<ModelObject> result;
+
+    std::vector<AirflowNetworkDistributionNode> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkDistributionNode>(AirflowNetworkDistributionNode::iddObjectType());
+    result.insert(result.end(), myAFNItems.begin(), myAFNItems.end());
+
+    return result;
   }
 
   std::vector<openstudio::IdfObject> AirLoopHVACZoneMixer_Impl::remove()
@@ -131,6 +143,28 @@ namespace detail {
     }
   }
 
+  boost::optional<AirflowNetworkDistributionNode> AirLoopHVACZoneMixer_Impl::createAirflowNetworkDistributionNode()
+  {
+    boost::optional<AirflowNetworkDistributionNode> opt = airflowNetworkDistributionNode();
+    if (opt) {
+      return boost::none;
+    }
+    return AirflowNetworkDistributionNode(model(), handle());
+  }
+
+  boost::optional<AirflowNetworkDistributionNode> AirLoopHVACZoneMixer_Impl::airflowNetworkDistributionNode() const
+  {
+    std::vector<AirflowNetworkDistributionNode> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkDistributionNode>(AirflowNetworkDistributionNode::iddObjectType());
+    auto count = myAFNItems.size();
+    if (count == 1) {
+      return myAFNItems[0];
+    } else if (count > 1) {
+      LOG(Warn, briefDescription() << " has more than one AirflowNetwork DistributionNode attached, returning first.");
+      return myAFNItems[0];
+    }
+    return boost::none;
+  }
+
 } // detail
 
 // create a new AirLoopHVACZoneMixer object in the model's workspace
@@ -183,6 +217,16 @@ void AirLoopHVACZoneMixer::disconnect()
 IddObjectType AirLoopHVACZoneMixer::iddObjectType() {
   IddObjectType result(IddObjectType::OS_AirLoopHVAC_ZoneMixer);
   return result;
+}
+
+boost::optional <AirflowNetworkDistributionNode> AirLoopHVACZoneMixer::createAirflowNetworkDistributionNode()
+{
+  return getImpl<detail::AirLoopHVACZoneMixer_Impl>()->createAirflowNetworkDistributionNode();
+}
+
+boost::optional<AirflowNetworkDistributionNode> AirLoopHVACZoneMixer::airflowNetworkDistributionNode() const
+{
+  return getImpl<detail::AirLoopHVACZoneMixer_Impl>()->airflowNetworkDistributionNode();
 }
 
 } // model

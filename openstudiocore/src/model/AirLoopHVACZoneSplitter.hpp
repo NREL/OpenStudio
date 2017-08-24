@@ -37,6 +37,7 @@ namespace openstudio {
 namespace model {
 
 class ThermalZone;
+class AirflowNetworkDistributionNode;
 
 namespace detail {
   class AirLoopHVACZoneSplitter_Impl;
@@ -80,6 +81,10 @@ class MODEL_API AirLoopHVACZoneSplitter : public Splitter {
   std::vector<openstudio::IdfObject> remove();
 
   void disconnect();
+
+  boost::optional<AirflowNetworkDistributionNode> createAirflowNetworkDistributionNode();
+
+  boost::optional<AirflowNetworkDistributionNode> airflowNetworkDistributionNode() const;
 
   protected:
 
