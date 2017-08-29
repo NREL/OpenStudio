@@ -74,6 +74,9 @@ namespace openstudio{
     /// check equality
     bool operator==(const Point3d& other) const;
 
+    /// check inequality
+    bool operator!=(const Point3d& other) const;
+
   private:
 
     REGISTER_LOGGER("utilities.Point3d");
