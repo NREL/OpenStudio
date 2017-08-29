@@ -600,6 +600,49 @@ if(BUILD_WITH_OPENSSL)
   endif()
 endif()
 
+# DView
+option(BUILD_DVIEW "Build DView" OFF)
+
+if( BUILD_DVIEW )
+  set(DVIEW_INSTALL_DIR "" CACHE PATH "Path to DView Install")
+  mark_as_advanced(DVIEW_INSTALL_DIR)
+  
+  if(NOT EXISTS ${DVIEW_INSTALL_DIR})
+    if( WIN32 )
+      set(DVIEW_ZIP_FILENAME "DView-windows.zip")
+      set(DVIEW_ZIP_EXPECTED_MD5 "")
+    elseif( APPLE )
+      set(DVIEW_ZIP_FILENAME "DView-osx.tar.gz")
+      set(DVIEW_ZIP_EXPECTED_MD5 "168483c624cc6026088730739317b7c8")
+    else()
+      set(DVIEW_ZIP_FILENAME "DView-linux.tar.gz")
+      set(DVIEW_ZIP_EXPECTED_MD5 "")
+    endif()
+  endif()
+
+  set(DVIEW_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${DVIEW_ZIP_FILENAME}")
+  if(EXISTS "${DVIEW_ZIP_LOCAL_PATH}")
+    file(MD5 "${DVIEW_ZIP_LOCAL_PATH}" RUBY_ZIP_MD5)
+  endif()
+
+  if( NOT DVIEW_ZIP_MD5 STREQUAL DVIEW_ZIP_EXPECTED_MD5)
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${DVIEW_ZIP_FILENAME}"
+      ${DVIEW_ZIP_LOCAL_PATH}
+      INACTIVITY_TIMEOUT 120
+      SHOW_PROGRESS
+      EXPECTED_MD5 ${DVIEW_ZIP_EXPECTED_MD5})
+      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${DVIEW_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+  endif()
+
+  if( WIN32 )
+    install(PROGRAMS "${CMAKE_BINARY_DIR}/DView-install/DView.exe" DESTINATION ./bin COMPONENT "DView")
+  elseif( APPLE )
+    install(DIRECTORY "${CMAKE_BINARY_DIR}/DView-install/DView.app" DESTINATION . USE_SOURCE_PERMISSIONS COMPONENT "DView")
+  else()
+    install(PROGRAMS "${CMAKE_BINARY_DIR}/DView-install/DView" DESTINATION ./bin COMPONENT "DView")
+  endif()
+endif()
+
 # SWIG
 
 if(UNIX)
@@ -1552,9 +1595,9 @@ cpack_add_component(OpenStudioApp
   DESCRIPTION "OpenStudio Application"
 )
 
-cpack_add_component(ResultsViewer
-  DISPLAY_NAME "ResultsViewer"
-  DESCRIPTION "ResultsViewer"
+cpack_add_component(DView
+  DISPLAY_NAME "DView"
+  DESCRIPTION "DView Application for viewing results"
 )
 
 cpack_add_component(EnergyPlus
@@ -1600,6 +1643,10 @@ cpack_ifw_configure_component(PAT
 cpack_ifw_configure_component(OpenStudioApp
   DEPENDS Resources CLI
   SCRIPT src/openstudio_app/install_operations.qs
+  REQUIRES_ADMIN_RIGHTS
+)
+
+cpack_ifw_configure_component(DView
   REQUIRES_ADMIN_RIGHTS
 )
 

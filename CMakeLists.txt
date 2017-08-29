@@ -485,6 +485,26 @@ else()
   set(QT_INSTALL_DIR "")
 endif()
 
+option(BUILD_DVIEW "Build DView" OFF)
+if( BUILD_DVIEW )
+    ExternalProject_Add(lk
+      GIT_REPOSITORY git://github.com/NREL/lk
+      GIT_TAG develop
+      CONFIGURE_COMMAND ""
+      BUILD_COMMAND ""
+      INSTALL_COMMAND ""
+    )
+
+    ExternalProject_Add(DView
+      DEPENDS lk
+      GIT_REPOSITORY https://github.com/kbenne/wex.git
+      GIT_TAG develop
+      CMAKE_CACHE_ARGS
+        -DLK_DIR:DIR=${CMAKE_BINARY_DIR}/lk-prefix/src/lk/
+        -DCMAKE_INSTALL_PREFIX:DIR=${CMAKE_BINARY_DIR}/DView-prefix/src/DView-install
+    )
+endif()
+
 set(OpenStudioCore_DIR ${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build)
 
 # Set up the dependencies for OpenStudioCore
