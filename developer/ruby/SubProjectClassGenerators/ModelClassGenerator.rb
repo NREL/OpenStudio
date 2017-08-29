@@ -38,7 +38,7 @@ require File.dirname(__FILE__) + '/SubProjectClassGenerator.rb'
 class ModelObjectField
 
   def initialize(iddObject, iddField)
-    puts "  " + iddField.name
+    # puts "  " + iddField.name
 
     @iddObject = iddObject
     @iddField = iddField
@@ -118,7 +118,7 @@ class ModelObjectField
           @booleanChoiceFalse = keys[1].name
         elsif((choices[0].name.upcase == "NO") || (choices[1].name.upcase == "YES"))
           result = true
-          @booleanChoiceTrue = keys[1].name"boost::optional<" + result + ">"
+          @booleanChoiceTrue = keys[1].name
           @booleanChoiceFalse = keys[0].name
         elsif((choices[0].name.upcase == "TRUE") || (choices[1].name.upcase == "FALSE"))
           result = true
@@ -381,12 +381,28 @@ class ModelObjectField
     return result
   end
 
+  def autosizedName
+    result = nil
+    if canAutosize?
+      result = "autosized" + OpenStudio::toUpperCamelCase(getterName)
+    end
+    return result
+  end
+
+  def sqlUnitString
+    result = ''
+    if @iddField.properties.units
+      result = @iddField.properties.units.to_s
+    end
+    return result
+  end
+
 end
 
 class ModelClassGenerator < SubProjectClassGenerator
   attr_accessor :iddObjectType, :idfObject, :iddObject, :isOS
   attr_accessor :requiredObjectListFields, :requiredDataFields
-  attr_accessor :hasRealFields, :hasScheduleFields
+  attr_accessor :hasRealFields, :hasScheduleFields, :autosizedGetterNames
 
   def initialize(className, baseClassName, pImpl, qobject, iddObjectType)
     super(className, baseClassName, pImpl, qobject)
@@ -410,6 +426,16 @@ class ModelClassGenerator < SubProjectClassGenerator
         @hasRealFields = true if modelObjectField.isReal?
         @hasScheduleFields = true if modelObjectField.isSchedule?
       }
+
+      # Determine if the object has any autosizable fields
+      @autosizedGetterNames = []
+      @iddObject.nonextensibleFields.each do |iddField|
+        modelObjectField = ModelObjectField.new(@iddObject, iddField)
+        if modelObjectField.canAutosize?
+          @autosizedGetterNames << modelObjectField.autosizedName
+        end
+      end
+
     end
   end
 
@@ -680,6 +706,8 @@ class ModelClassGenerator < SubProjectClassGenerator
 
         if field.canAutosize?
           result << "  bool " << field.isAutosizeName << "() const;\n\n"
+          # Get the autosized value from the sql file
+          result << "  boost::optional <double> " << field.autosizedName << "();\n\n"
         end
 
         if field.canAutocalculate?
@@ -732,6 +760,13 @@ class ModelClassGenerator < SubProjectClassGenerator
         end
 
       }
+
+      # If there are any autosizeable fields, need to add bulk autosize
+      # and applySizingValues methods
+      if @autosizedGetterNames.size > 0
+        result << "  void autosize();\n\n"
+        result << "  void applySizingValues();\n\n"
+      end
 
       # Extensible field setters
 
@@ -793,14 +828,16 @@ class ModelClassGenerator < SubProjectClassGenerator
 
         if field.canAutosize?
           result << "    bool " << field.isAutosizeName << "() const;\n\n"
+          # Get the autosized value from the sql file
+          result << "    boost::optional <double> " << field.autosizedName << "();\n\n"
         end
 
         if field.canAutocalculate?
           result << "    bool " << field.isAutocalculateName << "() const;\n\n"
         end
-
+        
       }
-
+      
       # Extensible field getters
       if (@iddObject.properties.extensible)
         result << "    // TODO: Handle this object's extensible fields." << "\n"
@@ -845,6 +882,13 @@ class ModelClassGenerator < SubProjectClassGenerator
           result << "    void " << field.autocalculateName << "();\n\n"
         end
       }
+
+      # If there are any autosizeable fields, need to add bulk autosize
+      # and applySizingValues methods
+      if @autosizedGetterNames.size > 0
+        result << "    void autosize();\n\n"
+        result << "    void applySizingValues();\n\n"
+      end
 
       # Extensible field setters
 
@@ -973,6 +1017,12 @@ class ModelClassGenerator < SubProjectClassGenerator
           result << "    }\n"
           result << "    return result;\n"
           result << "  }\n\n"
+
+          # Get the autosized value from the sql file
+          result << "  boost::optional <double> " << @className << "_Impl::" << field.autosizedName << "() {\n"
+          result << "    return getAutosizedValue(\"TODO_CHECK_SQL #{field.name}\", \"#{field.sqlUnitString}\");\n"
+          result << "  }\n\n"
+
         end
 
         if field.canAutocalculate?
@@ -1097,6 +1147,31 @@ class ModelClassGenerator < SubProjectClassGenerator
         end
 
       }
+
+      # If there are any autosizeable fields, need to add bulk autosize
+      # and applySizingValues methods
+      if @autosizedGetterNames.size > 0
+        # autosize()
+        result << "  void " << @className << "_Impl::autosize() {\n"
+        @autosizedGetterNames.each do |name|
+          result << "    #{name}();\n"
+        end
+        result << "  }\n\n"
+
+        # applySizingValues()
+        result << "  void " << @className << "_Impl::applySizingValues() {\n"
+        result << "    boost::optional<double> val;\n"
+        @autosizedGetterNames.each do |name|
+          setter_name = name.gsub('autosized','set')
+          result << "    val = #{name}();\n"
+          result << "    if (val) {\n"
+          result << "      #{setter_name}(val.get());\n"
+          result << "    }\n\n"
+        end
+        result << "  }\n\n"
+
+      end
+
     else
       result = super
     end
@@ -1145,8 +1220,13 @@ class ModelClassGenerator < SubProjectClassGenerator
           result << "bool " << @className << "::" << field.isAutosizeName << "() const {\n"
           result << "  return getImpl<detail::" << @className << "_Impl>()->" << field.isAutosizeName << "();\n"
           result << "}\n\n"
-        end
 
+          # Get the autosized value from the sql file
+          result << "  boost::optional <double> " << @className << "::" << field.autosizedName << "() {\n"
+          result << "    return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->#{field.autosizedName}();\n"
+          result << "  }\n\n"
+        end
+        
         if field.canAutocalculate?
           result << "bool " << @className << "::" << field.isAutocalculateName << "() const {\n"
           result << "  return getImpl<detail::" << @className << "_Impl>()->" << field.isAutocalculateName << "();\n"
@@ -1154,7 +1234,7 @@ class ModelClassGenerator < SubProjectClassGenerator
         end
 
       }
-
+      
       # Non-extensible field setters
       @nonextensibleFields.each { |field|
 
@@ -1191,6 +1271,20 @@ class ModelClassGenerator < SubProjectClassGenerator
           result << "}\n\n"
         end
       }
+
+      # If there are any autosizeable fields, need to add bulk autosize
+      # and applySizingValues methods
+      if @autosizedGetterNames.size > 0
+        # autosize()
+        result << "void #{@className}::autosize() {\n"
+        result << "  return getImpl<detail::#{@className}_Impl>()->autosize();\n"
+        result << "}\n\n"
+
+        # applySizingValues()
+        result << "void #{@className}::applySizingValues() {\n"
+        result << "  return getImpl<detail::#{@className}_Impl>()->applySizingValues();\n"
+        result << "}\n\n"
+      end
 
     else
       result = super
