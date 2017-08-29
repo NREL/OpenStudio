@@ -899,6 +899,46 @@ namespace detail{
     return false;
   }
 
+  // Autosizing methods
+  void CoilCoolingDXSingleSpeed_Impl::autosize() {
+    autosizeRatedTotalCoolingCapacity();
+    autosizeRatedSensibleHeatRatio();
+    autosizeRatedAirFlowRate();
+  }
+
+  void CoilCoolingDXSingleSpeed_Impl::applySizingValues() {
+    boost::optional<double> val;
+
+    val = autosizedRatedAirFlowRate();
+    if (val) {
+      setRatedAirFlowRate(val.get());
+    }
+
+    val = autosizedRatedTotalCoolingCapacity();
+    if (val) {
+      setRatedTotalCoolingCapacity(val.get());
+    }
+
+    val = autosizedRatedSensibleHeatRatio();
+    if (val) {
+      setRatedSensibleHeatRatio(val.get());
+    }
+
+  }
+
+  boost::optional <double> CoilCoolingDXSingleSpeed_Impl::autosizedRatedAirFlowRate() {
+    return getAutosizedValue("Design Size Rated Air Flow Rate", "m3/s");
+  }
+
+  boost::optional <double> CoilCoolingDXSingleSpeed_Impl::autosizedRatedTotalCoolingCapacity() {
+    return getAutosizedValue("Design Size Gross Rated Total Cooling Capacity", "W");
+  }
+
+  boost::optional <double> CoilCoolingDXSingleSpeed_Impl::autosizedRatedSensibleHeatRatio() {
+    return getAutosizedValue("Design Size Rated Sensible Heat Ratio", "");
+  }
+
+
 }// detail
 
 CoilCoolingDXSingleSpeed::CoilCoolingDXSingleSpeed(const Model& model)
@@ -1483,6 +1523,28 @@ bool CoilCoolingDXSingleSpeed::setRatedAirFlowRate(const Quantity& ratedAirFlowR
 
 void CoilCoolingDXSingleSpeed::autosizeRatedAirFlowRate() {
   getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->autosizeRatedAirFlowRate();
+}
+
+// Autosizing methods
+
+void CoilCoolingDXSingleSpeed::autosize() {
+  return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->autosize();
+}
+
+void CoilCoolingDXSingleSpeed::applySizingValues() {
+  return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->applySizingValues();
+}
+
+boost::optional <double> CoilCoolingDXSingleSpeed::autosizedRatedAirFlowRate() {
+  return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->autosizedRatedAirFlowRate();
+}
+
+boost::optional <double> CoilCoolingDXSingleSpeed::autosizedRatedTotalCoolingCapacity() {
+  return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->autosizedRatedTotalCoolingCapacity();
+}
+
+boost::optional <double> CoilCoolingDXSingleSpeed::autosizedRatedSensibleHeatRatio() {
+  return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->autosizedRatedSensibleHeatRatio();
 }
 
 } // model

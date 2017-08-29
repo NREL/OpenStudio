@@ -369,6 +369,18 @@ class MODEL_API CoilCoolingDXSingleSpeed : public StraightComponent {
 
   void autosizeRatedAirFlowRate();
 
+  // Autosizing methods
+
+  void autosize();
+
+  void applySizingValues();
+
+  boost::optional <double> autosizedRatedAirFlowRate();
+
+  boost::optional <double> autosizedRatedTotalCoolingCapacity();
+
+  boost::optional <double> autosizedRatedSensibleHeatRatio();
+
   //@}
  protected:
 
