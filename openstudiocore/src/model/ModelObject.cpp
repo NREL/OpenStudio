@@ -624,6 +624,45 @@ namespace detail {
     return keyValue;
   }
 
+  /** Gets the autosized component value from the sql file **/
+  boost::optional<double> ModelObject_Impl::getAutosizedValue(std::string valueName, std::string units) {
+    boost::optional < double > result;
+
+    // Get the object name
+    if (!name()) {
+      //LOG(Warn, "This object does not have a name, cannot retrieve the autosized value '" + valueName + "'.");
+      return result;
+    }
+
+    // Get the object name and transform to the way it is recorded
+    // in the sql file
+    std::string sqlName = name().get();
+    boost::to_upper(sqlName);
+
+    // Get the object type and transform to the way it is recorded
+    // in the sql file
+    std::string sqlObjectType = iddObject().type().valueDescription();
+    boost::replace_all(sqlObjectType, "OS:", "");
+
+    // Check that the model has a sql file
+    if (!model().sqlFile()) {
+      //LOG(Warn, "This model has no sql file, cannot retrieve the autosized value '" + valueName + "'.");
+      return result;
+    }
+
+    // Query the  
+    std::string query = "SELECT Value FROM ComponentSizes WHERE CompType = '" + sqlObjectType + "' AND CompName = '" + sqlName + "' AND Description = '" + valueName + "' AND Units = '" + units + "'";
+    boost::optional<double> val = model().sqlFile().get().execAndReturnFirstDouble(query);
+
+    // Warn if the query failed
+    if (!val) {
+      //LOG(Warn, "The autosized value query '" + query + "' returned no value.");
+    }
+
+    return val;
+
+  }
+
   //void ModelObject_Impl::connect(unsigned outletPort, ModelObject target, unsigned inletPort)
   //{
   //  OptionalConnection connection = getOutletConnection(outletPort);
@@ -1178,6 +1217,12 @@ ModelObject::ModelObject(IddObjectType type, const Model& model, bool fastName)
 ModelObject::ModelObject(std::shared_ptr<detail::ModelObject_Impl> p)
   : WorkspaceObject(p)
 {}
+
+/** Gets the autosized component value from the sql file **/
+boost::optional<double> ModelObject::getAutosizedValue(std::string valueName, std::string units)
+{
+  return getImpl<detail::ModelObject_Impl>()->getAutosizedValue(valueName, units);
+}
 
 } // model
 } // openstudio
