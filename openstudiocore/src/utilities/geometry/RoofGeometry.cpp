@@ -38,12 +38,12 @@ namespace openstudio{
     // nop
   }
 
-  boost::optional< std::vector< std::vector<Point3d> > > RoofGeometry::makeShedRoof(std::vector<Point3d>& polygon, double roofSlopeDegrees, double directionDegrees) 
+  boost::optional< std::vector< std::vector<Point3d> > > RoofGeometry::makeShedRoof(std::vector<Point3d>& polygon, double roofPitchDegrees, double directionDegrees) 
   {
     // FIXME implement
   }
 
-  boost::optional< std::vector< std::vector<Point3d> > > RoofGeometry::makeGableRoof(std::vector<Point3d>& polygon, double roofSlopeDegrees) 
+  boost::optional< std::vector< std::vector<Point3d> > > RoofGeometry::makeGableRoof(std::vector<Point3d>& polygon, double roofPitchDegrees) 
   {
     boost::optional< std::vector< std::vector<Point3d> > > faces = doStraightSkeleton(polygon);
     if (faces == boost::none) {
@@ -55,7 +55,7 @@ namespace openstudio{
     return faces.get;
   }
 
-  boost::optional< std::vector< std::vector<Point3d> > > RoofGeometry::makeHipRoof(std::vector<Point3d>& polygon, double roofSlopeDegrees)
+  boost::optional< std::vector< std::vector<Point3d> > > RoofGeometry::makeHipRoof(std::vector<Point3d>& polygon, double roofPitchDegrees)
   {
     boost::optional< std::vector< std::vector<Point3d> > > faces = doStraightSkeleton(polygon);
     if (faces == boost::none) {

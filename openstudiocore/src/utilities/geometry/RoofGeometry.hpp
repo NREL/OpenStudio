@@ -50,9 +50,9 @@ namespace openstudio{
     // default constructor creates empty RoofGeometry
     RoofGeometry();
 
-    boost::optional< std::vector< std::vector<Point3d> > > makeShedRoof(std::vector<Point3d>& polygon, double roofSlopeDegrees, double directionDegrees);
-    boost::optional< std::vector< std::vector<Point3d> > > makeGableRoof(std::vector<Point3d>& polygon, double roofSlopeDegrees);
-    boost::optional< std::vector< std::vector<Point3d> > > makeHipRoof(std::vector<Point3d>& polygon, double roofSlopeDegrees);
+    boost::optional< std::vector< std::vector<Point3d> > > makeShedRoof(std::vector<Point3d>& polygon, double roofPitchDegrees, double directionDegrees);
+    boost::optional< std::vector< std::vector<Point3d> > > makeGableRoof(std::vector<Point3d>& polygon, double roofPitchDegrees);
+    boost::optional< std::vector< std::vector<Point3d> > > makeHipRoof(std::vector<Point3d>& polygon, double roofPitchDegrees);
 
     // FIXME move somewhere else
     static Vector3d orthogonalLeft(Vector3d& v);
