@@ -585,6 +585,10 @@ boost::optional<StraightComponent> HVACComponent::containingStraightComponent() 
   return getImpl<detail::HVACComponent_Impl>()->containingStraightComponent();
 }
 
+void HVACComponent::autosize() {
+  getImpl<detail::HVACComponent_Impl>->autosize();
+}
+
 } // model
 
 } // openstudio
