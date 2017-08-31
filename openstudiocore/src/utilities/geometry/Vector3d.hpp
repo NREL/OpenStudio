@@ -34,7 +34,6 @@
 #include "../core/Logger.hpp"
 
 #include <vector>
-#include <Point3d>
 #include <boost/optional.hpp>
 
 namespace openstudio{
@@ -47,9 +46,6 @@ namespace openstudio{
 
     /// constructor with x, y, z
     Vector3d(double x, double y, double z);
-
-    /// constructor with Point3d
-    Vector3d(const Point3d& p);
 
     /// copy constructor
     Vector3d(const Vector3d& other);

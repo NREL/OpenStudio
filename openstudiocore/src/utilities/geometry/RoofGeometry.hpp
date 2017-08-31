@@ -31,7 +31,6 @@
 
 #include "../UtilitiesAPI.hpp"
 #include "../core/Logger.hpp"
-// FIXMXE: Create Point2d and Vector2d classes instead?
 #include "Point3d.hpp"
 #include "Vector3d.hpp"
 #include <boost/optional.hpp>
@@ -41,93 +40,122 @@ namespace openstudio{
 
   const double SPLIT_EPSILON = 1E-10;
 
-  /** RoofGeometry has methods for generating surfaces for simple roof types from polygon footprints.
-   */
-  class UTILITIES_API RoofGeometry
+  // LINE LINEAR
+
+  /// Geometry line in linear form. General form: Ax + By + C = 0;
+  class LineLinear2d
   {
   public:
-    
-    // default constructor creates empty RoofGeometry
-    RoofGeometry();
+    LineLinear2d();
+    LineLinear2d(double a, double b, double c);
+    LineLinear2d(Point3d& p1, Point3d& p2);
+    boost::optional<Point3d> collide(LineLinear2d& line2);
+    double A;
+    double B;
+    double C;
+  };
 
-    boost::optional< std::vector< std::vector<Point3d> > > makeShedRoof(std::vector<Point3d>& polygon, double roofPitchDegrees, double directionDegrees);
-    boost::optional< std::vector< std::vector<Point3d> > > makeGableRoof(std::vector<Point3d>& polygon, double roofPitchDegrees);
-    boost::optional< std::vector< std::vector<Point3d> > > makeHipRoof(std::vector<Point3d>& polygon, double roofPitchDegrees);
+  // RAY2DS
 
-    // FIXME move somewhere else
-    static Vector3d orthogonalLeft(Vector3d& v);
-    static Vector3d orthogonalRight(Vector3d& v);
+  class Ray2d
+  {
+  public:
+    Ray2d();
+    Ray2d(Point3d& aPoint, Vector3d& aVector);
+    boost::optional<Point3d> collide(LineLinear2d& line, double epsilon);
+    LineLinear2d getLinearForm();
+    bool isOnLeftSide(Point3d& pt, double epsilon);
+    bool isOnRightSide(Point3d& pt, double epsilon);
+    boost::optional<Point3d> intersectRay2d(Ray2d& other);
+    bool inCollinearRay(Point3d& p);
+    double perpDot(Vector3d& p1, Vector3d& p2);
+    Point3d point;
+    Vector3d vector;
+  };
 
-  private:
+  // EDGES
 
-    REGISTER_LOGGER("utilities.RoofGeometry");
+  class Edge
+  {
+  public:
+    Edge();
+    Edge(Point3d& aBegin, Point3d& aEnd);
+    Edge getOffsetEdge(std::vector<Edge>& edges, int offset);
+    Point3d begin;
+    Point3d end;
+    Ray2d bisectorPrevious;
+    Ray2d bisectorNext;
+    //LineLinear2d lineLinear2d;
+    Vector3d normalize();
+  };
 
-    boost::optional< std::vector< std::vector<Point3d> > > doStraightSkeleton(std::vector<Point3d>& polygon);
+  // VERTEXES
 
-    // init
-    void initSlav(std::vector<Point3d>& polygon, std::set< std::vector<Vertex> >& sLav, std::vector<Edge>& edges, std::vector<FaceQueue>& faces);
-    void initEvents(std::set< std::vector<Vertex> >& sLav, std::priority_queue<Event, std::vector<Event>, EventComparator>& queue, std::vector<Edge>& edges);
-    bool initPolygon(std::vector<Point3d>& polygon);
-    
-    // math
-    void makeCounterClockwise(std::vector<Point3d>& polygon);
-    bool isClockwisePolygon(std::vector<Point3d>& polygon);
-    double area(std::vector<Point3d>& polygon);
-    double calcDistance(Point3d& intersect, Edge& currentEdge);
-    Ray2d calcBisector(Point3d& p, Edge& e1, Edge& e2);
-    Vector3d calcVectorBisector(Vector3d& norm1, Vector3d& norm2);
-    void correctBisectorDirection(Ray2d& bisector, Vertex& beginNextVertex, Vertex& endPreviousVertex, Edge& beginEdge, Edge& endEdge);
-    boost::optional<Point3d> computeIntersectionBisectors(Vertex& vertexPrevious, Vertex& vertexNext);
-    Vector3d orthogonalProjection(Vector3d& unitVector, Vector3d& vectorToProject);
-    bool edgeBehindBisector(Ray2d& bisector, LineLinear2d& edge);
-    boost::optional<Edge> chooseLessParallelVertexEdge(Vertex& vertex, Edge& edge);
-    bool isInsidePolygon(Point3d point, std::vector<Point3d> points);
+  class Vertex
+  {
+  public:
+    Vertex();
+    Vertex(Point3d& aPoint, double aDistance, boost::optional<Ray2d&> aBisector, boost::optional<Edge&> aPreviousEdge, boost::optional<Edge&> aNextEdge);
+    Vertex getOffsetVertex(std::vector<Vertex>& vertexes, int offset);
+    std::vector<Vertex> getLav(std::set< std::vector<Vertex> >& sLav);
+    std::vector<Vertex> cutLavPart(std::vector<Vertex>& lav, Vertex& endVertex);
+    Point3d point;
+    double distance;
+    bool processed;
+    boost::optional<Edge> previousEdge;
+    boost::optional<Edge> nextEdge;
+    //FaceNode leftFace;
+    //FaceNode rightFace;
+    boost::optional<Ray2d> bisector;
+  };
 
-    // convergence
-    int assertMaxNumberOfInteraction(int count);
+  // FACES
 
-    // events
-    std::vector<Event> loadAndGroupLevelEvents(std::priority_queue<Event, std::vector<Event>, EventComparator>& queue);
-    std::vector<Event> loadLevelEvents(std::priority_queue<Event, std::vector<Event>, EventComparator>& queue);
-    std::vector<Event> groupLevelEvents(std::vector<Event>& levelEvents);
-    Event createLevelEvent(Point3d& eventCenter, double distance, std::vector<Event>& eventCluster);
-    Event createEdgeEvent(Point3d& point, Vertex& previousVertex, Vertex& nextVertex);
-    void multiSplitEvent(Event& event, std::set< std::vector<Vertex> >& sLav, std::priority_queue<Event, std::vector<Event>, EventComparator>& queue, std::vector<Edge>& edges);
-    void pickEvent(Event& event, std::set< std::vector<Vertex> >& sLav, std::priority_queue<Event, std::vector<Event>, EventComparator>& queue, std::vector<Edge>& edges);
-    void multiEdgeEvent(Event& event, std::set< std::vector<Vertex> >& sLav, std::priority_queue<Event, std::vector<Event>, EventComparator>& queue, std::vector<Edge>& edges);
-    void computeEvents(Vertex& vertex, std::priority_queue<Event, std::vector<Event>, EventComparator>& queue, std::vector<Edge>& edges);
-    void computeEdgeEvents(Vertex& previousVertex, Vertex& nextVertex, std::priority_queue<Event, std::vector<Event>, EventComparator>& queue);
-    void computeSplitEvents(Vertex& vertex, std::vector<Edge>& edges, std::priority_queue<Event, std::vector<Event>, EventComparator>& queue, boost::optional<double> distanceSquared);
-    boost::optional<double> computeCloserEdgeEvent(Vertex& vertex, std::priority_queue<Event, std::vector<Event>, EventComparator>& queue);
-    std::vector<SplitCandidate> calcOppositeEdges(Vertex& vertex, std::vector<Edge>& edges);
-    boost::optional<SplitCandidate> calcCandidatePointForSplit(Vertex& vertex, Edge& edge);
-    void removeEventsUnderHeight(std::priority_queue<Event, std::vector<Event>, EventComparator>& queue, double levelHeight);
+  class FaceNode
+  {
+  public:
+    FaceNode();
+    FaceNode(Vertex& aVertex);
+    Vertex vertex;
+  };
 
-    // chains
-    std::vector<Chain> createChains(std::vector<Event>& cluster);
-    std::vector<Event> createEdgeChain(std::vector<Event>& edgeCluster);
-    bool isInEdgeChain(Event& split, Chain& chain);
-    void createOppositeEdgeChains(std::set< std::vector<Vertex> >& sLav, std::vector<Chain>& chains, Point3d& center);
-    
-    // faces
-    void addMultiBackFaces(std::vector<Event>& edgeList, Vertex& edgeVertex);
-    FaceNode addFaceBack(Vertex& newVertex, Vertex& va, Vertex& vb);
-    FaceNode addFaceLeft(Vertex& newVertex, Vertex& va);
-    FaceNode addFaceRight(Vertex& newVertex, Vertex& vb);
-    std::tuple<bool, FaceNode> addSplitFaces(bool hasLastFaceNode, FaceNode& lastFaceNode, Chain& chainBegin, Chain& chainEnd, Vertex& newVertex);
+  class FaceQueue : public std::queue<FaceNode>
+  {
+  public:
+    Edge edge; // Edge for given queue.
+    bool closed; //Flag if queue is closed. After closing can't be modified.
+  };
 
-    // vertexes/lavs
-    Vertex createMultiSplitVertex(Edge& nextEdge, Edge& previousEdge, Point3d& center, double distance);
-    Vertex createOppositeEdgeVertex(Vertex& newVertex);
-    void mergeBeforeBaseVertex(Vertex& base, std::vector<Vertex>& baseList, Vertex& merged, std::vector<Vertex>& mergedList);
-    void processTwoNodeLavs(std::set< std::vector<Vertex> >& sLav);
-    void removeEmptyLav(std::set< std::vector<Vertex> >& sLav);
-    boost::optional<Vertex> findOppositeEdgeLav(std::set< std::vector<Vertex> > sLav, Edge oppositeEdge, Point3d center);
-    std::vector<Vertex> findEdgeLavs(std::set< std::vector<Vertex> > sLav, Edge oppositeEdge);
-    boost::optional<Vertex> getEdgeInLav(std::vector<Vertex> lav, Edge oppositeEdge);
-    boost::optional<Vertex> chooseOppositeEdgeLav(std::vector<Vertex> edgeLavs, Edge oppositeEdge, Point3d center);
+  // CHAINS
 
-    // FIXME: Add some private member variables so we dont have to pass around so much?
+  enum ChainType
+  {
+    CHAIN_TYPE_EDGE = 0, CHAIN_TYPE_SPLIT = 1, CHAIN_TYPE_SINGLE_EDGE = 2
+  };
+  enum ChainMode
+  {
+    CHAIN_MODE_EDGE = 0, CHAIN_MODE_SPLIT = 1, CHAIN_MODE_CLOSED_EDGE = 2
+  };
+
+  class Chain
+  {
+  public:
+    Chain();
+    //Chain(Event& aSplitEvent);
+    //Chain(std::vector<Event>& aEdgeList);
+    Chain(Edge& aOppositeEdge, Vertex& aNextVertex);
+    ChainMode getChainMode();
+    Edge previousEdge;
+    Edge nextEdge;
+    boost::optional<Edge> oppositeEdge;
+    Vertex previousVertex;
+    Vertex nextVertex;
+    boost::optional<Vertex> currentVertex;
+    //std::vector<Event> edgeList;
+    bool closed;
+    bool split;
+    ChainType chainType;
+    //Event splitEvent;
   };
 
   // EVENTS
@@ -161,7 +189,7 @@ namespace openstudio{
     bool isEventInGroup(std::set<Vertex>& parentGroup);
   };
 
-  struct EventComparator
+  struct EventCompare
   {
     bool operator()(const Event& event1, const Event& event2) {
       if (event1.distance > event2.distance) {
@@ -169,109 +197,6 @@ namespace openstudio{
       }
       return false;
     }
-  };
-
-  // RAY2DS
-
-  class Ray2d
-  {
-  public:
-    Ray2d();
-    Ray2d(Point3d& aPoint, Vector3d& aVector);
-    boost::optional<Point3d> collide(LineLinear2d& line, double epsilon);
-    LineLinear2d getLinearForm();
-    bool isOnLeftSide(Point3d& pt, double epsilon);
-    bool isOnRightSide(Point3d& pt, double epsilon);
-    boost::optional<Point3d> intersectRay2d(Ray2d& other);
-    bool inCollinearRay(Point3d& p);
-    double perpDot(Vector3d& p1, Vector3d& p2);
-    Point3d point;
-    Vector3d vector;
-  };
-
-  // VERTEXES
-
-  class Vertex
-  {
-  public:
-    Vertex();
-    Vertex(Point3d& aPoint, double aDistance, boost::optional<Ray2d&> aBisector, boost::optional<Edge&> aPreviousEdge, boost::optional<Edge&> aNextEdge);
-    Vertex getOffsetVertex(std::vector<Vertex>& vertexes, int offset);
-    std::vector<Vertex> getLav(std::set< std::vector<Vertex> >& sLav);
-    std::vector<Vertex> cutLavPart(std::vector<Vertex>& lav, Vertex& endVertex);
-    Point3d point;
-    double distance;
-    bool processed;
-    boost::optional<Edge> previousEdge;
-    boost::optional<Edge> nextEdge;
-    FaceNode leftFace;
-    FaceNode rightFace;
-    boost::optional<Ray2d> bisector;
-  };
-
-  // EDGES
-
-  class Edge
-  {
-  public:
-    Edge();
-    Edge(Point3d& aBegin, Point3d& aEnd);
-    Edge getOffsetEdge(std::vector<Edge>& edges, int offset);
-    Point3d begin;
-    Point3d end;
-    Ray2d bisectorPrevious;
-    Ray2d bisectorNext;
-    //LineLinear2d lineLinear2d;
-    Vector3d normalize();
-  };
-
-  // FACES
-
-  class FaceQueue : public std::queue<FaceNode>
-  {
-  public:
-    Edge edge; // Edge for given queue.
-    bool closed; //Flag if queue is closed. After closing can't be modified.
-  };
-
-  class FaceNode
-  {
-  public:
-    FaceNode();
-    FaceNode(Vertex& aVertex);
-    Vertex vertex;
-  };
-
-  // CHAINS
-
-  enum ChainType
-  {
-    CHAIN_TYPE_EDGE = 0, CHAIN_TYPE_SPLIT = 1, CHAIN_TYPE_SINGLE_EDGE = 2
-  };
-  enum ChainMode
-  {
-    CHAIN_MODE_EDGE = 0, CHAIN_MODE_SPLIT = 1, CHAIN_MODE_CLOSED_EDGE = 2
-  };
-
-  class Chain
-  {
-  public:
-    Chain();
-    Chain(Event& aSplitEvent);
-    Chain(std::vector<Event>& aEdgeList);
-    Chain(Edge& aOppositeEdge, Vertex& aNextVertex);
-    ChainMode getChainMode();
-    Edge previousEdge;
-    Edge nextEdge;
-    boost::optional<Edge> oppositeEdge;
-    Vertex previousVertex;
-    Vertex nextVertex;
-    boost::optional<Vertex> currentVertex;
-    std::vector<Event> edgeList;
-    bool closed;
-    bool split;
-    ChainType chainType;
-    Event splitEvent;
   };
 
   // SPLIT CANDIDATES
@@ -287,19 +212,93 @@ namespace openstudio{
     boost::optional<Point3d> oppositePoint;
   };
 
-  // LINE LINEAR
-
-  /// Geometry line in linear form. General form: Ax + By + C = 0;
-  class LineLinear2d
+  /** RoofGeometry has methods for generating surfaces for simple roof types from polygon footprints.
+  */
+  class UTILITIES_API RoofGeometry
   {
   public:
-    LineLinear2d();
-    LineLinear2d(double a, double b, double c);
-    LineLinear2d(Point3d& p1, Point3d& p2);
-    boost::optional<Point3d> collide(LineLinear2d& line2);
-    double A;
-    double B;
-    double C;
+
+    // default constructor creates empty RoofGeometry
+    RoofGeometry();
+
+    std::vector< std::vector<Point3d> > makeShedRoof(std::vector<Point3d>& polygon, double roofPitchDegrees, double directionDegrees);
+    std::vector< std::vector<Point3d> > makeGableRoof(std::vector<Point3d>& polygon, double roofPitchDegrees);
+    std::vector< std::vector<Point3d> > makeHipRoof(std::vector<Point3d>& polygon, double roofPitchDegrees);
+
+    // FIXME move somewhere else
+    static Vector3d orthogonalLeft(Vector3d& v);
+    static Vector3d orthogonalRight(Vector3d& v);
+
+  private:
+
+    REGISTER_LOGGER("utilities.RoofGeometry");
+
+    std::vector< std::vector<Point3d> > doStraightSkeleton(std::vector<Point3d>& polygon);
+
+    // init
+    void initSlav(std::vector<Point3d>& polygon, std::set< std::vector<Vertex> >& sLav, std::vector<Edge>& edges, std::vector<FaceQueue>& faces);
+    void initEvents(std::set< std::vector<Vertex> >& sLav, std::priority_queue<Event, std::vector<Event>, EventCompare>& queue, std::vector<Edge>& edges);
+    bool initPolygon(std::vector<Point3d>& polygon);
+
+    // math
+    void makeCounterClockwise(std::vector<Point3d>& polygon);
+    bool isClockwisePolygon(std::vector<Point3d>& polygon);
+    double area(std::vector<Point3d>& polygon);
+    double calcDistance(Point3d& intersect, Edge& currentEdge);
+    Ray2d calcBisector(Point3d& p, Edge& e1, Edge& e2);
+    Vector3d calcVectorBisector(Vector3d& norm1, Vector3d& norm2);
+    void correctBisectorDirection(Ray2d& bisector, Vertex& beginNextVertex, Vertex& endPreviousVertex, Edge& beginEdge, Edge& endEdge);
+    boost::optional<Point3d> computeIntersectionBisectors(Vertex& vertexPrevious, Vertex& vertexNext);
+    Vector3d orthogonalProjection(Vector3d& unitVector, Vector3d& vectorToProject);
+    bool edgeBehindBisector(Ray2d& bisector, LineLinear2d& edge);
+    boost::optional<Edge> chooseLessParallelVertexEdge(Vertex& vertex, Edge& edge);
+    bool isInsidePolygon(Point3d point, std::vector<Point3d> points);
+
+    // convergence
+    int assertMaxNumberOfInteraction(int count);
+
+    // events
+    std::vector<Event> loadAndGroupLevelEvents(std::priority_queue<Event, std::vector<Event>, EventCompare>& queue);
+    std::vector<Event> loadLevelEvents(std::priority_queue<Event, std::vector<Event>, EventCompare>& queue);
+    std::vector<Event> groupLevelEvents(std::vector<Event>& levelEvents);
+    Event createLevelEvent(Point3d& eventCenter, double distance, std::vector<Event>& eventCluster);
+    Event createEdgeEvent(Point3d& point, Vertex& previousVertex, Vertex& nextVertex);
+    void multiSplitEvent(Event& event, std::set< std::vector<Vertex> >& sLav, std::priority_queue<Event, std::vector<Event>, EventCompare>& queue, std::vector<Edge>& edges);
+    void pickEvent(Event& event, std::set< std::vector<Vertex> >& sLav, std::priority_queue<Event, std::vector<Event>, EventCompare>& queue, std::vector<Edge>& edges);
+    void multiEdgeEvent(Event& event, std::set< std::vector<Vertex> >& sLav, std::priority_queue<Event, std::vector<Event>, EventCompare>& queue, std::vector<Edge>& edges);
+    void computeEvents(Vertex& vertex, std::priority_queue<Event, std::vector<Event>, EventCompare>& queue, std::vector<Edge>& edges);
+    void computeEdgeEvents(Vertex& previousVertex, Vertex& nextVertex, std::priority_queue<Event, std::vector<Event>, EventCompare>& queue);
+    void computeSplitEvents(Vertex& vertex, std::vector<Edge>& edges, std::priority_queue<Event, std::vector<Event>, EventCompare>& queue, boost::optional<double> distanceSquared);
+    boost::optional<double> computeCloserEdgeEvent(Vertex& vertex, std::priority_queue<Event, std::vector<Event>, EventCompare>& queue);
+    std::vector<SplitCandidate> calcOppositeEdges(Vertex& vertex, std::vector<Edge>& edges);
+    boost::optional<SplitCandidate> calcCandidatePointForSplit(Vertex& vertex, Edge& edge);
+    void removeEventsUnderHeight(std::priority_queue<Event, std::vector<Event>, EventCompare>& queue, double levelHeight);
+
+    // chains
+    std::vector<Chain> createChains(std::vector<Event>& cluster);
+    std::vector<Event> createEdgeChain(std::vector<Event>& edgeCluster);
+    bool isInEdgeChain(Event& split, Chain& chain);
+    void createOppositeEdgeChains(std::set< std::vector<Vertex> >& sLav, std::vector<Chain>& chains, Point3d& center);
+
+    // faces
+    void addMultiBackFaces(std::vector<Event>& edgeList, Vertex& edgeVertex);
+    FaceNode addFaceBack(Vertex& newVertex, Vertex& va, Vertex& vb);
+    FaceNode addFaceLeft(Vertex& newVertex, Vertex& va);
+    FaceNode addFaceRight(Vertex& newVertex, Vertex& vb);
+    std::tuple<bool, FaceNode> addSplitFaces(bool hasLastFaceNode, FaceNode& lastFaceNode, Chain& chainBegin, Chain& chainEnd, Vertex& newVertex);
+
+    // vertexes/lavs
+    Vertex createMultiSplitVertex(Edge& nextEdge, Edge& previousEdge, Point3d& center, double distance);
+    Vertex createOppositeEdgeVertex(Vertex& newVertex);
+    void mergeBeforeBaseVertex(Vertex& base, std::vector<Vertex>& baseList, Vertex& merged, std::vector<Vertex>& mergedList);
+    void processTwoNodeLavs(std::set< std::vector<Vertex> >& sLav);
+    void removeEmptyLav(std::set< std::vector<Vertex> >& sLav);
+    boost::optional<Vertex> findOppositeEdgeLav(std::set< std::vector<Vertex> > sLav, Edge oppositeEdge, Point3d center);
+    std::vector<Vertex> findEdgeLavs(std::set< std::vector<Vertex> > sLav, Edge oppositeEdge);
+    boost::optional<Vertex> getEdgeInLav(std::vector<Vertex> lav, Edge oppositeEdge);
+    boost::optional<Vertex> chooseOppositeEdgeLav(std::vector<Vertex> edgeLavs, Edge oppositeEdge, Point3d center);
+
+    // FIXME: Add some private member variables so we dont have to pass around so much?
   };
 
 } // openstudio

@@ -38,48 +38,69 @@ namespace openstudio{
     // nop
   }
 
-  boost::optional< std::vector< std::vector<Point3d> > > RoofGeometry::makeShedRoof(std::vector<Point3d>& polygon, double roofPitchDegrees, double directionDegrees) 
+  std::vector< std::vector<Point3d> > RoofGeometry::makeShedRoof(std::vector<Point3d>& polygon, double roofPitchDegrees, double directionDegrees) 
   {
     // FIXME implement
+    std::vector< std::vector<Point3d> > roofs;
+    return roofs;
   }
 
-  boost::optional< std::vector< std::vector<Point3d> > > RoofGeometry::makeGableRoof(std::vector<Point3d>& polygon, double roofPitchDegrees) 
+  std::vector< std::vector<Point3d> > RoofGeometry::makeGableRoof(std::vector<Point3d>& polygon, double roofPitchDegrees) 
   {
-    boost::optional< std::vector< std::vector<Point3d> > > faces = doStraightSkeleton(polygon);
-    if (faces == boost::none) {
-      return boost::none;
+    std::vector< std::vector<Point3d> > roofs;
+    try 
+    {
+      roofs = doStraightSkeleton(polygon);
+      if (roofs.size() == 0) {
+        return roofs;
+      }
+    }
+    catch (...)
+    {
+      return roofs;
     }
 
     // FIXME implement adjustments for gables
 
-    return faces.get;
+    return roofs;
   }
 
-  boost::optional< std::vector< std::vector<Point3d> > > RoofGeometry::makeHipRoof(std::vector<Point3d>& polygon, double roofPitchDegrees)
+  std::vector< std::vector<Point3d> > RoofGeometry::makeHipRoof(std::vector<Point3d>& polygon, double roofPitchDegrees)
   {
-    boost::optional< std::vector< std::vector<Point3d> > > faces = doStraightSkeleton(polygon);
-    if (faces == boost::none) {
-      return boost::none;
+    // FIXME: catch LOG_AND_THROW
+    std::vector< std::vector<Point3d> > roofs;
+    try 
+    {
+      roofs = doStraightSkeleton(polygon);
+      if (roofs.size() == 0) {
+        return roofs;
+      }
+    }
+    catch (...) 
+    {
+      return roofs;
     }
 
-    return faces.get;
+    return roofs;
   }
 
-  boost::optional< std::vector< std::vector<Point3d> > > RoofGeometry::doStraightSkeleton(std::vector<Point3d>& polygon) {
+  std::vector< std::vector<Point3d> > RoofGeometry::doStraightSkeleton(std::vector<Point3d>& polygon) {
     
-    /* Straight skeleton algorithm implementation. Base on highly modified Petr
+    /* Straight skeleton algorithm implementation. Based on highly modified Petr
      * Felkel and Stepan Obdrzalek algorithm.
      * Translated from https://github.com/kendzi/kendzi-math
      */
 
-    std::priority_queue<Event, std::vector<Event>, EventComparator> queue;
+    std::vector< std::vector<Point3d> > roofs;
+    std::priority_queue<Event, std::vector<Event>, EventCompare> queue;
     std::vector<Event> processedEvents;
     std::vector<FaceQueue> faces;
     std::vector<Edge> edges;
     std::set< std::vector<Vertex> > sLav;
 
     if (!initPolygon(polygon)) {
-      return boost::none;
+      std::vector< std::vector<Point3d> > noRoofs;
+      return noRoofs;
     }
 
     initSlav(polygon, sLav, edges, faces);
@@ -87,14 +108,15 @@ namespace openstudio{
 
     int count = 0;
 
-    while (!queue.empty) {
+    while (!queue.empty()) {
       // start processing skeleton level
       count = assertMaxNumberOfInteraction(count);
       if (count < 0) {
-        return boost::none;
+        std::vector< std::vector<Point3d> > noRoofs;
+        return noRoofs;
       }
 
-      double levelHeight = queue.top.distance;
+      double levelHeight = queue.top().distance;
 
       std::vector<Event> levelEvents = loadAndGroupLevelEvents(queue);
 
@@ -111,11 +133,9 @@ namespace openstudio{
         processedEvents.push_back(event);
 
         if (event.eventType == EVENT_EDGE) {
-          LOG(Error, "All edge events should be converted to MultiEdgeEvents for given level");
-          return boost::none;
+          LOG_AND_THROW("All edge events should be converted to MultiEdgeEvents for given level");
         } else if (event.eventType == EVENT_SPLIT) {
-          LOG(Error, "All split events should be converted to MultiSplitEvents for given level");
-          return boost::none;
+          LOG_AND_THROW("All split events should be converted to MultiSplitEvents for given level");
         } else if (event.eventType == EVENT_MULTI_SPLIT) {
           multiSplitEvent(event, sLav, queue, edges);
           continue;
@@ -126,8 +146,7 @@ namespace openstudio{
           multiEdgeEvent(event, sLav, queue, edges);
           continue;
         } else {
-          LOG(Error, "Unknown event type");
-          return boost::none;
+          LOG_AND_THROW("Unknown event type");
         }
       }
 
@@ -138,14 +157,15 @@ namespace openstudio{
 
     }
 
-    return addFacesToOutput(faces);
+    // FIXME return addFacesToOutput(faces);
+    return roofs;
   }
 
   void RoofGeometry::initSlav(std::vector<Point3d>& polygon, std::set< std::vector<Vertex> >& sLav, std::vector<Edge>& edges, std::vector<FaceQueue>& faces)
   {
     std::vector<Edge> edgesList;
 
-    int size = polygon.size;
+    int size = polygon.size();
     for (int i = 0; i < size; i++) {
       int j = (i + 1) % size;
       edgesList.push_back(Edge(polygon.at(i), polygon.at(j)));
@@ -170,7 +190,7 @@ namespace openstudio{
 
       Vertex vertex = Vertex(edge.end, 0, edge.bisectorNext, edge, nextEdge);
 
-      lav.insert(vertex);
+      // FIXME lav.insert(vertex);
     }
     sLav.insert(lav);
 
@@ -181,22 +201,22 @@ namespace openstudio{
       FaceNode rightFace = FaceNode(vertex);
 
       FaceQueue faceQueue;
-      faceQueue.edge = vertex.nextEdge.get;
+      faceQueue.edge = vertex.nextEdge.get();
 
       faceQueue.push(rightFace);
       
       faces.push_back(faceQueue);
 
-      vertex.rightFace = rightFace;
+      //FIXME vertex.rightFace = rightFace;
 
       // create face on left side of next vertex
       FaceNode leftFace = FaceNode(next);
-      rightFace.addPush(leftFace);
-      next.leftFace = leftFace;
+      //FIXME rightFace.addPush(leftFace);
+      //FIXME next.leftFace = leftFace;
     }
   }
 
-  void RoofGeometry::initEvents(std::set< std::vector<Vertex> >& sLav, std::priority_queue<Event, std::vector<Event>, EventComparator>& queue, std::vector<Edge>& edges)
+  void RoofGeometry::initEvents(std::set< std::vector<Vertex> >& sLav, std::priority_queue<Event, std::vector<Event>, EventCompare>& queue, std::vector<Edge>& edges)
   {
     for (std::vector<Vertex> lav : sLav) {
       for (Vertex vertex : lav) {
@@ -215,10 +235,10 @@ namespace openstudio{
 
   bool RoofGeometry::initPolygon(std::vector<Point3d>& polygon)
   {
-    if (polygon.size < 3) {
+    if (polygon.size() < 3) {
       LOG(Error, "Polygon must have at least 3 points");
       return false;
-    } else if (polygon[0] == polygon[polygon.size - 1]) {
+    } else if (polygon[0] == polygon[polygon.size() - 1]) {
       LOG(Error, "Polygon can't start and end with the same point");
       return false;
     }
@@ -247,11 +267,13 @@ namespace openstudio{
   // zero, for counter-clockwise polygon area will be greater than zero.
   double RoofGeometry::area(std::vector<Point3d>& polygon)
   {
-    int n = polygon.size;
+    int n = polygon.size();
     double a = 0.0;
     for (int p = n - 1, q = 0; q < n; p = q++)
     {
-      a += polygon[p].x * polygon[q].y - polygon[q].x * polygon[p].y;
+      Point3d pp = polygon.at(p);
+      Point3d pq = polygon.at(q);
+      a += pp.x() * pq.y() - pq.x() * pp.y();
     }
     return a * 0.5;
   }
@@ -266,37 +288,37 @@ namespace openstudio{
     return count;
   }
 
-  std::vector<Event> RoofGeometry::loadAndGroupLevelEvents(std::priority_queue<Event, std::vector<Event>, EventComparator>& queue) {
+  std::vector<Event> RoofGeometry::loadAndGroupLevelEvents(std::priority_queue<Event, std::vector<Event>, EventCompare>& queue) {
     std::vector<Event> levelEvents = loadLevelEvents(queue);
     return groupLevelEvents(levelEvents);
   }
 
-  std::vector<Event> RoofGeometry::loadLevelEvents(std::priority_queue<Event, std::vector<Event>, EventComparator>& queue) {
+  std::vector<Event> RoofGeometry::loadLevelEvents(std::priority_queue<Event, std::vector<Event>, EventCompare>& queue) {
     /*
      * Loads all non obsolete events which are on one level.
      */
 
     std::vector<Event> level;
 
-    boost::optional<Event> levelStart = boost::none;
+    Event levelStart;
     do {
       levelStart = queue.top();
       queue.pop();
       // skip all obsolete events in level
-    } while (levelStart != boost::none && levelStart.get.isObsolete);
+    } while (levelStart.obsolete);
       
-    if (levelStart == boost::none || levelStart.get.isObsolete) {
+    if (levelStart.obsolete) {
       // all events obsolete
       return level;
     }
 
-    double levelStartHeight = levelStart.get.distance;
+    double levelStartHeight = levelStart.distance;
 
-    level.push_back(levelStart.get);
+    level.push_back(levelStart);
 
-    boost::optional<Event> event = queue.top();
+    Event event = queue.top();
 
-    while (event.get.distance - levelStartHeight < SPLIT_EPSILON) {
+    while (event.distance - levelStartHeight < SPLIT_EPSILON) {
       Event nextLevelEvent = queue.top();
       queue.pop();
       if (!nextLevelEvent.obsolete) {
@@ -311,7 +333,7 @@ namespace openstudio{
     std::vector<Event> ret;
     std::set<Vertex> parentGroup;
 
-    while (levelEvents.size > 0) {
+    while (levelEvents.size() > 0) {
       parentGroup.clear();
       
       Event event = levelEvents.at(0);
@@ -324,7 +346,7 @@ namespace openstudio{
       std::vector<Event> cluster;
       cluster.push_back(event);
 
-      for (int j = 0; j < levelEvents.size; j++) {
+      for (int j = 0; j < levelEvents.size(); j++) {
         Event test = levelEvents[j];
 
         if (test.isEventInGroup(parentGroup)) {
@@ -335,13 +357,13 @@ namespace openstudio{
            * share the same parent, they should be merge together.
            */
           cluster.push_back(levelEvents.at(j));
-          levelEvents.erase(levelEvents.begin + j - 1);
+          levelEvents.erase(levelEvents.begin() + j - 1);
           test.addEventToGroup(parentGroup);
           j--;
         } else if (getDistance(eventCenter, test.point) < SPLIT_EPSILON) {
           // group all events when the result points are near each other
           cluster.push_back(levelEvents.at(j));
-          levelEvents.erase(levelEvents.begin + j - 1);
+          levelEvents.erase(levelEvents.begin() + j - 1);
           test.addEventToGroup(parentGroup);
           j--;
         }
@@ -358,7 +380,7 @@ namespace openstudio{
   Event RoofGeometry::createLevelEvent(Point3d& eventCenter, double distance, std::vector<Event>& eventCluster) {
     std::vector<Chain> chains = createChains(eventCluster);
 
-    if (chains.size == 1) {
+    if (chains.size() == 1) {
       Chain chain = chains.at(0);
       if (chain.getChainMode() == CHAIN_MODE_CLOSED_EDGE) {
         return Event::Event(eventCenter, distance, chain, true);
@@ -371,7 +393,7 @@ namespace openstudio{
 
     for (Chain chain : chains) {
       if (chain.getChainMode() == CHAIN_MODE_CLOSED_EDGE) {
-        // TODO: exception
+        LOG_AND_THROW("found closed chain of events for single point, but found more then one chain");
       }
     }
 
@@ -425,13 +447,13 @@ namespace openstudio{
 
     std::vector<Chain> edgeChains;
 
-    while (edgeCluster.size > 0) {
+    while (edgeCluster.size() > 0) {
       /*
       * We need to find all connected edge events, and create chains from
       * them. Two event are assumed as connected if next parent of one
       * event is equal to previous parent of second event.
       */
-      edgeChains.push_back(Chain(createEdgeChain(edgeCluster)));
+      //FIXME edgeChains.push_back(Chain(createEdgeChain(edgeCluster)));
     }
 
     std::vector<Chain> chains;
@@ -439,9 +461,9 @@ namespace openstudio{
       chains.push_back(edgeChain);
     }
 
-    while (splitCluster.size > 0) {
+    while (splitCluster.size() > 0) {
       Event split = splitCluster.at(0);
-      splitCluster.erase(splitCluster.begin);
+      splitCluster.erase(splitCluster.begin());
 
       for (Chain chain : edgeChains) {
         // check if chain is split type
@@ -454,7 +476,7 @@ namespace openstudio{
         * split event is not part of any edge chain, it should be added as
         * new single element chain;
         */
-        chains.push_back(Chain(split));
+        //FIXME chains.push_back(Chain(split));
       }
 
     }
@@ -473,28 +495,28 @@ namespace openstudio{
     std::vector<Event> edgeList;
 
     edgeList.push_back(edgeCluster.at(0));
-    edgeCluster.erase(edgeCluster.begin);
+    edgeCluster.erase(edgeCluster.begin());
 
     // find all successors of edge event
     // find all predecessors of edge event
 
     do {
       Vertex beginVertex = edgeList.at(0).previousVertex;
-      Vertex endVertex = edgeList.at(edgeList.size - 1).nextVertex;
+      Vertex endVertex = edgeList.at(edgeList.size() - 1).nextVertex;
 
       bool do_continue = false;
-      for (int i = 0; i < edgeCluster.size; i++) {
+      for (int i = 0; i < edgeCluster.size(); i++) {
         Event edge = edgeCluster.at(i);
         if (&edge.previousVertex == &endVertex) {
           // edge should be added as last in chain
-          edgeCluster.erase(edgeCluster.begin + i - 1);
+          edgeCluster.erase(edgeCluster.begin() + i - 1);
           edgeList.push_back(edge);
           do_continue = true;
           break;
         } else if (&edge.nextVertex == &beginVertex) {
           // edge should be added as first in chain
-          edgeCluster.erase(edgeCluster.begin + i - 1);
-          edgeList.insert(edgeCluster.begin, edge);
+          edgeCluster.erase(edgeCluster.begin() + i - 1);
+          edgeList.insert(edgeCluster.begin(), edge);
           do_continue = true;
           break;
         }
@@ -514,7 +536,7 @@ namespace openstudio{
   bool RoofGeometry::isInEdgeChain(Event& split, Chain& chain) {
     Vertex splitParent = split.parent;
 
-    std::vector<Event> edgeList = chain.edgeList;
+    std::vector<Event> edgeList; // FIXME = chain.edgeList;
     for (Event edgeEvent : edgeList) {
       if (&edgeEvent.previousVertex == &splitParent || &edgeEvent.nextVertex == &splitParent) {
         return true;
@@ -524,7 +546,7 @@ namespace openstudio{
     return false;
   }
 
-  void RoofGeometry::multiSplitEvent(Event& event, std::set< std::vector<Vertex> >& sLav, std::priority_queue<Event, std::vector<Event>, EventComparator>& queue, std::vector<Edge>& edges) {
+  void RoofGeometry::multiSplitEvent(Event& event, std::set< std::vector<Vertex> >& sLav, std::priority_queue<Event, std::vector<Event>, EventCompare>& queue, std::vector<Edge>& edges) {
 
     std::vector<Chain> chains = event.chains;
     Point3d center = event.point;
@@ -532,14 +554,14 @@ namespace openstudio{
     createOppositeEdgeChains(sLav, chains, center);
 
     // sort list of chains clock wise
-    std::sort(chains.begin, chains.end); // FIXME implement compare function
+    std::sort(chains.begin(), chains.end()); // FIXME implement compare function
 
     // face node for split event is shared between two chains
     bool hasLastFaceNode = false;
     FaceNode lastFaceNode;
 
     // connect all edges into new bisectors and lavs
-    int edgeListSize = chains.size;
+    int edgeListSize = chains.size();
     for (int i = 0; i < edgeListSize; i++) {
       Chain chainBegin = chains.at(i);
       Chain chainEnd = chains.at((i + 1) % edgeListSize);
@@ -550,7 +572,7 @@ namespace openstudio{
       Vertex beginNextVertex = chainBegin.nextVertex;
       Vertex endPreviousVertex = chainEnd.previousVertex;
 
-      correctBisectorDirection(newVertex.bisector.get, beginNextVertex, endPreviousVertex, chainBegin.nextEdge, chainEnd.previousEdge);
+      correctBisectorDirection(newVertex.bisector.get(), beginNextVertex, endPreviousVertex, chainBegin.nextEdge, chainEnd.previousEdge);
 
       std::vector<Vertex> beginNextVertexLav = beginNextVertex.getLav(sLav);
       std::vector<Vertex> endPreviousVertexLav = endPreviousVertex.getLav(sLav);
@@ -578,40 +600,40 @@ namespace openstudio{
 
         mergeBeforeBaseVertex(beginNextVertex, beginNextVertexLav, endPreviousVertex, endPreviousVertexLav);
 
-        endPreviousVertex.addNext(newVertex);
+        //FIXME endPreviousVertex.addNext(newVertex);
       }
 
       computeEvents(newVertex, queue, edges);
 
       std::tuple<bool, FaceNode> t = addSplitFaces(hasLastFaceNode, lastFaceNode, chainBegin, chainEnd, newVertex);
-      hasLastFaceNode = t[0];
-      lastFaceNode = t[1];
+      hasLastFaceNode = std::get<0>(t);
+      lastFaceNode = std::get<1>(t);
 
     }
 
     // remove all centers of events from lav
-    edgeListSize = chains.size;
+    edgeListSize = chains.size();
     for (int i = 0; i < edgeListSize; i++) {
       Chain chainBegin = chains.at(i);
       Chain chainEnd = chains.at((i + 1) % edgeListSize);
 
-      removeFromLav(chainBegin.currentVertex);
-      removeFromLav(chainEnd.currentVertex);
+      //FIXME removeFromLav(chainBegin.currentVertex);
+      //FIXME removeFromLav(chainEnd.currentVertex);
 
       if (chainBegin.currentVertex != boost::none) {
-        chainBegin.currentVertex.get.processed = true;
+        chainBegin.currentVertex.get().processed = true;
       }
       if (chainEnd.currentVertex != boost::none) {
-        chainEnd.currentVertex.get.processed = true;
+        chainEnd.currentVertex.get().processed = true;
       }
 
     }
 
   }
 
-  void RoofGeometry::pickEvent(Event& event, std::set< std::vector<Vertex> >& sLav, std::priority_queue<Event, std::vector<Event>, EventComparator>& queue, std::vector<Edge>& edges) {
+  void RoofGeometry::pickEvent(Event& event, std::set< std::vector<Vertex> >& sLav, std::priority_queue<Event, std::vector<Event>, EventCompare>& queue, std::vector<Edge>& edges) {
     Point3d center = event.point;
-    std::vector<Event> edgeList = event.chain.edgeList;
+    std::vector<Event> edgeList; //FIXME = event.chain.edgeList;
 
     // lav will be removed so it is final vertex.
     Vertex pickVertex = Vertex(center, event.distance, boost::none, boost::none, boost::none);
@@ -625,11 +647,11 @@ namespace openstudio{
 
       Vertex leftVertex = edgeEvent.previousVertex;
       leftVertex.processed = true;
-      removeFromLav(leftVertex);
+      //FIXME removeFromLav(leftVertex);
 
       Vertex rightVertex = edgeEvent.nextVertex;
       rightVertex.processed = true;
-      removeFromLav(rightVertex);
+      //FIXME removeFromLav(rightVertex);
 
       addFaceBack(edgeVertex, leftVertex, rightVertex);
 
@@ -639,29 +661,29 @@ namespace openstudio{
   FaceNode RoofGeometry::addFaceBack(Vertex& newVertex, Vertex& va, Vertex& vb) {
     // back face
     FaceNode fn = FaceNode(newVertex);
-    va.rightFace.addPush(fn);
-    FaceQueueUtil.connectQueues(fn, vb.leftFace);
+    //FIXME va.rightFace.addPush(fn);
+    //FIXME FaceQueueUtil.connectQueues(fn, vb.leftFace);
     return fn;
   }
 
   FaceNode RoofGeometry::addFaceLeft(Vertex& newVertex, Vertex& va) {
     FaceNode fn = FaceNode(newVertex);
-    va.leftFace.addPush(fn);
-    newVertex.leftFace = fn;
+    //FIXME va.leftFace.addPush(fn);
+    //FIXME newVertex.leftFace = fn;
     return fn;
   }
 
   FaceNode RoofGeometry::addFaceRight(Vertex& newVertex, Vertex& vb) {
     FaceNode fn = FaceNode(newVertex);
-    vb.rightFace.addPush(fn);
-    newVertex.rightFace = fn;
+    //FIXME vb.rightFace.addPush(fn);
+    //FIXME newVertex.rightFace = fn;
     return fn;
   }
 
-  void RoofGeometry::multiEdgeEvent(Event& event, std::set< std::vector<Vertex> >& sLav, std::priority_queue<Event, std::vector<Event>, EventComparator>& queue, std::vector<Edge>& edges) {
+  void RoofGeometry::multiEdgeEvent(Event& event, std::set< std::vector<Vertex> >& sLav, std::priority_queue<Event, std::vector<Event>, EventCompare>& queue, std::vector<Edge>& edges) {
 
     Point3d center = event.point;
-    std::vector<Event> edgeList = event.chain.edgeList;
+    std::vector<Event> edgeList; //FIXME = event.chain.edgeList;
 
     Vertex previousVertex = event.chain.previousVertex;
     previousVertex.processed = true;
@@ -669,8 +691,8 @@ namespace openstudio{
     Vertex nextVertex = event.chain.nextVertex;
     nextVertex.processed = true;
 
-    Ray2d bisector = calcBisector(center, previousVertex.previousEdge.get, nextVertex.nextEdge.get);
-    Vertex edgeVertex = Vertex(center, event.distance, bisector, previousVertex.previousEdge.get, nextVertex.nextEdge.get);
+    Ray2d bisector = calcBisector(center, previousVertex.previousEdge.get(), nextVertex.nextEdge.get());
+    Vertex edgeVertex = Vertex(center, event.distance, bisector, previousVertex.previousEdge.get(), nextVertex.nextEdge.get());
 
     // left face
     addFaceLeft(edgeVertex, previousVertex);
@@ -678,7 +700,7 @@ namespace openstudio{
     // right face
     addFaceRight(edgeVertex, nextVertex);
 
-    previousVertex.addPrevious(edgeVertex);
+    //FIXME previousVertex.addPrevious(edgeVertex);
 
     // back faces
     addMultiBackFaces(edgeList, edgeVertex);
@@ -724,11 +746,11 @@ namespace openstudio{
   }
 
   Vector3d RoofGeometry::orthogonalLeft(Vector3d& v) {
-    return Vector3d(-v.y, v.x, v.z);
+    return Vector3d(-v.y(), v.x(), v.z());
   }
 
   Vector3d RoofGeometry::orthogonalRight(Vector3d& v) {
-    return Vector3d(v.y, -v.x, v.z);
+    return Vector3d(v.y(), -v.x(), v.z());
   }
 
   void RoofGeometry::correctBisectorDirection(Ray2d& bisector, Vertex& beginNextVertex, Vertex& endPreviousVertex, Edge& beginEdge, Edge& endEdge) {
@@ -738,19 +760,21 @@ namespace openstudio{
     * bisector is wrong. For parallel edges direction of edge need to be
     * corrected using location of vertex.
     */
-    Edge beginEdge2 = beginNextVertex.previousEdge.get;
-    Edge endEdge2 = endPreviousVertex.nextEdge.get;
+    Edge beginEdge2 = beginNextVertex.previousEdge.get();
+    Edge endEdge2 = endPreviousVertex.nextEdge.get();
 
     if (&beginEdge != &beginEdge2 || &endEdge != &endEdge2) {
-      // TODO exception
+      LOG_AND_THROW("Unexpected situation");
     }
 
     /*
     * Check if edges are parallel and in opposite direction to each other.
     */
     if (beginEdge.normalize().dot(endEdge.normalize()) < -0.97) {
-      Vector3d n1 = Vector3d(bisector.point) - Vector3d(endPreviousVertex.point);
-      Vector3d n2 = Vector3d(beginNextVertex.point) - Vector3d(bisector.point);
+      Point3d bp = bisector.point;
+      Point3d bnvp = beginNextVertex.point;
+      Vector3d n1 = Vector3d(bp.x(), bp.y(), bp.z()) - Vector3d(bnvp.x(), bnvp.y(), bnvp.z());
+      Vector3d n2 = Vector3d(bnvp.x(), bnvp.y(), bnvp.z()) - Vector3d(bp.x(), bp.y(), bp.z());
       n1.normalize();
       n2.normalize();
       Vector3d bisectorPrediction = calcVectorBisector(n1, n2);
@@ -768,23 +792,23 @@ namespace openstudio{
   /// Add all vertex from "merged" lav into "base" lav. Vertex are added before
   /// base vertex. Merged vertex order is reversed.
   void RoofGeometry::mergeBeforeBaseVertex(Vertex& base, std::vector<Vertex>& baseList, Vertex& merged, std::vector<Vertex>& mergedList) {
-    int size = mergedList.size;
+    int size = mergedList.size();
 
     for (int i = 0; i < size; i++) {
       Vertex nextMerged = merged.getOffsetVertex(mergedList, 1);
-      auto it = std::find(baseList.begin, baseList.end, base);
+      auto it = std::find(baseList.begin(), baseList.end(), base);
       baseList.insert(it - 1, nextMerged);
     }
 
-    mergedList.erase(mergedList.begin, mergedList.end);
+    mergedList.erase(mergedList.begin(), mergedList.end());
   }
 
-  void RoofGeometry::computeEvents(Vertex& vertex, std::priority_queue<Event, std::vector<Event>, EventComparator>& queue, std::vector<Edge>& edges) {
+  void RoofGeometry::computeEvents(Vertex& vertex, std::priority_queue<Event, std::vector<Event>, EventCompare>& queue, std::vector<Edge>& edges) {
     boost::optional<double> distanceSquared = computeCloserEdgeEvent(vertex, queue);
     computeSplitEvents(vertex, edges, queue, distanceSquared);
   }
 
-  boost::optional<double> RoofGeometry::computeCloserEdgeEvent(Vertex& vertex, std::priority_queue<Event, std::vector<Event>, EventComparator>& queue) {
+  boost::optional<double> RoofGeometry::computeCloserEdgeEvent(Vertex& vertex, std::priority_queue<Event, std::vector<Event>, EventCompare>& queue) {
     /*
      * Calculate two new edge events for given vertex. Events are generated
      * using current, previous and next vertex in current lav. When two edge
@@ -792,8 +816,8 @@ namespace openstudio{
      * only closer event or both if they have the same distance.
      */
 
-    Vertex nextVertex = vertex.next();
-    Vertex previousVertex = vertex.previous();
+    Vertex nextVertex; // FIXME = vertex.next();
+    Vertex previousVertex; // FIXME = vertex.previous();
 
     Point3d point = vertex.point;
 
@@ -813,17 +837,17 @@ namespace openstudio{
     double distance2 = std::numeric_limits<double>::max();
 
     if (point1 != boost::none) {
-      distance1 = getDistanceSquared(point, point1.get);
+      distance1 = getDistanceSquared(point, point1.get());
     }
     if (point2 != boost::none) {
-      distance2 = getDistanceSquared(point,point2.get);
+      distance2 = getDistanceSquared(point,point2.get());
     }
 
     if (distance1 - SPLIT_EPSILON < distance2) {
-      queue.push(createEdgeEvent(point1.get, vertex, nextVertex));
+      queue.push(createEdgeEvent(point1.get(), vertex, nextVertex));
     }
     if (distance2 - SPLIT_EPSILON < distance1) {
-      queue.push(createEdgeEvent(point2.get, previousVertex, vertex));
+      queue.push(createEdgeEvent(point2.get(), previousVertex, vertex));
     }
 
     if (distance1 < distance2){
@@ -833,8 +857,8 @@ namespace openstudio{
   }
 
   boost::optional<Point3d> RoofGeometry::computeIntersectionBisectors(Vertex& vertexPrevious, Vertex& vertexNext) {
-    Ray2d bisectorPrevious = vertexPrevious.bisector.get;
-    Ray2d bisectorNext = vertexNext.bisector.get;
+    Ray2d bisectorPrevious = vertexPrevious.bisector.get();
+    Ray2d bisectorNext = vertexNext.bisector.get();
 
     boost::optional<Point3d> intersect = bisectorPrevious.intersectRay2d(bisectorNext);
 
@@ -847,11 +871,11 @@ namespace openstudio{
       return boost::none;
     }
 
-    return intersect.get;
+    return intersect.get();
   }
 
   Event RoofGeometry::createEdgeEvent(Point3d& point, Vertex& previousVertex, Vertex& nextVertex) {
-    return Event(point, calcDistance(point, previousVertex.nextEdge.get), previousVertex, nextVertex);
+    return Event(point, calcDistance(point, previousVertex.nextEdge.get()), previousVertex, nextVertex);
   }
 
   double RoofGeometry::calcDistance(Point3d& intersect, Edge& currentEdge) {
@@ -861,7 +885,7 @@ namespace openstudio{
 
     Vector3d pointOnVector = orthogonalProjection(edge, vector);
 
-    return getDistance(Point3d(vector.x, vector.y, vector.z), Point3d(pointOnVector.x, pointOnVector.y, pointOnVector.z));
+    return getDistance(Point3d(vector.x(), vector.y(), vector.z()), Point3d(pointOnVector.x(), pointOnVector.y(), pointOnVector.z()));
   }
 
   // see http://en.wikipedia.org/wiki/Vector_projection
@@ -869,13 +893,13 @@ namespace openstudio{
     Vector3d n = Vector3d(unitVector);
     n.normalize();
 
-    double px = vectorToProject.x;
-    double py = vectorToProject.y;
-    double pz = vectorToProject.z;
+    double px = vectorToProject.x();
+    double py = vectorToProject.y();
+    double pz = vectorToProject.z();
 
-    double ax = n.x;
-    double ay = n.y;
-    double az = n.z;
+    double ax = n.x();
+    double ay = n.y();
+    double az = n.z();
 
     double vx = px * ax * ax + py * ax * ay + pz * ax * az;
     double vy = px * ax * ay + py * ay * ay + pz * ay * az;
@@ -884,14 +908,14 @@ namespace openstudio{
     return Vector3d(vx, vy, vz);
   }
 
-  void RoofGeometry::computeEdgeEvents(Vertex& previousVertex, Vertex& nextVertex, std::priority_queue<Event, std::vector<Event>, EventComparator>& queue) {
+  void RoofGeometry::computeEdgeEvents(Vertex& previousVertex, Vertex& nextVertex, std::priority_queue<Event, std::vector<Event>, EventCompare>& queue) {
     boost::optional<Point3d> point = computeIntersectionBisectors(previousVertex, nextVertex);
     if (point != boost::none) {
-      queue.push(createEdgeEvent(point.get, previousVertex, nextVertex));
+      queue.push(createEdgeEvent(point.get(), previousVertex, nextVertex));
     }
   }
 
-  void RoofGeometry::computeSplitEvents(Vertex& vertex, std::vector<Edge>& edges, std::priority_queue<Event, std::vector<Event>, EventComparator>& queue, boost::optional<double> distanceSquared) {
+  void RoofGeometry::computeSplitEvents(Vertex& vertex, std::vector<Edge>& edges, std::priority_queue<Event, std::vector<Event>, EventCompare>& queue, boost::optional<double> distanceSquared) {
     Point3d source = vertex.point;
     
     std::vector<SplitCandidate> oppositeEdges = calcOppositeEdges(vertex, edges);
@@ -901,7 +925,7 @@ namespace openstudio{
       Point3d point = oppositeEdge.point;
 
       if (distanceSquared != boost::none) {
-        if (getDistanceSquared(source, point) > distanceSquared.get + SPLIT_EPSILON) {
+        if (getDistanceSquared(source, point) > distanceSquared.get() + SPLIT_EPSILON) {
           /*
           * Current split event distance from source of event is
           * greater then for edge event. Split event can be reject.
@@ -923,7 +947,7 @@ namespace openstudio{
         continue;
       }
 
-      queue.push(Event(point, oppositeEdge.distance, vertex, oppositeEdge.oppositeEdge.get));
+      queue.push(Event(point, oppositeEdge.distance, vertex, oppositeEdge.oppositeEdge.get()));
       continue;
 
     }
@@ -938,7 +962,7 @@ namespace openstudio{
       LineLinear2d edge = LineLinear2d(edgeEntry.begin, edgeEntry.end);
 
       // check if edge is behind bisector
-      if (edgeBehindBisector(vertex.bisector.get, edge)) {
+      if (edgeBehindBisector(vertex.bisector.get(), edge)) {
         continue;
       }
 
@@ -946,7 +970,7 @@ namespace openstudio{
       boost::optional<SplitCandidate> candidatePoint = calcCandidatePointForSplit(vertex, edgeEntry);
 
       if (candidatePoint != boost::none) {
-        ret.push_back(candidatePoint.get);
+        ret.push_back(candidatePoint.get());
       }
 
     }
@@ -972,10 +996,10 @@ namespace openstudio{
       return boost::none;
     }
 
-    Vector3d vertexEdgeNormNegate = vertexEdge.get.normalize;
-    Vector3d edgesBisector = calcVectorBisector(vertexEdgeNormNegate, edge.normalize);
+    Vector3d vertexEdgeNormNegate = vertexEdge.get().normalize();
+    Vector3d edgesBisector = calcVectorBisector(vertexEdgeNormNegate, edge.normalize());
 
-    LineLinear2d llv = LineLinear2d(vertexEdge.get.begin, vertexEdge.get.end);
+    LineLinear2d llv = LineLinear2d(vertexEdge.get().begin, vertexEdge.get().end);
     LineLinear2d lle = LineLinear2d(edge.begin, edge.end);
     boost::optional<Point3d> edgesCollide = llv.collide(lle);
 
@@ -984,34 +1008,34 @@ namespace openstudio{
       * Check should be performed to exclude the case when one of the
       * line segments starting at V is parallel to ei.
       */
-      // TODO exception
+      LOG_AND_THROW("Unexpected situation");
     }
 
-    LineLinear2d edgesBisectorLine = Ray2d(edgesCollide.get, edgesBisector).getLinearForm();
+    LineLinear2d edgesBisectorLine = Ray2d(edgesCollide.get(), edgesBisector).getLinearForm();
 
     /*
     * Compute the coordinates of the candidate point Bi as the intersection
     * between the bisector at V and the axis of the angle between one of
     * the edges starting at V and the tested line segment ei
     */
-    boost::optional<Point3d> candidatePoint = vertex.bisector.get.collide(edgesBisectorLine, SPLIT_EPSILON);
+    boost::optional<Point3d> candidatePoint = vertex.bisector.get().collide(edgesBisectorLine, SPLIT_EPSILON);
 
     if (candidatePoint == boost::none) {
       return boost::none;
     }
 
-    if (edge.bisectorPrevious.isOnRightSide(candidatePoint.get, SPLIT_EPSILON) && edge.bisectorNext.isOnLeftSide(candidatePoint.get, SPLIT_EPSILON)) {
+    if (edge.bisectorPrevious.isOnRightSide(candidatePoint.get(), SPLIT_EPSILON) && edge.bisectorNext.isOnLeftSide(candidatePoint.get(), SPLIT_EPSILON)) {
 
-      double distance = calcDistance(candidatePoint.get, edge);
+      double distance = calcDistance(candidatePoint.get(), edge);
 
-      if (edge.bisectorPrevious.isOnLeftSide(candidatePoint.get, SPLIT_EPSILON) || edge.bisectorNext.isOnRightSide(candidatePoint.get, SPLIT_EPSILON)) {
+      if (edge.bisectorPrevious.isOnLeftSide(candidatePoint.get(), SPLIT_EPSILON) || edge.bisectorNext.isOnRightSide(candidatePoint.get(), SPLIT_EPSILON)) {
 
         Point3d oppositePoint = edge.begin;
-        return SplitCandidate(candidatePoint.get, distance, boost::none, oppositePoint);
+        return SplitCandidate(candidatePoint.get(), distance, boost::none, oppositePoint);
 
       }
 
-      return SplitCandidate(candidatePoint.get, distance, edge, boost::none);
+      return SplitCandidate(candidatePoint.get(), distance, edge, boost::none);
 
     }
 
@@ -1020,13 +1044,13 @@ namespace openstudio{
   }
 
   boost::optional<Edge> RoofGeometry::chooseLessParallelVertexEdge(Vertex& vertex, Edge& edge) {
-    Edge edgeA = vertex.previousEdge.get;
-    Edge edgeB = vertex.nextEdge.get;
+    Edge edgeA = vertex.previousEdge.get();
+    Edge edgeB = vertex.nextEdge.get();
 
     Edge vertexEdge = edgeA;
 
-    double edgeADot = std::abs(edge.normalize.dot(edgeA.normalize));
-    double edgeBDot = std::abs(edge.normalize.dot(edgeB.normalize));
+    double edgeADot = std::abs(edge.normalize().dot(edgeA.normalize()));
+    double edgeBDot = std::abs(edge.normalize().dot(edgeB.normalize()));
 
     if (edgeADot + edgeBDot >= 2 - SPLIT_EPSILON) {
       // both lines are parallel to given edge
@@ -1061,17 +1085,17 @@ namespace openstudio{
       if (chain.chainType == CHAIN_TYPE_SPLIT) {
         boost::optional<Edge> oppositeEdge = chain.oppositeEdge;
 
-        if (oppositeEdge != boost::none && !oppositeEdges.count(oppositeEdge.get)) {
+        if (oppositeEdge != boost::none && !oppositeEdges.count(oppositeEdge.get())) {
           // find lav vertex for opposite edge
 
-          boost::optional<Vertex> nextVertex = findOppositeEdgeLav(sLav, oppositeEdge.get, center);
+          boost::optional<Vertex> nextVertex = findOppositeEdgeLav(sLav, oppositeEdge.get(), center);
           if (nextVertex != boost::none) {
-            oppositeEdgeChains.push_back(Chain(oppositeEdge.get, nextVertex.get));
+            oppositeEdgeChains.push_back(Chain(oppositeEdge.get(), nextVertex.get()));
           } else {
-            findOppositeEdgeLav(sLav, oppositeEdge.get, center);
+            findOppositeEdgeLav(sLav, oppositeEdge.get(), center);
             chainsForRemoval.push_back(chain);
           }
-          oppositeEdges.insert(oppositeEdge.get);
+          oppositeEdges.insert(oppositeEdge.get());
         }
 
       } else if (chain.chainType == CHAIN_TYPE_EDGE) {
@@ -1080,7 +1104,7 @@ namespace openstudio{
           if (oppositeEdge != boost::none) {
             // never happen?
             // find lav vertex for opposite edge
-            oppositeEdges.insert(oppositeEdge.get);
+            oppositeEdges.insert(oppositeEdge.get());
           }
         }
 
@@ -1093,7 +1117,7 @@ namespace openstudio{
     * that edge should be removed
     */
     for (Chain chain : chainsForRemoval) {
-      chains.erase(chain);
+      // FIXME chains.erase(chain);
     }
     for (Chain chain : oppositeEdgeChains) {
       chains.push_back(chain);
@@ -1111,7 +1135,7 @@ namespace openstudio{
     for (std::vector<Vertex> lav : sLav) {
       boost::optional<Vertex> vertexInLav = getEdgeInLav(lav, oppositeEdge);
       if (vertexInLav != boost::none) {
-        edgeLavs.push_back(vertexInLav);
+        edgeLavs.push_back(vertexInLav.get());
       }
     }
     return edgeLavs;
@@ -1127,14 +1151,14 @@ namespace openstudio{
   }
 
   boost::optional<Vertex> RoofGeometry::chooseOppositeEdgeLav(std::vector<Vertex> edgeLavs, Edge oppositeEdge, Point3d center) {
-    if (edgeLavs.size == 0) {
+    if (edgeLavs.size() == 0) {
       return boost::none;
-    } else if (edgeLavs.size == 1) {
+    } else if (edgeLavs.size() == 1) {
       return edgeLavs.at(0);
     }
 
     Point3d edgeStart = oppositeEdge.begin;
-    Vector3d edgeNorm = oppositeEdge.normalize;
+    Vector3d edgeNorm = oppositeEdge.normalize();
     Vector3d centerVector = center - edgeStart;
     double centerDot = edgeNorm.dot(centerVector);
 
@@ -1161,7 +1185,7 @@ namespace openstudio{
 
     // Additional check if center is inside lav
     for (Vertex end : edgeLavs) {
-      int size = end.list.size;
+      int size = 0; // FIXME = end.list.size();
       std::vector<Point3d> points;
       Vertex next = end;
       for (int i = 0; i < size; i++) {
@@ -1173,9 +1197,7 @@ namespace openstudio{
       }
     }
 
-    // could not find lav for opposite edge, it could be correct 
-    // but need some test data to check.
-    // FIXME exception
+    LOG_AND_THROW("could not find lav for opposite edge, it could be correct but need some test data to check.")
 
   }
 
@@ -1187,7 +1209,7 @@ namespace openstudio{
      * see http://paulbourke.net/geometry/insidepoly/
      */
 
-    int numpoints = points.size;
+    int numpoints = points.size();
 
     if (numpoints < 3) {
       return false;
@@ -1211,12 +1233,12 @@ namespace openstudio{
         node2 = points.at(it);
       }
 
-      double x = point.x;
-      double y = point.y;
+      double x = point.x();
+      double y = point.y();
 
       // FIXME: missing parantheses?
-      if (node1.y < y && node2.y >= y || node2.y < y && node1.y >= y) {
-        if (node1.x + (y - node1.y) / (node2.y - node1.y) * (node2.x - node1.x) < x) {
+      if (node1.y() < y && node2.y() >= y || node2.y() < y && node1.y() >= y) {
+        if (node1.x() + (y - node1.y()) / (node2.y() - node1.y()) * (node2.x() - node1.x()) < x) {
           oddNodes = !oddNodes;
         }
       }
@@ -1243,17 +1265,17 @@ namespace openstudio{
         beginVertex = createOppositeEdgeVertex(newVertex);
 
         /* same face in two vertex, original and in opposite edge clone */
-        newVertex.rightFace = beginVertex.rightFace;
-        lastFaceNode = beginVertex.leftFace;
+        // FIXME newVertex.rightFace = beginVertex.rightFace;
+        // FIXME lastFaceNode = beginVertex.leftFace;
         hasLastFaceNode = true;
       } else {
         // face queue exist simply assign it to new node
-        newVertex.rightFace = lastFaceNode;
+        // FIXME newVertex.rightFace = lastFaceNode;
         hasLastFaceNode = false;
       }
 
     } else {
-      Vertex beginVertex = chainBegin.currentVertex.get;
+      Vertex beginVertex = chainBegin.currentVertex.get();
 
       // right face
       addFaceRight(newVertex, beginVertex);
@@ -1272,17 +1294,17 @@ namespace openstudio{
         endVertex = createOppositeEdgeVertex(newVertex);
 
         /* same face in two vertex, original and in opposite edge clone */
-        newVertex.leftFace = endVertex.leftFace;
-        lastFaceNode = endVertex.leftFace;
+        // FIXME newVertex.leftFace = endVertex.leftFace;
+        // FIXME lastFaceNode = endVertex.leftFace;
         hasLastFaceNode = true;
       } else {
         // face queue exist simply assign it to new node
-        newVertex.leftFace = lastFaceNode;
+        // FIXME newVertex.leftFace = lastFaceNode;
         hasLastFaceNode = false;
       }
 
     } else {
-      Vertex endVertex = chainEnd.currentVertex.get;
+      Vertex endVertex = chainEnd.currentVertex.get();
 
       // left face
       addFaceLeft(newVertex, endVertex);
@@ -1298,42 +1320,42 @@ namespace openstudio{
     * by additional output face.
     */
 
-    Vertex vertex = Vertex(newVertex.point, newVertex.distance, newVertex.bisector.get, newVertex.previousEdge.get, newVertex.nextEdge.get);
+    Vertex vertex = Vertex(newVertex.point, newVertex.distance, newVertex.bisector.get(), newVertex.previousEdge.get(), newVertex.nextEdge.get());
 
     // create new empty node queue
     FaceNode fn = FaceNode(vertex);
-    vertex.leftFace = fn;
-    vertex.rightFace = fn;
+    // FIXME vertex.leftFace = fn;
+    // FIXME vertex.rightFace = fn;
 
     // add one node for queue to present opposite site of edge split event
     FaceQueue rightFace;
-    rightFace.addFirst(fn);
+    // FIXME rightFace.addFirst(fn);
 
     return vertex;
   }
 
   void RoofGeometry::processTwoNodeLavs(std::set< std::vector<Vertex> >& sLav) {
     for (std::vector<Vertex> lav : sLav) {
-      if (lav.size == 2) {
-        Vertex first = lav.front;
+      if (lav.size() == 2) {
+        Vertex first = lav.front();
         Vertex last = first.getOffsetVertex(lav, 1);
 
-        FaceQueueUtil.connectQueues(first.leftFace, last.rightFace);
-        FaceQueueUtil.connectQueues(first.rightFace, last.leftFace);
+        // FIXME FaceQueueUtil.connectQueues(first.leftFace, last.rightFace);
+        // FIXME FaceQueueUtil.connectQueues(first.rightFace, last.leftFace);
 
         first.processed = true;
         last.processed = true;
 
-        lav.erase(first);
-        lav.erase(last);
+        // FIXME lav.erase(first);
+        // FIXME lav.erase(last);
 
       }
     }
   }
 
-  void RoofGeometry::removeEventsUnderHeight(std::priority_queue<Event, std::vector<Event>, EventComparator>& queue, double levelHeight) {
-    while (!queue.empty) {
-      if (queue.top.distance > levelHeight + SPLIT_EPSILON) {
+  void RoofGeometry::removeEventsUnderHeight(std::priority_queue<Event, std::vector<Event>, EventCompare>& queue, double levelHeight) {
+    while (!queue.empty()) {
+      if (queue.top().distance > levelHeight + SPLIT_EPSILON) {
         break;
       }
       queue.pop();
@@ -1345,7 +1367,7 @@ namespace openstudio{
     while (foundEmptyLav) {
       foundEmptyLav = false;
       for (std::vector<Vertex> lav : sLav) {
-        if (lav.size == 0) {
+        if (lav.size() == 0) {
           sLav.erase(lav);
           foundEmptyLav = true;
           break;
@@ -1426,7 +1448,7 @@ namespace openstudio{
 
   std::vector<Vertex> Vertex::getLav(std::set< std::vector<Vertex> >& sLav) {
     for (std::vector<Vertex> lav : sLav) {
-      if (std::find(lav.begin, lav.end, this) != lav.end) {
+      if (std::find(lav.begin(), lav.end(), this) != lav.end()) {
         return lav;
       }
     }
@@ -1436,7 +1458,7 @@ namespace openstudio{
   std::vector<Vertex> Vertex::cutLavPart(std::vector<Vertex>& lav, Vertex& endVertex) {
     std::vector<Vertex> ret;
 
-    int size = lav.size;
+    int size = lav.size();
 
     // FIXME implement
 
@@ -1450,7 +1472,7 @@ namespace openstudio{
   }
 
   Vector3d Edge::normalize() {
-    Vector3d v = Vector3d(end) - Vector3d(begin);
+    Vector3d v = Vector3d(end.x(), end.y(), end.z()) - Vector3d(begin.x(), begin.y(), begin.z());
     v.normalize();
     return v;
   }
@@ -1476,7 +1498,7 @@ namespace openstudio{
     /*
     * Portably there is better way to do this. this is from graphical.
     */
-    Vector3d collideVector = collide.get - point;
+    Vector3d collideVector = collide.get() - point;
 
     double dot = vector.dot(collideVector);
 
@@ -1488,11 +1510,11 @@ namespace openstudio{
   }
 
   LineLinear2d Ray2d::getLinearForm() {
-    double x = point.x;
-    double y = point.y;
+    double x = point.x();
+    double y = point.y();
 
-    double B = -vector.x;
-    double A = vector.y;
+    double B = -vector.x();
+    double A = vector.y();
 
     double C = -1 * (A * x + B * y);
     return LineLinear2d(A, B, C);
@@ -1579,12 +1601,12 @@ namespace openstudio{
       // endpoints of S1 in eqn for S2
       Vector3d w2 = s1p1 - s2p0;
       
-      if (v.x != 0) {
-        t0 = w.x / v.x;
-        t1 = w2.x / v.x;
+      if (v.x() != 0) {
+        t0 = w.x() / v.x();
+        t1 = w2.x() / v.x();
       } else {
-        t0 = w.y / v.y;
-        t1 = w2.y / v.y;
+        t0 = w.y() / v.y();
+        t1 = w2.y() / v.y();
       }
 
       if (t0 > t1) {
@@ -1641,7 +1663,7 @@ namespace openstudio{
 
   /// perp dot product between two vectors
   double Ray2d::perpDot(Vector3d& p1, Vector3d& p2) {
-    return (p1.x * p2.y - p1.y - p2.x);
+    return (p1.x() * p2.y() - p1.y() - p2.x());
   }
 
   bool Ray2d::inCollinearRay(Point3d& p) {
@@ -1673,9 +1695,9 @@ namespace openstudio{
   }
 
   LineLinear2d::LineLinear2d(Point3d& p1, Point3d& p2) {
-    A = p1.y - p2.y;
-    B = p2.x - p1.x;
-    C = p1.x * p2.y - p2.x * p1.y;
+    A = p1.y() - p2.y();
+    B = p2.x() - p1.x();
+    C = p1.x() * p2.y() - p2.x() * p1.y();
   }
 
   boost::optional<Point3d> LineLinear2d::collide(LineLinear2d& line2) {
@@ -1691,15 +1713,15 @@ namespace openstudio{
   }
 
   // CHAIN
-  Chain::Chain(Event& aSplitEvent) {
-    chainType = CHAIN_TYPE_SPLIT;
-    splitEvent = aSplitEvent;
-  }
+  //Chain::Chain(Event& aSplitEvent) {
+  //  chainType = CHAIN_TYPE_SPLIT;
+  //  splitEvent = aSplitEvent;
+  //}
 
-  Chain::Chain(std::vector<Event>& aEdgeList) {
-    chainType = CHAIN_TYPE_EDGE;
-    edgeList = aEdgeList;
-  }
+  //Chain::Chain(std::vector<Event>& aEdgeList) {
+  //  chainType = CHAIN_TYPE_EDGE;
+  //  edgeList = aEdgeList;
+  //}
 
   Chain::Chain(Edge& aOppositeEdge, Vertex& aNextVertex) {
     chainType = CHAIN_TYPE_SINGLE_EDGE;
@@ -1710,8 +1732,7 @@ namespace openstudio{
   ChainMode Chain::getChainMode() {
     if (chainType == CHAIN_TYPE_EDGE) {
       if (closed && split) {
-        //LOG(Error, "Chain can't be closed and split");
-        // TODO exception
+        // FIXME LOG_AND_THROW("Chain can't be closed and split");
       } else if (closed) {
         return CHAIN_MODE_CLOSED_EDGE;
       } else if (split) {

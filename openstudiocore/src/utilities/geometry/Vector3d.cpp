@@ -27,7 +27,6 @@
  **********************************************************************************************************************/
 
 #include "Vector3d.hpp"
-#include "Point3d.hpp"
 
 namespace openstudio{
 
@@ -43,13 +42,6 @@ namespace openstudio{
     m_storage[0] = x;
     m_storage[1] = y;
     m_storage[2] = z;
-  }
-
-  /// constructor with Point3d
-  Vector3d::Vector3d(const Point3d& p) {
-    m_storage[0] = p.x;
-    m_storage[1] = p.y;
-    m_storage[2] = p.z;
   }
 
   /// copy constructor
