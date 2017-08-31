@@ -508,6 +508,20 @@ namespace detail {
     return boost::none;
   }
 
+  // default implementation does nothing.
+  // should only be used by objects that have
+  // no autosized fields 
+  void HVACComponent_Impl::autosize() {
+    return;
+  }
+
+  // default implementation does nothing.
+  // should only be used by objects that have
+  // no autosized fields 
+  void HVACComponent_Impl::applySizingValues() {
+    return;
+  }
+
 } // detail
 
 HVACComponent::HVACComponent(std::shared_ptr<detail::HVACComponent_Impl> p)
@@ -586,7 +600,7 @@ boost::optional<StraightComponent> HVACComponent::containingStraightComponent() 
 }
 
 void HVACComponent::autosize() {
-  getImpl<detail::HVACComponent_Impl>->autosize();
+  return getImpl<detail::HVACComponent_Impl>->autosize();
 }
 
 } // model
