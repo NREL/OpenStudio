@@ -235,6 +235,8 @@ EditorWebView::EditorWebView(bool isIP, const openstudio::model::Model& model, Q
         QMessageBox::warning(this, "Updating Floorplan", errorsAndWarnings);
       }
 
+      std::string contents2 = m_floorplan->toJSON();
+
       // start the editor
       m_newImportGeometry->setEnabled(false);
       m_geometryEditorStarted = true;
