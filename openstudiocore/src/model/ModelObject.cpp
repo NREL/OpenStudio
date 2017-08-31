@@ -1018,6 +1018,20 @@ namespace detail {
     return std::vector<ScheduleTypeKey>();
   }
 
+  // default implementation does nothing.
+  // should only be used by objects that have
+  // no autosized fields 
+  void ModelObject_Impl::autosize() {
+    return;
+  }
+
+  // default implementation does nothing.
+  // should only be used by objects that have
+  // no autosized fields 
+  void ModelObject_Impl::applySizingValues() {
+    return;
+  }
+
 } // detail
 
 bool ModelObject::operator < (const ModelObject& right) const
@@ -1222,6 +1236,14 @@ ModelObject::ModelObject(std::shared_ptr<detail::ModelObject_Impl> p)
 boost::optional<double> ModelObject::getAutosizedValue(std::string valueName, std::string units) const
 {
   return getImpl<detail::ModelObject_Impl>()->getAutosizedValue(valueName, units);
+}
+
+void ModelObject::autosize() {
+  return getImpl<detail::ModelObject_Impl>->autosize();
+}
+
+void ModelObject::applySizingValues() {
+  return getImpl<detail::ModelObject_Impl>->applySizingValues();
 }
 
 } // model

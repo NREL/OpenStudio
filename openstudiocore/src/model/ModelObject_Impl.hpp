@@ -251,6 +251,10 @@ namespace detail {
     /** Gets the autosized component value from the sql file **/
     boost::optional<double> getAutosizedValue(std::string valueName, std::string unitString) const;
 
+    virtual void autosize();
+
+    virtual void applySizingValues();
+
    protected:
 
     ModelObject_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);

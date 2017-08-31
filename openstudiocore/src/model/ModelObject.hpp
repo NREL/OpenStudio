@@ -308,6 +308,10 @@ class MODEL_API ModelObject : public openstudio::WorkspaceObject {
   // DLM@20100716: should this stay in ModelObject
   boost::optional<unsigned> connectedObjectPort(unsigned port) const;
   
+  void autosize();
+
+  void applySizingValues();
+
   //@}
  protected:
 

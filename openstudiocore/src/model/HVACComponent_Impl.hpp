@@ -107,10 +107,6 @@ class MODEL_API HVACComponent_Impl : public ParentObject_Impl {
   
   virtual boost::optional<StraightComponent> containingStraightComponent() const;
 
-  virtual void autosize();
-
-  virtual void applySizingValues();
-
   bool addToNode(Node & node, 
     const HVACComponent & systemStartComponent, 
     const HVACComponent & systemEndComponent,
