@@ -926,15 +926,15 @@ namespace detail{
 
   }
 
-  boost::optional <double> CoilCoolingDXSingleSpeed_Impl::autosizedRatedAirFlowRate() {
+  boost::optional<double> CoilCoolingDXSingleSpeed_Impl::autosizedRatedAirFlowRate() const {
     return getAutosizedValue("Design Size Rated Air Flow Rate", "m3/s");
   }
 
-  boost::optional <double> CoilCoolingDXSingleSpeed_Impl::autosizedRatedTotalCoolingCapacity() {
+  boost::optional<double> CoilCoolingDXSingleSpeed_Impl::autosizedRatedTotalCoolingCapacity() const {
     return getAutosizedValue("Design Size Gross Rated Total Cooling Capacity", "W");
   }
 
-  boost::optional <double> CoilCoolingDXSingleSpeed_Impl::autosizedRatedSensibleHeatRatio() {
+  boost::optional<double> CoilCoolingDXSingleSpeed_Impl::autosizedRatedSensibleHeatRatio()  const {
     return getAutosizedValue("Design Size Rated Sensible Heat Ratio", "");
   }
 
@@ -1535,15 +1535,15 @@ void CoilCoolingDXSingleSpeed::applySizingValues() {
   return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->applySizingValues();
 }
 
-boost::optional <double> CoilCoolingDXSingleSpeed::autosizedRatedAirFlowRate() {
+boost::optional <double> CoilCoolingDXSingleSpeed::autosizedRatedAirFlowRate() const {
   return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->autosizedRatedAirFlowRate();
 }
 
-boost::optional <double> CoilCoolingDXSingleSpeed::autosizedRatedTotalCoolingCapacity() {
+boost::optional <double> CoilCoolingDXSingleSpeed::autosizedRatedTotalCoolingCapacity() const {
   return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->autosizedRatedTotalCoolingCapacity();
 }
 
-boost::optional <double> CoilCoolingDXSingleSpeed::autosizedRatedSensibleHeatRatio() {
+boost::optional <double> CoilCoolingDXSingleSpeed::autosizedRatedSensibleHeatRatio() const {
   return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->autosizedRatedSensibleHeatRatio();
 }
 
