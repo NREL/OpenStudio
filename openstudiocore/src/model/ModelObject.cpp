@@ -625,7 +625,7 @@ namespace detail {
   }
 
   /** Gets the autosized component value from the sql file **/
-  boost::optional<double> ModelObject_Impl::getAutosizedValue(std::string valueName, std::string units) {
+  boost::optional<double> ModelObject_Impl::getAutosizedValue(std::string valueName, std::string units) const {
     boost::optional < double > result;
 
     // Get the object name
@@ -1219,7 +1219,7 @@ ModelObject::ModelObject(std::shared_ptr<detail::ModelObject_Impl> p)
 {}
 
 /** Gets the autosized component value from the sql file **/
-boost::optional<double> ModelObject::getAutosizedValue(std::string valueName, std::string units)
+boost::optional<double> ModelObject::getAutosizedValue(std::string valueName, std::string units) const
 {
   return getImpl<detail::ModelObject_Impl>()->getAutosizedValue(valueName, units);
 }

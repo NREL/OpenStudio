@@ -296,7 +296,7 @@ class MODEL_API ModelObject : public openstudio::WorkspaceObject {
   std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
 
   /** Gets the autosized component value from the sql file **/
-  boost::optional<double> getAutosizedValue(std::string valueName, std::string unitString);
+  boost::optional<double> getAutosizedValue(std::string valueName, std::string unitString) const;
 
   //@}
   /** @name HVAC System Connections */
