@@ -160,6 +160,10 @@ class MODEL_API HVACComponent : public ParentObject
   // */
   //virtual boost::optional<unsigned> connectedObjectPort(unsigned port);
 
+  virtual void autosize() = 0;
+
+  virtual void applySizingValues() = 0;
+
   protected:
 
   HVACComponent(IddObjectType type,const Model& model);
