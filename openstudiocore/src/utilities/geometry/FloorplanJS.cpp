@@ -788,6 +788,12 @@ namespace openstudio{
     return value.get("id", "").asString();
   }
 
+  std::string FloorplanJS::getFaceId(const Json::Value& value) const
+  {
+    return value.get("face_id", "").asString();
+  }
+
+  
   std::string FloorplanJS::getNextId()
   {
     ++m_lastId;
@@ -919,12 +925,21 @@ namespace openstudio{
       }
 
       std::vector<Json::ArrayIndex> indicesToRemove;
+      std::set<std::string> faceIdsToRemove;
       Json::Value& values = value[key];
       Json::ArrayIndex n = values.size();
       for (Json::ArrayIndex i = 0; i < n; ++i){
-        if (handleStrings.find(getHandleString(values[i])) == handleStrings.end()){
+        std::string handle = getHandleString(values[i]);
+        // empty handle indicates that object has not been synched with the osm yet
+        if (!handle.empty() && (handleStrings.find(handle) == handleStrings.end())){
+
+          // no object in floorplan should have an empty name
           if (names.find(getName(values[i])) == names.end()){
             indicesToRemove.push_back(i);
+            std::string faceId = getFaceId(values[i]);
+            if (!faceId.empty()){
+              faceIdsToRemove.insert(faceId);
+            }
           }
         }
       }
@@ -933,6 +948,12 @@ namespace openstudio{
       for (const auto& i : indicesToRemove){
         Json::Value removed;
         values.removeIndex(i, &removed);
+      }
+
+      if (!faceIdsToRemove.empty()){
+        if (checkKeyAndType(value, "geometry", Json::objectValue)){
+          removeFaces(value["geometry"], faceIdsToRemove);
+        }
       }
     }
 
@@ -1012,6 +1033,136 @@ namespace openstudio{
     } 
 
     value[key] = "";
+  }
+
+
+  void FloorplanJS::removeFaces(Json::Value& value, const std::set<std::string>& faceIdsToRemove)
+  {
+    if (!checkKeyAndType(value, "faces", Json::arrayValue)){
+      return;
+    }
+
+    std::map<std::string, unsigned> edgeRefCount;
+    std::set<std::string> edgeIdsToRemove;
+
+    std::vector<Json::ArrayIndex> indicesToRemove;
+    Json::Value& faces = value["faces"];
+    Json::ArrayIndex n = faces.size();
+    for (Json::ArrayIndex i = 0; i < n; ++i){
+      bool removeFace = false;
+      if (faceIdsToRemove.find(getId(faces[i])) != faceIdsToRemove.end()){
+        removeFace = true;
+        indicesToRemove.push_back(i);
+      }
+      if (checkKeyAndType(faces[i], "edge_ids", Json::arrayValue)){
+        Json::Value& edgeIds = faces[i]["edge_ids"];
+        Json::ArrayIndex n2 = edgeIds.size();
+        for (Json::ArrayIndex i2 = 0; i2 < n2; ++i2){
+          std::string edgeId = edgeIds[i2].asString();
+        
+          if (removeFace){
+            edgeIdsToRemove.insert(edgeId);
+          }
+
+          if (edgeRefCount.find(edgeId) == edgeRefCount.end()){
+            edgeRefCount[edgeId] = 1;
+          }else{
+            edgeRefCount[edgeId] = edgeRefCount[edgeId] + 1;
+          }
+        }
+      }
+    }
+    std::reverse(indicesToRemove.begin(), indicesToRemove.end());
+
+    // remove the faces
+    for (const auto& i : indicesToRemove){
+      Json::Value removed;
+      faces.removeIndex(i, &removed);
+    }
+
+    // don't remove edges with ref count > 1
+    for (const auto& pair : edgeRefCount){
+      if (pair.second > 1){
+        edgeIdsToRemove.erase(pair.first);
+      }
+    }
+    removeEdges(value, edgeIdsToRemove);
+  }
+
+  void FloorplanJS::removeEdges(Json::Value& value, const std::set<std::string>& edgeIdsToRemove)
+  {
+    if (!checkKeyAndType(value, "edges", Json::arrayValue)){
+      return;
+    }
+
+    std::map<std::string, unsigned> vertexRefCount;
+    std::set<std::string> vertexIdsToRemove;
+
+    std::vector<Json::ArrayIndex> indicesToRemove;
+    Json::Value& edges = value["edges"];
+    Json::ArrayIndex n = edges.size();
+    for (Json::ArrayIndex i = 0; i < n; ++i){
+      bool removeEdge = false;
+      if (edgeIdsToRemove.find(getId(edges[i])) != edgeIdsToRemove.end()){
+        removeEdge = true;
+        indicesToRemove.push_back(i);
+      }
+      if (checkKeyAndType(edges[i], "vertex_ids", Json::arrayValue)){
+        Json::Value& vertexIds = edges[i]["vertex_ids"];
+        Json::ArrayIndex n2 = vertexIds.size();
+        for (Json::ArrayIndex i2 = 0; i2 < n2; ++i2){
+          std::string vertexId = vertexIds[i2].asString();
+        
+          if (removeEdge){
+            vertexIdsToRemove.insert(vertexId);
+          }
+
+          if (vertexRefCount.find(vertexId) == vertexRefCount.end()){
+            vertexRefCount[vertexId] = 1;
+          }else{
+            vertexRefCount[vertexId] = vertexRefCount[vertexId] + 1;
+          }
+        }
+      }
+    }
+    std::reverse(indicesToRemove.begin(), indicesToRemove.end());
+
+    // remove the edges
+    for (const auto& i : indicesToRemove){
+      Json::Value removed;
+      edges.removeIndex(i, &removed);
+    }
+
+    // don't remove vertices with ref count > 1
+    for (const auto& pair : vertexRefCount){
+      if (pair.second > 2){
+        vertexIdsToRemove.erase(pair.first);
+      }
+    }
+    removeVertices(value, vertexIdsToRemove);
+  }
+
+  void FloorplanJS::removeVertices(Json::Value& value, const std::set<std::string>& vertexIdsToRemove)
+  {
+    if (!checkKeyAndType(value, "vertices", Json::arrayValue)){
+      return;
+    }
+
+    std::vector<Json::ArrayIndex> indicesToRemove;
+    Json::Value& vertices = value["vertices"];
+    Json::ArrayIndex n = vertices.size();
+    for (Json::ArrayIndex i = 0; i < n; ++i){
+      if (vertexIdsToRemove.find(getId(vertices[i])) != vertexIdsToRemove.end()){
+        indicesToRemove.push_back(i);
+      }
+    }
+    std::reverse(indicesToRemove.begin(), indicesToRemove.end());
+
+    // remove the vertices
+    for (const auto& i : indicesToRemove){
+      Json::Value removed;
+      vertices.removeIndex(i, &removed);
+    }
   }
 
 } // openstudio
