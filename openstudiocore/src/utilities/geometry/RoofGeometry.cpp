@@ -992,7 +992,7 @@ namespace openstudio{
   boost::optional<SplitCandidate> RoofGeometry::calcCandidatePointForSplit(Vertex& vertex, Edge& edge) {
     
     boost::optional<Edge> vertexEdge = chooseLessParallelVertexEdge(vertex, edge);
-    if (vertexEdge == boost::none) {
+    if (!vertexEdge) {
       return boost::none;
     }
 
@@ -1143,8 +1143,13 @@ namespace openstudio{
 
   boost::optional<Vertex> RoofGeometry::getEdgeInLav(std::vector<Vertex> lav, Edge oppositeEdge) {
     for (Vertex vertex : lav) {
-      if (oppositeEdge == vertex.previousEdge || oppositeEdge == vertex.getOffsetVertex(lav, -1).nextEdge) {
+      if (vertex.previousEdge && oppositeEdge == vertex.previousEdge.get()){
         return vertex;
+      } else{
+        boost::optional<Edge> nextEdge = vertex.getOffsetVertex(lav, -1).nextEdge;
+        if (nextEdge && oppositeEdge == nextEdge.get()) {
+          return vertex;
+        }
       }
     }
     return boost::none;
@@ -1464,6 +1469,14 @@ namespace openstudio{
 
   }
 
+  // Returns true if this vertex is less than other
+  bool Vertex::operator<(const Vertex& other) const {
+
+    // FIXME implement
+    return false;
+
+  }
+
   // EDGE
 
   Edge::Edge(Point3d& aBegin, Point3d& aEnd) {
@@ -1481,6 +1494,21 @@ namespace openstudio{
     // FIXME implement
   }
 
+  // Returns true if this edge is less than other
+  bool Edge::operator<(const Edge& other) const {
+
+    // FIXME implement
+    return false;
+
+  }
+
+  // Returns true if this edge is equal to other
+  bool Edge::operator==(const Edge& other) const {
+
+    // FIXME implement
+    return false;
+
+  }
   // RAY2D
 
   Ray2d::Ray2d(Point3d& aPoint, Vector3d& aVector) {

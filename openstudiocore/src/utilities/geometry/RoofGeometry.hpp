@@ -81,6 +81,8 @@ namespace openstudio{
     Edge();
     Edge(Point3d& aBegin, Point3d& aEnd);
     Edge getOffsetEdge(std::vector<Edge>& edges, int offset);
+    bool operator<(const Edge& other) const;
+    bool operator==(const Edge& other) const;
     Point3d begin;
     Point3d end;
     Ray2d bisectorPrevious;
@@ -99,6 +101,7 @@ namespace openstudio{
     Vertex getOffsetVertex(std::vector<Vertex>& vertexes, int offset);
     std::vector<Vertex> getLav(std::set< std::vector<Vertex> >& sLav);
     std::vector<Vertex> cutLavPart(std::vector<Vertex>& lav, Vertex& endVertex);
+    bool operator<(const Vertex& other) const;
     Point3d point;
     double distance;
     bool processed;
