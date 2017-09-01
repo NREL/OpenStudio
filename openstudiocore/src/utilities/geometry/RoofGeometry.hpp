@@ -53,6 +53,8 @@ namespace openstudio{
     double A;
     double B;
     double C;
+  private:
+    REGISTER_LOGGER("utilities.LineLinear2d");
   };
 
   // RAY2DS
@@ -71,6 +73,8 @@ namespace openstudio{
     double perpDot(Vector3d& p1, Vector3d& p2);
     Point3d point;
     Vector3d vector;
+  private:
+    REGISTER_LOGGER("utilities.Ray2d");
   };
 
   // EDGES
@@ -89,6 +93,8 @@ namespace openstudio{
     Ray2d bisectorNext;
     //LineLinear2d lineLinear2d;
     Vector3d normalize();
+  private:
+    REGISTER_LOGGER("utilities.Edge");
   };
 
   // VERTEXES
@@ -99,7 +105,7 @@ namespace openstudio{
     Vertex();
     Vertex(Point3d& aPoint, double aDistance, boost::optional<Ray2d&> aBisector, boost::optional<Edge&> aPreviousEdge, boost::optional<Edge&> aNextEdge);
     Vertex getOffsetVertex(std::vector<Vertex>& vertexes, int offset);
-    std::vector<Vertex> getLav(std::set< std::vector<Vertex> >& sLav);
+    std::vector<Vertex> getLav(std::vector< std::vector<Vertex> >& sLav);
     std::vector<Vertex> cutLavPart(std::vector<Vertex>& lav, Vertex& endVertex);
     bool operator<(const Vertex& other) const;
     bool operator==(const Vertex& other) const;
@@ -111,6 +117,8 @@ namespace openstudio{
     //FaceNode leftFace;
     //FaceNode rightFace;
     boost::optional<Ray2d> bisector;
+  private:
+    REGISTER_LOGGER("utilities.Vertex");
   };
 
   // FACES
@@ -121,6 +129,8 @@ namespace openstudio{
     FaceNode();
     FaceNode(Vertex& aVertex);
     Vertex vertex;
+  private:
+    REGISTER_LOGGER("utilities.FaceNode");
   };
 
   class FaceQueue : public std::queue<FaceNode>
@@ -160,6 +170,8 @@ namespace openstudio{
     bool split;
     ChainType chainType;
     //Event splitEvent;
+  private:
+    REGISTER_LOGGER("utilities.Chain");
   };
 
   // EVENTS
@@ -189,8 +201,10 @@ namespace openstudio{
     EventType eventType;
     Chain chain;
     std::vector<Chain> chains;
-    void addEventToGroup(std::set<Vertex>& parentGroup);
-    bool isEventInGroup(std::set<Vertex>& parentGroup);
+    void addEventToGroup(std::vector<Vertex>& parentGroup);
+    bool isEventInGroup(std::vector<Vertex>& parentGroup);
+  private:
+    REGISTER_LOGGER("utilities.Event");
   };
 
   struct EventCompare
@@ -215,6 +229,8 @@ namespace openstudio{
     double distance;
     boost::optional<Edge> oppositeEdge;
     boost::optional<Point3d> oppositePoint;
+  private:
+    REGISTER_LOGGER("utilities.SplitCandidate");
   };
 
   /** RoofGeometry has methods for generating surfaces for simple roof types from polygon footprints.
@@ -241,8 +257,8 @@ namespace openstudio{
     std::vector< std::vector<Point3d> > doStraightSkeleton(std::vector<Point3d>& polygon);
 
     // init
-    void initSlav(std::vector<Point3d>& polygon, std::set< std::vector<Vertex> >& sLav, std::vector<Edge>& edges, std::vector<FaceQueue>& faces);
-    void initEvents(std::set< std::vector<Vertex> >& sLav, std::priority_queue<Event, std::vector<Event>, EventCompare>& queue, std::vector<Edge>& edges);
+    void initSlav(std::vector<Point3d>& polygon, std::vector< std::vector<Vertex> >& sLav, std::vector<Edge>& edges, std::vector<FaceQueue>& faces);
+    void initEvents(std::vector< std::vector<Vertex> >& sLav, std::priority_queue<Event, std::vector<Event>, EventCompare>& queue, std::vector<Edge>& edges);
     bool initPolygon(std::vector<Point3d>& polygon);
 
     // math
@@ -268,9 +284,9 @@ namespace openstudio{
     std::vector<Event> groupLevelEvents(std::vector<Event>& levelEvents);
     Event createLevelEvent(Point3d& eventCenter, double distance, std::vector<Event>& eventCluster);
     Event createEdgeEvent(Point3d& point, Vertex& previousVertex, Vertex& nextVertex);
-    void multiSplitEvent(Event& event, std::set< std::vector<Vertex> >& sLav, std::priority_queue<Event, std::vector<Event>, EventCompare>& queue, std::vector<Edge>& edges);
-    void pickEvent(Event& event, std::set< std::vector<Vertex> >& sLav, std::priority_queue<Event, std::vector<Event>, EventCompare>& queue, std::vector<Edge>& edges);
-    void multiEdgeEvent(Event& event, std::set< std::vector<Vertex> >& sLav, std::priority_queue<Event, std::vector<Event>, EventCompare>& queue, std::vector<Edge>& edges);
+    void multiSplitEvent(Event& event, std::vector< std::vector<Vertex> >& sLav, std::priority_queue<Event, std::vector<Event>, EventCompare>& queue, std::vector<Edge>& edges);
+    void pickEvent(Event& event, std::vector< std::vector<Vertex> >& sLav, std::priority_queue<Event, std::vector<Event>, EventCompare>& queue, std::vector<Edge>& edges);
+    void multiEdgeEvent(Event& event, std::vector< std::vector<Vertex> >& sLav, std::priority_queue<Event, std::vector<Event>, EventCompare>& queue, std::vector<Edge>& edges);
     void computeEvents(Vertex& vertex, std::priority_queue<Event, std::vector<Event>, EventCompare>& queue, std::vector<Edge>& edges);
     void computeEdgeEvents(Vertex& previousVertex, Vertex& nextVertex, std::priority_queue<Event, std::vector<Event>, EventCompare>& queue);
     void computeSplitEvents(Vertex& vertex, std::vector<Edge>& edges, std::priority_queue<Event, std::vector<Event>, EventCompare>& queue, boost::optional<double> distanceSquared);
@@ -283,7 +299,7 @@ namespace openstudio{
     std::vector<Chain> createChains(std::vector<Event>& cluster);
     std::vector<Event> createEdgeChain(std::vector<Event>& edgeCluster);
     bool isInEdgeChain(Event& split, Chain& chain);
-    void createOppositeEdgeChains(std::set< std::vector<Vertex> >& sLav, std::vector<Chain>& chains, Point3d& center);
+    void createOppositeEdgeChains(std::vector< std::vector<Vertex> >& sLav, std::vector<Chain>& chains, Point3d& center);
 
     // faces
     void addMultiBackFaces(std::vector<Event>& edgeList, Vertex& edgeVertex);
@@ -296,10 +312,10 @@ namespace openstudio{
     Vertex createMultiSplitVertex(Edge& nextEdge, Edge& previousEdge, Point3d& center, double distance);
     Vertex createOppositeEdgeVertex(Vertex& newVertex);
     void mergeBeforeBaseVertex(Vertex& base, std::vector<Vertex>& baseList, Vertex& merged, std::vector<Vertex>& mergedList);
-    void processTwoNodeLavs(std::set< std::vector<Vertex> >& sLav);
-    void removeEmptyLav(std::set< std::vector<Vertex> >& sLav);
-    boost::optional<Vertex> findOppositeEdgeLav(std::set< std::vector<Vertex> > sLav, Edge oppositeEdge, Point3d center);
-    std::vector<Vertex> findEdgeLavs(std::set< std::vector<Vertex> > sLav, Edge oppositeEdge);
+    void processTwoNodeLavs(std::vector< std::vector<Vertex> >& sLav);
+    void removeEmptyLav(std::vector< std::vector<Vertex> >& sLav);
+    boost::optional<Vertex> findOppositeEdgeLav(std::vector< std::vector<Vertex> > sLav, Edge oppositeEdge, Point3d center);
+    std::vector<Vertex> findEdgeLavs(std::vector< std::vector<Vertex> > sLav, Edge oppositeEdge);
     boost::optional<Vertex> getEdgeInLav(std::vector<Vertex> lav, Edge oppositeEdge);
     boost::optional<Vertex> chooseOppositeEdgeLav(std::vector<Vertex> edgeLavs, Edge oppositeEdge, Point3d center);
     bool areSameLav(std::vector<Vertex>& lav1, std::vector<Vertex>& lav2);
