@@ -102,6 +102,7 @@ namespace openstudio{
     std::vector<Vertex> getLav(std::set< std::vector<Vertex> >& sLav);
     std::vector<Vertex> cutLavPart(std::vector<Vertex>& lav, Vertex& endVertex);
     bool operator<(const Vertex& other) const;
+    bool operator==(const Vertex& other) const;
     Point3d point;
     double distance;
     bool processed;
@@ -209,6 +210,7 @@ namespace openstudio{
   public:
     SplitCandidate();
     SplitCandidate(Point3d& aPoint, double aDistance, boost::optional<Edge&> aOppositeEdge, boost::optional<Point3d&> aOppositePoint);
+    bool operator==(const SplitCandidate& other) const;
     Point3d point;
     double distance;
     boost::optional<Edge> oppositeEdge;
@@ -300,6 +302,7 @@ namespace openstudio{
     std::vector<Vertex> findEdgeLavs(std::set< std::vector<Vertex> > sLav, Edge oppositeEdge);
     boost::optional<Vertex> getEdgeInLav(std::vector<Vertex> lav, Edge oppositeEdge);
     boost::optional<Vertex> chooseOppositeEdgeLav(std::vector<Vertex> edgeLavs, Edge oppositeEdge, Point3d center);
+    bool areSameLav(std::vector<Vertex>& lav1, std::vector<Vertex>& lav2);
 
     // FIXME: Add some private member variables so we dont have to pass around so much?
   };

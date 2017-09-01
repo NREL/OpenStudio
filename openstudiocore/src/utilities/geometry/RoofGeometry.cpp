@@ -507,13 +507,13 @@ namespace openstudio{
       bool do_continue = false;
       for (int i = 0; i < edgeCluster.size(); i++) {
         Event edge = edgeCluster.at(i);
-        if (&edge.previousVertex == &endVertex) {
+        if (edge.previousVertex == endVertex) {
           // edge should be added as last in chain
           edgeCluster.erase(edgeCluster.begin() + i - 1);
           edgeList.push_back(edge);
           do_continue = true;
           break;
-        } else if (&edge.nextVertex == &beginVertex) {
+        } else if (edge.nextVertex == beginVertex) {
           // edge should be added as first in chain
           edgeCluster.erase(edgeCluster.begin() + i - 1);
           edgeList.insert(edgeCluster.begin(), edge);
@@ -538,7 +538,7 @@ namespace openstudio{
 
     std::vector<Event> edgeList; // FIXME = chain.edgeList;
     for (Event edgeEvent : edgeList) {
-      if (&edgeEvent.previousVertex == &splitParent || &edgeEvent.nextVertex == &splitParent) {
+      if (edgeEvent.previousVertex == splitParent || edgeEvent.nextVertex == splitParent) {
         return true;
       }
     }
@@ -577,7 +577,7 @@ namespace openstudio{
       std::vector<Vertex> beginNextVertexLav = beginNextVertex.getLav(sLav);
       std::vector<Vertex> endPreviousVertexLav = endPreviousVertex.getLav(sLav);
 
-      if (&beginNextVertexLav == &endPreviousVertexLav) {
+      if (areSameLav(beginNextVertexLav, endPreviousVertexLav)) {
         /*
         * if vertexes are in same lav we need to cut part of lav in the
         * middle of vertex and create new lav from that points
@@ -620,15 +620,20 @@ namespace openstudio{
       //FIXME removeFromLav(chainBegin.currentVertex);
       //FIXME removeFromLav(chainEnd.currentVertex);
 
-      if (chainBegin.currentVertex != boost::none) {
+      if (chainBegin.currentVertex) {
         chainBegin.currentVertex.get().processed = true;
       }
-      if (chainEnd.currentVertex != boost::none) {
+      if (chainEnd.currentVertex) {
         chainEnd.currentVertex.get().processed = true;
       }
 
     }
 
+  }
+
+  bool RoofGeometry::areSameLav(std::vector<Vertex>& lav1, std::vector<Vertex>& lav2) {
+    // FIXME Implement
+    return false;
   }
 
   void RoofGeometry::pickEvent(Event& event, std::set< std::vector<Vertex> >& sLav, std::priority_queue<Event, std::vector<Event>, EventCompare>& queue, std::vector<Edge>& edges) {
@@ -829,17 +834,17 @@ namespace openstudio{
     boost::optional<Point3d> point1 = computeIntersectionBisectors(vertex, nextVertex);
     boost::optional<Point3d> point2 = computeIntersectionBisectors(previousVertex, vertex);
 
-    if (point1 == boost::none && point2 == boost::none) {
+    if (!point1 && !point2) {
       return boost::none;
     }
 
     double distance1 = std::numeric_limits<double>::max();
     double distance2 = std::numeric_limits<double>::max();
 
-    if (point1 != boost::none) {
+    if (point1) {
       distance1 = getDistanceSquared(point, point1.get());
     }
-    if (point2 != boost::none) {
+    if (point2) {
       distance2 = getDistanceSquared(point,point2.get());
     }
 
@@ -862,11 +867,11 @@ namespace openstudio{
 
     boost::optional<Point3d> intersect = bisectorPrevious.intersectRay2d(bisectorNext);
 
-    if (intersect == boost::none) {
+    if (!intersect) {
       return boost::none;
     }
 
-    if (vertexPrevious.point == intersect || vertexNext.point == intersect) {
+    if (vertexPrevious.point == intersect.get() || vertexNext.point == intersect.get()) {
       // skip the same points
       return boost::none;
     }
@@ -910,7 +915,7 @@ namespace openstudio{
 
   void RoofGeometry::computeEdgeEvents(Vertex& previousVertex, Vertex& nextVertex, std::priority_queue<Event, std::vector<Event>, EventCompare>& queue) {
     boost::optional<Point3d> point = computeIntersectionBisectors(previousVertex, nextVertex);
-    if (point != boost::none) {
+    if (point) {
       queue.push(createEdgeEvent(point.get(), previousVertex, nextVertex));
     }
   }
@@ -924,7 +929,7 @@ namespace openstudio{
     for (SplitCandidate oppositeEdge : oppositeEdges) {
       Point3d point = oppositeEdge.point;
 
-      if (distanceSquared != boost::none) {
+      if (distanceSquared) {
         if (getDistanceSquared(source, point) > distanceSquared.get() + SPLIT_EPSILON) {
           /*
           * Current split event distance from source of event is
@@ -940,7 +945,7 @@ namespace openstudio{
       }
 
       // check if it is vertex split event
-      if (oppositeEdge.oppositePoint != boost::none) {
+      if (oppositeEdge.oppositePoint) {
         // some of vertex event can share the same opposite
         // point
         queue.push(Event(point, oppositeEdge.distance, vertex));
@@ -969,7 +974,7 @@ namespace openstudio{
       // compute the coordinates of the candidate point Bi
       boost::optional<SplitCandidate> candidatePoint = calcCandidatePointForSplit(vertex, edgeEntry);
 
-      if (candidatePoint != boost::none) {
+      if (candidatePoint) {
         ret.push_back(candidatePoint.get());
       }
 
@@ -986,7 +991,7 @@ namespace openstudio{
     * whole line containing the currently tested line segment ei rejects
     * the line segments laying "behind" the vertex V
     */
-    return (bisector.collide(edge, SPLIT_EPSILON) == boost::none);
+    return (!bisector.collide(edge, SPLIT_EPSILON));
   }
 
   boost::optional<SplitCandidate> RoofGeometry::calcCandidatePointForSplit(Vertex& vertex, Edge& edge) {
@@ -1003,7 +1008,7 @@ namespace openstudio{
     LineLinear2d lle = LineLinear2d(edge.begin, edge.end);
     boost::optional<Point3d> edgesCollide = llv.collide(lle);
 
-    if (edgesCollide == boost::none) {
+    if (!edgesCollide) {
       /*
       * Check should be performed to exclude the case when one of the
       * line segments starting at V is parallel to ei.
@@ -1020,7 +1025,7 @@ namespace openstudio{
     */
     boost::optional<Point3d> candidatePoint = vertex.bisector.get().collide(edgesBisectorLine, SPLIT_EPSILON);
 
-    if (candidatePoint == boost::none) {
+    if (!candidatePoint) {
       return boost::none;
     }
 
@@ -1085,11 +1090,11 @@ namespace openstudio{
       if (chain.chainType == CHAIN_TYPE_SPLIT) {
         boost::optional<Edge> oppositeEdge = chain.oppositeEdge;
 
-        if (oppositeEdge != boost::none && !oppositeEdges.count(oppositeEdge.get())) {
+        if (oppositeEdge && !oppositeEdges.count(oppositeEdge.get())) {
           // find lav vertex for opposite edge
 
           boost::optional<Vertex> nextVertex = findOppositeEdgeLav(sLav, oppositeEdge.get(), center);
-          if (nextVertex != boost::none) {
+          if (nextVertex) {
             oppositeEdgeChains.push_back(Chain(oppositeEdge.get(), nextVertex.get()));
           } else {
             findOppositeEdgeLav(sLav, oppositeEdge.get(), center);
@@ -1101,7 +1106,7 @@ namespace openstudio{
       } else if (chain.chainType == CHAIN_TYPE_EDGE) {
         if (chain.getChainMode() == CHAIN_MODE_SPLIT) {
           boost::optional<Edge> oppositeEdge = chain.oppositeEdge;
-          if (oppositeEdge != boost::none) {
+          if (oppositeEdge) {
             // never happen?
             // find lav vertex for opposite edge
             oppositeEdges.insert(oppositeEdge.get());
@@ -1134,7 +1139,7 @@ namespace openstudio{
     std::vector<Vertex> edgeLavs;
     for (std::vector<Vertex> lav : sLav) {
       boost::optional<Vertex> vertexInLav = getEdgeInLav(lav, oppositeEdge);
-      if (vertexInLav != boost::none) {
+      if (vertexInLav) {
         edgeLavs.push_back(vertexInLav.get());
       }
     }
@@ -1477,6 +1482,14 @@ namespace openstudio{
 
   }
 
+  // Returns true if this vertex is equal to other
+  bool Vertex::operator==(const Vertex& other) const {
+
+    // FIXME implement
+    return false;
+
+  }
+
   // EDGE
 
   Edge::Edge(Point3d& aBegin, Point3d& aEnd) {
@@ -1519,7 +1532,7 @@ namespace openstudio{
   boost::optional<Point3d> Ray2d::collide(LineLinear2d& line, double epsilon) {
     // rewrite?
     boost::optional<Point3d> collide = getLinearForm().collide(line);
-    if (collide == boost::none) {
+    if (!collide) {
       return boost::none;
     }
 
@@ -1713,6 +1726,15 @@ namespace openstudio{
     oppositeEdge = aOppositeEdge;
     oppositePoint = aOppositePoint;
   }
+
+  // Returns true if this SplitCandidate is equal to other
+  bool SplitCandidate::operator==(const SplitCandidate& other) const {
+
+    // FIXME implement
+    return false;
+
+  }
+
 
   // LINE LINEAR
 
