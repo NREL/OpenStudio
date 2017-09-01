@@ -1458,7 +1458,7 @@ namespace openstudio{
 
   std::vector<Vertex> Vertex::getLav(std::set< std::vector<Vertex> >& sLav) {
     for (std::vector<Vertex> lav : sLav) {
-      if (std::find(lav.begin(), lav.end(), this) != lav.end()) {
+      if (std::find(lav.begin(), lav.end(), *this) != lav.end()) {
         return lav;
       }
     }
