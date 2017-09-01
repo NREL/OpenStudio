@@ -124,6 +124,10 @@ namespace detail {
 
     virtual Mixer demandMixer() = 0;
 
+    virtual void autosize();
+
+    virtual void applySizingValues();
+
   private:
 
     REGISTER_LOGGER("openstudio.model.Loop");
