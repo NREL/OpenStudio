@@ -93,6 +93,16 @@ namespace detail {
 
     Curve coolingCapacityModifierCurveFunctionofFlowFraction() const;
 
+  boost::optional<double> autosizedRatedTotalCoolingCapacity() const ;
+
+  boost::optional<double> autosizedRatedSensibleHeatRatio() const ;
+
+  boost::optional<double> autosizedRatedAirFlowRate() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{

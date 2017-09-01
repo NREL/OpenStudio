@@ -83,6 +83,12 @@ class MODEL_API CoilHeatingGasMultiStageStageData : public ModelObject {
   /** @name Other */
   //@{
 
+  boost::optional<double> autosizedNominalCapacity() const ;
+
+  void autosize();
+
+  void applySizingValues();
+
   //@}
  protected:
   /// @cond

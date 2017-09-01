@@ -158,6 +158,16 @@ class MODEL_API CoilHeatingDXSingleSpeed_Impl : public StraightComponent_Impl {
 
   bool isResistiveDefrostHeaterCapacityAutosized() const;
 
+  boost::optional<double> autosizedRatedTotalHeatingCapacity() const ;
+
+  boost::optional<double> autosizedRatedAirFlowRate() const ;
+
+  boost::optional<double> autosizedResistiveDefrostHeaterCapacity() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
   //@}
   /** @name Setters */
   //@{

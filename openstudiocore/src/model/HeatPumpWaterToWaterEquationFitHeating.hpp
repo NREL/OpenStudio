@@ -166,6 +166,18 @@ class MODEL_API HeatPumpWaterToWaterEquationFitHeating : public WaterToWaterComp
   /** @name Other */
   //@{
 
+  boost::optional<double> autosizedReferenceLoadSideFlowRate() const ;
+
+  boost::optional<double> autosizedReferenceSourceSideFlowRate() const ;
+
+  boost::optional<double> autosizedRatedHeatingCapacity() const ;
+
+  boost::optional<double> autosizedRatedHeatingPowerConsumption() const ;
+
+  void autosize();
+
+  void applySizingValues();
+
   //@}
  protected:
   /// @cond

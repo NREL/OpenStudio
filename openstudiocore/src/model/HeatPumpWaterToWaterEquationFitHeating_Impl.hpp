@@ -117,6 +117,18 @@ namespace detail {
 
     boost::optional<HeatPumpWaterToWaterEquationFitCooling> companionCoolingHeatPump() const;
 
+  boost::optional<double> autosizedReferenceLoadSideFlowRate() const ;
+
+  boost::optional<double> autosizedReferenceSourceSideFlowRate() const ;
+
+  boost::optional<double> autosizedRatedHeatingCapacity() const ;
+
+  boost::optional<double> autosizedRatedHeatingPowerConsumption() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{

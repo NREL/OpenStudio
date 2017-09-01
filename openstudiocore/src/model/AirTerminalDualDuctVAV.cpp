@@ -250,6 +250,23 @@ namespace detail {
     return HVACComponent_Impl::isRemovable();
   }
 
+  boost::optional<double> AirTerminalDualDuctVAV_Impl::autosizedMaximumDamperAirFlowRate() const {
+    return getAutosizedValue("Design Size Maximum Damper Air Flow Rate", "m3/s");
+  }
+
+  void AirTerminalDualDuctVAV_Impl::autosize() {
+    autosizedMaximumDamperAirFlowRate();
+  }
+
+  void AirTerminalDualDuctVAV_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedMaximumDamperAirFlowRate();
+    if (val) {
+      setMaximumDamperAirFlowRate(val.get());
+    }
+
+  }
+
 } // detail
 
 AirTerminalDualDuctVAV::AirTerminalDualDuctVAV(const Model& model)
@@ -326,6 +343,10 @@ AirTerminalDualDuctVAV::AirTerminalDualDuctVAV(std::shared_ptr<detail::AirTermin
   : Mixer(impl)
 {}
 /// @endcond
+
+  boost::optional<double> AirTerminalDualDuctVAV::autosizedMaximumDamperAirFlowRate() const {
+    return getImpl<detail::AirTerminalDualDuctVAV_Impl>()->autosizedMaximumDamperAirFlowRate();
+  }
 
 } // model
 } // openstudio

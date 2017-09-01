@@ -382,6 +382,20 @@ class MODEL_API WaterHeaterStratified : public WaterToWaterComponent {
   /** @name Other */
   //@{
 
+  boost::optional<double> autosizedTankVolume() const ;
+
+  boost::optional<double> autosizedTankHeight() const ;
+
+  boost::optional<double> autosizedHeater1Capacity() const ;
+
+  boost::optional<double> autosizedUseSideDesignFlowRate() const ;
+
+  boost::optional<double> autosizedSourceSideDesignFlowRate() const ;
+
+  void autosize();
+
+  void applySizingValues();
+
   //@}
  protected:
   /// @cond

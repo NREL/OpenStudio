@@ -871,6 +871,23 @@ void PlantLoop_Impl::resetCommonPipeSimulation()
     setString(OS_PlantLoopFields::ComponentSetpointOperationSchemeSchedule, "");
   }
 
+  boost::optional<double> PlantLoop_Impl::autosizedMaximumLoopFlowRate() const {
+    return getAutosizedValue("Design Size Maximum Loop Flow Rate", "m3/s");
+  }
+
+  void PlantLoop_Impl::autosize() {
+    autosizedMaximumLoopFlowRate();
+  }
+
+  void PlantLoop_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedMaximumLoopFlowRate();
+    if (val) {
+      setMaximumLoopFlowRate(val.get());
+    }
+
+  }
+
 } // detail
 
 PlantLoop::PlantLoop(Model& model)
@@ -1305,6 +1322,10 @@ boost::optional<Schedule> PlantLoop::componentSetpointOperationSchemeSchedule() 
 void PlantLoop::resetComponentSetpointOperationSchemeSchedule() {
   getImpl<detail::PlantLoop_Impl>()->resetComponentSetpointOperationSchemeSchedule();
 }
+
+  boost::optional<double> PlantLoop::autosizedMaximumLoopFlowRate() const {
+    return getImpl<detail::PlantLoop_Impl>()->autosizedMaximumLoopFlowRate();
+  }
 
 } // model
 } // openstudio

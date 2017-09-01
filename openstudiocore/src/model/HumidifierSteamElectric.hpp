@@ -111,6 +111,14 @@ class MODEL_API HumidifierSteamElectric : public StraightComponent {
   /** @name Other */
   //@{
 
+  boost::optional<double> autosizedRatedCapacity() const ;
+
+  boost::optional<double> autosizedRatedPower() const ;
+
+  void autosize();
+
+  void applySizingValues();
+
   //@}
  protected:
   /// @cond

@@ -274,6 +274,14 @@ class MODEL_API PumpVariableSpeed : public StraightComponent
 
   void resetMaximumRPMSchedule();
 
+  boost::optional<double> autosizedRatedFlowRate() const ;
+
+  boost::optional<double> autosizedRatedPowerConsumption() const ;
+
+  void autosize();
+
+  void applySizingValues();
+
   //@}
  protected:
   /// @cond

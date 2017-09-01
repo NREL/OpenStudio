@@ -639,6 +639,53 @@ namespace detail{
     setBooleanFieldValue(OS_AirTerminal_SingleDuct_VAV_ReheatFields::ControlForOutdoorAir,controlForOutdoorAir);
   }
 
+  boost::optional<double> AirTerminalSingleDuctVAVReheat_Impl::autosizedMaximumAirFlowRate() const {
+    return getAutosizedValue("Design Size Maximum Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> AirTerminalSingleDuctVAVReheat_Impl::autosizedMaximumHotWaterOrSteamFlowRate() const {
+    return getAutosizedValue("Design Size Maximum Hot Water or Steam Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> AirTerminalSingleDuctVAVReheat_Impl::autosizedMaximumFlowPerZoneFloorAreaDuringReheat() const {
+    return getAutosizedValue("Design Size Maximum Flow per Zone Floor Area During Reheat", "m3/s-m2");
+  }
+
+  boost::optional<double> AirTerminalSingleDuctVAVReheat_Impl::autosizedMaximumFlowFractionDuringReheat() const {
+    return getAutosizedValue("Design Size Maximum Flow Fraction During Reheat", "");
+  }
+
+  void AirTerminalSingleDuctVAVReheat_Impl::autosize() {
+    autosizedMaximumAirFlowRate();
+    autosizedMaximumHotWaterOrSteamFlowRate();
+    autosizedMaximumFlowPerZoneFloorAreaDuringReheat();
+    autosizedMaximumFlowFractionDuringReheat();
+  }
+
+  void AirTerminalSingleDuctVAVReheat_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedMaximumAirFlowRate();
+    if (val) {
+      setMaximumAirFlowRate(val.get());
+    }
+
+    val = autosizedMaximumHotWaterOrSteamFlowRate();
+    if (val) {
+      setMaximumHotWaterOrSteamFlowRate(val.get());
+    }
+
+    val = autosizedMaximumFlowPerZoneFloorAreaDuringReheat();
+    if (val) {
+      setMaximumFlowPerZoneFloorAreaDuringReheat(val.get());
+    }
+
+    val = autosizedMaximumFlowFractionDuringReheat();
+    if (val) {
+      setMaximumFlowFractionDuringReheat(val.get());
+    }
+
+  }
+
 } // detail
 
 AirTerminalSingleDuctVAVReheat::AirTerminalSingleDuctVAVReheat( const Model& model, 
@@ -895,6 +942,22 @@ void AirTerminalSingleDuctVAVReheat::setControlForOutdoorAir(bool controlForOutd
 {
   getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->setControlForOutdoorAir(controlForOutdoorAir);
 }
+
+  boost::optional<double> AirTerminalSingleDuctVAVReheat::autosizedMaximumAirFlowRate() const {
+    return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->autosizedMaximumAirFlowRate();
+  }
+
+  boost::optional<double> AirTerminalSingleDuctVAVReheat::autosizedMaximumHotWaterOrSteamFlowRate() const {
+    return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->autosizedMaximumHotWaterOrSteamFlowRate();
+  }
+
+  boost::optional<double> AirTerminalSingleDuctVAVReheat::autosizedMaximumFlowPerZoneFloorAreaDuringReheat() const {
+    return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->autosizedMaximumFlowPerZoneFloorAreaDuringReheat();
+  }
+
+  boost::optional<double> AirTerminalSingleDuctVAVReheat::autosizedMaximumFlowFractionDuringReheat() const {
+    return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->autosizedMaximumFlowFractionDuringReheat();
+  }
 
 } // model
 

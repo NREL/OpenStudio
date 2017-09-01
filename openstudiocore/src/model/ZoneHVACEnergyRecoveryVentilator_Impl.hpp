@@ -107,6 +107,14 @@ namespace detail {
 
     // boost::optional<ModelObject> availabilityManagerList() const;
 
+  boost::optional<double> autosizedSupplyAirFlowRate() const ;
+
+  boost::optional<double> autosizedExhaustAirFlowRate() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{

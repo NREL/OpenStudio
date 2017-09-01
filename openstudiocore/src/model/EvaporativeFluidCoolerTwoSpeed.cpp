@@ -724,6 +724,103 @@ namespace detail {
   //   OS_ASSERT(result);
   // }
 
+  boost::optional<double> EvaporativeFluidCoolerTwoSpeed_Impl::autosizedHighFanSpeedAirFlowRate() const {
+    return getAutosizedValue("Design Size High Fan Speed Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> EvaporativeFluidCoolerTwoSpeed_Impl::autosizedHighFanSpeedFanPower() const {
+    return getAutosizedValue("Design Size High Fan Speed Fan Power", "W");
+  }
+
+  boost::optional<double> EvaporativeFluidCoolerTwoSpeed_Impl::autosizedLowFanSpeedAirFlowRate() const {
+    return getAutosizedValue("Design Size Low Fan Speed Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> EvaporativeFluidCoolerTwoSpeed_Impl::autosizedLowFanSpeedFanPower() const {
+    return getAutosizedValue("Design Size Low Fan Speed Fan Power", "W");
+  }
+
+  boost::optional<double> EvaporativeFluidCoolerTwoSpeed_Impl::autosizedLowSpeedStandardDesignCapacity() const {
+    return getAutosizedValue("Design Size Low Speed Standard Design Capacity", "W");
+  }
+
+  boost::optional<double> EvaporativeFluidCoolerTwoSpeed_Impl::autosizedHighFanSpeedUfactorTimesAreaValue() const {
+    return getAutosizedValue("Design Size High Fan Speed U-factor Times Area Value", "W/K");
+  }
+
+  boost::optional<double> EvaporativeFluidCoolerTwoSpeed_Impl::autosizedLowFanSpeedUfactorTimesAreaValue() const {
+    return getAutosizedValue("Design Size Low Fan Speed U-factor Times Area Value", "W/K");
+  }
+
+  boost::optional<double> EvaporativeFluidCoolerTwoSpeed_Impl::autosizedDesignWaterFlowRate() const {
+    return getAutosizedValue("Design Size Design Water Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> EvaporativeFluidCoolerTwoSpeed_Impl::autosizedLowSpeedUserSpecifiedDesignCapacity() const {
+    return getAutosizedValue("Design Size Low Speed User Specified Design Capacity", "W");
+  }
+
+  void EvaporativeFluidCoolerTwoSpeed_Impl::autosize() {
+    autosizedHighFanSpeedAirFlowRate();
+    autosizedHighFanSpeedFanPower();
+    autosizedLowFanSpeedAirFlowRate();
+    autosizedLowFanSpeedFanPower();
+    autosizedLowSpeedStandardDesignCapacity();
+    autosizedHighFanSpeedUfactorTimesAreaValue();
+    autosizedLowFanSpeedUfactorTimesAreaValue();
+    autosizedDesignWaterFlowRate();
+    autosizedLowSpeedUserSpecifiedDesignCapacity();
+  }
+
+  void EvaporativeFluidCoolerTwoSpeed_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedHighFanSpeedAirFlowRate();
+    if (val) {
+      setHighFanSpeedAirFlowRate(val.get());
+    }
+
+    val = autosizedHighFanSpeedFanPower();
+    if (val) {
+      setHighFanSpeedFanPower(val.get());
+    }
+
+    val = autosizedLowFanSpeedAirFlowRate();
+    if (val) {
+      setLowFanSpeedAirFlowRate(val.get());
+    }
+
+    val = autosizedLowFanSpeedFanPower();
+    if (val) {
+      setLowFanSpeedFanPower(val.get());
+    }
+
+    val = autosizedLowSpeedStandardDesignCapacity();
+    if (val) {
+      setLowSpeedStandardDesignCapacity(val.get());
+    }
+
+    val = autosizedHighFanSpeedUfactorTimesAreaValue();
+    if (val) {
+      setHighFanSpeedUfactorTimesAreaValue(val.get());
+    }
+
+    val = autosizedLowFanSpeedUfactorTimesAreaValue();
+    if (val) {
+      setLowFanSpeedUfactorTimesAreaValue(val.get());
+    }
+
+    val = autosizedDesignWaterFlowRate();
+    if (val) {
+      setDesignWaterFlowRate(val.get());
+    }
+
+    val = autosizedLowSpeedUserSpecifiedDesignCapacity();
+    if (val) {
+      setLowSpeedUserSpecifiedDesignCapacity(val.get());
+    }
+
+  }
+
 } // detail
 
 EvaporativeFluidCoolerTwoSpeed::EvaporativeFluidCoolerTwoSpeed(const Model& model)
@@ -1162,6 +1259,42 @@ EvaporativeFluidCoolerTwoSpeed::EvaporativeFluidCoolerTwoSpeed(std::shared_ptr<d
   : StraightComponent(impl)
 {}
 /// @endcond
+
+  boost::optional<double> EvaporativeFluidCoolerTwoSpeed::autosizedHighFanSpeedAirFlowRate() const {
+    return getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->autosizedHighFanSpeedAirFlowRate();
+  }
+
+  boost::optional<double> EvaporativeFluidCoolerTwoSpeed::autosizedHighFanSpeedFanPower() const {
+    return getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->autosizedHighFanSpeedFanPower();
+  }
+
+  boost::optional<double> EvaporativeFluidCoolerTwoSpeed::autosizedLowFanSpeedAirFlowRate() const {
+    return getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->autosizedLowFanSpeedAirFlowRate();
+  }
+
+  boost::optional<double> EvaporativeFluidCoolerTwoSpeed::autosizedLowFanSpeedFanPower() const {
+    return getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->autosizedLowFanSpeedFanPower();
+  }
+
+  boost::optional<double> EvaporativeFluidCoolerTwoSpeed::autosizedLowSpeedStandardDesignCapacity() const {
+    return getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->autosizedLowSpeedStandardDesignCapacity();
+  }
+
+  boost::optional<double> EvaporativeFluidCoolerTwoSpeed::autosizedHighFanSpeedUfactorTimesAreaValue() const {
+    return getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->autosizedHighFanSpeedUfactorTimesAreaValue();
+  }
+
+  boost::optional<double> EvaporativeFluidCoolerTwoSpeed::autosizedLowFanSpeedUfactorTimesAreaValue() const {
+    return getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->autosizedLowFanSpeedUfactorTimesAreaValue();
+  }
+
+  boost::optional<double> EvaporativeFluidCoolerTwoSpeed::autosizedDesignWaterFlowRate() const {
+    return getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->autosizedDesignWaterFlowRate();
+  }
+
+  boost::optional<double> EvaporativeFluidCoolerTwoSpeed::autosizedLowSpeedUserSpecifiedDesignCapacity() const {
+    return getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->autosizedLowSpeedUserSpecifiedDesignCapacity();
+  }
 
 } // model
 } // openstudio

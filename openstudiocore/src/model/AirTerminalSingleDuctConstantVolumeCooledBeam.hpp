@@ -172,6 +172,18 @@ class MODEL_API AirTerminalSingleDuctConstantVolumeCooledBeam : public StraightC
   /** @name Other */
   //@{
 
+  boost::optional<double> autosizedSupplyAirVolumetricFlowRate() const ;
+
+  boost::optional<double> autosizedMaximumTotalChilledWaterVolumetricFlowRate() const ;
+
+  boost::optional<double> autosizedNumberofBeams() const ;
+
+  boost::optional<double> autosizedBeamLength() const ;
+
+  void autosize();
+
+  void applySizingValues();
+
   //@}
  protected:
   /// @cond

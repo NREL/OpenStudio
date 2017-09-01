@@ -107,6 +107,12 @@ namespace detail {
     // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> heatingControlTemperatureSchedule() const;
 
+  boost::optional<double> autosizedMaximumHotWaterFlow() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{

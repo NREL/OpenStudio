@@ -221,6 +221,33 @@ namespace detail {
     return result;
   }
 
+  boost::optional<double> CoilHeatingDXVariableRefrigerantFlow_Impl::autosizedRatedTotalHeatingCapacity() const {
+    return getAutosizedValue("Design Size Total Heating Capacity", "W");
+  }
+
+  boost::optional<double> CoilHeatingDXVariableRefrigerantFlow_Impl::autosizedRatedAirFlowRate() const {
+    return getAutosizedValue("Design Size Air Flow Rate", "m3/s");
+  }
+
+  void CoilHeatingDXVariableRefrigerantFlow_Impl::autosize() {
+    autosizedRatedTotalHeatingCapacity();
+    autosizedRatedAirFlowRate();
+  }
+
+  void CoilHeatingDXVariableRefrigerantFlow_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedRatedTotalHeatingCapacity();
+    if (val) {
+      setRatedTotalHeatingCapacity(val.get());
+    }
+
+    val = autosizedRatedAirFlowRate();
+    if (val) {
+      setRatedAirFlowRate(val.get());
+    }
+
+  }
+
 } // detail
 
 CoilHeatingDXVariableRefrigerantFlow::CoilHeatingDXVariableRefrigerantFlow(const Model& model)
@@ -326,6 +353,14 @@ CoilHeatingDXVariableRefrigerantFlow::CoilHeatingDXVariableRefrigerantFlow(std::
   : HVACComponent(impl)
 {}
 /// @endcond
+
+  boost::optional<double> CoilHeatingDXVariableRefrigerantFlow::autosizedRatedTotalHeatingCapacity() const {
+    return getImpl<detail::CoilHeatingDXVariableRefrigerantFlow_Impl>()->autosizedRatedTotalHeatingCapacity();
+  }
+
+  boost::optional<double> CoilHeatingDXVariableRefrigerantFlow::autosizedRatedAirFlowRate() const {
+    return getImpl<detail::CoilHeatingDXVariableRefrigerantFlow_Impl>()->autosizedRatedAirFlowRate();
+  }
 
 } // model
 } // openstudio

@@ -121,6 +121,14 @@ namespace detail {
 
     Curve partLoadFractionCorrelationCurve() const;
 
+  boost::optional<double> autosizedRatedEvaporatorAirFlowRate() const ;
+
+  boost::optional<double> autosizedRatedCondenserWaterFlowRate() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{

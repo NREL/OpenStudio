@@ -488,6 +488,73 @@ namespace detail {
     return result;
   }
 
+  boost::optional<double> AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl::autosizedSystemAirFlowRateDuringCoolingOperation() const {
+    return getAutosizedValue("Design Size System Air Flow Rate During Cooling Operation", "m3/s");
+  }
+
+  boost::optional<double> AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl::autosizedSystemAirFlowRateDuringHeatingOperation() const {
+    return getAutosizedValue("Design Size System Air Flow Rate During Heating Operation", "m3/s");
+  }
+
+  boost::optional<double> AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl::autosizedSystemAirFlowRateWhenNoCoolingorHeatingisNeeded() const {
+    return getAutosizedValue("Design Size System Air Flow Rate When No Cooling or Heating is Needed", "m3/s");
+  }
+
+  boost::optional<double> AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl::autosizedOutdoorAirFlowRateDuringCoolingOperation() const {
+    return getAutosizedValue("Design Size Outdoor Air Flow Rate During Cooling Operation", "m3/s");
+  }
+
+  boost::optional<double> AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl::autosizedOutdoorAirFlowRateDuringHeatingOperation() const {
+    return getAutosizedValue("Design Size Outdoor Air Flow Rate During Heating Operation", "m3/s");
+  }
+
+  boost::optional<double> AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl::autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() const {
+    return getAutosizedValue("Design Size Outdoor Air Flow Rate When No Cooling or Heating is Needed", "m3/s");
+  }
+
+  void AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl::autosize() {
+    autosizedSystemAirFlowRateDuringCoolingOperation();
+    autosizedSystemAirFlowRateDuringHeatingOperation();
+    autosizedSystemAirFlowRateWhenNoCoolingorHeatingisNeeded();
+    autosizedOutdoorAirFlowRateDuringCoolingOperation();
+    autosizedOutdoorAirFlowRateDuringHeatingOperation();
+    autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
+  }
+
+  void AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedSystemAirFlowRateDuringCoolingOperation();
+    if (val) {
+      setSystemAirFlowRateDuringCoolingOperation(val.get());
+    }
+
+    val = autosizedSystemAirFlowRateDuringHeatingOperation();
+    if (val) {
+      setSystemAirFlowRateDuringHeatingOperation(val.get());
+    }
+
+    val = autosizedSystemAirFlowRateWhenNoCoolingorHeatingisNeeded();
+    if (val) {
+      setSystemAirFlowRateWhenNoCoolingorHeatingisNeeded(val.get());
+    }
+
+    val = autosizedOutdoorAirFlowRateDuringCoolingOperation();
+    if (val) {
+      setOutdoorAirFlowRateDuringCoolingOperation(val.get());
+    }
+
+    val = autosizedOutdoorAirFlowRateDuringHeatingOperation();
+    if (val) {
+      setOutdoorAirFlowRateDuringHeatingOperation(val.get());
+    }
+
+    val = autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
+    if (val) {
+      setOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded(val.get());
+    }
+
+  }
+
 } // detail
 
 AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass::AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass(const Model& model,
@@ -745,6 +812,30 @@ AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass::AirLoopHVACUnitaryHeatCoolVAVChan
   : StraightComponent(impl)
 {}
 /// @endcond
+
+  boost::optional<double> AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass::autosizedSystemAirFlowRateDuringCoolingOperation() const {
+    return getImpl<detail::AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl>()->autosizedSystemAirFlowRateDuringCoolingOperation();
+  }
+
+  boost::optional<double> AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass::autosizedSystemAirFlowRateDuringHeatingOperation() const {
+    return getImpl<detail::AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl>()->autosizedSystemAirFlowRateDuringHeatingOperation();
+  }
+
+  boost::optional<double> AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass::autosizedSystemAirFlowRateWhenNoCoolingorHeatingisNeeded() const {
+    return getImpl<detail::AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl>()->autosizedSystemAirFlowRateWhenNoCoolingorHeatingisNeeded();
+  }
+
+  boost::optional<double> AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass::autosizedOutdoorAirFlowRateDuringCoolingOperation() const {
+    return getImpl<detail::AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl>()->autosizedOutdoorAirFlowRateDuringCoolingOperation();
+  }
+
+  boost::optional<double> AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass::autosizedOutdoorAirFlowRateDuringHeatingOperation() const {
+    return getImpl<detail::AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl>()->autosizedOutdoorAirFlowRateDuringHeatingOperation();
+  }
+
+  boost::optional<double> AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass::autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() const {
+    return getImpl<detail::AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl>()->autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
+  }
 
 } // model
 } // openstudio

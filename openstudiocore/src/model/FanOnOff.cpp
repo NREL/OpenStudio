@@ -501,6 +501,23 @@ namespace detail {
     return boost::none;
   }
 
+  boost::optional<double> FanOnOff_Impl::autosizedMaximumFlowRate() const {
+    return getAutosizedValue("Design Size Maximum Flow Rate", "m3/s");
+  }
+
+  void FanOnOff_Impl::autosize() {
+    autosizedMaximumFlowRate();
+  }
+
+  void FanOnOff_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedMaximumFlowRate();
+    if (val) {
+      setMaximumFlowRate(val.get());
+    }
+
+  }
+
 } // detail
 
 FanOnOff::FanOnOff(const Model& model)
@@ -768,6 +785,10 @@ FanOnOff::FanOnOff(std::shared_ptr<detail::FanOnOff_Impl> impl)
   : StraightComponent(impl)
 {}
 /// @endcond
+
+  boost::optional<double> FanOnOff::autosizedMaximumFlowRate() const {
+    return getImpl<detail::FanOnOff_Impl>()->autosizedMaximumFlowRate();
+  }
 
 } // model
 } // openstudio

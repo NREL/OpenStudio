@@ -488,6 +488,43 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_ChillerHeaterPerformance_Electric_EIRFields::HeatingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurveName);
   }
 
+  boost::optional<double> ChillerHeaterPerformanceElectricEIR_Impl::autosizedReferenceCoolingModeEvaporatorCapacity() const {
+    return getAutosizedValue("Design Size Reference Cooling Mode Evaporator Capacity", "W");
+  }
+
+  boost::optional<double> ChillerHeaterPerformanceElectricEIR_Impl::autosizedDesignChilledWaterFlowRate() const {
+    return getAutosizedValue("Design Size Design Chilled Water Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> ChillerHeaterPerformanceElectricEIR_Impl::autosizedDesignCondenserWaterFlowRate() const {
+    return getAutosizedValue("Design Size Design Condenser Water Flow Rate", "m3/s");
+  }
+
+  void ChillerHeaterPerformanceElectricEIR_Impl::autosize() {
+    autosizedReferenceCoolingModeEvaporatorCapacity();
+    autosizedDesignChilledWaterFlowRate();
+    autosizedDesignCondenserWaterFlowRate();
+  }
+
+  void ChillerHeaterPerformanceElectricEIR_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedReferenceCoolingModeEvaporatorCapacity();
+    if (val) {
+      setReferenceCoolingModeEvaporatorCapacity(val.get());
+    }
+
+    val = autosizedDesignChilledWaterFlowRate();
+    if (val) {
+      setDesignChilledWaterFlowRate(val.get());
+    }
+
+    val = autosizedDesignCondenserWaterFlowRate();
+    if (val) {
+      setDesignCondenserWaterFlowRate(val.get());
+    }
+
+  }
+
 } // detail
 
 ChillerHeaterPerformanceElectricEIR::ChillerHeaterPerformanceElectricEIR(const Model& model)
@@ -965,6 +1002,26 @@ ChillerHeaterPerformanceElectricEIR::ChillerHeaterPerformanceElectricEIR(std::sh
   : ParentObject(impl)
 {}
 /// @endcond
+
+  boost::optional<double> ChillerHeaterPerformanceElectricEIR::autosizedReferenceCoolingModeEvaporatorCapacity() const {
+    return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->autosizedReferenceCoolingModeEvaporatorCapacity();
+  }
+
+  boost::optional<double> ChillerHeaterPerformanceElectricEIR::autosizedDesignChilledWaterFlowRate() const {
+    return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->autosizedDesignChilledWaterFlowRate();
+  }
+
+  boost::optional<double> ChillerHeaterPerformanceElectricEIR::autosizedDesignCondenserWaterFlowRate() const {
+    return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->autosizedDesignCondenserWaterFlowRate();
+  }
+
+  void ChillerHeaterPerformanceElectricEIR::autosize() {
+    return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->autosize();
+  }
+
+  void ChillerHeaterPerformanceElectricEIR::applySizingValues() {
+    return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->applySizingValues();
+  }
 
 } // model
 } // openstudio

@@ -179,6 +179,14 @@ class MODEL_API ControllerOutdoorAir_Impl : public ParentObject_Impl {
 
   std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
+  boost::optional<double> autosizedMinimumOutdoorAirFlowRate() const ;
+
+  boost::optional<double> autosizedMaximumOutdoorAirFlowRate() const ;
+
+  void autosize();
+
+  void applySizingValues();
+
  private:
 
   boost::optional<ControllerMechanicalVentilation> optionalControllerMechanicalVentilation() const;

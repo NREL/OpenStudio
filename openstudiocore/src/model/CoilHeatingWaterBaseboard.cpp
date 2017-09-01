@@ -288,6 +288,43 @@ namespace detail {
   }
 
  
+  boost::optional<double> CoilHeatingWaterBaseboard_Impl::autosizedHeatingDesignCapacity() const {
+    return getAutosizedValue("Design Size Heating Design Capacity", "W");
+  }
+
+  boost::optional<double> CoilHeatingWaterBaseboard_Impl::autosizedUFactorTimesAreaValue() const {
+    return getAutosizedValue("Design Size U-Factor Times Area Value", "W/K");
+  }
+
+  boost::optional<double> CoilHeatingWaterBaseboard_Impl::autosizedMaximumWaterFlowRate() const {
+    return getAutosizedValue("Design Size Maximum Water Flow Rate", "m3/s");
+  }
+
+  void CoilHeatingWaterBaseboard_Impl::autosize() {
+    autosizedHeatingDesignCapacity();
+    autosizedUFactorTimesAreaValue();
+    autosizedMaximumWaterFlowRate();
+  }
+
+  void CoilHeatingWaterBaseboard_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedHeatingDesignCapacity();
+    if (val) {
+      setHeatingDesignCapacity(val.get());
+    }
+
+    val = autosizedUFactorTimesAreaValue();
+    if (val) {
+      setUFactorTimesAreaValue(val.get());
+    }
+
+    val = autosizedMaximumWaterFlowRate();
+    if (val) {
+      setMaximumWaterFlowRate(val.get());
+    }
+
+  }
+
 } // detail
 
 CoilHeatingWaterBaseboard::CoilHeatingWaterBaseboard(const Model& model)
@@ -427,6 +464,18 @@ CoilHeatingWaterBaseboard::CoilHeatingWaterBaseboard(std::shared_ptr<detail::Coi
   : StraightComponent(impl)
 {}
 /// @endcond
+
+  boost::optional<double> CoilHeatingWaterBaseboard::autosizedHeatingDesignCapacity() const {
+    return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->autosizedHeatingDesignCapacity();
+  }
+
+  boost::optional<double> CoilHeatingWaterBaseboard::autosizedUFactorTimesAreaValue() const {
+    return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->autosizedUFactorTimesAreaValue();
+  }
+
+  boost::optional<double> CoilHeatingWaterBaseboard::autosizedMaximumWaterFlowRate() const {
+    return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->autosizedMaximumWaterFlowRate();
+  }
 
 } // model
 } // openstudio

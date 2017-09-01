@@ -138,6 +138,14 @@ namespace detail {
 
     bool isPrimaryAirDesignFlowRateAutosized() const;
 
+  boost::optional<double> autosizedRecirculatingWaterPumpPowerConsumption() const ;
+
+  boost::optional<double> autosizedPrimaryAirDesignFlowRate() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
    private:
 
     REGISTER_LOGGER("openstudio.model.EvaporativeCoolerDirectResearchSpecial");

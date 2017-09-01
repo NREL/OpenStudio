@@ -244,6 +244,14 @@ namespace detail {
 
     boost::optional<Schedule> maximumRPMSchedule() const;
 
+  boost::optional<double> autosizedRatedFlowRate() const ;
+
+  boost::optional<double> autosizedRatedPowerConsumption() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{

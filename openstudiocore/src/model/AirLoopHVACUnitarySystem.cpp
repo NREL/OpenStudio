@@ -1171,6 +1171,53 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  boost::optional<double> AirLoopHVACUnitarySystem_Impl::autosizedSupplyAirFlowRateDuringCoolingOperation() const {
+    return getAutosizedValue("Design Size Supply Air Flow Rate During Cooling Operation", "m3/s");
+  }
+
+  boost::optional<double> AirLoopHVACUnitarySystem_Impl::autosizedSupplyAirFlowRateDuringHeatingOperation() const {
+    return getAutosizedValue("Design Size Supply Air Flow Rate During Heating Operation", "m3/s");
+  }
+
+  boost::optional<double> AirLoopHVACUnitarySystem_Impl::autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisRequired() const {
+    return getAutosizedValue("Design Size Supply Air Flow Rate When No Cooling or Heating is Required", "m3/s");
+  }
+
+  boost::optional<double> AirLoopHVACUnitarySystem_Impl::autosizedMaximumSupplyAirTemperature() const {
+    return getAutosizedValue("Design Size Maximum Supply Air Temperature", "C");
+  }
+
+  void AirLoopHVACUnitarySystem_Impl::autosize() {
+    autosizedSupplyAirFlowRateDuringCoolingOperation();
+    autosizedSupplyAirFlowRateDuringHeatingOperation();
+    autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
+    autosizedMaximumSupplyAirTemperature();
+  }
+
+  void AirLoopHVACUnitarySystem_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedSupplyAirFlowRateDuringCoolingOperation();
+    if (val) {
+      setSupplyAirFlowRateDuringCoolingOperation(val.get());
+    }
+
+    val = autosizedSupplyAirFlowRateDuringHeatingOperation();
+    if (val) {
+      setSupplyAirFlowRateDuringHeatingOperation(val.get());
+    }
+
+    val = autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
+    if (val) {
+      setSupplyAirFlowRateWhenNoCoolingorHeatingisRequired(val.get());
+    }
+
+    val = autosizedMaximumSupplyAirTemperature();
+    if (val) {
+      setMaximumSupplyAirTemperature(val.get());
+    }
+
+  }
+
 } // detail
 
 AirLoopHVACUnitarySystem::AirLoopHVACUnitarySystem(const Model& model)
@@ -1867,6 +1914,22 @@ AirLoopHVACUnitarySystem::AirLoopHVACUnitarySystem(std::shared_ptr<detail::AirLo
   : WaterToAirComponent(impl)
 {}
 /// @endcond
+
+  boost::optional<double> AirLoopHVACUnitarySystem::autosizedSupplyAirFlowRateDuringCoolingOperation() const {
+    return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->autosizedSupplyAirFlowRateDuringCoolingOperation();
+  }
+
+  boost::optional<double> AirLoopHVACUnitarySystem::autosizedSupplyAirFlowRateDuringHeatingOperation() const {
+    return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->autosizedSupplyAirFlowRateDuringHeatingOperation();
+  }
+
+  boost::optional<double> AirLoopHVACUnitarySystem::autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisRequired() const {
+    return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
+  }
+
+  boost::optional<double> AirLoopHVACUnitarySystem::autosizedMaximumSupplyAirTemperature() const {
+    return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->autosizedMaximumSupplyAirTemperature();
+  }
 
 } // model
 } // openstudio

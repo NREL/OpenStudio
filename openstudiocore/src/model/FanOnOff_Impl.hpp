@@ -160,6 +160,12 @@ namespace detail {
     Curve fanEfficiencyRatioFunctionofSpeedRatioCurve() const;
     bool setFanEfficiencyRatioFunctionofSpeedRatioCurve( const Curve& curve );
 
+  boost::optional<double> autosizedMaximumFlowRate() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
    //protected:
    private:

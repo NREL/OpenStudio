@@ -585,6 +585,53 @@ namespace detail {
     return true;
   }
 
+  boost::optional<double> EvaporativeFluidCoolerSingleSpeed_Impl::autosizedDesignAirFlowRate() const {
+    return getAutosizedValue("Design Size Design Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> EvaporativeFluidCoolerSingleSpeed_Impl::autosizedFanPoweratDesignAirFlowRate() const {
+    return getAutosizedValue("Design Size Fan Power at Design Air Flow Rate", "W");
+  }
+
+  boost::optional<double> EvaporativeFluidCoolerSingleSpeed_Impl::autosizedUfactorTimesAreaValueatDesignAirFlowRate() const {
+    return getAutosizedValue("Design Size U-factor Times Area Value at Design Air Flow Rate", "W/K");
+  }
+
+  boost::optional<double> EvaporativeFluidCoolerSingleSpeed_Impl::autosizedDesignWaterFlowRate() const {
+    return getAutosizedValue("Design Size Design Water Flow Rate", "m3/s");
+  }
+
+  void EvaporativeFluidCoolerSingleSpeed_Impl::autosize() {
+    autosizedDesignAirFlowRate();
+    autosizedFanPoweratDesignAirFlowRate();
+    autosizedUfactorTimesAreaValueatDesignAirFlowRate();
+    autosizedDesignWaterFlowRate();
+  }
+
+  void EvaporativeFluidCoolerSingleSpeed_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedDesignAirFlowRate();
+    if (val) {
+      setDesignAirFlowRate(val.get());
+    }
+
+    val = autosizedFanPoweratDesignAirFlowRate();
+    if (val) {
+      setFanPoweratDesignAirFlowRate(val.get());
+    }
+
+    val = autosizedUfactorTimesAreaValueatDesignAirFlowRate();
+    if (val) {
+      setUfactorTimesAreaValueatDesignAirFlowRate(val.get());
+    }
+
+    val = autosizedDesignWaterFlowRate();
+    if (val) {
+      setDesignWaterFlowRate(val.get());
+    }
+
+  }
+
 } // detail
 
 EvaporativeFluidCoolerSingleSpeed::EvaporativeFluidCoolerSingleSpeed(const Model& model)
@@ -914,6 +961,22 @@ EvaporativeFluidCoolerSingleSpeed::EvaporativeFluidCoolerSingleSpeed(std::shared
   : StraightComponent(impl)
 {}
 /// @endcond
+
+  boost::optional<double> EvaporativeFluidCoolerSingleSpeed::autosizedDesignAirFlowRate() const {
+    return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->autosizedDesignAirFlowRate();
+  }
+
+  boost::optional<double> EvaporativeFluidCoolerSingleSpeed::autosizedFanPoweratDesignAirFlowRate() const {
+    return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->autosizedFanPoweratDesignAirFlowRate();
+  }
+
+  boost::optional<double> EvaporativeFluidCoolerSingleSpeed::autosizedUfactorTimesAreaValueatDesignAirFlowRate() const {
+    return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->autosizedUfactorTimesAreaValueatDesignAirFlowRate();
+  }
+
+  boost::optional<double> EvaporativeFluidCoolerSingleSpeed::autosizedDesignWaterFlowRate() const {
+    return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->autosizedDesignWaterFlowRate();
+  }
 
 } // model
 } // openstudio

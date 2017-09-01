@@ -278,6 +278,14 @@ namespace detail {
 
     bool isDedicatedOutdoorAirHighSetpointTemperatureforDesignAutosized() const;
 
+  boost::optional<double> autosizedDedicatedOutdoorAirLowSetpointTemperatureforDesign() const ;
+
+  boost::optional<double> autosizedDedicatedOutdoorAirHighSetpointTemperatureforDesign() const ;
+
+  void autosize();
+
+  void applySizingValues();
+
     //@}
     /** @name Setters */
     //@{

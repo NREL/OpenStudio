@@ -189,6 +189,18 @@ class MODEL_API EvaporativeCoolerIndirectResearchSpecial : public StraightCompon
   /** @name Other */
   //@{
 
+  boost::optional<double> autosizedRecirculatingWaterPumpPowerConsumption() const ;
+
+  boost::optional<double> autosizedSecondaryFanFlowRate() const ;
+
+  boost::optional<double> autosizedSecondaryAirFanDesignPower() const ;
+
+  boost::optional<double> autosizedPrimaryDesignAirFlowRate() const ;
+
+  void autosize();
+
+  void applySizingValues();
+
   //@}
  protected:
   /// @cond

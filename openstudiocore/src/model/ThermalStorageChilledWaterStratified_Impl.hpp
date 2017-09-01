@@ -166,6 +166,14 @@ namespace detail {
 
     double node10AdditionalLossCoefficient() const;
 
+  boost::optional<double> autosizedUseSideDesignFlowRate() const ;
+
+  boost::optional<double> autosizedSourceSideDesignFlowRate() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{

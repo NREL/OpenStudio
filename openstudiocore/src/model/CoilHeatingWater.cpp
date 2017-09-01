@@ -543,6 +543,43 @@ namespace detail{
   }
 
 
+  boost::optional<double> CoilHeatingWater_Impl::autosizedUFactorTimesAreaValue() const {
+    return getAutosizedValue("Design Size U-Factor Times Area Value", "W/K");
+  }
+
+  boost::optional<double> CoilHeatingWater_Impl::autosizedMaximumWaterFlowRate() const {
+    return getAutosizedValue("Design Size Maximum Water Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> CoilHeatingWater_Impl::autosizedRatedCapacity() const {
+    return getAutosizedValue("Design Size Capacity", "W");
+  }
+
+  void CoilHeatingWater_Impl::autosize() {
+    autosizedUFactorTimesAreaValue();
+    autosizedMaximumWaterFlowRate();
+    autosizedRatedCapacity();
+  }
+
+  void CoilHeatingWater_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedUFactorTimesAreaValue();
+    if (val) {
+      setUFactorTimesAreaValue(val.get());
+    }
+
+    val = autosizedMaximumWaterFlowRate();
+    if (val) {
+      setMaximumWaterFlowRate(val.get());
+    }
+
+    val = autosizedRatedCapacity();
+    if (val) {
+      setRatedCapacity(val.get());
+    }
+
+  }
+
 } // detail
 
 CoilHeatingWater::CoilHeatingWater(const Model& model, Schedule & availableSchedule)
@@ -715,6 +752,18 @@ boost::optional<ControllerWaterCoil> CoilHeatingWater::controllerWaterCoil()
 {
   return getImpl<detail::CoilHeatingWater_Impl>()->controllerWaterCoil();
 }
+
+  boost::optional<double> CoilHeatingWater::autosizedUFactorTimesAreaValue() const {
+    return getImpl<detail::CoilHeatingWater_Impl>()->autosizedUFactorTimesAreaValue();
+  }
+
+  boost::optional<double> CoilHeatingWater::autosizedMaximumWaterFlowRate() const {
+    return getImpl<detail::CoilHeatingWater_Impl>()->autosizedMaximumWaterFlowRate();
+  }
+
+  boost::optional<double> CoilHeatingWater::autosizedRatedCapacity() const {
+    return getImpl<detail::CoilHeatingWater_Impl>()->autosizedRatedCapacity();
+  }
 
 } // model
 } // openstudio

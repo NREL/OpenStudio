@@ -297,6 +297,16 @@ class MODEL_API ChillerElectricEIR : public WaterToWaterComponent {
   bool setBasinHeaterSchedule(Schedule & s);
 
   void resetBasinHeaterSchedule();
+  boost::optional<double> autosizedReferenceCapacity() const ;
+
+  boost::optional<double> autosizedReferenceChilledWaterFlowRate() const ;
+
+  boost::optional<double> autosizedReferenceCondenserFluidFlowRate() const ;
+
+  void autosize();
+
+  void applySizingValues();
+
   //@}
  protected:
 

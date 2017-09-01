@@ -269,6 +269,22 @@ class MODEL_API ZoneHVACFourPipeFanCoil : public ZoneHVACComponent
   /** @name Other */
   //@{
 
+  boost::optional<double> autosizedMaximumSupplyAirFlowRate() const ;
+
+  boost::optional<double> autosizedMaximumOutdoorAirFlowRate() const ;
+
+  boost::optional<double> autosizedMaximumColdWaterFlowRate() const ;
+
+  boost::optional<double> autosizedMaximumHotWaterFlowRate() const ;
+
+  boost::optional<double> autosizedMinimumSupplyAirTemperatureinCoolingMode() const ;
+
+  boost::optional<double> autosizedMaximumSupplyAirTemperatureinHeatingMode() const ;
+
+  void autosize();
+
+  void applySizingValues();
+
   //@}
  protected:
   /// @cond

@@ -225,6 +225,12 @@ class MODEL_API FanVariableVolume : public StraightComponent {
 
   void resetEndUseSubcategory();
 
+  boost::optional<double> autosizedMaximumFlowRate() const ;
+
+  void autosize();
+
+  void applySizingValues();
+
   //@}
  protected:
   /// @cond

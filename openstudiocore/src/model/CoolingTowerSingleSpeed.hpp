@@ -335,6 +335,22 @@ class MODEL_API CoolingTowerSingleSpeed : public StraightComponent {
 
   void resetSizingFactor();
 
+  boost::optional<double> autosizedDesignWaterFlowRate() const ;
+
+  boost::optional<double> autosizedDesignAirFlowRate() const ;
+
+  boost::optional<double> autosizedFanPoweratDesignAirFlowRate() const ;
+
+  boost::optional<double> autosizedUFactorTimesAreaValueatDesignAirFlowRate() const ;
+
+  boost::optional<double> autosizedAirFlowRateinFreeConvectionRegime() const ;
+
+  boost::optional<double> autosizedUFactorTimesAreaValueatFreeConvectionAirFlowRate() const ;
+
+  void autosize();
+
+  void applySizingValues();
+
   //@}
  protected:
 

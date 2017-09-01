@@ -701,6 +701,23 @@ namespace detail {
     return OS_HeatExchanger_AirToAir_SensibleAndLatentFields::ExhaustAirOutletNode;
   }
 
+  boost::optional<double> HeatExchangerAirToAirSensibleAndLatent_Impl::autosizedNominalSupplyAirFlowRate() const {
+    return getAutosizedValue("Design Size Nominal Supply Air Flow Rate", "m3/s");
+  }
+
+  void HeatExchangerAirToAirSensibleAndLatent_Impl::autosize() {
+    autosizedNominalSupplyAirFlowRate();
+  }
+
+  void HeatExchangerAirToAirSensibleAndLatent_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedNominalSupplyAirFlowRate();
+    if (val) {
+      setNominalSupplyAirFlowRate(val.get());
+    }
+
+  }
+
 } // detail
 
 HeatExchangerAirToAirSensibleAndLatent::HeatExchangerAirToAirSensibleAndLatent(const Model& model)
@@ -1033,6 +1050,10 @@ HeatExchangerAirToAirSensibleAndLatent::HeatExchangerAirToAirSensibleAndLatent(s
   : AirToAirComponent(impl)
 {}
 /// @endcond
+
+  boost::optional<double> HeatExchangerAirToAirSensibleAndLatent::autosizedNominalSupplyAirFlowRate() const {
+    return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->autosizedNominalSupplyAirFlowRate();
+  }
 
 } // model
 } // openstudio

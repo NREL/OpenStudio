@@ -273,6 +273,18 @@ namespace detail {
 
     bool isLatentHeatRecoveryEffectivenessDefaulted() const;
 
+  boost::optional<double> autosizedMaximumHeatingAirFlowRate() const ;
+
+  boost::optional<double> autosizedMaximumSensibleHeatingCapacity() const ;
+
+  boost::optional<double> autosizedMaximumCoolingAirFlowRate() const ;
+
+  boost::optional<double> autosizedMaximumTotalCoolingCapacity() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{

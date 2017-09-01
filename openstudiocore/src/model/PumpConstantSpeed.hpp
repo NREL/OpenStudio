@@ -184,6 +184,14 @@ class MODEL_API PumpConstantSpeed : public StraightComponent {
 
   void resetSkinLossRadiativeFraction();
 
+  boost::optional<double> autosizedRatedFlowRate() const ;
+
+  boost::optional<double> autosizedRatedPowerConsumption() const ;
+
+  void autosize();
+
+  void applySizingValues();
+
  protected:
 
   /// @cond

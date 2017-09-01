@@ -449,6 +449,23 @@ bool AirTerminalSingleDuctVAVNoReheat_Impl::addToNode(Node & node)
     setBooleanFieldValue(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::ControlForOutdoorAir,controlForOutdoorAir);
   }
 
+  boost::optional<double> AirTerminalSingleDuctVAVNoReheat_Impl::autosizedMaximumAirFlowRate() const {
+    return getAutosizedValue("Design Size Maximum Air Flow Rate", "m3/s");
+  }
+
+  void AirTerminalSingleDuctVAVNoReheat_Impl::autosize() {
+    autosizedMaximumAirFlowRate();
+  }
+
+  void AirTerminalSingleDuctVAVNoReheat_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedMaximumAirFlowRate();
+    if (val) {
+      setMaximumAirFlowRate(val.get());
+    }
+
+  }
+
 } // detail
 
 AirTerminalSingleDuctVAVNoReheat::AirTerminalSingleDuctVAVNoReheat(const Model& model, Schedule& schedule)
@@ -576,6 +593,10 @@ AirTerminalSingleDuctVAVNoReheat::AirTerminalSingleDuctVAVNoReheat(std::shared_p
   : StraightComponent(impl)
 {}
 /// @endcond
+
+  boost::optional<double> AirTerminalSingleDuctVAVNoReheat::autosizedMaximumAirFlowRate() const {
+    return getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->autosizedMaximumAirFlowRate();
+  }
 
 } // model
 } // openstudio

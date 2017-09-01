@@ -103,6 +103,12 @@ namespace detail {
 
     double fractionofRadiantEnergyIncidentonPeople() const;
 
+  boost::optional<double> autosizedHeatingDesignCapacity() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{

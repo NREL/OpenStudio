@@ -155,9 +155,9 @@ namespace detail {
 
     // Autosizing methods
 
-    void autosize() override;
+    virtual void autosize() override;
 
-    void applySizingValues() override;
+    virtual void applySizingValues() override;
 
     boost::optional <double> autosizedRatedAirFlowRate() const;
 

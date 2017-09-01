@@ -189,6 +189,20 @@ class MODEL_API CoilPerformanceDXCooling : public ParentObject {
   /** @name Other */
   //@{
 
+  boost::optional<double> autosizedGrossRatedTotalCoolingCapacity() const ;
+
+  boost::optional<double> autosizedGrossRatedSensibleHeatRatio() const ;
+
+  boost::optional<double> autosizedRatedAirFlowRate() const ;
+
+  boost::optional<double> autosizedEvaporativeCondenserAirFlowRate() const ;
+
+  boost::optional<double> autosizedEvaporativeCondenserPumpRatedPowerConsumption() const ;
+
+  void autosize();
+
+  void applySizingValues();
+
   //@}
  protected:
   /// @cond

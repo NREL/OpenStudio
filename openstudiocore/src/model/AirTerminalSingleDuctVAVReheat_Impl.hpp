@@ -165,6 +165,18 @@ namespace detail {
 
     void setControlForOutdoorAir(bool controlForOutdoorAir);
 
+  boost::optional<double> autosizedMaximumAirFlowRate() const ;
+
+  boost::optional<double> autosizedMaximumHotWaterOrSteamFlowRate() const ;
+
+  boost::optional<double> autosizedMaximumFlowPerZoneFloorAreaDuringReheat() const ;
+
+  boost::optional<double> autosizedMaximumFlowFractionDuringReheat() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
    private:
 
     REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctVAVReheat");

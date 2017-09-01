@@ -129,6 +129,14 @@ class MODEL_API CoilHeatingDXMultiSpeedStageData : public ParentObject {
   /** @name Other */
   //@{
 
+  boost::optional<double> autosizedGrossRatedHeatingCapacity() const ;
+
+  boost::optional<double> autosizedRatedAirFlowRate() const ;
+
+  void autosize();
+
+  void applySizingValues();
+
   //@}
  protected:
   /// @cond

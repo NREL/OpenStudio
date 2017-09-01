@@ -101,6 +101,12 @@ class MODEL_API SolarCollectorFlatPlatePhotovoltaicThermal : public StraightComp
   /** @name Other */
   //@{
 
+  boost::optional<double> autosizedDesignFlowRate() const ;
+
+  void autosize();
+
+  void applySizingValues();
+
   //@}
  protected:
 

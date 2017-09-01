@@ -565,6 +565,53 @@ namespace detail {
     return StraightComponent_Impl::remove();
   }
 
+  boost::optional<double> AirTerminalSingleDuctSeriesPIUReheat_Impl::autosizedMaximumAirFlowRate() const {
+    return getAutosizedValue("Design Size Maximum Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> AirTerminalSingleDuctSeriesPIUReheat_Impl::autosizedMaximumPrimaryAirFlowRate() const {
+    return getAutosizedValue("Design Size Maximum Primary Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> AirTerminalSingleDuctSeriesPIUReheat_Impl::autosizedMinimumPrimaryAirFlowFraction() const {
+    return getAutosizedValue("Design Size Minimum Primary Air Flow Fraction", "");
+  }
+
+  boost::optional<double> AirTerminalSingleDuctSeriesPIUReheat_Impl::autosizedMaximumHotWaterorSteamFlowRate() const {
+    return getAutosizedValue("Design Size Maximum Hot Water or Steam Flow Rate", "m3/s");
+  }
+
+  void AirTerminalSingleDuctSeriesPIUReheat_Impl::autosize() {
+    autosizedMaximumAirFlowRate();
+    autosizedMaximumPrimaryAirFlowRate();
+    autosizedMinimumPrimaryAirFlowFraction();
+    autosizedMaximumHotWaterorSteamFlowRate();
+  }
+
+  void AirTerminalSingleDuctSeriesPIUReheat_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedMaximumAirFlowRate();
+    if (val) {
+      setMaximumAirFlowRate(val.get());
+    }
+
+    val = autosizedMaximumPrimaryAirFlowRate();
+    if (val) {
+      setMaximumPrimaryAirFlowRate(val.get());
+    }
+
+    val = autosizedMinimumPrimaryAirFlowFraction();
+    if (val) {
+      setMinimumPrimaryAirFlowFraction(val.get());
+    }
+
+    val = autosizedMaximumHotWaterorSteamFlowRate();
+    if (val) {
+      setMaximumHotWaterorSteamFlowRate(val.get());
+    }
+
+  }
+
 } // detail
 
 AirTerminalSingleDuctSeriesPIUReheat::AirTerminalSingleDuctSeriesPIUReheat(const Model& model,
@@ -716,6 +763,22 @@ AirTerminalSingleDuctSeriesPIUReheat::AirTerminalSingleDuctSeriesPIUReheat(std::
   : StraightComponent(impl)
 {}
 /// @endcond
+
+  boost::optional<double> AirTerminalSingleDuctSeriesPIUReheat::autosizedMaximumAirFlowRate() const {
+    return getImpl<detail::AirTerminalSingleDuctSeriesPIUReheat_Impl>()->autosizedMaximumAirFlowRate();
+  }
+
+  boost::optional<double> AirTerminalSingleDuctSeriesPIUReheat::autosizedMaximumPrimaryAirFlowRate() const {
+    return getImpl<detail::AirTerminalSingleDuctSeriesPIUReheat_Impl>()->autosizedMaximumPrimaryAirFlowRate();
+  }
+
+  boost::optional<double> AirTerminalSingleDuctSeriesPIUReheat::autosizedMinimumPrimaryAirFlowFraction() const {
+    return getImpl<detail::AirTerminalSingleDuctSeriesPIUReheat_Impl>()->autosizedMinimumPrimaryAirFlowFraction();
+  }
+
+  boost::optional<double> AirTerminalSingleDuctSeriesPIUReheat::autosizedMaximumHotWaterorSteamFlowRate() const {
+    return getImpl<detail::AirTerminalSingleDuctSeriesPIUReheat_Impl>()->autosizedMaximumHotWaterorSteamFlowRate();
+  }
 
 } // model
 } // openstudio

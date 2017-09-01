@@ -189,6 +189,14 @@ class MODEL_API WaterHeaterHeatPump : public ZoneHVACComponent {
   /** @name Other */
   //@{
 
+  boost::optional<double> autosizedCondenserWaterFlowRate() const ;
+
+  boost::optional<double> autosizedEvaporatorAirFlowRate() const ;
+
+  void autosize();
+
+  void applySizingValues();
+
   //@}
  protected:
   /// @cond

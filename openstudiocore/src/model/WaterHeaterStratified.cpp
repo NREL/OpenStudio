@@ -1053,6 +1053,63 @@ namespace detail {
     return boost::none;
   }
 
+  boost::optional<double> WaterHeaterStratified_Impl::autosizedTankVolume() const {
+    return getAutosizedValue("Design Size Tank Volume", "m3");
+  }
+
+  boost::optional<double> WaterHeaterStratified_Impl::autosizedTankHeight() const {
+    return getAutosizedValue("Design Size Tank Height", "m");
+  }
+
+  boost::optional<double> WaterHeaterStratified_Impl::autosizedHeater1Capacity() const {
+    return getAutosizedValue("Design Size Heater 1 Capacity", "W");
+  }
+
+  boost::optional<double> WaterHeaterStratified_Impl::autosizedUseSideDesignFlowRate() const {
+    return getAutosizedValue("Design Size Use Side Design Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> WaterHeaterStratified_Impl::autosizedSourceSideDesignFlowRate() const {
+    return getAutosizedValue("Design Size Source Side Design Flow Rate", "m3/s");
+  }
+
+  void WaterHeaterStratified_Impl::autosize() {
+    autosizedTankVolume();
+    autosizedTankHeight();
+    autosizedHeater1Capacity();
+    autosizedUseSideDesignFlowRate();
+    autosizedSourceSideDesignFlowRate();
+  }
+
+  void WaterHeaterStratified_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedTankVolume();
+    if (val) {
+      setTankVolume(val.get());
+    }
+
+    val = autosizedTankHeight();
+    if (val) {
+      setTankHeight(val.get());
+    }
+
+    val = autosizedHeater1Capacity();
+    if (val) {
+      setHeater1Capacity(val.get());
+    }
+
+    val = autosizedUseSideDesignFlowRate();
+    if (val) {
+      setUseSideDesignFlowRate(val.get());
+    }
+
+    val = autosizedSourceSideDesignFlowRate();
+    if (val) {
+      setSourceSideDesignFlowRate(val.get());
+    }
+
+  }
+
 } // detail
 
 WaterHeaterStratified::WaterHeaterStratified(const Model& model)
@@ -1779,6 +1836,26 @@ WaterHeaterStratified::WaterHeaterStratified(std::shared_ptr<detail::WaterHeater
   : WaterToWaterComponent(impl)
 {}
 /// @endcond
+
+  boost::optional<double> WaterHeaterStratified::autosizedTankVolume() const {
+    return getImpl<detail::WaterHeaterStratified_Impl>()->autosizedTankVolume();
+  }
+
+  boost::optional<double> WaterHeaterStratified::autosizedTankHeight() const {
+    return getImpl<detail::WaterHeaterStratified_Impl>()->autosizedTankHeight();
+  }
+
+  boost::optional<double> WaterHeaterStratified::autosizedHeater1Capacity() const {
+    return getImpl<detail::WaterHeaterStratified_Impl>()->autosizedHeater1Capacity();
+  }
+
+  boost::optional<double> WaterHeaterStratified::autosizedUseSideDesignFlowRate() const {
+    return getImpl<detail::WaterHeaterStratified_Impl>()->autosizedUseSideDesignFlowRate();
+  }
+
+  boost::optional<double> WaterHeaterStratified::autosizedSourceSideDesignFlowRate() const {
+    return getImpl<detail::WaterHeaterStratified_Impl>()->autosizedSourceSideDesignFlowRate();
+  }
 
 } // model
 } // openstudio

@@ -654,6 +654,43 @@ void SizingSystem_Impl::setAirLoopHVAC(const AirLoopHVAC & airLoopHVAC)
   OS_ASSERT(this->setPointer(OS_Sizing_SystemFields::AirLoopName, airLoopHVAC.handle()));
 }
 
+  boost::optional<double> SizingSystem_Impl::autosizedDesignOutdoorAirFlowRate() const {
+    return getAutosizedValue("Design Size Design Outdoor Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> SizingSystem_Impl::autosizedCoolingDesignCapacity() const {
+    return getAutosizedValue("Design Size Cooling Design Capacity", "W");
+  }
+
+  boost::optional<double> SizingSystem_Impl::autosizedHeatingDesignCapacity() const {
+    return getAutosizedValue("Design Size Heating Design Capacity", "W");
+  }
+
+  void SizingSystem_Impl::autosize() {
+    autosizedDesignOutdoorAirFlowRate();
+    autosizedCoolingDesignCapacity();
+    autosizedHeatingDesignCapacity();
+  }
+
+  void SizingSystem_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedDesignOutdoorAirFlowRate();
+    if (val) {
+      setDesignOutdoorAirFlowRate(val.get());
+    }
+
+    val = autosizedCoolingDesignCapacity();
+    if (val) {
+      setCoolingDesignCapacity(val.get());
+    }
+
+    val = autosizedHeatingDesignCapacity();
+    if (val) {
+      setHeatingDesignCapacity(val.get());
+    }
+
+  }
+
 } // detail
 
 SizingSystem::SizingSystem(const Model& model, const AirLoopHVAC & airLoopHVAC)
@@ -1154,6 +1191,26 @@ SizingSystem::SizingSystem(std::shared_ptr<detail::SizingSystem_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond
+
+  boost::optional<double> SizingSystem::autosizedDesignOutdoorAirFlowRate() const {
+    return getImpl<detail::SizingSystem_Impl>()->autosizedDesignOutdoorAirFlowRate();
+  }
+
+  boost::optional<double> SizingSystem::autosizedCoolingDesignCapacity() const {
+    return getImpl<detail::SizingSystem_Impl>()->autosizedCoolingDesignCapacity();
+  }
+
+  boost::optional<double> SizingSystem::autosizedHeatingDesignCapacity() const {
+    return getImpl<detail::SizingSystem_Impl>()->autosizedHeatingDesignCapacity();
+  }
+
+  void SizingSystem::autosize() {
+    return getImpl<detail::SizingSystem_Impl>()->autosize();
+  }
+
+  void SizingSystem::applySizingValues() {
+    return getImpl<detail::SizingSystem_Impl>()->applySizingValues();
+  }
 
 } // model
 

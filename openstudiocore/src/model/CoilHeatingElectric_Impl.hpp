@@ -107,6 +107,12 @@ namespace detail {
 
     boost::optional<Node> temperatureSetpointNode() const;
 
+  boost::optional<double> autosizedNominalCapacity() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{

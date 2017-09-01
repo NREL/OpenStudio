@@ -371,9 +371,9 @@ class MODEL_API CoilCoolingDXSingleSpeed : public StraightComponent {
 
   // Autosizing methods
 
-  void autosize() override;
+  void autosize();
 
-  void applySizingValues() override;
+  void applySizingValues();
 
   boost::optional <double> autosizedRatedAirFlowRate() const;
 

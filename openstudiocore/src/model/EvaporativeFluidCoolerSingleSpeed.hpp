@@ -213,6 +213,18 @@ class MODEL_API EvaporativeFluidCoolerSingleSpeed : public StraightComponent {
   /** @name Other */
   //@{
 
+  boost::optional<double> autosizedDesignAirFlowRate() const ;
+
+  boost::optional<double> autosizedFanPoweratDesignAirFlowRate() const ;
+
+  boost::optional<double> autosizedUfactorTimesAreaValueatDesignAirFlowRate() const ;
+
+  boost::optional<double> autosizedDesignWaterFlowRate() const ;
+
+  void autosize();
+
+  void applySizingValues();
+
   //@}
  protected:
   /// @cond

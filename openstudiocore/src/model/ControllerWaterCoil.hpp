@@ -133,6 +133,14 @@ class MODEL_API ControllerWaterCoil : public HVACComponent
 
   void resetMinimumActuatedFlow();
 
+  boost::optional<double> autosizedControllerConvergenceTolerance() const ;
+
+  boost::optional<double> autosizedMaximumActuatedFlow() const ;
+
+  void autosize();
+
+  void applySizingValues();
+
   //@}
   protected:
 

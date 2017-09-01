@@ -92,6 +92,16 @@ class MODEL_API CoilCoolingDXVariableRefrigerantFlow : public HVACComponent {
 
   bool setCoolingCapacityModifierCurveFunctionofFlowFraction(const Curve& lcurve);
 
+  boost::optional<double> autosizedRatedTotalCoolingCapacity() const ;
+
+  boost::optional<double> autosizedRatedSensibleHeatRatio() const ;
+
+  boost::optional<double> autosizedRatedAirFlowRate() const ;
+
+  void autosize();
+
+  void applySizingValues();
+
  protected:
 
   /// @cond

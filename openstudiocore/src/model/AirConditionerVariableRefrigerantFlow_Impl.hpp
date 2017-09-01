@@ -477,6 +477,22 @@ class MODEL_API AirConditionerVariableRefrigerantFlow_Impl : public StraightComp
 
   std::vector<ModelObject> children() const override;
 
+  boost::optional<double> autosizedRatedTotalCoolingCapacity() const ;
+
+  boost::optional<double> autosizedRatedTotalHeatingCapacity() const ;
+
+  boost::optional<double> autosizedResistiveDefrostHeaterCapacity() const ;
+
+  boost::optional<double> autosizedWaterCondenserVolumeFlowRate() const ;
+
+  boost::optional<double> autosizedEvaporativeCondenserAirFlowRate() const ;
+
+  boost::optional<double> autosizedEvaporativeCondenserPumpRatedPowerConsumption() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
  private:
 
   REGISTER_LOGGER("openstudio.model.AirConditionerVariableRefrigerantFlow");

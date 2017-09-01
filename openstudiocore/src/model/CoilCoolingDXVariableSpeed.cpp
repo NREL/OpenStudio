@@ -557,6 +557,43 @@ namespace detail {
     return result;
   }
 
+  boost::optional<double> CoilCoolingDXVariableSpeed_Impl::autosizedGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel() const {
+    return getAutosizedValue("Gross Design Size Total Cooling Capacity At Selected Nominal Speed Level", "W");
+  }
+
+  boost::optional<double> CoilCoolingDXVariableSpeed_Impl::autosizedRatedAirFlowRateAtSelectedNominalSpeedLevel() const {
+    return getAutosizedValue("Design Size Air Flow Rate At Selected Nominal Speed Level", "m3/s");
+  }
+
+  boost::optional<double> CoilCoolingDXVariableSpeed_Impl::autosizedEvaporativeCondenserPumpRatedPowerConsumption() const {
+    return getAutosizedValue("Evaporative Condenser Pump Design Size Power Consumption", "W");
+  }
+
+  void CoilCoolingDXVariableSpeed_Impl::autosize() {
+    autosizedGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel();
+    autosizedRatedAirFlowRateAtSelectedNominalSpeedLevel();
+    autosizedEvaporativeCondenserPumpRatedPowerConsumption();
+  }
+
+  void CoilCoolingDXVariableSpeed_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel();
+    if (val) {
+      setGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel(val.get());
+    }
+
+    val = autosizedRatedAirFlowRateAtSelectedNominalSpeedLevel();
+    if (val) {
+      setRatedAirFlowRateAtSelectedNominalSpeedLevel(val.get());
+    }
+
+    val = autosizedEvaporativeCondenserPumpRatedPowerConsumption();
+    if (val) {
+      setEvaporativeCondenserPumpRatedPowerConsumption(val.get());
+    }
+
+  }
+
 } // detail
 
 CoilCoolingDXVariableSpeed::CoilCoolingDXVariableSpeed(const Model& model)
@@ -844,6 +881,18 @@ CoilCoolingDXVariableSpeed::CoilCoolingDXVariableSpeed(std::shared_ptr<detail::C
   : StraightComponent(impl)
 {}
 /// @endcond
+
+  boost::optional<double> CoilCoolingDXVariableSpeed::autosizedGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel() const {
+    return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->autosizedGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel();
+  }
+
+  boost::optional<double> CoilCoolingDXVariableSpeed::autosizedRatedAirFlowRateAtSelectedNominalSpeedLevel() const {
+    return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->autosizedRatedAirFlowRateAtSelectedNominalSpeedLevel();
+  }
+
+  boost::optional<double> CoilCoolingDXVariableSpeed::autosizedEvaporativeCondenserPumpRatedPowerConsumption() const {
+    return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->autosizedEvaporativeCondenserPumpRatedPowerConsumption();
+  }
 
 } // model
 } // openstudio

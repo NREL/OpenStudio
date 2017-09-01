@@ -187,6 +187,12 @@ class MODEL_API BoilerSteam : public StraightComponent {
 
   //@}
 
+  boost::optional<double> autosizedNominalCapacity() const ;
+
+  void autosize();
+
+  void applySizingValues();
+
  protected:
 
   /// @cond

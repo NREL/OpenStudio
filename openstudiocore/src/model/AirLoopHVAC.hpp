@@ -314,6 +314,12 @@ class MODEL_API AirLoopHVAC : public Loop
 
   static IddObjectType iddObjectType();
 
+  boost::optional<double> autosizedDesignSupplyAirFlowRate() const ;
+
+  void autosize();
+
+  void applySizingValues();
+
  protected:
 
   friend class Model;

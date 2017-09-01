@@ -571,6 +571,43 @@ namespace detail {
     return OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::InducedAirInletNodeName;
   }
 
+  boost::optional<double> AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::autosizedMaximumTotalAirFlowRate() const {
+    return getAutosizedValue("Design Size Maximum Total Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::autosizedMaximumHotWaterFlowRate() const {
+    return getAutosizedValue("Design Size Maximum Hot Water Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::autosizedMaximumColdWaterFlowRate() const {
+    return getAutosizedValue("Design Size Maximum Cold Water Flow Rate", "m3/s");
+  }
+
+  void AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::autosize() {
+    autosizedMaximumTotalAirFlowRate();
+    autosizedMaximumHotWaterFlowRate();
+    autosizedMaximumColdWaterFlowRate();
+  }
+
+  void AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedMaximumTotalAirFlowRate();
+    if (val) {
+      setMaximumTotalAirFlowRate(val.get());
+    }
+
+    val = autosizedMaximumHotWaterFlowRate();
+    if (val) {
+      setMaximumHotWaterFlowRate(val.get());
+    }
+
+    val = autosizedMaximumColdWaterFlowRate();
+    if (val) {
+      setMaximumColdWaterFlowRate(val.get());
+    }
+
+  }
+
 } // detail
 
 AirTerminalSingleDuctConstantVolumeFourPipeInduction::AirTerminalSingleDuctConstantVolumeFourPipeInduction(const Model& model, HVACComponent& heatingCoil)
@@ -772,6 +809,18 @@ AirTerminalSingleDuctConstantVolumeFourPipeInduction::AirTerminalSingleDuctConst
   : StraightComponent(impl)
 {}
 /// @endcond
+
+  boost::optional<double> AirTerminalSingleDuctConstantVolumeFourPipeInduction::autosizedMaximumTotalAirFlowRate() const {
+    return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl>()->autosizedMaximumTotalAirFlowRate();
+  }
+
+  boost::optional<double> AirTerminalSingleDuctConstantVolumeFourPipeInduction::autosizedMaximumHotWaterFlowRate() const {
+    return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl>()->autosizedMaximumHotWaterFlowRate();
+  }
+
+  boost::optional<double> AirTerminalSingleDuctConstantVolumeFourPipeInduction::autosizedMaximumColdWaterFlowRate() const {
+    return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl>()->autosizedMaximumColdWaterFlowRate();
+  }
 
 } // model
 } // openstudio

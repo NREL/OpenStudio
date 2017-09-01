@@ -486,6 +486,63 @@ namespace detail {
     return newObject;
   }
 
+  boost::optional<double> CoilPerformanceDXCooling_Impl::autosizedGrossRatedTotalCoolingCapacity() const {
+    return getAutosizedValue("Gross Design Size Total Cooling Capacity", "W");
+  }
+
+  boost::optional<double> CoilPerformanceDXCooling_Impl::autosizedGrossRatedSensibleHeatRatio() const {
+    return getAutosizedValue("Gross Design Size Sensible Heat Ratio", "");
+  }
+
+  boost::optional<double> CoilPerformanceDXCooling_Impl::autosizedRatedAirFlowRate() const {
+    return getAutosizedValue("Design Size Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> CoilPerformanceDXCooling_Impl::autosizedEvaporativeCondenserAirFlowRate() const {
+    return getAutosizedValue("Design Size Evaporative Condenser Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> CoilPerformanceDXCooling_Impl::autosizedEvaporativeCondenserPumpRatedPowerConsumption() const {
+    return getAutosizedValue("Evaporative Condenser Pump Design Size Power Consumption", "W");
+  }
+
+  void CoilPerformanceDXCooling_Impl::autosize() {
+    autosizedGrossRatedTotalCoolingCapacity();
+    autosizedGrossRatedSensibleHeatRatio();
+    autosizedRatedAirFlowRate();
+    autosizedEvaporativeCondenserAirFlowRate();
+    autosizedEvaporativeCondenserPumpRatedPowerConsumption();
+  }
+
+  void CoilPerformanceDXCooling_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedGrossRatedTotalCoolingCapacity();
+    if (val) {
+      setGrossRatedTotalCoolingCapacity(val.get());
+    }
+
+    val = autosizedGrossRatedSensibleHeatRatio();
+    if (val) {
+      setGrossRatedSensibleHeatRatio(val.get());
+    }
+
+    val = autosizedRatedAirFlowRate();
+    if (val) {
+      setRatedAirFlowRate(val.get());
+    }
+
+    val = autosizedEvaporativeCondenserAirFlowRate();
+    if (val) {
+      setEvaporativeCondenserAirFlowRate(val.get());
+    }
+
+    val = autosizedEvaporativeCondenserPumpRatedPowerConsumption();
+    if (val) {
+      setEvaporativeCondenserPumpRatedPowerConsumption(val.get());
+    }
+
+  }
+
 } // detail
 
 CoilPerformanceDXCooling::CoilPerformanceDXCooling(const Model& model,
@@ -833,6 +890,34 @@ CoilPerformanceDXCooling::CoilPerformanceDXCooling(std::shared_ptr<detail::CoilP
   : ParentObject(impl)
 {}
 /// @endcond
+
+  boost::optional<double> CoilPerformanceDXCooling::autosizedGrossRatedTotalCoolingCapacity() const {
+    return getImpl<detail::CoilPerformanceDXCooling_Impl>()->autosizedGrossRatedTotalCoolingCapacity();
+  }
+
+  boost::optional<double> CoilPerformanceDXCooling::autosizedGrossRatedSensibleHeatRatio() const {
+    return getImpl<detail::CoilPerformanceDXCooling_Impl>()->autosizedGrossRatedSensibleHeatRatio();
+  }
+
+  boost::optional<double> CoilPerformanceDXCooling::autosizedRatedAirFlowRate() const {
+    return getImpl<detail::CoilPerformanceDXCooling_Impl>()->autosizedRatedAirFlowRate();
+  }
+
+  boost::optional<double> CoilPerformanceDXCooling::autosizedEvaporativeCondenserAirFlowRate() const {
+    return getImpl<detail::CoilPerformanceDXCooling_Impl>()->autosizedEvaporativeCondenserAirFlowRate();
+  }
+
+  boost::optional<double> CoilPerformanceDXCooling::autosizedEvaporativeCondenserPumpRatedPowerConsumption() const {
+    return getImpl<detail::CoilPerformanceDXCooling_Impl>()->autosizedEvaporativeCondenserPumpRatedPowerConsumption();
+  }
+
+  void CoilPerformanceDXCooling::autosize() {
+    return getImpl<detail::CoilPerformanceDXCooling_Impl>()->autosize();
+  }
+
+  void CoilPerformanceDXCooling::applySizingValues() {
+    return getImpl<detail::CoilPerformanceDXCooling_Impl>()->applySizingValues();
+  }
 
 } // model
 } // openstudio

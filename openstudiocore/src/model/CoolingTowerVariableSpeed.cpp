@@ -692,6 +692,43 @@ namespace detail {
     return false;
   }
 
+  boost::optional<double> CoolingTowerVariableSpeed_Impl::autosizedDesignWaterFlowRate() const {
+    return getAutosizedValue("Design Size Design Water Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> CoolingTowerVariableSpeed_Impl::autosizedDesignAirFlowRate() const {
+    return getAutosizedValue("Design Size Design Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> CoolingTowerVariableSpeed_Impl::autosizedDesignFanPower() const {
+    return getAutosizedValue("Design Size Design Fan Power", "W");
+  }
+
+  void CoolingTowerVariableSpeed_Impl::autosize() {
+    autosizedDesignWaterFlowRate();
+    autosizedDesignAirFlowRate();
+    autosizedDesignFanPower();
+  }
+
+  void CoolingTowerVariableSpeed_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedDesignWaterFlowRate();
+    if (val) {
+      setDesignWaterFlowRate(val.get());
+    }
+
+    val = autosizedDesignAirFlowRate();
+    if (val) {
+      setDesignAirFlowRate(val.get());
+    }
+
+    val = autosizedDesignFanPower();
+    if (val) {
+      setDesignFanPower(val.get());
+    }
+
+  }
+
 } // detail
 
 CoolingTowerVariableSpeed::CoolingTowerVariableSpeed(const Model& model)
@@ -1074,6 +1111,18 @@ CoolingTowerVariableSpeed::CoolingTowerVariableSpeed(std::shared_ptr<detail::Coo
   : StraightComponent(impl)
 {}
 /// @endcond
+
+  boost::optional<double> CoolingTowerVariableSpeed::autosizedDesignWaterFlowRate() const {
+    return getImpl<detail::CoolingTowerVariableSpeed_Impl>()->autosizedDesignWaterFlowRate();
+  }
+
+  boost::optional<double> CoolingTowerVariableSpeed::autosizedDesignAirFlowRate() const {
+    return getImpl<detail::CoolingTowerVariableSpeed_Impl>()->autosizedDesignAirFlowRate();
+  }
+
+  boost::optional<double> CoolingTowerVariableSpeed::autosizedDesignFanPower() const {
+    return getImpl<detail::CoolingTowerVariableSpeed_Impl>()->autosizedDesignFanPower();
+  }
 
 } // model
 } // openstudio

@@ -327,6 +327,23 @@ namespace detail {
     return surfaces;
   }
 
+  boost::optional<double> ZoneHVACHighTemperatureRadiant_Impl::autosizedMaximumPowerInput() const {
+    return getAutosizedValue("Design Size Maximum Power Input", "W");
+  }
+
+  void ZoneHVACHighTemperatureRadiant_Impl::autosize() {
+    autosizedMaximumPowerInput();
+  }
+
+  void ZoneHVACHighTemperatureRadiant_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedMaximumPowerInput();
+    if (val) {
+      setMaximumPowerInput(val.get());
+    }
+
+  }
+
 } // detail
 
 ZoneHVACHighTemperatureRadiant::ZoneHVACHighTemperatureRadiant(const Model& model)
@@ -483,6 +500,10 @@ ZoneHVACHighTemperatureRadiant::ZoneHVACHighTemperatureRadiant(std::shared_ptr<d
   : ZoneHVACComponent(impl)
 {}
 /// @endcond
+
+  boost::optional<double> ZoneHVACHighTemperatureRadiant::autosizedMaximumPowerInput() const {
+    return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->autosizedMaximumPowerInput();
+  }
 
 } // model
 } // openstudio

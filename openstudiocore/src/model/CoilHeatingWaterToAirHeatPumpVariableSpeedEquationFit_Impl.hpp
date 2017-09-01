@@ -107,6 +107,16 @@ namespace detail {
 
     Curve energyPartLoadFractionCurve() const;
 
+  boost::optional<double> autosizedRatedHeatingCapacityAtSelectedNominalSpeedLevel() const ;
+
+  boost::optional<double> autosizedRatedAirFlowRateAtSelectedNominalSpeedLevel() const ;
+
+  boost::optional<double> autosizedRatedWaterFlowRateAtSelectedNominalSpeedLevel() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{

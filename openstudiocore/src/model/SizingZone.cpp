@@ -937,6 +937,33 @@ namespace detail {
     bool result = setString(OS_Sizing_ZoneFields::DedicatedOutdoorAirHighSetpointTemperatureforDesign, "autosize");
     OS_ASSERT(result);
   }
+  boost::optional<double> SizingZone_Impl::autosizedDedicatedOutdoorAirLowSetpointTemperatureforDesign() const {
+    return getAutosizedValue("Design Size Dedicated Outdoor Air Low Setpoint Temperature for Design", "C");
+  }
+
+  boost::optional<double> SizingZone_Impl::autosizedDedicatedOutdoorAirHighSetpointTemperatureforDesign() const {
+    return getAutosizedValue("Design Size Dedicated Outdoor Air High Setpoint Temperature for Design", "C");
+  }
+
+  void SizingZone_Impl::autosize() {
+    autosizedDedicatedOutdoorAirLowSetpointTemperatureforDesign();
+    autosizedDedicatedOutdoorAirHighSetpointTemperatureforDesign();
+  }
+
+  void SizingZone_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedDedicatedOutdoorAirLowSetpointTemperatureforDesign();
+    if (val) {
+      setDedicatedOutdoorAirLowSetpointTemperatureforDesign(val.get());
+    }
+
+    val = autosizedDedicatedOutdoorAirHighSetpointTemperatureforDesign();
+    if (val) {
+      setDedicatedOutdoorAirHighSetpointTemperatureforDesign(val.get());
+    }
+
+  }
+
 } // detail
 
 SizingZone::SizingZone(const Model& model, const ThermalZone & thermalZone)
@@ -1455,6 +1482,22 @@ SizingZone::SizingZone(std::shared_ptr<detail::SizingZone_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond
+
+  boost::optional<double> SizingZone::autosizedDedicatedOutdoorAirLowSetpointTemperatureforDesign() const {
+    return getImpl<detail::SizingZone_Impl>()->autosizedDedicatedOutdoorAirLowSetpointTemperatureforDesign();
+  }
+
+  boost::optional<double> SizingZone::autosizedDedicatedOutdoorAirHighSetpointTemperatureforDesign() const {
+    return getImpl<detail::SizingZone_Impl>()->autosizedDedicatedOutdoorAirHighSetpointTemperatureforDesign();
+  }
+
+  void SizingZone::autosize() {
+    return getImpl<detail::SizingZone_Impl>()->autosize();
+  }
+
+  void SizingZone::applySizingValues() {
+    return getImpl<detail::SizingZone_Impl>()->applySizingValues();
+  }
 
 } // model
 } // openstudio

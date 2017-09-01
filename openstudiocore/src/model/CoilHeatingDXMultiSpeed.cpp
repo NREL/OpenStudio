@@ -430,6 +430,23 @@ namespace detail {
     return result;
   }
 
+  boost::optional<double> CoilHeatingDXMultiSpeed_Impl::autosizedResistiveDefrostHeaterCapacity() const {
+    return getAutosizedValue("Design Size Resistive Defrost Heater Capacity", "W");
+  }
+
+  void CoilHeatingDXMultiSpeed_Impl::autosize() {
+    autosizedResistiveDefrostHeaterCapacity();
+  }
+
+  void CoilHeatingDXMultiSpeed_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedResistiveDefrostHeaterCapacity();
+    if (val) {
+      setResistiveDefrostHeaterCapacity(val.get());
+    }
+
+  }
+
 } // detail
 
 CoilHeatingDXMultiSpeed::CoilHeatingDXMultiSpeed(const Model& model)
@@ -640,6 +657,10 @@ CoilHeatingDXMultiSpeed::CoilHeatingDXMultiSpeed(std::shared_ptr<detail::CoilHea
   : StraightComponent(impl)
 {}
 /// @endcond
+
+  boost::optional<double> CoilHeatingDXMultiSpeed::autosizedResistiveDefrostHeaterCapacity() const {
+    return getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->autosizedResistiveDefrostHeaterCapacity();
+  }
 
 } // model
 } // openstudio

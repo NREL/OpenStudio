@@ -99,6 +99,12 @@ namespace detail {
 
     bool isHeatingThrottlingRangeDefaulted() const;
 
+  boost::optional<double> autosizedMaximumElectricalPowertoPanel() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     /** @name Setters */
 
     bool setAvailabilitySchedule(Schedule& schedule);

@@ -103,6 +103,12 @@ class MODEL_API ZoneHVACBaseboardConvectiveElectric : public ZoneHVACComponent {
    **/
   void removeFromThermalZone();
 
+  boost::optional<double> autosizedNominalCapacity() const ;
+
+  void autosize();
+
+  void applySizingValues();
+
  protected:
 
   /// @cond

@@ -153,6 +153,14 @@ class MODEL_API HeaderedPumpsVariableSpeed : public StraightComponent {
   /** @name Other */
   //@{
 
+  boost::optional<double> autosizedTotalRatedFlowRate() const ;
+
+  boost::optional<double> autosizedRatedPowerConsumption() const ;
+
+  void autosize();
+
+  void applySizingValues();
+
   //@}
  protected:
   /// @cond

@@ -125,6 +125,14 @@ class MODEL_API ZoneHVACUnitHeater : public ZoneHVACComponent
 
   /** @name Other */
 
+  boost::optional<double> autosizedMaximumSupplyAirFlowRate() const ;
+
+  boost::optional<double> autosizedMaximumHotWaterFlowRate() const ;
+
+  void autosize();
+
+  void applySizingValues();
+
  protected:
   /// @cond
   typedef detail::ZoneHVACUnitHeater_Impl ImplType;

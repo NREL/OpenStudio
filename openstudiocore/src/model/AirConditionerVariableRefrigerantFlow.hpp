@@ -536,6 +536,22 @@ class MODEL_API AirConditionerVariableRefrigerantFlow : public StraightComponent
 
   std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> terminals() const;
 
+  boost::optional<double> autosizedRatedTotalCoolingCapacity() const ;
+
+  boost::optional<double> autosizedRatedTotalHeatingCapacity() const ;
+
+  boost::optional<double> autosizedResistiveDefrostHeaterCapacity() const ;
+
+  boost::optional<double> autosizedWaterCondenserVolumeFlowRate() const ;
+
+  boost::optional<double> autosizedEvaporativeCondenserAirFlowRate() const ;
+
+  boost::optional<double> autosizedEvaporativeCondenserPumpRatedPowerConsumption() const ;
+
+  void autosize();
+
+  void applySizingValues();
+
  protected:
 
   /// @cond

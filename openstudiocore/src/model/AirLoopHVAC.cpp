@@ -1617,6 +1617,23 @@ namespace detail {
     return supplySplitter() ? true : false;
   }
 
+  boost::optional<double> AirLoopHVAC_Impl::autosizedDesignSupplyAirFlowRate() const {
+    return getAutosizedValue("Design Size Design Supply Air Flow Rate", "m3/s");
+  }
+
+  void AirLoopHVAC_Impl::autosize() {
+    autosizedDesignSupplyAirFlowRate();
+  }
+
+  void AirLoopHVAC_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedDesignSupplyAirFlowRate();
+    if (val) {
+      setDesignSupplyAirFlowRate(val.get());
+    }
+
+  }
+
 } // detail
 
 AirLoopHVAC::AirLoopHVAC(Model& model, bool dualDuct)
@@ -1933,6 +1950,10 @@ bool AirLoopHVAC::removeSupplySplitter(HVACComponent & hvacComponent)
 bool AirLoopHVAC::isDualDuct() const {
   return getImpl<detail::AirLoopHVAC_Impl>()->isDualDuct();
 }
+
+  boost::optional<double> AirLoopHVAC::autosizedDesignSupplyAirFlowRate() const {
+    return getImpl<detail::AirLoopHVAC_Impl>()->autosizedDesignSupplyAirFlowRate();
+  }
 
 } // model
 

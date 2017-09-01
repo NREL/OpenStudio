@@ -241,6 +241,14 @@ namespace detail {
 
     bool addToNode(Node & node) override;
 
+  boost::optional<double> autosizedRatedFlowRate() const ;
+
+  boost::optional<double> autosizedRatedPowerConsumption() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
    protected:
 
    private:

@@ -1150,6 +1150,73 @@ namespace detail {
     return false;
   }
 
+  boost::optional<double> CoolingTowerSingleSpeed_Impl::autosizedDesignWaterFlowRate() const {
+    return getAutosizedValue("Design Size Design Water Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> CoolingTowerSingleSpeed_Impl::autosizedDesignAirFlowRate() const {
+    return getAutosizedValue("Design Size Design Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> CoolingTowerSingleSpeed_Impl::autosizedFanPoweratDesignAirFlowRate() const {
+    return getAutosizedValue("Design Size Fan Power at Design Air Flow Rate", "W");
+  }
+
+  boost::optional<double> CoolingTowerSingleSpeed_Impl::autosizedUFactorTimesAreaValueatDesignAirFlowRate() const {
+    return getAutosizedValue("Design Size U-Factor Times Area Value at Design Air Flow Rate", "W/K");
+  }
+
+  boost::optional<double> CoolingTowerSingleSpeed_Impl::autosizedAirFlowRateinFreeConvectionRegime() const {
+    return getAutosizedValue("Design Size Air Flow Rate in Free Convection Regime", "m3/s");
+  }
+
+  boost::optional<double> CoolingTowerSingleSpeed_Impl::autosizedUFactorTimesAreaValueatFreeConvectionAirFlowRate() const {
+    return getAutosizedValue("Design Size U-Factor Times Area Value at Free Convection Air Flow Rate", "W/K");
+  }
+
+  void CoolingTowerSingleSpeed_Impl::autosize() {
+    autosizedDesignWaterFlowRate();
+    autosizedDesignAirFlowRate();
+    autosizedFanPoweratDesignAirFlowRate();
+    autosizedUFactorTimesAreaValueatDesignAirFlowRate();
+    autosizedAirFlowRateinFreeConvectionRegime();
+    autosizedUFactorTimesAreaValueatFreeConvectionAirFlowRate();
+  }
+
+  void CoolingTowerSingleSpeed_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedDesignWaterFlowRate();
+    if (val) {
+      setDesignWaterFlowRate(val.get());
+    }
+
+    val = autosizedDesignAirFlowRate();
+    if (val) {
+      setDesignAirFlowRate(val.get());
+    }
+
+    val = autosizedFanPoweratDesignAirFlowRate();
+    if (val) {
+      setFanPoweratDesignAirFlowRate(val.get());
+    }
+
+    val = autosizedUFactorTimesAreaValueatDesignAirFlowRate();
+    if (val) {
+      setUFactorTimesAreaValueatDesignAirFlowRate(val.get());
+    }
+
+    val = autosizedAirFlowRateinFreeConvectionRegime();
+    if (val) {
+      setAirFlowRateinFreeConvectionRegime(val.get());
+    }
+
+    val = autosizedUFactorTimesAreaValueatFreeConvectionAirFlowRate();
+    if (val) {
+      setUFactorTimesAreaValueatFreeConvectionAirFlowRate(val.get());
+    }
+
+  }
+
 } // detail
 
 CoolingTowerSingleSpeed::CoolingTowerSingleSpeed(const Model& model)
@@ -1756,6 +1823,30 @@ CoolingTowerSingleSpeed::CoolingTowerSingleSpeed(std::shared_ptr<detail::Cooling
   : StraightComponent(impl)
 {}
 /// @endcond
+
+  boost::optional<double> CoolingTowerSingleSpeed::autosizedDesignWaterFlowRate() const {
+    return getImpl<detail::CoolingTowerSingleSpeed_Impl>()->autosizedDesignWaterFlowRate();
+  }
+
+  boost::optional<double> CoolingTowerSingleSpeed::autosizedDesignAirFlowRate() const {
+    return getImpl<detail::CoolingTowerSingleSpeed_Impl>()->autosizedDesignAirFlowRate();
+  }
+
+  boost::optional<double> CoolingTowerSingleSpeed::autosizedFanPoweratDesignAirFlowRate() const {
+    return getImpl<detail::CoolingTowerSingleSpeed_Impl>()->autosizedFanPoweratDesignAirFlowRate();
+  }
+
+  boost::optional<double> CoolingTowerSingleSpeed::autosizedUFactorTimesAreaValueatDesignAirFlowRate() const {
+    return getImpl<detail::CoolingTowerSingleSpeed_Impl>()->autosizedUFactorTimesAreaValueatDesignAirFlowRate();
+  }
+
+  boost::optional<double> CoolingTowerSingleSpeed::autosizedAirFlowRateinFreeConvectionRegime() const {
+    return getImpl<detail::CoolingTowerSingleSpeed_Impl>()->autosizedAirFlowRateinFreeConvectionRegime();
+  }
+
+  boost::optional<double> CoolingTowerSingleSpeed::autosizedUFactorTimesAreaValueatFreeConvectionAirFlowRate() const {
+    return getImpl<detail::CoolingTowerSingleSpeed_Impl>()->autosizedUFactorTimesAreaValueatFreeConvectionAirFlowRate();
+  }
 
 } // model
 } // openstudio

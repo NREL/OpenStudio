@@ -413,6 +413,18 @@ class MODEL_API AirLoopHVACUnitarySystem : public WaterToAirComponent {
   /** @name Other */
   //@{
 
+  boost::optional<double> autosizedSupplyAirFlowRateDuringCoolingOperation() const ;
+
+  boost::optional<double> autosizedSupplyAirFlowRateDuringHeatingOperation() const ;
+
+  boost::optional<double> autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisRequired() const ;
+
+  boost::optional<double> autosizedMaximumSupplyAirTemperature() const ;
+
+  void autosize();
+
+  void applySizingValues();
+
   //@}
  protected:
   /// @cond

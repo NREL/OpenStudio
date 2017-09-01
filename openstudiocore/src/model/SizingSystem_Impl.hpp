@@ -304,6 +304,16 @@ class MODEL_API SizingSystem_Impl : public ModelObject_Impl
 
   void setAirLoopHVAC(const AirLoopHVAC & airLoopHVAC);
 
+  boost::optional<double> autosizedDesignOutdoorAirFlowRate() const ;
+
+  boost::optional<double> autosizedCoolingDesignCapacity() const ;
+
+  boost::optional<double> autosizedHeatingDesignCapacity() const ;
+
+  void autosize();
+
+  void applySizingValues();
+
   protected:
 
   private:

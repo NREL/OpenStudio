@@ -110,6 +110,14 @@ namespace detail {
 
     double skinLossRadiativeFraction() const;
 
+  boost::optional<double> autosizedTotalRatedFlowRate() const ;
+
+  boost::optional<double> autosizedRatedPowerConsumption() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{

@@ -328,6 +328,23 @@ namespace detail {
     return false;
   }
 
+  boost::optional<double> CoilCoolingLowTempRadiantVarFlow_Impl::autosizedMaximumColdWaterFlow() const {
+    return getAutosizedValue("Design Size Maximum Cold Water Flow", "m3/s");
+  }
+
+  void CoilCoolingLowTempRadiantVarFlow_Impl::autosize() {
+    autosizedMaximumColdWaterFlow();
+  }
+
+  void CoilCoolingLowTempRadiantVarFlow_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedMaximumColdWaterFlow();
+    if (val) {
+      setMaximumColdWaterFlow(val.get());
+    }
+
+  }
+
 } // detail
 
  CoilCoolingLowTempRadiantVarFlow::CoilCoolingLowTempRadiantVarFlow(const Model& model,
@@ -461,6 +478,10 @@ CoilCoolingLowTempRadiantVarFlow::CoilCoolingLowTempRadiantVarFlow(std::shared_p
   : StraightComponent(impl)
 {}
 /// @endcond
+
+  boost::optional<double> CoilCoolingLowTempRadiantVarFlow::autosizedMaximumColdWaterFlow() const {
+    return getImpl<detail::CoilCoolingLowTempRadiantVarFlow_Impl>()->autosizedMaximumColdWaterFlow();
+  }
 
 } // model
 } // openstudio

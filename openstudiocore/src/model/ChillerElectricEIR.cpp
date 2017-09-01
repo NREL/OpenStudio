@@ -766,6 +766,43 @@ namespace detail {
     return true;
   }
 
+  boost::optional<double> ChillerElectricEIR_Impl::autosizedReferenceCapacity() const {
+    return getAutosizedValue("Design Size Reference Capacity", "W");
+  }
+
+  boost::optional<double> ChillerElectricEIR_Impl::autosizedReferenceChilledWaterFlowRate() const {
+    return getAutosizedValue("Design Size Reference Chilled Water Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> ChillerElectricEIR_Impl::autosizedReferenceCondenserFluidFlowRate() const {
+    return getAutosizedValue("Design Size Reference Condenser Fluid Flow Rate", "m3/s");
+  }
+
+  void ChillerElectricEIR_Impl::autosize() {
+    autosizedReferenceCapacity();
+    autosizedReferenceChilledWaterFlowRate();
+    autosizedReferenceCondenserFluidFlowRate();
+  }
+
+  void ChillerElectricEIR_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedReferenceCapacity();
+    if (val) {
+      setReferenceCapacity(val.get());
+    }
+
+    val = autosizedReferenceChilledWaterFlowRate();
+    if (val) {
+      setReferenceChilledWaterFlowRate(val.get());
+    }
+
+    val = autosizedReferenceCondenserFluidFlowRate();
+    if (val) {
+      setReferenceCondenserFluidFlowRate(val.get());
+    }
+
+  }
+
 } // detail
 
 ChillerElectricEIR::ChillerElectricEIR(const Model& model,
@@ -1310,6 +1347,18 @@ ChillerElectricEIR::ChillerElectricEIR(std::shared_ptr<detail::ChillerElectricEI
 {}
 
 /// @endcond
+
+  boost::optional<double> ChillerElectricEIR::autosizedReferenceCapacity() const {
+    return getImpl<detail::ChillerElectricEIR_Impl>()->autosizedReferenceCapacity();
+  }
+
+  boost::optional<double> ChillerElectricEIR::autosizedReferenceChilledWaterFlowRate() const {
+    return getImpl<detail::ChillerElectricEIR_Impl>()->autosizedReferenceChilledWaterFlowRate();
+  }
+
+  boost::optional<double> ChillerElectricEIR::autosizedReferenceCondenserFluidFlowRate() const {
+    return getImpl<detail::ChillerElectricEIR_Impl>()->autosizedReferenceCondenserFluidFlowRate();
+  }
 
 } // model
 } // openstudio

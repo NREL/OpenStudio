@@ -103,6 +103,18 @@ namespace detail {
 
     boost::optional<Node> outdoorAirInletNode() const;
 
+  boost::optional<double> autosizedDesignAirFlowRateUfactorTimesAreaValue() const ;
+
+  boost::optional<double> autosizedDesignWaterFlowRate() const ;
+
+  boost::optional<double> autosizedDesignAirFlowRate() const ;
+
+  boost::optional<double> autosizedDesignAirFlowRateFanPower() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{

@@ -665,6 +665,53 @@ AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::outputVariableNames() const
   }
 
 
+  boost::optional<double> AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::autosizedSupplyAirVolumetricFlowRate() const {
+    return getAutosizedValue("Design Size Supply Air Volumetric Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::autosizedMaximumTotalChilledWaterVolumetricFlowRate() const {
+    return getAutosizedValue("Design Size Maximum Total Chilled Water Volumetric Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::autosizedNumberofBeams() const {
+    return getAutosizedValue("Design Size Number of Beams", "");
+  }
+
+  boost::optional<double> AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::autosizedBeamLength() const {
+    return getAutosizedValue("Design Size Beam Length", "m");
+  }
+
+  void AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::autosize() {
+    autosizedSupplyAirVolumetricFlowRate();
+    autosizedMaximumTotalChilledWaterVolumetricFlowRate();
+    autosizedNumberofBeams();
+    autosizedBeamLength();
+  }
+
+  void AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedSupplyAirVolumetricFlowRate();
+    if (val) {
+      setSupplyAirVolumetricFlowRate(val.get());
+    }
+
+    val = autosizedMaximumTotalChilledWaterVolumetricFlowRate();
+    if (val) {
+      setMaximumTotalChilledWaterVolumetricFlowRate(val.get());
+    }
+
+    val = autosizedNumberofBeams();
+    if (val) {
+      setNumberofBeams(val.get());
+    }
+
+    val = autosizedBeamLength();
+    if (val) {
+      setBeamLength(val.get());
+    }
+
+  }
+
 } // detail
 
 AirTerminalSingleDuctConstantVolumeCooledBeam::AirTerminalSingleDuctConstantVolumeCooledBeam(const Model& model,
@@ -922,6 +969,22 @@ AirTerminalSingleDuctConstantVolumeCooledBeam::AirTerminalSingleDuctConstantVolu
   : StraightComponent(impl)
 {}
 /// @endcond
+
+  boost::optional<double> AirTerminalSingleDuctConstantVolumeCooledBeam::autosizedSupplyAirVolumetricFlowRate() const {
+    return getImpl<detail::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl>()->autosizedSupplyAirVolumetricFlowRate();
+  }
+
+  boost::optional<double> AirTerminalSingleDuctConstantVolumeCooledBeam::autosizedMaximumTotalChilledWaterVolumetricFlowRate() const {
+    return getImpl<detail::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl>()->autosizedMaximumTotalChilledWaterVolumetricFlowRate();
+  }
+
+  boost::optional<double> AirTerminalSingleDuctConstantVolumeCooledBeam::autosizedNumberofBeams() const {
+    return getImpl<detail::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl>()->autosizedNumberofBeams();
+  }
+
+  boost::optional<double> AirTerminalSingleDuctConstantVolumeCooledBeam::autosizedBeamLength() const {
+    return getImpl<detail::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl>()->autosizedBeamLength();
+  }
 
 } // model
 } // openstudio

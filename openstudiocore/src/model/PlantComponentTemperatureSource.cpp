@@ -179,6 +179,23 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  boost::optional<double> PlantComponentTemperatureSource_Impl::autosizedDesignVolumeFlowRate() const {
+    return getAutosizedValue("Design Size Design Volume Flow Rate", "m3/s");
+  }
+
+  void PlantComponentTemperatureSource_Impl::autosize() {
+    autosizedDesignVolumeFlowRate();
+  }
+
+  void PlantComponentTemperatureSource_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedDesignVolumeFlowRate();
+    if (val) {
+      setDesignVolumeFlowRate(val.get());
+    }
+
+  }
+
 } // detail
 
 PlantComponentTemperatureSource::PlantComponentTemperatureSource(const Model& model)
@@ -255,6 +272,10 @@ PlantComponentTemperatureSource::PlantComponentTemperatureSource(std::shared_ptr
   : StraightComponent(impl)
 {}
 /// @endcond
+
+  boost::optional<double> PlantComponentTemperatureSource::autosizedDesignVolumeFlowRate() const {
+    return getImpl<detail::PlantComponentTemperatureSource_Impl>()->autosizedDesignVolumeFlowRate();
+  }
 
 } // model
 } // openstudio

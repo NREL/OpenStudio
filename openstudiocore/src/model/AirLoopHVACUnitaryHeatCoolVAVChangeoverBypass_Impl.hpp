@@ -119,6 +119,22 @@ namespace detail {
 
     std::string dehumidificationControlType() const;
 
+  boost::optional<double> autosizedSystemAirFlowRateDuringCoolingOperation() const ;
+
+  boost::optional<double> autosizedSystemAirFlowRateDuringHeatingOperation() const ;
+
+  boost::optional<double> autosizedSystemAirFlowRateWhenNoCoolingorHeatingisNeeded() const ;
+
+  boost::optional<double> autosizedOutdoorAirFlowRateDuringCoolingOperation() const ;
+
+  boost::optional<double> autosizedOutdoorAirFlowRateDuringHeatingOperation() const ;
+
+  boost::optional<double> autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{

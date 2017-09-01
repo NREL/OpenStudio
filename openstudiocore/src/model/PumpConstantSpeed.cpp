@@ -697,6 +697,33 @@ namespace detail {
     return false;
   }
 
+  boost::optional<double> PumpConstantSpeed_Impl::autosizedRatedFlowRate() const {
+    return getAutosizedValue("Design Size Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> PumpConstantSpeed_Impl::autosizedRatedPowerConsumption() const {
+    return getAutosizedValue("Design Size Power Consumption", "W");
+  }
+
+  void PumpConstantSpeed_Impl::autosize() {
+    autosizedRatedFlowRate();
+    autosizedRatedPowerConsumption();
+  }
+
+  void PumpConstantSpeed_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedRatedFlowRate();
+    if (val) {
+      setRatedFlowRate(val.get());
+    }
+
+    val = autosizedRatedPowerConsumption();
+    if (val) {
+      setRatedPowerConsumption(val.get());
+    }
+
+  }
+
 } // detail
 
 PumpConstantSpeed::PumpConstantSpeed(const Model& model)
@@ -973,6 +1000,14 @@ PumpConstantSpeed::PumpConstantSpeed(std::shared_ptr<detail::PumpConstantSpeed_I
   : StraightComponent(impl)
 {}
 /// @endcond
+
+  boost::optional<double> PumpConstantSpeed::autosizedRatedFlowRate() const {
+    return getImpl<detail::PumpConstantSpeed_Impl>()->autosizedRatedFlowRate();
+  }
+
+  boost::optional<double> PumpConstantSpeed::autosizedRatedPowerConsumption() const {
+    return getImpl<detail::PumpConstantSpeed_Impl>()->autosizedRatedPowerConsumption();
+  }
 
 } // model
 } // openstudio

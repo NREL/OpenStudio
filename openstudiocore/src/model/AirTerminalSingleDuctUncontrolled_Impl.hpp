@@ -101,6 +101,12 @@ namespace detail {
 
     void autosizeMaximumAirFlowRate();
 
+  boost::optional<double> autosizedMaximumAirFlowRate() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
    private:
 
     REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctUncontrolled");

@@ -757,6 +757,43 @@ namespace detail {
     return result;
   }
 
+  boost::optional<double> CoilHeatingDXSingleSpeed_Impl::autosizedRatedTotalHeatingCapacity() const {
+    return getAutosizedValue("Design Size Total Heating Capacity", "W");
+  }
+
+  boost::optional<double> CoilHeatingDXSingleSpeed_Impl::autosizedRatedAirFlowRate() const {
+    return getAutosizedValue("Design Size Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> CoilHeatingDXSingleSpeed_Impl::autosizedResistiveDefrostHeaterCapacity() const {
+    return getAutosizedValue("Design Size Resistive Defrost Heater Capacity", "W");
+  }
+
+  void CoilHeatingDXSingleSpeed_Impl::autosize() {
+    autosizedRatedTotalHeatingCapacity();
+    autosizedRatedAirFlowRate();
+    autosizedResistiveDefrostHeaterCapacity();
+  }
+
+  void CoilHeatingDXSingleSpeed_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedRatedTotalHeatingCapacity();
+    if (val) {
+      setRatedTotalHeatingCapacity(val.get());
+    }
+
+    val = autosizedRatedAirFlowRate();
+    if (val) {
+      setRatedAirFlowRate(val.get());
+    }
+
+    val = autosizedResistiveDefrostHeaterCapacity();
+    if (val) {
+      setResistiveDefrostHeaterCapacity(val.get());
+    }
+
+  }
+
 } // detail
 
 CoilHeatingDXSingleSpeed::CoilHeatingDXSingleSpeed( const Model& model,
@@ -1158,6 +1195,18 @@ CoilHeatingDXSingleSpeed::CoilHeatingDXSingleSpeed(std::shared_ptr<detail::CoilH
 {}
 
 /// @endcond
+
+  boost::optional<double> CoilHeatingDXSingleSpeed::autosizedRatedTotalHeatingCapacity() const {
+    return getImpl<detail::CoilHeatingDXSingleSpeed_Impl>()->autosizedRatedTotalHeatingCapacity();
+  }
+
+  boost::optional<double> CoilHeatingDXSingleSpeed::autosizedRatedAirFlowRate() const {
+    return getImpl<detail::CoilHeatingDXSingleSpeed_Impl>()->autosizedRatedAirFlowRate();
+  }
+
+  boost::optional<double> CoilHeatingDXSingleSpeed::autosizedResistiveDefrostHeaterCapacity() const {
+    return getImpl<detail::CoilHeatingDXSingleSpeed_Impl>()->autosizedResistiveDefrostHeaterCapacity();
+  }
 
 } // model
 

@@ -85,6 +85,12 @@ namespace detail {
 
     boost::optional<DesignSpecificationOutdoorAir> designSpecificationOutdoorAirObject() const;
 
+  boost::optional<double> autosizedMaximumDamperAirFlowRate() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{

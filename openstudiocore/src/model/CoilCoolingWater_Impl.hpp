@@ -154,6 +154,24 @@ namespace detail {
 
     void setHeatExchangerConfiguration( std::string value );
 
+  boost::optional<double> autosizedDesignWaterFlowRate() const ;
+
+  boost::optional<double> autosizedDesignAirFlowRate() const ;
+
+  boost::optional<double> autosizedDesignInletWaterTemperature() const ;
+
+  boost::optional<double> autosizedDesignInletAirTemperature() const ;
+
+  boost::optional<double> autosizedDesignOutletAirTemperature() const ;
+
+  boost::optional<double> autosizedDesignInletAirHumidityRatio() const ;
+
+  boost::optional<double> autosizedDesignOutletAirHumidityRatio() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
   private:    
     REGISTER_LOGGER("openstudio.model.CoilCoolingWater");
 

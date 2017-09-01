@@ -242,6 +242,33 @@ namespace detail {
     return result;
   }
 
+  boost::optional<double> CoilHeatingWaterBaseboardRadiant_Impl::autosizedHeatingDesignCapacity() const {
+    return getAutosizedValue("Design Size Heating Design Capacity", "W");
+  }
+
+  boost::optional<double> CoilHeatingWaterBaseboardRadiant_Impl::autosizedMaximumWaterFlowRate() const {
+    return getAutosizedValue("Design Size Maximum Water Flow Rate", "m3/s");
+  }
+
+  void CoilHeatingWaterBaseboardRadiant_Impl::autosize() {
+    autosizedHeatingDesignCapacity();
+    autosizedMaximumWaterFlowRate();
+  }
+
+  void CoilHeatingWaterBaseboardRadiant_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedHeatingDesignCapacity();
+    if (val) {
+      setHeatingDesignCapacity(val.get());
+    }
+
+    val = autosizedMaximumWaterFlowRate();
+    if (val) {
+      setMaximumWaterFlowRate(val.get());
+    }
+
+  }
+
 } // detail
 
 CoilHeatingWaterBaseboardRadiant::CoilHeatingWaterBaseboardRadiant(const Model& model)
@@ -360,6 +387,14 @@ CoilHeatingWaterBaseboardRadiant::CoilHeatingWaterBaseboardRadiant(std::shared_p
   : StraightComponent(impl)
 {}
 /// @endcond
+
+  boost::optional<double> CoilHeatingWaterBaseboardRadiant::autosizedHeatingDesignCapacity() const {
+    return getImpl<detail::CoilHeatingWaterBaseboardRadiant_Impl>()->autosizedHeatingDesignCapacity();
+  }
+
+  boost::optional<double> CoilHeatingWaterBaseboardRadiant::autosizedMaximumWaterFlowRate() const {
+    return getImpl<detail::CoilHeatingWaterBaseboardRadiant_Impl>()->autosizedMaximumWaterFlowRate();
+  }
 
 } // model
 } // openstudio

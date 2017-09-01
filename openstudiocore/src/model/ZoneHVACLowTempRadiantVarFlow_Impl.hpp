@@ -115,6 +115,12 @@ namespace detail {
 
     double circuitLength() const;
 
+  boost::optional<double> autosizedHydronicTubingLength() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{

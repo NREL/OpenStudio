@@ -87,6 +87,12 @@ class MODEL_API AirTerminalSingleDuctUncontrolled : public StraightComponent {
 
   void autosizeMaximumAirFlowRate();
 
+  boost::optional<double> autosizedMaximumAirFlowRate() const ;
+
+  void autosize();
+
+  void applySizingValues();
+
   //@}
  protected:
   friend class Model;

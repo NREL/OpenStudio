@@ -235,6 +235,12 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   void resetAvailabilityManager();
 
+  boost::optional<double> autosizedDesignSupplyAirFlowRate() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
   private:
 
   REGISTER_LOGGER("openstudio.model.AirLoopHVAC");

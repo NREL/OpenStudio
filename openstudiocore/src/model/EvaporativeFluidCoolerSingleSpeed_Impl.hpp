@@ -138,6 +138,18 @@ namespace detail {
 
     boost::optional<Schedule> blowdownMakeupWaterUsageSchedule() const;
 
+  boost::optional<double> autosizedDesignAirFlowRate() const ;
+
+  boost::optional<double> autosizedFanPoweratDesignAirFlowRate() const ;
+
+  boost::optional<double> autosizedUfactorTimesAreaValueatDesignAirFlowRate() const ;
+
+  boost::optional<double> autosizedDesignWaterFlowRate() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{

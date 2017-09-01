@@ -77,6 +77,12 @@ namespace detail {
 
     double parasiticElectricLoad() const;
 
+  boost::optional<double> autosizedNominalCapacity() const ;
+
+  void autosize();
+
+  void applySizingValues();
+
     //@}
     /** @name Setters */
     //@{

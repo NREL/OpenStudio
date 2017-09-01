@@ -182,6 +182,14 @@ class MODEL_API CoilWaterHeatingAirToWaterHeatPump : public HVACComponent {
   /** @name Other */
   //@{
 
+  boost::optional<double> autosizedRatedEvaporatorAirFlowRate() const ;
+
+  boost::optional<double> autosizedRatedCondenserWaterFlowRate() const ;
+
+  void autosize();
+
+  void applySizingValues();
+
   //@}
  protected:
   /// @cond

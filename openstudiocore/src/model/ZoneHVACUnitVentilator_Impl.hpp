@@ -120,6 +120,16 @@ namespace detail {
 
     // boost::optional<ModelObject> designSpecificationZoneHVACSizingObject() const;
 
+  boost::optional<double> autosizedMaximumSupplyAirFlowRate() const ;
+
+  boost::optional<double> autosizedMinimumOutdoorAirFlowRate() const ;
+
+  boost::optional<double> autosizedMaximumOutdoorAirFlowRate() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{

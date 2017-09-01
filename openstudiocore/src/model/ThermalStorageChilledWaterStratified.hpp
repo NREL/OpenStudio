@@ -266,6 +266,14 @@ class MODEL_API ThermalStorageChilledWaterStratified : public WaterToWaterCompon
   /** @name Other */
   //@{
 
+  boost::optional<double> autosizedUseSideDesignFlowRate() const ;
+
+  boost::optional<double> autosizedSourceSideDesignFlowRate() const ;
+
+  void autosize();
+
+  void applySizingValues();
+
   //@}
  protected:
   /// @cond

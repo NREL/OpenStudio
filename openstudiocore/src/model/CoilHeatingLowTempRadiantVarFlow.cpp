@@ -279,6 +279,23 @@ namespace detail {
     return false;
   }
 
+  boost::optional<double> CoilHeatingLowTempRadiantVarFlow_Impl::autosizedMaximumHotWaterFlow() const {
+    return getAutosizedValue("Design Size Maximum Hot Water Flow", "m3/s");
+  }
+
+  void CoilHeatingLowTempRadiantVarFlow_Impl::autosize() {
+    autosizedMaximumHotWaterFlow();
+  }
+
+  void CoilHeatingLowTempRadiantVarFlow_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedMaximumHotWaterFlow();
+    if (val) {
+      setMaximumHotWaterFlow(val.get());
+    }
+
+  }
+
 } // detail
 
 CoilHeatingLowTempRadiantVarFlow::CoilHeatingLowTempRadiantVarFlow(const Model& model,Schedule& heatingControlTemperature)
@@ -366,6 +383,10 @@ CoilHeatingLowTempRadiantVarFlow::CoilHeatingLowTempRadiantVarFlow(std::shared_p
   : StraightComponent(impl)
 {}
 /// @endcond
+
+  boost::optional<double> CoilHeatingLowTempRadiantVarFlow::autosizedMaximumHotWaterFlow() const {
+    return getImpl<detail::CoilHeatingLowTempRadiantVarFlow_Impl>()->autosizedMaximumHotWaterFlow();
+  }
 
 } // model
 } // openstudio

@@ -103,6 +103,12 @@ namespace detail {
 
     bool isEfficiencyDefaulted() const;
 
+  boost::optional<double> autosizedNominalCapacity() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{

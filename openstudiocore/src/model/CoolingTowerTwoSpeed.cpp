@@ -976,6 +976,123 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  boost::optional<double> CoolingTowerTwoSpeed_Impl::autosizedDesignWaterFlowRate() const {
+    return getAutosizedValue("Design Size Design Water Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> CoolingTowerTwoSpeed_Impl::autosizedHighFanSpeedAirFlowRate() const {
+    return getAutosizedValue("Design Size High Fan Speed Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> CoolingTowerTwoSpeed_Impl::autosizedHighFanSpeedFanPower() const {
+    return getAutosizedValue("Design Size High Fan Speed Fan Power", "W");
+  }
+
+  boost::optional<double> CoolingTowerTwoSpeed_Impl::autosizedHighFanSpeedUFactorTimesAreaValue() const {
+    return getAutosizedValue("Design Size High Fan Speed U-Factor Times Area Value", "W/K");
+  }
+
+  boost::optional<double> CoolingTowerTwoSpeed_Impl::autosizedLowFanSpeedAirFlowRate() const {
+    return getAutosizedValue("Design Size Low Fan Speed Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> CoolingTowerTwoSpeed_Impl::autosizedLowFanSpeedFanPower() const {
+    return getAutosizedValue("Design Size Low Fan Speed Fan Power", "W");
+  }
+
+  boost::optional<double> CoolingTowerTwoSpeed_Impl::autosizedLowFanSpeedUFactorTimesAreaValue() const {
+    return getAutosizedValue("Design Size Low Fan Speed U-Factor Times Area Value", "W/K");
+  }
+
+  boost::optional<double> CoolingTowerTwoSpeed_Impl::autosizedFreeConvectionRegimeAirFlowRate() const {
+    return getAutosizedValue("Design Size Free Convection Regime Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> CoolingTowerTwoSpeed_Impl::autosizedFreeConvectionRegimeUFactorTimesAreaValue() const {
+    return getAutosizedValue("Design Size Free Convection Regime U-Factor Times Area Value", "W/K");
+  }
+
+  boost::optional<double> CoolingTowerTwoSpeed_Impl::autosizedLowSpeedNominalCapacity() const {
+    return getAutosizedValue("Design Size Low Speed Nominal Capacity", "W");
+  }
+
+  boost::optional<double> CoolingTowerTwoSpeed_Impl::autosizedFreeConvectionNominalCapacity() const {
+    return getAutosizedValue("Design Size Free Convection Nominal Capacity", "W");
+  }
+
+  void CoolingTowerTwoSpeed_Impl::autosize() {
+    autosizedDesignWaterFlowRate();
+    autosizedHighFanSpeedAirFlowRate();
+    autosizedHighFanSpeedFanPower();
+    autosizedHighFanSpeedUFactorTimesAreaValue();
+    autosizedLowFanSpeedAirFlowRate();
+    autosizedLowFanSpeedFanPower();
+    autosizedLowFanSpeedUFactorTimesAreaValue();
+    autosizedFreeConvectionRegimeAirFlowRate();
+    autosizedFreeConvectionRegimeUFactorTimesAreaValue();
+    autosizedLowSpeedNominalCapacity();
+    autosizedFreeConvectionNominalCapacity();
+  }
+
+  void CoolingTowerTwoSpeed_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedDesignWaterFlowRate();
+    if (val) {
+      setDesignWaterFlowRate(val.get());
+    }
+
+    val = autosizedHighFanSpeedAirFlowRate();
+    if (val) {
+      setHighFanSpeedAirFlowRate(val.get());
+    }
+
+    val = autosizedHighFanSpeedFanPower();
+    if (val) {
+      setHighFanSpeedFanPower(val.get());
+    }
+
+    val = autosizedHighFanSpeedUFactorTimesAreaValue();
+    if (val) {
+      setHighFanSpeedUFactorTimesAreaValue(val.get());
+    }
+
+    val = autosizedLowFanSpeedAirFlowRate();
+    if (val) {
+      setLowFanSpeedAirFlowRate(val.get());
+    }
+
+    val = autosizedLowFanSpeedFanPower();
+    if (val) {
+      setLowFanSpeedFanPower(val.get());
+    }
+
+    val = autosizedLowFanSpeedUFactorTimesAreaValue();
+    if (val) {
+      setLowFanSpeedUFactorTimesAreaValue(val.get());
+    }
+
+    val = autosizedFreeConvectionRegimeAirFlowRate();
+    if (val) {
+      setFreeConvectionRegimeAirFlowRate(val.get());
+    }
+
+    val = autosizedFreeConvectionRegimeUFactorTimesAreaValue();
+    if (val) {
+      setFreeConvectionRegimeUFactorTimesAreaValue(val.get());
+    }
+
+    val = autosizedLowSpeedNominalCapacity();
+    if (val) {
+      setLowSpeedNominalCapacity(val.get());
+    }
+
+    val = autosizedFreeConvectionNominalCapacity();
+    if (val) {
+      setFreeConvectionNominalCapacity(val.get());
+    }
+
+  }
+
 } // detail
 
 CoolingTowerTwoSpeed::CoolingTowerTwoSpeed(const Model& model)
@@ -1610,6 +1727,50 @@ CoolingTowerTwoSpeed::CoolingTowerTwoSpeed(std::shared_ptr<detail::CoolingTowerT
   : StraightComponent(impl)
 {}
 /// @endcond
+
+  boost::optional<double> CoolingTowerTwoSpeed::autosizedDesignWaterFlowRate() const {
+    return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->autosizedDesignWaterFlowRate();
+  }
+
+  boost::optional<double> CoolingTowerTwoSpeed::autosizedHighFanSpeedAirFlowRate() const {
+    return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->autosizedHighFanSpeedAirFlowRate();
+  }
+
+  boost::optional<double> CoolingTowerTwoSpeed::autosizedHighFanSpeedFanPower() const {
+    return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->autosizedHighFanSpeedFanPower();
+  }
+
+  boost::optional<double> CoolingTowerTwoSpeed::autosizedHighFanSpeedUFactorTimesAreaValue() const {
+    return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->autosizedHighFanSpeedUFactorTimesAreaValue();
+  }
+
+  boost::optional<double> CoolingTowerTwoSpeed::autosizedLowFanSpeedAirFlowRate() const {
+    return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->autosizedLowFanSpeedAirFlowRate();
+  }
+
+  boost::optional<double> CoolingTowerTwoSpeed::autosizedLowFanSpeedFanPower() const {
+    return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->autosizedLowFanSpeedFanPower();
+  }
+
+  boost::optional<double> CoolingTowerTwoSpeed::autosizedLowFanSpeedUFactorTimesAreaValue() const {
+    return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->autosizedLowFanSpeedUFactorTimesAreaValue();
+  }
+
+  boost::optional<double> CoolingTowerTwoSpeed::autosizedFreeConvectionRegimeAirFlowRate() const {
+    return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->autosizedFreeConvectionRegimeAirFlowRate();
+  }
+
+  boost::optional<double> CoolingTowerTwoSpeed::autosizedFreeConvectionRegimeUFactorTimesAreaValue() const {
+    return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->autosizedFreeConvectionRegimeUFactorTimesAreaValue();
+  }
+
+  boost::optional<double> CoolingTowerTwoSpeed::autosizedLowSpeedNominalCapacity() const {
+    return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->autosizedLowSpeedNominalCapacity();
+  }
+
+  boost::optional<double> CoolingTowerTwoSpeed::autosizedFreeConvectionNominalCapacity() const {
+    return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->autosizedFreeConvectionNominalCapacity();
+  }
 
 } // model
 } // openstudio

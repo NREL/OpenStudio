@@ -383,6 +383,63 @@ namespace detail {
     return OS_Chiller_AbsorptionFields::CondenserOutletNodeName;
   }
 
+  boost::optional<double> ChillerAbsorption_Impl::autosizedNominalCapacity() const {
+    return getAutosizedValue("Design Size Nominal Capacity", "W");
+  }
+
+  boost::optional<double> ChillerAbsorption_Impl::autosizedNominalPumpingPower() const {
+    return getAutosizedValue("Design Size Nominal Pumping Power", "W");
+  }
+
+  boost::optional<double> ChillerAbsorption_Impl::autosizedDesignChilledWaterFlowRate() const {
+    return getAutosizedValue("Design Size Design Chilled Water Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> ChillerAbsorption_Impl::autosizedDesignCondenserWaterFlowRate() const {
+    return getAutosizedValue("Design Size Design Condenser Water Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> ChillerAbsorption_Impl::autosizedDesignGeneratorFluidFlowRate() const {
+    return getAutosizedValue("Design Size Design Generator Fluid Flow Rate", "m3/s");
+  }
+
+  void ChillerAbsorption_Impl::autosize() {
+    autosizedNominalCapacity();
+    autosizedNominalPumpingPower();
+    autosizedDesignChilledWaterFlowRate();
+    autosizedDesignCondenserWaterFlowRate();
+    autosizedDesignGeneratorFluidFlowRate();
+  }
+
+  void ChillerAbsorption_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedNominalCapacity();
+    if (val) {
+      setNominalCapacity(val.get());
+    }
+
+    val = autosizedNominalPumpingPower();
+    if (val) {
+      setNominalPumpingPower(val.get());
+    }
+
+    val = autosizedDesignChilledWaterFlowRate();
+    if (val) {
+      setDesignChilledWaterFlowRate(val.get());
+    }
+
+    val = autosizedDesignCondenserWaterFlowRate();
+    if (val) {
+      setDesignCondenserWaterFlowRate(val.get());
+    }
+
+    val = autosizedDesignGeneratorFluidFlowRate();
+    if (val) {
+      setDesignGeneratorFluidFlowRate(val.get());
+    }
+
+  }
+
 } // detail
 
 ChillerAbsorption::ChillerAbsorption(const Model& model)
@@ -630,6 +687,26 @@ ChillerAbsorption::ChillerAbsorption(std::shared_ptr<detail::ChillerAbsorption_I
   : WaterToWaterComponent(impl)
 {}
 /// @endcond
+
+  boost::optional<double> ChillerAbsorption::autosizedNominalCapacity() const {
+    return getImpl<detail::ChillerAbsorption_Impl>()->autosizedNominalCapacity();
+  }
+
+  boost::optional<double> ChillerAbsorption::autosizedNominalPumpingPower() const {
+    return getImpl<detail::ChillerAbsorption_Impl>()->autosizedNominalPumpingPower();
+  }
+
+  boost::optional<double> ChillerAbsorption::autosizedDesignChilledWaterFlowRate() const {
+    return getImpl<detail::ChillerAbsorption_Impl>()->autosizedDesignChilledWaterFlowRate();
+  }
+
+  boost::optional<double> ChillerAbsorption::autosizedDesignCondenserWaterFlowRate() const {
+    return getImpl<detail::ChillerAbsorption_Impl>()->autosizedDesignCondenserWaterFlowRate();
+  }
+
+  boost::optional<double> ChillerAbsorption::autosizedDesignGeneratorFluidFlowRate() const {
+    return getImpl<detail::ChillerAbsorption_Impl>()->autosizedDesignGeneratorFluidFlowRate();
+  }
 
 } // model
 } // openstudio

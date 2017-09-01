@@ -850,6 +850,23 @@ namespace detail {
     return boost::none;
   }
 
+  boost::optional<double> FanVariableVolume_Impl::autosizedMaximumFlowRate() const {
+    return getAutosizedValue("Design Size Maximum Flow Rate", "m3/s");
+  }
+
+  void FanVariableVolume_Impl::autosize() {
+    autosizedMaximumFlowRate();
+  }
+
+  void FanVariableVolume_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedMaximumFlowRate();
+    if (val) {
+      setMaximumFlowRate(val.get());
+    }
+
+  }
+
 } // detail
 
 FanVariableVolume::FanVariableVolume(const Model& model, Schedule & schedule)
@@ -1222,6 +1239,10 @@ FanVariableVolume::FanVariableVolume(std::shared_ptr<detail::FanVariableVolume_I
   : StraightComponent(impl)
 {}
 /// @endcond
+
+  boost::optional<double> FanVariableVolume::autosizedMaximumFlowRate() const {
+    return getImpl<detail::FanVariableVolume_Impl>()->autosizedMaximumFlowRate();
+  }
 
 } // model
 } // openstudio

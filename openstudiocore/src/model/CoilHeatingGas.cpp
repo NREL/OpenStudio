@@ -459,6 +459,23 @@ namespace detail{
     return false;
   }
 
+  boost::optional<double> CoilHeatingGas_Impl::autosizedNominalCapacity() const {
+    return getAutosizedValue("Design Size Nominal Capacity", "W");
+  }
+
+  void CoilHeatingGas_Impl::autosize() {
+    autosizedNominalCapacity();
+  }
+
+  void CoilHeatingGas_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedNominalCapacity();
+    if (val) {
+      setNominalCapacity(val.get());
+    }
+
+  }
+
 }// detail
 
 // create a new CoilHeatingGas object in the model's workspace
@@ -611,6 +628,10 @@ IddObjectType CoilHeatingGas::iddObjectType() {
   IddObjectType result(IddObjectType::OS_Coil_Heating_Gas);
   return result;
 }
+
+  boost::optional<double> CoilHeatingGas::autosizedNominalCapacity() const {
+    return getImpl<detail::CoilHeatingGas_Impl>()->autosizedNominalCapacity();
+  }
 
 } // model
 } // openstudio

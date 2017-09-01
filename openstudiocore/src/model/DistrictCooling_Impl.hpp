@@ -80,6 +80,12 @@ namespace detail {
 
     bool isNominalCapacityAutosized() const;
 
+  boost::optional<double> autosizedNominalCapacity() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{

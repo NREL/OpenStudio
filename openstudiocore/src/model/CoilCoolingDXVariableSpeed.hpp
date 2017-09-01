@@ -168,6 +168,16 @@ class MODEL_API CoilCoolingDXVariableSpeed : public StraightComponent {
 
   void removeAllSpeeds();
 
+  boost::optional<double> autosizedGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel() const ;
+
+  boost::optional<double> autosizedRatedAirFlowRateAtSelectedNominalSpeedLevel() const ;
+
+  boost::optional<double> autosizedEvaporativeCondenserPumpRatedPowerConsumption() const ;
+
+  void autosize();
+
+  void applySizingValues();
+
   //@}
  protected:
   /// @cond

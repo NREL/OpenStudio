@@ -134,6 +134,12 @@ class MODEL_API ZoneHVACHighTemperatureRadiant : public ZoneHVACComponent {
   void removeFromThermalZone();
   //@}
 
+  boost::optional<double> autosizedMaximumPowerInput() const ;
+
+  void autosize();
+
+  void applySizingValues();
+
  protected:
 
   /// @cond

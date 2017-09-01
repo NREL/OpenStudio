@@ -120,6 +120,23 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  boost::optional<double> CoilHeatingGasMultiStageStageData_Impl::autosizedNominalCapacity() const {
+    return getAutosizedValue("Design Size Nominal Capacity", "W");
+  }
+
+  void CoilHeatingGasMultiStageStageData_Impl::autosize() {
+    autosizedNominalCapacity();
+  }
+
+  void CoilHeatingGasMultiStageStageData_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedNominalCapacity();
+    if (val) {
+      setNominalCapacity(val.get());
+    }
+
+  }
+
 } // detail
 
 CoilHeatingGasMultiStageStageData::CoilHeatingGasMultiStageStageData(const Model& model)
@@ -173,6 +190,18 @@ CoilHeatingGasMultiStageStageData::CoilHeatingGasMultiStageStageData(std::shared
   : ModelObject(impl)
 {}
 /// @endcond
+
+  boost::optional<double> CoilHeatingGasMultiStageStageData::autosizedNominalCapacity() const {
+    return getImpl<detail::CoilHeatingGasMultiStageStageData_Impl>()->autosizedNominalCapacity();
+  }
+
+  void CoilHeatingGasMultiStageStageData::autosize() {
+    return getImpl<detail::CoilHeatingGasMultiStageStageData_Impl>()->autosize();
+  }
+
+  void CoilHeatingGasMultiStageStageData::applySizingValues() {
+    return getImpl<detail::CoilHeatingGasMultiStageStageData_Impl>()->applySizingValues();
+  }
 
 } // model
 } // openstudio

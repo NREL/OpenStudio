@@ -287,6 +287,33 @@ namespace detail {
     return t_clone;
   }
 
+  boost::optional<double> CoilHeatingDXMultiSpeedStageData_Impl::autosizedGrossRatedHeatingCapacity() const {
+    return getAutosizedValue("Gross Design Size Heating Capacity", "W");
+  }
+
+  boost::optional<double> CoilHeatingDXMultiSpeedStageData_Impl::autosizedRatedAirFlowRate() const {
+    return getAutosizedValue("Design Size Air Flow Rate", "m3/s");
+  }
+
+  void CoilHeatingDXMultiSpeedStageData_Impl::autosize() {
+    autosizedGrossRatedHeatingCapacity();
+    autosizedRatedAirFlowRate();
+  }
+
+  void CoilHeatingDXMultiSpeedStageData_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedGrossRatedHeatingCapacity();
+    if (val) {
+      setGrossRatedHeatingCapacity(val.get());
+    }
+
+    val = autosizedRatedAirFlowRate();
+    if (val) {
+      setRatedAirFlowRate(val.get());
+    }
+
+  }
+
 } // detail
 
 CoilHeatingDXMultiSpeedStageData::CoilHeatingDXMultiSpeedStageData(const Model& model)
@@ -521,6 +548,22 @@ CoilHeatingDXMultiSpeedStageData::CoilHeatingDXMultiSpeedStageData(std::shared_p
   : ParentObject(impl)
 {}
 /// @endcond
+
+  boost::optional<double> CoilHeatingDXMultiSpeedStageData::autosizedGrossRatedHeatingCapacity() const {
+    return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->autosizedGrossRatedHeatingCapacity();
+  }
+
+  boost::optional<double> CoilHeatingDXMultiSpeedStageData::autosizedRatedAirFlowRate() const {
+    return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->autosizedRatedAirFlowRate();
+  }
+
+  void CoilHeatingDXMultiSpeedStageData::autosize() {
+    return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->autosize();
+  }
+
+  void CoilHeatingDXMultiSpeedStageData::applySizingValues() {
+    return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->applySizingValues();
+  }
 
 } // model
 } // openstudio

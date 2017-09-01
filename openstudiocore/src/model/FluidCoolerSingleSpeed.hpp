@@ -129,6 +129,18 @@ class MODEL_API FluidCoolerSingleSpeed : public StraightComponent {
   /** @name Other */
   //@{
 
+  boost::optional<double> autosizedDesignAirFlowRateUfactorTimesAreaValue() const ;
+
+  boost::optional<double> autosizedDesignWaterFlowRate() const ;
+
+  boost::optional<double> autosizedDesignAirFlowRate() const ;
+
+  boost::optional<double> autosizedDesignAirFlowRateFanPower() const ;
+
+  void autosize();
+
+  void applySizingValues();
+
   //@}
  protected:
   /// @cond

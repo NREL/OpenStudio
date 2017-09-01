@@ -999,6 +999,53 @@ namespace detail {
     return true;
   }
 
+  boost::optional<double> ZoneHVACIdealLoadsAirSystem_Impl::autosizedMaximumHeatingAirFlowRate() const {
+    return getAutosizedValue("Design Size Maximum Heating Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> ZoneHVACIdealLoadsAirSystem_Impl::autosizedMaximumSensibleHeatingCapacity() const {
+    return getAutosizedValue("Design Size Maximum Sensible Heating Capacity", "W");
+  }
+
+  boost::optional<double> ZoneHVACIdealLoadsAirSystem_Impl::autosizedMaximumCoolingAirFlowRate() const {
+    return getAutosizedValue("Design Size Maximum Cooling Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> ZoneHVACIdealLoadsAirSystem_Impl::autosizedMaximumTotalCoolingCapacity() const {
+    return getAutosizedValue("Design Size Maximum Total Cooling Capacity", "W");
+  }
+
+  void ZoneHVACIdealLoadsAirSystem_Impl::autosize() {
+    autosizedMaximumHeatingAirFlowRate();
+    autosizedMaximumSensibleHeatingCapacity();
+    autosizedMaximumCoolingAirFlowRate();
+    autosizedMaximumTotalCoolingCapacity();
+  }
+
+  void ZoneHVACIdealLoadsAirSystem_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedMaximumHeatingAirFlowRate();
+    if (val) {
+      setMaximumHeatingAirFlowRate(val.get());
+    }
+
+    val = autosizedMaximumSensibleHeatingCapacity();
+    if (val) {
+      setMaximumSensibleHeatingCapacity(val.get());
+    }
+
+    val = autosizedMaximumCoolingAirFlowRate();
+    if (val) {
+      setMaximumCoolingAirFlowRate(val.get());
+    }
+
+    val = autosizedMaximumTotalCoolingCapacity();
+    if (val) {
+      setMaximumTotalCoolingCapacity(val.get());
+    }
+
+  }
+
 } // detail
 
 ZoneHVACIdealLoadsAirSystem::ZoneHVACIdealLoadsAirSystem(const Model& model)
@@ -1491,6 +1538,22 @@ ZoneHVACIdealLoadsAirSystem::ZoneHVACIdealLoadsAirSystem(std::shared_ptr<detail:
   : ZoneHVACComponent(impl)
 {}
 /// @endcond
+
+  boost::optional<double> ZoneHVACIdealLoadsAirSystem::autosizedMaximumHeatingAirFlowRate() const {
+    return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->autosizedMaximumHeatingAirFlowRate();
+  }
+
+  boost::optional<double> ZoneHVACIdealLoadsAirSystem::autosizedMaximumSensibleHeatingCapacity() const {
+    return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->autosizedMaximumSensibleHeatingCapacity();
+  }
+
+  boost::optional<double> ZoneHVACIdealLoadsAirSystem::autosizedMaximumCoolingAirFlowRate() const {
+    return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->autosizedMaximumCoolingAirFlowRate();
+  }
+
+  boost::optional<double> ZoneHVACIdealLoadsAirSystem::autosizedMaximumTotalCoolingCapacity() const {
+    return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->autosizedMaximumTotalCoolingCapacity();
+  }
 
 } // model
 } // openstudio

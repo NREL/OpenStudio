@@ -107,6 +107,12 @@ class MODEL_API AirTerminalDualDuctVAV : public Mixer {
     */
   boost::optional<Node> coldAirInletNode() const;
 
+  boost::optional<double> autosizedMaximumDamperAirFlowRate() const ;
+
+  void autosize();
+
+  void applySizingValues();
+
   //@}
  protected:
   /// @cond

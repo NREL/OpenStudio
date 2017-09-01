@@ -122,6 +122,12 @@ class MODEL_API ZoneHVACBaseboardRadiantConvectiveElectric : public ZoneHVACComp
    **/
   void removeFromThermalZone();
 
+  boost::optional<double> autosizedHeatingDesignCapacity() const ;
+
+  void autosize();
+
+  void applySizingValues();
+
   //@}
  protected:
   /// @cond

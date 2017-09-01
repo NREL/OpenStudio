@@ -267,6 +267,12 @@ class MODEL_API PlantLoop : public Loop {
 
   SizingPlant sizingPlant() const;
 
+  boost::optional<double> autosizedMaximumLoopFlowRate() const ;
+
+  void autosize();
+
+  void applySizingValues();
+
   protected:
 
   friend class Model;

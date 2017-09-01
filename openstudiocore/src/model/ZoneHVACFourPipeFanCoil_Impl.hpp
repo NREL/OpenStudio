@@ -164,6 +164,22 @@ namespace detail {
 
     bool isHeatingConvergenceToleranceDefaulted() const;
 
+  boost::optional<double> autosizedMaximumSupplyAirFlowRate() const ;
+
+  boost::optional<double> autosizedMaximumOutdoorAirFlowRate() const ;
+
+  boost::optional<double> autosizedMaximumColdWaterFlowRate() const ;
+
+  boost::optional<double> autosizedMaximumHotWaterFlowRate() const ;
+
+  boost::optional<double> autosizedMinimumSupplyAirTemperatureinCoolingMode() const ;
+
+  boost::optional<double> autosizedMaximumSupplyAirTemperatureinHeatingMode() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{

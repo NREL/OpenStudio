@@ -101,6 +101,14 @@ namespace detail {
 
     Curve wasteHeatFunctionofTemperatureCurve() const;
 
+  boost::optional<double> autosizedGrossRatedHeatingCapacity() const ;
+
+  boost::optional<double> autosizedRatedAirFlowRate() const ;
+
+  void autosize();
+
+  void applySizingValues();
+
     //@}
     /** @name Setters */
     //@{

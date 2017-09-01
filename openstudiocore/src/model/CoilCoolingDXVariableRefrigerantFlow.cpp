@@ -248,6 +248,43 @@ namespace detail {
     return result;
   }
 
+  boost::optional<double> CoilCoolingDXVariableRefrigerantFlow_Impl::autosizedRatedTotalCoolingCapacity() const {
+    return getAutosizedValue("Design Size Total Cooling Capacity", "W");
+  }
+
+  boost::optional<double> CoilCoolingDXVariableRefrigerantFlow_Impl::autosizedRatedSensibleHeatRatio() const {
+    return getAutosizedValue("Design Size Sensible Heat Ratio", "");
+  }
+
+  boost::optional<double> CoilCoolingDXVariableRefrigerantFlow_Impl::autosizedRatedAirFlowRate() const {
+    return getAutosizedValue("Design Size Air Flow Rate", "m3/s");
+  }
+
+  void CoilCoolingDXVariableRefrigerantFlow_Impl::autosize() {
+    autosizedRatedTotalCoolingCapacity();
+    autosizedRatedSensibleHeatRatio();
+    autosizedRatedAirFlowRate();
+  }
+
+  void CoilCoolingDXVariableRefrigerantFlow_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedRatedTotalCoolingCapacity();
+    if (val) {
+      setRatedTotalCoolingCapacity(val.get());
+    }
+
+    val = autosizedRatedSensibleHeatRatio();
+    if (val) {
+      setRatedSensibleHeatRatio(val.get());
+    }
+
+    val = autosizedRatedAirFlowRate();
+    if (val) {
+      setRatedAirFlowRate(val.get());
+    }
+
+  }
+
 } // detail
 
 CoilCoolingDXVariableRefrigerantFlow::CoilCoolingDXVariableRefrigerantFlow(const Model& model)
@@ -371,6 +408,18 @@ CoilCoolingDXVariableRefrigerantFlow::CoilCoolingDXVariableRefrigerantFlow(std::
   : HVACComponent(impl)
 {}
 /// @endcond
+
+  boost::optional<double> CoilCoolingDXVariableRefrigerantFlow::autosizedRatedTotalCoolingCapacity() const {
+    return getImpl<detail::CoilCoolingDXVariableRefrigerantFlow_Impl>()->autosizedRatedTotalCoolingCapacity();
+  }
+
+  boost::optional<double> CoilCoolingDXVariableRefrigerantFlow::autosizedRatedSensibleHeatRatio() const {
+    return getImpl<detail::CoilCoolingDXVariableRefrigerantFlow_Impl>()->autosizedRatedSensibleHeatRatio();
+  }
+
+  boost::optional<double> CoilCoolingDXVariableRefrigerantFlow::autosizedRatedAirFlowRate() const {
+    return getImpl<detail::CoilCoolingDXVariableRefrigerantFlow_Impl>()->autosizedRatedAirFlowRate();
+  }
 
 } // model
 } // openstudio

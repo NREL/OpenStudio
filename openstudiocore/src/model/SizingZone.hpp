@@ -307,6 +307,14 @@ class MODEL_API SizingZone : public ModelObject {
   /** @name Other */
   //@{
 
+  boost::optional<double> autosizedDedicatedOutdoorAirLowSetpointTemperatureforDesign() const ;
+
+  boost::optional<double> autosizedDedicatedOutdoorAirHighSetpointTemperatureforDesign() const ;
+
+  void autosize();
+
+  void applySizingValues();
+
   //@}
  protected:
 

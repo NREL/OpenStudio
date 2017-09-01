@@ -625,6 +625,53 @@ namespace detail {
     return true;
   }
 
+  boost::optional<double> AirLoopHVACUnitaryHeatPumpAirToAir_Impl::autosizedSupplyAirFlowRateDuringCoolingOperation() const {
+    return getAutosizedValue("Design Size Supply Air Flow Rate During Cooling Operation", "m3/s");
+  }
+
+  boost::optional<double> AirLoopHVACUnitaryHeatPumpAirToAir_Impl::autosizedSupplyAirFlowRateDuringHeatingOperation() const {
+    return getAutosizedValue("Design Size Supply Air Flow Rate During Heating Operation", "m3/s");
+  }
+
+  boost::optional<double> AirLoopHVACUnitaryHeatPumpAirToAir_Impl::autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded() const {
+    return getAutosizedValue("Design Size Supply Air Flow Rate When No Cooling or Heating is Needed", "m3/s");
+  }
+
+  boost::optional<double> AirLoopHVACUnitaryHeatPumpAirToAir_Impl::autosizedMaximumSupplyAirTemperaturefromSupplementalHeater() const {
+    return getAutosizedValue("Design Size Maximum Supply Air Temperature from Supplemental Heater", "C");
+  }
+
+  void AirLoopHVACUnitaryHeatPumpAirToAir_Impl::autosize() {
+    autosizedSupplyAirFlowRateDuringCoolingOperation();
+    autosizedSupplyAirFlowRateDuringHeatingOperation();
+    autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
+    autosizedMaximumSupplyAirTemperaturefromSupplementalHeater();
+  }
+
+  void AirLoopHVACUnitaryHeatPumpAirToAir_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedSupplyAirFlowRateDuringCoolingOperation();
+    if (val) {
+      setSupplyAirFlowRateDuringCoolingOperation(val.get());
+    }
+
+    val = autosizedSupplyAirFlowRateDuringHeatingOperation();
+    if (val) {
+      setSupplyAirFlowRateDuringHeatingOperation(val.get());
+    }
+
+    val = autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
+    if (val) {
+      setSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded(val.get());
+    }
+
+    val = autosizedMaximumSupplyAirTemperaturefromSupplementalHeater();
+    if (val) {
+      setMaximumSupplyAirTemperaturefromSupplementalHeater(val.get());
+    }
+
+  }
+
 } // detail
 
 AirLoopHVACUnitaryHeatPumpAirToAir::AirLoopHVACUnitaryHeatPumpAirToAir( const Model & model,
@@ -865,6 +912,22 @@ AirLoopHVACUnitaryHeatPumpAirToAir::AirLoopHVACUnitaryHeatPumpAirToAir(std::shar
   : StraightComponent(impl)
 {}
 /// @endcond
+
+  boost::optional<double> AirLoopHVACUnitaryHeatPumpAirToAir::autosizedSupplyAirFlowRateDuringCoolingOperation() const {
+    return getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl>()->autosizedSupplyAirFlowRateDuringCoolingOperation();
+  }
+
+  boost::optional<double> AirLoopHVACUnitaryHeatPumpAirToAir::autosizedSupplyAirFlowRateDuringHeatingOperation() const {
+    return getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl>()->autosizedSupplyAirFlowRateDuringHeatingOperation();
+  }
+
+  boost::optional<double> AirLoopHVACUnitaryHeatPumpAirToAir::autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded() const {
+    return getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl>()->autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
+  }
+
+  boost::optional<double> AirLoopHVACUnitaryHeatPumpAirToAir::autosizedMaximumSupplyAirTemperaturefromSupplementalHeater() const {
+    return getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl>()->autosizedMaximumSupplyAirTemperaturefromSupplementalHeater();
+  }
 
 } // model
 } // openstudio

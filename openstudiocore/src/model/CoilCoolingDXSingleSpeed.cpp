@@ -1527,14 +1527,6 @@ void CoilCoolingDXSingleSpeed::autosizeRatedAirFlowRate() {
 
 // Autosizing methods
 
-void CoilCoolingDXSingleSpeed::autosize() {
-  return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->autosize();
-}
-
-void CoilCoolingDXSingleSpeed::applySizingValues() {
-  return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->applySizingValues();
-}
-
 boost::optional <double> CoilCoolingDXSingleSpeed::autosizedRatedAirFlowRate() const {
   return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->autosizedRatedAirFlowRate();
 }

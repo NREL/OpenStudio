@@ -333,6 +333,33 @@ namespace detail {
     return false;
   }
 
+  boost::optional<double> HeaderedPumpsVariableSpeed_Impl::autosizedTotalRatedFlowRate() const {
+    return getAutosizedValue("Total Design Size Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> HeaderedPumpsVariableSpeed_Impl::autosizedRatedPowerConsumption() const {
+    return getAutosizedValue("Design Size Power Consumption", "W");
+  }
+
+  void HeaderedPumpsVariableSpeed_Impl::autosize() {
+    autosizedTotalRatedFlowRate();
+    autosizedRatedPowerConsumption();
+  }
+
+  void HeaderedPumpsVariableSpeed_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedTotalRatedFlowRate();
+    if (val) {
+      setTotalRatedFlowRate(val.get());
+    }
+
+    val = autosizedRatedPowerConsumption();
+    if (val) {
+      setRatedPowerConsumption(val.get());
+    }
+
+  }
+
 } // detail
 
 HeaderedPumpsVariableSpeed::HeaderedPumpsVariableSpeed(const Model& model)
@@ -527,6 +554,14 @@ HeaderedPumpsVariableSpeed::HeaderedPumpsVariableSpeed(std::shared_ptr<detail::H
   : StraightComponent(impl)
 {}
 /// @endcond
+
+  boost::optional<double> HeaderedPumpsVariableSpeed::autosizedTotalRatedFlowRate() const {
+    return getImpl<detail::HeaderedPumpsVariableSpeed_Impl>()->autosizedTotalRatedFlowRate();
+  }
+
+  boost::optional<double> HeaderedPumpsVariableSpeed::autosizedRatedPowerConsumption() const {
+    return getImpl<detail::HeaderedPumpsVariableSpeed_Impl>()->autosizedRatedPowerConsumption();
+  }
 
 } // model
 } // openstudio

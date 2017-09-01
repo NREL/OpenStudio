@@ -424,6 +424,33 @@ namespace detail {
     return result;
   }
 
+  boost::optional<double> CoilWaterHeatingAirToWaterHeatPump_Impl::autosizedRatedEvaporatorAirFlowRate() const {
+    return getAutosizedValue("Design Size Evaporator Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> CoilWaterHeatingAirToWaterHeatPump_Impl::autosizedRatedCondenserWaterFlowRate() const {
+    return getAutosizedValue("Design Size Condenser Water Flow Rate", "m3/s");
+  }
+
+  void CoilWaterHeatingAirToWaterHeatPump_Impl::autosize() {
+    autosizedRatedEvaporatorAirFlowRate();
+    autosizedRatedCondenserWaterFlowRate();
+  }
+
+  void CoilWaterHeatingAirToWaterHeatPump_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedRatedEvaporatorAirFlowRate();
+    if (val) {
+      setRatedEvaporatorAirFlowRate(val.get());
+    }
+
+    val = autosizedRatedCondenserWaterFlowRate();
+    if (val) {
+      setRatedCondenserWaterFlowRate(val.get());
+    }
+
+  }
+
 } // detail
 
 CoilWaterHeatingAirToWaterHeatPump::CoilWaterHeatingAirToWaterHeatPump(const Model& model)
@@ -788,6 +815,14 @@ CoilWaterHeatingAirToWaterHeatPump::CoilWaterHeatingAirToWaterHeatPump(std::shar
   : HVACComponent(impl)
 {}
 /// @endcond
+
+  boost::optional<double> CoilWaterHeatingAirToWaterHeatPump::autosizedRatedEvaporatorAirFlowRate() const {
+    return getImpl<detail::CoilWaterHeatingAirToWaterHeatPump_Impl>()->autosizedRatedEvaporatorAirFlowRate();
+  }
+
+  boost::optional<double> CoilWaterHeatingAirToWaterHeatPump::autosizedRatedCondenserWaterFlowRate() const {
+    return getImpl<detail::CoilWaterHeatingAirToWaterHeatPump_Impl>()->autosizedRatedCondenserWaterFlowRate();
+  }
 
 } // model
 } // openstudio

@@ -142,6 +142,12 @@ namespace detail {
 
     void autosizeMaximumFlowRate();
 
+  boost::optional<double> autosizedMaximumFlowRate() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
    private:
 

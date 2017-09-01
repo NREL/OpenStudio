@@ -220,6 +220,20 @@ namespace detail {
 
     boost::optional<Schedule> indirectAlternateSetpointTemperatureSchedule() const;
 
+  boost::optional<double> autosizedTankVolume() const ;
+
+  boost::optional<double> autosizedTankHeight() const ;
+
+  boost::optional<double> autosizedHeater1Capacity() const ;
+
+  boost::optional<double> autosizedUseSideDesignFlowRate() const ;
+
+  boost::optional<double> autosizedSourceSideDesignFlowRate() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{
