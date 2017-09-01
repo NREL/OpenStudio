@@ -143,6 +143,8 @@ set(geometry_src
   geometry/Point3d.cpp
   geometry/PointLatLon.hpp
   geometry/PointLatLon.cpp
+  geometry/RoofGeometry.cpp
+  geometry/RoofGeometry.hpp
   geometry/ThreeJS.hpp
   geometry/ThreeJS.cpp
   geometry/Transformation.hpp
@@ -426,6 +428,7 @@ set(${target_name}_test_src
   geometry/Test/Geometry_GTest.cpp
   geometry/Test/Intersection_GTest.cpp
   geometry/Test/Plane_GTest.cpp
+  geometry/Test/RoofGeometry_GTest.cpp
   geometry/Test/ThreeJS_GTest.cpp
   geometry/Test/FloorplanJS_GTest.cpp
   geometry/Test/Transformation_GTest.cpp
