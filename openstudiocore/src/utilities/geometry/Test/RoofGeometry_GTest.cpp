@@ -846,3 +846,29 @@ TEST_F(GeometryFixture, circularAddTest2) {
     EXPECT_TRUE(test);
   }
 }
+
+TEST_F(GeometryFixture, circularAddTest2Clockwise) {
+  double pitch = radToDeg(atan(6.0 / 12.0));
+
+  std::vector<Point3d> footprint;
+  footprint.push_back(Point3d(50.0, 100.0, 0.0));
+  footprint.push_back(Point3d(150.0, 100.0, 0.0));
+  footprint.push_back(Point3d(150.0, 50.0, 0.0));
+  footprint.push_back(Point3d(50.0, 50.0, 0.0));
+
+  RoofGeometry rg;
+  std::vector< std::vector<Point3d> > roofPolygons = rg.makeHipRoof(footprint, pitch);
+
+  std::vector< std::vector<Point3d> > expectedRoofPolygons;
+  expectedRoofPolygons.push_back({Point3d(125.0, 75.0, 12.5), Point3d(150.0, 50.0, 0.0), Point3d(150.0, 100.0, 0.0)});
+  expectedRoofPolygons.push_back({Point3d(125.0, 75.0, 12.5), Point3d(150.0, 100.0, 0.0), Point3d(50.0, 100.0, 0.0), Point3d(75.0, 75.0, 12.5)});
+  expectedRoofPolygons.push_back({Point3d(75.0, 75.0, 12.5), Point3d(50.0, 100.0, 0.0), Point3d(50.0, 50.0, 0.0)});
+  expectedRoofPolygons.push_back({Point3d(75.0, 75.0, 12.5), Point3d(50.0, 50.0, 0.0), Point3d(150.0, 50.0, 0.0), Point3d(125.0, 75.0, 12.5)});
+
+  EXPECT_EQ(roofPolygons.size(), expectedRoofPolygons.size());
+
+  for (unsigned i = 0; i < roofPolygons.size(); ++i) {
+    bool test = polygonMatches(expectedRoofPolygons, roofPolygons[i]);
+    EXPECT_TRUE(test);
+  }
+}

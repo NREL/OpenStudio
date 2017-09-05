@@ -50,9 +50,9 @@ namespace openstudio{
     LineLinear2d(double a, double b, double c);
     LineLinear2d(Point3d& p1, Point3d& p2);
     boost::optional<Point3d> collide(LineLinear2d& line2);
-    double A;
-    double B;
-    double C;
+    double A = 0.0;
+    double B = 0.0;
+    double C = 0.0;
   private:
     REGISTER_LOGGER("utilities.LineLinear2d");
   };
@@ -84,7 +84,7 @@ namespace openstudio{
   public:
     Edge();
     Edge(Point3d& aBegin, Point3d& aEnd);
-    Edge getOffsetEdge(std::vector<Edge>& edges, int offset);
+    int getOffsetEdgeIndex(std::vector<Edge>& edges, int offset);
     bool operator<(const Edge& other) const;
     bool operator==(const Edge& other) const;
     Point3d begin;
@@ -104,14 +104,14 @@ namespace openstudio{
   public:
     Vertex();
     Vertex(Point3d& aPoint, double aDistance, boost::optional<Ray2d&> aBisector, boost::optional<Edge&> aPreviousEdge, boost::optional<Edge&> aNextEdge);
-    Vertex getOffsetVertex(std::vector<Vertex>& vertexes, int offset);
+    int getOffsetVertexIndex(std::vector<Vertex>& vertexes, int offset);
     std::vector<Vertex> getLav(std::vector< std::vector<Vertex> >& sLav);
     std::vector<Vertex> cutLavPart(std::vector<Vertex>& lav, Vertex& endVertex);
     bool operator<(const Vertex& other) const;
     bool operator==(const Vertex& other) const;
     Point3d point;
-    double distance;
-    bool processed;
+    double distance = 0.0;
+    bool processed = false;
     boost::optional<Edge> previousEdge;
     boost::optional<Edge> nextEdge;
     //FaceNode leftFace;
@@ -137,7 +137,7 @@ namespace openstudio{
   {
   public:
     Edge edge; // Edge for given queue.
-    bool closed; //Flag if queue is closed. After closing can't be modified.
+    bool closed = false; //Flag if queue is closed. After closing can't be modified.
   };
 
   // CHAINS
@@ -166,8 +166,8 @@ namespace openstudio{
     Vertex nextVertex;
     boost::optional<Vertex> currentVertex;
     //std::vector<Event> edgeList;
-    bool closed;
-    bool split;
+    bool closed = false;
+    bool split = false;
     ChainType chainType;
     //Event splitEvent;
   private:
@@ -192,8 +192,8 @@ namespace openstudio{
     Event(Point3d& aPoint, double aDistance, Chain& aChain, bool isPickEvent);
     Event(Point3d& aPoint, double aDistance, std::vector<Chain>& aChains);
     Point3d point;
-    double distance;
-    bool obsolete;
+    double distance = 0.0;
+    bool obsolete = false;
     Vertex parent;
     Vertex previousVertex;
     Vertex nextVertex;
@@ -226,7 +226,7 @@ namespace openstudio{
     SplitCandidate(Point3d& aPoint, double aDistance, boost::optional<Edge&> aOppositeEdge, boost::optional<Point3d&> aOppositePoint);
     bool operator==(const SplitCandidate& other) const;
     Point3d point;
-    double distance;
+    double distance = 0.0;
     boost::optional<Edge> oppositeEdge;
     boost::optional<Point3d> oppositePoint;
   private:
@@ -259,7 +259,7 @@ namespace openstudio{
     // init
     void initSlav(std::vector<Point3d>& polygon, std::vector< std::vector<Vertex> >& sLav, std::vector<Edge>& edges, std::vector<FaceQueue>& faces);
     void initEvents(std::vector< std::vector<Vertex> >& sLav, std::priority_queue<Event, std::vector<Event>, EventCompare>& queue, std::vector<Edge>& edges);
-    bool initPolygon(std::vector<Point3d>& polygon);
+    void initPolygon(std::vector<Point3d>& polygon);
 
     // math
     void makeCounterClockwise(std::vector<Point3d>& polygon);
