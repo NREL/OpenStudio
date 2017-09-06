@@ -30462,7 +30462,6 @@ Coil:Heating:DX:VariableSpeed,
         \note only required if ReverseCycle defrost strategy is specified
    N5,  \field Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
         \type real
-        \minimum -50.0
         \default -8.0
         \units C
    N6,  \field Outdoor Dry-Bulb Temperature to Turn On Compressor
@@ -35626,8 +35625,11 @@ AirLoopHVAC:UnitarySystem,
        \key Coil:Heating:Water
        \key Coil:Heating:Steam
        \key Coil:UserDefined
-       \note Enter the type of supplemental heating coil if included in the unitary system.
+       \note Enter the type of supplemental heating or reheat coil if included in the unitary system.
        \note Only required if dehumidification control type is "CoolReheat".
+       \note This coil supplements heating mode operation or reheats the supply air during dehumidification
+       \note mode operation. If set point based control is used the coils operate to meet their respective
+       \note supply air temperature set point.
   A19, \field Supplemental Heating Coil Name
        \type object-list
        \object-list HeatingCoilName
@@ -35905,7 +35907,14 @@ UnitarySystemPerformance:Multispeed,
        \note This choice does not apply to speed 1 operation.
        \note Yes = operate at the highest speed possible without exceeding the current load.
        \note No = allow operation at the average of two adjacent speeds to match the current load.
-  N3 , \field Heating Speed 1 Supply Air Flow Ratio
+  N3 , \field No Load Supply Air Flow Rate Ratio
+       \type real
+       \minimum 0
+       \maximum 1
+       \default 1
+       \note Used to define the no load operating air flow rate when the system fan
+       \note is specified to operate continuously.
+  N4 , \field Heating Speed 1 Supply Air Flow Ratio
        \required-field
        \type real
        \autosizable
@@ -35915,7 +35924,7 @@ UnitarySystemPerformance:Multispeed,
        \note Enter the lowest operating supply air flow ratio during heating
        \note operation or specify autosize. This value is the ratio of air flow
        \note at this speed to the maximum air flow rate.
-  N4 ; \field Cooling Speed 1 Supply Air Flow Ratio
+  N5 ; \field Cooling Speed 1 Supply Air Flow Ratio
        \required-field
        \type real
        \autosizable
@@ -37704,7 +37713,7 @@ AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl,
        \memo It describes the Variable Refrigerant Flow system excluding the performance of indoor units
        \memo Indoor units are modeled separately, see ZoneHVAC:TerminalUnit:VariableRefrigerantFlow
        \extensible:3 - repeat last three fields, remembering to remove ; from "inner" fields.
-       \min-fields 47
+       \min-fields 41
   A1 , \field Heat Pump Name
        \required-field
        \type alpha
@@ -37986,7 +37995,7 @@ AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl:HR,
        \memo Temperature Control. It describes the VRF HR system excluding the performance of indoor units.
        \memo Indoor units are modeled separately in the ZoneHVAC:TerminalUnit:VariableRefrigerantFlow object
        \extensible:3 repeat last three fields (changing numbering, please), remembering to remove ";" from "inner" fields.
-       \min-fields 64
+       \min-fields 58
   A1 , \field Name
        \required-field
        \type alpha
@@ -38665,6 +38674,7 @@ Controller:MechanicalVentilation,
         \key ProportionalControlBasedOnDesignOccupancy
         \key ProportionalControlBasedonOccupancySchedule
         \key IndoorAirQualityProcedureGenericContaminant
+        \key ProportionalControlBasedOnDesignOARate
         \default VentilationRateProcedure
    N1,  \field Zone Maximum Outdoor Air Fraction
         \type real
@@ -38742,21 +38752,30 @@ AirLoopHVAC,
        \type object-list
        \object-list ConnectorLists
    A6, \field Supply Side Inlet Node Name
-       \note Name of inlet node where return air enters the supply side of the air loop
+       \note Name of inlet node where air enters the supply side of the air loop.
+       \note If this air loop has a return path, then this node is where return air enters the supply side.
+       \note If this air loop has no return path, then this node is where outdoor air or other air enters the supply side.
        \required-field
        \type node
    A7, \field Demand Side Outlet Node Name
        \note Name of outlet node where return air leaves the demand side and enters the supply side.
+       \note Required if this air loop has a return path. Leave this field blank if there is no return.
        \required-field
        \type node
    A8, \field Demand Side Inlet Node Names
        \note Name of a Node or NodeList containing the inlet node(s) supplying air to zone equipment.
        \required-field
        \type node
-   A9; \field Supply Side Outlet Node Names
+   A9, \field Supply Side Outlet Node Names
        \note Name of a Node or NodeList containing the outlet node(s) supplying air to the demand side.
        \required-field
        \type node
+   N2; \field Design Return Air Flow Fraction of Supply Air Flow
+       \note The design return air flow rate as a fraction of supply air flow rate with no exhaust.
+       \note This can be used to model a pressurized system or set to zero to model a DOAS with no return flow.
+       \note Use ZoneAirMassFlowConservation to balance zone infiltration and mixing flows.
+       \minimum 0.0
+       \default 1.0
 
 AirLoopHVAC:OutdoorAirSystem:EquipmentList,
        \memo List equipment in simulation order
@@ -39076,11 +39095,49 @@ OutdoorAir:Node,
   A1,  \field Name
        \required-field
        \type node
-  N1 ; \field Height Above Ground
+  N1 , \field Height Above Ground
        \note A value less than zero indicates that the height will be ignored and the weather file conditions will be used.
        \type real
        \units m
        \default -1.0
+  A2 , \field Drybulb Temperature Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note Schedule values are real numbers, -100.0 to 100.0, units C
+  A3 , \field Wetbulb Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note Schedule values are real numbers, -100.0 to 100.0, units C
+  A4 , \field Wind Speed Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note Schedule values are real numbers, 0.0 to 40.0, units m/s
+  A5 , \field Wind Direction Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note Schedule values are real numbers, 0.0 to 360.0, units degree
+  A6 , \field Wind Pressure Coefficient Curve Name
+       \type object-list
+       \object-list WPCValueNames
+       \object-list UniVariateCurves
+       \object-list UniVariateTables
+       \note The name of the AirflowNetwork:MultiZone:WindPressureCoefficientValues, curve, or table object specifying the wind pressure coefficient.
+  A7 , \field Symmetric Wind Pressure Coefficient Curve
+       \type choice
+       \key Yes
+       \key No
+       \default No
+       \note Specify whether the pressure curve is symmetric or not.
+       \note Specify Yes for curves that should be evaluated from 0 to 180 degrees
+       \note Specify No for curves that should be evaluated from 0 to 360 degrees
+  A8 ; \field Wind Angle Type
+       \type choice
+       \key Absolute
+       \key Relative
+       \default Absolute
+       \note Specify whether the angle used to compute the wind pressure coefficient is absolute or relative
+       \note Specify Relative to compute the angle between the wind direction and the surface azimuth
+       \note Specify Absolute to use the wind direction angle directly
 
 OutdoorAir:NodeList,
        \extensible:1 Just duplicate last field and comments (changing numbering, please)
@@ -40762,11 +40819,16 @@ Boiler:HotWater,
        \type real
        \units W
        \minimum 0.0
-  N10; \field Sizing Factor
+  N10, \field Sizing Factor
        \note Multiplies the autosized capacity and flow rates
        \type real
        \minimum> 0.0
        \default 1.0
+  A8 ; \field End-Use Subcategory
+       \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
+       \type alpha
+       \retaincase
+       \default General
 
 Boiler:Steam,
        \memo This boiler model is an adaptation of the empirical model from the Building
@@ -40794,13 +40856,19 @@ Boiler:Steam,
        \key OtherFuel1
        \key OtherFuel2
   N1 , \field Maximum Operating Pressure
-       \units kPa
+       \required-field
+       \units Pa
+       \default 160000
   N2 , \field Theoretical Efficiency
+       \required-field
        \type real
-       \minimum 0.0
+       \minimum> 0.0
        \maximum 1.0
+       \default 0.8
   N3 , \field Design Outlet Steam Temperature
+       \required-field
        \units C
+       \default 100
   N4 , \field Nominal Capacity
        \units W
        \autosizable
@@ -40817,11 +40885,16 @@ Boiler:Steam,
        \type node
   A4 , \field Steam Outlet Node Name
        \type node
-  N11; \field Sizing Factor
+  N11, \field Sizing Factor
        \note Multiplies the autosized capacity and flow rates
        \type real
        \minimum> 0.0
        \default 1.0
+  A5 ; \field End-Use Subcategory
+       \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
+       \type alpha
+       \retaincase
+       \default General
 
 Chiller:Electric:EIR,
 \min-fields 23
@@ -41025,11 +41098,16 @@ Chiller:Electric:EIR,
        \note This optional schedule of temperatures will turn off heat recovery if inlet exceeds the value
        \type object-list
        \object-list ScheduleNames
-  A15; \field Heat Recovery Leaving Temperature Setpoint Node Name
+  A15, \field Heat Recovery Leaving Temperature Setpoint Node Name
        \note This optional field provides control over the heat recovery
        \note Using this triggers a model more suited to series bundle and chillers with higher temperature heat recovery
        \note If this field is not used, the bundles are modeled as being in parallel
        \type node
+  A16; \field End-Use Subcategory
+       \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
+       \type alpha
+       \retaincase
+       \default General
 
 Chiller:Electric:ReformulatedEIR,
 \min-fields 22
@@ -41222,11 +41300,16 @@ Chiller:Electric:ReformulatedEIR,
        \note This optional schedule of temperatures will turn off heat recovery if inlet exceeds the value
        \type object-list
        \object-list ScheduleNames
-  A14; \field Heat Recovery Leaving Temperature Setpoint Node Name
+  A14, \field Heat Recovery Leaving Temperature Setpoint Node Name
        \note This optional field provides control over the heat recovery
        \note Using this triggers a model more suited to series bundle and chillers with higher temperature heat recovery
        \note If this field is not used, the bundles are modeled as being in parallel
        \type node
+  A15; \field End-Use Subcategory
+       \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
+       \type alpha
+       \retaincase
+       \default General
 
 Chiller:Electric,
     \min-fields 27
@@ -41365,11 +41448,16 @@ Chiller:Electric,
        \note This optional schedule of temperatures will turn off heat recovery if inlet exceeds the value
        \type object-list
        \object-list ScheduleNames
-  A12; \field Heat Recovery Leaving Temperature Setpoint Node Name
+  A12, \field Heat Recovery Leaving Temperature Setpoint Node Name
        \note This optional field provides control over the heat recovery
        \note Using this triggers a model more suited to series bundle and chillers with higher temperature heat recovery
        \note If this field is not used, the bundles are modeled as being in parallel
        \type node
+  A13; \field End-Use Subcategory
+       \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
+       \type alpha
+       \retaincase
+       \default General
 
 Chiller:Absorption:Indirect,
    \min-fields 17
@@ -43526,11 +43614,16 @@ CoolingTower:SingleSpeed,
        \minimum 1
        \default 2.5
        \note The allowable maximal fraction of the nominal flow rate per cell
-  N25; \field Sizing Factor
+  N25, \field Sizing Factor
        \note Multiplies the autosized capacity and flow rates
        \type real
        \minimum> 0.0
        \default 1.0
+  A13; \field End-Use Subcategory
+       \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
+       \type alpha
+       \retaincase
+       \default General
 
 CoolingTower:TwoSpeed,
        \min-fields 24
@@ -43831,11 +43924,16 @@ CoolingTower:TwoSpeed,
        \minimum 1
        \default 2.5
        \note The allowable maximal fraction of the nominal flow rate per cell
-  N33; \field Sizing Factor
+  N33, \field Sizing Factor
        \note Multiplies the autosized capacity and flow rates
        \type real
        \minimum> 0.0
        \default 1.0
+  A12; \field End-Use Subcategory
+       \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
+       \type alpha
+       \retaincase
+       \default General
 
 CoolingTower:VariableSpeed:Merkel,
        \min-fields 24
@@ -44144,11 +44242,16 @@ CoolingTower:VariableSpeed:Merkel,
        \minimum 1
        \default 2.5
        \note The allowable maximal fraction of the nominal flow rate per cell
-  N29; \field Sizing Factor
+  N29, \field Sizing Factor
        \note Multiplies the autosized capacity and flow rates
        \type real
        \minimum> 0.0
        \default 1.0
+  A16; \field End-Use Subcategory
+       \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
+       \type alpha
+       \retaincase
+       \default General
 
 CoolingTower:VariableSpeed,
        \min-fields 15
@@ -44348,11 +44451,16 @@ CoolingTower:VariableSpeed,
        \minimum 1
        \default 2.5
        \note The allowable maximal fraction of the nominal flow rate per cell
-  N17; \field Sizing Factor
+  N17, \field Sizing Factor
        \note Multiplies the autosized capacity and flow rates
        \type real
        \minimum> 0.0
        \default 1.0
+  A14; \field End-Use Subcategory
+       \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
+       \type alpha
+       \retaincase
+       \default General
 
 CoolingTowerPerformance:CoolTools,
        \min-fields 44
@@ -46131,10 +46239,15 @@ WaterHeater:Mixed,
        \note StorageTank mode always requests flow unless tank is at its Maximum Temperature Limit
        \note IndirectHeatPrimarySetpoint mode requests flow whenever primary setpoint calls for heat
        \note IndirectHeatAlternateSetpoint mode requests flow whenever alternate indirect setpoint calls for heat
-  A19; \field Indirect Alternate Setpoint Temperature Schedule Name
+  A19, \field Indirect Alternate Setpoint Temperature Schedule Name
        \note This field is only used if the previous is set to IndirectHeatAlternateSetpoint
        \type object-list
        \object-list ScheduleNames
+  A20; \field End-Use Subcategory
+       \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
+       \type alpha
+       \retaincase
+       \default General
 
 WaterHeater:Stratified,
        \memo Water heater with stratified, multi-node water tank. May be used to model a tankless
@@ -46152,6 +46265,7 @@ WaterHeater:Stratified,
        \reference-class-name validBranchEquipmentTypes
        \reference validBranchEquipmentNames
   A2 , \field End-Use Subcategory
+       \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
        \type alpha
        \retaincase
        \default General
@@ -46744,7 +46858,6 @@ WaterHeater:HeatPump:PumpedCondenser,
   N4 , \field Minimum Inlet Air Temperature for Compressor Operation
        \type real
        \units C
-       \minimum -5
        \default 10
        \note Heat pump compressor will not operate when the inlet air dry-bulb temperature
        \note is below this value.
@@ -46831,7 +46944,7 @@ WaterHeater:HeatPump:PumpedCondenser,
        \note proportional to the schedule value (i.e. 0.4 = 40% outdoor air, 60% zone air).
   A29, \field Tank Element Control Logic
        \type choice
-       \key MutuallyExlcusive
+       \key MutuallyExclusive
        \key Simultaneous
        \default Simultaneous
        \note MutuallyExclusive means that once the tank heating element is active the
@@ -46996,7 +47109,6 @@ WaterHeater:HeatPump:WrappedCondenser,
   N5 , \field Minimum Inlet Air Temperature for Compressor Operation
        \type real
        \units C
-       \minimum -5
        \default 10
        \note Heat pump compressor will not operate when the inlet air dry-bulb temperature
        \note is below this value.
@@ -48727,8 +48839,10 @@ EnergyManagementSystem:MeteredOutputVariable,
        \key HeatRecoveryForCooling
        \key HeatRecoveryForHeating
   A8 , \field End-Use Subcategory
-       \type alpha
+       \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
        \note enter a user-defined subcategory for this metered output
+       \type alpha
+       \retaincase
   A9 ; \field Units
        \note optional but will result in dimensionless units for blank
        \note EnergyPlus units are standard SI units
@@ -49549,22 +49663,28 @@ AvailabilityManager:NightCycle,
   N1 , \field Thermostat Tolerance
        \default 1.0
        \units deltaC
+  A5 , \field Cycling Run Time Control Type
+       \type choice
+       \key FixedRunTime
+       \key Thermostat
+       \key ThermostatWithMinimumRunTime
+       \default FixedRunTime
   N2 , \field Cycling Run Time
        \default 3600.
        \units s
-  A5 , \field Control Zone or Zone List Name
+  A6 , \field Control Zone or Zone List Name
        \type object-list
        \object-list ZoneAndZoneListNames
        \note When AvailabilityManager:NightCycle is used in the zone component availability
        \note manager assignment list, the Control Zone Name should be the name of the zone in which the
        \note zone component is.
-  A6 , \field Cooling Control Zone or Zone List Name
+  A7 , \field Cooling Control Zone or Zone List Name
        \type object-list
        \object-list ZoneAndZoneListNames
-  A7 , \field Heating Control Zone or Zone List Name
+  A8 , \field Heating Control Zone or Zone List Name
        \type object-list
        \object-list ZoneAndZoneListNames
-  A8 ; \field Heating Zone Fans Only Zone or Zone List Name
+  A9 ; \field Heating Zone Fans Only Zone or Zone List Name
        \type object-list
        \object-list ZoneAndZoneListNames
 
@@ -49924,13 +50044,16 @@ SetpointManager:Scheduled:DualSetpoint,
        \type node
 
 SetpointManager:OutdoorAirReset,
-     \memo The Outdoor Air Reset Setpoint Manager sets the supply air
-     \memo temperature according to the outdoor air temperature using a reset rule.
+     \memo This Setpoint Manager is used to place a setpoint temperature on system node
+     \memo according to the outdoor air temperature using a reset rule. The outdoor air
+     \memo temperature is obtained from the weather information during the simulation.
   A1 , \field Name
        \required-field
   A2 , \field Control Variable
        \type choice
        \key Temperature
+       \key MaximumTemperature
+       \key MinimumTemperature
        \default Temperature
   N1 , \field Setpoint at Outdoor Low Temperature
        \units C
@@ -51027,10 +51150,14 @@ Refrigeration:Case,
         \minimum -70.0
         \maximum 40.0
         \note Default is 5 C less than case operating temperature
-  N21;  \field Average Refrigerant Charge Inventory
+  N21,  \field Average Refrigerant Charge Inventory
         \units kg/m
         \type real
         \default 0.0
+  A15; \field Under Case HVAC Return Air Node Name
+       \note Name of the return air node for this case.
+       \note If left blank, defaults to the first return air node for this zone.
+       \type node
 
 Refrigeration:CompressorRack,
         \memo Works in conjunction with the refrigeration case and walk-in objects to simulate the
@@ -51179,6 +51306,7 @@ Refrigeration:CompressorRack,
         \note conditions are the outdoor air conditions for the current timestep
         \note (e.g., no adjustment for height above ground).
   A13 , \field End-Use Subcategory
+        \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
         \type alpha
         \retaincase
         \default General
@@ -51261,6 +51389,7 @@ Refrigeration:Condenser:AirCooled,
         \note (e.g., no adjustment for height above ground).
         \note If the condenser rejects heat to a conditioned zone, enter the zone name here.
   A5 ,  \field End-Use Subcategory
+        \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
         \type alpha
         \retaincase
         \default General
@@ -51404,6 +51533,7 @@ Refrigeration:Condenser:EvaporativeCooled,
         \note shutdown/draining of the water cooling system in cold climate applications.
         \note For periods with schedule values of 0, the condenser operates as Air Cooled.
   A6,   \field End-Use Subcategory
+        \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
         \type alpha
         \retaincase
         \default General
@@ -56652,10 +56782,12 @@ Curve:CubicLinear,
   A2,  \field Input Unit Type for X
        \type choice
        \key Dimensionless
+       \key Temperature
        \default Dimensionless
   A3,  \field Input Unit Type for Y
        \type choice
        \key Dimensionless
+       \key Temperature
        \default Dimensionless
   A4;  \field Output Unit Type
        \type choice
@@ -57375,7 +57507,7 @@ Table:OneIndependentVariable,
 
 Table:TwoIndependentVariables,
        \extensible:3 repeat last three fields
-       \min-fields 22
+       \min-fields 14
        \memo Allows entry of tabular data pairs as alternate input
        \memo for performance curve objects.
        \memo Performance curve objects can be created using these inputs.
@@ -57427,6 +57559,7 @@ Table:TwoIndependentVariables,
        \key MassFlow
        \key Power
        \key Distance
+       \key Angle
        \default Dimensionless
   A5,  \field Input Unit Type for Y
        \type choice
@@ -57436,6 +57569,7 @@ Table:TwoIndependentVariables,
        \key MassFlow
        \key Power
        \key Distance
+       \key Wavelength
        \default Dimensionless
   A6,  \field Output Unit Type
        \type choice
@@ -57448,15 +57582,15 @@ Table:TwoIndependentVariables,
        \note This field is used to normalize the following output data.
        \note The minimum and maximum table output fields are also normalized.
        \note If this field is blank or 1, the table data presented below will be used.
+  A7 , \field External File Name
+       \type alpha
+       \retaincase
   N8 , \field X Value 1
-       \required-field
        \type real
        \begin-extensible
   N9 , \field Y Value 1
-       \required-field
        \type real
   N10; \field Output Value 1
-       \required-field
        \type real
 
 Table:MultiVariableLookup,
@@ -57678,7 +57812,7 @@ FluidProperties:Saturated,
       \format FluidProperty
       \extensible:1
       \max-fields 254
-  A1, \field Name
+  A1, \field Fluid Name
       \type object-list
       \object-list FluidNames
   A2, \field Fluid Property Type
@@ -58015,7 +58149,7 @@ UtilityCost:Tariff,
         \memo references the tariff name.  See UtilityCost:Charge:Simple, UtilityCost:Charge:Block,
         \memo UtilityCost:Ratchet, UtilityCost:Qualify, UtilityCost:Variable and
         \memo UtilityCost:Computation objects.
-   A1,  \field Name
+   A1,  \field Utility Cost Qualify Name
         \required-field
         \type alpha
         \reference UtilityCostTariffs
@@ -58133,7 +58267,7 @@ UtilityCost:Qualify,
         \memo "Qualified" entry will say "No" and the UtilityCost:Qualify that caused its exclusion
         \memo is shown. Multiple UtilityCost:Qualify objects can appear for the same tariff and
         \memo they can be based on any variable.
-   A1,  \field Name
+   A1,  \field Utility Cost Qualify Name
         \required-field
         \note Displayed in the report if the tariff does not qualify
    A2,  \field Tariff Name
@@ -58187,7 +58321,7 @@ UtilityCost:Charge:Simple,
         \memo It may also be used for taxes, surcharges and any other charges that occur on a
         \memo utility bill. Multiple UtilityCost:Charge:Simple objects may be defined for a single
         \memo tariff and they will be added together.
-   A1,  \field Name
+   A1,  \field Utility Cost Charge Simple Name
         \required-field
         \note Charge Variable Name
         \note This is the name associated with the UtilityCost:Charge:Simple object and will appear in the report.
@@ -58247,7 +58381,7 @@ UtilityCost:Charge:Block,
         \memo single tariff and they will be added together.
         \extensible:2
         \max-fields 37
-   A1,  \field Name
+   A1,  \field Utility Cost Charge Block Name
         \required-field
         \note Charge Variable Name
         \note This is the name associated with the UtilityCost:Charge:Block object and will appear in the report.
@@ -58669,7 +58803,7 @@ LifeCycleCost:UsePriceEscalation,
         \memo annual supplement to NIST Handbook 135 in Tables Ca-1 to Ca-5 and are included in an
         \memo EnergyPlus dataset file.
         \extensible:1
-   A1,  \field Name
+   A1,  \field LCC Price Escalation Name
         \required-field
         \type alpha
         \note The identifier used for the object. The name usually identifies the location (such as the
@@ -58856,7 +58990,7 @@ Output:Surfaces:List,
    \key ViewFactorInfo
    \key Lines
    \key CostInfo
-   \key DecayCurvesfromZoneComponentLoads
+   \key DecayCurvesFromComponentLoadsSummary
    A2; \field Report Specifications
    \note (IDF, only for Surfaces, Lines report -- will print transformed coordinates in IDF style)
    \type choice
@@ -59002,6 +59136,8 @@ Output:Table:SummaryReports,
        \key AdaptiveComfortSummary
        \key SensibleHeatGainSummary
        \key ZoneComponentLoadSummary
+       \key AirLoopComponentLoadSummary
+       \key FacilityComponentLoadSummary
        \key Standard62.1Summary
        \key EnergyMeters
        \key InitializationSummary
@@ -59395,7 +59531,7 @@ Output:Meter,
        \memo a list of meters that can be reported are available after a run on
        \memo the meter dictionary file (.mdd) if the Output:VariableDictionary has been requested.
        \format singleLine
-  A1 , \field Name
+  A1 , \field Key Name
        \required-field
        \type external-list
        \external-list autoRDDmeter
@@ -59410,6 +59546,7 @@ Output:Meter,
        \note RunPeriod, Environment, and Annual are the same
        \key Hourly
        \key Daily
+       \key Detailed
        \key Monthly
        \key RunPeriod
        \key Environment
@@ -59422,7 +59559,7 @@ Output:Meter:MeterFileOnly,
        \memo a list of meters that can be reported are available after a run on
        \memo the meter dictionary file (.mdd) if the Output:VariableDictionary has been requested.
        \format singleLine
-  A1,  \field Name
+  A1,  \field Key Name
        \required-field
        \type external-list
        \external-list autoRDDmeter
@@ -59450,7 +59587,7 @@ Output:Meter:Cumulative,
        \memo a list of meters that can be reported are available after a run on
        \memo the meter dictionary file (.mdd) if the Output:VariableDictionary has been requested.
        \format singleLine
-  A1,  \field Name
+  A1,  \field Key Name
        \required-field
        \type external-list
        \external-list autoRDDmeter
@@ -59478,7 +59615,7 @@ Output:Meter:Cumulative:MeterFileOnly,
        \memo a list of meters that can be reported are available after a run on
        \memo the meter dictionary file (.mdd) if the Output:VariableDictionary has been requested.
        \format singleLine
-  A1,  \field Name
+  A1,  \field Key Name
        \required-field
        \type external-list
        \external-list autoRDDmeter
@@ -59571,6 +59708,7 @@ Output:EnvironmentalImpactFactors,
        \key Hourly
        \key Daily
        \key Monthly
+       \key Annual
        \key RunPeriod
        \key Environment
        \key Annual
