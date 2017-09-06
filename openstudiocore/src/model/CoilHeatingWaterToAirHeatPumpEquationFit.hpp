@@ -167,9 +167,7 @@ class MODEL_API CoilHeatingWaterToAirHeatPumpEquationFit : public WaterToAirComp
 
   boost::optional<double> autosizedRatedHeatingCapacity() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
   //@}
  protected:

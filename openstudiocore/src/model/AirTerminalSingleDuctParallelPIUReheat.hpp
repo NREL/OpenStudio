@@ -153,9 +153,7 @@ class MODEL_API AirTerminalSingleDuctParallelPIUReheat : public StraightComponen
 
   boost::optional<double> autosizedMaximumHotWaterorSteamFlowRate() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
   //@}
  protected:

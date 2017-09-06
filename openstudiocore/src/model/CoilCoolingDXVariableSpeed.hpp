@@ -174,9 +174,7 @@ class MODEL_API CoilCoolingDXVariableSpeed : public StraightComponent {
 
   boost::optional<double> autosizedEvaporativeCondenserPumpRatedPowerConsumption() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
   //@}
  protected:

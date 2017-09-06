@@ -124,9 +124,7 @@ class MODEL_API ZoneHVACBaseboardRadiantConvectiveElectric : public ZoneHVACComp
 
   boost::optional<double> autosizedHeatingDesignCapacity() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
   //@}
  protected:

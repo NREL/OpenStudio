@@ -125,9 +125,7 @@ class MODEL_API ZoneHVACLowTemperatureRadiantElectric : public ZoneHVACComponent
 
   boost::optional<double> autosizedMaximumElectricalPowertoPanel() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
   //@}
  protected:

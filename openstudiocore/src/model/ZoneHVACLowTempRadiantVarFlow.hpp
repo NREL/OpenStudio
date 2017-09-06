@@ -143,9 +143,7 @@ class MODEL_API ZoneHVACLowTempRadiantVarFlow : public ZoneHVACComponent {
 
   boost::optional<double> autosizedHydronicTubingLength() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
   //@}
  protected:

@@ -421,9 +421,7 @@ class MODEL_API AirLoopHVACUnitarySystem : public WaterToAirComponent {
 
   boost::optional<double> autosizedMaximumSupplyAirTemperature() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
   //@}
  protected:

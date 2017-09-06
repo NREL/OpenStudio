@@ -393,9 +393,7 @@ class MODEL_API CoolingTowerTwoSpeed : public StraightComponent {
 
   boost::optional<double> autosizedFreeConvectionNominalCapacity() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
   //@}
  protected:

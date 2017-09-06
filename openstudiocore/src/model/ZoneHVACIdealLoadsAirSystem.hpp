@@ -316,9 +316,7 @@ class MODEL_API ZoneHVACIdealLoadsAirSystem : public ZoneHVACComponent {
 
   boost::optional<double> autosizedMaximumTotalCoolingCapacity() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
   //@}
  protected:

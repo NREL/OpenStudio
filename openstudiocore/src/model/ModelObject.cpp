@@ -630,7 +630,7 @@ namespace detail {
 
     // Get the object name
     if (!name()) {
-      //LOG(Warn, "This object does not have a name, cannot retrieve the autosized value '" + valueName + "'.");
+      LOG(Warn, "This object does not have a name, cannot retrieve the autosized value '" + valueName + "'.");
       return result;
     }
 
@@ -646,7 +646,7 @@ namespace detail {
 
     // Check that the model has a sql file
     if (!model().sqlFile()) {
-      //LOG(Warn, "This model has no sql file, cannot retrieve the autosized value '" + valueName + "'.");
+      LOG(Warn, "This model has no sql file, cannot retrieve the autosized value '" + valueName + "'.");
       return result;
     }
 
@@ -656,7 +656,7 @@ namespace detail {
 
     // Warn if the query failed
     if (!val) {
-      //LOG(Warn, "The autosized value query '" + query + "' returned no value.");
+      LOG(Warn, "The autosized value query '" + query + "' returned no value.");
     }
 
     return val;

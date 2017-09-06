@@ -392,9 +392,7 @@ class MODEL_API WaterHeaterStratified : public WaterToWaterComponent {
 
   boost::optional<double> autosizedSourceSideDesignFlowRate() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
   //@}
  protected:

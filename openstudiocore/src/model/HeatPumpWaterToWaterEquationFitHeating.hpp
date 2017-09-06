@@ -174,9 +174,7 @@ class MODEL_API HeatPumpWaterToWaterEquationFitHeating : public WaterToWaterComp
 
   boost::optional<double> autosizedRatedHeatingPowerConsumption() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
   //@}
  protected:

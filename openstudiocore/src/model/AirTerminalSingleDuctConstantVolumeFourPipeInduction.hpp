@@ -164,9 +164,7 @@ class MODEL_API AirTerminalSingleDuctConstantVolumeFourPipeInduction : public St
 
   boost::optional<double> autosizedMaximumColdWaterFlowRate() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
   //@}
  protected:

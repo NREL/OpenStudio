@@ -121,9 +121,7 @@ class MODEL_API CoilCoolingLowTempRadiantVarFlow : public StraightComponent {
 
   boost::optional<double> autosizedMaximumColdWaterFlow() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
   //@}
  protected:

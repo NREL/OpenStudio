@@ -87,9 +87,7 @@ class MODEL_API CoilHeatingDXVariableRefrigerantFlow : public HVACComponent {
 
   boost::optional<double> autosizedRatedAirFlowRate() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
  protected:
 

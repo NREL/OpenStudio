@@ -188,9 +188,7 @@ class MODEL_API AirLoopHVACUnitaryHeatPumpAirToAir : public StraightComponent
 
   boost::optional<double> autosizedMaximumSupplyAirTemperaturefromSupplementalHeater() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
   //@}
  protected:

@@ -123,9 +123,7 @@ class MODEL_API AirTerminalSingleDuctVAVNoReheat : public StraightComponent {
 
   boost::optional<double> autosizedMaximumAirFlowRate() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
   //@}
  protected:

@@ -143,9 +143,7 @@ class MODEL_API EvaporativeCoolerDirectResearchSpecial : public StraightComponen
 
   boost::optional<double> autosizedPrimaryAirDesignFlowRate() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
   //@}
  protected:

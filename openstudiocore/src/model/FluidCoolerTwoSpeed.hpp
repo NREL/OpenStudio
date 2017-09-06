@@ -193,9 +193,7 @@ class MODEL_API FluidCoolerTwoSpeed : public StraightComponent {
 
   boost::optional<double> autosizedLowFanSpeedFanPower() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
   //@}
  protected:

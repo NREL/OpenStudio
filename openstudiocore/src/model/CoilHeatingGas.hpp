@@ -144,9 +144,7 @@ class MODEL_API CoilHeatingGas : public StraightComponent {
 
   boost::optional<double> autosizedNominalCapacity() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
   //@}
  protected:

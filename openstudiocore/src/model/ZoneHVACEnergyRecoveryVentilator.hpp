@@ -134,9 +134,7 @@ class MODEL_API ZoneHVACEnergyRecoveryVentilator : public ZoneHVACComponent {
 
   boost::optional<double> autosizedExhaustAirFlowRate() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
   //@}
  protected:

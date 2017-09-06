@@ -116,9 +116,7 @@ class MODEL_API AirTerminalSingleDuctVAVHeatAndCoolReheat : public StraightCompo
 
   boost::optional<double> autosizedMaximumHotWaterorSteamFlowRate() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
   //@}
  protected:

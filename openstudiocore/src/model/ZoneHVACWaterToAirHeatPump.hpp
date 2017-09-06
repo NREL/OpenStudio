@@ -268,9 +268,7 @@ class MODEL_API ZoneHVACWaterToAirHeatPump : public ZoneHVACComponent {
 
   boost::optional<double> autosizedMaximumSupplyAirTemperaturefromSupplementalHeater() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
   //@}
  protected:

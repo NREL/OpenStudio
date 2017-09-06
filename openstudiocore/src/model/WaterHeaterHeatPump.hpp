@@ -193,9 +193,7 @@ class MODEL_API WaterHeaterHeatPump : public ZoneHVACComponent {
 
   boost::optional<double> autosizedEvaporatorAirFlowRate() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
   //@}
  protected:

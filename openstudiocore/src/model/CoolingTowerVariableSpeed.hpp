@@ -231,9 +231,7 @@ class MODEL_API CoolingTowerVariableSpeed : public StraightComponent {
 
   boost::optional<double> autosizedDesignFanPower() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
  protected:
 

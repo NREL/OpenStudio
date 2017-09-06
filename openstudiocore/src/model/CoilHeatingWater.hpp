@@ -170,9 +170,7 @@ class MODEL_API CoilHeatingWater : public WaterToAirComponent {
 
   boost::optional<double> autosizedRatedCapacity() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
   //@}
  protected:

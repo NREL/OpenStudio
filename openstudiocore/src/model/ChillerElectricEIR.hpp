@@ -303,9 +303,7 @@ class MODEL_API ChillerElectricEIR : public WaterToWaterComponent {
 
   boost::optional<double> autosizedReferenceCondenserFluidFlowRate() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
   //@}
  protected:

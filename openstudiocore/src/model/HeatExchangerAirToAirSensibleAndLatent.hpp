@@ -200,9 +200,7 @@ class MODEL_API HeatExchangerAirToAirSensibleAndLatent : public AirToAirComponen
 
   boost::optional<double> autosizedNominalSupplyAirFlowRate() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
  protected:
 

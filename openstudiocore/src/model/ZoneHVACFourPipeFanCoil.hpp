@@ -281,9 +281,7 @@ class MODEL_API ZoneHVACFourPipeFanCoil : public ZoneHVACComponent
 
   boost::optional<double> autosizedMaximumSupplyAirTemperatureinHeatingMode() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
   //@}
  protected:

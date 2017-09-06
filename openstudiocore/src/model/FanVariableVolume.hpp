@@ -227,9 +227,7 @@ class MODEL_API FanVariableVolume : public StraightComponent {
 
   boost::optional<double> autosizedMaximumFlowRate() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
   //@}
  protected:

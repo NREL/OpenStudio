@@ -103,9 +103,7 @@ class MODEL_API SolarCollectorFlatPlatePhotovoltaicThermal : public StraightComp
 
   boost::optional<double> autosizedDesignFlowRate() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
   //@}
  protected:

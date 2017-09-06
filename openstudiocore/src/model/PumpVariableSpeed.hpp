@@ -278,9 +278,7 @@ class MODEL_API PumpVariableSpeed : public StraightComponent
 
   boost::optional<double> autosizedRatedPowerConsumption() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
   //@}
  protected:

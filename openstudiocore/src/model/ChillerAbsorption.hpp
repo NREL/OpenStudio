@@ -181,9 +181,7 @@ class MODEL_API ChillerAbsorption : public WaterToWaterComponent {
 
   boost::optional<double> autosizedDesignGeneratorFluidFlowRate() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
   //@}
  protected:

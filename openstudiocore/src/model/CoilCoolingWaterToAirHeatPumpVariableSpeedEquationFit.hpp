@@ -130,9 +130,7 @@ class MODEL_API CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit : public W
 
   boost::optional<double> autosizedRatedWaterFlowRateAtSelectedNominalSpeedLevel() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
   //@}
  protected:

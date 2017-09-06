@@ -186,9 +186,7 @@ class MODEL_API CoilWaterHeatingAirToWaterHeatPump : public HVACComponent {
 
   boost::optional<double> autosizedRatedCondenserWaterFlowRate() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
   //@}
  protected:

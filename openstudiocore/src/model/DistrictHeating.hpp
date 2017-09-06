@@ -90,9 +90,7 @@ class MODEL_API DistrictHeating : public StraightComponent {
 
   boost::optional<double> autosizedNominalCapacity() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
  protected:
   /// @cond

@@ -269,9 +269,7 @@ class MODEL_API PlantLoop : public Loop {
 
   boost::optional<double> autosizedMaximumLoopFlowRate() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
   protected:
 

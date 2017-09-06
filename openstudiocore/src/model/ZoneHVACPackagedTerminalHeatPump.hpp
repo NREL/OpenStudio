@@ -244,9 +244,7 @@ class MODEL_API ZoneHVACPackagedTerminalHeatPump : public ZoneHVACComponent
 
   boost::optional<double> autosizedMaximumSupplyAirTemperaturefromSupplementalHeater() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
   //@}
  protected:

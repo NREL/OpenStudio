@@ -136,9 +136,7 @@ class MODEL_API ZoneHVACHighTemperatureRadiant : public ZoneHVACComponent {
 
   boost::optional<double> autosizedMaximumPowerInput() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
  protected:
 

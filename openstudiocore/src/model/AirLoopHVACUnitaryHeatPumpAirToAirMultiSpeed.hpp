@@ -253,9 +253,7 @@ class MODEL_API AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed : public StraightCo
 
   boost::optional<double> autosizedSpeed4SupplyAirFlowRateDuringCoolingOperation() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
   //@}
  protected:

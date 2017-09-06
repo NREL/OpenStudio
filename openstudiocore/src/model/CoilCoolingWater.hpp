@@ -209,9 +209,7 @@ class MODEL_API CoilCoolingWater : public WaterToAirComponent {
 
   boost::optional<double> autosizedDesignOutletAirHumidityRatio() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
   //@}
  protected:

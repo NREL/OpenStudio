@@ -168,9 +168,7 @@ class MODEL_API ZoneHVACTerminalUnitVariableRefrigerantFlow : public ZoneHVACCom
 
   boost::optional<double> autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
  protected:
 

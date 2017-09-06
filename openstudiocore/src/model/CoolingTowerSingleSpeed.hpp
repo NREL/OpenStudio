@@ -347,9 +347,7 @@ class MODEL_API CoolingTowerSingleSpeed : public StraightComponent {
 
   boost::optional<double> autosizedUFactorTimesAreaValueatFreeConvectionAirFlowRate() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
   //@}
  protected:

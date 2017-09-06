@@ -115,9 +115,7 @@ class MODEL_API HumidifierSteamElectric : public StraightComponent {
 
   boost::optional<double> autosizedRatedPower() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
   //@}
  protected:

@@ -137,9 +137,7 @@ class MODEL_API ControllerWaterCoil : public HVACComponent
 
   boost::optional<double> autosizedMaximumActuatedFlow() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
   //@}
   protected:

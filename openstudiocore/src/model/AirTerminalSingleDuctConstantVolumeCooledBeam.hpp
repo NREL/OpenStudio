@@ -180,9 +180,7 @@ class MODEL_API AirTerminalSingleDuctConstantVolumeCooledBeam : public StraightC
 
   boost::optional<double> autosizedBeamLength() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
   //@}
  protected:

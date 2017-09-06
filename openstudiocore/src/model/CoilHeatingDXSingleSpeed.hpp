@@ -225,9 +225,7 @@ class MODEL_API CoilHeatingDXSingleSpeed : public StraightComponent {
 
   boost::optional<double> autosizedResistiveDefrostHeaterCapacity() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
   //@}
  protected:

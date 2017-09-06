@@ -316,9 +316,7 @@ class MODEL_API AirLoopHVAC : public Loop
 
   boost::optional<double> autosizedDesignSupplyAirFlowRate() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
  protected:
 

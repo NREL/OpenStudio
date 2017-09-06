@@ -425,9 +425,7 @@ class MODEL_API WaterHeaterMixed : public WaterToWaterComponent {
 
   boost::optional<double> autosizedSourceSideDesignFlowRate() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
   //@}
  protected:

@@ -282,9 +282,7 @@ class MODEL_API EvaporativeFluidCoolerTwoSpeed : public StraightComponent {
 
   boost::optional<double> autosizedLowSpeedUserSpecifiedDesignCapacity() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
   //@}
  protected:

@@ -187,9 +187,7 @@ class MODEL_API AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass : public StraightC
 
   boost::optional<double> autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
   //@}
   /** @name Other */

@@ -129,9 +129,7 @@ class MODEL_API ZoneHVACUnitHeater : public ZoneHVACComponent
 
   boost::optional<double> autosizedMaximumHotWaterFlowRate() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
  protected:
   /// @cond

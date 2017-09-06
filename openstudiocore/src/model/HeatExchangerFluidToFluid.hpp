@@ -186,9 +186,7 @@ class MODEL_API HeatExchangerFluidToFluid : public WaterToWaterComponent {
 
   boost::optional<double> autosizedHeatExchangerUFactorTimesAreaValue() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
   //@}
  protected:

@@ -138,9 +138,7 @@ class MODEL_API CoilHeatingWaterBaseboard : public StraightComponent {
 
   boost::optional<double> autosizedMaximumWaterFlowRate() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
   //@}
  protected:

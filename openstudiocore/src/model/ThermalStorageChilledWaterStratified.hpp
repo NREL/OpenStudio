@@ -270,9 +270,7 @@ class MODEL_API ThermalStorageChilledWaterStratified : public WaterToWaterCompon
 
   boost::optional<double> autosizedSourceSideDesignFlowRate() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
   //@}
  protected:

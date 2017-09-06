@@ -197,9 +197,7 @@ class MODEL_API ZoneHVACPackagedTerminalAirConditioner : public ZoneHVACComponen
 
   boost::optional<double> autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
   //@}
  protected:

@@ -105,9 +105,7 @@ class MODEL_API ZoneHVACBaseboardConvectiveElectric : public ZoneHVACComponent {
 
   boost::optional<double> autosizedNominalCapacity() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
  protected:
 

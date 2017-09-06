@@ -165,9 +165,7 @@ class MODEL_API ZoneHVACUnitVentilator : public ZoneHVACComponent {
 
   boost::optional<double> autosizedMaximumOutdoorAirFlowRate() const ;
 
-  void autosize();
 
-  void applySizingValues();
 
   //@}
  protected:
