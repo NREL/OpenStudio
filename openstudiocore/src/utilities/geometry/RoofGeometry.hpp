@@ -85,6 +85,7 @@ namespace openstudio{
     Edge();
     Edge(Point3d& aBegin, Point3d& aEnd);
     int getOffsetEdgeIndex(std::vector<Edge>& edges, int offset);
+    friend std::ostream& operator<<(std::ostream& os, const Edge& edge);
     bool operator<(const Edge& other) const;
     bool operator==(const Edge& other) const;
     Point3d begin;
@@ -107,6 +108,7 @@ namespace openstudio{
     int getOffsetVertexIndex(std::vector<Vertex>& vertexes, int offset);
     std::vector<Vertex> getLav(std::vector< std::vector<Vertex> >& sLav);
     std::vector<Vertex> cutLavPart(std::vector<Vertex>& lav, Vertex& endVertex);
+    friend std::ostream& operator<<(std::ostream& os, const Vertex& vertex);
     bool operator<(const Vertex& other) const;
     bool operator==(const Vertex& other) const;
     Point3d point;
@@ -191,6 +193,8 @@ namespace openstudio{
     Event(Point3d& aPoint, double aDistance, Vertex& aParent, Edge& aOppositeEdge);
     Event(Point3d& aPoint, double aDistance, Chain& aChain, bool isPickEvent);
     Event(Point3d& aPoint, double aDistance, std::vector<Chain>& aChains);
+    friend std::ostream& operator<<(std::ostream& os, const Event& event);
+    bool operator<(const Event& other) const;
     Point3d point;
     double distance = 0.0;
     bool obsolete = false;
@@ -205,16 +209,6 @@ namespace openstudio{
     bool isEventInGroup(std::vector<Vertex>& parentGroup);
   private:
     REGISTER_LOGGER("utilities.Event");
-  };
-
-  struct EventCompare
-  {
-    bool operator()(const Event& event1, const Event& event2) {
-      if (event1.distance > event2.distance) {
-        return true;
-      }
-      return false;
-    }
   };
 
   // SPLIT CANDIDATES
@@ -258,7 +252,7 @@ namespace openstudio{
 
     // init
     void initSlav(std::vector<Point3d>& polygon, std::vector< std::vector<Vertex> >& sLav, std::vector<Edge>& edges, std::vector<FaceQueue>& faces);
-    void initEvents(std::vector< std::vector<Vertex> >& sLav, std::priority_queue<Event, std::vector<Event>, EventCompare>& queue, std::vector<Edge>& edges);
+    void initEvents(std::vector< std::vector<Vertex> >& sLav, std::vector<Event>& queue, std::vector<Edge>& edges);
     void initPolygon(std::vector<Point3d>& polygon);
 
     // math
@@ -279,21 +273,21 @@ namespace openstudio{
     int assertMaxNumberOfInteraction(int count);
 
     // events
-    std::vector<Event> loadAndGroupLevelEvents(std::priority_queue<Event, std::vector<Event>, EventCompare>& queue);
-    std::vector<Event> loadLevelEvents(std::priority_queue<Event, std::vector<Event>, EventCompare>& queue);
+    std::vector<Event> loadAndGroupLevelEvents(std::vector<Event>& queue);
+    std::vector<Event> loadLevelEvents(std::vector<Event>& queue);
     std::vector<Event> groupLevelEvents(std::vector<Event>& levelEvents);
     Event createLevelEvent(Point3d& eventCenter, double distance, std::vector<Event>& eventCluster);
     Event createEdgeEvent(Point3d& point, Vertex& previousVertex, Vertex& nextVertex);
-    void multiSplitEvent(Event& event, std::vector< std::vector<Vertex> >& sLav, std::priority_queue<Event, std::vector<Event>, EventCompare>& queue, std::vector<Edge>& edges);
-    void pickEvent(Event& event, std::vector< std::vector<Vertex> >& sLav, std::priority_queue<Event, std::vector<Event>, EventCompare>& queue, std::vector<Edge>& edges);
-    void multiEdgeEvent(Event& event, std::vector< std::vector<Vertex> >& sLav, std::priority_queue<Event, std::vector<Event>, EventCompare>& queue, std::vector<Edge>& edges);
-    void computeEvents(Vertex& vertex, std::priority_queue<Event, std::vector<Event>, EventCompare>& queue, std::vector<Edge>& edges);
-    void computeEdgeEvents(Vertex& previousVertex, Vertex& nextVertex, std::priority_queue<Event, std::vector<Event>, EventCompare>& queue);
-    void computeSplitEvents(Vertex& vertex, std::vector<Edge>& edges, std::priority_queue<Event, std::vector<Event>, EventCompare>& queue, boost::optional<double> distanceSquared);
-    boost::optional<double> computeCloserEdgeEvent(Vertex& vertex, std::priority_queue<Event, std::vector<Event>, EventCompare>& queue);
+    void multiSplitEvent(Event& event, std::vector< std::vector<Vertex> >& sLav, std::vector<Event>& queue, std::vector<Edge>& edges);
+    void pickEvent(Event& event, std::vector< std::vector<Vertex> >& sLav, std::vector<Event>& queue, std::vector<Edge>& edges);
+    void multiEdgeEvent(Event& event, std::vector< std::vector<Vertex> >& sLav, std::vector<Event>& queue, std::vector<Edge>& edges);
+    void computeEvents(Vertex& vertex, std::vector<Event>& queue, std::vector<Edge>& edges);
+    void computeEdgeEvents(Vertex& previousVertex, Vertex& nextVertex, std::vector<Event>& queue);
+    void computeSplitEvents(Vertex& vertex, std::vector<Edge>& edges, std::vector<Event>& queue, boost::optional<double> distanceSquared);
+    boost::optional<double> computeCloserEdgeEvent(Vertex& vertex, std::vector<Event>& queue);
     std::vector<SplitCandidate> calcOppositeEdges(Vertex& vertex, std::vector<Edge>& edges);
     boost::optional<SplitCandidate> calcCandidatePointForSplit(Vertex& vertex, Edge& edge);
-    void removeEventsUnderHeight(std::priority_queue<Event, std::vector<Event>, EventCompare>& queue, double levelHeight);
+    void removeEventsUnderHeight(std::vector<Event>& queue, double levelHeight);
 
     // chains
     std::vector<Chain> createChains(std::vector<Event>& cluster);

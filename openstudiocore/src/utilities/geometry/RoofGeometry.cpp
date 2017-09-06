@@ -92,7 +92,7 @@ namespace openstudio{
      */
 
     std::vector< std::vector<Point3d> > roofs;
-    std::priority_queue<Event, std::vector<Event>, EventCompare> queue;
+    std::vector<Event> queue;
     std::vector<Event> processedEvents;
     std::vector<FaceQueue> faces;
     std::vector<Edge> edges;
@@ -104,15 +104,14 @@ namespace openstudio{
 
     int count = 0;
 
+    //std::cout << "queue " << queue.size() << std::endl;
     while (!queue.empty()) {
       // start processing skeleton level
       count = assertMaxNumberOfInteraction(count);
-      if (count < 0) {
-        std::vector< std::vector<Point3d> > noRoofs;
-        return noRoofs;
-      }
+      //std::cout << "count " << count << std::endl;
 
-      double levelHeight = queue.top().distance;
+      double levelHeight = queue[0].distance;
+      //std::cout << "levelHeight " << levelHeight << std::endl;
 
       std::vector<Event> levelEvents = loadAndGroupLevelEvents(queue);
 
@@ -130,7 +129,7 @@ namespace openstudio{
 
         if (event.eventType == EVENT_EDGE) {
           LOG_AND_THROW("All edge events should be converted to MultiEdgeEvents for given level");
-        } else if (event.eventType == EVENT_SPLIT) {
+        } else if (event.eventType == EVENT_SPLIT || event.eventType == EVENT_SPLIT_VERTEX) {
           LOG_AND_THROW("All split events should be converted to MultiSplitEvents for given level");
         } else if (event.eventType == EVENT_MULTI_SPLIT) {
           multiSplitEvent(event, sLav, queue, edges);
@@ -164,7 +163,7 @@ namespace openstudio{
     int size = polygon.size();
     for (int i = 0; i < size; i++) {
       int j = (i + 1) % size;
-      edgesList.push_back(Edge(polygon.at(i), polygon.at(j)));
+      edgesList.push_back(Edge(polygon[i], polygon[j]));
     }
 
     for (int i = 0; i < edgesList.size(); i++) {
@@ -211,7 +210,7 @@ namespace openstudio{
     }
   }
 
-  void RoofGeometry::initEvents(std::vector< std::vector<Vertex> >& sLav, std::priority_queue<Event, std::vector<Event>, EventCompare>& queue, std::vector<Edge>& edges)
+  void RoofGeometry::initEvents(std::vector< std::vector<Vertex> >& sLav, std::vector<Event>& queue, std::vector<Edge>& edges)
   {
     for (int i = 0; i < sLav.size(); i++) {
       for (int j = 0; j < sLav[i].size(); j++) {
@@ -262,8 +261,8 @@ namespace openstudio{
     double a = 0.0;
     for (int p = n - 1, q = 0; q < n; p = q++)
     {
-      Point3d pp = polygon.at(p);
-      Point3d pq = polygon.at(q);
+      Point3d pp = polygon[p];
+      Point3d pq = polygon[q];
       a += pp.x() * pq.y() - pq.x() * pp.y();
     }
     return a * 0.5;
@@ -274,17 +273,17 @@ namespace openstudio{
     count++;
     if (count > 10000) {
       LOG_AND_THROW("Polygon must have at least 3 points");
-      return -1;
     }
     return count;
   }
 
-  std::vector<Event> RoofGeometry::loadAndGroupLevelEvents(std::priority_queue<Event, std::vector<Event>, EventCompare>& queue) {
+  std::vector<Event> RoofGeometry::loadAndGroupLevelEvents(std::vector<Event>& queue) {
+    std::sort(queue.begin(), queue.end());
     std::vector<Event> levelEvents = loadLevelEvents(queue);
     return groupLevelEvents(levelEvents);
   }
 
-  std::vector<Event> RoofGeometry::loadLevelEvents(std::priority_queue<Event, std::vector<Event>, EventCompare>& queue) {
+  std::vector<Event> RoofGeometry::loadLevelEvents(std::vector<Event>& queue) {
     /*
      * Loads all non obsolete events which are on one level.
      */
@@ -293,8 +292,8 @@ namespace openstudio{
 
     Event levelStart;
     do {
-      levelStart = queue.top();
-      queue.pop();
+      levelStart = queue[0];
+      queue.erase(queue.begin());
       // skip all obsolete events in level
     } while (queue.size() > 0 && levelStart.obsolete);
       
@@ -307,15 +306,21 @@ namespace openstudio{
 
     level.push_back(levelStart);
 
-    Event event = queue.top();
+    Event event = queue[0];
 
     while (queue.size() > 0 && event.distance - levelStartHeight < SPLIT_EPSILON) {
-      queue.pop();
+      queue.erase(queue.begin());
       if (!event.obsolete) {
         level.push_back(event);
       }
-      event = queue.top();
+      event = queue[0];
     }
+
+    //std::cout << "loadLevelEvents queue size " << queue.size() << std::endl;
+    //std::cout << "loadLevelEvents level size " << level.size() << std::endl;
+    //for (Event e : level) {
+    //  std::cout << "loadLevelEvents level " << e << std::endl;
+    //}
 
     return level;
   }
@@ -327,45 +332,50 @@ namespace openstudio{
     while (levelEvents.size() > 0) {
       parentGroup.clear();
       
-      Event event = levelEvents.at(0);
-      levelEvents.pop_back();
-      Point3d eventCenter = event.point;
-      double distance = event.distance;
+      Point3d eventCenter = levelEvents[0].point;
+      double distance = levelEvents[0].distance;
 
-      event.addEventToGroup(parentGroup);
+      levelEvents[0].addEventToGroup(parentGroup);
 
       std::vector<Event> cluster;
-      cluster.push_back(event);
+      cluster.push_back(levelEvents[0]);
+
+      levelEvents.erase(levelEvents.begin());
 
       for (int j = 0; j < levelEvents.size(); j++) {
-        Event test = levelEvents[j];
 
-        if (test.isEventInGroup(parentGroup)) {
+        if (levelEvents[j].isEventInGroup(parentGroup)) {
           /* Because of numerical errors, split event and edge event
            * can appear in slight different points. Epsilon can be
            * applied to level but event point can move rapidly even for
            * little changes in level. If two events for the same level
            * share the same parent, they should be merge together.
            */
-          cluster.push_back(levelEvents.at(j));
-          levelEvents.erase(levelEvents.begin() + j - 1);
-          test.addEventToGroup(parentGroup);
+          //std::cout << "groupLevelEvents if " << levelEvents[j] << std::endl;
+          cluster.push_back(levelEvents[j]);
+          levelEvents[j].addEventToGroup(parentGroup);
+          levelEvents.erase(levelEvents.begin() + j);
           j--;
-        } else if (getDistance(eventCenter, test.point) < SPLIT_EPSILON) {
+        } else if (getDistance(eventCenter, levelEvents[j].point) < SPLIT_EPSILON) {
           // group all events when the result points are near each other
-          cluster.push_back(levelEvents.at(j));
-          levelEvents.erase(levelEvents.begin() + j - 1);
-          test.addEventToGroup(parentGroup);
+          //std::cout << "groupLevelEvents else if " << levelEvents[j] << std::endl;
+          cluster.push_back(levelEvents[j]);
+          levelEvents[j].addEventToGroup(parentGroup);
+          levelEvents.erase(levelEvents.begin() + j);
           j--;
+        } else {
+          //std::cout << "groupLevelEvents else " << levelEvents[j] << std::endl;
         }
 
       }
 
       // More than one event can share the same result point, we need to
       // create new level event.
+      //std::cout << "groupLevelEvents ret add" << std::endl;
       ret.push_back(createLevelEvent(eventCenter, distance, cluster));
 
     }
+    //std::cout << "groupLevelEvents ret size " << ret.size() << std::endl;
 
     return ret;
   }
@@ -374,7 +384,7 @@ namespace openstudio{
     std::vector<Chain> chains = createChains(eventCluster);
 
     if (chains.size() == 1) {
-      Chain chain = chains.at(0);
+      Chain chain = chains[0];
       if (chain.getChainMode() == CHAIN_MODE_CLOSED_EDGE) {
         return Event(eventCenter, distance, chain, true);
       } else if (chain.getChainMode() == CHAIN_MODE_EDGE) {
@@ -424,7 +434,8 @@ namespace openstudio{
 
     for (Event Event : cluster) {
       if (Event.eventType == EVENT_SPLIT_VERTEX) {
-        if (false) { // FIXME if (!vertexEventsParents.count(Event.parent)) {
+        bool found = std::find(vertexEventsParents.begin(), vertexEventsParents.end(), Event.parent) != vertexEventsParents.end();
+        if (!found) {
           /*
            * It can be created multiple vertex events for one parent.
            * Its is caused because two edges share one vertex and new
@@ -446,7 +457,7 @@ namespace openstudio{
       * them. Two event are assumed as connected if next parent of one
       * event is equal to previous parent of second event.
       */
-      //FIXME edgeChains.push_back(Chain(createEdgeChain(edgeCluster)));
+      edgeChains.push_back(Chain()); // FIXME edgeChains.push_back(Chain(createEdgeChain(edgeCluster)));
     }
 
     std::vector<Chain> chains;
@@ -455,7 +466,7 @@ namespace openstudio{
     }
 
     while (splitCluster.size() > 0) {
-      Event split = splitCluster.at(0);
+      Event split = splitCluster[0];
       splitCluster.erase(splitCluster.begin());
 
       for (Chain chain : edgeChains) {
@@ -469,7 +480,7 @@ namespace openstudio{
         * split event is not part of any edge chain, it should be added as
         * new single element chain;
         */
-        //FIXME chains.push_back(Chain(split));
+        chains.push_back(Chain()); // FIXME chains.push_back(Chain(split));
       }
 
     }
@@ -487,19 +498,19 @@ namespace openstudio{
   std::vector<Event> RoofGeometry::createEdgeChain(std::vector<Event>& edgeCluster) {
     std::vector<Event> edgeList;
 
-    edgeList.push_back(edgeCluster.at(0));
+    edgeList.push_back(edgeCluster[0]);
     edgeCluster.erase(edgeCluster.begin());
 
     // find all successors of edge event
     // find all predecessors of edge event
 
     do {
-      Vertex beginVertex = edgeList.at(0).previousVertex;
-      Vertex endVertex = edgeList.at(edgeList.size() - 1).nextVertex;
+      Vertex beginVertex = edgeList[0].previousVertex;
+      Vertex endVertex = edgeList[edgeList.size() - 1].nextVertex;
 
       bool do_continue = false;
       for (int i = 0; i < edgeCluster.size(); i++) {
-        Event edge = edgeCluster.at(i);
+        Event edge = edgeCluster[i];
         if (edge.previousVertex == endVertex) {
           // edge should be added as last in chain
           edgeCluster.erase(edgeCluster.begin() + i - 1);
@@ -539,7 +550,7 @@ namespace openstudio{
     return false;
   }
 
-  void RoofGeometry::multiSplitEvent(Event& event, std::vector< std::vector<Vertex> >& sLav, std::priority_queue<Event, std::vector<Event>, EventCompare>& queue, std::vector<Edge>& edges) {
+  void RoofGeometry::multiSplitEvent(Event& event, std::vector< std::vector<Vertex> >& sLav, std::vector<Event>& queue, std::vector<Edge>& edges) {
 
     std::vector<Chain> chains = event.chains;
     Point3d center = event.point;
@@ -556,8 +567,8 @@ namespace openstudio{
     // connect all edges into new bisectors and lavs
     int edgeListSize = chains.size();
     for (int i = 0; i < edgeListSize; i++) {
-      Chain chainBegin = chains.at(i);
-      Chain chainEnd = chains.at((i + 1) % edgeListSize);
+      Chain chainBegin = chains[i];
+      Chain chainEnd = chains[(i + 1) % edgeListSize];
 
       Vertex newVertex = createMultiSplitVertex(chainBegin.nextEdge, chainEnd.previousEdge, center, event.distance);
 
@@ -607,8 +618,8 @@ namespace openstudio{
     // remove all centers of events from lav
     edgeListSize = chains.size();
     for (int i = 0; i < edgeListSize; i++) {
-      Chain chainBegin = chains.at(i);
-      Chain chainEnd = chains.at((i + 1) % edgeListSize);
+      Chain chainBegin = chains[i];
+      Chain chainEnd = chains[(i + 1) % edgeListSize];
 
       //FIXME removeFromLav(chainBegin.currentVertex);
       //FIXME removeFromLav(chainEnd.currentVertex);
@@ -629,7 +640,7 @@ namespace openstudio{
     return false;
   }
 
-  void RoofGeometry::pickEvent(Event& event, std::vector< std::vector<Vertex> >& sLav, std::priority_queue<Event, std::vector<Event>, EventCompare>& queue, std::vector<Edge>& edges) {
+  void RoofGeometry::pickEvent(Event& event, std::vector< std::vector<Vertex> >& sLav, std::vector<Event>& queue, std::vector<Edge>& edges) {
     Point3d center = event.point;
     std::vector<Event> edgeList; //FIXME = event.chain.edgeList;
 
@@ -678,7 +689,7 @@ namespace openstudio{
     return fn;
   }
 
-  void RoofGeometry::multiEdgeEvent(Event& event, std::vector< std::vector<Vertex> >& sLav, std::priority_queue<Event, std::vector<Event>, EventCompare>& queue, std::vector<Edge>& edges) {
+  void RoofGeometry::multiEdgeEvent(Event& event, std::vector< std::vector<Vertex> >& sLav, std::vector<Event>& queue, std::vector<Edge>& edges) {
 
     Point3d center = event.point;
     std::vector<Event> edgeList; //FIXME = event.chain.edgeList;
@@ -801,12 +812,12 @@ namespace openstudio{
     mergedList.erase(mergedList.begin(), mergedList.end());
   }
 
-  void RoofGeometry::computeEvents(Vertex& vertex, std::priority_queue<Event, std::vector<Event>, EventCompare>& queue, std::vector<Edge>& edges) {
+  void RoofGeometry::computeEvents(Vertex& vertex, std::vector<Event>& queue, std::vector<Edge>& edges) {
     boost::optional<double> distanceSquared = computeCloserEdgeEvent(vertex, queue);
     computeSplitEvents(vertex, edges, queue, distanceSquared);
   }
 
-  boost::optional<double> RoofGeometry::computeCloserEdgeEvent(Vertex& vertex, std::priority_queue<Event, std::vector<Event>, EventCompare>& queue) {
+  boost::optional<double> RoofGeometry::computeCloserEdgeEvent(Vertex& vertex, std::vector<Event>& queue) {
     /*
      * Calculate two new edge events for given vertex. Events are generated
      * using current, previous and next vertex in current lav. When two edge
@@ -842,10 +853,10 @@ namespace openstudio{
     }
 
     if (distance1 - SPLIT_EPSILON < distance2) {
-      queue.push(createEdgeEvent(point1.get(), vertex, nextVertex));
+      queue.push_back(createEdgeEvent(point1.get(), vertex, nextVertex));
     }
     if (distance2 - SPLIT_EPSILON < distance1) {
-      queue.push(createEdgeEvent(point2.get(), previousVertex, vertex));
+      queue.push_back(createEdgeEvent(point2.get(), previousVertex, vertex));
     }
 
     if (distance1 < distance2){
@@ -909,14 +920,16 @@ namespace openstudio{
     return Vector3d(vx, vy, vz);
   }
 
-  void RoofGeometry::computeEdgeEvents(Vertex& previousVertex, Vertex& nextVertex, std::priority_queue<Event, std::vector<Event>, EventCompare>& queue) {
+  void RoofGeometry::computeEdgeEvents(Vertex& previousVertex, Vertex& nextVertex, std::vector<Event>& queue) {
     boost::optional<Point3d> point = computeIntersectionBisectors(previousVertex, nextVertex);
     if (point) {
-      queue.push(createEdgeEvent(point.get(), previousVertex, nextVertex));
+      Event e = createEdgeEvent(point.get(), previousVertex, nextVertex);
+      //std::cout << "computeEdgeEvents queue add " << e << std::endl;
+      queue.push_back(e);
     }
   }
 
-  void RoofGeometry::computeSplitEvents(Vertex& vertex, std::vector<Edge>& edges, std::priority_queue<Event, std::vector<Event>, EventCompare>& queue, boost::optional<double> distanceSquared) {
+  void RoofGeometry::computeSplitEvents(Vertex& vertex, std::vector<Edge>& edges, std::vector<Event>& queue, boost::optional<double> distanceSquared) {
     Point3d source = vertex.point;
     
     std::vector<SplitCandidate> oppositeEdges = calcOppositeEdges(vertex, edges);
@@ -943,11 +956,15 @@ namespace openstudio{
       if (oppositeEdge.oppositePoint) {
         // some of vertex event can share the same opposite
         // point
-        queue.push(Event(oppositeEdge.point, oppositeEdge.distance, vertex));
+        Event e1 = Event(oppositeEdge.point, oppositeEdge.distance, vertex);
+        //std::cout << "computeSplitEvents queue add " << e1 << std::endl;
+        queue.push_back(e1);
         continue;
       }
 
-      queue.push(Event(oppositeEdge.point, oppositeEdge.distance, vertex, oppositeEdge.oppositeEdge.get()));
+      Event e2 = Event(oppositeEdge.point, oppositeEdge.distance, vertex, oppositeEdge.oppositeEdge.get());
+      //std::cout << "computeSplitEvents queue add " << e2 << std::endl;
+      queue.push_back(e2);
       continue;
 
     }
@@ -1163,7 +1180,7 @@ namespace openstudio{
     if (edgeLavs.size() == 0) {
       return boost::none;
     } else if (edgeLavs.size() == 1) {
-      return edgeLavs.at(0);
+      return edgeLavs[0];
     }
 
     Point3d edgeStart = oppositeEdge.begin;
@@ -1226,7 +1243,7 @@ namespace openstudio{
 
     int it = 0;
 
-    Point3d first = points.at(it);
+    Point3d first = points[it];
 
     bool oddNodes = false;
 
@@ -1234,12 +1251,12 @@ namespace openstudio{
     Point3d node2;
 
     for (int i = 0; i < numpoints; i++) {
-      node1 = points.at(it);
+      node1 = points[it];
       it++;
       if (i == numpoints - 1) {
         node2 = first;
       } else {
-        node2 = points.at(it);
+        node2 = points[it];
       }
 
       double x = point.x();
@@ -1361,12 +1378,12 @@ namespace openstudio{
     }
   }
 
-  void RoofGeometry::removeEventsUnderHeight(std::priority_queue<Event, std::vector<Event>, EventCompare>& queue, double levelHeight) {
+  void RoofGeometry::removeEventsUnderHeight(std::vector<Event>& queue, double levelHeight) {
     while (!queue.empty()) {
-      if (queue.top().distance > levelHeight + SPLIT_EPSILON) {
+      if (queue[0].distance > levelHeight + SPLIT_EPSILON) {
         break;
       }
-      queue.pop();
+      queue.erase(queue.begin());
     }
   }
 
@@ -1436,8 +1453,25 @@ namespace openstudio{
     chains = aChains;
   }
 
+  std::ostream& operator<<(std::ostream& os, const Event& event) {
+    if (event.eventType == EVENT_EDGE) {
+      os << "EdgeEvent [v=" << event.point << ", previousVertex=" << event.previousVertex.point << ", nextVertex=" << event.nextVertex.point << ", distance=" << event.distance << "]";
+    } else if (event.eventType == EVENT_SPLIT) {
+      os << "SplitEvent [v=" << event.point << ", parent=" << event.point << ", distance=" << event.distance << "]";
+    } else if (event.eventType == EVENT_SPLIT_VERTEX) {
+      os << "VertexSplitEvent [v=" << event.point << ", parent=" << event.parent.point << ", distance=" << event.distance << "]";
+    } else {
+      os << "IntersectEntry [v=" << event.point << ", distance=" << event.distance << "]";
+    }
+    return os;
+  }
+
+  bool Event::operator<(const Event& other) const {
+    return distance < other.distance;
+  }
+
   void Event::addEventToGroup(std::vector<Vertex>& parentGroup) {
-    if (eventType == EVENT_SPLIT) {
+    if (eventType == EVENT_SPLIT || eventType == EVENT_SPLIT_VERTEX) {
       parentGroup.push_back(parent);
     } else if (eventType == EVENT_EDGE) {
       parentGroup.push_back(previousVertex);
@@ -1447,14 +1481,21 @@ namespace openstudio{
   }
 
   bool Event::isEventInGroup(std::vector<Vertex>& parentGroup) {
-    if (eventType == EVENT_SPLIT) {
+    //std::cout << "isEventInGroup event " << this << std::endl;
+    //for (Vertex v : parentGroup) {
+    //  std::cout << "isEventInGroup parentGroupVertex " << v << std::endl;
+    //}
+    if (eventType == EVENT_SPLIT || eventType == EVENT_SPLIT_VERTEX) {
       bool foundParent = std::find(parentGroup.begin(), parentGroup.end(), parent) != parentGroup.end();
+      //std::cout << "isEventInGroup SplitEvent " << foundParent << std::endl;
       return foundParent;
     } else if (eventType == EVENT_EDGE) {
       bool foundPreviousVertex = std::find(parentGroup.begin(), parentGroup.end(), previousVertex) != parentGroup.end();
       bool foundNextVertex = std::find(parentGroup.begin(), parentGroup.end(), nextVertex) != parentGroup.end();
+      //std::cout << "isEventInGroup EdgeEvent " << (foundPreviousVertex || foundNextVertex) << std::endl;
       return (foundPreviousVertex || foundNextVertex);
     }
+    //std::cout << "isEventInGroup other false" << std::endl;
     return false;
   }
 
@@ -1517,6 +1558,11 @@ namespace openstudio{
     return ret;
   }
 
+  std::ostream& operator<<(std::ostream& os, const Vertex& vertex) {
+    os << "VertexEntry [v=" << vertex.point << ", processed=" << vertex.processed << ", bisector=" << vertex.bisector << ", previousEdge=" << vertex.previousEdge << ", nextEdge=" << vertex.nextEdge << "]";
+    return os;
+  }
+
   // Returns true if this vertex is less than other
   bool Vertex::operator<(const Vertex& other) const {
 
@@ -1565,6 +1611,11 @@ namespace openstudio{
       pos -= edges.size();
     }
     return pos;
+  }
+
+  std::ostream& operator<<(std::ostream& os, const Edge& edge) {
+    os << "EdgeEntry [p1=" << edge.begin << ", p2=" << edge.end << "]";
+    return os;
   }
 
   // Returns true if this edge is less than other
@@ -1828,6 +1879,7 @@ namespace openstudio{
 
     return Point3d(WBC / WAB, WCA / WAB, 0);
   }
+
 
   // CHAIN
   
