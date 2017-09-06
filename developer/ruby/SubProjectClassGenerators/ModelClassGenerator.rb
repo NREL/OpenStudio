@@ -761,13 +761,6 @@ class ModelClassGenerator < SubProjectClassGenerator
 
       }
 
-      # If there are any autosizeable fields, need to add bulk autosize
-      # and applySizingValues methods
-      if @autosizedGetterNames.size > 0
-        result << "  void autosize();\n\n"
-        result << "  void applySizingValues();\n\n"
-      end
-
       # Extensible field setters
 
       if (@iddObject.properties.extensible)
@@ -884,10 +877,11 @@ class ModelClassGenerator < SubProjectClassGenerator
       }
 
       # If there are any autosizeable fields, need to add bulk autosize
-      # and applySizingValues methods
+      # and applySizingValues methods.  These methods are assumed
+      # to be overrides from the method declared in HVACComponent.
       if @autosizedGetterNames.size > 0
-        result << "    void autosize();\n\n"
-        result << "    void applySizingValues();\n\n"
+        result << "    virtual void autosize() override;\n\n"
+        result << "    virtual void applySizingValues() override;\n\n"
       end
 
       # Extensible field setters
@@ -1271,20 +1265,6 @@ class ModelClassGenerator < SubProjectClassGenerator
           result << "}\n\n"
         end
       }
-
-      # If there are any autosizeable fields, need to add bulk autosize
-      # and applySizingValues methods
-      if @autosizedGetterNames.size > 0
-        # autosize()
-        result << "void #{@className}::autosize() {\n"
-        result << "  return getImpl<detail::#{@className}_Impl>()->autosize();\n"
-        result << "}\n\n"
-
-        # applySizingValues()
-        result << "void #{@className}::applySizingValues() {\n"
-        result << "  return getImpl<detail::#{@className}_Impl>()->applySizingValues();\n"
-        result << "}\n\n"
-      end
 
     else
       result = super
