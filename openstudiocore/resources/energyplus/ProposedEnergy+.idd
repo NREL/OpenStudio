@@ -3109,7 +3109,7 @@ WindowMaterial:Glazing,
        \type real
        \minimum> 0.0
        \default 7.2e10
-  N14, \field Poisson's ratio
+  N14, \field Poissons ratio
        \note coefficient used for deflection calculations. Used only with complex
        \note fenestration when deflection model is set to TemperatureAndPressureInput
        \type real

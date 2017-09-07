@@ -307,13 +307,6 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACPackagedTerminalH
     idfObject.setDouble(ZoneHVAC_PackagedTerminalHeatPumpFields::HeatingConvergenceTolerance,value.get());
   }
 
-  // MinimumOutdoorDryBulbTemperatureforCompressorOperation
-
-  if( (value = modelObject.minimumOutdoorDryBulbTemperatureforCompressorOperation()) )
-  {
-    idfObject.setDouble(ZoneHVAC_PackagedTerminalHeatPumpFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation,value.get());
-  }
-
   // CoolingCoilObjectType
 
   HVACComponent coolingCoil = modelObject.coolingCoil();
