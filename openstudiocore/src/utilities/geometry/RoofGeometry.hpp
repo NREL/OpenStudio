@@ -71,6 +71,7 @@ namespace openstudio{
     boost::optional<Point3d> intersectRay2d(Ray2d& other);
     bool inCollinearRay(Point3d& p);
     double perpDot(Vector3d& p1, Vector3d& p2);
+    friend std::ostream& operator<<(std::ostream& os, const Ray2d& ray2d);
     Point3d point;
     Vector3d vector;
   private:
@@ -98,6 +99,23 @@ namespace openstudio{
     REGISTER_LOGGER("utilities.Edge");
   };
 
+  // FACES
+
+  //class FaceNode
+  //{
+  //public:
+  //  FaceNode();
+  //private:
+  //  REGISTER_LOGGER("utilities.FaceNode");
+  //};
+
+  //class FaceQueue : public std::queue<FaceNode>
+  //{
+  //public:
+  //  Edge edge; // Edge for given queue.
+  //  bool closed = false; //Flag if queue is closed. After closing can't be modified.
+  //};
+
   // VERTEXES
 
   class Vertex
@@ -106,43 +124,58 @@ namespace openstudio{
     Vertex();
     Vertex(Point3d& aPoint, double aDistance, boost::optional<Ray2d&> aBisector, boost::optional<Edge&> aPreviousEdge, boost::optional<Edge&> aNextEdge);
     int getOffsetVertexIndex(std::vector<Vertex>& vertexes, int offset);
-    std::vector<Vertex> getLav(std::vector< std::vector<Vertex> >& sLav);
+    int getLavIndex(std::vector< std::vector<Vertex> >& sLav);
     std::vector<Vertex> cutLavPart(std::vector<Vertex>& lav, Vertex& endVertex);
     friend std::ostream& operator<<(std::ostream& os, const Vertex& vertex);
     bool operator<(const Vertex& other) const;
     bool operator==(const Vertex& other) const;
     Point3d point;
-    double distance = 0.0;
-    bool processed = false;
     boost::optional<Edge> previousEdge;
     boost::optional<Edge> nextEdge;
-    //FaceNode leftFace;
-    //FaceNode rightFace;
     boost::optional<Ray2d> bisector;
+    double distance = 0.0;
+    bool processed = false;
+    //FIXME: FaceNode leftFace;
+    //FIXME: FaceNode rightFace;
   private:
     REGISTER_LOGGER("utilities.Vertex");
   };
 
-  // FACES
+  // QUEUE EVENTS
 
-  class FaceNode
+  enum QueueEventType
+  {
+    QUEUE_EVENT_EDGE = 0, QUEUE_EVENT_SPLIT = 1, QUEUE_EVENT_SPLIT_VERTEX = 2,
+  };
+
+  class QueueEvent
   {
   public:
-    FaceNode();
-    FaceNode(Vertex& aVertex);
-    Vertex vertex;
+    QueueEvent();
+    QueueEvent(Point3d& aPoint, double aDistance, Vertex& aPreviousVertex, Vertex& aNextVertex); // EdgeEvent
+    QueueEvent(Point3d& aPoint, double aDistance, Vertex& aParent); // VertexSplitEvent
+    QueueEvent(Point3d& aPoint, double aDistance, Vertex& aParent, Edge& aOppositeEdge); // SplitEvent
+    void addEventToGroup(std::vector<Vertex>& parentGroup);
+    bool isEventInGroup(std::vector<Vertex>& parentGroup);
+    friend std::ostream& operator<<(std::ostream& os, const QueueEvent& event);
+    bool operator<(const QueueEvent& other) const;
+    Edge getOppositeEdgePrevious();
+    Edge getOppositeEdgeNext();
+    Vertex previousVertex;
+    Vertex nextVertex;
+    Vertex parent;
+    Edge oppositeEdge;
+    Point3d point;
+    QueueEventType eventType;
+    double distance = 0.0;
+    bool isObsolete();
   private:
-    REGISTER_LOGGER("utilities.FaceNode");
+    REGISTER_LOGGER("utilities.QueueEvent");
+    bool obsolete = false;
   };
 
-  class FaceQueue : public std::queue<FaceNode>
-  {
-  public:
-    Edge edge; // Edge for given queue.
-    bool closed = false; //Flag if queue is closed. After closing can't be modified.
-  };
 
-  // CHAINS
+  // CHAINS (of queue events)
 
   enum ChainType
   {
@@ -157,58 +190,55 @@ namespace openstudio{
   {
   public:
     Chain();
-    //Chain(Event& aSplitEvent);
-    //Chain(std::vector<Event>& aEdgeList);
-    Chain(Edge& aOppositeEdge, Vertex& aNextVertex);
+    Chain(QueueEvent& aSplitEvent); // SplitChain
+    Chain(std::vector<QueueEvent>& aEdgeList); // EdgeChain
+    Chain(Edge& aOppositeEdge, Vertex& aNextVertex); // SingleEdgeChain
     ChainMode getChainMode();
+    Edge getPreviousEdge();
+    Edge getNextEdge();
+    Vertex getPreviousVertex();
+    Vertex getNextVertex();
+    boost::optional<Vertex> getCurrentVertex();
+    boost::optional<Edge> getOppositeEdge();
+    std::vector<QueueEvent> edgeList;
+    QueueEvent splitEvent;
+    ChainType chainType;
+    bool closed = false;
+    bool split = false;
+  private:
+    REGISTER_LOGGER("utilities.Chain");
     Edge previousEdge;
     Edge nextEdge;
-    boost::optional<Edge> oppositeEdge;
     Vertex previousVertex;
     Vertex nextVertex;
     boost::optional<Vertex> currentVertex;
-    //std::vector<Event> edgeList;
-    bool closed = false;
-    bool split = false;
-    ChainType chainType;
-    //Event splitEvent;
-  private:
-    REGISTER_LOGGER("utilities.Chain");
+    boost::optional<Edge> oppositeEdge;
   };
 
-  // EVENTS
 
-  enum EventType
+  // LEVEL EVENTS
+
+  enum LevelEventType
   {
-    EVENT_EDGE = 0, EVENT_SPLIT = 1, EVENT_SPLIT_VERTEX = 2, EVENT_PICK = 3, EVENT_MULTI_EDGE = 4, EVENT_MULTI_SPLIT = 5
+    LEVEL_EVENT_PICK = 0, LEVEL_EVENT_MULTI_EDGE = 1, LEVEL_EVENT_MULTI_SPLIT = 2
   };
 
-  class Event
+  class LevelEvent
   {
   public:
-    Event();
-    Event(Point3d& aPoint, double aDistance);
-    Event(Point3d& aPoint, double aDistance, Vertex& aPreviousVertex, Vertex& aNextVertex);
-    Event(Point3d& aPoint, double aDistance, Vertex& aParent);
-    Event(Point3d& aPoint, double aDistance, Vertex& aParent, Edge& aOppositeEdge);
-    Event(Point3d& aPoint, double aDistance, Chain& aChain, bool isPickEvent);
-    Event(Point3d& aPoint, double aDistance, std::vector<Chain>& aChains);
-    friend std::ostream& operator<<(std::ostream& os, const Event& event);
-    bool operator<(const Event& other) const;
-    Point3d point;
-    double distance = 0.0;
-    bool obsolete = false;
-    Vertex parent;
-    Vertex previousVertex;
-    Vertex nextVertex;
-    Edge oppositeEdge;
-    EventType eventType;
+    LevelEvent();
+    LevelEvent(Point3d& aPoint, double aDistance, Chain& aChain, bool isPickEvent); // PickEvent or MultiEdgeEvent
+    LevelEvent(Point3d& aPoint, double aDistance, std::vector<Chain>& aChains); // MultiSplitEvent
+    friend std::ostream& operator<<(std::ostream& os, const LevelEvent& event);
+    bool operator<(const LevelEvent& other) const;
     Chain chain;
     std::vector<Chain> chains;
-    void addEventToGroup(std::vector<Vertex>& parentGroup);
-    bool isEventInGroup(std::vector<Vertex>& parentGroup);
+    Point3d point;
+    LevelEventType eventType;
+    double distance = 0.0;
+    bool obsolete = false;
   private:
-    REGISTER_LOGGER("utilities.Event");
+    REGISTER_LOGGER("utilities.LevelEvent");
   };
 
   // SPLIT CANDIDATES
@@ -251,8 +281,8 @@ namespace openstudio{
     std::vector< std::vector<Point3d> > doStraightSkeleton(std::vector<Point3d>& polygon);
 
     // init
-    void initSlav(std::vector<Point3d>& polygon, std::vector< std::vector<Vertex> >& sLav, std::vector<Edge>& edges, std::vector<FaceQueue>& faces);
-    void initEvents(std::vector< std::vector<Vertex> >& sLav, std::vector<Event>& queue, std::vector<Edge>& edges);
+    void initSlav(std::vector<Point3d>& polygon, std::vector< std::vector<Vertex> >& sLav, std::vector<Edge>& edges); // FIXME: , std::vector<FaceQueue>& faces);
+    void initEvents(std::vector< std::vector<Vertex> >& sLav, std::vector<QueueEvent>& queue, std::vector<Edge>& edges);
     void initPolygon(std::vector<Point3d>& polygon);
 
     // math
@@ -273,34 +303,34 @@ namespace openstudio{
     int assertMaxNumberOfInteraction(int count);
 
     // events
-    std::vector<Event> loadAndGroupLevelEvents(std::vector<Event>& queue);
-    std::vector<Event> loadLevelEvents(std::vector<Event>& queue);
-    std::vector<Event> groupLevelEvents(std::vector<Event>& levelEvents);
-    Event createLevelEvent(Point3d& eventCenter, double distance, std::vector<Event>& eventCluster);
-    Event createEdgeEvent(Point3d& point, Vertex& previousVertex, Vertex& nextVertex);
-    void multiSplitEvent(Event& event, std::vector< std::vector<Vertex> >& sLav, std::vector<Event>& queue, std::vector<Edge>& edges);
-    void pickEvent(Event& event, std::vector< std::vector<Vertex> >& sLav, std::vector<Event>& queue, std::vector<Edge>& edges);
-    void multiEdgeEvent(Event& event, std::vector< std::vector<Vertex> >& sLav, std::vector<Event>& queue, std::vector<Edge>& edges);
-    void computeEvents(Vertex& vertex, std::vector<Event>& queue, std::vector<Edge>& edges);
-    void computeEdgeEvents(Vertex& previousVertex, Vertex& nextVertex, std::vector<Event>& queue);
-    void computeSplitEvents(Vertex& vertex, std::vector<Edge>& edges, std::vector<Event>& queue, boost::optional<double> distanceSquared);
-    boost::optional<double> computeCloserEdgeEvent(Vertex& vertex, std::vector<Event>& queue);
+    std::vector<LevelEvent> loadAndGroupLevelEvents(std::vector<QueueEvent>& queue);
+    std::vector<QueueEvent> loadLevelEvents(std::vector<QueueEvent>& queue);
+    std::vector<LevelEvent> groupLevelEvents(std::vector<QueueEvent>& levelEvents);
+    LevelEvent createLevelEvent(Point3d& eventCenter, double distance, std::vector<QueueEvent>& eventCluster);
+    QueueEvent createEdgeEvent(Point3d& point, Vertex& previousVertex, Vertex& nextVertex);
+    void multiSplitEvent(LevelEvent& event, std::vector< std::vector<Vertex> >& sLav, std::vector<QueueEvent>& queue, std::vector<Edge>& edges);
+    void pickEvent(LevelEvent& event, std::vector< std::vector<Vertex> >& sLav, std::vector<QueueEvent>& queue, std::vector<Edge>& edges);
+    void multiEdgeEvent(LevelEvent& event, std::vector< std::vector<Vertex> >& sLav, std::vector<QueueEvent>& queue, std::vector<Edge>& edges);
+    void computeEvents(Vertex& vertex, std::vector<QueueEvent>& queue, std::vector<Edge>& edges, std::vector< std::vector<Vertex> >& sLav);
+    void computeEdgeEvents(Vertex& previousVertex, Vertex& nextVertex, std::vector<QueueEvent>& queue);
+    void computeSplitEvents(Vertex& vertex, std::vector<Edge>& edges, std::vector<QueueEvent>& queue, boost::optional<double> distanceSquared);
+    boost::optional<double> computeCloserEdgeEvent(Vertex& vertex, std::vector<QueueEvent>& queue, std::vector< std::vector<Vertex> >& sLav);
     std::vector<SplitCandidate> calcOppositeEdges(Vertex& vertex, std::vector<Edge>& edges);
     boost::optional<SplitCandidate> calcCandidatePointForSplit(Vertex& vertex, Edge& edge);
-    void removeEventsUnderHeight(std::vector<Event>& queue, double levelHeight);
+    void removeEventsUnderHeight(std::vector<QueueEvent>& queue, double levelHeight);
 
     // chains
-    std::vector<Chain> createChains(std::vector<Event>& cluster);
-    std::vector<Event> createEdgeChain(std::vector<Event>& edgeCluster);
-    bool isInEdgeChain(Event& split, Chain& chain);
+    std::vector<Chain> createChains(std::vector<QueueEvent>& cluster);
+    std::vector<QueueEvent> createEdgeChain(std::vector<QueueEvent>& edgeCluster);
+    bool isInEdgeChain(QueueEvent& split, Chain& chain);
     void createOppositeEdgeChains(std::vector< std::vector<Vertex> >& sLav, std::vector<Chain>& chains, Point3d& center);
 
     // faces
-    void addMultiBackFaces(std::vector<Event>& edgeList, Vertex& edgeVertex);
-    FaceNode addFaceBack(Vertex& newVertex, Vertex& va, Vertex& vb);
-    FaceNode addFaceLeft(Vertex& newVertex, Vertex& va);
-    FaceNode addFaceRight(Vertex& newVertex, Vertex& vb);
-    std::tuple<bool, FaceNode> addSplitFaces(bool hasLastFaceNode, FaceNode& lastFaceNode, Chain& chainBegin, Chain& chainEnd, Vertex& newVertex);
+    void addMultiBackFaces(std::vector<QueueEvent>& edgeList, Vertex& edgeVertex);
+    // FIXME: FaceNode addFaceBack(Vertex& newVertex, Vertex& va, Vertex& vb);
+    // FIXME: FaceNode addFaceLeft(Vertex& newVertex, Vertex& va);
+    // FIXME: FaceNode addFaceRight(Vertex& newVertex, Vertex& vb);
+    // FIXME: std::tuple<bool, FaceNode> addSplitFaces(bool hasLastFaceNode, FaceNode& lastFaceNode, Chain& chainBegin, Chain& chainEnd, Vertex& newVertex);
 
     // vertexes/lavs
     Vertex createMultiSplitVertex(Edge& nextEdge, Edge& previousEdge, Point3d& center, double distance);
