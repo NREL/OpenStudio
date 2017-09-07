@@ -214,4 +214,23 @@ class CentralHeatPump_Test < MiniTest::Unit::TestCase
   end
 
 
+  def test_reverse_lookups_two_parent_modules_same_central_hp
+
+    model = OpenStudio::Model::Model.new
+    central_hp = OpenStudio::Model::CentralHeatPumpSystem.new(model)
+    mod = OpenStudio::Model::CentralHeatPumpSystemModule.new(model)
+    ch_heater = mod.chillerHeaterModulesPerformanceComponent
+    assert(central_hp.addModule(mod))
+
+    mod2 = OpenStudio::Model::CentralHeatPumpSystemModule.new(model)
+
+    assert(central_hp.addModule(mod2));
+    assert(mod2.setChillerHeaterModulesPerformanceComponent(ch_heater))
+
+    assert_equal(2, ch_heater.centralHeatPumpSystemModules.size);
+    assert_equal(1, ch_heater.centralHeatPumpSystems.size);
+
+  end
+
+
 end

@@ -570,6 +570,7 @@ namespace detail {
 
     std::vector<CentralHeatPumpSystem> result;
 
+    // TODO: cleanup
     //EITHER
     //
     // Loop on all parent CentralHeatPumpSystemModules
@@ -593,10 +594,11 @@ namespace detail {
       // flag to avoid pushing it several times (a CentralHP can have multiple Mods that reference this chillerPerf)
       bool is_added = false;
 
-      if (!is_added) {
-        // Loop on each CentralHeatPumpSystemModules
-        for (const CentralHeatPumpSystemModule& central_hp_module : central_hp.modules() )
-        {
+      // Loop on each CentralHeatPumpSystemModules
+      for (const CentralHeatPumpSystemModule& central_hp_module : central_hp.modules() )
+      {
+        if (!is_added) {
+
           ChillerHeaterPerformanceElectricEIR chiller = central_hp_module.chillerHeaterModulesPerformanceComponent();
 
           if ( chiller.handle() == this->handle() ) {

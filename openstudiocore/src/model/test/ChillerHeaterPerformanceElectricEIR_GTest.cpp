@@ -333,6 +333,8 @@ TEST_F(ModelFixture, ChillerHeaterPerformanceElectricEIR_ReverseLookups)
     ChillerHeaterPerformanceElectricEIR ch_heater = mod.chillerHeaterModulesPerformanceComponent();
     ASSERT_TRUE(central_hp.addModule(mod));
 
+    ASSERT_EQ(1u, central_hp.modules().size());
+
     ASSERT_EQ(1u, ch_heater.centralHeatPumpSystemModules().size());
     ASSERT_EQ(mod.handle(), ch_heater.centralHeatPumpSystemModules()[0].handle());
 
