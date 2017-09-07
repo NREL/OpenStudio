@@ -48,6 +48,8 @@
 #include "../../model/CoolingTowerTwoSpeed_Impl.hpp"
 #include "../../model/GeneratorFuelCellExhaustGasToWaterHeatExchanger.hpp"
 #include "../../model/GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl.hpp"
+#include "../../model/GeneratorMicroTurbineHeatRecovery.hpp"
+#include "../../model/GeneratorMicroTurbineHeatRecovery_Impl.hpp"
 #include "../../model/GroundHeatExchangerVertical.hpp"
 #include "../../model/GroundHeatExchangerVertical_Impl.hpp"
 #include "../../model/GroundHeatExchangerHorizontalTrench.hpp"
@@ -159,6 +161,13 @@ boost::optional<double> flowrate(const HVACComponent & component)
       result = hr.heatRecoveryWaterMaximumFlowRate();
       break;
     }
+    // TODO: @kbenne is this needed?
+    case openstudio::IddObjectType::OS_Generator_MicroTurbine_HeatRecovery :
+    {
+      auto mchpHR = component.cast<GeneratorMicroTurbineHeatRecovery>();
+      result = mchpHR.maximumHeatRecoveryWaterFlowRate();
+      break;
+    }
     case openstudio::IddObjectType::OS_Boiler_HotWater :
     {
       auto boiler = component.cast<BoilerHotWater>();
@@ -180,7 +189,7 @@ boost::optional<double> flowrate(const HVACComponent & component)
     case openstudio::IddObjectType::OS_DistrictHeating :
     {
       break;
-    }      
+    }
     case openstudio::IddObjectType::OS_Chiller_Electric_EIR :
     {
       auto chiller = component.cast<ChillerElectricEIR>();
@@ -206,7 +215,7 @@ boost::optional<double> flowrate(const HVACComponent & component)
     case openstudio::IddObjectType::OS_DistrictCooling :
     {
       break;
-    }      
+    }
     case openstudio::IddObjectType::OS_CoolingTower_SingleSpeed :
     {
       auto tower = component.cast<CoolingTowerSingleSpeed>();
@@ -331,7 +340,7 @@ ComponentType componentType(const HVACComponent & component)
     case openstudio::IddObjectType::OS_DistrictHeating :
     {
       return ComponentType::HEATING;
-    }      
+    }
     case openstudio::IddObjectType::OS_Chiller_Electric_EIR :
     {
       return ComponentType::COOLING;
@@ -351,7 +360,7 @@ ComponentType componentType(const HVACComponent & component)
     case openstudio::IddObjectType::OS_DistrictCooling :
     {
       return ComponentType::COOLING;
-    }      
+    }
     case openstudio::IddObjectType::OS_CoolingTower_SingleSpeed :
     {
       return ComponentType::COOLING;
@@ -414,6 +423,7 @@ ComponentType componentType(const HVACComponent & component)
     }
     case openstudio::IddObjectType::OS_Generator_MicroTurbine_HeatRecovery :
     {
+      // TODO: @kbenne, address these comments
       // Maybe that should be both, in the case of an absorption chiller?
       // Also, should maybe check if it's in mode FollowThermal or FollowThermalLimitElectrical?
       // If not in these two modes, it doesn't care and just runs. Also, it's typically on the demand Side, and this method
@@ -428,8 +438,8 @@ ComponentType componentType(const HVACComponent & component)
 }
 
 // Some plant components air in a containingHVACComponent() and it is that
-// container which needs to go on the plant operation scheme. Here is a filter to 
-// figure that out. 
+// container which needs to go on the plant operation scheme. Here is a filter to
+// figure that out.
 HVACComponent operationSchemeComponent(const HVACComponent & component) {
     boost::optional<HVACComponent> result;
 
@@ -550,9 +560,8 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantEquipmentOperationSc
 
       for( auto setpointComponent : t_setpointComponents )
       {
-        // TODO: Find the right way to deal with this
+        // TODO: @kbenne, Find the right way to deal with this
         // For now, "dirty" (?) fix for Generator:MicroTurbine
-        // @kbenne, FYI
 
         boost::optional<IdfObject> _idfObject;
 
@@ -616,7 +625,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantEquipmentOperationSc
     }
 
     applyDefault = false;
-  } 
+  }
 
   if( auto heatingLoadScheme = plantLoop.plantEquipmentOperationHeatingLoad() ) {
     auto _scheme = translateAndMapModelObject(heatingLoadScheme.get());
@@ -650,7 +659,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantEquipmentOperationSc
   }
 
   if( applyDefault ) {
-    // If we get here then there must not be any operation schemes defined in the model 
+    // If we get here then there must not be any operation schemes defined in the model
     // and we should go ahead and create default schemes.
     const auto & t_heatingComponents = heatingComponents( plantLoop );
     if( ! t_heatingComponents.empty() ) {

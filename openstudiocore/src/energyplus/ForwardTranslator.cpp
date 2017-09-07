@@ -1517,9 +1517,15 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
   }
   case openstudio::IddObjectType::OS_Generator_MicroTurbine:
   {
-    // Will also translate the Generator:MicroTurbine:HeatRecovery if there is one
-    model::GeneratorMicroTurbine temp = modelObject.cast<GeneratorMicroTurbine>();
-    retVal = translateGeneratorMicroTurbine(temp);
+    // Will also translate the Generator:MicroTurbine:HeatRecovery if there is one attached to the Generator:MicroTurbine
+    model::GeneratorMicroTurbine mchp = modelObject.cast<GeneratorMicroTurbine>();
+    retVal = translateGeneratorMicroTurbine(mchp);
+    break;
+  }
+  case openstudio::IddObjectType::OS_Generator_MicroTurbine_HeatRecovery:
+  {
+    // no-op, just Log a Trace message
+    LOG(Trace, "OS_Generator_MicroTurbine_HeatRecovery is not translated by itself but in the parent GeneratorMicroTurbine");
     break;
   }
   case openstudio::IddObjectType::OS_Generator_FuelCell:
