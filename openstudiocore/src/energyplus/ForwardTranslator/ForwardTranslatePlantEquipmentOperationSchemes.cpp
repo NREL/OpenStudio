@@ -395,7 +395,24 @@ ComponentType componentType(const HVACComponent & component)
     }
     case openstudio::IddObjectType::OS_HeatExchanger_FluidToFluid :
     {
-      return ComponentType::BOTH;
+      // "Smart" defaults instead of ComponentType::BOTH;
+      HeatExchangerFluidToFluid hx = component.cast<HeatExchangerFluidToFluid>;
+
+      std::string controlType = hx.controlType();
+
+      if ( (controlType == 'HeatingSetpointModulated') ||
+          (controlType == 'HeatingSetpointOnOff') ) {
+        return ComponentType::HEATING;
+
+      } else if ( (controlType == 'CoolingSetpointModulated') ||
+          (controlType == 'CoolingSetpointOnOff') ||
+          (controlType == 'CoolingDifferentialOnOff') ||
+          (controlType == 'CoolingSetpointOnOffWithComponentOverride') ) {
+        return ComponentType::COOLING;
+
+      } else {
+        return ComponentType::BOTH;
+      }
     }
     case openstudio::IddObjectType::OS_SolarCollector_FlatPlate_PhotovoltaicThermal :
     {
