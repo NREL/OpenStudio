@@ -103,14 +103,14 @@ namespace detail {
   }
 
   // This will clone both the GeneratorFuelCellExhaustGasToWaterHeatExchanger and its linked GeneratorFuelCell
-  // and will return a reference to the GeneratorMicroTurbineHeatRecovery
+  // and will return a reference to the GeneratorFuelCellExhaustGasToWaterHeatExchanger
   ModelObject GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::clone(Model model) const {
 
     // We call the parent generator's Clone method which will clone both the fuelCell and fuelCellHX
     GeneratorFuelCell fs = fuelCell();
     GeneratorFuelCell fsClone = fs.clone(model).cast<GeneratorFuelCell>();
 
-    // We get the clone of the parent generator's MTHR so we can return that
+    // We get the clone of the parent generator's GeneratorFuelCellExhaustGasToWaterHeatExchanger so we can return that
     GeneratorFuelCellExhaustGasToWaterHeatExchanger hxClone = fsClone.heatExchanger();
 
 
@@ -505,7 +505,7 @@ GeneratorFuelCellExhaustGasToWaterHeatExchanger::GeneratorFuelCellExhaustGasToWa
   //setHeatRecoveryWaterInletNode(waterInletNode);
   //note: This field contains the name of the node that connects the heat exchanger s outlet to the plant loop.
   //setHeatRecoveryWaterOutletNode(waterOutletNode);
-  //note: This field is used to determine which node will receive the exhaust air stream leaving the FC. This node will usually be outside and not be referenced elsewhere. 
+  //note: This field is used to determine which node will receive the exhaust air stream leaving the FC. This node will usually be outside and not be referenced elsewhere.
   //      However, if the exhaust stream is used in a heat recovery ventilator (as described in section 11 of the Annex 42 specification) then the node would be reference in the heat recovery ventilator object.
   setExhaustOutletAirNode(exhaustOutletAirNode);
   setHeatRecoveryWaterMaximumFlowRate(0.0004);

@@ -87,8 +87,8 @@ namespace detail {
     return GeneratorFuelCellPowerModule::iddObjectType();
   }
 
-  // This will clone both the GeneratorFuelCellExhaustGasToWaterHeatExchanger and its linked GeneratorFuelCell
-  // and will return a reference to the GeneratorMicroTurbineHeatRecovery
+  // This will clone both the GeneratorFuelCellPowerModule and its linked GeneratorFuelCell
+  // and will return a reference to the GeneratorFuelCellPowerModule
   ModelObject GeneratorFuelCellPowerModule_Impl::clone(Model model) const {
 
     // We call the parent generator's Clone method which will clone both the fuelCell and fuelCellHX

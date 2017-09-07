@@ -290,7 +290,7 @@ namespace detail {
     return schedule;
   }
 
-  // Convenience method to go fetch the connected GeneratorMicroTurbineHeatRecovery's 'Rated Thermal to Electrical Power Ratio'
+  // Convenience method to go fetch the connected GeneratorFuelCell's 'Rated Thermal to Electrical Power Ratio'
   boost::optional<double> GeneratorFuelCell_Impl::ratedThermaltoElectricalPowerRatio() const {
     boost::optional<double> temp;
     return temp;
