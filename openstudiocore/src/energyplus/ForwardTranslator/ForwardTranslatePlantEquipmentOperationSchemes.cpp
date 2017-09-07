@@ -396,21 +396,25 @@ ComponentType componentType(const HVACComponent & component)
     case openstudio::IddObjectType::OS_HeatExchanger_FluidToFluid :
     {
       // "Smart" defaults instead of ComponentType::BOTH;
-      HeatExchangerFluidToFluid hx = component.cast<HeatExchangerFluidToFluid>;
+      HeatExchangerFluidToFluid hx = component.cast<HeatExchangerFluidToFluid>();
 
       std::string controlType = hx.controlType();
 
-      if ( (controlType == 'HeatingSetpointModulated') ||
-          (controlType == 'HeatingSetpointOnOff') ) {
+      if ( (controlType == "HeatingSetpointModulated") ||
+          (controlType == "HeatingSetpointOnOff") ) {
         return ComponentType::HEATING;
 
-      } else if ( (controlType == 'CoolingSetpointModulated') ||
-          (controlType == 'CoolingSetpointOnOff') ||
-          (controlType == 'CoolingDifferentialOnOff') ||
-          (controlType == 'CoolingSetpointOnOffWithComponentOverride') ) {
+      } else if ( (controlType == "CoolingSetpointModulated") ||
+          (controlType == "CoolingSetpointOnOff") ||
+          (controlType == "CoolingDifferentialOnOff") ||
+          (controlType == "CoolingSetpointOnOffWithComponentOverride") ) {
         return ComponentType::COOLING;
 
       } else {
+        // TODO: would need to open a log channel
+        // LOG(Debug, "HeatExchangerFluidToFluid '" << hx.name().get() << "' doesn't have a "
+        //           "controlType ('" << controlType << "') that allows us to specify whether "
+        //           "it's heating or cooling, setting to ComponentType::BOTH");
         return ComponentType::BOTH;
       }
     }

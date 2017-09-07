@@ -105,8 +105,8 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorGeneratorMicroTurbine_ELCD_PlantLoop)
 
   // TODO: Temporarily output the Log in the console with the Trace (-3) level
   // for debug
-  openstudio::Logger::instance().standardOutLogger().enable();
-  openstudio::Logger::instance().standardOutLogger().setLogLevel(Trace);
+  // openstudio::Logger::instance().standardOutLogger().enable();
+  // openstudio::Logger::instance().standardOutLogger().setLogLevel(Trace);
 
 
   // Create a model, a mchp, a mchpHR, a plantLoop and an electricalLoadCenter
