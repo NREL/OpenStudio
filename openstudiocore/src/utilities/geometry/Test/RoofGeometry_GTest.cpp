@@ -46,7 +46,7 @@ bool polygonMatches(std::vector< std::vector<Point3d> > polygons, std::vector<Po
   return (polygonMatches == 1);
 }
 
-TEST_F(GeometryFixture, Square_6_12)
+TEST_F(GeometryFixture, RoofSquare_6_12)
 {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
@@ -73,7 +73,7 @@ TEST_F(GeometryFixture, Square_6_12)
   }
 }
 
-TEST_F(GeometryFixture, Square_1_12) {
+TEST_F(GeometryFixture, RoofSquare_1_12) {
   double pitch = radToDeg(atan(1.0 / 12.0));
 
   std::vector<Point3d> footprint;
@@ -99,7 +99,7 @@ TEST_F(GeometryFixture, Square_1_12) {
   }
 }
 
-TEST_F(GeometryFixture, Rectangle_3_12) {
+TEST_F(GeometryFixture, RoofRectangle_3_12) {
   double pitch = radToDeg(atan(3.0 / 12.0));
 
   std::vector<Point3d> footprint;
@@ -125,7 +125,7 @@ TEST_F(GeometryFixture, Rectangle_3_12) {
   }
 }
 
-TEST_F(GeometryFixture, Hshape_6_12) {
+TEST_F(GeometryFixture, RoofHshape_6_12) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
   std::vector<Point3d> footprint;
@@ -165,7 +165,7 @@ TEST_F(GeometryFixture, Hshape_6_12) {
   }
 }
 
-TEST_F(GeometryFixture, skeletonTest6_9) {
+TEST_F(GeometryFixture, RoofSkeletonTest6_9) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
   std::vector<Point3d> footprint;
@@ -193,7 +193,7 @@ TEST_F(GeometryFixture, skeletonTest6_9) {
   }
 }
 
-TEST_F(GeometryFixture, skeletonTest7) {
+TEST_F(GeometryFixture, RoofSkeletonTest7) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
   std::vector<Point3d> footprint;
@@ -221,7 +221,7 @@ TEST_F(GeometryFixture, skeletonTest7) {
   }
 }
 
-TEST_F(GeometryFixture, skeletonTest8) {
+TEST_F(GeometryFixture, RoofSkeletonTest8) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
   std::vector<Point3d> footprint;
@@ -255,7 +255,7 @@ TEST_F(GeometryFixture, skeletonTest8) {
   }
 }
 
-TEST_F(GeometryFixture, skeletonTestB1) {
+TEST_F(GeometryFixture, RoofSkeletonTestB1) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
   std::vector<Point3d> footprint;
@@ -305,7 +305,7 @@ TEST_F(GeometryFixture, skeletonTestB1) {
   }
 }
 
-TEST_F(GeometryFixture, skeletonTestB2) {
+TEST_F(GeometryFixture, RoofSkeletonTestB2) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
   std::vector<Point3d> footprint;
@@ -353,7 +353,7 @@ TEST_F(GeometryFixture, skeletonTestB2) {
   }
 }
 
-TEST_F(GeometryFixture, skeletonTestB3) {
+TEST_F(GeometryFixture, RoofSkeletonTestB3) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
   std::vector<Point3d> footprint;
@@ -385,7 +385,7 @@ TEST_F(GeometryFixture, skeletonTestB3) {
   }
 }
 
-TEST_F(GeometryFixture, skeletonTestB4) {
+TEST_F(GeometryFixture, RoofSkeletonTestB4) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
   std::vector<Point3d> footprint;
@@ -413,7 +413,7 @@ TEST_F(GeometryFixture, skeletonTestB4) {
   }
 }
 
-TEST_F(GeometryFixture, skeletonTestB5) {
+TEST_F(GeometryFixture, RoofSkeletonTestB5) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
   std::vector<Point3d> footprint;
@@ -441,7 +441,7 @@ TEST_F(GeometryFixture, skeletonTestB5) {
   }
 }
 
-TEST_F(GeometryFixture, skeletonTestB6) {
+TEST_F(GeometryFixture, RoofSkeletonTestB6) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
   std::vector<Point3d> footprint;
@@ -473,7 +473,7 @@ TEST_F(GeometryFixture, skeletonTestB6) {
   }
 }
 
-TEST_F(GeometryFixture, skeletonTestB7) {
+TEST_F(GeometryFixture, RoofSkeletonTestB7) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
   std::vector<Point3d> footprint;
@@ -503,7 +503,7 @@ TEST_F(GeometryFixture, skeletonTestB7) {
   }
 }
 
-TEST_F(GeometryFixture, skeletonTestB8) {
+TEST_F(GeometryFixture, RoofSkeletonTestB8) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
   std::vector<Point3d> footprint;
@@ -531,7 +531,7 @@ TEST_F(GeometryFixture, skeletonTestB8) {
   }
 }
 
-TEST_F(GeometryFixture, skeletonTest9) {
+TEST_F(GeometryFixture, RoofSkeletonTest9) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
   std::vector<Point3d> footprint;
@@ -565,7 +565,7 @@ TEST_F(GeometryFixture, skeletonTest9) {
   }
 }
 
-TEST_F(GeometryFixture, skeletonTestB10) {
+TEST_F(GeometryFixture, RoofSkeletonTestB10) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
   std::vector<Point3d> footprint;
@@ -603,7 +603,7 @@ TEST_F(GeometryFixture, skeletonTestB10) {
   }
 }
 
-TEST_F(GeometryFixture, skeletonTestB11) {
+TEST_F(GeometryFixture, RoofSkeletonTestB11) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
   std::vector<Point3d> footprint;
@@ -653,7 +653,7 @@ TEST_F(GeometryFixture, skeletonTestB11) {
   }
 }
 
-TEST_F(GeometryFixture, skeletonTestB11_b) {
+TEST_F(GeometryFixture, RoofSkeletonTestB11_b) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
   std::vector<Point3d> footprint;
@@ -687,7 +687,7 @@ TEST_F(GeometryFixture, skeletonTestB11_b) {
   }
 }
 
-TEST_F(GeometryFixture, skeletonTestB12) {
+TEST_F(GeometryFixture, RoofSkeletonTestB12) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
   std::vector<Point3d> footprint;
@@ -737,7 +737,7 @@ TEST_F(GeometryFixture, skeletonTestB12) {
   }
 }
 
-TEST_F(GeometryFixture, skeletonTestB13) {
+TEST_F(GeometryFixture, RoofSkeletonTestB13) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
   std::vector<Point3d> footprint;
@@ -795,7 +795,7 @@ TEST_F(GeometryFixture, skeletonTestB13) {
   }
 }
 
-TEST_F(GeometryFixture, circularAddTest) {
+TEST_F(GeometryFixture, RoofCircularAddTest) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
   std::vector<Point3d> footprint;
@@ -821,7 +821,7 @@ TEST_F(GeometryFixture, circularAddTest) {
   }
 }
 
-TEST_F(GeometryFixture, circularAddTest2) {
+TEST_F(GeometryFixture, RoofCircularAddTest2) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
   std::vector<Point3d> footprint;
@@ -847,7 +847,7 @@ TEST_F(GeometryFixture, circularAddTest2) {
   }
 }
 
-TEST_F(GeometryFixture, circularAddTest2Clockwise) {
+TEST_F(GeometryFixture, RoofCircularAddTest2Clockwise) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
   std::vector<Point3d> footprint;

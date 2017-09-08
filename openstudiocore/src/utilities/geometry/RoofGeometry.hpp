@@ -99,23 +99,6 @@ namespace openstudio{
     REGISTER_LOGGER("utilities.Edge");
   };
 
-  // FACES
-
-  //class FaceNode
-  //{
-  //public:
-  //  FaceNode();
-  //private:
-  //  REGISTER_LOGGER("utilities.FaceNode");
-  //};
-
-  //class FaceQueue : public std::queue<FaceNode>
-  //{
-  //public:
-  //  Edge edge; // Edge for given queue.
-  //  bool closed = false; //Flag if queue is closed. After closing can't be modified.
-  //};
-
   // VERTEXES
 
   class Vertex
@@ -137,10 +120,19 @@ namespace openstudio{
     boost::optional<Ray2d> bisector;
     double distance = 0.0;
     bool processed = false;
-    //FIXME: FaceNode leftFace;
-    //FIXME: FaceNode rightFace;
   private:
     REGISTER_LOGGER("utilities.Vertex");
+  };
+
+  // FACES
+
+  class Face
+  {
+  public:
+    Face();
+    std::vector<Vertex> vertexes;
+  private:
+    REGISTER_LOGGER("utilities.Face");
   };
 
   // QUEUE EVENTS
@@ -161,8 +153,8 @@ namespace openstudio{
     bool isEventInGroup(std::vector<Vertex>& parentGroup);
     friend std::ostream& operator<<(std::ostream& os, const QueueEvent& event);
     bool operator<(const QueueEvent& other) const;
-    Edge getOppositeEdgePrevious();
-    Edge getOppositeEdgeNext();
+    Edge& getOppositeEdgePrevious();
+    Edge& getOppositeEdgeNext();
     Vertex previousVertex;
     Vertex nextVertex;
     Vertex parent;
@@ -196,12 +188,12 @@ namespace openstudio{
     Chain(std::vector<QueueEvent>& aEdgeList); // EdgeChain
     Chain(Edge& aOppositeEdge, Vertex& aNextVertex); // SingleEdgeChain
     ChainMode getChainMode();
-    Edge getPreviousEdge();
-    Edge getNextEdge();
-    Vertex getPreviousVertex();
-    Vertex getNextVertex();
-    boost::optional<Vertex> getCurrentVertex();
-    boost::optional<Edge> getOppositeEdge();
+    Edge& getPreviousEdge();
+    Edge& getNextEdge();
+    Vertex& getPreviousVertex();
+    Vertex& getNextVertex();
+    boost::optional<Vertex&> getCurrentVertex();
+    boost::optional<Edge&> getOppositeEdge();
     std::vector<QueueEvent> edgeList;
     QueueEvent splitEvent;
     ChainType chainType;
@@ -214,7 +206,7 @@ namespace openstudio{
     Vertex previousVertex;
     Vertex nextVertex;
     boost::optional<Vertex> currentVertex;
-    boost::optional<Edge> oppositeEdge;
+    boost::optional<Edge&> oppositeEdge;
   };
 
 
@@ -280,10 +272,10 @@ namespace openstudio{
 
     REGISTER_LOGGER("utilities.RoofGeometry");
 
-    std::vector< std::vector<Point3d> > doStraightSkeleton(std::vector<Point3d>& polygon);
+    std::vector< std::vector<Point3d> > doStraightSkeleton(std::vector<Point3d>& polygon, double roofPitchDegrees);
 
     // init
-    void initSlav(std::vector<Point3d>& polygon, std::vector< std::vector<Vertex> >& sLav, std::vector<Edge>& edges); // FIXME: , std::vector<FaceQueue>& faces);
+    void initSlav(std::vector<Point3d>& polygon, std::vector< std::vector<Vertex> >& sLav, std::vector<Edge>& edges, std::vector<Face>& faces);
     void initEvents(std::vector< std::vector<Vertex> >& sLav, std::vector<QueueEvent>& queue, std::vector<Edge>& edges);
     void initPolygon(std::vector<Point3d>& polygon);
 
@@ -310,9 +302,9 @@ namespace openstudio{
     std::vector<LevelEvent> groupLevelEvents(std::vector<QueueEvent>& levelEvents);
     LevelEvent createLevelEvent(Point3d& eventCenter, double distance, std::vector<QueueEvent>& eventCluster);
     QueueEvent createEdgeEvent(Point3d& point, Vertex& previousVertex, Vertex& nextVertex);
-    void multiSplitEvent(LevelEvent& event, std::vector< std::vector<Vertex> >& sLav, std::vector<QueueEvent>& queue, std::vector<Edge>& edges);
-    void pickEvent(LevelEvent& event, std::vector< std::vector<Vertex> >& sLav, std::vector<QueueEvent>& queue, std::vector<Edge>& edges);
-    void multiEdgeEvent(LevelEvent& event, std::vector< std::vector<Vertex> >& sLav, std::vector<QueueEvent>& queue, std::vector<Edge>& edges);
+    void multiSplitEvent(LevelEvent& event, std::vector< std::vector<Vertex> >& sLav, std::vector<QueueEvent>& queue, std::vector<Edge>& edges, std::vector<Face>& faces);
+    void pickEvent(LevelEvent& event, std::vector< std::vector<Vertex> >& sLav, std::vector<QueueEvent>& queue, std::vector<Edge>& edges, std::vector<Face>& faces);
+    void multiEdgeEvent(LevelEvent& event, std::vector< std::vector<Vertex> >& sLav, std::vector<QueueEvent>& queue, std::vector<Edge>& edges, std::vector<Face>& faces);
     void computeEvents(Vertex& vertex, std::vector<QueueEvent>& queue, std::vector<Edge>& edges, std::vector< std::vector<Vertex> >& sLav);
     void computeEdgeEvents(Vertex& previousVertex, Vertex& nextVertex, std::vector<QueueEvent>& queue);
     void computeSplitEvents(Vertex& vertex, std::vector<Edge>& edges, std::vector<QueueEvent>& queue, boost::optional<double> distanceSquared);
@@ -328,17 +320,18 @@ namespace openstudio{
     void createOppositeEdgeChains(std::vector< std::vector<Vertex> >& sLav, std::vector<Chain>& chains, Point3d& center);
 
     // faces
-    void addMultiBackFaces(std::vector<QueueEvent>& edgeList, Vertex& edgeVertex, std::vector< std::vector<Vertex> >& sLav);
-    // FIXME: FaceNode addFaceBack(Vertex& newVertex, Vertex& va, Vertex& vb);
-    // FIXME: FaceNode addFaceLeft(Vertex& newVertex, Vertex& va);
-    // FIXME: FaceNode addFaceRight(Vertex& newVertex, Vertex& vb);
-    // FIXME: std::tuple<bool, FaceNode> addSplitFaces(bool hasLastFaceNode, FaceNode& lastFaceNode, Chain& chainBegin, Chain& chainEnd, Vertex& newVertex);
+    void addMultiBackFaces(std::vector<QueueEvent>& edgeList, Vertex& edgeVertex, std::vector< std::vector<Vertex> >& sLav, std::vector<QueueEvent>& queue, std::vector<Face>& faces);
+    void addFaceBack(Vertex& newVertex, Vertex& va, Vertex& vb, std::vector<Face>& faces);
+    void addFaceLeft(Vertex& newVertex, Vertex& va, std::vector<Face>& faces);
+    void addFaceRight(Vertex& newVertex, Vertex& vb, std::vector<Face>& faces);
+    // FIXME: std::tuple<bool, FaceNode> addSplitFaces(bool hasLastFaceNode, FaceNode& lastFaceNode, Chain& chainBegin, Chain& chainEnd, Vertex& newVertex, std::vector<Face>& faces);
+    std::vector< std::vector<Point3d> > facesToRoofs(std::vector<Face>& faces, double roofPitchDegrees);
 
     // vertexes/lavs
     Vertex createMultiSplitVertex(Edge& nextEdge, Edge& previousEdge, Point3d& center, double distance);
     Vertex createOppositeEdgeVertex(Vertex& newVertex);
     void mergeBeforeBaseVertex(Vertex& base, std::vector<Vertex>& baseList, Vertex& merged, std::vector<Vertex>& mergedList);
-    void processTwoNodeLavs(std::vector< std::vector<Vertex> >& sLav);
+    void processTwoNodeLavs(std::vector< std::vector<Vertex> >& sLav, std::vector<QueueEvent>& queue, std::vector<Face>& faces);
     void removeEmptyLav(std::vector< std::vector<Vertex> >& sLav);
     boost::optional<Vertex> findOppositeEdgeLav(std::vector< std::vector<Vertex> > sLav, Edge oppositeEdge, Point3d center);
     std::vector<Vertex> findEdgeLavs(std::vector< std::vector<Vertex> > sLav, Edge oppositeEdge);
