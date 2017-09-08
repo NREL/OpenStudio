@@ -99,19 +99,17 @@ namespace detail {
 
   /** This method clones the CentralHeatPumpSystemModyle but sets the chillerHeaterModulesPerformanceComponent to the same as the original
    * By using the "children" method and listing the chillerHeaterModulesPerformanceComponent there ModelObject_Impl::clone will automatically do
-   * the right thing */
+   * the right thing -> NO IT DOESN'T */
   ModelObject CentralHeatPumpSystemModule_Impl::clone(Model model) const
   {
     CentralHeatPumpSystemModule newCentralHPMod = ModelObject_Impl::clone(model).cast<CentralHeatPumpSystemModule>();
-    // ASSERT that it does have the same Perf component as the original Module
-    OS_ASSERT(newCentralHPMod.chillerHeaterModulesPerformanceComponent() == this->chillerHeaterModulesPerformanceComponent());
 
     // If not using "children", then expliclity do it:
-    // bool ok = true;
+    bool ok = true;
     // We don't want to clone the perf object, set it to the same ChillHeaterPerformanceElectricEIR
-    //ok = newCentralHPMod.setChillerHeaterModulesPerformanceComponent(this->chillerHeaterModulesPerformanceComponent());
+    ok = newCentralHPMod.setChillerHeaterModulesPerformanceComponent(this->chillerHeaterModulesPerformanceComponent());
     // This better have worked
-    //OS_ASSERT(ok);
+    OS_ASSERT(ok);
 
     return newCentralHPMod;
   }
@@ -121,7 +119,7 @@ namespace detail {
   std::vector<IddObjectType> CentralHeatPumpSystemModule_Impl::allowableChildTypes() const
   {
     std::vector<IddObjectType> result;
-    result.push_back(IddObjectType::OS_ChillerHeaterPerformance_Electric_EIR);
+    // result.push_back(IddObjectType::OS_ChillerHeaterPerformance_Electric_EIR);
     return result;
   }
 
@@ -130,8 +128,8 @@ namespace detail {
   {
     std::vector<ModelObject> result;
 
-    ChillerHeaterPerformanceElectricEIR ch_heater = chillerHeaterModulesPerformanceComponent();
-    result.push_back(ch_heater);
+    // ChillerHeaterPerformanceElectricEIR ch_heater = chillerHeaterModulesPerformanceComponent();
+    // result.push_back(ch_heater);
 
     // The chillerHeaterModulesControlSchedule, being a schedule, is already a resource so no need here
 
