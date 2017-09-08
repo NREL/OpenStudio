@@ -1151,27 +1151,27 @@ namespace detail {
   }
 
   boost::optional<double> CoolingTowerSingleSpeed_Impl::autosizedDesignWaterFlowRate() const {
-    return getAutosizedValue("Design Size Design Water Flow Rate", "m3/s");
+    return getAutosizedValue("Design Water Flow Rate", "m3/s");
   }
 
   boost::optional<double> CoolingTowerSingleSpeed_Impl::autosizedDesignAirFlowRate() const {
-    return getAutosizedValue("Design Size Design Air Flow Rate", "m3/s");
+    return getAutosizedValue("Design Air Flow Rate", "m3/s");
   }
 
   boost::optional<double> CoolingTowerSingleSpeed_Impl::autosizedFanPoweratDesignAirFlowRate() const {
-    return getAutosizedValue("Design Size Fan Power at Design Air Flow Rate", "W");
+    return getAutosizedValue("Fan Power at Design Air Flow Rate", "W");
   }
 
   boost::optional<double> CoolingTowerSingleSpeed_Impl::autosizedUFactorTimesAreaValueatDesignAirFlowRate() const {
-    return getAutosizedValue("Design Size U-Factor Times Area Value at Design Air Flow Rate", "W/K");
+    return getAutosizedValue("U-Factor Times Area Value at Design Air Flow Rate", "W/K");
   }
 
   boost::optional<double> CoolingTowerSingleSpeed_Impl::autosizedAirFlowRateinFreeConvectionRegime() const {
-    return getAutosizedValue("Design Size Air Flow Rate in Free Convection Regime", "m3/s");
+    return getAutosizedValue("Free Convection Regime Air Flow Rate", "m3/s");
   }
 
   boost::optional<double> CoolingTowerSingleSpeed_Impl::autosizedUFactorTimesAreaValueatFreeConvectionAirFlowRate() const {
-    return getAutosizedValue("Design Size U-Factor Times Area Value at Free Convection Air Flow Rate", "W/K");
+    return getAutosizedValue("Free Convection U-Factor Times Area Value", "W/K");
   }
 
   void CoolingTowerSingleSpeed_Impl::autosize() {

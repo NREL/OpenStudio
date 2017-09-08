@@ -357,15 +357,15 @@ namespace detail {
   }
 
   boost::optional<double> CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::autosizedRatedHeatingCapacityAtSelectedNominalSpeedLevel() const {
-    return getAutosizedValue("Design Size Heating Capacity At Selected Nominal Speed Level", "W");
+    return getAutosizedValue("Design Size Nominal Heating Capacity", "W");
   }
 
   boost::optional<double> CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::autosizedRatedAirFlowRateAtSelectedNominalSpeedLevel() const {
-    return getAutosizedValue("Design Size Air Flow Rate At Selected Nominal Speed Level", "m3/s");
+    return getAutosizedValue("Design Size Rated Air Flow Rate", "m3/s");
   }
 
   boost::optional<double> CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::autosizedRatedWaterFlowRateAtSelectedNominalSpeedLevel() const {
-    return getAutosizedValue("Design Size Water Flow Rate At Selected Nominal Speed Level", "m3/s");
+    return getAutosizedValue("Design Size Rated Water Flow Rate", "m3/s");
   }
 
   void CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::autosize() {

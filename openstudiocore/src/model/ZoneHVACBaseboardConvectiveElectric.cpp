@@ -283,7 +283,7 @@ namespace detail {
   }
 
   boost::optional<double> ZoneHVACBaseboardConvectiveElectric_Impl::autosizedNominalCapacity() const {
-    return getAutosizedValue("Design Size Nominal Capacity", "W");
+    return getAutosizedValue("Design Size Heating Design Capacity", "W");
   }
 
   void ZoneHVACBaseboardConvectiveElectric_Impl::autosize() {

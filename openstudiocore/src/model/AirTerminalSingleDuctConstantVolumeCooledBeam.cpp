@@ -666,19 +666,19 @@ AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::outputVariableNames() const
 
 
   boost::optional<double> AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::autosizedSupplyAirVolumetricFlowRate() const {
-    return getAutosizedValue("Design Size Supply Air Volumetric Flow Rate", "m3/s");
+    return getAutosizedValue("Supply Air Flow Rate", "m3/s");
   }
 
   boost::optional<double> AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::autosizedMaximumTotalChilledWaterVolumetricFlowRate() const {
-    return getAutosizedValue("Design Size Maximum Total Chilled Water Volumetric Flow Rate", "m3/s");
+    return getAutosizedValue("Maximum Total Chilled Water Flow Rate", "m3/s");
   }
 
   boost::optional<double> AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::autosizedNumberofBeams() const {
-    return getAutosizedValue("Design Size Number of Beams", "");
+    return getAutosizedValue("Number of Beams", "");
   }
 
   boost::optional<double> AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::autosizedBeamLength() const {
-    return getAutosizedValue("Design Size Beam Length", "m");
+    return getAutosizedValue("Beam Length", "m");
   }
 
   void AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::autosize() {

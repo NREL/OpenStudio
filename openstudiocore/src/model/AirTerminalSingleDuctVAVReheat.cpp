@@ -648,11 +648,11 @@ namespace detail{
   }
 
   boost::optional<double> AirTerminalSingleDuctVAVReheat_Impl::autosizedMaximumFlowPerZoneFloorAreaDuringReheat() const {
-    return getAutosizedValue("Design Size Maximum Flow per Zone Floor Area During Reheat", "m3/s-m2");
+    return getAutosizedValue("Design Size Maximum Flow per Zone Floor Area during Reheat", "m3/s-m2");
   }
 
   boost::optional<double> AirTerminalSingleDuctVAVReheat_Impl::autosizedMaximumFlowFractionDuringReheat() const {
-    return getAutosizedValue("Design Size Maximum Flow Fraction During Reheat", "");
+    return getAutosizedValue("Design Size Maximum Flow Fraction during Reheat", "");
   }
 
   void AirTerminalSingleDuctVAVReheat_Impl::autosize() {

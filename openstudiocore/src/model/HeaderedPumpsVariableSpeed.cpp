@@ -334,11 +334,11 @@ namespace detail {
   }
 
   boost::optional<double> HeaderedPumpsVariableSpeed_Impl::autosizedTotalRatedFlowRate() const {
-    return getAutosizedValue("Total Design Size Flow Rate", "m3/s");
+    return getAutosizedValue("Design Flow Rate", "m3/s");
   }
 
   boost::optional<double> HeaderedPumpsVariableSpeed_Impl::autosizedRatedPowerConsumption() const {
-    return getAutosizedValue("Design Size Power Consumption", "W");
+    return getAutosizedValue("Design Power Consumption", "W");
   }
 
   void HeaderedPumpsVariableSpeed_Impl::autosize() {

@@ -1172,15 +1172,15 @@ namespace detail {
   }
 
   boost::optional<double> AirLoopHVACUnitarySystem_Impl::autosizedSupplyAirFlowRateDuringCoolingOperation() const {
-    return getAutosizedValue("Design Size Supply Air Flow Rate During Cooling Operation", "m3/s");
+    return getAutosizedValue("Design Size Cooling Supply Air Flow Rate", "m3/s");
   }
 
   boost::optional<double> AirLoopHVACUnitarySystem_Impl::autosizedSupplyAirFlowRateDuringHeatingOperation() const {
-    return getAutosizedValue("Design Size Supply Air Flow Rate During Heating Operation", "m3/s");
+    return getAutosizedValue("Design Size Heating Supply Air Flow Rate", "m3/s");
   }
 
   boost::optional<double> AirLoopHVACUnitarySystem_Impl::autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisRequired() const {
-    return getAutosizedValue("Design Size Supply Air Flow Rate When No Cooling or Heating is Required", "m3/s");
+    return getAutosizedValue("User-Specified No Load Supply Air Flow Rate", "m3/s");
   }
 
   boost::optional<double> AirLoopHVACUnitarySystem_Impl::autosizedMaximumSupplyAirTemperature() const {

@@ -659,11 +659,11 @@ namespace detail {
   }
 
   boost::optional<double> ControllerOutdoorAir_Impl::autosizedMinimumOutdoorAirFlowRate() const {
-    return getAutosizedValue("Design Size Minimum Outdoor Air Flow Rate", "m3/s");
+    return getAutosizedValue("Minimum Outdoor Air Flow Rate", "m3/s");
   }
 
   boost::optional<double> ControllerOutdoorAir_Impl::autosizedMaximumOutdoorAirFlowRate() const {
-    return getAutosizedValue("Design Size Maximum Outdoor Air Flow Rate", "m3/s");
+    return getAutosizedValue("Maximum Outdoor Air Flow Rate", "m3/s");
   }
 
   void ControllerOutdoorAir_Impl::autosize() {

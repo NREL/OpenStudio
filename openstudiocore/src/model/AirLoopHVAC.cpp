@@ -1618,7 +1618,7 @@ namespace detail {
   }
 
   boost::optional<double> AirLoopHVAC_Impl::autosizedDesignSupplyAirFlowRate() const {
-    return getAutosizedValue("Design Size Design Supply Air Flow Rate", "m3/s");
+    return getAutosizedValue("Design Supply Air Flow Rate", "m3/s");
   }
 
   void AirLoopHVAC_Impl::autosize() {

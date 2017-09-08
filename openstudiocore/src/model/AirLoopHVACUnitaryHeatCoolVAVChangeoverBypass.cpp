@@ -489,27 +489,27 @@ namespace detail {
   }
 
   boost::optional<double> AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl::autosizedSystemAirFlowRateDuringCoolingOperation() const {
-    return getAutosizedValue("Design Size System Air Flow Rate During Cooling Operation", "m3/s");
+    return getAutosizedValue("maximum cooling air flow rate", "m3/s");
   }
 
   boost::optional<double> AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl::autosizedSystemAirFlowRateDuringHeatingOperation() const {
-    return getAutosizedValue("Design Size System Air Flow Rate During Heating Operation", "m3/s");
+    return getAutosizedValue("maximum heating air flow rate", "m3/s");
   }
 
   boost::optional<double> AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl::autosizedSystemAirFlowRateWhenNoCoolingorHeatingisNeeded() const {
-    return getAutosizedValue("Design Size System Air Flow Rate When No Cooling or Heating is Needed", "m3/s");
+    return getAutosizedValue("maximum air flow rate when compressor/coil is off", "m3/s");
   }
 
   boost::optional<double> AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl::autosizedOutdoorAirFlowRateDuringCoolingOperation() const {
-    return getAutosizedValue("Design Size Outdoor Air Flow Rate During Cooling Operation", "m3/s");
+    return getAutosizedValue("maximum outside air flow rate in cooling", "m3/s");
   }
 
   boost::optional<double> AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl::autosizedOutdoorAirFlowRateDuringHeatingOperation() const {
-    return getAutosizedValue("Design Size Outdoor Air Flow Rate During Heating Operation", "m3/s");
+    return getAutosizedValue("maximum outdoor air flow rate in heating", "m3/s");
   }
 
   boost::optional<double> AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl::autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() const {
-    return getAutosizedValue("Design Size Outdoor Air Flow Rate When No Cooling or Heating is Needed", "m3/s");
+    return getAutosizedValue("maximum outdoor air flow rate when compressor is off", "m3/s");
   }
 
   void AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl::autosize() {

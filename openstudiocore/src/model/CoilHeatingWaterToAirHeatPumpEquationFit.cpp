@@ -411,15 +411,15 @@ namespace detail {
   }
 
   boost::optional<double> CoilHeatingWaterToAirHeatPumpEquationFit_Impl::autosizedRatedAirFlowRate() const {
-    return getAutosizedValue("Design Size Air Flow Rate", "m3/s");
+    return getAutosizedValue("Design Size Rated Air Flow Rate", "m3/s");
   }
 
   boost::optional<double> CoilHeatingWaterToAirHeatPumpEquationFit_Impl::autosizedRatedWaterFlowRate() const {
-    return getAutosizedValue("Design Size Water Flow Rate", "m3/s");
+    return getAutosizedValue("Design Size Rated Water Flow Rate", "m3/s");
   }
 
   boost::optional<double> CoilHeatingWaterToAirHeatPumpEquationFit_Impl::autosizedRatedHeatingCapacity() const {
-    return getAutosizedValue("Design Size Heating Capacity", "W");
+    return getAutosizedValue("Design Size Rated Heating Capacity", "W");
   }
 
   void CoilHeatingWaterToAirHeatPumpEquationFit_Impl::autosize() {

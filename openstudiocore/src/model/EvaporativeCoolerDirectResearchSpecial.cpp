@@ -302,11 +302,11 @@ namespace detail{
   }
 
   boost::optional<double> EvaporativeCoolerDirectResearchSpecial_Impl::autosizedRecirculatingWaterPumpPowerConsumption() const {
-    return getAutosizedValue("Design Size Recirculating Water Pump Power Consumption", "W");
+    return getAutosizedValue("Recirculating Water Pump Power Consumption", "W");
   }
 
   boost::optional<double> EvaporativeCoolerDirectResearchSpecial_Impl::autosizedPrimaryAirDesignFlowRate() const {
-    return getAutosizedValue("Design Size Primary Air Design Flow Rate", "m3/s");
+    return getAutosizedValue("Primary Air Design Flow Rate", "m3/s");
   }
 
   void EvaporativeCoolerDirectResearchSpecial_Impl::autosize() {

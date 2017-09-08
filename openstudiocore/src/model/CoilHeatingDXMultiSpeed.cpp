@@ -431,7 +431,7 @@ namespace detail {
   }
 
   boost::optional<double> CoilHeatingDXMultiSpeed_Impl::autosizedResistiveDefrostHeaterCapacity() const {
-    return getAutosizedValue("Design Size Resistive Defrost Heater Capacity", "W");
+    return getAutosizedValue("Design Size Resistive Defrost Heater Capacity", "");
   }
 
   void CoilHeatingDXMultiSpeed_Impl::autosize() {

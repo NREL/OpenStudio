@@ -830,15 +830,15 @@ namespace detail {
 
  
   boost::optional<double> ZoneHVACWaterToAirHeatPump_Impl::autosizedSupplyAirFlowRateDuringCoolingOperation() const {
-    return getAutosizedValue("Design Size Supply Air Flow Rate During Cooling Operation", "m3/s");
+    return getAutosizedValue("Design Size Cooling Supply Air Flow Rate", "m3/s");
   }
 
   boost::optional<double> ZoneHVACWaterToAirHeatPump_Impl::autosizedSupplyAirFlowRateDuringHeatingOperation() const {
-    return getAutosizedValue("Design Size Supply Air Flow Rate During Heating Operation", "m3/s");
+    return getAutosizedValue("Design Size Heating Supply Air Flow Rate", "m3/s");
   }
 
   boost::optional<double> ZoneHVACWaterToAirHeatPump_Impl::autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded() const {
-    return getAutosizedValue("Design Size Supply Air Flow Rate When No Cooling or Heating is Needed", "m3/s");
+    return getAutosizedValue("Design Size No Load Supply Air Flow Rate", "m3/s");
   }
 
   boost::optional<double> ZoneHVACWaterToAirHeatPump_Impl::autosizedOutdoorAirFlowRateDuringCoolingOperation() const {

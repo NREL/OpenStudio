@@ -646,19 +646,19 @@ namespace detail {
     return boost::none;
   }
   boost::optional<double> CoilCoolingWaterToAirHeatPumpEquationFit_Impl::autosizedRatedAirFlowRate() const {
-    return getAutosizedValue("Design Size Air Flow Rate", "m3/s");
+    return getAutosizedValue("Design Size Rated Air Flow Rate", "m3/s");
   }
 
   boost::optional<double> CoilCoolingWaterToAirHeatPumpEquationFit_Impl::autosizedRatedWaterFlowRate() const {
-    return getAutosizedValue("Design Size Water Flow Rate", "m3/s");
+    return getAutosizedValue("Design Size Rated Water Flow Rate", "m3/s");
   }
 
   boost::optional<double> CoilCoolingWaterToAirHeatPumpEquationFit_Impl::autosizedRatedTotalCoolingCapacity() const {
-    return getAutosizedValue("Design Size Total Cooling Capacity", "W");
+    return getAutosizedValue("Design Size Rated Total Cooling Capacity", "W");
   }
 
   boost::optional<double> CoilCoolingWaterToAirHeatPumpEquationFit_Impl::autosizedRatedSensibleCoolingCapacity() const {
-    return getAutosizedValue("Design Size Sensible Cooling Capacity", "W");
+    return getAutosizedValue("Design Size Rated Sensible Cooling Capacity", "W");
   }
 
   void CoilCoolingWaterToAirHeatPumpEquationFit_Impl::autosize() {

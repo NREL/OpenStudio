@@ -758,11 +758,11 @@ namespace detail {
   }
 
   boost::optional<double> CoilHeatingDXSingleSpeed_Impl::autosizedRatedTotalHeatingCapacity() const {
-    return getAutosizedValue("Design Size Total Heating Capacity", "W");
+    return getAutosizedValue("Design Size Gross Rated Heating Capacity", "W");
   }
 
   boost::optional<double> CoilHeatingDXSingleSpeed_Impl::autosizedRatedAirFlowRate() const {
-    return getAutosizedValue("Design Size Air Flow Rate", "m3/s");
+    return getAutosizedValue("Design Size Rated Air Flow Rate", "m3/s");
   }
 
   boost::optional<double> CoilHeatingDXSingleSpeed_Impl::autosizedResistiveDefrostHeaterCapacity() const {

@@ -465,11 +465,11 @@ namespace detail {
   }
 
   boost::optional<double> CoilCoolingWater_Impl::autosizedDesignInletAirHumidityRatio() const {
-    return getAutosizedValue("Design Size Design Inlet Air Humidity Ratio", "kg-H2O/kg-air");
+    return getAutosizedValue("Design Size Design Inlet Air Humidity Ratio", "");
   }
 
   boost::optional<double> CoilCoolingWater_Impl::autosizedDesignOutletAirHumidityRatio() const {
-    return getAutosizedValue("Design Size Design Outlet Air Humidity Ratio", "kg-H2O/kg-air");
+    return getAutosizedValue("Design Size Design Outlet Air Humidity Ratio", "");
   }
 
   void CoilCoolingWater_Impl::autosize() {

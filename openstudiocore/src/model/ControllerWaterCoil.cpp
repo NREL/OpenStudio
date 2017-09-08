@@ -253,11 +253,11 @@ boost::optional<HVACComponent> ControllerWaterCoil_Impl::waterCoil() const
 }
 
   boost::optional<double> ControllerWaterCoil_Impl::autosizedControllerConvergenceTolerance() const {
-    return getAutosizedValue("Design Size Controller Convergence Tolerance", "deltaC");
+    return getAutosizedValue("Controller Convergence Tolerance", "");
   }
 
   boost::optional<double> ControllerWaterCoil_Impl::autosizedMaximumActuatedFlow() const {
-    return getAutosizedValue("Design Size Maximum Actuated Flow", "m3/s");
+    return getAutosizedValue("Maximum Actuated Flow", "m3/s");
   }
 
   void ControllerWaterCoil_Impl::autosize() {

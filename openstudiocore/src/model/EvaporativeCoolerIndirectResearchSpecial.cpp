@@ -479,7 +479,7 @@ namespace detail {
   }
 
   boost::optional<double> EvaporativeCoolerIndirectResearchSpecial_Impl::autosizedRecirculatingWaterPumpPowerConsumption() const {
-    return getAutosizedValue("Design Size Recirculating Water Pump Power Consumption", "W");
+    return getAutosizedValue("Recirculating Water Pump Power Consumption", "W");
   }
 
   boost::optional<double> EvaporativeCoolerIndirectResearchSpecial_Impl::autosizedSecondaryFanFlowRate() const {
@@ -487,11 +487,11 @@ namespace detail {
   }
 
   boost::optional<double> EvaporativeCoolerIndirectResearchSpecial_Impl::autosizedSecondaryAirFanDesignPower() const {
-    return getAutosizedValue("Design Size Secondary Air Fan Design Power", "W");
+    return getAutosizedValue("Secondary Fan Power", "W");
   }
 
   boost::optional<double> EvaporativeCoolerIndirectResearchSpecial_Impl::autosizedPrimaryDesignAirFlowRate() const {
-    return getAutosizedValue("Design Size Primary Design Air Flow Rate", "m3/s");
+    return getAutosizedValue("Primary Air Design Flow Rate", "m3/s");
   }
 
   void EvaporativeCoolerIndirectResearchSpecial_Impl::autosize() {

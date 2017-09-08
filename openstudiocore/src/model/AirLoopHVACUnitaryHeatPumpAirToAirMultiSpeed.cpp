@@ -624,43 +624,43 @@ namespace detail {
   }
 
   boost::optional<double> AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl::autosizedMaximumSupplyAirTemperaturefromSupplementalHeater() const {
-    return getAutosizedValue("Design Size Maximum Supply Air Temperature from Supplemental Heater", "C");
+    return getAutosizedValue("Maximum Supply Air Temperature from Supplemental Heater", "C");
   }
 
   boost::optional<double> AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl::autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded() const {
-    return getAutosizedValue("Design Size Supply Air Flow Rate When No Cooling or Heating is Needed", "m3/s");
+    return getAutosizedValue("Supply Air Flow Rate When No Cooling or Heating is Needed", "m3/s");
   }
 
   boost::optional<double> AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl::autosizedSpeed1SupplyAirFlowRateDuringHeatingOperation() const {
-    return getAutosizedValue("Design Size Speed 1 Supply Air Flow Rate During Heating Operation", "m3/s");
+    return getAutosizedValue("Speed1 Supply Air Flow Rate During Heating Operation", "m3/s");
   }
 
   boost::optional<double> AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl::autosizedSpeed2SupplyAirFlowRateDuringHeatingOperation() const {
-    return getAutosizedValue("Design Size Speed 2 Supply Air Flow Rate During Heating Operation", "m3/s");
+    return getAutosizedValue("Speed2 Supply Air Flow Rate During Heating Operation", "m3/s");
   }
 
   boost::optional<double> AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl::autosizedSpeed3SupplyAirFlowRateDuringHeatingOperation() const {
-    return getAutosizedValue("Design Size Speed 3 Supply Air Flow Rate During Heating Operation", "m3/s");
+    return getAutosizedValue("Speed3 Supply Air Flow Rate During Heating Operation", "m3/s");
   }
 
   boost::optional<double> AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl::autosizedSpeed4SupplyAirFlowRateDuringHeatingOperation() const {
-    return getAutosizedValue("Design Size Speed 4 Supply Air Flow Rate During Heating Operation", "m3/s");
+    return getAutosizedValue("Speed4 Supply Air Flow Rate During Heating Operation", "m3/s");
   }
 
   boost::optional<double> AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl::autosizedSpeed1SupplyAirFlowRateDuringCoolingOperation() const {
-    return getAutosizedValue("Design Size Speed 1 Supply Air Flow Rate During Cooling Operation", "m3/s");
+    return getAutosizedValue("Speed 1 Supply Air Flow Rate During Cooling Operation", "m3/s");
   }
 
   boost::optional<double> AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl::autosizedSpeed2SupplyAirFlowRateDuringCoolingOperation() const {
-    return getAutosizedValue("Design Size Speed 2 Supply Air Flow Rate During Cooling Operation", "m3/s");
+    return getAutosizedValue("Speed 2 Supply Air Flow Rate During Cooling Operation", "m3/s");
   }
 
   boost::optional<double> AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl::autosizedSpeed3SupplyAirFlowRateDuringCoolingOperation() const {
-    return getAutosizedValue("Design Size Speed 3 Supply Air Flow Rate During Cooling Operation", "m3/s");
+    return getAutosizedValue("Speed 3 Supply Air Flow Rate During Cooling Operation", "m3/s");
   }
 
   boost::optional<double> AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl::autosizedSpeed4SupplyAirFlowRateDuringCoolingOperation() const {
-    return getAutosizedValue("Design Size Speed 4 Supply Air Flow Rate During Cooling Operation", "m3/s");
+    return getAutosizedValue("Speed 4 Supply Air Flow Rate During Cooling Operation", "m3/s");
   }
 
   void AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl::autosize() {

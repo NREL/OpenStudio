@@ -1046,11 +1046,11 @@ namespace detail {
   }
 
   boost::optional<double> PumpVariableSpeed_Impl::autosizedRatedFlowRate() const {
-    return getAutosizedValue("Design Size Flow Rate", "m3/s");
+    return getAutosizedValue("Design Flow Rate", "m3/s");
   }
 
   boost::optional<double> PumpVariableSpeed_Impl::autosizedRatedPowerConsumption() const {
-    return getAutosizedValue("Design Size Power Consumption", "W");
+    return getAutosizedValue("Design Power Consumption", "W");
   }
 
   void PumpVariableSpeed_Impl::autosize() {

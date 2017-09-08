@@ -558,11 +558,11 @@ namespace detail {
   }
 
   boost::optional<double> CoilCoolingDXVariableSpeed_Impl::autosizedGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel() const {
-    return getAutosizedValue("Gross Design Size Total Cooling Capacity At Selected Nominal Speed Level", "W");
+    return getAutosizedValue("Design Size Rated Total Cooling Capacity", "W");
   }
 
   boost::optional<double> CoilCoolingDXVariableSpeed_Impl::autosizedRatedAirFlowRateAtSelectedNominalSpeedLevel() const {
-    return getAutosizedValue("Design Size Air Flow Rate At Selected Nominal Speed Level", "m3/s");
+    return getAutosizedValue("Design Size Rated Air Flow Rate", "m3/s");
   }
 
   boost::optional<double> CoilCoolingDXVariableSpeed_Impl::autosizedEvaporativeCondenserPumpRatedPowerConsumption() const {

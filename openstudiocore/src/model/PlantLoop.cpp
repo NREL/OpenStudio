@@ -872,7 +872,7 @@ void PlantLoop_Impl::resetCommonPipeSimulation()
   }
 
   boost::optional<double> PlantLoop_Impl::autosizedMaximumLoopFlowRate() const {
-    return getAutosizedValue("Design Size Maximum Loop Flow Rate", "m3/s");
+    return getAutosizedValue("Maximum Loop Flow Rate", "m3/s");
   }
 
   void PlantLoop_Impl::autosize() {

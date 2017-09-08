@@ -328,7 +328,7 @@ namespace detail {
   }
 
   boost::optional<double> ZoneHVACHighTemperatureRadiant_Impl::autosizedMaximumPowerInput() const {
-    return getAutosizedValue("Design Size Maximum Power Input", "W");
+    return getAutosizedValue("Design Size Heating Design Capacity", "W");
   }
 
   void ZoneHVACHighTemperatureRadiant_Impl::autosize() {

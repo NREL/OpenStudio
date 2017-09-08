@@ -626,19 +626,19 @@ namespace detail {
   }
 
   boost::optional<double> AirLoopHVACUnitaryHeatPumpAirToAir_Impl::autosizedSupplyAirFlowRateDuringCoolingOperation() const {
-    return getAutosizedValue("Design Size Supply Air Flow Rate During Cooling Operation", "m3/s");
+    return getAutosizedValue("Supply Air Flow Rate During Cooling Operation", "m3/s");
   }
 
   boost::optional<double> AirLoopHVACUnitaryHeatPumpAirToAir_Impl::autosizedSupplyAirFlowRateDuringHeatingOperation() const {
-    return getAutosizedValue("Design Size Supply Air Flow Rate During Heating Operation", "m3/s");
+    return getAutosizedValue("Supply Air Flow Rate During Heating Operation", "m3/s");
   }
 
   boost::optional<double> AirLoopHVACUnitaryHeatPumpAirToAir_Impl::autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded() const {
-    return getAutosizedValue("Design Size Supply Air Flow Rate When No Cooling or Heating is Needed", "m3/s");
+    return getAutosizedValue("Supply Air Flow Rate When No Cooling or Heating is Needed", "m3/s");
   }
 
   boost::optional<double> AirLoopHVACUnitaryHeatPumpAirToAir_Impl::autosizedMaximumSupplyAirTemperaturefromSupplementalHeater() const {
-    return getAutosizedValue("Design Size Maximum Supply Air Temperature from Supplemental Heater", "C");
+    return getAutosizedValue("Maximum Supply Air Temperature from Supplemental Heater", "C");
   }
 
   void AirLoopHVACUnitaryHeatPumpAirToAir_Impl::autosize() {
