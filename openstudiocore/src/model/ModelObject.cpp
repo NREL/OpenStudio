@@ -650,16 +650,68 @@ namespace detail {
       return result;
     }
 
-    // Query the  
-    std::string query = "SELECT Value FROM ComponentSizes WHERE CompType = '" + sqlObjectType + "' AND CompName = '" + sqlName + "' AND Description = '" + valueName + "' AND Units = '" + units + "'";
-    boost::optional<double> val = model().sqlFile().get().execAndReturnFirstDouble(query);
+    // Query the Intialization Summary -> Component Sizing table to get 
+    // the row names that contains information for this component.
+    std::stringstream rowsQuery;
+    rowsQuery << "SELECT RowName ";
+    rowsQuery << "FROM tabulardatawithstrings ";
+    rowsQuery << "WHERE ReportName='Initialization Summary' ";
+    rowsQuery << "AND ReportForString='Entire Facility' ";
+    rowsQuery << "AND TableName = 'Component Sizing Information' ";
+    rowsQuery << "AND Value='" + sqlName + "'";
+
+    boost::optional<std::vector<std::string>> rowNames = model().sqlFile().get().execAndReturnVectorOfString(rowsQuery.str());
 
     // Warn if the query failed
-    if (!val) {
-      LOG(Warn, "The autosized value query '" + query + "' returned no value.");
+    if (!rowNames) {
+      LOG(Warn, "Could not find a component called '" + sqlName + "' in any rows of the Initialization Summary Component Sizing table.");
+      return result;
     }
 
-    return val;
+    // Query each row of the Intialization Summary -> Component Sizing table
+    // that contains this component to get the desired value.
+    std::string valueNameAndUnits = valueName + std::string(" [") + units + std::string("]");
+    if (units == "") {
+      valueNameAndUnits = valueName;
+    }
+
+    for (std::string rowName : rowNames.get()) {
+      std::stringstream rowCheckQuery;
+      rowCheckQuery << "SELECT Value ";
+      rowCheckQuery << "FROM tabulardatawithstrings ";
+      rowCheckQuery << "WHERE ReportName='Initialization Summary' ";
+      rowCheckQuery << "AND ReportForString='Entire Facility' ";
+      rowCheckQuery << "AND TableName = 'Component Sizing Information' ";
+      rowCheckQuery << "AND RowName='" << rowName << "' ";
+      rowCheckQuery << "AND Value='" << valueNameAndUnits << "'";
+      boost::optional<std::string> rowValueName = model().sqlFile().get().execAndReturnFirstString(rowCheckQuery.str());
+      // Check if the query succeeded
+      if (!rowValueName) {
+        continue;
+      }
+      // This is the right row
+      std::stringstream valQuery;
+      valQuery << "SELECT Value ";
+      valQuery << "FROM tabulardatawithstrings ";
+      valQuery << "WHERE ReportName='Initialization Summary' ";
+      valQuery << "AND ReportForString='Entire Facility' ";
+      valQuery << "AND TableName = 'Component Sizing Information' ";
+      valQuery << "AND ColumnName='Value' ";
+      valQuery << "AND RowName='" << rowName << "' ";
+      boost::optional<double> val = model().sqlFile().get().execAndReturnFirstDouble(valQuery.str());
+      // Check if the query succeeded
+      if (val) {
+        result = val.get();
+        break;
+      }
+    }
+
+
+    if (!result) {
+      LOG(Warn, "The autosized value query for " + valueNameAndUnits + " of " + sqlName + " returned no value.");
+    }
+
+    return result;
 
   }
 
