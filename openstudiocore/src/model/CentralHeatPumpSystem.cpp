@@ -146,7 +146,7 @@ namespace detail {
     for(const CentralHeatPumpSystemModule & centralHPMod: this->modules()) {
 
       // The CentralHeatPumpSystemModule_Impl::clone method will set the reference to the same
-      // ChillerHeaterPerformanceElectricEIR because it is defined as children
+      // ChillerHeaterPerformanceElectricEIR as the original one
       CentralHeatPumpSystemModule centralHPModClone = centralHPMod.clone(model).cast<CentralHeatPumpSystemModule>();
 
       // Add that to the new object

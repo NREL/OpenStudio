@@ -165,7 +165,6 @@ TEST_F(ModelFixture, CentralHeatPumpSystem_PlantLoopConnections)
     if( plant ) {
       EXPECT_EQ(coolingPlant.handle(),plant->handle());
     }
-    // TODO: Change that number?
     // PlantLoop has 5 components on the supply side by default (3 Nodes, One splitter, One mixer)
     EXPECT_EQ(7u,coolingPlant.supplyComponents().size());
 
@@ -188,7 +187,7 @@ TEST_F(ModelFixture, CentralHeatPumpSystem_PlantLoopConnections)
     if( plant ) {
       EXPECT_EQ(sourcePlant.handle(),plant->handle());
     }
-    // TODO: Change that number?
+
     EXPECT_EQ(7u,sourcePlant.demandComponents().size());
 
     // test the convenience function
@@ -216,7 +215,6 @@ TEST_F(ModelFixture, CentralHeatPumpSystem_PlantLoopConnections)
       EXPECT_EQ(heatingPlant.handle(),plant_bis->handle());
     }
 
-    // TODO: Change that number?
     EXPECT_EQ(7u,heatingPlant.supplyComponents().size());
 
     EXPECT_TRUE( central_hp.removeFromTertiaryPlantLoop() );

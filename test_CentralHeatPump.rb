@@ -189,6 +189,7 @@ class CentralHeatPump_Test < MiniTest::Unit::TestCase
 
   end
 
+
   def test_clone_in_other_model
 
     model = OpenStudio::Model::Model.new

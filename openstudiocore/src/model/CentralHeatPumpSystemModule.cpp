@@ -97,25 +97,27 @@ namespace detail {
     return result;
   }
 
-  // Instead I'm actually treating the ChillerHeaterPerformanceElectricEIR as a resource by defining it as a child
-/*
- *  ModelObject CentralHeatPumpSystemModule_Impl::clone(Model model) const
- *  {
- *    CentralHeatPumpSystemModule newCentralHPMod = ModelObject_Impl::clone(model).cast<CentralHeatPumpSystemModule>();
- *
- *    // Clone the ChillerHeaterPerformanceElectricEIR
- *    ChillerHeaterPerformanceElectricEIR newChillerHeater = this->chillerHeaterModulesPerformanceComponent().clone(model).cast<ChillerHeaterPerformanceElectricEIR>();
- *    //
- *
- *    bool ok = true;
- *    ok = newCentralHPMod.setChillerHeaterModulesPerformanceComponent( newChillerHeater );
- *    OS_ASSERT(ok);
- *
- *    return newCentralHPMod;
- *  }
- */
+  /** This method clones the CentralHeatPumpSystemModyle but sets the chillerHeaterModulesPerformanceComponent to the same as the original
+   * By using the "children" method and listing the chillerHeaterModulesPerformanceComponent there ModelObject_Impl::clone will automatically do
+   * the right thing */
+  ModelObject CentralHeatPumpSystemModule_Impl::clone(Model model) const
+  {
+    CentralHeatPumpSystemModule newCentralHPMod = ModelObject_Impl::clone(model).cast<CentralHeatPumpSystemModule>();
+    // ASSERT that it does have the same Perf component as the original Module
+    OS_ASSERT(newCentralHPMod.chillerHeaterModulesPerformanceComponent() == this->chillerHeaterModulesPerformanceComponent());
 
-    // Return allowable child types: ChillerHeaterPerformanceElectricEIR
+    // If not using "children", then expliclity do it:
+    // bool ok = true;
+    // We don't want to clone the perf object, set it to the same ChillHeaterPerformanceElectricEIR
+    //ok = newCentralHPMod.setChillerHeaterModulesPerformanceComponent(this->chillerHeaterModulesPerformanceComponent());
+    // This better have worked
+    //OS_ASSERT(ok);
+
+    return newCentralHPMod;
+  }
+
+
+  // Returns allowable child types: ChillerHeaterPerformanceElectricEIR
   std::vector<IddObjectType> CentralHeatPumpSystemModule_Impl::allowableChildTypes() const
   {
     std::vector<IddObjectType> result;
