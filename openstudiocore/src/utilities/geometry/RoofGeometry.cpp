@@ -107,11 +107,11 @@ namespace openstudio{
     //std::cout << "queue " << queue.size() << std::endl;
     while (!queue.empty()) {
       // start processing skeleton level
-      count = assertMaxNumberOfInteraction(count);
-      //std::cout << "count " << count << std::endl;
+      count = assertMaxNumberOfIterations(count);
+      std::cout << "count " << count << std::endl;
 
       double levelHeight = queue[0].distance;
-      //std::cout << "levelHeight " << levelHeight << std::endl;
+      std::cout << "levelHeight " << levelHeight << std::endl;
 
       std::vector<LevelEvent> levelEvents = loadAndGroupLevelEvents(queue);
 
@@ -141,9 +141,15 @@ namespace openstudio{
         }
       }
 
+      for (QueueEvent e : queue) {
+        std::cout << "queue event " << e << " isObsolete " << e.isObsolete() << std::endl;
+      }
+
       processTwoNodeLavs(sLav);
 
+      //std::cout << "queue size before " << queue.size() << std::endl;
       removeEventsUnderHeight(queue, levelHeight);
+      //std::cout << "queue size after " << queue.size() << std::endl;
       removeEmptyLav(sLav);
 
     }
@@ -264,11 +270,11 @@ namespace openstudio{
     return a * 0.5;
   }
 
-  int RoofGeometry::assertMaxNumberOfInteraction(int count)
+  int RoofGeometry::assertMaxNumberOfIterations(int count)
   {
     count++;
     if (count > 10000) {
-      LOG_AND_THROW("Polygon must have at least 3 points");
+      LOG_AND_THROW("Maximum number of iterations reached. Bug?");
     }
     return count;
   }
@@ -285,6 +291,10 @@ namespace openstudio{
      */
 
     std::vector<QueueEvent> level;
+
+    for (QueueEvent e : queue) {
+      std::cout << "loadLevelEvents queue event " << e << std::endl;
+    }
 
     QueueEvent levelStart;
     do {
@@ -314,7 +324,7 @@ namespace openstudio{
 
     //std::cout << "loadLevelEvents queue size " << queue.size() << std::endl;
     //std::cout << "loadLevelEvents level size " << level.size() << std::endl;
-    //for (Event e : level) {
+    //for (QueueEvent e : level) {
     //  std::cout << "loadLevelEvents level " << e << std::endl;
     //}
 
@@ -566,19 +576,17 @@ namespace openstudio{
     // connect all edges into new bisectors and lavs
     int edgeListSize = chains.size();
     for (int i = 0; i < edgeListSize; i++) {
-      Chain chainBegin = chains[i];
-      Chain chainEnd = chains[(i + 1) % edgeListSize];
+      int begin = i;
+      int end = (i + 1) % edgeListSize;
 
-      Vertex newVertex = createMultiSplitVertex(chainBegin.getNextEdge(), chainEnd.getPreviousEdge(), center, event.distance);
+      Vertex newVertex = createMultiSplitVertex(chains[begin].getNextEdge(), chains[end].getPreviousEdge(), center, event.distance);
 
       // Split and merge lavs...
-      Vertex beginNextVertex = chainBegin.getNextVertex();
-      Vertex endPreviousVertex = chainEnd.getPreviousVertex();
 
-      correctBisectorDirection(newVertex.bisector.get(), beginNextVertex, endPreviousVertex, chainBegin.getNextEdge(), chainEnd.getPreviousEdge());
+      correctBisectorDirection(newVertex.bisector.get(), chains[begin].getNextVertex(), chains[end].getPreviousVertex(), chains[begin].getNextEdge(), chains[end].getPreviousEdge());
 
-      std::vector<Vertex> beginNextVertexLav = sLav[beginNextVertex.getLavIndex(sLav)];
-      std::vector<Vertex> endPreviousVertexLav = sLav[endPreviousVertex.getLavIndex(sLav)];
+      std::vector<Vertex> beginNextVertexLav = sLav[chains[begin].getNextVertex().getLavIndex(sLav)];
+      std::vector<Vertex> endPreviousVertexLav = sLav[chains[end].getPreviousVertex().getLavIndex(sLav)];
 
       if (areSameLav(beginNextVertexLav, endPreviousVertexLav)) {
         /*
@@ -586,7 +594,7 @@ namespace openstudio{
         * middle of vertex and create new lav from that points
         */
 
-        std::vector<Vertex> lavPart = beginNextVertex.cutLavPart(beginNextVertexLav, endPreviousVertex);
+        std::vector<Vertex> lavPart = chains[begin].getNextVertex().cutLavPart(beginNextVertexLav, chains[end].getPreviousVertex());
 
         std::vector<Vertex> lav;
         lav.push_back(newVertex);
@@ -601,10 +609,10 @@ namespace openstudio{
         * one.
         */
 
-        mergeBeforeBaseVertex(beginNextVertex, beginNextVertexLav, endPreviousVertex, endPreviousVertexLav);
+        mergeBeforeBaseVertex(chains[begin].getNextVertex(), beginNextVertexLav, chains[end].getPreviousVertex(), endPreviousVertexLav);
 
-        int lavIndex = endPreviousVertex.getLavIndex(sLav);
-        auto it = std::find(sLav[lavIndex].begin(), sLav[lavIndex].end(), endPreviousVertex);
+        int lavIndex = chains[end].getPreviousVertex().getLavIndex(sLav);
+        auto it = std::find(sLav[lavIndex].begin(), sLav[lavIndex].end(), chains[end].getPreviousVertex());
         sLav[lavIndex].insert(it + 1, newVertex);
       }
 
@@ -619,17 +627,14 @@ namespace openstudio{
     // remove all centers of events from lav
     edgeListSize = chains.size();
     for (int i = 0; i < edgeListSize; i++) {
-      Chain chainBegin = chains[i];
-      Chain chainEnd = chains[(i + 1) % edgeListSize];
+      chains[i].getCurrentVertex().get().removeFromLav(sLav);
+      chains[(i + 1) % edgeListSize].getCurrentVertex().get().removeFromLav(sLav);
 
-      //FIXME removeFromLav(chainBegin.currentVertex);
-      //FIXME removeFromLav(chainEnd.currentVertex);
-
-      if (chainBegin.getCurrentVertex()) {
-        chainBegin.getCurrentVertex().get().processed = true;
+      if (chains[i].getCurrentVertex()) {
+        chains[i].getCurrentVertex().get().processed = true;
       }
-      if (chainEnd.getCurrentVertex()) {
-        chainEnd.getCurrentVertex().get().processed = true;
+      if (chains[(i + 1) % edgeListSize].getCurrentVertex()) {
+        chains[(i + 1) % edgeListSize].getCurrentVertex().get().processed = true;
       }
 
     }
@@ -642,28 +647,23 @@ namespace openstudio{
   }
 
   void RoofGeometry::pickEvent(LevelEvent& event, std::vector< std::vector<Vertex> >& sLav, std::vector<QueueEvent>& queue, std::vector<Edge>& edges) {
-    Point3d center = event.point;
-    std::vector<QueueEvent> edgeList = event.chain.edgeList;
-
     // lav will be removed so it is final vertex.
-    Vertex pickVertex = Vertex(center, event.distance, boost::none, boost::none, boost::none);
+    Vertex pickVertex = Vertex(event.point, event.distance, boost::none, boost::none, boost::none);
     pickVertex.processed = true;
 
-    addMultiBackFaces(edgeList, pickVertex);
+    addMultiBackFaces(event.chain.edgeList, pickVertex, sLav);
   }
 
-  void RoofGeometry::addMultiBackFaces(std::vector<QueueEvent>& edgeList, Vertex& edgeVertex) {
+  void RoofGeometry::addMultiBackFaces(std::vector<QueueEvent>& edgeList, Vertex& edgeVertex, std::vector< std::vector<Vertex> >& sLav) {
     for (QueueEvent edgeEvent : edgeList) {
 
-      Vertex leftVertex = edgeEvent.previousVertex;
-      leftVertex.processed = true;
-      //FIXME removeFromLav(leftVertex);
+      edgeEvent.previousVertex.processed = true;
+      edgeEvent.previousVertex.removeFromLav(sLav);
 
-      Vertex rightVertex = edgeEvent.nextVertex;
-      rightVertex.processed = true;
-      //FIXME removeFromLav(rightVertex);
+      edgeEvent.nextVertex.processed = true;
+      edgeEvent.nextVertex.removeFromLav(sLav);
 
-      // FIXME: addFaceBack(edgeVertex, leftVertex, rightVertex);
+      // FIXME: addFaceBack(edgeVertex, edgeEvent.previousVertex, edgeEvent.nextVertex);
 
     }
   }
@@ -691,14 +691,15 @@ namespace openstudio{
 
   void RoofGeometry::multiEdgeEvent(LevelEvent& event, std::vector< std::vector<Vertex> >& sLav, std::vector<QueueEvent>& queue, std::vector<Edge>& edges) {
 
-    Vertex previousVertex = event.chain.getPreviousVertex();
-    Vertex nextVertex = event.chain.getNextVertex();
+    event.chain.getPreviousVertex().processed = true;
 
-    previousVertex.processed = true;
-    nextVertex.processed = true;
+    Vertex v = event.chain.getPreviousVertex();
+    v.processed = true;
 
-    Ray2d bisector = calcBisector(event.point, previousVertex.previousEdge.get(), nextVertex.nextEdge.get());
-    Vertex edgeVertex = Vertex(event.point, event.distance, bisector, previousVertex.previousEdge.get(), nextVertex.nextEdge.get());
+    event.chain.getNextVertex().processed = true;
+
+    Ray2d bisector = calcBisector(event.point, event.chain.getPreviousVertex().previousEdge.get(), event.chain.getNextVertex().nextEdge.get());
+    Vertex edgeVertex = Vertex(event.point, event.distance, bisector, event.chain.getPreviousVertex().previousEdge.get(), event.chain.getNextVertex().nextEdge.get());
 
     // left face
     // FIXME: addFaceLeft(edgeVertex, event.chain.getPreviousVertex());
@@ -706,12 +707,12 @@ namespace openstudio{
     // right face
     // FIXME: addFaceRight(edgeVertex, event.chain.getNextVertex());
 
-    int lavIndex = previousVertex.getLavIndex(sLav);
-    auto it = std::find(sLav[lavIndex].begin(), sLav[lavIndex].end(), previousVertex);
+    int lavIndex = event.chain.getPreviousVertex().getLavIndex(sLav);
+    auto it = std::find(sLav[lavIndex].begin(), sLav[lavIndex].end(), event.chain.getPreviousVertex());
     sLav[lavIndex].insert(it, edgeVertex);
 
     // back faces
-    // FIXME: addMultiBackFaces(event.chain.edgeList, edgeVertex);
+    addMultiBackFaces(event.chain.edgeList, edgeVertex, sLav);
 
     computeEvents(edgeVertex, queue, edges, sLav);
   }
@@ -826,15 +827,20 @@ namespace openstudio{
 
     int vertexLavIndex = vertex.getLavIndex(sLav);
 
+    //for (Vertex v : sLav[vertexLavIndex]) {
+    //  std::cout << "computeCloserEdgeEvent lav v " << v << std::endl;
+    //}
+
     int vertexNextIndex = vertex.getOffsetVertexIndex(sLav[vertexLavIndex], 1);
     int vertexPreviousIndex = vertex.getOffsetVertexIndex(sLav[vertexLavIndex], -1);
 
     Vertex nextVertex = sLav[vertexLavIndex][vertexNextIndex];
     Vertex previousVertex = sLav[vertexLavIndex][vertexPreviousIndex];
 
-    std::cout << "computeCloserEdgeEvent nextVertex " << nextVertex << std::endl;
-    std::cout << "computeCloserEdgeEvent previousVertex " << previousVertex << std::endl;
-    std::cout << "computeCloserEdgeEvent point " << vertex.point << std::endl;
+    //std::cout << "computeCloserEdgeEvent vertex " << vertex << std::endl;
+    //std::cout << "computeCloserEdgeEvent nextVertex " << nextVertex << std::endl;
+    //std::cout << "computeCloserEdgeEvent previousVertex " << previousVertex << std::endl;
+    //std::cout << "computeCloserEdgeEvent point " << vertex.point << std::endl;
 
     /*
      * We need to chose closer edge event. When two evens appear in epsilon
@@ -852,16 +858,16 @@ namespace openstudio{
     double distance2 = std::numeric_limits<double>::max();
 
     if (point1) {
-      std::cout << "computeCloserEdgeEvent point1 " << point1 << std::endl;
+      //std::cout << "computeCloserEdgeEvent point1 " << point1 << std::endl;
       distance1 = getDistanceSquared(vertex.point, point1.get());
     }
     if (point2) {
-      std::cout << "computeCloserEdgeEvent point2 " << point2 << std::endl;
+      //std::cout << "computeCloserEdgeEvent point2 " << point2 << std::endl;
       distance2 = getDistanceSquared(vertex.point, point2.get());
     }
 
-    std::cout << "computeCloserEdgeEvent distance1 " << distance1 << std::endl;
-    std::cout << "computeCloserEdgeEvent distance2 " << distance2 << std::endl;
+    //std::cout << "computeCloserEdgeEvent distance1 " << distance1 << std::endl;
+    //std::cout << "computeCloserEdgeEvent distance2 " << distance2 << std::endl;
 
     if (distance1 - SPLIT_EPSILON < distance2) {
       QueueEvent e = createEdgeEvent(point1.get(), vertex, nextVertex);
@@ -944,7 +950,8 @@ namespace openstudio{
 
   void RoofGeometry::computeSplitEvents(Vertex& vertex, std::vector<Edge>& edges, std::vector<QueueEvent>& queue, boost::optional<double> distanceSquared) {
     Point3d source = vertex.point;
-    
+    //std::cout << "computeSplitEvents begin" << std::endl;
+
     std::vector<SplitCandidate> oppositeEdges = calcOppositeEdges(vertex, edges);
 
     // check if it is vertex split event
@@ -1384,14 +1391,15 @@ namespace openstudio{
         lav[0].processed = true;
         lav[j].processed = true;
 
-        // FIXME lav.erase(lav[0]);
-        // FIXME lav.erase(lav[j]);
+        lav[0].removeFromLav(sLav);
+        lav[lav.size() - 1].removeFromLav(sLav);
 
       }
     }
   }
 
   void RoofGeometry::removeEventsUnderHeight(std::vector<QueueEvent>& queue, double levelHeight) {
+    std::sort(queue.begin(), queue.end());
     while (!queue.empty()) {
       if (queue[0].distance > levelHeight + SPLIT_EPSILON) {
         break;
@@ -1401,15 +1409,11 @@ namespace openstudio{
   }
 
   void RoofGeometry::removeEmptyLav(std::vector< std::vector<Vertex> >& sLav) {
-    bool foundEmptyLav = true;
-    while (foundEmptyLav) {
-      foundEmptyLav = false;
-      for (std::vector<Vertex> lav : sLav) {
-        if (lav.size() == 0) {
-          // FIXME sLav.erase(lav);
-          foundEmptyLav = true;
-          break;
-        }
+    for (int i = 0; i < sLav.size(); i++) {
+      if (sLav[i].size() == 0) {
+        sLav.erase(sLav.begin() + i);
+        i--;
+        break;
       }
     }
   }
@@ -1545,14 +1549,25 @@ namespace openstudio{
   }
 
   int Vertex::getLavIndex(std::vector< std::vector<Vertex> >& sLav) {
-    int size = sLav.size();
-    for (int i = 0; i < size; i++) {
-      std::vector<Vertex> lav = sLav[i];
-      if (std::find(lav.begin(), lav.end(), *this) != lav.end()) {
+    for (int i = 0; i < sLav.size(); i++) {
+      if (std::find(sLav[i].begin(), sLav[i].end(), *this) != sLav[i].end()) {
         return i;
       }
     }
-    LOG_AND_THROW("Could not find lav.");
+    LOG_AND_THROW("Could not find vertex in slav.");
+  }
+
+  void Vertex::removeFromLav(std::vector< std::vector<Vertex> >& sLav) {
+    int i = getLavIndex(sLav);
+    removeFromLav(sLav[i]);
+  }
+
+  void Vertex::removeFromLav(std::vector<Vertex>& lav) {
+    auto it = std::find(lav.begin(), lav.end(), *this);
+    if (it == lav.end()) {
+      LOG_AND_THROW("Could not find vertex in lav.");
+    }
+    lav.erase(it);
   }
 
   // Returns cut portion of lav from this vertex to endVertex, including both

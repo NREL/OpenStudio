@@ -125,6 +125,8 @@ namespace openstudio{
     Vertex(Point3d& aPoint, double aDistance, boost::optional<Ray2d&> aBisector, boost::optional<Edge&> aPreviousEdge, boost::optional<Edge&> aNextEdge);
     int getOffsetVertexIndex(std::vector<Vertex>& vertexes, int offset);
     int getLavIndex(std::vector< std::vector<Vertex> >& sLav);
+    void removeFromLav(std::vector< std::vector<Vertex> >& sLav);
+    void removeFromLav(std::vector<Vertex>& lav);
     std::vector<Vertex> cutLavPart(std::vector<Vertex>& lav, Vertex& endVertex);
     friend std::ostream& operator<<(std::ostream& os, const Vertex& vertex);
     bool operator<(const Vertex& other) const;
@@ -300,7 +302,7 @@ namespace openstudio{
     bool isInsidePolygon(Point3d point, std::vector<Point3d> points);
 
     // convergence
-    int assertMaxNumberOfInteraction(int count);
+    int assertMaxNumberOfIterations(int count);
 
     // events
     std::vector<LevelEvent> loadAndGroupLevelEvents(std::vector<QueueEvent>& queue);
@@ -326,7 +328,7 @@ namespace openstudio{
     void createOppositeEdgeChains(std::vector< std::vector<Vertex> >& sLav, std::vector<Chain>& chains, Point3d& center);
 
     // faces
-    void addMultiBackFaces(std::vector<QueueEvent>& edgeList, Vertex& edgeVertex);
+    void addMultiBackFaces(std::vector<QueueEvent>& edgeList, Vertex& edgeVertex, std::vector< std::vector<Vertex> >& sLav);
     // FIXME: FaceNode addFaceBack(Vertex& newVertex, Vertex& va, Vertex& vb);
     // FIXME: FaceNode addFaceLeft(Vertex& newVertex, Vertex& va);
     // FIXME: FaceNode addFaceRight(Vertex& newVertex, Vertex& vb);
