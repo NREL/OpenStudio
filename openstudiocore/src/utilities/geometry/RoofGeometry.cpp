@@ -34,14 +34,33 @@
 namespace openstudio{
 
   void debugFaces(std::string caller, std::vector<Face> faces) {
-    //std::cout << caller << std::endl;
-    //for (Face f : faces) {
-    //  std::cout << "FACE: ";
-    //  for (Vertex v : f.vertexes) {
-    //    std::cout << v.point << ",";
-    //  }
-    //  std::cout << std::endl;
-    //}
+    return;
+    std::cout << caller << std::endl;
+    for (Face f : faces) {
+      std::cout << "FACE: ";
+      for (Vertex v : f.vertexes) {
+        std::cout << v.point << ",";
+      }
+      std::cout << std::endl;
+    }
+  }
+
+  void debugSlav(std::string caller, std::vector< std::vector<Vertex> > sLav) {
+    return;
+    std::cout << caller << std::endl;
+    for (std::vector<Vertex> lav : sLav) {
+      for (Vertex v : lav) {
+        std::cout << "lav v " << v << std::endl;
+      }
+    }
+  }
+
+  void debugQueue(std::string caller, std::vector<QueueEvent> queue) {
+    return;
+    std::cout << caller << std::endl;
+    for (QueueEvent q : queue) {
+      std::cout << "queue event " << q << std::endl;
+    }
   }
 
   // TODO: Shouldn't need this method eventually; shouldn't have separate vertex objects
@@ -49,9 +68,11 @@ namespace openstudio{
     v.processed = true;
 
     int lavIndex = v.getLavIndex(sLav);
-    auto it = std::find(sLav[lavIndex].begin(), sLav[lavIndex].end(), v);
-    int pos = std::distance(sLav[lavIndex].begin(), it);
-    sLav[lavIndex][pos].processed = true;
+    if (lavIndex > -1) {
+      auto it = std::find(sLav[lavIndex].begin(), sLav[lavIndex].end(), v);
+      int pos = std::distance(sLav[lavIndex].begin(), it);
+      sLav[lavIndex][pos].processed = true;
+    }
 
     for (QueueEvent& e : queue) {
       if (e.previousVertex == v) {
@@ -75,6 +96,14 @@ namespace openstudio{
   {
     // FIXME implement
     std::vector< std::vector<Point3d> > roofs;
+    try {
+
+    }
+    catch (...) 
+    {
+      return roofs;
+    }
+
     return roofs;
   }
 
@@ -100,7 +129,6 @@ namespace openstudio{
 
   std::vector< std::vector<Point3d> > RoofGeometry::makeHipRoof(std::vector<Point3d>& polygon, double roofPitchDegrees)
   {
-    // FIXME: catch LOG_AND_THROW
     std::vector< std::vector<Point3d> > roofs;
     try 
     {
@@ -134,6 +162,8 @@ namespace openstudio{
     initSlav(polygon, sLav, edges, faces);
     initEvents(sLav, queue, edges);
 
+    debugQueue("doStraightSkeleton", queue);
+
     int count = 0;
 
     //std::cout << "queue " << queue.size() << std::endl;
@@ -147,7 +177,7 @@ namespace openstudio{
 
       std::vector<LevelEvent> levelEvents = loadAndGroupLevelEvents(queue);
 
-      for (LevelEvent event : levelEvents) {
+      for (LevelEvent& event : levelEvents) {
 
         if (event.obsolete) {
           /*
@@ -188,7 +218,7 @@ namespace openstudio{
     }
 
     //for (Edge e : edges) {
-    //  std::cout << "edge " << e << std::endl;
+    //  std::cout << "doStraightSkeleton edge " << e << std::endl;
     //}
 
     std::vector< std::vector<Point3d> > roofs = facesToRoofs(faces, roofPitchDegrees);
@@ -350,12 +380,13 @@ namespace openstudio{
     //  std::cout << "loadLevelEvents queue event " << e << std::endl;
     //}
 
-    QueueEvent levelStart;
-    do {
+    QueueEvent& levelStart = queue[0];
+    levelStart = queue[0];
+    while (queue.size() > 0 && levelStart.isObsolete()) {
       levelStart = queue[0];
       queue.erase(queue.begin());
       // skip all obsolete events in level
-    } while (queue.size() > 0 && levelStart.isObsolete());
+    }
       
     if (levelStart.isObsolete()) {
       // all events obsolete
@@ -366,14 +397,18 @@ namespace openstudio{
 
     level.push_back(levelStart);
 
-    QueueEvent event = queue[0];
+    QueueEvent& event = queue[0];
+    queue.erase(queue.begin());
 
     while (queue.size() > 0 && event.distance - levelStartHeight < SPLIT_EPSILON) {
-      queue.erase(queue.begin());
       if (!event.isObsolete()) {
         level.push_back(event);
       }
+      if (queue.size() == 0) {
+        break;
+      }
       event = queue[0];
+      queue.erase(queue.begin());
     }
 
     //std::cout << "loadLevelEvents queue size " << queue.size() << std::endl;
@@ -435,21 +470,29 @@ namespace openstudio{
       ret.push_back(createLevelEvent(eventCenter, distance, cluster));
 
     }
+
     //std::cout << "groupLevelEvents ret size " << ret.size() << std::endl;
+    for (LevelEvent e : ret) {
+      //std::cout << "groupLevelEvents event " << e << std::endl;
+      debugQueue("groupLevelEvents", e.chain.edgeList);
+    }
 
     return ret;
   }
 
   LevelEvent RoofGeometry::createLevelEvent(Point3d& eventCenter, double distance, std::vector<QueueEvent>& eventCluster) {
+    //for (QueueEvent e : eventCluster) {
+    //  std::cout << "createLevelEvent eventCluster e " << e << std::endl;
+    //}
     std::vector<Chain> chains = createChains(eventCluster);
 
     if (chains.size() == 1) {
       if (chains[0].getChainMode() == CHAIN_MODE_CLOSED_EDGE) {
-        return LevelEvent(eventCenter, distance, chains[0], true);
+        return LevelEvent(eventCenter, distance, chains[0], true); // PickEvent
       } else if (chains[0].getChainMode() == CHAIN_MODE_EDGE) {
-        return LevelEvent(eventCenter, distance, chains[0], false);
+        return LevelEvent(eventCenter, distance, chains[0], false); // MultiEdgeEvent
       } else if (chains[0].getChainMode() == CHAIN_MODE_SPLIT) {
-        return LevelEvent(eventCenter, distance, chains);
+        return LevelEvent(eventCenter, distance, chains); // MultiSplitEvent
       }
     }
 
@@ -459,14 +502,14 @@ namespace openstudio{
       }
     }
 
-    return LevelEvent(eventCenter, distance, chains);
+    return LevelEvent(eventCenter, distance, chains); // MultiSplitEvent
   }
 
   std::vector<Chain> RoofGeometry::createChains(std::vector<QueueEvent>& cluster) {
     /*
      * Create chains of events from cluster. Cluster is set of events which meet
-     * in the same result point. Try to connect all event which share the same
-     * vertex into chain. Events in chain are sorted. If events don't share
+     * in the same result point. Try to connect all events which share the same
+     * vertex into chain. Events in a chain are sorted. If events don't share a
      * vertex, returned chains contains only one event.
      */
 
@@ -474,7 +517,7 @@ namespace openstudio{
     std::vector<QueueEvent> splitCluster;
     std::vector<Vertex> vertexEventsParents;
 
-    for (QueueEvent event : cluster) {
+    for (QueueEvent& event : cluster) {
       if (event.eventType == QUEUE_EVENT_EDGE) {
         edgeCluster.push_back(event);
       } else {
@@ -491,56 +534,80 @@ namespace openstudio{
       }
     }
 
-    for (QueueEvent event : cluster) {
+    //std::cout << "createChains edgeCluster size1 " << edgeCluster.size() << std::endl;
+    //std::cout << "createChains splitCluster size1 " << splitCluster.size() << std::endl;
+    //std::cout << "createChains vertexEventsParents size1 " << vertexEventsParents.size() << std::endl;
+
+    for (QueueEvent& event : cluster) {
       if (event.eventType == QUEUE_EVENT_SPLIT_VERTEX) {
+        //std::cout << "createChains event.parent " << event.parent << std::endl;
+        //for (Vertex v : vertexEventsParents) {
+        //  std::cout << "createChains vertexEventsParents " << v << std::endl;
+        //}
         bool found = std::find(vertexEventsParents.begin(), vertexEventsParents.end(), event.parent) != vertexEventsParents.end();
         if (!found) {
           /*
-           * It can be created multiple vertex events for one parent.
-           * Its is caused because two edges share one vertex and new
-           * event will be added to both of them. When processing we
-           * need always group them into one per vertex. Always prefer
+           * Multiple vertex events can be created for one parent.
+           * It is caused by two edges that share one vertex and new
+           * event will be added for both of them. When processing we
+           * always need to group them into one per vertex. Always prefer
            * split events over vertex events.
            */
+          //std::cout << "createChains not found" << std::endl;
           vertexEventsParents.push_back(event.parent);
           splitCluster.push_back(event);
         }
       }
     }
 
+    //std::cout << "createChains splitCluster size2 " << splitCluster.size() << std::endl;
+    //std::cout << "createChains vertexEventsParents size2 " << vertexEventsParents.size() << std::endl;
+
     std::vector<Chain> edgeChains;
 
     while (edgeCluster.size() > 0) {
       /*
       * We need to find all connected edge events, and create chains from
-      * them. Two event are assumed as connected if next parent of one
+      * them. Two events are assumed to be connected if next parent of one
       * event is equal to previous parent of second event.
       */
       edgeChains.push_back(Chain(createEdgeChain(edgeCluster)));
     }
 
     std::vector<Chain> chains;
-    for (Chain edgeChain : edgeChains) {
+    for (Chain& edgeChain : edgeChains) {
       chains.push_back(edgeChain);
     }
+
+    for (Chain c : chains) {
+      debugQueue("createChains", c.edgeList);
+    }
+
+    //std::cout << "createChains chains1 size " << chains.size() << std::endl;
 
     while (splitCluster.size() > 0) {
       QueueEvent split = splitCluster[0];
       splitCluster.erase(splitCluster.begin());
 
-      for (Chain chain : edgeChains) {
+      bool inEdgeChain = false;
+      for (Chain& chain : edgeChains) {
         // check if chain is split type
         if (isInEdgeChain(split, chain)) {
           // if we have edge chain it can't share split event
-          continue;
+          inEdgeChain = true;
+          break;
         }
-
-        /*
-        * split event is not part of any edge chain, it should be added as
-        * new single element chain;
-        */
-        chains.push_back(Chain(split));
       }
+
+      if (inEdgeChain) {
+        continue;
+      }
+
+      /*
+      * split event is not part of any edge chain, it should be added as
+      * new single element chain;
+      */
+      chains.push_back(Chain(split));
 
     }
 
@@ -554,6 +621,12 @@ namespace openstudio{
     //for (Chain c : chains) {
     //  std::cout << "createChains chain " << c << std::endl;
     //}
+
+    //std::cout << "createChains chains2 size " << chains.size() << std::endl;
+
+    for (Chain c : chains) {
+      debugQueue("createChains2", c.edgeList);
+    }
 
     return chains;
 
@@ -569,21 +642,21 @@ namespace openstudio{
     // find all predecessors of edge event
 
     do {
-      Vertex beginVertex = edgeList[0].previousVertex;
-      Vertex endVertex = edgeList[edgeList.size() - 1].nextVertex;
+      Vertex& beginVertex = edgeList[0].previousVertex;
+      Vertex& endVertex = edgeList[edgeList.size() - 1].nextVertex;
 
       bool do_continue = false;
       for (int i = 0; i < edgeCluster.size(); i++) {
         if (edgeCluster[i].previousVertex == endVertex) {
           // edge should be added as last in chain
           edgeList.push_back(edgeCluster[i]);
-          edgeCluster.erase(edgeCluster.begin() + i - 1);
+          edgeCluster.erase(edgeCluster.begin() + i);
           do_continue = true;
           break;
         } else if (edgeCluster[i].nextVertex == beginVertex) {
           // edge should be added as first in chain
           edgeList.insert(edgeCluster.begin(), edgeCluster[i]);
-          edgeCluster.erase(edgeCluster.begin() + i - 1);
+          edgeCluster.erase(edgeCluster.begin() + i);
           do_continue = true;
           break;
         }
@@ -597,15 +670,14 @@ namespace openstudio{
 
     } while (true);
 
+    debugQueue("createEdgeChain", edgeList);
+
     return edgeList;
   }
 
   bool RoofGeometry::isInEdgeChain(QueueEvent& split, Chain& chain) {
-    Vertex splitParent = split.parent;
-
-    std::vector<QueueEvent> edgeList = chain.edgeList;
-    for (QueueEvent edgeEvent : edgeList) {
-      if (edgeEvent.previousVertex == splitParent || edgeEvent.nextVertex == splitParent) {
+    for (QueueEvent& edgeEvent : chain.edgeList) {
+      if (edgeEvent.previousVertex == split.parent || edgeEvent.nextVertex == split.parent) {
         return true;
       }
     }
@@ -621,6 +693,7 @@ namespace openstudio{
     createOppositeEdgeChains(sLav, chains, center);
 
     // sort list of chains clock wise
+    LOG_AND_THROW("FIXME");
     //std::sort(chains.begin(), chains.end()); // FIXME implement compare function
 
     // connect all edges into new bisectors and lavs
@@ -670,6 +743,7 @@ namespace openstudio{
 
       computeEvents(newVertex, queue, edges, sLav);
 
+      LOG_AND_THROW("FIXME");
       //std::tuple<bool, FaceNode> t = addSplitFaces(hasLastFaceNode, lastFaceNode, chainBegin, chainEnd, newVertex, faces);
       // FIXME: hasLastFaceNode = std::get<0>(t);
       // FIXME: lastFaceNode = std::get<1>(t);
@@ -697,6 +771,7 @@ namespace openstudio{
   }
 
   bool RoofGeometry::areSameLav(std::vector<Vertex>& lav1, std::vector<Vertex>& lav2) {
+    LOG_AND_THROW("FIXME");
     // FIXME Implement
     return false;
   }
@@ -709,10 +784,11 @@ namespace openstudio{
     setProcessed(pickVertex, sLav, queue);
 
     addMultiBackFaces(event.chain.edgeList, pickVertex, sLav, queue, faces);
+
   }
 
   void RoofGeometry::addMultiBackFaces(std::vector<QueueEvent>& edgeList, Vertex& edgeVertex, std::vector< std::vector<Vertex> >& sLav, std::vector<QueueEvent>& queue, std::vector<Face>& faces) {
-    for (QueueEvent edgeEvent : edgeList) {
+    for (QueueEvent& edgeEvent : edgeList) {
 
       setProcessed(edgeEvent.previousVertex, sLav, queue);
       edgeEvent.previousVertex.removeFromLav(sLav);
@@ -1092,8 +1168,7 @@ namespace openstudio{
     }
 
     if (ret.size() > 1) {
-      // FIXME implement sort here
-      LOG_AND_THROW("Not yet implemented.")
+      std::sort(ret.begin(), ret.end());
     }
 
     return ret;
@@ -1204,6 +1279,7 @@ namespace openstudio{
       if (chain.chainType == CHAIN_TYPE_SPLIT) {
         boost::optional<Edge&> oppositeEdge = chain.getOppositeEdge();
 
+        LOG_AND_THROW("FIXME");
         if (false) { // FIXME if (oppositeEdge && !oppositeEdges.count(oppositeEdge.get())) {
           // find lav vertex for opposite edge
 
@@ -1237,6 +1313,7 @@ namespace openstudio{
     */
     for (Chain chain : chainsForRemoval) {
       // FIXME chains.erase(chain);
+      LOG_AND_THROW("FIXME");
     }
     for (Chain chain : oppositeEdgeChains) {
       chains.push_back(chain);
@@ -1310,6 +1387,7 @@ namespace openstudio{
 
     // Additional check if center is inside lav
     for (Vertex end : edgeLavs) {
+      LOG_AND_THROW("FIXME");
       int size = 0; // FIXME = end.list.size();
       std::vector<Point3d> points;
       Vertex next = end;
@@ -1439,6 +1517,7 @@ namespace openstudio{
   //}
 
   Vertex RoofGeometry::createOppositeEdgeVertex(Vertex& newVertex) {
+    LOG_AND_THROW("FIXME");
     /*
     * When opposite edge is processed we need to create copy of vertex to
     * use in opposite face. When opposite edge chain occur vertex is shared
@@ -1528,11 +1607,11 @@ namespace openstudio{
   
   std::ostream& operator<<(std::ostream& os, const QueueEvent& event) {
     if (event.eventType == QUEUE_EVENT_EDGE) {
-      os << "EdgeEvent [v=" << event.point << ", previousVertex=" << event.previousVertex << ", nextVertex=" << event.nextVertex << ", distance=" << event.distance << "]";
+      os << "EdgeEvent [v=" << event.point << ", previousVertex=" << event.previousVertex.point << ", nextVertex=" << event.nextVertex.point << ", distance=" << event.distance << "]";
     } else if (event.eventType == QUEUE_EVENT_SPLIT) {
-      os << "SplitEvent [v=" << event.point << ", parent=" << event.parent << ", distance=" << event.distance << "]";
+      os << "SplitEvent [v=" << event.point << ", parent=" << event.parent.point << ", distance=" << event.distance << "]";
     } else if (event.eventType == QUEUE_EVENT_SPLIT_VERTEX) {
-      os << "VertexSplitEvent [v=" << event.point << ", parent=" << event.parent << ", distance=" << event.distance << "]";
+      os << "VertexSplitEvent [v=" << event.point << ", parent=" << event.parent.point << ", distance=" << event.distance << "]";
     }
     return os;
   }
@@ -1542,17 +1621,21 @@ namespace openstudio{
   }
 
   void QueueEvent::addEventToGroup(std::vector<Vertex>& parentGroup) {
+    //std::cout << "addEventToGroup size before " << parentGroup.size() << std::endl;
     if (eventType == QUEUE_EVENT_SPLIT || eventType == QUEUE_EVENT_SPLIT_VERTEX) {
+      //std::cout << "addEventToGroup add parent " << parent << std::endl;
       parentGroup.push_back(parent);
     } else if (eventType == QUEUE_EVENT_EDGE) {
+      //std::cout << "addEventToGroup add previousVertex " << previousVertex << std::endl;
+      //std::cout << "addEventToGroup add nextVertex " << nextVertex << std::endl;
       parentGroup.push_back(previousVertex);
       parentGroup.push_back(nextVertex);
     }
-
+    //std::cout << "addEventToGroup size after " << parentGroup.size() << std::endl;
   }
 
   bool QueueEvent::isEventInGroup(std::vector<Vertex>& parentGroup) {
-    //std::cout << "isEventInGroup event " << this << std::endl;
+    //std::cout << "isEventInGroup event " << *this << std::endl;
     //for (Vertex v : parentGroup) {
     //  std::cout << "isEventInGroup parentGroupVertex " << v << std::endl;
     //}
@@ -1575,6 +1658,7 @@ namespace openstudio{
   }
 
   Edge& QueueEvent::getOppositeEdgeNext() {
+    LOG_AND_THROW("FIXME");
     return oppositeEdge; // FIXME: return oppositeEdge.next();
   }
 
@@ -1623,20 +1707,21 @@ namespace openstudio{
         return i;
       }
     }
-    LOG_AND_THROW("Could not find vertex in slav.");
+    return -1;
   }
 
   void Vertex::removeFromLav(std::vector< std::vector<Vertex> >& sLav) {
     int i = getLavIndex(sLav);
-    removeFromLav(sLav[i]);
+    if (i != -1) {
+      removeFromLav(sLav[i]);
+    }
   }
 
   void Vertex::removeFromLav(std::vector<Vertex>& lav) {
     auto it = std::find(lav.begin(), lav.end(), *this);
-    if (it == lav.end()) {
-      LOG_AND_THROW("Could not find vertex in lav.");
+    if (it != lav.end()) {
+      lav.erase(it);
     }
-    lav.erase(it);
   }
 
   // Returns cut portion of lav from this vertex to endVertex, including both
@@ -1644,7 +1729,7 @@ namespace openstudio{
     std::vector<Vertex> ret;
 
     int size = lav.size();
-
+    LOG_AND_THROW("FIXME");
     // FIXME implement
     return ret;
   }
@@ -1656,7 +1741,7 @@ namespace openstudio{
 
   // Returns true if this vertex is less than other
   bool Vertex::operator<(const Vertex& other) const {
-
+    LOG_AND_THROW("FIXME");
     // FIXME implement
     return false;
 
@@ -1717,7 +1802,7 @@ namespace openstudio{
 
   // Returns true if this edge is less than other
   bool Edge::operator<(const Edge& other) const {
-
+    LOG_AND_THROW("FIXME");
     // FIXME implement
     return false;
 
@@ -1947,12 +2032,14 @@ namespace openstudio{
     oppositePoint = aOppositePoint;
   }
 
+  // Returns true if this SplitCandidate is less than other
+  bool SplitCandidate::operator<(const SplitCandidate& other) const {
+    return (distance < other.distance);
+  }
+
   // Returns true if this SplitCandidate is equal to other
   bool SplitCandidate::operator==(const SplitCandidate& other) const {
-
-    // FIXME implement
-    return false;
-
+    return (point == other.point && distance == other.distance);
   }
 
 
@@ -2029,6 +2116,9 @@ namespace openstudio{
   Chain::Chain(std::vector<QueueEvent>& aEdgeList) {
     chainType = CHAIN_TYPE_EDGE;
     edgeList = aEdgeList;
+    if (getPreviousVertex() == getNextVertex()) {
+      closed = true;
+    }
   }
 
   Chain::Chain(Edge& aOppositeEdge, Vertex& aNextVertex) {
@@ -2040,7 +2130,7 @@ namespace openstudio{
   ChainMode Chain::getChainMode() {
     if (chainType == CHAIN_TYPE_EDGE) {
       if (closed && split) {
-        // FIXME LOG_AND_THROW("Chain can't be closed and split");
+        LOG_AND_THROW("Chain can't be closed and split");
       } else if (closed) {
         return CHAIN_MODE_CLOSED_EDGE;
       } else if (split) {
@@ -2079,6 +2169,7 @@ namespace openstudio{
     } else if (chainType == CHAIN_TYPE_SINGLE_EDGE) {
       return previousVertex;
     } else {
+      LOG_AND_THROW("FIXME");
       return splitEvent.parent; // FIXME: return splitEvent.getParent().previous();
     }
   }
@@ -2089,6 +2180,7 @@ namespace openstudio{
     } else if (chainType == CHAIN_TYPE_SINGLE_EDGE) {
       return nextVertex;
     } else {
+      LOG_AND_THROW("FIXME");
       return splitEvent.parent; // FIXME: return splitEvent.getParent().next();
     }
   }

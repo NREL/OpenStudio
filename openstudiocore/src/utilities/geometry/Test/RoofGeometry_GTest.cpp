@@ -43,6 +43,20 @@ bool polygonMatches(std::vector< std::vector<Point3d> > polygons, std::vector<Po
       polygonMatches += 1;
     }
   }
+
+  //if (polygonMatches != 1) {
+  //  for (std::vector<Point3d> p : polygons) {
+  //    std::cout << "EXPECTED POLYGON:" << std::endl;;
+  //    for (Point3d p : p) {
+  //      std::cout << p << std::endl;
+  //    }
+  //  }
+  //  std::cout << "CALCULATED POLYGON:" << std::endl;
+  //  for (Point3d p : polygon) {
+  //    std::cout << p << std::endl;
+  //  }
+  //}
+
   return (polygonMatches == 1);
 }
 
@@ -60,12 +74,12 @@ TEST_F(GeometryFixture, RoofSquare_6_12)
   std::vector< std::vector<Point3d> > roofPolygons = rg.makeHipRoof(footprint, pitch);
 
   std::vector< std::vector<Point3d> > expectedRoofPolygons;
-  expectedRoofPolygons.push_back({Point3d(5.0, 5.0, 0.0), Point3d(5.0, 25.0, 0.0), Point3d(15.0, 15.0, 5.0)});
-  expectedRoofPolygons.push_back({Point3d(25.0, 5.0, 0.0), Point3d(5.0, 5.0, 0.0), Point3d(15.0, 15.0, 5.0)});
-  expectedRoofPolygons.push_back({Point3d(25.0, 25.0, 0.0), Point3d(25.0, 5.0, 0.0), Point3d(15.0, 15.0, 5.0)});
-  expectedRoofPolygons.push_back({Point3d(5.0, 25.0, 0.0), Point3d(25.0, 25.0, 0.0), Point3d(15.0, 15.0, 5.0)});
+  expectedRoofPolygons.push_back({Point3d(15.0, 15.0, 5.0), Point3d(25.0, 5.0, 0.0), Point3d(25.0, 25.0, 0.0)});
+  expectedRoofPolygons.push_back({Point3d(15.0, 15.0, 5.0), Point3d(25.0, 25.0, 0.0), Point3d(5.0, 25.0, 0.0)});
+  expectedRoofPolygons.push_back({Point3d(15.0, 15.0, 5.0), Point3d(5.0, 25.0, 0.0), Point3d(5.0, 5.0, 0.0)});
+  expectedRoofPolygons.push_back({Point3d(15.0, 15.0, 5.0), Point3d(5.0, 5.0, 0.0), Point3d(25.0, 5.0, 0.0)});
 
-  EXPECT_EQ(roofPolygons.size(), expectedRoofPolygons.size());
+  EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (unsigned i = 0; i < roofPolygons.size(); ++i) {
     bool test = polygonMatches(expectedRoofPolygons, roofPolygons[i]);
@@ -91,7 +105,7 @@ TEST_F(GeometryFixture, RoofSquare_1_12) {
   expectedRoofPolygons.push_back({Point3d(25.0, 25.0, 0.0), Point3d(25.0, 5.0, 0.0), Point3d(15.0, 15.0, 0.833)});
   expectedRoofPolygons.push_back({Point3d(5.0, 25.0, 0.0), Point3d(25.0, 25.0, 0.0), Point3d(15.0, 15.0, 0.833)});
 
-  EXPECT_EQ(roofPolygons.size(), expectedRoofPolygons.size());
+  EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (unsigned i = 0; i < roofPolygons.size(); ++i) {
     bool test = polygonMatches(expectedRoofPolygons, roofPolygons[i]);
@@ -117,7 +131,7 @@ TEST_F(GeometryFixture, RoofRectangle_3_12) {
   expectedRoofPolygons.push_back({Point3d(40.0, 25.0, 0.0), Point3d(40.0, 5.0, 0.0), Point3d(30.0, 15.0, 2.5)});
   expectedRoofPolygons.push_back({Point3d(5.0, 25.0, 0.0), Point3d(40.0, 25.0, 0.0), Point3d(30.0, 15.0, 2.5), Point3d(15.0, 15.0, 2.5)});
 
-  EXPECT_EQ(roofPolygons.size(), expectedRoofPolygons.size());
+  EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (unsigned i = 0; i < roofPolygons.size(); ++i) {
     bool test = polygonMatches(expectedRoofPolygons, roofPolygons[i]);
@@ -157,7 +171,7 @@ TEST_F(GeometryFixture, RoofHshape_6_12) {
   expectedRoofPolygons.push_back({Point3d(10, 18, 0), Point3d(20, 18, 0), Point3d(23, 15, 0.75), Point3d(7, 15, 0.75)});
   expectedRoofPolygons.push_back({Point3d(0, 25, 0), Point3d(10, 25, 0), Point3d(5, 20, 1.25)});
 
-  EXPECT_EQ(roofPolygons.size(), expectedRoofPolygons.size());
+  EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (unsigned i = 0; i < roofPolygons.size(); ++i) {
     bool test = polygonMatches(expectedRoofPolygons, roofPolygons[i]);
@@ -185,7 +199,7 @@ TEST_F(GeometryFixture, RoofSkeletonTest6_9) {
   expectedRoofPolygons.push_back({Point3d(147.1566715713749, 110.4476269750399, 23.876136976448187), Point3d(119.0, 158.0, 0.0), Point3d(90.0, 106.0, 0.0)});
   expectedRoofPolygons.push_back({Point3d(149.3227702994274, 109.40180634780967, 24.406769820569707), Point3d(147.1566715713749, 110.4476269750399, 23.876136976448187), Point3d(90.0, 106.0, 0.0), Point3d(126.0, 60.0, 0.0)});
 
-  EXPECT_EQ(roofPolygons.size(), expectedRoofPolygons.size());
+  EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (unsigned i = 0; i < roofPolygons.size(); ++i) {
     bool test = polygonMatches(expectedRoofPolygons, roofPolygons[i]);
@@ -213,7 +227,7 @@ TEST_F(GeometryFixture, RoofSkeletonTest7) {
   expectedRoofPolygons.push_back({Point3d(0.4142135623730951, 0.4142135623730951, 0.2928932188134524), Point3d(-1.0, 1.0, 0.0), Point3d(0.0, 0.0, 0.0), Point3d(0.5, 0.20710678118654752, 0.25)});
   expectedRoofPolygons.push_back({Point3d(0.5, 0.20710678118654752, 0.25), Point3d(0.0, 0.0, 0.0), Point3d(0.0, -1.0, 0.0), Point3d(0.5, -0.5, 0.25)});
 
-  EXPECT_EQ(roofPolygons.size(), expectedRoofPolygons.size());
+  EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (unsigned i = 0; i < roofPolygons.size(); ++i) {
     bool test = polygonMatches(expectedRoofPolygons, roofPolygons[i]);
@@ -247,7 +261,7 @@ TEST_F(GeometryFixture, RoofSkeletonTest8) {
   expectedRoofPolygons.push_back({Point3d(-1.3835459038079945, 0.5519531123818496, 0.30822704809600276), Point3d(-2.0, -0.2, 0.0), Point3d(-1.0, 0.0, 0.0), Point3d(-0.43606459624258886, 0.6219268927095002, 0.24962633041547042)});
   expectedRoofPolygons.push_back({Point3d(0.011951105288885877, -0.90319932382556, 0.54840033808722), Point3d(0.02180193069397529, 0.08986159383373349, 0.5038946796426319), Point3d(-0.43606459624258886, 0.6219268927095002, 0.24962633041547042), Point3d(-1.0, 0.0, 0.0), Point3d(-1.2, -2.0, 0.0)});
 
-  EXPECT_EQ(roofPolygons.size(), expectedRoofPolygons.size());
+  EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (unsigned i = 0; i < roofPolygons.size(); ++i) {
     bool test = polygonMatches(expectedRoofPolygons, roofPolygons[i]);
@@ -297,7 +311,7 @@ TEST_F(GeometryFixture, RoofSkeletonTestB1) {
   expectedRoofPolygons.push_back({Point3d(0.9184708676614719, 9.563507938168502, 0.5187868083298253), Point3d(-0.13214359029800526, 10.603466113057067, 0.0), Point3d(0.0, 0.0, 0.0), Point3d(0.3594527136710186, 8.976136170014422, 0.23563971612419035)});
   expectedRoofPolygons.push_back({Point3d(0.3594527136710186, 8.976136170014422, 0.23563971612419035), Point3d(0.0, 0.0, 0.0), Point3d(0.7904833761575505, 8.520486967634694, 0.0)});
 
-  EXPECT_EQ(roofPolygons.size(), expectedRoofPolygons.size());
+  EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (unsigned i = 0; i < roofPolygons.size(); ++i) {
     bool test = polygonMatches(expectedRoofPolygons, roofPolygons[i]);
@@ -345,7 +359,7 @@ TEST_F(GeometryFixture, RoofSkeletonTestB2) {
   expectedRoofPolygons.push_back({Point3d(0.7321423860140842, 9.474000222038036, 0.47750931955493864), Point3d(-0.24573045314637643, 10.433085818392197, 0.0), Point3d(0.0, 0.0, 0.0), Point3d(0.3113773466011168, 9.026957386584131, 0.2619219898328897)});
   expectedRoofPolygons.push_back({Point3d(0.3113773466011168, 9.026957386584131, 0.2619219898328897), Point3d(0.0, 0.0, 0.0), Point3d(0.7904833761549828, 8.520486967607015, 0.0)});
 
-  EXPECT_EQ(roofPolygons.size(), expectedRoofPolygons.size());
+  EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (unsigned i = 0; i < roofPolygons.size(); ++i) {
     bool test = polygonMatches(expectedRoofPolygons, roofPolygons[i]);
@@ -377,7 +391,7 @@ TEST_F(GeometryFixture, RoofSkeletonTestB3) {
   expectedRoofPolygons.push_back({Point3d(2.25187865095761, 3.9032812980229954, 1.2561995495738625), Point3d(2.1462783279814595, 4.158151806596191, 1.2121980233450986), Point3d(-0.4480081827933864, 6.565094698194268, 0.0), Point3d(0.0, 0.0, 0.0), Point3d(1.9726755710182728, 0.08306472324690238, 0.9868768053436059), Point3d(1.860584700471444, 3.4853258215219385, 1.0467787901715908)});
   expectedRoofPolygons.push_back({Point3d(1.9726755710182728, 0.08306472324690238, 0.9868768053436059), Point3d(0.0, 0.0, 0.0), Point3d(0.0853589477356087, -5.32440343246266, 0.0), Point3d(1.996553519848494, -3.386722145559448, 0.9710046229839351)});
 
-  EXPECT_EQ(roofPolygons.size(), expectedRoofPolygons.size());
+  EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (unsigned i = 0; i < roofPolygons.size(); ++i) {
     bool test = polygonMatches(expectedRoofPolygons, roofPolygons[i]);
@@ -405,7 +419,7 @@ TEST_F(GeometryFixture, RoofSkeletonTestB4) {
   expectedRoofPolygons.push_back({Point3d(2.812172737637799, 0.14602644606810766, 1.3748294820465696), Point3d(-1.7258603912355601, 6.252730824609899, 0.0), Point3d(0.0, 0.0, 0.0), Point3d(2.804480151931106, 0.08532357949119695, 1.3630462913156411)});
   expectedRoofPolygons.push_back({Point3d(2.804480151931106, 0.08532357949119695, 1.3630462913156411), Point3d(0.0, 0.0, 0.0), Point3d(-1.192493260706565, -5.6367673060470285, 0.0), Point3d(1.4279119335787651, -3.517645076047145, 1.0625288000004602)});
 
-  EXPECT_EQ(roofPolygons.size(), expectedRoofPolygons.size());
+  EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (unsigned i = 0; i < roofPolygons.size(); ++i) {
     bool test = polygonMatches(expectedRoofPolygons, roofPolygons[i]);
@@ -433,7 +447,7 @@ TEST_F(GeometryFixture, RoofSkeletonTestB5) {
   expectedRoofPolygons.push_back({Point3d(2.795364974222883, 1.2972941167706578, 1.5198861728400568), Point3d(-1.7258603912355601, 6.252730824609899, 0.0), Point3d(0.0, 0.0, 0.0), Point3d(2.6710186548727584, 0.08126314331894204, 1.2981807231020268)});
   expectedRoofPolygons.push_back({Point3d(2.6710186548727584, 0.08126314331894204, 1.2981807231020268), Point3d(0.0, 0.0, 0.0), Point3d(-1.192493260706565, -5.6367673060470285, 0.0), Point3d(1.381369491592734, -3.555283958639109, 1.0436566480369565)});
 
-  EXPECT_EQ(roofPolygons.size(), expectedRoofPolygons.size());
+  EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (unsigned i = 0; i < roofPolygons.size(); ++i) {
     bool test = polygonMatches(expectedRoofPolygons, roofPolygons[i]);
@@ -465,7 +479,7 @@ TEST_F(GeometryFixture, RoofSkeletonTestB6) {
   expectedRoofPolygons.push_back({Point3d(1.4934603449825767, 2.941709497335058, 1.6434738733770782), Point3d(-3.7200362861701817, 4.025043505214006, 1.1693594394280284), Point3d(-4.254892790432256, 3.6762164828487554, 0.9074772170550292), Point3d(-3.4580600517873807, 1.3968924313579514, 0.0), Point3d(0.0, 0.0, 0.0), Point3d(2.3454435517151353, 1.2486300643020334, 1.018110122952239)});
   expectedRoofPolygons.push_back({Point3d(2.3454435517151353, 1.2486300643020334, 1.018110122952239), Point3d(0.0, 0.0, 0.0), Point3d(-1.192493260706565, -5.636767306047028, 0.0), Point3d(1.1735930214222696, -3.723312833627361, 0.9594068976548346)});
 
-  EXPECT_EQ(roofPolygons.size(), expectedRoofPolygons.size());
+  EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (unsigned i = 0; i < roofPolygons.size(); ++i) {
     bool test = polygonMatches(expectedRoofPolygons, roofPolygons[i]);
@@ -495,7 +509,7 @@ TEST_F(GeometryFixture, RoofSkeletonTestB7) {
   expectedRoofPolygons.push_back({Point3d(0.159929259942705, -0.4325952358032944, 0.11345123056840964), Point3d(0.2284312718843465, -0.37117635227923845, 0.06788342500341242), Point3d(7.360455718922119, -6.229013606285628, 0.0), Point3d(0.0, 0.0, 0.0)});
   expectedRoofPolygons.push_back({Point3d(1.4340349467659332, -6.223122037874707, 1.2042918694294955), Point3d(0.159929259942705, -0.4325952358032944, 0.11345123056840964), Point3d(0.0, 0.0, 0.0), Point3d(-1.1889778921584675, -7.356451670462243, 0.0), Point3d(1.4340349467659332, -6.223122037874707, 1.2042918694294955)});
 
-  EXPECT_EQ(roofPolygons.size(), expectedRoofPolygons.size());
+  EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (unsigned i = 0; i < roofPolygons.size(); ++i) {
     bool test = polygonMatches(expectedRoofPolygons, roofPolygons[i]);
@@ -523,7 +537,7 @@ TEST_F(GeometryFixture, RoofSkeletonTestB8) {
   expectedRoofPolygons.push_back({Point3d(0.3674963650297451, -1.375941535615892, 0.29116226024306735), Point3d(0.8357970425329011, -1.0288592710693223, 0.0), Point3d(0.0, 0.0, 0.0)});
   expectedRoofPolygons.push_back({Point3d(1.4340349467659332, -6.223122037874707, 1.2042918694294955), Point3d(0.3674963650297451, -1.375941535615892, 0.29116226024306735), Point3d(0.0, 0.0, 0.0), Point3d(-1.1889778921584675, -7.356451670462243, 0.0), Point3d(1.4340349467659332, -6.223122037874707, 1.2042918694294955)});
 
-  EXPECT_EQ(roofPolygons.size(), expectedRoofPolygons.size());
+  EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (unsigned i = 0; i < roofPolygons.size(); ++i) {
     bool test = polygonMatches(expectedRoofPolygons, roofPolygons[i]);
@@ -557,7 +571,7 @@ TEST_F(GeometryFixture, RoofSkeletonTest9) {
   expectedRoofPolygons.push_back({Point3d(91.32064371214591, 103.74930831439367, 9.374654157196835), Point3d(68.0, 118.0, 0.0), Point3d(77.0, 85.0, 0.0)});
   expectedRoofPolygons.push_back({Point3d(126.06659653966571, 107.36712501572094, 11.183562507860437), Point3d(91.32064371214591, 103.74930831439367, 9.374654157196835), Point3d(77.0, 85.0, 0.0), Point3d(198.0, 85.0, 0.0), Point3d(175.59714332930346, 106.58848144366122, 10.794240721830585), Point3d(134.3606956195723, 98.01182646424897, 6.505913232124485)});
 
-  EXPECT_EQ(roofPolygons.size(), expectedRoofPolygons.size());
+  EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (unsigned i = 0; i < roofPolygons.size(); ++i) {
     bool test = polygonMatches(expectedRoofPolygons, roofPolygons[i]);
@@ -595,7 +609,7 @@ TEST_F(GeometryFixture, RoofSkeletonTestB10) {
   expectedRoofPolygons.push_back({Point3d(9.49692191488606, 0.6133654113232458, 0.5271089343613387), Point3d(8.782756714583655, 1.5573908412810287, 0.0), Point3d(0.0, 0.0, 0.0)});
   expectedRoofPolygons.push_back({Point3d(10.882442218967304, 1.4375936356513357, 0.9709841370116856), Point3d(9.49692191488606, 0.6133654113232458, 0.5271089343613387), Point3d(0.0, 0.0, 0.0), Point3d(23.542862199718826, -1.0957017437087124, 0.0), Point3d(11.471020185145417, 0.67152109157326, 0.6020436394953249)});
 
-  EXPECT_EQ(roofPolygons.size(), expectedRoofPolygons.size());
+  EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (unsigned i = 0; i < roofPolygons.size(); ++i) {
     bool test = polygonMatches(expectedRoofPolygons, roofPolygons[i]);
@@ -645,7 +659,7 @@ TEST_F(GeometryFixture, RoofSkeletonTestB11) {
   expectedRoofPolygons.push_back({Point3d(-0.09379527500698746, 15.045234233860004, 0.5181309987380204), Point3d(-1.2112187885796715, 16.08403225178089, 0.0), Point3d(0.0, 0.0, 0.0), Point3d(-0.6890929440306793, 14.379123828889721, 0.19631243722611377)});
   expectedRoofPolygons.push_back({Point3d(-0.6890929440306793, 14.379123828889721, 0.19631243722611377), Point3d(0.0, 0.0, 0.0), Point3d(-0.2885918221241157, 14.001053106358517, 0.0)});
 
-  EXPECT_EQ(roofPolygons.size(), expectedRoofPolygons.size());
+  EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (unsigned i = 0; i < roofPolygons.size(); ++i) {
     bool test = polygonMatches(expectedRoofPolygons, roofPolygons[i]);
@@ -679,7 +693,7 @@ TEST_F(GeometryFixture, RoofSkeletonTestB11_b) {
   expectedRoofPolygons.push_back({Point3d(6.8490390285892975, 3.8595532917064257, 0.9865589482615805), Point3d(8.823006374999641, 4.231995455388115, 0.0), Point3d(4.899343591400031, 14.19306411217788, 0.0)});
   expectedRoofPolygons.push_back({Point3d(6.8490390285892975, 3.8595532917064257, 0.9865589482615805), Point3d(4.899343591400031, 14.19306411217788, 0.0), Point3d(4.873615853393824, 2.8449682126970464, 0.0), Point3d(6.315213958119228, 1.396818641879405, 0.7224387756441808), Point3d(6.844650538271922, 1.9238600368574004, 0.9865589482591838)});
 
-  EXPECT_EQ(roofPolygons.size(), expectedRoofPolygons.size());
+  EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (unsigned i = 0; i < roofPolygons.size(); ++i) {
     bool test = polygonMatches(expectedRoofPolygons, roofPolygons[i]);
@@ -729,7 +743,7 @@ TEST_F(GeometryFixture, RoofSkeletonTestB12) {
   expectedRoofPolygons.push_back({Point3d(1.6842202935831398, 16.437932562856407, 0.5192977794804833), Point3d(0.6856567883022331, 17.478794675312955, 0.0), Point3d(0.0, 0.0, 0.0), Point3d(1.1408243780107237, 15.895738201571742, 0.2584350351911583)});
   expectedRoofPolygons.push_back({Point3d(1.1408243780107237, 15.895738201571742, 0.2584350351911583), Point3d(0.0, 0.0, 0.0), Point3d(1.6082838074612242, 15.395815413439262, 0.0)});
 
-  EXPECT_EQ(roofPolygons.size(), expectedRoofPolygons.size());
+  EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (unsigned i = 0; i < roofPolygons.size(); ++i) {
     bool test = polygonMatches(expectedRoofPolygons, roofPolygons[i]);
@@ -787,7 +801,7 @@ TEST_F(GeometryFixture, RoofSkeletonTestB13) {
   expectedRoofPolygons.push_back({Point3d(-5.188103636084188, 5.166716270119771, 2.5887104987054257), Point3d(-10.354819907553885, -0.021387367337700525, 0.0), Point3d(0.0, 0.0, 0.0)});
   expectedRoofPolygons.push_back({Point3d(-5.188103636084188, 5.166716270119771, 2.5887104987054257), Point3d(0.0, 0.0, 0.0), Point3d(-0.03697835689094475, 17.903291653889664, 0.0), Point3d(-5.225081993006609, 23.07000792440424, 2.5887104987207548)});
 
-  EXPECT_EQ(roofPolygons.size(), expectedRoofPolygons.size());
+  EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (unsigned i = 0; i < roofPolygons.size(); ++i) {
     bool test = polygonMatches(expectedRoofPolygons, roofPolygons[i]);
@@ -813,7 +827,7 @@ TEST_F(GeometryFixture, RoofCircularAddTest) {
   expectedRoofPolygons.push_back({Point3d(75.0, 75.0, 12.5), Point3d(50.0, 100.0, 0.0), Point3d(50.0, 50.0, 0.0)});
   expectedRoofPolygons.push_back({Point3d(75.0, 75.0, 12.5), Point3d(50.0, 50.0, 0.0), Point3d(100.0, 50.0, 0.0)});
 
-  EXPECT_EQ(roofPolygons.size(), expectedRoofPolygons.size());
+  EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (unsigned i = 0; i < roofPolygons.size(); ++i) {
     bool test = polygonMatches(expectedRoofPolygons, roofPolygons[i]);
@@ -839,7 +853,7 @@ TEST_F(GeometryFixture, RoofCircularAddTest2) {
   expectedRoofPolygons.push_back({Point3d(75.0, 75.0, 12.5), Point3d(50.0, 100.0, 0.0), Point3d(50.0, 50.0, 0.0)});
   expectedRoofPolygons.push_back({Point3d(75.0, 75.0, 12.5), Point3d(50.0, 50.0, 0.0), Point3d(150.0, 50.0, 0.0), Point3d(125.0, 75.0, 12.5)});
 
-  EXPECT_EQ(roofPolygons.size(), expectedRoofPolygons.size());
+  EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (unsigned i = 0; i < roofPolygons.size(); ++i) {
     bool test = polygonMatches(expectedRoofPolygons, roofPolygons[i]);
@@ -865,7 +879,7 @@ TEST_F(GeometryFixture, RoofCircularAddTest2Clockwise) {
   expectedRoofPolygons.push_back({Point3d(75.0, 75.0, 12.5), Point3d(50.0, 100.0, 0.0), Point3d(50.0, 50.0, 0.0)});
   expectedRoofPolygons.push_back({Point3d(75.0, 75.0, 12.5), Point3d(50.0, 50.0, 0.0), Point3d(150.0, 50.0, 0.0), Point3d(125.0, 75.0, 12.5)});
 
-  EXPECT_EQ(roofPolygons.size(), expectedRoofPolygons.size());
+  EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (unsigned i = 0; i < roofPolygons.size(); ++i) {
     bool test = polygonMatches(expectedRoofPolygons, roofPolygons[i]);

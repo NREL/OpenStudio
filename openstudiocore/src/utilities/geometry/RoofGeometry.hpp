@@ -242,6 +242,7 @@ namespace openstudio{
   public:
     SplitCandidate();
     SplitCandidate(Point3d& aPoint, double aDistance, boost::optional<Edge&> aOppositeEdge, boost::optional<Point3d&> aOppositePoint);
+    bool operator<(const SplitCandidate& other) const;
     bool operator==(const SplitCandidate& other) const;
     Point3d point;
     double distance = 0.0;
