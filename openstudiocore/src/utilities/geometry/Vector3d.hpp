@@ -89,6 +89,12 @@ namespace openstudio{
     /// set length
     bool setLength(double newLength);
 
+    /// orthogonal right
+    Vector3d orthogonalRight() const;
+
+    /// orthogonal left
+    Vector3d orthogonalLeft() const;
+
     /// dot product with another Vector3d
     double dot(const Vector3d& other) const;
 

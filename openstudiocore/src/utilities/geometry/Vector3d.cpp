@@ -180,6 +180,16 @@ namespace openstudio{
     return result;
   }
 
+  /// orthogonal right
+  Vector3d Vector3d::orthogonalRight() const {
+    return Vector3d(m_storage[1], -m_storage[0], m_storage[2]);
+  }
+
+  /// orthogonal left
+  Vector3d Vector3d::orthogonalLeft() const {
+    return Vector3d(-m_storage[1], m_storage[0], m_storage[2]);
+  }
+
   /// dot product with another Vector3d
   double Vector3d::dot(const Vector3d& other) const
   {
