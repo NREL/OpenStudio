@@ -866,19 +866,27 @@ void  OpenStudioApp::showAbout()
   about.exec();
 }
 
-void OpenStudioApp::reloadFile(const QString& fileToLoad, bool modified, bool saveCurrentTabs)
+void OpenStudioApp::reloadFile(const QString& osmPath, bool modified, bool saveCurrentTabs)
 {
   OS_ASSERT(m_osDocument);
 
-  QFileInfo info(fileToLoad); // handles windows links and "\"
+  QFileInfo info(osmPath); // handles windows links and "\"
   QString fileName = info.absoluteFilePath();
   osversion::VersionTranslator versionTranslator;
-  boost::optional<openstudio::model::Model> model = versionTranslator.loadModel(toPath(fileName));
-  if( model ){ 
-    
+  openstudio::path path = toPath(fileName);
+  boost::optional<openstudio::model::Model> model = versionTranslator.loadModel(path);
+  if (model){
+
     bool wasQuitOnLastWindowClosed = this->quitOnLastWindowClosed();
     this->setQuitOnLastWindowClosed(false);
-    
+
+    // DLM: load OSW from the existing temp dir
+    openstudio::path workflowPath = openstudio::toPath(m_osDocument->modelTempDir()) / toPath("resources") / toPath("workflow.osw");
+    boost::optional<WorkflowJSON> workflowJSON = WorkflowJSON::load(workflowPath);
+    if (workflowJSON){
+      model->setWorkflowJSON(*workflowJSON);
+    }
+
     m_osDocument->setModel(*model, modified, saveCurrentTabs);
 
     versionUpdateMessageBox(versionTranslator, true, fileName, openstudio::toPath(m_osDocument->modelTempDir()));
