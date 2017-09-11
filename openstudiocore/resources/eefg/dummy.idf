@@ -2,9 +2,11 @@
 !    8.5;                    !- Version Identifier
 !  Version,
 !    8.6;                    !- Version Identifier
-
 !  Version,
 !    8.7;                    !- Version Identifier
+
+!  Version,
+!    8.8;                    !- Version Identifier
 
   Building,
     Building1,               !- Name

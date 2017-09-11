@@ -490,23 +490,23 @@ TEST_F(IdfFixture, Workspace_SameNameNotReference)
 
   EXPECT_TRUE(w1->handle () != w2->handle ());
 
-  ASSERT_TRUE(object1->getString(Output_MeterFields::Name));
-  EXPECT_EQ("", object1->getString(Output_MeterFields::Name).get());
+  ASSERT_TRUE(object1->getString(Output_MeterFields::KeyName));
+  EXPECT_EQ("", object1->getString(Output_MeterFields::KeyName).get());
 
-  ASSERT_TRUE(object2->getString(Output_MeterFields::Name));
-  EXPECT_EQ("", object2->getString(Output_MeterFields::Name).get());
+  ASSERT_TRUE(object2->getString(Output_MeterFields::KeyName));
+  EXPECT_EQ("", object2->getString(Output_MeterFields::KeyName).get());
 
-  EXPECT_TRUE(object1->setString(Output_MeterFields::Name, "Gas:Facility"));
-  ASSERT_TRUE(object1->getString(Output_MeterFields::Name));
-  EXPECT_EQ("Gas:Facility", object1->getString(Output_MeterFields::Name).get());
+  EXPECT_TRUE(object1->setString(Output_MeterFields::KeyName, "Gas:Facility"));
+  ASSERT_TRUE(object1->getString(Output_MeterFields::KeyName));
+  EXPECT_EQ("Gas:Facility", object1->getString(Output_MeterFields::KeyName).get());
 
-  EXPECT_TRUE(object2->setString(Output_MeterFields::Name, "Gas:Building"));
-  ASSERT_TRUE(object2->getString(Output_MeterFields::Name));
-  EXPECT_EQ("Gas:Building", object2->getString(Output_MeterFields::Name).get());
+  EXPECT_TRUE(object2->setString(Output_MeterFields::KeyName, "Gas:Building"));
+  ASSERT_TRUE(object2->getString(Output_MeterFields::KeyName));
+  EXPECT_EQ("Gas:Building", object2->getString(Output_MeterFields::KeyName).get());
 
-  EXPECT_TRUE(object2->setString(Output_MeterFields::Name, "Gas:Facility"));
-  ASSERT_TRUE(object2->getString(Output_MeterFields::Name));
-  EXPECT_EQ("Gas:Facility", object2->getString(Output_MeterFields::Name).get());
+  EXPECT_TRUE(object2->setString(Output_MeterFields::KeyName, "Gas:Facility"));
+  ASSERT_TRUE(object2->getString(Output_MeterFields::KeyName));
+  EXPECT_EQ("Gas:Facility", object2->getString(Output_MeterFields::KeyName).get());
 
 }
 

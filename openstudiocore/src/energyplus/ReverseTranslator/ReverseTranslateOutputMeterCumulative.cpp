@@ -44,7 +44,7 @@ OptionalModelObject ReverseTranslator::translateOutputMeterCumulative( const Wor
 {
   openstudio::model::OutputMeter meter( m_model );
 
-  OptionalString s = workspaceObject.getString(Output_Meter_CumulativeFields::Name);
+  OptionalString s = workspaceObject.getString(Output_Meter_CumulativeFields::KeyName);
   if(s){
     meter.setName(*s);
   }

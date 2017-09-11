@@ -9,9 +9,11 @@
 !    8.5;                    !- Version Identifier
 !  Version,
 !    8.6;                    !- Version Identifier
-
 !  Version,
 !    8.7;                    !- Version Identifier
+
+!  Version,
+!    8.8;                    !- Version Identifier
 
   FluidProperties:Name,
     R507A,                   !- Fluid Name
@@ -36,7 +38,7 @@
     54.000,57.000,60.000,63.000,66.000,69.000;
 
   FluidProperties:Saturated,
-    R507a,                   !- Name
+    R507a,                   !- Fluid Name
     Pressure,                !- Fluid Property Type
     FluidGas,                !- Fluid Phase
     R507aSaturatedTemperatures,  !- Temperature Values Name
@@ -49,7 +51,7 @@
     2.5818E+06,2.7594E+06,2.9469E+06,3.1451E+06,3.3548E+06,3.5779E+06;
 
   FluidProperties:Saturated,
-    R507a,                   !- Name
+    R507a,                   !- Fluid Name
     Enthalpy,                !- Fluid Property Type
     Fluid,                   !- Fluid Phase
     R507aSaturatedTemperatures,  !- Temperature Values Name
@@ -62,7 +64,7 @@
     2.8494E+05,2.9091E+05,2.9726E+05,3.0416E+05,3.1203E+05,3.2251E+05;
 
   FluidProperties:Saturated,
-    R507a,                   !- Name
+    R507a,                   !- Fluid Name
     Enthalpy,                !- Fluid Property Type
     FluidGas,                !- Fluid Phase
     R507aSaturatedTemperatures,  !- Temperature Values Name
@@ -75,7 +77,7 @@
     3.7581E+05,3.7480E+05,3.7320E+05,3.7074E+05,3.6678E+05,3.5902E+05;
 
   FluidProperties:Saturated,
-    R507a,                   !- Name
+    R507a,                   !- Fluid Name
     Density,                 !- Fluid Property Type
     Fluid,                   !- Fluid Phase
     R507aSaturatedTemperatures,  !- Temperature Values Name
@@ -88,7 +90,7 @@
     8.6498E+02,8.3742E+02,8.0612E+02,7.6915E+02,7.2211E+02,6.4788E+02;
 
   FluidProperties:Saturated,
-    R507a,                   !- Name
+    R507a,                   !- Fluid Name
     Density,                 !- Fluid Property Type
     FluidGas,                !- Fluid Phase
     R507aSaturatedTemperatures,  !- Temperature Values Name
@@ -101,7 +103,7 @@
     1.6727E+02,1.8605E+02,2.0863E+02,2.3698E+02,2.7557E+02,3.4101E+02;
 
   FluidProperties:Saturated,
-    R507a,                   !- Name
+    R507a,                   !- Fluid Name
     SpecificHeat,            !- Fluid Property Type
     Fluid,                   !- Fluid Phase
     R507aSaturatedTemperatures,  !- Temperature Values Name
@@ -114,7 +116,7 @@
     2.1654E+03,2.3650E+03,2.6728E+03,3.2209E+03,4.5109E+03,1.1483E+04;
 
   FluidProperties:Saturated,
-    R507a,                   !- Name
+    R507a,                   !- Fluid Name
     SpecificHeat,            !- Fluid Property Type
     FluidGas,                !- Fluid Phase
     R507aSaturatedTemperatures,  !- Temperature Values Name

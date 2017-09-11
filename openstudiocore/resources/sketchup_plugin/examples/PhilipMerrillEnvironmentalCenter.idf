@@ -12,7 +12,7 @@
 !
 !
 
-  VERSION,8.7;
+  VERSION,8.8;
 
 !-   ===========  ALL OBJECTS IN CLASS: BUILDING ===========
 !10,  ! estimated
@@ -64138,7 +64138,7 @@
     ZN1-WestConf Inlet Node, !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZN1-WestConf Node,       !- Zone Air Node Name
-    ZN1-WestConf Return Node;!- Zone Return Air Node Name
+    ZN1-WestConf Return Node;!- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentList,
     ZN1-WestConf Equipment,  !- Name
@@ -64152,6 +64152,7 @@
     ,                        !- Availability Schedule Name
     ZN1-WestConf Inlet Node, !- Zone Supply Air Node Name
     ,                        !- Zone Exhaust Air Node Name
+    ,                        !- System Inlet Air Node Name
     50,                      !- Maximum Heating Supply Air Temperature {C}
     13,                      !- Minimum Cooling Supply Air Temperature {C}
     0.015,                   !- Maximum Heating Supply Air Humidity Ratio {kgWater/kgDryAir}
@@ -64188,7 +64189,7 @@
     ZN2-EastConf Inlet Node, !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZN2-EastConf Node,       !- Zone Air Node Name
-    ZN2-EastConf Return Node;!- Zone Return Air Node Name
+    ZN2-EastConf Return Node;!- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentList,
     ZN2-EastConf Equipment,  !- Name
@@ -64202,6 +64203,7 @@
     ,                        !- Availability Schedule Name
     ZN2-EastConf Inlet Node, !- Zone Supply Air Node Name
     ,                        !- Zone Exhaust Air Node Name
+    ,                        !- System Inlet Air Node Name
     50,                      !- Maximum Heating Supply Air Temperature {C}
     13,                      !- Minimum Cooling Supply Air Temperature {C}
     0.015,                   !- Maximum Heating Supply Air Humidity Ratio {kgWater/kgDryAir}
@@ -64238,7 +64240,7 @@
     ZN3-SWMain Inlet Node,   !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZN3-SWMain Node,         !- Zone Air Node Name
-    ZN3-SWMain Return Node;  !- Zone Return Air Node Name
+    ZN3-SWMain Return Node;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentList,
     ZN3-SWMain Equipment,    !- Name
@@ -64252,6 +64254,7 @@
     ,                        !- Availability Schedule Name
     ZN3-SWMain Inlet Node,   !- Zone Supply Air Node Name
     ,                        !- Zone Exhaust Air Node Name
+    ,                        !- System Inlet Air Node Name
     50,                      !- Maximum Heating Supply Air Temperature {C}
     13,                      !- Minimum Cooling Supply Air Temperature {C}
     0.015,                   !- Maximum Heating Supply Air Humidity Ratio {kgWater/kgDryAir}
@@ -64288,7 +64291,7 @@
     ZN4-NWMain Inlet Node,   !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZN4-NWMain Node,         !- Zone Air Node Name
-    ZN4-NWMain Return Node;  !- Zone Return Air Node Name
+    ZN4-NWMain Return Node;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentList,
     ZN4-NWMain Equipment,    !- Name
@@ -64302,6 +64305,7 @@
     ,                        !- Availability Schedule Name
     ZN4-NWMain Inlet Node,   !- Zone Supply Air Node Name
     ,                        !- Zone Exhaust Air Node Name
+    ,                        !- System Inlet Air Node Name
     50,                      !- Maximum Heating Supply Air Temperature {C}
     13,                      !- Minimum Cooling Supply Air Temperature {C}
     0.015,                   !- Maximum Heating Supply Air Humidity Ratio {kgWater/kgDryAir}
@@ -64338,7 +64342,7 @@
     ZN5-Server Inlet Node,   !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZN5-Server Node,         !- Zone Air Node Name
-    ZN5-Server Return Node;  !- Zone Return Air Node Name
+    ZN5-Server Return Node;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentList,
     ZN5-Server Equipment,    !- Name
@@ -64352,6 +64356,7 @@
     ,                        !- Availability Schedule Name
     ZN5-Server Inlet Node,   !- Zone Supply Air Node Name
     ,                        !- Zone Exhaust Air Node Name
+    ,                        !- System Inlet Air Node Name
     50,                      !- Maximum Heating Supply Air Temperature {C}
     13,                      !- Minimum Cooling Supply Air Temperature {C}
     0.015,                   !- Maximum Heating Supply Air Humidity Ratio {kgWater/kgDryAir}
@@ -64388,7 +64393,7 @@
     ZN6-ExhibtLobby Inlet Node,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZN6-ExhibtLobby Node,    !- Zone Air Node Name
-    ZN6-ExhibtLobby Return Node;  !- Zone Return Air Node Name
+    ZN6-ExhibtLobby Return Node;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentList,
     ZN6-ExhibtLobby Equipment,  !- Name
@@ -64402,6 +64407,7 @@
     ,                        !- Availability Schedule Name
     ZN6-ExhibtLobby Inlet Node,  !- Zone Supply Air Node Name
     ,                        !- Zone Exhaust Air Node Name
+    ,                        !- System Inlet Air Node Name
     50,                      !- Maximum Heating Supply Air Temperature {C}
     13,                      !- Minimum Cooling Supply Air Temperature {C}
     0.015,                   !- Maximum Heating Supply Air Humidity Ratio {kgWater/kgDryAir}
@@ -64438,7 +64444,7 @@
     ZN7-SEMain Inlet Node,   !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZN7-SEMain Node,         !- Zone Air Node Name
-    ZN7-SEMain Return Node;  !- Zone Return Air Node Name
+    ZN7-SEMain Return Node;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentList,
     ZN7-SEMain Equipment,    !- Name
@@ -64452,6 +64458,7 @@
     ,                        !- Availability Schedule Name
     ZN7-SEMain Inlet Node,   !- Zone Supply Air Node Name
     ,                        !- Zone Exhaust Air Node Name
+    ,                        !- System Inlet Air Node Name
     50,                      !- Maximum Heating Supply Air Temperature {C}
     13,                      !- Minimum Cooling Supply Air Temperature {C}
     0.015,                   !- Maximum Heating Supply Air Humidity Ratio {kgWater/kgDryAir}
@@ -64488,7 +64495,7 @@
     ZN8-NEMain Inlet Node,   !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZN8-NEMain Node,         !- Zone Air Node Name
-    ZN8-NEMain Return Node;  !- Zone Return Air Node Name
+    ZN8-NEMain Return Node;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentList,
     ZN8-NEMain Equipment,    !- Name
@@ -64502,6 +64509,7 @@
     ,                        !- Availability Schedule Name
     ZN8-NEMain Inlet Node,   !- Zone Supply Air Node Name
     ,                        !- Zone Exhaust Air Node Name
+    ,                        !- System Inlet Air Node Name
     50,                      !- Maximum Heating Supply Air Temperature {C}
     13,                      !- Minimum Cooling Supply Air Temperature {C}
     0.015,                   !- Maximum Heating Supply Air Humidity Ratio {kgWater/kgDryAir}
@@ -64538,7 +64546,7 @@
     ZN9-SouthConf Inlet Node,!- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZN9-SouthConf Node,      !- Zone Air Node Name
-    ZN9-SouthConf Return Node;  !- Zone Return Air Node Name
+    ZN9-SouthConf Return Node;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentList,
     ZN9-SouthConf Equipment, !- Name
@@ -64552,6 +64560,7 @@
     ,                        !- Availability Schedule Name
     ZN9-SouthConf Inlet Node,!- Zone Supply Air Node Name
     ,                        !- Zone Exhaust Air Node Name
+    ,                        !- System Inlet Air Node Name
     50,                      !- Maximum Heating Supply Air Temperature {C}
     13,                      !- Minimum Cooling Supply Air Temperature {C}
     0.015,                   !- Maximum Heating Supply Air Humidity Ratio {kgWater/kgDryAir}
@@ -64588,7 +64597,7 @@
     ZN10-KitchDine Inlet Node,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZN10-KitchDine Node,     !- Zone Air Node Name
-    ZN10-KitchDine Return Node;  !- Zone Return Air Node Name
+    ZN10-KitchDine Return Node;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentList,
     ZN10-KitchDine Equipment,!- Name
@@ -64602,6 +64611,7 @@
     ,                        !- Availability Schedule Name
     ZN10-KitchDine Inlet Node,  !- Zone Supply Air Node Name
     ,                        !- Zone Exhaust Air Node Name
+    ,                        !- System Inlet Air Node Name
     50,                      !- Maximum Heating Supply Air Temperature {C}
     13,                      !- Minimum Cooling Supply Air Temperature {C}
     0.015,                   !- Maximum Heating Supply Air Humidity Ratio {kgWater/kgDryAir}
@@ -64638,7 +64648,7 @@
     ZN11-EastConf Inlet Node,!- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZN11-EastConf Node,      !- Zone Air Node Name
-    ZN11-EastConf Return Node;  !- Zone Return Air Node Name
+    ZN11-EastConf Return Node;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentList,
     ZN11-EastConf Equipment, !- Name
@@ -64652,6 +64662,7 @@
     ,                        !- Availability Schedule Name
     ZN11-EastConf Inlet Node,!- Zone Supply Air Node Name
     ,                        !- Zone Exhaust Air Node Name
+    ,                        !- System Inlet Air Node Name
     50,                      !- Maximum Heating Supply Air Temperature {C}
     13,                      !- Minimum Cooling Supply Air Temperature {C}
     0.015,                   !- Maximum Heating Supply Air Humidity Ratio {kgWater/kgDryAir}
@@ -64688,7 +64699,7 @@
     ZN12-Link Inlet Node,    !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZN12-Link Node,          !- Zone Air Node Name
-    ZN12-Link Return Node;   !- Zone Return Air Node Name
+    ZN12-Link Return Node;   !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentList,
     ZN12-Link Equipment,     !- Name
@@ -64702,6 +64713,7 @@
     ,                        !- Availability Schedule Name
     ZN12-Link Inlet Node,    !- Zone Supply Air Node Name
     ,                        !- Zone Exhaust Air Node Name
+    ,                        !- System Inlet Air Node Name
     50,                      !- Maximum Heating Supply Air Temperature {C}
     13,                      !- Minimum Cooling Supply Air Temperature {C}
     0.015,                   !- Maximum Heating Supply Air Humidity Ratio {kgWater/kgDryAir}
@@ -64738,7 +64750,7 @@
     ZN13-WestWindows Inlet Node,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZN13-WestWindows Node,   !- Zone Air Node Name
-    ZN13-WestWindows Return Node;  !- Zone Return Air Node Name
+    ZN13-WestWindows Return Node;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentList,
     ZN13-WestWindows Equipment,  !- Name
@@ -64752,6 +64764,7 @@
     ,                        !- Availability Schedule Name
     ZN13-WestWindows Inlet Node,  !- Zone Supply Air Node Name
     ,                        !- Zone Exhaust Air Node Name
+    ,                        !- System Inlet Air Node Name
     50,                      !- Maximum Heating Supply Air Temperature {C}
     13,                      !- Minimum Cooling Supply Air Temperature {C}
     0.015,                   !- Maximum Heating Supply Air Humidity Ratio {kgWater/kgDryAir}
@@ -64788,7 +64801,7 @@
     ZN14-SW_Main Inlet Node, !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZN14-SW_Main Node,       !- Zone Air Node Name
-    ZN14-SW_Main Return Node;!- Zone Return Air Node Name
+    ZN14-SW_Main Return Node;!- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentList,
     ZN14-SW_Main Equipment,  !- Name
@@ -64802,6 +64815,7 @@
     ,                        !- Availability Schedule Name
     ZN14-SW_Main Inlet Node, !- Zone Supply Air Node Name
     ,                        !- Zone Exhaust Air Node Name
+    ,                        !- System Inlet Air Node Name
     50,                      !- Maximum Heating Supply Air Temperature {C}
     13,                      !- Minimum Cooling Supply Air Temperature {C}
     0.015,                   !- Maximum Heating Supply Air Humidity Ratio {kgWater/kgDryAir}
@@ -64838,7 +64852,7 @@
     ZN15-NW_Main Inlet Node, !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZN15-NW_Main Node,       !- Zone Air Node Name
-    ZN15-NW_Main Return Node;!- Zone Return Air Node Name
+    ZN15-NW_Main Return Node;!- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentList,
     ZN15-NW_Main Equipment,  !- Name
@@ -64852,6 +64866,7 @@
     ,                        !- Availability Schedule Name
     ZN15-NW_Main Inlet Node, !- Zone Supply Air Node Name
     ,                        !- Zone Exhaust Air Node Name
+    ,                        !- System Inlet Air Node Name
     50,                      !- Maximum Heating Supply Air Temperature {C}
     13,                      !- Minimum Cooling Supply Air Temperature {C}
     0.015,                   !- Maximum Heating Supply Air Humidity Ratio {kgWater/kgDryAir}
@@ -64888,7 +64903,7 @@
     ZN16-EastWindows Inlet Node,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZN16-EastWindows Node,   !- Zone Air Node Name
-    ZN16-EastWindows Return Node;  !- Zone Return Air Node Name
+    ZN16-EastWindows Return Node;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentList,
     ZN16-EastWindows Equipment,  !- Name
@@ -64902,6 +64917,7 @@
     ,                        !- Availability Schedule Name
     ZN16-EastWindows Inlet Node,  !- Zone Supply Air Node Name
     ,                        !- Zone Exhaust Air Node Name
+    ,                        !- System Inlet Air Node Name
     50,                      !- Maximum Heating Supply Air Temperature {C}
     13,                      !- Minimum Cooling Supply Air Temperature {C}
     0.015,                   !- Maximum Heating Supply Air Humidity Ratio {kgWater/kgDryAir}
@@ -64938,7 +64954,7 @@
     ZN17-EastMain Inlet Node,!- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZN17-EastMain Node,      !- Zone Air Node Name
-    ZN17-EastMain Return Node;  !- Zone Return Air Node Name
+    ZN17-EastMain Return Node;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentList,
     ZN17-EastMain Equipment, !- Name
@@ -64952,6 +64968,7 @@
     ,                        !- Availability Schedule Name
     ZN17-EastMain Inlet Node,!- Zone Supply Air Node Name
     ,                        !- Zone Exhaust Air Node Name
+    ,                        !- System Inlet Air Node Name
     50,                      !- Maximum Heating Supply Air Temperature {C}
     13,                      !- Minimum Cooling Supply Air Temperature {C}
     0.015,                   !- Maximum Heating Supply Air Humidity Ratio {kgWater/kgDryAir}
@@ -64988,7 +65005,7 @@
     ZN18-NEMain Inlet Node,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZN18-NEMain Node,        !- Zone Air Node Name
-    ZN18-NEMain Return Node; !- Zone Return Air Node Name
+    ZN18-NEMain Return Node; !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentList,
     ZN18-NEMain Equipment,   !- Name
@@ -65002,6 +65019,7 @@
     ,                        !- Availability Schedule Name
     ZN18-NEMain Inlet Node,  !- Zone Supply Air Node Name
     ,                        !- Zone Exhaust Air Node Name
+    ,                        !- System Inlet Air Node Name
     50,                      !- Maximum Heating Supply Air Temperature {C}
     13,                      !- Minimum Cooling Supply Air Temperature {C}
     0.015,                   !- Maximum Heating Supply Air Humidity Ratio {kgWater/kgDryAir}
@@ -65038,7 +65056,7 @@
     ZN19-AtticConf Inlet Node,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZN19-AtticConf Node,     !- Zone Air Node Name
-    ZN19-AtticConf Return Node;  !- Zone Return Air Node Name
+    ZN19-AtticConf Return Node;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentList,
     ZN19-AtticConf Equipment,!- Name
@@ -65052,6 +65070,7 @@
     ,                        !- Availability Schedule Name
     ZN19-AtticConf Inlet Node,  !- Zone Supply Air Node Name
     ,                        !- Zone Exhaust Air Node Name
+    ,                        !- System Inlet Air Node Name
     50,                      !- Maximum Heating Supply Air Temperature {C}
     13,                      !- Minimum Cooling Supply Air Temperature {C}
     0.015,                   !- Maximum Heating Supply Air Humidity Ratio {kgWater/kgDryAir}

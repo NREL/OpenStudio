@@ -57,7 +57,7 @@ boost::optional<IdfObject> ForwardTranslator::translateOutputMeter( OutputMeter 
     idfObject = IdfObject (openstudio::IddObjectType::Output_Meter_Cumulative_MeterFileOnly);
     m_idfObjects.push_back(*idfObject);
 
-    idfObject->setString(Output_Meter_Cumulative_MeterFileOnlyFields::Name, toString(name));
+    idfObject->setString(Output_Meter_Cumulative_MeterFileOnlyFields::KeyName, toString(name));
 
     if (!modelObject.isReportingFrequencyDefaulted()){
       idfObject->setString(Output_Meter_Cumulative_MeterFileOnlyFields::ReportingFrequency, modelObject.reportingFrequency());
@@ -67,7 +67,7 @@ boost::optional<IdfObject> ForwardTranslator::translateOutputMeter( OutputMeter 
     idfObject = IdfObject (openstudio::IddObjectType::Output_Meter_MeterFileOnly);
     m_idfObjects.push_back(*idfObject);
 
-    idfObject->setString(Output_Meter_MeterFileOnlyFields::Name, toString(name));
+    idfObject->setString(Output_Meter_MeterFileOnlyFields::KeyName, toString(name));
 
     if (!modelObject.isReportingFrequencyDefaulted()){
       idfObject->setString(Output_Meter_MeterFileOnlyFields::ReportingFrequency, modelObject.reportingFrequency());
@@ -77,7 +77,7 @@ boost::optional<IdfObject> ForwardTranslator::translateOutputMeter( OutputMeter 
     idfObject = IdfObject (openstudio::IddObjectType::Output_Meter_Cumulative);
     m_idfObjects.push_back(*idfObject);
 
-    idfObject->setString(Output_Meter_CumulativeFields::Name, toString(name));
+    idfObject->setString(Output_Meter_CumulativeFields::KeyName, toString(name));
 
     if (!modelObject.isReportingFrequencyDefaulted()){
       idfObject->setString(Output_Meter_CumulativeFields::ReportingFrequency, modelObject.reportingFrequency());
@@ -87,7 +87,7 @@ boost::optional<IdfObject> ForwardTranslator::translateOutputMeter( OutputMeter 
     idfObject = IdfObject (openstudio::IddObjectType::Output_Meter);
     m_idfObjects.push_back(*idfObject);
 
-    idfObject->setString(Output_MeterFields::Name, toString(name));
+    idfObject->setString(Output_MeterFields::KeyName, toString(name));
 
     if (!modelObject.isReportingFrequencyDefaulted()){
       idfObject->setString(Output_MeterFields::ReportingFrequency, modelObject.reportingFrequency());
