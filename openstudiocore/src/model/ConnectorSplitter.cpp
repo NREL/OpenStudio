@@ -176,7 +176,7 @@ ConnectorSplitter::ConnectorSplitter(const Model& model)
 }
 
 ConnectorSplitter::ConnectorSplitter(std::shared_ptr<detail::ConnectorSplitter_Impl> p)
-  : Splitter(p)
+  : Splitter(std::move(p))
 {}
 
 std::vector<openstudio::IdfObject> ConnectorSplitter::remove()

@@ -1168,7 +1168,7 @@ ModelObject::ModelObject(IddObjectType type, const Model& model, bool fastName)
   // add to Workspace
   openstudio::detail::WorkspaceObject_ImplPtrVector impls;
   impls.push_back(getImpl<openstudio::detail::WorkspaceObject_Impl>());
-  model.getImpl<detail::Model_Impl>()->addObjects(impls);
+  model.getImpl<detail::Model_Impl>()->addObjects(impls,false);
   // object should be initialized and ready to go
   if (!getImpl<detail::ModelObject_Impl>()->initialized()){
     LOG_AND_THROW("ModelObject not initialized: " << std::endl << getImpl<openstudio::detail::WorkspaceObject_Impl>()->idfObject());
@@ -1176,7 +1176,7 @@ ModelObject::ModelObject(IddObjectType type, const Model& model, bool fastName)
 }
 
 ModelObject::ModelObject(std::shared_ptr<detail::ModelObject_Impl> p)
-  : WorkspaceObject(p)
+  : WorkspaceObject(std::move(p))
 {}
 
 } // model

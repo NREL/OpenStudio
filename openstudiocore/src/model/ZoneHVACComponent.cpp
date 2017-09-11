@@ -236,20 +236,20 @@ namespace detail {
   bool ZoneHVACComponent_Impl::addToNode(Node & node)
   {
     bool result = false;
-  
+
     boost::optional<ThermalZone> thermalZone;
     boost::optional<AirTerminalSingleDuctInletSideMixer> terminal;
-  
+
     if( boost::optional<ModelObject> outlet = node.outletModelObject() ) {
       if( boost::optional<PortList> pl = outlet->optionalCast<PortList>() ) {
         thermalZone = pl->thermalZone();
       }
     }
-  
+
     if( boost::optional<ModelObject> inlet = node.inletModelObject() ) {
       terminal = inlet->optionalCast<AirTerminalSingleDuctInletSideMixer>();
     }
-  
+
     if( thermalZone && terminal ) {
       if( this->thermalZone() ) {
         removeFromThermalZone();
@@ -279,7 +279,7 @@ namespace detail {
 
       result = true;
     }
-  
+
     return result;
   }
 
@@ -300,7 +300,7 @@ namespace detail {
       t_model.connect( t_inletNode.get(), t_inletNode->outletPort(),
                        targetModelObject, targetPort );
 
-      std::vector<AirTerminalSingleDuctInletSideMixer> terminalMixers = 
+      std::vector<AirTerminalSingleDuctInletSideMixer> terminalMixers =
         subsetCastVector<AirTerminalSingleDuctInletSideMixer>(t_airLoopHVAC->demandComponents(t_airLoopHVAC->demandInletNode(),t_inletNode.get()));
       if( ! terminalMixers.empty() ) {
         if( boost::optional<Node> secondaryNode = terminalMixers.front().secondaryAirInletNode() ) {
@@ -333,14 +333,14 @@ namespace detail {
 } // detail
 
 ZoneHVACComponent::ZoneHVACComponent(std::shared_ptr<detail::ZoneHVACComponent_Impl> p)
-  : HVACComponent(p)
+  : HVACComponent(std::move(p))
 {}
 
 ZoneHVACComponent::ZoneHVACComponent(IddObjectType type,const Model& model)
   : HVACComponent(type,model)
 {
   OS_ASSERT(getImpl<detail::ZoneHVACComponent_Impl>());
-}     
+}
 
 std::vector<ModelObject> ZoneHVACComponent::children() const
 {

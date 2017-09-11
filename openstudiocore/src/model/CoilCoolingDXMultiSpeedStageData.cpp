@@ -734,7 +734,7 @@ void CoilCoolingDXMultiSpeedStageData::autosizeRatedEvaporativeCondenserPumpPowe
 
 /// @cond
 CoilCoolingDXMultiSpeedStageData::CoilCoolingDXMultiSpeedStageData(std::shared_ptr<detail::CoilCoolingDXMultiSpeedStageData_Impl> impl)
-  : ParentObject(impl)
+  : ParentObject(std::move(impl))
 {}
 /// @endcond
 

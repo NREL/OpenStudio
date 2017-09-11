@@ -342,7 +342,7 @@ void HumidifierSteamElectric::autosizeRatedCapacity() {
 
 /// @cond
 HumidifierSteamElectric::HumidifierSteamElectric(std::shared_ptr<detail::HumidifierSteamElectric_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

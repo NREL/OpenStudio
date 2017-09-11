@@ -126,7 +126,7 @@ ConnectorMixer::ConnectorMixer(const Model& model)
 
 ConnectorMixer::ConnectorMixer(
     std::shared_ptr<detail::ConnectorMixer_Impl> p)
-  : Mixer(p)
+  : Mixer(std::move(p))
 {}
 
 std::vector<openstudio::IdfObject> ConnectorMixer::remove()

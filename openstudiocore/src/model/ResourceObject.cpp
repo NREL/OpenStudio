@@ -40,13 +40,13 @@ namespace detail {
     : ParentObject_Impl(idfObject, model, keepHandle)
   {}
 
-  ResourceObject_Impl::ResourceObject_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
-                                           Model_Impl* model, 
+  ResourceObject_Impl::ResourceObject_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                           Model_Impl* model,
                                            bool keepHandle)
     : ParentObject_Impl(other, model, keepHandle)
   {}
-  
-  ResourceObject_Impl::ResourceObject_Impl(const ResourceObject_Impl& other, 
+
+  ResourceObject_Impl::ResourceObject_Impl(const ResourceObject_Impl& other,
                                            Model_Impl* model,
                                            bool keepHandle)
     : ParentObject_Impl(other, model, keepHandle)
@@ -81,7 +81,7 @@ namespace detail {
   }
 
   unsigned ResourceObject_Impl::nonResourceObjectUseCount(bool excludeChildren) const {
-   
+
     unsigned result = 0;
 
     ModelObjectVector children;
@@ -121,13 +121,13 @@ namespace detail {
 } // detail
 
 ResourceObject::ResourceObject(IddObjectType type,const Model& model)
-  : ParentObject(type,model) 
+  : ParentObject(type,model)
 {
   OS_ASSERT(getImpl<detail::ResourceObject_Impl>());
 }
 
 ResourceObject::ResourceObject(std::shared_ptr<detail::ResourceObject_Impl> impl)
-  : ParentObject(impl)
+  : ParentObject(std::move(impl))
 {}
 
 unsigned ResourceObject::directUseCount(bool excludeChildren) const {

@@ -113,7 +113,7 @@ IddObjectType Duct::iddObjectType() {
 
 /// @cond
 Duct::Duct(std::shared_ptr<detail::Duct_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

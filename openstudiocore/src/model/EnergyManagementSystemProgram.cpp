@@ -165,7 +165,7 @@ namespace detail {
           comment.clear();
           //add comment to comment vector
           comment.append(comments.at(1));
-          //combine any remaining comments for this line into one comment 
+          //combine any remaining comments for this line into one comment
           if (comments.size() > 2) {
             for (size_t j = 2; j < comments.size(); j++) {
               comment.append("!" + comments.at(j));
@@ -204,7 +204,7 @@ namespace detail {
     while ((pos = line_rn.find("\r", pos)) != std::string::npos) {
       line_rn.erase(pos, 1);
     }
-    // remove '\n' 
+    // remove '\n'
     pos = 0;
     while ((pos = line_rn.find("\n", pos)) != std::string::npos) {
       line_rn.erase(pos, 1);
@@ -233,7 +233,7 @@ namespace detail {
         comment.clear();
         //add comment to comment vector
         comment.append(comments.at(1));
-        //combine any remaining comments for this line into one comment 
+        //combine any remaining comments for this line into one comment
         if (comments.size() > 2) {
           for (size_t j = 2; j < comments.size(); j++) {
             comment.append(", " + comments.at(j));
@@ -319,7 +319,7 @@ namespace detail {
     if (body.is_initialized()) {
       //assume body is a vector of strings
       for (size_t i = 0; i < body.get().size(); i++) {
-        //find uids        
+        //find uids
         boost::sregex_token_iterator j(body.get().at(i).begin(), body.get().at(i).end(), uuidInString(), subs);
 
         while (j != boost::sregex_token_iterator()) {
@@ -349,7 +349,7 @@ namespace detail {
     if (body.is_initialized()) {
       //assume body is a vector of strings
       for (size_t i = 0; i < body.get().size(); i++) {
-        //find uids        
+        //find uids
         boost::sregex_token_iterator j(body.get().at(i).begin(), body.get().at(i).end(), uuidInString(), subs);
 
         while (j != boost::sregex_token_iterator()) {
@@ -361,7 +361,7 @@ namespace detail {
             result.push_back(body.get().at(i));
             break;
           }
-        }        
+        }
       }
     }
     return result;
@@ -413,7 +413,7 @@ std::vector<std::string> EnergyManagementSystemProgram::invalidReferencedObjects
 
 /// @cond
 EnergyManagementSystemProgram::EnergyManagementSystemProgram(std::shared_ptr<detail::EnergyManagementSystemProgram_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

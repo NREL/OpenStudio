@@ -50,16 +50,16 @@ namespace detail {
     OS_ASSERT(idfObject.iddObject().type() == ClimateZones::iddObjectType());
   }
 
-  ClimateZones_Impl::ClimateZones_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
-                                       Model_Impl* model, 
+  ClimateZones_Impl::ClimateZones_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                       Model_Impl* model,
                                        bool keepHandle)
     : ModelObject_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == ClimateZones::iddObjectType());
   }
 
-  ClimateZones_Impl::ClimateZones_Impl(const ClimateZones_Impl& other, 
-                                       Model_Impl* model, 
+  ClimateZones_Impl::ClimateZones_Impl(const ClimateZones_Impl& other,
+                                       Model_Impl* model,
                                        bool keepHandle)
     : ModelObject_Impl(other,model,keepHandle)
   {}
@@ -84,14 +84,14 @@ namespace detail {
       return ClimateZone(p,numFields());
     }
     return eg.cast<ClimateZone>();
-  }      
+  }
 
   ClimateZone ClimateZones_Impl::getClimateZone(const std::string& institution,unsigned year) const {
     std::shared_ptr<ClimateZones_Impl> p;
     ClimateZone result(p,numFields());
     ClimateZoneVector czs = climateZones();
     for (const ClimateZone& cz : czs) {
-      if ( istringEqual(cz.institution(),institution) && (cz.year() == year) ) 
+      if ( istringEqual(cz.institution(),institution) && (cz.year() == year) )
       {
         result = cz;
         break;
@@ -130,7 +130,7 @@ namespace detail {
     if (oSite) { result = oSite->optionalCast<ParentObject>(); }
     return result;
   }
-  
+
   const std::vector<std::string>& ClimateZones_Impl::outputVariableNames() const {
     static std::vector<std::string> result;
     if (result.empty()){
@@ -188,7 +188,7 @@ namespace detail {
 
     ClimateZoneVector candidates = getClimateZones(institution);
     if (candidates.size() > 1) {
-      LOG(Warn,"Cannot set climate zone value for institutuion '" << institution 
+      LOG(Warn,"Cannot set climate zone value for institutuion '" << institution
           << "', because there are " << candidates.size() << " such listings, not 1.");
       return result;
     }
@@ -201,8 +201,8 @@ namespace detail {
   }
 
   ClimateZone ClimateZones_Impl::setClimateZone(const std::string& institution,
-                                                unsigned year, 
-                                                const std::string& value) 
+                                                unsigned year,
+                                                const std::string& value)
   {
     std::shared_ptr<ClimateZones_Impl> p;
     ClimateZone result(p,numFields());
@@ -228,7 +228,7 @@ namespace detail {
   }
 
   ClimateZone ClimateZones_Impl::appendClimateZone(const std::string& institution,
-                                                   const std::string& value) 
+                                                   const std::string& value)
   {
     return appendClimateZone(institution,
                              ClimateZones::getDefaultDocumentName(institution),
@@ -237,7 +237,7 @@ namespace detail {
   }
 
   ClimateZone ClimateZones_Impl::appendClimateZone(const std::string& institution,
-                                                   unsigned year, 
+                                                   unsigned year,
                                                    const std::string& value)
   {
     return appendClimateZone(institution,
@@ -246,10 +246,10 @@ namespace detail {
                              value);
   }
 
-  ClimateZone ClimateZones_Impl::appendClimateZone(const std::string& institution, 
-                                                   const std::string documentName, 
-                                                   unsigned year, 
-                                                   const std::string& value) 
+  ClimateZone ClimateZones_Impl::appendClimateZone(const std::string& institution,
+                                                   const std::string documentName,
+                                                   unsigned year,
+                                                   const std::string& value)
   {
     StringVector values;
     values.push_back(institution);
@@ -301,8 +301,8 @@ std::string ClimateZone::documentName() const {
 unsigned ClimateZone::year() const {
   OS_ASSERT(!empty());
   OptionalUnsigned ou = getUnsigned(OS_ClimateZonesExtensibleFields::ClimateZoneDocumentYear,true);
-  if (!ou) { 
-    LOG_AND_THROW("Climate zone year is not yet set for the " << groupIndex() << "th ClimateZone."); 
+  if (!ou) {
+    LOG_AND_THROW("Climate zone year is not yet set for the " << groupIndex() << "th ClimateZone.");
   }
   return *ou;
 }
@@ -320,25 +320,25 @@ bool ClimateZone::setValue(const std::string& value) {
 }
 
 bool ClimateZone::setType(const std::string& institution,
-                          const std::string& documentName, 
-                          unsigned year) 
+                          const std::string& documentName,
+                          unsigned year)
 {
-  bool result = setString(OS_ClimateZonesExtensibleFields::ClimateZoneInstitutionName,institution); 
+  bool result = setString(OS_ClimateZonesExtensibleFields::ClimateZoneInstitutionName,institution);
   result = result && setString(OS_ClimateZonesExtensibleFields::ClimateZoneDocumentName,documentName);
   result = result && setUnsigned(OS_ClimateZonesExtensibleFields::ClimateZoneDocumentYear,year);
 
-  return result; 
+  return result;
 }
 
 bool ClimateZone::setTypeAndValue(const std::string& institution,
-                                  const std::string& documentName, 
-                                  unsigned year, 
-                                  const std::string& value) 
+                                  const std::string& documentName,
+                                  unsigned year,
+                                  const std::string& value)
 {
   bool result = setType(institution,documentName,year);
   result = result && setString(OS_ClimateZonesExtensibleFields::ClimateZoneValue,value);
 
-  return result; 
+  return result;
 }
 
 ClimateZone::ClimateZone(std::shared_ptr<detail::ClimateZones_Impl> impl,unsigned index)
@@ -388,7 +388,7 @@ std::string ClimateZones::getDefaultDocumentName(const std::string& institution)
   }
   return result;
 }
-  
+
 unsigned ClimateZones::getDefaultYear(const std::string& institution) {
   unsigned result(0);
   if (istringEqual(institution,ClimateZones::ashraeInstitutionName())) {
@@ -400,8 +400,8 @@ unsigned ClimateZones::getDefaultYear(const std::string& institution) {
   return result;
 }
 
-std::vector<std::string> ClimateZones::validClimateZoneValues(const std::string& institution, 
-                                                              unsigned year) 
+std::vector<std::string> ClimateZones::validClimateZoneValues(const std::string& institution,
+                                                              unsigned year)
 {
   StringVector result;
   if (istringEqual(institution,ashraeInstitutionName())) {
@@ -494,13 +494,13 @@ ClimateZone ClimateZones::setActiveClimateZone(const std::string& institution,un
 }
 */
 ClimateZone ClimateZones::setClimateZone(const std::string& institution,
-                                         const std::string& value) 
+                                         const std::string& value)
 {
   return getImpl<detail::ClimateZones_Impl>()->setClimateZone(institution,value);
 }
 
 ClimateZone ClimateZones::setClimateZone(const std::string& institution,
-                                         unsigned year, 
+                                         unsigned year,
                                          const std::string& value)
 {
   return getImpl<detail::ClimateZones_Impl>()->setClimateZone(institution,year,value);
@@ -523,9 +523,9 @@ ClimateZone ClimateZones::appendClimateZone(const std::string& institution,
   return getImpl<detail::ClimateZones_Impl>()->appendClimateZone(institution,year,value);
 }
 
-ClimateZone ClimateZones::appendClimateZone(const std::string& institution, 
-                                            const std::string documentName, 
-                                            unsigned year, 
+ClimateZone ClimateZones::appendClimateZone(const std::string& institution,
+                                            const std::string documentName,
+                                            unsigned year,
                                             const std::string& value)
 {
   return getImpl<detail::ClimateZones_Impl>()->appendClimateZone(institution,documentName,year,value);
@@ -541,12 +541,12 @@ ClimateZones::ClimateZones(Model& model)
 {
   // add empty climate zone to define default institution
   pushExtensibleGroup(StringVector());
-  // Programming note: This line of code cannot be in the _Impl constructor because 
+  // Programming note: This line of code cannot be in the _Impl constructor because
   // pushExtensibleGroup constructs an IdfExtensibleGroup from the _Impl.
 }
 
 ClimateZones::ClimateZones(std::shared_ptr<detail::ClimateZones_Impl> impl)
-  : ModelObject(impl) 
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

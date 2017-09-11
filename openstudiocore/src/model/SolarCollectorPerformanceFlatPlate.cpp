@@ -224,7 +224,7 @@ SolarCollectorPerformanceFlatPlate::SolarCollectorPerformanceFlatPlate(const Mod
 {
   OS_ASSERT(getImpl<detail::SolarCollectorPerformanceFlatPlate_Impl>());
 
-  // Defaults from "Alternate Energy Technologies AE - 32" in SolarCollectors.imf in E+ data sets. 
+  // Defaults from "Alternate Energy Technologies AE - 32" in SolarCollectors.imf in E+ data sets.
   bool ok = true;;
   ok = setGrossArea(2.9646);
   OS_ASSERT(ok);
@@ -349,7 +349,7 @@ void SolarCollectorPerformanceFlatPlate::resetCoefficient3ofIncidentAngleModifie
 
 /// @cond
 SolarCollectorPerformanceFlatPlate::SolarCollectorPerformanceFlatPlate(std::shared_ptr<detail::SolarCollectorPerformanceFlatPlate_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

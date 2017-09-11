@@ -945,12 +945,12 @@ namespace detail {
                               schedule);
     return result;
   }
-  
+
   void ZoneHVACFourPipeFanCoil_Impl::resetSupplyAirFanOperatingModeSchedule() {
     bool result = setString(OS_ZoneHVAC_FourPipeFanCoilFields::SupplyAirFanOperatingModeScheduleName, "");
     OS_ASSERT(result);
   }
-  
+
   boost::optional<Schedule> ZoneHVACFourPipeFanCoil_Impl::supplyAirFanOperatingModeSchedule() const {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(
              OS_ZoneHVAC_FourPipeFanCoilFields::SupplyAirFanOperatingModeScheduleName);
@@ -959,7 +959,7 @@ namespace detail {
   boost::optional<double> ZoneHVACFourPipeFanCoil_Impl::minimumSupplyAirTemperatureInCoolingMode() const {
     return getDouble(OS_ZoneHVAC_FourPipeFanCoilFields::MinimumSupplyAirTemperatureinCoolingMode,true);
   }
-  
+
   bool ZoneHVACFourPipeFanCoil_Impl::isMinimumSupplyAirTemperatureInCoolingModeAutosized() const {
     bool result = false;
     boost::optional<std::string> value = getString(OS_ZoneHVAC_FourPipeFanCoilFields::MinimumSupplyAirTemperatureinCoolingMode, true);
@@ -968,20 +968,20 @@ namespace detail {
     }
     return result;
   }
-  
+
   void ZoneHVACFourPipeFanCoil_Impl::autosizeMinimumSupplyAirTemperatureInCoolingMode() {
     bool result = setString(OS_ZoneHVAC_FourPipeFanCoilFields::MinimumSupplyAirTemperatureinCoolingMode, "autosize");
     OS_ASSERT(result);
   }
-  
+
   bool ZoneHVACFourPipeFanCoil_Impl::setMinimumSupplyAirTemperatureInCoolingMode(double minimumSupplyAirTemperatureInCoolingMode) {
     return setDouble(OS_ZoneHVAC_FourPipeFanCoilFields::MinimumSupplyAirTemperatureinCoolingMode,minimumSupplyAirTemperatureInCoolingMode);
   }
-  
+
   boost::optional<double> ZoneHVACFourPipeFanCoil_Impl::maximumSupplyAirTemperatureInHeatingMode() const {
     return getDouble(OS_ZoneHVAC_FourPipeFanCoilFields::MaximumSupplyAirTemperatureinHeatingMode,true);
   }
-  
+
   bool ZoneHVACFourPipeFanCoil_Impl::isMaximumSupplyAirTemperatureInHeatingModeAutosized() const {
     bool result = false;
     boost::optional<std::string> value = getString(OS_ZoneHVAC_FourPipeFanCoilFields::MaximumSupplyAirTemperatureinHeatingMode, true);
@@ -990,12 +990,12 @@ namespace detail {
     }
     return result;
   }
-  
+
   void ZoneHVACFourPipeFanCoil_Impl::autosizeMaximumSupplyAirTemperatureInHeatingMode() {
     bool result = setString(OS_ZoneHVAC_FourPipeFanCoilFields::MaximumSupplyAirTemperatureinHeatingMode, "autosize");
     OS_ASSERT(result);
   }
-  
+
   bool ZoneHVACFourPipeFanCoil_Impl::setMaximumSupplyAirTemperatureInHeatingMode(double maximumSupplyAirTemperatureInHeatingMode) {
     return setDouble(OS_ZoneHVAC_FourPipeFanCoilFields::MaximumSupplyAirTemperatureinHeatingMode,maximumSupplyAirTemperatureInHeatingMode);
   }
@@ -1421,7 +1421,7 @@ bool ZoneHVACFourPipeFanCoil::setMaximumSupplyAirTemperatureInHeatingMode(double
 
 /// @cond
 ZoneHVACFourPipeFanCoil::ZoneHVACFourPipeFanCoil(std::shared_ptr<detail::ZoneHVACFourPipeFanCoil_Impl> impl)
-  : ZoneHVACComponent(impl)
+  : ZoneHVACComponent(std::move(impl))
 {}
 /// @endcond
 

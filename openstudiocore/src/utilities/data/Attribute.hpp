@@ -57,9 +57,9 @@ namespace detail{
 }
 
 /** \class AttributeValueType
- *  \brief A listing of data types that can be held in an Attribute. 
- *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro 
- *  call is: 
+ *  \brief A listing of data types that can be held in an Attribute.
+ *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro
+ *  call is:
  *  \code
 OPENSTUDIO_ENUM( AttributeValueType,
   ((Boolean)(Boolean)(0))
@@ -83,9 +83,9 @@ OPENSTUDIO_ENUM( AttributeValueType,
   ((AttributeVector)(AttributeVector)(7))
 );
 
-/** AttributeDescription describes what an acceptable Attribute is in a given context. At this 
+/** AttributeDescription describes what an acceptable Attribute is in a given context. At this
  *  time, it is primarily used in openstudio::analysis::GenericUncertaintyDescription. Note
- *  that AttributeDescription was designed to provide the information needed by a UI developer 
+ *  that AttributeDescription was designed to provide the information needed by a UI developer
  *  to properly prompt a user for the data needed to create a new Attribute. */
 struct UTILITIES_API AttributeDescription {
   std::string name;
@@ -258,7 +258,7 @@ class UTILITIES_API Attribute {
   /// get the name
   std::string name() const;
 
-  /// get the display name. if returnName and the display name is empty, will return 
+  /// get the display name. if returnName and the display name is empty, will return
   /// name() instead.
   boost::optional<std::string> displayName(bool returnName=false) const;
 
@@ -346,8 +346,8 @@ class UTILITIES_API Attribute {
   /// set the units
   bool setUnits(const std::string& units);
 
-  /** If attribute is a simple type (non-vector), prints attribute's value to std::string as 
-  *  simply as possible. Numeric types print in high precision. Attribute vectors are printed 
+  /** If attribute is a simple type (non-vector), prints attribute's value to std::string as
+  *  simply as possible. Numeric types print in high precision. Attribute vectors are printed
   *  as XML. */
   std::string toString() const;
 
@@ -367,7 +367,7 @@ class UTILITIES_API Attribute {
     if (!impl){
       throw(std::bad_cast());
     }
-    return T(impl);
+    return T(std::move(impl));
   }
 
   /// cast to optional of type T
@@ -376,7 +376,7 @@ class UTILITIES_API Attribute {
     boost::optional<T> result;
     std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
     if (impl){
-      result = T(impl);
+      result = T(std::move(impl));
     }
     return result;
   }

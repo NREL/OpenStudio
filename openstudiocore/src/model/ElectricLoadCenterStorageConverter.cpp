@@ -120,7 +120,7 @@ namespace detail {
   boost::optional<Schedule> ElectricLoadCenterStorageConverter_Impl::optionalAvailabilitySchedule() const {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ElectricLoadCenter_Storage_ConverterFields::AvailabilityScheduleName);
   }
-  
+
   // Convenience method to find the ELCD linked to this storage device
   boost::optional<ElectricLoadCenterDistribution> ElectricLoadCenterStorageConverter_Impl::electricLoadCenterDistribution() const {
     auto elcds = getObject<ModelObject>().getModelObjectSources<ElectricLoadCenterDistribution>(ElectricLoadCenterDistribution::iddObjectType());
@@ -295,7 +295,7 @@ ElectricLoadCenterStorageConverter::ElectricLoadCenterStorageConverter(const Mod
 
   // This is actually the E+ default
   setSimpleFixedEfficiency(0.95);
-  
+
   // Already defaults to alwaysOnDiscreteSchedule
   //auto availableSchedule = model.alwaysOnDiscreteSchedule();
   //setAvailabilitySchedule(availableSchedule);
@@ -409,7 +409,7 @@ void ElectricLoadCenterStorageConverter::resetRadiativeFraction() {
 
 /// @cond
 ElectricLoadCenterStorageConverter::ElectricLoadCenterStorageConverter(std::shared_ptr<detail::ElectricLoadCenterStorageConverter_Impl> impl)
-  : ParentObject(impl)
+  : ParentObject(std::move(impl))
 {}
 /// @endcond
 

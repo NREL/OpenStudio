@@ -205,7 +205,7 @@ void OutputEnergyManagementSystem::resetEMSRuntimeLanguageDebugOutputLevel() {
 
 /// @cond
 OutputEnergyManagementSystem::OutputEnergyManagementSystem(std::shared_ptr<detail::OutputEnergyManagementSystem_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 OutputEnergyManagementSystem::OutputEnergyManagementSystem(Model& model)
   : ModelObject(OutputEnergyManagementSystem::iddObjectType(),model)

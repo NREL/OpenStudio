@@ -76,7 +76,7 @@ namespace model {
 namespace detail {
 
   Surface_Impl::Surface_Impl(const IdfObject& idfObject,
-                             Model_Impl* model, 
+                             Model_Impl* model,
                              bool keepHandle)
     : PlanarSurface_Impl(idfObject,model,keepHandle)
   {
@@ -222,7 +222,7 @@ namespace detail {
 
     // both surfaces return a construction, they are not the same, and both have same search distance
 
-    if (constructionWithSearchDistance->first.optionalCast<model::LayeredConstruction>() && 
+    if (constructionWithSearchDistance->first.optionalCast<model::LayeredConstruction>() &&
         adjacentConstructionWithSearchDistance->first.optionalCast<model::LayeredConstruction>()){
       if (constructionWithSearchDistance->first.cast<model::LayeredConstruction>().reverseEqualLayers(adjacentConstructionWithSearchDistance->first.cast<model::LayeredConstruction>())){
         // these constructions are reverse equal
@@ -243,7 +243,7 @@ namespace detail {
     if (construction){
       return std::make_pair(*construction, 0);
     }
-    
+
     boost::optional<Space> space = this->space();
     if (space){
       result = space->getDefaultConstructionWithSearchDistance(this->getObject<Surface>());
@@ -310,8 +310,8 @@ namespace detail {
   bool Surface_Impl::isGroundSurface() const
   {
     std::string outsideBoundaryCondition = this->outsideBoundaryCondition();
-   
-    if (istringEqual("Ground", outsideBoundaryCondition) || 
+
+    if (istringEqual("Ground", outsideBoundaryCondition) ||
         istringEqual("GroundFCfactorMethod", outsideBoundaryCondition) ||
         istringEqual("GroundSlabPreprocessorAverage", outsideBoundaryCondition) ||
         istringEqual("GroundSlabPreprocessorCore", outsideBoundaryCondition) ||
@@ -322,7 +322,7 @@ namespace detail {
         istringEqual("GroundBasementPreprocessorLowerWall", outsideBoundaryCondition)){
           return true;
     }
-    
+
     return false;
   }
 
@@ -408,7 +408,7 @@ namespace detail {
 
   bool Surface_Impl::setOutsideBoundaryCondition(std::string outsideBoundaryCondition, bool driverMethod) {
     bool result = false;
-    
+
     boost::optional<Surface> adjacentSurface = this->adjacentSurface();
     boost::optional<SurfacePropertyOtherSideCoefficients> surfacePropertyOtherSideCoefficients = this->surfacePropertyOtherSideCoefficients();
     boost::optional<SurfacePropertyOtherSideConditionsModel> surfacePropertyOtherSideConditionsModel = this->surfacePropertyOtherSideConditionsModel();
@@ -589,7 +589,7 @@ namespace detail {
       OptionalDouble outputResult;
       // opaque exterior
       if (sqlFile && constructionName && oConstruction->isOpaque()) {
-        std::string query = "SELECT RowId FROM tabulardatawithstrings WHERE ReportName='EnvelopeSummary' AND ReportForString='Entire Facility' AND TableName='Opaque Exterior' AND ColumnName='Construction' AND Value='" + 
+        std::string query = "SELECT RowId FROM tabulardatawithstrings WHERE ReportName='EnvelopeSummary' AND ReportForString='Entire Facility' AND TableName='Opaque Exterior' AND ColumnName='Construction' AND Value='" +
             to_upper_copy(*constructionName) + "'";
         OptionalInt rowId = sqlFile->execAndReturnFirstInt(query);
         if (rowId) {
@@ -1002,7 +1002,7 @@ namespace detail {
     }
 
     // goes from face coordinates of building vertices to building coordinates
-    Transformation faceTransformation; 
+    Transformation faceTransformation;
     Transformation faceTransformationInverse;
     try {
       faceTransformation = Transformation::alignFace(buildingVertices);
@@ -1038,7 +1038,7 @@ namespace detail {
     //LOG(Debug, surface);
     //LOG(Debug, otherSurface);
 
-    // goes from building coordinates to local system 
+    // goes from building coordinates to local system
     Transformation spaceTransformationInverse = spaceTransformation.inverse();
     Transformation otherSpaceTransformationInverse = otherSpaceTransformation.inverse();
 
@@ -1150,7 +1150,7 @@ namespace detail {
       otherSubSurface.setSubSurfaceType(subSurface.subSurfaceType());
       otherSubSurface.setSurface(otherSurface);
       otherSubSurface.setAdjacentSubSurface(subSurface);
-    } 
+    }
 
     return otherSurface;
   }
@@ -1215,19 +1215,19 @@ namespace detail {
 
   void Surface_Impl::assignDefaultSunExposure(bool driverMethod)
   {
-    std::string outsideBoundaryCondition = this->outsideBoundaryCondition();  
+    std::string outsideBoundaryCondition = this->outsideBoundaryCondition();
     if (istringEqual("Outdoors", outsideBoundaryCondition)){
       bool test = this->setSunExposure("SunExposed", driverMethod);
       OS_ASSERT(test);
     }else if (istringEqual("Surface", this->outsideBoundaryCondition()) ||
               istringEqual("Adiabatic", this->outsideBoundaryCondition()) ||
               istringEqual("Ground", this->outsideBoundaryCondition()) ||
-              istringEqual("GroundFCfactorMethod", this->outsideBoundaryCondition()) || 
+              istringEqual("GroundFCfactorMethod", this->outsideBoundaryCondition()) ||
               istringEqual("GroundSlabPreprocessorAverage", this->outsideBoundaryCondition()) ||
               istringEqual("GroundSlabPreprocessorCore", this->outsideBoundaryCondition()) ||
               istringEqual("GroundSlabPreprocessorPerimeter", this->outsideBoundaryCondition()) ||
               istringEqual("GroundBasementPreprocessorAverageWall", this->outsideBoundaryCondition()) ||
-              istringEqual("GroundBasementPreprocessorAverageFloor", this->outsideBoundaryCondition()) || 
+              istringEqual("GroundBasementPreprocessorAverageFloor", this->outsideBoundaryCondition()) ||
               istringEqual("GroundBasementPreprocessorUpperWall", this->outsideBoundaryCondition()) ||
               istringEqual("GroundBasementPreprocessorLowerWall", this->outsideBoundaryCondition())){
       bool test = this->setSunExposure("NoSun", driverMethod);
@@ -1243,7 +1243,7 @@ namespace detail {
       }
     }
   }
-     
+
   void Surface_Impl::assignDefaultWindExposure()
   {
     assignDefaultWindExposure(true);
@@ -1350,21 +1350,21 @@ namespace detail {
     }
 
     double grossArea = this->grossArea();
-    
+
     if (grossArea == 0){
       return result;
     }
 
     double windowArea = 0.0;
     for (const SubSurface& subSurface : this->subSurfaces()){
-      if (istringEqual(subSurface.subSurfaceType(), "FixedWindow") || 
+      if (istringEqual(subSurface.subSurfaceType(), "FixedWindow") ||
         istringEqual(subSurface.subSurfaceType(), "OperableWindow")){
           windowArea += subSurface.multiplier() * subSurface.netArea();
       }
     }
-    
+
     double wwr = windowArea / grossArea;
-    
+
     return wwr;
   }
 
@@ -1377,7 +1377,7 @@ namespace detail {
     }
 
     double grossArea = this->grossArea();
-    
+
     if (grossArea == 0){
       return result;
     }
@@ -1388,9 +1388,9 @@ namespace detail {
           skylightArea += subSurface.multiplier() * subSurface.netArea();
       }
     }
-    
+
     result = skylightArea / grossArea;
-    
+
     return result;
   }
 
@@ -1407,7 +1407,7 @@ namespace detail {
     std::vector<Point3d> projectedVertics = horizontal.project(vertices);
 
     boost::optional<double> grossArea = getArea(projectedVertics);
-    
+
     if (!grossArea || grossArea.get() == 0){
       return result;
     }
@@ -1418,9 +1418,9 @@ namespace detail {
           skylightArea += subSurface.multiplier() * subSurface.netArea();
       }
     }
-    
+
     result = skylightArea / grossArea.get();
-    
+
     return result;
   }
 
@@ -1439,7 +1439,7 @@ namespace detail {
     double desiredViewGlassSillHeight = 0;
     double desiredDaylightingGlassHeaderHeight = 0;
     double exteriorShadingProjectionFactor = 0;
-    double interiorShelfProjectionFactor = 0; 
+    double interiorShelfProjectionFactor = 0;
     boost::optional<ConstructionBase> viewGlassConstruction;
     boost::optional<ConstructionBase> daylightingGlassConstruction;
 
@@ -1451,9 +1451,9 @@ namespace detail {
       desiredDaylightingGlassHeaderHeight = desiredHeightOffset;
     }
 
-    tmp = applyViewAndDaylightingGlassRatios(viewGlassToWallRatio, daylightingGlassToWallRatio, 
+    tmp = applyViewAndDaylightingGlassRatios(viewGlassToWallRatio, daylightingGlassToWallRatio,
                                              desiredViewGlassSillHeight, desiredDaylightingGlassHeaderHeight,
-                                             exteriorShadingProjectionFactor, interiorShelfProjectionFactor, 
+                                             exteriorShadingProjectionFactor, interiorShelfProjectionFactor,
                                              viewGlassConstruction, daylightingGlassConstruction);
 
     if (!tmp.empty()){
@@ -1464,10 +1464,10 @@ namespace detail {
     return result;
   }
 
-  std::vector<SubSurface> Surface_Impl::applyViewAndDaylightingGlassRatios(double viewGlassToWallRatio, double daylightingGlassToWallRatio, 
+  std::vector<SubSurface> Surface_Impl::applyViewAndDaylightingGlassRatios(double viewGlassToWallRatio, double daylightingGlassToWallRatio,
                                                                            double desiredViewGlassSillHeight, double desiredDaylightingGlassHeaderHeight,
-                                                                           double exteriorShadingProjectionFactor, double interiorShelfProjectionFactor, 
-                                                                           const boost::optional<ConstructionBase>& viewGlassConstruction, 
+                                                                           double exteriorShadingProjectionFactor, double interiorShelfProjectionFactor,
+                                                                           const boost::optional<ConstructionBase>& viewGlassConstruction,
                                                                            const boost::optional<ConstructionBase>& daylightingGlassConstruction)
   {
     std::vector<SubSurface> result;
@@ -1479,7 +1479,7 @@ namespace detail {
 
     // surface cannot have any non-window sub surfaces
     for (const SubSurface& subSurface : this->subSurfaces()){
-      if (istringEqual(subSurface.subSurfaceType(), "FixedWindow") || 
+      if (istringEqual(subSurface.subSurfaceType(), "FixedWindow") ||
           istringEqual(subSurface.subSurfaceType(), "OperableWindow"))
       {
         continue;
@@ -1517,7 +1517,7 @@ namespace detail {
     if (!doDaylightGlass){
       desiredDaylightingGlassHeaderHeight = 0.0;
     }
-    
+
     // new coordinate system has z' in direction of outward normal, y' is up
     double xmin = std::numeric_limits<double>::max();
     double xmax = std::numeric_limits<double>::min();
@@ -1543,7 +1543,7 @@ namespace detail {
     }
 
     // wall parameters
-    double wallWidth = xmax - xmin; 
+    double wallWidth = xmax - xmin;
     double wallHeight = ymax - ymin;
     double wallArea = wallWidth*wallHeight;
 
@@ -1569,11 +1569,11 @@ namespace detail {
       return result;
     }
 
-    // view glass parameters 
+    // view glass parameters
     double viewMinX = 0;
     double viewMinY = 0;
     double viewWidth = 0;
-    double viewHeight = 0;  
+    double viewHeight = 0;
 
     // daylighting glass parameters
     double daylightingWidth = 0;
@@ -1590,11 +1590,11 @@ namespace detail {
     bool converged = false;
     for (unsigned i = 0; i < 100; ++i){
 
-      // view glass parameters 
+      // view glass parameters
       viewMinX = viewWidthInset;
       viewMinY = viewSillHeight;
       viewWidth = wallWidth - 2*viewWidthInset;
-      viewHeight = requestedViewArea/viewWidth;  
+      viewHeight = requestedViewArea/viewWidth;
 
       // daylighting glass parameters
       daylightingWidth = wallWidth - 2*daylightingWidthInset;
@@ -1607,7 +1607,7 @@ namespace detail {
 
         if (doViewAndDaylightGlass){
 
-          // try shrinking vertical offsets 
+          // try shrinking vertical offsets
           viewSillHeight = std::max(viewSillHeight - oneInch, minGlassToEdgeDistance);
           daylightingHeaderHeight = std::max(daylightingHeaderHeight - oneInch, minGlassToEdgeDistance);
 
@@ -1615,7 +1615,7 @@ namespace detail {
 
           // solve directly
           viewSillHeight = wallHeight - minGlassToEdgeDistance - viewHeight;
-          
+
           if (viewSillHeight < minGlassToEdgeDistance){
             // cannot make window this large
             return result;
@@ -1660,7 +1660,7 @@ namespace detail {
       viewVertices.push_back(Point3d(viewMinX, viewMinY + viewHeight, 0));
       viewVertices.push_back(Point3d(viewMinX, viewMinY, 0));
       viewVertices.push_back(Point3d(viewMinX + viewWidth, viewMinY, 0));
-      viewVertices.push_back(Point3d(viewMinX + viewWidth, viewMinY + viewHeight, 0)); 
+      viewVertices.push_back(Point3d(viewMinX + viewWidth, viewMinY + viewHeight, 0));
 
       QPolygonF windowPolygon;
       for (const Point3d& point : viewVertices){
@@ -1686,8 +1686,8 @@ namespace detail {
       daylightingVertices.push_back(Point3d(daylightingMinX, daylightingMinY + daylightingHeight, 0));
       daylightingVertices.push_back(Point3d(daylightingMinX, daylightingMinY, 0));
       daylightingVertices.push_back(Point3d(daylightingMinX + daylightingWidth, daylightingMinY, 0));
-      daylightingVertices.push_back(Point3d(daylightingMinX + daylightingWidth, daylightingMinY + daylightingHeight, 0)); 
-    
+      daylightingVertices.push_back(Point3d(daylightingMinX + daylightingWidth, daylightingMinY + daylightingHeight, 0));
+
       QPolygonF windowPolygon;
       for (const Point3d& point : daylightingVertices){
         if (std::abs(point.z()) > 0.001){
@@ -1704,7 +1704,7 @@ namespace detail {
           LOG(Debug, "Surface does not fully contain SubSurface");
           return result;
         }
-      }    
+      }
     }
 
     Point3dVector exteriorShadingVertices;
@@ -1712,20 +1712,20 @@ namespace detail {
       exteriorShadingVertices.push_back(Point3d(viewMinX, viewMinY + viewHeight, 0));
       exteriorShadingVertices.push_back(Point3d(viewMinX, viewMinY + viewHeight, exteriorShadingProjectionFactor*viewHeight));
       exteriorShadingVertices.push_back(Point3d(viewMinX + viewWidth, viewMinY + viewHeight, exteriorShadingProjectionFactor*viewHeight));
-      exteriorShadingVertices.push_back(Point3d(viewMinX + viewWidth, viewMinY + viewHeight, 0)); 
+      exteriorShadingVertices.push_back(Point3d(viewMinX + viewWidth, viewMinY + viewHeight, 0));
     }
 
     Point3dVector interiorShelfVertices;
     if (doInteriorShelf) {
       interiorShelfVertices.push_back(Point3d(daylightingMinX + daylightingWidth, daylightingMinY, 0));
-      interiorShelfVertices.push_back(Point3d(daylightingMinX + daylightingWidth, daylightingMinY, -interiorShelfProjectionFactor*daylightingHeight)); 
+      interiorShelfVertices.push_back(Point3d(daylightingMinX + daylightingWidth, daylightingMinY, -interiorShelfProjectionFactor*daylightingHeight));
       interiorShelfVertices.push_back(Point3d(daylightingMinX, daylightingMinY, -interiorShelfProjectionFactor*daylightingHeight));
       interiorShelfVertices.push_back(Point3d(daylightingMinX, daylightingMinY, 0));
     }
 
     // everything ok, remove all windows
     for (SubSurface subSurface : this->subSurfaces()){
-      if (istringEqual(subSurface.subSurfaceType(), "FixedWindow") || 
+      if (istringEqual(subSurface.subSurfaceType(), "FixedWindow") ||
         istringEqual(subSurface.subSurfaceType(), "OperableWindow")){
         subSurface.remove();
       }
@@ -1867,7 +1867,7 @@ namespace detail {
     std::vector<Point3dVector> masks;
     std::map<Handle, Point3dVector> handleToFaceVertexMap;
     for (const SubSurface& subSurface : subSurfaces){
-      
+
       Point3dVector subSurfaceFaceVertices = inverseTransformation * subSurface.vertices();
       if (subSurfaceFaceVertices.size() < 3){
         continue;
@@ -1941,7 +1941,7 @@ namespace detail {
     unsigned numReparented = 0;
     Model model = this->model();
     for (const Point3dVector& newFace : newFaces){
-      
+
       boost::optional<Surface> surface;
       if (!changedThis){
         changedThis = true;
@@ -1964,7 +1964,7 @@ namespace detail {
       vertices = transformation * vertices;
       surface->setVertices(vertices);
 
-      // loop over all sub surfaces and reparent 
+      // loop over all sub surfaces and reparent
       typedef std::pair<Handle, Point3dVector> MapType;
       for (const MapType& p : handleToFaceVertexMap){
         // if surface includes a single point it will include them all
@@ -1982,7 +1982,7 @@ namespace detail {
     if (numReparented != handleToFaceVertexMap.size()){
       LOG(Warn, "Expected to reparent " << handleToFaceVertexMap.size() << " sub surfaces in splitSurfaceForSubSurfaces, but only reparented " << numReparented);
     }
-  
+
 
     return result;
   }
@@ -1990,9 +1990,9 @@ namespace detail {
   std::vector<SubSurface> Surface_Impl::createSubSurfaces(const std::vector<std::vector<Point3d> >& faces, double inset, const boost::optional<ConstructionBase>& construction)
   {
     std::vector<SubSurface> result;
-    
+
     double tol = 0.0254;
-    
+
     if (!this->subSurfaces().empty()){
       return result;
     }
@@ -2034,7 +2034,7 @@ namespace detail {
         }else{
           std::vector<std::vector<Point3d> > holes;
           allNewFaceVertices = computeTriangulation(intersectionVertices, holes, tol);
-        } 
+        }
 
         for (Point3dVector newFaceVertices : allNewFaceVertices){
 
@@ -2064,7 +2064,7 @@ Surface::Surface(const std::vector<Point3d>& vertices, const Model& model)
   getImpl<detail::Surface_Impl>()->assignDefaultSurfaceType(false);
   getImpl<detail::Surface_Impl>()->assignDefaultBoundaryCondition(false);
   getImpl<detail::Surface_Impl>()->assignDefaultSunExposure(false);
-  getImpl<detail::Surface_Impl>()->assignDefaultWindExposure(false); 
+  getImpl<detail::Surface_Impl>()->assignDefaultWindExposure(false);
   getImpl<detail::Surface_Impl>()->emitChangeSignals(); // emit signals here
 }
 
@@ -2259,7 +2259,7 @@ boost::optional<SurfaceIntersection> Surface::computeIntersection(Surface& other
   return getImpl<detail::Surface_Impl>()->computeIntersection(otherSurface);
 }
 
-boost::optional<Surface> Surface::createAdjacentSurface(const Space& otherSpace) 
+boost::optional<Surface> Surface::createAdjacentSurface(const Space& otherSpace)
 {
   return getImpl<detail::Surface_Impl>()->createAdjacentSurface(otherSpace);
 }
@@ -2313,13 +2313,13 @@ boost::optional<SubSurface> Surface::setWindowToWallRatio(double wwr, double des
   return getImpl<detail::Surface_Impl>()->setWindowToWallRatio(wwr, desiredHeightOffset, heightOffsetFromFloor);
 }
 
-std::vector<SubSurface> Surface::applyViewAndDaylightingGlassRatios(double viewGlassToWallRatio, double daylightingGlassToWallRatio, 
+std::vector<SubSurface> Surface::applyViewAndDaylightingGlassRatios(double viewGlassToWallRatio, double daylightingGlassToWallRatio,
                                                                     double desiredViewGlassSillHeight, double desiredDaylightingGlassHeaderHeight,
-                                                                    double exteriorShadingProjectionFactor, double interiorShelfProjectionFactor, 
-                                                                    const boost::optional<ConstructionBase>& viewGlassConstruction, 
+                                                                    double exteriorShadingProjectionFactor, double interiorShelfProjectionFactor,
+                                                                    const boost::optional<ConstructionBase>& viewGlassConstruction,
                                                                     const boost::optional<ConstructionBase>& daylightingGlassConstruction)
 {
-  return getImpl<detail::Surface_Impl>()->applyViewAndDaylightingGlassRatios(viewGlassToWallRatio, daylightingGlassToWallRatio, 
+  return getImpl<detail::Surface_Impl>()->applyViewAndDaylightingGlassRatios(viewGlassToWallRatio, daylightingGlassToWallRatio,
                                                                              desiredViewGlassSillHeight, desiredDaylightingGlassHeaderHeight,
                                                                              exteriorShadingProjectionFactor, interiorShelfProjectionFactor,
                                                                              viewGlassConstruction, daylightingGlassConstruction);
@@ -2342,13 +2342,13 @@ std::vector<Surface> Surface::splitSurfaceForSubSurfaces()
 
 /// @cond
 Surface::Surface(std::shared_ptr<detail::Surface_Impl> impl)
-  : PlanarSurface(impl)
+  : PlanarSurface(std::move(impl))
 {}
 /// @endcond
 
-SurfaceIntersection::SurfaceIntersection(const Surface& surface1, 
+SurfaceIntersection::SurfaceIntersection(const Surface& surface1,
                                          const Surface& surface2,
-                                         const std::vector<Surface>& newSurfaces1, 
+                                         const std::vector<Surface>& newSurfaces1,
                                          const std::vector<Surface>& newSurfaces2)
   : m_surface1(surface1), m_surface2(surface2), m_newSurfaces1(newSurfaces1), m_newSurfaces2(newSurfaces2)
 {

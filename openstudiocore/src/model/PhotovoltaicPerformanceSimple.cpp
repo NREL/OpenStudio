@@ -229,7 +229,7 @@ void PhotovoltaicPerformanceSimple::resetEfficiencySchedule() {
 
 /// @cond
 PhotovoltaicPerformanceSimple::PhotovoltaicPerformanceSimple(std::shared_ptr<detail::PhotovoltaicPerformanceSimple_Impl> impl)
-  : PhotovoltaicPerformance(impl)
+  : PhotovoltaicPerformance(std::move(impl))
 {}
 /// @endcond
 

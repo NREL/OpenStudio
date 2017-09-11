@@ -95,7 +95,7 @@ IddObjectType PlantEquipmentOperationOutdoorRelativeHumidity::iddObjectType() {
 
 /// @cond
 PlantEquipmentOperationOutdoorRelativeHumidity::PlantEquipmentOperationOutdoorRelativeHumidity(std::shared_ptr<detail::PlantEquipmentOperationOutdoorRelativeHumidity_Impl> impl)
-  : PlantEquipmentOperationRangeBasedScheme(impl)
+  : PlantEquipmentOperationRangeBasedScheme(std::move(impl))
 {}
 /// @endcond
 

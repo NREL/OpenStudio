@@ -125,12 +125,12 @@ namespace detail {
     return value.get();
   }
 
-  unsigned AirTerminalSingleDuctConstantVolumeReheat_Impl::inletPort() 
+  unsigned AirTerminalSingleDuctConstantVolumeReheat_Impl::inletPort()
   {
     return OS_AirTerminal_SingleDuct_ConstantVolume_ReheatFields::AirInletNodeName;
   }
 
-  unsigned AirTerminalSingleDuctConstantVolumeReheat_Impl::outletPort() 
+  unsigned AirTerminalSingleDuctConstantVolumeReheat_Impl::outletPort()
   {
     return OS_AirTerminal_SingleDuct_ConstantVolume_ReheatFields::AirOutletNodeName;
   }
@@ -165,7 +165,7 @@ namespace detail {
                               sourcePort.get(),
                               inletNode,
                               inletNode.inletPort() );
-              
+
               _model.connect( inletNode,
                               inletNode.outletPort(),
                               this->getObject<ModelObject>(),
@@ -183,7 +183,7 @@ namespace detail {
                 thermalZone->addEquipment(mo);
               }
 
-              return true; 
+              return true;
             }
           }
         }
@@ -202,7 +202,7 @@ namespace detail {
 
     boost::optional<ModelObject> sourceModelObject = this->inletModelObject();
     boost::optional<unsigned> sourcePort = this->connectedObjectPort(this->inletPort());
-    
+
     boost::optional<ModelObject> targetModelObject = this->outletModelObject();
     boost::optional<unsigned> targetPort = this->connectedObjectPort(this->outletPort());
 
@@ -279,7 +279,7 @@ namespace detail {
     HVACComponent coil = this->reheatCoil();
 
     HVACComponent coilClone = coil.clone(model).cast<HVACComponent>();
-    
+
     modelObjectClone.setReheatCoil(coilClone);
 
     return modelObjectClone;
@@ -412,7 +412,7 @@ namespace detail {
     if( result )
     {
       result = this->setPointer(OS_AirTerminal_SingleDuct_ConstantVolume_ReheatFields::ReheatCoilName,coil.handle());
-    } 
+    }
 
     return result;
   }
@@ -522,10 +522,10 @@ namespace detail {
 
 } // detail
 
-AirTerminalSingleDuctConstantVolumeReheat::AirTerminalSingleDuctConstantVolumeReheat(const Model& model, 
+AirTerminalSingleDuctConstantVolumeReheat::AirTerminalSingleDuctConstantVolumeReheat(const Model& model,
                                                                 Schedule& availabilitySchedule,
                                                                 HVACComponent& coil)
-  : StraightComponent(AirTerminalSingleDuctConstantVolumeReheat::iddObjectType(),model) 
+  : StraightComponent(AirTerminalSingleDuctConstantVolumeReheat::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl>());
 
@@ -663,7 +663,7 @@ void AirTerminalSingleDuctConstantVolumeReheat::resetMaximumReheatAirTemperature
 
 /// @cond
 AirTerminalSingleDuctConstantVolumeReheat::AirTerminalSingleDuctConstantVolumeReheat(std::shared_ptr<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

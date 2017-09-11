@@ -85,7 +85,7 @@ namespace detail {
   {
     return getObject<ModelObject>().getModelObjectTarget<ConstructionBase>(OS_DefaultSubSurfaceConstructionsFields::OperableWindowConstructionName);
   }
-  
+
   boost::optional<ConstructionBase> DefaultSubSurfaceConstructions_Impl::doorConstruction() const
   {
     return getObject<ModelObject>().getModelObjectTarget<ConstructionBase>(OS_DefaultSubSurfaceConstructionsFields::DoorConstructionName);
@@ -116,7 +116,7 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<ConstructionBase>(OS_DefaultSubSurfaceConstructionsFields::TubularDaylightDiffuserConstructionName);
   }
 
-  bool DefaultSubSurfaceConstructions_Impl::setFixedWindowConstruction(const ConstructionBase& construction)  
+  bool DefaultSubSurfaceConstructions_Impl::setFixedWindowConstruction(const ConstructionBase& construction)
   {
     return setPointer(OS_DefaultSubSurfaceConstructionsFields::FixedWindowConstructionName, construction.handle());
   }
@@ -136,7 +136,7 @@ namespace detail {
     setString(OS_DefaultSubSurfaceConstructionsFields::OperableWindowConstructionName, "");
   }
 
-  bool DefaultSubSurfaceConstructions_Impl::setDoorConstruction(const ConstructionBase& construction)  
+  bool DefaultSubSurfaceConstructions_Impl::setDoorConstruction(const ConstructionBase& construction)
   {
     return setPointer(OS_DefaultSubSurfaceConstructionsFields::DoorConstructionName, construction.handle());
   }
@@ -146,7 +146,7 @@ namespace detail {
     setString(OS_DefaultSubSurfaceConstructionsFields::DoorConstructionName, "");
   }
 
-  bool DefaultSubSurfaceConstructions_Impl::setGlassDoorConstruction(const ConstructionBase& construction)  
+  bool DefaultSubSurfaceConstructions_Impl::setGlassDoorConstruction(const ConstructionBase& construction)
   {
     return setPointer(OS_DefaultSubSurfaceConstructionsFields::GlassDoorConstructionName, construction.handle());
   }
@@ -156,7 +156,7 @@ namespace detail {
     setString(OS_DefaultSubSurfaceConstructionsFields::GlassDoorConstructionName, "");
   }
 
-  bool DefaultSubSurfaceConstructions_Impl::setOverheadDoorConstruction(const ConstructionBase& construction)  
+  bool DefaultSubSurfaceConstructions_Impl::setOverheadDoorConstruction(const ConstructionBase& construction)
   {
     return setPointer(OS_DefaultSubSurfaceConstructionsFields::OverheadDoorConstructionName, construction.handle());
   }
@@ -176,7 +176,7 @@ namespace detail {
     setString(OS_DefaultSubSurfaceConstructionsFields::SkylightConstructionName, "");
   }
 
-  bool DefaultSubSurfaceConstructions_Impl::setTubularDaylightDomeConstruction(const ConstructionBase& construction)  
+  bool DefaultSubSurfaceConstructions_Impl::setTubularDaylightDomeConstruction(const ConstructionBase& construction)
   {
     return setPointer(OS_DefaultSubSurfaceConstructionsFields::TubularDaylightDomeConstructionName, construction.handle());
   }
@@ -186,7 +186,7 @@ namespace detail {
     setString(OS_DefaultSubSurfaceConstructionsFields::TubularDaylightDomeConstructionName, "");
   }
 
-  bool DefaultSubSurfaceConstructions_Impl::setTubularDaylightDiffuserConstruction(const ConstructionBase& construction)  
+  bool DefaultSubSurfaceConstructions_Impl::setTubularDaylightDiffuserConstruction(const ConstructionBase& construction)
   {
     return setPointer(OS_DefaultSubSurfaceConstructionsFields::TubularDaylightDiffuserConstructionName, construction.handle());
   }
@@ -195,11 +195,11 @@ namespace detail {
   {
     setString(OS_DefaultSubSurfaceConstructionsFields::TubularDaylightDiffuserConstructionName, "");
   }
-    
+
   void DefaultSubSurfaceConstructions_Impl::merge(const DefaultSubSurfaceConstructions& other)
   {
     boost::optional<ConstructionBase> construction;
-    
+
     if (!(this->fixedWindowConstruction())){
       construction = other.fixedWindowConstruction();
       if (construction){
@@ -248,7 +248,7 @@ namespace detail {
         this->setTubularDaylightDomeConstruction(*construction);
       }
     }
-        
+
     if (!(this->tubularDaylightDiffuserConstruction())){
       construction = other.tubularDaylightDiffuserConstruction();
       if (construction){
@@ -565,7 +565,7 @@ bool DefaultSubSurfaceConstructions::setTubularDaylightDiffuserConstruction(cons
 void DefaultSubSurfaceConstructions::resetTubularDaylightDiffuserConstruction(){
   getImpl<detail::DefaultSubSurfaceConstructions_Impl>()->resetTubularDaylightDiffuserConstruction();
 }
-    
+
 void DefaultSubSurfaceConstructions::merge(const DefaultSubSurfaceConstructions& other)
 {
   getImpl<detail::DefaultSubSurfaceConstructions_Impl>()->merge(other);
@@ -573,7 +573,7 @@ void DefaultSubSurfaceConstructions::merge(const DefaultSubSurfaceConstructions&
 
 /// @cond
 DefaultSubSurfaceConstructions::DefaultSubSurfaceConstructions(std::shared_ptr<detail::DefaultSubSurfaceConstructions_Impl> impl)
-  : ResourceObject(impl)
+  : ResourceObject(std::move(impl))
 {}
 /// @endcond
 

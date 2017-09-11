@@ -87,7 +87,7 @@ ModelObject ZoneHVACBaseboardConvectiveWater_Impl::clone(Model model) const
 
     if( model == this->model() ) {
       if( auto plant = t_heatingCoil.plantLoop() ) {
-        plant->addDemandBranchForComponent(heatingCoilClone); 
+        plant->addDemandBranchForComponent(heatingCoilClone);
       }
     }
 
@@ -321,7 +321,7 @@ void ZoneHVACBaseboardConvectiveWater::removeFromThermalZone()
 }
 /// @cond
 ZoneHVACBaseboardConvectiveWater::ZoneHVACBaseboardConvectiveWater(std::shared_ptr<detail::ZoneHVACBaseboardConvectiveWater_Impl> impl)
-  : ZoneHVACComponent(impl)
+  : ZoneHVACComponent(std::move(impl))
 {}
 /// @endcond
 

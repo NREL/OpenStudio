@@ -217,7 +217,7 @@ namespace detail {
           fanCount += subsetCastVector<FanVariableVolume>(oaSystem->components()).size();
         }
 
-        if( StraightComponent_Impl::addToNode(node) ) 
+        if( StraightComponent_Impl::addToNode(node) )
         {
           SetpointManagerMixedAir::updateFanInletOutletNodes(airLoop.get());
           return true;
@@ -479,7 +479,7 @@ FanConstantVolume::FanConstantVolume(const Model& model)
 }
 
 FanConstantVolume::FanConstantVolume(std::shared_ptr<detail::FanConstantVolume_Impl> p)
-  : StraightComponent(p)
+  : StraightComponent(std::move(p))
 {}
 
 Schedule FanConstantVolume::availabilitySchedule() const

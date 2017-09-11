@@ -547,7 +547,7 @@ namespace detail{
   {
     setDouble(OS_Coil_Cooling_DX_SingleSpeedFields::BasinHeaterCapacity,value.get());
   }
-  
+
   void CoilCoolingDXSingleSpeed_Impl::setBasinHeaterCapacity( double value )
   {
     setDouble(OS_Coil_Cooling_DX_SingleSpeedFields::BasinHeaterCapacity,value);
@@ -1018,7 +1018,7 @@ CoilCoolingDXSingleSpeed::CoilCoolingDXSingleSpeed(const Model& model,
 }
 
 CoilCoolingDXSingleSpeed::CoilCoolingDXSingleSpeed(std::shared_ptr<detail::CoilCoolingDXSingleSpeed_Impl> p)
-  : StraightComponent(p)
+  : StraightComponent(std::move(p))
 {}
 
 Schedule CoilCoolingDXSingleSpeed::availabilitySchedule()const

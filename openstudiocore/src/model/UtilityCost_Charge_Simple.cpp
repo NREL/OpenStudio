@@ -158,7 +158,7 @@ UtilityCost_Charge_Simple::UtilityCost_Charge_Simple(const Model& model)
 
 // constructor
 UtilityCost_Charge_Simple::UtilityCost_Charge_Simple(std::shared_ptr<detail::UtilityCost_Charge_Simple_Impl> impl)
-  : ParentObject(impl)
+  : ParentObject(std::move(impl))
 {}
 
 OptionalString UtilityCost_Charge_Simple::tariffName() const

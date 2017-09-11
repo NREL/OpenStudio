@@ -955,7 +955,7 @@ void BoilerSteam::resetSizingFactor() {
 
 /// @cond
 BoilerSteam::BoilerSteam(std::shared_ptr<detail::BoilerSteam_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

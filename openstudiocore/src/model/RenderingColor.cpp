@@ -231,7 +231,7 @@ std::string RenderingColor::colorString() const
 
 /// @cond
 RenderingColor::RenderingColor(std::shared_ptr<detail::RenderingColor_Impl> impl)
-  : ResourceObject(impl)
+  : ResourceObject(std::move(impl))
 {}
 
 QColor RenderingColor::randomColor()

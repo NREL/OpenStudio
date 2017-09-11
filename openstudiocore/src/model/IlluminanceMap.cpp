@@ -264,7 +264,7 @@ namespace detail {
     return result;
   }
 
-  bool IlluminanceMap_Impl::setTransformation(const openstudio::Transformation& transformation) 
+  bool IlluminanceMap_Impl::setTransformation(const openstudio::Transformation& transformation)
   {
     bool test;
 
@@ -484,7 +484,7 @@ std::vector<Point3d> IlluminanceMap::corners() const
 
 /// @cond
 IlluminanceMap::IlluminanceMap(std::shared_ptr<detail::IlluminanceMap_Impl> impl)
-  : SpaceItem(impl)
+  : SpaceItem(std::move(impl))
 {}
 /// @endcond
 

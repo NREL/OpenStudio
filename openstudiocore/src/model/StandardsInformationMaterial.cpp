@@ -306,7 +306,7 @@ namespace detail {
       }
     }
 
-    // remove current 
+    // remove current
     IstringFind finder;
     if (standardsCategory){
       finder.addTarget(*standardsCategory);
@@ -330,7 +330,7 @@ namespace detail {
 
     return result;
   }
-  
+
   bool StandardsInformationMaterial_Impl::isCompositeMaterial() const
   {
     boost::optional<std::string> standardsCategory = this->standardsCategory();
@@ -518,7 +518,7 @@ namespace detail {
       }
     }
 
-    // remove current 
+    // remove current
     IstringFind finder;
     if (compositeFramingMaterial){
       finder.addTarget(*compositeFramingMaterial);
@@ -615,7 +615,7 @@ namespace detail {
       }
     }
 
-    // remove current 
+    // remove current
     IstringFind finder;
     if (compositeFramingConfiguration){
       finder.addTarget(*compositeFramingConfiguration);
@@ -712,7 +712,7 @@ namespace detail {
       }
     }
 
-    // remove current 
+    // remove current
     IstringFind finder;
     if (compositeFramingDepth){
       finder.addTarget(*compositeFramingDepth);
@@ -809,7 +809,7 @@ namespace detail {
       }
     }
 
-    // remove current 
+    // remove current
     IstringFind finder;
     if (compositeFramingSize){
       finder.addTarget(*compositeFramingSize);
@@ -906,7 +906,7 @@ namespace detail {
       }
     }
 
-    // remove current 
+    // remove current
     IstringFind finder;
     if (compositeCavityInsulation){
       finder.addTarget(*compositeCavityInsulation);
@@ -998,7 +998,7 @@ namespace detail {
   }
 
   void StandardsInformationMaterial_Impl::resetCompositeFramingConfiguration()
-  {    
+  {
     bool result = setString(OS_StandardsInformation_MaterialFields::CompositeFramingConfiguration, "");
     OS_ASSERT(result);
   }
@@ -1227,7 +1227,7 @@ void StandardsInformationMaterial::resetCompositeCavityInsulation()
 
 /// @cond
 StandardsInformationMaterial::StandardsInformationMaterial(std::shared_ptr<detail::StandardsInformationMaterial_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

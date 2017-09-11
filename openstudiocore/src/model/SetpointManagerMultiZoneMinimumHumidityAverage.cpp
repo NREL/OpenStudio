@@ -209,7 +209,7 @@ bool SetpointManagerMultiZoneMinimumHumidityAverage::setControlVariable(const st
 
 /// @cond
 SetpointManagerMultiZoneMinimumHumidityAverage::SetpointManagerMultiZoneMinimumHumidityAverage(std::shared_ptr<detail::SetpointManagerMultiZoneMinimumHumidityAverage_Impl> impl)
-  : SetpointManager(impl)
+  : SetpointManager(std::move(impl))
 {}
 /// @endcond
 

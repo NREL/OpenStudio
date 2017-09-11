@@ -211,7 +211,7 @@ void ZoneAirContaminantBalance::resetOutdoorCarbonDioxideSchedule() {
 
 /// @cond
 ZoneAirContaminantBalance::ZoneAirContaminantBalance(std::shared_ptr<detail::ZoneAirContaminantBalance_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 
 ZoneAirContaminantBalance::ZoneAirContaminantBalance(Model& model)

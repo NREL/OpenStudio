@@ -768,7 +768,7 @@ boost::optional<Node> SetpointManagerOutdoorAirReset::setpointNode() const
 
 /// @cond
 SetpointManagerOutdoorAirReset::SetpointManagerOutdoorAirReset(std::shared_ptr<detail::SetpointManagerOutdoorAirReset_Impl> impl)
-  : SetpointManager(impl)
+  : SetpointManager(std::move(impl))
 {}
 /// @endcond
 

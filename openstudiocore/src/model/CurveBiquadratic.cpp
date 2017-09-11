@@ -492,7 +492,7 @@ void CurveBiquadratic::resetOutputUnitType() {
 
 /// @cond
 CurveBiquadratic::CurveBiquadratic(std::shared_ptr<detail::CurveBiquadratic_Impl> impl)
-  : Curve(impl)
+  : Curve(std::move(impl))
 {}
 /// @endcond
 

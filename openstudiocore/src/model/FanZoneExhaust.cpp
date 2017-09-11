@@ -113,7 +113,7 @@ namespace detail {
     }
     return result;
   }
-  
+
   boost::optional<ThermalZone> FanZoneExhaust_Impl::thermalZone()
   {
     boost::optional<ThermalZone> result;
@@ -136,8 +136,8 @@ namespace detail {
     }
 
     return result;
-  }  
-  
+  }
+
   bool FanZoneExhaust_Impl::addToThermalZone(ThermalZone & thermalZone)
   {
     Model m = this->model();
@@ -165,7 +165,7 @@ namespace detail {
 
     m.connect(exhaustNode,exhaustNode.outletPort(),mo,this->inletPort());
 
-    // Node (Exhaust Fan Outlet Node) 
+    // Node (Exhaust Fan Outlet Node)
 
     Node exhaustFanOutletNode(m);
 
@@ -205,7 +205,7 @@ namespace detail {
   {
     return OS_Fan_ZoneExhaustFields::AirOutletNodeName;
   }
-  
+
   std::string FanZoneExhaust_Impl::endUseSubcategory() const {
     boost::optional<std::string> value = getString(OS_Fan_ZoneExhaustFields::EndUseSubcategory,true);
     OS_ASSERT(value);
@@ -435,7 +435,7 @@ void FanZoneExhaust::resetBalancedExhaustFractionSchedule() {
 
 /// @cond
 FanZoneExhaust::FanZoneExhaust(std::shared_ptr<detail::FanZoneExhaust_Impl> impl)
-  : ZoneHVACComponent(impl)
+  : ZoneHVACComponent(std::move(impl))
 {}
 /// @endcond
 

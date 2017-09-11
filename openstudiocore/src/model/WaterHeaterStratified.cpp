@@ -1776,7 +1776,7 @@ void WaterHeaterStratified::resetIndirectAlternateSetpointTemperatureSchedule() 
 
 /// @cond
 WaterHeaterStratified::WaterHeaterStratified(std::shared_ptr<detail::WaterHeaterStratified_Impl> impl)
-  : WaterToWaterComponent(impl)
+  : WaterToWaterComponent(std::move(impl))
 {}
 /// @endcond
 

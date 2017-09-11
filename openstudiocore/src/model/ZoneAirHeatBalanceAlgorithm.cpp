@@ -149,7 +149,7 @@ void ZoneAirHeatBalanceAlgorithm::resetAlgorithm() {
 
 /// @cond
 ZoneAirHeatBalanceAlgorithm::ZoneAirHeatBalanceAlgorithm(std::shared_ptr<detail::ZoneAirHeatBalanceAlgorithm_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {
 }
 

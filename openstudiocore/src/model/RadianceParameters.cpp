@@ -889,7 +889,7 @@ bool RadianceParameters::isFineSettings()
 
 /// @cond
 RadianceParameters::RadianceParameters(std::shared_ptr<detail::RadianceParameters_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {
 }
 
@@ -898,7 +898,7 @@ RadianceParameters::RadianceParameters(Model& model)
 {
   OS_ASSERT(getImpl<detail::RadianceParameters_Impl>());
 
-  applyCoarseSettings();  
+  applyCoarseSettings();
 }
 
 /// @endcond

@@ -1024,7 +1024,7 @@ void Shade::resetAirflowPermeability() {
 
 /// @cond
 Shade::Shade(std::shared_ptr<detail::Shade_Impl> impl)
-  : ShadingMaterial(impl)
+  : ShadingMaterial(std::move(impl))
 {}
 /// @endcond
 

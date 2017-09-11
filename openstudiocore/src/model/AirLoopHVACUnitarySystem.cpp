@@ -193,7 +193,7 @@ namespace detail {
     }
 
     if( auto designSpec = designSpecificationMultispeedObject() ) {
-      auto removed = designSpec->remove(); 
+      auto removed = designSpec->remove();
       result.insert(result.end(), removed.begin(), removed.end());
     }
 
@@ -1864,7 +1864,7 @@ void AirLoopHVACUnitarySystem::resetDesignSpecificationMultispeedObject() {
 
 /// @cond
 AirLoopHVACUnitarySystem::AirLoopHVACUnitarySystem(std::shared_ptr<detail::AirLoopHVACUnitarySystem_Impl> impl)
-  : WaterToAirComponent(impl)
+  : WaterToAirComponent(std::move(impl))
 {}
 /// @endcond
 
