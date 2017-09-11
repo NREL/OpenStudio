@@ -87,37 +87,37 @@ option(BUILD_SHARED_LIBS "Build OS libs as shared libraries" OFF)
 set(MAXIMIZE_CPU_USAGE OFF CACHE BOOL "Attempt to fully load the CPU during builds")
 mark_as_advanced(MAXIMIZE_CPU_USAGE)
 
-if(MSVC)
-  # Visual Studio compiler check
-  # http://en.wikipedia.org/wiki/Visual_C%2B%2B#32-bit_and_64-bit_versions
-  if    (${CMAKE_C_COMPILER_VERSION} VERSION_LESS "18.0.21005.1")
-    message(FATAL_ERROR "Visual Studio earlier than VS2013 is not supported")
-  elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "18.0.21005.1")
-    # VS2013
-    message(SEND_ERROR "Update 4 for Visual Studio 2013 is required")
-  elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "18.00.30501")
-    # VS2013 Update 2:
-    message(SEND_ERROR "Update 4 for Visual Studio 2013 is required")
-  elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "18.00.30723")
-    message(WARNING "Update 4 for Visual Studio 2013 is strongly recommended")
-  elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "18.00.31101")
-    # VS2013 Update 4: no-op
-  elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "18.00.40629")
-    # VS2013 Update 5: no-op
-  endif()
-
-  if ("${CMAKE_GENERATOR}" STREQUAL "Visual Studio 12 2013 Win64")
-    set(CMAKE_GENERATOR_TOOLSET "v120</PlatformToolset><PreferredToolArchitecture>x64</PreferredToolArchitecture><PlatformToolset>v120")
-  elseif ("${CMAKE_GENERATOR}" STREQUAL "Visual Studio 14 2015 Win64")
-    set(CMAKE_GENERATOR_TOOLSET "v140</PlatformToolset><PreferredToolArchitecture>x64</PreferredToolArchitecture><PlatformToolset>v140")
-  else()
-    message(STATUS "This version of Visual Studio will not use the 64 bit linker. Build times will likely suffer.")
-  endif()
-
-  # Build with Multiple Processes
-  set(BUILD_WITH_MULTIPLE_PROCESSES ON CACHE BOOL "/MP compiler flag for full processor utilization")
-  mark_as_advanced(BUILD_WITH_MULTIPLE_PROCESSES)
-endif()
+#if(MSVC)
+#  # Visual Studio compiler check
+#  # http://en.wikipedia.org/wiki/Visual_C%2B%2B#32-bit_and_64-bit_versions
+#  if    (${CMAKE_C_COMPILER_VERSION} VERSION_LESS "18.0.21005.1")
+#    message(FATAL_ERROR "Visual Studio earlier than VS2013 is not supported")
+#  elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "18.0.21005.1")
+#    # VS2013
+#    message(SEND_ERROR "Update 4 for Visual Studio 2013 is required")
+#  elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "18.00.30501")
+#    # VS2013 Update 2:
+#    message(SEND_ERROR "Update 4 for Visual Studio 2013 is required")
+#  elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "18.00.30723")
+#    message(WARNING "Update 4 for Visual Studio 2013 is strongly recommended")
+#  elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "18.00.31101")
+#    # VS2013 Update 4: no-op
+#  elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "18.00.40629")
+#    # VS2013 Update 5: no-op
+#  endif()
+#
+#  if ("${CMAKE_GENERATOR}" STREQUAL "Visual Studio 12 2013 Win64")
+#    set(CMAKE_GENERATOR_TOOLSET "v120</PlatformToolset><PreferredToolArchitecture>x64</PreferredToolArchitecture><PlatformToolset>v120")
+#  elseif ("${CMAKE_GENERATOR}" STREQUAL "Visual Studio 14 2015 Win64")
+#    set(CMAKE_GENERATOR_TOOLSET "v140</PlatformToolset><PreferredToolArchitecture>x64</PreferredToolArchitecture><PlatformToolset>v140")
+#  else()
+#    message(STATUS "This version of Visual Studio will not use the 64 bit linker. Build times will likely suffer.")
+#  endif()
+#
+#  # Build with Multiple Processes
+#  set(BUILD_WITH_MULTIPLE_PROCESSES ON CACHE BOOL "/MP compiler flag for full processor utilization")
+#  mark_as_advanced(BUILD_WITH_MULTIPLE_PROCESSES)
+#endif()
 
 
 # Apple Sanity Check
@@ -487,6 +487,13 @@ endif()
 
 option(BUILD_DVIEW "Build DView" OFF)
 if( BUILD_DVIEW )
+    ExternalProject_Add(curl
+      URL https://curl.haxx.se/download/curl-7.55.1.tar.gz
+      CONFIGURE_COMMAND ""
+      BUILD_COMMAND ""
+      INSTALL_COMMAND ""
+    )
+
     ExternalProject_Add(lk
       GIT_REPOSITORY git://github.com/NREL/lk
       GIT_TAG develop
@@ -496,12 +503,14 @@ if( BUILD_DVIEW )
     )
 
     ExternalProject_Add(DView
-      DEPENDS lk
+      DEPENDS lk curl
       GIT_REPOSITORY https://github.com/kbenne/wex.git
       GIT_TAG develop
       CMAKE_CACHE_ARGS
         -DLK_DIR:DIR=${CMAKE_BINARY_DIR}/lk-prefix/src/lk/
+        -DCURL_DIR:DIR=${CMAKE_BINARY_DIR}/curl-prefix/src/curl/
         -DCMAKE_INSTALL_PREFIX:DIR=${CMAKE_BINARY_DIR}/DView-prefix/src/DView-install
+        -DwxWidgets_EXCLUDE_COMMON_LIBRARIES:BOOL=false
     )
 endif()
 
