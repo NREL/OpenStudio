@@ -1235,7 +1235,6 @@ if(BUILD_OS_APP)
   list(APPEND project_directories "openstudio_lib")
   list(APPEND project_directories "openstudio_app")
   list(APPEND project_directories "qwt")
-  list(APPEND project_directories "resultsviewer")
 endif()
 
 # Include the resources, should happen after find EnergyPlus
@@ -1651,11 +1650,6 @@ cpack_ifw_configure_component(OpenStudioApp
 )
 
 cpack_ifw_configure_component(DView
-  REQUIRES_ADMIN_RIGHTS
-)
-
-cpack_ifw_configure_component(ResultsViewer
-  SCRIPT src/resultsviewer/install_operations.qs
   REQUIRES_ADMIN_RIGHTS
 )
 
