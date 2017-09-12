@@ -38,13 +38,16 @@ namespace openstudio{
   REGISTER_LOGGER("utilities.RoofGeometry");
 
   /// Generate shed roof polygons
-  UTILITIES_API std::vector< std::vector<Point3d> > makeShedRoof(std::vector<Point3d>& polygon, double roofPitchDegrees, double directionDegrees);
+  UTILITIES_API std::vector< std::vector<Point3d> > generateShedRoof(std::vector<Point3d>& polygon, double roofPitchDegrees, double directionDegrees);
 
   /// Generate gable roof polygons
-  UTILITIES_API std::vector< std::vector<Point3d> > makeGableRoof(std::vector<Point3d>& polygon, double roofPitchDegrees);
+  UTILITIES_API std::vector< std::vector<Point3d> > generateGableRoof(std::vector<Point3d>& polygon, double roofPitchDegrees);
 
   /// Generate hip roof polygons
-  UTILITIES_API std::vector< std::vector<Point3d> > makeHipRoof(std::vector<Point3d>& polygon, double roofPitchDegrees);
+  UTILITIES_API std::vector< std::vector<Point3d> > generateHipRoof(std::vector<Point3d>& polygon, double roofPitchDegrees);
+
+  /// Generate roof edges from the straight skeleton algorithm
+  UTILITIES_API std::vector< std::vector<Point3d> > generateSkeletonRoofEdges(std::vector<Point3d>& polygon);
 
 } // openstudio
 

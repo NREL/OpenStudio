@@ -45,15 +45,15 @@ public:
   double C = 0.0;
 
   LineLinear2d(double a, double b, double c) {
-    A = a;
-    B = b;
-    C = c;
+    this->A = a;
+    this->B = b;
+    this->C = c;
   }
 
   LineLinear2d(Point3d& p1, Point3d& p2) {
-    A = p1.y() - p2.y();
-    B = p2.x() - p1.x();
-    C = p1.x() * p2.y() - p2.x() * p1.y();
+    this->A = p1.y() - p2.y();
+    this->B = p2.x() - p1.x();
+    this->C = p1.x() * p2.y() - p2.x() * p1.y();
   }
 
   boost::optional<Point3d> collide(LineLinear2d& line2) {
@@ -66,6 +66,11 @@ public:
     }
 
     return Point3d(WBC / WAB, WCA / WAB, 0);
+  }
+
+  friend std::ostream& operator<<(std::ostream& os, const LineLinear2d& l) {
+    os << "LineLinear2d [A=" << l.A << ", B=" << l.B << ", C=" << l.C << "]";
+    return os;
   }
 
 private:
@@ -82,9 +87,9 @@ public:
   Point3d point;
   Vector3d vector;
 
-  Ray2d(Point3d& aPoint, Vector3d& aVector) {
-    point = aPoint;
-    vector = aVector;
+  Ray2d(Point3d& point, Vector3d& vector) {
+    this->point = point;
+    this->vector = vector;
   }
 
   boost::optional<Point3d> collide(LineLinear2d& line, double epsilon) {
@@ -299,9 +304,9 @@ public:
     // nop
   }
 
-  Edge(Point3d& aBegin, Point3d& aEnd) {
-    begin = aBegin;
-    end = aEnd;
+  Edge(Point3d& begin, Point3d& end) {
+    this->begin = begin;
+    this->end = end;
   }
 
   Vector3d normalize() {
@@ -310,23 +315,8 @@ public:
     return v;
   }
 
-  int getOffsetEdgeIndex(std::vector<Edge>& edges, int offset) {
-    auto it = std::find(edges.begin(), edges.end(), *this);
-    if (it == edges.end()) {
-      LOG_AND_THROW("Could not find edge in edges.");
-    }
-    int pos = std::distance(edges.begin(), it);
-    pos += offset;
-    if (pos < 0) {
-      pos += edges.size();
-    } else if (pos > edges.size() - 1) {
-      pos -= edges.size();
-    }
-    return pos;
-  }
-
   friend std::ostream& operator<<(std::ostream& os, const Edge& e) {
-    os << "EdgeEntry [p1=" << e.begin << ", p2=" << e.end << "]";
+    os << "EdgeEntry [p1=" << e.begin << ", p2=" << e.end << ", bp=" << e.bisectorPrevious << ", bn=" << e.bisectorNext << "]";
     return os;
   }
 
@@ -344,11 +334,44 @@ public:
       return true;
     }
     return false;
+  }
 
+  // Returns true if this edge is not equal to other
+  bool operator!=(const Edge& other) const {
+    if (begin != other.begin || end != other.end) {
+      return true;
+    }
+    return false;
+  }
+
+  Edge& previous(std::vector<Edge>& edges) {
+    int index = getOffsetEdgeIndex(edges, -1);
+    return edges[index];
+  }
+
+  Edge& next(std::vector<Edge>& edges) {
+    int index = getOffsetEdgeIndex(edges, 1);
+    return edges[index];
   }
 
 private:
   REGISTER_LOGGER("utilities.Edge");
+  
+  int getOffsetEdgeIndex(std::vector<Edge>& edges, int offset) {
+    auto it = std::find(edges.begin(), edges.end(), *this);
+    if (it == edges.end()) {
+      LOG_AND_THROW("Could not find edge in edges.");
+    }
+    int pos = std::distance(edges.begin(), it);
+    pos += offset;
+    if (pos < 0) {
+      pos += edges.size();
+    } else if (pos > edges.size() - 1) {
+      pos -= edges.size();
+    }
+    return pos;
+  }
+
 };
 
 class Vertex
@@ -365,28 +388,23 @@ public:
     // nop
   }
 
-  Vertex(Point3d& aPoint, double aDistance, boost::optional<Ray2d&> aBisector, boost::optional<Edge&> aPreviousEdge, boost::optional<Edge&> aNextEdge) {
-    point = aPoint;
-    distance = aDistance;
-    bisector = aBisector;
-    previousEdge = aPreviousEdge;
-    nextEdge = aNextEdge;
-    processed = false;
+  Vertex(Point3d& point, double distance, boost::optional<Ray2d&> bisector, boost::optional<Edge&> previousEdge, boost::optional<Edge&> nextEdge) {
+    this->point = point;
+    this->distance = distance;
+    this->bisector = bisector;
+    this->previousEdge = previousEdge;
+    this->nextEdge = nextEdge;
+    this->processed = false;
   }
 
-  int getOffsetVertexIndex(std::vector<Vertex>& vertexes, int offset) {
-    auto it = std::find(vertexes.begin(), vertexes.end(), *this);
-    if (it == vertexes.end()) {
-      LOG_AND_THROW("Could not find edge in edges.");
-    }
-    int pos = std::distance(vertexes.begin(), it);
-    pos += offset;
-    if (pos < 0) {
-      pos += vertexes.size();
-    } else if (pos > vertexes.size() - 1) {
-      pos -= vertexes.size();
-    }
-    return pos;
+  Vertex& previous(std::vector<Vertex>& vertexes) {
+    int index = getOffsetVertexIndex(vertexes, -1);
+    return vertexes[index];
+  }
+
+  Vertex& next(std::vector<Vertex>& vertexes) {
+    int index = getOffsetVertexIndex(vertexes, 1);
+    return vertexes[index];
   }
 
   int getLavIndex(std::vector< std::vector<Vertex> >& sLav) {
@@ -416,14 +434,63 @@ public:
   std::vector<Vertex> cutLavPart(std::vector<Vertex>& lav, Vertex& endVertex) {
     std::vector<Vertex> ret;
 
-    int size = lav.size();
-    LOG_AND_THROW("FIXME");
-    // FIXME implement
+    Vertex current = *this;
+    ret.push_back(current);
+
+    if (*this == endVertex) {
+      return ret;
+    }
+
+    while (true) {
+      current = current.next(lav);
+      ret.push_back(current);
+      if (current == endVertex) {
+        break;
+      }
+      if (ret.size() > lav.size()) {
+        LOG_AND_THROW("End vertex not found in start vertex lav.");
+      }
+    }
+
+    for (Vertex& v : ret) {
+      v.removeFromLav(lav);
+    }
+
     return ret;
   }
 
   friend std::ostream& operator<<(std::ostream& os, const Vertex& v) {
-    os << "VertexEntry [v=" << v.point << ", processed=" << v.processed << ", bisector=" << v.bisector << ", previousEdge=" << v.previousEdge << ", nextEdge=" << v.nextEdge << ", distance=" << v.distance << "]";
+    std::string processed = "false";
+    if (v.processed) {
+      processed = "true";
+    }
+
+    os << "VertexEntry [v=" << v.point << ", processed=" << processed << ", bisector=";
+
+    if (v.bisector) {
+      os << v.bisector.get();
+    }
+    else {
+      os << "null";
+    }
+
+    os << ", previousEdge=";
+
+    if (v.previousEdge) {
+      os << v.previousEdge.get();
+    } else {
+      os << "null";
+    }
+
+    os << ", nextEdge=";
+
+    if (v.nextEdge) {
+      os << v.nextEdge.get();
+    } else {
+      os << "null";
+    }
+
+    os << "]";
     return os;
   }
 
@@ -437,16 +504,38 @@ public:
 
   // Returns true if this vertex is equal to other
   bool operator==(const Vertex& other) const {
-
     if (point == other.point && distance == other.distance) {
       return true;
     }
     return false;
+  }
 
+  // Returns true if this vertex is not equal to other
+  bool operator!=(const Vertex& other) const {
+    if (point != other.point || distance != other.distance) {
+      return true;
+    }
+    return false;
   }
 
 private:
   REGISTER_LOGGER("utilities.Vertex");
+
+  int getOffsetVertexIndex(std::vector<Vertex> vertexes, int offset) {
+    auto it = std::find(vertexes.begin(), vertexes.end(), *this);
+    if (it == vertexes.end()) {
+      LOG_AND_THROW("Could not find vertex.");
+    }
+    int pos = std::distance(vertexes.begin(), it);
+    pos += offset;
+    if (pos < 0) {
+      pos += vertexes.size();
+    } else if (pos > vertexes.size() - 1) {
+      pos -= vertexes.size();
+    }
+    return pos;
+  }
+
 };
 
 class Face
@@ -482,27 +571,27 @@ public:
     // nop
   }
 
-  QueueEvent(Point3d& aPoint, double aDistance, Vertex& aPreviousVertex, Vertex& aNextVertex) {
-    eventType = TYPE_EDGE;
-    point = aPoint;
-    distance = aDistance;
-    previousVertex = aPreviousVertex;
-    nextVertex = aNextVertex;
+  QueueEvent(Point3d& point, double distance, Vertex& previousVertex, Vertex& nextVertex) {
+    this->eventType = TYPE_EDGE;
+    this->point = point;
+    this->distance = distance;
+    this->previousVertex = previousVertex;
+    this->nextVertex = nextVertex;
   }
 
-  QueueEvent(Point3d& aPoint, double aDistance, Vertex& aParent) {
-    eventType = TYPE_SPLIT_VERTEX;
-    point = aPoint;
-    distance = aDistance;
-    parent = aParent;
+  QueueEvent(Point3d& point, double distance, Vertex& parent) {
+    this->eventType = TYPE_SPLIT_VERTEX;
+    this->point = point;
+    this->distance = distance;
+    this->parent = parent;
   }
 
-  QueueEvent(Point3d& aPoint, double aDistance, Vertex& aParent, Edge& aOppositeEdge) {
-    eventType = TYPE_SPLIT;
-    point = aPoint;
-    distance = aDistance;
-    parent = aParent;
-    oppositeEdge = aOppositeEdge;
+  QueueEvent(Point3d& point, double distance, Vertex& parent, Edge& oppositeEdge) {
+    this->eventType = TYPE_SPLIT;
+    this->point = point;
+    this->distance = distance;
+    this->parent = parent;
+    this->oppositeEdge = oppositeEdge;
   }
 
   friend std::ostream& operator<<(std::ostream& os, const QueueEvent& e) {
@@ -598,23 +687,23 @@ public:
     // nop
   }
 
-  Chain(QueueEvent& aSplitEvent) {
-    chainType = TYPE_SPLIT;
-    splitEvent = aSplitEvent;
+  Chain(QueueEvent& splitEvent) {
+    this->chainType = TYPE_SPLIT;
+    this->splitEvent = splitEvent;
   }
 
-  Chain(std::vector<QueueEvent>& aEdgeList) {
-    chainType = TYPE_EDGE;
-    edgeList = aEdgeList;
-    if (getPreviousVertex() == getNextVertex()) {
-      closed = true;
+  Chain(std::vector<QueueEvent>& edgeList, std::vector< std::vector<Vertex> > sLav) {
+    this->chainType = TYPE_EDGE;
+    this->edgeList = edgeList;
+    if (getPreviousVertex(sLav) == getNextVertex(sLav)) {
+      this->closed = true;
     }
   }
 
-  Chain(Edge& aOppositeEdge, Vertex& aNextVertex) {
-    chainType = TYPE_SINGLE_EDGE;
-    oppositeEdge = aOppositeEdge;
-    nextVertex = aNextVertex;
+  Chain(Edge& oppositeEdge, Vertex& nextVertex) {
+    this->chainType = TYPE_SINGLE_EDGE;
+    this->oppositeEdge = oppositeEdge;
+    this->nextVertex = nextVertex;
   }
 
   ChainMode getChainMode() {
@@ -653,25 +742,25 @@ public:
     }
   }
 
-  Vertex& getPreviousVertex() {
+  Vertex& getPreviousVertex(std::vector< std::vector<Vertex> >& sLav) {
     if (chainType == TYPE_EDGE) {
       return edgeList[0].previousVertex;
     } else if (chainType == TYPE_SINGLE_EDGE) {
       return previousVertex;
     } else {
-      LOG_AND_THROW("FIXME");
-      return splitEvent.parent; // FIXME: return splitEvent.getParent().previous();
+      int lavIndex = splitEvent.parent.getLavIndex(sLav);
+      return splitEvent.parent.previous(sLav[lavIndex]);
     }
   }
 
-  Vertex& getNextVertex() {
+  Vertex& getNextVertex(std::vector< std::vector<Vertex> >& sLav) {
     if (chainType == TYPE_EDGE) {
       return edgeList[edgeList.size() - 1].nextVertex;
     } else if (chainType == TYPE_SINGLE_EDGE) {
       return nextVertex;
     } else {
-      LOG_AND_THROW("FIXME");
-      return splitEvent.parent; // FIXME: return splitEvent.getParent().next();
+      int lavIndex = splitEvent.parent.getLavIndex(sLav);
+      return splitEvent.parent.next(sLav[lavIndex]);
     }
   }
 
@@ -693,6 +782,68 @@ public:
     }
     return oppositeEdge;
   }
+
+  friend std::ostream& operator<<(std::ostream& os, Chain& c) {
+    std::string type_s;
+    if (c.chainType == TYPE_EDGE) {
+      type_s = "Edge";
+    } else if (c.chainType == TYPE_SPLIT) {
+      type_s = "Split";
+    } else {
+      type_s = "SingleEdge";
+    }
+
+    std::string mode_s;
+    if (c.getChainMode() == MODE_EDGE) {
+      mode_s = "EDGE";
+    } else if (c.getChainMode() == MODE_SPLIT) {
+      mode_s = "SPLIT";
+    } else {
+      mode_s = "CLOSED_EDGE";
+    }
+
+    os << "Chain [type=" << type_s << ", mode=" << mode_s << ", pe=" << c.getPreviousEdge() << ", ne=" << c.getNextEdge() << ", oe=";
+
+    if (c.getOppositeEdge().is_initialized()) {
+      os << c.getOppositeEdge().get();
+    } else {
+      os << "null";
+    }
+
+    os << ", cv=";
+
+    if (c.getCurrentVertex().is_initialized()) {
+      os << c.getCurrentVertex().get();
+    } else {
+      os << "null";
+    }
+
+    os << "]";
+
+    return os;
+  }
+
+  struct Comparer
+  {
+    Point3d center;
+
+    Comparer(Point3d center) {
+      this->center = center;
+    }
+
+    double angle(Point3d p1, Point3d p2) const {
+      double dx = p2.x() - p1.x();
+      double dy = p2.y() - p1.y();
+      return atan2(dy, dx);
+    }
+
+    bool operator () (Chain c1, Chain c2) const {
+      double angle1 = angle(center, c1.getPreviousEdge().begin);
+      double angle2 = angle(center, c2.getPreviousEdge().begin);
+      return (angle1 < angle2);
+    }
+
+  };
 
 private:
   REGISTER_LOGGER("utilities.Chain");
@@ -723,22 +874,22 @@ public:
     // nop
   }
 
-  LevelEvent(Point3d& aPoint, double aDistance, Chain& aChain, bool isPickEvent) {
+  LevelEvent(Point3d& point, double distance, Chain& chain, bool isPickEvent) {
     if (isPickEvent) {
-      eventType = TYPE_PICK;
+      this->eventType = TYPE_PICK;
     } else {
-      eventType = TYPE_MULTI_EDGE;
+      this->eventType = TYPE_MULTI_EDGE;
     }
-    point = aPoint;
-    distance = aDistance;
-    chain = aChain;
+    this->point = point;
+    this->distance = distance;
+    this->chain = chain;
   }
 
-  LevelEvent(Point3d& aPoint, double aDistance, std::vector<Chain>& aChains) {
-    eventType = TYPE_MULTI_SPLIT;
-    point = aPoint;
-    distance = aDistance;
-    chains = aChains;
+  LevelEvent(Point3d& point, double distance, std::vector<Chain>& chains) {
+    this->eventType = TYPE_MULTI_SPLIT;
+    this->point = point;
+    this->distance = distance;
+    this->chains = chains;
   }
 
   friend std::ostream& operator<<(std::ostream& os, const LevelEvent& e) {
@@ -762,11 +913,11 @@ public:
   boost::optional<Edge> oppositeEdge;
   boost::optional<Point3d> oppositePoint;
 
-  SplitCandidate(Point3d& aPoint, double aDistance, boost::optional<Edge&> aOppositeEdge, boost::optional<Point3d&> aOppositePoint) {
-    point = aPoint;
-    distance = aDistance;
-    oppositeEdge = aOppositeEdge;
-    oppositePoint = aOppositePoint;
+  SplitCandidate(Point3d& point, double distance, boost::optional<Edge&> oppositeEdge, boost::optional<Point3d&> oppositePoint) {
+    this->point = point;
+    this->distance = distance;
+    this->oppositeEdge = oppositeEdge;
+    this->oppositePoint = oppositePoint;
   }
 
   // Returns true if this SplitCandidate is less than other
@@ -779,12 +930,25 @@ public:
     return (point == other.point && distance == other.distance);
   }
 
+  friend std::ostream& operator<<(std::ostream& os, const SplitCandidate& s) {
+    os << "SplitCandidate [point=" << s.point << ", distance=" << s.distance << "]";
+    return os;
+  }
+
 private:
   REGISTER_LOGGER("utilities.SplitCandidate");
 };
 
+class RoofOutput
+{
+public:
+  UTILITIES_API std::vector< std::vector<Point3d> > surfaces;
+  UTILITIES_API std::vector< std::vector<Point3d> > edges;
+private:
+  REGISTER_LOGGER("utilities.RoofOutput");
+};
+
 void debugFaces(std::string caller, std::vector<Face> faces) {
-  return;
   std::cout << caller << std::endl;
   for (Face f : faces) {
     std::cout << "FACE: ";
@@ -796,17 +960,31 @@ void debugFaces(std::string caller, std::vector<Face> faces) {
 }
 
 void debugSlav(std::string caller, std::vector< std::vector<Vertex> > sLav) {
-  return;
   std::cout << caller << std::endl;
+  int i = 0;
   for (std::vector<Vertex> lav : sLav) {
+    i++;
     for (Vertex v : lav) {
-      std::cout << "lav v " << v << std::endl;
+      std::cout << "slav v " << i << " " << v << std::endl;
     }
   }
 }
 
+void debugLav(std::string caller, std::vector<Vertex> lav) {
+  std::cout << caller << std::endl;
+  for (Vertex v : lav) {
+    std::cout << "lav v " << v << std::endl;
+  }
+}
+
+void debugEdges(std::string caller, std::vector<Edge> edges) {
+  std::cout << caller << std::endl;
+  for (Edge e : edges) {
+    std::cout << "edges e " << e << std::endl;
+  }
+}
+
 void debugQueue(std::string caller, std::vector<QueueEvent> queue) {
-  return;
   std::cout << caller << std::endl;
   for (QueueEvent q : queue) {
     std::cout << "queue event " << q << std::endl;
@@ -837,20 +1015,30 @@ void setProcessed(Vertex& v, std::vector< std::vector<Vertex> >& sLav, std::vect
   }
 }
 
-std::vector< std::vector<Point3d> > facesToRoofs(std::vector<Face>& faces, double roofPitchDegrees) {
-
+std::vector< std::vector<Point3d> > facesToPoint3d(std::vector<Face>& faces, double roofPitchDegrees) {
+  std::vector< std::vector<Point3d> > roofsPoint3d;
   double roofSlope = tan(degToRad(roofPitchDegrees));
-
-  std::vector< std::vector<Point3d> > roofs;
   for (Face face : faces) {
-    std::vector<Point3d> roof;
+    std::vector<Point3d> roofPoint3d;
     for (Vertex v : face.vertexes) {
       Point3d p = Point3d(v.point.x(), v.point.y(), v.distance * roofSlope);
-      roof.push_back(p);
+      roofPoint3d.push_back(p);
     }
-    roofs.push_back(roof);
+    roofsPoint3d.push_back(roofPoint3d);
   }
-  return roofs;
+  return roofsPoint3d;
+}
+
+std::vector< std::vector<Point3d> > edgesToPoint3d(std::vector<Edge>& edges) {
+  std::vector< std::vector<Point3d> > edgesPoint3d;
+  for (Edge e : edges) {
+    std::vector<Point3d> edgePoint3d;
+    edgePoint3d.push_back(e.begin);
+    edgePoint3d.push_back(e.end);
+    edgesPoint3d.push_back(edgePoint3d);
+    //  std::cout << "doStraightSkeleton edge " << e << std::endl;
+  }
+  return edgesPoint3d;
 }
 
 Vector3d calcVectorBisector(Vector3d& norm1, Vector3d& norm2) {
@@ -885,31 +1073,33 @@ Ray2d calcBisector(Point3d& p, Edge& e1, Edge& e2) {
 
 void initSlav(std::vector<Point3d>& polygon, std::vector< std::vector<Vertex> >& sLav, std::vector<Edge>& edges, std::vector<Face>& faces)
 {
-  std::vector<Edge> edgesList;
-
   int size = polygon.size();
   for (int i = 0; i < size; i++) {
     int j = (i + 1) % size;
-    edgesList.push_back(Edge(polygon[i], polygon[j]));
+    edges.push_back(Edge(polygon[i], polygon[j]));
   }
 
-  for (Edge& edge : edgesList) {
-    int i = edge.getOffsetEdgeIndex(edgesList, 1);
-    Edge& nextEdge = edgesList[i];
+  for (Edge& edge : edges) {
+    Edge& nextEdge = edge.next(edges);
       
     Ray2d bisector = calcBisector(edge.end, edge, nextEdge);
+    //std::cout << "initSlav bisector " << bisector << std::endl;
 
+    //std::cout << "initSlav edge " << edge << std::endl;
     edge.bisectorNext = bisector;
-    nextEdge.bisectorPrevious = bisector;
+    //std::cout << "initSlav edge.bisectorNext " << edge.bisectorNext << std::endl;
 
-    edges.push_back(edge);
+    //std::cout << "initSlav nextEdge " << nextEdge << std::endl;
+    nextEdge.bisectorPrevious = bisector;
+    //std::cout << "initSlav nextEdge.bisectorPrevious " << nextEdge.bisectorPrevious << std::endl;
   }
+
+  //debugEdges("initSlav", edges);
 
   std::vector<Vertex> lav;
 
-  for (Edge& edge : edgesList) {
-    int i = edge.getOffsetEdgeIndex(edgesList, 1);
-    Edge& nextEdge = edgesList[i];
+  for (Edge& edge : edges) {
+    Edge& nextEdge = edge.next(edges);
 
     Vertex vertex = Vertex(edge.end, 0, edge.bisectorNext, edge, nextEdge);
 
@@ -917,16 +1107,17 @@ void initSlav(std::vector<Point3d>& polygon, std::vector< std::vector<Vertex> >&
   }
   sLav.push_back(lav);
 
-  for (int i = 0; i < lav.size(); i++) {
-    int j = lav[i].getOffsetVertexIndex(lav, 1);
+  for (Vertex& vertex : lav) {
+    Vertex& next = vertex.next(lav);
 
     Face face;
-    face.vertexes.push_back(lav[i]);
-    face.vertexes.push_back(lav[j]);
+    face.vertexes.push_back(vertex);
+    face.vertexes.push_back(next);
     faces.push_back(face);
   }
 
-  debugFaces("initSlav", faces);
+  //debugSlav("initSlav", sLav);
+  //debugFaces("initSlav", faces);
 }
 
 bool edgeBehindBisector(Ray2d& bisector, LineLinear2d& edge) {
@@ -1000,9 +1191,13 @@ boost::optional<SplitCandidate> calcCandidatePointForSplit(Vertex& vertex, Edge&
   if (!vertexEdge) {
     return boost::none;
   }
+  //std::cout << "calcCandidatePointForSplit vertexEdge " << vertexEdge.get() << std::endl;
 
   Vector3d vertexEdgeNormNegate = vertexEdge.get().normalize();
   Vector3d edgesBisector = calcVectorBisector(vertexEdgeNormNegate, edge.normalize());
+
+  //std::cout << "calcCandidatePointForSplit vertexEdgeNormNegate " << vertexEdgeNormNegate << std::endl;
+  //std::cout << "calcCandidatePointForSplit edgesBisector " << edgesBisector << std::endl;
 
   LineLinear2d llv = LineLinear2d(vertexEdge.get().begin, vertexEdge.get().end);
   LineLinear2d lle = LineLinear2d(edge.begin, edge.end);
@@ -1015,8 +1210,10 @@ boost::optional<SplitCandidate> calcCandidatePointForSplit(Vertex& vertex, Edge&
     */
     LOG_AND_THROW("Unexpected situation");
   }
+  //std::cout << "calcCandidatePointForSplit edgesCollide " << edgesCollide.get() << std::endl;
 
   LineLinear2d edgesBisectorLine = Ray2d(edgesCollide.get(), edgesBisector).getLinearForm();
+  //std::cout << "calcCandidatePointForSplit edgesBisectorLine " << edgesBisectorLine << std::endl;
 
   /*
   * Compute the coordinates of the candidate point Bi as the intersection
@@ -1029,6 +1226,16 @@ boost::optional<SplitCandidate> calcCandidatePointForSplit(Vertex& vertex, Edge&
     return boost::none;
   }
 
+  //std::cout << "calcCandidatePointForSplit candidatePoint " << candidatePoint.get() << std::endl;
+
+  //std::cout << "calcCandidatePointForSplit edge.getBisectorPrevious " << edge.bisectorPrevious << std::endl;
+  //std::cout << "calcCandidatePointForSplit edge.getBisectorNext " << edge.bisectorNext << std::endl;
+
+  //std::cout << "calcCandidatePointForSplit test1 " << edge.bisectorPrevious.isOnRightSide(candidatePoint.get(), SPLIT_EPSILON) << std::endl;
+  //std::cout << "calcCandidatePointForSplit test2 " << edge.bisectorNext.isOnLeftSide(candidatePoint.get(), SPLIT_EPSILON) << std::endl;
+  //std::cout << "calcCandidatePointForSplit test3 " << edge.bisectorPrevious.isOnLeftSide(candidatePoint.get(), SPLIT_EPSILON) << std::endl;
+  //std::cout << "calcCandidatePointForSplit test4 " << edge.bisectorNext.isOnRightSide(candidatePoint.get(), SPLIT_EPSILON) << std::endl;
+
   if (edge.bisectorPrevious.isOnRightSide(candidatePoint.get(), SPLIT_EPSILON) && edge.bisectorNext.isOnLeftSide(candidatePoint.get(), SPLIT_EPSILON)) {
 
     double distance = calcDistance(candidatePoint.get(), edge);
@@ -1036,10 +1243,12 @@ boost::optional<SplitCandidate> calcCandidatePointForSplit(Vertex& vertex, Edge&
     if (edge.bisectorPrevious.isOnLeftSide(candidatePoint.get(), SPLIT_EPSILON) || edge.bisectorNext.isOnRightSide(candidatePoint.get(), SPLIT_EPSILON)) {
 
       Point3d oppositePoint = edge.begin;
+      //std::cout << "calcCandidatePointForSplit if-if" << std::endl;
       return SplitCandidate(candidatePoint.get(), distance, boost::none, oppositePoint);
 
     }
 
+    //std::cout << "calcCandidatePointForSplit if" << std::endl;
     return SplitCandidate(candidatePoint.get(), distance, edge, boost::none);
 
   }
@@ -1052,26 +1261,37 @@ std::vector<SplitCandidate> calcOppositeEdges(Vertex& vertex, std::vector<Edge>&
 
   std::vector<SplitCandidate> ret;
 
-  for (Edge edgeEntry : edges) {
+  //std::cout << "calcOppositeEdges edges[0] " << edges.at(0) << std::endl;
+
+  for (Edge& edgeEntry : edges) {
+
+    //std::cout << "calcOppositeEdges edge " << edgeEntry << std::endl;
 
     LineLinear2d edge = LineLinear2d(edgeEntry.begin, edgeEntry.end);
 
     // check if edge is behind bisector
     if (edgeBehindBisector(vertex.bisector.get(), edge)) {
+      //std::cout << "calcOppositeEdges edgeBehindBisector true" << std::endl;
       continue;
     }
-
     // compute the coordinates of the candidate point Bi
     boost::optional<SplitCandidate> candidatePoint = calcCandidatePointForSplit(vertex, edgeEntry);
 
     if (candidatePoint) {
+      //std::cout << "calcOppositeEdges candidatePoint " << candidatePoint.get() << std::endl;
       ret.push_back(candidatePoint.get());
     }
 
   }
 
   if (ret.size() > 1) {
+    for (SplitCandidate s : ret) {
+      //std::cout << "calcOppositeEdges sorted before " << s << std::endl;
+    }
     std::sort(ret.begin(), ret.end());
+    for (SplitCandidate s : ret) {
+      //std::cout << "calcOppositeEdges sorted after " << s << std::endl;
+    }
   }
 
   return ret;
@@ -1079,12 +1299,14 @@ std::vector<SplitCandidate> calcOppositeEdges(Vertex& vertex, std::vector<Edge>&
 
 void computeSplitEvents(Vertex& vertex, std::vector<Edge>& edges, std::vector<QueueEvent>& queue, boost::optional<double> distanceSquared) {
   Point3d source = vertex.point;
-  //std::cout << "computeSplitEvents begin" << std::endl;
+  //std::cout << "computeSplitEvents vertex " << vertex << std::endl;
 
   std::vector<SplitCandidate> oppositeEdges = calcOppositeEdges(vertex, edges);
 
   // check if it is vertex split event
   for (SplitCandidate oppositeEdge : oppositeEdges) {
+
+    //std::cout << "computeSplitEvents oppositeEdge " << oppositeEdge << std::endl;
 
     if (distanceSquared) {
       if (getDistanceSquared(source, oppositeEdge.point) > distanceSquared.get() + SPLIT_EPSILON) {
@@ -1097,6 +1319,7 @@ void computeSplitEvents(Vertex& vertex, std::vector<Edge>& edges, std::vector<Qu
         * Unnecessary events should be reject otherwise they cause
         * problems for degenerate cases.
         */
+        //std::cout << "computeSplitEvents continue" << std::endl;
         continue;
       }
     }
@@ -1105,13 +1328,13 @@ void computeSplitEvents(Vertex& vertex, std::vector<Edge>& edges, std::vector<Qu
     if (oppositeEdge.oppositePoint) {
       // some of vertex event can share the same opposite
       // point
-      QueueEvent e1 = QueueEvent(oppositeEdge.point, oppositeEdge.distance, vertex);
+      QueueEvent e1 = QueueEvent(oppositeEdge.point, oppositeEdge.distance, vertex); // SplitEvent
       //std::cout << "computeSplitEvents queue add " << e1 << std::endl;
       queue.push_back(e1);
       continue;
     }
 
-    QueueEvent e2 = QueueEvent(oppositeEdge.point, oppositeEdge.distance, vertex, oppositeEdge.oppositeEdge.get());
+    QueueEvent e2 = QueueEvent(oppositeEdge.point, oppositeEdge.distance, vertex, oppositeEdge.oppositeEdge.get()); // SplitVertexEvent
     //std::cout << "computeSplitEvents queue add " << e2 << std::endl;
     queue.push_back(e2);
     continue;
@@ -1141,7 +1364,7 @@ boost::optional<Point3d> computeIntersectionBisectors(Vertex& vertexPrevious, Ve
 }
 
 QueueEvent createEdgeEvent(Point3d& point, Vertex& previousVertex, Vertex& nextVertex) {
-  return QueueEvent(point, calcDistance(point, previousVertex.nextEdge.get()), previousVertex, nextVertex);
+  return QueueEvent(point, calcDistance(point, previousVertex.nextEdge.get()), previousVertex, nextVertex); // EdgeEvent
 }
 
 void computeEdgeEvents(Vertex& previousVertex, Vertex& nextVertex, std::vector<QueueEvent>& queue) {
@@ -1155,18 +1378,22 @@ void computeEdgeEvents(Vertex& previousVertex, Vertex& nextVertex, std::vector<Q
 
 void initEvents(std::vector< std::vector<Vertex> >& sLav, std::vector<QueueEvent>& queue, std::vector<Edge>& edges)
 {
-  for (int i = 0; i < sLav.size(); i++) {
-    for (int j = 0; j < sLav[i].size(); j++) {
-      computeSplitEvents(sLav[i][j], edges, queue, boost::none);
+  for (std::vector<Vertex>& lav : sLav) {
+    for (Vertex& vertex : lav) {
+      computeSplitEvents(vertex, edges, queue, boost::none);
     }
   }
 
-  for (int i = 0; i < sLav.size(); i++) {
-    for (int j = 0; j < sLav[i].size(); j++) {
-      int k = sLav[i][j].getOffsetVertexIndex(sLav[i], 1);
-      computeEdgeEvents(sLav[i][j], sLav[i][k], queue);
+  //debugQueue("computeSplitEvents", queue);
+
+  for (std::vector<Vertex>& lav : sLav) {
+    for (Vertex& vertex : lav) {
+      Vertex& next = vertex.next(lav);
+      computeEdgeEvents(vertex, next, queue);
     }
   }
+
+  //debugQueue("computeEdgeEvents", queue);
 
 }
 
@@ -1304,7 +1531,7 @@ std::vector<QueueEvent> createEdgeChain(std::vector<QueueEvent>& edgeCluster) {
 
   } while (true);
 
-  debugQueue("createEdgeChain", edgeList);
+  //debugQueue("createEdgeChain", edgeList);
 
   return edgeList;
 }
@@ -1319,7 +1546,7 @@ bool isInEdgeChain(QueueEvent& split, Chain& chain) {
   return false;
 }
 
-std::vector<Chain> createChains(std::vector<QueueEvent>& cluster) {
+std::vector<Chain> createChains(std::vector<QueueEvent>& cluster, std::vector< std::vector<Vertex> >& sLav) {
   /*
   * Create chains of events from cluster. Cluster is set of events which meet
   * in the same result point. Try to connect all events which share the same
@@ -1385,7 +1612,7 @@ std::vector<Chain> createChains(std::vector<QueueEvent>& cluster) {
     * them. Two events are assumed to be connected if next parent of one
     * event is equal to previous parent of second event.
     */
-    edgeChains.push_back(Chain(createEdgeChain(edgeCluster))); // EdgeChain
+    edgeChains.push_back(Chain(createEdgeChain(edgeCluster), sLav)); // EdgeChain
   }
 
   std::vector<Chain> chains;
@@ -1394,7 +1621,7 @@ std::vector<Chain> createChains(std::vector<QueueEvent>& cluster) {
   }
 
   for (Chain c : chains) {
-    debugQueue("createChains", c.edgeList);
+    //debugQueue("createChains", c.edgeList);
   }
 
   //std::cout << "createChains chains1 size " << chains.size() << std::endl;
@@ -1439,18 +1666,18 @@ std::vector<Chain> createChains(std::vector<QueueEvent>& cluster) {
   //std::cout << "createChains chains2 size " << chains.size() << std::endl;
 
   for (Chain c : chains) {
-    debugQueue("createChains2", c.edgeList);
+    //debugQueue("createChains2", c.edgeList);
   }
 
   return chains;
 
 }
 
-LevelEvent createLevelEvent(Point3d& eventCenter, double distance, std::vector<QueueEvent>& eventCluster) {
+LevelEvent createLevelEvent(Point3d& eventCenter, double distance, std::vector<QueueEvent>& eventCluster, std::vector< std::vector<Vertex> >& sLav) {
   //for (QueueEvent e : eventCluster) {
   //  std::cout << "createLevelEvent eventCluster e " << e << std::endl;
   //}
-  std::vector<Chain> chains = createChains(eventCluster);
+  std::vector<Chain> chains = createChains(eventCluster, sLav);
 
   if (chains.size() == 1) {
     if (chains[0].getChainMode() == Chain::MODE_CLOSED_EDGE) {
@@ -1471,7 +1698,7 @@ LevelEvent createLevelEvent(Point3d& eventCenter, double distance, std::vector<Q
   return LevelEvent(eventCenter, distance, chains); // MultiSplitEvent
 }
 
-std::vector<LevelEvent> groupLevelEvents(std::vector<QueueEvent>& levelEvents) {
+std::vector<LevelEvent> groupLevelEvents(std::vector<QueueEvent>& levelEvents, std::vector< std::vector<Vertex> >& sLav) {
   std::vector<LevelEvent> ret;
   std::vector<Vertex> parentGroup;
 
@@ -1518,49 +1745,36 @@ std::vector<LevelEvent> groupLevelEvents(std::vector<QueueEvent>& levelEvents) {
     // More than one event can share the same result point, we need to
     // create new level event.
     //std::cout << "groupLevelEvents ret add" << std::endl;
-    ret.push_back(createLevelEvent(eventCenter, distance, cluster));
+    ret.push_back(createLevelEvent(eventCenter, distance, cluster, sLav));
 
   }
 
   //std::cout << "groupLevelEvents ret size " << ret.size() << std::endl;
   for (LevelEvent e : ret) {
     //std::cout << "groupLevelEvents event " << e << std::endl;
-    debugQueue("groupLevelEvents", e.chain.edgeList);
+    //debugQueue("groupLevelEvents", e.chain.edgeList);
   }
 
   return ret;
 }
 
-std::vector<LevelEvent> loadAndGroupLevelEvents(std::vector<QueueEvent>& queue) {
-  std::sort(queue.begin(), queue.end());
+std::vector<LevelEvent> loadAndGroupLevelEvents(std::vector<QueueEvent>& queue, std::vector< std::vector<Vertex> >& sLav) {
   std::vector<QueueEvent> levelEvents = loadLevelEvents(queue);
-  return groupLevelEvents(levelEvents);
+  return groupLevelEvents(levelEvents, sLav);
 }
 
-boost::optional<Vertex> getEdgeInLav(std::vector<Vertex> lav, Edge oppositeEdge) {
-  for (Vertex vertex : lav) {
+boost::optional<Vertex&> getEdgeInLav(std::vector<Vertex>& lav, Edge& oppositeEdge) {
+  for (Vertex& vertex : lav) {
     if (vertex.previousEdge && oppositeEdge == vertex.previousEdge.get()) {
       return vertex;
     } else {
-      int i = vertex.getOffsetVertexIndex(lav, -1);
-      boost::optional<Edge> nextEdge = lav[i].nextEdge;
-      if (nextEdge && oppositeEdge == nextEdge.get()) {
+      Vertex& previous = vertex.previous(lav);
+      if (previous.nextEdge && oppositeEdge == previous.nextEdge.get()) {
         return vertex;
       }
     }
   }
   return boost::none;
-}
-
-std::vector<Vertex> findEdgeLavs(std::vector< std::vector<Vertex> > sLav, Edge oppositeEdge) {
-  std::vector<Vertex> edgeLavs;
-  for (std::vector<Vertex> lav : sLav) {
-    boost::optional<Vertex> vertexInLav = getEdgeInLav(lav, oppositeEdge);
-    if (vertexInLav) {
-      edgeLavs.push_back(vertexInLav.get());
-    }
-  }
-  return edgeLavs;
 }
 
 /// Test if point is inside polygon
@@ -1609,21 +1823,22 @@ bool isInsidePolygon(Point3d point, std::vector<Point3d> points) {
   return oddNodes;
 }
 
-boost::optional<Vertex> chooseOppositeEdgeLav(std::vector<Vertex> edgeLavs, Edge oppositeEdge, Point3d center) {
+int chooseOppositeEdgeLavIndex(std::vector<Vertex>& edgeLavs, Edge& oppositeEdge, Point3d& center) {
   if (edgeLavs.size() == 0) {
-    return boost::none;
+    return -1;
   } else if (edgeLavs.size() == 1) {
-    return edgeLavs[0];
+    return 0;
   }
 
-  Point3d edgeStart = oppositeEdge.begin;
+  Point3d& edgeStart = oppositeEdge.begin;
   Vector3d edgeNorm = oppositeEdge.normalize();
   Vector3d centerVector = center - edgeStart;
   double centerDot = edgeNorm.dot(centerVector);
 
-  for (Vertex end : edgeLavs) {
-    int j = end.getOffsetVertexIndex(edgeLavs, -1);
-    Vector3d beginVector = edgeLavs[j].point - edgeStart;
+  for (int i = 0; i < edgeLavs.size(); i++) {
+    Vertex& end = edgeLavs[i];
+    Vertex& begin = end.previous(edgeLavs);
+    Vector3d beginVector = begin.point - edgeStart;
     Vector3d endVector = end.point - edgeStart;
 
     double beginDot = edgeNorm.dot(beginVector);
@@ -1637,23 +1852,23 @@ boost::optional<Vertex> chooseOppositeEdgeLav(std::vector<Vertex> edgeLavs, Edge
     */
 
     if (beginDot < centerDot && centerDot < endDot || beginDot > centerDot && centerDot > endDot) {
-      return end;
+      return i;
     }
 
   }
 
   // Additional check if center is inside lav
-  for (Vertex end : edgeLavs) {
+  for (int i = 0; i < edgeLavs.size(); i++) {
+    Vertex& end = edgeLavs[i];
     LOG_AND_THROW("FIXME");
     int size = 0; // FIXME = end.list.size();
     std::vector<Point3d> points;
-    Vertex next = end;
-    for (int i = 0; i < size; i++) {
-      points.push_back(next.point);
+    for (int j = 0; j < size; j++) {
+      points.push_back(end.point);
       //FIXME next = next.getOffsetVertex(edgeLavs, 1);
     }
     if (isInsidePolygon(center, points)) {
-      return end;
+      return i;
     }
   }
 
@@ -1661,9 +1876,16 @@ boost::optional<Vertex> chooseOppositeEdgeLav(std::vector<Vertex> edgeLavs, Edge
 
 }
 
-boost::optional<Vertex> findOppositeEdgeLav(std::vector< std::vector<Vertex> > sLav, Edge oppositeEdge, Point3d center) {
-  std::vector<Vertex> edgeLavs = findEdgeLavs(sLav, oppositeEdge);
-  return chooseOppositeEdgeLav(edgeLavs, oppositeEdge, center);
+boost::optional<Vertex&> findOppositeEdgeLav(std::vector< std::vector<Vertex> >& sLav, Edge& oppositeEdge, Point3d& center) {
+  std::vector<Vertex> edgeLavs;
+  for (std::vector<Vertex>& lav : sLav) {
+    boost::optional<Vertex&> vertexInLav = getEdgeInLav(lav, oppositeEdge);
+    if (vertexInLav) {
+      edgeLavs.push_back(vertexInLav.get());
+    }
+  }
+  int lavIndex = chooseOppositeEdgeLavIndex(edgeLavs, oppositeEdge, center);
+  return edgeLavs[lavIndex];
 }
 
 void createOppositeEdgeChains(std::vector< std::vector<Vertex> >& sLav, std::vector<Chain>& chains, Point3d& center) {
@@ -1677,19 +1899,26 @@ void createOppositeEdgeChains(std::vector< std::vector<Vertex> >& sLav, std::vec
   std::vector<Chain> oppositeEdgeChains;
   std::vector<Chain> chainsForRemoval;
 
-  for (Chain chain : chains) {
+  for (Chain& chain : chains) {
     // add opposite edges as chain parts
     if (chain.chainType == Chain::TYPE_SPLIT) {
+      //std::cout << "createOppositeEdgeChains split chain true" << std::endl;
       boost::optional<Edge&> oppositeEdge = chain.getOppositeEdge();
 
-      LOG_AND_THROW("FIXME");
-      if (false) { // FIXME if (oppositeEdge && !oppositeEdges.count(oppositeEdge.get())) {
+      bool hasOppositeEdge = false;
+      if (oppositeEdge) {
+        hasOppositeEdge = std::find(oppositeEdges.begin(), oppositeEdges.end(), oppositeEdge.get()) != oppositeEdges.end();
+      }
+      if (oppositeEdge && !hasOppositeEdge) {
+        //std::cout << "createOppositeEdgeChains OppositeEdge if" << std::endl;
         // find lav vertex for opposite edge
 
-        boost::optional<Vertex> nextVertex = findOppositeEdgeLav(sLav, oppositeEdge.get(), center);
+        boost::optional<Vertex&> nextVertex = findOppositeEdgeLav(sLav, oppositeEdge.get(), center);
         if (nextVertex) {
+          //std::cout << "createOppositeEdgeChains if nextVertex " << nextVertex.get() << std::endl;
           oppositeEdgeChains.push_back(Chain(oppositeEdge.get(), nextVertex.get())); // SingleEdgeChain
         } else {
+          //std::cout << "createOppositeEdgeChains else" << std::endl;
           findOppositeEdgeLav(sLav, oppositeEdge.get(), center);
           chainsForRemoval.push_back(chain);
         }
@@ -1697,11 +1926,14 @@ void createOppositeEdgeChains(std::vector< std::vector<Vertex> >& sLav, std::vec
       }
 
     } else if (chain.chainType == Chain::TYPE_EDGE) {
+      //std::cout << "createOppositeEdgeChains split chain false" << std::endl;
       if (chain.getChainMode() == Chain::MODE_SPLIT) {
+        //std::cout << "createOppositeEdgeChains split mode" << std::endl;
         boost::optional<Edge&> oppositeEdge = chain.getOppositeEdge();
         if (oppositeEdge) {
           // never happen?
           // find lav vertex for opposite edge
+          //std::cout << "createOppositeEdgeChains oppositeEdge " << oppositeEdge.get() << std::endl;
           oppositeEdges.push_back(oppositeEdge.get());
         }
       }
@@ -1714,18 +1946,24 @@ void createOppositeEdgeChains(std::vector< std::vector<Vertex> >& sLav, std::vec
   * if opposite edge can't be found in active lavs then split chain with
   * that edge should be removed
   */
-  for (Chain chain : chainsForRemoval) {
+  for (Chain& chain : chainsForRemoval) {
     // FIXME chains.erase(chain);
     LOG_AND_THROW("FIXME");
   }
-  for (Chain chain : oppositeEdgeChains) {
+  for (Chain& chain : oppositeEdgeChains) {
     chains.push_back(chain);
+    
   }
 
 }
 
 Vertex createMultiSplitVertex(Edge& nextEdge, Edge& previousEdge, Point3d& center, double distance) {
+  //std::cout << "createMultiSplitVertex nextEdge " << nextEdge << std::endl;
+  //std::cout << "createMultiSplitVertex previousEdge " << previousEdge << std::endl;
+  //std::cout << "createMultiSplitVertex center " << center << std::endl;
+  //std::cout << "createMultiSplitVertex distance " << distance << std::endl;
   Ray2d bisector = calcBisector(center, previousEdge, nextEdge);
+  //std::cout << "createMultiSplitVertex bisector " << bisector << std::endl;
 
   // edges are mirrored for event
   return Vertex(center, distance, bisector, previousEdge, nextEdge);
@@ -1738,10 +1976,14 @@ void correctBisectorDirection(Ray2d& bisector, Vertex& beginNextVertex, Vertex& 
   * bisector is wrong. For parallel edges direction of edge need to be
   * corrected using location of vertex.
   */
-  Edge beginEdge2 = beginNextVertex.previousEdge.get();
-  Edge endEdge2 = endPreviousVertex.nextEdge.get();
 
-  if (&beginEdge != &beginEdge2 || &endEdge != &endEdge2) {
+  //std::cout << "correctBisectorDirection beginNextVertex " << beginNextVertex << std::endl;
+  //std::cout << "correctBisectorDirection endPreviousVertex " << endPreviousVertex << std::endl;
+
+  Edge& beginEdge2 = beginNextVertex.previousEdge.get();
+  Edge& endEdge2 = endPreviousVertex.nextEdge.get();
+
+  if (beginEdge != beginEdge2 || endEdge != endEdge2) {
     LOG_AND_THROW("Unexpected situation");
   }
 
@@ -1768,9 +2010,15 @@ void correctBisectorDirection(Ray2d& bisector, Vertex& beginNextVertex, Vertex& 
 }
 
 bool areSameLav(std::vector<Vertex>& lav1, std::vector<Vertex>& lav2) {
-  LOG_AND_THROW("FIXME");
-  // FIXME Implement
-  return false;
+  if (lav1.size() != lav2.size()) {
+    return false;
+  }
+  for (int i = 0; i < lav1.size(); i++) {
+    if (lav1[i] != lav2[i]) {
+      return false;
+    }
+  }
+  return true;
 }
 
 /// Add all vertex from "merged" lav into "base" lav. Vertex are added before
@@ -1779,9 +2027,9 @@ void mergeBeforeBaseVertex(Vertex& base, std::vector<Vertex>& baseList, Vertex& 
   int size = mergedList.size();
 
   for (int i = 0; i < size; i++) {
-    int j = merged.getOffsetVertexIndex(mergedList, 1);
+    Vertex& nextMerged = merged.next(mergedList);
     auto it = std::find(baseList.begin(), baseList.end(), base);
-    baseList.insert(it, mergedList[j]);
+    baseList.insert(it, nextMerged);
   }
 
   mergedList.erase(mergedList.begin(), mergedList.end());
@@ -1801,11 +2049,8 @@ boost::optional<double> computeCloserEdgeEvent(Vertex& vertex, std::vector<Queue
   //  std::cout << "computeCloserEdgeEvent lav v " << v << std::endl;
   //}
 
-  int vertexNextIndex = vertex.getOffsetVertexIndex(sLav[vertexLavIndex], 1);
-  int vertexPreviousIndex = vertex.getOffsetVertexIndex(sLav[vertexLavIndex], -1);
-
-  Vertex nextVertex = sLav[vertexLavIndex][vertexNextIndex];
-  Vertex previousVertex = sLav[vertexLavIndex][vertexPreviousIndex];
+  Vertex& nextVertex = vertex.next(sLav[vertexLavIndex]);
+  Vertex& previousVertex = vertex.previous(sLav[vertexLavIndex]);
 
   //std::cout << "computeCloserEdgeEvent vertex " << vertex << std::endl;
   //std::cout << "computeCloserEdgeEvent nextVertex " << nextVertex << std::endl;
@@ -1861,48 +2106,59 @@ void computeEvents(Vertex& vertex, std::vector<QueueEvent>& queue, std::vector<E
 
 void multiSplitEvent(LevelEvent& event, std::vector< std::vector<Vertex> >& sLav, std::vector<QueueEvent>& queue, std::vector<Edge>& edges, std::vector<Face>& faces) {
 
-  std::vector<Chain> chains = event.chains;
-  Point3d center = event.point;
+  Point3d& center = event.point;
 
-  createOppositeEdgeChains(sLav, chains, center);
+  createOppositeEdgeChains(sLav, event.chains, center);
 
   // sort list of chains clock wise
-  LOG_AND_THROW("FIXME");
-  //std::sort(chains.begin(), chains.end()); // FIXME implement compare function
+  std::sort(event.chains.begin(), event.chains.end(), Chain::Comparer(center));
+
+  for (Chain& c : event.chains) {
+    //std::cout << "multiSplitEvent event.chain " << c << std::endl;
+  }
+
+  //debugSlav("multiSplitEvent slav", sLav);
 
   // connect all edges into new bisectors and lavs
-  int edgeListSize = chains.size();
+  int edgeListSize = event.chains.size();
   for (int i = 0; i < edgeListSize; i++) {
-    Chain& chainBegin = chains[i];
-    Chain& chainEnd = chains[(i + 1) % edgeListSize];
+    //std::cout << "multiSplitEvent i " << i << std::endl;
+    Chain& chainBegin = event.chains[i];
+    Chain& chainEnd = event.chains[(i + 1) % edgeListSize];
 
     Vertex newVertex = createMultiSplitVertex(chainBegin.getNextEdge(), chainEnd.getPreviousEdge(), center, event.distance);
 
     // Split and merge lavs...
-    Vertex& beginNextVertex = chainBegin.getNextVertex();
-    Vertex& endPreviousVertex = chainEnd.getPreviousVertex();
+    Vertex& beginNextVertex = chainBegin.getNextVertex(sLav);
+    Vertex& endPreviousVertex = chainEnd.getPreviousVertex(sLav);
 
     correctBisectorDirection(newVertex.bisector.get(), beginNextVertex, endPreviousVertex, chainBegin.getNextEdge(), chainEnd.getPreviousEdge());
 
-    std::vector<Vertex> beginNextVertexLav = sLav[beginNextVertex.getLavIndex(sLav)];
-    std::vector<Vertex> endPreviousVertexLav = sLav[endPreviousVertex.getLavIndex(sLav)];
+    std::vector<Vertex>& beginNextVertexLav = sLav[beginNextVertex.getLavIndex(sLav)];
+    std::vector<Vertex>& endPreviousVertexLav = sLav[endPreviousVertex.getLavIndex(sLav)];
 
     if (areSameLav(beginNextVertexLav, endPreviousVertexLav)) {
+      //std::cout << "multiSplitEvent isSameLav true" << std::endl;
       /*
       * if vertexes are in same lav we need to cut part of lav in the
       * middle of vertex and create new lav from that points
       */
 
+      //debugSlav("multiSplitEvent slav before lavPart", sLav);
+
       std::vector<Vertex> lavPart = beginNextVertex.cutLavPart(beginNextVertexLav, endPreviousVertex);
+
+      //debugLav("multiSplitEvent lavPart", lavPart);
 
       std::vector<Vertex> lav;
       lav.push_back(newVertex);
-      for (Vertex vertex : lavPart) {
+      for (Vertex& vertex : lavPart) {
         lav.push_back(vertex);
       }
       sLav.push_back(lav);
 
     } else {
+      //std::cout << "multiSplitEvent isSameLav false" << std::endl;
       /*
       * if vertexes are in different lavs we need to merge them into
       * one.
@@ -1915,9 +2171,12 @@ void multiSplitEvent(LevelEvent& event, std::vector< std::vector<Vertex> >& sLav
       sLav[lavIndex].insert(it + 1, newVertex);
     }
 
+    //std::cout << "multiSplitEvent newVertex " << newVertex << std::endl;
+    //debugSlav("multiSplitEvent slav", sLav);
+    //debugQueue("multiSplitEvent queue", queue);
+    //debugEdges("multiSplitEvent edges", edges);
     computeEvents(newVertex, queue, edges, sLav);
 
-    LOG_AND_THROW("FIXME");
     //std::tuple<bool, FaceNode> t = addSplitFaces(hasLastFaceNode, lastFaceNode, chainBegin, chainEnd, newVertex, faces);
     // FIXME: hasLastFaceNode = std::get<0>(t);
     // FIXME: lastFaceNode = std::get<1>(t);
@@ -1925,10 +2184,10 @@ void multiSplitEvent(LevelEvent& event, std::vector< std::vector<Vertex> >& sLav
   }
 
   // remove all centers of events from lav
-  edgeListSize = chains.size();
+  edgeListSize = event.chains.size();
   for (int i = 0; i < edgeListSize; i++) {
-    Chain& chainBegin = chains[i];
-    Chain& chainEnd = chains[(i + 1) % edgeListSize];
+    Chain& chainBegin = event.chains[i];
+    Chain& chainEnd = event.chains[(i + 1) % edgeListSize];
 
     chainBegin.getCurrentVertex().get().removeFromLav(sLav);
     chainEnd.getCurrentVertex().get().removeFromLav(sLav);
@@ -1961,7 +2220,7 @@ void addFaceBack(Vertex& newVertex, Vertex& va, Vertex& vb, std::vector<Face>& f
       face.vertexes.push_back(newVertex);
     }
   }
-  debugFaces("addFaceBack", faces);
+  //debugFaces("addFaceBack", faces);
 }
 
 void addMultiBackFaces(std::vector<QueueEvent>& edgeList, Vertex& edgeVertex, std::vector< std::vector<Vertex> >& sLav, std::vector<QueueEvent>& queue, std::vector<Face>& faces) {
@@ -1998,7 +2257,7 @@ void addFaceLeft(Vertex& newVertex, Vertex& va, std::vector<Face>& faces) {
       break;
     }
   }
-  debugFaces("addFaceLeft", faces);
+  //debugFaces("addFaceLeft", faces);
 }
 
 void addFaceRight(Vertex& newVertex, Vertex& vb, std::vector<Face>& faces) {
@@ -2010,13 +2269,13 @@ void addFaceRight(Vertex& newVertex, Vertex& vb, std::vector<Face>& faces) {
       break;
     }
   }
-  debugFaces("addFaceRight", faces);
+  //debugFaces("addFaceRight", faces);
 }
 
 void multiEdgeEvent(LevelEvent& event, std::vector< std::vector<Vertex> >& sLav, std::vector<QueueEvent>& queue, std::vector<Edge>& edges, std::vector<Face>& faces) {
 
-  Vertex& prevVertex = event.chain.getPreviousVertex();
-  Vertex& nextVertex = event.chain.getNextVertex();
+  Vertex& prevVertex = event.chain.getPreviousVertex(sLav);
+  Vertex& nextVertex = event.chain.getNextVertex(sLav);
 
   setProcessed(prevVertex, sLav, queue);
   setProcessed(nextVertex, sLav, queue);
@@ -2025,10 +2284,10 @@ void multiEdgeEvent(LevelEvent& event, std::vector< std::vector<Vertex> >& sLav,
   Vertex edgeVertex = Vertex(event.point, event.distance, bisector, prevVertex.previousEdge.get(), nextVertex.nextEdge.get());
 
   // left face
-  addFaceLeft(edgeVertex, event.chain.getPreviousVertex(), faces);
+  addFaceLeft(edgeVertex, event.chain.getPreviousVertex(sLav), faces);
 
   // right face
-  addFaceRight(edgeVertex, event.chain.getNextVertex(), faces);
+  addFaceRight(edgeVertex, event.chain.getNextVertex(sLav), faces);
 
   int lavIndex = prevVertex.getLavIndex(sLav);
   auto it = std::find(sLav[lavIndex].begin(), sLav[lavIndex].end(), prevVertex);
@@ -2041,6 +2300,7 @@ void multiEdgeEvent(LevelEvent& event, std::vector< std::vector<Vertex> >& sLav,
 }
 
 //std::tuple<bool, FaceNode> addSplitFaces(bool hasLastFaceNode, FaceNode& lastFaceNode, Chain& chainBegin, Chain& chainEnd, Vertex& newVertex, std::vector<Face>& faces) {
+//  LOG_AND_THROW("FIXME");
 //  if (chainBegin.chainType == TYPE_SINGLE_EDGE) {
 //    /*
 //    * When chain is generated by opposite edge we need to share face
@@ -2131,16 +2391,17 @@ Vertex createOppositeEdgeVertex(Vertex& newVertex) {
 void processTwoNodeLavs(std::vector< std::vector<Vertex> >& sLav, std::vector<QueueEvent>& queue, std::vector<Face>& faces) {
   for (std::vector<Vertex> lav : sLav) {
     if (lav.size() == 2) {
-      int j = lav[0].getOffsetVertexIndex(lav, 1);
+      Vertex& first = lav[0];
+      Vertex& last = first.next(lav);
 
       // FIXME FaceQueueUtil.connectQueues(lav[0].leftFace, lav[j].rightFace);
       // FIXME FaceQueueUtil.connectQueues(lav[0].rightFace, lav[j].leftFace);
 
-      setProcessed(lav[0], sLav, queue);
-      setProcessed(lav[j], sLav, queue);
+      setProcessed(first, sLav, queue);
+      setProcessed(last, sLav, queue);
 
-      lav[0].removeFromLav(sLav);
-      lav[lav.size() - 1].removeFromLav(sLav);
+      first.removeFromLav(sLav);
+      last.removeFromLav(sLav);
 
     }
   }
@@ -2166,7 +2427,7 @@ void removeEmptyLav(std::vector< std::vector<Vertex> >& sLav) {
   }
 }
 
-std::vector< std::vector<Point3d> > doStraightSkeleton(std::vector<Point3d>& polygon, double roofPitchDegrees) {
+RoofOutput doStraightSkeleton(std::vector<Point3d>& polygon, double roofPitchDegrees) {
 
   /* Straight skeleton algorithm implementation. Based on highly modified Petr
   * Felkel and Stepan Obdrzalek algorithm.
@@ -2183,8 +2444,6 @@ std::vector< std::vector<Point3d> > doStraightSkeleton(std::vector<Point3d>& pol
   initSlav(polygon, sLav, edges, faces);
   initEvents(sLav, queue, edges);
 
-  debugQueue("doStraightSkeleton", queue);
-
   int count = 0;
 
   //std::cout << "queue " << queue.size() << std::endl;
@@ -2193,10 +2452,12 @@ std::vector< std::vector<Point3d> > doStraightSkeleton(std::vector<Point3d>& pol
     count = assertMaxNumberOfIterations(count);
     //std::cout << "count " << count << std::endl;
 
+    std::sort(queue.begin(), queue.end());
+
     double levelHeight = queue[0].distance;
     //std::cout << "levelHeight " << levelHeight << std::endl;
 
-    std::vector<LevelEvent> levelEvents = loadAndGroupLevelEvents(queue);
+    std::vector<LevelEvent> levelEvents = loadAndGroupLevelEvents(queue, sLav);
 
     for (LevelEvent& event : levelEvents) {
 
@@ -2211,12 +2472,15 @@ std::vector< std::vector<Point3d> > doStraightSkeleton(std::vector<Point3d>& pol
       processedEvents.push_back(event);
 
       if (event.eventType == LevelEvent::TYPE_MULTI_SPLIT) {
+        //std::cout << "skeleton eventType multiSplitEvent" << std::endl;
         multiSplitEvent(event, sLav, queue, edges, faces);
         continue;
       } else if (event.eventType == LevelEvent::TYPE_PICK) {
+        //std::cout << "skeleton eventType pickEvent" << std::endl;
         pickEvent(event, sLav, queue, edges, faces);
         continue;
       } else if (event.eventType == LevelEvent::TYPE_MULTI_EDGE) {
+        //std::cout << "skeleton eventType multiEdgeEvent" << std::endl;
         multiEdgeEvent(event, sLav, queue, edges, faces);
         continue;
       } else {
@@ -2229,7 +2493,7 @@ std::vector< std::vector<Point3d> > doStraightSkeleton(std::vector<Point3d>& pol
     //}
 
     processTwoNodeLavs(sLav, queue, faces);
-    debugFaces("processTwoNodeLavs", faces);
+    //debugFaces("processTwoNodeLavs", faces);
 
     //std::cout << "queue size before " << queue.size() << std::endl;
     removeEventsUnderHeight(queue, levelHeight);
@@ -2238,65 +2502,70 @@ std::vector< std::vector<Point3d> > doStraightSkeleton(std::vector<Point3d>& pol
 
   }
 
-  //for (Edge e : edges) {
-  //  std::cout << "doStraightSkeleton edge " << e << std::endl;
-  //}
+  std::vector< std::vector<Point3d> > edgesPoint3d = edgesToPoint3d(edges);
+  std::vector< std::vector<Point3d> > roofsPoint3d = facesToPoint3d(faces, roofPitchDegrees);
 
-  std::vector< std::vector<Point3d> > roofs = facesToRoofs(faces, roofPitchDegrees);
+  RoofOutput output;
+  output.edges = edgesPoint3d;
+  output.surfaces = roofsPoint3d;
 
-  //std::cout << "OUTPUT" << std::endl;
-  //for (std::vector<Point3d> roof : roofs) {
-  //  for (Point3d p : roof) {
-  //    std::cout << p << ",";
-  //  }
-  //  std::cout << std::endl;
-  //}
-
-  return roofs;
+  return output;
 }
 
 namespace openstudio {
 
-  std::vector< std::vector<Point3d> > makeShedRoof(std::vector<Point3d>& polygon, double roofPitchDegrees, double directionDegrees) {
+  /// Generate shed roof polygons
+  std::vector< std::vector<Point3d> > generateShedRoof(std::vector<Point3d>& polygon, double roofPitchDegrees, double directionDegrees) {
     // FIXME implement
-    std::vector< std::vector<Point3d> > roofs;
+    RoofOutput output;
     try {
 
     } catch (...) {
-      return roofs;
+      return output.surfaces;
     }
 
-    return roofs;
+    return output.surfaces;
   }
 
-  std::vector< std::vector<Point3d> > makeGableRoof(std::vector<Point3d>& polygon, double roofPitchDegrees) {
-    std::vector< std::vector<Point3d> > roofs;
+  /// Generate gable roof polygons
+  std::vector< std::vector<Point3d> > generateGableRoof(std::vector<Point3d>& polygon, double roofPitchDegrees) {
+    RoofOutput output;
     try {
-      roofs = doStraightSkeleton(polygon, roofPitchDegrees);
-      if (roofs.size() == 0) {
-        return roofs;
+      output = doStraightSkeleton(polygon, roofPitchDegrees);
+      if (output.surfaces.size() == 0) {
+        return output.surfaces;
       }
     } catch (...) {
-      return roofs;
+      return output.surfaces;
     }
 
     // FIXME implement adjustments for gables
 
-    return roofs;
+    return output.surfaces;
   }
 
-  std::vector< std::vector<Point3d> > makeHipRoof(std::vector<Point3d>& polygon, double roofPitchDegrees) {
-    std::vector< std::vector<Point3d> > roofs;
+  /// Generate hip roof polygons
+  std::vector< std::vector<Point3d> > generateHipRoof(std::vector<Point3d>& polygon, double roofPitchDegrees) {
+    RoofOutput output;
     try {
-      roofs = doStraightSkeleton(polygon, roofPitchDegrees);
-      if (roofs.size() == 0) {
-        return roofs;
-      }
+      output = doStraightSkeleton(polygon, roofPitchDegrees);
     } catch (...) {
-      return roofs;
+      return output.surfaces;
     }
 
-    return roofs;
+    return output.surfaces;
+  }
+
+  /// Generate roof edges from the straight skeleton algorithm
+  std::vector< std::vector<Point3d> > generateSkeletonRoofEdges(std::vector<Point3d>& polygon) {
+    RoofOutput output;
+    try {
+      output = doStraightSkeleton(polygon, 0.0);
+    } catch (...) {
+      return output.edges;
+    }
+
+    return output.edges;
   }
 
 }
