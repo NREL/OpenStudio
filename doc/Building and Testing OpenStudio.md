@@ -90,6 +90,7 @@ In a command window:
 
 In CMake check the following:
 
+- BUILD\_DVIEW
 - BUILD\_OS\_APP
 - BUILD\_PACKAGE
 - CMAKE\_BUILD\_TYPE = Release
@@ -125,6 +126,7 @@ Point CMake to the openstudiocore folder for source, and build folder for binari
 
 In CMake check the following:
 
+- BUILD\_DVIEW
 - BUILD\_CSHARP\_BINDINGS
 - BUILD\_DOCUMENTATION
 - BUILD\_OS\_APP
@@ -158,6 +160,7 @@ In a command window:
 
 In CMake check the following:
 
+- BUILD\_DVIEW
 - BUILD\_OS\_APP
 - BUILD\_PACKAGE
 - BUILD\_PAT
