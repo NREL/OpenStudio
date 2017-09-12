@@ -156,10 +156,6 @@ void ResultsView::openDViewClicked()
 
   QStringList args;
 
-  // instruct DView to make its own copies of the sql files passed in and to clean them up
-  // when done
-  args.push_back("--maketempcopies"); 
-
   if (!m_sqlFilePath.empty())
   {
     args.push_back(openstudio::toQString(m_sqlFilePath));
