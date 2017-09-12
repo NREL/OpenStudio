@@ -50,11 +50,6 @@
 
 #include <string>
 
-// forward declaration
-namespace resultsviewer{
-  class TableView;
-}
-
 namespace openstudio {
 
 // forward declarations
@@ -860,7 +855,6 @@ private:
   std::shared_ptr<detail::SqlFile_Impl> m_impl;
 
   /// returns datadictionary of available timeseries
-  friend class ::resultsviewer::TableView;
   detail::DataDictionaryTable dataDictionary() const;
 
 };

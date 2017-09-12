@@ -259,7 +259,7 @@ namespace detail {
   {
     return 0; // this object has no inlet or outlet node
   }
-  
+
   boost::optional<ThermalZone> ZoneHVACHighTemperatureRadiant_Impl::thermalZone() const
   {
     ModelObject thisObject = this->getObject<ModelObject>();
@@ -275,7 +275,7 @@ namespace detail {
     }
     return boost::none;
   }
-  
+
   bool ZoneHVACHighTemperatureRadiant_Impl::addToThermalZone(ThermalZone & thermalZone)
   {
     Model m = this->model();
@@ -298,7 +298,7 @@ namespace detail {
 
     return true;
   }
-  
+
   void ZoneHVACHighTemperatureRadiant_Impl::removeFromThermalZone()
   {
     if ( boost::optional<ThermalZone> thermalZone = this->thermalZone() ) {
@@ -306,8 +306,8 @@ namespace detail {
     }
   }
 
-  std::vector<Surface> ZoneHVACHighTemperatureRadiant_Impl::surfaces() const {    
-    
+  std::vector<Surface> ZoneHVACHighTemperatureRadiant_Impl::surfaces() const {
+
     //vector to hold all of the surfaces that this radiant system is attached to
     std::vector<Surface> surfaces;
 
@@ -316,12 +316,12 @@ namespace detail {
 
       //loop through all the spaces in this zone
       for (const Space& space : thermalZone->spaces()){
-    
+
         //loop through all the surfaces in this space
         for (const Surface& surface : space.surfaces()){
           surfaces.push_back(surface);
         }
-      }    
+      }
     }
 
     return surfaces;
@@ -480,7 +480,7 @@ void ZoneHVACHighTemperatureRadiant::removeFromThermalZone()
 
 /// @cond
 ZoneHVACHighTemperatureRadiant::ZoneHVACHighTemperatureRadiant(std::shared_ptr<detail::ZoneHVACHighTemperatureRadiant_Impl> impl)
-  : ZoneHVACComponent(impl)
+  : ZoneHVACComponent(std::move(impl))
 {}
 /// @endcond
 

@@ -47,19 +47,19 @@ PlantEquipmentOperationScheme_Impl::PlantEquipmentOperationScheme_Impl(IddObject
 
 PlantEquipmentOperationScheme_Impl::PlantEquipmentOperationScheme_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
   : ModelObject_Impl(idfObject, model, keepHandle)
-{ 
+{
 }
 
 PlantEquipmentOperationScheme_Impl::PlantEquipmentOperationScheme_Impl(
-    const openstudio::detail::WorkspaceObject_Impl& other, 
-    Model_Impl* model, 
+    const openstudio::detail::WorkspaceObject_Impl& other,
+    Model_Impl* model,
     bool keepHandle)
   : ModelObject_Impl(other,model,keepHandle)
 {
 }
 
-PlantEquipmentOperationScheme_Impl::PlantEquipmentOperationScheme_Impl(const PlantEquipmentOperationScheme_Impl& other, 
-                                               Model_Impl* model, 
+PlantEquipmentOperationScheme_Impl::PlantEquipmentOperationScheme_Impl(const PlantEquipmentOperationScheme_Impl& other,
+                                               Model_Impl* model,
                                                bool keepHandles)
   : ModelObject_Impl(other,model,keepHandles)
 {
@@ -75,10 +75,10 @@ PlantEquipmentOperationScheme::PlantEquipmentOperationScheme(IddObjectType type,
   : ModelObject(type,model)
 {
   OS_ASSERT(getImpl<detail::PlantEquipmentOperationScheme_Impl>());
-}     
+}
 
 PlantEquipmentOperationScheme::PlantEquipmentOperationScheme(std::shared_ptr<detail::PlantEquipmentOperationScheme_Impl> p)
-  : ModelObject(p)
+  : ModelObject(std::move(p))
 {}
 
 boost::optional<PlantLoop> PlantEquipmentOperationScheme::plantLoop() const {

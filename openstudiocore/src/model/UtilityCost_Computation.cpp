@@ -147,7 +147,7 @@ UtilityCost_Computation::UtilityCost_Computation(const Model& model)
 
 // constructor
 UtilityCost_Computation::UtilityCost_Computation(std::shared_ptr<detail::UtilityCost_Computation_Impl> impl)
-  : ParentObject(impl)
+  : ParentObject(std::move(impl))
 {}
 
 OptionalString UtilityCost_Computation::name() const

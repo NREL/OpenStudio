@@ -43,8 +43,8 @@ namespace detail {
     : ResourceObject_Impl(idfObject,model,keepHandle)
   {}
 
-  Curve_Impl::Curve_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
-                         Model_Impl* model, 
+  Curve_Impl::Curve_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                         Model_Impl* model,
                          bool keepHandle)
     : ResourceObject_Impl(other,model,keepHandle)
   {}
@@ -107,13 +107,13 @@ double Curve::evaluate(double x, double y, double z) const {
 
 /// @cond
 Curve::Curve(IddObjectType type, const Model& model)
-  : ResourceObject(type,model) 
+  : ResourceObject(type,model)
 {
   OS_ASSERT(getImpl<detail::Curve_Impl>());
 }
 
 Curve::Curve(std::shared_ptr<detail::Curve_Impl> impl)
-  : ResourceObject(impl)
+  : ResourceObject(std::move(impl))
 {}
 /// @endcond
 

@@ -42,12 +42,12 @@ namespace detail {
     : ResourceObject_Impl(idfObject, model, keepHandle)
   {}
 
-  Material_Impl::Material_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
-                               Model_Impl* model, 
+  Material_Impl::Material_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                               Model_Impl* model,
                                bool keepHandle)
     : ResourceObject_Impl(other, model, keepHandle)
   {}
-  
+
   Material_Impl::Material_Impl(const Material_Impl& other,Model_Impl* model,bool keepHandle)
     : ResourceObject_Impl(other, model, keepHandle)
   {}
@@ -85,7 +85,7 @@ namespace detail {
 } // detail
 
 Material::Material(IddObjectType type,const Model& model)
-  : ResourceObject(type,model) 
+  : ResourceObject(type,model)
 {
   OS_ASSERT(getImpl<detail::Material_Impl>());
 }
@@ -117,7 +117,7 @@ StandardsInformationMaterial Material::standardsInformation() const
 
 /// @cond
 Material::Material(std::shared_ptr<detail::Material_Impl> impl)
-  : ResourceObject(impl)
+  : ResourceObject(std::move(impl))
 {}
 /// @endcond
 

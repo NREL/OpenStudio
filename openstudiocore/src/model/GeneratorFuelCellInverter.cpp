@@ -264,7 +264,7 @@ GeneratorFuelCell GeneratorFuelCellInverter::fuelCell() const {
 
 /// @cond
 GeneratorFuelCellInverter::GeneratorFuelCellInverter(std::shared_ptr<detail::GeneratorFuelCellInverter_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

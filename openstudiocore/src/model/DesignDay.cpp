@@ -147,7 +147,7 @@ namespace detail {
   bool DesignDay_Impl::isSkyClearnessDefaulted() const {
     return isEmpty(OS_SizingPeriod_DesignDayFields::SkyClearness);
   }
- 
+
   bool DesignDay_Impl::rainIndicator() const {
     bool result(false);
     int i = getInt(OS_SizingPeriod_DesignDayFields::RainIndicator,true).get();
@@ -160,7 +160,7 @@ namespace detail {
   bool DesignDay_Impl::isRainIndicatorDefaulted() const {
     return isEmpty(OS_SizingPeriod_DesignDayFields::RainIndicator);
   }
-    
+
   bool DesignDay_Impl::snowIndicator() const {
     bool result(false);
     int i = getInt(OS_SizingPeriod_DesignDayFields::SnowIndicator,true).get();
@@ -173,7 +173,7 @@ namespace detail {
   bool DesignDay_Impl::isSnowIndicatorDefaulted() const {
     return isEmpty(OS_SizingPeriod_DesignDayFields::SnowIndicator);
   }
-  
+
   int DesignDay_Impl::dayOfMonth() const {
     boost::optional<int> value = getInt(OS_SizingPeriod_DesignDayFields::DayofMonth,true);
     OS_ASSERT(value);
@@ -216,7 +216,7 @@ namespace detail {
   bool DesignDay_Impl::isDaylightSavingTimeIndicatorDefaulted() const {
     return isEmpty(OS_SizingPeriod_DesignDayFields::DaylightSavingTimeIndicator);
   }
-    
+
   std::string DesignDay_Impl::humidityIndicatingType() const {
     boost::optional<std::string> value = getString(
         OS_SizingPeriod_DesignDayFields::HumidityIndicatingType,true);
@@ -242,7 +242,7 @@ namespace detail {
 
   bool DesignDay_Impl::isDryBulbTemperatureRangeModifierTypeDefaulted() const {
     return isEmpty(OS_SizingPeriod_DesignDayFields::DryBulbTemperatureRangeModifierType);
-  }  
+  }
 
   boost::optional<ScheduleDay> DesignDay_Impl::dryBulbTemperatureRangeModifierSchedule() const
   {
@@ -447,12 +447,12 @@ namespace detail {
     bool result = setString(OS_SizingPeriod_DesignDayFields::HumidityIndicatingType, "");
     OS_ASSERT(result);
   }
-  
+
   bool DesignDay_Impl::setHumidityIndicatingDaySchedule(const ScheduleDay& schedule) {
     return this->getObject<ModelObject>().setPointer(
         OS_SizingPeriod_DesignDayFields::HumidityIndicatingDayScheduleName,schedule.handle());
   }
-  
+
   void DesignDay_Impl::resetHumidityIndicatingDaySchedule() {
     this->setString(OS_SizingPeriod_DesignDayFields::HumidityIndicatingDayScheduleName,"");
   }
@@ -466,11 +466,11 @@ namespace detail {
     bool result = setString(OS_SizingPeriod_DesignDayFields::DryBulbTemperatureRangeModifierType, "");
     OS_ASSERT(result);
   }
-      
+
   bool DesignDay_Impl::setDryBulbTemperatureRangeModifierSchedule(const ScheduleDay& schedule) {
     return this->getObject<ModelObject>().setPointer(OS_SizingPeriod_DesignDayFields::DryBulbTemperatureRangeModifierScheduleName,schedule.handle());
   }
-  
+
   void DesignDay_Impl::resetDryBulbTemperatureRangeModifierSchedule() {
     this->setString(OS_SizingPeriod_DesignDayFields::DryBulbTemperatureRangeModifierScheduleName,"");
   }
@@ -484,19 +484,19 @@ namespace detail {
     bool result = setString(OS_SizingPeriod_DesignDayFields::SolarModelIndicator, "");
     OS_ASSERT(result);
   }
-  
+
   bool DesignDay_Impl::setBeamSolarDaySchedule(const ScheduleDay & schedule) {
     return this->setPointer(OS_SizingPeriod_DesignDayFields::BeamSolarDayScheduleName,schedule.handle());
   }
-  
+
   void DesignDay_Impl::resetBeamSolarDaySchedule() {
     this->setString(OS_SizingPeriod_DesignDayFields::BeamSolarDayScheduleName,"");
   }
-  
+
   bool DesignDay_Impl::setDiffuseSolarDaySchedule(const ScheduleDay & schedule) {
     return this->setPointer(OS_SizingPeriod_DesignDayFields::DiffuseSolarDayScheduleName,schedule.handle());
   }
-  
+
   void DesignDay_Impl::resetDiffuseSolarDaySchedule() {
     this->setString(OS_SizingPeriod_DesignDayFields::DiffuseSolarDayScheduleName,"");
   }
@@ -510,8 +510,8 @@ namespace detail {
     return result;
   }
 
-  boost::optional<ModelObject> 
-  DesignDay_Impl::dryBulbTemperatureRangeModifierScheduleAsModelObject() const 
+  boost::optional<ModelObject>
+  DesignDay_Impl::dryBulbTemperatureRangeModifierScheduleAsModelObject() const
   {
     OptionalModelObject result;
     OptionalScheduleDay schedule = dryBulbTemperatureRangeModifierSchedule();
@@ -661,7 +661,7 @@ DesignDay::DesignDay(const Model& model)
   OS_ASSERT(getImpl<detail::DesignDay_Impl>());
 
   setMaximumDryBulbTemperature(23.0);
-  setDailyDryBulbTemperatureRange(0.0);  
+  setDailyDryBulbTemperatureRange(0.0);
   setHumidityIndicatingConditionsAtMaximumDryBulb(23.0);
   setBarometricPressure(31000);
   setWindSpeed(0.0);
@@ -679,7 +679,7 @@ DesignDay::DesignDay(const Model& model)
 
 // constructor
 DesignDay::DesignDay(std::shared_ptr<detail::DesignDay_Impl> impl)
-  : SizingPeriod(impl)
+  : SizingPeriod(std::move(impl))
 {}
 
 IddObjectType DesignDay::iddObjectType() {
@@ -1026,7 +1026,7 @@ void DesignDay::resetBeamSolarDaySchedule() {
 
 bool DesignDay::setDiffuseSolarDaySchedule(const ScheduleDay& schedule) {
   return getImpl<detail::DesignDay_Impl>()->setDiffuseSolarDaySchedule(schedule);
-} 
+}
 
 void DesignDay::resetDiffuseSolarDaySchedule() {
   getImpl<detail::DesignDay_Impl>()->resetDiffuseSolarDaySchedule();

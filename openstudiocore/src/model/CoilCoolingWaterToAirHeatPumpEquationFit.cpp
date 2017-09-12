@@ -1012,7 +1012,7 @@ namespace detail {
 
 /// @cond
 CoilCoolingWaterToAirHeatPumpEquationFit::CoilCoolingWaterToAirHeatPumpEquationFit(std::shared_ptr<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl> impl)
-  : WaterToAirComponent(impl)
+  : WaterToAirComponent(std::move(impl))
 {}
 /// @endcond
 

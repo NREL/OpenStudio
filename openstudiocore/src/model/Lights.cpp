@@ -123,7 +123,7 @@ namespace detail {
     if (wattsperPerson){
       return lightsDefinition.setLightingLevel(*wattsperPerson * space->numberOfPeople());
     }
-  
+
     return false;
   }
 
@@ -422,7 +422,7 @@ LightsDefinition Lights::lightsDefinition() const
   return getImpl<detail::Lights_Impl>()->lightsDefinition();
 }
 
-bool Lights::setLightsDefinition(const LightsDefinition& lightsDefinition) 
+bool Lights::setLightsDefinition(const LightsDefinition& lightsDefinition)
 {
   return getImpl<detail::Lights_Impl>()->setLightsDefinition(lightsDefinition);
 }
@@ -453,7 +453,7 @@ double Lights::getPowerPerPerson(double floorArea, double numPeople) const {
 
 /// @cond
 Lights::Lights(std::shared_ptr<detail::Lights_Impl> impl)
-  : SpaceLoadInstance(impl)
+  : SpaceLoadInstance(std::move(impl))
 {}
 /// @endcond
 

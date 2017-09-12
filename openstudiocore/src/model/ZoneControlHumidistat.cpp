@@ -188,7 +188,7 @@ boost::optional<ThermalZone> ZoneControlHumidistat::controlledZone() const {
 
 /// @cond
 ZoneControlHumidistat::ZoneControlHumidistat(std::shared_ptr<detail::ZoneControlHumidistat_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

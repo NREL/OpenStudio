@@ -145,7 +145,7 @@ class UTILITIES_API Workspace {
                         StrictnessLevel level = StrictnessLevel::Draft) const;
 
   /** Swaps underlying data between this workspace and other. Throws if other and this
-   *  are not of the same type (must both be plain Workspaces, model::Models, or 
+   *  are not of the same type (must both be plain Workspaces, model::Models, or
    *  model::Components). */
   void swap(Workspace& other);
 
@@ -256,7 +256,7 @@ class UTILITIES_API Workspace {
    *  objects at once to avoid losing pointer (name/UUID reference) information. If successful,
    *  returned vector is of the same size, and is in the same order, as idfObjects. Otherwise,
    *  return value will be .empty(). If IdfObjects have handles they will be preserved.*/
-  std::vector<WorkspaceObject> addObjects(const std::vector<IdfObject>& idfObjects);
+  std::vector<WorkspaceObject> addObjects(const std::vector<IdfObject>& idfObjects, bool checkNames = true);
 
   /** Insert idfObjects into Workspace, if possible. Looks for equivalent objects first, then
    *  adds if necessary. If successful, new and equivalent objects will be returned in same order
@@ -282,7 +282,7 @@ class UTILITIES_API Workspace {
    *  \li objects[i] -> external object becomes NULL or result[i] -> external object depending on
    *      whether objects[0].workspace() == *this.
    *  \li external object -> objects[i] is not in any way duplicated in result */
-  std::vector<WorkspaceObject> addObjects(const std::vector<WorkspaceObject>& objects);
+  std::vector<WorkspaceObject> addObjects(const std::vector<WorkspaceObject>& objects, bool checkNames = true);
 
   /** Insert objects into this Workspace, if possible. All objects are assumed to be from the same
    *  workspace, possibly this one. Data is only cloned if no equivalent object is located in this
@@ -464,7 +464,7 @@ class UTILITIES_API Workspace {
     if (!impl){
       throw(std::bad_cast());
     }
-    return T(impl);
+    return T(std::move(impl));
   }
 
   /** Cast to boost::optional<T>. Returns boost::none on failure of cast. */
@@ -473,7 +473,7 @@ class UTILITIES_API Workspace {
     boost::optional<T> result;
     std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
     if (impl) {
-      result = T(impl);
+      result = T(std::move(impl));
     }
     return result;
   }

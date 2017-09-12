@@ -310,7 +310,7 @@ std::vector<CentralHeatPumpSystemModule> CentralHeatPumpSystem::modules() const 
 
 /// @cond
 CentralHeatPumpSystem::CentralHeatPumpSystem(std::shared_ptr<detail::CentralHeatPumpSystem_Impl> impl)
-  : WaterToWaterComponent(impl)
+  : WaterToWaterComponent(std::move(impl))
 {}
 /// @endcond
 

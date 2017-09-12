@@ -393,7 +393,7 @@ void CurveSigmoid::resetOutputUnitType() {
 
 /// @cond
 CurveSigmoid::CurveSigmoid(std::shared_ptr<detail::CurveSigmoid_Impl> impl)
-  : Curve(impl)
+  : Curve(std::move(impl))
 {}
 /// @endcond
 

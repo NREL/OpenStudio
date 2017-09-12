@@ -38,7 +38,7 @@
 
 #include "../utilities/core/Assert.hpp"
 
-#include <boost/algorithm/string.hpp>  
+#include <boost/algorithm/string.hpp>
 
 namespace openstudio {
 namespace model {
@@ -64,8 +64,8 @@ namespace detail {
                            OtherEquipmentDefinition,0,OS_OtherEquipment_Definition,FractionLost)
 
 
-  OtherEquipmentDefinition_Impl::OtherEquipmentDefinition_Impl(const IdfObject& idfObject, 
-                                                               Model_Impl* model, 
+  OtherEquipmentDefinition_Impl::OtherEquipmentDefinition_Impl(const IdfObject& idfObject,
+                                                               Model_Impl* model,
                                                                bool keepHandle)
     : SpaceLoadDefinition_Impl(idfObject,model,keepHandle)
   {
@@ -161,7 +161,7 @@ namespace detail {
     } else {
       result = setString(OS_OtherEquipment_DefinitionFields::DesignLevel, "");
     }
-  
+
     return result;
   }
 
@@ -242,7 +242,7 @@ namespace detail {
     return 0.0;
   }
 
-  double OtherEquipmentDefinition_Impl::getPowerPerFloorArea(double floorArea, 
+  double OtherEquipmentDefinition_Impl::getPowerPerFloorArea(double floorArea,
                                                                   double numPeople) const
   {
     std::string method = designLevelCalculationMethod();
@@ -290,9 +290,9 @@ namespace detail {
     OS_ASSERT(false);
     return 0.0;
   }
- 
-  bool OtherEquipmentDefinition_Impl::setDesignLevelCalculationMethod(const std::string& method, 
-                                                                      double floorArea, 
+
+  bool OtherEquipmentDefinition_Impl::setDesignLevelCalculationMethod(const std::string& method,
+                                                                      double floorArea,
                                                                       double numPeople)
   {
     std::string wmethod(method);
@@ -308,7 +308,7 @@ namespace detail {
     else if (wmethod == "watts/person") {
       return setWattsperPerson(getPowerPerPerson(floorArea,numPeople));
     }
-    
+
     return false;
   }
 
@@ -420,8 +420,8 @@ double OtherEquipmentDefinition::getPowerPerPerson(double floorArea, double numP
   return getImpl<detail::OtherEquipmentDefinition_Impl>()->getPowerPerPerson(floorArea,numPeople);
 }
 
-bool OtherEquipmentDefinition::setDesignLevelCalculationMethod(const std::string& method, 
-                                     double floorArea, 
+bool OtherEquipmentDefinition::setDesignLevelCalculationMethod(const std::string& method,
+                                     double floorArea,
                                      double numPeople)
 {
   return getImpl<detail::OtherEquipmentDefinition_Impl>()->setDesignLevelCalculationMethod(method,floorArea,numPeople);
@@ -429,7 +429,7 @@ bool OtherEquipmentDefinition::setDesignLevelCalculationMethod(const std::string
 
 /// @cond
 OtherEquipmentDefinition::OtherEquipmentDefinition(std::shared_ptr<detail::OtherEquipmentDefinition_Impl> impl)
-  : SpaceLoadDefinition(impl)
+  : SpaceLoadDefinition(std::move(impl))
 {}
 /// @endcond
 

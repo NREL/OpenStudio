@@ -47,9 +47,9 @@ namespace detail {
 // forward declarations
 class IdfObject;
 
-/** IdfExtensibleGroup wraps a single set of extensible fields in an IdfObject. For instance, 
+/** IdfExtensibleGroup wraps a single set of extensible fields in an IdfObject. For instance,
  *  many geometric objects have extensible groups each of which represents a single vertex
- *  (one three-dimensional point). (Also see the documentation for IddObject, 
+ *  (one three-dimensional point). (Also see the documentation for IddObject,
  *  IddObjectProperties, and ExtensibleIndex.) */
 class UTILITIES_API IdfExtensibleGroup {
  public:
@@ -62,7 +62,7 @@ class UTILITIES_API IdfExtensibleGroup {
   /** @name Getters */
   //@{
 
-  /** Returns this extensible group's fields. Return value will be empty() if this group is 
+  /** Returns this extensible group's fields. Return value will be empty() if this group is
    *  empty(). */
   std::vector<std::string> fields(bool returnDefault = false) const;
 
@@ -72,10 +72,10 @@ class UTILITIES_API IdfExtensibleGroup {
   /** Returns the comment associated with this extensible group's field fieldIndex. */
   boost::optional<std::string> fieldComment(unsigned fieldIndex, bool returnDefault = false) const;
 
-  /** Returns the string value of this extensible group's field fieldIndex, if that field 
+  /** Returns the string value of this extensible group's field fieldIndex, if that field
    *  exists (isValid(fieldIndex)). */
   boost::optional<std::string> getString(unsigned fieldIndex, bool returnDefault = false) const;
-  
+
   /** Returns true if the field is empty. */
   bool isEmpty(unsigned fieldIndex) const;
 
@@ -95,51 +95,51 @@ class UTILITIES_API IdfExtensibleGroup {
   /** @name Setters */
   //@{
 
-  /** Sets the comment associated with this extensible group's field fieldIndex, if possible. 
+  /** Sets the comment associated with this extensible group's field fieldIndex, if possible.
    *  Otherwise, returns false. */
   bool setFieldComment(unsigned fieldIndex, const std::string& cmnt);
 
-  /** Set all the fields in this IdfExtensibleGroup, if possible. Returns false if values is wrong 
+  /** Set all the fields in this IdfExtensibleGroup, if possible. Returns false if values is wrong
    *  size or setString fails on any individual fields. */
   bool setFields(const std::vector<std::string>& values);
 
-  /** Set this extensible group's field fieldIndex to value, if possible. Returns false if it 
+  /** Set this extensible group's field fieldIndex to value, if possible. Returns false if it
    *  cannot be set for any reason. */
   bool setString(unsigned fieldIndex, const std::string& value);
 
   /** setString that can delay signal emits. */
   bool setString(unsigned fieldIndex, const std::string& value, bool checkValidity);
 
-  /** Set this extensible group's field fieldIndex to value, if possible. Returns false if it 
+  /** Set this extensible group's field fieldIndex to value, if possible. Returns false if it
    *  cannot be set for any reason. */
   bool setDouble(unsigned fieldIndex, double value);
 
-  /** Set this extensible group's field fieldIndex to value, if possible. Returns false if it 
+  /** Set this extensible group's field fieldIndex to value, if possible. Returns false if it
    *  cannot be set for any reason. */
   bool setUnsigned(unsigned fieldIndex, unsigned value);
 
-  /** Set this extensible group's field fieldIndex to value, if possible. Returns false if it 
+  /** Set this extensible group's field fieldIndex to value, if possible. Returns false if it
    *  cannot be set for any reason. */
   bool setInt(unsigned fieldIndex, int value);
 
   /** Clones the data in this extensible group, and pushes the new extensible group onto the end
-   *  of the enclosing object. The returned IdfExtensibleGroup will be empty() if the operation 
+   *  of the enclosing object. The returned IdfExtensibleGroup will be empty() if the operation
    *  cannot be completed. */
   IdfExtensibleGroup pushClone() const;
 
   /** Clones the data in this extensible group, and inserts the new extensible group at groupIndex
-   *  within the enclosing object. The returned IdfExtensibleGroup will be empty() if the operation 
+   *  within the enclosing object. The returned IdfExtensibleGroup will be empty() if the operation
    *  cannot be completed. */
   IdfExtensibleGroup insertClone(unsigned groupIndex) const;
 
-  //@} 
+  //@}
   /** @name Queries */
   //@{
 
   /** Returns true if this ExtensibleGroup holds no data. */
   bool empty() const;
 
-  /** Returns the (group) index of this ExtensibleGroup. Indexing starts at 0. Throws if 
+  /** Returns the (group) index of this ExtensibleGroup. Indexing starts at 0. Throws if
    *  ExtensibleGroup is empty(). */
   unsigned groupIndex() const;
 
@@ -156,17 +156,17 @@ class UTILITIES_API IdfExtensibleGroup {
    *  alpha or numeric data). */
   std::vector<unsigned> dataFields() const;
 
-  /** Returns the indices of all fields in this ExtensibleGroup that are required, as defined 
+  /** Returns the indices of all fields in this ExtensibleGroup that are required, as defined
    *  by the IddObject. */
   std::vector<unsigned> requiredFields() const;
 
-  /** Equality comparator for \link IdfExtensibleGroup IdfExtensibleGroups\endlink. Tests for 
+  /** Equality comparator for \link IdfExtensibleGroup IdfExtensibleGroups\endlink. Tests for
    *  strict identity (same IdfObject, same groupIndex()). */
   bool operator==(const IdfExtensibleGroup& other) const;
 
   /** Negation of operator==.*/
   bool operator!=(const IdfExtensibleGroup& other) const;
- 
+
   //@}
   /** @name Type Casting */
   //@{
@@ -174,7 +174,7 @@ class UTILITIES_API IdfExtensibleGroup {
   /// cast to type T, can throw std::bad_cast
   template<typename T>
   T cast() const{
-    return T(this->getImpl<typename T::ImplType>(),m_index);
+    return T(std::move(this->getImpl<typename T::ImplType>()),m_index);
   }
 
   /// cast to optional of type T
@@ -183,27 +183,27 @@ class UTILITIES_API IdfExtensibleGroup {
     boost::optional<T> result;
     std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
     if (impl){
-      result = T(impl,m_index);
+      result = T(std::move(impl),m_index);
     }
     return result;
   }
 
   /** Get the parent object. */
   template<typename T>
-  T getObject() const { 
-    T result(std::dynamic_pointer_cast<typename T::ImplType>(m_impl));
-    return result; 
+  T getObject() const {
+    T result(std::move(std::dynamic_pointer_cast<typename T::ImplType>(m_impl)));
+    return result;
   }
 
   /** Get the parent object. */
   template<typename T>
-  boost::optional<T> getOptionalObject() const { 
+  boost::optional<T> getOptionalObject() const {
     boost::optional<T> result;
     std::shared_ptr<typename T::ImplType> p = std::dynamic_pointer_cast<typename T::ImplType>(m_impl);
     if (p){
-     result = T(p);
+     result = T(std::move(p));
     }
-    return result; 
+    return result;
   }
 
   //@}
@@ -211,7 +211,7 @@ class UTILITIES_API IdfExtensibleGroup {
   ///@cond
   typedef detail::IdfObject_Impl ImplType;
 
-  friend class detail::IdfObject_Impl;  
+  friend class detail::IdfObject_Impl;
 
   std::shared_ptr<detail::IdfObject_Impl> m_impl;
   unsigned m_index; // index corresponding to first field of the extensible group
@@ -219,25 +219,25 @@ class UTILITIES_API IdfExtensibleGroup {
   // get the impl
   template<typename T>
   std::shared_ptr<T> getImpl() const
-  {  
-    return std::dynamic_pointer_cast<T>(m_impl); 
+  {
+    return std::dynamic_pointer_cast<T>(m_impl);
   }
 
   /** Private constructor to be used by IdfObject. */
-  IdfExtensibleGroup(std::shared_ptr<detail::IdfObject_Impl> impl,unsigned index);  
+  IdfExtensibleGroup(std::shared_ptr<detail::IdfObject_Impl> impl,unsigned index);
 
   /** Set all the fields in this group, if possible. Returns false if values is wrong size or
    *  setString fails on any individual fields. Emits signals if checkValidity == true. Function
    *  provided so object method implementations can call it with checkValidity == false. */
   bool setFields(const std::vector<std::string>& values,bool checkValidity);
 
-  unsigned mf_toIndex(unsigned fieldIndex) const; 
+  unsigned mf_toIndex(unsigned fieldIndex) const;
 
   /** Return all object indices accessible through this extensible group. */
   std::vector<unsigned> mf_indices() const;
 
   std::vector<unsigned> mf_subsetAndToFieldIndices(std::vector<unsigned> indices) const;
-  ///@endcond 
+  ///@endcond
  private:
   /** Private default constructor. */
   IdfExtensibleGroup();

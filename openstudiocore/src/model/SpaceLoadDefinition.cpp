@@ -104,7 +104,7 @@ SpaceLoadDefinition::SpaceLoadDefinition(IddObjectType type,const Model& model)
 }
 
 SpaceLoadDefinition::SpaceLoadDefinition(std::shared_ptr<detail::SpaceLoadDefinition_Impl> impl)
-  : ResourceObject(impl)
+  : ResourceObject(std::move(impl))
 {}
 
 std::vector<SpaceLoadInstance> SpaceLoadDefinition::instances() const

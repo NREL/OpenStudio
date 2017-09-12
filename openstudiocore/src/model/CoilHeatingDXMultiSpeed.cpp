@@ -637,7 +637,7 @@ void CoilHeatingDXMultiSpeed::removeAllStages() {
 
 /// @cond
 CoilHeatingDXMultiSpeed::CoilHeatingDXMultiSpeed(std::shared_ptr<detail::CoilHeatingDXMultiSpeed_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

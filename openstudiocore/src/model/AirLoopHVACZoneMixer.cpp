@@ -142,7 +142,7 @@ AirLoopHVACZoneMixer::AirLoopHVACZoneMixer(const Model& model)
 
 AirLoopHVACZoneMixer::AirLoopHVACZoneMixer(
     std::shared_ptr<detail::AirLoopHVACZoneMixer_Impl> p)
-  : Mixer(p)
+  : Mixer(std::move(p))
 {}
 
 std::vector<openstudio::IdfObject> AirLoopHVACZoneMixer::remove()

@@ -103,7 +103,7 @@ IddObjectType WindowDataFile::iddObjectType() {
 
 /// @cond
 WindowDataFile::WindowDataFile(std::shared_ptr<detail::WindowDataFile_Impl> impl)
-  : ConstructionBase(impl)
+  : ConstructionBase(std::move(impl))
 {}
 /// @endcond
 

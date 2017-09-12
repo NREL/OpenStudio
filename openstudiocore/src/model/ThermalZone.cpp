@@ -1187,7 +1187,7 @@ namespace detail {
           if (surface.isAirWall()){
             needToSetFloorArea = true;
             break;
-          } 
+          }
 
           auto adjacentSurface = surface.adjacentSurface();
           if (adjacentSurface){
@@ -1197,7 +1197,7 @@ namespace detail {
               if (adjacentThermalZone){
                 if (adjacentThermalZone->handle() == this->handle())
                 {
-                  // this surface is completely inside the zone, need to set floor area since this surface will be removed 
+                  // this surface is completely inside the zone, need to set floor area since this surface will be removed
                   needToSetFloorArea = true;
                   break;
                 }
@@ -1284,7 +1284,7 @@ namespace detail {
     // set E+ floor area here if needed, this is only used for reporting total building area
     // loads are hard sized according to OpenStudio space floor area
     if (needToSetFloorArea){
-      
+
       // do not allow per area loads in the space type since we are overriding floor area
       spaceType.reset();
 
@@ -3041,7 +3041,7 @@ void ThermalZone::resetZoneControlContaminantController()
 
 /// @cond
 ThermalZone::ThermalZone(std::shared_ptr<detail::ThermalZone_Impl> impl)
-  : HVACComponent(impl)
+  : HVACComponent(std::move(impl))
 {}
 /// @endcond
 

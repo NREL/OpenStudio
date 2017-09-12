@@ -170,7 +170,7 @@ void CoilHeatingGasMultiStageStageData::setParasiticElectricLoad(double Parasiti
 
 /// @cond
 CoilHeatingGasMultiStageStageData::CoilHeatingGasMultiStageStageData(std::shared_ptr<detail::CoilHeatingGasMultiStageStageData_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

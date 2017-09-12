@@ -305,7 +305,7 @@ void ZoneCapacitanceMultiplierResearchSpecial::resetCarbonDioxideCapacityMultipl
 
 /// @cond
 ZoneCapacitanceMultiplierResearchSpecial::ZoneCapacitanceMultiplierResearchSpecial(std::shared_ptr<detail::ZoneCapacitanceMultiplierResearchSpecial_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 ZoneCapacitanceMultiplierResearchSpecial::ZoneCapacitanceMultiplierResearchSpecial(Model& model)
   : ModelObject(ZoneCapacitanceMultiplierResearchSpecial::iddObjectType(),model)

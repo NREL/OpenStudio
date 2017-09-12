@@ -407,7 +407,7 @@ RefrigerationCondenserWaterCooled::RefrigerationCondenserWaterCooled(const Model
 
   // Brian provided value for 'ConstantFlow'
   setWaterDesignFlowRate(0.0025);
-  
+
   //  0.003,                   !- Water Maximum Flow Rate {m3/s}
   setWaterMaximumFlowRate(0.003);
 
@@ -609,7 +609,7 @@ void RefrigerationCondenserWaterCooled::resetCondensatePipingRefrigerantInventor
 
 /// @cond
 RefrigerationCondenserWaterCooled::RefrigerationCondenserWaterCooled(std::shared_ptr<detail::RefrigerationCondenserWaterCooled_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

@@ -327,7 +327,7 @@ void CurveLinear::resetOutputUnitType() {
 
 /// @cond
 CurveLinear::CurveLinear(std::shared_ptr<detail::CurveLinear_Impl> impl)
-  : Curve(impl)
+  : Curve(std::move(impl))
 {}
 /// @endcond
 

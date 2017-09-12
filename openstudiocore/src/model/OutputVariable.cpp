@@ -240,7 +240,7 @@ OutputVariable::OutputVariable(const std::string& variableName, const Model& mod
 }
 
 OutputVariable::OutputVariable(std::shared_ptr<detail::OutputVariable_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 
 IddObjectType OutputVariable::iddObjectType() {

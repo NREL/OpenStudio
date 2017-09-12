@@ -43,7 +43,7 @@ OptionalModelObject ReverseTranslator::translateOutputMeter( const WorkspaceObje
 {
   openstudio::model::OutputMeter meter( m_model );
 
-  OptionalString s = workspaceObject.getString(Output_MeterFields::Name);
+  OptionalString s = workspaceObject.getString(Output_MeterFields::KeyName);
   if(s){
     meter.setName(*s);
   }

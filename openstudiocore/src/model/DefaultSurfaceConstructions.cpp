@@ -277,7 +277,7 @@ void DefaultSurfaceConstructions::merge(const DefaultSurfaceConstructions& other
 
 /// @cond
 DefaultSurfaceConstructions::DefaultSurfaceConstructions(std::shared_ptr<detail::DefaultSurfaceConstructions_Impl> impl)
-  : ResourceObject(impl)
+  : ResourceObject(std::move(impl))
 {}
 /// @endcond
 

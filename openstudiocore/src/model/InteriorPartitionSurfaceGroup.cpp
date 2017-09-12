@@ -358,7 +358,7 @@ InteriorPartitionSurfaceVector InteriorPartitionSurfaceGroup::interiorPartitionS
 
 /// @cond
 InteriorPartitionSurfaceGroup::InteriorPartitionSurfaceGroup(std::shared_ptr<detail::InteriorPartitionSurfaceGroup_Impl> impl)
-  : PlanarSurfaceGroup(impl)
+  : PlanarSurfaceGroup(std::move(impl))
 {}
 /// @endcond
 

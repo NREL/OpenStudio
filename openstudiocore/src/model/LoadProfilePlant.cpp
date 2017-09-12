@@ -242,7 +242,7 @@ bool LoadProfilePlant::setFlowRateFractionSchedule(Schedule& schedule) {
 
 /// @cond
 LoadProfilePlant::LoadProfilePlant(std::shared_ptr<detail::LoadProfilePlant_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

@@ -364,7 +364,7 @@ namespace detail {
     return result;
   }
 
-  bool DaylightingControl_Impl::setTransformation(const openstudio::Transformation& transformation) 
+  bool DaylightingControl_Impl::setTransformation(const openstudio::Transformation& transformation)
   {
     Vector3d translation = transformation.translation();
     this->setPositionXCoordinate(translation.x());
@@ -375,8 +375,8 @@ namespace detail {
     setPsiRotationAroundXAxis(radToDeg(eulerAngles.psi()));
     setThetaRotationAroundYAxis(radToDeg(eulerAngles.theta()));
     setPhiRotationAroundZAxis(radToDeg(eulerAngles.phi()));
-    
-    return true;  
+
+    return true;
   }
 
   bool DaylightingControl_Impl::isPrimaryDaylightingControl() const
@@ -404,7 +404,7 @@ namespace detail {
         result = (this->handle() == control->handle());
       }
     }
-    return result;  
+    return result;
   }
 
   bool DaylightingControl_Impl::aimAt(const Point3d& target)
@@ -689,7 +689,7 @@ bool DaylightingControl::aimAt(const Point3d& target)
 
 /// @cond
 DaylightingControl::DaylightingControl(std::shared_ptr<detail::DaylightingControl_Impl> impl)
-  : SpaceItem(impl)
+  : SpaceItem(std::move(impl))
 {}
 /// @endcond
 

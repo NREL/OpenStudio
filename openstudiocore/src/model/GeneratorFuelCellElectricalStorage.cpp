@@ -313,7 +313,7 @@ void GeneratorFuelCellElectricalStorage::resetInitialChargeState() {
 
 /// @cond
 GeneratorFuelCellElectricalStorage::GeneratorFuelCellElectricalStorage(std::shared_ptr<detail::GeneratorFuelCellElectricalStorage_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

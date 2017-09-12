@@ -578,7 +578,7 @@ CoilCoolingDXTwoStageWithHumidityControlMode::CoilCoolingDXTwoStageWithHumidityC
       partLoadFractionCorrelationCurve);
 
     coilPerformanceDXCooling.setGrossRatedCoolingCOP(2.7);
-    coilPerformanceDXCooling.setFractionofAirFlowBypassedAroundCoil(0.5); 
+    coilPerformanceDXCooling.setFractionofAirFlowBypassedAroundCoil(0.5);
 
     setDehumidificationMode1Stage1CoilPerformance(coilPerformanceDXCooling);
   }
@@ -638,7 +638,7 @@ CoilCoolingDXTwoStageWithHumidityControlMode::CoilCoolingDXTwoStageWithHumidityC
       partLoadFractionCorrelationCurve);
 
     coilPerformanceDXCooling.setGrossRatedCoolingCOP(2.7);
-    coilPerformanceDXCooling.setFractionofAirFlowBypassedAroundCoil(0.0); 
+    coilPerformanceDXCooling.setFractionofAirFlowBypassedAroundCoil(0.0);
 
     setDehumidificationMode1Stage1Plus2CoilPerformance(coilPerformanceDXCooling);
   }
@@ -770,7 +770,7 @@ void CoilCoolingDXTwoStageWithHumidityControlMode::resetBasinHeaterOperatingSche
 
 /// @cond
 CoilCoolingDXTwoStageWithHumidityControlMode::CoilCoolingDXTwoStageWithHumidityControlMode(std::shared_ptr<detail::CoilCoolingDXTwoStageWithHumidityControlMode_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

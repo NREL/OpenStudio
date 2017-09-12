@@ -156,7 +156,7 @@ SetpointManagerWarmestTemperatureFlow::SetpointManagerWarmestTemperatureFlow(con
   OS_ASSERT(getImpl<detail::SetpointManagerWarmestTemperatureFlow_Impl>());
 
   setControlVariable("Temperature");
-  setMinimumSetpointTemperature(12.0); 
+  setMinimumSetpointTemperature(12.0);
   setMaximumSetpointTemperature(18.0);
   setStrategy("TemperatureFirst");
   setMinimumTurndownRatio(0.2);
@@ -230,7 +230,7 @@ void SetpointManagerWarmestTemperatureFlow::resetSetpointNode() {
 
 /// @cond
 SetpointManagerWarmestTemperatureFlow::SetpointManagerWarmestTemperatureFlow(std::shared_ptr<detail::SetpointManagerWarmestTemperatureFlow_Impl> impl)
-  : SetpointManager(impl)
+  : SetpointManager(std::move(impl))
 {}
 /// @endcond
 
