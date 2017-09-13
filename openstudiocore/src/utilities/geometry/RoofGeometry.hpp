@@ -46,9 +46,6 @@ namespace openstudio{
   /// Generate hip roof polygons
   UTILITIES_API std::vector< std::vector<Point3d> > generateHipRoof(std::vector<Point3d>& polygon, double roofPitchDegrees);
 
-  /// Generate roof edges from the straight skeleton algorithm
-  UTILITIES_API std::vector< std::vector<Point3d> > generateSkeletonRoofEdges(std::vector<Point3d>& polygon);
-
 } // openstudio
 
 #endif //UTILITIES_GEOMETRY_ROOFGEOMETRY_HPP
