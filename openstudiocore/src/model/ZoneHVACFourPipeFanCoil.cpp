@@ -1009,11 +1009,11 @@ namespace detail {
   }
 
   boost::optional<double> ZoneHVACFourPipeFanCoil_Impl::autosizedMaximumColdWaterFlowRate() const {
-    return getAutosizedValue("Design Size Maximum Cold Water Flow Rate", "m3/s");
+    return getAutosizedValue("Design Size Maximum Cold Water Flow", "m3/s");
   }
 
   boost::optional<double> ZoneHVACFourPipeFanCoil_Impl::autosizedMaximumHotWaterFlowRate() const {
-    return getAutosizedValue("Design Size Maximum Hot Water Flow Rate", "m3/s");
+    return getAutosizedValue("Design Size Maximum Hot Water Flow", "m3/s");
   }
 
   boost::optional<double> ZoneHVACFourPipeFanCoil_Impl::autosizedMinimumSupplyAirTemperatureinCoolingMode() const {

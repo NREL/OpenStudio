@@ -243,11 +243,23 @@ namespace detail {
   }
 
   boost::optional<double> CoilHeatingWaterBaseboardRadiant_Impl::autosizedHeatingDesignCapacity() const {
-    return getAutosizedValue("Design Size Heating Design Capacity", "W");
+    boost::optional < double > result;
+    // Get the containing ZoneHVAC equipment and get its autosized value
+    auto parentHVAC = containingZoneHVACComponent();
+    if (!parentHVAC) {
+      return result;
+    }
+    return parentHVAC->getAutosizedValue("Design Size Heating Design Capacity", "W");
   }
 
   boost::optional<double> CoilHeatingWaterBaseboardRadiant_Impl::autosizedMaximumWaterFlowRate() const {
-    return getAutosizedValue("Design Size Maximum Water Flow Rate", "m3/s");
+    boost::optional < double > result;
+    // Get the containing ZoneHVAC equipment and get its autosized value
+    auto parentHVAC = containingZoneHVACComponent();
+    if (!parentHVAC) {
+      return result;
+    }
+    return parentHVAC->getAutosizedValue("Design Size Maximum Water Flow Rate", "m3/s");
   }
 
   void CoilHeatingWaterBaseboardRadiant_Impl::autosize() {

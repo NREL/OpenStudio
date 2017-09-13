@@ -487,15 +487,15 @@ namespace detail {
   }
 
   boost::optional<double> CoilPerformanceDXCooling_Impl::autosizedGrossRatedTotalCoolingCapacity() const {
-    return getAutosizedValue("Gross Design Size Total Cooling Capacity", "W");
+    return getAutosizedValue("Design Size Gross Rated Total Cooling Capacity", "W");
   }
 
   boost::optional<double> CoilPerformanceDXCooling_Impl::autosizedGrossRatedSensibleHeatRatio() const {
-    return getAutosizedValue("Gross Design Size Sensible Heat Ratio", "");
+    return getAutosizedValue("Design Size Gross Rated Sensible Heat Ratio", "");
   }
 
   boost::optional<double> CoilPerformanceDXCooling_Impl::autosizedRatedAirFlowRate() const {
-    return getAutosizedValue("Design Size Air Flow Rate", "m3/s");
+    return getAutosizedValue("Design Size Rated Air Flow Rate", "m3/s");
   }
 
   boost::optional<double> CoilPerformanceDXCooling_Impl::autosizedEvaporativeCondenserAirFlowRate() const {

@@ -680,7 +680,7 @@ namespace detail {
   }
 
   boost::optional<double> AirTerminalSingleDuctParallelPIUReheat_Impl::autosizedMaximumHotWaterorSteamFlowRate() const {
-    return getAutosizedValue("Design Size Maximum Hot Water or Steam Flow Rate", "m3/s");
+    return getAutosizedValue("Design Size Maximum Reheat Water Flow Rate", "m3/s");
   }
 
   void AirTerminalSingleDuctParallelPIUReheat_Impl::autosize() {

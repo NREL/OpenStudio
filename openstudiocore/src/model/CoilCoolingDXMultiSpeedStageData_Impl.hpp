@@ -192,6 +192,10 @@ namespace detail {
     virtual std::vector<ModelObject> children() const override;
     virtual ModelObject clone(Model model) const override;
 
+    // Used to determine the index of this performance data in the
+    // list of stages in the parent object.
+    boost::optional<std::tuple<int, CoilCoolingDXMultiSpeed>> stageIndexAndParentCoil() const;
+
     //@}
    protected:
    private:
@@ -202,6 +206,7 @@ namespace detail {
     boost::optional<Curve> optionalEnergyInputRatioFunctionofTemperatureCurve() const;
     boost::optional<Curve> optionalEnergyInputRatioFunctionofFlowFractionCurve() const;
     boost::optional<Curve> optionalPartLoadFractionCorrelationCurve() const;
+
   };
 
 } // detail

@@ -289,15 +289,33 @@ namespace detail {
 
  
   boost::optional<double> CoilHeatingWaterBaseboard_Impl::autosizedHeatingDesignCapacity() const {
-    return getAutosizedValue("Design Size Heating Design Capacity", "W");
+    boost::optional < double > result;
+    // Get the containing ZoneHVAC equipment and get its autosized value
+    auto parentHVAC = containingZoneHVACComponent();
+    if (!parentHVAC) {
+      return result;
+    }
+    return parentHVAC->getAutosizedValue("Design Size Heating Design Capacity", "W");
   }
 
   boost::optional<double> CoilHeatingWaterBaseboard_Impl::autosizedUFactorTimesAreaValue() const {
-    return getAutosizedValue("Design Size U-Factor Times Area Value", "W/K");
+    boost::optional < double > result;
+    // Get the containing ZoneHVAC equipment and get its autosized value
+    auto parentHVAC = containingZoneHVACComponent();
+    if (!parentHVAC) {
+      return result;
+    }
+    return parentHVAC->getAutosizedValue("Design Size U-Factor Times Area Value", "W/K");
   }
 
   boost::optional<double> CoilHeatingWaterBaseboard_Impl::autosizedMaximumWaterFlowRate() const {
-    return getAutosizedValue("Design Size Maximum Water Flow Rate", "m3/s");
+    boost::optional < double > result;
+    // Get the containing ZoneHVAC equipment and get its autosized value
+    auto parentHVAC = containingZoneHVACComponent();
+    if (!parentHVAC) {
+      return result;
+    }
+    return parentHVAC->getAutosizedValue("Design Size Maximum Water Flow Rate", "m3/s");
   }
 
   void CoilHeatingWaterBaseboard_Impl::autosize() {

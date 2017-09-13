@@ -935,7 +935,7 @@ namespace detail{
   }
 
   boost::optional<double> CoilCoolingDXSingleSpeed_Impl::autosizedRatedSensibleHeatRatio()  const {
-    return getAutosizedValue("Design Size Rated Sensible Heat Ratio", "");
+    return getAutosizedValue("Design Size Gross Rated Sensible Heat Ratio", "");
   }
 
 

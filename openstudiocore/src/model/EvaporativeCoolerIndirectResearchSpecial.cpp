@@ -479,7 +479,7 @@ namespace detail {
   }
 
   boost::optional<double> EvaporativeCoolerIndirectResearchSpecial_Impl::autosizedRecirculatingWaterPumpPowerConsumption() const {
-    return getAutosizedValue("Recirculating Water Pump Power Consumption", "W");
+    return getAutosizedValue("Recirculating Pump Power", "W");
   }
 
   boost::optional<double> EvaporativeCoolerIndirectResearchSpecial_Impl::autosizedSecondaryFanFlowRate() const {

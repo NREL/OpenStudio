@@ -31,6 +31,7 @@
 
 #include "ModelAPI.hpp"
 #include "ModelObject_Impl.hpp"
+#include "../model/CoilHeatingGasMultiStage.hpp"
 
 namespace openstudio {
 namespace model {
@@ -98,6 +99,10 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
+
+    // Used to determine the index of this performance data in the
+    // list of stages in the parent object.
+    boost::optional<std::tuple<int, CoilHeatingGasMultiStage>> stageIndexAndParentCoil() const;
 
     //@}
    protected:
