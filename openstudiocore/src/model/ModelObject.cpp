@@ -38,6 +38,11 @@
 #include "ResourceObject_Impl.hpp"
 #include "Connection.hpp"
 #include "Connection_Impl.hpp"
+#include "CoilCoolingDXTwoStageWithHumidityControlMode.hpp"
+#include "CoilCoolingDXTwoStageWithHumidityControlMode_Impl.hpp"
+#include "CoilPerformanceDXCooling.hpp"
+#include "CoilPerformanceDXCooling_Impl.hpp"
+
 
 #include "ScheduleTypeRegistry.hpp"
 #include "Schedule.hpp"
@@ -644,6 +649,58 @@ namespace detail {
     std::string sqlObjectType = iddObject().type().valueDescription();
     boost::replace_all(sqlObjectType, "OS:", "");
 
+    // Special logic to deal with EnergyPlus inconsistencies
+    if (sqlObjectType == "CoilPerformance:DX:Cooling") {
+      // Get the parent object
+      boost::optional<CoilCoolingDXTwoStageWithHumidityControlMode> parentCoil;
+      auto coilTwoSpdHumCtrls = this->model().getConcreteModelObjects<CoilCoolingDXTwoStageWithHumidityControlMode>();
+      for (const auto & coilInModel : coilTwoSpdHumCtrls) {
+        // Check the coil performance objects in this coil to see if one of them is this object       
+        auto coilPerf = coilInModel.normalModeStage1CoilPerformance();
+        if (coilPerf) {
+          if (coilPerf->handle() == this->handle()) {
+            parentCoil = coilInModel;
+            break;
+          }
+        }
+
+        coilPerf = coilInModel.normalModeStage1Plus2CoilPerformance();
+        if (coilPerf) {
+          if (coilPerf->handle() == this->handle()) {
+            parentCoil = coilInModel;
+            break;
+          }
+        }
+
+        coilPerf = coilInModel.dehumidificationMode1Stage1CoilPerformance();
+        if (coilPerf) {
+          if (coilPerf->handle() == this->handle()) {
+            parentCoil = coilInModel;
+            break;
+          }
+        }
+
+        coilPerf = coilInModel.dehumidificationMode1Stage1Plus2CoilPerformance();
+        if (coilPerf) {
+          if (coilPerf->handle() == this->handle()) {
+            parentCoil = coilInModel;
+            break;
+          }
+        }
+      }
+      
+      if (!parentCoil) {
+        LOG(Warn, "The CoilPerformance:DX:Cooling object called " + sqlName + " does not have a parent CoilCoolingDXTwoStageWithHumidityControlMode, cannot retrieve the autosized value.");
+        return result;
+      }
+
+      std::string parSqlName = parentCoil->name().get();
+      boost::to_upper(parSqlName);
+      // Join the parent and child object names, like:
+      // COIL COOLING DX TWO STAGE WITH HUMIDITY CONTROL MODE 1:COIL PERFORMANCE DX COOLING 1
+      sqlName = parSqlName + std::string(":") + sqlName;
+    }
+
     // Check that the model has a sql file
     if (!model().sqlFile()) {
       LOG(Warn, "This model has no sql file, cannot retrieve the autosized value '" + valueName + "'.");
@@ -673,6 +730,8 @@ namespace detail {
     std::string valueNameAndUnits = valueName + std::string(" [") + units + std::string("]");
     if (units == "") {
       valueNameAndUnits = valueName;
+    } else if (units == "typo_in_energyplus") {
+      valueNameAndUnits = valueName + std::string(" []");
     }
 
     for (std::string rowName : rowNames.get()) {
