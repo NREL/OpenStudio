@@ -1,3 +1,11 @@
+## OpenStudio v2.2.2
+###### 2017-09-13 — [Diff]( https://github.com/NREL/OpenStudio/compare/v2.2.1...v2.2.2 )
+
+- ![Fixed:][fixed] [#2562]( https://github.com/NREL/OpenStudio/issues/2562 ), Apply Measure Now Clears Measures Tab
+- ![Fixed:][fixed] [#2602]( https://github.com/NREL/OpenStudio/issues/2602 ), Can't save PAT 2.1.1 project on exit
+- ![Fixed:][fixed] [#2730]( https://github.com/NREL/OpenStudio/issues/2730 ), Opening existing floorplan in editor freezes app
+- ![Fixed:][fixed] [#2763]( https://github.com/NREL/OpenStudio/issues/2763 ), PAT Doesn't Show Analysis Complete for Modest Cloud Runs
+
 ## OpenStudio v2.2.1
 ###### 2017-09-06 — [Diff]( https://github.com/NREL/OpenStudio/compare/v2.2.0...v2.2.1 )
 
