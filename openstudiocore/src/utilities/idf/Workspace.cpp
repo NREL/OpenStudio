@@ -573,7 +573,7 @@ namespace detail {
       else {
         // check individual objects
         for (const WorkspaceObject& newObject : newObjects) {
-          ok = ok && newObject.isValid(level);
+          ok = ok && newObject.isValid(level, checkNames);
           if (!ok) {
             break;
           }
@@ -791,7 +791,7 @@ namespace detail {
           ++it;
         }
         // add objects
-        result = addObjects(newObjects,false);
+        result = addObjects(newObjects,checkNames);
         return result;
       }
     }
@@ -802,7 +802,7 @@ namespace detail {
     for (; it != itEnd; ++it) {
       newObjects.push_back(this->createObject(*it,keepHandles));
     }
-    result = addObjects(newObjects,false);
+    result = addObjects(newObjects,checkNames);
     if (!checkedForNameConflicts) {
       Workspace thisWorkspace = workspace();
       resolvePotentialNameConflicts(thisWorkspace);

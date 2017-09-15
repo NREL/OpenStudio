@@ -320,7 +320,7 @@ class UTILITIES_API IdfObject {
   std::vector<unsigned> requiredFields() const;
 
   /** Returns true if this IdfObject is valid, that is, has no errors at or below level. */
-  bool isValid(StrictnessLevel level) const;
+  bool isValid(StrictnessLevel level, bool checkNames=false) const;
 
   /** Returns a ValidityReport for this IdfObject containing all errors at or below level. */
   ValidityReport validityReport(StrictnessLevel level, bool checkNames=false) const;

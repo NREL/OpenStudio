@@ -1140,11 +1140,11 @@ namespace detail {
     return isValid(level,false);
   }
 
-  bool IdfObject_Impl::isValid(StrictnessLevel level,bool checkNames) const {
+  bool IdfObject_Impl::isValid(StrictnessLevel level, bool checkNames) const {
     return (validityReport(level,checkNames).numErrors() == 0);
   }
 
-  ValidityReport IdfObject_Impl::validityReport(StrictnessLevel level,bool checkNames) const {
+  ValidityReport IdfObject_Impl::validityReport(StrictnessLevel level, bool checkNames) const {
     ValidityReport report(level,getObject<IdfObject>());
     this->populateValidityReport(report,checkNames);
     return report;
@@ -2328,8 +2328,8 @@ std::vector<unsigned> IdfObject::requiredFields() const {
   return m_impl->requiredFields();
 }
 
-bool IdfObject::isValid(StrictnessLevel level) const {
-  return m_impl->isValid(level);
+bool IdfObject::isValid(StrictnessLevel level, bool checkNames) const {
+  return m_impl->isValid(level, checkNames);
 }
 
 ValidityReport IdfObject::validityReport(StrictnessLevel level, bool checkNames) const {

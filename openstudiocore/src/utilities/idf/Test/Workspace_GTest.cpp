@@ -1289,7 +1289,7 @@ TEST_F(IdfFixture, Workspace_SpecialNames) {
   EXPECT_TRUE(lights2.setString(LightsFields::ZoneorZoneListName, "Office, Hallway, and Other Zone"));
   ASSERT_TRUE(lights2.getTarget(LightsFields::ZoneorZoneListName));
   EXPECT_EQ(zone.handle(), lights2.getTarget(LightsFields::ZoneorZoneListName).get().handle());
-} 
+}
 
 TEST_F(IdfFixture,Workspace_AvoidingNameClashes_IdfObject) {
   // create workspace with one object
@@ -2069,7 +2069,7 @@ TEST_F(IdfFixture, Workspace_DaylightingControlsZoneName)
 
 }
 
-TEST_F(IdfFixture, Workspace_NextName) 
+TEST_F(IdfFixture, Workspace_NextName)
 {
   Workspace ws(StrictnessLevel::Draft, IddFileType::EnergyPlus);
 
@@ -2106,7 +2106,7 @@ TEST_F(IdfFixture, Workspace_NextName)
   EXPECT_EQ("Zone 2", ws.nextName(IddObjectType::Zone, true));
 }
 
-TEST_F(IdfFixture, Workspace_GetObjectsByNameUUID) 
+TEST_F(IdfFixture, Workspace_GetObjectsByNameUUID)
 {
   Workspace ws(StrictnessLevel::Draft, IddFileType::EnergyPlus);
 
