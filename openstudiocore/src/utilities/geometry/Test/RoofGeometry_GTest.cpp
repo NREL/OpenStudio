@@ -35,19 +35,20 @@
 
 using namespace openstudio;
 
-void matches(std::vector< std::vector<Point3d> > polygons, std::vector<Point3d> polygon)
+void matches(std::vector< std::vector<Point3d> > expectedPolygons, std::vector<Point3d> polygon)
 {
   int numMatches = 0;
-  for (int i = 0; i < polygons.size(); ++i) {
-    if (circularEqual(polygons[i], polygon, 0.01)) {
+  for (std::vector<Point3d> expectedPolygon : expectedPolygons) {
+    if (circularEqual(expectedPolygon, polygon, 0.01)) {
       numMatches += 1;
     }
   }
 
   //if (numMatches != 1) {
-  //  for (std::vector<Point3d> p : polygons) {
+  //  std::cout << "NOT MATCHED" << std::endl;
+  //  for (std::vector<Point3d> expectedPolygon : expectedPolygons) {
   //    std::cout << "EXPECTED POLYGON:" << std::endl;;
-  //    for (Point3d p : p) {
+  //    for (Point3d p : expectedPolygon) {
   //      std::cout << p << std::endl;
   //    }
   //  }
@@ -55,6 +56,8 @@ void matches(std::vector< std::vector<Point3d> > polygons, std::vector<Point3d> 
   //  for (Point3d p : polygon) {
   //    std::cout << p << std::endl;
   //  }
+  //} else {
+  //  std::cout << "MATCHED!" << std::endl;
   //}
 
   EXPECT_EQ(numMatches, 1);
@@ -97,10 +100,10 @@ TEST_F(GeometryFixture, RoofSquare_1_12) {
   std::vector< std::vector<Point3d> > roofPolygons = generateHipRoof(footprint, pitch);
 
   std::vector< std::vector<Point3d> > expectedRoofPolygons;
-  expectedRoofPolygons.push_back({Point3d(5.0, 5.0, 0.0), Point3d(5.0, 25.0, 0.0), Point3d(15.0, 15.0, 0.833)});
-  expectedRoofPolygons.push_back({Point3d(25.0, 5.0, 0.0), Point3d(5.0, 5.0, 0.0), Point3d(15.0, 15.0, 0.833)});
-  expectedRoofPolygons.push_back({Point3d(25.0, 25.0, 0.0), Point3d(25.0, 5.0, 0.0), Point3d(15.0, 15.0, 0.833)});
-  expectedRoofPolygons.push_back({Point3d(5.0, 25.0, 0.0), Point3d(25.0, 25.0, 0.0), Point3d(15.0, 15.0, 0.833)});
+  expectedRoofPolygons.push_back({Point3d(15.0, 15.0, 0.833333), Point3d(25.0, 5.0, 0.0), Point3d(25.0, 25.0, 0.0)});
+  expectedRoofPolygons.push_back({Point3d(15.0, 15.0, 0.833333), Point3d(25.0, 25.0, 0.0), Point3d(5.0, 25.0, 0.0)});
+  expectedRoofPolygons.push_back({Point3d(15.0, 15.0, 0.833333), Point3d(5.0, 25.0, 0.0), Point3d(5.0, 5.0, 0.0)});
+  expectedRoofPolygons.push_back({Point3d(15.0, 15.0, 0.833333), Point3d(5.0, 5.0, 0.0), Point3d(25.0, 5.0, 0.0)});
 
   EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
@@ -133,8 +136,8 @@ TEST_F(GeometryFixture, RoofRectangle_3_12) {
   }
 }
 
-TEST_F(GeometryFixture, RoofHshape_6_12) {
-  double pitch = radToDeg(atan(6.0 / 12.0));
+TEST_F(GeometryFixture, RoofHshape_3_12) {
+  double pitch = radToDeg(atan(3.0 / 12.0));
 
   std::vector<Point3d> footprint;
   footprint.push_back(Point3d(0, 25, 0));
@@ -153,16 +156,18 @@ TEST_F(GeometryFixture, RoofHshape_6_12) {
   std::vector< std::vector<Point3d> > roofPolygons = generateHipRoof(footprint, pitch);
 
   std::vector< std::vector<Point3d> > expectedRoofPolygons;
-  expectedRoofPolygons.push_back({Point3d(20, 5, 0), Point3d(20, 12, 0), Point3d(23, 15, 0.75), Point3d(20, 18, 0), Point3d(20, 25, 0), Point3d(25, 20, 1.25), Point3d(25, 10, 1.25)});
-  expectedRoofPolygons.push_back({Point3d(10, 25, 0), Point3d(10, 18, 0), Point3d(7, 15, 0.75), Point3d(10, 12, 0), Point3d(10, 5, 0), Point3d(5, 10, 1.25), Point3d(5, 20, 1.25)});
-  expectedRoofPolygons.push_back({Point3d(0, 5, 0), Point3d(0, 25, 0), Point3d(5, 20, 1.25), Point3d(5, 10, 1.25)});
-  expectedRoofPolygons.push_back({Point3d(10, 5, 0), Point3d(0, 5, 0), Point3d(5, 10, 1.25)});
-  expectedRoofPolygons.push_back({Point3d(20, 12, 0), Point3d(10, 12, 0), Point3d(7, 15, 0.75), Point3d(23, 15, 0.75)});
-  expectedRoofPolygons.push_back({Point3d(30, 5, 0), Point3d(20, 5, 0), Point3d(25, 10, 1.25)});
-  expectedRoofPolygons.push_back({Point3d(30, 25, 0), Point3d(30, 5, 0), Point3d(25, 10, 1.25), Point3d(25, 20, 1.25)});
-  expectedRoofPolygons.push_back({Point3d(20, 25, 0), Point3d(30, 25, 0), Point3d(25, 20, 1.25)});
-  expectedRoofPolygons.push_back({Point3d(10, 18, 0), Point3d(20, 18, 0), Point3d(23, 15, 0.75), Point3d(7, 15, 0.75)});
-  expectedRoofPolygons.push_back({Point3d(0, 25, 0), Point3d(10, 25, 0), Point3d(5, 20, 1.25)});
+  expectedRoofPolygons.push_back({Point3d(5.0, 10.0, 1.25), Point3d(10.0, 5.0, 0.0), Point3d(10.0, 12.0, 0.0), Point3d(7.0, 15.0, 0.75)});
+  expectedRoofPolygons.push_back({Point3d(7.0, 15.0, 0.75), Point3d(10.0, 12.0, 0.0), Point3d(20.0, 12.0, 0.0), Point3d(23.0, 15.0, 0.75)});
+  expectedRoofPolygons.push_back({Point3d(23.0, 15.0, 0.75), Point3d(20.0, 12.0, 0.0), Point3d(20.0, 5.0, 0.0), Point3d(25.0, 10.0, 1.25)});
+  expectedRoofPolygons.push_back({Point3d(25.0, 10.0, 1.25), Point3d(20.0, 5.0, 0.0), Point3d(30.0, 5.0, 0.0)});
+  expectedRoofPolygons.push_back({Point3d(25.0, 10.0, 1.25), Point3d(30.0, 5.0, 0.0), Point3d(30.0, 25.0, 0.0), Point3d(25.0, 20.0, 1.25)});
+  expectedRoofPolygons.push_back({Point3d(25.0, 20.0, 1.25), Point3d(30.0, 25.0, 0.0), Point3d(20.0, 25.0, 0.0)});
+  expectedRoofPolygons.push_back({Point3d(25.0, 20.0, 1.25), Point3d(20.0, 25.0, 0.0), Point3d(20.0, 18.0, 0.0), Point3d(23.0, 15.0, 0.75)});
+  expectedRoofPolygons.push_back({Point3d(23.0, 15.0, 0.75), Point3d(20.0, 18.0, 0.0), Point3d(10.0, 18.0, 0.0), Point3d(7.0, 15.0, 0.75)});
+  expectedRoofPolygons.push_back({Point3d(7.0, 15.0, 0.75), Point3d(10.0, 18.0, 0.0), Point3d(10.0, 25.0, 0.0), Point3d(5.0, 20.0, 1.25)});
+  expectedRoofPolygons.push_back({Point3d(5.0, 20.0, 1.25), Point3d(10.0, 25.0, 0.0), Point3d(0.0, 25.0, 0.0)});
+  expectedRoofPolygons.push_back({Point3d(5.0, 20.0, 1.25), Point3d(0.0, 25.0, 0.0), Point3d(0.0, 5.0, 0.0), Point3d(5.0, 10.0, 1.25)});
+  expectedRoofPolygons.push_back({Point3d(5.0, 10.0, 1.25), Point3d(0.0, 5.0, 0.0), Point3d(10.0, 5.0, 0.0)});
 
   EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
