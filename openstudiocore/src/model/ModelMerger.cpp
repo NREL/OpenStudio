@@ -145,6 +145,13 @@ namespace openstudio
       for (const auto& newSurface : newSpace.surfaces()){
         Surface clone = newSurface.clone(m_currentModel).cast<Surface>();
         clone.setSpace(currentSpace);
+
+        if (boost::optional<Surface> newAdjacentSurface = newSurface.adjacentSurface()){
+          boost::optional<WorkspaceObject> currentAdjacentSurface = getCurrentModelObject(*newAdjacentSurface);
+          if (currentAdjacentSurface){
+            clone.setAdjacentSurface(currentAdjacentSurface->cast<Surface>());
+          }
+        }
       }
 
       // DLM: TODO shadingSurfaceGroups
