@@ -143,13 +143,22 @@ namespace openstudio
 
       // add new surfaces
       for (const auto& newSurface : newSpace.surfaces()){
+        // DLM: this should probably be moved to a mergeSurface method
         Surface clone = newSurface.clone(m_currentModel).cast<Surface>();
         clone.setSpace(currentSpace);
 
-        if (boost::optional<Surface> newAdjacentSurface = newSurface.adjacentSurface()){
-          boost::optional<WorkspaceObject> currentAdjacentSurface = getCurrentModelObject(*newAdjacentSurface);
-          if (currentAdjacentSurface){
-            clone.setAdjacentSurface(currentAdjacentSurface->cast<Surface>());
+        m_newMergedHandles.insert(newSurface.handle());
+        m_currentToNewHandleMapping[clone.handle()] = newSurface.handle();
+        m_newToCurrentHandleMapping[newSurface.handle()] = clone.handle();
+
+        boost::optional<Surface> newAdjacentSurface = newSurface.adjacentSurface();
+        if (newAdjacentSurface){
+          boost::optional<UUID> currentAdjacentSurfaceHandle = getCurrentModelHandle(newAdjacentSurface->handle());
+          if (currentAdjacentSurfaceHandle){
+            boost::optional<Surface> currentAdjacentSurface = m_currentModel.getModelObject<Surface>(*currentAdjacentSurfaceHandle);
+            if (currentAdjacentSurface){
+              clone.setAdjacentSurface(*currentAdjacentSurface);
+            }
           }
         }
       }
