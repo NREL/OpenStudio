@@ -28,6 +28,7 @@
 
 #include <gtest/gtest.h>
 #include "../RoofGeometry.hpp"
+#include "../RoofGeometry.cpp"
 #include "../Intersection.hpp"
 #include "../Point3d.hpp"
 #include "GeometryFixture.hpp"
@@ -35,8 +36,7 @@
 
 using namespace openstudio;
 
-void matches(std::vector< std::vector<Point3d> > expectedPolygons, std::vector<Point3d> polygon)
-{
+void polygonMatches(std::vector< std::vector<Point3d> > expectedPolygons, std::vector<Point3d> polygon) {
   int numMatches = 0;
   for (std::vector<Point3d> expectedPolygon : expectedPolygons) {
     if (circularEqual(expectedPolygon, polygon, 0.01)) {
@@ -63,7 +63,420 @@ void matches(std::vector< std::vector<Point3d> > expectedPolygons, std::vector<P
   EXPECT_EQ(numMatches, 1);
 }
 
-TEST_F(GeometryFixture, RoofSquare_6_12)
+// Try to find index of last vertex after opposite edge is found. 
+// Index is calculated relatively from given starting vertex.
+int findSplitIndex(std::shared_ptr<Vertex> vertex, std::vector< std::shared_ptr<Vertex> >& lav, std::shared_ptr<Edge> oppositeEdge) {
+  int sizeLav = lav.size();
+  for (int i = 0; i < sizeLav; i++) {
+    std::shared_ptr<Vertex> currentVertex = lav[i];
+    if (oppositeEdge == currentVertex->previousEdge || oppositeEdge == Vertex::previous(currentVertex, lav)->nextEdge) {
+      return i;
+    }
+  }
+  return -1;
+}
+
+TEST_F(GeometryFixture, SkeletonInternal_testEdgeBehindBisector_1) {
+  std::shared_ptr<Ray2d> bisector(new Ray2d(Point3d(0, -1, 0), Vector3d(0, 1, 0)));
+  LineLinear2d edge = LineLinear2d(Point3d(-1, 0, 0), Point3d(1, 0, 0));
+  EXPECT_FALSE(edgeBehindBisector(bisector, edge));
+}
+
+TEST_F(GeometryFixture, SkeletonInternal_testEdgeBehindBisector_2) {
+  std::shared_ptr<Ray2d> bisector(new Ray2d(Point3d(0, 0, 0), Vector3d(1, 0, 0)));
+  LineLinear2d edge = LineLinear2d(Point3d(-1, 0, 0), Point3d(1, 0, 0));
+  EXPECT_TRUE(edgeBehindBisector(bisector, edge));
+}
+
+TEST_F(GeometryFixture, SkeletonInternal_testEdgeBehindBisector_3) {
+  std::shared_ptr<Ray2d> bisector(new Ray2d(Point3d(0, 0, 0), Vector3d(0, 1, 0)));
+  LineLinear2d edge = LineLinear2d(Point3d(0, 1, 0), Point3d(0, -1, 0));
+  EXPECT_TRUE(edgeBehindBisector(bisector, edge));
+}
+
+TEST_F(GeometryFixture, SkeletonInternal_testEdgeBehindBisector_4) {
+  std::shared_ptr<Ray2d> bisector(new Ray2d(Point3d(-1, 0.0000001, 0), Vector3d(1, 0, 0)));
+  LineLinear2d edge = LineLinear2d(Point3d(-1, 0, 0), Point3d(1, 0, 0));
+  EXPECT_TRUE(edgeBehindBisector(bisector, edge));
+}
+
+TEST_F(GeometryFixture, SkeletonInternal_testFindSplitIndex_1) {
+  std::shared_ptr<Edge> anyEdge(new Edge());
+  std::shared_ptr<Edge> oppositeEdge(new Edge());
+
+  std::shared_ptr<Vertex> v1(new Vertex(anyEdge, anyEdge));
+  std::shared_ptr<Vertex> v2(new Vertex(anyEdge, anyEdge));
+  std::shared_ptr<Vertex> v3(new Vertex(oppositeEdge, anyEdge));
+  std::shared_ptr<Vertex> v4(new Vertex(anyEdge, anyEdge));
+  std::shared_ptr<Vertex> v5(new Vertex(anyEdge, anyEdge));
+
+  std::vector< std::shared_ptr<Vertex> > lav = {v1, v2, v3, v4, v5};
+
+  int split = findSplitIndex(v1, lav, oppositeEdge);
+
+  EXPECT_EQ(2, split);
+}
+
+TEST_F(GeometryFixture, SkeletonInternal_testFindSplitIndex_2) {
+  std::shared_ptr<Edge> anyEdge(new Edge());
+  std::shared_ptr<Edge> oppositeEdge(new Edge());
+
+  std::shared_ptr<Vertex> v1(new Vertex(anyEdge, anyEdge));
+  std::shared_ptr<Vertex> v2(new Vertex(anyEdge, anyEdge));
+  std::shared_ptr<Vertex> v3(new Vertex(anyEdge, oppositeEdge));
+  std::shared_ptr<Vertex> v4(new Vertex(anyEdge, anyEdge));
+  std::shared_ptr<Vertex> v5(new Vertex(anyEdge, anyEdge));
+
+  std::vector< std::shared_ptr<Vertex> > lav = {v1, v2, v3, v4, v5};
+
+  int split = findSplitIndex(v1, lav, oppositeEdge);
+
+  EXPECT_EQ(3, split);
+}
+
+TEST_F(GeometryFixture, SkeletonInternal_testFindSplitIndex_3) {
+  std::shared_ptr<Edge> anyEdge(new Edge());
+  std::shared_ptr<Edge> oppositeEdge(new Edge());
+
+  std::shared_ptr<Vertex> v1(new Vertex(oppositeEdge, anyEdge));
+  std::shared_ptr<Vertex> v2(new Vertex(anyEdge, anyEdge));
+  std::shared_ptr<Vertex> v3(new Vertex(anyEdge, anyEdge));
+  std::shared_ptr<Vertex> v4(new Vertex(anyEdge, anyEdge));
+  std::shared_ptr<Vertex> v5(new Vertex(anyEdge, anyEdge));
+
+  std::vector< std::shared_ptr<Vertex> > lav = {v1, v2, v3, v4, v5};
+
+  int split = findSplitIndex(v1, lav, oppositeEdge);
+
+  EXPECT_EQ(0, split);
+}
+
+TEST_F(GeometryFixture, SkeletonInternal_testFindSplitIndex_4) {
+  std::shared_ptr<Edge> anyEdge(new Edge());
+  std::shared_ptr<Edge> oppositeEdge(new Edge());
+
+  std::shared_ptr<Vertex> v1(new Vertex(anyEdge, anyEdge));
+  std::shared_ptr<Vertex> v2(new Vertex(anyEdge, anyEdge));
+  std::shared_ptr<Vertex> v3(new Vertex(anyEdge, anyEdge));
+  std::shared_ptr<Vertex> v4(new Vertex(anyEdge, anyEdge));
+  std::shared_ptr<Vertex> v5(new Vertex(anyEdge, oppositeEdge));
+
+  std::vector< std::shared_ptr<Vertex> > lav = {v1, v2, v3, v4, v5};
+
+  int split = findSplitIndex(v1, lav, oppositeEdge);
+
+  EXPECT_EQ(0, split);
+}
+
+TEST_F(GeometryFixture, SkeletonInternal_chooseOppositeEdgeLav) {
+  Point3d p1 = Point3d(0, 0, 0);
+  Point3d p2 = Point3d(1, 0, 0);
+  std::shared_ptr<Edge> oppositeEdge(new Edge(p1, p2));
+
+  Point3d center = Point3d(0.5, 1, 0);
+
+  std::shared_ptr<Vertex> v1(new Vertex(p1, 0, nullptr, nullptr, nullptr));
+  std::shared_ptr<Vertex> v2(new Vertex(p2, 0, nullptr, nullptr, nullptr));
+
+  std::vector< std::shared_ptr<Vertex> > edgeLavs = {v1, v2};
+
+  std::vector< std::shared_ptr<Vertex> > lav = {v1, v2};
+  std::vector< std::vector< std::shared_ptr<Vertex> > > sLav = {lav};
+
+  int vertexIndex = chooseOppositeEdgeLavIndex(edgeLavs, oppositeEdge, center, sLav);
+
+  EXPECT_EQ(edgeLavs[vertexIndex], v1);
+}
+
+TEST_F(GeometryFixture, SkeletonInternal_chooseOppositeEdgeLav_2) {
+  Point3d p1 = Point3d(0, 0, 0);
+  Point3d p2 = Point3d(0.2, 0, 0);
+  Point3d p3 = Point3d(0.2, 0, 0);
+  Point3d p4 = Point3d(1, 0, 0);
+  std::shared_ptr<Edge> oppositeEdge(new Edge(p1, p3));
+
+  Point3d center = Point3d(0.5, 1, 0);
+
+  std::shared_ptr<Vertex> v1(new Vertex(p1, 0, nullptr, nullptr, nullptr));
+  std::shared_ptr<Vertex> v2(new Vertex(p2, 0, nullptr, nullptr, nullptr));
+  std::shared_ptr<Vertex> v3(new Vertex(p3, 0, nullptr, nullptr, nullptr));
+  std::shared_ptr<Vertex> v4(new Vertex(p4, 0, nullptr, nullptr, nullptr));
+
+  std::vector< std::shared_ptr<Vertex> > edgeLavs = {v1, v3};
+
+  std::vector< std::shared_ptr<Vertex> > lav1 = {v1, v2};
+  std::vector< std::shared_ptr<Vertex> > lav2 = {v3, v4};
+  std::vector< std::vector< std::shared_ptr<Vertex> > > sLav = {lav1, lav2};
+
+  int vertexIndex = chooseOppositeEdgeLavIndex(edgeLavs, oppositeEdge, center, sLav);
+
+  EXPECT_EQ(edgeLavs[vertexIndex], v3);
+}
+
+TEST_F(GeometryFixture, SkeletonInternal_createEdgeChain_1) {
+  std::shared_ptr<Vertex> v1(new Vertex());
+  std::shared_ptr<Vertex> v2(new Vertex());
+  std::shared_ptr<Vertex> v3(new Vertex());
+  std::shared_ptr<Vertex> v4(new Vertex());
+  std::shared_ptr<Vertex> v5(new Vertex());
+
+  std::shared_ptr<QueueEvent> e1(new QueueEvent(Point3d(), 0, v1, v2));
+  std::shared_ptr<QueueEvent> e2(new QueueEvent(Point3d(), 0, v3, v4));
+  std::shared_ptr<QueueEvent> e3(new QueueEvent(Point3d(), 0, v2, v5));
+
+  std::vector< std::shared_ptr<QueueEvent> > edgeCluster = {e1, e2, e3};
+
+  std::vector< std::shared_ptr<QueueEvent> > chain = createEdgeChain(edgeCluster);
+
+  EXPECT_EQ(2, chain.size());
+  EXPECT_EQ(e1, chain[0]);
+  EXPECT_EQ(e3, chain[1]);
+}
+
+TEST_F(GeometryFixture, SkeletonInternal_createEdgeChain_2) {
+  std::shared_ptr<Vertex> v1(new Vertex());
+  std::shared_ptr<Vertex> v2(new Vertex());
+  std::shared_ptr<Vertex> v3(new Vertex());
+  std::shared_ptr<Vertex> v4(new Vertex());
+
+  std::shared_ptr<QueueEvent> e1(new QueueEvent(Point3d(), 0, v1, v2));
+  std::shared_ptr<QueueEvent> e2(new QueueEvent(Point3d(), 0, v3, v1));
+  std::shared_ptr<QueueEvent> e3(new QueueEvent(Point3d(), 0, v2, v4));
+
+  std::vector< std::shared_ptr<QueueEvent> > edgeCluster = {e1, e2, e3};
+
+  std::vector< std::shared_ptr<QueueEvent> > chain = createEdgeChain(edgeCluster);
+
+  EXPECT_EQ(3, chain.size());
+  EXPECT_EQ(e2, chain[0]);
+  EXPECT_EQ(e1, chain[1]);
+  EXPECT_EQ(e3, chain[2]);
+}
+
+TEST_F(GeometryFixture, SkeletonInternal_groupLevelEvents_1) {
+  std::shared_ptr<Vertex> v1(new Vertex());
+  std::shared_ptr<Vertex> v2(new Vertex());
+  std::shared_ptr<Vertex> v3(new Vertex());
+  std::shared_ptr<Vertex> v4(new Vertex());
+  Point3d p1 = Point3d(0, 0, 0);
+
+  std::shared_ptr<QueueEvent> e1(new QueueEvent(p1, 0, v1, v2));
+  std::shared_ptr<QueueEvent> e2(new QueueEvent(p1, 0, v2, v3));
+  std::shared_ptr<QueueEvent> e3(new QueueEvent(p1, 0, v3, v4));
+  std::shared_ptr<QueueEvent> e4(new QueueEvent(p1, 0, v4, v1));
+
+  std::vector< std::shared_ptr<QueueEvent> > edgeCluster = {e1, e2, e3, e4};
+
+  std::vector< std::shared_ptr<Vertex> > lav = {v1, v2, v3, v4};
+  std::vector< std::vector< std::shared_ptr<Vertex> > > sLav = {lav};
+
+  std::vector<LevelEvent> chain = groupLevelEvents(edgeCluster, sLav);
+
+  EXPECT_TRUE(chain[0].eventType == LevelEvent::TYPE_PICK);
+}
+
+TEST_F(GeometryFixture, SkeletonInternal_cutLavPart) {
+  std::shared_ptr<Vertex> v1(new Vertex());
+  std::shared_ptr<Vertex> v2(new Vertex());
+  std::shared_ptr<Vertex> v3(new Vertex());
+  std::shared_ptr<Vertex> v4(new Vertex());
+  std::shared_ptr<Vertex> v5(new Vertex());
+
+  std::vector< std::shared_ptr<Vertex> > lav = {v1, v2, v3, v4, v5};
+
+  std::vector< std::shared_ptr<Vertex> > lavPart = cutLavPart(lav, v2, v3);
+
+  EXPECT_EQ(2, lavPart.size());
+  EXPECT_EQ(v2, lavPart[0]);
+  EXPECT_EQ(v3, lavPart[1]);
+}
+
+TEST_F(GeometryFixture, SkeletonInternal_cutLavPart_2) {
+  std::shared_ptr<Vertex> v1(new Vertex());
+  std::shared_ptr<Vertex> v2(new Vertex());
+  std::shared_ptr<Vertex> v3(new Vertex());
+  std::shared_ptr<Vertex> v4(new Vertex());
+  std::shared_ptr<Vertex> v5(new Vertex());
+
+  std::vector< std::shared_ptr<Vertex> > lav = {v1, v2, v3, v4, v5};
+
+  std::vector< std::shared_ptr<Vertex> > lavPart = cutLavPart(lav, v1, v1);
+
+  EXPECT_EQ(1, lavPart.size());
+  EXPECT_EQ(v1, lavPart[0]);
+}
+
+TEST_F(GeometryFixture, SkeletonLevelEvents_pickEvent) {
+  std::vector<Point3d> footprint;
+  footprint.push_back(Point3d(-1, -1, 0));
+  footprint.push_back(Point3d(1, -1, 0));
+  footprint.push_back(Point3d(1, 1, 0));
+  footprint.push_back(Point3d(-1, 1, 0));
+
+  std::vector< std::vector<Point3d> > roofPolygons = generateHipRoof(footprint, 0.0);
+
+  std::vector< std::vector<Point3d> > expectedRoofPolygons;
+  expectedRoofPolygons.push_back({Point3d(0.0, 0.0, 0.0), Point3d(1.0, -1.0, 0.0), Point3d(1.0, 1.0, 0.0)});
+  expectedRoofPolygons.push_back({Point3d(0.0, 0.0, 0.0), Point3d(1.0, 1.0, 0.0), Point3d(-1.0, 1.0, 0.0)});
+  expectedRoofPolygons.push_back({Point3d(0.0, 0.0, 0.0), Point3d(-1.0, 1.0, 0.0), Point3d(-1.0, -1.0, 0.0)});
+  expectedRoofPolygons.push_back({Point3d(0.0, 0.0, 0.0), Point3d(-1.0, -1.0, 0.0), Point3d(1.0, -1.0, 0.0)});
+
+  EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
+
+  for (int i = 0; i < roofPolygons.size(); ++i) {
+    polygonMatches(expectedRoofPolygons, roofPolygons[i]);
+  }
+}
+
+TEST_F(GeometryFixture, SkeletonLevelEvents_multiEdgeEvent) {
+  std::vector<Point3d> footprint;
+  footprint.push_back(Point3d(0, 1, 0));
+  footprint.push_back(Point3d(-1, 0, 0));
+  footprint.push_back(Point3d(0, -1, 0));
+  footprint.push_back(Point3d(5, -2, 0));
+  footprint.push_back(Point3d(7, 0, 0));
+  footprint.push_back(Point3d(5, 2, 0));
+
+  std::vector< std::vector<Point3d> > roofPolygons = generateHipRoof(footprint, 0.0);
+
+  std::vector< std::vector<Point3d> > expectedRoofPolygons;
+  expectedRoofPolygons.push_back({Point3d(0.5351837584879964, 1.0062969024153899E-16, 0.0), Point3d(-1.0, 0.0, 0.0), Point3d(0.0, -1.0, 0.0)});
+  expectedRoofPolygons.push_back({Point3d(4.39444872453601, 2.6834584064410396E-16, 0.0), Point3d(0.5351837584879964, 1.0062969024153899E-16, 0.0), Point3d(0.0, -1.0, 0.0), Point3d(5.0, -2.0, 0.0)});
+  expectedRoofPolygons.push_back({Point3d(4.39444872453601, 2.6834584064410396E-16, 0.0), Point3d(5.0, -2.0, 0.0), Point3d(7.0, 0.0, 0.0)});
+  expectedRoofPolygons.push_back({Point3d(4.39444872453601, 2.6834584064410396E-16, 0.0), Point3d(7.0, 0.0, 0.0), Point3d(5.0, 2.0, 0.0)});
+  expectedRoofPolygons.push_back({Point3d(4.39444872453601, 2.6834584064410396E-16, 0.0), Point3d(5.0, 2.0, 0.0), Point3d(0.0, 1.0, 0.0), Point3d(0.5351837584879964, 1.0062969024153899E-16, 0.0)});
+  expectedRoofPolygons.push_back({Point3d(0.5351837584879964, 1.0062969024153899E-16, 0.0), Point3d(0.0, 1.0, 0.0), Point3d(-1.0, 0.0, 0.0)});
+
+  EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
+
+  for (int i = 0; i < roofPolygons.size(); ++i) {
+    polygonMatches(expectedRoofPolygons, roofPolygons[i]);
+  }
+}
+
+TEST_F(GeometryFixture, SkeletonLevelEvents_cross_T1) {
+  std::vector<Point3d> footprint;
+  footprint.push_back(Point3d(-3.0, -1.0, 0.0));
+  footprint.push_back(Point3d(3.0, -1.0, 0.0));
+  footprint.push_back(Point3d(3.0, 1.0, 0.0));
+  footprint.push_back(Point3d(1.0, 1.0, 0.0));
+  footprint.push_back(Point3d(1.0, 3.0, 0.0));
+  footprint.push_back(Point3d(-1.0, 3.0, 0.0));
+  footprint.push_back(Point3d(-1.0, 1.0, 0.0));
+  footprint.push_back(Point3d(-3.0, 1.0, 0.0));
+
+  std::vector< std::vector<Point3d> > roofPolygons = generateHipRoof(footprint, 0.0);
+
+  std::vector< std::vector<Point3d> > expectedRoofPolygons;
+  expectedRoofPolygons.push_back({Point3d(2.0, 0.0, 0.0), Point3d(3.0, -1.0, 0.0), Point3d(3.0, 1.0, 0.0)});
+  expectedRoofPolygons.push_back({Point3d(2.0, 0.0, 0.0), Point3d(3.0, 1.0, 0.0), Point3d(1.0, 1.0, 0.0), Point3d(-0.0, 0.0, 0.0)});
+  expectedRoofPolygons.push_back({Point3d(-0.0, 0.0, 0.0), Point3d(1.0, 1.0, 0.0), Point3d(1.0, 3.0, 0.0), Point3d(-0.0, 2.0, 0.0)});
+  expectedRoofPolygons.push_back({Point3d(-0.0, 2.0, 0.0), Point3d(1.0, 3.0, 0.0), Point3d(-1.0, 3.0, 0.0)});
+  expectedRoofPolygons.push_back({Point3d(-0.0, 2.0, 0.0), Point3d(-1.0, 3.0, 0.0), Point3d(-1.0, 1.0, 0.0), Point3d(-0.0, 0.0, 0.0)});
+  expectedRoofPolygons.push_back({Point3d(-0.0, 0.0, 0.0), Point3d(-1.0, 1.0, 0.0), Point3d(-3.0, 1.0, 0.0), Point3d(-2.0, 0.0, 0.0)});
+  expectedRoofPolygons.push_back({Point3d(-2.0, 0.0, 0.0), Point3d(-3.0, 1.0, 0.0), Point3d(-3.0, -1.0, 0.0)});
+  expectedRoofPolygons.push_back({Point3d(-0.0, 0.0, 0.0), Point3d(-2.0, 0.0, 0.0), Point3d(-3.0, -1.0, 0.0), Point3d(3.0, -1.0, 0.0), Point3d(2.0, 0.0, 0.0)});
+
+  EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
+
+  for (int i = 0; i < roofPolygons.size(); ++i) {
+    polygonMatches(expectedRoofPolygons, roofPolygons[i]);
+  }
+}
+
+TEST_F(GeometryFixture, SkeletonLevelEvents_cross_X1) {
+  std::vector<Point3d> footprint;
+  footprint.push_back(Point3d(-3.0, -1.0, 0.0));
+  footprint.push_back(Point3d(-1.0, -1.0, 0.0));
+  footprint.push_back(Point3d(-1.0, -3.0, 0.0));
+  footprint.push_back(Point3d(1.0, -3.0, 0.0));
+  footprint.push_back(Point3d(1.0, -1.0, 0.0));
+  footprint.push_back(Point3d(3.0, -1.0, 0.0));
+  footprint.push_back(Point3d(3.0, 1.0, 0.0));
+  footprint.push_back(Point3d(1.0, 1.0, 0.0));
+  footprint.push_back(Point3d(1.0, 3.0, 0.0));
+  footprint.push_back(Point3d(-1.0, 3.0, 0.0));
+  footprint.push_back(Point3d(-1.0, 1.0, 0.0));
+  footprint.push_back(Point3d(-3.0, 1.0, 0.0));
+
+  std::vector< std::vector<Point3d> > roofPolygons = generateHipRoof(footprint, 0.0);
+
+  std::vector< std::vector<Point3d> > expectedRoofPolygons;
+  expectedRoofPolygons.push_back({Point3d(0.0, 0.0, 0.0), Point3d(-1.0, -1.0, 0.0), Point3d(-1.0, -3.0, 0.0), Point3d(-0.0, -2.0, 0.0)});
+  expectedRoofPolygons.push_back({Point3d(-0.0, -2.0, 0.0), Point3d(-1.0, -3.0, 0.0), Point3d(1.0, -3.0, 0.0)});
+  expectedRoofPolygons.push_back({Point3d(-0.0, -2.0, 0.0), Point3d(1.0, -3.0, 0.0), Point3d(1.0, -1.0, 0.0), Point3d(0.0, 0.0, 0.0)});
+  expectedRoofPolygons.push_back({Point3d(0.0, 0.0, 0.0), Point3d(1.0, -1.0, 0.0), Point3d(3.0, -1.0, 0.0), Point3d(2.0, -0.0, 0.0)});
+  expectedRoofPolygons.push_back({Point3d(2.0, -0.0, 0.0), Point3d(3.0, -1.0, 0.0), Point3d(3.0, 1.0, 0.0)});
+  expectedRoofPolygons.push_back({Point3d(2.0, -0.0, 0.0), Point3d(3.0, 1.0, 0.0), Point3d(1.0, 1.0, 0.0), Point3d(0.0, 0.0, 0.0)});
+  expectedRoofPolygons.push_back({Point3d(0.0, 0.0, 0.0), Point3d(1.0, 1.0, 0.0), Point3d(1.0, 3.0, 0.0), Point3d(0.0, 2.0, 0.0)});
+  expectedRoofPolygons.push_back({Point3d(0.0, 2.0, 0.0), Point3d(1.0, 3.0, 0.0), Point3d(-1.0, 3.0, 0.0)});
+  expectedRoofPolygons.push_back({Point3d(0.0, 2.0, 0.0), Point3d(-1.0, 3.0, 0.0), Point3d(-1.0, 1.0, 0.0), Point3d(0.0, 0.0, 0.0)});
+  expectedRoofPolygons.push_back({Point3d(0.0, 0.0, 0.0), Point3d(-1.0, 1.0, 0.0), Point3d(-3.0, 1.0, 0.0), Point3d(-2.0, 0.0, 0.0)});
+  expectedRoofPolygons.push_back({Point3d(-2.0, 0.0, 0.0), Point3d(-3.0, 1.0, 0.0), Point3d(-3.0, -1.0, 0.0)});
+  expectedRoofPolygons.push_back({Point3d(-2.0, 0.0, 0.0), Point3d(-3.0, -1.0, 0.0), Point3d(-1.0, -1.0, 0.0), Point3d(0.0, 0.0, 0.0)});
+
+  EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
+
+  for (int i = 0; i < roofPolygons.size(); ++i) {
+    polygonMatches(expectedRoofPolygons, roofPolygons[i]);
+  }
+}
+
+TEST_F(GeometryFixture, SkeletonLevelEvents_double_split) {
+  std::vector<Point3d> footprint;
+  footprint.push_back(Point3d(-6.0, 0.0, 0.0));
+  footprint.push_back(Point3d(-3.0, -6.0, 0.0));
+  footprint.push_back(Point3d(-1.0, -2.0, 0.0));
+  footprint.push_back(Point3d(1.0, -2.0, 0.0));
+  footprint.push_back(Point3d(3.0, -6.0, 0.0));
+  footprint.push_back(Point3d(6.0, 0.0, 0.0));
+
+  std::vector< std::vector<Point3d> > roofPolygons = generateHipRoof(footprint, 0.0);
+
+  std::vector< std::vector<Point3d> > expectedRoofPolygons;
+  expectedRoofPolygons.push_back({Point3d(-3.0000000000000004, -1.854101966249685, 0.0), Point3d(-3.0, -6.0, 0.0), Point3d(-1.0, -2.0, 0.0), Point3d(-1.6180339887498951, -1.0000000000000002, 0.0)});
+  expectedRoofPolygons.push_back({Point3d(-1.6180339887498951, -1.0000000000000002, 0.0), Point3d(-1.0, -2.0, 0.0), Point3d(1.0, -2.0, 0.0), Point3d(1.6180339887498951, -1.0000000000000002, 0.0)});
+  expectedRoofPolygons.push_back({Point3d(3.0000000000000004, -1.854101966249685, 0.0), Point3d(1.6180339887498951, -1.0000000000000002, 0.0), Point3d(1.0, -2.0, 0.0), Point3d(3.0, -6.0, 0.0)});
+  expectedRoofPolygons.push_back({Point3d(3.0000000000000004, -1.854101966249685, 0.0), Point3d(3.0, -6.0, 0.0), Point3d(6.0, 0.0, 0.0)});
+  expectedRoofPolygons.push_back({Point3d(-3.0000000000000004, -1.854101966249685, 0.0), Point3d(-1.6180339887498951, -1.0000000000000002, 0.0), Point3d(1.6180339887498951, -1.0000000000000002, 0.0), Point3d(3.0000000000000004, -1.854101966249685, 0.0), Point3d(6.0, 0.0, 0.0), Point3d(-6.0, 0.0, 0.0)});
+  expectedRoofPolygons.push_back({Point3d(-3.0000000000000004, -1.854101966249685, 0.0), Point3d(-6.0, 0.0, 0.0), Point3d(-3.0, -6.0, 0.0)});
+
+  EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
+
+  for (int i = 0; i < roofPolygons.size(); ++i) {
+    polygonMatches(expectedRoofPolygons, roofPolygons[i]);
+  }
+}
+
+TEST_F(GeometryFixture, SkeletonLevelEvents_double_split2) {
+  std::vector<Point3d> footprint;
+  footprint.push_back(Point3d(-6.0, 0.0, 0.0));
+  footprint.push_back(Point3d(-3.0, -6.0, 0.0));
+  footprint.push_back(Point3d(-1.0, -2.0, 0.0));
+  footprint.push_back(Point3d(0.0, -3.0, 0.0));
+  footprint.push_back(Point3d(1.0, -2.0, 0.0));
+  footprint.push_back(Point3d(3.0, -6.0, 0.0));
+  footprint.push_back(Point3d(6.0, 0.0, 0.0));
+
+  std::vector< std::vector<Point3d> > roofPolygons = generateHipRoof(footprint, 0.0);
+
+  std::vector< std::vector<Point3d> > expectedRoofPolygons;
+  expectedRoofPolygons.push_back({Point3d(-3.0000000000000004, -1.854101966249685, 0.0), Point3d(-3.0, -6.0, 0.0), Point3d(-1.0, -2.0, 0.0), Point3d(-1.2038204263767998, -0.7440019398522527, 0.0)});
+  expectedRoofPolygons.push_back({Point3d(-0.0, -1.242640687119285, 0.0), Point3d(-1.2038204263767998, -0.7440019398522527, 0.0), Point3d(-1.0, -2.0, 0.0), Point3d(0.0, -3.0, 0.0)});
+  expectedRoofPolygons.push_back({Point3d(-0.0, -1.242640687119285, 0.0), Point3d(0.0, -3.0, 0.0), Point3d(1.0, -2.0, 0.0), Point3d(1.2038204263767998, -0.7440019398522527, 0.0)});
+  expectedRoofPolygons.push_back({Point3d(3.0000000000000004, -1.854101966249685, 0.0), Point3d(1.2038204263767998, -0.7440019398522527, 0.0), Point3d(1.0, -2.0, 0.0), Point3d(3.0, -6.0, 0.0)});
+  expectedRoofPolygons.push_back({Point3d(3.0000000000000004, -1.854101966249685, 0.0), Point3d(3.0, -6.0, 0.0), Point3d(6.0, 0.0, 0.0)});
+  expectedRoofPolygons.push_back({Point3d(-3.0000000000000004, -1.854101966249685, 0.0), Point3d(-1.2038204263767998, -0.7440019398522527, 0.0), Point3d(-0.0, -1.242640687119285, 0.0), Point3d(1.2038204263767998, -0.7440019398522527, 0.0), Point3d(3.0000000000000004, -1.854101966249685, 0.0), Point3d(6.0, 0.0, 0.0), Point3d(-6.0, 0.0, 0.0)});
+  expectedRoofPolygons.push_back({Point3d(-3.0000000000000004, -1.854101966249685, 0.0), Point3d(-6.0, 0.0, 0.0), Point3d(-3.0, -6.0, 0.0)});
+
+  EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
+
+  for (int i = 0; i < roofPolygons.size(); ++i) {
+    polygonMatches(expectedRoofPolygons, roofPolygons[i]);
+  }
+}
+
+TEST_F(GeometryFixture, RoofSkeletonSquare_6_12)
 {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
@@ -84,11 +497,11 @@ TEST_F(GeometryFixture, RoofSquare_6_12)
   EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (int i = 0; i < roofPolygons.size(); ++i) {
-    matches(expectedRoofPolygons, roofPolygons[i]);
+    polygonMatches(expectedRoofPolygons, roofPolygons[i]);
   }
 }
 
-TEST_F(GeometryFixture, RoofSquare_1_12) {
+TEST_F(GeometryFixture, RoofSkeletonSquare_1_12) {
   double pitch = radToDeg(atan(1.0 / 12.0));
 
   std::vector<Point3d> footprint;
@@ -108,11 +521,11 @@ TEST_F(GeometryFixture, RoofSquare_1_12) {
   EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (int i = 0; i < roofPolygons.size(); ++i) {
-    matches(expectedRoofPolygons, roofPolygons[i]);
+    polygonMatches(expectedRoofPolygons, roofPolygons[i]);
   }
 }
 
-TEST_F(GeometryFixture, RoofRectangle_3_12) {
+TEST_F(GeometryFixture, RoofSkeletonRectangle_3_12) {
   double pitch = radToDeg(atan(3.0 / 12.0));
 
   std::vector<Point3d> footprint;
@@ -132,11 +545,11 @@ TEST_F(GeometryFixture, RoofRectangle_3_12) {
   EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (int i = 0; i < roofPolygons.size(); ++i) {
-    matches(expectedRoofPolygons, roofPolygons[i]);
+    polygonMatches(expectedRoofPolygons, roofPolygons[i]);
   }
 }
 
-TEST_F(GeometryFixture, RoofHshape_3_12) {
+TEST_F(GeometryFixture, RoofSkeletonHshape_3_12) {
   double pitch = radToDeg(atan(3.0 / 12.0));
 
   std::vector<Point3d> footprint;
@@ -172,7 +585,7 @@ TEST_F(GeometryFixture, RoofHshape_3_12) {
   EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (int i = 0; i < roofPolygons.size(); ++i) {
-    matches(expectedRoofPolygons, roofPolygons[i]);
+    polygonMatches(expectedRoofPolygons, roofPolygons[i]);
   }
 }
 
@@ -198,7 +611,7 @@ TEST_F(GeometryFixture, RoofSkeletonTest6_9) {
   EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (int i = 0; i < roofPolygons.size(); ++i) {
-    matches(expectedRoofPolygons, roofPolygons[i]);
+    polygonMatches(expectedRoofPolygons, roofPolygons[i]);
   }
 }
 
@@ -224,7 +637,7 @@ TEST_F(GeometryFixture, RoofSkeletonTest7) {
   EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (int i = 0; i < roofPolygons.size(); ++i) {
-    matches(expectedRoofPolygons, roofPolygons[i]);
+    polygonMatches(expectedRoofPolygons, roofPolygons[i]);
   }
 }
 
@@ -256,7 +669,7 @@ TEST_F(GeometryFixture, RoofSkeletonTest8) {
   EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (int i = 0; i < roofPolygons.size(); ++i) {
-    matches(expectedRoofPolygons, roofPolygons[i]);
+    polygonMatches(expectedRoofPolygons, roofPolygons[i]);
   }
 }
 
@@ -304,7 +717,7 @@ TEST_F(GeometryFixture, RoofSkeletonTestB1) {
   EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (int i = 0; i < roofPolygons.size(); ++i) {
-    matches(expectedRoofPolygons, roofPolygons[i]);
+    polygonMatches(expectedRoofPolygons, roofPolygons[i]);
   }
 }
 
@@ -350,7 +763,7 @@ TEST_F(GeometryFixture, RoofSkeletonTestB2) {
   EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (int i = 0; i < roofPolygons.size(); ++i) {
-    matches(expectedRoofPolygons, roofPolygons[i]);
+    polygonMatches(expectedRoofPolygons, roofPolygons[i]);
   }
 }
 
@@ -380,7 +793,7 @@ TEST_F(GeometryFixture, RoofSkeletonTestB3) {
   EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (int i = 0; i < roofPolygons.size(); ++i) {
-    matches(expectedRoofPolygons, roofPolygons[i]);
+    polygonMatches(expectedRoofPolygons, roofPolygons[i]);
   }
 }
 
@@ -406,7 +819,7 @@ TEST_F(GeometryFixture, RoofSkeletonTestB4) {
   EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (int i = 0; i < roofPolygons.size(); ++i) {
-    matches(expectedRoofPolygons, roofPolygons[i]);
+    polygonMatches(expectedRoofPolygons, roofPolygons[i]);
   }
 }
 
@@ -432,7 +845,7 @@ TEST_F(GeometryFixture, RoofSkeletonTestB5) {
   EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (int i = 0; i < roofPolygons.size(); ++i) {
-    matches(expectedRoofPolygons, roofPolygons[i]);
+    polygonMatches(expectedRoofPolygons, roofPolygons[i]);
   }
 }
 
@@ -462,7 +875,7 @@ TEST_F(GeometryFixture, RoofSkeletonTestB6) {
   EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (int i = 0; i < roofPolygons.size(); ++i) {
-    matches(expectedRoofPolygons, roofPolygons[i]);
+    polygonMatches(expectedRoofPolygons, roofPolygons[i]);
   }
 }
 
@@ -490,7 +903,7 @@ TEST_F(GeometryFixture, RoofSkeletonTestB7) {
   EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (int i = 0; i < roofPolygons.size(); ++i) {
-    matches(expectedRoofPolygons, roofPolygons[i]);
+    polygonMatches(expectedRoofPolygons, roofPolygons[i]);
   }
 }
 
@@ -516,7 +929,7 @@ TEST_F(GeometryFixture, RoofSkeletonTestB8) {
   EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (int i = 0; i < roofPolygons.size(); ++i) {
-    matches(expectedRoofPolygons, roofPolygons[i]);
+    polygonMatches(expectedRoofPolygons, roofPolygons[i]);
   }
 }
 
@@ -548,7 +961,7 @@ TEST_F(GeometryFixture, RoofSkeletonTest9) {
   EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (int i = 0; i < roofPolygons.size(); ++i) {
-    matches(expectedRoofPolygons, roofPolygons[i]);
+    polygonMatches(expectedRoofPolygons, roofPolygons[i]);
   }
 }
 
@@ -584,7 +997,7 @@ TEST_F(GeometryFixture, RoofSkeletonTestB10) {
   EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (int i = 0; i < roofPolygons.size(); ++i) {
-    matches(expectedRoofPolygons, roofPolygons[i]);
+    polygonMatches(expectedRoofPolygons, roofPolygons[i]);
   }
 }
 
@@ -632,7 +1045,7 @@ TEST_F(GeometryFixture, RoofSkeletonTestB11) {
   EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (int i = 0; i < roofPolygons.size(); ++i) {
-    matches(expectedRoofPolygons, roofPolygons[i]);
+    polygonMatches(expectedRoofPolygons, roofPolygons[i]);
   }
 }
 
@@ -664,7 +1077,7 @@ TEST_F(GeometryFixture, RoofSkeletonTestB11_b) {
   EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (int i = 0; i < roofPolygons.size(); ++i) {
-    matches(expectedRoofPolygons, roofPolygons[i]);
+    polygonMatches(expectedRoofPolygons, roofPolygons[i]);
   }
 }
 
@@ -712,7 +1125,7 @@ TEST_F(GeometryFixture, RoofSkeletonTestB12) {
   EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (int i = 0; i < roofPolygons.size(); ++i) {
-    matches(expectedRoofPolygons, roofPolygons[i]);
+    polygonMatches(expectedRoofPolygons, roofPolygons[i]);
   }
 }
 
@@ -768,7 +1181,7 @@ TEST_F(GeometryFixture, RoofSkeletonTestB13) {
   EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (int i = 0; i < roofPolygons.size(); ++i) {
-    matches(expectedRoofPolygons, roofPolygons[i]);
+    polygonMatches(expectedRoofPolygons, roofPolygons[i]);
   }
 }
 
@@ -792,7 +1205,7 @@ TEST_F(GeometryFixture, RoofCircularAddTest) {
   EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (int i = 0; i < roofPolygons.size(); ++i) {
-    matches(expectedRoofPolygons, roofPolygons[i]);
+    polygonMatches(expectedRoofPolygons, roofPolygons[i]);
   }
 }
 
@@ -816,7 +1229,7 @@ TEST_F(GeometryFixture, RoofCircularAddTest2) {
   EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (int i = 0; i < roofPolygons.size(); ++i) {
-    matches(expectedRoofPolygons, roofPolygons[i]);
+    polygonMatches(expectedRoofPolygons, roofPolygons[i]);
   }
 }
 
@@ -840,7 +1253,7 @@ TEST_F(GeometryFixture, RoofCircularAddTest2Clockwise) {
   EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (int i = 0; i < roofPolygons.size(); ++i) {
-    matches(expectedRoofPolygons, roofPolygons[i]);
+    polygonMatches(expectedRoofPolygons, roofPolygons[i]);
   }
 }
 
@@ -880,7 +1293,7 @@ TEST_F(GeometryFixture, RoofExtendedSkeleton_2) {
   EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (int i = 0; i < roofPolygons.size(); ++i) {
-    matches(expectedRoofPolygons, roofPolygons[i]);
+    polygonMatches(expectedRoofPolygons, roofPolygons[i]);
   }
 }
 
@@ -1084,7 +1497,7 @@ TEST_F(GeometryFixture, RoofExtendedSkeleton_3) {
   EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (int i = 0; i < roofPolygons.size(); ++i) {
-    matches(expectedRoofPolygons, roofPolygons[i]);
+    polygonMatches(expectedRoofPolygons, roofPolygons[i]);
   }
 }
 
@@ -1166,7 +1579,7 @@ TEST_F(GeometryFixture, RoofExtendedSkeleton_5) {
   EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (int i = 0; i < roofPolygons.size(); ++i) {
-    matches(expectedRoofPolygons, roofPolygons[i]);
+    polygonMatches(expectedRoofPolygons, roofPolygons[i]);
   }
 }
 
@@ -1214,7 +1627,7 @@ TEST_F(GeometryFixture, RoofExtendedSkeleton_6) {
   EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (int i = 0; i < roofPolygons.size(); ++i) {
-    matches(expectedRoofPolygons, roofPolygons[i]);
+    polygonMatches(expectedRoofPolygons, roofPolygons[i]);
   }
 }
 
@@ -1276,7 +1689,7 @@ TEST_F(GeometryFixture, RoofExtendedSkeleton_7) {
   EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (int i = 0; i < roofPolygons.size(); ++i) {
-    matches(expectedRoofPolygons, roofPolygons[i]);
+    polygonMatches(expectedRoofPolygons, roofPolygons[i]);
   }
 }
 
@@ -1308,6 +1721,6 @@ TEST_F(GeometryFixture, RoofExtendedSkeleton_8) {
   EXPECT_EQ(expectedRoofPolygons.size(), roofPolygons.size());
 
   for (int i = 0; i < roofPolygons.size(); ++i) {
-    matches(expectedRoofPolygons, roofPolygons[i]);
+    polygonMatches(expectedRoofPolygons, roofPolygons[i]);
   }
 }

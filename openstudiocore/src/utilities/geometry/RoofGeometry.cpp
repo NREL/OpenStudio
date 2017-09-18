@@ -34,7 +34,7 @@
 #include <boost/math/constants/constants.hpp>
 
 // FIXME: Create Lav class, add reference to lav from vertex
-// FIXME: Remove more boost::optionals?
+// FIXME: Add some typedefs
 
 using namespace openstudio;
 
@@ -141,7 +141,7 @@ public:
     return (orthRight.dot(direction) > -epsilon);
   }
 
-  boost::optional<Point3d> intersectRay2d(Ray2d& other) {
+  boost::optional<Point3d> intersectRay2d(std::shared_ptr<Ray2d> other) {
     /*
     * Calculate intersection points for rays. It can return more then one
     * intersection point when rays overlaps.
@@ -155,11 +155,11 @@ public:
     Point3d s1p0 = point;
     Point3d s1p1 = Point3d(point) + vector;
 
-    Point3d s2p0 = other.point;
-    Point3d s2p1 = Point3d(other.point) + other.vector;
+    Point3d s2p0 = other->point;
+    Point3d s2p1 = Point3d(other->point) + other->vector;
 
     Vector3d u = vector;
-    Vector3d v = other.vector;
+    Vector3d v = other->vector;
 
     Vector3d w = s1p0 - s2p0;
 
@@ -308,8 +308,8 @@ class Edge
 public:
   Point3d begin;
   Point3d end;
-  Ray2d bisectorPrevious;
-  Ray2d bisectorNext;
+  std::shared_ptr<Ray2d> bisectorPrevious;
+  std::shared_ptr<Ray2d> bisectorNext;
 
   Edge() {
     // nop
@@ -427,7 +427,7 @@ public:
   Point3d point;
   std::shared_ptr<Edge> previousEdge;
   std::shared_ptr<Edge> nextEdge;
-  boost::optional<Ray2d> bisector;
+  std::shared_ptr<Ray2d> bisector;
   std::shared_ptr<FaceNode> leftFaceNode;
   std::shared_ptr<FaceNode> rightFaceNode;
   double distance = 0.0;
@@ -437,31 +437,60 @@ public:
     // nop
   }
 
-  Vertex(Point3d& point, double distance, boost::optional<Ray2d&> bisector, std::shared_ptr<Edge> previousEdge, std::shared_ptr<Edge> nextEdge) {
+  Vertex(Point3d& point, double distance, std::shared_ptr<Ray2d> bisector, std::shared_ptr<Edge> previousEdge, std::shared_ptr<Edge> nextEdge) {
     this->point = point;
     this->distance = distance;
     this->bisector = bisector;
     this->previousEdge = previousEdge;
     this->nextEdge = nextEdge;
-    this->processed = false;
   }
 
-  std::shared_ptr<Vertex> previous(std::vector< std::shared_ptr<Vertex> >& vertexes) {
-    std::vector<Vertex> newVertexes;
-    for (std::shared_ptr<Vertex> v : vertexes) {
-      newVertexes.push_back(*v);
-    }
-    int index = getOffsetVertexIndex(newVertexes, -1);
+  Vertex(std::shared_ptr<Edge> previousEdge, std::shared_ptr<Edge> nextEdge) {
+    this->previousEdge = previousEdge;
+    this->nextEdge = nextEdge;
+  }
+
+  static std::shared_ptr<Vertex> previous(std::shared_ptr<Vertex> vertex, std::vector< std::shared_ptr<Vertex> >& vertexes) {
+    int index = getOffsetVertexIndex(vertex, vertexes, -1);
     return vertexes[index];
   }
 
-  std::shared_ptr<Vertex> next(std::vector< std::shared_ptr<Vertex> >& vertexes) {
-    std::vector<Vertex> newVertexes;
-    for (std::shared_ptr<Vertex> v : vertexes) {
-      newVertexes.push_back(*v);
-    }
-    int index = getOffsetVertexIndex(newVertexes, 1);
+  static std::shared_ptr<Vertex> next(std::shared_ptr<Vertex> vertex, std::vector< std::shared_ptr<Vertex> >& vertexes) {
+    int index = getOffsetVertexIndex(vertex, vertexes, 1);
     return vertexes[index];
+  }
+
+  static std::shared_ptr<Vertex> previous(std::shared_ptr<Vertex> vertex, std::vector< std::vector< std::shared_ptr<Vertex> > >& sLav) {
+    int index = Vertex::getLavIndex(vertex, sLav);
+    return Vertex::previous(vertex, sLav[index]);
+  }
+
+  static std::shared_ptr<Vertex> next(std::shared_ptr<Vertex> vertex, std::vector< std::vector< std::shared_ptr<Vertex> > >& sLav) {
+    int index = Vertex::getLavIndex(vertex, sLav);
+    return Vertex::next(vertex, sLav[index]);
+  }
+
+  static int getLavIndex(std::shared_ptr<Vertex> vertex, std::vector< std::vector< std::shared_ptr<Vertex> > >& sLav) {
+    for (int i = 0; i < sLav.size(); i++) {
+      if (std::find(sLav[i].begin(), sLav[i].end(), vertex) != sLav[i].end()) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
+  static void removeFromLav(std::shared_ptr<Vertex> vertex, std::vector< std::shared_ptr<Vertex> >& lav) {
+    auto it = std::find(lav.begin(), lav.end(), vertex);
+    if (it != lav.end()) {
+      lav.erase(it);
+    }
+  }
+
+  static void removeFromLav(std::shared_ptr<Vertex> vertex, std::vector< std::vector< std::shared_ptr<Vertex> > >& sLav) {
+    int i = Vertex::getLavIndex(vertex, sLav);
+    if (i != -1) {
+      Vertex::removeFromLav(vertex, sLav[i]);
+    }
   }
 
   friend std::ostream& operator<<(std::ostream& os, const Vertex& v) {
@@ -525,8 +554,8 @@ public:
 private:
   REGISTER_LOGGER("utilities.Vertex");
 
-  int getOffsetVertexIndex(std::vector<Vertex>& vertexes, int offset) {
-    auto it = std::find(vertexes.begin(), vertexes.end(), *this);
+  friend int getOffsetVertexIndex(std::shared_ptr<Vertex> vertex, std::vector< std::shared_ptr<Vertex> >& vertexes, int offset) {
+    auto it = std::find(vertexes.begin(), vertexes.end(), vertex);
     if (it == vertexes.end()) {
       LOG_AND_THROW("Could not find vertex.");
     }
@@ -539,18 +568,7 @@ private:
     }
     return pos;
   }
-
 };
-
-// FIXME: Remove eventually
-int getLavIndex(std::shared_ptr<Vertex> vertex, std::vector< std::vector< std::shared_ptr<Vertex> > >& sLav) {
-  for (int i = 0; i < sLav.size(); i++) {
-    if (std::find(sLav[i].begin(), sLav[i].end(), vertex) != sLav[i].end()) {
-      return i;
-    }
-  }
-  return -1;
-}
 
 class Face
 {
@@ -777,8 +795,7 @@ public:
      * processing of multi split event start .We need to store vertex before
      * processing starts.
     */
-    int lavIndex = getLavIndex(nextVertex, sLav);
-    this->previousVertex = nextVertex->previous(sLav[lavIndex]);
+    this->previousVertex = Vertex::previous(nextVertex, sLav);
   }
 
   ChainMode getChainMode() {
@@ -823,8 +840,7 @@ public:
     } else if (chainType == TYPE_SINGLE_EDGE) {
       return previousVertex;
     } else {
-      int lavIndex = getLavIndex(splitEvent->parent, sLav);
-      return splitEvent->parent->previous(sLav[lavIndex]);
+      return Vertex::previous(splitEvent->parent, sLav);
     }
   }
 
@@ -834,8 +850,7 @@ public:
     } else if (chainType == TYPE_SINGLE_EDGE) {
       return nextVertex;
     } else {
-      int lavIndex = getLavIndex(splitEvent->parent, sLav);
-      return splitEvent->parent->next(sLav[lavIndex]);
+      return Vertex::next(splitEvent->parent, sLav);
     }
   }
 
@@ -1036,20 +1051,6 @@ private:
   REGISTER_LOGGER("utilities.SplitCandidate");
 };
 
-void removeFromLav(std::shared_ptr<Vertex> vertex, std::vector< std::shared_ptr<Vertex> >& lav) {
-  auto it = std::find(lav.begin(), lav.end(), vertex);
-  if (it != lav.end()) {
-    lav.erase(it);
-  }
-}
-
-void removeFromLav(std::shared_ptr<Vertex> vertex, std::vector< std::vector< std::shared_ptr<Vertex> > >& sLav) {
-  int i = getLavIndex(vertex, sLav);
-  if (i != -1) {
-    removeFromLav(vertex, sLav[i]);
-  }
-}
-
 std::vector< std::vector<Point3d> > facesToPoint3d(std::vector< std::shared_ptr<Face> >& faces, double roofPitchDegrees) {
   std::vector< std::vector<Point3d> > roofsPoint3d;
   double roofSlope = tan(degToRad(roofPitchDegrees));
@@ -1090,11 +1091,12 @@ Vector3d calcVectorBisector(Vector3d& norm1, Vector3d& norm2) {
   return ret;
 }
 
-Ray2d calcBisector(Point3d& p, std::shared_ptr<Edge> e1, std::shared_ptr<Edge> e2) {
+std::shared_ptr<Ray2d> calcBisector(Point3d& p, std::shared_ptr<Edge> e1, std::shared_ptr<Edge> e2) {
   Vector3d norm1 = e1->normalize();
   Vector3d norm2 = e2->normalize();
   Vector3d bisector = calcVectorBisector(norm1, norm2);
-  return Ray2d(p, bisector);
+  std::shared_ptr<Ray2d> ray(new Ray2d(p, bisector));
+  return ray;
 }
 
 void addPush(std::shared_ptr<FaceNode> node, std::shared_ptr<FaceNode> newNode) {
@@ -1165,7 +1167,7 @@ void initSlav(std::vector<Point3d>& polygon, std::vector< std::vector< std::shar
   for (std::shared_ptr<Edge> edge : edges) {
     std::shared_ptr<Edge> nextEdge = edge->next(edges);
       
-    Ray2d bisector = calcBisector(edge->end, edge, nextEdge);
+    std::shared_ptr<Ray2d> bisector(calcBisector(edge->end, edge, nextEdge));
 
     edge->bisectorNext = bisector;
 
@@ -1184,7 +1186,7 @@ void initSlav(std::vector<Point3d>& polygon, std::vector< std::vector< std::shar
   sLav.push_back(lav);
 
   for (std::shared_ptr<Vertex> vertex : lav) {
-    std::shared_ptr<Vertex> next = vertex->next(lav);
+    std::shared_ptr<Vertex> next = Vertex::next(vertex, lav);
 
     // create face on right site of vertex
     std::shared_ptr<Face> face(new Face());
@@ -1203,13 +1205,13 @@ void initSlav(std::vector<Point3d>& polygon, std::vector< std::vector< std::shar
 
 }
 
-bool edgeBehindBisector(Ray2d& bisector, LineLinear2d& edge) {
+bool edgeBehindBisector(std::shared_ptr<Ray2d> bisector, LineLinear2d& edge) {
   /*
   * Simple intersection test between the bisector starting at V and the
   * whole line containing the currently tested line segment ei rejects
   * the line segments laying "behind" the vertex V
   */
-  return (!bisector.collide(edge, SPLIT_EPSILON));
+  return (!bisector->collide(edge, SPLIT_EPSILON));
 }
 
 std::shared_ptr<Edge> chooseLessParallelVertexEdge(std::shared_ptr<Vertex> vertex, std::shared_ptr<Edge> edge) {
@@ -1298,17 +1300,17 @@ boost::optional<SplitCandidate> calcCandidatePointForSplit(std::shared_ptr<Verte
   * between the bisector at V and the axis of the angle between one of
   * the edges starting at V and the tested line segment ei
   */
-  boost::optional<Point3d> candidatePoint = vertex->bisector.get().collide(edgesBisectorLine, SPLIT_EPSILON);
+  boost::optional<Point3d> candidatePoint = vertex->bisector->collide(edgesBisectorLine, SPLIT_EPSILON);
 
   if (!candidatePoint) {
     return boost::none;
   }
 
-  if (edge->bisectorPrevious.isOnRightSide(candidatePoint.get(), SPLIT_EPSILON) && edge->bisectorNext.isOnLeftSide(candidatePoint.get(), SPLIT_EPSILON)) {
+  if (edge->bisectorPrevious->isOnRightSide(candidatePoint.get(), SPLIT_EPSILON) && edge->bisectorNext->isOnLeftSide(candidatePoint.get(), SPLIT_EPSILON)) {
 
     double distance = calcDistance(candidatePoint.get(), edge);
 
-    if (edge->bisectorPrevious.isOnLeftSide(candidatePoint.get(), SPLIT_EPSILON) || edge->bisectorNext.isOnRightSide(candidatePoint.get(), SPLIT_EPSILON)) {
+    if (edge->bisectorPrevious->isOnLeftSide(candidatePoint.get(), SPLIT_EPSILON) || edge->bisectorNext->isOnRightSide(candidatePoint.get(), SPLIT_EPSILON)) {
 
       Point3d oppositePoint = edge->begin;
       return SplitCandidate(candidatePoint.get(), distance, nullptr, oppositePoint);
@@ -1332,7 +1334,7 @@ std::vector<SplitCandidate> calcOppositeEdges(std::shared_ptr<Vertex> vertex, st
     LineLinear2d edge = LineLinear2d(edgeEntry->begin, edgeEntry->end);
 
     // check if edge is behind bisector
-    if (edgeBehindBisector(vertex->bisector.get(), edge)) {
+    if (edgeBehindBisector(vertex->bisector, edge)) {
       continue;
     }
     // compute the coordinates of the candidate point Bi
@@ -1394,10 +1396,10 @@ void computeSplitEvents(std::shared_ptr<Vertex> vertex, std::vector< std::shared
 boost::optional<Point3d> computeIntersectionBisectors(std::shared_ptr<Vertex> vertexPrevious, std::shared_ptr<Vertex> vertexNext) {
   boost::optional<Point3d> ret;
 
-  Ray2d bisectorPrevious = vertexPrevious->bisector.get();
-  Ray2d bisectorNext = vertexNext->bisector.get();
+  std::shared_ptr<Ray2d> bisectorPrevious = vertexPrevious->bisector;
+  std::shared_ptr<Ray2d> bisectorNext = vertexNext->bisector;
 
-  boost::optional<Point3d> intersect = bisectorPrevious.intersectRay2d(bisectorNext);
+  boost::optional<Point3d> intersect = bisectorPrevious->intersectRay2d(bisectorNext);
 
   if (!intersect) {
     return ret;
@@ -1435,7 +1437,7 @@ void initEvents(std::vector< std::vector< std::shared_ptr<Vertex> > >& sLav, std
 
   for (std::vector< std::shared_ptr<Vertex> >& lav : sLav) {
     for (std::shared_ptr<Vertex> vertex : lav) {
-      std::shared_ptr<Vertex> next = vertex->next(lav);
+      std::shared_ptr<Vertex> next = Vertex::next(vertex, lav);
       computeEdgeEvents(vertex, next, queue);
     }
   }
@@ -1761,7 +1763,7 @@ std::shared_ptr<Vertex> getEdgeInLav(std::vector< std::shared_ptr<Vertex> >& lav
     if (vertex->previousEdge && oppositeEdge == vertex->previousEdge) {
       return vertex;
     } else {
-      std::shared_ptr<Vertex> previous = vertex->previous(lav);
+      std::shared_ptr<Vertex> previous = Vertex::previous(vertex, lav);
       if (previous->nextEdge && oppositeEdge == previous->nextEdge) {
         return vertex;
       }
@@ -1830,7 +1832,7 @@ int chooseOppositeEdgeLavIndex(std::vector< std::shared_ptr<Vertex> >& edgeLavs,
 
   for (int i = 0; i < edgeLavs.size(); i++) {
     std::shared_ptr<Vertex> end = edgeLavs[i];
-    std::shared_ptr<Vertex> begin = end->previous(edgeLavs);
+    std::shared_ptr<Vertex> begin = Vertex::previous(end, sLav);
     Vector3d beginVector = begin->point - edgeStart;
     Vector3d endVector = end->point - edgeStart;
 
@@ -1853,13 +1855,13 @@ int chooseOppositeEdgeLavIndex(std::vector< std::shared_ptr<Vertex> >& edgeLavs,
   // Additional check if center is inside lav
   for (int i = 0; i < edgeLavs.size(); i++) {
     std::shared_ptr<Vertex> end = edgeLavs[i];
-    int index = getLavIndex(end, sLav);
+    int index = Vertex::getLavIndex(end, sLav);
     int size = sLav[index].size();
     std::vector<Point3d> points;
     std::shared_ptr<Vertex> next = end;
     for (int j = 0; j < size; j++) {
       points.push_back(next->point);
-      next = next->next(sLav[index]);
+      next = Vertex::next(next, sLav[index]);
     }
     if (isInsidePolygon(center, points)) {
       return i;
@@ -1951,14 +1953,14 @@ void createOppositeEdgeChains(std::vector< std::vector< std::shared_ptr<Vertex> 
 }
 
 std::shared_ptr<Vertex> createMultiSplitVertex(std::shared_ptr<Edge> nextEdge, std::shared_ptr<Edge> previousEdge, Point3d& center, double distance) {
-  Ray2d bisector = calcBisector(center, previousEdge, nextEdge);
+  std::shared_ptr<Ray2d> bisector(calcBisector(center, previousEdge, nextEdge));
 
   // edges are mirrored for event
   std::shared_ptr<Vertex> vertex(new Vertex(center, distance, bisector, previousEdge, nextEdge));
   return vertex;
 }
 
-void correctBisectorDirection(Ray2d& bisector, std::shared_ptr<Vertex> beginNextVertex, std::shared_ptr<Vertex> endPreviousVertex, std::shared_ptr<Edge> beginEdge, std::shared_ptr<Edge> endEdge) {
+void correctBisectorDirection(std::shared_ptr<Ray2d> bisector, std::shared_ptr<Vertex> beginNextVertex, std::shared_ptr<Vertex> endPreviousVertex, std::shared_ptr<Edge> beginEdge, std::shared_ptr<Edge> endEdge) {
   /*
   * New bisector for vertex is created using connected edges. For
   * parallel edges numerical error may appear and direction of created
@@ -1977,7 +1979,7 @@ void correctBisectorDirection(Ray2d& bisector, std::shared_ptr<Vertex> beginNext
   * Check if edges are parallel and in opposite direction to each other.
   */
   if (beginEdge->normalize().dot(endEdge->normalize()) < -0.97) {
-    Point3d bp = bisector.point;
+    Point3d bp = bisector->point;
     Point3d bnvp = beginNextVertex->point;
     Vector3d n1 = Vector3d(bp.x(), bp.y(), bp.z()) - Vector3d(bnvp.x(), bnvp.y(), bnvp.z());
     Vector3d n2 = Vector3d(bnvp.x(), bnvp.y(), bnvp.z()) - Vector3d(bp.x(), bp.y(), bp.z());
@@ -1985,12 +1987,12 @@ void correctBisectorDirection(Ray2d& bisector, std::shared_ptr<Vertex> beginNext
     n2.normalize();
     Vector3d bisectorPrediction = calcVectorBisector(n1, n2);
 
-    if (bisector.vector.dot(bisectorPrediction) < 0) {
+    if (bisector->vector.dot(bisectorPrediction) < 0) {
       /*
       * Bisector is calculated in opposite direction to edges and
       * center.
       */
-      bisector.vector = bisector.vector.reverseVector();
+      bisector->vector = bisector->vector.reverseVector();
     }
   }
 }
@@ -2013,7 +2015,7 @@ void mergeBeforeBaseVertex(std::shared_ptr<Vertex> base, std::vector< std::share
   int size = mergedList.size();
 
   for (int i = 0; i < size; i++) {
-    std::shared_ptr<Vertex> nextMerged = merged->next(mergedList);
+    std::shared_ptr<Vertex> nextMerged = Vertex::next(merged, mergedList);
     auto it = std::find(baseList.begin(), baseList.end(), base);
     baseList.insert(it, nextMerged);
   }
@@ -2029,10 +2031,8 @@ boost::optional<double> computeCloserEdgeEvent(std::shared_ptr<Vertex> vertex, s
   * only closer event or both if they have the same distance.
   */
 
-  int vertexLavIndex = getLavIndex(vertex, sLav);
-
-  std::shared_ptr<Vertex> nextVertex = vertex->next(sLav[vertexLavIndex]);
-  std::shared_ptr<Vertex> previousVertex = vertex->previous(sLav[vertexLavIndex]);
+  std::shared_ptr<Vertex> nextVertex = Vertex::next(vertex, sLav);
+  std::shared_ptr<Vertex> previousVertex = Vertex::previous(vertex, sLav);
 
   /*
   * We need to chose closer edge event. When two evens appear in epsilon
@@ -2083,7 +2083,7 @@ std::shared_ptr<Vertex> createOppositeEdgeVertex(std::shared_ptr<Vertex> newVert
   * by additional output face.
   */
 
-  std::shared_ptr<Vertex> vertex(new Vertex(newVertex->point, newVertex->distance, newVertex->bisector.get(), newVertex->previousEdge, newVertex->nextEdge));
+  std::shared_ptr<Vertex> vertex(new Vertex(newVertex->point, newVertex->distance, newVertex->bisector, newVertex->previousEdge, newVertex->nextEdge));
 
   std::shared_ptr<Face> oppFace(new Face());
 
@@ -2186,7 +2186,7 @@ std::vector< std::shared_ptr<Vertex> > cutLavPart(std::vector< std::shared_ptr<V
   }
 
   while (true) {
-    current = current->next(lav);
+    current = Vertex::next(current, lav);
     ret.push_back(current);
     if (current == endVertex) {
       break;
@@ -2197,7 +2197,7 @@ std::vector< std::shared_ptr<Vertex> > cutLavPart(std::vector< std::shared_ptr<V
   }
 
   for (std::shared_ptr<Vertex> v : ret) {
-    removeFromLav(v, lav);
+    Vertex::removeFromLav(v, lav);
   }
 
   return ret;
@@ -2225,10 +2225,10 @@ void multiSplitEvent(LevelEvent& event, std::vector< std::vector< std::shared_pt
     std::shared_ptr<Vertex> beginNextVertex = chainBegin.getNextVertex(sLav);
     std::shared_ptr<Vertex> endPreviousVertex = chainEnd.getPreviousVertex(sLav);
 
-    correctBisectorDirection(newVertex->bisector.get(), beginNextVertex, endPreviousVertex, chainBegin.getNextEdge(), chainEnd.getPreviousEdge());
+    correctBisectorDirection(newVertex->bisector, beginNextVertex, endPreviousVertex, chainBegin.getNextEdge(), chainEnd.getPreviousEdge());
 
-    std::vector< std::shared_ptr<Vertex> >& beginNextVertexLav = sLav[getLavIndex(beginNextVertex, sLav)];
-    std::vector< std::shared_ptr<Vertex> >& endPreviousVertexLav = sLav[getLavIndex(endPreviousVertex, sLav)];
+    std::vector< std::shared_ptr<Vertex> >& beginNextVertexLav = sLav[Vertex::getLavIndex(beginNextVertex, sLav)];
+    std::vector< std::shared_ptr<Vertex> >& endPreviousVertexLav = sLav[Vertex::getLavIndex(endPreviousVertex, sLav)];
 
     if (areSameLav(beginNextVertexLav, endPreviousVertexLav)) {
       /*
@@ -2252,7 +2252,7 @@ void multiSplitEvent(LevelEvent& event, std::vector< std::vector< std::shared_pt
       */
       mergeBeforeBaseVertex(beginNextVertex, beginNextVertexLav, endPreviousVertex, endPreviousVertexLav);
 
-      int lavIndex = getLavIndex(endPreviousVertex, sLav);
+      int lavIndex = Vertex::getLavIndex(endPreviousVertex, sLav);
       if (lavIndex == -1) {
         LOG_AND_THROW("Could not find vertex in sLav.")
       }
@@ -2275,11 +2275,11 @@ void multiSplitEvent(LevelEvent& event, std::vector< std::vector< std::shared_pt
 
     if (chainBegin.getCurrentVertex()) {
       chainBegin.getCurrentVertex()->processed = true;
-      removeFromLav(chainBegin.getCurrentVertex(), sLav);
+      Vertex::removeFromLav(chainBegin.getCurrentVertex(), sLav);
     }
     if (chainEnd.getCurrentVertex()) {
       chainEnd.getCurrentVertex()->processed = true;
-      removeFromLav(chainEnd.getCurrentVertex(), sLav);
+      Vertex::removeFromLav(chainEnd.getCurrentVertex(), sLav);
     }
 
   }
@@ -2297,10 +2297,10 @@ void addMultiBackFaces(std::vector< std::shared_ptr<QueueEvent> >& edgeList, std
   for (std::shared_ptr<QueueEvent> edgeEvent : edgeList) {
 
     edgeEvent->previousVertex->processed = true;
-    removeFromLav(edgeEvent->previousVertex, sLav);
+    Vertex::removeFromLav(edgeEvent->previousVertex, sLav);
 
     edgeEvent->nextVertex->processed = true;
-    removeFromLav(edgeEvent->nextVertex, sLav);
+    Vertex::removeFromLav(edgeEvent->nextVertex, sLav);
 
     addFaceBack(edgeVertex, edgeEvent->previousVertex, edgeEvent->nextVertex, faces);
   }
@@ -2308,7 +2308,7 @@ void addMultiBackFaces(std::vector< std::shared_ptr<QueueEvent> >& edgeList, std
 
 void pickEvent(LevelEvent& event, std::vector< std::vector< std::shared_ptr<Vertex> > >& sLav, std::vector< std::shared_ptr<QueueEvent> >& queue, std::vector< std::shared_ptr<Edge> >& edges, std::vector< std::shared_ptr<Face> >& faces) {
   // lav will be removed so it is final vertex.
-  std::shared_ptr<Vertex> pickVertex(new Vertex(event.point, event.distance, boost::none, nullptr, nullptr));
+  std::shared_ptr<Vertex> pickVertex(new Vertex(event.point, event.distance, nullptr, nullptr, nullptr));
   pickVertex->processed = true;
 
   addMultiBackFaces(event.chain.edgeList, pickVertex, sLav, queue, faces);
@@ -2322,7 +2322,7 @@ void multiEdgeEvent(LevelEvent& event, std::vector< std::vector< std::shared_ptr
   prevVertex->processed = true;
   nextVertex->processed = true;
 
-  Ray2d bisector = calcBisector(event.point, prevVertex->previousEdge, nextVertex->nextEdge);
+  std::shared_ptr<Ray2d> bisector = calcBisector(event.point, prevVertex->previousEdge, nextVertex->nextEdge);
   std::shared_ptr<Vertex> edgeVertex(new Vertex(Point3d(event.point), event.distance, bisector, prevVertex->previousEdge, nextVertex->nextEdge));
 
   // left face
@@ -2331,7 +2331,7 @@ void multiEdgeEvent(LevelEvent& event, std::vector< std::vector< std::shared_ptr
   // right face
   addFaceRight(edgeVertex, event.chain.getNextVertex(sLav), faces);
 
-  int lavIndex = getLavIndex(prevVertex, sLav);
+  int lavIndex = Vertex::getLavIndex(prevVertex, sLav);
   auto it = std::find(sLav[lavIndex].begin(), sLav[lavIndex].end(), prevVertex);
   int pos = std::distance(sLav[lavIndex].begin(), it);
   if (pos == 0) {
@@ -2350,7 +2350,7 @@ void processTwoNodeLavs(std::vector< std::vector< std::shared_ptr<Vertex> > >& s
   for (std::vector< std::shared_ptr<Vertex> >& lav : sLav) {
     if (lav.size() == 2) {
       std::shared_ptr<Vertex> first = lav[0];
-      std::shared_ptr<Vertex> last = first->next(lav);
+      std::shared_ptr<Vertex> last = Vertex::next(first, lav);
 
       connectFaces(first->leftFaceNode, last->rightFaceNode);
       connectFaces(first->rightFaceNode, last->leftFaceNode);
@@ -2358,8 +2358,8 @@ void processTwoNodeLavs(std::vector< std::vector< std::shared_ptr<Vertex> > >& s
       first->processed = true;
       last->processed = true;
 
-      removeFromLav(first, lav);
-      removeFromLav(last, lav);
+      Vertex::removeFromLav(first, lav);
+      Vertex::removeFromLav(last, lav);
 
     }
   }
