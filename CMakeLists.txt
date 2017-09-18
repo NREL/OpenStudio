@@ -515,6 +515,7 @@ if( BUILD_DVIEW )
         -DCURL_DIR:DIR=${CMAKE_BINARY_DIR}/curl-prefix/src/curl/
         -DCMAKE_INSTALL_PREFIX:DIR=${CMAKE_BINARY_DIR}/DView-prefix/src/DView-install
         -DwxWidgets_EXCLUDE_COMMON_LIBRARIES:BOOL=false
+        -DwxWidgets_USE_STATIC:BOOL=true
     )
 endif()
 
