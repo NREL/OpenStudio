@@ -33,9 +33,6 @@
 #include <boost/optional.hpp>
 #include <boost/math/constants/constants.hpp>
 
-// FIXME: Create Lav class, add reference to lav from vertex
-// FIXME: Add some typedefs
-
 using namespace openstudio;
 
 const double SPLIT_EPSILON = 1E-10;
@@ -499,7 +496,15 @@ public:
       processed = "true";
     }
 
-    os << "VertexEntry [v=" << v.point << ", processed=" << processed << ", previousEdge=";
+    os << "VertexEntry [v=" << v.point << ", processed=" << processed << ", bisector=";
+
+    if (v.bisector) {
+      os << *v.bisector;
+    } else {
+      os << "null";
+    }
+
+    os << ", previousEdge=";
 
     if (v.previousEdge) {
       os << *v.previousEdge;
@@ -511,22 +516,6 @@ public:
 
     if (v.nextEdge) {
       os << *v.nextEdge;
-    } else {
-      os << "null";
-    }
-
-    os << ", leftFaceNode=";
-
-    if (v.leftFaceNode) {
-      os << *v.leftFaceNode;
-    } else {
-      os << "null";
-    }
-
-    os << ", rightFaceNode=";
-
-    if (v.rightFaceNode) {
-      os << *v.rightFaceNode;
     } else {
       os << "null";
     }
@@ -1053,7 +1042,7 @@ private:
   REGISTER_LOGGER("utilities.SplitCandidate");
 };
 
-std::vector< std::vector<Point3d> > facesToPoint3d(std::vector< std::shared_ptr<Face> >& faces, double roofPitchDegrees) {
+std::vector< std::vector<Point3d> > facesToPoint3d(std::vector< std::shared_ptr<Face> >& faces, double roofPitchDegrees, double zcoord) {
   std::vector< std::vector<Point3d> > roofsPoint3d;
   double roofSlope = tan(degToRad(roofPitchDegrees));
   for (std::shared_ptr<Face> face : faces) {
@@ -1062,7 +1051,7 @@ std::vector< std::vector<Point3d> > facesToPoint3d(std::vector< std::shared_ptr<
     }
     std::vector<Point3d> roofPoint3d;
     for (std::shared_ptr<FaceNode> v : face->nodes) {
-      Point3d p = Point3d(v->point.x(), v->point.y(), v->distance * roofSlope);
+      Point3d p = Point3d(v->point.x(), v->point.y(), zcoord + v->distance * roofSlope);
       roofPoint3d.push_back(p);
     }
     roofsPoint3d.push_back(roofPoint3d);
@@ -1093,12 +1082,12 @@ Vector3d calcVectorBisector(Vector3d& norm1, Vector3d& norm2) {
   return ret;
 }
 
-std::shared_ptr<Ray2d> calcBisector(Point3d& p, std::shared_ptr<Edge> e1, std::shared_ptr<Edge> e2) {
+Ray2d calcBisector(Point3d& p, std::shared_ptr<Edge> e1, std::shared_ptr<Edge> e2) {
+
   Vector3d norm1 = e1->normalize();
   Vector3d norm2 = e2->normalize();
   Vector3d bisector = calcVectorBisector(norm1, norm2);
-  std::shared_ptr<Ray2d> ray(new Ray2d(p, bisector));
-  return ray;
+  return Ray2d(p, bisector);
 }
 
 void addPush(std::shared_ptr<FaceNode> node, std::shared_ptr<FaceNode> newNode) {
@@ -1178,7 +1167,7 @@ void initSlav(std::vector<Point3d>& polygon, std::vector< std::vector< std::shar
   for (std::shared_ptr<Edge> edge : edges) {
     std::shared_ptr<Edge> nextEdge = edge->next(edges);
       
-    std::shared_ptr<Ray2d> bisector(calcBisector(edge->end, edge, nextEdge));
+    std::shared_ptr<Ray2d> bisector(new Ray2d(calcBisector(edge->end, edge, nextEdge)));
 
     edge->bisectorNext = bisector;
 
@@ -1480,15 +1469,32 @@ void makeCounterClockwise(std::vector<Point3d>& polygon) {
   }
 }
 
-void initPolygon(std::vector<Point3d>& polygon)
+void setZcoordsToZero(std::vector<Point3d>& polygon) {
+  for (Point3d& p : polygon) {
+    p += Vector3d(0, 0, -p.z());
+  }
+}
+
+double initPolygon(std::vector<Point3d>& polygon)
 {
   if (polygon.size() < 3) {
-    LOG_AND_THROW("Polygon must have at least 3 points");
+    LOG_AND_THROW("Polygon must have at least 3 points.");
   } else if (polygon[0] == polygon[polygon.size() - 1]) {
-    LOG_AND_THROW("Polygon can't start and end with the same point");
+    LOG_AND_THROW("Polygon can't start and end with the same point.");
+  }
+
+  for (int i = 1; i < polygon.size(); i++) {
+    if (polygon[i].z() != polygon[0].z()) {
+      LOG_AND_THROW("All polygon z coordinates must be the same.");
+    }
   }
 
   makeCounterClockwise(polygon);
+
+  double zcoord = polygon[0].z();
+  setZcoordsToZero(polygon);
+
+  return zcoord;
 }
 
 int assertMaxNumberOfIterations(int count)
@@ -1964,7 +1970,7 @@ void createOppositeEdgeChains(std::vector< std::vector< std::shared_ptr<Vertex> 
 }
 
 std::shared_ptr<Vertex> createMultiSplitVertex(std::shared_ptr<Edge> nextEdge, std::shared_ptr<Edge> previousEdge, Point3d& center, double distance) {
-  std::shared_ptr<Ray2d> bisector(calcBisector(center, previousEdge, nextEdge));
+  std::shared_ptr<Ray2d> bisector(new Ray2d(calcBisector(center, previousEdge, nextEdge)));
 
   // edges are mirrored for event
   std::shared_ptr<Vertex> vertex(new Vertex(center, distance, bisector, previousEdge, nextEdge));
@@ -2335,7 +2341,7 @@ void multiEdgeEvent(LevelEvent& event, std::vector< std::vector< std::shared_ptr
   prevVertex->processed = true;
   nextVertex->processed = true;
 
-  std::shared_ptr<Ray2d> bisector = calcBisector(event.point, prevVertex->previousEdge, nextVertex->nextEdge);
+  std::shared_ptr<Ray2d> bisector(new Ray2d(calcBisector(event.point, prevVertex->previousEdge, nextVertex->nextEdge)));
   std::shared_ptr<Vertex> edgeVertex(new Vertex(Point3d(event.point), event.distance, bisector, prevVertex->previousEdge, nextVertex->nextEdge));
 
   // left face
@@ -2393,7 +2399,6 @@ void removeEmptyLav(std::vector< std::vector< std::shared_ptr<Vertex> > >& sLav)
     if (sLav[i].size() == 0) {
       sLav.erase(sLav.begin() + i);
       i--;
-      break;
     }
   }
 }
@@ -2406,12 +2411,11 @@ std::vector< std::vector<Point3d> > doStraightSkeleton(std::vector<Point3d>& pol
   */
 
   std::vector< std::shared_ptr<QueueEvent> > queue;
-  std::vector<LevelEvent> processedEvents;
   std::vector< std::shared_ptr<Face> > faces;
   std::vector< std::shared_ptr<Edge> > edges;
   std::vector< std::vector< std::shared_ptr<Vertex> > > sLav;
 
-  initPolygon(polygon);
+  double zcoord = initPolygon(polygon);
   initSlav(polygon, sLav, edges, faces);
   initEvents(sLav, queue, edges);
 
@@ -2437,8 +2441,6 @@ std::vector< std::vector<Point3d> > doStraightSkeleton(std::vector<Point3d>& pol
         continue;
       }
 
-      processedEvents.push_back(event);
-
       if (event.eventType == LevelEvent::TYPE_MULTI_SPLIT) {
         multiSplitEvent(event, sLav, queue, edges, faces);
         continue;
@@ -2460,7 +2462,7 @@ std::vector< std::vector<Point3d> > doStraightSkeleton(std::vector<Point3d>& pol
 
   }
 
-  return facesToPoint3d(faces, roofPitchDegrees);
+  return facesToPoint3d(faces, roofPitchDegrees, zcoord);
 }
 
 namespace openstudio {
