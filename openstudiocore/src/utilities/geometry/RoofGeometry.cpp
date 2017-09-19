@@ -35,7 +35,7 @@
 
 using namespace openstudio;
 
-const double SPLIT_EPSILON = 1E-10;
+const double EPSILON = 1E-10;
 
 class LineLinear2d // Geometry line in linear form. General form: Ax + By + C = 0;
 { 
@@ -147,8 +147,6 @@ public:
     * see http://softsurfer.com/Archive/algorithm_0102/algorithm_0102.htm
     */
 
-    const double SMALL_NUM = 0.00000001;
-
     Point3d s1p0 = point;
     Point3d s1p1 = Point3d(point) + vector;
 
@@ -163,7 +161,7 @@ public:
     double d = perpDot(u, v);
 
     // test if they are parallel (includes either being a point)
-    if (std::abs(d) < SMALL_NUM) { // S1 and S2 are parallel
+    if (std::abs(d) < EPSILON) { // S1 and S2 are parallel
 
       if (perpDot(u, w) != 0 || perpDot(v, w) != 0) {
         // they are NOT collinear
@@ -447,14 +445,14 @@ public:
     this->nextEdge = nextEdge;
   }
 
-  static std::shared_ptr<Vertex> previous(std::shared_ptr<Vertex> vertex, std::vector< std::shared_ptr<Vertex> >& vertexes) {
-    int index = getOffsetVertexIndex(vertex, vertexes, -1);
-    return vertexes[index];
+  static std::shared_ptr<Vertex> previous(std::shared_ptr<Vertex> vertex, std::vector< std::shared_ptr<Vertex> >& vertices) {
+    int index = getOffsetVertexIndex(vertex, vertices, -1);
+    return vertices[index];
   }
 
-  static std::shared_ptr<Vertex> next(std::shared_ptr<Vertex> vertex, std::vector< std::shared_ptr<Vertex> >& vertexes) {
-    int index = getOffsetVertexIndex(vertex, vertexes, 1);
-    return vertexes[index];
+  static std::shared_ptr<Vertex> next(std::shared_ptr<Vertex> vertex, std::vector< std::shared_ptr<Vertex> >& vertices) {
+    int index = getOffsetVertexIndex(vertex, vertices, 1);
+    return vertices[index];
   }
 
   static std::shared_ptr<Vertex> previous(std::shared_ptr<Vertex> vertex, std::vector< std::vector< std::shared_ptr<Vertex> > >& sLav) {
@@ -543,17 +541,17 @@ public:
 private:
   REGISTER_LOGGER("utilities.Vertex");
 
-  friend int getOffsetVertexIndex(std::shared_ptr<Vertex> vertex, std::vector< std::shared_ptr<Vertex> >& vertexes, int offset) {
-    auto it = std::find(vertexes.begin(), vertexes.end(), vertex);
-    if (it == vertexes.end()) {
+  friend int getOffsetVertexIndex(std::shared_ptr<Vertex> vertex, std::vector< std::shared_ptr<Vertex> >& vertices, int offset) {
+    auto it = std::find(vertices.begin(), vertices.end(), vertex);
+    if (it == vertices.end()) {
       LOG_AND_THROW("Could not find vertex.");
     }
-    int pos = std::distance(vertexes.begin(), it);
+    int pos = std::distance(vertices.begin(), it);
     pos += offset;
     if (pos < 0) {
-      pos += vertexes.size();
-    } else if (pos > vertexes.size() - 1) {
-      pos -= vertexes.size();
+      pos += vertices.size();
+    } else if (pos > vertices.size() - 1) {
+      pos -= vertices.size();
     }
     return pos;
   }
@@ -1211,7 +1209,7 @@ bool edgeBehindBisector(std::shared_ptr<Ray2d> bisector, LineLinear2d& edge) {
   * whole line containing the currently tested line segment ei rejects
   * the line segments laying "behind" the vertex V
   */
-  return (!bisector->collide(edge, SPLIT_EPSILON));
+  return (!bisector->collide(edge, EPSILON));
 }
 
 std::shared_ptr<Edge> chooseLessParallelVertexEdge(std::shared_ptr<Vertex> vertex, std::shared_ptr<Edge> edge) {
@@ -1223,7 +1221,7 @@ std::shared_ptr<Edge> chooseLessParallelVertexEdge(std::shared_ptr<Vertex> verte
   double edgeADot = std::abs(edge->normalize().dot(edgeA->normalize()));
   double edgeBDot = std::abs(edge->normalize().dot(edgeB->normalize()));
 
-  if (edgeADot + edgeBDot >= 2 - SPLIT_EPSILON) {
+  if (edgeADot + edgeBDot >= 2 - EPSILON) {
     // both lines are parallel to given edge
     return nullptr;
   }
@@ -1300,17 +1298,17 @@ boost::optional<SplitCandidate> calcCandidatePointForSplit(std::shared_ptr<Verte
   * between the bisector at V and the axis of the angle between one of
   * the edges starting at V and the tested line segment ei
   */
-  boost::optional<Point3d> candidatePoint = vertex->bisector->collide(edgesBisectorLine, SPLIT_EPSILON);
+  boost::optional<Point3d> candidatePoint = vertex->bisector->collide(edgesBisectorLine, EPSILON);
 
   if (!candidatePoint) {
     return boost::none;
   }
 
-  if (edge->bisectorPrevious->isOnRightSide(candidatePoint.get(), SPLIT_EPSILON) && edge->bisectorNext->isOnLeftSide(candidatePoint.get(), SPLIT_EPSILON)) {
+  if (edge->bisectorPrevious->isOnRightSide(candidatePoint.get(), EPSILON) && edge->bisectorNext->isOnLeftSide(candidatePoint.get(), EPSILON)) {
 
     double distance = calcDistance(candidatePoint.get(), edge);
 
-    if (edge->bisectorPrevious->isOnLeftSide(candidatePoint.get(), SPLIT_EPSILON) || edge->bisectorNext->isOnRightSide(candidatePoint.get(), SPLIT_EPSILON)) {
+    if (edge->bisectorPrevious->isOnLeftSide(candidatePoint.get(), EPSILON) || edge->bisectorNext->isOnRightSide(candidatePoint.get(), EPSILON)) {
 
       Point3d oppositePoint = edge->begin;
       return SplitCandidate(candidatePoint.get(), distance, nullptr, oppositePoint);
@@ -1362,7 +1360,7 @@ void computeSplitEvents(std::shared_ptr<Vertex> vertex, std::vector< std::shared
   for (SplitCandidate oppositeEdge : oppositeEdges) {
 
     if (distanceSquared) {
-      if (getDistanceSquared(source, oppositeEdge.point) > distanceSquared.get() + SPLIT_EPSILON) {
+      if (getDistanceSquared(source, oppositeEdge.point) > distanceSquared.get() + EPSILON) {
         /*
         * Current split event distance from source of event is
         * greater then for edge event. Split event can be reject.
@@ -1536,7 +1534,7 @@ std::vector< std::shared_ptr<QueueEvent> > loadLevelEvents(std::vector< std::sha
 
   while (queue.size() > 0) {
     event = queue[0];
-    if (event->distance - levelStartHeight >= SPLIT_EPSILON) {
+    if (event->distance - levelStartHeight >= EPSILON) {
       break;
     }
     queue.erase(queue.begin());
@@ -1752,7 +1750,7 @@ std::vector<LevelEvent> groupLevelEvents(std::vector< std::shared_ptr<QueueEvent
         levelEvents[j]->addEventToGroup(parentGroup);
         levelEvents.erase(levelEvents.begin() + j);
         j--;
-      } else if (getDistance(eventCenter, levelEvents[j]->point) < SPLIT_EPSILON) {
+      } else if (getDistance(eventCenter, levelEvents[j]->point) < EPSILON) {
         // group all events when the result points are near each other
         cluster.push_back(levelEvents[j]);
         levelEvents[j]->addEventToGroup(parentGroup);
@@ -1858,7 +1856,7 @@ int chooseOppositeEdgeLavIndex(std::vector< std::shared_ptr<Vertex> >& edgeLavs,
 
     /*
     * Make projection of center, begin and end into edge. Begin and end
-    * are vertexes chosen by opposite edge (then point to opposite edge).
+    * are vertices chosen by opposite edge (then point to opposite edge).
     * Chose lav only when center is between begin and end. Only one lav
     * should meet criteria.
     */
@@ -2073,11 +2071,11 @@ boost::optional<double> computeCloserEdgeEvent(std::shared_ptr<Vertex> vertex, s
     distance2 = getDistanceSquared(vertex->point, point2.get());
   }
 
-  if (distance1 - SPLIT_EPSILON < distance2) {
+  if (distance1 - EPSILON < distance2) {
     std::shared_ptr<QueueEvent> e(createEdgeEvent(point1.get(), vertex, nextVertex));
     queue.push_back(e);
   }
-  if (distance2 - SPLIT_EPSILON < distance1) {
+  if (distance2 - EPSILON < distance1) {
     std::shared_ptr<QueueEvent> e(createEdgeEvent(point2.get(), previousVertex, vertex));
     queue.push_back(e);
   }
@@ -2251,7 +2249,7 @@ void multiSplitEvent(LevelEvent& event, std::vector< std::vector< std::shared_pt
 
     if (areSameLav(beginNextVertexLav, endPreviousVertexLav)) {
       /*
-      * if vertexes are in same lav we need to cut part of lav in the
+      * if vertices are in same lav we need to cut part of lav in the
       * middle of vertex and create new lav from that points
       */
 
@@ -2266,7 +2264,7 @@ void multiSplitEvent(LevelEvent& event, std::vector< std::vector< std::shared_pt
 
     } else {
       /*
-      * if vertexes are in different lavs we need to merge them into
+      * if vertices are in different lavs we need to merge them into
       * one.
       */
       mergeBeforeBaseVertex(beginNextVertex, beginNextVertexLav, endPreviousVertex, endPreviousVertexLav);
@@ -2387,7 +2385,7 @@ void processTwoNodeLavs(std::vector< std::vector< std::shared_ptr<Vertex> > >& s
 void removeEventsUnderHeight(std::vector< std::shared_ptr<QueueEvent> >& queue, double levelHeight) {
   std::sort(queue.begin(), queue.end(), QueueEvent::Comparer());
   while (!queue.empty()) {
-    if (queue[0]->distance > levelHeight + SPLIT_EPSILON) {
+    if (queue[0]->distance > levelHeight + EPSILON) {
       break;
     }
     queue.erase(queue.begin());
@@ -2465,6 +2463,273 @@ std::vector< std::vector<Point3d> > doStraightSkeleton(std::vector<Point3d>& pol
   return facesToPoint3d(faces, roofPitchDegrees, zcoord);
 }
 
+std::vector<Point3d> getGableTopAndBottomVertices(std::vector<Point3d>& surface) {
+  std::vector<Point3d> ret;
+  if (surface[0].z() > surface[1].z() && surface[0].z() > surface[2].z() && surface[1].z() == surface[2].z()) {
+    ret.push_back(surface[0]); // top
+    ret.push_back(surface[1]); // bottom
+    ret.push_back(surface[2]); // bottom
+  } else if (surface[1].z() > surface[0].z() && surface[1].z() > surface[2].z() && surface[0].z() == surface[2].z()) {
+    ret.push_back(surface[1]); // top
+    ret.push_back(surface[0]); // bottom
+    ret.push_back(surface[2]); // bottom
+  } else if (surface[2].z() > surface[0].z() && surface[2].z() > surface[1].z() && surface[0].z() == surface[1].z()) {
+    ret.push_back(surface[2]); // top
+    ret.push_back(surface[0]); // bottom
+    ret.push_back(surface[1]); // bottom
+  } 
+  return ret;
+}
+
+bool canBeGabled(std::vector<Point3d> surface) {
+  if (surface.size() != 3) {
+    return false;
+  }
+  std::vector<Point3d> vertices = getGableTopAndBottomVertices(surface);
+  if (vertices.size() != 3) {
+    return false;
+  }
+  return true;
+}
+
+void applyGableLogicTriangles(std::vector< std::vector<Point3d> >& surfaces) {
+  // For any roof surface that has 3 vertices, convert from an angled
+  // surface to a gable surface.
+
+  for (std::vector<Point3d>& gable : surfaces) {
+    if (!canBeGabled(gable)) {
+      continue;
+    }
+    std::vector<Point3d> gableVertices = getGableTopAndBottomVertices(gable);
+    Point3d gableTop = gableVertices[0];
+
+    std::vector<int> connectedSurfaces;
+    for (int i = 0; i < surfaces.size(); i++) {
+      for (Point3d& vertex : surfaces[i]) {
+        if (vertex != gableTop) {
+          continue;
+        }
+        connectedSurfaces.push_back(i);
+      }
+    }
+
+    if (connectedSurfaces.size() == 4) {
+      // Four angles roof edges meet, we'll need to create a ridge line.
+
+      /*                  ___________          ___________
+      *                  |\         /|        |     |     |
+      *                  |  \     /  |        |     |     |
+      *                  |    \ /    |        |     |     |
+      *                  |    / \    |   =>   |     |     |
+      *                  |  /     \  |        |     |     |
+      *                  |/_________\|        |_____|_____|
+      */
+
+      std::vector<int> connectedSurfacesRidge;
+
+      // Need to choose an arbitrary direction for the ridge.
+      // Retain ConnectedSurfaces[0] and opposite surface.
+      std::vector<Point3d> baseVertices = getGableTopAndBottomVertices(surfaces[connectedSurfaces[0]]);
+      Edge base1 = Edge(baseVertices[0], baseVertices[1]);
+      Edge base2 = Edge(baseVertices[0], baseVertices[2]);
+      for (int i = 1; i < connectedSurfaces.size(); i++) {
+        std::vector<Point3d> tryVertices = getGableTopAndBottomVertices(surfaces[connectedSurfaces[i]]);
+        Edge try1 = Edge(tryVertices[0], tryVertices[1]);
+        Edge try2 = Edge(tryVertices[0], tryVertices[2]);
+        if (base1 == try1 || base1 == try2 || base2 == try1 || base2 == try2) {
+          connectedSurfacesRidge.push_back(connectedSurfaces[i]);
+          connectedSurfaces.erase(connectedSurfaces.begin() + i);
+          i--;
+        }
+      }
+
+      if (connectedSurfaces.size() != 2 || connectedSurfacesRidge.size() != 2) {
+        LOG_AND_THROW("Unexpected number of surfaces.")
+      }
+
+      // Shift gable top vertex for opposite surfaces
+      std::vector<Point3d> newVertices;
+      for (int i = 0; i < connectedSurfaces.size(); i++) {
+        std::vector<Point3d>& surface = surfaces[connectedSurfaces[i]];
+        for (Point3d& vertex : surface) {
+          if (vertex != gableTop) {
+            continue;
+          }
+          std::vector<Point3d> surfVertices = getGableTopAndBottomVertices(surface);
+          Point3d newVertex = Point3d((surfVertices[1].x() + surfVertices[2].x()) / 2.0,
+            (surfVertices[1].y() + surfVertices[2].y()) / 2.0, surfVertices[0].z());
+          newVertices.push_back(newVertex);
+          vertex = newVertex;
+        }
+      }
+
+      // Split gable top vertex (create ridge) for other surfaces
+      for (int i = 0; i < connectedSurfacesRidge.size(); i++) {
+        std::vector<Point3d>& surface = surfaces[connectedSurfacesRidge[i]];
+        std::vector<Point3d> trySurface1;
+        std::vector<Point3d> trySurface2;
+        std::vector<Edge> tryEdges1;
+        std::vector<Edge> tryEdges2;
+        for (int j = 0; j < surface.size(); j++) {
+          Point3d vertex = surface[j];
+          if (vertex != gableTop) {
+            trySurface1.push_back(vertex);
+            trySurface2.push_back(vertex);
+            continue;
+          }
+          Point3d previousVertex = surface[(j - 1 + surface.size()) % surface.size()];
+          Point3d nextVertex = surface[(j + 1) % surface.size()];
+
+          trySurface1.push_back(newVertices[0]);
+          trySurface1.push_back(newVertices[1]);
+          tryEdges1.push_back(Edge(newVertices[0], previousVertex));
+          tryEdges1.push_back(Edge(newVertices[1], nextVertex));
+
+          trySurface2.push_back(newVertices[1]);
+          trySurface2.push_back(newVertices[0]);
+          tryEdges2.push_back(Edge(newVertices[1], previousVertex));
+          tryEdges2.push_back(Edge(newVertices[0], nextVertex));
+        }
+
+        // Correct surface will have no edge intersections
+        LineLinear2d l1a = LineLinear2d(tryEdges1[0].begin, tryEdges1[0].end);
+        LineLinear2d l1b = LineLinear2d(tryEdges1[1].begin, tryEdges1[1].end);
+        LineLinear2d l2a = LineLinear2d(tryEdges2[0].begin, tryEdges2[0].end);
+        LineLinear2d l2b = LineLinear2d(tryEdges2[1].begin, tryEdges2[1].end);
+
+        if (l1a.collide(l1b) && !l2a.collide(l2b)) {
+          surface = trySurface2; // trySurface1 has self intersection
+        } else if (l2a.collide(l2b) && !l1a.collide(l1b)) {
+          surface = trySurface1; // trySurface2 has self intersection
+        } else {
+          LOG_AND_THROW("Could not create gable ridge.");
+        }
+      }
+
+    } else {
+
+      // Shift gable top vertex for all connected surfaces.
+
+      /*                  ___________          ___________
+      *                  |\         /|        |     |     |
+      *                  |  \     /  |        |     |     |
+      *                  |    \ /    |        |     |     |
+      *                  |     |     |        |     |     |
+      *                  |     |     |   =>   |     |     |
+      *                  |    / \    |        |     |     |
+      *                  |  /     \  |        |     |     |
+      *                  |/_________\|        |_____|_____|
+      */
+
+      Point3d newVertex = Point3d((gableVertices[1].x() + gableVertices[2].x()) / 2.0,
+        (gableVertices[1].y() + gableVertices[2].y()) / 2.0, gableVertices[0].z());
+      for (int i = 0; i < connectedSurfaces.size(); i++) {
+        std::vector<Point3d>& surface = surfaces[connectedSurfaces[i]];
+        for (Point3d& vertex : surface) {
+          if (vertex != gableTop) {
+            continue;
+          }
+          vertex = newVertex;
+        }
+      }
+
+    }
+  }
+}
+
+void applyGableLogicRidgeTwoAnglesForward(std::vector< std::vector<Point3d> >& surfaces) {
+  // TODO
+
+  /*                  ___________          ___________
+  *                  |     |     |        |     |     |
+  *                  |     |     |        |     |     |
+  *                  |     |     |        |     |     |
+  *                  |     |     |        |     |     |
+  *                  |    / \    |   =>   |     |     |
+  *                  |   /   \   |        |     |     |
+  *                  |  /     |  |        |     |     |
+  *                  | /     /|  |        |     |     |
+  *                  |/_____/ |  |        |_____|_____|
+  *                        |  |  |              |  |  |
+  *                        |__|__|              |__|__|
+  */
+
+}
+
+void applyGableLogicRidgeTwoAnglesInside(std::vector< std::vector<Point3d> >& surfaces) {
+  // TODO
+
+  /*                  ___________          ___________
+  *                  |     |     |        |     |     |
+  *                  |     |     |        |     |     |
+  *                  |     |     |        |     |     |
+  *                  |     |     |        |     |     |
+  *                  |    / \    |   =>   |     |     |
+  *                  |   /   \   |        |     |     |
+  *                  |  /     \  |        |     |     |
+  *                  | /   /|\ \ |        |     |     |
+  *                  |/___/ | \_\|        |_____|_____|
+  *                       | | |                | | |
+  *                       |_|_|                |_|_|
+  */
+
+}
+
+void applyGableLogicRidgeTwoAnglesBackward(std::vector< std::vector<Point3d> >& surfaces) {
+  // TODO
+
+  /*    _______________________          _______________________
+  *    |                      /|        |                       |
+  *    |                     / |        |                       |
+  *    |                    /  |        |                       |
+  *    |                   /   |        |                       |
+  *    |-------------------    |        |-----------------------|
+  *    |                   \   |   =>   |                       |
+  *    |                    \  |        |                       |
+  *    |                    |  |        |                       |
+  *    |                   /|  |        |                   /|\ |
+  *    |__________________/ |  |        |__________________/ | \|
+  *                      |  |  |                          |  |  |
+  *                      |  |  |                          |  |  |
+  *                      |__|__|                          |__|__|
+  */
+
+}
+
+void applyGableLogicTwoRidgesTwoOppositeAngles(std::vector< std::vector<Point3d> >& surfaces) {
+  // TODO
+
+  /*    _______________________          _______________________
+  *    |                      /|        |                       |
+  *    |                     / |        |                       |
+  *    |                    /  |        |                       |
+  *    |                   /   |        |                       |
+  *    |-------------------    |        |-----------------------|
+  *    |                  /|   |   =>   |                 /|\   |
+  *    |                 / |   |        |                / | \  |
+  *    |                /  |   |        |               /  |  \ |
+  *    |               /   |   |        |              /   |   \|
+  *    |______________/    |   |        |_____________/    |    |
+  *                   |    |   |                      |    |    |
+  *                   |    |   |                      |    |    |
+  *                   |____|___|                      |____|____|
+  */
+
+}
+
+void applyGables(std::vector< std::vector<Point3d> >& surfaces) {
+  // Convert hip roof to gable roof
+
+  // Simple logic
+  applyGableLogicTriangles(surfaces);
+
+  // Complex logic
+  applyGableLogicRidgeTwoAnglesForward(surfaces);
+  applyGableLogicRidgeTwoAnglesInside(surfaces);
+  applyGableLogicRidgeTwoAnglesBackward(surfaces);
+  applyGableLogicTwoRidgesTwoOppositeAngles(surfaces);
+}
+
 namespace openstudio {
 
   /// Generate shed roof polygons
@@ -2492,7 +2757,7 @@ namespace openstudio {
       return surfaces;
     }
 
-    // FIXME implement adjustments for gables
+    applyGables(surfaces);
 
     return surfaces;
   }
