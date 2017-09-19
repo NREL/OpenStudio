@@ -2753,11 +2753,12 @@ namespace openstudio {
       if (surfaces.size() == 0) {
         return surfaces;
       }
+
+      applyGables(surfaces);
+
     } catch (...) {
       return surfaces;
     }
-
-    applyGables(surfaces);
 
     return surfaces;
   }
