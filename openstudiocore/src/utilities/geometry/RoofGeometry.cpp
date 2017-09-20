@@ -1487,8 +1487,6 @@ double initPolygon(std::vector<Point3d>& polygon)
     }
   }
 
-  makeCounterClockwise(polygon);
-
   double zcoord = polygon[0].z();
   setZcoordsToZero(polygon);
 
@@ -2414,6 +2412,7 @@ std::vector< std::vector<Point3d> > doStraightSkeleton(std::vector<Point3d>& pol
   std::vector< std::vector< std::shared_ptr<Vertex> > > sLav;
 
   double zcoord = initPolygon(polygon);
+  makeCounterClockwise(polygon);
   initSlav(polygon, sLav, edges, faces);
   initEvents(sLav, queue, edges);
 
@@ -2730,14 +2729,112 @@ void applyGables(std::vector< std::vector<Point3d> >& surfaces) {
   applyGableLogicTwoRidgesTwoOppositeAngles(surfaces);
 }
 
+struct Point3dComparer // needed to use std::map<Point3d, foo>
+{
+  bool operator () (Point3d p1, Point3d p2) const {
+    if (p1.x() < p2.x()) {
+      return true;
+    } else if (p1.x() == p2.x()) {
+      return (p1.y() < p2.y());
+    }
+    return false;
+  }
+};
+
+std::vector<Point3d> getShedLine(std::vector<Point3d>& polygon, double directionDegrees) {
+  boost::optional<Point3d> centroid = getCentroid(polygon);
+  if (!centroid) {
+    LOG_AND_THROW("Could not obtain centroid for polygon.");
+  }
+
+  // Get max distance of any polygon vertex from centroid
+  double maxDistance = 0.0;
+  for (Point3d& vertex : polygon) {
+    double distance = getDistance(vertex, centroid.get());
+    if (distance > maxDistance) {
+      maxDistance = distance;
+    }
+  }
+  maxDistance *= 2.0; // add buffer
+
+  double angleStandard = 90 - directionDegrees;
+
+  // Construct line segment through centroid perpendicular to directionDegrees
+  double angleRad1 = degToRad(angleStandard - 90.0);
+  double angleRad2 = degToRad(angleStandard + 90.0);
+  Point3d start = Point3d(centroid.get().x() + maxDistance * cos(angleRad1), centroid.get().y() + maxDistance * sin(angleRad1), 0.0);
+  Point3d end = Point3d(centroid.get().x() + maxDistance * cos(angleRad2), centroid.get().y() + maxDistance * sin(angleRad2), 0.0);
+
+  // Shift line segment in opposite direction of directionDegrees
+  double angle = atan2(end.x() - start.x(), end.y() - start.y());
+  double dx = -maxDistance * cos(angle);
+  double dy = maxDistance * sin(angle);
+  start += Vector3d(dx, dy, 0.0);
+  end += Vector3d(dx, dy, 0.0);
+
+  std::vector<Point3d> line = {start, end};
+  return line;
+}
+
+std::vector< std::vector<Point3d> > doShedRoof(std::vector<Point3d>& polygon, double roofPitchDegrees, double directionDegrees) {
+  std::vector< std::vector<Point3d> > surfaces;
+
+  double zcoord = initPolygon(polygon);
+
+  // Define arbitrary line outside of the polygon based on directionDegrees. The
+  // closest point to the line defines the start (height = 0) of the shed roof.
+  std::vector<Point3d> line = getShedLine(polygon, directionDegrees);
+
+  // Calculate distance from each polygon vertex to the line.
+  std::map<Point3d, double, Point3dComparer> distances;
+  double minDistance = std::numeric_limits<double>::max();
+  for (Point3d& vertex : polygon) {
+    distances[vertex] = getDistancePointToLineSegment(vertex, line);
+    if (distances[vertex] < minDistance) {
+      minDistance = distances[vertex];
+    }
+  }
+
+  // Reduce all vertex distances by minimum vertex distance. Combined with 
+  // roofPitchDegrees, this defines the height of the shed roof vertex.
+  double roofSlope = tan(degToRad(roofPitchDegrees));
+  for (auto element : distances) {
+    distances[element.first] = element.second - minDistance;
+  }
+  for (Point3d& vertex : polygon) {
+    vertex += Vector3d(0.0, 0.0, zcoord + distances[vertex] * roofSlope);
+  }
+
+  // Construct vertical walls for each polygon edge up to the shed roof.
+  std::vector< std::vector<Point3d> > walls;
+  for (int i = 0; i < polygon.size(); i++) {
+    Point3d vertex = polygon[i];
+    Point3d nextVertex = polygon[(i + 1) % polygon.size()];
+    std::vector<Point3d> wall = {vertex, nextVertex};
+    if (nextVertex.z() - zcoord > EPSILON) {
+      Point3d nextVertexFloor = Point3d(nextVertex.x(), nextVertex.y(), zcoord);
+      wall.push_back(nextVertexFloor);
+    }
+    if (vertex.z() - zcoord > EPSILON) {
+      Point3d vertexFloor = Point3d(vertex.x(), vertex.y(), zcoord);
+      wall.push_back(vertexFloor);
+    }
+    if (wall.size() > 2) {
+      surfaces.push_back(wall);
+    }
+  }
+  surfaces.push_back(polygon);
+
+  return surfaces;
+}
+
 namespace openstudio {
 
   /// Generate shed roof polygons
   std::vector< std::vector<Point3d> > generateShedRoof(std::vector<Point3d>& polygon, double roofPitchDegrees, double directionDegrees) {
-    // FIXME implement
     std::vector< std::vector<Point3d> > surfaces;
     try {
-
+      surfaces = doShedRoof(polygon, roofPitchDegrees, directionDegrees);
     } catch (...) {
       return surfaces;
     }
