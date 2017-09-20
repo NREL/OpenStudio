@@ -857,6 +857,7 @@ void  OpenStudioApp::showAbout()
     parent = currentDocument()->mainWindow();
   }
   QString details = "Measure Manager Server: " + measureManager().url().toString() + "\n";
+  details += "Chrome Debugger: http://localhost:" + qgetenv("QTWEBENGINE_REMOTE_DEBUGGING") + "\n";
   details += "Temp Directory: " + currentDocument()->modelTempDir();
   QMessageBox about(parent);
   about.setText(OPENSTUDIO_ABOUTBOX);
