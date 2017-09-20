@@ -31,6 +31,7 @@
 #include "ModelFixture.hpp"
 
 #include "../ThreeJSReverseTranslator.hpp"
+#include "../ModelMerger.hpp"
 #include "../Model.hpp"
 #include "../Space.hpp"
 #include "../Space_Impl.hpp"
@@ -75,4 +76,57 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS) {
   ASSERT_TRUE(file.is_open());
   file << json;
   file.close();
+}
+
+TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_SurfaceMatch) {
+
+  ThreeJSReverseTranslator rt;
+
+  openstudio::path p = resourcesPath() / toPath("utilities/Geometry/surface_match_floorplan.json");
+  ASSERT_TRUE(exists(p));
+
+  boost::optional<FloorplanJS> floorPlan = FloorplanJS::load(toString(p));
+  ASSERT_TRUE(floorPlan);
+
+  // not triangulated, for model transport/translation
+  ThreeScene scene = floorPlan->toThreeScene(true);
+  std::string json = scene.toJSON();
+  EXPECT_TRUE(ThreeScene::load(json));
+
+  boost::optional<Model> model = rt.modelFromThreeJS(scene);
+  ASSERT_TRUE(model);
+
+  std::stringstream ss;
+  ss << *model;
+  std::string s = ss.str();
+
+  EXPECT_EQ(4u, model->getModelObjects<Space>().size());
+  EXPECT_EQ(24u, model->getModelObjects<Surface>().size());
+
+  unsigned numMatched = 0;
+  for (const auto& surface : model->getModelObjects<Surface>()) {
+    if (surface.outsideBoundaryCondition() == "Surface"){
+      EXPECT_TRUE(surface.adjacentSurface());
+      ++numMatched;
+    }
+  }
+  EXPECT_EQ(8u, numMatched);
+
+  // merge export model into newModel
+  model::Model newModel;
+  model::ModelMerger mm;
+  mm.mergeModels(newModel, *model, rt.handleMapping());
+
+  EXPECT_EQ(4u, newModel.getModelObjects<Space>().size());
+  EXPECT_EQ(24u, newModel.getModelObjects<Surface>().size());
+
+  numMatched = 0;
+  for (const auto& surface : newModel.getModelObjects<Surface>()) {
+    if (surface.outsideBoundaryCondition() == "Surface"){
+      EXPECT_TRUE(surface.adjacentSurface());
+      ++numMatched;
+    }
+  }
+  EXPECT_EQ(8u, numMatched);
+
 }

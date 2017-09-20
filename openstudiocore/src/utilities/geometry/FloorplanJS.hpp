@@ -122,7 +122,7 @@ namespace openstudio{
 
     /// convert to ThreeJS, will throw if error
     /// ThreeJS file produced will always be in metric units, NorthAxis will not be applied
-    ThreeScene toThreeScene(bool breakSurfaces) const;
+    ThreeScene toThreeScene(bool openstudioFormat) const;
 
     /// degrees from North measured clockwise
     double northAxis() const;
