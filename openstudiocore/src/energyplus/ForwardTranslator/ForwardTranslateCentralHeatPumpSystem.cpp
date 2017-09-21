@@ -103,7 +103,18 @@ boost::optional<IdfObject> ForwardTranslator::translateCentralHeatPumpSystem( Ce
   }
 
   // HeatingLoopInletNodeName
+  if ( auto mo = modelObject.tertiaryInletModelObject() ) {
+    if ( auto node = mo->optionalCast<Node>() ) {
+      idfObject.setString(CentralHeatPumpSystemFields::HeatingLoopInletNodeName, node->name().get());
+    }
+  }
   // HeatingLoopOutletNodeName
+  if ( auto mo = modelObject.tertiaryOutletModelObject() ) {
+    if ( auto node = mo->optionalCast<Node>() ) {
+      idfObject.setString(CentralHeatPumpSystemFields::HeatingLoopOutletNodeName, node->name().get());
+    }
+  }
+
 
   // ChillerHeaterModulesPerformanceComponentObjectType1
   // ChillerHeaterModulesPerformanceComponentName1
