@@ -571,7 +571,7 @@ TEST_F(GeometryFixture, RoofSkeletonSquare_6_12_Shed_0deg) {
   std::vector< std::vector<Point3d> > roofPolygons = generateShedRoof(footprint, pitch, 0.0);
 
   std::vector< std::vector<Point3d> > expectedRoofPolygons;
-  expectedRoofPolygons.push_back({Point3d(5.0, 25.0, 18.0), Point3d(25.0, 25.0, 18.0), Point3d(25.0, 5.0, 8.0), Point3d(5.0, 5.0, 8.0)});
+  expectedRoofPolygons.push_back({Point3d(5.0, 5.0, 8.0), Point3d(25.0, 5.0, 8.0), Point3d(25.0, 25.0, 18.0), Point3d(5.0, 25.0, 18.0)});
   expectedRoofPolygons.push_back({Point3d(25.0, 5.0, 8.0), Point3d(25.0, 25.0, 8.0), Point3d(25.0, 25.0, 18.0)});
   expectedRoofPolygons.push_back({Point3d(25.0, 25.0, 8.0), Point3d(5.0, 25.0, 8.0), Point3d(5.0, 25.0, 18.0), Point3d(25.0, 25.0, 18.0)});
   expectedRoofPolygons.push_back({Point3d(5.0, 25.0, 8.0), Point3d(5.0, 5.0, 8.0), Point3d(5.0, 25.0, 18.0)});
@@ -595,7 +595,7 @@ TEST_F(GeometryFixture, RoofSkeletonSquare_6_12_Shed_90deg) {
   std::vector< std::vector<Point3d> > roofPolygons = generateShedRoof(footprint, pitch, 90.0);
 
   std::vector< std::vector<Point3d> > expectedRoofPolygons;
-  expectedRoofPolygons.push_back({Point3d(5.0, 25.0, 8.0), Point3d(25.0, 25.0, 18.0), Point3d(25.0, 5.0, 18.0), Point3d(5.0, 5.0, 8.0)});
+  expectedRoofPolygons.push_back({Point3d(5.0, 5.0, 8.0), Point3d(25.0, 5.0, 18.0), Point3d(25.0, 25.0, 18.0), Point3d(5.0, 25.0, 8.0)});
   expectedRoofPolygons.push_back({Point3d(5.0, 5.0, 8.0), Point3d(25.0, 5.0, 8.0), Point3d(25.0, 5.0, 18.0)});
   expectedRoofPolygons.push_back({Point3d(25.0, 5.0, 8.0), Point3d(25.0, 25.0, 8.0), Point3d(25.0, 25.0, 18.0), Point3d(25.0, 5.0, 18.0)});
   expectedRoofPolygons.push_back({Point3d(25.0, 25.0, 8.0), Point3d(5.0, 25.0, 8.0), Point3d(25.0, 25.0, 18.0)});
@@ -619,7 +619,7 @@ TEST_F(GeometryFixture, RoofSkeletonSquare_6_12_Shed_180deg) {
   std::vector< std::vector<Point3d> > roofPolygons = generateShedRoof(footprint, pitch, 180.0);
 
   std::vector< std::vector<Point3d> > expectedRoofPolygons;
-  expectedRoofPolygons.push_back({Point3d(5.0, 25.0, 8.0), Point3d(25.0, 25.0, 8.0), Point3d(25.0, 5.0, 18.0), Point3d(5.0, 5.0, 18.0)});
+  expectedRoofPolygons.push_back({Point3d(5.0, 5.0, 18.0), Point3d(25.0, 5.0, 18.0), Point3d(25.0, 25.0, 8.0), Point3d(5.0, 25.0, 8.0)});
   expectedRoofPolygons.push_back({Point3d(5.0, 5.0, 8.0), Point3d(25.0, 5.0, 8.0), Point3d(25.0, 5.0, 18.0), Point3d(5.0, 5.0, 18.0)});
   expectedRoofPolygons.push_back({Point3d(25.0, 5.0, 8.0), Point3d(25.0, 25.0, 8.0), Point3d(25.0, 5.0, 18.0)});
   expectedRoofPolygons.push_back({Point3d(5.0, 25.0, 8.0), Point3d(5.0, 5.0, 8.0), Point3d(5.0, 5.0, 18.0)});
@@ -643,7 +643,7 @@ TEST_F(GeometryFixture, RoofSkeletonSquare_6_12_Shed_270deg) {
   std::vector< std::vector<Point3d> > roofPolygons = generateShedRoof(footprint, pitch, 270.0);
 
   std::vector< std::vector<Point3d> > expectedRoofPolygons;
-  expectedRoofPolygons.push_back({Point3d(5.0, 25.0, 18.0), Point3d(25.0, 25.0, 8.0), Point3d(25.0, 5.0, 8.0), Point3d(5.0, 5.0, 18.0)});
+  expectedRoofPolygons.push_back({Point3d(5.0, 5.0, 18.0), Point3d(25.0, 5.0, 8.0), Point3d(25.0, 25.0, 8.0), Point3d(5.0, 25.0, 18.0)});
   expectedRoofPolygons.push_back({Point3d(25.0, 25.0, 8.0), Point3d(5.0, 25.0, 8.0), Point3d(5.0, 25.0, 18.0)});
   expectedRoofPolygons.push_back({Point3d(5.0, 25.0, 8.0), Point3d(5.0, 5.0, 8.0), Point3d(5.0, 5.0, 18.0), Point3d(5.0, 25.0, 18.0)});
   expectedRoofPolygons.push_back({Point3d(5.0, 5.0, 8.0), Point3d(25.0, 5.0, 8.0), Point3d(5.0, 5.0, 18.0)});
@@ -667,7 +667,7 @@ TEST_F(GeometryFixture, RoofSkeletonSquare_6_12_Shed_45deg) {
   std::vector< std::vector<Point3d> > roofPolygons = generateShedRoof(footprint, pitch, 45.0);
 
   std::vector< std::vector<Point3d> > expectedRoofPolygons;
-  expectedRoofPolygons.push_back({Point3d(5.0, 25.0, 15.071067812), Point3d(25.0, 25.0, 22.14213562), Point3d(25.0, 5.0, 15.071067812), Point3d(5.0, 5.0, 8.0)});
+  expectedRoofPolygons.push_back({Point3d(5.0, 5.0, 8.0), Point3d(25.0, 5.0, 15.071067812), Point3d(25.0, 25.0, 22.14213562), Point3d(5.0, 25.0, 15.071067812)});
   expectedRoofPolygons.push_back({Point3d(5.0, 5.0, 8.0), Point3d(25.0, 5.0, 8.0), Point3d(25.0, 5.0, 15.071067812)});
   expectedRoofPolygons.push_back({Point3d(25.0, 5.0, 8.0), Point3d(25.0, 25.0, 8.0), Point3d(25.0, 25.0, 22.14213562), Point3d(25.0, 5.0, 15.071067812)});
   expectedRoofPolygons.push_back({Point3d(25.0, 25.0, 8.0), Point3d(5.0, 25.0, 8.0), Point3d(5.0, 25.0, 15.071067812), Point3d(25.0, 25.0, 22.14213562)});
@@ -876,7 +876,7 @@ TEST_F(GeometryFixture, RoofSkeletonHshape_3_12_Shed_0deg) {
   std::vector< std::vector<Point3d> > roofPolygons = generateShedRoof(footprint, pitch, 0.0);
 
   std::vector< std::vector<Point3d> > expectedRoofPolygons;
-  expectedRoofPolygons.push_back({Point3d(0, 25, 5), Point3d(10, 25, 5), Point3d(10, 18, 3.25), Point3d(20, 18, 3.25), Point3d(20, 25, 5), Point3d(30, 25, 5), Point3d(30, 5, 0), Point3d(20, 5, 0), Point3d(20, 12, 1.75), Point3d(10, 12, 1.75), Point3d(10, 5, 0), Point3d(0, 5, 0)});
+  expectedRoofPolygons.push_back({Point3d(0, 5, 0), Point3d(10, 5, 0), Point3d(10, 12, 1.75), Point3d(20, 12, 1.75), Point3d(20, 5, 0), Point3d(30, 5, 0), Point3d(30, 25, 5), Point3d(20, 25, 5), Point3d(20, 18, 3.25), Point3d(10, 18, 3.25), Point3d(10, 25, 5), Point3d(0, 25, 5)});
   expectedRoofPolygons.push_back({Point3d(10, 5, 0), Point3d(10, 12, 0), Point3d(10, 12, 1.75)});
   expectedRoofPolygons.push_back({Point3d(10, 12, 0), Point3d(20, 12, 0), Point3d(20, 12, 1.75), Point3d(10, 12, 1.75)});
   expectedRoofPolygons.push_back({Point3d(20, 12, 0), Point3d(20, 5, 0), Point3d(20, 12, 1.75)});

@@ -2839,7 +2839,7 @@ std::vector< std::vector<Point3d> > doShedRoof(std::vector<Point3d>& polygon, do
       surfaces.push_back(wall);
     }
   }
-  surfaces.push_back(polygon);
+  surfaces.push_back(reverse(polygon));
 
   return surfaces;
 }
