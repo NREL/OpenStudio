@@ -599,7 +599,7 @@ ScheduleRule::ScheduleRule(ScheduleRuleset& scheduleRuleset)
   OS_ASSERT(getImpl<detail::ScheduleRule_Impl>());
 
   bool result = setPointer(OS_Schedule_RuleFields::ScheduleRulesetName, scheduleRuleset.handle());
-  OS_ASSERT(result); 
+  OS_ASSERT(result);
 
   ScheduleDay daySchedule(scheduleRuleset.model());
   result = setPointer(OS_Schedule_RuleFields::DayScheduleName, daySchedule.handle());
@@ -619,11 +619,11 @@ ScheduleRule::ScheduleRule(ScheduleRuleset& scheduleRuleset, const ScheduleDay& 
   OS_ASSERT(getImpl<detail::ScheduleRule_Impl>());
 
   bool result = setPointer(OS_Schedule_RuleFields::ScheduleRulesetName, scheduleRuleset.handle());
-  OS_ASSERT(result); 
+  OS_ASSERT(result);
 
   ModelObject clone = daySchedule.clone(scheduleRuleset.model());
   result = setPointer(OS_Schedule_RuleFields::DayScheduleName, clone.handle());
-  OS_ASSERT(result); 
+  OS_ASSERT(result);
   if (OptionalScheduleTypeLimits limits = scheduleRuleset.scheduleTypeLimits()) {
     clone.cast<ScheduleDay>().setScheduleTypeLimits(*limits);
   }
@@ -774,7 +774,7 @@ std::vector<bool> ScheduleRule::containsDates(const std::vector<openstudio::Date
 
 /// @cond
 ScheduleRule::ScheduleRule(std::shared_ptr<detail::ScheduleRule_Impl> impl)
-  : ParentObject(impl)
+  : ParentObject(std::move(impl))
 {}
 /// @endcond
 

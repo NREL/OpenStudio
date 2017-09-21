@@ -367,7 +367,7 @@ bool AvailabilityManagerOptimumStart::setNumberofPreviousDays(int numberofPrevio
 
 /// @cond
 AvailabilityManagerOptimumStart::AvailabilityManagerOptimumStart(std::shared_ptr<detail::AvailabilityManagerOptimumStart_Impl> impl)
-  : AvailabilityManager(impl)
+  : AvailabilityManager(std::move(impl))
 {}
 /// @endcond
 

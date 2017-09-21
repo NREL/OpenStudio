@@ -690,7 +690,7 @@ bool SiteGroundTemperatureShallow::setAllMonthlyTemperatures(const std::vector<d
 
 /// @cond
 SiteGroundTemperatureShallow::SiteGroundTemperatureShallow(std::shared_ptr<detail::SiteGroundTemperatureShallow_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 SiteGroundTemperatureShallow::SiteGroundTemperatureShallow(Model& model)
   : ModelObject(SiteGroundTemperatureShallow::iddObjectType(),model)

@@ -41,7 +41,7 @@ namespace model  {
 namespace detail {
 
   WeatherFileConditionType_Impl::WeatherFileConditionType_Impl(const IdfObject& idfObject,
-                                                               Model_Impl* model, 
+                                                               Model_Impl* model,
                                                                bool keepHandle)
     : SizingPeriod_Impl(idfObject, model, keepHandle)
   {
@@ -91,7 +91,7 @@ WeatherFileConditionType::WeatherFileConditionType(const Model& model)
 // constructor
 WeatherFileConditionType::WeatherFileConditionType(
     std::shared_ptr<detail::WeatherFileConditionType_Impl> impl)
-  : SizingPeriod(impl)
+  : SizingPeriod(std::move(impl))
 {}
 
 IddObjectType WeatherFileConditionType::iddObjectType() {

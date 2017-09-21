@@ -207,8 +207,8 @@ namespace detail {
     return getString(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::RadiantSurfaceType,true);
   }
 
-  std::vector<Surface> ZoneHVACLowTempRadiantConstFlow_Impl::surfaces() const {    
-    
+  std::vector<Surface> ZoneHVACLowTempRadiantConstFlow_Impl::surfaces() const {
+
     //vector to hold all of the surfaces that this radiant system is attached to
     std::vector<Surface> surfaces;
 
@@ -217,13 +217,13 @@ namespace detail {
 
       //loop through all the spaces in this zone
       for (const Space& space : thermalZone->spaces()){
-    
+
         //loop through all the surfaces in this space
         for (const Surface& surface : space.surfaces()){
 
           //skip surfaces whose construction is not internal source
           if(boost::optional<ConstructionWithInternalSource> construction = surface.construction()->optionalCast<ConstructionWithInternalSource>()){
-        
+
             //TODO change this to not optional when idd change is made
             //get the strings for requested surface types and current surface type
             std::string surfGrpName = this->radiantSurfaceType().get();
@@ -244,7 +244,7 @@ namespace detail {
             }
           }
         }
-      }    
+      }
     }
 
     return surfaces;
@@ -333,7 +333,7 @@ namespace detail {
   std::string ZoneHVACLowTempRadiantConstFlow_Impl::numberofCircuits() const {
     boost::optional<std::string> value = getString(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::NumberofCircuits,true);
     OS_ASSERT(value);
-    return value.get();    
+    return value.get();
   }
 
   double ZoneHVACLowTempRadiantConstFlow_Impl::circuitLength() const {
@@ -568,7 +568,7 @@ namespace detail {
   }
 } // detail
 
-ZoneHVACLowTempRadiantConstFlow::ZoneHVACLowTempRadiantConstFlow(const Model& model, 
+ZoneHVACLowTempRadiantConstFlow::ZoneHVACLowTempRadiantConstFlow(const Model& model,
                                                                  Schedule& availabilitySchedule,
                                                                  HVACComponent& heatingCoil,
                                                                  HVACComponent& coolingCoil,
@@ -808,7 +808,7 @@ void ZoneHVACLowTempRadiantConstFlow::removeFromThermalZone()
 }
 /// @cond
 ZoneHVACLowTempRadiantConstFlow::ZoneHVACLowTempRadiantConstFlow(std::shared_ptr<detail::ZoneHVACLowTempRadiantConstFlow_Impl> impl)
-  : ZoneHVACComponent(impl)
+  : ZoneHVACComponent(std::move(impl))
 {}
 /// @endcond
 

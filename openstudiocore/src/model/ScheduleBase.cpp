@@ -195,7 +195,7 @@ void ScheduleBase::ensureNoLeapDays()
 
 /// @cond
 ScheduleBase::ScheduleBase(std::shared_ptr<detail::ScheduleBase_Impl> impl)
-  : ResourceObject(impl)
+  : ResourceObject(std::move(impl))
 {}
 
 ScheduleBase::ScheduleBase(IddObjectType type, const Model &model)

@@ -352,14 +352,14 @@ namespace detail {
             modelObjectList->removeModelObject(elem);
           }
       }
-    }  
+    }
   }
 
   template <class T>
   void RefrigerationSystem_Impl::removeTemplate( const T & modelObject, boost::optional<ModelObjectList>& modelObjectList ) {
     if( modelObjectList ) {
       modelObjectList->removeModelObject(modelObject);
-    }  
+    }
   }
 
   template <class T>
@@ -975,7 +975,7 @@ void RefrigerationSystem::resetShellandCoilIntercoolerEffectiveness() {
 
 /// @cond
 RefrigerationSystem::RefrigerationSystem(std::shared_ptr<detail::RefrigerationSystem_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

@@ -178,7 +178,7 @@ ComponentCostAdjustments::ComponentCostAdjustments(const Model& model)
 
 // constructor
 ComponentCostAdjustments::ComponentCostAdjustments(std::shared_ptr<detail::ComponentCostAdjustments_Impl> impl)
-  : ParentObject(impl)
+  : ParentObject(std::move(impl))
 {}
 
 OptionalDouble ComponentCostAdjustments::miscellaneousCostPerConditionedArea() const

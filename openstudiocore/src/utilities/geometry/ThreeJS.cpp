@@ -103,7 +103,7 @@ namespace openstudio{
   }
     
   ThreeScene::ThreeScene(const std::string& s)
-    : m_metadata(std::vector<std::string>(), ThreeBoundingBox(0,0,0,0,0,0,0,0,0,0)), m_sceneObject(ThreeSceneObject("", std::vector<ThreeSceneChild>()))
+    : m_metadata(std::vector<std::string>(), ThreeBoundingBox(0,0,0,0,0,0,0,0,0,0), std::vector<ThreeModelObjectMetadata>()), m_sceneObject(ThreeSceneObject("", std::vector<ThreeSceneChild>()))
   {
     Json::Value root;
     Json::Reader reader;
@@ -523,6 +523,9 @@ namespace openstudio{
   }
 
   ThreeUserData::ThreeUserData()
+    : m_coincidentWithOutsideObject(false)
+      //m_belowFloorPlenum(false),
+      //m_aboveCeilingPlenum(false)
   {}
 
   ThreeUserData::ThreeUserData(const Json::Value& value)
@@ -532,16 +535,25 @@ namespace openstudio{
     assertType(value, "surfaceType", Json::stringValue);
     assertType(value, "surfaceTypeMaterialName", Json::stringValue);
     assertType(value, "constructionName", Json::stringValue);
+    assertType(value, "constructionHandle", Json::stringValue);
     assertType(value, "constructionMaterialName", Json::stringValue);
     assertType(value, "spaceName", Json::stringValue);
+    assertType(value, "spaceHandle", Json::stringValue);
     assertType(value, "thermalZoneName", Json::stringValue);
+    assertType(value, "thermalZoneHandle", Json::stringValue);
     assertType(value, "thermalZoneMaterialName", Json::stringValue);
     assertType(value, "spaceTypeName", Json::stringValue);
+    assertType(value, "spaceTypeHandle", Json::stringValue);
     assertType(value, "spaceTypeMaterialName", Json::stringValue);
     assertType(value, "buildingStoryName", Json::stringValue);
+    assertType(value, "buildingStoryHandle", Json::stringValue);
     assertType(value, "buildingStoryMaterialName", Json::stringValue);
     assertType(value, "buildingUnitName", Json::stringValue);
+    assertType(value, "buildingUnitHandle", Json::stringValue);
     assertType(value, "buildingUnitMaterialName", Json::stringValue);
+    assertType(value, "constructionSetName", Json::stringValue);
+    assertType(value, "constructionSetHandle", Json::stringValue);
+    assertType(value, "constructionSetMaterialName", Json::stringValue);
     assertType(value, "boundaryMaterialName", Json::stringValue);
     assertType(value, "outsideBoundaryCondition", Json::stringValue);
     assertType(value, "outsideBoundaryConditionObjectName", Json::stringValue);
@@ -549,22 +561,33 @@ namespace openstudio{
     assertType(value, "coincidentWithOutsideObject", Json::stringValue);
     assertType(value, "sunExposure", Json::stringValue);
     assertType(value, "windExposure", Json::stringValue);
+    assertType(value, "belowFloorPlenum", Json::booleanValue);
+    assertType(value, "aboveCeilingPlenum", Json::booleanValue);
 
     m_handle = value.get("handle", "").asString();
     m_name = value.get("name", "").asString();
     m_surfaceType = value.get("surfaceType", "").asString();
     m_surfaceTypeMaterialName = value.get("surfaceTypeMaterialName", "").asString();
     m_constructionName = value.get("constructionName", "").asString();
+    m_constructionHandle = value.get("constructionHandle", "").asString();
     m_constructionMaterialName = value.get("constructionMaterialName", "").asString();
     m_spaceName = value.get("spaceName", "").asString();
+    m_spaceHandle = value.get("spaceHandle", "").asString();
     m_thermalZoneName = value.get("thermalZoneName", "").asString();
+    m_thermalZoneHandle = value.get("thermalZoneHandle", "").asString();
     m_thermalZoneMaterialName = value.get("thermalZoneMaterialName", "").asString();
     m_spaceTypeName = value.get("spaceTypeName", "").asString();
+    m_spaceTypeHandle = value.get("spaceTypeHandle", "").asString();
     m_spaceTypeMaterialName = value.get("spaceTypeMaterialName", "").asString();
     m_buildingStoryName = value.get("buildingStoryName", "").asString();
+    m_buildingStoryHandle = value.get("buildingStoryHandle", "").asString();
     m_buildingStoryMaterialName = value.get("buildingStoryMaterialName", "").asString();
     m_buildingUnitName = value.get("buildingUnitName", "").asString();
+    m_buildingUnitHandle = value.get("buildingUnitHandle", "").asString();
     m_buildingUnitMaterialName = value.get("buildingUnitMaterialName", "").asString();
+    m_constructionSetName = value.get("constructionSetName", "").asString();
+    m_constructionSetHandle = value.get("constructionSetHandle", "").asString();
+    m_constructionSetMaterialName = value.get("constructionSetMaterialName", "").asString();
     m_boundaryMaterialName = value.get("boundaryMaterialName", "").asString();
     m_outsideBoundaryCondition = value.get("outsideBoundaryCondition", "").asString();
     m_outsideBoundaryConditionObjectName = value.get("outsideBoundaryConditionObjectName", "").asString();
@@ -572,6 +595,8 @@ namespace openstudio{
     m_coincidentWithOutsideObject = value.get("coincidentWithOutsideObject", false).asBool();
     m_sunExposure = value.get("sunExposure", "").asString();
     m_windExposure = value.get("windExposure", "").asString();
+    //m_belowFloorPlenum = value.get("belowFloorPlenum", "").asBool();
+    //m_aboveCeilingPlenum = value.get("aboveCeilingPlenum", "").asBool();
   }
 
   Json::Value ThreeUserData::toJsonValue() const
@@ -583,16 +608,25 @@ namespace openstudio{
     result["surfaceType"] = m_surfaceType;
     result["surfaceTypeMaterialName"] = m_surfaceTypeMaterialName;
     result["constructionName"] = m_constructionName;
+    result["constructionName"] = m_constructionName;
     result["constructionMaterialName"] = m_constructionMaterialName;
     result["spaceName"] = m_spaceName;
+    result["spaceHandle"] = m_spaceHandle;
     result["thermalZoneName"] = m_thermalZoneName;
+    result["thermalZoneHandle"] = m_thermalZoneHandle;
     result["thermalZoneMaterialName"] = m_thermalZoneMaterialName;
     result["spaceTypeName"] = m_spaceTypeName;
+    result["spaceTypeHandle"] = m_spaceTypeHandle;
     result["spaceTypeMaterialName"] = m_spaceTypeMaterialName;
     result["buildingStoryName"] = m_buildingStoryName;
+    result["buildingStoryHandle"] = m_buildingStoryHandle;
     result["buildingStoryMaterialName"] = m_buildingStoryMaterialName;
     result["buildingUnitName"] = m_buildingUnitName;
+    result["buildingUnitHandle"] = m_buildingUnitHandle;
     result["buildingUnitMaterialName"] = m_buildingUnitMaterialName;
+    result["constructionSetName"] = m_constructionSetName;
+    result["constructionSetHandle"] = m_constructionSetHandle;
+    result["constructionSetMaterialName"] = m_constructionSetMaterialName;
     result["boundaryMaterialName"] = m_boundaryMaterialName;
     result["outsideBoundaryCondition"] = m_outsideBoundaryCondition;
     result["outsideBoundaryConditionObjectName"] = m_outsideBoundaryConditionObjectName;
@@ -600,6 +634,8 @@ namespace openstudio{
     result["coincidentWithOutsideObject"] = m_coincidentWithOutsideObject;
     result["sunExposure"] = m_sunExposure;
     result["windExposure"] = m_windExposure;
+    //result["belowFloorPlenum"] = m_belowFloorPlenum;
+    //result["aboveCeilingPlenum"] = m_aboveCeilingPlenum;
 
     return result;
   }
@@ -629,6 +665,11 @@ namespace openstudio{
     return m_constructionName;
   }
 
+  std::string ThreeUserData::constructionHandle() const
+  {
+    return m_constructionHandle;
+  }
+
   std::string ThreeUserData::constructionMaterialName() const
   {
     return m_constructionMaterialName;
@@ -639,9 +680,19 @@ namespace openstudio{
     return m_spaceName;
   }
 
+  std::string ThreeUserData::spaceHandle() const
+  {
+    return m_spaceHandle;
+  }
+
   std::string ThreeUserData::thermalZoneName() const
   {
     return m_thermalZoneName;
+  }
+
+  std::string ThreeUserData::thermalZoneHandle() const
+  {
+    return m_thermalZoneHandle;
   }
 
   std::string ThreeUserData::thermalZoneMaterialName() const
@@ -654,6 +705,11 @@ namespace openstudio{
     return m_spaceTypeName;
   }
 
+  std::string ThreeUserData::spaceTypeHandle() const
+  {
+    return m_spaceTypeHandle;
+  }
+
   std::string ThreeUserData::spaceTypeMaterialName() const
   {
     return m_spaceTypeMaterialName;
@@ -662,6 +718,11 @@ namespace openstudio{
   std::string ThreeUserData::buildingStoryName() const
   {
     return m_buildingStoryName;
+  }
+
+  std::string ThreeUserData::buildingStoryHandle() const
+  {
+    return m_buildingStoryHandle;
   }
 
   std::string ThreeUserData::buildingStoryMaterialName() const
@@ -674,9 +735,29 @@ namespace openstudio{
     return m_buildingUnitName;
   }
 
+    std::string ThreeUserData::buildingUnitHandle() const
+  {
+    return m_buildingUnitHandle;
+  }
+
   std::string ThreeUserData::buildingUnitMaterialName() const
   {
     return m_buildingUnitMaterialName;
+  }
+
+  std::string ThreeUserData::constructionSetName() const
+  {
+    return m_constructionSetName;
+  }
+
+    std::string ThreeUserData::constructionSetHandle() const
+  {
+    return m_constructionSetHandle;
+  }
+
+  std::string ThreeUserData::constructionSetMaterialName() const
+  {
+    return m_constructionSetMaterialName;
   }
 
   std::string ThreeUserData::outsideBoundaryCondition() const
@@ -714,6 +795,21 @@ namespace openstudio{
     return m_windExposure;
   }
 
+  //bool ThreeUserData::plenum() const
+  //{
+  //  return (m_belowFloorPlenum || m_aboveCeilingPlenum);
+  //}
+
+  //bool ThreeUserData::belowFloorPlenum() const
+  //{
+  //  return m_belowFloorPlenum;
+  //}
+
+  //bool ThreeUserData::aboveCeilingPlenum() const
+  //{
+  //  return m_aboveCeilingPlenum;
+  //}
+
   void ThreeUserData::setHandle(const std::string& s)
   {
     m_handle = s;
@@ -739,6 +835,11 @@ namespace openstudio{
     m_constructionName = s;
   }
 
+  void ThreeUserData::setConstructionHandle(const std::string& s)
+  {
+    m_constructionHandle = s;
+  }
+
   void ThreeUserData::setConstructionMaterialName(const std::string& s)
   {
     m_constructionMaterialName = s;
@@ -749,9 +850,19 @@ namespace openstudio{
     m_spaceName = s;
   }
 
+  void ThreeUserData::setSpaceHandle(const std::string& s)
+  {
+    m_spaceHandle = s;
+  }
+
   void ThreeUserData::setThermalZoneName(const std::string& s)
   {
     m_thermalZoneName = s;
+  }
+
+  void ThreeUserData::setThermalZoneHandle(const std::string& s)
+  {
+    m_thermalZoneHandle = s;
   }
 
   void ThreeUserData::setThermalZoneMaterialName(const std::string& s)
@@ -763,6 +874,11 @@ namespace openstudio{
   {
     m_spaceTypeName = s;
   }
+    
+  void ThreeUserData::setSpaceTypeHandle(const std::string& s)
+  {
+    m_spaceTypeHandle = s;
+  }
 
   void ThreeUserData::setSpaceTypeMaterialName(const std::string& s)
   {
@@ -772,6 +888,11 @@ namespace openstudio{
   void ThreeUserData::setBuildingStoryName(const std::string& s)
   {
     m_buildingStoryName = s;
+  }
+    
+  void ThreeUserData::setBuildingStoryHandle(const std::string& s)
+  {
+    m_buildingStoryHandle = s;
   }
 
   void ThreeUserData::setBuildingStoryMaterialName(const std::string& s)
@@ -783,10 +904,30 @@ namespace openstudio{
   {
     m_buildingUnitName = s;
   }
+    
+  void ThreeUserData::setBuildingUnitHandle(const std::string& s)
+  {
+    m_buildingUnitHandle = s;
+  }
 
   void ThreeUserData::setBuildingUnitMaterialName(const std::string& s)
   {
     m_buildingUnitMaterialName = s;
+  }
+
+  void ThreeUserData::setConstructionSetName(const std::string& s)
+  {
+    m_constructionSetName = s;
+  }
+    
+  void ThreeUserData::setConstructionSetHandle(const std::string& s)
+  {
+    m_constructionSetHandle = s;
+  }
+
+  void ThreeUserData::setConstructionSetMaterialName(const std::string& s)
+  {
+    m_constructionSetMaterialName = s;
   }
 
   void ThreeUserData::setOutsideBoundaryCondition(const std::string& s)
@@ -823,6 +964,22 @@ namespace openstudio{
   {
     m_windExposure = s;
   }
+
+  //void ThreeUserData::setBelowFloorPlenum(bool v)
+  //{
+  //  m_belowFloorPlenum = v;
+  //  if (v){
+  //    m_aboveCeilingPlenum = false;
+  //  }
+  //}
+
+  //void ThreeUserData::setAboveCeilingPlenum(bool v)
+  //{
+  //  m_aboveCeilingPlenum = v;
+  //  if (v){
+  //    m_belowFloorPlenum = false;
+  //  }
+  //}
 
   ThreeSceneChild::ThreeSceneChild(const std::string& uuid, const std::string& name, const std::string& type,
                     const std::string& geometryId, const std::string& materialId, const ThreeUserData& userData)
@@ -1056,18 +1213,64 @@ namespace openstudio{
     return m_lookAtR;
   }
 
-  ThreeSceneMetadata::ThreeSceneMetadata(const std::vector<std::string>& buildingStoryNames, const ThreeBoundingBox& boundingBox)
-    : m_version("4.3"), m_type("Object"), m_generator("OpenStudio"), m_buildingStoryNames(buildingStoryNames), m_boundingBox(boundingBox)
+  ThreeModelObjectMetadata::ThreeModelObjectMetadata(const std::string& iddObjectType, const std::string& handle, const std::string& name)
+    : m_iddObjectType(iddObjectType), m_handle(handle), m_name(name)
+  {}
+
+  ThreeModelObjectMetadata::ThreeModelObjectMetadata()
+  {}
+  
+  ThreeModelObjectMetadata::ThreeModelObjectMetadata(const Json::Value& value)
+  {
+    assertKeyAndType(value, "iddObjectType", Json::stringValue);
+    assertKeyAndType(value, "handle", Json::stringValue);
+    assertKeyAndType(value, "name", Json::stringValue);
+
+    m_iddObjectType = value.get("iddObjectType", "").asString();
+    m_handle = value.get("handle", "").asString();
+    m_name = value.get("name", "").asString();
+  }
+
+  std::string ThreeModelObjectMetadata::iddObjectType() const
+  {
+    return m_iddObjectType;
+  }
+
+  std::string ThreeModelObjectMetadata::handle() const
+  {
+    return m_handle;
+  }
+
+  std::string ThreeModelObjectMetadata::name() const
+  {
+    return m_name;
+  }
+
+  Json::Value ThreeModelObjectMetadata::toJsonValue() const
+  {
+    Json::Value result;
+
+    result["iddObjectType"] = m_iddObjectType;
+    result["handle"] = m_handle;
+    result["name"] = m_name;
+
+    return result;
+  }
+
+
+  ThreeSceneMetadata::ThreeSceneMetadata(const std::vector<std::string>& buildingStoryNames, const ThreeBoundingBox& boundingBox, const std::vector<ThreeModelObjectMetadata>& modelObjectMetadata)
+    : m_version("4.3"), m_type("Object"), m_generator("OpenStudio"), m_buildingStoryNames(buildingStoryNames), m_boundingBox(boundingBox), m_modelObjectMetadata(modelObjectMetadata)
   {}
 
   ThreeSceneMetadata::ThreeSceneMetadata(const Json::Value& value)
-    : m_boundingBox(value.get("boundingBox", Json::objectValue))
+    : m_boundingBox(value.get("boundinmgBox", Json::objectValue))
   {
     assertKeyAndType(value, "version", Json::stringValue);
     assertKeyAndType(value, "type", Json::stringValue);
     assertKeyAndType(value, "generator", Json::stringValue);
     assertKeyAndType(value, "buildingStoryNames", Json::arrayValue);
     assertKeyAndType(value, "boundingBox", Json::objectValue);
+    assertKeyAndType(value, "modelObjectMetadata", Json::arrayValue);
 
     Json::Value version = value.get("version", "");
     if (version.isConvertibleTo(Json::stringValue)){
@@ -1081,6 +1284,15 @@ namespace openstudio{
     for (Json::ArrayIndex i = 0; i < n; ++i){
       m_buildingStoryNames.push_back(buildingStoryNames[i].asString());
     }
+
+    // DLM: done in initializer
+    //boundingBox = ThreeBoundingBox(value.get("boundinmgBox", Json::objectValue));
+
+    Json::Value modelObjectMetadata = value.get("modelObjectMetadata", Json::arrayValue);
+    n = modelObjectMetadata.size();
+    for (Json::ArrayIndex i = 0; i < n; ++i){
+      m_modelObjectMetadata.push_back(ThreeModelObjectMetadata(modelObjectMetadata[i]));
+    }
   }
 
   Json::Value ThreeSceneMetadata::toJsonValue() const
@@ -1092,11 +1304,17 @@ namespace openstudio{
       buildingStoryNames.append(buildingStoryName);
     }
 
+    Json::Value modelObjectMetadata(Json::arrayValue);
+    for (const auto& m : m_modelObjectMetadata){
+      modelObjectMetadata.append(m.toJsonValue());
+    }
+
     result["version"] = m_version;
     result["type"] = m_type;
     result["generator"] = m_generator;
     result["buildingStoryNames"] = buildingStoryNames;
     result["boundingBox"] = m_boundingBox.toJsonValue();
+    result["modelObjectMetadata"] = modelObjectMetadata;
 
     return result;
   }
@@ -1124,6 +1342,11 @@ namespace openstudio{
   ThreeBoundingBox ThreeSceneMetadata::boundingBox() const
   {
     return m_boundingBox;
+  }
+
+  std::vector<ThreeModelObjectMetadata> ThreeSceneMetadata::modelObjectMetadata() const
+  {
+    return m_modelObjectMetadata;
   }
 
 } // openstudio

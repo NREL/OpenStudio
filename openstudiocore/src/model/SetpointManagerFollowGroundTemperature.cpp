@@ -91,7 +91,7 @@ namespace detail {
     OS_ASSERT(value);
     return value.get();
   }
-  
+
   std::string SetpointManagerFollowGroundTemperature_Impl::referenceGroundTemperatureObjectType() const {
     boost::optional<std::string> value = getString(OS_SetpointManager_FollowGroundTemperatureFields::ReferenceGroundTemperatureObjectType,true);
     OS_ASSERT(value);
@@ -124,7 +124,7 @@ namespace detail {
     bool result = setString(OS_SetpointManager_FollowGroundTemperatureFields::ControlVariable, controlVariable);
     return result;
   }
-  
+
   bool SetpointManagerFollowGroundTemperature_Impl::setReferenceGroundTemperatureObjectType(const std::string& groundTemperatureObjType) {
     bool result = setString(OS_SetpointManager_FollowGroundTemperatureFields::ReferenceGroundTemperatureObjectType, groundTemperatureObjType);
     return result;
@@ -177,7 +177,7 @@ std::vector<std::string> SetpointManagerFollowGroundTemperature::controlVariable
   return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
                         OS_SetpointManager_FollowGroundTemperatureFields::ControlVariable);
 }
-  
+
 std::vector<std::string> SetpointManagerFollowGroundTemperature::referenceGroundTemperatureObjectTypeValues() {
   return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
                         OS_SetpointManager_FollowGroundTemperatureFields::ReferenceGroundTemperatureObjectType);
@@ -190,7 +190,7 @@ std::string SetpointManagerFollowGroundTemperature::controlVariable() const {
 std::string SetpointManagerFollowGroundTemperature::referenceGroundTemperatureObjectType() const {
   return getImpl<detail::SetpointManagerFollowGroundTemperature_Impl>()->referenceGroundTemperatureObjectType();
 }
-  
+
 double SetpointManagerFollowGroundTemperature::offsetTemperatureDifference() const {
   return getImpl<detail::SetpointManagerFollowGroundTemperature_Impl>()->offsetTemperatureDifference();
 }
@@ -214,7 +214,7 @@ bool SetpointManagerFollowGroundTemperature::setControlVariable(const std::strin
 bool SetpointManagerFollowGroundTemperature::setReferenceGroundTemperatureObjectType(const std::string& groundTemperatureObjType) {
   return getImpl<detail::SetpointManagerFollowGroundTemperature_Impl>()->setReferenceGroundTemperatureObjectType(groundTemperatureObjType);
 }
-  
+
 void SetpointManagerFollowGroundTemperature::setOffsetTemperatureDifference(double offsetTemperatureDifference) {
   getImpl<detail::SetpointManagerFollowGroundTemperature_Impl>()->setOffsetTemperatureDifference(offsetTemperatureDifference);
 }
@@ -229,7 +229,7 @@ void SetpointManagerFollowGroundTemperature::setMinimumSetpointTemperature(doubl
 
 /// @cond
 SetpointManagerFollowGroundTemperature::SetpointManagerFollowGroundTemperature(std::shared_ptr<detail::SetpointManagerFollowGroundTemperature_Impl> impl)
-  : SetpointManager(impl)
+  : SetpointManager(std::move(impl))
 {}
 /// @endcond
 

@@ -252,7 +252,7 @@ void PlantComponentTemperatureSource::resetSourceTemperatureSchedule() {
 
 /// @cond
 PlantComponentTemperatureSource::PlantComponentTemperatureSource(std::shared_ptr<detail::PlantComponentTemperatureSource_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

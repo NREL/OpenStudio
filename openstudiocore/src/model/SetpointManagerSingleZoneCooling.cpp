@@ -210,7 +210,7 @@ std::string SetpointManagerSingleZoneCooling::controlVariable() const {
 
 /// @cond
 SetpointManagerSingleZoneCooling::SetpointManagerSingleZoneCooling(std::shared_ptr<detail::SetpointManagerSingleZoneCooling_Impl> impl)
-  : SetpointManager(impl)
+  : SetpointManager(std::move(impl))
 {}
 /// @endcond
 

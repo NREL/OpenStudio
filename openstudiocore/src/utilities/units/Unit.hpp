@@ -70,7 +70,7 @@ OPENSTUDIO_ENUM(UnitSystem,
   ((Celsius))
   ((Fahrenheit))
 );
- *  \endcode 
+ *  \endcode
  *  \relates Unit */
 OPENSTUDIO_ENUM(UnitSystem,
   ((Mixed))
@@ -234,17 +234,17 @@ class UTILITIES_API Unit {
     if (!impl) {
       throw(std::bad_cast());
     }
-    return T(impl);
+    return T(std::move(impl));
   }
 
-  /** Cast to boost::optional<T>. Return value is boost::none (evaluates to false) 
+  /** Cast to boost::optional<T>. Return value is boost::none (evaluates to false)
    *  if object is not a T. */
   template<typename T>
   boost::optional<T> optionalCast() const{
     boost::optional<T> result;
     std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
     if (impl){
-      result = T(impl);
+      result = T(std::move(impl));
     }
     return result;
   }
@@ -278,9 +278,9 @@ UTILITIES_API std::ostream& operator<<(std::ostream& os, const Unit& u);
 
 /** Parses unit string into a Unit object. Precondition: isUnit == true. Otherwise, throws.
  *  Be forewarned--this does dumb parsing. Doesn't work to extract scales from expressions
- *  like "kN", doesn't match base units up with unit systems. 
+ *  like "kN", doesn't match base units up with unit systems.
  *
- *  Postcondition: prettyString() == "". 
+ *  Postcondition: prettyString() == "".
  *  \sa UnitFactory */
 UTILITIES_API Unit parseUnitString(const std::string& unitString);
 

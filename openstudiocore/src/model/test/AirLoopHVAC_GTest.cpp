@@ -163,7 +163,7 @@ TEST_F(ModelFixture,AirLoopHVAC_addBranchForZone)
   ThermalZone thermalZone = ThermalZone(model);
   ThermalZone thermalZone2 = ThermalZone(model);
   ScheduleCompact scheduleCompact = ScheduleCompact(model);
-  AirTerminalSingleDuctUncontrolled singleDuctTerminal = 
+  AirTerminalSingleDuctUncontrolled singleDuctTerminal =
                                                          AirTerminalSingleDuctUncontrolled(model,scheduleCompact);
   EXPECT_TRUE(scheduleCompact.scheduleTypeLimits());
 
@@ -182,7 +182,7 @@ TEST_F(ModelFixture,AirLoopHVAC_demandComponents)
   ThermalZone thermalZone = ThermalZone(model);
   ThermalZone thermalZone2 = ThermalZone(model);
   ScheduleCompact scheduleCompact = ScheduleCompact(model);
-  AirTerminalSingleDuctUncontrolled singleDuctTerminal = 
+  AirTerminalSingleDuctUncontrolled singleDuctTerminal =
                                                          AirTerminalSingleDuctUncontrolled(model,scheduleCompact);
 
   ASSERT_EQ( unsigned(5),airLoopHVAC.demandComponents().size() );
@@ -195,7 +195,7 @@ TEST_F(ModelFixture,AirLoopHVAC_demandComponents)
 
   ASSERT_EQ( unsigned(12),airLoopHVAC.demandComponents().size() );
 
-  ASSERT_EQ( thermalZone,airLoopHVAC.demandComponents( airLoopHVAC.zoneSplitter().outletModelObject(0)->cast<HVACComponent>(), 
+  ASSERT_EQ( thermalZone,airLoopHVAC.demandComponents( airLoopHVAC.zoneSplitter().outletModelObject(0)->cast<HVACComponent>(),
                                                        airLoopHVAC.zoneMixer().inletModelObject(0)->cast<HVACComponent>(),
                                                        thermalZone.iddObjectType() ).front() );
 }
@@ -267,7 +267,7 @@ TEST_F(ModelFixture,ThermalZone_remove)
   ThermalZone thermalZone = ThermalZone(model);
   ThermalZone thermalZone2 = ThermalZone(model);
   ScheduleCompact scheduleCompact = ScheduleCompact(model);
-  AirTerminalSingleDuctUncontrolled singleDuctTerminal = 
+  AirTerminalSingleDuctUncontrolled singleDuctTerminal =
                                                          AirTerminalSingleDuctUncontrolled(model,scheduleCompact);
 
   ASSERT_TRUE(airLoopHVAC.addBranchForZone(thermalZone,singleDuctTerminal));
@@ -288,7 +288,7 @@ TEST_F(ModelFixture,AirLoopHVAC_remove)
   ThermalZone thermalZone = ThermalZone(model);
   ThermalZone thermalZone2 = ThermalZone(model);
   ScheduleCompact scheduleCompact = ScheduleCompact(model);
-  AirTerminalSingleDuctUncontrolled singleDuctTerminal = 
+  AirTerminalSingleDuctUncontrolled singleDuctTerminal =
                                                          AirTerminalSingleDuctUncontrolled(model,scheduleCompact);
 
   ASSERT_TRUE(airLoopHVAC.addBranchForZone(thermalZone,singleDuctTerminal));
@@ -353,7 +353,7 @@ TEST_F(ModelFixture,AirLoopHVAC_supplyComponents)
 
   ASSERT_EQ(fan,oaSystem.returnAirModelObject()->cast<Node>().inletModelObject().get());
 
-  std::vector<ModelObject> returnComponents = 
+  std::vector<ModelObject> returnComponents =
     airLoopHVAC.supplyComponents(supplyInletNode, oaSystem.returnAirModelObject()->cast<Node>());
   returnComponents.erase( returnComponents.begin() );
 
@@ -399,11 +399,11 @@ TEST_F(ModelFixture,AirLoopHVAC_remove2)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  Model m; 
+  Model m;
 
   ScheduleCompact s(m);
-  
-  PlantLoop plantLoop(m); 
+
+  PlantLoop plantLoop(m);
 
   AirLoopHVAC airLoop(m);
 
@@ -438,13 +438,13 @@ TEST_F(ModelFixture,AirLoopHVAC_remove2)
 
   EXPECT_EQ( 5u,plantLoop.demandComponents().size() );
 
-  EXPECT_EXIT ( 
-  {  
+  EXPECT_EXIT (
+  {
     plantLoop.demandInletNode();
 
     plantLoop.demandOutletNode();
 
-     exit(0); 
+     exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
@@ -452,7 +452,7 @@ TEST_F(ModelFixture,AirLoopHVAC_remove2)
 
 TEST_F(ModelFixture, AirLoopHVAC_remove3)
 {
-  Model m; 
+  Model m;
 
   EXPECT_EQ(0u, m.getModelObjects<AirLoopHVAC>().size());
   EXPECT_EQ(0u, m.getModelObjects<SizingSystem>().size());
@@ -470,13 +470,13 @@ TEST_F(ModelFixture, AirLoopHVAC_remove3)
 
 TEST_F(ModelFixture, AirLoopHVAC_Cost)
 {
-  Model model; 
+  Model model;
 
   AirLoopHVAC airLoopHVAC = AirLoopHVAC(model);
   ThermalZone thermalZone = ThermalZone(model);
   ThermalZone thermalZone2 = ThermalZone(model);
   ScheduleCompact scheduleCompact = ScheduleCompact(model);
-  AirTerminalSingleDuctUncontrolled singleDuctTerminal = 
+  AirTerminalSingleDuctUncontrolled singleDuctTerminal =
                                                          AirTerminalSingleDuctUncontrolled(model,scheduleCompact);
   EXPECT_TRUE(scheduleCompact.scheduleTypeLimits());
 
@@ -515,13 +515,13 @@ TEST_F(ModelFixture, AirLoopHVAC_Cost)
 
 TEST_F(ModelFixture, AirLoopHVAC_AddBranchForZone_ReuseTerminal)
 {
-  Model model; 
+  Model model;
 
   AirLoopHVAC airLoopHVAC = AirLoopHVAC(model);
   ThermalZone thermalZone = ThermalZone(model);
   ThermalZone thermalZone2 = ThermalZone(model);
   ScheduleCompact scheduleCompact = ScheduleCompact(model);
-  AirTerminalSingleDuctUncontrolled singleDuctTerminal = 
+  AirTerminalSingleDuctUncontrolled singleDuctTerminal =
                                                          AirTerminalSingleDuctUncontrolled(model,scheduleCompact);
   EXPECT_TRUE(scheduleCompact.scheduleTypeLimits());
 
@@ -534,7 +534,7 @@ TEST_F(ModelFixture, AirLoopHVAC_AddBranchForZone_ReuseTerminal)
 
   EXPECT_EQ(1u, airLoopHVAC.thermalZones().size());
 
-  AirTerminalSingleDuctUncontrolled term2 = 
+  AirTerminalSingleDuctUncontrolled term2 =
     singleDuctTerminal.clone(model).cast<AirTerminalSingleDuctUncontrolled>();
 
   EXPECT_TRUE(airLoopHVAC.addBranchForZone(thermalZone2,term2));
@@ -702,7 +702,7 @@ TEST_F(ModelFixture,AirLoopHVAC_fans)
     ASSERT_EQ(fan,supplyFan.get());
 
     auto returnFan = airSystem.returnFan();
-    ASSERT_FALSE(returnFan);    
+    ASSERT_FALSE(returnFan);
 
     ControllerOutdoorAir oaController(m);
     AirLoopHVACOutdoorAirSystem oaSystem(m,oaController);
@@ -732,7 +732,7 @@ TEST_F(ModelFixture,AirLoopHVAC_fans)
     ASSERT_TRUE(reliefFan);
     ASSERT_EQ(fan3,reliefFan.get());
   }
-   
+
 }
 
 // Not possible in OS currently, uncomment in future
@@ -754,7 +754,7 @@ TEST_F(ModelFixture,AirLoopHVAC_fans)
 //   airSystem.resetReturnAirBypassFlowTemperatureSetpointSchedule();
 
 //   EXPECT_FALSE( airSystem.returnAirBypassFlowTemperatureSetpointSchedule() );
-   
+
 // }
 
 TEST_F(ModelFixture,AirLoopHVAC_Availability)
@@ -764,13 +764,13 @@ TEST_F(ModelFixture,AirLoopHVAC_Availability)
 
   {
     auto schedule = m.alwaysOnDiscreteSchedule();
-    EXPECT_EQ(schedule,airLoopHVAC.availabilitySchedule()); 
-  } 
+    EXPECT_EQ(schedule,airLoopHVAC.availabilitySchedule());
+  }
 
   EXPECT_FALSE(airLoopHVAC.availabilityManager());
 
   {
-    airLoopHVAC.setNightCycleControlType("CycleOnAny");  
+    airLoopHVAC.setNightCycleControlType("CycleOnAny");
     auto availabilityManager = airLoopHVAC.availabilityManager();
     EXPECT_TRUE(availabilityManager);
     auto nightCycle = availabilityManager->optionalCast<AvailabilityManagerNightCycle>();
@@ -789,7 +789,7 @@ TEST_F(ModelFixture,AirLoopHVAC_Availability)
     EXPECT_TRUE(availabilityManager2);
     EXPECT_EQ(availabilityManager2.get(),availabilityManager);
 
-    airLoopHVAC.setNightCycleControlType("CycleOnAny");  
+    airLoopHVAC.setNightCycleControlType("CycleOnAny");
     auto availabilityManager3 = airLoopHVAC.availabilityManager();
     EXPECT_TRUE(availabilityManager3);
     auto nightCycle = availabilityManager3->optionalCast<AvailabilityManagerNightCycle>();
@@ -822,7 +822,7 @@ TEST_F(ModelFixture,AirLoopHVAC_dualDuct)
     Model m;
     AirLoopHVAC airLoopHVAC(m);
 
-    EXPECT_EQ(1u,airLoopHVAC.supplyOutletNodes().size()); 
+    EXPECT_EQ(1u,airLoopHVAC.supplyOutletNodes().size());
 
     ConnectorSplitter splitter(m);
     auto supplyOutletNode = airLoopHVAC.supplyOutletNode();
@@ -830,7 +830,7 @@ TEST_F(ModelFixture,AirLoopHVAC_dualDuct)
 
     EXPECT_TRUE(airLoopHVAC.isDualDuct());
 
-    EXPECT_EQ(2u,airLoopHVAC.supplyOutletNodes().size()); 
+    EXPECT_EQ(2u,airLoopHVAC.supplyOutletNodes().size());
     EXPECT_EQ(4u,airLoopHVAC.supplyComponents().size());
     EXPECT_TRUE(airLoopHVAC.supplySplitter());
     EXPECT_EQ(2u,airLoopHVAC.supplySplitterOutletNodes().size());

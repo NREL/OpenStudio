@@ -1,9 +1,0 @@
-[Desktop Entry]
-Version=1.0
-Name=ResultsViewer
-Comment=View output from EnergyPlus simulations
-Exec=${CMAKE_INSTALL_PREFIX}/bin/ResultsViewer
-Terminal=false
-Type=Application
-Icon=ResultsViewer
-Categories=Science;Engineering;

@@ -51,7 +51,7 @@ namespace model {
 namespace detail {
 
   InteriorPartitionSurface_Impl::InteriorPartitionSurface_Impl(const IdfObject& idfObject,
-                                                               Model_Impl* model, 
+                                                               Model_Impl* model,
                                                                bool keepHandle)
     : PlanarSurface_Impl(idfObject,model,keepHandle)
   {
@@ -158,7 +158,7 @@ namespace detail {
   }
 
   boost::optional<Space> InteriorPartitionSurface_Impl::space() const
-  { 
+  {
     boost::optional<Space> result;
     boost::optional<InteriorPartitionSurfaceGroup> interiorPartitionSurfaceGroup = this->interiorPartitionSurfaceGroup();
     if (interiorPartitionSurfaceGroup){
@@ -270,7 +270,7 @@ namespace detail {
 
   bool InteriorPartitionSurface_Impl::setInteriorPartitionSurfaceGroup(const InteriorPartitionSurfaceGroup& interiorPartitionSurfaceGroup)
   {
-    return setPointer(OS_InteriorPartitionSurfaceFields::InteriorPartitionSurfaceGroupName, 
+    return setPointer(OS_InteriorPartitionSurfaceFields::InteriorPartitionSurfaceGroupName,
                       interiorPartitionSurfaceGroup.handle());
   }
 
@@ -411,7 +411,7 @@ boost::optional<DaylightingDeviceShelf> InteriorPartitionSurface::daylightingDev
 
 /// @cond
 InteriorPartitionSurface::InteriorPartitionSurface(std::shared_ptr<detail::InteriorPartitionSurface_Impl> impl)
-  : PlanarSurface(impl)
+  : PlanarSurface(std::move(impl))
 {}
 /// @endcond
 

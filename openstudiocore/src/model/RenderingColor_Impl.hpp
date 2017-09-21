@@ -100,6 +100,9 @@ namespace detail {
     void resetRenderingAlphaValue();
 
     //@}
+
+    std::string colorString() const;
+
    protected:
    private:
     REGISTER_LOGGER("openstudio.model.RenderingColor");

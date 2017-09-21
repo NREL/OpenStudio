@@ -98,7 +98,7 @@ namespace detail {
 
   bool OtherEquipment_Impl::hardSize() {
     OptionalSpace space = this->space();
-    if (!space) { 
+    if (!space) {
       return false;
     }
 
@@ -406,7 +406,7 @@ double OtherEquipment::getPowerPerPerson(double floorArea, double numPeople) con
 
 /// @cond
 OtherEquipment::OtherEquipment(std::shared_ptr<detail::OtherEquipment_Impl> impl)
-  : SpaceLoadInstance(impl)
+  : SpaceLoadInstance(std::move(impl))
 {}
 /// @endcond
 

@@ -27,9 +27,11 @@
  **********************************************************************************************************************/
 
 #include "GeometryPreviewView.hpp"
+#include "OSAppBase.hpp"
+#include "OSDocument.hpp"
 
 #include "../model/Model_Impl.hpp"
-#include "../model/ThreeJS.hpp"
+#include "../model/ThreeJSForwardTranslator.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Application.hpp"
@@ -60,7 +62,7 @@ GeometryPreviewView::GeometryPreviewView(bool isIP,
 
   QVBoxLayout *layout = new QVBoxLayout;
 
-  PreviewWebView* webView = new PreviewWebView(model, this);
+  PreviewWebView* webView = new PreviewWebView(isIP, model, this);
   layout->addWidget(webView);
 
   setLayout(layout);
@@ -71,16 +73,25 @@ GeometryPreviewView::~GeometryPreviewView()
 
 }
 
-PreviewWebView::PreviewWebView(const model::Model& model, QWidget *t_parent)
+PreviewWebView::PreviewWebView(bool isIP, const model::Model& model, QWidget *t_parent)
   : QWidget(t_parent),
     m_model(model),
-    m_isIP(true),
+    m_isIP(isIP),
     m_progressBar(new QProgressBar()),
     m_refreshBtn(new QPushButton("Refresh"))
 {
+
+  openstudio::OSAppBase * app = OSAppBase::instance();
+  OS_ASSERT(app);
+  m_document = app->currentDocument();
+  OS_ASSERT(m_document);
+
+  std::shared_ptr<OSDocument> m_document;
+
   auto mainLayout = new QVBoxLayout;
   setLayout(mainLayout);
 
+  connect(m_document.get(), &OSDocument::toggleUnitsClicked, this, &PreviewWebView::onUnitSystemChange);
   connect(m_refreshBtn, &QPushButton::clicked, this, &PreviewWebView::refreshClicked);
 
   auto hLayout = new QHBoxLayout(this);
@@ -164,12 +175,17 @@ void PreviewWebView::onLoadFinished(bool ok)
   if (m_json.isEmpty()){
     std::function<void(double)> updatePercentage = std::bind(&PreviewWebView::onTranslateProgress, this, _1);
     //ThreeScene scene = modelToThreeJS(m_model.clone(true).cast<model::Model>(), true, updatePercentage); // triangulated
-    ThreeScene scene = modelToThreeJS(m_model, true, updatePercentage); // triangulated
+
+    model::ThreeJSForwardTranslator ft;
+    ThreeScene scene = ft.modelToThreeJS(m_model, true, updatePercentage); // triangulated
     std::string json = scene.toJSON(false); // no pretty print
     m_json = QString::fromStdString(json);
   } else {
     m_progressBar->setValue(90);
   }
+
+  // disable doc
+  m_document->disable();
 
   // call init and animate
   QString javascript = QString("init(") + m_json + QString(");\n animate();\n initDatGui();");
@@ -191,12 +207,14 @@ void PreviewWebView::onLoadFinished(bool ok)
 void PreviewWebView::onTranslateProgress(double percentage)
 {
   m_progressBar->setValue(10 + 0.8*percentage);
-  Application::instance().processEvents();
+  OSAppBase::instance()->processEvents(QEventLoop::ExcludeUserInputEvents, 200);
 }
 
 void PreviewWebView::onJavaScriptFinished(const QVariant &v)
 {
+  m_document->enable();
   m_progressBar->setValue(100);
+  m_progressBar->setVisible(false);
 }
 
 void PreviewWebView::onRenderProcessTerminated(QWebEnginePage::RenderProcessTerminationStatus terminationStatus, int exitCode)

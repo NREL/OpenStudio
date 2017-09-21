@@ -97,7 +97,7 @@ namespace detail {
 
     Model model = this->model();
     for (const Construction& other : model.getConcreteModelObjects<Construction>()) {
-      
+
       MaterialVector layers = other.layers();
       if (layers.size() != reverseLayers.size()){
         continue;
@@ -135,7 +135,7 @@ Construction::Construction(const Model& model)
 }
 
 Construction::Construction(const std::vector<OpaqueMaterial>& opaqueMaterials)
-  : LayeredConstruction(Construction::iddObjectType(), 
+  : LayeredConstruction(Construction::iddObjectType(),
   (opaqueMaterials.empty() ? openstudio::model::Model() : opaqueMaterials.at(0).model()))
 {
   if (opaqueMaterials.empty()){
@@ -188,7 +188,7 @@ IddObjectType Construction::iddObjectType() {
 
 /// @cond
 Construction::Construction(std::shared_ptr<detail::Construction_Impl> impl)
-  : LayeredConstruction(impl)
+  : LayeredConstruction(std::move(impl))
 {}
 /// @endcond
 

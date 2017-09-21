@@ -1,4 +1,4 @@
-  Version,8.7;
+  Version,8.8;
 
   Building,
     Building 1,              !- Name
@@ -303,7 +303,7 @@
     Thermal Zone: Story 1 Core Space Inlet Node List,  !- Zone Air Inlet Node or NodeList Name
     Thermal Zone: Story 1 Core Space Exhaust Node List,  !- Zone Air Exhaust Node or NodeList Name
     Node 8,                  !- Zone Air Node Name
-    Thermal Zone: Story 1 Core Space Return Air Node;  !- Zone Return Air Node Name
+    Thermal Zone: Story 1 Core Space Return Air Node;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Thermal Zone: Story 1 Core Space Inlet Node List,  !- Name
@@ -439,6 +439,7 @@
     OS:Curve:Biquadratic 14, !- Energy Input Ratio Function of Temperature Curve Name
     OS:Curve:Quadratic 18,   !- Energy Input Ratio Function of Flow Fraction Curve Name
     OS:Curve:Quadratic 19,   !- Part Load Fraction Correlation Curve Name
+    ,                        !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
     0.0,                     !- Nominal Time for Condensate Removal to Begin {s}
     0.0,                     !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
     0.0,                     !- Maximum Cycling Rate {cycles/hr}
@@ -657,7 +658,7 @@
     Thermal Zone: Story 1 East Perimeter Space Inlet Node List,  !- Zone Air Inlet Node or NodeList Name
     Thermal Zone: Story 1 East Perimeter Space Exhaust Node List,  !- Zone Air Exhaust Node or NodeList Name
     Node 11,                 !- Zone Air Node Name
-    Thermal Zone: Story 1 East Perimeter Space Return Air Node;  !- Zone Return Air Node Name
+    Thermal Zone: Story 1 East Perimeter Space Return Air Node;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Thermal Zone: Story 1 East Perimeter Space Inlet Node List,  !- Name
@@ -685,7 +686,6 @@
     Coil:Heating:DX:SingleSpeed,  !- Heating Coil Object Type
     PTHP 1 Spd DX Htg Coil,  !- Heating Coil Name
     0.001,                   !- Heating Convergence Tolerance {dimensionless}
-    -8,                      !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
     Coil:Cooling:DX:SingleSpeed,  !- Cooling Coil Object Type
     PTHP 1 Spd DX Clg Coil,  !- Cooling Coil Name
     0.001,                   !- Cooling Convergence Tolerance {dimensionless}
@@ -857,6 +857,7 @@
     OS:Curve:Biquadratic 10, !- Energy Input Ratio Function of Temperature Curve Name
     OS:Curve:Quadratic 12,   !- Energy Input Ratio Function of Flow Fraction Curve Name
     OS:Curve:Quadratic 13,   !- Part Load Fraction Correlation Curve Name
+    ,                        !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
     0.0,                     !- Nominal Time for Condensate Removal to Begin {s}
     0.0,                     !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
     0.0,                     !- Maximum Cycling Rate {cycles/hr}
@@ -1075,7 +1076,7 @@
     Thermal Zone: Story 1 North Perimeter Space Inlet Node List,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Node 12,                 !- Zone Air Node Name
-    Node 42;                 !- Zone Return Air Node Name
+    Node 42;                 !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Thermal Zone: Story 1 North Perimeter Space Inlet Node List,  !- Name
@@ -1293,7 +1294,7 @@
     Thermal Zone: Story 1 South Perimeter Space Inlet Node List,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Node 13,                 !- Zone Air Node Name
-    Node 32;                 !- Zone Return Air Node Name
+    Node 32;                 !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Thermal Zone: Story 1 South Perimeter Space Inlet Node List,  !- Name
@@ -1512,7 +1513,7 @@
     Thermal Zone: Story 1 West Perimeter Space Inlet Node List,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Node 9,                  !- Zone Air Node Name
-    Node 34;                 !- Zone Return Air Node Name
+    Node 34;                 !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Thermal Zone: Story 1 West Perimeter Space Inlet Node List,  !- Name
@@ -1702,7 +1703,7 @@
     Thermal Zone: Story 2 Core Space Inlet Node List,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Node 14,                 !- Zone Air Node Name
-    Node 78;                 !- Zone Return Air Node Name
+    Node 78;                 !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Thermal Zone: Story 2 Core Space Inlet Node List,  !- Name
@@ -1959,7 +1960,7 @@
     Thermal Zone: Story 2 East Perimeter Space Inlet Node List,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Node 6,                  !- Zone Air Node Name
-    Node 82;                 !- Zone Return Air Node Name
+    Node 82;                 !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Thermal Zone: Story 2 East Perimeter Space Inlet Node List,  !- Name
@@ -2203,7 +2204,7 @@
     Thermal Zone: Story 2 North Perimeter Space Inlet Node List,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Node 15,                 !- Zone Air Node Name
-    Node 52;                 !- Zone Return Air Node Name
+    Node 52;                 !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Thermal Zone: Story 2 North Perimeter Space Inlet Node List,  !- Name
@@ -2419,7 +2420,7 @@
     Thermal Zone: Story 2 South Perimeter Space Inlet Node List,  !- Zone Air Inlet Node or NodeList Name
     Thermal Zone: Story 2 South Perimeter Space Exhaust Node List,  !- Zone Air Exhaust Node or NodeList Name
     Node 4,                  !- Zone Air Node Name
-    Node 95;                 !- Zone Return Air Node Name
+    Node 95;                 !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Thermal Zone: Story 2 South Perimeter Space Inlet Node List,  !- Name
@@ -2686,7 +2687,7 @@
     Thermal Zone: Story 2 West Perimeter Space Inlet Node List,  !- Zone Air Inlet Node or NodeList Name
     Thermal Zone: Story 2 West Perimeter Space Exhaust Node List,  !- Zone Air Exhaust Node or NodeList Name
     Node 5,                  !- Zone Air Node Name
-    Node 98;                 !- Zone Return Air Node Name
+    Node 98;                 !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Thermal Zone: Story 2 West Perimeter Space Inlet Node List,  !- Name
@@ -2924,7 +2925,7 @@
     Thermal Zone: Story 3 Core Space Inlet Node List,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Node 7,                  !- Zone Air Node Name
-    Node 162;                !- Zone Return Air Node Name
+    Node 162;                !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Thermal Zone: Story 3 Core Space Inlet Node List,  !- Name
@@ -3184,7 +3185,7 @@
     Thermal Zone: Story 3 East Perimeter Space Inlet Node List,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Node 1,                  !- Zone Air Node Name
-    Node 166;                !- Zone Return Air Node Name
+    Node 166;                !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Thermal Zone: Story 3 East Perimeter Space Inlet Node List,  !- Name
@@ -3436,7 +3437,7 @@
     Thermal Zone: Story 3 North Perimeter Space Inlet Node List,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Node 2,                  !- Zone Air Node Name
-    Node 171;                !- Zone Return Air Node Name
+    Node 171;                !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Thermal Zone: Story 3 North Perimeter Space Inlet Node List,  !- Name
@@ -3680,7 +3681,7 @@
     Thermal Zone: Story 3 South Perimeter Space Inlet Node List,  !- Zone Air Inlet Node or NodeList Name
     Thermal Zone: Story 3 South Perimeter Space Exhaust Node List,  !- Zone Air Exhaust Node or NodeList Name
     Node 10,                 !- Zone Air Node Name
-    Node 196;                !- Zone Return Air Node Name
+    Node 196;                !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Thermal Zone: Story 3 South Perimeter Space Inlet Node List,  !- Name
@@ -3947,7 +3948,7 @@
     Thermal Zone: Story 3 West Perimeter Space Inlet Node List,  !- Zone Air Inlet Node or NodeList Name
     Thermal Zone: Story 3 West Perimeter Space Exhaust Node List,  !- Zone Air Exhaust Node or NodeList Name
     Node 3,                  !- Zone Air Node Name
-    Node 199;                !- Zone Return Air Node Name
+    Node 199;                !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Thermal Zone: Story 3 West Perimeter Space Inlet Node List,  !- Name
@@ -6306,6 +6307,7 @@
     Curve Biquadratic 2,     !- Energy Input Ratio Function of Temperature Curve Name
     Curve Quadratic 2,       !- Energy Input Ratio Function of Flow Fraction Curve Name
     Curve Quadratic 3,       !- Part Load Fraction Correlation Curve Name
+    ,                        !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
     0.0,                     !- Nominal Time for Condensate Removal to Begin {s}
     0.0,                     !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
     0.0,                     !- Maximum Cycling Rate {cycles/hr}
@@ -6575,6 +6577,7 @@
     Curve Biquadratic 10,    !- Low Speed Energy Input Ratio Function of Temperature Curve Name
     ,                        !- Condenser Air Inlet Node Name
     AirCooled,               !- Condenser Type
+    ,                        !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
     0,                       !- High Speed Evaporative Condenser Effectiveness {dimensionless}
     ,                        !- High Speed Evaporative Condenser Air Flow Rate {m3/s}
     ,                        !- High Speed Evaporative Condenser Pump Rated Power Consumption {W}
@@ -6939,6 +6942,7 @@
     Curve Biquadratic 6,     !- Low Speed Energy Input Ratio Function of Temperature Curve Name
     ,                        !- Condenser Air Inlet Node Name
     AirCooled,               !- Condenser Type
+    ,                        !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
     0,                       !- High Speed Evaporative Condenser Effectiveness {dimensionless}
     ,                        !- High Speed Evaporative Condenser Air Flow Rate {m3/s}
     ,                        !- High Speed Evaporative Condenser Pump Rated Power Consumption {W}
@@ -8270,10 +8274,10 @@
     ,                        !- Nominal Capacity {W}
     0,                       !- Free Convection Capacity {W}
     0.1,                     !- Free Convection Nominal Capacity Sizing Factor
-    ,                        !- Design Inlet Air Dry-Bulb Temperature {C}
-    ,                        !- Design Inlet Air Wet-Bulb Temperature {C}
-    ,                        !- Design Approach Temperature {deltaC}
-    ,                        !- Design Range Temperature {deltaC}
+    35.0,                    !- Design Inlet Air Dry-Bulb Temperature {C}
+    25.6,                    !- Design Inlet Air Wet-Bulb Temperature {C}
+    Autosize,                !- Design Approach Temperature {deltaC}
+    Autosize,                !- Design Range Temperature {deltaC}
     0,                       !- Basin Heater Capacity {W/K}
     2,                       !- Basin Heater Setpoint Temperature {C}
     ,                        !- Basin Heater Operating Schedule Name
@@ -9353,7 +9357,7 @@
     0.0;                     !- Monthly Charge or Variable Name
 
   UtilityCost:Charge:Simple,
-    Secondary GeneralSummerOnPeakEnergyCharge,  !- Name
+    Secondary GeneralSummerOnPeakEnergyCharge,  !- Utility Cost Charge Simple Name
     Secondary General,       !- Tariff Name
     peakEnergy,              !- Source Variable
     summer,                  !- Season
@@ -9361,7 +9365,7 @@
     0.03849635652;           !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    Secondary GeneralSummerOffPeakEnergyCharge,  !- Name
+    Secondary GeneralSummerOffPeakEnergyCharge,  !- Utility Cost Charge Simple Name
     Secondary General,       !- Tariff Name
     offPeakEnergy,           !- Source Variable
     summer,                  !- Season
@@ -9369,7 +9373,7 @@
     0.03849635652;           !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    Secondary GeneralWinterOnPeakEnergyCharge,  !- Name
+    Secondary GeneralWinterOnPeakEnergyCharge,  !- Utility Cost Charge Simple Name
     Secondary General,       !- Tariff Name
     peakEnergy,              !- Source Variable
     winter,                  !- Season
@@ -9377,7 +9381,7 @@
     0.03995495652;           !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    Secondary GeneralWinterOffPeakEnergyCharge,  !- Name
+    Secondary GeneralWinterOffPeakEnergyCharge,  !- Utility Cost Charge Simple Name
     Secondary General,       !- Tariff Name
     offPeakEnergy,           !- Source Variable
     winter,                  !- Season
@@ -9385,7 +9389,7 @@
     0.03995495652;           !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    Secondary GeneralSummerDemandCharge,  !- Name
+    Secondary GeneralSummerDemandCharge,  !- Utility Cost Charge Simple Name
     Secondary General,       !- Tariff Name
     totalDemand,             !- Source Variable
     summer,                  !- Season
@@ -9393,7 +9397,7 @@
     21.6341592;              !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    Secondary GeneralWinterDemandCharge,  !- Name
+    Secondary GeneralWinterDemandCharge,  !- Utility Cost Charge Simple Name
     Secondary General,       !- Tariff Name
     totalDemand,             !- Source Variable
     winter,                  !- Season
@@ -9413,7 +9417,7 @@
     0.0;                     !- Monthly Charge or Variable Name
 
   UtilityCost:Charge:Simple,
-    FlatEnergyCharge-Gas,    !- Name
+    FlatEnergyCharge-Gas,    !- Utility Cost Charge Simple Name
     Large CG,                !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -9421,7 +9425,7 @@
     4.9217383587997245;      !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    FlatDemandCharge-Gas,    !- Name
+    FlatDemandCharge-Gas,    !- Utility Cost Charge Simple Name
     Large CG,                !- Tariff Name
     totalDemand,             !- Source Variable
     Annual,                  !- Season
@@ -9441,7 +9445,7 @@
     0.0;                     !- Monthly Charge or Variable Name
 
   UtilityCost:Charge:Simple,
-    FlatEnergyCharge-DistrictCooling,  !- Name
+    FlatEnergyCharge-DistrictCooling,  !- Utility Cost Charge Simple Name
     Generic District Cooling,!- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -9449,7 +9453,7 @@
     6.0;                     !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    FlatDemandCharge-DistrictCooling,  !- Name
+    FlatDemandCharge-DistrictCooling,  !- Utility Cost Charge Simple Name
     Generic District Cooling,!- Tariff Name
     totalDemand,             !- Source Variable
     Annual,                  !- Season
@@ -9469,7 +9473,7 @@
     0.0;                     !- Monthly Charge or Variable Name
 
   UtilityCost:Charge:Simple,
-    FlatEnergyCharge-DistrictHeating,  !- Name
+    FlatEnergyCharge-DistrictHeating,  !- Utility Cost Charge Simple Name
     Generic District Heating,!- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -9477,7 +9481,7 @@
     6.0;                     !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    FlatDemandCharge-DistrictHeating,  !- Name
+    FlatDemandCharge-DistrictHeating,  !- Utility Cost Charge Simple Name
     Generic District Heating,!- Tariff Name
     totalDemand,             !- Source Variable
     Annual,                  !- Season
@@ -9497,7 +9501,7 @@
     0.0;                     !- Monthly Charge or Variable Name
 
   UtilityCost:Charge:Simple,
-    FlatEnergyCharge-Water,  !- Name
+    FlatEnergyCharge-Water,  !- Utility Cost Charge Simple Name
     Generic Water,           !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -9517,7 +9521,7 @@
     0.0;                     !- Monthly Charge or Variable Name
 
   UtilityCost:Charge:Simple,
-    FlatEnergyCharge-Fuel Oil 1,  !- Name
+    FlatEnergyCharge-Fuel Oil 1,  !- Utility Cost Charge Simple Name
     Generic Fuel Oil 1,      !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -9540,7 +9544,7 @@
     None;                    !- Depreciation Method
 
   LifeCycleCost:UsePriceEscalation,
-    U.S. Avg  Commercial-Electricity,  !- Name
+    U.S. Avg  Commercial-Electricity,  !- LCC Price Escalation Name
     Electricity,             !- Resource
     2011,                    !- Escalation Start Year
     January,                 !- Escalation Start Month
@@ -9576,7 +9580,7 @@
     0.9773;                  !- Year 30 Escalation
 
   LifeCycleCost:UsePriceEscalation,
-    U.S. Avg  Commercial-Distillate Oil,  !- Name
+    U.S. Avg  Commercial-Distillate Oil,  !- LCC Price Escalation Name
     FuelOil#1,               !- Resource
     2011,                    !- Escalation Start Year
     January,                 !- Escalation Start Month
@@ -9612,7 +9616,7 @@
     1.3743;                  !- Year 30 Escalation
 
   LifeCycleCost:UsePriceEscalation,
-    U.S. Avg  Commercial-Residual Oil,  !- Name
+    U.S. Avg  Commercial-Residual Oil,  !- LCC Price Escalation Name
     FuelOil#2,               !- Resource
     2011,                    !- Escalation Start Year
     January,                 !- Escalation Start Month
@@ -9648,7 +9652,7 @@
     1.2638;                  !- Year 30 Escalation
 
   LifeCycleCost:UsePriceEscalation,
-    U.S. Avg  Commercial-Natural gas,  !- Name
+    U.S. Avg  Commercial-Natural gas,  !- LCC Price Escalation Name
     NaturalGas,              !- Resource
     2011,                    !- Escalation Start Year
     January,                 !- Escalation Start Month
@@ -9684,7 +9688,7 @@
     1.3115;                  !- Year 30 Escalation
 
   LifeCycleCost:UsePriceEscalation,
-    U.S. Avg  Commercial-Coal,  !- Name
+    U.S. Avg  Commercial-Coal,  !- LCC Price Escalation Name
     Coal,                    !- Resource
     2011,                    !- Escalation Start Year
     January,                 !- Escalation Start Month

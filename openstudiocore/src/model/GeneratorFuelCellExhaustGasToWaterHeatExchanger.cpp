@@ -505,7 +505,7 @@ GeneratorFuelCellExhaustGasToWaterHeatExchanger::GeneratorFuelCellExhaustGasToWa
   //setHeatRecoveryWaterInletNode(waterInletNode);
   //note: This field contains the name of the node that connects the heat exchanger s outlet to the plant loop.
   //setHeatRecoveryWaterOutletNode(waterOutletNode);
-  //note: This field is used to determine which node will receive the exhaust air stream leaving the FC. This node will usually be outside and not be referenced elsewhere. 
+  //note: This field is used to determine which node will receive the exhaust air stream leaving the FC. This node will usually be outside and not be referenced elsewhere.
   //      However, if the exhaust stream is used in a heat recovery ventilator (as described in section 11 of the Annex 42 specification) then the node would be reference in the heat recovery ventilator object.
   setExhaustOutletAirNode(exhaustOutletAirNode);
   setHeatRecoveryWaterMaximumFlowRate(0.0004);
@@ -796,7 +796,7 @@ GeneratorFuelCell GeneratorFuelCellExhaustGasToWaterHeatExchanger::fuelCell() co
 
 /// @cond
 GeneratorFuelCellExhaustGasToWaterHeatExchanger::GeneratorFuelCellExhaustGasToWaterHeatExchanger(std::shared_ptr<detail::GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

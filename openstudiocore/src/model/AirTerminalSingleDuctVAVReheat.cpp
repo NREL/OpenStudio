@@ -70,13 +70,13 @@ namespace detail{
   }
 
   AirTerminalSingleDuctVAVReheat_Impl::AirTerminalSingleDuctVAVReheat_Impl(
-      const AirTerminalSingleDuctVAVReheat_Impl& other, 
-      Model_Impl* model, 
-      bool keepHandle) 
+      const AirTerminalSingleDuctVAVReheat_Impl& other,
+      Model_Impl* model,
+      bool keepHandle)
     : StraightComponent_Impl(other,model,keepHandle)
   {}
 
-  // Get all output variable names that could be associated with this object. 
+  // Get all output variable names that could be associated with this object.
   const std::vector<std::string>& AirTerminalSingleDuctVAVReheat_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
@@ -129,12 +129,12 @@ namespace detail{
     return result;
   }
 
-  unsigned AirTerminalSingleDuctVAVReheat_Impl::inletPort() 
+  unsigned AirTerminalSingleDuctVAVReheat_Impl::inletPort()
   {
     return OS_AirTerminal_SingleDuct_VAV_ReheatFields::AirInletNodeName;
   }
 
-  unsigned AirTerminalSingleDuctVAVReheat_Impl::outletPort() 
+  unsigned AirTerminalSingleDuctVAVReheat_Impl::outletPort()
   {
     return OS_AirTerminal_SingleDuct_VAV_ReheatFields::AirOutletNodeName;
   }
@@ -169,7 +169,7 @@ namespace detail{
                               sourcePort.get(),
                               inletNode,
                               inletNode.inletPort() );
-              
+
               _model.connect( inletNode,
                               inletNode.outletPort(),
                               this->getObject<ModelObject>(),
@@ -187,7 +187,7 @@ namespace detail{
                 thermalZone->addEquipment(mo);
               }
 
-              return true; 
+              return true;
             }
           }
         }
@@ -206,7 +206,7 @@ namespace detail{
 
     boost::optional<ModelObject> sourceModelObject = this->inletModelObject();
     boost::optional<unsigned> sourcePort = this->connectedObjectPort(this->inletPort());
-    
+
     boost::optional<ModelObject> targetModelObject = this->outletModelObject();
     boost::optional<unsigned> targetPort = this->connectedObjectPort(this->outletPort());
 
@@ -283,7 +283,7 @@ namespace detail{
     HVACComponent coil = this->reheatCoil();
 
     HVACComponent coilClone = coil.clone(model).cast<HVACComponent>();
-    
+
     modelObjectClone.setReheatCoil(coilClone);
 
     return modelObjectClone;
@@ -489,7 +489,7 @@ namespace detail{
     return this->getDouble(OS_AirTerminal_SingleDuct_VAV_ReheatFields::MaximumFlowFractionDuringReheat);
   }
 
-  void AirTerminalSingleDuctVAVReheat_Impl::setMaximumFlowFractionDuringReheat( double value )  
+  void AirTerminalSingleDuctVAVReheat_Impl::setMaximumFlowFractionDuringReheat( double value )
   {
     this->setDouble(OS_AirTerminal_SingleDuct_VAV_ReheatFields::MaximumFlowFractionDuringReheat,value);
   }
@@ -574,7 +574,7 @@ namespace detail{
     if( result )
     {
       result = this->setPointer(OS_AirTerminal_SingleDuct_VAV_ReheatFields::ReheatCoilName,coil.handle());
-    } 
+    }
 
     return result;
   }
@@ -633,7 +633,7 @@ namespace detail{
   {
     return getBooleanFieldValue(OS_AirTerminal_SingleDuct_VAV_ReheatFields::ControlForOutdoorAir);
   }
-  
+
   void AirTerminalSingleDuctVAVReheat_Impl::setControlForOutdoorAir(bool controlForOutdoorAir)
   {
     setBooleanFieldValue(OS_AirTerminal_SingleDuct_VAV_ReheatFields::ControlForOutdoorAir,controlForOutdoorAir);
@@ -641,10 +641,10 @@ namespace detail{
 
 } // detail
 
-AirTerminalSingleDuctVAVReheat::AirTerminalSingleDuctVAVReheat( const Model& model, 
+AirTerminalSingleDuctVAVReheat::AirTerminalSingleDuctVAVReheat( const Model& model,
                                                                 Schedule & availabilitySchedule,
                                                                 HVACComponent & coil )
-  : StraightComponent(AirTerminalSingleDuctVAVReheat::iddObjectType(),model) 
+  : StraightComponent(AirTerminalSingleDuctVAVReheat::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>());
 
@@ -695,7 +695,7 @@ bool AirTerminalSingleDuctVAVReheat::setAvailabilitySchedule(Schedule& schedule)
 }
 
 AirTerminalSingleDuctVAVReheat::AirTerminalSingleDuctVAVReheat(std::shared_ptr<detail::AirTerminalSingleDuctVAVReheat_Impl> p)
-  : StraightComponent(p)
+  : StraightComponent(std::move(p))
 {}
 
 IddObjectType AirTerminalSingleDuctVAVReheat::iddObjectType() {
@@ -846,7 +846,7 @@ boost::optional<double> AirTerminalSingleDuctVAVReheat::maximumFlowFractionDurin
   return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->maximumFlowFractionDuringReheat();
 }
 
-void AirTerminalSingleDuctVAVReheat::setMaximumFlowFractionDuringReheat( double value )  
+void AirTerminalSingleDuctVAVReheat::setMaximumFlowFractionDuringReheat( double value )
 {
   getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->setMaximumFlowFractionDuringReheat(value);
 }

@@ -1297,7 +1297,7 @@ std::vector<std::vector<Point3d> > Building::generateSkylightPattern(double skyl
 
 /// @cond
 Building::Building(std::shared_ptr<detail::Building_Impl> impl)
-  : ParentObject(impl)
+  : ParentObject(std::move(impl))
 {}
 
 Building::Building(Model& model)

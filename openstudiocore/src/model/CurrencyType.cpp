@@ -122,7 +122,7 @@ CurrencyType::CurrencyType(const Model& model)
 
 // constructor
 CurrencyType::CurrencyType(std::shared_ptr<detail::CurrencyType_Impl> impl)
-  : ParentObject(impl)
+  : ParentObject(std::move(impl))
 {}
 
 //int CurrencyType::someInt() const

@@ -256,7 +256,7 @@ void ModelObjectList::removeAllModelObjects() {
 
 /// @cond
 ModelObjectList::ModelObjectList(std::shared_ptr<detail::ModelObjectList_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

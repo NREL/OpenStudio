@@ -45,11 +45,6 @@
 #include <string>
 #include <vector>
 
-// forward declaration
-namespace resultsviewer{
-  class TableView;
-}
-
 namespace openstudio{
 
   // forward declarations

@@ -181,7 +181,7 @@ DaylightingDeviceShelf::DaylightingDeviceShelf(const SubSurface& subSurface)
   }
 
   bool test = setPointer(OS_DaylightingDevice_ShelfFields::WindowName, subSurface.handle());
-  OS_ASSERT(test); 
+  OS_ASSERT(test);
 }
 
 IddObjectType DaylightingDeviceShelf::iddObjectType() {
@@ -224,7 +224,7 @@ SubSurface DaylightingDeviceShelf::subSurface() const
 
 /// @cond
 DaylightingDeviceShelf::DaylightingDeviceShelf(std::shared_ptr<detail::DaylightingDeviceShelf_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

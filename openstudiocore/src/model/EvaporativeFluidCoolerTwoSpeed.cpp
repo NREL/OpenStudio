@@ -1159,7 +1159,7 @@ void EvaporativeFluidCoolerTwoSpeed::resetBlowdownMakeupWaterUsageSchedule() {
 
 /// @cond
 EvaporativeFluidCoolerTwoSpeed::EvaporativeFluidCoolerTwoSpeed(std::shared_ptr<detail::EvaporativeFluidCoolerTwoSpeed_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

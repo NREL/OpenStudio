@@ -5,7 +5,7 @@
 !BESTEST-EX Case L200EX-PH BASE-CASE, developed by NREL
 !Use EnergyPlus IDFEditor to view inputs in IP units
 
-  Version,8.7;
+  Version,8.8;
 
   SimulationControl,
     No,                      !- Do Zone Sizing Calculation
@@ -1300,6 +1300,7 @@
     ,                        !- Availability Schedule Name
     ZONE ONE Supply Inlet,   !- Zone Supply Air Node Name
     ,                        !- Zone Exhaust Air Node Name
+    ,                        !- System Inlet Air Node Name
     50,                      !- Maximum Heating Supply Air Temperature {C}
     10,                      !- Minimum Cooling Supply Air Temperature {C}
     0.015,                   !- Maximum Heating Supply Air Humidity Ratio {kgWater/kgDryAir}
@@ -1336,7 +1337,7 @@
     ZONE ONE Supply Inlet,   !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZONE ONE Zone Air Node,  !- Zone Air Node Name
-    ZONE ONE Return Outlet;  !- Zone Return Air Node Name
+    ZONE ONE Return Outlet;  !- Zone Return Air Node or NodeList Name
 
 !===========OUTPUT===========
 

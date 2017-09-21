@@ -1684,7 +1684,7 @@ AirLoopHVAC::AirLoopHVAC(Model& model, bool dualDuct)
 }
 
 AirLoopHVAC::AirLoopHVAC(std::shared_ptr<detail::AirLoopHVAC_Impl> impl)
-  : Loop(impl)
+  : Loop(std::move(impl))
 {}
 
 Node AirLoopHVAC::supplyInletNode() const

@@ -98,12 +98,12 @@ namespace detail {
     bool result = setString(OS_Meter_CustomDecrementFields::FuelType, "");
     OS_ASSERT(result);
   }
-  
+
   // Source Meter Name
   std::string MeterCustomDecrement_Impl::sourceMeterName() const {
     return getString(OS_Meter_CustomDecrementFields::SourceMeterName,true).get();
   }
-  
+
   bool MeterCustomDecrement_Impl::setSourceMeterName(const std::string& sourceMeterName) {
     return setString(OS_Meter_CustomDecrementFields::SourceMeterName, sourceMeterName);
   }
@@ -224,7 +224,7 @@ MeterCustomDecrement::MeterCustomDecrement(const Model& model, const std::string
   : ModelObject(MeterCustomDecrement::iddObjectType(), model)
 {
   OS_ASSERT(getImpl<detail::MeterCustomDecrement_Impl>());
-  
+
   setSourceMeterName(sourceMeterName);
 
   // Default the fuelType to Electricity (maybe "Generic"?)
@@ -309,7 +309,7 @@ bool MeterCustomDecrement::setOutputVariableorMeterName(unsigned index, const st
 
 /// @cond
 MeterCustomDecrement::MeterCustomDecrement(std::shared_ptr<detail::MeterCustomDecrement_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

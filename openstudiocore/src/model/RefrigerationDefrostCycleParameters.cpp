@@ -93,7 +93,7 @@ namespace detail {
   //   boost::optional<int> minute = getInt(OS_Refrigeration_DefrostCycleParametersFields::Defrost1MinuteStartTime,true);
   //   if ( hour && minute ) {
   //     return Time(0, *hour, *minute);
-  //   } 
+  //   }
   //   return boost::none;
   // }
 
@@ -102,7 +102,7 @@ namespace detail {
     boost::optional<int> minute = getInt(OS_Refrigeration_DefrostCycleParametersFields::Defrost1MinuteStartTime,true);
     if ( hour && minute ) {
       return Time(0, *hour, *minute);
-    } 
+    }
     return boost::none;
   }
 
@@ -111,7 +111,7 @@ namespace detail {
     boost::optional<int> minute = getInt(OS_Refrigeration_DefrostCycleParametersFields::Defrost2MinuteStartTime,true);
     if ( hour && minute ) {
       return Time(0, *hour, *minute);
-    } 
+    }
     return boost::none;
   }
 
@@ -120,7 +120,7 @@ namespace detail {
     boost::optional<int> minute = getInt(OS_Refrigeration_DefrostCycleParametersFields::Defrost3MinuteStartTime,true);
     if ( hour && minute ) {
       return Time(0, *hour, *minute);
-    } 
+    }
     return boost::none;
   }
 
@@ -129,7 +129,7 @@ namespace detail {
     boost::optional<int> minute = getInt(OS_Refrigeration_DefrostCycleParametersFields::Defrost4MinuteStartTime,true);
     if ( hour && minute ) {
       return Time(0, *hour, *minute);
-    } 
+    }
     return boost::none;
   }
 
@@ -138,7 +138,7 @@ namespace detail {
     boost::optional<int> minute = getInt(OS_Refrigeration_DefrostCycleParametersFields::Defrost5MinuteStartTime,true);
     if ( hour && minute ) {
       return Time(0, *hour, *minute);
-    } 
+    }
     return boost::none;
   }
 
@@ -147,7 +147,7 @@ namespace detail {
     boost::optional<int> minute = getInt(OS_Refrigeration_DefrostCycleParametersFields::Defrost6MinuteStartTime,true);
     if ( hour && minute ) {
       return Time(0, *hour, *minute);
-    } 
+    }
     return boost::none;
   }
 
@@ -156,7 +156,7 @@ namespace detail {
     boost::optional<int> minute = getInt(OS_Refrigeration_DefrostCycleParametersFields::Defrost7MinuteStartTime,true);
     if ( hour && minute ) {
       return Time(0, *hour, *minute);
-    } 
+    }
     return boost::none;
   }
 
@@ -165,7 +165,7 @@ namespace detail {
     boost::optional<int> minute = getInt(OS_Refrigeration_DefrostCycleParametersFields::Defrost8MinuteStartTime,true);
     if ( hour && minute ) {
       return Time(0, *hour, *minute);
-    } 
+    }
     return boost::none;
   }
 
@@ -345,7 +345,7 @@ IddObjectType RefrigerationDefrostCycleParameters::iddObjectType() {
 
 /// @cond
 RefrigerationDefrostCycleParameters::RefrigerationDefrostCycleParameters(std::shared_ptr<detail::RefrigerationDefrostCycleParameters_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

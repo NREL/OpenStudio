@@ -129,7 +129,7 @@ bool EnergyManagementSystemConstructionIndexVariable::setConstructionObject(cons
 
 /// @cond
 EnergyManagementSystemConstructionIndexVariable::EnergyManagementSystemConstructionIndexVariable(std::shared_ptr<detail::EnergyManagementSystemConstructionIndexVariable_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

@@ -188,7 +188,7 @@ void SetpointManagerSingleZoneHumidityMaximum::resetControlZone() {
 
 /// @cond
 SetpointManagerSingleZoneHumidityMaximum::SetpointManagerSingleZoneHumidityMaximum(std::shared_ptr<detail::SetpointManagerSingleZoneHumidityMaximum_Impl> impl)
-  : SetpointManager(impl)
+  : SetpointManager(std::move(impl))
 {}
 /// @endcond
 

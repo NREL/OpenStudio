@@ -312,7 +312,7 @@ IddObjectType ScheduleWeek::iddObjectType() {
 
 /// @cond
 ScheduleWeek::ScheduleWeek(std::shared_ptr<detail::ScheduleWeek_Impl> impl)
-  : ResourceObject(impl)
+  : ResourceObject(std::move(impl))
 {}
 /// @endcond
 

@@ -215,7 +215,7 @@ namespace detail {
 
   bool FanVariableVolume_Impl::isMotorEfficiencyDefaulted() const {
     return isEmpty(OS_Fan_VariableVolumeFields::MotorEfficiency);
-  }  
+  }
 
   double FanVariableVolume_Impl::motorInAirstreamFraction() const {
     boost::optional<double> value = getDouble(OS_Fan_VariableVolumeFields::MotorInAirstreamFraction,true);
@@ -666,7 +666,7 @@ namespace detail {
           fanCount += subsetCastVector<FanVariableVolume>(oaSystem->components()).size();
         }
 
-        if( StraightComponent_Impl::addToNode(node) ) 
+        if( StraightComponent_Impl::addToNode(node) )
         {
           SetpointManagerMixedAir::updateFanInletOutletNodes(airLoop.get());
           return true;
@@ -1219,7 +1219,7 @@ void FanVariableVolume::resetEndUseSubcategory() {
 
 /// @cond
 FanVariableVolume::FanVariableVolume(std::shared_ptr<detail::FanVariableVolume_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

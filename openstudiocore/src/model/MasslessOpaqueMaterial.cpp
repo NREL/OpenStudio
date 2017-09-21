@@ -647,7 +647,7 @@ bool MasslessOpaqueMaterial::setSpecificHeat(const Quantity& value) {
 
 /// @cond
 MasslessOpaqueMaterial::MasslessOpaqueMaterial(std::shared_ptr<detail::MasslessOpaqueMaterial_Impl> impl)
-  : OpaqueMaterial(impl)
+  : OpaqueMaterial(std::move(impl))
 {}
 /// @endcond
 

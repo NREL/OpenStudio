@@ -9,9 +9,11 @@
 !    8.5;                    !- Version Identifier
 !  Version,
 !    8.6;                    !- Version Identifier
-
 !  Version,
 !    8.7;                    !- Version Identifier
+
+!  Version,
+!    8.8;                    !- Version Identifier
 
   FluidProperties:Name,
     R744,                    !- Fluid Name
@@ -36,7 +38,7 @@
     30.9,30.978;
 
   FluidProperties:Saturated,
-    R744,                    !- Name
+    R744,                    !- Fluid Name
     Pressure,                !- Fluid Property Type
     FluidGas,                !- Fluid Phase
     R744SaturatedTemperatures,  !- Temperature Values Name
@@ -50,7 +52,7 @@
     7.3640E+6,7.3773E+6;
 
   FluidProperties:Saturated,
-    R744,                    !- Name
+    R744,                    !- Fluid Name
     Enthalpy,                !- Fluid Property Type
     Fluid,                   !- Fluid Phase
     R744SaturatedTemperatures,  !- Temperature Values Name
@@ -64,7 +66,7 @@
     3.2032E+5,3.3225E+5;
 
   FluidProperties:Saturated,
-    R744,                    !- Name
+    R744,                    !- Fluid Name
     Enthalpy,                !- Fluid Property Type
     FluidGas,                !- Fluid Phase
     R744SaturatedTemperatures,  !- Temperature Values Name
@@ -78,7 +80,7 @@
     3.4541E+5,3.3225E+5;
 
   FluidProperties:Saturated,
-    R744,                    !- Name
+    R744,                    !- Fluid Name
     Density,                 !- Fluid Property Type
     Fluid,                   !- Fluid Phase
     R744SaturatedTemperatures,  !- Temperature Values Name
@@ -92,7 +94,7 @@
     5.2118E+2,4.6760E+2;
 
   FluidProperties:Saturated,
-    R744,                    !- Name
+    R744,                    !- Fluid Name
     Density,                 !- Fluid Property Type
     FluidGas,                !- Fluid Phase
     R744SaturatedTemperatures,  !- Temperature Values Name
@@ -106,7 +108,7 @@
     4.1579E+2,4.6760E+2;
 
   FluidProperties:Saturated,
-    R744,                    !- Name
+    R744,                    !- Fluid Name
     SpecificHeat,            !- Fluid Property Type
     Fluid,                   !- Fluid Phase
     R744SaturatedTemperatures,  !- Temperature Values Name
@@ -120,7 +122,7 @@
     6.8973E+5,1.0207E+14;
 
   FluidProperties:Saturated,
-    R744,                    !- Name
+    R744,                    !- Fluid Name
     SpecificHeat,            !- Fluid Property Type
     FluidGas,                !- Fluid Phase
     R744SaturatedTemperatures,  !- Temperature Values Name

@@ -331,7 +331,7 @@ bool PipeIndoor::setPipeLength(double pipeLength) {
 
 /// @cond
 PipeIndoor::PipeIndoor(std::shared_ptr<detail::PipeIndoor_Impl> impl)
-  :  StraightComponent(impl)
+  :  StraightComponent(std::move(impl))
 {}
 /// @endcond
 

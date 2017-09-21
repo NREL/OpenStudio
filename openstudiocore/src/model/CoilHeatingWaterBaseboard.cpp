@@ -94,7 +94,7 @@ namespace detail {
   boost::optional<ZoneHVACComponent> CoilHeatingWaterBaseboard_Impl::containingZoneHVACComponent() const
   {
     // this coil can only be found in a ZoneHVACBaseboardConvectiveWater
-    // check all ZoneHVACBaseboardConvectiveWaters in the model, seeing if this coil 
+    // check all ZoneHVACBaseboardConvectiveWaters in the model, seeing if this coil
     // is inside of one of them.  Return the one it is inside of
 
     // declare a vector to hold all of the zoneHVACBaseboardConvectiveWater
@@ -113,7 +113,7 @@ namespace detail {
       }
     }
 
-    // if the coil isn't inside any zonehvacbaseboards (which currently should never happen), return nothing  
+    // if the coil isn't inside any zonehvacbaseboards (which currently should never happen), return nothing
     return boost::none;
   }
 
@@ -287,7 +287,7 @@ namespace detail {
     return false;
   }
 
- 
+
 } // detail
 
 CoilHeatingWaterBaseboard::CoilHeatingWaterBaseboard(const Model& model)
@@ -424,7 +424,7 @@ void CoilHeatingWaterBaseboard::resetConvergenceTolerance() {
 }
 
 CoilHeatingWaterBaseboard::CoilHeatingWaterBaseboard(std::shared_ptr<detail::CoilHeatingWaterBaseboard_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

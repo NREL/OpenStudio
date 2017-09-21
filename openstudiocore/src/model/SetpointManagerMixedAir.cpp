@@ -51,8 +51,8 @@ namespace model {
 
 namespace detail{
 
-SetpointManagerMixedAir_Impl::SetpointManagerMixedAir_Impl(const IdfObject& idfObject, 
-                                                           Model_Impl* model, 
+SetpointManagerMixedAir_Impl::SetpointManagerMixedAir_Impl(const IdfObject& idfObject,
+                                                           Model_Impl* model,
                                                            bool keepHandle)
   : SetpointManager_Impl(idfObject, model, keepHandle)
 {
@@ -67,7 +67,7 @@ SetpointManagerMixedAir_Impl::SetpointManagerMixedAir_Impl(
 }
 
 SetpointManagerMixedAir_Impl::SetpointManagerMixedAir_Impl(
-    const SetpointManagerMixedAir_Impl& other, 
+    const SetpointManagerMixedAir_Impl& other,
     Model_Impl* model,
     bool keepHandles)
   : SetpointManager_Impl(other,model,keepHandles)
@@ -223,7 +223,7 @@ SetpointManagerMixedAir::SetpointManagerMixedAir(const Model& model)
 
 SetpointManagerMixedAir::SetpointManagerMixedAir(
     std::shared_ptr<detail::SetpointManagerMixedAir_Impl> p)
-  : SetpointManager(p)
+  : SetpointManager(std::move(p))
 {}
 
 IddObjectType SetpointManagerMixedAir::iddObjectType() {
@@ -296,7 +296,7 @@ void SetpointManagerMixedAir::updateFanInletOutletNodes(AirLoopHVAC & airLoopHVA
     else if( boost::optional<FanOnOff> onOffFan = supplyComponent.optionalCast<FanOnOff>() ) {
       fans.insert(fans.begin(), *onOffFan);
     }
-  } 
+  }
 
   if( fans.size() > 0 )
   {

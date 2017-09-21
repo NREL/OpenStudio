@@ -187,7 +187,7 @@ namespace detail {
 
     auto mixer = plant->supplyMixer();
 
-    if( ! stream2SourceNode() ) { 
+    if( ! stream2SourceNode() ) {
       TemperingValve thisObject = getObject<TemperingValve>();
       auto inletObjects = mixer.inletModelObjects();
       for( auto & inletObject : inletObjects ) {
@@ -264,7 +264,7 @@ void TemperingValve::resetPumpOutletNode() {
 
 /// @cond
 TemperingValve::TemperingValve(std::shared_ptr<detail::TemperingValve_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

@@ -52,8 +52,8 @@ namespace model {
 namespace detail {
 
   ZoneHVACPackagedTerminalHeatPump_Impl::ZoneHVACPackagedTerminalHeatPump_Impl(
-      const IdfObject& idfObject, 
-      Model_Impl* model, 
+      const IdfObject& idfObject,
+      Model_Impl* model,
       bool keepHandle)
     : ZoneHVACComponent_Impl(idfObject,model,keepHandle)
   {
@@ -1084,7 +1084,7 @@ HVACComponent ZoneHVACPackagedTerminalHeatPump::coolingCoil() const
 
 /// @cond
 ZoneHVACPackagedTerminalHeatPump::ZoneHVACPackagedTerminalHeatPump(std::shared_ptr<detail::ZoneHVACPackagedTerminalHeatPump_Impl> impl)
-  : ZoneHVACComponent(impl)
+  : ZoneHVACComponent(std::move(impl))
 {}
 /// @endcond
 

@@ -511,7 +511,7 @@ namespace detail {
 } // detail
 
 HVACComponent::HVACComponent(std::shared_ptr<detail::HVACComponent_Impl> p)
-  : ParentObject(p)
+  : ParentObject(std::move(p))
 {}
 
 HVACComponent::HVACComponent(IddObjectType type,const Model& model)

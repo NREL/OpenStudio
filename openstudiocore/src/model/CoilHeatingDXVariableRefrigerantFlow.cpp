@@ -203,7 +203,7 @@ namespace detail {
   boost::optional<Curve> CoilHeatingDXVariableRefrigerantFlow_Impl::optionalHeatingCapacityModifierFunctionofFlowFractionCurve() const {
     return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Heating_DX_VariableRefrigerantFlowFields::HeatingCapacityModifierFunctionofFlowFractionCurve);
   }
-    
+
   ModelObject CoilHeatingDXVariableRefrigerantFlow_Impl::clone(Model model) const
   {
     CoilHeatingDXVariableRefrigerantFlow objectClone = HVACComponent_Impl::clone(model).cast<CoilHeatingDXVariableRefrigerantFlow>();
@@ -323,7 +323,7 @@ bool CoilHeatingDXVariableRefrigerantFlow::setHeatingCapacityModifierFunctionofF
 
 /// @cond
 CoilHeatingDXVariableRefrigerantFlow::CoilHeatingDXVariableRefrigerantFlow(std::shared_ptr<detail::CoilHeatingDXVariableRefrigerantFlow_Impl> impl)
-  : HVACComponent(impl)
+  : HVACComponent(std::move(impl))
 {}
 /// @endcond
 

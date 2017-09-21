@@ -9,9 +9,11 @@
 !    8.5;                    !- Version Identifier
 !  Version,
 !    8.6;                    !- Version Identifier
-
 !  Version,
 !    8.7;                    !- Version Identifier
+
+!  Version,
+!    8.8;                    !- Version Identifier
 
   FluidProperties:Name,
     NH3,                     !- Fluid Name
@@ -44,7 +46,7 @@
     118.000,120.000,122.000,124.000,132.250;
 
   FluidProperties:Saturated,
-    NH3,                     !- Name
+    NH3,                     !- Fluid Name
     Pressure,                !- Fluid Property Type
     FluidGas,                !- Fluid Phase
     NH3SaturatedTemperatures,!- Temperature Values Name
@@ -65,7 +67,7 @@
     0.8787E+07,0.9112E+07,0.9448E+07,0.9793E+07,0.1133E+08;
 
   FluidProperties:Saturated,
-    NH3,                     !- Name
+    NH3,                     !- Fluid Name
     Enthalpy,                !- Fluid Property Type
     Fluid,                   !- Fluid Phase
     NH3SaturatedTemperatures,!- Temperature Values Name
@@ -86,7 +88,7 @@
     0.8524E+06,0.8699E+06,0.8886E+06,0.9088E+06,0.1119E+07;
 
   FluidProperties:Saturated,
-    NH3,                     !- Name
+    NH3,                     !- Fluid Name
     Enthalpy,                !- Fluid Property Type
     FluidGas,                !- Fluid Phase
     NH3SaturatedTemperatures,!- Temperature Values Name
@@ -107,7 +109,7 @@
     0.1363E+07,0.1350E+07,0.1336E+07,0.1319E+07,0.1119E+07;
 
   FluidProperties:Saturated,
-    NH3,                     !- Name
+    NH3,                     !- Fluid Name
     Density,                 !- Fluid Property Type
     Fluid,                   !- Fluid Phase
     NH3SaturatedTemperatures,!- Temperature Values Name
@@ -128,7 +130,7 @@
     0.3947E+03,0.3855E+03,0.3754E+03,0.3641E+03,0.2250E+03;
 
   FluidProperties:Saturated,
-    NH3,                     !- Name
+    NH3,                     !- Fluid Name
     Density,                 !- Fluid Property Type
     FluidGas,                !- Fluid Phase
     NH3SaturatedTemperatures,!- Temperature Values Name
@@ -149,7 +151,7 @@
     0.9361E+02,0.1001E+03,0.1074E+03,0.1159E+03,0.2250E+03;
 
   FluidProperties:Saturated,
-    NH3,                     !- Name
+    NH3,                     !- Fluid Name
     SpecificHeat,            !- Fluid Property Type
     Fluid,                   !- Fluid Phase
     NH3SaturatedTemperatures,!- Temperature Values Name
@@ -170,7 +172,7 @@
     0.1082E+05,0.1194E+05,0.1352E+05,0.1592E+05,0.0000E+00;
 
   FluidProperties:Saturated,
-    NH3,                     !- Name
+    NH3,                     !- Fluid Name
     SpecificHeat,            !- Fluid Property Type
     FluidGas,                !- Fluid Phase
     NH3SaturatedTemperatures,!- Temperature Values Name

@@ -717,7 +717,7 @@ bool ZoneHVACUnitVentilator::setCoolingConvergenceTolerance(double coolingConver
 
 /// @cond
 ZoneHVACUnitVentilator::ZoneHVACUnitVentilator(std::shared_ptr<detail::ZoneHVACUnitVentilator_Impl> impl)
-  : ZoneHVACComponent(impl)
+  : ZoneHVACComponent(std::move(impl))
 {}
 /// @endcond
 

@@ -760,7 +760,7 @@ namespace detail {
 } // detail
 
 CoilHeatingDXSingleSpeed::CoilHeatingDXSingleSpeed( const Model& model,
-                                                    Schedule & availabilitySchedule, 
+                                                    Schedule & availabilitySchedule,
                                                     Curve& totalHeatingCapacityFunctionofTemperatureCurve,
                                                     Curve& totalHeatingCapacityFunctionofFlowFractionCurve,
                                                     Curve& energyInputRatioFunctionofTemperatureCurve,
@@ -1154,7 +1154,7 @@ bool CoilHeatingDXSingleSpeed::setRatedSupplyFanPowerPerVolumeFlowRate(double ra
 
 /// @cond
 CoilHeatingDXSingleSpeed::CoilHeatingDXSingleSpeed(std::shared_ptr<detail::CoilHeatingDXSingleSpeed_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 
 /// @endcond

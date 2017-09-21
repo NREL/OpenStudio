@@ -636,7 +636,7 @@ void GeneratorFuelCell::resetStackCooler() {
 
 /// @cond
 GeneratorFuelCell::GeneratorFuelCell(std::shared_ptr<detail::GeneratorFuelCell_Impl> impl)
-  : Generator(impl)
+  : Generator(std::move(impl))
 {}
 /// @endcond
 

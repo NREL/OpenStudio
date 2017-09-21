@@ -70,7 +70,10 @@ namespace detail {
       m_fastNaming(false),
       m_workspaceObjectOrder(std::shared_ptr<WorkspaceObjectOrder_Impl>(new
           WorkspaceObjectOrder_Impl(HandleVector(),std::bind(&Workspace_Impl::getObject,this,std::placeholders::_1))))
-  {}
+  {
+    m_workspaceObjectMap.reserve(1<<15);
+    m_idfReferencesMap.reserve(1<<15);
+  }
 
   Workspace_Impl::Workspace_Impl(const IdfFile& idfFile,
                                  StrictnessLevel level) :
@@ -80,7 +83,10 @@ namespace detail {
       m_fastNaming(false),
       m_workspaceObjectOrder(std::shared_ptr<WorkspaceObjectOrder_Impl>(new
           WorkspaceObjectOrder_Impl(HandleVector(),std::bind(&Workspace_Impl::getObject,this,std::placeholders::_1))))
-  {}
+  {
+    m_workspaceObjectMap.reserve(1<<15);
+    m_idfReferencesMap.reserve(1<<15);
+  }
 
   Workspace_Impl::Workspace_Impl(const Workspace_Impl& other,bool keepHandles) :
     m_strictnessLevel(other.m_strictnessLevel),
@@ -99,6 +105,8 @@ namespace detail {
     if (directOrderVector) {
       m_workspaceObjectOrder.setDirectOrder(*directOrderVector);
     }
+    m_workspaceObjectMap.reserve(1<<15);
+    m_idfReferencesMap.reserve(1<<15);
   }
 
   Workspace_Impl::Workspace_Impl(const Workspace_Impl& other,
@@ -126,6 +134,8 @@ namespace detail {
       }
       m_workspaceObjectOrder.setDirectOrder(subsetOrder);
     }
+    m_workspaceObjectMap.reserve(1<<15);
+    m_idfReferencesMap.reserve(1<<15);
   }
 
   Workspace Workspace_Impl::clone(bool keepHandles) const {
@@ -227,7 +237,9 @@ namespace detail {
 
   boost::optional<WorkspaceObject> Workspace_Impl::getObject(const Handle& handle) const {
     auto womIt = m_workspaceObjectMap.find(handle);
-    if (womIt != m_workspaceObjectMap.end()) { return WorkspaceObject(womIt->second); }
+    if (womIt != m_workspaceObjectMap.end()) {
+      return WorkspaceObject(womIt->second);
+    }
     return boost::none;
   }
 
@@ -493,10 +505,18 @@ namespace detail {
 
   std::vector<WorkspaceObject> Workspace_Impl::addObjects(
       std::vector<std::shared_ptr<WorkspaceObject_Impl> >& objectImplPtrs,
+      bool checkNames)
+  {
+    return addObjects(objectImplPtrs, UHPointerVector(), HUPointerVector(), true, false, checkNames);
+  }
+
+  std::vector<WorkspaceObject> Workspace_Impl::addObjects(
+      std::vector<std::shared_ptr<WorkspaceObject_Impl> >& objectImplPtrs,
       const std::vector<UHPointer>& pointersIntoWorkspace,
       const std::vector<HUPointer>& pointersFromWorkspace,
       bool driverMethod,
-      bool expectToLosePointers)
+      bool expectToLosePointers,
+      bool checkNames)
   {
     HandleVector newHandles;
     WorkspaceObjectVector newObjects;
@@ -553,7 +573,7 @@ namespace detail {
       else {
         // check individual objects
         for (const WorkspaceObject& newObject : newObjects) {
-          ok = ok && newObject.isValid(level);
+          ok = ok && newObject.isValid(level, checkNames);
           if (!ok) {
             break;
           }
@@ -719,7 +739,7 @@ namespace detail {
 
     // add to workspace
     WorkspaceObject_ImplPtrVector objectImplPtrs(1u,objectImplPtr);
-    WorkspaceObjectVector objects = addObjects(objectImplPtrs);
+    WorkspaceObjectVector objects = addObjects(objectImplPtrs, false);
 
     // assess result and return
     if (objects.size() != 1) {
@@ -737,7 +757,7 @@ namespace detail {
     return result;
   }
 
-  std::vector<WorkspaceObject> Workspace_Impl::addObjects(const std::vector<IdfObject>& idfObjects) {
+  std::vector<WorkspaceObject> Workspace_Impl::addObjects(const std::vector<IdfObject>& idfObjects, bool checkNames) {
     WorkspaceObjectVector result;
     WorkspaceObject_ImplPtrVector newObjects;
 
@@ -771,7 +791,7 @@ namespace detail {
           ++it;
         }
         // add objects
-        result = addObjects(newObjects);
+        result = addObjects(newObjects,checkNames);
         return result;
       }
     }
@@ -782,7 +802,7 @@ namespace detail {
     for (; it != itEnd; ++it) {
       newObjects.push_back(this->createObject(*it,keepHandles));
     }
-    result = addObjects(newObjects);
+    result = addObjects(newObjects,checkNames);
     if (!checkedForNameConflicts) {
       Workspace thisWorkspace = workspace();
       resolvePotentialNameConflicts(thisWorkspace);
@@ -832,7 +852,7 @@ namespace detail {
     // handle potential name conflicts. only objects to be added need attention.
     Workspace working = this->cloneSubset(HandleVector()); // empty clone
     working.order().setDirectOrder(HandleVector()); // maintain order in vector
-    WorkspaceObjectVector wsObjects = working.addObjects(idfObjects);
+    WorkspaceObjectVector wsObjects = working.addObjects(idfObjects, false);
     if (wsObjects.size() != idfObjects.size()) {
       LOG(Error,"Unable to add idfObjects to their own Workspace as an intermediate step.");
       return WorkspaceObjectVector();
@@ -962,8 +982,7 @@ namespace detail {
     return result;
   }
 
-  std::vector<WorkspaceObject> Workspace_Impl::addObjects(
-    const std::vector<WorkspaceObject>& objects)
+  std::vector<WorkspaceObject> Workspace_Impl::addObjects(const std::vector<WorkspaceObject>& objects, bool checkNames)
   {
     WorkspaceObjectVector result;
     WorkspaceObject_ImplPtrVector newObjects;
@@ -979,7 +998,7 @@ namespace detail {
       // handle potential name conflicts
       Workspace working = this->cloneSubset(HandleVector()); // empty clone
       working.order().setDirectOrder(HandleVector()); // maintain order in vector
-      WorkspaceObjectVector wsObjects = working.addObjects(objects); // recursive call
+      WorkspaceObjectVector wsObjects = working.addObjects(objects, false); // recursive call
       if (wsObjects.size() != objects.size()) {
         LOG(Error,"Unable to add objects to their own Workspace as an intermediate step.");
         return result;
@@ -1143,7 +1162,7 @@ namespace detail {
     // handle potential name conflicts. only objects to be added need attention.
     Workspace working = this->cloneSubset(HandleVector()); // empty clone
     working.order().setDirectOrder(HandleVector()); // maintain order in vector
-    WorkspaceObjectVector wsObjects = working.addObjects(allObjects);
+    WorkspaceObjectVector wsObjects = working.addObjects(allObjects, false);
     if (wsObjects.size() != allObjects.size()) {
       LOG(Error,"Unable to add objectsToAdd and objectsToInsert to their own Workspace as an "
           << "intermediate step.");
@@ -1941,7 +1960,7 @@ namespace detail {
       found = found2;
       spacer = "_";
     }
-    
+
     if ( found != string::npos ) {
       std::string strSuffix = objectName.substr(found+1);
       const char *p = strSuffix.c_str();
@@ -1958,7 +1977,7 @@ namespace detail {
   }
 
   std::string Workspace_Impl::getBaseName(const std::string& objectName) const {
- 
+
     std::size_t found1 = objectName.find_last_of(' ');
     std::size_t found2 = objectName.find_last_of('_');
     std::size_t found = string::npos;
@@ -1969,7 +1988,7 @@ namespace detail {
     } else if (found2 != string::npos) {
       found = found2;
     }
-    
+
     if ( found != string::npos ) {
       std::string strSuffix = objectName.substr(found+1);
       const char *p = strSuffix.c_str();
@@ -2213,7 +2232,7 @@ namespace detail {
     for (; it != itEnd; ++it) {
       newObjects.push_back(this->createObject(*it,keepHandles));
     }
-    result = addObjects(newObjects,UHPointerVector(),HUPointerVector(),true,true);
+    result = addObjects(newObjects,UHPointerVector(),HUPointerVector(),true,true,false);
     Workspace thisWorkspace = workspace();
     resolvePotentialNameConflicts(thisWorkspace);
 
@@ -2463,7 +2482,7 @@ namespace detail {
             {
               origpath = toPath(url->toLocalFile());
             } else {
-              // DLM: When using QUrl constructor from a string as in getURL, QUrl will assume the 
+              // DLM: When using QUrl constructor from a string as in getURL, QUrl will assume the
               // drive letter in any file path is a scheme and automatically convert the scheme to lower case
               boost::optional<std::string> rawString = workspaceObject.getString(i);
               if (rawString && istringEqual(*rawString, url->toString().toStdString())){
@@ -2742,7 +2761,7 @@ Workspace::Workspace(const IdfFile& idfFile, StrictnessLevel level) :
     objectImplPtrs.push_back(m_impl->createObject(idfObject,true));
   }
   // add Object_ImplPtrs to Workspace_Impl
-  m_impl->addObjects(objectImplPtrs);
+  m_impl->addObjects(objectImplPtrs,false);
   Workspace copyOfThis(m_impl);
   m_impl->resolvePotentialNameConflicts(copyOfThis);
 }
@@ -2800,7 +2819,7 @@ boost::optional<std::string> Workspace::name(const Handle& handle) const {
 }
 
 boost::optional<WorkspaceObject> Workspace::getObject(Handle handle) const {
-  boost::optional<WorkspaceObject> result = m_impl->getObject(handle);
+  auto const result = m_impl->getObject(handle);
   if (result) { OS_ASSERT(result->initialized()); }
   return result;
 }
@@ -2889,8 +2908,8 @@ boost::optional<WorkspaceObject> Workspace::insertObject(const IdfObject& idfObj
   return m_impl->insertObject(idfObject);
 }
 
-std::vector<WorkspaceObject> Workspace::addObjects(const std::vector<IdfObject>& idfObjects) {
-  return m_impl->addObjects(idfObjects);
+std::vector<WorkspaceObject> Workspace::addObjects(const std::vector<IdfObject>& idfObjects, bool checkNames) {
+  return m_impl->addObjects(idfObjects, checkNames);
 }
 
 std::vector <WorkspaceObject> Workspace::insertObjects(const std::vector<IdfObject>& idfObjects) {
@@ -2903,8 +2922,8 @@ std::vector<WorkspaceObject> Workspace::addAndInsertObjects(
   return m_impl->addAndInsertObjects(objectsToAdd,objectsToInsert);
 }
 
-std::vector<WorkspaceObject> Workspace::addObjects(const std::vector<WorkspaceObject>& objects) {
-  return m_impl->addObjects(objects);
+std::vector<WorkspaceObject> Workspace::addObjects(const std::vector<WorkspaceObject>& objects, bool checkNames) {
+  return m_impl->addObjects(objects, checkNames);
 }
 
 std::vector<WorkspaceObject> Workspace::insertObjects(const std::vector<WorkspaceObject>& objects) {
@@ -3035,7 +3054,7 @@ bool Workspace::connectProgressBar(openstudio::ProgressBar& progressBar)
 // disconnect a progress bar
 bool Workspace::disconnectProgressBar(openstudio::ProgressBar& progressBar)
 {
-  
+
   m_impl.get()->progressRange.disconnect<ProgressBar, &ProgressBar::setRange>(&progressBar);
   m_impl.get()->progressValue.disconnect<ProgressBar, &ProgressBar::setValue>(&progressBar);
   m_impl.get()->progressCaption.disconnect<ProgressBar, &ProgressBar::setWindowTitle>(&progressBar);

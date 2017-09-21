@@ -142,7 +142,7 @@ namespace detail {
     {
       std::vector<IdfObject> removedZoneBoundaries = zoneBoundary.remove();
       result.insert(result.end(), removedZoneBoundaries.begin(), removedZoneBoundaries.end());
-    }      
+    }
 
     // t_model->blockSignals(false);
 
@@ -191,7 +191,7 @@ namespace detail {
     }
   }
 
-  void RefrigerationWalkIn_Impl::removeAllZoneBoundaries() 
+  void RefrigerationWalkIn_Impl::removeAllZoneBoundaries()
   {
     getObject<ModelObject>().clearExtensibleGroups();
   }
@@ -206,7 +206,7 @@ namespace detail {
     {
       if( boost::optional<WorkspaceObject> wo = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_Refrigeration_WalkInExtensibleFields::WalkInZoneBoundary) )
       {
-        if(boost::optional<RefrigerationWalkInZoneBoundary> refrigerationWalkInZoneBoundary = 
+        if(boost::optional<RefrigerationWalkInZoneBoundary> refrigerationWalkInZoneBoundary =
             wo->optionalCast<RefrigerationWalkInZoneBoundary>())
         {
           if( refrigerationWalkInZoneBoundary )
@@ -482,7 +482,7 @@ namespace detail {
     if(boost::optional<RefrigerationWalkInZoneBoundary> t_zoneBoundary = zoneBoundary()){
       return t_zoneBoundary->thermalZone();
     }
-    return boost::none;    
+    return boost::none;
   }
 
   boost::optional<double> RefrigerationWalkIn_Impl::zoneBoundaryTotalInsulatedSurfaceAreaFacingZone() const {
@@ -923,7 +923,7 @@ namespace detail {
     RefrigerationWalkInZoneBoundary zoneBoundary = frontZoneBoundary();
     zoneBoundary.resetStockingDoorOpeningScheduleFacingZone();
   }
-  
+
   RefrigerationWalkInZoneBoundary RefrigerationWalkIn_Impl::frontZoneBoundary() {
     if(zoneBoundaries().empty()){
       RefrigerationWalkInZoneBoundary refrigerationWalkInZoneBoundary(model());
@@ -939,7 +939,7 @@ namespace detail {
       return zoneBoundaries().front();
     } else {
       return boost::none;
-    } 
+    }
   }
 
 } // detail
@@ -1465,7 +1465,7 @@ void RefrigerationWalkIn::resetZoneBoundaryStockingDoorOpeningScheduleFacingZone
 
 /// @cond
 RefrigerationWalkIn::RefrigerationWalkIn(std::shared_ptr<detail::RefrigerationWalkIn_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

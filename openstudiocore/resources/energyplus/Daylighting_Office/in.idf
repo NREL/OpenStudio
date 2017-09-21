@@ -140,7 +140,7 @@
 ! schedule types, always on schedule, misc
 ! ***GENERAL SIMULATION PARAMETERS***
 
-  Version,8.7;
+  Version,8.8;
 
   SimulationControl,
     YES,                     !- Do Zone Sizing Calculation
@@ -2320,7 +2320,8 @@
     CoolCStandard10Ton_CapFF,!- Total Cooling Capacity Function of Flow Fraction Curve Name
     CoolCStandard10Ton_EIRFT,!- Energy Input Ratio Function of Temperature Curve Name
     CoolCStandard10Ton_EIRFFF,  !- Energy Input Ratio Function of Flow Fraction Curve Name
-    CoolCStandard10Ton_PLR;  !- Part Load Fraction Correlation Curve Name
+    CoolCStandard10Ton_PLR,  !- Part Load Fraction Correlation Curve Name
+    ;                        !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
 
   Coil:Cooling:DX:SingleSpeed,
     PSZ-AC:2_CoolC DXCoil,   !- Name
@@ -2336,7 +2337,8 @@
     CoolCStandard10Ton_CapFF,!- Total Cooling Capacity Function of Flow Fraction Curve Name
     CoolCStandard10Ton_EIRFT,!- Energy Input Ratio Function of Temperature Curve Name
     CoolCStandard10Ton_EIRFFF,  !- Energy Input Ratio Function of Flow Fraction Curve Name
-    CoolCStandard10Ton_PLR;  !- Part Load Fraction Correlation Curve Name
+    CoolCStandard10Ton_PLR,  !- Part Load Fraction Correlation Curve Name
+    ;                        !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
 
   Coil:Cooling:DX:SingleSpeed,
     PSZ-AC:3_CoolC DXCoil,   !- Name
@@ -2352,7 +2354,8 @@
     CoolCStandard10Ton_CapFF,!- Total Cooling Capacity Function of Flow Fraction Curve Name
     CoolCStandard10Ton_EIRFT,!- Energy Input Ratio Function of Temperature Curve Name
     CoolCStandard10Ton_EIRFFF,  !- Energy Input Ratio Function of Flow Fraction Curve Name
-    CoolCStandard10Ton_PLR;  !- Part Load Fraction Correlation Curve Name
+    CoolCStandard10Ton_PLR,  !- Part Load Fraction Correlation Curve Name
+    ;                        !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
 
   Coil:Cooling:DX:SingleSpeed,
     PSZ-AC:4_CoolC DXCoil,   !- Name
@@ -2368,7 +2371,8 @@
     CoolCStandard10Ton_CapFF,!- Total Cooling Capacity Function of Flow Fraction Curve Name
     CoolCStandard10Ton_EIRFT,!- Energy Input Ratio Function of Temperature Curve Name
     CoolCStandard10Ton_EIRFFF,  !- Energy Input Ratio Function of Flow Fraction Curve Name
-    CoolCStandard10Ton_PLR;  !- Part Load Fraction Correlation Curve Name
+    CoolCStandard10Ton_PLR,  !- Part Load Fraction Correlation Curve Name
+    ;                        !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
 
   Coil:Cooling:DX:SingleSpeed,
     PSZ-AC:5_CoolC DXCoil,   !- Name
@@ -2384,7 +2388,8 @@
     CoolCStandard10Ton_CapFF,!- Total Cooling Capacity Function of Flow Fraction Curve Name
     CoolCStandard10Ton_EIRFT,!- Energy Input Ratio Function of Temperature Curve Name
     CoolCStandard10Ton_EIRFFF,  !- Energy Input Ratio Function of Flow Fraction Curve Name
-    CoolCStandard10Ton_PLR;  !- Part Load Fraction Correlation Curve Name
+    CoolCStandard10Ton_PLR,  !- Part Load Fraction Correlation Curve Name
+    ;                        !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
 
   ZoneHVAC:EquipmentList,
     Core_ZN Equipment,       !- Name
@@ -3158,7 +3163,7 @@
     Core_ZN Inlet Nodes,     !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Core_ZN Air Node,        !- Zone Air Node Name
-    Core_ZN Return Air Node Name;  !- Zone Return Air Node Name
+    Core_ZN Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentConnections,
     Perimeter_ZN_1,          !- Zone Name
@@ -3166,7 +3171,7 @@
     Perimeter_ZN_1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Perimeter_ZN_1 Air Node, !- Zone Air Node Name
-    Perimeter_ZN_1 Return Air Node Name;  !- Zone Return Air Node Name
+    Perimeter_ZN_1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentConnections,
     Perimeter_ZN_2,          !- Zone Name
@@ -3174,7 +3179,7 @@
     Perimeter_ZN_2 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Perimeter_ZN_2 Air Node, !- Zone Air Node Name
-    Perimeter_ZN_2 Return Air Node Name;  !- Zone Return Air Node Name
+    Perimeter_ZN_2 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentConnections,
     Perimeter_ZN_3,          !- Zone Name
@@ -3182,7 +3187,7 @@
     Perimeter_ZN_3 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Perimeter_ZN_3 Air Node, !- Zone Air Node Name
-    Perimeter_ZN_3 Return Air Node Name;  !- Zone Return Air Node Name
+    Perimeter_ZN_3 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentConnections,
     Perimeter_ZN_4,          !- Zone Name
@@ -3190,7 +3195,7 @@
     Perimeter_ZN_4 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Perimeter_ZN_4 Air Node, !- Zone Air Node Name
-    Perimeter_ZN_4 Return Air Node Name;  !- Zone Return Air Node Name
+    Perimeter_ZN_4 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Core_ZN Inlet Nodes,     !- Name
@@ -3293,6 +3298,7 @@
     HVACOperationSchd,       !- Fan Schedule Name
     CycleOnAny,              !- Control Type
     1.0,                     !- Thermostat Tolerance {deltaC}
+    FixedRunTime,            !- Cycling Run Time Control Type
     1800;                    !- Cycling Run Time {s}
 
   AvailabilityManager:NightCycle,
@@ -3301,6 +3307,7 @@
     HVACOperationSchd,       !- Fan Schedule Name
     CycleOnAny,              !- Control Type
     1.0,                     !- Thermostat Tolerance {deltaC}
+    FixedRunTime,            !- Cycling Run Time Control Type
     1800;                    !- Cycling Run Time {s}
 
   AvailabilityManager:NightCycle,
@@ -3309,6 +3316,7 @@
     HVACOperationSchd,       !- Fan Schedule Name
     CycleOnAny,              !- Control Type
     1.0,                     !- Thermostat Tolerance {deltaC}
+    FixedRunTime,            !- Cycling Run Time Control Type
     1800;                    !- Cycling Run Time {s}
 
   AvailabilityManager:NightCycle,
@@ -3317,6 +3325,7 @@
     HVACOperationSchd,       !- Fan Schedule Name
     CycleOnAny,              !- Control Type
     1.0,                     !- Thermostat Tolerance {deltaC}
+    FixedRunTime,            !- Cycling Run Time Control Type
     1800;                    !- Cycling Run Time {s}
 
   AvailabilityManager:NightCycle,
@@ -3325,6 +3334,7 @@
     HVACOperationSchd,       !- Fan Schedule Name
     CycleOnAny,              !- Control Type
     1.0,                     !- Thermostat Tolerance {deltaC}
+    FixedRunTime,            !- Cycling Run Time Control Type
     1800;                    !- Cycling Run Time {s}
 
   BranchList,
@@ -4297,7 +4307,7 @@
     Comm Elect;              !- Group Name
 
   UtilityCost:Charge:Simple,
-    AnnualEnergyCharge,      !- Name
+    AnnualEnergyCharge,      !- Utility Cost Charge Simple Name
     PubServColorado_SG_SecondaryGeneral,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -4305,7 +4315,7 @@
     0.0165;                  !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    AnnualIncentiveCostCharge,  !- Name
+    AnnualIncentiveCostCharge,  !- Utility Cost Charge Simple Name
     PubServColorado_SG_SecondaryGeneral,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -4313,7 +4323,7 @@
     0.0021;                  !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    AnnualEnergyCostCharge,  !- Name
+    AnnualEnergyCostCharge,  !- Utility Cost Charge Simple Name
     PubServColorado_SG_SecondaryGeneral,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -4321,7 +4331,7 @@
     0.0083;                  !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    AnnualEnergyCostCharge,  !- Name
+    AnnualEnergyCostCharge,  !- Utility Cost Charge Simple Name
     PubServColorado_SG_SecondaryGeneral,  !- Tariff Name
     totalDemand,             !- Source Variable
     Annual,                  !- Season
@@ -4329,7 +4339,7 @@
     12.55;                   !- Cost per Unit Value or Variable Name
 
   UtilityCost:Qualify,
-    MinDemand25kw,           !- Name
+    MinDemand25kw,           !- Utility Cost Qualify Name
     PubServColorado_SG_SecondaryGeneral,  !- Tariff Name
     TotalDemand,             !- Variable Name
     Minimum,                 !- Qualify Type
@@ -4339,7 +4349,7 @@
     12;                      !- Number of Months
 
   UtilityCost:Charge:Simple,
-    taxoffourPtNinePercent,  !- Name
+    taxoffourPtNinePercent,  !- Utility Cost Charge Simple Name
     PubServColorado_SG_SecondaryGeneral,  !- Tariff Name
     SubTotal,                !- Source Variable
     Annual,                  !- Season
@@ -4365,7 +4375,7 @@
     Comm Elect;              !- Group Name
 
   UtilityCost:Charge:Simple,
-    AnnualEnergyCharge,      !- Name
+    AnnualEnergyCharge,      !- Utility Cost Charge Simple Name
     PubServColorado_C_CommercialService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -4373,7 +4383,7 @@
     0.0602;                  !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    AnnualIncentiveCharge,   !- Name
+    AnnualIncentiveCharge,   !- Utility Cost Charge Simple Name
     PubServColorado_C_CommercialService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -4381,7 +4391,7 @@
     0.0021;                  !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    AnnualEnergyCostCharge,  !- Name
+    AnnualEnergyCostCharge,  !- Utility Cost Charge Simple Name
     PubServColorado_C_CommercialService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -4389,7 +4399,7 @@
     0.0082;                  !- Cost per Unit Value or Variable Name
 
   UtilityCost:Qualify,
-    MaxDemand25kw,           !- Name
+    MaxDemand25kw,           !- Utility Cost Qualify Name
     PubServColorado_C_CommercialService,  !- Tariff Name
     TotalDemand,             !- Variable Name
     Maximum,                 !- Qualify Type
@@ -4399,7 +4409,7 @@
     1;                       !- Number of Months
 
   UtilityCost:Charge:Simple,
-    taxoffourPtNinePercent,  !- Name
+    taxoffourPtNinePercent,  !- Utility Cost Charge Simple Name
     PubServColorado_C_CommercialService,  !- Tariff Name
     SubTotal,                !- Source Variable
     Annual,                  !- Season
@@ -4425,7 +4435,7 @@
     Comm Gas;                !- Group Name
 
   UtilityCost:Charge:Simple,
-    MonthlyRateGasCharge,    !- Name
+    MonthlyRateGasCharge,    !- Utility Cost Charge Simple Name
     CO_EIAMonthlyRateGas,    !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -4449,7 +4459,7 @@
     6.92;                    !- November Value
 
   UtilityCost:Charge:Simple,
-    TaxoffourPtNinePercent,  !- Name
+    TaxoffourPtNinePercent,  !- Utility Cost Charge Simple Name
     CO_EIAMonthlyRateGas,    !- Tariff Name
     SubTotal,                !- Source Variable
     Annual,                  !- Season

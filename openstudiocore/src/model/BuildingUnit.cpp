@@ -448,7 +448,7 @@ bool BuildingUnit::resetFeature(const std::string& name)
 
 /// @cond
 BuildingUnit::BuildingUnit(std::shared_ptr<detail::BuildingUnit_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

@@ -288,7 +288,7 @@ void LightingDesignDay::ensureNoLeapDays()
 
 /// @cond
 LightingDesignDay::LightingDesignDay(std::shared_ptr<detail::LightingDesignDay_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

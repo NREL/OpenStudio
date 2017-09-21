@@ -454,12 +454,12 @@ namespace detail {
     }
   }
 
-  void GroundHeatExchangerVertical_Impl::removeAllGFunctions() 
+  void GroundHeatExchangerVertical_Impl::removeAllGFunctions()
   {
     getObject<ModelObject>().clearExtensibleGroups();
   }
 
-  std::vector< std::pair<double,double> > GroundHeatExchangerVertical_Impl::gFunctions() 
+  std::vector< std::pair<double,double> > GroundHeatExchangerVertical_Impl::gFunctions()
   {
     std::vector< std::pair<double,double> > result;
 
@@ -766,7 +766,7 @@ void GroundHeatExchangerVertical::resetGFunctionReferenceRatio() {
 
 /// @cond
 GroundHeatExchangerVertical::GroundHeatExchangerVertical(std::shared_ptr<detail::GroundHeatExchangerVertical_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

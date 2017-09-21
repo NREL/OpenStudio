@@ -272,7 +272,7 @@ namespace detail {
   {
     setString(OS_SpaceTypeFields::DefaultScheduleSetName, "");
   }
- 
+
   boost::optional<RenderingColor> SpaceType_Impl::renderingColor() const
   {
     return getObject<ModelObject>().getModelObjectTarget<RenderingColor>(OS_SpaceTypeFields::GroupRenderingName);
@@ -296,7 +296,7 @@ namespace detail {
   std::vector<std::string> SpaceType_Impl::suggestedStandardsBuildingTypes() const
   {
     std::vector<std::string> result;
-  
+
     boost::optional<std::string> standardsBuildingType = this->standardsBuildingType();
 
     // include values from json
@@ -309,7 +309,7 @@ namespace detail {
 
         QMap<QString, QVariant> building_types = climate_sets[climate_set_name].toMap();
         for (QString building_type_name : building_types.uniqueKeys()) {
-          
+
           result.push_back(toString(building_type_name));
 
         }
@@ -342,16 +342,16 @@ namespace detail {
     if (standardsBuildingType){
       finder.addTarget(*standardsBuildingType);
     }
-    auto it = std::remove_if(result.begin(), result.end(), finder); 
-    result.resize( std::distance(result.begin(),it) ); 
+    auto it = std::remove_if(result.begin(), result.end(), finder);
+    result.resize( std::distance(result.begin(),it) );
 
     // sort
     std::sort(result.begin(), result.end(), IstringCompare());
 
     // make unique
     // DLM: have to sort before calling unique, unique only works on consecutive elements
-    it = std::unique(result.begin(), result.end(), IstringEqual()); 
-    result.resize( std::distance(result.begin(),it) ); 
+    it = std::unique(result.begin(), result.end(), IstringEqual());
+    result.resize( std::distance(result.begin(),it) );
 
     // add building value to front
     if (buildingStandardsBuildingType){
@@ -444,16 +444,16 @@ namespace detail {
     if (standardsSpaceType){
       finder.addTarget(*standardsSpaceType);
     }
-    auto it = std::remove_if(result.begin(), result.end(), finder); 
-    result.resize( std::distance(result.begin(),it) ); 
+    auto it = std::remove_if(result.begin(), result.end(), finder);
+    result.resize( std::distance(result.begin(),it) );
 
     // sort
     std::sort(result.begin(), result.end(), IstringCompare());
 
     // make unique
     // DLM: have to sort before calling unique, unique only works on consecutive elements
-    it = std::unique(result.begin(), result.end(), IstringEqual()); 
-    result.resize( std::distance(result.begin(),it) ); 
+    it = std::unique(result.begin(), result.end(), IstringEqual());
+    result.resize( std::distance(result.begin(),it) );
 
     // add current to front
     if (standardsSpaceType){
@@ -614,11 +614,11 @@ namespace detail {
     return setPeoplePerFloorArea(*peoplePerFloorArea,templatePeople);
   }
 
-  bool SpaceType_Impl::setPeoplePerFloorArea(double peoplePerFloorArea, 
+  bool SpaceType_Impl::setPeoplePerFloorArea(double peoplePerFloorArea,
                                                   const boost::optional<People>& templatePeople)
   {
     if (peoplePerFloorArea < 0.0) {
-      LOG(Error,"SpaceType cannot set peoplePerFloorArea to " << peoplePerFloorArea 
+      LOG(Error,"SpaceType cannot set peoplePerFloorArea to " << peoplePerFloorArea
           << ", the value must be >= 0.0.");
       return false;
     }
@@ -666,11 +666,11 @@ namespace detail {
     return setSpaceFloorAreaPerPerson(*spaceFloorAreaPerPerson,templatePeople);
   }
 
-  bool SpaceType_Impl::setSpaceFloorAreaPerPerson(double spaceFloorAreaPerPerson, 
-                                                  const boost::optional<People>& templatePeople) 
+  bool SpaceType_Impl::setSpaceFloorAreaPerPerson(double spaceFloorAreaPerPerson,
+                                                  const boost::optional<People>& templatePeople)
   {
     if (lessThanOrEqual(spaceFloorAreaPerPerson,0.0)) {
-      LOG(Error,"SpaceType cannot set spaceFloorAreaPerPerson to " << spaceFloorAreaPerPerson 
+      LOG(Error,"SpaceType cannot set spaceFloorAreaPerPerson to " << spaceFloorAreaPerPerson
           << ", the value must be > 0.0.");
       return false;
     }
@@ -754,7 +754,7 @@ namespace detail {
       double lightingPowerPerFloorArea,const boost::optional<Lights>& templateLights)
   {
     if (lightingPowerPerFloorArea < 0.0) {
-      LOG(Error,"SpaceType cannot set lightingPowerPerFloorArea to " 
+      LOG(Error,"SpaceType cannot set lightingPowerPerFloorArea to "
           << lightingPowerPerFloorArea << ", the value must be >= 0.0.");
       return false;
     }
@@ -867,8 +867,8 @@ namespace detail {
     return result;
   }
 
-  double SpaceType_Impl::getLightingPowerPerFloorArea(double floorArea, 
-                                                           double numPeople) const 
+  double SpaceType_Impl::getLightingPowerPerFloorArea(double floorArea,
+                                                           double numPeople) const
   {
     double result(0.0);
     for (const Lights& lightsObject : lights()) {
@@ -881,7 +881,7 @@ namespace detail {
   }
 
   double SpaceType_Impl::getLightingPowerPerPerson(double floorArea, double numPeople) const {
-    double result(0.0); 
+    double result(0.0);
     for (const Lights& lightsObject : lights()) {
       result += lightsObject.getPowerPerPerson(floorArea,numPeople);
     }
@@ -925,13 +925,13 @@ namespace detail {
       const boost::optional<ElectricEquipment>& templateElectricEquipment)
   {
     if (electricEquipmentPowerPerFloorArea < 0.0) {
-      LOG(Error,"SpaceType cannot set electricEquipmentPowerPerFloorArea " 
+      LOG(Error,"SpaceType cannot set electricEquipmentPowerPerFloorArea "
           << electricEquipmentPowerPerFloorArea << ", the value must be >= 0.0.");
       return false;
     }
 
     // create or modify ElectricEquipment and ElectricEquipmentDefinition object
-    OptionalElectricEquipment myEquipment = 
+    OptionalElectricEquipment myEquipment =
         getMySpaceLoadInstance<ElectricEquipment,ElectricEquipmentDefinition>(templateElectricEquipment);
     if (!myEquipment) {
       LOG(Error,"The templateElectricEquipment object must be in the same Model as this SpaceType.");
@@ -988,13 +988,13 @@ namespace detail {
       const boost::optional<ElectricEquipment>& templateElectricEquipment)
   {
     if (electricEquipmentPowerPerPerson < 0.0) {
-      LOG(Error,"SpaceType cannot set electricEquipmentPowerPerPerson " 
+      LOG(Error,"SpaceType cannot set electricEquipmentPowerPerPerson "
           << electricEquipmentPowerPerPerson << ", the value must be >= 0.0.");
       return false;
     }
 
     // create or modify ElectricEquipment and ElectricEquipmentDefinition object
-    OptionalElectricEquipment myEquipment = 
+    OptionalElectricEquipment myEquipment =
         getMySpaceLoadInstance<ElectricEquipment,ElectricEquipmentDefinition>(templateElectricEquipment);
     if (!myEquipment) {
       LOG(Error,"The templateElectricEquipment object must be in the same Model as this SpaceType.");
@@ -1025,7 +1025,7 @@ namespace detail {
     return result;
   }
 
-  double SpaceType_Impl::getElectricEquipmentPowerPerFloorArea(double floorArea, 
+  double SpaceType_Impl::getElectricEquipmentPowerPerFloorArea(double floorArea,
                                                                     double numPeople) const
   {
     double result(0.0);
@@ -1035,7 +1035,7 @@ namespace detail {
     return result;
   }
 
-  double SpaceType_Impl::getElectricEquipmentPowerPerPerson(double floorArea, 
+  double SpaceType_Impl::getElectricEquipmentPowerPerPerson(double floorArea,
                                                             double numPeople) const
   {
     double result(0.0);
@@ -1079,13 +1079,13 @@ namespace detail {
       const boost::optional<GasEquipment>& templateGasEquipment)
   {
     if (gasEquipmentPowerPerFloorArea < 0.0) {
-      LOG(Error,"SpaceType cannot set gasEquipmentPowerPerFloorArea " 
+      LOG(Error,"SpaceType cannot set gasEquipmentPowerPerFloorArea "
           << gasEquipmentPowerPerFloorArea << ", the value must be >= 0.0.");
       return false;
     }
 
     // create or modify GasEquipment and GasEquipmentDefinition object
-    OptionalGasEquipment myEquipment = 
+    OptionalGasEquipment myEquipment =
         getMySpaceLoadInstance<GasEquipment,GasEquipmentDefinition>(templateGasEquipment);
     if (!myEquipment) {
       LOG(Error,"The templateGasEquipment object must be in the same Model as this SpaceType.");
@@ -1141,13 +1141,13 @@ namespace detail {
       const boost::optional<GasEquipment>& templateGasEquipment)
   {
     if (gasEquipmentPowerPerPerson < 0.0) {
-      LOG(Error,"SpaceType cannot set gasEquipmentPowerPerPerson " 
+      LOG(Error,"SpaceType cannot set gasEquipmentPowerPerPerson "
           << gasEquipmentPowerPerPerson << ", the value must be >= 0.0.");
       return false;
     }
 
     // create or modify GasEquipment and GasEquipmentDefinition object
-    OptionalGasEquipment myEquipment = 
+    OptionalGasEquipment myEquipment =
         getMySpaceLoadInstance<GasEquipment,GasEquipmentDefinition>(templateGasEquipment);
     if (!myEquipment) {
       LOG(Error,"The templateGasEquipment object must be in the same Model as this SpaceType.");
@@ -1178,7 +1178,7 @@ namespace detail {
     return result;
   }
 
-  double SpaceType_Impl::getGasEquipmentPowerPerFloorArea(double floorArea, 
+  double SpaceType_Impl::getGasEquipmentPowerPerFloorArea(double floorArea,
                                                                double numPeople) const
   {
     double result(0.0);
@@ -1616,7 +1616,7 @@ bool SpaceType::setLightingPowerPerFloorArea(double lightingPowerPerFloorArea) {
   return getImpl<detail::SpaceType_Impl>()->setLightingPowerPerFloorArea(lightingPowerPerFloorArea);
 }
 
-bool SpaceType::setLightingPowerPerFloorArea(double lightingPowerPerFloorArea, 
+bool SpaceType::setLightingPowerPerFloorArea(double lightingPowerPerFloorArea,
                                        const Lights& templateLights)
 {
   return getImpl<detail::SpaceType_Impl>()->setLightingPowerPerFloorArea(lightingPowerPerFloorArea,templateLights);
@@ -1736,7 +1736,7 @@ double SpaceType::floorArea() const
 
 /// @cond
 SpaceType::SpaceType(std::shared_ptr<detail::SpaceType_Impl> impl)
-  : ResourceObject(impl)
+  : ResourceObject(std::move(impl))
 {}
 /// @endcond
 

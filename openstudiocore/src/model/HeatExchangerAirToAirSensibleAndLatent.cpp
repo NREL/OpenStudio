@@ -1030,7 +1030,7 @@ void HeatExchangerAirToAirSensibleAndLatent::setEconomizerLockout(bool economize
 
 /// @cond
 HeatExchangerAirToAirSensibleAndLatent::HeatExchangerAirToAirSensibleAndLatent(std::shared_ptr<detail::HeatExchangerAirToAirSensibleAndLatent_Impl> impl)
-  : AirToAirComponent(impl)
+  : AirToAirComponent(std::move(impl))
 {}
 /// @endcond
 

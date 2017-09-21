@@ -75,33 +75,9 @@ void SpacesTabController::setSubTab(int index)
     m_currentIndex = index;
   }
 
-  if (qobject_cast<SpacesSpacesGridView *>(m_currentView)) {
-    disconnect(this, &SpacesTabController::toggleUnitsClicked, qobject_cast<SpacesSpacesGridView *>(m_currentView), &SpacesSpacesGridView::toggleUnitsClicked);
-    disconnect(qobject_cast<SpacesSpacesGridView *>(m_currentView), &SpacesSpacesGridView::dropZoneItemSelected, this, &SpacesTabController::dropZoneItemSelected);
-  }
-  else if (qobject_cast<SpacesLoadsGridView *>(m_currentView)) {
-    disconnect(this, &SpacesTabController::toggleUnitsClicked, qobject_cast<SpacesLoadsGridView *>(m_currentView), &SpacesLoadsGridView::toggleUnitsClicked);
-    disconnect(qobject_cast<SpacesLoadsGridView *>(m_currentView), &SpacesLoadsGridView::dropZoneItemSelected, this, &SpacesTabController::dropZoneItemSelected);
-  }
-  else if (qobject_cast<SpacesSurfacesGridView *>(m_currentView)) {
-    disconnect(this, &SpacesTabController::toggleUnitsClicked, qobject_cast<SpacesSurfacesGridView *>(m_currentView), &SpacesSurfacesGridView::toggleUnitsClicked);
-    disconnect(qobject_cast<SpacesSurfacesGridView *>(m_currentView), &SpacesSurfacesGridView::dropZoneItemSelected, this, &SpacesTabController::dropZoneItemSelected);
-  }
-  else if (qobject_cast<SpacesSubsurfacesGridView *>(m_currentView)) {
-    disconnect(this, &SpacesTabController::toggleUnitsClicked, qobject_cast<SpacesSubsurfacesGridView *>(m_currentView), &SpacesSubsurfacesGridView::toggleUnitsClicked);
-    disconnect(qobject_cast<SpacesSubsurfacesGridView *>(m_currentView), &SpacesSubsurfacesGridView::dropZoneItemSelected, this, &SpacesTabController::dropZoneItemSelected);
-  }
-  else if (qobject_cast<SpacesInteriorPartitionsGridView *>(m_currentView)) {
-    disconnect(this, &SpacesTabController::toggleUnitsClicked, qobject_cast<SpacesInteriorPartitionsGridView *>(m_currentView), &SpacesInteriorPartitionsGridView::toggleUnitsClicked);
-    disconnect(qobject_cast<SpacesInteriorPartitionsGridView *>(m_currentView), &SpacesInteriorPartitionsGridView::dropZoneItemSelected, this, &SpacesTabController::dropZoneItemSelected);
-  }
-  else if (qobject_cast<SpacesShadingGridView *>(m_currentView)) {
-    disconnect(this, &SpacesTabController::toggleUnitsClicked, qobject_cast<SpacesShadingGridView *>(m_currentView), &SpacesShadingGridView::toggleUnitsClicked);
-    disconnect(qobject_cast<SpacesShadingGridView *>(m_currentView), &SpacesShadingGridView::dropZoneItemSelected, this, &SpacesTabController::dropZoneItemSelected);
-  }
-  else if (m_currentView) {
-    // Oops! Should never get here
-    OS_ASSERT(false);
+  if (m_currentView) {
+    m_currentView->disconnect();
+    delete m_currentView;
   }
 
   switch (index){
