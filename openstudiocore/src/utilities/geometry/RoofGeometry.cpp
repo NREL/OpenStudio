@@ -2464,6 +2464,10 @@ std::vector< std::vector<Point3d> > doStraightSkeleton(std::vector<Point3d>& pol
 
 std::vector<Point3d> getGableTopAndBottomVertices(std::vector<Point3d>& surface) {
   std::vector<Point3d> ret;
+  if (surface.size() != 3) {
+    // gable must have 3 vertices
+    return ret;
+  }
   if (surface[0].z() > surface[1].z() && surface[0].z() > surface[2].z() && surface[1].z() == surface[2].z()) {
     ret.push_back(surface[0]); // top
     ret.push_back(surface[1]); // bottom
@@ -2480,40 +2484,69 @@ std::vector<Point3d> getGableTopAndBottomVertices(std::vector<Point3d>& surface)
   return ret;
 }
 
-bool canBeGabled(std::vector<Point3d> surface) {
-  if (surface.size() != 3) {
-    return false;
+int getOppositeGableIndex(std::vector< std::vector<Point3d> >& surfaces, std::vector<int> connectedSurfaces, int gableIndexNum) {
+  // Obtain opposite gable index relative to gableIndexNum
+  if (connectedSurfaces.size() < 4) {
+    // There must be at least 4 connected surfaces (including gableIndexNum) for 
+    // there to be an opposite gable.
+    return -1;
   }
-  std::vector<Point3d> vertices = getGableTopAndBottomVertices(surface);
-  if (vertices.size() != 3) {
-    return false;
+  std::vector<Point3d> baseVertices = getGableTopAndBottomVertices(surfaces[gableIndexNum]);
+  Edge base1 = Edge(baseVertices[0], baseVertices[1]);
+  Edge base2 = Edge(baseVertices[0], baseVertices[2]);
+  for (int i = 0; i < connectedSurfaces.size(); i++) {
+    if (connectedSurfaces[i] == gableIndexNum) {
+      continue;
+    }
+    std::vector<Point3d> tryVertices = getGableTopAndBottomVertices(surfaces[connectedSurfaces[i]]);
+    if (tryVertices.size() == 0) {
+      continue;
+    }
+    Edge try1 = Edge(tryVertices[0], tryVertices[1]);
+    Edge try2 = Edge(tryVertices[0], tryVertices[2]);
+    if (base1 != try1 && base1 != try2 && base2 != try1 && base2 != try2) {
+      return i;
+    }
   }
-  return true;
+  return -1;
 }
+
 
 void applyGableLogicTriangles(std::vector< std::vector<Point3d> >& surfaces) {
   // For any roof surface that has 3 vertices, convert from an angled
   // surface to a gable surface.
 
-  for (std::vector<Point3d>& gable : surfaces) {
-    if (!canBeGabled(gable)) {
+  std::set<int> processedSurfaces;
+
+  for (int i = 0; i < surfaces.size(); i++) {
+    if (std::find(processedSurfaces.begin(), processedSurfaces.end(), i) != processedSurfaces.end()) {
+      continue; // already processed
+    }
+
+    std::vector<Point3d>& gable = surfaces[i];
+    std::vector<Point3d> gableVertices = getGableTopAndBottomVertices(gable);
+    if (gableVertices.size() == 0) {
       continue;
     }
-    std::vector<Point3d> gableVertices = getGableTopAndBottomVertices(gable);
+
+    processedSurfaces.insert(i);
     Point3d gableTop = gableVertices[0];
 
     std::vector<int> connectedSurfaces;
-    for (int i = 0; i < surfaces.size(); i++) {
-      for (Point3d& vertex : surfaces[i]) {
+    for (int j = 0; j < surfaces.size(); j++) {
+      for (Point3d& vertex : surfaces[j]) {
         if (vertex != gableTop) {
           continue;
         }
-        connectedSurfaces.push_back(i);
+        connectedSurfaces.push_back(j);
+        processedSurfaces.insert(j); // will be processed below
       }
     }
 
-    if (connectedSurfaces.size() == 4) {
-      // Four angles roof edges meet, we'll need to create a ridge line.
+    int oppositeGableIndex = getOppositeGableIndex(surfaces, connectedSurfaces, i);
+
+    if (oppositeGableIndex != -1) {
+      // Two gables opposite each other meet, we'll need to create a (arbitrary) ridge line.
 
       /*                  ___________          ___________
       *                  |\         /|        |     |     |
@@ -2524,32 +2557,12 @@ void applyGableLogicTriangles(std::vector< std::vector<Point3d> >& surfaces) {
       *                  |/_________\|        |_____|_____|
       */
 
-      std::vector<int> connectedSurfacesRidge;
-
-      // Need to choose an arbitrary direction for the ridge.
-      // Retain ConnectedSurfaces[0] and opposite surface.
-      std::vector<Point3d> baseVertices = getGableTopAndBottomVertices(surfaces[connectedSurfaces[0]]);
-      Edge base1 = Edge(baseVertices[0], baseVertices[1]);
-      Edge base2 = Edge(baseVertices[0], baseVertices[2]);
-      for (int i = 1; i < connectedSurfaces.size(); i++) {
-        std::vector<Point3d> tryVertices = getGableTopAndBottomVertices(surfaces[connectedSurfaces[i]]);
-        Edge try1 = Edge(tryVertices[0], tryVertices[1]);
-        Edge try2 = Edge(tryVertices[0], tryVertices[2]);
-        if (base1 == try1 || base1 == try2 || base2 == try1 || base2 == try2) {
-          connectedSurfacesRidge.push_back(connectedSurfaces[i]);
-          connectedSurfaces.erase(connectedSurfaces.begin() + i);
-          i--;
-        }
-      }
-
-      if (connectedSurfaces.size() != 2 || connectedSurfacesRidge.size() != 2) {
-        LOG_AND_THROW("Unexpected number of surfaces.")
-      }
-
       // Shift gable top vertex for opposite surfaces
       std::vector<Point3d> newVertices;
-      for (int i = 0; i < connectedSurfaces.size(); i++) {
-        std::vector<Point3d>& surface = surfaces[connectedSurfaces[i]];
+
+      std::vector<int> gableSurfaceIndices = {i, connectedSurfaces[oppositeGableIndex]};
+      for (int j = 0; j < gableSurfaceIndices.size(); j++) {
+        std::vector<Point3d>& surface = surfaces[gableSurfaceIndices[j]];
         for (Point3d& vertex : surface) {
           if (vertex != gableTop) {
             continue;
@@ -2563,21 +2576,24 @@ void applyGableLogicTriangles(std::vector< std::vector<Point3d> >& surfaces) {
       }
 
       // Split gable top vertex (create ridge) for other surfaces
-      for (int i = 0; i < connectedSurfacesRidge.size(); i++) {
-        std::vector<Point3d>& surface = surfaces[connectedSurfacesRidge[i]];
+      for (int j = 0; j < connectedSurfaces.size(); j++) {
+        if (std::find(gableSurfaceIndices.begin(), gableSurfaceIndices.end(), connectedSurfaces[j]) != gableSurfaceIndices.end()) {
+          continue; // already processed these surfaces
+        }
+        std::vector<Point3d>& surface = surfaces[connectedSurfaces[j]];
         std::vector<Point3d> trySurface1;
         std::vector<Point3d> trySurface2;
         std::vector<Edge> tryEdges1;
         std::vector<Edge> tryEdges2;
-        for (int j = 0; j < surface.size(); j++) {
-          Point3d vertex = surface[j];
+        for (int k = 0; k < surface.size(); k++) {
+          Point3d vertex = surface[k];
           if (vertex != gableTop) {
             trySurface1.push_back(vertex);
             trySurface2.push_back(vertex);
             continue;
           }
-          Point3d previousVertex = surface[(j - 1 + surface.size()) % surface.size()];
-          Point3d nextVertex = surface[(j + 1) % surface.size()];
+          Point3d previousVertex = surface[(k - 1 + surface.size()) % surface.size()];
+          Point3d nextVertex = surface[(k + 1) % surface.size()];
 
           trySurface1.push_back(newVertices[0]);
           trySurface1.push_back(newVertices[1]);
@@ -2622,8 +2638,8 @@ void applyGableLogicTriangles(std::vector< std::vector<Point3d> >& surfaces) {
 
       Point3d newVertex = Point3d((gableVertices[1].x() + gableVertices[2].x()) / 2.0,
         (gableVertices[1].y() + gableVertices[2].y()) / 2.0, gableVertices[0].z());
-      for (int i = 0; i < connectedSurfaces.size(); i++) {
-        std::vector<Point3d>& surface = surfaces[connectedSurfaces[i]];
+      for (int j = 0; j < connectedSurfaces.size(); j++) {
+        std::vector<Point3d>& surface = surfaces[connectedSurfaces[j]];
         for (Point3d& vertex : surface) {
           if (vertex != gableTop) {
             continue;
