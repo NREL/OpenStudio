@@ -146,14 +146,26 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorCentralHeatPumpSystem) {
 
   IdfObject i_central_hp = workspace.getObjectsByType(IddObjectType::CentralHeatPumpSystem)[0];
 
-  ASSERT_EQ(OS_CentralHeatPumpSystemFields::CoolingLoopInletNodeName, CentralHeatPumpSystemFields::CoolingLoopInletNodeName);
-  ASSERT_EQ(OS_CentralHeatPumpSystemFields::CoolingLoopOutletNodeName, CentralHeatPumpSystemFields::CoolingLoopOutletNodeName);
+  // supply = Cooling
+  ASSERT_EQ(i_central_hp.getString(CentralHeatPumpSystemFields::CoolingLoopInletNodeName).get(),
+            central_hp.supplyInletModelObject().get().name());
 
-  ASSERT_EQ(OS_CentralHeatPumpSystemFields::SourceLoopInletNodeName, CentralHeatPumpSystemFields::SourceLoopInletNodeName);
-  ASSERT_EQ(OS_CentralHeatPumpSystemFields::SourceLoopOutletNodeName, CentralHeatPumpSystemFields::SourceLoopOutletNodeName);
+  ASSERT_EQ(i_central_hp.getString(CentralHeatPumpSystemFields::CoolingLoopOutletNodeName).get(),
+            central_hp.supplyOutletModelObject().get().name());
 
-  ASSERT_EQ(OS_CentralHeatPumpSystemFields::HeatingLoopInletNodeName, CentralHeatPumpSystemFields::HeatingLoopInletNodeName);
-  ASSERT_EQ(OS_CentralHeatPumpSystemFields::HeatingLoopOutletNodeName, CentralHeatPumpSystemFields::HeatingLoopOutletNodeName);
+  // demand = Source
+  ASSERT_EQ(i_central_hp.getString(CentralHeatPumpSystemFields::SourceLoopInletNodeName).get(),
+            central_hp.demandInletModelObject().get().name());
+
+  ASSERT_EQ(i_central_hp.getString(CentralHeatPumpSystemFields::SourceLoopOutletNodeName).get(),
+            central_hp.demandOutletModelObject().get().name());
+
+  // tertiary = Heating
+  ASSERT_EQ(i_central_hp.getString(CentralHeatPumpSystemFields::HeatingLoopInletNodeName).get(),
+            central_hp.tertiaryInletModelObject().get().name());
+
+  ASSERT_EQ(i_central_hp.getString(CentralHeatPumpSystemFields::HeatingLoopOutletNodeName).get(),
+            central_hp.tertiaryOutletModelObject().get().name());
 
 
   model.save(toPath("./ft_central_hp.osm"), true);
