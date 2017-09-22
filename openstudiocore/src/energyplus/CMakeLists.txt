@@ -496,6 +496,9 @@ set(${target_name}_test_src
 
   Test/AirWallMaterial_GTest.cpp
   Test/Building_GTest.cpp
+
+  Test/CentralHeatPumpSystem_GTest.cpp
+
   Test/CoilHeatingGas_GTest.cpp
   Test/Construction_GTest.cpp
   Test/DaylightingControl_GTest.cpp
