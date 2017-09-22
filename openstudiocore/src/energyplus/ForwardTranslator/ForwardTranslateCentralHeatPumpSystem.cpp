@@ -74,33 +74,36 @@ boost::optional<IdfObject> ForwardTranslator::translateCentralHeatPumpSystem( Ce
    }
   }
 
-  // SourceLoopInletNodeName
-  if( auto mo = modelObject.supplyInletModelObject() ) {
-    if( auto node = mo->optionalCast<Node>() ) {
-      idfObject.setString(CentralHeatPumpSystemFields::SourceLoopInletNodeName,node->name().get());
-    }
-  }
-
-  // SourceLoopOutletNodeName
-  if( auto mo = modelObject.supplyOutletModelObject() ) {
-    if( auto node = mo->optionalCast<Node>() ) {
-      idfObject.setString(CentralHeatPumpSystemFields::SourceLoopOutletNodeName,node->name().get());
-    }
-  }
+  // supply = Cooling Loop, demand=Source Loop, tertiary = Heating Loop
 
   // CoolingLoopInletNodeName
-  if( auto mo = modelObject.demandInletModelObject() ) {
+  if( auto mo = modelObject.supplyInletModelObject() ) {
     if( auto node = mo->optionalCast<Node>() ) {
       idfObject.setString(CentralHeatPumpSystemFields::CoolingLoopInletNodeName,node->name().get());
     }
   }
 
   // CoolingLoopOutletNodeName
-  if( auto mo = modelObject.demandOutletModelObject() ) {
+  if( auto mo = modelObject.supplyOutletModelObject() ) {
     if( auto node = mo->optionalCast<Node>() ) {
       idfObject.setString(CentralHeatPumpSystemFields::CoolingLoopOutletNodeName,node->name().get());
     }
   }
+
+  // SourceLoopInletNodeName
+  if( auto mo = modelObject.demandInletModelObject() ) {
+    if( auto node = mo->optionalCast<Node>() ) {
+      idfObject.setString(CentralHeatPumpSystemFields::SourceLoopInletNodeName,node->name().get());
+    }
+  }
+
+  // SourceLoopOutletNodeName
+  if( auto mo = modelObject.demandOutletModelObject() ) {
+    if( auto node = mo->optionalCast<Node>() ) {
+      idfObject.setString(CentralHeatPumpSystemFields::SourceLoopOutletNodeName,node->name().get());
+    }
+  }
+
 
   // HeatingLoopInletNodeName
   if ( auto mo = modelObject.tertiaryInletModelObject() ) {
