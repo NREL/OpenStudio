@@ -523,11 +523,17 @@ namespace detail {
 
     modelObjects = t_airLoopHVAC->demandComponents(splitterOutletObject->cast<HVACComponent>(),mixerInletObject->cast<HVACComponent>());
 
+    // Do this first because, the zone needs to be connected to airloop
+    // in order for disconnect to figure out which port is the airloop port
+    thermalZone.disconnect();
+
     zoneSplitter.removePortForBranch(zoneSplitter.branchIndexForOutletModelObject(splitterOutletObject.get()));
     zoneMixer.removePortForBranch(zoneMixer.branchIndexForInletModelObject(mixerInletObject.get()));
 
     for( const auto & modelObject : modelObjects ) {
-      modelObject.cast<HVACComponent>().disconnect();
+      if( ! modelObject.optionalCast<ThermalZone>() ) {
+        modelObject.cast<HVACComponent>().disconnect();
+      }
     }
 
     for( auto & modelObject : modelObjects ) {
