@@ -11425,27 +11425,27 @@ OS:CentralHeatPumpSystem,
        \required-field
        \type choice
        \key SmartMixing
-  A3,  \field Cooling Loop Inlet Node Name
+  A4,  \field Cooling Loop Inlet Node Name
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A4,  \field Cooling Loop Outlet Node Name
+  A5,  \field Cooling Loop Outlet Node Name
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A5,  \field Source Loop Inlet Node Name
+  A6,  \field Source Loop Inlet Node Name
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A6,  \field Source Loop Outlet Node Name
+  A7,  \field Source Loop Outlet Node Name
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A7,  \field Heating Loop Inlet Node Name
+  A8,  \field Heating Loop Inlet Node Name
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A8,  \field Heating Loop Outlet Node Name
+  A9,  \field Heating Loop Outlet Node Name
        \type object-list
        \required-field
        \object-list ConnectionNames
@@ -11454,11 +11454,11 @@ OS:CentralHeatPumpSystem,
        \type real
        \units W
        \minimum 0.0
-  A9,  \field Ancillary Operation Schedule Name
+  A10, \field Ancillary Operation Schedule Name
        \type object-list
        \object-list ScheduleNames
        \note This value from this schedule is multiplied times the Ancillary Power
-  A10; \field Chiller Heater Module List Name
+  A11; \field Chiller Heater Module List Name
        \required-field
        \type object-list
        \object-list ModelObjectLists
