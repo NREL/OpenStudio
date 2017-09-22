@@ -118,7 +118,6 @@ boost::optional<IdfObject> ForwardTranslator::translateCentralHeatPumpSystem( Ce
     }
   }
 
-
   // ChillerHeaterModulesPerformanceComponentObjectType1
   // ChillerHeaterModulesPerformanceComponentName1
   // ChillerHeaterModulesControlScheduleName1
@@ -135,7 +134,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCentralHeatPumpSystem( Ce
     {
       auto schedule = module.chillerHeaterModulesControlSchedule();
       if( auto _schedule = translateAndMapModelObject(schedule) ) {
-        idfObject.setString(CentralHeatPumpSystemExtensibleFields::ChillerHeaterModulesControlScheduleName,_schedule->name().get());
+        group.setString(CentralHeatPumpSystemExtensibleFields::ChillerHeaterModulesControlScheduleName,_schedule->name().get());
      }
     }
     group.setInt(CentralHeatPumpSystemExtensibleFields::NumberofChillerHeaterModules, module.numberofChillerHeaterModules() );

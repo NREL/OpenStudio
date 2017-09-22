@@ -47,7 +47,7 @@
 // I think I'll need to cast to a node
 #include "../../model/Node_Impl.hpp"
 
-#include "Schedule.hpp"
+#include "../../model/Schedule.hpp"
 
 
 #include "../../model/Version.hpp"
@@ -98,6 +98,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorCentralHeatPumpSystem) {
   ASSERT_TRUE(central_hp.setAncillaryPower(0.7));
   EXPECT_FALSE(central_hp.ancillaryOperationSchedule());
   Schedule schedule = model.alwaysOnDiscreteSchedule();
+
   // Return type: bool
   ASSERT_TRUE(central_hp.setAncillaryOperationSchedule(schedule));
   EXPECT_TRUE(central_hp.ancillaryOperationSchedule());
@@ -110,7 +111,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorCentralHeatPumpSystem) {
   // Second has 2
   CentralHeatPumpSystemModule central_hp_module2(model);
   central_hp.addModule(central_hp_module2);
-  ASSERT_TRUE(central_hp_module_2.setNumberofChillerHeaterModules(2));
+  ASSERT_TRUE(central_hp_module2.setNumberofChillerHeaterModules(2));
 
 
   ASSERT_EQ( (unsigned)2, central_hp.modules().size() );
@@ -145,14 +146,14 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorCentralHeatPumpSystem) {
 
   IdfObject i_central_hp = workspace.getObjectsByType(IddObjectType::CentralHeatPumpSystem)[0];
 
-  ASSERT_EQ(OS_CentralHeatPumpSystemFields::CoolingLoopInletNodeName, CentralHeatPumpSystem_Fields::CoolingLoopInletNodeName);
-  ASSERT_EQ(OS_CentralHeatPumpSystemFields::CoolingLoopOutletNodeName, CentralHeatPumpSystem_Fields::CoolingLoopOutletNodeName);
+  ASSERT_EQ(OS_CentralHeatPumpSystemFields::CoolingLoopInletNodeName, CentralHeatPumpSystemFields::CoolingLoopInletNodeName);
+  ASSERT_EQ(OS_CentralHeatPumpSystemFields::CoolingLoopOutletNodeName, CentralHeatPumpSystemFields::CoolingLoopOutletNodeName);
 
-  ASSERT_EQ(OS_CentralHeatPumpSystemFields::SourceLoopInletNodeName, CentralHeatPumpSystem_Fields::SourceLoopInletNodeName);
-  ASSERT_EQ(OS_CentralHeatPumpSystemFields::SourceLoopOutletNodeName, CentralHeatPumpSystem_Fields::SourceLoopOutletNodeName);
+  ASSERT_EQ(OS_CentralHeatPumpSystemFields::SourceLoopInletNodeName, CentralHeatPumpSystemFields::SourceLoopInletNodeName);
+  ASSERT_EQ(OS_CentralHeatPumpSystemFields::SourceLoopOutletNodeName, CentralHeatPumpSystemFields::SourceLoopOutletNodeName);
 
-  ASSERT_EQ(OS_CentralHeatPumpSystemFields::HeatingLoopInletNodeName, CentralHeatPumpSystem_Fields::HeatingLoopInletNodeName);
-  ASSERT_EQ(OS_CentralHeatPumpSystemFields::HeatingLoopOutletNodeName, CentralHeatPumpSystem_Fields::HeatingLoopOutletNodeName);
+  ASSERT_EQ(OS_CentralHeatPumpSystemFields::HeatingLoopInletNodeName, CentralHeatPumpSystemFields::HeatingLoopInletNodeName);
+  ASSERT_EQ(OS_CentralHeatPumpSystemFields::HeatingLoopOutletNodeName, CentralHeatPumpSystemFields::HeatingLoopOutletNodeName);
 
 
   model.save(toPath("./ft_central_hp.osm"), true);
