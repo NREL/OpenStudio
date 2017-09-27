@@ -1992,9 +1992,10 @@ void correctBisectorDirection(std::shared_ptr<Ray2d> bisector, std::shared_ptr<V
   * Check if edges are parallel and in opposite direction to each other.
   */
   if (beginEdge->normalize().dot(endEdge->normalize()) < -0.97) {
+    Point3d epvp = endPreviousVertex->point;
     Point3d bp = bisector->point;
     Point3d bnvp = beginNextVertex->point;
-    Vector3d n1 = Vector3d(bp.x(), bp.y(), bp.z()) - Vector3d(bnvp.x(), bnvp.y(), bnvp.z());
+    Vector3d n1 = Vector3d(bp.x(), bp.y(), bp.z()) - Vector3d(epvp.x(), epvp.y(), epvp.z());
     Vector3d n2 = Vector3d(bnvp.x(), bnvp.y(), bnvp.z()) - Vector3d(bp.x(), bp.y(), bp.z());
     n1.normalize();
     n2.normalize();
