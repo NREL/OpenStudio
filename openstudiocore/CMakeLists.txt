@@ -1470,9 +1470,8 @@ else()
   set(examplesdir Examples)
 endif()
 
-
 # Install additional Documents, such as release notes
-install(FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_2_2_0_20170630.pdf" DESTINATION .)
+install(FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_2_3_0_20170930.pdf" DESTINATION .)
 
 ###############################################################################
 
