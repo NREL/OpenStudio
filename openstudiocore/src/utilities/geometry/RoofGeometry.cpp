@@ -305,6 +305,8 @@ public:
   Point3d end;
   std::shared_ptr<Ray2d> bisectorPrevious;
   std::shared_ptr<Ray2d> bisectorNext;
+  std::shared_ptr<Edge> next;
+  std::shared_ptr<Edge> previous;
 
   Edge() {
     // nop
@@ -342,42 +344,8 @@ public:
     return false;
   }
 
-  std::shared_ptr<Edge> previous(std::vector< std::shared_ptr<Edge> >& edges) {
-    std::vector<Edge> newEdges;
-    for (std::shared_ptr<Edge> e : edges) {
-      newEdges.push_back(*e);
-    }
-    int index = getOffsetEdgeIndex(newEdges, -1);
-    return edges[index];
-  }
-
-  std::shared_ptr<Edge> next(std::vector< std::shared_ptr<Edge> >& edges) {
-    std::vector<Edge> newEdges;
-    for (std::shared_ptr<Edge> e : edges) {
-      newEdges.push_back(*e);
-    }
-    int index = getOffsetEdgeIndex(newEdges, 1);
-    return edges[index];
-  }
-
 private:
   REGISTER_LOGGER("utilities.Edge");
-  
-  int getOffsetEdgeIndex(std::vector<Edge>& edges, int offset) {
-    auto it = std::find(edges.begin(), edges.end(), *this);
-    if (it == edges.end()) {
-      LOG_AND_THROW("Could not find edge in edges.");
-    }
-    int pos = std::distance(edges.begin(), it);
-    pos += offset;
-    if (pos < 0) {
-      pos += edges.size();
-    } else if (pos > edges.size() - 1) {
-      pos -= edges.size();
-    }
-    return pos;
-  }
-
 };
 
 class Face; // forward declaration
@@ -1162,8 +1130,15 @@ void initSlav(std::vector<Point3d>& polygon, std::vector< std::vector< std::shar
     edges.push_back(e);
   }
 
+  for (int i = 0; i < size; i++) {
+    int h = (i - 1 + size) % size;
+    int j = (i + 1) % size;
+    edges[i]->previous = edges[h];
+    edges[i]->next = edges[j];
+  }
+
   for (std::shared_ptr<Edge> edge : edges) {
-    std::shared_ptr<Edge> nextEdge = edge->next(edges);
+    std::shared_ptr<Edge> nextEdge = edge->next;
       
     std::shared_ptr<Ray2d> bisector(new Ray2d(calcBisector(edge->end, edge, nextEdge)));
 
@@ -1175,7 +1150,7 @@ void initSlav(std::vector<Point3d>& polygon, std::vector< std::vector< std::shar
   std::vector< std::shared_ptr<Vertex> > lav;
 
   for (std::shared_ptr<Edge> edge : edges) {
-    std::shared_ptr<Edge> nextEdge = edge->next(edges);
+    std::shared_ptr<Edge> nextEdge = edge->next;
 
     std::shared_ptr<Vertex> vertex(new Vertex(edge->end, 0, edge->bisectorNext, edge, nextEdge));
 
