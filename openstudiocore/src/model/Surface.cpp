@@ -2436,27 +2436,27 @@ std::ostream& operator<<(std::ostream& os, const SurfaceIntersection& surfaceInt
 
 boost::optional<AirflowNetworkSurface> Surface::createAirflowNetworkSurface(const AirflowNetworkDetailedOpening& surfaceAirflowLeakage)
 {
-  return getImpl<detail::SubSurface_Impl>()->createAirflowNetworkSurface<AirflowNetworkDetailedOpening>(surfaceAirflowLeakage);
+  return getImpl<detail::Surface_Impl>()->createAirflowNetworkSurface<AirflowNetworkDetailedOpening>(surfaceAirflowLeakage);
 }
 
 boost::optional<AirflowNetworkSurface> Surface::createAirflowNetworkSurface(const AirflowNetworkSimpleOpening& surfaceAirflowLeakage)
 {
-  return getImpl<detail::SubSurface_Impl>()->createAirflowNetworkSurface<AirflowNetworkSimpleOpening>(surfaceAirflowLeakage);
+  return getImpl<detail::Surface_Impl>()->createAirflowNetworkSurface<AirflowNetworkSimpleOpening>(surfaceAirflowLeakage);
 }
 
 boost::optional<AirflowNetworkSurface> Surface::createAirflowNetworkSurface(const AirflowNetworkCrack& surfaceAirflowLeakage)
 {
-  return getImpl<detail::SubSurface_Impl>()->createAirflowNetworkSurface<AirflowNetworkCrack>(surfaceAirflowLeakage);
+  return getImpl<detail::Surface_Impl>()->createAirflowNetworkSurface<AirflowNetworkCrack>(surfaceAirflowLeakage);
 }
 
 boost::optional<AirflowNetworkSurface> Surface::createAirflowNetworkSurface(const AirflowNetworkEffectiveLeakageArea& surfaceAirflowLeakage)
 {
-  return getImpl<detail::SubSurface_Impl>()->createAirflowNetworkSurface<AirflowNetworkEffectiveLeakageArea>(surfaceAirflowLeakage);
+  return getImpl<detail::Surface_Impl>()->createAirflowNetworkSurface<AirflowNetworkEffectiveLeakageArea>(surfaceAirflowLeakage);
 }
 
 boost::optional<AirflowNetworkSurface> Surface::createAirflowNetworkSurface(const AirflowNetworkHorizontalOpening& surfaceAirflowLeakage)
 {
-  return getImpl<detail::SubSurface_Impl>()->createAirflowNetworkSurface<AirflowNetworkHorizontalOpening>(surfaceAirflowLeakage);
+  return getImpl<detail::Surface_Impl>()->createAirflowNetworkSurface<AirflowNetworkHorizontalOpening>(surfaceAirflowLeakage);
 }
 
 boost::optional<AirflowNetworkSurface> Surface::airflowNetworkSurface() const

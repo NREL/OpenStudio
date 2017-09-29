@@ -1112,7 +1112,7 @@ namespace detail {
     std::vector<AirflowNetworkSurface> myAFNSurfs = getObject<ModelObject>().getModelObjectSources<AirflowNetworkSurface>(AirflowNetworkSurface::iddObjectType());
     boost::optional<SubSurface> other = adjacentSubSurface();
     if (other) {
-      std::vector<AirflowNetworkSurface> adjAFNSurfs = other.get().getImpl<detail::Surface_Impl>()->getObject<ModelObject>().getModelObjectSources<AirflowNetworkSurface>(AirflowNetworkSurface::iddObjectType());
+      std::vector<AirflowNetworkSurface> adjAFNSurfs = other.get().getImpl<detail::SubSurface_Impl>()->getObject<ModelObject>().getModelObjectSources<AirflowNetworkSurface>(AirflowNetworkSurface::iddObjectType());
       myAFNSurfs.insert(myAFNSurfs.end(), adjAFNSurfs.begin(), adjAFNSurfs.end());
     }
     auto count = myAFNSurfs.size();

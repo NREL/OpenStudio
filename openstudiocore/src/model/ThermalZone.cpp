@@ -2078,6 +2078,11 @@ namespace detail {
 
     // DLM: do not clone zone mixing objects
 
+    if (auto t_afnzone = airflowNetworkZone()) {
+      auto afnzoneClone = t_afnzone->clone(model).cast<AirflowNetworkZone>();
+      afnzoneClone.setThermalZone(tz);
+    }
+
     return tz;
   }
 
