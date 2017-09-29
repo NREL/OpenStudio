@@ -54,7 +54,7 @@ void OSVersionFixture::SetUpTestCase() {
   // create and popluate resource folder
   openstudio::path thisVersionPath = versionResourcesPath(openstudio::VersionString(openStudioVersion()));
   if (!openstudio::filesystem::exists(thisVersionPath)) {
-    openstudio::filesystem::create_directory(thisVersionPath);
+    openstudio::filesystem::create_directories(thisVersionPath);
   }
 
   // ETH@20120514 Eventually this cpp file should be configured by CMake so OpenStudio.idd can be 
