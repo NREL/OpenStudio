@@ -47,7 +47,9 @@ Through workspace code optimization, large HVAC model creation time has been red
 
 For many years, OpenStudio has included ResultsViewer to visualize timeseries data.  In this release, ResultsViewer is now replaced by a visualization tool called DView which was originally developed for viewing residential building and solar energy simulation data. DView brings additional capabilities that ResultsViewer does not have, including IP unit conversion, CSV data import/export, image export, EPW weather file visualization, two synchronized views, stacked timeseries, average profiles, overview statistics, histograms, cumulative density plots, duration curves, and scatter plots.
 
-## Known Issue
+## Known Issues
+
+DView is not currently available in Ubuntu packages.  We hope to address this in the near future.
 
 PAT&#39;s algorithmic method &#39;RGenoud&#39; is unstable. A software patch will be provided once a fix is in place.  Please use &#39;PSO&#39; until it&#39;s fixed.
 
