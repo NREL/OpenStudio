@@ -187,6 +187,7 @@ TEST_F(ModelFixture, AirflowNetwork_Surface_Clone) {
   Surface clone1 = surface.clone().cast<Surface>();
   boost::optional<AirflowNetworkSurface> optsurf1 = clone1.airflowNetworkSurface();
   ASSERT_TRUE(optsurf1);
+  ASSERT_NE(optsurf, optsurf1);
   ASSERT_TRUE(optsurf1.get().leakageComponent());
   EXPECT_EQ(crack0, optsurf1.get().leakageComponent().get());
 
