@@ -495,7 +495,7 @@ bool CoilHeatingElectric::setAvailabilitySchedule( Schedule & schedule )
 
 /// @cond
 CoilHeatingElectric::CoilHeatingElectric(std::shared_ptr<detail::CoilHeatingElectric_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

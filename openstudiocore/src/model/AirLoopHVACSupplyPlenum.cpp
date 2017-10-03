@@ -217,14 +217,14 @@ namespace detail {
         oldOutletModelObject = directAirModelObject;
         oldOutletObjectPort = directAirModelObject->inletPort();
         oldInletObjectPort = directAirModelObject->connectedObjectPort(directAirModelObject->inletPort()).get();
-      } 
+      }
       else
       {
         oldOutletModelObject = node;
         oldOutletObjectPort = node.inletPort();
         oldInletObjectPort = node.connectedObjectPort(node.inletPort()).get();
       }
-    } 
+    }
 
     // Create a new node and connect the plenum
     if( result )
@@ -309,7 +309,7 @@ namespace detail {
            it != t_outletModelObjects.rend();
            ++it )
       {
-        unsigned branchIndex = branchIndexForOutletModelObject(*it); 
+        unsigned branchIndex = branchIndexForOutletModelObject(*it);
         unsigned t_outletPort = outletPort(branchIndex);
         unsigned connectedObjectInletPort = connectedObjectPort(t_outletPort).get();
 
@@ -384,7 +384,7 @@ bool AirLoopHVACSupplyPlenum::addBranchForZone(openstudio::model::ThermalZone & 
 
 /// @cond
 AirLoopHVACSupplyPlenum::AirLoopHVACSupplyPlenum(std::shared_ptr<detail::AirLoopHVACSupplyPlenum_Impl> impl)
-  : Splitter(impl)
+  : Splitter(std::move(impl))
 {}
 /// @endcond
 

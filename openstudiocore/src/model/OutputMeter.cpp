@@ -429,7 +429,7 @@ namespace detail {
       }else if (openstudio::istringEqual(frequency, "Timestep")){
           frequency = "Zone Timestep";
       }else if (openstudio::istringEqual(frequency, "Detailed")){
-          frequency = "HVAC System Timestep"; 
+          frequency = "HVAC System Timestep";
       }
 
       // currently the key value is not associated with the meter, it is part of the name
@@ -664,7 +664,7 @@ bool MeterFuelTypeEquals(const OutputMeter& meter,const FuelType& ft) {
 
 /// @cond
 OutputMeter::OutputMeter(std::shared_ptr<detail::OutputMeter_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

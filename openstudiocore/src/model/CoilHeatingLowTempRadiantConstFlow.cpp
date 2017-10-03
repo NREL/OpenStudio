@@ -134,7 +134,7 @@ namespace detail {
     {
       if( boost::optional<HVACComponent> coil = zoneHVACLowTempRadiantConstFlow.heatingCoil() )
       {
-        if( coil->handle() == this->handle() )  
+        if( coil->handle() == this->handle() )
         {
           return zoneHVACLowTempRadiantConstFlow;
         }
@@ -406,7 +406,7 @@ void CoilHeatingLowTempRadiantConstFlow::resetHeatingLowControlTemperatureSchedu
 
 /// @cond
 CoilHeatingLowTempRadiantConstFlow::CoilHeatingLowTempRadiantConstFlow(std::shared_ptr<detail::CoilHeatingLowTempRadiantConstFlow_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

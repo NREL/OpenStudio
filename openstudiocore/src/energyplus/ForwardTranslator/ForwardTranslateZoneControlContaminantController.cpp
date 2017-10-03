@@ -56,7 +56,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneControlContaminantCon
   }
 
   if( auto tz = modelObject.getImpl<model::detail::ZoneControlContaminantController_Impl>()->controlledZone() ) {
-    idfObject.setString(ZoneControl_ContaminantControllerFields::ControlledZoneName,tz->name().get());
+    idfObject.setString(ZoneControl_ContaminantControllerFields::ZoneName,tz->name().get());
   }
 
   if( auto s = modelObject.carbonDioxideControlAvailabilitySchedule() ) {

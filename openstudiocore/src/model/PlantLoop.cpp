@@ -967,7 +967,7 @@ PlantLoop::PlantLoop(Model& model)
 }
 
 PlantLoop::PlantLoop(std::shared_ptr<detail::PlantLoop_Impl> impl)
-  : Loop(impl)
+  : Loop(std::move(impl))
 {}
 
 boost::optional<AvailabilityManager> PlantLoop::availabilityManager() const

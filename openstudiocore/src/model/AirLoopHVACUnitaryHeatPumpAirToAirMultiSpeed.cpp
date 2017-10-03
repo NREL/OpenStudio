@@ -733,8 +733,8 @@ namespace detail {
 } // detail
 
 AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed::AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed(const Model& model,
-  const HVACComponent& fan, 
-  const HVACComponent& heatingCoil, 
+  const HVACComponent& fan,
+  const HVACComponent& heatingCoil,
   const HVACComponent& coolingCoil,
   const HVACComponent& supplementalHeatingCoil)
   : StraightComponent(AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed::iddObjectType(),model)
@@ -1075,7 +1075,7 @@ void AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed::autosizeSpeed4SupplyAirFlowRa
 
 /// @cond
 AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed::AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed(std::shared_ptr<detail::AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

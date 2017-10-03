@@ -130,7 +130,7 @@ void PlantEquipmentOperationOutdoorDryBulbDifference::resetReferenceTemperatureN
 
 /// @cond
 PlantEquipmentOperationOutdoorDryBulbDifference::PlantEquipmentOperationOutdoorDryBulbDifference(std::shared_ptr<detail::PlantEquipmentOperationOutdoorDryBulbDifference_Impl> impl)
-  : PlantEquipmentOperationRangeBasedScheme(impl)
+  : PlantEquipmentOperationRangeBasedScheme(std::move(impl))
 {}
 /// @endcond
 

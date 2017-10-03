@@ -175,7 +175,7 @@ void DistrictHeating::autosizeNominalCapacity() {
 /// @cond
 
 DistrictHeating::DistrictHeating(std::shared_ptr<detail::DistrictHeating_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

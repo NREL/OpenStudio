@@ -270,7 +270,7 @@ ThermalStorageIceDetailed::ThermalStorageIceDetailed(const Model& model)
   OS_ASSERT(getImpl<detail::ThermalStorageIceDetailed_Impl>());
 
   {
-    CurveQuadraticLinear curve(model);  
+    CurveQuadraticLinear curve(model);
     curve.setCoefficient1Constant(0.0);
     curve.setCoefficient2x(0.09);
     curve.setCoefficient3xPOW2(-0.15);
@@ -405,7 +405,7 @@ bool ThermalStorageIceDetailed::setThawProcessIndicator(std::string thawProcessI
 
 /// @cond
 ThermalStorageIceDetailed::ThermalStorageIceDetailed(std::shared_ptr<detail::ThermalStorageIceDetailed_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

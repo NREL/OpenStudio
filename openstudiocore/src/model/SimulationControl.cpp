@@ -620,7 +620,7 @@ SimulationControl::SimulationControl( const Model& model ):
 }
 
 SimulationControl::SimulationControl(std::shared_ptr<detail::SimulationControl_Impl> impl)
-  : ParentObject(impl)
+  : ParentObject(std::move(impl))
 {}
 
 IddObjectType SimulationControl::iddObjectType() {

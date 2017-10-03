@@ -94,7 +94,7 @@ IddObjectType EnergyManagementSystemGlobalVariable::iddObjectType() {
 
 /// @cond
 EnergyManagementSystemGlobalVariable::EnergyManagementSystemGlobalVariable(std::shared_ptr<detail::EnergyManagementSystemGlobalVariable_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

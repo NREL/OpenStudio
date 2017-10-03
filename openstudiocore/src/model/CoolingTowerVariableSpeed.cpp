@@ -1108,7 +1108,7 @@ void CoolingTowerVariableSpeed::resetSizingFactor() {
 
 /// @cond
 CoolingTowerVariableSpeed::CoolingTowerVariableSpeed(std::shared_ptr<detail::CoolingTowerVariableSpeed_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

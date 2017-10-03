@@ -255,7 +255,7 @@ namespace detail {
     return 0.0;
   }
 
-  double HotWaterEquipmentDefinition_Impl::getPowerPerFloorArea(double floorArea, 
+  double HotWaterEquipmentDefinition_Impl::getPowerPerFloorArea(double floorArea,
                                                                      double numPeople) const
   {
     std::string method = designLevelCalculationMethod();
@@ -280,7 +280,7 @@ namespace detail {
     return 0.0;
   }
 
-  double HotWaterEquipmentDefinition_Impl::getPowerPerPerson(double floorArea, 
+  double HotWaterEquipmentDefinition_Impl::getPowerPerPerson(double floorArea,
                                                              double numPeople) const
   {
     std::string method = designLevelCalculationMethod();
@@ -304,9 +304,9 @@ namespace detail {
     OS_ASSERT(false);
     return 0.0;
   }
- 
+
   bool HotWaterEquipmentDefinition_Impl::setDesignLevelCalculationMethod(const std::string& method,
-                                                                         double floorArea, 
+                                                                         double floorArea,
                                                                          double numPeople)
   {
     std::string wmethod(method);
@@ -321,7 +321,7 @@ namespace detail {
     else if (wmethod == "watts/person") {
       return setWattsperPerson(getPowerPerPerson(floorArea,numPeople));
     }
-    
+
     return false;
   }
 
@@ -433,8 +433,8 @@ double HotWaterEquipmentDefinition::getPowerPerPerson(double floorArea, double n
   return getImpl<detail::HotWaterEquipmentDefinition_Impl>()->getPowerPerPerson(floorArea,numPeople);
 }
 
-bool HotWaterEquipmentDefinition::setDesignLevelCalculationMethod(const std::string& method, 
-                                     double floorArea, 
+bool HotWaterEquipmentDefinition::setDesignLevelCalculationMethod(const std::string& method,
+                                     double floorArea,
                                      double numPeople)
 {
   return getImpl<detail::HotWaterEquipmentDefinition_Impl>()->setDesignLevelCalculationMethod(method,floorArea,numPeople);
@@ -442,7 +442,7 @@ bool HotWaterEquipmentDefinition::setDesignLevelCalculationMethod(const std::str
 
 /// @cond
 HotWaterEquipmentDefinition::HotWaterEquipmentDefinition(std::shared_ptr<detail::HotWaterEquipmentDefinition_Impl> impl)
-  : SpaceLoadDefinition(impl)
+  : SpaceLoadDefinition(std::move(impl))
 {}
 /// @endcond
 

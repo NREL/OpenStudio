@@ -547,7 +547,7 @@ void ScheduleTypeLimits::resetUnitType() {
 
 /// @cond
 ScheduleTypeLimits::ScheduleTypeLimits(std::shared_ptr<detail::ScheduleTypeLimits_Impl> impl)
-  : ResourceObject(impl)
+  : ResourceObject(std::move(impl))
 {}
 /// @endcond
 

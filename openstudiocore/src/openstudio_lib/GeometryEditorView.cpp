@@ -71,6 +71,8 @@
 #include <QWebEnginePage>
 #include <QWebEngineSettings>
 
+int CHECKFORUPDATEMSEC = 5000;
+
 namespace openstudio {
 
 GeometryEditorView::GeometryEditorView(bool isIP,
@@ -234,6 +236,8 @@ EditorWebView::EditorWebView(bool isIP, const openstudio::model::Model& model, Q
       if (!errorsAndWarnings.isEmpty()){
         QMessageBox::warning(this, "Updating Floorplan", errorsAndWarnings);
       }
+
+      std::string contents2 = m_floorplan->toJSON();
 
       // start the editor
       m_newImportGeometry->setEnabled(false);
@@ -497,7 +501,7 @@ void EditorWebView::startEditor()
 
   // start checking for updates
   m_versionNumber = 0;
-  m_checkForUpdateTimer->start(1000);
+  m_checkForUpdateTimer->start(CHECKFORUPDATEMSEC);
 
   m_document->enable();
 }
@@ -660,15 +664,31 @@ void EditorWebView::checkForUpdate()
 
     QString javascript = QString("window.versionNumber;");
     m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_versionNumber = v.toUInt();  m_javascriptRunning = false; });
+    
+    // DLM: the javascript engine appears to stop when a file dialog is launched by the editor (e.g. to import an image)
+    int processEventsTime = 200;
+    boost::posix_time::ptime start = boost::posix_time::microsec_clock::universal_time();
     while (m_javascriptRunning){
+      // if the javascript is taking too long to evaluate, bail out here
+      // DLM: multiply elapsed time by two, we want to make sure we have half of the time between update checks to process other events
+      int elapsed = 2 * (boost::posix_time::microsec_clock::universal_time() - start).total_milliseconds();
+      if (elapsed > CHECKFORUPDATEMSEC){
+        break;
+      }
       // DLM: instead ignore user events
-      OSAppBase::instance()->processEvents(QEventLoop::ExcludeUserInputEvents, 200);
+      // DLM: this is a problem during file dialogs launched by the editor
+      OSAppBase::instance()->processEvents(QEventLoop::ExcludeUserInputEvents, processEventsTime);
     }
 
     //m_document->enable();
 
-    if (currentVersionNumber != m_versionNumber){
-      onChanged();
+    if (m_javascriptRunning){
+      // DLM: do not set this to false, we will require the javascript to complete
+      //m_javascriptRunning = false;
+    } else{
+      if (currentVersionNumber != m_versionNumber){
+        onChanged();
+      }
     }
   }
 }

@@ -425,7 +425,7 @@ unsigned ZoneHVACEquipmentList::coolingPriority(const ModelObject & equipment)
 
 /// @cond
 ZoneHVACEquipmentList::ZoneHVACEquipmentList(std::shared_ptr<detail::ZoneHVACEquipmentList_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

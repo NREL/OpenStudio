@@ -76,7 +76,7 @@ namespace model {
 namespace detail {
 
   SubSurface_Impl::SubSurface_Impl(const IdfObject& idfObject,
-                                   Model_Impl* model, 
+                                   Model_Impl* model,
                                    bool keepHandle)
     : PlanarSurface_Impl(idfObject,model,keepHandle)
   {
@@ -205,7 +205,7 @@ namespace detail {
 
     // both surfaces return a construction, they are not the same, and both have same search distance
 
-    if (constructionWithSearchDistance->first.optionalCast<model::LayeredConstruction>() && 
+    if (constructionWithSearchDistance->first.optionalCast<model::LayeredConstruction>() &&
         adjacentConstructionWithSearchDistance->first.optionalCast<model::LayeredConstruction>()){
       if (constructionWithSearchDistance->first.cast<model::LayeredConstruction>().reverseEqualLayers(adjacentConstructionWithSearchDistance->first.cast<model::LayeredConstruction>())){
         // these constructions are reverse equal
@@ -276,7 +276,7 @@ namespace detail {
   }
 
   boost::optional<Space> SubSurface_Impl::space() const
-  { 
+  {
     boost::optional<Space> result;
     boost::optional<Surface> surface = this->surface();
     if (surface){
@@ -574,7 +574,7 @@ namespace detail {
   void SubSurface_Impl::resetShadingControl()
   {
     bool result = setString(OS_SubSurfaceFields::ShadingControlName, "");
-    OS_ASSERT(result);  
+    OS_ASSERT(result);
   }
 
   bool SubSurface_Impl::setWindowPropertyFrameAndDivider(const WindowPropertyFrameAndDivider& windowPropertyFrameAndDivider)
@@ -656,12 +656,12 @@ namespace detail {
     }
     return result;
   }
-  
+
   boost::optional<SubSurface> SubSurface_Impl::adjacentSubSurface() const
   {
     return getObject<SubSurface>().getModelObjectTarget<SubSurface>(OS_SubSurfaceFields::OutsideBoundaryConditionObject);
   }
-  
+
   bool SubSurface_Impl::setAdjacentSubSurface(SubSurface& subSurface)
   {
     // matching sub surface with self is ok for stories with multipliers
@@ -688,7 +688,7 @@ namespace detail {
         std::string thisSubSurfaceType = this->subSurfaceType();
         std::string adjacentSubSurfaceType = subSurface.subSurfaceType();
         if (thisSubSurfaceType != adjacentSubSurfaceType){
-          // sub surfaces don't match, we could return false here if we wanted to 
+          // sub surfaces don't match, we could return false here if we wanted to
           // however, David's preference is that we attempt to resolve this
           std::string thisDefaultSubSurfaceType = this->defaultSubSurfaceType();
 
@@ -726,7 +726,7 @@ namespace detail {
 
     return result;
   }
-  
+
   void SubSurface_Impl::resetAdjacentSubSurface()
   {
     bool test = setString(OS_SubSurfaceFields::OutsideBoundaryConditionObject, "");
@@ -874,7 +874,7 @@ namespace detail {
     return result;
   }
 
-  void SubSurface_Impl::assignDefaultSubSurfaceType() 
+  void SubSurface_Impl::assignDefaultSubSurfaceType()
   {
     std::string defaultSubSurfaceType = this->defaultSubSurfaceType();
     bool test = setSubSurfaceType(defaultSubSurfaceType);
@@ -903,7 +903,7 @@ namespace detail {
     boost::optional<Space> space = this->space();
     boost::optional<ShadingSurface> shadingSurface;
     if (space){
-      
+
       Point3dVector vertices = this->vertices();
       Transformation transformation = Transformation::alignFace(vertices);
       Point3dVector faceVertices = transformation.inverse() * vertices;
@@ -943,7 +943,7 @@ namespace detail {
   }
 
   boost::optional<ShadingSurface> SubSurface_Impl::addOverhangByProjectionFactor(double projectionFactor, double offsetFraction)
-  { 
+  {
     std::string subSurfaceType = this->subSurfaceType();
     if (!(istringEqual("FixedWindow", subSurfaceType) ||
           istringEqual("OperableWindow", subSurfaceType) ||
@@ -955,7 +955,7 @@ namespace detail {
     boost::optional<Space> space = this->space();
     boost::optional<ShadingSurface> shadingSurface;
     if (space){
-      
+
       Point3dVector vertices = this->vertices();
       Transformation transformation = Transformation::alignFace(vertices);
       Point3dVector faceVertices = transformation.inverse() * vertices;
@@ -1320,7 +1320,7 @@ boost::optional<DaylightingDeviceShelf> SubSurface::addDaylightingDeviceShelf() 
 
 /// @cond
 SubSurface::SubSurface(std::shared_ptr<detail::SubSurface_Impl> impl)
-  : PlanarSurface(impl)
+  : PlanarSurface(std::move(impl))
 {}
 /// @endcond
 

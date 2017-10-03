@@ -1923,7 +1923,7 @@ boost::optional<Model> Model::load(const path& osmPath, const path& workflowJSON
 
 
 Model::Model(std::shared_ptr<detail::Model_Impl> p)
-  : Workspace(p)
+  : Workspace(std::move(p))
 {}
 
 boost::optional<Building> Model::building() const

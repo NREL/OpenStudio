@@ -123,6 +123,7 @@ class MODEL_API ZoneHVACPackagedTerminalHeatPump : public ZoneHVACComponent
 
   bool isHeatingConvergenceToleranceDefaulted() const;
 
+  /** Not used as of EnergyPlus 8.8.0 and above **/
   double minimumOutdoorDryBulbTemperatureforCompressorOperation() const;
 
   bool isMinimumOutdoorDryBulbTemperatureforCompressorOperationDefaulted() const;
@@ -195,6 +196,7 @@ class MODEL_API ZoneHVACPackagedTerminalHeatPump : public ZoneHVACComponent
 
   void resetHeatingConvergenceTolerance();
 
+  /** Not used as of EnergyPlus 8.8.0 and above **/
   bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
 
   void resetMinimumOutdoorDryBulbTemperatureforCompressorOperation();

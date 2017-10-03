@@ -782,7 +782,7 @@ void FanOnOff::resetEndUseSubcategory()
 
 /// @cond
 FanOnOff::FanOnOff(std::shared_ptr<detail::FanOnOff_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

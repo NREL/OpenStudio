@@ -127,7 +127,7 @@ namespace detail {
 
   boost::optional<ZoneHVACComponent> CoilCoolingLowTempRadiantConstFlow_Impl::containingZoneHVACComponent() const
   {
-  
+
     std::vector<ZoneHVACLowTempRadiantConstFlow> zoneHVACLowTempRadiantConstFlows;
 
     zoneHVACLowTempRadiantConstFlows = this->model().getConcreteModelObjects<ZoneHVACLowTempRadiantConstFlow>();
@@ -136,7 +136,7 @@ namespace detail {
     {
       if( boost::optional<HVACComponent> coil = zoneHVACLowTempRadiantConstFlow.coolingCoil() )
       {
-        if( coil->handle() == this->handle() )  
+        if( coil->handle() == this->handle() )
         {
           return zoneHVACLowTempRadiantConstFlow;
         }
@@ -492,7 +492,7 @@ void CoilCoolingLowTempRadiantConstFlow::resetCondensationControlDewpointOffset(
 
 /// @cond
 CoilCoolingLowTempRadiantConstFlow::CoilCoolingLowTempRadiantConstFlow(std::shared_ptr<detail::CoilCoolingLowTempRadiantConstFlow_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

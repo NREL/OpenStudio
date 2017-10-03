@@ -72,7 +72,7 @@ void LifeCycleCostUsePriceEscalation_Impl::setEscalationStartYear(int num)
   setInt(OS_LifeCycleCost_UsePriceEscalationFields::EscalationStartYear,num);
 }
 
-boost::optional<double> LifeCycleCostUsePriceEscalation_Impl::yearEscalation(unsigned index) const 
+boost::optional<double> LifeCycleCostUsePriceEscalation_Impl::yearEscalation(unsigned index) const
 {
   IdfExtensibleGroup eg = getExtensibleGroup(index);
   if (!eg.empty()) {
@@ -89,7 +89,7 @@ bool LifeCycleCostUsePriceEscalation_Impl::setYearEscalation(unsigned index, dou
   else {
     StringVector values(1u);
     eg = insertExtensibleGroup(index,values);
-    if (!eg.empty()) { 
+    if (!eg.empty()) {
       return eg.setDouble(OS_LifeCycleCost_UsePriceEscalationExtensibleFields::YearEscalation,num);
     }
   }
@@ -167,7 +167,7 @@ LifeCycleCostUsePriceEscalation::LifeCycleCostUsePriceEscalation(const Model& mo
 
 // constructor
 LifeCycleCostUsePriceEscalation::LifeCycleCostUsePriceEscalation(std::shared_ptr<detail::LifeCycleCostUsePriceEscalation_Impl> impl)
-  : ParentObject(impl)
+  : ParentObject(std::move(impl))
 {}
 
 OptionalInt LifeCycleCostUsePriceEscalation::escalationStartYear() const

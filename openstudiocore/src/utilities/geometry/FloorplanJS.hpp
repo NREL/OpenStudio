@@ -122,7 +122,7 @@ namespace openstudio{
 
     /// convert to ThreeJS, will throw if error
     /// ThreeJS file produced will always be in metric units, NorthAxis will not be applied
-    ThreeScene toThreeScene(bool breakSurfaces) const;
+    ThreeScene toThreeScene(bool openstudioFormat) const;
 
     /// degrees from North measured clockwise
     double northAxis() const;
@@ -156,6 +156,7 @@ namespace openstudio{
     std::string getHandleString(const Json::Value& value) const;
     std::string getName(const Json::Value& value) const;
     std::string getId(const Json::Value& value) const;
+    std::string getFaceId(const Json::Value& value) const;
 
     std::string getNextId();
     void setLastId(const Json::Value& value);
@@ -168,6 +169,10 @@ namespace openstudio{
 
     void updateObjects(Json::Value& value, const std::string& key, const std::vector<FloorplanObject>& objects, bool removeMissingObjects);
     void updateObjectReference(Json::Value& value, const std::string& key, const FloorplanObject& objectReference, bool removeMissingObjects);
+
+    void removeFaces(Json::Value& value, const std::set<std::string>& faceIdsToRemove);
+    void removeEdges(Json::Value& value, const std::set<std::string>& edgeIdsToRemove);
+    void removeVertices(Json::Value& value, const std::set<std::string>& vertexIdsToRemove);
 
     Json::Value m_value;
 

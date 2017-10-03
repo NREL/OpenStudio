@@ -77,13 +77,13 @@ namespace detail {
 
   int CurveFunctionalPressureDrop_Impl::numVariables() const {
     LOG_AND_THROW("CurveFunctionalPressureDrop must be evaluated by EnergyPlus, in the context of "
-        << "plant pressure simulations. Therefore, numVariables and evaluate are not applicable " 
+        << "plant pressure simulations. Therefore, numVariables and evaluate are not applicable "
         << "for this curve type.");
   }
 
   double CurveFunctionalPressureDrop_Impl::evaluate(const std::vector<double>& x) const {
     LOG_AND_THROW("CurveFunctionalPressureDrop must be evaluated by EnergyPlus, in the context of "
-        << "plant pressure simulations. Therefore, numVariables and evaluate are not applicable " 
+        << "plant pressure simulations. Therefore, numVariables and evaluate are not applicable "
         << "for this curve type.");
   }
 
@@ -246,7 +246,7 @@ void CurveFunctionalPressureDrop::resetFixedFrictionFactor() {
 
 /// @cond
 CurveFunctionalPressureDrop::CurveFunctionalPressureDrop(std::shared_ptr<detail::CurveFunctionalPressureDrop_Impl> impl)
-  : Curve(impl)
+  : Curve(std::move(impl))
 {}
 /// @endcond
 

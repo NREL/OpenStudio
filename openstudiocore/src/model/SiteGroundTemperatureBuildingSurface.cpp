@@ -690,7 +690,7 @@ bool SiteGroundTemperatureBuildingSurface::setAllMonthlyTemperatures(const std::
 
 /// @cond
 SiteGroundTemperatureBuildingSurface::SiteGroundTemperatureBuildingSurface(std::shared_ptr<detail::SiteGroundTemperatureBuildingSurface_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 SiteGroundTemperatureBuildingSurface::SiteGroundTemperatureBuildingSurface(Model& model)
   : ModelObject(SiteGroundTemperatureBuildingSurface::iddObjectType(),model)

@@ -471,7 +471,7 @@ void FluidCoolerSingleSpeed::resetOutdoorAirInletNode() {
 
 /// @cond
 FluidCoolerSingleSpeed::FluidCoolerSingleSpeed(std::shared_ptr<detail::FluidCoolerSingleSpeed_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

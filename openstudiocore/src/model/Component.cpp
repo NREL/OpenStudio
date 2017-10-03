@@ -115,7 +115,7 @@ namespace detail {
     return boost::none;
   }
 
-  std::vector<WorkspaceObject> Component_Impl::addObjects(const IdfObjectVector& idfObjects)
+  std::vector<WorkspaceObject> Component_Impl::addObjects(const IdfObjectVector& idfObjects, bool checkNames)
   {
     return WorkspaceObjectVector();
   }
@@ -132,7 +132,7 @@ namespace detail {
   }
 
   std::vector<WorkspaceObject> Component_Impl::addObjects(
-      const std::vector<WorkspaceObject>& objects)
+      const std::vector<WorkspaceObject>& objects, bool checkNames)
   {
     return WorkspaceObjectVector();
   }
@@ -270,7 +270,7 @@ bool Component::save(const openstudio::path& p, bool overwrite) {
 
 /// @cond
 Component::Component(std::shared_ptr<detail::Component_Impl> impl)
-  : Model(impl)
+  : Model(std::move(impl))
 {}
 /// @endcond
 

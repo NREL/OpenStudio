@@ -784,7 +784,7 @@ void PhotovoltaicPerformanceEquivalentOneDiode::resetTotalHeatCapacity() {
 
 /// @cond
 PhotovoltaicPerformanceEquivalentOneDiode::PhotovoltaicPerformanceEquivalentOneDiode(std::shared_ptr<detail::PhotovoltaicPerformanceEquivalentOneDiode_Impl> impl)
-  : PhotovoltaicPerformance(impl)
+  : PhotovoltaicPerformance(std::move(impl))
 {}
 /// @endcond
 

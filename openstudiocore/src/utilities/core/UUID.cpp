@@ -51,14 +51,14 @@
 int _uuid_id = qRegisterMetaType<openstudio::UUID>("openstudio::UUID");
 
 namespace openstudio {
-  
+
 #ifdef __APPLE__
-  
+
   namespace detail {
-    
+
     // if you do not initialize random number generator on Mac you will generate same sequence of UUIDs
     // this issue is addressed in Qt 4.7 by using /dev/urandom
-    struct RandomNumberInitializer 
+    struct RandomNumberInitializer
     {
       RandomNumberInitializer(){
         FILE *urandom;
@@ -69,7 +69,7 @@ namespace openstudio {
         qsrand(seed);
       }
     };
-    
+
     RandomNumberInitializer _randomNumberInitializer;
 
   }
@@ -113,7 +113,7 @@ UUID UUID::random_generate()
   if (gen.get() == nullptr) {
     gen.reset(new boost::uuids::random_generator);
   }
-    
+
   return UUID((*gen)());
 }
 
@@ -129,7 +129,7 @@ UUID UUID::string_generate(const std::string &t_str)
 }
 
 
-UUID createUUID() 
+UUID createUUID()
 {
   return UUID::random_generate();
 }
@@ -138,7 +138,7 @@ UUID toUUID(const QString &str)
 {
   return toUUID(toString(str));
 }
-  
+
 UUID toUUID(const std::string& str)
 {
   try {

@@ -139,6 +139,7 @@ ApplyMeasureNowDialog::~ApplyMeasureNowDialog()
     app->measureManager().setLibraryController(app->currentDocument()->mainRightColumnController()->measureLibraryController()); 
 
     // restore the model's workflow JSON
+    // DLM: this is not sufficient if the OSM is being reloaded
     app->currentModel()->setWorkflowJSON(m_modelWorkflowJSON);
   }
 

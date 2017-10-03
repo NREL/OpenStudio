@@ -558,8 +558,8 @@ namespace detail {
 } // detail
 
 AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass::AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass(const Model& model,
-  const HVACComponent& fan, 
-  const HVACComponent& coolingCoil, 
+  const HVACComponent& fan,
+  const HVACComponent& coolingCoil,
   const HVACComponent& heatingCoil)
   : StraightComponent(AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass::iddObjectType(),model)
 {
@@ -568,19 +568,19 @@ AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass::AirLoopHVACUnitaryHeatCoolVAVChan
   bool ok;
   ok = setCoolingCoil(coolingCoil);
   if( ! ok ) {
-    LOG_AND_THROW("Unable to set cooling coil"); 
+    LOG_AND_THROW("Unable to set cooling coil");
   }
   ok = setHeatingCoil(heatingCoil);
   if( ! ok ) {
-    LOG_AND_THROW("Unable to set heating coil"); 
+    LOG_AND_THROW("Unable to set heating coil");
   }
   ok = setSupplyAirFan(fan);
   if( ! ok ) {
-    LOG_AND_THROW("Unable to set fan"); 
+    LOG_AND_THROW("Unable to set fan");
   }
 
   autosizeSystemAirFlowRateDuringCoolingOperation();
-  autosizeSystemAirFlowRateDuringHeatingOperation(); 
+  autosizeSystemAirFlowRateDuringHeatingOperation();
   autosizeSystemAirFlowRateWhenNoCoolingorHeatingisNeeded();
   autosizeOutdoorAirFlowRateDuringCoolingOperation();
   autosizeOutdoorAirFlowRateDuringHeatingOperation();
@@ -809,7 +809,7 @@ bool AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass::setDehumidificationControlTy
 
 /// @cond
 AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass::AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass(std::shared_ptr<detail::AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

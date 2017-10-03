@@ -98,9 +98,9 @@ namespace detail {
   std::vector<Space> LightingSimulationZone_Impl::spaces() const
   {
     std::vector<Space> result;
-    
-    for (const ModelExtensibleGroup& group : castVector<ModelExtensibleGroup>(extensibleGroups())) 
-    {        
+
+    for (const ModelExtensibleGroup& group : castVector<ModelExtensibleGroup>(extensibleGroups()))
+    {
       boost::optional<Space> space = group.getModelObjectTarget<Space>(0);
       OS_ASSERT(space);
       result.push_back(*space);
@@ -173,7 +173,7 @@ void LightingSimulationZone::resetSpaces()
 
 /// @cond
 LightingSimulationZone::LightingSimulationZone(std::shared_ptr<detail::LightingSimulationZone_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

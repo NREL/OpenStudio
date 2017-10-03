@@ -621,10 +621,10 @@ namespace detail {
   }
 
   bool PumpVariableSpeed_Impl::setPumpCurve(const Curve& curve) {
-    if (curve.optionalCast<CurveLinear>() || 
+    if (curve.optionalCast<CurveLinear>() ||
         curve.optionalCast<CurveQuadratic>() ||
         curve.optionalCast<CurveCubic>() ||
-        curve.optionalCast<CurveQuartic>()) 
+        curve.optionalCast<CurveQuartic>())
     {
       Curve wcurve = curve;
       if (wcurve.parent()) {
@@ -1491,7 +1491,7 @@ void PumpVariableSpeed::resetMaximumRPMSchedule() {
 
 /// @cond
 PumpVariableSpeed::PumpVariableSpeed(std::shared_ptr<detail::PumpVariableSpeed_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

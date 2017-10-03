@@ -454,7 +454,7 @@ namespace detail {
       auto mo = totalCoolingCapacityFunctionofTemperatureCurve();
       result.push_back(mo);
     }
-    { 
+    {
       auto mo = totalCoolingCapacityFunctionofFlowFractionCurve();
       result.push_back(mo);
     }
@@ -887,7 +887,7 @@ void CoilPerformanceDXCooling::resetSensibleHeatRatioFunctionofFlowFractionCurve
 
 /// @cond
 CoilPerformanceDXCooling::CoilPerformanceDXCooling(std::shared_ptr<detail::CoilPerformanceDXCooling_Impl> impl)
-  : ParentObject(impl)
+  : ParentObject(std::move(impl))
 {}
 /// @endcond
 

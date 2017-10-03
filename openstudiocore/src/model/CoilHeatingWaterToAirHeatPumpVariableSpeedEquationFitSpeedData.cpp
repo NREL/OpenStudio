@@ -291,7 +291,7 @@ CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData::CoilHeatingWater
   heating_curve_1.setMaximumValueofx(27.0);
   heating_curve_1.setMinimumValueofy(10.0);
   heating_curve_1.setMaximumValueofy(30.0);
-  
+
   CurveQuadratic heating_curve_2(model);
   heating_curve_2.setCoefficient1Constant(1.0);
   heating_curve_2.setCoefficient2x(0.0);
@@ -305,7 +305,7 @@ CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData::CoilHeatingWater
   heating_curve_3.setCoefficient3xPOW2(0.0);
   heating_curve_3.setMinimumValueofx(0.0);
   heating_curve_3.setMaximumValueofx(1.0);
-  
+
   CurveBiquadratic heating_curve_4(model);
   heating_curve_4.setCoefficient1Constant(0.993257);
   heating_curve_4.setCoefficient2x(0.0201512);
@@ -317,7 +317,7 @@ CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData::CoilHeatingWater
   heating_curve_4.setMaximumValueofx(27.0);
   heating_curve_4.setMinimumValueofy(10.0);
   heating_curve_4.setMaximumValueofy(30.0);
-  
+
   CurveQuadratic heating_curve_5(model);
   heating_curve_5.setCoefficient1Constant(1.0);
   heating_curve_5.setCoefficient2x(0.0);
@@ -513,7 +513,7 @@ bool CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData::setWasteHea
 
 /// @cond
 CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData(std::shared_ptr<detail::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl> impl)
-  : ParentObject(impl)
+  : ParentObject(std::move(impl))
 {}
 /// @endcond
 

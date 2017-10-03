@@ -608,7 +608,7 @@ bool HeatPumpWaterToWaterEquationFitCooling::setCompanionHeatingHeatPump(const H
 
 /// @cond
 HeatPumpWaterToWaterEquationFitCooling::HeatPumpWaterToWaterEquationFitCooling(std::shared_ptr<detail::HeatPumpWaterToWaterEquationFitCooling_Impl> impl)
-  : WaterToWaterComponent(impl)
+  : WaterToWaterComponent(std::move(impl))
 {}
 /// @endcond
 

@@ -33,7 +33,7 @@
 ! WeatherFileName=USA_CO_Boulder_TMY2.epw
 ! End SimMetaData
 
-  Version,8.7;
+  Version,8.8;
 
   Timestep,6;
 
@@ -1243,7 +1243,7 @@
     Classroom Inlet Nodes,   !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Classroom Air Node,      !- Zone Air Node Name
-    Classroom Return Air Node Name;  !- Zone Return Air Node Name
+    Classroom Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Classroom Inlet Nodes,   !- Name
@@ -1361,6 +1361,7 @@
     HVACOperationSchd,       !- Fan Schedule Name
     CycleOnAny,              !- Control Type
     1.0,                     !- Thermostat Tolerance {deltaC}
+    FixedRunTime,            !- Cycling Run Time Control Type
     1800;                    !- Cycling Run Time {s}
 
   BranchList,
@@ -1469,7 +1470,8 @@
     PSZ-AC:1_CoolCStandard10Ton_CapFF,  !- Total Cooling Capacity Function of Flow Fraction Curve Name
     PSZ-AC:1_CoolCStandard10Ton_EIRFT,  !- Energy Input Ratio Function of Temperature Curve Name
     PSZ-AC:1_CoolCStandard10Ton_EIRFFF,  !- Energy Input Ratio Function of Flow Fraction Curve Name
-    PSZ-AC:1_CoolCStandard10Ton_PLR;  !- Part Load Fraction Correlation Curve Name
+    PSZ-AC:1_CoolCStandard10Ton_PLR,  !- Part Load Fraction Correlation Curve Name
+    ;                        !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
 
   Curve:Biquadratic,
     PSZ-AC:1_CoolCStandard10Ton_CapFT,  !- Name

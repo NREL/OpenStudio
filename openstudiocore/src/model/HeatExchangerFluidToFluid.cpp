@@ -707,7 +707,7 @@ void HeatExchangerFluidToFluid::resetOperationMaximumTemperatureLimit() {
 
 /// @cond
 HeatExchangerFluidToFluid::HeatExchangerFluidToFluid(std::shared_ptr<detail::HeatExchangerFluidToFluid_Impl> impl)
-  : WaterToWaterComponent(impl)
+  : WaterToWaterComponent(std::move(impl))
 {}
 /// @endcond
 

@@ -950,7 +950,7 @@ void CoolingTowerPerformanceCoolTools::setCoefficient35(double coefficient35) {
 
 /// @cond
 CoolingTowerPerformanceCoolTools::CoolingTowerPerformanceCoolTools(std::shared_ptr<detail::CoolingTowerPerformanceCoolTools_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

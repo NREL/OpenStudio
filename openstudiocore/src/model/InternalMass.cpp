@@ -109,7 +109,7 @@ namespace detail {
     if (surfaceAreaperPerson){
       return internalMassDefinition.setSurfaceArea(*surfaceAreaperPerson * space->numberOfPeople());
     }
-  
+
     return false;
   }
 
@@ -308,7 +308,7 @@ boost::optional<SurfacePropertyConvectionCoefficients> InternalMass::surfaceProp
 
 /// @cond
 InternalMass::InternalMass(std::shared_ptr<detail::InternalMass_Impl> impl)
-  : SpaceLoadInstance(impl)
+  : SpaceLoadInstance(std::move(impl))
 {}
 /// @endcond
 

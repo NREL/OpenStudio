@@ -327,7 +327,7 @@ void CurveFanPressureRise::resetMaximumCurveOutput() {
 
 /// @cond
 CurveFanPressureRise::CurveFanPressureRise(std::shared_ptr<detail::CurveFanPressureRise_Impl> impl)
-  : Curve(impl)
+  : Curve(std::move(impl))
 {}
 /// @endcond
 

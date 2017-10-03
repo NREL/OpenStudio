@@ -690,7 +690,7 @@ bool SiteGroundTemperatureFCfactorMethod::setAllMonthlyTemperatures(const std::v
 
 /// @cond
 SiteGroundTemperatureFCfactorMethod::SiteGroundTemperatureFCfactorMethod(std::shared_ptr<detail::SiteGroundTemperatureFCfactorMethod_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 SiteGroundTemperatureFCfactorMethod::SiteGroundTemperatureFCfactorMethod(Model& model)
   : ModelObject(SiteGroundTemperatureFCfactorMethod::iddObjectType(),model)

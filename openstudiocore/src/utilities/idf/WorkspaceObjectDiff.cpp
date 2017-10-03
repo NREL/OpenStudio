@@ -61,7 +61,7 @@ namespace openstudio {
   }
 
   WorkspaceObjectDiff::WorkspaceObjectDiff(const std::shared_ptr<detail::WorkspaceObjectDiff_Impl>& impl)
-    : IdfObjectDiff(impl)
+    : IdfObjectDiff(std::move(impl))
   {
     OS_ASSERT(getImpl<detail::WorkspaceObjectDiff_Impl>());
   }

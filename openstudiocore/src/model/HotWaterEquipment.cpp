@@ -364,7 +364,7 @@ HotWaterEquipmentDefinition HotWaterEquipment::hotWaterEquipmentDefinition() con
   return getImpl<detail::HotWaterEquipment_Impl>()->hotWaterEquipmentDefinition();
 }
 
-bool HotWaterEquipment::setHotWaterEquipmentDefinition(const HotWaterEquipmentDefinition& hotWaterEquipmentDefinition) 
+bool HotWaterEquipment::setHotWaterEquipmentDefinition(const HotWaterEquipmentDefinition& hotWaterEquipmentDefinition)
 {
   return getImpl<detail::HotWaterEquipment_Impl>()->setHotWaterEquipmentDefinition(hotWaterEquipmentDefinition);
 }
@@ -383,7 +383,7 @@ double HotWaterEquipment::getPowerPerPerson(double floorArea, double numPeople) 
 
 /// @cond
 HotWaterEquipment::HotWaterEquipment(std::shared_ptr<detail::HotWaterEquipment_Impl> impl)
-  : SpaceLoadInstance(impl)
+  : SpaceLoadInstance(std::move(impl))
 {}
 /// @endcond
 

@@ -317,7 +317,7 @@ HeaderedPumpsConstantSpeed::HeaderedPumpsConstantSpeed(const Model& model)
   setFlowSequencingControlScheme("Sequential");
   setRatedPumpHead(179352);
   autosizeRatedPowerConsumption();
-  setMotorEfficiency(0.9); 
+  setMotorEfficiency(0.9);
   setFractionofMotorInefficienciestoFluidStream(0.0);
   setPumpControlType("Continuous");
   setSkinLossRadiativeFraction(0.1);
@@ -451,7 +451,7 @@ bool HeaderedPumpsConstantSpeed::setSkinLossRadiativeFraction(double skinLossRad
 
 /// @cond
 HeaderedPumpsConstantSpeed::HeaderedPumpsConstantSpeed(std::shared_ptr<detail::HeaderedPumpsConstantSpeed_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

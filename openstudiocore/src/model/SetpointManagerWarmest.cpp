@@ -200,7 +200,7 @@ bool SetpointManagerWarmest::setStrategy(const std::string& strategy) {
 
 /// @cond
 SetpointManagerWarmest::SetpointManagerWarmest(std::shared_ptr<detail::SetpointManagerWarmest_Impl> impl)
-  : SetpointManager(impl)
+  : SetpointManager(std::move(impl))
 {}
 /// @endcond
 

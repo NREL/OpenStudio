@@ -53,14 +53,14 @@ ElectricalStorage_Impl::ElectricalStorage_Impl(const IdfObject& idfObject, Model
 {}
 
 ElectricalStorage_Impl::ElectricalStorage_Impl(
-    const openstudio::detail::WorkspaceObject_Impl& other, 
-    Model_Impl* model, 
+    const openstudio::detail::WorkspaceObject_Impl& other,
+    Model_Impl* model,
     bool keepHandle)
  : ParentObject_Impl(other, model, keepHandle)
 {}
 
-ElectricalStorage_Impl::ElectricalStorage_Impl(const ElectricalStorage_Impl& other, 
-                             Model_Impl* model, 
+ElectricalStorage_Impl::ElectricalStorage_Impl(const ElectricalStorage_Impl& other,
+                             Model_Impl* model,
                              bool keepHandles)
  : ParentObject_Impl(other, model, keepHandles)
 {}
@@ -88,7 +88,7 @@ ElectricalStorage::ElectricalStorage(IddObjectType type,const Model& model)
 }
 
 ElectricalStorage::ElectricalStorage(std::shared_ptr<detail::ElectricalStorage_Impl> p)
-  : ParentObject(p)
+  : ParentObject(std::move(p))
 {}
 
 boost::optional<ElectricLoadCenterDistribution> ElectricalStorage::electricLoadCenterDistribution() const

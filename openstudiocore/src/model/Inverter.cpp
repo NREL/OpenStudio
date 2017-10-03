@@ -50,19 +50,19 @@ Inverter_Impl::Inverter_Impl(IddObjectType type, Model_Impl* model)
 
 Inverter_Impl::Inverter_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
   : ParentObject_Impl(idfObject, model, keepHandle)
-{ 
+{
 }
 
 Inverter_Impl::Inverter_Impl(
-    const openstudio::detail::WorkspaceObject_Impl& other, 
-    Model_Impl* model, 
+    const openstudio::detail::WorkspaceObject_Impl& other,
+    Model_Impl* model,
     bool keepHandle)
  : ParentObject_Impl(other, model, keepHandle)
 {
 }
 
-Inverter_Impl::Inverter_Impl(const Inverter_Impl& other, 
-                             Model_Impl* model, 
+Inverter_Impl::Inverter_Impl(const Inverter_Impl& other,
+                             Model_Impl* model,
                              bool keepHandles)
  : ParentObject_Impl(other, model, keepHandles)
 {
@@ -91,7 +91,7 @@ Inverter::Inverter(IddObjectType type,const Model& model)
 }
 
 Inverter::Inverter(std::shared_ptr<detail::Inverter_Impl> p)
-  : ParentObject(p)
+  : ParentObject(std::move(p))
 {}
 
 boost::optional<ElectricLoadCenterDistribution> Inverter::electricLoadCenterDistribution() const

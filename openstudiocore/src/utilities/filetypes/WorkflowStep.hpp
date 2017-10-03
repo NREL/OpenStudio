@@ -79,7 +79,7 @@ public:
     if (!impl){
       throw(std::bad_cast());
     }
-    return T(impl);
+    return T(std::move(impl));
   }
 
   /// cast to optional of type T
@@ -88,7 +88,7 @@ public:
     boost::optional<T> result;
     std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
     if (impl){
-      result = T(impl);
+      result = T(std::move(impl));
     }
     return result;
   }

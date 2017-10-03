@@ -71,7 +71,7 @@ namespace openstudio {
   UTILITIES_API bool operator> (const UUID & lhs, const UUID & rhs);
 
   /// Universally Unique Identifier
-  class UTILITIES_API UUID : private boost::uuids::uuid
+  class UTILITIES_API UUID : public boost::uuids::uuid
   {
   public:
     UUID();

@@ -320,10 +320,10 @@ class UTILITIES_API IdfObject {
   std::vector<unsigned> requiredFields() const;
 
   /** Returns true if this IdfObject is valid, that is, has no errors at or below level. */
-  bool isValid(StrictnessLevel level) const;
+  bool isValid(StrictnessLevel level, bool checkNames=false) const;
 
   /** Returns a ValidityReport for this IdfObject containing all errors at or below level. */
-  ValidityReport validityReport(StrictnessLevel level, bool checkNames=true) const;
+  ValidityReport validityReport(StrictnessLevel level, bool checkNames=false) const;
 
   /** Checks for equality of data (non-managedObjectList) fields. Prerequisite: iddObject()s
    *  must be equal. For objects with handle fields, checks for equality of handle OR equality
@@ -392,7 +392,7 @@ class UTILITIES_API IdfObject {
     if (!impl){
       throw(std::bad_cast());
     }
-    return T(impl);
+    return T(std::move(impl));
   }
 
   /// cast to optional of type T
@@ -401,7 +401,7 @@ class UTILITIES_API IdfObject {
     boost::optional<T> result;
     std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
     if (impl){
-      result = T(impl);
+      result = T(std::move(impl));
     }
     return result;
   }

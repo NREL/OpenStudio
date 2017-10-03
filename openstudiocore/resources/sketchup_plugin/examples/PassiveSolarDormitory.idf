@@ -1,4 +1,4 @@
-  Version,8.7;
+  Version,8.8;
 
   Timestep,4;
 
@@ -4211,7 +4211,7 @@
     Bedroom1 Inlet Node,     !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Bedroom1 Node,           !- Zone Air Node Name
-    Bedroom1 Return Node;    !- Zone Return Air Node Name
+    Bedroom1 Return Node;    !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentList,
     Bedroom1 Equipment,      !- Name
@@ -4225,6 +4225,7 @@
     ,                        !- Availability Schedule Name
     Bedroom1 Inlet Node,     !- Zone Supply Air Node Name
     ,                        !- Zone Exhaust Air Node Name
+    ,                        !- System Inlet Air Node Name
     50,                      !- Maximum Heating Supply Air Temperature {C}
     13,                      !- Minimum Cooling Supply Air Temperature {C}
     0.015,                   !- Maximum Heating Supply Air Humidity Ratio {kgWater/kgDryAir}
@@ -4261,7 +4262,7 @@
     Bedroom2 Inlet Node,     !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Bedroom2 Node,           !- Zone Air Node Name
-    Bedroom2 Return Node;    !- Zone Return Air Node Name
+    Bedroom2 Return Node;    !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentList,
     Bedroom2 Equipment,      !- Name
@@ -4275,6 +4276,7 @@
     ,                        !- Availability Schedule Name
     Bedroom2 Inlet Node,     !- Zone Supply Air Node Name
     ,                        !- Zone Exhaust Air Node Name
+    ,                        !- System Inlet Air Node Name
     50,                      !- Maximum Heating Supply Air Temperature {C}
     13,                      !- Minimum Cooling Supply Air Temperature {C}
     0.015,                   !- Maximum Heating Supply Air Humidity Ratio {kgWater/kgDryAir}
@@ -4311,7 +4313,7 @@
     Bedroom3 Inlet Node,     !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Bedroom3 Node,           !- Zone Air Node Name
-    Bedroom3 Return Node;    !- Zone Return Air Node Name
+    Bedroom3 Return Node;    !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentList,
     Bedroom3 Equipment,      !- Name
@@ -4325,6 +4327,7 @@
     ,                        !- Availability Schedule Name
     Bedroom3 Inlet Node,     !- Zone Supply Air Node Name
     ,                        !- Zone Exhaust Air Node Name
+    ,                        !- System Inlet Air Node Name
     50,                      !- Maximum Heating Supply Air Temperature {C}
     13,                      !- Minimum Cooling Supply Air Temperature {C}
     0.015,                   !- Maximum Heating Supply Air Humidity Ratio {kgWater/kgDryAir}
@@ -4361,7 +4364,7 @@
     Bedroom4 Inlet Node,     !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Bedroom4 Node,           !- Zone Air Node Name
-    Bedroom4 Return Node;    !- Zone Return Air Node Name
+    Bedroom4 Return Node;    !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentList,
     Bedroom4 Equipment,      !- Name
@@ -4375,6 +4378,7 @@
     ,                        !- Availability Schedule Name
     Bedroom4 Inlet Node,     !- Zone Supply Air Node Name
     ,                        !- Zone Exhaust Air Node Name
+    ,                        !- System Inlet Air Node Name
     50,                      !- Maximum Heating Supply Air Temperature {C}
     13,                      !- Minimum Cooling Supply Air Temperature {C}
     0.015,                   !- Maximum Heating Supply Air Humidity Ratio {kgWater/kgDryAir}

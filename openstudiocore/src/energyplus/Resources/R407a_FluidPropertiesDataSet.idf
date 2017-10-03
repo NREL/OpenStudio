@@ -9,9 +9,11 @@
 !    8.5;                    !- Version Identifier
 !  Version,
 !    8.6;                    !- Version Identifier
-
 !  Version,
 !    8.7;                    !- Version Identifier
+
+!  Version,
+!    8.8;                    !- Version Identifier
 
   FluidProperties:Name,
     R407a,                   !- Fluid Name
@@ -33,7 +35,7 @@
     60,65,70,75;
 
   FluidProperties:Saturated,
-    R407a,                   !- Name
+    R407a,                   !- Fluid Name
     Pressure,                !- Fluid Property Type
     FluidGas,                !- Fluid Phase
     R407aSaturatedTemperatures,  !- Temperature Values Name
@@ -43,7 +45,7 @@
     2.6873E+6,3.0160E+6,3.3784E+6,3.7806E+6;
 
   FluidProperties:Saturated,
-    R407a,                   !- Name
+    R407a,                   !- Fluid Name
     Enthalpy,                !- Fluid Property Type
     Fluid,                   !- Fluid Phase
     R407aSaturatedTemperatures,  !- Temperature Values Name
@@ -53,7 +55,7 @@
     2.9449E+5,3.0434E+5,3.1509E+5,3.2749E+5;
 
   FluidProperties:Saturated,
-    R407a,                   !- Name
+    R407a,                   !- Fluid Name
     Enthalpy,                !- Fluid Property Type
     FluidGas,                !- Fluid Phase
     R407aSaturatedTemperatures,  !- Temperature Values Name
@@ -63,7 +65,7 @@
     4.1121E+5,4.0977E+5,4.0711E+5,4.0230E+5;
 
   FluidProperties:Saturated,
-    R407a,                   !- Name
+    R407a,                   !- Fluid Name
     Density,                 !- Fluid Property Type
     Fluid,                   !- Fluid Phase
     R407aSaturatedTemperatures,  !- Temperature Values Name
@@ -73,7 +75,7 @@
     9.4304E+2,9.0120E+2,8.5099E+2,7.8510E+2;
 
   FluidProperties:Saturated,
-    R407a,                   !- Name
+    R407a,                   !- Fluid Name
     Density,                 !- Fluid Property Type
     FluidGas,                !- Fluid Phase
     R407aSaturatedTemperatures,  !- Temperature Values Name
@@ -83,7 +85,7 @@
     1.4166E+2,1.6682E+2,1.9924E+2,2.4458E+2;
 
   FluidProperties:Saturated,
-    R407a,                   !- Name
+    R407a,                   !- Fluid Name
     SpecificHeat,            !- Fluid Property Type
     Fluid,                   !- Fluid Phase
     R407aSaturatedTemperatures,  !- Temperature Values Name
@@ -93,7 +95,7 @@
     2.0682E+3,2.317E+3,2.7759E+3,3.9105E+3;
 
   FluidProperties:Saturated,
-    R407a,                   !- Name
+    R407a,                   !- Fluid Name
     SpecificHeat,            !- Fluid Property Type
     FluidGas,                !- Fluid Phase
     R407aSaturatedTemperatures,  !- Temperature Values Name

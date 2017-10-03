@@ -242,7 +242,7 @@ bool ZoneAirMassFlowConservation::setInfiltrationBalancingZones(const std::strin
   return getImpl<detail::ZoneAirMassFlowConservation_Impl>()->setInfiltrationBalancingZones(infiltrationBalancingZones);
 }
 
-void ZoneAirMassFlowConservation::resetInfiltrationBalancingZones() 
+void ZoneAirMassFlowConservation::resetInfiltrationBalancingZones()
 {
   getImpl<detail::ZoneAirMassFlowConservation_Impl>()->resetInfiltrationBalancingZones();
 }
@@ -250,7 +250,7 @@ void ZoneAirMassFlowConservation::resetInfiltrationBalancingZones()
 
 /// @cond
 ZoneAirMassFlowConservation::ZoneAirMassFlowConservation(std::shared_ptr<detail::ZoneAirMassFlowConservation_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 ZoneAirMassFlowConservation::ZoneAirMassFlowConservation(Model& model)
   : ModelObject(ZoneAirMassFlowConservation::iddObjectType(),model)

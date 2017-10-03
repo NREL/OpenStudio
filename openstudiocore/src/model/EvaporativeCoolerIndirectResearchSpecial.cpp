@@ -765,7 +765,7 @@ void EvaporativeCoolerIndirectResearchSpecial::autosizePrimaryDesignAirFlowRate(
 
 /// @cond
 EvaporativeCoolerIndirectResearchSpecial::EvaporativeCoolerIndirectResearchSpecial(std::shared_ptr<detail::EvaporativeCoolerIndirectResearchSpecial_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

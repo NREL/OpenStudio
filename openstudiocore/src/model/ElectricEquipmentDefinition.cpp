@@ -274,7 +274,7 @@ namespace detail {
     return 0.0;
   }
 
-  double ElectricEquipmentDefinition_Impl::getPowerPerFloorArea(double floorArea, 
+  double ElectricEquipmentDefinition_Impl::getPowerPerFloorArea(double floorArea,
                                                                      double numPeople) const
   {
     std::string method = designLevelCalculationMethod();
@@ -299,7 +299,7 @@ namespace detail {
     return 0.0;
   }
 
-  double ElectricEquipmentDefinition_Impl::getPowerPerPerson(double floorArea, 
+  double ElectricEquipmentDefinition_Impl::getPowerPerPerson(double floorArea,
                                                              double numPeople) const
   {
     std::string method = designLevelCalculationMethod();
@@ -323,9 +323,9 @@ namespace detail {
     OS_ASSERT(false);
     return 0.0;
   }
- 
+
   bool ElectricEquipmentDefinition_Impl::setDesignLevelCalculationMethod(const std::string& method,
-                                                                         double floorArea, 
+                                                                         double floorArea,
                                                                          double numPeople)
   {
     std::string wmethod(method);
@@ -340,7 +340,7 @@ namespace detail {
     else if (wmethod == "watts/person") {
       return setWattsperPerson(getPowerPerPerson(floorArea,numPeople));
     }
-    
+
     return false;
   }
 
@@ -452,8 +452,8 @@ double ElectricEquipmentDefinition::getPowerPerPerson(double floorArea, double n
   return getImpl<detail::ElectricEquipmentDefinition_Impl>()->getPowerPerPerson(floorArea,numPeople);
 }
 
-bool ElectricEquipmentDefinition::setDesignLevelCalculationMethod(const std::string& method, 
-                                     double floorArea, 
+bool ElectricEquipmentDefinition::setDesignLevelCalculationMethod(const std::string& method,
+                                     double floorArea,
                                      double numPeople)
 {
   return getImpl<detail::ElectricEquipmentDefinition_Impl>()->setDesignLevelCalculationMethod(method,floorArea,numPeople);
@@ -461,7 +461,7 @@ bool ElectricEquipmentDefinition::setDesignLevelCalculationMethod(const std::str
 
 /// @cond
 ElectricEquipmentDefinition::ElectricEquipmentDefinition(std::shared_ptr<detail::ElectricEquipmentDefinition_Impl> impl)
-  : SpaceLoadDefinition(impl)
+  : SpaceLoadDefinition(std::move(impl))
 {}
 /// @endcond
 

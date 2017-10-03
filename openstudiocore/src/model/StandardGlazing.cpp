@@ -1201,7 +1201,7 @@ bool StandardGlazing::setThermalResistance(double value) {
 
 /// @cond
 StandardGlazing::StandardGlazing(std::shared_ptr<detail::StandardGlazing_Impl> impl)
-  : Glazing(impl)
+  : Glazing(std::move(impl))
 {}
 /// @endcond
 

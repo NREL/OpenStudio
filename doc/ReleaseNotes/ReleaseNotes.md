@@ -1,43 +1,59 @@
-# OpenStudio 2.1.0 Overview
+# OpenStudio Version 2.3.0
 
-The OpenStudio 2.x line is an aggressive overhaul of OpenStudio to make the SDK smaller and more accessible for third party software developers. The new package includes two major new components: a command line interface (CLI) and a new version of the Parametric Analysis Tool (PAT).  A new component based installer gives users the choice to install only the components that they need. OpenStudio 2.1.0 is the first major release of the OpenStudio 2.x line.
+_Release Notes – 9/30/2017_
 
-The OpenStudio command line interface (CLI) allows software developers to execute a series of OpenStudio Measures and other simulation steps as described in an OpenStudio Workflow (OSW) file. The OSW defines a set of paths to search for OpenStudio Measures, initial seed model, weather file, and other supporting files. When an OSW is run through the CLI, the initial seed model is loaded and OpenStudio Model Measures are applied to the seed model.  After these measures, the OpenStudio Model is translated to EnergyPlus IDF format.  Once in EnergyPlus IDF format, OpenStudio EnergyPlus Measures are applied.  After these measures, the EnergyPlus simulation is executed.  Once the EnergyPlus simulation is complete, OpenStudio Reporting Measures are applied which generate reports.  Once the workflow is completed (successfully or unsuccessfully), an output OSW file is written which contains output related to running the workflow. The OpenStudio CLI contains a Ruby interpreter, Ruby standard library, OpenStudio Ruby bindings, and a core set of gems (including the OpenStudio Standards Gem). It does not have any shared library dependencies outside of system runtime libraries. EnergyPlus and Radiance are not embedded within the CLI, they are included as part of the OpenStudio installation. There is an example OSW included in this package in the compact_osw directory under the Examples directory. This example contains everything to run a simple OpenStudio workflow from loading a seed model, applying measures, running EnergyPlus, and running reporting measures. To run this example:
+These release notes describe version 2.3.0 of the OpenStudio software suite developed by the National Renewable Energy Laboratory (NREL), Buildings and Thermal Systems, Commercial Buildings Research Group, Tools Development Section, and associated collaborators. The notes are organized into the following sections:
 
-```
-cd path/to/Examples/compact_osw
-./path/to/openstudio.exe run -w compact.osw
-```
+- Where to Find OpenStudio Documentation
+- Installation Notes
+- Overview
 
-More information about the OpenStudio CLI is available at: http://nrel.github.io/OpenStudio-user-documentation/reference/command_line_interface/
+# Where to Find OpenStudio Documentation
 
-A new version of the OpenStudio Parametric Analysis Tool (PAT) is part of OpenStudio 2.1.0 packages. This new version of PAT has been rewritten from the ground up as an example of JavaScript application development with OpenStudio.  It has been packaged as an Electron desktop application and leverages OpenStudio Server for improved robustness, scalability, and capability.  This new version of PAT provides similar functionality (and we hope improved usability) as compared to PAT 1.14.0. However, the new version of PAT is not backwards compatible with PAT 1.14.0 projects. Additionally, this new version of PAT supports “algorithmic” workflows – methods for automatically generating large sets of analysis data points.  Choose from Design Of Experiments, Latin Hypercube Sampling, multiple optimization methods, and more to identify the most sensitive parameters in a model, calibrate a model against real consumption data, or optimize a model to balance multiple design objectives.  Algorithmic analyses tend to be computationally intensive, so the new PAT supports simulation on Amazon Web Service or other resources provisioned with OpenStudio Server.
+- OpenStudio release documentation, including these release notes, tutorials, and other user documentation, is available at [https://www.openstudio.net/](https://www.openstudio.net/).
+- C++ API documentation is available at [https://openstudio-sdk-documentation.s3.amazonaws.com/index.html](https://openstudio-sdk-documentation.s3.amazonaws.com/index.html).
+- Measure development documentation is available at [http://nrel.github.io/OpenStudio-user-documentation/reference/measure\_writing\_guide/](http://nrel.github.io/OpenStudio-user-documentation/reference/measure_writing_guide/).
 
-The Ruby and C# binding footprints have been greatly reduced in the OpenStudio 2.1.0 package. Previously, deploying the Ruby and C# bindings required deployment of many shared library and file dependencies. In OpenStudio 2.1.0, the Ruby bindings are contained in a single openstudio.so (.bundle on Mac) file and the C# bindings in an OpenStudio.dll and two supporting dll files. These are the only files required to distribute the OpenStudio 2.1.0 bindings with a third party application. Note that the openstudio.so Ruby file does not contain any gems or the Ruby standard library; these must be configured using typical Gemfile configuration for your Ruby project. Similarly, the C# bindings do not include a Ruby interpreter or OpenStudio Ruby bindings needed to apply OpenStudio Measures. If a C# project desires to run measures or simulations, it can write an OSW file and make a system call to the CLI.
+# Installation Notes
 
-OpenStudio 2.1.0 is mostly backwards compatible with OpenStudio 1.14.0.  One primary difference is that PAT is not backwards compatible with PAT 1.14.0 projects.  Also, upgrading a 1.14.0 version OSM to 2.1.0 will not preserve the associated run.db, any measures associated with the OSM will have to be re-added in 2.1.0. The API for OpenStudio Model and other core namespaces was mostly preserved during the OpenStudio 2.1.0 conversion. However, the RunManager, Analysis, Project, and AnalysisDriver namespaces were completely removed. The CLI and OSW format replace the functionality of RunManager. The OpenStudio Analysis (OSA) format replaces the functionality of Analysis, Project, and AnalysisDriver. The Ruleset namespace has been renamed to Measure to better reflect its functionality.
+OpenStudio is supported on Windows 7 – Windows 10, OS X 10.10 – 10.11, and 64-bit Ubuntu 14.04.
 
-OpenStudio 2.1.0 has been updated to EnergyPlus 8.7, Ruby 2.2.4, and is compatible with SketchUp 2017.  ResultsViewer is included in the 2.1.0 release.
+OpenStudio 2.3.0 supports EnergyPlus Release 8.8.0, which is bundled with the OpenStudio installer. It is no longer necessary to download and install EnergyPlus separately. Other builds of EnergyPlus are not supported by OpenStudio 2.3.0.
+
+OpenStudio 2.3.0 supports Radiance 5.0.a.12, which is bundled with the OpenStudio installer; users no longer have to install Radiance separately, and OpenStudio will use the included Radiance version regardless of any other versions that may be installed on the system. Other builds of Radiance are not supported by OpenStudio 2.3.0.
+
+## Installation Steps
+
+- The OpenStudio SketchUp Plug-in requires [SketchUp 2017](http://www.sketchup.com/) (not available for Linux). The OpenStudio SketchUp Plug-in does not support older versions of SketchUp.
+  - If the OpenStudio Plug-in does not automatically load in SketchUp, open the Window-&gt;Preferences-&gt;Extensions window in SketchUp and enable the OpenStudio plug-in if it is listed.
+- Download and install [OpenStudio](https://www.openstudio.net/downloads). Select components for installation.
+- Setup a Building Component Library (BCL) account to access online building components and measures. [View instructions on how to setup your account and configure the key in OpenStudio](http://nrel.github.io/OpenStudio-user-documentation/getting_started/getting_started/).
+
+For help with common installation problems please visit, [http://nrel.github.io/OpenStudio-user-documentation/help/troubleshooting/](http://nrel.github.io/OpenStudio-user-documentation/help/troubleshooting/).
+
+# Overview
+
+The biggest new feature in OpenStudio 2.2.0 is the integration of the OpenStudio Geometry Editor in the OpenStudio Application. The [OpenStudio Geometry Editor](https://github.com/NREL/openstudio-geometry-editor) is a new, open source software module that developers can leverage to produce building energy modeling UIs that include geometry creation. The OpenStudio Geometry Editor is meant to cover simple building geometry use cases only. More complex building geometry is best developed in a full featured CAD tool and exported to gbXML for building energy modeling. The OpenStudio Geometry Editor is implemented in JavaScript with minimal dependencies, allowing it to be integrated into a wide range of applications. The OpenStudio Geometry Editor reads and writes a custom [floorplan.json](https://raw.githubusercontent.com/NREL/openstudio-geometry-editor/develop/schema/geometry_schema.json) JSON file format. New methods have been added to the OpenStudio SDK, which can translate this file format to OSM. Additionally, new methods have been added to the SDK, which allows two OpenStudio Models to be merged. These new methods are demonstrated by integrating the Geometry Editor directly within the OpenStudio Application. The OpenStudio Geometry Editor and integration within the OpenStudio Application are experimental, and are not recommended for production workflows. However, we invite users to try these software components out and provide feedback to help us make them better for use by third party developers.  Instructions for use are at: [http://nrel.github.io/OpenStudio-user-documentation/reference/geometry\_editor/](http://nrel.github.io/OpenStudio-user-documentation/reference/geometry_editor/)
+
+**EnergyPlus**
+
+Openstudio now incorporates EnergyPlus Release 8.8, which provides additional speed improvements, as well as bug fixes.
+
+**OpenStudio**
+
+Through workspace code optimization, large HVAC model creation time has been reduced by roughly 75%. An example test model which originally took 416 seconds to create, took only 101 seconds after this code improvement.
+
+**DView**
+
+For many years, OpenStudio has included ResultsViewer to visualize timeseries data.  In this release, ResultsViewer is now replaced by a visualization tool called DView which was originally developed for viewing residential building and solar energy simulation data. DView brings additional capabilities that ResultsViewer does not have, including IP unit conversion, CSV data import/export, image export, EPW weather file visualization, two synchronized views, stacked timeseries, average profiles, overview statistics, histograms, cumulative density plots, duration curves, and scatter plots.
 
 ## Known Issues
 
-This is a list of known issues, if you find an issue not on this list please let us know so we can fix it.
+DView is not currently available in Ubuntu packages.  We hope to address this in the near future.
 
-Installer
-* Spaces in the install path will cause PAT to fail.
-* Firewall rules are not configured at install time, user is prompted to allow http communication between OpenStudioApp and the CLI as well as between PAT and the CLI.
+PAT&#39;s algorithmic method &#39;RGenoud&#39; is unstable. A software patch will be provided once a fix is in place.  Please use &#39;PSO&#39; until it&#39;s fixed.
 
-Measures
-* Measures written for OpenStudio 1.14.0 and earlier may not work with OpenStudio 2.0.0, measure authors are encouraged to test their measures and update them to ensure compatibility.
-* Reporting measures do not have access to offline JavaScript libraries included with the OpenStudio installation.  Measure writers can include offline JavaScript libraries in the resources directory of their measure.
+## Issue Statistics Since Previous Release
 
-OpenStudioApp
-* The app may appear to freeze on return from BCL measure dialog on Mac, a workaround is to select File -> Quit and when prompted to save the Model, select cancel to abort the quit operation or press the escape key.
-
-PAT 2.0
-* “Create One Design Alternative with Each Measure Option” duplicates options that already exist
-* Cannot enter user defined string for Measure Choice arguments
-* Display name is not shown  when browsing measures
-* Measures associated with seed model are not imported
-
-
+- 81 new issues were filed since the 2.2.0 release of OpenStudio (not including opened pull requests).
+- 42 issues were closed since the 2.2.0 release of OpenStudio (not including closed pull requests).

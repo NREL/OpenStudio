@@ -159,7 +159,7 @@ namespace detail {
 
     std::vector<ScheduleWeek> scheduleWeeks = this->scheduleWeeks(); // these are already sorted
     std::vector<openstudio::Date> dates = this->dates(); // these are already sorted
-    
+
     unsigned N = dates.size();
     OS_ASSERT(scheduleWeeks.size() == N);
 
@@ -193,7 +193,7 @@ namespace detail {
     std::vector<ScheduleWeek> scheduleWeeks = this->scheduleWeeks(); // these are already sorted
     std::vector<openstudio::Date> dates = this->dates(); // these are already sorted
     bool inserted = false;
-    
+
     unsigned N = dates.size();
     OS_ASSERT(scheduleWeeks.size() == N);
 
@@ -217,7 +217,7 @@ namespace detail {
         inserted = true;
 
       }else{
-        
+
         // if we need to insert new schedule/date pair here
         if ((untilDate < dates[i]) && !inserted){
 
@@ -296,7 +296,7 @@ IddObjectType ScheduleYear::iddObjectType() {
 
 /// @cond
 ScheduleYear::ScheduleYear(std::shared_ptr<detail::ScheduleYear_Impl> impl)
-  : Schedule(impl)
+  : Schedule(std::move(impl))
 {}
 /// @endcond
 

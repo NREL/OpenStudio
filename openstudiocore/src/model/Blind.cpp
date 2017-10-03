@@ -1878,7 +1878,7 @@ void Blind::resetMaximumSlatAngle() {
 
 /// @cond
 Blind::Blind(std::shared_ptr<detail::Blind_Impl> impl)
-  : ShadingMaterial(impl)
+  : ShadingMaterial(std::move(impl))
 {}
 /// @endcond
 

@@ -359,7 +359,7 @@ void DesignSpecificationZoneAirDistribution::resetZoneSecondaryRecirculationFrac
 
 /// @cond
 DesignSpecificationZoneAirDistribution::DesignSpecificationZoneAirDistribution(std::shared_ptr<detail::DesignSpecificationZoneAirDistribution_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 
