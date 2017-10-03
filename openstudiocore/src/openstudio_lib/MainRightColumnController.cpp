@@ -958,8 +958,8 @@ void MainRightColumnController::configureForThermalZonesSubTab(int subTabID)
   libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_EnergyRecoveryVentilator,"ERV");
   libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_FourPipeFanCoil,"Four Pipe Fan Coil");
   libraryWidget->addModelObjectType(IddObjectType::OS_Fan_ZoneExhaust,"Fan Zone Exhaust");
-  libraryWidget->addModelObjectType(IddObjectType::OS_WaterHeater_HeatPump,"Heat Pump Water Heater");
-  libraryWidget->addModelObjectType(IddObjectType::OS_WaterHeater_HeatPump_WrappedCondenser,"Heat Pump Water Heater - Wrapped Condenser");
+  libraryWidget->addModelObjectType(IddObjectType::OS_WaterHeater_HeatPump,"Water Heater - Heat Pump");
+  libraryWidget->addModelObjectType(IddObjectType::OS_WaterHeater_HeatPump_WrappedCondenser,"Water Heater - Heat Pump - Wrapped Condenser");
   libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_PackagedTerminalHeatPump,"PTHP");
   libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_WaterToAirHeatPump,"Water To Air HP");
   libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_PackagedTerminalAirConditioner,"PTAC");
@@ -1004,6 +1004,7 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
   myModelList->addModelObjectType(IddObjectType::OS_ZoneHVAC_UnitVentilator,"Unit Ventilator");
   myModelList->addModelObjectType(IddObjectType::OS_WaterUse_Equipment_Definition,"Water Use Equipment Definition");
   myModelList->addModelObjectType(IddObjectType::OS_WaterUse_Connections,"Water Use Connections");
+  // For some reason, this doesn't suffice to pick up the WaterHeater:Mixed linked to a HeatPump:WaterHeater
   myModelList->addModelObjectType(IddObjectType::OS_WaterHeater_Mixed, "Water Heater Mixed");
   myModelList->addModelObjectType(IddObjectType::OS_WaterHeater_Stratified, "Water Heater Stratified");
   myModelList->addModelObjectType(IddObjectType::OS_ThermalZone,"Thermal Zone");
