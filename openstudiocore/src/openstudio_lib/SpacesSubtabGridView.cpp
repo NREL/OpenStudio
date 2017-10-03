@@ -373,6 +373,7 @@ namespace openstudio {
   {
     m_spaceTypeFilter->clear();
     m_spaceTypeFilter->addItem(ALL);
+    m_spaceTypeFilter->addItem(UNASSIGNED);
     auto spacetypes = this->m_model.getConcreteModelObjects<model::SpaceType>();
     std::sort(spacetypes.begin(), spacetypes.end(), ModelObjectNameSorter());
     for (auto st : spacetypes)
