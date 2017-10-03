@@ -175,8 +175,11 @@ namespace openstudio {
 
   void FacilityStoriesGridView::purgeObjects(const IddObjectType& iddObjectType)
   {
-    for (auto mo : this->m_model.getConcreteModelObjects<model::BuildingStory>()){
-      mo.remove();
+    // If no spaces in the story -> remove
+    for (model::BuildingStory story : this->model().getConcreteModelObjects<model::BuildingStory>()){
+      if (story.spaces().empty()){
+        story.remove();
+      }
     }
   }
 
@@ -233,16 +236,16 @@ namespace openstudio {
   {
     //m_itemSelectorButtons->enableAddButton();
     //m_itemSelectorButtons->enableCopyButton();
-    m_itemSelectorButtons->enableRemoveButton();
-    m_itemSelectorButtons->enablePurgeButton();
+    // m_itemSelectorButtons->enableRemoveButton();
+    // m_itemSelectorButtons->enablePurgeButton();
   }
 
   void FacilityStoriesGridView::onClearSelection()
   {
     //m_itemSelectorButtons->disableAddButton();
     //m_itemSelectorButtons->disableCopyButton();
-    m_itemSelectorButtons->disableRemoveButton();
-    m_itemSelectorButtons->disablePurgeButton();
+    // m_itemSelectorButtons->disableRemoveButton();
+    // m_itemSelectorButtons->disablePurgeButton();
   }
 
   FacilityStoriesGridController::FacilityStoriesGridController(bool isIP,
