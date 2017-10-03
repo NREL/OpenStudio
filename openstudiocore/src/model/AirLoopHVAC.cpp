@@ -1175,13 +1175,14 @@ namespace detail {
 
   bool AirLoopHVAC_Impl::setAvailabilityManager(const AvailabilityManager & availabilityManager) {
     auto type = availabilityManager.iddObjectType();
-    if( type == IddObjectType::OS_AvailabilityManager_NightCycle ||
-        type == IddObjectType::OS_AvailabilityManager_HybridVentilation ||
-        type == IddObjectType::OS_AvailabilityManager_NightVentilation ||
-        type == IddObjectType::OS_AvailabilityManager_OptimumStart ) {
+
+    // All types should be allowed here except HybridVentilation (special, stand-alone)
+    if ( type == OS_AvailabilityManager_HybridVentilation) {
+      LOG(Warn, "Wrong AVM Type for an airLoopHVAC: " << availabilityManager.briefDescription());
+      return false;
+    } else {
       return setPointer(OS_AirLoopHVACFields::AvailabilityManager, availabilityManager.handle());
     }
-    return false;
   }
 
   void AirLoopHVAC_Impl::resetAvailabilityManager() {
