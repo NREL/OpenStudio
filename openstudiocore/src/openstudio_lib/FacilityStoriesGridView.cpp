@@ -176,7 +176,7 @@ namespace openstudio {
   void FacilityStoriesGridView::purgeObjects(const IddObjectType& iddObjectType)
   {
     // If no spaces in the story -> remove
-    for (model::BuildingStory story : this->model().getConcreteModelObjects<model::BuildingStory>()){
+    for (model::BuildingStory story : this->m_model.getConcreteModelObjects<model::BuildingStory>()){
       if (story.spaces().empty()){
         story.remove();
       }
