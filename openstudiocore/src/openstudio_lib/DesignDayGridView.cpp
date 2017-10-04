@@ -409,17 +409,28 @@ void DesignDayGridController::addColumns(const QString &/*category*/, std::vecto
 
     // This should be reset when the humidity indication condition type is changed to something incompatible
     else if (field == HUMIDITYINDICATINGCONDITIONSATMAXIMUMDRYBULB){
-      addQuantityEditColumn(Heading(QString(HUMIDITYINDICATINGCONDITIONSATMAXIMUMDRYBULB)),
-        QString("C"),
-        QString("C"),
-        QString("F"),
-        m_isIP,
+      /*
+       * // I'm having problems with the Humidity Tab, it crashes. not sure why, so trying to pinpoint the change that caused it
+       *addQuantityEditColumn(Heading(QString(HUMIDITYINDICATINGCONDITIONSATMAXIMUMDRYBULB)),
+       *  QString("C"),
+       *  QString("C"),
+       *  QString("F"),
+       *  m_isIP,
+       *  NullAdapter(&model::DesignDay::humidityIndicatingConditionsAtMaximumDryBulb),
+       *  NullAdapter(&model::DesignDay::setHumidityIndicatingConditionsAtMaximumDryBulb),
+       *  boost::optional<std::function<void(model::DesignDay*)>>(CastNullAdapter<model::DesignDay>(&model::DesignDay::resetHumidityIndicatingConditionsAtMaximumDryBulb)),
+       *  boost::optional<std::function<bool(model::DesignDay*)>>(CastNullAdapter<model::DesignDay>(&model::DesignDay::isHumidityIndicatingConditionsAtMaximumDryBulbDefaulted)),
+       *  boost::optional<DataSource>()
+       *  );
+       */
+      addValueEditColumn(Heading(QString(HUMIDITYINDICATINGCONDITIONSATMAXIMUMDRYBULB)),
         NullAdapter(&model::DesignDay::humidityIndicatingConditionsAtMaximumDryBulb),
         NullAdapter(&model::DesignDay::setHumidityIndicatingConditionsAtMaximumDryBulb),
         boost::optional<std::function<void(model::DesignDay*)>>(CastNullAdapter<model::DesignDay>(&model::DesignDay::resetHumidityIndicatingConditionsAtMaximumDryBulb)),
         boost::optional<std::function<bool(model::DesignDay*)>>(CastNullAdapter<model::DesignDay>(&model::DesignDay::isHumidityIndicatingConditionsAtMaximumDryBulbDefaulted)),
         boost::optional<DataSource>()
         );
+
     }
 
     else if (field == BAROMETRICPRESSURE){
