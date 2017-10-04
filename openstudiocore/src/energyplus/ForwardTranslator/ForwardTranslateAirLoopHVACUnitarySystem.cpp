@@ -108,7 +108,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
 
   // Control Type
   //unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::ControlType,"Load");
-  s = modelObject.getImpl<model::detail::AirLoopHVACUnitarySystem_Impl>()->controlType();
+  s = modelObject.controlType();
   if (s) {
     unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::ControlType,s.get());
   }
@@ -491,7 +491,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
     IdfObject _unitarySystemPerformance(openstudio::IddObjectType::UnitarySystemPerformance_Multispeed);
     m_idfObjects.push_back(_unitarySystemPerformance);
     _unitarySystemPerformance.setName(unitarySystem.nameString() + " Unitary System Performance");
-    
+
     boost::optional<model::CoilHeatingDXMultiSpeed> multispeedDXHeating;
     boost::optional<model::CoilHeatingGasMultiStage> multistageGasHeating;
     boost::optional<model::CoilCoolingDXMultiSpeed> multispeedDXCooling;
@@ -534,7 +534,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
       _unitarySystemPerformance.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling,1);
     }
 
-    _unitarySystemPerformance.setString(UnitarySystemPerformance_MultispeedFields::SingleModeOperation,"No"); 
+    _unitarySystemPerformance.setString(UnitarySystemPerformance_MultispeedFields::SingleModeOperation,"No");
 
     auto heatingFlow = modelObject.supplyAirFlowRateDuringHeatingOperation();
     auto coolingFlow = modelObject.supplyAirFlowRateDuringCoolingOperation();
@@ -585,7 +585,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
 
     unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectType,_unitarySystemPerformance.iddObject().name());
     unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectName,_unitarySystemPerformance.nameString());
-  } 
+  }
 
   // Fill in node names for inner components
   if( !airInletNodeName || !airOutletNodeName ) {
