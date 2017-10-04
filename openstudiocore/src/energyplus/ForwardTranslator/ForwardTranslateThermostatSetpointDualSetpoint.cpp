@@ -46,6 +46,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermostatSetpointDualSet
 {
   OptionalSchedule heat_sch = modelObject.getHeatingSchedule();
   OptionalSchedule cool_sch = modelObject.getCoolingSchedule();
+  boost::optional<IdfObject> result;
 
   // Two schedules = DualSetpoint
   if (heat_sch.is_initialized() && cool_sch.is_initialized()) {
@@ -67,7 +68,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermostatSetpointDualSet
     translateAndMapModelObject(*cool_sch);
     thermostat.setString(ThermostatSetpoint_DualSetpointFields::CoolingSetpointTemperatureScheduleName,cool_sch->name().get());
 
-    return boost::optional<IdfObject>(thermostat);
+    result = thermostat;
 
   // Heating only
   } else if ( heat_sch.is_initialized() && !cool_sch.is_initialized() ) {
@@ -85,7 +86,8 @@ boost::optional<IdfObject> ForwardTranslator::translateThermostatSetpointDualSet
     translateAndMapModelObject(*heat_sch);
     thermostat.setString(ThermostatSetpoint_SingleHeatingFields::SetpointTemperatureScheduleName, heat_sch->name().get());
 
-    return boost::optional<IdfObject>(thermostat);
+    result = thermostat;
+
 
   // Cooling only
   } else if ( !heat_sch.is_initialized() && cool_sch.is_initialized()) {
@@ -103,11 +105,12 @@ boost::optional<IdfObject> ForwardTranslator::translateThermostatSetpointDualSet
     translateAndMapModelObject(*cool_sch);
     thermostat.setString(ThermostatSetpoint_SingleCoolingFields::SetpointTemperatureScheduleName, cool_sch->name().get());
 
-    return boost::optional<IdfObject>(thermostat);
+    result = thermostat;
 
   }
   // No other cases, in ForwardTranslateThermalZone, we have checked that there is at least one schedule
 
+  return result;
 
 }
 
