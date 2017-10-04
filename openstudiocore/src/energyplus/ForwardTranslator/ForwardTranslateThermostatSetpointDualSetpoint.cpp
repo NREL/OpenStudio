@@ -50,6 +50,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermostatSetpointDualSet
   // Two schedules = DualSetpoint
   if (heat_sch.is_initialized() && cool_sch.is_initialized()) {
     IdfObject thermostat(openstudio::IddObjectType::ThermostatSetpoint_DualSetpoint);
+    m_idfObjects.push_back(thermostat);
 
     // Name
     OptionalString s = modelObject.name();
@@ -71,6 +72,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermostatSetpointDualSet
   // Heating only
   } else if ( heat_sch.is_initialized() && !cool_sch.is_initialized() ) {
     IdfObject thermostat(openstudio::IddObjectType::ThermostatSetpoint_SingleHeating);
+    m_idfObjects.push_back(thermostat);
 
     // Name
     OptionalString s = modelObject.name();
@@ -88,6 +90,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermostatSetpointDualSet
   // Cooling only
   } else if ( !heat_sch.is_initialized() && cool_sch.is_initialized()) {
     IdfObject thermostat(openstudio::IddObjectType::ThermostatSetpoint_SingleCooling);
+    m_idfObjects.push_back(thermostat);
 
     // Name
     OptionalString s = modelObject.name();

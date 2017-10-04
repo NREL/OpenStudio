@@ -97,7 +97,10 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Thermostat_Two_Schedules)
   thermostat.setCoolingSetpointTemperatureSchedule(cool_sch);
 
   // Assign to zone
-  zone.setThermostatSetpointDualSetpoint(thermostat)
+  zone.setThermostatSetpointDualSetpoint(thermostat);
+
+  // You also need an equipment, or ideal Loads, or tstat's not translated
+  zone.setUseIdealAirLoads(true);
 
   ForwardTranslator ft;
   Workspace workspace = ft.translateModel(m);
@@ -116,8 +119,10 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Thermostat_Two_Schedules)
   IdfObject idf_zone_control = workspace.getObjectsByType(IddObjectType::ZoneControl_Thermostat)[0];
   ASSERT_EQ(1u, idf_zone_control.extensibleGroups().size());
   IdfExtensibleGroup eg = idf_zone_control.extensibleGroups()[0];
-  ASSERT_EQ(eg.getString(ZoneControl_ThermostatExtensibleFields::ControlObjectType).get(), idf_tstat.iddObject().name());
-  ASSERT_EQ(eg.getString(ZoneControl_ThermostatExtensibleFields::ControlName).get(), idf_tstat.name().get());
+  ASSERT_EQ(eg.getString(ZoneControl_ThermostatExtensibleFields::ControlObjectType).get(),
+            idf_tstat.iddObject().name());
+  ASSERT_EQ(eg.getString(ZoneControl_ThermostatExtensibleFields::ControlName).get(),
+            idf_tstat.name().get());
 
 }
 
@@ -151,7 +156,10 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Thermostat_Heat_Only)
   thermostat.setHeatingSetpointTemperatureSchedule(heat_sch);
 
   // Assign to zone
-  zone.setThermostatSetpointDualSetpoint(thermostat)
+  zone.setThermostatSetpointDualSetpoint(thermostat);
+
+  // You also need an equipment, or ideal Loads, or tstat's not translated
+  zone.setUseIdealAirLoads(true);
 
   ForwardTranslator ft;
   Workspace workspace = ft.translateModel(m);
@@ -167,9 +175,11 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Thermostat_Heat_Only)
 
   IdfObject idf_zone_control = workspace.getObjectsByType(IddObjectType::ZoneControl_Thermostat)[0];
   ASSERT_EQ(1u, idf_zone_control.extensibleGroups().size());
-  eg = idf_zone_control.extensibleGroups()[0];
-  ASSERT_EQ(eg.getString(ZoneControl_ThermostatExtensibleFields::ControlObjectType).get(), idf_tstat.iddObject().name());
-  ASSERT_EQ(eg.getString(ZoneControl_ThermostatExtensibleFields::ControlName).get(), idf_tstat.name().get());
+  IdfExtensibleGroup eg = idf_zone_control.extensibleGroups()[0];
+  ASSERT_EQ(eg.getString(ZoneControl_ThermostatExtensibleFields::ControlObjectType).get(),
+            idf_tstat.iddObject().name() );
+  ASSERT_EQ(eg.getString(ZoneControl_ThermostatExtensibleFields::ControlName).get(),
+            idf_tstat.name().get() );
 
 }
 
@@ -205,6 +215,9 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Thermostat_Cool_Only)
   // Assign to zone
   zone.setThermostatSetpointDualSetpoint(thermostat);
 
+  // You also need an equipment, or ideal Loads, or tstat's not translated
+  zone.setUseIdealAirLoads(true);
+
   ForwardTranslator ft;
   Workspace workspace = ft.translateModel(m);
 
@@ -219,7 +232,10 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Thermostat_Cool_Only)
 
   IdfObject idf_zone_control = workspace.getObjectsByType(IddObjectType::ZoneControl_Thermostat)[0];
   ASSERT_EQ(1u, idf_zone_control.extensibleGroups().size());
-  eg = idf_zone_control.extensibleGroups()[0];
-  ASSERT_EQ(eg.getString(ZoneControl_ThermostatExtensibleFields::ControlObjectType).get(), idf_tstat.iddObject().name());
-  ASSERT_EQ(eg.getString(ZoneControl_ThermostatExtensibleFields::ControlName).get(), idf_tstat.name().get());
+
+  IdfExtensibleGroup eg = idf_zone_control.extensibleGroups()[0];
+  ASSERT_EQ(eg.getString(ZoneControl_ThermostatExtensibleFields::ControlObjectType).get(),
+            idf_tstat.iddObject().name() );
+  ASSERT_EQ(eg.getString(ZoneControl_ThermostatExtensibleFields::ControlName).get(),
+            idf_tstat.name().get() );
 }
