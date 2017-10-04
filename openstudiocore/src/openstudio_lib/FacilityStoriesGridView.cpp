@@ -48,6 +48,10 @@
 #include "../model/RenderingColor.hpp"
 #include "../model/RenderingColor_Impl.hpp"
 
+// For purgeObjects
+#include "../model/Space.hpp"
+
+
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/idd/IddEnums.hxx"
 #include "../utilities/idd/OS_BuildingStory_FieldEnums.hxx"

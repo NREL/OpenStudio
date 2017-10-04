@@ -571,8 +571,8 @@ void DesignDayGridController::onItemDropped(const OSItemId& itemId)
 
 void DesignDayGridController::refreshModelObjects()
 {
-  auto desighDays = m_model.getConcreteModelObjects<model::DesignDay>();
-  m_modelObjects = subsetCastVector<model::ModelObject>(desighDays);
+  auto designDays = m_model.getConcreteModelObjects<model::DesignDay>();
+  m_modelObjects = subsetCastVector<model::ModelObject>(designDays);
   std::sort(m_modelObjects.begin(), m_modelObjects.end(), ModelObjectNameSorter());
 }
 
