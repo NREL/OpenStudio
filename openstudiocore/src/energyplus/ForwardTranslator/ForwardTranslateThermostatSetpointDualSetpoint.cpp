@@ -81,7 +81,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermostatSetpointDualSet
 
     // (Heating) Setpoint Temperature Schedule Name
     translateAndMapModelObject(*heat_sch);
-    thermostat.setString(ThermostatSetpoint_SingleHeating_Fields::SetpointTemperatureScheduleName, heat_sch->name().get());
+    thermostat.setString(ThermostatSetpoint_SingleHeatingFields::SetpointTemperatureScheduleName, heat_sch->name().get());
 
     return boost::optional<IdfObject>(thermostat);
 
@@ -98,7 +98,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermostatSetpointDualSet
 
     // (Cooling) Setpoint Temperature Schedule Name
     translateAndMapModelObject(*cool_sch);
-    thermostat.setString(ThermostatSetpoint_SingleCooling_Fields::SetpointTemperatureScheduleName, cool_sch->name().get());
+    thermostat.setString(ThermostatSetpoint_SingleCoolingFields::SetpointTemperatureScheduleName, cool_sch->name().get());
 
     return boost::optional<IdfObject>(thermostat);
 
