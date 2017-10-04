@@ -838,8 +838,8 @@ void MainRightColumnController::configureForSpacesSubTab(int subTabID)
   myModelList->addModelObjectType(IddObjectType::OS_OtherEquipment_Definition, "Other Equipment Definitions");
   myModelList->addModelObjectType(IddObjectType::OS_SteamEquipment_Definition, "Steam Equipment Definitions");
   myModelList->addModelObjectType(IddObjectType::OS_HotWaterEquipment_Definition, "Hot Water Equipment Definitions");
-  myModelList->addModelObjectType(IddObjectType::OS_WaterHeater_HeatPump,"Heat Pump Water Heater");
-  myModelList->addModelObjectType(IddObjectType::OS_WaterHeater_HeatPump_WrappedCondenser,"Heat Pump Water Heater - Wrapped Condenser");
+  myModelList->addModelObjectType(IddObjectType::OS_WaterHeater_HeatPump,"Water Heater - Heat Pump");
+  myModelList->addModelObjectType(IddObjectType::OS_WaterHeater_HeatPump_WrappedCondenser,"Water Heater - Heat Pump - Wrapped Condenser");
   myModelList->addModelObjectType(IddObjectType::OS_WaterUse_Equipment_Definition, "Water Use Equipment Definitions");
   myModelList->addModelObjectType(IddObjectType::OS_GasEquipment_Definition, "Gas Equipment Definitions");
   myModelList->addModelObjectType(IddObjectType::OS_ElectricEquipment_Definition, "Electric Equipment Definitions");
@@ -893,8 +893,8 @@ void MainRightColumnController::configureForSpacesSubTab(int subTabID)
   myLibraryList->addModelObjectType(IddObjectType::OS_SteamEquipment_Definition, "Steam Equipment Definitions");
   myLibraryList->addModelObjectType(IddObjectType::OS_HotWaterEquipment_Definition, "Hot Water Equipment Definitions");
   myLibraryList->addModelObjectType(IddObjectType::OS_WaterUse_Equipment_Definition, "Water Use Equipment Definitions");
-  myLibraryList->addModelObjectType(IddObjectType::OS_WaterHeater_HeatPump,"Heat Pump Water Heater");
-  myLibraryList->addModelObjectType(IddObjectType::OS_WaterHeater_HeatPump_WrappedCondenser,"Heat Pump Water Heater - Wrapped Condenser");
+  myLibraryList->addModelObjectType(IddObjectType::OS_WaterHeater_HeatPump,"Water Heater - Heat Pump");
+  myLibraryList->addModelObjectType(IddObjectType::OS_WaterHeater_HeatPump_WrappedCondenser,"Water Heater - Heat Pump - Wrapped Condenser");
   myLibraryList->addModelObjectType(IddObjectType::OS_GasEquipment_Definition, "Gas Equipment Definitions");
   myLibraryList->addModelObjectType(IddObjectType::OS_ElectricEquipment_Definition, "Electric Equipment Definitions");
   myLibraryList->addModelObjectType(IddObjectType::OS_Luminaire_Definition, "Luminaire Definitions");
@@ -936,8 +936,8 @@ void MainRightColumnController::configureForThermalZonesSubTab(int subTabID)
   myModelList->addModelObjectType(IddObjectType::OS_Schedule_Constant, "Constant Schedules");
   myModelList->addModelObjectType(IddObjectType::OS_Schedule_Compact, "Compact Schedules");
   myModelList->addModelObjectType(IddObjectType::OS_Schedule_Ruleset, "Ruleset Schedules");
-  myModelList->addModelObjectType(IddObjectType::OS_WaterHeater_HeatPump,"Heat Pump Water Heater");
-  myModelList->addModelObjectType(IddObjectType::OS_WaterHeater_HeatPump_WrappedCondenser,"Heat Pump Water Heater - Wrapped Condenser");
+  myModelList->addModelObjectType(IddObjectType::OS_WaterHeater_HeatPump,"Water Heater - Heat Pump");
+  myModelList->addModelObjectType(IddObjectType::OS_WaterHeater_HeatPump_WrappedCondenser,"Water Heater - Heat Pump - Wrapped Condenser");
 
   setMyModelView(myModelList);
 
