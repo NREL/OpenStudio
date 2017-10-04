@@ -46,6 +46,10 @@
 #include "../../model/ScheduleRuleset.hpp"
 #include "../../model/ScheduleRuleset_Impl.hpp"
 
+#include "../../utilities/idf/IdfObject.hpp"
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
+
+
 #include <utilities/idd/ThermostatSetpoint_DualSetpoint_FieldEnums.hxx>
 #include <utilities/idd/ThermostatSetpoint_SingleHeating_FieldEnums.hxx>
 #include <utilities/idd/ThermostatSetpoint_SingleCooling_FieldEnums.hxx>
@@ -78,11 +82,8 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Thermostat_Two_Schedules)
   Space space1(m);
   space1.setThermalZone(zone);
 
-  Surface surface1(points, model);
+  Surface surface1(points, m);
   surface1.setSpace(space1);
-
-  Surface surface2(points, model);
-  surface2.setSpace(space2);
 
   // Create a thermostat
   ThermostatSetpointDualSetpoint thermostat(m);
@@ -114,7 +115,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Thermostat_Two_Schedules)
 
   IdfObject idf_zone_control = workspace.getObjectsByType(IddObjectType::ZoneControl_Thermostat)[0];
   ASSERT_EQ(1u, idf_zone_control.extensibleGroups().size());
-  eg = idf_zone_control.extensibleGroups()[0];
+  IdfExtensibleGroup eg = idf_zone_control.extensibleGroups()[0];
   ASSERT_EQ(eg.getString(ZoneControl_ThermostatExtensibleFields::ControlObjectType).get(), idf_tstat.iddObject().name());
   ASSERT_EQ(eg.getString(ZoneControl_ThermostatExtensibleFields::ControlName).get(), idf_tstat.name().get());
 
@@ -139,11 +140,8 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Thermostat_Heat_Only)
   Space space1(m);
   space1.setThermalZone(zone);
 
-  Surface surface1(points, model);
+  Surface surface1(points, m);
   surface1.setSpace(space1);
-
-  Surface surface2(points, model);
-  surface2.setSpace(space2);
 
   // Create a thermostat
   ThermostatSetpointDualSetpoint thermostat(m);
@@ -194,11 +192,8 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Thermostat_Cool_Only)
   Space space1(m);
   space1.setThermalZone(zone);
 
-  Surface surface1(points, model);
+  Surface surface1(points, m);
   surface1.setSpace(space1);
-
-  Surface surface2(points, model);
-  surface2.setSpace(space2);
 
   // Create a thermostat
   ThermostatSetpointDualSetpoint thermostat(m);
@@ -208,7 +203,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Thermostat_Cool_Only)
   thermostat.setCoolingSetpointTemperatureSchedule(cool_sch);
 
   // Assign to zone
-  zone.setThermostatSetpointDualSetpoint(thermostat)
+  zone.setThermostatSetpointDualSetpoint(thermostat);
 
   ForwardTranslator ft;
   Workspace workspace = ft.translateModel(m);
