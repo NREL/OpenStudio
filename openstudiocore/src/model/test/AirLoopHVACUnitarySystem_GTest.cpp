@@ -559,8 +559,8 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_ControlType)
   ASSERT_FALSE(a.isControlTypeDefaulted());
 
   a.resetControlType();
-  ASSERT_TRUE(test, a.isControlTypeDefaulted());
-  ASSERT_TRUE("Load", a.controlType());
+  ASSERT_TRUE(a.isControlTypeDefaulted());
+  ASSERT_EQ("Load", a.controlType());
 
 }
 
