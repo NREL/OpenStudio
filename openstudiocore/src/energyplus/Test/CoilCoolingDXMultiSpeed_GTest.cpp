@@ -37,14 +37,18 @@
 
 #include "../../model/Model.hpp"
 #include "../../model/AirLoopHVAC.hpp"
+#include "../../model/AirLoopHVACUnitarySystem.hpp"
+#include "../../model/UnitarySystemPerformanceMultispeed.hpp"
+
 #include "../../model/Node.hpp"
+#include "../../model/Curve.hpp"
 
 #include "../../utilities/idf/Workspace.hpp"
 #include "../../utilities/idf/WorkspaceObject.hpp"
 #include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
 #include <utilities/idd/Coil_Cooling_DX_MultiSpeed_FieldEnums.hxx>
-#include "../../utilities/idf/IdfExtensibleGroup.hpp"
+#include <utilities/idd/IddEnums.hxx>
 
 #include <resources.hxx>
 #include <sstream>
@@ -55,42 +59,49 @@ using namespace openstudio;
 
 
 /* It should allow for up to 4 stages. Tests that issue #2812 is fixed and doesn't come back */
-TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_4Stages)
+TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXMultiSpeed_4Stages)
 {
 
   Model m;
   CoilCoolingDXMultiSpeed coil(m);
 
-  CoilCoolingDXMultiSpeedStageData stage1(model);
+  CoilCoolingDXMultiSpeedStageData stage1(m);
   coil.addStage(stage1);
 
-  CoilCoolingDXMultiSpeedStageData stage2(model);
+  CoilCoolingDXMultiSpeedStageData stage2(m);
   coil.addStage(stage2);
 
-  CoilCoolingDXMultiSpeedStageData stage3(model);
+  CoilCoolingDXMultiSpeedStageData stage3(m);
   coil.addStage(stage3);
 
-  CoilCoolingDXMultiSpeedStageData stage4(model);
+  CoilCoolingDXMultiSpeedStageData stage4(m);
   coil.addStage(stage4);
 
   ASSERT_EQ(4u,coil.stages().size());
 
 
+  // The coil can only be wrapped in E+ in AirLoopHVAC:UnitaryHeatPump:AirToAir:Multispeed
+  // In OpenStudio, you can use UnitarySystem, the FT does the job
+  AirLoopHVACUnitarySystem unitary(m);
+  unitary.setCoolingCoil(coil);
+
+  UnitarySystemPerformanceMultispeed perf(m);
+  unitary.setDesignSpecificationMultispeedObject(perf);
+
   AirLoopHVAC airLoop(m);
   Node supplyOutletNode = airLoop.supplyOutletNode();
-  coil.addToNode(supplyOutletNode);
+  unitary.addToNode(supplyOutletNode);
 
   //translate the model to EnergyPlus
   ForwardTranslator ft;
-  Workspace workspace = ft.translateModel(model);
-
+  Workspace workspace = ft.translateModel(m);
 
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Coil_Cooling_DX_MultiSpeed).size());
   WorkspaceObject idf_coil = workspace.getObjectsByType(IddObjectType::Coil_Cooling_DX_MultiSpeed)[0];
 
   // Check that there are indeed 4 stages, both the NumberofSpeeds field (int) and the number of extensible groups
   ASSERT_EQ(4u, idf_coil.getInt(Coil_Cooling_DX_MultiSpeedFields::NumberofSpeeds).get());
-  ASSERT_EQ(4u, idf_coil.extensibleGroups().size())
+  ASSERT_EQ(4u, idf_coil.extensibleGroups().size());
 
   // WorkspaceExtensibleGroup eg = idf_coil.extensibleGroups()[0] or getExtensibleGroup(0);
 
