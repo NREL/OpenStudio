@@ -71,10 +71,10 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_AirLoopHVACUnitarySystem_ControlType)
   ForwardTranslator ft;
   Workspace workspace = ft.translateModel(m);
 
-  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::AirLoopHVACUnitarySystem).size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::AirLoopHVAC_UnitarySystem).size());
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::AirLoopHVAC).size());
 
-  IdfObject idf_unitary = workspace.getObjectsByType(IddObjectType::AirLoopHVACUnitarySystem)[0];
+  IdfObject idf_unitary = workspace.getObjectsByType(IddObjectType::AirLoopHVAC_UnitarySystem)[0];
 
   ASSERT_EQ("Setpoint",
             idf_unitary.getString(AirLoopHVAC_UnitarySystemFields::ControlType).get() );
@@ -84,10 +84,10 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_AirLoopHVACUnitarySystem_ControlType)
 
   workspace = ft.translateModel(m);
 
-  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::AirLoopHVACUnitarySystem).size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::AirLoopHVAC_UnitarySystem).size());
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::AirLoopHVAC).size());
 
-  idf_unitary = workspace.getObjectsByType(IddObjectType::AirLoopHVACUnitarySystem)[0];
+  idf_unitary = workspace.getObjectsByType(IddObjectType::AirLoopHVAC_UnitarySystem)[0];
 
   ASSERT_EQ("Load",
             idf_unitary.getString(AirLoopHVAC_UnitarySystemFields::ControlType).get() );
