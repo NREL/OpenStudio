@@ -77,7 +77,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_AirLoopHVACUnitarySystem_ControlType)
   IdfObject idf_unitary = workspace.getObjectsByType(IddObjectType::AirLoopHVACUnitarySystem)[0];
 
   ASSERT_EQ("Setpoint",
-            idf_unitary.getString(AirLoopHVAC_UnitarySystem_Field::ControlType).get() );
+            idf_unitary.getString(AirLoopHVAC_UnitarySystem_Fields::ControlType).get() );
 
   // test if load (make sure nothing is hardcoded)
   unitary.setControlType("Load");
@@ -90,7 +90,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_AirLoopHVACUnitarySystem_ControlType)
   idf_unitary = workspace.getObjectsByType(IddObjectType::AirLoopHVACUnitarySystem)[0];
 
   ASSERT_EQ("Load",
-            idf_unitary.getString(AirLoopHVAC_UnitarySystem_Field::ControlType).get() );
+            idf_unitary.getString(AirLoopHVAC_UnitarySystem_Fields::ControlType).get() );
 
 
 }
