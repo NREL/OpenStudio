@@ -100,7 +100,7 @@ boost::optional<IdfObject> ForwardTranslator::translateBoilerSteam( BoilerSteam 
 
   if( modelObject.isNominalCapacityAutosized() )
   {
-    idfObject.setString(Boiler_SteamFields::NominalCapacity,"Autosized");
+    idfObject.setString(Boiler_SteamFields::NominalCapacity,"Autosize");
   }
   else if( (value = modelObject.nominalCapacity()) )
   {
