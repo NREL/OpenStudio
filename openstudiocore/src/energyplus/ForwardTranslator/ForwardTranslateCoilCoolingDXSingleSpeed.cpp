@@ -205,11 +205,17 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXSingleSpeedW
   {
     idfObject.setDouble(Coil_Cooling_DX_SingleSpeedFields::EvaporativeCondenserAirFlowRate,*d);
   }
+  else {
+    idfObject.setString(Coil_Cooling_DX_SingleSpeedFields::EvaporativeCondenserAirFlowRate, "Autosize");
+  }
 
   d=modelObject.getEvaporativeCondenserPumpRatedPowerConsumption();
   if(d)
   {
     idfObject.setDouble(Coil_Cooling_DX_SingleSpeedFields::EvaporativeCondenserPumpRatedPowerConsumption,*d);
+  }
+  else {
+    idfObject.setString(Coil_Cooling_DX_SingleSpeedFields::EvaporativeCondenserPumpRatedPowerConsumption, "Autosize");
   }
 
   d=modelObject.getCrankcaseHeaterCapacity();

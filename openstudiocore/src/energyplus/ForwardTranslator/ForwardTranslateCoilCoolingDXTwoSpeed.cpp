@@ -242,12 +242,20 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXTwoSpeedWith
   {
     idfObject.setDouble(Coil_Cooling_DX_TwoSpeedFields::HighSpeedEvaporativeCondenserAirFlowRate,*d);
   }
+  else
+  {
+    idfObject.setString(Coil_Cooling_DX_TwoSpeedFields::HighSpeedEvaporativeCondenserAirFlowRate, "Autosize");
+  }
 
   //  N11, \field High Speed Evaporative Condenser Pump Rated Power Consumption
   d=modelObject.getHighSpeedEvaporativeCondenserPumpRatedPowerConsumption();
   if(d)
   {
     idfObject.setDouble(Coil_Cooling_DX_TwoSpeedFields::HighSpeedEvaporativeCondenserPumpRatedPowerConsumption,*d);
+  }
+  else
+  {
+    idfObject.setString(Coil_Cooling_DX_TwoSpeedFields::HighSpeedEvaporativeCondenserPumpRatedPowerConsumption, "Autosize");
   }
 
   //  N12, \field Low Speed Evaporative Condenser Effectiveness
@@ -263,6 +271,10 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXTwoSpeedWith
   {
     idfObject.setDouble(Coil_Cooling_DX_TwoSpeedFields::LowSpeedEvaporativeCondenserAirFlowRate,*d);
   }
+  else
+  {
+    idfObject.setString(Coil_Cooling_DX_TwoSpeedFields::LowSpeedEvaporativeCondenserAirFlowRate, "Autosize");
+  }
 
   //  N14, \field Low Speed Evaporative Condenser Pump Rated Power Consumption
   d=modelObject.getLowSpeedEvaporativeCondenserPumpRatedPowerConsumption();
@@ -270,6 +282,12 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXTwoSpeedWith
   {
     idfObject.setDouble(Coil_Cooling_DX_TwoSpeedFields::LowSpeedEvaporativeCondenserPumpRatedPowerConsumption,*d);
   }
+  else
+  {
+    idfObject.setString(Coil_Cooling_DX_TwoSpeedFields::LowSpeedEvaporativeCondenserPumpRatedPowerConsumption, "Autosize");
+  }
+
+
 
   //TODO
   //  A14, \field Supply Water Storage Tank Name
