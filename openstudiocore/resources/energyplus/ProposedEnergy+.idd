@@ -28557,8 +28557,8 @@ Coil:Cooling:DX:MultiSpeed,
        \memo between speeds. Modeled as a single coil (multi-speed compressor or multiple
        \memo compressors with row split or intertwined coil).
   \extensible:19
-  \min-fields 55
-  \max-fields 93
+  \min-fields 56
+  \max-fields 94
   A1 , \field Name
        \required-field
        \type alpha
