@@ -421,7 +421,7 @@ namespace detail {
   }
 
   boost::optional<double> ZoneHVACLowTemperatureRadiantElectric_Impl::autosizedMaximumElectricalPowertoPanel() const {
-    return getAutosizedValue("Design Size Maximum Electrical Power to Panel", "W");
+    return getAutosizedValue("Design Size Heating Design Capacity", "W");
   }
 
   void ZoneHVACLowTemperatureRadiantElectric_Impl::autosize() {

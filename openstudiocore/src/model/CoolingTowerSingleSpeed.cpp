@@ -1163,7 +1163,7 @@ namespace detail {
   }
 
   boost::optional<double> CoolingTowerSingleSpeed_Impl::autosizedUFactorTimesAreaValueatDesignAirFlowRate() const {
-    return getAutosizedValue("U-Factor Times Area Value at Design Air Flow Rate", "W/K");
+    return getAutosizedValue("U-Factor Times Area Value at Design Air Flow Rate", "W/C");
   }
 
   boost::optional<double> CoolingTowerSingleSpeed_Impl::autosizedAirFlowRateinFreeConvectionRegime() const {

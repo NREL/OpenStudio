@@ -703,11 +703,11 @@ namespace detail {
   }
 
   boost::optional<double> ThermalStorageChilledWaterStratified_Impl::autosizedUseSideDesignFlowRate() const {
-    return getAutosizedValue("Design Size Use Side Design Flow Rate", "m3/s");
+    return getAutosizedValue("Use Side Design Flow Rate", "m3/s");
   }
 
   boost::optional<double> ThermalStorageChilledWaterStratified_Impl::autosizedSourceSideDesignFlowRate() const {
-    return getAutosizedValue("Design Size Source Side Design Flow Rate", "m3/s");
+    return getAutosizedValue("Source Side Design Flow Rate", "m3/s");
   }
 
   void ThermalStorageChilledWaterStratified_Impl::autosize() {

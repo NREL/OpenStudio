@@ -634,7 +634,7 @@ namespace detail {
   }
 
   boost::optional<double> AirLoopHVACUnitaryHeatPumpAirToAir_Impl::autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded() const {
-    return getAutosizedValue("Supply Air Flow Rate When No Cooling or Heating is Needed", "m3/s");
+    return getAutosizedValue("Supply Air Flow Rate", "m3/s");
   }
 
   boost::optional<double> AirLoopHVACUnitaryHeatPumpAirToAir_Impl::autosizedMaximumSupplyAirTemperaturefromSupplementalHeater() const {

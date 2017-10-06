@@ -492,11 +492,11 @@ namespace detail {
   }
 
   boost::optional<double> CoilHeatingDXVariableSpeed_Impl::autosizedRatedHeatingCapacityAtSelectedNominalSpeedLevel() const {
-    return getAutosizedValue("Design Size Heating Capacity At Selected Nominal Speed Level", "W");
+    return getAutosizedValue("Design Size Nominal Heating Capacity", "W");
   }
 
   boost::optional<double> CoilHeatingDXVariableSpeed_Impl::autosizedRatedAirFlowRateAtSelectedNominalSpeedLevel() const {
-    return getAutosizedValue("Design Size Air Flow Rate At Selected Nominal Speed Level", "m3/s");
+    return getAutosizedValue("Design Size Rated Air Flow Rate", "m3/s");
   }
 
   boost::optional<double> CoilHeatingDXVariableSpeed_Impl::autosizedResistiveDefrostHeaterCapacity() const {

@@ -31,6 +31,8 @@
 
 #include "ModelAPI.hpp"
 #include "StraightComponent.hpp"
+#include "ZoneHVACLowTempRadiantVarFlow.hpp"
+#include "ZoneHVACLowTempRadiantVarFlow_Impl.hpp"
 
 namespace openstudio {
 
@@ -123,6 +125,10 @@ class MODEL_API CoilHeatingLowTempRadiantVarFlow : public StraightComponent {
   /// @endcond
  private:
   REGISTER_LOGGER("openstudio.model.CoilHeatingLowTempRadiantVarFlow");
+
+  // Used to find the ZoneHVAC that contains this coil
+  boost::optional<ZoneHVACLowTempRadiantVarFlow> parentZoneHVAC() const;
+
 };
 
 /** \relates CoilHeatingLowTempRadiantVarFlow*/

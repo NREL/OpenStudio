@@ -693,15 +693,15 @@ namespace detail {
   }
 
   boost::optional<double> CoolingTowerVariableSpeed_Impl::autosizedDesignWaterFlowRate() const {
-    return getAutosizedValue("Design Size Design Water Flow Rate", "m3/s");
+    return getAutosizedValue("Design Water Flow Rate", "m3/s");
   }
 
   boost::optional<double> CoolingTowerVariableSpeed_Impl::autosizedDesignAirFlowRate() const {
-    return getAutosizedValue("Design Size Design Air Flow Rate", "m3/s");
+    return getAutosizedValue("Design Air Flow Rate", "m3/s");
   }
 
   boost::optional<double> CoolingTowerVariableSpeed_Impl::autosizedDesignFanPower() const {
-    return getAutosizedValue("Design Size Design Fan Power", "W");
+    return getAutosizedValue("Fan Power at Design Air Flow Rate", "W");
   }
 
   void CoolingTowerVariableSpeed_Impl::autosize() {

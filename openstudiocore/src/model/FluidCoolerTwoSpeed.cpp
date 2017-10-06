@@ -428,35 +428,35 @@ namespace detail {
   }
 
   boost::optional<double> FluidCoolerTwoSpeed_Impl::autosizedHighFanSpeedUfactorTimesAreaValue() const {
-    return getAutosizedValue("Design Size High Fan Speed U-factor Times Area Value", "W/K");
+    return getAutosizedValue("Fluid cooler UA value at high fan speed based on nominal capacity input", "W/K");
   }
 
   boost::optional<double> FluidCoolerTwoSpeed_Impl::autosizedLowFanSpeedUfactorTimesAreaValue() const {
-    return getAutosizedValue("Design Size Low Fan Speed U-factor Times Area Value", "W/K");
+    return getAutosizedValue("U-factor Times Area Value at Low Fan Speed", "W/C");
   }
 
   boost::optional<double> FluidCoolerTwoSpeed_Impl::autosizedLowSpeedNominalCapacity() const {
-    return getAutosizedValue("Design Size Low Speed Nominal Capacity", "W");
+    return getAutosizedValue("Low Fan Speed Nominal Capacity", "W");
   }
 
   boost::optional<double> FluidCoolerTwoSpeed_Impl::autosizedDesignWaterFlowRate() const {
-    return getAutosizedValue("Design Size Design Water Flow Rate", "m3/s");
+    return getAutosizedValue("Design Water Flow Rate", "m3/s");
   }
 
   boost::optional<double> FluidCoolerTwoSpeed_Impl::autosizedHighFanSpeedAirFlowRate() const {
-    return getAutosizedValue("Design Size High Fan Speed Air Flow Rate", "m3/s");
+    return getAutosizedValue("Air Flow Rate at High Fan Speed", "m3/s");
   }
 
   boost::optional<double> FluidCoolerTwoSpeed_Impl::autosizedHighFanSpeedFanPower() const {
-    return getAutosizedValue("Design Size High Fan Speed Fan Power", "W");
+    return getAutosizedValue("Fan Power at High Fan Speed", "W");
   }
 
   boost::optional<double> FluidCoolerTwoSpeed_Impl::autosizedLowFanSpeedAirFlowRate() const {
-    return getAutosizedValue("Design Size Low Fan Speed Air Flow Rate", "m3/s");
+    return getAutosizedValue("Air Flow Rate at Low Fan Speed", "m3/s");
   }
 
   boost::optional<double> FluidCoolerTwoSpeed_Impl::autosizedLowFanSpeedFanPower() const {
-    return getAutosizedValue("Design Size Low Fan Speed Fan Power", "W");
+    return getAutosizedValue("Fan Power at Low Fan Speed", "W");
   }
 
   void FluidCoolerTwoSpeed_Impl::autosize() {

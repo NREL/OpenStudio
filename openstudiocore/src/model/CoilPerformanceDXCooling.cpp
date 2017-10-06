@@ -503,7 +503,7 @@ namespace detail {
   }
 
   boost::optional<double> CoilPerformanceDXCooling_Impl::autosizedEvaporativeCondenserPumpRatedPowerConsumption() const {
-    return getAutosizedValue("Evaporative Condenser Pump Design Size Power Consumption", "W");
+    return getAutosizedValue("Design Size Evaporative Condenser Pump Rated Power Consumption", "W");
   }
 
   void CoilPerformanceDXCooling_Impl::autosize() {

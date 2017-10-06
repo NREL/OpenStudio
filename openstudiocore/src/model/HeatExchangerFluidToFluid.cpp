@@ -421,15 +421,15 @@ namespace detail {
   }
 
   boost::optional<double> HeatExchangerFluidToFluid_Impl::autosizedLoopDemandSideDesignFlowRate() const {
-    return getAutosizedValue("Design Size Loop Demand Side Design Flow Rate", "m3/s");
+    return getAutosizedValue("Loop Demand Side Design Fluid Flow Rate", "m3/s");
   }
 
   boost::optional<double> HeatExchangerFluidToFluid_Impl::autosizedLoopSupplySideDesignFlowRate() const {
-    return getAutosizedValue("Design Size Loop Supply Side Design Flow Rate", "m3/s");
+    return getAutosizedValue("Loop Supply Side Design Fluid Flow Rate", "m3/s");
   }
 
   boost::optional<double> HeatExchangerFluidToFluid_Impl::autosizedHeatExchangerUFactorTimesAreaValue() const {
-    return getAutosizedValue("Design Size Heat Exchanger U-Factor Times Area Value", "W/K");
+    return getAutosizedValue("Heat Exchanger U-Factor Times Area Value", "W/C");
   }
 
   void HeatExchangerFluidToFluid_Impl::autosize() {

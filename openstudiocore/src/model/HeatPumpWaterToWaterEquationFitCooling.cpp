@@ -345,19 +345,19 @@ namespace detail {
   }
 
   boost::optional<double> HeatPumpWaterToWaterEquationFitCooling_Impl::autosizedReferenceLoadSideFlowRate() const {
-    return getAutosizedValue("Design Size Reference Load Side Flow Rate", "m3/s");
+    return getAutosizedValue("Design Size Load Side Volume Flow Rate", "m3/s");
   }
 
   boost::optional<double> HeatPumpWaterToWaterEquationFitCooling_Impl::autosizedReferenceSourceSideFlowRate() const {
-    return getAutosizedValue("Design Size Reference Source Side Flow Rate", "m3/s");
+    return getAutosizedValue("Design Size Source Side Volume Flow Rate", "m3/s");
   }
 
   boost::optional<double> HeatPumpWaterToWaterEquationFitCooling_Impl::autosizedRatedCoolingCapacity() const {
-    return getAutosizedValue("Design Size Reference Cooling Capacity", "W");
+    return getAutosizedValue("Design Size Nominal Capacity", "W");
   }
 
   boost::optional<double> HeatPumpWaterToWaterEquationFitCooling_Impl::autosizedRatedCoolingPowerConsumption() const {
-    return getAutosizedValue("Design Size Reference Cooling Power Consumption", "W");
+    return getAutosizedValue("Design Size Cooling Power Consumption", "W");
   }
 
   void HeatPumpWaterToWaterEquationFitCooling_Impl::autosize() {

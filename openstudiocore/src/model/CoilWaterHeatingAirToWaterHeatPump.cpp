@@ -425,11 +425,11 @@ namespace detail {
   }
 
   boost::optional<double> CoilWaterHeatingAirToWaterHeatPump_Impl::autosizedRatedEvaporatorAirFlowRate() const {
-    return getAutosizedValue("Design Size Evaporator Air Flow Rate", "m3/s");
+    return getAutosizedValue("Design Size Rated Evaporator Air Flow Rate", "m3/s");
   }
 
   boost::optional<double> CoilWaterHeatingAirToWaterHeatPump_Impl::autosizedRatedCondenserWaterFlowRate() const {
-    return getAutosizedValue("Design Size Condenser Water Flow Rate", "m3/s");
+    return getAutosizedValue("Design Size Rated Condenser Water Flow Rate", "m3/s");
   }
 
   void CoilWaterHeatingAirToWaterHeatPump_Impl::autosize() {

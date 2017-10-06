@@ -586,19 +586,19 @@ namespace detail {
   }
 
   boost::optional<double> EvaporativeFluidCoolerSingleSpeed_Impl::autosizedDesignAirFlowRate() const {
-    return getAutosizedValue("Design Size Design Air Flow Rate", "m3/s");
+    return getAutosizedValue("Design Air Flow Rate", "m3/s");
   }
 
   boost::optional<double> EvaporativeFluidCoolerSingleSpeed_Impl::autosizedFanPoweratDesignAirFlowRate() const {
-    return getAutosizedValue("Design Size Fan Power at Design Air Flow Rate", "W");
+    return getAutosizedValue("Fan Power at Design Air Flow Rate", "W");
   }
 
   boost::optional<double> EvaporativeFluidCoolerSingleSpeed_Impl::autosizedUfactorTimesAreaValueatDesignAirFlowRate() const {
-    return getAutosizedValue("Design Size U-factor Times Area Value at Design Air Flow Rate", "W/K");
+    return getAutosizedValue("U-Factor Times Area Value at Design Air Flow Rate", "W/C");
   }
 
   boost::optional<double> EvaporativeFluidCoolerSingleSpeed_Impl::autosizedDesignWaterFlowRate() const {
-    return getAutosizedValue("Design Size Design Water Flow Rate", "m3/s");
+    return getAutosizedValue("Design Water Flow Rate", "m3/s");
   }
 
   void EvaporativeFluidCoolerSingleSpeed_Impl::autosize() {

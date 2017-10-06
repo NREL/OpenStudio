@@ -249,15 +249,15 @@ namespace detail {
   }
 
   boost::optional<double> CoilCoolingDXVariableRefrigerantFlow_Impl::autosizedRatedTotalCoolingCapacity() const {
-    return getAutosizedValue("Design Size Total Cooling Capacity", "W");
+    return getAutosizedValue("Design Size Gross Rated Total Cooling Capacity", "W");
   }
 
   boost::optional<double> CoilCoolingDXVariableRefrigerantFlow_Impl::autosizedRatedSensibleHeatRatio() const {
-    return getAutosizedValue("Design Size Sensible Heat Ratio", "");
+    return getAutosizedValue("Design Size Gross Rated Sensible Heat Ratio", "");
   }
 
   boost::optional<double> CoilCoolingDXVariableRefrigerantFlow_Impl::autosizedRatedAirFlowRate() const {
-    return getAutosizedValue("Design Size Air Flow Rate", "m3/s");
+    return getAutosizedValue("Design Size Rated Air Flow Rate", "m3/s");
   }
 
   void CoilCoolingDXVariableRefrigerantFlow_Impl::autosize() {

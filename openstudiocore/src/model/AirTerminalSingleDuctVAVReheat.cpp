@@ -644,7 +644,7 @@ namespace detail{
   }
 
   boost::optional<double> AirTerminalSingleDuctVAVReheat_Impl::autosizedMaximumHotWaterOrSteamFlowRate() const {
-    return getAutosizedValue("Design Size Maximum Hot Water or Steam Flow Rate", "m3/s");
+    return getAutosizedValue("Design Size Maximum Reheat Water Flow Rate", "m3/s");
   }
 
   boost::optional<double> AirTerminalSingleDuctVAVReheat_Impl::autosizedMaximumFlowPerZoneFloorAreaDuringReheat() const {

@@ -1852,15 +1852,15 @@ namespace detail {
   }
 
   boost::optional<double> AirConditionerVariableRefrigerantFlow_Impl::autosizedRatedTotalCoolingCapacity() const {
-    return getAutosizedValue("Design Size Total Cooling Capacity", "W");
+    return getAutosizedValue("Design Size Rated Total Cooling Capacity (gross)", "W");
   }
 
   boost::optional<double> AirConditionerVariableRefrigerantFlow_Impl::autosizedRatedTotalHeatingCapacity() const {
-    return getAutosizedValue("Design Size Total Heating Capacity", "W");
+    return getAutosizedValue("Design Size Rated Total Heating Capacity", "W");
   }
 
   boost::optional<double> AirConditionerVariableRefrigerantFlow_Impl::autosizedResistiveDefrostHeaterCapacity() const {
-    return getAutosizedValue("Design Size Resistive Defrost Heater Capacity", "W");
+    return getAutosizedValue("Design Size Resistive Defrost Heater Capacity", "");
   }
 
   boost::optional<double> AirConditionerVariableRefrigerantFlow_Impl::autosizedWaterCondenserVolumeFlowRate() const {
@@ -1872,7 +1872,7 @@ namespace detail {
   }
 
   boost::optional<double> AirConditionerVariableRefrigerantFlow_Impl::autosizedEvaporativeCondenserPumpRatedPowerConsumption() const {
-    return getAutosizedValue("Evaporative Condenser Pump Design Size Power Consumption", "W");
+    return getAutosizedValue("Design Size Evaporative Condenser Pump Rated Power Consumption", "W");
   }
 
   void AirConditionerVariableRefrigerantFlow_Impl::autosize() {

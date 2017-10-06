@@ -142,6 +142,9 @@ namespace detail {
 
     bool addToNode(Node & node) override;
 
+    // Used to find the ZoneHVAC that contains this coil
+    boost::optional<ZoneHVACLowTempRadiantVarFlow> parentZoneHVAC() const;
+
     //@}
    protected:
    private:

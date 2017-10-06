@@ -242,11 +242,11 @@ namespace detail {
   }
 
   boost::optional<double> HumidifierSteamElectric_Impl::autosizedRatedCapacity() const {
-    return getAutosizedValue("Design Size Capacity", "m3/s");
+    return getAutosizedValue("Design Size Nominal Capacity Volume", "m3/s");
   }
 
   boost::optional<double> HumidifierSteamElectric_Impl::autosizedRatedPower() const {
-    return getAutosizedValue("Design Size Power", "W");
+    return getAutosizedValue("Design Size Rated Power", "W");
   }
 
   void HumidifierSteamElectric_Impl::autosize() {

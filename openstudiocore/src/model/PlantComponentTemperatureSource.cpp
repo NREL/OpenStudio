@@ -180,7 +180,7 @@ namespace detail {
   }
 
   boost::optional<double> PlantComponentTemperatureSource_Impl::autosizedDesignVolumeFlowRate() const {
-    return getAutosizedValue("Design Size Design Volume Flow Rate", "m3/s");
+    return getAutosizedValue("Design Size Design Fluid Flow Rate", "m3/s");
   }
 
   void PlantComponentTemperatureSource_Impl::autosize() {

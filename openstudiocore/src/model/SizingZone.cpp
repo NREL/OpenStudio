@@ -30,12 +30,15 @@
 #include "SizingZone_Impl.hpp"
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 #include <utilities/idd/IddFactory.hxx>
 
 #include <utilities/idd/OS_Sizing_Zone_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/units/Unit.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/sql/SqlFile.hpp"
 
 namespace openstudio {
 namespace model {
@@ -938,11 +941,141 @@ namespace detail {
     OS_ASSERT(result);
   }
   boost::optional<double> SizingZone_Impl::autosizedDedicatedOutdoorAirLowSetpointTemperatureforDesign() const {
-    return getAutosizedValue("Design Size Dedicated Outdoor Air Low Setpoint Temperature for Design", "C");
+    boost::optional < double > result;
+
+    std::string setpointType = "Low";
+
+    // Get the parent ThermalZone
+    ThermalZone parZone = thermalZone();
+
+    // Get the name of the thermal zone
+    if (!parZone.name()) {
+      LOG(Warn, "This object's parent ThermalZone does not have a name, cannot retrieve the autosized Dedicated Outdoor Air" + setpointType + " Setpoint Temperature.");
+      return result;
+    }
+
+    // Get the object name and transform to the way it is recorded
+    // in the sql file
+    std::string sqlName = parZone.name().get();
+    boost::to_upper(sqlName);
+
+    // Check that the model has a sql file
+    if (!model().sqlFile()) {
+      LOG(Warn, "This model has no sql file, cannot retrieve the autosized Dedicated Outdoor Air" + setpointType + " Setpoint Temperature.");
+      return result;
+    }
+
+    // Query the Intialization Summary -> Zone Sizing DOAS Inputs Information table to get 
+    // the row names that contains information for this component.
+    std::stringstream rowsQuery;
+    rowsQuery << "SELECT RowName ";
+    rowsQuery << "FROM tabulardatawithstrings ";
+    rowsQuery << "WHERE ReportName='Initialization Summary' ";
+    rowsQuery << "AND ReportForString='Entire Facility' ";
+    rowsQuery << "AND TableName = 'Zone Sizing DOAS Inputs' ";
+    rowsQuery << "AND Value='" + sqlName + "'";
+
+    boost::optional<std::vector<std::string>> rowNames = model().sqlFile().get().execAndReturnVectorOfString(rowsQuery.str());
+
+    // Warn if the query failed
+    if (!rowNames) {
+      LOG(Warn, "Could not find a component called '" + sqlName + "' in any rows of the Initialization Summary Zone Sizing DOAS Inputs table.");
+      return result;
+    }
+
+    // Query each row of the Intialization Summary -> Zone Sizing DOAS Inputs table
+    // that contains this component to get the desired value.
+    for (std::string rowName : rowNames.get()) {
+      std::stringstream valQuery;
+      valQuery << "SELECT Value ";
+      valQuery << "FROM tabulardatawithstrings ";
+      valQuery << "WHERE ReportName='Initialization Summary' ";
+      valQuery << "AND ReportForString='Entire Facility' ";
+      valQuery << "AND TableName = 'Zone Sizing DOAS Inputs' ";
+      valQuery << "AND RowName='" << rowName << "' ";
+      valQuery << "AND ColumnName='DOAS Design " << setpointType << " Setpoint Temperature {C}'";
+      boost::optional<double> val = model().sqlFile().get().execAndReturnFirstDouble(valQuery.str());
+      // Check if the query succeeded
+      if (val) {
+        result = val.get();
+        break;
+      }
+    }
+
+    if (!result) {
+      LOG(Warn, "The autosized value query for Dedicated Outdoor Air " + setpointType + " Setpoint Temperature for " + sqlName + " returned no value.");
+    }
+
+    return result;
   }
 
   boost::optional<double> SizingZone_Impl::autosizedDedicatedOutdoorAirHighSetpointTemperatureforDesign() const {
-    return getAutosizedValue("Design Size Dedicated Outdoor Air High Setpoint Temperature for Design", "C");
+    boost::optional < double > result;
+
+    std::string setpointType = "High";
+
+    // Get the parent ThermalZone
+    ThermalZone parZone = thermalZone();
+
+    // Get the name of the thermal zone
+    if (!parZone.name()) {
+      LOG(Warn, "This object's parent ThermalZone does not have a name, cannot retrieve the autosized Dedicated Outdoor Air" + setpointType + " Setpoint Temperature.");
+      return result;
+    }
+
+    // Get the object name and transform to the way it is recorded
+    // in the sql file
+    std::string sqlName = parZone.name().get();
+    boost::to_upper(sqlName);
+
+    // Check that the model has a sql file
+    if (!model().sqlFile()) {
+      LOG(Warn, "This model has no sql file, cannot retrieve the autosized Dedicated Outdoor Air" + setpointType + " Setpoint Temperature.");
+      return result;
+    }
+
+    // Query the Intialization Summary -> Zone Sizing DOAS Inputs Information table to get 
+    // the row names that contains information for this component.
+    std::stringstream rowsQuery;
+    rowsQuery << "SELECT RowName ";
+    rowsQuery << "FROM tabulardatawithstrings ";
+    rowsQuery << "WHERE ReportName='Initialization Summary' ";
+    rowsQuery << "AND ReportForString='Entire Facility' ";
+    rowsQuery << "AND TableName = 'Zone Sizing DOAS Inputs' ";
+    rowsQuery << "AND Value='" + sqlName + "'";
+
+    boost::optional<std::vector<std::string>> rowNames = model().sqlFile().get().execAndReturnVectorOfString(rowsQuery.str());
+
+    // Warn if the query failed
+    if (!rowNames) {
+      LOG(Warn, "Could not find a component called '" + sqlName + "' in any rows of the Initialization Summary Zone Sizing DOAS Inputs table.");
+      return result;
+    }
+
+    // Query each row of the Intialization Summary -> Zone Sizing DOAS Inputs table
+    // that contains this component to get the desired value.
+    for (std::string rowName : rowNames.get()) {
+      std::stringstream valQuery;
+      valQuery << "SELECT Value ";
+      valQuery << "FROM tabulardatawithstrings ";
+      valQuery << "WHERE ReportName='Initialization Summary' ";
+      valQuery << "AND ReportForString='Entire Facility' ";
+      valQuery << "AND TableName = 'Zone Sizing DOAS Inputs' ";
+      valQuery << "AND RowName='" << rowName << "' ";
+      valQuery << "AND ColumnName='DOAS Design " << setpointType << " Setpoint Temperature {C}'";
+      boost::optional<double> val = model().sqlFile().get().execAndReturnFirstDouble(valQuery.str());
+      // Check if the query succeeded
+      if (val) {
+        result = val.get();
+        break;
+      }
+    }
+
+    if (!result) {
+      LOG(Warn, "The autosized value query for Dedicated Outdoor Air " + setpointType + " Setpoint Temperature for " + sqlName + " returned no value.");
+    }
+
+    return result;
   }
 
   void SizingZone_Impl::autosize() {

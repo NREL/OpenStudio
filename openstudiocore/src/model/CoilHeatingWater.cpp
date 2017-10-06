@@ -552,7 +552,7 @@ namespace detail{
   }
 
   boost::optional<double> CoilHeatingWater_Impl::autosizedRatedCapacity() const {
-    return getAutosizedValue("Design Size Design Coil Load", "W");
+    return getAutosizedValue("Design Size Rated Capacity", "W");
   }
 
   void CoilHeatingWater_Impl::autosize() {

@@ -279,8 +279,39 @@ namespace detail {
     return false;
   }
 
+  boost::optional<ZoneHVACLowTempRadiantVarFlow> CoilHeatingLowTempRadiantVarFlow_Impl::parentZoneHVAC() const {
+
+    boost::optional<ZoneHVACLowTempRadiantVarFlow> result;
+
+    // This coil performance object can only be found in a ZoneHVACLowTempRadiantVarFlow
+    // Check all ZoneHVACLowTempRadiantVarFlow in the model, seeing if this is inside of one of them.
+    boost::optional<ZoneHVACLowTempRadiantVarFlow> parentCoil;
+    auto zoneHVACs = this->model().getConcreteModelObjects<ZoneHVACLowTempRadiantVarFlow>();
+    for (const auto & zoneHVAC : zoneHVACs) {
+      if (zoneHVAC.heatingCoil().handle() == this->handle()) {
+        result = zoneHVAC;
+        break;
+      }
+
+    }
+
+    // Warn if this coil was not found inside a ZoneHVACLowTempRadiantVarFlow
+    if (!result) {
+      LOG(Warn, name().get() + " was not found inside a ZoneHVACLowTempRadiantVarFlow in the model, cannot retrieve the autosized value.");
+      return result;
+    }
+
+    return result;
+  }
+
   boost::optional<double> CoilHeatingLowTempRadiantVarFlow_Impl::autosizedMaximumHotWaterFlow() const {
-    return getAutosizedValue("Design Size Maximum Hot Water Flow", "m3/s");
+    boost::optional<ZoneHVACLowTempRadiantVarFlow> zoneHVAC = parentZoneHVAC();
+    boost::optional<double> result;
+    if (!zoneHVAC) {
+      return result;
+    }
+
+    return zoneHVAC->getAutosizedValue("Design Size Maximum Hot Water Flow", "m3/s");
   }
 
   void CoilHeatingLowTempRadiantVarFlow_Impl::autosize() {
@@ -386,6 +417,10 @@ CoilHeatingLowTempRadiantVarFlow::CoilHeatingLowTempRadiantVarFlow(std::shared_p
 
   boost::optional<double> CoilHeatingLowTempRadiantVarFlow::autosizedMaximumHotWaterFlow() const {
     return getImpl<detail::CoilHeatingLowTempRadiantVarFlow_Impl>()->autosizedMaximumHotWaterFlow();
+  }
+
+  boost::optional<ZoneHVACLowTempRadiantVarFlow> CoilHeatingLowTempRadiantVarFlow::parentZoneHVAC() const {
+    return getImpl<detail::CoilHeatingLowTempRadiantVarFlow_Impl>()->parentZoneHVAC();
   }
 
 } // model

@@ -1000,7 +1000,7 @@ namespace detail {
   }
 
   boost::optional<double> ZoneHVACIdealLoadsAirSystem_Impl::autosizedMaximumHeatingAirFlowRate() const {
-    return getAutosizedValue("User-Specified Maximum Heating Air Flow Rate", "m3/s");
+    return getAutosizedValue("Design Size Maximum Heating Air Flow Rate", "m3/s");
   }
 
   boost::optional<double> ZoneHVACIdealLoadsAirSystem_Impl::autosizedMaximumSensibleHeatingCapacity() const {
@@ -1008,7 +1008,7 @@ namespace detail {
   }
 
   boost::optional<double> ZoneHVACIdealLoadsAirSystem_Impl::autosizedMaximumCoolingAirFlowRate() const {
-    return getAutosizedValue("User-Specified Maximum Cooling Air Flow Rate", "m3/s");
+    return getAutosizedValue("Design Size Maximum Cooling Air Flow Rate", "m3/s");
   }
 
   boost::optional<double> ZoneHVACIdealLoadsAirSystem_Impl::autosizedMaximumTotalCoolingCapacity() const {

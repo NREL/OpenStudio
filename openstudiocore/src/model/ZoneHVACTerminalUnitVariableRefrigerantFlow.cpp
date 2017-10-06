@@ -450,19 +450,19 @@ namespace detail {
   }
 
   boost::optional<double> ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::autosizedSupplyAirFlowRateDuringCoolingOperation() const {
-    return getAutosizedValue("Design Size Supply Air Flow Rate During Cooling Operation", "m3/s");
+    return getAutosizedValue("Design Size Cooling Supply Air Flow Rate", "m3/s");
   }
 
   boost::optional<double> ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::autosizedSupplyAirFlowRateWhenNoCoolingisNeeded() const {
-    return getAutosizedValue("Design Size Supply Air Flow Rate When No Cooling is Needed", "m3/s");
+    return getAutosizedValue("Design Size No Cooling Supply Air Flow Rate", "m3/s");
   }
 
   boost::optional<double> ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::autosizedSupplyAirFlowRateDuringHeatingOperation() const {
-    return getAutosizedValue("Design Size Supply Air Flow Rate During Heating Operation", "m3/s");
+    return getAutosizedValue("Design Size Heating Supply Air Flow Rate", "m3/s");
   }
 
   boost::optional<double> ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::autosizedSupplyAirFlowRateWhenNoHeatingisNeeded() const {
-    return getAutosizedValue("Design Size Supply Air Flow Rate When No Heating is Needed", "m3/s");
+    return getAutosizedValue("Design Size No Heating Supply Air Flow Rate", "m3/s");
   }
 
   boost::optional<double> ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::autosizedOutdoorAirFlowRateDuringCoolingOperation() const {

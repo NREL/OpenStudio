@@ -823,20 +823,24 @@ namespace detail{
     return getAutosizedValue("Design Size Low Speed Rated Air Flow Rate", "m3/s");
   }
 
+  // E+ output has a bug where this field label is incorrect
   boost::optional<double> CoilCoolingDXTwoSpeed_Impl::autosizedHighSpeedEvaporativeCondenserAirFlowRate() const {
-    return getAutosizedValue("Design Size High Speed Evaporative Condenser Rated Air Flow Rate", "m3/s");
+    return getAutosizedValue("Design Size High Speed Evaporative Condenser Effectiveness", "m3/s");
   }
 
+  // E+ output has a bug where this field label is incorrect
   boost::optional<double> CoilCoolingDXTwoSpeed_Impl::autosizedHighSpeedEvaporativeCondenserPumpRatedPowerConsumption() const {
-    return getAutosizedValue("High Speed Evaporative Condenser Pump Design Size Power Consumption", "W");
+    return getAutosizedValue("Design Size High Speed Evaporative Condenser Air Flow Rate", "W");
   }
 
+  // E+ output has a bug where this field label is incorrect
   boost::optional<double> CoilCoolingDXTwoSpeed_Impl::autosizedLowSpeedEvaporativeCondenserAirFlowRate() const {
-    return getAutosizedValue("Design Size Low Speed Evaporative Condenser Rated Air Flow Rate", "m3/s");
+    return getAutosizedValue("Design Size Low Speed Evaporative Condenser Effectiveness", "m3/s");
   }
 
+  // E+ output has a bug where this field label is incorrect
   boost::optional<double> CoilCoolingDXTwoSpeed_Impl::autosizedLowSpeedEvaporativeCondenserPumpRatedPowerConsumption() const {
-    return getAutosizedValue("Low Speed Evaporative Condenser Pump Design Size Power Consumption", "W");
+    return getAutosizedValue("Design Size Low Speed Evaporative Condenser Air Flow Rate", "W");
   }
 
   void CoilCoolingDXTwoSpeed_Impl::autosize() {

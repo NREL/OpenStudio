@@ -725,19 +725,19 @@ namespace detail {
   // }
 
   boost::optional<double> EvaporativeFluidCoolerTwoSpeed_Impl::autosizedHighFanSpeedAirFlowRate() const {
-    return getAutosizedValue("Design Size High Fan Speed Air Flow Rate", "m3/s");
+    return getAutosizedValue("Air Flow Rate at High Fan Speed", "m3/s");
   }
 
   boost::optional<double> EvaporativeFluidCoolerTwoSpeed_Impl::autosizedHighFanSpeedFanPower() const {
-    return getAutosizedValue("Design Size High Fan Speed Fan Power", "W");
+    return getAutosizedValue("Fan Power at High Fan Speed", "W");
   }
 
   boost::optional<double> EvaporativeFluidCoolerTwoSpeed_Impl::autosizedLowFanSpeedAirFlowRate() const {
-    return getAutosizedValue("Design Size Low Fan Speed Air Flow Rate", "m3/s");
+    return getAutosizedValue("Air Flow Rate at Low Fan Speed", "m3/s");
   }
 
   boost::optional<double> EvaporativeFluidCoolerTwoSpeed_Impl::autosizedLowFanSpeedFanPower() const {
-    return getAutosizedValue("Design Size Low Fan Speed Fan Power", "W");
+    return getAutosizedValue("Fan Power at Low Fan Speed", "W");
   }
 
   boost::optional<double> EvaporativeFluidCoolerTwoSpeed_Impl::autosizedLowSpeedStandardDesignCapacity() const {
@@ -745,15 +745,15 @@ namespace detail {
   }
 
   boost::optional<double> EvaporativeFluidCoolerTwoSpeed_Impl::autosizedHighFanSpeedUfactorTimesAreaValue() const {
-    return getAutosizedValue("Design Size High Fan Speed U-factor Times Area Value", "W/K");
+    return getAutosizedValue("U-Factor Times Area Value at High Fan Speed", "W/C");
   }
 
   boost::optional<double> EvaporativeFluidCoolerTwoSpeed_Impl::autosizedLowFanSpeedUfactorTimesAreaValue() const {
-    return getAutosizedValue("Design Size Low Fan Speed U-factor Times Area Value", "W/K");
+    return getAutosizedValue("U-Factor Times Area Value at Low Fan Speed", "W/C");
   }
 
   boost::optional<double> EvaporativeFluidCoolerTwoSpeed_Impl::autosizedDesignWaterFlowRate() const {
-    return getAutosizedValue("Design Size Design Water Flow Rate", "m3/s");
+    return getAutosizedValue("Design Water Flow Rate", "m3/s");
   }
 
   boost::optional<double> EvaporativeFluidCoolerTwoSpeed_Impl::autosizedLowSpeedUserSpecifiedDesignCapacity() const {

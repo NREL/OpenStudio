@@ -251,7 +251,7 @@ namespace detail {
   }
 
   boost::optional<double> AirTerminalDualDuctVAV_Impl::autosizedMaximumDamperAirFlowRate() const {
-    return getAutosizedValue("Design Size Maximum Damper Air Flow Rate", "m3/s");
+    return getAutosizedValue("Maximum Air Flow Rate", "m3/s");
   }
 
   void AirTerminalDualDuctVAV_Impl::autosize() {

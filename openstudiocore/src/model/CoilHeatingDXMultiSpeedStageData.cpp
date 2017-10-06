@@ -332,7 +332,7 @@ namespace detail {
     CoilHeatingDXMultiSpeed parentCoil = std::get<1>(indexAndName);
     std::string sqlField = "Speed " + std::to_string(index) + " Design Size Rated Total Heating Capacity";
 
-    return parentCoil.getAutosizedValue(sqlField, "m3/s");
+    return parentCoil.getAutosizedValue(sqlField, "W");
   }
 
   boost::optional<double> CoilHeatingDXMultiSpeedStageData_Impl::autosizedRatedAirFlowRate() const {
