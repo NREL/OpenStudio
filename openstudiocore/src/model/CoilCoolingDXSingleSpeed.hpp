@@ -379,6 +379,10 @@ class MODEL_API CoilCoolingDXSingleSpeed : public StraightComponent {
 
   boost::optional <double> autosizedRatedSensibleHeatRatio() const;
 
+  boost::optional <double> autosizedEvaporativeCondenserAirFlowRate() const;
+
+  boost::optional <double> autosizedEvaporativeCondenserPumpRatedPowerConsumption() const;
+
   //@}
  protected:
 

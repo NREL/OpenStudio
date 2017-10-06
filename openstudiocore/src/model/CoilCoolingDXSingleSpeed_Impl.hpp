@@ -165,6 +165,10 @@ namespace detail {
 
     boost::optional <double> autosizedRatedSensibleHeatRatio() const;
 
+    boost::optional <double> autosizedEvaporativeCondenserAirFlowRate() const;
+
+    boost::optional <double> autosizedEvaporativeCondenserPumpRatedPowerConsumption() const;
+
     //@}
     /** @name Setters */
     //@{
