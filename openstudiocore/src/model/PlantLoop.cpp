@@ -875,8 +875,13 @@ void PlantLoop_Impl::resetCommonPipeSimulation()
     return getAutosizedValue("Maximum Loop Flow Rate", "m3/s");
   }
 
+  boost::optional<double> PlantLoop_Impl::autosizedPlantLoopVolume() const {
+    return getAutosizedValue("Plant Loop Volume", "m3");
+  }
+
   void PlantLoop_Impl::autosize() {
-    autosizedMaximumLoopFlowRate();
+    autosizeMaximumLoopFlowRate();
+    autocalculatePlantLoopVolume();
   }
 
   void PlantLoop_Impl::applySizingValues() {
@@ -884,6 +889,11 @@ void PlantLoop_Impl::resetCommonPipeSimulation()
     val = autosizedMaximumLoopFlowRate();
     if (val) {
       setMaximumLoopFlowRate(val.get());
+    }
+
+    val = autosizedPlantLoopVolume();
+    if (val) {
+      setPlantLoopVolume(val.get());
     }
 
   }
@@ -1325,6 +1335,10 @@ void PlantLoop::resetComponentSetpointOperationSchemeSchedule() {
 
   boost::optional<double> PlantLoop::autosizedMaximumLoopFlowRate() const {
     return getImpl<detail::PlantLoop_Impl>()->autosizedMaximumLoopFlowRate();
+  }
+
+  boost::optional<double> PlantLoop::autosizedPlantLoopVolume() const {
+    return getImpl<detail::PlantLoop_Impl>()->autosizedPlantLoopVolume();
   }
 
 } // model

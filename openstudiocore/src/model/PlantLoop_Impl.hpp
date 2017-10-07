@@ -221,6 +221,8 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
 
   boost::optional<double> autosizedMaximumLoopFlowRate() const ;
 
+  boost::optional<double> autosizedPlantLoopVolume() const;
+
   virtual void autosize() override;
 
   virtual void applySizingValues() override;
