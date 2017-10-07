@@ -504,7 +504,7 @@ namespace detail {
   }
 
   void ZoneHVACLowTempRadiantVarFlow_Impl::autosize() {
-    autosizedHydronicTubingLength();
+    autosizeHydronicTubingLength();
   }
 
   void ZoneHVACLowTempRadiantVarFlow_Impl::applySizingValues() {

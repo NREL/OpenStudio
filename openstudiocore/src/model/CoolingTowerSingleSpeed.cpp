@@ -1175,12 +1175,12 @@ namespace detail {
   }
 
   void CoolingTowerSingleSpeed_Impl::autosize() {
-    autosizedDesignWaterFlowRate();
-    autosizedDesignAirFlowRate();
-    autosizedFanPoweratDesignAirFlowRate();
-    autosizedUFactorTimesAreaValueatDesignAirFlowRate();
-    autosizedAirFlowRateinFreeConvectionRegime();
-    autosizedUFactorTimesAreaValueatFreeConvectionAirFlowRate();
+    autosizeDesignWaterFlowRate();
+    autosizeDesignAirFlowRate();
+    autosizeFanPoweratDesignAirFlowRate();
+    autosizeUFactorTimesAreaValueatDesignAirFlowRate();
+    autosizeAirFlowRateinFreeConvectionRegime();
+    autosizeUFactorTimesAreaValueatFreeConvectionAirFlowRate();
   }
 
   void CoolingTowerSingleSpeed_Impl::applySizingValues() {

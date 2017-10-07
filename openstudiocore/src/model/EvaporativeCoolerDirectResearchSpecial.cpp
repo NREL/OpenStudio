@@ -310,8 +310,8 @@ namespace detail{
   }
 
   void EvaporativeCoolerDirectResearchSpecial_Impl::autosize() {
-    autosizedRecirculatingWaterPumpPowerConsumption();
-    autosizedPrimaryAirDesignFlowRate();
+    autosizeRecirculatingWaterPumpPowerConsumption();
+    autosizePrimaryAirDesignFlowRate();
   }
 
   void EvaporativeCoolerDirectResearchSpecial_Impl::applySizingValues() {

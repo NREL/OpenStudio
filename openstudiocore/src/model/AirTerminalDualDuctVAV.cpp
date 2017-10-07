@@ -255,7 +255,7 @@ namespace detail {
   }
 
   void AirTerminalDualDuctVAV_Impl::autosize() {
-    autosizedMaximumDamperAirFlowRate();
+    autosizeMaximumDamperAirFlowRate();
   }
 
   void AirTerminalDualDuctVAV_Impl::applySizingValues() {

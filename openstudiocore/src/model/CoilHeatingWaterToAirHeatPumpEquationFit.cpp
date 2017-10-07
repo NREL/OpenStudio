@@ -423,9 +423,9 @@ namespace detail {
   }
 
   void CoilHeatingWaterToAirHeatPumpEquationFit_Impl::autosize() {
-    autosizedRatedAirFlowRate();
-    autosizedRatedWaterFlowRate();
-    autosizedRatedHeatingCapacity();
+    autosizeRatedAirFlowRate();
+    autosizeRatedWaterFlowRate();
+    autosizeRatedHeatingCapacity();
   }
 
   void CoilHeatingWaterToAirHeatPumpEquationFit_Impl::applySizingValues() {

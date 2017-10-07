@@ -507,11 +507,11 @@ namespace detail {
   }
 
   void CoilPerformanceDXCooling_Impl::autosize() {
-    autosizedGrossRatedTotalCoolingCapacity();
-    autosizedGrossRatedSensibleHeatRatio();
-    autosizedRatedAirFlowRate();
-    autosizedEvaporativeCondenserAirFlowRate();
-    autosizedEvaporativeCondenserPumpRatedPowerConsumption();
+    autosizeGrossRatedTotalCoolingCapacity();
+    autosizeGrossRatedSensibleHeatRatio();
+    autosizeRatedAirFlowRate();
+    autosizeEvaporativeCondenserAirFlowRate();
+    autosizeEvaporativeCondenserPumpRatedPowerConsumption();
   }
 
   void CoilPerformanceDXCooling_Impl::applySizingValues() {

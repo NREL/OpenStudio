@@ -529,8 +529,8 @@ namespace detail {
   }
 
   void AirTerminalSingleDuctConstantVolumeReheat_Impl::autosize() {
-    autosizedMaximumAirFlowRate();
-    autosizedMaximumHotWaterorSteamFlowRate();
+    autosizeMaximumAirFlowRate();
+    autosizeMaximumHotWaterorSteamFlowRate();
   }
 
   void AirTerminalSingleDuctConstantVolumeReheat_Impl::applySizingValues() {

@@ -261,8 +261,8 @@ boost::optional<HVACComponent> ControllerWaterCoil_Impl::waterCoil() const
   }
 
   void ControllerWaterCoil_Impl::autosize() {
-    autosizedControllerConvergenceTolerance();
-    autosizedMaximumActuatedFlow();
+    autosizeControllerConvergenceTolerance();
+    autosizeMaximumActuatedFlow();
   }
 
   void ControllerWaterCoil_Impl::applySizingValues() {

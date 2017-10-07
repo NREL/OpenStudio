@@ -1600,10 +1600,10 @@ namespace detail {
   }
 
   void WaterHeaterMixed_Impl::autosize() {
-    autosizedTankVolume();
-    autosizedHeaterMaximumCapacity();
-    autosizedUseSideDesignFlowRate();
-    autosizedSourceSideDesignFlowRate();
+    autosizeTankVolume();
+    autosizeHeaterMaximumCapacity();
+    autosizeUseSideDesignFlowRate();
+    autosizeSourceSideDesignFlowRate();
   }
 
   void WaterHeaterMixed_Impl::applySizingValues() {

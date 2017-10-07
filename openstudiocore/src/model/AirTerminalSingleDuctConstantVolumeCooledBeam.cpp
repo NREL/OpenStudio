@@ -681,11 +681,16 @@ AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::outputVariableNames() const
     return getAutosizedValue("Beam Length", "m");
   }
 
+  boost::optional<double> AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::autosizedCoefficientofInductionKin() const {
+    return getAutosizedValue("Coefficient of Induction Kin", "");
+  }
+
   void AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::autosize() {
-    autosizedSupplyAirVolumetricFlowRate();
-    autosizedMaximumTotalChilledWaterVolumetricFlowRate();
-    autosizedNumberofBeams();
-    autosizedBeamLength();
+    autosizeSupplyAirVolumetricFlowRate();
+    autosizeMaximumTotalChilledWaterVolumetricFlowRate();
+    autosizeNumberofBeams();
+    autosizeBeamLength();
+    autocalculateCoefficientofInductionKin();
   }
 
   void AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::applySizingValues() {
@@ -708,6 +713,11 @@ AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::outputVariableNames() const
     val = autosizedBeamLength();
     if (val) {
       setBeamLength(val.get());
+    }
+
+    val = autosizedCoefficientofInductionKin();
+    if (val) {
+      setCoefficientofInductionKin(val.get());
     }
 
   }
@@ -984,6 +994,10 @@ AirTerminalSingleDuctConstantVolumeCooledBeam::AirTerminalSingleDuctConstantVolu
 
   boost::optional<double> AirTerminalSingleDuctConstantVolumeCooledBeam::autosizedBeamLength() const {
     return getImpl<detail::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl>()->autosizedBeamLength();
+  }
+
+  boost::optional<double> AirTerminalSingleDuctConstantVolumeCooledBeam::autosizedCoefficientofInductionKin() const {
+    return getImpl<detail::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl>()->autosizedCoefficientofInductionKin();
   }
 
 } // model

@@ -528,11 +528,11 @@ namespace detail {
   }
 
   void ChillerAbsorptionIndirect_Impl::autosize() {
-    autosizedNominalCapacity();
-    autosizedNominalPumpingPower();
-    autosizedDesignChilledWaterFlowRate();
-    autosizedDesignCondenserWaterFlowRate();
-    autosizedDesignGeneratorFluidFlowRate();
+    autosizeNominalCapacity();
+    autosizeNominalPumpingPower();
+    autosizeDesignChilledWaterFlowRate();
+    autosizeDesignCondenserWaterFlowRate();
+    autosizeDesignGeneratorFluidFlowRate();
   }
 
   void ChillerAbsorptionIndirect_Impl::applySizingValues() {

@@ -506,7 +506,7 @@ namespace detail {
   }
 
   void FanOnOff_Impl::autosize() {
-    autosizedMaximumFlowRate();
+    autosizeMaximumFlowRate();
   }
 
   void FanOnOff_Impl::applySizingValues() {

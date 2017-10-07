@@ -684,11 +684,11 @@ namespace detail {
   }
 
   void AirTerminalSingleDuctParallelPIUReheat_Impl::autosize() {
-    autosizedMaximumPrimaryAirFlowRate();
-    autosizedMaximumSecondaryAirFlowRate();
-    autosizedMinimumPrimaryAirFlowFraction();
-    autosizedFanOnFlowFraction();
-    autosizedMaximumHotWaterorSteamFlowRate();
+    autosizeMaximumPrimaryAirFlowRate();
+    autosizeMaximumSecondaryAirFlowRate();
+    autosizeMinimumPrimaryAirFlowFraction();
+    autosizeFanOnFlowFraction();
+    autosizeMaximumHotWaterorSteamFlowRate();
   }
 
   void AirTerminalSingleDuctParallelPIUReheat_Impl::applySizingValues() {

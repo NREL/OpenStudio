@@ -401,9 +401,9 @@ bool CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::setSpeedDataLis
   }
 
   void CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::autosize() {
-    autosizedGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel();
-    autosizedRatedAirFlowRateAtSelectedNominalSpeedLevel();
-    autosizedRatedWaterFlowRateAtSelectedNominalSpeedLevel();
+    autosizeGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel();
+    autosizeRatedAirFlowRateAtSelectedNominalSpeedLevel();
+    autosizeRatedWaterFlowRateAtSelectedNominalSpeedLevel();
   }
 
   void CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::applySizingValues() {

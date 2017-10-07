@@ -404,8 +404,8 @@ namespace detail {
   }
 
   void AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl::autosize() {
-    autosizedMaximumAirFlowRate();
-    autosizedMaximumHotWaterorSteamFlowRate();
+    autosizeMaximumAirFlowRate();
+    autosizeMaximumHotWaterorSteamFlowRate();
   }
 
   void AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl::applySizingValues() {

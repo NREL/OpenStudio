@@ -584,9 +584,9 @@ namespace detail {
   }
 
   void AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::autosize() {
-    autosizedMaximumTotalAirFlowRate();
-    autosizedMaximumHotWaterFlowRate();
-    autosizedMaximumColdWaterFlowRate();
+    autosizeMaximumTotalAirFlowRate();
+    autosizeMaximumHotWaterFlowRate();
+    autosizeMaximumColdWaterFlowRate();
   }
 
   void AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::applySizingValues() {

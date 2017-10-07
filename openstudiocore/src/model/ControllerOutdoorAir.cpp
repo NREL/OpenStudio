@@ -667,8 +667,8 @@ namespace detail {
   }
 
   void ControllerOutdoorAir_Impl::autosize() {
-    autosizedMinimumOutdoorAirFlowRate();
-    autosizedMaximumOutdoorAirFlowRate();
+    autosizeMinimumOutdoorAirFlowRate();
+    autosizeMaximumOutdoorAirFlowRate();
   }
 
   void ControllerOutdoorAir_Impl::applySizingValues() {

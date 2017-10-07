@@ -493,9 +493,9 @@ namespace detail {
   }
 
   void ZoneHVACUnitVentilator_Impl::autosize() {
-    autosizedMaximumSupplyAirFlowRate();
-    autosizedMinimumOutdoorAirFlowRate();
-    autosizedMaximumOutdoorAirFlowRate();
+    autosizeMaximumSupplyAirFlowRate();
+    autosizeMinimumOutdoorAirFlowRate();
+    autosizeMaximumOutdoorAirFlowRate();
   }
 
   void ZoneHVACUnitVentilator_Impl::applySizingValues() {

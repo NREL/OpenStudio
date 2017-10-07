@@ -343,8 +343,8 @@ namespace detail {
   }
 
   void ZoneHVACEnergyRecoveryVentilator_Impl::autosize() {
-    autosizedSupplyAirFlowRate();
-    autosizedExhaustAirFlowRate();
+    autosizeSupplyAirFlowRate();
+    autosizeExhaustAirFlowRate();
   }
 
   void ZoneHVACEnergyRecoveryVentilator_Impl::applySizingValues() {

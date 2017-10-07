@@ -286,7 +286,7 @@ namespace detail {
   }
 
   void SolarCollectorFlatPlatePhotovoltaicThermal_Impl::autosize() {
-    autosizedDesignFlowRate();
+    autosizeDesignFlowRate();
   }
 
   void SolarCollectorFlatPlatePhotovoltaicThermal_Impl::applySizingValues() {

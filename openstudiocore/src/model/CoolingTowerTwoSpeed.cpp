@@ -1021,17 +1021,17 @@ namespace detail {
   }
 
   void CoolingTowerTwoSpeed_Impl::autosize() {
-    autosizedDesignWaterFlowRate();
-    autosizedHighFanSpeedAirFlowRate();
-    autosizedHighFanSpeedFanPower();
-    autosizedHighFanSpeedUFactorTimesAreaValue();
-    autosizedLowFanSpeedAirFlowRate();
-    autosizedLowFanSpeedFanPower();
-    autosizedLowFanSpeedUFactorTimesAreaValue();
-    autosizedFreeConvectionRegimeAirFlowRate();
-    autosizedFreeConvectionRegimeUFactorTimesAreaValue();
-    autosizedLowSpeedNominalCapacity();
-    autosizedFreeConvectionNominalCapacity();
+    autosizeDesignWaterFlowRate();
+    autosizeHighFanSpeedAirFlowRate();
+    autosizeHighFanSpeedFanPower();
+    autosizeHighFanSpeedUFactorTimesAreaValue();
+    autosizeLowFanSpeedAirFlowRate();
+    autosizeLowFanSpeedFanPower();
+    autosizeLowFanSpeedUFactorTimesAreaValue();
+    autosizeFreeConvectionRegimeAirFlowRate();
+    autosizeFreeConvectionRegimeUFactorTimesAreaValue();
+    autosizeLowSpeedNominalCapacity();
+    autosizeFreeConvectionNominalCapacity();
   }
 
   void CoolingTowerTwoSpeed_Impl::applySizingValues() {

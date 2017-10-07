@@ -433,8 +433,8 @@ namespace detail {
   }
 
   void CoilWaterHeatingAirToWaterHeatPump_Impl::autosize() {
-    autosizedRatedEvaporatorAirFlowRate();
-    autosizedRatedCondenserWaterFlowRate();
+    autosizeRatedEvaporatorAirFlowRate();
+    autosizeRatedCondenserWaterFlowRate();
   }
 
   void CoilWaterHeatingAirToWaterHeatPump_Impl::applySizingValues() {

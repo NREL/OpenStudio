@@ -858,13 +858,13 @@ namespace detail {
   }
 
   void ZoneHVACWaterToAirHeatPump_Impl::autosize() {
-    autosizedSupplyAirFlowRateDuringCoolingOperation();
-    autosizedSupplyAirFlowRateDuringHeatingOperation();
-    autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
-    autosizedOutdoorAirFlowRateDuringCoolingOperation();
-    autosizedOutdoorAirFlowRateDuringHeatingOperation();
-    autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
-    autosizedMaximumSupplyAirTemperaturefromSupplementalHeater();
+    autosizeSupplyAirFlowRateDuringCoolingOperation();
+    autosizeSupplyAirFlowRateDuringHeatingOperation();
+    autosizeSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
+    autosizeOutdoorAirFlowRateDuringCoolingOperation();
+    autosizeOutdoorAirFlowRateDuringHeatingOperation();
+    autosizeOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
+    autosizeMaximumSupplyAirTemperaturefromSupplementalHeater();
   }
 
   void ZoneHVACWaterToAirHeatPump_Impl::applySizingValues() {

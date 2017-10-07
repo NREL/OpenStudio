@@ -844,16 +844,17 @@ namespace detail{
   }
 
   void CoilCoolingDXTwoSpeed_Impl::autosize() {
-    autosizedRatedHighSpeedTotalCoolingCapacity();
-    autosizedRatedHighSpeedSensibleHeatRatio();
-    autosizedRatedHighSpeedAirFlowRate();
-    autosizedRatedLowSpeedTotalCoolingCapacity();
-    autosizedRatedLowSpeedSensibleHeatRatio();
-    autosizedRatedLowSpeedAirFlowRate();
-    autosizedHighSpeedEvaporativeCondenserAirFlowRate();
-    autosizedHighSpeedEvaporativeCondenserPumpRatedPowerConsumption();
-    autosizedLowSpeedEvaporativeCondenserAirFlowRate();
-    autosizedLowSpeedEvaporativeCondenserPumpRatedPowerConsumption();
+    boost::optional<double> emptyVal;
+    setRatedHighSpeedTotalCoolingCapacity(emptyVal);
+    setRatedHighSpeedSensibleHeatRatio(emptyVal);
+    setRatedHighSpeedAirFlowRate(emptyVal);
+    setRatedLowSpeedTotalCoolingCapacity(emptyVal);
+    setRatedLowSpeedSensibleHeatRatio(emptyVal);
+    setRatedLowSpeedAirFlowRate(emptyVal);
+    setHighSpeedEvaporativeCondenserAirFlowRate(emptyVal);
+    setHighSpeedEvaporativeCondenserPumpRatedPowerConsumption(emptyVal);
+    setLowSpeedEvaporativeCondenserAirFlowRate(emptyVal);
+    setLowSpeedEvaporativeCondenserPumpRatedPowerConsumption(emptyVal);
   }
 
   void CoilCoolingDXTwoSpeed_Impl::applySizingValues() {

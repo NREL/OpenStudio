@@ -171,7 +171,7 @@ namespace detail {
   }
 
   void CoilHeatingGasMultiStageStageData_Impl::autosize() {
-    autosizedNominalCapacity();
+    autosizeNominalCapacity();
   }
 
   void CoilHeatingGasMultiStageStageData_Impl::applySizingValues() {

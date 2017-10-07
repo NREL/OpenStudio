@@ -546,8 +546,8 @@ namespace detail {
   }
 
   void WaterHeaterHeatPump_Impl::autosize() {
-    autosizedCondenserWaterFlowRate();
-    autosizedEvaporatorAirFlowRate();
+    autosizeCondenserWaterFlowRate();
+    autosizeEvaporatorAirFlowRate();
   }
 
   void WaterHeaterHeatPump_Impl::applySizingValues() {

@@ -1016,10 +1016,10 @@ namespace detail {
   }
 
   void ZoneHVACIdealLoadsAirSystem_Impl::autosize() {
-    autosizedMaximumHeatingAirFlowRate();
-    autosizedMaximumSensibleHeatingCapacity();
-    autosizedMaximumCoolingAirFlowRate();
-    autosizedMaximumTotalCoolingCapacity();
+    autosizeMaximumHeatingAirFlowRate();
+    autosizeMaximumSensibleHeatingCapacity();
+    autosizeMaximumCoolingAirFlowRate();
+    autosizeMaximumTotalCoolingCapacity();
   }
 
   void ZoneHVACIdealLoadsAirSystem_Impl::applySizingValues() {

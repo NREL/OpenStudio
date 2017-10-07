@@ -449,8 +449,8 @@ namespace detail {
   }
 
   void ZoneHVACUnitHeater_Impl::autosize() {
-    autosizedMaximumSupplyAirFlowRate();
-    autosizedMaximumHotWaterFlowRate();
+    autosizeMaximumSupplyAirFlowRate();
+    autosizeMaximumHotWaterFlowRate();
   }
 
   void ZoneHVACUnitHeater_Impl::applySizingValues() {

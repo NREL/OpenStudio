@@ -1025,12 +1025,12 @@ namespace detail {
   }
 
   void ZoneHVACFourPipeFanCoil_Impl::autosize() {
-    autosizedMaximumSupplyAirFlowRate();
-    autosizedMaximumOutdoorAirFlowRate();
-    autosizedMaximumColdWaterFlowRate();
-    autosizedMaximumHotWaterFlowRate();
-    autosizedMinimumSupplyAirTemperatureinCoolingMode();
-    autosizedMaximumSupplyAirTemperatureinHeatingMode();
+    autosizeMaximumSupplyAirFlowRate();
+    autosizeMaximumOutdoorAirFlowRate();
+    autosizeMaximumColdWaterFlowRate();
+    autosizeMaximumHotWaterFlowRate();
+    autosizeMinimumSupplyAirTemperatureInCoolingMode();
+    autosizeMaximumSupplyAirTemperatureInHeatingMode();
   }
 
   void ZoneHVACFourPipeFanCoil_Impl::applySizingValues() {

@@ -855,7 +855,7 @@ namespace detail {
   }
 
   void FanVariableVolume_Impl::autosize() {
-    autosizedMaximumFlowRate();
+    autosizeMaximumFlowRate();
   }
 
   void FanVariableVolume_Impl::applySizingValues() {

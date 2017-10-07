@@ -478,13 +478,13 @@ namespace detail {
   }
 
   void ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::autosize() {
-    autosizedSupplyAirFlowRateDuringCoolingOperation();
-    autosizedSupplyAirFlowRateWhenNoCoolingisNeeded();
-    autosizedSupplyAirFlowRateDuringHeatingOperation();
-    autosizedSupplyAirFlowRateWhenNoHeatingisNeeded();
-    autosizedOutdoorAirFlowRateDuringCoolingOperation();
-    autosizedOutdoorAirFlowRateDuringHeatingOperation();
-    autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
+    autosizeSupplyAirFlowRateDuringCoolingOperation();
+    autosizeSupplyAirFlowRateWhenNoCoolingisNeeded();
+    autosizeSupplyAirFlowRateDuringHeatingOperation();
+    autosizeSupplyAirFlowRateWhenNoHeatingisNeeded();
+    autosizeOutdoorAirFlowRateDuringCoolingOperation();
+    autosizeOutdoorAirFlowRateDuringHeatingOperation();
+    autosizeOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
   }
 
   void ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::applySizingValues() {

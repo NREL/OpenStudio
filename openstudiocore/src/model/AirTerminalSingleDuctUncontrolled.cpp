@@ -304,7 +304,7 @@ namespace detail{
   }
 
   void AirTerminalSingleDuctUncontrolled_Impl::autosize() {
-    autosizedMaximumAirFlowRate();
+    autosizeMaximumAirFlowRate();
   }
 
   void AirTerminalSingleDuctUncontrolled_Impl::applySizingValues() {

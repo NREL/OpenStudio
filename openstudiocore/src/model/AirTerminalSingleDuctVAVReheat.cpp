@@ -656,10 +656,10 @@ namespace detail{
   }
 
   void AirTerminalSingleDuctVAVReheat_Impl::autosize() {
-    autosizedMaximumAirFlowRate();
-    autosizedMaximumHotWaterOrSteamFlowRate();
-    autosizedMaximumFlowPerZoneFloorAreaDuringReheat();
-    autosizedMaximumFlowFractionDuringReheat();
+    autosizeMaximumAirFlowRate();
+    autosizeMaximumHotWaterOrSteamFlowRate();
+    autosizeMaximumFlowPerZoneFloorAreaDuringReheat();
+    autosizeMaximumFlowFractionDuringReheat();
   }
 
   void AirTerminalSingleDuctVAVReheat_Impl::applySizingValues() {

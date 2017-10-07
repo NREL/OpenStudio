@@ -287,8 +287,8 @@ namespace detail {
   }
 
   void HeaderedPumpsConstantSpeed_Impl::autosize() {
-    autosizedTotalRatedFlowRate();
-    autosizedRatedPowerConsumption();
+    autosizeTotalRatedFlowRate();
+    autosizeRatedPowerConsumption();
   }
 
   void HeaderedPumpsConstantSpeed_Impl::applySizingValues() {

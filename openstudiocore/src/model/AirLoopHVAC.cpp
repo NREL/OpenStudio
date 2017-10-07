@@ -1628,7 +1628,7 @@ namespace detail {
   }
 
   void AirLoopHVAC_Impl::autosize() {
-    autosizedDesignSupplyAirFlowRate();
+    autosizeDesignSupplyAirFlowRate();
   }
 
   void AirLoopHVAC_Impl::applySizingValues() {

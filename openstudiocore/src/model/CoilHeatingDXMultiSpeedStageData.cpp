@@ -350,8 +350,8 @@ namespace detail {
   }
 
   void CoilHeatingDXMultiSpeedStageData_Impl::autosize() {
-    autosizedGrossRatedHeatingCapacity();
-    autosizedRatedAirFlowRate();
+    autosizeGrossRatedHeatingCapacity();
+    autosizeRatedAirFlowRate();
   }
 
   void CoilHeatingDXMultiSpeedStageData_Impl::applySizingValues() {

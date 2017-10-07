@@ -706,8 +706,8 @@ namespace detail {
   }
 
   void PumpConstantSpeed_Impl::autosize() {
-    autosizedRatedFlowRate();
-    autosizedRatedPowerConsumption();
+    autosizeRatedFlowRate();
+    autosizeRatedPowerConsumption();
   }
 
   void PumpConstantSpeed_Impl::applySizingValues() {

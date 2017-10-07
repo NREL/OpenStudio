@@ -664,16 +664,16 @@ namespace detail {
   }
 
   void AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl::autosize() {
-    autosizedMaximumSupplyAirTemperaturefromSupplementalHeater();
-    autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
-    autosizedSpeed1SupplyAirFlowRateDuringHeatingOperation();
-    autosizedSpeed2SupplyAirFlowRateDuringHeatingOperation();
-    autosizedSpeed3SupplyAirFlowRateDuringHeatingOperation();
-    autosizedSpeed4SupplyAirFlowRateDuringHeatingOperation();
-    autosizedSpeed1SupplyAirFlowRateDuringCoolingOperation();
-    autosizedSpeed2SupplyAirFlowRateDuringCoolingOperation();
-    autosizedSpeed3SupplyAirFlowRateDuringCoolingOperation();
-    autosizedSpeed4SupplyAirFlowRateDuringCoolingOperation();
+    autosizeMaximumSupplyAirTemperaturefromSupplementalHeater();
+    autosizeSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
+    autosizeSpeed1SupplyAirFlowRateDuringHeatingOperation();
+    autosizeSpeed2SupplyAirFlowRateDuringHeatingOperation();
+    autosizeSpeed3SupplyAirFlowRateDuringHeatingOperation();
+    autosizeSpeed4SupplyAirFlowRateDuringHeatingOperation();
+    autosizeSpeed1SupplyAirFlowRateDuringCoolingOperation();
+    autosizeSpeed2SupplyAirFlowRateDuringCoolingOperation();
+    autosizeSpeed3SupplyAirFlowRateDuringCoolingOperation();
+    autosizeSpeed4SupplyAirFlowRateDuringCoolingOperation();
   }
 
   void AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl::applySizingValues() {

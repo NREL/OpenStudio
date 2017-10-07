@@ -1074,11 +1074,11 @@ namespace detail {
   }
 
   void WaterHeaterStratified_Impl::autosize() {
-    autosizedTankVolume();
-    autosizedTankHeight();
-    autosizedHeater1Capacity();
-    autosizedUseSideDesignFlowRate();
-    autosizedSourceSideDesignFlowRate();
+    autosizeTankVolume();
+    autosizeTankHeight();
+    autosizeHeater1Capacity();
+    autosizeUseSideDesignFlowRate();
+    autosizeSourceSideDesignFlowRate();
   }
 
   void WaterHeaterStratified_Impl::applySizingValues() {

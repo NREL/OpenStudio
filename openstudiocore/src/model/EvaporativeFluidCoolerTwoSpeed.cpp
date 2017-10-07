@@ -761,15 +761,15 @@ namespace detail {
   }
 
   void EvaporativeFluidCoolerTwoSpeed_Impl::autosize() {
-    autosizedHighFanSpeedAirFlowRate();
-    autosizedHighFanSpeedFanPower();
-    autosizedLowFanSpeedAirFlowRate();
-    autosizedLowFanSpeedFanPower();
-    autosizedLowSpeedStandardDesignCapacity();
-    autosizedHighFanSpeedUfactorTimesAreaValue();
-    autosizedLowFanSpeedUfactorTimesAreaValue();
-    autosizedDesignWaterFlowRate();
-    autosizedLowSpeedUserSpecifiedDesignCapacity();
+    autosizeHighFanSpeedAirFlowRate();
+    autosizeHighFanSpeedFanPower();
+    autosizeLowFanSpeedAirFlowRate();
+    autosizeLowFanSpeedFanPower();
+    autosizeLowSpeedStandardDesignCapacity();
+    autosizeHighFanSpeedUfactorTimesAreaValue();
+    autosizeLowFanSpeedUfactorTimesAreaValue();
+    autosizeDesignWaterFlowRate();
+    autosizeLowSpeedUserSpecifiedDesignCapacity();
   }
 
   void EvaporativeFluidCoolerTwoSpeed_Impl::applySizingValues() {

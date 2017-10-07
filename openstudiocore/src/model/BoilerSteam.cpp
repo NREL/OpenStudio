@@ -688,7 +688,7 @@ namespace detail {
   }
 
   void BoilerSteam_Impl::autosize() {
-    autosizedNominalCapacity();
+    autosizeNominalCapacity();
   }
 
   void BoilerSteam_Impl::applySizingValues() {

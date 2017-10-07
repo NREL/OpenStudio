@@ -570,9 +570,9 @@ namespace detail {
   }
 
   void CoilCoolingDXVariableSpeed_Impl::autosize() {
-    autosizedGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel();
-    autosizedRatedAirFlowRateAtSelectedNominalSpeedLevel();
-    autosizedEvaporativeCondenserPumpRatedPowerConsumption();
+    autosizeGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel();
+    autosizeRatedAirFlowRateAtSelectedNominalSpeedLevel();
+    autosizeEvaporativeCondenserPumpRatedPowerConsumption();
   }
 
   void CoilCoolingDXVariableSpeed_Impl::applySizingValues() {

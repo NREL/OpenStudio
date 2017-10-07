@@ -582,10 +582,10 @@ namespace detail {
   }
 
   void AirTerminalSingleDuctSeriesPIUReheat_Impl::autosize() {
-    autosizedMaximumAirFlowRate();
-    autosizedMaximumPrimaryAirFlowRate();
-    autosizedMinimumPrimaryAirFlowFraction();
-    autosizedMaximumHotWaterorSteamFlowRate();
+    autosizeMaximumAirFlowRate();
+    autosizeMaximumPrimaryAirFlowRate();
+    autosizeMinimumPrimaryAirFlowFraction();
+    autosizeMaximumHotWaterorSteamFlowRate();
   }
 
   void AirTerminalSingleDuctSeriesPIUReheat_Impl::applySizingValues() {

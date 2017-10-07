@@ -662,10 +662,10 @@ namespace detail {
   }
 
   void CoilCoolingWaterToAirHeatPumpEquationFit_Impl::autosize() {
-    autosizedRatedAirFlowRate();
-    autosizedRatedWaterFlowRate();
-    autosizedRatedTotalCoolingCapacity();
-    autosizedRatedSensibleCoolingCapacity();
+    autosizeRatedAirFlowRate();
+    autosizeRatedWaterFlowRate();
+    autosizeRatedTotalCoolingCapacity();
+    autosizeRatedSensibleCoolingCapacity();
   }
 
   void CoilCoolingWaterToAirHeatPumpEquationFit_Impl::applySizingValues() {

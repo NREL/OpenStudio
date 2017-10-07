@@ -711,8 +711,8 @@ namespace detail {
   }
 
   void ThermalStorageChilledWaterStratified_Impl::autosize() {
-    autosizedUseSideDesignFlowRate();
-    autosizedSourceSideDesignFlowRate();
+    autosizeUseSideDesignFlowRate();
+    autosizeSourceSideDesignFlowRate();
   }
 
   void ThermalStorageChilledWaterStratified_Impl::applySizingValues() {

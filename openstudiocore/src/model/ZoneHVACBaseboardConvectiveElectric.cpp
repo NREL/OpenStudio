@@ -287,7 +287,7 @@ namespace detail {
   }
 
   void ZoneHVACBaseboardConvectiveElectric_Impl::autosize() {
-    autosizedNominalCapacity();
+    autosizeNominalCapacity();
   }
 
   void ZoneHVACBaseboardConvectiveElectric_Impl::applySizingValues() {

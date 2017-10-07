@@ -645,12 +645,12 @@ namespace detail {
   }
 
   void ZoneHVACPackagedTerminalAirConditioner_Impl::autosize() {
-    autosizedSupplyAirFlowRateDuringCoolingOperation();
-    autosizedSupplyAirFlowRateDuringHeatingOperation();
-    autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
-    autosizedOutdoorAirFlowRateDuringCoolingOperation();
-    autosizedOutdoorAirFlowRateDuringHeatingOperation();
-    autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
+    autosizeSupplyAirFlowRateDuringCoolingOperation();
+    autosizeSupplyAirFlowRateDuringHeatingOperation();
+    autosizeSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
+    autosizeOutdoorAirFlowRateDuringCoolingOperation();
+    autosizeOutdoorAirFlowRateDuringHeatingOperation();
+    autosizeOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
   }
 
   void ZoneHVACPackagedTerminalAirConditioner_Impl::applySizingValues() {

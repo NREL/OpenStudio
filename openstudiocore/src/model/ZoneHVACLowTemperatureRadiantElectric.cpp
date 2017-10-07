@@ -425,7 +425,7 @@ namespace detail {
   }
 
   void ZoneHVACLowTemperatureRadiantElectric_Impl::autosize() {
-    autosizedMaximumElectricalPowertoPanel();
+    autosizeMaximumElectricalPowertoPanel();
   }
 
   void ZoneHVACLowTemperatureRadiantElectric_Impl::applySizingValues() {

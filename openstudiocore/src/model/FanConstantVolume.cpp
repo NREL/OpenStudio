@@ -460,7 +460,7 @@ namespace detail {
   }
 
   void FanConstantVolume_Impl::autosize() {
-    autosizedMaximumFlowRate();
+    autosizeMaximumFlowRate();
   }
 
   void FanConstantVolume_Impl::applySizingValues() {

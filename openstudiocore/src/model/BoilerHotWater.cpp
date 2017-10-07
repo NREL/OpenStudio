@@ -450,8 +450,8 @@ namespace detail {
   }
 
   void BoilerHotWater_Impl::autosize() {
-    autosizedNominalCapacity();
-    autosizedDesignWaterFlowRate();
+    autosizeNominalCapacity();
+    autosizeDesignWaterFlowRate();
   }
 
   void BoilerHotWater_Impl::applySizingValues() {

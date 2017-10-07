@@ -263,8 +263,8 @@ namespace detail {
   }
 
   void CoilHeatingWaterBaseboardRadiant_Impl::autosize() {
-    autosizedHeatingDesignCapacity();
-    autosizedMaximumWaterFlowRate();
+    autosizeHeatingDesignCapacity();
+    autosizeMaximumWaterFlowRate();
   }
 
   void CoilHeatingWaterBaseboardRadiant_Impl::applySizingValues() {

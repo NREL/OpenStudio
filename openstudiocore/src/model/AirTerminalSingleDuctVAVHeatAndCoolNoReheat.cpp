@@ -285,7 +285,7 @@ namespace detail {
   }
 
   void AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl::autosize() {
-    autosizedMaximumAirFlowRate();
+    autosizeMaximumAirFlowRate();
   }
 
   void AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl::applySizingValues() {

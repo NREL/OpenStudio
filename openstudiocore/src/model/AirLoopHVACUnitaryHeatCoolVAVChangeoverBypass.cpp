@@ -513,12 +513,12 @@ namespace detail {
   }
 
   void AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl::autosize() {
-    autosizedSystemAirFlowRateDuringCoolingOperation();
-    autosizedSystemAirFlowRateDuringHeatingOperation();
-    autosizedSystemAirFlowRateWhenNoCoolingorHeatingisNeeded();
-    autosizedOutdoorAirFlowRateDuringCoolingOperation();
-    autosizedOutdoorAirFlowRateDuringHeatingOperation();
-    autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
+    autosizeSystemAirFlowRateDuringCoolingOperation();
+    autosizeSystemAirFlowRateDuringHeatingOperation();
+    autosizeSystemAirFlowRateWhenNoCoolingorHeatingisNeeded();
+    autosizeOutdoorAirFlowRateDuringCoolingOperation();
+    autosizeOutdoorAirFlowRateDuringHeatingOperation();
+    autosizeOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
   }
 
   void AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl::applySizingValues() {

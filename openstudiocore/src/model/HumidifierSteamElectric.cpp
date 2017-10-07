@@ -250,8 +250,8 @@ namespace detail {
   }
 
   void HumidifierSteamElectric_Impl::autosize() {
-    autosizedRatedCapacity();
-    autosizedRatedPower();
+    autosizeRatedCapacity();
+    autosizeRatedPower();
   }
 
   void HumidifierSteamElectric_Impl::applySizingValues() {

@@ -296,10 +296,10 @@ namespace detail {
   }
 
   void FluidCoolerSingleSpeed_Impl::autosize() {
-    autosizedDesignAirFlowRateUfactorTimesAreaValue();
-    autosizedDesignWaterFlowRate();
-    autosizedDesignAirFlowRate();
-    autosizedDesignAirFlowRateFanPower();
+    autosizeDesignAirFlowRateUfactorTimesAreaValue();
+    autosizeDesignWaterFlowRate();
+    autosizeDesignAirFlowRate();
+    autosizeDesignAirFlowRateFanPower();
   }
 
   void FluidCoolerSingleSpeed_Impl::applySizingValues() {

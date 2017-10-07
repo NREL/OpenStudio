@@ -433,9 +433,9 @@ namespace detail {
   }
 
   void HeatExchangerFluidToFluid_Impl::autosize() {
-    autosizedLoopDemandSideDesignFlowRate();
-    autosizedLoopSupplySideDesignFlowRate();
-    autosizedHeatExchangerUFactorTimesAreaValue();
+    autosizeLoopDemandSideDesignFlowRate();
+    autosizeLoopSupplySideDesignFlowRate();
+    autosizeHeatExchangerUFactorTimesAreaValue();
   }
 
   void HeatExchangerFluidToFluid_Impl::applySizingValues() {

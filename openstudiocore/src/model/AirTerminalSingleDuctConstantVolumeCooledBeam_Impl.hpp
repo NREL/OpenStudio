@@ -140,6 +140,8 @@ namespace detail {
 
   boost::optional<double> autosizedBeamLength() const ;
 
+  boost::optional<double> autosizedCoefficientofInductionKin() const;
+  
   virtual void autosize() override;
 
   virtual void applySizingValues() override;

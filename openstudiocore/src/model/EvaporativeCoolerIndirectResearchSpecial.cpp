@@ -495,10 +495,10 @@ namespace detail {
   }
 
   void EvaporativeCoolerIndirectResearchSpecial_Impl::autosize() {
-    autosizedRecirculatingWaterPumpPowerConsumption();
-    autosizedSecondaryFanFlowRate();
-    autosizedSecondaryAirFanDesignPower();
-    autosizedPrimaryDesignAirFlowRate();
+    autosizeRecirculatingWaterPumpPowerConsumption();
+    autosizeSecondaryFanFlowRate();
+    autosizeSecondaryAirFanDesignPower();
+    autosizePrimaryDesignAirFlowRate();
   }
 
   void EvaporativeCoolerIndirectResearchSpecial_Impl::applySizingValues() {

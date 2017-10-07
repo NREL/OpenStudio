@@ -775,13 +775,13 @@ namespace detail {
   }
 
   void ZoneHVACPackagedTerminalHeatPump_Impl::autosize() {
-    autosizedSupplyAirFlowRateDuringCoolingOperation();
-    autosizedSupplyAirFlowRateDuringHeatingOperation();
-    autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
-    autosizedOutdoorAirFlowRateDuringCoolingOperation();
-    autosizedOutdoorAirFlowRateDuringHeatingOperation();
-    autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
-    autosizedMaximumSupplyAirTemperaturefromSupplementalHeater();
+    autosizeSupplyAirFlowRateDuringCoolingOperation();
+    autosizeSupplyAirFlowRateDuringHeatingOperation();
+    autosizeSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
+    autosizeOutdoorAirFlowRateDuringCoolingOperation();
+    autosizeOutdoorAirFlowRateDuringHeatingOperation();
+    autosizeOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
+    autosizeMaximumSupplyAirTemperaturefromSupplementalHeater();
   }
 
   void ZoneHVACPackagedTerminalHeatPump_Impl::applySizingValues() {

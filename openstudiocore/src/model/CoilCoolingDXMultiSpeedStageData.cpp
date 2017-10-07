@@ -520,11 +520,11 @@ namespace detail {
   }
 
   void CoilCoolingDXMultiSpeedStageData_Impl::autosize() {
-    autosizedGrossRatedTotalCoolingCapacity();
-    autosizedGrossRatedSensibleHeatRatio();
-    autosizedRatedAirFlowRate();
-    autosizedEvaporativeCondenserAirFlowRate();
-    autosizedRatedEvaporativeCondenserPumpPowerConsumption();
+    autosizeGrossRatedTotalCoolingCapacity();
+    autosizeGrossRatedSensibleHeatRatio();
+    autosizeRatedAirFlowRate();
+    autosizeEvaporativeCondenserAirFlowRate();
+    autosizeRatedEvaporativeCondenserPumpPowerConsumption();
   }
 
   void CoilCoolingDXMultiSpeedStageData_Impl::applySizingValues() {

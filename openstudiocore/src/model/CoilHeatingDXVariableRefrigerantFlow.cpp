@@ -230,8 +230,8 @@ namespace detail {
   }
 
   void CoilHeatingDXVariableRefrigerantFlow_Impl::autosize() {
-    autosizedRatedTotalHeatingCapacity();
-    autosizedRatedAirFlowRate();
+    autosizeRatedTotalHeatingCapacity();
+    autosizeRatedAirFlowRate();
   }
 
   void CoilHeatingDXVariableRefrigerantFlow_Impl::applySizingValues() {

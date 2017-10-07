@@ -132,7 +132,7 @@ namespace detail {
   }
 
   void DistrictCooling_Impl::autosize() {
-    autosizedNominalCapacity();
+    autosizeNominalCapacity();
   }
 
   void DistrictCooling_Impl::applySizingValues() {

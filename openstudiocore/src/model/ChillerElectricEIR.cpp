@@ -779,9 +779,9 @@ namespace detail {
   }
 
   void ChillerElectricEIR_Impl::autosize() {
-    autosizedReferenceCapacity();
-    autosizedReferenceChilledWaterFlowRate();
-    autosizedReferenceCondenserFluidFlowRate();
+    autosizeReferenceCapacity();
+    autosizeReferenceChilledWaterFlowRate();
+    autosizeReferenceCondenserFluidFlowRate();
   }
 
   void ChillerElectricEIR_Impl::applySizingValues() {

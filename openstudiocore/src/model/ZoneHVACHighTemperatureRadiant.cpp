@@ -332,7 +332,7 @@ namespace detail {
   }
 
   void ZoneHVACHighTemperatureRadiant_Impl::autosize() {
-    autosizedMaximumPowerInput();
+    autosizeMaximumPowerInput();
   }
 
   void ZoneHVACHighTemperatureRadiant_Impl::applySizingValues() {

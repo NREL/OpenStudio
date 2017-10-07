@@ -319,9 +319,9 @@ namespace detail {
   }
 
   void CoilHeatingWaterBaseboard_Impl::autosize() {
-    autosizedHeatingDesignCapacity();
-    autosizedUFactorTimesAreaValue();
-    autosizedMaximumWaterFlowRate();
+    autosizeHeatingDesignCapacity();
+    autosizeUFactorTimesAreaValue();
+    autosizeMaximumWaterFlowRate();
   }
 
   void CoilHeatingWaterBaseboard_Impl::applySizingValues() {

@@ -904,6 +904,9 @@ namespace detail{
     autosizeRatedTotalCoolingCapacity();
     autosizeRatedSensibleHeatRatio();
     autosizeRatedAirFlowRate();
+    boost::optional<double> emptyVal;
+    setEvaporativeCondenserAirFlowRate(emptyVal);
+    setEvaporativeCondenserPumpRatedPowerConsumption(emptyVal);
   }
 
   void CoilCoolingDXSingleSpeed_Impl::applySizingValues() {

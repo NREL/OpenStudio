@@ -454,7 +454,7 @@ bool AirTerminalSingleDuctVAVNoReheat_Impl::addToNode(Node & node)
   }
 
   void AirTerminalSingleDuctVAVNoReheat_Impl::autosize() {
-    autosizedMaximumAirFlowRate();
+    autosizeMaximumAirFlowRate();
   }
 
   void AirTerminalSingleDuctVAVNoReheat_Impl::applySizingValues() {

@@ -315,7 +315,7 @@ namespace detail {
   }
 
   void CoilHeatingLowTempRadiantVarFlow_Impl::autosize() {
-    autosizedMaximumHotWaterFlow();
+    autosizeMaximumHotWaterFlow();
   }
 
   void CoilHeatingLowTempRadiantVarFlow_Impl::applySizingValues() {

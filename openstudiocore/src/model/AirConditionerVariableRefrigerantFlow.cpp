@@ -1876,12 +1876,12 @@ namespace detail {
   }
 
   void AirConditionerVariableRefrigerantFlow_Impl::autosize() {
-    autosizedRatedTotalCoolingCapacity();
-    autosizedRatedTotalHeatingCapacity();
-    autosizedResistiveDefrostHeaterCapacity();
-    autosizedWaterCondenserVolumeFlowRate();
-    autosizedEvaporativeCondenserAirFlowRate();
-    autosizedEvaporativeCondenserPumpRatedPowerConsumption();
+    autosizeRatedTotalCoolingCapacity();
+    autosizeRatedTotalHeatingCapacity();
+    autosizeResistiveDefrostHeaterCapacity();
+    autosizeWaterCondenserVolumeFlowRate();
+    autosizeEvaporativeCondenserAirFlowRate();
+    autosizeEvaporativeCondenserPumpRatedPowerConsumption();
   }
 
   void AirConditionerVariableRefrigerantFlow_Impl::applySizingValues() {

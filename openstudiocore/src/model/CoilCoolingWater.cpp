@@ -473,13 +473,13 @@ namespace detail {
   }
 
   void CoilCoolingWater_Impl::autosize() {
-    autosizedDesignWaterFlowRate();
-    autosizedDesignAirFlowRate();
-    autosizedDesignInletWaterTemperature();
-    autosizedDesignInletAirTemperature();
-    autosizedDesignOutletAirTemperature();
-    autosizedDesignInletAirHumidityRatio();
-    autosizedDesignOutletAirHumidityRatio();
+    autosizeDesignWaterFlowRate();
+    autosizeDesignAirFlowRate();
+    autosizeDesignInletWaterTemperature();
+    autosizeDesignInletAirTemperature();
+    autosizeDesignOutletAirTemperature();
+    autosizeDesignInletAirHumidityRatio();
+    autosizeDesignOutletAirHumidityRatio();
   }
 
   void CoilCoolingWater_Impl::applySizingValues() {

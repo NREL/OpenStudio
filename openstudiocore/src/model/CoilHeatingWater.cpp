@@ -556,9 +556,9 @@ namespace detail{
   }
 
   void CoilHeatingWater_Impl::autosize() {
-    autosizedUFactorTimesAreaValue();
-    autosizedMaximumWaterFlowRate();
-    autosizedRatedCapacity();
+    autosizeUFactorTimesAreaValue();
+    autosizeMaximumWaterFlowRate();
+    autosizeRatedCapacity();
   }
 
   void CoilHeatingWater_Impl::applySizingValues() {

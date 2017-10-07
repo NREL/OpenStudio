@@ -361,10 +361,10 @@ namespace detail {
   }
 
   void HeatPumpWaterToWaterEquationFitCooling_Impl::autosize() {
-    autosizedReferenceLoadSideFlowRate();
-    autosizedReferenceSourceSideFlowRate();
-    autosizedRatedCoolingCapacity();
-    autosizedRatedCoolingPowerConsumption();
+    autosizeReferenceLoadSideFlowRate();
+    autosizeReferenceSourceSideFlowRate();
+    autosizeRatedCoolingCapacity();
+    autosizeRatedCoolingPowerConsumption();
   }
 
   void HeatPumpWaterToWaterEquationFitCooling_Impl::applySizingValues() {

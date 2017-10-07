@@ -642,10 +642,10 @@ namespace detail {
   }
 
   void AirLoopHVACUnitaryHeatPumpAirToAir_Impl::autosize() {
-    autosizedSupplyAirFlowRateDuringCoolingOperation();
-    autosizedSupplyAirFlowRateDuringHeatingOperation();
-    autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
-    autosizedMaximumSupplyAirTemperaturefromSupplementalHeater();
+    autosizeSupplyAirFlowRateDuringCoolingOperation();
+    autosizeSupplyAirFlowRateDuringHeatingOperation();
+    autosizeSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
+    autosizeMaximumSupplyAirTemperaturefromSupplementalHeater();
   }
 
   void AirLoopHVACUnitaryHeatPumpAirToAir_Impl::applySizingValues() {

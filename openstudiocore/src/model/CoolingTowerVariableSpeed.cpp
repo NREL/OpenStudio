@@ -705,9 +705,9 @@ namespace detail {
   }
 
   void CoolingTowerVariableSpeed_Impl::autosize() {
-    autosizedDesignWaterFlowRate();
-    autosizedDesignAirFlowRate();
-    autosizedDesignFanPower();
+    autosizeDesignWaterFlowRate();
+    autosizeDesignAirFlowRate();
+    autosizeDesignFanPower();
   }
 
   void CoolingTowerVariableSpeed_Impl::applySizingValues() {

@@ -464,7 +464,7 @@ namespace detail{
   }
 
   void CoilHeatingGas_Impl::autosize() {
-    autosizedNominalCapacity();
+    autosizeNominalCapacity();
   }
 
   void CoilHeatingGas_Impl::applySizingValues() {

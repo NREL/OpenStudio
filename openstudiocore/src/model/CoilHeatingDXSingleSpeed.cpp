@@ -770,9 +770,9 @@ namespace detail {
   }
 
   void CoilHeatingDXSingleSpeed_Impl::autosize() {
-    autosizedRatedTotalHeatingCapacity();
-    autosizedRatedAirFlowRate();
-    autosizedResistiveDefrostHeaterCapacity();
+    autosizeRatedTotalHeatingCapacity();
+    autosizeRatedAirFlowRate();
+    autosizeResistiveDefrostHeaterCapacity();
   }
 
   void CoilHeatingDXSingleSpeed_Impl::applySizingValues() {

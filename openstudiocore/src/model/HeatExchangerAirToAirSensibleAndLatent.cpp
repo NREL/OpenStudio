@@ -706,7 +706,7 @@ namespace detail {
   }
 
   void HeatExchangerAirToAirSensibleAndLatent_Impl::autosize() {
-    autosizedNominalSupplyAirFlowRate();
+    autosizeNominalSupplyAirFlowRate();
   }
 
   void HeatExchangerAirToAirSensibleAndLatent_Impl::applySizingValues() {

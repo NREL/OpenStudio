@@ -184,7 +184,7 @@ namespace detail {
   }
 
   void PlantComponentTemperatureSource_Impl::autosize() {
-    autosizedDesignVolumeFlowRate();
+    autosizeDesignVolumeFlowRate();
   }
 
   void PlantComponentTemperatureSource_Impl::applySizingValues() {

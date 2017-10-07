@@ -285,7 +285,7 @@ namespace detail {
   }
 
   void ZoneHVACBaseboardRadiantConvectiveElectric_Impl::autosize() {
-    autosizedHeatingDesignCapacity();
+    autosizeHeatingDesignCapacity();
   }
 
   void ZoneHVACBaseboardRadiantConvectiveElectric_Impl::applySizingValues() {

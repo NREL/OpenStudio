@@ -504,9 +504,9 @@ namespace detail {
   }
 
   void CoilHeatingDXVariableSpeed_Impl::autosize() {
-    autosizedRatedHeatingCapacityAtSelectedNominalSpeedLevel();
-    autosizedRatedAirFlowRateAtSelectedNominalSpeedLevel();
-    autosizedResistiveDefrostHeaterCapacity();
+    autosizeRatedHeatingCapacityAtSelectedNominalSpeedLevel();
+    autosizeRatedAirFlowRateAtSelectedNominalSpeedLevel();
+    autosizeResistiveDefrostHeaterCapacity();
   }
 
   void CoilHeatingDXVariableSpeed_Impl::applySizingValues() {

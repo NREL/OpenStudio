@@ -369,9 +369,9 @@ namespace detail {
   }
 
   void CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::autosize() {
-    autosizedRatedHeatingCapacityAtSelectedNominalSpeedLevel();
-    autosizedRatedAirFlowRateAtSelectedNominalSpeedLevel();
-    autosizedRatedWaterFlowRateAtSelectedNominalSpeedLevel();
+    autosizeRatedHeatingCapacityAtSelectedNominalSpeedLevel();
+    autosizeRatedAirFlowRateAtSelectedNominalSpeedLevel();
+    autosizeRatedWaterFlowRateAtSelectedNominalSpeedLevel();
   }
 
   void CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::applySizingValues() {

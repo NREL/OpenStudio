@@ -435,7 +435,7 @@ namespace detail {
   }
 
   void CoilHeatingDXMultiSpeed_Impl::autosize() {
-    autosizedResistiveDefrostHeaterCapacity();
+    autosizeResistiveDefrostHeaterCapacity();
   }
 
   void CoilHeatingDXMultiSpeed_Impl::applySizingValues() {

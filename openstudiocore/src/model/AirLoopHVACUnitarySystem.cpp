@@ -1180,7 +1180,7 @@ namespace detail {
   }
 
   boost::optional<double> AirLoopHVACUnitarySystem_Impl::autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisRequired() const {
-    return getAutosizedValue("User-Specified No Load Supply Air Flow Rate", "m3/s");
+    return getAutosizedValue("Design Size No Load Supply Air Flow Rate", "m3/s");
   }
 
   boost::optional<double> AirLoopHVACUnitarySystem_Impl::autosizedMaximumSupplyAirTemperature() const {
@@ -1188,10 +1188,10 @@ namespace detail {
   }
 
   void AirLoopHVACUnitarySystem_Impl::autosize() {
-    autosizedSupplyAirFlowRateDuringCoolingOperation();
-    autosizedSupplyAirFlowRateDuringHeatingOperation();
-    autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
-    autosizedMaximumSupplyAirTemperature();
+    autosizeSupplyAirFlowRateDuringCoolingOperation();
+    autosizeSupplyAirFlowRateDuringHeatingOperation();
+    autosizeSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
+    autosizeMaximumSupplyAirTemperature();
   }
 
   void AirLoopHVACUnitarySystem_Impl::applySizingValues() {

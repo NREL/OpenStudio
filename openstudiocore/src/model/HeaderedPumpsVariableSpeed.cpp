@@ -342,8 +342,8 @@ namespace detail {
   }
 
   void HeaderedPumpsVariableSpeed_Impl::autosize() {
-    autosizedTotalRatedFlowRate();
-    autosizedRatedPowerConsumption();
+    autosizeTotalRatedFlowRate();
+    autosizeRatedPowerConsumption();
   }
 
   void HeaderedPumpsVariableSpeed_Impl::applySizingValues() {

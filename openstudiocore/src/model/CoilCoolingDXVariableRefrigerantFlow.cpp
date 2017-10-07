@@ -261,9 +261,9 @@ namespace detail {
   }
 
   void CoilCoolingDXVariableRefrigerantFlow_Impl::autosize() {
-    autosizedRatedTotalCoolingCapacity();
-    autosizedRatedSensibleHeatRatio();
-    autosizedRatedAirFlowRate();
+    autosizeRatedTotalCoolingCapacity();
+    autosizeRatedSensibleHeatRatio();
+    autosizeRatedAirFlowRate();
   }
 
   void CoilCoolingDXVariableRefrigerantFlow_Impl::applySizingValues() {

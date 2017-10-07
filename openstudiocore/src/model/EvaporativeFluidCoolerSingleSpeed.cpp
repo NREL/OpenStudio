@@ -602,10 +602,10 @@ namespace detail {
   }
 
   void EvaporativeFluidCoolerSingleSpeed_Impl::autosize() {
-    autosizedDesignAirFlowRate();
-    autosizedFanPoweratDesignAirFlowRate();
-    autosizedUfactorTimesAreaValueatDesignAirFlowRate();
-    autosizedDesignWaterFlowRate();
+    autosizeDesignAirFlowRate();
+    autosizeFanPoweratDesignAirFlowRate();
+    autosizeUfactorTimesAreaValueatDesignAirFlowRate();
+    autosizeDesignWaterFlowRate();
   }
 
   void EvaporativeFluidCoolerSingleSpeed_Impl::applySizingValues() {

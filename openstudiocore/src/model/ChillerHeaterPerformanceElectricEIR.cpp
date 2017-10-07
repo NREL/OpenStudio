@@ -501,9 +501,9 @@ namespace detail {
   }
 
   void ChillerHeaterPerformanceElectricEIR_Impl::autosize() {
-    autosizedReferenceCoolingModeEvaporatorCapacity();
-    autosizedDesignChilledWaterFlowRate();
-    autosizedDesignCondenserWaterFlowRate();
+    autosizeReferenceCoolingModeEvaporatorCapacity();
+    autosizeDesignChilledWaterFlowRate();
+    autosizeDesignCondenserWaterFlowRate();
   }
 
   void ChillerHeaterPerformanceElectricEIR_Impl::applySizingValues() {

@@ -460,14 +460,14 @@ namespace detail {
   }
 
   void FluidCoolerTwoSpeed_Impl::autosize() {
-    autosizedHighFanSpeedUfactorTimesAreaValue();
-    autosizedLowFanSpeedUfactorTimesAreaValue();
-    autosizedLowSpeedNominalCapacity();
-    autosizedDesignWaterFlowRate();
-    autosizedHighFanSpeedAirFlowRate();
-    autosizedHighFanSpeedFanPower();
-    autosizedLowFanSpeedAirFlowRate();
-    autosizedLowFanSpeedFanPower();
+    autosizeHighFanSpeedUfactorTimesAreaValue();
+    autosizeLowFanSpeedUfactorTimesAreaValue();
+    autosizeLowSpeedNominalCapacity();
+    autosizeDesignWaterFlowRate();
+    autosizeHighFanSpeedAirFlowRate();
+    autosizeHighFanSpeedFanPower();
+    autosizeLowFanSpeedAirFlowRate();
+    autosizeLowFanSpeedFanPower();
   }
 
   void FluidCoolerTwoSpeed_Impl::applySizingValues() {

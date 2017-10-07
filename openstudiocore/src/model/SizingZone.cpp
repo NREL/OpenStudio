@@ -979,7 +979,7 @@ namespace detail {
 
     // Warn if the query failed
     if (!rowNames) {
-      LOG(Warn, "Could not find a component called '" + sqlName + "' in any rows of the Initialization Summary Zone Sizing DOAS Inputs table.");
+      LOG(Debug, "Could not find a component called '" + sqlName + "' in any rows of the Initialization Summary Zone Sizing DOAS Inputs table.");
       return result;
     }
 
@@ -1003,7 +1003,7 @@ namespace detail {
     }
 
     if (!result) {
-      LOG(Warn, "The autosized value query for Dedicated Outdoor Air " + setpointType + " Setpoint Temperature for " + sqlName + " returned no value.");
+      LOG(Debug, "The autosized value query for Dedicated Outdoor Air " + setpointType + " Setpoint Temperature for " + sqlName + " returned no value.");
     }
 
     return result;
@@ -1072,15 +1072,15 @@ namespace detail {
     }
 
     if (!result) {
-      LOG(Warn, "The autosized value query for Dedicated Outdoor Air " + setpointType + " Setpoint Temperature for " + sqlName + " returned no value.");
+      LOG(Debug, "The autosized value query for Dedicated Outdoor Air " + setpointType + " Setpoint Temperature for " + sqlName + " returned no value.");
     }
 
     return result;
   }
 
   void SizingZone_Impl::autosize() {
-    autosizedDedicatedOutdoorAirLowSetpointTemperatureforDesign();
-    autosizedDedicatedOutdoorAirHighSetpointTemperatureforDesign();
+    autosizeDedicatedOutdoorAirLowSetpointTemperatureforDesign();
+    autosizeDedicatedOutdoorAirHighSetpointTemperatureforDesign();
   }
 
   void SizingZone_Impl::applySizingValues() {

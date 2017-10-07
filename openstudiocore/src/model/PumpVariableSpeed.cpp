@@ -1054,8 +1054,8 @@ namespace detail {
   }
 
   void PumpVariableSpeed_Impl::autosize() {
-    autosizedRatedFlowRate();
-    autosizedRatedPowerConsumption();
+    autosizeRatedFlowRate();
+    autosizeRatedPowerConsumption();
   }
 
   void PumpVariableSpeed_Impl::applySizingValues() {

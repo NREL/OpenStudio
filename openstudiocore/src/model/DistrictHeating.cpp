@@ -130,7 +130,7 @@ namespace detail {
   }
 
   void DistrictHeating_Impl::autosize() {
-    autosizedNominalCapacity();
+    autosizeNominalCapacity();
   }
 
   void DistrictHeating_Impl::applySizingValues() {
