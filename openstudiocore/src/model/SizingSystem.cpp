@@ -668,7 +668,7 @@ void SizingSystem_Impl::setAirLoopHVAC(const AirLoopHVAC & airLoopHVAC)
     // Get the OA system
     boost::optional<AirLoopHVACOutdoorAirSystem> oaSys = parAirLoop->airLoopHVACOutdoorAirSystem();
     if (!oaSys) {
-      LOG(Warn, "This object's parent AirLoopHVAC has no AirLoopHVACOutdoorAirSystem, cannot retrieve the autosizedDesignOutdoorAirFlowRate.");
+      LOG(Debug, "This object's parent AirLoopHVAC has no AirLoopHVACOutdoorAirSystem, cannot retrieve the autosizedDesignOutdoorAirFlowRate.");
       return result;
     }
 
@@ -755,7 +755,7 @@ void SizingSystem_Impl::setAirLoopHVAC(const AirLoopHVAC & airLoopHVAC)
     }
 
     if (!result) {
-      LOG(Warn, "The autosized value query for " + capacityType + " Design Capacity of " + sqlName + " returned no value.");
+      LOG(Debug, "The autosized value query for " + capacityType + " Design Capacity of " + sqlName + " returned no value.");
     }
 
     return result;
@@ -772,7 +772,7 @@ void SizingSystem_Impl::setAirLoopHVAC(const AirLoopHVAC & airLoopHVAC)
 
     // Get the name of the air loop
     if (!parAirLoop.name()) {
-      LOG(Warn, "This object's parent AirLoopHVAC does not have a name, cannot retrieve the autosized " + capacityType + " Design Capacity.");
+      LOG(Debug, "This object's parent AirLoopHVAC does not have a name, cannot retrieve the autosized " + capacityType + " Design Capacity.");
       return result;
     }
 
@@ -839,16 +839,16 @@ void SizingSystem_Impl::setAirLoopHVAC(const AirLoopHVAC & airLoopHVAC)
     }
 
     if (!result) {
-      LOG(Warn, "The autosized value query for " + capacityType + " Design Capacity of " + sqlName + " returned no value.");
+      LOG(Debug, "The autosized value query for " + capacityType + " Design Capacity of " + sqlName + " returned no value.");
     }
 
     return result;
   }
 
   void SizingSystem_Impl::autosize() {
-    autosizedDesignOutdoorAirFlowRate();
-    autosizedCoolingDesignCapacity();
-    autosizedHeatingDesignCapacity();
+    autosizeDesignOutdoorAirFlowRate();
+    autosizeCoolingDesignCapacity();
+    autosizeHeatingDesignCapacity();
   }
 
   void SizingSystem_Impl::applySizingValues() {

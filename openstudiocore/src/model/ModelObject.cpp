@@ -767,7 +767,7 @@ namespace detail {
 
 
     if (!result) {
-      LOG(Warn, "The autosized value query for " + valueNameAndUnits + " of " + sqlName + " returned no value.");
+      LOG(Debug, "The autosized value query for " + valueNameAndUnits + " of " + sqlName + " returned no value.");
     }
 
     return result;
