@@ -9658,7 +9658,7 @@ OS:UnitarySystemPerformance:Multispeed,
        \key Yes
        \key No
        \default No
-       \note Controls coil operation during each HVAC timestep. 
+       \note Controls coil operation during each HVAC timestep.
        \note This choice does not apply to speed 1 operation.
        \note Yes = operate at the highest speed possible without exceeding the current load.
        \note No = allow operation at the average of two adjacent speeds to match the current load.
@@ -10544,16 +10544,48 @@ OS:AvailabilityManager:Scheduled,
        \memo Determines the availability of a loop or system: whether it is on or off.
        \memo Schedule overrides fan/pump schedule.
        \min-fields 3
-  A1, \field Handle
+  A1,  \field Handle
        \type handle
        \required-field
-  A2, \field Name
+  A2,  \field Name
        \type alpha
        \required-field
        \reference SystemAvailabilityManagers
-  A3; \field Schedule Name
+  A3;  \field Schedule Name
        \type object-list
        \required-field
+       \object-list ScheduleNames
+
+OS:AvailabilityManager:ScheduledOn,
+       \memo Determines the availability of a loop or system: only controls the turn on action.
+       \memo Schedule overrides fan/pump schedule.
+       \min-fields 3
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \type alpha
+       \reference SystemAvailabilityManagers
+  A3;  \field Schedule Name
+       \required-field
+       \type object-list
+       \object-list ScheduleNames
+
+OS:AvailabilityManager:ScheduledOff,
+       \memo Determines the availability of a loop or system: only controls the turn off action.
+       \memo Schedule overrides fan/pump schedule.
+       \min-fields 3
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \type alpha
+       \reference SystemAvailabilityManagers
+  A3;  \field Schedule Name
+       \required-field
+       \type object-list
        \object-list ScheduleNames
 
 OS:AvailabilityManager:NightCycle,
@@ -10668,7 +10700,7 @@ OS:AvailabilityManager:OptimumStart,
 
 OS:AvailabilityManager:DifferentialThermostat,
        \memo Overrides fan/pump schedules depending on temperature difference between two nodes.
-  A1, \field Handle
+  A1,  \field Handle
        \type handle
        \required-field
   A2 , \field Name
@@ -10689,6 +10721,79 @@ OS:AvailabilityManager:DifferentialThermostat,
        \type real
        \units deltaC
        \required-field
+
+
+OS:AvailabilityManager:HighTemperatureTurnOff,
+       \memo Overrides fan/pump schedules depending on temperature at sensor node.
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference SystemAvailabilityManagers
+  A3 , \field Sensor Node Name
+       \type object-list
+       \object-list Node
+  N1 ; \field Temperature
+       \required-field
+       \type real
+       \units C
+
+OS:AvailabilityManager:HighTemperatureTurnOn,
+       \memo Overrides fan/pump schedules depending on temperature at sensor node.
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference SystemAvailabilityManagers
+  A3 , \field Sensor Node Name
+       \type object-list
+       \object-list Node
+  N1 ; \field Temperature
+       \required-field
+       \type real
+       \units C
+
+OS:AvailabilityManager:LowTemperatureTurnOff,
+       \memo Overrides fan/pump schedules depending on temperature at sensor node.
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference SystemAvailabilityManagers
+  A3 , \field Sensor Node Name
+       \type object-list
+       \object-list Node
+  N1 , \field Temperature
+       \required-field
+       \type real
+       \units C
+  A4 ; \field Applicability Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note If blank, defaults to always active
+
+OS:AvailabilityManager:LowTemperatureTurnOn,
+       \memo Overrides fan/pump schedules depending on temperature at sensor node.
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference SystemAvailabilityManagers
+  A3 , \field Sensor Node Name
+       \type object-list
+       \object-list Node
+  N1 ; \field Temperature
+       \required-field
+       \type real
+       \units C
 
 OS:AvailabilityManager:NightVentilation,
        \memo depending on zone and outdoor conditions overrides fan schedule to do
@@ -21957,7 +22062,7 @@ OS:ZoneHVAC:FourPipeFanCoil,
    N10, \field Heating Convergence Tolerance
         \type real
         \minimum> 0.0
-        \default 0.001       
+        \default 0.001
    A13, \field Supply Air Fan Operating Mode Schedule Name
         \type object-list
         \object-list ScheduleNames
