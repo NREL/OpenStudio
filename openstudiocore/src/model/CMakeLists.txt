@@ -139,6 +139,9 @@ set(${target_name}_src
   AvailabilityManagerNightCycle.hpp
   AvailabilityManagerNightCycle_Impl.hpp
   AvailabilityManagerNightCycle.cpp
+  AvailabilityManagerHighTemperatureTurnOn.hpp
+  AvailabilityManagerHighTemperatureTurnOn_Impl.hpp
+  AvailabilityManagerHighTemperatureTurnOn.cpp
   Blind.hpp
   Blind_Impl.hpp
   Blind.cpp

@@ -236,6 +236,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(AvailabilityManagerHybridVentilation);
     REGISTER_CONSTRUCTOR(AvailabilityManagerDifferentialThermostat);
     REGISTER_CONSTRUCTOR(AvailabilityManagerNightVentilation);
+    REGISTER_CONSTRUCTOR(AvailabilityManagerHighTemperatureTurnOn);
     REGISTER_CONSTRUCTOR(Blind);
     REGISTER_CONSTRUCTOR(BoilerHotWater);
     REGISTER_CONSTRUCTOR(BoilerSteam);
@@ -677,6 +678,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(AvailabilityManagerHybridVentilation);
     REGISTER_COPYCONSTRUCTORS(AvailabilityManagerDifferentialThermostat);
     REGISTER_COPYCONSTRUCTORS(AvailabilityManagerNightVentilation);
+    REGISTER_COPYCONSTRUCTORS(AvailabilityManagerHighTemperatureTurnOn);
     REGISTER_COPYCONSTRUCTORS(Blind);
     REGISTER_COPYCONSTRUCTORS(BoilerHotWater);
     REGISTER_COPYCONSTRUCTORS(BoilerSteam);

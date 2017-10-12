@@ -59,6 +59,7 @@
 #include "AvailabilityManagerOptimumStart.hpp"
 #include "AvailabilityManagerDifferentialThermostat.hpp"
 #include "AvailabilityManagerNightVentilation.hpp"
+#include "AvailabilityManagerHighTemperatureTurnOn.hpp"
 #include "Blind.hpp"
 #include "BoilerHotWater.hpp"
 #include "BoilerSteam.hpp"
