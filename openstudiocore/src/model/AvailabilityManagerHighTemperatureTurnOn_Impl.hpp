@@ -29,7 +29,7 @@
 #ifndef MODEL_AVAILABILITYMANAGERHIGHTEMPERATURETURNON_IMPL_HPP
 #define MODEL_AVAILABILITYMANAGERHIGHTEMPERATURETURNON_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "AvailabilityManager_Impl.hpp"
 
 namespace openstudio {

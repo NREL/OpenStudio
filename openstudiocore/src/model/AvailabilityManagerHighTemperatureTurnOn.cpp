@@ -28,16 +28,11 @@
 
 #include "AvailabilityManagerHighTemperatureTurnOn.hpp"
 #include "AvailabilityManagerHighTemperatureTurnOn_Impl.hpp"
-
-// TODO: Check the following class names against object getters and setters.
 #include "Node.hpp"
 #include "Node_Impl.hpp"
-
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_AvailabilityManager_HighTemperatureTurnOn_FieldEnums.hxx>
-
 #include "../utilities/units/Unit.hpp"
-
 #include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
