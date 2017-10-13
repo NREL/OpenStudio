@@ -1496,6 +1496,35 @@ if (_className::iddObjectType() == typeToCreate) { \
     return spaceType;
   }
 
+  Node Model_Impl::outdoorAirNode() const
+  {
+    std::string outdoorAirNodeName("Model Outdoor Air Node");
+
+    std::vector<None> nodes = model().getConcreteModelObjects<Node>();
+
+    // Search for a node with the right name and not connected to any PlantLoop or AirLoopHVAC
+    for( const auto & node : nodes )
+    {
+      if( boost::optional<std::string> name = node.name() )
+      {
+        if( istringEqual(name.get(),outdoorAirNodeName) )
+        {
+          if( node.plantLoop().empty() && node.airLoopHVAC().empty() )
+          {
+            return node;
+          }
+        }
+      }
+    }
+
+    // Otherwise, create it
+    Node node(model());
+    node.setName(outdoorAirNodeName);
+
+    return node;
+  }
+
+
   WorkflowJSON Model_Impl::workflowJSON() const
   {
     return m_workflowJSON;
@@ -1997,6 +2026,11 @@ Schedule Model::alwaysOnDiscreteSchedule() const
 Schedule Model::alwaysOnContinuousSchedule() const
 {
   return getImpl<detail::Model_Impl>()->alwaysOnContinuousSchedule();
+}
+
+Node Model::outdoorAirNode() const
+{
+  return getImpl<detail::Model_Impl>()->outdoorAirNode();
 }
 
 SpaceType Model::plenumSpaceType() const

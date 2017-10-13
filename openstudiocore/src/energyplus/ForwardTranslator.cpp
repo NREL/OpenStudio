@@ -418,6 +418,15 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
   translateConstructions(model);
   translateSchedules(model);
 
+  // Translate the Outdoor Air Node
+  {
+    auto node = model.outdoorAirNode();
+    // Create a new IddObjectType::OutdoorAir_Node
+    IdfObject idfObject(IddObjectType::OutdoorAir_Node);
+    m_idfObjects.push_back(idfObject);
+    idfObject.setName(node.name().get());
+  }
+
   // get air loops in sorted order
   std::vector<AirLoopHVAC> airLoops = model.getConcreteModelObjects<AirLoopHVAC>();
   std::sort(airLoops.begin(), airLoops.end(), WorkspaceObjectNameLess());
