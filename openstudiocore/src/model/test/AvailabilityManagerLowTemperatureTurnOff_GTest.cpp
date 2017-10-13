@@ -91,7 +91,6 @@ TEST_F(ModelFixture, AvailabilityManagerLowTemperatureTurnOff_Setters_Getters)
   ASSERT_EQ(60.19, avm.temperature());
 
   // Test Applicability Schedule
-  ASSERT_TRUE(avm.applicabilitySchedule());
   ASSERT_EQ(m.alwaysOnDiscreteSchedule(), avm.applicabilitySchedule());
   ScheduleConstant tempSch(m);
   tempSch.setValue(50);

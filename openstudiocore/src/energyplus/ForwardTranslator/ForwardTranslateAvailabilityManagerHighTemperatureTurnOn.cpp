@@ -45,12 +45,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerHighTe
   m_idfObjects.push_back(idfObject);
 
   // Name
-  if( (boost::optional<std::string> s = modelObject.name()) ) {
+  if( boost::optional<std::string> s = modelObject.name() ) {
     idfObject.setName(*s);
   }
 
   // Sensor Node Name
-  if( (boost::optional<Node> node = modelObject.sensorNode()) ) {
+  if( boost::optional<Node> node = modelObject.sensorNode() ) {
     idfObject.setString(AvailabilityManager_HighTemperatureTurnOnFields::SensorNodeName,node->name().get());
   } else {
     // E+ will crash if this is missing (tested on 8.8.0)
