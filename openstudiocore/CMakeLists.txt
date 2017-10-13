@@ -13,6 +13,7 @@ project(OpenStudio VERSION 2.3.0)
 
 include(ExternalProject)
 include(CPackComponent)
+include(CheckCXXCompilerFlag)
 
 if( POLICY CMP0022 )
   cmake_policy(SET CMP0022 NEW)
@@ -322,6 +323,19 @@ if(MSVC)
   # ignore warnings about the stl being insecure
   add_definitions(-D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS)
 
+endif()
+
+# Add Color Output if Using Ninja
+macro(AddCXXFlagIfSupported flag test)
+   CHECK_CXX_COMPILER_FLAG(${flag} ${test})
+   if( ${${test}} )
+      message("adding ${flag}")
+      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${flag}")
+   endif()
+endmacro()
+
+if("Ninja" STREQUAL ${CMAKE_GENERATOR})
+   AddCXXFlagIfSupported(-fcolor-diagnostics COMPILER_SUPPORTS_fcolor-diagnostics)
 endif()
 ###############################################################################
 
