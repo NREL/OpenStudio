@@ -30,8 +30,8 @@
 
 #include <model/test/ModelFixture.hpp>
 
-#include "../AvailabilityManagerHighTemperatureTurnOn.hpp"
-#include "../AvailabilityManagerHighTemperatureTurnOn_Impl.hpp"
+#include "../AvailabilityManagerHighTemperatureTurnOff.hpp"
+#include "../AvailabilityManagerHighTemperatureTurnOff_Impl.hpp"
 
 #include "../Node.hpp"
 #include "../AirLoopHVAC.hpp"
@@ -40,25 +40,26 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, AvailabilityManagerHighTemperatureTurnOn_DefaultConstructor)
+TEST_F(ModelFixture, AvailabilityManagerHighTemperatureTurnOff_DefaultConstructor)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
   ASSERT_EXIT (
   {
      Model m;
-     AvailabilityManagerHighTemperatureTurnOn avm(m);
+     AvailabilityManagerHighTemperatureTurnOff avm(m);
 
      exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
 
-TEST_F(ModelFixture, AvailabilityManagerHighTemperatureTurnOn_Setters_Getters)
+TEST_F(ModelFixture, AvailabilityManagerHighTemperatureTurnOff_Setters_Getters)
 {
   Model m;
+  Node n;
 
-  AvailabilityManagerHighTemperatureTurnOn avm(m);
+  AvailabilityManagerHighTemperatureTurnOff avm(m);
 
   // Test Sensor node fields
   // Random node

@@ -30,35 +30,37 @@
 
 #include <model/test/ModelFixture.hpp>
 
-#include "../AvailabilityManagerHighTemperatureTurnOn.hpp"
-#include "../AvailabilityManagerHighTemperatureTurnOn_Impl.hpp"
+#include "../AvailabilityManagerLowTemperatureTurnOff.hpp"
+#include "../AvailabilityManagerLowTemperatureTurnOff_Impl.hpp"
 
 #include "../Node.hpp"
 #include "../AirLoopHVAC.hpp"
 #include "../PlantLoop.hpp"
+#include "../ScheduleConstant.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, AvailabilityManagerHighTemperatureTurnOn_DefaultConstructor)
+TEST_F(ModelFixture, AvailabilityManagerLowTemperatureTurnOff_DefaultConstructor)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
   ASSERT_EXIT (
   {
      Model m;
-     AvailabilityManagerHighTemperatureTurnOn avm(m);
+     AvailabilityManagerLowTemperatureTurnOff avm(m);
 
      exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
 
-TEST_F(ModelFixture, AvailabilityManagerHighTemperatureTurnOn_Setters_Getters)
+TEST_F(ModelFixture, AvailabilityManagerLowTemperatureTurnOff_Setters_Getters)
 {
   Model m;
+  Node n;
 
-  AvailabilityManagerHighTemperatureTurnOn avm(m);
+  AvailabilityManagerLowTemperatureTurnOff avm(m);
 
   // Test Sensor node fields
   // Random node
@@ -88,4 +90,12 @@ TEST_F(ModelFixture, AvailabilityManagerHighTemperatureTurnOn_Setters_Getters)
   // Test temperature
   EXPECT_TRUE(avm.setTemperature(60.19));
   ASSERT_EQ(60.19, avm.temperature());
+
+  // Test Applicability Schedule
+  ASSERT_TRUE(avm.applicabilitySchedule());
+  ASSERT_EQ(m.alwaysOnDiscreteSchedule(), avm.applicabilitySchedule());
+  ScheduleConstant tempSch(m);
+  tempSch.setValue(50);
+  EXPECT_TRUE(avm.setApplicabilitySchedule(tempSch));
+  ASSERT_EQ(tempSch.handle(), avm.applicabilitySchedule().handle());
 }
