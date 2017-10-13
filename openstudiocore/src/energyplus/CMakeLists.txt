@@ -499,6 +499,12 @@ set(${target_name}_test_src
   Test/ReverseTranslator_GTest.cpp
 
   Test/AirWallMaterial_GTest.cpp
+
+  Test/AvailabilityManagerHighTemperatureTurnOn_GTest.cpp
+  Test/AvailabilityManagerHighTemperatureTurnOff_GTest.cpp
+  Test/AvailabilityManagerLowTemperatureTurnOn_GTest.cpp
+  Test/AvailabilityManagerLowTemperatureTurnOff_GTest.cpp
+
   Test/Building_GTest.cpp
   Test/CoilHeatingGas_GTest.cpp
   Test/Construction_GTest.cpp
