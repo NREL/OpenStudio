@@ -65,7 +65,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AvailabilityManagerHighTemperatureTu
   ASSERT_EQ(n.name().get(), idf_avm.getString(AvailabilityManager_HighTemperatureTurnOnFields::SensorNodeName).get());
 
   // Temperature
-  EXPECT_DOUBLE_EQ(avm.temperature(), idf_avm.getDoubleAvailabilityManager_HighTemperatureTurnOnFields::Temperature());
+  EXPECT_DOUBLE_EQ(avm.temperature(), idf_avm.getDouble(AvailabilityManager_HighTemperatureTurnOnFields::Temperature).get());
 }
 
 /*

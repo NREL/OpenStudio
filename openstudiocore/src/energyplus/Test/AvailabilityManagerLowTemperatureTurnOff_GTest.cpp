@@ -71,7 +71,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AvailabilityManagerLowTemperatureTur
   ASSERT_EQ(n.name().get(), idf_avm.getString(AvailabilityManager_LowTemperatureTurnOffFields::SensorNodeName).get());
 
   // Temperature
-  EXPECT_DOUBLE_EQ(avm.temperature(), idf_avm.getDoubleAvailabilityManager_LowTemperatureTurnOffFields::Temperature());
+  EXPECT_DOUBLE_EQ(avm.temperature(), idf_avm.getDouble(AvailabilityManager_LowTemperatureTurnOnFields::Temperature).get());
 
   // Applicability Schedule Name
   ASSERT_EQ(sch.name().get(), idf_avm.getString(AvailabilityManager_LowTemperatureTurnOffFields::ApplicabilityScheduleName).get());
