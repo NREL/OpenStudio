@@ -547,14 +547,17 @@ boost::optional<AvailabilityManager> PlantLoop_Impl::availabilityManager() const
 
 bool PlantLoop_Impl::setAvailabilityManager(const AvailabilityManager & availabilityManager) {
   auto type = availabilityManager.iddObjectType();
+
+  // should be all types but NightCycle and NightVentilation (AirLoopHVAC);
+  // and not HybridVentilation (AirLoop, and special, stand-alone)
   if( type == IddObjectType::OS_AvailabilityManager_NightCycle ||
       type == IddObjectType::OS_AvailabilityManager_HybridVentilation ||
-      type == IddObjectType::OS_AvailabilityManager_NightVentilation ||
-      type == IddObjectType::OS_AvailabilityManager_OptimumStart ||
-      type == IddObjectType::OS_AvailabilityManager_DifferentialThermostat) {
+      type == IddObjectType::OS_AvailabilityManager_NightVentilation ) {
+    LOG(Warn, "Wrong AVM Type for a PlantLoop: " << availabilityManager.briefDescription());
+    return false;
+  } else {
     return setPointer(OS_PlantLoopFields::AvailabilityManagerName, availabilityManager.handle());
   }
-  return false;
 }
 
 void PlantLoop_Impl::resetAvailabilityManager() {
