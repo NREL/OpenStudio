@@ -73,7 +73,7 @@ class MODEL_API AvailabilityManagerHighTemperatureTurnOff : public AvailabilityM
 
   void resetSensorNode();
 
-  void setTemperature(double temperature);
+  bool setTemperature(double temperature);
 
   //@}
   /** @name Other */

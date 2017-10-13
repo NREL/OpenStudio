@@ -88,7 +88,7 @@ namespace detail {
 
     void resetSensorNode();
 
-    void setTemperature(double temperature);
+    bool setTemperature(double temperature);
 
     bool setApplicabilitySchedule(Schedule& schedule);
 

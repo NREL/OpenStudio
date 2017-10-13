@@ -83,7 +83,7 @@ namespace detail {
 
     void resetSensorNode();
 
-    void setTemperature(double temperature);
+    bool setTemperature(double temperature);
 
     //@}
     /** @name Other */

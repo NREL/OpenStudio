@@ -96,9 +96,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void AvailabilityManagerLowTemperatureTurnOn_Impl::setTemperature(double temperature) {
+  bool AvailabilityManagerLowTemperatureTurnOn_Impl::setTemperature(double temperature) {
     bool result = setDouble(OS_AvailabilityManager_LowTemperatureTurnOnFields::Temperature, temperature);
     OS_ASSERT(result);
+    return result;
   }
 
 } // detail
@@ -131,8 +132,8 @@ void AvailabilityManagerLowTemperatureTurnOn::resetSensorNode() {
   getImpl<detail::AvailabilityManagerLowTemperatureTurnOn_Impl>()->resetSensorNode();
 }
 
-void AvailabilityManagerLowTemperatureTurnOn::setTemperature(double temperature) {
-  getImpl<detail::AvailabilityManagerLowTemperatureTurnOn_Impl>()->setTemperature(temperature);
+bool AvailabilityManagerLowTemperatureTurnOn::setTemperature(double temperature) {
+  return getImpl<detail::AvailabilityManagerLowTemperatureTurnOn_Impl>()->setTemperature(temperature);
 }
 
 /// @cond

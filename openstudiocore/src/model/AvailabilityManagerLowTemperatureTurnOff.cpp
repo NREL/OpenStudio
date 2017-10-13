@@ -112,11 +112,11 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void AvailabilityManagerLowTemperatureTurnOff_Impl::setTemperature(double temperature) {
+  bool AvailabilityManagerLowTemperatureTurnOff_Impl::setTemperature(double temperature) {
     bool result = setDouble(OS_AvailabilityManager_LowTemperatureTurnOffFields::Temperature, temperature);
     OS_ASSERT(result);
+    return result;
   }
-
 
   Schedule AvailabilityManagerLowTemperatureTurnOff_Impl::applicabilitySchedule() const {
     boost::optional<Schedule> value = optionalApplicabilitySchedule();
@@ -175,8 +175,8 @@ void AvailabilityManagerLowTemperatureTurnOff::resetSensorNode() {
   getImpl<detail::AvailabilityManagerLowTemperatureTurnOff_Impl>()->resetSensorNode();
 }
 
-void AvailabilityManagerLowTemperatureTurnOff::setTemperature(double temperature) {
-  getImpl<detail::AvailabilityManagerLowTemperatureTurnOff_Impl>()->setTemperature(temperature);
+bool AvailabilityManagerLowTemperatureTurnOff::setTemperature(double temperature) {
+  return getImpl<detail::AvailabilityManagerLowTemperatureTurnOff_Impl>()->setTemperature(temperature);
 }
 
 Schedule AvailabilityManagerLowTemperatureTurnOff::applicabilitySchedule() const {
