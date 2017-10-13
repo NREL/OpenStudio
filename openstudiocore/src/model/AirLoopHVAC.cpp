@@ -1177,7 +1177,7 @@ namespace detail {
     auto type = availabilityManager.iddObjectType();
 
     // All types should be allowed here except HybridVentilation (special, stand-alone)
-    if ( type == OS_AvailabilityManager_HybridVentilation) {
+    if ( type == IddObjectType::OS_AvailabilityManager_HybridVentilation) {
       LOG(Warn, "Wrong AVM Type for an airLoopHVAC: " << availabilityManager.briefDescription());
       return false;
     } else {
