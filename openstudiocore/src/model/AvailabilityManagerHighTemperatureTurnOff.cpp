@@ -28,6 +28,7 @@
 
 #include "AvailabilityManagerHighTemperatureTurnOff.hpp"
 #include "AvailabilityManagerHighTemperatureTurnOff_Impl.hpp"
+#include "Model.hpp"
 #include "Node.hpp"
 #include "Node_Impl.hpp"
 #include <utilities/idd/IddEnums.hxx>

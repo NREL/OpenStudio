@@ -28,6 +28,7 @@
 
 #include "AvailabilityManagerLowTemperatureTurnOff.hpp"
 #include "AvailabilityManagerLowTemperatureTurnOff_Impl.hpp"
+#include "Model.hpp"
 #include "Node.hpp"
 #include "Node_Impl.hpp"
 #include "Schedule.hpp"
