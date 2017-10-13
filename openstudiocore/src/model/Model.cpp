@@ -1500,7 +1500,7 @@ if (_className::iddObjectType() == typeToCreate) { \
   {
     std::string outdoorAirNodeName("Model Outdoor Air Node");
 
-    std::vector<None> nodes = model().getConcreteModelObjects<Node>();
+    std::vector<Node> nodes = model().getConcreteModelObjects<Node>();
 
     // Search for a node with the right name and not connected to any PlantLoop or AirLoopHVAC
     for( const auto & node : nodes )
@@ -1509,7 +1509,7 @@ if (_className::iddObjectType() == typeToCreate) { \
       {
         if( istringEqual(name.get(),outdoorAirNodeName) )
         {
-          if( node.plantLoop().empty() && node.airLoopHVAC().empty() )
+          if( !node.plantLoop() && !node.airLoopHVAC() )
           {
             return node;
           }
