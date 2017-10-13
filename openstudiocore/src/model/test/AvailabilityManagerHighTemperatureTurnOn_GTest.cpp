@@ -62,7 +62,7 @@ TEST_F(ModelFixture, AvailabilityManagerHighTemperatureTurnOn_Setters_Getters)
 
   // Test Sensor node fields
   // Random node
-  Node n;
+  Node n(m);
   ASSERT_FALSE(avm.sensorNode());
   EXPECT_TRUE(avm.setSensorNode(n));
   ASSERT_TRUE(avm.sensorNode());

@@ -57,13 +57,12 @@ TEST_F(ModelFixture, AvailabilityManagerLowTemperatureTurnOn_DefaultConstructor)
 TEST_F(ModelFixture, AvailabilityManagerLowTemperatureTurnOn_Setters_Getters)
 {
   Model m;
-  Node n;
 
   AvailabilityManagerLowTemperatureTurnOn avm(m);
 
   // Test Sensor node fields
   // Random node
-  Node n;
+  Node n(m);
   ASSERT_FALSE(avm.sensorNode());
   EXPECT_TRUE(avm.setSensorNode(n));
   ASSERT_TRUE(avm.sensorNode());
