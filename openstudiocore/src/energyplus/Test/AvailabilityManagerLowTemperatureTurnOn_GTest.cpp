@@ -45,12 +45,11 @@ using namespace openstudio;
 TEST_F(EnergyPlusFixture, ForwardTranslator_AvailabilityManagerLowTemperatureTurnOn) {
 
   Model m;
-  Node n;
 
   AvailabilityManagerLowTemperatureTurnOn avm(m);
 
   // Assign Sensor Node and Temperature
-  Node n;
+  Node n(m);
   EXPECT_TRUE(avm.setSensorNode(n));
   EXPECT_TRUE(avm.setTemperature(60.19));
 
@@ -75,7 +74,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AvailabilityManagerLowTemperatureTur
 TEST_F(EnergyPlusFixture, ForwardTranslator_AvailabilityManagerLowTemperatureTurnOn_NoSensorNode) {
 
   Model m;
-  Node n;
 
   AvailabilityManagerLowTemperatureTurnOn avm(m);
   // No Sensor Node
