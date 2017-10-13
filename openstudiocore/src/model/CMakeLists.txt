@@ -142,6 +142,15 @@ set(${target_name}_src
   AvailabilityManagerHighTemperatureTurnOn.hpp
   AvailabilityManagerHighTemperatureTurnOn_Impl.hpp
   AvailabilityManagerHighTemperatureTurnOn.cpp
+  AvailabilityManagerHighTemperatureTurnOff.hpp
+  AvailabilityManagerHighTemperatureTurnOff_Impl.hpp
+  AvailabilityManagerHighTemperatureTurnOff.cpp
+  AvailabilityManagerLowTemperatureTurnOn.hpp
+  AvailabilityManagerLowTemperatureTurnOn_Impl.hpp
+  AvailabilityManagerLowTemperatureTurnOn.cpp
+  AvailabilityManagerLowTemperatureTurnOff.hpp
+  AvailabilityManagerLowTemperatureTurnOff_Impl.hpp
+  AvailabilityManagerLowTemperatureTurnOff.cpp
   Blind.hpp
   Blind_Impl.hpp
   Blind.cpp
@@ -1466,6 +1475,10 @@ set(${target_name}_test_src
   test/AvailabilityManagerOptimumStart_GTest.cpp
   test/AvailabilityManagerDifferentialThermostat_GTest.cpp
   test/AvailabilityManagerNightVentilation_GTest.cpp
+  test/AvailabilityManagerHighTemperatureTurnOn_GTest.cpp
+  test/AvailabilityManagerHighTemperatureTurnOff_GTest.cpp
+  test/AvailabilityManagerLowTemperatureTurnOn_GTest.cpp
+  test/AvailabilityManagerLowTemperatureTurnOff_GTest.cpp
   test/Blind_GTest.cpp
   test/BoilerHotWater_GTest.cpp
   test/BoilerSteam_GTest.cpp
