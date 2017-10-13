@@ -75,6 +75,10 @@ class AvailabilityManagerOptimumStart;
 class AvailabilityManagerDifferentialThermostat;
 class AvailabilityManagerNightVentilation;
 class AvailabilityManagerNightCycle;
+class AvailabilityManagerHighTemperatureTurnOn;
+class AvailabilityManagerHighTemperatureTurnOff;
+class AvailabilityManagerLowTemperatureTurnOn;
+class AvailabilityManagerLowTemperatureTurnOff;
 class Blind;
 class Building;
 class BoilerHotWater;
@@ -513,6 +517,14 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateAvailabilityManagerNightVentilation( model::AvailabilityManagerNightVentilation & modelObject );
 
   boost::optional<IdfObject> translateAvailabilityManagerNightCycle( model::AvailabilityManagerNightCycle & modelObject );
+
+  boost::optional<IdfObject> translateAvailabilityManagerHighTemperatureTurnOn( model::AvailabilityManagerHighTemperatureTurnOn & modelObject );
+
+  boost::optional<IdfObject> translateAvailabilityManagerHighTemperatureTurnOff( model::AvailabilityManagerHighTemperatureTurnOff & modelObject );
+
+  boost::optional<IdfObject> translateAvailabilityManagerLowTemperatureTurnOn( model::AvailabilityManagerLowTemperatureTurnOn & modelObject );
+
+  boost::optional<IdfObject> translateAvailabilityManagerLowTemperatureTurnOff( model::AvailabilityManagerLowTemperatureTurnOff & modelObject );
 
   boost::optional<IdfObject> translateBlind( model::Blind & modelObject );
 

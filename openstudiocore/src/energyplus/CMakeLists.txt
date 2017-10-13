@@ -45,6 +45,10 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateAvailabilityManagerDifferentialThermostat.cpp
   ForwardTranslator/ForwardTranslateAvailabilityManagerNightVentilation.cpp
   ForwardTranslator/ForwardTranslateAvailabilityManagerNightCycle.cpp
+  ForwardTranslator/ForwardTranslateAvailabilityManagerHighTemperatureTurnOn.cpp
+  ForwardTranslator/ForwardTranslateAvailabilityManagerHighTemperatureTurnOff.cpp
+  ForwardTranslator/ForwardTranslateAvailabilityManagerLowTemperatureTurnOn.cpp
+  ForwardTranslator/ForwardTranslateAvailabilityManagerLowTemperatureTurnOff.cpp
   ForwardTranslator/ForwardTranslateBlind.cpp
   ForwardTranslator/ForwardTranslateBoilerHotWater.cpp
   ForwardTranslator/ForwardTranslateBoilerSteam.cpp

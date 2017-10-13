@@ -701,6 +701,30 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateAvailabilityManagerNightCycle(mo);
       break;
     }
+  case openstudio::IddObjectType::OS_AvailabilityManager_HighTemperatureTurnOn :
+    {
+      auto mo = modelObject.cast<AvailabilityManagerHighTemperatureTurnOn>();
+      retVal = translateAvailabilityManagerHighTemperatureTurnOn(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_AvailabilityManager_HighTemperatureTurnOff :
+    {
+      auto mo = modelObject.cast<AvailabilityManagerHighTemperatureTurnOff>();
+      retVal = translateAvailabilityManagerHighTemperatureTurnOff(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_AvailabilityManager_LowTemperatureTurnOn :
+    {
+      auto mo = modelObject.cast<AvailabilityManagerLowTemperatureTurnOn>();
+      retVal = translateAvailabilityManagerLowTemperatureTurnOn(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_AvailabilityManager_LowTemperatureTurnOff :
+    {
+      auto mo = modelObject.cast<AvailabilityManagerLowTemperatureTurnOff>();
+      retVal = translateAvailabilityManagerLowTemperatureTurnOff(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_Boiler_HotWater :
     {
       model::BoilerHotWater boiler = modelObject.cast<BoilerHotWater>();
