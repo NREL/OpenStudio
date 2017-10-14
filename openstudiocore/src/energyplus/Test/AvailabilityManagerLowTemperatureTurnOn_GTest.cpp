@@ -34,6 +34,8 @@
 #include "../../model/Model.hpp"
 #include "../../model/AvailabilityManagerLowTemperatureTurnOn.hpp"
 #include "../../model/Node.hpp"
+#include "../../model/PlantLoop.hpp"
+#include "../../model/AirLoopHVAC.hpp"
 
 #include <utilities/idd/AvailabilityManager_LowTemperatureTurnOn_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -52,6 +54,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AvailabilityManagerLowTemperatureTur
   Node n(m);
   EXPECT_TRUE(avm.setSensorNode(n));
   EXPECT_TRUE(avm.setTemperature(60.19));
+
+  // Assign it to a plant loop
+  PlantLoop p(m);
+  p.setAvailabilityManager(avm);
 
   // ForwardTranslate
   ForwardTranslator forwardTranslator;
@@ -79,11 +85,32 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AvailabilityManagerLowTemperatureTur
   // No Sensor Node
   ASSERT_FALSE(avm.sensorNode());
 
+  // Assign it to a plant loop (otherwise it's purely not translated anyways...)
+  PlantLoop p(m);
+  p.setAvailabilityManager(avm);
+
   // ForwardTranslate
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(m);
 
   EXPECT_EQ(1u, forwardTranslator.errors().size());
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_AvailabilityManagerLowTemperatureTurnOn_ConnectPlantLoopAirLoop) {
+
+  Model m;
+
+  AvailabilityManagerLowTemperatureTurnOn avm(m);
+
+  // Assign it to a plant loop
+  PlantLoop p(m);
+  ASSERT_TRUE(p.setAvailabilityManager(avm));
+
+
+  // Assign it to an Air loop
+  AirLoopHVAC a(m);
+  ASSERT_TRUE(a.setAvailabilityManager(avm));
+
 }
 
 

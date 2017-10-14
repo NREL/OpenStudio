@@ -35,6 +35,7 @@
 #include "../../model/AvailabilityManagerLowTemperatureTurnOff.hpp"
 #include "../../model/Node.hpp"
 #include "../../model/ScheduleConstant.hpp"
+#include "../../model/PlantLoop.hpp"
 
 #include <utilities/idd/AvailabilityManager_LowTemperatureTurnOff_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -58,6 +59,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AvailabilityManagerLowTemperatureTur
   sch.setValue(50);
   EXPECT_TRUE(avm.setApplicabilitySchedule(sch));
 
+  // Assign it to a plant loop
+  PlantLoop p(m);
+  p.setAvailabilityManager(avm);
 
   // ForwardTranslate
   ForwardTranslator forwardTranslator;
@@ -88,6 +92,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AvailabilityManagerLowTemperatureTur
   AvailabilityManagerLowTemperatureTurnOff avm(m);
   // No Sensor Node
   ASSERT_FALSE(avm.sensorNode());
+
+  // Assign it to a plant loop (otherwise it's purely not translated anyways...)
+  PlantLoop p(m);
+  p.setAvailabilityManager(avm);
 
   // ForwardTranslate
   ForwardTranslator forwardTranslator;
