@@ -1,3 +1,4 @@
+
 #ifndef MODEL_CORE_I
 #define MODEL_CORE_I
 
@@ -24,6 +25,12 @@
   
   // ignore building for now
   %ignore openstudio::model::Model::building;
+
+  // Ignore plenum space type for now
+  %ignore openstudio::model::Model::plenumSpaceType;
+
+  // Ignore outdoor air node for now
+  %ignore openstudio::model::Model::outdoorAirNode;
   
   // should be able to do something here as C# supports partial classes
   // http://www.swig.org/Doc1.3/CSharp.html#csharp_extending_proxy_class
@@ -42,7 +49,21 @@
     //  }
     //}    
   %}
-  
+
+#elif defined SWIGJAVA
+
+  // ignore building for now
+  %ignore openstudio::model::Model::building;
+
+  // Ignore plenum space type for now
+  %ignore openstudio::model::Model::plenumSpaceType;
+
+  // Ignore outdoor air node for now
+  %ignore openstudio::model::Model::outdoorAirNode;
+
+  %rename(loadComponent) openstudio::model::Component::load;
+  %ignore openstudio::model::Meter::name;
+  %ignore openstudio::model::Meter::setName;
 #else
 
 #endif
@@ -56,12 +77,6 @@
   #include <utilities/units/Quantity.hpp>
   #include <utilities/units/Unit.hpp>
 %}
-
-#if defined SWIGJAVA
-  %rename(loadComponent) openstudio::model::Component::load;
-  %ignore openstudio::model::Meter::name;
-  %ignore openstudio::model::Meter::setName;
-#endif
 
 // templates for non-ModelObjects
 %template(ModelVector) std::vector<openstudio::model::Model>;
@@ -81,8 +96,19 @@
 // Ignore rawImpl, should that even be in the public interface?
 %ignore openstudio::model::Model::rawImpl;
 
-// Ignore plenum space type
-%ignore openstudio::model::Model::plenumSpaceType;
+namespace openstudio {
+namespace model {
+
+// forward declarations
+class SpaceType;
+class Node;
+}
+}
+
+// DLM: forward declaring these classes and requesting the valuewrapper feature seems to be sufficient for the Ruby bindings
+// For C# we ignore any methods using these and then reimpliment using partial class later
+%feature("valuewrapper") SpaceType;
+%feature("valuewrapper") Node;
 
 // templates 
 %ignore std::vector<openstudio::model::ModelObject>::vector(size_type);

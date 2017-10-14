@@ -55,7 +55,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AvailabilityManagerLowTemperatureTur
 
   // ForwardTranslate
   ForwardTranslator forwardTranslator;
-  Workspace workspace = forwardTranslator.translateModel(model);
+  Workspace workspace = forwardTranslator.translateModel(m);
 
   WorkspaceObjectVector idfObjs(workspace.getObjectsByType(IddObjectType::AvailabilityManager_LowTemperatureTurnOn));
   EXPECT_EQ(1u, idfObjs.size());
@@ -81,7 +81,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AvailabilityManagerLowTemperatureTur
 
   // ForwardTranslate
   ForwardTranslator forwardTranslator;
-  Workspace workspace = forwardTranslator.translateModel(model);
+  Workspace workspace = forwardTranslator.translateModel(m);
 
   EXPECT_EQ(1u, forwardTranslator.errors().size());
 }

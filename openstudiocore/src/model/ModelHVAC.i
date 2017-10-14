@@ -469,6 +469,9 @@ SWIG_MODELOBJECT(SolarCollectorPerformancePhotovoltaicThermalSimple, 1);
   %inline {
     namespace openstudio {
       namespace model {
+        openstudio::model::Node getOutdoorAirNode(openstudio::model::Model model){
+          return model.outdoorAirNode();
+        }
         std::vector<openstudio::model::ThermalZone> getThermalZones(const openstudio::model::Building& building){
           return building.thermalZones();
         }
@@ -489,7 +492,14 @@ SWIG_MODELOBJECT(SolarCollectorPerformancePhotovoltaicThermalSimple, 1);
   
     using System;
     using System.Runtime.InteropServices;
-        
+
+    public partial class Model : Workspace {
+      public Node outdoorAirNode()
+      {
+        return OpenStudio.OpenStudioModelHVAC.getOutdoorAirNode(this);
+      }
+    }  
+
     public partial class Building : ParentObject {
       public ThermalZoneVector thermalZones()
       {

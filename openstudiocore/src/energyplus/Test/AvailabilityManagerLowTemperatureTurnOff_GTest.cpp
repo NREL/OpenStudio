@@ -61,7 +61,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AvailabilityManagerLowTemperatureTur
 
   // ForwardTranslate
   ForwardTranslator forwardTranslator;
-  Workspace workspace = forwardTranslator.translateModel(model);
+  Workspace workspace = forwardTranslator.translateModel(m);
 
   WorkspaceObjectVector idfObjs(workspace.getObjectsByType(IddObjectType::AvailabilityManager_LowTemperatureTurnOff));
   EXPECT_EQ(1u, idfObjs.size());
@@ -71,7 +71,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AvailabilityManagerLowTemperatureTur
   ASSERT_EQ(n.name().get(), idf_avm.getString(AvailabilityManager_LowTemperatureTurnOffFields::SensorNodeName).get());
 
   // Temperature
-  EXPECT_DOUBLE_EQ(avm.temperature(), idf_avm.getDouble(AvailabilityManager_LowTemperatureTurnOnFields::Temperature).get());
+  EXPECT_DOUBLE_EQ(avm.temperature(), idf_avm.getDouble(AvailabilityManager_LowTemperatureTurnOffFields::Temperature).get());
 
   // Applicability Schedule Name
   ASSERT_EQ(sch.name().get(), idf_avm.getString(AvailabilityManager_LowTemperatureTurnOffFields::ApplicabilityScheduleName).get());
@@ -91,7 +91,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AvailabilityManagerLowTemperatureTur
 
   // ForwardTranslate
   ForwardTranslator forwardTranslator;
-  Workspace workspace = forwardTranslator.translateModel(model);
+  Workspace workspace = forwardTranslator.translateModel(m);
 
   EXPECT_EQ(1u, forwardTranslator.errors().size());
 }
