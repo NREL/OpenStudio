@@ -542,11 +542,9 @@ ZoneVentilationDesignFlowRate::ZoneVentilationDesignFlowRate(const Model& model)
     setSchedule(schedule);
   }
 
-  setDesignFlowRateCalculationMethod("AirChanges/Hour");
-  setDesignFlowRate(0.0);
-  setFlowRateperZoneFloorArea(0.0);
-  setFlowRateperPerson(0.0);
+  // This automatically switches the Calculation Method to "AirChanges/Hour"
   setAirChangesperHour(5.0);
+
   setVentilationType("Natural");
   setFanPressureRise(0.0);
   setFanTotalEfficiency(1.0);
