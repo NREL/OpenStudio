@@ -952,8 +952,8 @@ PlantLoop::PlantLoop(Model& model)
   setString(OS_PlantLoopFields::PressureSimulationType,"");
 
   // AvailabilityManagerAssignmentList
-  AvailabilityManagerAssignementList avmList(*this);
-  setPointer(OS_PlantLoopFields::AvailabilityManagerListName, avmList.handle());
+  // AvailabilityManagerAssignementList avmList(*this);
+  // setPointer(OS_PlantLoopFields::AvailabilityManagerListName, avmList.handle());
 }
 
 PlantLoop::PlantLoop(std::shared_ptr<detail::PlantLoop_Impl> impl)
