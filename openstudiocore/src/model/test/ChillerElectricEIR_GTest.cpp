@@ -465,34 +465,34 @@ TEST(ChillerElectricEIR, ChillerElectricEIR_CondenserType)
   model::ChillerElectricEIR ch(m);
 
   // By default, AirCooled (from IDD)
-  EXPECT_EQ("AirCooled", ch.condenserType);
+  EXPECT_EQ("AirCooled", ch.condenserType());
 
   // Not connected to a secondary plantLoop
   ASSERT_TRUE(ch.setCondenserType("EvaporativelyCooled"));
-  ASSERT_EQ("EvaporativelyCooled", ch.condenserType);
+  ASSERT_EQ("EvaporativelyCooled", ch.condenserType());
 
   ASSERT_TRUE(ch.setCondenserType("AirCooled"));
-  ASSERT_EQ("AirCooled", ch.condenserType);
+  ASSERT_EQ("AirCooled", ch.condenserType());
 
   ASSERT_FALSE(ch.setCondenserType("WaterCooled"));
 
   // Add to primary plant loop (on supply), behavior should be the same
   ASSERT_TRUE(pl1.addSupplyBranchForComponent(ch));
   // Should have stayed
-  ASSERT_EQ("AirCooled", ch.condenserType);
+  ASSERT_EQ("AirCooled", ch.condenserType());
   ASSERT_TRUE(ch.setCondenserType("EvaporativelyCooled"));
-  ASSERT_EQ("EvaporativelyCooled", ch.condenserType);
+  ASSERT_EQ("EvaporativelyCooled", ch.condenserType());
 
   ASSERT_TRUE(ch.setCondenserType("AirCooled"));
-  ASSERT_EQ("AirCooled", ch.condenserType);
+  ASSERT_EQ("AirCooled", ch.condenserType());
 
   ASSERT_FALSE(ch.setCondenserType("WaterCooled"));
 
 
   // Add to the Secondary plant loop (on demand), behavior should be reversed
-  ASSERT_TRUE(pl2.addDemandBranchForComponent(chiller));
+  ASSERT_TRUE(pl2.addDemandBranchForComponent(ch));
   // Should have been automatically set to WaterCooled
-  ASSERT_EQ("WaterCooled", ch.condenserType);
+  ASSERT_EQ("WaterCooled", ch.condenserType());
 
   ASSERT_FALSE(ch.setCondenserType("AirCooled"));
   ASSERT_FALSE(ch.setCondenserType("EvaporativelyCooled"));
@@ -500,13 +500,13 @@ TEST(ChillerElectricEIR, ChillerElectricEIR_CondenserType)
   // Disconnect from the secondary plant Loop
   ASSERT_TRUE(ch.removeFromSecondaryPlantLoop());
   // Should have been automatically switched to AirCooled
-  ASSERT_EQ("AirCooled", ch.condenserType);
+  ASSERT_EQ("AirCooled", ch.condenserType());
 
   ASSERT_TRUE(ch.setCondenserType("EvaporativelyCooled"));
-  ASSERT_EQ("EvaporativelyCooled", ch.condenserType);
+  ASSERT_EQ("EvaporativelyCooled", ch.condenserType());
 
   ASSERT_TRUE(ch.setCondenserType("AirCooled"));
-  ASSERT_EQ("AirCooled", ch.condenserType);
+  ASSERT_EQ("AirCooled", ch.condenserType());
 
   ASSERT_FALSE(ch.setCondenserType("WaterCooled"));
 
