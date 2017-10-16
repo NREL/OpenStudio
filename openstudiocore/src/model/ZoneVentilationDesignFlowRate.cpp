@@ -28,6 +28,7 @@
 
 #include "ZoneVentilationDesignFlowRate.hpp"
 #include "ZoneVentilationDesignFlowRate_Impl.hpp"
+
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
 #include "ThermalZone.hpp"
@@ -37,6 +38,7 @@
 #include "ZoneHVACEquipmentList_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
+
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_ZoneVentilation_DesignFlowRate_FieldEnums.hxx>
@@ -259,27 +261,84 @@ namespace detail {
   }
 
   bool ZoneVentilationDesignFlowRate_Impl::setDesignFlowRateCalculationMethod(std::string designFlowRateCalculationMethod) {
+    LOG(Warn, "ZoneVentilationDesignFlowRate::setDesignFlowRateCalculationMethod has been deprecated and will be removed in a future release, the design flow rate calculation method is set during the call to setDesignFlowRate, setFlowRateperZoneFloorArea, setAirChangesperHour, etc");
     bool result = setString(OS_ZoneVentilation_DesignFlowRateFields::DesignFlowRateCalculationMethod, designFlowRateCalculationMethod);
     return result;
   }
 
   bool ZoneVentilationDesignFlowRate_Impl::setDesignFlowRate(double designFlowRate) {
-    bool result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::DesignFlowRate, designFlowRate);
+    bool result = true;
+    if (designFlowRate < 0){
+      result = false;
+    }else{
+      result = setString(OS_ZoneVentilation_DesignFlowRateFields::DesignFlowRateCalculationMethod, "Flow/Zone");
+      OS_ASSERT(result);
+      result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::DesignFlowRate, designFlowRate);
+      OS_ASSERT(result);
+      result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::FlowRateperZoneFloorArea, 0.0);
+      OS_ASSERT(result);
+      result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::FlowRateperPerson, 0.0);
+      OS_ASSERT(result);
+      result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::AirChangesperHour, 0.0);
+      OS_ASSERT(result);
+    }
     return result;
   }
 
   bool ZoneVentilationDesignFlowRate_Impl::setFlowRateperZoneFloorArea(double flowRateperZoneFloorArea) {
-    bool result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::FlowRateperZoneFloorArea, flowRateperZoneFloorArea);
+    bool result = true;
+    if (flowRateperZoneFloorArea < 0){
+      result = false;
+    }else{
+      result = setString(OS_ZoneVentilation_DesignFlowRateFields::DesignFlowRateCalculationMethod, "Flow/Area");
+      OS_ASSERT(result);
+      result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::DesignFlowRate, 0.0);
+      OS_ASSERT(result);
+      result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::FlowRateperZoneFloorArea, flowRateperZoneFloorArea);
+      OS_ASSERT(result);
+      result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::FlowRateperPerson, 0.0);
+      OS_ASSERT(result);
+      result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::AirChangesperHour, 0.0);
+      OS_ASSERT(result);
+    }
     return result;
   }
 
   bool ZoneVentilationDesignFlowRate_Impl::setFlowRateperPerson(double flowRateperPerson) {
-    bool result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::FlowRateperPerson, flowRateperPerson);
+    bool result = true;
+    if (flowRateperPerson < 0){
+      result = false;
+    }else{
+      result = setString(OS_ZoneVentilation_DesignFlowRateFields::DesignFlowRateCalculationMethod, "Flow/Person");
+      OS_ASSERT(result);
+      result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::DesignFlowRate, 0.0);
+      OS_ASSERT(result);
+      result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::FlowRateperZoneFloorArea, 0.0);
+      OS_ASSERT(result);
+      result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::FlowRateperPerson, flowRateperPerson);
+      OS_ASSERT(result);
+      result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::AirChangesperHour, 0.0);
+      OS_ASSERT(result);
+    }
     return result;
   }
 
   bool ZoneVentilationDesignFlowRate_Impl::setAirChangesperHour(double airChangesperHour) {
-    bool result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::AirChangesperHour, airChangesperHour);
+    bool result = true;
+    if (airChangesperHour < 0){
+      result = false;
+    }else{
+      result = setString(OS_ZoneVentilation_DesignFlowRateFields::DesignFlowRateCalculationMethod, "AirChanges/Hour");
+      OS_ASSERT(result);
+      result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::DesignFlowRate, 0.0);
+      OS_ASSERT(result);
+      result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::FlowRateperZoneFloorArea, 0.0);
+      OS_ASSERT(result);
+      result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::FlowRateperPerson, 0.0);
+      OS_ASSERT(result);
+      result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::AirChangesperHour, airChangesperHour);
+      OS_ASSERT(result);
+    }
     return result;
   }
 
