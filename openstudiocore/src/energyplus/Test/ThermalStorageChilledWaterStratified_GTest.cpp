@@ -61,7 +61,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalStorageChilledWaterStratified
     EXPECT_EQ(1u, idfObjs.size());
     WorkspaceObject idf_t(idfObjs[0]);
 
-    EXPECT_DOUBLE_EQ(4.25, *idf_t.getDouble(Coil_Heating_FuelFields::TankRecoveryTime));
-    EXPECT_EQ(7, *idf_t.getInt(Coil_Heating_FuelFields::NumberofNodes));
+    EXPECT_DOUBLE_EQ(4.25, *idf_t.getDouble(ThermalStorage_ChilledWater_StratifiedFields::TankRecoveryTime));
+    EXPECT_EQ(7, *idf_t.getInt(ThermalStorage_ChilledWater_StratifiedFields::NumberofNodes));
 
 }
