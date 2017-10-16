@@ -84,7 +84,7 @@ TEST_F(ModelFixture,ZoneVentilationDesignFlowRate_setFlow)
   ASSERT_FALSE(zv.airChangesperHour());
 
   // AirChanges/Hour
-  ASSERT_TRUE(zv.setFlowRateperZoneFloorArea(1.05));
+  ASSERT_TRUE(zv.setAirChangesperHour(1.05));
   EXPECT_DOUBLE_EQ(1.05, zv.airChangesperHour());
   ASSERT_EQ("AirChanges/Hour", zv.designFlowRateCalculationMethod());
   ASSERT_FALSE(zv.designFlowRate());
