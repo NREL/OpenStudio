@@ -227,6 +227,10 @@ WaterUseEquipment::WaterUseEquipment(const WaterUseEquipmentDefinition& waterUse
   : SpaceLoadInstance(WaterUseEquipment::iddObjectType(),waterUseEquipmentDefinition)
 {
   OS_ASSERT(getImpl<detail::WaterUseEquipment_Impl>());
+
+  bool test = this->w.setFlowRateFractionSchedule(this->model().alwaysOnDiscreteSchedule());
+  OS_ASSERT(test);
+
 }
 
 IddObjectType WaterUseEquipment::iddObjectType() {

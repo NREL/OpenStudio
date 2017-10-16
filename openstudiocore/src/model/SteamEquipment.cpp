@@ -292,6 +292,13 @@ SteamEquipment::SteamEquipment(const SteamEquipmentDefinition& definition)
   : SpaceLoadInstance(SteamEquipment::iddObjectType(),definition)
 {
   OS_ASSERT(getImpl<detail::SteamEquipment_Impl>());
+
+  bool test = this->setSchedule(this->model().alwaysOnDiscreteSchedule());
+  OS_ASSERT(test);
+  test = this->setMultiplier(1.0)
+  OS_ASSERT(test);
+  test = this->setEndUseSubcategory("General");
+  OS_ASSERT(test);
 }
 
 IddObjectType SteamEquipment::iddObjectType() {

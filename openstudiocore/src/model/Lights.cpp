@@ -350,6 +350,15 @@ Lights::Lights(const LightsDefinition& lightsDefinition)
   : SpaceLoadInstance(Lights::iddObjectType(),lightsDefinition)
 {
   OS_ASSERT(getImpl<detail::Lights_Impl>());
+
+  bool test = this->setSchedule(this->model().alwaysOnDiscreteSchedule());
+  OS_ASSERT(test);
+  test = this->setMultiplier(1.0)
+  OS_ASSERT(test);
+  test = this->setEndUseSubcategory("General");
+  OS_ASSERT(test);
+  test = this->setFractionReplaceable(1.0);
+  OS_ASSERT(test);
 }
 
 IddObjectType Lights::iddObjectType() {

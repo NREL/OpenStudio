@@ -315,6 +315,11 @@ OtherEquipment::OtherEquipment(const OtherEquipmentDefinition& definition)
   : SpaceLoadInstance(OtherEquipment::iddObjectType(),definition)
 {
   OS_ASSERT(getImpl<detail::OtherEquipment_Impl>());
+
+  setSchedule(this->model().alwaysOnDiscreteSchedule());
+  setMultiplier(1.0)
+  setFuelType("NaturalGas");
+  setEndUseSubcategory("General");
 }
 
 IddObjectType OtherEquipment::iddObjectType() {

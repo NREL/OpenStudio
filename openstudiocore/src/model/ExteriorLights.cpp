@@ -254,6 +254,10 @@ ExteriorLights::ExteriorLights(const ExteriorLightsDefinition& definition,
     ok = setControlOption("AstronomicalClock");
     OS_ASSERT(ok);
   }
+
+  setMultiplier(1.0)
+  setEndUseSubcategory("General");
+
 }
 
 ExteriorLights::ExteriorLights(const ExteriorLightsDefinition& definition,
@@ -270,6 +274,11 @@ ExteriorLights::ExteriorLights(const ExteriorLightsDefinition& definition,
     LOG_AND_THROW("Could not set " << briefDescription() << "'s schedule to "
                   << schedule.briefDescription() << ".");
   }
+
+  ok = this->setMultiplier(1.0)
+  OS_ASSERT(ok);
+  ok = this->setEndUseSubcategory("General");
+  OS_ASSERT(ok);
 }
 
 IddObjectType ExteriorLights::iddObjectType() {

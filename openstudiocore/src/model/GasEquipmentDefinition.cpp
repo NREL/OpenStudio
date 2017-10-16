@@ -374,6 +374,13 @@ GasEquipmentDefinition::GasEquipmentDefinition(const Model& model)
   OS_ASSERT(getImpl<detail::GasEquipmentDefinition_Impl>());
   bool test = this->setDesignLevel(0.0);
   OS_ASSERT(test);
+
+  test = this->setSchedule(this->model().alwaysOnDiscreteSchedule());
+  OS_ASSERT(test);
+  test = this->setMultiplier(1.0)
+  OS_ASSERT(test);
+  test = this->setEndUseSubcategory("General");
+  OS_ASSERT(test);
 }
 
 IddObjectType GasEquipmentDefinition::iddObjectType() {

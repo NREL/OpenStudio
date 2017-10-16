@@ -626,6 +626,20 @@ Luminaire::Luminaire(const LuminaireDefinition& luminaireDefinition)
   setPositionXcoordinate(0.0);
   setPositionYcoordinate(0.0);
   setPositionZcoordinate(0.0);
+
+  setPsiRotationAroundXaxis(0.0);
+  setThetaRotationAroundYaxis(0.0);
+  setPhiRotationAroundZaxis(0.0);
+
+  bool test = this->setSchedule(this->model().alwaysOnDiscreteSchedule());
+  OS_ASSERT(test);
+  test = this->setMultiplier(1.0)
+  OS_ASSERT(test);
+  test = this->setEndUseSubcategory("General");
+  OS_ASSERT(test);
+  test = this->setFractionReplaceable(1.0);
+  OS_ASSERT(test);
+
 }
 
 IddObjectType Luminaire::iddObjectType() {
