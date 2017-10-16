@@ -8634,9 +8634,10 @@ OS:AirLoopHVAC,
   A4, \field Availability Schedule
        \type object-list
         \object-list ScheduleNames
-  A5, \field Availability Manager
+  A5, \field Availability Manager List Name
+       \note Enter the name of an AvailabilityManagerAssignmentList object.
        \type object-list
-       \object-list SystemAvailabilityManagers
+       \object-list SystemAvailabilityManagerLists
   N1, \field Design Supply Air Flow Rate
        \type real
        \autosizable
@@ -19181,9 +19182,10 @@ OS:PlantLoop,
         \key UniformLoad
         \key UniformPLR
         \key SequentialUniformPLR
-  A17, \field Availability Manager Name
+  A17, \field Availability Manager List Name
+       \note Enter the name of an AvailabilityManagerAssignmentList object.
        \type object-list
-       \object-list SystemAvailabilityManagers
+       \object-list SystemAvailabilityManagerLists
   A18, \field Plant Loop Demand Calculation Scheme
        \type choice
        \default SingleSetpoint

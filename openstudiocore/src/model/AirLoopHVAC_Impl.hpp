@@ -47,6 +47,7 @@ class SizingSystem;
 class StraightComponent;
 class AvailabilityManagerScheduled;
 class AvailabilityManager;
+class AvailabilityManagerAssignmentList;
 
 namespace detail {
 
@@ -229,11 +230,22 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   bool isDualDuct() const;
 
-  boost::optional<AvailabilityManager> availabilityManager() const;
 
-  bool setAvailabilityManager(const AvailabilityManager & availabilityManager);
+  // AVM
 
-  void resetAvailabilityManager();
+  AvailabilityManagerAssignmentList availabilityManagerAssignmentList() const;
+
+  std::vector<AvailabilityManager> availabilityManagers() const;
+
+  bool addAvailabilityManager(const AvailabilityManager & availabilityManager);
+
+  bool addAvailabilityManager(const AvailabilityManager & availabilityManager, unsigned priority);
+
+  void clearAvailabilityManagers();
+
+  bool setAvailabilityManagerPriority(const AvailabilityManager & availabilityManager, unsigned priority);
+
+  unsigned availabilityManagerPriority(const AvailabilityManager & availabilityManager);
 
   private:
 

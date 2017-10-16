@@ -297,16 +297,43 @@ class MODEL_API AirLoopHVAC : public Loop
    *  flow rate through a return air bypass duct. **/
   // void resetReturnAirBypassFlowTemperatureSetpointSchedule();
 
-  /** AvailabilityManager is used to override the system availabilitySchedule() with one of OpenStudio's
-    * supported AvailabilityManager types.
-    * Unlike EnergyPlus which supports layering multiple availability managers on an AvailabilityManagerAssignmentList,
-    * OpenStudio allows only one AvailabilityManager at a time.
-    **/
-  boost::optional<AvailabilityManager> availabilityManager() const;
 
-  bool setAvailabilityManager(const AvailabilityManager& availabilityManager);
+  /*
+   * Return all AvailabilityManagers assigned to this list, in the priority order
+   *  AvailabilityManagers are used to override the system availabilitySchedule() with one of OpenStudio's
+   *  supported AvailabilityManager types.
+   */
+  std::vector<AvailabilityManager> availabilityManagers() const;
 
-  void resetAvailabilityManager();
+  /*
+   * Add a new AvailabilityManager at the end of the list (priority = last).
+   */
+  bool addAvailabilityManager(const AvailabilityManager & availabilityManager);
+
+  /*
+   * Add a new AvailabilityManager to the list which a given priority (1 to x).
+   * Internally calls addAvailabilityManager then setPriority, see remarks there
+   */
+  bool addAvailabilityManager(const AvailabilityManager & availabilityManager, unsigned priority);
+
+  /*
+   * Removes all AvailabilityManagers assigned (TODO: should that affect the availabilitySchedule?)
+   */
+  void clearAvailabilityManagers();
+
+  /*
+   * You can shuffle the priority of a given AvailabilityManager after having added it
+   * If priority is below 1, it's reset to 1.
+   * If priority is greater than the number of availability managers, will reset to last
+   */
+  bool setAvailabilityManagerPriority(const AvailabilityManager & availabilityManager, unsigned priority);
+
+  /*
+   * Get the priority of the AvailabilityManager given as argument
+   */
+  unsigned availabilityManagerPriority(const AvailabilityManager & availabilityManager);
+
+
 
   std::vector<openstudio::IdfObject> remove() override;
 
