@@ -30,6 +30,8 @@
 #include "ModelFixture.hpp"
 #include "../CoilCoolingDXTwoStageWithHumidityControlMode.hpp"
 #include "../CoilCoolingDXTwoStageWithHumidityControlMode_Impl.hpp"
+#include "../CoilPerformanceDXCooling.hpp"
+#include "../CoilPerformanceDXCooling_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -39,12 +41,49 @@ TEST_F(ModelFixture,CoilCoolingDXTwoStageWithHumidityControlMode)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
-     Model m; 
-     CoilCoolingDXTwoStageWithHumidityControlMode valve(m); 
+  ASSERT_EXIT (
+  {
+     Model m;
+     CoilCoolingDXTwoStageWithHumidityControlMode coil(m);
 
-     exit(0); 
+     exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
+}
+
+/* Verifies that the CoilPerformanceDXCooling objects are indeed cloned too
+ * Address https://github.com/NREL/OpenStudio/issues/2253
+ */
+TEST_F(ModelFixture,CoilCoolingDXTwoStageWithHumidityControlMode_CloneCoilPerf)
+{
+  Model m;
+  Model m2;
+
+  CoilCoolingDXTwoStageWithHumidityControlMode coil(m);
+
+  // The Ctor should have assigned the CoilPerformanceDXCooling Objects
+  ASSERT_TRUE(coil.normalModeStage1CoilPerformance());
+  ASSERT_TRUE(coil.normalModeStage1Plus2CoilPerformance());
+  ASSERT_TRUE(coil.dehumidificationMode1Stage1CoilPerformance());
+  ASSERT_TRUE(coil.dehumidificationMode1Stage1Plus2CoilPerformance());
+  EXPECT_EQ(4u, m.getModelObjects<CoilPerformanceDXCooling>().size());
+
+  // Clone in same model
+  CoilCoolingDXTwoStageWithHumidityControlMode cloneClone = coil.clone(m).cast<CoilCoolingDXTwoStageWithHumidityControlMode>();
+  ASSERT_TRUE(cloneClone.normalModeStage1CoilPerformance());
+  ASSERT_TRUE(cloneClone.normalModeStage1Plus2CoilPerformance());
+  ASSERT_TRUE(cloneClone.dehumidificationMode1Stage1CoilPerformance());
+  ASSERT_TRUE(cloneClone.dehumidificationMode1Stage1Plus2CoilPerformance());
+  // These are resources, so they should point to the same as the ori, not cloned
+  EXPECT_EQ(4u, m.getModelObjects<CoilPerformanceDXCooling>().size());
+
+  // Clone in other model
+  CoilCoolingDXTwoStageWithHumidityControlMode cloneClone2 = coil.clone(m2).cast<CoilCoolingDXTwoStageWithHumidityControlMode>();
+  ASSERT_TRUE(cloneClone2.normalModeStage1CoilPerformance());
+  ASSERT_TRUE(cloneClone2.normalModeStage1Plus2CoilPerformance());
+  ASSERT_TRUE(cloneClone2.dehumidificationMode1Stage1CoilPerformance());
+  ASSERT_TRUE(cloneClone2.dehumidificationMode1Stage1Plus2CoilPerformance());
+  // They should have been cloned to the new model too
+  EXPECT_EQ(4u, m2.getModelObjects<CoilPerformanceDXCooling>().size());
+
 }
