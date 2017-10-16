@@ -109,6 +109,10 @@ namespace detail {
 
   unsigned AvailabilityManagerAssignmentList_Impl::priority(const AvailabilityManager & avm) {
 
+    // TODO: perhaps I chould explicitly check that the avm is
+    // 1. in the same model
+    // 2. in the avm list
+    // In order to LOG a helpful message to the user.
     boost::optional<unsigned> result;
 
     std::vector<IdfExtensibleGroup> groups = extensibleGroups();
