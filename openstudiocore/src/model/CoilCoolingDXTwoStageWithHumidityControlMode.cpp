@@ -358,6 +358,14 @@ namespace detail {
     return newCoil;
   }
 
+  std::vector<IddObjectType> CoilCoolingDXTwoStageWithHumidityControlMode_Impl::allowableChildTypes() const
+  {
+    std::vector<IddObjectType> result;
+    result.push_back(IddObjectType::OS_CoilPerformance_DX_Cooling);
+    return result;
+  }
+
+
   std::vector<ModelObject> CoilCoolingDXTwoStageWithHumidityControlMode_Impl::children() const
   {
     std::vector<ModelObject> result;
