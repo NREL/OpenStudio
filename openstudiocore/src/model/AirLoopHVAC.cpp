@@ -70,6 +70,8 @@
 #include "AirTerminalSingleDuctUncontrolled_Impl.hpp"
 #include "AirTerminalSingleDuctVAVReheat.hpp"
 #include "AirTerminalSingleDuctVAVReheat_Impl.hpp"
+#include "AvailabilityManagerAssignmentList.hpp"
+#include "AvailabilityManagerAssignmentList_Impl.hpp"
 #include "AvailabilityManager.hpp"
 #include "AvailabilityManager_Impl.hpp"
 #include "AvailabilityManagerNightCycle.hpp"
