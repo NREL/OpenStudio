@@ -93,7 +93,6 @@ class MODEL_API WaterToWaterComponent_Impl : public HVACComponent_Impl
 
   bool removeFromPlantLoop();
 
-  // TODO: for handling the chiller condenser type automatically, this needs to become virtual... is this a big deal?
   virtual bool removeFromSecondaryPlantLoop();
 
   virtual unsigned tertiaryInletPort() const;
