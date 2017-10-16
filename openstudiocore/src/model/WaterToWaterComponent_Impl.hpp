@@ -49,8 +49,8 @@ class MODEL_API WaterToWaterComponent_Impl : public HVACComponent_Impl
 
   WaterToWaterComponent_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-  WaterToWaterComponent_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
-                             Model_Impl* model, 
+  WaterToWaterComponent_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                             Model_Impl* model,
                              bool keepHandle);
 
   WaterToWaterComponent_Impl(const WaterToWaterComponent_Impl& other, Model_Impl* model, bool keepHandles);
@@ -93,7 +93,8 @@ class MODEL_API WaterToWaterComponent_Impl : public HVACComponent_Impl
 
   bool removeFromPlantLoop();
 
-  bool removeFromSecondaryPlantLoop();
+  // TODO: for handling the chiller condenser type automatically, this needs to become virtual... is this a big deal?
+  virtual bool removeFromSecondaryPlantLoop();
 
   virtual unsigned tertiaryInletPort() const;
 
