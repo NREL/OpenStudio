@@ -78,6 +78,8 @@ TEST_F(ModelFixture,CoilCoolingDXTwoStageWithHumidityControlMode_CloneCoilPerf)
   EXPECT_EQ(4u, m.getModelObjects<CoilPerformanceDXCooling>().size());
 
   // Clone in other model
+  //
+  // This line triggers an OS_ASSERT exception ModelObject_Impl::clone (868)
   CoilCoolingDXTwoStageWithHumidityControlMode cloneClone2 = coil.clone(m2).cast<CoilCoolingDXTwoStageWithHumidityControlMode>();
   ASSERT_TRUE(cloneClone2.normalModeStage1CoilPerformance());
   ASSERT_TRUE(cloneClone2.normalModeStage1Plus2CoilPerformance());

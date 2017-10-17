@@ -94,7 +94,6 @@ namespace detail {
 
   std::vector<ScheduleTypeKey> CoilCoolingDXTwoStageWithHumidityControlMode_Impl::getScheduleTypeKeys(const Schedule& schedule) const
   {
-    // TODO: Check schedule display names.
     std::vector<ScheduleTypeKey> result;
     UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
     UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
@@ -384,7 +383,6 @@ namespace detail {
     if( auto mo = dehumidificationMode1Stage1Plus2CoilPerformance() ) {
       result.push_back(mo.get());
     }
-
     return result;
   }
 
