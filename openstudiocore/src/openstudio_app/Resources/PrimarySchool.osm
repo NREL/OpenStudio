@@ -14788,7 +14788,11 @@ OS:Lights,
   {dec69462-d779-4479-b87b-685fdf21194a}, !- Handle
   189.1-2009 - PriSchl - Cafeteria - CZ1-3 Lights, !- Name
   {78d67ee0-313f-4f6e-9cc2-5803a85160e5}, !- Lights Definition Name
-  {6c860934-69d0-4986-bdb2-a7c16c08a6a8}; !- Space or SpaceType Name
+  {6c860934-69d0-4986-bdb2-a7c16c08a6a8}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:Schedule:Ruleset,
   {303b5ee4-4ba6-43aa-9cdd-ddeb3f2a373a}, ! Handle
@@ -15380,7 +15384,10 @@ OS:ElectricEquipment,
   {f06b6450-bd37-4827-83b9-1fd398bfc724}, !- Handle
   189.1-2009 - PriSchl - Cafeteria - CZ1-3 Electric Equipment, !- Name
   {7a32adb7-fe4e-48ab-a334-021214923588}, !- Electric Equipment Definition Name
-  {6c860934-69d0-4986-bdb2-a7c16c08a6a8}; !- Space or SpaceType Name
+  {6c860934-69d0-4986-bdb2-a7c16c08a6a8}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:Schedule:Ruleset,
   {820c3ad4-0cd2-41f1-8457-1e9b172b92f2}, ! Handle
@@ -15873,7 +15880,11 @@ OS:Lights,
   {652e1ae7-b1ad-4a73-a667-7567d5d269b2}, !- Handle
   189.1-2009 - PriSchl - Classroom - CZ1-3 Lights, !- Name
   {9a46d229-e480-436a-acc7-05c5ad4805fe}, !- Lights Definition Name
-  {e6bbe375-4f84-47d1-bd90-72e6e21b9856}; !- Space or SpaceType Name
+  {e6bbe375-4f84-47d1-bd90-72e6e21b9856}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {d81533ac-19b6-4f49-9d82-88d8847be349}, !- Handle
@@ -16140,7 +16151,10 @@ OS:ElectricEquipment,
   {3fd62be2-b7e5-4f84-a3f6-b48ccc4fafd9}, !- Handle
   189.1-2009 - PriSchl - Classroom - CZ1-3 Electric Equipment, !- Name
   {d40381fa-50d8-4d3b-8c43-8b67e890ba21}, !- Electric Equipment Definition Name
-  {e6bbe375-4f84-47d1-bd90-72e6e21b9856}; !- Space or SpaceType Name
+  {e6bbe375-4f84-47d1-bd90-72e6e21b9856}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {114de5c5-b2c5-4472-b80e-a7a1ddc3858b}, !- Handle
@@ -16201,7 +16215,11 @@ OS:Lights,
   {da0ea62e-ab0b-499a-98b9-49b78c778c3f}, !- Handle
   189.1-2009 - PriSchl - Corridor - CZ1-3 Lights, !- Name
   {d82bfa5f-f469-49d6-b74f-a05084a4836c}, !- Lights Definition Name
-  {07dfed1d-48b2-431f-8810-38fd3d2b74d1}; !- Space or SpaceType Name
+  {07dfed1d-48b2-431f-8810-38fd3d2b74d1}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {6c011854-aa71-4434-9c1a-f95c46688998}, !- Handle
@@ -16255,7 +16273,10 @@ OS:ElectricEquipment,
   {c4e23d22-8800-4886-b47c-2f027e7c41a5}, !- Handle
   189.1-2009 - PriSchl - Corridor - CZ1-3 Electric Equipment, !- Name
   {a3a6e134-ac6e-4f8d-8ac5-9f920bd37a2d}, !- Electric Equipment Definition Name
-  {07dfed1d-48b2-431f-8810-38fd3d2b74d1}; !- Space or SpaceType Name
+  {07dfed1d-48b2-431f-8810-38fd3d2b74d1}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {c967cd67-9c64-477d-93bd-efbbc3eb959a}, !- Handle
@@ -16404,7 +16425,11 @@ OS:Lights,
   {20a0de4e-070f-4729-a418-763efac7f090}, !- Handle
   189.1-2009 - PriSchl - Gym - CZ1-3 Lights, !- Name
   {48cd04e1-d3e3-46d1-872c-1f5be3395bb0}, !- Lights Definition Name
-  {83e2748d-bf4a-4106-8957-0692f50ff999}; !- Space or SpaceType Name
+  {83e2748d-bf4a-4106-8957-0692f50ff999}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {7c3cdeb0-3ba8-4012-a991-4fb5aa16e2d3}, !- Handle
@@ -16674,7 +16699,10 @@ OS:ElectricEquipment,
   {e59ef91b-f2ce-4a8f-aa0d-17f1ecf0ccab}, !- Handle
   189.1-2009 - PriSchl - Gym - CZ1-3 Electric Equipment, !- Name
   {9a4522ff-6664-41fe-919d-844c310dd9be}, !- Electric Equipment Definition Name
-  {83e2748d-bf4a-4106-8957-0692f50ff999}; !- Space or SpaceType Name
+  {83e2748d-bf4a-4106-8957-0692f50ff999}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {50306937-ceba-41fa-822a-2614fa612b99}, !- Handle
@@ -16725,7 +16753,11 @@ OS:Lights,
   {20f0d0a9-1083-4599-9263-2d27829160d0}, !- Handle
   189.1-2009 - PriSchl - Kitchen - CZ1-3 Lights, !- Name
   {b0fe257f-a5b1-4384-a7c8-83990df4b19d}, !- Lights Definition Name
-  {0aa63dda-90c2-477b-a074-8c11ce570ab6}; !- Space or SpaceType Name
+  {0aa63dda-90c2-477b-a074-8c11ce570ab6}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {15ccd317-d270-4e5e-ba80-7e9e0cdf8e9f}, !- Handle
@@ -16779,7 +16811,10 @@ OS:ElectricEquipment,
   {b8eed389-5462-43d9-9771-25b0a5dd0d2f}, !- Handle
   189.1-2009 - PriSchl - Kitchen - CZ1-3 Electric Equipment, !- Name
   {04ca04de-e6dd-4adf-b820-db0c46d0ea17}, !- Electric Equipment Definition Name
-  {0aa63dda-90c2-477b-a074-8c11ce570ab6}; !- Space or SpaceType Name
+  {0aa63dda-90c2-477b-a074-8c11ce570ab6}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:Schedule:Ruleset,
   {2c3d8970-ce3f-4d98-9d84-0ec3b4cc5541}, ! Handle
@@ -17021,7 +17056,10 @@ OS:GasEquipment,
   {dbae2178-ab66-497b-8aef-1879c6a80b22}, !- Handle
   189.1-2009 - PriSchl - Kitchen - CZ1-3 Gas Equipment, !- Name
   {edbbf98a-d872-47f3-9191-d08672b4dff9}, !- Gas Equipment Definition Name
-  {0aa63dda-90c2-477b-a074-8c11ce570ab6}; !- Space or SpaceType Name
+  {0aa63dda-90c2-477b-a074-8c11ce570ab6}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:Schedule:Ruleset,
   {daf7aed6-a0bf-4927-a91f-0593746e93f0}, ! Handle
@@ -17300,7 +17338,11 @@ OS:Lights,
   {91daf86b-4f36-4652-b1bc-1da9d3358ec9}, !- Handle
   189.1-2009 - PriSchl - Library - CZ1-3 Lights, !- Name
   {21b97efc-426b-43bb-b83e-eec88f75c008}, !- Lights Definition Name
-  {dc0f2e1d-e651-48f7-9ee7-a39c26d85626}; !- Space or SpaceType Name
+  {dc0f2e1d-e651-48f7-9ee7-a39c26d85626}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {286f92ce-a24f-46a2-96cc-410b4826947d}, !- Handle
@@ -17354,7 +17396,10 @@ OS:ElectricEquipment,
   {9e03c65e-3dd5-4256-b4df-b5c57721e3fc}, !- Handle
   189.1-2009 - PriSchl - Library - CZ1-3 Electric Equipment, !- Name
   {c6c32770-960c-4ba6-b94f-d825aa47fbaa}, !- Electric Equipment Definition Name
-  {dc0f2e1d-e651-48f7-9ee7-a39c26d85626}; !- Space or SpaceType Name
+  {dc0f2e1d-e651-48f7-9ee7-a39c26d85626}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {cf3a3395-a046-47f1-9c47-2db1f2afed00}, !- Handle
@@ -17405,7 +17450,11 @@ OS:Lights,
   {cc86a60f-d180-4c5d-b4bc-9d9de0c72cae}, !- Handle
   189.1-2009 - PriSchl - Lobby - CZ1-3 Lights, !- Name
   {85d058c3-22fc-40f0-887f-f2e62de5b80f}, !- Lights Definition Name
-  {0fa83fd4-e00f-4773-a514-98118becffa2}; !- Space or SpaceType Name
+  {0fa83fd4-e00f-4773-a514-98118becffa2}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {96cdf48b-cb84-4286-8335-87ef74942201}, !- Handle
@@ -17444,7 +17493,10 @@ OS:ElectricEquipment,
   {c0686067-5cfa-4237-88c1-5a903104b499}, !- Handle
   189.1-2009 - PriSchl - Lobby - CZ1-3 Electric Equipment, !- Name
   {b00e3a4a-35c0-4b5e-a381-0139d8967bbc}, !- Electric Equipment Definition Name
-  {0fa83fd4-e00f-4773-a514-98118becffa2}; !- Space or SpaceType Name
+  {0fa83fd4-e00f-4773-a514-98118becffa2}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {4e0282bd-915f-48ca-a121-139402f4ce7d}, !- Handle
@@ -17495,7 +17547,11 @@ OS:Lights,
   {8a179e51-0ec8-4874-90ef-b0c409e2b581}, !- Handle
   189.1-2009 - PriSchl - Mechanical - CZ1-3 Lights, !- Name
   {723af4a3-0e20-4194-800f-798596b284de}, !- Lights Definition Name
-  {f1b61545-68a4-47dd-9b12-7723d492f4c5}; !- Space or SpaceType Name
+  {f1b61545-68a4-47dd-9b12-7723d492f4c5}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {5d35649f-4aec-4c5a-8bfc-3488614b7726}, !- Handle
@@ -17549,7 +17605,10 @@ OS:ElectricEquipment,
   {dd9c1827-c32f-4683-b41a-884c164c0754}, !- Handle
   189.1-2009 - PriSchl - Mechanical - CZ1-3 Electric Equipment, !- Name
   {ef2729ec-3497-4d73-ba2f-2ebc35c3b8ab}, !- Electric Equipment Definition Name
-  {f1b61545-68a4-47dd-9b12-7723d492f4c5}; !- Space or SpaceType Name
+  {f1b61545-68a4-47dd-9b12-7723d492f4c5}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {c3a0f1d4-b146-4070-aaf7-297ff952d1f7}, !- Handle
@@ -17600,7 +17659,11 @@ OS:Lights,
   {f45e2890-4daf-402f-9a1a-1c40ef5032b4}, !- Handle
   189.1-2009 - PriSchl - Office - CZ1-3 Lights, !- Name
   {410695d1-ec43-452b-932c-172103970424}, !- Lights Definition Name
-  {eb70643f-66fc-446a-a6e4-1c459945a14f}; !- Space or SpaceType Name
+  {eb70643f-66fc-446a-a6e4-1c459945a14f}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {4c31a58b-f851-47fa-aba0-fc3126824070}, !- Handle
@@ -17654,7 +17717,10 @@ OS:ElectricEquipment,
   {ed3ce443-aa1c-4a5a-966f-2acf9529b34d}, !- Handle
   189.1-2009 - PriSchl - Office - CZ1-3 Electric Equipment, !- Name
   {7217f3bb-0d4b-45d4-a60f-8d042fe55db9}, !- Electric Equipment Definition Name
-  {eb70643f-66fc-446a-a6e4-1c459945a14f}; !- Space or SpaceType Name
+  {eb70643f-66fc-446a-a6e4-1c459945a14f}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {19a6dbbb-2288-4f56-a564-82e257249646}, !- Handle
@@ -17705,7 +17771,11 @@ OS:Lights,
   {e6544c18-9f2a-45dd-a75e-399e3962d680}, !- Handle
   189.1-2009 - PriSchl - Restroom - CZ1-3 Lights, !- Name
   {9eac746d-6b77-4d78-bcc7-b219ea3d5d5b}, !- Lights Definition Name
-  {32c8fb3e-b126-4f1e-a20b-4f2270ee47f7}; !- Space or SpaceType Name
+  {32c8fb3e-b126-4f1e-a20b-4f2270ee47f7}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {05cd907d-fa50-4451-bdca-d0221615e4ae}, !- Handle
@@ -17759,7 +17829,10 @@ OS:ElectricEquipment,
   {6f84009f-de99-4682-b199-cffcecd3300e}, !- Handle
   189.1-2009 - PriSchl - Restroom - CZ1-3 Electric Equipment, !- Name
   {3e101ade-8f19-4f8b-acdb-8251d4e078f7}, !- Electric Equipment Definition Name
-  {32c8fb3e-b126-4f1e-a20b-4f2270ee47f7}; !- Space or SpaceType Name
+  {32c8fb3e-b126-4f1e-a20b-4f2270ee47f7}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {d6320154-8da3-4726-aae9-fda1279522f0}, !- Handle
@@ -17810,7 +17883,11 @@ OS:Lights,
   {2f401eeb-3516-4ff8-88da-037f62205df7}, !- Handle
   189.1-2009 - PriSchl - Cafeteria - CZ4-8 Lights, !- Name
   {ed39d918-0c5c-42c4-b08b-db91b65baee2}, !- Lights Definition Name
-  {998bc018-df7e-464e-aad7-0b7271660c72}; !- Space or SpaceType Name
+  {998bc018-df7e-464e-aad7-0b7271660c72}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {fd88bc6a-15e1-4ef2-acd7-a2f29c58ffae}, !- Handle
@@ -17864,7 +17941,10 @@ OS:ElectricEquipment,
   {9928b138-f39e-49ef-bf8f-1743f118e665}, !- Handle
   189.1-2009 - PriSchl - Cafeteria - CZ4-8 Electric Equipment, !- Name
   {50d7fc07-1242-4da3-8379-dc241691e02d}, !- Electric Equipment Definition Name
-  {998bc018-df7e-464e-aad7-0b7271660c72}; !- Space or SpaceType Name
+  {998bc018-df7e-464e-aad7-0b7271660c72}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {a9b34189-247c-497f-baed-0c2ca4cb133f}, !- Handle
@@ -17915,7 +17995,11 @@ OS:Lights,
   {937dba35-d123-465b-9b17-063c68ba1e07}, !- Handle
   189.1-2009 - PriSchl - Classroom - CZ4-8 Lights, !- Name
   {c79ce7f3-d131-428a-8744-e39cd119eea8}, !- Lights Definition Name
-  {a4dc2f7a-287f-42bb-b8d1-8e49a3252bc3}; !- Space or SpaceType Name
+  {a4dc2f7a-287f-42bb-b8d1-8e49a3252bc3}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {ff5d5560-7d9c-4564-be66-4ae9e4e95c9e}, !- Handle
@@ -17969,7 +18053,10 @@ OS:ElectricEquipment,
   {7a7d037b-b769-4766-8f95-4c06a53acf3a}, !- Handle
   189.1-2009 - PriSchl - Classroom - CZ4-8 Electric Equipment, !- Name
   {2a54ef65-12b8-453d-8525-7fd5d51f16b8}, !- Electric Equipment Definition Name
-  {a4dc2f7a-287f-42bb-b8d1-8e49a3252bc3}; !- Space or SpaceType Name
+  {a4dc2f7a-287f-42bb-b8d1-8e49a3252bc3}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {9b821811-2a4d-4afd-8166-8a3ece6430df}, !- Handle
@@ -18020,7 +18107,11 @@ OS:Lights,
   {ef37c0a0-be20-472e-95c3-e27f417f52cb}, !- Handle
   189.1-2009 - PriSchl - Corridor - CZ4-8 Lights, !- Name
   {9b45740b-026f-42cf-90f7-cf964f76078b}, !- Lights Definition Name
-  {0728baf3-81f7-450e-9eb6-c4660fe8fb70}; !- Space or SpaceType Name
+  {0728baf3-81f7-450e-9eb6-c4660fe8fb70}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {d4ea44ed-13a6-45b7-8b61-c2be6f16725a}, !- Handle
@@ -18074,7 +18165,10 @@ OS:ElectricEquipment,
   {ebfcdcd1-9004-477c-9fef-4e7549561381}, !- Handle
   189.1-2009 - PriSchl - Corridor - CZ4-8 Electric Equipment, !- Name
   {15277a47-8b53-4894-be51-f21ef27703e8}, !- Electric Equipment Definition Name
-  {0728baf3-81f7-450e-9eb6-c4660fe8fb70}; !- Space or SpaceType Name
+  {0728baf3-81f7-450e-9eb6-c4660fe8fb70}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {78d363b1-c0f2-48fc-badd-53b6030a4b89}, !- Handle
@@ -18125,7 +18219,11 @@ OS:Lights,
   {d4f95a25-e481-4deb-940c-f35ca65e0500}, !- Handle
   189.1-2009 - PriSchl - Gym - CZ4-8 Lights, !- Name
   {22aa184e-a1e7-4fd8-a439-b8e50bae2108}, !- Lights Definition Name
-  {36c1d603-0550-4062-9bec-16fb2773f985}; !- Space or SpaceType Name
+  {36c1d603-0550-4062-9bec-16fb2773f985}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {3976c3a7-0466-42d0-8377-08651b6296c5}, !- Handle
@@ -18179,7 +18277,10 @@ OS:ElectricEquipment,
   {e421350d-808e-42c0-867c-e37489acb4f1}, !- Handle
   189.1-2009 - PriSchl - Gym - CZ4-8 Electric Equipment, !- Name
   {8eef5548-ad27-4715-926b-a6748110d782}, !- Electric Equipment Definition Name
-  {36c1d603-0550-4062-9bec-16fb2773f985}; !- Space or SpaceType Name
+  {36c1d603-0550-4062-9bec-16fb2773f985}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {de345c0d-a037-4842-8721-e6dccf112a3a}, !- Handle
@@ -18230,7 +18331,11 @@ OS:Lights,
   {f0f7eb0f-8767-4912-92bf-79e171a30b5f}, !- Handle
   189.1-2009 - PriSchl - Kitchen - CZ4-8 Lights, !- Name
   {093a6683-f776-46d6-bbf5-21a501b7e438}, !- Lights Definition Name
-  {01fab7ae-bccb-4c64-ac6e-ddc8c4cd73a0}; !- Space or SpaceType Name
+  {01fab7ae-bccb-4c64-ac6e-ddc8c4cd73a0}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {0ba0d594-7bb8-4c1e-8649-1081db553d3b}, !- Handle
@@ -18284,7 +18389,10 @@ OS:ElectricEquipment,
   {e47da631-2d51-4894-810f-792967b48d6f}, !- Handle
   189.1-2009 - PriSchl - Kitchen - CZ4-8 Electric Equipment, !- Name
   {47fb2c05-bc4a-4ec5-b95e-2c43c6113df3}, !- Electric Equipment Definition Name
-  {01fab7ae-bccb-4c64-ac6e-ddc8c4cd73a0}; !- Space or SpaceType Name
+  {01fab7ae-bccb-4c64-ac6e-ddc8c4cd73a0}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:GasEquipment:Definition,
   {9e2e8638-dcdc-404d-981f-29059b4f6546}, !- Handle
@@ -18298,7 +18406,10 @@ OS:GasEquipment,
   {8b10a5d3-9bdf-4a76-9a97-c36c1735be53}, !- Handle
   189.1-2009 - PriSchl - Kitchen - CZ4-8 Gas Equipment, !- Name
   {9e2e8638-dcdc-404d-981f-29059b4f6546}, !- Gas Equipment Definition Name
-  {01fab7ae-bccb-4c64-ac6e-ddc8c4cd73a0}; !- Space or SpaceType Name
+  {01fab7ae-bccb-4c64-ac6e-ddc8c4cd73a0}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {20fac3f7-124a-4a94-928b-7faa93a4abcd}, !- Handle
@@ -18349,7 +18460,11 @@ OS:Lights,
   {61005c61-85ae-457e-aab4-0bae39c2c3ec}, !- Handle
   189.1-2009 - PriSchl - Library - CZ4-8 Lights, !- Name
   {197ecb0e-e798-49a2-ba48-aedb3f4a399b}, !- Lights Definition Name
-  {4893d852-1af8-417e-b101-7583223013b7}; !- Space or SpaceType Name
+  {4893d852-1af8-417e-b101-7583223013b7}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {7c85f67f-b2d5-4325-9ce8-74744cc0fdb5}, !- Handle
@@ -18403,7 +18518,10 @@ OS:ElectricEquipment,
   {acae9958-0924-49ee-a188-d8329730fb1e}, !- Handle
   189.1-2009 - PriSchl - Library - CZ4-8 Electric Equipment, !- Name
   {27b6587d-0462-4cfb-a38d-b6fc7146aed2}, !- Electric Equipment Definition Name
-  {4893d852-1af8-417e-b101-7583223013b7}; !- Space or SpaceType Name
+  {4893d852-1af8-417e-b101-7583223013b7}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {15375544-e221-4ba9-bf9e-61b52a444c40}, !- Handle
@@ -18454,7 +18572,11 @@ OS:Lights,
   {2371c21a-33bf-4104-89f8-55cfdf3d4555}, !- Handle
   189.1-2009 - PriSchl - Lobby - CZ4-8 Lights, !- Name
   {1365b4d9-1438-43e4-9a60-23d632737b7a}, !- Lights Definition Name
-  {667bef0d-fcba-4cfd-bb82-082e4c566ae9}; !- Space or SpaceType Name
+  {667bef0d-fcba-4cfd-bb82-082e4c566ae9}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {1e65635b-243f-4ff0-aa15-369005b5b610}, !- Handle
@@ -18493,7 +18615,10 @@ OS:ElectricEquipment,
   {a246df5a-579a-44c6-aa96-0180812daa74}, !- Handle
   189.1-2009 - PriSchl - Lobby - CZ4-8 Electric Equipment, !- Name
   {21217020-e39b-4364-af73-d76f36cf2fec}, !- Electric Equipment Definition Name
-  {667bef0d-fcba-4cfd-bb82-082e4c566ae9}; !- Space or SpaceType Name
+  {667bef0d-fcba-4cfd-bb82-082e4c566ae9}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {be9023be-12e5-401e-8b6c-0cd1a3b8a487}, !- Handle
@@ -18544,7 +18669,11 @@ OS:Lights,
   {1a12f0d1-89e1-4c6e-8294-cc925c2fb246}, !- Handle
   189.1-2009 - PriSchl - Mechanical - CZ4-8 Lights, !- Name
   {db7c83bd-b353-4777-a607-0e967f3d9cc5}, !- Lights Definition Name
-  {8dbd0189-16b6-4986-9362-f772bc188cb1}; !- Space or SpaceType Name
+  {8dbd0189-16b6-4986-9362-f772bc188cb1}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {b7a65255-7bff-40ef-8c87-e05cbffcafe0}, !- Handle
@@ -18598,7 +18727,10 @@ OS:ElectricEquipment,
   {b83e0a8b-546d-4085-a0f0-887d9c84660a}, !- Handle
   189.1-2009 - PriSchl - Mechanical - CZ4-8 Electric Equipment, !- Name
   {ebc6f5a1-5b4d-4689-8fd0-5046152f7bd2}, !- Electric Equipment Definition Name
-  {8dbd0189-16b6-4986-9362-f772bc188cb1}; !- Space or SpaceType Name
+  {8dbd0189-16b6-4986-9362-f772bc188cb1}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {f2d3b139-330e-4cb4-8901-1a81a8062268}, !- Handle
@@ -18649,7 +18781,11 @@ OS:Lights,
   {cdd03aa8-e99a-4583-86d8-6c45b3318de1}, !- Handle
   189.1-2009 - PriSchl - Office - CZ4-8 Lights, !- Name
   {886d3e97-f6b1-4a1a-909f-e9c059456d02}, !- Lights Definition Name
-  {67841697-4888-4283-9180-c1228cf1ecb4}; !- Space or SpaceType Name
+  {67841697-4888-4283-9180-c1228cf1ecb4}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {c32c1ce4-3d96-4911-81c0-110318f47c6f}, !- Handle
@@ -18703,7 +18839,10 @@ OS:ElectricEquipment,
   {ce012d9a-91dd-4833-a0c8-31aa03bf9e63}, !- Handle
   189.1-2009 - PriSchl - Office - CZ4-8 Electric Equipment, !- Name
   {3f466327-fa51-46ac-90c0-a84bcea90db5}, !- Electric Equipment Definition Name
-  {67841697-4888-4283-9180-c1228cf1ecb4}; !- Space or SpaceType Name
+  {67841697-4888-4283-9180-c1228cf1ecb4}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {b5513f05-0c0c-4bf1-abd5-fa385b16cb67}, !- Handle
@@ -18754,7 +18893,11 @@ OS:Lights,
   {828e30f1-83a1-46b2-8a9e-80873dc230e5}, !- Handle
   189.1-2009 - PriSchl - Restroom - CZ4-8 Lights, !- Name
   {e891f044-8d2d-4e04-9b31-eab704895abd}, !- Lights Definition Name
-  {aca52056-2804-41e5-957e-199f6ce47bd9}; !- Space or SpaceType Name
+  {aca52056-2804-41e5-957e-199f6ce47bd9}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {42247806-266e-407f-9a96-cfc7770bda6e}, !- Handle
@@ -18808,7 +18951,10 @@ OS:ElectricEquipment,
   {55a2a2f0-f8f0-429b-a85d-8a19df202f9d}, !- Handle
   189.1-2009 - PriSchl - Restroom - CZ4-8 Electric Equipment, !- Name
   {7983884d-6ebe-4fe3-a58e-0678347cffbe}, !- Electric Equipment Definition Name
-  {aca52056-2804-41e5-957e-199f6ce47bd9}; !- Space or SpaceType Name
+  {aca52056-2804-41e5-957e-199f6ce47bd9}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {d96b4601-4480-43c3-8266-9377a2be6294}, !- Handle
@@ -18859,7 +19005,11 @@ OS:Lights,
   {e92dbce8-415e-413d-b4ff-d5530149822a}, !- Handle
   90.1-2007 - PriSchl - Cafeteria Lights, !- Name
   {c9802db8-3d31-4d40-a386-a90a682218ef}, !- Lights Definition Name
-  {9a9e8918-a997-4266-bcff-cf4f62c39d3f}; !- Space or SpaceType Name
+  {9a9e8918-a997-4266-bcff-cf4f62c39d3f}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {5f63c18f-330f-4e9b-b1d0-7c930527f269}, !- Handle
@@ -18913,7 +19063,10 @@ OS:ElectricEquipment,
   {55d7f3e7-4001-43f6-8ac0-40a902e94510}, !- Handle
   90.1-2007 - PriSchl - Cafeteria Electric Equipment, !- Name
   {61df682a-9403-4348-b908-03b9012c9345}, !- Electric Equipment Definition Name
-  {9a9e8918-a997-4266-bcff-cf4f62c39d3f}; !- Space or SpaceType Name
+  {9a9e8918-a997-4266-bcff-cf4f62c39d3f}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {3ab24e5f-10e6-4259-b61c-9b423124a259}, !- Handle
@@ -18964,7 +19117,11 @@ OS:Lights,
   {c8a79ce0-5ee3-42c0-b1c1-ec1cb08dccfd}, !- Handle
   90.1-2007 - PriSchl - Classroom Lights, !- Name
   {58417d21-07b1-4321-9f99-25e9cf3185d4}, !- Lights Definition Name
-  {d9f026b9-27f3-4c87-808b-706c20d590fb}; !- Space or SpaceType Name
+  {d9f026b9-27f3-4c87-808b-706c20d590fb}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {87d4dc07-0ea6-4169-8a38-94625c1f3336}, !- Handle
@@ -19018,7 +19175,10 @@ OS:ElectricEquipment,
   {ce2adab6-2850-4a15-a4d2-1ac8269bb589}, !- Handle
   90.1-2007 - PriSchl - Classroom Electric Equipment, !- Name
   {a9745449-ec63-4a69-9cb2-57e2143551f3}, !- Electric Equipment Definition Name
-  {d9f026b9-27f3-4c87-808b-706c20d590fb}; !- Space or SpaceType Name
+  {d9f026b9-27f3-4c87-808b-706c20d590fb}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {9965b0c4-d5e9-4c3a-a747-dc1dfb43c1e3}, !- Handle
@@ -19069,7 +19229,11 @@ OS:Lights,
   {958b3299-5008-4753-8c2b-201d57403c93}, !- Handle
   90.1-2007 - PriSchl - Corridor Lights,  !- Name
   {2a72b3bd-c0bd-434d-a822-b51ffa9b8992}, !- Lights Definition Name
-  {c8a98022-34f1-49fd-9223-0bc12e2c17be}; !- Space or SpaceType Name
+  {c8a98022-34f1-49fd-9223-0bc12e2c17be}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {1d051f1e-a0f2-49e6-97a1-d7f7fef6fb6f}, !- Handle
@@ -19123,7 +19287,10 @@ OS:ElectricEquipment,
   {ad44b1bf-a4af-4913-a6d9-ea60c9fdb701}, !- Handle
   90.1-2007 - PriSchl - Corridor Electric Equipment, !- Name
   {84791f28-fda6-454a-a4bc-55aa06e913c3}, !- Electric Equipment Definition Name
-  {c8a98022-34f1-49fd-9223-0bc12e2c17be}; !- Space or SpaceType Name
+  {c8a98022-34f1-49fd-9223-0bc12e2c17be}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {6ba7043d-88db-42e8-bed3-b28fc1717f3a}, !- Handle
@@ -19174,7 +19341,11 @@ OS:Lights,
   {5f9c4ab2-134f-4dd2-9177-947b57937d15}, !- Handle
   90.1-2007 - PriSchl - Gym Lights,       !- Name
   {cded4bbf-7c5b-4224-b2e7-35e0bbb46bca}, !- Lights Definition Name
-  {a6555b26-8e97-4a47-9cff-7416e2cc863c}; !- Space or SpaceType Name
+  {a6555b26-8e97-4a47-9cff-7416e2cc863c}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {a568cdae-c240-4b94-a24b-db906afbb045}, !- Handle
@@ -19228,7 +19399,10 @@ OS:ElectricEquipment,
   {a11e823c-5d42-4d19-9cb3-eb4c2280dd2b}, !- Handle
   90.1-2007 - PriSchl - Gym Electric Equipment, !- Name
   {624b9644-bc5c-4d99-a340-891a5e3aa946}, !- Electric Equipment Definition Name
-  {a6555b26-8e97-4a47-9cff-7416e2cc863c}; !- Space or SpaceType Name
+  {a6555b26-8e97-4a47-9cff-7416e2cc863c}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {3466df77-55c7-4797-adde-ccbd92d80f63}, !- Handle
@@ -19279,7 +19453,11 @@ OS:Lights,
   {293b4fa0-7add-40ed-85d5-882fe4d991bb}, !- Handle
   90.1-2007 - PriSchl - Kitchen Lights,   !- Name
   {b04facf2-56ef-47ba-b547-25e5d992af86}, !- Lights Definition Name
-  {b19c6bf5-e779-40b9-8af3-e00904fd902e}; !- Space or SpaceType Name
+  {b19c6bf5-e779-40b9-8af3-e00904fd902e}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {db9c22a4-31ae-43d2-a292-837f24217eab}, !- Handle
@@ -19333,7 +19511,10 @@ OS:ElectricEquipment,
   {0dc57a69-efa0-4ee4-a3b8-c336e6945c21}, !- Handle
   90.1-2007 - PriSchl - Kitchen Electric Equipment, !- Name
   {81b5378d-7ef1-4b32-97bc-cc90626715c2}, !- Electric Equipment Definition Name
-  {b19c6bf5-e779-40b9-8af3-e00904fd902e}; !- Space or SpaceType Name
+  {b19c6bf5-e779-40b9-8af3-e00904fd902e}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:GasEquipment:Definition,
   {934fee16-e2cb-45cf-a3ba-0125254e7412}, !- Handle
@@ -19347,7 +19528,10 @@ OS:GasEquipment,
   {bcdd09d4-900d-4819-a3b4-ccccbbb330f4}, !- Handle
   90.1-2007 - PriSchl - Kitchen Gas Equipment, !- Name
   {934fee16-e2cb-45cf-a3ba-0125254e7412}, !- Gas Equipment Definition Name
-  {b19c6bf5-e779-40b9-8af3-e00904fd902e}; !- Space or SpaceType Name
+  {b19c6bf5-e779-40b9-8af3-e00904fd902e}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {619e5b2f-3526-4aed-af78-68f5902a0fea}, !- Handle
@@ -19398,7 +19582,11 @@ OS:Lights,
   {91e3089e-b806-40f8-a705-498ed8fbf30d}, !- Handle
   90.1-2007 - PriSchl - Library Lights,   !- Name
   {d945b23a-ff06-4311-8fde-7a00ec49af51}, !- Lights Definition Name
-  {6f5f9e3b-bbef-4dcf-9f5d-e82157374ef0}; !- Space or SpaceType Name
+  {6f5f9e3b-bbef-4dcf-9f5d-e82157374ef0}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {dcfb909d-2d01-46de-80d5-fafb47d6db37}, !- Handle
@@ -19452,7 +19640,10 @@ OS:ElectricEquipment,
   {9c4c6f08-35a3-4d67-a876-09fd9949d198}, !- Handle
   90.1-2007 - PriSchl - Library Electric Equipment, !- Name
   {99dde7cf-81f8-4881-8e0c-35e5885d5153}, !- Electric Equipment Definition Name
-  {6f5f9e3b-bbef-4dcf-9f5d-e82157374ef0}; !- Space or SpaceType Name
+  {6f5f9e3b-bbef-4dcf-9f5d-e82157374ef0}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {02148e7d-7d19-499f-896d-23ac0c9ffceb}, !- Handle
@@ -19503,7 +19694,11 @@ OS:Lights,
   {58170e3d-b583-40d7-acad-28260cc999d3}, !- Handle
   90.1-2007 - PriSchl - Lobby Lights,     !- Name
   {7a896cce-43ad-446b-9e1a-8549f052e65f}, !- Lights Definition Name
-  {c8e1b332-890c-408f-a2e7-a04b1d270401}; !- Space or SpaceType Name
+  {c8e1b332-890c-408f-a2e7-a04b1d270401}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {4fd089f1-0ae7-4c99-bb08-6cbcd9b2b207}, !- Handle
@@ -19542,7 +19737,10 @@ OS:ElectricEquipment,
   {1e8ab6f2-cef1-4a5e-b3f3-4aef01e294c8}, !- Handle
   90.1-2007 - PriSchl - Lobby Electric Equipment, !- Name
   {2c5d95e4-dcb7-4850-b113-5cabf4273a5c}, !- Electric Equipment Definition Name
-  {c8e1b332-890c-408f-a2e7-a04b1d270401}; !- Space or SpaceType Name
+  {c8e1b332-890c-408f-a2e7-a04b1d270401}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {40d828c5-6942-4a29-82fc-e6fff94b0f83}, !- Handle
@@ -19593,7 +19791,11 @@ OS:Lights,
   {b90ff757-6966-4c9e-805c-2e0a9050328e}, !- Handle
   90.1-2007 - PriSchl - Mechanical Lights, !- Name
   {1c2942f0-73f5-432b-b664-f105e2030610}, !- Lights Definition Name
-  {1cf80bdc-f080-4004-9ef9-b963080f8de5}; !- Space or SpaceType Name
+  {1cf80bdc-f080-4004-9ef9-b963080f8de5}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {e3bad16d-4e36-40b2-abc4-bd65b9745903}, !- Handle
@@ -19647,7 +19849,10 @@ OS:ElectricEquipment,
   {fa52438e-2504-4a59-bdda-1b7a49d4dcf0}, !- Handle
   90.1-2007 - PriSchl - Mechanical Electric Equipment, !- Name
   {9cd1c8ed-fe0e-488c-b2b0-95f76d457a62}, !- Electric Equipment Definition Name
-  {1cf80bdc-f080-4004-9ef9-b963080f8de5}; !- Space or SpaceType Name
+  {1cf80bdc-f080-4004-9ef9-b963080f8de5}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {9d5b4408-42f5-4f93-8b61-653f92ddf9a6}, !- Handle
@@ -19698,7 +19903,11 @@ OS:Lights,
   {08c0c3ba-2836-401e-b7b4-be61093cf740}, !- Handle
   90.1-2007 - PriSchl - Office Lights,    !- Name
   {381b39a1-20da-46e4-ab30-2a6043c7c308}, !- Lights Definition Name
-  {ff8db0cc-1a61-48f9-aca9-847bd0c92f8c}; !- Space or SpaceType Name
+  {ff8db0cc-1a61-48f9-aca9-847bd0c92f8c}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {ce1fec94-56b1-40b2-acf5-2d5f81304e3b}, !- Handle
@@ -19752,7 +19961,10 @@ OS:ElectricEquipment,
   {f3227e22-57da-4397-a77d-cae03138653d}, !- Handle
   90.1-2007 - PriSchl - Office Electric Equipment, !- Name
   {fa9649bd-9aa1-472d-aa82-db19219583fb}, !- Electric Equipment Definition Name
-  {ff8db0cc-1a61-48f9-aca9-847bd0c92f8c}; !- Space or SpaceType Name
+  {ff8db0cc-1a61-48f9-aca9-847bd0c92f8c}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {c82a0520-3b07-4f09-b7fa-11e509be7410}, !- Handle
@@ -19803,7 +20015,11 @@ OS:Lights,
   {91bd7362-6973-4fdf-adc3-889f8a717fce}, !- Handle
   90.1-2007 - PriSchl - Restroom Lights,  !- Name
   {724faf19-b246-4a34-a419-1c043ac7442a}, !- Lights Definition Name
-  {aaa53101-7c6b-478a-9736-f2895992d75e}; !- Space or SpaceType Name
+  {aaa53101-7c6b-478a-9736-f2895992d75e}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {d32bd107-7232-418e-9308-d2a2549d04c5}, !- Handle
@@ -19857,7 +20073,10 @@ OS:ElectricEquipment,
   {2fa646a4-e405-485e-bc1b-81be3a5e6534}, !- Handle
   90.1-2007 - PriSchl - Restroom Electric Equipment, !- Name
   {632a8dea-abf6-4e9e-80bd-457e4e0a1936}, !- Electric Equipment Definition Name
-  {aaa53101-7c6b-478a-9736-f2895992d75e}; !- Space or SpaceType Name
+  {aaa53101-7c6b-478a-9736-f2895992d75e}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {071027a9-aa42-4660-9367-2c6ac8130ef9}, !- Handle
@@ -19908,7 +20127,11 @@ OS:Lights,
   {7f7f8358-2730-41c6-a0bd-474cf4d5ff35}, !- Handle
   90.1-2010 - PriSchl - Cafeteria Lights, !- Name
   {db8243c3-f7db-4b19-bf90-b941003daf5b}, !- Lights Definition Name
-  {031880ac-b103-467e-b0a6-c65a259ed634}; !- Space or SpaceType Name
+  {031880ac-b103-467e-b0a6-c65a259ed634}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {26503331-567a-4e71-809a-f5339a6b67d2}, !- Handle
@@ -19962,7 +20185,10 @@ OS:ElectricEquipment,
   {8e07805d-d003-4b11-9cec-aa3838535822}, !- Handle
   90.1-2010 - PriSchl - Cafeteria Electric Equipment, !- Name
   {3b5ed620-6e35-4c3e-9fca-5ecf75f16803}, !- Electric Equipment Definition Name
-  {031880ac-b103-467e-b0a6-c65a259ed634}; !- Space or SpaceType Name
+  {031880ac-b103-467e-b0a6-c65a259ed634}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {59638f25-b0b0-46fd-9150-e4a92c6b4a69}, !- Handle
@@ -20013,7 +20239,11 @@ OS:Lights,
   {28862924-3458-4849-a7ab-2ff086689792}, !- Handle
   90.1-2010 - PriSchl - Classroom Lights, !- Name
   {ad0c01d3-fe8c-4e0f-867b-1c6383e347eb}, !- Lights Definition Name
-  {d8bef1b9-ed66-4158-b51a-42f466d13c18}; !- Space or SpaceType Name
+  {d8bef1b9-ed66-4158-b51a-42f466d13c18}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {d4024043-4f90-4f43-89dd-527fc6391014}, !- Handle
@@ -20067,7 +20297,10 @@ OS:ElectricEquipment,
   {810e69f6-6e70-480d-836d-b870dc7e2ca7}, !- Handle
   90.1-2010 - PriSchl - Classroom Electric Equipment, !- Name
   {d4170051-f75a-46f6-a27e-0be09ea10749}, !- Electric Equipment Definition Name
-  {d8bef1b9-ed66-4158-b51a-42f466d13c18}; !- Space or SpaceType Name
+  {d8bef1b9-ed66-4158-b51a-42f466d13c18}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {44d210a1-d57c-42db-9fef-622db0e9cd57}, !- Handle
@@ -20118,7 +20351,11 @@ OS:Lights,
   {4ffd5b34-cfc0-41e2-a7b3-d337d3a637a1}, !- Handle
   90.1-2010 - PriSchl - Corridor Lights,  !- Name
   {8c86fb57-ced0-4f1b-a73d-d0a3142a7c7a}, !- Lights Definition Name
-  {706c4380-8eca-481a-aa40-9929c08e66e4}; !- Space or SpaceType Name
+  {706c4380-8eca-481a-aa40-9929c08e66e4}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {0f00e33d-bee9-4f7b-8dc8-28cb7f806ffc}, !- Handle
@@ -20172,7 +20409,10 @@ OS:ElectricEquipment,
   {9012e4e3-d6cc-4306-a811-99a1fdacefc2}, !- Handle
   90.1-2010 - PriSchl - Corridor Electric Equipment, !- Name
   {cfc3f842-547b-4894-b392-9483d5e1ecd4}, !- Electric Equipment Definition Name
-  {706c4380-8eca-481a-aa40-9929c08e66e4}; !- Space or SpaceType Name
+  {706c4380-8eca-481a-aa40-9929c08e66e4}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {9f9134b4-fd89-4ff7-ac24-535f5116b4a6}, !- Handle
@@ -20223,7 +20463,11 @@ OS:Lights,
   {b17176ac-6503-4f23-9d80-5d848dd1dc5b}, !- Handle
   90.1-2010 - PriSchl - Gym Lights,       !- Name
   {e486c48a-faf9-40c3-aea5-1aff681ab18f}, !- Lights Definition Name
-  {e4c3261a-3f14-44c3-8f45-a0fff6358db3}; !- Space or SpaceType Name
+  {e4c3261a-3f14-44c3-8f45-a0fff6358db3}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {e8e3344e-9b77-40ae-914b-fc5c33531375}, !- Handle
@@ -20277,7 +20521,10 @@ OS:ElectricEquipment,
   {e71cd07a-1f22-4842-b890-b5d4187d72d4}, !- Handle
   90.1-2010 - PriSchl - Gym Electric Equipment, !- Name
   {08eb5214-9cb9-4697-b18a-b4306bf281e9}, !- Electric Equipment Definition Name
-  {e4c3261a-3f14-44c3-8f45-a0fff6358db3}; !- Space or SpaceType Name
+  {e4c3261a-3f14-44c3-8f45-a0fff6358db3}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {f152db29-6744-4213-855c-79f2a8b358d5}, !- Handle
@@ -20328,7 +20575,11 @@ OS:Lights,
   {a7db1242-98fe-4fc8-b243-ddb195e20f5e}, !- Handle
   90.1-2010 - PriSchl - Kitchen Lights,   !- Name
   {12d69c87-c442-46ea-ada4-72251df52360}, !- Lights Definition Name
-  {0106cb03-eab2-486d-84b7-dd75a701670b}; !- Space or SpaceType Name
+  {0106cb03-eab2-486d-84b7-dd75a701670b}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {b476778a-5422-43ae-bef9-cc5eab8e43b7}, !- Handle
@@ -20382,7 +20633,10 @@ OS:ElectricEquipment,
   {e11748aa-d114-4c55-a17c-dfe725c8d2f8}, !- Handle
   90.1-2010 - PriSchl - Kitchen Electric Equipment, !- Name
   {d021f42a-ca71-41e3-8f7e-187cac50d2bc}, !- Electric Equipment Definition Name
-  {0106cb03-eab2-486d-84b7-dd75a701670b}; !- Space or SpaceType Name
+  {0106cb03-eab2-486d-84b7-dd75a701670b}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:GasEquipment:Definition,
   {26c30d78-5928-4fe9-8728-dfdb701f43a6}, !- Handle
@@ -20396,7 +20650,10 @@ OS:GasEquipment,
   {de04853d-7a95-433f-b8d0-638ea504bd4c}, !- Handle
   90.1-2010 - PriSchl - Kitchen Gas Equipment, !- Name
   {26c30d78-5928-4fe9-8728-dfdb701f43a6}, !- Gas Equipment Definition Name
-  {0106cb03-eab2-486d-84b7-dd75a701670b}; !- Space or SpaceType Name
+  {0106cb03-eab2-486d-84b7-dd75a701670b}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {c9c9c5c8-89d3-4a30-ad2d-fd910338717b}, !- Handle
@@ -20447,7 +20704,11 @@ OS:Lights,
   {e7ac642a-e75f-44fe-9217-b87a1b622aea}, !- Handle
   90.1-2010 - PriSchl - Library Lights,   !- Name
   {e1d13db9-86f6-4473-a7f5-56e576f55f24}, !- Lights Definition Name
-  {9c93e294-5b9d-4d07-9675-84d695b4ad0e}; !- Space or SpaceType Name
+  {9c93e294-5b9d-4d07-9675-84d695b4ad0e}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {4c31d4ff-bacc-4119-adaa-fc1a9ccd958b}, !- Handle
@@ -20501,7 +20762,10 @@ OS:ElectricEquipment,
   {6934c61f-359e-4e0c-a36b-a62de637757a}, !- Handle
   90.1-2010 - PriSchl - Library Electric Equipment, !- Name
   {8c1b1173-3597-4ed8-ae31-0953184c42df}, !- Electric Equipment Definition Name
-  {9c93e294-5b9d-4d07-9675-84d695b4ad0e}; !- Space or SpaceType Name
+  {9c93e294-5b9d-4d07-9675-84d695b4ad0e}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {ff3bfaad-319c-4c76-9932-3c0b232269ba}, !- Handle
@@ -20552,7 +20816,11 @@ OS:Lights,
   {f146e3e0-5f9c-4819-9c9e-f4afc377415a}, !- Handle
   90.1-2010 - PriSchl - Lobby Lights,     !- Name
   {8f6d53b6-469f-467c-8ae8-db0f5c8e2817}, !- Lights Definition Name
-  {170e3cbb-c3f1-4c2d-b86d-ea32b2e2eb71}; !- Space or SpaceType Name
+  {170e3cbb-c3f1-4c2d-b86d-ea32b2e2eb71}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {2385386e-2297-40c7-a4b1-c67ea65ae8ef}, !- Handle
@@ -20591,7 +20859,10 @@ OS:ElectricEquipment,
   {317180d6-b7d3-45fb-a690-def28becb7ef}, !- Handle
   90.1-2010 - PriSchl - Lobby Electric Equipment, !- Name
   {ce3f174e-8841-4c96-8b7e-cf62fdc73e34}, !- Electric Equipment Definition Name
-  {170e3cbb-c3f1-4c2d-b86d-ea32b2e2eb71}; !- Space or SpaceType Name
+  {170e3cbb-c3f1-4c2d-b86d-ea32b2e2eb71}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {2f5d1e84-3585-4a5e-b166-f40ac4d721bd}, !- Handle
@@ -20642,7 +20913,11 @@ OS:Lights,
   {1f2f61ab-79b8-4eed-93a7-edf129d24659}, !- Handle
   90.1-2010 - PriSchl - Mechanical Lights, !- Name
   {a24f48de-5e86-4a93-bbf2-8aee92e9faed}, !- Lights Definition Name
-  {6dac259c-294e-4ef9-bd01-f6e0cd045a55}; !- Space or SpaceType Name
+  {6dac259c-294e-4ef9-bd01-f6e0cd045a55}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {6defea89-849a-4add-a881-12eb0151ee68}, !- Handle
@@ -20696,7 +20971,10 @@ OS:ElectricEquipment,
   {91c45bef-5974-45eb-a90f-7d9df6e53e24}, !- Handle
   90.1-2010 - PriSchl - Mechanical Electric Equipment, !- Name
   {6852de7b-576f-4303-a6c1-784e2e0f11b2}, !- Electric Equipment Definition Name
-  {6dac259c-294e-4ef9-bd01-f6e0cd045a55}; !- Space or SpaceType Name
+  {6dac259c-294e-4ef9-bd01-f6e0cd045a55}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {7c0e3269-a647-493a-b847-5eb23e0f9ab4}, !- Handle
@@ -20747,7 +21025,11 @@ OS:Lights,
   {6d388cb7-54db-4e0c-b5bc-7c9ef046c81c}, !- Handle
   90.1-2010 - PriSchl - Office Lights,    !- Name
   {ffd76dcf-33b3-43a5-9538-685500f7c81f}, !- Lights Definition Name
-  {8d135713-f6de-465f-b824-c4e90bd181dc}; !- Space or SpaceType Name
+  {8d135713-f6de-465f-b824-c4e90bd181dc}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {1fa78230-bf3c-4e89-b077-88052a794019}, !- Handle
@@ -20801,7 +21083,10 @@ OS:ElectricEquipment,
   {6abcbb7e-1e74-4b79-81a2-735f302ef10f}, !- Handle
   90.1-2010 - PriSchl - Office Electric Equipment, !- Name
   {b1c14f3f-8804-4c72-8713-2c715d078df2}, !- Electric Equipment Definition Name
-  {8d135713-f6de-465f-b824-c4e90bd181dc}; !- Space or SpaceType Name
+  {8d135713-f6de-465f-b824-c4e90bd181dc}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {ff357bb3-7efa-4dac-b81d-0e173205eead}, !- Handle
@@ -20852,7 +21137,11 @@ OS:Lights,
   {7a20c21a-6ced-4087-99cf-475a12223f2b}, !- Handle
   90.1-2010 - PriSchl - Restroom Lights,  !- Name
   {27928007-640d-4024-bb27-120d35a21123}, !- Lights Definition Name
-  {01ecf881-bb34-47ef-a0d4-33ac18aac73e}; !- Space or SpaceType Name
+  {01ecf881-bb34-47ef-a0d4-33ac18aac73e}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {1cb5fabc-7f7e-425f-98b4-6dc8a4ddb75b}, !- Handle
@@ -20906,7 +21195,10 @@ OS:ElectricEquipment,
   {26cca4d5-3bc5-46d8-914c-8a2bc2aee769}, !- Handle
   90.1-2010 - PriSchl - Restroom Electric Equipment, !- Name
   {7d3b74f0-4aa9-401b-a829-a439c2c93ea4}, !- Electric Equipment Definition Name
-  {01ecf881-bb34-47ef-a0d4-33ac18aac73e}; !- Space or SpaceType Name
+  {01ecf881-bb34-47ef-a0d4-33ac18aac73e}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {2c764b46-52da-456d-a0df-d57cd24dc8eb}, !- Handle
@@ -20957,7 +21249,11 @@ OS:Lights,
   {06edefbc-17ba-4600-a68c-437b7198f086}, !- Handle
   DOE Ref 1980-2004 - PriSchl - Cafeteria Lights, !- Name
   {7faba6f9-b517-41c1-808d-607dc5698565}, !- Lights Definition Name
-  {0bb1e072-fec3-4df7-af19-c847ad18041d}; !- Space or SpaceType Name
+  {0bb1e072-fec3-4df7-af19-c847ad18041d}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {652cb77f-9e16-46be-b0c6-14547fede4d8}, !- Handle
@@ -21011,7 +21307,10 @@ OS:ElectricEquipment,
   {cf454ab3-c097-45e0-bc5a-a452bc253e2e}, !- Handle
   DOE Ref 1980-2004 - PriSchl - Cafeteria Electric Equipment, !- Name
   {82e24af0-5a87-4748-9ba8-0d640541456b}, !- Electric Equipment Definition Name
-  {0bb1e072-fec3-4df7-af19-c847ad18041d}; !- Space or SpaceType Name
+  {0bb1e072-fec3-4df7-af19-c847ad18041d}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {97d87505-0559-4570-a098-34cd5bab2ce7}, !- Handle
@@ -21062,7 +21361,11 @@ OS:Lights,
   {87d623d0-97b1-4e84-b8c8-e712643e293f}, !- Handle
   DOE Ref 1980-2004 - PriSchl - Classroom Lights, !- Name
   {be48c7af-bbb4-40b0-ba9d-5918b1084584}, !- Lights Definition Name
-  {71588ae6-3e29-410f-897f-912e435f1314}; !- Space or SpaceType Name
+  {71588ae6-3e29-410f-897f-912e435f1314}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {6fc020e4-8fe7-4032-a780-2269b3b16e54}, !- Handle
@@ -21116,7 +21419,10 @@ OS:ElectricEquipment,
   {799879e6-894e-46d8-9681-c58ec7bca81f}, !- Handle
   DOE Ref 1980-2004 - PriSchl - Classroom Electric Equipment, !- Name
   {8d33a082-a21c-42d7-add9-8dd841436fbf}, !- Electric Equipment Definition Name
-  {71588ae6-3e29-410f-897f-912e435f1314}; !- Space or SpaceType Name
+  {71588ae6-3e29-410f-897f-912e435f1314}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {9ed69071-f0d7-4983-9885-814cb0567095}, !- Handle
@@ -21167,7 +21473,11 @@ OS:Lights,
   {bc2d472a-289b-421c-9a8f-42cc1d40992e}, !- Handle
   DOE Ref 1980-2004 - PriSchl - Corridor Lights, !- Name
   {41e7b31b-95cb-4d9a-afbd-1b49acfbfb8a}, !- Lights Definition Name
-  {4c2d37f9-71cc-42de-bcea-4dff45196bc6}; !- Space or SpaceType Name
+  {4c2d37f9-71cc-42de-bcea-4dff45196bc6}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {94673042-ee41-44b7-bd03-4e314033de30}, !- Handle
@@ -21221,7 +21531,10 @@ OS:ElectricEquipment,
   {8bc46bc6-387a-43ee-9522-9a6524f3e938}, !- Handle
   DOE Ref 1980-2004 - PriSchl - Corridor Electric Equipment, !- Name
   {ac7ba3c4-273e-4af6-8518-b88b4d3813be}, !- Electric Equipment Definition Name
-  {4c2d37f9-71cc-42de-bcea-4dff45196bc6}; !- Space or SpaceType Name
+  {4c2d37f9-71cc-42de-bcea-4dff45196bc6}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {25d4447a-5a1e-486b-9581-973bf89e0a0d}, !- Handle
@@ -21272,7 +21585,11 @@ OS:Lights,
   {fe3f6a35-1fb5-46dd-9fea-63429d20022b}, !- Handle
   DOE Ref 1980-2004 - PriSchl - Gym Lights, !- Name
   {99183c39-7c86-4c2c-92b7-2b4d2155f55a}, !- Lights Definition Name
-  {023f17d1-d2a0-49f6-9cae-4068ab8bf634}; !- Space or SpaceType Name
+  {023f17d1-d2a0-49f6-9cae-4068ab8bf634}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {e0ed2cb4-99f1-4b6b-8ba0-b36484f73fd5}, !- Handle
@@ -21326,7 +21643,10 @@ OS:ElectricEquipment,
   {a2498442-b87b-4a40-ac1b-07aa638ab01c}, !- Handle
   DOE Ref 1980-2004 - PriSchl - Gym Electric Equipment, !- Name
   {145d6655-7940-4e6c-ab26-837f77bef549}, !- Electric Equipment Definition Name
-  {023f17d1-d2a0-49f6-9cae-4068ab8bf634}; !- Space or SpaceType Name
+  {023f17d1-d2a0-49f6-9cae-4068ab8bf634}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {f33d4329-16f1-4485-9f63-61a029a9467f}, !- Handle
@@ -21377,7 +21697,11 @@ OS:Lights,
   {aeb91725-776e-4186-8f49-687d92427194}, !- Handle
   DOE Ref 1980-2004 - PriSchl - Kitchen Lights, !- Name
   {f1fa2105-e5bf-4b0d-96d3-06dc8dd12eca}, !- Lights Definition Name
-  {65b7d53e-2f56-4329-8e8c-9bad17b40e6a}; !- Space or SpaceType Name
+  {65b7d53e-2f56-4329-8e8c-9bad17b40e6a}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {51ed27cb-8bcb-4d58-a026-cf51dfc2c83c}, !- Handle
@@ -21431,7 +21755,10 @@ OS:ElectricEquipment,
   {ca180e51-3e35-4b78-8f2b-1cb1a7fec58e}, !- Handle
   DOE Ref 1980-2004 - PriSchl - Kitchen Electric Equipment, !- Name
   {6739b55a-803e-48e4-a93b-57676fc71f1e}, !- Electric Equipment Definition Name
-  {65b7d53e-2f56-4329-8e8c-9bad17b40e6a}; !- Space or SpaceType Name
+  {65b7d53e-2f56-4329-8e8c-9bad17b40e6a}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:GasEquipment:Definition,
   {17036008-4177-43ca-b9d7-3848e818ad95}, !- Handle
@@ -21445,7 +21772,10 @@ OS:GasEquipment,
   {918fa64f-3c42-497f-8330-582f51cb2e2e}, !- Handle
   DOE Ref 1980-2004 - PriSchl - Kitchen Gas Equipment, !- Name
   {17036008-4177-43ca-b9d7-3848e818ad95}, !- Gas Equipment Definition Name
-  {65b7d53e-2f56-4329-8e8c-9bad17b40e6a}; !- Space or SpaceType Name
+  {65b7d53e-2f56-4329-8e8c-9bad17b40e6a}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {e87f7705-2b3c-4290-8782-fddda9381938}, !- Handle
@@ -21496,7 +21826,11 @@ OS:Lights,
   {f72fc2b9-77c2-402b-a03b-75450a2eddbd}, !- Handle
   DOE Ref 1980-2004 - PriSchl - Library Lights, !- Name
   {60e7bb1e-f10b-473b-b724-cbe120c457f5}, !- Lights Definition Name
-  {b3c68eff-0dde-4db9-95d0-a67d47fb8b18}; !- Space or SpaceType Name
+  {b3c68eff-0dde-4db9-95d0-a67d47fb8b18}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {aa10c897-2598-436e-b04c-6e285e2b1a68}, !- Handle
@@ -21550,7 +21884,10 @@ OS:ElectricEquipment,
   {cb08dc31-b336-491f-85ce-aec8ddd667e8}, !- Handle
   DOE Ref 1980-2004 - PriSchl - Library Electric Equipment, !- Name
   {eaf4a4c0-d062-49d7-845d-627676bfc066}, !- Electric Equipment Definition Name
-  {b3c68eff-0dde-4db9-95d0-a67d47fb8b18}; !- Space or SpaceType Name
+  {b3c68eff-0dde-4db9-95d0-a67d47fb8b18}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {118dd3ec-ae0f-4d69-b66f-5aa874f43058}, !- Handle
@@ -21601,7 +21938,11 @@ OS:Lights,
   {319272fa-3401-483a-8971-03207a86e8ae}, !- Handle
   DOE Ref 1980-2004 - PriSchl - Lobby Lights, !- Name
   {709cbfef-6d44-490d-bd72-f08dcbebfb95}, !- Lights Definition Name
-  {24eb4426-7a6b-46c8-9b79-270c66dbd59c}; !- Space or SpaceType Name
+  {24eb4426-7a6b-46c8-9b79-270c66dbd59c}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {2ba7bda3-aeac-4df8-90bf-52e1e26c00a4}, !- Handle
@@ -21640,7 +21981,10 @@ OS:ElectricEquipment,
   {722a3081-7d4c-40f4-9627-ddd430edfb8e}, !- Handle
   DOE Ref 1980-2004 - PriSchl - Lobby Electric Equipment, !- Name
   {d548b88e-1afe-4e75-aa3f-eb5d152b5bfb}, !- Electric Equipment Definition Name
-  {24eb4426-7a6b-46c8-9b79-270c66dbd59c}; !- Space or SpaceType Name
+  {24eb4426-7a6b-46c8-9b79-270c66dbd59c}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {dc82d3f4-2206-4ce2-966a-77ac8bd155e8}, !- Handle
@@ -21691,7 +22035,11 @@ OS:Lights,
   {f6956b74-3ca1-4674-8252-82b10ea94539}, !- Handle
   DOE Ref 1980-2004 - PriSchl - Mechanical Lights, !- Name
   {1117483f-2001-442b-903b-3b6d1238d42e}, !- Lights Definition Name
-  {cba76e2f-6c34-4054-823c-8c03456e1443}; !- Space or SpaceType Name
+  {cba76e2f-6c34-4054-823c-8c03456e1443}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {d9e9a808-9a38-4342-b196-1b5a13d2b42a}, !- Handle
@@ -21745,7 +22093,10 @@ OS:ElectricEquipment,
   {f5dfd1f5-f367-4589-979b-576e8187a26a}, !- Handle
   DOE Ref 1980-2004 - PriSchl - Mechanical Electric Equipment, !- Name
   {3163c609-9362-423b-bb8d-fed17ddb148c}, !- Electric Equipment Definition Name
-  {cba76e2f-6c34-4054-823c-8c03456e1443}; !- Space or SpaceType Name
+  {cba76e2f-6c34-4054-823c-8c03456e1443}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {4d80ea4a-b07a-4404-be57-f8e2279cc8d1}, !- Handle
@@ -21796,7 +22147,11 @@ OS:Lights,
   {48fd76d8-47ee-4098-baa1-04a9f47ddb1e}, !- Handle
   DOE Ref 1980-2004 - PriSchl - Office Lights, !- Name
   {acb1e84f-4d40-43df-8681-a0456f646788}, !- Lights Definition Name
-  {0b774409-7683-42fa-8a65-37d43a8d0e82}; !- Space or SpaceType Name
+  {0b774409-7683-42fa-8a65-37d43a8d0e82}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {5384799e-69c7-46e9-84db-fda02c9b4d4e}, !- Handle
@@ -21850,7 +22205,10 @@ OS:ElectricEquipment,
   {f933801e-e0b2-4a9f-a01d-2d254b97818f}, !- Handle
   DOE Ref 1980-2004 - PriSchl - Office Electric Equipment, !- Name
   {52c25513-3946-4bda-ab13-cdf273ce6da9}, !- Electric Equipment Definition Name
-  {0b774409-7683-42fa-8a65-37d43a8d0e82}; !- Space or SpaceType Name
+  {0b774409-7683-42fa-8a65-37d43a8d0e82}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {e0abedf2-be27-4247-bfd9-193561a7b48e}, !- Handle
@@ -21901,7 +22259,11 @@ OS:Lights,
   {d0f6e062-bb48-4bb7-87c0-8e26515d44d6}, !- Handle
   DOE Ref 1980-2004 - PriSchl - Restroom Lights, !- Name
   {1a245d06-80c1-45af-98e9-53f23c9b1d2c}, !- Lights Definition Name
-  {c05ccb6e-e00b-4937-b7c1-f7b284f247fa}; !- Space or SpaceType Name
+  {c05ccb6e-e00b-4937-b7c1-f7b284f247fa}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {191a33ff-f5ca-4a7e-9e19-e3215a31364c}, !- Handle
@@ -21955,7 +22317,10 @@ OS:ElectricEquipment,
   {78f323ba-8591-4d3a-a0ef-d0b5ee587a15}, !- Handle
   DOE Ref 1980-2004 - PriSchl - Restroom Electric Equipment, !- Name
   {69770410-7b3e-48e0-9e85-d94d75820456}, !- Electric Equipment Definition Name
-  {c05ccb6e-e00b-4937-b7c1-f7b284f247fa}; !- Space or SpaceType Name
+  {c05ccb6e-e00b-4937-b7c1-f7b284f247fa}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {6dac6b7a-b006-4e07-995a-3c318e2b8e64}, !- Handle
@@ -22006,7 +22371,11 @@ OS:Lights,
   {5262a74c-6087-4549-affa-b8dac135679c}, !- Handle
   DOE Ref 2004 - PriSchl - Cafeteria Lights, !- Name
   {715c2463-d829-4dac-9400-8eda97b326d5}, !- Lights Definition Name
-  {91d2d897-1a17-4f26-b668-6271f82c0664}; !- Space or SpaceType Name
+  {91d2d897-1a17-4f26-b668-6271f82c0664}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {c54d12ee-d64f-424b-8813-74868a6fe18b}, !- Handle
@@ -22060,7 +22429,10 @@ OS:ElectricEquipment,
   {081a339d-066a-43f9-970a-a4c549e69329}, !- Handle
   DOE Ref 2004 - PriSchl - Cafeteria Electric Equipment, !- Name
   {46bffea2-18b5-4c18-a17f-257be0c90fc4}, !- Electric Equipment Definition Name
-  {91d2d897-1a17-4f26-b668-6271f82c0664}; !- Space or SpaceType Name
+  {91d2d897-1a17-4f26-b668-6271f82c0664}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {aa3e97dc-dcde-45f7-a821-7580ecb0be5b}, !- Handle
@@ -22111,7 +22483,11 @@ OS:Lights,
   {73c54254-d82c-49ef-bf7b-1a08fbef3b7f}, !- Handle
   DOE Ref 2004 - PriSchl - Classroom Lights, !- Name
   {a35e6e48-0c14-4d8d-a86e-ae8a4807e1c3}, !- Lights Definition Name
-  {9b570615-28bc-4faa-9d32-571da38e7608}; !- Space or SpaceType Name
+  {9b570615-28bc-4faa-9d32-571da38e7608}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {87884eef-9030-432c-8fca-4e8b5599c528}, !- Handle
@@ -22165,7 +22541,10 @@ OS:ElectricEquipment,
   {db29add0-19b2-49e1-a49e-efa9b0846d04}, !- Handle
   DOE Ref 2004 - PriSchl - Classroom Electric Equipment, !- Name
   {86c47782-8373-486d-94c1-9dbf4189c2aa}, !- Electric Equipment Definition Name
-  {9b570615-28bc-4faa-9d32-571da38e7608}; !- Space or SpaceType Name
+  {9b570615-28bc-4faa-9d32-571da38e7608}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {9b86a875-3858-4d84-92c9-eeb197226216}, !- Handle
@@ -22216,7 +22595,11 @@ OS:Lights,
   {4b055567-4896-4a9e-98cd-7104c58c8cb3}, !- Handle
   DOE Ref 2004 - PriSchl - Corridor Lights, !- Name
   {b19244ae-61e2-499c-8fe4-b9d4f6209704}, !- Lights Definition Name
-  {5a391edc-080a-4e20-a3ff-fd805e6c7e71}; !- Space or SpaceType Name
+  {5a391edc-080a-4e20-a3ff-fd805e6c7e71}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {c3ec2b5e-49b0-4218-8c2b-b555f46ec06d}, !- Handle
@@ -22270,7 +22653,10 @@ OS:ElectricEquipment,
   {b3c7b677-a08b-4fdb-8121-869267b80b7c}, !- Handle
   DOE Ref 2004 - PriSchl - Corridor Electric Equipment, !- Name
   {80b256c2-885b-4189-885e-6f2aa4c36b14}, !- Electric Equipment Definition Name
-  {5a391edc-080a-4e20-a3ff-fd805e6c7e71}; !- Space or SpaceType Name
+  {5a391edc-080a-4e20-a3ff-fd805e6c7e71}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {4c3f12ab-c8e4-4188-84f5-d6f440a40618}, !- Handle
@@ -22321,7 +22707,11 @@ OS:Lights,
   {fbd54b8e-ad43-408b-a877-881bdbb8df72}, !- Handle
   DOE Ref 2004 - PriSchl - Gym Lights,    !- Name
   {1b40ce3c-fa57-4913-aea5-5ced12909938}, !- Lights Definition Name
-  {137458d9-3dda-43fa-9bc3-1304f7014b69}; !- Space or SpaceType Name
+  {137458d9-3dda-43fa-9bc3-1304f7014b69}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {369a9d92-149b-4a1f-a11c-54ae121e3e99}, !- Handle
@@ -22375,7 +22765,10 @@ OS:ElectricEquipment,
   {46601937-ba48-463c-87a9-0282c576540d}, !- Handle
   DOE Ref 2004 - PriSchl - Gym Electric Equipment, !- Name
   {7434b4d7-3171-409b-a449-643685679598}, !- Electric Equipment Definition Name
-  {137458d9-3dda-43fa-9bc3-1304f7014b69}; !- Space or SpaceType Name
+  {137458d9-3dda-43fa-9bc3-1304f7014b69}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {1babf305-1319-4949-88a2-02a1063b66b5}, !- Handle
@@ -22426,7 +22819,11 @@ OS:Lights,
   {dc899e63-fcfc-4307-b2d4-68844e8f6b2e}, !- Handle
   DOE Ref 2004 - PriSchl - Kitchen Lights, !- Name
   {e8c2ed4d-5698-4baf-bd30-326aefb06c7d}, !- Lights Definition Name
-  {5ac4a94c-f5be-49d6-9019-572b9335ee70}; !- Space or SpaceType Name
+  {5ac4a94c-f5be-49d6-9019-572b9335ee70}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {2294b87f-ffba-454b-b59a-1c9975dc7e20}, !- Handle
@@ -22480,7 +22877,10 @@ OS:ElectricEquipment,
   {e6eb61cf-1d06-42de-9936-65a7bdf34b27}, !- Handle
   DOE Ref 2004 - PriSchl - Kitchen Electric Equipment, !- Name
   {fa5b1109-4b81-42fe-91ca-6a7cbd660da0}, !- Electric Equipment Definition Name
-  {5ac4a94c-f5be-49d6-9019-572b9335ee70}; !- Space or SpaceType Name
+  {5ac4a94c-f5be-49d6-9019-572b9335ee70}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:GasEquipment:Definition,
   {9ecbd0e6-7355-4f55-9556-785aa8190707}, !- Handle
@@ -22494,7 +22894,10 @@ OS:GasEquipment,
   {9a52797c-0d36-4f19-9ddd-aa1319050263}, !- Handle
   DOE Ref 2004 - PriSchl - Kitchen Gas Equipment, !- Name
   {9ecbd0e6-7355-4f55-9556-785aa8190707}, !- Gas Equipment Definition Name
-  {5ac4a94c-f5be-49d6-9019-572b9335ee70}; !- Space or SpaceType Name
+  {5ac4a94c-f5be-49d6-9019-572b9335ee70}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {541d7949-b689-4c69-8883-c137c7e9c8b6}, !- Handle
@@ -22545,7 +22948,11 @@ OS:Lights,
   {5651bb91-b03a-4b18-ab35-4f20b1e38df7}, !- Handle
   DOE Ref 2004 - PriSchl - Library Lights, !- Name
   {247f9ef3-5a54-4062-932d-eb8d5a16451b}, !- Lights Definition Name
-  {d337d196-ada3-4db5-a5bf-9c92c51c19a4}; !- Space or SpaceType Name
+  {d337d196-ada3-4db5-a5bf-9c92c51c19a4}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {955bae1c-cab8-4bab-a552-2e4e79e339cb}, !- Handle
@@ -22599,7 +23006,10 @@ OS:ElectricEquipment,
   {df97db2d-0403-4159-b816-06392c30fb47}, !- Handle
   DOE Ref 2004 - PriSchl - Library Electric Equipment, !- Name
   {b99fe2b0-34b8-4088-998d-7e3f3d1f9231}, !- Electric Equipment Definition Name
-  {d337d196-ada3-4db5-a5bf-9c92c51c19a4}; !- Space or SpaceType Name
+  {d337d196-ada3-4db5-a5bf-9c92c51c19a4}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {20687e14-229c-4056-8dde-b970e097a721}, !- Handle
@@ -22650,7 +23060,11 @@ OS:Lights,
   {527ec044-faa3-4571-9f76-233a2fe304b9}, !- Handle
   DOE Ref 2004 - PriSchl - Lobby Lights,  !- Name
   {01989b59-5536-498b-8e83-75e0c6e905da}, !- Lights Definition Name
-  {3f141455-0106-4382-b225-8877b23328e8}; !- Space or SpaceType Name
+  {3f141455-0106-4382-b225-8877b23328e8}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {ae6871be-4b67-4a5a-9887-8be3248342e7}, !- Handle
@@ -22689,7 +23103,10 @@ OS:ElectricEquipment,
   {9629866b-1065-42d5-b957-c48a8c930f7c}, !- Handle
   DOE Ref 2004 - PriSchl - Lobby Electric Equipment, !- Name
   {0f510e86-72e7-41d7-affd-533a0811cd01}, !- Electric Equipment Definition Name
-  {3f141455-0106-4382-b225-8877b23328e8}; !- Space or SpaceType Name
+  {3f141455-0106-4382-b225-8877b23328e8}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {8cd2510e-d671-4e6e-9abc-7bf99330b24a}, !- Handle
@@ -22740,7 +23157,11 @@ OS:Lights,
   {623007d0-bd46-415b-be80-b3cae86f447d}, !- Handle
   DOE Ref 2004 - PriSchl - Mechanical Lights, !- Name
   {7ea68f2c-b949-429a-97c0-901a17455e8d}, !- Lights Definition Name
-  {299e2ae7-a5df-4eb7-a3e9-0f3db50b9fb0}; !- Space or SpaceType Name
+  {299e2ae7-a5df-4eb7-a3e9-0f3db50b9fb0}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {3226bd53-2bd8-42dd-9bf6-e1d83ff56b57}, !- Handle
@@ -22794,7 +23215,10 @@ OS:ElectricEquipment,
   {924c722f-11f5-4e26-adad-9cb72bbac2dc}, !- Handle
   DOE Ref 2004 - PriSchl - Mechanical Electric Equipment, !- Name
   {00a250ea-98cf-4a0b-a1a5-689d5134bb84}, !- Electric Equipment Definition Name
-  {299e2ae7-a5df-4eb7-a3e9-0f3db50b9fb0}; !- Space or SpaceType Name
+  {299e2ae7-a5df-4eb7-a3e9-0f3db50b9fb0}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {bc9b5ff2-8e2c-48fb-ba60-34dc2903413d}, !- Handle
@@ -22845,7 +23269,11 @@ OS:Lights,
   {35e4c942-a41d-46c4-a2bd-1a60c31a210f}, !- Handle
   DOE Ref 2004 - PriSchl - Office Lights, !- Name
   {dd9fb14c-d3c2-45ea-a7e8-cd9da4305167}, !- Lights Definition Name
-  {ee7d731f-78b2-47d8-b9f5-03ad61604111}; !- Space or SpaceType Name
+  {ee7d731f-78b2-47d8-b9f5-03ad61604111}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {236958a0-9ca7-4566-8880-d75ab23c611c}, !- Handle
@@ -22899,7 +23327,10 @@ OS:ElectricEquipment,
   {210853be-ce29-47cd-b0fa-318ca1259abb}, !- Handle
   DOE Ref 2004 - PriSchl - Office Electric Equipment, !- Name
   {e4bafc40-bda6-4d07-a765-5ca753f4d3d9}, !- Electric Equipment Definition Name
-  {ee7d731f-78b2-47d8-b9f5-03ad61604111}; !- Space or SpaceType Name
+  {ee7d731f-78b2-47d8-b9f5-03ad61604111}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {48a3ea7e-9b07-47ba-b9ca-f633d8dd03db}, !- Handle
@@ -22950,7 +23381,11 @@ OS:Lights,
   {e06715b2-ff31-4d7b-ab35-9b69d245c1d7}, !- Handle
   DOE Ref 2004 - PriSchl - Restroom Lights, !- Name
   {0343fa41-8f49-42ef-97bc-eb678da08e15}, !- Lights Definition Name
-  {5dbee4c9-e73f-4521-8fa5-f1b44cfb5b91}; !- Space or SpaceType Name
+  {5dbee4c9-e73f-4521-8fa5-f1b44cfb5b91}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {814e5042-7603-4b74-b7de-5c0d2242b9b2}, !- Handle
@@ -23004,7 +23439,10 @@ OS:ElectricEquipment,
   {0a800b17-ebe7-43a7-b772-510d644f50e2}, !- Handle
   DOE Ref 2004 - PriSchl - Restroom Electric Equipment, !- Name
   {69d80c61-8175-4376-bc73-03426486f959}, !- Electric Equipment Definition Name
-  {5dbee4c9-e73f-4521-8fa5-f1b44cfb5b91}; !- Space or SpaceType Name
+  {5dbee4c9-e73f-4521-8fa5-f1b44cfb5b91}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {e3ea8e42-d3c5-407f-a3fe-73032bdd81c6}, !- Handle
@@ -23055,7 +23493,11 @@ OS:Lights,
   {8db5a328-2425-45f4-967d-658aa1c1a01c}, !- Handle
   DOE Ref Pre-1980 - PriSchl - Cafeteria Lights, !- Name
   {3e66ba9c-0cf8-475d-a404-a3c190cdf416}, !- Lights Definition Name
-  {2651d81a-007c-4e2d-b893-abe2549e4e7f}; !- Space or SpaceType Name
+  {2651d81a-007c-4e2d-b893-abe2549e4e7f}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {bed1ff8c-f377-4c4e-a2b2-21a2d675e213}, !- Handle
@@ -23109,7 +23551,10 @@ OS:ElectricEquipment,
   {9bf5901c-9912-4405-a01c-0cba9649a7b5}, !- Handle
   DOE Ref Pre-1980 - PriSchl - Cafeteria Electric Equipment, !- Name
   {140262cc-6b6c-4c86-9223-a9e279a162e6}, !- Electric Equipment Definition Name
-  {2651d81a-007c-4e2d-b893-abe2549e4e7f}; !- Space or SpaceType Name
+  {2651d81a-007c-4e2d-b893-abe2549e4e7f}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {8cff0f2b-2a10-4cb9-b0cc-a1f5af2c2c12}, !- Handle
@@ -23160,7 +23605,11 @@ OS:Lights,
   {f64fc109-61c8-4770-9a6f-84d48e126532}, !- Handle
   DOE Ref Pre-1980 - PriSchl - Classroom Lights, !- Name
   {b305b581-6e8d-4aca-9ea7-62ee4ad5b42b}, !- Lights Definition Name
-  {cdf7a3b9-950c-4217-9b02-4e8a7a2a2e1a}; !- Space or SpaceType Name
+  {cdf7a3b9-950c-4217-9b02-4e8a7a2a2e1a}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {70b99a28-bb09-4169-a443-feae9571ec69}, !- Handle
@@ -23214,7 +23663,10 @@ OS:ElectricEquipment,
   {2d574dd5-c22b-4c68-9226-f1edc52d1b9e}, !- Handle
   DOE Ref Pre-1980 - PriSchl - Classroom Electric Equipment, !- Name
   {2cedf16b-6395-4cec-81d5-eedda72d7fed}, !- Electric Equipment Definition Name
-  {cdf7a3b9-950c-4217-9b02-4e8a7a2a2e1a}; !- Space or SpaceType Name
+  {cdf7a3b9-950c-4217-9b02-4e8a7a2a2e1a}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {10ec84cb-feae-4d31-9eba-af8b04e400f4}, !- Handle
@@ -23265,7 +23717,11 @@ OS:Lights,
   {85751273-170b-438c-b301-7f05436157c8}, !- Handle
   DOE Ref Pre-1980 - PriSchl - Corridor Lights, !- Name
   {28a26356-815f-4e90-9b19-00c9c6e1c15f}, !- Lights Definition Name
-  {059b4e24-233a-49db-869d-30a5cd927fe7}; !- Space or SpaceType Name
+  {059b4e24-233a-49db-869d-30a5cd927fe7}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {02924d50-698a-4e2a-b188-3b2023df1fd1}, !- Handle
@@ -23319,7 +23775,10 @@ OS:ElectricEquipment,
   {ca9a9991-b522-4f5d-9e3b-e864c77ffe45}, !- Handle
   DOE Ref Pre-1980 - PriSchl - Corridor Electric Equipment, !- Name
   {d750ff4a-93ba-48d7-b83b-1259f0c3c194}, !- Electric Equipment Definition Name
-  {059b4e24-233a-49db-869d-30a5cd927fe7}; !- Space or SpaceType Name
+  {059b4e24-233a-49db-869d-30a5cd927fe7}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {1f511888-5ced-475c-978c-9e0adc7e8b60}, !- Handle
@@ -23370,7 +23829,11 @@ OS:Lights,
   {b990da21-9514-471d-95c4-f915e51ade7a}, !- Handle
   DOE Ref Pre-1980 - PriSchl - Gym Lights, !- Name
   {ca30419e-70d4-4e46-8633-a90450433ca7}, !- Lights Definition Name
-  {00b6cc3d-b604-46e9-9c2c-35b512a46300}; !- Space or SpaceType Name
+  {00b6cc3d-b604-46e9-9c2c-35b512a46300}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {455e1b19-6a74-4e29-abfb-d18f1d80fe83}, !- Handle
@@ -23424,7 +23887,10 @@ OS:ElectricEquipment,
   {57eacd22-0e29-454f-af7d-04b6b7e4b5bd}, !- Handle
   DOE Ref Pre-1980 - PriSchl - Gym Electric Equipment, !- Name
   {2ceadc44-20ab-4953-a55a-229d72091951}, !- Electric Equipment Definition Name
-  {00b6cc3d-b604-46e9-9c2c-35b512a46300}; !- Space or SpaceType Name
+  {00b6cc3d-b604-46e9-9c2c-35b512a46300}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {6b0e8d05-b10e-49a1-ab91-3a9145ec5ee0}, !- Handle
@@ -23475,7 +23941,11 @@ OS:Lights,
   {270bafe1-e036-4d11-8949-c4159bbc8138}, !- Handle
   DOE Ref Pre-1980 - PriSchl - Kitchen Lights, !- Name
   {26b56f03-64c6-4e02-9f68-1037cf82c44c}, !- Lights Definition Name
-  {5f870e5e-13d4-4788-ba14-15f2cccfcdb2}; !- Space or SpaceType Name
+  {5f870e5e-13d4-4788-ba14-15f2cccfcdb2}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {61117632-dcda-40dd-9da1-c30f6abee6eb}, !- Handle
@@ -23529,7 +23999,10 @@ OS:ElectricEquipment,
   {523724e1-b8e1-4b9e-a7d3-5126111510d2}, !- Handle
   DOE Ref Pre-1980 - PriSchl - Kitchen Electric Equipment, !- Name
   {e2ab7c79-5685-4786-9e4e-2c562c89bbb6}, !- Electric Equipment Definition Name
-  {5f870e5e-13d4-4788-ba14-15f2cccfcdb2}; !- Space or SpaceType Name
+  {5f870e5e-13d4-4788-ba14-15f2cccfcdb2}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:GasEquipment:Definition,
   {d9f2aa7b-c5e4-4f55-97bb-2dc695c75541}, !- Handle
@@ -23543,7 +24016,10 @@ OS:GasEquipment,
   {f5cf1976-9d12-4efe-801f-1a07d092444c}, !- Handle
   DOE Ref Pre-1980 - PriSchl - Kitchen Gas Equipment, !- Name
   {d9f2aa7b-c5e4-4f55-97bb-2dc695c75541}, !- Gas Equipment Definition Name
-  {5f870e5e-13d4-4788-ba14-15f2cccfcdb2}; !- Space or SpaceType Name
+  {5f870e5e-13d4-4788-ba14-15f2cccfcdb2}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {9d0fe646-b5e9-430b-ad84-63b988ccf89d}, !- Handle
@@ -23594,7 +24070,11 @@ OS:Lights,
   {9e865488-0c63-42ac-853e-52b0266e84aa}, !- Handle
   DOE Ref Pre-1980 - PriSchl - Library Lights, !- Name
   {f62ccdc5-4abd-45ad-a875-6c8d1b58caf4}, !- Lights Definition Name
-  {7853e324-41fa-4d79-825c-0d2f7fe52e97}; !- Space or SpaceType Name
+  {7853e324-41fa-4d79-825c-0d2f7fe52e97}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {c2d10c80-3c45-4bac-ace2-c77d04da6f15}, !- Handle
@@ -23648,7 +24128,10 @@ OS:ElectricEquipment,
   {f01bb405-0a2e-490f-9a28-8fe4cbceccdd}, !- Handle
   DOE Ref Pre-1980 - PriSchl - Library Electric Equipment, !- Name
   {62421803-6780-4d1f-96fc-c7fd12c3ccb4}, !- Electric Equipment Definition Name
-  {7853e324-41fa-4d79-825c-0d2f7fe52e97}; !- Space or SpaceType Name
+  {7853e324-41fa-4d79-825c-0d2f7fe52e97}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {cd3c3c90-4e38-4f80-b39d-2b3d04b3eb11}, !- Handle
@@ -23699,7 +24182,11 @@ OS:Lights,
   {a7d57694-6b80-48bf-9019-24b0fbf83337}, !- Handle
   DOE Ref Pre-1980 - PriSchl - Lobby Lights, !- Name
   {05fed822-2497-41a5-99d2-6a2a9e73f2c7}, !- Lights Definition Name
-  {cc48ec0a-b1f7-47de-a7c3-cfdb1329e032}; !- Space or SpaceType Name
+  {cc48ec0a-b1f7-47de-a7c3-cfdb1329e032}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {50cc56e5-5e5a-41ec-8f40-8a43058a51e2}, !- Handle
@@ -23738,7 +24225,10 @@ OS:ElectricEquipment,
   {7cb04dea-1983-4bcc-8167-b87be9aeea66}, !- Handle
   DOE Ref Pre-1980 - PriSchl - Lobby Electric Equipment, !- Name
   {cf69dd58-1421-4d1f-b455-c16e1fb9da5f}, !- Electric Equipment Definition Name
-  {cc48ec0a-b1f7-47de-a7c3-cfdb1329e032}; !- Space or SpaceType Name
+  {cc48ec0a-b1f7-47de-a7c3-cfdb1329e032}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {22291b85-158b-4b5f-9834-6a1065dd924d}, !- Handle
@@ -23789,7 +24279,11 @@ OS:Lights,
   {e42dffa5-ad65-4b28-9822-ca4f5d8ef605}, !- Handle
   DOE Ref Pre-1980 - PriSchl - Mechanical Lights, !- Name
   {8a9822ab-04c3-4e34-b87d-10c4dc7045f2}, !- Lights Definition Name
-  {cd8bdd06-0ffa-402e-99fc-3e15c1c64e5f}; !- Space or SpaceType Name
+  {cd8bdd06-0ffa-402e-99fc-3e15c1c64e5f}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {c748fc4d-7132-4da3-8e46-0e0a5c5e2910}, !- Handle
@@ -23843,7 +24337,10 @@ OS:ElectricEquipment,
   {5cc1946b-854c-4b9e-8dc3-7951e05d6321}, !- Handle
   DOE Ref Pre-1980 - PriSchl - Mechanical Electric Equipment, !- Name
   {f5c80cbf-6f5a-4685-9642-757a4ebc105e}, !- Electric Equipment Definition Name
-  {cd8bdd06-0ffa-402e-99fc-3e15c1c64e5f}; !- Space or SpaceType Name
+  {cd8bdd06-0ffa-402e-99fc-3e15c1c64e5f}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {6335367a-e564-440d-afaa-0a47b0f0741e}, !- Handle
@@ -23894,7 +24391,11 @@ OS:Lights,
   {67e8ded4-bd5a-4adf-9b15-b09027350143}, !- Handle
   DOE Ref Pre-1980 - PriSchl - Office Lights, !- Name
   {faf5f433-6270-4de3-a4f5-ec4455942b18}, !- Lights Definition Name
-  {8f65d525-7e89-49c4-8454-15470f77624c}; !- Space or SpaceType Name
+  {8f65d525-7e89-49c4-8454-15470f77624c}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {a3e37906-1663-4a96-ac7a-187a8a4fca1c}, !- Handle
@@ -23948,7 +24449,10 @@ OS:ElectricEquipment,
   {02984753-93c5-4410-a38c-090a8411cf41}, !- Handle
   DOE Ref Pre-1980 - PriSchl - Office Electric Equipment, !- Name
   {254f5090-de7c-4a92-ad41-567bd7755298}, !- Electric Equipment Definition Name
-  {8f65d525-7e89-49c4-8454-15470f77624c}; !- Space or SpaceType Name
+  {8f65d525-7e89-49c4-8454-15470f77624c}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {12c7287f-71b8-47a8-bef6-3b516ef84e6d}, !- Handle
@@ -23999,7 +24503,11 @@ OS:Lights,
   {cfcac922-8689-432a-bd73-a8a47ecaeecd}, !- Handle
   DOE Ref Pre-1980 - PriSchl - Restroom Lights, !- Name
   {36e4c0cf-108d-47fd-b21f-d86664e9a30f}, !- Lights Definition Name
-  {aa14fb2b-40e0-47ed-a2ff-9b215c3ff700}; !- Space or SpaceType Name
+  {aa14fb2b-40e0-47ed-a2ff-9b215c3ff700}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {b74737e8-a274-4c50-80af-24e24271ab8c}, !- Handle
@@ -24053,7 +24561,10 @@ OS:ElectricEquipment,
   {87b96c68-5ee9-47d2-b9a4-d5c6e7aa83a3}, !- Handle
   DOE Ref Pre-1980 - PriSchl - Restroom Electric Equipment, !- Name
   {4ac38e7b-766d-4c20-888a-cf9bc96acee4}, !- Electric Equipment Definition Name
-  {aa14fb2b-40e0-47ed-a2ff-9b215c3ff700}; !- Space or SpaceType Name
+  {aa14fb2b-40e0-47ed-a2ff-9b215c3ff700}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {53a05ffd-f492-44fa-b113-04df39d9b788}, !- Handle

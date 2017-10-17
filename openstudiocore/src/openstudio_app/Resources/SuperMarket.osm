@@ -14788,7 +14788,11 @@ OS:Lights,
   {134ad9be-718d-4039-a7b5-90df6229419d}, !- Handle
   189.1-2009 - SpMarket - Deli/Bakery - CZ1-3 Lights, !- Name
   {db3ff68d-708a-4d3f-90cc-f6ce52929735}, !- Lights Definition Name
-  {8bec821c-96a1-4481-b2d1-45b5028fa406}; !- Space or SpaceType Name
+  {8bec821c-96a1-4481-b2d1-45b5028fa406}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:Schedule:Ruleset,
   {12dcf44e-ca4e-4f72-84f5-9b7fcf43eb05}, ! Handle
@@ -15330,7 +15334,10 @@ OS:ElectricEquipment,
   {59bb8fc4-0a16-4750-8826-f2d3e61a088b}, !- Handle
   189.1-2009 - SpMarket - Deli/Bakery - CZ1-3 Electric Equipment, !- Name
   {3d289667-ccd9-41cf-b962-ce033779add2}, !- Electric Equipment Definition Name
-  {8bec821c-96a1-4481-b2d1-45b5028fa406}; !- Space or SpaceType Name
+  {8bec821c-96a1-4481-b2d1-45b5028fa406}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:Schedule:Ruleset,
   {246e1343-f6c9-413f-a957-5bd5da2224e8}, ! Handle
@@ -15500,7 +15507,10 @@ OS:GasEquipment,
   {bca30d62-27cf-4246-adae-618da18d0884}, !- Handle
   189.1-2009 - SpMarket - Deli/Bakery - CZ1-3 Gas Equipment, !- Name
   {907cc4df-a9aa-4e7e-b7a9-565adbea0289}, !- Gas Equipment Definition Name
-  {8bec821c-96a1-4481-b2d1-45b5028fa406}; !- Space or SpaceType Name
+  {8bec821c-96a1-4481-b2d1-45b5028fa406}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {4756e3f5-13c0-4df6-b0c8-4f474faf6ea1}, !- Handle
@@ -15661,7 +15671,11 @@ OS:Lights,
   {c36a03ed-c2cf-4320-a4e9-161ba8604c4a}, !- Handle
   189.1-2009 - SpMarket - DryStorage - CZ1-3 Lights, !- Name
   {1647c2d8-ec1a-496c-901f-ee461c113488}, !- Lights Definition Name
-  {dd4838e0-3cd0-4bee-9f53-89228ac9b74e}; !- Space or SpaceType Name
+  {dd4838e0-3cd0-4bee-9f53-89228ac9b74e}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {34bfd00f-be5c-47b8-a7f5-9834ab190a3f}, !- Handle
@@ -15715,7 +15729,10 @@ OS:ElectricEquipment,
   {0765cf0c-df27-4890-96cb-1aa9e31babc4}, !- Handle
   189.1-2009 - SpMarket - DryStorage - CZ1-3 Electric Equipment, !- Name
   {db9fd2f8-28f0-48e1-a0ce-330d45ec6f32}, !- Electric Equipment Definition Name
-  {dd4838e0-3cd0-4bee-9f53-89228ac9b74e}; !- Space or SpaceType Name
+  {dd4838e0-3cd0-4bee-9f53-89228ac9b74e}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {e9fdee34-f11d-4511-bfb6-b8026365125a}, !- Handle
@@ -15766,7 +15783,11 @@ OS:Lights,
   {9cbc6231-4146-41b3-8d79-75343304e5f0}, !- Handle
   189.1-2009 - SpMarket - Office - CZ1-3 Lights, !- Name
   {0db06a59-713d-4bd9-8bc0-28ea27093386}, !- Lights Definition Name
-  {7582b1ca-2b25-40e8-976e-24754ab99684}; !- Space or SpaceType Name
+  {7582b1ca-2b25-40e8-976e-24754ab99684}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {bbf57fcf-48aa-416a-ace2-92e04fe077b3}, !- Handle
@@ -15820,7 +15841,10 @@ OS:ElectricEquipment,
   {38f4d8d5-2565-478c-a78c-079291e0a615}, !- Handle
   189.1-2009 - SpMarket - Office - CZ1-3 Electric Equipment, !- Name
   {b89158e9-5058-43f8-bdfa-59f804c079bd}, !- Electric Equipment Definition Name
-  {7582b1ca-2b25-40e8-976e-24754ab99684}; !- Space or SpaceType Name
+  {7582b1ca-2b25-40e8-976e-24754ab99684}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {5579b96b-6099-439c-b90b-a8605be26fb1}, !- Handle
@@ -15871,7 +15895,11 @@ OS:Lights,
   {54d37b65-94c9-4323-bb1b-5376055a0147}, !- Handle
   189.1-2009 - SpMarket - Sales/Produce - CZ1-3 Lights, !- Name
   {39309d00-4112-4891-9f11-a7afee978728}, !- Lights Definition Name
-  {fa354134-22ed-45d6-bdba-e8acc2c21025}; !- Space or SpaceType Name
+  {fa354134-22ed-45d6-bdba-e8acc2c21025}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {24045137-efd5-470a-92f2-559bf05e0169}, !- Handle
@@ -15925,7 +15953,10 @@ OS:ElectricEquipment,
   {d30c6094-4791-4b34-b656-21efcfab57f3}, !- Handle
   189.1-2009 - SpMarket - Sales/Produce - CZ1-3 Electric Equipment, !- Name
   {1dfe6c1c-11b4-48c5-bdd6-7215882cd43e}, !- Electric Equipment Definition Name
-  {fa354134-22ed-45d6-bdba-e8acc2c21025}; !- Space or SpaceType Name
+  {fa354134-22ed-45d6-bdba-e8acc2c21025}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {d0480acf-22e8-4a48-8868-07e16eab1fc6}, !- Handle
@@ -15986,7 +16017,11 @@ OS:Lights,
   {ecccbb4a-071e-4ab6-a009-1664452c4a87}, !- Handle
   189.1-2009 - SpMarket - Deli/Bakery - CZ4-8 Lights, !- Name
   {9d6ecd72-f08c-4954-af07-e35ddb364aa7}, !- Lights Definition Name
-  {f034aad0-c76f-4064-83d7-ecffc47fc931}; !- Space or SpaceType Name
+  {f034aad0-c76f-4064-83d7-ecffc47fc931}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {97041794-c070-46a6-aef3-0d1c7f58c334}, !- Handle
@@ -16040,7 +16075,10 @@ OS:ElectricEquipment,
   {b3231836-0dcb-4341-842b-67ee943ea3a3}, !- Handle
   189.1-2009 - SpMarket - Deli/Bakery - CZ4-8 Electric Equipment, !- Name
   {ea245119-ca48-4a8e-8fd5-8193104a526b}, !- Electric Equipment Definition Name
-  {f034aad0-c76f-4064-83d7-ecffc47fc931}; !- Space or SpaceType Name
+  {f034aad0-c76f-4064-83d7-ecffc47fc931}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:GasEquipment:Definition,
   {0c50c1b3-9783-44f6-b69c-e919699ce254}, !- Handle
@@ -16054,7 +16092,10 @@ OS:GasEquipment,
   {5133eed6-dc9e-4f8b-a81a-cb070d304dbd}, !- Handle
   189.1-2009 - SpMarket - Deli/Bakery - CZ4-8 Gas Equipment, !- Name
   {0c50c1b3-9783-44f6-b69c-e919699ce254}, !- Gas Equipment Definition Name
-  {f034aad0-c76f-4064-83d7-ecffc47fc931}; !- Space or SpaceType Name
+  {f034aad0-c76f-4064-83d7-ecffc47fc931}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {857f1724-ca20-41fe-822b-3d4e268fa546}, !- Handle
@@ -16105,7 +16146,11 @@ OS:Lights,
   {aa9c6703-98ca-455e-a7af-70f532d0144b}, !- Handle
   189.1-2009 - SpMarket - DryStorage - CZ4-8 Lights, !- Name
   {d45e1ed7-ffed-44a7-b879-74c10d6a6be3}, !- Lights Definition Name
-  {daa470bc-2e32-4c66-bf81-c7225db7c6be}; !- Space or SpaceType Name
+  {daa470bc-2e32-4c66-bf81-c7225db7c6be}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {95b0634b-1b82-44d9-bb13-fa0899fa41c6}, !- Handle
@@ -16159,7 +16204,10 @@ OS:ElectricEquipment,
   {b11d138d-8534-4f5b-ae2f-0a738e899941}, !- Handle
   189.1-2009 - SpMarket - DryStorage - CZ4-8 Electric Equipment, !- Name
   {088f8673-a33f-4f52-8baf-cb6d133ac06b}, !- Electric Equipment Definition Name
-  {daa470bc-2e32-4c66-bf81-c7225db7c6be}; !- Space or SpaceType Name
+  {daa470bc-2e32-4c66-bf81-c7225db7c6be}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {249a5358-fe47-4644-8de2-de6a86a3307c}, !- Handle
@@ -16210,7 +16258,11 @@ OS:Lights,
   {24558a53-38d9-46a0-822a-777a354cd403}, !- Handle
   189.1-2009 - SpMarket - Office - CZ4-8 Lights, !- Name
   {c5059914-ae20-4a2e-acf7-d262549a8382}, !- Lights Definition Name
-  {c02f918c-6db3-4605-8f21-e9b4fd9d2365}; !- Space or SpaceType Name
+  {c02f918c-6db3-4605-8f21-e9b4fd9d2365}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {07293b14-f417-404f-b09e-7ec76ad3f3b7}, !- Handle
@@ -16264,7 +16316,10 @@ OS:ElectricEquipment,
   {0f62cb45-5c71-4cb6-82af-ff9a660335ce}, !- Handle
   189.1-2009 - SpMarket - Office - CZ4-8 Electric Equipment, !- Name
   {13b44bfa-d895-47f9-aaca-19fc3804960f}, !- Electric Equipment Definition Name
-  {c02f918c-6db3-4605-8f21-e9b4fd9d2365}; !- Space or SpaceType Name
+  {c02f918c-6db3-4605-8f21-e9b4fd9d2365}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {385b1913-5338-4f83-891f-d3841afd9da6}, !- Handle
@@ -16315,7 +16370,11 @@ OS:Lights,
   {bf02862f-d30b-4730-8651-10c8807f0a0b}, !- Handle
   189.1-2009 - SpMarket - Sales/Produce - CZ4-8 Lights, !- Name
   {7adcf25f-e5b2-4f9f-807a-ec13099575b9}, !- Lights Definition Name
-  {826ed6e2-76a0-4c86-bcf4-3eb624376b7b}; !- Space or SpaceType Name
+  {826ed6e2-76a0-4c86-bcf4-3eb624376b7b}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {7bae8f15-6192-457f-8317-571e50d5d68d}, !- Handle
@@ -16369,7 +16428,10 @@ OS:ElectricEquipment,
   {79501b32-9e3c-40c8-8b5c-07ea465003c9}, !- Handle
   189.1-2009 - SpMarket - Sales/Produce - CZ4-8 Electric Equipment, !- Name
   {8b5f26bc-69ec-4c0a-9832-564f1eb85bad}, !- Electric Equipment Definition Name
-  {826ed6e2-76a0-4c86-bcf4-3eb624376b7b}; !- Space or SpaceType Name
+  {826ed6e2-76a0-4c86-bcf4-3eb624376b7b}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {97fff374-b050-4ab9-a704-833d30eb712f}, !- Handle
@@ -16420,7 +16482,11 @@ OS:Lights,
   {48d8dfe0-9895-46a3-9589-a5c00654432d}, !- Handle
   90.1-2007 - SpMarket - Deli/Bakery Lights, !- Name
   {4a72c8e6-c4e3-4d9d-a9f9-71011739a906}, !- Lights Definition Name
-  {0ab6646c-7f06-4721-9a6d-a7955edc6d9f}; !- Space or SpaceType Name
+  {0ab6646c-7f06-4721-9a6d-a7955edc6d9f}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {74f322dc-0e9b-4c03-aede-50e3c03aa720}, !- Handle
@@ -16474,7 +16540,10 @@ OS:ElectricEquipment,
   {d0e2450a-8951-4040-bc7b-5661dfb7c41a}, !- Handle
   90.1-2007 - SpMarket - Deli/Bakery Electric Equipment, !- Name
   {6712bebc-4788-46ad-88b0-d380752c0fba}, !- Electric Equipment Definition Name
-  {0ab6646c-7f06-4721-9a6d-a7955edc6d9f}; !- Space or SpaceType Name
+  {0ab6646c-7f06-4721-9a6d-a7955edc6d9f}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:GasEquipment:Definition,
   {d87552c7-febf-4448-86fb-85882700fc00}, !- Handle
@@ -16488,7 +16557,10 @@ OS:GasEquipment,
   {44983cf9-b563-473d-8691-ca33229def02}, !- Handle
   90.1-2007 - SpMarket - Deli/Bakery Gas Equipment, !- Name
   {d87552c7-febf-4448-86fb-85882700fc00}, !- Gas Equipment Definition Name
-  {0ab6646c-7f06-4721-9a6d-a7955edc6d9f}; !- Space or SpaceType Name
+  {0ab6646c-7f06-4721-9a6d-a7955edc6d9f}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {0fba7fc9-e23a-427b-8d0a-88b3ce4b1d3d}, !- Handle
@@ -16539,7 +16611,11 @@ OS:Lights,
   {63b18bdb-1c07-4338-a84a-3e6a9f8be184}, !- Handle
   90.1-2007 - SpMarket - DryStorage Lights, !- Name
   {9374566d-33c6-49e8-8bbb-7cbadef45734}, !- Lights Definition Name
-  {feb07c6d-46ac-4351-929c-ab0d805257c3}; !- Space or SpaceType Name
+  {feb07c6d-46ac-4351-929c-ab0d805257c3}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {3bef40a8-798a-410b-9473-0b6874a5020e}, !- Handle
@@ -16593,7 +16669,10 @@ OS:ElectricEquipment,
   {09def6b9-de54-4a48-8d6f-b5b9efd56e05}, !- Handle
   90.1-2007 - SpMarket - DryStorage Electric Equipment, !- Name
   {085df38b-c853-4c7a-a09f-beead8c0ee63}, !- Electric Equipment Definition Name
-  {feb07c6d-46ac-4351-929c-ab0d805257c3}; !- Space or SpaceType Name
+  {feb07c6d-46ac-4351-929c-ab0d805257c3}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {512b675b-aac9-420c-b44e-35052c270379}, !- Handle
@@ -16644,7 +16723,11 @@ OS:Lights,
   {8efcb86f-91e4-4b78-bd8a-2f595e20dca9}, !- Handle
   90.1-2007 - SpMarket - Office Lights,   !- Name
   {571aece4-e1af-459e-9218-18efaae3e9e0}, !- Lights Definition Name
-  {1b058718-8f8d-4f04-86de-4520de546b79}; !- Space or SpaceType Name
+  {1b058718-8f8d-4f04-86de-4520de546b79}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {57adb4e7-d638-4b0c-ab3d-f223fe7a07b1}, !- Handle
@@ -16698,7 +16781,10 @@ OS:ElectricEquipment,
   {c0284a4c-d0f4-4d2b-9c00-be1cbda7685a}, !- Handle
   90.1-2007 - SpMarket - Office Electric Equipment, !- Name
   {1b630616-3824-42b0-b264-5c5bb62c5b10}, !- Electric Equipment Definition Name
-  {1b058718-8f8d-4f04-86de-4520de546b79}; !- Space or SpaceType Name
+  {1b058718-8f8d-4f04-86de-4520de546b79}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {675d0116-72ce-44f2-9e33-e52aa03696ea}, !- Handle
@@ -16749,7 +16835,11 @@ OS:Lights,
   {892e403e-c344-41b7-9a70-6f58ed6c48ce}, !- Handle
   90.1-2007 - SpMarket - Sales/Produce Lights, !- Name
   {1cdb059d-69f0-447d-9ddc-d966b424e801}, !- Lights Definition Name
-  {b5156035-946d-447f-9737-2a2f9680b89a}; !- Space or SpaceType Name
+  {b5156035-946d-447f-9737-2a2f9680b89a}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {ccdb4a19-0149-42c6-8e2a-6a8c1c124027}, !- Handle
@@ -16803,7 +16893,10 @@ OS:ElectricEquipment,
   {ce93f149-b151-4aaf-8e97-84c36e6c199e}, !- Handle
   90.1-2007 - SpMarket - Sales/Produce Electric Equipment, !- Name
   {82d5e55c-3cb8-4337-bf4b-7db0f3d79178}, !- Electric Equipment Definition Name
-  {b5156035-946d-447f-9737-2a2f9680b89a}; !- Space or SpaceType Name
+  {b5156035-946d-447f-9737-2a2f9680b89a}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {5ff17db0-6cab-4046-ba6b-b0c52225a311}, !- Handle
@@ -16854,7 +16947,11 @@ OS:Lights,
   {cfd09716-96fc-463a-80a8-364bcd271cc8}, !- Handle
   90.1-2010 - SpMarket - Deli/Bakery Lights, !- Name
   {29b2fb97-e19a-4a7e-85ec-d99d891f4619}, !- Lights Definition Name
-  {76531b02-d4a0-4a68-a6c6-b1d52641d503}; !- Space or SpaceType Name
+  {76531b02-d4a0-4a68-a6c6-b1d52641d503}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {73803557-62fd-43ac-a512-10b6a80143c5}, !- Handle
@@ -16908,7 +17005,10 @@ OS:ElectricEquipment,
   {80b15fa9-c0e9-42fc-8456-b280cf2ef3ba}, !- Handle
   90.1-2010 - SpMarket - Deli/Bakery Electric Equipment, !- Name
   {5f214ad4-d2bc-4867-9e3b-f7eca80535ec}, !- Electric Equipment Definition Name
-  {76531b02-d4a0-4a68-a6c6-b1d52641d503}; !- Space or SpaceType Name
+  {76531b02-d4a0-4a68-a6c6-b1d52641d503}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:GasEquipment:Definition,
   {cde88d4d-0cfc-4625-8feb-75bbced340f8}, !- Handle
@@ -16922,7 +17022,10 @@ OS:GasEquipment,
   {376ff012-d2bd-424e-be4f-23c59257c351}, !- Handle
   90.1-2010 - SpMarket - Deli/Bakery Gas Equipment, !- Name
   {cde88d4d-0cfc-4625-8feb-75bbced340f8}, !- Gas Equipment Definition Name
-  {76531b02-d4a0-4a68-a6c6-b1d52641d503}; !- Space or SpaceType Name
+  {76531b02-d4a0-4a68-a6c6-b1d52641d503}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {f5216342-2c2b-48db-94f9-44039b18317f}, !- Handle
@@ -16973,7 +17076,11 @@ OS:Lights,
   {6fb970b9-bb48-4e11-a633-d966ef418c15}, !- Handle
   90.1-2010 - SpMarket - DryStorage Lights, !- Name
   {817dfc10-7463-4299-9546-7f98ebf0e0f9}, !- Lights Definition Name
-  {a7ed0b5b-33d5-493b-8e5d-06cf11812382}; !- Space or SpaceType Name
+  {a7ed0b5b-33d5-493b-8e5d-06cf11812382}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {66e97edb-f31c-4b95-9f25-019771ca07f5}, !- Handle
@@ -17027,7 +17134,10 @@ OS:ElectricEquipment,
   {eab829be-ae2c-4321-bf98-c15f9a5e45bf}, !- Handle
   90.1-2010 - SpMarket - DryStorage Electric Equipment, !- Name
   {11542960-e369-43d5-8810-35d526cf9140}, !- Electric Equipment Definition Name
-  {a7ed0b5b-33d5-493b-8e5d-06cf11812382}; !- Space or SpaceType Name
+  {a7ed0b5b-33d5-493b-8e5d-06cf11812382}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {16ff2356-fa8d-4728-b0b1-2cc5cfc54735}, !- Handle
@@ -17078,7 +17188,11 @@ OS:Lights,
   {f094f698-392f-47e9-8e95-9239d76c202d}, !- Handle
   90.1-2010 - SpMarket - Office Lights,   !- Name
   {c6c2e3d7-a8dd-42b7-b06d-da3f90e74294}, !- Lights Definition Name
-  {ea850c67-0173-4c60-a889-5437f0b4ad2e}; !- Space or SpaceType Name
+  {ea850c67-0173-4c60-a889-5437f0b4ad2e}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {1aa7d39c-c4ee-40e7-9f36-741532747366}, !- Handle
@@ -17132,7 +17246,10 @@ OS:ElectricEquipment,
   {16db63dd-cd13-449a-b47c-4a1077be50ef}, !- Handle
   90.1-2010 - SpMarket - Office Electric Equipment, !- Name
   {e305c167-f1ff-4082-9d65-3ee9fc320f55}, !- Electric Equipment Definition Name
-  {ea850c67-0173-4c60-a889-5437f0b4ad2e}; !- Space or SpaceType Name
+  {ea850c67-0173-4c60-a889-5437f0b4ad2e}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {53d3f90c-1ee1-4032-9c22-6799f7d21a26}, !- Handle
@@ -17183,7 +17300,11 @@ OS:Lights,
   {03ce98b0-1cd3-46ba-bea2-343b8b86c9bf}, !- Handle
   90.1-2010 - SpMarket - Sales/Produce Lights, !- Name
   {c6993be4-2355-451e-83c9-e2ffb3949d25}, !- Lights Definition Name
-  {7aa53bb0-8075-426a-ac00-3e660db3104d}; !- Space or SpaceType Name
+  {7aa53bb0-8075-426a-ac00-3e660db3104d}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {90c32797-833b-4e48-9c33-021e758ce663}, !- Handle
@@ -17237,7 +17358,10 @@ OS:ElectricEquipment,
   {c927278c-8b23-4981-ad4a-ab9d504beddf}, !- Handle
   90.1-2010 - SpMarket - Sales/Produce Electric Equipment, !- Name
   {96dd59f5-0e3b-456a-a891-a4558181c3c0}, !- Electric Equipment Definition Name
-  {7aa53bb0-8075-426a-ac00-3e660db3104d}; !- Space or SpaceType Name
+  {7aa53bb0-8075-426a-ac00-3e660db3104d}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {8762bf8f-9c69-45a3-b0d9-632af3ea4c92}, !- Handle
@@ -17288,7 +17412,11 @@ OS:Lights,
   {dc753172-9e87-4890-a5c5-7df0018a5f08}, !- Handle
   DOE Ref 1980-2004 - SpMarket - Deli/Bakery Lights, !- Name
   {cdfdf796-dde9-460b-bd60-11e81fdcff3a}, !- Lights Definition Name
-  {90c6921b-406f-4deb-a42e-f122492e531e}; !- Space or SpaceType Name
+  {90c6921b-406f-4deb-a42e-f122492e531e}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {4a82b86d-f333-4ad7-ab7f-1ed2dcacfef4}, !- Handle
@@ -17342,7 +17470,10 @@ OS:ElectricEquipment,
   {2bdef832-7ef9-47d9-948e-41c36e045e4f}, !- Handle
   DOE Ref 1980-2004 - SpMarket - Deli/Bakery Electric Equipment, !- Name
   {6745d55f-8bae-41a7-84cf-7060f9238180}, !- Electric Equipment Definition Name
-  {90c6921b-406f-4deb-a42e-f122492e531e}; !- Space or SpaceType Name
+  {90c6921b-406f-4deb-a42e-f122492e531e}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:GasEquipment:Definition,
   {2f837ab8-f7ee-46cf-aa7c-20105024c399}, !- Handle
@@ -17356,7 +17487,10 @@ OS:GasEquipment,
   {608093f8-d390-4d20-aa37-d75ce3350dce}, !- Handle
   DOE Ref 1980-2004 - SpMarket - Deli/Bakery Gas Equipment, !- Name
   {2f837ab8-f7ee-46cf-aa7c-20105024c399}, !- Gas Equipment Definition Name
-  {90c6921b-406f-4deb-a42e-f122492e531e}; !- Space or SpaceType Name
+  {90c6921b-406f-4deb-a42e-f122492e531e}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {08144688-e1b9-4f3f-aa3a-2ef40feba7bb}, !- Handle
@@ -17407,7 +17541,11 @@ OS:Lights,
   {49991adc-b4e3-4893-8265-6510f9b597db}, !- Handle
   DOE Ref 1980-2004 - SpMarket - DryStorage Lights, !- Name
   {5a6baaf1-422a-4248-93a8-e4e56aa67afe}, !- Lights Definition Name
-  {f0d7be55-39b9-428e-a981-301992b51b4c}; !- Space or SpaceType Name
+  {f0d7be55-39b9-428e-a981-301992b51b4c}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {22ded1ee-cb0f-4e37-be26-23b476f0d6ae}, !- Handle
@@ -17461,7 +17599,10 @@ OS:ElectricEquipment,
   {f83b4df2-ff13-4d75-85ef-34b84ad82be2}, !- Handle
   DOE Ref 1980-2004 - SpMarket - DryStorage Electric Equipment, !- Name
   {11f2ba83-2419-44ce-b142-a037e3eede36}, !- Electric Equipment Definition Name
-  {f0d7be55-39b9-428e-a981-301992b51b4c}; !- Space or SpaceType Name
+  {f0d7be55-39b9-428e-a981-301992b51b4c}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {0f81b272-df51-47e7-92d1-7c5a08e99ba0}, !- Handle
@@ -17512,7 +17653,11 @@ OS:Lights,
   {91251610-80f8-4f14-8189-6a31ed2a7a53}, !- Handle
   DOE Ref 1980-2004 - SpMarket - Office Lights, !- Name
   {5ad32c0c-658d-485e-9292-f32025bce682}, !- Lights Definition Name
-  {88045df2-0379-4a54-a0ce-82f9f5568004}; !- Space or SpaceType Name
+  {88045df2-0379-4a54-a0ce-82f9f5568004}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {7fd9ca39-1e28-49ec-89ba-2b797929af91}, !- Handle
@@ -17566,7 +17711,10 @@ OS:ElectricEquipment,
   {ade953f1-e188-4d83-8191-1d99e8ab5e11}, !- Handle
   DOE Ref 1980-2004 - SpMarket - Office Electric Equipment, !- Name
   {4820775e-f006-43d4-930d-41a95cee12bc}, !- Electric Equipment Definition Name
-  {88045df2-0379-4a54-a0ce-82f9f5568004}; !- Space or SpaceType Name
+  {88045df2-0379-4a54-a0ce-82f9f5568004}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {3894af41-433f-454a-90f6-746dbd804111}, !- Handle
@@ -17617,7 +17765,11 @@ OS:Lights,
   {2dae07f8-4b2e-432a-b271-5cec5da85a1a}, !- Handle
   DOE Ref 1980-2004 - SpMarket - Sales/Produce Lights, !- Name
   {42ab07ad-dfed-429b-bc2d-9e2f3a62ea9d}, !- Lights Definition Name
-  {cec560a8-4b59-4948-a271-695ac209d20a}; !- Space or SpaceType Name
+  {cec560a8-4b59-4948-a271-695ac209d20a}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {d752f666-3588-449a-8139-75e025770804}, !- Handle
@@ -17671,7 +17823,10 @@ OS:ElectricEquipment,
   {f4b176fb-eebe-490c-af3a-b60ca2a37762}, !- Handle
   DOE Ref 1980-2004 - SpMarket - Sales/Produce Electric Equipment, !- Name
   {c7c6e357-8ff4-4036-b8e3-d0c086096b3e}, !- Electric Equipment Definition Name
-  {cec560a8-4b59-4948-a271-695ac209d20a}; !- Space or SpaceType Name
+  {cec560a8-4b59-4948-a271-695ac209d20a}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {bc7e7048-2327-4068-a865-0ffeebed63cf}, !- Handle
@@ -17722,7 +17877,11 @@ OS:Lights,
   {675072f3-acbc-425c-a538-e387b4b85497}, !- Handle
   DOE Ref 2004 - SpMarket - Deli/Bakery Lights, !- Name
   {142355f6-b723-42f9-8050-4fce30121bb2}, !- Lights Definition Name
-  {eee2ecea-116a-4f14-a9cb-5e9f8b3098ff}; !- Space or SpaceType Name
+  {eee2ecea-116a-4f14-a9cb-5e9f8b3098ff}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {b71ceef8-da50-4621-b795-e95cf5df83b9}, !- Handle
@@ -17776,7 +17935,10 @@ OS:ElectricEquipment,
   {b1521a57-cba5-42c1-ae89-824cf9dbf6dc}, !- Handle
   DOE Ref 2004 - SpMarket - Deli/Bakery Electric Equipment, !- Name
   {a07f48fe-5f06-4fbb-893c-b2948df5dc6d}, !- Electric Equipment Definition Name
-  {eee2ecea-116a-4f14-a9cb-5e9f8b3098ff}; !- Space or SpaceType Name
+  {eee2ecea-116a-4f14-a9cb-5e9f8b3098ff}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:GasEquipment:Definition,
   {dcd9bce4-b1ea-4ef9-99aa-cea8a7821edc}, !- Handle
@@ -17790,7 +17952,10 @@ OS:GasEquipment,
   {0b00946c-4988-41fe-ba3b-1668835d7d59}, !- Handle
   DOE Ref 2004 - SpMarket - Deli/Bakery Gas Equipment, !- Name
   {dcd9bce4-b1ea-4ef9-99aa-cea8a7821edc}, !- Gas Equipment Definition Name
-  {eee2ecea-116a-4f14-a9cb-5e9f8b3098ff}; !- Space or SpaceType Name
+  {eee2ecea-116a-4f14-a9cb-5e9f8b3098ff}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {16406e99-456d-4743-81af-17d9729aca4f}, !- Handle
@@ -17841,7 +18006,11 @@ OS:Lights,
   {1cb05709-91ae-4a6c-b114-b3616aa2a183}, !- Handle
   DOE Ref 2004 - SpMarket - DryStorage Lights, !- Name
   {d223897e-0425-4dd2-90fa-71256e334062}, !- Lights Definition Name
-  {9c881fd3-070f-49fa-81be-fc72a851593d}; !- Space or SpaceType Name
+  {9c881fd3-070f-49fa-81be-fc72a851593d}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {febab4d9-7deb-4498-90a0-41e63dad4dae}, !- Handle
@@ -17895,7 +18064,10 @@ OS:ElectricEquipment,
   {a6fc7b72-48a1-46c8-9bca-5632fcd6e756}, !- Handle
   DOE Ref 2004 - SpMarket - DryStorage Electric Equipment, !- Name
   {cc87d6e5-a762-4000-8a70-4805e7aa6393}, !- Electric Equipment Definition Name
-  {9c881fd3-070f-49fa-81be-fc72a851593d}; !- Space or SpaceType Name
+  {9c881fd3-070f-49fa-81be-fc72a851593d}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {f69774e9-f1fb-4ece-90ee-37978a9e8557}, !- Handle
@@ -17946,7 +18118,11 @@ OS:Lights,
   {782c3cf7-f0ac-412d-be18-4cf6535acfa5}, !- Handle
   DOE Ref 2004 - SpMarket - Office Lights, !- Name
   {c27a8090-80a7-42af-9338-bea97d19619c}, !- Lights Definition Name
-  {cfa692c9-2c16-4947-8ffe-594c1ae1042c}; !- Space or SpaceType Name
+  {cfa692c9-2c16-4947-8ffe-594c1ae1042c}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {c2751128-26c5-4c49-a816-468bb5113243}, !- Handle
@@ -18000,7 +18176,10 @@ OS:ElectricEquipment,
   {4fc0c48a-cb65-46da-b6f5-c85b8c55e971}, !- Handle
   DOE Ref 2004 - SpMarket - Office Electric Equipment, !- Name
   {223c1b21-f995-494e-9ce0-8a387195aeb7}, !- Electric Equipment Definition Name
-  {cfa692c9-2c16-4947-8ffe-594c1ae1042c}; !- Space or SpaceType Name
+  {cfa692c9-2c16-4947-8ffe-594c1ae1042c}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {c778b7b0-3222-4c8d-b445-414cfd07e8aa}, !- Handle
@@ -18051,7 +18230,11 @@ OS:Lights,
   {6762f005-31b8-40fc-9795-6ca987f1f037}, !- Handle
   DOE Ref 2004 - SpMarket - Sales/Produce Lights, !- Name
   {587d85bd-b814-492f-9b89-86a069fa2496}, !- Lights Definition Name
-  {91cb3cc5-c661-4c4f-a2f0-2953d011f739}; !- Space or SpaceType Name
+  {91cb3cc5-c661-4c4f-a2f0-2953d011f739}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {3d7dc24e-f7e1-4768-92d2-fb4bf9c45373}, !- Handle
@@ -18105,7 +18288,10 @@ OS:ElectricEquipment,
   {c7588639-1562-4a14-a58a-18afd6114195}, !- Handle
   DOE Ref 2004 - SpMarket - Sales/Produce Electric Equipment, !- Name
   {2bd688b1-18b0-41fd-b4de-e85a09db209e}, !- Electric Equipment Definition Name
-  {91cb3cc5-c661-4c4f-a2f0-2953d011f739}; !- Space or SpaceType Name
+  {91cb3cc5-c661-4c4f-a2f0-2953d011f739}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {89fd1d13-a2c5-4311-97f7-c14676e41b9c}, !- Handle
@@ -18156,7 +18342,11 @@ OS:Lights,
   {efa12ecd-1faa-4801-a479-9a4baf934811}, !- Handle
   DOE Ref Pre-1980 - SpMarket - Deli/Bakery Lights, !- Name
   {ebcce7c7-c681-4818-9256-fc871fb814d1}, !- Lights Definition Name
-  {5deba66a-68ba-499d-89b6-b8560ed8193a}; !- Space or SpaceType Name
+  {5deba66a-68ba-499d-89b6-b8560ed8193a}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {6d7a20b5-c20e-4342-be73-0910e34d0c1b}, !- Handle
@@ -18210,7 +18400,10 @@ OS:ElectricEquipment,
   {00f5b97e-45aa-4ddd-86bf-4ed2c15368b4}, !- Handle
   DOE Ref Pre-1980 - SpMarket - Deli/Bakery Electric Equipment, !- Name
   {5472146c-0307-4dd1-b99e-309c27e5d896}, !- Electric Equipment Definition Name
-  {5deba66a-68ba-499d-89b6-b8560ed8193a}; !- Space or SpaceType Name
+  {5deba66a-68ba-499d-89b6-b8560ed8193a}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:GasEquipment:Definition,
   {8786d9b3-f5fe-4340-8d78-f31a5b7b672b}, !- Handle
@@ -18224,7 +18417,10 @@ OS:GasEquipment,
   {8dd60a0e-b100-4367-9627-53adb852952d}, !- Handle
   DOE Ref Pre-1980 - SpMarket - Deli/Bakery Gas Equipment, !- Name
   {8786d9b3-f5fe-4340-8d78-f31a5b7b672b}, !- Gas Equipment Definition Name
-  {5deba66a-68ba-499d-89b6-b8560ed8193a}; !- Space or SpaceType Name
+  {5deba66a-68ba-499d-89b6-b8560ed8193a}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {81bdb8bd-85ca-4185-ae22-400a3c5e4606}, !- Handle
@@ -18275,7 +18471,11 @@ OS:Lights,
   {7225ec9b-0749-4cab-a89f-c9e03ec76e3d}, !- Handle
   DOE Ref Pre-1980 - SpMarket - DryStorage Lights, !- Name
   {b5b872b1-4dce-4219-a9db-20fa0f380b2e}, !- Lights Definition Name
-  {b25addd0-2a03-48e3-a88d-6d78c987d95d}; !- Space or SpaceType Name
+  {b25addd0-2a03-48e3-a88d-6d78c987d95d}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {f6bff4b9-f5eb-4bb1-af3a-f36e375125be}, !- Handle
@@ -18329,7 +18529,10 @@ OS:ElectricEquipment,
   {c8c8e8b2-0ff9-47e2-a01b-6034f7c6d00f}, !- Handle
   DOE Ref Pre-1980 - SpMarket - DryStorage Electric Equipment, !- Name
   {d1843182-2cef-459b-bb32-430671dbec0e}, !- Electric Equipment Definition Name
-  {b25addd0-2a03-48e3-a88d-6d78c987d95d}; !- Space or SpaceType Name
+  {b25addd0-2a03-48e3-a88d-6d78c987d95d}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {292360d3-6410-4d90-9a83-05d7c4a6e4e2}, !- Handle
@@ -18380,7 +18583,11 @@ OS:Lights,
   {12e08cea-6c19-4e34-9122-33e5a2b517b4}, !- Handle
   DOE Ref Pre-1980 - SpMarket - Office Lights, !- Name
   {c99e20ab-78a0-4993-b59a-bd0da16a2a3c}, !- Lights Definition Name
-  {f1e5cad7-2ed3-4caa-b263-42206d1d9c42}; !- Space or SpaceType Name
+  {f1e5cad7-2ed3-4caa-b263-42206d1d9c42}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {bc8a7b2e-e139-4301-9f75-f3e9434bda26}, !- Handle
@@ -18434,7 +18641,10 @@ OS:ElectricEquipment,
   {8d1cd0fa-a442-4eca-b04e-6c41461b040f}, !- Handle
   DOE Ref Pre-1980 - SpMarket - Office Electric Equipment, !- Name
   {90b0af92-1b91-4c1d-b083-5c3fc0bd234b}, !- Electric Equipment Definition Name
-  {f1e5cad7-2ed3-4caa-b263-42206d1d9c42}; !- Space or SpaceType Name
+  {f1e5cad7-2ed3-4caa-b263-42206d1d9c42}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {7192ab4a-e2ed-4d1e-8535-821f7b9c4a4b}, !- Handle
@@ -18485,7 +18695,11 @@ OS:Lights,
   {0c60515c-72d8-4943-9011-ea446df10f1d}, !- Handle
   DOE Ref Pre-1980 - SpMarket - Sales/Produce Lights, !- Name
   {e423352e-d770-4bfb-bee1-169d63eb03c4}, !- Lights Definition Name
-  {82fc1ba4-8f3f-4f4e-a62b-deacd0edfa24}; !- Space or SpaceType Name
+  {82fc1ba4-8f3f-4f4e-a62b-deacd0edfa24}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {80a7a9c2-d222-45ed-9753-3c7ad94e1654}, !- Handle
@@ -18539,7 +18753,10 @@ OS:ElectricEquipment,
   {74a2755d-8121-4053-8bd9-e8597e928242}, !- Handle
   DOE Ref Pre-1980 - SpMarket - Sales/Produce Electric Equipment, !- Name
   {6b220990-44c2-4adc-b222-74ead112e43f}, !- Electric Equipment Definition Name
-  {82fc1ba4-8f3f-4f4e-a62b-deacd0edfa24}; !- Space or SpaceType Name
+  {82fc1ba4-8f3f-4f4e-a62b-deacd0edfa24}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {0d505f62-5c01-4cb7-9ea8-8ad549c1d88b}, !- Handle
