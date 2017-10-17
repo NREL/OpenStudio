@@ -178,9 +178,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ExteriorLights_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool ExteriorLights_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = setString(OS_Exterior_LightsFields::EndUseSubcategory, endUseSubcategory);
     OS_ASSERT(result);
+    return result;
   }
 
   void ExteriorLights_Impl::resetEndUseSubcategory() {
@@ -255,9 +256,12 @@ ExteriorLights::ExteriorLights(const ExteriorLightsDefinition& definition,
     OS_ASSERT(ok);
   }
 
-  setMultiplier(1.0)
-  setEndUseSubcategory("General");
-
+  /*
+   *ok = this->setMultiplier(1.0);
+   *OS_ASSERT(ok);
+   */
+  ok = this->setEndUseSubcategory("General");
+  OS_ASSERT(ok);
 }
 
 ExteriorLights::ExteriorLights(const ExteriorLightsDefinition& definition,
@@ -275,8 +279,10 @@ ExteriorLights::ExteriorLights(const ExteriorLightsDefinition& definition,
                   << schedule.briefDescription() << ".");
   }
 
-  ok = this->setMultiplier(1.0)
-  OS_ASSERT(ok);
+  /*
+   *ok = this->setMultiplier(1.0);
+   *OS_ASSERT(ok);
+   */
   ok = this->setEndUseSubcategory("General");
   OS_ASSERT(ok);
 }
@@ -355,8 +361,8 @@ void ExteriorLights::resetMultiplier() {
   getImpl<detail::ExteriorLights_Impl>()->resetMultiplier();
 }
 
-void ExteriorLights::setEndUseSubcategory(std::string endUseSubcategory) {
-  getImpl<detail::ExteriorLights_Impl>()->setEndUseSubcategory(endUseSubcategory);
+bool ExteriorLights::setEndUseSubcategory(std::string endUseSubcategory) {
+  return getImpl<detail::ExteriorLights_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
 void ExteriorLights::resetEndUseSubcategory() {

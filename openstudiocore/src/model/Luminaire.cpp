@@ -40,6 +40,7 @@
 #include "DefaultScheduleSet.hpp"
 #include "DefaultScheduleSet_Impl.hpp"
 #include "LifeCycleCost.hpp"
+#include "Model.hpp"
 
 #include <utilities/idd/OS_Luminaire_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -386,9 +387,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void Luminaire_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool Luminaire_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = setString(OS_LuminaireFields::EndUseSubcategory, endUseSubcategory);
     OS_ASSERT(result);
+    return result;
   }
 
   void Luminaire_Impl::resetEndUseSubcategory() {
@@ -631,11 +633,14 @@ Luminaire::Luminaire(const LuminaireDefinition& luminaireDefinition)
   setThetaRotationAroundYaxis(0.0);
   setPhiRotationAroundZaxis(0.0);
 
-  bool test = this->setSchedule(this->model().alwaysOnDiscreteSchedule());
-  OS_ASSERT(test);
-  test = this->setMultiplier(1.0)
-  OS_ASSERT(test);
-  test = this->setEndUseSubcategory("General");
+  /*
+   *Schedule sch = this->model().alwaysOnDiscreteSchedule();
+   *bool test = this->setSchedule(sch);
+   *OS_ASSERT(test);
+   *test = this->setMultiplier(1.0);
+   *OS_ASSERT(test);
+   */
+  bool test = this->setEndUseSubcategory("General");
   OS_ASSERT(test);
   test = this->setFractionReplaceable(1.0);
   OS_ASSERT(test);
@@ -807,8 +812,8 @@ void Luminaire::resetMultiplier() {
   getImpl<detail::Luminaire_Impl>()->resetMultiplier();
 }
 
-void Luminaire::setEndUseSubcategory(std::string endUseSubcategory) {
-  getImpl<detail::Luminaire_Impl>()->setEndUseSubcategory(endUseSubcategory);
+bool Luminaire::setEndUseSubcategory(std::string endUseSubcategory) {
+  return getImpl<detail::Luminaire_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
 void Luminaire::resetEndUseSubcategory() {

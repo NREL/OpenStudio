@@ -254,7 +254,7 @@ InternalMass::InternalMass(const InternalMassDefinition& internalMassDefinition)
 {
   OS_ASSERT(getImpl<detail::InternalMass_Impl>());
 
-  test = this->setMultiplier(1.0)
+  bool test = this->setMultiplier(1.0);
   OS_ASSERT(test);
 
 }

@@ -555,7 +555,7 @@ People::People(const PeopleDefinition& peopleDefinition)
 {
   OS_ASSERT(getImpl<detail::People_Impl>());
 
-  bool test = this->setMultiplier(1.0)
+  bool test = this->setMultiplier(1.0);
   OS_ASSERT(test);
 }
 

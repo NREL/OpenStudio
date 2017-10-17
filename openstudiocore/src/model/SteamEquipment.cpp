@@ -40,6 +40,7 @@
 #include "DefaultScheduleSet.hpp"
 #include "DefaultScheduleSet_Impl.hpp"
 #include "LifeCycleCost.hpp"
+#include "Model.hpp"
 
 #include <utilities/idd/OS_SteamEquipment_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -214,9 +215,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void SteamEquipment_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool SteamEquipment_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = setString(OS_SteamEquipmentFields::EndUseSubcategory, endUseSubcategory);
     OS_ASSERT(result);
+    return result;
   }
 
   void SteamEquipment_Impl::resetEndUseSubcategory() {
@@ -293,11 +295,14 @@ SteamEquipment::SteamEquipment(const SteamEquipmentDefinition& definition)
 {
   OS_ASSERT(getImpl<detail::SteamEquipment_Impl>());
 
-  bool test = this->setSchedule(this->model().alwaysOnDiscreteSchedule());
-  OS_ASSERT(test);
-  test = this->setMultiplier(1.0)
-  OS_ASSERT(test);
-  test = this->setEndUseSubcategory("General");
+  /*
+   *Schedule sch = this->model().alwaysOnDiscreteSchedule();
+   *bool test = this->setSchedule(sch);
+   *OS_ASSERT(test);
+   *test = this->setMultiplier(1.0);
+   *OS_ASSERT(test);
+   */
+  bool test = this->setEndUseSubcategory("General");
   OS_ASSERT(test);
 }
 
@@ -346,8 +351,8 @@ void SteamEquipment::resetMultiplier() {
   getImpl<detail::SteamEquipment_Impl>()->resetMultiplier();
 }
 
-void SteamEquipment::setEndUseSubcategory(std::string endUseSubcategory) {
-  getImpl<detail::SteamEquipment_Impl>()->setEndUseSubcategory(endUseSubcategory);
+bool SteamEquipment::setEndUseSubcategory(std::string endUseSubcategory) {
+  return getImpl<detail::SteamEquipment_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
 void SteamEquipment::resetEndUseSubcategory() {

@@ -40,6 +40,7 @@
 #include "DefaultScheduleSet.hpp"
 #include "DefaultScheduleSet_Impl.hpp"
 #include "LifeCycleCost.hpp"
+#include "Model.hpp"
 
 #include <utilities/idd/OS_ElectricEquipment_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -175,9 +176,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ElectricEquipment_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool ElectricEquipment_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = setString(OS_ElectricEquipmentFields::EndUseSubcategory, endUseSubcategory);
     OS_ASSERT(result);
+    return result;
   }
 
   void ElectricEquipment_Impl::resetEndUseSubcategory() {
@@ -347,11 +349,14 @@ ElectricEquipment::ElectricEquipment(const ElectricEquipmentDefinition& electric
 {
   OS_ASSERT(getImpl<detail::ElectricEquipment_Impl>());
 
-  bool test = this->setSchedule(this->model().alwaysOnDiscreteSchedule());
-  OS_ASSERT(test);
-  test = this->setMultiplier(1.0)
-  OS_ASSERT(test);
-  test = this->setEndUseSubcategory("General");
+  /*
+   *Schedule sch = this->model().alwaysOnDiscreteSchedule();
+   *bool test = this->setSchedule(sch);
+   *OS_ASSERT(test);
+   *test = this->setMultiplier(1.0);
+   *OS_ASSERT(test);
+   */
+  bool test = this->setEndUseSubcategory("General");
   OS_ASSERT(test);
 
 }
@@ -377,8 +382,8 @@ void ElectricEquipment::resetMultiplier() {
   getImpl<detail::ElectricEquipment_Impl>()->resetMultiplier();
 }
 
-void ElectricEquipment::setEndUseSubcategory(std::string endUseSubcategory) {
-  getImpl<detail::ElectricEquipment_Impl>()->setEndUseSubcategory(endUseSubcategory);
+bool ElectricEquipment::setEndUseSubcategory(std::string endUseSubcategory) {
+  return getImpl<detail::ElectricEquipment_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
 void ElectricEquipment::resetEndUseSubcategory() {

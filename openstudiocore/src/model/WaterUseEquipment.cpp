@@ -228,7 +228,8 @@ WaterUseEquipment::WaterUseEquipment(const WaterUseEquipmentDefinition& waterUse
 {
   OS_ASSERT(getImpl<detail::WaterUseEquipment_Impl>());
 
-  bool test = this->w.setFlowRateFractionSchedule(this->model().alwaysOnDiscreteSchedule());
+  Schedule sch = this->model().alwaysOnDiscreteSchedule();
+  bool test = this->setFlowRateFractionSchedule(sch);
   OS_ASSERT(test);
 
 }
